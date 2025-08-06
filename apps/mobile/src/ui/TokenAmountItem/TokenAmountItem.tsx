@@ -7,7 +7,7 @@ import {
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
-import {useWindowDimensions, View, ViewProps} from 'react-native'
+import {Text, useWindowDimensions, View, ViewProps} from 'react-native'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {usePrivacyMode} from '../../features/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
@@ -63,25 +63,22 @@ export const TokenAmountItem = ({
 
   const handleShowTokenDetails = () => {
     openModal({
-      title: strings.txReview.tokenDetailsTitle,
+      title: strings.portfolio.tokenDetail,
       content: <TokenDetails tokenInfo={info} />,
       height: isPrimary ? 450 : windowHeight * 0.8,
     })
   }
 
   return (
-    <View
-      style={[style, {flexDirection: 'row', alignItems: 'center'}]}
-      testID="assetItem"
-    >
-      <Left>
+    <View style={[style, a.flex_row, a.align_center]} testID="assetItem">
+      <View>
         <TokenInfoIcon
           info={amount.info}
           size={variant === 'swap' ? 'md' : 'lg'}
         />
-      </Left>
+      </View>
 
-      <Middle>
+      <View style={[a.flex_1, a.justify_center, a.px_sm]}>
         <Text
           numberOfLines={1}
           ellipsizeMode="middle"
@@ -99,9 +96,9 @@ export const TokenAmountItem = ({
         >
           {detail}
         </Text>
-      </Middle>
+      </View>
 
-      <Right style={[a.align_end]}>
+      <View style={[a.align_end]}>
         {!isNft(info) && variant !== 'swap' && (
           <View
             testID="tokenAmountText"
@@ -131,7 +128,7 @@ export const TokenAmountItem = ({
 
         {variant !== 'swap' && (
           <PairedBalance
-            textStyle={[{textAlign: 'right'}]}
+            textStyle={a.text_right}
             amount={amount}
             ignorePrivacy={ignorePrivacy}
           />
@@ -141,12 +138,12 @@ export const TokenAmountItem = ({
           <View style={[a.flex, a.flex_row, a.align_center, a.gap_sm]}>
             {amount.quantity > 0n && (
               <View>
-                <Text style={[a.body_1_lg_regular, {textAlign: 'right'}]}>
+                <Text style={[a.body_1_lg_regular, a.text_right]}>
                   {formattedQuantity}
                 </Text>
 
                 <PairedBalance
-                  textStyle={[{textAlign: 'right'}]}
+                  textStyle={a.text_right}
                   amount={amount}
                   ignorePrivacy={ignorePrivacy}
                 />
@@ -169,21 +166,10 @@ export const TokenAmountItem = ({
             )}
           </View>
         )}
-      </Right>
+      </View>
     </View>
   )
 }
-
-const Left = ({style, ...props}: ViewProps) => <View style={style} {...props} />
-const Middle = ({style, ...props}: ViewProps) => (
-  <View
-    style={[style, {flex: 1, justifyContent: 'center', paddingHorizontal: 8}]}
-    {...props}
-  />
-)
-const Right = ({style, ...props}: ViewProps) => (
-  <View style={style} {...props} />
-)
 
 export const AmountItemPlaceholder = ({style}: ViewProps) => {
   const {palette: p} = useTheme()

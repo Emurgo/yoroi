@@ -1,7 +1,7 @@
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import {useTheme} from '@yoroi/theme'
-import React from 'react'
+import * as React from 'react'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
@@ -10,7 +10,7 @@ import {
   useWalletNavigation,
   VotingRegistrationRouteNavigation,
   VotingRegistrationRoutes,
-} from '~/kernel/navigation'
+} from '~/kernel/navigation/navigation'
 import {Boundary} from '~/ui/Boundary/Boundary'
 import {NetworkTag} from '../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {ConfirmPin} from './useCases/ConfirmPin/ConfirmPin'

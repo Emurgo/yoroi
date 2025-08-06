@@ -7,7 +7,7 @@ import {useBlockGoBack, useWalletNavigation} from '~/kernel/navigation/hooks'
 import {Button} from '~/ui/Button/Button'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
-import {SuccessfulTxIcon} from '../ReviewTx/illustrations/SuccessfulTxIcon'
+import {SuccessfulTxIcon} from '~/ui/SuccessfulTxIcon/SuccessfulTxIcon'
 
 export const SubmittedTxScreen = () => {
   useBlockGoBack()

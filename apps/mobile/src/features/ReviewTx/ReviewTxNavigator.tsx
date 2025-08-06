@@ -1,13 +1,13 @@
 import {createStackNavigator} from '@react-navigation/stack'
 import {Atoms, ThemedPalette, useTheme} from '@yoroi/theme'
-import React from 'react'
+import * as React from 'react'
 
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {
   defaultStackNavigationOptions,
   ReviewTxRoutes,
-} from '~/kernel/navigation'
+} from '~/kernel/navigation/navigation'
 import {Boundary} from '~/ui/Boundary/Boundary'
-import {useStrings} from '~/kernel/i18n/useStrings'
 import {ReviewTxScreen} from './useCases/ReviewTxScreen/ReviewTxScreen'
 import {FailedTxScreen} from './useCases/ShowFailedTxScreen/FailedTxScreen'
 import {InfraestructureIssueScreen} from './useCases/ShowInfraestructureIssueScreen/InfraestructureIssueScreen'

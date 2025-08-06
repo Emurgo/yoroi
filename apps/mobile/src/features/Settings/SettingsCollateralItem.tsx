@@ -1,5 +1,5 @@
 import {amountFormatter} from '@yoroi/portfolio'
-import React from 'react'
+import * as React from 'react'
 
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {

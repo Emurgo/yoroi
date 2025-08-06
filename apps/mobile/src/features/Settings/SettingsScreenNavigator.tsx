@@ -2,12 +2,15 @@ import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import {atoms as a, useTheme} from '@yoroi/theme'
-import React from 'react'
+import * as React from 'react'
 import {TouchableOpacity} from 'react-native'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {defaultMaterialTopTabNavigationOptions, defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
+import {
+  defaultMaterialTopTabNavigationOptions,
+  defaultStackNavigationOptions,
+} from '~/kernel/navigation/common/helpers'
 import {SettingsStackRoutes, SettingsTabRoutes} from '~/kernel/navigation/types'
 import {Boundary} from '~/ui/Boundary/Boundary'
 import {Icon} from '~/ui/Icon'

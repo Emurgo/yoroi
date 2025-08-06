@@ -4,10 +4,13 @@ import {infoFilterByName, isPrimaryToken} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
 import {Portfolio} from '@yoroi/types'
-import React from 'react'
+import * as React from 'react'
 import {Alert, TouchableOpacity, View} from 'react-native'
 
-import {limitOfSecondaryAmountsPerTx} from '~/features/SetupWallet/common/constants'
+import {usePortfolioBalances} from '~/features/Portfolio/common/hooks/usePortfolioBalances'
+import {MediaGallery} from '~/features/Portfolio/ui/MediaGallery/MediaGallery'
+import {useSearch, useSearchOnNavBar} from '~/features/Search/SearchContext'
+import {limitOfSecondaryAmountsPerTx} from '~/features/Send/common/constants'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
@@ -15,10 +18,7 @@ import {TxHistoryRouteNavigation} from '~/kernel/navigation/types'
 import {NoAssetFoundImage} from '~/ui/NoAssetFoundImage/NoAssetFoundImage'
 import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
-import {usePortfolioBalances} from '../Portfolio/common/hooks/usePortfolioBalances'
-import {MediaGallery} from '../Portfolio/common/MediaGallery/MediaGallery'
-import {TokenAmountItem} from '../Portfolio/common/TokenAmountItem/TokenAmountItem'
-import {useSearch, useSearchOnNavBar} from '../Search/SearchContext'
+import {TokenAmountItem} from '~/ui/TokenAmountItem/TokenAmountItem'
 import {MaxAmountsPerTx} from './Show/MaxAmountsPerTx'
 
 export const SelectTokenFromListScreen = () => {
@@ -34,7 +34,7 @@ export const SelectTokenFromListScreen = () => {
 
   useSearchOnNavBar({
     placeholder: strings.send.searchTokens,
-    title: strings.send.selecteAssetTitle,
+    title: strings.send.selectAssetTitle,
   })
   const {visible: isSearchOpened, isSearching, search} = useSearch()
   const shouldShowNfts = fungibilityFilter === 'nfts' && !isSearchOpened
@@ -217,7 +217,7 @@ const ListSpendables = ({
         />
       )}
       bounces={false}
-      contentContainerStyle={[a.px_lg]}
+      contentContainerStyle={a.px_lg}
       keyExtractor={(_, index) => index.toString()}
       testID="assetList"
       ItemSeparatorComponent={() => <Space.Height.md />}
@@ -299,7 +299,7 @@ const SelectAmount = ({amount, disabled}: SelectAmountProps) => {
       if (currentAmount == null) {
         amountChanged({
           info: amount.info,
-          quantity: 0n,
+          quantity: BigInt(0),
         })
       }
       navigation.navigate('send-edit-amount')
@@ -350,8 +350,9 @@ const EmptyStatuses = ({
 }
 
 const NoSpendableAmount = ({text}: {text: string}) => {
+  const {palette: p} = useTheme()
   return (
-    <View style={[a.flex_1, {textAlign: 'center'}]}>
+    <View style={[a.flex_1, a.justify_center, a.align_center]}>
       <Space.Height._2xl />
 
       <NoAssetFoundImage
@@ -360,12 +361,7 @@ const NoSpendableAmount = ({text}: {text: string}) => {
 
       <Space.Height.lg />
 
-      <Text
-        style={[
-          a.heading_3_medium,
-          {color: p.gray_max, flex: 1, textAlign: 'center'},
-        ]}
-      >
+      <Text style={[a.heading_3_medium, {color: p.text_gray_max}, a.flex_1]}>
         {text}
       </Text>
     </View>
@@ -374,8 +370,9 @@ const NoSpendableAmount = ({text}: {text: string}) => {
 
 const EmptySearchResult = () => {
   const strings = useStrings()
+  const {palette: p} = useTheme()
   return (
-    <View style={[a.flex_1, {textAlign: 'center'}]}>
+    <View style={[a.flex_1, a.justify_center, a.align_center]}>
       <Space.Height._2xl />
 
       <NoAssetFoundImage
@@ -384,12 +381,7 @@ const EmptySearchResult = () => {
 
       <Space.Height.lg />
 
-      <Text
-        style={[
-          a.heading_3_medium,
-          {color: p.gray_max, flex: 1, textAlign: 'center'},
-        ]}
-      >
+      <Text style={[a.heading_3_medium, {color: p.text_gray_max}, a.flex_1]}>
         {strings.send.noAssets}
       </Text>
     </View>
@@ -470,7 +462,7 @@ const Counter = <T,>({
 }
 
 const hasSpendableAmount = (amount: Portfolio.Token.Amount) =>
-  amount.quantity > 0n
+  amount.quantity > BigInt(0)
 const filterOutSelected =
   (amounts: Record<Portfolio.Token.Id, Portfolio.Token.Amount>) =>
   (amount: Portfolio.Token.Amount) =>
@@ -479,7 +471,7 @@ const toSpendableAmountMapper =
   (allocated: Map<Portfolio.Token.Id, bigint>) =>
   (amount: Portfolio.Token.Amount): Portfolio.Token.Amount => ({
     info: amount.info,
-    quantity: amount.quantity - (allocated.get(amount.info.id) ?? 0n),
+    quantity: amount.quantity - (allocated.get(amount.info.id) ?? BigInt(0)),
   })
 const amountFilterByType =
   (type: Portfolio.Token.Type) =>

@@ -1,5 +1,5 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
-import React from 'react'
+import * as React from 'react'
 import {FlatList, Text, TouchableOpacity, View, ViewProps} from 'react-native'
 
 // import {useSearch, useSearchOnNavBar} from '../../features/Search/SearchContext'

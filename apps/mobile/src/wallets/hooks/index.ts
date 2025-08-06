@@ -151,31 +151,30 @@ export const useAddressHex = (wallet: YoroiWallet) => {
   const result = useQuery({
     queryKey: [wallet.id, 'addressHex'],
     queryFn: () => convertBech32ToHex(wallet.externalAddresses[0]),
-    suspense: true,
   })
   if (!result.data) throw new Error('invalid state')
   return result.data
 }
 
 export const useKeyHashes = ({address}: {address: string}) => {
-  const [spendingData, stakingData] = useQueries([
-    {
-      suspense: true,
-      queryKey: [address, 'spendingKeyHash'],
-      queryFn: () =>
-        getSpendingKey(address).then((spending) => {
+  const [spendingData, stakingData] = useQueries({
+    queries: [
+      {
+        queryKey: [address, 'spendingKeyHash'],
+        queryFn: () => {
+          const spending = getSpendingKey(address)
           return {spending}
-        }),
-    },
-    {
-      suspense: true,
-      queryKey: [address, 'stakingkeyHash'],
-      queryFn: () =>
-        getStakingKey(address).then((staking) => {
+        },
+      },
+      {
+        queryKey: [address, 'stakingkeyHash'],
+        queryFn: () => {
+          const staking = getStakingKey(address)
           return {staking}
-        }),
-    },
-  ])
+        },
+      },
+    ],
+  })
   return {
     spending: spendingData.data?.spending,
     staking: stakingData.data?.staking,

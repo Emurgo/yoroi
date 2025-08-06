@@ -1,5 +1,5 @@
 import {atoms as a} from '@yoroi/theme'
-import React from 'react'
+import * as React from 'react'
 import {FlatList} from 'react-native'
 
 import {CurrencySymbol} from '~/wallets/types/other'

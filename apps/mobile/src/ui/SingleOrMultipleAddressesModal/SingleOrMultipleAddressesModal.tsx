@@ -4,32 +4,30 @@ import * as React from 'react'
 import {Text, View} from 'react-native'
 
 import {useMultipleAddressesInfo} from '~/features/Receive/common/useMultipleAddressesInfo'
-import {useStrings} from '~/kernel/i18n/useStrings'
 import {useAddressMode} from '~/features/WalletManager/hooks/useAddressMode'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button, ButtonType} from '~/ui/Button/Button'
-import {useModal} from '~/ui/Modal/ModalContext'
-import {QRs} from '~/ui/QRsIllustration/QRsIllustration'
 
 export const singleOrMultipleAddressesModalHeight = 580
 
 type Props = {
   onConfirm: (addressMode: Wallet.AddressMode) => void
+  onClose: () => void
 }
 
-export const SingleOrMultipleAddressesModal = ({onConfirm}: Props) => {
+export const SingleOrMultipleAddressesModal = ({onConfirm, onClose}: Props) => {
   const strings = useStrings()
   const {enableMultipleMode, enableSingleMode} = useAddressMode()
 
   const {hideMultipleAddressesInfo} = useMultipleAddressesInfo()
 
-  const {closeModal} = useModal()
   const {palette: p} = useTheme()
 
   const handleOnMultiple = () => {
     enableMultipleMode()
     hideMultipleAddressesInfo({
       onSuccess: () => {
-        closeModal()
+        onClose()
         onConfirm('multiple')
       },
     })
@@ -39,7 +37,7 @@ export const SingleOrMultipleAddressesModal = ({onConfirm}: Props) => {
     enableSingleMode()
     hideMultipleAddressesInfo({
       onSuccess: () => {
-        closeModal()
+        onClose()
         onConfirm('single')
       },
     })
@@ -49,7 +47,8 @@ export const SingleOrMultipleAddressesModal = ({onConfirm}: Props) => {
     <View
       style={[a.flex_1, a.align_center, a.justify_between, a.px_lg, a.py_lg]}
     >
-      <QRs />
+      {/* TODO: REVISIT, this breaks the app. investigate why */}
+      {/*  <QRs /> */}
 
       <Text
         style={[
@@ -71,7 +70,10 @@ export const SingleOrMultipleAddressesModal = ({onConfirm}: Props) => {
           onPress={handleOnMultiple}
         />
 
-        <Button title={strings.receive.singleAddressWallet} onPress={handleOnSingle} />
+        <Button
+          title={strings.receive.singleAddressWallet}
+          onPress={handleOnSingle}
+        />
       </View>
     </View>
   )

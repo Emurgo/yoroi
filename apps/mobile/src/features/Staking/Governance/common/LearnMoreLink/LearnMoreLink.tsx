@@ -1,5 +1,5 @@
 import {useTheme} from '@yoroi/theme'
-import React from 'react'
+import * as React from 'react'
 import {Linking, Text, TouchableOpacity} from 'react-native'
 
 import {useStrings} from '~/kernel/i18n/useStrings'

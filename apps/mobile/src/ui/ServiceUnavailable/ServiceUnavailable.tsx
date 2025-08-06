@@ -1,12 +1,12 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
-import React from 'react'
+import * as React from 'react'
 import {Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
 import {ConectionErrorImage} from '~/ui/ConectionErrorImage/ConectionErrorImage'
 import {Space} from '~/ui/Space/Space'
-import {useStrings} from '~/kernel/i18n/useStrings'
 
 type ServiceUnavailableProps = {
   resetErrorBoundary?: () => void

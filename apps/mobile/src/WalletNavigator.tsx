@@ -1,6 +1,6 @@
 import {createStackNavigator} from '@react-navigation/stack'
 import {atoms as a, useTheme} from '@yoroi/theme'
-import React from 'react'
+import * as React from 'react'
 
 import {SearchProvider} from '~/features/Search/SearchContext'
 import {SettingsScreenNavigator} from '~/features/Settings/SettingsScreenNavigator'

@@ -1,14 +1,14 @@
 import {isNonNullable} from '@yoroi/common'
 import {parseDrepId, useIsValidDRepID} from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
-import React from 'react'
+import * as React from 'react'
 import {Alert, Linking, Text, View} from 'react-native'
 
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
 import {Space} from '~/ui/Space/Space'
 import {TextInput} from '~/ui/TextInput/TextInput'
 import {CardanoMobile} from '~/wallets/wallets'
-import {useStrings} from '~/kernel/i18n/useStrings'
 
 export type Props = {
   onSubmit?: (options: {

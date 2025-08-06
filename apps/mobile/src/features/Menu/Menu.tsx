@@ -2,7 +2,7 @@ import {defineMessage} from '@formatjs/intl'
 import {useFocusEffect} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import {atoms as a, useTheme} from '@yoroi/theme'
-import React from 'react'
+import * as React from 'react'
 import {
   Linking,
   ScrollView,
@@ -21,7 +21,7 @@ import {
   defaultStackNavigationOptions,
   MenuRoutes,
   useWalletNavigation,
-} from '~/kernel/navigation'
+} from '~/kernel/navigation/navigation'
 import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {useModal} from '~/ui/Modal/ModalContext'

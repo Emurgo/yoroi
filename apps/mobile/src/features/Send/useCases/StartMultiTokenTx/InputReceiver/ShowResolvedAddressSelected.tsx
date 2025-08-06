@@ -1,7 +1,7 @@
 import {nameServerName} from '@yoroi/resolver'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
-import React from 'react'
+import * as React from 'react'
 import {Text, View} from 'react-native'
 
 import {useStrings} from '~/kernel/i18n/useStrings'

@@ -7,7 +7,7 @@ import {
 import {parseSafe, useAsyncStorage} from '@yoroi/common'
 import {configCurrencies} from '@yoroi/portfolio'
 import {App, Portfolio} from '@yoroi/types'
-import React from 'react'
+import * as React from 'react'
 
 // Create supportedCurrencies from configCurrencies keys
 export const supportedCurrencies = Object.keys(

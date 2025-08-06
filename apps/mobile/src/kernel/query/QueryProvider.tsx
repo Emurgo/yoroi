@@ -35,7 +35,13 @@ export function QueryProvider({children}: React.PropsWithChildren) {
       persistOptions={{
         persister,
         dehydrateOptions: {
-          shouldDehydrateQuery: () => true,
+          shouldDehydrateQuery: (query) => {
+            // Don't dehydrate queries that explicitly opt out
+            if (query.meta?.shouldDehydrate === false) {
+              return false
+            }
+            return true
+          },
         },
       }}
     >

@@ -15,6 +15,7 @@ import Animated, {FadeIn, FadeOut, Layout} from 'react-native-reanimated'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
+import {useBold} from '~/hooks/useBold'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Alert as AlertIllustration} from '~/ui/AlertIllustration/AlertIllustration'
@@ -24,7 +25,7 @@ import {Space} from '~/ui/Space/Space'
 import {StepperProgress} from '~/ui/StepperProgress/StepperProgress'
 
 export const VerifyRecoveryPhraseScreen = () => {
-  const bold = useBold()
+  const bold = useBold({style: a.body_1_lg_medium})
   const navigation = useNavigation<any>()
   const strings = useStrings()
   const {mnemonic, publicKeyHexChanged, accountVisual, walletImplementation} =
@@ -458,14 +459,6 @@ const WordBadge = ({
       </Animated.Text>
     </Animated.View>
   )
-}
-
-const useBold = () => {
-  return {
-    b: (text: React.ReactNode) => (
-      <Text style={a.body_1_lg_medium}>{text}</Text>
-    ),
-  }
 }
 
 type Entry = {id: number; word: string}

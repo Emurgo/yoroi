@@ -19,6 +19,8 @@ import {
   WalletDuplicatedModalActions,
 } from '~/features/SetupWallet/common/WalletDuplicatedModal/WalletDuplicatedModal'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
+import {useBold} from '~/hooks/useBold'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Button} from '~/ui/Button/Button'
 import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingView'
@@ -27,7 +29,6 @@ import {useScrollView} from '~/ui/ScrollView/ScrollView'
 import {Space} from '~/ui/Space/Space'
 import {StepperProgress} from '~/ui/StepperProgress/StepperProgress'
 import {isEmptyString} from '~/wallets/utils/string'
-import {useStrings} from '~/kernel/i18n/useStrings'
 import {MnemonicInput} from './MnemonicInput/MnemonicInput'
 
 export type MnemonicWordInputRef = {
@@ -36,10 +37,17 @@ export type MnemonicWordInputRef = {
 }
 
 export const RestoreWalletScreen = () => {
-  const strings = useStrings()
-  const bold = useBold()
-  const [mnemonic, setMnemonic] = React.useState('')
   const navigation = useNavigation<any>()
+  const strings = useStrings()
+  const {palette: p} = useTheme()
+  const {track} = useMetrics()
+  const bold = useBold({style: a.body_1_lg_medium})
+  const {openModal, closeModal} = useModal()
+  const {walletManager} = useWalletManager()
+  const walletNames = Array.from(walletManager.walletMetas.values()).map(
+    ({name}) => name,
+  )
+  const [mnemonic, setMnemonic] = React.useState('')
   const {
     publicKeyHexChanged,
     mnemonicChanged,
@@ -47,13 +55,9 @@ export const RestoreWalletScreen = () => {
     walletImplementation,
     accountVisual,
   } = useSetupWallet()
-  const {track} = useMetrics()
-  const {walletManager} = useWalletManager()
-  const {openModal} = useModal()
+  const {scrollViewRef} = useScrollView()
   const [focusedIndex, setFocusedIndex] = React.useState<number>(0)
   const [isValidPhrase, setIsValidPhrase] = React.useState(false)
-  const {scrollViewRef} = useScrollView()
-  const {palette: p} = useTheme()
 
   if (mnemonicType === null) throw new Error('mnemonicType missing')
 
@@ -372,12 +376,4 @@ const WordSuggestionButton = ({
       </Text>
     </TouchableOpacity>
   )
-}
-
-const useBold = () => {
-  return {
-    b: (text: React.ReactNode) => (
-      <Text style={a.body_1_lg_medium}>{text}</Text>
-    ),
-  }
 }

@@ -207,7 +207,7 @@ export const uiMessages = defineMessages({
   },
   private: {
     id: 'analytics.private',
-    defaultMessage: '!!!Private',
+    defaultMessage: '!!!We <b>cannot</b> access private keys',
   },
   noip: {
     id: 'global.actions.dialogs.logout.noButton',

@@ -1,17 +1,17 @@
 import {GovernanceProvider} from '@yoroi/staking'
 import {Atoms, ThemedPalette, useTheme} from '@yoroi/theme'
-import React from 'react'
+import * as React from 'react'
 
 import {NetworkTag} from '~/features/Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {
   BackButton,
   defaultStackNavigationOptions,
   useWalletNavigation,
-} from '~/kernel/navigation'
+} from '~/kernel/navigation/navigation'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {useGovernanceManagerMaker} from './common/helpers'
 import {NavigationStack} from './common/navigation'
-import {useStrings} from '~/kernel/i18n/useStrings'
 import {ChangeVoteScreen} from './useCases/ChangeVote/ChangeVoteScreen'
 import {HomeScreen} from './useCases/Home/HomeScreen'
 import {NoFundsScreen} from './useCases/NoFunds/NoFundsScreen'

@@ -1,5 +1,5 @@
 import {Portfolio} from '@yoroi/types'
-import React from 'react'
+import * as React from 'react'
 
 const TxFilterContext = React.createContext<undefined | TxFilterContext>(
   undefined,

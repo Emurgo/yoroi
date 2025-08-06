@@ -1,7 +1,7 @@
 import {createStackNavigator} from '@react-navigation/stack'
 import {GovernanceProvider} from '@yoroi/staking'
 import {useTheme} from '@yoroi/theme'
-import React from 'react'
+import * as React from 'react'
 
 import {NetworkTag} from '~/features/Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {useGovernanceManagerMaker} from '~/features/Staking/Governance/common/helpers'
@@ -10,7 +10,7 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {
   DashboardRoutes,
   defaultStackNavigationOptions,
-} from '~/kernel/navigation'
+} from '~/kernel/navigation/navigation'
 import {StakingCenter} from '../Staking/StakingCenter'
 import {Dashboard} from './Dashboard'
 import {FailedTxScreen} from './ShowFailedTxScreen/FailedTxScreen'

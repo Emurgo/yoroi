@@ -1,6 +1,6 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 import {useTheme} from '@yoroi/theme'
-import React from 'react'
+import * as React from 'react'
 
 import {DiscoverNavigator} from '~/features/Discover/DiscoverNavigator'
 import {PortfolioNavigator} from '~/features/Portfolio/PortfolioNavigator'

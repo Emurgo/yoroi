@@ -1,7 +1,7 @@
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {useTheme} from '@yoroi/theme'
-import React from 'react'
+import * as React from 'react'
 import {
   Linking,
   Platform,
@@ -12,6 +12,7 @@ import {
 import {ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {SetupWalletRouteNavigation} from '~/kernel/navigation/types'
 import {BulletPointItem} from '~/ui/BulletPointItem'
@@ -19,7 +20,6 @@ import {Button} from '~/ui/Button/Button'
 import {Space} from '~/ui/Space/Space'
 import {StepperProgress} from '~/ui/StepperProgress/StepperProgress'
 import {Text} from '~/ui/Text/Text'
-import {useStrings} from '~/kernel/i18n/useStrings'
 import {LedgerCheckIllustration} from '../../illustrations/LedgerCheckIllustration'
 
 export const CheckNanoXScreen = () => {
@@ -38,7 +38,10 @@ export const CheckNanoXScreen = () => {
     }, []),
   )
 
-  const commonRequirements = [strings.setupWallet.appInstalled, strings.setupWallet.appOpened]
+  const commonRequirements = [
+    strings.setupWallet.appInstalled,
+    strings.setupWallet.appOpened,
+  ]
   const usbRequirements = [
     strings.setupWallet.haveOTGAdapter,
     strings.setupWallet.usbAlwaysConnected,
@@ -135,7 +138,9 @@ const LedgerSupportLink = () => {
       ]}
       onPress={onPress}
     >
-      <Text style={[{color: p.primary_500}]}>{strings.setupWallet.ledgerSupportLink}</Text>
+      <Text style={[{color: p.primary_500}]}>
+        {strings.setupWallet.ledgerSupportLink}
+      </Text>
     </TouchableOpacity>
   )
 }

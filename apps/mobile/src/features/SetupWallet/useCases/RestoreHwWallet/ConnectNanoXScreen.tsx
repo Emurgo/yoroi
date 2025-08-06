@@ -2,8 +2,7 @@ import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {HW} from '@yoroi/types'
-import React from 'react'
-import {useIntl} from 'react-intl'
+import * as React from 'react'
 import {View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
@@ -15,18 +14,17 @@ import {useWalletManager} from '~/features/WalletManager/context/WalletManagerPr
 import {showErrorDialog} from '~/kernel/dialogs'
 
 import {LocalizableError} from '~/kernel/i18n/LocalizableError'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {SetupWalletRouteNavigation} from '~/kernel/navigation/types'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {StepperProgress} from '~/ui/StepperProgress/StepperProgress'
 import {getHWDeviceInfo} from '~/wallets/cardano/hw/hw'
-import {useStrings} from '~/kernel/i18n/useStrings'
 import {LedgerConnect} from '../legacy/HW'
 
 type Props = {}
 
 export const ConnectNanoXScreen = ({defaultDevices}: Props) => {
-
   const strings = useStrings()
   const {palette: p} = useTheme()
   const {walletManager} = useWalletManager()

@@ -1,6 +1,6 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {App} from '@yoroi/types'
-import React from 'react'
+import * as React from 'react'
 import {ScrollView, TextProps, View} from 'react-native'
 
 import {logger} from '../../../../../kernel/logger/logger'
