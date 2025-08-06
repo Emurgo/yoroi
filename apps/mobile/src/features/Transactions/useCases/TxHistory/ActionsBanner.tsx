@@ -18,7 +18,8 @@ import {Text} from '~/ui/Text/Text'
 
 export const ActionsBanner = (_props: {disabled: boolean}) => {
   const strings = useStrings()
-  // const swapForm = useSwap()
+// TODO: REVISIT when wallet hooks are fixed
+    // const swapForm = useSwap()
   // const {tokenOutId, isLoading} = useSwapConfig()
   // const disabled = props.disabled || isLoading
   const navigateTo = useNavigateTo()
