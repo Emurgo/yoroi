@@ -1,3 +1,5 @@
+set -euo pipefail
+
 packages=(
   types
   common
@@ -20,24 +22,17 @@ packages=(
 )
 
 for pkg in "${packages[@]}"; do
-  echo "→ Deleting node_modules in package '${pkg}'…"
-  (
-    cd "./packages/$pkg" \
-    && rm -rf node_modules \
-    && echo "   ✔️  node_modules removed from '${pkg}'" \
-    && cd ..
-  )
+  echo "→ Deleting node_modules in '${pkg}'…"
+  rm -rf "packages/$pkg/node_modules"
 done
 
-
 for pkg in "${packages[@]}"; do
-  echo "→ Installing dependencies and building '${pkg}'…"
+  echo "→ Installing, testing and building '${pkg}'…"
   (
-    cd "./packages/$pkg" \
-    && npm i \
-    && npm run build \
-    && echo "   ✔️  Build completed for '${pkg}'" \
-    && cd ..
+    cd "packages/$pkg"
+    npm ci
+    npm run build
+    echo "   ✔️  Build completed for '${pkg}'"
   )
 done
 
