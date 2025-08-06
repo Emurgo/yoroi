@@ -19,7 +19,7 @@ export const WalletNavigator = () => {
   const {palette: p} = useTheme()
 
   const navOptions = React.useMemo(
-    () => defaultStackNavigationOptions(a, p),
+    () => defaultStackNavigationOptions(p),
     [p],
   )
 

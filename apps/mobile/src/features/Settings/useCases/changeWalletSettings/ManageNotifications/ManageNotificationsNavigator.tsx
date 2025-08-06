@@ -18,7 +18,7 @@ export const ManageNotificationsNavigator = () => {
     <Stack.Navigator
       initialRouteName="manage-notification-settings"
       screenOptions={{
-        ...defaultStackNavigationOptions(a, p),
+        ...defaultStackNavigationOptions(p),
       }}
     >
       <Stack.Screen //

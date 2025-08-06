@@ -1,4 +1,3 @@
-import {createStackNavigator} from '@react-navigation/stack'
 import {
   resolverApiMaker,
   resolverManagerMaker,
@@ -7,6 +6,8 @@ import {
 } from '@yoroi/resolver'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Resolver} from '@yoroi/types'
+
+import {createStackNavigator} from '@react-navigation/stack'
 import * as React from 'react'
 
 import {ReceiveProvider} from '~/features/Receive/common/ReceiveProvider'
@@ -29,6 +30,7 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
 import {TxHistoryRoutes} from '~/kernel/navigation/types'
 import {Boundary} from '~/ui/Boundary/Boundary'
+
 import {HeaderRightHistory} from './common/HeaderRightHistory'
 import {TxDetails} from './useCases/TxDetails/TxDetails'
 import {TxHistory} from './useCases/TxHistory/TxHistory'
@@ -40,7 +42,7 @@ export const TxHistoryNavigator = () => {
   const {palette: p} = useTheme()
 
   const navigationOptions = React.useMemo(
-    () => defaultStackNavigationOptions(a, p),
+    () => defaultStackNavigationOptions(p),
     [p],
   )
 
@@ -68,211 +70,138 @@ export const TxHistoryNavigator = () => {
   return (
     <ResolverProvider resolverManager={resolverManager}>
       <ReceiveProvider>
-        <Stack.Navigator
-          screenOptions={{
-            ...navigationOptions,
-            headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
-          }}
-        >
-          <Stack.Screen
-            name="history-list"
-            options={{
-              title: strings.transactions.history.historyTitle,
-              headerRight: () => <HeaderRightHistory />,
+        <Boundary loading={{size: 'full'}}>
+          <Stack.Navigator
+            screenOptions={{
+              ...navigationOptions,
+              headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
             }}
           >
-            {() => (
-              <Boundary loading={{size: 'full'}}>
-                <TxHistory />
-              </Boundary>
-            )}
-          </Stack.Screen>
+            <Stack.Screen
+              name="history-list"
+              options={{
+                title: strings.transactions.history.historyTitle,
+                headerRight: () => <HeaderRightHistory />,
+              }}
+              getComponent={() => TxHistory}
+            />
 
-          <Stack.Screen
-            name="tx-details"
-            options={{
-              title: strings.transactions.history.txDetailsTitle,
-            }}
-          >
-            {() => (
-              <Boundary loading={{size: 'full'}}>
-                <TxDetails />
-              </Boundary>
-            )}
-          </Stack.Screen>
+            <Stack.Screen
+              name="tx-details"
+              options={{
+                title: strings.transactions.history.txDetailsTitle,
+              }}
+              getComponent={() => TxDetails}
+            />
 
-          <Stack.Screen
-            name="utxo-list"
-            options={{
-              title: strings.transactions.utxo.utxoListTitle,
-            }}
-          >
-            {() => (
-              <Boundary loading={{size: 'full'}}>
-                <UtxoList />
-              </Boundary>
-            )}
-          </Stack.Screen>
+            <Stack.Screen
+              name="utxo-list"
+              options={{
+                title: strings.transactions.utxo.utxoListTitle,
+              }}
+              getComponent={() => UtxoList}
+            />
 
-          <Stack.Screen
-            name="utxo-consolidation"
-            options={{
-              title: strings.transactions.utxo.utxoConsolidationTitle,
-            }}
-          >
-            {() => (
-              <Boundary loading={{size: 'full'}}>
-                <UtxoConsolidation />
-              </Boundary>
-            )}
-          </Stack.Screen>
+            <Stack.Screen
+              name="utxo-consolidation"
+              options={{
+                title: strings.transactions.utxo.utxoConsolidationTitle,
+              }}
+              getComponent={() => UtxoConsolidation}
+            />
 
-          {/* Send Screens */}
-          <Stack.Screen
-            name="send-start-tx"
-            options={{
-              title: strings.send.sendTitle,
-            }}
-          >
-            {() => (
-              <Boundary loading={{size: 'full'}}>
-                <StartMultiTokenTxScreen />
-              </Boundary>
-            )}
-          </Stack.Screen>
+            {/* Send Screens */}
+            <Stack.Screen
+              name="send-start-tx"
+              options={{
+                title: strings.send.sendTitle,
+              }}
+              getComponent={() => StartMultiTokenTxScreen}
+            />
 
-          <Stack.Screen
-            name="send-list-amounts-to-send"
-            options={{
-              title: strings.send.listAmountsToSendTitle,
-            }}
-          >
-            {() => (
-              <Boundary loading={{size: 'full'}}>
-                <ListAmountsToSendScreen />
-              </Boundary>
-            )}
-          </Stack.Screen>
+            <Stack.Screen
+              name="send-list-amounts-to-send"
+              options={{
+                title: strings.send.listAmountsToSendTitle,
+              }}
+              getComponent={() => ListAmountsToSendScreen}
+            />
 
-          <Stack.Screen
-            name="send-edit-amount"
-            options={{
-              title: strings.send.editAmountTitle,
-            }}
-          >
-            {() => (
-              <Boundary loading={{size: 'full'}}>
-                <EditAmountScreen />
-              </Boundary>
-            )}
-          </Stack.Screen>
+            <Stack.Screen
+              name="send-edit-amount"
+              options={{
+                title: strings.send.editAmountTitle,
+              }}
+              getComponent={() => EditAmountScreen}
+            />
 
-          <Stack.Screen
-            name="send-select-token-from-list"
-            options={{
-              title: strings.send.selectTokenTitle,
-            }}
-          >
-            {() => (
-              <Boundary loading={{size: 'full'}}>
-                <SelectTokenFromListScreen />
-              </Boundary>
-            )}
-          </Stack.Screen>
+            <Stack.Screen
+              name="send-select-token-from-list"
+              options={{
+                title: strings.send.selectTokenTitle,
+              }}
+              getComponent={() => SelectTokenFromListScreen}
+            />
 
-          <Stack.Screen
-            name="send-submitted-tx"
-            options={{
-              title: strings.send.sendTitle,
-            }}
-          >
-            {() => (
-              <Boundary loading={{size: 'full'}}>
-                <SendSubmittedTxScreen />
-              </Boundary>
-            )}
-          </Stack.Screen>
+            <Stack.Screen
+              name="send-submitted-tx"
+              options={{
+                title: strings.send.sendTitle,
+              }}
+              getComponent={() => SendSubmittedTxScreen}
+            />
 
-          <Stack.Screen
-            name="send-failed-tx"
-            options={{
-              title: strings.send.sendTitle,
-            }}
-          >
-            {() => (
-              <Boundary loading={{size: 'full'}}>
-                <SendFailedTxScreen />
-              </Boundary>
-            )}
-          </Stack.Screen>
+            <Stack.Screen
+              name="send-failed-tx"
+              options={{
+                title: strings.send.sendTitle,
+              }}
+              getComponent={() => SendFailedTxScreen}
+            />
 
-          {/* Receive Screens */}
-          <Stack.Screen
-            name="receive-single"
-            options={{
-              title: strings.receive.receiveTitle,
-            }}
-          >
-            {() => (
-              <Boundary loading={{size: 'full'}}>
-                <DescribeSelectedAddressScreen />
-              </Boundary>
-            )}
-          </Stack.Screen>
+            {/* Receive Screens */}
+            <Stack.Screen
+              name="receive-single"
+              options={{
+                title: strings.receive.receiveTitle,
+              }}
+              getComponent={() => DescribeSelectedAddressScreen}
+            />
 
-          <Stack.Screen
-            name="receive-multiple"
-            options={{
-              title: strings.receive.multipleAddress,
-            }}
-          >
-            {() => (
-              <Boundary loading={{size: 'full'}}>
-                <ListMultipleAddressesScreen />
-              </Boundary>
-            )}
-          </Stack.Screen>
+            <Stack.Screen
+              name="receive-multiple"
+              options={{
+                title: strings.receive.multipleAddress,
+              }}
+              getComponent={() => ListMultipleAddressesScreen}
+            />
 
-          <Stack.Screen
-            name="receive-specific-amount"
-            options={{
-              title: strings.receive.specificAmount,
-            }}
-          >
-            {() => (
-              <Boundary loading={{size: 'full'}}>
-                <RequestSpecificAmountScreen />
-              </Boundary>
-            )}
-          </Stack.Screen>
+            <Stack.Screen
+              name="receive-specific-amount"
+              options={{
+                title: strings.receive.specificAmount,
+              }}
+              getComponent={() => RequestSpecificAmountScreen}
+            />
 
-          {/* Scan Screens */}
-          <Stack.Screen
-            name="scan-start"
-            options={{
-              title: strings.scan.scanTitle,
-            }}
-          >
-            {() => (
-              <Boundary loading={{size: 'full'}}>
-                <ScanCodeScreen />
-              </Boundary>
-            )}
-          </Stack.Screen>
+            {/* Scan Screens */}
+            <Stack.Screen
+              name="scan-start"
+              options={{
+                title: strings.scan.scanTitle,
+              }}
+              getComponent={() => ScanCodeScreen}
+            />
 
-          <Stack.Screen
-            name="scan-show-camera-permission-denied"
-            options={{
-              title: strings.scan.cameraPermissionDeniedTitle,
-            }}
-          >
-            {() => (
-              <Boundary loading={{size: 'full'}}>
-                <ShowCameraPermissionDeniedScreen />
-              </Boundary>
-            )}
-          </Stack.Screen>
-        </Stack.Navigator>
+            <Stack.Screen
+              name="scan-show-camera-permission-denied"
+              options={{
+                title: strings.scan.cameraPermissionDeniedTitle,
+              }}
+              getComponent={() => ShowCameraPermissionDeniedScreen}
+            />
+          </Stack.Navigator>
+        </Boundary>
       </ReceiveProvider>
     </ResolverProvider>
   )

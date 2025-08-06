@@ -144,7 +144,7 @@ export const useSearchOnNavBar = ({
   const navigation = useNavigation()
   const {palette: p} = useTheme()
   const defaultNavigationOptions = React.useMemo(
-    () => defaultStackNavigationOptions(a, p),
+    () => defaultStackNavigationOptions(p),
     [p],
   )
 
@@ -243,7 +243,7 @@ export const useDisableSearchOnBar = ({
     React.useCallback(() => {
       if (isChild)
         navigation.getParent()?.setOptions({
-          ...defaultStackNavigationOptions(a, p),
+          ...defaultStackNavigationOptions(p),
           headerLeft: onBack
             ? () => <BackButton onPress={onBack} />
             : undefined,
@@ -256,7 +256,7 @@ export const useDisableSearchOnBar = ({
   React.useLayoutEffect(() => {
     if (!isChild)
       navigation.setOptions({
-        ...defaultStackNavigationOptions(a, p),
+        ...defaultStackNavigationOptions(p),
         headerLeft: onBack ? () => <BackButton onPress={onBack} /> : undefined,
         headerRight: undefined,
         title,

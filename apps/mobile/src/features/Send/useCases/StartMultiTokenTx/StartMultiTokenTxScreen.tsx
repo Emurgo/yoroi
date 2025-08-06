@@ -106,8 +106,6 @@ export const StartMultiTokenTxScreen = () => {
         >
           <ShowErrors />
 
-          <NotifySupportedNameServers />
-
           <InputReceiver
             value={receiver.resolve}
             onChangeText={handleOnChangeReceiver}

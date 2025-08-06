@@ -40,7 +40,7 @@ export const MenuNavigator = () => {
     <MenuStack.Navigator
       initialRouteName="_menu"
       screenOptions={{
-        ...defaultStackNavigationOptions(ta, p),
+        ...defaultStackNavigationOptions(p),
         headerLeft: () => null,
         headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
       }}

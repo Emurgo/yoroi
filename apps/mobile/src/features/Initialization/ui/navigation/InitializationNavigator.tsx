@@ -22,7 +22,7 @@ export const InitializationNavigator = () => {
   return (
     <Stack.Navigator
       screenOptions={{
-        ...defaultStackNavigationOptions(a, p),
+        ...defaultStackNavigationOptions(p),
       }}
     >
       <Stack.Screen

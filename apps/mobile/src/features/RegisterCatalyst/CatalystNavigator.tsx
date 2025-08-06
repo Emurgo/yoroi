@@ -28,8 +28,8 @@ export const CatalystNavigator = () => {
   )
 
   const navigationOptions = React.useMemo(
-    () => defaultStackNavigationOptions(atoms, p),
-    [atoms, p],
+    () => defaultStackNavigationOptions(p),
+    [p],
   )
 
   return (

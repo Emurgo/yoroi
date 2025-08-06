@@ -29,7 +29,7 @@ export const NftsNavigator = () => {
   return (
     <Stack.Navigator
       screenOptions={{
-        ...defaultStackNavigationOptions(atoms, p),
+        ...defaultStackNavigationOptions(p),
         headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
       }}
     >

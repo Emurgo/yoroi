@@ -29,7 +29,7 @@ export const DiscoverNavigator = () => {
     <DappConnectorProvider manager={manager}>
       <Stack.Navigator
         screenOptions={{
-          ...defaultStackNavigationOptions(a, p),
+          ...defaultStackNavigationOptions(p),
           headerLeft: () => null,
           gestureEnabled: true,
           headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,

@@ -29,7 +29,7 @@ export const GovernanceNavigator = () => {
       <SafeArea>
         <Stack.Navigator
           screenOptions={{
-            ...screenOptions(atoms, p),
+            ...screenOptions(p),
             headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
           }}
           initialRouteName="staking-gov-home"
@@ -87,7 +87,7 @@ const txStatusOptions = {
   detachPreviousScreen: true,
   header: () => null,
 }
-const screenOptions = (atoms: Atoms, color: ThemedPalette) => ({
-  ...defaultStackNavigationOptions(atoms, color),
+const screenOptions = (color: ThemedPalette) => ({
+  ...defaultStackNavigationOptions(color),
   gestureEnabled: false,
 })

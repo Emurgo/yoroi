@@ -109,7 +109,7 @@ export const AppNavigator = () => {
   // const afterLoginAction = useAfterLoginAction()
   // NOTE: _____ DONE 
 
-  const navOptions = React.useMemo(() => defaultStackNavigationOptions(atoms, color), [atoms, color])
+  const navOptions = React.useMemo(() => defaultStackNavigationOptions(color), [color])
 
   return (
     <NavigationContainer

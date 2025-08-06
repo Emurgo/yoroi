@@ -59,7 +59,7 @@ export const SettingsScreenNavigator = () => {
   return (
     <Stack.Navigator
       screenOptions={{
-        ...defaultStackNavigationOptions(a, p),
+        ...defaultStackNavigationOptions(p),
       }}
     >
       <Stack.Screen //
@@ -232,7 +232,7 @@ const SettingsTabNavigator = () => {
     <Tab.Navigator
       style={ta.bg_color_max}
       screenOptions={({route}) => ({
-        ...defaultMaterialTopTabNavigationOptions(a, p),
+        ...defaultMaterialTopTabNavigationOptions(p),
         tabBarLabel:
           route.name === 'wallet-settings'
             ? strings.settings.walletTabTitle

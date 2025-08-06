@@ -22,7 +22,7 @@ export const ReviewTxNavigator = () => {
   return (
     <Stack.Navigator
       screenOptions={{
-        ...screenOptions(atoms, p),
+        ...screenOptions(p),
       }}
     >
       <Stack.Screen name="review-tx" options={{title: strings.txReview.title}}>
@@ -52,7 +52,7 @@ export const ReviewTxNavigator = () => {
   )
 }
 
-const screenOptions = (atoms: Atoms, color: ThemedPalette) => ({
-  ...defaultStackNavigationOptions(atoms, color),
+const screenOptions = (color: ThemedPalette) => ({
+  ...defaultStackNavigationOptions(color),
   gestureEnabled: true,
 })

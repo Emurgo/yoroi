@@ -15,8 +15,8 @@ export const ToggleAnalyticsSettingsNavigator = () => {
   const {atoms, palette: p} = useTheme()
 
   const navigationOptions = React.useMemo(
-    () => defaultStackNavigationOptions(atoms, p),
-    [atoms, p],
+    () => defaultStackNavigationOptions(p),
+    [p],
   )
 
   return (
