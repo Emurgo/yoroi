@@ -128,7 +128,7 @@ export const ListMultipleAddressesScreen = () => {
         style={[
           a.pt_lg,
           a.px_lg,
-          at.bg_color_max,
+          ta.bg_color_max,
           {borderColor: p.gray_200},
           {
             display: hasReachedGapLimit ? 'none' : 'flex',
