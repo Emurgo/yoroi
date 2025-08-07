@@ -128,7 +128,8 @@ export const ListMultipleAddressesScreen = () => {
         style={[
           a.pt_lg,
           a.px_lg,
-          {backgroundColor: p.bg_color_max, borderColor: p.gray_200},
+          ta.bg_color_max,
+          {borderColor: p.gray_200},
           {
             display: hasReachedGapLimit ? 'none' : 'flex',
             borderTopWidth: inView.current < addressInfos.length ? 1 : 0,
