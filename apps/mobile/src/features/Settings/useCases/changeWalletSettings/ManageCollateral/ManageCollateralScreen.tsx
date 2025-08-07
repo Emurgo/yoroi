@@ -15,35 +15,28 @@ import {
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {SettingsStackRoutes} from '../../../../../kernel/navigation/types'
-import {useUnsafeParams, useWalletNavigation} from '../../../../../kernel/navigation/hooks'
-import {Button, ButtonType} from '../../../../../ui/Button/Button'
-import {Copiable} from '../../../../../ui/Copiable/Copiable'
-import {ErrorPanel} from '../../../../../ui/ErrorPanel/ErrorPanel'
-import {Icon} from '../../../../../ui/Icon'
-import {Info} from '../../../../../ui/Icon/Info'
-import {useModal} from '../../../../../ui/Modal/ModalContext'
-import {Space} from '../../../../../ui/Space/Space'
-import {Text} from '../../../../../ui/Text/Text'
-import {useSetCollateralId} from '../../../../../wallets/cardano/utxoManager/useSetCollateralId'
-import {
-  collateralConfig,
-  utxosMaker,
-} from '../../../../../wallets/cardano/utxoManager/utxos'
-import {useBalances} from '../../../../../wallets/hooks'
-import {RawUtxo} from '../../../../../wallets/types/other'
-import {YoroiEntry, YoroiSignedTx} from '../../../../../wallets/types/yoroi'
-import {
-  Amounts,
-  asQuantity,
-  Quantities,
-} from '../../../../../wallets/utils/utils'
-import {useReviewTx} from '../../../../ReviewTx/common/ReviewTxProvider'
-import {useWalletManager} from '../../../../WalletManager/context/WalletManagerProvider'
+import {useReviewTx} from '~/features/ReviewTx/common/ReviewTxProvider'
+import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
+import {useStrings} from '~/kernel/i18n/useStrings'
+import {useUnsafeParams, useWalletNavigation} from '~/kernel/navigation/hooks'
+import {SettingsStackRoutes} from '~/kernel/navigation/types'
+import {Button, ButtonType} from '~/ui/Button/Button'
+import {Copiable} from '~/ui/Copiable/Copiable'
+import {ErrorPanel} from '~/ui/ErrorPanel/ErrorPanel'
+import {Icon} from '~/ui/Icon'
+import {Info} from '~/ui/Icon/Info'
+import {useModal} from '~/ui/Modal/ModalContext'
+import {Space} from '~/ui/Space/Space'
+import {Text} from '~/ui/Text/Text'
+import {useSetCollateralId} from '~/wallets/cardano/utxoManager/useSetCollateralId'
+import {collateralConfig, utxosMaker} from '~/wallets/cardano/utxoManager/utxos'
+import {useBalances} from '~/wallets/hooks'
+import {RawUtxo} from '~/wallets/types/other'
+import {YoroiEntry, YoroiSignedTx} from '~/wallets/types/yoroi'
+import {Amounts, asQuantity, Quantities} from '~/wallets/utils/utils'
 import {CollateralInfoModal} from './CollateralInfoModal'
 import {createCollateralEntry} from './helpers'
 import {InitialCollateralInfoModal} from './InitialCollateralInfoModal'
-import {useStrings} from '~/kernel/i18n/useStrings'
 
 export const ManageCollateralScreen = () => {
   const {atoms: ta} = useTheme()
@@ -165,12 +158,7 @@ export const ManageCollateralScreen = () => {
       style={[ta.bg_color_max, a.flex_1, a.px_lg]}
     >
       <ScrollView>
-        <Text
-          style={[
-            a.flex_1,
-            a.self_center,
-          ]}
-        >
+        <Text style={[a.flex_1, a.self_center]}>
           {strings.lockedAsCollateral}
         </Text>
 

@@ -2,8 +2,8 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {FlatList} from 'react-native'
 
-import {supportedThemes} from '../../../../../kernel/constants'
-import {useThemeStorageMaker} from '../../../../../wallets/hooks'
+import {supportedThemes} from '~/kernel/constants'
+import {useThemeStorageMaker} from '~/wallets/hooks'
 import {ThemePickerItem} from './ThemePickerItem'
 
 export const ThemePickerList = () => {

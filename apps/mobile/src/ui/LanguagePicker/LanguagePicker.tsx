@@ -3,7 +3,6 @@ import * as React from 'react'
 import {FlatList, Text, TouchableOpacity, View, ViewProps} from 'react-native'
 
 // import {useSearch, useSearchOnNavBar} from '../../features/Search/SearchContext'
-import {useStrings} from '~/kernel/i18n/useStrings'
 import {useLanguage} from '../../kernel/i18n/LanguageProvider'
 import {
   LanguageRecord,
@@ -19,7 +18,6 @@ export const LanguagePicker = () => {
   const language = useLanguage()
 
   const {languageCode, selectLanguage} = language
-  const strings = useStrings()
 
   const {search} = {
     search: '',

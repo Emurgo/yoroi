@@ -2,8 +2,8 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
-import {InfoModalIllustration} from './illustrations/InfoModalIllustration'
 import {useStrings} from '~/kernel/i18n/useStrings'
+import {InfoModalIllustration} from './illustrations/InfoModalIllustration'
 
 export const CollateralInfoModal = () => {
   const {atoms: ta} = useTheme()
@@ -14,7 +14,7 @@ export const CollateralInfoModal = () => {
       <InfoModalIllustration />
 
       <Text style={[a.text_center, a.body_1_lg_regular, ta.text_gray_medium]}>
-        {strings.collateralInfoModalText}
+        {strings.manageCollateral.collateralInfoModalText}
       </Text>
     </View>
   )
