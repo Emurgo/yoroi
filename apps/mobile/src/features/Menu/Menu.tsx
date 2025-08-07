@@ -3,6 +3,7 @@ import {createStackNavigator} from '@react-navigation/stack'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {
+  Alert,
   Linking,
   ScrollView,
   TouchableOpacity,
@@ -22,6 +23,7 @@ import {Icon} from '~/ui/Icon'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
+import {InsufficientFundsModal} from '../RegisterCatalyst/common/InsufficientFundsModal'
 import {NetworkTag} from '../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {usePoolTransition} from '../Staking/Staking/PoolTransition/usePoolTransition'
 
@@ -93,7 +95,10 @@ export const Menu = () => {
 
         <Catalyst
           label={strings.menu.catalystVoting}
-          onPress={navigateTo.catalystVoting}
+          onPress={
+            // navigateTo.catalystVoting
+            Alert.alert('useCatalystCurrentFund cause crashes')
+          }
           left={<Icon.Catalyst size={24} color={p.gray_600} />}
         />
 
@@ -201,7 +206,8 @@ const Catalyst = ({
   onPress: () => void
 }) => {
   const strings = useStrings()
-  // const {wallet} = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
+  // Hook causes crashes at the moment
   // const {sufficientFunds} = useCanVote(wallet)
   const {openModal, closeModal} = useModal()
   const screenHeight = useWindowDimensions().height
@@ -211,12 +217,12 @@ const Catalyst = ({
     // if (sufficientFunds) {
     //   onPress()
     // } else {
-    //   openModal({
-    //     title: strings.menu.attention,
-    //     content: <InsufficientFundsModal />,
-    //     footer: <Button title={strings.menu.back} onPress={closeModal} />,
-    //     height: modalHeight,
-    //   })
+    openModal({
+      title: strings.menu.attention,
+      content: <InsufficientFundsModal />,
+      footer: <Button title={strings.menu.back} onPress={closeModal} />,
+      height: modalHeight,
+    })
     // }
   }
   return <Item label={label} onPress={handlePress} left={left} />
