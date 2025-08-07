@@ -1,6 +1,6 @@
-import { Platform, StyleProp, ViewStyle } from 'react-native'
+import {Platform, StyleProp, ViewStyle} from 'react-native'
 
-import { fontSize, lineHeight, tokens } from '../tokens/tokens'
+import {fontSize, lineHeight, tokens} from '../tokens/tokens'
 
 // to build typography
 const fontFamily = {
