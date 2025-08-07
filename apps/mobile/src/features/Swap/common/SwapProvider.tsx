@@ -11,11 +11,11 @@ import {TextInput} from 'react-native'
 import {usePortfolioBalances} from '~/features/Portfolio/common/hooks/usePortfolioBalances'
 import {usePortfolioTokenInfos} from '~/features/Portfolio/common/hooks/usePortfolioTokenInfos'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {useAddressHex, useStakingKey} from '~/wallets/hooks'
+import {useStakingKey} from '~/wallets/hooks'
 import {undefinedToken} from './constants'
 import {useNavigateTo} from './navigation'
-import {useStrings} from '~/kernel/i18n/useStrings'
 import {useGetInputs} from './useGetInputs'
 import {useSwapConfig} from './useSwapConfig'
 
@@ -106,7 +106,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
   const balances = usePortfolioBalances({wallet})
   const stakingKey = useStakingKey(wallet)
   const address = wallet.externalAddresses[0]
-  const addressHex = useAddressHex(wallet)
+  const addressHex = convertBech32ToHex(address)
   const {partners, excludedTokens} = useSwapConfig()
   const [isLoading, setIsLoading] = React.useState(false)
   const swapManager = React.useMemo(() => {

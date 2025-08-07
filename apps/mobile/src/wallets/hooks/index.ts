@@ -10,7 +10,6 @@ import {
   UseMutationOptions,
   useQuery,
   UseQueryOptions,
-  useSuspenseQuery,
 } from '@tanstack/react-query'
 import {cardanoConfig} from '@yoroi/blockchains'
 import {
@@ -31,7 +30,6 @@ import {useSelectedWallet} from '../../features/WalletManager/hooks/useSelectedW
 import {isDev, isNightly} from '../../kernel/constants'
 import {logger} from '../../kernel/logger/logger'
 import {deriveAddressFromXPub} from '../cardano/account-manager/derive-address-from-xpub'
-import {convertBech32ToHex} from '../cardano/common/signatureUtils'
 import {WalletEvent, YoroiWallet} from '../cardano/types'
 
 import {
@@ -141,15 +139,6 @@ export const useStakingKey = (wallet: YoroiWallet) => {
     queryKey: [wallet.id, 'stakingKey'],
     queryFn: getPublicKeyHex,
     suspense: true,
-  })
-  if (!result.data) throw new Error('invalid state')
-  return result.data
-}
-
-export const useAddressHex = (wallet: YoroiWallet) => {
-  const result = useSuspenseQuery({
-    queryKey: [wallet.id, 'addressHex'],
-    queryFn: () => convertBech32ToHex(wallet.externalAddresses[0]),
   })
   if (!result.data) throw new Error('invalid state')
   return result.data
