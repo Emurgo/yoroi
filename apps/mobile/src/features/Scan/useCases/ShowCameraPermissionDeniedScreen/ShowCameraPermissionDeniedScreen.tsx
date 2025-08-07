@@ -1,10 +1,12 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
 import {Linking, ScrollView, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useBlockGoBack, useWalletNavigation} from '~/kernel/navigation/hooks'
+import {useBlockGoBack} from '~/kernel/navigation/hooks/useBlockGoBack'
+import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {CameraPermissionDeniedIllustration} from '~/ui/CameraPermissionDeniedIllustration/CameraPermissionDeniedIllustration'
 import {Space} from '~/ui/Space/Space'

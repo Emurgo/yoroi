@@ -7,7 +7,7 @@ import ViewTransformer from 'react-native-easy-view-transformer'
 
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {useParams} from '~/kernel/navigation/hooks'
+import {useParams} from '~/kernel/navigation/hooks/useParams'
 import {NftRoutes} from '~/kernel/navigation/types'
 import {FadeIn} from '~/ui/FadeIn/FadeIn'
 import {MediaPreview} from '~/ui/MediaPreview/MediaPreview'

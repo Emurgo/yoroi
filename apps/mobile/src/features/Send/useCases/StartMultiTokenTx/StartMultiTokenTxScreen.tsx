@@ -1,6 +1,7 @@
-import {useIsFocused} from '@react-navigation/native'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
+
+import {useIsFocused} from '@react-navigation/native'
 import * as React from 'react'
 import {TextInput, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
@@ -11,6 +12,7 @@ import {useNextTick} from '~/features/Send/common/hooks/useNextTick'
 import {useNavigateTo} from '~/features/Send/common/navigation'
 import {useSendAddress} from '~/features/Send/common/useSendAddress'
 import {useSendReceiver} from '~/features/Send/common/useSendReceiver'
+import {useHasPendingTx} from '~/features/Transactions/hooks/useHasPendingTx'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
@@ -18,10 +20,9 @@ import {Button} from '~/ui/Button/Button'
 import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingView'
 import {ScrollView, useScrollView} from '~/ui/ScrollView/ScrollView'
 import {Space} from '~/ui/Space/Space'
-import {useHasPendingTx, useIsOnline} from '~/wallets/hooks'
+
 import {InputMemo} from './InputMemo/InputMemo'
 import {InputReceiver} from './InputReceiver/InputReceiver'
-import {NotifySupportedNameServers} from './NotifySupportedNameServers/NotifySupportedNameServers'
 import {SelectNameServer} from './SelectNameServer/SelectNameServer'
 import {ShowErrors} from './ShowErrors'
 
@@ -38,7 +39,6 @@ export const StartMultiTokenTxScreen = () => {
   }, [track])
 
   const hasPendingTx = useHasPendingTx({wallet})
-  const isOnline = useIsOnline(wallet)
 
   const {
     targets,
@@ -67,12 +67,12 @@ export const StartMultiTokenTxScreen = () => {
     isUnsupportedDomain,
     isLoading,
     receiverError,
-    addressError,
+    addressError: addressError ?? null,
   })
 
   const isValidAddress = addressValidated && !hasReceiverError
   const hasMemoError = memo.length > memoMaxLenght
-  const canGoNext = isOnline && !hasPendingTx && isValidAddress && !hasMemoError
+  const canGoNext = !hasPendingTx && isValidAddress && !hasMemoError
 
   const handleOnNext = () => {
     const shouldOpenAddToken = Object.keys(amounts).length === 0

@@ -6,7 +6,7 @@ import {Chain, Notifications} from '@yoroi/types'
 import {BannerIds, showBanner} from '~/features/Notifications/common/banners'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {useWalletEvent} from '~/wallets/hooks'
+import {useWalletEvent} from '~/features/WalletManager/hooks/useWalletEvent'
 import {useIsParticipatingInGovernance} from '../common/helpers'
 import {useStrings} from '~/kernel/i18n/useStrings'
 

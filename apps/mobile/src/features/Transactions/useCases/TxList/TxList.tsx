@@ -6,7 +6,7 @@ import {View} from 'react-native'
 
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {Space} from '~/ui/Space/Space'
-import {useTransactionInfos} from '~/wallets/hooks'
+import {useTransactionInfos} from '~/features/Transactions/hooks/useTransactionInfos'
 import {TransactionInfo} from '~/wallets/types/other'
 import {useTxFilter} from './TxFilterProvider'
 import {TxListItem} from './TxListItem'

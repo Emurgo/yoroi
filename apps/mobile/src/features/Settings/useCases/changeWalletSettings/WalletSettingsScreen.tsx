@@ -6,7 +6,7 @@ import {useWalletManager} from '~/features/WalletManager/context/WalletManagerPr
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {useWalletNavigation} from '~/kernel/navigation/hooks'
+import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Hr} from '~/ui/Hr/Hr'
 import {Space} from '~/ui/Space/Space'
 

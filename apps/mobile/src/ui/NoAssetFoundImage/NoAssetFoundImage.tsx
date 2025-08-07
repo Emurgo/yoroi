@@ -1,5 +1,6 @@
 import * as React from 'react'
 import Svg, {
+  ClipPath,
   Defs,
   G,
   LinearGradient,

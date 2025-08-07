@@ -22,18 +22,16 @@ import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetw
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {useWalletNavigation} from '~/kernel/navigation/hooks'
+import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {DashboardRoutes} from '~/kernel/navigation/types'
 
 import {Banner} from '~/ui/Banner/Banner'
 import {Button} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
-import {
-  useBalances,
-  useCreateWithdrawTx,
-  useIsOnline,
-} from '~/wallets/hooks'
+import {useBalances} from '~/features/Portfolio/common/hooks/useBalances'
+import {useCreateWithdrawTx} from '~/features/Staking/hooks/useCreateWithdrawTx'
+import {useIsOnline} from '~/features/WalletManager/hooks/useIsOnline'
 import {useSync} from '~/features/WalletManager/hooks/useSync'
 import {isEmptyString} from '~/wallets/utils/string'
 import {Amounts} from '~/wallets/utils/utils'
@@ -52,9 +50,11 @@ export const Dashboard = () => {
   const {isPoolRetiring} = usePoolTransition()
   const {unsignedTxChanged} = useReviewTx()
   const {
-    isLoading: isWithdrawLoading,
+    isPending: isWithdrawLoading,
     hasRewards,
-    createWithdrawalTx,
+    value: unsignedTx,
+    error: withdrawError,
+    resolve: createWithdrawalTx,
   } = useCreateWithdrawTx()
   const {wallet, meta} = useSelectedWallet()
   const {isPending: isSyncing, sync} = useSync(wallet)
@@ -76,6 +76,26 @@ export const Dashboard = () => {
   const isParticipatingInGovernance = useIsParticipatingInGovernance()
   const walletNavigateTo = useWalletNavigation()
 
+  React.useEffect(() => {
+    if (unsignedTx) {
+      unsignedTxChanged(unsignedTx)
+      walletNavigateTo.navigateToTxReview({
+        operations: [<StakeRewardsWithdrawalOperation key="0" />],
+        onSuccess: () => {
+          track.claimAdaTransactionSubmitted()
+          navigateTo.submittedTx()
+        },
+        onError: navigateTo.failedTx,
+      })
+    }
+  }, [unsignedTx, unsignedTxChanged, walletNavigateTo, track, navigateTo])
+
+  React.useEffect(() => {
+    if (withdrawError) {
+      navigateTo.failedTx()
+    }
+  }, [withdrawError, navigateTo])
+
   const createOnWithdraw =
     ({shouldDeregister}: {shouldDeregister: boolean}) =>
     () => {
@@ -93,22 +113,7 @@ export const Dashboard = () => {
         return
       }
 
-      createWithdrawalTx({
-        shouldDeregister,
-        onError: navigateTo.failedTx,
-        onSuccess: (unsignedTx) => {
-          unsignedTxChanged(unsignedTx)
-          walletNavigateTo.navigateToTxReview({
-            operations: [<StakeRewardsWithdrawalOperation key="0" />],
-            onSuccess: () => {
-              track.claimAdaTransactionSubmitted()
-              navigateTo.submittedTx()
-            },
-            onError: navigateTo.failedTx,
-          })
-          return
-        },
-      })
+      createWithdrawalTx({shouldDeregister})
     }
 
   return (
