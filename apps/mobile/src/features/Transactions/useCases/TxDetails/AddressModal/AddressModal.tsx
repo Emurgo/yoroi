@@ -9,7 +9,6 @@ import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWalle
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Copiable} from '~/ui/Copiable/Copiable'
 import {Space} from '~/ui/Space/Space'
-import {useKeyHashes} from '~/wallets/hooks'
 
 type Path = {
   account: number
@@ -24,7 +23,6 @@ type Props = {
 
 export const AddressModal = ({address, path}: Props) => {
   const strings = useStrings()
-  const keyHashes = useKeyHashes({address})
   const {palette: p} = useTheme()
   const {
     meta: {implementation},
@@ -79,27 +77,33 @@ export const AddressModal = ({address, path}: Props) => {
           </>
         )}
 
-        {keyHashes?.staking != null && keyHashes.staking !== '' && (
-          <>
-            <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
-              {strings.transactions.staking}
-            </Text>
+        {(() => {
+          const staking = getStakingKey(address)
+          return staking != null && staking !== '' ? (
+            <>
+              <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
+                {strings.transactions.staking}
+              </Text>
 
-            <Copiable title={keyHashes.staking} text={keyHashes.staking} />
+              <Copiable title={staking} text={staking} />
 
-            <Space.Width.sm />
-          </>
-        )}
+              <Space.Width.sm />
+            </>
+          ) : null
+        })()}
 
-        {keyHashes?.spending != null && keyHashes.spending !== '' && (
-          <>
-            <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
-              {strings.transactions.spending}
-            </Text>
+        {(() => {
+          const spending = getSpendingKey(address)
+          return spending != null && spending !== '' ? (
+            <>
+              <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
+                {strings.transactions.spending}
+              </Text>
 
-            <Copiable title={keyHashes.spending} text={keyHashes.spending} />
-          </>
-        )}
+              <Copiable title={spending} text={spending} />
+            </>
+          ) : null
+        })()}
       </View>
     </View>
   )
