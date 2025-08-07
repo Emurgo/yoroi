@@ -13,7 +13,7 @@ import {BalanceCardSkeleton} from '~/ui/BalanceCardSkeleton/BalanceCardSkeleton'
 import {BalanceHeaderCard} from '~/ui/BalanceHeaderCard/BalanceHeaderCard'
 import {Space} from '~/ui/Space/Space'
 
-import {useSelectedNetwork} from '../../hooks/useSelectedNetwork'
+import {useSelectedNetwork} from '../../../hooks/useSelectedNetwork'
 
 export const AggregatedBalance = () => {
   const {palette: p, atoms: ta} = useTheme()

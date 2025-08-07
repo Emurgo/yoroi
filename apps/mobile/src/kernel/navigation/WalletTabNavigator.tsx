@@ -1,5 +1,6 @@
+import {atoms as a, useTheme} from '@yoroi/theme'
+
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
-import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 
 import {DiscoverNavigator} from '~/features/Discover/DiscoverNavigator'
@@ -8,12 +9,13 @@ import {SettingsScreenNavigator} from '~/features/Settings/SettingsScreenNavigat
 import {TxHistoryNavigator} from '~/features/Transactions/TxHistoryNavigator'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Icon} from '~/ui/Icon'
-import {WalletTabRoutes} from './navigation'
+
+import {WalletTabRoutes} from './types'
 
 const Tab = createBottomTabNavigator<WalletTabRoutes>()
 
 export const WalletTabNavigator = () => {
-  const {palette: p} = useTheme()
+  const {palette: p, atoms: ta} = useTheme()
   const strings = useStrings()
 
   return (
@@ -21,25 +23,20 @@ export const WalletTabNavigator = () => {
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: p.bg_color_max,
+          ...ta.bg_color_max,
+          ...a.border_t,
           borderTopColor: p.gray_200,
-          borderTopWidth: 1,
-          paddingBottom: 8,
-          paddingTop: 8,
-          height: 80,
         },
         tabBarActiveTintColor: p.primary_600,
         tabBarInactiveTintColor: p.gray_600,
         tabBarLabelStyle: {
-          fontSize: 12,
-          fontWeight: '600',
-          marginTop: 4,
+          ...a.body_3_sm_medium,
         },
       }}
     >
       <Tab.Screen
         name="history"
-        component={TxHistoryNavigator}
+        getComponent={() => TxHistoryNavigator}
         options={{
           title: strings.transactions.history.historyTitle,
           tabBarIcon: ({focused, color, size}) =>
@@ -53,7 +50,7 @@ export const WalletTabNavigator = () => {
 
       <Tab.Screen
         name="portfolio"
-        component={PortfolioNavigator}
+        getComponent={() => PortfolioNavigator}
         options={{
           title: strings.portfolio.portfolio,
           tabBarIcon: ({focused, color, size}) =>
@@ -67,7 +64,7 @@ export const WalletTabNavigator = () => {
 
       <Tab.Screen
         name="discover"
-        component={DiscoverNavigator}
+        getComponent={() => DiscoverNavigator}
         options={{
           title: strings.discover.discoverTitle,
           tabBarIcon: ({focused, color, size}) =>
@@ -81,7 +78,7 @@ export const WalletTabNavigator = () => {
 
       <Tab.Screen
         name="menu"
-        component={SettingsScreenNavigator}
+        getComponent={() => SettingsScreenNavigator}
         options={{
           title: strings.menu.menu,
           tabBarIcon: ({focused, color, size}) =>

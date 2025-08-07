@@ -32,3 +32,6 @@ const supportedNetworksProd: Array<Chain.SupportedNetworks> = freeze([
 export const availableNetworks = isDev
   ? supportedNetworksDev
   : supportedNetworksProd
+
+export const linkToSupportOpenTicket =
+  'https://emurgohelpdesk.zendesk.com/hc/en-us/requests/new?ticket_form_id=360013330335'

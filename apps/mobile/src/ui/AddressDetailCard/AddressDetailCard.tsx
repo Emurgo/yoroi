@@ -8,6 +8,10 @@ import {useReceive} from '~/features/Receive/common/ReceiveProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Space} from '~/ui/Space/Space'
+import {
+  getSpendingKey,
+  getStakingKey,
+} from '~/wallets/cardano/addressInfo/addressInfo'
 import {isEmptyString} from '~/wallets/utils/string'
 import {ShareDetailsCard} from '../ShareDetailsCard/ShareDetailsCard'
 import {ShareQRCodeCard} from '../ShareQRCodeCard/ShareQRCodeCard'

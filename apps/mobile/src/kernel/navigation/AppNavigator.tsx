@@ -30,26 +30,23 @@ import {SetupWalletNavigator} from '~/features/SetupWallet/SetupWalletNavigator'
 import {useHasWallets} from '~/features/WalletManager/hooks/useHasWallets'
 import {Modal} from '~/ui/Modal/ModalScreen'
 
-import {WalletNavigator} from '../../WalletNavigator'
 import {agreementDate, isDev} from '../constants'
 import {useStrings} from '../i18n/useStrings'
 import {defaultStackNavigationOptions} from './common/helpers'
 import {FirstAction} from './types'
+import {WalletNavigator} from './WalletNavigator'
 
 const Stack = createStackNavigator<any>()
 
 export const AppNavigator = () => {
-  // TODO: REVISIT missing deeplink watcher 
+  // TODO: REVISIT missing deeplink watcher
   const {palette: p} = useTheme()
   const firstAction = useFirstAction()
   const {isLoggedOut, isLoggedIn} = useAuth()
   const afterLoginAction = useAfterLoginAction()
   const strings = useStrings()
 
-  const navOptions = React.useMemo(
-    () => defaultStackNavigationOptions(p),
-    [p],
-  )
+  const navOptions = React.useMemo(() => defaultStackNavigationOptions(p), [p])
 
   return (
     <Stack.Navigator
@@ -147,7 +144,7 @@ export const AppNavigator = () => {
           ...(Platform.OS === 'android' && {
             ...TransitionPresets.DefaultTransition,
           }), // overriding general navigation settings
-          cardStyle: {backgroundColor: 'transparent'}, // this is needed for the modal to be transparent
+          cardStyle: a.bg_transparent, // this is needed for the modal to be transparent
         }}
       >
         <Stack.Screen

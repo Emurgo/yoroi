@@ -1,33 +1,38 @@
-import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Wallet} from '@yoroi/types'
+
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 import {Linking, Text, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useWalletMetas} from '~/features/WalletManager/hooks/useWalletMetas'
-import {SupportIllustration} from '~/features/WalletManager/ui/illustrations/SupportIllustration'
 import {isDev} from '~/kernel/constants'
 import {features} from '~/kernel/features'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
+import {useWalletNavigation} from '~/kernel/navigation/hooks'
 import {Button} from '~/ui/Button/Button'
 import {ScrollView, useScrollView} from '~/ui/ScrollView/ScrollView'
 import {Space} from '~/ui/Space/Space'
-import {useWalletManager} from '../../context/WalletManagerProvider'
+
+import {linkToSupportOpenTicket} from '../../../common/constants'
+import {useWalletManager} from '../../../context/WalletManagerProvider'
+import {useWalletMetas} from '../../../hooks/useWalletMetas'
+import {SupportIllustration} from '../../../ui/illustrations/SupportIllustration'
 import {AggregatedBalance} from './AggregatedBalance'
 import {WalletListItem} from './WalletListItem'
 
 export const SelectWalletFromList = () => {
+  // TODO: REVISIT when links are restored
   // useLinksRequestWallet()
-  const {palette: p} = useTheme()
-  const walletMetas = useWalletMetas()
-  const {track} = useMetrics()
   const {isScrollBarShown, setIsScrollBarShown, scrollViewRef} = useScrollView()
   const [showLine, setShowLine] = React.useState(false)
+  const navigation = useNavigation()
+  const {palette: p} = useTheme()
+  const {track} = useMetrics()
+  const walletMetas = useWalletMetas()
   const {walletManager} = useWalletManager()
-  const navigation = useNavigation<any>()
 
   useFocusEffect(
     React.useCallback(() => {
@@ -38,6 +43,7 @@ export const SelectWalletFromList = () => {
   const handleOnSelect = React.useCallback(
     async (walletMeta: Wallet.Meta) => {
       walletManager.setSelectedWalletId(walletMeta.id)
+      // TODO: REVISIT when notifications are restored
       /* if (await shouldHandleNotificationInternalNavigationAction()) {
         await handleNotificationInternalNavigationAction(pushNotificationsManager, walletNavigation)
         return
@@ -50,7 +56,7 @@ export const SelectWalletFromList = () => {
     [walletManager, navigation],
   )
 
-  const data = React.useMemo(
+  const walletList = React.useMemo(
     () =>
       walletMetas?.map((walletMeta) => (
         <React.Fragment key={walletMeta.id}>
@@ -77,7 +83,7 @@ export const SelectWalletFromList = () => {
         onScrollEndDrag={() => setShowLine(false)}
         bounces={true}
       >
-        {data}
+        {walletList}
 
         <Space.Height.lg />
       </ScrollView>
@@ -86,7 +92,7 @@ export const SelectWalletFromList = () => {
         style={[
           a.px_lg,
           (showLine || isScrollBarShown) && {
-            borderTopWidth: 1,
+            ...a.border_t,
             borderTopColor: p.gray_200,
           },
         ]}
@@ -110,9 +116,6 @@ export const SelectWalletFromList = () => {
     </SafeAreaView>
   )
 }
-
-const linkToSupportOpenTicket =
-  'https://emurgohelpdesk.zendesk.com/hc/en-us/requests/new?ticket_form_id=360013330335'
 
 const SupportTicketLink = () => {
   const {palette: p, atoms: ta} = useTheme()
@@ -138,29 +141,31 @@ const SupportTicketLink = () => {
 const AddWalletButton = () => {
   const strings = useStrings()
   const {reset: resetSetupWalletState} = useSetupWallet()
-  const navigation = useNavigation<any>()
-  const goToSetupWallet = React.useCallback(() => {
-    navigation.navigate('wallet-setup')
-  }, [navigation])
+  const {resetToWalletSetup} = useWalletNavigation()
+  const handleOnPress = React.useCallback(() => {
+    resetSetupWalletState()
+    resetToWalletSetup()
+  }, [resetSetupWalletState, resetToWalletSetup])
 
   return (
     <Button
-      onPress={() => {
-        resetSetupWalletState()
-        goToSetupWallet()
-      }}
+      onPress={handleOnPress}
       title={strings.walletManager.addWalletButton}
     />
   )
 }
 
 const OnlyDevButton = () => {
-  const navigation = useNavigation<any>()
-  const openDevMenu = React.useCallback(() => {
+  const navigation = useNavigation()
+  const handleOnPress = React.useCallback(() => {
     navigation.navigate('developer')
   }, [navigation])
 
   return (
-    <Button testID="btnDevOptions" onPress={openDevMenu} title="Dev options" />
+    <Button
+      testID="btnDevOptions"
+      onPress={handleOnPress}
+      title="Dev options"
+    />
   )
 }
