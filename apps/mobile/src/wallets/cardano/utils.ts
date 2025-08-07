@@ -314,3 +314,8 @@ export const getAddressedUtxos = (wallet: YoroiWallet) => {
     },
   )
 }
+
+export const getPublicKeyHex = (wallet: YoroiWallet) => {
+  const pkBytes = wallet.getStakingKey().hash().toBytes()
+  return Buffer.from(pkBytes).toString('hex')
+}

@@ -1,39 +1,40 @@
-import {useNavigation} from '@react-navigation/native'
-import {cardanoConfig, derivationConfig} from '@yoroi/blockchains'
+import {derivationConfig} from '@yoroi/blockchains'
 import {useAsyncStorage} from '@yoroi/common'
 import {Blockies} from '@yoroi/identicon'
 import {useSetupWallet} from '@yoroi/setup-wallet'
-import {Api, Wallet} from '@yoroi/types'
+import {atoms as a, useTheme} from '@yoroi/theme'
+import {Api} from '@yoroi/types'
+
+import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 import {FlatList, InteractionManager, ScrollView, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {walletChecksum} from '@emurgo/cip4-js'
-import {useSuspenseQuery} from '@tanstack/react-query'
 import {parseWalletMeta} from '~/features/WalletManager/common/validators/wallet-meta'
 import {useCreateWalletXPub} from '~/features/WalletManager/hooks/useCreateWalletXPub'
+import {usePlate} from '~/features/WalletManager/hooks/usePlate'
 import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
 import {showErrorDialog} from '~/kernel/dialogs'
+import {errorMessages} from '~/kernel/i18n/messages/global'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {logger} from '~/kernel/logger/logger'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Boundary} from '~/ui/Boundary/Boundary'
 import {Icon} from '~/ui/Icon'
 import {Line} from '~/ui/Line/Line'
 import {Text} from '~/ui/Text/Text'
-import {deriveAddressFromXPub} from '~/wallets/cardano/account-manager/derive-address-from-xpub'
+import {throwLoggedError} from '~/kernel/logger/helpers/throw-logged-error'
+import {SetupWalletRouteNavigation} from '~/kernel/navigation/types'
 import {isEmptyString} from '~/wallets/utils/string'
+
 import {WalletAddress} from '../WalletAddress/WalletAddress'
 import {WalletNameForm} from '../WalletNameForm/WalletNameForm'
 
-// when ro, later will be part of the onboarding
-const addressMode: Wallet.AddressMode = 'single'
 export const SaveReadOnlyWalletScreen = () => {
-  const strings = useStrings()
   const storage = useAsyncStorage()
-  const navigation = useNavigation<any>()
+  const navigation = useNavigation<SetupWalletRouteNavigation>()
+  const strings = useStrings()
   const {track} = useMetrics()
-
+  const {atoms: ta} = useTheme()
   const {
     publicKeyHex,
     path,
@@ -47,18 +48,18 @@ export const SaveReadOnlyWalletScreen = () => {
     return i
   })
 
-  const {createWallet, isPending} = useCreateWalletXPub({
+  const {createWallet} = useCreateWalletXPub({
     onSuccess: async (wallet) => {
       walletIdChanged(wallet.id)
       const walletStorage = storage.join('wallet/')
       const walletMeta = await walletStorage.getItem(wallet.id, parseWalletMeta)
 
       if (!walletMeta) {
-        const error = new Error(
-          'WalletDetailsScreen: wallet meta is invalid, reached an invalid state.',
+        throwLoggedError(
+          new Error(
+            'SaveReadOnlyWalletScreen: wallet meta is invalid, reached an invalid state.',
+          ),
         )
-        logger.error(error)
-        throw error
       }
 
       track.restoreWalletDetailsSettled()
@@ -68,8 +69,8 @@ export const SaveReadOnlyWalletScreen = () => {
     onError: (error) => {
       InteractionManager.runAfterInteractions(() => {
         return error instanceof Api.Errors.Network
-          ? showErrorDialog(strings.global.networkError)
-          : showErrorDialog(strings.global.generalError, {
+          ? showErrorDialog(errorMessages.networkError)
+          : showErrorDialog(errorMessages.generalError, undefined, {
               message: error.message,
             })
       })
@@ -80,12 +81,12 @@ export const SaveReadOnlyWalletScreen = () => {
     ({name}: {name: string}) => {
       createWallet({
         name,
+        accountVisual,
         implementation: walletImplementation,
         bip44AccountPublic: publicKeyHex,
-        readOnly: true,
-        addressMode,
+        addressMode: 'single',
         hwDeviceInfo: null,
-        accountVisual,
+        readOnly: true,
       })
     },
     [createWallet, publicKeyHex, walletImplementation, accountVisual],
@@ -94,15 +95,12 @@ export const SaveReadOnlyWalletScreen = () => {
   return (
     <SafeAreaView
       edges={['left', 'right', 'bottom']}
-      style={[{flex: 1, paddingHorizontal: 16}]}
+      style={[a.flex_1, a.px_md, ta.bg_color_max]}
     >
       <Boundary loading={{size: 'full'}}>
         <WalletNameForm
           onSubmit={onSubmit}
-          defaultWalletName={
-            strings.setupWallet.saveReadOnlyWallet.defaultWalletName
-          }
-          // containerStyle={[{paddingTop: 0, paddingHorizontal: 0}]}
+          defaultWalletName={strings.setupWallet.defaultWalletName}
           bottomContent={
             <WalletInfoView
               normalizedPath={normalizedPath}
@@ -115,25 +113,27 @@ export const SaveReadOnlyWalletScreen = () => {
   )
 }
 
-const CheckSumView = ({icon, checksum}: {icon: string; checksum: string}) => (
-  <View
-    style={[
-      {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginTop: 12,
-        borderColor: 'red',
-        flexWrap: 'wrap',
-      },
-    ]}
-  >
-    <Icon.WalletAvatar image={new Blockies({seed: icon}).asBase64()} />
+const CheckSumView = ({icon, checksum}: {icon: string; checksum: string}) => {
+  const {palette: p} = useTheme()
 
-    <Text style={[{fontSize: 18, fontWeight: 'bold', paddingLeft: 12}]}>
-      {checksum}
-    </Text>
-  </View>
-)
+  return (
+    <View
+      style={[
+        a.flex_row,
+        a.align_center,
+        a.pt_sm,
+        a.flex_wrap,
+        {borderColor: p.sys_magenta_500},
+      ]}
+    >
+      <Icon.WalletAvatar image={new Blockies({seed: icon}).asBase64()} />
+
+      <Text style={[a.font_bold, a.pl_sm, a.heading_4_regular]}>
+        {checksum}
+      </Text>
+    </View>
+  )
+}
 
 type WalletInfoProps = {
   normalizedPath: Array<number>
@@ -153,10 +153,10 @@ const WalletInfoView = ({normalizedPath, publicKeyHex}: WalletInfoProps) => {
   })
 
   return (
-    <View style={[{marginTop: SECTION_MARGIN}]}>
-      <ScrollView style={[{paddingRight: 10}]}>
-        <View style={[{marginBottom: SECTION_MARGIN}]}>
-          <Text>{strings.setupWallet.saveReadOnlyWallet.checksumLabel}</Text>
+    <View style={[a.pt_xl]}>
+      <ScrollView style={[a.pr_sm]}>
+        <View style={[a.pb_xl]}>
+          <Text>{strings.setupWallet.checksumLabel}</Text>
 
           {!isEmptyString(plate.accountPlate.ImagePart) && (
             <CheckSumView
@@ -166,10 +166,8 @@ const WalletInfoView = ({normalizedPath, publicKeyHex}: WalletInfoProps) => {
           )}
         </View>
 
-        <View style={[{marginBottom: SECTION_MARGIN}]}>
-          <Text>
-            {strings.setupWallet.saveReadOnlyWallet.walletAddressLabel}
-          </Text>
+        <View style={[a.pb_xl]}>
+          <Text>{strings.setupWallet.walletAddressLabel}</Text>
 
           <FlatList
             data={plate.addresses}
@@ -180,20 +178,16 @@ const WalletInfoView = ({normalizedPath, publicKeyHex}: WalletInfoProps) => {
 
         <Line />
 
-        <View style={[{marginTop: SECTION_MARGIN}]}>
-          <Text style={[{marginBottom: LABEL_MARGIN}]}>
-            {strings.setupWallet.saveReadOnlyWallet.key}
-          </Text>
+        <View style={[a.pt_xl]}>
+          <Text style={[a.pb_sm]}>{strings.setupWallet.key}</Text>
 
-          <View style={[{padding: 4, marginBottom: 10}]}>
+          <View style={[a.p_xs, a.pb_sm]}>
             <Text secondary monospace numberOfLines={1} ellipsizeMode="middle">
               {publicKeyHex}
             </Text>
           </View>
 
-          <Text style={[{marginBottom: LABEL_MARGIN}]}>
-            {strings.setupWallet.saveReadOnlyWallet.derivationPath}
-          </Text>
+          <Text style={[a.pb_sm]}>{strings.setupWallet.derivationPath}</Text>
 
           <Text secondary monospace>
             {`m/${normalizedPath[0]}'/${normalizedPath[1]}'/${normalizedPath[2]}`}
@@ -202,39 +196,4 @@ const WalletInfoView = ({normalizedPath, publicKeyHex}: WalletInfoProps) => {
       </ScrollView>
     </View>
   )
-}
-
-const SECTION_MARGIN = 24
-const LABEL_MARGIN = 8
-
-export const usePlate = ({
-  chainId,
-  publicKeyHex,
-  implementation,
-}: {
-  chainId: number
-  publicKeyHex: string
-  implementation: Wallet.Implementation
-}) => {
-  const {data: addresses} = useSuspenseQuery({
-    queryKey: ['plate', chainId, publicKeyHex, implementation],
-    queryFn: () => {
-      const accountPlate = walletChecksum(publicKeyHex)
-      const addresses = deriveAddressFromXPub({
-        xpub: publicKeyHex,
-        chainId,
-        implementation,
-        accountPlate,
-        addressMode,
-        cardanoConfig,
-      })
-
-      return {
-        accountPlate,
-        addresses,
-      }
-    },
-  })
-
-  return addresses
 }

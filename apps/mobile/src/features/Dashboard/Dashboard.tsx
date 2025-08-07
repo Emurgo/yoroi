@@ -33,8 +33,8 @@ import {
   useBalances,
   useCreateWithdrawTx,
   useIsOnline,
-  useSync,
 } from '~/wallets/hooks'
+import {useSync} from '~/features/WalletManager/hooks/useSync'
 import {isEmptyString} from '~/wallets/utils/string'
 import {Amounts} from '~/wallets/utils/utils'
 import {EpochProgress} from './EpochProgress'
@@ -57,7 +57,7 @@ export const Dashboard = () => {
     createWithdrawalTx,
   } = useCreateWithdrawTx()
   const {wallet, meta} = useSelectedWallet()
-  const {isLoading: isSyncing, sync} = useSync(wallet)
+  const {isPending: isSyncing, sync} = useSync(wallet)
   const isOnline = useIsOnline(wallet)
   const {openModal} = useModal()
 
@@ -81,7 +81,7 @@ export const Dashboard = () => {
     () => {
       if (!isParticipatingInGovernance) {
         openModal({
-          title: governanceStrings.withdrawWarningTitle,
+          title: strings.staking.withdrawWarningTitle,
           content: (
             <WithdrawGovernanceWarningModal
               onParticipatePress={() =>
@@ -234,8 +234,8 @@ const SyncErrorBanner = ({showRefresh}: {showRefresh: boolean}) => {
       error
       text={
         showRefresh
-          ? strings.global.syncErrorBannerTextWithRefresh
-          : strings.global.syncErrorBannerTextWithoutRefresh
+          ? strings.transactions.syncErrorBannerTextWithRefresh
+          : strings.transactions.syncErrorBannerTextWithoutRefresh
       }
     />
   )
@@ -279,8 +279,6 @@ const EpochInfo = () => {
     />
   )
 }
-
-// Messages moved to centralized useStrings
 
 const Actions = (props: ViewProps) => {
   const {palette: p} = useTheme()

@@ -1,5 +1,6 @@
-import {useFocusEffect} from '@react-navigation/native'
 import {atoms as a, useTheme} from '@yoroi/theme'
+
+import {useFocusEffect} from '@react-navigation/native'
 import {LinearGradient} from 'expo-linear-gradient'
 import * as React from 'react'
 import {LayoutAnimation, Text, View} from 'react-native'
@@ -11,7 +12,8 @@ import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWalle
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Space} from '~/ui/Space/Space'
-import {useSync} from '~/wallets/hooks'
+import {useSync} from '~/features/WalletManager/hooks/useSync'
+
 import {TxList} from '../TxList/TxList'
 // import {useUtxoConsolidationBanner} from '../UtxoConsolidation/UtxoConsolidation/useUtxoConsolidationBanner'
 import {UtxoListButton} from '../UtxoList/UtxoListButton'
@@ -97,7 +99,7 @@ export const TxHistory = () => {
         <Text
           style={[a.body_1_lg_medium, {color: p.gray_900, textAlign: 'center'}]}
         >
-          {strings.title}
+          {strings.transactions.title}
         </Text>
 
         <Space.Height.xl />
@@ -108,9 +110,9 @@ export const TxHistory = () => {
 
         {meta.implementation === 'cardano-bip44' && showWarning && (
           <WarningBanner
-            title={strings.warningTitle.toUpperCase()}
+            title={strings.transactions.warningTitle.toUpperCase()}
             icon={infoIcon}
-            message={strings.warningMessage}
+            message={strings.transactions.warningMessage}
             showCloseIcon
             onRequestClose={() => {
               LayoutAnimation.configureNext(
