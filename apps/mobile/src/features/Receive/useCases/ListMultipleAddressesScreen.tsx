@@ -31,7 +31,7 @@ type AddressInfo = {
 
 export const ListMultipleAddressesScreen = () => {
   const strings = useStrings()
-  const {palette: p} = useTheme()
+  const {palette: p, atoms: at} = useTheme()
   const navigate = useNavigateTo()
   const {track} = useMetrics()
   const {wallet} = useSelectedWallet()
@@ -128,7 +128,7 @@ export const ListMultipleAddressesScreen = () => {
         style={[
           a.pt_lg,
           a.px_lg,
-          ta.bg_color_max,
+          at.bg_color_max,
           {borderColor: p.gray_200},
           {
             display: hasReachedGapLimit ? 'none' : 'flex',
