@@ -100,7 +100,7 @@ export const ListMultipleAddressesScreen = () => {
 
   return (
     <SafeAreaView
-      style={[a.flex_1, a.py_lg, {backgroundColor: p.bg_color_max}]}
+      style={[a.flex_1, a.py_lg, ta.bg_color_max]}
       edges={['left', 'right', 'bottom']}
     >
       <View style={[a.flex_1, a.px_lg]}>
