@@ -22,8 +22,6 @@ import {Icon} from '~/ui/Icon'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
-import {useCanVote} from '../RegisterCatalyst/common/hooks'
-import {InsufficientFundsModal} from '../RegisterCatalyst/common/InsufficientFundsModal'
 import {NetworkTag} from '../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {usePoolTransition} from '../Staking/Staking/PoolTransition/usePoolTransition'
 
@@ -72,17 +70,13 @@ export const Menu = () => {
       <ScrollView contentContainerStyle={[a.flex_1, a.p_lg]} bounces={false}>
         <AppSettings //
           label={strings.menu.settings}
-          onPress={() => {}}
+          onPress={navigateTo.settings}
           left={<Icon.Gear size={24} color={p.gray_600} />}
         />
 
         <Staking
           label={strings.menu.stakingCenter}
-          onPress={
-            () => {}
-
-            // navigateTo.stakingCenter
-          }
+          onPress={navigateTo.stakingCenter}
           left={<Icon.TabStaking size={24} color={p.gray_600} />}
           right={
             isPoolRetiring ? (
@@ -93,19 +87,13 @@ export const Menu = () => {
 
         <Governance
           label={strings.menu.governanceCentre}
-          onPress={
-            () => {}
-            // navigateTo.governanceCentre
-          }
+          onPress={navigateTo.governanceCentre}
           left={<Icon.Governance size={24} color={p.gray_600} />}
         />
 
         <Catalyst
           label={strings.menu.catalystVoting}
-          onPress={
-            () => {}
-            // navigateTo.catalystVoting
-          }
+          onPress={navigateTo.catalystVoting}
           left={<Icon.Catalyst size={24} color={p.gray_600} />}
         />
 
@@ -213,23 +201,23 @@ const Catalyst = ({
   onPress: () => void
 }) => {
   const strings = useStrings()
-  const {wallet} = useSelectedWallet()
-  const {sufficientFunds} = useCanVote(wallet)
+  // const {wallet} = useSelectedWallet()
+  // const {sufficientFunds} = useCanVote(wallet)
   const {openModal, closeModal} = useModal()
   const screenHeight = useWindowDimensions().height
   const modalHeight = Math.min(screenHeight * 0.8, 280)
 
   const handlePress = () => {
-    if (sufficientFunds) {
-      onPress()
-    } else {
-      openModal({
-        title: strings.menu.attention,
-        content: <InsufficientFundsModal />,
-        footer: <Button title={strings.menu.back} onPress={closeModal} />,
-        height: modalHeight,
-      })
-    }
+    // if (sufficientFunds) {
+    //   onPress()
+    // } else {
+    //   openModal({
+    //     title: strings.menu.attention,
+    //     content: <InsufficientFundsModal />,
+    //     footer: <Button title={strings.menu.back} onPress={closeModal} />,
+    //     height: modalHeight,
+    //   })
+    // }
   }
   return <Item label={label} onPress={handlePress} left={left} />
 }
