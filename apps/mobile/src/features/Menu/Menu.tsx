@@ -11,12 +11,11 @@ import {
   View,
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {usePrefetchStakingInfo} from '~/features/Dashboard/StakePoolInfos'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
-import {useWalletNavigation} from '~/kernel/navigation/hooks'
+import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {MenuRoutes} from '~/kernel/navigation/types'
 import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
@@ -25,7 +24,8 @@ import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
 import {InsufficientFundsModal} from '../RegisterCatalyst/common/InsufficientFundsModal'
 import {NetworkTag} from '../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
-import {usePoolTransition} from '../Staking/Staking/PoolTransition/usePoolTransition'
+// import {usePrefetchStakingInfo} from '~/features/Dashboard/StakePoolInfos'
+// import {usePoolTransition} from '../Staking/Staking/PoolTransition/usePoolTransition'
 
 const MenuStack = createStackNavigator<MenuRoutes>()
 
@@ -55,7 +55,7 @@ export const Menu = () => {
   const strings = useStrings()
   const {atoms: ta, palette: p} = useTheme()
   const navigateTo = useNavigateTo()
-  const {isPoolRetiring} = usePoolTransition()
+  // const {isPoolRetiring} = usePoolTransition()
   const {track} = useMetrics()
 
   useFocusEffect(
@@ -81,9 +81,10 @@ export const Menu = () => {
           onPress={navigateTo.stakingCenter}
           left={<Icon.TabStaking size={24} color={p.gray_600} />}
           right={
-            isPoolRetiring ? (
-              <Icon.Warning size={24} color={p.sys_magenta_500} />
-            ) : null
+            // isPoolRetiring ? (
+            //   <Icon.Warning size={24} color={p.sys_magenta_500} />
+            // ) :
+            null
           }
         />
 
@@ -239,18 +240,18 @@ const useNavigateTo = () => {
   } = useWalletNavigation()
   const {wallet} = useSelectedWallet()
 
-  const prefetchStakingInfo = usePrefetchStakingInfo(wallet)
+  // const prefetchStakingInfo = usePrefetchStakingInfo(wallet)
 
   return {
     catalystVoting: () => {
-      prefetchStakingInfo()
-
-      navigation.navigate('manage-wallets', {
-        screen: 'voting-registration',
-        params: {
-          screen: 'download-catalyst',
-        },
-      })
+      // prefetchStakingInfo()
+      //
+      // navigation.navigate('manage-wallets', {
+      //   screen: 'voting-registration',
+      //   params: {
+      //     screen: 'download-catalyst',
+      //   },
+      // })
     },
     stakingCenter: () => navigateToStakingDashboard(),
     settings: () => navigateToSettings(),
