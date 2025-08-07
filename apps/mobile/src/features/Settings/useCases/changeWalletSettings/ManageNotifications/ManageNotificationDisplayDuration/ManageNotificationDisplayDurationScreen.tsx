@@ -9,11 +9,11 @@ import * as React from 'react'
 import {ScrollView, Text, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Button} from '~/ui/Button/Button'
 import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingView'
 import {TextInput} from '~/ui/TextInput/TextInput'
-import {useStrings} from '~/kernel/i18n/useStrings'
 
 type ManualChoice = {
   id: 'Manual'
@@ -96,7 +96,7 @@ export const ManageNotificationDisplayDurationScreen = () => {
               },
             ]}
           >
-            {strings.description}
+            {strings.manageNotificationDisplayDuration.description}
           </Text>
 
           <View style={[a.flex_row, a.pb_xl, a.flex_wrap]}>
@@ -143,7 +143,7 @@ export const ManageNotificationDisplayDurationScreen = () => {
                 {top: -3, left: 11, paddingHorizontal: 3},
               ]}
             >
-              {strings.displayDuration}
+              {strings.manageNotificationDisplayDuration.displayDuration}
             </Text>
 
             <TextInput
@@ -174,18 +174,22 @@ export const ManageNotificationDisplayDurationScreen = () => {
                     {right: 0, top: 0},
                   ]}
                 >
-                  {strings.seconds}
+                  {strings.manageNotificationDisplayDuration.seconds}
                 </Text>
               }
               error={shouldDisplayError}
-              errorText={shouldDisplayError ? strings.inputError : undefined}
+              errorText={
+                shouldDisplayError
+                  ? strings.manageNotificationDisplayDuration.inputError
+                  : undefined
+              }
             />
           </View>
         </ScrollView>
 
         <Button
           testID="applyButton"
-          title={strings.apply}
+          title={strings.manageNotificationDisplayDuration.apply}
           disabled={isButtonDisabled}
           onPress={handleSubmit}
         />
@@ -200,19 +204,19 @@ const getLabelById = (
 ) => {
   switch (id) {
     case '2s':
-      return strings.twoSeconds
+      return strings.manageNotificationDisplayDuration.twoSeconds
     case '4s':
-      return strings.fourSeconds
+      return strings.manageNotificationDisplayDuration.fourSeconds
     case '6s':
-      return strings.sixSeconds
+      return strings.manageNotificationDisplayDuration.sixSeconds
     case '8s':
-      return strings.eightSeconds
+      return strings.manageNotificationDisplayDuration.eightSeconds
     case '10s':
-      return strings.tenSeconds
+      return strings.manageNotificationDisplayDuration.tenSeconds
     case '12s':
-      return strings.twelveSeconds
+      return strings.manageNotificationDisplayDuration.twelveSeconds
     case 'Manual':
-      return strings.manual
+      return strings.manageNotificationDisplayDuration.manual
   }
 }
 
@@ -241,6 +245,7 @@ const useConfig = () => {
   }
   return config
 }
+
 function formatNumber(displayDuration: number): string {
   // TODO: Implement this
   return '0'

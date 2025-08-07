@@ -1,7 +1,6 @@
+import {useMutation} from '@tanstack/react-query'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
-
-import {useMutation} from '@tanstack/react-query'
 import BigNumber from 'bignumber.js'
 import * as React from 'react'
 import {
@@ -17,9 +16,9 @@ import {
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useReviewTx} from '~/features/ReviewTx/common/ReviewTxProvider'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {useUnsafeParams} from '~/kernel/navigation/hooks/useUnsafeParams'
-import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
+import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
+import {useStrings} from '~/kernel/i18n/useStrings'
+import {useUnsafeParams, useWalletNavigation} from '~/kernel/navigation/hooks'
 import {SettingsStackRoutes} from '~/kernel/navigation/types'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Copiable} from '~/ui/Copiable/Copiable'
@@ -31,12 +30,10 @@ import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
 import {useSetCollateralId} from '~/wallets/cardano/utxoManager/useSetCollateralId'
 import {collateralConfig, utxosMaker} from '~/wallets/cardano/utxoManager/utxos'
+import {useBalances} from '~/wallets/hooks'
 import {RawUtxo} from '~/wallets/types/other'
 import {YoroiEntry, YoroiSignedTx} from '~/wallets/types/yoroi'
 import {Amounts, asQuantity, Quantities} from '~/wallets/utils/utils'
-
-import {useBalances} from '~/features/Portfolio/common/hooks/useBalances'
-import {useStrings} from '~/kernel/i18n/useStrings'
 import {CollateralInfoModal} from './CollateralInfoModal'
 import {createCollateralEntry} from './helpers'
 import {InitialCollateralInfoModal} from './InitialCollateralInfoModal'
@@ -44,10 +41,7 @@ import {InitialCollateralInfoModal} from './InitialCollateralInfoModal'
 export const ManageCollateralScreen = () => {
   const {atoms: ta} = useTheme()
 
-  const {
-    wallet,
-    meta: {addressMode},
-  } = useSelectedWallet()
+  const {wallet, meta: addressMode} = useWalletManager().selected!
   const {amount, collateralId, utxo} = wallet.getCollateralInfo()
   const screenHeight = useWindowDimensions().height
 
@@ -64,13 +58,14 @@ export const ManageCollateralScreen = () => {
 
   const params = useUnsafeParams<SettingsStackRoutes['manage-collateral']>()
 
-  const {mutate: createUnsignedTx, isPending: isLoadingTx} = useMutation({
+  const {mutate: createUnsignedTx, isLoading: isLoadingTx} = useMutation({
     mutationFn: (entries: YoroiEntry[]) =>
       wallet.createUnsignedTx({entries, addressMode}),
     retry: false,
+    useErrorBoundary: true,
   })
 
-  const {isPending: isLoadingCollateral, setCollateralId} =
+  const {isLoading: isLoadingCollateral, setCollateralId} =
     useSetCollateralId(wallet)
   const handleRemoveCollateral = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
