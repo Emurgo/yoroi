@@ -1,5 +1,5 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
-import React from 'react'
+import * as React from 'react'
 import {useWindowDimensions, View} from 'react-native'
 
 // @ts-ignore
@@ -7,8 +7,8 @@ import ViewTransformer from 'react-native-easy-view-transformer'
 
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {NftRoutes} from '~/kernel/navigation/types'
 import {useParams} from '~/kernel/navigation/hooks'
+import {NftRoutes} from '~/kernel/navigation/types'
 import {FadeIn} from '~/ui/FadeIn/FadeIn'
 import {MediaPreview} from '~/ui/MediaPreview/MediaPreview'
 import {isEmptyString} from '~/wallets/utils/string'

@@ -14,7 +14,6 @@ import ViewShot, {captureRef} from 'react-native-view-shot'
 
 import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
-import {CaptureShareQRCodeCard} from '../CaptureShareQRCodeCard/CaptureShareQRCodeCard'
 
 type ShareQRCodeCardProps = {
   qrContent: string
@@ -41,44 +40,35 @@ export const ShareQRCodeCard = ({
   const [isSharing, setIsSharing] = React.useState(false)
   const ref = React.useRef<ViewShot>(null)
 
-  const handleOnPressShare = () => {
-    setIsSharing(true)
+  const handleOnPressShare = async () => {
     onShare?.()
-  }
 
-  React.useEffect(() => {
-    if (isSharing) {
-      const captureAndShare = async () => {
-        await new Promise((resolve) => setTimeout(resolve, 10))
+    if (isSharing) return
 
-        const uri = await captureRef(ref, {
-          format: 'png',
-          quality: 1,
-          fileName: shareLabel,
-        })
+    setIsSharing(true)
 
-        setIsSharing(false)
-        await Share.open({
-          url: uri,
-          filename: shareLabel,
-          message: shareContent,
-        })
-      }
+    try {
+      const uri = await captureRef(ref, {
+        format: 'png',
+        quality: 0.8,
+      })
 
-      captureAndShare()
+      await Share.open({
+        url: uri,
+        message: shareContent,
+      })
+    } catch (error) {
+      // User cancelled or error occurred
+      console.log('Share cancelled or error:', error)
+    } finally {
+      setIsSharing(false)
     }
-  }, [isSharing, shareLabel, shareContent])
-
-  if (isSharing)
-    return (
-      <ViewShot style={{height: 308}} ref={ref}>
-        <CaptureShareQRCodeCard content={qrContent} />
-      </ViewShot>
-    )
+  }
 
   return (
     <TouchableWithoutFeedback onLongPress={onLongPress}>
-      <View
+      <ViewShot
+        ref={ref}
         style={[
           a.gap_lg,
           a.align_center,
@@ -134,11 +124,7 @@ export const ShareQRCodeCard = ({
           <Space.Height.md />
 
           <Text
-            style={[
-              a.text_center,
-              a.body_2_md_medium,
-              {color: p.gray_max},
-            ]}
+            style={[a.text_center, a.body_2_md_medium, {color: p.gray_max}]}
           >
             {qrContent}
           </Text>
@@ -162,7 +148,7 @@ export const ShareQRCodeCard = ({
             {shareLabel}
           </Text>
         </TouchableOpacity>
-      </View>
+      </ViewShot>
     </TouchableWithoutFeedback>
   )
 }

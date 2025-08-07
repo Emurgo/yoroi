@@ -47,7 +47,7 @@ export const AppNavigator = () => {
   const strings = useStrings()
 
   const navOptions = React.useMemo(
-    () => defaultStackNavigationOptions(a, p),
+    () => defaultStackNavigationOptions(p),
     [p],
   )
 

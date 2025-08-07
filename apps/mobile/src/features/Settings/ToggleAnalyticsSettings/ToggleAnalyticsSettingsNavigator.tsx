@@ -1,12 +1,10 @@
 import {createStackNavigator} from '@react-navigation/stack'
 import {useTheme} from '@yoroi/theme'
-import React from 'react'
+import * as React from 'react'
 
-import {
-  defaultStackNavigationOptions,
-  ToggleAnalyticsSettingsRoutes,
-} from '~/kernel/navigation'
 import {useStrings} from '~/kernel/i18n/useStrings'
+import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
+import {ToggleAnalyticsSettingsRoutes} from '~/kernel/navigation/types'
 import {ToggleAnalyticsSettingsScreen} from './ToggleAnalyticsSettingsScreen'
 
 const Stack = createStackNavigator<ToggleAnalyticsSettingsRoutes>()
@@ -17,8 +15,8 @@ export const ToggleAnalyticsSettingsNavigator = () => {
   const {atoms, palette: p} = useTheme()
 
   const navigationOptions = React.useMemo(
-    () => defaultStackNavigationOptions(atoms, p),
-    [atoms, p],
+    () => defaultStackNavigationOptions(p),
+    [p],
   )
 
   return (
@@ -30,7 +28,9 @@ export const ToggleAnalyticsSettingsNavigator = () => {
       <Stack.Screen
         name="settings"
         component={ToggleAnalyticsSettingsScreen}
-        options={{title: strings.settings.toggleAnalytics.toggleAnalyticsSettingsTitle}}
+        options={{
+          title: strings.settings.toggleAnalytics.toggleAnalyticsSettingsTitle,
+        }}
       />
     </Stack.Navigator>
   )

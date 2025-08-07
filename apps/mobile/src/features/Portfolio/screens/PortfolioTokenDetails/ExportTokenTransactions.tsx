@@ -1,13 +1,13 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
-import React from 'react'
+import * as React from 'react'
 import {TouchableOpacity} from 'react-native'
 
-import {Icon} from '~/ui/Icon'
-import {features} from '~/kernel/features'
 import {
   PortfolioDetailsTab,
   usePortfolio,
 } from '~/features/Portfolio/context/PortfolioProvider'
+import {features} from '~/kernel/features'
+import {Icon} from '~/ui/Icon'
 
 const ExportTokenTransactions = () => {
   const {atoms: ta, palette: p} = useTheme()

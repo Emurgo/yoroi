@@ -10,6 +10,9 @@ import {TouchableOpacity, View, ViewProps} from 'react-native'
 import {FlatList} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {useReviewTx} from '~/features/ReviewTx/common/ReviewTxProvider'
+import {useSearch} from '~/features/Search/SearchContext'
+import {useNavigateTo} from '~/features/Send/common/navigation'
 import {toYoroiEntry} from '~/features/Send/common/toYoroiEntry'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
@@ -25,9 +28,6 @@ import {Space} from '~/ui/Space/Space'
 import {TokenAmountItem} from '~/ui/TokenAmountItem/TokenAmountItem'
 import {useSaveMemo} from '~/wallets/hooks'
 import {YoroiEntry, YoroiSignedTx} from '~/wallets/types/yoroi'
-import {useNavigateTo} from '../../common/navigation'
-import {useReviewTx} from '../ReviewTx/common/ReviewTxProvider'
-import {useSearch} from '../Search/SearchContext'
 
 export const ListAmountsToSendScreen = () => {
   const navigateTo = useNavigateTo()
@@ -58,11 +58,10 @@ export const ListAmountsToSendScreen = () => {
   const {
     meta: {addressMode},
   } = useSelectedWallet()
-  const {mutate: createUnsignedTx, isLoading} = useMutation({
+  const {mutate: createUnsignedTx, isPending} = useMutation({
     mutationFn: (entries: YoroiEntry[]) =>
       wallet.createUnsignedTx({entries, addressMode}),
     retry: false,
-    useErrorBoundary: true,
   })
 
   React.useEffect(() => {
@@ -148,7 +147,7 @@ export const ListAmountsToSendScreen = () => {
           </Boundary>
         )}
         bounces={false}
-        keyExtractor={({info}) => info.id}
+        keyExtractor={(item) => item.info.id}
         testID="selectedTokens"
       />
 
@@ -165,7 +164,7 @@ export const ListAmountsToSendScreen = () => {
           onPress={onNext}
           title={strings.send.next}
           disabled={selectedTokensCounter === 0}
-          isLoading={isLoading}
+          isLoading={isPending}
         />
       </Actions>
     </SafeAreaView>

@@ -1,17 +1,17 @@
 import {Chain} from '@yoroi/types'
 
-import * as React from 'react'
 import {QueryClient} from '@tanstack/react-query'
-import {Text, View} from 'react-native'
 import {render, waitFor} from '@testing-library/react-native'
+import * as React from 'react'
+import {Text, View} from 'react-native'
 
-import {wrapperMaker} from '../../fixtures/wrapperMaker'
-import {tokenMocks} from '../../adapters/token.mocks'
 import {tokenInfoMocks} from '../../adapters/token-info.mocks'
-import {usePortfolioTokenInfo} from './usePortfolioTokenInfo'
-import {createUnknownTokenInfo} from '../../helpers/create-unknown-token-info'
+import {tokenMocks} from '../../adapters/token.mocks'
 import {primaryTokenId} from '../../constants'
 import {queryClientFixture} from '../../fixtures/query-client'
+import {wrapperMaker} from '../../fixtures/wrapperMaker'
+import {createUnknownTokenInfo} from '../../helpers/create-unknown-token-info'
+import {usePortfolioTokenInfo} from './usePortfolioTokenInfo'
 
 describe('usePortfolioTokenInfo', () => {
   let queryClient: QueryClient
@@ -86,7 +86,7 @@ describe('usePortfolioTokenInfo', () => {
     })
     const {getByTestId} = render(<TestComponent />, {wrapper})
 
-    expect(getByTestId('loading')).toBeDefined()
+    expect(getByTestId('suspending')).toBeDefined()
 
     await waitFor(() => {
       expect(getByTestId('data')).toBeDefined()
@@ -124,7 +124,7 @@ describe('usePortfolioTokenInfo', () => {
     })
     const {getByTestId} = render(<TestComponent />, {wrapper})
 
-    expect(getByTestId('loading')).toBeDefined()
+    expect(getByTestId('suspending')).toBeDefined()
 
     await waitFor(() => {
       expect(getByTestId('data')).toBeDefined()

@@ -1,7 +1,7 @@
 import {PoolInfoApi} from '@emurgo/yoroi-lib'
 import {useQuery, UseQueryOptions} from '@tanstack/react-query'
 import {atoms as a, useTheme} from '@yoroi/theme'
-import React from 'react'
+import * as React from 'react'
 import {ActivityIndicator, Linking, View} from 'react-native'
 
 import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'

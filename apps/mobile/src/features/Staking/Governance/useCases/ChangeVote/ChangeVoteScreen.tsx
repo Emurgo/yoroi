@@ -8,18 +8,18 @@ import {
   useVotingCertificate,
 } from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
-import React from 'react'
+import * as React from 'react'
 import {Text, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
-import {useStrings} from '~/kernel/i18n/useStrings'
 import {LearnMoreLink} from '~/features/Staking/Governance/common/LearnMoreLink/LearnMoreLink'
 import {YoroiRecordLink} from '~/features/Staking/Governance/common/YoroiRecordLink/YoroiRecordLink'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {Action} from '~/ui/Action/Action'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
 import {useCreateGovernanceTx, useStakingKey} from '~/wallets/hooks'
+import {Action} from '../../common/Action/Action'
 import {
   mapStakingKeyStateToGovernanceAction,
   useGovernanceActions,

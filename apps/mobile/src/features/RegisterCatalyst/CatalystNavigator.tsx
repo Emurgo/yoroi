@@ -1,16 +1,13 @@
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import {useTheme} from '@yoroi/theme'
-import React from 'react'
+import * as React from 'react'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {
-  defaultStackNavigationOptions,
-  useWalletNavigation,
-  VotingRegistrationRouteNavigation,
-  VotingRegistrationRoutes,
-} from '~/kernel/navigation'
+import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
+import {useWalletNavigation} from '~/kernel/navigation/hooks'
+import {VotingRegistrationRouteNavigation, VotingRegistrationRoutes} from '~/kernel/navigation/types'
 import {Boundary} from '~/ui/Boundary/Boundary'
 import {NetworkTag} from '../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {ConfirmPin} from './useCases/ConfirmPin/ConfirmPin'
@@ -31,8 +28,8 @@ export const CatalystNavigator = () => {
   )
 
   const navigationOptions = React.useMemo(
-    () => defaultStackNavigationOptions(atoms, p),
-    [atoms, p],
+    () => defaultStackNavigationOptions(p),
+    [p],
   )
 
   return (

@@ -14,8 +14,11 @@ import {
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {usePortfolioBalances} from '~/features/Portfolio/common/hooks/usePortfolioBalances'
+import {usePortfolioPrimaryBreakdown} from '~/features/Portfolio/common/hooks/usePortfolioPrimaryBreakdown'
+import {useNavigateTo} from '~/features/Send/common/navigation'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {useLanguage} from '~/kernel/i18n'
+import {useLanguage} from '~/kernel/i18n/LanguageProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 import {Button} from '~/ui/Button/Button'
@@ -23,11 +26,8 @@ import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingVi
 import {PairedBalance} from '~/ui/PairedBalance/PairedBalance'
 import {Space} from '~/ui/Space/Space'
 import {TextInput} from '~/ui/TextInput/TextInput'
+import {TokenAmountItem} from '~/ui/TokenAmountItem/TokenAmountItem'
 import {Quantities} from '~/wallets/utils/utils'
-import {useNavigateTo} from '../../common/navigation'
-import {TokenAmountItem} from '../Portfolio/common/TokenAmountItem/TokenAmountItem'
-import {usePortfolioBalances} from '../Portfolio/common/hooks/usePortfolioBalances'
-import {usePortfolioPrimaryBreakdown} from '../Portfolio/common/hooks/usePortfolioPrimaryBreakdown'
 import {NoBalance} from './ShowError/NoBalance'
 import {UnableToSpend} from './ShowError/UnableToSpend'
 
@@ -51,15 +51,24 @@ export const EditAmountScreen = () => {
   } = useTransfer()
 
   const amount = targets[selectedTargetIndex].entry.amounts[selectedTokenId]
+
+  if (!amount) {
+    // If amount is not found, navigate back to the token selection screen
+    React.useEffect(() => {
+      navigateTo.selectedTokens()
+    }, [navigateTo])
+    return null
+  }
+
   const initialQuantity = amount.quantity
   const available =
-    (balances.records.get(selectedTokenId)?.quantity ?? 0n) -
-    (allocated.get(selectedTargetIndex)?.get(selectedTokenId) ?? 0n)
+    (balances.records.get(selectedTokenId)?.quantity ?? BigInt(0)) -
+    (allocated.get(selectedTargetIndex)?.get(selectedTokenId) ?? BigInt(0))
   const isPrimary = isPrimaryToken(amount.info)
 
   const [quantity, setQuantity] = React.useState(initialQuantity)
   const [inputValue, setInputValue] = React.useState(
-    initialQuantity === 0n
+    initialQuantity === BigInt(0)
       ? ''
       : atomicBreakdown(initialQuantity, amount.info.decimals).bn.toFormat(),
   )
@@ -70,7 +79,7 @@ export const EditAmountScreen = () => {
   React.useEffect(() => {
     setQuantity(initialQuantity)
     setInputValue(
-      initialQuantity === 0n
+      initialQuantity === BigInt(0)
         ? ''
         : atomicBreakdown(initialQuantity, amount.info.decimals).bn.toFormat(),
     )
@@ -79,7 +88,7 @@ export const EditAmountScreen = () => {
   const isFocused = useIsFocused()
   React.useEffect(() => {
     return () => {
-      if (amount.quantity === 0n && !isFocused) {
+      if (amount.quantity === BigInt(0) && !isFocused) {
         InteractionManager.runAfterInteractions(() => {
           amountRemoved(selectedTokenId)
         })
@@ -90,7 +99,7 @@ export const EditAmountScreen = () => {
   const hasBalance = available >= quantity
   // primary can have locked amount
   const isUnableToSpend = isPrimary && quantity > spendable
-  const isZero = quantity === 0n
+  const isZero = quantity === BigInt(0)
 
   const handleOnChangeQuantity = React.useCallback(
     (text: string) => {
@@ -162,11 +171,11 @@ export const EditAmountScreen = () => {
               />
             )}
 
-            <Space />
+            <Space.Height.md />
 
             {!isPrimary && <MaxBalanceButton onPress={handleOnMaxBalance} />}
 
-            <Space />
+            <Space.Height.md />
 
             {!hasBalance && <NoBalance />}
 

@@ -1,6 +1,7 @@
 import {AsyncStorageProvider} from '@yoroi/common'
 import {SetupWalletProvider} from '@yoroi/setup-wallet'
 import {ThemeProvider} from '@yoroi/theme'
+import {TransferProvider} from '@yoroi/transfer'
 
 import * as Font from 'expo-font'
 import * as React from 'react'
@@ -66,11 +67,13 @@ function BusinessShell({children}: React.PropsWithChildren) {
       <SearchProvider>
         <PairingProvider currencyStorageKeyManager={currencyStorageKeyManager}>
           <WalletManagerProvider walletManager={walletManager}>
-            <SetupWalletProvider>
-              <YoroiNotificationManager>
-                <CurrencyProvider>{children}</CurrencyProvider>
-              </YoroiNotificationManager>
-            </SetupWalletProvider>
+            <TransferProvider>
+              <SetupWalletProvider>
+                <YoroiNotificationManager>
+                  <CurrencyProvider>{children}</CurrencyProvider>
+                </YoroiNotificationManager>
+              </SetupWalletProvider>
+            </TransferProvider>
           </WalletManagerProvider>
         </PairingProvider>
       </SearchProvider>

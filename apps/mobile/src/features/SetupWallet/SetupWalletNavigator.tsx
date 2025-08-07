@@ -5,7 +5,7 @@ import * as React from 'react'
 /* import {
   defaultStackNavigationOptions,
   WalletInitRoutes,
-} from '~/kernel/navigation' */
+} from '~/kernel/navigation/navigation' */
 // import {NetworkTag} from '../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {PreparingWalletScreen} from './common/PreparingWalletScreen/PreparingWalletScreen'
 import {ImportReadOnlyWalletScreen} from './legacy/ImportReadOnlyWallet/ImportReadOnlyWalletScreen'

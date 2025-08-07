@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {TextInput, TextInputProps} from '~/ui/TextInput/TextInput'

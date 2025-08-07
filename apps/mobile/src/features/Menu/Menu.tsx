@@ -2,7 +2,7 @@ import {defineMessage} from '@formatjs/intl'
 import {useFocusEffect} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import {atoms as a, useTheme} from '@yoroi/theme'
-import React from 'react'
+import * as React from 'react'
 import {
   Linking,
   ScrollView,
@@ -17,11 +17,9 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {
-  defaultStackNavigationOptions,
-  MenuRoutes,
-  useWalletNavigation,
-} from '~/kernel/navigation'
+import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
+import {MenuRoutes} from '~/kernel/navigation/types'
+import {useWalletNavigation} from '~/kernel/navigation/hooks'
 import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {useModal} from '~/ui/Modal/ModalContext'
@@ -42,7 +40,7 @@ export const MenuNavigator = () => {
     <MenuStack.Navigator
       initialRouteName="_menu"
       screenOptions={{
-        ...defaultStackNavigationOptions(ta, p),
+        ...defaultStackNavigationOptions(p),
         headerLeft: () => null,
         headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
       }}

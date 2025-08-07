@@ -2,7 +2,7 @@ import {networkConfigs} from '@yoroi/blockchains'
 import {atoms as a} from '@yoroi/theme'
 import {Chain} from '@yoroi/types'
 import {freeze} from 'immer'
-import React from 'react'
+import * as React from 'react'
 import {FlatList} from 'react-native'
 
 import {useMetrics} from '../../../../../kernel/metrics/metricsManager'

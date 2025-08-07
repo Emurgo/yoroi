@@ -1,5 +1,5 @@
 import {useTheme} from '@yoroi/theme'
-import React from 'react'
+import * as React from 'react'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {LanguagePicker} from '~/ui/LanguagePicker/LanguagePicker'

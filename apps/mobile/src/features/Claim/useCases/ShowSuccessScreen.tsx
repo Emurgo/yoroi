@@ -2,7 +2,7 @@ import {useClaim} from '@yoroi/claim'
 import {sortTokenAmountsByInfo} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {App, Claim, Portfolio} from '@yoroi/types'
-import React from 'react'
+import * as React from 'react'
 import {
   FlatList,
   Linking,

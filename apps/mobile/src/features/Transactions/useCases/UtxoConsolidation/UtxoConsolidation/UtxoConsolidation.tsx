@@ -10,7 +10,7 @@ import {ScrollView, useScrollView} from '~/ui/ScrollView/ScrollView'
 
 export const UtxoConsolidation = () => {
   const strings = useStrings()
-  const {palette: p} = useTheme()
+  const {atoms: ta, palette: p} = useTheme()
   const {isScrollBarShown, setIsScrollBarShown, scrollViewRef} = useScrollView()
   // TODO: Needs tx building with utxo selection
   const shouldShowNotice = true
@@ -29,8 +29,8 @@ export const UtxoConsolidation = () => {
             style={[a.w_full, {resizeMode: 'contain'}]}
           />
 
-          <Text style={[a.body_1_lg_regular, {color: p.gray_900}]}>
-            {strings.organizeWalletDescription}
+          <Text style={[a.body_1_lg_regular, ta.text_primary_max]}>
+            {strings.transactions.utxo.utxoConsolidationTitle}
           </Text>
 
           {shouldShowNotice && (
@@ -42,10 +42,10 @@ export const UtxoConsolidation = () => {
                 {backgroundColor: p.sys_cyan_100},
               ]}
             >
-              <Icon.Info size={20} color={p.el_gray_max} />
+              <Icon.Info size={20} color={ta.el_gray_max.color} />
 
-              <Text style={[a.body_1_lg_medium, {color: p.el_gray_medium}]}>
-                {strings.organizeWalletWarning}
+              <Text style={[a.body_1_lg_medium, ta.text_gray_medium]}>
+                {strings.transactions.utxo.utxoConsolidationWarning}
               </Text>
             </View>
           )}
@@ -58,7 +58,10 @@ export const UtxoConsolidation = () => {
           isScrollBarShown && [a.border_t, {borderTopColor: p.gray_200}],
         ]}
       >
-        <Button onPress={handleOnPress} title={strings.organizeWalletButton} />
+        <Button
+          onPress={handleOnPress}
+          title={strings.transactions.utxo.organizeWalletButton}
+        />
       </View>
     </View>
   )

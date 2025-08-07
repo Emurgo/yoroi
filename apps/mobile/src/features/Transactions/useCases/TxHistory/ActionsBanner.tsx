@@ -1,4 +1,3 @@
-import {useNavigation} from '@react-navigation/native'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Alert, GestureResponderEvent, View} from 'react-native'
@@ -12,17 +11,18 @@ import {useAddressMode} from '~/features/WalletManager/hooks/useAddressMode'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
+import {useWalletNavigation} from '~/kernel/navigation/hooks'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {Text} from '~/ui/Text/Text'
 
 export const ActionsBanner = (_props: {disabled: boolean}) => {
   const strings = useStrings()
-// TODO: REVISIT when wallet hooks are fixed
-    // const swapForm = useSwap()
+  // TODO: REVISIT when wallet hooks are fixed
+  // const swapForm = useSwap()
   // const {tokenOutId, isLoading} = useSwapConfig()
   // const disabled = props.disabled || isLoading
-  const navigateTo = useNavigateTo()
+  const navigateTo = useWalletNavigation()
   const {palette: p} = useTheme()
 
   const {isSingle, addressMode} = useAddressMode()
@@ -88,21 +88,17 @@ export const ActionsBanner = (_props: {disabled: boolean}) => {
 
   const handleOnPressReceive = () => {
     if (!isSingle) {
-      navigateTo.receiveMultipleAddresses()
+      navigateTo.navigateToReceiveMultiple()
       return
     }
 
-    if (usedAddresses.length <= 1 && isShowingMultipleAddressInfo) {
-      hideMultipleAddressesInfo({
-        onSuccess: () => {
-          selectedAddressChanged(nextReceiveAddress)
-          navigateTo.receiveSingleAddress()
-        },
-      })
+    if (isShowingMultipleAddressInfo) {
+      hideMultipleAddressesInfo()
       return
     }
+
     selectedAddressChanged(nextReceiveAddress)
-    navigateTo.receiveSingleAddress()
+    navigateTo.navigateToReceiveSingle()
   }
 
   const handleOnLongPressReceive = (event: GestureResponderEvent) => {
@@ -146,7 +142,7 @@ export const ActionsBanner = (_props: {disabled: boolean}) => {
             <Button
               type={ButtonType.Circle}
               icon={Icon.Send}
-              onPress={() => Alert.alert('Send Feature not implemented')}
+              onPress={() => navigateTo.navigateToSendStartTx()}
               testID="sendButton"
               // disabled={disabled}
             />
@@ -208,17 +204,4 @@ export const ActionsBanner = (_props: {disabled: boolean}) => {
       )}
     </View>
   )
-}
-
-const useNavigateTo = () => {
-  const navigation = useNavigation<any>()
-
-  return {
-    send: () => navigation.navigate('send-start-tx'),
-    receiveSingleAddress: () => navigation.navigate('receive-single'),
-    receiveMultipleAddresses: () => navigation.navigate('receive-multiple'),
-    swap: () => navigation.navigate('swap-main'),
-    swapPreprodNotice: () => navigation.navigate('swap-preprod-notice'),
-    exchange: () => navigation.navigate('exchange-create-order'),
-  }
 }

@@ -46,6 +46,7 @@ This document consolidates all development guidelines, migration processes, and 
 4. **Error Monitoring**:
    - Watch Metro terminal for "Unable to resolve" errors
    - Use `curl -s "http://localhost:8081/reload"` to trigger reloads
+   - For Android-specific bundle testing: `curl -s "http://localhost:8081/index.ts.bundle?platform=android&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.routerRoot=app&unstable_transformProfile=hermes-stable"`
    - Fix errors systematically: Fix → Reload → Check next error
 
 ### Reference Previous Working Version
@@ -741,7 +742,7 @@ This pattern can be replicated for migrating components from `wallet-mobile` or 
 - **Image assets**: Use relative paths, not `~` alias
 - **Components**: Use absolute paths with `~/` prefix
 - **Tabs component**: Use `~/ui/Tabs` (migrated from wallet-mobile)
-- **Navigation**: Use `~/kernel/navigation/navigation` not `~/kernel/navigation`
+- **Navigation**: Use `~/kernel/navigation` not `~/kernel/navigation`
 - **Strings**: Use `~/features/Transactions/common/strings` not `~/features/Transactions/common/useStrings`
 
 ### Debugging Instructions
@@ -875,6 +876,7 @@ git checkout fix/wallet-navigation-and-functionality
 8. **Document new issues** in conflicts.md when found
 9. **Use themed atoms for common theme-dependent styles** like `ta.bg_color_max`, `ta.text_primary_max`, `ta.el_primary_max` instead of `{backgroundColor: p.bg_color_max}`, `{color: p.text_primary_max}`, etc.
 10. **Only use direct palette access** when no equivalent themed atom exists
+11. **Do not create index.ts files** - import directly from the source files instead of creating barrel exports
 
 ## 🔄 Migration Checklist
 
@@ -888,3 +890,4 @@ git checkout fix/wallet-navigation-and-functionality
 - [ ] Clear Metro cache and restart development server
 - [ ] Check conflicts.md for known issues
 - [ ] Document any new conflicts found
+- [ ] Remove any new index.ts files and update imports to use direct file paths

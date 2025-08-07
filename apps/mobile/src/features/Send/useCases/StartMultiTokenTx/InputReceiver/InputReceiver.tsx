@@ -1,12 +1,12 @@
 import {useTheme} from '@yoroi/theme'
-import React from 'react'
+import * as React from 'react'
 import {ActivityIndicator, TextInput as RNTextInput, Text} from 'react-native'
 
+import {useNavigateTo} from '~/features/Send/common/navigation'
 import {ScannerButton} from '~/features/Send/common/ScannerButton'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Icon} from '~/ui/Icon'
 import {TextInput, TextInputProps} from '~/ui/TextInput/TextInput'
-import {useNavigateTo} from '../../common/navigation'
 import {ShowResolvedAddressSelected} from './ShowResolvedAddressSelected'
 
 export const InputReceiver = React.forwardRef(

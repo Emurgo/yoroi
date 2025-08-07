@@ -2,17 +2,17 @@ import {isNameServer, nameServerName} from '@yoroi/resolver'
 import {useTransfer} from '@yoroi/transfer'
 import {Resolver} from '@yoroi/types'
 import * as React from 'react'
-import {ReactNode} from 'react'
 import {Animated} from 'react-native'
 
+import {ButtonGroup} from '~/features/Send/common/ButtonGroup/ButtonGroup'
+import {useBold} from '~/hooks/useBold'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {ButtonGroup} from '~/ui/ButtonGroup/ButtonGroup'
 import {Space} from '~/ui/Space/Space'
-import {Text} from '~/ui/Text/Text'
 import {WarningBanner} from '~/ui/WarningBanner/WarningBanner'
 
 export const SelectNameServer = () => {
   const strings = useStrings()
+  const bold = useBold()
   const {targets, selectedTargetIndex, nameServerSelectedChanged} =
     useTransfer()
   const receiver = targets[selectedTargetIndex].receiver
@@ -85,9 +85,3 @@ const toAddressRecordsEntries = (
     },
     [] as [Resolver.NameServer, string][],
   )
-
-const bold = {
-  b: (text: ReactNode) => (
-    <Text style={{fontWeight: '500', fontFamily: 'Rubik-Medium'}}>{text}</Text>
-  ),
-}

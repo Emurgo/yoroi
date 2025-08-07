@@ -15,8 +15,8 @@ import {
   View,
 } from 'react-native'
 
-import {compareArrays} from '~/wallets/utils/utils'
 import {Icon} from '~/ui/Icon'
+import {compareArrays} from '~/wallets/utils/utils'
 
 import {
   AppRoutes,
@@ -26,8 +26,7 @@ import {
 } from '../types'
 
 export const defaultStackNavigationOptions = (
-  atoms: typeof a,
-  color: ThemedPalette,
+  palette: ThemedPalette,
 ): StackNavigationOptions => {
   const width = Dimensions.get('window').width
   return {
@@ -35,38 +34,38 @@ export const defaultStackNavigationOptions = (
     detachPreviousScreen:
       false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
     cardStyle: {
-      backgroundColor: color.bg_color_max,
+      backgroundColor: palette.bg_color_max,
     },
     cardOverlay: () => (
       <View
         style={{
-          flex: 1,
-          backgroundColor: color.bg_color_max,
+          ...a.flex_1,
+          backgroundColor: palette.bg_color_max,
         }}
       />
     ),
-    headerTintColor: color.gray_max,
+    headerTintColor: palette.gray_max,
     headerStyle: {
       elevation: 0,
       shadowOpacity: 0,
-      backgroundColor: color.bg_color_max,
+      backgroundColor: palette.bg_color_max,
     },
     headerTitleStyle: {
-      ...atoms.body_1_lg_medium,
+      ...a.body_1_lg_medium,
+      ...a.text_center,
       width: width - 75,
-      textAlign: 'center',
     },
     headerTitleAlign: 'center',
     headerTitleContainerStyle: {
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center',
+      ...a.flex_1,
+      ...a.align_center,
+      ...a.justify_center,
     },
     headerLeftContainerStyle: {
-      ...atoms.pl_sm,
+      ...a.pl_sm,
     },
     headerRightContainerStyle: {
-      ...atoms.pr_sm,
+      ...a.pr_sm,
     },
     headerLeft: (props) => <BackButton {...props} />,
   }
@@ -74,7 +73,6 @@ export const defaultStackNavigationOptions = (
 
 // NAVIGATOR TOP TABS OPTIONS
 export const defaultMaterialTopTabNavigationOptions = (
-  atoms: typeof a,
   color: ThemedPalette,
 ): MaterialTopTabNavigationOptions => {
   return {
@@ -82,12 +80,13 @@ export const defaultMaterialTopTabNavigationOptions = (
       backgroundColor: color.bg_color_max,
       elevation: 0,
       shadowOpacity: 0,
-      marginHorizontal: 16,
+      ...a.pt_lg,
+      ...a.pb_lg,
     },
     tabBarIndicatorStyle: {backgroundColor: color.primary_600, height: 2},
     tabBarLabelStyle: {
       textTransform: 'none',
-      ...atoms.body_1_lg_medium,
+      ...a.body_1_lg_medium,
     },
     tabBarActiveTintColor: color.primary_600,
     tabBarInactiveTintColor: color.gray_600,
@@ -131,7 +130,9 @@ const getFocusedRouteName = (
   return [name]
 }
 
-export const getCurrentRouteName = (state: NavigationState): string | undefined => {
+export const getCurrentRouteName = (
+  state: NavigationState,
+): string | undefined => {
   return state.routes[state.index]?.name
 }
 
@@ -168,11 +169,11 @@ export const isTxHistoryRoute = (
 }
 
 export const BackButton = (props: TouchableOpacityProps & {color?: string}) => {
-  const {palette} = useTheme()
+  const {palette: p} = useTheme()
 
   return (
     <TouchableOpacity {...props} testID="buttonBack2">
-      <Icon.Chevron direction="left" color={props.color ?? palette.gray_max} />
+      <Icon.Chevron direction="left" color={props.color ?? p.gray_max} />
     </TouchableOpacity>
   )
 }

@@ -6,16 +6,17 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {ViewProps} from 'react-native-svg/lib/typescript/fabric/utils'
 
 import {YoroiZendeskLink} from '~/features/SetupWallet/common/constants'
+import {useBold} from '~/hooks/useBold'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Button} from '~/ui/Button/Button'
 import {CardAboutPhrase} from '~/ui/CardAboutPhrase/CardAboutPhrase'
 import {LearnMoreButton} from '~/ui/LearnMoreButton/LearnMoreButton'
 import {Space} from '~/ui/Space/Space'
 import {StepperProgress} from '~/ui/StepperProgress/StepperProgress'
-import {useStrings} from '~/kernel/i18n/useStrings'
 
 export const AboutRecoveryPhraseScreen = () => {
-  const bold = useBold()
+  const bold = useBold({style: a.body_1_lg_medium})
   const strings = useStrings()
   const navigation = useNavigation<any>()
   const {track} = useMetrics()
@@ -85,11 +86,3 @@ export const AboutRecoveryPhraseScreen = () => {
 const Actions = ({style, ...props}: ViewProps) => (
   <View style={style} {...props} />
 )
-
-const useBold = () => {
-  return {
-    b: (text: React.ReactNode) => (
-      <Text style={a.body_1_lg_medium}>{text}</Text>
-    ),
-  }
-}

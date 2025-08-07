@@ -6,13 +6,13 @@ import {ScrollView, Text, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useSwap} from '~/features/Swap/common/useSwap'
-import {useLanguage} from '~/kernel/i18n'
+import {useLanguage} from '~/kernel/i18n/LanguageProvider'
 import {NumberLocale} from '~/kernel/i18n/languages'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView'
 import {SettingsSwitch} from '~/ui/SettingsSwitch/SettingsSwitch'
-import {TextInput} from '~/ui/TextInput'
+import {TextInput} from '~/ui/TextInput/TextInput'
 import {Quantities} from '~/wallets/utils/utils'
 
 type CustomChoice = {

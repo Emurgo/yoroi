@@ -21,7 +21,7 @@ export const AgreementChangedNavigator = () => {
     <Stack.Navigator
       initialRouteName="terms-of-service-changed"
       screenOptions={{
-        ...defaultStackNavigationOptions(a, p),
+        ...defaultStackNavigationOptions(p),
       }}
     >
       <Stack.Screen

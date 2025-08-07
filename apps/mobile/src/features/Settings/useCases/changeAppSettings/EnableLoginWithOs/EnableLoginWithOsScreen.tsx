@@ -1,10 +1,10 @@
 import {useNavigation} from '@react-navigation/native'
-import React from 'react'
+import * as React from 'react'
 
-import {useStrings} from '~/kernel/i18n/useStrings'
-import {Button, ButtonType} from '~/ui/Button/Button'
 import {useEnableAuthWithOs} from '~/features/Auth/hooks/useEnableAuthWithOS'
 import {OsAuthScreen} from '~/features/Auth/ui/screens/OsAuthScreen'
+import {useStrings} from '~/kernel/i18n/useStrings'
+import {Button, ButtonType} from '~/ui/Button/Button'
 
 export const EnableLoginWithOsScreen = () => {
   const strings = useStrings()
@@ -17,7 +17,10 @@ export const EnableLoginWithOsScreen = () => {
   return (
     <OsAuthScreen
       headings={[strings.settings.enableLoginWithOs.heading]}
-      subHeadings={[strings.settings.enableLoginWithOs.subHeading1, strings.settings.enableLoginWithOs.subHeading2]}
+      subHeadings={[
+        strings.settings.enableLoginWithOs.subHeading1,
+        strings.settings.enableLoginWithOs.subHeading2,
+      ]}
       buttons={[
         <Button
           key="cancel"

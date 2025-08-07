@@ -5,7 +5,7 @@ import {
   Notifications as YoroiNotifications,
 } from '@yoroi/types'
 import * as Notifications from 'expo-notifications'
-import React from 'react'
+import * as React from 'react'
 import {Notifications as RNNotifications} from 'react-native-notifications'
 
 import {logger} from '~/kernel/logger/logger'

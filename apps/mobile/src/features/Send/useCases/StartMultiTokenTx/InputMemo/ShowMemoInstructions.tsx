@@ -1,7 +1,7 @@
 import * as React from 'react'
 import {View} from 'react-native'
 
-import {memoMaxLenght} from '~/features/SetupWallet/common/constants'
+import {memoMaxLenght} from '~/features/Send/common/constants'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {HelperText} from '~/ui/TextInput/TextInput'
 

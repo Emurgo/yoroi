@@ -1,16 +1,14 @@
 import {createStackNavigator} from '@react-navigation/stack'
 import {GovernanceProvider} from '@yoroi/staking'
 import {useTheme} from '@yoroi/theme'
-import React from 'react'
+import * as React from 'react'
 
 import {NetworkTag} from '~/features/Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {useGovernanceManagerMaker} from '~/features/Staking/Governance/common/helpers'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {
-  DashboardRoutes,
-  defaultStackNavigationOptions,
-} from '~/kernel/navigation'
+import {DashboardRoutes} from '~/kernel/navigation/types'
+import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
 import {StakingCenter} from '../Staking/StakingCenter'
 import {Dashboard} from './Dashboard'
 import {FailedTxScreen} from './ShowFailedTxScreen/FailedTxScreen'
@@ -28,7 +26,7 @@ export const DashboardNavigator = () => {
     <GovernanceProvider manager={manager}>
       <Stack.Navigator
         screenOptions={{
-          ...defaultStackNavigationOptions(atoms, p.color),
+          ...defaultStackNavigationOptions(p.color),
           title: strings.dashboard.stakingCenterTitle,
           headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
         }}

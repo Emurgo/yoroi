@@ -1,11 +1,11 @@
 import {useNavigation} from '@react-navigation/native'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Chain} from '@yoroi/types'
-import React from 'react'
+import * as React from 'react'
 import {Linking, Text, View} from 'react-native'
 
-import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {LearnMoreLink} from '~/features/Staking/Governance/common/LearnMoreLink/LearnMoreLink'
+import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {TxHistoryRouteNavigation} from '~/kernel/navigation/types'
 import {Button} from '~/ui/Button/Button'

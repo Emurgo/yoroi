@@ -16,13 +16,12 @@ import {Text, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
 import {GovernanceVote} from '@yoroi/types'
-import {useStrings} from '~/kernel/i18n/useStrings'
 import {formatDrepHashToCIP129Format} from '~/features/Staking/Governance/common/drep'
 import {LearnMoreLink} from '~/features/Staking/Governance/common/LearnMoreLink/LearnMoreLink'
 import {YoroiRecordLink} from '~/features/Staking/Governance/common/YoroiRecordLink/YoroiRecordLink'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {Action} from '~/ui/Action/Action'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
 import {
@@ -32,6 +31,7 @@ import {
   useWalletEvent,
 } from '~/wallets/hooks'
 import {TransactionInfo} from '~/wallets/types/other'
+import {Action} from '../../common/Action/Action'
 import {
   mapStakingKeyStateToGovernanceAction,
   useGovernanceActions,

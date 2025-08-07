@@ -1,5 +1,5 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
-import React from 'react'
+import * as React from 'react'
 import {Alert, View} from 'react-native'
 
 import {useStrings} from '~/kernel/i18n/useStrings'

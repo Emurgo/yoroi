@@ -22,9 +22,11 @@ import {YoroiZendeskLink} from '~/features/SetupWallet/common/constants'
 import {parseWalletMeta} from '~/features/WalletManager/common/validators/wallet-meta'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useCreateWalletMnemonic} from '~/features/WalletManager/hooks/useCreateWalletMnemonic'
+import {useBold} from '~/hooks/useBold'
 import {showErrorDialog} from '~/kernel/dialogs'
 import {debugWalletInfo, features} from '~/kernel/features'
-import { useStrings } from '~/kernel/i18n/useStrings'
+import {errorMessages} from '~/kernel/i18n/messages/global'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Button} from '~/ui/Button/Button'
@@ -44,7 +46,6 @@ import {
   validatePassword,
   validateWalletName,
 } from '~/wallets/utils/validators'
-import {errorMessages} from '~/kernel/i18n/messages/global'
 
 const useSizeModal = () => {
   const HEIGHT_SCREEN = useWindowDimensions().height
@@ -77,7 +78,7 @@ export const WalletDetailsScreen = () => {
   const strings = useStrings()
   const {palette: p} = useTheme()
   const {track} = useMetrics()
-  const bold = useBold()
+  const bold = useBold({style: a.body_1_lg_medium})
   const {HEIGHT_MODAL_NAME_PASSWORD, HEIGHT_MODAL_CHECKSUM} = useSizeModal()
   const {openModal, closeModal} = useModal()
   const {walletManager} = useWalletManager()
@@ -285,7 +286,10 @@ export const WalletDetailsScreen = () => {
             }}
           />
 
-          <Button title={strings.setupWallet.continueButton} onPress={closeModal} />
+          <Button
+            title={strings.setupWallet.continueButton}
+            onPress={closeModal}
+          />
         </View>
       ),
       height: HEIGHT_MODAL_CHECKSUM,
@@ -427,12 +431,4 @@ const Info = ({onPress}: {onPress: () => void}) => {
 
 const Actions = ({style, ...props}: ViewProps) => {
   return <View style={style} {...props} />
-}
-
-const useBold = () => {
-  return {
-    b: (text: React.ReactNode) => (
-      <Text style={a.body_1_lg_medium}>{text}</Text>
-    ),
-  }
 }

@@ -11,7 +11,7 @@ import {
   useMutationWithInvalidations,
 } from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
-import React from 'react'
+import * as React from 'react'
 import {Platform, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 

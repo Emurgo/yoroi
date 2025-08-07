@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react'
 
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
