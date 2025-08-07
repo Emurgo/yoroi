@@ -31,7 +31,7 @@ type AddressInfo = {
 
 export const ListMultipleAddressesScreen = () => {
   const strings = useStrings()
-  const {palette: p, atoms: at} = useTheme()
+  const {palette: p, atoms: ta} = useTheme()
   const navigate = useNavigateTo()
   const {track} = useMetrics()
   const {wallet} = useSelectedWallet()
