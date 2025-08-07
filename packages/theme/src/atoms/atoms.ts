@@ -353,6 +353,9 @@ export const atoms = {
   rounded_md: {
     borderRadius: tokens.borderRadius.md,
   },
+  rounded_lg: {
+    borderRadius: 16,
+  },
   rounded_full: {
     borderRadius: tokens.borderRadius.full,
   },
