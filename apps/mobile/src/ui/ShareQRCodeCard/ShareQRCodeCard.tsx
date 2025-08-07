@@ -135,7 +135,7 @@ export const ShareQRCodeCard = ({
 
           <Text
             style={[
-              {textAlign: 'center'},
+              a.text_center,
               a.body_2_md_medium,
               {color: p.gray_max},
             ]}
