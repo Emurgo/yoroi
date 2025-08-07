@@ -1,6 +1,6 @@
-import {Platform, StyleProp, ViewStyle} from 'react-native'
+import { Platform, StyleProp, ViewStyle } from 'react-native'
 
-import {fontSize, lineHeight, tokens} from '../tokens/tokens'
+import { fontSize, lineHeight, tokens } from '../tokens/tokens'
 
 // to build typography
 const fontFamily = {
@@ -354,7 +354,7 @@ export const atoms = {
     borderRadius: tokens.borderRadius.md,
   },
   rounded_lg: {
-    borderRadius: 16,
+    borderRadius: tokens.borderRadius.lg,
   },
   rounded_full: {
     borderRadius: tokens.borderRadius.full,
