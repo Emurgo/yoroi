@@ -3,10 +3,9 @@ import {isTokenInfo as isPortfolioTokenInfo} from '@yoroi/portfolio'
 import {Balance, Portfolio} from '@yoroi/types'
 import {BigNumber} from 'bignumber.js'
 import type {FormatDateOptions, IntlShape} from 'react-intl'
-import {defineMessages} from 'react-intl'
 
-import {DefaultAsset, Token} from '@yoroi/types'
 import {isTokenInfo} from '../cardano/utils'
+import {DefaultAsset, Token} from '../types/tokens'
 
 export const getTokenFingerprint = ({
   policyId,
@@ -252,11 +251,20 @@ export const formatDateRelative = (
   const yesterday = getYesterday()
 
   if (inputDateString === today) {
-    return strings?.today ?? intl.formatMessage({id: 'global.today', defaultMessage: '!!!Today'})
+    return (
+      strings?.today ??
+      intl.formatMessage({id: 'global.today', defaultMessage: '!!!Today'})
+    )
   }
 
   if (inputDateString === yesterday) {
-    return strings?.yesterday ?? intl.formatMessage({id: 'global.yesterday', defaultMessage: '!!!Yesterday'})
+    return (
+      strings?.yesterday ??
+      intl.formatMessage({
+        id: 'global.yesterday',
+        defaultMessage: '!!!Yesterday',
+      })
+    )
   }
 
   return intl.formatDate(new Date(timestamp), opts)

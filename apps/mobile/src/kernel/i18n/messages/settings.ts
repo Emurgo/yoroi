@@ -75,7 +75,7 @@ export const settingsMessages = defineMessages({
     defaultMessage: '!!!Wallet',
   },
   appTabTitle: {
-    id: 'api.error.unknown',
+    id: 'components.settings.applicationsettingsscreen.tabTitle',
     defaultMessage: '!!!App',
   },
   notifications: {

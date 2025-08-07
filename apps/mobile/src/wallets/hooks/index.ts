@@ -12,13 +12,7 @@ import {
   UseQueryOptions,
 } from '@tanstack/react-query'
 import {cardanoConfig} from '@yoroi/blockchains'
-import {
-  mountMMKVStorage,
-  observableStorageMaker,
-  parseBoolean,
-  useMutationWithInvalidations,
-} from '@yoroi/common'
-import {themeStorageMaker} from '@yoroi/theme'
+import {parseBoolean, useMutationWithInvalidations} from '@yoroi/common'
 import {App, Balance, HW, Wallet} from '@yoroi/types'
 import {Buffer} from 'buffer'
 import * as React from 'react'
@@ -29,6 +23,7 @@ import {useSelectedNetwork} from '../../features/WalletManager/hooks/useSelected
 import {useSelectedWallet} from '../../features/WalletManager/hooks/useSelectedWallet'
 import {isDev, isNightly} from '../../kernel/constants'
 import {logger} from '../../kernel/logger/logger'
+import {themeStorageKeyManager} from '../../kernel/storage/storages'
 import {deriveAddressFromXPub} from '../cardano/account-manager/derive-address-from-xpub'
 import {WalletEvent, YoroiWallet} from '../cardano/types'
 
@@ -52,7 +47,6 @@ export const getCrashReportsEnabled = async (
 
 const useCrashReportsEnabled = (storage: AsyncStorageStatic = AsyncStorage) => {
   const query = useQuery({
-    suspense: true,
     queryKey: [crashReportsStorageKey],
     queryFn: () => getCrashReportsEnabled(storage),
     enabled: !isNightly && !isDev,
@@ -66,7 +60,6 @@ const useSetCrashReportsEnabled = (
   storage: AsyncStorageStatic = AsyncStorage,
 ) => {
   const mutation = useMutationWithInvalidations<void, Error, boolean>({
-    useErrorBoundary: true,
     mutationFn: async (enabled) => {
       if (enabled) {
         logger.enable()
@@ -138,7 +131,6 @@ export const useStakingKey = (wallet: YoroiWallet) => {
   const result = useQuery({
     queryKey: [wallet.id, 'stakingKey'],
     queryFn: getPublicKeyHex,
-    suspense: true,
   })
   if (!result.data) throw new Error('invalid state')
   return result.data
@@ -170,7 +162,6 @@ export const usePlate = ({
 }) => {
   const implementationConfig = cardanoConfig.implementations[implementation]
   const query = useQuery({
-    suspense: true,
     queryKey: ['plate', chainId, publicKeyHex],
     queryFn: async () => {
       const addresses = await deriveAddressFromXPub({
@@ -196,7 +187,7 @@ export const usePlate = ({
 export const useCreateWithdrawTx = () => {
   const {wallet, meta} = useSelectedWallet()
   const [isLoading, setIsLoading] = React.useState(false)
-  const {stakingInfo} = useStakingInfo(wallet, {suspense: true})
+  const {stakingInfo} = useStakingInfo(wallet)
 
   const hasRewards =
     stakingInfo?.status === 'staked' //
@@ -256,21 +247,25 @@ export const useVotingRegTx = (
   const query = useQuery({
     ...options,
     retry: false,
-    cacheTime: 0,
-    suspense: true,
     queryKey: [
       catalystKeyHex,
       wallet.id,
       'voting-reg-tx',
       JSON.stringify({supportsCIP36}),
     ],
-    queryFn: () =>
-      wallet.createVotingRegTx({catalystKeyHex, supportsCIP36, addressMode}),
+    queryFn: async () => {
+      const votingRegTx = await wallet.createVotingRegTx({
+        catalystKeyHex,
+        supportsCIP36,
+        addressMode,
+      })
+      return {votingRegTx}
+    },
   })
 
   if (!query.data) throw new Error('invalid state')
 
-  return query.data.votingRegTx
+  return query.data
 }
 
 export const useSignWithPasswordAndSubmitTx = (
@@ -662,12 +657,7 @@ export const useCreateGovernanceTx = (
 }
 
 export const useThemeStorageMaker = () => {
-  const themeDiscovery = mountMMKVStorage<string>({path: `theme/`})
-  const themeDiscoveryStorage = observableStorageMaker(themeDiscovery)
-
-  const themeStorage = themeStorageMaker({storage: themeDiscoveryStorage})
-
-  return themeStorage
+  return themeStorageKeyManager
 }
 
 export const usePoolInfo = ({poolId}: {poolId: string}): FullPoolInfo => {

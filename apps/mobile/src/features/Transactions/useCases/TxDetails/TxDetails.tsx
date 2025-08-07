@@ -3,6 +3,7 @@ import {isNonNullable} from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {fromPairs} from 'lodash'
 import React, {useState} from 'react'
+import {useIntl} from 'react-intl'
 import {
   LayoutAnimation,
   Linking,
@@ -40,6 +41,7 @@ export const TxDetails = () => {
   const screenHeight = useWindowDimensions().height
   const modalHeight = Math.min(screenHeight * 0.8, 650) // to include derivation path in case it is possible
   const strings = useStrings()
+  const intl = useIntl()
   const {atoms: ta, palette: p} = useTheme()
   const {id} = useRoute().params as Params
   const {wallet} = useSelectedWallet()
@@ -59,7 +61,7 @@ export const TxDetails = () => {
   const memo = !isEmptyString(transaction.memo) ? transaction.memo : '-'
 
   const submittedAt = isNonNullable(transaction.submittedAt)
-    ? formatDateAndTime(transaction.submittedAt)
+    ? formatDateAndTime(transaction.submittedAt, intl)
     : ''
 
   const {fromFiltered, toFiltered, cntOmittedTo} = getShownAddresses(
@@ -87,7 +89,7 @@ export const TxDetails = () => {
 
   const openAddressModal = (address: string) =>
     openModal({
-      title: strings.addessModalTitle,
+      title: strings.transactions.addessModalTitle,
       content: <AddressModal address={address} />,
       height: modalHeight,
     })
@@ -98,7 +100,9 @@ export const TxDetails = () => {
     >
       <FadeIn style={a.flex_1}>
         <ScrollView contentContainerStyle={a.px_lg}>
-          <Banner label={strings.direction(transaction.direction)}>
+          <Banner
+            label={strings.transactions.direction(transaction.direction as any)}
+          >
             <Boundary>
               <AdaAmount amount={amount} />
 
@@ -106,14 +110,14 @@ export const TxDetails = () => {
             </Boundary>
           </Banner>
 
-          <Label>{strings.memo}</Label>
+          <Label>{strings.transactions.memo}</Label>
 
           <Text>{memo}</Text>
 
           <View style={[{borderTopWidth: 1, borderColor: p.gray_200}]}>
             <Text style={[a.pt_lg, a.self_center]}>{submittedAt}</Text>
 
-            <Label>{strings.fromAddresses}</Label>
+            <Label>{strings.transactions.fromAddresses}</Label>
           </View>
 
           {fromFiltered.map((item) => (
@@ -134,7 +138,7 @@ export const TxDetails = () => {
                 >
                   <Text
                     style={[{color: p.gray_900}, a.body_2_md_regular]}
-                  >{` -${item.assets.length} ${strings.assetsLabel} `}</Text>
+                  >{` -${item.assets.length} ${strings.transactions.assetsLabel} `}</Text>
 
                   <Icon.Chevron
                     direction={expandedInItemId === item.id ? 'up' : 'down'}
@@ -152,7 +156,7 @@ export const TxDetails = () => {
           ))}
 
           <View style={[{borderTopWidth: 1, borderColor: p.gray_200}]}>
-            <Label>{strings.toAddresses}</Label>
+            <Label>{strings.transactions.toAddresses}</Label>
           </View>
 
           {toFiltered.map((item) => (
@@ -173,7 +177,7 @@ export const TxDetails = () => {
                 >
                   <Text
                     style={[{color: p.gray_900}, a.body_2_md_regular]}
-                  >{` +${item.assets.length} ${strings.assetsLabel} `}</Text>
+                  >{` +${item.assets.length} ${strings.transactions.assetsLabel} `}</Text>
 
                   <Icon.Chevron
                     direction={expandedOutItemId === item.id ? 'up' : 'down'}
@@ -191,18 +195,18 @@ export const TxDetails = () => {
           ))}
 
           {cntOmittedTo > 0 && (
-            <Text>{strings.omittedCount(cntOmittedTo)}</Text>
+            <Text>{strings.transactions.omittedCount(cntOmittedTo)}</Text>
           )}
 
           <View style={[{borderTopWidth: 1, borderColor: p.gray_200}]}>
-            <Label>{strings.txAssuranceLevel}</Label>
+            <Label>{strings.transactions.txAssuranceLevel}</Label>
           </View>
 
           {/* <Boundary loading={{size: 'small'}}>
             <Confirmations transaction={transaction} />
           </Boundary> */}
 
-          <Label>{strings.transactionId}</Label>
+          <Label>{strings.transactions.transactionId}</Label>
 
           <Copiable title={transaction.id} text={transaction.id} />
         </ScrollView>
@@ -212,7 +216,7 @@ export const TxDetails = () => {
             onPress={() =>
               Linking.openURL(explorers.cardanoscan.tx(transaction.id))
             }
-            title={strings.openInExplorer}
+            title={strings.transactions.openInExplorer}
           />
         </Actions>
       </FadeIn>
@@ -262,7 +266,7 @@ const Fee = ({amount}: {amount: BigNumber}) => {
   const strings = useStrings()
   const {wallet} = useSelectedWallet()
 
-  const text = `${strings.txDetailsFee} ${formatTokenWithSymbol(asQuantity(amount), wallet.portfolioPrimaryTokenInfo)}`
+  const text = `${strings.transactions.txDetailsFee} ${formatTokenWithSymbol(asQuantity(amount), wallet.portfolioPrimaryTokenInfo)}`
   return <Text>{text}</Text>
 }
 
