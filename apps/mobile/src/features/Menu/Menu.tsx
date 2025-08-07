@@ -1,11 +1,21 @@
+import {useFocusEffect} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {ScrollView, TouchableOpacity, useWindowDimensions} from 'react-native'
+import {
+  Linking,
+  ScrollView,
+  TouchableOpacity,
+  useWindowDimensions,
+  View,
+} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
+import {usePrefetchStakingInfo} from '~/features/Dashboard/StakePoolInfos'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
+import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
+import {useWalletNavigation} from '~/kernel/navigation/hooks'
 import {MenuRoutes} from '~/kernel/navigation/types'
 import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
@@ -27,7 +37,7 @@ export const MenuNavigator = () => {
     <MenuStack.Navigator
       initialRouteName="_menu"
       screenOptions={{
-        ...defaultStackNavigationOptions(a, p),
+        ...defaultStackNavigationOptions(p),
         headerLeft: () => null,
         headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
       }}
