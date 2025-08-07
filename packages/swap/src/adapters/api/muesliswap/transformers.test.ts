@@ -114,6 +114,34 @@ describe('transformers', () => {
         api.results.quoteNoOut,
       )
     })
+
+    test('should handle undefined blockedProtocols', () => {
+      const result = transformers.quote.request({
+        slippage: 0.01,
+        tokenIn: '.',
+        tokenOut:
+          'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950',
+        amountIn: 10,
+        protocol: undefined,
+        blockedProtocols: undefined,
+      })
+
+      expect(result.excluded_sources).toEqual([])
+    })
+
+    test('should handle null blockedProtocols', () => {
+      const result = transformers.quote.request({
+        slippage: 0.01,
+        tokenIn: '.',
+        tokenOut:
+          'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950',
+        amountIn: 10,
+        protocol: undefined,
+        blockedProtocols: null as any,
+      })
+
+      expect(result.excluded_sources).toEqual([])
+    })
   })
 
   describe('quoteLimit', () => {
@@ -142,6 +170,34 @@ describe('transformers', () => {
       expect(transformers.create.response(api.responses.create)).toEqual(
         api.results.create,
       )
+    })
+
+    test('should handle undefined blockedProtocols in create', () => {
+      const result = transformers.create.request({
+        slippage: 0.01,
+        tokenIn: '.',
+        tokenOut:
+          'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950',
+        amountIn: 10,
+        protocol: undefined,
+        blockedProtocols: undefined,
+      })
+
+      expect(result.excluded_sources).toEqual([])
+    })
+
+    test('should handle null blockedProtocols in create', () => {
+      const result = transformers.create.request({
+        slippage: 0.01,
+        tokenIn: '.',
+        tokenOut:
+          'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950',
+        amountIn: 10,
+        protocol: undefined,
+        blockedProtocols: null as any,
+      })
+
+      expect(result.excluded_sources).toEqual([])
     })
   })
 
@@ -205,6 +261,14 @@ describe('transformers', () => {
       ${'new-protocol'}               | ${Dex.Unsupported}
     `('should map $protocol to $dex', ({protocol, dex}) => {
       expect(fromSwapProtocol(protocol)).toBe(dex)
+    })
+
+    it('should return Dex.Unsupported for Cswap protocol', () => {
+      expect(fromSwapProtocol(Swap.Protocol.Cswap)).toBe(Dex.Unsupported)
+    })
+
+    it('should return Dex.Unsupported for Splash_v1 protocol', () => {
+      expect(fromSwapProtocol(Swap.Protocol.Splash_v1)).toBe(Dex.Unsupported)
     })
   })
 })
