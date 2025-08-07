@@ -14,11 +14,11 @@ export const menuMessages = defineMessages({
     defaultMessage: '!!!Staking Center',
   },
   supportTitle: {
-    id: 'components.settings.settingsscreen.title',
+    id: 'menu.supportTitle',
     defaultMessage: '!!!Support',
   },
   supportLink: {
-    id: 'components.settings.settingsscreen.title',
+    id: 'menu.supportLink',
     defaultMessage: '!!!Support Link',
   },
   knowledgeBase: {

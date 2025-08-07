@@ -95,22 +95,19 @@ export const Menu = () => {
 
         <Catalyst
           label={strings.menu.catalystVoting}
-          onPress={
+          onPress={() => {
             // navigateTo.catalystVoting
             Alert.alert('useCatalystCurrentFund cause crashes')
-          }
+          }}
           left={<Icon.Catalyst size={24} color={p.gray_600} />}
         />
-
-        <SupportLink />
-
-        <Space.Height.lg />
-
-        <Button
+        <KnowledgeBase //
+          label={strings.menu.knowledgeBase}
           onPress={navigateTo.knowledgeBase}
-          title={strings.menu.knowledgeBase}
-          type="Secondary"
+          left={<Icon.Info size={24} color={p.gray_600} />}
         />
+        <Space.Height.lg fill />
+        <SupportLink />
       </ScrollView>
     </SafeAreaView>
   )

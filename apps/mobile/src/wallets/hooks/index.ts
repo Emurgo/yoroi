@@ -18,7 +18,7 @@ import {
   parseBoolean,
   useMutationWithInvalidations,
 } from '@yoroi/common'
-import {themeStorageMaker} from '@yoroi/theme'
+import {themeStorageKeyManager} from '~/kernel/storage/storages'
 import {App, Balance, HW, Wallet} from '@yoroi/types'
 import {Buffer} from 'buffer'
 import * as React from 'react'
@@ -662,12 +662,7 @@ export const useCreateGovernanceTx = (
 }
 
 export const useThemeStorageMaker = () => {
-  const themeDiscovery = mountMMKVStorage<string>({path: `theme/`})
-  const themeDiscoveryStorage = observableStorageMaker(themeDiscovery)
-
-  const themeStorage = themeStorageMaker({storage: themeDiscoveryStorage})
-
-  return themeStorage
+  return themeStorageKeyManager
 }
 
 export const usePoolInfo = ({poolId}: {poolId: string}): FullPoolInfo => {

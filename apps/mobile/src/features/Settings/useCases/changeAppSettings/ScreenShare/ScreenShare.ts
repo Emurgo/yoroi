@@ -1,8 +1,6 @@
-import {useQuery} from '@tanstack/react-query'
 import {
   isBoolean,
   useAsyncStorage,
-  useMutationWithInvalidations,
 } from '@yoroi/common'
 import {useEffect, useState} from 'react'
 import {NativeModules, Platform} from 'react-native'
@@ -11,53 +9,92 @@ const {FlagSecure} = NativeModules
 
 export const useChangeScreenShareSetting = () => {
   const storage = useAsyncStorage()
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<Error | null>(null)
 
-  const mutation = useMutationWithInvalidations({
-    mutationFn: async (screenShareEnabled: boolean) => {
+  const changeScreenShareSettings = async (screenShareEnabled: boolean) => {
+    try {
+      setIsLoading(true)
+      setError(null)
+      
       await storage
         .join('appSettings/')
         .setItem('screenShareEnabled', screenShareEnabled)
+      
       if (Platform.OS === 'android') {
         changeScreenShareNativeSettingOnAndroid(screenShareEnabled)
       }
-    },
-    invalidateQueries: [['screenShareEnabled']],
-  })
+    } catch (err) {
+      const error = err instanceof Error ? err : new Error('Failed to change screen share settings')
+      setError(error)
+      throw error
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   return {
-    ...mutation,
-    changeScreenShareSettings: mutation.mutate,
+    isLoading,
+    error,
+    isError: error !== null,
+    changeScreenShareSettings,
   }
 }
 
 export const useScreenShareSettingEnabled = () => {
   const storage = useAsyncStorage()
+  const [data, setData] = useState<boolean>(false)
+  const [error, setError] = useState<Error | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
 
-  return useQuery(['screenShareEnabled'], async () => {
-    if (Platform.OS === 'android') {
-      return (
-        (await storage
+  const fetchScreenShareSetting = async () => {
+    try {
+      setIsLoading(true)
+      setError(null)
+      
+      if (Platform.OS === 'android') {
+        const result = await storage
           .join('appSettings/')
-          .getItem<boolean>('screenShareEnabled')) ?? false
-      )
+          .getItem<boolean>('screenShareEnabled')
+        setData(result ?? false)
+      } else {
+        setData(true)
+      }
+    } catch (err) {
+      const error = err instanceof Error ? err : new Error('Failed to fetch screen share setting')
+      setError(error)
+      setData(false) // fallback to false on error
+    } finally {
+      setIsLoading(false)
     }
-    return true
-  })
+  }
+
+  useEffect(() => {
+    fetchScreenShareSetting()
+  }, [])
+
+  return {
+    data,
+    error,
+    isLoading,
+    isError: error !== null,
+    refetch: fetchScreenShareSetting,
+  }
 }
 
 export const useInitScreenShare = () => {
-  const {data: screenShareEnabled} = useScreenShareSettingEnabled()
+  const {data: screenShareEnabled, isLoading} = useScreenShareSettingEnabled()
   const [initialised, setInitialised] = useState(false)
 
   useEffect(() => {
-    if (!isBoolean(screenShareEnabled) || initialised) return
+    if (isLoading || !isBoolean(screenShareEnabled) || initialised) return
 
     if (Platform.OS === 'android') {
       changeScreenShareNativeSettingOnAndroid(screenShareEnabled)
     }
 
     setInitialised(true)
-  }, [screenShareEnabled, initialised])
+  }, [screenShareEnabled, initialised, isLoading])
 
   return {initialised}
 }

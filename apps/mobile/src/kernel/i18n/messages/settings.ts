@@ -305,7 +305,7 @@ export const settingsMessages = defineMessages({
     defaultMessage: '!!!Single Address',
   },
   walletSettingsMultipleAddressesInfo: {
-    id: 'components.send.sendscreen.addressInputLabel',
+    id: 'global.multipleAddressesInfo',
     defaultMessage: '!!!Multiple Addresses Info',
   },
   walletSettingsInAppNotifications: {
@@ -359,15 +359,15 @@ export const settingsMessages = defineMessages({
     defaultMessage: '!!!Privacy Mode',
   },
   applicationSettingsPrivacyModeInfo: {
-    id: 'portfolio.portfolioTokensDetailScreen.info',
+    id: 'components.settings.applicationsettingsscreen.privacyModeInfo',
     defaultMessage: '!!!Privacy Mode Info',
   },
   applicationSettingsBiometricsSignIn: {
-    id: 'components.send.biometricauthscreen.headings2',
+    id: 'components.settings.applicationsettingsscreen.biometricsSignIn',
     defaultMessage: '!!!Biometrics Sign In',
   },
   applicationSettingsBiometricsSignInInfo: {
-    id: 'components.send.biometricauthscreen.headings2',
+    id: 'components.settings.applicationsettingsscreen.biometricsSignInInfo',
     defaultMessage: '!!!Biometrics Sign In Info',
   },
   applicationSettingsTermsOfservice: {
@@ -379,7 +379,7 @@ export const settingsMessages = defineMessages({
     defaultMessage: '!!!Crash Reporting',
   },
   applicationSettingsCrashReportingInfo: {
-    id: 'portfolio.portfolioTokensDetailScreen.info',
+    id: 'components.settings.applicationsettingsscreen.crashReportingInfo',
     defaultMessage: '!!!Crash Reporting Info',
   },
   applicationSettingsAnalytics: {

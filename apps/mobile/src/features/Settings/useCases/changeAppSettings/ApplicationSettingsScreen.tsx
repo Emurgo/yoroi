@@ -1,5 +1,5 @@
 import {networkConfigs} from '@yoroi/blockchains'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Platform, ScrollView} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
@@ -29,7 +29,7 @@ import {
 
 export const ApplicationSettingsScreen = () => {
   const strings = useStrings()
-  const {paletteName: name, palette: p} = useTheme()
+  const {atoms: ta, paletteName: name, palette: p} = useTheme()
   const {languageCode} = useLanguage()
   const language = supportedLanguages.find(
     (lang) => lang.code === languageCode,
@@ -64,8 +64,11 @@ export const ApplicationSettingsScreen = () => {
   }
 
   return (
-    <SafeAreaView edges={['bottom', 'right', 'left']} style={{}}>
-      <ScrollView bounces={false} style={{}}>
+    <SafeAreaView
+      edges={['bottom', 'right', 'left']}
+      style={[a.flex_row, ta.bg_color_max]}
+    >
+      <ScrollView bounces={false} style={[a.flex_1, a.p_lg]}>
         <SettingsSection title={strings.settings.applicationSettings.general}>
           <NavigatedSettingsItem
             icon={<Icon.Globe {...iconProps} />}
