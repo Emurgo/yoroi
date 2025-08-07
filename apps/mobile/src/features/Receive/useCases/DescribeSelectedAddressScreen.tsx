@@ -59,7 +59,7 @@ export const DescribeSelectedAddressScreen = () => {
     [navigateTo],
   )
   React.useEffect(() => {
-    if (isShowingMultipleAddressInfo) return
+    if (!isShowingMultipleAddressInfo) return
 
     const timeout = setTimeout(() => {
       openModal({
