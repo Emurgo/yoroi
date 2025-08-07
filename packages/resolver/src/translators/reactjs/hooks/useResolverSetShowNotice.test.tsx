@@ -27,4 +27,29 @@ describe('useResolverSetShowNotice', () => {
     expect(mockResolverManager.showNotice.save).toHaveBeenCalledWith(true)
     expect(result.current.isError).toBe(false)
   })
+
+  it('error', async () => {
+    const testError = new Error('Test error')
+    mockResolverManager.showNotice.save = jest.fn().mockRejectedValue(testError)
+    const wrapper = wrapperManagerFixture({
+      resolverManager: mockResolverManager,
+    })
+
+    const {result} = renderHook(() => useResolverSetShowNotice(), {wrapper})
+
+    await act(async () => {
+      try {
+        await result.current.setShowNotice(true)
+      } catch (err) {
+        // Expected to throw
+      }
+    })
+
+    await waitFor(() => expect(result.current.isLoading).toBe(false))
+    await waitFor(() => expect(result.current.isError).toBe(true))
+
+    expect(mockResolverManager.showNotice.save).toHaveBeenCalledTimes(1)
+    expect(mockResolverManager.showNotice.save).toHaveBeenCalledWith(true)
+    expect(result.current.error).toBe(testError)
+  })
 })
