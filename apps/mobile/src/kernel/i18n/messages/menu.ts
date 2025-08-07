@@ -6,20 +6,20 @@ export const menuMessages = defineMessages({
     defaultMessage: '!!!Catalyst Voting',
   },
   settings: {
-    id: 'components.common.navigation.dashboardButton',
+    id: 'menu.settings',
     defaultMessage: '!!!Settings',
   },
   stakingCenter: {
-    id: 'components.stakingcenter.title',
+    id: 'menu.stakingCenter',
     defaultMessage: '!!!Staking Center',
   },
   supportTitle: {
-    id: 'components.settings.settingsscreen.title',
-    defaultMessage: '!!!Support',
+    id: 'menu.supportTitle',
+    defaultMessage: '!!!Any questions',
   },
   supportLink: {
-    id: 'components.settings.settingsscreen.title',
-    defaultMessage: '!!!Support Link',
+    id: 'menu.supportLink',
+    defaultMessage: '!!!Ask our support team',
   },
   knowledgeBase: {
     id: 'menu.knowledgeBase',

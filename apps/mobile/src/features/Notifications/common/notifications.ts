@@ -1,6 +1,6 @@
 import {mountAsyncStorage} from '@yoroi/common'
 import {Notifications as NotificationTypes} from '@yoroi/types'
-import {Notification, Notifications} from 'react-native-notifications'
+import * as Notifications from 'expo-notifications'
 
 import {
   formatCurrency,
@@ -59,16 +59,18 @@ export const displayNotificationEvent = async (
   }
 }
 
-export const sendNotification = (options: {
+export const sendNotification = async (options: {
   title: string
   body: string
   id: number
 }) => {
-  const notification = new Notification({
-    title: options.title,
-    body: options.body,
-    sound: 'default',
-    id: options.id,
+  await Notifications.scheduleNotificationAsync({
+    content: {
+      title: options.title,
+      body: options.body,
+      sound: 'default',
+      data: { id: options.id },
+    },
+    trigger: null, // null means send immediately
   })
-  Notifications.postLocalNotification(notification.payload, options.id)
 }
