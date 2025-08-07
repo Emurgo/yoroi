@@ -1,6 +1,6 @@
 {
   "name": "@yoroi/swap",
-  "version": "6.0.0",
+  "version": "6.0.1",
   "description": "The Swap package of Yoroi SDK",
   "keywords": [
     "yoroi",
@@ -46,7 +46,8 @@
     "!**/__fixtures__",
     "!**/__mocks__",
     "!**/.*"
-  ],  "scripts": {
+  ],
+  "scripts": {
     "build": "npm run tsc && npm run lint && npm run test --ci --silent && npm run clean && bob build",
     "build:dev": "npm run tsc && npm run clean && bob build",
     "build:release": "npm run build && npm run flow",
@@ -70,7 +71,6 @@
     "@babel/preset-env": "^7.25.3",
     "@babel/runtime": "^7.25.0",
     "@commitlint/config-conventional": "^17.0.2",
-    "@react-native-async-storage/async-storage": ">= 2.1.2",
     "@react-native-community/cli": "18.0.0",
     "@react-native-community/cli-platform-android": "18.0.0",
     "@react-native-community/cli-platform-ios": "18.0.0",
@@ -88,10 +88,10 @@
     "@types/jest": "^29.5.12",
     "@types/react": "^19.0.0",
     "@types/react-test-renderer": "^19.1.0",
-    "@yoroi/api": "file:../api",
-    "@yoroi/common": "file:../common",
-    "@yoroi/types": "file:../types",
-    "@yoroi/portfolio": "file:../portfolio",
+    "@yoroi/api": "6.0.0",
+    "@yoroi/common": "6.0.0",
+    "@yoroi/types": "6.0.0",
+    "@yoroi/portfolio": "6.0.0",
     "axios": "^1.10.0",
     "axios-mock-adapter": "^1.22.0",
     "babel-jest": "^29.7.0",
@@ -121,11 +121,22 @@
   },
   "dependencies": {
     "@emurgo/cip4-js": "^1.0.7",
+    "@tanstack/react-query": "5.76.2",
+    "@yoroi/api": "6.0.0",
+    "@yoroi/common": "6.0.0",
+    "@yoroi/portfolio": "6.0.0",
+    "bignumber.js": "9.3.0",
+    "immer": "10.1.1",
+    "react": ">= 16.8.0 < 20.0.0",
+    "react-native-mmkv": "3.2.0",
+    "rxjs": "7.8.2",
+    "zod": "3.25.17"
+  },
+  "peerDependencies": {
     "@react-native-async-storage/async-storage": "2.1.2",
     "@tanstack/react-query": "5.76.2",
-    "@yoroi/api": "file:../api",
-    "@yoroi/common": "file:../common",
-    "@yoroi/portfolio": "file:../portfolio",
+    "@yoroi/common": "6.0.0",
+    "@yoroi/portfolio": "6.0.0",
     "bignumber.js": "9.3.0",
     "immer": "10.1.1",
     "react": ">= 16.8.0 < 20.0.0",
