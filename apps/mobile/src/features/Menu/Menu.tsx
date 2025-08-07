@@ -253,7 +253,10 @@ const useNavigateTo = () => {
       //   },
       // })
     },
-    stakingCenter: () => navigateToStakingDashboard(),
+    stakingCenter: () => {
+      Alert.alert('navigateToStakingDashboard cause crashes')
+      // navigateToStakingDashboard()
+    },
     settings: () => navigateToSettings(),
     support: () => Linking.openURL(SUPPORT_TICKET_LINK),
     knowledgeBase: () => Linking.openURL(KNOWLEDGE_BASE_LINK),
