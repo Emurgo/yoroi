@@ -12,22 +12,21 @@ import {
 import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {SettingsSwitch} from '~/ui/SettingsSwitch/SettingsSwitch'
-import {useCrashReports} from '~/wallets/hooks'
 import {useCurrencyPairing} from './Currency/CurrencyContext'
 import {usePrivacyMode} from './PrivacyMode/PrivacyMode'
 import {
   useChangeScreenShareSetting,
   useScreenShareSettingEnabled,
 } from './ScreenShare'
+import {useCrashReports} from './useCrashReports'
 
 export const ApplicationSettingsScreen = () => {
   const strings = useStrings()
-  const {atoms: ta, palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
   const {network} = useSelectedNetwork()
-  const {isTogglePrivacyModeLoading, isPrivacyActive} = usePrivacyMode()
+  const {isPrivacyActive} = usePrivacyMode()
   const crashReports = useCrashReports()
   const screenShareQuery = useScreenShareSettingEnabled()
-  const {changeScreenShareSettings} = useChangeScreenShareSetting()
   const {currency} = useCurrencyPairing()
   const navigateTo = useNavigateTo()
 

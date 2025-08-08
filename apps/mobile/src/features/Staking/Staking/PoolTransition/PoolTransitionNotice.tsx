@@ -6,6 +6,7 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {formatTimeSpan} from '~/wallets/utils/timeUtils'
+import {usePoolTransition} from './usePoolTransition'
 
 export const PoolTransitionNotice = () => {
   const {palette: p} = useTheme()

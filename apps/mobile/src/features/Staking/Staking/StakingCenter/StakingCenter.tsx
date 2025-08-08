@@ -7,6 +7,11 @@ import {View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {WebView, WebViewMessageEvent} from 'react-native-webview'
 
+import {useIntl} from 'react-intl'
+import {useNavigateTo} from '~/features/Dashboard/Dashboard'
+import {useStakingTx} from '~/features/Dashboard/StakePoolInfos'
+import {useReviewTx} from '~/features/ReviewTx/common/ReviewTxProvider'
+import {PoolDetailScreen} from '~/features/Staking/Staking/PoolDetails/PoolDetailScreen'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {showErrorDialog} from '~/kernel/dialogs'
@@ -14,10 +19,8 @@ import {useLanguage} from '~/kernel/i18n/LanguageProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
+import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Space} from '~/ui/Space/Space'
-import {useStakingTx} from '../Dashboard/StakePoolInfos'
-import {PoolDetailScreen} from '../PoolDetails'
-import {useReviewTx} from '../ReviewTx/common/ReviewTxProvider'
 
 export const StakingCenter = () => {
   const strings = useStrings()
@@ -28,6 +31,7 @@ export const StakingCenter = () => {
   const {wallet, meta} = useSelectedWallet()
   const {walletManager} = useWalletManager()
   const {track} = useMetrics()
+  const intl = useIntl()
   const {plate} = walletManager.checksum(wallet.publicKeyHex)
   const {navigateToTxReview} = useWalletNavigation()
   const {unsignedTxChanged} = useReviewTx()
@@ -56,32 +60,29 @@ export const StakingCenter = () => {
   )
 
   const onSuccess = () => {
-    queryClient.resetQueries([wallet.id, 'stakingInfo'])
+    queryClient.resetQueries({queryKey: [wallet.id, 'stakingInfo']})
     track.stakingCenterDelegationSubmitted()
     navigateTo.submittedTx()
   }
 
   const onError = () => {
     setSelectedPoolId(null)
-    queryClient.resetQueries([wallet.id, 'stakingInfo'])
+    queryClient.resetQueries({queryKey: [wallet.id, 'stakingInfo']})
     navigateTo.failedTx()
   }
 
-  const {isLoading} = useStakingTx(
+  const {isLoading, stakingTx} = useStakingTx(
     {wallet, poolId: selectedPoolId ?? undefined, meta},
-    {
-      enabled: selectedPoolId != null,
-      suspense: false,
-      onSuccess: (yoroiUnsignedTx) => {
-        if (selectedPoolId == null) return
-
-        track.stakingCenterDelegationInitiated()
-        unsignedTxChanged(yoroiUnsignedTx)
-        navigateToTxReview({onSuccess, onError})
-      },
-      onError,
-    },
+    {queryKey: [wallet.id, 'stakingTx'], enabled: selectedPoolId != null},
   )
+
+  React.useEffect(() => {
+    if (!stakingTx) return
+    if (selectedPoolId == null) return
+    track.stakingCenterDelegationInitiated()
+    unsignedTxChanged(stakingTx)
+    navigateToTxReview({onSuccess, onError})
+  }, [stakingTx, selectedPoolId, track, unsignedTxChanged, navigateToTxReview])
 
   const handleOnMessage = async (event: WebViewMessageEvent) => {
     const selectedPoolHashes = JSON.parse(decodeURI(event.nativeEvent.data))
@@ -130,11 +131,7 @@ export const StakingCenter = () => {
         </View>
       )}
 
-      <PleaseWaitModal
-        title=""
-        spinnerText={strings.global.pleaseWait}
-        visible={isLoading}
-      />
+      {/* loading modal removed */}
     </SafeAreaView>
   )
 }
