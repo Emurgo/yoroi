@@ -2,9 +2,9 @@ import {isNonNullable} from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import {useRoute} from '@react-navigation/native'
+import {BigNumber} from 'bignumber.js'
 import {fromPairs} from 'lodash'
 import React, {useState} from 'react'
-import {BigNumber} from 'bignumber.js'
 import {useIntl} from 'react-intl'
 import {
   LayoutAnimation,
@@ -62,7 +62,6 @@ export const TxDetails = () => {
   const transactions = useTransactionInfos({wallet})
   const transaction = transactions[id]
   const memo = !isEmptyString(transaction.memo) ? transaction.memo : '-'
-  const intl = useIntl()
 
   const submittedAt = isNonNullable(transaction.submittedAt)
     ? formatDateAndTime(transaction.submittedAt, intl)
@@ -105,11 +104,7 @@ export const TxDetails = () => {
     >
       <FadeIn style={a.flex_1}>
         <ScrollView contentContainerStyle={a.px_lg}>
-<<<<<<< HEAD
           <Banner label={strings.transactions.direction(transaction.direction)}>
-=======
-          <Banner label={strings.transactions.direction(transaction.direction)}>
->>>>>>> origin/develop
             <Boundary>
               <AdaAmount amount={amount} />
 
@@ -145,11 +140,7 @@ export const TxDetails = () => {
                 >
                   <Text
                     style={[{color: p.gray_900}, a.body_2_md_regular]}
-<<<<<<< HEAD
                   >{` -${item.assets.length} ${strings.transactions.assets} `}</Text>
-=======
-                  >{` -${item.assets.length} ${strings.transactions.assets} `}</Text>
->>>>>>> origin/develop
 
                   <Icon.Chevron
                     direction={expandedInItemId === item.id ? 'up' : 'down'}
@@ -188,11 +179,7 @@ export const TxDetails = () => {
                 >
                   <Text
                     style={[{color: p.gray_900}, a.body_2_md_regular]}
-<<<<<<< HEAD
                   >{` +${item.assets.length} ${strings.transactions.assets} `}</Text>
-=======
-                  >{` +${item.assets.length} ${strings.transactions.assets} `}</Text>
->>>>>>> origin/develop
 
                   <Icon.Chevron
                     direction={expandedOutItemId === item.id ? 'up' : 'down'}
