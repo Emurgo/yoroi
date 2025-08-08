@@ -19,13 +19,13 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {Icon} from '~/ui/Icon'
 import {SettingsSwitch} from '~/ui/SettingsSwitch/SettingsSwitch'
 import {Space} from '~/ui/Space/Space'
-import {useCrashReports} from '~/wallets/hooks'
 import {useCurrencyPairing} from './Currency/CurrencyContext'
 import {usePrivacyMode} from './PrivacyMode/PrivacyMode'
 import {
   useChangeScreenShareSetting,
   useScreenShareSettingEnabled,
 } from './ScreenShare'
+import {useCrashReports} from './useCrashReports'
 
 export const ApplicationSettingsScreen = () => {
   const strings = useStrings()
