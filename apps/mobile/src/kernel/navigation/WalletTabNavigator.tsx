@@ -4,8 +4,8 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 import * as React from 'react'
 
 import {DiscoverNavigator} from '~/features/Discover/DiscoverNavigator'
+import {MenuNavigator} from '~/features/Menu/Menu'
 import {PortfolioNavigator} from '~/features/Portfolio/PortfolioNavigator'
-import {SettingsScreenNavigator} from '~/features/Settings/SettingsScreenNavigator'
 import {TxHistoryNavigator} from '~/features/Transactions/TxHistoryNavigator'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Icon} from '~/ui/Icon'
@@ -78,7 +78,7 @@ export const WalletTabNavigator = () => {
 
       <Tab.Screen
         name="menu"
-        getComponent={() => SettingsScreenNavigator}
+        getComponent={() => MenuNavigator}
         options={{
           title: strings.menu.menu,
           tabBarIcon: ({focused, color, size}) =>

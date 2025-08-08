@@ -1,146 +1,201 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {ScrollView, Text, View} from 'react-native'
+import {Platform, ScrollView} from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {useNavigateTo} from '~/features/Settings/common/navigation'
+import {
+  NavigatedSettingsItem,
+  SettingsItem,
+  SettingsSection,
+} from '~/features/Settings/SettingsItems'
+import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {Button} from '~/ui/Button/Button'
-import {Hr} from '~/ui/Hr/Hr'
-import {Space} from '~/ui/Space/Space'
+import {SettingsSwitch} from '~/ui/SettingsSwitch/SettingsSwitch'
+import {useCurrencyPairing} from './Currency/CurrencyContext'
+import {usePrivacyMode} from './PrivacyMode/PrivacyMode'
+import {
+  useChangeScreenShareSetting,
+  useScreenShareSettingEnabled,
+} from './ScreenShare'
+import {useCrashReports} from './useCrashReports'
 
 export const ApplicationSettingsScreen = () => {
   const strings = useStrings()
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
+  const {network} = useSelectedNetwork()
+  const {isPrivacyActive} = usePrivacyMode()
+  const crashReports = useCrashReports()
+  const screenShareQuery = useScreenShareSettingEnabled()
+  const {currency} = useCurrencyPairing()
+  const navigateTo = useNavigateTo()
+
+  const isScreenSharingDisabled = React.useMemo(() => {
+    return Platform.OS === 'ios' && network === 'mainnet'
+  }, [network])
 
   return (
-    <ScrollView style={[a.flex_1, {backgroundColor: p.bg_color_max}]}>
-      <View style={[a.p_lg, a.gap_lg]}>
-        <View style={[a.gap_md]}>
-          <Text style={[a.heading_3_medium]}>
-            {strings.settings.applicationSettings.general}
-          </Text>
+    <SafeAreaView
+      edges={['bottom', 'right', 'left']}
+      style={[ta.bg_color_max, a.flex_1]}
+    >
+      <ScrollView bounces={false} style={[a.flex_1, a.p_lg]}>
+        <SettingsSection title={strings.settings.applicationSettings.general}>
+          <NavigatedSettingsItem
+            label={strings.settings.applicationSettings.selectLanguage}
+            onNavigate={navigateTo.changeLanguage}
+            selected="English"
+          />
 
-          <View style={[a.gap_sm]}>
-            <Text style={[a.body_1_lg_regular]}>
-              {strings.settings.applicationSettings.language}
-            </Text>
-            <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
-              {strings.settings.applicationSettings.language}
-            </Text>
-          </View>
+          <NavigatedSettingsItem
+            label={strings.settings.applicationSettings.selectFiatCurrency}
+            onNavigate={navigateTo.changeCurrency}
+            selected={currency}
+          />
 
-          <View style={[a.gap_sm]}>
-            <Text style={[a.body_1_lg_regular]}>
-              {strings.settings.applicationSettings.currency}
-            </Text>
-            <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
-              {strings.settings.applicationSettings.currency}
-            </Text>
-          </View>
+          <NavigatedSettingsItem
+            label={strings.settings.applicationSettings.selectTheme}
+            onNavigate={navigateTo.changeTheme}
+            selected="Light"
+          />
+        </SettingsSection>
 
-          <View style={[a.gap_sm]}>
-            <Text style={[a.body_1_lg_regular]}>
-              {strings.settings.applicationSettings.theme}
-            </Text>
-            <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
-              {strings.settings.applicationSettings.theme}
-            </Text>
-          </View>
-        </View>
+        <SettingsSection
+          title={strings.settings.applicationSettings.securityReporting}
+        >
+          <SettingsItem
+            label={strings.settings.applicationSettings.privacyMode}
+          >
+            <PrivacyModeSwitch isPrivacyActive={isPrivacyActive} />
+          </SettingsItem>
 
-        <Hr />
+          <SettingsItem
+            label={strings.settings.applicationSettings.biometricsSignIn}
+          >
+            <BiometricsSwitch />
+          </SettingsItem>
 
-        <View style={[a.gap_md]}>
-          <Text style={[a.heading_3_medium]}>
-            {strings.settings.applicationSettings.security}
-          </Text>
+          <SettingsItem
+            label={strings.settings.applicationSettings.crashReporting}
+          >
+            <CrashReportsSwitch crashReportEnabled={crashReports.enabled} />
+          </SettingsItem>
 
-          <View style={[a.gap_sm]}>
-            <Text style={[a.body_1_lg_regular]}>
-              {strings.settings.applicationSettings.biometric}
-            </Text>
-            <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
-              {strings.settings.applicationSettings.biometric}
-            </Text>
-          </View>
+          <SettingsItem
+            label={strings.settings.applicationSettings.screenSharing}
+          >
+            <ScreenSharingSwitch
+              screenSharingEnabled={screenShareQuery.data ?? false}
+              disabled={isScreenSharingDisabled}
+            />
+          </SettingsItem>
+        </SettingsSection>
+      </ScrollView>
+    </SafeAreaView>
+  )
+}
 
-          <View style={[a.gap_sm]}>
-            <Text style={[a.body_1_lg_regular]}>
-              {strings.settings.applicationSettings.pin}
-            </Text>
-            <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
-              {strings.settings.applicationSettings.pin}
-            </Text>
-          </View>
-        </View>
+// to avoid switch jumps
+const PrivacyModeSwitch = ({isPrivacyActive}: {isPrivacyActive: boolean}) => {
+  const {setPrivacyModeOn, setPrivacyModeOff, isTogglePrivacyModeLoading} =
+    usePrivacyMode()
+  const [isLocalPrivacyActive, setIsLocalPrivacyOff] =
+    React.useState(isPrivacyActive)
 
-        <Hr />
+  const onTogglePrivacyMode = () => {
+    if (isLocalPrivacyActive) {
+      setPrivacyModeOff()
+      setIsLocalPrivacyOff(false)
+    } else {
+      setPrivacyModeOn()
+      setIsLocalPrivacyOff(true)
+    }
+  }
 
-        <View style={[a.gap_md]}>
-          <Text style={[a.heading_3_medium]}>
-            {strings.settings.applicationSettings.privacy}
-          </Text>
+  React.useEffect(() => {
+    setIsLocalPrivacyOff(isPrivacyActive)
+  }, [isPrivacyActive])
 
-          <View style={[a.gap_sm]}>
-            <Text style={[a.body_1_lg_regular]}>
-              {strings.settings.applicationSettings.analytics}
-            </Text>
-            <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
-              {strings.settings.applicationSettings.analytics}
-            </Text>
-          </View>
+  return (
+    <SettingsSwitch
+      value={isLocalPrivacyActive}
+      onValueChange={onTogglePrivacyMode}
+      disabled={isTogglePrivacyModeLoading}
+    />
+  )
+}
 
-          <View style={[a.gap_sm]}>
-            <Text style={[a.body_1_lg_regular]}>
-              {strings.settings.applicationSettings.crashReports}
-            </Text>
-            <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
-              {strings.settings.applicationSettings.crashReports}
-            </Text>
-          </View>
-        </View>
+// to avoid switch jumps
+const CrashReportsSwitch = ({
+  crashReportEnabled,
+}: {
+  crashReportEnabled: boolean
+}) => {
+  const {enable, disable} = useCrashReports()
+  const [isLocalEnabled, setIsLocalEnabled] = React.useState(crashReportEnabled)
 
-        <Hr />
+  const onToggleCrashReports = (enabled: boolean) => {
+    if (enabled) {
+      enable()
+      setIsLocalEnabled(true)
+    } else {
+      disable()
+      setIsLocalEnabled(false)
+    }
+  }
 
-        <View style={[a.gap_md]}>
-          <Text style={[a.heading_3_medium]}>
-            {strings.settings.applicationSettings.about}
-          </Text>
+  React.useEffect(() => {
+    setIsLocalEnabled(crashReportEnabled)
+  }, [crashReportEnabled])
 
-          <View style={[a.gap_sm]}>
-            <Text style={[a.body_1_lg_regular]}>
-              {strings.settings.applicationSettings.version}
-            </Text>
-            <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
-              {strings.settings.applicationSettings.version}
-            </Text>
-          </View>
+  return (
+    <SettingsSwitch
+      value={isLocalEnabled}
+      onValueChange={onToggleCrashReports}
+      disabled={false}
+    />
+  )
+}
 
-          <View style={[a.gap_sm]}>
-            <Text style={[a.body_1_lg_regular]}>
-              {strings.settings.applicationSettings.terms}
-            </Text>
-            <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
-              {strings.settings.applicationSettings.terms}
-            </Text>
-          </View>
+// to avoid switch jumps
+const ScreenSharingSwitch = ({
+  screenSharingEnabled,
+  disabled,
+}: {
+  screenSharingEnabled: boolean
+  disabled?: boolean
+}) => {
+  const {changeScreenShareSettings} = useChangeScreenShareSetting()
+  const [isLocalEnabled, setIsLocalEnabled] =
+    React.useState(screenSharingEnabled)
 
-          <View style={[a.gap_sm]}>
-            <Text style={[a.body_1_lg_regular]}>
-              {strings.settings.applicationSettings.privacyPolicy}
-            </Text>
-            <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
-              {strings.settings.applicationSettings.privacyPolicy}
-            </Text>
-          </View>
-        </View>
+  const onToggle = (enabled: boolean) => {
+    changeScreenShareSettings(enabled)
+    setIsLocalEnabled(enabled)
+  }
 
-        <Space.Height.lg />
+  React.useEffect(() => {
+    setIsLocalEnabled(screenSharingEnabled)
+  }, [screenSharingEnabled])
 
-        <Button
-          title={strings.settings.applicationSettings.save}
-          onPress={() => {}}
-        />
-      </View>
-    </ScrollView>
+  return (
+    <SettingsSwitch
+      value={isLocalEnabled}
+      onValueChange={onToggle}
+      disabled={disabled}
+    />
+  )
+}
+
+// Placeholder component for biometrics switch
+const BiometricsSwitch = () => {
+  const [isEnabled, setIsEnabled] = React.useState(false)
+
+  return (
+    <SettingsSwitch
+      value={isEnabled}
+      onValueChange={setIsEnabled}
+      disabled={false}
+    />
   )
 }

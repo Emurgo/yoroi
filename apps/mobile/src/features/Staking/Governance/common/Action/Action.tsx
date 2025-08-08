@@ -1,11 +1,11 @@
 import {isNonNullable} from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {LinearGradient} from 'expo-linear-gradient'
 import React, {ReactNode} from 'react'
 import {ActivityIndicator, Pressable, View} from 'react-native'
-import {LinearGradient} from 'expo-linear-gradient'
 
 import {Icon} from '~/ui/Icon'
-import {Space} from '~/ui/Space'
+import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
 
 type Props = {

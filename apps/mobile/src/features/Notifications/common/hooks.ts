@@ -6,10 +6,9 @@ import {
 } from '@yoroi/types'
 import * as Notifications from 'expo-notifications'
 import * as React from 'react'
-import {Notifications as RNNotifications} from 'react-native-notifications'
 
 import {logger} from '~/kernel/logger/logger'
-import {useWalletNavigation, WalletNavigation} from '~/kernel/navigation/hooks'
+import {useWalletNavigation} from '~/kernel/navigation/hooks'
 import {pushNotificationsManager} from './notification-manager'
 import {parseNotificationId} from './notifications'
 import {usePrimaryTokenPriceChangedNotification} from './primary-token-price-changed-notification'
@@ -17,13 +16,37 @@ import {useRewardsUpdatedNotifications} from './rewards-updated-notification'
 import {triggerNotificationAction} from './tools'
 import {useTransactionReceivedNotifications} from './transaction-received-notification'
 
-const initPushNotifications = (walletNavigation: WalletNavigation) => {
+const createPushNotification = (options: {
+  title: string
+  description: string
+  id: number
+  data?: Record<string, unknown>
+}): NotificationTypes.PushEvent => {
+  const {title, description, data, id} = options
+  return {
+    id,
+    date: new Date().toISOString(),
+    isRead: false,
+    trigger: NotificationTypes.Trigger.Push,
+    metadata: {
+      title,
+      body: description,
+      data,
+    },
+  } as const
+}
+
+const initPushNotifications = (
+  walletNavigation: ReturnType<typeof useWalletNavigation>,
+) => {
   // Configure Expo notifications
   Notifications.setNotificationHandler({
     handleNotification: async () => ({
       shouldShowAlert: true,
       shouldPlaySound: true,
       shouldSetBadge: false,
+      shouldShowBanner: true,
+      shouldShowList: true,
     }),
   })
 
@@ -57,25 +80,9 @@ const initPushNotifications = (walletNavigation: WalletNavigation) => {
       })
     })
 
-  const notificationOpenedSubscription =
-    RNNotifications.events().registerNotificationOpened(
-      (notification, completion) => {
-        const payloadId = notification.payload['google.sent_time']
-        const id = parseNotificationId(payloadId)
-        triggerNotificationAction({
-          manager: pushNotificationsManager,
-          id,
-          walletNavigation,
-          source: 'os',
-        })
-        completion()
-      },
-    )
-
   return () => {
     notificationListener?.remove()
     responseListener?.remove()
-    notificationOpenedSubscription.remove()
   }
 }
 
@@ -108,24 +115,4 @@ export const useInitNotifications = ({
   useTransactionReceivedNotifications({enabled: localEnabled})
   usePrimaryTokenPriceChangedNotification({enabled: false}) // Temporarily disabled until requested by product team
   useRewardsUpdatedNotifications({enabled: localEnabled})
-}
-
-const createPushNotification = (options: {
-  title: string
-  description: string
-  id: number
-  data?: Record<string, unknown>
-}): NotificationTypes.PushEvent => {
-  const {title, description, data, id} = options
-  return {
-    id,
-    date: new Date().toISOString(),
-    isRead: false,
-    trigger: NotificationTypes.Trigger.Push,
-    metadata: {
-      title,
-      body: description,
-      data,
-    },
-  } as const
 }

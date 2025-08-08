@@ -2,6 +2,7 @@ import {isNonNullable} from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import {useRoute} from '@react-navigation/native'
+import {BigNumber} from 'bignumber.js'
 import {fromPairs} from 'lodash'
 import React, {useState} from 'react'
 import {useIntl} from 'react-intl'
@@ -43,6 +44,7 @@ export const TxDetails = () => {
   const screenHeight = useWindowDimensions().height
   const modalHeight = Math.min(screenHeight * 0.8, 650) // to include derivation path in case it is possible
   const strings = useStrings()
+  const intl = useIntl()
   const {atoms: ta, palette: p} = useTheme()
   const {id} = useRoute().params as Params
   const {wallet} = useSelectedWallet()
@@ -60,7 +62,6 @@ export const TxDetails = () => {
   const transactions = useTransactionInfos({wallet})
   const transaction = transactions[id]
   const memo = !isEmptyString(transaction.memo) ? transaction.memo : '-'
-  const intl = useIntl()
 
   const submittedAt = isNonNullable(transaction.submittedAt)
     ? formatDateAndTime(transaction.submittedAt, intl)

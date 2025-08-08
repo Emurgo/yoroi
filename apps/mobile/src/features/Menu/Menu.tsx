@@ -1,4 +1,3 @@
-import {defineMessage} from '@formatjs/intl'
 import {useFocusEffect} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import {atoms as a, useTheme} from '@yoroi/theme'
@@ -6,7 +5,6 @@ import * as React from 'react'
 import {
   Linking,
   ScrollView,
-  StyleSheet,
   Text,
   TouchableOpacity,
   useWindowDimensions,
@@ -18,13 +16,12 @@ import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWalle
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
-import {MenuRoutes} from '~/kernel/navigation/types'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
+import {MenuRoutes} from '~/kernel/navigation/types'
 import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
-import {usePrefetchStakingInfo} from '../Dashboard/StakePoolInfos'
 import {useCanVote} from '../RegisterCatalyst/common/hooks'
 import {InsufficientFundsModal} from '../RegisterCatalyst/common/InsufficientFundsModal'
 import {NetworkTag} from '../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
@@ -34,7 +31,7 @@ const MenuStack = createStackNavigator<MenuRoutes>()
 
 export const MenuNavigator = () => {
   const strings = useStrings()
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p} = useTheme()
 
   return (
     <MenuStack.Navigator
@@ -57,7 +54,7 @@ export const MenuNavigator = () => {
 export const Menu = () => {
   const strings = useStrings()
   const {atoms: ta, palette: p} = useTheme()
-  const navigateTo = useNavigateTo()
+  const navigateTo = useWalletNavigation()
   const {isPoolRetiring} = usePoolTransition()
   const {track} = useMetrics()
 
@@ -75,13 +72,13 @@ export const Menu = () => {
       <ScrollView contentContainerStyle={[a.flex_1, a.p_lg]} bounces={false}>
         <AppSettings //
           label={strings.menu.settings}
-          onPress={navigateTo.settings}
+          onPress={navigateTo.navigateToSettings}
           left={<Icon.Gear size={24} color={p.gray_600} />}
         />
 
         <Staking
           label={strings.menu.stakingCenter}
-          onPress={navigateTo.stakingCenter}
+          onPress={navigateTo.navigateToStakingDashboard}
           left={<Icon.TabStaking size={24} color={p.gray_600} />}
           right={
             isPoolRetiring ? (
@@ -92,55 +89,101 @@ export const Menu = () => {
 
         <Governance
           label={strings.menu.governanceCentre}
-          onPress={navigateTo.governanceCentre}
-          left={<Icon.TabGovernance size={24} color={p.gray_600} />}
+          onPress={navigateTo.navigateToGovernanceCentre}
+          left={<Icon.Governance size={24} color={p.gray_600} />}
         />
 
-        <Catalyst
-          label={strings.menu.catalystVoting}
-          onPress={navigateTo.catalystVoting}
-          left={<Icon.TabCatalyst size={24} color={p.gray_600} />}
-        />
+        <React.Suspense
+          fallback={
+            <Item
+              label={strings.menu.catalystVoting}
+              left={<Icon.Catalyst size={24} color={p.gray_600} />}
+              onPress={() => {}}
+              disabled
+            />
+          }
+        >
+          <Catalyst
+            label={strings.menu.catalystVoting}
+            left={<Icon.Catalyst size={24} color={p.gray_600} />}
+            onPress={navigateTo.navigateToGovernanceCentre}
+          />
+        </React.Suspense>
+
+        <Space.Height.lg fill />
 
         <SupportLink />
-
-        <Space.Height.lg />
-
-        <Button
-          onPress={navigateTo.knowledgeBase}
-          title={strings.menu.knowledgeBase}
-          type="Secondary"
-        />
       </ScrollView>
     </SafeAreaView>
   )
 }
 
+const AppSettings = ({
+  label,
+  left,
+  onPress,
+}: {
+  label: string
+  left: React.ReactElement
+  onPress: () => void
+}) => {
+  return <Item label={label} left={left} onPress={onPress} />
+}
+
+const Staking = ({
+  label,
+  left,
+  right,
+  onPress,
+}: {
+  label: string
+  left: React.ReactElement
+  right?: React.ReactElement | null
+  onPress: () => void
+}) => {
+  return <Item label={label} left={left} right={right} onPress={onPress} />
+}
+
+const Governance = ({
+  label,
+  left,
+  onPress,
+}: {
+  label: string
+  left: React.ReactElement
+  onPress: () => void
+}) => {
+  return <Item label={label} left={left} onPress={onPress} />
+}
+
 const SupportLink = () => {
   const strings = useStrings()
-  const {atoms: ta, palette: p} = useTheme()
-  const navigateTo = useNavigateTo()
+  const {palette: p} = useTheme()
+
+  const handleSupportPress = () => {
+    Linking.openURL('https://yoroi-wallet.com/support')
+  }
+
+  const handleKnowledgeBasePress = () => {
+    Linking.openURL('https://yoroi-wallet.com/help')
+  }
 
   return (
-    <View style={a.align_center}>
-      <View style={a.justify_center}>
-        <Text style={{color: p.gray_600}}>{strings.supportTitle}</Text>
-      </View>
-
-      <Space.Height.lg />
-
-      <TouchableOpacity
-        onPress={navigateTo.support}
-        style={[a.justify_between, a.align_center, a.flex_row]}
-      >
-        <Icon.Support size={24} color="#4B6DDE" />
-
-        <Space.Width.lg />
-
-        <Text style={[ta.el_primary_medium, a.body_2_md_medium]}>
-          {strings.supportLink.toLocaleUpperCase()}
-        </Text>
-      </TouchableOpacity>
+    <View>
+      <Text style={[a.body_1_lg_medium, {color: p.gray_900}]}>
+        {strings.menu.supportTitle}
+      </Text>
+      <Space.Height.sm />
+      <Item
+        label={strings.menu.supportLink}
+        left={<Icon.Support size={24} color={p.gray_600} />}
+        onPress={handleSupportPress}
+      />
+      <Item
+        label={strings.menu.knowledgeBase}
+        left={<Icon.Info size={24} color={p.gray_600} />}
+        onPress={handleKnowledgeBasePress}
+      />
     </View>
   )
 }
@@ -158,44 +201,37 @@ const Item = ({
   right?: React.ReactElement | null
   onPress: () => void
 }) => {
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p} = useTheme()
 
   return (
     <TouchableOpacity
-      onPress={onPress}
       style={[
-        a.py_lg,
         a.flex_row,
         a.align_center,
-        a.justify_center,
-        {
-          borderBottomWidth: StyleSheet.hairlineWidth,
-          borderBottomColor: p.gray_200,
-        },
+        a.justify_between,
+        a.py_lg,
+        {opacity: disabled ? 0.5 : 1},
       ]}
+      onPress={onPress}
       disabled={disabled}
     >
-      {left}
-
-      <Space.Width.lg />
-
-      <Text style={[a.body_2_md_regular, ta.el_gray_max]}>{label}</Text>
-
-      <Space.Height.sm fill />
-
-      {right}
-
-      <Space.Width.sm />
-
-      <Icon.Chevron direction="right" size={28} color={p.gray_600} />
+      <View style={[a.flex_row, a.align_center]}>
+        {left}
+        <Space.Width.sm />
+        <Text
+          style={[
+            a.body_1_lg_medium,
+            {color: disabled ? p.gray_500 : p.gray_900},
+          ]}
+        >
+          {label}
+        </Text>
+      </View>
+      {right && <View>{right}</View>}
     </TouchableOpacity>
   )
 }
 
-const Staking = Item
-const Governance = Item
-const AppSettings = Item
-const KnowledgeBase = Item
 const Catalyst = ({
   label,
   left,
@@ -217,90 +253,13 @@ const Catalyst = ({
       onPress()
     } else {
       openModal({
-        title: strings.attention,
+        title: strings.menu.attention,
         content: <InsufficientFundsModal />,
-        footer: <Button title={strings.back} onPress={closeModal} />,
+        footer: <Button title={strings.menu.back} onPress={closeModal} />,
         height: modalHeight,
       })
     }
   }
-  return <Item label={label} onPress={handlePress} left={left} />
+
+  return <Item label={label} left={left} onPress={handlePress} />
 }
-
-const SUPPORT_TICKET_LINK =
-  'https://emurgohelpdesk.zendesk.com/hc/en-us/requests/new?ticket_form_id=360013330335'
-const KNOWLEDGE_BASE_LINK =
-  'https://emurgohelpdesk.zendesk.com/hc/en-us/categories/4412619927695-Yoroi'
-
-const useNavigateTo = () => {
-  const {
-    navigation,
-    navigateToSettings,
-    navigateToGovernanceCentre,
-    navigateToStakingDashboard,
-  } = useWalletNavigation()
-  const {wallet} = useSelectedWallet()
-
-  const prefetchStakingInfo = usePrefetchStakingInfo(wallet)
-
-  return {
-    catalystVoting: () => {
-      prefetchStakingInfo()
-
-      navigation.navigate('manage-wallets', {
-        screen: 'voting-registration',
-        params: {
-          screen: 'download-catalyst',
-        },
-      })
-    },
-    stakingCenter: () => navigateToStakingDashboard(),
-    settings: () => navigateToSettings(),
-    support: () => Linking.openURL(SUPPORT_TICKET_LINK),
-    knowledgeBase: () => Linking.openURL(KNOWLEDGE_BASE_LINK),
-    governanceCentre: () => navigateToGovernanceCentre(),
-  }
-}
-
-const messages = defineMessage({
-  staking: {
-    id: 'menu.staking',
-    defaultMessage: '!!!Staking center',
-  },
-  catalystVoting: {
-    id: 'menu.catalystVoting',
-    defaultMessage: '!!!Catalyst voting',
-  },
-  stakingCenter: {
-    id: 'menu.stakingCenter',
-    defaultMessage: '!!!Staking',
-  },
-  settings: {
-    id: 'menu.settings',
-    defaultMessage: '!!!Settings',
-  },
-  supportTitle: {
-    id: 'menu.supportTitle',
-    defaultMessage: '!!!Any questions',
-  },
-  supportLink: {
-    id: 'menu.supportLink',
-    defaultMessage: '!!!Ask our support team',
-  },
-  knowledgeBase: {
-    id: 'menu.knowledgeBase',
-    defaultMessage: '!!!Knowledge base',
-  },
-  menu: {
-    id: 'menu',
-    defaultMessage: '!!!Menu',
-  },
-  releases: {
-    id: 'menu.releases',
-    defaultMessage: '!!!Releases',
-  },
-  governanceCentre: {
-    id: 'menu.governanceCentre',
-    defaultMessage: '!!!Governance centre',
-  },
-})

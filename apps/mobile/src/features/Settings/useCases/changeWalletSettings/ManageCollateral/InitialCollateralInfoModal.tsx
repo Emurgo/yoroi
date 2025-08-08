@@ -2,9 +2,9 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Linking, Text, View} from 'react-native'
 
-import {Space, SpaceHeight} from '../../../../../ui/Space/Space'
-import {InfoModalIllustration} from './illustrations/InfoModalIllustration'
 import {useStrings} from '~/kernel/i18n/useStrings'
+import {Space} from '../../../../../ui/Space/Space'
+import {InfoModalIllustration} from './illustrations/InfoModalIllustration'
 
 export const InitialCollateralInfoModal = () => {
   const {atoms: ta} = useTheme()
@@ -15,7 +15,7 @@ export const InitialCollateralInfoModal = () => {
       <InfoModalIllustration />
 
       <Text style={[a.text_center, a.body_1_lg_regular, ta.text_gray_medium]}>
-        {strings.collateralInfoModalText}
+        {strings.manageCollateral.collateralInfoModalText}
 
         <Space.Width._2xs />
 
@@ -40,13 +40,10 @@ const Link = () => {
 
   return (
     <Text
-      style={[
-        a.link_1_lg_underline,
-        ta.text_primary_medium,
-      ]}
+      style={[a.link_1_lg_underline, ta.text_primary_medium]}
       onPress={handleOnPress}
     >
-      {strings.learnMore}.
+      {strings.manageCollateral.learnMore}.
     </Text>
   )
 }

@@ -1,5 +1,5 @@
 import {createStackNavigator} from '@react-navigation/stack'
-import {atoms as a, useTheme} from '@yoroi/theme'
+import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
@@ -24,13 +24,15 @@ export const ManageNotificationsNavigator = () => {
       <Stack.Screen //
         name="manage-notification-settings"
         component={ManageNotificationSettings}
-        options={{title: strings.settings.notifications}}
+        options={{title: strings.manageNotifications.notifications}}
       />
 
       <Stack.Screen //
         name="manage-notification-display-duration"
         component={ManageNotificationDisplayDurationScreen}
-        options={{title: strings.settings.manageDisplayDurationScreenTitle}}
+        options={{
+          title: strings.manageNotifications.manageDisplayDurationScreenTitle,
+        }}
       />
     </Stack.Navigator>
   )

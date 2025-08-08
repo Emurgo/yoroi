@@ -150,18 +150,20 @@ const useChangePassword = (
   >,
 ) => {
   const {walletManager} = useWalletManager()
-  const {mutate, ...mutation} = useMutation(
-    ({currentPassword, newPassword}) =>
+
+  const mutation = useMutation({
+    mutationFn: ({currentPassword, newPassword}) =>
       walletManager.changeWalletPassword({
         id: wallet.id,
         oldPassword: currentPassword,
         newPassword,
       }),
-    mutationOptions,
-  )
+    ...mutationOptions,
+  })
 
   return {
-    changePassword: mutate,
-    ...mutation,
+    changePassword: mutation.mutate,
+    isLoading: mutation.isPending,
+    error: mutation.error,
   }
 }

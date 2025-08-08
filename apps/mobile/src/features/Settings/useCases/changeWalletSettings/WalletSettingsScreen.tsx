@@ -1,13 +1,21 @@
+import {useNavigation} from '@react-navigation/native'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {ScrollView, Text, View} from 'react-native'
+import {Alert, ScrollView, Text, TouchableOpacity, View} from 'react-native'
 
+import {
+  NavigatedSettingsItem,
+  SettingsItem,
+  SettingsSection,
+} from '~/features/Settings/SettingsItems'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
-import {Hr} from '~/ui/Hr/Hr'
+import {SettingsRouteNavigation} from '~/kernel/navigation/types'
+import {Button} from '~/ui/Button/Button'
+import {Icon} from '~/ui/Icon'
 import {Space} from '~/ui/Space/Space'
 
 export const WalletSettingsScreen = () => {
@@ -17,274 +25,226 @@ export const WalletSettingsScreen = () => {
   const {walletManager} = useWalletManager()
   const {resetToWalletSelection} = useWalletNavigation()
   const {track} = useMetrics()
+  const navigation = useNavigation<SettingsRouteNavigation>()
 
-  // const onToggleEasyConfirmation = () => {
-  //   // TODO: implement
-  //   track.walletSettingsEasyConfirmationToggled()
-  // }
+  const onToggleEasyConfirmation = () => {
+    if (meta.isEasyConfirmationEnabled) {
+      navigation.navigate('disable-easy-confirmation')
+    } else {
+      navigation.navigate('enable-easy-confirmation')
+    }
+  }
 
-  // const onSwitchWallet = () => {
-  //   resetToWalletSelection()
-  // }
+  const onSwitchWallet = () => {
+    resetToWalletSelection()
+  }
 
-  // const onLogout = () => {
-  //   Alert.alert(
-  //     strings.settings.walletSettings.logout,
-  //     strings.settings.walletSettings.logout,
-  //     [
-  //       {
-  //         text: strings.settings.walletSettings.logout,
-  //         onPress: () => {
-  //           walletManager.logout(wallet.id)
-  //           resetToWalletSelection()
-  //         },
-  //       },
-  //       {
-  //         text: strings.settings.walletSettings.cancel,
-  //         style: 'cancel',
-  //       },
-  //     ],
-  //   )
-  // }
+  const onLogout = () => {
+    Alert.alert(
+      strings.settings.walletSettings.logout,
+      strings.settings.walletSettings.logout,
+      [
+        {
+          text: strings.settings.walletSettings.logout,
+          onPress: () => {
+            walletManager.removeWallet(wallet.id)
+            resetToWalletSelection()
+          },
+        },
+        {
+          text: strings.global.cancel,
+          style: 'cancel',
+        },
+      ],
+    )
+  }
+
+  const onResync = () => {
+    Alert.alert(
+      strings.settings.walletSettings.resync,
+      strings.settings.walletSettings.resync,
+      [
+        {
+          text: strings.global.cancel,
+          style: 'cancel',
+        },
+        {
+          text: strings.settings.walletSettings.resync,
+          onPress: async () => {
+            try {
+              await wallet.sync({isForced: true})
+              track.settingsPageViewed()
+            } catch (error) {
+              console.error('Resync failed:', error)
+            }
+          },
+        },
+      ],
+    )
+  }
+
+  const getWalletType = (implementation: string): string => {
+    switch (implementation) {
+      case 'byron':
+        return strings.settings.walletSettings.byronWallet
+      case 'shelley':
+        return strings.settings.walletSettings.shelleyWallet
+      default:
+        return strings.settings.walletSettings.unknownWalletType
+    }
+  }
 
   return (
     <ScrollView style={[a.flex_1, {backgroundColor: p.bg_color_max}]}>
       <View style={[a.p_lg, a.gap_lg]}>
-        <View style={[a.gap_md]}>
-          <Text style={[a.heading_3_medium]}>
-            {strings.settings.walletSettings.general}
-          </Text>
+        <SettingsSection title={strings.settings.walletSettings.general}>
+          <SettingsItem
+            label={strings.settings.walletSettings.walletName}
+            icon={<Icon.Wallet size={24} color={p.gray_600} />}
+          >
+            <View style={[a.flex_row, a.align_center]}>
+              <Text style={[a.body_1_lg_regular, {color: p.gray_500}]}>
+                {meta.name}
+              </Text>
+              <Space.Width.md />
+              <Icon.Chevron direction="right" size={28} color={p.el_gray_min} />
+            </View>
+          </SettingsItem>
 
-          <View style={[a.gap_sm]}>
-            <Text style={[a.body_1_lg_regular]}>
-              {strings.settings.walletSettings.walletName}
-            </Text>
-            <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
-              {meta.name}
-            </Text>
-          </View>
+          <SettingsItem
+            label={strings.settings.walletSettings.network}
+            icon={<Icon.Cardano size={24} color={p.gray_600} />}
+          >
+            <View style={[a.flex_row, a.align_center]}>
+              <Text style={[a.body_1_lg_regular, {color: p.gray_500}]}>
+                {meta.implementation}
+              </Text>
+              <Space.Width.md />
+              <Icon.Chevron direction="right" size={28} color={p.el_gray_min} />
+            </View>
+          </SettingsItem>
 
-          <View style={[a.gap_sm]}>
-            <Text style={[a.body_1_lg_regular]}>
-              {strings.settings.walletSettings.network}
-            </Text>
-            {/* <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>{meta.networkId}</Text> */}
-          </View>
+          <SettingsItem
+            label={strings.settings.walletSettings.walletType}
+            icon={<Icon.WalletStack size={24} color={p.gray_600} />}
+          >
+            <View style={[a.flex_row, a.align_center]}>
+              <Text style={[a.body_1_lg_regular, {color: p.gray_500}]}>
+                {getWalletType(meta.implementation)}
+              </Text>
+              <Space.Width.md />
+              <Icon.Chevron direction="right" size={28} color={p.el_gray_min} />
+            </View>
+          </SettingsItem>
+        </SettingsSection>
 
-          <View style={[a.gap_sm]}>
-            <Text style={[a.body_1_lg_regular]}>
-              {strings.settings.walletSettings.walletType}
-            </Text>
-            <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
-              {/* {getWalletType(meta.implementation)} */}
-            </Text>
-          </View>
-        </View>
+        <SettingsSection title={strings.settings.walletSettings.security}>
+          <NavigatedSettingsItem
+            label={strings.settings.walletSettings.changePassword}
+            onNavigate={() => navigation.navigate('change-password')}
+            icon={<Icon.Lock size={24} color={p.gray_600} />}
+          />
 
-        <Hr />
+          <TouchableOpacity onPress={onToggleEasyConfirmation}>
+            <SettingsItem
+              label={strings.settings.walletSettings.easyConfirmation}
+              info={strings.settings.walletSettings.easyConfirmationInfo}
+              icon={<Icon.Pin size={24} color={p.gray_600} />}
+            >
+              <View style={[a.flex_row, a.align_center]}>
+                <Icon.Chevron
+                  direction="right"
+                  size={28}
+                  color={p.el_gray_min}
+                />
+              </View>
+            </SettingsItem>
+          </TouchableOpacity>
+        </SettingsSection>
 
-        <View style={[a.gap_md]}>
-          <Text style={[a.heading_3_medium]}>
-            {strings.settings.walletSettings.security}
-          </Text>
+        <SettingsSection title={strings.settings.walletSettings.actions}>
+          <TouchableOpacity onPress={onSwitchWallet}>
+            <SettingsItem
+              label={strings.settings.walletSettings.switchWallet}
+              icon={<Icon.Switch size={24} color={p.gray_600} />}
+            >
+              <View style={[a.flex_row, a.align_center]}>
+                <Icon.Chevron
+                  direction="right"
+                  size={28}
+                  color={p.el_gray_min}
+                />
+              </View>
+            </SettingsItem>
+          </TouchableOpacity>
 
-          <View style={[a.gap_sm]}>
-            <Text style={[a.body_1_lg_regular]}>
-              {strings.settings.walletSettings.changePassword}
-            </Text>
-            <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
-              {strings.settings.walletSettings.changePassword}
-            </Text>
-          </View>
+          <NavigatedSettingsItem
+            label={strings.settings.walletSettings.removeWallet}
+            onNavigate={() => navigation.navigate('remove-wallet')}
+            icon={<Icon.Delete size={24} color={p.gray_600} />}
+          />
 
-          <View style={[a.gap_sm]}>
-            <Text style={[a.body_1_lg_regular]}>
-              {strings.settings.walletSettings.easyConfirmation}
-            </Text>
-            <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
-              {strings.settings.walletSettings.easyConfirmationInfo}
-            </Text>
-          </View>
-        </View>
+          <NavigatedSettingsItem
+            label={strings.settings.walletSettings.about}
+            onNavigate={() => navigation.navigate('about')}
+            icon={<Icon.Info size={24} color={p.gray_600} />}
+          />
 
-        <Hr />
+          <TouchableOpacity onPress={onResync}>
+            <SettingsItem
+              label={strings.settings.walletSettings.resync}
+              icon={<Icon.Resync size={24} color={p.gray_600} />}
+            >
+              <View style={[a.flex_row, a.align_center]}>
+                <Icon.Chevron
+                  direction="right"
+                  size={28}
+                  color={p.el_gray_min}
+                />
+              </View>
+            </SettingsItem>
+          </TouchableOpacity>
+        </SettingsSection>
 
-        <View style={[a.gap_md]}>
-          <Text style={[a.heading_3_medium]}>
-            {strings.settings.walletSettings.actions}
-          </Text>
+        <SettingsSection title={strings.settings.walletSettings.notifications}>
+          <NavigatedSettingsItem
+            label={strings.settings.walletSettings.inAppNotifications}
+            onNavigate={() => navigation.navigate('manage-notifications')}
+            icon={<Icon.Bell size={24} color={p.gray_600} />}
+          />
 
-          <View style={[a.gap_sm]}>
-            <Text style={[a.body_1_lg_regular]}>
-              {strings.settings.walletSettings.switchWallet}
-            </Text>
-            <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
-              {strings.settings.walletSettings.switchWallet}
-            </Text>
-          </View>
+          <NavigatedSettingsItem
+            label={strings.settings.walletSettings.displayDuration}
+            onNavigate={() =>
+              navigation.navigate('manage-notifications', {
+                screen: 'manage-notification-display-duration',
+              })
+            }
+            icon={<Icon.Time size={24} color={p.gray_600} />}
+          />
+        </SettingsSection>
 
-          <View style={[a.gap_sm]}>
-            <Text style={[a.body_1_lg_regular]}>
-              {strings.settings.walletSettings.removeWallet}
-            </Text>
-            <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
-              {strings.settings.walletSettings.removeWallet}
-            </Text>
-          </View>
+        <SettingsSection title={strings.settings.walletSettings.collateral}>
+          <NavigatedSettingsItem
+            label={strings.settings.walletSettings.multipleAddresses}
+            onNavigate={() => navigation.navigate('manage-collateral')}
+            icon={<Icon.Collateral size={24} color={p.gray_600} />}
+          />
 
-          <View style={[a.gap_sm]}>
-            <Text style={[a.body_1_lg_regular]}>
-              {strings.settings.walletSettings.about}
-            </Text>
-            <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
-              {strings.settings.walletSettings.about}
-            </Text>
-          </View>
-
-          <View style={[a.gap_sm]}>
-            <Text style={[a.body_1_lg_regular]}>
-              {strings.settings.walletSettings.resync}
-            </Text>
-            <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
-              {strings.settings.walletSettings.resync}
-            </Text>
-          </View>
-        </View>
-
-        <Hr />
-
-        <View style={[a.gap_md]}>
-          <Text style={[a.heading_3_medium]}>
-            {strings.settings.walletSettings.notifications}
-          </Text>
-
-          <View style={[a.gap_sm]}>
-            <Text style={[a.body_1_lg_regular]}>
-              {strings.settings.walletSettings.inAppNotifications}
-            </Text>
-            <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
-              {strings.settings.walletSettings.allowNotifications}
-            </Text>
-          </View>
-
-          <View style={[a.gap_sm]}>
-            <Text style={[a.body_1_lg_regular]}>
-              {strings.settings.walletSettings.displayDuration}
-            </Text>
-            <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
-              {strings.settings.walletSettings.displayDuration}
-            </Text>
-          </View>
-        </View>
-
-        <Hr />
-
-        <View style={[a.gap_md]}>
-          <Text style={[a.heading_3_medium]}>
-            {strings.settings.walletSettings.collateral}
-          </Text>
-
-          <View style={[a.gap_sm]}>
-            <Text style={[a.body_1_lg_regular]}>
-              {strings.settings.walletSettings.multipleAddresses}
-            </Text>
-            <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
-              {strings.settings.walletSettings.multipleAddressesInfo}
-            </Text>
-          </View>
-
-          <View style={[a.gap_sm]}>
-            <Text style={[a.body_1_lg_regular]}>
-              {strings.settings.walletSettings.singleAddress}
-            </Text>
-            <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
-              {strings.settings.walletSettings.singleAddress}
-            </Text>
-          </View>
-        </View>
+          <NavigatedSettingsItem
+            label={strings.settings.walletSettings.singleAddress}
+            onNavigate={() => navigation.navigate('manage-collateral')}
+            icon={<Icon.Wallet size={24} color={p.gray_600} />}
+          />
+        </SettingsSection>
 
         <Space.Height.lg />
 
-        {/* <Button title={strings.settings.walletSettings.logout} onPress={onLogout} /> */}
+        <Button
+          title={strings.settings.walletSettings.logout}
+          onPress={onLogout}
+        />
       </View>
     </ScrollView>
   )
 }
-
-// const getWalletType = (
-//   implementation: Wallet.Implementation,
-// ): string => {
-//   switch (implementation) {
-//     case 'byron':
-//       return strings.settings.walletSettings.byronWallet
-//     case 'shelley':
-//       return strings.settings.walletSettings.shelleyWallet
-//     default:
-//       return strings.settings.walletSettings.unknownWalletType
-//   }
-// }
-
-// const ResyncButton = () => {
-//   const strings = useStrings()
-//   const {track} = useMetrics()
-
-//   const onResync = async () => {
-//     // TODO: implement resync
-//     track.walletSettingsResyncClicked()
-//   }
-
-//   return (
-//     <Button
-//       title={strings.settings.walletSettings.resync}
-//       onPress={onResync}
-//     />
-//   )
-// }
-
-// const AddressModeSwitcher = (props: {isSingle: boolean}) => {
-//   const strings = useStrings()
-
-//   const handleOnSwitchAddressMode = () => {
-//     // TODO: implement address mode switching
-//   }
-
-//   return (
-//     <View style={[a.flex_row, a.gap_sm]}>
-//       <Text style={[a.body_1_lg_regular]}>
-//         {props.isSingle ? strings.settings.walletSettings.singleAddress : strings.settings.walletSettings.multipleAddresses}
-//       </Text>
-//       <Button
-//         title={strings.settings.walletSettings.switchWallet}
-//         onPress={handleOnSwitchAddressMode}
-//       />
-//     </View>
-//   )
-// }
-
-// const useLogout = () => {
-//   const strings = useStrings()
-//   const {walletManager} = useWalletManager()
-//   const {resetToWalletSelection} = useWalletNavigation()
-
-//   const logout = () => {
-//     Alert.alert(
-//       strings.settings.walletSettings.logout,
-//       strings.settings.walletSettings.logout,
-//       [
-//         {
-//           text: strings.settings.walletSettings.logout,
-//           onPress: () => {
-//             // TODO: implement logout
-//             resetToWalletSelection()
-//           },
-//         },
-//         {
-//           text: strings.settings.walletSettings.cancel,
-//           style: 'cancel',
-//         },
-//       ],
-//     )
-//   }
-
-//   return {logout}
-// }

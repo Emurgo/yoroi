@@ -1,16 +1,16 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
 import {TouchableOpacity, View} from 'react-native'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Icon} from '~/ui/Icon'
 import {Text} from '~/ui/Text/Text'
-import {CurrencySymbol} from '~/wallets/types/other'
 
 type Props = {
   nativeName: string
-  symbol: CurrencySymbol
-  selectCurrency: (symbol: CurrencySymbol) => void
+  symbol: Portfolio.Currency.Symbol
+  selectCurrency: (symbol: Portfolio.Currency.Symbol) => void
   isSelected: boolean
 }
 
@@ -34,10 +34,8 @@ export const CurrencyPickerItem = ({
       <Row>
         <Description>
           <Title>{title}</Title>
-
           <Subtitle>{subtitle}</Subtitle>
         </Description>
-
         <Selected>
           {isSelected && <Icon.Check size={24} color={p.primary_600} />}
         </Selected>
@@ -63,6 +61,7 @@ const Row = ({children}: {children: React.ReactNode}) => {
     </View>
   )
 }
+
 const Description = ({children}: {children: React.ReactNode}) => {
   return (
     <View
@@ -77,6 +76,7 @@ const Description = ({children}: {children: React.ReactNode}) => {
     </View>
   )
 }
+
 const Selected = ({children}: {children: React.ReactNode}) => {
   return (
     <View
@@ -92,6 +92,7 @@ const Selected = ({children}: {children: React.ReactNode}) => {
     </View>
   )
 }
+
 const Title = ({children}: {children: React.ReactNode}) => {
   const {palette: p} = useTheme()
   return (
@@ -107,6 +108,7 @@ const Title = ({children}: {children: React.ReactNode}) => {
     </Text>
   )
 }
+
 const Subtitle = ({children}: {children: React.ReactNode}) => {
   const {palette: p} = useTheme()
   return (
