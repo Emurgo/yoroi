@@ -353,7 +353,7 @@ export const toSwapProtocol = (dex: Dex): Swap.Protocol =>
 
 export const fromSwapProtocol = (dex: Swap.Protocol): Dex =>
   ({
-    [Swap.Protocol.Cswap]: undefined,
+    [Swap.Protocol.Cswap]: Dex.Unsupported,
     [Swap.Protocol.Minswap_v1]: Dex.Minswap_v1,
     [Swap.Protocol.Minswap_v2]: Dex.Minswap_v2,
     [Swap.Protocol.Minswap_stable]: Dex.Minswap_stable,
@@ -362,7 +362,7 @@ export const fromSwapProtocol = (dex: Swap.Protocol): Dex =>
     [Swap.Protocol.Vyfi_v1]: Dex.Vyfi_v1,
     [Swap.Protocol.Sundaeswap_v1]: Dex.Sundaeswap_v1,
     [Swap.Protocol.Sundaeswap_v3]: Dex.Sundaeswap_v3,
-    [Swap.Protocol.Splash_v1]: undefined,
+    [Swap.Protocol.Splash_v1]: Dex.Unsupported,
     [Swap.Protocol.Teddy_v1]: Dex.Teddy_v1,
     [Swap.Protocol.Muesliswap_v2]: Dex.Muesliswap_v2,
     [Swap.Protocol.Muesliswap_clp]: Dex.Muesliswap_clp,

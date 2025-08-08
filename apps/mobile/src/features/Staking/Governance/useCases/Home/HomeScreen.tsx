@@ -24,12 +24,10 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
-import {
-  useCreateGovernanceTx,
-  useStakingKey,
-  useTransactionInfos,
-  useWalletEvent,
-} from '~/wallets/hooks'
+import {useCreateGovernanceTx} from '~/features/Staking/hooks/useCreateGovernanceTx'
+import {useStakingKey} from '~/features/Staking/hooks/useStakingKey'
+import {useTransactionInfos} from '~/features/Transactions/hooks/useTransactionInfos'
+import {useWalletEvent} from '~/features/WalletManager/hooks/useWalletEvent'
 import {TransactionInfo} from '~/wallets/types/other'
 import {Action} from '../../common/Action/Action'
 import {

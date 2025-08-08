@@ -1,8 +1,10 @@
-import {useRoute} from '@react-navigation/native'
 import {isNonNullable} from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
+
+import {useRoute} from '@react-navigation/native'
 import {fromPairs} from 'lodash'
 import React, {useState} from 'react'
+import {BigNumber} from 'bignumber.js'
 import {useIntl} from 'react-intl'
 import {
   LayoutAnimation,
@@ -17,6 +19,7 @@ import {ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {usePrivacyMode} from '~/features/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
+import {useTransactionInfos} from '~/features/Transactions/hooks/useTransactionInfos'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Banner} from '~/ui/Banner/Banner'
@@ -28,11 +31,11 @@ import {Icon} from '~/ui/Icon'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {MultiToken} from '~/wallets/cardano/MultiToken'
 import {CardanoTypes} from '~/wallets/cardano/types'
-import {useTransactionInfos} from '~/wallets/hooks'
 import {TransactionInfo} from '~/wallets/types/other'
 import {formatDateAndTime, formatTokenWithSymbol} from '~/wallets/utils/format'
 import {isEmptyString} from '~/wallets/utils/string'
 import {asQuantity} from '~/wallets/utils/utils'
+
 import AddressModal from './AddressModal/AddressModal'
 import {AssetList} from './AssetList'
 
@@ -59,6 +62,7 @@ export const TxDetails = () => {
   const transactions = useTransactionInfos({wallet})
   const transaction = transactions[id]
   const memo = !isEmptyString(transaction.memo) ? transaction.memo : '-'
+  const intl = useIntl()
 
   const submittedAt = isNonNullable(transaction.submittedAt)
     ? formatDateAndTime(transaction.submittedAt, intl)
@@ -93,6 +97,7 @@ export const TxDetails = () => {
       content: <AddressModal address={address} />,
       height: modalHeight,
     })
+
   return (
     <SafeAreaView
       edges={['bottom', 'left', 'right']}
@@ -100,9 +105,11 @@ export const TxDetails = () => {
     >
       <FadeIn style={a.flex_1}>
         <ScrollView contentContainerStyle={a.px_lg}>
-          <Banner
-            label={strings.transactions.direction(transaction.direction as any)}
-          >
+<<<<<<< HEAD
+          <Banner label={strings.transactions.direction(transaction.direction)}>
+=======
+          <Banner label={strings.transactions.direction(transaction.direction)}>
+>>>>>>> origin/develop
             <Boundary>
               <AdaAmount amount={amount} />
 
@@ -138,7 +145,11 @@ export const TxDetails = () => {
                 >
                   <Text
                     style={[{color: p.gray_900}, a.body_2_md_regular]}
-                  >{` -${item.assets.length} ${strings.transactions.assetsLabel} `}</Text>
+<<<<<<< HEAD
+                  >{` -${item.assets.length} ${strings.transactions.assets} `}</Text>
+=======
+                  >{` -${item.assets.length} ${strings.transactions.assets} `}</Text>
+>>>>>>> origin/develop
 
                   <Icon.Chevron
                     direction={expandedInItemId === item.id ? 'up' : 'down'}
@@ -177,7 +188,11 @@ export const TxDetails = () => {
                 >
                   <Text
                     style={[{color: p.gray_900}, a.body_2_md_regular]}
-                  >{` +${item.assets.length} ${strings.transactions.assetsLabel} `}</Text>
+<<<<<<< HEAD
+                  >{` +${item.assets.length} ${strings.transactions.assets} `}</Text>
+=======
+                  >{` +${item.assets.length} ${strings.transactions.assets} `}</Text>
+>>>>>>> origin/develop
 
                   <Icon.Chevron
                     direction={expandedOutItemId === item.id ? 'up' : 'down'}

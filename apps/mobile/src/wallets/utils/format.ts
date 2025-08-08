@@ -1,6 +1,7 @@
-import AssetFingerprint from '@emurgo/cip14-js'
 import {isTokenInfo as isPortfolioTokenInfo} from '@yoroi/portfolio'
 import {Balance, Portfolio} from '@yoroi/types'
+
+import AssetFingerprint from '@emurgo/cip14-js'
 import {BigNumber} from 'bignumber.js'
 import type {FormatDateOptions, IntlShape} from 'react-intl'
 
@@ -283,6 +284,3 @@ function getYesterday() {
 function getToday() {
   return getDateString(new Date())
 }
-
-// Note: today and yesterday messages moved to centralized useStrings
-// These utility functions should be updated to accept strings parameter

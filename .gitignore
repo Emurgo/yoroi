@@ -3,6 +3,8 @@
 .DS_Store
 
 .env
+translations/
+.translations/
 
 # Xcode
 #

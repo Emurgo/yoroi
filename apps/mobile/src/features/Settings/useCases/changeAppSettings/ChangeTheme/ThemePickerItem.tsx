@@ -1,4 +1,5 @@
 import {atoms as a, ThemeName, useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
 import {TouchableOpacity, View} from 'react-native'
 
@@ -6,19 +7,15 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Icon} from '~/ui/Icon'
 import {Text} from '~/ui/Text/Text'
-import {useThemeStorageMaker} from '~/wallets/hooks'
 
 type Props = {
   title: ThemeName
-  selectTheme: (name: ThemeName) => void
-  setLocalTheme: (name: ThemeName) => void
 }
 
-export const ThemePickerItem = ({title, selectTheme, setLocalTheme}: Props) => {
-  const {palette: p} = useTheme()
+export const ThemePickerItem = ({title}: Props) => {
+  const {palette: p, selectTheme, config} = useTheme()
 
   const strings = useStrings()
-  const themeStorage = useThemeStorageMaker()
   const {track} = useMetrics()
 
   const handleSelectTheme = (theme: ThemeName) => {
@@ -30,7 +27,6 @@ export const ThemePickerItem = ({title, selectTheme, setLocalTheme}: Props) => {
             ? 'dark'
             : 'auto',
     })
-    setLocalTheme(theme)
     selectTheme(theme)
   }
   return (
@@ -44,9 +40,7 @@ export const ThemePickerItem = ({title, selectTheme, setLocalTheme}: Props) => {
         </Description>
 
         <Selected>
-          {themeStorage.read() === title && (
-            <Icon.Check size={24} color={p.primary_600} />
-          )}
+          {config === title && <Icon.Check size={24} color={p.primary_600} />}
         </Selected>
       </Row>
     </TouchableOpacity>

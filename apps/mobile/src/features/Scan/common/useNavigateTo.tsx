@@ -2,7 +2,7 @@ import {useNavigation} from '@react-navigation/native'
 import {useRef} from 'react'
 
 import {TxHistoryRouteNavigation} from '~/kernel/navigation/types'
-import {useWalletNavigation} from '~/kernel/navigation/hooks'
+import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 
 export const useNavigateTo = () => {
   const navigation = useNavigation<TxHistoryRouteNavigation>()

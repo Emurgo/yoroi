@@ -1,9 +1,0 @@
-{
-  "npmClient": "yarn",
-  "version": "independent",
-  "command": {
-    "run": {
-      "ignore": ["e2e/*"]
-    }
-  }
-}

@@ -2,7 +2,7 @@ import {isString, parseString} from '@yoroi/common'
 import {App} from '@yoroi/types'
 
 export const makeMemosManager = async (storage: App.Storage) => {
-  const getMemos = () =>
+  const getMemos = async () =>
     storage
       .getAllKeys()
       .then((keys) => storage.multiGet(keys, parseString))

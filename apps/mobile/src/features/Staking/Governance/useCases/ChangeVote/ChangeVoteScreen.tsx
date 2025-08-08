@@ -18,7 +18,8 @@ import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWalle
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
-import {useCreateGovernanceTx, useStakingKey} from '~/wallets/hooks'
+import {useCreateGovernanceTx} from '~/features/Staking/hooks/useCreateGovernanceTx'
+import {useStakingKey} from '~/features/Staking/hooks/useStakingKey'
 import {Action} from '../../common/Action/Action'
 import {
   mapStakingKeyStateToGovernanceAction,
