@@ -1,382 +1,116 @@
 import {networkConfigs} from '@yoroi/blockchains'
-import {ThemeName, useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
-import {defineMessages, useIntl} from 'react-intl'
-import {Platform, ScrollView} from 'react-native'
-import {SafeAreaView} from 'react-native-safe-area-context'
+import {ScrollView, Text, View} from 'react-native'
 
-import {
-  useAuthSetting,
-  useAuthWithOs,
-  useIsAuthOsSupported,
-} from '~/features/Auth/hooks'
-import {useNavigateTo} from '~/features/Settings/common/navigation'
-import {
-  NavigatedSettingsItem,
-  SettingsItem,
-  SettingsSection,
-} from '~/features/Settings/SettingsItems'
-import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
-import {isDev, isNightly} from '~/kernel/constants'
-import {themeNames} from '~/kernel/i18n/global-messages'
-import {useLanguage} from '~/kernel/i18n/LanguageProvider'
-import {LanguageRecord, supportedLanguages} from '~/kernel/i18n/localization'
-import {Icon} from '~/ui/Icon'
-import {SettingsSwitch} from '~/ui/SettingsSwitch/SettingsSwitch'
+import {useStrings} from '~/kernel/i18n/useStrings'
+import {Button} from '~/ui/Button/Button'
+import {Hr} from '~/ui/Hr/Hr'
 import {Space} from '~/ui/Space/Space'
-import {useCrashReports} from '~/wallets/hooks'
-import {useCurrencyPairing} from './Currency/CurrencyContext'
-import {usePrivacyMode} from './PrivacyMode/PrivacyMode'
-import {
-  useChangeScreenShareSetting,
-  useScreenShareSettingEnabled,
-} from './ScreenShare'
 
 export const ApplicationSettingsScreen = () => {
   const strings = useStrings()
-  const {paletteName: name, palette: p} = useTheme()
-  const {languageCode} = useLanguage()
-  const language = supportedLanguages.find(
-    (lang) => lang.code === languageCode,
-  ) as LanguageRecord
-
-  const {isTogglePrivacyModeLoading, isPrivacyActive} = usePrivacyMode()
-  const {currency} = useCurrencyPairing()
-  const {enabled: crashReportEnabled} = useCrashReports()
-
-  const authSetting = useAuthSetting()
-  const isAuthOsSupported = useIsAuthOsSupported()
-  const navigateTo = useNavigateTo()
-
-  const {authWithOs} = useAuthWithOs({onSuccess: navigateTo.enableLoginWithPin})
-
-  const {network} = useSelectedNetwork()
-
-  const {data: screenShareEnabled} = useScreenShareSettingEnabled()
-  const displayScreenShareSetting = Platform.OS === 'android'
-
-  const onToggleAuthWithOs = () => {
-    if (authSetting === 'os') {
-      authWithOs()
-    } else {
-      navigateTo.enableLoginWithOs()
-    }
-  }
-
-  const iconProps = {
-    color: p.gray_400,
-    size: 23,
-  }
+  const {palette: p} = useTheme()
 
   return (
-    <SafeAreaView edges={['bottom', 'right', 'left']} style={{}}>
-      <ScrollView bounces={false} style={{}}>
-        <SettingsSection title={strings.general}>
-          <NavigatedSettingsItem
-            icon={<Icon.Globe {...iconProps} />}
-            label={strings.network}
-            onNavigate={navigateTo.changeNetwork}
-            selected={networkConfigs[network].name}
-          />
+    <ScrollView style={[a.flex_1, {backgroundColor: p.bg_color_max}]}>
+      <View style={[a.p_lg, a.gap_lg]}>
+        <View style={[a.gap_md]}>
+          <Text style={[a.heading_3_medium]}>{strings.settings.applicationSettings.general}</Text>
 
-          <NavigatedSettingsItem
-            icon={<Icon.Language {...iconProps} />}
-            label={strings.selectLanguage}
-            onNavigate={navigateTo.changeLanguage}
-            selected={language.label}
-          />
+          <View style={[a.gap_sm]}>
+            <Text style={[a.body_1_lg_regular]}>{strings.settings.applicationSettings.language}</Text>
+            <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
+              {strings.settings.applicationSettings.language}
+            </Text>
+          </View>
 
-          <NavigatedSettingsItem
-            icon={<Icon.Coins {...iconProps} />}
-            label={strings.selectFiatCurrency}
-            selected={currency}
-            onNavigate={navigateTo.changeCurrency}
-          />
+          <View style={[a.gap_sm]}>
+            <Text style={[a.body_1_lg_regular]}>{strings.settings.applicationSettings.currency}</Text>
+            <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
+              {strings.settings.applicationSettings.currency}
+            </Text>
+          </View>
 
-          <NavigatedSettingsItem
-            icon={<Icon.Info {...iconProps} />}
-            label={strings.about}
-            onNavigate={navigateTo.about}
-          />
+          <View style={[a.gap_sm]}>
+            <Text style={[a.body_1_lg_regular]}>{strings.settings.applicationSettings.theme}</Text>
+            <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
+              {strings.settings.applicationSettings.theme}
+            </Text>
+          </View>
+        </View>
 
-          <NavigatedSettingsItem
-            icon={<Icon.TermsOfUse {...iconProps} />}
-            label={strings.termsOfservice}
-            onNavigate={navigateTo.termsOfUse}
-          />
+        <Hr />
 
-          <NavigatedSettingsItem
-            icon={<Icon.TermsOfUse {...iconProps} />}
-            label={strings.privacyPolicy}
-            onNavigate={navigateTo.privacyPolicy}
-          />
+        <View style={[a.gap_md]}>
+          <Text style={[a.heading_3_medium]}>{strings.settings.applicationSettings.security}</Text>
 
-          <NavigatedSettingsItem
-            icon={<Icon.Analytics {...iconProps} />}
-            label={strings.analytics}
-            onNavigate={navigateTo.analytics}
-          />
+          <View style={[a.gap_sm]}>
+            <Text style={[a.body_1_lg_regular]}>{strings.settings.applicationSettings.biometric}</Text>
+            <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
+              {strings.settings.applicationSettings.biometric}
+            </Text>
+          </View>
 
-          <NavigatedSettingsItem
-            icon={<Icon.Theme {...iconProps} />}
-            label={strings.selectTheme}
-            onNavigate={navigateTo.changeTheme}
-            selected={strings.translateThemeName(name)}
-          />
-        </SettingsSection>
+          <View style={[a.gap_sm]}>
+            <Text style={[a.body_1_lg_regular]}>{strings.settings.applicationSettings.pin}</Text>
+            <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
+              {strings.settings.applicationSettings.pin}
+            </Text>
+          </View>
+        </View>
 
-        <Space.Height.xl />
+        <Hr />
 
-        <SettingsSection title={strings.securityReporting}>
-          <NavigatedSettingsItem
-            disabled={authSetting === 'os'}
-            icon={<Icon.Pin {...iconProps} />}
-            label={strings.changePin}
-            onNavigate={navigateTo.changeCustomPin}
-          />
+        <View style={[a.gap_md]}>
+          <Text style={[a.heading_3_medium]}>{strings.settings.applicationSettings.privacy}</Text>
 
-          <SettingsItem
-            icon={<Icon.EyeOff {...iconProps} />}
-            label={strings.privacyMode}
-            info={strings.privacyModeInfo}
-          >
-            <PrivacyModeSwitch isPrivacyActive={isPrivacyActive} />
-          </SettingsItem>
+          <View style={[a.gap_sm]}>
+            <Text style={[a.body_1_lg_regular]}>{strings.settings.applicationSettings.analytics}</Text>
+            <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
+              {strings.settings.applicationSettings.analytics}
+            </Text>
+          </View>
 
-          <SettingsItem
-            icon={<Icon.Bio {...iconProps} />}
-            label={strings.biometricsSignIn}
-            info={strings.biometricsSignInInfo}
-            disabled={!isAuthOsSupported}
-          >
-            <SettingsSwitch
-              value={authSetting === 'os'}
-              onValueChange={onToggleAuthWithOs}
-              disabled={!isAuthOsSupported || isTogglePrivacyModeLoading}
-            />
-          </SettingsItem>
+          <View style={[a.gap_sm]}>
+            <Text style={[a.body_1_lg_regular]}>{strings.settings.applicationSettings.crashReports}</Text>
+            <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
+              {strings.settings.applicationSettings.crashReports}
+            </Text>
+          </View>
+        </View>
 
-          <SettingsItem
-            icon={<Icon.Export {...iconProps} />}
-            label={strings.crashReporting}
-            info={strings.crashReportingInfo}
-          >
-            <CrashReportsSwitch
-              crashReportEnabled={Boolean(crashReportEnabled)}
-            />
-          </SettingsItem>
+        <Hr />
 
-          {displayScreenShareSetting && (
-            <SettingsItem
-              icon={<Icon.Share {...iconProps} />}
-              label={strings.screenSharing}
-              info={strings.screenSharingInfo}
-            >
-              <ScreenSharingSwitch
-                screenSharingEnabled={Boolean(screenShareEnabled)}
-                disabled={!Boolean(screenShareEnabled)}
-              />
-            </SettingsItem>
-          )}
-        </SettingsSection>
+        <View style={[a.gap_md]}>
+          <Text style={[a.heading_3_medium]}>{strings.settings.applicationSettings.about}</Text>
 
-        <Space.Height.xl />
-      </ScrollView>
-    </SafeAreaView>
+          <View style={[a.gap_sm]}>
+            <Text style={[a.body_1_lg_regular]}>{strings.settings.applicationSettings.version}</Text>
+            <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
+              {strings.settings.applicationSettings.version}
+            </Text>
+          </View>
+
+          <View style={[a.gap_sm]}>
+            <Text style={[a.body_1_lg_regular]}>{strings.settings.applicationSettings.terms}</Text>
+            <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
+              {strings.settings.applicationSettings.terms}
+            </Text>
+          </View>
+
+          <View style={[a.gap_sm]}>
+            <Text style={[a.body_1_lg_regular]}>{strings.settings.applicationSettings.privacyPolicy}</Text>
+            <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
+              {strings.settings.applicationSettings.privacyPolicy}
+            </Text>
+          </View>
+        </View>
+
+        <Space.Height.lg />
+
+        <Button title={strings.settings.applicationSettings.save} onPress={() => {}} />
+      </View>
+    </ScrollView>
   )
 }
-
-// to avoid switch jumps
-const PrivacyModeSwitch = ({isPrivacyActive}: {isPrivacyActive: boolean}) => {
-  const {setPrivacyModeOn, setPrivacyModeOff, isTogglePrivacyModeLoading} =
-    usePrivacyMode()
-  const [isLocalPrivacyActive, setIsLocalPrivacyOff] =
-    React.useState(isPrivacyActive)
-
-  const onTogglePrivacyMode = () => {
-    setIsLocalPrivacyOff((prevState) => {
-      if (prevState) {
-        setPrivacyModeOn()
-      } else {
-        setPrivacyModeOff()
-      }
-
-      return !prevState
-    })
-  }
-
-  return (
-    <SettingsSwitch
-      value={isLocalPrivacyActive}
-      onValueChange={onTogglePrivacyMode}
-      disabled={isTogglePrivacyModeLoading}
-    />
-  )
-}
-
-// to avoid switch jumps
-const CrashReportsSwitch = ({
-  crashReportEnabled,
-}: {
-  crashReportEnabled: boolean
-}) => {
-  const crashReports = useCrashReports()
-  const [isLocalEnabled, setIsLocalEnabled] = React.useState(crashReportEnabled)
-
-  const onToggleCrashReports = () => {
-    setIsLocalEnabled((prevState) => {
-      if (prevState) {
-        crashReports.disable()
-      } else {
-        crashReports.enable()
-      }
-
-      return !prevState
-    })
-  }
-
-  return (
-    <SettingsSwitch
-      value={isLocalEnabled}
-      onValueChange={onToggleCrashReports}
-      disabled={isNightly || isDev}
-    />
-  )
-}
-
-// to avoid switch jumps
-const ScreenSharingSwitch = ({
-  screenSharingEnabled,
-  disabled,
-}: {
-  screenSharingEnabled: boolean
-  disabled?: boolean
-}) => {
-  const {changeScreenShareSettings} = useChangeScreenShareSetting()
-  const [isLocalEnabled, setIsLocalEnabled] =
-    React.useState(screenSharingEnabled)
-
-  const onToggle = (enabled: boolean) => {
-    changeScreenShareSettings(enabled)
-    setIsLocalEnabled(enabled)
-  }
-
-  return (
-    <SettingsSwitch
-      value={isLocalEnabled}
-      onValueChange={onToggle}
-      disabled={disabled}
-    />
-  )
-}
-
-const useStrings = () => {
-  const intl = useIntl()
-
-  return {
-    general: intl.formatMessage(messages.general),
-    securityReporting: intl.formatMessage(messages.securityReporting),
-    selectLanguage: intl.formatMessage(messages.selectLanguage),
-    selectTheme: intl.formatMessage(messages.selectTheme),
-    selectFiatCurrency: intl.formatMessage(messages.selectFiatCurrency),
-    about: intl.formatMessage(messages.about),
-    changePin: intl.formatMessage(messages.changePin),
-    privacyMode: intl.formatMessage(messages.privacyMode),
-    privacyModeInfo: intl.formatMessage(messages.privacyModeInfo),
-    biometricsSignIn: intl.formatMessage(messages.biometricsSignIn),
-    biometricsSignInInfo: intl.formatMessage(messages.biometricsSignInInfo),
-    termsOfservice: intl.formatMessage(messages.termsOfservice),
-    crashReporting: intl.formatMessage(messages.crashReporting),
-    crashReportingInfo: intl.formatMessage(messages.crashReportingInfo),
-    analytics: intl.formatMessage(messages.analytics),
-    privacyPolicy: intl.formatMessage(messages.privacyPolicy),
-    screenSharing: intl.formatMessage(messages.screenSharing),
-    screenSharingInfo: intl.formatMessage(messages.screenSharingInfo),
-    translateThemeName: (theme: ThemeName) =>
-      intl.formatMessage(themeNames[theme]),
-    network: intl.formatMessage(messages.network),
-  }
-}
-
-const messages = defineMessages({
-  general: {
-    id: 'components.settings.applicationsettingsscreen.label.general',
-    defaultMessage: '!!!General',
-  },
-  securityReporting: {
-    id: 'components.settings.applicationsettingsscreen.label.securityReporting',
-    defaultMessage: '!!!Security & Reporting',
-  },
-  selectLanguage: {
-    id: 'components.settings.applicationsettingsscreen.selectLanguage',
-    defaultMessage: '!!!Language',
-  },
-  selectTheme: {
-    id: 'components.settings.applicationsettingsscreen.selectTheme',
-    defaultMessage: '!!!Theme',
-  },
-  selectFiatCurrency: {
-    id: 'components.settings.applicationsettingsscreen.selectFiatCurrency',
-    defaultMessage: '!!!Fiat Currency',
-  },
-  about: {
-    id: 'components.settings.applicationsettingsscreen.about',
-    defaultMessage: '!!!About',
-  },
-  termsOfservice: {
-    id: 'components.initialization.acepttermsofservicescreen.title',
-    defaultMessage: '!!!Terms of Service Agreement',
-  },
-  changePin: {
-    id: 'components.settings.applicationsettingsscreen.changePin',
-    defaultMessage: '!!!Change PIN',
-  },
-  privacyMode: {
-    id: 'components.settings.applicationsettingsscreen.privacyMode',
-    defaultMessage: '!!!Hide balance',
-  },
-  privacyModeInfo: {
-    id: 'components.settings.applicationsettingsscreen.privacyModeInfo',
-    defaultMessage:
-      '!!!This function will be applied to all wallets in your app',
-  },
-  biometricsSignIn: {
-    id: 'components.settings.applicationsettingsscreen.biometricsSignIn',
-    defaultMessage: '!!!Sign in with your biometrics',
-  },
-  biometricsSignInInfo: {
-    id: 'components.settings.applicationsettingsscreen.biometricsSignInInfo',
-    defaultMessage:
-      '!!!Changes to this option will be reflected after restarting the application',
-  },
-  crashReporting: {
-    id: 'components.settings.applicationsettingsscreen.crashReporting',
-    defaultMessage: '!!!Send crash report to Emurgo',
-  },
-  crashReportingInfo: {
-    id: 'components.settings.applicationsettingsscreen.crashReportingInfo',
-    defaultMessage:
-      '!!!Changes to this option will be reflected after restarting the application',
-  },
-  analytics: {
-    id: 'components.settings.applicationsettingsscreen.analytics',
-    defaultMessage: '!!!Analytics',
-  },
-  privacyPolicy: {
-    id: 'components.settings.applicationsettingsscreen.privacyPolicy',
-    defaultMessage: '!!!Privacy Policy',
-  },
-  screenSharing: {
-    id: 'components.settings.applicationsettingsscreen.screenSharing',
-    defaultMessage: '!!!Enable screensharing',
-  },
-  screenSharingInfo: {
-    id: 'components.settings.applicationsettingsscreen.screenSharingInfo',
-    defaultMessage:
-      '!!!Changes to this option will enable you to make screenshots as well share your screen via third party apps',
-  },
-  network: {
-    id: 'components.settings.applicationsettingsscreen.network',
-    defaultMessage: '!!!Network',
-  },
-})

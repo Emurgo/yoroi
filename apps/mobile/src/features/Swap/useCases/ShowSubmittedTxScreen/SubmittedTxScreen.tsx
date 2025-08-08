@@ -2,8 +2,8 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
-import {useSwap} from '~/features/Swap/common/SwapProvider'
-import {useStrings} from '~/features/Swap/common/useStrings'
+import {useSwap} from '~/features/Swap/common/useSwap'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
@@ -47,7 +47,7 @@ export const SubmittedTxScreen = () => {
           {color: p.gray_max},
         ]}
       >
-        {strings.submittedTxScreenTitle}
+        {strings.swap.submittedTxScreenTitle}
       </Text>
 
       <Text
@@ -57,7 +57,7 @@ export const SubmittedTxScreen = () => {
           {color: p.gray_600, maxWidth: 330},
         ]}
       >
-        {strings.submittedTxScreenText}
+        {strings.swap.submittedTxScreenText}
       </Text>
 
       <Space.Height._2xs fill />
@@ -65,7 +65,7 @@ export const SubmittedTxScreen = () => {
       <Actions>
         <Button
           onPress={handleOnPress}
-          title={strings.submittedTxScreenButton}
+          title={strings.swap.submittedTxScreenButton}
           style={[a.px_lg]}
         />
       </Actions>

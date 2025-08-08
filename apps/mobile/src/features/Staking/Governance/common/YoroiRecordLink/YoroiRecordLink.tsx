@@ -4,7 +4,7 @@ import {Linking, TouchableOpacity, View} from 'react-native'
 
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Divider} from '~/ui/Divider/Divider'
-import {useStrings} from '../strings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 
 export const YoroiRecordLink = () => {
   const strings = useStrings()

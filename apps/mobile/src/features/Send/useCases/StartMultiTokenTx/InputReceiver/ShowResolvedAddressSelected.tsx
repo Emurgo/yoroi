@@ -4,7 +4,7 @@ import {useTransfer} from '@yoroi/transfer'
 import React from 'react'
 import {Text, View} from 'react-native'
 
-import {useStrings} from '~/features/Send/common/useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Space} from '~/ui/Space/Space'
 
 export const ShowResolvedAddressSelected = () => {
@@ -20,7 +20,7 @@ export const ShowResolvedAddressSelected = () => {
 
   const serverName = nameServerName[selectedNameServer]
   const shortenAddress = shortenString(address)
-  const resolvedAddressInfo = `${strings.resolvedAddress}: ${shortenAddress}`
+  const resolvedAddressInfo = `${strings.send.resolvedAddress}: ${shortenAddress}`
 
   return (
     <View>

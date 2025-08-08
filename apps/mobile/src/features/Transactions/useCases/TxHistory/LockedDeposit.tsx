@@ -4,11 +4,11 @@ import React from 'react'
 import {View} from 'react-native'
 
 import {usePortfolioPrimaryBreakdown} from '~/features/Portfolio/common/hooks/usePortfolioPrimaryBreakdown'
-import {useStrings} from '~/features/Transactions/common/strings'
+import {usePrivacyMode} from '~/features/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
-import {usePrivacyMode} from '~/features/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
 
 export const LockedDeposit = ({
   ignorePrivacy = false,

@@ -2,7 +2,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Alert, View} from 'react-native'
 
-import {useStrings} from '~/features/Swap/common/strings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Text} from '~/ui/Text/Text'
 import {

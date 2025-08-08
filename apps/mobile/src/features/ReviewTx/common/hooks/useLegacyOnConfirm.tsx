@@ -8,7 +8,7 @@ import {useModal} from '~/ui/Modal/ModalContext'
 import {YoroiSignedTx, YoroiUnsignedTx} from '~/wallets/types/yoroi'
 import {useNavigateTo} from './useNavigateTo'
 import {OnConfirm} from './useOnConfirm'
-import {useStrings} from './useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 
 export const useLegacyOnConfirm = ({
   unsignedTx,

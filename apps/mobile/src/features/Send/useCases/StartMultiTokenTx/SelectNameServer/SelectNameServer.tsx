@@ -5,7 +5,7 @@ import * as React from 'react'
 import {ReactNode} from 'react'
 import {Animated} from 'react-native'
 
-import {useStrings} from '~/features/Send/common/useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {ButtonGroup} from '~/ui/ButtonGroup/ButtonGroup'
 import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
@@ -63,7 +63,7 @@ export const SelectNameServer = () => {
               <Space.Height.md />
 
               <WarningBanner
-                content={String(strings.manyNameServersWarning(bold))}
+                content={String(strings.send.manyNameServersWarning(bold))}
               />
             </>
           )}

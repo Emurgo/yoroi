@@ -2,7 +2,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Text, TouchableOpacity, TouchableOpacityProps} from 'react-native'
 
-import {useStrings} from '~/features/Portfolio/common/hooks/useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {
   PortfolioDappsTab,
   usePortfolio,
@@ -19,7 +19,7 @@ export const PortfolioDAppTabs = () => {
         onPress={() => {
           setDappsTab(PortfolioDappsTab.LiquidityPool)
         }}
-        label={strings.liquidityPool}
+        label={strings.portfolio.liquidityPool}
         active={dappsTab === PortfolioDappsTab.LiquidityPool}
       />
 
@@ -27,7 +27,7 @@ export const PortfolioDAppTabs = () => {
         onPress={() => {
           setDappsTab(PortfolioDappsTab.OpenOrders)
         }}
-        label={strings.openOrders}
+        label={strings.portfolio.openOrders}
         active={dappsTab === PortfolioDappsTab.OpenOrders}
       />
 
@@ -35,7 +35,7 @@ export const PortfolioDAppTabs = () => {
         onPress={() => {
           setDappsTab(PortfolioDappsTab.LendAndBorrow)
         }}
-        label={strings.lendAndBorrow}
+        label={strings.portfolio.lendAndBorrow}
         active={dappsTab === PortfolioDappsTab.LendAndBorrow}
       />
     </TabsGradient>

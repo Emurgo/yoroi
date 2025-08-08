@@ -1,7 +1,7 @@
 import {isRight} from '@yoroi/common'
 import {Chain, Portfolio} from '@yoroi/types'
 
-import {UseQueryOptions, useQuery} from '@tanstack/react-query'
+import {UseSuspenseQueryOptions, useSuspenseQuery} from '@tanstack/react-query'
 
 export function usePortfolioTokenTraits(
   {
@@ -13,14 +13,14 @@ export function usePortfolioTokenTraits(
     getTokenTraits: Portfolio.Api.Api['tokenTraits']
     network: Chain.SupportedNetworks
   },
-  options?: UseQueryOptions<
+  options?: UseSuspenseQueryOptions<
     Portfolio.Token.Traits,
     Error,
     Portfolio.Token.Traits,
     [Chain.SupportedNetworks, 'usePortfolioTokenTraits', Portfolio.Token.Id]
   >,
 ) {
-  const query = useQuery({
+  const query = useSuspenseQuery({
     queryKey: [network, 'usePortfolioTokenTraits', id],
     ...options,
     queryFn: async () => {

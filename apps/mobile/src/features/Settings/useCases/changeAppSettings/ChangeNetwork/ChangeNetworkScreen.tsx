@@ -15,12 +15,12 @@ import React from 'react'
 import {Platform, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Boundary} from '../../../../../ui/Boundary/Boundary'
 import {Button} from '../../../../../ui/Button/Button'
 import {useModal} from '../../../../../ui/Modal/ModalContext'
 import {Space} from '../../../../../ui/Space/Space'
 import {NetworkPickerList} from './NetworkPickerList'
-import {useStrings} from './strings'
 
 export const ChangeNetworkScreen = () => {
   const {atoms: ta} = useTheme()
@@ -70,21 +70,21 @@ export const useHandleOpenNetworkNoticeModal = () => {
 
   const handleOpenModal = () => {
     openModal({
-      title: strings.networkNoticeTitle,
+      title: strings.changeNetwork.networkNoticeTitle,
       content: (
         <View style={[a.flex_1, a.px_lg]}>
           <Text style={[a.body_1_lg_regular, {color: p.gray_900}]}>
-            {strings.networkNoticeMessage}
+            {strings.changeNetwork.networkNoticeMessage}
           </Text>
 
           <Space.Height.lg />
 
           <Text style={[a.body_1_lg_medium, {color: p.gray_900}]}>
-            {strings.networkNoticeListTitle}
+            {strings.changeNetwork.networkNoticeListTitle}
           </Text>
 
           <Text style={[a.body_1_lg_regular, {color: p.gray_900}]}>
-            {strings.networkNoticeList}
+            {strings.changeNetwork.networkNoticeList}
           </Text>
 
           <Space.Height.sm fill />
@@ -93,7 +93,10 @@ export const useHandleOpenNetworkNoticeModal = () => {
         </View>
       ),
       footer: (
-        <Button title={strings.networkNoticeButton} onPress={closeModal} />
+        <Button
+          title={strings.changeNetwork.networkNoticeButton}
+          onPress={closeModal}
+        />
       ),
       height: 450,
       onClose,

@@ -22,6 +22,11 @@ export const Direction = ({
   const iconStyles = styleMap(p)[transactionDirection]
   const IconComponent = iconMap[transactionDirection]
 
+  if (!IconComponent) {
+    console.warn(`Unknown transaction direction: ${transactionDirection}`)
+    return null
+  }
+
   return (
     <View
       style={[
@@ -37,7 +42,10 @@ export const Direction = ({
         containerStyle,
       ]}
     >
-      <IconComponent color={iconStyles?.icon} size={iconStyles.size ?? size} />
+      <IconComponent
+        color={iconStyles?.icon ?? '#000'}
+        size={iconStyles?.size ?? size}
+      />
     </View>
   )
 }

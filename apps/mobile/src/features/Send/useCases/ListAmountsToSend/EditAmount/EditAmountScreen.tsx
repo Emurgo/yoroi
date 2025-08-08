@@ -14,9 +14,9 @@ import {
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useStrings} from '~/features/Send/common/useStrings'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useLanguage} from '~/kernel/i18n'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 import {Button} from '~/ui/Button/Button'
 import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingView'
@@ -179,7 +179,7 @@ export const EditAmountScreen = () => {
         <Actions>
           <ApplyButton
             onPress={handleOnApply}
-            title={strings.apply.toLocaleUpperCase()}
+            title={strings.send.apply.toLocaleUpperCase()}
             disabled={isUnableToSpend || !hasBalance || isZero}
           />
         </Actions>
@@ -202,7 +202,7 @@ const MaxBalanceButton = ({onPress}: {onPress(): void}) => {
   return (
     <TouchableOpacity onPress={onPress}>
       <Text style={[{color: p.primary_600}, a.body_1_lg_medium]}>
-        {strings.max.toLocaleUpperCase()}
+        {strings.send.max.toLocaleUpperCase()}
       </Text>
     </TouchableOpacity>
   )

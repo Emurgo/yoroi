@@ -1,19 +1,17 @@
 import {useNavigation} from '@react-navigation/native'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
-import {defineMessages, useIntl} from 'react-intl'
-import {ScrollView, View} from 'react-native'
+import {KeyboardAvoidingView, Platform, ScrollView, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import globalMessages from '../../../../../kernel/i18n/global-messages'
-import {Button} from '../../../../../ui/Button/Button'
-import {KeyboardAvoidingView} from '../../../../../ui/KeyboardAvoidingView/KeyboardAvoidingView'
-import {Space} from '../../../../../ui/Space/Space'
-import {TextInput} from '../../../../../ui/TextInput/TextInput'
-import {isEmptyString} from '../../../../../wallets/utils/string'
-import {getWalletNameError} from '../../../../../wallets/utils/validators'
-import {useWalletManager} from '../../../../WalletManager/context/WalletManagerProvider'
-import {useSelectedWallet} from '../../../../WalletManager/hooks/useSelectedWallet'
+import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useStrings} from '~/kernel/i18n/useStrings'
+import {Button} from '~/ui/Button/Button'
+import {Space} from '~/ui/Space/Space'
+import {TextInput} from '~/ui/TextInput/TextInput'
+import {isEmptyString} from '~/wallets/utils/string'
+import {getWalletNameError} from '~/wallets/utils/validators'
 
 export const RenameWalletScreen = () => {
   const strings = useStrings()
@@ -34,9 +32,9 @@ export const RenameWalletScreen = () => {
   const hasErrors = Object.keys(validationErrors).length > 0
   const errorText = getWalletNameError(
     {
-      tooLong: strings.tooLong,
-      nameAlreadyTaken: strings.nameAlreadyTaken,
-      mustBeFilled: strings.mustBeFilled,
+      tooLong: strings.settings.renameWallet.tooLong,
+      nameAlreadyTaken: strings.settings.renameWallet.nameAlreadyTaken,
+      mustBeFilled: strings.settings.renameWallet.mustBeFilled,
     },
     validationErrors,
   )
@@ -46,7 +44,10 @@ export const RenameWalletScreen = () => {
   }
 
   return (
-    <KeyboardAvoidingView style={[ta.bg_color_max, a.flex_1]}>
+    <KeyboardAvoidingView
+      style={[ta.bg_color_max, a.flex_1]}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    >
       <SafeAreaView
         style={[a.flex_1, a.pt_lg, a.pb_lg]}
         edges={['left', 'right', 'bottom']}
@@ -57,7 +58,7 @@ export const RenameWalletScreen = () => {
             errorDelay={0}
             enablesReturnKeyAutomatically
             autoFocus
-            label={strings.walletNameInputLabel}
+            label={strings.settings.renameWallet.walletNameInputLabel}
             value={newWalletName}
             onChangeText={(walletName: string) => setNewWalletName(walletName)}
             errorText={!isEmptyString(errorText) ? errorText : undefined}
@@ -70,7 +71,7 @@ export const RenameWalletScreen = () => {
         <View style={[ta.bg_color_max, a.pt_lg, a.px_lg]}>
           <Button
             onPress={handleOnRename}
-            title={strings.changeButton}
+            title={strings.settings.renameWallet.changeButton}
             disabled={hasErrors || isEmptyString(newWalletName)}
           />
         </View>
@@ -80,30 +81,3 @@ export const RenameWalletScreen = () => {
 }
 
 const WalletNameInput = TextInput
-
-const messages = defineMessages({
-  changeButton: {
-    id: 'components.settings.changewalletname.changeButton',
-    defaultMessage: '!!!Change name',
-  },
-  walletNameInputLabel: {
-    id: 'components.settings.changewalletname.walletNameInputLabel',
-    defaultMessage: '!!!Wallet name',
-  },
-})
-
-const useStrings = () => {
-  const intl = useIntl()
-
-  return {
-    changeButton: intl.formatMessage(messages.changeButton),
-    walletNameInputLabel: intl.formatMessage(messages.walletNameInputLabel),
-    tooLong: intl.formatMessage(globalMessages.walletNameErrorTooLong),
-    nameAlreadyTaken: intl.formatMessage(
-      globalMessages.walletNameErrorNameAlreadyTaken,
-    ),
-    mustBeFilled: intl.formatMessage(
-      globalMessages.walletNameErrorMustBeFilled,
-    ),
-  }
-}

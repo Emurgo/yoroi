@@ -4,7 +4,7 @@ import * as React from 'react'
 import {Image, ImageSourcePropType, ImageStyle, Text, View} from 'react-native'
 
 import {ILiquidityPool} from '~/features/Portfolio/common/hooks/useGetLiquidityPool'
-import {useStrings} from '~/features/Portfolio/common/hooks/useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {AssetLogo} from '~/features/Portfolio/ui/AssetLogo/AssetLogo'
 import {PairedBalance} from '~/ui/PairedBalance/PairedBalance'
 import {TokenInfoIcon} from '~/ui/TokenInfoIcon/TokenInfoIcon'
@@ -62,7 +62,7 @@ export const LiquidityPoolModal = ({tokenInfo, splitTokenSymbol}: Props) => {
         >{`${firstTokenName} ${splitTokenSymbol} ${secondTokenName}`}</Text>
       </View>
 
-      <InfoGroup label={strings.value}>
+      <InfoGroup label={strings.portfolio.value}>
         <View>
           <Text
             style={[a.body_1_lg_regular, a.text_right, {color: p.gray_900}]}
@@ -75,7 +75,7 @@ export const LiquidityPoolModal = ({tokenInfo, splitTokenSymbol}: Props) => {
         </View>
       </InfoGroup>
 
-      <InfoGroup label={strings.dex}>
+      <InfoGroup label={strings.portfolio.dex}>
         <View style={[a.flex_row, a.align_center, a.justify_end, a.gap_xs]}>
           <DexLogo
             source={tokenInfo.dex.logo}
@@ -94,7 +94,7 @@ export const LiquidityPoolModal = ({tokenInfo, splitTokenSymbol}: Props) => {
         </View>
       </InfoGroup>
 
-      <InfoGroup label={strings.lp}>
+      <InfoGroup label={strings.portfolio.lp}>
         <Text style={[a.body_1_lg_regular, a.text_right, {color: p.gray_900}]}>
           {firstTokenBalance}
         </Text>

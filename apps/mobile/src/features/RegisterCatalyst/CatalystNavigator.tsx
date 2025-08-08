@@ -2,9 +2,8 @@ import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
-import {useIntl} from 'react-intl'
 
-import globalMessages from '~/kernel/i18n/global-messages'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {
   defaultStackNavigationOptions,
@@ -40,7 +39,7 @@ export const CatalystNavigator = () => {
     <Stack.Navigator
       screenOptions={{
         ...navigationOptions,
-        title: strings.title,
+        title: strings.global.votingTitle,
         headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
       }}
     >
@@ -80,13 +79,5 @@ export const useNavigateTo = () => {
     confirmPin: () => navigation.navigate('confirm-pin'),
     qrCode: () => navigation.navigate('qr-code'),
     txHistory: () => resetToTxHistory(),
-  }
-}
-
-const useStrings = () => {
-  const intl = useIntl()
-
-  return {
-    title: intl.formatMessage(globalMessages.votingTitle),
   }
 }

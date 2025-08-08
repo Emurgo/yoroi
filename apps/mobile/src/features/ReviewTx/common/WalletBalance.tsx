@@ -9,7 +9,7 @@ import {BalanceCard} from '~/ui/BalanceCard/BalanceCard'
 import {Icon} from '~/ui/Icon'
 import {Space} from '~/ui/Space/Space'
 import {TokenInfoIcon} from '~/ui/TokenInfoIcon/TokenInfoIcon'
-import {useStrings} from './hooks/useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 
 export const WalletBalance = ({
   image,
@@ -61,7 +61,7 @@ export const WalletBalance = ({
         <TokenSquare
           count={ftList.length}
           list={ftList}
-          title={strings.walletBalanceTokensTitle}
+          title={strings.txReview.walletBalanceTokensTitle}
         />
 
         <Space.Width.lg />
@@ -69,7 +69,7 @@ export const WalletBalance = ({
         <TokenSquare
           count={nftsList.length}
           list={nftsList}
-          title={strings.walletBalanceNFTsTitle}
+          title={strings.txReview.walletBalanceNFTsTitle}
         />
       </TokenSquares>
     </View>

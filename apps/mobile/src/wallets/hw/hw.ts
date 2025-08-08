@@ -1,7 +1,7 @@
 import {useMutation, UseMutationOptions} from '@tanstack/react-query'
 import {Permission, PermissionsAndroid, Platform} from 'react-native'
 
-import {ledgerMessages} from '~/kernel/i18n/global-messages'
+
 import {LocalizableError} from '~/kernel/i18n/LocalizableError'
 
 const requestLedgerPermissions = async () => {
@@ -48,16 +48,16 @@ export class BaseLedgerError extends LocalizableError {}
 export class BluetoothDisabledError extends BaseLedgerError {
   constructor() {
     super({
-      id: ledgerMessages.bluetoothDisabledError.id,
-      defaultMessage: ledgerMessages.bluetoothDisabledError.defaultMessage,
+      id: 'ledger.bluetoothDisabledError',
+      defaultMessage: 'Bluetooth is disabled. Please enable Bluetooth to connect to your Ledger device.',
     })
   }
 }
 export class GeneralConnectionError extends BaseLedgerError {
   constructor() {
     super({
-      id: ledgerMessages.connectionError.id,
-      defaultMessage: ledgerMessages.connectionError.defaultMessage,
+      id: 'ledger.connectionError',
+      defaultMessage: 'Failed to connect to Ledger device. Please check your connection and try again.',
     })
   }
 }
@@ -65,16 +65,16 @@ export class GeneralConnectionError extends BaseLedgerError {
 export class LedgerUserError extends BaseLedgerError {
   constructor() {
     super({
-      id: ledgerMessages.connectionError.id,
-      defaultMessage: ledgerMessages.connectionError.defaultMessage,
+      id: 'ledger.connectionError',
+      defaultMessage: 'Failed to connect to Ledger device. Please check your connection and try again.',
     })
   }
 }
 export class RejectedByUserError extends BaseLedgerError {
   constructor() {
     super({
-      id: ledgerMessages.rejectedByUserError.id,
-      defaultMessage: ledgerMessages.rejectedByUserError.defaultMessage,
+      id: 'ledger.rejectedByUserError',
+      defaultMessage: 'Operation was rejected by the user on the Ledger device.',
     })
   }
 }
@@ -82,8 +82,8 @@ export class RejectedByUserError extends BaseLedgerError {
 export class AdaAppClosedError extends BaseLedgerError {
   constructor() {
     super({
-      id: ledgerMessages.appOpened.id,
-      defaultMessage: ledgerMessages.appOpened.defaultMessage,
+      id: 'ledger.appOpened',
+      defaultMessage: 'Please open the Cardano app on your Ledger device.',
     })
   }
 }

@@ -3,9 +3,7 @@ import {useFocusEffect} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
-import {useIntl} from 'react-intl'
 import {
-  ActivityIndicator,
   Linking,
   ScrollView,
   StyleSheet,
@@ -17,9 +15,7 @@ import {
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import globalMessages, {
-  confirmationMessages,
-} from '~/kernel/i18n/global-messages'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {
   defaultStackNavigationOptions,
@@ -54,7 +50,7 @@ export const MenuNavigator = () => {
       <MenuStack.Screen
         name="_menu"
         component={Menu}
-        options={{title: strings.menu}}
+        options={{title: strings.menu.menu}}
       />
     </MenuStack.Navigator>
   )
@@ -80,13 +76,13 @@ export const Menu = () => {
     >
       <ScrollView contentContainerStyle={[a.flex_1, a.p_lg]} bounces={false}>
         <AppSettings //
-          label={strings.settings}
+          label={strings.menu.settings}
           onPress={navigateTo.settings}
           left={<Icon.Gear size={24} color={p.gray_600} />}
         />
 
         <Staking
-          label={strings.stakingCenter}
+          label={strings.menu.stakingCenter}
           onPress={navigateTo.stakingCenter}
           left={<Icon.TabStaking size={24} color={p.gray_600} />}
           right={
@@ -97,38 +93,26 @@ export const Menu = () => {
         />
 
         <Governance
-          label={strings.governanceCentre}
+          label={strings.menu.governanceCentre}
           onPress={navigateTo.governanceCentre}
-          left={<Icon.Governance size={24} color={p.gray_600} />}
+          left={<Icon.TabGovernance size={24} color={p.gray_600} />}
         />
 
-        <React.Suspense
-          fallback={
-            <Item
-              disabled
-              onPress={() => null}
-              label={strings.catalystVoting}
-              left={<Icon.Catalyst size={24} color={p.gray_600} />}
-              right={<ActivityIndicator color={p.gray_600} />}
-            />
-          }
-        >
-          <Catalyst
-            label={strings.catalystVoting}
-            onPress={navigateTo.catalystVoting}
-            left={<Icon.Catalyst size={24} color={p.gray_600} />}
-          />
-        </React.Suspense>
-
-        <KnowledgeBase //
-          label={strings.knowledgeBase}
-          onPress={navigateTo.knowledgeBase}
-          left={<Icon.Info size={24} color={p.gray_600} />}
+        <Catalyst
+          label={strings.menu.catalystVoting}
+          onPress={navigateTo.catalystVoting}
+          left={<Icon.TabCatalyst size={24} color={p.gray_600} />}
         />
-
-        <Space.Height.sm fill />
 
         <SupportLink />
+
+        <Space.Height.lg />
+
+        <Button
+          onPress={navigateTo.knowledgeBase}
+          title={strings.menu.knowledgeBase}
+          type="Secondary"
+        />
       </ScrollView>
     </SafeAreaView>
   )
@@ -277,24 +261,6 @@ const useNavigateTo = () => {
     support: () => Linking.openURL(SUPPORT_TICKET_LINK),
     knowledgeBase: () => Linking.openURL(KNOWLEDGE_BASE_LINK),
     governanceCentre: () => navigateToGovernanceCentre(),
-  }
-}
-
-const useStrings = () => {
-  const intl = useIntl()
-
-  return {
-    attention: intl.formatMessage(globalMessages.attention),
-    back: intl.formatMessage(confirmationMessages.commonButtons.backButton),
-    catalystVoting: intl.formatMessage(messages.catalystVoting),
-    settings: intl.formatMessage(messages.settings),
-    stakingCenter: intl.formatMessage(messages.stakingCenter),
-    supportTitle: intl.formatMessage(messages.supportTitle),
-    supportLink: intl.formatMessage(messages.supportLink),
-    knowledgeBase: intl.formatMessage(messages.knowledgeBase),
-    menu: intl.formatMessage(messages.menu),
-    releases: intl.formatMessage(messages.releases),
-    governanceCentre: intl.formatMessage(messages.governanceCentre),
   }
 }
 

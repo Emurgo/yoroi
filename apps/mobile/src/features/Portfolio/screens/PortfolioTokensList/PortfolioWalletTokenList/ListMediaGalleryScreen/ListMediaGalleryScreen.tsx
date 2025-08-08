@@ -7,7 +7,7 @@ import {ScrollView, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {usePortfolioBalances} from '~/features/Portfolio/common/hooks/usePortfolioBalances'
-import {useStrings} from '~/features/Portfolio/common/hooks/useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useTrackNftGallerySearchActivated} from '~/features/Portfolio/common/hooks/useTrackNftGallerySearchActivated'
 import {useNavigateTo} from '~/features/Portfolio/common/navigation'
 import {MediaGallery} from '~/features/Portfolio/ui/MediaGallery/MediaGallery'
@@ -29,8 +29,8 @@ export const ListMediaGalleryScreen = () => {
 
   // use case: search nfts
   useSearchOnNavBar({
-    title: strings.title,
-    placeholder: strings.search,
+    title: strings.portfolio.title,
+    placeholder: strings.portfolio.search,
     extraNavigationOptions: {
       headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
     },
@@ -62,7 +62,7 @@ export const ListMediaGalleryScreen = () => {
           style={[a.flex_1, a.flex_grow]}
           contentContainerStyle={[a.flex_1]}
         >
-          <EmptyGallery message={strings.noNftsFound} />
+          <EmptyGallery message={strings.portfolio.noNftsFound} />
         </ScrollView>
       </Wrapper>
     )
@@ -76,7 +76,7 @@ export const ListMediaGalleryScreen = () => {
           contentContainerStyle={[a.flex_1]}
         >
           <EmptyGallery
-            message={strings.noNftsInWallet}
+            message={strings.portfolio.noNftsInWallet}
             heading={
               <View>
                 <NftCount count={0} />
@@ -136,7 +136,7 @@ const NftCount = ({count}: {count?: number | string}) => {
     <View style={{height: 22}} testID="txtNftCount">
       <Text
         style={[{color: p.text_gray_medium}, a.flex_1, a.text_center]}
-      >{`${strings.nftCount}: ${count ?? '-'}`}</Text>
+      >{`${strings.portfolio.nftCount}: ${count ?? '-'}`}</Text>
     </View>
   )
 }

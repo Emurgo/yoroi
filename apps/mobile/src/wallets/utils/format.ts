@@ -237,6 +237,7 @@ export const formatDateAndTime = (timestamp: string, intl: IntlShape) => {
 export const formatDateRelative = (
   timestamp: string,
   intl: IntlShape,
+  strings?: {today: string; yesterday: string},
   opts = {
     year: 'numeric',
     month: 'numeric',
@@ -251,11 +252,11 @@ export const formatDateRelative = (
   const yesterday = getYesterday()
 
   if (inputDateString === today) {
-    return intl.formatMessage(messages.today)
+    return strings?.today ?? intl.formatMessage({id: 'global.today', defaultMessage: '!!!Today'})
   }
 
   if (inputDateString === yesterday) {
-    return intl.formatMessage(messages.yesterday)
+    return strings?.yesterday ?? intl.formatMessage({id: 'global.yesterday', defaultMessage: '!!!Yesterday'})
   }
 
   return intl.formatDate(new Date(timestamp), opts)
@@ -275,17 +276,5 @@ function getToday() {
   return getDateString(new Date())
 }
 
-const messages = defineMessages({
-  today: {
-    id: 'utils.format.today',
-    defaultMessage: '!!!Today',
-  },
-  yesterday: {
-    id: 'utils.format.yesterday',
-    defaultMessage: '!!!Yesterday',
-  },
-  unknownAssetName: {
-    id: 'utils.format.unknownAssetName',
-    defaultMessage: '!!![Unknown asset name]',
-  },
-})
+// Note: today and yesterday messages moved to centralized useStrings
+// These utility functions should be updated to accept strings parameter

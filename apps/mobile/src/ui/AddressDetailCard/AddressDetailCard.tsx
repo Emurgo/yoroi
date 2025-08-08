@@ -5,7 +5,7 @@ import Animated, {Layout} from 'react-native-reanimated'
 
 import {useCopy} from '~/features/Copy/context/CopyProvider'
 import {useReceive} from '~/features/Receive/common/ReceiveProvider'
-import {useStrings} from '~/features/Receive/common/useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Space} from '~/ui/Space/Space'
 import {useKeyHashes} from '~/wallets/hooks'
@@ -79,17 +79,17 @@ export const AddressDetailCard = ({title}: AddressDetailCardProps) => {
           <ShareQRCodeCard
             title={item.title}
             qrContent={item.address}
-            shareContent={`${strings.address} ${item.address}`}
+            shareContent={`${strings.receive.address} ${item.address}`}
             onLongPress={(event) =>
               copy({
                 text: item.address,
-                feedback: strings.addressCopiedMsg,
+                feedback: strings.receive.addressCopiedMsg,
                 event,
               })
             }
             testID="receive:address-detail-card"
             onShare={() => track.receiveShareAddressClicked()}
-            shareLabel={strings.shareLabel}
+            shareLabel={strings.receive.shareLabel}
           />
         )
       case 'Details':

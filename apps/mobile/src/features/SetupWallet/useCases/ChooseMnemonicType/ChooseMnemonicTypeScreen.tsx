@@ -9,7 +9,7 @@ import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {LogoBanner} from '~/ui/LogoBanner/LogoBanner'
 import {Space} from '~/ui/Space/Space'
 import {ButtonCard} from '../../common/ButtonCard/ButtonCard'
-import {useStrings} from '../../common/useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Mnemonic15Words} from '../../illustrations/Mnemonic15Words'
 import {Mnemonic24Words} from '../../illustrations/Mnemonic24Words'
 
@@ -50,7 +50,7 @@ export const ChooseMnemonicTypeScreen = () => {
 
       <View>
         <ButtonCard
-          title={strings.choose15WordsMnemonicTitle}
+          title={strings.setupWallet.choose15WordsMnemonicTitle}
           icon={<Mnemonic15Words style={[a.absolute, {right: 0}]} />}
           onPress={handle15Words}
           testID="mnemonic-15-word"
@@ -59,7 +59,7 @@ export const ChooseMnemonicTypeScreen = () => {
         <Space.Height.lg />
 
         <ButtonCard
-          title={strings.choose24WordsMnemonicTitle}
+          title={strings.setupWallet.choose24WordsMnemonicTitle}
           icon={<Mnemonic24Words style={[a.absolute, {right: 0}]} />}
           onPress={handle24Words}
           testID="mnemonic-24-word"

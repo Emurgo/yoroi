@@ -15,11 +15,8 @@ import {
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {
-  SettingsStackRoutes,
-  useUnsafeParams,
-  useWalletNavigation,
-} from '../../../../../kernel/navigation/navigation'
+import {SettingsStackRoutes} from '../../../../../kernel/navigation/types'
+import {useUnsafeParams, useWalletNavigation} from '../../../../../kernel/navigation/hooks'
 import {Button, ButtonType} from '../../../../../ui/Button/Button'
 import {Copiable} from '../../../../../ui/Copiable/Copiable'
 import {ErrorPanel} from '../../../../../ui/ErrorPanel/ErrorPanel'
@@ -46,7 +43,7 @@ import {useWalletManager} from '../../../../WalletManager/context/WalletManagerP
 import {CollateralInfoModal} from './CollateralInfoModal'
 import {createCollateralEntry} from './helpers'
 import {InitialCollateralInfoModal} from './InitialCollateralInfoModal'
-import {useStrings} from './strings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 
 export const ManageCollateralScreen = () => {
   const {atoms: ta} = useTheme()

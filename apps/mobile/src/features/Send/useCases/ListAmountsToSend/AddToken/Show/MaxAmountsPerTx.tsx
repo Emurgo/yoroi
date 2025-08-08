@@ -1,11 +1,10 @@
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {defineMessages, useIntl} from 'react-intl'
 import {Text} from 'react-native'
 
-import {ErrorPanel} from '~/ui/ErrorPanel/ErrorPanel'
-import globalMessages from '~/kernel/i18n/global-messages'
 import {limitOfSecondaryAmountsPerTx} from '~/features/SetupWallet/common/constants'
+import {useStrings} from '~/kernel/i18n/useStrings'
+import {ErrorPanel} from '~/ui/ErrorPanel/ErrorPanel'
 
 export const MaxAmountsPerTx = () => {
   const strings = useStrings()
@@ -18,27 +17,10 @@ export const MaxAmountsPerTx = () => {
       >
         <Text
           style={theme.atoms.body_2_md_medium}
-        >{`${limitOfSecondaryAmountsPerTx} ${strings.assets.toLocaleLowerCase()} `}</Text>
+        >{`${limitOfSecondaryAmountsPerTx} ${strings.send.assets.toLocaleLowerCase()} `}</Text>
 
-        {strings.maxAmountsPerTx}
+        {strings.send.maxAmountsPerTx}
       </Text>
     </ErrorPanel>
   )
-}
-
-const messages = defineMessages({
-  maxAmountsPerTx: {
-    id: 'components.send.sendscreen.errorBannerMaxTokenLimit',
-    defaultMessage:
-      '!!!is the maximum number allowed to send in one transaction',
-  },
-})
-
-const useStrings = () => {
-  const intl = useIntl()
-
-  return {
-    maxAmountsPerTx: intl.formatMessage(messages.maxAmountsPerTx),
-    assets: intl.formatMessage(globalMessages.assetsLabel),
-  }
 }

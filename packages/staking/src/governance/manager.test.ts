@@ -130,14 +130,11 @@ describe('createGovernanceManager', () => {
 
   describe('createDelegationCertificate', () => {
     it('should create delegation certificate', async () => {
-      const privateKey = await cardano.Bip32PrivateKey.fromBytes(
+      const privateKey = cardano.Bip32PrivateKey.fromBytes(
         Buffer.from(privateKeyCBOR, 'hex'),
       )
-      const publicKey = await privateKey.toPublic()
-      const stakingKey = await publicKey
-        .derive(2)
-        .then((x) => x.derive(0))
-        .then((x) => x.toRawKey())
+      const publicKey = privateKey.toPublic()
+      const stakingKey = publicKey.derive(2).derive(0).toRawKey()
 
       const drepId = 'c1ba49d52822bc4ef30cbf77060251668f1a6ef15ca46d18f76cc758'
       const manager = governanceManagerMaker(options)
@@ -147,9 +144,7 @@ describe('createGovernanceManager', () => {
         stakingKey,
       )
       expect(certificate).toBeDefined()
-      const certificateHex = Buffer.from(await certificate.toBytes()).toString(
-        'hex',
-      )
+      const certificateHex = Buffer.from(certificate.toBytes()).toString('hex')
       expect(certificateHex).toBe(
         '83098200581cc3892366f174a76af9252f78368f5747d3055ab3568ea3b6bf40b01e8200581cc1ba49d52822bc4ef30cbf77060251668f1a6ef15ca46d18f76cc758',
       )

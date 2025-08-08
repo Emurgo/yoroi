@@ -12,7 +12,7 @@ import {
 } from 'react-native'
 
 import {IOpenOrders} from '~/features/Portfolio/common/hooks/useGetOpenOrders'
-import {useStrings} from '~/features/Portfolio/common/hooks/useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {AssetLogo} from '~/features/Portfolio/ui/AssetLogo/AssetLogo'
 import {PairedBalance} from '~/ui/PairedBalance/PairedBalance'
 import {TokenInfoIcon} from '~/ui/TokenInfoIcon/TokenInfoIcon'
@@ -70,7 +70,7 @@ export const OpenOrderModal = ({tokenInfo, splitTokenSymbol}: Props) => {
         >{`${firstTokenName} ${splitTokenSymbol} ${secondTokenName}`}</Text>
       </View>
 
-      <InfoGroup label={strings.total}>
+      <InfoGroup label={strings.portfolio.total}>
         <View>
           <Text
             style={[a.body_1_lg_regular, a.text_right, {color: p.gray_900}]}
@@ -83,7 +83,7 @@ export const OpenOrderModal = ({tokenInfo, splitTokenSymbol}: Props) => {
         </View>
       </InfoGroup>
 
-      <InfoGroup label={strings.dex}>
+      <InfoGroup label={strings.portfolio.dex}>
         <View style={[a.flex_row, a.align_center, a.justify_end, a.gap_xs]}>
           <DexLogo
             source={tokenInfo.dex.logo}
@@ -102,19 +102,19 @@ export const OpenOrderModal = ({tokenInfo, splitTokenSymbol}: Props) => {
         </View>
       </InfoGroup>
 
-      <InfoGroup label={strings.assetPrice}>
+      <InfoGroup label={strings.portfolio.assetPrice}>
         <Text
           style={[a.body_1_lg_regular, a.text_right, {color: p.gray_900}]}
         >{`${firstTokenBalance} ${firstTokenName}/${secondTokenName}`}</Text>
       </InfoGroup>
 
-      <InfoGroup label={strings.assetAmount}>
+      <InfoGroup label={strings.portfolio.assetAmount}>
         <Text
           style={[a.body_1_lg_regular, a.text_right, {color: p.gray_900}]}
         >{`${secondTokenBalance} ${secondTokenName}`}</Text>
       </InfoGroup>
 
-      <InfoGroup label={strings.txId}>
+      <InfoGroup label={strings.portfolio.txId}>
         <TxLink
           txId={shortenString('f23ad8f38f23ad8f38f23ad8f38f23ad8f38bcb')}
           onTxPress={() => Linking.openURL('http://')}

@@ -8,7 +8,6 @@ import {
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Explorers, Network, Portfolio} from '@yoroi/types'
 import React, {ReactNode, useState} from 'react'
-import {defineMessages, useIntl} from 'react-intl'
 import {
   Linking,
   RefreshControl,
@@ -18,11 +17,12 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native'
+import {useStrings} from '~/kernel/i18n/useStrings'
 
 import {usePortfolioImageInvalidate} from '~/features/Portfolio/common/hooks/usePortfolioImage'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {NftRoutes} from '~/kernel/navigation'
+import {NftRoutes} from '~/kernel/navigation/types'
 import {Boundary} from '~/ui/Boundary/Boundary'
 import {Copiable} from '~/ui/Copiable/Copiable'
 import {FadeIn} from '~/ui/FadeIn/FadeIn'
@@ -73,7 +73,7 @@ export const MediaDetailsScreen = () => {
                   track.nftGalleryDetailsTab({nft_tab: 'Overview'})
                 }
               }}
-              label={strings.overview}
+              label={strings.portfolio.overview}
               active={activeTab === 'overview'}
               testID="overview"
             />
@@ -85,7 +85,7 @@ export const MediaDetailsScreen = () => {
                   track.nftGalleryDetailsTab({nft_tab: 'Metadata'})
                 }
               }}
-              label={strings.metadata}
+              label={strings.portfolio.info}
               active={activeTab === 'metadata'}
               testID="metadata"
             />
@@ -209,23 +209,23 @@ const NftOverview = ({info, explorers, traits}: NftOverviewProps) => {
 
   return (
     <View>
-      <MetadataRow title={strings.nftName}>
+      <MetadataRow title={strings.portfolio.info}>
         <Text style={[a.body_2_md_regular, {color: p.gray_600}, a.flex_1]}>
           {info.name}
         </Text>
       </MetadataRow>
 
-      <MetadataRow title={strings.description}>
+      <MetadataRow title={strings.portfolio.info}>
         <Text style={[a.body_2_md_regular, {color: p.gray_600}, a.flex_1]}>
           {normalizeMetadataString(info.description)}
         </Text>
       </MetadataRow>
 
-      <MetadataRow title={strings.fingerprint}>
+      <MetadataRow title={strings.portfolio.fingerprint}>
         <Copiable title={info.fingerprint} text={info.fingerprint} />
       </MetadataRow>
 
-      <MetadataRow title={strings.policyId}>
+      <MetadataRow title={strings.portfolio.policyID}>
         <Copiable title={policyId} text={policyId} />
       </MetadataRow>
 
@@ -233,7 +233,7 @@ const NftOverview = ({info, explorers, traits}: NftOverviewProps) => {
         <Trait key={`trait-${trait.type}`} trait={trait} />
       ))}
 
-      <MetadataRow title={strings.detailsLinks}>
+      <MetadataRow title={strings.portfolio.info}>
         <View
           style={{
             display: 'flex',
@@ -374,7 +374,10 @@ const NftMetadata = ({discovery}: {discovery: Portfolio.Token.Discovery}) => {
 
   return (
     <View>
-      <Copiable title={strings.copyMetadata} text={stringifiedMetadata} />
+      <Copiable
+        title={strings.portfolio.nftDetail.copyMetadata}
+        text={stringifiedMetadata}
+      />
 
       <Space.Height.sm />
 
@@ -387,68 +390,3 @@ const isSupportedUrl = (url: string) =>
   url.toLocaleLowerCase().startsWith('https')
 
 type ActiveTab = 'overview' | 'metadata'
-
-const messages = defineMessages({
-  title: {
-    id: 'nft.detail.title',
-    defaultMessage: '!!!NFT Details',
-  },
-  overview: {
-    id: 'nft.detail.overview',
-    defaultMessage: '!!!Overview',
-  },
-  metadata: {
-    id: 'nft.detail.metadata',
-    defaultMessage: '!!!Metadata',
-  },
-  nftName: {
-    id: 'nft.detail.nftName',
-    defaultMessage: '!!!NFT Name',
-  },
-  createdAt: {
-    id: 'nft.detail.createdAt',
-    defaultMessage: '!!!Created',
-  },
-  description: {
-    id: 'nft.detail.description',
-    defaultMessage: '!!!Description',
-  },
-  author: {
-    id: 'nft.detail.author',
-    defaultMessage: '!!!Author',
-  },
-  fingerprint: {
-    id: 'nft.detail.fingerprint',
-    defaultMessage: '!!!Fingerprint',
-  },
-  policyId: {
-    id: 'nft.detail.policyId',
-    defaultMessage: '!!!Policy id',
-  },
-  detailsLinks: {
-    id: 'nft.detail.detailsLinks',
-    defaultMessage: '!!!Details on',
-  },
-  copyMetadata: {
-    id: 'nft.detail.copyMetadata',
-    defaultMessage: '!!!Copy metadata',
-  },
-})
-
-const useStrings = () => {
-  const intl = useIntl()
-
-  return {
-    title: intl.formatMessage(messages.title),
-    overview: intl.formatMessage(messages.overview),
-    metadata: intl.formatMessage(messages.metadata),
-    nftName: intl.formatMessage(messages.nftName),
-    createdAt: intl.formatMessage(messages.createdAt),
-    description: intl.formatMessage(messages.description),
-    author: intl.formatMessage(messages.author),
-    fingerprint: intl.formatMessage(messages.fingerprint),
-    policyId: intl.formatMessage(messages.policyId),
-    detailsLinks: intl.formatMessage(messages.detailsLinks),
-    copyMetadata: intl.formatMessage(messages.copyMetadata),
-  }
-}

@@ -650,7 +650,7 @@ describe('DappConnector', () => {
       const dappConnector = getDappConnector({
         ...mockWallet,
         getCollateral: () => Promise.resolve([]),
-        getBalance: () => CSL.Value.fromHex('00'),
+        getBalance: () => Promise.resolve(CSL.Value.fromHex('00')),
       })
       const sendMessage = jest.fn()
       await dappConnector.addConnection({
@@ -669,8 +669,7 @@ describe('DappConnector', () => {
       const dappConnector = getDappConnector({
         ...mockWallet,
         getCollateral: () => Promise.resolve([]),
-        getBalance: async () =>
-          CSL.Value.new(await CSL.BigNum.fromStr('20000000')),
+        getBalance: async () => CSL.Value.new(CSL.BigNum.fromStr('20000000')),
         sendReorganisationTx: async () => ({toHex: () => '00'}) as any,
       })
       const sendMessage = jest.fn()
@@ -697,8 +696,7 @@ describe('DappConnector', () => {
       const dappConnector = getDappConnector({
         ...mockWallet,
         getCollateral: () => Promise.resolve([]),
-        getBalance: async () =>
-          CSL.Value.new(await CSL.BigNum.fromStr('20000000')),
+        getBalance: async () => CSL.Value.new(CSL.BigNum.fromStr('20000000')),
         sendReorganisationTx: async () =>
           Promise.reject(new Error('Reorganisation failed')),
       })
@@ -1014,12 +1012,14 @@ const mockWallet: ResolverWallet = {
   network: Chain.Network.Mainnet,
   networkId: 1,
   confirmConnection: async () => true,
-  getBalance: () => CSL.Value.fromHex('1a062ea8a0'),
+  getBalance: () => Promise.resolve(CSL.Value.fromHex('1a062ea8a0')),
   getUnusedAddresses: () => Promise.resolve([]),
   getUsedAddresses: () => Promise.resolve([]),
   getChangeAddress: () =>
-    CSL.Address.fromHex(
-      '017ef00ee3672330155382a2857573868af466b88aa8c4081f45583e1784d958399bcce03402fd853d43a4e7366f2018932e5aff4eea904693',
+    Promise.resolve(
+      CSL.Address.fromHex(
+        '017ef00ee3672330155382a2857573868af466b88aa8c4081f45583e1784d958399bcce03402fd853d43a4e7366f2018932e5aff4eea904693',
+      ),
     ),
   getRewardAddresses: () =>
     Promise.all([

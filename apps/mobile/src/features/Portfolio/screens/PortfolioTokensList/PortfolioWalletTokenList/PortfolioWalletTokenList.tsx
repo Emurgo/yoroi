@@ -12,7 +12,7 @@ import * as React from 'react'
 import {Text, View} from 'react-native'
 
 import {aggregatePrimaryAmount} from '~/features/Portfolio/common/helpers/aggregatePrimaryAmount'
-import {useStrings} from '~/features/Portfolio/common/hooks/useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useZeroBalance} from '~/features/Portfolio/common/hooks/useZeroBalance'
 import {usePortfolio} from '~/features/Portfolio/context/PortfolioProvider'
 import {usePortfolioTokenActivity} from '~/features/Portfolio/context/PortfolioTokenActivityProvider'
@@ -185,7 +185,7 @@ const HeadingList = ({
       <Space.Height.md />
 
       <Text style={[{color: p.gray_700}, a.body_2_md_regular]}>
-        {strings.tokensAvailable(isFirstUser ? 0 : countTokensList)}
+        {strings.portfolio.tokensAvailable(isFirstUser ? 0 : countTokensList)}
       </Text>
 
       <Space.Height.sm />

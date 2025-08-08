@@ -2,7 +2,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
-import {useStrings} from './useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 
 export const LabelSingleAddress = () => {
   const strings = useStrings()

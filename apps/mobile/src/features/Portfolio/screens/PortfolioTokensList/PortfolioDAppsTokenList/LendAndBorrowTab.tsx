@@ -2,7 +2,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {View} from 'react-native'
 
-import {useStrings} from '~/features/Portfolio/common/hooks/useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {TokenEmptyList} from '~/features/Portfolio/ui/TokenEmptyList/TokenEmptyList'
 import {Space} from '~/ui/Space/Space'
 
@@ -14,7 +14,7 @@ export const LendAndBorrowTab = () => {
     <View style={[a.flex_1]}>
       <Space.Height.md />
 
-      <TokenEmptyList emptyText={strings.availableSoon} />
+      <TokenEmptyList emptyText={strings.portfolio.availableSoon} />
     </View>
   )
 }

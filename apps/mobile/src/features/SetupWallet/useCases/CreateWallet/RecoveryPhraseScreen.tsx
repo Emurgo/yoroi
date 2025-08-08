@@ -7,6 +7,7 @@ import {Linking, Platform, Text, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {YoroiZendeskLink} from '~/features/SetupWallet/common/constants'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Button} from '~/ui/Button/Button'
 import {CardAboutPhrase} from '~/ui/CardAboutPhrase/CardAboutPhrase'
@@ -16,7 +17,6 @@ import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
 import {StepperProgress} from '~/ui/StepperProgress/StepperProgress'
 import {generateAdaMnemonic} from '~/wallets/cardano/mnemonic/mnemonic'
-import {useStrings} from '../../common/useStrings'
 import {EyeClosed} from '../../illustrations/EyeClosed'
 import {EyeOpen} from '../../illustrations/EyeOpen'
 
@@ -44,17 +44,17 @@ export const RecoveryPhraseScreen = () => {
 
   const handleOnShowModal = React.useCallback(() => {
     openModal({
-      title: strings.recoveryPhraseModalTitle,
+      title: strings.setupWallet.recoveryPhraseModalTitle,
       content: (
         <View style={[a.flex_1, a.px_lg]}>
           <CardAboutPhrase
-            title={strings.recoveryPhraseCardTitle}
+            title={strings.setupWallet.recoveryPhraseCardTitle}
             linesOfText={[
-              strings.recoveryPhraseCardFirstItem,
-              strings.recoveryPhraseCardSecondItem,
-              strings.recoveryPhraseCardThirdItem,
-              strings.recoveryPhraseCardFourthItem,
-              strings.recoveryPhraseCardFifthItem,
+              strings.setupWallet.recoveryPhraseCardFirstItem,
+              strings.setupWallet.recoveryPhraseCardSecondItem,
+              strings.setupWallet.recoveryPhraseCardThirdItem,
+              strings.setupWallet.recoveryPhraseCardFourthItem,
+              strings.setupWallet.recoveryPhraseCardFifthItem,
             ]}
           />
 
@@ -71,7 +71,7 @@ export const RecoveryPhraseScreen = () => {
       ),
       footer: (
         <Button
-          title={strings.continueButton}
+          title={strings.setupWallet.continueButton}
           onPress={() => {
             closeModal()
             showCreateWalletInfoModalChanged(false)
@@ -83,12 +83,12 @@ export const RecoveryPhraseScreen = () => {
     })
   }, [
     openModal,
-    strings.recoveryPhraseCardFifthItem,
-    strings.recoveryPhraseCardFirstItem,
-    strings.recoveryPhraseCardFourthItem,
-    strings.recoveryPhraseCardSecondItem,
-    strings.recoveryPhraseCardThirdItem,
-    strings.recoveryPhraseCardTitle,
+    strings.setupWallet.recoveryPhraseCardFifthItem,
+    strings.setupWallet.recoveryPhraseCardFirstItem,
+    strings.setupWallet.recoveryPhraseCardFourthItem,
+    strings.setupWallet.recoveryPhraseCardSecondItem,
+    strings.setupWallet.recoveryPhraseCardThirdItem,
+    strings.setupWallet.recoveryPhraseCardTitle,
     closeModal,
     showCreateWalletInfoModalChanged,
   ])
@@ -106,12 +106,12 @@ export const RecoveryPhraseScreen = () => {
       <View style={[a.gap_lg]}>
         <StepperProgress
           currentStep={2}
-          currentStepTitle={strings.stepRecoveryPhrase}
+          currentStepTitle={strings.setupWallet.stepRecoveryPhrase}
           totalSteps={4}
         />
 
         <Text style={[a.body_1_lg_regular, {color: p.gray_900}]}>
-          {strings.recoveryPhraseTitle(bold)}
+          {strings.setupWallet.recoveryPhraseTitle(bold)}
 
           <Info onPress={handleOnShowModal} testID="step2-info-icon" />
         </Text>
@@ -178,8 +178,8 @@ export const RecoveryPhraseScreen = () => {
             ]}
           >
             {!isBlur
-              ? strings.hideRecoveryPhraseButton
-              : strings.showRecoveryPhraseButton}
+              ? strings.setupWallet.hideRecoveryPhraseButton
+              : strings.setupWallet.showRecoveryPhraseButton}
           </Text>
         </TouchableOpacity>
       </View>
@@ -187,7 +187,7 @@ export const RecoveryPhraseScreen = () => {
       <Space.Height.lg fill />
 
       <Button
-        title={strings.next}
+        title={strings.setupWallet.next}
         disabled={isBlur}
         onPress={() => {
           mnemonicChanged(mnemonic)

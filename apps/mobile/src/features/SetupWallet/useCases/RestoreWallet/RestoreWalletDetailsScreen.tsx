@@ -6,7 +6,6 @@ import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Api, Wallet} from '@yoroi/types'
 import * as React from 'react'
-import {useIntl} from 'react-intl'
 import {
   InteractionManager,
   Linking,
@@ -20,13 +19,13 @@ import {
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {YoroiZendeskLink} from '~/features/SetupWallet/common/constants'
-import {useStrings} from '~/features/SetupWallet/common/useStrings'
 import {parseWalletMeta} from '~/features/WalletManager/common/validators/wallet-meta'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useCreateWalletMnemonic} from '~/features/WalletManager/hooks/useCreateWalletMnemonic'
 import {showErrorDialog} from '~/kernel/dialogs'
 import {debugWalletInfo, features} from '~/kernel/features'
-import {errorMessages} from '~/kernel/i18n/global-messages'
+import { useStrings } from '~/kernel/i18n/useStrings'
+import {errorMessages} from '~/kernel/i18n/messages/global'
 import {logger} from '~/kernel/logger/logger'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Button} from '~/ui/Button/Button'
@@ -105,7 +104,7 @@ export const RestoreWalletDetailsScreen = () => {
   )
   const passwordErrors = validatePassword(password, passwordConfirmation)
 
-  const intl = useIntl()
+
   const {
     createWallet,
     isPending,
@@ -131,9 +130,13 @@ export const RestoreWalletDetailsScreen = () => {
     onError: (error) => {
       InteractionManager.runAfterInteractions(() => {
         return error instanceof Api.Errors.Network
-          ? showErrorDialog(errorMessages.networkError, intl)
-          : showErrorDialog(errorMessages.generalError, intl, {
-              message: error.message,
+          ? showErrorDialog({
+              title: errorMessages.networkError.title,
+              message: errorMessages.networkError.message,
+            })
+          : showErrorDialog({
+              title: errorMessages.generalError.title,
+              message: errorMessages.generalError.message,
             })
       })
     },
@@ -141,13 +144,13 @@ export const RestoreWalletDetailsScreen = () => {
 
   const passwordErrorText =
     passwordErrors.passwordIsWeak && !isPending
-      ? strings.passwordStrengthRequirement({
+      ? strings.setupWallet.passwordStrengthRequirement({
           requiredPasswordLength: REQUIRED_PASSWORD_LENGTH,
         })
       : undefined
   const passwordConfirmationErrorText =
     passwordErrors.matchesConfirmation && !isPending
-      ? strings.repeatPasswordInputError
+      ? strings.setupWallet.repeatPasswordInputError
       : undefined
 
   useFocusEffect(
@@ -161,9 +164,9 @@ export const RestoreWalletDetailsScreen = () => {
     : null
   const walletNameErrorText = getWalletNameError(
     {
-      tooLong: strings.tooLong,
-      nameAlreadyTaken: strings.nameAlreadyTaken,
-      mustBeFilled: strings.mustBeFilled,
+      tooLong: strings.setupWallet.tooLong,
+      nameAlreadyTaken: strings.setupWallet.nameAlreadyTaken,
+      mustBeFilled: strings.setupWallet.mustBeFilled,
     },
     nameErrors,
   )
@@ -175,24 +178,24 @@ export const RestoreWalletDetailsScreen = () => {
 
   const showModalTipsPassword = () => {
     openModal({
-      title: strings.walletDetailsModalTitle,
+      title: strings.setupWallet.walletDetailsModalTitle,
       content: (
         <View style={[a.flex_1, a.pb_lg, a.px_lg]}>
           <CardAboutPhrase
-            title={strings.walletNameModalCardTitle}
+            title={strings.setupWallet.walletNameModalCardTitle}
             linesOfText={[
-              strings.walletNameModalCardFirstItem,
-              strings.walletNameModalCardSecondItem,
+              strings.setupWallet.walletNameModalCardFirstItem,
+              strings.setupWallet.walletNameModalCardSecondItem,
             ]}
           />
 
           <Space.Height.lg />
 
           <CardAboutPhrase
-            title={strings.walletPasswordModalCardTitle}
+            title={strings.setupWallet.walletPasswordModalCardTitle}
             linesOfText={[
-              strings.walletPasswordModalCardFirstItem,
-              strings.walletPasswordModalCardSecondItem,
+              strings.setupWallet.walletPasswordModalCardFirstItem,
+              strings.setupWallet.walletPasswordModalCardSecondItem,
             ]}
           />
 
@@ -205,24 +208,24 @@ export const RestoreWalletDetailsScreen = () => {
           />
         </View>
       ),
-      footer: <Button title={strings.continueButton} onPress={closeModal} />,
+      footer: <Button title={strings.setupWallet.continueButton} onPress={closeModal} />,
       height: HEIGHT_MODAL_NAME_PASSWORD,
     })
   }
 
   const showModalTipsPlateNumber = () => {
     openModal({
-      title: strings.walletDetailsModalTitle,
+      title: strings.setupWallet.walletDetailsModalTitle,
       content: (
         <View style={[a.flex_1, a.pb_lg, a.px_lg]}>
           <CardAboutPhrase
-            title={strings.walletChecksumModalCardTitle}
+            title={strings.setupWallet.walletChecksumModalCardTitle}
             checksumImage={plate.ImagePart}
             checksumLine={1}
             linesOfText={[
-              strings.walletChecksumModalCardFirstItem,
-              strings.walletChecksumModalCardSecondItem(plate.TextPart),
-              strings.walletChecksumModalCardThirdItem,
+              strings.setupWallet.walletChecksumModalCardFirstItem,
+              strings.setupWallet.walletChecksumModalCardSecondItem,
+              strings.setupWallet.walletChecksumModalCardThirdItem,
             ]}
           />
 
@@ -235,7 +238,7 @@ export const RestoreWalletDetailsScreen = () => {
           />
         </View>
       ),
-      footer: <Button title={strings.continueButton} onPress={closeModal} />,
+      footer: <Button title={strings.setupWallet.continueButton} onPress={closeModal} />,
       height: HEIGHT_MODAL_CHECKSUM,
     })
   }
@@ -255,20 +258,13 @@ export const RestoreWalletDetailsScreen = () => {
       >
         <StepperProgress
           currentStep={2}
-          currentStepTitle={strings.stepWalletDetails}
+          currentStepTitle={strings.setupWallet.stepWalletDetails}
           totalSteps={2}
         />
 
         <View style={a.flex_row}>
-          <Text
-            style={[
-              {
-                color: p.text_gray_medium,
-              },
-              a.body_1_lg_regular,
-            ]}
-          >
-            {strings.walletDetailsTitle(bold)}
+          <Text style={[a.body_1_lg_regular, {color: p.gray_900}]}>
+            {strings.setupWallet.walletDetailsTitle(bold)}
           </Text>
 
           <Info onPress={showModalTipsPassword} />
@@ -280,7 +276,7 @@ export const RestoreWalletDetailsScreen = () => {
           <TextInput
             enablesReturnKeyAutomatically
             autoFocus
-            label={strings.walletDetailsNameInput}
+            label={strings.setupWallet.walletDetailsNameInput}
             value={name}
             onChangeText={(walletName: string) => setName(walletName)}
             errorText={
@@ -302,12 +298,12 @@ export const RestoreWalletDetailsScreen = () => {
             enablesReturnKeyAutomatically
             ref={passwordRef}
             secureTextEntry
-            label={strings.walletDetailsPasswordInput}
+            label={strings.setupWallet.walletDetailsPasswordInput}
             value={password}
             onChangeText={setPassword}
             errorText={passwordErrorText}
             returnKeyType="next"
-            helper={strings.walletDetailsPasswordHelper}
+            helper={strings.setupWallet.walletDetailsPasswordHelper}
             onSubmitEditing={() => passwordConfirmationRef.current?.focus()}
             testID="walletPasswordInput"
             autoComplete="off"
@@ -322,7 +318,7 @@ export const RestoreWalletDetailsScreen = () => {
             ref={passwordConfirmationRef}
             secureTextEntry
             returnKeyType="done"
-            label={strings.walletDetailsConfirmPasswordInput}
+            label={strings.setupWallet.walletDetailsConfirmPasswordInput}
             value={passwordConfirmation}
             onChangeText={setPasswordConfirmation}
             errorText={passwordConfirmationErrorText}
@@ -368,7 +364,7 @@ export const RestoreWalletDetailsScreen = () => {
 
         <View>
           <Button
-            title={strings.next}
+            title={strings.setupWallet.next}
             onPress={() =>
               createWallet({
                 name,

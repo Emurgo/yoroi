@@ -11,7 +11,7 @@ import {
 
 import {useNavigateTo} from '~/features/Portfolio/common/hooks/useNavigateTo'
 import {usePortfolioBalances} from '~/features/Portfolio/common/hooks/usePortfolioBalances'
-import {useStrings} from '~/features/Portfolio/common/hooks/useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {Icon} from '~/ui/Icon'
 import {MediaPreview} from '~/ui/MediaPreview/MediaPreview'
@@ -98,7 +98,7 @@ const Heading = ({countNfts, onPress}: HeadingProps) => {
       style={[a.px_lg, a.flex_row, a.justify_between, a.align_center]}
     >
       <Text style={[a.body_1_lg_medium, {color: p.gray_900}]}>
-        {strings.nfts(countNfts)}
+        {strings.portfolio.nfts(countNfts)}
       </Text>
       <Icon.ArrowRight color={p.gray_800} size={24} />
     </TouchableOpacity>

@@ -4,7 +4,7 @@ import React, {useState} from 'react'
 import {FlatList, Image, StyleSheet, Text, View} from 'react-native'
 
 import NewsPlaceHolder from '~/assets/img/token-news-place-holder.png'
-import {useStrings} from '~/features/Portfolio/common/hooks/useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Accordion} from '~/ui/Accordion/Accordion'
 import {Space} from '~/ui/Space/Space'
 
@@ -15,7 +15,7 @@ export const TokenNews = () => {
 
   return (
     <Accordion
-      label={strings.news}
+      label={strings.portfolio.news}
       expanded={expanded}
       onChange={setExpanded}
       wrapperStyle={[a.flex_1]}

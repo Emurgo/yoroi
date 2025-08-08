@@ -4,7 +4,7 @@ import {LinearGradient} from 'expo-linear-gradient'
 import * as React from 'react'
 import {Platform, StyleSheet, Text, View} from 'react-native'
 
-import {useStrings} from '~/features/SetupWallet/common/useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Icon} from '~/ui/Icon'
 import {Space} from '~/ui/Space/Space'
 
@@ -91,7 +91,7 @@ export const CardAboutPhrase = ({
             >
               {handleShowChecksum && (
                 <>
-                  {strings.walletChecksum}
+                  {strings.setupWallet.walletChecksum}
                   <Space.Width.sm />
                   <View
                     style={{

@@ -1,14 +1,14 @@
 import {useNavigation} from '@react-navigation/native'
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {LinearGradient} from 'expo-linear-gradient'
 import * as React from 'react'
 import {FlatList, Text, TouchableOpacity, View} from 'react-native'
-import {LinearGradient} from 'expo-linear-gradient'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {undefinedToken} from '~/features/Swap/common/constants'
-import {useSwap} from '~/features/Swap/common/SwapProvider'
-import {useStrings} from '~/features/Swap/common/useStrings'
+import {useSwap} from '~/features/Swap/common/useSwap'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Counter} from '~/ui/Counter/Counter'
 import {ProtocolAvatar} from '~/ui/ProtocolAvatar/ProtocolAvatar'
 
@@ -86,7 +86,7 @@ export const SelectProtocolScreen = () => {
 
               <View style={[a.flex_row, a.justify_between, a.gap_md]}>
                 <Text style={[a.body_1_lg_regular, {color: p.text_gray_low}]}>
-                  {strings.price}
+                  {strings.swap.price}
                 </Text>
 
                 <Text
@@ -102,7 +102,7 @@ export const SelectProtocolScreen = () => {
 
               <View style={[a.flex_row, a.justify_between, a.gap_md]}>
                 <Text style={[a.body_1_lg_regular, {color: p.text_gray_low}]}>
-                  {strings.batcherFee}
+                  {strings.swap.batcherFee}
                 </Text>
 
                 <Text
@@ -123,8 +123,8 @@ export const SelectProtocolScreen = () => {
 
       <Counter
         counter={counter}
-        unitsText={strings.pools(counter)}
-        closingText={strings.available}
+        unitsText={strings.swap.pools(counter)}
+        closingText={strings.swap.available}
       />
     </SafeAreaView>
   )

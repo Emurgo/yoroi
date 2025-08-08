@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/native'
 import {useRef} from 'react'
 
-import {SwapTokenRouteseNavigation} from '~/kernel/navigation'
+import {SwapTokenRouteseNavigation} from '~/kernel/navigation/types'
 
 export const useNavigateTo = () => {
   const swapNavigation = useNavigation<SwapTokenRouteseNavigation>()

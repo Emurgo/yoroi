@@ -795,7 +795,7 @@ export const makeCardanoWallet = (
         this.syncUtxos({isForced}),
         this.transactionManager.doSync(
           this.addressesInBlocks,
-          networkManager.legacyApiBaseUrl,
+          this.networkManager.legacyApiBaseUrl,
         ),
       ])
     }
@@ -1135,13 +1135,13 @@ export const makeCardanoWallet = (
     // =================== backend API =================== //
 
     async checkServerStatus() {
-      return legacyApi.checkServerStatus(networkManager.legacyApiBaseUrl)
+      return legacyApi.checkServerStatus(this.networkManager.legacyApiBaseUrl)
     }
 
     async submitTransaction(base64SignedTx: string) {
       await legacyApi.submitTransaction(
         base64SignedTx,
-        networkManager.legacyApiBaseUrl,
+        this.networkManager.legacyApiBaseUrl,
       )
     }
 
@@ -1240,23 +1240,29 @@ export const makeCardanoWallet = (
     async fetchAccountState(): Promise<AccountStateResponse> {
       return legacyApi.bulkGetAccountState(
         [this.rewardAddressHex],
-        networkManager.legacyApiBaseUrl,
+        this.networkManager.legacyApiBaseUrl,
       )
     }
 
     async fetchPoolInfo(request: PoolInfoRequest) {
-      return legacyApi.getPoolInfo(request, networkManager.legacyApiBaseUrl)
+      return legacyApi.getPoolInfo(
+        request,
+        this.networkManager.legacyApiBaseUrl,
+      )
     }
 
     async fetchFundInfo(): Promise<FundInfoResponse> {
       return legacyApi.getFundInfo(
-        networkManager.legacyApiBaseUrl,
+        this.networkManager.legacyApiBaseUrl,
         this.isMainnet,
       )
     }
 
     async fetchTxStatus(request: TxStatusRequest): Promise<TxStatusResponse> {
-      return legacyApi.fetchTxStatus(request, networkManager.legacyApiBaseUrl)
+      return legacyApi.fetchTxStatus(
+        request,
+        this.networkManager.legacyApiBaseUrl,
+      )
     }
 
     private isInitialized = false

@@ -2,7 +2,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
-import {useStrings} from '~/features/ReviewTx/common/hooks/useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {TokenItem} from '~/features/ReviewTx/common/TokenItem'
 import {FormattedTx} from '~/features/ReviewTx/common/types'
 import {Copiable} from '~/ui/Copiable/Copiable'
@@ -24,7 +24,7 @@ export const MintTab = ({mintData}: {mintData: FormattedTx['mint']}) => {
             <View style={[a.flex_1, a.flex_row, a.justify_between]}>
               <Text
                 style={[a.body_2_md_medium, {color: p.text_gray_medium}]}
-              >{`${strings.policyIdLabel}:`}</Text>
+              >{`${strings.txReview.policyIdLabel}:`}</Text>
 
               <Space.Width.sm />
 

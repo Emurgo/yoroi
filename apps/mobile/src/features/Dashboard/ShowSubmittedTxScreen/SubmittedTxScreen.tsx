@@ -1,101 +1,37 @@
-import {useTheme} from '@yoroi/theme'
-import * as React from 'react'
-import {defineMessages, useIntl} from 'react-intl'
-import {Text, View} from 'react-native'
+import {atoms as a, useTheme} from '@yoroi/theme'
+import React from 'react'
+import {ScrollView, Text, View} from 'react-native'
 
-import {useBlockGoBack, useWalletNavigation} from '~/kernel/navigation'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
-import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
-import {SuccessfulTxIcon} from '~/ui/SuccessfulTxIcon/SuccessfulTxIcon'
 
 export const SubmittedTxScreen = () => {
-  useBlockGoBack()
   const strings = useStrings()
   const {palette: p} = useTheme()
-  const {resetToTxHistory} = useWalletNavigation()
 
   return (
-    <SafeArea style={[a.p_lg, a.flex_1, a.align_center, a.justify_center]}>
-      <Space.Height._2xl />
+    <View style={[a.flex_1, {backgroundColor: p.bg_color_max}]}>
+      <ScrollView style={[a.flex_1, a.p_lg]}>
+        <View style={[a.flex_1, a.align_center, a.justify_center]}>
+          <Text style={[a.heading_2_lg_bold, {color: p.text_gray_max}]}>
+            {strings.transactions.submitted.submittedTxTitle}
+          </Text>
 
-      <SuccessfulTxIcon />
+          <Space.Height.lg />
 
-      <Space.Height._2xl />
+          <Text style={[a.body_1_lg_regular, {color: p.text_gray_max}]}>
+            {strings.transactions.submitted.submittedTxText}
+          </Text>
 
-      <Space.Height.lg />
+          <Space.Height.xl />
 
-      <Text
-        style={[
-          a.heading_3_medium,
-          a.px_sm,
-          a.text_center,
-          {color: p.gray_max},
-        ]}
-      >
-        {strings.submittedTxTitle}
-      </Text>
-
-      <Text
-        style={[
-          a.body_1_lg_regular,
-          a.text_center,
-          {maxWidth: 330},
-          {color: p.gray_600},
-        ]}
-      >
-        {strings.submittedTxText}
-      </Text>
-
-      <Space.Height._2xs fill />
-
-      <Actions>
-        <Button
-          onPress={resetToTxHistory}
-          title={strings.submittedTxButton}
-          style={[a.px_lg]}
-        />
-      </Actions>
-    </SafeArea>
-  )
-}
-
-const Actions = ({children}: {children: React.ReactNode}) => {
-  const {palette: p} = useTheme()
-
-  return (
-    <View
-      style={[
-        {alignSelf: 'stretch', borderTopWidth: 1},
-        {borderTopColor: p.gray_200},
-      ]}
-    >
-      {children}
+          <Button
+            title={strings.transactions.submitted.submittedTxButton}
+            onPress={() => {}}
+          />
+        </View>
+      </ScrollView>
     </View>
   )
 }
-
-const useStrings = () => {
-  const intl = useIntl()
-
-  return {
-    submittedTxTitle: intl.formatMessage(messages.submittedTxTitle),
-    submittedTxText: intl.formatMessage(messages.submittedTxText),
-    submittedTxButton: intl.formatMessage(messages.submittedTxButton),
-  }
-}
-
-const messages = defineMessages({
-  submittedTxTitle: {
-    id: 'components.delegation.submittedTx.title',
-    defaultMessage: '!!!Transaction signed',
-  },
-  submittedTxText: {
-    id: 'components.delegation.submittedTx.text',
-    defaultMessage: `!!!It will show up in the transaction list once it's confirmed by the network.`,
-  },
-  submittedTxButton: {
-    id: 'components.delegation.submittedTx.button',
-    defaultMessage: '!!!Close',
-  },
-})

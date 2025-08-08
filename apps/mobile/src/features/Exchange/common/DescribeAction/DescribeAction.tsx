@@ -3,9 +3,9 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Linking, TouchableOpacity, View} from 'react-native'
 
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
-import {useStrings} from '../useStrings'
 
 const YOROI_SUPPORT_URL = 'https://yoroi-wallet.com/#/support'
 

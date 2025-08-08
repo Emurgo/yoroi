@@ -5,7 +5,6 @@ import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Api, Wallet} from '@yoroi/types'
 import * as React from 'react'
-import {useIntl} from 'react-intl'
 import {
   InteractionManager,
   Linking,
@@ -20,13 +19,12 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {ViewProps} from 'react-native-svg/lib/typescript/fabric/utils'
 
 import {YoroiZendeskLink} from '~/features/SetupWallet/common/constants'
-import {useStrings} from '~/features/SetupWallet/common/useStrings'
 import {parseWalletMeta} from '~/features/WalletManager/common/validators/wallet-meta'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useCreateWalletMnemonic} from '~/features/WalletManager/hooks/useCreateWalletMnemonic'
 import {showErrorDialog} from '~/kernel/dialogs'
 import {debugWalletInfo, features} from '~/kernel/features'
-import {errorMessages} from '~/kernel/i18n/global-messages'
+import { useStrings } from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Button} from '~/ui/Button/Button'
@@ -46,6 +44,7 @@ import {
   validatePassword,
   validateWalletName,
 } from '~/wallets/utils/validators'
+import {errorMessages} from '~/kernel/i18n/messages/global'
 
 const useSizeModal = () => {
   const HEIGHT_SCREEN = useWindowDimensions().height
@@ -85,7 +84,7 @@ export const WalletDetailsScreen = () => {
   const walletNames = Array.from(walletManager.walletMetas.values()).map(
     ({name}) => name,
   )
-  const intl = useIntl()
+
   const storage = useAsyncStorage()
   const {
     mnemonic,
@@ -142,9 +141,13 @@ export const WalletDetailsScreen = () => {
     onError: (error) => {
       InteractionManager.runAfterInteractions(() => {
         return error instanceof Api.Errors.Network
-          ? showErrorDialog(errorMessages.networkError, intl)
-          : showErrorDialog(errorMessages.generalError, intl, {
-              message: error.message,
+          ? showErrorDialog({
+              title: errorMessages.networkError.title,
+              message: errorMessages.networkError.message,
+            })
+          : showErrorDialog({
+              title: errorMessages.generalError.title,
+              message: errorMessages.generalError.message,
             })
       })
     },
@@ -152,13 +155,13 @@ export const WalletDetailsScreen = () => {
 
   const passwordErrorText =
     passwordErrors.passwordIsWeak && !isPending
-      ? strings.passwordStrengthRequirement({
+      ? strings.setupWallet.passwordStrengthRequirement({
           requiredPasswordLength: REQUIRED_PASSWORD_LENGTH,
         })
       : undefined
   const passwordConfirmationErrorText =
     passwordErrors.matchesConfirmation && !isPending
-      ? strings.repeatPasswordInputError
+      ? strings.setupWallet.repeatPasswordInputError
       : undefined
 
   const nameErrors = validateWalletName(
@@ -168,9 +171,9 @@ export const WalletDetailsScreen = () => {
   )
   const walletNameErrorText = getWalletNameError(
     {
-      tooLong: strings.tooLong,
-      nameAlreadyTaken: strings.nameAlreadyTaken,
-      mustBeFilled: strings.mustBeFilled,
+      tooLong: strings.setupWallet.tooLong,
+      nameAlreadyTaken: strings.setupWallet.nameAlreadyTaken,
+      mustBeFilled: strings.setupWallet.mustBeFilled,
     },
     nameErrors,
   )
@@ -198,23 +201,23 @@ export const WalletDetailsScreen = () => {
 
   const showModalTipsPassword = React.useCallback(() => {
     openModal({
-      title: strings.walletDetailsModalTitle,
+      title: strings.setupWallet.walletDetailsModalTitle,
       content: (
         <View style={[a.flex_1, a.px_lg, a.pb_lg]}>
           <View style={[a.gap_lg]}>
             <CardAboutPhrase
-              title={strings.walletNameModalCardTitle}
+              title={strings.setupWallet.walletNameModalCardTitle}
               linesOfText={[
-                strings.walletNameModalCardFirstItem,
-                strings.walletNameModalCardSecondItem,
+                strings.setupWallet.walletNameModalCardFirstItem,
+                strings.setupWallet.walletNameModalCardSecondItem,
               ]}
             />
 
             <CardAboutPhrase
-              title={strings.walletPasswordModalCardTitle}
+              title={strings.setupWallet.walletPasswordModalCardTitle}
               linesOfText={[
-                strings.walletPasswordModalCardFirstItem,
-                strings.walletPasswordModalCardSecondItem,
+                strings.setupWallet.walletPasswordModalCardFirstItem,
+                strings.setupWallet.walletPasswordModalCardSecondItem,
               ]}
             />
           </View>
@@ -229,7 +232,7 @@ export const WalletDetailsScreen = () => {
           />
 
           <Button
-            title={strings.continueButton}
+            title={strings.setupWallet.continueButton}
             onPress={() => {
               closeModal()
               showRestoreWalletInfoModalChanged(false)
@@ -242,12 +245,12 @@ export const WalletDetailsScreen = () => {
     })
   }, [
     openModal,
-    strings.walletNameModalCardFirstItem,
-    strings.walletNameModalCardSecondItem,
-    strings.walletNameModalCardTitle,
-    strings.walletPasswordModalCardFirstItem,
-    strings.walletPasswordModalCardSecondItem,
-    strings.walletPasswordModalCardTitle,
+    strings.setupWallet.walletNameModalCardFirstItem,
+    strings.setupWallet.walletNameModalCardSecondItem,
+    strings.setupWallet.walletNameModalCardTitle,
+    strings.setupWallet.walletPasswordModalCardFirstItem,
+    strings.setupWallet.walletPasswordModalCardSecondItem,
+    strings.setupWallet.walletPasswordModalCardTitle,
     closeModal,
     showRestoreWalletInfoModalChanged,
   ])
@@ -259,17 +262,17 @@ export const WalletDetailsScreen = () => {
 
   const showModalTipsPlateNumber = () => {
     openModal({
-      title: strings.walletDetailsModalTitle,
+      title: strings.setupWallet.walletDetailsModalTitle,
       content: (
         <View style={[a.flex_1, a.px_lg, a.pb_lg]}>
           <CardAboutPhrase
-            title={strings.walletChecksumModalCardTitle}
+            title={strings.setupWallet.walletChecksumModalCardThirdItem}
             checksumImage={seed}
             checksumLine={1}
             linesOfText={[
-              strings.walletChecksumModalCardFirstItem,
-              strings.walletChecksumModalCardSecondItem(plate),
-              strings.walletChecksumModalCardThirdItem,
+              strings.setupWallet.walletChecksumModalCardFirstItem,
+              strings.setupWallet.walletChecksumModalCardSecondItem,
+              strings.setupWallet.walletChecksumModalCardThirdItem,
             ]}
           />
         </View>
@@ -282,7 +285,7 @@ export const WalletDetailsScreen = () => {
             }}
           />
 
-          <Button title={strings.continueButton} onPress={closeModal} />
+          <Button title={strings.setupWallet.continueButton} onPress={closeModal} />
         </View>
       ),
       height: HEIGHT_MODAL_CHECKSUM,
@@ -298,19 +301,13 @@ export const WalletDetailsScreen = () => {
         <StepperProgress
           style={[a.px_lg]}
           currentStep={4}
-          currentStepTitle={strings.stepWalletDetails}
+          currentStepTitle={strings.setupWallet.stepWalletDetails}
           totalSteps={4}
         />
 
         <View style={[{height: 24}, a.px_lg, a.flex_row]}>
-          <Text
-            style={[
-              {color: p.text_gray_medium},
-              a.self_center,
-              a.body_1_lg_regular,
-            ]}
-          >
-            {strings.walletDetailsTitle(bold)}
+          <Text style={[a.body_1_lg_regular, {color: p.gray_900}]}>
+            {strings.setupWallet.walletDetailsTitle(bold)}
           </Text>
 
           <Info onPress={showModalTipsPassword} />
@@ -320,7 +317,7 @@ export const WalletDetailsScreen = () => {
           <TextInput
             enablesReturnKeyAutomatically
             autoFocus={!showRestoreWalletInfoModal}
-            label={strings.walletDetailsNameInput}
+            label={strings.setupWallet.walletDetailsNameInput}
             value={name}
             onChangeText={(walletName: string) => setName(walletName)}
             errorText={
@@ -340,12 +337,12 @@ export const WalletDetailsScreen = () => {
             enablesReturnKeyAutomatically
             ref={passwordRef}
             secureTextEntry
-            label={strings.walletDetailsPasswordInput}
+            label={strings.setupWallet.walletDetailsPasswordInput}
             value={password}
             onChangeText={setPassword}
             errorText={passwordErrorText}
             returnKeyType="next"
-            helper={strings.walletDetailsPasswordHelper}
+            helper={strings.setupWallet.walletDetailsPasswordHelper}
             onSubmitEditing={() => passwordConfirmationRef.current?.focus()}
             testID="walletPasswordInput"
             autoComplete="off"
@@ -358,7 +355,7 @@ export const WalletDetailsScreen = () => {
             ref={passwordConfirmationRef}
             secureTextEntry
             returnKeyType="done"
-            label={strings.walletDetailsConfirmPasswordInput}
+            label={strings.setupWallet.walletDetailsConfirmPasswordInput}
             value={passwordConfirmation}
             onChangeText={setPasswordConfirmation}
             errorText={passwordConfirmationErrorText}
@@ -404,7 +401,7 @@ export const WalletDetailsScreen = () => {
 
         <Actions style={a.px_lg}>
           <Button
-            title={strings.next}
+            title={strings.setupWallet.next}
             onPress={() => handleCreateWallet()}
             disabled={
               isPending ||

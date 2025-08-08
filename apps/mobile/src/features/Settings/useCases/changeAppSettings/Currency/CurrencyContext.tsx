@@ -10,7 +10,7 @@ import {App, Portfolio} from '@yoroi/types'
 import React from 'react'
 
 // Create supportedCurrencies from configCurrencies keys
-const supportedCurrencies = Object.keys(
+export const supportedCurrencies = Object.keys(
   configCurrencies,
 ) as Array<Portfolio.Currency.Symbol>
 

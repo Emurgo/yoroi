@@ -15,7 +15,7 @@ import {
 
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Text} from '~/ui/Text/Text'
-import {useStrings} from '../ReviewTx/common/hooks/useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {TokenDetails} from '../ReviewTx/common/TokenDetails'
 import {TokenInfoIcon} from './TokenInfoIcon'
 
@@ -38,7 +38,7 @@ export const MiniTokenAmountItem = ({amount}: MiniTokenAmountItemProps) => {
 
   const handleShowTokenDetails = () => {
     openModal({
-      title: strings.tokenDetailsTitle,
+      title: strings.txReview.tokenDetailsTitle,
       content: <TokenDetails tokenInfo={info} />,
       height: isPrimary ? 450 : windowHeight * 0.8,
     })

@@ -2,7 +2,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
-import {useStrings} from '~/features/Portfolio/common/hooks/useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {AssetTokenImage} from '~/ui/AssetTokenImage/AssetTokenImage'
 
 type Props = {
@@ -31,7 +31,7 @@ export const TokenEmptyList = ({emptyText}: Props) => {
       </View>
 
       <Text style={[{color: p.gray_max}, a.heading_3_medium, a.font_semibold]}>
-        {emptyText ?? strings.noTokensFound}
+        {emptyText ?? strings.portfolio.noTokensFound}
       </Text>
     </View>
   )

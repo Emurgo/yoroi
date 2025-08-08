@@ -1,8 +1,8 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {defineMessages, useIntl} from 'react-intl'
 import {Text, View} from 'react-native'
 import {Defs, LinearGradient, Path, Stop, Svg, SvgProps} from 'react-native-svg'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Space} from '~/ui/Space/Space'
 
 const YOROI_COMPANY_NAME = 'Yoroi'
@@ -23,7 +23,7 @@ export const YoroiLogo = () => {
       <Space.Height.sm />
 
       <Text style={{...a.body_2_md_regular, color: p.gray_900}}>
-        {strings.text}
+        {strings.ui.yoroiLogo}
       </Text>
     </View>
   )
@@ -56,18 +56,3 @@ const YoroiLogoSvg = (props: SvgProps) => {
     </Svg>
   )
 }
-
-const useStrings = () => {
-  const intl = useIntl()
-
-  return {
-    text: intl.formatMessage(messages.text),
-  }
-}
-
-const messages = defineMessages({
-  text: {
-    id: 'components.yoroiLogo',
-    defaultMessage: '!!!Light wallet for Cardano assets',
-  },
-})

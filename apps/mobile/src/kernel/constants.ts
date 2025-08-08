@@ -33,6 +33,7 @@ export const release = isProduction ? version : 'dev'
 export const build = Device.osBuildId ?? ''
 export const distribution = `${Platform.OS}.${build}`
 
+// NOTE: **IMPORTANT**
 // Platforms - there is one disavantage to using this approach when testing:
 // the react-native module needs to be unloaded and reloaded to change the platform
 export const isIOS = Platform.OS === 'ios'

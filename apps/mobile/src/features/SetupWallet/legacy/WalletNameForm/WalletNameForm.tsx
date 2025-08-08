@@ -1,27 +1,14 @@
-import {useFocusEffect} from '@react-navigation/native'
 import {atoms as a, useTheme} from '@yoroi/theme'
-import React from 'react'
-import {
-  ActivityIndicator,
-  Image,
-  ImageSourcePropType,
-  ScrollView,
-  View,
-  ViewStyle,
-} from 'react-native'
+import {Wallet} from '@yoroi/types'
+import React, {useState} from 'react'
+import {ImageSourcePropType, View, ViewStyle} from 'react-native'
 
-import {defineMessages, useIntl} from 'react-intl'
-import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
-import globalMessages from '~/kernel/i18n/global-messages'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
+import {useSetupWallet} from '@yoroi/setup-wallet'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
-import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingView'
-import {Text} from '~/ui/Text/Text'
+import {Icon} from '~/ui/Icon'
+import {Space} from '~/ui/Space/Space'
 import {TextInput} from '~/ui/TextInput/TextInput'
-import {
-  getWalletNameError,
-  validateWalletName,
-} from '~/wallets/utils/validators'
 
 type Props = {
   onSubmit: ({name}: {name: string}) => void
@@ -49,32 +36,30 @@ export const WalletNameForm = ({
 }: Props) => {
   const strings = useStrings()
   const {palette: p} = useTheme()
-  const [name, setName] = React.useState(defaultWalletName ?? '')
-  const {track} = useMetrics()
-  const {walletManager} = useWalletManager()
-  const walletNames = Array.from(walletManager.walletMetas.values()).map(
-    ({name}) => name,
-  )
-  const validationErrors = validateWalletName(name, null, walletNames)
-  const hasErrors = Object.keys(validationErrors).length > 0
-  const errorMessages = {
-    tooLong: strings.walletNameErrorTooLong,
-    nameAlreadyTaken: strings.walletNameErrorNameAlreadyTaken,
-    mustBeFilled: strings.walletNameErrorMustBeFilled,
-  }
-  const walletNameErrorText =
-    getWalletNameError(errorMessages, validationErrors) ?? undefined
+  const [walletName, setWalletName] = useState(defaultWalletName ?? '')
+  const [error, setError] = useState('')
+  const {walletImplementation} = useSetupWallet()
 
-  useFocusEffect(
-    React.useCallback(() => {
-      track.restoreWalletDetailsStepViewed()
-    }, [track]),
-  )
+  const handleSubmit = () => {
+    if (walletName.length === 0) {
+      setError(strings.setupWallet.walletNameForm.walletNameErrorMustBeFilled)
+      return
+    }
+
+    if (walletName.length > 20) {
+      setError(strings.setupWallet.walletNameForm.walletNameErrorTooLong)
+      return
+    }
+
+    onSubmit({name: walletName})
+  }
 
   return (
-    <View style={[{flex: 1}, {backgroundColor: p.bg_color_max}]}>
-      <KeyboardAvoidingView style={{flex: 1}}>
-        {progress != null && (
+    <View style={[a.flex_1, containerStyle]}>
+      {topContent}
+
+      <View style={[a.flex_1, a.p_lg]}>
+        {progress && (
           <ProgressStep
             currentStep={progress.currentStep}
             totalSteps={progress.totalSteps}
@@ -82,85 +67,44 @@ export const WalletNameForm = ({
           />
         )}
 
-        <ScrollView style={{flex: 1}} bounces={false}>
-          <View
-            style={[
-              {paddingVertical: 24, paddingHorizontal: 16, flex: 1},
-              containerStyle,
-            ]}
-          >
-            <View
-              style={[
-                {
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  marginBottom: 16,
-                },
-              ]}
-            >
-              {image != null && <Image source={image} />}
+        <Space.Height.lg />
+
+        {image && (
+          <>
+            <View style={[a.align_center, a.mb_lg]}>
+              <Icon.WalletAvatar image={image} />
             </View>
 
-            {topContent}
+            <Space.Height.lg />
+          </>
+        )}
 
-            <TextInput
-              errorOnMount
-              autoFocus
-              label={strings.walletNameInputLabel}
-              value={name}
-              onChangeText={(walletName: string) => setName(walletName)}
-              errorText={walletNameErrorText}
-              disabled={isWaiting}
-              autoComplete="off"
-              testID="walletNameInput"
-            />
+        <TextInput
+          label={strings.setupWallet.walletNameForm.walletNameInputLabel}
+          value={walletName}
+          onChangeText={(text) => {
+            setWalletName(text)
+            setError('')
+          }}
+          error={error}
+          autoFocus
+          autoComplete="off"
+          testID="walletNameInput"
+        />
 
-            {bottomContent}
-          </View>
-        </ScrollView>
+        <Space.Height.lg />
 
-        <View style={[{flexDirection: 'row', marginTop: 12}]}>
-          <Button
-            onPress={() => onSubmit({name: name.trim()})}
-            title={strings.save}
-            disabled={hasErrors || isWaiting}
-            testID="saveWalletButton"
-          />
-        </View>
+        <Button
+          title={strings.setupWallet.walletNameForm.save}
+          onPress={handleSubmit}
+          disabled={isWaiting}
+          testID="saveButton"
+        />
+      </View>
 
-        {isWaiting && <ActivityIndicator color="black" />}
-      </KeyboardAvoidingView>
+      {bottomContent}
     </View>
   )
-}
-
-const messages = defineMessages({
-  walletNameInputLabel: {
-    id: 'components.walletinit.walletform.walletNameInputLabel',
-    defaultMessage: '!!!Wallet name',
-  },
-  save: {
-    id: 'components.walletinit.connectnanox.savenanoxscreen.save',
-    defaultMessage: '!!!Save',
-  },
-})
-
-const useStrings = () => {
-  const intl = useIntl()
-
-  return {
-    walletNameInputLabel: intl.formatMessage(messages.walletNameInputLabel),
-    save: intl.formatMessage(messages.save),
-    walletNameErrorTooLong: intl.formatMessage(
-      globalMessages.walletNameErrorTooLong,
-    ),
-    walletNameErrorNameAlreadyTaken: intl.formatMessage(
-      globalMessages.walletNameErrorNameAlreadyTaken,
-    ),
-    walletNameErrorMustBeFilled: intl.formatMessage(
-      globalMessages.walletNameErrorMustBeFilled,
-    ),
-  }
 }
 
 type StepProps = {

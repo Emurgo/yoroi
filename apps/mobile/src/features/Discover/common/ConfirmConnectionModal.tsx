@@ -9,7 +9,7 @@ import {Icon} from '~/ui/Icon'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
 import {getDappFallbackLogo} from './helpers'
-import {useStrings} from './useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 
 type Props = {
   name: string
@@ -147,9 +147,6 @@ export const ConfirmConnectionModal = ({
     </View>
   )
 }
-
-const walletsCompatibilityLink =
-  'https://emurgohelpdesk.zendesk.com/hc/en-us/articles/10413017088527-DApps-and-HD-wallets-compatability'
 
 /* const SingleAddressDAppWarning = () => {
   const {atoms: a, palette: p} = useTheme()

@@ -6,7 +6,7 @@ import * as React from 'react'
 import {Alert, Linking} from 'react-native'
 
 import {useClaimErrorResolver} from '~/features/Claim/common/useClaimErrorResolver'
-import {useStrings as useStringsClaim} from '~/features/Claim/common/useStrings'
+import {useStrings as useStringsClaim} from '~/kernel/i18n/useStrings'
 import {
   AskConfirmation,
   AskConfirmationActions,

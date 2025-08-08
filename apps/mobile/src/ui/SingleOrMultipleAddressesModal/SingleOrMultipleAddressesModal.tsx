@@ -4,7 +4,7 @@ import * as React from 'react'
 import {Text, View} from 'react-native'
 
 import {useMultipleAddressesInfo} from '~/features/Receive/common/useMultipleAddressesInfo'
-import {useStrings} from '~/features/Receive/common/useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useAddressMode} from '~/features/WalletManager/hooks/useAddressMode'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/ModalContext'
@@ -59,7 +59,7 @@ export const SingleOrMultipleAddressesModal = ({onConfirm}: Props) => {
           {color: p.text_gray_medium},
         ]}
       >
-        {strings.singleOrMultipleDetails}
+        {strings.receive.singleOrMultipleDetails}
       </Text>
 
       <View style={[{flex: 1}]} />
@@ -67,11 +67,11 @@ export const SingleOrMultipleAddressesModal = ({onConfirm}: Props) => {
       <View style={[a.flex_col, a.gap_sm, a.w_full, {height: 120}]}>
         <Button
           type={ButtonType.Text}
-          title={strings.selectMultiple}
+          title={strings.receive.selectMultiple}
           onPress={handleOnMultiple}
         />
 
-        <Button title={strings.singleAddressWallet} onPress={handleOnSingle} />
+        <Button title={strings.receive.singleAddressWallet} onPress={handleOnSingle} />
       </View>
     </View>
   )

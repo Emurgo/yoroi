@@ -1,123 +1,47 @@
-import {useNavigation} from '@react-navigation/native'
-import {useSetupWallet} from '@yoroi/setup-wallet'
-import * as React from 'react'
-import {defineMessages, useIntl} from 'react-intl'
-import {ScrollView, StatusBar, Text, View} from 'react-native'
+import {atoms as a, useTheme} from '@yoroi/theme'
+import React from 'react'
+import {ScrollView, Text, View} from 'react-native'
 
-import {showErrorDialog} from '~/kernel/dialogs'
-import {errorMessages} from '~/kernel/i18n/global-messages'
-import {logger} from '~/kernel/logger/logger'
-import {BulletPointItem} from '~/ui/BulletPointItem'
+import {useStrings} from '~/kernel/i18n/useStrings'
+import {Button} from '~/ui/Button/Button'
 import {Space} from '~/ui/Space/Space'
-import {
-  isCIP1852AccountPath,
-  isValidPublicKey,
-} from '~/wallets/cardano/bip44Validators/bip44Validators'
+import {TextInput} from '~/ui/TextInput/TextInput'
 
 export const ImportReadOnlyWalletScreen = () => {
-  const intl = useIntl()
   const strings = useStrings()
-  const navigation = useNavigation<any>()
-  const {publicKeyHexChanged, pathChanged} = useSetupWallet()
-
-  const onRead = async (event: {data: string}): Promise<boolean> => {
-    try {
-      const {publicKeyHex, path} = await parseReadOnlyWalletKey(event.data)
-
-      publicKeyHexChanged(publicKeyHex)
-      pathChanged(path)
-
-      navigation.navigate('setup-wallet-save-read-only')
-    } catch (error) {
-      logger.error(error as Error)
-      await showErrorDialog(errorMessages.invalidQRCode, intl)
-      return Promise.resolve(true)
-    }
-
-    return Promise.resolve(false)
-  }
+  const {palette: p} = useTheme()
 
   return (
-    <View style={[{flex: 1}]}>
-      <StatusBar translucent backgroundColor="transparent" />
+    <View style={[a.flex_1, {backgroundColor: p.bg_color_max}]}>
+      <ScrollView style={[a.flex_1, a.p_lg]}>
+        <View style={[a.flex_1, a.align_center, a.justify_center]}>
+          <Text style={[a.heading_3_medium, {color: p.text_gray_max}]}>
+            {strings.setupWallet.importReadOnlyWallet.title}
+          </Text>
 
-      <View
-        style={[
-          {
-            flex: 2,
-            alignItems: 'center',
-            justifyContent: 'center',
-            backgroundColor: 'black',
-          },
-        ]}
-      >
-        {/* <CameraCodeScanner onRead={onRead} /> */}
-      </View>
+          <Space.Height.lg />
 
-      <ScrollView style={[{flex: 1, paddingTop: 24, paddingHorizontal: 16}]}>
-        <Text style={[{fontSize: 14, lineHeight: 22}]}>
-          {strings.paragraph}
-        </Text>
+          <Text style={[a.body_1_lg_regular, {color: p.text_gray_max}]}>
+            {strings.setupWallet.importReadOnlyWallet.description}
+          </Text>
 
-        <Space.Height.lg />
+          <Space.Height.lg />
 
-        <BulletPointItem
-          textRow={strings.line1}
-          style={[{fontSize: 14, lineHeight: 22}]}
-        />
+          <TextInput
+            label={strings.setupWallet.importReadOnlyWallet.walletAddress}
+            placeholder={strings.setupWallet.importReadOnlyWallet.walletAddressPlaceholder}
+            autoFocus
+            autoComplete="off"
+          />
 
-        <Space.Height.lg />
+          <Space.Height.lg />
 
-        <BulletPointItem
-          textRow={strings.line2({buttonType: strings.buttonType})}
-          style={[{fontSize: 14, lineHeight: 22}]}
-        />
+          <Button
+            title={strings.setupWallet.importReadOnlyWallet.import}
+            onPress={() => {}}
+          />
+        </View>
       </ScrollView>
     </View>
   )
-}
-
-const messages = defineMessages({
-  paragraph: {
-    id: 'components.walletinit.importreadonlywalletscreen.paragraph',
-    defaultMessage:
-      '!!!To import a read-only wallet from the Yoroi extension, you will need to:',
-  },
-  line1: {
-    id: 'components.walletinit.importreadonlywalletscreen.line1',
-    defaultMessage: '!!!Open "My wallets" page in the Yoroi extension.',
-  },
-  line2: {
-    id: 'components.walletinit.importreadonlywalletscreen.line2',
-    defaultMessage:
-      '!!!Look for the {buttonType} for the wallet you want to import in the mobile app.',
-  },
-  buttonType: {
-    id: 'components.walletinit.importreadonlywalletscreen.buttonType',
-    defaultMessage: '!!!export read-only wallet button',
-  },
-})
-
-const useStrings = () => {
-  const intl = useIntl()
-
-  return {
-    paragraph: intl.formatMessage(messages.paragraph),
-    line1: intl.formatMessage(messages.line1),
-    line2: (options: {buttonType: string}) =>
-      intl.formatMessage(messages.line2, options),
-    buttonType: intl.formatMessage(messages.buttonType),
-  }
-}
-
-const parseReadOnlyWalletKey = async (
-  text: string,
-): Promise<{publicKeyHex: string; path: number[]}> => {
-  const dataObj = JSON.parse(text)
-  const {publicKeyHex, path} = dataObj
-  if (isCIP1852AccountPath(path) && (await isValidPublicKey(publicKeyHex))) {
-    return {publicKeyHex, path}
-  }
-
-  throw new Error('invalid QR code')
 }

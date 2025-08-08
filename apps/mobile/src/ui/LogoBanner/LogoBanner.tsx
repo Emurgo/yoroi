@@ -2,7 +2,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
-import {useStrings} from '~/features/SetupWallet/common/useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Space} from '~/ui/Space/Space'
 
 export const LogoBanner = () => {
@@ -12,13 +12,13 @@ export const LogoBanner = () => {
   return (
     <View style={[a.align_center, {backgroundColor: p.bg_color_max}]}>
       <Text style={[{color: p.primary_500}, a.text_center, a.heading_1_medium]}>
-        {strings.logoTitle}
+        {strings.setupWallet.logoTitle}
       </Text>
 
       <Space.Height.sm />
 
       <Text style={[a.text_center, a.body_2_md_regular, {color: p.gray_900}]}>
-        {strings.logoSubtitle}
+        {strings.setupWallet.logoSubtitle}
       </Text>
     </View>
   )

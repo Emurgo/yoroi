@@ -4,10 +4,10 @@ import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
 import {Pressable, Text, TextInput, View} from 'react-native'
 
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Space} from '~/ui/Space/Space'
 import {TokenInfoIcon} from '~/ui/TokenInfoIcon/TokenInfoIcon'
 import {isEmptyString} from '~/wallets/utils/string'
-import {useStrings} from '../useStrings'
 
 type AmountCardProps = {
   error?: string
@@ -174,7 +174,7 @@ export const AmountCard: React.FC<AmountCardProps> = ({
               <Text
                 ellipsizeMode="middle"
                 style={[a.body_3_sm_regular, {color: p.gray_600}]}
-              >{`${strings.currentBalance}: ${formattedAmount}`}</Text>
+              >{`${strings.exchange.currentBalance}: ${formattedAmount}`}</Text>
             </View>
           </View>
         </View>

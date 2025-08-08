@@ -2,7 +2,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {View} from 'react-native'
 
-import {useStrings} from '~/features/ReviewTx/common/hooks/useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {FormattedTx} from '~/features/ReviewTx/common/types'
 import {Accordion} from '~/ui/Accordion/Accordion'
 import {Space} from '~/ui/Space/Space'
@@ -21,7 +21,7 @@ export const ReferenceInputsTab = ({
       <Space.Height.lg />
 
       <Accordion
-        label={`${strings.utxosInputsLabel} (${referenceInputs.length})`}
+        label={`${strings.txReview.utxosInputsLabel} (${referenceInputs.length})`}
       >
         <Inputs inputs={referenceInputs} />
       </Accordion>

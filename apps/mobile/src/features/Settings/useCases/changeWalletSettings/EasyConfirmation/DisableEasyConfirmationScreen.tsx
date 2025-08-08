@@ -1,14 +1,14 @@
 import {useNavigation} from '@react-navigation/native'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
-import {defineMessages, useIntl} from 'react-intl'
 import {View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '../../../../../ui/Button/Button'
-import {Text} from '../../../../../ui/Text/Text'
-import {useWalletManager} from '../../../../WalletManager/context/WalletManagerProvider'
-import {useSelectedWallet} from '../../../../WalletManager/hooks/useSelectedWallet'
+import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useStrings} from '~/kernel/i18n/useStrings'
+import {Button} from '~/ui/Button/Button'
+import {Text} from '~/ui/Text/Text'
 
 export const DisableEasyConfirmationScreen = () => {
   const {atoms: ta} = useTheme()
@@ -33,42 +33,17 @@ export const DisableEasyConfirmationScreen = () => {
           },
         ]}
       >
-        <Text
-          style={[
-            a.body_1_lg_regular,
-          ]}
-        >
-          {strings.disableHeading}
+        <Text style={[a.body_1_lg_regular]}>
+          {strings.settings.easyConfirmation.disableHeading}
         </Text>
       </View>
 
       <View style={[a.pb_lg, a.px_lg]}>
         <Button
-          title={strings.disableButton}
+          title={strings.settings.easyConfirmation.disableButton}
           onPress={handleOnDisableConfirmation}
         />
       </View>
     </SafeAreaView>
   )
 }
-
-const useStrings = () => {
-  const intl = useIntl()
-
-  return {
-    disableHeading: intl.formatMessage(messages.disableHeading),
-    disableButton: intl.formatMessage(messages.disableButton),
-  }
-}
-
-const messages = defineMessages({
-  disableHeading: {
-    id: 'components.settings.disableeasyconfirmationscreen.disableHeading',
-    defaultMessage:
-      '!!!By disabling this option you will be able to spend your assets only with your master password.',
-  },
-  disableButton: {
-    id: 'components.settings.disableeasyconfirmationscreen.disableButton',
-    defaultMessage: '!!!Disable',
-  },
-})

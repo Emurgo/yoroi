@@ -1,13 +1,13 @@
 import * as React from 'react'
-import {ReactNode} from 'react'
 import {StyleProp, TouchableOpacity, View, ViewStyle} from 'react-native'
 import {ClipPath, Defs, G, Path, Rect, Svg} from 'react-native-svg'
-import {SpaceWidth} from '~/ui/Space/Space'
+
+import {Space} from '../Space/Space'
 
 type BlueCheckboxProps = {
   checked?: boolean
   onPress?: () => void
-  children?: ReactNode
+  children?: React.ReactNode
   style?: StyleProp<ViewStyle>
   spacing?: number
 }

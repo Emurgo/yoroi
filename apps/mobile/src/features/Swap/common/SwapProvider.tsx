@@ -3,7 +3,7 @@ import {useQuery} from '@tanstack/react-query'
 import {isLeft, isRight} from '@yoroi/common'
 import {isPrimaryToken, primaryTokenId} from '@yoroi/portfolio'
 import {swapManagerMaker, swapStorageMaker} from '@yoroi/swap'
-import {Api, Balance, Portfolio, Swap} from '@yoroi/types'
+import {Balance, Portfolio, Swap} from '@yoroi/types'
 import {produce} from 'immer'
 import * as React from 'react'
 import {TextInput} from 'react-native'
@@ -15,9 +15,86 @@ import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useAddressHex, useStakingKey} from '~/wallets/hooks'
 import {undefinedToken} from './constants'
 import {useNavigateTo} from './navigation'
-import {useStrings} from './strings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useGetInputs} from './useGetInputs'
 import {useSwapConfig} from './useSwapConfig'
+
+type SwapActionValueMap = {
+  ChangeOrderType: 'limit' | 'market'
+  TokenInInputTouched: undefined
+  TokenOutInputTouched: undefined
+  TokenInIdChanged: Portfolio.Token.Id
+  TokenOutIdChanged: Portfolio.Token.Id
+  TokenInAmountChanged: string
+  TokenOutAmountChanged: string
+  TokenInErrorChanged: string | null
+  TokenOutErrorChanged: string | null
+  WantedPriceInputChanged: string
+  SlippageInputChanged: number
+  SwitchTouched: undefined
+  ProtocolSelected: Swap.Protocol
+  ProtocolChanged: Swap.Protocol | undefined
+  Refresh: undefined
+  ResetAmounts: undefined
+  ResetForm: undefined
+  EstimateResponse: Swap.EstimateResponse
+  EstimateError: any
+  CreateResponse: Swap.CreateResponse
+  CreateError: any
+}
+
+type SwapAction = {
+  [K in keyof SwapActionValueMap]: SwapActionValueMap[K] extends undefined
+    ? {type: K}
+    : {type: K; value: SwapActionValueMap[K]}
+}[keyof SwapActionValueMap]
+
+type SwapState = {
+  needsNewEstimate: boolean
+  orderType: 'market' | 'limit'
+  lastInputTouched: 'in' | 'out'
+  tokenInInput: {
+    isTouched: boolean
+    tokenId?: Portfolio.Token.Id
+    disabled: boolean
+    error: string | null
+    value: string
+  }
+  tokenOutInput: {
+    isTouched: boolean
+    tokenId?: Portfolio.Token.Id
+    disabled: boolean
+    error: string | null
+    value: string
+  }
+  slippageInput: {
+    value: number
+  }
+  selectedProtocol: {
+    isTouched: boolean
+    value?: Swap.Protocol
+  }
+  wantedPrice: string
+  canSwap: boolean
+  estimate?: Swap.EstimateResponse
+  createTx?: Swap.CreateResponse
+}
+
+type SwapContext = SwapState & {
+  isLoading: boolean
+  limitOptions?: Swap.LimitOptionsResponse
+  tokenInfos: Map<Portfolio.Token.Id, Portfolio.Token.Info>
+  tokenInInputRef: React.RefObject<TextInput> | undefined
+  tokenOutInputRef: React.RefObject<TextInput> | undefined
+  wantedPriceInputRef: React.RefObject<TextInput> | undefined
+  orders?: Array<Swap.Order>
+  action: React.Dispatch<SwapAction>
+  create: () => void
+  cancel: any
+  managerSettings: Swap.ManagerSettings
+  assignManagerSettings: any
+  refetchOrders: () => void
+}
 
 export const SwapProvider = ({children}: {children: React.ReactNode}) => {
   const navigate = useNavigateTo()
@@ -348,7 +425,11 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
     ],
   )
 
-  return <SwapContext.Provider value={context}>{children}</SwapContext.Provider>
+  return (
+    <SwapContextInstance.Provider value={context}>
+      {children}
+    </SwapContextInstance.Provider>
+  )
 }
 
 const swapReducer = (state: SwapState, action: SwapAction) => {
@@ -509,60 +590,6 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
   })
 }
 
-export const SwapAction = {
-  ChangeOrderType: 'ChangeOrderType',
-  TokenInInputTouched: 'TokenInInputTouched',
-  TokenOutInputTouched: 'TokenOutInputTouched',
-  TokenInIdChanged: 'TokenInIdChanged',
-  TokenOutIdChanged: 'TokenOutIdChanged',
-  TokenInAmountChanged: 'TokenInAmountChanged',
-  TokenOutAmountChanged: 'TokenOutAmountChanged',
-  TokenInErrorChanged: 'TokenInErrorChanged',
-  TokenOutErrorChanged: 'TokenOutErrorChanged',
-  WantedPriceInputChanged: 'WantedPriceInputChanged',
-  SlippageInputChanged: 'SlippageInputChanged',
-  SwitchTouched: 'SwitchTouched',
-  ProtocolSelected: 'ProtocolSelected',
-  ProtocolChanged: 'ProtocolChanged',
-  Refresh: 'Refresh',
-  ResetAmounts: 'ResetAmounts',
-  ResetForm: 'ResetForm',
-  EstimateResponse: 'EstimateResponse',
-  EstimateError: 'EstimateError',
-  CreateResponse: 'CreateResponse',
-  CreateError: 'CreateError',
-} as const
-
-type SwapActionValueMap = {
-  ChangeOrderType: 'limit' | 'market'
-  TokenInInputTouched: undefined
-  TokenOutInputTouched: undefined
-  TokenInIdChanged: Portfolio.Token.Id
-  TokenOutIdChanged: Portfolio.Token.Id
-  TokenInAmountChanged: string
-  TokenOutAmountChanged: string
-  TokenInErrorChanged: string | null
-  TokenOutErrorChanged: string | null
-  WantedPriceInputChanged: string
-  SlippageInputChanged: number
-  SwitchTouched: undefined
-  ProtocolSelected: Swap.Protocol
-  ProtocolChanged: Swap.Protocol | undefined
-  Refresh: undefined
-  ResetAmounts: undefined
-  ResetForm: undefined
-  EstimateResponse: Swap.EstimateResponse
-  EstimateError: Api.ResponseError
-  CreateResponse: Swap.CreateResponse
-  CreateError: Api.ResponseError
-}
-
-export type SwapAction = {
-  [K in keyof SwapActionValueMap]: SwapActionValueMap[K] extends undefined
-    ? {type: K}
-    : {type: K; value: SwapActionValueMap[K]}
-}[keyof SwapActionValueMap]
-
 const defaultState: SwapState = Object.freeze({
   needsNewEstimate: false,
   orderType: 'market',
@@ -596,54 +623,7 @@ const defaultState: SwapState = Object.freeze({
   cancelError: undefined,
 } as const)
 
-type SwapState = {
-  needsNewEstimate: boolean
-  orderType: 'market' | 'limit'
-  lastInputTouched: 'in' | 'out'
-  tokenInInput: {
-    isTouched: boolean
-    tokenId?: Portfolio.Token.Id
-    disabled: boolean
-    error: string | null
-    value: string
-  }
-  tokenOutInput: {
-    isTouched: boolean
-    tokenId?: Portfolio.Token.Id
-    disabled: boolean
-    error: string | null
-    value: string
-  }
-  slippageInput: {
-    value: number
-  }
-  selectedProtocol: {
-    isTouched: boolean
-    value?: Swap.Protocol
-  }
-  wantedPrice: string
-  canSwap: boolean
-  estimate?: Swap.EstimateResponse
-  createTx?: Swap.CreateResponse
-}
-
-export type SwapContext = SwapState & {
-  isLoading: boolean
-  limitOptions?: Swap.LimitOptionsResponse
-  tokenInfos: Map<Portfolio.Token.Id, Portfolio.Token.Info>
-  tokenInInputRef: React.RefObject<TextInput> | undefined
-  tokenOutInputRef: React.RefObject<TextInput> | undefined
-  wantedPriceInputRef: React.RefObject<TextInput> | undefined
-  orders?: Array<Swap.Order>
-  action: React.Dispatch<SwapAction>
-  create: () => void
-  cancel: Swap.Api['cancel']
-  managerSettings: Swap.ManagerSettings
-  assignManagerSettings: Swap.Manager['assignSettings']
-  refetchOrders: () => void
-}
-
-const SwapContext = React.createContext<SwapContext>({
+const SwapContextInstance = React.createContext<SwapContext>({
   ...defaultState,
   isLoading: false,
   tokenInfos: new Map<Portfolio.Token.Id, Portfolio.Token.Info>(),
@@ -666,3 +646,5 @@ const parseNumber = (text: string) =>
         .replace(/^0+(.+)/, '$1')
         .replace(/^\.$/, '0.')
     : '0'
+
+export {SwapContextInstance}

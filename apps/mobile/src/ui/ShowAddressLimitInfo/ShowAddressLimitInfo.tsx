@@ -4,7 +4,7 @@ import {Linking, Text, TouchableWithoutFeedback} from 'react-native'
 import Animated, {FadeInUp, FadeOut, Layout} from 'react-native-reanimated'
 
 import {YoroiZendeskLink} from '~/features/Receive/common/contants'
-import {useStrings} from '~/features/Receive/common/useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Icon} from '~/ui/Icon'
 
 export const ShowAddressLimitInfo = () => {
@@ -31,7 +31,7 @@ export const ShowAddressLimitInfo = () => {
       <Icon.Info size={24} color={p.primary_500} />
 
       <Text style={[a.body_2_md_regular, {color: p.gray_max}]}>
-        {strings.infoAddressLimit}
+        {strings.receive.infoAddressLimit}
 
         <TouchableWithoutFeedback
           onPress={() => {
@@ -39,7 +39,7 @@ export const ShowAddressLimitInfo = () => {
           }}
         >
           <Text style={{color: p.primary_500, borderWidth: 1}}>
-            {strings.yoroiZendesk}
+            {strings.receive.yoroiZendesk}
           </Text>
         </TouchableWithoutFeedback>
       </Text>

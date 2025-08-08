@@ -5,7 +5,7 @@ import {Text, TouchableOpacity, useWindowDimensions} from 'react-native'
 
 import {useModal} from '~/ui/Modal/ModalContext'
 import {TokenDetails} from '~/ui/TokenDetails/TokenDetails'
-import {useStrings} from './hooks/useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 
 export const TokenItem = ({
   tokenInfo,
@@ -25,7 +25,7 @@ export const TokenItem = ({
 
   const handleShowTokenDetails = () => {
     openModal({
-      title: strings.tokenDetailsTitle,
+      title: strings.txReview.tokenDetailsTitle,
       content: <TokenDetails tokenInfo={tokenInfo} />,
       height: windowHeight * 0.8,
     })

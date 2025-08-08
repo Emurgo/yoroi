@@ -7,8 +7,8 @@ import uuid from 'uuid'
 
 import {useBrowser} from '~/features/Discover/common/BrowserProvider'
 import {useNavigateTo} from '~/features/Discover/common/useNavigateTo'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Icon} from '~/ui/Icon'
-import {useStrings} from '../../common/useStrings'
 
 export const BrowserTabsBar = () => {
   const strings = useStrings()

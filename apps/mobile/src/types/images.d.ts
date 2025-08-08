@@ -1,12 +1,10 @@
 declare module '~/assets/*' {
--  const content: any
-+  const content: import('react-native').ImageSourcePropType
+  const content: import('react-native').ImageSourcePropType
   export default content
 }
 
 declare module '*.png' {
--  const content: any
-+  const content: import('react-native').ImageSourcePropType
+  const content: import('react-native').ImageSourcePropType
   export default content
 }
 

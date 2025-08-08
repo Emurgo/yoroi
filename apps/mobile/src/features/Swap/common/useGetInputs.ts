@@ -13,8 +13,7 @@ export const useGetInputs = () => {
 
       const result = await Promise.all(
         (
-          (await _getRequiredUtxos(csl, wallet, amounts, wallet.utxos, meta)) ||
-          []
+          (await _getRequiredUtxos(wallet, amounts, wallet.utxos, meta)) || []
         ).map(async (u) => {
           return Buffer.from(await u.toBytes()).toString('hex')
         }),

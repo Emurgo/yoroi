@@ -2,8 +2,8 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Text, View} from 'react-native'
 
-import {useStrings} from '~/features/ReviewTx/common/hooks/useStrings'
-import {useBlockGoBack, useWalletNavigation} from '~/kernel/navigation'
+import {useStrings} from '~/kernel/i18n/useStrings'
+import {useBlockGoBack, useWalletNavigation} from '~/kernel/navigation/hooks'
 import {Button} from '~/ui/Button/Button'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
@@ -39,7 +39,7 @@ export const SubmittedTxScreen = () => {
           {color: p.gray_max},
         ]}
       >
-        {strings.submittedTxTitle}
+        {strings.txReview.submittedTxTitle}
       </Text>
 
       <Text
@@ -49,7 +49,7 @@ export const SubmittedTxScreen = () => {
           {color: p.gray_600, maxWidth: 330},
         ]}
       >
-        {strings.submittedTxText}
+        {strings.txReview.submittedTxText}
       </Text>
 
       <Space.Height._2xs fill />
@@ -57,7 +57,7 @@ export const SubmittedTxScreen = () => {
       <Actions>
         <Button
           onPress={resetToTxHistory}
-          title={strings.submittedTxButton}
+          title={strings.txReview.submittedTxButton}
           style={[a.px_lg]}
         />
       </Actions>

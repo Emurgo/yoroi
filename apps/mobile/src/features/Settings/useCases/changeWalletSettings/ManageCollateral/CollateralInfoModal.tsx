@@ -3,7 +3,7 @@ import * as React from 'react'
 import {Text, View} from 'react-native'
 
 import {InfoModalIllustration} from './illustrations/InfoModalIllustration'
-import {useStrings} from './strings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 
 export const CollateralInfoModal = () => {
   const {atoms: ta} = useTheme()

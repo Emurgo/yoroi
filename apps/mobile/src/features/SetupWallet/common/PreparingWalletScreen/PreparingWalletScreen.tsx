@@ -8,7 +8,7 @@ import {logger} from '~/kernel/logger/logger'
 // import {useLaunchWalletAfterSyncing} from '~/features/WalletManager/hooks/useLaunchWalletAfterSyncing'
 // import {useSyncTemporarilyPaused} from '~/features/WalletManager/hooks/useSyncTemporarilyPaused'
 import {isEmptyString} from '~/wallets/utils/string'
-import {useStrings} from '../useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 
 /**
  * It requests the global syncing to stop on mounting to favor the sync of a specific wallet
@@ -40,7 +40,7 @@ export const PreparingWalletScreen = () => {
       ]}
     >
       <Text style={[{color: p.primary_500}, a.text_center, a.heading_2_medium]}>
-        {strings.preparingWallet}
+        {strings.setupWallet.preparingWallet}
       </Text>
     </SafeAreaView>
   )

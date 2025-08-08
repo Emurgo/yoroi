@@ -2,13 +2,13 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {TextInput as RNTextInput, View} from 'react-native'
 
-import {useStrings} from '~/features/Swap/common/useStrings'
 import {debugWalletInfo, features} from '~/kernel/features'
+import {useStrings} from '~/kernel/i18n/useStrings'
+import {ActivityIndicator} from '~/ui/ActivityIndicator/ActivityIndicator'
 import {Button} from '~/ui/Button/Button'
 import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
 import {TextInput} from '~/ui/TextInput/TextInput'
-import {ActivityIndicator} from '../ConfirmRawTx/ActivityIndicator'
 import {getErrorMessage} from '../errors'
 
 export type ErrorData = {
@@ -38,7 +38,13 @@ export const ConfirmWithSpendingPassword = ({
   const strings = useStrings()
   const {palette: p} = useTheme()
 
-  const errorMessage = error ? getErrorMessage(error, strings) : null
+  const errorMessage = error
+    ? getErrorMessage(error, {
+        wrongPasswordMessage: strings.swap.wrongPasswordMessage,
+        error: strings.global.error,
+        missingCollateral: strings.swap.missingCollateral,
+      })
+    : null
 
   return (
     <View style={[a.flex_1, a.px_lg]}>
@@ -49,14 +55,14 @@ export const ConfirmWithSpendingPassword = ({
           {paddingBottom: 8, color: p.gray_900},
         ]}
       >
-        {summary ?? strings.enterSpendingPassword}
+        {summary ?? strings.swap.enterSpendingPassword}
       </Text>
 
       <TextInput
         secureTextEntry
         ref={spendingPasswordRef}
         enablesReturnKeyAutomatically
-        placeholder={strings.spendingPassword}
+        placeholder={strings.swap.spendingPassword}
         value={spendingPassword}
         onChangeText={(text) => {
           setSpendingPassword(text)
@@ -71,7 +77,7 @@ export const ConfirmWithSpendingPassword = ({
 
       <Button
         testID="swapButton"
-        title={strings.sign}
+        title={strings.swap.sign}
         onPress={() => onSubmit?.(spendingPassword)}
         disabled={spendingPassword.length === 0}
       />

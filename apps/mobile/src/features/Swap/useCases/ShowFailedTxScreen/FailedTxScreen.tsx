@@ -2,7 +2,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
-import {useStrings} from '~/features/Swap/common/strings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
 import {FailedTxIcon} from '~/ui/FailedTxIcon/FailedTxIcon'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'

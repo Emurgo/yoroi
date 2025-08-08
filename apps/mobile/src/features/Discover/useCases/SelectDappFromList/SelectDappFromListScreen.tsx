@@ -7,10 +7,9 @@ import {ChainDAppsWarning} from '~/features/Discover/common/ChainDAppsWarning'
 import {getGoogleSearchItem} from '~/features/Discover/common/helpers'
 import {useDAppsConnected} from '~/features/Discover/common/useDAppsConnected'
 import {useShowWelcomeDApp} from '~/features/Discover/common/useShowWelcomeDApp'
-import {useStrings} from '~/features/Discover/common/useStrings'
-import {ShowDisclaimer} from '~/features/Legal/Disclaimer/ShowDisclaimer'
 import {useSearch, useSearchOnNavBar} from '~/features/Search/SearchContext'
 import {NetworkTag} from '~/features/Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {SimpleTab} from '~/ui/SimpleTab/SimpleTab'
 import {Space} from '~/ui/Space/Space'
@@ -44,8 +43,8 @@ export const SelectDappFromListScreen = () => {
   }, [currentTab, track])
 
   useSearchOnNavBar({
-    title: strings.discoverTitle,
-    placeholder: strings.searchDApps,
+    title: strings.discover.discoverTitle,
+    placeholder: strings.discover.searchDApps,
     noBack: true,
     extraNavigationOptions: {
       headerTitle: ({children}) => (
@@ -149,13 +148,13 @@ const HeaderControl = ({
       {hasConnectedDapps && (
         <View style={[{flexDirection: 'row', gap: 8, paddingBottom: 16}]}>
           <SimpleTab
-            name={strings.connected}
+            name={strings.discover.connected}
             isActive={currentTab === DAppTabs.connected}
             onPress={() => onTabChange(DAppTabs.connected)}
           />
 
           <SimpleTab
-            name={strings.recommended}
+            name={strings.discover.recommended}
             isActive={currentTab === DAppTabs.recommended}
             onPress={() => onTabChange(DAppTabs.recommended)}
           />

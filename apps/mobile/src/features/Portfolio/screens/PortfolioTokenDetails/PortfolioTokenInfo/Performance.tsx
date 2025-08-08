@@ -6,7 +6,7 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 
 import {useGetPortfolioTokenInfo} from '~/features/Portfolio/common/hooks/useGetPortfolioTokenInfo'
 import {usePortfolioTokenDetailParams} from '~/features/Portfolio/common/hooks/useNavigateTo'
-import {useStrings} from '~/features/Portfolio/common/hooks/useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {Space} from '~/ui/Space/Space'
 
@@ -53,32 +53,32 @@ export const Performance = () => {
         <TextGroup
           loading={isFetching}
           value={`${value?.user?.bought ?? '-/-'} USD`}
-          label={strings.bought}
+          label={strings.portfolio.bought}
         />
 
         <TextGroup
           loading={isFetching}
           value={`${value?.user?.receive ?? '-/-'} USD`}
-          label={strings.received}
+          label={strings.portfolio.received}
         />
 
         <TextGroup
           loading={isFetching}
           value={`${value?.user?.sent ?? '-/-'} USD`}
-          label={strings.sent}
+          label={strings.portfolio.sent}
         />
 
         <TextGroup
           loading={isFetching}
           value={`${value?.user?.sold ?? '-/-'} USD`}
-          label={strings.sold}
+          label={strings.portfolio.sold}
         />
       </View>
 
       <Space.Height.lg />
 
       <Text style={[a.body_1_lg_medium, a.font_semibold, {color: p.gray_800}]}>
-        {strings.marketData}
+        {strings.portfolio.marketData}
       </Text>
 
       <Space.Height.md />
@@ -87,31 +87,31 @@ export const Performance = () => {
         <TextGroup
           loading={isFetching}
           value={`${value?.market?.change ?? '-/-'} %`}
-          label={strings.tokenPriceChange}
+          label={strings.portfolio.tokenPriceChange}
         />
 
         <TextGroup
           loading={isFetching}
           value={`${value?.market?.price ?? '-/-'} USD`}
-          label={strings.tokenPrice}
+          label={strings.portfolio.tokenPrice}
         />
 
         <TextGroup
           loading={isFetching}
           value={`${value?.market?.cap ?? '-/-'} USD`}
-          label={strings.marketCap}
+          label={strings.portfolio.marketCap}
         />
 
         <TextGroup
           loading={isFetching}
           value={`${value?.market?.vol ?? '-/-'} USD`}
-          label={strings._24hVolume}
+          label={strings.portfolio._24hVolume}
         />
 
         <TextGroup
           loading={isFetching}
           value={`#${value?.market?.rank ?? '-/-'}`}
-          label={strings.rank}
+          label={strings.portfolio.rank}
         />
 
         <Space.Height.md />
@@ -119,31 +119,31 @@ export const Performance = () => {
         <TextGroup
           loading={isFetching}
           value={`${value?.market?.circulating ?? '-/-'} ${tokenSymbol}`}
-          label={strings.circulating}
+          label={strings.portfolio.circulating}
         />
 
         <TextGroup
           loading={isFetching}
           value={`${value?.market?.total_supply ?? '-/-'} ${tokenSymbol}`}
-          label={strings.totalSupply}
+          label={strings.portfolio.totalSupply}
         />
 
         <TextGroup
           loading={isFetching}
           value={`${value?.market?.max_supply ?? '-/-'} ${tokenSymbol}`}
-          label={strings.maxSupply}
+          label={strings.portfolio.maxSupply}
         />
 
         <TextGroup
           loading={isFetching}
           value={`${value?.market?.ath ?? '-/-'} USD`}
-          label={strings.allTimeHigh}
+          label={strings.portfolio.allTimeHigh}
         />
 
         <TextGroup
           loading={isFetching}
           value={`${value?.market?.atl ?? '-/-'} USD`}
-          label={strings.allTimeLow}
+          label={strings.portfolio.allTimeLow}
         />
       </View>
     </View>

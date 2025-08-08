@@ -7,9 +7,9 @@ import * as React from 'react'
 import {BannerIds, showBanner} from '~/features/Notifications/common/banners'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useBalances} from '~/wallets/hooks'
 import {Amounts, Quantities} from '~/wallets/utils/utils'
-import {useStrings} from './useStrings'
 
 export const useBuyCryptoBanner = () => {
   const {wallet} = useSelectedWallet()

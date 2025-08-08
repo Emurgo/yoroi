@@ -6,7 +6,7 @@ import {
   getPriceImpactRisk,
   usePriceImpactRiskTheme,
 } from '~/features/Swap/common/helpers'
-import {useStrings} from '~/features/Swap/common/strings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Icon} from '~/ui/Icon'
 
 export const ShowPriceImpact = ({priceImpact = 0}: {priceImpact?: number}) => {
@@ -33,7 +33,7 @@ export const ShowPriceImpact = ({priceImpact = 0}: {priceImpact?: number}) => {
       )}
 
       <Text style={[{color: textColor}, a.body_2_md_regular]}>
-        <Text>{strings.priceImpact}</Text>
+        <Text>{strings.swap.priceImpact}</Text>
 
         <Text> = </Text>
 

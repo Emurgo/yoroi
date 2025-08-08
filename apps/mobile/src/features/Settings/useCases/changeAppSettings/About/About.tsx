@@ -1,27 +1,32 @@
-import {useNavigation} from '@react-navigation/native'
-import {useQuery} from '@tanstack/react-query'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
-import {defineMessages, useIntl} from 'react-intl'
-import {Pressable, Text, View} from 'react-native'
+import {Text, View} from 'react-native'
 
-import {commit} from '../../../../../kernel/constants'
-import {SettingsRouteNavigation} from '../../../../../kernel/navigation/navigation'
-import {Copiable} from '../../../../../ui/Copiable/Copiable'
+import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useStrings} from '~/kernel/i18n/useStrings'
+import {Copiable} from '~/ui/Copiable/Copiable'
+import {Space} from '~/ui/Space/Space'
+import {YoroiWallet} from '~/wallets/cardano/types'
 
 export const About = () => {
   const strings = useStrings()
-  const {atoms: ta, palette: p} = useTheme()
-  const navigation = useNavigation<SettingsRouteNavigation>()
-  const {data: FCMToken} = useQuery({
-    useErrorBoundary: false,
-    suspense: false,
-    queryFn: () => messaging().getToken(),
-  })
+  const {palette: p} = useTheme()
+  const {wallet} = useSelectedWallet()
+  const {network} = useSelectedNetwork()
+
+  const {version, commit} = wallet
+  const FCMToken = wallet.FCMToken
+
+  const getWalletType = (wallet: YoroiWallet) => {
+    if (wallet.isByron) return strings.settings.about.byronWallet
+    if (wallet.isShelley) return strings.settings.about.shelleyWallet
+    return strings.settings.about.unknownWalletType
+  }
 
   return (
-    <View style={[a.flex_1, ta.bg_color_max, a.p_lg]}>
-      <View style={[a.flex_row, a.justify_between, a.py_lg]}>
+    <View style={[a.p_lg, a.gap_lg]}>
+      <View>
         <Text
           style={[
             {
@@ -30,26 +35,22 @@ export const About = () => {
             a.body_1_lg_medium,
           ]}
         >
-          {strings.currentVersion}
+          {strings.settings.about.currentVersion}
         </Text>
 
-        <Pressable
-          onLongPress={() => navigation.navigate('settings-system-log')}
+        <Text
+          style={[
+            {
+              color: p.gray_500,
+            },
+            a.body_1_lg_regular,
+          ]}
         >
-          <Text
-            style={[
-              {
-                color: p.gray_500,
-              },
-              a.body_1_lg_regular,
-            ]}
-          >
-            {appInfo.version}
-          </Text>
-        </Pressable>
+          {version}
+        </Text>
       </View>
 
-      <View style={[a.flex_row, a.justify_between, a.py_lg]}>
+      <View>
         <Text
           style={[
             {
@@ -58,7 +59,81 @@ export const About = () => {
             a.body_1_lg_medium,
           ]}
         >
-          {strings.commit}
+          {strings.settings.about.commit}
+        </Text>
+
+        <Text
+          style={[
+            {
+              color: p.gray_500,
+            },
+            a.body_1_lg_regular,
+          ]}
+        >
+          {commit}
+        </Text>
+      </View>
+
+      <View>
+        <Text
+          style={[
+            {
+              color: p.gray_900,
+            },
+            a.body_1_lg_medium,
+          ]}
+        >
+          {strings.settings.about.network}
+        </Text>
+
+        <Text
+          style={[
+            {
+              color: p.gray_500,
+            },
+            a.body_1_lg_regular,
+          ]}
+        >
+          {network}
+        </Text>
+      </View>
+
+      <View>
+        <Text
+          style={[
+            {
+              color: p.gray_900,
+            },
+            a.body_1_lg_medium,
+          ]}
+        >
+          {strings.settings.about.walletType}
+        </Text>
+
+        <Text
+          style={[
+            {
+              color: p.gray_500,
+            },
+            a.body_1_lg_regular,
+          ]}
+        >
+          {getWalletType(wallet)}
+        </Text>
+      </View>
+
+      <Space.Height.lg />
+
+      <View>
+        <Text
+          style={[
+            {
+              color: p.gray_900,
+            },
+            a.body_1_lg_medium,
+          ]}
+        >
+          {strings.settings.about.commit}
         </Text>
 
         <Text
@@ -83,7 +158,7 @@ export const About = () => {
               a.body_1_lg_medium,
             ]}
           >
-            {strings.fcmToken}
+            {strings.settings.about.fcmToken}
           </Text>
 
           <Copiable text={FCMToken}>
@@ -107,53 +182,3 @@ export const About = () => {
     </View>
   )
 }
-
-const useStrings = () => {
-  const intl = useIntl()
-
-  return {
-    currentVersion: intl.formatMessage(messages.currentVersion),
-    commit: intl.formatMessage(messages.commit),
-    network: intl.formatMessage(messages.network),
-    walletType: intl.formatMessage(messages.walletType),
-    byronWallet: intl.formatMessage(messages.byronWallet),
-    shelleyWallet: intl.formatMessage(messages.shelleyWallet),
-    unknownWalletType: intl.formatMessage(messages.unknownWalletType),
-    fcmToken: intl.formatMessage(messages.fcmToken),
-  }
-}
-
-const messages = defineMessages({
-  currentVersion: {
-    id: 'global.currentVersion',
-    defaultMessage: '!!!Current Version',
-  },
-  commit: {
-    id: 'global.commit',
-    defaultMessage: '!!!Commit',
-  },
-  network: {
-    id: 'global.network',
-    defaultMessage: '!!!Network',
-  },
-  walletType: {
-    id: 'components.settings.applicationsettingsscreen.walletType',
-    defaultMessage: '!!!Wallet type',
-  },
-  byronWallet: {
-    id: 'components.settings.walletsettingscreen.byronWallet',
-    defaultMessage: '!!!Byron-era wallet',
-  },
-  shelleyWallet: {
-    id: 'components.settings.walletsettingscreen.shelleyWallet',
-    defaultMessage: '!!!Shelley-era wallet',
-  },
-  unknownWalletType: {
-    id: 'components.settings.walletsettingscreen.unknownWalletType',
-    defaultMessage: '!!!Unknown Wallet Type',
-  },
-  fcmToken: {
-    id: 'components.settings.walletsettingscreen.fcmToken',
-    defaultMessage: '!!!FCM Token',
-  },
-})

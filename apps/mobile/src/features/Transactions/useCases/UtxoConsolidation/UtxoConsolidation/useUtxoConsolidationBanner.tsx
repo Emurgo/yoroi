@@ -4,12 +4,12 @@ import {useNotificationManager} from '@yoroi/notifications'
 import {Chain, Notifications} from '@yoroi/types'
 
 import {BannerIds, showBanner} from '~/features/Notifications/common/banners'
-import {useStrings} from '~/features/Transactions/common/strings'
+import {useUtxoList} from '~/features/Transactions/useCases/UtxoList/useUtxoList'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useAddressMode} from '~/features/WalletManager/hooks/useAddressMode'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {features} from '~/kernel/features'
-import {useUtxoList} from '~/features/Transactions/useCases/UtxoList/useUtxoList'
+import {useStrings} from '~/kernel/i18n/useStrings'
 
 export const useUtxoConsolidationBanner = () => {
   const {wallet} = useSelectedWallet()

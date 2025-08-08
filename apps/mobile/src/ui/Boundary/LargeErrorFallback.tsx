@@ -4,10 +4,10 @@ import * as React from 'react'
 import {Text, View} from 'react-native'
 
 import {useTranslatedError} from '~/hooks/useTranslatedError'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
 import {Space} from '~/ui/Space/Space'
 import {ErrorFallbackProps} from './types'
-import {useStrings} from './useStrings'
 
 export const LargeErrorFallback = ({
   error,
@@ -43,7 +43,7 @@ export const LargeErrorFallback = ({
 
       {reset && (
         <Button
-          title={strings.tryAgain}
+          title={strings.ui.tryAgain}
           onPress={() => {
             resetErrorBoundary()
           }}

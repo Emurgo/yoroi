@@ -4,7 +4,7 @@ import {View} from 'react-native'
 
 import {formatPriceChange} from '~/features/Portfolio/common/helpers/priceChange'
 import {TokenChartInterval} from '~/features/Portfolio/common/hooks/useGetPortfolioTokenChart'
-import {useStrings} from '~/features/Portfolio/common/hooks/useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useCurrencyPairing} from '~/features/Settings/useCases/changeAppSettings/Currency/CurrencyContext'
 import {PnlTag} from '~/ui/PnlTag/PnlTag'
 import {Text} from '~/ui/Text/Text'
@@ -35,19 +35,19 @@ export const TokenPerformance = ({tokenPerformance, timeInterval}: Props) => {
   const intervalLabel = React.useMemo(() => {
     switch (timeInterval) {
       case TokenChartInterval.DAY:
-        return strings._24_hours
+        return strings.portfolio._24_hours
       case TokenChartInterval.WEEK:
-        return strings._1_week
+        return strings.portfolio._1_week
       case TokenChartInterval.MONTH:
-        return strings._1_month
+        return strings.portfolio._1_month
       case TokenChartInterval.SIX_MONTHS:
-        return strings._6_months
+        return strings.portfolio._6_months
       case TokenChartInterval.YEAR:
-        return strings._1_year
+        return strings.portfolio._1_year
       case TokenChartInterval.ALL:
-        return strings.all_time
+        return strings.portfolio.all_time
       default:
-        return strings._24_hours
+        return strings.portfolio._24_hours
     }
   }, [strings, timeInterval])
 
@@ -57,8 +57,8 @@ export const TokenPerformance = ({tokenPerformance, timeInterval}: Props) => {
         numberOfLine={3}
         title={
           !tokenPerformance
-            ? strings.noDataFound
-            : strings.tokenPriceChangeTooltip(intervalLabel)
+            ? strings.portfolio.noDataFound
+            : strings.portfolio.tokenPriceChangeTooltip(intervalLabel)
         }
       >
         <View style={[a.flex, a.flex_row, a.align_center, {gap: 2}]}>

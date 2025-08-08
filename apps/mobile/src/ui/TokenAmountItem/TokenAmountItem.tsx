@@ -9,7 +9,7 @@ import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
 import {useWindowDimensions, View, ViewProps} from 'react-native'
 
-import {useStrings} from '../../features/ReviewTx/common/hooks/useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {usePrivacyMode} from '../../features/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
 import {usePriceImpactRiskTheme} from '../../features/Swap/common/helpers'
 import {SwapPriceImpactRisk} from '../../features/Swap/common/types'
@@ -63,7 +63,7 @@ export const TokenAmountItem = ({
 
   const handleShowTokenDetails = () => {
     openModal({
-      title: strings.tokenDetailsTitle,
+      title: strings.txReview.tokenDetailsTitle,
       content: <TokenDetails tokenInfo={info} />,
       height: isPrimary ? 450 : windowHeight * 0.8,
     })

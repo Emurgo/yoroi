@@ -3,7 +3,7 @@ import React from 'react'
 import {ActivityIndicator, TextInput as RNTextInput, Text} from 'react-native'
 
 import {ScannerButton} from '~/features/Send/common/ScannerButton'
-import {useStrings} from '~/features/Send/common/useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Icon} from '~/ui/Icon'
 import {TextInput, TextInputProps} from '~/ui/TextInput/TextInput'
 import {useNavigateTo} from '../../common/navigation'
@@ -32,7 +32,9 @@ export const InputReceiver = React.forwardRef(
     return (
       <TextInput
         right={rightAdornment}
-        label={<Text style={{fontSize: 15}}>{strings.addressInputLabel}</Text>}
+        label={
+          <Text style={{fontSize: 15}}>{strings.send.addressInputLabel}</Text>
+        }
         testID="receiverInput"
         autoCorrect={false}
         focusable

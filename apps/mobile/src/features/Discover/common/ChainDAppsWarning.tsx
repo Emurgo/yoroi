@@ -2,11 +2,12 @@ import {useQuery} from '@tanstack/react-query'
 import {useAsyncStorage, useMutationWithInvalidations} from '@yoroi/common'
 import {Chain} from '@yoroi/types'
 import * as React from 'react'
+import {Text, View} from 'react-native'
 
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {GradientWarning} from '~/ui/ChainWarning/GradientWarning'
-import {useStrings} from './useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
+import {Button} from '~/ui/Button/Button'
 
 export const ChainDAppsWarning = () => {
   const strings = useStrings()
@@ -23,11 +24,21 @@ export const ChainDAppsWarning = () => {
 
   if (isMainnet || hasAccepted) return null
   return (
-    <GradientWarning
-      title={strings.testnetWarningTitle}
-      onClose={handleOnClose}
-      description={strings.testnetWarningDescription}
-    />
+    <View
+      style={{
+        padding: 16,
+        backgroundColor: '#fff3cd',
+        borderColor: '#ffeaa7',
+        borderWidth: 1,
+        borderRadius: 8,
+      }}
+    >
+      <Text style={{fontWeight: 'bold', marginBottom: 8}}>
+        {strings.testnetWarningTitle}
+      </Text>
+      <Text style={{marginBottom: 8}}>{strings.testnetWarningDescription}</Text>
+      <Button title="Close" onPress={handleOnClose} />
+    </View>
   )
 }
 

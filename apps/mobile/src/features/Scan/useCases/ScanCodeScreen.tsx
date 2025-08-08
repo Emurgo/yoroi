@@ -5,7 +5,9 @@ import {Alert, AlertButton} from 'react-native'
 import {z} from 'zod'
 
 import * as feedback from '~/kernel/haptics/feedback'
-import {ScanRoutes, useParams} from '~/kernel/navigation'
+import {useStrings} from '~/kernel/i18n/useStrings'
+import {ScanRoutes} from '~/kernel/navigation/types'
+import {useParams} from '~/kernel/navigation/hooks'
 import {
   CameraCodeScanner,
   CameraCodeScannerMethods,
@@ -13,7 +15,6 @@ import {
 import {parseScanAction} from '../common/parsers'
 import {useNavigateTo} from '../common/useNavigateTo'
 import {useScanErrorResolver} from '../common/useScanErrorResolver'
-import {useStrings} from '../common/useStrings'
 import {useTriggerScanAction} from '../common/useTriggerScanAction'
 
 export const ScanCodeScreen = () => {
@@ -21,7 +22,10 @@ export const ScanCodeScreen = () => {
   const strings = useStrings()
   const scannerRef = React.useRef<CameraCodeScannerMethods>(null)
   const [buttons] = React.useState<AlertButton[]>([
-    {text: strings.ok, onPress: () => scannerRef.current?.continueScanning()},
+    {
+      text: strings.scan.ok,
+      onPress: () => scannerRef.current?.continueScanning(),
+    },
   ])
   const scanErrorResolver = useScanErrorResolver()
   const {insideFeature} = useParams<Params>(isParams)

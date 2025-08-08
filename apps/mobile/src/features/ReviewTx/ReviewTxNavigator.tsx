@@ -7,7 +7,7 @@ import {
   ReviewTxRoutes,
 } from '~/kernel/navigation'
 import {Boundary} from '~/ui/Boundary/Boundary'
-import {useStrings} from './common/hooks/useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {ReviewTxScreen} from './useCases/ReviewTxScreen/ReviewTxScreen'
 import {FailedTxScreen} from './useCases/ShowFailedTxScreen/FailedTxScreen'
 import {InfraestructureIssueScreen} from './useCases/ShowInfraestructureIssueScreen/InfraestructureIssueScreen'
@@ -27,7 +27,7 @@ export const ReviewTxNavigator = () => {
         ...screenOptions(atoms, p),
       }}
     >
-      <Stack.Screen name="review-tx" options={{title: strings.title}}>
+      <Stack.Screen name="review-tx" options={{title: strings.txReview.title}}>
         {() => (
           <Boundary
             error={{

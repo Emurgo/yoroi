@@ -7,7 +7,7 @@ import {
   formatPriceChange,
   priceChange,
 } from '~/features/Portfolio/common/helpers/priceChange'
-import {useStrings} from '~/features/Portfolio/common/hooks/useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {
   PortfolioListTab,
   usePortfolio,
@@ -80,8 +80,8 @@ export const TotalTokensValueContent = ({amount, headerCard}: Props) => {
           <Tooltip
             title={
               listTab === PortfolioListTab.Dapps
-                ? strings.totalDAppsValueTooltip
-                : strings.totalWalletValueTooltip
+                ? strings.portfolio.totalDAppsValueTooltip
+                : strings.portfolio.totalWalletValueTooltip
             }
           >
             <View style={[a.flex_row, a.gap_xs, a.align_stretch]}>

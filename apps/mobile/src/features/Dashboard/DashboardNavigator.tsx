@@ -2,11 +2,11 @@ import {createStackNavigator} from '@react-navigation/stack'
 import {GovernanceProvider} from '@yoroi/staking'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
-import {defineMessages, useIntl} from 'react-intl'
 
 import {NetworkTag} from '~/features/Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {useGovernanceManagerMaker} from '~/features/Staking/Governance/common/helpers'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {
   DashboardRoutes,
   defaultStackNavigationOptions,
@@ -29,7 +29,7 @@ export const DashboardNavigator = () => {
       <Stack.Navigator
         screenOptions={{
           ...defaultStackNavigationOptions(atoms, p.color),
-          title: strings.title,
+          title: strings.dashboard.stakingCenterTitle,
           headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
         }}
       >
@@ -65,18 +65,3 @@ export const DashboardNavigator = () => {
     </GovernanceProvider>
   )
 }
-
-const useStrings = () => {
-  const intl = useIntl()
-
-  return {
-    title: intl.formatMessage(messages.title),
-  }
-}
-
-const messages = defineMessages({
-  title: {
-    id: 'components.stakingcenter.title',
-    defaultMessage: '!!!Staking Center',
-  },
-})

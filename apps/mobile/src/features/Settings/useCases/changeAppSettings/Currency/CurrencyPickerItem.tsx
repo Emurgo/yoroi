@@ -1,12 +1,11 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
-import {useIntl} from 'react-intl'
 import {TouchableOpacity, View} from 'react-native'
 
-import {currencyNames} from '../../../../../kernel/i18n/global-messages'
-import {Icon} from '../../../../../ui/Icon'
-import {Text} from '../../../../../ui/Text/Text'
-import {CurrencySymbol} from '../../../../../wallets/types/other'
+import {useStrings} from '~/kernel/i18n/useStrings'
+import {Icon} from '~/ui/Icon'
+import {Text} from '~/ui/Text/Text'
+import {CurrencySymbol} from '~/wallets/types/other'
 
 type Props = {
   nativeName: string
@@ -23,7 +22,7 @@ export const CurrencyPickerItem = ({
 }: Props) => {
   const strings = useStrings()
   const {palette: p} = useTheme()
-  const title = strings.translatedName(symbol)
+  const title = strings.settings.currencySettings.translatedName(symbol)
   const subtitle = `${nativeName} (${symbol})`
 
   const handleSelectCurrency = () => {
@@ -122,13 +121,4 @@ const Subtitle = ({children}: {children: React.ReactNode}) => {
       {children}
     </Text>
   )
-}
-
-const useStrings = () => {
-  const intl = useIntl()
-
-  return {
-    translatedName: (symbol: CurrencySymbol) =>
-      intl.formatMessage(currencyNames[symbol]),
-  }
 }

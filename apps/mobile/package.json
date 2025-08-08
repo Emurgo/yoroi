@@ -42,10 +42,9 @@
     "@ledgerhq/react-native-hid": "^6.32.6",
     "@ledgerhq/react-native-hw-transport-ble": "^6.34.2",
     "@react-native-async-storage/async-storage": "^2.1.2",
-    "@react-native-firebase/app": "^22.4.0",
-    "@react-native-firebase/messaging": "^22.4.0",
     "@react-native-masked-view/masked-view": "^0.2.9",
     "@react-native/metro-babel-transformer": "^0.80.1",
+    "@react-navigation/bottom-tabs": "^7.4.4",
     "@react-navigation/material-top-tabs": "^7.3.2",
     "@react-navigation/native": "^7.1.9",
     "@react-navigation/stack": "^7.4.2",
@@ -59,6 +58,7 @@
     "@yoroi/blockchains": "file:../../packages/blockchains",
     "@yoroi/claim": "file:../../packages/claim",
     "@yoroi/common": "file:../../packages/common",
+    "@yoroi/dapp-connector": "file:../../packages/dapp-connector",
     "@yoroi/exchange": "file:../../packages/exchange",
     "@yoroi/explorers": "file:../../packages/explorers",
     "@yoroi/identicon": "file:../../packages/identicon",
@@ -133,7 +133,8 @@
     "react-native-webview": "13.13.5",
     "rxjs": "^7.8.2",
     "uuid": "^11.1.0",
-    "zod": "^3.25.17"
+    "zod": "^3.25.17",
+    "expo-system-ui": "~5.0.10"
   },
   "devDependencies": {
     "@amplitude/ampli": "^1.36.2",

@@ -5,12 +5,12 @@ import * as React from 'react'
 import {Alert, Platform, Text, View} from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 
-import {SetupWalletRouteNavigation} from '~/kernel/navigation'
+import {SetupWalletRouteNavigation} from '~/kernel/navigation/types'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {Space} from '~/ui/Space/Space'
 import {HARDWARE_WALLETS, useLedgerPermissions} from '~/wallets/hw/hw'
-import {useStrings} from '../../common/useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 
 const useIsAndroidUsbSupported = () => {
   const [isAndroidUsbSupported, setIsAndroidUsbSupported] =
@@ -43,7 +43,7 @@ export const SelectHwConnectionModal = () => {
           },
         ]}
       >
-        {strings.hwModalText}
+        {strings.setupWallet.hwModalText}
       </Text>
 
       <SelectBluetoothSection />
@@ -70,7 +70,7 @@ const SelectBluetoothSection = () => {
   }
 
   const {request} = useLedgerPermissions({
-    onError: () => Alert.alert(strings.error, strings.bluetoothError),
+    onError: () => Alert.alert(strings.setupWallet.error, strings.setupWallet.bluetoothError),
     onSuccess: () => {
       USBChanged(false)
       navigateHw()
@@ -83,7 +83,7 @@ const SelectBluetoothSection = () => {
 
       <Button
         type={ButtonType.Secondary}
-        title={strings.hwModalBtButton}
+        title={strings.setupWallet.hwModalBtButton}
         icon={Icon.Bluetooth}
         onPress={() => request()}
       />
@@ -124,7 +124,7 @@ const SelectUsbSection = () => {
             },
           ]}
         >
-          {strings.hwModalIosWarning}
+          {strings.setupWallet.hwModalIosWarning}
         </Text>
       </>
     )
@@ -138,7 +138,7 @@ const SelectUsbSection = () => {
 
       <Button
         type={ButtonType.Secondary}
-        title={strings.hwModalUsbButton}
+        title={strings.setupWallet.hwModalUsbButton}
         icon={Icon.Usb}
         onPress={() => {
           USBChanged(true)

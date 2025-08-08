@@ -1,8 +1,8 @@
 import * as React from 'react'
 import {Alert} from 'react-native'
 
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useAuth} from '../context/AuthProvider'
-import {useStrings} from './useStrings'
 
 export const useAuthWithOs = ({
   onSuccess,
@@ -17,7 +17,7 @@ export const useAuthWithOs = ({
       await loginWithHost()
       onSuccess?.()
     } catch (error) {
-      Alert.alert(strings.error, strings.unknownError)
+      Alert.alert(strings.global.error, strings.auth.unknownError)
     }
   }, [loginWithHost, onSuccess, strings])
 

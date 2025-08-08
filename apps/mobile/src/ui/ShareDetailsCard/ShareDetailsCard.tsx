@@ -4,7 +4,7 @@ import {useWindowDimensions, View} from 'react-native'
 import {LinearGradient} from 'expo-linear-gradient'
 
 import {useLastDateAddressUsed} from '~/features/Receive/common/useLastDateAddressUsed'
-import {useStrings} from '~/features/Receive/common/useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Text} from '~/ui/Text/Text'
 import {isEmptyString} from '~/wallets/utils/string'
@@ -70,14 +70,14 @@ export const ShareDetailsCard = ({
       />
 
       <Text style={[a.heading_3_medium, {color: p.gray_max}]}>
-        {strings.walletAddress}
+        {strings.receive.walletAddress}
       </Text>
 
       <View style={{alignSelf: 'stretch'}}>
         <Text
           style={[a.body_2_md_regular, {color: p.gray_600, textAlign: 'left'}]}
         >
-          {strings.address}
+          {strings.receive.address}
         </Text>
 
         <View style={[a.flex_row, {gap: 4}]}>
@@ -93,7 +93,7 @@ export const ShareDetailsCard = ({
           <Copiable
             text={address}
             onCopy={handleAddressOnCopy}
-            feedback={strings.addressCopiedMsg}
+            feedback={strings.receive.addressCopiedMsg}
           />
         </View>
       </View>
@@ -106,7 +106,7 @@ export const ShareDetailsCard = ({
               {color: p.gray_600, textAlign: 'left'},
             ]}
           >
-            {strings.stakingKeyHash}
+            {strings.receive.stakingKeyHash}
           </Text>
 
           <View style={[a.flex_row, {gap: 4}]}>
@@ -119,7 +119,7 @@ export const ShareDetailsCard = ({
               {stakingHash}
             </Text>
 
-            <Copiable text={stakingHash} feedback={strings.addressCopiedMsg} />
+            <Copiable text={stakingHash} feedback={strings.receive.addressCopiedMsg} />
           </View>
         </View>
       )}
@@ -132,7 +132,7 @@ export const ShareDetailsCard = ({
               {color: p.gray_600, textAlign: 'left'},
             ]}
           >
-            {strings.spendingKeyHash}
+            {strings.receive.spendingKeyHash}
           </Text>
 
           <View style={[a.flex_row, {gap: 4}]}>
@@ -145,7 +145,7 @@ export const ShareDetailsCard = ({
               {spendingHash}
             </Text>
 
-            <Copiable text={spendingHash} feedback={strings.addressCopiedMsg} />
+            <Copiable text={spendingHash} feedback={strings.receive.addressCopiedMsg} />
           </View>
         </View>
       )}
@@ -158,7 +158,7 @@ export const ShareDetailsCard = ({
               {color: p.gray_600, textAlign: 'left'},
             ]}
           >
-            {strings.lastUsed}
+            {strings.receive.lastUsed}
           </Text>
 
           <View style={[a.flex_row, {gap: 4}]}>

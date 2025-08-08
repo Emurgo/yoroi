@@ -1,14 +1,15 @@
 import * as React from 'react'
 import {useWindowDimensions} from 'react-native'
 
-import {useModal} from '~/ui/Modal/ModalContext'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useModal} from '~/ui/Modal/ModalContext'
 import {
   PoolTransitionModal,
   PoolTransitionModalActions,
 } from './PoolTransitionModal'
 import {usePoolTransitionContext} from './PoolTransitionProvider'
-import {usePoolTransition, useStrings} from './usePoolTransition'
+import {usePoolTransition} from './usePoolTransition'
+import {useStrings} from '~/kernel/i18n/useStrings'
 
 export const usePoolTransitionModal = () => {
   const {poolTransition, isPoolRetiring, isLoading, navigateToUpdate} =
@@ -27,7 +28,7 @@ export const usePoolTransitionModal = () => {
       poolTransition !== null
     ) {
       openModal({
-        title: strings.title,
+        title: strings.staking.title,
         content: <PoolTransitionModal poolTransition={poolTransition} />,
         footer: <PoolTransitionModalActions onContinue={navigateToUpdate} />,
         height: modalHeight,
@@ -41,7 +42,7 @@ export const usePoolTransitionModal = () => {
     navigateToUpdate,
     openModal,
     poolTransition,
-    strings.title,
+    strings.staking.title,
     wallet.id,
     setShownWallets,
   ])

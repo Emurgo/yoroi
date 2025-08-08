@@ -4,25 +4,22 @@ import {atoms as a, lightPalette, useTheme} from '@yoroi/theme'
 import {HW} from '@yoroi/types'
 import * as React from 'react'
 import type {IntlShape} from 'react-intl'
-import {defineMessages, useIntl} from 'react-intl'
+import {defineMessages} from 'react-intl'
 import {Alert, FlatList, Image, Text, View} from 'react-native'
 import {Observer} from 'rxjs'
 
-import globalMessages, {
-  confirmationMessages,
-  ledgerMessages,
-} from '~/kernel/i18n/global-messages'
+import bleImage from '~/assets/img/bluetooth.png'
+import usbImage from '~/assets/img/ledger-nano-usb.png'
 import {LocalizableError} from '~/kernel/i18n/LocalizableError'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 import {Button} from '~/ui/Button/Button'
 import {Space} from '~/ui/Space/Space'
 import {BluetoothDisabledError, RejectedByUserError} from '~/wallets/hw/hw'
 import {Device} from '~/wallets/types/hw'
-import bleImage from '~/assets/img/bluetooth.png'
-import usbImage from '~/assets/img/ledger-nano-usb.png'
 import {BulletPointItem} from '../BulletPointItem'
 import {Loading} from '../Loading/Loading'
-import {DeviceItem} from './DeviceItem'
+import {DeviceItem} from '~/features/HW/LedgerConnect/DeviceItem'
 
 type Props = {
   intl: IntlShape
@@ -237,10 +234,7 @@ class LedgerConnectInt extends React.Component<Props, State> {
     if (error != null) {
       msg = intl.formatMessage(messages.error)
       if (error instanceof LocalizableError) {
-        errMsg = intl.formatMessage({
-          id: error.name,
-          defaultMessage: error.message,
-        })
+        errMsg = intl.formatMessage(error.descriptor)
       } else {
         errMsg = String(error.message)
       }
@@ -347,9 +341,20 @@ class LedgerConnectInt extends React.Component<Props, State> {
 }
 
 export const LedgerConnect = (props: Omit<Props, 'intl' | 'styles'>) => {
-  const intl = useIntl()
+  const strings = useStrings()
 
-  return <LedgerConnectInt {...props} intl={intl} />
+  return (
+    <LedgerConnectInt
+      {...props}
+      intl={{
+        formatMessage: (msg: any) => {
+          if (msg.id === 'global.error') return strings.global.error
+          if (msg.id === 'global.confirm') return strings.global.confirm
+          return msg.defaultMessage || ''
+        },
+      }}
+    />
+  )
 }
 
 const messages = defineMessages({

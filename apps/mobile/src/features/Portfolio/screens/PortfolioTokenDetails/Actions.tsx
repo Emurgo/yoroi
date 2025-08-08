@@ -5,10 +5,10 @@ import * as React from 'react'
 import {View} from 'react-native'
 
 import {useNavigateTo} from '~/features/Portfolio/common/hooks/useNavigateTo'
-import {useStrings} from '~/features/Portfolio/common/hooks/useStrings'
-import {useSwap} from '~/features/Swap/common/SwapProvider'
+import {useSwap} from '~/features/Swap/common/useSwap'
 import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
@@ -66,12 +66,16 @@ export const Actions = ({tokenInfo}: Props) => {
       <View style={[a.flex_row, a.gap_lg, a.p_lg]}>
         <Button
           type={ButtonType.Secondary}
-          title={strings.send}
+          title={strings.portfolio.send}
           icon={Icon.Send}
           onPress={navigateTo.resetTabAndSend}
         />
 
-        <Button title={strings.swap} icon={Icon.Swap} onPress={handleOnSwap} />
+        <Button
+          title={strings.portfolio.swap}
+          icon={Icon.Swap}
+          onPress={handleOnSwap}
+        />
       </View>
     </View>
   )

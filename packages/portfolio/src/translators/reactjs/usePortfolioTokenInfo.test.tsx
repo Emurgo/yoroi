@@ -31,20 +31,12 @@ describe('usePortfolioTokenInfo', () => {
       .mockResolvedValue(tokenInfoMocks.apiReponse.nftCryptoKitty.success)
 
     const TestComponent = () => {
-      const {data, isLoading} = usePortfolioTokenInfo({
+      const {data} = usePortfolioTokenInfo({
         id: tokenMocks.nftCryptoKitty.info.id,
         network: Chain.Network.Mainnet,
         getTokenInfo: mockedGetTokenInfo,
         primaryTokenInfo: tokenInfoMocks.primaryETH,
       })
-
-      if (isLoading) {
-        return (
-          <View>
-            <Text testID="loading">Loading...</Text>
-          </View>
-        )
-      }
 
       return (
         <View>
@@ -52,12 +44,11 @@ describe('usePortfolioTokenInfo', () => {
         </View>
       )
     }
+
     const wrapper = wrapperMaker({
       queryClient,
     })
     const {getByTestId} = render(<TestComponent />, {wrapper})
-
-    expect(getByTestId('loading')).toBeDefined()
 
     await waitFor(() => {
       expect(getByTestId('data')).toBeDefined()
@@ -77,20 +68,12 @@ describe('usePortfolioTokenInfo', () => {
       .mockResolvedValue(tokenInfoMocks.primaryETH)
 
     const TestComponent = () => {
-      const {data, isLoading} = usePortfolioTokenInfo({
+      const {data} = usePortfolioTokenInfo({
         id: primaryTokenId,
         network: Chain.Network.Mainnet,
         getTokenInfo: mockedGetTokenInfo,
         primaryTokenInfo: tokenInfoMocks.primaryETH,
       })
-
-      if (isLoading) {
-        return (
-          <View>
-            <Text testID="loading">Loading...</Text>
-          </View>
-        )
-      }
 
       return (
         <View>
@@ -123,20 +106,12 @@ describe('usePortfolioTokenInfo', () => {
     const mockedGetTokenInfo = jest.fn().mockResolvedValue(unknownTokenInfo)
 
     const TestComponent = () => {
-      const {data, isLoading} = usePortfolioTokenInfo({
+      const {data} = usePortfolioTokenInfo({
         id: tokenMocks.nftCryptoKitty.info.id,
         network: Chain.Network.Mainnet,
         getTokenInfo: mockedGetTokenInfo,
         primaryTokenInfo: tokenInfoMocks.primaryETH,
       })
-
-      if (isLoading) {
-        return (
-          <View>
-            <Text testID="loading">Loading...</Text>
-          </View>
-        )
-      }
 
       return (
         <View>

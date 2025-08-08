@@ -6,7 +6,7 @@ import {useModal} from '~/ui/Modal/ModalContext'
 
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Space} from '~/ui/Space/Space'
-import {useStrings} from '../common/useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 
 type Props = {
   address: string

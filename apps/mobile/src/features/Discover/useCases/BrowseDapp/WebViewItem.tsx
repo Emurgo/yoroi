@@ -1,4 +1,5 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {LinearGradient} from 'expo-linear-gradient'
 import * as React from 'react'
 import {
   Dimensions,
@@ -6,7 +7,6 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
 } from 'react-native'
-import {LinearGradient} from 'expo-linear-gradient'
 import Animated, {
   Easing,
   useAnimatedStyle,

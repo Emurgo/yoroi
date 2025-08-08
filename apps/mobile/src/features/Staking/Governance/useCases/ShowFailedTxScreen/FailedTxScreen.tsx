@@ -2,7 +2,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
-import {useStrings} from '~/features/Staking/common/useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
 import {Space} from '~/ui/Space/Space'
 import {useNavigateTo} from '../../common/navigation'
@@ -39,11 +39,11 @@ export const FailedTxScreen = () => {
           {color: p.gray_max},
         ]}
       >
-        {strings.failedTxTitle}
+        {strings.staking.failedTxTitle}
       </Text>
 
       <Text style={[a.body_1_lg_regular, a.text_center, {color: p.gray_600}]}>
-        {strings.failedTxText}
+        {strings.staking.failedTxText}
       </Text>
 
       <Space.Height.sm fill />
@@ -51,7 +51,7 @@ export const FailedTxScreen = () => {
       <View style={a.align_stretch}>
         <Button
           onPress={navigateTo.home}
-          title={strings.failedTxButton}
+          title={strings.staking.failedTxButton}
           style={a.px_lg}
         />
       </View>

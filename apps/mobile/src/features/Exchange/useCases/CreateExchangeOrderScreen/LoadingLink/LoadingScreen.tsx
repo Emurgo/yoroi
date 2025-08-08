@@ -2,8 +2,8 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Space} from '~/ui/Space/Space'
-import {useStrings} from '../../common/useStrings'
 import {YoroiLogo} from '../illustrations/YoroiLogo'
 
 export const LoadingLinkScreen = () => {

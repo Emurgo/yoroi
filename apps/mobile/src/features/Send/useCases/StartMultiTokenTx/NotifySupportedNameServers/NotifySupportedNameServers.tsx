@@ -1,12 +1,12 @@
 import {useResolverSetShowNotice, useResolverShowNotice} from '@yoroi/resolver'
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {LinearGradient} from 'expo-linear-gradient'
 import React from 'react'
 import {Text, TouchableOpacity, View} from 'react-native'
-import {LinearGradient} from 'expo-linear-gradient'
 
 import {Icon} from '~/ui/Icon'
 
-import {useStrings} from '~/features/Send/common/useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Space} from '~/ui/Space/Space'
 
 export const NotifySupportedNameServers = () => {
@@ -41,7 +41,7 @@ export const NotifySupportedNameServers = () => {
           ]}
         >
           <Text style={[a.body_1_lg_medium, {color: p.gray_max}]}>
-            {`${strings.resolverNoticeTitle} `}😇
+            {`${strings.send.resolverNoticeTitle} `}😇
           </Text>
 
           <TouchableOpacity onPress={handleOnClose}>
@@ -52,7 +52,7 @@ export const NotifySupportedNameServers = () => {
         <Space.Height.sm />
 
         <Text style={[a.body_2_md_regular, {color: p.gray_max}]}>
-          {strings.resolverNoticeText}:
+          {strings.send.resolverNoticeText}:
         </Text>
 
         <NameServer text="ADA Handle" />

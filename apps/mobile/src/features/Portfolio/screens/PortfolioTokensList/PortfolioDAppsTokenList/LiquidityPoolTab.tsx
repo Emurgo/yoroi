@@ -4,7 +4,7 @@ import {FlatList, Text, View} from 'react-native'
 
 import {ILiquidityPool} from '~/features/Portfolio/common/hooks/useGetLiquidityPool'
 import {useShowLiquidityPoolModal} from '~/features/Portfolio/common/hooks/useShowLiquidityPoolModal'
-import {useStrings} from '~/features/Portfolio/common/hooks/useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {TokenEmptyList} from '~/features/Portfolio/ui/TokenEmptyList/TokenEmptyList'
 import {makeList} from '~/kernel/utils'
 import {Space} from '~/ui/Space/Space'
@@ -40,7 +40,7 @@ export const LiquidityPoolTab = ({
       return (
         <View>
           <Text style={[a.body_2_md_regular, {color: p.gray_700}]}>
-            {strings.countLiquidityPoolsAvailable(tokensList.length)}
+            {strings.portfolio.countLiquidityPoolsAvailable(tokensList.length)}
           </Text>
 
           <Space.Height.md />
@@ -88,7 +88,7 @@ export const LiquidityPoolTab = ({
         )}
         ListEmptyComponent={
           !isFetching ? (
-            <TokenEmptyList emptyText={strings.noDataFound} />
+            <TokenEmptyList emptyText={strings.portfolio.noDataFound} />
           ) : undefined
         }
         contentContainerStyle={[a.flex_1, a.flex_grow]}

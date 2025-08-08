@@ -1,5 +1,4 @@
 import * as React from 'react'
-import {QueryClient, QueryClientProvider} from '@tanstack/react-query'
 
 import {SuspenseBoundary} from './SuspenseBoundary'
 import {ErrorBoundary} from './ErrorBoundary'
@@ -7,18 +6,15 @@ import {CatalystProvider} from '../catalyst/translators/context'
 import {Catalyst} from '../types'
 
 type Props = {
-  queryClient: QueryClient
   manager: Catalyst.Manager
 }
 
 export const wrapperManagerFixture =
-  ({queryClient, manager}: Props) =>
+  ({manager}: Props) =>
   ({children}: {children: React.ReactNode}) => (
-    <QueryClientProvider client={queryClient}>
-      <ErrorBoundary>
-        <SuspenseBoundary>
-          <CatalystProvider manager={manager}>{children}</CatalystProvider>
-        </SuspenseBoundary>
-      </ErrorBoundary>
-    </QueryClientProvider>
+    <ErrorBoundary>
+      <SuspenseBoundary>
+        <CatalystProvider manager={manager}>{children}</CatalystProvider>
+      </SuspenseBoundary>
+    </ErrorBoundary>
   )

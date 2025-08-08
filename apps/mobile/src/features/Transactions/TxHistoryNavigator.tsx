@@ -1,15 +1,11 @@
 import {createStackNavigator} from '@react-navigation/stack'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
-import {defineMessages, useIntl} from 'react-intl'
 
 import {NetworkTag} from '~/features/Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {
-  defaultStackNavigationOptions,
-  TxHistoryRoutes,
-} from '~/kernel/navigation/navigation'
+import {useStrings} from '~/kernel/i18n/useStrings'
+import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
+import {TxHistoryRoutes} from '~/kernel/navigation/types'
 import {Boundary} from '~/ui/Boundary/Boundary'
 import {HeaderRightHistory} from './common/HeaderRightHistory'
 import {TxDetails} from './useCases/TxDetails/TxDetails'
@@ -18,10 +14,8 @@ import {TxHistory} from './useCases/TxHistory/TxHistory'
 const Stack = createStackNavigator<TxHistoryRoutes>()
 
 export const TxHistoryNavigator = () => {
-  const {track} = useMetrics()
   const strings = useStrings()
-  const {wallet, meta} = useSelectedWallet()
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p} = useTheme()
 
   const navigationOptions = React.useMemo(
     () => defaultStackNavigationOptions(a, p),
@@ -38,7 +32,7 @@ export const TxHistoryNavigator = () => {
       <Stack.Screen
         name="history-list"
         options={{
-          title: strings.historyTitle,
+          title: strings.transactions.history.historyTitle,
           headerRight: () => <HeaderRightHistory />,
         }}
       >
@@ -52,7 +46,7 @@ export const TxHistoryNavigator = () => {
       <Stack.Screen
         name="tx-details"
         options={{
-          title: strings.txDetailsTitle,
+          title: strings.transactions.history.txDetailsTitle,
         }}
       >
         {() => (
@@ -64,23 +58,3 @@ export const TxHistoryNavigator = () => {
     </Stack.Navigator>
   )
 }
-
-const useStrings = () => {
-  const intl = useIntl()
-
-  return {
-    historyTitle: intl.formatMessage(messages.historyTitle),
-    txDetailsTitle: intl.formatMessage(messages.txDetailsTitle),
-  }
-}
-
-const messages = defineMessages({
-  historyTitle: {
-    id: 'global.historyTitle',
-    defaultMessage: '!!!History',
-  },
-  txDetailsTitle: {
-    id: 'global.txDetailsTitle',
-    defaultMessage: '!!!Transaction Details',
-  },
-})

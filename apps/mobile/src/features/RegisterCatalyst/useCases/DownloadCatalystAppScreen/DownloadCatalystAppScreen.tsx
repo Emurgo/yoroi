@@ -14,18 +14,18 @@ import {
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import appstoreBadge from '~/assets/img/app-store-badge.png'
+import playstoreBadge from '~/assets/img/google-play-badge.png'
 import {useCatalystCurrentFund} from '~/features/Discover/common/hooks'
 import {useStakingInfo} from '~/features/Portfolio/common/hooks/useStakingInfo'
 import {useNavigateTo} from '~/features/RegisterCatalyst/common/navigation'
-import {useStrings} from '~/features/RegisterCatalyst/common/useStrings'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
 import {CatalystStep1} from '~/ui/CatalystStep1Illustration/CatalystStep1Illustration'
 import {Actions, Row, Stepper} from '~/ui/common/components'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
-import appstoreBadge from '~/assets/img/app-store-badge.png'
-import playstoreBadge from '~/assets/img/google-play-badge.png'
 
 export const DownloadCatalystAppScreen = () => {
   const strings = useStrings()
@@ -58,10 +58,13 @@ export const DownloadCatalystAppScreen = () => {
   React.useEffect(() => {
     if (stakingInfo?.status === 'not-registered')
       openModal({
-        title: strings.attention,
+        title: strings.registerCatalyst.title,
         content: <WarningModal />,
         footer: (
-          <Button title={strings.iUnderstandButton} onPress={closeModal} />
+          <Button
+            title={strings.registerCatalyst.confirm}
+            onPress={closeModal}
+          />
         ),
         height: 300,
       })
@@ -69,22 +72,26 @@ export const DownloadCatalystAppScreen = () => {
     closeModal,
     openModal,
     stakingInfo?.status,
-    strings.attention,
-    strings.iUnderstandButton,
+    strings.registerCatalyst.title,
+    strings.registerCatalyst.confirm,
   ])
 
   const fundName = fund.info.fundName
-  const registrationStart = `${formatDate(fund.info.snapshotStart)}: ${strings.snapshotStart}`
-  const votingStart = `${formatDate(fund.info.votingStart)}: ${strings.votingStart}`
-  const votingEnd = `${formatDate(fund.info.votingEnd)}: ${strings.votingEnd}`
-  const votingResults = `${formatDate(fund.info.tallyingEnd)}: ${strings.votingResults}`
+  const registrationStart = `${formatDate(fund.info.snapshotStart)}: ${strings.registerCatalyst.snapshotStart}`
+  const votingStart = `${formatDate(fund.info.votingStart)}: ${strings.registerCatalyst.votingStart}`
+  const votingEnd = `${formatDate(fund.info.votingEnd)}: ${strings.registerCatalyst.votingEnd}`
+  const votingResults = `${formatDate(fund.info.tallyingEnd)}: ${strings.registerCatalyst.votingResults}`
 
   return (
     <SafeAreaView
       edges={['left', 'right', 'bottom']}
       style={[{backgroundColor: p.bg_color_max}, a.px_lg, a.pb_lg]}
     >
-      <Stepper title={strings.title} currentStep={1} totalSteps={3} />
+      <Stepper
+        title={strings.registerCatalyst.title}
+        currentStep={1}
+        totalSteps={3}
+      />
 
       <ScrollView bounces={false} contentContainerStyle={[a.align_center]}>
         <CatalystStep1 />
@@ -92,7 +99,7 @@ export const DownloadCatalystAppScreen = () => {
         <Space.Height.lg />
 
         <Text style={[a.body_1_lg_regular]}>
-          {strings.downloadCatalystAppDescription}
+          {strings.registerCatalyst.step2Description}
         </Text>
 
         <Space.Height.lg />
@@ -116,7 +123,7 @@ export const DownloadCatalystAppScreen = () => {
         <Space.Height.xl />
 
         <Actions>
-          <Button title={strings.next} onPress={onNext} />
+          <Button title={strings.registerCatalyst.confirm} onPress={onNext} />
         </Actions>
       </ScrollView>
     </SafeAreaView>
@@ -143,7 +150,7 @@ const WarningModal = () => {
   return (
     <View style={[a.px_lg, a.flex_1]}>
       <Text style={[a.body_1_lg_regular, {color: p.text_gray_medium}]}>
-        {strings.catalystWarning}
+        {strings.registerCatalyst.tip}
       </Text>
     </View>
   )

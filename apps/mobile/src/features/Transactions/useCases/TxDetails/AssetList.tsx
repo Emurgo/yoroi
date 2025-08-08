@@ -1,14 +1,12 @@
 import {isPrimaryToken, usePortfolioTokenInfo} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
-import {useIntl} from 'react-intl'
 import {FlatList, Text, TouchableOpacity, View} from 'react-native'
 
 import {usePrivacyMode} from '~/features/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
-import {useStrings} from '~/features/Transactions/common/strings'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {normalisePtId} from '~/kernel/helpers/normalisePtId'
-import globalMessages, {txLabels} from '~/kernel/i18n/global-messages'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Boundary} from '~/ui/Boundary/Boundary'
 import {CardanoTypes} from '~/wallets/cardano/types'
 import {formatTokenAmount} from '~/wallets/utils/format'
@@ -20,18 +18,18 @@ type AssetListProps = {
   onSelect?: (tokenEntry: CardanoTypes.TokenEntry) => void
 }
 export const AssetList = ({assets, onSelect}: AssetListProps) => {
-  const intl = useIntl()
+  const strings = useStrings()
   const {palette: p} = useTheme()
 
   return (
     <View>
       <View style={[a.flex_row, a.justify_between, {marginBottom: 10}]}>
         <Text style={[{color: p.text_gray_medium}, a.body_2_md_regular]}>
-          {intl.formatMessage(globalMessages.assetsLabel)}
+          {strings.transactions.assetsLabel}
         </Text>
 
         <Text style={[{color: p.text_gray_medium}, a.body_2_md_regular]}>
-          {intl.formatMessage(txLabels.amount)}
+          {strings.send.amount}
         </Text>
       </View>
 
@@ -72,7 +70,7 @@ const AssetRow = ({entry, onSelect}: AssetRowProps) => {
   const {palette: p} = useTheme()
 
   const name = isEmptyString(tokenInfo?.name)
-    ? strings.unknownAssetName
+    ? strings.transactions.unknownAssetName
     : tokenInfo?.name
 
   const quantity = tokenInfo

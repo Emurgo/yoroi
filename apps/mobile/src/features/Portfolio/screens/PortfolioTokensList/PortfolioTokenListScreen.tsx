@@ -3,7 +3,7 @@ import * as React from 'react'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useGetDAppsPortfolioBalance} from '~/features/Portfolio/common/hooks/useGetDAppsPortfolioBalance'
-import {useStrings} from '~/features/Portfolio/common/hooks/useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {
   PortfolioListTab,
   usePortfolio,
@@ -35,8 +35,8 @@ export const PortfolioTokenListScreen = () => {
   }, [listTab, track])
 
   useSearchOnNavBar({
-    title: strings.tokenList,
-    placeholder: strings.searchTokens,
+    title: strings.portfolio.tokenList,
+    placeholder: strings.portfolio.searchTokens,
     extraNavigationOptions: {
       headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
     },
@@ -51,13 +51,13 @@ export const PortfolioTokenListScreen = () => {
         <Tabs>
           <Tab
             onPress={() => setListTab(PortfolioListTab.Wallet)}
-            label={strings.walletToken}
+            label={strings.portfolio.walletToken}
             active={listTab === PortfolioListTab.Wallet}
           />
 
           <Tab
             onPress={() => setListTab(PortfolioListTab.Dapps)}
-            label={strings.dappsToken}
+            label={strings.portfolio.dappsToken}
             active={listTab === PortfolioListTab.Dapps}
           />
         </Tabs>

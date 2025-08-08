@@ -1,4 +1,4 @@
-import {errorMessages} from '~/kernel/i18n/global-messages'
+
 import {LocalizableError} from '~/kernel/i18n/LocalizableError'
 
 // thrown when the request did go through but
@@ -6,8 +6,8 @@ import {LocalizableError} from '~/kernel/i18n/LocalizableError'
 export class ApiError extends LocalizableError {
   constructor(response: string | null) {
     super({
-      id: errorMessages.apiError.message.id,
-      defaultMessage: errorMessages.apiError.message.defaultMessage || '',
+      id: 'api.error',
+      defaultMessage: 'API error: {response}',
       values: {
         response,
       },

@@ -8,11 +8,11 @@ import React from 'react'
 import {useIntl} from 'react-intl'
 import {Text, TouchableOpacity, View, ViewProps} from 'react-native'
 
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useStrings} from '~/kernel/i18n/useStrings'
+// import {TxHistoryRouteNavigation} from '~/kernel/navigation'
 import {useCurrencyPairing} from '~/features/Settings/useCases/changeAppSettings/Currency/CurrencyContext'
 import {usePrivacyMode} from '~/features/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
-import {useStrings} from '~/features/Transactions/common/strings'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {TxHistoryRouteNavigation} from '~/kernel/navigation/navigation'
 import {Boundary, ResetError} from '~/ui/Boundary/Boundary'
 import {Icon} from '~/ui/Icon'
 import {styleMap} from '~/ui/Icon/Direction'
@@ -35,7 +35,7 @@ type Props = {
 
 export const TxListItem = ({transaction}: Props) => {
   const strings = useStrings()
-  const navigation = useNavigation<TxHistoryRouteNavigation>()
+  const navigation = useNavigation<any>()
   const {palette: p} = useTheme()
   const {wallet} = useSelectedWallet()
   const {tokenId} = useTxFilter()
@@ -49,7 +49,7 @@ export const TxListItem = ({transaction}: Props) => {
   const showDetails = () =>
     navigation.navigate('tx-details', {id: transaction.id})
   const submittedAt = isNonNullable(transaction.submittedAt)
-    ? `${formatDateRelative(transaction.submittedAt, intl) + ', ' + formatTime(transaction.submittedAt, intl)}`
+    ? `${formatDateRelative(transaction.submittedAt, intl, {today: strings.global.today, yesterday: strings.global.yesterday}) + ', ' + formatTime(transaction.submittedAt, intl)}`
     : ''
 
   const amountAsMT = MultiToken.fromArray(transaction.amount)
@@ -82,7 +82,7 @@ export const TxListItem = ({transaction}: Props) => {
           ]}
           testID="transactionDirection"
         >
-          {strings.direction(transaction.direction as any)}
+          {strings.transactions.direction(transaction.direction as any)}
         </Text>
 
         <Text
@@ -110,7 +110,7 @@ export const TxListItem = ({transaction}: Props) => {
           ) : (
             <Text
               style={[{color: p.gray_600}, a.body_3_sm_regular]}
-            >{`${assetLength} ${strings.assets(assetLength)}`}</Text>
+            >{`${assetLength} ${strings.transactions.assets(assetLength)}`}</Text>
           )}
         </Row>
       </Right>

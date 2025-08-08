@@ -5,7 +5,7 @@ import {LinearGradient} from 'expo-linear-gradient'
 import Animated, {FadeInUp, FadeOut, Layout} from 'react-native-reanimated'
 
 import {useCopy} from '~/features/Copy/context/CopyProvider'
-import {useStrings} from '~/features/Receive/common/useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Space} from '~/ui/Space/Space'
 import {SkeletonSmallCardAddress} from '../SkeletonAddressDetail/SkeletonAddressDetail'
 
@@ -58,7 +58,7 @@ export const SmallAddressCard = ({
           ]}
           activeOpacity={0.6}
           onLongPress={(event) =>
-            copy({text: address, feedback: strings.addressCopiedMsg, event})
+            copy({text: address, feedback: strings.receive.addressCopiedMsg, event})
           }
           onPress={onPress}
           testID={testID}
@@ -115,7 +115,7 @@ export const SmallAddressCard = ({
                   !isUsed && {color: p.gray_min},
                 ]}
               >
-                {isUsed ? strings.usedAddress : strings.unusedAddress}
+                {isUsed ? strings.receive.usedAddress : strings.receive.unusedAddress}
               </Text>
             </View>
 

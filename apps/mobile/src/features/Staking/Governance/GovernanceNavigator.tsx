@@ -11,7 +11,7 @@ import {
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {useGovernanceManagerMaker} from './common/helpers'
 import {NavigationStack} from './common/navigation'
-import {useStrings} from './common/strings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {ChangeVoteScreen} from './useCases/ChangeVote/ChangeVoteScreen'
 import {HomeScreen} from './useCases/Home/HomeScreen'
 import {NoFundsScreen} from './useCases/NoFunds/NoFundsScreen'

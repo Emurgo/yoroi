@@ -3,7 +3,6 @@ import {isNonNullable} from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {fromPairs} from 'lodash'
 import React, {useState} from 'react'
-import {IntlShape, useIntl} from 'react-intl'
 import {
   LayoutAnimation,
   Linking,
@@ -17,9 +16,8 @@ import {ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {usePrivacyMode} from '~/features/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
-import {messages, useStrings} from '~/features/Transactions/common/strings'
-import {useBestBlock} from '~/features/WalletManager/hooks/useBestBlock'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Banner} from '~/ui/Banner/Banner'
 import {Boundary} from '~/ui/Boundary/Boundary'
 import {Button} from '~/ui/Button/Button'
@@ -43,7 +41,6 @@ export const TxDetails = () => {
   const modalHeight = Math.min(screenHeight * 0.8, 650) // to include derivation path in case it is possible
   const strings = useStrings()
   const {atoms: ta, palette: p} = useTheme()
-  const intl = useIntl()
   const {id} = useRoute().params as Params
   const {wallet} = useSelectedWallet()
   const explorers = wallet.networkManager.explorers
@@ -62,11 +59,11 @@ export const TxDetails = () => {
   const memo = !isEmptyString(transaction.memo) ? transaction.memo : '-'
 
   const submittedAt = isNonNullable(transaction.submittedAt)
-    ? formatDateAndTime(transaction.submittedAt, intl)
+    ? formatDateAndTime(transaction.submittedAt)
     : ''
 
   const {fromFiltered, toFiltered, cntOmittedTo} = getShownAddresses(
-    intl,
+    strings,
     transaction,
     internalAddressIndex,
     externalAddressIndex,
@@ -101,7 +98,7 @@ export const TxDetails = () => {
     >
       <FadeIn style={a.flex_1}>
         <ScrollView contentContainerStyle={a.px_lg}>
-          <Banner label={strings[transaction.direction]}>
+          <Banner label={strings.direction(transaction.direction)}>
             <Boundary>
               <AdaAmount amount={amount} />
 
@@ -201,9 +198,9 @@ export const TxDetails = () => {
             <Label>{strings.txAssuranceLevel}</Label>
           </View>
 
-          <Boundary loading={{size: 'small'}}>
+          {/* <Boundary loading={{size: 'small'}}>
             <Confirmations transaction={transaction} />
-          </Boundary>
+          </Boundary> */}
 
           <Label>{strings.transactionId}</Label>
 
@@ -220,25 +217,6 @@ export const TxDetails = () => {
         </Actions>
       </FadeIn>
     </SafeAreaView>
-  )
-}
-
-const Confirmations = ({transaction}: {transaction: TransactionInfo}) => {
-  const strings = useStrings()
-  const bestBlock = useBestBlock({
-    options: {
-      refetchInterval: 5_000,
-    },
-  })
-
-  return (
-    <Text>
-      {strings.confirmations(
-        transaction.blockNumber === 0
-          ? 0
-          : bestBlock.height - transaction.blockNumber,
-      )}
-    </Text>
   )
 }
 
@@ -263,8 +241,8 @@ const AdaAmount = ({amount}: {amount: BigNumber}) => {
   const {palette: p} = useTheme()
   const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
   const amountStyle = amount.gte(0)
-    ? {color: p.primary_600, fontWeight: '500'}
-    : {color: p.sys_magenta_500, fontWeight: '500'}
+    ? {color: p.primary_600, fontWeight: '500' as const}
+    : {color: p.sys_magenta_500, fontWeight: '500' as const}
 
   if (isPrivacyActive) {
     return <Text style={amountStyle}>{privacyPlaceholder}</Text>
@@ -288,7 +266,7 @@ const Fee = ({amount}: {amount: BigNumber}) => {
   return <Text>{text}</Text>
 }
 
-const ExpandableAssetList: React.VFC<{
+const ExpandableAssetList: React.FC<{
   expanded: boolean
   assets: CardanoTypes.TokenEntry[]
 }> = ({expanded, assets}) => {
@@ -342,7 +320,7 @@ const Actions = ({style, ...props}: ViewProps) => (
 )
 
 const getShownAddresses = (
-  intl: IntlShape,
+  strings: any,
   transaction: TransactionInfo,
   internalAddressIndex: Record<string, number>,
   externalAddressIndex: Record<string, number>,
@@ -354,15 +332,15 @@ const getShownAddresses = (
 
   const getPath = (address: string) => {
     if (isMyReceive(address)) {
-      return intl.formatMessage(messages.addressPrefixReceive, {
-        idx: externalAddressIndex[address],
-      })
+      return strings.transactions.addressPrefixReceive(
+        externalAddressIndex[address],
+      )
     } else if (isMyChange(address)) {
-      return intl.formatMessage(messages.addressPrefixChange, {
-        idx: internalAddressIndex[address],
-      })
+      return strings.transactions.addressPrefixChange(
+        internalAddressIndex[address],
+      )
     } else {
-      return intl.formatMessage(messages.addressPrefixNotMine)
+      return strings.transactions.addressPrefixNotMine
     }
   }
 

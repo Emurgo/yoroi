@@ -5,13 +5,13 @@ import * as React from 'react'
 import {Text, View} from 'react-native'
 
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {Copiable} from '~/ui/Copiable'
+import {useStrings} from '~/kernel/i18n/useStrings'
+import {Copiable} from '~/ui/Copiable/Copiable'
 import {ExplorerInfoLinks} from '~/ui/ExplorerInfoLinks/ExplorerInfoLinks'
 import {Space} from '~/ui/Space/Space'
 import {formatTokenWithText} from '~/wallets/utils/format'
 import {isEmptyString} from '~/wallets/utils/string'
 import {asQuantity, Quantities} from '~/wallets/utils/utils'
-import {useStrings} from './hooks/useStrings'
 import {generatePoolName} from './operations'
 
 export const PoolDetails = ({poolInfo}: {poolInfo: FullPoolInfo}) => {
@@ -47,7 +47,7 @@ export const PoolDetails = ({poolInfo}: {poolInfo: FullPoolInfo}) => {
       <Space.Height.lg />
 
       <Info
-        label={strings.poolSize}
+        label={strings.txReview.poolDetails.poolSize}
         value={formatTokenWithText(
           asQuantity(explorer?.stake ?? Quantities.zero),
           wallet.portfolioPrimaryTokenInfo,
@@ -56,23 +56,29 @@ export const PoolDetails = ({poolInfo}: {poolInfo: FullPoolInfo}) => {
 
       <Space.Height.sm />
 
-      <Info label={strings.poolRoa} value={`${explorer?.roa ?? '-'}%`} />
-
-      <Space.Height.sm />
-
-      <Info label={strings.poolShare} value={`${explorer?.share ?? '-'}%`} />
+      <Info
+        label={strings.txReview.poolDetails.poolRoa}
+        value={`${explorer?.roa ?? '-'}%`}
+      />
 
       <Space.Height.sm />
 
       <Info
-        label={strings.poolSaturation}
+        label={strings.txReview.poolDetails.poolShare}
+        value={`${explorer?.share ?? '-'}%`}
+      />
+
+      <Space.Height.sm />
+
+      <Info
+        label={strings.txReview.poolDetails.poolSaturation}
         value={`${explorer?.saturation ?? '-'}%`}
       />
 
       <Space.Height.sm />
 
       <Info
-        label={strings.poolTaxFix}
+        label={strings.txReview.poolDetails.taxFix}
         value={formatTokenWithText(
           asQuantity(explorer?.taxFix ?? Quantities.zero),
           wallet.portfolioPrimaryTokenInfo,
@@ -82,14 +88,14 @@ export const PoolDetails = ({poolInfo}: {poolInfo: FullPoolInfo}) => {
       <Space.Width.sm />
 
       <Info
-        label={strings.poolTaxRatio}
+        label={strings.txReview.poolDetails.taxRatio}
         value={`${explorer?.taxRatio ?? '-'}%`}
       />
 
       <Space.Width.sm />
 
       <Info
-        label={strings.poolPledge}
+        label={strings.txReview.poolDetails.pledge}
         value={formatTokenWithText(
           asQuantity(
             (lastChainPoolInfo?.payload as {poolParams: {pledge: string}})
@@ -127,7 +133,7 @@ const PoolId = ({poolId}: {poolId: string | undefined}) => {
   return (
     <Row>
       <Text style={[a.body_2_md_regular, {color: p.text_gray_low}]}>
-        {strings.poolId}
+        {strings.txReview.poolDetails.poolId}
       </Text>
 
       <Space.Width.lg />
@@ -158,7 +164,7 @@ const PoolHash = ({poolHash}: {poolHash?: string}) => {
   return (
     <Row>
       <Text style={[a.body_2_md_regular, {color: p.text_gray_low}]}>
-        {strings.poolHash}
+        {strings.txReview.poolDetails.poolHash}
       </Text>
 
       <Space.Width.lg />

@@ -2,7 +2,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
-import {useMappedStrings} from './useStrings'
+import {useMappedStrings} from '~/kernel/i18n/useStrings'
 
 type Props = {
   category: string

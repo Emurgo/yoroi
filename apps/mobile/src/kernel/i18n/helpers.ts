@@ -1,7 +1,6 @@
 import {IntlShape} from 'react-intl'
 
 import {LocalizableError} from './LocalizableError'
-import globalMessages from './global-messages'
 
 export const getTranslatedError = (intl: IntlShape) => {
   return (error?: Error | LocalizableError) => {
@@ -11,6 +10,6 @@ export const getTranslatedError = (intl: IntlShape) => {
 
     const errorMessage = error?.toString()
 
-    return errorMessage || intl.formatMessage(globalMessages.unknown)
+    return errorMessage || 'Unknown error'
   }
 }

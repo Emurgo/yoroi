@@ -44,7 +44,10 @@ config.resolver.extraNodeModules = {
   '@yoroi/blockchains': path.resolve(workspaceRoot, 'packages/blockchains'),
   '@yoroi/claim': path.resolve(workspaceRoot, 'packages/claim'),
   '@yoroi/common': path.resolve(workspaceRoot, 'packages/common'),
-  '@yoroi/dapp-connector': path.resolve(workspaceRoot, 'packages/dapp-connector'),
+  '@yoroi/dapp-connector': path.resolve(
+    workspaceRoot,
+    'packages/dapp-connector',
+  ),
   '@yoroi/exchange': path.resolve(workspaceRoot, 'packages/exchange'),
   '@yoroi/explorers': path.resolve(workspaceRoot, 'packages/explorers'),
   '@yoroi/identicon': path.resolve(workspaceRoot, 'packages/identicon'),
@@ -72,6 +75,9 @@ config.transformer.minifierConfig = {
     drop_console: true,
   },
 }
+
+// Enable require.context feature
+config.transformer.unstable_allowRequireContext = true
 
 const shims = {
   'crypto': 'react-native-quick-crypto',

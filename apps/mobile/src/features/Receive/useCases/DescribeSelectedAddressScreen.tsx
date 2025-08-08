@@ -7,6 +7,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useCopy} from '~/features/Copy/context/CopyProvider'
 import {useAddressMode} from '~/features/WalletManager/hooks/useAddressMode'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {AddressDetailCard} from '~/ui/AddressDetailCard/AddressDetailCard'
 import {Button, ButtonType} from '~/ui/Button/Button'
@@ -22,7 +23,6 @@ import {useReceive} from '../common/ReceiveProvider'
 import {useMultipleAddressesInfo} from '../common/useMultipleAddressesInfo'
 import {useNavigateTo} from '../common/useNavigateTo'
 import {useReceiveAddressesStatus} from '../common/useReceiveAddressesStatus'
-import {useStrings} from '../common/useStrings'
 
 export const DescribeSelectedAddressScreen = () => {
   const strings = useStrings()
@@ -42,7 +42,11 @@ export const DescribeSelectedAddressScreen = () => {
 
   const onCopy = (event: GestureResponderEvent) => {
     track.receiveCopyAddressClicked({copy_address_location: 'CTA Copy Address'})
-    copy({text: selectedAddress, feedback: strings.addressCopiedMsg, event})
+    copy({
+      text: selectedAddress,
+      feedback: strings.receive.addressCopiedMsg,
+      event,
+    })
   }
 
   const handleOnModalConfirm = React.useCallback(
@@ -56,7 +60,7 @@ export const DescribeSelectedAddressScreen = () => {
   React.useEffect(() => {
     isShowingMultipleAddressInfo &&
       openModal({
-        title: strings.singleOrMultiple,
+        title: strings.receive.singleOrMultiple,
         content: (
           <SingleOrMultipleAddressesModal onConfirm={handleOnModalConfirm} />
         ),
@@ -67,7 +71,7 @@ export const DescribeSelectedAddressScreen = () => {
     isSingle,
     isMultipleAddressesUsed,
     openModal,
-    strings.singleOrMultiple,
+    strings.receive.singleOrMultiple,
     handleOnModalConfirm,
   ])
 
@@ -85,7 +89,7 @@ export const DescribeSelectedAddressScreen = () => {
       <ScrollView style={[a.flex_1]}>
         <View style={[a.align_center, a.flex_1]}>
           {hasAddress ? (
-            <AddressDetailCard title={strings.addresscardTitle} />
+            <AddressDetailCard title={strings.receive.addresscardTitle} />
           ) : (
             <SkeletonAdressDetail />
           )}
@@ -95,7 +99,7 @@ export const DescribeSelectedAddressScreen = () => {
       <View style={[a.flex_col, a.gap_sm]}>
         <Button
           type={ButtonType.Text}
-          title={strings.requestSpecificAmountButton}
+          title={strings.receive.requestSpecificAmountButton}
           onPress={navigateTo.requestSpecificAmount}
           disabled={!hasAddress}
           testID="receive:request-specific-amount-link"
@@ -104,7 +108,7 @@ export const DescribeSelectedAddressScreen = () => {
         <Button
           onPress={onCopy}
           disabled={!hasAddress}
-          title={strings.copyAddressButton}
+          title={strings.receive.copyAddressButton}
           icon={Icon.Copy}
         />
       </View>

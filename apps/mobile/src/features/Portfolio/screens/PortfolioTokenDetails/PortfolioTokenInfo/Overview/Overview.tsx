@@ -3,16 +3,16 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import React, {useState} from 'react'
 import {Linking, Text, TouchableOpacity, View} from 'react-native'
 
-import {Accordion} from '~/ui/Accordion/Accordion'
 import {usePortfolioTokenDetailParams} from '~/features/Portfolio/common/hooks/useNavigateTo'
-import {useStrings} from '~/features/Portfolio/common/hooks/useStrings'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {features} from '~/kernel/features'
+import {useStrings} from '~/kernel/i18n/useStrings'
+import {Accordion} from '~/ui/Accordion/Accordion'
 import {Copiable} from '~/ui/Copiable/Copiable'
 import {ExplorerInfoLinks} from '~/ui/ExplorerInfoLinks/ExplorerInfoLinks'
 import {Space} from '~/ui/Space/Space'
 import {TokenInfoIcon} from '~/ui/TokenInfoIcon/TokenInfoIcon'
-import {isEmptyString} from '~/wallets/utils/utils'
+import {isEmptyString} from '~/wallets/utils/string'
 import {TokenNews} from './TokenNews'
 
 export const Overview = () => {
@@ -35,7 +35,7 @@ export const Overview = () => {
       <Space.Height.sm />
 
       <Accordion
-        label={strings.info}
+        label={strings.portfolio.info}
         expanded={expanded}
         onChange={setExpanded}
         wrapperStyle={[a.flex_col, a.gap_xs]}
@@ -64,7 +64,7 @@ export const Overview = () => {
           <Text
             style={[a.body_1_lg_medium, a.font_semibold, {color: p.gray_900}]}
           >
-            {strings.website}
+            {strings.portfolio.website}
           </Text>
 
           <Space.Height._2xs />
@@ -100,7 +100,7 @@ export const Overview = () => {
                   {color: p.gray_900},
                 ]}
               >
-                {strings.policyID}
+                {strings.portfolio.policyID}
               </Text>
 
               <Space.Height._2xs />
@@ -132,7 +132,7 @@ export const Overview = () => {
                   {color: p.gray_900},
                 ]}
               >
-                {strings.fingerprint}
+                {strings.portfolio.fingerprint}
               </Text>
 
               <Space.Height._2xs />

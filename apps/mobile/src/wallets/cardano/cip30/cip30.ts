@@ -1,5 +1,4 @@
 import * as CSL from '@emurgo/cross-csl-core'
-import {WasmModuleProxy} from '@emurgo/cross-csl-core'
 import {
   RemoteUnspentOutput,
   signRawTransaction,
@@ -21,7 +20,7 @@ import {asQuantity, Utxos} from '~/wallets/utils/utils'
 import {Cardano, CardanoMobile} from '~/wallets/wallets'
 import {toAssetNameHex, toPolicyId} from '../api/utils'
 import {identifierToCardanoAsset} from '../assetUtils'
-import * as cip8 from '../cip8/cip8'
+// import * as cip8 from '../cip8/cip8'
 import {
   getDerivationPathForAddress,
   getTransactionSigners,
@@ -33,7 +32,6 @@ import {
   findCollateralCandidates,
   utxosMaker,
 } from '../utxoManager/utxos'
-import {wrappedCsl} from '../wrappedCsl'
 
 export const cip30ExtensionMaker = (wallet: YoroiWallet, meta: Wallet.Meta) => {
   return new CIP30Extension(wallet, meta)
@@ -52,18 +50,12 @@ class CIP30Extension {
   ) {}
 
   getBalance(tokenId = '*'): CSL.Value {
-    const {csl, release} = wrappedCsl()
-    try {
-      const value = _getBalance(
-        csl,
-        tokenId,
-        this.wallet.utxos,
-        this.wallet.portfolioPrimaryTokenInfo.id,
-      )
-      return copyFromCSL(CardanoMobile.Value, value)
-    } finally {
-      release()
-    }
+    const value = _getBalance(
+      tokenId,
+      this.wallet.utxos,
+      this.wallet.portfolioPrimaryTokenInfo.id,
+    )
+    return copyFromCSL(CardanoMobile.Value, value)
   }
 
   getUnusedAddresses(): CSL.Address[] {
@@ -91,66 +83,57 @@ class CIP30Extension {
     return [address]
   }
 
-  getUtxos(
+  async getUtxos(
     value?: string,
     pagination?: Pagination,
-  ): CSL.TransactionUnspentOutput[] | null {
-    const {csl, release} = wrappedCsl()
-    try {
-      const utxos = _getUtxos(csl, this.wallet, this.meta, value, pagination)
-      if (utxos === null) return null
-      return utxos.map((u) =>
-        CardanoMobile.TransactionUnspentOutput.fromHex(u.toHex()),
-      )
-    } finally {
-      release()
-    }
+  ): Promise<CSL.TransactionUnspentOutput[] | null> {
+    const utxos = await _getUtxos(this.wallet, this.meta, value, pagination)
+    if (utxos === null) return null
+    return utxos.map((u) =>
+      CardanoMobile.TransactionUnspentOutput.fromHex(u.toHex()),
+    )
   }
 
-  getCollateral(value?: string): CSL.TransactionUnspentOutput[] | null {
-    const {csl, release} = wrappedCsl()
-    try {
-      const valueStr = value?.trim() ?? collateralConfig.minLovelace.toString()
-      const valueNum = new BigNumber(valueStr)
+  async getCollateral(
+    value?: string,
+  ): Promise<CSL.TransactionUnspentOutput[] | null> {
+    const valueStr = value?.trim() ?? collateralConfig.minLovelace.toString()
+    const valueNum = new BigNumber(valueStr)
 
-      assertCollateralValue(valueNum)
+    assertCollateralValue(valueNum)
 
-      const currentCollateral = this.wallet.getCollateralInfo()
-      const canUseCurrentCollateral =
-        currentCollateral.utxo && valueNum.lte(currentCollateral.utxo.amount)
+    const currentCollateral = this.wallet.getCollateralInfo()
+    const canUseCurrentCollateral =
+      currentCollateral.utxo && valueNum.lte(currentCollateral.utxo.amount)
 
-      if (canUseCurrentCollateral && currentCollateral.utxo) {
-        const utxo = cardanoUtxoFromRemoteFormat(
-          rawUtxoToRemoteUnspentOutput(currentCollateral.utxo),
-        )
-        return [recreateTransactionUnspentOutput(utxo)]
-      }
-
-      const oneUtxoCollateral = _drawCollateralInOneUtxo(
-        this.wallet,
-        asQuantity(valueNum),
+    if (canUseCurrentCollateral && currentCollateral.utxo) {
+      const utxo = cardanoUtxoFromRemoteFormat(
+        rawUtxoToRemoteUnspentOutput(currentCollateral.utxo),
       )
-      if (oneUtxoCollateral) {
-        return [recreateTransactionUnspentOutput(oneUtxoCollateral)]
-      }
-
-      const multipleUtxosCollateral = _drawCollateralInMultipleUtxos(
-        csl,
-        this.wallet,
-        this.meta,
-        asQuantity(valueNum),
-      )
-      if (multipleUtxosCollateral && multipleUtxosCollateral.length > 0) {
-        return copyMultipleFromCSL(
-          multipleUtxosCollateral,
-          CardanoMobile.TransactionUnspentOutput,
-        )
-      }
-
-      return null
-    } finally {
-      release()
+      return [recreateTransactionUnspentOutput(utxo)]
     }
+
+    const oneUtxoCollateral = _drawCollateralInOneUtxo(
+      this.wallet,
+      asQuantity(valueNum),
+    )
+    if (oneUtxoCollateral) {
+      return [recreateTransactionUnspentOutput(oneUtxoCollateral)]
+    }
+
+    const multipleUtxosCollateral = await _drawCollateralInMultipleUtxos(
+      this.wallet,
+      this.meta,
+      asQuantity(valueNum),
+    )
+    if (multipleUtxosCollateral && multipleUtxosCollateral.length > 0) {
+      return copyMultipleFromCSL(
+        multipleUtxosCollateral,
+        CardanoMobile.TransactionUnspentOutput,
+      )
+    }
+
+    return null
   }
 
   async submitTx(cbor: string): Promise<string> {
@@ -160,54 +143,50 @@ class CIP30Extension {
     return txId
   }
 
-  signData(
+  async signData(
     rootKey: string,
     address: string,
     payload: string,
-  ): {signature: string; key: string} {
-    const {csl, release} = wrappedCsl()
-    try {
-      const payloadInBytes = Buffer.from(payload, 'hex')
-      const normalisedAddress = normalizeToAddress(csl, address)
-      const bech32Address = normalisedAddress?.toBech32(undefined)
-      if (!bech32Address || !normalisedAddress)
-        throw new Error('Invalid address')
+  ): Promise<{signature: string; key: string}> {
+    const payloadInBytes = Buffer.from(payload, 'hex')
+    const normalisedAddress = normalizeToAddress(CardanoMobile, address)
+    const bech32Address = normalisedAddress?.toBech32(undefined)
+    if (!bech32Address || !normalisedAddress) throw new Error('Invalid address')
 
-      const rewardAddress = csl.RewardAddress.fromAddress(normalisedAddress)
-      const rewardAddressHex = rewardAddress?.toAddress().toHex()
+    const rewardAddress =
+      CardanoMobile.RewardAddress.fromAddress(normalisedAddress)
+    const rewardAddressHex = rewardAddress?.toAddress().toHex()
 
-      const stakingSigningPath =
-        this.meta.implementation === 'cardano-cip1852'
-          ? cardanoConfig.implementations[this.meta.implementation].features
-              .staking.addressing
-          : null
+    const stakingSigningPath =
+      this.meta.implementation === 'cardano-cip1852'
+        ? cardanoConfig.implementations[this.meta.implementation].features
+            .staking.addressing
+        : null
 
-      const signingPath =
-        rewardAddressHex === this.wallet.rewardAddressHex &&
-        Array.isArray(stakingSigningPath)
-          ? stakingSigningPath
-          : getDerivationPathForAddress(
-              bech32Address,
-              this.wallet,
-              this.meta,
-              true,
-            )
+    const signingPath =
+      rewardAddressHex === this.wallet.rewardAddressHex &&
+      Array.isArray(stakingSigningPath)
+        ? stakingSigningPath
+        : getDerivationPathForAddress(
+            bech32Address,
+            this.wallet,
+            this.meta,
+            true,
+          )
 
-      const signingKey = createRawTxSigningKey(rootKey, signingPath)
-      const coseSign1 = cip8.sign(
-        Buffer.from(normalisedAddress.toHex(), 'hex'),
-        signingKey,
-        payloadInBytes,
-      )
-      const key = cip8.makeCip8Key(signingKey.toPublic().asBytes())
+    const signingKey = createRawTxSigningKey(rootKey, signingPath)
+    throw new Error('msl can be used')
+    // const coseSign1 = await cip8.sign(
+    //   Buffer.from(normalisedAddress.toHex(), 'hex'),
+    //   signingKey,
+    //   payloadInBytes,
+    // )
+    // const key = await cip8.makeCip8Key(signingKey.toPublic().asBytes())
 
-      return {
-        signature: Buffer.from(coseSign1.toBytes()).toString('hex'),
-        key: Buffer.from(key.toBytes()).toString('hex'),
-      }
-    } finally {
-      release()
-    }
+    // return {
+    //   signature: Buffer.from(coseSign1.toBytes()).toString('hex'),
+    //   key: Buffer.from(key.toBytes()).toString('hex'),
+    // }
   }
 
   signTx(
@@ -215,26 +194,14 @@ class CIP30Extension {
     cbor: string,
     partial = false,
   ): CSL.TransactionWitnessSet {
-    const {csl, release} = wrappedCsl()
-    try {
-      const signers = getTransactionSigners(
-        cbor,
-        this.wallet,
-        this.meta,
-        partial,
-      )
-      const keys = signers.map((signer) =>
-        createRawTxSigningKey(rootKey, signer),
-      )
-      const signedTxBytes = signRawTransaction(csl, cbor, keys)
-      const signedTx = csl.Transaction.fromBytes(signedTxBytes)
-      return copyFromCSL(
-        CardanoMobile.TransactionWitnessSet,
-        signedTx.witnessSet(),
-      )
-    } finally {
-      release()
-    }
+    const signers = getTransactionSigners(cbor, this.wallet, this.meta, partial)
+    const keys = signers.map((signer) => createRawTxSigningKey(rootKey, signer))
+    const signedTxBytes = signRawTransaction(CardanoMobile, cbor, keys)
+    const signedTx = CardanoMobile.Transaction.fromBytes(signedTxBytes)
+    return copyFromCSL(
+      CardanoMobile.TransactionWitnessSet,
+      signedTx.witnessSet(),
+    )
   }
 
   async buildReorganisationTx(value?: string): Promise<string> {
@@ -252,21 +219,14 @@ class CIP30Extension {
       addressMode: this.meta.addressMode,
     })
     const txBody = yoroiUnsignedTx.unsignedTx.txBuilder.build()
-    const {csl, release} = wrappedCsl()
-    try {
-      const emptyWitnessSet = csl.TransactionWitnessSet.new()
-      const tx = csl.Transaction.new(txBody, emptyWitnessSet, undefined)
-      return tx.toHex()
-    } finally {
-      release()
-    }
+
+    const emptyWitnessSet = CardanoMobile.TransactionWitnessSet.new()
+    const tx = CardanoMobile.Transaction.new(txBody, emptyWitnessSet, undefined)
+    return tx.toHex()
   }
 }
 
-const remoteAssetToMultiasset = (
-  csl: WasmModuleProxy,
-  remoteAssets: UtxoAsset[],
-): CSL.MultiAsset => {
+const remoteAssetToMultiasset = (remoteAssets: UtxoAsset[]): CSL.MultiAsset => {
   const groupedAssets = remoteAssets.reduce(
     (res, a) => {
       ;(res[toPolicyId(a.assetId)] = res[toPolicyId(a.assetId)] || []).push(a)
@@ -274,19 +234,19 @@ const remoteAssetToMultiasset = (
     },
     {} as Record<string, UtxoAsset[]>,
   )
-  const multiasset = csl.MultiAsset.new()
+  const multiasset = CardanoMobile.MultiAsset.new()
   for (const policyHex of Object.keys(groupedAssets)) {
     const assetGroup = groupedAssets[policyHex]
-    const policyId = csl.ScriptHash.fromBytes(
+    const policyId = CardanoMobile.ScriptHash.fromBytes(
       new Uint8Array(Buffer.from(policyHex, 'hex')),
     )
-    const assets = csl.Assets.new()
+    const assets = CardanoMobile.Assets.new()
     for (const asset of assetGroup) {
       assets.insert(
-        csl.AssetName.new(
+        CardanoMobile.AssetName.new(
           new Uint8Array(Buffer.from(toAssetNameHex(asset.assetId), 'hex')),
         ),
-        csl.BigNum.fromStr(asset.amount),
+        CardanoMobile.BigNum.fromStr(asset.amount),
       )
     }
     multiasset.insert(policyId, assets)
@@ -296,34 +256,30 @@ const remoteAssetToMultiasset = (
 const cardanoUtxoFromRemoteFormat = (
   u: RemoteUnspentOutput,
 ): CSL.TransactionUnspentOutput => {
-  const {csl, release} = wrappedCsl()
-  try {
-    const input = csl.TransactionInput.new(
-      csl.TransactionHash.fromHex(u.txHash),
-      u.txIndex,
-    )
-    const value = csl.Value.new(csl.BigNum.fromStr(u.amount))
-    if ((u.assets || []).length > 0) {
-      value.setMultiasset(remoteAssetToMultiasset(csl, [...u.assets]))
-    }
-    const receiver = csl.Address.fromBech32(u.receiver)
-    if (!receiver) throw new Error('Invalid receiver')
-    const output = csl.TransactionOutput.new(receiver, value)
-    return csl.TransactionUnspentOutput.new(input, output)
-  } finally {
-    release()
+  const input = CardanoMobile.TransactionInput.new(
+    CardanoMobile.TransactionHash.fromHex(u.txHash),
+    u.txIndex,
+  )
+  const value = CardanoMobile.Value.new(CardanoMobile.BigNum.fromStr(u.amount))
+  if ((u.assets || []).length > 0) {
+    value.setMultiasset(remoteAssetToMultiasset([...u.assets]))
   }
+  const receiver = CardanoMobile.Address.fromBech32(u.receiver)
+  if (!receiver) throw new Error('Invalid receiver')
+  const output = CardanoMobile.TransactionOutput.new(receiver, value)
+  return CardanoMobile.TransactionUnspentOutput.new(input, output)
 }
 
 const _getBalance = (
-  csl: WasmModuleProxy,
   tokenId = '*',
   utxos: RawUtxo[],
   primaryTokenId: string,
 ) => {
   if (tokenId === 'TADA' || tokenId === 'ADA') tokenId = '.'
   const amounts = Utxos.toAmounts(utxos, primaryTokenId)
-  const value = csl.Value.new(csl.BigNum.fromStr(amounts[primaryTokenId]))
+  const value = CardanoMobile.Value.new(
+    CardanoMobile.BigNum.fromStr(amounts[primaryTokenId]),
+  )
   const normalizedInHex = Object.keys(amounts)
     .filter((t) => {
       if (tokenId === '*') return true
@@ -342,16 +298,16 @@ const _getBalance = (
     'policyIdHex',
   )
 
-  const multiAsset = csl.MultiAsset.new()
+  const multiAsset = CardanoMobile.MultiAsset.new()
   for (const policyIdHex of Object.keys(groupedByPolicyId)) {
     const assetValue = groupedByPolicyId[policyIdHex]
     if (!assetValue) continue
-    const policyId = csl.ScriptHash.fromHex(policyIdHex)
-    const assets = csl.Assets.new()
+    const policyId = CardanoMobile.ScriptHash.fromHex(policyIdHex)
+    const assets = CardanoMobile.Assets.new()
     for (const asset of assetValue) {
       if (!asset) continue
-      const assetName = csl.AssetName.fromHex(asset.nameHex)
-      const assetValue = csl.BigNum.fromStr(asset.amount)
+      const assetName = CardanoMobile.AssetName.fromHex(asset.nameHex)
+      const assetValue = CardanoMobile.BigNum.fromStr(asset.amount)
       assets.insert(assetName, assetValue)
     }
     multiAsset.insert(policyId, assets)
@@ -360,13 +316,12 @@ const _getBalance = (
   return value
 }
 
-const _getUtxos = (
-  csl: WasmModuleProxy,
+const _getUtxos = async (
   wallet: YoroiWallet,
   meta: Wallet.Meta,
   value?: string,
   pagination?: Pagination,
-) => {
+): Promise<CSL.TransactionUnspentOutput[] | null> => {
   const valueStr = value?.trim() ?? ''
 
   if (valueStr.length === 0) {
@@ -386,20 +341,24 @@ const _getUtxos = (
     try {
       Object.assign(
         amounts,
-        getAmountsFromValue(csl, valueStr, wallet.portfolioPrimaryTokenInfo.id),
+        getAmountsFromValue(valueStr, wallet.portfolioPrimaryTokenInfo.id),
       )
     } catch (error) {
       logger.error('cip30 Failed to parse value _getUtxos', {error})
     }
   }
 
-  const validUtxos = _getRequiredUtxos(csl, wallet, amounts, wallet.utxos, meta)
+  const validUtxos = await _getRequiredUtxos(
+    wallet,
+    amounts,
+    wallet.utxos,
+    meta,
+  )
   if (validUtxos === null) return null
   return paginate(validUtxos, pagination)
 }
 
 export const _getRequiredUtxos = async (
-  csl: WasmModuleProxy,
   wallet: YoroiWallet,
   amounts: Balance.Amounts,
   allUtxos: RawUtxo[],
@@ -409,7 +368,7 @@ export const _getRequiredUtxos = async (
     rawUtxoToRemoteUnspentOutput(utxo),
   )
   const rewardAddress = normalizeToAddress(
-    csl,
+    CardanoMobile,
     wallet.rewardAddressHex,
   )?.toBech32(undefined)
   if (!rewardAddress) throw new Error('Invalid wallet state')
@@ -490,7 +449,6 @@ const _drawCollateralInOneUtxo = (
 }
 
 const _drawCollateralInMultipleUtxos = async (
-  csl: WasmModuleProxy,
   wallet: YoroiWallet,
   meta: Wallet.Meta,
   quantity: Balance.Quantity,
@@ -504,7 +462,7 @@ const _drawCollateralInMultipleUtxos = async (
   const sortedFromMaxToMin = possibleUtxos.sort((a, b) => {
     const aAmount = new BigNumber(a.amount)
     const bAmount = new BigNumber(b.amount)
-    return bAmount.comparedTo(aAmount)
+    return bAmount.comparedTo(aAmount) ?? 0
   })
 
   const utxosWithLimitAccounted = sortedFromMaxToMin.slice(
@@ -513,7 +471,6 @@ const _drawCollateralInMultipleUtxos = async (
   )
 
   const utxos = await _getRequiredUtxos(
-    csl,
     wallet,
     {[wallet.portfolioPrimaryTokenInfo.id]: quantity},
     utxosWithLimitAccounted,
@@ -526,12 +483,8 @@ const _drawCollateralInMultipleUtxos = async (
   return null
 }
 
-const getAmountsFromValue = (
-  csl: WasmModuleProxy,
-  value: string,
-  primaryTokenId: string,
-) => {
-  const valueFromHex = csl.Value.fromHex(value)
+const getAmountsFromValue = (value: string, primaryTokenId: string) => {
+  const valueFromHex = CardanoMobile.Value.fromHex(value)
   const amounts: BalanceAmounts = {}
 
   if (valueFromHex.hasValue()) {

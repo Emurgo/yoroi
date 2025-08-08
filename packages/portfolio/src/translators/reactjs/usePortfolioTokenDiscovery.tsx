@@ -1,7 +1,7 @@
 import {isRight} from '@yoroi/common'
 import {Chain, Portfolio} from '@yoroi/types'
 
-import {UseQueryOptions, useSuspenseQuery} from '@tanstack/react-query'
+import {UseSuspenseQueryOptions, useSuspenseQuery} from '@tanstack/react-query'
 
 export function usePortfolioTokenDiscovery(
   {
@@ -13,7 +13,7 @@ export function usePortfolioTokenDiscovery(
     getTokenDiscovery: Portfolio.Api.Api['tokenDiscovery']
     network: Chain.SupportedNetworks
   },
-  options?: UseQueryOptions<
+  options?: UseSuspenseQueryOptions<
     Portfolio.Token.Discovery,
     Error,
     Portfolio.Token.Discovery,

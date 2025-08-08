@@ -14,7 +14,7 @@ import {
   ViewStyle,
 } from 'react-native'
 
-import {useStrings} from '~/features/ReviewTx/common/hooks/useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {FormattedMetadata, FormattedTx} from '~/features/ReviewTx/common/types'
 import {Button} from '~/ui/Button/Button'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
@@ -52,8 +52,8 @@ export const ReviewTx = ({
   const strings = useStrings()
 
   const tabsData: Array<[string, Tabs]> = [
-    [strings.overviewTab, 'overview'],
-    [strings.utxosTab, 'utxos'],
+    [strings.txReview.overviewTab, 'overview'],
+    [strings.txReview.utxosTab, 'utxos'],
   ]
   const [activeTab, setActiveTab] = React.useState<Tabs>(tabsData[0][1])
 
@@ -63,10 +63,10 @@ export const ReviewTx = ({
   const showMintTab = !!formattedTx.mint
   const showReferenceInoutsTab = formattedTx.referenceInputs.length > 0
 
-  if (showMetadataTab) tabsData.push([strings.metadataTab, 'metadata'])
-  if (showMintTab) tabsData.push([strings.mintTab, 'mint'])
+  if (showMetadataTab) tabsData.push([strings.txReview.metadataTab, 'metadata'])
+  if (showMintTab) tabsData.push([strings.txReview.mintTab, 'mint'])
   if (showReferenceInoutsTab)
-    tabsData.push([strings.referenceInputsTab, 'reference_inputs'])
+    tabsData.push([strings.txReview.referenceInputsTab, 'reference_inputs'])
 
   // intentionally not using ref
   const {
@@ -182,7 +182,7 @@ export const ReviewTx = ({
       <Actions
         style={scrollbarActive && [a.border_t, {borderTopColor: p.gray_200}]}
       >
-        <Button title={strings.confirm} onPress={onConfirm} />
+        <Button title={strings.txReview.confirm} onPress={onConfirm} />
       </Actions>
     </SafeArea>
   )

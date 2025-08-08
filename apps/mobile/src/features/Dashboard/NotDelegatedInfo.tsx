@@ -1,11 +1,11 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
-import {defineMessages, useIntl} from 'react-intl'
 import {Image, View} from 'react-native'
 
+import NotDelegatedImage from '~/assets/img/testnet/no-transactions-yet.png'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Line} from '~/ui/Line/Line'
 import {Text} from '~/ui/Text/Text'
-import NotDelegatedImage from '~/assets/img/testnet/no-transactions-yet.png'
 
 export const NotDelegatedInfo = () => {
   const strings = useStrings()
@@ -25,7 +25,7 @@ export const NotDelegatedInfo = () => {
           {color: p.gray_900},
         ]}
       >
-        {strings.firstLine}
+        {strings.dashboard.firstLine}
       </Text>
 
       <Text
@@ -36,31 +36,10 @@ export const NotDelegatedInfo = () => {
           {color: p.gray_900},
         ]}
       >
-        {strings.secondLine}
+        {strings.dashboard.secondLine}
       </Text>
 
       <Line />
     </View>
   )
 }
-
-const useStrings = () => {
-  const intl = useIntl()
-
-  return {
-    firstLine: intl.formatMessage(messages.firstLine),
-    secondLine: intl.formatMessage(messages.secondLine),
-  }
-}
-
-const messages = defineMessages({
-  firstLine: {
-    id: 'components.delegationsummary.notDelegatedInfo.firstLine',
-    defaultMessage: '!!!You have not delegated your ADA yet.',
-  },
-  secondLine: {
-    id: 'components.delegationsummary.notDelegatedInfo.secondLine',
-    defaultMessage:
-      '!!!Go to Staking center to choose which stake pool you want to delegate in. Note, you may delegate only to one stake pool in this Tesnnet.',
-  },
-})

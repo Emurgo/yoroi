@@ -2,7 +2,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
-import {useStrings} from '~/features/ReviewTx/common/hooks/useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {FormattedMetadata} from '~/features/ReviewTx/common/types'
 import {Copiable} from '~/ui/Copiable/Copiable'
 import {Space} from '~/ui/Space/Space'
@@ -21,7 +21,7 @@ export const MetadataTab = ({metadata, hash}: FormattedMetadata) => {
 
       <View style={[a.flex_row, a.justify_between]}>
         <Text style={[a.body_2_md_regular, {color: p.text_gray_low}]}>
-          {strings.metadataHash}
+          {strings.txReview.metadataHash}
         </Text>
 
         <Space.Width.lg />
@@ -46,7 +46,7 @@ export const MetadataTab = ({metadata, hash}: FormattedMetadata) => {
         <View style={[a.flex_row, a.justify_between]}>
           <Copiable text={metadataFormatted}>
             <Text style={[a.body_1_lg_medium, {color: p.text_gray_medium}]}>
-              {strings.metadataJsonLabel}
+              {strings.txReview.metadataJsonLabel}
             </Text>
           </Copiable>
         </View>

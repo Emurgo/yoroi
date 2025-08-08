@@ -1,9 +1,9 @@
-import {useNavigation} from '@react-navigation/native'
 import {hex} from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
+
+import {useNavigation} from '@react-navigation/native'
 import {BigNumber} from 'bignumber.js'
 import * as React from 'react'
-import {useIntl} from 'react-intl'
 import {Text} from 'react-native'
 import {BleManager, LogLevel} from 'react-native-ble-plx'
 import {SystemBars} from 'react-native-edge-to-edge'
@@ -13,27 +13,20 @@ import {useAuth} from '~/features/Auth/context/AuthProvider'
 import {usePairing} from '~/features/Pairing/context/PairingProvider'
 import {decryptData} from '~/kernel/crypto/decrypt-data'
 import {encryptData} from '~/kernel/crypto/encrypt-data'
-import globalMessages from '~/kernel/i18n/global-messages'
 import {useLanguage} from '~/kernel/i18n/LanguageProvider'
 import {LocalizableError} from '~/kernel/i18n/LocalizableError'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {debugStorage} from '~/kernel/storage/debug-storage'
 import {rootMMKV, rootSyncStorage} from '~/kernel/storage/storages'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {LoadingOverlay} from '~/ui/LoadingOverlay/LoadingOverlay'
 
-export function DevMenu({visible}: {visible?: boolean}) {
-  const {
-    isDark,
-    config,
-    palette: p,
-    basePalette,
-    selectTheme,
-    atoms: ta,
-  } = useTheme()
-  const {authWithHost} = useAuth()
+export function DevMenu() {
+  const {isDark, config, basePalette, selectTheme, atoms: ta} = useTheme()
+  const {authWithHost, changeAuthSetting} = useAuth()
   const {languageCode, selectLanguage} = useLanguage()
-  const {formatMessage: f} = useIntl()
+  const strings = useStrings()
   const [isLoading, setIsLoading] = React.useState(false)
   const [showCrash, setShowCrash] = React.useState(false)
   const showLoadingFor3Seconds = React.useCallback(() => {
@@ -46,10 +39,6 @@ export function DevMenu({visible}: {visible?: boolean}) {
   const metrics = useMetrics()
   const {currency, ptActivity} = usePairing()
   const navigation = useNavigation<any>()
-
-  if (!visible) {
-    return null
-  }
 
   return (
     <SafeAreaView
@@ -81,7 +70,7 @@ export function DevMenu({visible}: {visible?: boolean}) {
           selectLanguage(languageCode === 'en-US' ? 'de-DE' : 'en-US')
         }
         type={ButtonType.Secondary}
-        title={`Change Language ${languageCode} ${f(globalMessages.available)} $${BigNumber(10.12).toString()}`}
+        title={`Change Language ${languageCode} ${strings.global.available} $${BigNumber(10.12).toString()}`}
         style={[a.pt_md, a.p_md, a.rounded_md]}
       />
 
@@ -103,6 +92,13 @@ export function DevMenu({visible}: {visible?: boolean}) {
         onPress={() => authWithHost().then(console.log).catch(console.error)}
         type={ButtonType.Secondary}
         title="Auth with Host"
+        style={[a.pt_md, a.p_md, a.rounded_md]}
+      />
+
+      <Button
+        onPress={() => changeAuthSetting('os')}
+        type={ButtonType.Secondary}
+        title="Set Auth with Host"
         style={[a.pt_md, a.p_md, a.rounded_md]}
       />
 

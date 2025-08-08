@@ -13,14 +13,14 @@ import {
 
 import {useCopy} from '~/features/Copy/context/CopyProvider'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Icon} from '~/ui/Icon'
 import {Space} from '~/ui/Space/Space'
 import {isEmptyString} from '~/wallets/utils/string'
-import {Copiable} from '../Copiable'
+import {Copiable} from '../Copiable/Copiable'
 import {ExplorerInfoLinks} from '../ExplorerInfoLinks/ExplorerInfoLinks'
 import {SimpleTab} from '../SimpleTab/SimpleTab'
 import {TokenInfoIcon} from '../TokenInfoIcon/TokenInfoIcon'
-import {useStrings} from './hooks/useStrings'
 
 export const TokenDetails = ({
   tokenInfo,
@@ -108,13 +108,18 @@ const Info = ({info}: {info: Portfolio.Token.Info}) => {
       {
         staleTime: time.session,
         enabled: !isPrimaryTokenInfo(info),
+        queryKey: [
+          wallet.networkManager.network,
+          'usePortfolioTokenDiscovery',
+          info.id,
+        ],
       },
     )
 
   if (isPrimaryTokenInfo(info))
     return (
       <Text style={[a.body_2_md_regular, {color: p.text_gray_max}]}>
-        {strings.adaDescription}
+        {strings.txReview.adaDescription}
       </Text>
     )
 
@@ -122,13 +127,13 @@ const Info = ({info}: {info: Portfolio.Token.Info}) => {
     <View style={[a.flex_1]}>
       <View style={[a.flex_row]}>
         <SimpleTab
-          name={strings.overview}
+          name={strings.portfolio.overview}
           onPress={() => setActiveTab('overview')}
           isActive={activeTab === 'overview'}
         />
 
         <SimpleTab
-          name={strings.json}
+          name={strings.txReview.tokenDetails.jsonTab.title}
           onPress={() => setActiveTab('json')}
           isActive={activeTab === 'json'}
         />
@@ -178,12 +183,13 @@ const Json = ({
       style={[
         a.flex_1,
         a.pt_lg,
-        {borderRadius: 8, backgroundColor: p.bg_color_min},
+        a.rounded_sm,
+        {backgroundColor: p.bg_color_min},
       ]}
     >
       <View style={[a.px_lg, a.flex_row, a.justify_between]}>
         <Text style={[a.body_1_lg_medium, {color: p.text_gray_medium}]}>
-          {strings.metadata}
+          {strings.txReview.tokenDetails.jsonTab.metadata}
         </Text>
 
         <TouchableOpacity
@@ -251,7 +257,7 @@ const PolicyId = ({policyId}: {policyId: string}) => {
   return (
     <Row>
       <Text style={[a.body_2_md_regular, {color: p.text_gray_low}]}>
-        {strings.policyId}
+        {strings.portfolio.policyID}
       </Text>
 
       <Space.Width.lg />
@@ -283,7 +289,7 @@ const Fingerprint = ({info}: {info: Portfolio.Token.Info}) => {
   return (
     <Row>
       <Text style={[a.body_2_md_regular, {color: p.text_gray_low}]}>
-        {strings.fingerprint}
+        {strings.portfolio.fingerprint}
       </Text>
 
       <Space.Width.lg />
@@ -315,7 +321,7 @@ const Name = ({info}: {info: Portfolio.Token.Info}) => {
   return (
     <Row>
       <Text style={[a.body_2_md_regular, {color: p.text_gray_low}]}>
-        {strings.name}
+        {strings.txReview.tokenDetails.overViewTab.name}
       </Text>
 
       <Text
@@ -342,7 +348,7 @@ const TokenSupply = ({discovery}: {discovery?: Portfolio.Token.Discovery}) => {
 
       <Row>
         <Text style={[a.body_2_md_regular, {color: p.text_gray_low}]}>
-          {strings.tokenSupply}
+          {strings.portfolio.totalSupply}
         </Text>
 
         <Text
@@ -372,7 +378,7 @@ const Symbol = ({info}: {info: Portfolio.Token.Info}) => {
 
       <Row>
         <Text style={[a.body_2_md_regular, {color: p.text_gray_low}]}>
-          {strings.symbol}
+          {strings.txReview.tokenDetails.overViewTab.symbol}
         </Text>
 
         <Text
@@ -401,7 +407,7 @@ const Description = ({info}: {info: Portfolio.Token.Info}) => {
       <Space.Width.sm />
 
       <Text style={[a.body_2_md_regular, {color: p.text_gray_low}]}>
-        {strings.description}
+        {strings.txReview.tokenDetails.overViewTab.description}
       </Text>
 
       <Text style={[a.body_2_md_regular, {color: p.text_gray_max}]}>

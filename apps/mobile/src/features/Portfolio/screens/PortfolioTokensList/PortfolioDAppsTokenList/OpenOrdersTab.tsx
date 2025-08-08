@@ -4,7 +4,7 @@ import {FlatList, Text, View} from 'react-native'
 
 import {IOpenOrders} from '~/features/Portfolio/common/hooks/useGetOpenOrders'
 import {useShowOpenOrderModal} from '~/features/Portfolio/common/hooks/useShowOpenOrderModal'
-import {useStrings} from '~/features/Portfolio/common/hooks/useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {TokenEmptyList} from '~/features/Portfolio/ui/TokenEmptyList/TokenEmptyList'
 import {makeList} from '~/kernel/utils'
 import {Space} from '~/ui/Space/Space'
@@ -36,7 +36,7 @@ export const OpenOrdersTab = ({isFetching, tokensList, isSearching}: Props) => {
       return (
         <View>
           <Text style={[a.body_2_md_regular, {color: p.gray_700}]}>
-            {strings.countOpenOrders(tokensList.length)}
+            {strings.portfolio.countOpenOrders(tokensList.length)}
           </Text>
 
           <Space.Height.md />
@@ -80,7 +80,7 @@ export const OpenOrdersTab = ({isFetching, tokensList, isSearching}: Props) => {
         )}
         ListEmptyComponent={
           !isFetching ? (
-            <TokenEmptyList emptyText={strings.noDataFound} />
+            <TokenEmptyList emptyText={strings.portfolio.noDataFound} />
           ) : undefined
         }
         contentContainerStyle={[a.flex_1, a.flex_grow]}

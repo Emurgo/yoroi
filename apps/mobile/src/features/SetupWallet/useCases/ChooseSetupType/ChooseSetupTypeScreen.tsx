@@ -2,7 +2,7 @@ import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {ScrollView, View} from 'react-native'
+import {ScrollView, View, Text} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useMetrics} from '~/kernel/metrics/metricsManager'
@@ -10,7 +10,7 @@ import {LogoBanner} from '~/ui/LogoBanner/LogoBanner'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
 import {ButtonCard} from '../../common/ButtonCard/ButtonCard'
-import {useStrings} from '../../common/useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 // import {SelectHwConnectionModal} from '../RestoreHwWallet/SelectHwConnectionModal'
 
 export const ChooseSetupTypeScreen = () => {
@@ -64,7 +64,7 @@ export const ChooseSetupTypeScreen = () => {
       <ScrollView showsVerticalScrollIndicator={false}>
         <View>
           <ButtonCard
-            title={strings.createWalletButtonCard}
+            title={strings.setupWallet.createWalletButtonCard}
             // icon={<CreateWallet style={position: 'absolute', right: 0} />}
             onPress={handleCreate}
             testID="setup-create-new-wallet-button"
@@ -73,7 +73,7 @@ export const ChooseSetupTypeScreen = () => {
           <Space.Height.lg />
 
           <ButtonCard
-            title={strings.restoreWalletButtonCard}
+            title={strings.setupWallet.restoreWalletButtonCard}
             // icon={<RestoreWallet style={position: 'absolute', right: 0} />}
             onPress={handleRestore}
             testID="setup-restore-wallet-button"

@@ -4,7 +4,7 @@ import React from 'react'
 import {ScrollView, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useStrings} from '~/features/RegisterCatalyst/common/useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
 import {Checkbox} from '~/ui/Checkbox/Checkbox'
 import {
@@ -37,10 +37,14 @@ export const DisplayPin = () => {
       edges={['left', 'right', 'bottom']}
       style={[{flex: 1}, {backgroundColor: p.bg_color_max}, a.px_lg, a.pb_lg]}
     >
-      <Stepper title={strings.step2Title} currentStep={2} totalSteps={3} />
+      <Stepper
+        title={strings.registerCatalyst.step2Title}
+        currentStep={2}
+        totalSteps={3}
+      />
 
       <ScrollView bounces={false}>
-        <Description>{strings.step2Description}</Description>
+        <Description>{strings.registerCatalyst.step2Description}</Description>
 
         <Space.Height.xl />
 
@@ -63,7 +67,7 @@ export const DisplayPin = () => {
         <Space.Height.xl />
 
         <Checkbox
-          text={strings.checkbox}
+          text={strings.registerCatalyst.checkbox}
           checked={checked}
           onChange={setChecked}
         />
@@ -74,7 +78,7 @@ export const DisplayPin = () => {
       <Actions>
         <Button
           onPress={() => onNext()}
-          title={strings.continueButton}
+          title={strings.registerCatalyst.confirm}
           disabled={!checked}
         />
       </Actions>

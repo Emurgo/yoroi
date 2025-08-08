@@ -18,7 +18,7 @@ import {cardanoConfig, derivationConfig} from '@yoroi/blockchains'
 import {HW, Wallet} from '@yoroi/types'
 import {BleError} from 'react-native-ble-plx'
 
-import {ledgerMessages} from '~/kernel/i18n/global-messages'
+
 import {LocalizableError} from '~/kernel/i18n/LocalizableError'
 import {logger} from '~/kernel/logger/logger'
 import {
@@ -45,8 +45,8 @@ type LedgerConnectionResponse = {
 export class DeprecatedAdaAppError extends BaseLedgerError {
   constructor() {
     super({
-      id: ledgerMessages.deprecatedAdaAppError.id,
-      defaultMessage: ledgerMessages.deprecatedAdaAppError.defaultMessage,
+      id: 'ledger.deprecatedAdaAppError',
+      defaultMessage: 'Please update your Ledger Cardano app to version {version} or higher',
       values: {
         version: `${MIN_ADA_APP_VERSION}`,
       },

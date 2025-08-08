@@ -1,13 +1,12 @@
 import {atoms as a, ThemeName, useTheme} from '@yoroi/theme'
 import React from 'react'
-import {useIntl} from 'react-intl'
 import {TouchableOpacity, View} from 'react-native'
 
-import {themeNames} from '../../../../../kernel/i18n/global-messages'
-import {useMetrics} from '../../../../../kernel/metrics/metricsManager'
-import {Icon} from '../../../../../ui/Icon'
-import {Text} from '../../../../../ui/Text/Text'
-import {useThemeStorageMaker} from '../../../../../wallets/hooks'
+import {useStrings} from '~/kernel/i18n/useStrings'
+import {useMetrics} from '~/kernel/metrics/metricsManager'
+import {Icon} from '~/ui/Icon'
+import {Text} from '~/ui/Text/Text'
+import {useThemeStorageMaker} from '~/wallets/hooks'
 
 type Props = {
   title: ThemeName
@@ -41,7 +40,7 @@ export const ThemePickerItem = ({title, selectTheme, setLocalTheme}: Props) => {
     >
       <Row>
         <Description>
-          <Title>{strings.translateThemeName(title)}</Title>
+          <Title>{strings.settings.theme.translateThemeName(title)}</Title>
         </Description>
 
         <Selected>
@@ -107,13 +106,4 @@ const Title = ({children}: {children: React.ReactNode}) => {
       {children}
     </Text>
   )
-}
-
-const useStrings = () => {
-  const intl = useIntl()
-
-  return {
-    translateThemeName: (theme: ThemeName) =>
-      intl.formatMessage(themeNames[theme]),
-  }
 }

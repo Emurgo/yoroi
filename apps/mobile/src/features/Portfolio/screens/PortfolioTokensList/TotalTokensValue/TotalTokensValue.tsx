@@ -3,7 +3,7 @@ import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
-import {useStrings} from '~/features/Portfolio/common/hooks/useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {
   PortfolioListTab,
   usePortfolio,
@@ -20,8 +20,8 @@ export const TotalTokensValue = ({amount}: Props) => {
   const {listTab} = usePortfolio()
   const title =
     listTab === PortfolioListTab.Wallet
-      ? strings.totalWalletValue
-      : strings.totalDAppValue
+      ? strings.portfolio.totalWalletValue
+      : strings.portfolio.totalDAppValue
 
   return (
     <View style={[a.py_lg]}>
