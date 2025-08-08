@@ -1,4 +1,4 @@
-import {useState, useEffect} from 'react'
+import {useQuery} from '@tanstack/react-query'
 import {Resolver} from '@yoroi/types'
 
 import {useResolver} from '../provider/ResolverProvider'
@@ -11,42 +11,19 @@ export const useResolverCryptoAddresses = ({
   strategy?: Resolver.Strategy
 }) => {
   const {crypto} = useResolver()
-  const [data, setData] = useState<Resolver.AddressesResponse>([])
-  const [error, setError] = useState<Error | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
 
-  useEffect(() => {
-    let isCancelled = false
-    const fetchData = async () => {
-      try {
-        setIsLoading(true)
-        setError(null)
-        const result = await crypto.getCardanoAddresses({resolve, strategy}, {})
-        if (!isCancelled) {
-          setData(result)
-        }
-      } catch (err) {
-        if (!isCancelled) {
-          setError(err as Error)
-        }
-      } finally {
-        if (!isCancelled) {
-          setIsLoading(false)
-        }
-      }
-    }
-
-    fetchData()
-    return () => {
-      isCancelled = true
-    }
-  }, [crypto, resolve, strategy])
+  const {data, error, isLoading, isError} = useQuery({
+    queryKey: ['resolver', 'crypto-addresses', resolve, strategy],
+    queryFn: async ({signal}: {signal?: AbortSignal}) => {
+      return await crypto.getCardanoAddresses({resolve, strategy}, {signal})
+    },
+  })
 
   return {
-    data,
+    data: data ?? [],
     error,
     isLoading,
-    isError: error !== null,
-    cryptoAddresses: data,
+    isError,
+    cryptoAddresses: data ?? [],
   }
 }
