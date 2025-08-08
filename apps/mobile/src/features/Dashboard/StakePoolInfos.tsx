@@ -1,16 +1,23 @@
-import {useQuery, useQueryClient, UseQueryOptions} from '@tanstack/react-query'
+import {
+  useQuery,
+  useQueryClient,
+  UseQueryOptions,
+  UseSuspenseQueryOptions,
+} from '@tanstack/react-query'
 import {useTheme} from '@yoroi/theme'
 import {Balance, Wallet} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 import * as React from 'react'
 import {ActivityIndicator, View} from 'react-native'
 
+import {useStakingInfo} from '~/features/Staking/hooks/useStakingInfo'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {ButtonProps} from '~/ui/Button/Button'
 import {YoroiWallet} from '~/wallets/cardano/types'
 import {StakingInfo} from '~/wallets/types/staking'
 import {YoroiUnsignedTx} from '~/wallets/types/yoroi'
 import {Quantities} from '~/wallets/utils/utils'
+
 import {StakePoolInfo} from './StakePoolInfo'
 
 export const StakePoolInfos = ({ctaProps}: {ctaProps?: ButtonProps}) => {
@@ -40,48 +47,18 @@ export const usePrefetchStakingInfo = (wallet: YoroiWallet) => {
 
   return () =>
     queryClient.prefetchQuery({
-      queryKey: [wallet.id, 'stakingInfo'],
+      queryKey: [wallet.id, 'useStakingInfo'],
       queryFn: () => wallet.getStakingInfo(),
     })
 }
 
-export const useStakingInfo = (
-  wallet: YoroiWallet,
-  options?: UseQueryOptions<
-    StakingInfo,
-    Error,
-    StakingInfo,
-    [string, 'stakingInfo']
-  >,
-) => {
-  const query = useQuery({
-    ...options,
-    retry: false,
-    queryKey: [wallet.id, 'stakingInfo'],
-    queryFn: () => wallet.getStakingInfo(),
-  })
-
-  React.useEffect(() => {
-    const unsubscribe = wallet.subscribe(
-      ({type}) => type === 'utxos' && query.refetch(),
-    )
-
-    return () => unsubscribe?.()
-  }, [query, wallet])
-
-  return {
-    stakingInfo: query.data,
-    ...query,
-  }
-}
-
 const useStakePoolIds = (
   wallet: YoroiWallet,
-  options?: UseQueryOptions<
+  options?: UseSuspenseQueryOptions<
     StakingInfo,
     Error,
     StakingInfo,
-    [string, 'stakingInfo']
+    [string, 'useStakingInfo']
   >,
 ) => {
   const {stakingInfo, ...query} = useStakingInfo(wallet, options)

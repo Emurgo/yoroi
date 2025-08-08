@@ -178,7 +178,7 @@ export interface YoroiWallet {
   getChangeAddress(addressMode: Wallet.AddressMode): string
 
   // Balances, TxDetails
-  saveMemo(txId: string, memo: string): void
+  saveMemo(txId: string, memo: string): Promise<void>
   get transactions(): Record<string, TransactionInfo>
   get confirmationCounts(): Record<string, null | number>
   fetchTxStatus(request: TxStatusRequest): Promise<TxStatusResponse>

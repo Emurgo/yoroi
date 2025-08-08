@@ -7,7 +7,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useWalletNavigation} from '~/kernel/navigation/hooks'
+import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Button} from '~/ui/Button/Button'
 import {
   Actions,

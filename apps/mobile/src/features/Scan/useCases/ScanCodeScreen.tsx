@@ -1,5 +1,7 @@
-import {useFocusEffect} from '@react-navigation/native'
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {Scan} from '@yoroi/types'
+
+import {useFocusEffect} from '@react-navigation/native'
 import {CameraView, useCameraPermissions} from 'expo-camera'
 import * as Haptics from 'expo-haptics'
 import * as React from 'react'
@@ -8,7 +10,7 @@ import {z} from 'zod'
 
 import {useTriggerScanAction} from '~/features/Scan/common/useTriggerScanAction'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useParams} from '~/kernel/navigation/hooks'
+import {useParams} from '~/kernel/navigation/hooks/useParams'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {ScanRoutes} from '~/kernel/navigation/types'
 
@@ -20,9 +22,11 @@ export const ScanCodeScreen = () => {
   const {atoms: ta} = useTheme()
   const strings = useStrings()
   const {navigateToTxHistory} = useWalletNavigation()
-  const params = useParams<ScanRoutes['scan-start']>((params) => {
-    return params && typeof params === 'object' && 'insideFeature' in params
-  })
+  const params = useParams<ScanRoutes['scan-start']>(
+    (params): params is Readonly<{insideFeature: Scan.Feature}> => {
+      return params && typeof params === 'object' && 'insideFeature' in params
+    },
+  )
   const {insideFeature} = scanParamsSchema.parse(params)
   const triggerScanAction = useTriggerScanAction({
     insideFeature: insideFeature as 'scan' | 'send',

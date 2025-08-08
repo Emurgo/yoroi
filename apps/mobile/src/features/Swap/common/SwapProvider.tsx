@@ -13,7 +13,7 @@ import {usePortfolioTokenInfos} from '~/features/Portfolio/common/hooks/usePortf
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {useStakingKey} from '~/wallets/hooks'
+import {useStakingKey} from '~/features/Staking/hooks/useStakingKey'
 import {undefinedToken} from './constants'
 import {useNavigateTo} from './navigation'
 import {useGetInputs} from './useGetInputs'

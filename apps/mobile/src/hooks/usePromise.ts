@@ -67,7 +67,7 @@ export function usePromise<T, A extends unknown[] = []>(
   }
 }
 
-export type UsePromiseOptions<T, A extends unknown[] = []> = {
+export type UsePromiseOptions<T = unknown, A extends unknown[] = []> = {
   promise: (...args: A) => Promise<T>
   onSuccess?: (value: T) => void
   onError?: (error: Error) => void

@@ -16,11 +16,11 @@ import {
 import {useWalletNotifications} from '~/features/Notifications/common/useWalletNotifications'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useLanguage} from '~/kernel/i18n'
-import {useWalletNavigation} from '~/kernel/navigation/hooks'
+import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {ScrollView} from '~/ui/ScrollView/ScrollView'
 import {Text} from '~/ui/Text/Text'
-import {useTransactionInfos} from '~/wallets/hooks'
+import {useTransactionInfos} from '~/features/Transactions/hooks/useTransactionInfos'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {EmptyNotificationsIllustration} from '../illustrations/EmptyNotifications'
 
