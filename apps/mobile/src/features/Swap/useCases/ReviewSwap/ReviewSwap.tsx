@@ -10,10 +10,10 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Button} from '~/ui/Button/Button'
-import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView'
+import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingView'
 import {ProtocolAvatar} from '~/ui/ProtocolAvatar/ProtocolAvatar'
-import {TransactionSummary} from '~/ui/TransactionSummary/TransactionSummary'
 import {useNavigateTo} from '../../common/navigation'
+import {TransactionSummary} from './TransactionSummary'
 
 const BOTTOM_ACTION_SECTION = 220
 
@@ -84,7 +84,7 @@ export const ReviewSwap = () => {
         ) : undefined,
       details: {
         component: <TransactionSummary swapForm={swapForm} />,
-        title: strings.swapDetailsTitle,
+        title: strings.swap.swapDetailsTitle,
         height: 600,
       },
     })
@@ -120,7 +120,11 @@ export const ReviewSwap = () => {
           }),
         }}
       >
-        <Button testID="swapButton" title={strings.next} onPress={onNext} />
+        <Button
+          testID="swapButton"
+          title={strings.swap.next}
+          onPress={onNext}
+        />
       </Actions>
     </SafeAreaView>
   )

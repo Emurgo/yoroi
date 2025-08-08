@@ -4,14 +4,14 @@ import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 
 import {Linking} from 'react-native'
-// import {useSwap} from '~/features/Swap/common/useSwap'
+import {useSwap} from '~/features/Swap/common/useSwap'
 import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
 import {ReviewTxRoutes, SettingsStackRoutes} from '../types'
 
 export const useWalletNavigation = () => {
   const navigation = useNavigation()
   const {network} = useSelectedNetwork()
-  // const swapForm = useSwap()
+  const swapForm = useSwap()
 
   return React.useRef({
     navigation,
@@ -204,6 +204,30 @@ export const useWalletNavigation = () => {
       })
     },
 
+    navigateToReceiveSingle: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'history',
+          params: {
+            screen: 'receive-single',
+          },
+        },
+      })
+    },
+
+    navigateToReceiveMultiple: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'history',
+          params: {
+            screen: 'receive-multiple',
+          },
+        },
+      })
+    },
+
     navigateToAppSettings: () => {
       navigation.navigate('manage-wallets', {
         screen: 'settings',
@@ -297,14 +321,43 @@ export const useWalletNavigation = () => {
         return
       }
 
-      // TODO: REVISIT when swap is ready
-      // swapForm.action({type: 'ResetForm'})
-      //
-      // if (tokenOutId !== undefined) {
-      //   swapForm.action({type: 'TokenOutIdChanged', value: tokenOutId})
-      //   swapForm.action({type: 'TokenOutInputTouched'})
-      // }
+      swapForm.action({type: 'ResetForm'})
 
+      if (tokenOutId !== undefined) {
+        swapForm.action({type: 'TokenOutIdChanged', value: tokenOutId})
+        swapForm.action({type: 'TokenOutInputTouched'})
+      }
+
+      navigation.navigate('manage-wallets', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'history',
+          params: {
+            screen: 'swap-main',
+          },
+        },
+      })
+    },
+
+    navigateToSwapPreprodNotice: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'history',
+          params: {
+            screen: 'swap-preprod-notice',
+          },
+        },
+      })
+    },
+
+    resetTabAndSwap: () => {
+      navigation.reset({
+        index: 0,
+        routes: [
+          {name: 'manage-wallets', params: {screen: 'main-wallet-routes'}},
+        ],
+      })
       navigation.navigate('manage-wallets', {
         screen: 'main-wallet-routes',
         params: {
@@ -408,14 +461,6 @@ export const useWalletNavigation = () => {
       })
     },
 
-    // Receive Navigation Functions
-    navigateToReceiveSingle: () => {
-      navigation.navigate('manage-wallets', {
-        screen: 'main-wallet-routes',
-        params: {screen: 'history', params: {screen: 'receive-single'}},
-      })
-    },
-
     navigateToReceiveSpecificAmount: () => {
       navigation.navigate('manage-wallets', {
         screen: 'main-wallet-routes',
@@ -423,13 +468,6 @@ export const useWalletNavigation = () => {
           screen: 'history',
           params: {screen: 'receive-specific-amount'},
         },
-      })
-    },
-
-    navigateToReceiveMultiple: () => {
-      navigation.navigate('manage-wallets', {
-        screen: 'main-wallet-routes',
-        params: {screen: 'history', params: {screen: 'receive-multiple'}},
       })
     },
   } as const).current

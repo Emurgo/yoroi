@@ -1,5 +1,6 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Swap} from '@yoroi/types'
+import {NumberLocale} from '@yoroi/types/lib/typescript/intl/numbers'
 import BigNumber from 'bignumber.js'
 import * as React from 'react'
 import {ScrollView, Text, TouchableOpacity, View} from 'react-native'
@@ -7,10 +8,9 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useSwap} from '~/features/Swap/common/useSwap'
 import {useLanguage} from '~/kernel/i18n/LanguageProvider'
-import {NumberLocale} from '~/kernel/i18n/languages'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView'
+import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingView'
 import {SettingsSwitch} from '~/ui/SettingsSwitch/SettingsSwitch'
 import {TextInput} from '~/ui/TextInput/TextInput'
 import {Quantities} from '~/wallets/utils/utils'
@@ -108,7 +108,7 @@ export const SwapSettings = () => {
       >
         <ScrollView bounces={false} style={[a.flex_1]}>
           <Text style={[a.py_lg, a.body_1_lg_regular, {color: p.gray_600}]}>
-            {strings.slippageTolerance}
+            {strings.swap.slippageTolerance}
           </Text>
 
           <View style={[a.flex_row, a.pb_xl, a.flex_wrap]}>
@@ -176,10 +176,10 @@ export const SwapSettings = () => {
                     style={[
                       a.body_3_sm_regular,
                       a.py_xs,
-                      {color: p.text_gray_700},
+                      {color: p.text_gray_low},
                     ]}
                   >
-                    {strings.enterSlippage}
+                    {strings.swap.enterSlippage}
                   </Text>
                 ) : isSelectedChoiceCustom && hasError ? (
                   <Text
@@ -189,7 +189,7 @@ export const SwapSettings = () => {
                       {color: p.sys_magenta_500},
                     ]}
                   >
-                    {strings.slippageToleranceError}
+                    {strings.swap.slippageToleranceError}
                   </Text>
                 ) : undefined
               }
@@ -197,13 +197,13 @@ export const SwapSettings = () => {
           )}
 
           <Text style={[a.py_lg, a.body_1_lg_regular, {color: p.gray_600}]}>
-            {strings.routingPreferences}
+            {strings.swap.routingPreferences}
           </Text>
 
           <View style={[a.gap_md]}>
             <View style={[a.flex_row, a.justify_between, a.align_center]}>
               <Text style={[a.body_1_lg_regular, {color: p.text_gray_max}]}>
-                {strings.auto}
+                {strings.swap.auto}
               </Text>
 
               <SettingsSwitch

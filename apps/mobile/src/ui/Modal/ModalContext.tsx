@@ -12,6 +12,7 @@ type ModalState = {
   isLoading: boolean
   canDiscard: boolean
   title: string
+  canContinue: boolean
 }
 type ModalActions = {
   openModal: (args: {
@@ -27,6 +28,7 @@ type ModalActions = {
   setFooter: (footer: React.ReactNode | undefined) => void
   setTitle: (title: string) => void
   setCanDiscard: (canDiscard: boolean) => void
+  setCanContinue: (canContinue: boolean) => void
 }
 
 const ModalContext = React.createContext<
@@ -106,6 +108,12 @@ export const ModalProvider = ({
         canDiscard,
       })
     },
+    setCanContinue: (canContinue: boolean) => {
+      dispatch({
+        type: 'setCanContinue',
+        canContinue,
+      })
+    },
   }).current
 
   const context = React.useMemo(
@@ -139,6 +147,7 @@ type ModalAction =
   | {type: 'setFooter'; footer: React.ReactNode | undefined}
   | {type: 'setTitle'; title: string}
   | {type: 'setCanDiscard'; canDiscard: boolean}
+  | {type: 'setCanContinue'; canContinue: boolean}
 
 const modalReducer = (state: ModalState, action: ModalAction) => {
   switch (action.type) {
@@ -184,6 +193,12 @@ const modalReducer = (state: ModalState, action: ModalAction) => {
         canDiscard: action.canDiscard,
       }
 
+    case 'setCanContinue':
+      return {
+        ...state,
+        canContinue: action.canContinue,
+      }
+
     default:
       throw new Error(`modalReducer invalid action`)
   }
@@ -198,4 +213,5 @@ const defaultState: ModalState = Object.freeze({
   isLoading: false,
   canDiscard: true,
   title: '',
+  canContinue: false,
 })

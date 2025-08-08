@@ -3,10 +3,11 @@ import * as React from 'react'
 import {Text, useWindowDimensions, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
+import {ShowDisclaimer} from '~/features/Legal/ui/Disclaimer/ShowDisclaimer'
 import {undefinedToken} from '~/features/Swap/common/constants'
 import {useSwap} from '~/features/Swap/common/useSwap'
+import {useIsKeyboardOpen} from '~/hooks/useIsKeyboardOpen'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useIsKeyboardOpen} from '~/kernel/keyboard/useIsKeyboardOpen'
 import {AmountCard} from '~/ui/AmountCard/AmountCard'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {EstimateSummary} from '~/ui/EstimateSummary/EstimateSummary'
@@ -16,11 +17,10 @@ import {ProtocolAvatar} from '~/ui/ProtocolAvatar/ProtocolAvatar'
 import {RefreshButton} from '~/ui/RefreshButton/RefreshButton'
 import {ShowPriceImpact} from '~/ui/ShowPriceImpact/ShowPriceImpact'
 import {Space} from '~/ui/Space/Space'
-import {WarnLimitPrice} from '~/ui/WarnLimitPrice/WarnLimitPrice'
 import {isEmptyString} from '~/wallets/utils/string'
 import {useNavigateTo} from '../../common/navigation'
-import {ShowDisclaimer} from '../Legal/Disclaimer/ShowDisclaimer'
 import {LimitInput} from './LimitInput'
+import {WarnLimitPrice} from './WarnLimitPrice'
 
 const LIMIT_PRICE_WARNING_THRESHOLD = 0.1 // 10%
 const BOTTOM_ACTION_SECTION = 180
@@ -53,7 +53,7 @@ export const SwapMainScreen = () => {
 
     if (swapForm.orderType === 'limit' && difference > threshold) {
       openModal({
-        title: strings.limitPriceWarningTitle,
+        title: strings.swap.limitPriceWarningTitle,
         content: (
           <WarnLimitPrice
             wantedPrice={wantedPrice.toFixed(tokenOutInfo?.decimals ?? 6)}
@@ -69,13 +69,13 @@ export const SwapMainScreen = () => {
             <Button
               size="S"
               type={ButtonType.Secondary}
-              title={strings.limitPriceWarningBack}
+              title={strings.swap.limitPriceWarningBack}
               onPress={closeModal}
             />
 
             <Button
               size="S"
-              title={strings.limitPriceWarningConfirm}
+              title={strings.swap.limitPriceWarningConfirm}
               onPress={swapForm.create}
             />
           </View>
@@ -107,7 +107,7 @@ export const SwapMainScreen = () => {
                     swapForm.action({type: 'ChangeOrderType', value: 'market'})
                   }
                   type={ButtonType.SecondaryText}
-                  title={strings.marketButton}
+                  title={strings.swap.marketButton}
                   size="M"
                   fontOverride={a.body_1_lg_medium}
                   {...(swapForm.orderType === 'market' && {
@@ -120,7 +120,7 @@ export const SwapMainScreen = () => {
                     swapForm.action({type: 'ChangeOrderType', value: 'limit'})
                   }
                   type={ButtonType.SecondaryText}
-                  title={strings.limitButton}
+                  title={strings.swap.limitButton}
                   size="M"
                   fontOverride={a.body_1_lg_medium}
                   {...(swapForm.orderType === 'limit' && {
@@ -207,7 +207,7 @@ export const SwapMainScreen = () => {
               swapForm.estimate === undefined && (
                 <View style={[a.flex_row, a.justify_between]}>
                   <Text style={[a.body_1_lg_regular, {color: p.text_gray_low}]}>
-                    {strings.route}
+                    {strings.swap.route}
                   </Text>
 
                   <ProtocolAvatar
@@ -235,8 +235,8 @@ export const SwapMainScreen = () => {
           testID="swapButton"
           title={
             swapForm.orderType === 'market'
-              ? strings.swapButton
-              : strings.placeOrder
+              ? strings.swap.swapButton
+              : strings.swap.placeOrder
           }
           disabled={!swapForm.canSwap}
           isLoading={swapForm.isLoading}

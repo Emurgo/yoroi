@@ -11,14 +11,15 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {getTokenIdParts} from '~/features/Portfolio/common/helpers/get-token-id-parts'
 import {usePortfolioBalances} from '~/features/Portfolio/common/hooks/usePortfolioBalances'
-import {usePortfolioTokenActivity} from '~/features/Portfolio/common/PortfolioTokenActivityProvider'
+import {usePortfolioTokenActivity} from '~/features/Portfolio/context/PortfolioTokenActivityProvider'
+import {useSearch, useSearchOnNavBar} from '~/features/Search/SearchContext'
 import {filterBySearch} from '~/features/Swap/common/filterBySearch'
 import {useSwap} from '~/features/Swap/common/useSwap'
 import {useSwapConfig} from '~/features/Swap/common/useSwapConfig'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {useUnsafeParams} from '~/kernel/navigation/hooks'
+import {useUnsafeParams} from '~/kernel/navigation/hooks/useUnsafeParams'
 import {SwapTokenRoutes} from '~/kernel/navigation/types'
 import {Boundary} from '~/ui/Boundary/Boundary'
 import {Counter} from '~/ui/Counter/Counter'
@@ -31,7 +32,6 @@ import {
   TokenAmountItem,
 } from '~/ui/TokenAmountItem/TokenAmountItem'
 import {useNavigateTo} from '../../common/navigation'
-import {useSearch, useSearchOnNavBar} from '../Search/SearchContext'
 
 type Direction = SwapTokenRoutes['swap-select-token']
 
@@ -43,27 +43,19 @@ export const SelectTokenScreen = () => {
   const loading = React.useMemo(
     () => ({
       fallback: (
-        <View
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-          }}
-        >
+        <View style={[a.flex_col]}>
           {Array.from({length: 6}).map((_, i) => (
-            <AmountItemPlaceholder
-              key={i}
-              style={[styles.item, {paddingVertical: 8, paddingHorizontal: 16}]}
-            />
+            <AmountItemPlaceholder key={i} style={[a.py_sm, a.px_lg]} />
           ))}
         </View>
       ),
     }),
-    [styles.item],
+    [],
   )
 
   useSearchOnNavBar({
-    placeholder: strings.searchTokens,
-    title: direction === 'in' ? strings.swapFrom : strings.swapTo,
+    placeholder: strings.swap.searchTokens,
+    title: direction === 'in' ? strings.swap.swapFrom : strings.swap.swapTo,
   })
 
   return (
@@ -101,22 +93,27 @@ const TokenList = ({direction}: Direction) => {
           if (isPrimaryToken(a.info)) return -1 // `a` is the PrimaryToken, so it should come first
           if (isPrimaryToken(b.info)) return 1 // `b` is the PrimaryToken, so it should come first
 
-          // Compare based on weighted value (price * amount)
-          return (tokenActivity[b.info.id]?.price.close ?? new BigNumber(0))
+          const comparison = (
+            tokenActivity[b.info.id]?.price.close ?? new BigNumber(0)
+          )
             .multipliedBy(amountBreakdown(b).bn)
             .comparedTo(
               (
                 tokenActivity[a.info.id]?.price.close ?? new BigNumber(0)
               ).multipliedBy(amountBreakdown(a).bn),
             )
+          return comparison ?? 0
         })
         .map(({info: {id}}) => id)
         .filter((ti) => tokenInfos.has(ti)),
     [balances.all, tokenActivity, tokenInfos],
   )
   const verifiedTokens = React.useMemo(
-    () => swapConfig?.verifiedTokens?.filter((ti) => tokenInfos.has(ti)) ?? [],
-    [swapConfig?.verifiedTokens, tokenInfos],
+    () =>
+      (swapConfig as {verifiedTokens?: string[]})?.verifiedTokens?.filter(
+        (ti) => tokenInfos.has(ti as Portfolio.Token.Id),
+      ) ?? [],
+    [swapConfig, tokenInfos],
   )
 
   const filteredTokenList = React.useMemo(() => {
@@ -125,19 +122,19 @@ const TokenList = ({direction}: Direction) => {
       .filter(isNonNullable)
 
     if (direction === 'in')
-      return [strings.yourAssets, ...ownedList].filter(
+      return [strings.swap.yourAssets, ...ownedList].filter(
         filterBySearch(assetSearchTerm),
       )
 
     const verifiedList = verifiedTokens
-      .map((ti) => tokenInfos.get(ti))
+      .map((ti: string) => tokenInfos.get(ti as Portfolio.Token.Id))
       .filter(isNonNullable)
-      .filter(({id}) => !ownedTokens.includes(id))
+      .filter(({id}: {id: Portfolio.Token.Id}) => !ownedTokens.includes(id))
 
     return [
-      strings.yourAssets,
+      strings.swap.yourAssets,
       ...ownedList,
-      strings.allAssets,
+      strings.swap.allAssets,
       ...verifiedList,
       ...sortTokenInfos({
         secondaryTokenInfos: Array.from(tokenInfos.values()).filter(
@@ -149,8 +146,8 @@ const TokenList = ({direction}: Direction) => {
   }, [
     ownedTokens,
     direction,
-    strings.yourAssets,
-    strings.allAssets,
+    strings.swap.yourAssets,
+    strings.swap.allAssets,
     wallet.portfolioPrimaryTokenInfo,
     assetSearchTerm,
     verifiedTokens,
@@ -158,27 +155,16 @@ const TokenList = ({direction}: Direction) => {
   ])
 
   return (
-    <View style={[styles.list, {flex: 1}]}>
+    <View style={[a.flex_1]}>
       <FlashList
         data={filteredTokenList}
         renderItem={({item}: {item: Portfolio.Token.Info | string}) =>
           isString(item) ? (
-            <Text
-              style={[styles.sectionHeading, {color: p.text_gray_low}, a.p_lg]}
-            >
-              {item}
-            </Text>
+            <Text style={[{color: p.text_gray_low}, a.p_lg]}>{item}</Text>
           ) : (
             <Boundary
               loading={{
-                fallback: (
-                  <AmountItemPlaceholder
-                    style={[
-                      styles.item,
-                      {paddingVertical: 8, paddingHorizontal: 16},
-                    ]}
-                  />
-                ),
+                fallback: <AmountItemPlaceholder style={[a.py_sm, a.px_lg]} />,
               }}
             >
               <SelectableToken
@@ -202,9 +188,9 @@ const TokenList = ({direction}: Direction) => {
 
       <Counter
         counter={filteredTokenList.length}
-        style={[styles.counter, {paddingVertical: 16}]}
-        unitsText={strings.assets(filteredTokenList.length)}
-        closingText={strings.available}
+        style={[a.py_lg]}
+        unitsText={strings.swap.assets(filteredTokenList.length)}
+        closingText={strings.swap.available}
       />
     </View>
   )
@@ -277,7 +263,7 @@ const SelectableToken = ({
 
   return (
     <TouchableOpacity
-      style={[styles.item, {paddingVertical: 8, paddingHorizontal: 16}]}
+      style={[a.py_sm, a.px_lg]}
       onPress={handleOnTokenSelection}
       testID="selectTokenButton"
     >
@@ -292,8 +278,6 @@ const SelectableToken = ({
 
 const EmptyList = () => {
   const {search: assetSearchTerm, visible: isSearching} = useSearch()
-  const {palette: p} = useTheme()
-  const strings = useStrings()
 
   if (isSearching && assetSearchTerm.length > 0)
     return <EmptySearchResult assetSearchTerm={assetSearchTerm} />
@@ -305,27 +289,19 @@ const EmptySearchResult = ({assetSearchTerm}: {assetSearchTerm: string}) => {
   const strings = useStrings()
   const {palette: p} = useTheme()
   return (
-    <View style={[styles.imageContainer, {flex: 1, textAlign: 'center'}]}>
+    <View style={[a.flex_1]}>
       <Space.Height.xl />
 
       <NoAssetFoundImage
-        style={[
-          styles.image,
-          {flex: 1, alignSelf: 'center', width: 200, height: 228},
-        ]}
+        style={[a.flex_1, {alignSelf: 'center', width: 200, height: 228}]}
       />
 
       <Space.Height.lg />
 
-      <Text
-        style={[
-          styles.contentText,
-          {flex: 1, color: p.gray_max, paddingTop: 4, textAlign: 'center'},
-        ]}
-      >
+      <Text style={[a.flex_1, a.pt_xs, a.text_center, {color: p.gray_max}]}>
         {assetSearchTerm === ''
-          ? strings.noAssetsFound
-          : strings.noAssetsFoundFor(assetSearchTerm)}
+          ? strings.swap.noAssetsFound
+          : strings.swap.noAssetsFoundFor(assetSearchTerm)}
       </Text>
     </View>
   )

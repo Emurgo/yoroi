@@ -23,6 +23,15 @@ import {FailedTxScreen as SendFailedTxScreen} from '~/features/Send/useCases/Sho
 import {SubmittedTxScreen as SendSubmittedTxScreen} from '~/features/Send/useCases/ShowSubmittedTxScreen/SubmittedTxScreen'
 import {StartMultiTokenTxScreen} from '~/features/Send/useCases/StartMultiTokenTx/StartMultiTokenTxScreen'
 import {NetworkTag} from '~/features/Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
+import {SelectProtocolScreen} from '~/features/Swap/useCases/CreateOrder/SelectProtocolScreen'
+import {SelectTokenScreen} from '~/features/Swap/useCases/CreateOrder/SelectTokenScreen'
+import {SwapMainScreen} from '~/features/Swap/useCases/CreateOrder/SwapMainScreen'
+import {ListOrders} from '~/features/Swap/useCases/ListOrders/ListOrders'
+import {ReviewSwap} from '~/features/Swap/useCases/ReviewSwap/ReviewSwap'
+import {FailedTxScreen as SwapFailedTxScreen} from '~/features/Swap/useCases/ShowFailedTxScreen/FailedTxScreen'
+import {ShowPreprodNoticeScreen} from '~/features/Swap/useCases/ShowPreprodNoticeScreen/ShowPreprodNoticeScreen'
+import {SubmittedTxScreen as SwapSubmittedTxScreen} from '~/features/Swap/useCases/ShowSubmittedTxScreen/SubmittedTxScreen'
+import {SwapSettings} from '~/features/Swap/useCases/SwapSettings/SwapSettings'
 import {UtxoConsolidation} from '~/features/Transactions/useCases/UtxoConsolidation/UtxoConsolidation/UtxoConsolidation'
 import {UtxoList} from '~/features/Transactions/useCases/UtxoList/UtxoList'
 import {unstoppableApiKey} from '~/kernel/constants'
@@ -199,6 +208,79 @@ export const TxHistoryNavigator = () => {
                 title: strings.scan.cameraPermissionDeniedTitle,
               }}
               getComponent={() => ShowCameraPermissionDeniedScreen}
+            />
+
+            {/* Swap Screens */}
+            <Stack.Screen
+              name="swap-main"
+              options={{
+                title: strings.swap.swapTitle,
+              }}
+              getComponent={() => SwapMainScreen}
+            />
+
+            <Stack.Screen
+              name="swap-orders"
+              options={{
+                title: strings.swap.listOrdersSheetTitle,
+              }}
+              getComponent={() => ListOrders}
+            />
+
+            <Stack.Screen
+              name="swap-settings"
+              options={{
+                title: 'Settings',
+              }}
+              getComponent={() => SwapSettings}
+            />
+
+            <Stack.Screen
+              name="swap-review"
+              options={{
+                title: strings.swap.swapDetailsTitle,
+              }}
+              getComponent={() => ReviewSwap}
+            />
+
+            <Stack.Screen
+              name="swap-select-token"
+              options={{
+                title: strings.swap.selectToken,
+              }}
+              getComponent={() => SelectTokenScreen}
+            />
+
+            <Stack.Screen
+              name="swap-select-protocol"
+              options={{
+                title: strings.swap.changePool,
+              }}
+              getComponent={() => SelectProtocolScreen}
+            />
+
+            <Stack.Screen
+              name="swap-preprod-notice"
+              options={{
+                title: strings.swap.preprodNoticeTitle,
+              }}
+              getComponent={() => ShowPreprodNoticeScreen}
+            />
+
+            <Stack.Screen
+              name="swap-submitted-tx"
+              options={{
+                title: strings.swap.submittedTxScreenTitle,
+              }}
+              getComponent={() => SwapSubmittedTxScreen}
+            />
+
+            <Stack.Screen
+              name="swap-failed-tx"
+              options={{
+                title: strings.swap.failedTxScreenTitle,
+              }}
+              getComponent={() => SwapFailedTxScreen}
             />
           </Stack.Navigator>
         </Boundary>

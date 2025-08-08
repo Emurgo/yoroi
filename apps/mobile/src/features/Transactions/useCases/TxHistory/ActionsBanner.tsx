@@ -1,13 +1,16 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {Chain} from '@yoroi/types'
 import * as React from 'react'
-import {Alert, GestureResponderEvent, View} from 'react-native'
+import {GestureResponderEvent, View} from 'react-native'
 
-// import {useSwap} from '~/features/Swap/common/SwapProvider'
 import {useCopy} from '~/features/Copy/context/CopyProvider'
 import {useReceive} from '~/features/Receive/common/ReceiveProvider'
 import {useMultipleAddressesInfo} from '~/features/Receive/common/useMultipleAddressesInfo'
 import {useReceiveAddressesStatus} from '~/features/Receive/common/useReceiveAddressesStatus'
+import {useSwap} from '~/features/Swap/common/useSwap'
+import {useSwapConfig} from '~/features/Swap/common/useSwapConfig'
 import {useAddressMode} from '~/features/WalletManager/hooks/useAddressMode'
+import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
@@ -18,10 +21,9 @@ import {Text} from '~/ui/Text/Text'
 
 export const ActionsBanner = (_props: {disabled: boolean}) => {
   const strings = useStrings()
-  // TODO: REVISIT when wallet hooks are fixed
-  // const swapForm = useSwap()
-  // const {tokenOutId, isLoading} = useSwapConfig()
-  // const disabled = props.disabled || isLoading
+  const swapForm = useSwap()
+  const {tokenOutId, isLoading} = useSwapConfig()
+  const disabled = _props.disabled || isLoading
   const navigateTo = useWalletNavigation()
   const {palette: p} = useTheme()
 
@@ -33,26 +35,13 @@ export const ActionsBanner = (_props: {disabled: boolean}) => {
   const {hideMultipleAddressesInfo, isShowingMultipleAddressInfo} =
     useMultipleAddressesInfo()
 
-  const {meta} = useSelectedWallet()
-  /*
-  const {reset: resetSendState} = useTransfer()
-
+  const {meta, wallet} = useSelectedWallet()
   const {track} = useMetrics()
+  const {network} = useSelectedNetwork()
 
-  const {
-    selected: {network},
-  } = useWalletManager()
-
-
-
-  const handleOnSend = () => {
-    navigateTo.send()
-    resetSendState()
-  }
- */
-  /* const handleOnSwap = () => {
+  const handleOnSwap = () => {
     if (network === Chain.Network.Preprod) {
-      navigateTo.swapPreprodNotice()
+      navigateTo.navigateToSwapPreprodNotice()
       return
     }
 
@@ -66,8 +55,8 @@ export const ActionsBanner = (_props: {disabled: boolean}) => {
     track.swapInitiated({
       from_asset: [
         {
-          asset_name: portfolioPrimaryTokenInfo.name,
-          asset_ticker: portfolioPrimaryTokenInfo.ticker,
+          asset_name: wallet.portfolioPrimaryTokenInfo.name,
+          asset_ticker: wallet.portfolioPrimaryTokenInfo.ticker,
           policy_id: '',
         },
       ],
@@ -76,15 +65,13 @@ export const ActionsBanner = (_props: {disabled: boolean}) => {
       slippage_tolerance: 1,
     })
 
-    navigateTo.swap()
+    navigateTo.navigateToSwap()
   }
- */
-  /* const handleOnExchange = () => {
+
+  const handleOnExchange = () => {
     track.walletPageExchangeClicked()
-    navigateTo.exchange()
+    navigateTo.navigateToExchange()
   }
- */
-  const {track} = useMetrics()
 
   const handleOnPressReceive = () => {
     if (!isSingle) {
@@ -120,7 +107,7 @@ export const ActionsBanner = (_props: {disabled: boolean}) => {
           icon={Icon.Received}
           onPress={handleOnPressReceive}
           testID="receiveButton"
-          // disabled={disabled}
+          disabled={disabled}
           onLongPress={handleOnLongPressReceive}
         />
 
@@ -129,7 +116,7 @@ export const ActionsBanner = (_props: {disabled: boolean}) => {
             a.pt_sm,
             a.body_3_sm_medium,
             {color: p.text_gray_medium},
-            // disabled && {color: p.text_gray_low},
+            disabled && {color: p.text_gray_low},
           ]}
         >
           {strings.transactions.receiveLabel}
@@ -144,7 +131,7 @@ export const ActionsBanner = (_props: {disabled: boolean}) => {
               icon={Icon.Send}
               onPress={() => navigateTo.navigateToSendStartTx()}
               testID="sendButton"
-              // disabled={disabled}
+              disabled={disabled}
             />
 
             <Text
@@ -152,7 +139,7 @@ export const ActionsBanner = (_props: {disabled: boolean}) => {
                 a.pt_sm,
                 a.body_3_sm_medium,
                 {color: p.text_gray_medium},
-                // disabled && {color: p.text_gray_low},
+                disabled && {color: p.text_gray_low},
               ]}
             >
               {strings.transactions.sendLabel}
@@ -163,9 +150,9 @@ export const ActionsBanner = (_props: {disabled: boolean}) => {
             <Button
               type={ButtonType.Circle}
               icon={Icon.Swap}
-              onPress={() => Alert.alert('Swap Feature not implemented')}
+              onPress={handleOnSwap}
               testID="swapButton"
-              // disabled={disabled}
+              disabled={disabled}
             />
 
             <Text
@@ -173,7 +160,7 @@ export const ActionsBanner = (_props: {disabled: boolean}) => {
                 a.pt_sm,
                 a.body_3_sm_medium,
                 {color: p.text_gray_medium},
-                // disabled && {color: p.text_gray_low},
+                disabled && {color: p.text_gray_low},
               ]}
             >
               {strings.transactions.swapLabel}
@@ -184,9 +171,9 @@ export const ActionsBanner = (_props: {disabled: boolean}) => {
             <Button
               type={ButtonType.Circle}
               icon={Icon.Exchange}
-              onPress={() => Alert.alert('Exchange Feature not implemented')}
+              onPress={handleOnExchange}
               testID="buyButton"
-              // disabled={disabled}
+              disabled={disabled}
             />
 
             <Text
@@ -194,7 +181,7 @@ export const ActionsBanner = (_props: {disabled: boolean}) => {
                 a.pt_sm,
                 a.body_3_sm_medium,
                 {color: p.text_gray_medium},
-                // disabled && {color: p.text_gray_low},
+                disabled && {color: p.text_gray_low},
               ]}
             >
               {strings.transactions.exchange}

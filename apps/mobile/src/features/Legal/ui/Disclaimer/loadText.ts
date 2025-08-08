@@ -1,4 +1,5 @@
 import {LanguageCode} from '~/kernel/i18n/localization'
+import {Disclaimer} from '../../common/types'
 import DE_DE_DAPP from './dapp/de-DE.md'
 import EN_US_DAPP from './dapp/en-US.md'
 import ES_ES_DAPP from './dapp/es-ES.md'
@@ -21,7 +22,6 @@ import PT_BR from './thirdParty/pt-BR.md'
 import RU_RU from './thirdParty/ru-RU.md'
 import VI_VN from './thirdParty/vi-VN.md'
 import ZH_CN from './thirdParty/zh-Hans.md'
-import {Disclaimer} from './types'
 
 const map = {
   [Disclaimer.Dapps]: {
