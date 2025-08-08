@@ -25,19 +25,20 @@ import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {DashboardRoutes} from '~/kernel/navigation/types'
 
-import {Banner} from '~/ui/Banner/Banner'
-import {Button} from '~/ui/Button/Button'
-import {useModal} from '~/ui/Modal/ModalContext'
-import {Space} from '~/ui/Space/Space'
 import {useBalances} from '~/features/Portfolio/common/hooks/useBalances'
 import {useCreateWithdrawTx} from '~/features/Staking/hooks/useCreateWithdrawTx'
 import {useIsOnline} from '~/features/WalletManager/hooks/useIsOnline'
 import {useSync} from '~/features/WalletManager/hooks/useSync'
+import {Banner} from '~/ui/Banner/Banner'
+import {Button} from '~/ui/Button/Button'
+import {useModal} from '~/ui/Modal/ModalContext'
+import {Space} from '~/ui/Space/Space'
 import {isEmptyString} from '~/wallets/utils/string'
 import {Amounts} from '~/wallets/utils/utils'
+import {useStakingInfo} from '../Staking/hooks/useStakingInfo'
 import {EpochProgress} from './EpochProgress'
 import {NotDelegatedInfo} from './NotDelegatedInfo'
-import {StakePoolInfos, useStakingInfo} from './StakePoolInfos'
+import {StakePoolInfos} from './StakePoolInfos'
 import {UserSummary} from './UserSummary'
 
 export const Dashboard = () => {
@@ -119,16 +120,16 @@ export const Dashboard = () => {
   return (
     <SafeAreaView
       edges={['bottom', 'left', 'right']}
-      style={[styles.root, {backgroundColor: p.bg_color_max}]}
+      style={[a.flex_1, {backgroundColor: p.bg_color_max}]}
     >
-      <View style={styles.container}>
+      <View style={[a.flex_1]}>
         {isOnline && error && (
           <SyncErrorBanner showRefresh={!(isLoading || isSyncing)} />
         )}
 
         <ScrollView
-          style={styles.scrollView}
-          contentContainerStyle={styles.contentContainer}
+          style={[a.flex_1]}
+          contentContainerStyle={[a.px_lg, a.py_lg]}
           refreshControl={
             <RefreshControl
               onRefresh={() => {

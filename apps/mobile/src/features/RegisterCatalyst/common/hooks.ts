@@ -12,7 +12,11 @@ export const useCanVote = (wallet: YoroiWallet) => {
   const {meta} = useSelectedWallet()
   const amount = usePortfolioPrimaryBalance({wallet})
   const {fund} = useCatalystCurrentFund()
-  const sufficientFunds = amount.quantity >= fund.info.votingPowerThreshold
+
+  // Default to false if fund data is not available yet
+  const sufficientFunds = fund
+    ? amount.quantity >= fund.info.votingPowerThreshold
+    : false
 
   return {
     canVote: !meta.isReadOnly && isShelley(meta.implementation),

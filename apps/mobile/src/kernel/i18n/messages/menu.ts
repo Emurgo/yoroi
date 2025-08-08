@@ -10,16 +10,16 @@ export const menuMessages = defineMessages({
     defaultMessage: '!!!Settings',
   },
   stakingCenter: {
-    id: 'components.stakingcenter.title',
+    id: 'menu.stakingCenter',
     defaultMessage: '!!!Staking Center',
   },
   supportTitle: {
     id: 'menu.supportTitle',
-    defaultMessage: '!!!Support',
+    defaultMessage: '!!!Any questions',
   },
   supportLink: {
     id: 'menu.supportLink',
-    defaultMessage: '!!!Support Link',
+    defaultMessage: '!!!Ask our support team',
   },
   knowledgeBase: {
     id: 'menu.knowledgeBase',

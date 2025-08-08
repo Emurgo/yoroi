@@ -1,15 +1,15 @@
 import {atoms as a} from '@yoroi/theme'
+import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
 import {FlatList} from 'react-native'
 
-import {CurrencySymbol} from '~/wallets/types/other'
 import {useCurrencyPairing} from './CurrencyContext'
 import {CurrencyPickerItem} from './CurrencyPickerItem'
 
 export const CurrencyPickerList = () => {
   const {configCurrencies, currency, selectCurrency} = useCurrencyPairing()
   const currencies = Object.entries(configCurrencies)
-    .map(([k, v]) => ({symbol: k as CurrencySymbol, data: v}))
+    .map(([k, v]) => ({symbol: k as Portfolio.Currency.Symbol, data: v}))
     .filter(({symbol}) => symbol !== 'ADA')
 
   return (

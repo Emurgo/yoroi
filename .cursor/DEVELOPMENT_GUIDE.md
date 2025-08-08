@@ -891,3 +891,284 @@ git checkout fix/wallet-navigation-and-functionality
 - [ ] Check conflicts.md for known issues
 - [ ] Document any new conflicts found
 - [ ] Remove any new index.ts files and update imports to use direct file paths
+
+---
+
+## 🧭 Navigation Migration Guidelines
+
+### Overview
+
+This section documents the recent navigation system refactoring and provides guidelines for future navigation-related changes in the Yoroi mobile app.
+
+### Recent Navigation Changes (Commit 58709d40a)
+
+#### 1. Simplified Navigation Options API
+
+**Before:**
+
+```typescript
+// Navigation options required both atoms and palette
+const navOptions = React.useMemo(
+  () => defaultStackNavigationOptions(atoms, p),
+  [atoms, p]
+);
+```
+
+**After:**
+
+```typescript
+// Navigation options now only require palette
+const navOptions = React.useMemo(() => defaultStackNavigationOptions(p), [p]);
+```
+
+#### 2. Updated Navigation Helper Functions
+
+**Function Signature Changes:**
+
+```typescript
+// Before
+export const defaultStackNavigationOptions = (
+  atoms: typeof a,
+  color: ThemedPalette
+): StackNavigationOptions => {
+  // Implementation used atoms parameter
+};
+
+// After
+export const defaultStackNavigationOptions = (
+  palette: ThemedPalette
+): StackNavigationOptions => {
+  // Implementation uses static atoms (a) directly
+};
+```
+
+**Key Changes:**
+
+- Removed `atoms` parameter from all navigation option functions
+- Use static atoms (`a`) directly in navigation helpers
+- Simplified function signatures across all navigators
+
+#### 3. Navigation Hook Enhancements
+
+**New Send/Receive Navigation Functions:**
+
+```typescript
+// Added to useWalletNavigation hook
+navigateToSendStartTx: () => {
+  navigation.navigate('manage-wallets', {
+    screen: 'main-wallet-routes',
+    params: {screen: 'history', params: {screen: 'send-start-tx'}},
+  })
+},
+
+navigateToReceiveSingle: () => {
+  navigation.navigate('manage-wallets', {
+    screen: 'main-wallet-routes',
+    params: {screen: 'history', params: {screen: 'receive-single'}},
+  })
+},
+```
+
+#### 4. Performance Optimizations
+
+**TxHistoryNavigator Improvements:**
+
+```typescript
+// Before: Inline component definitions
+<Stack.Screen name="history-list">
+  {() => (
+    <Boundary loading={{size: 'full'}}>
+      <TxHistory />
+    </Boundary>
+  )}
+</Stack.Screen>
+
+// After: getComponent for better performance
+<Stack.Screen
+  name="history-list"
+  getComponent={() => TxHistory}
+/>
+```
+
+### Migration Guidelines
+
+#### 1. Update Navigation Options Usage
+
+**❌ Avoid old pattern:**
+
+```typescript
+const navOptions = React.useMemo(
+  () => defaultStackNavigationOptions(atoms, p),
+  [atoms, p]
+);
+```
+
+**✅ Use new pattern:**
+
+```typescript
+const navOptions = React.useMemo(() => defaultStackNavigationOptions(p), [p]);
+```
+
+#### 2. Update Navigation Helper Functions
+
+**❌ Avoid old function signatures:**
+
+```typescript
+const screenOptions = (atoms: Atoms, color: ThemedPalette) => ({
+  ...defaultStackNavigationOptions(atoms, color),
+  gestureEnabled: true,
+});
+```
+
+**✅ Use new function signatures:**
+
+```typescript
+const screenOptions = (color: ThemedPalette) => ({
+  ...defaultStackNavigationOptions(color),
+  gestureEnabled: true,
+});
+```
+
+#### 3. Use Static Atoms in Navigation Helpers
+
+**✅ Correct pattern for navigation helpers:**
+
+```typescript
+export const defaultStackNavigationOptions = (
+  palette: ThemedPalette
+): StackNavigationOptions => {
+  return {
+    headerTitleStyle: {
+      ...a.body_1_lg_medium, // Use static atoms directly
+      ...a.text_center,
+    },
+    headerTitleContainerStyle: {
+      ...a.flex_1,
+      ...a.align_center,
+      ...a.justify_center,
+    },
+  };
+};
+```
+
+#### 4. Performance Best Practices
+
+**✅ Use getComponent for better performance:**
+
+```typescript
+<Stack.Screen
+  name="screen-name"
+  options={{ title: strings.screen.title }}
+  getComponent={() => ScreenComponent}
+/>
+```
+
+**❌ Avoid inline component definitions:**
+
+```typescript
+<Stack.Screen name="screen-name">{() => <ScreenComponent />}</Stack.Screen>
+```
+
+### Navigation Architecture Principles
+
+#### 1. Consistent Navigation Options
+
+All navigators should use the centralized `defaultStackNavigationOptions` function:
+
+```typescript
+// ✅ Consistent across all navigators
+screenOptions={{
+  ...defaultStackNavigationOptions(p),
+  headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
+}}
+```
+
+#### 2. Navigation Hook Usage
+
+Use the centralized `useWalletNavigation` hook for navigation actions:
+
+```typescript
+import { useWalletNavigation } from "~/kernel/navigation/hooks/useWalletNavigation";
+
+const Component = () => {
+  const navigation = useWalletNavigation();
+
+  const handleNavigate = () => {
+    navigation.navigateToSendStartTx();
+  };
+};
+```
+
+#### 3. Route Type Safety
+
+Always use typed route names from the navigation types:
+
+```typescript
+import { TxHistoryRoutes } from "~/kernel/navigation/types";
+
+// ✅ Type-safe navigation
+navigation.navigate("tx-details" as keyof TxHistoryRoutes);
+```
+
+### Migration Checklist
+
+- [ ] Update all `defaultStackNavigationOptions` calls to remove `atoms` parameter
+- [ ] Update all `defaultMaterialTopTabNavigationOptions` calls to remove `atoms` parameter
+- [ ] Replace inline component definitions with `getComponent`
+- [ ] Update navigation helper function signatures
+- [ ] Use static atoms (`a`) directly in navigation helpers
+- [ ] Test navigation flows after migration
+- [ ] Verify performance improvements
+- [ ] Update any custom navigation options to match new pattern
+
+### Benefits of Navigation Migration
+
+1. **Simplified API**: Fewer parameters to manage in navigation options
+2. **Better Performance**: `getComponent` pattern improves bundle loading
+3. **Consistent Patterns**: Unified navigation options across all navigators
+4. **Type Safety**: Better TypeScript support with simplified signatures
+5. **Maintainability**: Cleaner code with fewer dependencies
+
+### Common Migration Issues
+
+#### 1. Missing Atoms Parameter
+
+**Error:** `TypeError: Cannot read property 'body_1_lg_medium' of undefined`
+
+**Solution:** Use static atoms (`a`) directly instead of passed atoms parameter:
+
+```typescript
+// ❌ Before
+headerTitleStyle: {
+  ...atoms.body_1_lg_medium,
+}
+
+// ✅ After
+headerTitleStyle: {
+  ...a.body_1_lg_medium,
+}
+```
+
+#### 2. Navigation Hook Dependencies
+
+**Error:** Navigation functions not found
+
+**Solution:** Import from the correct location:
+
+```typescript
+// ✅ Correct import
+import { useWalletNavigation } from "~/kernel/navigation/hooks/useWalletNavigation";
+```
+
+#### 3. Performance Issues
+
+**Issue:** Slow navigation transitions
+
+**Solution:** Use `getComponent` pattern:
+
+```typescript
+// ✅ Performance optimized
+<Stack.Screen name="screen-name" getComponent={() => ScreenComponent} />
+```
+
+This navigation migration represents a significant improvement in the app's navigation architecture, making it more maintainable, performant, and consistent across all features.

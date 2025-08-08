@@ -61,7 +61,7 @@ export const ManageCollateralScreen = () => {
 
   const {mutate: createUnsignedTx, isLoading: isLoadingTx} = useMutation({
     mutationFn: (entries: YoroiEntry[]) =>
-      wallet.createUnsignedTx({entries, addressMode}),
+      wallet.createUnsignedTx({entries, addressMode: meta.addressMode}),
     retry: false,
     useErrorBoundary: true,
   })
@@ -125,9 +125,14 @@ export const ManageCollateralScreen = () => {
         .isLessThan(collateralConfig.minLovelace)
     ) {
       Alert.alert(
-        strings.notEnoughFundsAlertTitle,
-        strings.notEnoughFundsAlertMessage,
-        [{text: strings.notEnoughFundsAlertOK, onPress: () => true}],
+        strings.manageCollateral.notEnoughFundsAlertTitle,
+        strings.manageCollateral.notEnoughFundsAlertMessage,
+        [
+          {
+            text: strings.manageCollateral.notEnoughFundsAlertOK,
+            onPress: () => true,
+          },
+        ],
         {cancelable: false},
       )
       return
@@ -138,7 +143,7 @@ export const ManageCollateralScreen = () => {
 
   const handleCollateralInfoModal = () => {
     openModal({
-      title: strings.initialCollateralInfoModalTitle,
+      title: strings.manageCollateral.initialCollateralInfoModalTitle,
       content: <InitialCollateralInfoModal />,
       footer: (
         <ModalsButtons
@@ -193,20 +198,20 @@ export const ManageCollateralScreen = () => {
 
             <Space.Height.lg />
 
-            <Text>{strings.removeCollateral}</Text>
+            <Text>{strings.manageCollateral.removeCollateral}</Text>
           </>
         )}
 
         {didSpend && (
           <ErrorPanel>
-            <Text>{strings.collateralSpent}</Text>
+            <Text>{strings.manageCollateral.collateralSpent}</Text>
           </ErrorPanel>
         )}
       </ScrollView>
 
       {shouldShowPrimaryButton && (
         <Button
-          title={strings.generateCollateral}
+          title={strings.manageCollateral.generateCollateral}
           onPress={handleCollateralInfoModal}
           disabled={isLoading}
         />
@@ -216,10 +221,9 @@ export const ManageCollateralScreen = () => {
         <Button
           title={params.backButton.content}
           onPress={params.backButton.onPress}
+          type={ButtonType.Secondary}
         />
       )}
-
-      <Space.Height.lg />
     </SafeAreaView>
   )
 }
@@ -232,17 +236,15 @@ const ModalsButtons = ({
   onCancel: () => void
 }) => {
   const strings = useStrings()
-
   return (
-    <View>
+    <View style={[a.flex_row, a.gap_md]}>
       <Button
-        type={ButtonType.SecondaryText}
-        title={strings.cancel}
+        title={strings.manageCollateral.cancel}
         onPress={onCancel}
+        type={ButtonType.Secondary}
       />
-
       <Button
-        title={strings.initialCollateralInfoModalButton}
+        title={strings.manageCollateral.initialCollateralInfoModalButton}
         onPress={onConfirm}
       />
     </View>
@@ -309,12 +311,20 @@ const RemoveAmountButton = ({disabled, ...props}: TouchableOpacityProps) => {
 const Operation = () => {
   const {atoms: ta, palette: p} = useTheme()
   const strings = useStrings()
-  const {openModal} = useModal()
+  const {openModal, closeModal} = useModal()
 
   const handleOnPressInfo = () => {
     openModal({
-      title: strings.collateralInfoModalTitle,
+      title: strings.manageCollateral.collateralInfoModalTitle,
       content: <CollateralInfoModal />,
+      footer: (
+        <View style={[a.flex_row, a.gap_md]}>
+          <Button
+            title={strings.manageCollateral.collateralInfoModalLabel}
+            onPress={closeModal}
+          />
+        </View>
+      ),
       height: 500,
     })
   }
@@ -322,13 +332,13 @@ const Operation = () => {
   return (
     <View style={[a.flex_row, a.align_center]}>
       <Text style={[a.body_2_md_regular, ta.text_gray_medium]}>
-        {strings.collateralInfoModalLabel}
+        {strings.manageCollateral.collateralInfoModalLabel}
       </Text>
 
       <Space.Width.xs />
 
       <TouchableOpacity onPress={handleOnPressInfo}>
-        <Info size={24} color={p.iconColor} />
+        <Info size={24} color={p.gray_900} />
       </TouchableOpacity>
     </View>
   )

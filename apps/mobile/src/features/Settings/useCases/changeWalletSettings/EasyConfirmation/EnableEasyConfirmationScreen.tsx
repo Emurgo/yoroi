@@ -3,28 +3,39 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {ScrollView, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {useStrings} from '~/kernel/i18n/useStrings'
 
+import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {isEmptyString} from '~/wallets/utils/string'
 import {Button} from '../../../../../ui/Button/Button'
 import {KeyboardAvoidingView} from '../../../../../ui/KeyboardAvoidingView/KeyboardAvoidingView'
 import {LoadingOverlay} from '../../../../../ui/LoadingOverlay/LoadingOverlay'
 import {Text} from '../../../../../ui/Text/Text'
 import {TextInput} from '../../../../../ui/TextInput/TextInput'
-import {useSelectedWallet} from '../../../../WalletManager/hooks/useSelectedWallet'
 
 export const EnableEasyConfirmationScreen = () => {
-  const intl = useIntl()
   const strings = useStrings()
   const {atoms: ta, palette: p} = useTheme()
   const navigation = useNavigation()
   const [rootPassword, setRootPassword] = React.useState('')
-  const {
-    meta: {id},
-  } = useSelectedWallet()
-  const {enableEasyConfirmation, isLoading} = {
-    enableEasyConfirmation: () => {},
-    isLoading: true,
+  const {wallet} = useSelectedWallet()
+  const {walletManager} = useWalletManager()
+  const [isLoading, setIsLoading] = React.useState(false)
+
+  const enableEasyConfirmation = async (password: string) => {
+    if (isEmptyString(password)) return
+
+    setIsLoading(true)
+    try {
+      await walletManager.enableEasyConfirmation(wallet.id, password)
+      navigation.goBack()
+    } catch (error) {
+      // Handle error - could show an alert or toast
+      console.error('Failed to enable easy confirmation:', error)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -73,7 +84,7 @@ export const EnableEasyConfirmationScreen = () => {
         </Actions>
       </SafeAreaView>
 
-      <LoadingOverlay loading={isLoading} />
+      <LoadingOverlay isLoading={isLoading} />
     </KeyboardAvoidingView>
   )
 }
