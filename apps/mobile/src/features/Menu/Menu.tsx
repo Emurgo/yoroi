@@ -127,7 +127,7 @@ const SupportLink = () => {
         onPress={navigateTo.support}
         style={[a.justify_between, a.align_center, a.flex_row]}
       >
-        <Icon.Support size={24} color="#4B6DDE" />
+        <Icon.Support size={24} color={p.primary_600} />
 
         <Space.Width.lg />
 
@@ -165,6 +165,7 @@ const Item = ({
         a.border_b,
         {
           borderBottomColor: p.gray_200,
+          opacity: disabled ? 0.5 : 1,
         },
       ]}
       disabled={disabled}

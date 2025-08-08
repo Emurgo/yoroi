@@ -17,7 +17,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useBalances} from '~/features/Portfolio/common/hooks/useBalances'
 import {useReviewTx} from '~/features/ReviewTx/common/ReviewTxProvider'
-import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useUnsafeParams} from '~/kernel/navigation/hooks/useUnsafeParams'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
@@ -42,7 +42,7 @@ import {InitialCollateralInfoModal} from './InitialCollateralInfoModal'
 export const ManageCollateralScreen = () => {
   const {atoms: ta} = useTheme()
 
-  const {wallet, meta: addressMode} = useWalletManager().selected!
+  const {wallet, meta} = useSelectedWallet()
   const {amount, collateralId, utxo} = wallet.getCollateralInfo()
   const screenHeight = useWindowDimensions().height
 
@@ -59,14 +59,13 @@ export const ManageCollateralScreen = () => {
 
   const params = useUnsafeParams<SettingsStackRoutes['manage-collateral']>()
 
-  const {mutate: createUnsignedTx, isLoading: isLoadingTx} = useMutation({
+  const {mutate: createUnsignedTx, isPending: isLoadingTx} = useMutation({
     mutationFn: (entries: YoroiEntry[]) =>
       wallet.createUnsignedTx({entries, addressMode: meta.addressMode}),
     retry: false,
-    useErrorBoundary: true,
   })
 
-  const {isLoading: isLoadingCollateral, setCollateralId} =
+  const {isPending: isLoadingCollateral, setCollateralId} =
     useSetCollateralId(wallet)
   const handleRemoveCollateral = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
@@ -165,7 +164,7 @@ export const ManageCollateralScreen = () => {
     >
       <ScrollView>
         <Text style={[a.flex_1, a.self_center]}>
-          {strings.lockedAsCollateral}
+          {strings.manageCollateral.lockedAsCollateral}
         </Text>
 
         <Space.Height.sm />
