@@ -19,13 +19,13 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {Icon} from '~/ui/Icon'
 import {SettingsSwitch} from '~/ui/SettingsSwitch/SettingsSwitch'
 import {Space} from '~/ui/Space/Space'
-import {useCrashReports} from '~/wallets/hooks'
 import {useCurrencyPairing} from './Currency/CurrencyContext'
 import {usePrivacyMode} from './PrivacyMode/PrivacyMode'
 import {
   useChangeScreenShareSetting,
   useScreenShareSettingEnabled,
 } from './ScreenShare'
+import {useCrashReports} from './useCrashReports'
 
 export const ApplicationSettingsScreen = () => {
   const strings = useStrings()
@@ -47,7 +47,8 @@ export const ApplicationSettingsScreen = () => {
 
   const {network} = useSelectedNetwork()
 
-  const {data: screenShareEnabled} = useScreenShareSettingEnabled()
+  const {data: screenShareEnabled, isLoading: isScreenShareLoading} =
+    useScreenShareSettingEnabled()
   const displayScreenShareSetting = Platform.OS === 'android'
 
   const onToggleAuthWithOs = () => {
@@ -174,7 +175,7 @@ export const ApplicationSettingsScreen = () => {
             >
               <ScreenSharingSwitch
                 screenSharingEnabled={Boolean(screenShareEnabled)}
-                disabled={!Boolean(screenShareEnabled)}
+                disabled={isScreenShareLoading}
               />
             </SettingsItem>
           )}
@@ -195,13 +196,13 @@ const PrivacyModeSwitch = ({isPrivacyActive}: {isPrivacyActive: boolean}) => {
 
   const onTogglePrivacyMode = () => {
     setIsLocalPrivacyOff((prevState) => {
-      if (prevState) {
+      const next = !prevState
+      if (next) {
         setPrivacyModeOn()
       } else {
         setPrivacyModeOff()
       }
-
-      return !prevState
+      return next
     })
   }
 
@@ -252,7 +253,7 @@ const ScreenSharingSwitch = ({
   screenSharingEnabled: boolean
   disabled: boolean
 }) => {
-  const {changeScreenShareSettings, isPending} = useChangeScreenShareSetting()
+  const {changeScreenShareSettings, isLoading} = useChangeScreenShareSetting()
   const [isLocalScreenSharingEnabled, setIsLocalScreenSharingEnabled] =
     React.useState(screenSharingEnabled)
 
@@ -268,7 +269,7 @@ const ScreenSharingSwitch = ({
     <SettingsSwitch
       value={isLocalScreenSharingEnabled}
       onValueChange={onToggleScreenSharing}
-      disabled={disabled || isPending}
+      disabled={disabled || isLoading}
     />
   )
 }

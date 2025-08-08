@@ -9,6 +9,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {useAuth} from '~/features/Auth/context/AuthProvider'
 import {useAuthSetting} from '~/features/Auth/hooks/useAuthSetting'
 import {useAddressMode} from '~/features/WalletManager/hooks/useAddressMode'
+import {useResync} from '~/features/WalletManager/hooks/useResync'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {DIALOG_BUTTONS, showConfirmationDialog} from '~/kernel/dialogs'
 import {useStrings} from '~/kernel/i18n/useStrings'
@@ -18,7 +19,6 @@ import {SettingsRouteNavigation} from '~/kernel/navigation/types'
 import {Icon} from '~/ui/Icon'
 import {SettingsSwitch} from '~/ui/SettingsSwitch/SettingsSwitch'
 import {Space} from '~/ui/Space/Space'
-import {useResync} from '~/wallets/hooks'
 import {useNavigateTo} from '../../common/navigation'
 import {SettingsCollateralItem} from '../../SettingsCollateralItem'
 import {
@@ -179,11 +179,7 @@ const ResyncButton = () => {
 
   const {walletIdChanged} = useSetupWallet()
   const settingsNavigation = useNavigation<SettingsRouteNavigation>()
-  const {resync, isPending} = useResync(wallet, {
-    onMutate: () => {
-      settingsNavigation.navigate('settings-preparing-wallet')
-    },
-  })
+  const {resync, isPending} = useResync(wallet)
 
   const {track} = useMetrics()
 
@@ -191,10 +187,10 @@ const ResyncButton = () => {
     // track.walletSettingsResyncClicked()
     const selection = await showConfirmationDialog(
       {
-        title: strings.global.confirmationMessages.title,
-        message: strings.global.confirmationMessages.message,
-        btnNoLabel: strings.global.confirmationMessages.noButton,
-        btnYesLabel: strings.global.confirmationMessages.yesButton,
+        title: {id: 'global.disclaimer', defaultMessage: 'Disclaimer'},
+        message: {id: 'global.proceed', defaultMessage: 'Proceed?'},
+        btnNoLabel: {id: 'global.cancel', defaultMessage: 'Cancel'},
+        btnYesLabel: {id: 'global.proceed', defaultMessage: 'Proceed'},
       },
       intl,
     )
@@ -214,7 +210,6 @@ const ResyncButton = () => {
       icon={<Icon.Resync {...iconProps} />}
       label={strings.settings.walletSettings.resync}
       onNavigate={onResync}
-      disabled={isPending}
     />
   )
 }
@@ -251,10 +246,10 @@ const useLogout = () => {
   return async () => {
     const selection = await showConfirmationDialog(
       {
-        title: strings.global.confirmationMessages.title,
-        message: strings.global.confirmationMessages.message,
-        btnNoLabel: strings.global.confirmationMessages.noButton,
-        btnYesLabel: strings.global.confirmationMessages.yesButton,
+        title: {id: 'global.disclaimer', defaultMessage: 'Disclaimer'},
+        message: {id: 'global.proceed', defaultMessage: 'Proceed?'},
+        btnNoLabel: {id: 'global.cancel', defaultMessage: 'Cancel'},
+        btnYesLabel: {id: 'global.proceed', defaultMessage: 'Proceed'},
       },
       intl,
     )

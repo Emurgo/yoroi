@@ -27,10 +27,15 @@ export const ChangeNetworkScreen = () => {
   const {networkNoticeShown} = useNetworkNoticeShown()
 
   const {handleOpenModal} = useHandleOpenNetworkNoticeModal()
+  const hasShownRef = React.useRef(false)
 
   React.useEffect(() => {
-    if (!networkNoticeShown) {
-      const timeout = setTimeout(handleOpenModal, time.seconds(0.5))
+    if (!networkNoticeShown && !hasShownRef.current) {
+      const timeout = setTimeout(() => {
+        // prevent repeated opens during async storage update
+        hasShownRef.current = true
+        handleOpenModal()
+      }, time.seconds(0.5))
 
       return () => clearTimeout(timeout)
     }
@@ -57,8 +62,7 @@ export const useHandleOpenNetworkNoticeModal = () => {
   const {palette: p} = useTheme()
   const strings = useStrings()
   const {openModal, closeModal} = useModal()
-  const {refetch} = useNetworkNoticeShown()
-  const {networkNoticeShown} = useNetworkNoticeShown()
+  const {refetch, networkNoticeShown} = useNetworkNoticeShown()
 
   const setNetworkNoticeShown = useSetNetworkNoticeShown({
     onSuccess: () => refetch(),
@@ -95,11 +99,13 @@ export const useHandleOpenNetworkNoticeModal = () => {
       footer: (
         <Button
           title={strings.settings.changeNetwork.networkNoticeButton}
-          onPress={closeModal}
+          onPress={() => {
+            if (!networkNoticeShown) setNetworkNoticeShown()
+            closeModal()
+          }}
         />
       ),
       height: 450,
-      onClose,
     })
   }
 
@@ -127,7 +133,6 @@ const useNetworkNoticeShown = (
   const storage = useAsyncStorage()
 
   const query = useQuery({
-    suspense: true,
     queryKey: ['useNetworkNoticeShown'],
     ...options,
     queryFn: async () => {
