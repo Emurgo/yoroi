@@ -9,8 +9,6 @@ import {PortfolioNavigator} from '~/features/Portfolio/PortfolioNavigator'
 import {TxHistoryNavigator} from '~/features/Transactions/TxHistoryNavigator'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Icon} from '~/ui/Icon'
-
-import {MenuNavigator} from '~/features/Menu/Menu'
 import {WalletTabRoutes} from './types'
 
 const Tab = createBottomTabNavigator<WalletTabRoutes>()

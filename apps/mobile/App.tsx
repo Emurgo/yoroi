@@ -20,6 +20,7 @@ import {YoroiNotificationManager} from './src/features/Notifications/common/Yoro
 import {PairingProvider} from './src/features/Pairing/context/PairingProvider'
 import {SearchProvider} from './src/features/Search/SearchContext'
 import {CurrencyProvider} from './src/features/Settings/useCases/changeAppSettings/Currency/CurrencyContext'
+import {AutomaticWalletOpenerProvider} from './src/features/WalletManager/context/AutomaticWalletOpeningProvider'
 import {WalletManagerProvider} from './src/features/WalletManager/context/WalletManagerProvider'
 import {walletManager} from './src/features/WalletManager/wallet-manager'
 import {ConnectionProvider} from './src/kernel/connection/ConnectionProvider'
@@ -77,17 +78,19 @@ function BusinessShell({children}: React.PropsWithChildren) {
       <SearchProvider>
         <PairingProvider currencyStorageKeyManager={currencyStorageKeyManager}>
           <WalletManagerProvider walletManager={walletManager}>
-            <TransferProvider>
-              <SetupWalletProvider>
-                <YoroiNotificationManager>
-                  <CurrencyProvider>
-                    <CatalystProvider manager={catalystManager}>
-                      {children}
-                    </CatalystProvider>
-                  </CurrencyProvider>
-                </YoroiNotificationManager>
-              </SetupWalletProvider>
-            </TransferProvider>
+            <AutomaticWalletOpenerProvider>
+              <TransferProvider>
+                <SetupWalletProvider>
+                  <YoroiNotificationManager>
+                    <CurrencyProvider>
+                      <CatalystProvider manager={catalystManager}>
+                        {children}
+                      </CatalystProvider>
+                    </CurrencyProvider>
+                  </YoroiNotificationManager>
+                </SetupWalletProvider>
+              </TransferProvider>
+            </AutomaticWalletOpenerProvider>
           </WalletManagerProvider>
         </PairingProvider>
       </SearchProvider>

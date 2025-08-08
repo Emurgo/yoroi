@@ -65,7 +65,7 @@ export function useCatalystCurrentFund() {
   }, [catalyst])
 
   if (error) throw error
-  if (data == null)
+  if (!isLoading && data == null)
     throw new App.Errors.InvalidState('useCatalystFundStatus: no data')
 
   return {
