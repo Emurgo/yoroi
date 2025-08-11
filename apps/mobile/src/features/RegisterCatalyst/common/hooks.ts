@@ -1,7 +1,6 @@
+import {useQuery, UseQueryOptions} from '@tanstack/react-query'
+import {time} from '@yoroi/common'
 import {Catalyst, useCatalyst} from '@yoroi/staking'
-import {App} from '@yoroi/types'
-import {useEffect, useState} from 'react'
-
 import {usePortfolioPrimaryBalance} from '~/features/Portfolio/common/hooks/usePortfolioPrimaryBalance'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {throwLoggedError} from '~/kernel/logger/helpers/throw-logged-error'
@@ -24,57 +23,35 @@ export const useCanVote = (wallet: YoroiWallet) => {
   }
 }
 
-export function useCatalystCurrentFund() {
+export function useCatalystCurrentFund(
+  options?: UseQueryOptions<
+    {status: Catalyst.FundStatus; info: Catalyst.FundInfo},
+    Error
+  >,
+) {
   const catalyst = useCatalyst()
-  const [data, setData] = useState<{
-    status: Catalyst.FundStatus
-    info: Catalyst.FundInfo
-  } | null>(null)
-  const [error, setError] = useState<Error | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
+  const query = useQuery({
+    staleTime: time.oneDay,
+    retryDelay: time.oneSecond,
+    queryKey: ['useCatalystFundStatus'],
+    ...options,
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setIsLoading(true)
-        setError(null)
+    queryFn: async () => {
+      const response = await catalyst.getFundInfo()
 
-        const response = await catalyst.getFundInfo()
+      if (response.tag === 'left')
+        throwLoggedError(new Error(response.error.message))
+      const info = response.value.data
 
-        console.log(`response getFundInfo: ${JSON.stringify(response)}`)
-        if (response.tag === 'left') {
-          throwLoggedError(new Error(response.error.message))
-        }
-
-        const info = response.value.data
-
-        const result = {
-          info,
-          status: catalyst.fundStatus(info),
-        }
-
-        setData(result)
-      } catch (err) {
-        setError(err as Error)
-      } finally {
-        setIsLoading(false)
+      return {
+        info,
+        status: catalyst.fundStatus(info),
       }
-    }
-
-    fetchData()
-  }, [catalyst])
-
-  if (error) throw error
-  if (!isLoading && data == null)
-    throw new App.Errors.InvalidState('useCatalystFundStatus: no data')
+    },
+  })
 
   return {
-    query: {
-      data,
-      error,
-      isLoading,
-      isError: error !== null,
-    },
-    fund: data,
+    query,
+    fund: query.data,
   }
 }
