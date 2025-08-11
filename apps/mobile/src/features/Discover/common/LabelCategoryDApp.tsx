@@ -1,30 +1,24 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {Text, View} from 'react-native'
+import {StyleSheet, Text, View} from 'react-native'
 
-import {useMappedStrings} from '~/kernel/i18n/useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 
 type Props = {
   category: string
 }
 export const LabelCategoryDApp = ({category}: Props) => {
-  const mappedStrings = useMappedStrings()
+  const strings = useStrings()
   const text = React.useMemo(
-    () => mappedStrings(category) ?? category,
-    [mappedStrings, category],
+    () => strings.useMappedStrings()(category) ?? category,
+    [strings, category],
   )
   const {palette: p} = useTheme()
 
   return (
     <View
       style={[
-        {
-          borderRadius: 20,
-          paddingVertical: 1,
-          paddingHorizontal: 6,
-          height: 24,
-          borderWidth: 2,
-        },
+        styles.container,
         a.flex_row,
         a.align_center,
         a.justify_center,
@@ -36,3 +30,13 @@ export const LabelCategoryDApp = ({category}: Props) => {
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  container: {
+    borderRadius: 20,
+    paddingVertical: 1,
+    paddingHorizontal: 6,
+    height: 24,
+    borderWidth: 2,
+  },
+})

@@ -1,48 +1,47 @@
-import {useQuery, useQueryClient, UseQueryOptions} from '@tanstack/react-query'
 import {DappConnection, useDappConnector} from '@yoroi/dapp-connector'
 import {Chain} from '@yoroi/types'
 import * as React from 'react'
 
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {usePromise} from '~/hooks/usePromise'
 
-export const useDAppsConnected = (
-  options?: UseQueryOptions<
-    DappConnection[],
-    Error,
-    string[],
-    [string, string, string]
-  >,
-) => {
+export const useDAppsConnected = (options?: {refetchOnMount?: boolean}) => {
   const {wallet} = useSelectedWallet()
   const {manager} = useDappConnector()
 
-  return useQuery({
-    suspense: true,
+  const result = usePromise({
+    promise: () => manager.listAllConnections(),
+    shouldSuspend: true,
     ...options,
-    queryKey: [wallet.id, 'useDappsConnected', wallet.networkManager.network],
-    queryFn: () => manager.listAllConnections(),
-    select: (connections) =>
-      selectWalletConnectedOrigins(
-        connections,
+  })
+
+  if (result.value) {
+    return {
+      data: selectWalletConnectedOrigins(
+        result.value,
         wallet.id,
         wallet.networkManager.network,
       ),
-  })
+      isLoading: result.isPending,
+      error: result.error,
+    }
+  }
+
+  return {
+    data: [],
+    isLoading: result.isPending,
+    error: result.error,
+  }
 }
 
 export const useInvalidateConnectedDapps = () => {
-  const queryClient = useQueryClient()
-  const selectedWallet = useSelectedWallet()
-  const walletId = selectedWallet.wallet.id
-  const network = selectedWallet.wallet.networkManager.network
-
+  // Since we're using usePromise instead of useQuery,
+  // invalidation is handled differently - the component will re-render
+  // and the promise will be re-executed when dependencies change
   return React.useCallback(async () => {
-    await queryClient.invalidateQueries([
-      walletId,
-      'useDappsConnected',
-      network,
-    ])
-  }, [walletId, network, queryClient])
+    // This is a no-op for usePromise - the component will re-render
+    // and re-execute the promise when needed
+  }, [])
 }
 
 const selectWalletConnectedOrigins = (

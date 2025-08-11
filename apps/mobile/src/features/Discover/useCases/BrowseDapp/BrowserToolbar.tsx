@@ -1,6 +1,6 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {Text, View} from 'react-native'
+import {StyleSheet, Text, View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 
 import {useMetrics} from '~/kernel/metrics/metricsManager'
@@ -28,33 +28,9 @@ export const BrowserToolbar = ({uri}: Props) => {
   }
 
   return (
-    <View
-      style={[
-        {
-          backgroundColor: p.bg_color_max,
-          paddingVertical: 10,
-          paddingHorizontal: 16,
-          flexDirection: 'row',
-          alignItems: 'center',
-          gap: 16,
-        },
-      ]}
-    >
-      <View
-        style={[
-          {
-            borderRadius: 8,
-            backgroundColor: p.gray_50,
-            paddingVertical: 13,
-            paddingHorizontal: 12,
-            flex: 1,
-          },
-        ]}
-      >
-        <TouchableOpacity
-          onPress={handleEditUrl}
-          style={[{flexDirection: 'row', alignItems: 'center', gap: 8}]}
-        >
+    <View style={[styles.container, {backgroundColor: p.bg_color_max}]}>
+      <View style={[styles.urlContainer, {backgroundColor: p.gray_50}]}>
+        <TouchableOpacity onPress={handleEditUrl} style={styles.urlButton}>
           {isSecure && <Icon.LockFilled color={p.el_gray_medium} />}
 
           <Text style={[a.body_2_md_regular, {color: p.text_gray_medium}]}>
@@ -69,3 +45,26 @@ export const BrowserToolbar = ({uri}: Props) => {
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#FFFFFF',
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 16,
+  },
+  urlContainer: {
+    borderRadius: 8,
+    backgroundColor: '#F9FAFB',
+    paddingVertical: 13,
+    paddingHorizontal: 12,
+    flex: 1,
+  },
+  urlButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+})

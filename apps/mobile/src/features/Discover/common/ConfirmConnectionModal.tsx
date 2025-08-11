@@ -1,15 +1,15 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Image} from 'expo-image'
 import * as React from 'react'
-import {Text, View} from 'react-native'
+import {StyleSheet, Text, View} from 'react-native'
 
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
 import {getDappFallbackLogo} from './helpers'
-import {useStrings} from '~/kernel/i18n/useStrings'
 
 type Props = {
   name: string
@@ -38,7 +38,7 @@ export const useOpenConfirmConnectionModal = () => {
         : confirmConnectionModalHeight
 
       openModal({
-        title: strings.confirmConnectionModalTitle,
+        title: strings.discover.confirmConnectionModalTitle,
         content: (
           <ConfirmConnectionModal
             name={props.name}
@@ -49,7 +49,7 @@ export const useOpenConfirmConnectionModal = () => {
         ),
         footer: (
           <Button
-            title={strings.confirmConnectionModalConnect}
+            title={strings.discover.confirmConnectionModalConnect}
             onPress={() => {
               track.discoverWebViewBottomSheetConnectClicked()
               props.onConfirm()
@@ -60,7 +60,13 @@ export const useOpenConfirmConnectionModal = () => {
         height: modalHeight,
       })
     },
-    [openModal],
+    [
+      openModal,
+      closeModal,
+      strings.discover.confirmConnectionModalTitle,
+      strings.discover.confirmConnectionModalConnect,
+      track,
+    ],
   )
   return {openConfirmConnectionModal: open, closeModal}
 }
@@ -86,7 +92,7 @@ export const ConfirmConnectionModal = ({
 
         <Image
           source={{uri: imageUri}}
-          style={[{width: 48, height: 48}]}
+          style={styles.dappLogo}
           key={imageUri}
         />
       </View>
@@ -97,7 +103,7 @@ export const ConfirmConnectionModal = ({
         style={[a.flex, a.flex_row, a.align_center, a.justify_center, a.gap_xs]}
       >
         <Text style={[{color: p.text_gray_medium}, a.body_1_lg_regular]}>
-          {strings.confirmConnectionModalConnectTo}
+          {strings.discover.confirmConnectionModalConnectTo}
         </Text>
 
         <Text
@@ -132,17 +138,17 @@ export const ConfirmConnectionModal = ({
       <Space.Height.lg />
 
       <Text style={[{color: p.text_gray_medium}, a.body_1_lg_regular]}>
-        {strings.confirmConnectionModalAllowThisDAppTo}
+        {strings.discover.confirmConnectionModalAllowThisDAppTo}
       </Text>
 
       <View style={[a.pl_sm]}>
         <Text
           style={[{color: p.text_gray_medium}, a.body_1_lg_regular]}
-        >{`\u2022 ${strings.confirmConnectionModalPermission1}`}</Text>
+        >{`\u2022 ${strings.discover.confirmConnectionModalPermission1}`}</Text>
 
         <Text
           style={[{color: p.text_gray_medium}, a.body_1_lg_regular]}
-        >{`\u2022 ${strings.confirmConnectionModalPermission2}`}</Text>
+        >{`\u2022 ${strings.discover.confirmConnectionModalPermission2}`}</Text>
       </View>
     </View>
   )
@@ -180,3 +186,10 @@ export const ConfirmConnectionModal = ({
     />
   )
 } */
+
+const styles = StyleSheet.create({
+  dappLogo: {
+    width: 48,
+    height: 48,
+  },
+})

@@ -82,6 +82,16 @@ export const TxHistoryNavigator = () => {
               options={{
                 title: strings.transactions.history.historyTitle,
                 headerRight: () => <HeaderRightHistory />,
+                headerTransparent: true,
+                headerStyle: {
+                  backgroundColor: 'transparent',
+                  elevation: 0,
+                  shadowOpacity: 0,
+                },
+                headerTitleStyle: {
+                  color: p.gray_max,
+                },
+                headerTintColor: p.gray_max,
               }}
               getComponent={() => TxHistory}
             />

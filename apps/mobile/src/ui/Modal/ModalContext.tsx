@@ -12,6 +12,7 @@ type ModalState = {
   isLoading: boolean
   canDiscard: boolean
   title: string
+  canContinue?: boolean
 }
 type ModalActions = {
   openModal: (args: {
@@ -21,12 +22,14 @@ type ModalActions = {
     isLoading?: boolean
     canDiscard?: boolean
     title?: string
+    canContinue?: boolean
   }) => void
   closeModal: () => void
   setLoading: (isLoading: boolean) => void
   setFooter: (footer: React.ReactNode | undefined) => void
   setTitle: (title: string) => void
   setCanDiscard: (canDiscard: boolean) => void
+  setCanContinue: (canContinue: boolean) => void
 }
 
 const ModalContext = React.createContext<
@@ -69,7 +72,15 @@ export const ModalProvider = ({
       })
       handleDismissModalPress()
     },
-    openModal: ({content, height, footer, isLoading, canDiscard, title}) => {
+    openModal: ({
+      content,
+      height,
+      footer,
+      isLoading,
+      canDiscard,
+      title,
+      canContinue,
+    }) => {
       Keyboard.dismiss()
       dispatch({
         type: 'open',
@@ -79,6 +90,7 @@ export const ModalProvider = ({
         isLoading,
         canDiscard,
         title,
+        canContinue,
       })
       handlePresentModalPress()
     },
@@ -104,6 +116,12 @@ export const ModalProvider = ({
       dispatch({
         type: 'setCanDiscard',
         canDiscard,
+      })
+    },
+    setCanContinue: (canContinue: boolean) => {
+      dispatch({
+        type: 'setCanContinue',
+        canContinue,
       })
     },
   }).current
@@ -133,12 +151,14 @@ type ModalAction =
       isLoading?: boolean
       canDiscard?: boolean
       title?: string
+      canContinue?: boolean
     }
   | {type: 'close'}
   | {type: 'setLoading'; isLoading: boolean}
   | {type: 'setFooter'; footer: React.ReactNode | undefined}
   | {type: 'setTitle'; title: string}
   | {type: 'setCanDiscard'; canDiscard: boolean}
+  | {type: 'setCanContinue'; canContinue: boolean}
 
 const modalReducer = (state: ModalState, action: ModalAction) => {
   switch (action.type) {
@@ -151,6 +171,7 @@ const modalReducer = (state: ModalState, action: ModalAction) => {
         isLoading: action.isLoading ?? defaultState.isLoading,
         canDiscard: action.canDiscard ?? defaultState.canDiscard,
         title: action.title ?? defaultState.title,
+        canContinue: action.canContinue ?? defaultState.canContinue,
         isOpen: true,
       }
 
@@ -182,6 +203,12 @@ const modalReducer = (state: ModalState, action: ModalAction) => {
       return {
         ...state,
         canDiscard: action.canDiscard,
+      }
+
+    case 'setCanContinue':
+      return {
+        ...state,
+        canContinue: action.canContinue,
       }
 
     default:

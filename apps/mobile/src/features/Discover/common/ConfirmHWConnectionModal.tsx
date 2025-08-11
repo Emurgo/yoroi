@@ -32,9 +32,9 @@ export const useConfirmHWConnectionModal = () => {
   const {openModal, closeModal} = useModal()
   const strings = useStrings()
   const confirmHWConnection = useCallback(
-    ({onConfirm, onClose, onCancel}: Props) => {
+    ({onConfirm, onClose: _onClose, onCancel}: Props) => {
       openModal({
-        title: strings.signTransaction,
+        title: strings.swap.signTransaction,
         content: (
           <ErrorBoundary
             fallbackRender={({error, resetErrorBoundary}) => (
@@ -49,10 +49,9 @@ export const useConfirmHWConnectionModal = () => {
           </ErrorBoundary>
         ),
         height: 350,
-        onClose,
       })
     },
-    [openModal, strings.signTransaction],
+    [openModal, strings.swap.signTransaction],
   )
   return {confirmHWConnection, closeModal}
 }
@@ -66,11 +65,10 @@ const ConfirmHWConnectionModal = ({onConfirm}: Pick<Props, 'onConfirm'>) => {
   const {palette: p} = useTheme()
   const {mutate: handleOnConfirm} = useMutation<void, Error, OnConfirmOptions>({
     mutationFn: onConfirm,
-    useErrorBoundary: true,
   })
 
-  const onSelectTransport = (transportType: TransportType) => {
-    setTransportType(transportType)
+  const onSelectTransport = (selectedTransportType: TransportType) => {
+    setTransportType(selectedTransportType)
     setStep('connect-transport')
   }
 
@@ -108,11 +106,11 @@ const ConfirmHWConnectionModal = ({onConfirm}: Pick<Props, 'onConfirm'>) => {
   }
 
   return (
-    <View style={[a.flex_1, a.align_center, a.justify_center, {gap: 35}]}>
+    <View style={[a.flex_1, a.align_center, a.justify_center, a.gap_lg]}>
       <ActivityIndicator size="large" color={p.gray_max} />
 
-      <Text style={[{fontSize: 18}, a.text_center, {color: p.gray_max}]}>
-        {strings.continueOnLedger}
+      <Text style={[a.body_1_lg_regular, a.text_center, {color: p.gray_max}]}>
+        {strings.swap.continueOnLedger}
       </Text>
     </View>
   )

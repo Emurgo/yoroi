@@ -1,12 +1,13 @@
 import {useDappList} from '@yoroi/dapp-connector'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {FlatList, View} from 'react-native'
+import {FlatList, StyleSheet, View} from 'react-native'
 
 import {ChainDAppsWarning} from '~/features/Discover/common/ChainDAppsWarning'
 import {getGoogleSearchItem} from '~/features/Discover/common/helpers'
 import {useDAppsConnected} from '~/features/Discover/common/useDAppsConnected'
 import {useShowWelcomeDApp} from '~/features/Discover/common/useShowWelcomeDApp'
+import {ShowDisclaimer} from '~/features/Legal/ui/Disclaimer/ShowDisclaimer'
 import {useSearch, useSearchOnNavBar} from '~/features/Search/SearchContext'
 import {NetworkTag} from '~/features/Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {useStrings} from '~/kernel/i18n/useStrings'
@@ -26,9 +27,13 @@ const DAppTabs = {
 type TDAppTabs = keyof typeof DAppTabs
 type Category = 'Investment' | 'Media' | 'Trading' | 'NFT' | 'Community'
 
+const HeaderTitleComponent = ({children}: {children: React.ReactNode}) => (
+  <NetworkTag style={styles.headerTitle}>{children}</NetworkTag>
+)
+
 export const SelectDappFromListScreen = () => {
   const strings = useStrings()
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
   const [currentTab, setCurrentTab] = React.useState<TDAppTabs>('connected')
   const [categoriesSelected, setCategoriesSelected] = React.useState<string[]>(
     [],
@@ -47,9 +52,7 @@ export const SelectDappFromListScreen = () => {
     placeholder: strings.discover.searchDApps,
     noBack: true,
     extraNavigationOptions: {
-      headerTitle: ({children}) => (
-        <NetworkTag style={{width: 200}}>{children}</NetworkTag>
-      ),
+      headerTitle: HeaderTitleComponent,
     },
   })
   const {data: connectedOrigins = []} = useDAppsConnected({
@@ -88,9 +91,7 @@ export const SelectDappFromListScreen = () => {
 
       <ShowDisclaimer type="dapps" disabled={!isShowedWelcomeDApp} />
 
-      <View
-        style={[{flex: 1, backgroundColor: p.bg_color_max}, a.px_lg, a.gap_lg]}
-      >
+      <View style={[styles.mainContainer, ta.bg_color_max, a.px_lg, a.gap_lg]}>
         <ChainDAppsWarning />
 
         <FlatList
@@ -138,7 +139,7 @@ const HeaderControl = ({
     refetchOnMount: true,
   })
   const hasConnectedDapps = connectedOrigins.length > 0
-  const {data: list} = useDappList({suspense: true})
+  const {data: list} = useDappList()
   const filters = Object.keys(list?.filters ?? {})
 
   if (visible) return <Space.Height.md />
@@ -146,7 +147,7 @@ const HeaderControl = ({
   return (
     <>
       {hasConnectedDapps && (
-        <View style={[{flexDirection: 'row', gap: 8, paddingBottom: 16}]}>
+        <View style={styles.tabsContainer}>
           <SimpleTab
             name={strings.discover.connected}
             isActive={currentTab === DAppTabs.connected}
@@ -165,7 +166,7 @@ const HeaderControl = ({
         <View>
           <CountDAppsConnected total={connectedOrigins.length} />
 
-          <Space.Height._2xs style={{height: 16}} />
+          <Space.Height._2xs style={styles.spacer} />
         </View>
       )}
 
@@ -179,7 +180,7 @@ const HeaderControl = ({
 
           <CountDAppsAvailable total={count} />
 
-          <Space.Height._2xs style={{height: 16}} />
+          <Space.Height._2xs style={styles.spacer} />
         </View>
       )}
     </>
@@ -189,7 +190,7 @@ const HeaderControl = ({
 const useFilteredDappList = (tab: TDAppTabs, categoriesSelected: string[]) => {
   const {search, visible} = useSearch()
   const {track} = useMetrics()
-  const {data: list} = useDappList({suspense: true})
+  const {data: list} = useDappList()
   const {data: connectedOrigins = []} = useDAppsConnected({
     refetchOnMount: true,
   })
@@ -285,3 +286,20 @@ const useFilteredDappList = (tab: TDAppTabs, categoriesSelected: string[]) => {
     dAppFirst.name.localeCompare(dAppSecond.name),
   )
 }
+
+const styles = StyleSheet.create({
+  headerTitle: {
+    width: 200,
+  },
+  mainContainer: {
+    flex: 1,
+  },
+  tabsContainer: {
+    flexDirection: 'row',
+    gap: 8,
+    paddingBottom: 16,
+  },
+  spacer: {
+    height: 16,
+  },
+})
