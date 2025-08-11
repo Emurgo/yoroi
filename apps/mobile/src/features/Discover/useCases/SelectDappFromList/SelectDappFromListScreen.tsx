@@ -1,7 +1,7 @@
 import {useDappList} from '@yoroi/dapp-connector'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {FlatList, StyleSheet, View} from 'react-native'
+import {FlatList, View} from 'react-native'
 
 import {ChainDAppsWarning} from '~/features/Discover/common/ChainDAppsWarning'
 import {getGoogleSearchItem} from '~/features/Discover/common/helpers'
@@ -28,7 +28,7 @@ type TDAppTabs = keyof typeof DAppTabs
 type Category = 'Investment' | 'Media' | 'Trading' | 'NFT' | 'Community'
 
 const HeaderTitleComponent = ({children}: {children: React.ReactNode}) => (
-  <NetworkTag style={styles.headerTitle}>{children}</NetworkTag>
+  <NetworkTag style={{width: 200}}>{children}</NetworkTag>
 )
 
 export const SelectDappFromListScreen = () => {
@@ -91,7 +91,7 @@ export const SelectDappFromListScreen = () => {
 
       <ShowDisclaimer type="dapps" disabled={!isShowedWelcomeDApp} />
 
-      <View style={[styles.mainContainer, ta.bg_color_max, a.px_lg, a.gap_lg]}>
+      <View style={[a.flex_1, ta.bg_color_max, a.px_lg, a.gap_lg]}>
         <ChainDAppsWarning />
 
         <FlatList
@@ -147,7 +147,7 @@ const HeaderControl = ({
   return (
     <>
       {hasConnectedDapps && (
-        <View style={styles.tabsContainer}>
+        <View style={[a.flex_row, a.gap_xs, a.pb_md]}>
           <SimpleTab
             name={strings.discover.connected}
             isActive={currentTab === DAppTabs.connected}
@@ -166,7 +166,7 @@ const HeaderControl = ({
         <View>
           <CountDAppsConnected total={connectedOrigins.length} />
 
-          <Space.Height._2xs style={styles.spacer} />
+          <Space.Height._2xs />
         </View>
       )}
 
@@ -180,7 +180,7 @@ const HeaderControl = ({
 
           <CountDAppsAvailable total={count} />
 
-          <Space.Height._2xs style={styles.spacer} />
+          <Space.Height._2xs />
         </View>
       )}
     </>
@@ -287,19 +287,4 @@ const useFilteredDappList = (tab: TDAppTabs, categoriesSelected: string[]) => {
   )
 }
 
-const styles = StyleSheet.create({
-  headerTitle: {
-    width: 200,
-  },
-  mainContainer: {
-    flex: 1,
-  },
-  tabsContainer: {
-    flexDirection: 'row',
-    gap: 8,
-    paddingBottom: 16,
-  },
-  spacer: {
-    height: 16,
-  },
-})
+

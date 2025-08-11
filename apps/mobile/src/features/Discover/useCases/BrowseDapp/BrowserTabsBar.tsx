@@ -1,6 +1,6 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet, Text, View} from 'react-native'
+import {Text, View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {v4} from 'uuid'
@@ -33,12 +33,24 @@ export const BrowserTabsBar = () => {
   return (
     <View
       style={[
-        styles.container,
-        styles.shadow,
-        {backgroundColor: p.bg_color_max, paddingBottom: insets.bottom + 12},
+        a.flex_row,
+        a.align_center,
+        a.gap_md,
+        a.justify_between,
+        a.py_md,
+        a.px_md,
+        {
+          backgroundColor: p.bg_color_max,
+          paddingBottom: insets.bottom + 12,
+          shadowColor: '#054037',
+          shadowOffset: {width: 0, height: 5},
+          shadowOpacity: 0.3,
+          shadowRadius: 8,
+          elevation: 14,
+        },
       ]}
     >
-      <View style={styles.leftContainer}>
+      <View style={[a.flex_row, a.flex_1]}>
         <TouchableOpacity onPress={handleCreateTab}>
           <Icon.Plus size={24} color={p.el_gray_medium} />
         </TouchableOpacity>
@@ -48,7 +60,7 @@ export const BrowserTabsBar = () => {
         {`${totalTabs} tab(s)`}
       </Text>
 
-      <View style={styles.rightContainer}>
+      <View style={[a.flex_row, a.flex_1, a.justify_end]}>
         <TouchableOpacity onPress={handleCancelChangeTab}>
           <Text style={[a.body_2_md_medium, {color: p.el_gray_medium}]}>
             {strings.discover.done}
@@ -59,33 +71,4 @@ export const BrowserTabsBar = () => {
   )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#FFFFFF',
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 16,
-    justifyContent: 'space-between',
-  },
-  shadow: {
-    shadowColor: '#054037',
-    shadowOffset: {
-      width: 0,
-      height: 5,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 14,
-  },
-  leftContainer: {
-    flexDirection: 'row',
-    flex: 1,
-  },
-  rightContainer: {
-    flexDirection: 'row',
-    flex: 1,
-    justifyContent: 'flex-end',
-  },
-})
+

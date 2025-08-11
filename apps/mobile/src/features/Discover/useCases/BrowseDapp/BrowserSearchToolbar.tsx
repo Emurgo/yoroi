@@ -1,7 +1,6 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {
-  StyleSheet,
   TextInput,
   TouchableOpacity,
   TouchableOpacityProps,
@@ -46,7 +45,7 @@ export const BrowserSearchToolbar = ({
 
   return (
     <View style={[a.px_md]}>
-      <View style={[a.flex_row, a.align_center, a.gap_lg, styles.container]}>
+      <View style={[a.flex_row, a.align_center, a.gap_lg, {minHeight: 64}]}>
         <BackButton onPress={onBack} />
 
         <TextInput
@@ -59,7 +58,7 @@ export const BrowserSearchToolbar = ({
           autoCapitalize="none"
           style={[
             {color: p.text_gray_max},
-            styles.input,
+            {minHeight: 36},
             a.body_1_lg_regular,
             a.flex_1,
             a.pb_md,
@@ -83,11 +82,4 @@ const BackButton = (props: TouchableOpacityProps) => {
   )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    minHeight: 64,
-  },
-  input: {
-    minHeight: 36,
-  },
-})
+

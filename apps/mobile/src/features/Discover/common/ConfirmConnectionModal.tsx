@@ -1,7 +1,7 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Image} from 'expo-image'
 import * as React from 'react'
-import {StyleSheet, Text, View} from 'react-native'
+import {Text, View} from 'react-native'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
@@ -77,7 +77,7 @@ export const ConfirmConnectionModal = ({
   logo,
   showSingleAddressWarning,
 }: Props) => {
-  const {palette: p} = useTheme()
+  const {atoms: ta, palette: p} = useTheme()
   const strings = useStrings()
   const imageUri = logo.length === 0 ? getDappFallbackLogo(website) : logo
 
@@ -92,7 +92,7 @@ export const ConfirmConnectionModal = ({
 
         <Image
           source={{uri: imageUri}}
-          style={styles.dappLogo}
+          style={{width: 48, height: 48}}
           key={imageUri}
         />
       </View>
@@ -187,9 +187,4 @@ export const ConfirmConnectionModal = ({
   )
 } */
 
-const styles = StyleSheet.create({
-  dappLogo: {
-    width: 48,
-    height: 48,
-  },
-})
+
