@@ -1,8 +1,9 @@
 import {useQuery} from '@tanstack/react-query'
 import {useAsyncStorage, useMutationWithInvalidations} from '@yoroi/common'
+import {atoms as a} from '@yoroi/theme'
 import {Chain} from '@yoroi/types'
 import * as React from 'react'
-import {StyleSheet, Text, View} from 'react-native'
+import {Text, View} from 'react-native'
 
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
@@ -24,32 +25,27 @@ export const ChainDAppsWarning = () => {
 
   if (isMainnet || hasAccepted) return null
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>{strings.discover.testnetWarningTitle}</Text>
-      <Text style={styles.description}>
+    <View
+      style={[
+        a.p_md,
+        {
+          backgroundColor: '#fff3cd',
+          borderColor: '#ffeaa7',
+          borderWidth: 1,
+          borderRadius: 8,
+        },
+      ]}
+    >
+      <Text style={[a.font_bold, a.pb_sm]}>
+        {strings.discover.testnetWarningTitle}
+      </Text>
+      <Text style={[a.pb_sm]}>
         {strings.discover.testnetWarningDescription}
       </Text>
       <Button title={strings.discover.cancel} onPress={handleOnClose} />
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    padding: 16,
-    backgroundColor: '#fff3cd',
-    borderColor: '#ffeaa7',
-    borderWidth: 1,
-    borderRadius: 8,
-  },
-  title: {
-    fontWeight: 'bold',
-    marginBottom: 8,
-  },
-  description: {
-    marginBottom: 8,
-  },
-})
 
 const useDAppsWarning = () => {
   const storage = useAsyncStorage()
