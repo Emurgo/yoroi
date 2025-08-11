@@ -286,5 +286,3 @@ const useFilteredDappList = (tab: TDAppTabs, categoriesSelected: string[]) => {
     dAppFirst.name.localeCompare(dAppSecond.name),
   )
 }
-
-
