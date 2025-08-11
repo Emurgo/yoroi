@@ -60,9 +60,10 @@ export const WebViewItem = ({tab, index}: Props) => {
   const scaleXWebview = useSharedValue(1)
   const opacityValue = useSharedValue(0)
 
-  const {initScript, handleEvent} = useConnectWalletToWebView(
+  const {initScript, handleEvent, markWebViewReady} = useConnectWalletToWebView(
     wallet,
     webViewRef,
+    webURL, // Pass the tab URL as fallback
   )
 
   const containerStyleAnimated = useAnimatedStyle(() => {
@@ -82,7 +83,11 @@ export const WebViewItem = ({tab, index}: Props) => {
 
   const handleEventLoadWebView = (event: WebViewNavigationEvent) => {
     const url = event.nativeEvent.url
-    if (url !== 'about:blank') updateTab(+index, {url})
+    if (url !== 'about:blank') {
+      updateTab(+index, {url})
+      // Mark WebView as ready after successful load
+      markWebViewReady()
+    }
   }
 
   const onSelectTabActive = () => {
