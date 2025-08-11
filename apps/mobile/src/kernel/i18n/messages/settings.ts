@@ -405,35 +405,35 @@ export const settingsMessages = defineMessages({
 
   // Change Network
   changeNetworkNetworkNoticeTitle: {
-    id: 'global.network',
+    id: 'components.settings.applicationsettingsscreen.network.notice.title',
     defaultMessage: '!!!Network Notice Title',
   },
   changeNetworkNetworkNoticeMessage: {
-    id: 'global.network',
+    id: 'components.settings.applicationsettingsscreen.network.notice.message',
     defaultMessage: '!!!Network Notice Message',
   },
   changeNetworkNetworkNoticeListTitle: {
-    id: 'global.network',
+    id: 'components.settings.applicationsettingsscreen.network.notice.listTitle',
     defaultMessage: '!!!Network Notice List Title',
   },
   changeNetworkNetworkNoticeList: {
-    id: 'global.network',
+    id: 'components.settings.applicationsettingsscreen.network.notice.list',
     defaultMessage: '!!!Network Notice List',
   },
   changeNetworkNetworkNoticeButton: {
-    id: 'global.network',
+    id: 'components.settings.applicationsettingsscreen.network.notice.button',
     defaultMessage: '!!!Network Notice Button',
   },
   changeNetworkPreparingNetwork: {
-    id: 'global.network',
+    id: 'components.settings.applicationsettingsscreen.network.preparingNetworks',
     defaultMessage: '!!!Preparing Network',
   },
   changeNetworkNetworkTagModalTitle: {
-    id: 'global.network',
+    id: 'components.settings.applicationsettingsscreen.network.tag.modal.title',
     defaultMessage: '!!!Network Tag Modal Title',
   },
   changeNetworkNetworkTagModalText: {
-    id: 'global.network',
+    id: 'components.settings.applicationsettingsscreen.network.tag.modal.text',
     defaultMessage: '!!!Network Tag Modal Text',
   },
 })

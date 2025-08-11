@@ -38,7 +38,7 @@ export const NetworkTag = ({
     walletManager,
   } = useWalletManager()
   const {navigateToChangeNetwork} = useWalletNavigation()
-  const {atoms: ta, atoms} = useTheme()
+  const {atoms: ta} = useTheme()
   const {openModal, closeModal} = useModal()
   const strings = useStrings()
   const {track} = useMetrics()
@@ -138,7 +138,7 @@ const PreprodTag = ({
   onPress: () => void
   disabled: boolean
 }) => {
-  const {palette: p, atoms: ta} = useTheme()
+  const {palette: p} = useTheme()
 
   const {name} = networkConfigs[Chain.Network.Preprod]
 
