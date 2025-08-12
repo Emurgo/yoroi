@@ -67,7 +67,7 @@ export const ApplicationSettingsScreen = () => {
   return (
     <SafeAreaView
       edges={['bottom', 'right', 'left']}
-      style={[a.flex_row, ta.bg_color_max]}
+      style={[ta.bg_color_max, a.flex_1]}
     >
       <ScrollView bounces={false} style={[a.flex_1, a.p_lg]}>
         <SettingsSection title={strings.settings.applicationSettings.general}>
