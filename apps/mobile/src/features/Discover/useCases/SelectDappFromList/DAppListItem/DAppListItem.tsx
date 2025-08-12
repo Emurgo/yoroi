@@ -9,7 +9,7 @@ import {
   View,
 } from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import uuid from 'uuid'
+import {v4} from 'uuid'
 
 import {useBrowser} from '~/features/Discover/common/BrowserProvider'
 import {LabelCategoryDApp} from '~/features/Discover/common/LabelCategoryDApp'
@@ -17,6 +17,7 @@ import {LabelConnected} from '~/features/Discover/common/LabelConnected'
 import {LabelSingleAddress} from '~/features/Discover/common/LabelSingleAddress'
 import {useDisconnectDapp} from '~/features/Discover/common/useDisconnectDapp'
 import {useNavigateTo} from '~/features/Discover/common/useNavigateTo'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
@@ -70,25 +71,28 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
 
     closeModal()
 
-    const id = uuid.v4()
+    const id = v4()
     addTab(dApp.uri, id)
     setTabActive(tabs.length)
 
     navigateTo.browseDapp()
   }
-  const handleDisconnectDApp = async (dApp: DAppItem) => {
-    await disconnectDApp(dApp)
+  const handleDisconnectDApp = async (dAppItem: DAppItem) => {
+    await disconnectDApp(dAppItem)
     closeModal()
   }
 
-  const handleConfirmDisconnect = (dApp: DAppItem) => {
+  const handleConfirmDisconnect = (dAppItem: DAppItem) => {
     closeModal()
     Alert.alert(
-      strings.disconnectDApp,
-      strings.confirmDisconnectDAppDescription,
+      strings.discover.disconnectDApp,
+      strings.discover.confirmDisconnectDAppDescription,
       [
-        {text: strings.cancel, style: 'cancel'},
-        {text: strings.confirm, onPress: () => handleDisconnectDApp(dApp)},
+        {text: strings.discover.cancel, style: 'cancel'},
+        {
+          text: strings.discover.confirm,
+          onPress: () => handleDisconnectDApp(dAppItem),
+        },
       ],
     )
   }
@@ -107,7 +111,7 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
     }
 
     openModal({
-      title: strings.dAppActions,
+      title: strings.discover.dAppActions,
       content: (
         <View style={[a.flex_col, a.px_lg]}>
           <View style={[{alignItems: 'center', gap: 8}]}>
@@ -130,7 +134,10 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
 
           <Space.Height.lg />
 
-          <InfoBanner iconSize={20} content={strings.disconnectWarning} />
+          <InfoBanner
+            iconSize={20}
+            content={strings.discover.disconnectWarning}
+          />
 
           <Space.Height.lg />
         </View>
@@ -143,7 +150,7 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
             style={[a.gap_lg]}
             onPress={handleOpenDApp}
             icon={Icon.DApp}
-            title={strings.openDApp}
+            title={strings.discover.openDApp}
             size="S"
           />
 
@@ -153,7 +160,7 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
             style={[a.gap_lg]}
             onPress={() => handleConfirmDisconnect(dApp)}
             icon={Icon.Disconnect}
-            title={strings.disconnectWalletFromDApp}
+            title={strings.discover.disconnectWalletFromDApp}
             size="S"
           />
         </View>
@@ -174,7 +181,8 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
         ) : (
           <Image
             source={{uri: logo}}
-            style={[{width: 40, height: 40, contentFit: 'contain'}]}
+            style={[{width: 40, height: 40}]}
+            contentFit="contain"
           />
         )}
 
@@ -232,13 +240,13 @@ const SingleAddressDAppWarning = () => {
         <>
           <Text
             style={[a.body_2_md_regular, {color: p.text_gray_max}]}
-          >{`${strings.singleAddressWarning} `}</Text>
+          >{`${strings.discover.singleAddressWarning} `}</Text>
 
           <Text
             style={[a.body_2_md_regular, {color: p.sys_cyan_500}]}
             onPress={handleOnPress}
           >
-            {strings.learnMore}
+            {strings.manageCollateral.learnMore}
           </Text>
         </>
       }

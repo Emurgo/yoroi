@@ -337,11 +337,11 @@ export async function toLedgerSignRequest(
 
     const baseAddr = csl.BaseAddress.fromAddress(addr)
     if (baseAddr) {
-      const enterpriseAddr = csl.EnterpriseAddress.new(
+      const newEnterpriseAddr = csl.EnterpriseAddress.new(
         networkId,
         baseAddr.paymentCred(),
       )
-      const paymentAddress = enterpriseAddr.toAddress().toHex()
+      const paymentAddress = newEnterpriseAddr.toAddress().toHex()
       const ownPaymentPath = ownUtxoAddressMap[paymentAddress]
       if (ownPaymentPath) {
         const stake = baseAddr.stakeCred()
@@ -449,7 +449,7 @@ export async function toLedgerSignRequest(
   }
 
   const txBody = csl.FixedTransaction.fromHex(cbor).body()
-  const parsedCbor = decode(txBody.toBytes())
+  const parsedCbor = decode<Map<number, unknown>>(txBody.toBytes())
   const outputs: TxOutput[] = []
   const nativeOutputs = txBody.outputs()
   for (let i = 0; i < nativeOutputs.len(); i++) {

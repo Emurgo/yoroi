@@ -3,10 +3,10 @@ import * as React from 'react'
 import {Text, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
-import {useStrings} from '~/kernel/i18n/useStrings'
 
 export const useOpenUnverifiedDappModal = () => {
   const {openModal, closeModal} = useModal()
@@ -17,7 +17,7 @@ export const useOpenUnverifiedDappModal = () => {
   const open = React.useCallback(
     (options: {onClose: () => void; onConfirm: () => void}) => {
       openModal({
-        title: strings.disclaimerModalTitle,
+        title: strings.discover.disclaimerModalTitle,
         content: (
           <View style={[a.px_lg, a.flex_col, a.flex_1]}>
             <View
@@ -30,7 +30,7 @@ export const useOpenUnverifiedDappModal = () => {
               ]}
             >
               <Text style={[a.body_1_lg_regular, {color: p.gray_900}]}>
-                {strings.disclaimerModalText}
+                {strings.discover.disclaimerModalText}
               </Text>
             </View>
 
@@ -38,7 +38,10 @@ export const useOpenUnverifiedDappModal = () => {
           </View>
         ),
         footer: (
-          <Button title={strings.understand} onPress={options.onConfirm} />
+          <Button
+            title={strings.discover.understand}
+            onPress={options.onConfirm}
+          />
         ),
         height: 320 + insets.bottom,
         onClose: options.onClose,
@@ -48,9 +51,9 @@ export const useOpenUnverifiedDappModal = () => {
       insets.bottom,
       openModal,
       p.gray_900,
-      strings.disclaimerModalText,
-      strings.disclaimerModalTitle,
-      strings.understand,
+      strings.discover.disclaimerModalText,
+      strings.discover.disclaimerModalTitle,
+      strings.discover.understand,
     ],
   )
   return {openUnverifiedDappModal: open, closeModal}
