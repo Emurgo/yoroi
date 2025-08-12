@@ -1,7 +1,8 @@
 import {networkConfigs} from '@yoroi/blockchains'
+import {useSyncStorageToState} from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
-import {Platform, ScrollView} from 'react-native'
+import {ScrollView} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useAuthSetting} from '~/features/Auth/hooks/useAuthSetting'
 import {useAuthWithOs} from '~/features/Auth/hooks/useAuthWithOs'
@@ -13,9 +14,14 @@ import {
   SettingsSection,
 } from '~/features/Settings/SettingsItems'
 import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
+import {isAndroid} from '~/kernel/constants'
 import {useLanguage} from '~/kernel/i18n/LanguageProvider'
 import {LanguageRecord, supportedLanguages} from '~/kernel/i18n/localization'
 import {useStrings} from '~/kernel/i18n/useStrings'
+import {
+  crashReportsStorageKeyManager,
+  screenShareStorageKeyManager,
+} from '~/kernel/storage/storages'
 import {Icon} from '~/ui/Icon'
 import {SettingsSwitch} from '~/ui/SettingsSwitch/SettingsSwitch'
 import {Space} from '~/ui/Space/Space'
@@ -25,7 +31,6 @@ import {
   useChangeScreenShareSetting,
   useScreenShareSettingEnabled,
 } from './ScreenShare'
-import {useCrashReports} from './useCrashReports'
 
 export const ApplicationSettingsScreen = () => {
   const strings = useStrings()
@@ -37,7 +42,6 @@ export const ApplicationSettingsScreen = () => {
 
   const {isTogglePrivacyModeLoading, isPrivacyActive} = usePrivacyMode()
   const {currency} = useCurrencyPairing()
-  const {enabled: crashReportEnabled} = useCrashReports()
 
   const authSetting = useAuthSetting()
   const isAuthOsSupported = useIsAuthOsSupported()
@@ -47,9 +51,7 @@ export const ApplicationSettingsScreen = () => {
 
   const {network} = useSelectedNetwork()
 
-  const {data: screenShareEnabled, isLoading: isScreenShareLoading} =
-    useScreenShareSettingEnabled()
-  const displayScreenShareSetting = Platform.OS === 'android'
+  const {isLoading: isScreenShareLoading} = useScreenShareSettingEnabled()
 
   const onToggleAuthWithOs = () => {
     if (authSetting === 'os') {
@@ -162,21 +164,16 @@ export const ApplicationSettingsScreen = () => {
             label={strings.settings.applicationSettings.crashReporting}
             info={strings.settings.applicationSettings.crashReportingInfo}
           >
-            <CrashReportsSwitch
-              crashReportEnabled={Boolean(crashReportEnabled)}
-            />
+            <CrashReportsSwitch />
           </SettingsItem>
 
-          {displayScreenShareSetting && (
+          {isAndroid && (
             <SettingsItem
               icon={<Icon.Share {...iconProps} />}
               label={strings.settings.applicationSettings.screenSharing}
               info={strings.settings.applicationSettings.screenSharingInfo}
             >
-              <ScreenSharingSwitch
-                screenSharingEnabled={Boolean(screenShareEnabled)}
-                disabled={isScreenShareLoading}
-              />
+              <ScreenSharingSwitch disabled={isScreenShareLoading} />
             </SettingsItem>
           )}
         </SettingsSection>
@@ -216,25 +213,12 @@ const PrivacyModeSwitch = ({isPrivacyActive}: {isPrivacyActive: boolean}) => {
 }
 
 // to avoid switch jumps
-const CrashReportsSwitch = ({
-  crashReportEnabled,
-}: {
-  crashReportEnabled: boolean
-}) => {
-  const {enable, disable, enabled} = useCrashReports()
+const CrashReportsSwitch = ({}: {}) => {
   const [isLocalCrashReportEnabled, setIsLocalCrashReportEnabled] =
-    React.useState(crashReportEnabled)
+    useSyncStorageToState(crashReportsStorageKeyManager)
 
   const onToggleCrashReports = () => {
-    setIsLocalCrashReportEnabled((prevState) => {
-      if (prevState) {
-        disable()
-      } else {
-        enable()
-      }
-
-      return !prevState
-    })
+    setIsLocalCrashReportEnabled(!isLocalCrashReportEnabled)
   }
 
   return (
@@ -246,23 +230,15 @@ const CrashReportsSwitch = ({
 }
 
 // to avoid switch jumps
-const ScreenSharingSwitch = ({
-  screenSharingEnabled,
-  disabled,
-}: {
-  screenSharingEnabled: boolean
-  disabled: boolean
-}) => {
+const ScreenSharingSwitch = ({disabled}: {disabled: boolean}) => {
   const {changeScreenShareSettings, isLoading} = useChangeScreenShareSetting()
   const [isLocalScreenSharingEnabled, setIsLocalScreenSharingEnabled] =
-    React.useState(screenSharingEnabled)
+    useSyncStorageToState(screenShareStorageKeyManager)
 
   const onToggleScreenSharing = () => {
-    setIsLocalScreenSharingEnabled((prevState) => {
-      const newState = !prevState
-      changeScreenShareSettings(newState)
-      return newState
-    })
+    const newState = !isLocalScreenSharingEnabled
+    setIsLocalScreenSharingEnabled(newState)
+    changeScreenShareSettings(newState)
   }
 
   return (

@@ -9,7 +9,7 @@ export const ThemePickerList = () => {
   return (
     <FlatList
       contentContainerStyle={{...a.p_lg}}
-      data={Object.entries(supportedThemes).map(([k, v]) => ({themeName: v}))}
+      data={Object.entries(supportedThemes).map(([, v]) => ({themeName: v}))}
       keyExtractor={({themeName}) => themeName}
       renderItem={({item: {themeName}}) => {
         return <ThemePickerItem title={themeName} />

@@ -12,9 +12,10 @@ import {
 } from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {Platform, Text, View} from 'react-native'
+import {Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {isAndroid} from '~/kernel/constants'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Boundary} from '~/ui/Boundary/Boundary'
 import {Button} from '~/ui/Button/Button'
@@ -93,7 +94,7 @@ export const useHandleOpenNetworkNoticeModal = () => {
 
           <Space.Height.sm fill />
 
-          {Platform.OS === 'android' && <Space.Height.lg />}
+          {isAndroid && <Space.Height.lg />}
         </View>
       ),
       footer: (
