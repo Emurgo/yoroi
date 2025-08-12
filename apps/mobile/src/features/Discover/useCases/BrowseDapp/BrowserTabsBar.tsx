@@ -3,7 +3,7 @@ import * as React from 'react'
 import {Text, View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import uuid from 'uuid'
+import {v4} from 'uuid'
 
 import {useBrowser} from '~/features/Discover/common/BrowserProvider'
 import {useNavigateTo} from '~/features/Discover/common/useNavigateTo'
@@ -24,7 +24,7 @@ export const BrowserTabsBar = () => {
 
   const handleCreateTab = () => {
     openTabs(false)
-    const tabId = uuid.v4()
+    const tabId = v4()
     addTab('', tabId)
     setTabActive(tabs.length)
     navigateTo.searchDappInBrowser()
@@ -33,29 +33,24 @@ export const BrowserTabsBar = () => {
   return (
     <View
       style={[
+        a.flex_row,
+        a.align_center,
+        a.gap_md,
+        a.justify_between,
+        a.py_md,
+        a.px_md,
         {
           backgroundColor: p.bg_color_max,
-          paddingVertical: 12,
-          paddingHorizontal: 16,
-          flexDirection: 'row',
-          alignItems: 'center',
-          gap: 16,
-          justifyContent: 'space-between',
-        },
-        {
+          paddingBottom: insets.bottom + 12,
           shadowColor: '#054037',
-          shadowOffset: {
-            width: 0,
-            height: 5,
-          },
+          shadowOffset: {width: 0, height: 5},
           shadowOpacity: 0.3,
           shadowRadius: 8,
           elevation: 14,
-          paddingBottom: insets.bottom + 12,
         },
       ]}
     >
-      <View style={[{flexDirection: 'row', flex: 1}]}>
+      <View style={[a.flex_row, a.flex_1]}>
         <TouchableOpacity onPress={handleCreateTab}>
           <Icon.Plus size={24} color={p.el_gray_medium} />
         </TouchableOpacity>
@@ -65,15 +60,15 @@ export const BrowserTabsBar = () => {
         {`${totalTabs} tab(s)`}
       </Text>
 
-      <View
-        style={[{flexDirection: 'row', flex: 1, justifyContent: 'flex-end'}]}
-      >
+      <View style={[a.flex_row, a.flex_1, a.justify_end]}>
         <TouchableOpacity onPress={handleCancelChangeTab}>
           <Text style={[a.body_2_md_medium, {color: p.el_gray_medium}]}>
-            {strings.done}
+            {strings.discover.done}
           </Text>
         </TouchableOpacity>
       </View>
     </View>
   )
 }
+
+

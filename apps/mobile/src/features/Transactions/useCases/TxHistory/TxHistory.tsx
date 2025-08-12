@@ -9,10 +9,10 @@ import {LayoutAnimation, Text, View} from 'react-native'
 // import {usePoolTransitionModal} from '~/features/Staking/Staking/PoolTransition/usePoolTransitionModal'
 import infoIcon from '~/assets/img/icon/info-light-green.png'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useSync} from '~/features/WalletManager/hooks/useSync'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {Space} from '~/ui/Space/Space'
-import {useSync} from '~/features/WalletManager/hooks/useSync'
+import {Space, SpaceHeight} from '~/ui/Space/Space'
 
 import {TxList} from '../TxList/TxList'
 // import {useUtxoConsolidationBanner} from '../UtxoConsolidation/UtxoConsolidation/useUtxoConsolidationBanner'
@@ -73,7 +73,7 @@ export const TxHistory = () => {
       end={{x: isDark ? 0 : 0, y: isDark ? 0.5 : 0}}
       style={{flex: 1}}
     >
-      <Space.Height._2xs />
+      <SpaceHeight size={91} />
 
       <CollapsibleHeader expanded={expanded}>
         <BalanceBanner />

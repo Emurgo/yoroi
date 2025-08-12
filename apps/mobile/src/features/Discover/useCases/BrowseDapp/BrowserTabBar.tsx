@@ -1,6 +1,11 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {Text, TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
+import {
+  Text,
+  TouchableOpacity,
+  TouchableOpacityProps,
+  View,
+} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import Share from 'react-native-share'
 import WebView from 'react-native-webview'
@@ -74,16 +79,13 @@ export const BrowserTabBar = ({webViewRef, webViewState}: Props) => {
         {backgroundColor: p.bg_color_max},
         {
           shadowColor: '#054037',
-          shadowOffset: {
-            width: 0,
-            height: 8,
-          },
+          shadowOffset: {width: 0, height: 8},
           shadowOpacity: 0.3,
           shadowRadius: 8,
           elevation: 14,
           zIndex: 1,
-          paddingBottom: insets.bottom + 12,
         },
+        {paddingBottom: insets.bottom + 12},
       ]}
     >
       <Touch disabled={!webViewState.canGoBack} onPress={handleBackward}>
@@ -123,35 +125,14 @@ const TabItem = ({total = 1}: TabItemProps) => {
   const {palette: p} = useTheme()
 
   return (
-    <View style={[{position: 'relative'}]}>
+    <View style={a.relative}>
       <Icon.Square color={p.gray_800} />
 
-      <View
-        style={[
-          {
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            justifyContent: 'center',
-            alignItems: 'center',
-          },
-        ]}
-      >
-        <Text
-          style={[
-            {
-              color: p.gray_800,
-              fontWeight: '500',
-              fontSize: 10,
-              lineHeight: 18,
-            },
-          ]}
-        >
-          {total}
-        </Text>
+      <View style={[a.absolute, a.inset_0, a.justify_center, a.align_center]}>
+        <Text style={[{fontWeight: '500', fontSize: 10, lineHeight: 18}, {color: p.gray_800}]}>{total}</Text>
       </View>
     </View>
   )
 }
+
+
