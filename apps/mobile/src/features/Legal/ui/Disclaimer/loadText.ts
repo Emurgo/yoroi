@@ -21,7 +21,7 @@ import KO_KR from './thirdParty/ko-KR.md'
 import PT_BR from './thirdParty/pt-BR.md'
 import RU_RU from './thirdParty/ru-RU.md'
 import VI_VN from './thirdParty/vi-VN.md'
-import ZH_CN from './thirdParty/zh-Hans.md'
+import ZH_CN from './thirdParty/zh-CN.md'
 
 const map = {
   [Disclaimer.Dapps]: {

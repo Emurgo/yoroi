@@ -12,7 +12,8 @@ type ModalState = {
   isLoading: boolean
   canDiscard: boolean
   title: string
-  canContinue: boolean
+  canContinue?: boolean
+  onClose?: () => void
 }
 type ModalActions = {
   openModal: (args: {
@@ -22,6 +23,8 @@ type ModalActions = {
     isLoading?: boolean
     canDiscard?: boolean
     title?: string
+    canContinue?: boolean
+    onClose?: () => void
   }) => void
   closeModal: () => void
   setLoading: (isLoading: boolean) => void
@@ -64,14 +67,36 @@ export const ModalProvider = ({
     bottomSheetModalRef.current?.close()
   }, [])
 
-  const actions = React.useRef<ModalActions>({
-    closeModal: () => {
-      dispatch({
-        type: 'close',
-      })
-      handleDismissModalPress()
-    },
-    openModal: ({content, height, footer, isLoading, canDiscard, title}) => {
+  const closeModal = React.useCallback(() => {
+    if (state.onClose) {
+      state.onClose()
+    }
+    dispatch({
+      type: 'close',
+    })
+    handleDismissModalPress()
+  }, [state.onClose, handleDismissModalPress])
+
+  const openModal = React.useCallback(
+    ({
+      content,
+      height,
+      footer,
+      isLoading,
+      canDiscard,
+      title,
+      canContinue,
+      onClose,
+    }: {
+      content: React.ReactNode
+      height?: number
+      footer?: React.ReactNode
+      isLoading?: boolean
+      canDiscard?: boolean
+      title?: string
+      canContinue?: boolean
+      onClose?: () => void
+    }) => {
       Keyboard.dismiss()
       dispatch({
         type: 'open',
@@ -81,40 +106,69 @@ export const ModalProvider = ({
         isLoading,
         canDiscard,
         title,
+        canContinue,
+        onClose,
       })
       handlePresentModalPress()
     },
-    setLoading: (isLoading: boolean) => {
-      dispatch({
-        type: 'setLoading',
-        isLoading,
-      })
-    },
-    setFooter: (footer: React.ReactNode | undefined) => {
-      dispatch({
-        type: 'setFooter',
-        footer,
-      })
-    },
-    setTitle: (title: string) => {
-      dispatch({
-        type: 'setTitle',
-        title,
-      })
-    },
-    setCanDiscard: (canDiscard: boolean) => {
-      dispatch({
-        type: 'setCanDiscard',
-        canDiscard,
-      })
-    },
-    setCanContinue: (canContinue: boolean) => {
-      dispatch({
-        type: 'setCanContinue',
-        canContinue,
-      })
-    },
-  }).current
+    [handlePresentModalPress],
+  )
+
+  const setLoading = React.useCallback((isLoading: boolean) => {
+    dispatch({
+      type: 'setLoading',
+      isLoading,
+    })
+  }, [])
+
+  const setFooter = React.useCallback((footer: React.ReactNode | undefined) => {
+    dispatch({
+      type: 'setFooter',
+      footer,
+    })
+  }, [])
+
+  const setTitle = React.useCallback((title: string) => {
+    dispatch({
+      type: 'setTitle',
+      title,
+    })
+  }, [])
+
+  const setCanDiscard = React.useCallback((canDiscard: boolean) => {
+    dispatch({
+      type: 'setCanDiscard',
+      canDiscard,
+    })
+  }, [])
+
+  const setCanContinue = React.useCallback((canContinue: boolean) => {
+    dispatch({
+      type: 'setCanContinue',
+      canContinue,
+    })
+  }, [])
+
+  const actions = React.useMemo<ModalActions>(
+    () => ({
+      closeModal,
+      openModal,
+      setLoading,
+      setFooter,
+      setTitle,
+      setCanDiscard,
+      setCanContinue,
+    }),
+    [
+      closeModal,
+      openModal,
+      setLoading,
+      setFooter,
+      setTitle,
+      setCanDiscard,
+      setCanContinue,
+    ],
+  )
 
   const context = React.useMemo(
     () => ({...state, ...actions}),
@@ -141,6 +195,8 @@ type ModalAction =
       isLoading?: boolean
       canDiscard?: boolean
       title?: string
+      canContinue?: boolean
+      onClose?: () => void
     }
   | {type: 'close'}
   | {type: 'setLoading'; isLoading: boolean}
@@ -160,6 +216,8 @@ const modalReducer = (state: ModalState, action: ModalAction) => {
         isLoading: action.isLoading ?? defaultState.isLoading,
         canDiscard: action.canDiscard ?? defaultState.canDiscard,
         title: action.title ?? defaultState.title,
+        canContinue: action.canContinue ?? defaultState.canContinue,
+        onClose: action.onClose,
         isOpen: true,
       }
 

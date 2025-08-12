@@ -9,8 +9,10 @@ import {walletConfig} from './wallet-config'
 export const useConnectWalletToWebView = (
   wallet: YoroiWallet,
   webViewRef: React.RefObject<WebView | null>,
+  fallbackUrl?: string,
 ) => {
   const {manager, sessionId} = useDappConnector()
+  const [isWebViewReady, setIsWebViewReady] = React.useState(false)
 
   const sendMessageToWebView =
     (event: string) => (id: string, result: unknown, error?: Error) => {
@@ -32,8 +34,53 @@ export const useConnectWalletToWebView = (
     }
 
   const handleWebViewEvent = async (e: WebViewMessageEvent) => {
+    // Skip events if WebView is not ready yet
+    if (!isWebViewReady) {
+      logger.debug(
+        'useConnectWalletToWebView: skipping event - WebView not ready yet',
+        {
+          data: e.nativeEvent.data,
+        },
+      )
+      return
+    }
+
     const {data} = e.nativeEvent
-    const webViewUrl = e.nativeEvent.url
+    let webViewUrl = e.nativeEvent.url
+
+    // Handle case where webViewUrl is null or invalid
+    if (!webViewUrl || webViewUrl === 'null' || webViewUrl === 'about:blank') {
+      if (fallbackUrl) {
+        // Use the fallback URL from the tab data
+        webViewUrl = fallbackUrl
+        logger.debug('useConnectWalletToWebView: using fallback URL', {
+          originalUrl: e.nativeEvent.url,
+          fallbackUrl,
+        })
+      } else {
+        // Skip this event if we don't have a valid URL
+        logger.warn(
+          'useConnectWalletToWebView: skipping event - no valid URL',
+          {
+            originalUrl: e.nativeEvent.url,
+            data,
+          },
+        )
+        return
+      }
+    }
+
+    // Additional safety check: ensure we have a valid URL before proceeding
+    if (!webViewUrl || webViewUrl === 'about:blank') {
+      logger.warn(
+        'useConnectWalletToWebView: skipping event - invalid URL after fallback',
+        {
+          webViewUrl,
+          data,
+        },
+      )
+      return
+    }
 
     try {
       await manager.handleEvent(data, webViewUrl, sendMessageToWebView(data))
@@ -41,6 +88,7 @@ export const useConnectWalletToWebView = (
       logger.error('useConnectWalletToWebView: error handling web event', {
         error,
         data,
+        webViewUrl,
       })
     }
   }
@@ -50,10 +98,15 @@ export const useConnectWalletToWebView = (
     webViewRef.current?.injectJavaScript(initScript)
   }, [wallet, webViewRef, sessionId, manager])
 
+  const markWebViewReady = React.useCallback(() => {
+    setIsWebViewReady(true)
+  }, [])
+
   return {
     handleEvent: handleWebViewEvent,
     initScript: getInitScript(sessionId, manager),
     sessionId,
+    markWebViewReady,
   }
 }
 

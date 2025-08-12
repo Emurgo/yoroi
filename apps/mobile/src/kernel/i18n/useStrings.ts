@@ -1796,6 +1796,32 @@ export const useStrings = () => {
         // bluetoothEnabled: f(setupWalletMessages.bluetoothEnabled),
         // locationEnabled: f(setupWalletMessages.locationEnabled),
       },
+
+      // Mapped strings for dynamic category mapping
+      getDappMappedStrings: () => {
+        const categoryMap: Record<string, string> = {
+          'Investment': f(discoverMessages.filterParentOptionsInvestment),
+          'Media': f(discoverMessages.filterParentOptionsMedia),
+          'Trading': f(discoverMessages.filterParentOptionsTrading),
+          'NFT': f(discoverMessages.filterParentOptionsNFT),
+          'Community': f(discoverMessages.filterParentOptionsCommunity),
+          'Entertainment': f(discoverMessages.filterChildOptionsEntertainment),
+          'DeFi': f(discoverMessages.filterChildOptionsDeFi),
+          'DEX': f(discoverMessages.filterChildOptionsDEX),
+          'NFT Marketplace': f(
+            discoverMessages.filterChildOptionsNFTMarketplace,
+          ),
+          'Stablecoin': f(discoverMessages.filterChildOptionsStablecoin),
+          'Trading Tools': f(discoverMessages.filterChildOptionsTradingTools),
+          'DAO': f(discoverMessages.filterChildOptionsDAO),
+          'Decentralised Storage': f(
+            discoverMessages.filterChildOptionsDecentralisedStorage,
+          ),
+          'News': f(discoverMessages.filterChildOptionsNews),
+        }
+
+        return (key: string) => categoryMap[key] || key
+      },
     })
   }, [intl])
 }

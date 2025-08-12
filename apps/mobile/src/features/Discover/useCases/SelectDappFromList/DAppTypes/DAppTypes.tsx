@@ -1,7 +1,7 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {ScrollView, Text, TouchableWithoutFeedback, View} from 'react-native'
-import {useMappedStrings} from '~/kernel/i18n/useStrings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 
 import {Icon} from '~/ui/Icon'
 import {Space} from '~/ui/Space/Space'
@@ -74,10 +74,10 @@ const TypeItem = ({
   const {palette: p} = useTheme()
 
   const [isPressed, setIsPressed] = React.useState(false)
-  const mappedStrings = useMappedStrings()
+  const strings = useStrings()
   const text = React.useMemo(
-    () => mappedStrings(name) ?? name,
-    [mappedStrings, name],
+    () => strings.getDappMappedStrings()(name) ?? name,
+    [strings, name],
   )
 
   const getBoxChipStyle = React.useMemo(() => {

@@ -1,5 +1,6 @@
 import {useQuery} from '@tanstack/react-query'
 import {useAsyncStorage, useMutationWithInvalidations} from '@yoroi/common'
+import {atoms as a} from '@yoroi/theme'
 import {Chain} from '@yoroi/types'
 import * as React from 'react'
 import {Text, View} from 'react-native'
@@ -25,19 +26,23 @@ export const ChainDAppsWarning = () => {
   if (isMainnet || hasAccepted) return null
   return (
     <View
-      style={{
-        padding: 16,
-        backgroundColor: '#fff3cd',
-        borderColor: '#ffeaa7',
-        borderWidth: 1,
-        borderRadius: 8,
-      }}
+      style={[
+        a.p_md,
+        {
+          backgroundColor: '#fff3cd',
+          borderColor: '#ffeaa7',
+          borderWidth: 1,
+          borderRadius: 8,
+        },
+      ]}
     >
-      <Text style={{fontWeight: 'bold', marginBottom: 8}}>
-        {strings.testnetWarningTitle}
+      <Text style={[a.font_bold, a.pb_sm]}>
+        {strings.discover.testnetWarningTitle}
       </Text>
-      <Text style={{marginBottom: 8}}>{strings.testnetWarningDescription}</Text>
-      <Button title="Close" onPress={handleOnClose} />
+      <Text style={[a.pb_sm]}>
+        {strings.discover.testnetWarningDescription}
+      </Text>
+      <Button title={strings.discover.cancel} onPress={handleOnClose} />
     </View>
   )
 }

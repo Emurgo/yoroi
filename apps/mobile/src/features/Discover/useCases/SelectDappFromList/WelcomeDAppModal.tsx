@@ -60,6 +60,7 @@ export const WelcomeDAppModal = ({disabled}: {disabled?: boolean}) => {
     strings.discover.next,
     strings.discover.welcomeToYoroiDAppExplorer,
     strings.discover.welcomeToYoroiDAppExplorerDescription,
+    p.gray_900,
   ])
 
   return <></>
