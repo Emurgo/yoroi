@@ -25,7 +25,7 @@ export const useShowWelcomeDApp = () => {
     shouldSuspend: true,
   })
 
-  // Update local state when the promise resolves
+  // TODO: REVISIT when usePromise is better defined
   React.useEffect(() => {
     if (result.value !== undefined) {
       setLocalValue(result.value)
