@@ -1,7 +1,7 @@
 import {networkConfigs} from '@yoroi/blockchains'
 import {useSyncStorageToState} from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
-import React from 'react'
+import * as React from 'react'
 import {ScrollView} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useAuthSetting} from '~/features/Auth/hooks/useAuthSetting'
@@ -28,7 +28,7 @@ import {Space} from '~/ui/Space/Space'
 import {useCurrencyPairing} from './Currency/CurrencyContext'
 import {usePrivacyMode} from './PrivacyMode/PrivacyMode'
 import {
-  useChangeScreenShareSetting,
+  changeScreenShareNativeSettingOnAndroid,
   useScreenShareSettingEnabled,
 } from './ScreenShare'
 
@@ -231,21 +231,20 @@ const CrashReportsSwitch = ({}: {}) => {
 
 // to avoid switch jumps
 const ScreenSharingSwitch = ({disabled}: {disabled: boolean}) => {
-  const {changeScreenShareSettings, isLoading} = useChangeScreenShareSetting()
   const [isLocalScreenSharingEnabled, setIsLocalScreenSharingEnabled] =
     useSyncStorageToState(screenShareStorageKeyManager)
 
   const onToggleScreenSharing = () => {
     const newState = !isLocalScreenSharingEnabled
     setIsLocalScreenSharingEnabled(newState)
-    changeScreenShareSettings(newState)
+    changeScreenShareNativeSettingOnAndroid(newState)
   }
 
   return (
     <SettingsSwitch
       value={isLocalScreenSharingEnabled}
       onValueChange={onToggleScreenSharing}
-      disabled={disabled || isLoading}
+      disabled={disabled}
     />
   )
 }

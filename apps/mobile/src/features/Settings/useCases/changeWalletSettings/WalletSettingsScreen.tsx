@@ -2,7 +2,7 @@ import {useNavigation} from '@react-navigation/native'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Wallet} from '@yoroi/types'
-import React from 'react'
+import * as React from 'react'
 import {useIntl} from 'react-intl'
 import {ScrollView} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
@@ -241,7 +241,6 @@ const AddressModeSwitcher = (props: {isSingle: boolean}) => {
 const useLogout = () => {
   const {loggedOut} = useAuth()
   const intl = useIntl()
-  const strings = useStrings()
 
   return async () => {
     const selection = await showConfirmationDialog(
