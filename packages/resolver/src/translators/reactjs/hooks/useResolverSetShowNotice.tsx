@@ -1,14 +1,17 @@
-import {useMutation} from '@tanstack/react-query'
+import {useMutation, UseMutationOptions} from '@tanstack/react-query'
 
 import {useResolver} from '../provider/ResolverProvider'
 
-export const useResolverSetShowNotice = () => {
+export const useResolverSetShowNotice = (
+  options?: UseMutationOptions<void, Error, boolean>,
+) => {
   const {showNotice} = useResolver()
 
   const mutation = useMutation({
     mutationFn: async (value: boolean) => {
       await showNotice.save(value)
     },
+    ...options,
   })
 
   return {
