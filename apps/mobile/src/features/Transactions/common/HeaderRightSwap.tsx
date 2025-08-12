@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
-import React from 'react'
+import * as React from 'react'
 import {TouchableOpacity} from 'react-native'
 
 import {TxHistoryRouteNavigation} from '~/kernel/navigation/types'

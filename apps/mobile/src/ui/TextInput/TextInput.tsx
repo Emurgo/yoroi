@@ -85,13 +85,13 @@ export const TextInput = React.forwardRef(
     const showHelperComponent = helper != null && !isString(helper)
 
     const helperToShow = showError ? (
-      <HelperText type="error" visible p={p}>
+      <HelperText type="error" visible>
         {errorText}
       </HelperText>
     ) : showHelperComponent ? (
       helper
     ) : (
-      <HelperText type="info" visible p={p}>
+      <HelperText type="info" visible>
         {helper}
       </HelperText>
     )
@@ -188,15 +188,15 @@ export const HelperText = ({
   type = 'info',
   faded = false,
   visible = true,
-  p,
   ...props
 }: {
   children: React.ReactNode
   type?: 'info' | 'error'
   faded?: boolean
   visible?: boolean
-  p: any
 }) => {
+  const {palette: p} = useTheme()
+
   return (
     <HelperTextRNP
       style={{paddingHorizontal: 0}}

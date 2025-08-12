@@ -46,6 +46,7 @@ This document consolidates all development guidelines, migration processes, and 
 4. **Error Monitoring**:
    - Watch Metro terminal for "Unable to resolve" errors
    - Use `curl -s "http://localhost:8081/reload"` to trigger reloads
+   - For Android-specific bundle testing: `curl -s "http://localhost:8081/index.ts.bundle?platform=android&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.routerRoot=app&unstable_transformProfile=hermes-stable"`
    - Fix errors systematically: Fix → Reload → Check next error
 
 ### Reference Previous Working Version
@@ -116,6 +117,7 @@ import { RawUtxo, YoroiUnsignedTx } from "@yoroi/types";
 #### 4. Adopt Atomic Design System
 
 **Static Atoms (`a`):**
+Static atoms come directly from `@yoroi/theme` and are theme-independent:
 
 ```typescript
 import {atoms as a} from '@yoroi/theme'
@@ -123,10 +125,112 @@ style={[a.p_lg, a.rounded_sm, a.flex_col]}
 ```
 
 **Theme-Aware Atoms (`ta`) and Palette (`p`):**
+Dynamic atoms come from `useTheme` and are aliased to `ta`. These should be preferred over direct palette usage for theme-dependent styles:
 
 ```typescript
 const {atoms: ta, palette: p} = useTheme()
-style={[...ta.bg_color_max, a.p_lg, {color: p.text_gray_low}]}
+
+// ✅ CORRECT: Use themed atoms for theme-dependent styles
+style={[a.p_lg, ta.bg_color_max]} // Instead of {backgroundColor: p.bg_color_max}
+
+// ✅ CORRECT: Use themed atoms for text colors
+style={[a.text_center, ta.text_primary_max]} // Instead of {color: p.text_primary_max}
+
+// ✅ CORRECT: Use themed atoms for element colors
+style={[a.flex_1, ta.el_primary_max]} // Instead of {color: p.el_primary_max}
+```
+
+**Available Themed Atoms (`ta`):**
+The following atoms should use `ta` instead of direct palette access:
+
+```typescript
+// Background colors
+ta.bg_color_max; // {backgroundColor: themes[paletteName].theme.bg_color_max}
+ta.bg_color_min; // {backgroundColor: themes[paletteName].theme.bg_color_min}
+
+// Element colors
+ta.el_primary_max; // {color: themes[paletteName].theme.el_primary_max}
+ta.el_primary_medium; // {color: themes[paletteName].theme.el_primary_medium}
+ta.el_primary_min; // {color: themes[paletteName].theme.el_primary_min}
+ta.el_gray_max; // {color: themes[paletteName].theme.el_gray_max}
+ta.el_gray_medium; // {color: themes[paletteName].theme.el_gray_medium}
+ta.el_gray_min; // {color: themes[paletteName].theme.el_gray_min}
+ta.el_secondary; // {color: themes[paletteName].theme.el_secondary}
+
+// Input colors
+ta.input_selected; // {color: themes[paletteName].theme.input_selected}
+
+// Text colors
+ta.text_primary_max; // {color: themes[paletteName].theme.text_primary_max}
+ta.text_primary_medium; // {color: themes[paletteName].theme.text_primary_medium}
+ta.text_primary_min; // {color: themes[paletteName].theme.text_primary_min}
+ta.text_gray_max; // {color: themes[paletteName].theme.text_gray_max}
+ta.text_gray_medium; // {color: themes[paletteName].theme.text_gray_medium}
+ta.text_gray_low; // {color: themes[paletteName].theme.text_gray_low}
+ta.text_gray_min; // {color: themes[paletteName].theme.text_gray_min}
+ta.text_error; // {color: themes[paletteName].theme.text_error}
+ta.text_warning; // {color: themes[paletteName].theme.text_warning}
+ta.text_success; // {color: themes[paletteName].theme.text_success}
+ta.text_info; // {color: themes[paletteName].theme.text_info}
+
+// Web-specific backgrounds
+ta.web_bg_sidebar_active; // {backgroundColor: themes[paletteName].theme.web_bg_sidebar_active}
+ta.web_bg_sidebar_inactive; // {backgroundColor: themes[paletteName].theme.web_bg_sidebar_inactive}
+
+// Mobile-specific backgrounds
+ta.mobile_bg_blur; // {backgroundColor: themes[paletteName].theme.mobile_bg_blur}
+```
+
+**Style Organization Best Practices:**
+
+```typescript
+// ✅ CORRECT: Organize styles in this order
+style={[
+  // 1. Static atoms first (performance)
+  a.flex_1,
+  a.p_lg,
+  a.rounded_sm,
+
+  // 2. Themed atoms second (theme-dependent)
+  ta.bg_color_max,
+  ta.text_primary_max,
+
+  // 3. Direct palette only when no themed atom exists
+  {borderColor: p.gray_300} // Only if no ta.el_gray_min equivalent
+]}
+```
+
+**Migration Examples:**
+
+```typescript
+// ❌ BEFORE: Direct palette usage
+const {palette: p} = useTheme()
+<View style={[a.p_lg, {backgroundColor: p.bg_color_max}]} />
+
+// ✅ AFTER: Use themed atoms
+const {atoms: ta} = useTheme()
+<View style={[a.p_lg, ta.bg_color_max]} />
+
+// ❌ BEFORE: Direct palette for text colors
+<Text style={[a.text_center, {color: p.text_primary_max}]}>Hello</Text>
+
+// ✅ AFTER: Use themed atoms for text colors
+<Text style={[a.text_center, ta.text_primary_max]}>Hello</Text>
+
+// ❌ BEFORE: Direct palette for element colors
+<Icon style={[a.w_6, a.h_6, {color: p.el_primary_max}]} />
+
+// ✅ AFTER: Use themed atoms for element colors
+<Icon style={[a.w_6, a.h_6, ta.el_primary_max]} />
+```
+
+**When to Use Direct Palette (`p`):**
+Only use direct palette access when there's no equivalent themed atom available:
+
+```typescript
+// ✅ CORRECT: Use palette for colors without themed atoms
+style={{borderColor: p.gray_300}} // No ta.border_gray_300 exists
+style={{shadowColor: p.black_static}} // No ta.shadow_color exists
 ```
 
 #### 5. Update Component Imports
@@ -638,7 +742,7 @@ This pattern can be replicated for migrating components from `wallet-mobile` or 
 - **Image assets**: Use relative paths, not `~` alias
 - **Components**: Use absolute paths with `~/` prefix
 - **Tabs component**: Use `~/ui/Tabs` (migrated from wallet-mobile)
-- **Navigation**: Use `~/kernel/navigation/navigation` not `~/kernel/navigation`
+- **Navigation**: Use `~/kernel/navigation` not `~/kernel/navigation`
 - **Strings**: Use `~/features/Transactions/common/strings` not `~/features/Transactions/common/useStrings`
 
 ### Debugging Instructions
@@ -764,12 +868,15 @@ git checkout fix/wallet-navigation-and-functionality
 
 1. **Always use absolute paths** with `~/` prefix for internal imports
 2. **Prefer static atoms** (`a`) when possible for better performance
-3. **Use theme atoms** (`ta`) only for theme-dependent styles
-4. **Keep style arrays** organized: static atoms first, then theme atoms, then palette
+3. **Use themed atoms** (`ta`) for theme-dependent styles instead of direct palette access
+4. **Keep style arrays** organized: static atoms first, then themed atoms, then palette
 5. **Test both light and dark themes** after migration
 6. **Update all relative imports** to use the new absolute path system
 7. **Check conflicts.md** before starting new migrations
 8. **Document new issues** in conflicts.md when found
+9. **Use themed atoms for common theme-dependent styles** like `ta.bg_color_max`, `ta.text_primary_max`, `ta.el_primary_max` instead of `{backgroundColor: p.bg_color_max}`, `{color: p.text_primary_max}`, etc.
+10. **Only use direct palette access** when no equivalent themed atom exists
+11. **Do not create index.ts files** - import directly from the source files instead of creating barrel exports
 
 ## 🔄 Migration Checklist
 
@@ -777,8 +884,291 @@ git checkout fix/wallet-navigation-and-functionality
 - [ ] Replace relative imports with absolute paths (`~/`)
 - [ ] Update component imports from `components/` to `ui/`
 - [ ] Convert styles to atomic design system
+- [ ] Use themed atoms (`ta`) instead of direct palette access for theme-dependent styles
 - [ ] Test in both light and dark themes
 - [ ] Verify all imports resolve correctly
 - [ ] Clear Metro cache and restart development server
 - [ ] Check conflicts.md for known issues
 - [ ] Document any new conflicts found
+- [ ] Remove any new index.ts files and update imports to use direct file paths
+
+---
+
+## 🧭 Navigation Migration Guidelines
+
+### Overview
+
+This section documents the recent navigation system refactoring and provides guidelines for future navigation-related changes in the Yoroi mobile app.
+
+### Recent Navigation Changes (Commit 58709d40a)
+
+#### 1. Simplified Navigation Options API
+
+**Before:**
+
+```typescript
+// Navigation options required both atoms and palette
+const navOptions = React.useMemo(
+  () => defaultStackNavigationOptions(atoms, p),
+  [atoms, p]
+);
+```
+
+**After:**
+
+```typescript
+// Navigation options now only require palette
+const navOptions = React.useMemo(() => defaultStackNavigationOptions(p), [p]);
+```
+
+#### 2. Updated Navigation Helper Functions
+
+**Function Signature Changes:**
+
+```typescript
+// Before
+export const defaultStackNavigationOptions = (
+  atoms: typeof a,
+  color: ThemedPalette
+): StackNavigationOptions => {
+  // Implementation used atoms parameter
+};
+
+// After
+export const defaultStackNavigationOptions = (
+  palette: ThemedPalette
+): StackNavigationOptions => {
+  // Implementation uses static atoms (a) directly
+};
+```
+
+**Key Changes:**
+
+- Removed `atoms` parameter from all navigation option functions
+- Use static atoms (`a`) directly in navigation helpers
+- Simplified function signatures across all navigators
+
+#### 3. Navigation Hook Enhancements
+
+**New Send/Receive Navigation Functions:**
+
+```typescript
+// Added to useWalletNavigation hook
+navigateToSendStartTx: () => {
+  navigation.navigate('manage-wallets', {
+    screen: 'main-wallet-routes',
+    params: {screen: 'history', params: {screen: 'send-start-tx'}},
+  })
+},
+
+navigateToReceiveSingle: () => {
+  navigation.navigate('manage-wallets', {
+    screen: 'main-wallet-routes',
+    params: {screen: 'history', params: {screen: 'receive-single'}},
+  })
+},
+```
+
+#### 4. Performance Optimizations
+
+**TxHistoryNavigator Improvements:**
+
+```typescript
+// Before: Inline component definitions
+<Stack.Screen name="history-list">
+  {() => (
+    <Boundary loading={{size: 'full'}}>
+      <TxHistory />
+    </Boundary>
+  )}
+</Stack.Screen>
+
+// After: getComponent for better performance
+<Stack.Screen
+  name="history-list"
+  getComponent={() => TxHistory}
+/>
+```
+
+### Migration Guidelines
+
+#### 1. Update Navigation Options Usage
+
+**❌ Avoid old pattern:**
+
+```typescript
+const navOptions = React.useMemo(
+  () => defaultStackNavigationOptions(atoms, p),
+  [atoms, p]
+);
+```
+
+**✅ Use new pattern:**
+
+```typescript
+const navOptions = React.useMemo(() => defaultStackNavigationOptions(p), [p]);
+```
+
+#### 2. Update Navigation Helper Functions
+
+**❌ Avoid old function signatures:**
+
+```typescript
+const screenOptions = (atoms: Atoms, color: ThemedPalette) => ({
+  ...defaultStackNavigationOptions(atoms, color),
+  gestureEnabled: true,
+});
+```
+
+**✅ Use new function signatures:**
+
+```typescript
+const screenOptions = (color: ThemedPalette) => ({
+  ...defaultStackNavigationOptions(color),
+  gestureEnabled: true,
+});
+```
+
+#### 3. Use Static Atoms in Navigation Helpers
+
+**✅ Correct pattern for navigation helpers:**
+
+```typescript
+export const defaultStackNavigationOptions = (
+  palette: ThemedPalette
+): StackNavigationOptions => {
+  return {
+    headerTitleStyle: {
+      ...a.body_1_lg_medium, // Use static atoms directly
+      ...a.text_center,
+    },
+    headerTitleContainerStyle: {
+      ...a.flex_1,
+      ...a.align_center,
+      ...a.justify_center,
+    },
+  };
+};
+```
+
+#### 4. Performance Best Practices
+
+**✅ Use getComponent for better performance:**
+
+```typescript
+<Stack.Screen
+  name="screen-name"
+  options={{ title: strings.screen.title }}
+  getComponent={() => ScreenComponent}
+/>
+```
+
+**❌ Avoid inline component definitions:**
+
+```typescript
+<Stack.Screen name="screen-name">{() => <ScreenComponent />}</Stack.Screen>
+```
+
+### Navigation Architecture Principles
+
+#### 1. Consistent Navigation Options
+
+All navigators should use the centralized `defaultStackNavigationOptions` function:
+
+```typescript
+// ✅ Consistent across all navigators
+screenOptions={{
+  ...defaultStackNavigationOptions(p),
+  headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
+}}
+```
+
+#### 2. Navigation Hook Usage
+
+Use the centralized `useWalletNavigation` hook for navigation actions:
+
+```typescript
+import { useWalletNavigation } from "~/kernel/navigation/hooks/useWalletNavigation";
+
+const Component = () => {
+  const navigation = useWalletNavigation();
+
+  const handleNavigate = () => {
+    navigation.navigateToSendStartTx();
+  };
+};
+```
+
+#### 3. Route Type Safety
+
+Always use typed route names from the navigation types:
+
+```typescript
+import { TxHistoryRoutes } from "~/kernel/navigation/types";
+
+// ✅ Type-safe navigation
+navigation.navigate("tx-details" as keyof TxHistoryRoutes);
+```
+
+### Migration Checklist
+
+- [ ] Update all `defaultStackNavigationOptions` calls to remove `atoms` parameter
+- [ ] Update all `defaultMaterialTopTabNavigationOptions` calls to remove `atoms` parameter
+- [ ] Replace inline component definitions with `getComponent`
+- [ ] Update navigation helper function signatures
+- [ ] Use static atoms (`a`) directly in navigation helpers
+- [ ] Test navigation flows after migration
+- [ ] Verify performance improvements
+- [ ] Update any custom navigation options to match new pattern
+
+### Benefits of Navigation Migration
+
+1. **Simplified API**: Fewer parameters to manage in navigation options
+2. **Better Performance**: `getComponent` pattern improves bundle loading
+3. **Consistent Patterns**: Unified navigation options across all navigators
+4. **Type Safety**: Better TypeScript support with simplified signatures
+5. **Maintainability**: Cleaner code with fewer dependencies
+
+### Common Migration Issues
+
+#### 1. Missing Atoms Parameter
+
+**Error:** `TypeError: Cannot read property 'body_1_lg_medium' of undefined`
+
+**Solution:** Use static atoms (`a`) directly instead of passed atoms parameter:
+
+```typescript
+// ❌ Before
+headerTitleStyle: {
+  ...atoms.body_1_lg_medium,
+}
+
+// ✅ After
+headerTitleStyle: {
+  ...a.body_1_lg_medium,
+}
+```
+
+#### 2. Navigation Hook Dependencies
+
+**Error:** Navigation functions not found
+
+**Solution:** Import from the correct location:
+
+```typescript
+// ✅ Correct import
+import { useWalletNavigation } from "~/kernel/navigation/hooks/useWalletNavigation";
+```
+
+#### 3. Performance Issues
+
+**Issue:** Slow navigation transitions
+
+**Solution:** Use `getComponent` pattern:
+
+```typescript
+// ✅ Performance optimized
+<Stack.Screen name="screen-name" getComponent={() => ScreenComponent} />
+```
+
+This navigation migration represents a significant improvement in the app's navigation architecture, making it more maintainable, performant, and consistent across all features.

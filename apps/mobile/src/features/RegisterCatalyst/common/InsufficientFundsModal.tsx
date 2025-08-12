@@ -21,9 +21,12 @@ export const InsufficientFundsModal = () => {
   const {fund} = useCatalystCurrentFund()
   const {palette: p} = useTheme()
 
+  // Default to 0 if fund data is not available yet
+  const votingPowerThreshold = fund?.info?.votingPowerThreshold ?? 0n
+
   const fmtMinPrimaryBalance = formatter({
     info: wallet.portfolioPrimaryTokenInfo,
-    quantity: BigInt(fund.info.votingPowerThreshold),
+    quantity: votingPowerThreshold,
   })
   const fmtPrimaryBalance = formatter(primaryBalance)
 

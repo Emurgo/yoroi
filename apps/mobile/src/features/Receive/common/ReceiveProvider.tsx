@@ -1,5 +1,5 @@
 import {produce} from 'immer'
-import React from 'react'
+import * as React from 'react'
 
 export const useReceive = () => React.useContext(ReceiveContext)
 

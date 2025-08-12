@@ -21,12 +21,12 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
-import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView'
+import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingView'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {ScrollView, useScrollView} from '~/ui/ScrollView/ScrollView'
 import {ShareQRCodeCard} from '~/ui/ShareQRCodeCard/ShareQRCodeCard'
 import {SkeletonAdressDetail} from '~/ui/SkeletonAddressDetail/SkeletonAddressDetail'
-import {TextInput} from '~/ui/TextInput'
+import {TextInput} from '~/ui/TextInput/TextInput'
 import {editedFormatter} from '~/wallets/utils/amountUtils'
 import {isEmptyString} from '~/wallets/utils/string'
 import {useReceive} from '../common/ReceiveProvider'
@@ -50,7 +50,7 @@ export const RequestSpecificAmountScreen = () => {
   const handleOnGenerateLink = React.useCallback(() => {
     track.receiveAmountGeneratedPageViewed({ada_amount: Number(amount)})
     openModal({
-      title: strings.amountToReceive,
+      title: strings.receive.amountToReceive,
       content: <Modal amount={amount} address={selectedAddress} />,
       height: modalHeight,
     })
@@ -58,7 +58,7 @@ export const RequestSpecificAmountScreen = () => {
     track,
     amount,
     openModal,
-    strings.amountToReceive,
+    strings.receive.amountToReceive,
     selectedAddress,
     modalHeight,
   ])
@@ -95,11 +95,11 @@ export const RequestSpecificAmountScreen = () => {
         >
           <View style={[a.gap_lg]}>
             <Text style={[a.body_1_lg_regular, {color: p.text_gray_medium}]}>
-              {strings.specificAmountDescription}
+              {strings.receive.specificAmountDescription}
             </Text>
 
             <TextInput
-              label={strings.ADALabel}
+              label={strings.receive.ADALabel}
               keyboardType="numeric"
               onChangeText={handleOnChangeAmount}
               value={amount}
@@ -109,7 +109,7 @@ export const RequestSpecificAmountScreen = () => {
 
             <View style={[a.gap_xs]}>
               <Text style={[a.body_1_lg_regular, {color: p.gray_600}]}>
-                {strings.address}
+                {strings.receive.address}
               </Text>
 
               <Text style={[a.body_1_lg_regular, {color: p.text_gray_medium}]}>
@@ -131,7 +131,7 @@ export const RequestSpecificAmountScreen = () => {
           <Button
             onPress={handleOnGenerateLink}
             disabled={!hasAmount}
-            title={strings.generateLink}
+            title={strings.receive.generateLink}
             testID="receive:request-specific-amount:generate-link-button"
           />
         </View>
@@ -181,11 +181,15 @@ const Modal = ({amount, address}: {amount: string; address: string}) => {
             shareContent={content}
             qrContent={content}
             onLongPress={(event: GestureResponderEvent) =>
-              copy({text: content, feedback: strings.addressCopiedMsg, event})
+              copy({
+                text: content,
+                feedback: strings.receive.addressCopiedMsg,
+                event,
+              })
             }
             testID="receive:specific-amount"
             onShare={() => track.receiveShareAddressClicked()}
-            shareLabel={strings.shareLabel}
+            shareLabel={strings.receive.shareLabel}
           />
         ) : (
           <View style={[{flex: 1}]}>
@@ -197,10 +201,10 @@ const Modal = ({amount, address}: {amount: string; address: string}) => {
       <View style={[a.pt_lg]}>
         <Button
           onPress={(event: GestureResponderEvent) =>
-            copy({text: content, feedback: strings.copyLinkMsg, event})
+            copy({text: content, feedback: strings.receive.copyLinkMsg, event})
           }
           disabled={!hasAmount}
-          title={strings.copyLinkBtn}
+          title={strings.receive.copyLinkBtn}
           icon={Icon.Copy}
           testID="receive:request-specific-amount:copy-link-button"
         />

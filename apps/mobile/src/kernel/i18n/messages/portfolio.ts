@@ -86,8 +86,8 @@ export const portfolioMessages = defineMessages({
     defaultMessage: '!!!Lend and Borrow',
   },
   tokenDetail: {
-    id: 'components.txhistory.txdetails.txDetails',
-    defaultMessage: '!!!Token Detail',
+    id: 'portfolio.portfolioTokensDetailScreen.tokenDetail',
+    defaultMessage: '!!!Token details',
   },
   availableSoon: {
     id: 'components.delegationsummary.userSummary.title',

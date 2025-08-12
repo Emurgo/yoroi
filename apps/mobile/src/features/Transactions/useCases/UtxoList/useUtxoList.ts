@@ -10,7 +10,7 @@ import {Balance} from '@yoroi/types'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {toAssetNameHex, toPolicyId} from '~/wallets/cardano/api/utils'
 import {wrappedCsl} from '~/wallets/cardano/wrappedCsl'
-import {useWalletEvent} from '~/wallets/hooks'
+import {useWalletEvent} from '~/features/WalletManager/hooks/useWalletEvent'
 import {RawUtxo} from '~/wallets/types/other'
 
 export const useUtxoList = () => {
@@ -23,10 +23,11 @@ export const useUtxoList = () => {
   const queryClient = useQueryClient()
 
   const queryKey = ['utxoList', walletId]
-  useWalletEvent(wallet, 'utxos', () => queryClient.invalidateQueries(queryKey))
+  useWalletEvent(wallet, 'utxos', () =>
+    queryClient.invalidateQueries({queryKey}),
+  )
 
   const query = useQuery({
-    suspense: true,
     queryKey,
     queryFn: () =>
       getUtxoList({

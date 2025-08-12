@@ -23,7 +23,7 @@ export const BrowserSearchToolbar = ({
   onSearchSubmit,
   searchValue,
 }: Props) => {
-  const {palette: p, isDark} = useTheme()
+  const {atoms: ta, palette: p, isDark} = useTheme()
   const strings = useStrings()
   const {track} = useMetrics()
 
@@ -52,12 +52,13 @@ export const BrowserSearchToolbar = ({
           autoFocus
           selectTextOnFocus
           value={searchValue}
-          placeholder={strings.searchDApps}
+          placeholder={strings.discover.searchDApps}
           placeholderTextColor={p.text_gray_low}
           onChangeText={(search) => onSearchChange(search)}
           autoCapitalize="none"
           style={[
-            {color: p.text_gray_max, minHeight: 36},
+            ta.text_gray_max,
+            {minHeight: 36},
             a.body_1_lg_regular,
             a.flex_1,
             a.pb_md,

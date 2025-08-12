@@ -7,7 +7,7 @@ import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWalle
 import {Icon} from '~/ui/Icon'
 import {NotificationItem} from '~/ui/NotificationItem/NotificationItem'
 import {YoroiWallet} from '~/wallets/cardano/types'
-import {useTransactionInfos} from '~/wallets/hooks'
+import {useTransactionInfos} from '~/features/Transactions/hooks/useTransactionInfos'
 import {TransactionInfo} from '~/wallets/types/other'
 import {Token} from '~/wallets/types/tokens'
 import {asQuantity, Quantities} from '~/wallets/utils/utils'

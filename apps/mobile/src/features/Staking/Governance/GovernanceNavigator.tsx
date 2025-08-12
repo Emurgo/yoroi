@@ -1,17 +1,14 @@
 import {GovernanceProvider} from '@yoroi/staking'
 import {Atoms, ThemedPalette, useTheme} from '@yoroi/theme'
-import React from 'react'
+import * as React from 'react'
 
 import {NetworkTag} from '~/features/Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
-import {
-  BackButton,
-  defaultStackNavigationOptions,
-  useWalletNavigation,
-} from '~/kernel/navigation'
+import {useStrings} from '~/kernel/i18n/useStrings'
+import {BackButton, defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
+import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {useGovernanceManagerMaker} from './common/helpers'
 import {NavigationStack} from './common/navigation'
-import {useStrings} from '~/kernel/i18n/useStrings'
 import {ChangeVoteScreen} from './useCases/ChangeVote/ChangeVoteScreen'
 import {HomeScreen} from './useCases/Home/HomeScreen'
 import {NoFundsScreen} from './useCases/NoFunds/NoFundsScreen'
@@ -32,7 +29,7 @@ export const GovernanceNavigator = () => {
       <SafeArea>
         <Stack.Navigator
           screenOptions={{
-            ...screenOptions(atoms, p),
+            ...screenOptions(p),
             headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
           }}
           initialRouteName="staking-gov-home"
@@ -90,7 +87,7 @@ const txStatusOptions = {
   detachPreviousScreen: true,
   header: () => null,
 }
-const screenOptions = (atoms: Atoms, color: ThemedPalette) => ({
-  ...defaultStackNavigationOptions(atoms, color),
+const screenOptions = (color: ThemedPalette) => ({
+  ...defaultStackNavigationOptions(color),
   gestureEnabled: false,
 })

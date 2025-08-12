@@ -97,6 +97,18 @@ export const transactionsMessages = defineMessages({
     id: 'components.transactions.viewOnExplorer',
     defaultMessage: '!!!View on Explorer',
   },
+  utxoListTitle: {
+    id: 'components.utxoList',
+    defaultMessage: '!!!UTxO List',
+  },
+  utxoConsolidationTitle: {
+    id: 'components.utxoConsolidation',
+    defaultMessage: '!!!UTxO Consolidation',
+  },
+  utxoConsolidationWarning: {
+    id: 'components.utxoConsolidationWarning',
+    defaultMessage: '!!!Consolidate your UTxOs to improve wallet performance',
+  },
   noTransactions: {
     id: 'components.txhistory.txhistory.noTransactions',
     defaultMessage: '!!!No transactions',
@@ -186,24 +198,26 @@ export const transactionsMessages = defineMessages({
     defaultMessage: '!!!Copied Label',
   },
   organizeWallet: {
-    id: 'components.txhistory.txhistory.title',
+    id: 'components.organizeWallet.title',
     defaultMessage: '!!!Organize Wallet',
   },
   organizeWalletBanner: {
-    id: 'components.txhistory.txhistory.title',
-    defaultMessage: '!!!Organize Wallet Banner',
+    id: 'components.organizeWallet.banner',
+    defaultMessage: '!!!Assets are spread in multiple addresses',
   },
   organizeWalletDescription: {
-    id: 'components.txhistory.txhistory.title',
-    defaultMessage: '!!!Organize Wallet Description',
+    id: 'components.organizeWallet.description',
+    defaultMessage:
+      '!!!Your assets are spread across multiple addresses which may interfere with Dapp connectivity. Merging your ADA and tokens into a single address keeps your wallet organized and ready for Dapp interactions.',
   },
   organizeWalletWarning: {
-    id: 'components.txhistory.txhistory.title',
-    defaultMessage: '!!!Organize Wallet Warning',
+    id: 'components.organizeWallet.warning',
+    defaultMessage:
+      '!!!Certain wallets will require more than 1 transaction to merge assets. You will receive a notification if an additional transaction is needed.',
   },
   organizeWalletButton: {
-    id: 'components.txhistory.txhistory.title',
-    defaultMessage: '!!!Organize Wallet Button',
+    id: 'components.organizeWallet.button',
+    defaultMessage: '!!!Merge assets',
   },
   historyTitle: {
     id: 'components.txhistory.txhistory.title',

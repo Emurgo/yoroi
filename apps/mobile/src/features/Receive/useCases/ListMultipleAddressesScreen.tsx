@@ -1,5 +1,5 @@
 import {useFocusEffect} from '@react-navigation/native'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {
   InteractionManager,
@@ -31,7 +31,7 @@ type AddressInfo = {
 
 export const ListMultipleAddressesScreen = () => {
   const strings = useStrings()
-  const {palette: p} = useTheme()
+  const {palette: p, atoms: ta} = useTheme()
   const navigate = useNavigateTo()
   const {track} = useMetrics()
   const {wallet} = useSelectedWallet()
@@ -100,10 +100,10 @@ export const ListMultipleAddressesScreen = () => {
 
   return (
     <SafeAreaView
-      style={[styles.root, {backgroundColor: p.bg_color_max}]}
+      style={[a.flex_1, a.py_lg, ta.bg_color_max]}
       edges={['left', 'right', 'bottom']}
     >
-      <View style={styles.content}>
+      <View style={[a.flex_1, a.px_lg]}>
         {showAddressLimitInfo && hasReachedGapLimit && (
           <>
             <ShowAddressLimitInfo />
@@ -126,8 +126,9 @@ export const ListMultipleAddressesScreen = () => {
 
       <Animated.View
         style={[
-          styles.footer,
-          {backgroundColor: p.bg_color_max},
+          a.pt_lg,
+          a.px_lg,
+          ta.bg_color_max,
           {borderColor: p.gray_200},
           {
             display: hasReachedGapLimit ? 'none' : 'flex',

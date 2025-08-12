@@ -1,21 +1,26 @@
-import {useNavigation} from '@react-navigation/native'
-import {useMutation} from '@tanstack/react-query'
 import {isNft} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
 import {Portfolio} from '@yoroi/types'
+
+import {useNavigation} from '@react-navigation/native'
+import {useMutation} from '@tanstack/react-query'
 import * as React from 'react'
 import {useLayoutEffect} from 'react'
 import {TouchableOpacity, View, ViewProps} from 'react-native'
 import {FlatList} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {useReviewTx} from '~/features/ReviewTx/common/ReviewTxProvider'
+import {useSearch} from '~/features/Search/SearchContext'
+import {useNavigateTo} from '~/features/Send/common/navigation'
 import {toYoroiEntry} from '~/features/Send/common/toYoroiEntry'
+import {useSaveMemo} from '~/features/Transactions/hooks/useSaveMemo'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {assetsToSendProperties} from '~/kernel/metrics/helpers'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {useWalletNavigation} from '~/kernel/navigation/hooks'
+import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {AddTokenButton} from '~/ui/AddTokenButton/AddTokenButton'
 import {Boundary} from '~/ui/Boundary/Boundary'
 import {Button} from '~/ui/Button/Button'
@@ -23,11 +28,7 @@ import {Icon} from '~/ui/Icon'
 import {RemoveAmountButton} from '~/ui/RemoveAmountButton/RemoveAmountButton'
 import {Space} from '~/ui/Space/Space'
 import {TokenAmountItem} from '~/ui/TokenAmountItem/TokenAmountItem'
-import {useSaveMemo} from '~/wallets/hooks'
 import {YoroiEntry, YoroiSignedTx} from '~/wallets/types/yoroi'
-import {useNavigateTo} from '../../common/navigation'
-import {useReviewTx} from '../ReviewTx/common/ReviewTxProvider'
-import {useSearch} from '../Search/SearchContext'
 
 export const ListAmountsToSendScreen = () => {
   const navigateTo = useNavigateTo()
@@ -58,11 +59,10 @@ export const ListAmountsToSendScreen = () => {
   const {
     meta: {addressMode},
   } = useSelectedWallet()
-  const {mutate: createUnsignedTx, isLoading} = useMutation({
+  const {mutate: createUnsignedTx, isPending} = useMutation({
     mutationFn: (entries: YoroiEntry[]) =>
       wallet.createUnsignedTx({entries, addressMode}),
     retry: false,
-    useErrorBoundary: true,
   })
 
   React.useEffect(() => {
@@ -148,7 +148,7 @@ export const ListAmountsToSendScreen = () => {
           </Boundary>
         )}
         bounces={false}
-        keyExtractor={({info}) => info.id}
+        keyExtractor={(item) => item.info.id}
         testID="selectedTokens"
       />
 
@@ -165,7 +165,7 @@ export const ListAmountsToSendScreen = () => {
           onPress={onNext}
           title={strings.send.next}
           disabled={selectedTokensCounter === 0}
-          isLoading={isLoading}
+          isLoading={isPending}
         />
       </Actions>
     </SafeAreaView>
@@ -182,8 +182,6 @@ const ActionableAmount = ({
   onRemove,
   onEdit,
 }: ActionableAmountProps) => {
-  const {palette: p} = useTheme()
-
   const handleRemove = () => onRemove(amount.info.id)
   const handleEdit = () => (isNft(amount.info) ? null : onEdit(amount.info.id))
 

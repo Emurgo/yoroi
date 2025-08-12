@@ -4,8 +4,7 @@ import {Blockies} from '@yoroi/identicon'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Api, Wallet} from '@yoroi/types'
-import React from 'react'
-import {useIntl} from 'react-intl'
+import * as React from 'react'
 import {
   InteractionManager,
   Linking,
@@ -17,23 +16,24 @@ import {
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {CardAboutPhrase} from '~/features/SetupWallet/common/CardAboutPhrase/CardAboutPhrase'
 import {YoroiZendeskLink} from '~/features/SetupWallet/common/constants'
-import {LearnMoreButton} from '~/features/SetupWallet/common/LearnMoreButton/LearnMoreButton'
-import {useStrings} from '~/kernel/i18n/useStrings'
 import {Info as InfoIcon} from '~/features/SetupWallet/illustrations/Info'
 import {parseWalletMeta} from '~/features/WalletManager/common/validators/wallet-meta'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useCreateWalletXPub} from '~/features/WalletManager/hooks/useCreateWalletXPub'
+import {useBold} from '~/hooks/useBold'
 import {showErrorDialog} from '~/kernel/dialogs'
 import {debugWalletInfo, features} from '~/kernel/features'
+import {errorMessages} from '~/kernel/i18n/messages/global'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {SetupWalletRouteNavigation} from '~/kernel/navigation/types'
 import {Button} from '~/ui/Button/Button'
+import {CardAboutPhrase} from '~/ui/CardAboutPhrase/CardAboutPhrase'
 import {Icon} from '~/ui/Icon'
 import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingView'
+import {LearnMoreButton} from '~/ui/LearnMoreButton/LearnMoreButton'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
 import {StepperProgress} from '~/ui/StepperProgress/StepperProgress'
@@ -68,14 +68,13 @@ const useSizeModal = () => {
 // when hw, later will be part of the onboarding
 const addressMode: Wallet.AddressMode = 'single'
 export const SaveNanoXScreen = () => {
-
   const strings = useStrings()
   const {palette: p, isDark} = useTheme()
   const storage = useAsyncStorage()
   const navigation = useNavigation<SetupWalletRouteNavigation>()
   const {track} = useMetrics()
   const {openModal, closeModal} = useModal()
-  const bold = useBold()
+  const bold = useBold({style: a.body_1_lg_medium})
   const {walletManager} = useWalletManager()
   const {HEIGHT_MODAL_NAME_PASSWORD, HEIGHT_MODAL_CHECKSUM} = useSizeModal()
   const [name, setName] = React.useState(
@@ -95,7 +94,7 @@ export const SaveNanoXScreen = () => {
   if (!hwDeviceInfo) throw new Error('no hwDeviceInfo')
   const {plate, seed} = walletManager.checksum(hwDeviceInfo.bip44AccountPublic)
 
-  const {createWallet, isLoading} = useCreateWalletXPub({
+  const {createWallet, isPending} = useCreateWalletXPub({
     onSuccess: async (wallet) => {
       walletIdChanged(wallet.id)
       const walletStorage = storage.join('wallet/')
@@ -117,15 +116,19 @@ export const SaveNanoXScreen = () => {
     onError: (error) => {
       InteractionManager.runAfterInteractions(() => {
         return error instanceof Api.Errors.Network
-          ? showErrorDialog(strings.global.networkError)
-          : showErrorDialog(strings.global.generalError, {
-              message: error.message,
+          ? showErrorDialog({
+              title: errorMessages.networkError.title,
+              message: errorMessages.networkError.message,
+            })
+          : showErrorDialog({
+              title: errorMessages.generalError.title,
+              message: errorMessages.generalError.message,
             })
       })
     },
   })
 
-  const nameErrors = !isLoading ? walletManager.validateWalletName(name) : null
+  const nameErrors = !isPending ? walletManager.validateWalletName(name) : null
   const walletNameErrorText = getWalletNameError(
     {
       tooLong: strings.setupWallet.tooLong,
@@ -135,7 +138,7 @@ export const SaveNanoXScreen = () => {
     nameErrors,
   )
 
-  const disabled = isLoading || Object.keys(nameErrors ?? {}).length > 0
+  const disabled = isPending || Object.keys(nameErrors ?? {}).length > 0
 
   const handleOnSubmit = React.useCallback(() => {
     createWallet({
@@ -181,7 +184,12 @@ export const SaveNanoXScreen = () => {
           />
         </View>
       ),
-      footer: <Button title={strings.setupWallet.continueButton} onPress={closeModal} />,
+      footer: (
+        <Button
+          title={strings.setupWallet.continueButton}
+          onPress={closeModal}
+        />
+      ),
       height: HEIGHT_MODAL_NAME_PASSWORD,
     })
   }
@@ -197,7 +205,7 @@ export const SaveNanoXScreen = () => {
             checksumLine={1}
             linesOfText={[
               strings.setupWallet.walletChecksumModalCardFirstItem,
-              strings.setupWallet.walletChecksumModalCardSecondItem(plate),
+              strings.setupWallet.walletChecksumModalCardSecondItem,
               strings.setupWallet.walletChecksumModalCardThirdItem,
             ]}
           />
@@ -211,7 +219,12 @@ export const SaveNanoXScreen = () => {
           />
         </View>
       ),
-      footer: <Button title={strings.setupWallet.continueButton} onPress={closeModal} />,
+      footer: (
+        <Button
+          title={strings.setupWallet.continueButton}
+          onPress={closeModal}
+        />
+      ),
       height: HEIGHT_MODAL_CHECKSUM,
     })
   }
@@ -257,7 +270,7 @@ export const SaveNanoXScreen = () => {
             value={name}
             onChangeText={(walletName: string) => setName(walletName)}
             errorText={
-              !isEmptyString(walletNameErrorText) && !isLoading
+              !isEmptyString(walletNameErrorText) && !isPending
                 ? walletNameErrorText
                 : undefined
             }
@@ -270,14 +283,7 @@ export const SaveNanoXScreen = () => {
 
           <Space.Height.lg />
 
-          <View
-            style={[
-              a.flex_row,
-              a.align_center,
-              a.justify_center,
-              {textAlignVertical: 'center'},
-            ]}
-          >
+          <View style={[a.flex_row, a.align_center, a.justify_center]}>
             <Icon.WalletAvatar
               image={new Blockies({seed}).asBase64()}
               style={[{width: 24, height: 24}]}
@@ -325,12 +331,4 @@ const Info = ({onPress}: {onPress: () => void}) => {
       <InfoIcon size={24} color={isDark ? p.white_static : p.black_static} />
     </TouchableOpacity>
   )
-}
-
-const useBold = () => {
-  return {
-    b: (text: React.ReactNode) => (
-      <Text style={[a.body_1_lg_medium]}>{text}</Text>
-    ),
-  }
 }

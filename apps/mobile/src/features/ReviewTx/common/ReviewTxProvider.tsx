@@ -8,7 +8,7 @@
  */
 
 import {castDraft, produce} from 'immer'
-import React from 'react'
+import * as React from 'react'
 
 import {YoroiUnsignedTx} from '~/wallets/types/yoroi'
 

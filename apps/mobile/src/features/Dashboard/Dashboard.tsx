@@ -2,7 +2,7 @@ import {useNavigation} from '@react-navigation/native'
 import {StackNavigationProp} from '@react-navigation/stack'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import BigNumber from 'bignumber.js'
-import React from 'react'
+import * as React from 'react'
 import {
   ActivityIndicator,
   RefreshControl,
@@ -15,31 +15,30 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {StakeRewardsWithdrawalOperation} from '~/features/ReviewTx/common/operations'
 import {useReviewTx} from '~/features/ReviewTx/common/ReviewTxProvider'
 import {useIsParticipatingInGovernance} from '~/features/Staking/Governance/common/helpers'
-import {useStrings} from '~/kernel/i18n/useStrings'
 import {WithdrawGovernanceWarningModal} from '~/features/Staking/Governance/useCases/WithdrawGovernanceWarningModal/WithdrawGovernanceWarningModal'
 import {PoolTransitionNotice} from '~/features/Staking/Staking/PoolTransition/PoolTransitionNotice'
 import {usePoolTransition} from '~/features/Staking/Staking/PoolTransition/usePoolTransition'
 import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
+import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {DashboardRoutes} from '~/kernel/navigation/types'
-import {useWalletNavigation} from '~/kernel/navigation/hooks'
 
+import {useBalances} from '~/features/Portfolio/common/hooks/useBalances'
+import {useCreateWithdrawTx} from '~/features/Staking/hooks/useCreateWithdrawTx'
+import {useIsOnline} from '~/features/WalletManager/hooks/useIsOnline'
+import {useSync} from '~/features/WalletManager/hooks/useSync'
 import {Banner} from '~/ui/Banner/Banner'
 import {Button} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
-import {
-  useBalances,
-  useCreateWithdrawTx,
-  useIsOnline,
-  useSync,
-} from '~/wallets/hooks'
 import {isEmptyString} from '~/wallets/utils/string'
 import {Amounts} from '~/wallets/utils/utils'
+import {useStakingInfo} from '../Staking/hooks/useStakingInfo'
 import {EpochProgress} from './EpochProgress'
 import {NotDelegatedInfo} from './NotDelegatedInfo'
-import {StakePoolInfos, useStakingInfo} from './StakePoolInfos'
+import {StakePoolInfos} from './StakePoolInfos'
 import {UserSummary} from './UserSummary'
 
 export const Dashboard = () => {
@@ -52,12 +51,14 @@ export const Dashboard = () => {
   const {isPoolRetiring} = usePoolTransition()
   const {unsignedTxChanged} = useReviewTx()
   const {
-    isLoading: isWithdrawLoading,
+    isPending: isWithdrawLoading,
     hasRewards,
-    createWithdrawalTx,
+    value: unsignedTx,
+    error: withdrawError,
+    resolve: createWithdrawalTx,
   } = useCreateWithdrawTx()
   const {wallet, meta} = useSelectedWallet()
-  const {isLoading: isSyncing, sync} = useSync(wallet)
+  const {isPending: isSyncing, sync} = useSync(wallet)
   const isOnline = useIsOnline(wallet)
   const {openModal} = useModal()
 
@@ -76,12 +77,32 @@ export const Dashboard = () => {
   const isParticipatingInGovernance = useIsParticipatingInGovernance()
   const walletNavigateTo = useWalletNavigation()
 
+  React.useEffect(() => {
+    if (unsignedTx) {
+      unsignedTxChanged(unsignedTx)
+      walletNavigateTo.navigateToTxReview({
+        operations: [<StakeRewardsWithdrawalOperation key="0" />],
+        onSuccess: () => {
+          track.claimAdaTransactionSubmitted()
+          navigateTo.submittedTx()
+        },
+        onError: navigateTo.failedTx,
+      })
+    }
+  }, [unsignedTx, unsignedTxChanged, walletNavigateTo, track, navigateTo])
+
+  React.useEffect(() => {
+    if (withdrawError) {
+      navigateTo.failedTx()
+    }
+  }, [withdrawError, navigateTo])
+
   const createOnWithdraw =
     ({shouldDeregister}: {shouldDeregister: boolean}) =>
     () => {
       if (!isParticipatingInGovernance) {
         openModal({
-          title: governanceStrings.withdrawWarningTitle,
+          title: strings.staking.withdrawWarningTitle,
           content: (
             <WithdrawGovernanceWarningModal
               onParticipatePress={() =>
@@ -93,37 +114,22 @@ export const Dashboard = () => {
         return
       }
 
-      createWithdrawalTx({
-        shouldDeregister,
-        onError: navigateTo.failedTx,
-        onSuccess: (unsignedTx) => {
-          unsignedTxChanged(unsignedTx)
-          walletNavigateTo.navigateToTxReview({
-            operations: [<StakeRewardsWithdrawalOperation key="0" />],
-            onSuccess: () => {
-              track.claimAdaTransactionSubmitted()
-              navigateTo.submittedTx()
-            },
-            onError: navigateTo.failedTx,
-          })
-          return
-        },
-      })
+      createWithdrawalTx({shouldDeregister})
     }
 
   return (
     <SafeAreaView
       edges={['bottom', 'left', 'right']}
-      style={[styles.root, {backgroundColor: p.bg_color_max}]}
+      style={[a.flex_1, {backgroundColor: p.bg_color_max}]}
     >
-      <View style={styles.container}>
+      <View style={[a.flex_1]}>
         {isOnline && error && (
           <SyncErrorBanner showRefresh={!(isLoading || isSyncing)} />
         )}
 
         <ScrollView
-          style={styles.scrollView}
-          contentContainerStyle={styles.contentContainer}
+          style={[a.flex_1]}
+          contentContainerStyle={[a.px_lg, a.py_lg]}
           refreshControl={
             <RefreshControl
               onRefresh={() => {
@@ -234,8 +240,8 @@ const SyncErrorBanner = ({showRefresh}: {showRefresh: boolean}) => {
       error
       text={
         showRefresh
-          ? strings.global.syncErrorBannerTextWithRefresh
-          : strings.global.syncErrorBannerTextWithoutRefresh
+          ? strings.transactions.syncErrorBannerTextWithRefresh
+          : strings.transactions.syncErrorBannerTextWithoutRefresh
       }
     />
   )
@@ -279,8 +285,6 @@ const EpochInfo = () => {
     />
   )
 }
-
-// Messages moved to centralized useStrings
 
 const Actions = (props: ViewProps) => {
   const {palette: p} = useTheme()

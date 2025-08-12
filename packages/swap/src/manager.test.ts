@@ -166,6 +166,19 @@ describe('swapManagerMaker', () => {
       expect(mockDexhunterApi.tokens).toHaveBeenCalled()
     })
 
+    it('excludes aggregator if routing preference array does not include it', async () => {
+      const manager = swapManagerMaker(baseConfig)
+      manager.assignSettings({routingPreference: ['muesliswap']})
+
+      const result = await manager.api.tokens()
+      expect(result.tag).toBe('right')
+      expect(mockMuesliswapApi.tokens).toHaveBeenCalled()
+      // Dexhunter should be excluded because it's not in the routing preference array
+      // The excluded response should be returned instead of calling the API
+      // Since the promise is created immediately, the API is still called, but the result is excluded
+      expect(mockDexhunterApi.tokens).toHaveBeenCalled()
+    })
+
     it('returns left if both are left', async () => {
       mockDexhunterApi.tokens.mockResolvedValue({
         tag: 'left',

@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/native'
 import {useMutation, UseMutationOptions} from '@tanstack/react-query'
 import {atoms as a, useTheme} from '@yoroi/theme'
-import React from 'react'
+import * as React from 'react'
 import {
   KeyboardAvoidingView,
   Platform,
@@ -150,18 +150,20 @@ const useChangePassword = (
   >,
 ) => {
   const {walletManager} = useWalletManager()
-  const {mutate, ...mutation} = useMutation(
-    ({currentPassword, newPassword}) =>
+
+  const mutation = useMutation({
+    mutationFn: ({currentPassword, newPassword}) =>
       walletManager.changeWalletPassword({
         id: wallet.id,
         oldPassword: currentPassword,
         newPassword,
       }),
-    mutationOptions,
-  )
+    ...mutationOptions,
+  })
 
   return {
-    changePassword: mutate,
-    ...mutation,
+    changePassword: mutation.mutate,
+    isLoading: mutation.isPending,
+    error: mutation.error,
   }
 }

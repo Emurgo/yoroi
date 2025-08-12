@@ -40,7 +40,7 @@ export const rootStorageObservable = observableStorageMaker(rootSyncStorage)
 export const rootSyncStorageKeyMaker = storageKeyMaker(rootStorageObservable)
 
 // Root - storageVersion
-export const storageCurrentVersion = 3
+export const storageCurrentVersion = 4
 export const keyStorageVersion = 'storageVersion'
 export const storageVersionStorageKeyManager = rootSyncStorageKeyMaker({
   key: keyStorageVersion,

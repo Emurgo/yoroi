@@ -1,13 +1,11 @@
 import {createStackNavigator} from '@react-navigation/stack'
 import {Atoms, ThemedPalette, useTheme} from '@yoroi/theme'
-import React from 'react'
+import * as React from 'react'
 
-import {
-  defaultStackNavigationOptions,
-  ReviewTxRoutes,
-} from '~/kernel/navigation'
-import {Boundary} from '~/ui/Boundary/Boundary'
 import {useStrings} from '~/kernel/i18n/useStrings'
+import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
+import {ReviewTxRoutes} from '~/kernel/navigation/types'
+import {Boundary} from '~/ui/Boundary/Boundary'
 import {ReviewTxScreen} from './useCases/ReviewTxScreen/ReviewTxScreen'
 import {FailedTxScreen} from './useCases/ShowFailedTxScreen/FailedTxScreen'
 import {InfraestructureIssueScreen} from './useCases/ShowInfraestructureIssueScreen/InfraestructureIssueScreen'
@@ -24,7 +22,7 @@ export const ReviewTxNavigator = () => {
   return (
     <Stack.Navigator
       screenOptions={{
-        ...screenOptions(atoms, p),
+        ...screenOptions(p),
       }}
     >
       <Stack.Screen name="review-tx" options={{title: strings.txReview.title}}>
@@ -54,7 +52,7 @@ export const ReviewTxNavigator = () => {
   )
 }
 
-const screenOptions = (atoms: Atoms, color: ThemedPalette) => ({
-  ...defaultStackNavigationOptions(atoms, color),
+const screenOptions = (color: ThemedPalette) => ({
+  ...defaultStackNavigationOptions(color),
   gestureEnabled: true,
 })

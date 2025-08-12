@@ -1,15 +1,15 @@
 import {Chain} from '@yoroi/types'
 
-import * as React from 'react'
 import {QueryClient} from '@tanstack/react-query'
-import {Text, View} from 'react-native'
 import {render, waitFor} from '@testing-library/react-native'
+import * as React from 'react'
+import {Text, View} from 'react-native'
 
-import {usePortfolioTokenTraits} from './usePortfolioTokenTraits'
-import {wrapperMaker} from '../../fixtures/wrapperMaker'
-import {tokenMocks} from '../../adapters/token.mocks'
 import {tokenTraitsMocks} from '../../adapters/token-traits.mocks'
+import {tokenMocks} from '../../adapters/token.mocks'
 import {queryClientFixture} from '../../fixtures/query-client'
+import {wrapperMaker} from '../../fixtures/wrapperMaker'
+import {usePortfolioTokenTraits} from './usePortfolioTokenTraits'
 
 describe('usePortfolioTokenTraits', () => {
   let queryClient: QueryClient
@@ -46,6 +46,8 @@ describe('usePortfolioTokenTraits', () => {
     })
     const {getByTestId} = render(<TestComponent />, {wrapper})
 
+    expect(getByTestId('suspending')).toBeDefined()
+
     // Then we should see the data
     await waitFor(() => {
       expect(getByTestId('data')).toBeDefined()
@@ -80,12 +82,13 @@ describe('usePortfolioTokenTraits', () => {
     })
     const {getByTestId} = render(<TestComponent />, {wrapper})
 
-    // Then we should see the data
+    expect(getByTestId('suspending')).toBeDefined()
+
+    // Then we should see the error
     await waitFor(() => {
-      expect(getByTestId('data')).toBeDefined()
+      expect(getByTestId('hasError')).toBeDefined()
     })
 
-    expect(getByTestId('data').props.children).toEqual(JSON.stringify(1))
     expect(mockedGetTokenTraits).toHaveBeenCalledWith(
       tokenMocks.nftCryptoKitty.info.id,
     )

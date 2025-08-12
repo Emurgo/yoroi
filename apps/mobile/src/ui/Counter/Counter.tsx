@@ -1,5 +1,5 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
-import React from 'react'
+import * as React from 'react'
 import {View, ViewProps} from 'react-native'
 
 import {Text} from '~/ui/Text/Text'

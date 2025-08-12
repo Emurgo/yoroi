@@ -1,12 +1,12 @@
 import {FlashList, FlashListProps} from '@shopify/flash-list'
 import {atoms as a} from '@yoroi/theme'
 import _ from 'lodash'
-import React from 'react'
+import * as React from 'react'
 import {View} from 'react-native'
 
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {Space} from '~/ui/Space/Space'
-import {useTransactionInfos} from '~/wallets/hooks'
+import {useTransactionInfos} from '~/features/Transactions/hooks/useTransactionInfos'
 import {TransactionInfo} from '~/wallets/types/other'
 import {useTxFilter} from './TxFilterProvider'
 import {TxListItem} from './TxListItem'
@@ -47,7 +47,7 @@ export const TxList = (props: Props) => {
     <View style={a.flex_1}>
       <FlashList
         data={loadedTxs}
-        contentContainerStyle={[a.pt_lg, a.px_lg]}
+        contentContainerStyle={{...a.pt_lg, ...a.px_lg}}
         renderItem={({item}) => <TxListItem transaction={item} />}
         ItemSeparatorComponent={() => <Space.Height.lg />}
         keyExtractor={(_, index) => index.toString()}

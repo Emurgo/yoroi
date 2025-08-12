@@ -1,5 +1,5 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
-import React from 'react'
+import * as React from 'react'
 import {View} from 'react-native'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
@@ -49,7 +49,7 @@ export const ModalError = ({error, resetErrorBoundary, onCancel}: Props) => {
           size="S"
           type={ButtonType.Secondary}
           onPress={onCancel}
-          title={strings.cancel}
+          title={strings.global.cancel}
         />
 
         <Space.Width.lg />
@@ -57,7 +57,7 @@ export const ModalError = ({error, resetErrorBoundary, onCancel}: Props) => {
         <Button
           size="S"
           onPress={resetErrorBoundary}
-          title={strings.tryAgain}
+          title={strings.ui.tryAgain}
         />
       </View>
     </>
@@ -66,40 +66,27 @@ export const ModalError = ({error, resetErrorBoundary, onCancel}: Props) => {
 
 const getErrorMessage = (
   error: Error,
-  strings: Record<
-    | 'error'
-    | 'rejectedByUser'
-    | 'bluetoothDisabledError'
-    | 'ledgerUserError'
-    | 'ledgerGeneralConnectionError'
-    | 'ledgerBluetoothDisabledError'
-    | 'ledgerAdaAppNeedsToBeOpenError',
-    string
-  >,
+  strings: ReturnType<typeof useStrings>,
 ): string => {
   if (error instanceof RejectedByUserError) {
-    return strings.rejectedByUser
+    return strings.ledgerMessages.rejectedByUserError
   }
 
   if (error instanceof BluetoothDisabledError) {
-    return strings.bluetoothDisabledError
+    return strings.ledgerMessages.bluetoothDisabledError
   }
 
   if (error instanceof LedgerUserError) {
-    return strings.ledgerUserError
+    return strings.ledgerMessages.connectionError
   }
 
   if (error instanceof GeneralConnectionError) {
-    return strings.ledgerGeneralConnectionError
-  }
-
-  if (error instanceof BluetoothDisabledError) {
-    return strings.ledgerBluetoothDisabledError
+    return strings.ledgerMessages.connectionError
   }
 
   if (error instanceof AdaAppClosedError) {
-    return strings.ledgerAdaAppNeedsToBeOpenError
+    return strings.ledgerMessages.appOpened
   }
 
-  return `${strings.error}: ${error.message}`
+  return `${strings.global.error}: ${error.message}`
 }

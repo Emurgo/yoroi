@@ -4,15 +4,15 @@ import * as React from 'react'
 import {View} from 'react-native'
 import Svg, {ClipPath, Defs, G, Path, Rect} from 'react-native-svg'
 
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {useWalletNavigation} from '~/kernel/navigation/hooks'
+import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Icon} from '~/ui/Icon'
 import {IconProps} from '~/ui/Icon/type'
 import {NotificationItem} from '~/ui/NotificationItem/NotificationItem'
 import {SwipeOutWrapper} from '~/ui/SwipeOutWrapper/SwipeOutWrapper'
 import {TransactionReceivedNotificationPopup} from '~/ui/TransactionReceivedNotificationPopup/TransactionReceivedNotificationPopup'
 import {BannerIds} from './banners'
-import {useStrings} from '~/kernel/i18n/useStrings'
 
 type Props = {
   event: Notifications.Event

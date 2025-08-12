@@ -98,7 +98,7 @@ export const discoverMessages = defineMessages({
     defaultMessage: '!!!Welcome to Yoroi dApp Explorer',
   },
   welcomeToYoroiDAppExplorerDescription: {
-    id: 'components.walletinit.walletinitmenu.logo.title',
+    id: 'discover.discoverList.welcomeToYoroiDAppExplorerDescription',
     defaultMessage: '!!!Welcome to Yoroi dApp Explorer Description',
   },
   next: {

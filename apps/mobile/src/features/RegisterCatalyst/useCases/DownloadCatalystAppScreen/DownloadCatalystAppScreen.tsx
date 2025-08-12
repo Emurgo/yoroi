@@ -16,9 +16,9 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import appstoreBadge from '~/assets/img/app-store-badge.png'
 import playstoreBadge from '~/assets/img/google-play-badge.png'
-import {useCatalystCurrentFund} from '~/features/Discover/common/hooks'
-import {useStakingInfo} from '~/features/Portfolio/common/hooks/useStakingInfo'
+import {useCatalystCurrentFund} from '~/features/Discover/common/useCatalystCurrentFund'
 import {useNavigateTo} from '~/features/RegisterCatalyst/common/navigation'
+import {useStakingInfo} from '~/features/Staking/hooks/useStakingInfo'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
@@ -30,7 +30,7 @@ import {Space} from '~/ui/Space/Space'
 export const DownloadCatalystAppScreen = () => {
   const strings = useStrings()
   const {wallet} = useSelectedWallet()
-  const {stakingInfo} = useStakingInfo(wallet, {suspense: true})
+  const {stakingInfo} = useStakingInfo(wallet)
   const {openModal, closeModal} = useModal()
   const {palette: p} = useTheme()
   const {fund} = useCatalystCurrentFund()
@@ -188,4 +188,4 @@ const AppStoreButton = () => {
   )
 }
 
-const createPin = () => cryptoRandomString({length: 4, type: 'numeric'})
+const createPin = () => cryptoRandomString({length: 4, type: 'numeric'} as any)

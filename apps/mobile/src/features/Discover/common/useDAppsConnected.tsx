@@ -17,7 +17,7 @@ export const useDAppsConnected = (
   const {manager} = useDappConnector()
 
   return useQuery({
-    suspense: true,
+    throwOnError: true,
     ...options,
     queryKey: [wallet.id, 'useDappsConnected', wallet.networkManager.network],
     queryFn: () => manager.listAllConnections(),
@@ -37,11 +37,9 @@ export const useInvalidateConnectedDapps = () => {
   const network = selectedWallet.wallet.networkManager.network
 
   return React.useCallback(async () => {
-    await queryClient.invalidateQueries([
-      walletId,
-      'useDappsConnected',
-      network,
-    ])
+    await queryClient.invalidateQueries({
+      queryKey: [walletId, 'useDappsConnected', network],
+    })
   }, [walletId, network, queryClient])
 }
 

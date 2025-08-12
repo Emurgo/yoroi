@@ -1,5 +1,5 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
-import React from 'react'
+import * as React from 'react'
 import {Image, View} from 'react-native'
 
 import NotDelegatedImage from '~/assets/img/testnet/no-transactions-yet.png'

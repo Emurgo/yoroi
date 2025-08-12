@@ -1,5 +1,5 @@
 import {useTheme} from '@yoroi/theme'
-import React from 'react'
+import * as React from 'react'
 import {Switch} from 'react-native'
 
 export const SettingsSwitch = ({

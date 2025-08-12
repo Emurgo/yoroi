@@ -1,12 +1,10 @@
 import {useQuery, UseQueryOptions} from '@tanstack/react-query'
 import {time} from '@yoroi/common'
 import {Catalyst, useCatalyst} from '@yoroi/staking'
-import {App} from '@yoroi/types'
 
 import {usePortfolioPrimaryBalance} from '~/features/Portfolio/common/hooks/usePortfolioPrimaryBalance'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {throwLoggedError} from '~/kernel/logger/helpers/throw-logged-error'
-import {queryInfo} from '~/kernel/query-client'
 import {YoroiWallet} from '~/wallets/cardano/types'
 import {isShelley} from '~/wallets/cardano/utils'
 
@@ -14,7 +12,11 @@ export const useCanVote = (wallet: YoroiWallet) => {
   const {meta} = useSelectedWallet()
   const amount = usePortfolioPrimaryBalance({wallet})
   const {fund} = useCatalystCurrentFund()
-  const sufficientFunds = amount.quantity >= fund.info.votingPowerThreshold
+
+  // Default to false if fund data is not available yet
+  const sufficientFunds = fund
+    ? amount.quantity >= fund.info.votingPowerThreshold
+    : false
 
   return {
     canVote: !meta.isReadOnly && isShelley(meta.implementation),
@@ -30,12 +32,9 @@ export function useCatalystCurrentFund(
 ) {
   const catalyst = useCatalyst()
   const query = useQuery({
-    suspense: true,
-    useErrorBoundary: true,
     staleTime: time.oneDay,
-    cacheTime: time.oneDay,
     retryDelay: time.oneSecond,
-    queryKey: [queryInfo.keyToPersist, 'useCatalystFundStatus'],
+    queryKey: ['useCatalystFundStatus'],
     ...options,
 
     queryFn: async () => {
@@ -51,9 +50,6 @@ export function useCatalystCurrentFund(
       }
     },
   })
-
-  if (query.data == null)
-    throw new App.Errors.InvalidState('useCatalystFundStatus: no data')
 
   return {
     query,

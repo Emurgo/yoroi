@@ -358,5 +358,79 @@ export const useWalletNavigation = () => {
         },
       })
     },
+
+    // Send Navigation Functions
+    navigateToSendStartTx: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'main-wallet-routes',
+        params: {screen: 'history', params: {screen: 'send-start-tx'}},
+      })
+    },
+
+    navigateToSendListAmounts: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'history',
+          params: {screen: 'send-list-amounts-to-send'},
+        },
+      })
+    },
+
+    navigateToSendEditAmount: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'main-wallet-routes',
+        params: {screen: 'history', params: {screen: 'send-edit-amount'}},
+      })
+    },
+
+    navigateToSendSelectToken: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'history',
+          params: {screen: 'send-select-token-from-list'},
+        },
+      })
+    },
+
+    navigateToSendSubmittedTx: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'main-wallet-routes',
+        params: {screen: 'history', params: {screen: 'send-submitted-tx'}},
+      })
+    },
+
+    navigateToSendFailedTx: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'main-wallet-routes',
+        params: {screen: 'history', params: {screen: 'send-failed-tx'}},
+      })
+    },
+
+    // Receive Navigation Functions
+    navigateToReceiveSingle: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'main-wallet-routes',
+        params: {screen: 'history', params: {screen: 'receive-single'}},
+      })
+    },
+
+    navigateToReceiveSpecificAmount: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'history',
+          params: {screen: 'receive-specific-amount'},
+        },
+      })
+    },
+
+    navigateToReceiveMultiple: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'main-wallet-routes',
+        params: {screen: 'history', params: {screen: 'receive-multiple'}},
+      })
+    },
   } as const).current
 }

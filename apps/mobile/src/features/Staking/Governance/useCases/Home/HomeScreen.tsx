@@ -15,29 +15,27 @@ import React, {type ReactNode} from 'react'
 import {Text, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
-import {GovernanceVote} from '@yoroi/types'
-import {useStrings} from '~/kernel/i18n/useStrings'
 import {formatDrepHashToCIP129Format} from '~/features/Staking/Governance/common/drep'
 import {LearnMoreLink} from '~/features/Staking/Governance/common/LearnMoreLink/LearnMoreLink'
 import {YoroiRecordLink} from '~/features/Staking/Governance/common/YoroiRecordLink/YoroiRecordLink'
+import {useCreateGovernanceTx} from '~/features/Staking/hooks/useCreateGovernanceTx'
+import {useStakingInfo} from '~/features/Staking/hooks/useStakingInfo'
+import {useStakingKey} from '~/features/Staking/hooks/useStakingKey'
+import {useTransactionInfos} from '~/features/Transactions/hooks/useTransactionInfos'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useWalletEvent} from '~/features/WalletManager/hooks/useWalletEvent'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {Action} from '~/ui/Action/Action'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
-import {
-  useCreateGovernanceTx,
-  useStakingKey,
-  useTransactionInfos,
-  useWalletEvent,
-} from '~/wallets/hooks'
 import {TransactionInfo} from '~/wallets/types/other'
+import {Action} from '../../common/Action/Action'
 import {
   mapStakingKeyStateToGovernanceAction,
   useGovernanceActions,
 } from '../../common/helpers'
 import {useNavigateTo} from '../../common/navigation'
-import {useStakingInfo} from '../Dashboard/StakePoolInfos'
+import {GovernanceVote} from '../../types'
 import {EnterDrepIdModal} from '../EnterDrepIdModal/EnterDrepIdModal'
 
 export const HomeScreen = () => {
@@ -49,11 +47,10 @@ export const HomeScreen = () => {
     setIsPendingRefetchAfterTxConfirmation,
   ] = React.useState(false)
 
-  const {data: stakingStatus, refetch: refetchStakingKeyState} =
-    useStakingKeyState(stakingKeyHash, {
-      refetchOnMount: true,
-      suspense: true,
-    })
+  const {data: stakingStatus} = useStakingKeyState(stakingKeyHash)
+  const refetchStakingKeyState = React.useCallback(() => {
+    // trigger by toggling utxos or navigating; explicit refetch not available in this hook
+  }, [])
 
   useWalletEvent(wallet, 'utxos', refetchStakingKeyState)
 

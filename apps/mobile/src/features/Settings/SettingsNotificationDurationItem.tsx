@@ -1,6 +1,6 @@
 import {isNumber} from '@yoroi/common'
 import {useNotificationsConfig} from '@yoroi/notifications'
-import React from 'react'
+import * as React from 'react'
 
 import {
   NavigatedSettingsItem,

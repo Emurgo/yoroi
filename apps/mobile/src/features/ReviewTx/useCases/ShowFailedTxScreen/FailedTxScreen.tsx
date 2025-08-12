@@ -1,13 +1,13 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
-import React from 'react'
+import * as React from 'react'
 import {Text, View} from 'react-native'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useBlockGoBack, useWalletNavigation} from '~/kernel/navigation/hooks'
 import {Button} from '~/ui/Button/Button'
+import {FailedTxIcon} from '~/ui/FailedTxIcon/FailedTxIcon'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
-import {FailedTxIcon} from '../illustrations/FailedTxIcon'
 
 export const FailedTxScreen = () => {
   useBlockGoBack()

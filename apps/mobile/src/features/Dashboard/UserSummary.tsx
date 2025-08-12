@@ -1,6 +1,6 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {BigNumber} from 'bignumber.js'
-import React from 'react'
+import * as React from 'react'
 import {View} from 'react-native'
 
 import {usePrivacyMode} from '~/features/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'

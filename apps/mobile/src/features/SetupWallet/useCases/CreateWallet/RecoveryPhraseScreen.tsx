@@ -7,6 +7,7 @@ import {Linking, Platform, Text, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {YoroiZendeskLink} from '~/features/SetupWallet/common/constants'
+import {useBold} from '~/hooks/useBold'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Button} from '~/ui/Button/Button'
@@ -21,7 +22,7 @@ import {EyeClosed} from '../../illustrations/EyeClosed'
 import {EyeOpen} from '../../illustrations/EyeOpen'
 
 export const RecoveryPhraseScreen = () => {
-  const bold = useBold()
+  const bold = useBold({style: a.body_1_lg_medium})
   const {openModal, closeModal} = useModal()
   const [isBlur, setIsBlur] = React.useState(true)
   const navigation = useNavigation<any>()
@@ -213,12 +214,4 @@ const Info = ({onPress, testID}: {onPress: () => void; testID?: string}) => {
       </View>
     </TouchableOpacity>
   )
-}
-
-const useBold = () => {
-  return {
-    b: (text: React.ReactNode) => (
-      <Text style={a.body_1_lg_medium}>{text}</Text>
-    ),
-  }
 }

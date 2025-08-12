@@ -14,7 +14,7 @@ import {
 import {availableNetworks} from '~/features/WalletManager/common/constants'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {useWalletNavigation} from '~/kernel/navigation/hooks'
+import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'

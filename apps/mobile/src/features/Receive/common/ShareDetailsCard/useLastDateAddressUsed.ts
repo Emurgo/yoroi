@@ -7,12 +7,16 @@ export const useLastDateAddressUsed = (address: string) => {
   const {wallet} = useSelectedWallet()
   const intl = useIntl()
   return React.useMemo(() => {
+    if (!wallet.transactions) return null
+
     const lastUsed = Object.values(wallet.transactions).reduce(
       (currentLast, tx) => {
         const {inputs, outputs} = tx
         const isRelevant =
-          inputs.some((v) => address === v.address) ||
-          outputs.some((v) => address === v.address)
+          inputs?.some((v: {address: string}) => address === v.address) ||
+          false ||
+          outputs?.some((v: {address: string}) => address === v.address) ||
+          false
         if (!isRelevant) return currentLast
         const lastUpdatedAt = new Date(tx.lastUpdatedAt).getTime()
 

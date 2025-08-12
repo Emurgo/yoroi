@@ -1,10 +1,10 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
-import React from 'react'
+import * as React from 'react'
 import {Linking, TouchableOpacity, View} from 'react-native'
 
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Divider} from '~/ui/Divider/Divider'
-import {useStrings} from '~/kernel/i18n/useStrings'
 
 export const YoroiRecordLink = () => {
   const strings = useStrings()

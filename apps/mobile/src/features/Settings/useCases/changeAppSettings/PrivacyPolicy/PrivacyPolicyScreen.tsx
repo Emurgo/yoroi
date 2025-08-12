@@ -1,5 +1,5 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
-import React from 'react'
+import * as React from 'react'
 import {ScrollView} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {PrivacyPolicy} from '~/features/Legal/ui/PrivacyPolicy/PrivacyPolicy'

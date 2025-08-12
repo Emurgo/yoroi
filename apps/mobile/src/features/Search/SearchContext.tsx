@@ -1,9 +1,10 @@
+import {atoms as a, ThemedPalette, useTheme} from '@yoroi/theme'
+
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {
   StackNavigationOptions,
   TransitionPresets,
 } from '@react-navigation/stack'
-import {atoms as a, ThemeAtoms, ThemedPalette, useTheme} from '@yoroi/theme'
 import {produce} from 'immer'
 import React, {
   createContext,
@@ -144,7 +145,7 @@ export const useSearchOnNavBar = ({
   const navigation = useNavigation()
   const {palette: p} = useTheme()
   const defaultNavigationOptions = React.useMemo(
-    () => defaultStackNavigationOptions(a, p),
+    () => defaultStackNavigationOptions(p),
     [p],
   )
 
@@ -243,7 +244,7 @@ export const useDisableSearchOnBar = ({
     React.useCallback(() => {
       if (isChild)
         navigation.getParent()?.setOptions({
-          ...defaultStackNavigationOptions(a, p),
+          ...defaultStackNavigationOptions(p),
           headerLeft: onBack
             ? () => <BackButton onPress={onBack} />
             : undefined,
@@ -256,7 +257,7 @@ export const useDisableSearchOnBar = ({
   React.useLayoutEffect(() => {
     if (!isChild)
       navigation.setOptions({
-        ...defaultStackNavigationOptions(a, p),
+        ...defaultStackNavigationOptions(p),
         headerLeft: onBack ? () => <BackButton onPress={onBack} /> : undefined,
         headerRight: undefined,
         title,
@@ -333,7 +334,6 @@ export const BackButton2 = (
 const WIDTH = Dimensions.get('window').width
 
 export const defaultStackNavigationOptions = (
-  atoms: ThemeAtoms,
   color: ThemedPalette,
 ): StackNavigationOptions => {
   return {
@@ -358,7 +358,7 @@ export const defaultStackNavigationOptions = (
       backgroundColor: color.bg_color_max,
     },
     headerTitleStyle: {
-      ...atoms.body_1_lg_medium,
+      ...a.body_1_lg_medium,
       width: WIDTH - 75,
       textAlign: 'center',
     },
@@ -369,10 +369,10 @@ export const defaultStackNavigationOptions = (
       justifyContent: 'center',
     },
     headerLeftContainerStyle: {
-      ...atoms.pl_sm,
+      ...a.pl_sm,
     },
     headerRightContainerStyle: {
-      ...atoms.pr_sm,
+      ...a.pr_sm,
     },
     headerLeft: (props) => <BackButton2 {...props} />,
   }

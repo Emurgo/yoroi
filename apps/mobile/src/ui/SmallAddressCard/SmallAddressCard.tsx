@@ -1,7 +1,7 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
-import React from 'react'
-import {Text, TouchableOpacity, View} from 'react-native'
 import {LinearGradient} from 'expo-linear-gradient'
+import * as React from 'react'
+import {Text, TouchableOpacity, View} from 'react-native'
 import Animated, {FadeInUp, FadeOut, Layout} from 'react-native-reanimated'
 
 import {useCopy} from '~/features/Copy/context/CopyProvider'
@@ -58,7 +58,11 @@ export const SmallAddressCard = ({
           ]}
           activeOpacity={0.6}
           onLongPress={(event) =>
-            copy({text: address, feedback: strings.receive.addressCopiedMsg, event})
+            copy({
+              text: address,
+              feedback: strings.receive.addressCopiedMsg,
+              event,
+            })
           }
           onPress={onPress}
           testID={testID}
@@ -115,7 +119,9 @@ export const SmallAddressCard = ({
                   !isUsed && {color: p.gray_min},
                 ]}
               >
-                {isUsed ? strings.receive.usedAddress : strings.receive.unusedAddress}
+                {isUsed
+                  ? strings.receive.usedAddress
+                  : strings.receive.unusedAddress}
               </Text>
             </View>
 

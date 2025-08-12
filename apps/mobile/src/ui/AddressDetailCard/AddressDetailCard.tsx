@@ -8,7 +8,10 @@ import {useReceive} from '~/features/Receive/common/ReceiveProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Space} from '~/ui/Space/Space'
-import {useKeyHashes} from '~/wallets/hooks'
+import {
+  getSpendingKey,
+  getStakingKey,
+} from '~/wallets/cardano/addressInfo/addressInfo'
 import {isEmptyString} from '~/wallets/utils/string'
 import {ShareDetailsCard} from '../ShareDetailsCard/ShareDetailsCard'
 import {ShareQRCodeCard} from '../ShareQRCodeCard/ShareQRCodeCard'
@@ -39,9 +42,8 @@ export const AddressDetailCard = ({title}: AddressDetailCardProps) => {
   const {palette: p} = useTheme()
 
   const {selectedAddress: address} = useReceive()
-  const {spending, staking} = useKeyHashes({address})
-  const stakingHash = staking ?? ''
-  const spendingHash = spending ?? ''
+  const stakingHash = getStakingKey(address) ?? ''
+  const spendingHash = getSpendingKey(address) ?? ''
 
   const [scrollPosition, setScrollPosition] = React.useState(0)
   const cards: ReadonlyArray<CardItem> = [
@@ -58,9 +60,10 @@ export const AddressDetailCard = ({title}: AddressDetailCardProps) => {
   const itemsPerPage = 1
   const minToSwitchPage = 64
   const totalPages = Math.ceil(cards.length / itemsPerPage)
-  const cardIndicators = Array.from({length: totalPages}, (_, index) => index)
+  const cardIndicators =
+    Array.from({length: totalPages}, (_, index) => index) || []
 
-  if (isEmptyString(address)) return
+  if (isEmptyString(address)) return null
 
   const handleOnPageChange = (event: {
     nativeEvent: {contentOffset: {x: number}}
@@ -126,20 +129,22 @@ export const AddressDetailCard = ({title}: AddressDetailCardProps) => {
       <Space.Height.sm />
 
       <View style={[a.flex_row, {gap: 6}]}>
-        {cardIndicators.map((index) => (
-          <View
-            key={index + '-indicator'}
-            style={[
-              {
-                width: 12,
-                height: 12,
-                borderRadius: 100,
-                backgroundColor:
-                  index === scrollPosition ? p.el_primary_medium : p.gray_300,
-              },
-            ]}
-          />
-        ))}
+        {cardIndicators &&
+          cardIndicators.length > 0 &&
+          cardIndicators.map((index) => (
+            <View
+              key={index + '-indicator'}
+              style={[
+                {
+                  width: 12,
+                  height: 12,
+                  borderRadius: 100,
+                  backgroundColor:
+                    index === scrollPosition ? p.el_primary_medium : p.gray_300,
+                },
+              ]}
+            />
+          ))}
       </View>
     </View>
   )

@@ -1,14 +1,16 @@
-import {atoms as a, useTheme} from '@yoroi/theme'
-import {Portfolio} from '@yoroi/types'
-import React from 'react'
-import {Text, TextInput, View} from 'react-native'
+import {atoms as a} from '@yoroi/theme'
+import * as React from 'react'
+import {Text, View} from 'react-native'
 
 import {useQuery} from '@tanstack/react-query'
-import {Button} from '~/ui/Button/Button'
-import {GradientWarning} from '~/ui/GradientWarning/GradientWarning'
-import {Space} from '~/ui/Space/Space'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {isValidPoolIdOrHash, normalizeToPoolHash} from '~/yoroi-wallets/cardano/utils'
+import {Button} from '~/ui/Button/Button'
+import {Space} from '~/ui/Space/Space'
+import {TextInput} from '~/ui/TextInput/TextInput'
+import {
+  isValidPoolIdOrHash,
+  normalizeToPoolHash,
+} from '~/wallets/cardano/delegationUtils'
 
 type Props = {
   onPressDelegate: (poolHash: string) => void
@@ -33,10 +35,15 @@ export const PoolDetailScreen = ({
 
   return (
     <>
-      <GradientWarning
-        title={strings.staking.poolDetails.disclaimerTitle}
-        description={strings.staking.poolDetails.disclaimerText}
-      />
+      <View>
+        <Text style={[a.body_1_lg_medium]}>
+          {strings.staking.poolDetails.disclaimerTitle}
+        </Text>
+        <Space.Height.xs />
+        <Text style={[a.body_2_md_regular]}>
+          {strings.staking.poolDetails.disclaimerText}
+        </Text>
+      </View>
 
       <Space.Height.lg />
 

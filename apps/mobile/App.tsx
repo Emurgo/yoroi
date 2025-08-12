@@ -1,6 +1,12 @@
 import {AsyncStorageProvider} from '@yoroi/common'
 import {SetupWalletProvider} from '@yoroi/setup-wallet'
+import {
+  catalystApiMaker,
+  catalystManagerMaker,
+  CatalystProvider,
+} from '@yoroi/staking'
 import {ThemeProvider} from '@yoroi/theme'
+import {TransferProvider} from '@yoroi/transfer'
 
 import * as Font from 'expo-font'
 import * as React from 'react'
@@ -31,6 +37,11 @@ import {
 } from './src/kernel/storage/storages'
 import {CrashBoundary} from './src/ui/CrashBoundary/CrashBoundary'
 import {LoadingOverlayProvider} from './src/ui/LoadingOverlay/context'
+
+const catalystApi = catalystApiMaker()
+const catalystManager = catalystManagerMaker({
+  api: catalystApi,
+})
 
 function AppShell({children}: React.PropsWithChildren) {
   const isMigrated = useMigrations(rootStorage)
@@ -66,11 +77,17 @@ function BusinessShell({children}: React.PropsWithChildren) {
       <SearchProvider>
         <PairingProvider currencyStorageKeyManager={currencyStorageKeyManager}>
           <WalletManagerProvider walletManager={walletManager}>
-            <SetupWalletProvider>
-              <YoroiNotificationManager>
-                <CurrencyProvider>{children}</CurrencyProvider>
-              </YoroiNotificationManager>
-            </SetupWalletProvider>
+            <TransferProvider>
+              <SetupWalletProvider>
+                <YoroiNotificationManager>
+                  <CurrencyProvider>
+                    <CatalystProvider manager={catalystManager}>
+                      {children}
+                    </CatalystProvider>
+                  </CurrencyProvider>
+                </YoroiNotificationManager>
+              </SetupWalletProvider>
+            </TransferProvider>
           </WalletManagerProvider>
         </PairingProvider>
       </SearchProvider>

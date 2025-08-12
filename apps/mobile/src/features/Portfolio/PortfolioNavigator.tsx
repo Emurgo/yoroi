@@ -28,7 +28,7 @@ export const PortfolioNavigator = () => {
     <PortfolioProvider>
       <Stack.Navigator
         screenOptions={{
-          ...defaultStackNavigationOptions(a, p),
+          ...defaultStackNavigationOptions(p),
           headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
         }}
       >

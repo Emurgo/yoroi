@@ -16,7 +16,6 @@ import {
   TokensResponse,
   MuesliswapApiConfig,
 } from './types'
-import {resolveDexes} from './helpers'
 
 export const transformersMaker = ({
   primaryTokenInfo,
@@ -97,8 +96,7 @@ export const transformersMaker = ({
 
     cancel: {
       request: ({order}: Swap.CancelRequest): CancelRequest => ({
-        tx_hash: order.txHash,
-        output_idx: order.outputIndex ?? 0,
+        order_ids: [`${order.txHash}#${order.outputIndex ?? 0}`],
       }),
       response: ({tx_cbor}: CancelResponse): Swap.CancelResponse => ({
         cbor: tx_cbor,
@@ -120,7 +118,7 @@ export const transformersMaker = ({
         sell_amount: String(amountIn),
 
         buy_amount: String(amountIn * wantedPrice),
-        dex: protocol ? fromSwapProtocol(protocol) : undefined,
+        order_contract: protocol ? fromSwapProtocol(protocol) : undefined,
       }),
     },
 
@@ -142,10 +140,12 @@ export const transformersMaker = ({
         ...(partner !== undefined && {partner}),
         // muesli expects slippage as a percentage
         slippage: slippage / 100,
-        dex: resolveDexes({
-          protocol: protocol ? fromSwapProtocol(protocol) : undefined,
-          blockedProtocols: blockedProtocols?.map(fromSwapProtocol),
-        }),
+        excluded_sources: protocol
+          ? Object.values(Dex).filter(
+              (dex) =>
+                dex !== Dex.Unsupported && dex !== fromSwapProtocol(protocol),
+            )
+          : (blockedProtocols?.map(fromSwapProtocol) ?? []),
       }),
       response: ({
         buy_token_decimals,
@@ -156,7 +156,7 @@ export const transformersMaker = ({
         total_batcher_fee,
         total_deposit,
         total_input,
-        frontend_fee,
+        service_fee,
         total_output,
         total_output_without_slippage,
       }: QuoteResponse): Swap.EstimateResponse => ({
@@ -167,7 +167,7 @@ export const transformersMaker = ({
         batcherFee: Number(total_batcher_fee),
         deposits: Number(total_deposit),
         totalFee: Number(
-          (Number(total_batcher_fee) + Number(frontend_fee)).toFixed(
+          (Number(total_batcher_fee) + Number(service_fee)).toFixed(
             primaryTokenInfo.decimals,
           ),
         ),
@@ -198,10 +198,12 @@ export const transformersMaker = ({
         user_address: address,
         ...(partner !== undefined && {partner}),
         slippage: slippage / 100,
-        dex: resolveDexes({
-          protocol: protocol ? fromSwapProtocol(protocol) : undefined,
-          blockedProtocols: blockedProtocols?.map(fromSwapProtocol),
-        }),
+        excluded_sources: protocol
+          ? Object.values(Dex).filter(
+              (dex) =>
+                dex !== Dex.Unsupported && dex !== fromSwapProtocol(protocol),
+            )
+          : (blockedProtocols?.map(fromSwapProtocol) ?? []),
         utxos: inputs,
       }),
       response: ({
@@ -211,7 +213,7 @@ export const transformersMaker = ({
           net_price,
           net_price_impact,
           splits,
-          frontend_fee,
+          service_fee,
           total_batcher_fee,
           total_deposit,
           total_input,
@@ -222,14 +224,14 @@ export const transformersMaker = ({
       }: CreateOrderResponse): Swap.CreateResponse => ({
         aggregator: Swap.Aggregator.Muesliswap,
         aggregatorFee: 0,
-        frontendFee: Number(frontend_fee),
+        frontendFee: Number(service_fee),
         cbor: tx_cbor,
         netPrice: net_price * 10 ** (sell_token_decimals - buy_token_decimals),
         priceImpact: net_price_impact,
         batcherFee: Number(total_batcher_fee),
         deposits: Number(total_deposit),
         totalFee: Number(
-          (Number(total_batcher_fee) + Number(frontend_fee)).toFixed(
+          (Number(total_batcher_fee) + Number(service_fee)).toFixed(
             primaryTokenInfo.decimals,
           ),
         ),
@@ -250,7 +252,7 @@ export const transformersMaker = ({
         amountIn,
         inputs,
       }: Swap.CreateRequest): LimitOrderRequest => ({
-        dex: fromSwapProtocol(protocol),
+        order_contract: fromSwapProtocol(protocol),
         buy_amount: String(amountIn * wantedPrice),
 
         numbers_have_decimals: true,
@@ -267,7 +269,7 @@ export const transformersMaker = ({
           net_price,
           net_price_impact,
           splits,
-          frontend_fee,
+          service_fee,
           total_batcher_fee,
           total_deposit,
           total_input,
@@ -280,13 +282,13 @@ export const transformersMaker = ({
         aggregator: Swap.Aggregator.Muesliswap,
 
         aggregatorFee: 0,
-        frontendFee: Number(frontend_fee),
+        frontendFee: Number(service_fee),
         netPrice: net_price * 10 ** (sell_token_decimals - buy_token_decimals),
         priceImpact: net_price_impact,
         batcherFee: Number(total_batcher_fee),
         deposits: Number(total_deposit),
         totalFee: Number(
-          (Number(total_batcher_fee) + Number(frontend_fee)).toFixed(
+          (Number(total_batcher_fee) + Number(service_fee)).toFixed(
             primaryTokenInfo.decimals,
           ),
         ),
@@ -351,7 +353,7 @@ export const toSwapProtocol = (dex: Dex): Swap.Protocol =>
 
 export const fromSwapProtocol = (dex: Swap.Protocol): Dex =>
   ({
-    [Swap.Protocol.Cswap]: undefined,
+    [Swap.Protocol.Cswap]: Dex.Unsupported,
     [Swap.Protocol.Minswap_v1]: Dex.Minswap_v1,
     [Swap.Protocol.Minswap_v2]: Dex.Minswap_v2,
     [Swap.Protocol.Minswap_stable]: Dex.Minswap_stable,
@@ -360,7 +362,7 @@ export const fromSwapProtocol = (dex: Swap.Protocol): Dex =>
     [Swap.Protocol.Vyfi_v1]: Dex.Vyfi_v1,
     [Swap.Protocol.Sundaeswap_v1]: Dex.Sundaeswap_v1,
     [Swap.Protocol.Sundaeswap_v3]: Dex.Sundaeswap_v3,
-    [Swap.Protocol.Splash_v1]: undefined,
+    [Swap.Protocol.Splash_v1]: Dex.Unsupported,
     [Swap.Protocol.Teddy_v1]: Dex.Teddy_v1,
     [Swap.Protocol.Muesliswap_v2]: Dex.Muesliswap_v2,
     [Swap.Protocol.Muesliswap_clp]: Dex.Muesliswap_clp,

@@ -1,25 +1,23 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Text} from 'react-native'
 
-import {limitOfSecondaryAmountsPerTx} from '~/features/SetupWallet/common/constants'
+import {limitOfSecondaryAmountsPerTx} from '~/features/Send/common/constants'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {ErrorPanel} from '~/ui/ErrorPanel/ErrorPanel'
 
 export const MaxAmountsPerTx = () => {
   const strings = useStrings()
-  const theme = useTheme()
+  const {atoms: ta} = useTheme()
 
   return (
     <ErrorPanel>
-      <Text
-        style={[theme.atoms.body_2_md_regular, {color: theme.color.gray_max}]}
-      >
-        <Text
-          style={theme.atoms.body_2_md_medium}
-        >{`${limitOfSecondaryAmountsPerTx} ${strings.send.assets.toLocaleLowerCase()} `}</Text>
+      <Text style={[ta.text_gray_max, a.body_3_sm_regular]}>
+        <Text style={[a.body_3_sm_medium]}>
+          {`${limitOfSecondaryAmountsPerTx} `}
+        </Text>
 
-        {strings.send.maxAmountsPerTx}
+        {strings.send.errorBannerMaxTokenLimit}
       </Text>
     </ErrorPanel>
   )

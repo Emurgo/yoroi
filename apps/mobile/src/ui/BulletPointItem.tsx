@@ -1,5 +1,5 @@
 import {atoms as a} from '@yoroi/theme'
-import React from 'react'
+import * as React from 'react'
 import {StyleProp, Text, TextStyle, View} from 'react-native'
 
 import {Space} from './Space/Space'
