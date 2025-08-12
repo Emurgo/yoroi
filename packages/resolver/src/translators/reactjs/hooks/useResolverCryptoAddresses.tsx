@@ -12,7 +12,7 @@ export const useResolverCryptoAddresses = ({
 }) => {
   const {crypto} = useResolver()
 
-  const {data, error, isLoading, isError} = useQuery({
+  const query = useQuery({
     queryKey: ['resolver', 'crypto-addresses', resolve, strategy],
     queryFn: async ({signal}: {signal?: AbortSignal}) => {
       return await crypto.getCardanoAddresses({resolve, strategy}, {signal})
@@ -20,10 +20,7 @@ export const useResolverCryptoAddresses = ({
   })
 
   return {
-    data: data ?? [],
-    error,
-    isLoading,
-    isError,
-    cryptoAddresses: data ?? [],
+    ...query,
+    cryptoAddresses: query.data ?? [],
   }
 }
