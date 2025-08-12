@@ -2,6 +2,7 @@ import {
   useQuery,
   UseQueryOptions,
   useSuspenseQuery,
+  UseSuspenseQueryOptions,
 } from '@tanstack/react-query'
 import {createUnknownTokenInfo, isPrimaryToken} from '@yoroi/portfolio'
 import {Portfolio} from '@yoroi/types'
@@ -24,8 +25,8 @@ export const usePortfolioTokenInfos = (
   > = {},
 ) => {
   const query = useQuery({
-    ...options,
     queryKey: [wallet.networkManager.network, sourceId, tokenIds],
+    ...options,
     queryFn: async () => {
       const secondaryTokenIds = tokenIds.filter((id) => !isPrimaryToken(id))
       const response = await wallet.networkManager.tokenManager.sync({
@@ -48,17 +49,26 @@ export const usePortfolioTokenInfos = (
   }
 }
 
-export const usePortfolioTokenInfosSuspense = ({
-  wallet,
-  tokenIds,
-  sourceId = 'useTokenInfos',
-}: {
-  wallet: YoroiWallet
-  tokenIds: ReadonlyArray<Portfolio.Token.Id>
-  sourceId?: string
-}) => {
+export const usePortfolioTokenInfosSuspense = (
+  {
+    wallet,
+    tokenIds,
+    sourceId = 'useTokenInfos',
+  }: {
+    wallet: YoroiWallet
+    tokenIds: ReadonlyArray<Portfolio.Token.Id>
+    sourceId?: string
+  },
+  options?: UseSuspenseQueryOptions<
+    Map<`${string}.${string}`, Portfolio.Token.Info>,
+    Error,
+    Map<`${string}.${string}`, Portfolio.Token.Info>,
+    [string, string, ReadonlyArray<Portfolio.Token.Id>]
+  >,
+) => {
   const query = useSuspenseQuery({
     queryKey: [wallet.networkManager.network, sourceId, tokenIds],
+    ...options,
     queryFn: async () => {
       const secondaryTokenIds = tokenIds.filter((id) => !isPrimaryToken(id))
       const response = await wallet.networkManager.tokenManager.sync({

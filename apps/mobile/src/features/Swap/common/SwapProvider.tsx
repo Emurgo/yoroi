@@ -9,45 +9,66 @@ import * as React from 'react'
 import {TextInput} from 'react-native'
 
 import {usePortfolioBalances} from '~/features/Portfolio/common/hooks/usePortfolioBalances'
-import {usePortfolioTokenInfos} from '~/features/Portfolio/common/hooks/usePortfolioTokenInfos'
+import {usePortfolioTokenInfosSuspense} from '~/features/Portfolio/common/hooks/usePortfolioTokenInfos'
+import {useStakingKey} from '~/features/Staking/hooks/useStakingKey'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {useStakingKey} from '~/features/Staking/hooks/useStakingKey'
+import {convertBech32ToHex} from '~/wallets/cardano/common/signatureUtils'
 import {undefinedToken} from './constants'
 import {useNavigateTo} from './navigation'
 import {useGetInputs} from './useGetInputs'
 import {useSwapConfig} from './useSwapConfig'
 
-type SwapActionValueMap = {
-  ChangeOrderType: 'limit' | 'market'
-  TokenInInputTouched: undefined
-  TokenOutInputTouched: undefined
-  TokenInIdChanged: Portfolio.Token.Id
-  TokenOutIdChanged: Portfolio.Token.Id
-  TokenInAmountChanged: string
-  TokenOutAmountChanged: string
-  TokenInErrorChanged: string | null
-  TokenOutErrorChanged: string | null
-  WantedPriceInputChanged: string
-  SlippageInputChanged: number
-  SwitchTouched: undefined
-  ProtocolSelected: Swap.Protocol
-  ProtocolChanged: Swap.Protocol | undefined
-  Refresh: undefined
-  ResetAmounts: undefined
-  ResetForm: undefined
-  EstimateResponse: Swap.EstimateResponse
-  EstimateError: any
-  CreateResponse: Swap.CreateResponse
-  CreateError: any
-}
+const SwapActionType = {
+  ChangeOrderType: 'ChangeOrderType',
+  TokenInInputTouched: 'TokenInInputTouched',
+  TokenOutInputTouched: 'TokenOutInputTouched',
+  TokenInIdChanged: 'TokenInIdChanged',
+  TokenOutIdChanged: 'TokenOutIdChanged',
+  TokenInAmountChanged: 'TokenInAmountChanged',
+  TokenOutAmountChanged: 'TokenOutAmountChanged',
+  TokenInErrorChanged: 'TokenInErrorChanged',
+  TokenOutErrorChanged: 'TokenOutErrorChanged',
+  WantedPriceInputChanged: 'WantedPriceInputChanged',
+  SlippageInputChanged: 'SlippageInputChanged',
+  SwitchTouched: 'SwitchTouched',
+  ProtocolSelected: 'ProtocolSelected',
+  ProtocolChanged: 'ProtocolChanged',
+  Refresh: 'Refresh',
+  ResetAmounts: 'ResetAmounts',
+  ResetForm: 'ResetForm',
+  EstimateResponse: 'EstimateResponse',
+  EstimateError: 'EstimateError',
+  CreateResponse: 'CreateResponse',
+  CreateError: 'CreateError',
+} as const
 
-type SwapAction = {
-  [K in keyof SwapActionValueMap]: SwapActionValueMap[K] extends undefined
-    ? {type: K}
-    : {type: K; value: SwapActionValueMap[K]}
-}[keyof SwapActionValueMap]
+type SwapAction =
+  | {type: typeof SwapActionType.ChangeOrderType; value: 'limit' | 'market'}
+  | {type: typeof SwapActionType.TokenInInputTouched}
+  | {type: typeof SwapActionType.TokenOutInputTouched}
+  | {type: typeof SwapActionType.TokenInIdChanged; value: Portfolio.Token.Id}
+  | {type: typeof SwapActionType.TokenOutIdChanged; value: Portfolio.Token.Id}
+  | {type: typeof SwapActionType.TokenInAmountChanged; value: string}
+  | {type: typeof SwapActionType.TokenOutAmountChanged; value: string}
+  | {type: typeof SwapActionType.TokenInErrorChanged; value: string | null}
+  | {type: typeof SwapActionType.TokenOutErrorChanged; value: string | null}
+  | {type: typeof SwapActionType.WantedPriceInputChanged; value: string}
+  | {type: typeof SwapActionType.SlippageInputChanged; value: number}
+  | {type: typeof SwapActionType.SwitchTouched}
+  | {type: typeof SwapActionType.ProtocolSelected; value: Swap.Protocol}
+  | {
+      type: typeof SwapActionType.ProtocolChanged
+      value: Swap.Protocol | undefined
+    }
+  | {type: typeof SwapActionType.Refresh}
+  | {type: typeof SwapActionType.ResetAmounts}
+  | {type: typeof SwapActionType.ResetForm}
+  | {type: typeof SwapActionType.EstimateResponse; value: Swap.EstimateResponse}
+  | {type: typeof SwapActionType.EstimateError; value: any}
+  | {type: typeof SwapActionType.CreateResponse; value: Swap.CreateResponse}
+  | {type: typeof SwapActionType.CreateError; value: any}
 
 type SwapState = {
   needsNewEstimate: boolean
@@ -84,9 +105,9 @@ type SwapContext = SwapState & {
   isLoading: boolean
   limitOptions?: Swap.LimitOptionsResponse
   tokenInfos: Map<Portfolio.Token.Id, Portfolio.Token.Info>
-  tokenInInputRef: React.RefObject<TextInput> | undefined
-  tokenOutInputRef: React.RefObject<TextInput> | undefined
-  wantedPriceInputRef: React.RefObject<TextInput> | undefined
+  tokenInInputRef: React.RefObject<TextInput | null> | undefined
+  tokenOutInputRef: React.RefObject<TextInput | null> | undefined
+  wantedPriceInputRef: React.RefObject<TextInput | null> | undefined
   orders?: Array<Swap.Order>
   action: React.Dispatch<SwapAction>
   create: () => void
@@ -171,15 +192,14 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
 
   useFocusEffect(refetches)
 
-  const {tokenInfos = new Map<Portfolio.Token.Id, Portfolio.Token.Info>()} =
-    usePortfolioTokenInfos(
-      {
-        wallet,
-        tokenIds,
-        sourceId: 'SwapProvider',
-      },
-      {suspense: true},
-    )
+  const {tokenInfos: portfolioTokenInfos} = usePortfolioTokenInfosSuspense({
+    wallet,
+    tokenIds,
+    sourceId: 'SwapProvider',
+  })
+
+  const tokenInfos =
+    portfolioTokenInfos ?? new Map<Portfolio.Token.Id, Portfolio.Token.Info>()
 
   const tokenOutInputRef = React.useRef<TextInput | null>(null)
   const tokenInInputRef = React.useRef<TextInput | null>(null)
@@ -261,7 +281,10 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
       10 ** (tokenAmount?.info?.decimals ?? 0)
     const hasEnoughBalance = tokenBalance >= Number(state.tokenInInput.value)
     if (!hasEnoughBalance) {
-      action({type: 'TokenInErrorChanged', value: strings.notEnoughBalance})
+      action({
+        type: 'TokenInErrorChanged',
+        value: strings.swap.notEnoughBalance,
+      })
     } else {
       action({type: 'TokenInErrorChanged', value: null})
     }
@@ -269,7 +292,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
     balances.records,
     state.tokenInInput.tokenId,
     state.tokenInInput.value,
-    strings.notEnoughBalance,
+    strings.swap.notEnoughBalance,
   ])
 
   React.useEffect(() => {
@@ -302,10 +325,10 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
       })
       .then((response) => {
         if (isLeft(response)) {
-          action({type: SwapAction.EstimateError, value: response.error})
+          action({type: SwapActionType.EstimateError, value: response.error})
         } else {
           action({
-            type: SwapAction.EstimateResponse,
+            type: SwapActionType.EstimateResponse,
             value: response.value.data,
           })
         }
@@ -370,9 +393,12 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
         setIsLoading(false)
 
         if (isLeft(response)) {
-          action({type: SwapAction.CreateError, value: response.error})
+          action({type: SwapActionType.CreateError, value: response.error})
         } else {
-          action({type: SwapAction.CreateResponse, value: response.value.data})
+          action({
+            type: SwapActionType.CreateResponse,
+            value: response.value.data,
+          })
           navigate.reviewSwap()
         }
       })
@@ -438,37 +464,37 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
     draft.lastInputTouched = 'in'
 
     switch (action.type) {
-      case SwapAction.ChangeOrderType:
+      case SwapActionType.ChangeOrderType:
         draft.orderType = action.value
         break
 
-      case SwapAction.TokenInInputTouched:
+      case SwapActionType.TokenInInputTouched:
         draft.tokenInInput.isTouched = true
         draft.tokenInInput.value = ''
         draft.tokenInInput.error = null
         break
 
-      case SwapAction.TokenOutInputTouched:
+      case SwapActionType.TokenOutInputTouched:
         draft.tokenOutInput.isTouched = true
         draft.tokenOutInput.value = ''
         draft.tokenOutInput.error = null
         break
 
-      case SwapAction.TokenInIdChanged:
+      case SwapActionType.TokenInIdChanged:
         draft.tokenInInput.tokenId = action.value
         draft.selectedProtocol.isTouched = false
         draft.wantedPrice = ''
 
         break
 
-      case SwapAction.TokenOutIdChanged:
+      case SwapActionType.TokenOutIdChanged:
         draft.tokenOutInput.tokenId = action.value
         draft.selectedProtocol.isTouched = false
         draft.wantedPrice = ''
 
         break
 
-      case SwapAction.TokenInAmountChanged:
+      case SwapActionType.TokenInAmountChanged:
         draft.tokenInInput.value = parseNumber(action.value)
         if (action.value === '' || action.value === '0') {
           draft.tokenOutInput.value = '0'
@@ -477,7 +503,7 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
         }
         break
 
-      case SwapAction.TokenOutAmountChanged:
+      case SwapActionType.TokenOutAmountChanged:
         draft.lastInputTouched = 'out'
         draft.tokenOutInput.value = parseNumber(action.value)
         if (action.value === '' || action.value === '0') {
@@ -487,28 +513,28 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
         }
         break
 
-      case SwapAction.TokenInErrorChanged:
+      case SwapActionType.TokenInErrorChanged:
         draft.lastInputTouched = state.lastInputTouched
         draft.tokenInInput.error = action.value
         draft.needsNewEstimate = false
         break
 
-      case SwapAction.TokenOutErrorChanged:
+      case SwapActionType.TokenOutErrorChanged:
         draft.lastInputTouched = state.lastInputTouched
         draft.tokenOutInput.error = action.value
         draft.needsNewEstimate = false
         break
 
-      case SwapAction.SlippageInputChanged:
+      case SwapActionType.SlippageInputChanged:
         draft.slippageInput.value = action.value
         break
 
-      case SwapAction.WantedPriceInputChanged:
+      case SwapActionType.WantedPriceInputChanged:
         draft.wantedPrice = parseNumber(action.value)
         if (Number(draft.wantedPrice) === 0) draft.needsNewEstimate = false
         break
 
-      case SwapAction.SwitchTouched:
+      case SwapActionType.SwitchTouched:
         draft.tokenOutInput.isTouched = state.tokenInInput.isTouched
         draft.tokenOutInput.tokenId = state.tokenInInput.tokenId
         draft.tokenOutInput.value = ''
@@ -522,23 +548,23 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
         draft.wantedPrice = ''
         break
 
-      case SwapAction.ProtocolSelected:
+      case SwapActionType.ProtocolSelected:
         draft.selectedProtocol.isTouched = true
         draft.selectedProtocol.value = action.value
         break
 
-      case SwapAction.ProtocolChanged:
+      case SwapActionType.ProtocolChanged:
         draft.selectedProtocol.isTouched = false
         draft.selectedProtocol.value = action.value
         break
 
-      case SwapAction.Refresh:
+      case SwapActionType.Refresh:
         draft.lastInputTouched = state.lastInputTouched
         draft.tokenInInput.error = null
         draft.tokenOutInput.error = null
         break
 
-      case SwapAction.ResetAmounts:
+      case SwapActionType.ResetAmounts:
         draft.tokenInInput.value = ''
         draft.tokenOutInput.value = ''
 
@@ -546,11 +572,11 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
         draft.tokenOutInput.error = null
         break
 
-      case SwapAction.ResetForm:
+      case SwapActionType.ResetForm:
         draft = defaultState
         break
 
-      case SwapAction.EstimateResponse:
+      case SwapActionType.EstimateResponse:
         draft.lastInputTouched = state.lastInputTouched
         draft.needsNewEstimate = false
         draft.estimate = action.value
@@ -566,19 +592,19 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
         }
         break
 
-      case SwapAction.EstimateError:
+      case SwapActionType.EstimateError:
         draft.needsNewEstimate = false
         draft.estimate = undefined
         draft.tokenOutInput.error = action.value.message
         draft.canSwap = false
         break
 
-      case SwapAction.CreateResponse:
+      case SwapActionType.CreateResponse:
         draft.needsNewEstimate = false
         draft.createTx = action.value
         break
 
-      case SwapAction.CreateError:
+      case SwapActionType.CreateError:
         draft.needsNewEstimate = false
         draft.createTx = undefined
         draft.tokenOutInput.error = action.value.message

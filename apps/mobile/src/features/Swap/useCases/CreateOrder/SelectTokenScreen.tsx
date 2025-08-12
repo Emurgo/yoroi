@@ -43,9 +43,17 @@ export const SelectTokenScreen = () => {
   const loading = React.useMemo(
     () => ({
       fallback: (
-        <View style={[a.flex_col]}>
+        <View
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+          }}
+        >
           {Array.from({length: 6}).map((_, i) => (
-            <AmountItemPlaceholder key={i} style={[a.py_sm, a.px_lg]} />
+            <AmountItemPlaceholder
+              key={i}
+              style={[{paddingVertical: 8, paddingHorizontal: 16}]}
+            />
           ))}
         </View>
       ),
@@ -93,27 +101,24 @@ const TokenList = ({direction}: Direction) => {
           if (isPrimaryToken(a.info)) return -1 // `a` is the PrimaryToken, so it should come first
           if (isPrimaryToken(b.info)) return 1 // `b` is the PrimaryToken, so it should come first
 
-          const comparison = (
-            tokenActivity[b.info.id]?.price.close ?? new BigNumber(0)
+          // Compare based on weighted value (price * amount)
+          return (
+            (tokenActivity[b.info.id]?.price.close ?? new BigNumber(0))
+              .multipliedBy(amountBreakdown(b).bn)
+              .comparedTo(
+                (
+                  tokenActivity[a.info.id]?.price.close ?? new BigNumber(0)
+                ).multipliedBy(amountBreakdown(a).bn),
+              ) ?? 0
           )
-            .multipliedBy(amountBreakdown(b).bn)
-            .comparedTo(
-              (
-                tokenActivity[a.info.id]?.price.close ?? new BigNumber(0)
-              ).multipliedBy(amountBreakdown(a).bn),
-            )
-          return comparison ?? 0
         })
         .map(({info: {id}}) => id)
         .filter((ti) => tokenInfos.has(ti)),
     [balances.all, tokenActivity, tokenInfos],
   )
   const verifiedTokens = React.useMemo(
-    () =>
-      (swapConfig as {verifiedTokens?: string[]})?.verifiedTokens?.filter(
-        (ti) => tokenInfos.has(ti as Portfolio.Token.Id),
-      ) ?? [],
-    [swapConfig, tokenInfos],
+    () => swapConfig?.verifiedTokens?.filter((ti) => tokenInfos.has(ti)) ?? [],
+    [swapConfig?.verifiedTokens, tokenInfos],
   )
 
   const filteredTokenList = React.useMemo(() => {
@@ -127,9 +132,9 @@ const TokenList = ({direction}: Direction) => {
       )
 
     const verifiedList = verifiedTokens
-      .map((ti: string) => tokenInfos.get(ti as Portfolio.Token.Id))
+      .map((ti) => tokenInfos.get(ti))
       .filter(isNonNullable)
-      .filter(({id}: {id: Portfolio.Token.Id}) => !ownedTokens.includes(id))
+      .filter(({id}) => !ownedTokens.includes(id))
 
     return [
       strings.swap.yourAssets,
@@ -155,7 +160,7 @@ const TokenList = ({direction}: Direction) => {
   ])
 
   return (
-    <View style={[a.flex_1]}>
+    <View style={a.flex_1}>
       <FlashList
         data={filteredTokenList}
         renderItem={({item}: {item: Portfolio.Token.Info | string}) =>
@@ -164,7 +169,9 @@ const TokenList = ({direction}: Direction) => {
           ) : (
             <Boundary
               loading={{
-                fallback: <AmountItemPlaceholder style={[a.py_sm, a.px_lg]} />,
+                fallback: (
+                  <AmountItemPlaceholder style={[[a.py_sm, a.px_lg]]} />
+                ),
               }}
             >
               <SelectableToken
@@ -188,9 +195,9 @@ const TokenList = ({direction}: Direction) => {
 
       <Counter
         counter={filteredTokenList.length}
-        style={[a.py_lg]}
-        unitsText={strings.swap.assets(filteredTokenList.length)}
-        closingText={strings.swap.available}
+        style={a.py_lg}
+        unitsText={strings.swap.tokens(filteredTokenList.length)}
+        closingText={strings.swap.found}
       />
     </View>
   )
@@ -298,7 +305,7 @@ const EmptySearchResult = ({assetSearchTerm}: {assetSearchTerm: string}) => {
 
       <Space.Height.lg />
 
-      <Text style={[a.flex_1, a.pt_xs, a.text_center, {color: p.gray_max}]}>
+      <Text style={[a.flex_1, a.text_center, a.pt_xs, {color: p.gray_max}]}>
         {assetSearchTerm === ''
           ? strings.swap.noAssetsFound
           : strings.swap.noAssetsFoundFor(assetSearchTerm)}

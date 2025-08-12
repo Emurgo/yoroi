@@ -35,10 +35,10 @@ export const SwapMainScreen = () => {
   const {openModal, closeModal} = useModal()
   const navigateTo = useNavigateTo()
 
-  const tokenInInfo = swapForm.tokenInfos.get(
+  const tokenInInfo = swapForm.tokenInfos?.get?.(
     swapForm.tokenInInput.tokenId ?? undefinedToken,
   )
-  const tokenOutInfo = swapForm.tokenInfos.get(
+  const tokenOutInfo = swapForm.tokenInfos?.get?.(
     swapForm.tokenOutInput.tokenId ?? undefinedToken,
   )
 
