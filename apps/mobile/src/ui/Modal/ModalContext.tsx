@@ -67,17 +67,18 @@ export const ModalProvider = ({
     bottomSheetModalRef.current?.close()
   }, [])
 
-  const actions = React.useRef<ModalActions>({
-    closeModal: () => {
-      if (state.onClose) {
-        state.onClose()
-      }
-      dispatch({
-        type: 'close',
-      })
-      handleDismissModalPress()
-    },
-    openModal: ({
+  const closeModal = React.useCallback(() => {
+    if (state.onClose) {
+      state.onClose()
+    }
+    dispatch({
+      type: 'close',
+    })
+    handleDismissModalPress()
+  }, [state.onClose, handleDismissModalPress])
+
+  const openModal = React.useCallback(
+    ({
       content,
       height,
       footer,
@@ -86,6 +87,15 @@ export const ModalProvider = ({
       title,
       canContinue,
       onClose,
+    }: {
+      content: React.ReactNode
+      height?: number
+      footer?: React.ReactNode
+      isLoading?: boolean
+      canDiscard?: boolean
+      title?: string
+      canContinue?: boolean
+      onClose?: () => void
     }) => {
       Keyboard.dismiss()
       dispatch({
@@ -101,37 +111,64 @@ export const ModalProvider = ({
       })
       handlePresentModalPress()
     },
-    setLoading: (isLoading: boolean) => {
-      dispatch({
-        type: 'setLoading',
-        isLoading,
-      })
-    },
-    setFooter: (footer: React.ReactNode | undefined) => {
-      dispatch({
-        type: 'setFooter',
-        footer,
-      })
-    },
-    setTitle: (title: string) => {
-      dispatch({
-        type: 'setTitle',
-        title,
-      })
-    },
-    setCanDiscard: (canDiscard: boolean) => {
-      dispatch({
-        type: 'setCanDiscard',
-        canDiscard,
-      })
-    },
-    setCanContinue: (canContinue: boolean) => {
-      dispatch({
-        type: 'setCanContinue',
-        canContinue,
-      })
-    },
-  }).current
+    [handlePresentModalPress],
+  )
+
+  const setLoading = React.useCallback((isLoading: boolean) => {
+    dispatch({
+      type: 'setLoading',
+      isLoading,
+    })
+  }, [])
+
+  const setFooter = React.useCallback((footer: React.ReactNode | undefined) => {
+    dispatch({
+      type: 'setFooter',
+      footer,
+    })
+  }, [])
+
+  const setTitle = React.useCallback((title: string) => {
+    dispatch({
+      type: 'setTitle',
+      title,
+    })
+  }, [])
+
+  const setCanDiscard = React.useCallback((canDiscard: boolean) => {
+    dispatch({
+      type: 'setCanDiscard',
+      canDiscard,
+    })
+  }, [])
+
+  const setCanContinue = React.useCallback((canContinue: boolean) => {
+    dispatch({
+      type: 'setCanContinue',
+      canContinue,
+    })
+  }, [])
+
+  const actions = React.useMemo<ModalActions>(
+    () => ({
+      closeModal,
+      openModal,
+      setLoading,
+      setFooter,
+      setTitle,
+      setCanDiscard,
+      setCanContinue,
+    }),
+    [
+      closeModal,
+      openModal,
+      setLoading,
+      setFooter,
+      setTitle,
+      setCanDiscard,
+      setCanContinue,
+    ],
+  )
 
   const context = React.useMemo(
     () => ({...state, ...actions}),

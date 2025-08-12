@@ -64,29 +64,28 @@ export const ModalError = ({error, resetErrorBoundary, onCancel}: Props) => {
   )
 }
 
-const getErrorMessage = (error: Error, strings: any): string => {
+const getErrorMessage = (
+  error: Error,
+  strings: ReturnType<typeof useStrings>,
+): string => {
   if (error instanceof RejectedByUserError) {
-    return strings.global.ledgerMessages.rejectedByUserError
+    return strings.ledgerMessages.rejectedByUserError
   }
 
   if (error instanceof BluetoothDisabledError) {
-    return strings.global.ledgerMessages.bluetoothDisabledError
+    return strings.ledgerMessages.bluetoothDisabledError
   }
 
   if (error instanceof LedgerUserError) {
-    return strings.global.ledgerMessages.connectionError
+    return strings.ledgerMessages.connectionError
   }
 
   if (error instanceof GeneralConnectionError) {
-    return strings.global.ledgerMessages.connectionError
-  }
-
-  if (error instanceof BluetoothDisabledError) {
-    return strings.global.ledgerMessages.bluetoothDisabledError
+    return strings.ledgerMessages.connectionError
   }
 
   if (error instanceof AdaAppClosedError) {
-    return strings.global.ledgerMessages.appOpened
+    return strings.ledgerMessages.appOpened
   }
 
   return `${strings.global.error}: ${error.message}`

@@ -76,7 +76,7 @@ const TypeItem = ({
   const [isPressed, setIsPressed] = React.useState(false)
   const strings = useStrings()
   const text = React.useMemo(
-    () => strings.useMappedStrings()(name) ?? name,
+    () => strings.getDappMappedStrings()(name) ?? name,
     [strings, name],
   )
 

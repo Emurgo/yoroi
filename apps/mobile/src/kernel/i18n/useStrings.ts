@@ -1795,7 +1795,7 @@ export const useStrings = () => {
       },
 
       // Mapped strings for dynamic category mapping
-      useMappedStrings: () => {
+      getDappMappedStrings: () => {
         const categoryMap: Record<string, string> = {
           'Investment': f(discoverMessages.filterParentOptionsInvestment),
           'Media': f(discoverMessages.filterParentOptionsMedia),

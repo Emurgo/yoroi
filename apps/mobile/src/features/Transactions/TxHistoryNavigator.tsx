@@ -4,7 +4,7 @@ import {
   ResolverProvider,
   resolverStorageMaker,
 } from '@yoroi/resolver'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {Resolver} from '@yoroi/types'
 
 import {createStackNavigator} from '@react-navigation/stack'
@@ -84,7 +84,7 @@ export const TxHistoryNavigator = () => {
                 headerRight: () => <HeaderRightHistory />,
                 headerTransparent: true,
                 headerStyle: {
-                  backgroundColor: 'transparent',
+                  ...a.bg_transparent,
                   elevation: 0,
                   shadowOpacity: 0,
                 },

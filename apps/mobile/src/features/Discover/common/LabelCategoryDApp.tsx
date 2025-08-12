@@ -11,7 +11,7 @@ export const LabelCategoryDApp = ({category}: Props) => {
   const strings = useStrings()
   const {atoms: ta, palette: p} = useTheme()
   const text = React.useMemo(
-    () => strings.useMappedStrings()(category) ?? category,
+    () => strings.getDappMappedStrings()(category) ?? category,
     [strings, category],
   )
 
