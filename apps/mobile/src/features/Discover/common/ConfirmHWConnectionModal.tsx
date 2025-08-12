@@ -32,7 +32,7 @@ export const useConfirmHWConnectionModal = () => {
   const {openModal, closeModal} = useModal()
   const strings = useStrings()
   const confirmHWConnection = useCallback(
-    ({onConfirm, onClose: _onClose, onCancel}: Props) => {
+    ({onConfirm, onClose, onCancel}: Props) => {
       openModal({
         title: strings.swap.signTransaction,
         content: (
@@ -49,6 +49,7 @@ export const useConfirmHWConnectionModal = () => {
           </ErrorBoundary>
         ),
         height: 350,
+        onClose,
       })
     },
     [openModal, strings.swap.signTransaction],

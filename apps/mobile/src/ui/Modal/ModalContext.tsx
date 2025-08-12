@@ -13,6 +13,7 @@ type ModalState = {
   canDiscard: boolean
   title: string
   canContinue?: boolean
+  onClose?: () => void
 }
 type ModalActions = {
   openModal: (args: {
@@ -23,6 +24,7 @@ type ModalActions = {
     canDiscard?: boolean
     title?: string
     canContinue?: boolean
+    onClose?: () => void
   }) => void
   closeModal: () => void
   setLoading: (isLoading: boolean) => void
@@ -67,6 +69,9 @@ export const ModalProvider = ({
 
   const actions = React.useRef<ModalActions>({
     closeModal: () => {
+      if (state.onClose) {
+        state.onClose()
+      }
       dispatch({
         type: 'close',
       })
@@ -80,6 +85,7 @@ export const ModalProvider = ({
       canDiscard,
       title,
       canContinue,
+      onClose,
     }) => {
       Keyboard.dismiss()
       dispatch({
@@ -91,6 +97,7 @@ export const ModalProvider = ({
         canDiscard,
         title,
         canContinue,
+        onClose,
       })
       handlePresentModalPress()
     },
@@ -152,6 +159,7 @@ type ModalAction =
       canDiscard?: boolean
       title?: string
       canContinue?: boolean
+      onClose?: () => void
     }
   | {type: 'close'}
   | {type: 'setLoading'; isLoading: boolean}
@@ -172,6 +180,7 @@ const modalReducer = (state: ModalState, action: ModalAction) => {
         canDiscard: action.canDiscard ?? defaultState.canDiscard,
         title: action.title ?? defaultState.title,
         canContinue: action.canContinue ?? defaultState.canContinue,
+        onClose: action.onClose,
         isOpen: true,
       }
 

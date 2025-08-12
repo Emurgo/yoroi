@@ -49,7 +49,7 @@ export const ModalError = ({error, resetErrorBoundary, onCancel}: Props) => {
           size="S"
           type={ButtonType.Secondary}
           onPress={onCancel}
-          title={strings.cancel}
+          title={strings.global.cancel}
         />
 
         <Space.Width.lg />
@@ -57,49 +57,37 @@ export const ModalError = ({error, resetErrorBoundary, onCancel}: Props) => {
         <Button
           size="S"
           onPress={resetErrorBoundary}
-          title={strings.tryAgain}
+          title={strings.ui.tryAgain}
         />
       </View>
     </>
   )
 }
 
-const getErrorMessage = (
-  error: Error,
-  strings: Record<
-    | 'error'
-    | 'rejectedByUser'
-    | 'bluetoothDisabledError'
-    | 'ledgerUserError'
-    | 'ledgerGeneralConnectionError'
-    | 'ledgerBluetoothDisabledError'
-    | 'ledgerAdaAppNeedsToBeOpenError',
-    string
-  >,
-): string => {
+const getErrorMessage = (error: Error, strings: any): string => {
   if (error instanceof RejectedByUserError) {
-    return strings.rejectedByUser
+    return strings.global.ledgerMessages.rejectedByUserError
   }
 
   if (error instanceof BluetoothDisabledError) {
-    return strings.bluetoothDisabledError
+    return strings.global.ledgerMessages.bluetoothDisabledError
   }
 
   if (error instanceof LedgerUserError) {
-    return strings.ledgerUserError
+    return strings.global.ledgerMessages.connectionError
   }
 
   if (error instanceof GeneralConnectionError) {
-    return strings.ledgerGeneralConnectionError
+    return strings.global.ledgerMessages.connectionError
   }
 
   if (error instanceof BluetoothDisabledError) {
-    return strings.ledgerBluetoothDisabledError
+    return strings.global.ledgerMessages.bluetoothDisabledError
   }
 
   if (error instanceof AdaAppClosedError) {
-    return strings.ledgerAdaAppNeedsToBeOpenError
+    return strings.global.ledgerMessages.appOpened
   }
 
-  return `${strings.error}: ${error.message}`
+  return `${strings.global.error}: ${error.message}`
 }
