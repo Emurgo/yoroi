@@ -47,6 +47,10 @@ export const AuthProvider: React.FC<React.PropsWithChildren<Props>> = ({
           encryptedData: storedPin,
           secretKey: hex.fromUtf8(pin),
         })
+        logger.debug('PIN matched', {
+          origin: 'AuthProvider',
+          type: 'user',
+        })
         return true
       } catch (error) {
         logger.error('error checking PIN', {
@@ -67,6 +71,10 @@ export const AuthProvider: React.FC<React.PropsWithChildren<Props>> = ({
         secretKey: hex.fromUtf8(pin),
       })
       pinStorageKeyManager.save(encryptedPin.value)
+      logger.debug('PIN created', {
+        origin: 'AuthProvider',
+        type: 'user',
+      })
     },
     [installationIdKeyManager, pinStorageKeyManager],
   )
@@ -79,12 +87,39 @@ export const AuthProvider: React.FC<React.PropsWithChildren<Props>> = ({
     [checkPin],
   )
 
-  const loginWithHost = React.useCallback(async () => {
-    const ok = await authWithHost()
-    if (ok) {
-      setLoggedState(loggedInState)
-    }
-  }, [authWithHost])
+  const loginWithHost = React.useCallback(
+    async ({noFallback = false}: {noFallback?: boolean} = {}) => {
+      const hasAuthenticated = await authWithHost({noFallback})
+      if (hasAuthenticated) {
+        setLoggedState(loggedInState)
+      }
+      logger.debug('loginWithHost', {
+        origin: 'AuthProvider',
+        type: 'user',
+        noFallback,
+        hasAuthenticated,
+      })
+    },
+    [authWithHost],
+  )
+
+  const enableLoginWithHost = React.useCallback(
+    async ({noFallback = false}: {noFallback?: boolean} = {}) => {
+      const hasAuthenticated = await authWithHost({noFallback})
+      if (hasAuthenticated) {
+        changeAuthSetting('os')
+        pinStorageKeyManager.remove()
+      }
+      logger.debug('enableLoginWithHost', {
+        origin: 'AuthProvider',
+        type: 'user',
+        hasAuthenticated,
+        noFallback,
+      })
+      return hasAuthenticated
+    },
+    [pinStorageKeyManager, authWithHost, changeAuthSetting],
+  )
 
   const value = React.useMemo(
     () => ({
@@ -95,6 +130,7 @@ export const AuthProvider: React.FC<React.PropsWithChildren<Props>> = ({
       createPin,
       loginWithPin,
       loginWithHost,
+      enableLoginWithHost,
       loggedIn: () => {
         logger.debug('login', {
           origin: 'AuthProvider',
@@ -168,7 +204,12 @@ type AuthContextActions = {
   changeAuthSetting(authSetting: AuthSetting): void
   authWithHost(): Promise<boolean>
   loginWithPin(pin: string): void
-  loginWithHost(): Promise<void>
+  loginWithHost({noFallback}?: {noFallback?: boolean}): Promise<void>
+  enableLoginWithHost: ({
+    noFallback,
+  }?: {
+    noFallback?: boolean
+  }) => Promise<boolean>
   checkPin(pin: string): boolean
   createPin(pin: string): void
 }
