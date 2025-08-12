@@ -1,8 +1,10 @@
-import {useQuery} from '@tanstack/react-query'
+import {useQuery, UseQueryOptions} from '@tanstack/react-query'
 
 import {useResolver} from '../provider/ResolverProvider'
 
-export const useResolverShowNotice = () => {
+export const useResolverShowNotice = (
+  options?: UseQueryOptions<boolean, Error>,
+) => {
   const {showNotice} = useResolver()
 
   const query = useQuery({
@@ -10,6 +12,9 @@ export const useResolverShowNotice = () => {
     queryFn: async () => {
       return await showNotice.read()
     },
+    staleTime: 0,
+    gcTime: 0,
+    ...options,
   })
 
   return {

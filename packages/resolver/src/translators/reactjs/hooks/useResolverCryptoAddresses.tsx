@@ -17,6 +17,8 @@ export const useResolverCryptoAddresses = ({
     queryFn: async ({signal}: {signal?: AbortSignal}) => {
       return await crypto.getCardanoAddresses({resolve, strategy}, {signal})
     },
+    staleTime: 0,
+    gcTime: 0,
   })
 
   return {
