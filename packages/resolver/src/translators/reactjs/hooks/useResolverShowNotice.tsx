@@ -3,7 +3,9 @@ import {useQuery, UseQueryOptions} from '@tanstack/react-query'
 import {useResolver} from '../provider/ResolverProvider'
 
 export const useResolverShowNotice = (
-  options?: UseQueryOptions<boolean, Error>,
+  options?: Partial<
+    UseQueryOptions<boolean, Error, boolean, ['resolver', 'show-notice']>
+  >,
 ) => {
   const {showNotice} = useResolver()
 
