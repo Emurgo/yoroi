@@ -1,5 +1,4 @@
 import {useNavigation} from '@react-navigation/native'
-import {useMutation, UseMutationOptions} from '@tanstack/react-query'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {
@@ -35,6 +34,14 @@ export const ChangePasswordScreen = () => {
   const {changePassword, isLoading, error} = useChangePassword(wallet, {
     onSuccess: () => navigation.goBack(),
   })
+
+  const handleChangePassword = async () => {
+    try {
+      await changePassword({currentPassword, newPassword})
+    } catch (err) {
+      // Error is already handled in the hook
+    }
+  }
 
   const hasErrors =
     newPassword.length < REQUIRED_PASSWORD_LENGTH ||
@@ -123,8 +130,8 @@ export const ChangePasswordScreen = () => {
 
         <Actions>
           <Button
-            onPress={() => changePassword({currentPassword, newPassword})}
-            disabled={hasErrors}
+            onPress={handleChangePassword}
+            disabled={hasErrors || isLoading}
             title={strings.settings.changePassword.continueButton}
           />
         </Actions>
@@ -143,27 +150,48 @@ const Actions = (props: ViewProps) => {
 
 const useChangePassword = (
   wallet: YoroiWallet,
-  mutationOptions: UseMutationOptions<
-    void,
-    Error,
-    {currentPassword: string; newPassword: string}
-  >,
+  options?: {
+    onSuccess?: () => void
+    onError?: (error: Error) => void
+  },
 ) => {
   const {walletManager} = useWalletManager()
+  const [isLoading, setIsLoading] = React.useState(false)
+  const [error, setError] = React.useState<Error | null>(null)
 
-  const mutation = useMutation({
-    mutationFn: ({currentPassword, newPassword}) =>
-      walletManager.changeWalletPassword({
+  const changePassword = async ({
+    currentPassword,
+    newPassword,
+  }: {
+    currentPassword: string
+    newPassword: string
+  }) => {
+    try {
+      setIsLoading(true)
+      setError(null)
+
+      await walletManager.changeWalletPassword({
         id: wallet.id,
         oldPassword: currentPassword,
         newPassword,
-      }),
-    ...mutationOptions,
-  })
+      })
+
+      options?.onSuccess?.()
+    } catch (err) {
+      const error =
+        err instanceof Error ? err : new Error('Failed to change password')
+      setError(error)
+      options?.onError?.(error)
+      throw error
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   return {
-    changePassword: mutation.mutate,
-    isLoading: mutation.isPending,
-    error: mutation.error,
+    changePassword,
+    isLoading,
+    error,
+    isError: error !== null,
   }
 }

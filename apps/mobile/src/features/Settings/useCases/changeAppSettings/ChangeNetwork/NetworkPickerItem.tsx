@@ -3,8 +3,8 @@ import {Chain, Network} from '@yoroi/types'
 import * as React from 'react'
 import {TouchableOpacity, View} from 'react-native'
 
-import {Icon} from '../../../../../ui/Icon'
-import {Text} from '../../../../../ui/Text/Text'
+import {Icon} from '~/ui/Icon'
+import {Text} from '~/ui/Text/Text'
 
 type Props = {
   name: Readonly<Network.Config['name']>

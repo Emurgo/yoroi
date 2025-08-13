@@ -1,16 +1,13 @@
 import {createTypeGuardFromSchema} from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Chain} from '@yoroi/types'
-
 import * as React from 'react'
 import {Text} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {z} from 'zod'
-
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useParams} from '~/kernel/navigation/hooks/useParams'
 import {SettingsStackRoutes} from '~/kernel/navigation/types'
-
 import {useLaunchRouteAfterSyncing} from './useLaunchRouteAfterSyncing'
 
 export const PreparingNetworkScreen = () => {

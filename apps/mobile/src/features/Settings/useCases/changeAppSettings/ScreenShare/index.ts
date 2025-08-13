@@ -1,5 +1,5 @@
 export {
-  useChangeScreenShareSetting,
+  changeScreenShareNativeSettingOnAndroid,
   useInitScreenShare,
   useScreenShareSettingEnabled,
 } from './ScreenShare'

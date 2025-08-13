@@ -1,7 +1,6 @@
+import {useMutation} from '@tanstack/react-query'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
-
-import {useMutation} from '@tanstack/react-query'
 import BigNumber from 'bignumber.js'
 import * as React from 'react'
 import {
@@ -16,8 +15,10 @@ import {
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {useBalances} from '~/features/Portfolio/common/hooks/useBalances'
 import {useReviewTx} from '~/features/ReviewTx/common/ReviewTxProvider'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useUnsafeParams} from '~/kernel/navigation/hooks/useUnsafeParams'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {SettingsStackRoutes} from '~/kernel/navigation/types'
@@ -34,9 +35,6 @@ import {collateralConfig, utxosMaker} from '~/wallets/cardano/utxoManager/utxos'
 import {RawUtxo} from '~/wallets/types/other'
 import {YoroiEntry, YoroiSignedTx} from '~/wallets/types/yoroi'
 import {Amounts, asQuantity, Quantities} from '~/wallets/utils/utils'
-
-import {useBalances} from '~/features/Portfolio/common/hooks/useBalances'
-import {useStrings} from '~/kernel/i18n/useStrings'
 import {CollateralInfoModal} from './CollateralInfoModal'
 import {createCollateralEntry} from './helpers'
 import {InitialCollateralInfoModal} from './InitialCollateralInfoModal'
@@ -44,10 +42,7 @@ import {InitialCollateralInfoModal} from './InitialCollateralInfoModal'
 export const ManageCollateralScreen = () => {
   const {atoms: ta} = useTheme()
 
-  const {
-    wallet,
-    meta: {addressMode},
-  } = useSelectedWallet()
+  const {wallet, meta} = useSelectedWallet()
   const {amount, collateralId, utxo} = wallet.getCollateralInfo()
   const screenHeight = useWindowDimensions().height
 
@@ -169,7 +164,7 @@ export const ManageCollateralScreen = () => {
     >
       <ScrollView>
         <Text style={[a.flex_1, a.self_center]}>
-          {strings.lockedAsCollateral}
+          {strings.manageCollateral.lockedAsCollateral}
         </Text>
 
         <Space.Height.sm />

@@ -76,7 +76,7 @@ export const settingsMessages = defineMessages({
   },
   appTabTitle: {
     id: 'components.settings.applicationsettingsscreen.tabTitle',
-    defaultMessage: '!!!App',
+    defaultMessage: '!!!Application',
   },
   notifications: {
     id: 'components.txhistory.notifications.title',
@@ -253,11 +253,11 @@ export const settingsMessages = defineMessages({
     defaultMessage: '!!!Change Password',
   },
   walletSettingsEasyConfirmation: {
-    id: 'txReview.confirm',
+    id: 'components.settings.walletsettingscreen.easyConfirmation',
     defaultMessage: '!!!Easy Confirmation',
   },
   walletSettingsEasyConfirmationInfo: {
-    id: 'txReview.confirm',
+    id: 'components.settings.walletsettingscreen.easyConfirmationInfo',
     defaultMessage: '!!!Easy Confirmation Info',
   },
   walletSettingsRemoveWallet: {
@@ -305,7 +305,7 @@ export const settingsMessages = defineMessages({
     defaultMessage: '!!!Single Address',
   },
   walletSettingsMultipleAddressesInfo: {
-    id: 'components.send.sendscreen.addressInputLabel',
+    id: 'global.multipleAddressesInfo',
     defaultMessage: '!!!Multiple Addresses Info',
   },
   walletSettingsInAppNotifications: {
@@ -359,15 +359,15 @@ export const settingsMessages = defineMessages({
     defaultMessage: '!!!Privacy Mode',
   },
   applicationSettingsPrivacyModeInfo: {
-    id: 'portfolio.portfolioTokensDetailScreen.info',
+    id: 'components.settings.applicationsettingsscreen.privacyModeInfo',
     defaultMessage: '!!!Privacy Mode Info',
   },
   applicationSettingsBiometricsSignIn: {
-    id: 'components.send.biometricauthscreen.headings2',
+    id: 'components.settings.applicationsettingsscreen.biometricsSignIn',
     defaultMessage: '!!!Biometrics Sign In',
   },
   applicationSettingsBiometricsSignInInfo: {
-    id: 'components.send.biometricauthscreen.headings2',
+    id: 'components.settings.applicationsettingsscreen.biometricsSignInInfo',
     defaultMessage: '!!!Biometrics Sign In Info',
   },
   applicationSettingsTermsOfservice: {
@@ -379,7 +379,7 @@ export const settingsMessages = defineMessages({
     defaultMessage: '!!!Crash Reporting',
   },
   applicationSettingsCrashReportingInfo: {
-    id: 'portfolio.portfolioTokensDetailScreen.info',
+    id: 'components.settings.applicationsettingsscreen.crashReportingInfo',
     defaultMessage: '!!!Crash Reporting Info',
   },
   applicationSettingsAnalytics: {
@@ -405,35 +405,35 @@ export const settingsMessages = defineMessages({
 
   // Change Network
   changeNetworkNetworkNoticeTitle: {
-    id: 'global.network',
+    id: 'components.settings.applicationsettingsscreen.network.notice.title',
     defaultMessage: '!!!Network Notice Title',
   },
   changeNetworkNetworkNoticeMessage: {
-    id: 'global.network',
+    id: 'components.settings.applicationsettingsscreen.network.notice.message',
     defaultMessage: '!!!Network Notice Message',
   },
   changeNetworkNetworkNoticeListTitle: {
-    id: 'global.network',
+    id: 'components.settings.applicationsettingsscreen.network.notice.listTitle',
     defaultMessage: '!!!Network Notice List Title',
   },
   changeNetworkNetworkNoticeList: {
-    id: 'global.network',
+    id: 'components.settings.applicationsettingsscreen.network.notice.list',
     defaultMessage: '!!!Network Notice List',
   },
   changeNetworkNetworkNoticeButton: {
-    id: 'global.network',
+    id: 'components.settings.applicationsettingsscreen.network.notice.button',
     defaultMessage: '!!!Network Notice Button',
   },
   changeNetworkPreparingNetwork: {
-    id: 'global.network',
+    id: 'components.settings.applicationsettingsscreen.network.preparingNetworks',
     defaultMessage: '!!!Preparing Network',
   },
   changeNetworkNetworkTagModalTitle: {
-    id: 'global.network',
+    id: 'components.settings.applicationsettingsscreen.network.tag.modal.title',
     defaultMessage: '!!!Network Tag Modal Title',
   },
   changeNetworkNetworkTagModalText: {
-    id: 'global.network',
+    id: 'components.settings.applicationsettingsscreen.network.tag.modal.text',
     defaultMessage: '!!!Network Tag Modal Text',
   },
 })
