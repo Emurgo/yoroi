@@ -17,6 +17,7 @@ import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
 import {SwapTokenRoutes} from '~/kernel/navigation/types'
 import {LoadingOverlay} from '~/ui/LoadingOverlay/LoadingOverlay'
 
+import {HeaderRightSwap} from '../Transactions/common/HeaderRightSwap'
 import {SwapProvider} from './common/SwapProvider'
 import {SwapMainScreen} from './useCases/CreateOrder/SwapMainScreen'
 
@@ -44,6 +45,7 @@ export const SwapNavigator = () => {
             name="main"
             options={{
               title: strings.swap.swapTitle,
+              headerRight: () => <HeaderRightSwap />,
             }}
             getComponent={() => SwapMainScreen}
           />
