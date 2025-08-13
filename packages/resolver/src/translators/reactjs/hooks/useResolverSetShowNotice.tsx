@@ -1,4 +1,6 @@
-import {useMutation, UseMutationOptions} from '@tanstack/react-query'
+import {UseMutationOptions} from '@tanstack/react-query'
+
+import {useMutationWithInvalidations} from '@yoroi/common'
 
 import {useResolver} from '../provider/ResolverProvider'
 
@@ -7,10 +9,11 @@ export const useResolverSetShowNotice = (
 ) => {
   const {showNotice} = useResolver()
 
-  const mutation = useMutation({
+  const mutation = useMutationWithInvalidations({
     mutationFn: async (value: boolean) => {
       await showNotice.save(value)
     },
+    invalidateQueries: [['resolver', 'show-notice']],
     ...options,
   })
 
