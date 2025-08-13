@@ -1,7 +1,9 @@
+import {toBigInt} from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Platform, Pressable, Text, TextInput, View} from 'react-native'
 
+import {useNavigateTo} from '~/features/Swap/common/navigation'
 import {useSwap} from '~/features/Swap/common/useSwap'
 import {Icon} from '~/ui/Icon'
 import {PairedBalance} from '../PairedBalance/PairedBalance'
@@ -10,23 +12,42 @@ import {TokenInfoIcon} from '../TokenInfoIcon/TokenInfoIcon'
 export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
   const {atoms: ta, palette: p} = useTheme()
   const swapForm = useSwap()
+  const navigateTo = useNavigateTo()
   const [isFocused, setIsFocused] = React.useState(false)
 
   const amount =
     direction === 'in' ? swapForm.tokenInInput : swapForm.tokenOutInput
-  const info = amount.info
-  const quantity = amount.quantity
+  const info = amount.tokenId
+    ? swapForm.tokenInfos.get(amount.tokenId)
+    : undefined
+  const quantity = amount.value
   const error = amount.error
-  const touched = amount.touched
+  const touched = amount.isTouched
 
   const formattedAmount = info ? `${info.name} (${info.ticker})` : ''
 
   const focusInput = () => {
-    // Focus logic here
+    const inputRef =
+      direction === 'in' ? swapForm.tokenInInputRef : swapForm.tokenOutInputRef
+    if (inputRef?.current) {
+      inputRef.current.focus()
+    }
   }
 
-  const navigateTo = () => {
-    // Navigation logic here
+  const navigateToTokenSelection = () => {
+    if (direction === 'in') {
+      navigateTo.selectTokenIn()
+    } else {
+      navigateTo.selectTokenOut()
+    }
+  }
+
+  const handleAmountChange = (value: string) => {
+    if (direction === 'in') {
+      swapForm.action({type: 'TokenInAmountChanged', value})
+    } else {
+      swapForm.action({type: 'TokenOutAmountChanged', value})
+    }
   }
 
   return (
@@ -40,7 +61,10 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
       ]}
     >
       <View style={[a.flex_row, a.justify_between]}>
-        <View style={[a.flex_row, a.align_center]}>
+        <Pressable
+          style={[a.flex_row, a.align_center]}
+          onPress={navigateToTokenSelection}
+        >
           <TokenInfoIcon info={info} size="md" />
 
           <Text
@@ -55,11 +79,11 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
           </Text>
 
           <Icon.Chevron direction="down" size={24} color={p.gray_max} />
-        </View>
+        </Pressable>
 
         <Pressable
           style={[a.flex_1, a.flex_row, a.justify_end, a.align_center]}
-          onPress={() => (info ? focusInput() : navigateTo())}
+          onPress={() => (info ? focusInput() : navigateToTokenSelection())}
         >
           <TextInput
             keyboardType="numeric"
@@ -67,9 +91,7 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
             value={quantity}
             placeholder="0"
             placeholderTextColor={p.text_gray_medium}
-            onChangeText={(value) => {
-              // onChange logic here
-            }}
+            onChangeText={handleAmountChange}
             allowFontScaling
             selectionColor={isFocused ? p.input_selected : p.black_static}
             style={[
@@ -84,6 +106,11 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
             selectTextOnFocus
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
+            ref={
+              direction === 'in'
+                ? swapForm.tokenInInputRef
+                : swapForm.tokenOutInputRef
+            }
           />
         </Pressable>
       </View>
@@ -113,7 +140,7 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
         <PairedBalance
           amount={{
             info,
-            quantity,
+            quantity: toBigInt(quantity || '0', info.decimals),
           }}
         />
       )}

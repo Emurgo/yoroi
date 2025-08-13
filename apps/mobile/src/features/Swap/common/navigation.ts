@@ -1,10 +1,10 @@
 import {useNavigation} from '@react-navigation/native'
 import {useRef} from 'react'
 
-import {SwapTokenRouteseNavigation} from '~/kernel/navigation/types'
+import {TxHistoryRouteNavigation} from '~/kernel/navigation/types'
 
 export const useNavigateTo = () => {
-  const swapNavigation = useNavigation<SwapTokenRouteseNavigation>()
+  const swapNavigation = useNavigation<TxHistoryRouteNavigation>()
   const navigation = useNavigation()
 
   return useRef({
@@ -16,7 +16,16 @@ export const useNavigateTo = () => {
     startSwap: () => swapNavigation.navigate('swap-main'),
     orders: () => swapNavigation.navigate('swap-orders'),
     swapSettings: () => swapNavigation.navigate('swap-settings'),
-    reviewSwap: () => swapNavigation.navigate('swap-review'),
+    reviewSwap: () =>
+      navigation.navigate('manage-wallets', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'history',
+          params: {
+            screen: 'swap-review',
+          },
+        },
+      }),
     submittedTx: () => swapNavigation.navigate('swap-submitted-tx'),
     failedTx: () => swapNavigation.navigate('swap-failed-tx'),
     swapOpenOrders: () =>

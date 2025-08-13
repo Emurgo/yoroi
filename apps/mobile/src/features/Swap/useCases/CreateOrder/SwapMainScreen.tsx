@@ -3,7 +3,6 @@ import * as React from 'react'
 import {Text, useWindowDimensions, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
-import {ShowDisclaimer} from '~/features/Legal/ui/Disclaimer/ShowDisclaimer'
 import {undefinedToken} from '~/features/Swap/common/constants'
 import {useSwap} from '~/features/Swap/common/useSwap'
 import {useIsKeyboardOpen} from '~/hooks/useIsKeyboardOpen'
@@ -25,7 +24,7 @@ import {WarnLimitPrice} from './WarnLimitPrice'
 const LIMIT_PRICE_WARNING_THRESHOLD = 0.1 // 10%
 const BOTTOM_ACTION_SECTION = 180
 
-export const SwapMainScreen = () => {
+const SwapMainScreenContent = () => {
   const [contentHeight, setContentHeight] = React.useState(0)
   const strings = useStrings()
   const {palette: p} = useTheme()
@@ -89,7 +88,7 @@ export const SwapMainScreen = () => {
   return (
     <View style={[a.flex_1, a.pb_lg, {backgroundColor: p.bg_color_max}]}>
       <ScrollView style={[a.px_lg]}>
-        <ShowDisclaimer type="swap" />
+        {/*  <ShowDisclaimer type="swap" /> */}
 
         <Space.Height.lg />
 
@@ -245,4 +244,8 @@ export const SwapMainScreen = () => {
       </View>
     </View>
   )
+}
+
+export const SwapMainScreen = () => {
+  return <SwapMainScreenContent />
 }
