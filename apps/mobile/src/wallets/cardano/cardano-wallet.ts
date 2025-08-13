@@ -20,20 +20,6 @@ import {freeze} from 'immer'
 import {defaultMemoize} from 'reselect'
 import {Observable} from 'rxjs'
 
-import type {
-  AccountStateResponse,
-  FundInfoResponse,
-  PoolInfoRequest,
-  RawUtxo,
-  TxStatusRequest,
-  TxStatusResponse,
-} from '@yoroi/types'
-import {
-  StakingInfo,
-  YoroiEntry,
-  YoroiSignedTx,
-  YoroiUnsignedTx,
-} from '@yoroi/types'
 import {toLedgerSignRequest} from '~/features/Discover/common/ledger'
 import {buildPortfolioBalanceManager} from '~/features/Portfolio/common/helpers/build-balance-manager'
 import {toBalanceManagerSyncArgs} from '~/features/Portfolio/common/transformers/toBalanceManagerSyncArgs'
@@ -48,6 +34,16 @@ import {
   makeWalletEncryptedStorage,
   WalletEncryptedStorage,
 } from '~/kernel/storage/EncryptedStorage'
+import type {
+  AccountStateResponse,
+  FundInfoResponse,
+  PoolInfoRequest,
+  RawUtxo,
+  TxStatusRequest,
+  TxStatusResponse,
+} from '../types/other'
+import {StakingInfo} from '../types/staking'
+import {YoroiEntry, YoroiSignedTx, YoroiUnsignedTx} from '../types/yoroi'
 import {Quantities} from '../utils/utils'
 import {Cardano, CardanoMobile} from '../wallets'
 import {
@@ -949,10 +945,11 @@ export const makeCardanoWallet = (
         needsStakingKey && stakingPrivateKey ? [stakingPrivateKey] : undefined
 
       const datumDatas = unsignedTx.entries
-        .map((entry) => entry.datum)
+        .map((entry: YoroiEntry) => entry.datum)
         .filter(isNonNullable)
         .filter(
-          (datum): datum is Exclude<Datum, {hash: string}> => 'data' in datum,
+          (datum: Datum): datum is Exclude<Datum, {hash: string}> =>
+            'data' in datum,
         )
 
       if (datumDatas.length > 0) {
@@ -1114,10 +1111,11 @@ export const makeCardanoWallet = (
       )
 
       const datumDatas = unsignedTx.entries
-        .map((entry) => entry.datum)
+        .map((entry: YoroiEntry) => entry.datum)
         .filter(isNonNullable)
         .filter(
-          (datum): datum is Exclude<Datum, {hash: string}> => 'data' in datum,
+          (datum: Datum): datum is Exclude<Datum, {hash: string}> =>
+            'data' in datum,
         )
 
       const signedTx = await Cardano.buildLedgerSignedTx(
@@ -1380,7 +1378,7 @@ const parseTransactions = (
   primaryTokenInfo: Portfolio.Token.Info,
 ) => {
   const addresses =
-    rewardAddressHex != ''
+    rewardAddressHex !== ''
       ? [...internalAddresses, ...externalAddresses, rewardAddressHex]
       : [...internalAddresses, ...externalAddresses]
 

@@ -51,15 +51,7 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
   }
 
   return (
-    <View
-      style={[
-        {borderRadius: 8},
-        {borderRadius: 8},
-        a.p_lg,
-        a.gap_lg,
-        {backgroundColor: p.bg_color_min},
-      ]}
-    >
+    <View style={[a.rounded_sm, a.p_lg, a.gap_lg, ta.bg_color_min]}>
       <View style={[a.flex_row, a.justify_between]}>
         <Pressable
           style={[a.flex_row, a.align_center]}
@@ -129,7 +121,7 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
 
           <Text
             ellipsizeMode="middle"
-            style={[a.body_2_md_regular, {color: p.gray_600}]}
+            style={[a.body_2_md_regular, ta.text_gray_medium]}
           >
             {formattedAmount}
           </Text>
