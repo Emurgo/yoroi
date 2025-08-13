@@ -11,7 +11,8 @@ import {Divider} from 'react-native-paper'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 import {ViewProps} from 'react-native-svg/lib/typescript/fabric/utils'
 
-import {usePortfolioTokenInfos} from '~/features/Portfolio/common/hooks/usePortfolioTokenInfos'
+import {usePortfolioTokenInfosSuspense} from '~/features/Portfolio/common/hooks/usePortfolioTokenInfos'
+import {useSearch, useSearchOnNavBar} from '~/features/Search/SearchContext'
 import {useSwap} from '~/features/Swap/common/useSwap'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
@@ -28,8 +29,8 @@ import {ProtocolAvatar} from '~/ui/ProtocolAvatar/ProtocolAvatar'
 import {RefreshButton} from '~/ui/RefreshButton/RefreshButton'
 import {ServiceUnavailable} from '~/ui/ServiceUnavailable/ServiceUnavailable'
 import {Space} from '~/ui/Space/Space'
+import {TokenInfoIcon} from '~/ui/TokenInfoIcon/TokenInfoIcon'
 import {useNavigateTo} from '../../common/navigation'
-import {useSearch, useSearchOnNavBar} from '../Search/SearchContext'
 
 type Filter = 'open' | 'completed'
 
@@ -42,8 +43,8 @@ export const ListOrders = () => {
   const {palette: p} = useTheme()
 
   useSearchOnNavBar({
-    placeholder: strings.searchTokens,
-    title: strings.swapTitle,
+    placeholder: strings.swap.searchTokens,
+    title: strings.swap.swapTitle,
     isChild: true,
     onBack: navigateToTxHistory,
   })
@@ -55,7 +56,7 @@ export const ListOrders = () => {
           <Button
             onPress={() => setFilter('open')}
             type={ButtonType.SecondaryText}
-            title={strings.openOrders}
+            title={strings.swap.openOrders}
             size="M"
             fontOverride={a.body_1_lg_medium}
             {...(filter === 'open' && {
@@ -68,7 +69,7 @@ export const ListOrders = () => {
           <Button
             onPress={() => setFilter('completed')}
             type={ButtonType.SecondaryText}
-            title={strings.completedOrders}
+            title={strings.swap.completedOrders}
             size="M"
             fontOverride={a.body_1_lg_medium}
             {...(filter === 'completed' && {
@@ -137,12 +138,12 @@ const Content = ({filter}: {filter: Filter}) => {
 
       {!isSearching && (
         <Counter
-          openingText={strings.youHave}
+          openingText={strings.swap.youHave}
           counter={orders?.length ?? 0}
           closingText={
             filter === 'open'
-              ? strings.listOpenOrders
-              : strings.listCompletedOrders
+              ? strings.swap.listOpenOrders
+              : strings.swap.listCompletedOrders
           }
         />
       )}
@@ -225,13 +226,16 @@ const Order = ({order}: {order: Swap.Order}) => {
       </TouchableOpacity>
 
       <View style={[a.gap_md]}>
-        <Row label={strings.listOrdersSheetAssetPrice} value={priceStr} />
+        <Row label={strings.swap.listOrdersSheetAssetPrice} value={priceStr} />
 
-        <Row label={strings.listOrdersSheetAssetAmount} value={amountOutStr} />
+        <Row
+          label={strings.swap.listOrdersSheetAssetAmount}
+          value={amountOutStr}
+        />
 
         {order.placedAt !== undefined && (
           <Row
-            label={strings.listOrdersTimeCreated}
+            label={strings.swap.listOrdersTimeCreated}
             value={intl.formatDate(new Date(order.placedAt), {
               dateStyle: 'medium',
               timeStyle: 'short',
@@ -241,7 +245,7 @@ const Order = ({order}: {order: Swap.Order}) => {
 
         {order.lastUpdate !== undefined && (
           <Row
-            label={strings.listOrdersTimeCompleted}
+            label={strings.swap.listOrdersTimeCompleted}
             value={intl.formatDate(new Date(order.lastUpdate), {
               dateStyle: 'medium',
               timeStyle: 'short',
@@ -252,12 +256,12 @@ const Order = ({order}: {order: Swap.Order}) => {
         {expanded && (
           <React.Fragment>
             <Row
-              label={strings.listOrdersTotal}
+              label={strings.swap.listOrdersTotal}
               value={`${order.amountIn} ${tokenName(tokenInInfo)}`}
             />
 
             <Row
-              label={strings.route}
+              label={strings.swap.route}
               value={
                 <ProtocolAvatar protocol={order.protocol} preventOpenLink />
               }
@@ -265,7 +269,7 @@ const Order = ({order}: {order: Swap.Order}) => {
 
             {lastTxHash !== '' && (
               <Row
-                label={strings.listOrdersTxId}
+                label={strings.swap.listOrdersTxId}
                 value={
                   <Button
                     type={ButtonType.Link}
@@ -327,7 +331,7 @@ const OrderCancellation = ({
         navigateToTxReview({
           cbor: response.value.data.cbor,
           details: {
-            title: strings.swapCancellationDetailsTitle,
+            title: strings.swap.swapCancellationDetailsTitle,
             component: (
               <Details
                 order={order}
@@ -343,7 +347,7 @@ const OrderCancellation = ({
     }
 
     openModal({
-      title: strings.listOrdersSheetTitle,
+      title: strings.swap.listOrdersSheetTitle,
       content: (
         <OrderCancellationConfirmation
           order={order}
@@ -356,21 +360,21 @@ const OrderCancellation = ({
       footer: isLeft(response) ? (
         <Button
           type={ButtonType.Secondary}
-          title={strings.listOrdersSheetBack}
+          title={strings.swap.listOrdersSheetBack}
           onPress={closeModal}
         />
       ) : (
         <View style={[a.flex_row, a.gap_md, a.justify_center, a.align_center]}>
           <Button
             type={ButtonType.Secondary}
-            title={strings.listOrdersSheetBack}
+            title={strings.swap.listOrdersSheetBack}
             onPress={closeModal}
           />
 
           {response.value.data.cbor !== undefined && (
             <Button
               type={ButtonType.Critical}
-              title={strings.listOrdersSheetConfirm}
+              title={strings.swap.listOrdersSheetConfirm}
               onPress={onOrderCancelConfirm}
             />
           )}
@@ -384,7 +388,7 @@ const OrderCancellation = ({
     <Button
       style={[a.self_start, a.px_0]}
       type={ButtonType.SecondaryText}
-      title={strings.listOrdersSheetButtonText}
+      title={strings.swap.listOrdersSheetButtonText}
       isLoading={isLoading}
       onPress={onPress}
     />
@@ -416,22 +420,22 @@ const OrderCancellationConfirmation = ({
     <View>
       <React.Fragment>
         <Row
-          label={strings.route}
+          label={strings.swap.route}
           value={<ProtocolAvatar protocol={order.protocol} preventOpenLink />}
         />
 
-        <Row label={strings.listOrdersSheetAssetPrice} value={price} />
+        <Row label={strings.swap.listOrdersSheetAssetPrice} value={price} />
 
-        <Row label={strings.listOrdersSheetAssetAmount} value={amount} />
+        <Row label={strings.swap.listOrdersSheetAssetAmount} value={amount} />
 
         <Row
-          label={strings.listOrdersSheetTotalReturned}
+          label={strings.swap.listOrdersSheetTotalReturned}
           value={`${order.amountIn} ${tokenName(tokenInInfo)}`}
         />
 
         {fee !== undefined && (
           <Row
-            label={strings.listOrdersSheetCancellationFee}
+            label={strings.swap.listOrdersSheetCancellationFee}
             value={`${fee} ${primaryTokenInfoMainnet.ticker}}`}
           />
         )}
@@ -481,7 +485,7 @@ const ListEmptyComponent = ({filter}: {filter: Filter}) => {
   const {palette: p} = useTheme()
 
   return (
-    <View style={[a.text_center, a.gap_lg, a.pt_2xl]}>
+    <View style={[a.gap_lg, a.pt_2xl]}>
       {filter === 'open' ? (
         <React.Fragment>
           <EmptyOpenOrdersIllustration
@@ -497,8 +501,8 @@ const ListEmptyComponent = ({filter}: {filter: Filter}) => {
             ]}
           >
             {isSearching
-              ? `${strings.emptySearchOpenOrders} "${assetSearchTerm}"`
-              : strings.emptyOpenOrders}
+              ? `${strings.swap.emptySearchOpenOrders} "${assetSearchTerm}"`
+              : strings.swap.emptyOpenOrders}
           </Text>
 
           {!isSearching && (
@@ -510,7 +514,7 @@ const ListEmptyComponent = ({filter}: {filter: Filter}) => {
                 {color: p.text_gray_low},
               ]}
             >
-              {strings.emptyOpenOrdersSub}
+              {strings.swap.emptyOpenOrdersSub}
             </Text>
           )}
         </React.Fragment>
@@ -529,8 +533,8 @@ const ListEmptyComponent = ({filter}: {filter: Filter}) => {
             ]}
           >
             {isSearching
-              ? `${strings.emptySearchCompletedOrders} "${assetSearchTerm}"`
-              : strings.emptyCompletedOrders}
+              ? `${strings.swap.emptySearchCompletedOrders} "${assetSearchTerm}"`
+              : strings.swap.emptyCompletedOrders}
           </Text>
         </React.Fragment>
       )}
@@ -547,12 +551,12 @@ const Details = ({
   const strings = useStrings()
   const {wallet} = useSelectedWallet()
 
-  const portfolioTokenInfos = usePortfolioTokenInfos(
-    {wallet, tokenIds: [order.tokenIn, order.tokenOut]},
-    {suspense: true},
-  )
-  const tokenInInfo = portfolioTokenInfos.tokenInfos?.get(order.tokenIn)
-  const tokenOutInfo = portfolioTokenInfos.tokenInfos?.get(order.tokenOut)
+  const portfolioTokenInfos = usePortfolioTokenInfosSuspense({
+    wallet,
+    tokenIds: [order.tokenIn, order.tokenOut],
+  })
+  const tokenInInfo = portfolioTokenInfos.tokenInfos.get(order.tokenIn)
+  const tokenOutInfo = portfolioTokenInfos.tokenInfos.get(order.tokenOut)
   const {palette: p} = useTheme()
 
   if (tokenInInfo == null)
@@ -583,7 +587,7 @@ const Details = ({
   return (
     <View>
       <Text style={[{fontSize: 12}, a.pb_sm, {color: p.text_gray_medium}]}>
-        {strings.swapFrom}
+        {strings.swap.swapFrom}
       </Text>
 
       <View style={[a.flex_row, a.align_center]}>
@@ -623,7 +627,7 @@ const Details = ({
       <Space.Height.lg />
 
       <Text style={[{fontSize: 12}, a.pb_sm, {color: p.text_gray_medium}]}>
-        {strings.swapTo}
+        {strings.swap.swapTo}
       </Text>
 
       <View style={[a.flex_row, a.align_center]}>

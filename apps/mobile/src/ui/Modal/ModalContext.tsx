@@ -271,4 +271,5 @@ const defaultState: ModalState = Object.freeze({
   isLoading: false,
   canDiscard: true,
   title: '',
+  canContinue: false,
 })

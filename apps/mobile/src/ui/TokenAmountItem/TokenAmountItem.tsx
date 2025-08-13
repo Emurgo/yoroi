@@ -42,7 +42,7 @@ export const TokenAmountItem = ({
   const strings = useStrings()
   const {openModal} = useModal()
   const {height: windowHeight} = useWindowDimensions()
-  const {palette: p} = useTheme()
+  const {atoms: ta, palette: p} = useTheme()
   const {privacyPlaceholder, isPrivacyActive} = usePrivacyMode()
   const priceImpactRiskTheme = usePriceImpactRiskTheme(
     priceImpactRisk ?? 'none',
@@ -82,7 +82,7 @@ export const TokenAmountItem = ({
         <Text
           numberOfLines={1}
           ellipsizeMode="middle"
-          style={[a.body_1_lg_medium, {color: p.gray_900}]}
+          style={[a.body_1_lg_medium, ta.text_gray_max]}
           testID="tokenInfoText"
         >
           {name}
@@ -91,7 +91,7 @@ export const TokenAmountItem = ({
         <Text
           numberOfLines={1}
           ellipsizeMode="middle"
-          style={[{maxWidth: 140}, a.body_3_sm_regular, {color: p.gray_600}]}
+          style={[{maxWidth: 140}, a.body_3_sm_regular, ta.text_gray_medium]}
           testID="tokenFingerprintText"
         >
           {detail}
@@ -138,7 +138,9 @@ export const TokenAmountItem = ({
           <View style={[a.flex, a.flex_row, a.align_center, a.gap_sm]}>
             {amount.quantity > 0n && (
               <View>
-                <Text style={[a.body_1_lg_regular, a.text_right]}>
+                <Text
+                  style={[a.body_1_lg_regular, a.text_right, ta.text_gray_max]}
+                >
                   {formattedQuantity}
                 </Text>
 

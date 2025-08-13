@@ -7,7 +7,6 @@ import {useSwap} from './useSwap'
 export const useSwapConfig = () => {
   const getSwapConfig = getSwapConfigApiMaker()
   const query = useQuery({
-    useErrorBoundary: false,
     queryKey: ['useSwapConfig'],
     queryFn: () => getSwapConfig(),
   })

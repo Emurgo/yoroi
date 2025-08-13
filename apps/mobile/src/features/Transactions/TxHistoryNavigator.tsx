@@ -31,6 +31,7 @@ import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
 import {TxHistoryRoutes} from '~/kernel/navigation/types'
 import {Boundary} from '~/ui/Boundary/Boundary'
 
+import {SwapNavigator} from '../Swap/navigator'
 import {HeaderRightHistory} from './common/HeaderRightHistory'
 import {TxDetails} from './useCases/TxDetails/TxDetails'
 import {TxHistory} from './useCases/TxHistory/TxHistory'
@@ -209,6 +210,14 @@ export const TxHistoryNavigator = () => {
                 title: strings.scan.cameraPermissionDeniedTitle,
               }}
               getComponent={() => ShowCameraPermissionDeniedScreen}
+            />
+
+            <Stack.Screen
+              name="swap"
+              options={{
+                headerShown: false,
+              }}
+              getComponent={() => SwapNavigator}
             />
           </Stack.Navigator>
         </Boundary>

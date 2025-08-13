@@ -257,6 +257,18 @@ export const swapMessages = defineMessages({
     id: 'txReview.fee',
     defaultMessage: '!!!Swap Fees Title',
   },
+  swapFees: {
+    id: 'swap.swapScreen.swapFees',
+    defaultMessage: '!!!Swap Fees',
+  },
+  swapSlippageTitle: {
+    id: 'swap.swapScreen.slippageTolerance',
+    defaultMessage: '!!!Slippage',
+  },
+  swapSlippage: {
+    id: 'swap.swapScreen.slippageInfo',
+    defaultMessage: '!!!Slippage Info',
+  },
   swapLiquidityFee: {
     id: 'txReview.fee',
     defaultMessage: '!!!Swap Liquidity Fee',

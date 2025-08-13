@@ -976,6 +976,9 @@ export const useStrings = () => {
         swapMinReceived: f(swapMessages.swapMinReceived),
         swapMinReceivedTitle: f(swapMessages.swapMinReceivedTitle),
         swapFeesTitle: f(swapMessages.swapFeesTitle),
+        swapFees: f(swapMessages.swapFees),
+        swapSlippageTitle: f(swapMessages.swapSlippageTitle),
+        swapSlippage: f(swapMessages.swapSlippage),
         swapLiquidityFee: f(swapMessages.swapLiquidityFee),
         swapLiqProvFee: f(swapMessages.swapLiqProvFee),
         swapLiquidityFeeInfo: (

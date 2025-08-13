@@ -8,19 +8,23 @@ import {
   PRICE_IMPACT_MODERATE_RISK,
   undefinedToken,
 } from '~/features/Swap/common/constants'
-import {SwapContext} from '~/features/Swap/common/SwapProvider'
+import {SwapContextInstance} from '~/features/Swap/common/SwapProvider'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Divider} from '~/ui/Divider/Divider'
+import {Splits} from '~/ui/EstimateSummary/EstimateSummary'
 import {Icon} from '~/ui/Icon'
 import {ProtocolAvatar} from '~/ui/ProtocolAvatar/ProtocolAvatar'
+import {ShowPriceImpact} from '~/ui/ShowPriceImpact/ShowPriceImpact'
 import {Space} from '~/ui/Space/Space'
 import {TokenAmountItem} from '~/ui/TokenAmountItem/TokenAmountItem'
 import {getPriceImpactRisk, usePriceImpactRiskTheme} from '../../common/helpers'
-import {Splits} from '../CreateOrder/EstimateSummary'
-import {ShowPriceImpact} from '../CreateOrder/ShowPriceImpact'
 
-export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
+export const TransactionSummary = ({
+  swapForm,
+}: {
+  swapForm: React.ContextType<typeof SwapContextInstance>
+}) => {
   const strings = useStrings()
   const {palette: p} = useTheme()
   const {wallet} = useSelectedWallet()
@@ -81,14 +85,14 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
 
   const feesInfo = [
     {
-      label: strings.route,
+      label: strings.swap.route,
       value:
         protocol !== undefined ? (
           <ProtocolAvatar
             protocol={protocol}
             append={
               swapForm.createTx?.aggregator != null
-                ? ` ${strings.via} ${_.upperFirst(swapForm.createTx.aggregator)}${
+                ? ` ${strings.swap.via} ${_.upperFirst(swapForm.createTx.aggregator)}${
                     swapForm.createTx.splits.length > 1 ? '...' : ''
                   }`
                 : ''
@@ -108,8 +112,8 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
     {
       label:
         orderType === 'market'
-          ? strings.marketPrice
-          : strings.limitPriceWarningTitle,
+          ? strings.swap.marketPrice
+          : strings.swap.limitPriceWarningTitle,
       value: (
         <Text
           style={[
@@ -124,12 +128,12 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
       ),
     },
     {
-      label: strings.priceImpact,
+      label: strings.swap.priceImpact,
       value: <ShowPriceImpact priceImpact={swapForm.createTx?.priceImpact} />,
       hidden: priceImpactRisk === 'none' || orderType === 'limit',
     },
     {
-      label: strings.swapMinAdaTitle,
+      label: strings.swap.swapMinAdaTitle,
       value: (
         <Text style={[a.text_left, a.body_1_lg_regular, {color: p.gray_900}]}>
           {minAdaInfoValue}
@@ -137,7 +141,7 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
       ),
     },
     {
-      label: strings.swapFeesTitle,
+      label: strings.swap.swapFeesTitle,
       value: (
         <Text style={[a.text_left, a.body_1_lg_regular, {color: p.gray_900}]}>
           {totalFee}
@@ -145,7 +149,7 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
       ),
     },
     {
-      label: strings.swapMinReceivedTitle,
+      label: strings.swap.swapMinReceivedTitle,
       value: (
         <View>
           <Text
@@ -186,7 +190,7 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
 
             <Text style={[a.body_2_md_regular, {color: p.gray_900}]}>
               <Text style={[a.body_2_md_regular, a.body_2_md_medium]}>
-                {strings.priceImpactRiskHigh({
+                {strings.swap.priceImpactRiskHigh({
                   riskValue:
                     priceImpactRisk === 'moderate'
                       ? PRICE_IMPACT_MODERATE_RISK
@@ -196,7 +200,7 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
 
               <Text style={[a.body_2_md_regular, {color: p.gray_900}]}>
                 {' '}
-                {strings.priceImpactDescription(priceImpactRisk)}
+                {strings.swap.priceImpactDescription(priceImpactRisk)}
               </Text>
             </Text>
           </View>
@@ -205,7 +209,7 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
       <Space.Height.lg />
 
       <Text style={[{fontSize: 12}, a.pb_sm, {color: p.gray_900}]}>
-        {strings.swapFrom}
+        {strings.swap.swapFrom}
       </Text>
 
       <TokenAmountItem amount={amountIn} orderType={orderType} />
@@ -213,7 +217,7 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
       <Space.Height.lg />
 
       <Text style={[{fontSize: 12}, a.pb_sm, {color: p.gray_900}]}>
-        {strings.swapTo}
+        {strings.swap.swapTo}
       </Text>
 
       <TokenAmountItem
@@ -225,7 +229,7 @@ export const TransactionSummary = ({swapForm}: {swapForm: SwapContext}) => {
       <Divider verticalSpace="lg" />
 
       <Text style={[a.body_1_lg_medium, {color: p.text_gray_medium}]}>
-        {strings.swapDetailsTitle}
+        {strings.swap.swapDetailsTitle}
       </Text>
 
       {feesInfo.map((orderInfo) => {
