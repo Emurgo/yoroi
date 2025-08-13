@@ -1,37 +1,53 @@
 import {useNavigation} from '@react-navigation/native'
+import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {Wallet} from '@yoroi/types'
 import * as React from 'react'
-import {Alert, ScrollView, Text, TouchableOpacity, View} from 'react-native'
-
-import {
-  NavigatedSettingsItem,
-  SettingsItem,
-  SettingsSection,
-} from '~/features/Settings/SettingsItems'
-import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
+import {useIntl} from 'react-intl'
+import {ScrollView} from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context'
+import {useAuth} from '~/features/Auth/context/AuthProvider'
+import {useAuthSetting} from '~/features/Auth/hooks/useAuthSetting'
+import {useAddressMode} from '~/features/WalletManager/hooks/useAddressMode'
+import {useResync} from '~/features/WalletManager/hooks/useResync'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {DIALOG_BUTTONS, showConfirmationDialog} from '~/kernel/dialogs'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {SettingsRouteNavigation} from '~/kernel/navigation/types'
-import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
+import {SettingsSwitch} from '~/ui/SettingsSwitch/SettingsSwitch'
 import {Space} from '~/ui/Space/Space'
+import {useNavigateTo} from '../../common/navigation'
+import {SettingsCollateralItem} from '../../SettingsCollateralItem'
+import {
+  NavigatedSettingsItem,
+  SettingsBuildItem,
+  SettingsItem,
+  SettingsSection,
+} from '../../SettingsItems'
 
 export const WalletSettingsScreen = () => {
   const strings = useStrings()
-  const {palette: p} = useTheme()
-  const {wallet, meta} = useSelectedWallet()
-  const {walletManager} = useWalletManager()
-  const {resetToWalletSelection} = useWalletNavigation()
-  const {track} = useMetrics()
-  const navigation = useNavigation<SettingsRouteNavigation>()
+  const {atoms: ta, palette: p} = useTheme()
+  const {resetToWalletSelection, navigateToNotificationSettings} =
+    useWalletNavigation()
+  const authSetting = useAuthSetting()
+  const addressMode = useAddressMode()
+
+  const logout = useLogout()
+  const settingsNavigation = useNavigation<SettingsRouteNavigation>()
+  const {
+    meta: {isEasyConfirmationEnabled, isHW, isReadOnly, implementation},
+  } = useSelectedWallet()
+  const navigateTo = useNavigateTo()
 
   const onToggleEasyConfirmation = () => {
-    if (meta.isEasyConfirmationEnabled) {
-      navigation.navigate('disable-easy-confirmation')
+    if (isEasyConfirmationEnabled) {
+      navigateTo.disableEasyConfirmation()
     } else {
-      navigation.navigate('enable-easy-confirmation')
+      navigateTo.enableEasyConfirmation()
     }
   }
 
@@ -39,212 +55,205 @@ export const WalletSettingsScreen = () => {
     resetToWalletSelection()
   }
 
-  const onLogout = () => {
-    Alert.alert(
-      strings.settings.walletSettings.logout,
-      strings.settings.walletSettings.logout,
-      [
-        {
-          text: strings.settings.walletSettings.logout,
-          onPress: () => {
-            walletManager.removeWallet(wallet.id)
-            resetToWalletSelection()
-          },
-        },
-        {
-          text: strings.global.cancel,
-          style: 'cancel',
-        },
-      ],
-    )
-  }
-
-  const onResync = () => {
-    Alert.alert(
-      strings.settings.walletSettings.resync,
-      strings.settings.walletSettings.resync,
-      [
-        {
-          text: strings.global.cancel,
-          style: 'cancel',
-        },
-        {
-          text: strings.settings.walletSettings.resync,
-          onPress: async () => {
-            try {
-              await wallet.sync({isForced: true})
-              track.settingsPageViewed()
-            } catch (error) {
-              console.error('Resync failed:', error)
-            }
-          },
-        },
-      ],
-    )
-  }
-
-  const getWalletType = (implementation: string): string => {
-    switch (implementation) {
-      case 'byron':
-        return strings.settings.walletSettings.byronWallet
-      case 'shelley':
-        return strings.settings.walletSettings.shelleyWallet
-      default:
-        return strings.settings.walletSettings.unknownWalletType
-    }
+  const iconProps = {
+    color: p.gray_400,
+    size: 23,
   }
 
   return (
-    <ScrollView style={[a.flex_1, {backgroundColor: p.bg_color_max}]}>
-      <View style={[a.p_lg, a.gap_lg]}>
+    <SafeAreaView
+      edges={['bottom', 'right', 'left']}
+      style={[ta.bg_color_max, a.flex_1]}
+    >
+      <ScrollView bounces={false} style={[a.flex_1, a.p_lg]}>
         <SettingsSection title={strings.settings.walletSettings.general}>
-          <SettingsItem
+          <NavigatedSettingsItem
+            icon={<Icon.WalletStack {...iconProps} />}
+            label={strings.settings.walletSettings.switchWallet}
+            onNavigate={onSwitchWallet}
+          />
+
+          <NavigatedSettingsItem
+            icon={<Icon.Logout {...iconProps} />}
+            label={strings.settings.walletSettings.logout}
+            onNavigate={logout}
+          />
+
+          <NavigatedSettingsItem
+            icon={<Icon.Wallet {...iconProps} />}
             label={strings.settings.walletSettings.walletName}
-            icon={<Icon.Wallet size={24} color={p.gray_600} />}
-          >
-            <View style={[a.flex_row, a.align_center]}>
-              <Text style={[a.body_1_lg_regular, {color: p.gray_500}]}>
-                {meta.name}
-              </Text>
-              <Space.Width.md />
-              <Icon.Chevron direction="right" size={28} color={p.el_gray_min} />
-            </View>
-          </SettingsItem>
-
-          <SettingsItem
-            label={strings.settings.walletSettings.network}
-            icon={<Icon.Cardano size={24} color={p.gray_600} />}
-          >
-            <View style={[a.flex_row, a.align_center]}>
-              <Text style={[a.body_1_lg_regular, {color: p.gray_500}]}>
-                {meta.implementation}
-              </Text>
-              <Space.Width.md />
-              <Icon.Chevron direction="right" size={28} color={p.el_gray_min} />
-            </View>
-          </SettingsItem>
-
-          <SettingsItem
-            label={strings.settings.walletSettings.walletType}
-            icon={<Icon.WalletStack size={24} color={p.gray_600} />}
-          >
-            <View style={[a.flex_row, a.align_center]}>
-              <Text style={[a.body_1_lg_regular, {color: p.gray_500}]}>
-                {getWalletType(meta.implementation)}
-              </Text>
-              <Space.Width.md />
-              <Icon.Chevron direction="right" size={28} color={p.el_gray_min} />
-            </View>
-          </SettingsItem>
+            onNavigate={() => settingsNavigation.navigate('change-wallet-name')}
+          />
         </SettingsSection>
+
+        <Space.Height.xl />
 
         <SettingsSection title={strings.settings.walletSettings.security}>
           <NavigatedSettingsItem
+            icon={<Icon.Lock {...iconProps} />}
             label={strings.settings.walletSettings.changePassword}
-            onNavigate={() => navigation.navigate('change-password')}
-            icon={<Icon.Lock size={24} color={p.gray_600} />}
+            onNavigate={() => settingsNavigation.navigate('change-password')}
+            disabled={isReadOnly || isHW}
           />
 
-          <TouchableOpacity onPress={onToggleEasyConfirmation}>
-            <SettingsItem
-              label={strings.settings.walletSettings.easyConfirmation}
-              info={strings.settings.walletSettings.easyConfirmationInfo}
-              icon={<Icon.Pin size={24} color={p.gray_600} />}
-            >
-              <View style={[a.flex_row, a.align_center]}>
-                <Icon.Chevron
-                  direction="right"
-                  size={28}
-                  color={p.el_gray_min}
-                />
-              </View>
-            </SettingsItem>
-          </TouchableOpacity>
+          <SettingsItem
+            icon={<Icon.Bio {...iconProps} />}
+            label={strings.settings.walletSettings.easyConfirmation}
+            info={strings.settings.walletSettings.easyConfirmationInfo}
+            disabled={authSetting === 'pin' || isHW || isReadOnly}
+          >
+            <SettingsSwitch
+              value={isEasyConfirmationEnabled}
+              onValueChange={onToggleEasyConfirmation}
+              disabled={authSetting === 'pin' || isHW || isReadOnly}
+            />
+          </SettingsItem>
         </SettingsSection>
+
+        <Space.Height.xl />
 
         <SettingsSection title={strings.settings.walletSettings.actions}>
-          <TouchableOpacity onPress={onSwitchWallet}>
-            <SettingsItem
-              label={strings.settings.walletSettings.switchWallet}
-              icon={<Icon.Switch size={24} color={p.gray_600} />}
-            >
-              <View style={[a.flex_row, a.align_center]}>
-                <Icon.Chevron
-                  direction="right"
-                  size={28}
-                  color={p.el_gray_min}
-                />
-              </View>
-            </SettingsItem>
-          </TouchableOpacity>
-
           <NavigatedSettingsItem
+            icon={<Icon.CrossCircle {...iconProps} />}
             label={strings.settings.walletSettings.removeWallet}
-            onNavigate={() => navigation.navigate('remove-wallet')}
-            icon={<Icon.Delete size={24} color={p.gray_600} />}
+            onNavigate={() => settingsNavigation.navigate('remove-wallet')}
           />
 
-          <NavigatedSettingsItem
-            label={strings.settings.walletSettings.about}
-            onNavigate={() => navigation.navigate('about')}
-            icon={<Icon.Info size={24} color={p.gray_600} />}
+          <ResyncButton />
+
+          <SettingsCollateralItem
+            icon={<Icon.Collateral {...iconProps} />}
+            label={strings.settings.walletSettings.collateral}
+            onNavigate={() => settingsNavigation.navigate('manage-collateral')}
           />
 
-          <TouchableOpacity onPress={onResync}>
-            <SettingsItem
-              label={strings.settings.walletSettings.resync}
-              icon={<Icon.Resync size={24} color={p.gray_600} />}
-            >
-              <View style={[a.flex_row, a.align_center]}>
-                <Icon.Chevron
-                  direction="right"
-                  size={28}
-                  color={p.el_gray_min}
-                />
-              </View>
-            </SettingsItem>
-          </TouchableOpacity>
-        </SettingsSection>
-
-        <SettingsSection title={strings.settings.walletSettings.notifications}>
-          <NavigatedSettingsItem
-            label={strings.settings.walletSettings.inAppNotifications}
-            onNavigate={() => navigation.navigate('manage-notifications')}
-            icon={<Icon.Bell size={24} color={p.gray_600} />}
-          />
-
-          <NavigatedSettingsItem
-            label={strings.settings.walletSettings.displayDuration}
-            onNavigate={() =>
-              navigation.navigate('manage-notifications', {
-                screen: 'manage-notification-display-duration',
-              })
-            }
-            icon={<Icon.Time size={24} color={p.gray_600} />}
-          />
-        </SettingsSection>
-
-        <SettingsSection title={strings.settings.walletSettings.collateral}>
-          <NavigatedSettingsItem
+          <SettingsItem
+            icon={<Icon.Qr {...iconProps} />}
             label={strings.settings.walletSettings.multipleAddresses}
-            onNavigate={() => navigation.navigate('manage-collateral')}
-            icon={<Icon.Collateral size={24} color={p.gray_600} />}
-          />
+            info={strings.settings.walletSettings.multipleAddressesInfo}
+          >
+            <AddressModeSwitcher isSingle={addressMode.isSingle} />
+          </SettingsItem>
+        </SettingsSection>
 
+        <Space.Height.xl />
+
+        <SettingsSection title={strings.settings.notifications}>
           <NavigatedSettingsItem
-            label={strings.settings.walletSettings.singleAddress}
-            onNavigate={() => navigation.navigate('manage-collateral')}
-            icon={<Icon.Wallet size={24} color={p.gray_600} />}
+            icon={<Icon.Bell {...iconProps} />}
+            label={strings.settings.notifications}
+            onNavigate={() => navigateToNotificationSettings()}
           />
         </SettingsSection>
 
-        <Space.Height.lg />
+        <Space.Height.xl />
 
-        <Button
-          title={strings.settings.walletSettings.logout}
-          onPress={onLogout}
-        />
-      </View>
-    </ScrollView>
+        <SettingsSection title={strings.settings.walletSettings.about}>
+          <SettingsBuildItem
+            label={strings.settings.walletSettings.walletType}
+            value={getWalletType(implementation)}
+          />
+        </SettingsSection>
+
+        <Space.Height.xl />
+      </ScrollView>
+    </SafeAreaView>
   )
+}
+
+const getWalletType = (implementation: Wallet.Implementation): string => {
+  const strings = useStrings()
+  if (implementation === 'cardano-bip44')
+    return strings.settings.walletSettings.byronWallet
+  if (implementation === 'cardano-cip1852')
+    return strings.settings.walletSettings.shelleyWallet
+
+  return strings.settings.walletSettings.unknownWalletType
+}
+
+const ResyncButton = () => {
+  const {wallet} = useSelectedWallet()
+  const {palette: p} = useTheme()
+  const strings = useStrings()
+  const intl = useIntl()
+
+  const {walletIdChanged} = useSetupWallet()
+  const settingsNavigation = useNavigation<SettingsRouteNavigation>()
+  const {resync, isPending} = useResync(wallet)
+
+  const {track} = useMetrics()
+
+  const onResync = async () => {
+    // track.walletSettingsResyncClicked()
+    const selection = await showConfirmationDialog(
+      {
+        title: {id: 'global.disclaimer', defaultMessage: 'Disclaimer'},
+        message: {id: 'global.proceed', defaultMessage: 'Proceed?'},
+        btnNoLabel: {id: 'global.cancel', defaultMessage: 'Cancel'},
+        btnYesLabel: {id: 'global.proceed', defaultMessage: 'Proceed'},
+      },
+      intl,
+    )
+    if (selection === DIALOG_BUTTONS.YES) {
+      walletIdChanged(wallet.id)
+      resync()
+    }
+  }
+
+  const iconProps = {
+    color: p.gray_400,
+    size: 23,
+  }
+
+  return (
+    <NavigatedSettingsItem
+      icon={<Icon.Resync {...iconProps} />}
+      label={strings.settings.walletSettings.resync}
+      onNavigate={onResync}
+    />
+  )
+}
+
+const AddressModeSwitcher = (props: {isSingle: boolean}) => {
+  const addressMode = useAddressMode()
+  const [isSingleLocal, setIsSingleLocal] = React.useState(props.isSingle)
+
+  const handleOnSwitchAddressMode = () => {
+    setIsSingleLocal((prevState) => {
+      if (prevState) {
+        addressMode.enableMultipleMode()
+      } else {
+        addressMode.enableSingleMode()
+      }
+
+      return !prevState
+    })
+  }
+
+  return (
+    <SettingsSwitch
+      value={!isSingleLocal}
+      onValueChange={handleOnSwitchAddressMode}
+    />
+  )
+}
+
+const useLogout = () => {
+  const {loggedOut} = useAuth()
+  const intl = useIntl()
+
+  return async () => {
+    const selection = await showConfirmationDialog(
+      {
+        title: {id: 'global.disclaimer', defaultMessage: 'Disclaimer'},
+        message: {id: 'global.proceed', defaultMessage: 'Proceed?'},
+        btnNoLabel: {id: 'global.cancel', defaultMessage: 'Cancel'},
+        btnYesLabel: {id: 'global.proceed', defaultMessage: 'Proceed'},
+      },
+      intl,
+    )
+    if (selection === DIALOG_BUTTONS.YES) {
+      loggedOut() // triggers navigation to login
+    }
+  }
 }

@@ -6,6 +6,7 @@ import {Platform, Text, View} from 'react-native'
 import {usePortfolioPrimaryBalance} from '~/features/Portfolio/common/hooks/usePortfolioPrimaryBalance'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
+import {ActivityIndicator} from '~/ui/ActivityIndicator/ActivityIndicator'
 import {Space} from '~/ui/Space/Space'
 import {useCatalystCurrentFund} from './hooks'
 
@@ -14,15 +15,26 @@ const formatter = amountFormatter({
   dropTraillingZeros: true,
 })
 
-export const InsufficientFundsModal = () => {
+const InsufficientFundsModalContent = () => {
   const strings = useStrings()
   const {wallet} = useSelectedWallet()
   const primaryBalance = usePortfolioPrimaryBalance({wallet})
-  const {fund} = useCatalystCurrentFund()
+  const {fund, query} = useCatalystCurrentFund()
   const {palette: p} = useTheme()
 
+  // Show loading state
+  if (query.isLoading) {
+    return (
+      <View style={[a.px_lg, a.flex_1, a.gap_lg, a.justify_between]}>
+        <ActivityIndicator />
+      </View>
+    )
+  }
+
   // Default to 0 if fund data is not available yet
-  const votingPowerThreshold = fund?.info?.votingPowerThreshold ?? 0n
+  const votingPowerThreshold = fund?.info?.votingPowerThreshold
+    ? BigInt(fund.info.votingPowerThreshold)
+    : BigInt(0)
 
   const fmtMinPrimaryBalance = formatter({
     info: wallet.portfolioPrimaryTokenInfo,
@@ -43,3 +55,5 @@ export const InsufficientFundsModal = () => {
     </View>
   )
 }
+
+export const InsufficientFundsModal = InsufficientFundsModalContent

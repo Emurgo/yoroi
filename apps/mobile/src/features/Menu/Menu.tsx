@@ -5,13 +5,13 @@ import * as React from 'react'
 import {
   Linking,
   ScrollView,
-  Text,
   TouchableOpacity,
   useWindowDimensions,
   View,
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-
+import {usePrefetchStakingInfo} from '~/features/Dashboard/StakePoolInfos'
+import {useCanVote} from '~/features/RegisterCatalyst/common/hooks'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
@@ -22,7 +22,7 @@ import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
-import {useCanVote} from '../RegisterCatalyst/common/hooks'
+import {Text} from '~/ui/Text/Text'
 import {InsufficientFundsModal} from '../RegisterCatalyst/common/InsufficientFundsModal'
 import {NetworkTag} from '../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {usePoolTransition} from '../Staking/Staking/PoolTransition/usePoolTransition'
@@ -54,7 +54,7 @@ export const MenuNavigator = () => {
 export const Menu = () => {
   const strings = useStrings()
   const {atoms: ta, palette: p} = useTheme()
-  const navigateTo = useWalletNavigation()
+  const navigateTo = useNavigateTo()
   const {isPoolRetiring} = usePoolTransition()
   const {track} = useMetrics()
 
@@ -72,13 +72,13 @@ export const Menu = () => {
       <ScrollView contentContainerStyle={[a.flex_1, a.p_lg]} bounces={false}>
         <AppSettings //
           label={strings.menu.settings}
-          onPress={navigateTo.navigateToSettings}
+          onPress={navigateTo.settings}
           left={<Icon.Gear size={24} color={p.gray_600} />}
         />
 
         <Staking
           label={strings.menu.stakingCenter}
-          onPress={navigateTo.navigateToStakingDashboard}
+          onPress={navigateTo.stakingCenter}
           left={<Icon.TabStaking size={24} color={p.gray_600} />}
           right={
             isPoolRetiring ? (
@@ -89,101 +89,52 @@ export const Menu = () => {
 
         <Governance
           label={strings.menu.governanceCentre}
-          onPress={navigateTo.navigateToGovernanceCentre}
+          onPress={navigateTo.governanceCentre}
           left={<Icon.Governance size={24} color={p.gray_600} />}
         />
 
-        <React.Suspense
-          fallback={
-            <Item
-              label={strings.menu.catalystVoting}
-              left={<Icon.Catalyst size={24} color={p.gray_600} />}
-              onPress={() => {}}
-              disabled
-            />
-          }
-        >
-          <Catalyst
-            label={strings.menu.catalystVoting}
-            left={<Icon.Catalyst size={24} color={p.gray_600} />}
-            onPress={navigateTo.navigateToGovernanceCentre}
-          />
-        </React.Suspense>
-
+        <Catalyst
+          label={strings.menu.catalystVoting}
+          onPress={navigateTo.catalystVoting}
+          left={<Icon.Catalyst size={24} color={p.gray_600} />}
+        />
+        <KnowledgeBase //
+          label={strings.menu.knowledgeBase}
+          onPress={navigateTo.knowledgeBase}
+          left={<Icon.Info size={24} color={p.gray_600} />}
+        />
         <Space.Height.lg fill />
-
         <SupportLink />
       </ScrollView>
     </SafeAreaView>
   )
 }
 
-const AppSettings = ({
-  label,
-  left,
-  onPress,
-}: {
-  label: string
-  left: React.ReactElement
-  onPress: () => void
-}) => {
-  return <Item label={label} left={left} onPress={onPress} />
-}
-
-const Staking = ({
-  label,
-  left,
-  right,
-  onPress,
-}: {
-  label: string
-  left: React.ReactElement
-  right?: React.ReactElement | null
-  onPress: () => void
-}) => {
-  return <Item label={label} left={left} right={right} onPress={onPress} />
-}
-
-const Governance = ({
-  label,
-  left,
-  onPress,
-}: {
-  label: string
-  left: React.ReactElement
-  onPress: () => void
-}) => {
-  return <Item label={label} left={left} onPress={onPress} />
-}
-
 const SupportLink = () => {
   const strings = useStrings()
-  const {palette: p} = useTheme()
-
-  const handleSupportPress = () => {
-    Linking.openURL('https://yoroi-wallet.com/support')
-  }
-
-  const handleKnowledgeBasePress = () => {
-    Linking.openURL('https://yoroi-wallet.com/help')
-  }
+  const {atoms: ta, palette: p} = useTheme()
+  const navigateTo = useNavigateTo()
 
   return (
-    <View>
-      <Text style={[a.body_1_lg_medium, {color: p.gray_900}]}>
-        {strings.menu.supportTitle}
-      </Text>
-      <Space.Height.sm />
-      <Item
-        label={strings.menu.supportLink}
-        left={<Icon.Support size={24} color={p.gray_600} />}
-        onPress={handleSupportPress}
-      />
-      <Item
-        label={strings.menu.knowledgeBase}
-        left={<Icon.Info size={24} color={p.gray_600} />}
-        onPress={handleKnowledgeBasePress}
-      />
+    <View style={a.align_center}>
+      <View style={a.justify_center}>
+        <Text style={{color: p.gray_600}}>{strings.menu.supportTitle}</Text>
+      </View>
+
+      <Space.Height.lg />
+
+      <TouchableOpacity
+        onPress={navigateTo.support}
+        style={[a.justify_between, a.align_center, a.flex_row]}
+      >
+        <Icon.Support size={24} color={p.primary_600} />
+
+        <Space.Width.lg />
+
+        <Text style={[ta.el_primary_medium, a.body_2_md_medium]}>
+          {strings.menu.supportLink.toLocaleUpperCase()}
+        </Text>
+      </TouchableOpacity>
     </View>
   )
 }
@@ -201,37 +152,45 @@ const Item = ({
   right?: React.ReactElement | null
   onPress: () => void
 }) => {
-  const {palette: p} = useTheme()
+  const {atoms: ta, palette: p} = useTheme()
 
   return (
     <TouchableOpacity
+      onPress={onPress}
       style={[
+        a.py_lg,
         a.flex_row,
         a.align_center,
-        a.justify_between,
-        a.py_lg,
-        {opacity: disabled ? 0.5 : 1},
+        a.justify_center,
+        a.border_b,
+        {
+          borderBottomColor: p.gray_200,
+          opacity: disabled ? 0.5 : 1,
+        },
       ]}
-      onPress={onPress}
       disabled={disabled}
     >
-      <View style={[a.flex_row, a.align_center]}>
-        {left}
-        <Space.Width.sm />
-        <Text
-          style={[
-            a.body_1_lg_medium,
-            {color: disabled ? p.gray_500 : p.gray_900},
-          ]}
-        >
-          {label}
-        </Text>
-      </View>
-      {right && <View>{right}</View>}
+      {left}
+
+      <Space.Width.lg />
+
+      <Text style={[a.body_2_md_regular, ta.el_gray_max]}>{label}</Text>
+
+      <Space.Height.sm fill />
+
+      {right}
+
+      <Space.Width.sm />
+
+      <Icon.Chevron direction="right" size={28} color={p.gray_600} />
     </TouchableOpacity>
   )
 }
 
+const Staking = Item
+const Governance = Item
+const AppSettings = Item
+const KnowledgeBase = Item
 const Catalyst = ({
   label,
   left,
@@ -260,6 +219,41 @@ const Catalyst = ({
       })
     }
   }
+  return <Item label={label} onPress={handlePress} left={left} />
+}
 
-  return <Item label={label} left={left} onPress={handlePress} />
+const SUPPORT_TICKET_LINK =
+  'https://emurgohelpdesk.zendesk.com/hc/en-us/requests/new?ticket_form_id=360013330335'
+const KNOWLEDGE_BASE_LINK =
+  'https://emurgohelpdesk.zendesk.com/hc/en-us/categories/4412619927695-Yoroi'
+
+const useNavigateTo = () => {
+  const {
+    navigation,
+    navigateToSettings,
+    navigateToGovernanceCentre,
+    navigateToStakingDashboard,
+  } = useWalletNavigation()
+  const {wallet} = useSelectedWallet()
+
+  const prefetchStakingInfo = usePrefetchStakingInfo(wallet)
+
+  return {
+    catalystVoting: () => {
+      prefetchStakingInfo()
+      navigation.navigate('manage-wallets', {
+        screen: 'voting-registration',
+        params: {
+          screen: 'download-catalyst',
+        },
+      })
+    },
+    stakingCenter: () => {
+      navigateToStakingDashboard()
+    },
+    settings: () => navigateToSettings(),
+    support: () => Linking.openURL(SUPPORT_TICKET_LINK),
+    knowledgeBase: () => Linking.openURL(KNOWLEDGE_BASE_LINK),
+    governanceCentre: () => navigateToGovernanceCentre(),
+  }
 }

@@ -3,7 +3,7 @@ import * as React from 'react'
 import {Linking, Text, View} from 'react-native'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {Space} from '../../../../../ui/Space/Space'
+import {Space} from '~/ui/Space/Space'
 import {InfoModalIllustration} from './illustrations/InfoModalIllustration'
 
 export const InitialCollateralInfoModal = () => {
@@ -32,7 +32,7 @@ const learnMoreLink =
 
 const Link = () => {
   const strings = useStrings()
-  const {palette: p, atoms: ta} = useTheme()
+  const {atoms: ta} = useTheme()
 
   const handleOnPress = () => {
     Linking.openURL(learnMoreLink)

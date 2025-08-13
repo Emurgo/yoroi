@@ -1,64 +1,36 @@
-import {useQuery} from '@tanstack/react-query'
-import {
-  isBoolean,
-  useAsyncStorage,
-  useMutationWithInvalidations,
-} from '@yoroi/common'
-import {useEffect, useState} from 'react'
-import {NativeModules, Platform} from 'react-native'
+import {useSyncStorageToState} from '@yoroi/common'
+import * as React from 'react'
+import {NativeModules} from 'react-native'
+import {isAndroid} from '~/kernel/constants'
+import {screenShareStorageKeyManager} from '~/kernel/storage/storages'
 
 const {FlagSecure} = NativeModules
 
-export const useChangeScreenShareSetting = () => {
-  const storage = useAsyncStorage()
+export const useScreenShareSettingEnabled = () => {
+  const [screenShareEnabled] = useSyncStorageToState(
+    screenShareStorageKeyManager,
+  )
 
-  const mutation = useMutationWithInvalidations({
-    mutationFn: async (screenShareEnabled: boolean) => {
-      await storage
-        .join('appSettings/')
-        .setItem('screenShareEnabled', screenShareEnabled)
-      if (Platform.OS === 'android') {
-        changeScreenShareNativeSettingOnAndroid(screenShareEnabled)
-      }
-    },
-    invalidateQueries: [['screenShareEnabled']],
-  })
+  const data = isAndroid ? screenShareEnabled : true
 
   return {
-    ...mutation,
-    changeScreenShareSettings: mutation.mutate,
+    data,
+    error: null,
+    isLoading: false,
+    isError: false,
   }
 }
 
-export const useScreenShareSettingEnabled = () => {
-  const storage = useAsyncStorage()
-
-  return useQuery({
-    queryKey: ['screenShareEnabled'],
-    queryFn: async () => {
-      if (Platform.OS === 'android') {
-        return (
-          (await storage
-            .join('appSettings/')
-            .getItem<boolean>('screenShareEnabled')) ?? false
-        )
-      }
-      return true
-    },
-  })
-}
-
 export const useInitScreenShare = () => {
-  const {data: screenShareEnabled} = useScreenShareSettingEnabled()
-  const [initialised, setInitialised] = useState(false)
+  const [screenShareEnabled] = useSyncStorageToState(
+    screenShareStorageKeyManager,
+  )
+  const [initialised, setInitialised] = React.useState(false)
 
-  useEffect(() => {
-    if (!isBoolean(screenShareEnabled) || initialised) return
+  React.useEffect(() => {
+    if (!isAndroid || initialised) return
 
-    if (Platform.OS === 'android') {
-      changeScreenShareNativeSettingOnAndroid(screenShareEnabled)
-    }
-
+    changeScreenShareNativeSettingOnAndroid(screenShareEnabled)
     setInitialised(true)
   }, [screenShareEnabled, initialised])
 
