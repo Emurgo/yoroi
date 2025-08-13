@@ -30,15 +30,24 @@ export const useNavigateTo = () => {
       navigation.reset({index: 0, routes: [{name: 'dashboard-portfolio'}]})
       navigation.navigate('history', {
         screen: 'swap',
+        params: {
+          screen: 'main',
+        },
       })
     },
     swap: () =>
       navigation.navigate('history', {
         screen: 'swap',
+        params: {
+          screen: 'main',
+        },
       }),
     swapPreprodNotice: () =>
       navigation.navigate('history', {
-        screen: 'swap-preprod-notice',
+        screen: 'swap',
+        params: {
+          screen: 'preprod-notice',
+        },
       }),
     buyAda: () =>
       navigation.navigate('history', {screen: 'exchange-create-order'}),
