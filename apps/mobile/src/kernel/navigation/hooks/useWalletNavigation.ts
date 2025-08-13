@@ -333,7 +333,7 @@ export const useWalletNavigation = () => {
         params: {
           screen: 'history',
           params: {
-            screen: 'swap-main',
+            screen: 'swap',
           },
         },
       })
@@ -363,7 +363,7 @@ export const useWalletNavigation = () => {
         params: {
           screen: 'history',
           params: {
-            screen: 'swap-main',
+            screen: 'swap',
           },
         },
       })

@@ -23,15 +23,6 @@ import {FailedTxScreen as SendFailedTxScreen} from '~/features/Send/useCases/Sho
 import {SubmittedTxScreen as SendSubmittedTxScreen} from '~/features/Send/useCases/ShowSubmittedTxScreen/SubmittedTxScreen'
 import {StartMultiTokenTxScreen} from '~/features/Send/useCases/StartMultiTokenTx/StartMultiTokenTxScreen'
 import {NetworkTag} from '~/features/Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
-import {SelectProtocolScreen} from '~/features/Swap/useCases/CreateOrder/SelectProtocolScreen'
-import {SelectTokenScreen} from '~/features/Swap/useCases/CreateOrder/SelectTokenScreen'
-import {SwapMainScreen} from '~/features/Swap/useCases/CreateOrder/SwapMainScreen'
-import {ListOrders} from '~/features/Swap/useCases/ListOrders/ListOrders'
-import {ReviewSwap} from '~/features/Swap/useCases/ReviewSwap/ReviewSwap'
-import {FailedTxScreen as SwapFailedTxScreen} from '~/features/Swap/useCases/ShowFailedTxScreen/FailedTxScreen'
-import {ShowPreprodNoticeScreen} from '~/features/Swap/useCases/ShowPreprodNoticeScreen/ShowPreprodNoticeScreen'
-import {SubmittedTxScreen as SwapSubmittedTxScreen} from '~/features/Swap/useCases/ShowSubmittedTxScreen/SubmittedTxScreen'
-import {SwapSettings} from '~/features/Swap/useCases/SwapSettings/SwapSettings'
 import {UtxoConsolidation} from '~/features/Transactions/useCases/UtxoConsolidation/UtxoConsolidation/UtxoConsolidation'
 import {UtxoList} from '~/features/Transactions/useCases/UtxoList/UtxoList'
 import {unstoppableApiKey} from '~/kernel/constants'
@@ -40,7 +31,7 @@ import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
 import {TxHistoryRoutes} from '~/kernel/navigation/types'
 import {Boundary} from '~/ui/Boundary/Boundary'
 
-import {SwapProvider} from '../Swap/common/SwapProvider'
+import {SwapNavigator} from '../Swap/navigator'
 import {HeaderRightHistory} from './common/HeaderRightHistory'
 import {TxDetails} from './useCases/TxDetails/TxDetails'
 import {TxHistory} from './useCases/TxHistory/TxHistory'
@@ -78,231 +69,159 @@ export const TxHistoryNavigator = () => {
   }, [resolverStorage, resolverApi])
 
   return (
-    /* TODO: REVISIT manage suspense properly. swap provider gets blocked without it due to usePortfolioTokenInfosSuspense */
-    <React.Suspense fallback={null}>
-      <SwapProvider>
-        <ResolverProvider resolverManager={resolverManager}>
-          <ReceiveProvider>
-            <Boundary loading={{size: 'full'}}>
-              <Stack.Navigator
-                screenOptions={{
-                  ...navigationOptions,
-                  headerTitle: ({children}) => (
-                    <NetworkTag>{children}</NetworkTag>
-                  ),
-                }}
-              >
-                <Stack.Screen
-                  name="history-list"
-                  options={{
-                    title: strings.transactions.history.historyTitle,
-                    headerRight: () => <HeaderRightHistory />,
-                    headerTransparent: true,
-                    headerStyle: {
-                      ...a.bg_transparent,
-                      elevation: 0,
-                      shadowOpacity: 0,
-                    },
-                    headerTitleStyle: {
-                      color: p.gray_max,
-                    },
-                    headerTintColor: p.gray_max,
-                  }}
-                  getComponent={() => TxHistory}
-                />
+    <ResolverProvider resolverManager={resolverManager}>
+      <ReceiveProvider>
+        <Boundary loading={{size: 'full'}}>
+          <Stack.Navigator
+            screenOptions={{
+              ...navigationOptions,
+              headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
+            }}
+          >
+            <Stack.Screen
+              name="history-list"
+              options={{
+                title: strings.transactions.history.historyTitle,
+                headerRight: () => <HeaderRightHistory />,
+                headerTransparent: true,
+                headerStyle: {
+                  ...a.bg_transparent,
+                  elevation: 0,
+                  shadowOpacity: 0,
+                },
+                headerTitleStyle: {
+                  color: p.gray_max,
+                },
+                headerTintColor: p.gray_max,
+              }}
+              getComponent={() => TxHistory}
+            />
 
-                <Stack.Screen
-                  name="tx-details"
-                  options={{
-                    title: strings.transactions.history.txDetailsTitle,
-                  }}
-                  getComponent={() => TxDetails}
-                />
+            <Stack.Screen
+              name="tx-details"
+              options={{
+                title: strings.transactions.history.txDetailsTitle,
+              }}
+              getComponent={() => TxDetails}
+            />
 
-                <Stack.Screen
-                  name="utxo-list"
-                  options={{
-                    title: strings.transactions.utxo.utxoListTitle,
-                  }}
-                  getComponent={() => UtxoList}
-                />
+            <Stack.Screen
+              name="utxo-list"
+              options={{
+                title: strings.transactions.utxo.utxoListTitle,
+              }}
+              getComponent={() => UtxoList}
+            />
 
-                <Stack.Screen
-                  name="utxo-consolidation"
-                  options={{
-                    title: strings.transactions.utxo.utxoConsolidationTitle,
-                  }}
-                  getComponent={() => UtxoConsolidation}
-                />
+            <Stack.Screen
+              name="utxo-consolidation"
+              options={{
+                title: strings.transactions.utxo.utxoConsolidationTitle,
+              }}
+              getComponent={() => UtxoConsolidation}
+            />
 
-                {/* Send Screens */}
-                <Stack.Screen
-                  name="send-start-tx"
-                  options={{
-                    title: strings.send.sendTitle,
-                  }}
-                  getComponent={() => StartMultiTokenTxScreen}
-                />
+            {/* Send Screens */}
+            <Stack.Screen
+              name="send-start-tx"
+              options={{
+                title: strings.send.sendTitle,
+              }}
+              getComponent={() => StartMultiTokenTxScreen}
+            />
 
-                <Stack.Screen
-                  name="send-list-amounts-to-send"
-                  options={{
-                    title: strings.send.listAmountsToSendTitle,
-                  }}
-                  getComponent={() => ListAmountsToSendScreen}
-                />
+            <Stack.Screen
+              name="send-list-amounts-to-send"
+              options={{
+                title: strings.send.listAmountsToSendTitle,
+              }}
+              getComponent={() => ListAmountsToSendScreen}
+            />
 
-                <Stack.Screen
-                  name="send-edit-amount"
-                  options={{
-                    title: strings.send.editAmountTitle,
-                  }}
-                  getComponent={() => EditAmountScreen}
-                />
+            <Stack.Screen
+              name="send-edit-amount"
+              options={{
+                title: strings.send.editAmountTitle,
+              }}
+              getComponent={() => EditAmountScreen}
+            />
 
-                <Stack.Screen
-                  name="send-select-token-from-list"
-                  options={{
-                    title: strings.send.selectTokenTitle,
-                  }}
-                  getComponent={() => SelectTokenFromListScreen}
-                />
+            <Stack.Screen
+              name="send-select-token-from-list"
+              options={{
+                title: strings.send.selectTokenTitle,
+              }}
+              getComponent={() => SelectTokenFromListScreen}
+            />
 
-                <Stack.Screen
-                  name="send-submitted-tx"
-                  options={{
-                    title: strings.send.sendTitle,
-                  }}
-                  getComponent={() => SendSubmittedTxScreen}
-                />
+            <Stack.Screen
+              name="send-submitted-tx"
+              options={{
+                title: strings.send.sendTitle,
+              }}
+              getComponent={() => SendSubmittedTxScreen}
+            />
 
-                <Stack.Screen
-                  name="send-failed-tx"
-                  options={{
-                    title: strings.send.sendTitle,
-                  }}
-                  getComponent={() => SendFailedTxScreen}
-                />
+            <Stack.Screen
+              name="send-failed-tx"
+              options={{
+                title: strings.send.sendTitle,
+              }}
+              getComponent={() => SendFailedTxScreen}
+            />
 
-                {/* Receive Screens */}
-                <Stack.Screen
-                  name="receive-single"
-                  options={{
-                    title: strings.receive.receiveTitle,
-                  }}
-                  getComponent={() => DescribeSelectedAddressScreen}
-                />
+            {/* Receive Screens */}
+            <Stack.Screen
+              name="receive-single"
+              options={{
+                title: strings.receive.receiveTitle,
+              }}
+              getComponent={() => DescribeSelectedAddressScreen}
+            />
 
-                <Stack.Screen
-                  name="receive-multiple"
-                  options={{
-                    title: strings.receive.multipleAddress,
-                  }}
-                  getComponent={() => ListMultipleAddressesScreen}
-                />
+            <Stack.Screen
+              name="receive-multiple"
+              options={{
+                title: strings.receive.multipleAddress,
+              }}
+              getComponent={() => ListMultipleAddressesScreen}
+            />
 
-                <Stack.Screen
-                  name="receive-specific-amount"
-                  options={{
-                    title: strings.receive.specificAmount,
-                  }}
-                  getComponent={() => RequestSpecificAmountScreen}
-                />
+            <Stack.Screen
+              name="receive-specific-amount"
+              options={{
+                title: strings.receive.specificAmount,
+              }}
+              getComponent={() => RequestSpecificAmountScreen}
+            />
 
-                {/* Scan Screens */}
-                <Stack.Screen
-                  name="scan-start"
-                  options={{
-                    title: strings.scan.scanTitle,
-                  }}
-                  getComponent={() => ScanCodeScreen}
-                />
+            {/* Scan Screens */}
+            <Stack.Screen
+              name="scan-start"
+              options={{
+                title: strings.scan.scanTitle,
+              }}
+              getComponent={() => ScanCodeScreen}
+            />
 
-                <Stack.Screen
-                  name="scan-show-camera-permission-denied"
-                  options={{
-                    title: strings.scan.cameraPermissionDeniedTitle,
-                  }}
-                  getComponent={() => ShowCameraPermissionDeniedScreen}
-                />
+            <Stack.Screen
+              name="scan-show-camera-permission-denied"
+              options={{
+                title: strings.scan.cameraPermissionDeniedTitle,
+              }}
+              getComponent={() => ShowCameraPermissionDeniedScreen}
+            />
 
-                {/* Swap Screens */}
-                <Stack.Screen
-                  name="swap-main"
-                  options={{
-                    title: strings.swap.swapTitle,
-                  }}
-                  getComponent={() => SwapMainScreen}
-                />
-
-                <Stack.Screen
-                  name="swap-orders"
-                  options={{
-                    title: strings.swap.listOrdersSheetTitle,
-                  }}
-                  getComponent={() => ListOrders}
-                />
-
-                <Stack.Screen
-                  name="swap-settings"
-                  options={{
-                    title: 'Settings',
-                  }}
-                  getComponent={() => SwapSettings}
-                />
-
-                <Stack.Screen
-                  name="swap-review"
-                  options={{
-                    title: strings.swap.swapDetailsTitle,
-                  }}
-                  getComponent={() => ReviewSwap}
-                />
-
-                <Stack.Screen
-                  name="swap-select-token"
-                  options={{
-                    title: strings.swap.selectToken,
-                  }}
-                  getComponent={() => SelectTokenScreen}
-                />
-
-                <Stack.Screen
-                  name="swap-select-protocol"
-                  options={{
-                    title: strings.swap.changePool,
-                  }}
-                  getComponent={() => SelectProtocolScreen}
-                />
-
-                <Stack.Screen
-                  name="swap-preprod-notice"
-                  options={{
-                    title: strings.swap.preprodNoticeTitle,
-                  }}
-                  getComponent={() => ShowPreprodNoticeScreen}
-                />
-
-                <Stack.Screen
-                  name="swap-submitted-tx"
-                  options={{
-                    title: strings.swap.submittedTxScreenTitle,
-                  }}
-                  getComponent={() => SwapSubmittedTxScreen}
-                />
-
-                <Stack.Screen
-                  name="swap-failed-tx"
-                  options={{
-                    title: strings.swap.failedTxScreenTitle,
-                  }}
-                  getComponent={() => SwapFailedTxScreen}
-                />
-              </Stack.Navigator>
-            </Boundary>
-          </ReceiveProvider>
-        </ResolverProvider>
-      </SwapProvider>
-    </React.Suspense>
+            <Stack.Screen
+              name="swap"
+              options={{
+                headerShown: false,
+              }}
+              getComponent={() => SwapNavigator}
+            />
+          </Stack.Navigator>
+        </Boundary>
+      </ReceiveProvider>
+    </ResolverProvider>
   )
 }

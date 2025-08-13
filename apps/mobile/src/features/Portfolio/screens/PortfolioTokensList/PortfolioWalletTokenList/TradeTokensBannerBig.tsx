@@ -16,7 +16,7 @@ export const TradeTokensBannerBig = () => {
 
   const navigation = useNavigation<TxHistoryRouteNavigation>()
   const handleSwap = () => {
-    navigation.navigate('swap-main')
+    navigation.navigate('swap')
   }
 
   return (

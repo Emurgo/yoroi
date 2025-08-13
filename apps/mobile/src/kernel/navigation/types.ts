@@ -1,8 +1,7 @@
 import {Chain, Portfolio, Scan} from '@yoroi/types'
 
-import {NavigatorScreenParams} from '@react-navigation/native'
+import {NavigatorScreenParams, useNavigation} from '@react-navigation/native'
 import {StackNavigationProp} from '@react-navigation/stack'
-import {useNavigation} from '@react-navigation/native'
 
 import {OnConfirm} from '~/features/ReviewTx/common/hooks/useOnConfirm'
 import {ReviewDetailsProps} from '~/features/ReviewTx/useCases/ReviewTxScreen/ReviewTx/Overview/OverviewTab'
@@ -93,6 +92,7 @@ type NotificationCenterRoutes = {
 }
 
 export type SwapTokenRoutes = {
+  'swap': undefined
   'swap-main': undefined
   'swap-orders': undefined
   'swap-settings': undefined
@@ -119,7 +119,8 @@ export type ExchangeRoutes = {
 
 export type ExchangeRoutesNavigation = StackNavigationProp<ExchangeRoutes>
 
-export type StakingCenterRouteNavigation = StackNavigationProp<StakingCenterRoutes>
+export type StakingCenterRouteNavigation =
+  StackNavigationProp<StakingCenterRoutes>
 
 export type SettingsTabRoutes = {
   'wallet-settings': undefined
@@ -237,7 +238,8 @@ export type VotingRegistrationRoutes = {
   'qr-code': undefined
 }
 
-export type VotingRegistrationRouteNavigation = StackNavigationProp<VotingRegistrationRoutes>
+export type VotingRegistrationRouteNavigation =
+  StackNavigationProp<VotingRegistrationRoutes>
 
 export type InititalizationRoutes = {
   'initial': undefined
@@ -250,7 +252,8 @@ export type InititalizationRoutes = {
   'read-privacy-policy': undefined
 }
 
-export type InititalizationNavigation = StackNavigationProp<InititalizationRoutes>
+export type InititalizationNavigation =
+  StackNavigationProp<InititalizationRoutes>
 
 export type FirstAction =
   | 'first-run'
@@ -314,7 +317,9 @@ export type WalletNavigation = {
   navigateToChangeNetwork: () => void
   navigateToTxHistory: () => void
   navigateToAppSettings: () => void
-  navigateToCollateralSettings: (params?: SettingsStackRoutes['manage-collateral']) => void
+  navigateToCollateralSettings: (
+    params?: SettingsStackRoutes['manage-collateral'],
+  ) => void
   navigateToNotificationDisplayDuration: () => void
   navigateToNotificationSettings: () => void
   navigateToNotifications: () => void

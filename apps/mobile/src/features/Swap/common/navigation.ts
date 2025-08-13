@@ -13,7 +13,7 @@ export const useNavigateTo = () => {
       swapNavigation.navigate('swap-select-token', {direction: 'in'}),
     selectTokenOut: () =>
       swapNavigation.navigate('swap-select-token', {direction: 'out'}),
-    startSwap: () => swapNavigation.navigate('swap-main'),
+    startSwap: () => swapNavigation.navigate('swap'),
     orders: () => swapNavigation.navigate('swap-orders'),
     swapSettings: () => swapNavigation.navigate('swap-settings'),
     reviewSwap: () =>
@@ -44,7 +44,7 @@ export const useNavigateTo = () => {
         params: {
           screen: 'history',
           params: {
-            screen: 'swap-main',
+            screen: 'swap',
           },
         },
       }),
