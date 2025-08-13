@@ -50,10 +50,7 @@ export const SelectTokenScreen = () => {
           }}
         >
           {Array.from({length: 6}).map((_, i) => (
-            <AmountItemPlaceholder
-              key={i}
-              style={[{paddingVertical: 8, paddingHorizontal: 16}]}
-            />
+            <AmountItemPlaceholder key={i} style={[a.py_sm, a.px_lg]} />
           ))}
         </View>
       ),
