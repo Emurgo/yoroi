@@ -134,7 +134,7 @@ export const StartMultiTokenTxScreen = () => {
             <NextButton
               onPress={handleOnNext}
               title={strings.send.next}
-              disabled={!canGoNext}
+              // disabled={!canGoNext}
               testID="nextButton"
             />
           </Padding>

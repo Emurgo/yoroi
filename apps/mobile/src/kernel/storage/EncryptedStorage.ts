@@ -34,7 +34,7 @@ export const EncryptedStorage = {
       secretKey: hex.fromUtf8(password),
     })
 
-    return keyStorage.setItem(key, encrypted)
+    return keyStorage.setItem(key, encrypted.value)
   },
 
   remove(key: StorageKey) {

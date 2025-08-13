@@ -12,14 +12,15 @@ import {
 } from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {Platform, Text, View} from 'react-native'
+import {Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {isAndroid} from '~/kernel/constants'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {Boundary} from '../../../../../ui/Boundary/Boundary'
-import {Button} from '../../../../../ui/Button/Button'
-import {useModal} from '../../../../../ui/Modal/ModalContext'
-import {Space} from '../../../../../ui/Space/Space'
+import {Boundary} from '~/ui/Boundary/Boundary'
+import {Button} from '~/ui/Button/Button'
+import {useModal} from '~/ui/Modal/ModalContext'
+import {Space} from '~/ui/Space/Space'
 import {NetworkPickerList} from './NetworkPickerList'
 
 export const ChangeNetworkScreen = () => {
@@ -27,10 +28,15 @@ export const ChangeNetworkScreen = () => {
   const {networkNoticeShown} = useNetworkNoticeShown()
 
   const {handleOpenModal} = useHandleOpenNetworkNoticeModal()
+  const hasShownRef = React.useRef(false)
 
   React.useEffect(() => {
-    if (!networkNoticeShown) {
-      const timeout = setTimeout(handleOpenModal, time.seconds(0.5))
+    if (!networkNoticeShown && !hasShownRef.current) {
+      const timeout = setTimeout(() => {
+        // prevent repeated opens during async storage update
+        hasShownRef.current = true
+        handleOpenModal()
+      }, time.seconds(0.5))
 
       return () => clearTimeout(timeout)
     }
@@ -57,8 +63,7 @@ export const useHandleOpenNetworkNoticeModal = () => {
   const {palette: p} = useTheme()
   const strings = useStrings()
   const {openModal, closeModal} = useModal()
-  const {refetch} = useNetworkNoticeShown()
-  const {networkNoticeShown} = useNetworkNoticeShown()
+  const {refetch, networkNoticeShown} = useNetworkNoticeShown()
 
   const setNetworkNoticeShown = useSetNetworkNoticeShown({
     onSuccess: () => refetch(),
@@ -70,36 +75,38 @@ export const useHandleOpenNetworkNoticeModal = () => {
 
   const handleOpenModal = () => {
     openModal({
-      title: strings.changeNetwork.networkNoticeTitle,
+      title: strings.settings.changeNetwork.networkNoticeTitle,
       content: (
         <View style={[a.flex_1, a.px_lg]}>
           <Text style={[a.body_1_lg_regular, {color: p.gray_900}]}>
-            {strings.changeNetwork.networkNoticeMessage}
+            {strings.settings.changeNetwork.networkNoticeMessage}
           </Text>
 
           <Space.Height.lg />
 
           <Text style={[a.body_1_lg_medium, {color: p.gray_900}]}>
-            {strings.changeNetwork.networkNoticeListTitle}
+            {strings.settings.changeNetwork.networkNoticeListTitle}
           </Text>
 
           <Text style={[a.body_1_lg_regular, {color: p.gray_900}]}>
-            {strings.changeNetwork.networkNoticeList}
+            {strings.settings.changeNetwork.networkNoticeList}
           </Text>
 
           <Space.Height.sm fill />
 
-          {Platform.OS === 'android' && <Space.Height.lg />}
+          {isAndroid && <Space.Height.lg />}
         </View>
       ),
       footer: (
         <Button
-          title={strings.changeNetwork.networkNoticeButton}
-          onPress={closeModal}
+          title={strings.settings.changeNetwork.networkNoticeButton}
+          onPress={() => {
+            if (!networkNoticeShown) setNetworkNoticeShown()
+            closeModal()
+          }}
         />
       ),
       height: 450,
-      onClose,
     })
   }
 
@@ -127,7 +134,6 @@ const useNetworkNoticeShown = (
   const storage = useAsyncStorage()
 
   const query = useQuery({
-    suspense: true,
     queryKey: ['useNetworkNoticeShown'],
     ...options,
     queryFn: async () => {

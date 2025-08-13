@@ -24,14 +24,12 @@ export const RemoveWalletScreen = () => {
   const {atoms: ta, palette: p} = useTheme()
   const strings = useStrings()
   const navigation = useNavigation()
-  const {wallet} = useSelectedWallet()
+  const {wallet, meta} = useSelectedWallet()
   const {walletManager} = useWalletManager()
 
   const [walletName, setWalletName] = React.useState('')
   const [hasMnemonicWrittenDown, setHasMnemonicWrittenDown] =
     React.useState(false)
-
-  const {meta} = wallet
 
   const disabled =
     walletName !== meta.name || (!meta.isHW && !hasMnemonicWrittenDown)

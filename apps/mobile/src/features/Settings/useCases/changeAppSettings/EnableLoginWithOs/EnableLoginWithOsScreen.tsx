@@ -1,16 +1,19 @@
 import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 
-import {useEnableAuthWithOs} from '~/features/Auth/hooks/useEnableAuthWithOS'
+import {useAuth} from '~/features/Auth/context/AuthProvider'
 import {OsAuthScreen} from '~/features/Auth/ui/screens/OsAuthScreen'
+import {usePromise} from '~/hooks/usePromise'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button, ButtonType} from '~/ui/Button/Button'
 
 export const EnableLoginWithOsScreen = () => {
   const strings = useStrings()
   const navigation = useNavigation()
+  const {enableLoginWithHost} = useAuth()
 
-  const {enableAuthWithOs, isLoading} = useEnableAuthWithOs({
+  const {isPending, resolve} = usePromise({
+    promise: enableLoginWithHost,
     onSuccess: () => navigation.goBack(),
   })
 
@@ -24,7 +27,7 @@ export const EnableLoginWithOsScreen = () => {
       buttons={[
         <Button
           key="cancel"
-          disabled={isLoading}
+          disabled={isPending}
           size="S"
           type={ButtonType.Secondary}
           title={strings.settings.enableLoginWithOs.notNowButton}
@@ -32,10 +35,10 @@ export const EnableLoginWithOsScreen = () => {
         />,
         <Button
           size="S"
-          disabled={isLoading}
+          disabled={isPending}
           key="link"
           title={strings.settings.enableLoginWithOs.linkButton}
-          onPress={() => enableAuthWithOs()}
+          onPress={() => resolve()}
         />,
       ]}
     />

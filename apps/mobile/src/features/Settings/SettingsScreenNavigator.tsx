@@ -5,6 +5,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {TouchableOpacity} from 'react-native'
 
+import {useAuth} from '~/features/Auth/context/AuthProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {
@@ -262,6 +263,12 @@ const ChangePinScreenWrapper = () => {
 
 const EnableLoginWithPinWrapper = () => {
   const navigation = useNavigation()
+  const {changeAuthSetting} = useAuth()
 
-  return <EnableLoginWithPinScreen onDone={navigation.goBack} />
+  const handleDone = () => {
+    changeAuthSetting('pin')
+    navigation.goBack()
+  }
+
+  return <EnableLoginWithPinScreen onDone={handleDone} />
 }

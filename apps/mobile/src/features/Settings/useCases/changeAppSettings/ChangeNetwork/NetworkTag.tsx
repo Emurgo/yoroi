@@ -13,12 +13,12 @@ import {
 
 import {availableNetworks} from '~/features/WalletManager/common/constants'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
-import {useStrings} from '~/kernel/i18n/useStrings'
 
 export const NetworkTag = ({
   children,
@@ -38,7 +38,7 @@ export const NetworkTag = ({
     walletManager,
   } = useWalletManager()
   const {navigateToChangeNetwork} = useWalletNavigation()
-  const {atoms: ta, atoms} = useTheme()
+  const {atoms: ta} = useTheme()
   const {openModal, closeModal} = useModal()
   const strings = useStrings()
   const {track} = useMetrics()
@@ -138,7 +138,7 @@ const PreprodTag = ({
   onPress: () => void
   disabled: boolean
 }) => {
-  const {palette: p, atoms: ta} = useTheme()
+  const {palette: p} = useTheme()
 
   const {name} = networkConfigs[Chain.Network.Preprod]
 
