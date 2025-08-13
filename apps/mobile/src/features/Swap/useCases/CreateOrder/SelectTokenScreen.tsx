@@ -33,7 +33,7 @@ import {
 } from '~/ui/TokenAmountItem/TokenAmountItem'
 import {useNavigateTo} from '../../common/navigation'
 
-type Direction = SwapTokenRoutes['swap-select-token']
+type Direction = SwapTokenRoutes['select-token']
 
 export const SelectTokenScreen = () => {
   const strings = useStrings()

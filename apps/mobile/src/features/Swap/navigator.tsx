@@ -41,7 +41,7 @@ export const SwapNavigator = () => {
           }}
         >
           <Stack.Screen
-            name="swap-main"
+            name="main"
             options={{
               title: strings.swap.swapTitle,
             }}
@@ -49,7 +49,7 @@ export const SwapNavigator = () => {
           />
 
           <Stack.Screen
-            name="swap-orders"
+            name="orders"
             options={{
               title: strings.swap.listOrdersSheetTitle,
             }}
@@ -57,7 +57,7 @@ export const SwapNavigator = () => {
           />
 
           <Stack.Screen
-            name="swap-settings"
+            name="settings"
             options={{
               title: 'Settings',
             }}
@@ -65,7 +65,7 @@ export const SwapNavigator = () => {
           />
 
           <Stack.Screen
-            name="swap-review"
+            name="review"
             options={{
               title: strings.swap.swapDetailsTitle,
             }}
@@ -73,7 +73,7 @@ export const SwapNavigator = () => {
           />
 
           <Stack.Screen
-            name="swap-select-token"
+            name="select-token"
             options={{
               title: strings.swap.selectToken,
             }}
@@ -81,7 +81,7 @@ export const SwapNavigator = () => {
           />
 
           <Stack.Screen
-            name="swap-select-protocol"
+            name="select-protocol"
             options={{
               title: strings.swap.changePool,
             }}
@@ -89,7 +89,7 @@ export const SwapNavigator = () => {
           />
 
           <Stack.Screen
-            name="swap-preprod-notice"
+            name="preprod-notice"
             options={{
               title: strings.swap.preprodNoticeTitle,
             }}
@@ -97,7 +97,7 @@ export const SwapNavigator = () => {
           />
 
           <Stack.Screen
-            name="swap-submitted-tx"
+            name="submitted-tx"
             options={{
               title: strings.swap.submittedTxScreenTitle,
             }}
@@ -105,7 +105,7 @@ export const SwapNavigator = () => {
           />
 
           <Stack.Screen
-            name="swap-failed-tx"
+            name="failed-tx"
             options={{
               title: strings.swap.failedTxScreenTitle,
             }}

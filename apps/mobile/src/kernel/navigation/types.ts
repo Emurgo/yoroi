@@ -65,8 +65,8 @@ export type TxHistoryRoutes = {
   'send-submitted-tx': undefined
   'send-failed-tx': undefined
   'send-select-token-from-list': undefined
-} & SwapTokenRoutes &
-  ScanRoutes &
+  'swap': NavigatorScreenParams<SwapTokenRoutes>
+} & ScanRoutes &
   ClaimRoutes &
   ExchangeRoutes &
   NotificationCenterRoutes
@@ -92,16 +92,15 @@ type NotificationCenterRoutes = {
 }
 
 export type SwapTokenRoutes = {
-  'swap': undefined
-  'swap-main': undefined
-  'swap-orders': undefined
-  'swap-settings': undefined
-  'swap-review': undefined
-  'swap-select-token': {direction: 'in' | 'out'}
-  'swap-select-protocol': undefined
-  'swap-preprod-notice': undefined
-  'swap-submitted-tx': undefined
-  'swap-failed-tx': undefined
+  'main': undefined
+  'orders': undefined
+  'settings': undefined
+  'review': undefined
+  'select-token': {direction: 'in' | 'out'}
+  'select-protocol': undefined
+  'preprod-notice': undefined
+  'submitted-tx': undefined
+  'failed-tx': undefined
 }
 
 export type SwapTokenRouteseNavigation = StackNavigationProp<SwapTokenRoutes>

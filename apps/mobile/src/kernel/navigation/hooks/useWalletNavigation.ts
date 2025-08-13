@@ -314,7 +314,10 @@ export const useWalletNavigation = () => {
           params: {
             screen: 'history',
             params: {
-              screen: 'swap-preprod-notice',
+              screen: 'swap',
+              params: {
+                screen: 'preprod-notice',
+              },
             },
           },
         })
@@ -334,6 +337,9 @@ export const useWalletNavigation = () => {
           screen: 'history',
           params: {
             screen: 'swap',
+            params: {
+              screen: 'main',
+            },
           },
         },
       })
@@ -345,7 +351,10 @@ export const useWalletNavigation = () => {
         params: {
           screen: 'history',
           params: {
-            screen: 'swap-preprod-notice',
+            screen: 'swap',
+            params: {
+              screen: 'preprod-notice',
+            },
           },
         },
       })
@@ -364,6 +373,9 @@ export const useWalletNavigation = () => {
           screen: 'history',
           params: {
             screen: 'swap',
+            params: {
+              screen: 'main',
+            },
           },
         },
       })

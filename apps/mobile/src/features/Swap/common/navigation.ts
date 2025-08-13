@@ -1,40 +1,139 @@
 import {useNavigation} from '@react-navigation/native'
 import {useRef} from 'react'
 
-import {TxHistoryRouteNavigation} from '~/kernel/navigation/types'
-
 export const useNavigateTo = () => {
-  const swapNavigation = useNavigation<TxHistoryRouteNavigation>()
   const navigation = useNavigation()
 
   return useRef({
-    selectProtocol: () => swapNavigation.navigate('swap-select-protocol'),
+    selectProtocol: () =>
+      navigation.navigate('manage-wallets', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'history',
+          params: {
+            screen: 'swap',
+            params: {
+              screen: 'select-protocol',
+            },
+          },
+        },
+      }),
     selectTokenIn: () =>
-      swapNavigation.navigate('swap-select-token', {direction: 'in'}),
+      navigation.navigate('manage-wallets', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'history',
+          params: {
+            screen: 'swap',
+            params: {
+              screen: 'select-token',
+              params: {direction: 'in'},
+            },
+          },
+        },
+      }),
     selectTokenOut: () =>
-      swapNavigation.navigate('swap-select-token', {direction: 'out'}),
-    startSwap: () => swapNavigation.navigate('swap'),
-    orders: () => swapNavigation.navigate('swap-orders'),
-    swapSettings: () => swapNavigation.navigate('swap-settings'),
+      navigation.navigate('manage-wallets', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'history',
+          params: {
+            screen: 'swap',
+            params: {
+              screen: 'select-token',
+              params: {direction: 'out'},
+            },
+          },
+        },
+      }),
+    startSwap: () =>
+      navigation.navigate('manage-wallets', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'history',
+          params: {
+            screen: 'swap',
+            params: {
+              screen: 'main',
+            },
+          },
+        },
+      }),
+    orders: () =>
+      navigation.navigate('manage-wallets', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'history',
+          params: {
+            screen: 'swap',
+            params: {
+              screen: 'orders',
+            },
+          },
+        },
+      }),
+    swapSettings: () =>
+      navigation.navigate('manage-wallets', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'history',
+          params: {
+            screen: 'swap',
+            params: {
+              screen: 'settings',
+            },
+          },
+        },
+      }),
     reviewSwap: () =>
       navigation.navigate('manage-wallets', {
         screen: 'main-wallet-routes',
         params: {
           screen: 'history',
           params: {
-            screen: 'swap-review',
+            screen: 'swap',
+            params: {
+              screen: 'review',
+            },
           },
         },
       }),
-    submittedTx: () => swapNavigation.navigate('swap-submitted-tx'),
-    failedTx: () => swapNavigation.navigate('swap-failed-tx'),
+    submittedTx: () =>
+      navigation.navigate('manage-wallets', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'history',
+          params: {
+            screen: 'swap',
+            params: {
+              screen: 'submitted-tx',
+            },
+          },
+        },
+      }),
+    failedTx: () =>
+      navigation.navigate('manage-wallets', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'history',
+          params: {
+            screen: 'swap',
+            params: {
+              screen: 'failed-tx',
+            },
+          },
+        },
+      }),
     swapOpenOrders: () =>
       navigation.navigate('manage-wallets', {
         screen: 'main-wallet-routes',
         params: {
           screen: 'history',
           params: {
-            screen: 'swap-orders',
+            screen: 'swap',
+            params: {
+              screen: 'orders',
+            },
           },
         },
       }),
@@ -45,6 +144,9 @@ export const useNavigateTo = () => {
           screen: 'history',
           params: {
             screen: 'swap',
+            params: {
+              screen: 'main',
+            },
           },
         },
       }),

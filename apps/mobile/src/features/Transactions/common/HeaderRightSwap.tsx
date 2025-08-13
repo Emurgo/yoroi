@@ -12,7 +12,20 @@ export const HeaderRightSwap = React.memo(() => {
 
   return (
     <TouchableOpacity
-      onPress={() => navigation.navigate('swap-orders')}
+      onPress={() =>
+        navigation.navigate('manage-wallets', {
+          screen: 'main-wallet-routes',
+          params: {
+            screen: 'history',
+            params: {
+              screen: 'swap',
+              params: {
+                screen: 'orders',
+              },
+            },
+          },
+        })
+      }
       style={{paddingRight: 8}}
     >
       <Icon.TermsOfUse color={p.gray_max} size={24} />
