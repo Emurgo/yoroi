@@ -16,8 +16,6 @@ const metricsManager = makeMetricsManager()
 
 export function PlatformShell({children}: React.PropsWithChildren) {
   useScreenCapture()
-  // TODO: Uncomment this when we have a way to test notifications
-  // useInitNotifications({localEnabled: true, pushEnabled: true})
 
   return (
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>
