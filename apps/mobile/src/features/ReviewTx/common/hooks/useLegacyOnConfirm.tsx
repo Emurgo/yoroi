@@ -1,14 +1,13 @@
 import * as React from 'react'
 
+import {ConfirmRawTxWithOs} from '~/features/Swap/common/ConfirmRawTx/ConfirmRawTxWithOs'
+import {ConfirmRawTxWithPassword} from '~/features/Swap/common/ConfirmRawTx/ConfirmRawTxWithPassword'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {ConfirmTxWithHwModal} from '~/ui/ConfirmTxWithHwModal/ConfirmTxWithHwModal'
-import {ConfirmTxWithOsModal} from '~/ui/ConfirmTxWithOsModal/ConfirmTxWithOsModal'
-import {ConfirmTxWithSpendingPasswordModal} from '~/ui/ConfirmTxWithSpendingPasswordModal/ConfirmTxWithSpendingPasswordModal'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {YoroiSignedTx, YoroiUnsignedTx} from '~/wallets/types/yoroi'
 import {useNavigateTo} from './useNavigateTo'
 import {OnConfirm} from './useOnConfirm'
-import {useStrings} from '~/kernel/i18n/useStrings'
 
 export const useLegacyOnConfirm = ({
   unsignedTx,
@@ -50,32 +49,32 @@ export const useLegacyOnConfirm = ({
     const {isHW, isEasyConfirmationEnabled} = meta
 
     if (isHW) {
-      openModal({
-        title: strings.signTransaction,
-        content: (
-          <ConfirmTxWithHwModal
-            onCancel={closeModal}
-            unsignedTx={unsignedTx}
-            onSuccess={handleOnSuccess}
-            onNotSupportedCIP1694={() => {
-              if (onNotSupportedCIP1694) {
-                closeModal()
-                onNotSupportedCIP1694()
-              }
-            }}
-            onCIP36SupportChange={onCIP36SupportChange ?? undefined}
-          />
-        ),
-        height: 400,
-      })
+      // openModal({
+      //   title: strings.swap.signTransaction,
+      //   content: (
+      //     <ConfirmRawTxWithHW
+      //       onCancel={closeModal}
+      //       unsignedTx={unsignedTx}
+      //       onSuccess={handleOnSuccess}
+      //       onNotSupportedCIP1694={() => {
+      //         if (onNotSupportedCIP1694) {
+      //           closeModal()
+      //           onNotSupportedCIP1694()
+      //         }
+      //       }}
+      //       onCIP36SupportChange={onCIP36SupportChange ?? undefined}
+      //     />
+      //   ),
+      //   height: 400,
+      // })
       return
     }
 
     if (!isHW && !isEasyConfirmationEnabled) {
       openModal({
-        title: strings.signTransaction,
+        title: strings.swap.signTransaction,
         content: (
-          <ConfirmTxWithSpendingPasswordModal
+          <ConfirmRawTxWithPassword
             unsignedTx={unsignedTx}
             onSuccess={handleOnSuccess}
             onError={handleOnError}
@@ -87,9 +86,9 @@ export const useLegacyOnConfirm = ({
     }
 
     openModal({
-      title: strings.signTransaction,
+      title: strings.swap.signTransaction,
       content: (
-        <ConfirmTxWithOsModal
+        <ConfirmRawTxWithOs
           unsignedTx={unsignedTx}
           onSuccess={handleOnSuccess}
           onError={handleOnError}

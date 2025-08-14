@@ -3,7 +3,6 @@ import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
-import {useStrings} from '~/kernel/i18n/useStrings'
 import {TokenItem} from '~/features/ReviewTx/common/TokenItem'
 import {
   FormattedInput,
@@ -13,6 +12,7 @@ import {
   FormattedTx,
 } from '~/features/ReviewTx/common/types'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Accordion} from '~/ui/Accordion/Accordion'
 import {Copiable} from '~/ui/Copiable/Copiable'
 import {Divider} from '~/ui/Divider/Divider'
@@ -28,7 +28,9 @@ export const UTxOsTab = ({tx}: {tx: FormattedTx}) => {
     <View style={[a.flex_1, a.px_lg, {backgroundColor: p.bg_color_max}]}>
       <Space.Height.lg />
 
-      <Accordion label={`${strings.txReview.utxosInputsLabel} (${tx.inputs.length})`}>
+      <Accordion
+        label={`${strings.txReview.utxosInputsLabel} (${tx.inputs.length})`}
+      >
         <Inputs inputs={tx.inputs} />
       </Accordion>
 
@@ -39,7 +41,9 @@ export const UTxOsTab = ({tx}: {tx: FormattedTx}) => {
         )}
       />
 
-      <Accordion label={`${strings.txReview.utxosOutputsLabel} (${tx.outputs.length})`}>
+      <Accordion
+        label={`${strings.txReview.utxosOutputsLabel} (${tx.outputs.length})`}
+      >
         <Outputs outputs={tx.outputs} />
       </Accordion>
 

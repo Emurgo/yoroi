@@ -1,15 +1,15 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {PortfolioTokenBalances} from '@yoroi/types/lib/typescript/portfolio/balances'
 import * as React from 'react'
 import {FlatList, Text, View} from 'react-native'
 
 import {usePortfolioBalances} from '~/features/Portfolio/common/hooks/usePortfolioBalances'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {BalanceCard} from '~/ui/BalanceCard/BalanceCard'
 import {Icon} from '~/ui/Icon'
 import {Space} from '~/ui/Space/Space'
 import {TokenInfoIcon} from '~/ui/TokenInfoIcon/TokenInfoIcon'
-import {useStrings} from '~/kernel/i18n/useStrings'
 
 export const WalletBalance = ({
   image,
@@ -61,7 +61,7 @@ export const WalletBalance = ({
         <TokenSquare
           count={ftList.length}
           list={ftList}
-          title={strings.txReview.walletBalanceTokensTitle}
+          title={strings.txReview.walletBalance.tokens}
         />
 
         <Space.Width.lg />
@@ -69,7 +69,7 @@ export const WalletBalance = ({
         <TokenSquare
           count={nftsList.length}
           list={nftsList}
-          title={strings.txReview.walletBalanceNFTsTitle}
+          title={strings.txReview.walletBalance.nfts}
         />
       </TokenSquares>
     </View>

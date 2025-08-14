@@ -86,7 +86,7 @@ export const useOnConfirm = ({
       }
 
       openModal({
-        title: strings.signTransaction,
+        title: strings.swap.signTransaction,
         content: (
           <ErrorBoundary
             fallbackRender={({error, resetErrorBoundary}) => (
