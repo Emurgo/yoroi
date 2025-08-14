@@ -1,4 +1,4 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 import {Image} from 'expo-image'
 import * as React from 'react'
@@ -44,27 +44,23 @@ export const MediaPreview = ({
   const placeholder = getPlaceholder(info.type, isDark)
 
   return (
-    <View
-      style={[{width, height}, {position: 'relative'}, {overflow: 'hidden'}]}
-    >
+    <View style={[{width, height}, a.relative, a.overflow_hidden]}>
       <Image
-        source={{uri: showPlaceholder ? placeholder : uri, headers}}
+        source={
+          showPlaceholder ? placeholder : uri ? {uri, headers} : placeholder
+        }
         contentFit={contentFit}
         placeholderContentFit={contentFit}
         style={{width, height, ...style}}
         blurRadius={blurRadius}
         cachePolicy="memory-disk"
-        placeholder={isError && placeholder}
+        placeholder={isError ? placeholder : undefined}
         onLoad={onLoad}
         onError={onError}
       />
 
       {isLoading && (
-        <View
-          style={[
-            {position: 'absolute', top: 0, left: 0, zIndex: 1, width, height},
-          ]}
-        >
+        <View style={[a.absolute, a.inset_0, a.z_10, {width, height}]}>
           <View
             style={[
               {width, height},
