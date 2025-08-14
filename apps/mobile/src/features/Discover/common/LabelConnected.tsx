@@ -9,13 +9,16 @@ export const LabelConnected = () => {
   const {atoms: ta, palette: p} = useTheme()
   return (
     <View
-      style={[a.px_sm, {paddingVertical: 3, borderRadius: 999}, ta.bg_color_secondary_600]}
+      style={[
+        a.px_sm,
+        a.py_2xs,
+        a.rounded_full,
+        {backgroundColor: p.secondary_500},
+      ]}
     >
-      <Text style={[a.body_3_sm_medium, {fontWeight: '500'}, {color: p.gray_min}]}>
+      <Text style={[a.body_3_sm_medium, ta.text_gray_min]}>
         {strings.discover.connected}
       </Text>
     </View>
   )
 }
-
-

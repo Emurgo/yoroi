@@ -1,0 +1,96 @@
+name: mobile-checks
+
+on: 
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+    types: [opened, synchronize, reopened, ready_for_review]
+
+jobs:
+  check:
+    if: github.event.pull_request.draft != true
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22.12.0"
+          cache: 'npm'
+          cache-dependency-path: '**/package-lock.json'
+      - name: Build packages in dependency order
+        run: |
+          # Build packages in the correct dependency order
+          packages=(
+            types
+            common
+            api
+            identicon
+            theme
+            explorers
+            portfolio
+            blockchains
+            exchange
+            resolver
+            claim
+            setup-wallet
+            notifications
+            links
+            staking
+            swap
+            transfer
+            dapp-connector
+          )
+          
+          for pkg in "${packages[@]}"; do
+            echo "→ Building '${pkg}'…"
+            (
+              cd "packages/$pkg"
+              npm ci
+              npm run build
+              echo "   ✔️  Build completed for '${pkg}'"
+            )
+          done
+        shell: bash
+      - name: Install pkgs
+        run: npm ci
+        working-directory: apps/mobile
+        shell: bash
+      - name: TypeScript check
+        run: npm run tsc
+        working-directory: apps/mobile
+        shell: bash
+      - name: Lint
+        run: npm run lint
+        working-directory: apps/mobile
+        shell: bash
+      - name: Test
+        run: npm run test
+        working-directory: apps/mobile
+        shell: bash
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          files: |
+            packages/api/coverage/lcov.info
+            packages/blockchains/coverage/lcov.info
+            packages/claim/coverage/lcov.info
+            packages/common/coverage/lcov.info
+            packages/dapp-connector/coverage/lcov.info
+            packages/exchange/coverage/lcov.info
+            packages/explorers/coverage/lcov.info
+            packages/identicon/coverage/lcov.info
+            packages/links/coverage/lcov.info
+            packages/notifications/coverage/lcov.info
+            packages/portfolio/coverage/lcov.info
+            packages/resolver/coverage/lcov.info
+            packages/setup-wallet/coverage/lcov.info
+            packages/staking/coverage/lcov.info
+            packages/swap/coverage/lcov.info
+            packages/theme/coverage/lcov.info
+            packages/transfer/coverage/lcov.info
+            packages/types/coverage/lcov.info
+            apps/mobile/coverage/lcov.info
+          fail_ci_if_error: false 
+          verbose: true
+          token: ${{ secrets.CODECOV_TOKEN }}

@@ -6,12 +6,12 @@ import * as React from 'react'
 import {Alert, Linking} from 'react-native'
 
 import {useClaimErrorResolver} from '~/features/Claim/common/useClaimErrorResolver'
-import {useStrings as useStringsClaim} from '~/kernel/i18n/useStrings'
 import {
   AskConfirmation,
   AskConfirmationActions,
 } from '~/features/Claim/useCases/AskConfirmation'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {pastedFormatter} from '~/wallets/utils/amountUtils'
 import {useNavigateTo} from './useNavigateTo'
@@ -24,7 +24,7 @@ export const useTriggerScanAction = ({
   const {
     wallet: {portfolioPrimaryTokenInfo},
   } = useSelectedWallet()
-  const {openModal, closeModal, startLoading, stopLoading} = useModal()
+  const {openModal, closeModal, setLoading} = useModal()
 
   const navigateTo = useNavigateTo()
 
@@ -50,12 +50,14 @@ export const useTriggerScanAction = ({
       navigateTo.claimShowSuccess()
     },
     onError: (error) => {
-      stopLoading()
+      setLoading(false)
       const claimErrorDialog = claimErrorResolver(error)
-      Alert.alert(claimErrorDialog.title, claimErrorDialog.message)
+      if (claimErrorDialog) {
+        Alert.alert(claimErrorDialog.title, claimErrorDialog.message)
+      }
     },
   })
-  const stringsClaim = useStringsClaim()
+  const strings = useStrings()
 
   const trigger = (scanAction: Scan.Action) => {
     switch (scanAction.action) {
@@ -103,12 +105,12 @@ export const useTriggerScanAction = ({
         scanActionClaimChanged(scanAction)
 
         const handleOnContinue = () => {
-          startLoading()
+          setLoading(true)
           claimTokens(scanAction)
         }
 
         openModal({
-          title: stringsClaim.askConfirmationTitle,
+          title: strings.claim.askConfirmationTitle,
           content: (
             <AskConfirmation
               address={address}
