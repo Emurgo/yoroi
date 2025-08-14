@@ -8,8 +8,9 @@ import {useLanguage} from '~/kernel/i18n/LanguageProvider'
 import {LanguageRecord, supportedLanguages} from '~/kernel/i18n/localization'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {BlueCheckbox} from '~/ui/BlueCheckbox/BlueCheckbox'
-import {Button} from '~/ui/Button/Button'
+import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
+import {YoroiLogo} from '~/ui/YoroiLogo/YoroiLogo'
 import {Space} from '~/ui/Space/Space'
 
 import {useNavigateTo} from '../../hooks/useNavigateTo'
@@ -48,7 +49,9 @@ export const InitialScreen = () => {
   return (
     <SafeAreaView style={[a.flex_1, a.p_lg, ta.bg_color_max]}>
       <ScrollView bounces={false} contentContainerStyle={a.flex_grow}>
-        <Icon.YoroiWallet size={64} />
+      <Space.Height._2xl />
+          <YoroiLogo />
+          <Space.Height._2xl />
 
         <Space.Height.xl />
 
@@ -111,14 +114,15 @@ export const InitialScreen = () => {
             </TouchableOpacity>
           </View>
         </BlueCheckbox>
-
-        <Button
-          title={strings.initialization.continue}
-          disabled={!tosAccepted}
-          onPress={onPressContinue}
-          testID="buttonContinue"
-        />
       </ScrollView>
+      
+      <Button
+        type={ButtonType.Primary}
+        title={strings.initialization.continue}
+        disabled={!tosAccepted}
+        onPress={onPressContinue}
+        testID="buttonContinue"
+      />
     </SafeAreaView>
   )
 }
