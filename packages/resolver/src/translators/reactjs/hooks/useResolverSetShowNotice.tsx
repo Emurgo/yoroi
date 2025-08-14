@@ -20,5 +20,5 @@ export const useResolverSetShowNotice = (
   return {
     ...mutation,
     setShowNotice: mutation.mutate,
-  } as any
+  }
 }
