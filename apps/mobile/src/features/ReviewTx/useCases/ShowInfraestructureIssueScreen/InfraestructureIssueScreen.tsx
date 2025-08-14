@@ -4,11 +4,12 @@ import * as React from 'react'
 import {Text, View} from 'react-native'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useBlockGoBack, useWalletNavigation} from '~/kernel/navigation/hooks'
+import {useBlockGoBack} from '~/kernel/navigation/hooks/useBlockGoBack'
+import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Button} from '~/ui/Button/Button'
+import {InfraestructureIssueIcon} from '~/ui/InfraestructureIssueIcon/InfraestructureIssueIcon'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
-import {InfraestructureIssueIcon} from '../illustrations/InfraestructureIssueIcon'
 
 export const InfraestructureIssueScreen = () => {
   useBlockGoBack()
