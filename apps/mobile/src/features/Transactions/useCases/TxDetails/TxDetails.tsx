@@ -98,10 +98,7 @@ export const TxDetails = () => {
     })
 
   return (
-    <SafeAreaView
-      edges={['bottom', 'left', 'right']}
-      style={[a.flex_1, ta.bg_color_max]}
-    >
+    <SafeAreaView edges={['left', 'right']} style={[a.flex_1, ta.bg_color_max]}>
       <FadeIn style={a.flex_1}>
         <ScrollView contentContainerStyle={a.px_lg}>
           <Banner label={strings.transactions.direction(transaction.direction)}>
@@ -215,6 +212,7 @@ export const TxDetails = () => {
 
         <Actions style={[{borderTopWidth: 1, borderColor: p.gray_200}]}>
           <Button
+            type={'Primary'}
             onPress={() =>
               Linking.openURL(explorers.cardanoscan.tx(transaction.id))
             }

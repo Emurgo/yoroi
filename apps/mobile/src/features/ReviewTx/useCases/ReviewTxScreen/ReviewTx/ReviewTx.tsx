@@ -14,8 +14,8 @@ import {
   ViewStyle,
 } from 'react-native'
 
-import {useStrings} from '~/kernel/i18n/useStrings'
 import {FormattedMetadata, FormattedTx} from '~/features/ReviewTx/common/types'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {ScrollView, useScrollView} from '~/ui/ScrollView/ScrollView'
@@ -52,8 +52,8 @@ export const ReviewTx = ({
   const strings = useStrings()
 
   const tabsData: Array<[string, Tabs]> = [
-    [strings.txReview.overviewTab, 'overview'],
-    [strings.txReview.utxosTab, 'utxos'],
+    [strings.txReview.tabLabel.overview, 'overview'],
+    [strings.txReview.tabLabel.utxos, 'utxos'],
   ]
   const [activeTab, setActiveTab] = React.useState<Tabs>(tabsData[0][1])
 
@@ -63,10 +63,14 @@ export const ReviewTx = ({
   const showMintTab = !!formattedTx.mint
   const showReferenceInoutsTab = formattedTx.referenceInputs.length > 0
 
-  if (showMetadataTab) tabsData.push([strings.txReview.metadataTab, 'metadata'])
-  if (showMintTab) tabsData.push([strings.txReview.mintTab, 'mint'])
+  if (showMetadataTab)
+    tabsData.push([strings.txReview.tabLabel.metadataTab, 'metadata'])
+  if (showMintTab) tabsData.push([strings.txReview.tabLabel.mint, 'mint'])
   if (showReferenceInoutsTab)
-    tabsData.push([strings.txReview.referenceInputsTab, 'reference_inputs'])
+    tabsData.push([
+      strings.txReview.tabLabel.referenceInputs,
+      'reference_inputs',
+    ])
 
   // intentionally not using ref
   const {
