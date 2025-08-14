@@ -9,7 +9,7 @@ const YOROI_COMPANY_NAME = 'Yoroi'
 
 export const YoroiLogo = () => {
   const strings = useStrings()
-  const {palette: p, atoms: ta} = useTheme()
+  const {palette: p} = useTheme()
   return (
     <View style={{alignItems: 'center'}}>
       <YoroiLogoSvg />
@@ -22,7 +22,7 @@ export const YoroiLogo = () => {
 
       <Space.Height.sm />
 
-      <Text style={[ta.body_2_md_regular, color: p.gray_900]}>
+      <Text style={[a.body_2_md_regular, {color: p.gray_900}]}>
         {strings.ui.yoroiLogoSubtitle}
       </Text>
     </View>

@@ -1262,6 +1262,18 @@ export const useStrings = () => {
         yoroiRecord: f(stakingMessages.yoroiRecord),
         newToGovernanceTitle: f(stakingMessages.newToGovernanceTitle),
         newToGovernanceText: f(stakingMessages.newToGovernanceText),
+        // Add missing strings
+        delegationSuccess: f(stakingMessages.delegationSuccess),
+        delegationFailed: f(stakingMessages.delegationFailed),
+        delegationFailedMessage: f(stakingMessages.delegationFailed),
+        retry: f(stakingMessages.retry),
+        poolWarningCensoring: f(stakingMessages.warning),
+        poolWarningMultiBlock: f(stakingMessages.warning),
+        poolWarningUnknown: f(stakingMessages.warning),
+        poolWarningHeader: f(stakingMessages.warning),
+        poolWarningSuggested: f(stakingMessages.warning),
+        loading: f(stakingMessages.loading),
+        processingDelegation: f(stakingMessages.loading),
         poolDetails: {
           poolHash: f(stakingMessages.poolDetailsPoolHash),
           delegate: f(stakingMessages.poolDetailsDelegate),

@@ -3,7 +3,7 @@ import {useQueryClient} from '@tanstack/react-query'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {defineMessages} from 'react-intl'
-import {View} from 'react-native'
+import {Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {WebView, WebViewMessageEvent} from 'react-native-webview'
 
@@ -14,18 +14,22 @@ import {useReviewTx} from '~/features/ReviewTx/common/ReviewTxProvider'
 import {PoolDetailScreen} from '~/features/Staking/Staking/PoolDetails/PoolDetailScreen'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {showErrorDialog} from '~/kernel/dialogs'
+import {showConfirmationDialog, showErrorDialog} from '~/kernel/dialogs'
 import {useLanguage} from '~/kernel/i18n/LanguageProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
+import {Button} from '~/ui/Button/Button'
+import {LoadingOverlay} from '~/ui/LoadingOverlay/LoadingOverlay'
+import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
 
 export const StakingCenter = () => {
   const strings = useStrings()
   const {isDark, atoms: ta} = useTheme()
   const queryClient = useQueryClient()
+  const {openModal, closeModal} = useModal()
 
   const {languageCode} = useLanguage()
   const {wallet, meta} = useSelectedWallet()
@@ -42,6 +46,7 @@ export const StakingCenter = () => {
   )
   const [isContentLoaded, setIsContentLoaded] = React.useState(false)
   const [url, setUrl] = React.useState<null | string>(null)
+  const [showLoadingModal, setShowLoadingModal] = React.useState(false)
 
   useFocusEffect(
     React.useCallback(() => {
@@ -62,13 +67,13 @@ export const StakingCenter = () => {
   const onSuccess = () => {
     queryClient.resetQueries({queryKey: [wallet.id, 'stakingInfo']})
     track.stakingCenterDelegationSubmitted()
-    navigateTo.submittedTx()
+    showDelegationSuccessDialog()
   }
 
   const onError = () => {
     setSelectedPoolId(null)
     queryClient.resetQueries({queryKey: [wallet.id, 'stakingInfo']})
-    navigateTo.failedTx()
+    showDelegationFailedDialog()
   }
 
   const {isLoading, stakingTx} = useStakingTx(
@@ -88,9 +93,102 @@ export const StakingCenter = () => {
     const selectedPoolHashes = JSON.parse(decodeURI(event.nativeEvent.data))
     if (!Array.isArray(selectedPoolHashes) || selectedPoolHashes.length < 1) {
       await showErrorDialog(noPoolDataDialog, intl)
+      return
     }
-    logger.debug('selected pools from explorer:', selectedPoolHashes)
-    setSelectedPoolId(selectedPoolHashes[0])
+    logger.debug('selected pools from explorer', {selectedPoolHashes})
+
+    // Show confirmation dialog before proceeding
+    const confirmed = await showConfirmationDialog(
+      delegationConfirmationDialog,
+      intl,
+    )
+    if (confirmed === 'Yes') {
+      setShowLoadingModal(true)
+      setSelectedPoolId(selectedPoolHashes[0])
+    }
+  }
+
+  const showDelegationSuccessDialog = () => {
+    openModal({
+      title: strings.staking.delegationSuccess,
+      content: (
+        <View style={[a.px_lg, a.py_lg]}>
+          <Text style={[a.body_1_lg_regular, ta.text_primary_max]}>
+            {strings.staking.submittedTxText}
+          </Text>
+        </View>
+      ),
+      footer: (
+        <View style={[a.px_lg, a.pb_lg]}>
+          <Button
+            title={strings.staking.submittedTxButton}
+            onPress={() => {
+              closeModal()
+              navigateTo.submittedTx()
+            }}
+          />
+        </View>
+      ),
+    })
+  }
+
+  const showDelegationFailedDialog = () => {
+    openModal({
+      title: strings.staking.delegationFailed,
+      content: (
+        <View style={[a.px_lg, a.py_lg]}>
+          <Text style={[a.body_1_lg_regular, ta.text_primary_max]}>
+            {strings.staking.delegationFailedMessage}
+          </Text>
+        </View>
+      ),
+      footer: (
+        <View style={[a.px_lg, a.pb_lg]}>
+          <Button
+            title={strings.staking.retry}
+            onPress={() => {
+              closeModal()
+              setShowLoadingModal(false)
+            }}
+          />
+        </View>
+      ),
+    })
+  }
+
+  const showPoolWarningModal = (
+    poolId: string,
+    warningType: 'censoring' | 'multiBlock' | 'unknown',
+  ) => {
+    const warningMessages = {
+      censoring: strings.staking.poolWarningCensoring,
+      multiBlock: strings.staking.poolWarningMultiBlock,
+      unknown: strings.staking.poolWarningUnknown,
+    }
+
+    openModal({
+      title: strings.staking.warning,
+      content: (
+        <View style={[a.px_lg, a.py_lg]}>
+          <Text style={[a.body_1_lg_regular, ta.text_primary_max]}>
+            {strings.staking.poolWarningHeader}
+          </Text>
+          <Space.Height.md />
+          <Text style={[a.body_1_lg_regular, ta.text_primary_max]}>
+            {warningMessages[warningType]}
+          </Text>
+          <Space.Height.md />
+          <Text style={[a.body_1_lg_regular, ta.text_primary_max]}>
+            {strings.staking.poolWarningSuggested}
+          </Text>
+        </View>
+      ),
+      footer: (
+        <View style={[a.px_lg, a.pb_lg]}>
+          <Button title={strings.global.ok} onPress={closeModal} />
+        </View>
+      ),
+    })
   }
 
   const shouldDisplayPoolIDInput = !wallet.isMainnet
@@ -131,7 +229,23 @@ export const StakingCenter = () => {
         </View>
       )}
 
-      {/* loading modal removed */}
+      {showLoadingModal && (
+        <LoadingOverlay
+          isLoading={true}
+          content={
+            <View
+              style={[a.p_lg, ta.bg_color_max, a.rounded_md, a.align_center]}
+            >
+              <Text style={[a.body_1_lg_regular, ta.text_primary_max, a.pb_sm]}>
+                {strings.staking.loading}
+              </Text>
+              <Text style={[a.body_1_lg_regular, ta.text_primary_max]}>
+                {strings.staking.processingDelegation}
+              </Text>
+            </View>
+          }
+        />
+      )}
     </SafeAreaView>
   )
 }
@@ -145,6 +259,25 @@ const noPoolDataDialog = defineMessages({
     id: 'components.stakingcenter.noPoolDataDialog.message',
     defaultMessage:
       '!!!The data from the stake pool(s) you selected is invalid. Please try again',
+  },
+})
+
+const delegationConfirmationDialog = defineMessages({
+  title: {
+    id: 'components.stakingcenter.confirmDelegation.title',
+    defaultMessage: '!!!Confirm Delegation',
+  },
+  message: {
+    id: 'components.stakingcenter.confirmDelegation.message',
+    defaultMessage: '!!!Are you sure you want to delegate to this stake pool?',
+  },
+  btnYesLabel: {
+    id: 'components.stakingcenter.confirmDelegation.delegateButtonLabel',
+    defaultMessage: '!!!Delegate',
+  },
+  btnNoLabel: {
+    id: 'global.cancel',
+    defaultMessage: '!!!Cancel',
   },
 })
 

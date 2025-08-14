@@ -178,7 +178,7 @@ export const stakingMessages = defineMessages({
     defaultMessage: '!!!Withdrawal Failed',
   },
   loading: {
-    id: 'components.staking.loading',
+    id: 'components.stakingcenter.loading',
     defaultMessage: '!!!Loading...',
   },
   error: {

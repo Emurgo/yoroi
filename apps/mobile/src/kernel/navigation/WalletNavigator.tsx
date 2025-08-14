@@ -12,6 +12,7 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
 import {WalletStackRoutes} from '~/kernel/navigation/types'
 import {WalletTabNavigator} from '~/kernel/navigation/WalletTabNavigator'
+import {DashboardNavigator} from '../../features/Dashboard/DashboardNavigator'
 
 const Stack = createStackNavigator<WalletStackRoutes>()
 
@@ -56,6 +57,12 @@ export const WalletNavigator = () => {
           name="settings"
           options={{headerShown: false}}
           getComponent={() => SettingsScreenNavigator}
+        />
+
+        <Stack.Screen
+          name="staking-dashboard"
+          options={{headerShown: false}}
+          getComponent={() => DashboardNavigator}
         />
       </Stack.Navigator>
     </SearchProvider>
