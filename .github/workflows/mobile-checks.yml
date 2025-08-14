@@ -45,11 +45,16 @@ jobs:
           for pkg in "${packages[@]}"; do
             echo "→ Building '${pkg}'…"
             (
-              cd "../../packages/$pkg"
+              cd "packages/$pkg"
+              npm ci
               npm run build
               echo "   ✔️  Build completed for '${pkg}'"
             )
           done
+        shell: bash
+      - name: Install pkgs
+        run: npm ci
+        working-directory: apps/mobile
         shell: bash
       - name: TypeScript check
         run: npm run tsc
