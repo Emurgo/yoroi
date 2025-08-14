@@ -15,6 +15,7 @@ export const useResolverSetShowNotice = (
     },
     invalidateQueries: [['resolver', 'show-notice']],
     ...options,
+    mutationKey: [['useResolverShowNotice']],
   })
 
   return {
