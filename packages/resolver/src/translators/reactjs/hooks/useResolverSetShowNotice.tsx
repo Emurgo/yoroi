@@ -10,9 +10,7 @@ export const useResolverSetShowNotice = (
   const {showNotice} = useResolver()
 
   const mutation = useMutationWithInvalidations({
-    mutationFn: async (value: boolean) => {
-      await showNotice.save(value)
-    },
+    mutationFn: showNotice.save,
     invalidateQueries: [[useResolverShowNotice']],
     ...options,
     mutationKey: [['useResolverShowNotice']],
