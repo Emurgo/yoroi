@@ -348,6 +348,7 @@ export const useStrings = () => {
         tokens: (qty: number) => f(globalMessages.tokens, {qty}),
         nfts: (qty: number) => f(globalMessages.nfts, {qty}),
         tokensAvailable: (qty: number) => f(globalMessages.tokens, {qty}),
+        metadata: f(portfolioMessages.metadata),
       },
 
       // UI strings

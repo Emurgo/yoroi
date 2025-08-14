@@ -164,16 +164,10 @@ const SelectableMedia = ({info}: {info: Portfolio.Token.Info}) => {
   return (
     <TouchableOpacity
       onPress={() => navigateTo.nftZoom(info.id)}
-      style={[
-        a.flex,
-        a.flex_row,
-        a.flex_grow,
-        {backgroundColor: p.gray_100},
-      ]}
+      style={[a.flex, a.flex_row, a.flex_grow, {backgroundColor: p.gray_100}]}
     >
       <MediaPreview
         info={info}
-        style={{}}
         height={imageHeight}
         width={imageWidth}
         contentFit="contain"
@@ -387,10 +381,7 @@ const NftMetadata = ({discovery}: {discovery: Portfolio.Token.Discovery}) => {
 
   return (
     <View>
-      <Copiable
-        title={strings.txReview.tokenDetails.jsonTab.metadata}
-        text={stringifiedMetadata}
-      />
+      <Copiable title={strings.portfolio.metadata} text={stringifiedMetadata} />
 
       <Space.Height.sm />
 
