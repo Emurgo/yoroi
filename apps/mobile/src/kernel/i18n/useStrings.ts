@@ -364,6 +364,7 @@ export const useStrings = () => {
         header: f(uiMessages.header),
         description: f(uiMessages.description),
         anonymous: f(uiMessages.anonymous),
+        analyticsHeader: f(uiMessages.analyticsHeader),
         optout: f(uiMessages.optout),
         private: (options: {b: (content: ReactNode[]) => ReactNode}) =>
           f(uiMessages.private, options),
