@@ -11,6 +11,7 @@ import {TransferProvider} from '@yoroi/transfer'
 import * as Font from 'expo-font'
 import * as React from 'react'
 
+import {ReviewTxProvider} from '~/features/ReviewTx/common/ReviewTxProvider'
 import {AppNavigator} from '~/kernel/navigation/AppNavigator'
 import {Modal} from '~/ui/Modal/ModalScreen'
 import {PlatformShell} from './PlatformShell'
@@ -77,15 +78,17 @@ function BusinessShell({children}: React.PropsWithChildren) {
           <WalletManagerProvider walletManager={walletManager}>
             <AutomaticWalletOpenerProvider>
               <TransferProvider>
-                <SetupWalletProvider>
-                  <YoroiNotificationManager>
-                    <CurrencyProvider>
-                      <CatalystProvider manager={catalystManager}>
-                        {children}
-                      </CatalystProvider>
-                    </CurrencyProvider>
-                  </YoroiNotificationManager>
-                </SetupWalletProvider>
+                <ReviewTxProvider>
+                  <SetupWalletProvider>
+                    <YoroiNotificationManager>
+                      <CurrencyProvider>
+                        <CatalystProvider manager={catalystManager}>
+                          {children}
+                        </CatalystProvider>
+                      </CurrencyProvider>
+                    </YoroiNotificationManager>
+                  </SetupWalletProvider>
+                </ReviewTxProvider>
               </TransferProvider>
             </AutomaticWalletOpenerProvider>
           </WalletManagerProvider>
