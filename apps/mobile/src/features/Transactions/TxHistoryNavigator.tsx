@@ -31,12 +31,12 @@ import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
 import {TxHistoryRoutes} from '~/kernel/navigation/types'
 import {Boundary} from '~/ui/Boundary/Boundary'
 
+import {ShowSuccessScreen} from '../Claim/useCases/ShowSuccessScreen'
 import {ViewNotificationHistoryScreen} from '../Notifications/useCases/ViewNotificationHistory/ViewNotificationHistoryScreen'
 import {SwapNavigator} from '../Swap/navigator'
 import {HeaderRightHistory} from './common/HeaderRightHistory'
 import {TxDetails} from './useCases/TxDetails/TxDetails'
 import {TxHistory} from './useCases/TxHistory/TxHistory'
-import {ShowSuccessScreen} from '../Claim/useCases/ShowSuccessScreen'
 
 const Stack = createStackNavigator<TxHistoryRoutes>()
 
