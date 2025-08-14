@@ -1399,6 +1399,7 @@
   "notifications.turnOnAlerts": "Turn on notifications to get alerts and updates about your wallet.",
   "notifications.skip": "Skip",
   "notifications.turnOnNotifications": "Turn on notifications",
+  "notifications.notificationCenter": "Notification Center",
   "components.walletinit.createwallet.recoveryphrasescreen.recoveryPhraseCardSecondItem": "Keep it safe",
   "components.walletinit.createwallet.recoveryphrasescreen.step": "Step 1 of 3",
   "components.walletinit.createwallet.verifyrecoveryphrasescreen.step": "Step 2 of 3"

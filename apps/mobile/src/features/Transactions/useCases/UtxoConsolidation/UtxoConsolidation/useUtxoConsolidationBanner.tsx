@@ -41,8 +41,8 @@ export const useUtxoConsolidationBanner = () => {
           ) {
             showBanner({
               id: BannerIds.UtxoConsolidation,
-              title: strings.organizeWallet,
-              body: strings.organizeWalletBanner,
+              title: strings.transactions.utxo.utxoConsolidationTitle,
+              body: strings.transactions.utxo.utxoConsolidationWarning,
               isRead: !!last,
             })
           }
