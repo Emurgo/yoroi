@@ -31,6 +31,7 @@ import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
 import {TxHistoryRoutes} from '~/kernel/navigation/types'
 import {Boundary} from '~/ui/Boundary/Boundary'
 
+import {ShowSuccessScreen} from '../Claim/useCases/ShowSuccessScreen'
 import {ViewNotificationHistoryScreen} from '../Notifications/useCases/ViewNotificationHistory/ViewNotificationHistoryScreen'
 import {SwapNavigator} from '../Swap/navigator'
 import {HeaderRightHistory} from './common/HeaderRightHistory'
@@ -229,6 +230,16 @@ export const TxHistoryNavigator = () => {
                 headerShown: true,
               }}
               getComponent={() => ViewNotificationHistoryScreen}
+            />
+
+            {/* Claim Screens */}
+            <Stack.Screen
+              name="claim-show-success"
+              options={{
+                title: strings.claim.showSuccessTitle,
+                headerShown: true,
+              }}
+              getComponent={() => ShowSuccessScreen}
             />
           </Stack.Navigator>
         </Boundary>

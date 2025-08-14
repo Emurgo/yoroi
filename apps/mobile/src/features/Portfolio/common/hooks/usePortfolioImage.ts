@@ -106,22 +106,23 @@ export const usePortfolioImage = ({
     },
   })
 
-  const timerRef = React.useRef<ReturnType<typeof setTimeout>>()
+  const timerRef = React.useRef<ReturnType<typeof setTimeout> | undefined>(
+    undefined,
+  )
   React.useEffect(() => () => clearTimeout(timerRef.current), [])
 
   const onError = useCallback(() => {
     const count = queryClient.getQueryState(queryKey)?.dataUpdateCount
     if (count && count < 10) {
-      timerRef.current = setTimeout(query.refetch, count * 300)
+      timerRef.current = setTimeout(() => query.refetch(), count * 300)
     } else {
       if (isDev) {
         invalidate([`${policy}.${name}`])
-        queryClient.invalidateQueries(queryKey)
+        queryClient.invalidateQueries({queryKey})
       }
       setError(true)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [query, queryClient])
+  }, [query, queryClient, queryKey, invalidate, policy, name, isDev])
 
   const onLoad = useCallback(() => {
     setLoading(false)

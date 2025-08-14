@@ -4,9 +4,9 @@ import {Platform, Text, View} from 'react-native'
 
 import {useModal} from '~/ui/Modal/ModalContext'
 
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Space} from '~/ui/Space/Space'
-import {useStrings} from '~/kernel/i18n/useStrings'
 
 type Props = {
   address: string
@@ -16,7 +16,7 @@ type Props = {
 export const AskConfirmation = ({address, url, code}: Props) => {
   const strings = useStrings()
   const domain = getDomain(url)
-  const {palette: p} = useTheme()
+  const {atoms: ta, palette: p} = useTheme()
 
   return (
     <View style={[a.flex_1, a.px_lg]}>
@@ -25,10 +25,10 @@ export const AskConfirmation = ({address, url, code}: Props) => {
           a.font_normal,
           a.text_center,
           a.body_1_lg_regular,
-          {color: p.text_gray_medium},
+          ta.text_gray_medium,
         ]}
       >
-        {strings.addressSharingWarning}
+        {strings.claim.addressSharingWarning}
       </Text>
 
       <Space.Height.xl />
@@ -36,7 +36,7 @@ export const AskConfirmation = ({address, url, code}: Props) => {
       <Text
         style={[
           {fontFamily: Platform.select({ios: 'Menlo', android: 'monospace'})},
-          {color: p.text_gray_max},
+          ta.text_gray_max,
         ]}
       >
         {address}
@@ -44,11 +44,11 @@ export const AskConfirmation = ({address, url, code}: Props) => {
 
       <Space.Height.lg fill />
 
-      <Item label={strings.domain} value={domain} />
+      <Item label={strings.claim.domain} value={domain} />
 
       <Space.Height.lg />
 
-      <Item label={strings.code} value={code} />
+      <Item label={strings.claim.code} value={code} />
 
       <Space.Height.lg fill />
     </View>
@@ -56,7 +56,7 @@ export const AskConfirmation = ({address, url, code}: Props) => {
 }
 
 const Item = ({label, value}: {label: string; value: string}) => {
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
   return (
     <View style={[a.self_stretch, a.flex_row, a.justify_between]}>
       <Text
@@ -64,7 +64,7 @@ const Item = ({label, value}: {label: string; value: string}) => {
           a.font_normal,
           a.pr_sm,
           a.body_1_lg_regular,
-          {color: p.text_gray_medium},
+          ta.text_gray_medium,
         ]}
       >
         {label}
@@ -77,7 +77,7 @@ const Item = ({label, value}: {label: string; value: string}) => {
           {maxWidth: 240},
           a.font_normal,
           a.body_1_lg_regular,
-          {color: p.text_gray_max},
+          ta.text_gray_max,
         ]}
       >
         {value}
@@ -99,14 +99,14 @@ export const AskConfirmationActions = ({
       <Button
         size="S"
         type={ButtonType.Secondary}
-        title={strings.cancel}
+        title={strings.global.cancel}
         onPress={closeModal}
         disabled={isLoading}
       />
 
       <Button
         size="S"
-        title={strings.continue}
+        title={strings.claim.continue}
         onPress={onContinue}
         disabled={isLoading}
       />
