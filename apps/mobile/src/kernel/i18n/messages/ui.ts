@@ -207,7 +207,7 @@ export const uiMessages = defineMessages({
   },
   analyticsHeader: {
     id: 'analytics.header',
-    defaultMessage: '!!!analytics header',
+    defaultMessage: '!!!Join the Journey',
   },
   optout: {
     id: 'analytics.optout',
