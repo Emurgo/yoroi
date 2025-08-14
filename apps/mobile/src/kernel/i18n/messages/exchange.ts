@@ -14,11 +14,11 @@ export const exchangeMessages = defineMessages({
     defaultMessage: '!!!Banxa',
   },
   buyCrypto: {
-    id: 'txReview.overview.receiveToLabel',
+    id: 'rampOnOff.createRampOnOff.buyCrypto',
     defaultMessage: '!!!Buy crypto',
   },
   buySellCrypto: {
-    id: 'txReview.overview.receiveToLabel',
+    id: 'rampOnOff.resultRampOnOff.buySellCrypto',
     defaultMessage: '!!!Buy/Sell crypto',
   },
   congrats: {
@@ -34,7 +34,7 @@ export const exchangeMessages = defineMessages({
     defaultMessage: '!!!Content disclaimer',
   },
   cryptoAmountYouGet: {
-    id: 'global.txLabels.amount',
+    id: 'rampOnOff.resultRampOnOff.cryptoAmountYouGet',
     defaultMessage: '!!!Crypto amount you get',
   },
   currentBalance: {
@@ -42,11 +42,11 @@ export const exchangeMessages = defineMessages({
     defaultMessage: '!!!Current balance',
   },
   customerSupport: {
-    id: 'components.settings.settingsscreen.title',
+    id: 'rampOnOff.resultRampOnOff.customerSupport',
     defaultMessage: '!!!Customer support',
   },
   descriptionBuySellADATransaction: {
-    id: 'global.buy',
+    id: 'rampOnOff.resultRampOnOff.descriptionBuySellADATransaction',
     defaultMessage: '!!!Description for buy/sell ADA transaction',
   },
   disclaimer: {
@@ -58,11 +58,11 @@ export const exchangeMessages = defineMessages({
     defaultMessage: '!!!Content disclaimer for preprod',
   },
   fiatAmountYouGet: {
-    id: 'global.txLabels.amount',
+    id: 'rampOnOff.resultRampOnOff.fiatAmountYouGet',
     defaultMessage: '!!!Fiat amount you get',
   },
   goToTransactions: {
-    id: 'txReview.infraestructureIssueButton',
+    id: 'rampOnOff.resultRampOnOff.goToTransactions',
     defaultMessage: '!!!Go to transactions',
   },
   notEnoughBalance: {
@@ -86,15 +86,15 @@ export const exchangeMessages = defineMessages({
     defaultMessage: '!!!Provider fee',
   },
   sellCrypto: {
-    id: 'txReview.overview.receiveToLabel',
+    id: 'rampOnOff.createRampOnOff.sellCrypto',
     defaultMessage: '!!!Sell crypto',
   },
   significant: {
-    id: 'global.sign',
+    id: 'rampOnOff.resultRampOnOff.significant',
     defaultMessage: '!!!Significant',
   },
   sellCurrencyWarning: {
-    id: 'components.txhistory.flawedwalletmodal.title',
+    id: 'rampOnOff.createRampOnOff.sellCurrencyWarning',
     defaultMessage: '!!!Sell currency warning',
   },
   title: {
@@ -102,7 +102,7 @@ export const exchangeMessages = defineMessages({
     defaultMessage: '!!!Exchange',
   },
   getFirstCrypto: {
-    id: 'txReview.overview.receiveToLabel',
+    id: 'rampOnOff.rampOnOffScreen.getFirstCrypto',
     defaultMessage: '!!!Get your first crypto',
   },
   ourTrustedPartners: {
@@ -110,11 +110,11 @@ export const exchangeMessages = defineMessages({
     defaultMessage: '!!!Our trusted partners',
   },
   needMoreCrypto: {
-    id: 'txReview.overview.receiveToLabel',
+    id: 'rampOnOff.rampOnOffScreen.needMoreCrypto',
     defaultMessage: '!!!Need more crypto',
   },
   fee: {
-    id: 'txReview.fee',
+    id: 'rampOnOff.createRampOnOff.fee',
     defaultMessage: '!!!Fee',
   },
   preprodFaucetBannerTitle: {
@@ -126,19 +126,19 @@ export const exchangeMessages = defineMessages({
     defaultMessage: '!!!Preprod faucet banner text',
   },
   preprodFaucetBannerButtonText: {
-    id: 'txReview.overview.receiveToLabel',
+    id: 'rampOnOff.createRampOnOff.preprodfaucetbanner.button.text',
     defaultMessage: '!!!Preprod faucet banner button text',
   },
   createOrderPreprodFaucetButtonText: {
-    id: 'txReview.overview.receiveToLabel',
+    id: 'rampOnOff.createRampOnOff.createorder.preprodfaucet.button.text',
     defaultMessage: '!!!Create order preprod faucet button text',
   },
   createOrderPreprodNoticeTitle: {
-    id: 'global.actions.dialogs.logout.noButton',
+    id: 'rampOnOff.createRampOnOff.createorder.preprodnotice.title',
     defaultMessage: '!!!Create order preprod notice title',
   },
   createOrderPreprodNoticeText: {
-    id: 'global.actions.dialogs.logout.noButton',
+    id: 'rampOnOff.createRampOnOff.createorder.preprodnotice.text',
     defaultMessage: '!!!Create order preprod notice text',
   },
   playground: {
@@ -146,11 +146,11 @@ export const exchangeMessages = defineMessages({
     defaultMessage: '!!!Playground',
   },
   loadingLink: {
-    id: 'components.settings.biometricslinkscreen.linkButton',
+    id: 'rampOnOff.createRampOnOff.loadingLink',
     defaultMessage: '!!!Loading link',
   },
   linkError: {
-    id: 'global.error',
+    id: 'rampOnOff.createRampOnOff.linkError',
     defaultMessage: '!!!Link error',
   },
 })

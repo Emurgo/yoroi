@@ -238,7 +238,7 @@ export const stakingMessages = defineMessages({
     defaultMessage: '!!!Update',
   },
   governanceCentreTitle: {
-    id: 'components.stakingcenter.title',
+    id: 'components.governance.governanceCentreTitle',
     defaultMessage: '!!!Governance Centre Title',
   },
   confirmTxTitle: {
@@ -246,7 +246,7 @@ export const stakingMessages = defineMessages({
     defaultMessage: '!!!Confirm Tx Title',
   },
   learnMoreAboutGovernance: {
-    id: 'components.stakingcenter.title',
+    id: 'components.governance.learnMoreAboutGovernance',
     defaultMessage: '!!!Learn More About Governance',
   },
   actionDelegateToADRepTitle: {
@@ -294,15 +294,15 @@ export const stakingMessages = defineMessages({
     defaultMessage: '!!!Delegate Voting To DRep',
   },
   selectAbstain: {
-    id: 'components.governance.abstaining',
+    id: 'components.governance.selectAbstain',
     defaultMessage: '!!!Select Abstain',
   },
   selectNoConfidence: {
-    id: 'components.governance.actionNoConfidenceTitle',
+    id: 'components.governance.selectNoConfidence',
     defaultMessage: '!!!Select No Confidence',
   },
   operations: {
-    id: 'components.stakingcenter.title',
+    id: 'components.governance.operations',
     defaultMessage: '!!!Operations',
   },
   drepID: {
@@ -310,35 +310,35 @@ export const stakingMessages = defineMessages({
     defaultMessage: '!!!DRep ID',
   },
   thankYouForParticipating: {
-    id: 'components.stakingcenter.title',
+    id: 'components.governance.thankYouForParticipating',
     defaultMessage: '!!!Thank You For Participating',
   },
   thisTransactionCanTakeAWhile: {
-    id: 'components.stakingcenter.title',
+    id: 'components.governance.thisTransactionCanTakeAWhile',
     defaultMessage: '!!!This Transaction Can Take A While',
   },
   participationBenefits: {
-    id: 'components.stakingcenter.title',
+    id: 'components.governance.participationBenefits',
     defaultMessage: '!!!Participation Benefits',
   },
   goToGovernance: {
-    id: 'components.stakingcenter.title',
+    id: 'components.governance.goToGovernance',
     defaultMessage: '!!!Go To Governance',
   },
   findDRepHere: {
-    id: 'components.stakingcenter.title',
+    id: 'components.governance.findDRepHere',
     defaultMessage: '!!!Find DRep Here',
   },
   reviewActions: {
-    id: 'components.stakingcenter.title',
+    id: 'components.governance.reviewActions',
     defaultMessage: '!!!Review Actions',
   },
   actionYouHaveSelectedTxPending: {
-    id: 'components.send.assetselectorscreen.youHave',
+    id: 'components.governance.actionYouHaveSelectedTxPending',
     defaultMessage: '!!!Action You Have Selected Tx Pending',
   },
   actionYouHaveSelected: {
-    id: 'components.send.assetselectorscreen.youHave',
+    id: 'components.governance.actionYouHaveSelected',
     defaultMessage: '!!!Action You Have Selected',
   },
   changeDRep: {
@@ -350,11 +350,11 @@ export const stakingMessages = defineMessages({
     defaultMessage: '!!!Confirm',
   },
   transactionDetails: {
-    id: 'components.txhistory.txdetails.txDetails',
+    id: 'components.governance.transactionDetails',
     defaultMessage: '!!!Transaction Details',
   },
   total: {
-    id: 'components.stakingcenter.title',
+    id: 'components.governance.total',
     defaultMessage: '!!!Total',
   },
   transactionFailed: {
@@ -362,11 +362,11 @@ export const stakingMessages = defineMessages({
     defaultMessage: '!!!Transaction Failed',
   },
   notSupportedVersionTitle: {
-    id: 'components.stakingcenter.title',
+    id: 'components.governance.notSupportedVersionTitle',
     defaultMessage: '!!!Not Supported Version Title',
   },
   notSupportedVersionDescription: {
-    id: 'components.stakingcenter.title',
+    id: 'components.governance.notSupportedVersionDescription',
     defaultMessage: '!!!Not Supported Version Description',
   },
   noFunds: {
@@ -386,23 +386,23 @@ export const stakingMessages = defineMessages({
     defaultMessage: '!!!Buy Ada',
   },
   goToFaucet: {
-    id: 'components.stakingcenter.title',
+    id: 'components.governance.goToFaucet',
     defaultMessage: '!!!Go To Faucet',
   },
   withdrawWarningTitle: {
-    id: 'components.stakingcenter.title',
+    id: 'components.governance.withdrawWarningTitle',
     defaultMessage: '!!!Withdraw Warning Title',
   },
   withdrawWarningDescription: {
-    id: 'components.stakingcenter.title',
+    id: 'components.governance.withdrawWarningDescription',
     defaultMessage: '!!!Withdraw Warning Description',
   },
   withdrawWarningButton: {
-    id: 'components.stakingcenter.title',
+    id: 'components.governance.withdrawWarningButton',
     defaultMessage: '!!!Withdraw Warning Button',
   },
   enterDRepID: {
-    id: 'components.governance.drepID',
+    id: 'components.governance.enterDRepID',
     defaultMessage: '!!!Enter DRep ID',
   },
   enterPassword: {
@@ -410,99 +410,99 @@ export const stakingMessages = defineMessages({
     defaultMessage: '!!!Enter Password',
   },
   hardwareWalletSupportComingSoon: {
-    id: 'components.stakingcenter.title',
+    id: 'components.governance.hardwareWalletSupportComingSoon',
     defaultMessage: '!!!Hardware Wallet Support Coming Soon',
   },
   workingOnHardwareWalletSupport: {
-    id: 'components.stakingcenter.title',
+    id: 'components.governance.workingOnHardwareWalletSupport',
     defaultMessage: '!!!Working On Hardware Wallet Support',
   },
   goToWallet: {
-    id: 'components.stakingcenter.title',
+    id: 'components.governance.goToWallet',
     defaultMessage: '!!!Go To Wallet',
   },
   txFees: {
-    id: 'components.stakingcenter.confirmDelegation.ofFees',
+    id: 'components.governance.txFees',
     defaultMessage: '!!!Tx Fees',
   },
   registerStakingKey: {
-    id: 'components.stakingcenter.confirmDelegation.delegateButtonLabel',
+    id: 'components.governance.registerStakingKey',
     defaultMessage: '!!!Register Staking Key',
   },
   enterDrepIDInfo: {
-    id: 'components.stakingcenter.title',
+    id: 'components.governance.enterDrepIDInfo',
     defaultMessage: '!!!Enter Drep ID Info',
   },
   goToStaking: {
-    id: 'components.stakingcenter.title',
+    id: 'components.governance.goToStaking',
     defaultMessage: '!!!Go To Staking',
   },
   readyToCollectRewards: {
-    id: 'components.stakingcenter.confirmDelegation.rewardsExplanation',
+    id: 'components.governance.readyToCollectRewards',
     defaultMessage: '!!!Ready To Collect Rewards',
   },
   notSupportedVersionButton: {
-    id: 'components.stakingcenter.title',
+    id: 'components.governance.notSupportedVersionButton',
     defaultMessage: '!!!Not Supported Version Button',
   },
   scriptNotSupported: {
-    id: 'components.stakingcenter.title',
+    id: 'components.governance.scriptNotSupported',
     defaultMessage: '!!!Script Not Supported',
   },
   submittedTxButton: {
-    id: 'components.stakingcenter.title',
+    id: 'components.governance.submittedTxButton',
     defaultMessage: '!!!Submitted Tx Button',
   },
   submittedTxText: {
-    id: 'components.stakingcenter.title',
+    id: 'components.governance.submittedTxText',
     defaultMessage: '!!!Submitted Tx Text',
   },
   submittedTxTitle: {
-    id: 'components.stakingcenter.title',
+    id: 'components.governance.submittedTxTitle',
     defaultMessage: '!!!Submitted Tx Title',
   },
   failedTxButton: {
-    id: 'components.stakingcenter.title',
+    id: 'components.governance.failedTxButton',
     defaultMessage: '!!!Failed Tx Button',
   },
   failedTxText: {
-    id: 'components.stakingcenter.title',
+    id: 'components.governance.failedTxText',
     defaultMessage: '!!!Failed Tx Text',
   },
   failedTxTitle: {
-    id: 'components.stakingcenter.title',
+    id: 'components.governance.failedTxTitle',
     defaultMessage: '!!!Failed Tx Title',
   },
   invalidDRepId: {
-    id: 'components.stakingcenter.title',
+    id: 'components.governance.invalidDRepId',
     defaultMessage: '!!!Invalid DRep Id',
   },
   delegateToAYoroiDrep: {
-    id: 'components.stakingcenter.title',
+    id: 'components.governance.delegateToAYoroiDrep',
     defaultMessage: '!!!Delegate To A Yoroi Drep',
   },
   delegatingToYoroiDRep: {
-    id: 'components.stakingcenter.title',
+    id: 'components.governance.delegatingToYoroiDRep',
     defaultMessage: '!!!Delegating To Yoroi DRep',
   },
   delegateToAYoroiDRepDescription: {
-    id: 'components.stakingcenter.title',
+    id: 'components.governance.delegateToAYoroiDRepDescription',
     defaultMessage: '!!!Delegate To A Yoroi DRep Description',
   },
   delegateVotingToDRepDeprecatedFormatNotice: {
-    id: 'components.stakingcenter.title',
+    id: 'components.governance.delegateVotingToDRepDeprecatedFormatNotice',
     defaultMessage: '!!!Delegate Voting To DRep Deprecated Format Notice',
   },
   yoroiRecord: {
-    id: 'components.stakingcenter.title',
+    id: 'components.governance.yoroiRecord',
     defaultMessage: '!!!Yoroi Record',
   },
   newToGovernanceTitle: {
-    id: 'components.stakingcenter.title',
+    id: 'components.governance.newToGovernance.title',
     defaultMessage: '!!!New To Governance Title',
   },
   newToGovernanceText: {
-    id: 'components.stakingcenter.title',
+    id: 'components.governance.newToGovernance.text',
     defaultMessage: '!!!New To Governance Text',
   },
   poolDetailsPoolHash: {
@@ -522,7 +522,7 @@ export const stakingMessages = defineMessages({
     defaultMessage: '!!!Invalid Pool ID',
   },
   poolDetailsNext: {
-    id: 'components.stakingcenter.title',
+    id: 'global.next',
     defaultMessage: '!!!Next',
   },
   poolDetailsDisclaimerTitle: {

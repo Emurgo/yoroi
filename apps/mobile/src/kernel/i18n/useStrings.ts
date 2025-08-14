@@ -238,6 +238,7 @@ export const useStrings = () => {
         turnOnAlerts: f(notificationsMessages.turnOnAlerts),
         skip: f(notificationsMessages.skip),
         turnOnNotifications: f(notificationsMessages.turnOnNotifications),
+        notificationCenter: f(notificationsMessages.notificationCenter),
       },
 
       // Claim strings
