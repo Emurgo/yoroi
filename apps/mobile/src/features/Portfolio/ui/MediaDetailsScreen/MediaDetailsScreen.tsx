@@ -37,7 +37,7 @@ export const MediaDetailsScreen = () => {
   const {palette: p} = useTheme()
   const strings = useStrings()
   const {track} = useMetrics()
-  const {invalidate, isLoading} = usePortfolioImageInvalidate()
+  const {invalidate, isPending} = usePortfolioImageInvalidate()
 
   const [activeTab, setActiveTab] = useState<ActiveTab>('overview')
 
@@ -55,12 +55,12 @@ export const MediaDetailsScreen = () => {
   const onRefresh = () => invalidate([amount.info.id])
 
   return (
-    <FadeIn style={[a.flex_1, {backgroundColor: p.bg_color_max}]}>
+    <FadeIn style={{flex: 1, backgroundColor: p.bg_color_max}}>
       <SafeAreaView>
         <ScrollView
           contentContainerStyle={[{paddingHorizontal: imagePadding}]}
           refreshControl={
-            <RefreshControl onRefresh={onRefresh} refreshing={isLoading} />
+            <RefreshControl onRefresh={onRefresh} refreshing={isPending} />
           }
         >
           <SelectableMedia info={amount.info} />
@@ -120,6 +120,7 @@ const Details = ({activeTab, info, networkManager}: DetailsProps) => {
     },
     {
       staleTime: time.session,
+      queryKey: [network, 'usePortfolioTokenDiscovery', info.id],
     },
   )
   const {tokenTraits} = usePortfolioTokenTraits(
@@ -130,6 +131,7 @@ const Details = ({activeTab, info, networkManager}: DetailsProps) => {
     },
     {
       staleTime: time.oneDay,
+      queryKey: [network, 'usePortfolioTokenTraits', info.id],
     },
   )
 
@@ -162,11 +164,16 @@ const SelectableMedia = ({info}: {info: Portfolio.Token.Info}) => {
   return (
     <TouchableOpacity
       onPress={() => navigateTo.nftZoom(info.id)}
-      style={[{display: 'flex', flexDirection: 'row'}]}
+      style={{
+        display: 'flex',
+        flexDirection: 'row',
+        flexGrow: 1,
+        backgroundColor: p.gray_100,
+      }}
     >
       <MediaPreview
         info={info}
-        style={[{flexGrow: 1, backgroundColor: p.gray_100}]}
+        style={{}}
         height={imageHeight}
         width={imageWidth}
         contentFit="contain"
@@ -366,6 +373,12 @@ const Trait = ({trait}: {trait: Portfolio.Token.Trait}) => {
 
 const NftMetadata = ({discovery}: {discovery: Portfolio.Token.Discovery}) => {
   const strings = useStrings()
+
+  // Return null if no discovery or metadata
+  if (!discovery || !discovery.originalMetadata) {
+    return null
+  }
+
   const stringifiedMetadata = JSON.stringify(
     discovery.originalMetadata,
     null,
@@ -375,7 +388,7 @@ const NftMetadata = ({discovery}: {discovery: Portfolio.Token.Discovery}) => {
   return (
     <View>
       <Copiable
-        title={strings.portfolio.nftDetail.copyMetadata}
+        title={strings.txReview.tokenDetails.jsonTab.metadata}
         text={stringifiedMetadata}
       />
 
