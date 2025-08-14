@@ -533,4 +533,29 @@ export const stakingMessages = defineMessages({
     id: 'components.stakingcenter.poolDetails.disclaimerText',
     defaultMessage: '!!!Disclaimer Text',
   },
+  noPoolDataDialogTitle: {
+    id: 'components.stakingcenter.noPoolDataDialog.title',
+    defaultMessage: '!!!Invalid Pool Data',
+  },
+  noPoolDataDialogMessage: {
+    id: 'components.stakingcenter.noPoolDataDialog.message',
+    defaultMessage:
+      '!!!The data from the stake pool(s) you selected is invalid. Please try again',
+  },
+  confirmDelegationTitle: {
+    id: 'components.stakingcenter.confirmDelegation.title',
+    defaultMessage: '!!!Confirm Delegation',
+  },
+  confirmDelegationMessage: {
+    id: 'components.stakingcenter.confirmDelegation.message',
+    defaultMessage: '!!!Are you sure you want to delegate to this stake pool?',
+  },
+  confirmDelegationDelegateButtonLabel: {
+    id: 'components.stakingcenter.confirmDelegation.delegateButtonLabel',
+    defaultMessage: '!!!Delegate',
+  },
+  confirmDelegationCancelButtonLabel: {
+    id: 'global.cancel',
+    defaultMessage: '!!!Cancel',
+  },
 })

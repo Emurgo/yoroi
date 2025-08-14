@@ -1283,6 +1283,16 @@ export const useStrings = () => {
           disclaimerTitle: f(stakingMessages.poolDetailsDisclaimerTitle),
           disclaimerText: f(stakingMessages.poolDetailsDisclaimerText),
         },
+        noPoolDataDialog: {
+          title: f(stakingMessages.noPoolDataDialogTitle),
+          message: f(stakingMessages.noPoolDataDialogMessage),
+        },
+        confirmDelegation: {
+          title: f(stakingMessages.confirmDelegationTitle),
+          message: f(stakingMessages.confirmDelegationMessage),
+          delegateButtonLabel: f(stakingMessages.confirmDelegationDelegateButtonLabel),
+          cancelButtonLabel: f(stakingMessages.confirmDelegationCancelButtonLabel),
+        },
       },
 
       // ReviewTx strings
