@@ -8,7 +8,7 @@ import * as Notifications from 'expo-notifications'
 import * as React from 'react'
 
 import {logger} from '~/kernel/logger/logger'
-import {useWalletNavigation} from '~/kernel/navigation/hooks'
+import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {pushNotificationsManager} from './notification-manager'
 import {parseNotificationId} from './notifications'
 import {usePrimaryTokenPriceChangedNotification} from './primary-token-price-changed-notification'

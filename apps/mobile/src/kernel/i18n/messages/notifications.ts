@@ -57,4 +57,8 @@ export const notificationsMessages = defineMessages({
     id: 'notifications.turnOnNotifications',
     defaultMessage: '!!!Turn on notifications',
   },
+  notificationCenter: {
+    id: 'notifications.notificationCenter',
+    defaultMessage: '!!!Notification Center',
+  },
 })

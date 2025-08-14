@@ -25,7 +25,9 @@ import {
 } from '~/features/Initialization/ui/screens/DarkThemeAnnouncementScreen'
 import {LegalAgreement} from '~/features/Legal/common/types'
 import {useLegalAgreement} from '~/features/Legal/hooks/useLegalAgreement'
+import {useInitNotifications} from '~/features/Notifications/common/hooks'
 import {NotificationsDevScreen} from '~/features/Notifications/useCases/NotificationsDevScreen'
+import {NotificationUIHandler} from '~/features/Notifications/useCases/NotificationUIHandler'
 import {SetupWalletNavigator} from '~/features/SetupWallet/SetupWalletNavigator'
 import {useHasWallets} from '~/features/WalletManager/hooks/useHasWallets'
 import {Modal} from '~/ui/Modal/ModalScreen'
@@ -48,127 +50,135 @@ export const AppNavigator = () => {
 
   const navOptions = React.useMemo(() => defaultStackNavigationOptions(p), [p])
 
+  // Enable notifications inside navigation context
+  useInitNotifications({localEnabled: true, pushEnabled: true})
+
   return (
-    <Stack.Navigator
-      screenOptions={{
-        ...navOptions,
-        headerShown: false /* used only for transition */,
-      }}
-    >
-      {/* Not Authenticated */}
-
-      {isLoggedOut && (
-        <Stack.Group>
-          {firstAction === 'first-run' && (
-            <Stack.Screen
-              name="first-run"
-              getComponent={() => InitializationNavigator}
-            />
-          )}
-
-          {firstAction === 'show-agreement-changed-notice' && (
-            <Stack.Screen
-              name="agreement-changed-notice"
-              getComponent={() => AgreementChangedNavigator}
-            />
-          )}
-
-          {firstAction === 'auth-with-pin' && (
-            <Stack.Screen
-              name="custom-pin-auth"
-              getComponent={() => LoginWithPinScreen}
-            />
-          )}
-
-          {firstAction === 'auth-with-os' && (
-            <Stack.Screen
-              name="bio-auth-initial"
-              getComponent={() => LoginWithHostScreen}
-              options={{headerShown: false}}
-            />
-          )}
-
-          {firstAction === 'request-new-pin' && (
-            <Stack.Screen //
-              name="enable-login-with-pin"
-              component={InitiatePinScreen}
-              options={{title: strings.auth.pinInputTitle}}
-            />
-          )}
-        </Stack.Group>
-      )}
-
-      {/* Authenticated */}
-
-      {isLoggedIn && (
-        <Stack.Group>
-          {afterLoginAction === 'choose-biometric-login' && (
-            <Stack.Screen //
-              name="choose-biometric-login"
-              options={{headerShown: false}}
-              getComponent={() => ChooseBiometricLoginScreen}
-            />
-          )}
-
-          {afterLoginAction === 'dark-theme-announcement' && (
-            <Stack.Screen //
-              name="dark-theme-announcement"
-              options={{headerShown: false}}
-              getComponent={() => DarkThemeAnnouncementScreen}
-            />
-          )}
-
-          {afterLoginAction === 'setup-wallet' && (
-            <Stack.Screen //
-              name="setup-wallet"
-              options={{headerShown: false}}
-              component={SetupWalletNavigator}
-            />
-          )}
-
-          {afterLoginAction === 'manage-wallets' && (
-            <Stack.Screen
-              name="manage-wallets"
-              getComponent={() => WalletNavigator}
-            />
-          )}
-        </Stack.Group>
-      )}
-
-      {/* Modal */}
-
-      <Stack.Group
+    <>
+      <Stack.Navigator
         screenOptions={{
-          gestureEnabled: false,
-          presentation: 'transparentModal',
-          ...(Platform.OS === 'android' && {
-            ...TransitionPresets.DefaultTransition,
-          }), // overriding general navigation settings
-          cardStyle: a.bg_transparent, // this is needed for the modal to be transparent
+          ...navOptions,
+          headerShown: false /* used only for transition */,
         }}
       >
-        <Stack.Screen
-          name="modal"
-          getComponent={() => Modal}
-          options={{
+        {/* Not Authenticated */}
+
+        {isLoggedOut && (
+          <Stack.Group>
+            {firstAction === 'first-run' && (
+              <Stack.Screen
+                name="first-run"
+                getComponent={() => InitializationNavigator}
+              />
+            )}
+
+            {firstAction === 'show-agreement-changed-notice' && (
+              <Stack.Screen
+                name="agreement-changed-notice"
+                getComponent={() => AgreementChangedNavigator}
+              />
+            )}
+
+            {firstAction === 'auth-with-pin' && (
+              <Stack.Screen
+                name="custom-pin-auth"
+                getComponent={() => LoginWithPinScreen}
+              />
+            )}
+
+            {firstAction === 'auth-with-os' && (
+              <Stack.Screen
+                name="bio-auth-initial"
+                getComponent={() => LoginWithHostScreen}
+                options={{headerShown: false}}
+              />
+            )}
+
+            {firstAction === 'request-new-pin' && (
+              <Stack.Screen //
+                name="enable-login-with-pin"
+                component={InitiatePinScreen}
+                options={{title: strings.auth.pinInputTitle}}
+              />
+            )}
+          </Stack.Group>
+        )}
+
+        {/* Authenticated */}
+
+        {isLoggedIn && (
+          <Stack.Group>
+            {afterLoginAction === 'choose-biometric-login' && (
+              <Stack.Screen //
+                name="choose-biometric-login"
+                options={{headerShown: false}}
+                getComponent={() => ChooseBiometricLoginScreen}
+              />
+            )}
+
+            {afterLoginAction === 'dark-theme-announcement' && (
+              <Stack.Screen //
+                name="dark-theme-announcement"
+                options={{headerShown: false}}
+                getComponent={() => DarkThemeAnnouncementScreen}
+              />
+            )}
+
+            {afterLoginAction === 'setup-wallet' && (
+              <Stack.Screen //
+                name="setup-wallet"
+                options={{headerShown: false}}
+                component={SetupWalletNavigator}
+              />
+            )}
+
+            {afterLoginAction === 'manage-wallets' && (
+              <Stack.Screen
+                name="manage-wallets"
+                getComponent={() => WalletNavigator}
+              />
+            )}
+          </Stack.Group>
+        )}
+
+        {/* Modal */}
+
+        <Stack.Group
+          screenOptions={{
             gestureEnabled: false,
+            presentation: 'transparentModal',
+            ...(Platform.OS === 'android' && {
+              ...TransitionPresets.DefaultTransition,
+            }), // overriding general navigation settings
+            cardStyle: a.bg_transparent, // this is needed for the modal to be transparent
           }}
-        />
-      </Stack.Group>
-
-      {/* Development */}
-
-      {isDev && (
-        <Stack.Group>
-          <Stack.Screen name="developer" getComponent={() => DevMenu} />
-
+        >
           <Stack.Screen
-            name="notifications"
-            getComponent={() => NotificationsDevScreen}
+            name="modal"
+            getComponent={() => Modal}
+            options={{
+              gestureEnabled: false,
+            }}
           />
         </Stack.Group>
-      )}
-    </Stack.Navigator>
+
+        {/* Development */}
+
+        {isDev && (
+          <Stack.Group>
+            <Stack.Screen name="developer" getComponent={() => DevMenu} />
+
+            <Stack.Screen
+              name="notifications"
+              getComponent={() => NotificationsDevScreen}
+            />
+          </Stack.Group>
+        )}
+      </Stack.Navigator>
+
+      {/* Notification UI Handler - rendered outside Stack.Navigator but inside NavigationContainer */}
+      <NotificationUIHandler />
+    </>
   )
 }
 

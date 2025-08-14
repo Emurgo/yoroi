@@ -7,8 +7,8 @@ import {BannerIds, showBanner} from '~/features/Notifications/common/banners'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useWalletEvent} from '~/features/WalletManager/hooks/useWalletEvent'
-import {useIsParticipatingInGovernance} from '../common/helpers'
 import {useStrings} from '~/kernel/i18n/useStrings'
+import {useIsParticipatingInGovernance} from '../common/helpers'
 
 export const useGovernanceBanner = () => {
   const strings = useStrings()
@@ -22,7 +22,9 @@ export const useGovernanceBanner = () => {
   const queryKey = ['governanceBanner', wallet?.id, network]
   const queryClient = useQueryClient()
 
-  useWalletEvent(wallet, 'utxos', () => queryClient.invalidateQueries(queryKey))
+  useWalletEvent(wallet, 'utxos', () =>
+    queryClient.invalidateQueries({queryKey}),
+  )
 
   useQuery({
     queryKey,
@@ -42,8 +44,8 @@ export const useGovernanceBanner = () => {
           ) {
             showBanner({
               id: BannerIds.GovernanceParticipation,
-              title: strings.newToGovernanceTitle,
-              body: strings.newToGovernanceText,
+              title: strings.staking.newToGovernanceTitle,
+              body: strings.staking.newToGovernanceText,
               isRead: !!last,
             })
           }

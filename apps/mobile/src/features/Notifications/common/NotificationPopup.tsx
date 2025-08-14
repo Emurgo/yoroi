@@ -109,8 +109,8 @@ export const NotificationPopup = ({
         <NotificationItem
           onPress={handleOnPress}
           icon={<ColoredIcon icon={Icon.Staking} />}
-          title={strings.stakingRewardsReceived}
-          description={strings.tapToView}
+          title={strings.notifications.stakingRewardsReceived}
+          description={strings.notifications.tapToView}
         />
       </SwipeOutWrapper>
     )
@@ -142,7 +142,7 @@ export const NotificationPopup = ({
       >
         <NotificationItem
           onPress={handleOnPress}
-          icon={<PushNotificationIcon />} // Assuming PushNotificationIcon is a component that renders an SVG
+          icon={<PushNotificationIcon />}
           title={event.metadata.title}
           description={event.metadata.body}
         />
@@ -185,4 +185,14 @@ const ColoredIcon = (props: {icon: (p: IconProps) => React.JSX.Element}) => {
       <Icon color={palette.secondary_600} />
     </View>
   )
+}
+
+const styles = {
+  icon: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+  },
 }
