@@ -13,7 +13,7 @@ export const useResolverSetShowNotice = (
     mutationFn: async (value: boolean) => {
       await showNotice.save(value)
     },
-    invalidateQueries: [['resolver', 'show-notice']],
+    invalidateQueries: [[useResolverShowNotice']],
     ...options,
     mutationKey: [['useResolverShowNotice']],
   })
