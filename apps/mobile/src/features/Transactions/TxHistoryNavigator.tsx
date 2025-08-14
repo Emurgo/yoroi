@@ -31,6 +31,7 @@ import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
 import {TxHistoryRoutes} from '~/kernel/navigation/types'
 import {Boundary} from '~/ui/Boundary/Boundary'
 
+import {ViewNotificationHistoryScreen} from '../Notifications/useCases/ViewNotificationHistory/ViewNotificationHistoryScreen'
 import {SwapNavigator} from '../Swap/navigator'
 import {HeaderRightHistory} from './common/HeaderRightHistory'
 import {TxDetails} from './useCases/TxDetails/TxDetails'
@@ -218,6 +219,16 @@ export const TxHistoryNavigator = () => {
                 headerShown: false,
               }}
               getComponent={() => SwapNavigator}
+            />
+
+            {/* Notification Center */}
+            <Stack.Screen
+              name="notification-center-history"
+              options={{
+                title: strings.notifications.notificationCenter,
+                headerShown: true,
+              }}
+              getComponent={() => ViewNotificationHistoryScreen}
             />
           </Stack.Navigator>
         </Boundary>

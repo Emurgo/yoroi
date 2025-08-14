@@ -1,7 +1,9 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
 import {Text, View} from 'react-native'
 import {Defs, LinearGradient, Path, Stop, Svg, SvgProps} from 'react-native-svg'
+
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Space} from '~/ui/Space/Space'
 
@@ -9,20 +11,21 @@ const YOROI_COMPANY_NAME = 'Yoroi'
 
 export const YoroiLogo = () => {
   const strings = useStrings()
-  const {palette: p, atoms: ta} = useTheme()
+  const {palette: p} = useTheme()
+
   return (
-    <View style={{alignItems: 'center'}}>
+    <View style={[a.align_center]}>
       <YoroiLogoSvg />
 
       <Space.Height.sm />
 
-      <Text style={{color: p.primary_600, ...a.heading_1_medium}}>
+      <Text style={[{color: p.primary_600}, a.heading_1_medium]}>
         {YOROI_COMPANY_NAME}
       </Text>
 
       <Space.Height.sm />
 
-      <Text style={[ta.body_2_md_regular, color: p.gray_900]}>
+      <Text style={[a.body_2_md_regular, ta.text_gray_medium]}>
         {strings.ui.yoroiLogoSubtitle}
       </Text>
     </View>

@@ -114,8 +114,8 @@ export const discoverMessages = defineMessages({
     defaultMessage: '!!!{count} dApps connected',
   },
   connected: {
-    id: 'components.walletinit.walletDetails.walletNameModalCardItem.second',
-    defaultMessage: '!!!Connected',
+    id: 'discover.discoverList.connected',
+    defaultMessage: '!!!Authorized',
   },
   recommended: {
     id: 'discover.discoverList.recommended',
