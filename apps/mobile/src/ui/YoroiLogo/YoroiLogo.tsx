@@ -23,7 +23,7 @@ export const YoroiLogo = () => {
       <Space.Height.sm />
 
       <Text style={{...a.body_2_md_regular, color: p.gray_900}}>
-        {strings.ui.yoroiLogo}
+        {strings.ui.yoroiLogoSubtitle}
       </Text>
     </View>
   )

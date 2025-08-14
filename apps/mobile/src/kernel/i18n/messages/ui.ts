@@ -173,6 +173,10 @@ export const uiMessages = defineMessages({
     id: 'components.walletinit.walletinitmenu.logo.title',
     defaultMessage: '!!!Yoroi Logo',
   },
+  yoroiLogoSubtitle: {
+    id: 'components.walletinit.walletinitmenu.logo.subtitle',
+    defaultMessage: '!!!Yoroi Logo Subtitle',
+  },
   tryAgain: {
     id: 'swap.failedTxScreen.button',
     defaultMessage: '!!!Try Again',

@@ -352,6 +352,7 @@ export const useStrings = () => {
       // UI strings
       ui: {
         yoroiLogo: f(uiMessages.yoroiLogo),
+        yoroiLogoSubtitle: f(uiMessages.yoroiLogoSubtitle),
         tryAgain: f(uiMessages.tryAgain),
         addToken: f(uiMessages.addToken),
         pairedBalanceError: (currency: string) =>

@@ -14,7 +14,7 @@ export const initializationMessages = defineMessages({
     defaultMessage: '!!!Select Language',
   },
   tosIAgreeWith: {
-    id: 'components.initialization.acepttermsofservicescreen.aggreeClause',
+    id: 'termsOfService.tosIAgreeWith',
     defaultMessage: '!!!Terms of Service I Agree With',
   },
   tosAgreement: {
@@ -38,11 +38,11 @@ export const initializationMessages = defineMessages({
     defaultMessage: '!!!Language Picker Title',
   },
   tosAnd: {
-    id: 'components.initialization.acepttermsofservicescreen.aggreeClause',
+    id: 'components.initialization.tosAnd',
     defaultMessage: '!!!Terms of Service And',
   },
   privacyPolicy: {
-    id: 'components.initialization.acepttermsofservicescreen.title',
+    id: 'components.initialization.privacyNotice.title',
     defaultMessage: '!!!Privacy Policy',
   },
   biometricDescription: {
