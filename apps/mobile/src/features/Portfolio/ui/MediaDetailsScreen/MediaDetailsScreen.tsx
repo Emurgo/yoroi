@@ -164,12 +164,12 @@ const SelectableMedia = ({info}: {info: Portfolio.Token.Info}) => {
   return (
     <TouchableOpacity
       onPress={() => navigateTo.nftZoom(info.id)}
-      style={{
-        display: 'flex',
-        flexDirection: 'row',
-        flexGrow: 1,
-        backgroundColor: p.gray_100,
-      }}
+      style={[
+        a.flex,
+        a.flex_row,
+        a.flex_grow,
+        {backgroundColor: p.gray_100},
+      ]}
     >
       <MediaPreview
         info={info}
