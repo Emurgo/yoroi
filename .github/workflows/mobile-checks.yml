@@ -8,8 +8,7 @@ on:
 
 jobs:
   check:
-    if: github.event.pull_request.draft == false
-
+    if: github.event.pull_request.draft != true
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
