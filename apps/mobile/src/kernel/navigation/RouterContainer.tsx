@@ -15,20 +15,25 @@ const navRef =
   React.createRef<NavigationContainerRef<ReactNavigation.RootParamList>>()
 
 export function RouterContainer({children}: React.PropsWithChildren) {
-  const [currentRouteName, setCurrentRouteName] = React.useState<string | undefined>(undefined)
+  const [currentRouteName, setCurrentRouteName] = React.useState<
+    string | undefined
+  >(undefined)
 
-  const handleStateChange = React.useCallback((state: NavigationState | undefined) => {
-    if (state) {
-      const routeName = getCurrentRouteName(state)
-      setCurrentRouteName(routeName)
-    }
-  }, [])
+  const handleStateChange = React.useCallback(
+    (state: NavigationState | undefined) => {
+      if (state) {
+        const routeName = getCurrentRouteName(state)
+        setCurrentRouteName(routeName)
+      }
+    },
+    [],
+  )
 
   useStatusBar(currentRouteName)
 
   return (
-    <NavigationContainer 
-      ref={navRef} 
+    <NavigationContainer
+      ref={navRef}
       linking={{enabled: true, prefixes}}
       onStateChange={handleStateChange}
     >

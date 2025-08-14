@@ -41,7 +41,7 @@ export type ButtonProps = {
 
 export const Button = (props: ButtonProps) => {
   const {
-    type,
+    type = ButtonType.Primary,
     size,
     title,
     icon: Icon,
