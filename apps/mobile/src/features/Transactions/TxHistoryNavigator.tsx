@@ -36,6 +36,7 @@ import {SwapNavigator} from '../Swap/navigator'
 import {HeaderRightHistory} from './common/HeaderRightHistory'
 import {TxDetails} from './useCases/TxDetails/TxDetails'
 import {TxHistory} from './useCases/TxHistory/TxHistory'
+import {ShowSuccessScreen} from '../Claim/useCases/ShowSuccessScreen'
 
 const Stack = createStackNavigator<TxHistoryRoutes>()
 
@@ -229,6 +230,16 @@ export const TxHistoryNavigator = () => {
                 headerShown: true,
               }}
               getComponent={() => ViewNotificationHistoryScreen}
+            />
+
+            {/* Claim Screens */}
+            <Stack.Screen
+              name="claim-show-success"
+              options={{
+                title: strings.claim.showSuccessTitle,
+                headerShown: true,
+              }}
+              getComponent={() => ShowSuccessScreen}
             />
           </Stack.Navigator>
         </Boundary>
