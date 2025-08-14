@@ -1,4 +1,4 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {Notifications} from '@yoroi/types'
 import * as React from 'react'
 import {View} from 'react-native'
@@ -178,21 +178,22 @@ const PushNotificationIcon = () => {
 }
 
 const ColoredIcon = (props: {icon: (p: IconProps) => React.JSX.Element}) => {
-  const {palette} = useTheme()
+  const {palette: p} = useTheme()
   const Icon = props.icon
   return (
-    <View style={[styles.icon, {backgroundColor: palette.secondary_100}]}>
-      <Icon color={palette.secondary_600} />
+    <View
+      style={[
+        a.align_center,
+        a.justify_center,
+        {
+          width: 40,
+          height: 40,
+          borderRadius: 20,
+          backgroundColor: p.secondary_100,
+        },
+      ]}
+    >
+      <Icon color={p.secondary_600} />
     </View>
   )
-}
-
-const styles = {
-  icon: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    alignItems: 'center' as const,
-    justifyContent: 'center' as const,
-  },
 }

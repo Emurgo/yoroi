@@ -1,9 +1,8 @@
 import {isString} from '@yoroi/common'
-import {atoms as a, useTheme} from '@yoroi/theme'
+import {useTheme} from '@yoroi/theme'
 
-import {TransitionPresets, createStackNavigator} from '@react-navigation/stack'
+import {createStackNavigator} from '@react-navigation/stack'
 import * as React from 'react'
-import {Platform} from 'react-native'
 
 import {AuthSetting, AuthWithHostConfig} from '~/features/Auth/common/types'
 import {useAuth} from '~/features/Auth/context/AuthProvider'
@@ -30,7 +29,6 @@ import {NotificationsDevScreen} from '~/features/Notifications/useCases/Notifica
 import {NotificationUIHandler} from '~/features/Notifications/useCases/NotificationUIHandler'
 import {SetupWalletNavigator} from '~/features/SetupWallet/SetupWalletNavigator'
 import {useHasWallets} from '~/features/WalletManager/hooks/useHasWallets'
-import {Modal} from '~/ui/Modal/ModalScreen'
 
 import {agreementDate, isDev} from '../constants'
 import {useStrings} from '../i18n/useStrings'
@@ -140,27 +138,6 @@ export const AppNavigator = () => {
             )}
           </Stack.Group>
         )}
-
-        {/* Modal */}
-
-        <Stack.Group
-          screenOptions={{
-            gestureEnabled: false,
-            presentation: 'transparentModal',
-            ...(Platform.OS === 'android' && {
-              ...TransitionPresets.DefaultTransition,
-            }), // overriding general navigation settings
-            cardStyle: a.bg_transparent, // this is needed for the modal to be transparent
-          }}
-        >
-          <Stack.Screen
-            name="modal"
-            getComponent={() => Modal}
-            options={{
-              gestureEnabled: false,
-            }}
-          />
-        </Stack.Group>
 
         {/* Development */}
 
