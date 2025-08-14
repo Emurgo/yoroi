@@ -55,9 +55,7 @@ export const SelectDappFromListScreen = () => {
       headerTitle: HeaderTitleComponent,
     },
   })
-  const {data: connectedOrigins = []} = useDAppsConnected({
-    refetchOnMount: true,
-  })
+  const {data: connectedOrigins = []} = useDAppsConnected()
 
   const isDappConnected = (dappOrigins: string[]) => {
     return dappOrigins.some((dappOrigin) =>
@@ -135,9 +133,7 @@ const HeaderControl = ({
 }) => {
   const {visible} = useSearch()
   const strings = useStrings()
-  const {data: connectedOrigins = []} = useDAppsConnected({
-    refetchOnMount: true,
-  })
+  const {data: connectedOrigins = []} = useDAppsConnected()
   const hasConnectedDapps = connectedOrigins.length > 0
   const {data: list} = useDappList()
   const filters = Object.keys(list?.filters ?? {})
@@ -191,9 +187,7 @@ const useFilteredDappList = (tab: TDAppTabs, categoriesSelected: string[]) => {
   const {search, visible} = useSearch()
   const {track} = useMetrics()
   const {data: list} = useDappList()
-  const {data: connectedOrigins = []} = useDAppsConnected({
-    refetchOnMount: true,
-  })
+  const {data: connectedOrigins = []} = useDAppsConnected()
   const hasConnectedDapps = connectedOrigins.length > 0
   const isSearching = visible
 
