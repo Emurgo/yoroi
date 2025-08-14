@@ -72,6 +72,8 @@ const Notice = ({
         >
           <CommonContent onReadMore={onReadMore} showLogo />
 
+          <Space.Height.lg />
+
           <Button
             size="S"
             type={ButtonType.Text}
