@@ -13,6 +13,7 @@ import {Space} from '~/ui/Space/Space'
 import {SettingsSwitch} from '../SettingsSwitch/SettingsSwitch'
 import {YoroiLogo} from '../YoroiLogo/YoroiLogo'
 import {AnalyticsImage} from './AnalyticsImage'
+import { Icon } from '../../ui/Icon'
 
 type Props = {
   type: 'notice' | 'settings'
@@ -63,13 +64,15 @@ const Notice = ({
         showsVerticalScrollIndicator={true}
       >
         <View
-          style={{alignItems: 'center', paddingHorizontal: 16}}
+          style={[a.align_center, a.px_lg]}
           onLayout={(event) => {
             const {height} = event.nativeEvent.layout
             setContentHeight(height + BOTTOM_BUTTON_ROW_HEIGHT)
           }}
         >
           <CommonContent onReadMore={onReadMore} showLogo />
+
+          <Space.Height.lg />
 
           <Button
             size="S"
@@ -159,23 +162,23 @@ const CommonContent = ({
 
   const list = [
     {
-      style: {color: p.sys_magenta_500, paddingRight: 8, fontSize: 16},
-      icon: '✓',
+      icon: <Icon.CheckFilled size={16} color={p.sys_cyan_500} />,
+      key: 'anonymous',
+    },
+    {
+      icon: <Icon.CheckFilled size={16} color={p.sys_cyan_500} />,
       key: 'optout',
     },
     {
-      style: {color: p.sys_magenta_500, paddingRight: 8, fontSize: 16},
-      icon: '✕',
+      icon: <Icon.CrossCircle size={16} color={p.sys_magenta_500} />,
       key: 'private',
     },
     {
-      style: {color: p.sys_magenta_500, paddingRight: 8, fontSize: 16},
-      icon: '✕',
+      icon: <Icon.CrossCircle size={16} color={p.sys_magenta_500} />,
       key: 'noip',
     },
     {
-      style: {color: p.sys_magenta_500, paddingRight: 8, fontSize: 16},
-      icon: '✕',
+      icon: <Icon.CrossCircle size={16} color={p.sys_magenta_500} />,
       key: 'nosell',
     },
   ] as const
@@ -190,47 +193,31 @@ const CommonContent = ({
         </>
       )}
 
-      <Text style={[a.heading_1_medium, ta.text_gray_max]}>
-        {strings.ui.header}
-      </Text>
-
-      <Space.Height.md />
-
-      <Text style={[a.body_1_lg_regular, ta.text_gray_medium]}>
-        {strings.ui.description}
-      </Text>
-
-      <Space.Height.lg />
-
       <AnalyticsImage />
 
       <Space.Height.lg />
 
       <View style={{alignItems: 'center'}}>
         <Text style={[a.body_1_lg_medium, ta.text_gray_max]}>
-          {strings.ui.anonymous}
+          {strings.ui.analyticsHeader}
         </Text>
 
-        <Space.Height.xs />
+        <Space.Height.lg />
 
-        <Text style={[a.body_2_md_regular, ta.text_gray_medium]}>
-          {strings.ui.optout}
-        </Text>
       </View>
 
-      <Space.Height.lg />
-
-      <View style={{gap: 8}}>
-        {list.map(({style, icon, key}) => (
+      <View style={[a.gap_xs]}>
+        {list.map(({icon, key}) => (
           <View
             key={key}
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'baseline',
-            }}
+            style={[
+              a.flex_row,
+              a.align_center,  
+            ]}
           >
-            <Text style={style}>{icon}</Text>
+            <View style={[a.pr_sm]}> 
+              {icon}
+            </View>
 
             <Text style={[a.body_1_lg_regular]}>
               {key === 'private' || key === 'noip' || key === 'nosell'
@@ -241,7 +228,7 @@ const CommonContent = ({
         ))}
       </View>
 
-      <Space.Height.md />
+      <Space.Height.lg />
 
       <TouchableOpacity onPress={onReadMore}>
         <Text style={[ta.text_primary_medium, a.text_center, a.link_1_lg]}>
