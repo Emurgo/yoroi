@@ -1351,6 +1351,7 @@ export const useStrings = () => {
           utxosForeignAddressLabel: f(
             txReviewMessages.utxosUtxosForeignAddressLabel,
           ),
+          utxosFeeLabel: f(txReviewMessages.utxosUtxosFeeLabel),
         },
         tokenDetails: {
           title: f(txReviewMessages.tokenDetailsTitle),

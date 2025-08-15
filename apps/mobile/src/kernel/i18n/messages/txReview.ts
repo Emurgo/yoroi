@@ -70,6 +70,10 @@ export const txReviewMessages = defineMessages({
     id: 'txReview.utxos.utxosInputsLabel',
     defaultMessage: '!!!Inputs',
   },
+  utxosUtxosInputsLabel: {
+    id: 'txReview.utxos.utxosInputsLabel',
+    defaultMessage: '!!!Inputs',
+  },
   utxosUtxosOutputsLabel: {
     id: 'txReview.utxos.utxosOutputsLabel',
     defaultMessage: '!!!Outputs',
@@ -81,6 +85,10 @@ export const txReviewMessages = defineMessages({
   utxosUtxosForeignAddressLabel: {
     id: 'txReview.utxos.utxosForeignAddressLabel',
     defaultMessage: '!!!Foreign address',
+  },
+  utxosUtxosFeeLabel: {
+    id: 'txReview.utxos.utxosFee',
+    defaultMessage: '!!!Fee',
   },
   tokenDetailsOverViewTabTitle: {
     id: 'txReview.tokenDetails.overViewTab.title',

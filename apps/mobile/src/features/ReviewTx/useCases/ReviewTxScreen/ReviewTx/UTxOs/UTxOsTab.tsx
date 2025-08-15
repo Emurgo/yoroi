@@ -22,27 +22,34 @@ import {formatTokenWithText} from '~/wallets/utils/format'
 export const UTxOsTab = ({tx}: {tx: FormattedTx}) => {
   const {palette: p} = useTheme()
   const strings = useStrings()
+  const [inputsExpanded, setInputsExpanded] = React.useState(false)
+  const [outputsExpanded, setOutputsExpanded] = React.useState(false)
+
   const {wallet} = useSelectedWallet()
+
+  // Fallback fee formatting if wallet is not available
+  const feeText = wallet
+    ? formatTokenWithText(tx.fee.quantity, wallet.portfolioPrimaryTokenInfo)
+    : `${tx.fee.quantity} ${tx.fee.tokenInfo.ticker || 'ADA'}`
 
   return (
     <View style={[a.flex_1, a.px_lg, {backgroundColor: p.bg_color_max}]}>
       <Space.Height.lg />
 
       <Accordion
-        label={`${strings.txReview.utxosInputsLabel} (${tx.inputs.length})`}
+        label={`${strings.txReview.utxos.utxosInputsLabel} (${tx.inputs.length})`}
+        expanded={inputsExpanded}
+        onChange={setInputsExpanded}
       >
         <Inputs inputs={tx.inputs} />
       </Accordion>
 
-      <Fee
-        fee={formatTokenWithText(
-          tx.fee.quantity,
-          wallet.portfolioPrimaryTokenInfo,
-        )}
-      />
+      <Fee fee={feeText} />
 
       <Accordion
-        label={`${strings.txReview.utxosOutputsLabel} (${tx.outputs.length})`}
+        label={`${strings.txReview.utxos.utxosOutputsLabel} (${tx.outputs.length})`}
+        expanded={outputsExpanded}
+        onChange={setOutputsExpanded}
       >
         <Outputs outputs={tx.outputs} />
       </Accordion>
@@ -169,8 +176,8 @@ const Output = ({output}: {output: FormattedOutput}) => {
 }
 
 const Fee = ({fee}: {fee: string}) => {
-  const {palette: p} = useTheme()
   const strings = useStrings()
+  const {palette: p} = useTheme()
 
   return (
     <View>
@@ -178,7 +185,7 @@ const Fee = ({fee}: {fee: string}) => {
 
       <View style={[a.flex_row, a.justify_between]}>
         <Text style={[a.body_1_lg_medium, {color: p.text_gray_medium}]}>
-          {strings.txReview.feeLabel}
+          {strings.txReview.utxos.utxosFeeLabel}
         </Text>
 
         <Text
@@ -198,14 +205,14 @@ const UtxoTitle = ({
   isOwnAdddress: boolean | null
   isInput: boolean
 }) => {
-  const {palette: p} = useTheme()
   const strings = useStrings()
+  const {palette: p} = useTheme()
 
   const label =
     isOwnAdddress != null
       ? isOwnAdddress
-        ? strings.txReview.utxosYourAddressLabel
-        : strings.txReview.utxosForeignAddressLabel
+        ? strings.txReview.utxos.utxosYourAddressLabel
+        : strings.txReview.utxos.utxosForeignAddressLabel
       : '-'
 
   return (

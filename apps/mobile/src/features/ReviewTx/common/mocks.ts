@@ -1,5 +1,9 @@
 import {Portfolio} from '@yoroi/types'
+import * as React from 'react'
+import {Text, View} from 'react-native'
 
+import BigNumber from 'bignumber.js'
+import {TransactionInfo} from '~/wallets/types/other'
 import {FormattedTx} from './types'
 
 export const onlyAdaOneReceiver: FormattedTx = {
@@ -1509,6 +1513,177 @@ const operationsWarning: FormattedTx = {
   ],
 }
 
+// Mock data for ReviewTx component props
+export const mockOperations: Array<React.ReactNode> = [
+  React.createElement(
+    View,
+    {key: 'operation1', style: {padding: 8}},
+    React.createElement(Text, null, 'Mock Operation 1'),
+  ),
+  React.createElement(
+    View,
+    {key: 'operation2', style: {padding: 8}},
+    React.createElement(Text, null, 'Mock Operation 2'),
+  ),
+]
+
+export const mockOperationsNotice: React.ReactNode = React.createElement(
+  View,
+  {
+    style: {
+      padding: 10,
+      backgroundColor: '#fff3cd',
+      borderWidth: 1,
+      borderColor: '#ffeaa7',
+    },
+  },
+  React.createElement(
+    Text,
+    null,
+    'Mock Operations Notice: This is a test notice for operations',
+  ),
+)
+
+export const mockDetails = {
+  title: 'Mock Transaction Details',
+  component: React.createElement(
+    View,
+    {style: {padding: 15}},
+    React.createElement(Text, null, 'Mock details component content'),
+  ),
+}
+
+export const mockReceiverCustomTitle: React.ReactNode = React.createElement(
+  View,
+  {style: {padding: 4}},
+  React.createElement(
+    Text,
+    {style: {fontWeight: 'bold', color: '#007bff'}},
+    'Custom Receiver Title',
+  ),
+)
+
+export const mockCreatedBy: React.ReactNode = React.createElement(
+  View,
+  {style: {padding: 4}},
+  React.createElement(
+    Text,
+    {style: {fontStyle: 'italic', color: '#6c757d'}},
+    'Created by: Mock User',
+  ),
+)
+
+export const mockOnConfirm = () => {
+  console.log('Mock onConfirm called')
+}
+
+// Complete ReviewTx mock data
+export const mockReviewTxProps = {
+  formattedTx: onlyAdaOneReceiver,
+  formattedMetadata: {
+    hash: 'a1b2c3d4e5f6789012345678901234567890abcdef1234567890abcdef123456',
+    metadata: {
+      msg: ['Mock transaction metadata for testing'],
+    },
+  },
+  operations: mockOperations,
+  operationsNotice: mockOperationsNotice,
+  details: mockDetails,
+  receiverCustomTitle: mockReceiverCustomTitle,
+  createdBy: mockCreatedBy,
+  onConfirm: mockOnConfirm,
+}
+
+// Dummy transaction data for testing submitted tx screen
+export const dummySubmittedTransaction: TransactionInfo = {
+  id: 'dummy-tx-id-1234567890abcdef',
+  inputs: [
+    {
+      address:
+        'addr1qykrmfm7qmhpvmt6xkapegwun67wf75pcghm7p3a78gmm470ppwv8x4ylafdu84xqmh9sx4vrk4czekksv884xmvanwqrqg5yh',
+      amount: '10000000', // 10 ADA
+      assets: [
+        {
+          identifier: '.',
+          amount: new BigNumber('10000000'),
+        },
+      ],
+    },
+  ],
+  outputs: [
+    {
+      address:
+        'addr1q8a3kt40xel75qeknwcsa75jevg9nljf64vjxfdmz24p00d84fs97ylhclpxmu3ej5dyy8wjjl54tk8tjynnwag83a2q90y4sx',
+      amount: '9500000', // 9.5 ADA
+      assets: [
+        {
+          identifier: '.',
+          amount: new BigNumber('9500000'),
+        },
+      ],
+    },
+  ],
+  amount: [
+    {
+      identifier: '.',
+      amount: '500000', // 0.5 ADA fee
+      isDefault: true,
+    },
+  ],
+  fee: [
+    {
+      identifier: '.',
+      amount: '500000',
+      isDefault: true,
+    },
+  ],
+  delta: [
+    {
+      identifier: '.',
+      amount: '-500000', // Negative because it's sent
+      isDefault: true,
+    },
+  ],
+  confirmations: 0, // Just submitted
+  blockNumber: 0,
+  direction: 'SENT',
+  submittedAt: new Date().toISOString(),
+  lastUpdatedAt: new Date().toISOString(),
+  status: 'Pending',
+  assurance: 'HIGH',
+  tokens: {},
+  memo: 'Test transaction for demo purposes',
+  metadata: {
+    msg: ['Demo transaction submitted successfully'],
+  },
+}
+
+// Dummy transaction data for successful transactions
+export const dummySuccessfulTransaction: TransactionInfo = {
+  ...dummySubmittedTransaction,
+  id: 'dummy-successful-tx-abcdef1234567890',
+  confirmations: 15,
+  blockNumber: 123456,
+  status: 'Successful',
+  submittedAt: new Date(Date.now() - 300000).toISOString(), // 5 minutes ago
+  lastUpdatedAt: new Date(Date.now() - 60000).toISOString(), // 1 minute ago
+}
+
+// Dummy transaction data for failed transactions
+export const dummyFailedTransaction: TransactionInfo = {
+  ...dummySubmittedTransaction,
+  id: 'dummy-failed-tx-0987654321fedcba',
+  status: 'Failed',
+  submittedAt: new Date(Date.now() - 600000).toISOString(), // 10 minutes ago
+  lastUpdatedAt: new Date(Date.now() - 300000).toISOString(), // 5 minutes ago
+}
+
+export const dummyTransactionData = {
+  submitted: dummySubmittedTransaction,
+  successful: dummySuccessfulTransaction,
+  failed: dummyFailedTransaction,
+}
+
 export const mocks = {
   formattedTxs: {
     onlyAdaOneReceiver,
@@ -1519,4 +1694,5 @@ export const mocks = {
     onlyAdaOneReceiverReferenceInputs,
     operationsWarning,
   },
+  reviewTx: mockReviewTxProps,
 }
