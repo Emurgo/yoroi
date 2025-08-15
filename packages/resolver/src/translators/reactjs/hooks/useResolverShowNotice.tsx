@@ -4,13 +4,13 @@ import {useResolver} from '../provider/ResolverProvider'
 
 export const useResolverShowNotice = (
   options?: Partial<
-    UseQueryOptions<boolean, Error, boolean, ['resolver', 'show-notice']>
+    UseQueryOptions<boolean, Error, boolean, ['useResolverShowNotice']>
   >,
 ) => {
   const {showNotice} = useResolver()
 
   const query = useQuery({
-    queryKey: ['useResolverShowNotifce'],
+    queryKey: ['useResolverShowNotice'],
     queryFn: showNotice.read,
     staleTime: 0,
     gcTime: 0,

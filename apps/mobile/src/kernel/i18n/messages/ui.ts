@@ -173,6 +173,10 @@ export const uiMessages = defineMessages({
     id: 'components.walletinit.walletinitmenu.logo.title',
     defaultMessage: '!!!Yoroi Logo',
   },
+  yoroiLogoSubtitle: {
+    id: 'components.walletinit.walletinitmenu.logo.subtitle',
+    defaultMessage: '!!!Yoroi Logo Subtitle',
+  },
   tryAgain: {
     id: 'swap.failedTxScreen.button',
     defaultMessage: '!!!Try Again',
@@ -201,6 +205,10 @@ export const uiMessages = defineMessages({
     id: 'analytics.anonymous',
     defaultMessage: '!!!Anonymous',
   },
+  analyticsHeader: {
+    id: 'analytics.header',
+    defaultMessage: '!!!Join the Journey',
+  },
   optout: {
     id: 'analytics.optout',
     defaultMessage: '!!!Opt out',
@@ -210,11 +218,11 @@ export const uiMessages = defineMessages({
     defaultMessage: '!!!We <b>cannot</b> access private keys',
   },
   noip: {
-    id: 'global.actions.dialogs.logout.noButton',
+    id: 'analytics.noip',
     defaultMessage: '!!!No IP',
   },
   nosell: {
-    id: 'global.actions.dialogs.logout.noButton',
+    id: 'analytics.nosell',
     defaultMessage: '!!!No sell',
   },
   more: {

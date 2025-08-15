@@ -9,10 +9,11 @@ on:
       - develop
       - 'releases/**'
   pull_request:
-      types: [opened, synchronize, reopened]
+      types: [opened, synchronize, reopened, ready_for_review]
 
 jobs:
   sonarqube:
+    if: github.event.pull_request.draft != true
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4

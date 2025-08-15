@@ -7,41 +7,41 @@ export const useDialogs = () => {
 
   return React.useRef({
     errorInvalidRequest: {
-      title: strings.apiErrorTitle,
-      message: strings.apiErrorInvalidRequest,
+      title: strings.claim.apiErrorTitle,
+      message: strings.claim.apiErrorInvalidRequest,
     },
     errorNotFound: {
-      title: strings.apiErrorTitle,
-      message: strings.apiErrorNotFound,
+      title: strings.claim.apiErrorTitle,
+      message: strings.claim.apiErrorNotFound,
     },
     errorAlreadyClaimed: {
-      title: strings.apiErrorTitle,
-      message: strings.apiErrorAlreadyClaimed,
+      title: strings.claim.apiErrorTitle,
+      message: strings.claim.apiErrorAlreadyClaimed,
     },
     errorExpired: {
-      title: strings.apiErrorTitle,
-      message: strings.apiErrorExpired,
+      title: strings.claim.apiErrorTitle,
+      message: strings.claim.apiErrorExpired,
     },
     errorTooEarly: {
-      title: strings.apiErrorTitle,
-      message: strings.apiErrorTooEarly,
+      title: strings.claim.apiErrorTitle,
+      message: strings.claim.apiErrorTooEarly,
     },
     errorRateLimited: {
-      title: strings.apiErrorTitle,
-      message: strings.apiErrorRateLimited,
+      title: strings.claim.apiErrorTitle,
+      message: strings.claim.apiErrorRateLimited,
     },
 
     accepted: {
-      title: strings.acceptedTitle,
-      message: strings.acceptedMesage,
+      title: strings.claim.acceptedTitle,
+      message: strings.claim.acceptedMessage,
     },
     processing: {
-      title: strings.processingTitle,
-      message: strings.processingMessage,
+      title: strings.claim.processingTitle,
+      message: strings.claim.processingMessage,
     },
     done: {
-      title: strings.doneTitle,
-      message: strings.doneMessage,
+      title: strings.claim.doneTitle,
+      message: strings.claim.doneMessage,
     },
   } as const).current
 }

@@ -1,8 +1,7 @@
 import {Chain, Portfolio, Scan} from '@yoroi/types'
 
-import {NavigatorScreenParams} from '@react-navigation/native'
+import {NavigatorScreenParams, useNavigation} from '@react-navigation/native'
 import {StackNavigationProp} from '@react-navigation/stack'
-import {useNavigation} from '@react-navigation/native'
 
 import {OnConfirm} from '~/features/ReviewTx/common/hooks/useOnConfirm'
 import {ReviewDetailsProps} from '~/features/ReviewTx/useCases/ReviewTxScreen/ReviewTx/Overview/OverviewTab'
@@ -66,8 +65,8 @@ export type TxHistoryRoutes = {
   'send-submitted-tx': undefined
   'send-failed-tx': undefined
   'send-select-token-from-list': undefined
-} & SwapTokenRoutes &
-  ScanRoutes &
+  'swap': NavigatorScreenParams<SwapTokenRoutes>
+} & ScanRoutes &
   ClaimRoutes &
   ExchangeRoutes &
   NotificationCenterRoutes
@@ -93,15 +92,15 @@ type NotificationCenterRoutes = {
 }
 
 export type SwapTokenRoutes = {
-  'swap-main': undefined
-  'swap-orders': undefined
-  'swap-settings': undefined
-  'swap-review': undefined
-  'swap-select-token': {direction: 'in' | 'out'}
-  'swap-select-protocol': undefined
-  'swap-preprod-notice': undefined
-  'swap-submitted-tx': undefined
-  'swap-failed-tx': undefined
+  'main': undefined
+  'orders': undefined
+  'settings': undefined
+  'review': undefined
+  'select-token': {direction: 'in' | 'out'}
+  'select-protocol': undefined
+  'preprod-notice': undefined
+  'submitted-tx': undefined
+  'failed-tx': undefined
 }
 
 export type SwapTokenRouteseNavigation = StackNavigationProp<SwapTokenRoutes>
@@ -119,7 +118,8 @@ export type ExchangeRoutes = {
 
 export type ExchangeRoutesNavigation = StackNavigationProp<ExchangeRoutes>
 
-export type StakingCenterRouteNavigation = StackNavigationProp<StakingCenterRoutes>
+export type StakingCenterRouteNavigation =
+  StackNavigationProp<StakingCenterRoutes>
 
 export type SettingsTabRoutes = {
   'wallet-settings': undefined
@@ -237,7 +237,8 @@ export type VotingRegistrationRoutes = {
   'qr-code': undefined
 }
 
-export type VotingRegistrationRouteNavigation = StackNavigationProp<VotingRegistrationRoutes>
+export type VotingRegistrationRouteNavigation =
+  StackNavigationProp<VotingRegistrationRoutes>
 
 export type InititalizationRoutes = {
   'initial': undefined
@@ -250,7 +251,8 @@ export type InititalizationRoutes = {
   'read-privacy-policy': undefined
 }
 
-export type InititalizationNavigation = StackNavigationProp<InititalizationRoutes>
+export type InititalizationNavigation =
+  StackNavigationProp<InititalizationRoutes>
 
 export type FirstAction =
   | 'first-run'
@@ -314,7 +316,9 @@ export type WalletNavigation = {
   navigateToChangeNetwork: () => void
   navigateToTxHistory: () => void
   navigateToAppSettings: () => void
-  navigateToCollateralSettings: (params?: SettingsStackRoutes['manage-collateral']) => void
+  navigateToCollateralSettings: (
+    params?: SettingsStackRoutes['manage-collateral'],
+  ) => void
   navigateToNotificationDisplayDuration: () => void
   navigateToNotificationSettings: () => void
   navigateToNotifications: () => void

@@ -4,40 +4,33 @@ import {useRef} from 'react'
 import {SwapTokenRouteseNavigation} from '~/kernel/navigation/types'
 
 export const useNavigateTo = () => {
-  const swapNavigation = useNavigation<SwapTokenRouteseNavigation>()
-  const navigation = useNavigation()
+  const navigation = useNavigation<SwapTokenRouteseNavigation>()
+  const rootNavigation = useNavigation()
 
   return useRef({
-    selectProtocol: () => swapNavigation.navigate('swap-select-protocol'),
-    selectTokenIn: () =>
-      swapNavigation.navigate('swap-select-token', {direction: 'in'}),
+    selectProtocol: () => navigation.navigate('select-protocol'),
+    selectTokenIn: () => navigation.navigate('select-token', {direction: 'in'}),
     selectTokenOut: () =>
-      swapNavigation.navigate('swap-select-token', {direction: 'out'}),
-    startSwap: () => swapNavigation.navigate('swap-main'),
-    orders: () => swapNavigation.navigate('swap-orders'),
-    swapSettings: () => swapNavigation.navigate('swap-settings'),
-    reviewSwap: () => swapNavigation.navigate('swap-review'),
-    submittedTx: () => swapNavigation.navigate('swap-submitted-tx'),
-    failedTx: () => swapNavigation.navigate('swap-failed-tx'),
-    swapOpenOrders: () =>
-      navigation.navigate('manage-wallets', {
+      navigation.navigate('select-token', {direction: 'out'}),
+    startSwap: () => navigation.navigate('main'),
+    orders: () => navigation.navigate('orders'),
+    swapSettings: () => navigation.navigate('settings'),
+    reviewSwap: () =>
+      rootNavigation.navigate('manage-wallets', {
         screen: 'main-wallet-routes',
         params: {
           screen: 'history',
           params: {
-            screen: 'swap-orders',
+            screen: 'swap',
+            params: {
+              screen: 'main',
+            },
           },
         },
       }),
-    resetToStartSwap: () =>
-      navigation.navigate('manage-wallets', {
-        screen: 'main-wallet-routes',
-        params: {
-          screen: 'history',
-          params: {
-            screen: 'swap-main',
-          },
-        },
-      }),
+    submittedTx: () => navigation.navigate('submitted-tx'),
+    failedTx: () => navigation.navigate('failed-tx'),
+    swapOpenOrders: () => navigation.navigate('orders'),
+    resetToStartSwap: () => navigation.navigate('main'),
   }).current
 }

@@ -46,7 +46,7 @@ const Price = ({amount, textStyle, ignorePrivacy, hidePrimaryPair}: Props) => {
     selected: {networkManager},
   } = useWalletManager()
   const portfolioPrimaryTokenInfo = networkManager.primaryTokenInfo
-  const {atoms: ta, palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
 
   const {
     currency: selectedCurrency,
@@ -100,7 +100,7 @@ const Price = ({amount, textStyle, ignorePrivacy, hidePrimaryPair}: Props) => {
 
   return (
     <Text
-      style={[a.body_3_sm_regular, {color: p.text_gray_medium}, textStyle]}
+      style={[a.body_3_sm_regular, ta.text_gray_medium, textStyle]}
       testID="pairedTotalText"
     >
       {price}
@@ -114,11 +114,11 @@ export const BalanceError = ({
   textStyle?: TextStyle | TextStyle[]
 }) => {
   const strings = useStrings()
-  const {atoms: ta, palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
   const {currency} = useCurrencyPairing()
 
   return (
-    <Text style={[a.body_3_sm_regular, {color: p.text_gray_medium}, textStyle]}>
+    <Text style={[a.body_3_sm_regular, ta.text_gray_medium, textStyle]}>
       {strings.ui.pairedBalanceError(currency)}
     </Text>
   )

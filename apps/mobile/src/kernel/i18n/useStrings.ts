@@ -238,6 +238,7 @@ export const useStrings = () => {
         turnOnAlerts: f(notificationsMessages.turnOnAlerts),
         skip: f(notificationsMessages.skip),
         turnOnNotifications: f(notificationsMessages.turnOnNotifications),
+        notificationCenter: f(notificationsMessages.notificationCenter),
       },
 
       // Claim strings
@@ -347,11 +348,13 @@ export const useStrings = () => {
         tokens: (qty: number) => f(globalMessages.tokens, {qty}),
         nfts: (qty: number) => f(globalMessages.nfts, {qty}),
         tokensAvailable: (qty: number) => f(globalMessages.tokens, {qty}),
+        metadata: f(portfolioMessages.metadata),
       },
 
       // UI strings
       ui: {
         yoroiLogo: f(uiMessages.yoroiLogo),
+        yoroiLogoSubtitle: f(uiMessages.yoroiLogoSubtitle),
         tryAgain: f(uiMessages.tryAgain),
         addToken: f(uiMessages.addToken),
         pairedBalanceError: (currency: string) =>
@@ -361,6 +364,7 @@ export const useStrings = () => {
         header: f(uiMessages.header),
         description: f(uiMessages.description),
         anonymous: f(uiMessages.anonymous),
+        analyticsHeader: f(uiMessages.analyticsHeader),
         optout: f(uiMessages.optout),
         private: (options: {b: (content: ReactNode[]) => ReactNode}) =>
           f(uiMessages.private, options),
@@ -976,6 +980,9 @@ export const useStrings = () => {
         swapMinReceived: f(swapMessages.swapMinReceived),
         swapMinReceivedTitle: f(swapMessages.swapMinReceivedTitle),
         swapFeesTitle: f(swapMessages.swapFeesTitle),
+        swapFees: f(swapMessages.swapFees),
+        swapSlippageTitle: f(swapMessages.swapSlippageTitle),
+        swapSlippage: f(swapMessages.swapSlippage),
         swapLiquidityFee: f(swapMessages.swapLiquidityFee),
         swapLiqProvFee: f(swapMessages.swapLiqProvFee),
         swapLiquidityFeeInfo: (
@@ -1258,6 +1265,18 @@ export const useStrings = () => {
         yoroiRecord: f(stakingMessages.yoroiRecord),
         newToGovernanceTitle: f(stakingMessages.newToGovernanceTitle),
         newToGovernanceText: f(stakingMessages.newToGovernanceText),
+        // Add missing strings
+        delegationSuccess: f(stakingMessages.delegationSuccess),
+        delegationFailed: f(stakingMessages.delegationFailed),
+        delegationFailedMessage: f(stakingMessages.delegationFailed),
+        retry: f(stakingMessages.retry),
+        poolWarningCensoring: f(stakingMessages.warning),
+        poolWarningMultiBlock: f(stakingMessages.warning),
+        poolWarningUnknown: f(stakingMessages.warning),
+        poolWarningHeader: f(stakingMessages.warning),
+        poolWarningSuggested: f(stakingMessages.warning),
+        loading: f(stakingMessages.loading),
+        processingDelegation: f(stakingMessages.loading),
         poolDetails: {
           poolHash: f(stakingMessages.poolDetailsPoolHash),
           delegate: f(stakingMessages.poolDetailsDelegate),
@@ -1266,6 +1285,16 @@ export const useStrings = () => {
           next: f(stakingMessages.poolDetailsNext),
           disclaimerTitle: f(stakingMessages.poolDetailsDisclaimerTitle),
           disclaimerText: f(stakingMessages.poolDetailsDisclaimerText),
+        },
+        noPoolDataDialog: {
+          title: f(stakingMessages.noPoolDataDialogTitle),
+          message: f(stakingMessages.noPoolDataDialogMessage),
+        },
+        confirmDelegation: {
+          title: f(stakingMessages.confirmDelegationTitle),
+          message: f(stakingMessages.confirmDelegationMessage),
+          delegateButtonLabel: f(stakingMessages.confirmDelegationDelegateButtonLabel),
+          cancelButtonLabel: f(stakingMessages.confirmDelegationCancelButtonLabel),
         },
       },
 

@@ -30,7 +30,7 @@ for pkg in "${packages[@]}"; do
   echo "→ Installing, testing and building '${pkg}'…"
   (
     cd "packages/$pkg"
-    npm ci
+    npm install
     npm run build
     echo "   ✔️  Build completed for '${pkg}'"
   )

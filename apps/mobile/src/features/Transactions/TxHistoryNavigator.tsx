@@ -31,6 +31,9 @@ import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
 import {TxHistoryRoutes} from '~/kernel/navigation/types'
 import {Boundary} from '~/ui/Boundary/Boundary'
 
+import {ShowSuccessScreen} from '../Claim/useCases/ShowSuccessScreen'
+import {ViewNotificationHistoryScreen} from '../Notifications/useCases/ViewNotificationHistory/ViewNotificationHistoryScreen'
+import {SwapNavigator} from '../Swap/navigator'
 import {HeaderRightHistory} from './common/HeaderRightHistory'
 import {TxDetails} from './useCases/TxDetails/TxDetails'
 import {TxHistory} from './useCases/TxHistory/TxHistory'
@@ -209,6 +212,34 @@ export const TxHistoryNavigator = () => {
                 title: strings.scan.cameraPermissionDeniedTitle,
               }}
               getComponent={() => ShowCameraPermissionDeniedScreen}
+            />
+
+            <Stack.Screen
+              name="swap"
+              options={{
+                headerShown: false,
+              }}
+              getComponent={() => SwapNavigator}
+            />
+
+            {/* Notification Center */}
+            <Stack.Screen
+              name="notification-center-history"
+              options={{
+                title: strings.notifications.notificationCenter,
+                headerShown: true,
+              }}
+              getComponent={() => ViewNotificationHistoryScreen}
+            />
+
+            {/* Claim Screens */}
+            <Stack.Screen
+              name="claim-show-success"
+              options={{
+                title: strings.claim.showSuccessTitle,
+                headerShown: true,
+              }}
+              getComponent={() => ShowSuccessScreen}
             />
           </Stack.Navigator>
         </Boundary>

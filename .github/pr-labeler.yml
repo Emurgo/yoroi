@@ -1,4 +1,35 @@
-feature: ['feature/*', '\[feature\]', 'feature\-*', 'feature:']
-fix: ['fix/*', '\[fix\]', 'fix\-*', 'fix:']
-chore: ['chore/*', '\[chore\]', 'chore\-*', 'chore:']
-refactor: ['refactor/*', '\[refactor\]', 'refactor\-*', 'refactor:']
+# Feature-related labels
+feature: ['feature/*', '\[feature\]', 'feature\-*', 'feature:', 'feat/*', 'feat:', 'enhancement/*', 'enhancement:']
+
+# Bug fixes
+fix: ['fix/*', '\[fix\]', 'fix\-*', 'fix:', 'bugfix/*', 'bugfix:', 'bug/*', 'bug:']
+
+# Documentation
+docs: ['docs/*', '\[docs\]', 'docs\-*', 'docs:', 'documentation/*', 'documentation:', 'doc/*', 'doc:']
+
+# Testing
+test: ['test/*', '\[test\]', 'test\-*', 'test:', 'testing/*', 'testing:', 'spec/*', 'spec:']
+
+# Refactoring
+refactor: ['refactor/*', '\[refactor\]', 'refactor\-*', 'refactor:', 'refactoring/*', 'refactoring:']
+
+# Performance improvements
+perf: ['perf/*', '\[perf\]', 'perf\-*', 'perf:', 'performance/*', 'performance:', 'optimization/*', 'optimization:']
+
+# Security updates
+security: ['security/*', '\[security\]', 'security\-*', 'security:', 'sec/*', 'sec:', 'vulnerability/*', 'vulnerability:']
+
+# Dependencies
+deps: ['deps/*', '\[deps\]', 'deps\-*', 'deps:', 'dependency/*', 'dependency:', 'dependencies/*', 'dependencies:']
+
+# Build and CI/CD
+ci: ['ci/*', '\[ci\]', 'ci\-*', 'ci:', 'build/*', 'build:', 'pipeline/*', 'pipeline:']
+
+# Chores and maintenance
+chore: ['chore/*', '\[chore\]', 'chore\-*', 'chore:', 'maintenance/*', 'maintenance:', 'housekeeping/*', 'housekeeping:']
+
+# Hotfixes
+hotfix: ['hotfix/*', '\[hotfix\]', 'hotfix\-*', 'hotfix:', 'urgent/*', 'urgent:', 'critical/*', 'critical:']
+
+# Release preparation
+release: ['release/*', '\[release\]', 'release\-*', 'release:', 'version/*', 'version:']

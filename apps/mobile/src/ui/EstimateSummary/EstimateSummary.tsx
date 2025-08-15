@@ -4,8 +4,8 @@ import * as React from 'react'
 import {Text, View} from 'react-native'
 
 import {undefinedToken} from '~/features/Swap/common/constants'
+import {useNavigateTo} from '~/features/Swap/common/navigation'
 import {useSwap} from '~/features/Swap/common/useSwap'
-import {useNavigateTo} from '~/features/Transactions/common/navigation'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button, ButtonType} from '~/ui/Button/Button'
@@ -16,7 +16,6 @@ import {SwapInfoLink} from '~/ui/SwapInfoLink/SwapInfoLink'
 
 export const EstimateSummary = () => {
   const strings = useStrings()
-  const {atoms: ta, palette: p} = useTheme()
   const {wallet} = useSelectedWallet()
   const swapForm = useSwap()
   const {openModal} = useModal()
@@ -45,7 +44,7 @@ export const EstimateSummary = () => {
   const expand = () =>
     openModal({
       content: (
-        <View style={[a.p_lg]}>
+        <View style={a.p_lg}>
           <Splits data={swapForm.estimate?.splits ?? []} />
         </View>
       ),
@@ -53,10 +52,10 @@ export const EstimateSummary = () => {
     })
 
   return (
-    <View style={[a.p_lg]}>
+    <View style={a.p_lg}>
       <Row
-        label={strings.route}
-        description={strings.routeDescription}
+        label={strings.swap.route}
+        description={strings.swap.routeDescription}
         value={
           protocol !== undefined && (
             <View style={[a.flex_row, a.align_center, a.gap_xs]}>
@@ -77,31 +76,31 @@ export const EstimateSummary = () => {
       />
 
       <Row
-        label={strings.price}
+        label={strings.swap.price}
         description={
           swapForm.orderType === 'limit'
-            ? strings.limitPriceInfo
-            : strings.marketPriceInfo
+            ? strings.swap.limitPriceInfo
+            : strings.swap.marketPriceInfo
         }
         value={`1 ${tokenInTicker} = ${price} ${tokenOutTicker}`}
       />
 
       <Row
-        label={strings.swapFeesTitle}
-        description={strings.swapFees}
+        label={strings.swap.swapFeesTitle}
+        description={strings.swap.swapFees}
         value={`${swapForm.estimate?.totalFee} ${wallet.portfolioPrimaryTokenInfo.ticker}`}
       />
 
       <Row
-        label={strings.swapMinReceivedTitle}
-        description={strings.swapMinReceived}
-        value={`${swapForm.estimate?.minOutput} ${tokenOutTicker}`}
+        label={strings.swap.swapMinReceivedTitle}
+        description={strings.swap.swapMinReceived}
+        value={`${swapForm.estimate?.totalOutput} ${tokenOutTicker}`}
       />
 
       <Row
-        label={strings.swapSlippageTitle}
-        description={strings.swapSlippage}
-        value={`${swapForm.estimate?.slippage}%`}
+        label={strings.swap.swapSlippageTitle}
+        description={strings.swap.swapSlippage}
+        value={`${swapForm.slippageInput.value}%`}
       />
     </View>
   )
@@ -116,7 +115,7 @@ const Row = ({
   description?: string
   value: number | string | React.ReactNode
 }) => {
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p} = useTheme()
   const {openModal} = useModal()
 
   return (
@@ -166,7 +165,7 @@ const Row = ({
 }
 
 export const Splits = ({data}: {data: Swap.Split[]}) => {
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p} = useTheme()
 
   const total = data.reduce(
     (acc, curr) => (acc += curr.expectedOutputWithoutSlippage),

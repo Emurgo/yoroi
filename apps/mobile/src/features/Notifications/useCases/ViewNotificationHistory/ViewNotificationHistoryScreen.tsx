@@ -14,15 +14,15 @@ import {
   getTransactionReceivedNotificationTitle,
 } from '~/features/Notifications/common/TransactionReceivedNotification'
 import {useWalletNotifications} from '~/features/Notifications/common/useWalletNotifications'
+import {useTransactionInfos} from '~/features/Transactions/hooks/useTransactionInfos'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {useLanguage} from '~/kernel/i18n'
+import {useLanguage} from '~/kernel/i18n/LanguageProvider'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {ScrollView} from '~/ui/ScrollView/ScrollView'
 import {Text} from '~/ui/Text/Text'
-import {useTransactionInfos} from '~/features/Transactions/hooks/useTransactionInfos'
-import {useStrings} from '~/kernel/i18n/useStrings'
-import {EmptyNotificationsIllustration} from '../illustrations/EmptyNotifications'
+import {EmptyNotificationsIllustration} from '../../illustrations/EmptyNotifications'
 
 export const ViewNotificationHistoryScreen = () => {
   const {palette: p} = useTheme()
@@ -59,7 +59,9 @@ export const ViewNotificationHistoryScreen = () => {
       >
         <EmptyNotificationsIllustration />
 
-        <Text style={[a.heading_3_medium]}>{strings.noNotifications}</Text>
+        <Text style={[a.heading_3_medium]}>
+          {strings.notifications.noNotifications}
+        </Text>
       </View>
     )
   }
@@ -92,7 +94,7 @@ export const ViewNotificationHistoryScreen = () => {
       >
         <Button
           style={[a.flex, a.justify_center, a.align_center]}
-          title={strings.markAllAsRead}
+          title={strings.notifications.markAllAsRead}
           onPress={handleMarkAllAsRead}
           type={ButtonType.Text}
         />
