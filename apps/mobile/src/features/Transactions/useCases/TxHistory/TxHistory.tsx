@@ -8,7 +8,7 @@ import {LayoutAnimation, Text, View} from 'react-native'
 import infoIcon from '~/assets/img/icon/info-light-green.png'
 import {useBuyCryptoBanner} from '~/features/Exchange/common/useBuyCryptoBanner'
 import {useGetImportantAlertsModal} from '~/features/Notifications/common/GetImportantAlertsModal'
-import {useGovernanceBanner} from '~/features/Staking/Governance/useCases/useGovernanceBanner'
+// import {useGovernanceBanner} from '~/features/Staking/Governance/useCases/useGovernanceBanner'
 import {usePoolTransitionModal} from '~/features/Staking/Staking/PoolTransition/usePoolTransitionModal'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useSync} from '~/features/WalletManager/hooks/useSync'
@@ -27,7 +27,7 @@ import {useOnScroll} from './useOnScroll'
 import {WarningBanner} from './WarningBanner'
 
 export const TxHistory = () => {
-  useGovernanceBanner()
+  // useGovernanceBanner()
   useBuyCryptoBanner()
   useUtxoConsolidationBanner()
 
