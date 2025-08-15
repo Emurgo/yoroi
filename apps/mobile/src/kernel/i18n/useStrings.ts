@@ -833,6 +833,7 @@ export const useStrings = () => {
         }) => f(globalMessages.insufficientBalance, params),
         votingTitle: f(globalMessages.votingTitle),
         available: f(globalMessages.available),
+        signTransaction: f(txLabels.signTransaction),
       },
 
       // Discover strings

@@ -50,7 +50,7 @@ export const useLegacyOnConfirm = ({
 
     if (isHW) {
       // openModal({
-      //   title: strings.swap.signTransaction,
+      //   title: strings.global.signTransaction,
       //   content: (
       //     <ConfirmRawTxWithHW
       //       onCancel={closeModal}
@@ -72,7 +72,7 @@ export const useLegacyOnConfirm = ({
 
     if (!isHW && !isEasyConfirmationEnabled) {
       openModal({
-        title: strings.swap.signTransaction,
+        title: strings.global.signTransaction,
         content: (
           <ConfirmRawTxWithPassword
             unsignedTx={unsignedTx}
@@ -86,7 +86,7 @@ export const useLegacyOnConfirm = ({
     }
 
     openModal({
-      title: strings.swap.signTransaction,
+      title: strings.global.signTransaction,
       content: (
         <ConfirmRawTxWithOs
           unsignedTx={unsignedTx}

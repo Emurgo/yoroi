@@ -190,7 +190,7 @@ export const transactionsMessages = defineMessages({
     defaultMessage: '!!!Omitted Count',
   },
   openInExplorer: {
-    id: 'components.txhistory.txdetails.txDetails',
+    id: 'components.txhistory.txdetails.openInExplorer',
     defaultMessage: '!!!Open In Explorer',
   },
   copiedLabel: {

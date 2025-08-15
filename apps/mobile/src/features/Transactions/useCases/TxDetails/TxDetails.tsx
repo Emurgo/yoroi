@@ -212,7 +212,6 @@ export const TxDetails = () => {
 
         <Actions style={[{borderTopWidth: 1, borderColor: p.gray_200}]}>
           <Button
-            type={'Primary'}
             onPress={() =>
               Linking.openURL(explorers.cardanoscan.tx(transaction.id))
             }
