@@ -1265,6 +1265,18 @@ export const useStrings = () => {
         yoroiRecord: f(stakingMessages.yoroiRecord),
         newToGovernanceTitle: f(stakingMessages.newToGovernanceTitle),
         newToGovernanceText: f(stakingMessages.newToGovernanceText),
+        // Add missing strings
+        delegationSuccess: f(stakingMessages.delegationSuccess),
+        delegationFailed: f(stakingMessages.delegationFailed),
+        delegationFailedMessage: f(stakingMessages.delegationFailed),
+        retry: f(stakingMessages.retry),
+        poolWarningCensoring: f(stakingMessages.warning),
+        poolWarningMultiBlock: f(stakingMessages.warning),
+        poolWarningUnknown: f(stakingMessages.warning),
+        poolWarningHeader: f(stakingMessages.warning),
+        poolWarningSuggested: f(stakingMessages.warning),
+        loading: f(stakingMessages.loading),
+        processingDelegation: f(stakingMessages.loading),
         poolDetails: {
           poolHash: f(stakingMessages.poolDetailsPoolHash),
           delegate: f(stakingMessages.poolDetailsDelegate),
@@ -1273,6 +1285,16 @@ export const useStrings = () => {
           next: f(stakingMessages.poolDetailsNext),
           disclaimerTitle: f(stakingMessages.poolDetailsDisclaimerTitle),
           disclaimerText: f(stakingMessages.poolDetailsDisclaimerText),
+        },
+        noPoolDataDialog: {
+          title: f(stakingMessages.noPoolDataDialogTitle),
+          message: f(stakingMessages.noPoolDataDialogMessage),
+        },
+        confirmDelegation: {
+          title: f(stakingMessages.confirmDelegationTitle),
+          message: f(stakingMessages.confirmDelegationMessage),
+          delegateButtonLabel: f(stakingMessages.confirmDelegationDelegateButtonLabel),
+          cancelButtonLabel: f(stakingMessages.confirmDelegationCancelButtonLabel),
         },
       },
 

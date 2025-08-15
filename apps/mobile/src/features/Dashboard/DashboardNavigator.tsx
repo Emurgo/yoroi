@@ -5,11 +5,12 @@ import * as React from 'react'
 
 import {NetworkTag} from '~/features/Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {useGovernanceManagerMaker} from '~/features/Staking/Governance/common/helpers'
-import {StakingCenter} from '~/features/Staking/Staking/StakingCenter'
+
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
 import {DashboardRoutes} from '~/kernel/navigation/types'
+import {StakingCenter} from '../Staking/Staking/StakingCenter/StakingCenter'
 import {Dashboard} from './Dashboard'
 import {FailedTxScreen} from './ShowFailedTxScreen/FailedTxScreen'
 import {SubmittedTxScreen} from './ShowSubmittedTxScreen/SubmittedTxScreen'
