@@ -16,7 +16,6 @@ export const ButtonGroup = <T extends string>({
   labels,
   onSelect,
   style,
-  ...props
 }: ButtonGroupProps<T> & ViewProps) => {
   const [selected, setSelected] = React.useState(initial)
   const {palette: p} = useTheme()

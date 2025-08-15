@@ -18,7 +18,7 @@ export const LoginWithHostScreen = () => {
 
   React.useEffect(() => {
     resolve()
-  }, [])
+  }, [resolve])
 
   return (
     <View style={[a.flex_1, a.flex_col, a.justify_between]}>

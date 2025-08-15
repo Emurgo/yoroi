@@ -52,13 +52,11 @@ export const EditAmountScreen = () => {
 
   const amount = targets[selectedTargetIndex].entry.amounts[selectedTokenId]
 
-  if (!amount) {
-    // If amount is not found, navigate back to the token selection screen
-    React.useEffect(() => {
+  React.useEffect(() => {
+    if (!amount) {
       navigateTo.selectedTokens()
-    }, [navigateTo])
-    return null
-  }
+    }
+  }, [navigateTo, amount])
 
   const initialQuantity = amount.quantity
   const available =

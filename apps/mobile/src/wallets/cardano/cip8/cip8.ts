@@ -1,65 +1,44 @@
 import {PrivateKey} from '@emurgo/cross-csl-core'
-// import {init} from '@emurgo/cross-msl-mobile' // Temporarily disabled due to Python compatibility issues
+import {init} from '@emurgo/cross-msl-mobile'
 import {Buffer} from 'buffer'
 
-// const MSL = init('cip8') // Temporarily disabled due to Python compatibility issues
-const MSL = null // Placeholder - MSL functionality temporarily disabled
+const MSL = init('cip8')
 
 export const sign = async (
   address: Buffer,
   signKey: PrivateKey,
   payload: Buffer,
 ) => {
-  // MSL functionality temporarily disabled due to Python compatibility issues
-  throw new Error(
-    'MSL signing functionality is temporarily disabled due to Python compatibility issues',
+  const protectedHeader = MSL.HeaderMap.new()
+  protectedHeader.setAlgorithmId(
+    MSL.Label.fromAlgorithmId(MSL.AlgorithmId.EdDSA),
   )
-
-  // Original implementation (commented out):
-  // const protectedHeader = await MSL.HeaderMap.new()
-  // await protectedHeader.setAlgorithmId(
-  //   await MSL.Label.fromAlgorithmId(MSL.AlgorithmId.EdDSA),
-  // )
-  // await protectedHeader.setHeader(
-  //   await MSL.Label.newText('address'),
-  //   await MSL.CBORValue.newBytes(address),
-  // )
-  // const protectedSerialized = await MSL.ProtectedHeaderMap.new(protectedHeader)
-  // const unprotected = await MSL.HeaderMap.new()
-  // const headers = await MSL.Headers.new(protectedSerialized, unprotected)
-  // const builder = await MSL.COSESign1Builder.new(headers, payload, false)
-  // const toSign = await (await builder.makeDataToSign()).toBytes()
-  // const signedSigStruct = await (await signKey.sign(toSign)).toBytes()
-  // return builder.build(signedSigStruct)
+  protectedHeader.setHeader(
+    MSL.Label.newText('address'),
+    MSL.CBORValue.newBytes(address),
+  )
+  const protectedSerialized = MSL.ProtectedHeaderMap.new(protectedHeader)
+  const unprotected = MSL.HeaderMap.new()
+  const headers = MSL.Headers.new(protectedSerialized, unprotected)
+  const builder = MSL.COSESign1Builder.new(headers, payload, false)
+  const toSign = builder.makeDataToSign().toBytes()
+  const signedSigStruct = signKey.sign(toSign).toBytes()
+  return builder.build(signedSigStruct)
 }
 
 export const makeCip8Key = async (publicSigningKey: Uint8Array) => {
-  // MSL functionality temporarily disabled due to Python compatibility issues
-  throw new Error(
-    'MSL key generation functionality is temporarily disabled due to Python compatibility issues',
+  const key = MSL.COSEKey.new(MSL.Label.fromKeyType(MSL.KeyType.OKP))
+  key.setAlgorithmId(MSL.Label.fromAlgorithmId(MSL.AlgorithmId.EdDSA))
+  key.setHeader(
+    MSL.Label.newInt(MSL.Int.newNegative(MSL.BigNum.fromStr('1'))),
+    MSL.CBORValue.newInt(MSL.Int.newI32(6)),
+  )
+  key.setHeader(
+    MSL.Label.newInt(MSL.Int.newNegative(MSL.BigNum.fromStr('2'))),
+    MSL.CBORValue.newBytes(publicSigningKey),
   )
 
-  // Original implementation (commented out):
-  // const key = await MSL.COSEKey.new(
-  //   await MSL.Label.fromKeyType(MSL.KeyType.OKP),
-  // )
-  // await key.setAlgorithmId(
-  //   await MSL.Label.fromAlgorithmId(MSL.AlgorithmId.EdDSA),
-  // )
-  // await key.setHeader(
-  //   await MSL.Label.newInt(
-  //     await MSL.Int.newNegative(await MSL.BigNum.fromStr('1')),
-  //   ),
-  //   await MSL.CBORValue.newInt(await MSL.Int.newI32(6)),
-  // )
-  // await key.setHeader(
-  //   await MSL.Label.newInt(
-  //     await MSL.Int.newNegative(await MSL.BigNum.fromStr('2')),
-  //   ),
-  //   await MSL.CBORValue.newBytes(publicSigningKey),
-  // )
-
-  // return key
+  return key
 }
 
 export const buildCoseSign1FromSignature = async (
@@ -67,23 +46,17 @@ export const buildCoseSign1FromSignature = async (
   signature: Buffer,
   payload: Buffer,
 ) => {
-  // MSL functionality temporarily disabled due to Python compatibility issues
-  throw new Error(
-    'MSL signature building functionality is temporarily disabled due to Python compatibility issues',
+  const protectedHeader = MSL.HeaderMap.new()
+  protectedHeader.setAlgorithmId(
+    MSL.Label.fromAlgorithmId(MSL.AlgorithmId.EdDSA),
   )
-
-  // Original implementation (commented out):
-  // const protectedHeader = await MSL.HeaderMap.new()
-  // await protectedHeader.setAlgorithmId(
-  //   await MSL.Label.fromAlgorithmId(MSL.AlgorithmId.EdDSA),
-  // )
-  // await protectedHeader.setHeader(
-  //   await MSL.Label.newText('address'),
-  //   await MSL.CBORValue.newBytes(address),
-  // )
-  // const protectedSerialized = await MSL.ProtectedHeaderMap.new(protectedHeader)
-  // const unprotected = await MSL.HeaderMap.new()
-  // const headers = await MSL.Headers.new(protectedSerialized, unprotected)
-  // const builder = await MSL.COSESign1Builder.new(headers, payload, false)
-  // return builder.build(signature)
+  protectedHeader.setHeader(
+    MSL.Label.newText('address'),
+    MSL.CBORValue.newBytes(address),
+  )
+  const protectedSerialized = MSL.ProtectedHeaderMap.new(protectedHeader)
+  const unprotected = MSL.HeaderMap.new()
+  const headers = MSL.Headers.new(protectedSerialized, unprotected)
+  const builder = MSL.COSESign1Builder.new(headers, payload, false)
+  return builder.build(signature)
 }

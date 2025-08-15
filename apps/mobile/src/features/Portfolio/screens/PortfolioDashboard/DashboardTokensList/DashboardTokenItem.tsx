@@ -26,7 +26,7 @@ type Props = {
   tokenInfo: PortfolioTokenAmount
 }
 export const DashboardTokenItem = ({tokenInfo}: Props) => {
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p} = useTheme()
   const navigationTo = useNavigateTo()
   const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
   const formattedQuantity =
@@ -99,7 +99,7 @@ export const DashboardTokenItem = ({tokenInfo}: Props) => {
 }
 
 const TokenInfo = ({info}: {info: Portfolio.Token.Info}) => {
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p} = useTheme()
   const name = infoExtractName(info)
   const isPrimary = isPrimaryToken(info)
   const detail = isPrimary ? info.description : info.fingerprint

@@ -10,7 +10,6 @@ import {
 import {Text} from '../Text/Text'
 
 export const Tabs = ({children, style}: ViewProps) => {
-  const {atoms: ta, palette: p} = useTheme()
   return <View style={[a.flex_row, style]}>{children}</View>
 }
 
@@ -21,7 +20,7 @@ export const Tab = ({
   testID,
   style,
 }: TouchableOpacityProps & {active: boolean; label: string}) => {
-  const {atoms: ta, palette: p} = useTheme()
+  const {atoms: a, palette: p} = useTheme()
 
   return (
     <TouchableOpacity
@@ -55,7 +54,7 @@ export const Tab = ({
 }
 
 export const TabPanels = ({children}: {children: React.ReactNode}) => {
-  const {atoms: ta, palette: p} = useTheme()
+  const {atoms: a, palette: p} = useTheme()
   return (
     <View
       style={[

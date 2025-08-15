@@ -13,7 +13,6 @@ import {
 import {Api, App, HW, Network, Portfolio, Wallet} from '@yoroi/types'
 import {BigNumber} from 'bignumber.js'
 
-import {WalletEncryptedStorage} from '~/kernel/storage/EncryptedStorage'
 import type {
   FundInfoResponse,
   RawUtxo,
@@ -28,8 +27,11 @@ import {
   StakePoolInfosAndHistories,
   StakingInfo,
   StakingStatus,
+  YoroiEntry,
+  YoroiSignedTx,
+  YoroiUnsignedTx,
 } from '@yoroi/types'
-import {YoroiEntry, YoroiSignedTx, YoroiUnsignedTx} from '@yoroi/types'
+import {WalletEncryptedStorage} from '~/kernel/storage/EncryptedStorage'
 import type {Addresses} from './account-manager/account-manager'
 
 export type WalletEvent =

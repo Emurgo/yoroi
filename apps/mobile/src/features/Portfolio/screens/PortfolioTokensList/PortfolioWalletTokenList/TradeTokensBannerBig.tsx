@@ -11,7 +11,7 @@ import {Space} from '~/ui/Space/Space'
 import {TradeTokensAsset} from '../../PortfolioDashboard/DashboardTokensList/TradeTokensAsset'
 
 export const TradeTokensBannerBig = () => {
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p} = useTheme()
   const strings = useStrings()
 
   const navigation = useNavigation<TxHistoryRouteNavigation>()

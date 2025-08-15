@@ -1,16 +1,16 @@
 import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 
-import {Copiable} from '~/ui/Copiable/Copiable'
-import {isDev} from '~/kernel/env'
-import {ReviewTxRoutes} from '~/kernel/navigation/types'
-import {useUnsafeParams} from '~/kernel/navigation/hooks'
 import {useFormattedMetadata} from '~/features/ReviewTx/common/hooks/useFormattedMetadata'
 import {useFormattedTx} from '~/features/ReviewTx/common/hooks/useFormattedTx'
 import {useLegacyOnConfirm} from '~/features/ReviewTx/common/hooks/useLegacyOnConfirm'
 import {useOnConfirm} from '~/features/ReviewTx/common/hooks/useOnConfirm'
 import {useTxBody} from '~/features/ReviewTx/common/hooks/useTxBody'
 import {useReviewTx} from '~/features/ReviewTx/common/ReviewTxProvider'
+import {isDev} from '~/kernel/env'
+import {useUnsafeParams} from '~/kernel/navigation/hooks'
+import {ReviewTxRoutes} from '~/kernel/navigation/types'
+import {Copiable} from '~/ui/Copiable/Copiable'
 import {ReviewTx} from './ReviewTx/ReviewTx'
 
 export const ReviewTxScreen = () => {

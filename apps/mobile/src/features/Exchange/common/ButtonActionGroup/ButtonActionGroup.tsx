@@ -17,7 +17,7 @@ export const ButtonActionGroup = ({
   disabled,
 }: ButtonActionGroupProps) => {
   const handleOnPress = (orderType: OrderType) => onSelect(orderType)
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p} = useTheme()
 
   return (
     <View style={[a.flex_row]}>

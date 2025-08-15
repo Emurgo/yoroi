@@ -56,9 +56,9 @@ export const PoolTransitionNotice = () => {
   )
 }
 
-const Actions = (props: ViewProps) => {
-  return <View {...props} style={{flexDirection: 'row'}} />
-}
+// const Actions = (props: ViewProps) => {
+//   return <View {...props} style={{flexDirection: 'row'}} />
+// }
 
 const Row = (props: ViewProps) => {
   return <View {...props} style={{flexDirection: 'row', gap: 4}} />

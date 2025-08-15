@@ -10,7 +10,10 @@ import {to4_9_0} from './4_9_0'
 import {to6_0_0} from './6_0_0'
 import {ErrorMigrationVersion} from './errors'
 
-import {initInstallationId, storageCurrentVersion} from '~/kernel/storage/storages'
+import {
+  initInstallationId,
+  storageCurrentVersion,
+} from '~/kernel/storage/storages'
 
 const keyStorageVersion = 'storageVersion'
 
@@ -18,13 +21,16 @@ export const storageVersionMaker = (storage: App.Storage) => {
   return {
     save(storageVersion: number) {
       // should save the last version always after migration, can't be higher than currentVersion
-      if (storageVersion > storageCurrentVersion) throw new ErrorMigrationVersion()
+      if (storageVersion > storageCurrentVersion)
+        throw new ErrorMigrationVersion()
       return storage.setItem(keyStorageVersion, storageVersion)
     },
     async read() {
       return storage
         .getItem(keyStorageVersion)
-        .then((version) => (isNumber(version) ? version : storageCurrentVersion))
+        .then((version) =>
+          isNumber(version) ? version : storageCurrentVersion,
+        )
     },
     async newInstallation() {
       return storage.setItem(keyStorageVersion, storageCurrentVersion)

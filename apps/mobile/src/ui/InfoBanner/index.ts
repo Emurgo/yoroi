@@ -1,1 +1,1 @@
-export {InfoBanner} from './InfoBanner' 
+export {InfoBanner} from './InfoBanner'

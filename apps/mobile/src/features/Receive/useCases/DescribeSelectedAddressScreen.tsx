@@ -22,15 +22,16 @@ import {isEmptyString} from '~/wallets/utils/string'
 import {useReceive} from '../common/ReceiveProvider'
 import {useMultipleAddressesInfo} from '../common/useMultipleAddressesInfo'
 import {useNavigateTo} from '../common/useNavigateTo'
-import {useReceiveAddressesStatus} from '../common/useReceiveAddressesStatus'
 
 export const DescribeSelectedAddressScreen = () => {
   const strings = useStrings()
   const {palette: p} = useTheme()
   const navigateTo = useNavigateTo()
   const {selectedAddress} = useReceive()
-  const {/* isSingle,  */ addressMode} = useAddressMode()
-  const addresses = useReceiveAddressesStatus(addressMode)
+  const {
+    /* isSingle,  */
+  } = useAddressMode()
+  // const addresses = useReceiveAddressesStatus(addressMode)
   // TODO: REVISIT, RESTORE THIS FEATURE
   // const isMultipleAddressesUsed = addresses.used.length > 1
   const {isShowingMultipleAddressInfo} = useMultipleAddressesInfo()

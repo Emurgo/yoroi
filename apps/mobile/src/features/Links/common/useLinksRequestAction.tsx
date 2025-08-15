@@ -7,6 +7,7 @@ import {InteractionManager} from 'react-native'
 import uuid from 'uuid'
 
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useModal} from '~/ui/Modal/ModalContext'
@@ -14,7 +15,6 @@ import {useBrowser} from '../Discover/common/BrowserProvider'
 import {RequestedAdaPaymentWithLinkScreen} from '../useCases/RequestedAdaPaymentWithLinkScreen/RequestedAdaPaymentWithLinkScreen'
 import {RequestedBrowserLaunchDappUrlScreen} from '../useCases/RequestedBrowserLaunchDappUrlScreen/RequestedBrowserLaunchDappUrlScreen'
 import {useNavigateTo} from './useNavigationTo'
-import {useStrings} from '~/kernel/i18n/useStrings'
 
 const heightBreakpoint = 467
 export const useLinksRequestAction = () => {

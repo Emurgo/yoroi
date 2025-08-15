@@ -9,7 +9,7 @@ import {Button} from '~/ui/Button/Button'
 import {TradeTokensAsset} from './TradeTokensAsset'
 
 export const TradeTokensBanner = () => {
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p} = useTheme()
   const strings = useStrings()
   const navigationTo = useNavigateTo()
 

@@ -2,6 +2,7 @@ import * as React from 'react'
 import {useWindowDimensions} from 'react-native'
 
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {
   PoolTransitionModal,
@@ -9,7 +10,6 @@ import {
 } from './PoolTransitionModal'
 import {usePoolTransitionContext} from './PoolTransitionProvider'
 import {usePoolTransition} from './usePoolTransition'
-import {useStrings} from '~/kernel/i18n/useStrings'
 
 export const usePoolTransitionModal = () => {
   const {poolTransition, isPoolRetiring, isLoading, navigateToUpdate} =

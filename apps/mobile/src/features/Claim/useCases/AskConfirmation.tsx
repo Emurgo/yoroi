@@ -16,7 +16,7 @@ type Props = {
 export const AskConfirmation = ({address, url, code}: Props) => {
   const strings = useStrings()
   const domain = getDomain(url)
-  const {atoms: ta, palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
 
   return (
     <View style={[a.flex_1, a.px_lg]}>

@@ -13,7 +13,7 @@ import {useResync} from '~/features/WalletManager/hooks/useResync'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {DIALOG_BUTTONS, showConfirmationDialog} from '~/kernel/dialogs'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
+
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {SettingsRouteNavigation} from '~/kernel/navigation/types'
 import {Icon} from '~/ui/Icon'
@@ -42,6 +42,7 @@ export const WalletSettingsScreen = () => {
     meta: {isEasyConfirmationEnabled, isHW, isReadOnly, implementation},
   } = useSelectedWallet()
   const navigateTo = useNavigateTo()
+  const walletType = useWalletType(implementation)
 
   const onToggleEasyConfirmation = () => {
     if (isEasyConfirmationEnabled) {
@@ -151,7 +152,7 @@ export const WalletSettingsScreen = () => {
         <SettingsSection title={strings.settings.walletSettings.about}>
           <SettingsBuildItem
             label={strings.settings.walletSettings.walletType}
-            value={getWalletType(implementation)}
+            value={walletType}
           />
         </SettingsSection>
 
@@ -161,7 +162,7 @@ export const WalletSettingsScreen = () => {
   )
 }
 
-const getWalletType = (implementation: Wallet.Implementation): string => {
+const useWalletType = (implementation: Wallet.Implementation): string => {
   const strings = useStrings()
   if (implementation === 'cardano-bip44')
     return strings.settings.walletSettings.byronWallet
@@ -178,10 +179,10 @@ const ResyncButton = () => {
   const intl = useIntl()
 
   const {walletIdChanged} = useSetupWallet()
-  const settingsNavigation = useNavigation<SettingsRouteNavigation>()
-  const {resync, isPending} = useResync(wallet)
+  // const settingsNavigation = useNavigation<SettingsRouteNavigation>()
+  const {resync} = useResync(wallet)
 
-  const {track} = useMetrics()
+  // const {track} = useMetrics()
 
   const onResync = async () => {
     // track.walletSettingsResyncClicked()

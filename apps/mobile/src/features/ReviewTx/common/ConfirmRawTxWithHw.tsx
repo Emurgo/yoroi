@@ -6,12 +6,12 @@ import {ScrollView, View} from 'react-native'
 
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {ActivityIndicator} from '~/ui/ActivityIndicator/ActivityIndicator'
 import {LedgerConnect} from '~/ui/LedgerConnect/LedgerConnect'
 import {LedgerTransportSwitch} from '~/ui/LedgerTransportSwitch/LedgerTransportSwitch'
 import {Text} from '~/ui/Text/Text'
 import {withBLE, withUSB} from '~/wallets/hw/hwWallet'
-import {useStrings} from '~/kernel/i18n/useStrings'
 
 type TransportType = 'USB' | 'BLE'
 type Step = 'select-transport' | 'connect-transport' | 'loading'

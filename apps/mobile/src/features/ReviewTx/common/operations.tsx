@@ -10,15 +10,15 @@ import {
   formatDrepHashToCIP105Format,
   formatDrepHashToCIP129Format,
 } from '~/features/Staking/Governance/common/drep'
+import {usePoolInfo} from '~/features/Staking/hooks/usePoolInfo'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Icon} from '~/ui/Icon'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
 import {wrappedCsl} from '~/wallets/cardano/wrappedCsl'
-import {usePoolInfo} from '~/features/Staking/hooks/usePoolInfo'
 import {formatTokenWithText} from '~/wallets/utils/format'
 import {asQuantity, Quantities} from '~/wallets/utils/utils'
-import {useStrings} from '~/kernel/i18n/useStrings'
 import {PoolDetails} from './PoolDetails'
 import {CertificateType, FormattedTx} from './types'
 
@@ -95,7 +95,9 @@ export const StakeRewardsWithdrawalOperation = ({
         strike={strike}
       />
 
-      <Text style={styles.operationValue}>{strings.txReview.rewardsWithdrawalText}</Text>
+      <Text style={styles.operationValue}>
+        {strings.txReview.rewardsWithdrawalText}
+      </Text>
     </View>
   )
 }

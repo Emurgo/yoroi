@@ -5,6 +5,7 @@ import {isPrimaryToken} from '@yoroi/portfolio'
 import {Chain, Portfolio} from '@yoroi/types'
 
 import {fetchPtPriceActivity} from '~/features/Pairing/hooks/usePrimaryTokenActivity'
+import {useCurrencyPairing} from '~/features/Settings/useCases/changeAppSettings/Currency/CurrencyContext'
 import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {supportedCurrencies} from '~/kernel/constants'
@@ -12,7 +13,6 @@ import {useLanguage} from '~/kernel/i18n/LanguageProvider'
 import {logger} from '~/kernel/logger/logger'
 import {delay} from '~/wallets/utils/timeUtils'
 import {priceChange} from '../helpers/priceChange'
-import {useCurrencyPairing} from '~/features/Settings/useCases/changeAppSettings/Currency/CurrencyContext'
 import {usePortfolioTokenDetailParams} from './useNavigateTo'
 
 export const TokenChartInterval = {

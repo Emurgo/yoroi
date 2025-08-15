@@ -69,8 +69,7 @@ const initPushNotifications = (
   )
 
   const responseListener =
-    Notifications.addNotificationResponseReceivedListener((response) => {
-      const {title, body, data} = response.notification.request.content
+    Notifications.addNotificationResponseReceivedListener((_response) => {
       const id = parseNotificationId(Date.now().toString())
       triggerNotificationAction({
         manager: pushNotificationsManager,

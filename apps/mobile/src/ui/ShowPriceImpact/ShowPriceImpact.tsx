@@ -1,4 +1,4 @@
-import {atoms as a, useTheme} from '@yoroi/theme'
+import {atoms as a} from '@yoroi/theme'
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
@@ -11,7 +11,6 @@ import {Icon} from '~/ui/Icon'
 
 export const ShowPriceImpact = ({priceImpact = 0}: {priceImpact?: number}) => {
   const strings = useStrings()
-  const {palette: p} = useTheme()
 
   const priceImpactRisk = getPriceImpactRisk(priceImpact)
 

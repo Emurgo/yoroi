@@ -25,22 +25,19 @@ import {PortfolioTokenChart} from './PortfolioTokenChart/PortfolioTokenChart'
 import {PortfolioTokenInfo} from './PortfolioTokenInfo/PortfolioTokenInfo'
 
 export const PortfolioTokenDetailsScreen = () => {
-  const {atoms: ta, palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
   const strings = useStrings()
   const {detailsTab, setDetailsTab} = usePortfolio()
   const {track} = useMetrics()
   const [isStickyTab, setIsStickyTab] = React.useState(false)
   const {id: tokenId} = usePortfolioTokenDetailParams()
   const {wallet} = useSelectedWallet()
-  const {tokenInfo} = usePortfolioTokenInfo(
-    {
-      getTokenInfo: wallet.networkManager.tokenManager.api.tokenInfo,
-      id: tokenId,
-      network: wallet.networkManager.network,
-      primaryTokenInfo: wallet.portfolioPrimaryTokenInfo,
-    },
-    {suspense: true},
-  )
+  const {tokenInfo} = usePortfolioTokenInfo({
+    getTokenInfo: wallet.networkManager.tokenManager.api.tokenInfo,
+    id: tokenId,
+    network: wallet.networkManager.network,
+    primaryTokenInfo: wallet.portfolioPrimaryTokenInfo,
+  })
 
   const HEADER_HEIGHT = 304
 
@@ -60,17 +57,10 @@ export const PortfolioTokenDetailsScreen = () => {
 
   const renderTabs = React.useMemo(() => {
     return (
-      <Tabs
-        style={[
-          a.justify_between,
-          a.px_lg,
-          a.gap_lg,
-          {backgroundColor: p.bg_color_max},
-        ]}
-      >
+      <Tabs style={[a.justify_between, a.px_lg, a.gap_lg, ta.bg_color_max]}>
         {features.portfolioPerformance && (
           <Tab
-            style={[{flex: 1}]}
+            style={[a.flex_1]}
             active={detailsTab === PortfolioDetailsTab.Performance}
             onPress={() => setDetailsTab(PortfolioDetailsTab.Performance)}
             label={strings.portfolio.performance}
@@ -78,41 +68,31 @@ export const PortfolioTokenDetailsScreen = () => {
         )}
 
         <Tab
-          style={[{flex: 1}]}
+          style={[a.flex_1]}
           active={detailsTab === PortfolioDetailsTab.Overview}
           onPress={() => setDetailsTab(PortfolioDetailsTab.Overview)}
           label={strings.portfolio.overview}
         />
 
         <Tab
-          style={[{flex: 1}]}
+          style={[a.flex_1]}
           active={detailsTab === PortfolioDetailsTab.Transactions}
           onPress={() => setDetailsTab(PortfolioDetailsTab.Transactions)}
           label={strings.portfolio.transactions}
         />
       </Tabs>
     )
-  }, [
-    detailsTab,
-    setDetailsTab,
-    strings.portfolio.overview,
-    strings.portfolio.performance,
-    strings.portfolio.transactions,
-  ])
+  }, [ta, strings, detailsTab, setDetailsTab])
 
   return (
     <SafeArea>
       <TxFilter tokenId={tokenId}>
         <Animated.View
           style={[
-            {
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              width: '100%',
-              zIndex: 10,
-            },
+            a.absolute,
+            a.inset_0,
+            a.w_full,
+            a.z_10,
             isStickyTab
               ? {opacity: 1, display: 'flex'}
               : {opacity: 0, display: 'none'},
@@ -126,7 +106,7 @@ export const PortfolioTokenDetailsScreen = () => {
           ListHeaderComponent={
             <>
               <Animated.View
-                style={[{overflow: 'hidden', height: HEADER_HEIGHT}]}
+                style={[a.overflow_hidden, {height: HEADER_HEIGHT}]}
               >
                 <Space.Height.md />
 

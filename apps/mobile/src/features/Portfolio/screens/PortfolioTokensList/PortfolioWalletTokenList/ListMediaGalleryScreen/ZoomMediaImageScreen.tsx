@@ -20,7 +20,7 @@ const isParams = (params?: Params | object | undefined): params is Params => {
 }
 
 export const ZoomMediaImageScreen = () => {
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p} = useTheme()
   const {id} = useParams<Params>(isParams)
   const {wallet} = useSelectedWallet()
   const dimensions = useWindowDimensions()

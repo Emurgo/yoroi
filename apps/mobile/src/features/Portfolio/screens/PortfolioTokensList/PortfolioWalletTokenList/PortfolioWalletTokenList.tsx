@@ -12,13 +12,13 @@ import * as React from 'react'
 import {Text, View} from 'react-native'
 
 import {aggregatePrimaryAmount} from '~/features/Portfolio/common/helpers/aggregatePrimaryAmount'
-import {useStrings} from '~/kernel/i18n/useStrings'
 import {useZeroBalance} from '~/features/Portfolio/common/hooks/useZeroBalance'
 import {usePortfolio} from '~/features/Portfolio/context/PortfolioProvider'
 import {usePortfolioTokenActivity} from '~/features/Portfolio/context/PortfolioTokenActivityProvider'
 import {TokenEmptyList} from '~/features/Portfolio/ui/TokenEmptyList/TokenEmptyList'
 import {useSearch} from '~/features/Search/SearchContext'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {makeList} from '~/kernel/utils'
 import {Line} from '~/ui/Line/Line'
@@ -29,7 +29,7 @@ import {TokenBalanceSkeletonItem} from './TokenBalanceSkeletonItem'
 import {TradeTokensBannerBig} from './TradeTokensBannerBig'
 
 export const PortfolioWalletTokenList = () => {
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p} = useTheme()
   const {search, isSearching} = useSearch()
   const isZeroADABalance = useZeroBalance()
   const {resetTabs} = usePortfolio()
@@ -169,7 +169,7 @@ const HeadingList = ({
   countTokensList,
   amount,
 }: HeadingListProps) => {
-  const {atoms: ta, palette: p} = useTheme()
+  const {atoms: a, palette: p} = useTheme()
   const strings = useStrings()
 
   return (

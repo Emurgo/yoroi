@@ -12,7 +12,6 @@ import {useNextTick} from '~/features/Send/common/hooks/useNextTick'
 import {useNavigateTo} from '~/features/Send/common/navigation'
 import {useSendAddress} from '~/features/Send/common/useSendAddress'
 import {useSendReceiver} from '~/features/Send/common/useSendReceiver'
-import {useHasPendingTx} from '~/features/Transactions/hooks/useHasPendingTx'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
@@ -21,6 +20,7 @@ import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingVi
 import {ScrollView, useScrollView} from '~/ui/ScrollView/ScrollView'
 import {Space} from '~/ui/Space/Space'
 
+import {useHasPendingTx} from '~/features/Transactions/hooks/useHasPendingTx'
 import {InputMemo} from './InputMemo/InputMemo'
 import {InputReceiver} from './InputReceiver/InputReceiver'
 import {SelectNameServer} from './SelectNameServer/SelectNameServer'
@@ -134,7 +134,7 @@ export const StartMultiTokenTxScreen = () => {
             <NextButton
               onPress={handleOnNext}
               title={strings.send.next}
-              // disabled={!canGoNext}
+              disabled={!canGoNext}
               testID="nextButton"
             />
           </Padding>

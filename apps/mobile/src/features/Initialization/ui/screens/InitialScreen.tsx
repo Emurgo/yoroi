@@ -10,8 +10,8 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {BlueCheckbox} from '~/ui/BlueCheckbox/BlueCheckbox'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
-import {YoroiLogo} from '~/ui/YoroiLogo/YoroiLogo'
 import {Space} from '~/ui/Space/Space'
+import {YoroiLogo} from '~/ui/YoroiLogo/YoroiLogo'
 
 import {useNavigateTo} from '../../hooks/useNavigateTo'
 
@@ -29,11 +29,6 @@ export const InitialScreen = () => {
     navigateTo.readPrivacyPolicy()
   }
 
-  const onLanguageChange = React.useCallback(
-    () => setTosAccepted(false),
-    [setTosAccepted],
-  )
-
   const onPressContinue = () => {
     navigateTo.analytics()
   }
@@ -49,9 +44,9 @@ export const InitialScreen = () => {
   return (
     <SafeAreaView style={[a.flex_1, a.p_lg, ta.bg_color_max]}>
       <ScrollView bounces={false} contentContainerStyle={a.flex_grow}>
-      <Space.Height._2xl />
-          <YoroiLogo />
-          <Space.Height._2xl />
+        <Space.Height._2xl />
+        <YoroiLogo />
+        <Space.Height._2xl />
 
         <Space.Height.xl />
 
@@ -115,7 +110,7 @@ export const InitialScreen = () => {
           </View>
         </BlueCheckbox>
       </ScrollView>
-      
+
       <Button
         type={ButtonType.Primary}
         title={strings.initialization.continue}

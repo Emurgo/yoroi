@@ -10,7 +10,7 @@ import {features} from '~/kernel/features'
 import {Icon} from '~/ui/Icon'
 
 const ExportTokenTransactions = () => {
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p} = useTheme()
   const {detailsTab} = usePortfolio()
 
   if (

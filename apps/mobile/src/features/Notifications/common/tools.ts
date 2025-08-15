@@ -13,11 +13,9 @@ const permissionModalStorageKey = 'triggeredNotificationsPermissionModal'
 export const triggerNotificationsPermissionModal = async () => {
   // Request permissions using Expo notifications
   const {status: existingStatus} = await Notifications.getPermissionsAsync()
-  let finalStatus = existingStatus
-  
+
   if (existingStatus !== 'granted') {
-    const {status} = await Notifications.requestPermissionsAsync()
-    finalStatus = status
+    await Notifications.requestPermissionsAsync()
   }
 
   // Android requires manual permission request for POST_NOTIFICATIONS

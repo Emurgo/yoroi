@@ -6,7 +6,7 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 import {Space} from '~/ui/Space/Space'
 
 export const DashboardTokenSkeletonItem = () => {
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p} = useTheme()
 
   return (
     <View style={[a.w_full, a.h_full]}>

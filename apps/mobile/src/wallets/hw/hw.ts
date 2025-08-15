@@ -1,7 +1,6 @@
 import {useMutation, UseMutationOptions} from '@tanstack/react-query'
 import {Permission, PermissionsAndroid, Platform} from 'react-native'
 
-
 import {LocalizableError} from '~/kernel/i18n/LocalizableError'
 
 const requestLedgerPermissions = async () => {
@@ -49,7 +48,8 @@ export class BluetoothDisabledError extends BaseLedgerError {
   constructor() {
     super({
       id: 'ledger.bluetoothDisabledError',
-      defaultMessage: 'Bluetooth is disabled. Please enable Bluetooth to connect to your Ledger device.',
+      defaultMessage:
+        'Bluetooth is disabled. Please enable Bluetooth to connect to your Ledger device.',
     })
   }
 }
@@ -57,7 +57,8 @@ export class GeneralConnectionError extends BaseLedgerError {
   constructor() {
     super({
       id: 'ledger.connectionError',
-      defaultMessage: 'Failed to connect to Ledger device. Please check your connection and try again.',
+      defaultMessage:
+        'Failed to connect to Ledger device. Please check your connection and try again.',
     })
   }
 }
@@ -66,7 +67,8 @@ export class LedgerUserError extends BaseLedgerError {
   constructor() {
     super({
       id: 'ledger.connectionError',
-      defaultMessage: 'Failed to connect to Ledger device. Please check your connection and try again.',
+      defaultMessage:
+        'Failed to connect to Ledger device. Please check your connection and try again.',
     })
   }
 }
@@ -74,7 +76,8 @@ export class RejectedByUserError extends BaseLedgerError {
   constructor() {
     super({
       id: 'ledger.rejectedByUserError',
-      defaultMessage: 'Operation was rejected by the user on the Ledger device.',
+      defaultMessage:
+        'Operation was rejected by the user on the Ledger device.',
     })
   }
 }

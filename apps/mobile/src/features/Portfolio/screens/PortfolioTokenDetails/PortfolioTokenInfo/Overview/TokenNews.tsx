@@ -9,7 +9,6 @@ import {Accordion} from '~/ui/Accordion/Accordion'
 import {Space} from '~/ui/Space/Space'
 
 export const TokenNews = () => {
-  const {atoms: ta, palette: p} = useTheme()
   const strings = useStrings()
   const [expanded, setExpanded] = useState(true)
 
@@ -33,7 +32,7 @@ export const TokenNews = () => {
 }
 
 const NewsCard = () => {
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p} = useTheme()
   return (
     <View
       style={[

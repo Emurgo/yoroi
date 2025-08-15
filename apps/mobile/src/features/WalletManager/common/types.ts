@@ -3,11 +3,7 @@
 import {App, Chain, HW, Network, Portfolio} from '@yoroi/types'
 
 import {KeychainManager} from '~/kernel/storage/Keychain'
-import {
-  CardanoTypes,
-  WalletEvent,
-  YoroiWallet,
-} from '~/wallets/cardano/types'
+import {CardanoTypes, WalletEvent, YoroiWallet} from '~/wallets/cardano/types'
 
 export type NetworkTokenManagers = Readonly<
   Record<Chain.SupportedNetworks, Portfolio.Manager.Token>

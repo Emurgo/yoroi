@@ -2,12 +2,12 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Text, TouchableOpacity, TouchableOpacityProps} from 'react-native'
 
-import {useStrings} from '~/kernel/i18n/useStrings'
 import {
   PortfolioDappsTab,
   usePortfolio,
 } from '~/features/Portfolio/context/PortfolioProvider'
 import {TabsGradient} from '~/features/Portfolio/ui/TabsGradient/Tabs'
+import {useStrings} from '~/kernel/i18n/useStrings'
 
 export const PortfolioDAppTabs = () => {
   const strings = useStrings()
@@ -47,7 +47,7 @@ type TabProps = {
   active: boolean
 }
 const Tab = ({onPress, label, active}: TouchableOpacityProps & TabProps) => {
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p} = useTheme()
   return (
     <TouchableOpacity
       style={[a.p_sm, a.rounded_sm, active && {backgroundColor: p.gray_200}]}

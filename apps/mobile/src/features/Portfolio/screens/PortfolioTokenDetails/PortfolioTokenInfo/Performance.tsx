@@ -6,12 +6,12 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 
 import {useGetPortfolioTokenInfo} from '~/features/Portfolio/common/hooks/useGetPortfolioTokenInfo'
 import {usePortfolioTokenDetailParams} from '~/features/Portfolio/common/hooks/useNavigateTo'
-import {useStrings} from '~/kernel/i18n/useStrings'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Space} from '~/ui/Space/Space'
 
 export const Performance = () => {
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p} = useTheme()
   const {id: tokenId} = usePortfolioTokenDetailParams()
   const {
     wallet: {balances},
@@ -157,7 +157,7 @@ interface TextGroupProps {
   loading?: boolean
 }
 const TextGroup = ({label, loading, value, children}: TextGroupProps) => {
-  const {atoms: ta, palette: p} = useTheme()
+  const {atoms: a, palette: p} = useTheme()
 
   return (
     <View style={[a.flex_1, a.flex_row, a.justify_between, a.align_center]}>

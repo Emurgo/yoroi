@@ -5,11 +5,11 @@ import {FlatList, Text, View} from 'react-native'
 
 import {usePortfolioBalances} from '~/features/Portfolio/common/hooks/usePortfolioBalances'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {BalanceCard} from '~/ui/BalanceCard/BalanceCard'
 import {Icon} from '~/ui/Icon'
 import {Space} from '~/ui/Space/Space'
 import {TokenInfoIcon} from '~/ui/TokenInfoIcon/TokenInfoIcon'
-import {useStrings} from '~/kernel/i18n/useStrings'
 
 export const WalletBalance = ({
   image,

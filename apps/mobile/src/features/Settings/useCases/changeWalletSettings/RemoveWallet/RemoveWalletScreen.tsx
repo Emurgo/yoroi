@@ -145,9 +145,9 @@ export const RemoveWalletScreen = () => {
   )
 }
 
-const Description = (props: ViewProps) => {
-  return <View {...props} />
-}
+// const Description = (props: ViewProps) => {
+//   return <View {...props} />
+// }
 const WalletInfo = (props: ViewProps) => {
   const {atoms: ta} = useTheme()
   return <View {...props} style={ta.bg_color_max} />

@@ -19,7 +19,7 @@ const Stack = createStackNavigator<DashboardRoutes>()
 export const DashboardNavigator = () => {
   const {meta} = useSelectedWallet()
   const strings = useStrings()
-  const {palette: p, atoms} = useTheme()
+  const {palette: p} = useTheme()
 
   const manager = useGovernanceManagerMaker()
 

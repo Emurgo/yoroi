@@ -1,7 +1,7 @@
 import {App} from '@yoroi/types'
 
-import {migrateInstallationId, to6_0_0} from './6_0_0'
 import {installationIdStorageKeyManager} from '~/kernel/storage/storages'
+import {migrateInstallationId, to6_0_0} from './6_0_0'
 
 // Mock the installationIdStorageKeyManager
 jest.mock('~/kernel/storage/storages', () => ({
@@ -13,7 +13,9 @@ jest.mock('~/kernel/storage/storages', () => ({
 
 describe('6_0_0 migrations', () => {
   let storage: App.Storage
-  let mockInstallationIdStorageKeyManager: jest.Mocked<typeof installationIdStorageKeyManager>
+  let mockInstallationIdStorageKeyManager: jest.Mocked<
+    typeof installationIdStorageKeyManager
+  >
 
   beforeEach(() => {
     // Reset all mocks
@@ -34,8 +36,11 @@ describe('6_0_0 migrations', () => {
     } as never
 
     // Get the mocked installationIdStorageKeyManager
-    mockInstallationIdStorageKeyManager = installationIdStorageKeyManager as jest.Mocked<typeof installationIdStorageKeyManager>
-    
+    mockInstallationIdStorageKeyManager =
+      installationIdStorageKeyManager as jest.Mocked<
+        typeof installationIdStorageKeyManager
+      >
+
     // Reset the save mock to default behavior
     mockInstallationIdStorageKeyManager.save.mockReturnValue(undefined)
   })
@@ -48,7 +53,9 @@ describe('6_0_0 migrations', () => {
     it('should do nothing when installationId already exists in new storage', async () => {
       // Arrange
       const existingInstallationId = 'existing-uuid-123'
-      mockInstallationIdStorageKeyManager.read.mockReturnValue(existingInstallationId)
+      mockInstallationIdStorageKeyManager.read.mockReturnValue(
+        existingInstallationId,
+      )
 
       // Act
       await migrateInstallationId(storage)
@@ -74,7 +81,9 @@ describe('6_0_0 migrations', () => {
       // Assert
       expect(mockInstallationIdStorageKeyManager.read).toHaveBeenCalledTimes(1)
       expect(storage.join).toHaveBeenCalledWith('appSettings/')
-      expect(mockInstallationIdStorageKeyManager.save).toHaveBeenCalledWith(oldInstallationId)
+      expect(mockInstallationIdStorageKeyManager.save).toHaveBeenCalledWith(
+        oldInstallationId,
+      )
     })
 
     it('should do nothing when old installationId does not exist', async () => {
@@ -123,7 +132,9 @@ describe('6_0_0 migrations', () => {
       // Assert
       expect(mockInstallationIdStorageKeyManager.read).toHaveBeenCalledTimes(1)
       expect(storage.join).toHaveBeenCalledWith('appSettings/')
-      expect(mockInstallationIdStorageKeyManager.save).toHaveBeenCalledWith(oldInstallationId)
+      expect(mockInstallationIdStorageKeyManager.save).toHaveBeenCalledWith(
+        oldInstallationId,
+      )
     })
 
     it('should handle storage errors gracefully', async () => {
@@ -134,7 +145,9 @@ describe('6_0_0 migrations', () => {
       })
 
       // Act & Assert
-      await expect(migrateInstallationId(storage)).rejects.toThrow('Storage error')
+      await expect(migrateInstallationId(storage)).rejects.toThrow(
+        'Storage error',
+      )
       expect(mockInstallationIdStorageKeyManager.read).toHaveBeenCalledTimes(1)
       expect(storage.join).toHaveBeenCalledWith('appSettings/')
       expect(mockInstallationIdStorageKeyManager.save).not.toHaveBeenCalled()
@@ -147,7 +160,9 @@ describe('6_0_0 migrations', () => {
       })
 
       // Act & Assert
-      await expect(migrateInstallationId(storage)).rejects.toThrow('Storage key manager error')
+      await expect(migrateInstallationId(storage)).rejects.toThrow(
+        'Storage key manager error',
+      )
       expect(mockInstallationIdStorageKeyManager.read).toHaveBeenCalledTimes(1)
       expect(storage.join).not.toHaveBeenCalled()
     })
@@ -167,7 +182,9 @@ describe('6_0_0 migrations', () => {
       await expect(migrateInstallationId(storage)).rejects.toThrow('Save error')
       expect(mockInstallationIdStorageKeyManager.read).toHaveBeenCalledTimes(1)
       expect(storage.join).toHaveBeenCalledWith('appSettings/')
-      expect(mockInstallationIdStorageKeyManager.save).toHaveBeenCalledWith(oldInstallationId)
+      expect(mockInstallationIdStorageKeyManager.save).toHaveBeenCalledWith(
+        oldInstallationId,
+      )
     })
   })
 
@@ -191,7 +208,9 @@ describe('6_0_0 migrations', () => {
       // Assert
       expect(mockInstallationIdStorageKeyManager.read).toHaveBeenCalledTimes(1)
       expect(storage.join).toHaveBeenCalledWith('appSettings/')
-      expect(mockInstallationIdStorageKeyManager.save).toHaveBeenCalledWith(oldInstallationId)
+      expect(mockInstallationIdStorageKeyManager.save).toHaveBeenCalledWith(
+        oldInstallationId,
+      )
     })
   })
 
@@ -226,13 +245,17 @@ describe('6_0_0 migrations', () => {
       // Assert
       expect(mockInstallationIdStorageKeyManager.read).toHaveBeenCalledTimes(1)
       expect(storage.join).toHaveBeenCalledWith('appSettings/')
-      expect(mockInstallationIdStorageKeyManager.save).toHaveBeenCalledWith(existingInstallationId)
+      expect(mockInstallationIdStorageKeyManager.save).toHaveBeenCalledWith(
+        existingInstallationId,
+      )
     })
 
     it('should handle the complete migration flow for a user who already migrated', async () => {
       // Arrange - Simulate a user who already has the new storage format
       const alreadyMigratedInstallationId = 'already-migrated-uuid'
-      mockInstallationIdStorageKeyManager.read.mockReturnValue(alreadyMigratedInstallationId)
+      mockInstallationIdStorageKeyManager.read.mockReturnValue(
+        alreadyMigratedInstallationId,
+      )
 
       // Act
       await migrateInstallationId(storage)
@@ -291,7 +314,9 @@ describe('6_0_0 migrations', () => {
       // Assert
       expect(mockInstallationIdStorageKeyManager.read).toHaveBeenCalledTimes(1)
       expect(storage.join).toHaveBeenCalledWith('appSettings/')
-      expect(mockInstallationIdStorageKeyManager.save).toHaveBeenCalledWith(nonStringInstallationId)
+      expect(mockInstallationIdStorageKeyManager.save).toHaveBeenCalledWith(
+        nonStringInstallationId,
+      )
     })
 
     it('should handle very long installationId strings', async () => {
@@ -308,7 +333,9 @@ describe('6_0_0 migrations', () => {
       // Assert
       expect(mockInstallationIdStorageKeyManager.read).toHaveBeenCalledTimes(1)
       expect(storage.join).toHaveBeenCalledWith('appSettings/')
-      expect(mockInstallationIdStorageKeyManager.save).toHaveBeenCalledWith(longInstallationId)
+      expect(mockInstallationIdStorageKeyManager.save).toHaveBeenCalledWith(
+        longInstallationId,
+      )
     })
   })
 })
