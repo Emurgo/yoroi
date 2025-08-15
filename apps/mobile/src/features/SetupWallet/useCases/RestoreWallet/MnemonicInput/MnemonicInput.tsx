@@ -12,11 +12,11 @@ import {
   View,
 } from 'react-native'
 
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Alert} from '~/ui/AlertIllustration/AlertIllustration'
 import {Check2} from '~/ui/Check2Illustration/Check2Illustration'
 import {Space} from '~/ui/Space/Space'
 import {isEmptyString} from '~/wallets/utils/string'
-import {useStrings} from '~/kernel/i18n/useStrings'
 import {MnemonicWordInputRef} from '../RestoreWalletScreen'
 import {TextInput} from './TextInput/TextInput'
 
@@ -58,7 +58,9 @@ export const MnemonicInput = ({
 
   const isMnemonicCompleted = !isEmptyString(mnemonic)
   const error =
-    !isValidPhrase && isMnemonicCompleted ? strings.setupWallet.invalidChecksum : ''
+    !isValidPhrase && isMnemonicCompleted
+      ? strings.setupWallet.invalidChecksum
+      : ''
 
   return (
     <View>

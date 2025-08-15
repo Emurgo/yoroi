@@ -246,7 +246,7 @@ const useConfig = () => {
   return config
 }
 
-function formatNumber(displayDuration: number): string {
-  // TODO: Implement this
-  return '0'
-}
+// function formatNumber(displayDuration: number): string {
+//   // TODO: Implement this
+//   return '0'
+// }

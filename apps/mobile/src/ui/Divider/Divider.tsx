@@ -4,11 +4,7 @@ import {View} from 'react-native'
 
 import {Space} from '~/ui/Space/Space'
 
-export const Divider = ({
-  verticalSpace = 'none',
-}: {
-  verticalSpace?: SpacingSize
-}) => {
+export const Divider = ({}: {verticalSpace?: SpacingSize}) => {
   const {palette: p} = useTheme()
   return (
     <>

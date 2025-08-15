@@ -7,7 +7,10 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
-import {VotingRegistrationRouteNavigation, VotingRegistrationRoutes} from '~/kernel/navigation/types'
+import {
+  VotingRegistrationRouteNavigation,
+  VotingRegistrationRoutes,
+} from '~/kernel/navigation/types'
 import {Boundary} from '~/ui/Boundary/Boundary'
 import {NetworkTag} from '../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {ConfirmPin} from './useCases/ConfirmPin/ConfirmPin'
@@ -17,7 +20,7 @@ import {QrCode} from './useCases/ShowQrCode/ShowQrCode'
 
 const Stack = createStackNavigator<VotingRegistrationRoutes>()
 export const CatalystNavigator = () => {
-  const {atoms, palette: p} = useTheme()
+  const {palette: p} = useTheme()
   const strings = useStrings()
   const {track} = useMetrics()
 

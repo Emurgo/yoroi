@@ -69,7 +69,7 @@ export const sendNotification = async (options: {
       title: options.title,
       body: options.body,
       sound: 'default',
-      data: { id: options.id },
+      data: {id: options.id},
     },
     trigger: null, // null means send immediately
   })

@@ -198,8 +198,12 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
     sourceId: 'SwapProvider',
   })
 
-  const tokenInfos =
-    portfolioTokenInfos ?? new Map<Portfolio.Token.Id, Portfolio.Token.Info>()
+  const tokenInfos = React.useMemo(
+    () =>
+      portfolioTokenInfos ??
+      new Map<Portfolio.Token.Id, Portfolio.Token.Info>(),
+    [portfolioTokenInfos],
+  )
 
   const tokenOutInputRef = React.useRef<TextInput | null>(null)
   const tokenInInputRef = React.useRef<TextInput | null>(null)

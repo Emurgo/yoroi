@@ -1,9 +1,7 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
-import {Wallet} from '@yoroi/types'
 import React, {useState} from 'react'
-import {ImageSourcePropType, View, ViewStyle} from 'react-native'
+import {ImageSourcePropType, Text, View, ViewStyle} from 'react-native'
 
-import {useSetupWallet} from '@yoroi/setup-wallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
@@ -35,10 +33,10 @@ export const WalletNameForm = ({
   isWaiting = false,
 }: Props) => {
   const strings = useStrings()
-  const {palette: p} = useTheme()
+  // const {palette: p} = useTheme()
   const [walletName, setWalletName] = useState(defaultWalletName ?? '')
   const [error, setError] = useState('')
-  const {walletImplementation} = useSetupWallet()
+  // const {walletImplementation} = useSetupWallet()
 
   const handleSubmit = () => {
     if (walletName.length === 0) {

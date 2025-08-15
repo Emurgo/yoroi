@@ -1,4 +1,3 @@
-
 import {LocalizableError} from '~/kernel/i18n/LocalizableError'
 
 // thrown when the request did go through but

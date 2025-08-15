@@ -16,7 +16,7 @@ import {isEmptyString} from '~/wallets/utils/string'
 import {TokenNews} from './TokenNews'
 
 export const Overview = () => {
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p} = useTheme()
   const strings = useStrings()
   const [expanded, setExpanded] = useState(true)
   const {id: tokenId} = usePortfolioTokenDetailParams()

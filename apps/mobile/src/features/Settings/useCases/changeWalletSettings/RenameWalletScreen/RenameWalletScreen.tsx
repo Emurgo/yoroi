@@ -16,7 +16,7 @@ import {getWalletNameError} from '~/wallets/utils/validators'
 export const RenameWalletScreen = () => {
   const strings = useStrings()
   const navigation = useNavigation()
-  const {atoms: ta, palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
 
   const {
     wallet,

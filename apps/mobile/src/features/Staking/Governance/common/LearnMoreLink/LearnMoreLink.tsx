@@ -9,7 +9,7 @@ const LEARN_MORE_LINK =
 
 export const LearnMoreLink = () => {
   const strings = useStrings()
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p} = useTheme()
 
   const handleOnPress = () => {
     Linking.openURL(LEARN_MORE_LINK)

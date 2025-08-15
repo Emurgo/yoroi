@@ -69,7 +69,7 @@ const useSizeModal = () => {
 const addressMode: Wallet.AddressMode = 'single'
 export const SaveNanoXScreen = () => {
   const strings = useStrings()
-  const {palette: p, isDark} = useTheme()
+  const {palette: p} = useTheme()
   const storage = useAsyncStorage()
   const navigation = useNavigation<SetupWalletRouteNavigation>()
   const {track} = useMetrics()

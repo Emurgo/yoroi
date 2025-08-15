@@ -12,7 +12,7 @@ import {DashboardNFTsList} from './DashboardNFTsList/DashboardNFTsList'
 import {DashboardTokensList} from './DashboardTokensList/DashboardTokensList'
 
 export const PortfolioDashboardScreen = () => {
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p} = useTheme()
   const {track} = useMetrics()
   const {resetTabs} = usePortfolio()
 

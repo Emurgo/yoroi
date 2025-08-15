@@ -1,5 +1,5 @@
 import {isNonNullable} from '@yoroi/common'
-import {atoms as a, useTheme} from '@yoroi/theme'
+import {useTheme} from '@yoroi/theme'
 import {LinearGradient} from 'expo-linear-gradient'
 import React, {ReactNode} from 'react'
 import {ActivityIndicator, Pressable, View} from 'react-native'
@@ -27,7 +27,7 @@ export const Action = ({
   showRightArrow,
   showGradient,
 }: Props) => {
-  const {atoms: ta, palette: p} = useTheme()
+  const {atoms: a, palette: p} = useTheme()
 
   return (
     <Pressable onPress={onPress} disabled={pending}>

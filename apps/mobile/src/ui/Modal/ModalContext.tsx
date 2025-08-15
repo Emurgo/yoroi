@@ -75,7 +75,7 @@ export const ModalProvider = ({
       type: 'close',
     })
     handleDismissModalPress()
-  }, [state.onClose, handleDismissModalPress])
+  }, [state, handleDismissModalPress])
 
   const openModal = React.useCallback(
     ({

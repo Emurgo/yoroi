@@ -4,14 +4,14 @@ import * as React from 'react'
 import {ScrollView, Text, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
-import {useStrings} from '~/kernel/i18n/useStrings'
 
 export const AskToOpenWalletScreen = () => {
   const strings = useStrings()
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p} = useTheme()
   const {closeModal} = useModal()
   const {actionFinished} = useLinks()
 

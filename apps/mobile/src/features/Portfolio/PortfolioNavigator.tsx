@@ -1,4 +1,4 @@
-import {atoms as a, useTheme} from '@yoroi/theme'
+import {useTheme} from '@yoroi/theme'
 
 import {createStackNavigator} from '@react-navigation/stack'
 import * as React from 'react'

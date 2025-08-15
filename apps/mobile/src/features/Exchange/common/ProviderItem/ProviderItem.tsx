@@ -1,5 +1,5 @@
 import {useExchange} from '@yoroi/exchange'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {Chain} from '@yoroi/types'
 import * as React from 'react'
 import {Text, TouchableOpacity, View} from 'react-native'
@@ -24,14 +24,13 @@ export const ProviderItem = ({
   disabled,
   label,
 }: Props) => {
-  const {atoms: a, palette: p} = useTheme()
+  const {palette: p} = useTheme()
   const {
     selected: {network},
   } = useWalletManager()
   const {orderType} = useExchange()
 
   const isPreprod = network === Chain.Network.Preprod
-  const isMainnet = network === Chain.Network.Mainnet
   const isBuy = orderType === 'buy'
 
   if (isPreprod && isBuy) return null

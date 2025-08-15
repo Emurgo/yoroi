@@ -25,7 +25,7 @@ type Props = {
   amount: Portfolio.Token.Amount
 }
 export const TokenBalanceItem = ({amount}: Props) => {
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p} = useTheme()
   const navigationTo = useNavigateTo()
   const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
 

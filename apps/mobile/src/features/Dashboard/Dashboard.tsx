@@ -47,7 +47,6 @@ export const Dashboard = () => {
 
   const strings = useStrings()
   const navigateTo = useNavigateTo()
-  const governanceStrings = useStrings()
   const {isPoolRetiring} = usePoolTransition()
   const {unsignedTxChanged} = useReviewTx()
   const {

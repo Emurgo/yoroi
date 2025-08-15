@@ -11,16 +11,15 @@ import {
 
 import {useNavigateTo} from '~/features/Portfolio/common/hooks/useNavigateTo'
 import {usePortfolioBalances} from '~/features/Portfolio/common/hooks/usePortfolioBalances'
-import {useStrings} from '~/kernel/i18n/useStrings'
 import {useZeroBalance} from '~/features/Portfolio/common/hooks/useZeroBalance'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Icon} from '~/ui/Icon'
 import {Space} from '~/ui/Space/Space'
 import {DashboardTokenItem} from './DashboardTokenItem'
 import {TradeTokensBanner} from './TradeTokensBanner'
 
 export const DashboardTokensList = () => {
-  const {atoms: ta, palette: p} = useTheme()
   const {width: SCREEN_WIDTH} = useWindowDimensions()
   const PADDING_LEFT_SIDE = 16
   const PADDING_RIGHT_SIDE_FOR_ITEMS = 15

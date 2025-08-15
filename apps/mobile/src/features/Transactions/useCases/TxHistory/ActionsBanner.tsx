@@ -28,8 +28,7 @@ export const ActionsBanner = (_props: {disabled: boolean}) => {
   const {palette: p} = useTheme()
 
   const {isSingle, addressMode} = useAddressMode()
-  const {next: nextReceiveAddress, used: usedAddresses} =
-    useReceiveAddressesStatus(addressMode)
+  const {next: nextReceiveAddress} = useReceiveAddressesStatus(addressMode)
   const {selectedAddressChanged} = useReceive()
   const {copy} = useCopy()
   const {hideMultipleAddressesInfo, isShowingMultipleAddressInfo} =

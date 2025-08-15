@@ -60,19 +60,19 @@ export const StakingCenter = () => {
     }, [languageCode, plate]),
   )
 
-  const onSuccess = () => {
+  const onSuccess = React.useCallback(() => {
     queryClient.resetQueries({queryKey: [wallet.id, 'stakingInfo']})
     track.stakingCenterDelegationSubmitted()
     navigateTo.submittedTx()
-  }
+  }, [queryClient, wallet.id, track, navigateTo])
 
-  const onError = () => {
+  const onError = React.useCallback(() => {
     setSelectedPoolId(null)
     queryClient.resetQueries({queryKey: [wallet.id, 'stakingInfo']})
     navigateTo.failedTx()
-  }
+  }, [queryClient, wallet.id, navigateTo])
 
-  const {isLoading, stakingTx} = useStakingTx(
+  const {stakingTx} = useStakingTx(
     {wallet, poolId: selectedPoolId ?? undefined, meta},
     {queryKey: [wallet.id, 'stakingTx'], enabled: selectedPoolId != null},
   )
@@ -83,7 +83,15 @@ export const StakingCenter = () => {
     track.stakingCenterDelegationInitiated()
     unsignedTxChanged(stakingTx)
     navigateToTxReview({onSuccess, onError})
-  }, [stakingTx, selectedPoolId, track, unsignedTxChanged, navigateToTxReview])
+  }, [
+    stakingTx,
+    selectedPoolId,
+    track,
+    unsignedTxChanged,
+    navigateToTxReview,
+    onSuccess,
+    onError,
+  ])
 
   const handleOnMessage = async (event: WebViewMessageEvent) => {
     const selectedPoolHashes = JSON.parse(decodeURI(event.nativeEvent.data))

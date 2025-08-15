@@ -8,9 +8,9 @@ import {primaryTokenId} from '@yoroi/portfolio'
 import {Balance} from '@yoroi/types'
 
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useWalletEvent} from '~/features/WalletManager/hooks/useWalletEvent'
 import {toAssetNameHex, toPolicyId} from '~/wallets/cardano/api/utils'
 import {wrappedCsl} from '~/wallets/cardano/wrappedCsl'
-import {useWalletEvent} from '~/features/WalletManager/hooks/useWalletEvent'
 import {RawUtxo} from '~/wallets/types/other'
 
 export const useUtxoList = () => {

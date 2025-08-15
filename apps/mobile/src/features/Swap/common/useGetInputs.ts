@@ -9,7 +9,7 @@ export const useGetInputs = () => {
 
   return {
     getInputs: async (amounts: Balance.Amounts) => {
-      const {csl, release} = wrappedCsl()
+      const {release} = wrappedCsl()
 
       const result = await Promise.all(
         (

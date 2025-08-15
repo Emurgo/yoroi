@@ -1,10 +1,13 @@
 import {GovernanceProvider} from '@yoroi/staking'
-import {Atoms, ThemedPalette, useTheme} from '@yoroi/theme'
+import {ThemedPalette, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 
 import {NetworkTag} from '~/features/Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {BackButton, defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
+import {
+  BackButton,
+  defaultStackNavigationOptions,
+} from '~/kernel/navigation/common/helpers'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {useGovernanceManagerMaker} from './common/helpers'
@@ -21,7 +24,7 @@ const Stack = NavigationStack
 export const GovernanceNavigator = () => {
   const strings = useStrings()
   const manager = useGovernanceManagerMaker()
-  const {atoms, palette: p} = useTheme()
+  const {palette: p} = useTheme()
   const walletNavigation = useWalletNavigation()
 
   return (

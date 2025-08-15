@@ -147,6 +147,7 @@ export const AuthProvider: React.FC<React.PropsWithChildren<Props>> = ({
     }),
     [
       authWithHostConfig,
+      enableLoginWithHost,
       authWithHost,
       checkPin,
       createPin,

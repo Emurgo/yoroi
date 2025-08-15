@@ -97,7 +97,7 @@ describe('SwapProvider', () => {
       )
 
       // This should not throw an error
-      const result = tokenInfos.get('test-token')
+      tokenInfos.get('test-token')
 
       return null
     }

@@ -257,7 +257,6 @@ type ActionableAmountProps = {
   disabled?: boolean
 }
 const ActionableAmount = ({
-  amount,
   onRemove,
   collateralId,
   disabled,
@@ -282,9 +281,9 @@ const ActionableAmount = ({
   )
 }
 
-const Left = ({style, ...props}: ViewProps) => (
-  <View style={[style, {flex: 1}]} {...props} />
-)
+// const Left = ({style, ...props}: ViewProps) => (
+//   <View style={[style, {flex: 1}]} {...props} />
+// )
 const Right = ({style, ...props}: ViewProps) => (
   <View style={[style, a.pl_lg]} {...props} />
 )

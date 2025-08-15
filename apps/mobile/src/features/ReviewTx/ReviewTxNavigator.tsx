@@ -1,5 +1,5 @@
 import {createStackNavigator} from '@react-navigation/stack'
-import {Atoms, ThemedPalette, useTheme} from '@yoroi/theme'
+import {ThemedPalette, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
@@ -14,7 +14,7 @@ import {SubmittedTxScreen} from './useCases/ShowSubmittedTxScreen/SubmittedTxScr
 export const Stack = createStackNavigator<ReviewTxRoutes>()
 
 export const ReviewTxNavigator = () => {
-  const {atoms, palette: p} = useTheme()
+  const {palette: p} = useTheme()
   const strings = useStrings()
 
   const fallback = React.useCallback(() => <InfraestructureIssueScreen />, [])

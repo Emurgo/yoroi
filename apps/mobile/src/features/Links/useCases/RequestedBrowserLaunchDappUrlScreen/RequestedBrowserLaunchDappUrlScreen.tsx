@@ -4,10 +4,10 @@ import {Links} from '@yoroi/types'
 import * as React from 'react'
 import {ScrollView, Text, View, ViewProps} from 'react-native'
 
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
-import {useStrings} from '~/kernel/i18n/useStrings'
 import {ShowDisclaimer} from './ShowDisclaimer/ShowDisclaimer'
 
 const isEmptyString = (str: string | undefined | null): boolean => {
@@ -30,8 +30,10 @@ export const RequestedBrowserLaunchDappUrlScreen = ({
 
   // TODO: revisit check with product
   const description = isTrusted
-    ? strings.links.requestedBrowserLaunchDappUrl.trustedBrowserLaunchDappUrlDescription
-    : strings.links.requestedBrowserLaunchDappUrl.untrustedBrowserLaunchDappUrlDescription
+    ? strings.links.requestedBrowserLaunchDappUrl
+        .trustedBrowserLaunchDappUrlDescription
+    : strings.links.requestedBrowserLaunchDappUrl
+        .untrustedBrowserLaunchDappUrlDescription
 
   const handleOnCancel = () => {
     actionFinished()
@@ -51,7 +53,9 @@ export const RequestedBrowserLaunchDappUrlScreen = ({
       ]}
     >
       <ScrollView bounces={false}>
-        <ShowDisclaimer title={strings.links.requestedBrowserLaunchDappUrl.disclaimer}>
+        <ShowDisclaimer
+          title={strings.links.requestedBrowserLaunchDappUrl.disclaimer}
+        >
           <Text
             style={[
               {

@@ -1,4 +1,4 @@
-import {YoroiSignedTx, YoroiTxInfo, YoroiUnsignedTx} from '@yoroi/types'
+import {YoroiSignedTx, YoroiTxInfo, YoroiUnsignedTx} from '../types/yoroi'
 import {CardanoTypes} from './types'
 
 type YoroiSignedTxInfo = {
@@ -10,7 +10,8 @@ export const yoroiSignedTx = ({
   unsignedTx,
   signedTx,
 }: YoroiSignedTxInfo): YoroiSignedTx => {
-  const {unsignedTx: _, ...yoroiTxInfo} = unsignedTx
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const {unsignedTx: _unused, ...yoroiTxInfo} = unsignedTx
 
   return {
     ...(yoroiTxInfo as YoroiTxInfo),

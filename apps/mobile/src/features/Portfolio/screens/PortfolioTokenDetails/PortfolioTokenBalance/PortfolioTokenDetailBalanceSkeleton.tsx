@@ -4,7 +4,7 @@ import {View} from 'react-native'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 
 export const PortfolioTokenDetailBalanceSkeleton = () => {
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p} = useTheme()
   return (
     <View>
       <SkeletonPlaceholder borderRadius={9} backgroundColor={p.gray_100}>

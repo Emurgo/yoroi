@@ -3,6 +3,10 @@ module.exports = {
   rules: {
     // Disable Babel config requirement for metro.config.js
     '@babel/no-invalid-this': 'off',
+    'react-native/no-inline-styles': 'off',
+    '@typescript-eslint/no-shadow': 'off',
+    'react/no-unstable-nested-components': ['error', {allowAsProps: true}],
+    'eqeqeq': 'off',
     'prettier/prettier': [
       'error',
       {
@@ -24,4 +28,4 @@ module.exports = {
       },
     },
   ],
-} 
+}

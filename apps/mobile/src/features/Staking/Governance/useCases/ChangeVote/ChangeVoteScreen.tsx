@@ -14,12 +14,12 @@ import {ScrollView} from 'react-native-gesture-handler'
 
 import {LearnMoreLink} from '~/features/Staking/Governance/common/LearnMoreLink/LearnMoreLink'
 import {YoroiRecordLink} from '~/features/Staking/Governance/common/YoroiRecordLink/YoroiRecordLink'
+import {useCreateGovernanceTx} from '~/features/Staking/hooks/useCreateGovernanceTx'
+import {useStakingKey} from '~/features/Staking/hooks/useStakingKey'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
-import {useCreateGovernanceTx} from '~/features/Staking/hooks/useCreateGovernanceTx'
-import {useStakingKey} from '~/features/Staking/hooks/useStakingKey'
 import {Action} from '../../common/Action/Action'
 import {
   mapStakingKeyStateToGovernanceAction,
