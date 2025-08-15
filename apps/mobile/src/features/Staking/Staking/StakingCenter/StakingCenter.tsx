@@ -2,8 +2,7 @@ import {useFocusEffect} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {defineMessages} from 'react-intl'
-import {View} from 'react-native'
+import {Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {WebView, WebViewMessageEvent} from 'react-native-webview'
 
@@ -14,12 +13,13 @@ import {useReviewTx} from '~/features/ReviewTx/common/ReviewTxProvider'
 import {PoolDetailScreen} from '~/features/Staking/Staking/PoolDetails/PoolDetailScreen'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {showErrorDialog} from '~/kernel/dialogs'
+import {showConfirmationDialog, showErrorDialog} from '~/kernel/dialogs'
 import {useLanguage} from '~/kernel/i18n/LanguageProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
+import {LoadingOverlay} from '~/ui/LoadingOverlay/LoadingOverlay'
 import {Space} from '~/ui/Space/Space'
 
 export const StakingCenter = () => {
@@ -42,6 +42,7 @@ export const StakingCenter = () => {
   )
   const [isContentLoaded, setIsContentLoaded] = React.useState(false)
   const [url, setUrl] = React.useState<null | string>(null)
+  const [showLoadingModal, setShowLoadingModal] = React.useState(false)
 
   useFocusEffect(
     React.useCallback(() => {
@@ -87,10 +88,50 @@ export const StakingCenter = () => {
   const handleOnMessage = async (event: WebViewMessageEvent) => {
     const selectedPoolHashes = JSON.parse(decodeURI(event.nativeEvent.data))
     if (!Array.isArray(selectedPoolHashes) || selectedPoolHashes.length < 1) {
-      await showErrorDialog(noPoolDataDialog, intl)
+      await showErrorDialog(
+        // LEGACY
+        {
+          title: {
+            id: 'components.stakingcenter.noPoolDataDialog.title',
+            defaultMessage: strings.staking.noPoolDataDialog.title,
+          },
+          message: {
+            id: 'components.stakingcenter.noPoolDataDialog.message',
+            defaultMessage: strings.staking.noPoolDataDialog.message,
+          },
+        },
+        intl,
+      )
+      return
     }
-    logger.debug('selected pools from explorer:', selectedPoolHashes)
-    setSelectedPoolId(selectedPoolHashes[0])
+    logger.debug('selected pools from explorer', {selectedPoolHashes})
+
+    // Show confirmation dialog before proceeding
+    const confirmed = await showConfirmationDialog(
+      {
+        title: {
+          id: 'components.stakingcenter.confirmDelegation.title',
+          defaultMessage: strings.staking.confirmDelegation.title,
+        },
+        message: {
+          id: 'components.stakingcenter.confirmDelegation.message',
+          defaultMessage: strings.staking.confirmDelegation.message,
+        },
+        btnYesLabel: {
+          id: 'components.stakingcenter.confirmDelegation.delegateButtonLabel',
+          defaultMessage: strings.staking.confirmDelegation.delegateButtonLabel,
+        },
+        btnNoLabel: {
+          id: 'global.cancel',
+          defaultMessage: strings.staking.confirmDelegation.cancelButtonLabel,
+        },
+      },
+      intl,
+    )
+    if (confirmed === 'Yes') {
+      setShowLoadingModal(true)
+      setSelectedPoolId(selectedPoolHashes[0])
+    }
   }
 
   const shouldDisplayPoolIDInput = !wallet.isMainnet
@@ -131,22 +172,26 @@ export const StakingCenter = () => {
         </View>
       )}
 
-      {/* loading modal removed */}
+      {showLoadingModal && (
+        <LoadingOverlay
+          isLoading
+          content={
+            <View
+              style={[a.p_lg, ta.bg_color_max, a.rounded_md, a.align_center]}
+            >
+              <Text style={[a.body_1_lg_regular, ta.text_primary_max, a.pb_sm]}>
+                {strings.staking.loading}
+              </Text>
+              <Text style={[a.body_1_lg_regular, ta.text_primary_max]}>
+                {strings.staking.processingDelegation}
+              </Text>
+            </View>
+          }
+        />
+      )}
     </SafeAreaView>
   )
 }
-
-const noPoolDataDialog = defineMessages({
-  title: {
-    id: 'components.stakingcenter.noPoolDataDialog.title',
-    defaultMessage: '!!!Invalid Pool Data',
-  },
-  message: {
-    id: 'components.stakingcenter.noPoolDataDialog.message',
-    defaultMessage:
-      '!!!The data from the stake pool(s) you selected is invalid. Please try again',
-  },
-})
 
 const prepareStakingURL = (locale: string, plate: string): string => {
   // source=mobile is constant and already included
