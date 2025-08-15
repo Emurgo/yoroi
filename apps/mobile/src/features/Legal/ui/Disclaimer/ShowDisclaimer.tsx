@@ -31,7 +31,7 @@ export const ShowDisclaimer = ({type, disabled}: Props) => {
   const [showed, setShowed] = React.useState(false)
   const [accepted, setAccepted] = useDisclaimerState(type)
   const [canContinue, setCanContinue] = React.useState(false)
-  const {atoms: ta, palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
 
   React.useEffect(() => {
     if (!disabled && !accepted && showed === false) {

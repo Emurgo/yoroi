@@ -3,10 +3,10 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Text, TouchableOpacity, View} from 'react-native'
 
-import {TokenInfoIcon} from '~/ui/TokenInfoIcon/TokenInfoIcon'
-import {PairedBalance} from '~/ui/PairedBalance/PairedBalance'
 import {ILiquidityPool} from '~/features/Portfolio/common/hooks/useGetLiquidityPool'
 import {AssetLogo} from '~/features/Portfolio/ui/AssetLogo/AssetLogo'
+import {PairedBalance} from '~/ui/PairedBalance/PairedBalance'
+import {TokenInfoIcon} from '~/ui/TokenInfoIcon/TokenInfoIcon'
 
 type Props = {
   tokenInfo: ILiquidityPool
@@ -19,7 +19,7 @@ export const DAppTokenItem = ({
   splitTokenSymbol,
   onPress,
 }: Props) => {
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p} = useTheme()
 
   const [firstToken, secondToken] = tokenInfo.assets
   const firstTokenBalance = amountBreakdown(firstToken).bn.toFormat(2)

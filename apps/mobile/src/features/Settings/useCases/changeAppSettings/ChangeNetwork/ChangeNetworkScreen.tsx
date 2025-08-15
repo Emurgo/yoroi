@@ -69,9 +69,9 @@ export const useHandleOpenNetworkNoticeModal = () => {
     onSuccess: () => refetch(),
   })
 
-  const onClose = React.useCallback(() => {
-    if (!networkNoticeShown) setNetworkNoticeShown()
-  }, [networkNoticeShown, setNetworkNoticeShown])
+  // const onClose = React.useCallback(() => {
+  //   if (!networkNoticeShown) setNetworkNoticeShown()
+  // }, [networkNoticeShown, setNetworkNoticeShown])
 
   const handleOpenModal = () => {
     openModal({

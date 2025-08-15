@@ -82,17 +82,7 @@ export const RecoveryPhraseScreen = () => {
       ),
       height: 552,
     })
-  }, [
-    openModal,
-    strings.setupWallet.recoveryPhraseCardFifthItem,
-    strings.setupWallet.recoveryPhraseCardFirstItem,
-    strings.setupWallet.recoveryPhraseCardFourthItem,
-    strings.setupWallet.recoveryPhraseCardSecondItem,
-    strings.setupWallet.recoveryPhraseCardThirdItem,
-    strings.setupWallet.recoveryPhraseCardTitle,
-    closeModal,
-    showCreateWalletInfoModalChanged,
-  ])
+  }, [strings, openModal, closeModal, showCreateWalletInfoModalChanged])
 
   React.useEffect(() => {
     if (showCreateWalletInfoModal) handleOnShowModal()

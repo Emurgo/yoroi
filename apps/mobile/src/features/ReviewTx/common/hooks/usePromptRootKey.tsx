@@ -1,10 +1,10 @@
 import * as React from 'react'
 
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {useModal} from '~/ui/Modal/ModalContext'
-import {useStrings} from '~/kernel/i18n/useStrings'
 import {ConfirmRawTxWithOs} from '~/features/Swap/common/ConfirmRawTx/ConfirmRawTxWithOs'
 import {ConfirmRawTxWithPassword} from '~/features/Swap/common/ConfirmRawTx/ConfirmRawTxWithPassword'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useStrings} from '~/kernel/i18n/useStrings'
+import {useModal} from '~/ui/Modal/ModalContext'
 
 type PromptRootKeyOptions = {
   onSuccess: (rootKey: string) => void
@@ -52,7 +52,12 @@ export const usePromptRootKey = () => {
         onClose,
       })
     },
-    [closeModal, meta.isEasyConfirmationEnabled, openModal, strings.discover.confirmTx],
+    [
+      closeModal,
+      meta.isEasyConfirmationEnabled,
+      openModal,
+      strings.discover.confirmTx,
+    ],
   )
 
   return {promptRootKey} as const

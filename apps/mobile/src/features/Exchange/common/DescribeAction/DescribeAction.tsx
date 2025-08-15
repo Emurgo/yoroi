@@ -1,5 +1,5 @@
 import {useExchange, useExchangeProvidersByOrderType} from '@yoroi/exchange'
-import {atoms as a, useTheme} from '@yoroi/theme'
+import {atoms as a} from '@yoroi/theme'
 import * as React from 'react'
 import {Linking, TouchableOpacity, View} from 'react-native'
 
@@ -11,7 +11,6 @@ const YOROI_SUPPORT_URL = 'https://yoroi-wallet.com/#/support'
 
 export const DescribeAction = () => {
   const strings = useStrings()
-  const {atoms: ta, palette: p} = useTheme()
   const {orderType, providerId, provider} = useExchange()
   const providers = useExchangeProvidersByOrderType({
     orderType,

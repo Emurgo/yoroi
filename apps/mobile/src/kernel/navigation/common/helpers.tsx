@@ -7,6 +7,7 @@ import {
   StackNavigationOptions,
   TransitionPresets,
 } from '@react-navigation/stack'
+import * as React from 'react'
 import {
   Dimensions,
   Platform,

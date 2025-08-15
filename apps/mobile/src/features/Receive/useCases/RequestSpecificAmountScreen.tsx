@@ -143,7 +143,6 @@ export const RequestSpecificAmountScreen = () => {
 const Modal = ({amount, address}: {amount: string; address: string}) => {
   const strings = useStrings()
   const {track} = useMetrics()
-  const {palette: p} = useTheme()
 
   const cardanoLinks = linksCardanoModuleMaker()
   const cardanoRequestLink = cardanoLinks.create({

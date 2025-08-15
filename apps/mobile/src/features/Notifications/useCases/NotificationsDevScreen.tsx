@@ -214,7 +214,6 @@ const TransactionReceivedSetting = ({
   value: NotificationTypes.Config['TransactionReceived']
   onChange: (value: NotificationTypes.Config['TransactionReceived']) => void
 }) => {
-  const {palette: p} = useTheme()
   return (
     <View>
       <Text>Transaction Received</Text>
@@ -238,7 +237,6 @@ const RewardsUpdateSetting = ({
   value: NotificationTypes.Config['RewardsUpdated']
   onChange: (value: NotificationTypes.Config['RewardsUpdated']) => void
 }) => {
-  const {palette: p} = useTheme()
   return (
     <View>
       <Text>Rewards Updated</Text>
@@ -264,7 +262,6 @@ const PrimaryTokenPriceChangedSetting = ({
     value: NotificationTypes.Config['PrimaryTokenPriceChanged'],
   ) => void
 }) => {
-  const {palette: p} = useTheme()
   return (
     <View>
       <Text>Primary Token Price Changed</Text>

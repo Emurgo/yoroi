@@ -4,7 +4,6 @@ import {Alert} from 'react-native'
 
 import {isNative, isWeb} from './constants'
 
-
 type DialogOptions = {
   title: string
   message: string

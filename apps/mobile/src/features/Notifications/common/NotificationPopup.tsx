@@ -31,7 +31,6 @@ export const NotificationPopup = ({
   const strings = useStrings()
 
   const {track} = useMetrics()
-  const {palette: p} = useTheme()
 
   React.useEffect(() => {
     if (event.trigger === Notifications.Trigger.Push) {

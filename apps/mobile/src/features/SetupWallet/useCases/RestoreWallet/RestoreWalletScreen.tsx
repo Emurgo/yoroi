@@ -42,11 +42,11 @@ export const RestoreWalletScreen = () => {
   const {palette: p} = useTheme()
   const {track} = useMetrics()
   const bold = useBold({style: a.body_1_lg_medium})
-  const {openModal, closeModal} = useModal()
+  const {openModal} = useModal()
   const {walletManager} = useWalletManager()
-  const walletNames = Array.from(walletManager.walletMetas.values()).map(
-    ({name}) => name,
-  )
+  // const walletNames = Array.from(walletManager.walletMetas.values()).map(
+  //   ({name}) => name,
+  // )
   const [mnemonic, setMnemonic] = React.useState('')
   const {
     publicKeyHexChanged,
@@ -175,6 +175,7 @@ export const RestoreWalletScreen = () => {
     publicKeyHexChanged(accountPubKeyHex)
     navigation.navigate('setup-wallet-restore-details')
   }, [
+    strings,
     accountVisual,
     mnemonic,
     mnemonicChanged,

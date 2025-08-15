@@ -17,7 +17,7 @@ type Props = {
   tokenInfo: Portfolio.Token.Info
 }
 export const Actions = ({tokenInfo}: Props) => {
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p} = useTheme()
   const strings = useStrings()
   const navigateTo = useNavigateTo()
   const swapForm = useSwap()

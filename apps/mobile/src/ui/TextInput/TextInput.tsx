@@ -219,14 +219,13 @@ export const HelperText = ({
   )
 }
 
-export const Checkmark = ({p}: {p: any}) => {
+export const Checkmark = ({}: {p: any}) => {
   return <Icon.Check size={24} color={p.secondary_500} />
 }
 
 const SecureTextEntryToggle = ({
   showPassword,
   onPress,
-  p,
 }: {
   showPassword: boolean
   onPress: () => void
@@ -245,10 +244,10 @@ const SecureTextEntryToggle = ({
   )
 }
 
-const InputContainer = ({children, p}: {children: React.ReactNode; p: any}) => {
+const InputContainer = ({children}: {children: React.ReactNode; p: any}) => {
   return <View style={{flexDirection: 'row', flex: 1}}>{children}</View>
 }
 
-const AdornmentContainer = ({style, children, p}: ViewProps & {p: any}) => {
+const AdornmentContainer = ({style, children}: ViewProps & {p: any}) => {
   return <View style={[{justifyContent: 'center'}, style]}>{children}</View>
 }

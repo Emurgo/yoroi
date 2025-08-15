@@ -1,6 +1,10 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/ban-types */
-import {Dimensions, EmitterSubscription, LayoutRectangle, NativeEventSubscription, ViewStyle} from 'react-native'
+import {
+  Dimensions,
+  EmitterSubscription,
+  LayoutRectangle,
+  NativeEventSubscription,
+  ViewStyle,
+} from 'react-native'
 
 type ChildrenMeasurement = {
   width: number
@@ -39,7 +43,11 @@ const overflowRight = (center: number, tooltipWidth: number): boolean => {
  * Return true when the children y-coordinate + its height + tooltip height is greater than the layout height.
  * The tooltip will be placed at the top of the wrapped element.
  */
-const overflowBottom = (childrenY: number, childrenHeight: number, tooltipHeight: number): boolean => {
+const overflowBottom = (
+  childrenY: number,
+  childrenHeight: number,
+  tooltipHeight: number,
+): boolean => {
   const {height: layoutHeight} = Dimensions.get('window')
 
   return childrenY + childrenHeight + tooltipHeight > layoutHeight
@@ -51,11 +59,15 @@ const getTooltipXPosition = (
 ): number => {
   // when the children use position absolute the childrenWidth is measured as 0,
   // so it's best to anchor the tooltip at the start of the children
-  const center = childrenWidth > 0 ? childrenX + (childrenWidth - tooltipWidth) / 2 : childrenX
+  const center =
+    childrenWidth > 0
+      ? childrenX + (childrenWidth - tooltipWidth) / 2
+      : childrenX
 
   if (overflowLeft(center)) return childrenX
 
-  if (overflowRight(center, tooltipWidth)) return childrenX + childrenWidth - tooltipWidth
+  if (overflowRight(center, tooltipWidth))
+    return childrenX + childrenWidth - tooltipWidth
 
   return center
 }
@@ -64,7 +76,8 @@ const getTooltipYPosition = (
   {pageY: childrenY, height: childrenHeight}: ChildrenMeasurement,
   {height: tooltipHeight}: TooltipLayout,
 ): number => {
-  if (overflowBottom(childrenY, childrenHeight, tooltipHeight)) return childrenY - tooltipHeight
+  if (overflowBottom(childrenY, childrenHeight, tooltipHeight))
+    return childrenY - tooltipHeight
 
   return childrenY + childrenHeight
 }
@@ -123,7 +136,9 @@ export const getTooltipPosition = (
 
 export function addEventListener<
   T extends {
-    addEventListener: (...args: any) => NativeEventSubscription | EmitterSubscription
+    addEventListener: (
+      ...args: any
+    ) => NativeEventSubscription | EmitterSubscription
   } & {removeEventListener?: (...args: any) => void} & {
     remove?: (...args: any) => void
   },

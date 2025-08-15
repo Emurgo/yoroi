@@ -3,15 +3,15 @@ import {Balance, Notifications, Portfolio} from '@yoroi/types'
 import * as React from 'react'
 import {View} from 'react-native'
 
+import {useTransactionInfos} from '~/features/Transactions/hooks/useTransactionInfos'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Icon} from '~/ui/Icon'
 import {NotificationItem} from '~/ui/NotificationItem/NotificationItem'
 import {YoroiWallet} from '~/wallets/cardano/types'
-import {useTransactionInfos} from '~/features/Transactions/hooks/useTransactionInfos'
 import {TransactionInfo} from '~/wallets/types/other'
 import {Token} from '~/wallets/types/tokens'
 import {asQuantity, Quantities} from '~/wallets/utils/utils'
-import {useStrings} from '~/kernel/i18n/useStrings'
 
 export const getTransactionReceivedNotificationTitle = (
   event: Notifications.Event,

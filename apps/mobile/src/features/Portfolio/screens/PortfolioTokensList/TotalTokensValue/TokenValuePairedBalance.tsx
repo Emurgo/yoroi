@@ -4,8 +4,8 @@ import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
 import {Text} from 'react-native'
 
-import {PairedBalance} from '~/ui/PairedBalance/PairedBalance'
 import {usePrivacyMode} from '~/features/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
+import {PairedBalance} from '~/ui/PairedBalance/PairedBalance'
 import {SkeletonPairedToken} from './SkeletonPairedToken'
 
 type Props = {
@@ -18,7 +18,7 @@ export const TokenValuePairedBalance = ({
   isFetching,
   isPrimaryTokenActive,
 }: Props) => {
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p} = useTheme()
   const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
 
   const name = infoExtractName(amount.info)

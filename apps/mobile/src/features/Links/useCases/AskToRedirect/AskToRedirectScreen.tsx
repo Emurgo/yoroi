@@ -10,7 +10,7 @@ import {Space} from '~/ui/Space/Space'
 
 export const AskToRedirectScreen = ({link}: {link: string}) => {
   const strings = useStrings()
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p} = useTheme()
   const {closeModal} = useModal()
 
   const handleOnConfirm = () => {

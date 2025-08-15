@@ -5,12 +5,12 @@ import * as React from 'react'
 import {Alert, Platform, Text, View} from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {SetupWalletRouteNavigation} from '~/kernel/navigation/types'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {Space} from '~/ui/Space/Space'
 import {HARDWARE_WALLETS, useLedgerPermissions} from '~/wallets/hw/hw'
-import {useStrings} from '~/kernel/i18n/useStrings'
 
 const useIsAndroidUsbSupported = () => {
   const [isAndroidUsbSupported, setIsAndroidUsbSupported] =
@@ -70,7 +70,11 @@ const SelectBluetoothSection = () => {
   }
 
   const {request} = useLedgerPermissions({
-    onError: () => Alert.alert(strings.setupWallet.error, strings.setupWallet.bluetoothError),
+    onError: () =>
+      Alert.alert(
+        strings.setupWallet.error,
+        strings.setupWallet.bluetoothError,
+      ),
     onSuccess: () => {
       USBChanged(false)
       navigateHw()

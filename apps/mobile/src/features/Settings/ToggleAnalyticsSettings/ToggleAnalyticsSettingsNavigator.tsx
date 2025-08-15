@@ -12,7 +12,7 @@ const Stack = createStackNavigator<ToggleAnalyticsSettingsRoutes>()
 export const ToggleAnalyticsSettingsNavigator = () => {
   const strings = useStrings()
 
-  const {atoms, palette: p} = useTheme()
+  const {palette: p} = useTheme()
 
   const navigationOptions = React.useMemo(
     () => defaultStackNavigationOptions(p),

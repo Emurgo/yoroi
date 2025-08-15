@@ -77,7 +77,7 @@ export const ConfirmConnectionModal = ({
   logo,
   showSingleAddressWarning,
 }: Props) => {
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p} = useTheme()
   const strings = useStrings()
   const imageUri = logo.length === 0 ? getDappFallbackLogo(website) : logo
 

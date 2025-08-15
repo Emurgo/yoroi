@@ -45,4 +45,4 @@ export const ledgerMessages = defineMessages({
     id: 'components.walletinit.connectnanox.checknanoxscreen.title',
     defaultMessage: '!!!App opened on device',
   },
-}) 
+})

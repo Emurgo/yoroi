@@ -1294,8 +1294,12 @@ export const useStrings = () => {
         confirmDelegation: {
           title: f(stakingMessages.confirmDelegationTitle),
           message: f(stakingMessages.confirmDelegationMessage),
-          delegateButtonLabel: f(stakingMessages.confirmDelegationDelegateButtonLabel),
-          cancelButtonLabel: f(stakingMessages.confirmDelegationCancelButtonLabel),
+          delegateButtonLabel: f(
+            stakingMessages.confirmDelegationDelegateButtonLabel,
+          ),
+          cancelButtonLabel: f(
+            stakingMessages.confirmDelegationCancelButtonLabel,
+          ),
         },
       },
 

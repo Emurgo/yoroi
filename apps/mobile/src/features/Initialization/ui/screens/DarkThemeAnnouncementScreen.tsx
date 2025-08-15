@@ -111,7 +111,7 @@ export const DarkThemeAnnouncementScreen = () => {
 }
 
 const Toggle = () => {
-  const {isLight, isDark, selectTheme, atoms: ta, palette: p} = useTheme()
+  const {isLight, isDark, selectTheme, palette: p} = useTheme()
   const {track} = useMetrics()
 
   const handleOnValueChange = () => {

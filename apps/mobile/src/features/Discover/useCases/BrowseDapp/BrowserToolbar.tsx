@@ -28,9 +28,29 @@ export const BrowserToolbar = ({uri}: Props) => {
   }
 
   return (
-    <View style={[a.flex_row, a.align_center, a.gap_md, a.py_sm, a.px_md, {backgroundColor: p.bg_color_max}]}>
-      <View style={[a.flex_1, a.rounded_md, {backgroundColor: p.gray_50}, a.py_sm, a.px_sm]}>
-        <TouchableOpacity onPress={handleEditUrl} style={[a.flex_row, a.align_center, a.gap_xs]}>
+    <View
+      style={[
+        a.flex_row,
+        a.align_center,
+        a.gap_md,
+        a.py_sm,
+        a.px_md,
+        {backgroundColor: p.bg_color_max},
+      ]}
+    >
+      <View
+        style={[
+          a.flex_1,
+          a.rounded_md,
+          {backgroundColor: p.gray_50},
+          a.py_sm,
+          a.px_sm,
+        ]}
+      >
+        <TouchableOpacity
+          onPress={handleEditUrl}
+          style={[a.flex_row, a.align_center, a.gap_xs]}
+        >
           {isSecure && <Icon.LockFilled color={p.el_gray_medium} />}
 
           <Text style={[a.body_2_md_regular, {color: p.text_gray_medium}]}>
@@ -45,5 +65,3 @@ export const BrowserToolbar = ({uri}: Props) => {
     </View>
   )
 }
-
-

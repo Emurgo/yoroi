@@ -3,11 +3,11 @@ import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
-import {useStrings} from '~/kernel/i18n/useStrings'
 import {
   PortfolioListTab,
   usePortfolio,
 } from '~/features/Portfolio/context/PortfolioProvider'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {TotalTokensValueContent} from './TotalTokensValueContent'
 
 type Props = {
@@ -16,7 +16,7 @@ type Props = {
 
 export const TotalTokensValue = ({amount}: Props) => {
   const strings = useStrings()
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p} = useTheme()
   const {listTab} = usePortfolio()
   const title =
     listTab === PortfolioListTab.Wallet

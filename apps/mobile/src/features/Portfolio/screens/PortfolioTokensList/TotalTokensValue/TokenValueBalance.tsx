@@ -20,7 +20,7 @@ export const TokenValueBalance = ({
   isPrimaryTokenActive,
   rate,
 }: Props) => {
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p} = useTheme()
   const {currency, config} = useCurrencyPairing()
   const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
   const name = infoExtractName(amount.info)

@@ -4,14 +4,16 @@ import {atoms as a, lightPalette, useTheme} from '@yoroi/theme'
 import {HW} from '@yoroi/types'
 import * as React from 'react'
 import type {IntlShape} from 'react-intl'
-import {defineMessages} from 'react-intl'
+import {defineMessages, useIntl} from 'react-intl'
 import {Alert, FlatList, Image, Text, View} from 'react-native'
 import {Observer} from 'rxjs'
 
 import bleImage from '~/assets/img/bluetooth.png'
 import usbImage from '~/assets/img/ledger-nano-usb.png'
+import {DeviceItem} from '~/features/HW/LedgerConnect/DeviceItem'
 import {LocalizableError} from '~/kernel/i18n/LocalizableError'
-import {useStrings} from '~/kernel/i18n/useStrings'
+import {confirmationMessages, globalMessages} from '~/kernel/i18n/messages'
+import {ledgerMessages} from '~/kernel/i18n/messages/global'
 import {logger} from '~/kernel/logger/logger'
 import {Button} from '~/ui/Button/Button'
 import {Space} from '~/ui/Space/Space'
@@ -19,7 +21,32 @@ import {BluetoothDisabledError, RejectedByUserError} from '~/wallets/hw/hw'
 import {Device} from '~/wallets/types/hw'
 import {BulletPointItem} from '../BulletPointItem'
 import {Loading} from '../Loading/Loading'
-import {DeviceItem} from '~/features/HW/LedgerConnect/DeviceItem'
+
+type ListHeaderWrapperProps = {
+  msg: string
+  err?: string | null
+  atoms: any
+  palette: any
+}
+
+const ListHeaderWrapper = ({
+  msg,
+  err,
+  atoms,
+  palette,
+}: ListHeaderWrapperProps) => (
+  <View style={[a.align_center, a.justify_center]}>
+    <Text style={[a.pb_lg, a.body_1_lg_medium, atoms.text_gray_medium]}>
+      {msg}
+    </Text>
+
+    {err != null && (
+      <Text style={[a.body_1_lg_medium, {color: palette.sys_magenta_500}]}>
+        {err}
+      </Text>
+    )}
+  </View>
+)
 
 type Props = {
   intl: IntlShape
@@ -27,6 +54,7 @@ type Props = {
   onConnectBLE: (deviceId: string) => Promise<void> | void
   useUSB?: boolean
   onWaitingMessage?: string
+  defaultDevices?: Device[]
 }
 
 type State = {
@@ -50,7 +78,7 @@ class LedgerConnectInt extends React.Component<Props, State> {
 
   _subscriptions: null | {unsubscribe: () => void} = null
   _bluetoothEnabled: null | boolean = null
-  _transportLib: TransportHID | TransportBLE | null = null
+  _transportLib: typeof TransportHID | typeof TransportBLE | null = null
   _isMounted = false
 
   componentDidMount() {
@@ -133,6 +161,7 @@ class LedgerConnectInt extends React.Component<Props, State> {
       }
     }
 
+    if (this._transportLib == null) return
     this._subscriptions = this._transportLib.listen({
       complete: onComplete,
       next: useUSB ? onHWNext : onBLENext,
@@ -211,25 +240,6 @@ class LedgerConnectInt extends React.Component<Props, State> {
     const {intl, onWaitingMessage} = this.props
     const {atoms: ta, palette: p} = useTheme()
 
-    const ListHeaderWrapper = ({
-      msg,
-      err,
-    }: {
-      msg: string
-      err?: string | null
-    }) => (
-      <View style={[a.align_center, a.justify_center]}>
-        <Text style={[a.pb_lg, a.body_1_lg_medium, ta.text_gray_medium]}>
-          {msg}
-        </Text>
-
-        {err != null && (
-          <Text style={[a.body_1_lg_medium, {color: p.sys_magenta_500}]}>
-            {err}
-          </Text>
-        )}
-      </View>
-    )
     let msg, errMsg
     if (error != null) {
       msg = intl.formatMessage(messages.error)
@@ -246,7 +256,7 @@ class LedgerConnectInt extends React.Component<Props, State> {
       }
     }
     if (msg == null) return null
-    return <ListHeaderWrapper msg={msg} err={errMsg} />
+    return <ListHeaderWrapper msg={msg} err={errMsg} atoms={ta} palette={p} />
   }
 
   render() {
@@ -332,7 +342,7 @@ class LedgerConnectInt extends React.Component<Props, State> {
             title={intl.formatMessage(
               confirmationMessages.commonButtons.confirmButton,
             )}
-            style={[a.margin_x_md, a.mb_sm]}
+            style={[a.px_md, a.pb_sm]}
           />
         )}
       </>
@@ -341,20 +351,9 @@ class LedgerConnectInt extends React.Component<Props, State> {
 }
 
 export const LedgerConnect = (props: Omit<Props, 'intl' | 'styles'>) => {
-  const strings = useStrings()
+  const intl = useIntl()
 
-  return (
-    <LedgerConnectInt
-      {...props}
-      intl={{
-        formatMessage: (msg: any) => {
-          if (msg.id === 'global.error') return strings.global.error
-          if (msg.id === 'global.confirm') return strings.global.confirm
-          return msg.defaultMessage || ''
-        },
-      }}
-    />
-  )
+  return <LedgerConnectInt {...props} intl={intl} />
 }
 
 const messages = defineMessages({

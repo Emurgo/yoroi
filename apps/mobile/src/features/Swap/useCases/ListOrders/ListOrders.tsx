@@ -122,7 +122,6 @@ const Content = ({filter}: {filter: Filter}) => {
       (status === 'open' && filter === 'open') ||
       (status !== 'open' && status !== 'canceled' && filter === 'completed'),
   )
-  const {palette: p} = useTheme()
 
   return (
     <View style={[a.flex_1]}>
@@ -317,7 +316,6 @@ const OrderCancellation = ({
   const [isLoading, setIsLoading] = React.useState<boolean>(false)
   const {navigateToTxReview} = useWalletNavigation()
   const navigateTo = useNavigateTo()
-  const {palette: p} = useTheme()
 
   const onPress = async () => {
     setIsLoading(true)
