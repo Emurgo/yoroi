@@ -14,7 +14,7 @@ export const SubmittedTxScreen = () => {
     <View style={[a.flex_1, {backgroundColor: p.bg_color_max}]}>
       <ScrollView style={[a.flex_1, a.p_lg]}>
         <View style={[a.flex_1, a.align_center, a.justify_center]}>
-          <Text style={[a.heading_2_lg_bold, {color: p.text_gray_max}]}>
+          <Text style={[a.heading_2_medium, {color: p.text_gray_max}]}>
             {strings.transactions.submitted.submittedTxTitle}
           </Text>
 

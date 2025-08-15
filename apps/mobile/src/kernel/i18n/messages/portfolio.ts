@@ -313,4 +313,8 @@ export const portfolioMessages = defineMessages({
     id: 'nft.navigation.search',
     defaultMessage: '!!!Search',
   },
+  metadata: {
+    id: 'nft.detail.metadata',
+    defaultMessage: '!!!Metadata',
+  },
 })

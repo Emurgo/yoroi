@@ -2,11 +2,11 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
+import {BrokenImage} from '~/features/Staking/Governance/illustrations/BrokenImage'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Button} from '~/ui/Button/Button'
 import {Space} from '~/ui/Space/Space'
-import {BrokenImage} from '../illustrations/BrokenImage'
 
 export const NotSupportedCardanoAppVersion = () => {
   const strings = useStrings()
@@ -36,13 +36,13 @@ export const NotSupportedCardanoAppVersion = () => {
 
       <View style={[a.px_lg, a.align_center]}>
         <Text style={[a.heading_3_medium, a.text_center, {color: p.gray_max}]}>
-          {strings.notSupportedVersionTitle}
+          {strings.staking.notSupportedVersionTitle}
         </Text>
       </View>
 
       <View style={[a.px_lg, a.align_center]}>
         <Text style={[a.body_2_md_regular, a.text_center, {color: p.gray_600}]}>
-          {strings.notSupportedVersionDescription}
+          {strings.staking.notSupportedVersionDescription}
         </Text>
       </View>
 
@@ -50,7 +50,7 @@ export const NotSupportedCardanoAppVersion = () => {
 
       <View style={a.p_lg}>
         <Button
-          title={strings.notSupportedVersionButton}
+          title={strings.staking.notSupportedVersionButton}
           onPress={handleOnPress}
         />
       </View>

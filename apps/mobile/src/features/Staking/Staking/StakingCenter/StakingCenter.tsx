@@ -174,7 +174,7 @@ export const StakingCenter = () => {
 
       {showLoadingModal && (
         <LoadingOverlay
-          isLoading={true}
+          isLoading
           content={
             <View
               style={[a.p_lg, ta.bg_color_max, a.rounded_md, a.align_center]}
