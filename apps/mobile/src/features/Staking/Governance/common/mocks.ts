@@ -10,9 +10,7 @@ const governanceManager: GovernanceManager = {
     })
   },
   convertHexKeyHashToBech32Format: () => {
-    return Promise.resolve(
-      'drep1r73ah4wa3zqhw2fpnzyyj2lnya5zwjftkakgfk094y3mkerc53c',
-    )
+    return 'drep1r73ah4wa3zqhw2fpnzyyj2lnya5zwjftkakgfk094y3mkerc53c'
   },
   createStakeRegistrationCertificate: () => {
     return Promise.reject(new Error('mock not implemented'))

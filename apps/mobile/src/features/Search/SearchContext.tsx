@@ -338,8 +338,7 @@ export const defaultStackNavigationOptions = (
 ): StackNavigationOptions => {
   return {
     ...(Platform.OS === 'android' && {...TransitionPresets.SlideFromRightIOS}),
-    detachPreviousScreen:
-      false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
+    detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
     cardStyle: {
       backgroundColor: color.bg_color_max,
     },

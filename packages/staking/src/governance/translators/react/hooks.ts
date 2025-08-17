@@ -267,10 +267,10 @@ export const useBech32DRepID = () => {
   })
 
   const convert = React.useCallback(
-    async (hexId: string): Promise<string> => {
+    (hexId: string): string => {
       setState({isLoading: true})
       try {
-        const result = await manager.convertHexKeyHashToBech32Format(hexId)
+        const result = manager.convertHexKeyHashToBech32Format(hexId)
         setState({data: result, isLoading: false})
         return result
       } catch (error) {

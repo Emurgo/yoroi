@@ -866,7 +866,7 @@ export const makeCardanoWallet = (
       } = this.protocolParams
 
       try {
-        const unsignedTx = await Cardano.createUnsignedTx(
+        const unsignedTx = Cardano.createUnsignedTx(
           absSlotNumber,
           addressedUtxos,
           recipients,
