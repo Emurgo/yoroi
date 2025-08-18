@@ -29,12 +29,7 @@ export const useSendReceiver = () => {
     refetch,
     isLoading: isResolvingAddressess,
     isSuccess,
-  } = useResolverCryptoAddresses(
-    {resolve: receiver.resolve},
-    {
-      enabled: false,
-    },
-  )
+  } = useResolverCryptoAddresses({resolve: receiver.resolve})
 
   const isNotResolvedDomain = React.useMemo(
     () =>

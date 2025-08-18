@@ -33,7 +33,7 @@ export const getTransactionReceivedNotificationTitle = (
   const isSent = tx.direction === 'SENT'
 
   if (isIntraWallet) {
-    return strings.intraWalletTransactionSent
+    return strings.notifications.intraWalletTransactionSent
   }
 
   if (isReceived) {
@@ -43,14 +43,14 @@ export const getTransactionReceivedNotificationTitle = (
     )
 
     return details.hasReceivedMultipleAssets
-      ? strings.multipleAssetsReceived
+      ? strings.notifications.multipleAssetsReceived
       : `${formatAssets(
           Quantities.format(
             details.firstAssetAmountReceived,
             details.firstReceivedAsset.denomination,
           ),
           details.firstReceivedAsset.name,
-        )} ${strings.received}`
+        )} ${strings.notifications.received}`
   }
 
   if (isSent) {
@@ -60,14 +60,14 @@ export const getTransactionReceivedNotificationTitle = (
     )
 
     return details.hasSentMultipleAssets
-      ? strings.multipleAssetsSent
+      ? strings.notifications.multipleAssetsSent
       : `${formatAssets(
           Quantities.format(
             details.firstAssetAmountSent,
             details.firstSentAsset.denomination,
           ),
           details.firstSentAsset.name,
-        )} ${strings.sent}`
+        )} ${strings.notifications.sent}`
   }
 
   return ''
@@ -125,7 +125,7 @@ export const TransactionReceivedNotification = ({
         transactionInfos,
         wallet,
       )}
-      description={strings.tapToView}
+      description={strings.notifications.tapToView}
     />
   )
 }

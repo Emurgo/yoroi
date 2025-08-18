@@ -3,7 +3,7 @@ import * as React from 'react'
 import {useStrings} from '~/kernel/i18n/useStrings'
 
 export const useDialogs = () => {
-  const strings = useStrings()
+  const {scan: strings} = useStrings()
 
   return React.useRef({
     cameraPermissionDenied: {

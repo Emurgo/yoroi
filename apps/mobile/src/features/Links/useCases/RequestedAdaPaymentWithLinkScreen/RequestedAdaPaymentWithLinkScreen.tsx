@@ -24,7 +24,7 @@ export const RequestedAdaPaymentWithLinkScreen = ({
   onContinue: () => void
 }) => {
   const strings = useStrings()
-  const {palette: p} = useTheme()
+  const {palette: p, atoms: ta} = useTheme()
   const {actionFinished} = useLinks()
   const {closeModal} = useModal()
 
@@ -41,10 +41,10 @@ export const RequestedAdaPaymentWithLinkScreen = ({
   return (
     <SafeAreaView
       edges={['bottom', 'left', 'right']}
-      style={[{backgroundColor: p.bg_color_max}, a.flex_1, a.px_lg]}
+      style={[ta.bg_color_max, a.flex_1, a.px_lg]}
     >
       <ScrollView bounces={false}>
-        <ShowDisclaimer title={strings.links.disclaimer}>
+        <ShowDisclaimer title={strings.global.disclaimer}>
           <Text style={[a.body_2_md_regular, {color: p.text_gray_max}]}>
             {description}
           </Text>
@@ -67,12 +67,12 @@ export const RequestedAdaPaymentWithLinkScreen = ({
           size="S"
           type={ButtonType.Secondary}
           onPress={handleOnCancel}
-          title={strings.links.cancel}
+          title={strings.global.cancel}
         />
 
         <Space.Width.md />
 
-        <Button size="S" onPress={onContinue} title={strings.links.continue} />
+        <Button size="S" onPress={onContinue} title={strings.global.proceed} />
       </Actions>
     </SafeAreaView>
   )

@@ -11,8 +11,8 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {Icon} from '~/ui/Icon'
 import {Space} from '~/ui/Space/Space'
 
-import {BanxaLogo} from '../illustrations/BanxaLogo'
-import {EncryptusLogo} from '../illustrations/EncryptusLogo'
+import {BanxaLogo} from '../../illustrations/BanxaLogo'
+import {EncryptusLogo} from '../../illustrations/EncryptusLogo'
 
 export const SelectProviderFromListScreen = () => {
   const {palette: p} = useTheme()
@@ -64,7 +64,7 @@ export const SelectProviderFromListScreen = () => {
           return (
             <ProviderItem
               label={provider.name}
-              fee={`${fee}% ${strings.fee}`}
+              fee={`${fee}% ${strings.exchange.fee}`}
               leftAdornment={leftAdornment}
               rightAdornment={rightAdornment}
               onPress={() => handleOnSelectProvider(providerId)}
