@@ -1,4 +1,4 @@
-import {CardanoMobile} from '../wallets'
+import {CardanoMobile} from '~/wallets/wallets'
 import {getSpendingKey, getStakingKey, toWasmAddress} from './addressInfo'
 
 // base
@@ -60,8 +60,8 @@ describe('toWasmAddress', () => {
     ${'shelley mainnet BaseAddress'} | ${shelley_mainnet_type0_address} | ${CardanoMobile.Address}
     ${'shelley testnet BaseAddress'} | ${shelley_testnet_type0_address} | ${CardanoMobile.Address}
     ${'shelley mainnet Enterprise'}  | ${shelley_mainnet_type6_address} | ${CardanoMobile.Address}
-  `('$desc', async ({address, expected}) => {
-    const result = await toWasmAddress(address)
+  `('$desc', ({address, expected}) => {
+    const result = toWasmAddress(address)
     expect(result).toBeInstanceOf(expected)
   })
 
@@ -71,8 +71,8 @@ describe('toWasmAddress', () => {
     ${'byron testnet'}      | ${byron_testnet_address} | ${null}
     ${'jorgmandur testnet'} | ${jorgamndur_testnet}    | ${null}
     ${'jorgmandur mainnet'} | ${jorgamndur_mainnet}    | ${null}
-  `('$desc', async ({address, expected}) => {
-    const result = await toWasmAddress(address)
+  `('$desc', ({address, expected}) => {
+    const result = toWasmAddress(address)
     expect(result).toBe(expected)
   })
 })
@@ -89,10 +89,10 @@ describe('getKeyHashes', () => {
     ${'jorgmandur mainnet'}            | ${jorgamndur_mainnet}            | ${emptyKeyHashes}
     ${'shelley mainnet RewardAddress'} | ${reward_mainnet_address}        | ${reward_mainnet_addressKeyHashes}
     ${'shelley testnet RewardAddress'} | ${reward_testnet_address}        | ${reward_testnet_addressKeyHashes}
-  `('$desc', async ({address, expected}) => {
+  `('$desc', ({address, expected}) => {
     const result = {
-      spending: await getSpendingKey(address),
-      staking: await getStakingKey(address),
+      spending: getSpendingKey(address),
+      staking: getStakingKey(address),
     }
     expect(result).toEqual(expected)
   })

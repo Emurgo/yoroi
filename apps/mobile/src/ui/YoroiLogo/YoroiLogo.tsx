@@ -11,7 +11,7 @@ const YOROI_COMPANY_NAME = 'Yoroi'
 
 export const YoroiLogo = () => {
   const strings = useStrings()
-  const {palette: p} = useTheme()
+  const {palette: p, atoms: ta} = useTheme()
 
   return (
     <View style={[a.align_center]}>

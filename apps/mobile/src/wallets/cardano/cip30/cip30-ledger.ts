@@ -37,13 +37,11 @@ class CIP30LedgerExtension {
   ): Promise<{signature: string; key: string}> {
     const {csl, release} = wrappedCsl()
     try {
-      const normalizedAddress = await normalizeToAddress(csl, address)
+      const normalizedAddress = normalizeToAddress(csl, address)
       if (!normalizedAddress) throw new Error('Invalid address')
       const rewardAddress =
         await csl.RewardAddress.fromAddress(normalizedAddress)
-      const rewardAddressHex = await rewardAddress
-        ?.toAddress()
-        .then((a) => a.toHex())
+      const rewardAddressHex = rewardAddress?.toAddress().toHex()
 
       const stakingSigningPath =
         this.meta.implementation === 'cardano-cip1852'
@@ -55,9 +53,8 @@ class CIP30LedgerExtension {
         rewardAddressHex === this.wallet.rewardAddressHex &&
         Array.isArray(stakingSigningPath)
           ? stakingSigningPath
-          : this.wallet.getAddressing(
-              await normalizedAddress.toBech32(undefined),
-            ).path
+          : this.wallet.getAddressing(normalizedAddress.toBech32(undefined))
+              .path
 
       const ledgerPayload: MessageData = {
         messageHex: payload,
@@ -90,7 +87,7 @@ class CIP30LedgerExtension {
   ): Promise<Transaction> {
     const {csl, release} = wrappedCsl()
     try {
-      if (!partial) await assertHasAllSigners(cbor, this.wallet, this.meta)
+      if (!partial) assertHasAllSigners(cbor, this.wallet, this.meta)
 
       const stakingSigningPath =
         this.meta.implementation === 'cardano-cip1852'
@@ -105,8 +102,8 @@ class CIP30LedgerExtension {
         cbor,
         this.wallet.networkManager.chainId,
         this.wallet.networkManager.protocolMagic,
-        await getHexAddressingMap(csl, this.wallet),
-        await getHexAddressingMap(csl, this.wallet),
+        getHexAddressingMap(csl, this.wallet),
+        getHexAddressingMap(csl, this.wallet),
         getAddressedUtxos(this.wallet),
         [],
         stakingSigningPath,
@@ -148,7 +145,7 @@ export async function encodeHardwareWalletSignResult(options: {
   const key = await makeCip8Key(Buffer.from(options.signingPublicKeyHex, 'hex'))
 
   return {
-    signature: Buffer.from(await coseSign1.toBytes()).toString('hex'),
-    key: Buffer.from(await key.toBytes()).toString('hex'),
+    signature: Buffer.from(coseSign1.toBytes()).toString('hex'),
+    key: Buffer.from(key.toBytes()).toString('hex'),
   }
 }
