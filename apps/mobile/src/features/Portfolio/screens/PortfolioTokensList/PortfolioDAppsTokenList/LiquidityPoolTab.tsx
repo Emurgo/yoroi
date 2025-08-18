@@ -1,4 +1,5 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
 import {FlatList, Text, View} from 'react-native'
 
@@ -8,6 +9,7 @@ import {TokenEmptyList} from '~/features/Portfolio/ui/TokenEmptyList/TokenEmptyL
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {makeList} from '~/kernel/utils'
 import {Space} from '~/ui/Space/Space'
+
 import {DAppTokenItem} from './DAppTokenItem/DAppTokenItem'
 import {DAppTokenItemSkeleton} from './DAppTokenItem/DAppTokenItemSkeleton'
 

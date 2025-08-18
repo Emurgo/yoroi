@@ -1,6 +1,7 @@
 import {useLinks} from '@yoroi/links'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Links} from '@yoroi/types'
+
 import * as React from 'react'
 import {ScrollView, Text, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
@@ -10,6 +11,7 @@ import {Button, ButtonType} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
 import {isEmptyString} from '~/wallets/utils/string'
+
 import {ShowDisclaimer} from './ShowDisclaimer/ShowDisclaimer'
 
 export const RequestedAdaPaymentWithLinkScreen = ({

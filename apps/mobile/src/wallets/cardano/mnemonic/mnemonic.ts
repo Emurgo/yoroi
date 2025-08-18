@@ -1,8 +1,8 @@
 import {generateMnemonic, mnemonicToEntropy} from 'bip39'
 
-const {randomBytes} = require('react-native-randombytes')
-
 import {CardanoMobile} from '~/wallets/wallets'
+
+const {randomBytes} = require('react-native-randombytes')
 
 const mnemonicStrengh = 160
 

@@ -25,16 +25,16 @@ import {
 import {LegalAgreement} from '~/features/Legal/common/types'
 import {useLegalAgreement} from '~/features/Legal/hooks/useLegalAgreement'
 import {useInitNotifications} from '~/features/Notifications/common/hooks'
-import {NotificationsDevScreen} from '~/features/Notifications/useCases/NotificationsDevScreen'
 import {NotificationUIHandler} from '~/features/Notifications/useCases/NotificationUIHandler'
+import {NotificationsDevScreen} from '~/features/Notifications/useCases/NotificationsDevScreen'
 import {SetupWalletNavigator} from '~/features/SetupWallet/SetupWalletNavigator'
 import {useHasWallets} from '~/features/WalletManager/hooks/useHasWallets'
 
 import {agreementDate, isDev} from '../constants'
 import {useStrings} from '../i18n/useStrings'
+import {WalletNavigator} from './WalletNavigator'
 import {defaultStackNavigationOptions} from './common/helpers'
 import {FirstAction} from './types'
-import {WalletNavigator} from './WalletNavigator'
 
 const Stack = createStackNavigator<any>()
 

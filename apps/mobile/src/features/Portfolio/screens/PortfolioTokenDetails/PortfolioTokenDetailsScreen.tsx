@@ -1,6 +1,7 @@
 import {usePortfolioTokenInfo} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {App} from '@yoroi/types'
+
 import * as React from 'react'
 import {Animated, NativeScrollEvent, NativeSyntheticEvent} from 'react-native'
 
@@ -19,6 +20,7 @@ import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
 import {Tab, Tabs} from '~/ui/Tabs/Tabs'
+
 import {Actions} from './Actions'
 import {PortfolioTokenBalance} from './PortfolioTokenBalance/PortfolioTokenBalance'
 import {PortfolioTokenChart} from './PortfolioTokenChart/PortfolioTokenChart'

@@ -1,17 +1,18 @@
-import {useFocusEffect} from '@react-navigation/native'
 import {
   configCardanoLegacyTransfer,
   linksCardanoModuleMaker,
   linksYoroiModuleMaker,
 } from '@yoroi/links'
 import {atoms as a, useTheme} from '@yoroi/theme'
+
+import {useFocusEffect} from '@react-navigation/native'
 import * as React from 'react'
 import {
   GestureResponderEvent,
   ScrollView as RNScrollView,
   Text,
-  useWindowDimensions,
   View,
+  useWindowDimensions,
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
@@ -29,6 +30,7 @@ import {SkeletonAdressDetail} from '~/ui/SkeletonAddressDetail/SkeletonAddressDe
 import {TextInput} from '~/ui/TextInput/TextInput'
 import {editedFormatter} from '~/wallets/utils/amountUtils'
 import {isEmptyString} from '~/wallets/utils/string'
+
 import {useReceive} from '../common/ReceiveProvider'
 
 export const RequestSpecificAmountScreen = () => {

@@ -1,5 +1,6 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Chain, Network} from '@yoroi/types'
+
 import * as React from 'react'
 import {TouchableOpacity, View} from 'react-native'
 

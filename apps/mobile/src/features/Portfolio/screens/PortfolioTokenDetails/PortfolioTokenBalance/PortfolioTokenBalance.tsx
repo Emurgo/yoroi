@@ -1,5 +1,6 @@
 import {amountBreakdown, infoExtractName} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
@@ -7,6 +8,7 @@ import {usePortfolioTokenDetailParams} from '~/features/Portfolio/common/hooks/u
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {LoadingBoundary} from '~/ui/Boundary/Boundary'
 import {PairedBalance} from '~/ui/PairedBalance/PairedBalance'
+
 import {PortfolioTokenDetailBalanceSkeleton} from './PortfolioTokenDetailBalanceSkeleton'
 
 export const PortfolioTokenBalance = () => {

@@ -1,6 +1,7 @@
-import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
+
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 import {
   StyleProp,

@@ -1,8 +1,9 @@
 import {atoms as a} from '@yoroi/theme'
+
+import {useQuery} from '@tanstack/react-query'
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
-import {useQuery} from '@tanstack/react-query'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
 import {Space} from '~/ui/Space/Space'

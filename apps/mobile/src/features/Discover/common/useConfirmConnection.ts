@@ -1,4 +1,5 @@
 import {DappConnector} from '@yoroi/dapp-connector'
+
 import * as React from 'react'
 import {InteractionManager} from 'react-native'
 

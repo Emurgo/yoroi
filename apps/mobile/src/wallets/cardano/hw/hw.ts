@@ -1,3 +1,6 @@
+import {cardanoConfig, derivationConfig} from '@yoroi/blockchains'
+import {HW, Wallet} from '@yoroi/types'
+
 import type {
   GetExtendedPublicKeyRequest,
   GetExtendedPublicKeyResponse,
@@ -11,11 +14,8 @@ import type {
 import AppAda, {
   DeviceStatusCodes,
 } from '@cardano-foundation/ledgerjs-hw-app-cardano'
-
 import TransportHID from '@ledgerhq/react-native-hid'
 import TransportBLE from '@ledgerhq/react-native-hw-transport-ble'
-import {cardanoConfig, derivationConfig} from '@yoroi/blockchains'
-import {HW, Wallet} from '@yoroi/types'
 import {BleError} from 'react-native-ble-plx'
 
 import {LocalizableError} from '~/kernel/i18n/LocalizableError'

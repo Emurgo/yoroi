@@ -8,6 +8,7 @@ import {LocalizableError} from '~/kernel/i18n/LocalizableError'
 import {Button} from '~/ui/Button/Button'
 import {Copiable} from '~/ui/Copiable/Copiable'
 import {Space} from '~/ui/Space/Space'
+
 import {ExpandableItem} from './ExpandableItem'
 
 // TODO: Add error image

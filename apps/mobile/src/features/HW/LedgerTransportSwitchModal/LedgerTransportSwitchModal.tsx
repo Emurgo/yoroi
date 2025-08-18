@@ -1,4 +1,5 @@
 import {atoms as a} from '@yoroi/theme'
+
 import * as React from 'react'
 import {Alert, Platform, ScrollView, Text} from 'react-native'
 import DeviceInfo from 'react-native-device-info'

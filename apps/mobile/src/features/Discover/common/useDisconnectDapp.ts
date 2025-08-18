@@ -1,7 +1,9 @@
 import {useDappConnector} from '@yoroi/dapp-connector'
+
 import * as React from 'react'
 
 import {useMetrics} from '~/kernel/metrics/metricsManager'
+
 import type {DAppItem} from './helpers'
 import {useInvalidateConnectedDapps} from './useDAppsConnected'
 

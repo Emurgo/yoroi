@@ -1,5 +1,6 @@
 import {addressVisualDerivationPathMaker} from '@yoroi/blockchains'
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import {fromPairs} from 'lodash'
 import * as React from 'react'
 import {Text, View} from 'react-native'
@@ -9,6 +10,10 @@ import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWalle
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Copiable} from '~/ui/Copiable/Copiable'
 import {Space} from '~/ui/Space/Space'
+import {
+  getSpendingKey,
+  getStakingKey,
+} from '~/wallets/cardano/addressInfo/addressInfo'
 
 type Path = {
   account: number

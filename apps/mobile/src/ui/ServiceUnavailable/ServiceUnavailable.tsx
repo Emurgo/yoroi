@@ -1,4 +1,5 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
 import {Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'

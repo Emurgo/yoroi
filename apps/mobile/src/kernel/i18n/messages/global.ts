@@ -1,7 +1,8 @@
+import {ThemeName} from '@yoroi/theme'
+
 import {freeze} from 'immer'
 import {MessageDescriptor, defineMessages} from 'react-intl'
 
-import {ThemeName} from '@yoroi/theme'
 import {supportedCurrencies} from '~/features/Settings/useCases/changeAppSettings/Currency/CurrencyContext'
 
 export const confirmationMessages = freeze(

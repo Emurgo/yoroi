@@ -1,5 +1,6 @@
-import {useQuery, UseQueryOptions} from '@tanstack/react-query'
 import {Portfolio} from '@yoroi/types'
+
+import {UseQueryOptions, useQuery} from '@tanstack/react-query'
 import {ImageSourcePropType} from 'react-native'
 
 import {getDappFallbackLogo} from '~/features/Discover/common/helpers'

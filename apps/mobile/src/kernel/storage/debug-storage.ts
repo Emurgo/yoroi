@@ -1,7 +1,7 @@
+import {App} from '@yoroi/types'
+
 import {AsyncStorageStatic} from '@react-native-async-storage/async-storage'
 import {MMKV} from 'react-native-mmkv'
-
-import {App} from '@yoroi/types'
 
 type Tree = {
   [key: string]: Tree | string | null

@@ -1,10 +1,3 @@
-import {walletChecksum} from '@emurgo/cip4-js'
-import * as CSL from '@emurgo/cross-csl-core'
-import {
-  createSignedLedgerTxFromCbor,
-  signRawTransaction,
-} from '@emurgo/yoroi-lib'
-import {Datum} from '@emurgo/yoroi-lib/dist/internals/models'
 import {AppApi} from '@yoroi/api'
 import {
   cardanoConfig,
@@ -13,10 +6,17 @@ import {
 } from '@yoroi/blockchains'
 import {isNonNullable} from '@yoroi/common'
 import {Api, App, Balance, HW, Network, Portfolio, Wallet} from '@yoroi/types'
+
+import {walletChecksum} from '@emurgo/cip4-js'
+import * as CSL from '@emurgo/cross-csl-core'
+import {
+  createSignedLedgerTxFromCbor,
+  signRawTransaction,
+} from '@emurgo/yoroi-lib'
+import {Datum} from '@emurgo/yoroi-lib/dist/internals/models'
 import {BigNumber} from 'bignumber.js'
 import {Buffer} from 'buffer'
 import {freeze} from 'immer'
-
 import {defaultMemoize} from 'reselect'
 import {Observable} from 'rxjs'
 
@@ -24,16 +24,17 @@ import {toLedgerSignRequest} from '~/features/Discover/common/ledger'
 import {buildPortfolioBalanceManager} from '~/features/Portfolio/common/helpers/build-balance-manager'
 import {toBalanceManagerSyncArgs} from '~/features/Portfolio/common/transformers/toBalanceManagerSyncArgs'
 import {
-  makeMemosManager,
   MemosManager,
+  makeMemosManager,
 } from '~/features/Transactions/common/memos/memosManager'
 import {LocalizableError} from '~/kernel/i18n/LocalizableError'
 import {throwLoggedError} from '~/kernel/logger/helpers/throw-logged-error'
 import {logger} from '~/kernel/logger/logger'
 import {
-  makeWalletEncryptedStorage,
   WalletEncryptedStorage,
+  makeWalletEncryptedStorage,
 } from '~/kernel/storage/EncryptedStorage'
+
 import type {
   AccountStateResponse,
   FundInfoResponse,
@@ -48,8 +49,8 @@ import {Quantities} from '../utils/utils'
 import {Cardano, CardanoMobile} from '../wallets'
 import {
   AccountManager,
-  accountManagerMaker,
   Addresses,
+  accountManagerMaker,
 } from './account-manager/account-manager'
 import * as legacyApi from './api/api'
 import {calcLockedDeposit} from './assetUtils'
@@ -58,8 +59,8 @@ import {
   getDelegationStatus,
 } from './delegationUtils'
 import {
-  doesCardanoAppVersionSupportCIP1694,
   doesCardanoAppVersionSupportCIP36,
+  doesCardanoAppVersionSupportCIP1694,
   getCardanoAppMajorVersion,
   signTxWithLedger,
 } from './hw/hw'
@@ -70,13 +71,13 @@ import {TransactionManager} from './transactionManager/transactionManager'
 import {toLibToken} from './transformers/to-lib-token'
 import {
   CardanoTypes,
-  isYoroiWallet,
   NoOutputsError,
   NotEnoughMoneyToSendError,
   RegistrationStatus,
   WalletEvent,
   WalletSubscription,
   YoroiWallet,
+  isYoroiWallet,
 } from './types'
 import {yoroiUnsignedTx} from './unsignedTx/unsignedTx'
 import {
@@ -85,7 +86,7 @@ import {
   getHexAddressingMap,
   toRecipients,
 } from './utils'
-import {makeUtxoManager, UtxoManager} from './utxoManager/utxoManager'
+import {UtxoManager, makeUtxoManager} from './utxoManager/utxoManager'
 import {utxosMaker} from './utxoManager/utxos'
 
 export const makeCardanoWallet = (

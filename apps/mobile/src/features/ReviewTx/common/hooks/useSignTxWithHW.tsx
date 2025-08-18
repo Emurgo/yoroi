@@ -5,6 +5,7 @@ import * as React from 'react'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {cip30LedgerExtensionMaker} from '~/wallets/cardano/cip30/cip30-ledger'
 import {BaseLedgerError} from '~/wallets/hw/hw'
+
 import {useConfirmHWConnectionModal} from '../Discover/common/ConfirmHWConnectionModal'
 
 export type SignTxWithHW = {

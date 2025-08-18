@@ -1,5 +1,6 @@
 import {infoExtractName} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import React, {ReactNode} from 'react'
 import {Text, View} from 'react-native'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'

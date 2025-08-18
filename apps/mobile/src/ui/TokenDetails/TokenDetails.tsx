@@ -2,6 +2,7 @@ import {time} from '@yoroi/common'
 import {isPrimaryTokenInfo, usePortfolioTokenDiscovery} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
+
 import * as React from 'react'
 import {
   ActivityIndicator,
@@ -17,6 +18,7 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {Icon} from '~/ui/Icon'
 import {Space} from '~/ui/Space/Space'
 import {isEmptyString} from '~/wallets/utils/string'
+
 import {Copiable} from '../Copiable/Copiable'
 import {ExplorerInfoLinks} from '../ExplorerInfoLinks/ExplorerInfoLinks'
 import {SimpleTab} from '../SimpleTab/SimpleTab'

@@ -1,5 +1,6 @@
 import {isTokenId, primaryTokenId} from '@yoroi/portfolio'
 import {Portfolio} from '@yoroi/types'
+
 import {freeze} from 'immer'
 
 const legacyPtTokenIds = freeze([primaryTokenId, '', '.'])

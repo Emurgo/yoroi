@@ -10,5 +10,3 @@ declare module 'react-native-fast-pbkdf2' {
   }
   export default Pbkdf2
 }
-
-

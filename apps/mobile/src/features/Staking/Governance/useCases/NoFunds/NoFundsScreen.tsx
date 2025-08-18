@@ -1,6 +1,7 @@
-import {useNavigation} from '@react-navigation/native'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Chain} from '@yoroi/types'
+
+import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 import {Linking, Text, View} from 'react-native'
 

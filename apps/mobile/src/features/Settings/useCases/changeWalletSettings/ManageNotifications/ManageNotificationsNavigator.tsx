@@ -1,8 +1,10 @@
-import {createStackNavigator} from '@react-navigation/stack'
 import {useTheme} from '@yoroi/theme'
+
+import {createStackNavigator} from '@react-navigation/stack'
 import * as React from 'react'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
+
 import {defaultStackNavigationOptions} from '../../../../../kernel/navigation/common/helpers'
 import {ManageNotificationsRoutes} from '../../../../../kernel/navigation/types'
 import {ManageNotificationDisplayDurationScreen} from './ManageNotificationDisplayDuration/ManageNotificationDisplayDurationScreen'

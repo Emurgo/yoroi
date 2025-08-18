@@ -6,6 +6,7 @@ import {walletChecksum} from '@emurgo/cip4-js'
 import {freeze} from 'immer'
 import {
   BehaviorSubject,
+  Subscription,
   catchError,
   concatMap,
   finalize,
@@ -13,7 +14,6 @@ import {
   interval,
   of,
   startWith,
-  Subscription,
   switchMap,
 } from 'rxjs'
 import {v4} from 'uuid'
@@ -27,6 +27,7 @@ import {keyManager} from '~/wallets/cardano/key-manager/key-manager'
 import {WalletEvent, YoroiWallet} from '~/wallets/cardano/types'
 import {wrappedCsl} from '~/wallets/cardano/wrappedCsl'
 import {validatePassword, validateWalletName} from '~/wallets/utils/validators'
+
 import {networkManagers} from './common/constants'
 import {
   SyncWalletInfo,

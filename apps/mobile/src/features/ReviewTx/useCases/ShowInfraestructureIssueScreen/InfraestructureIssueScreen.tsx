@@ -1,5 +1,6 @@
-import {useNavigation} from '@react-navigation/native'
 import {atoms as a, useTheme} from '@yoroi/theme'
+
+import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
@@ -8,6 +9,7 @@ import {useBlockGoBack, useWalletNavigation} from '~/kernel/navigation/hooks'
 import {Button} from '~/ui/Button/Button'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
+
 import {InfraestructureIssueIcon} from '../illustrations/InfraestructureIssueIcon'
 
 export const InfraestructureIssueScreen = () => {

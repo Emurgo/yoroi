@@ -1,4 +1,5 @@
 import {mocks} from '~/wallets/mocks/wallet'
+
 import {getMasterKeyFromMnemonic} from '../mnemonic/mnemonic'
 import {YoroiWallet} from '../types'
 import {cip30ExtensionMaker} from './cip30'

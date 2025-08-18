@@ -1,5 +1,6 @@
 import {isNonNullable} from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import {LinearGradient} from 'expo-linear-gradient'
 import React, {ReactNode} from 'react'
 import {ActivityIndicator, Pressable, View} from 'react-native'

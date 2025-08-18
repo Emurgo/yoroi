@@ -2,6 +2,7 @@ import React, {useState} from 'react'
 
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {Space} from '~/ui/Space/Space'
+
 import {ConfirmWithSpendingPassword} from '../ConfirmWithSpendingPassword'
 
 type Props = {

@@ -1,5 +1,6 @@
 import {GovernanceProvider} from '@yoroi/staking'
 import {ThemedPalette, useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
 
 import {NetworkTag} from '~/features/Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
@@ -10,6 +11,7 @@ import {
 } from '~/kernel/navigation/common/helpers'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
+
 import {useGovernanceManagerMaker} from './common/helpers'
 import {NavigationStack} from './common/navigation'
 import {ChangeVoteScreen} from './useCases/ChangeVote/ChangeVoteScreen'
@@ -24,7 +26,7 @@ const Stack = NavigationStack
 export const GovernanceNavigator = () => {
   const strings = useStrings()
   const manager = useGovernanceManagerMaker()
-  const {atoms, palette: p} = useTheme()
+  const {palette: p} = useTheme()
   const walletNavigation = useWalletNavigation()
 
   return (

@@ -1,4 +1,5 @@
 import {useLinks} from '@yoroi/links'
+
 import * as React from 'react'
 
 export const useLinksShowActionResult = () => {

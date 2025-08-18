@@ -1,6 +1,7 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
-import {Text, useWindowDimensions, View} from 'react-native'
+import {Text, View, useWindowDimensions} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
 import {undefinedToken} from '~/features/Swap/common/constants'
@@ -17,6 +18,7 @@ import {RefreshButton} from '~/ui/RefreshButton/RefreshButton'
 import {ShowPriceImpact} from '~/ui/ShowPriceImpact/ShowPriceImpact'
 import {Space} from '~/ui/Space/Space'
 import {isEmptyString} from '~/wallets/utils/string'
+
 import {useNavigateTo} from '../../common/navigation'
 import {LimitInput} from './LimitInput'
 import {WarnLimitPrice} from './WarnLimitPrice'

@@ -7,8 +7,9 @@ import {
 import {linksYoroiModuleMaker} from '@yoroi/links'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Chain, Exchange} from '@yoroi/types'
+
 import * as React from 'react'
-import {Linking, useWindowDimensions, View} from 'react-native'
+import {Linking, View, useWindowDimensions} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
@@ -23,10 +24,11 @@ import {Icon} from '~/ui/Icon'
 import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingView'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {delay} from '~/wallets/utils/timeUtils'
+
 import {useNavigateTo} from '../../common/navigation'
+import {ShowDisclaimer} from '../Legal/Disclaimer/ShowDisclaimer'
 import {BanxaLogo} from '../illustrations/BanxaLogo'
 import {EncryptusLogo} from '../illustrations/EncryptusLogo'
-import {ShowDisclaimer} from '../Legal/Disclaimer/ShowDisclaimer'
 import {CreateExchangeButton} from './CreateExchangeButton/CreateExchangeButton'
 import {EditAmount} from './EditAmount/EditAmount'
 import {ErrorScreen} from './LoadingLink/ErrorScreen'

@@ -2,6 +2,7 @@ import {useClaim} from '@yoroi/claim'
 import {sortTokenAmountsByInfo} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {App, Claim, Portfolio} from '@yoroi/types'
+
 import * as React from 'react'
 import {
   FlatList,
@@ -24,6 +25,7 @@ import {Icon} from '~/ui/Icon'
 import {Space} from '~/ui/Space/Space'
 import {TokenAmountItem} from '~/ui/TokenAmountItem/TokenAmountItem'
 import {isEmptyString} from '~/wallets/utils/string'
+
 import {useDialogs} from '../common/useDialogs'
 import {useNavigateTo} from '../common/useNavigateTo'
 

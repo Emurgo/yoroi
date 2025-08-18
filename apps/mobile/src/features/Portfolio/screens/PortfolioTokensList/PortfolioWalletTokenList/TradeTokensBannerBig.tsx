@@ -1,5 +1,6 @@
-import {useNavigation} from '@react-navigation/native'
 import {atoms as a, useTheme} from '@yoroi/theme'
+
+import {useNavigation} from '@react-navigation/native'
 import {LinearGradient} from 'expo-linear-gradient'
 import * as React from 'react'
 import {Text, View} from 'react-native'
@@ -8,6 +9,7 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {TxHistoryRouteNavigation} from '~/kernel/navigation/types'
 import {Button} from '~/ui/Button/Button'
 import {Space} from '~/ui/Space/Space'
+
 import {TradeTokensAsset} from '../../PortfolioDashboard/DashboardTokensList/TradeTokensAsset'
 
 export const TradeTokensBannerBig = () => {

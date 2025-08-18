@@ -1,5 +1,3 @@
-import {useFocusEffect} from '@react-navigation/native'
-import {FlashList} from '@shopify/flash-list'
 import {
   amountBreakdown,
   infoExtractName,
@@ -7,6 +5,9 @@ import {
 } from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
+
+import {useFocusEffect} from '@react-navigation/native'
+import {FlashList} from '@shopify/flash-list'
 import BigNumber from 'bignumber.js'
 import * as React from 'react'
 import {Text, View} from 'react-native'
@@ -23,6 +24,7 @@ import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {makeList} from '~/kernel/utils'
 import {Line} from '~/ui/Line/Line'
 import {Space} from '~/ui/Space/Space'
+
 import {TotalTokensValue} from '../TotalTokensValue/TotalTokensValue'
 import {TokenBalanceItem} from './TokenBalanceItem'
 import {TokenBalanceSkeletonItem} from './TokenBalanceSkeletonItem'

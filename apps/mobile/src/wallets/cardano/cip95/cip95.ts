@@ -1,5 +1,6 @@
 import {cardanoConfig} from '@yoroi/blockchains'
 import {Wallet} from '@yoroi/types'
+
 import {Buffer} from 'buffer'
 
 import {cip30ExtensionMaker} from '../cip30/cip30'

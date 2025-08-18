@@ -1,11 +1,13 @@
 import {amountBreakdown, infoExtractName} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
+
 import * as React from 'react'
 import {Text} from 'react-native'
 
 import {usePrivacyMode} from '~/features/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
 import {PairedBalance} from '~/ui/PairedBalance/PairedBalance'
+
 import {SkeletonPairedToken} from './SkeletonPairedToken'
 
 type Props = {

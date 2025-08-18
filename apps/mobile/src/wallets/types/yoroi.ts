@@ -1,5 +1,6 @@
-import {Datum} from '@emurgo/yoroi-lib'
 import {Balance} from '@yoroi/types'
+
+import {Datum} from '@emurgo/yoroi-lib'
 
 import {CardanoTypes} from '../cardano/types'
 

@@ -2,6 +2,7 @@ import * as React from 'react'
 import {Alert} from 'react-native'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
+
 import {useAuth} from '../context/AuthProvider'
 
 export const useAuthWithOs = ({

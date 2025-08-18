@@ -1,5 +1,4 @@
 /* tslint:disable */
-
 // @ts-nocheck
 /**
  * Ampli - A strong typed wrapper for your Analytics
@@ -16,7 +15,6 @@
  *
  * [Full Setup Instructions](https://data.amplitude.com/emurgo/Yoroi/implementation/mobile)
  */
-
 import * as amplitude from '@amplitude/analytics-react-native'
 
 export type ReactNativeClient = amplitude.Types.ReactNativeClient

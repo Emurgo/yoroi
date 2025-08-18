@@ -1,9 +1,10 @@
+import {Balance, Network} from '@yoroi/types'
+
 import {
   Change,
   Datum,
   MultiTokenValue,
 } from '@emurgo/yoroi-lib/dist/internals/models'
-import {Balance, Network} from '@yoroi/types'
 
 import {
   YoroiEntry,
@@ -11,8 +12,9 @@ import {
   YoroiUnsignedTx,
   YoroiVoting,
 } from '~/wallets/types/yoroi'
-import {Amounts, asQuantity, Entries, Quantities} from '~/wallets/utils/utils'
+import {Amounts, Entries, Quantities, asQuantity} from '~/wallets/utils/utils'
 import {Cardano, CardanoMobile} from '~/wallets/wallets'
+
 import {CardanoTypes} from '../types'
 
 export const yoroiUnsignedTx = ({

@@ -1,7 +1,8 @@
-import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {HW} from '@yoroi/types'
+
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 import {View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
@@ -12,7 +13,6 @@ import {
 } from '~/features/SetupWallet/common/WalletDuplicatedModal/WalletDuplicatedModal'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {showErrorDialog} from '~/kernel/dialogs'
-
 import {LocalizableError} from '~/kernel/i18n/LocalizableError'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
@@ -20,6 +20,7 @@ import {SetupWalletRouteNavigation} from '~/kernel/navigation/types'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {StepperProgress} from '~/ui/StepperProgress/StepperProgress'
 import {getHWDeviceInfo} from '~/wallets/cardano/hw/hw'
+
 import {LedgerConnect} from '../legacy/HW'
 
 type Props = {}

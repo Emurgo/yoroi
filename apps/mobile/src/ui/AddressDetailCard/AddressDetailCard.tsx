@@ -1,6 +1,7 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
-import {useWindowDimensions, View} from 'react-native'
+import {View, useWindowDimensions} from 'react-native'
 import Animated, {Layout} from 'react-native-reanimated'
 
 import {useCopy} from '~/features/Copy/context/CopyProvider'
@@ -13,6 +14,7 @@ import {
   getStakingKey,
 } from '~/wallets/cardano/addressInfo/addressInfo'
 import {isEmptyString} from '~/wallets/utils/string'
+
 import {ShareDetailsCard} from '../ShareDetailsCard/ShareDetailsCard'
 import {ShareQRCodeCard} from '../ShareQRCodeCard/ShareQRCodeCard'
 

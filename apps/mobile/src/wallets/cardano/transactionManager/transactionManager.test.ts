@@ -3,8 +3,10 @@ import {fromPairs} from 'lodash'
 import DeviceInfo from 'react-native-device-info'
 
 import {rootStorage} from '~/kernel/storage/storages'
+
 import {ApiHistoryError} from '../errors'
 import {
+  mockTx,
   mockedAddressesByChunks,
   mockedBackendConfig,
   mockedEmptyHistoryResponse,
@@ -12,13 +14,12 @@ import {
   mockedHistoryResponse,
   mockedLocalTransactions,
   mockedTipStatusResponse,
-  mockTx,
 } from '../mocks'
 import {
+  TransactionManager,
   makeTxManagerStorage,
   syncTxs,
   toCachedTx,
-  TransactionManager,
 } from './transactionManager'
 
 jest.mock('../api/api', () => ({

@@ -1,6 +1,7 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
-import {useWindowDimensions, View, ViewProps} from 'react-native'
+import {View, ViewProps, useWindowDimensions} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
@@ -12,6 +13,7 @@ import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation
 import {Button} from '~/ui/Button/Button'
 import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingView'
 import {ProtocolAvatar} from '~/ui/ProtocolAvatar/ProtocolAvatar'
+
 import {useNavigateTo} from '../../common/navigation'
 import {TransactionSummary} from './TransactionSummary'
 

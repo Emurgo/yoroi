@@ -1,4 +1,5 @@
 import {useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
 import {ActivityIndicator as RNActivityIndicator} from 'react-native'
 

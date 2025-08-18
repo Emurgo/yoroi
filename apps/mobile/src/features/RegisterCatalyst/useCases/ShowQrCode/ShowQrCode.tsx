@@ -1,5 +1,6 @@
 import {useCatalyst} from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
 import {InteractionManager, ScrollView} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
@@ -9,9 +10,10 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {useBlockGoBack} from '~/kernel/navigation/hooks'
 import {Button} from '~/ui/Button/Button'
 import {Checkbox} from '~/ui/Checkbox/Checkbox'
-import {Actions, Description} from '~/ui/common/components'
 import {ShareQRCodeCard} from '~/ui/ShareQRCodeCard/ShareQRCodeCard'
 import {Space} from '~/ui/Space/Space'
+import {Actions, Description} from '~/ui/common/components'
+
 import {useNavigateTo} from '../CatalystNavigator'
 import {useAllowScreenshot} from '../hooks/useAllowScreenShot'
 

@@ -3,7 +3,7 @@ import * as React from 'react'
 import {Text, View} from 'react-native'
 
 import {Ampli} from './ampli'
-import {makeMetricsManager, MetricsProvider, useMetrics} from './metricsManager'
+import {MetricsProvider, makeMetricsManager, useMetrics} from './metricsManager'
 import {mockMetricsManager} from './mocks'
 
 const initialMockedMetricsManager = mockMetricsManager()

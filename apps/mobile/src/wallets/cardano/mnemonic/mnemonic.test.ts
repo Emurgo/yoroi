@@ -1,4 +1,3 @@
-import {wrappedCsl} from '../wrappedCsl'
 import {generateAdaMnemonic, generateWalletRootKey} from './mnemonic'
 
 const mnemonic = [
@@ -19,11 +18,7 @@ describe('BIP39', () => {
   })
 
   it('correctly derives wallet root key', async () => {
-    const {csl, release} = wrappedCsl()
     const rootKey = generateWalletRootKey(mnemonic)
-    expect(Buffer.from(rootKey.asBytes()).toString('hex')).toEqual(
-      expectedKey,
-    )
-    release()
+    expect(Buffer.from(rootKey.asBytes()).toString('hex')).toEqual(expectedKey)
   })
 })

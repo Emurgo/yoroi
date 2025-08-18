@@ -1,9 +1,10 @@
-import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useAsyncStorage} from '@yoroi/common'
 import {Blockies} from '@yoroi/identicon'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Api, Wallet} from '@yoroi/types'
+
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 import {
   InteractionManager,
@@ -11,8 +12,8 @@ import {
   ScrollView,
   Text,
   TouchableOpacity,
-  useWindowDimensions,
   View,
+  useWindowDimensions,
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 

@@ -1,9 +1,9 @@
 import {
-  fetchData,
   FetchData,
+  RequestConfig,
+  fetchData,
   getBasePath,
   isRight,
-  RequestConfig,
   time,
 } from '@yoroi/common'
 import {Api} from '@yoroi/types'
@@ -11,10 +11,10 @@ import {Api} from '@yoroi/types'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import {createAsyncStoragePersister} from '@tanstack/query-async-storage-persister'
 import {
-  focusManager,
-  onlineManager,
   QueryClient,
   QueryKey,
+  focusManager,
+  onlineManager,
 } from '@tanstack/react-query'
 import {
   PersistQueryClientProvider,
@@ -27,6 +27,7 @@ import {AppState, AppStateStatus} from 'react-native'
 
 import {isWeb} from '~/kernel/constants'
 import {logger} from '~/kernel/logger/logger'
+
 import {ConnectionStatus} from './types'
 
 // IMPORTANT:

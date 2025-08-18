@@ -2,7 +2,6 @@ import * as React from 'react'
 
 import {pinLength} from '~/features/Auth/common/constants'
 import {useAuth} from '~/features/Auth/context/AuthProvider'
-
 import {
   PinInput,
   PinInputRef,
@@ -10,7 +9,6 @@ import {
 import {showErrorDialog} from '~/kernel/dialogs'
 import {errorMessages} from '~/kernel/i18n/messages/global'
 import {useStrings} from '~/kernel/i18n/useStrings'
-
 import {logger} from '~/kernel/logger/logger'
 
 export const CheckPinInput = ({onValid}: {onValid: () => void}) => {

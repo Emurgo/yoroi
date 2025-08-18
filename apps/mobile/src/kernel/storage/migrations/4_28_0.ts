@@ -1,7 +1,7 @@
-import {WalletChecksum} from '@emurgo/cip4-js'
-
 import {Blockies} from '@yoroi/identicon'
 import {App, HW, Wallet} from '@yoroi/types'
+
+import {WalletChecksum} from '@emurgo/cip4-js'
 
 import {makeWalletEncryptedStorage} from '~/kernel/storage/EncryptedStorage'
 

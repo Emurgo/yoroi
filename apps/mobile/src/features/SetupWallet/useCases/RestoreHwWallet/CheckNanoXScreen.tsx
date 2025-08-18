@@ -1,6 +1,7 @@
-import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {useTheme} from '@yoroi/theme'
+
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 import {
   Linking,
@@ -20,6 +21,7 @@ import {Button} from '~/ui/Button/Button'
 import {Space} from '~/ui/Space/Space'
 import {StepperProgress} from '~/ui/StepperProgress/StepperProgress'
 import {Text} from '~/ui/Text/Text'
+
 import {LedgerCheckIllustration} from '../../illustrations/LedgerCheckIllustration'
 
 export const CheckNanoXScreen = () => {

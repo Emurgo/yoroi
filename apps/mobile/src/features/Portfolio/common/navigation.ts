@@ -1,5 +1,6 @@
-import {useNavigation} from '@react-navigation/native'
 import {Portfolio} from '@yoroi/types'
+
+import {useNavigation} from '@react-navigation/native'
 
 import {NftRouteNavigation} from '~/kernel/navigation/types'
 

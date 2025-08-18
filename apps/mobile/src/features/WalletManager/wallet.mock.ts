@@ -2,8 +2,10 @@ import {AppApi} from '@yoroi/api'
 import {cardanoConfig, protocolParamsPlaceholder} from '@yoroi/blockchains'
 import {createPrimaryTokenInfo} from '@yoroi/portfolio'
 import {Portfolio, Wallet} from '@yoroi/types'
+
 import {noop} from 'lodash'
 import {Observable} from 'rxjs'
+
 import {YoroiWallet} from '../../wallets/cardano/types'
 import {mockEncryptedStorage} from '../../wallets/mocks/storage'
 import {mockTransactionInfos} from '../../wallets/mocks/transaction'

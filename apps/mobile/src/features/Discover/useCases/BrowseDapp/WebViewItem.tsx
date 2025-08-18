@@ -1,4 +1,5 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import {LinearGradient} from 'expo-linear-gradient'
 import * as React from 'react'
 import {
@@ -18,13 +19,14 @@ import {
   WebViewNavigation,
   WebViewNavigationEvent,
 } from 'react-native-webview/lib/WebViewTypes'
-import {isDev} from '~/kernel/constants'
 
 import {TabItem, useBrowser} from '~/features/Discover/common/BrowserProvider'
 import {useConnectWalletToWebView} from '~/features/Discover/common/hooks'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {isDev} from '~/kernel/constants'
 import {Icon} from '~/ui/Icon'
 import {Space} from '~/ui/Space/Space'
+
 import {getDomainFromUrl} from '../../common/helpers'
 import {useNavigateTo} from '../../common/useNavigateTo'
 import {BrowserTabBar} from './BrowserTabBar'

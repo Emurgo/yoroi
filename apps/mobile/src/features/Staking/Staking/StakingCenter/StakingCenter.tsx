@@ -1,12 +1,13 @@
+import {atoms as a, useTheme} from '@yoroi/theme'
+
 import {useFocusEffect} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
-import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
+import {useIntl} from 'react-intl'
 import {Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {WebView, WebViewMessageEvent} from 'react-native-webview'
 
-import {useIntl} from 'react-intl'
 import {useNavigateTo} from '~/features/Dashboard/Dashboard'
 import {useStakingTx} from '~/features/Dashboard/StakePoolInfos'
 import {useReviewTx} from '~/features/ReviewTx/common/ReviewTxProvider'

@@ -1,18 +1,20 @@
 import {networkConfigs} from '@yoroi/blockchains'
 import {useSyncStorageToState} from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
 import {ScrollView} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
+
 import {useAuthSetting} from '~/features/Auth/hooks/useAuthSetting'
 import {useAuthWithOs} from '~/features/Auth/hooks/useAuthWithOs'
 import {useIsAuthOsSupported} from '~/features/Auth/hooks/useIsAuthOsSupported'
-import {useNavigateTo} from '~/features/Settings/common/navigation'
 import {
   NavigatedSettingsItem,
   SettingsItem,
   SettingsSection,
 } from '~/features/Settings/SettingsItems'
+import {useNavigateTo} from '~/features/Settings/common/navigation'
 import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
 import {isAndroid} from '~/kernel/constants'
 import {useLanguage} from '~/kernel/i18n/LanguageProvider'
@@ -25,6 +27,7 @@ import {
 import {Icon} from '~/ui/Icon'
 import {SettingsSwitch} from '~/ui/SettingsSwitch/SettingsSwitch'
 import {Space} from '~/ui/Space/Space'
+
 import {useCurrencyPairing} from './Currency/CurrencyContext'
 import {usePrivacyMode} from './PrivacyMode/PrivacyMode'
 import {

@@ -1,12 +1,12 @@
 import {useResolverSetShowNotice, useResolverShowNotice} from '@yoroi/resolver'
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import {LinearGradient} from 'expo-linear-gradient'
 import * as React from 'react'
 import {Text, TouchableOpacity, View} from 'react-native'
 
-import {Icon} from '~/ui/Icon'
-
 import {useStrings} from '~/kernel/i18n/useStrings'
+import {Icon} from '~/ui/Icon'
 import {Space} from '~/ui/Space/Space'
 
 export const NotifySupportedNameServers = () => {

@@ -1,10 +1,11 @@
-import {createStackNavigator} from '@react-navigation/stack'
 import {atoms as a, useTheme} from '@yoroi/theme'
-import * as React from 'react'
 
 import {useNavigation} from '@react-navigation/native'
+import {createStackNavigator} from '@react-navigation/stack'
+import * as React from 'react'
 import {Button, Text, View} from 'react-native'
 import {SystemBars} from 'react-native-edge-to-edge'
+
 import {useModal} from '~/ui/Modal/ModalContext'
 
 const Stack = createStackNavigator<any>()

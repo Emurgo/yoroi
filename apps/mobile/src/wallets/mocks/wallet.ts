@@ -6,14 +6,17 @@ import {
 } from '@yoroi/blockchains'
 import {createPrimaryTokenInfo} from '@yoroi/portfolio'
 import {Balance, Portfolio, Wallet} from '@yoroi/types'
+
 import BigNumber from 'bignumber.js'
 import {noop} from 'lodash'
 import {Observable} from 'rxjs'
 
 import {buildPortfolioTokenManagers} from '~/features/Portfolio/common/helpers/build-token-managers'
 import {logger} from '~/kernel/logger/logger'
+
 import {toTokenInfo, utf8ToHex} from '../cardano/api/utils'
 import {CardanoTypes, YoroiWallet} from '../cardano/types'
+import {TransactionInfo} from '../types/other'
 import {
   RemotePoolMetaSuccess,
   StakePoolInfosAndHistories,
@@ -30,7 +33,6 @@ import {CardanoMobile} from '../wallets'
 import {mockEncryptedStorage} from './storage'
 import {mockTransactionInfo, mockTransactionInfos} from './transaction'
 import {utxos} from './utxos'
-import { TransactionInfo } from '../types/other'
 
 const primaryTokenInfoMainnet = createPrimaryTokenInfo({
   decimals: 6,
@@ -310,7 +312,9 @@ const fetchPoolInfo = {
 
 const fetchNftModerationStatus = {
   success: {
-    approved: async (..._args: unknown[]): Promise<YoroiNftModerationStatus> => {
+    approved: async (
+      ..._args: unknown[]
+    ): Promise<YoroiNftModerationStatus> => {
       return 'approved'
     },
     consent: async (..._args: unknown[]): Promise<YoroiNftModerationStatus> => {
@@ -470,8 +474,7 @@ const signTxWithLedger = {
 }
 
 const submitTransaction = {
-  success: async (..._args: unknown[]) => {
-  },
+  success: async (..._args: unknown[]) => {},
   error: async (..._args: unknown[]) => {
     return Promise.reject(new Error('Mock error'))
   },

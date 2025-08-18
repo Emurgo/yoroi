@@ -1,5 +1,6 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
+
 import * as React from 'react'
 import {Text, TouchableOpacity, useWindowDimensions} from 'react-native'
 

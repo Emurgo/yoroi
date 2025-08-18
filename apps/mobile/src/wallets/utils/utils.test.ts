@@ -1,15 +1,16 @@
 import {Balance} from '@yoroi/types'
+
 import BigNumber from 'bignumber.js'
 
 import {RawUtxo} from '../types/other'
 import {YoroiEntry} from '../types/yoroi'
 import {
   Amounts,
-  asQuantity,
   Entries,
   Quantities,
-  splitStringInto64CharArray,
   Utxos,
+  asQuantity,
+  splitStringInto64CharArray,
 } from './utils'
 
 describe('Quantities', () => {

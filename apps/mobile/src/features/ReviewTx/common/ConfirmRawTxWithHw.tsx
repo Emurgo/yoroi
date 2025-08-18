@@ -1,6 +1,7 @@
-import {useMutation, UseMutationOptions} from '@tanstack/react-query'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {HW} from '@yoroi/types'
+
+import {UseMutationOptions, useMutation} from '@tanstack/react-query'
 import React, {useState} from 'react'
 import {ScrollView, View} from 'react-native'
 
@@ -83,7 +84,7 @@ export const ConfirmRawTxWithHW = ({onSuccess, cbor}: Props) => {
           {color: p.text_gray_medium},
         ]}
       >
-        {strings.continueOnLedger}
+        {strings.ledgerMessages.continueOnLedger}
       </Text>
     </View>
   )
@@ -99,28 +100,7 @@ export const useSignRawTxWithHw = (
   const {wallet} = useSelectedWallet()
   const mutation = useMutation({
     ...options,
-    useErrorBoundary: true,
-    mutationFn: async ({cbor, useUSB, hwDeviceInfo}) => {
-      await wallet.signRawTxWithLedger(cbor, useUSB, hwDeviceInfo)
-    },
-  })
-  return {
-    ...mutation,
-    signRawWithHw: mutation.mutate,
-  }
-}
-
-export const useSignRawTxWithHw = (
-  options?: UseMutationOptions<
-    void,
-    Error,
-    {cbor: string; useUSB: boolean; hwDeviceInfo: HW.DeviceInfo}
-  >,
-) => {
-  const {wallet} = useSelectedWallet()
-  const mutation = useMutation({
-    ...options,
-    useErrorBoundary: true,
+    throwOnError: true,
     mutationFn: async ({cbor, useUSB, hwDeviceInfo}) => {
       await wallet.signRawTxWithLedger(cbor, useUSB, hwDeviceInfo)
     },

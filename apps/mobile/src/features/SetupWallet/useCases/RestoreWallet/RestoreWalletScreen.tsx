@@ -1,6 +1,7 @@
-import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
+
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {validateMnemonic} from 'bip39'
 import * as React from 'react'
 import {
@@ -8,8 +9,8 @@ import {
   Platform,
   Text,
   TouchableOpacity,
-  useWindowDimensions,
   View,
+  useWindowDimensions,
 } from 'react-native'
 import {FlatList, ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
@@ -29,6 +30,7 @@ import {useScrollView} from '~/ui/ScrollView/ScrollView'
 import {Space} from '~/ui/Space/Space'
 import {StepperProgress} from '~/ui/StepperProgress/StepperProgress'
 import {isEmptyString} from '~/wallets/utils/string'
+
 import {MnemonicInput} from './MnemonicInput/MnemonicInput'
 
 export type MnemonicWordInputRef = {

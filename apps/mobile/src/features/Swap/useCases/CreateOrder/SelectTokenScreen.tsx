@@ -1,8 +1,9 @@
-import {FlashList} from '@shopify/flash-list'
 import {isNonNullable, isString} from '@yoroi/common'
 import {amountBreakdown, isPrimaryToken, sortTokenInfos} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
+
+import {FlashList} from '@shopify/flash-list'
 import BigNumber from 'bignumber.js'
 import * as React from 'react'
 import {ErrorBoundary} from 'react-error-boundary'
@@ -31,6 +32,7 @@ import {
   AmountItemPlaceholder,
   TokenAmountItem,
 } from '~/ui/TokenAmountItem/TokenAmountItem'
+
 import {useNavigateTo} from '../../common/navigation'
 
 type Direction = SwapTokenRoutes['select-token']

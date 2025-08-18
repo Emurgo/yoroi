@@ -14,6 +14,7 @@ import {
 } from '@emurgo/yoroi-lib'
 
 import {WalletEncryptedStorage} from '~/kernel/storage/EncryptedStorage'
+
 import {
   FundInfoResponse,
   RawUtxo,

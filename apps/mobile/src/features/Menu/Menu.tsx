@@ -1,15 +1,17 @@
+import {atoms as a, useTheme} from '@yoroi/theme'
+
 import {useFocusEffect} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
-import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {
   Linking,
   ScrollView,
   TouchableOpacity,
-  useWindowDimensions,
   View,
+  useWindowDimensions,
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
+
 import {usePrefetchStakingInfo} from '~/features/Dashboard/StakePoolInfos'
 import {useCanVote} from '~/features/RegisterCatalyst/common/hooks'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
@@ -23,6 +25,7 @@ import {Icon} from '~/ui/Icon'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
+
 import {InsufficientFundsModal} from '../RegisterCatalyst/common/InsufficientFundsModal'
 import {NetworkTag} from '../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {usePoolTransition} from '../Staking/Staking/PoolTransition/usePoolTransition'

@@ -1,20 +1,22 @@
 import {isArray, isString} from '@yoroi/common'
 import {Portfolio} from '@yoroi/types'
+
 import {BigNumber} from 'bignumber.js'
 
 import {
   BaseAsset,
   CERTIFICATE_KIND,
-  Transaction,
   TRANSACTION_DIRECTION,
   TRANSACTION_STATUS,
   TRANSACTION_TYPE,
+  Transaction,
   TransactionInfo,
 } from '~/wallets/types/other'
 import {Token} from '~/wallets/types/tokens'
+
 import {
-  getDefaultNetworkTokenEntry,
   MultiToken,
+  getDefaultNetworkTokenEntry,
   strToDefaultMultiAsset,
 } from '../MultiToken'
 import {multiTokenFromRemote} from '../utils'

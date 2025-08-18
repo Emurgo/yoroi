@@ -1,4 +1,4 @@
-import {atoms as a, ThemedPalette, useTheme} from '@yoroi/theme'
+import {ThemedPalette, atoms as a, useTheme} from '@yoroi/theme'
 
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {
@@ -7,8 +7,8 @@ import {
 } from '@react-navigation/stack'
 import {produce} from 'immer'
 import React, {
-  createContext,
   ReactNode,
+  createContext,
   useCallback,
   useContext,
   useReducer,
@@ -338,7 +338,8 @@ export const defaultStackNavigationOptions = (
 ): StackNavigationOptions => {
   return {
     ...(Platform.OS === 'android' && {...TransitionPresets.SlideFromRightIOS}),
-    detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
+    detachPreviousScreen:
+      false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
     cardStyle: {
       backgroundColor: color.bg_color_max,
     },

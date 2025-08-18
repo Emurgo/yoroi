@@ -3,6 +3,7 @@ import {isLeft, truncateString} from '@yoroi/common'
 import {infoExtractName} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Api, Portfolio, Swap} from '@yoroi/types'
+
 import * as React from 'react'
 import {ErrorBoundary} from 'react-error-boundary'
 import {useIntl} from 'react-intl'
@@ -30,6 +31,7 @@ import {RefreshButton} from '~/ui/RefreshButton/RefreshButton'
 import {ServiceUnavailable} from '~/ui/ServiceUnavailable/ServiceUnavailable'
 import {Space} from '~/ui/Space/Space'
 import {TokenInfoIcon} from '~/ui/TokenInfoIcon/TokenInfoIcon'
+
 import {useNavigateTo} from '../../common/navigation'
 
 type Filter = 'open' | 'completed'

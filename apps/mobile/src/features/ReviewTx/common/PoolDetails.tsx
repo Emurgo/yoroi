@@ -1,5 +1,6 @@
-import {FullPoolInfo} from '@emurgo/yoroi-lib'
 import {atoms as a, useTheme} from '@yoroi/theme'
+
+import {FullPoolInfo} from '@emurgo/yoroi-lib'
 import {Image} from 'expo-image'
 import * as React from 'react'
 import {Text, View} from 'react-native'
@@ -11,7 +12,8 @@ import {ExplorerInfoLinks} from '~/ui/ExplorerInfoLinks/ExplorerInfoLinks'
 import {Space} from '~/ui/Space/Space'
 import {formatTokenWithText} from '~/wallets/utils/format'
 import {isEmptyString} from '~/wallets/utils/string'
-import {asQuantity, Quantities} from '~/wallets/utils/utils'
+import {Quantities, asQuantity} from '~/wallets/utils/utils'
+
 import {generatePoolName} from './operations'
 
 export const PoolDetails = ({poolInfo}: {poolInfo: FullPoolInfo}) => {

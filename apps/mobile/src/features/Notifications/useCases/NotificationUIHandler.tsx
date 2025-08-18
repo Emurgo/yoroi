@@ -1,7 +1,8 @@
-import {useNavigation} from '@react-navigation/native'
 import {isString} from '@yoroi/common'
 import {useNotificationManager} from '@yoroi/notifications'
 import {Notifications} from '@yoroi/types'
+
+import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 
 import {useNotificationDisplaySettings} from '~/features/Settings/useCases/changeWalletSettings/Notifications/NotificationsDisplaySettings'
@@ -10,9 +11,10 @@ import {
   isTxHistoryRoute,
   isWalletSelectionRoute,
 } from '~/kernel/navigation/common/helpers'
-import {pushNotificationsManager} from '../common/notification-manager'
+
 import {NotificationPopup} from '../common/NotificationPopup'
 import {NotificationStack} from '../common/NotificationStack'
+import {pushNotificationsManager} from '../common/notification-manager'
 
 const displayLimit = 3
 

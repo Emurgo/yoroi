@@ -1,11 +1,11 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
 import {Platform, Text, View} from 'react-native'
 
-import {useModal} from '~/ui/Modal/ModalContext'
-
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button, ButtonType} from '~/ui/Button/Button'
+import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
 
 type Props = {

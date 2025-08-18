@@ -6,10 +6,12 @@ import {
 } from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
+
 import * as React from 'react'
-import {Text, useWindowDimensions, View, ViewProps} from 'react-native'
+import {Text, View, ViewProps, useWindowDimensions} from 'react-native'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
+
 import {usePrivacyMode} from '../../features/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
 import {usePriceImpactRiskTheme} from '../../features/Swap/common/helpers'
 import {SwapPriceImpactRisk} from '../../features/Swap/common/types'

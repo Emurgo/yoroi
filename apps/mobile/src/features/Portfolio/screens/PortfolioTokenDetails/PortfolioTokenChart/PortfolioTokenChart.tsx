@@ -1,4 +1,5 @@
 import {atoms as a} from '@yoroi/theme'
+
 import React, {useCallback, useState} from 'react'
 import {View} from 'react-native'
 
@@ -6,6 +7,7 @@ import {
   TokenChartInterval,
   useGetPortfolioTokenChart,
 } from '~/features/Portfolio/common/hooks/useGetPortfolioTokenChart'
+
 import {ChartPlaceholder} from './ChartPlaceholder'
 import {PortfolioTokenChartSkeleton} from './PortfolioTokenChartSkeleton'
 import {TokenChart} from './TokenChart'

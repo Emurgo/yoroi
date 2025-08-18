@@ -1,5 +1,6 @@
-import {useNavigation} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
+
+import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 import {TouchableOpacity} from 'react-native'
 

@@ -1,5 +1,6 @@
 import {amountFormatter} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
 import {Platform, Text, View} from 'react-native'
 
@@ -8,6 +9,7 @@ import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWalle
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {ActivityIndicator} from '~/ui/ActivityIndicator/ActivityIndicator'
 import {Space} from '~/ui/Space/Space'
+
 import {useCatalystCurrentFund} from './hooks'
 
 const formatter = amountFormatter({

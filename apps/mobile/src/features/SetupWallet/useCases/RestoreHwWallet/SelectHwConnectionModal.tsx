@@ -1,6 +1,7 @@
-import {useNavigation} from '@react-navigation/native'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {useTheme} from '@yoroi/theme'
+
+import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 import {Alert, Platform, Text, View} from 'react-native'
 import DeviceInfo from 'react-native-device-info'

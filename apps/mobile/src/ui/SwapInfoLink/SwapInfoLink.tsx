@@ -13,7 +13,7 @@ export const SwapInfoLink = () => {
     <Button
       type={ButtonType.Link}
       onPress={() => Linking.openURL(SWAP_ZENDESK_LINK)}
-      title={strings.listOrdersSheetLink}
+      title={strings.swap.listOrdersSheetLink}
     />
   )
 }

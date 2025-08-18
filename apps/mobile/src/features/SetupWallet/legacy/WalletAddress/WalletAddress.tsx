@@ -1,6 +1,8 @@
 import {useExplorers} from '@yoroi/explorers'
+
 import * as React from 'react'
 import {Linking, Text, TouchableOpacity, View, ViewStyle} from 'react-native'
+
 import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
 import {Copiable} from '~/ui/Copiable/Copiable'
 

@@ -1,4 +1,5 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import {CameraView, useCameraPermissions} from 'expo-camera'
 import * as React from 'react'
 import {Text, TouchableOpacity, View} from 'react-native'
