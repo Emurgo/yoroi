@@ -10,16 +10,16 @@ import {
 import * as React from 'react'
 
 import {useReviewTx} from '~/features/ReviewTx/common/ReviewTxProvider'
-import {useStakingKey} from '~/features/Staking/hooks/useStakingKey'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {useWalletEvent} from '~/features/WalletManager/hooks/useWalletEvent'
-import {useStrings} from '~/kernel/i18n/useStrings'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {InfoBanner} from '~/ui/InfoBanner/InfoBanner'
+import {useStakingKey} from '~/features/Staking/hooks/useStakingKey'
+import {useWalletEvent} from '~/features/WalletManager/hooks/useWalletEvent'
 import {YoroiUnsignedTx} from '~/wallets/types/yoroi'
 import {CardanoMobile} from '~/wallets/wallets'
 import {GovernanceVote} from '../types'
 import {useNavigateTo} from './navigation'
+import {useStrings} from '~/kernel/i18n/useStrings'
 
 export const useIsParticipatingInGovernance = () => {
   const status = useGovernanceStatus({
