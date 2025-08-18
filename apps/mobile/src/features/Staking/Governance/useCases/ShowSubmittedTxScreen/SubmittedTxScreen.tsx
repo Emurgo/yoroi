@@ -6,7 +6,7 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Button} from '~/ui/Button/Button'
 import {Space} from '~/ui/Space/Space'
-import {SuccessfulTxIcon} from '../ReviewTx/illustrations/SuccessfulTxIcon'
+import {SuccessfulTxIcon} from '~/ui/SuccessfulTxIcon/SuccessfulTxIcon'
 
 export const SubmittedTxScreen = () => {
   const strings = useStrings()

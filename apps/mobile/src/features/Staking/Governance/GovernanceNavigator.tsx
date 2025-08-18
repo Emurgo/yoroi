@@ -24,7 +24,7 @@ const Stack = NavigationStack
 export const GovernanceNavigator = () => {
   const strings = useStrings()
   const manager = useGovernanceManagerMaker()
-  const {palette: p} = useTheme()
+  const {atoms, palette: p} = useTheme()
   const walletNavigation = useWalletNavigation()
 
   return (
@@ -41,7 +41,7 @@ export const GovernanceNavigator = () => {
             name="staking-gov-home"
             component={HomeScreen}
             options={{
-              title: strings.governanceCentreTitle,
+              title: strings.staking.governanceCentreTitle,
               headerLeft: (props) => (
                 <BackButton
                   {...props}
@@ -54,7 +54,7 @@ export const GovernanceNavigator = () => {
           <Stack.Screen
             name="staking-gov-change-vote"
             component={ChangeVoteScreen}
-            options={{title: strings.governanceCentreTitle}}
+            options={{title: strings.staking.governanceCentreTitle}}
           />
 
           <Stack.Screen
@@ -66,7 +66,7 @@ export const GovernanceNavigator = () => {
           <Stack.Screen
             name="staking-gov-no-funds"
             component={NoFundsScreen}
-            options={{title: strings.governanceCentreTitle}}
+            options={{title: strings.staking.governanceCentreTitle}}
           />
 
           <Stack.Screen
