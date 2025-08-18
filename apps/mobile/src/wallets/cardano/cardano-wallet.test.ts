@@ -3,7 +3,6 @@ import {Chain} from '@yoroi/types'
 
 import {getWalletFactory} from '~/features/WalletManager/network-manager/get-wallet-factory'
 import {keyManager} from './key-manager/key-manager'
-import {wrappedCsl} from './wrappedCsl'
 
 describe('CardanoWallet', () => {
   afterEach(() => AsyncStorage.clear())
@@ -20,13 +19,10 @@ describe('CardanoWallet', () => {
     const id = '261c7e0f-dd72-490c-8ce9-6714b512b969'
 
     // keys
-    const {csl, release} = wrappedCsl()
-    const {accountPubKeyHex} = await keyManager('cardano-cip1852')({
+    const {accountPubKeyHex} = keyManager('cardano-cip1852')({
       mnemonic,
-      csl,
       accountVisual,
     })
-    release()
 
     const wallet = await ShelleyWalletPreprod.build({
       id,

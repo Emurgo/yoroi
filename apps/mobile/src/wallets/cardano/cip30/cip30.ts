@@ -147,9 +147,9 @@ class CIP30Extension {
   async signData(
     rootKey: string,
     address: string,
-    _payload: string,
+    payload: string,
   ): Promise<{signature: string; key: string}> {
-    // const payloadInBytes = Buffer.from(payload, 'hex')
+    const payloadInBytes = Buffer.from(payload, 'hex')
     const normalisedAddress = normalizeToAddress(CardanoMobile, address)
     const bech32Address = normalisedAddress?.toBech32(undefined)
     if (!bech32Address || !normalisedAddress) throw new Error('Invalid address')
@@ -176,12 +176,12 @@ class CIP30Extension {
           )
 
     const signingKey = createRawTxSigningKey(rootKey, signingPath)
-    const coseSign1 = cip8.sign(
+    const coseSign1 = await cip8.sign(
       Buffer.from(normalisedAddress.toHex(), 'hex'),
       signingKey,
       payloadInBytes,
     )
-    const key = cip8.makeCip8Key(signingKey.toPublic().asBytes())
+    const key = await cip8.makeCip8Key(signingKey.toPublic().asBytes())
 
     return {
       signature: Buffer.from(coseSign1.toBytes()).toString('hex'),
