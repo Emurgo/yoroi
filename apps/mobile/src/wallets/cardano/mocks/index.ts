@@ -1,9 +1,4 @@
-import {
-  BackendConfig,
-  RawTransaction,
-  TipStatusResponse,
-  Transaction,
-} from '@yoroi/types'
+import {BackendConfig, RawTransaction, Transaction} from '~/wallets/types/other'
 
 export const mockedBackendConfig: BackendConfig = {
   API_ROOT: 'https://fakeapiroot.com',

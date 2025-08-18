@@ -1,8 +1,9 @@
-import {Balance} from '@yoroi/types'
+import {Balance, Numbers} from '@yoroi/types'
+
 import BigNumber from 'bignumber.js'
 
-import {RawUtxo, TokenId, YoroiEntry} from '@yoroi/types'
-import {NumberLocale} from '~/kernel/i18n/languages'
+import {RawUtxo} from '../types/other'
+import {TokenId, YoroiEntry} from '../types/yoroi'
 
 export const Entries = {
   first: (entries: YoroiEntry[]): YoroiEntry => {
@@ -168,7 +169,7 @@ export const Quantities = {
   parseFromText: (
     text: string,
     denomination: number,
-    format: NumberLocale,
+    format: Numbers.Locale,
     precision = denomination,
   ): [string, Balance.Quantity] => {
     const {decimalSeparator} = format
