@@ -76,7 +76,7 @@ export const useUpdateLatestGovernanceAction = (
     mutationFn: async (action: GovernanceAction) =>
       await manager.setLatestGovernanceAction(action),
     invalidateQueries: [
-      [walletId, manager.network, 'governanceLatestGovernanceAction'],
+      [walletId, manager.network, 'useLatestGovernanceAction'],
     ],
   })
   return {
