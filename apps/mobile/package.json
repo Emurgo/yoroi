@@ -114,6 +114,7 @@
     "react-native-device-info": "14.0.4",
     "react-native-easy-view-transformer": "1.2.1",
     "react-native-edge-to-edge": "1.6.0",
+    "react-native-fast-pbkdf2": "^0.3.1",
     "react-native-gesture-handler": "2.24.0",
     "react-native-keychain": "10.0.0",
     "react-native-linear-gradient": "2.8.3",

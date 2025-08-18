@@ -1,5 +1,6 @@
 import {getMasterKeyFromMnemonic} from '../mnemonic/mnemonic'
-import {mocks} from '../mocks/wallet'
+import {mocks} from '../../mocks/wallet'
+import {Buffer} from 'buffer'
 import {cip95ExtensionMaker} from './cip95'
 
 describe('cip95ExtensionMaker', () => {
@@ -13,13 +14,14 @@ describe('cip95ExtensionMaker', () => {
   })
 
   it('should support signData', async () => {
-    const rootKey = await getMasterKeyFromMnemonic(mnemonic)
+    const rootKey = getMasterKeyFromMnemonic(mnemonic)
+    const rootKeyHex = Buffer.from(rootKey).toString('hex')
     const message = '48656C6C6F'
     const addressBech32 =
       'addr1qynqc23tpx4dqps6xgqy9s2l3xz5fxu734wwmzj9uddn0h2z6epfcukqmswgwwfruxh7gaddv9x0d5awccwahnhwleqqc4zkh4'
 
     const cip95 = cip95ExtensionMaker(mocks.wallet, mocks.walletMeta)
-    const result = await cip95.signData(rootKey, addressBech32, message)
+    const result = await cip95.signData(rootKeyHex, addressBech32, message)
 
     expect(result).toEqual({
       signature:

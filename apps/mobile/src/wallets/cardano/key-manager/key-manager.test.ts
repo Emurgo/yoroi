@@ -14,7 +14,7 @@ describe('makeKeys', () => {
       'slide assault bus',
     ].join(' ')
 
-    const keys = await keyManager('cardano-cip1852')({mnemonic, csl})
+    const keys = await keyManager('cardano-cip1852')({mnemonic})
 
     expect(keys).toEqual({
       accountPubKeyHex:
@@ -31,7 +31,7 @@ describe('makeKeys', () => {
       'slide assault bus',
     ].join(' ')
 
-    const keys = await keyManager('cardano-bip44')({mnemonic, csl})
+    const keys = await keyManager('cardano-bip44')({mnemonic})
 
     expect(keys).toEqual({
       accountPubKeyHex:

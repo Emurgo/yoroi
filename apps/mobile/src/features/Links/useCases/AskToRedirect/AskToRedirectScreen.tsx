@@ -37,12 +37,12 @@ export const AskToRedirectScreen = ({link}: {link: string}) => {
           size="S"
           type={ButtonType.Secondary}
           onPress={closeModal}
-          title={strings.links.cancel}
+          title={strings.global.cancel}
         />
 
         <Space.Width.md />
 
-        <Button size="S" onPress={handleOnConfirm} title={strings.links.ok} />
+        <Button size="S" onPress={handleOnConfirm} title={strings.global.ok} />
       </Actions>
     </SafeAreaView>
   )

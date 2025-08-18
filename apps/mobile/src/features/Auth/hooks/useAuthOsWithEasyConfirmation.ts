@@ -1,3 +1,11 @@
+import {UseMutationOptions, useMutation} from '@tanstack/react-query'
+import {Alert} from 'react-native'
+
+import {useStrings} from '~/kernel/i18n/useStrings'
+import {logger} from '~/kernel/logger/logger'
+import {Keychain} from '~/kernel/storage/Keychain'
+import {AuthenticationPrompt} from '~/kernel/storage/KeychainStorage'
+
 export const useAuthOsWithEasyConfirmation = (
   {
     walletId: _walletId,
@@ -10,13 +18,13 @@ export const useAuthOsWithEasyConfirmation = (
   const alert = (error: unknown) => {
     if (error instanceof Keychain.Errors.CancelledByUser) return
     if (error instanceof Keychain.Errors.TooManyAttempts)
-      return Alert.alert(strings.error, strings.tooManyAttempts)
-    return Alert.alert(strings.error, strings.unknownError)
+      return Alert.alert(strings.global.error, strings.global.tooManyAttempts)
+    return Alert.alert(strings.global.error, strings.global.unknownError)
   }
 
   const defaultAuthenticationPrompt: AuthenticationPrompt = {
-    cancel: strings.cancel,
-    title: strings.authorize,
+    cancel: strings.global.cancel,
+    title: strings.global.accept,
   }
 
   const mutation = useMutation({
