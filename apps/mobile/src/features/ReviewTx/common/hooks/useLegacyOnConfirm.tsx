@@ -2,9 +2,6 @@ import * as React from 'react'
 
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {ConfirmTxWithHwModal} from '~/ui/ConfirmTxWithHwModal/ConfirmTxWithHwModal'
-import {ConfirmTxWithOsModal} from '~/ui/ConfirmTxWithOsModal/ConfirmTxWithOsModal'
-import {ConfirmTxWithSpendingPasswordModal} from '~/ui/ConfirmTxWithSpendingPasswordModal/ConfirmTxWithSpendingPasswordModal'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {YoroiSignedTx, YoroiUnsignedTx} from '~/wallets/types/yoroi'
 
@@ -52,19 +49,11 @@ export const useLegacyOnConfirm = ({
 
     if (isHW) {
       openModal({
-        title: strings.signTransaction,
+        title: strings.staking.signTransaction,
         content: (
-          <ConfirmTxWithHwModal
-            onCancel={closeModal}
-            unsignedTx={unsignedTx}
+          <ConfirmRawTxWithHW
             onSuccess={handleOnSuccess}
-            onNotSupportedCIP1694={() => {
-              if (onNotSupportedCIP1694) {
-                closeModal()
-                onNotSupportedCIP1694()
-              }
-            }}
-            onCIP36SupportChange={onCIP36SupportChange ?? undefined}
+            cbor={unsignedTx.cbor}
           />
         ),
         height: 400,

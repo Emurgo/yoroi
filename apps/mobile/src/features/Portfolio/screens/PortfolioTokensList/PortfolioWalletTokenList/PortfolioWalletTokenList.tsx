@@ -171,7 +171,7 @@ const HeadingList = ({
   countTokensList,
   amount,
 }: HeadingListProps) => {
-  const {atoms: a, palette: p} = useTheme()
+  const {palette: p} = useTheme()
   const strings = useStrings()
 
   return (
