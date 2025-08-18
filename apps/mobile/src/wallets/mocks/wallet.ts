@@ -655,17 +655,6 @@ const tokenInfos: Record<string, Balance.TokenInfo> = {
       policyId: '1d129dc9c03f95a863489883914f05a52e13135994a32f0cbeacc65e',
       assetNameHex: '74484f444c53',
     }),
-    symbol: '8DEC',
-    metadatas: {
-      mintFt: undefined,
-      tokenRegistry: undefined,
-      mintNft: {
-        name: '8DEC',
-        description: 'WingRiders testnet 8DEC token.',
-        image:
-          'https://fibo-validated-nft-images.s3.amazonaws.com/asset1a6765qk8cpk2wll3hevw6xy9xry893jrzl9ms3.jpeg',
-      },
-    },
   },
   '1d129dc9c03f95a863489883914f05a52e13135994a32f0cbeacc65e.74484f444c54':
     toTokenInfo({

@@ -1,7 +1,9 @@
-import {UseMutationOptions} from '@tanstack/react-query'
 import {useMutationWithInvalidations} from '@yoroi/common'
 
-import {RawUtxo} from '@yoroi/types'
+import {UseMutationOptions} from '@tanstack/react-query'
+
+import {RawUtxo} from '~/wallets/types/other'
+
 import {YoroiWallet} from '../types'
 
 export const useSetCollateralId = (
@@ -9,8 +11,9 @@ export const useSetCollateralId = (
   {...options}: UseMutationOptions<void, Error, RawUtxo['utxo_id']> = {},
 ) => {
   const mutation = useMutationWithInvalidations({
-    mutationFn: (collateralId: RawUtxo['utxo_id']) =>
-      wallet.setCollateralId(collateralId),
+    mutationFn: async (collateralId: RawUtxo['utxo_id']) => {
+      wallet.setCollateralId(collateralId)
+    },
     invalidateQueries: [['useSetCollateralId', wallet.id]],
     ...options,
   })

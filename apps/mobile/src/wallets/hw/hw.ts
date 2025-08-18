@@ -1,4 +1,5 @@
 import {useMutation, UseMutationOptions} from '@tanstack/react-query'
+import {MessageDescriptor} from 'react-intl'
 import {Permission, PermissionsAndroid, Platform} from 'react-native'
 
 import {LocalizableError} from '~/kernel/i18n/LocalizableError'
@@ -42,7 +43,13 @@ const getLedgerPermissions = () => {
   return permissions
 }
 
-export class BaseLedgerError extends LocalizableError {}
+export class BaseLedgerError extends LocalizableError {
+  public values: Record<string, unknown>
+  constructor(descriptor: MessageDescriptor, values: Record<string, unknown> = {}) {
+    super(descriptor)
+    this.values = values
+  }
+}
 
 export class BluetoothDisabledError extends BaseLedgerError {
   constructor() {
