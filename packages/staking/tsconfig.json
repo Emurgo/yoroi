@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "declaration": true,
-    "baseUrl": "./src",
+    "baseUrl": ".",
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
     "esModuleInterop": true,
@@ -22,7 +22,12 @@
     "strict": true,
     "target": "esnext",
     "noImplicitAny": true,
-    "useUnknownInCatchVariables": true
+    "useUnknownInCatchVariables": true,
+    "paths": {
+      "@tanstack/react-query": ["./node_modules/@tanstack/react-query"],
+      "@tanstack/query-core": ["./node_modules/@tanstack/query-core"],
+      "src/*": ["./src/*"]
+    }
   },
   "exclude": ["node_modules"]
 }
