@@ -1,3 +1,6 @@
+import {cardanoConfig} from '@yoroi/blockchains'
+import {Balance, Wallet} from '@yoroi/types'
+
 import * as CSL from '@emurgo/cross-csl-core'
 import {
   RemoteUnspentOutput,
@@ -6,9 +9,6 @@ import {
 } from '@emurgo/yoroi-lib'
 import {normalizeToAddress} from '@emurgo/yoroi-lib/dist/internals/utils/addresses'
 import {parseTokenList} from '@emurgo/yoroi-lib/dist/internals/utils/assets'
-import {cardanoConfig} from '@yoroi/blockchains'
-import {Balance, Wallet} from '@yoroi/types'
-import {BalanceAmounts} from '@yoroi/types/src/balance/token'
 import {BigNumber} from 'bignumber.js'
 import {Buffer} from 'buffer'
 import _ from 'lodash'
@@ -18,6 +18,7 @@ import {RawUtxo} from '~/wallets/types/other'
 import {YoroiUnsignedTx} from '~/wallets/types/yoroi'
 import {asQuantity, Utxos} from '~/wallets/utils/utils'
 import {Cardano, CardanoMobile} from '~/wallets/wallets'
+
 import {toAssetNameHex, toPolicyId} from '../api/utils'
 import {identifierToCardanoAsset} from '../assetUtils'
 import * as cip8 from '../cip8/cip8'
@@ -330,7 +331,7 @@ const _getUtxos = async (
     return paginate(validUtxos, pagination)
   }
 
-  const amounts: BalanceAmounts = {}
+  const amounts: Balance.Amounts = {}
 
   const isValueNumber = !isNaN(Number(valueStr))
 
@@ -484,7 +485,7 @@ const _drawCollateralInMultipleUtxos = async (
 
 const getAmountsFromValue = (value: string, primaryTokenId: string) => {
   const valueFromHex = CardanoMobile.Value.fromHex(value)
-  const amounts: BalanceAmounts = {}
+  const amounts: Balance.Amounts = {}
 
   if (valueFromHex.hasValue()) {
     amounts[primaryTokenId] = asQuantity(valueFromHex.coin().toStr())

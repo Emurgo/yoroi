@@ -1,6 +1,6 @@
 import _ from 'lodash'
 
-import type {
+import {
   AccountStateRequest,
   AccountStateResponse,
   FundInfoResponse,
@@ -10,8 +10,8 @@ import type {
   TxHistoryRequest,
   TxStatusRequest,
   TxStatusResponse,
-} from '@yoroi/types'
-import {StakePoolInfosAndHistories} from '@yoroi/types'
+} from '~/wallets/types/other'
+import {StakePoolInfosAndHistories} from '~/wallets/types/staking'
 import {ServerStatus} from '../types'
 import {handleError} from './errors'
 import {fetchDefault} from './fetch'

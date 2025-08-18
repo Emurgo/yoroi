@@ -1,8 +1,9 @@
-import {normalizeToAddress} from '@emurgo/yoroi-lib/dist/internals/utils/addresses'
 import {Balance, Chain, Portfolio} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
+// TODO: REVISIT this is not exported from yoroi-lib
+import {normalizeToAddress} from '@emurgo/yoroi-lib/dist/internals/utils/addresses'
 
-import {Address} from '@yoroi/types'
+import {Address} from '../types/yoroi'
 import {Amounts, asQuantity, Quantities} from '../utils/utils'
 import {CardanoMobile} from '../wallets'
 import {cardanoValueFromMultiToken} from './cardanoValueFromMultiToken'

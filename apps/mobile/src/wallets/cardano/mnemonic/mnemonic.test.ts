@@ -20,8 +20,8 @@ describe('BIP39', () => {
 
   it('correctly derives wallet root key', async () => {
     const {csl, release} = wrappedCsl()
-    const rootKey = await generateWalletRootKey(mnemonic, csl)
-    expect(Buffer.from(await rootKey.asBytes()).toString('hex')).toEqual(
+    const rootKey = generateWalletRootKey(mnemonic)
+    expect(Buffer.from(rootKey.asBytes()).toString('hex')).toEqual(
       expectedKey,
     )
     release()

@@ -43,14 +43,14 @@ type LedgerConnectionResponse = {
 
 export class DeprecatedAdaAppError extends BaseLedgerError {
   constructor() {
-    super({
-      id: 'ledger.deprecatedAdaAppError',
-      defaultMessage:
-        'Please update your Ledger Cardano app to version {version} or higher',
-      values: {
-        version: `${MIN_ADA_APP_VERSION}`,
+    super(
+      {
+        id: 'ledger.deprecatedAdaAppError',
+        defaultMessage:
+          'Please update your Ledger Cardano app to version {version} or higher',
       },
-    })
+      {version: `${MIN_ADA_APP_VERSION}`},
+    )
   }
 }
 

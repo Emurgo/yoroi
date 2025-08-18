@@ -1,4 +1,9 @@
-import {BackendConfig, RawTransaction, Transaction} from '~/wallets/types/other'
+import {
+  BackendConfig,
+  RawTransaction,
+  TipStatusResponse,
+  Transaction,
+} from '~/wallets/types/other'
 
 export const mockedBackendConfig: BackendConfig = {
   API_ROOT: 'https://fakeapiroot.com',
