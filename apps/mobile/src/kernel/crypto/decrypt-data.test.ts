@@ -12,8 +12,8 @@ describe('decryptData', () => {
     const ciphertextHex = ''.concat(salt, nonce, payload)
 
     const decryptedHex = decryptData({
-      cipherTextHex: hex(ciphertextHex),
-      secretKey: password,
+      encryptedData: hex(ciphertextHex),
+      secretKey: hex(password),
     })
     expect(decryptedHex.utf8).toBe('masterkey')
   })

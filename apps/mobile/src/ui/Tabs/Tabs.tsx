@@ -1,4 +1,5 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
 import {
   TouchableOpacity,
@@ -20,7 +21,7 @@ export const Tab = ({
   testID,
   style,
 }: TouchableOpacityProps & {active: boolean; label: string}) => {
-  const {atoms: a, palette: p} = useTheme()
+  const {palette: p} = useTheme()
 
   return (
     <TouchableOpacity
@@ -43,7 +44,8 @@ export const Tab = ({
         <View
           style={[
             a.absolute,
-            {bottom: 0, height: 2, width: '100%'},
+            a.w_full,
+            {bottom: 0, height: 2},
             {borderTopLeftRadius: 2, borderTopRightRadius: 2},
             {backgroundColor: p.primary_600},
           ]}
@@ -54,13 +56,13 @@ export const Tab = ({
 }
 
 export const TabPanels = ({children}: {children: React.ReactNode}) => {
-  const {atoms: a, palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
   return (
     <View
       style={[
         a.flex_1,
         a.pt_sm,
-        {backgroundColor: p.bg_color_max},
+        ta.bg_color_max,
         {borderTopLeftRadius: 8, borderTopRightRadius: 8},
       ]}
     >
@@ -72,7 +74,6 @@ export const TabPanels = ({children}: {children: React.ReactNode}) => {
 export const TabPanel = ({
   active,
   children,
-}: {
+}: React.PropsWithChildren<{
   active: boolean
-  children: React.ReactNode
-}) => <>{active ? children : null}</>
+}>) => <>{active ? children : null}</>

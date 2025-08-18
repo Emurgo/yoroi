@@ -107,7 +107,6 @@ const Info = ({info}: {info: Portfolio.Token.Info}) => {
       },
       {
         staleTime: time.session,
-        enabled: !isPrimaryTokenInfo(info),
         queryKey: [
           wallet.networkManager.network,
           'usePortfolioTokenDiscovery',

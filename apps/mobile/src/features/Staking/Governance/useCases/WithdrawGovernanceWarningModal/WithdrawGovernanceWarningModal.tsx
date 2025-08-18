@@ -26,13 +26,13 @@ export const WithdrawGovernanceWarningModal = ({onParticipatePress}: Props) => {
           ta.text_gray_medium,
         ]}
       >
-        {strings.withdrawWarningDescription}
+        {strings.staking.withdrawWarningDescription}
       </Text>
 
       <Space.Height.sm fill />
 
       <Button
-        title={strings.withdrawWarningButton}
+        title={strings.staking.withdrawWarningButton}
         onPress={onParticipatePress}
       />
 
