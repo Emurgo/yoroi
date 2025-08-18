@@ -1,6 +1,7 @@
 import {isString} from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
-import React, {ForwardedRef} from 'react'
+
+import * as React from 'react'
 import {
   TextInput as RNTextInput,
   TextInputProps as RNTextInputProps,
@@ -38,9 +39,6 @@ const useDebounced = (callback: VoidFunction, value: unknown, delay = 1000) => {
   React.useEffect(() => {
     if (first.current) {
       first.current = false
-      return () => {
-        return
-      }
     }
 
     const handler = setTimeout(() => callback(), delay)
@@ -50,7 +48,7 @@ const useDebounced = (callback: VoidFunction, value: unknown, delay = 1000) => {
 }
 
 export const TextInput = React.forwardRef(
-  (props: TextInputProps, ref: ForwardedRef<RNTextInput>) => {
+  (props: TextInputProps, ref: React.ForwardedRef<RNTextInput>) => {
     const {
       value,
       containerStyle,
@@ -139,7 +137,7 @@ export const TextInput = React.forwardRef(
           mode="outlined"
           error={errorTextEnabled && !isEmptyString(errorText)}
           render={({style, ...inputProps}) => (
-            <InputContainer p={p}>
+            <InputContainer>
               <RNTextInput
                 {...inputProps}
                 style={[
@@ -159,7 +157,6 @@ export const TextInput = React.forwardRef(
                     a.justify_end,
                     a.flex_col,
                   ]}
-                  p={p}
                 >
                   {right}
                 </AdornmentContainer>
@@ -169,7 +166,6 @@ export const TextInput = React.forwardRef(
                 <SecureTextEntryToggle
                   showPassword={showPassword}
                   onPress={() => setShowPassword(!showPassword)}
-                  p={p}
                 />
               ) : null}
             </InputContainer>
@@ -219,7 +215,8 @@ export const HelperText = ({
   )
 }
 
-export const Checkmark = ({}: {p: any}) => {
+export const Checkmark = () => {
+  const {palette: p} = useTheme()
   return <Icon.Check size={24} color={p.secondary_500} />
 }
 
@@ -229,10 +226,10 @@ const SecureTextEntryToggle = ({
 }: {
   showPassword: boolean
   onPress: () => void
-  p: any
 }) => {
+  const {palette: p} = useTheme()
   return (
-    <AdornmentContainer style={{paddingRight: 16}} p={p}>
+    <AdornmentContainer style={{paddingRight: 16}}>
       <TouchableOpacity onPress={onPress}>
         {showPassword ? (
           <Icon.EyeOff color={p.el_gray_medium} size={30} />
@@ -244,10 +241,10 @@ const SecureTextEntryToggle = ({
   )
 }
 
-const InputContainer = ({children}: {children: React.ReactNode; p: any}) => {
-  return <View style={{flexDirection: 'row', flex: 1}}>{children}</View>
+const InputContainer = ({children}: {children: React.ReactNode}) => {
+  return <View style={[a.flex_row, a.flex_1]}>{children}</View>
 }
 
-const AdornmentContainer = ({style, children}: ViewProps & {p: any}) => {
-  return <View style={[{justifyContent: 'center'}, style]}>{children}</View>
+const AdornmentContainer = ({style, children}: ViewProps) => {
+  return <View style={[a.justify_center, style]}>{children}</View>
 }

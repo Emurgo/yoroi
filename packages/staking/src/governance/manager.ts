@@ -35,7 +35,7 @@ export type GovernanceManager = {
     hash: string,
     type: 'script' | 'key',
     stakingKey: CardanoTypes.PublicKey,
-  ) => Promise<CardanoTypes.Certificate>
+  ) => CardanoTypes.Certificate
   createLedgerDelegationPayload: (
     hash: string,
     type: 'script' | 'key',
@@ -44,21 +44,21 @@ export type GovernanceManager = {
   createVotingCertificate: (
     vote: VoteKind,
     stakingKey: CardanoTypes.PublicKey,
-  ) => Promise<CardanoTypes.Certificate>
+  ) => CardanoTypes.Certificate
   createLedgerVotingPayload: (
     vote: VoteKind,
     stakingKey: CardanoTypes.PublicKey,
   ) => Promise<object>
   createStakeRegistrationCertificate: (
     stakingKey: CardanoTypes.PublicKey,
-  ) => Promise<CardanoTypes.Certificate>
+  ) => CardanoTypes.Certificate
 
   // latest governance action to be used only to check the "pending" transaction that is not yet confirmed on the blockchain
   setLatestGovernanceAction: (action: GovernanceAction | null) => Promise<void>
   getLatestGovernanceAction: () => Promise<GovernanceAction | null>
 
   getStakingKeyState: (stakeKeyHash: string) => Promise<StakingKeyState>
-  convertHexKeyHashToBech32Format: (hexKeyHash: string) => Promise<string>
+  convertHexKeyHashToBech32Format: (hexKeyHash: string) => string
 }
 
 export const governanceManagerMaker = (config: Config): GovernanceManager => {
@@ -71,11 +71,8 @@ class Manager implements GovernanceManager {
     this.network = config.network
   }
 
-  async convertHexKeyHashToBech32Format(hexKeyHash: string): Promise<string> {
-    return await convertHexKeyHashToBech32Format(
-      hexKeyHash,
-      this.config.cardano,
-    )
+  convertHexKeyHashToBech32Format(hexKeyHash: string): string {
+    return convertHexKeyHashToBech32Format(hexKeyHash, this.config.cardano)
   }
 
   async getStakingKeyState(stakeKeyHash: string) {
@@ -110,11 +107,11 @@ class Manager implements GovernanceManager {
     return {}
   }
 
-  async createDelegationCertificate(
+  createDelegationCertificate(
     hash: string,
     type: 'script' | 'key',
     stakingKey: CardanoTypes.PublicKey,
-  ): Promise<CardanoTypes.Certificate> {
+  ): CardanoTypes.Certificate {
     const {
       Certificate,
       Ed25519KeyHash,
@@ -124,40 +121,32 @@ class Manager implements GovernanceManager {
       ScriptHash,
     } = this.config.cardano
 
-    const stakingCredential = await Credential.fromKeyhash(
-      await stakingKey.hash(),
-    )
+    const stakingCredential = Credential.fromKeyhash(stakingKey.hash())
 
     const votingDelegation =
       type === 'key'
-        ? await DRep.newKeyHash(
-            await Ed25519KeyHash.fromBytes(Buffer.from(hash, 'hex')),
-          )
-        : await DRep.newScriptHash(
-            await ScriptHash.fromBytes(Buffer.from(hash, 'hex')),
-          )
+        ? DRep.newKeyHash(Ed25519KeyHash.fromBytes(Buffer.from(hash, 'hex')))
+        : DRep.newScriptHash(ScriptHash.fromBytes(Buffer.from(hash, 'hex')))
 
-    return await Certificate.newVoteDelegation(
-      await VoteDelegation.new(stakingCredential, votingDelegation),
+    return Certificate.newVoteDelegation(
+      VoteDelegation.new(stakingCredential, votingDelegation),
     )
   }
 
-  async createStakeRegistrationCertificate(
+  createStakeRegistrationCertificate(
     stakingKey: CardanoTypes.PublicKey,
-  ): Promise<CardanoTypes.Certificate> {
+  ): CardanoTypes.Certificate {
     const {Certificate, Credential, StakeRegistration} = this.config.cardano
 
-    const stakingCredential = await Credential.fromKeyhash(
-      await stakingKey.hash(),
-    )
+    const stakingCredential = Credential.fromKeyhash(stakingKey.hash())
 
-    return await Certificate.newStakeRegistration(
-      await StakeRegistration.new(stakingCredential),
+    return Certificate.newStakeRegistration(
+      StakeRegistration.new(stakingCredential),
     )
   }
 
   async validateDRepID(drepId: string): Promise<void> {
-    const {hash} = await parseDrepId(drepId, this.config.cardano)
+    const {hash} = parseDrepId(drepId, this.config.cardano)
     const drepStatus = await this.config.api.getDRepById(hash)
 
     if (!drepStatus || !drepStatus.epoch) {
@@ -173,31 +162,23 @@ class Manager implements GovernanceManager {
     throw new Error('Not implemented')
   }
 
-  async createVotingCertificate(
+  createVotingCertificate(
     vote: VoteKind,
     stakingKey: CardanoTypes.PublicKey,
-  ): Promise<CardanoTypes.Certificate> {
+  ): CardanoTypes.Certificate {
     const {Certificate, Credential, VoteDelegation, DRep} = this.config.cardano
 
-    const stakingCredential = await Credential.fromKeyhash(
-      await stakingKey.hash(),
-    )
+    const stakingCredential = Credential.fromKeyhash(stakingKey.hash())
 
     if (vote === 'abstain') {
-      return await Certificate.newVoteDelegation(
-        await VoteDelegation.new(
-          stakingCredential,
-          await DRep.newAlwaysAbstain(),
-        ),
+      return Certificate.newVoteDelegation(
+        VoteDelegation.new(stakingCredential, DRep.newAlwaysAbstain()),
       )
     }
 
     if (vote === 'no-confidence') {
-      return await Certificate.newVoteDelegation(
-        await VoteDelegation.new(
-          stakingCredential,
-          await DRep.newAlwaysNoConfidence(),
-        ),
+      return Certificate.newVoteDelegation(
+        VoteDelegation.new(stakingCredential, DRep.newAlwaysNoConfidence()),
       )
     }
 

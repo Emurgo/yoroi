@@ -14,7 +14,25 @@
       "~/kernel/*": ["./src/kernel/*"],
       "~/wallets/*": ["./src/wallets/*"],
       "~/components/*": ["./src/ui/*"],
-      "~/assets/*": ["./assets/*"]
+      "~/assets/*": ["./assets/*"],
+      "@yoroi/api": ["../../packages/api"],
+      "@yoroi/blockchains": ["../../packages/blockchains"],
+      "@yoroi/claim": ["../../packages/claim"],
+      "@yoroi/common": ["../../packages/common"],
+      "@yoroi/dapp-connector": ["../../packages/dapp-connector"],
+      "@yoroi/exchange": ["../../packages/exchange"],
+      "@yoroi/explorers": ["../../packages/explorers"],
+      "@yoroi/identicon": ["../../packages/identicon"],
+      "@yoroi/links": ["../../packages/links"],
+      "@yoroi/notifications": ["../../packages/notifications"],
+      "@yoroi/portfolio": ["../../packages/portfolio"],
+      "@yoroi/resolver": ["../../packages/resolver"],
+      "@yoroi/setup-wallet": ["../../packages/setup-wallet"],
+      "@yoroi/staking": ["../../packages/staking"],
+      "@yoroi/swap": ["../../packages/swap"],
+      "@yoroi/theme": ["../../packages/theme"],
+      "@yoroi/transfer": ["../../packages/transfer"],
+      "@yoroi/types": ["../../packages/types"]
     }
   }
 }
