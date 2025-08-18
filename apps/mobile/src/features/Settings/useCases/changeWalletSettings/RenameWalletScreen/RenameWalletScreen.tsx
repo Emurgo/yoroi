@@ -62,7 +62,9 @@ export const RenameWalletScreen = () => {
             label={strings.settings.renameWallet.walletNameInputLabel}
             value={newWalletName}
             onChangeText={(walletName: string) => setNewWalletName(walletName)}
-            errorText={!isEmptyString(errorText) ? errorText : undefined}
+            errorText={
+              !isEmptyString(errorText) && errorText ? errorText : undefined
+            }
             autoComplete="off"
           />
         </ScrollView>

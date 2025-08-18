@@ -220,7 +220,7 @@ const TransactionReceivedSetting = ({
     <View>
       <Text>Transaction Received</Text>
 
-      <View style={[styles.row, a.gap_sm]}>
+      <View style={[a.flex_row, a.gap_sm]}>
         <Text>Notify</Text>
 
         <Switch
@@ -243,7 +243,7 @@ const RewardsUpdateSetting = ({
     <View>
       <Text>Rewards Updated</Text>
 
-      <View style={[styles.row, a.gap_sm]}>
+      <View style={[a.flex_row, a.gap_sm]}>
         <Text>Notify</Text>
 
         <Switch
@@ -268,7 +268,7 @@ const PrimaryTokenPriceChangedSetting = ({
     <View>
       <Text>Primary Token Price Changed</Text>
 
-      <View style={[styles.row, a.gap_sm]}>
+      <View style={[a.flex_row, a.gap_sm]}>
         <Text>Notify</Text>
 
         <Switch
@@ -277,13 +277,13 @@ const PrimaryTokenPriceChangedSetting = ({
         />
       </View>
 
-      <View style={[styles.row, a.gap_sm]}>
+      <View style={[a.flex_row, a.gap_sm]}>
         <Text>Threshold</Text>
 
         <Text>{value.thresholdInPercent}</Text>
       </View>
 
-      <View style={[styles.row, a.gap_sm]}>
+      <View style={[a.flex_row, a.gap_sm]}>
         <Text>Interval</Text>
 
         <Text>{value.interval}</Text>

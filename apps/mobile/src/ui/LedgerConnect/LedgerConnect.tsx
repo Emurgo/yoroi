@@ -13,8 +13,11 @@ import bleImage from '~/assets/img/bluetooth.png'
 import usbImage from '~/assets/img/ledger-nano-usb.png'
 import {DeviceItem} from '~/features/HW/LedgerConnect/DeviceItem/DeviceItem'
 import {LocalizableError} from '~/kernel/i18n/LocalizableError'
-import {confirmationMessages, globalMessages} from '~/kernel/i18n/messages'
-import {ledgerMessages} from '~/kernel/i18n/messages/global'
+import {
+  confirmationMessages,
+  globalMessages,
+  ledgerMessages,
+} from '~/kernel/i18n/messages'
 import {logger} from '~/kernel/logger/logger'
 import {Button} from '~/ui/Button/Button'
 import {Space} from '~/ui/Space/Space'

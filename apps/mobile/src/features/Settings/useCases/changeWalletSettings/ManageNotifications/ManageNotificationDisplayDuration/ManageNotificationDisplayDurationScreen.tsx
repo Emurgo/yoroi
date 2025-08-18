@@ -240,14 +240,9 @@ const isInputValid = (text: string) => {
 }
 
 const useConfig = () => {
-  const {data: config} = useNotificationsConfig({suspense: true})
+  const {data: config} = useNotificationsConfig()
   if (!config) {
     throw new Error('Config not found')
   }
   return config
 }
-
-// function formatNumber(displayDuration: number): string {
-//   // TODO: Implement this
-//   return '0'
-// }
