@@ -1,4 +1,5 @@
 import * as React from 'react'
+import {QueryClient, QueryClientProvider} from '@tanstack/react-query'
 import {init} from '@emurgo/cross-csl-nodejs'
 import {act, renderHook, waitFor} from '@testing-library/react-native'
 
@@ -15,8 +16,14 @@ import {GovernanceManager} from '../../manager'
 
 const createMocks = (managerPatch: Partial<GovernanceManager>) => {
   const manager = {...managerMock, ...managerPatch}
+  const queryClient = new QueryClient()
+  queryClient.setDefaultOptions({queries: {staleTime: 0, retry: false}})
   const wrapper = ({children}: React.PropsWithChildren) => {
-    return <GovernanceProvider manager={manager}>{children}</GovernanceProvider>
+    return (
+      <QueryClientProvider client={queryClient}>
+        <GovernanceProvider manager={manager}>{children}</GovernanceProvider>
+      </QueryClientProvider>
+    )
   }
   return {wrapper, manager}
 }
@@ -57,9 +64,12 @@ describe('Governance Translators React', () => {
     const {wrapper, manager} = createMocks({
       setLatestGovernanceAction: jest.fn().mockResolvedValue(true),
     })
-    const {result} = renderHook(() => useUpdateLatestGovernanceAction(), {
-      wrapper,
-    })
+    const {result} = renderHook(
+      () => useUpdateLatestGovernanceAction('wallet-id'),
+      {
+        wrapper,
+      },
+    )
     act(() => {
       result.current.mutate({
         hash: 'drepId',
@@ -88,17 +98,14 @@ describe('Governance Translators React', () => {
     )
     const publicKey = privateKey.toPublic()
     const stakingKey = publicKey.derive(2).derive(0).toRawKey()
-
     const {result} = renderHook(() => useDelegationCertificate(), {wrapper})
-
-    await act(async () => {
-      await result.current.createCertificate({
+    await waitFor(() =>
+      result.current.createCertificate({
         hash: 'drepId',
         type: 'key',
         stakingKey,
-      })
-    })
-
+      }),
+    )
     await waitFor(() => result.current.isSuccess)
     expect(manager.createDelegationCertificate).toHaveBeenCalledWith(
       'drepId',
@@ -119,14 +126,9 @@ describe('Governance Translators React', () => {
     const publicKey = privateKey.toPublic()
     const stakingKey = publicKey.derive(2).derive(0).toRawKey()
     const {result} = renderHook(() => useVotingCertificate(), {wrapper})
-
-    await act(async () => {
-      await result.current.createCertificate({
-        vote: 'no-confidence',
-        stakingKey,
-      })
-    })
-
+    await waitFor(() =>
+      result.current.createCertificate({vote: 'no-confidence', stakingKey}),
+    )
     await waitFor(() => result.current.isSuccess)
     expect(manager.createVotingCertificate).toHaveBeenCalledWith(
       'no-confidence',

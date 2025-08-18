@@ -90,6 +90,7 @@
     "@testing-library/jest-dom": "6.4.2",
     "@testing-library/react": "16.3.0",
     "@testing-library/react-native": "13.2.0",
+    "@tanstack/react-query": "5.81.5",
     "@tsconfig/react-native": "3.0.3",
     "@types/jest": "29.5.12",
     "@types/react": "19.1.1",
