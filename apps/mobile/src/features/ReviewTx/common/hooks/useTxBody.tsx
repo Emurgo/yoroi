@@ -1,10 +1,11 @@
-import {useQuery} from '@tanstack/react-query'
+import {useSuspenseQuery} from '@tanstack/react-query'
 
 import {wrappedCsl} from '~/wallets/cardano/wrappedCsl'
 import {YoroiUnsignedTx} from '~/wallets/types/yoroi'
 
 import {TransactionBody} from '../types'
 
+// TODO: REVISIT it can be removed
 export const useTxBody = ({
   cbor,
   unsignedTx,
@@ -12,7 +13,7 @@ export const useTxBody = ({
   cbor?: string | null
   unsignedTx?: YoroiUnsignedTx | null
 }): TransactionBody => {
-  const query = useQuery({
+  const query = useSuspenseQuery({
     queryKey: ['useTxBody', cbor, unsignedTx],
     queryFn: async () => {
       // ORDER IS IMPORTANT
@@ -27,29 +28,27 @@ export const useTxBody = ({
         throw new Error('useTxBody: missing cbor and unsignedTx')
       }
     },
-    useErrorBoundary: true,
-    suspense: true,
   })
 
   if (query.data === undefined)
     throw new Error('useTxBody: cannot extract txBody')
   return query.data
 }
-const getCborTxBody = async (cbor: string) => {
+const getCborTxBody = (cbor: string) => {
   const {csl, release} = wrappedCsl()
   try {
-    const tx = await csl.Transaction.fromHex(cbor)
-    const jsonString = await tx.toJson()
+    const tx = csl.Transaction.fromHex(cbor)
+    const jsonString = tx.toJson()
     return JSON.parse(jsonString).body
   } finally {
     release()
   }
 }
 
-const getUnsignedTxTxBody = async (unsignedTx: YoroiUnsignedTx) => {
+const getUnsignedTxTxBody = (unsignedTx: YoroiUnsignedTx) => {
   const {
     unsignedTx: {txBody},
   } = unsignedTx
-  const txBodyjson = await txBody.toJson()
+  const txBodyjson = txBody.toJson()
   return JSON.parse(txBodyjson)
 }

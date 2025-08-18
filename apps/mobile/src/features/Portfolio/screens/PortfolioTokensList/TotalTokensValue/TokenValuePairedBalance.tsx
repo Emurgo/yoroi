@@ -30,7 +30,7 @@ export const TokenValuePairedBalance = ({
     return (
       <PairedBalance
         amount={amount}
-        textStyle={[a.body_2_md_regular, {color: p.gray_600}]}
+        textStyle={{...a.body_2_md_regular, color: p.gray_600}}
       />
     )
   return (

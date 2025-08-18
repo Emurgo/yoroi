@@ -63,15 +63,18 @@ const listLiquidityPool: ILiquidityPool[] = [
 ]
 
 export const useGetLiquidityPool = (
-  options: UseQueryOptions<
-    ILiquidityPool[],
-    Error,
-    ILiquidityPool[],
-    ['useGetLiquidityPool']
+  options: Omit<
+    UseQueryOptions<
+      ILiquidityPool[],
+      Error,
+      ILiquidityPool[],
+      ['useGetLiquidityPool']
+    >,
+    'queryKey' | 'queryFn'
   > = {},
 ) => {
   const query = useQuery({
-    useErrorBoundary: true,
+    throwOnError: true,
     ...options,
     queryKey: ['useGetLiquidityPool'],
     queryFn: async () => {

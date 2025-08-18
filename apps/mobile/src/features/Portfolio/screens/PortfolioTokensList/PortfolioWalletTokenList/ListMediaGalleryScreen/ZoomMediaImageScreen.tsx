@@ -20,7 +20,7 @@ const isParams = (params?: Params | object | undefined): params is Params => {
 }
 
 export const ZoomMediaImageScreen = () => {
-  const {palette: p} = useTheme()
+  const {palette: p, atoms: ta} = useTheme()
   const {id} = useParams<Params>(isParams)
   const {wallet} = useSelectedWallet()
   const dimensions = useWindowDimensions()
@@ -38,7 +38,7 @@ export const ZoomMediaImageScreen = () => {
   if (!amount) return null
 
   return (
-    <FadeIn style={[{backgroundColor: p.bg_color_max}, a.flex_1]}>
+    <FadeIn style={{...ta.bg_color_max, ...a.flex_1}}>
       <ViewTransformer maxScale={3} minScale={1}>
         <View
           style={[
@@ -55,7 +55,7 @@ export const ZoomMediaImageScreen = () => {
             width={dimensions.width}
             height={dimensions.height}
             contentFit="contain"
-            style={[{backgroundColor: p.gray_100}]}
+            style={{backgroundColor: p.gray_100}}
           />
         </View>
       </ViewTransformer>

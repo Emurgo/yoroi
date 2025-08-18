@@ -79,7 +79,11 @@ export const OpenOrderModal = ({tokenInfo, splitTokenSymbol}: Props) => {
 
           <PairedBalance
             amount={firstToken}
-            textStyle={[a.body_3_sm_regular, a.text_right, {color: p.gray_600}]}
+            textStyle={{
+              ...a.body_3_sm_regular,
+              ...a.text_right,
+              color: p.gray_600,
+            }}
           />
         </View>
       </InfoGroup>

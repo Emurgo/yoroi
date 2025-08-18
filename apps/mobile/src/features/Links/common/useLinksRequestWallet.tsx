@@ -20,11 +20,11 @@ export const useLinksRequestWallet = () => {
 
   const askToOpenAWallet = React.useCallback(() => {
     openModal({
-      title: strings.askToOpenAWalletTitle,
+      title: strings.links.askToOpenAWalletTitle,
       content: <AskToOpenWalletScreen />,
       height: heightBreakpoint,
     })
-  }, [openModal, strings.askToOpenAWalletTitle])
+  }, [openModal, strings.links.askToOpenAWalletTitle])
 
   React.useEffect(() => {
     InteractionManager.runAfterInteractions(() => {
