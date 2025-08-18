@@ -19,7 +19,7 @@ export const ConfirmRawTxWithPassword = ({
 
   const handlePasswordConfirm = async (password: string) => {
     const rootKey = await wallet.encryptedStorage.xpriv.read(password)
-    return onConfirm?.(rootKey)
+    return onConfirm?.(rootKey.value)
   }
 
   return (

@@ -12,23 +12,23 @@ describe('AddressChain', () => {
     used = []
     chain = new AddressChain(
       {
-        generate: (ids) => Promise.resolve(ids.map(getAddr)),
+        generate: (ids) => ids.map(getAddr),
       } as AddressGenerator,
       5 /* block size */,
       2 /* gap limit */,
     )
   })
 
-  it('starts with some addresses', async () => {
+  it('starts with some addresses', () => {
     expect.assertions(1)
-    await chain?.initialize()
+    chain?.initialize()
     expect(chain?.size()).toBe(5)
   })
 
   it('follows discovery', async () => {
     expect.assertions(5)
     used = []
-    await chain?.initialize()
+    chain?.initialize()
     await chain?.sync(filterFn)
     expect(chain?.size()).toBe(5)
 
@@ -56,7 +56,7 @@ describe('AddressChain', () => {
     expect.assertions(4)
 
     used = [4, 9]
-    await chain?.initialize()
+    chain?.initialize()
     await chain?.sync(filterFn)
     expect(chain?.size()).toBe(15)
     expect(chain?.getIndexOfAddress(getAddr(4))).toBe(4)
@@ -77,7 +77,7 @@ describe('AddressChain', () => {
 
     expect.assertions(2)
 
-    await chain.initialize()
+    chain.initialize()
 
     const data = chain.toJSON()
     const chain2 = AddressChain.fromJSON(data, 1)
