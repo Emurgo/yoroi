@@ -42,17 +42,19 @@ export const CheckNanoXScreen = () => {
   )
 
   const commonRequirements = [
-    strings.setupWallet.appInstalled,
-    strings.setupWallet.appOpened,
+    strings.ledgerMessages.appInstalled,
+    strings.ledgerMessages.appOpened,
   ]
   const usbRequirements = [
-    strings.setupWallet.haveOTGAdapter,
-    strings.setupWallet.usbAlwaysConnected,
+    strings.ledgerMessages.haveOTGAdapter,
+    strings.ledgerMessages.usbAlwaysConnected,
     ...commonRequirements,
   ]
   const bleRequirements = [
-    strings.setupWallet.bluetoothEnabled,
-    ...(Platform.OS === 'android' ? [strings.setupWallet.locationEnabled] : []),
+    strings.ledgerMessages.bluetoothEnabled,
+    ...(Platform.OS === 'android'
+      ? [strings.ledgerMessages.locationEnabled]
+      : []),
     ...commonRequirements,
   ]
 

@@ -29,7 +29,7 @@ export const useGetImportantAlertsModal = ({enabled}: {enabled: boolean}) => {
       if (hasShownModal) return
 
       openModal({
-        title: strings.getImportantAlerts,
+        title: strings.notifications.getImportantAlerts,
         content: <GetImportantAlertsModal />,
         height: 520,
       })
@@ -66,14 +66,14 @@ export const GetImportantAlertsModal = () => {
           {color: p.text_gray_medium},
         ]}
       >
-        {strings.turnOnAlerts}
+        {strings.notifications.turnOnAlerts}
       </Text>
 
       <Space.Height._2xs fill />
 
       <Button
         size="M"
-        title={strings.skip}
+        title={strings.notifications.skip}
         onPress={closeModal}
         type={ButtonType.Text}
         style={[a.flex_1, a.self_stretch, {flexGrow: 0}]}
@@ -81,7 +81,7 @@ export const GetImportantAlertsModal = () => {
 
       <Button
         size="M"
-        title={strings.turnOnNotifications}
+        title={strings.notifications.turnOnNotifications}
         onPress={handleTurnOnPress}
         style={[a.flex_1, a.self_stretch, {flexGrow: 0}]}
       />

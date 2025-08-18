@@ -12,6 +12,8 @@ import {TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {DescribeAction} from '~/features/Exchange/common/DescribeAction/DescribeAction'
+import {BanxaLogo} from '~/features/Exchange/illustrations/BanxaLogo'
+import {EncryptusLogo} from '~/features/Exchange/illustrations/EncryptusLogo'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Button} from '~/ui/Button/Button'
@@ -20,14 +22,12 @@ import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
 
-import {BanxaLogo} from '../illustrations/BanxaLogo'
-import {EncryptusLogo} from '../illustrations/EncryptusLogo'
-import {WalletAssetImage} from '../illustrations/WalletAssetImage'
+import {WalletAssetImage} from '../../illustrations/WalletAssetImage'
 import {ContentResult} from './ContentResult/ContentResult'
 
 export const ShowExchangeResultOrderScreen = () => {
   const strings = useStrings()
-  const {palette: p} = useTheme()
+  const {atoms: ta, palette: p} = useTheme()
   const {openModal} = useModal()
   const {resetToWalletSelection} = useWalletNavigation()
   const {action, actionFinished} = useLinks()
@@ -54,7 +54,10 @@ export const ShowExchangeResultOrderScreen = () => {
   }
 
   const handleOnShowDetails = () => {
-    openModal({title: strings.buySellCrypto, content: <DescribeAction />})
+    openModal({
+      title: strings.exchange.buySellCrypto,
+      content: <DescribeAction />,
+    })
   }
 
   const {showOrderDetails, Logo, name, showProviderDetails} =
@@ -64,7 +67,7 @@ export const ShowExchangeResultOrderScreen = () => {
     <ExchangeProvider manager={exchangeManager}>
       <SafeAreaView
         edges={['bottom', 'left', 'right']}
-        style={[{flex: 1, backgroundColor: p.bg_color_max}]}
+        style={[a.flex_1, ta.bg_color_max]}
       >
         <View
           style={[
@@ -77,22 +80,22 @@ export const ShowExchangeResultOrderScreen = () => {
             },
           ]}
         >
-          <WalletAssetImage style={[{flex: 1, width: 200, height: 228}]} />
+          <WalletAssetImage style={{...a.flex_1, width: 200, height: 228}} />
 
           <Space.Height.lg />
 
           <Text
             style={[
               a.heading_3_medium,
+              a.text_center,
               {
                 color: p.gray_900,
                 fontWeight: '500',
-                textAlign: 'center',
                 textAlignVertical: 'center',
               },
             ]}
           >
-            {strings.congrats}
+            {strings.exchange.congrats}
 
             {showOrderDetails && (
               <>
@@ -112,7 +115,7 @@ export const ShowExchangeResultOrderScreen = () => {
 
           {showOrderDetails && (
             <>
-              <ContentResult title={strings.cryptoAmountYouGet}>
+              <ContentResult title={strings.exchange.cryptoAmountYouGet}>
                 <Text
                   style={[a.body_1_lg_regular, {color: p.gray_max}]}
                 >{`${params?.coinAmount ?? 0} ${params?.coin ?? ''}`}</Text>
@@ -120,7 +123,7 @@ export const ShowExchangeResultOrderScreen = () => {
 
               <Space.Height.md />
 
-              <ContentResult title={strings.fiatAmountYouGet}>
+              <ContentResult title={strings.exchange.fiatAmountYouGet}>
                 <Text
                   style={[a.body_1_lg_regular, {color: p.gray_max}]}
                 >{`${params?.fiatAmount ?? 0} ${params?.fiat ?? ''}`}</Text>
@@ -132,8 +135,8 @@ export const ShowExchangeResultOrderScreen = () => {
             <>
               <Space.Height.md />
 
-              <ContentResult title={strings.provider}>
-                <View style={[{flexDirection: 'row', alignItems: 'center'}]}>
+              <ContentResult title={strings.exchange.provider}>
+                <View style={[a.flex_row, a.align_center]}>
                   <Logo size={24} />
 
                   <Space.Width.xs />
@@ -148,9 +151,9 @@ export const ShowExchangeResultOrderScreen = () => {
           )}
         </View>
 
-        <View style={[{padding: 16}]}>
+        <View style={a.px_lg}>
           {' '}
-          <Button onPress={handleOnClose} title={strings.close} />{' '}
+          <Button onPress={handleOnClose} title={strings.global.close} />{' '}
         </View>
       </SafeAreaView>
     </ExchangeProvider>

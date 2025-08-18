@@ -653,7 +653,7 @@ export class WalletManager {
     const id = v4()
 
     const {csl, release} = wrappedCsl()
-    const {rootKey, accountPubKeyHex} = await walletFactory.makeKeys({
+    const {rootKey, accountPubKeyHex} = walletFactory.makeKeys({
       mnemonic,
       csl,
     })
