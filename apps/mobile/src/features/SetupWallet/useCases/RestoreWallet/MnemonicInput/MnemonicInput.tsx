@@ -1,4 +1,5 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import {wordlists} from 'bip39'
 import * as React from 'react'
 import {
@@ -17,6 +18,7 @@ import {Alert} from '~/ui/AlertIllustration/AlertIllustration'
 import {Check2} from '~/ui/Check2Illustration/Check2Illustration'
 import {Space} from '~/ui/Space/Space'
 import {isEmptyString} from '~/wallets/utils/string'
+
 import {MnemonicWordInputRef} from '../RestoreWalletScreen'
 import {TextInput} from './TextInput/TextInput'
 

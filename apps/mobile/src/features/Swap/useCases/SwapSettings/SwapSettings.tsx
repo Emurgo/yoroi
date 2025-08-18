@@ -1,6 +1,7 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Swap} from '@yoroi/types'
 import {NumberLocale} from '@yoroi/types/lib/typescript/intl/numbers'
+
 import BigNumber from 'bignumber.js'
 import * as React from 'react'
 import {ScrollView, Text, TouchableOpacity, View} from 'react-native'

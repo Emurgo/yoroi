@@ -1,6 +1,7 @@
 import {getDexUrlByProtocol} from '@yoroi/swap'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Swap} from '@yoroi/types'
+
 import * as React from 'react'
 import {Linking, Text, TouchableOpacity} from 'react-native'
 

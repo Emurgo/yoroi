@@ -1,10 +1,12 @@
 import {useLinks} from '@yoroi/links'
+
 import * as React from 'react'
 import {InteractionManager} from 'react-native'
 
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useModal} from '~/ui/Modal/ModalContext'
+
 import {AskToOpenWalletScreen} from '../useCases/AskToOpenAWalletScreen/AskToOpenAWalletScreen'
 
 const heightBreakpoint = 367

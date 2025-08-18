@@ -9,9 +9,10 @@ import {NetworkTag} from '~/features/Settings/useCases/changeAppSettings/ChangeN
 import {SetupWalletNavigator} from '~/features/SetupWallet/SetupWalletNavigator'
 import {SelectWalletFromList} from '~/features/WalletManager/ui/screens/SelectWalletFromListScreen/SelectWalletFromListScreen'
 import {useStrings} from '~/kernel/i18n/useStrings'
+import {WalletTabNavigator} from '~/kernel/navigation/WalletTabNavigator'
 import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
 import {WalletStackRoutes} from '~/kernel/navigation/types'
-import {WalletTabNavigator} from '~/kernel/navigation/WalletTabNavigator'
+
 import {DashboardNavigator} from '../../features/Dashboard/DashboardNavigator'
 import {GovernanceNavigator} from '../../features/Staking/Governance/GovernanceNavigator'
 

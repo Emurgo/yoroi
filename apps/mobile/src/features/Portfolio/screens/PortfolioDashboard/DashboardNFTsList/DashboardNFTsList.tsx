@@ -1,12 +1,13 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
 import {
   FlatList,
   Image,
   Text,
   TouchableOpacity,
-  useWindowDimensions,
   View,
+  useWindowDimensions,
 } from 'react-native'
 
 import placeholderDark from '~/assets/img/nft-placeholder-dark.png'

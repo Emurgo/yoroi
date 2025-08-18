@@ -2,6 +2,7 @@ import * as React from 'react'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {TextInput, TextInputProps} from '~/ui/TextInput/TextInput'
+
 import {ShowMemoErrorTooLong} from './ShowMemoErrorTooLong'
 import {ShowMemoInstructions} from './ShowMemoInstructions'
 

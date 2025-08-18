@@ -1,6 +1,6 @@
 import type {GetVersionResponse} from '@cardano-foundation/ledgerjs-hw-app-cardano'
 
-import {checkDeviceVersion, DeprecatedAdaAppError} from './hw'
+import {DeprecatedAdaAppError, checkDeviceVersion} from './hw'
 
 describe('hw', () => {
   it('should throw on outdated ledger Ada app', () => {

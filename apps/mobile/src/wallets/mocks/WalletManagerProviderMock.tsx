@@ -1,5 +1,6 @@
 import {buildNetworkManagers} from '@yoroi/blockchains'
 import {Wallet} from '@yoroi/types'
+
 import * as React from 'react'
 
 import {buildPortfolioTokenManagers} from '../../features/Portfolio/common/helpers/build-token-managers'

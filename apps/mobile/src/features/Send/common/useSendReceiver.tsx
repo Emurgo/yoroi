@@ -1,4 +1,3 @@
-import {useQueryClient} from '@tanstack/react-query'
 import {
   isDomain,
   isNameServer,
@@ -7,6 +6,8 @@ import {
 } from '@yoroi/resolver'
 import {useTransfer} from '@yoroi/transfer'
 import {Resolver} from '@yoroi/types'
+
+import {useQueryClient} from '@tanstack/react-query'
 import * as React from 'react'
 
 export const useSendReceiver = () => {

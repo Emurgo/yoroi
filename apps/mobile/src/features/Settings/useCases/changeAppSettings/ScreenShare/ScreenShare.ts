@@ -1,6 +1,8 @@
 import {useSyncStorageToState} from '@yoroi/common'
+
 import * as React from 'react'
 import {NativeModules} from 'react-native'
+
 import {isAndroid} from '~/kernel/constants'
 import {screenShareStorageKeyManager} from '~/kernel/storage/storages'
 

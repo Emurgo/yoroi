@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/native'
 import {
-  createStackNavigator,
   StackNavigationProp,
+  createStackNavigator,
 } from '@react-navigation/stack'
 import {useRef} from 'react'
 

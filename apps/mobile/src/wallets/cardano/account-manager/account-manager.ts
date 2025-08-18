@@ -2,11 +2,12 @@ import {cardanoConfig, derivationConfig} from '@yoroi/blockchains'
 import {parseSafe} from '@yoroi/common'
 import {App, Wallet} from '@yoroi/types'
 
+import _ from 'lodash'
 import {defaultMemoize} from 'reselect'
 
-import _ from 'lodash'
 import {logger} from '~/kernel/logger/logger'
 import {CardanoMobile} from '~/wallets/wallets'
+
 import * as legacyApi from '../api/api'
 import {CardanoTypes} from '../types'
 

@@ -1,5 +1,6 @@
 import {linksCardanoModuleMaker} from '@yoroi/links'
 import {Links, Scan} from '@yoroi/types'
+
 import {freeze} from 'immer'
 
 export const parseScanAction = (codeContent: string): Scan.Action => {

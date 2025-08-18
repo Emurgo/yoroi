@@ -1,6 +1,7 @@
 import {useLinks} from '@yoroi/links'
 import {useTheme} from '@yoroi/theme'
 import {Links} from '@yoroi/types'
+
 import * as React from 'react'
 import {ScrollView, Text, View, ViewProps} from 'react-native'
 
@@ -8,6 +9,7 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
+
 import {ShowDisclaimer} from './ShowDisclaimer/ShowDisclaimer'
 
 const isEmptyString = (str: string | undefined | null): boolean => {

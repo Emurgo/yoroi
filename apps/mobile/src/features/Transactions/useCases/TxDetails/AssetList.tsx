@@ -1,5 +1,6 @@
 import {isPrimaryToken, usePortfolioTokenInfo} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
 import {FlatList, Text, TouchableOpacity, View} from 'react-native'
 

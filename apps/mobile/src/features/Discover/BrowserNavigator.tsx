@@ -1,5 +1,6 @@
-import {createStackNavigator} from '@react-navigation/stack'
 import {useTheme} from '@yoroi/theme'
+
+import {createStackNavigator} from '@react-navigation/stack'
 import * as React from 'react'
 import {SafeAreaView} from 'react-native-safe-area-context'
 

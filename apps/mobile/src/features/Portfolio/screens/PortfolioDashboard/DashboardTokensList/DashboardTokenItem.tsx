@@ -6,6 +6,7 @@ import {
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 import {PortfolioTokenAmount} from '@yoroi/types/lib/typescript/portfolio/amount'
+
 import * as React from 'react'
 import {Text, TouchableOpacity, View} from 'react-native'
 

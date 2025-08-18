@@ -1,4 +1,5 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
@@ -12,6 +13,7 @@ import {NetworkTag} from '~/features/Settings/useCases/changeAppSettings/ChangeN
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Tab, TabPanel, Tabs} from '~/ui/Tabs'
+
 import {PortfolioDAppsTokenList} from './PortfolioDAppsTokenList/PortfolioDAppsTokenList'
 import {PortfolioWalletTokenList} from './PortfolioWalletTokenList/PortfolioWalletTokenList'
 

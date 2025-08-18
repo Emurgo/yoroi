@@ -1,4 +1,5 @@
 import {useNotificationsConfig} from '@yoroi/notifications'
+
 import * as React from 'react'
 import {Animated, Dimensions, Easing, PanResponder} from 'react-native'
 

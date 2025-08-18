@@ -1,5 +1,6 @@
 import {ThemeName} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
+
 import {freeze} from 'immer'
 import type {ReactNode} from 'react'
 import * as React from 'react'

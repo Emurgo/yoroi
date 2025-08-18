@@ -1,5 +1,6 @@
 import {useExchange, useExchangeProvidersByOrderType} from '@yoroi/exchange'
 import {Chain} from '@yoroi/types'
+
 import BigNumber from 'bignumber.js'
 import * as React from 'react'
 
@@ -10,6 +11,7 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {AmountCard} from '~/ui/AmountCard/AmountCard'
 import {Space} from '~/ui/Space/Space'
 import {Quantities} from '~/wallets/utils/utils'
+
 import {usePortfolioPrimaryBalance} from '../Portfolio/common/hooks/usePortfolioPrimaryBalance'
 
 export const EditAmount = ({disabled}: {disabled?: boolean}) => {

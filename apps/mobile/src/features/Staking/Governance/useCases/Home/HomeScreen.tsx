@@ -1,5 +1,3 @@
-import {NotEnoughMoneyToSendError} from '@emurgo/yoroi-lib/dist/errors'
-import {useFocusEffect} from '@react-navigation/native'
 import {isNonNullable, isString} from '@yoroi/common'
 import {
   GOVERNANCE_YOROI_DREP_ID_HEX,
@@ -11,6 +9,9 @@ import {
   useVotingCertificate,
 } from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
+
+import {NotEnoughMoneyToSendError} from '@emurgo/yoroi-lib/dist/errors'
+import {useFocusEffect} from '@react-navigation/native'
 import React, {type ReactNode} from 'react'
 import {Text, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
@@ -29,6 +30,7 @@ import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
 import {TransactionInfo} from '~/wallets/types/other'
+
 import {Action} from '../../common/Action/Action'
 import {
   mapStakingKeyStateToGovernanceAction,

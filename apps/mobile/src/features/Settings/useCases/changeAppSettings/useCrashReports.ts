@@ -1,8 +1,9 @@
+import {parseBoolean, useMutationWithInvalidations} from '@yoroi/common'
+
 import AsyncStorage, {
   AsyncStorageStatic,
 } from '@react-native-async-storage/async-storage'
 import {useQuery} from '@tanstack/react-query'
-import {parseBoolean, useMutationWithInvalidations} from '@yoroi/common'
 import * as React from 'react'
 
 import {isDev, isNightly} from '~/kernel/constants'

@@ -12,6 +12,7 @@ import {
   TxStatusResponse,
 } from '~/wallets/types/other'
 import {StakePoolInfosAndHistories} from '~/wallets/types/staking'
+
 import {ServerStatus} from '../types'
 import {handleError} from './errors'
 import {fetchDefault} from './fetch'

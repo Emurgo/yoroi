@@ -1,11 +1,13 @@
-import {useQuery} from '@tanstack/react-query'
 import {atoms as a, useTheme} from '@yoroi/theme'
+
+import {useQuery} from '@tanstack/react-query'
 import * as React from 'react'
 import {ActivityIndicator, View} from 'react-native'
-
 import Markdown from 'react-native-marked'
+
 import {LanguageCode} from '~/kernel/i18n/localization'
 import {Space} from '~/ui/Space/Space'
+
 import {loadTOS} from './loadTos'
 
 const useTos = ({languageCode}: {languageCode: LanguageCode}) => {

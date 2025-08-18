@@ -1,6 +1,7 @@
 import {App} from '@yoroi/types'
 
 import {installationIdStorageKeyManager} from '~/kernel/storage/storages'
+
 import {migrateInstallationId, to6_0_0} from './6_0_0'
 
 // Mock the installationIdStorageKeyManager

@@ -1,12 +1,13 @@
-import {Transaction} from '@emurgo/cross-csl-core'
 import {
-  connectionStorageMaker,
   DappConnector,
+  ResolverWallet,
+  connectionStorageMaker,
   dappConnectorApiMaker,
   dappConnectorMaker,
-  ResolverWallet,
 } from '@yoroi/dapp-connector'
 import {App, Wallet} from '@yoroi/types'
+
+import {Transaction} from '@emurgo/cross-csl-core'
 import BigNumber from 'bignumber.js'
 
 import {cip30ExtensionMaker} from '~/wallets/cardano/cip30/cip30'
@@ -120,7 +121,7 @@ export const createDappConnector = (options: CreateDappConnectorOptions) => {
     getBalance: (tokenId) => cip30.getBalance(tokenId),
     getChangeAddress: () => cip30.getChangeAddress(),
     getRewardAddresses: () => cip30.getRewardAddresses(),
-    submitTx: (cbor) => cip30.submitTx(cbor),
+    submitTx: async (cbor) => await cip30.submitTx(cbor),
     getCollateral: async (value) => await cip30.getCollateral(value),
     getUtxos: async (value, pagination) =>
       await cip30.getUtxos(value, pagination),

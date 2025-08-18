@@ -1,7 +1,8 @@
+import {atoms as a, useTheme} from '@yoroi/theme'
+
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
-import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {TouchableOpacity} from 'react-native'
 
@@ -15,6 +16,7 @@ import {
 import {SettingsStackRoutes, SettingsTabRoutes} from '~/kernel/navigation/types'
 import {Boundary} from '~/ui/Boundary/Boundary'
 import {Icon} from '~/ui/Icon'
+
 import {ChangePinScreen} from '../Auth/ui/screens/ChangePinScreen'
 import {EnableLoginWithPinScreen} from '../Auth/ui/screens/EnableLoginWithPinScreen'
 import {PreparingWalletScreen} from '../SetupWallet/common/PreparingWalletScreen/PreparingWalletScreen'

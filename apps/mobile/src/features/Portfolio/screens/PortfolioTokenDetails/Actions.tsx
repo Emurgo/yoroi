@@ -1,6 +1,7 @@
 import {isPrimaryToken} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Chain, Portfolio} from '@yoroi/types'
+
 import * as React from 'react'
 import {View} from 'react-native'
 

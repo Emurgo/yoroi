@@ -1,8 +1,9 @@
 import {useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
 import {
-  type SafeAreaViewProps,
   SafeAreaView,
+  type SafeAreaViewProps,
 } from 'react-native-safe-area-context'
 
 export const SafeArea = ({children, ...rest}: SafeAreaViewProps) => {

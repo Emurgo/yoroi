@@ -1,7 +1,7 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
-import * as React from 'react'
-import {useWindowDimensions, View} from 'react-native'
 
+import * as React from 'react'
+import {View, useWindowDimensions} from 'react-native'
 // @ts-ignore
 import ViewTransformer from 'react-native-easy-view-transformer'
 

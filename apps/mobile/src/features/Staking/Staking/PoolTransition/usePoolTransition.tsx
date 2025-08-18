@@ -1,7 +1,8 @@
+import {Wallet} from '@yoroi/types'
+
 import {init} from '@emurgo/cross-csl-mobile'
 import {PoolInfoApi} from '@emurgo/yoroi-lib'
 import {useQuery} from '@tanstack/react-query'
-import {Wallet} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 import * as React from 'react'
 
@@ -12,7 +13,7 @@ import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWalle
 import {features} from '~/kernel/features'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {YoroiWallet} from '~/wallets/cardano/types'
-import {asQuantity, Quantities} from '~/wallets/utils/utils'
+import {Quantities, asQuantity} from '~/wallets/utils/utils'
 
 const createDelegationTx = async (
   wallet: YoroiWallet,

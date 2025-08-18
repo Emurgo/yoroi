@@ -1,6 +1,7 @@
-import {FlashList} from '@shopify/flash-list'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
+
+import {FlashList} from '@shopify/flash-list'
 import * as React from 'react'
 import {ActivityIndicator, Text, TouchableOpacity, View} from 'react-native'
 
@@ -9,6 +10,7 @@ import {MiniTokenAmountItem} from '~/features/Portfolio/ui/TokenAmountItem/MiniT
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Space} from '~/ui/Space/Space'
+
 import {UtxoList} from './useUtxoList'
 
 export const UtxoItem = ({item}: {item: UtxoList[number]['utxos'][number]}) => {

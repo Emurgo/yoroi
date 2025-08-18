@@ -1,5 +1,6 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Wallet} from '@yoroi/types'
+
 import * as React from 'react'
 import {Text, View} from 'react-native'
 

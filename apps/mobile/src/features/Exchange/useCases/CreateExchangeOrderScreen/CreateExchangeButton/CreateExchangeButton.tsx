@@ -1,6 +1,7 @@
 import {useExchange} from '@yoroi/exchange'
 import {atoms as a} from '@yoroi/theme'
 import {Chain} from '@yoroi/types'
+
 import * as React from 'react'
 import {Linking, View, ViewStyle} from 'react-native'
 

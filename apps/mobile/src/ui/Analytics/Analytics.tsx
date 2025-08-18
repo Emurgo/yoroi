@@ -1,7 +1,7 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
-import {Text, TouchableOpacity, useWindowDimensions, View} from 'react-native'
+import {Text, TouchableOpacity, View, useWindowDimensions} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
 import {useBold} from '~/hooks/useBold'

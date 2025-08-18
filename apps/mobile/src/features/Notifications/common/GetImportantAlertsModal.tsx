@@ -1,6 +1,7 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
-import {InteractionManager, useWindowDimensions, View} from 'react-native'
+import {InteractionManager, View, useWindowDimensions} from 'react-native'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button, ButtonType} from '~/ui/Button/Button'
@@ -8,6 +9,7 @@ import {useModal} from '~/ui/Modal/ModalContext'
 import {PhoneBell} from '~/ui/PhoneBellIllustration/PhoneBellIllustration'
 import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
+
 import {uiStorage} from './storage'
 import {triggerNotificationsPermissionModal} from './tools'
 

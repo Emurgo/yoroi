@@ -10,6 +10,7 @@ import {
   metricsConsentRequestedStorageKeyManager,
   metricsEnabledStorageKeyManager,
 } from '~/kernel/storage/storages'
+
 import {Ampli, ampli} from './ampli'
 import {mockMetricsManager} from './mocks'
 

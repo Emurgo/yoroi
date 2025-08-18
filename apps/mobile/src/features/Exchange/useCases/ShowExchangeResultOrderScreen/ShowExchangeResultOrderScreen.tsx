@@ -1,11 +1,12 @@
 import {
+  ExchangeProvider,
   exchangeApiMaker,
   exchangeManagerMaker,
-  ExchangeProvider,
 } from '@yoroi/exchange'
 import {useLinks} from '@yoroi/links'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Links} from '@yoroi/types'
+
 import * as React from 'react'
 import {TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
@@ -18,6 +19,7 @@ import {Icon} from '~/ui/Icon'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
+
 import {BanxaLogo} from '../illustrations/BanxaLogo'
 import {EncryptusLogo} from '../illustrations/EncryptusLogo'
 import {WalletAssetImage} from '../illustrations/WalletAssetImage'

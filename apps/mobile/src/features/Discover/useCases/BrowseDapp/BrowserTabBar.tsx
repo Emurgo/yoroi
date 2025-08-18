@@ -1,4 +1,5 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
 import {Text, TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
@@ -8,10 +9,11 @@ import WebView from 'react-native-webview'
 import {useBrowser} from '~/features/Discover/common/BrowserProvider'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Icon} from '~/ui/Icon'
+
 import {WebViewState} from './WebViewItem'
 
 type Props = {
-  webViewRef: React.RefObject<WebView>
+  webViewRef: React.RefObject<WebView | null>
   webViewState: WebViewState
 }
 export const BrowserTabBar = ({webViewRef, webViewState}: Props) => {

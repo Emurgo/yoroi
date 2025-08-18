@@ -4,6 +4,7 @@ import * as React from 'react'
 import {ScrollView as RNScrollView, ScrollViewProps, View} from 'react-native'
 
 import {useFlashAndScroll} from './useFlashAndScroll'
+
 export const ScrollView = React.forwardRef<RNScrollView, Props>(
   ({children, onScrollBarChange, ...props}, ref) => {
     const [wrapperHeight, setWrapperHeight] = React.useState(0)

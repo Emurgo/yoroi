@@ -1,4 +1,5 @@
 import {useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
 import {useWindowDimensions} from 'react-native'
 import Svg, {Path} from 'react-native-svg'

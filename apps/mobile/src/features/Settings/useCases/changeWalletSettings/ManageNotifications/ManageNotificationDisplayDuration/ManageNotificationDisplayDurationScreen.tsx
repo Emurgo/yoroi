@@ -1,10 +1,11 @@
-import {useNavigation} from '@react-navigation/native'
 import {parseNumber} from '@yoroi/common'
 import {
   useNotificationsConfig,
   useUpdateNotificationsConfig,
 } from '@yoroi/notifications'
 import {atoms as a, useTheme} from '@yoroi/theme'
+
+import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 import {ScrollView, Text, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'

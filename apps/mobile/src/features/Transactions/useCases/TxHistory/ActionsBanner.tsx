@@ -1,5 +1,6 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Chain} from '@yoroi/types'
+
 import * as React from 'react'
 import {GestureResponderEvent, View} from 'react-native'
 

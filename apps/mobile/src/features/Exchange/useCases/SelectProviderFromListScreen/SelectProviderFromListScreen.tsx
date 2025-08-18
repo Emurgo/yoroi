@@ -1,6 +1,7 @@
 import {useExchange, useExchangeProvidersByOrderType} from '@yoroi/exchange'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Exchange} from '@yoroi/types'
+
 import * as React from 'react'
 import {FlatList, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
@@ -9,6 +10,7 @@ import {ProviderItem} from '~/features/Exchange/common/ProviderItem/ProviderItem
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Icon} from '~/ui/Icon'
 import {Space} from '~/ui/Space/Space'
+
 import {BanxaLogo} from '../illustrations/BanxaLogo'
 import {EncryptusLogo} from '../illustrations/EncryptusLogo'
 

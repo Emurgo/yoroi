@@ -1,7 +1,8 @@
-import TransportHID from '@ledgerhq/react-native-hid'
-import TransportBLE from '@ledgerhq/react-native-hw-transport-ble'
 import {atoms as a, lightPalette, useTheme} from '@yoroi/theme'
 import {HW} from '@yoroi/types'
+
+import TransportHID from '@ledgerhq/react-native-hid'
+import TransportBLE from '@ledgerhq/react-native-hw-transport-ble'
 import * as React from 'react'
 import type {IntlShape} from 'react-intl'
 import {defineMessages, useIntl} from 'react-intl'
@@ -19,6 +20,7 @@ import {Button} from '~/ui/Button/Button'
 import {Space} from '~/ui/Space/Space'
 import {BluetoothDisabledError, RejectedByUserError} from '~/wallets/hw/hw'
 import {Device} from '~/wallets/types/hw'
+
 import {BulletPointItem} from '../BulletPointItem'
 import {Loading} from '../Loading/Loading'
 
@@ -234,7 +236,6 @@ class LedgerConnectInt extends React.Component<Props, State> {
   ListHeader = () => {
     const {error, waiting, deviceObj} = this.state
     const {intl, onWaitingMessage} = this.props
-    const {atoms: ta, palette: p} = useTheme()
 
     let msg, errMsg
     if (error != null) {
@@ -252,7 +253,7 @@ class LedgerConnectInt extends React.Component<Props, State> {
       }
     }
     if (msg == null) return null
-    return <ListHeaderWrapper msg={msg} err={errMsg} atoms={ta} palette={p} />
+    return <ListHeaderWrapper msg={msg} err={errMsg} />
   }
 
   render() {

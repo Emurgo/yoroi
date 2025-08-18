@@ -1,5 +1,6 @@
 import {atoms as a} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
+
 import * as React from 'react'
 import {FlatList} from 'react-native'
 

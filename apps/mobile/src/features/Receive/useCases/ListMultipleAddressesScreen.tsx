@@ -1,5 +1,6 @@
-import {useFocusEffect} from '@react-navigation/native'
 import {atoms as a, useTheme} from '@yoroi/theme'
+
+import {useFocusEffect} from '@react-navigation/native'
 import * as React from 'react'
 import {
   InteractionManager,
@@ -20,6 +21,7 @@ import {Button} from '~/ui/Button/Button'
 import {ShowAddressLimitInfo} from '~/ui/ShowAddressLimitInfo/ShowAddressLimitInfo'
 import {SmallAddressCard} from '~/ui/SmallAddressCard/SmallAddressCard'
 import {Space} from '~/ui/Space/Space'
+
 import {useReceive} from '../common/ReceiveProvider'
 import {useNavigateTo} from '../common/useNavigateTo'
 import {useReceiveAddressesStatus} from '../common/useReceiveAddressesStatus'

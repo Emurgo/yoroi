@@ -1,4 +1,5 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
 import {ScrollView, Text, View} from 'react-native'
 
@@ -9,7 +10,7 @@ import {TextInput} from '~/ui/TextInput/TextInput'
 
 export const ImportReadOnlyWalletScreen = () => {
   const strings = useStrings()
-  const {palette: p, atoms: ta} = useTheme()
+  const {atoms: ta} = useTheme()
 
   return (
     <View style={[a.flex_1, ta.bg_color_max]}>
@@ -29,9 +30,7 @@ export const ImportReadOnlyWalletScreen = () => {
 
           <TextInput
             label={strings.setupWallet.walletAddressLabel}
-            placeholder={
-              strings.setupWallet.walletAddressLabel
-            }
+            placeholder={strings.setupWallet.walletAddressLabel}
             autoFocus
             autoComplete="off"
           />

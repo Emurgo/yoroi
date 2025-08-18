@@ -1,9 +1,10 @@
-import {UseMutationOptions, useQuery} from '@tanstack/react-query'
 import {
   parseSafe,
   useAsyncStorage,
   useMutationWithInvalidations,
 } from '@yoroi/common'
+
+import {UseMutationOptions, useQuery} from '@tanstack/react-query'
 
 const useReadPrivacyMode = () => {
   const storage = useAsyncStorage()

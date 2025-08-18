@@ -11,9 +11,9 @@ import {
   Linking,
   Text,
   TouchableOpacity,
-  useWindowDimensions,
   View,
   ViewProps,
+  useWindowDimensions,
 } from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'

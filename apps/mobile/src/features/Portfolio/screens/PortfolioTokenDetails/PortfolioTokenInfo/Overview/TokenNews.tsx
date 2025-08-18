@@ -1,4 +1,5 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import {LinearGradient} from 'expo-linear-gradient'
 import React, {useState} from 'react'
 import {FlatList, Image, StyleSheet, Text, View} from 'react-native'

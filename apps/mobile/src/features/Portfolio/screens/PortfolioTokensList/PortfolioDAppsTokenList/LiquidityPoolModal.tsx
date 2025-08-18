@@ -1,5 +1,6 @@
 import {amountBreakdown, infoExtractName} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
 import {Image, ImageSourcePropType, ImageStyle, Text, View} from 'react-native'
 

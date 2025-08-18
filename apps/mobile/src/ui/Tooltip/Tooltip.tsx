@@ -1,4 +1,5 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
 import {
   Dimensions,
@@ -10,7 +11,7 @@ import {
 } from 'react-native'
 import {Portal} from 'react-native-paper'
 
-import {addEventListener, getTooltipPosition, Measurement} from './utils'
+import {Measurement, addEventListener, getTooltipPosition} from './utils'
 
 type TooltipProps = {
   /**
@@ -148,7 +149,7 @@ export const Tooltip = ({
       if ((children as any).props?.disabled) return null
       return (children as any).props?.onPress?.()
     }
-  }, [children.props, mode, visible])
+  }, [children, mode, visible])
 
   const pressProps =
     mode === 'hover'

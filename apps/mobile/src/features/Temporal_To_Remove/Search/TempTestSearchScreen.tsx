@@ -1,5 +1,6 @@
 import * as React from 'react'
 import {FlatList, ListRenderItem, SafeAreaView, Text, View} from 'react-native'
+
 import {useSearch, useSearchOnNavBar} from '../../Search/SearchContext'
 
 interface WordItem {

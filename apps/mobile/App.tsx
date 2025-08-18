@@ -1,9 +1,9 @@
 import {AsyncStorageProvider} from '@yoroi/common'
 import {SetupWalletProvider} from '@yoroi/setup-wallet'
 import {
+  CatalystProvider,
   catalystApiMaker,
   catalystManagerMaker,
-  CatalystProvider,
 } from '@yoroi/staking'
 import {ThemeProvider} from '@yoroi/theme'
 import {TransferProvider} from '@yoroi/transfer'
@@ -13,6 +13,7 @@ import * as React from 'react'
 
 import {AppNavigator} from '~/kernel/navigation/AppNavigator'
 import {Modal} from '~/ui/Modal/ModalScreen'
+
 import {PlatformShell} from './PlatformShell'
 import {AuthProvider} from './src/features/Auth/context/AuthProvider'
 import {CopyProvider} from './src/features/Copy/context/CopyProvider'

@@ -1,5 +1,6 @@
 import {useCatalyst} from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
 import {ScrollView, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
@@ -7,6 +8,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
 import {Checkbox} from '~/ui/Checkbox/Checkbox'
+import {Space} from '~/ui/Space/Space'
 import {
   Actions,
   Description,
@@ -14,7 +16,7 @@ import {
   Row,
   Stepper,
 } from '~/ui/common/components'
-import {Space} from '~/ui/Space/Space'
+
 import {useNavigateTo} from '../CatalystNavigator'
 
 export const DisplayPin = () => {

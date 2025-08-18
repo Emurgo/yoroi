@@ -1,14 +1,15 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import _ from 'lodash'
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
+import {SwapContextInstance} from '~/features/Swap/common/SwapProvider'
 import {
   PRICE_IMPACT_HIGH_RISK,
   PRICE_IMPACT_MODERATE_RISK,
   undefinedToken,
 } from '~/features/Swap/common/constants'
-import {SwapContextInstance} from '~/features/Swap/common/SwapProvider'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Divider} from '~/ui/Divider/Divider'
@@ -18,6 +19,7 @@ import {ProtocolAvatar} from '~/ui/ProtocolAvatar/ProtocolAvatar'
 import {ShowPriceImpact} from '~/ui/ShowPriceImpact/ShowPriceImpact'
 import {Space} from '~/ui/Space/Space'
 import {TokenAmountItem} from '~/ui/TokenAmountItem/TokenAmountItem'
+
 import {getPriceImpactRisk, usePriceImpactRiskTheme} from '../../common/helpers'
 
 export const TransactionSummary = ({

@@ -1,8 +1,9 @@
-import {useQuery, UseQueryOptions} from '@tanstack/react-query'
 import {networkConfigs} from '@yoroi/blockchains'
 import {isRight, time} from '@yoroi/common'
 import {isPrimaryToken} from '@yoroi/portfolio'
 import {Chain, Portfolio} from '@yoroi/types'
+
+import {UseQueryOptions, useQuery} from '@tanstack/react-query'
 
 import {fetchPtPriceActivity} from '~/features/Pairing/hooks/usePrimaryTokenActivity'
 import {useCurrencyPairing} from '~/features/Settings/useCases/changeAppSettings/Currency/CurrencyContext'
@@ -12,6 +13,7 @@ import {supportedCurrencies} from '~/kernel/constants'
 import {useLanguage} from '~/kernel/i18n/LanguageProvider'
 import {logger} from '~/kernel/logger/logger'
 import {delay} from '~/wallets/utils/timeUtils'
+
 import {priceChange} from '../helpers/priceChange'
 import {usePortfolioTokenDetailParams} from './useNavigateTo'
 

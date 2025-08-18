@@ -1,9 +1,4 @@
 import {
-  UseMutationOptions,
-  useQuery,
-  UseQueryOptions,
-} from '@tanstack/react-query'
-import {
   isBoolean,
   parseSafe,
   time,
@@ -11,6 +6,12 @@ import {
   useMutationWithInvalidations,
 } from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
+
+import {
+  UseMutationOptions,
+  UseQueryOptions,
+  useQuery,
+} from '@tanstack/react-query'
 import * as React from 'react'
 import {Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
@@ -21,6 +22,7 @@ import {Boundary} from '~/ui/Boundary/Boundary'
 import {Button} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
+
 import {NetworkPickerList} from './NetworkPickerList'
 
 export const ChangeNetworkScreen = () => {

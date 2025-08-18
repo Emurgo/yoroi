@@ -1,7 +1,8 @@
 import {isString} from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
-import React, {forwardRef, ReactNode} from 'react'
-import {type ViewProps, Text, TouchableOpacity, View} from 'react-native'
+
+import React, {ReactNode, forwardRef} from 'react'
+import {Text, TouchableOpacity, View, type ViewProps} from 'react-native'
 
 import {Icon} from '../Icon'
 

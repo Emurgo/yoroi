@@ -1,5 +1,6 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
+
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
@@ -8,6 +9,7 @@ import {
   usePortfolio,
 } from '~/features/Portfolio/context/PortfolioProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
+
 import {TotalTokensValueContent} from './TotalTokensValueContent'
 
 type Props = {

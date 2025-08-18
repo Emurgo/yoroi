@@ -4,8 +4,8 @@ import {Balance, Wallet} from '@yoroi/types'
 import * as CSL from '@emurgo/cross-csl-core'
 import {
   RemoteUnspentOutput,
-  signRawTransaction,
   UtxoAsset,
+  signRawTransaction,
 } from '@emurgo/yoroi-lib'
 import {normalizeToAddress} from '@emurgo/yoroi-lib/dist/internals/utils/addresses'
 import {parseTokenList} from '@emurgo/yoroi-lib/dist/internals/utils/assets'
@@ -16,7 +16,7 @@ import _ from 'lodash'
 import {logger} from '~/kernel/logger/logger'
 import {RawUtxo} from '~/wallets/types/other'
 import {YoroiUnsignedTx} from '~/wallets/types/yoroi'
-import {asQuantity, Utxos} from '~/wallets/utils/utils'
+import {Utxos, asQuantity} from '~/wallets/utils/utils'
 import {Cardano, CardanoMobile} from '~/wallets/wallets'
 
 import {toAssetNameHex, toPolicyId} from '../api/utils'

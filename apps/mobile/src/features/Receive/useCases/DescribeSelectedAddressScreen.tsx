@@ -1,6 +1,7 @@
-import {useFocusEffect} from '@react-navigation/native'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Wallet} from '@yoroi/types'
+
+import {useFocusEffect} from '@react-navigation/native'
 import * as React from 'react'
 import {GestureResponderEvent, ScrollView, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
@@ -19,6 +20,7 @@ import {
 } from '~/ui/SingleOrMultipleAddressesModal/SingleOrMultipleAddressesModal'
 import {SkeletonAdressDetail} from '~/ui/SkeletonAddressDetail/SkeletonAddressDetail'
 import {isEmptyString} from '~/wallets/utils/string'
+
 import {useReceive} from '../common/ReceiveProvider'
 import {useMultipleAddressesInfo} from '../common/useMultipleAddressesInfo'
 import {useNavigateTo} from '../common/useNavigateTo'

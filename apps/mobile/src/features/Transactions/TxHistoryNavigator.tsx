@@ -1,7 +1,7 @@
 import {
+  ResolverProvider,
   resolverApiMaker,
   resolverManagerMaker,
-  ResolverProvider,
   resolverStorageMaker,
 } from '@yoroi/resolver'
 import {atoms as a, useTheme} from '@yoroi/theme'

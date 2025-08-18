@@ -1,4 +1,5 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
@@ -17,21 +18,21 @@ export const WarnLimitPrice = ({
   tokenOutTicker: string
 }) => {
   const strings = useStrings()
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
 
   return (
     <View style={[a.justify_between, a.flex_1, a.px_lg, a.pb_lg]}>
       <View>
-        <Text style={[a.body_1_lg_regular, {color: p.text_gray_medium}]}>
-          {strings.limitPriceWarningDescription}
+        <Text style={[a.body_1_lg_regular, ta.text_gray_medium]}>
+          {strings.swap.limitPriceWarningDescription}
         </Text>
 
         <Space.Height.md />
 
         <View style={[a.flex_col, a.gap_sm]}>
           <View style={[a.flex_row, a.justify_between, a.gap_md]}>
-            <Text style={[a.body_1_lg_regular, {color: p.text_gray_medium}]}>
-              {strings.limitPriceWarningYourPrice}
+            <Text style={[a.body_1_lg_regular, ta.text_gray_medium]}>
+              {strings.swap.limitPriceWarningYourPrice}
             </Text>
 
             <View
@@ -45,14 +46,14 @@ export const WarnLimitPrice = ({
               ]}
             >
               <Text
-                style={[a.body_1_lg_regular, {color: p.text_gray_max}]}
+                style={[a.body_1_lg_regular, ta.text_gray_max]}
               >{`1 ${tokenInTicker} = ${wantedPrice} ${tokenOutTicker}`}</Text>
             </View>
           </View>
 
           <View style={[a.flex_row, a.justify_between, a.gap_md]}>
-            <Text style={[a.body_1_lg_regular, {color: p.text_gray_medium}]}>
-              {strings.limitPriceWarningMarketPrice}
+            <Text style={[a.body_1_lg_regular, ta.text_gray_medium]}>
+              {strings.swap.limitPriceWarningMarketPrice}
             </Text>
 
             <View
@@ -66,7 +67,7 @@ export const WarnLimitPrice = ({
               ]}
             >
               <Text
-                style={[a.body_1_lg_regular, {color: p.text_gray_max}]}
+                style={[a.body_1_lg_regular, ta.text_gray_max]}
               >{`1 ${tokenInTicker} = ${marketPrice} ${tokenOutTicker}`}</Text>
             </View>
           </View>

@@ -1,14 +1,15 @@
 import {networkConfigs} from '@yoroi/blockchains'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Chain} from '@yoroi/types'
+
 import * as React from 'react'
 import {
   Text,
   TextStyle,
   TouchableOpacity,
-  useWindowDimensions,
   View,
   ViewStyle,
+  useWindowDimensions,
 } from 'react-native'
 
 import {availableNetworks} from '~/features/WalletManager/common/constants'

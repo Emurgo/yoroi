@@ -1,11 +1,13 @@
-import {useNavigation} from '@react-navigation/native'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Wallet} from '@yoroi/types'
+
+import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 import {useIntl} from 'react-intl'
 import {ScrollView} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
+
 import {useAuth} from '~/features/Auth/context/AuthProvider'
 import {useAuthSetting} from '~/features/Auth/hooks/useAuthSetting'
 import {useAddressMode} from '~/features/WalletManager/hooks/useAddressMode'
@@ -13,13 +15,12 @@ import {useResync} from '~/features/WalletManager/hooks/useResync'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {DIALOG_BUTTONS, showConfirmationDialog} from '~/kernel/dialogs'
 import {useStrings} from '~/kernel/i18n/useStrings'
-
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {SettingsRouteNavigation} from '~/kernel/navigation/types'
 import {Icon} from '~/ui/Icon'
 import {SettingsSwitch} from '~/ui/SettingsSwitch/SettingsSwitch'
 import {Space} from '~/ui/Space/Space'
-import {useNavigateTo} from '../../common/navigation'
+
 import {SettingsCollateralItem} from '../../SettingsCollateralItem'
 import {
   NavigatedSettingsItem,
@@ -27,6 +28,7 @@ import {
   SettingsItem,
   SettingsSection,
 } from '../../SettingsItems'
+import {useNavigateTo} from '../../common/navigation'
 
 export const WalletSettingsScreen = () => {
   const strings = useStrings()

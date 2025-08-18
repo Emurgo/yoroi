@@ -1,12 +1,13 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import {LinearGradient} from 'expo-linear-gradient'
 import * as React from 'react'
 import {
   GestureResponderEvent,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  useWindowDimensions,
   View,
+  useWindowDimensions,
 } from 'react-native'
 import QRCode from 'react-native-qrcode-svg'
 import Share from 'react-native-share'

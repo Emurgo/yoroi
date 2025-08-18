@@ -1,4 +1,3 @@
-import {RouteProp, useRoute} from '@react-navigation/native'
 import {isString, time} from '@yoroi/common'
 import {
   traitValueExpander,
@@ -7,6 +6,8 @@ import {
 } from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Explorers, Network, Portfolio} from '@yoroi/types'
+
+import {RouteProp, useRoute} from '@react-navigation/native'
 import React, {ReactNode, useState} from 'react'
 import {
   Linking,
@@ -14,13 +15,13 @@ import {
   SafeAreaView,
   ScrollView,
   TouchableOpacity,
-  useWindowDimensions,
   View,
+  useWindowDimensions,
 } from 'react-native'
-import {useStrings} from '~/kernel/i18n/useStrings'
 
 import {usePortfolioImageInvalidate} from '~/features/Portfolio/common/hooks/usePortfolioImage'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {NftRoutes} from '~/kernel/navigation/types'
 import {Boundary} from '~/ui/Boundary/Boundary'
@@ -31,6 +32,7 @@ import {MediaPreview} from '~/ui/MediaPreview/MediaPreview'
 import {Space} from '~/ui/Space/Space'
 import {Tab, TabPanel, TabPanels, Tabs} from '~/ui/Tabs'
 import {Text} from '~/ui/Text/Text'
+
 import {useNavigateTo} from '../../common/navigation'
 
 export const MediaDetailsScreen = () => {

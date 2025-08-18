@@ -1,14 +1,17 @@
-import {FlashList} from '@shopify/flash-list'
 import {atoms as a} from '@yoroi/theme'
+
+import {FlashList} from '@shopify/flash-list'
 import * as React from 'react'
 import {View} from 'react-native'
 
 import {useAddressMode} from '~/features/WalletManager/hooks/useAddressMode'
 import {features} from '~/kernel/features'
 import {Space} from '~/ui/Space/Space'
-import {useUtxoList} from './useUtxoList'
+
 import {UtxoAddressGroup} from './UtxoAddressGroup'
 import {WarningSingleAddress} from './WarningSingleAddress'
+import {useUtxoList} from './useUtxoList'
+
 export const UtxoList = () => {
   const {utxoList} = useUtxoList()
   const {isSingle} = useAddressMode()

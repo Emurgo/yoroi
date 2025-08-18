@@ -1,4 +1,5 @@
 import {NotificationProvider} from '@yoroi/notifications'
+
 import * as React from 'react'
 
 import {useNotificationManagerMaker} from './notification-manager'
