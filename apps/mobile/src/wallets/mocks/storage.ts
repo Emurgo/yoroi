@@ -15,5 +15,5 @@ export const mockEncryptedStorage: WalletEncryptedStorage = {
     write: () => Promise.resolve(),
     remove: () => Promise.resolve(),
   },
-  clear: () => Promise.resolve([undefined, undefined]),
+  clear: () => Promise.resolve(),
 }
