@@ -26,7 +26,7 @@ export const NotifySupportedNameServers = () => {
   return (
     <View>
       <LinearGradient
-        style={[{borderRadius: 8}, a.p_md]}
+        style={[a.rounded_sm, a.p_md]}
         start={{x: 0, y: 0}}
         end={{x: 1, y: 1}}
         colors={[p.secondary_200, p.primary_100]}
@@ -72,11 +72,11 @@ const NameServer = ({text}: {text: string}) => {
   return (
     <View
       style={[
+        a.flex_row,
+        a.align_center,
         {
-          flexDirection: 'row',
-          alignItems: 'center',
-          lineHeight: 22,
-          color: p.gray_max,
+          height: 22,
+          backgroundColor: p.gray_max,
         },
       ]}
     >

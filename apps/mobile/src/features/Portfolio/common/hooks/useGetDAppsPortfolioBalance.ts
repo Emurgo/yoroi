@@ -7,15 +7,18 @@ interface IDAppPortfolioBalance {
 
 export const useGetDAppsPortfolioBalance = (
   quantity: bigint,
-  options: UseQueryOptions<
-    IDAppPortfolioBalance,
-    Error,
-    IDAppPortfolioBalance,
-    ['useGetDAppsPortfolioBalance', number]
+  options: Omit<
+    UseQueryOptions<
+      IDAppPortfolioBalance,
+      Error,
+      IDAppPortfolioBalance,
+      ['useGetDAppsPortfolioBalance', number]
+    >,
+    'queryKey' | 'queryFn'
   > = {},
 ) => {
   const query = useQuery({
-    useErrorBoundary: true,
+    throwOnError: true,
     ...options,
     queryKey: ['useGetDAppsPortfolioBalance', Number(quantity)],
     queryFn: async () => {
@@ -28,8 +31,8 @@ export const useGetDAppsPortfolioBalance = (
       }
 
       return {
-        quantity: BigInt(120000000),
-        previousQuantity: BigInt(120160000),
+        quantity: BigInt(0),
+        previousQuantity: BigInt(0),
       }
     },
   })

@@ -24,13 +24,17 @@ export const UTxOsTab = ({tx}: {tx: FormattedTx}) => {
   const {palette: p} = useTheme()
   const strings = useStrings()
   const {wallet} = useSelectedWallet()
+  const [inputsExpanded, setInputsExpanded] = React.useState(true)
+  const [outputsExpanded, setOutputsExpanded] = React.useState(true)
 
   return (
     <View style={[a.flex_1, a.px_lg, {backgroundColor: p.bg_color_max}]}>
       <Space.Height.lg />
 
       <Accordion
-        label={`${strings.txReview.utxosInputsLabel} (${tx.inputs.length})`}
+        label={`${strings.txReview.utxos.utxosInputsLabel} (${tx.inputs.length})`}
+        expanded={inputsExpanded}
+        onChange={setInputsExpanded}
       >
         <Inputs inputs={tx.inputs} />
       </Accordion>
@@ -43,7 +47,9 @@ export const UTxOsTab = ({tx}: {tx: FormattedTx}) => {
       />
 
       <Accordion
-        label={`${strings.txReview.utxosOutputsLabel} (${tx.outputs.length})`}
+        label={`${strings.txReview.utxos.utxosOutputsLabel} (${tx.outputs.length})`}
+        expanded={outputsExpanded}
+        onChange={setOutputsExpanded}
       >
         <Outputs outputs={tx.outputs} />
       </Accordion>
@@ -179,7 +185,7 @@ const Fee = ({fee}: {fee: string}) => {
 
       <View style={[a.flex_row, a.justify_between]}>
         <Text style={[a.body_1_lg_medium, {color: p.text_gray_medium}]}>
-          {strings.txReview.feeLabel}
+          {strings.txReview.fee}
         </Text>
 
         <Text
@@ -205,8 +211,8 @@ const UtxoTitle = ({
   const label =
     isOwnAdddress != null
       ? isOwnAdddress
-        ? strings.txReview.utxosYourAddressLabel
-        : strings.txReview.utxosForeignAddressLabel
+        ? strings.txReview.utxos.utxosYourAddressLabel
+        : strings.txReview.utxos.utxosForeignAddressLabel
       : '-'
 
   return (

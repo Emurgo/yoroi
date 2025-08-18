@@ -27,7 +27,10 @@ import {
   useNotificationDisplaySettings,
 } from '../../Notifications/NotificationsDisplaySettings'
 
-const getNotificationsAuthorizationStatus = () => {
+const getNotificationsAuthorizationStatus = ():
+  | 'authorized'
+  | 'not_determined'
+  | 'denied' => {
   // TODO: Alert.alert('getNotificationsAuthorizationStatus not implemented')
   return 'not_determined' as const
 }

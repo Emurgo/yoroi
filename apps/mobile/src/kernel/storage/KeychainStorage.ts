@@ -1,6 +1,6 @@
+import * as LocalAuth from 'expo-local-authentication'
 import {Platform} from 'react-native'
 import * as Keychain from 'react-native-keychain'
-import * as LocalAuth from 'expo-local-authentication'
 
 async function write(key: string, value: string) {
   // Keep storage in native keychain but avoid unsupported options; Expo auth will gate access
@@ -12,10 +12,7 @@ async function write(key: string, value: string) {
   })
 }
 
-async function read(
-  key: string,
-  _authenticationPrompt: AuthenticationPrompt,
-) {
+async function read(key: string, _authenticationPrompt: AuthenticationPrompt) {
   // Authenticate with Expo (biometrics/OS) first; ignore unsupported prompt fields
   try {
     const result = await LocalAuth.authenticateAsync({
