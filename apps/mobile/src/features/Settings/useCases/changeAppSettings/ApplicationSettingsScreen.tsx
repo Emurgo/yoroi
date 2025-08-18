@@ -29,7 +29,7 @@ import {SettingsSwitch} from '~/ui/SettingsSwitch/SettingsSwitch'
 import {Space} from '~/ui/Space/Space'
 
 import {useCurrencyPairing} from './Currency/CurrencyContext'
-import {usePrivacyMode} from './PrivacyMode/PrivacyMode'
+import {usePrivacyMode} from './PrivacyMode/usePrivacyMode'
 import {
   changeScreenShareNativeSettingOnAndroid,
   useScreenShareSettingEnabled,

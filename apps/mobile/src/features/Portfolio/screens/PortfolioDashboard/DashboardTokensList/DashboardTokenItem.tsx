@@ -16,7 +16,7 @@ import {
 import {useNavigateTo} from '~/features/Portfolio/common/hooks/useNavigateTo'
 import {usePortfolioTokenActivity} from '~/features/Portfolio/context/PortfolioTokenActivityProvider'
 import {useCurrencyPairing} from '~/features/Settings/useCases/changeAppSettings/Currency/CurrencyContext'
-import {usePrivacyMode} from '~/features/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
+import {usePrivacyMode} from '~/features/Settings/useCases/changeAppSettings/PrivacyMode/usePrivacyMode'
 import {PairedBalance} from '~/ui/PairedBalance/PairedBalance'
 import {PnlTag} from '~/ui/PnlTag/PnlTag'
 import {Space} from '~/ui/Space/Space'
