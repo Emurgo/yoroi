@@ -8,7 +8,7 @@ import {Quantities} from '~/wallets/utils/utils'
 import {useStakingInfo} from './useStakingInfo'
 
 export const useCreateWithdrawTx = (
-  options?: UsePromiseOptions<YoroiUnsignedTx, [{shouldDeregister: boolean}]>,
+  options?: Omit<UsePromiseOptions<YoroiUnsignedTx, [{shouldDeregister: boolean}]>, 'promise'>,
 ) => {
   const {wallet, meta} = useSelectedWallet()
   const {stakingInfo} = useStakingInfo(wallet)

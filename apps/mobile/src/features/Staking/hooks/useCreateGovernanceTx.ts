@@ -9,10 +9,10 @@ import {YoroiUnsignedTx} from '~/wallets/types/yoroi'
 
 export const useCreateGovernanceTx = (
   wallet: YoroiWallet,
-  options?: UsePromiseOptions<
+  options?: Omit<UsePromiseOptions<
     YoroiUnsignedTx,
     [{certificates: Certificate[]; addressMode: Wallet.AddressMode}]
-  >,
+  >, 'promise'>,
 ) => {
   const create = React.useCallback(
     async ({

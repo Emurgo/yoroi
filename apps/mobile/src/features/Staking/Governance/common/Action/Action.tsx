@@ -48,6 +48,7 @@ export const Action = ({
             a.relative,
             a.rounded_sm,
             !showGradient && [a.border, {borderColor: p.gray_200}],
+            showGradient && {backgroundColor: p.bg_color_min},
           ]}
         >
           {pending && (
@@ -76,13 +77,13 @@ export const Action = ({
 
           <View style={[a.py_lg, a.px_lg, {minHeight: 134}]}>
             <Text
-              style={[a.font_semibold, a.heading_4_medium, {color: p.gray_max}]}
+              style={[a.font_semibold, a.heading_4_medium, ta.text_gray_max]}
             >
               {title}
             </Text>
 
             <Text
-              style={[a.font_normal, a.body_1_lg_regular, {color: p.gray_max}]}
+              style={[a.font_normal, a.body_1_lg_regular, ta.text_gray_max]}
             >
               {description}
             </Text>
