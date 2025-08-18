@@ -1,5 +1,12 @@
 import * as React from 'react'
-import Svg, {Defs, G, LinearGradient, Path, Stop} from 'react-native-svg'
+import Svg, {
+  Defs,
+  G,
+  LinearGradient,
+  Path,
+  Stop,
+  SvgProps,
+} from 'react-native-svg'
 
 // TODO: Get from Product the oficial illustration
 export const ClaimSuccessIllustration = ({

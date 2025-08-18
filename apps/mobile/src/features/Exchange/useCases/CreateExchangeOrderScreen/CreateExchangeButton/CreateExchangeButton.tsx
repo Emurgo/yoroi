@@ -29,9 +29,9 @@ export const CreateExchangeButton = ({
 
   const title = isBuy
     ? isPreprod
-      ? strings.createOrderPreprodFaucetButtonText
-      : strings.proceed
-    : strings.proceed
+      ? strings.exchange.createOrderPreprodFaucetButtonText
+      : strings.global.proceed
+    : strings.global.proceed
 
   const handleOnPress = () => {
     if (isPreprod && isBuy) {

@@ -40,12 +40,12 @@ export const AskToOpenWalletScreen = () => {
           size="S"
           type={ButtonType.Secondary}
           onPress={handleOnCancel}
-          title={strings.links.cancel}
+          title={strings.global.cancel}
         />
 
         <Space.Width.md />
 
-        <Button size="S" onPress={closeModal} title={strings.links.ok} />
+        <Button size="S" onPress={closeModal} title={strings.global.ok} />
       </Actions>
     </SafeAreaView>
   )

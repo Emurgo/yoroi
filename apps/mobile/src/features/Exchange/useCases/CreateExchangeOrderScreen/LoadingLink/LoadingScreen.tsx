@@ -3,10 +3,9 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
+import {YoroiLogo} from '~/features/Exchange/illustrations/YoroiLogo'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Space} from '~/ui/Space/Space'
-
-import {YoroiLogo} from '../illustrations/YoroiLogo'
 
 export const LoadingLinkScreen = () => {
   const strings = useStrings()
@@ -26,7 +25,7 @@ export const LoadingLinkScreen = () => {
           {maxWidth: 340},
         ]}
       >
-        {strings.loadingLink}
+        {strings.exchange.loadingLink}
       </Text>
     </View>
   )

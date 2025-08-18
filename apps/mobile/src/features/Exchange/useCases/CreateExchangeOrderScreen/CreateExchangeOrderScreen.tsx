@@ -14,6 +14,7 @@ import {ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {ProviderItem} from '~/features/Exchange/common/ProviderItem/ProviderItem'
+import {ShowDisclaimer} from '~/features/Legal/ui/Disclaimer/ShowDisclaimer'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {banxaTestWallet} from '~/kernel/constants'
@@ -25,10 +26,9 @@ import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingVi
 import {useModal} from '~/ui/Modal/ModalContext'
 import {delay} from '~/wallets/utils/timeUtils'
 
-import {useNavigateTo} from '../../common/navigation'
-import {ShowDisclaimer} from '../Legal/Disclaimer/ShowDisclaimer'
-import {BanxaLogo} from '../illustrations/BanxaLogo'
-import {EncryptusLogo} from '../illustrations/EncryptusLogo'
+import {useNavigateTo} from '../../common/useNavigateTo'
+import {BanxaLogo} from '../../illustrations/BanxaLogo'
+import {EncryptusLogo} from '../../illustrations/EncryptusLogo'
 import {CreateExchangeButton} from './CreateExchangeButton/CreateExchangeButton'
 import {EditAmount} from './EditAmount/EditAmount'
 import {ErrorScreen} from './LoadingLink/ErrorScreen'
@@ -113,9 +113,6 @@ export const CreateExchangeOrderScreen = () => {
       fetcherConfig: {signal},
     },
     {
-      enabled: false,
-      suspense: false,
-      useErrorBoundary: false,
       onError: async () => {
         closeModal()
 

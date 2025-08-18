@@ -4,13 +4,13 @@ import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 import {TouchableOpacity, View} from 'react-native'
 
-// import {TxHistoryRouteNavigation} from '~/kernel/navigation/navigation'
+import {TxHistoryRouteNavigation} from '~/kernel/navigation/types'
 import {Icon} from '~/ui/Icon'
 
 import {useWalletNotifications} from '../../Notifications/common/useWalletNotifications'
 
 export const HeaderRightHistory = React.memo(() => {
-  const navigation = useNavigation<any /* TxHistoryRouteNavigation */>()
+  const navigation = useNavigation<TxHistoryRouteNavigation>()
   const {palette: p} = useTheme()
   const {data: walletNotifications} = useWalletNotifications()
 

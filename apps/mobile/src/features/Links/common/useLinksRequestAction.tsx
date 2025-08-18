@@ -7,13 +7,13 @@ import * as React from 'react'
 import {InteractionManager} from 'react-native'
 import uuid from 'uuid'
 
+import {useBrowser} from '~/features/Discover/common/BrowserProvider'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useModal} from '~/ui/Modal/ModalContext'
 
-import {useBrowser} from '../Discover/common/BrowserProvider'
 import {RequestedAdaPaymentWithLinkScreen} from '../useCases/RequestedAdaPaymentWithLinkScreen/RequestedAdaPaymentWithLinkScreen'
 import {RequestedBrowserLaunchDappUrlScreen} from '../useCases/RequestedBrowserLaunchDappUrlScreen/RequestedBrowserLaunchDappUrlScreen'
 import {useNavigateTo} from './useNavigationTo'
@@ -97,8 +97,8 @@ export const useLinksRequestAction = () => {
       decimals: number,
     ) => {
       const title = isTrusted
-        ? strings.trustedPaymentRequestedTitle
-        : strings.untrustedPaymentRequestedTitle
+        ? strings.links.trustedPaymentRequestedTitle
+        : strings.links.untrustedPaymentRequestedTitle
       const handleOnContinue = () =>
         startTransferWithLink(
           {
@@ -124,8 +124,8 @@ export const useLinksRequestAction = () => {
       openModal({title: title, content: content, height: heightBreakpoint})
     },
     [
-      strings.trustedPaymentRequestedTitle,
-      strings.untrustedPaymentRequestedTitle,
+      strings.links.trustedPaymentRequestedTitle,
+      strings.links.untrustedPaymentRequestedTitle,
       startTransferWithLink,
       openModal,
     ],
@@ -179,8 +179,8 @@ export const useLinksRequestAction = () => {
       isTrusted: boolean
     }) => {
       const title = isTrusted
-        ? strings.trustedBrowserLaunchDappUrlTitle
-        : strings.untrustedBrowserLaunchDappUrlTitle
+        ? strings.links.trustedBrowserLaunchDappUrlTitle
+        : strings.links.untrustedBrowserLaunchDappUrlTitle
       const handleOnContinue = () =>
         launchDappUrl({
           info: {
@@ -205,8 +205,8 @@ export const useLinksRequestAction = () => {
     [
       launchDappUrl,
       openModal,
-      strings.trustedBrowserLaunchDappUrlTitle,
-      strings.untrustedBrowserLaunchDappUrlTitle,
+      strings.links.trustedBrowserLaunchDappUrlTitle,
+      strings.links.untrustedBrowserLaunchDappUrlTitle,
     ],
   )
 

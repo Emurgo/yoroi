@@ -15,18 +15,18 @@ export const useLinksRequestRedirect = (redirectTo?: string) => {
   const askToRedirect = React.useCallback(
     (link: string) => {
       openModal({
-        title: strings.askToRedirectTitle,
+        title: strings.links.askToRedirectTitle,
         content: <AskToRedirectScreen link={link} />,
         height: heightBreakpoint,
       })
     },
-    [openModal, strings.askToRedirectTitle],
+    [openModal, strings.links.askToRedirectTitle],
   )
 
   React.useEffect(() => {
     InteractionManager.runAfterInteractions(() => {
       if (!isEmptyString(redirectTo))
-        askToRedirect(decodeURIComponent(redirectTo))
+        askToRedirect(decodeURIComponent(redirectTo ?? ''))
     })
   }, [redirectTo, askToRedirect])
 }
