@@ -29,7 +29,7 @@ import {SettingsSwitch} from '~/ui/SettingsSwitch/SettingsSwitch'
 import {Space} from '~/ui/Space/Space'
 
 import {useCurrencyPairing} from './Currency/CurrencyContext'
-import {usePrivacyMode} from './PrivacyMode/PrivacyMode'
+import {usePrivacyMode} from './PrivacyMode/usePrivacyMode'
 import {
   changeScreenShareNativeSettingOnAndroid,
   useScreenShareSettingEnabled,
@@ -43,7 +43,7 @@ export const ApplicationSettingsScreen = () => {
     (lang) => lang.code === languageCode,
   ) as LanguageRecord
 
-  const {isTogglePrivacyModeLoading, isPrivacyActive} = usePrivacyMode()
+  const {isPrivacyActive} = usePrivacyMode()
   const {currency} = useCurrencyPairing()
 
   const authSetting = useAuthSetting()
@@ -158,7 +158,7 @@ export const ApplicationSettingsScreen = () => {
             <SettingsSwitch
               value={authSetting === 'os'}
               onValueChange={onToggleAuthWithOs}
-              disabled={!isAuthOsSupported || isTogglePrivacyModeLoading}
+              disabled={!isAuthOsSupported}
             />
           </SettingsItem>
 
@@ -189,8 +189,7 @@ export const ApplicationSettingsScreen = () => {
 
 // to avoid switch jumps
 const PrivacyModeSwitch = ({isPrivacyActive}: {isPrivacyActive: boolean}) => {
-  const {setPrivacyModeOn, setPrivacyModeOff, isTogglePrivacyModeLoading} =
-    usePrivacyMode()
+  const {setPrivacyModeOn, setPrivacyModeOff} = usePrivacyMode()
   const [isLocalPrivacyActive, setIsLocalPrivacyOff] =
     React.useState(isPrivacyActive)
 
@@ -210,7 +209,6 @@ const PrivacyModeSwitch = ({isPrivacyActive}: {isPrivacyActive: boolean}) => {
     <SettingsSwitch
       value={isLocalPrivacyActive}
       onValueChange={onTogglePrivacyMode}
-      disabled={isTogglePrivacyModeLoading}
     />
   )
 }

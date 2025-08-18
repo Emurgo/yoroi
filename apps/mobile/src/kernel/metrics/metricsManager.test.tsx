@@ -184,12 +184,18 @@ const mockAmpli = {
 
 const mockMetricsStorage = {
   enabled: {
-    read: jest.fn().mockResolvedValue(true),
-    write: jest.fn().mockResolvedValue(undefined),
+    read: jest.fn().mockReturnValue(true),
+    save: jest.fn(),
+    remove: jest.fn(),
+    subscribe: jest.fn().mockReturnValue({unsubscribe: jest.fn()}),
+    key: 'enabled',
   },
   consentRequested: {
-    read: jest.fn().mockResolvedValue(false),
-    write: jest.fn().mockResolvedValue(undefined),
+    read: jest.fn().mockReturnValue(false),
+    save: jest.fn(),
+    remove: jest.fn(),
+    subscribe: jest.fn().mockReturnValue({unsubscribe: jest.fn()}),
+    key: 'consentRequested',
   },
 }
 
@@ -201,7 +207,7 @@ describe('makeMetricsManager', () => {
   test('init should initialize metricsModule with the correct environment and enabled status', async () => {
     const metricsManager = makeMetricsManager(mockMetricsStorage, mockAmpli)
 
-    expect(await metricsManager.enabled()).toBe(true)
+    expect(mockMetricsStorage.enabled.read()).toBe(true)
     await metricsManager.init()
 
     expect(mockAmpli.load).toHaveBeenCalledWith({
@@ -223,7 +229,7 @@ describe('makeMetricsManager', () => {
       mockAmpliLoaded,
     )
 
-    expect(await metricsManager.enabled()).toBe(true)
+    expect(mockMetricsStorage.enabled.read()).toBe(true)
     await metricsManager.init()
 
     expect(mockAmpliLoaded.load).toHaveBeenCalledTimes(0)
@@ -708,20 +714,26 @@ describe('makeMetricsManager', () => {
   test('enable should set metrics enabled to true', async () => {
     const metricsManager = makeMetricsManager(mockMetricsStorage, mockAmpli)
     await metricsManager.enable()
-    expect(await metricsManager.enabled()).toBe(true)
-    expect(mockMetricsStorage.enabled.write).toHaveBeenCalledWith(true)
+    expect(mockMetricsStorage.enabled.read()).toBe(true)
+    expect(mockMetricsStorage.enabled.save).toHaveBeenCalledWith(true)
     expect(mockAmpli.client.setOptOut).toHaveBeenCalledWith(false)
   })
 
   test('disable should set metrics enabled to false', async () => {
     const mockMetricsStorageDisabled = {
       enabled: {
-        read: jest.fn().mockResolvedValue(false),
-        write: jest.fn().mockResolvedValue(undefined),
+        read: jest.fn().mockReturnValue(false),
+        save: jest.fn(),
+        remove: jest.fn(),
+        subscribe: jest.fn().mockReturnValue({unsubscribe: jest.fn()}),
+        key: 'enabled',
       },
       consentRequested: {
-        read: jest.fn().mockResolvedValue(false),
-        write: jest.fn().mockResolvedValue(undefined),
+        read: jest.fn().mockReturnValue(false),
+        save: jest.fn(),
+        remove: jest.fn(),
+        subscribe: jest.fn().mockReturnValue({unsubscribe: jest.fn()}),
+        key: 'consentRequested',
       },
     }
     const metricsManager = makeMetricsManager(
@@ -729,8 +741,8 @@ describe('makeMetricsManager', () => {
       mockAmpli,
     )
     await metricsManager.disable()
-    expect(await metricsManager.enabled()).toBe(false)
-    expect(mockMetricsStorageDisabled.enabled.write).toHaveBeenCalledWith(false)
+    expect(mockMetricsStorageDisabled.enabled.read()).toBe(false)
+    expect(mockMetricsStorageDisabled.enabled.save).toHaveBeenCalledWith(false)
     expect(mockAmpli.client.setOptOut).toHaveBeenCalledWith(true)
     expect(mockAmpli.flush).toHaveBeenCalled()
   })

@@ -10,6 +10,7 @@ import * as React from 'react'
 import {ScrollView, Text, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {useFormatNumber} from '~/kernel/i18n/useFormatNumber'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Button} from '~/ui/Button/Button'
@@ -44,6 +45,7 @@ export const ManageNotificationDisplayDurationScreen = () => {
   const config = useConfig()
   const {mutate: updateConfig} = useUpdateNotificationsConfig()
   const navigation = useNavigation()
+  const formatNumber = useFormatNumber()
 
   const {atoms: ta, palette: p} = useTheme()
   const strings = useStrings()

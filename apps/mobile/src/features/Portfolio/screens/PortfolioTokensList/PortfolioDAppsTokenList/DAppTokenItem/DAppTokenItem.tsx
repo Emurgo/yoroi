@@ -41,7 +41,7 @@ export const DAppTokenItem = ({
             <TokenInfoIcon
               info={firstToken.info}
               size="sm"
-              imageStyle={[{width: 26, height: 26}]}
+              imageStyle={{width: 26, height: 26}}
             />
           </AssetLogo>
 
@@ -55,7 +55,7 @@ export const DAppTokenItem = ({
             <TokenInfoIcon
               info={secondToken.info}
               size="sm"
-              imageStyle={[{width: 26, height: 26}]}
+              imageStyle={{width: 26, height: 26}}
             />
           </AssetLogo>
         </View>
@@ -78,7 +78,11 @@ export const DAppTokenItem = ({
 
         <PairedBalance
           amount={firstToken}
-          textStyle={[{color: p.gray_600}, a.body_3_sm_regular, a.text_right]}
+          textStyle={{
+            color: p.gray_600,
+            ...a.body_3_sm_regular,
+            ...a.text_right,
+          }}
         />
       </View>
     </TouchableOpacity>

@@ -88,7 +88,7 @@ export const useOnConfirm = ({
       }
 
       openModal({
-        title: strings.signTransaction,
+        title: strings.staking.signTransaction,
         content: (
           <ErrorBoundary
             fallbackRender={({error, resetErrorBoundary}) => (
@@ -135,10 +135,8 @@ const submitTx = async (
   wallet: YoroiWallet,
   meta: Wallet.Meta,
 ) => {
-  const signers = await getTransactionSigners(cbor, wallet, meta)
-  const keys = await Promise.all(
-    signers.map(async (signer) => createRawTxSigningKey(rootKey, signer)),
-  )
+  const signers = getTransactionSigners(cbor, wallet, meta)
+  const keys = signers.map((signer) => createRawTxSigningKey(rootKey, signer))
   const response = await wallet.signRawTx(cbor, keys)
   if (!response) throw new Error('useOnConfirm:: not possible to sign tx')
   const hexBase64 = Buffer.from(response).toString('base64')

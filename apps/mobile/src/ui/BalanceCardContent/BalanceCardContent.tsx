@@ -11,7 +11,7 @@ import {
 } from '~/features/Portfolio/common/helpers/priceChange'
 import {useNavigateTo} from '~/features/Portfolio/common/hooks/useNavigateTo'
 import {useCurrencyPairing} from '~/features/Settings/useCases/changeAppSettings/Currency/CurrencyContext'
-import {usePrivacyMode} from '~/features/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
+import {usePrivacyMode} from '~/features/Settings/useCases/changeAppSettings/PrivacyMode/usePrivacyMode'
 import {Space} from '~/ui/Space/Space'
 
 import {PairedBalance} from '../PairedBalance/PairedBalance'
