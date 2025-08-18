@@ -37,15 +37,13 @@ const listOpenOrders: IOpenOrders[] = [
 ]
 
 export const useGetOpenOrders = (
-  options: UseQueryOptions<
-    IOpenOrders[],
-    Error,
-    IOpenOrders[],
-    ['useGetOpenOrders']
+  options: Omit<
+    UseQueryOptions<IOpenOrders[], Error, IOpenOrders[], ['useGetOpenOrders']>,
+    'queryKey' | 'queryFn'
   > = {},
 ) => {
   const query = useQuery({
-    useErrorBoundary: true,
+    throwOnError: true,
     ...options,
     queryKey: ['useGetOpenOrders'],
     queryFn: async () => {

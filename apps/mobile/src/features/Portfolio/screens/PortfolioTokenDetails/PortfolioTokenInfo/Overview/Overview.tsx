@@ -46,7 +46,7 @@ export const Overview = () => {
           <TokenInfoIcon
             size="sm"
             info={tokenInfo}
-            imageStyle={[{width: 32, height: 32}, a.rounded_sm]}
+            imageStyle={{width: 32, height: 32, ...a.rounded_sm}}
           />
 
           <Text

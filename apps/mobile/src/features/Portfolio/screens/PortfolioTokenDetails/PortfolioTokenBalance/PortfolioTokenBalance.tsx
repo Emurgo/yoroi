@@ -46,7 +46,7 @@ export const PortfolioTokenBalance = () => {
         </View>
 
         <PairedBalance
-          textStyle={[a.body_2_md_regular, {color: p.gray_600}]}
+          textStyle={{...a.body_2_md_regular, color: p.gray_600}}
           ignorePrivacy
           amount={tokenInfo}
         />
