@@ -12,6 +12,7 @@ export const HeaderRightHistory = React.memo(() => {
   const {palette: p} = useTheme()
   const {data: walletNotifications} = useWalletNotifications()
 
+  // TODO: REVISIT types from notifications reaching as any
   const isBellActive = React.useMemo(
     () => walletNotifications.some((n) => !n.isRead),
     [walletNotifications],

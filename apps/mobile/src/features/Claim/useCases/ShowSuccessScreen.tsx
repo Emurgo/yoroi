@@ -60,7 +60,7 @@ export const ShowSuccessScreen = () => {
       <Actions>
         <Space.Height.lg />
 
-        {!isEmptyString(txHash) && (
+        {!isEmptyString(txHash) && txHash && (
           <>
             <TxHash txHash={txHash} />
 
@@ -77,7 +77,7 @@ export const ShowSuccessScreen = () => {
 }
 
 const Actions = ({style, ...props}: ViewProps) => (
-  <View style={[style, {paddingHorizontal: 16}]} {...props} />
+  <View style={[style, a.px_lg]} {...props} />
 )
 const Header = ({style, ...props}: ViewProps) => {
   return <View style={[a.align_center, a.px_lg, style]} {...props} />
@@ -93,7 +93,7 @@ const Status = ({
     ['accepted']: dialogs.accepted,
     ['done']: dialogs.done,
   }
-  const {palette: p} = useTheme()
+  const {palette: p, atoms: ta} = useTheme()
   return (
     <>
       <Text
@@ -115,8 +115,8 @@ const Status = ({
         style={[
           a.body_3_sm_regular,
           a.text_center,
+          ta.text_gray_medium,
           {maxWidth: 300},
-          {color: p.text_gray_medium},
         ]}
       >
         {dialog[status].message}
