@@ -9,15 +9,15 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
 import {Checkbox} from '~/ui/Checkbox/Checkbox'
 import {Space} from '~/ui/Space/Space'
+
+import {useNavigateTo} from '../../CatalystNavigator'
 import {
   Actions,
   Description,
   PinBox,
   Row,
   Stepper,
-} from '~/ui/common/components'
-
-import {useNavigateTo} from '../CatalystNavigator'
+} from '../../common/components'
 
 export const DisplayPin = () => {
   const strings = useStrings()
@@ -30,7 +30,7 @@ export const DisplayPin = () => {
 
   const [pin0, pin1, pin2, pin3] = pin
 
-  const onNext = () => {
+  const handleOnNext = () => {
     navigateTo.confirmPin()
   }
 
@@ -50,7 +50,7 @@ export const DisplayPin = () => {
 
         <Space.Height.xl />
 
-        <Row style={[{justifyContent: 'center'}]}>
+        <Row style={a.justify_center}>
           <PinBox>{pin0}</PinBox>
 
           <Space.Width.lg />
@@ -79,7 +79,7 @@ export const DisplayPin = () => {
 
       <Actions>
         <Button
-          onPress={() => onNext()}
+          onPress={() => handleOnNext()}
           title={strings.registerCatalyst.confirm}
           disabled={!checked}
         />

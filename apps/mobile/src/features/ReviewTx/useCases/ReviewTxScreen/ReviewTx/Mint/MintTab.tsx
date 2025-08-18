@@ -29,7 +29,7 @@ export const MintTab = ({mintData}: {mintData: FormattedTx['mint']}) => {
 
               <Space.Width.sm />
 
-              <Copiable text={policyId} style={[a.flex_1]}>
+              <Copiable text={policyId} style={{...a.flex_1}}>
                 <Text
                   style={[
                     a.flex_1,

@@ -1,5 +1,5 @@
 import {useSetupWallet} from '@yoroi/setup-wallet'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import * as React from 'react'
@@ -26,11 +26,12 @@ import {LedgerCheckIllustration} from '../../illustrations/LedgerCheckIllustrati
 
 export const CheckNanoXScreen = () => {
   const strings = useStrings()
-  const {palette: p} = useTheme()
+  const {palette: p, atoms: ta} = useTheme()
   const {track} = useMetrics()
 
   const navigation = useNavigation<SetupWalletRouteNavigation>()
-  const onContinue = () => navigation.navigate('setup-wallet-connect-nano-x')
+  const handleOnContinue = () =>
+    navigation.navigate('setup-wallet-connect-nano-x')
   const {useUSB} = useSetupWallet()
 
   useFocusEffect(
@@ -58,7 +59,7 @@ export const CheckNanoXScreen = () => {
   return (
     <SafeAreaView
       edges={['left', 'right', 'bottom']}
-      style={[{flex: 1, backgroundColor: p.bg_color_max}]}
+      style={[a.flex_1, ta.bg_color_max]}
     >
       <StepperProgress
         style={[{paddingHorizontal: 16}]}
@@ -72,10 +73,8 @@ export const CheckNanoXScreen = () => {
 
         <Text
           style={[
+            a.body_1_lg_regular,
             {
-              fontSize: 16,
-              lineHeight: 24,
-              fontWeight: '500',
               color: p.text_gray_medium,
             },
           ]}
@@ -88,14 +87,7 @@ export const CheckNanoXScreen = () => {
         {(useUSB ? usbRequirements : bleRequirements).map((item) => (
           <BulletPointItem
             key={item}
-            style={[
-              {
-                fontSize: 16,
-                lineHeight: 24,
-                fontWeight: '400',
-                color: p.text_gray_medium,
-              },
-            ]}
+            style={[a.body_1_lg_regular, {color: p.text_gray_medium}]}
             textRow={item}
           />
         ))}
@@ -109,7 +101,7 @@ export const CheckNanoXScreen = () => {
 
       <Actions>
         <Button
-          onPress={onContinue}
+          onPress={handleOnContinue}
           title={strings.setupWallet.continueButton}
           testID="continueButton"
         />
@@ -122,23 +114,14 @@ const ledgerSupport =
   'https://emurgohelpdesk.zendesk.com/hc/en-us/sections/4413677248399-Hardware-Wallet-Ledger-Trezor'
 
 const LedgerSupportLink = () => {
-  const onPress = () => Linking.openURL(ledgerSupport)
+  const handleOnPress = () => Linking.openURL(ledgerSupport)
   const strings = useStrings()
   const {palette: p} = useTheme()
 
   return (
     <TouchableOpacity
-      style={[
-        {
-          fontSize: 16,
-          lineHeight: 24,
-          fontWeight: '400',
-          flexDirection: 'row',
-          justifyContent: 'center',
-          alignItems: 'center',
-        },
-      ]}
-      onPress={onPress}
+      style={[a.flex_row, a.justify_center, a.align_center]}
+      onPress={handleOnPress}
     >
       <Text style={[{color: p.primary_500}]}>
         {strings.setupWallet.ledgerSupportLink}
@@ -149,12 +132,12 @@ const LedgerSupportLink = () => {
 
 const Illustration = () => {
   return (
-    <View style={[{flex: 1, alignItems: 'center'}]}>
+    <View style={[a.flex_1, a.align_center]}>
       <LedgerCheckIllustration />
     </View>
   )
 }
 
 const Actions = (props: ViewProps) => {
-  return <View {...props} style={[{padding: 16}]} />
+  return <View {...props} style={a.p_lg} />
 }

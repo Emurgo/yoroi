@@ -42,10 +42,11 @@ import {TextInput} from '~/ui/TextInput/TextInput'
 import {isEmptyString} from '~/wallets/utils/string'
 import {getWalletNameError} from '~/wallets/utils/validators'
 
+const mediumScreenHeight = 800
+const largerScreenHeight = 900
+
 const useSizeModal = () => {
   const HEIGHT_SCREEN = useWindowDimensions().height
-  const mediumScreenHeight = 800
-  const largerScreenHeight = 900
   const PERCENTAGE_NAME_PASSWORD =
     HEIGHT_SCREEN >= largerScreenHeight
       ? 58
@@ -263,7 +264,7 @@ export const SaveNanoXScreen = () => {
 
         <Space.Height.xl />
 
-        <ScrollView style={[a.flex_1]}>
+        <ScrollView style={a.flex_1}>
           <TextInput
             enablesReturnKeyAutomatically
             autoFocus
@@ -271,7 +272,9 @@ export const SaveNanoXScreen = () => {
             value={name}
             onChangeText={(walletName: string) => setName(walletName)}
             errorText={
-              !isEmptyString(walletNameErrorText) && !isPending
+              !isEmptyString(walletNameErrorText) &&
+              walletNameErrorText &&
+              !isPending
                 ? walletNameErrorText
                 : undefined
             }

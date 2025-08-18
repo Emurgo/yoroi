@@ -70,7 +70,7 @@ function Media({
           info={info}
           width={imageSize}
           height={imageSize}
-          style={[a.rounded_sm, {backgroundColor: p.gray_100}]}
+          style={{...a.rounded_sm, backgroundColor: p.gray_100}}
         />
       </View>
 

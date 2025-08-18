@@ -94,7 +94,11 @@ export const TokenBalanceItem = ({amount}: Props) => {
         <PairedBalance
           hidePrimaryPair
           amount={amount}
-          textStyle={[a.body_3_sm_regular, a.text_right, {color: p.gray_600}]}
+          textStyle={{
+            ...a.body_3_sm_regular,
+            ...a.text_right,
+            color: p.gray_600,
+          }}
         />
       </View>
     </TouchableOpacity>

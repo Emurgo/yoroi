@@ -1640,17 +1640,24 @@ export const useStrings = () => {
 
       // Ledger Messages
       ledgerMessages: {
+        appInstalled: f(ledgerMessages.appInstalled),
+        appOpened: f(ledgerMessages.appOpened),
+        bluetoothDisabledError: f(ledgerMessages.bluetoothDisabledError),
+        bluetoothEnabled: f(ledgerMessages.bluetoothEnabled),
+        connectionError: f(ledgerMessages.connectionError),
         connectUsb: f(ledgerMessages.connectUsb),
-        keepUsbConnected: f(ledgerMessages.keepUsbConnected),
+        continueOnLedger: f(ledgerMessages.continueOnLedger),
         enableLocation: f(ledgerMessages.enableLocation),
         enableTransport: f(ledgerMessages.enableTransport),
         enterPin: f(ledgerMessages.enterPin),
+        haveOTGAdapter: f(ledgerMessages.haveOTGAdapter),
+        keepUsbConnected: f(ledgerMessages.keepUsbConnected),
+        locationEnabled: f(ledgerMessages.locationEnabled),
         openApp: f(ledgerMessages.openApp),
         rejectedByUserError: f(ledgerMessages.rejectedByUserError),
-        continueOnLedger: f(ledgerMessages.continueOnLedger),
-        bluetoothDisabledError: f(ledgerMessages.bluetoothDisabledError),
-        connectionError: f(ledgerMessages.connectionError),
-        appOpened: f(ledgerMessages.appOpened),
+        usbAlwaysConnected: f(ledgerMessages.usbAlwaysConnected),
+        followSteps: f(ledgerMessages.followSteps),
+        noDeviceInfoError: f(ledgerMessages.noDeviceInfoError),
       },
 
       // Setup Wallet strings
@@ -1822,10 +1829,6 @@ export const useStrings = () => {
         walletPasswordModalCardSecondItem: f(
           setupWalletMessages.walletPasswordModalCardSecondItem,
         ),
-        // The following keys do not exist on setupWalletMessages and have been removed to fix the error:
-        // usbAlwaysConnected: f(setupWalletMessages.usbAlwaysConnected),
-        // bluetoothEnabled: f(setupWalletMessages.bluetoothEnabled),
-        // locationEnabled: f(setupWalletMessages.locationEnabled),
       },
 
       // Mapped strings for dynamic category mapping

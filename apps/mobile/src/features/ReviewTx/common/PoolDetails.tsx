@@ -130,7 +130,7 @@ const PoolId = ({poolId}: {poolId: string | undefined}) => {
   const strings = useStrings()
   const {palette: p} = useTheme()
 
-  if (isEmptyString(poolId)) return null
+  if (isEmptyString(poolId) || poolId == null) return null
 
   return (
     <Row>
@@ -161,7 +161,7 @@ const PoolHash = ({poolHash}: {poolHash?: string}) => {
   const strings = useStrings()
   const {palette: p} = useTheme()
 
-  if (isEmptyString(poolHash)) return null
+  if (isEmptyString(poolHash) || poolHash == null) return null
 
   return (
     <Row>

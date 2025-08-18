@@ -291,7 +291,9 @@ export const RestoreWalletDetailsScreen = () => {
             value={name}
             onChangeText={(walletName: string) => setName(walletName)}
             errorText={
-              !isEmptyString(walletNameErrorText) && !isPending
+              !isEmptyString(walletNameErrorText) &&
+              walletNameErrorText &&
+              !isPending
                 ? walletNameErrorText
                 : undefined
             }
