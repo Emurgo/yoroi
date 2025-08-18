@@ -1,7 +1,7 @@
 import * as React from 'react'
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query'
 import {init} from '@emurgo/cross-csl-nodejs'
-import {act, renderHook, waitFor} from '@testing-library/react-native'
+import {renderHook, waitFor} from '@testing-library/react-native'
 
 import {
   useDelegationCertificate,
@@ -14,10 +14,21 @@ import {GovernanceProvider} from './context'
 import {managerMock} from '../../mocks'
 import {GovernanceManager} from '../../manager'
 
+jest.mock('@yoroi/common', () => ({
+  ...jest.requireActual('@yoroi/common'),
+  useMutationWithInvalidations: jest.fn(),
+}))
+
+import {useMutationWithInvalidations} from '@yoroi/common'
+
 const createMocks = (managerPatch: Partial<GovernanceManager>) => {
   const manager = {...managerMock, ...managerPatch}
-  const queryClient = new QueryClient()
-  queryClient.setDefaultOptions({queries: {staleTime: 0, retry: false}})
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {staleTime: 0, retry: false},
+      mutations: {retry: false},
+    },
+  })
   const wrapper = ({children}: React.PropsWithChildren) => {
     return (
       <QueryClientProvider client={queryClient}>
@@ -25,7 +36,7 @@ const createMocks = (managerPatch: Partial<GovernanceManager>) => {
       </QueryClientProvider>
     )
   }
-  return {wrapper, manager}
+  return {wrapper, manager, queryClient}
 }
 
 describe('Governance Translators React', () => {
@@ -61,24 +72,37 @@ describe('Governance Translators React', () => {
   })
 
   it('useUpdateLatestGovernanceAction should call manager.setLatestGovernanceAction', async () => {
+    const mockMutation = {
+      mutate: jest.fn(),
+      isSuccess: false,
+      isPending: false,
+    }
+    ;(useMutationWithInvalidations as jest.Mock).mockReturnValue(mockMutation)
+
     const {wrapper, manager} = createMocks({
       setLatestGovernanceAction: jest.fn().mockResolvedValue(true),
     })
-    const {result} = renderHook(
-      () => useUpdateLatestGovernanceAction('wallet-id'),
-      {
-        wrapper,
-      },
-    )
-    act(() => {
-      result.current.mutate({
-        hash: 'drepId',
-        type: 'key',
-        kind: 'delegate-to-drep',
-        txID: 'txId',
-      })
+    renderHook(() => useUpdateLatestGovernanceAction('wallet-id'), {
+      wrapper,
     })
-    await waitFor(() => result.current.isSuccess)
+
+    expect(useMutationWithInvalidations).toHaveBeenCalledWith({
+      mutationFn: expect.any(Function),
+      invalidateQueries: [
+        ['wallet-id', managerMock.network, 'governanceLatestGovernanceAction'],
+      ],
+    })
+
+    // Test the mutation function
+    const mutationFn = (useMutationWithInvalidations as jest.Mock).mock
+      .calls[0][0].mutationFn
+    await mutationFn({
+      hash: 'drepId',
+      type: 'key',
+      kind: 'delegate-to-drep',
+      txID: 'txId',
+    })
+
     expect(manager.setLatestGovernanceAction).toHaveBeenCalledWith({
       hash: 'drepId',
       type: 'key',
@@ -87,9 +111,9 @@ describe('Governance Translators React', () => {
     })
   })
 
-  it('useDelegationCertificate should call manager.createDelegationCertificate', async () => {
+  it('useDelegationCertificate should call manager.createDelegationCertificate', () => {
     const {wrapper, manager} = createMocks({
-      createDelegationCertificate: jest.fn().mockResolvedValue(true),
+      createDelegationCertificate: jest.fn().mockReturnValue({}),
     })
 
     const cardano = init('global')
@@ -99,19 +123,19 @@ describe('Governance Translators React', () => {
     const publicKey = privateKey.toPublic()
     const stakingKey = publicKey.derive(2).derive(0).toRawKey()
     const {result} = renderHook(() => useDelegationCertificate(), {wrapper})
-    await waitFor(() =>
-      result.current.createCertificate({
-        hash: 'drepId',
-        type: 'key',
-        stakingKey,
-      }),
-    )
-    await waitFor(() => result.current.isSuccess)
+
+    const certificate = result.current({
+      hash: 'drepId',
+      type: 'key',
+      stakingKey,
+    })
+
     expect(manager.createDelegationCertificate).toHaveBeenCalledWith(
       'drepId',
       'key',
       stakingKey,
     )
+    expect(certificate).toBeDefined()
   })
 
   it('useVotingCertificate should call manager.createVotingCertificate', async () => {
