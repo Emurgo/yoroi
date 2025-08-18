@@ -13,12 +13,14 @@ import {Space} from '~/ui/Space/Space'
 import {TradeTokensAsset} from '../../PortfolioDashboard/DashboardTokensList/TradeTokensAsset'
 
 export const TradeTokensBannerBig = () => {
-  const {palette: p} = useTheme()
+  const {palette: p, atoms: ta} = useTheme()
   const strings = useStrings()
 
   const navigation = useNavigation<TxHistoryRouteNavigation>()
   const handleSwap = () => {
-    navigation.navigate('swap')
+    navigation.navigate('swap', {
+      screen: 'main',
+    })
   }
 
   return (
@@ -33,7 +35,7 @@ export const TradeTokensBannerBig = () => {
           a.justify_between,
           a.relative,
           a.overflow_hidden,
-          {backgroundColor: p.bg_color_max},
+          ta.bg_color_max,
         ]}
         colors={p.bg_gradient_1}
         start={{x: 0, y: 0}}

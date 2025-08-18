@@ -350,6 +350,10 @@ export const useStrings = () => {
         nfts: (qty: number) => f(globalMessages.nfts, {qty}),
         tokensAvailable: (qty: number) => f(globalMessages.tokens, {qty}),
         metadata: f(portfolioMessages.metadata),
+        nftCount: f(portfolioMessages.nftCount),
+        noNftsFound: f(portfolioMessages.noNftsFound),
+        noNftsInWallet: f(portfolioMessages.noNftsInWallet),
+        countOpenOrders: (qty: number) => f(portfolioMessages.countOpenOrders, {qty}),
       },
 
       // UI strings

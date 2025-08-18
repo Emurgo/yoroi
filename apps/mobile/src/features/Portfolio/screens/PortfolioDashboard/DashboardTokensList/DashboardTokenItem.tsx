@@ -5,7 +5,6 @@ import {
 } from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
-import {PortfolioTokenAmount} from '@yoroi/types/lib/typescript/portfolio/amount'
 
 import * as React from 'react'
 import {Text, TouchableOpacity, View} from 'react-native'
@@ -24,7 +23,7 @@ import {Space} from '~/ui/Space/Space'
 import {TokenInfoIcon} from '~/ui/TokenInfoIcon/TokenInfoIcon'
 
 type Props = {
-  tokenInfo: PortfolioTokenAmount
+  tokenInfo: Portfolio.Token.Amount
 }
 export const DashboardTokenItem = ({tokenInfo}: Props) => {
   const {palette: p} = useTheme()

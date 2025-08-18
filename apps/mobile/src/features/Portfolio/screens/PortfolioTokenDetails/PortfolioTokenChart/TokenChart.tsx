@@ -1,9 +1,10 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 
-import React, {memo, useEffect, useMemo, useState} from 'react'
+import {curveNatural} from 'd3-shape'
+import * as React from 'react'
 import {Dimensions, PanResponder, View} from 'react-native'
 import {Circle, G, Line, Rect, Text as SvgText} from 'react-native-svg'
-import {LineChart as SvgLineChart, shape} from 'react-native-svg-charts'
+import {LineChart as SvgLineChart} from 'react-native-svg-charts'
 
 interface Props {
   dataSources?: {
@@ -111,7 +112,7 @@ const Tooltip = ({
 const TokenChartComponent = ({dataSources = [], onValueSelected}: Props) => {
   const {palette: p} = useTheme()
 
-  const {labelList, valueList, dataSize} = useMemo(() => {
+  const {labelList, valueList, dataSize} = React.useMemo(() => {
     const dataChart = dataSources.reduce(
       (pre, next) => {
         return {
@@ -132,7 +133,7 @@ const TokenChartComponent = ({dataSources = [], onValueSelected}: Props) => {
     }
   }, [dataSources])
 
-  const [positionX, setPositionX] = useState(-1) // The currently selected X coordinate position
+  const [positionX, setPositionX] = React.useState(-1) // The currently selected X coordinate position
 
   const panResponder = PanResponder.create({
     onStartShouldSetPanResponder: () => true,
@@ -180,7 +181,7 @@ const TokenChartComponent = ({dataSources = [], onValueSelected}: Props) => {
     onValueSelected(positionIndex)
   }
 
-  useEffect(() => {
+  React.useEffect(() => {
     onValueSelected(dataSize - 1)
   }, [dataSize, onValueSelected])
 
@@ -192,7 +193,7 @@ const TokenChartComponent = ({dataSources = [], onValueSelected}: Props) => {
           data={valueList}
           svg={{stroke: p.primary_500, strokeWidth: 2}}
           contentInset={{top: 16, bottom: 16}}
-          curve={shape.curveNatural}
+          curve={curveNatural}
           animate={true}
           animationDuration={500}
         >
@@ -212,4 +213,4 @@ const TokenChartComponent = ({dataSources = [], onValueSelected}: Props) => {
   )
 }
 
-export const TokenChart = memo(TokenChartComponent)
+export const TokenChart = React.memo(TokenChartComponent)
