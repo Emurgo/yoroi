@@ -17,6 +17,12 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import appstoreBadge from '~/assets/img/app-store-badge.png'
 import playstoreBadge from '~/assets/img/google-play-badge.png'
+import {
+  Actions,
+  Row,
+  Stepper,
+} from '~/features/RegisterCatalyst/common/components'
+import {useCatalystCurrentFund} from '~/features/RegisterCatalyst/common/hooks'
 import {useStakingInfo} from '~/features/Staking/hooks/useStakingInfo'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'

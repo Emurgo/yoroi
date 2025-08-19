@@ -15,7 +15,6 @@ import {BACKSPACE, NumericKeyboard} from '~/ui/NumericKeyboard'
 import {Space} from '~/ui/Space/Space'
 import {generatePrivateKeyForCatalyst} from '~/wallets/cardano/catalyst'
 import {encryptWithPassword} from '~/wallets/cardano/catalyst/catalystCipher'
-
 import {useNavigateTo} from '../../CatalystNavigator'
 import {
   Actions,
@@ -35,7 +34,7 @@ export const ConfirmPin = () => {
   const {unsignedTxChanged} = useReviewTx()
   const {navigateToTxReview} = useWalletNavigation()
 
-  const {generateVotingKeys, isPending} = useGenerateVotingKeys({
+  const {generateVotingKeys, isLoading} = useGenerateVotingKeys({
     onSuccess: async ({catalystKeyHex, votingKeyEncrypted}) => {
       votingKeyEncryptedChanged(votingKeyEncrypted)
 
@@ -280,7 +279,7 @@ export const ConfirmPin = () => {
           <Button
             onPress={() => onNext()}
             title={strings.registerCatalyst.confirm}
-            disabled={!done || isPending}
+            disabled={!done || isLoading}
           />
         </Actions>
       </Padding>
@@ -289,7 +288,7 @@ export const ConfirmPin = () => {
 
       <NumericKeyboard onKeyDown={onKeyDown} />
 
-      {isPending && (
+      {isLoading && (
         <View
           style={[
             a.inset_0,

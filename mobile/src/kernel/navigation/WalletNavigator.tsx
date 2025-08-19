@@ -3,6 +3,7 @@ import {useTheme} from '@yoroi/theme'
 import {createStackNavigator} from '@react-navigation/stack'
 import * as React from 'react'
 
+import {CatalystNavigator} from '~/features/RegisterCatalyst/CatalystNavigator'
 import {ReviewTxNavigator} from '~/features/ReviewTx/ReviewTxNavigator'
 import {SearchProvider} from '~/features/Search/SearchContext'
 import {SettingsScreenNavigator} from '~/features/Settings/SettingsScreenNavigator'
@@ -78,6 +79,11 @@ export const WalletNavigator = () => {
           name="governance"
           options={{headerShown: false}}
           getComponent={() => GovernanceNavigator}
+        />
+        <Stack.Screen
+          name="catalyst-voting"
+          options={{headerShown: false}}
+          getComponent={() => CatalystNavigator}
         />
       </Stack.Navigator>
     </SearchProvider>
