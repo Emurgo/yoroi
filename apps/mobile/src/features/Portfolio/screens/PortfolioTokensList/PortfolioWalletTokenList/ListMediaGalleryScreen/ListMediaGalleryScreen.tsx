@@ -114,7 +114,7 @@ export const ListMediaGalleryScreen = () => {
 }
 
 const Wrapper = ({children}: {children: ReactNode}) => {
-  const {palette: p, atoms: ta} = useTheme()
+  const {atoms: ta} = useTheme()
   return (
     <SafeAreaView
       edges={['left', 'right', 'bottom']}
