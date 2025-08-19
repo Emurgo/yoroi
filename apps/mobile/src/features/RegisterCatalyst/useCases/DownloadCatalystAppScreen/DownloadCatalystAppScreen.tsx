@@ -30,10 +30,7 @@ import {Button} from '~/ui/Button/Button'
 import {CatalystStep1} from '~/ui/CatalystStep1Illustration/CatalystStep1Illustration'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
-
 import {useNavigateTo} from '../../CatalystNavigator'
-import {Actions, Row, Stepper} from '../../common/components'
-import {useCatalystCurrentFund} from '../../common/hooks'
 
 export const DownloadCatalystAppScreen = () => {
   const strings = useStrings()
