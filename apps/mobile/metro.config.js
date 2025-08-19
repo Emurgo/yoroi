@@ -27,6 +27,7 @@ config.resolver.nodeModulesPaths = [
   path.resolve(workspaceRoot, 'packages/links/node_modules'),
   path.resolve(workspaceRoot, 'packages/notifications/node_modules'),
   path.resolve(workspaceRoot, 'packages/portfolio/node_modules'),
+  path.resolve(workspaceRoot, 'packages/staking/node_modules'),
   path.resolve(workspaceRoot, 'packages/resolver/node_modules'),
   path.resolve(workspaceRoot, 'packages/staking/node_modules'),
   path.resolve(workspaceRoot, 'packages/setup-wallet/node_modules'),
