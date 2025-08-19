@@ -101,22 +101,22 @@ config.resolver.unstable_conditionNames = ['browser', 'require', 'react-native']
 // Add WASM support - treat as asset only
 config.resolver.assetExts.push('wasm')
 
-// Markdown support
-config.resolver.sourceExts.push('md')
+// // Markdown support
+// config.resolver.sourceExts.push('md')
 
 const originalResolveRequest = config.resolver.resolveRequest
 const markdownResolver = createMarkdownResolver(__dirname)
 
 // Set up the custom resolver for markdown
-config.resolver.resolveRequest = (context, moduleName, platform) => {
-  const markdownResult = markdownResolver(context, moduleName, platform)
-  if (markdownResult) {
-    return markdownResult
-  }
+// config.resolver.resolveRequest = (context, moduleName, platform) => {
+//   const markdownResult = markdownResolver(context, moduleName, platform)
+//   if (markdownResult) {
+//     return markdownResult
+//   }
 
-  return originalResolveRequest
-    ? originalResolveRequest(context, moduleName, platform)
-    : context.resolveRequest(context, moduleName, platform)
-}
+//   return originalResolveRequest
+//     ? originalResolveRequest(context, moduleName, platform)
+//     : context.resolveRequest(context, moduleName, platform)
+// }
 
 module.exports = config

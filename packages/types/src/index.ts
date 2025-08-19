@@ -577,7 +577,6 @@ export namespace Portfolio {
     export type BalanceManagerRefresh = PortfolioEventBalanceManagerRefresh
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-shadow
   export namespace Api {
     export type TokenInfosResponse = PortfolioApiTokenInfosResponse
     export type TokenDiscoveryResponse = PortfolioApiTokenDiscoveryResponse
@@ -730,7 +729,6 @@ export namespace Scan {
 }
 
 export namespace Claim {
-  // eslint-disable-next-line @typescript-eslint/no-shadow
   export namespace Api {
     export namespace Errors {
       export class AlreadyClaimed extends ClaimApiErrorsAlreadyClaimed {}

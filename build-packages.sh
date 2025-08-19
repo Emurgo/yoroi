@@ -84,7 +84,7 @@ build_packages() {
       (
         cd "packages/$pkg"
         # --force is needed 19.1.0 react should be 19.1.1
-        npm install --frozen-lockfile
+        npm install --verbose
         npm run build
       )
       echo "  ✅ Built '${pkg}'"
@@ -116,7 +116,7 @@ rm -rf node_modules
 if [ "$CLEAN_MODE" = "true" ] || [ "$CLEAN_MODE" = "clean" ]; then
   rm -f "package-lock.json"
 fi
-npm install --frozen-lockfile
+npm install --verbose
 npm run lint 
 npm run tsc
 npm run test 

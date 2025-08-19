@@ -1,22 +1,13 @@
 {
-  "extends": [
-    "@react-native-community",
-    "prettier"
-  ],
+  "extends": ["@react-native", "prettier"],
+  "plugins": ["prettier"],
   "rules": {
-    "prettier/prettier": [
-      "error",
-      {
-        "quoteProps": "consistent",
-        "bracketSpacing": false,
-        "singleQuote": true,
-        "tabWidth": 2,
-        "trailingComma": "all",
-        "useTabs": false,
-        "semi": false
-      }
-    ]
+    "@babel/no-invalid-this": "off",
+    "react-native/no-inline-styles": "off",
+    "@typescript-eslint/no-shadow": "off",
+    "react/no-unstable-nested-components": ["error", {"allowAsProps": true}],
+    "eqeqeq": "off",
+    "prettier/prettier": "error"
   },
-  "ignorePatterns": ["src/storybook/BasePalette.tsx"],
   "root": true
 } 
