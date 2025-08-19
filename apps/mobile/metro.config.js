@@ -37,7 +37,7 @@ config.resolver.nodeModulesPaths = [
 ]
 
 // NOTE: workaround for the structure now
-config.resolver.disableHierarchicalLookup = false
+// config.resolver.disableHierarchicalLookup = true
 config.resolver.enablePackageExports = true
 
 config.resolver.extraNodeModules = {
@@ -69,7 +69,7 @@ config.resolver.extraNodeModules = {
   '~/kernel': path.resolve(projectRoot, 'src/kernel'),
   '~/wallets': path.resolve(projectRoot, 'src/wallets'),
   '~/components': path.resolve(projectRoot, 'src/ui'),
-  '~/assets': path.resolve(projectRoot, 'assets'),
+  '~/assets': path.resolve(projectRoot, 'assets')
 }
 
 config.transformer.minifierConfig = {

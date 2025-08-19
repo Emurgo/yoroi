@@ -63,6 +63,7 @@ const themes: Readonly<Record<Exclude<ThemeName, 'system'>, ThemeRecord>> =
 export const ThemeContext = React.createContext<undefined | ThemeContext>(
   undefined,
 )
+
 export const ThemeProvider = ({
   children,
   storage,

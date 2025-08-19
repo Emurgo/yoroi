@@ -51,10 +51,10 @@ clean_packages() {
       echo "  → Cleaning '${pkg}'..."
       if [ "$CLEAN_MODE" = "true" ] || [ "$CLEAN_MODE" = "clean" ]; then
         rm -f "packages/$pkg/package-lock.json"
+        rm -rf "packages/$pkg/lib"
+        rm -rf "packages/$pkg/node_modules"
+        echo "  ✅ Cleaned '${pkg}'"
       fi
-      rm -rf "packages/$pkg/lib"
-      # rm -rf "packages/$pkg/node_modules"
-      echo "  ✅ Cleaned '${pkg}'"
     ) &
     pids+=($!)
   done
@@ -81,12 +81,9 @@ build_packages() {
   for pkg in "${packages[@]}"; do
     (
       echo "  → Building '${pkg}'..."
-      (
-        cd "packages/$pkg"
-        # --force is needed 19.1.0 react should be 19.1.1
-        npm install --verbose
-        npm run build
-      )
+      cd "packages/$pkg"
+      npm install --verbose
+      npm run build
       echo "  ✅ Built '${pkg}'"
     ) &
     pids+=($!)
@@ -112,8 +109,8 @@ echo "📱 Building mobile app..."
 
 # Build mobile app
 cd apps/mobile
-rm -rf node_modules
 if [ "$CLEAN_MODE" = "true" ] || [ "$CLEAN_MODE" = "clean" ]; then
+  rm -rf node_modules
   rm -f "package-lock.json"
 fi
 npm install --verbose
