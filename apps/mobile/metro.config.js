@@ -37,7 +37,7 @@ config.resolver.nodeModulesPaths = [
 ]
 
 // NOTE: workaround for the structure now
-config.resolver.disableHierarchicalLookup = true
+config.resolver.disableHierarchicalLookup = false
 config.resolver.enablePackageExports = true
 
 config.resolver.extraNodeModules = {
