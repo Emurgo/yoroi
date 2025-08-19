@@ -20,10 +20,13 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
     "target": "esnext",
     "paths": {
       "@tanstack/react-query": ["./node_modules/@tanstack/react-query"],
       "@tanstack/query-core": ["./node_modules/@tanstack/query-core"],
+      "react": ["./node_modules/@types/react"],
       "src/*": ["./src/*"]
     }
   },
