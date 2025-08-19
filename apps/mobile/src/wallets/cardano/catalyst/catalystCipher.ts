@@ -1,11 +1,12 @@
 // @ts-ignore
 import chacha from 'chacha'
 import cryptoRandomString from 'crypto-random-string'
-import Pbkdf2 from 'react-native-fast-pbkdf2'
+import pbkdf2 from 'pbkdf2'
 
 const PBKDF_ITERATIONS = 12983
 const SALT_SIZE = 16
 const KEY_SIZE = 32
+const DIGEST = 'sha512'
 const NONCE_SIZE = 12
 const TAG_SIZE = 16
 const PROTO_SIZE = 1
@@ -20,26 +21,28 @@ const PROTO_VERSION = Buffer.from('01', 'hex')
 const promisifyPbkdf2: (
   array: Uint8Array,
   buffer: Buffer,
-) => Promise<Buffer> = async (password, salt) => {
-  const passwordB64 = Buffer.from(password).toString('base64')
-  const saltB64 = Buffer.from(salt).toString('base64')
-  // react-native-fast-pbkdf2 returns base64 string
-  const derivedB64 = await Pbkdf2.derive(
-    passwordB64,
-    saltB64,
-    PBKDF_ITERATIONS,
-    KEY_SIZE,
-    'sha-512',
-  )
-  return Buffer.from(derivedB64, 'base64')
+) => Promise<Buffer> = (password, salt) => {
+  return new Promise((resolve, reject) => {
+    pbkdf2.pbkdf2(
+      password,
+      salt,
+      PBKDF_ITERATIONS,
+      KEY_SIZE,
+      DIGEST,
+      (err: Error | null, key: Buffer) => {
+        if (err) return reject(err)
+        return resolve(key)
+      },
+    )
+  })
 }
 
 export async function encryptWithPassword(
   passwordBuf: Uint8Array,
   dataBytes: Uint8Array,
 ): Promise<string> {
-  const salt = Buffer.from(cryptoRandomString(2 * SALT_SIZE), 'hex')
-  const nonce = Buffer.from(cryptoRandomString(2 * NONCE_SIZE), 'hex')
+  const salt = Buffer.from(cryptoRandomString(2 * 16), 'hex')
+  const nonce = Buffer.from(cryptoRandomString(2 * 12), 'hex')
   const data = Buffer.from(dataBytes)
   const aad = Buffer.from('', 'hex')
 
