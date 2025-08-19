@@ -17,7 +17,6 @@ export const BlueCheckbox = ({
   onPress,
   children,
   style,
-  spacing = 15,
 }: BlueCheckboxProps) => {
   return (
     <TouchableOpacity

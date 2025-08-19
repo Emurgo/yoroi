@@ -1,11 +1,13 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
 import {View} from 'react-native'
 
-import {useStrings} from '~/kernel/i18n/useStrings'
 import {FormattedTx} from '~/features/ReviewTx/common/types'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Accordion} from '~/ui/Accordion/Accordion'
 import {Space} from '~/ui/Space/Space'
+
 import {Inputs} from '../UTxOs/UTxOsTab'
 
 export const ReferenceInputsTab = ({

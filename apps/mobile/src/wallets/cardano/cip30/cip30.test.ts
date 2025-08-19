@@ -1,5 +1,6 @@
+import {mocks} from '~/wallets/mocks/wallet'
+
 import {getMasterKeyFromMnemonic} from '../mnemonic/mnemonic'
-import {mocks} from '../mocks/wallet'
 import {YoroiWallet} from '../types'
 import {cip30ExtensionMaker} from './cip30'
 
@@ -81,19 +82,21 @@ describe('cip30ExtensionMaker', () => {
 
   it('should support signTx', async () => {
     const cip30 = cip30ExtensionMaker(mocks.wallet, mocks.walletMeta)
-    const rootKey = await getMasterKeyFromMnemonic(mnemonic)
-    const result = await cip30.signTx(rootKey, txCbor, true)
+    const rootKey = getMasterKeyFromMnemonic(mnemonic)
+    const rootKeyHex = Buffer.from(rootKey).toString('hex')
+    const result = await cip30.signTx(rootKeyHex, txCbor, true)
     expect(result).toBeDefined()
   })
 
   it('should support signData', async () => {
-    const rootKey = await getMasterKeyFromMnemonic(mnemonic)
+    const rootKey = getMasterKeyFromMnemonic(mnemonic)
+    const rootKeyHex = Buffer.from(rootKey).toString('hex')
     const message = '48656C6C6F'
     const addressBech32 =
       'addr1qynqc23tpx4dqps6xgqy9s2l3xz5fxu734wwmzj9uddn0h2z6epfcukqmswgwwfruxh7gaddv9x0d5awccwahnhwleqqc4zkh4'
 
     const cip30 = cip30ExtensionMaker(mocks.wallet, mocks.walletMeta)
-    const result = await cip30.signData(rootKey, addressBech32, message)
+    const result = await cip30.signData(rootKeyHex, addressBech32, message)
 
     expect(result).toEqual({
       signature:

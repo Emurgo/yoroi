@@ -3,6 +3,7 @@ import {isLeft, truncateString} from '@yoroi/common'
 import {infoExtractName} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Api, Portfolio, Swap} from '@yoroi/types'
+
 import * as React from 'react'
 import {ErrorBoundary} from 'react-error-boundary'
 import {useIntl} from 'react-intl'
@@ -30,6 +31,7 @@ import {RefreshButton} from '~/ui/RefreshButton/RefreshButton'
 import {ServiceUnavailable} from '~/ui/ServiceUnavailable/ServiceUnavailable'
 import {Space} from '~/ui/Space/Space'
 import {TokenInfoIcon} from '~/ui/TokenInfoIcon/TokenInfoIcon'
+
 import {useNavigateTo} from '../../common/navigation'
 
 type Filter = 'open' | 'completed'
@@ -122,7 +124,6 @@ const Content = ({filter}: {filter: Filter}) => {
       (status === 'open' && filter === 'open') ||
       (status !== 'open' && status !== 'canceled' && filter === 'completed'),
   )
-  const {palette: p} = useTheme()
 
   return (
     <View style={[a.flex_1]}>
@@ -317,7 +318,6 @@ const OrderCancellation = ({
   const [isLoading, setIsLoading] = React.useState<boolean>(false)
   const {navigateToTxReview} = useWalletNavigation()
   const navigateTo = useNavigateTo()
-  const {palette: p} = useTheme()
 
   const onPress = async () => {
     setIsLoading(true)

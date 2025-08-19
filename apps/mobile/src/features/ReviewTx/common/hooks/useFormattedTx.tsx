@@ -1,8 +1,8 @@
-import {CredKind} from '@emurgo/cross-csl-core'
-import {useQuery} from '@tanstack/react-query'
 import {isNonNullable} from '@yoroi/common'
 import {ApiUtxoData, Portfolio} from '@yoroi/types'
-import {NetworkApi} from '@yoroi/types/lib/typescript/network/manager'
+
+import {CredKind} from '@emurgo/cross-csl-core'
+import {useSuspenseQuery} from '@tanstack/react-query'
 import _ from 'lodash'
 
 import {usePortfolioTokenInfos} from '~/features/Portfolio/common/hooks/usePortfolioTokenInfos'
@@ -12,6 +12,7 @@ import {YoroiWallet} from '~/wallets/cardano/types'
 import {deriveRewardAddressFromAddress} from '~/wallets/cardano/utils'
 import {wrappedCsl} from '~/wallets/cardano/wrappedCsl'
 import {asQuantity} from '~/wallets/utils/utils'
+
 import {
   FormattedCertificate,
   FormattedFee,
@@ -81,10 +82,7 @@ export const useFormattedTx = (data: TransactionBody): FormattedTx => {
     ...mintTokenIds,
     ...referenceInputTokenIds,
   ])
-  const portfolioTokenInfos = usePortfolioTokenInfos(
-    {wallet, tokenIds},
-    {suspense: true},
-  )
+  const portfolioTokenInfos = usePortfolioTokenInfos({wallet, tokenIds})
 
   const formattedInputs = useFormattedInputs(
     wallet,
@@ -120,13 +118,10 @@ export const useFormattedInputs = (
   tokenInfosResult: ReturnType<typeof usePortfolioTokenInfos>,
   inputUtxos: ReturnType<typeof useUtxos>,
 ) => {
-  const query = useQuery<FormattedInputs>(
-    ['useFormattedInputs', inputUtxos],
-    async () => formatInputs(wallet, tokenInfosResult, inputUtxos),
-    {
-      suspense: true,
-    },
-  )
+  const query = useSuspenseQuery<FormattedInputs>({
+    queryKey: ['useFormattedInputs', inputUtxos],
+    queryFn: async () => formatInputs(wallet, tokenInfosResult, inputUtxos),
+  })
 
   if (!query.data) throw new Error('invalid formatted inputs')
   return query.data
@@ -137,13 +132,10 @@ export const useFormattedOutputs = (
   outputs: TransactionOutputs,
   portfolioTokenInfos: ReturnType<typeof usePortfolioTokenInfos>,
 ) => {
-  const query = useQuery<FormattedOutputs>(
-    ['useFormattedOutputs', outputs],
-    () => formatOutputs(wallet, outputs, portfolioTokenInfos),
-    {
-      suspense: true,
-    },
-  )
+  const query = useSuspenseQuery<FormattedOutputs>({
+    queryKey: ['useFormattedOutputs', outputs],
+    queryFn: async () => formatOutputs(wallet, outputs, portfolioTokenInfos),
+  })
 
   if (!query.data) throw new Error('invalid formatted outputs')
   return query.data
@@ -309,8 +301,8 @@ const getAddressKind = async (
   const {csl, release} = wrappedCsl()
 
   try {
-    const address = await csl.Address.fromBech32(addressBech32)
-    const addressKind = await (await address.paymentCred())?.kind()
+    const address = csl.Address.fromBech32(addressBech32)
+    const addressKind = address.paymentCred()?.kind()
     return addressKind ?? null
   } finally {
     release()
@@ -320,11 +312,10 @@ const getAddressKind = async (
 export const useUtxos = (inputs: TransactionInputs, wallet: YoroiWallet) => {
   const {networkManager} = useSelectedNetwork()
 
-  const query = useQuery({
+  const query = useSuspenseQuery({
     queryKey: ['useUtxos', inputs],
     queryFn: async () =>
       getAllUtxos(inputs, wallet, networkManager.api.utxoData),
-    suspense: true,
   })
 
   if (!query.data) throw new Error('invalid formatted inputs')

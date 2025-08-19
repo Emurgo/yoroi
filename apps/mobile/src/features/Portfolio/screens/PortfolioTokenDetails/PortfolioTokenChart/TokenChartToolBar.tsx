@@ -1,9 +1,10 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
 import {TouchableOpacity, View} from 'react-native'
 
-import {Text} from '~/ui/Text/Text'
 import {TokenChartInterval} from '~/features/Portfolio/common/hooks/useGetPortfolioTokenChart'
+import {Text} from '~/ui/Text/Text'
 
 interface Props {
   timeInterval: TokenChartInterval
@@ -15,7 +16,7 @@ export const TokenChartToolbar = ({
   disabled,
   onChange,
 }: Props) => {
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p} = useTheme()
 
   const handleChange = (itv: TokenChartInterval) => {
     if (disabled) return

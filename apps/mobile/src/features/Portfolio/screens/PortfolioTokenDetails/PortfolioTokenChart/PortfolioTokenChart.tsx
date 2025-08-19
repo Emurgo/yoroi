@@ -1,4 +1,5 @@
-import {atoms as a, useTheme} from '@yoroi/theme'
+import {atoms as a} from '@yoroi/theme'
+
 import React, {useCallback, useState} from 'react'
 import {View} from 'react-native'
 
@@ -6,6 +7,7 @@ import {
   TokenChartInterval,
   useGetPortfolioTokenChart,
 } from '~/features/Portfolio/common/hooks/useGetPortfolioTokenChart'
+
 import {ChartPlaceholder} from './ChartPlaceholder'
 import {PortfolioTokenChartSkeleton} from './PortfolioTokenChartSkeleton'
 import {TokenChart} from './TokenChart'
@@ -13,8 +15,6 @@ import {TokenChartToolbar} from './TokenChartToolBar'
 import {TokenPerformance} from './TokenPerformance'
 
 export const PortfolioTokenChart = () => {
-  const {atoms: ta} = useTheme()
-
   const [selectedIndex, setSelectedIndex] = useState(0)
 
   const [timeInterval, setTimeInterval] = useState<TokenChartInterval>(

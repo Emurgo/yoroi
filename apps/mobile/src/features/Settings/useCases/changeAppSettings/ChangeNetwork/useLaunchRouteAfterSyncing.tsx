@@ -1,4 +1,5 @@
 import {Chain} from '@yoroi/types'
+
 import * as React from 'react'
 
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'

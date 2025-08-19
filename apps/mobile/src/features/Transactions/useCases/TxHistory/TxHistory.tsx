@@ -23,8 +23,8 @@ import {ActionsBanner} from './ActionsBanner'
 import {BalanceBanner} from './BalanceBanner'
 import {CollapsibleHeader} from './CollapsibleHeader'
 import {LockedDeposit} from './LockedDeposit'
-import {useOnScroll} from './useOnScroll'
 import {WarningBanner} from './WarningBanner'
+import {useOnScroll} from './useOnScroll'
 
 export const TxHistory = () => {
   useGovernanceBanner()

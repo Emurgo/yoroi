@@ -1,6 +1,7 @@
 import {isPrimaryToken} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
+
 import {Image} from 'expo-image'
 import * as React from 'react'
 import {ImageStyle, View} from 'react-native'
@@ -26,7 +27,7 @@ export const TokenInfoIcon = ({
   size = 'lg',
   imageStyle,
 }: TokenInfoIconProps) => {
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p} = useTheme()
   const [policy, name] = !info ? '.' : info.id.split('.')
   const {uri, headers, onError, onLoad, isError} = usePortfolioImage({
     policy,
@@ -39,8 +40,7 @@ export const TokenInfoIcon = ({
     return (
       <View
         style={[
-          {backgroundColor: 'transparent'},
-          {borderRadius: 8},
+          a.rounded_sm,
           a.align_center,
           a.justify_center,
           a.overflow_hidden,
@@ -60,8 +60,7 @@ export const TokenInfoIcon = ({
     return (
       <View
         style={[
-          {backgroundColor: 'transparent'},
-          {borderRadius: 8},
+          a.rounded_sm,
           a.align_center,
           a.justify_center,
           a.overflow_hidden,
@@ -83,8 +82,8 @@ export const TokenInfoIcon = ({
       source={{uri, headers}}
       contentFit="cover"
       style={[
-        {backgroundColor: 'transparent'},
-        {borderRadius: 8},
+        a.bg_transparent,
+        a.rounded_sm,
         a.align_center,
         a.justify_center,
         a.overflow_hidden,

@@ -1,4 +1,3 @@
-import {useQueryClient} from '@tanstack/react-query'
 import {
   isDomain,
   isNameServer,
@@ -7,6 +6,8 @@ import {
 } from '@yoroi/resolver'
 import {useTransfer} from '@yoroi/transfer'
 import {Resolver} from '@yoroi/types'
+
+import {useQueryClient} from '@tanstack/react-query'
 import * as React from 'react'
 
 export const useSendReceiver = () => {
@@ -28,12 +29,7 @@ export const useSendReceiver = () => {
     refetch,
     isLoading: isResolvingAddressess,
     isSuccess,
-  } = useResolverCryptoAddresses(
-    {resolve: receiver.resolve},
-    {
-      enabled: false,
-    },
-  )
+  } = useResolverCryptoAddresses({resolve: receiver.resolve})
 
   const isNotResolvedDomain = React.useMemo(
     () =>

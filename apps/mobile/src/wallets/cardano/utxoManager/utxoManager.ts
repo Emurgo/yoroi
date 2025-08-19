@@ -1,14 +1,15 @@
-import {initUtxo, UtxoModels, UtxoStorage} from '@emurgo/yoroi-lib'
+import {isString, parseSafe} from '@yoroi/common'
+import {App} from '@yoroi/types'
+
+import {UtxoModels, UtxoStorage, initUtxo} from '@emurgo/yoroi-lib'
 import {
   Utxo,
   UtxoAtSafePoint,
   UtxoDiffToBestBlock,
 } from '@emurgo/yoroi-lib/dist/utxo/models'
-import {isString, parseSafe} from '@yoroi/common'
-import {App} from '@yoroi/types'
 import {parseInt} from 'lodash'
 
-import {RawUtxo} from '@yoroi/types'
+import {RawUtxo} from '~/wallets/types/other'
 
 export const makeUtxoManager = async ({
   storage,

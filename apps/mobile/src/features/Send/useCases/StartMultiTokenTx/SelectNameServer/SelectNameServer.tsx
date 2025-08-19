@@ -1,6 +1,7 @@
 import {isNameServer, nameServerName} from '@yoroi/resolver'
 import {useTransfer} from '@yoroi/transfer'
 import {Resolver} from '@yoroi/types'
+
 import * as React from 'react'
 import {Animated} from 'react-native'
 

@@ -1,3 +1,6 @@
+import {cardanoConfig, derivationConfig} from '@yoroi/blockchains'
+import {HW, Wallet} from '@yoroi/types'
+
 import type {
   GetExtendedPublicKeyRequest,
   GetExtendedPublicKeyResponse,
@@ -11,13 +14,9 @@ import type {
 import AppAda, {
   DeviceStatusCodes,
 } from '@cardano-foundation/ledgerjs-hw-app-cardano'
-
 import TransportHID from '@ledgerhq/react-native-hid'
 import TransportBLE from '@ledgerhq/react-native-hw-transport-ble'
-import {cardanoConfig, derivationConfig} from '@yoroi/blockchains'
-import {HW, Wallet} from '@yoroi/types'
 import {BleError} from 'react-native-ble-plx'
-
 
 import {LocalizableError} from '~/kernel/i18n/LocalizableError'
 import {logger} from '~/kernel/logger/logger'
@@ -44,13 +43,14 @@ type LedgerConnectionResponse = {
 
 export class DeprecatedAdaAppError extends BaseLedgerError {
   constructor() {
-    super({
-      id: 'ledger.deprecatedAdaAppError',
-      defaultMessage: 'Please update your Ledger Cardano app to version {version} or higher',
-      values: {
-        version: `${MIN_ADA_APP_VERSION}`,
+    super(
+      {
+        id: 'ledger.deprecatedAdaAppError',
+        defaultMessage:
+          'Please update your Ledger Cardano app to version {version} or higher',
       },
-    })
+      {version: `${MIN_ADA_APP_VERSION}`},
+    )
   }
 }
 

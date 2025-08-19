@@ -1,5 +1,6 @@
-import {useNavigation} from '@react-navigation/native'
 import {Chain} from '@yoroi/types'
+
+import {useNavigation} from '@react-navigation/native'
 
 import {useWalletNavigation} from '../../../kernel/navigation/hooks/useWalletNavigation'
 import {SettingsRouteNavigation} from '../../../kernel/navigation/types'

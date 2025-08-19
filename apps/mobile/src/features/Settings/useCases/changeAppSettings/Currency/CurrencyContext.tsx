@@ -1,15 +1,17 @@
-import {
-  useMutation,
-  UseMutationOptions,
-  useQuery,
-  useQueryClient,
-} from '@tanstack/react-query'
 import {parseSafe, useAsyncStorage} from '@yoroi/common'
 import {configCurrencies} from '@yoroi/portfolio'
 import {App, Portfolio} from '@yoroi/types'
+
+import {
+  UseMutationOptions,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query'
 import * as React from 'react'
 
-// Create supportedCurrencies from configCurrencies keys
+import {usePrimaryTokenActivity} from '~/features/Pairing/hooks/usePrimaryTokenActivity'
+
 export const supportedCurrencies = Object.keys(
   configCurrencies,
 ) as Array<Portfolio.Currency.Symbol>
@@ -22,13 +24,9 @@ export const CurrencyProvider = ({children}: {children: React.ReactNode}) => {
   const currency = useCurrency()
   const selectCurrency = useSaveCurrency()
 
-  // TODO: Replace with actual usePrimaryTokenActivity hook when available
-  const ptActivity = {
-    ts: Date.now(),
-    close: 0,
-    open: 0,
-  }
-  const isLoading = false
+  const {isLoading, ptActivity} = usePrimaryTokenActivity({
+    to: currency,
+  })
 
   const value = React.useMemo(
     () => ({
@@ -131,7 +129,6 @@ type CurrencyContext = {
 
 const parseCurrencySymbol = (data: unknown) => {
   const isCurrencySymbol = (data: unknown): data is Portfolio.Currency.Symbol =>
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     Object.values(supportedCurrencies).includes(data as any)
 
   const parsed = parseSafe(data)

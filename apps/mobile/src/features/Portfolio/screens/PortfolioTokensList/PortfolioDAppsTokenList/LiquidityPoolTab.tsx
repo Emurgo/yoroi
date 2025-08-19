@@ -1,13 +1,15 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
 import {FlatList, Text, View} from 'react-native'
 
 import {ILiquidityPool} from '~/features/Portfolio/common/hooks/useGetLiquidityPool'
 import {useShowLiquidityPoolModal} from '~/features/Portfolio/common/hooks/useShowLiquidityPoolModal'
-import {useStrings} from '~/kernel/i18n/useStrings'
 import {TokenEmptyList} from '~/features/Portfolio/ui/TokenEmptyList/TokenEmptyList'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {makeList} from '~/kernel/utils'
 import {Space} from '~/ui/Space/Space'
+
 import {DAppTokenItem} from './DAppTokenItem/DAppTokenItem'
 import {DAppTokenItemSkeleton} from './DAppTokenItem/DAppTokenItemSkeleton'
 
@@ -40,7 +42,7 @@ export const LiquidityPoolTab = ({
       return (
         <View>
           <Text style={[a.body_2_md_regular, {color: p.gray_700}]}>
-            {strings.portfolio.countLiquidityPoolsAvailable(tokensList.length)}
+            {tokensList.length.toString()}
           </Text>
 
           <Space.Height.md />

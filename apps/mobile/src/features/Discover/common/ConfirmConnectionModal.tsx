@@ -1,4 +1,5 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import {Image} from 'expo-image'
 import * as React from 'react'
 import {Text, View} from 'react-native'
@@ -9,6 +10,7 @@ import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
+
 import {getDappFallbackLogo} from './helpers'
 
 type Props = {
@@ -77,7 +79,7 @@ export const ConfirmConnectionModal = ({
   logo,
   showSingleAddressWarning,
 }: Props) => {
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p} = useTheme()
   const strings = useStrings()
   const imageUri = logo.length === 0 ? getDappFallbackLogo(website) : logo
 

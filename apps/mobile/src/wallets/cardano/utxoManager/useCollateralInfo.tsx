@@ -1,4 +1,5 @@
-import {useWallet} from '../hooks'
+import {useWallet} from '~/features/WalletManager/hooks/useWallet'
+
 import {YoroiWallet} from '../types'
 
 export const useCollateralInfo = (wallet: YoroiWallet) => {

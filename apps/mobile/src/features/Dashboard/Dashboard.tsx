@@ -1,6 +1,7 @@
+import {atoms as a, useTheme} from '@yoroi/theme'
+
 import {useNavigation} from '@react-navigation/native'
 import {StackNavigationProp} from '@react-navigation/stack'
-import {atoms as a, useTheme} from '@yoroi/theme'
 import BigNumber from 'bignumber.js'
 import * as React from 'react'
 import {
@@ -12,29 +13,29 @@ import {
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {StakeRewardsWithdrawalOperation} from '~/features/ReviewTx/common/operations'
+import {useBalances} from '~/features/Portfolio/common/hooks/useBalances'
 import {useReviewTx} from '~/features/ReviewTx/common/ReviewTxProvider'
+import {StakeRewardsWithdrawalOperation} from '~/features/ReviewTx/common/operations'
 import {useIsParticipatingInGovernance} from '~/features/Staking/Governance/common/helpers'
 import {WithdrawGovernanceWarningModal} from '~/features/Staking/Governance/useCases/WithdrawGovernanceWarningModal/WithdrawGovernanceWarningModal'
 import {PoolTransitionNotice} from '~/features/Staking/Staking/PoolTransition/PoolTransitionNotice'
 import {usePoolTransition} from '~/features/Staking/Staking/PoolTransition/usePoolTransition'
+import {useCreateWithdrawTx} from '~/features/Staking/hooks/useCreateWithdrawTx'
+import {useIsOnline} from '~/features/WalletManager/hooks/useIsOnline'
 import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useSync} from '~/features/WalletManager/hooks/useSync'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {DashboardRoutes} from '~/kernel/navigation/types'
-
-import {useBalances} from '~/features/Portfolio/common/hooks/useBalances'
-import {useCreateWithdrawTx} from '~/features/Staking/hooks/useCreateWithdrawTx'
-import {useIsOnline} from '~/features/WalletManager/hooks/useIsOnline'
-import {useSync} from '~/features/WalletManager/hooks/useSync'
 import {Banner} from '~/ui/Banner/Banner'
 import {Button} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
 import {isEmptyString} from '~/wallets/utils/string'
 import {Amounts} from '~/wallets/utils/utils'
+
 import {useStakingInfo} from '../Staking/hooks/useStakingInfo'
 import {EpochProgress} from './EpochProgress'
 import {NotDelegatedInfo} from './NotDelegatedInfo'
@@ -47,7 +48,6 @@ export const Dashboard = () => {
 
   const strings = useStrings()
   const navigateTo = useNavigateTo()
-  const governanceStrings = useStrings()
   const {isPoolRetiring} = usePoolTransition()
   const {unsignedTxChanged} = useReviewTx()
   const {

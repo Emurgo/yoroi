@@ -1,9 +1,11 @@
-import {MetadataJsonSchema} from '@emurgo/cross-csl-core'
-import {useQuery} from '@tanstack/react-query'
 import {isString} from '@yoroi/common'
+
+import {MetadataJsonSchema} from '@emurgo/cross-csl-core'
+import {useSuspenseQuery} from '@tanstack/react-query'
 
 import {wrappedCsl} from '~/wallets/cardano/wrappedCsl'
 import {YoroiUnsignedTx} from '~/wallets/types/yoroi'
+
 import {FormattedMetadata, TransactionBody} from '../types'
 
 export const formatMetadata = async (
@@ -24,18 +26,18 @@ export const formatMetadata = async (
       hash != null
     ) {
       generalTransactionMetadata =
-        await unsignedTx.unsignedTx.auxiliaryData?.metadata()
+        unsignedTx.unsignedTx.auxiliaryData?.metadata()
     } else if (cbor != null && hash != null) {
-      const tx = await csl.Transaction.fromHex(cbor)
-      const auxiliaryData = await tx.auxiliaryData()
-      generalTransactionMetadata = await auxiliaryData?.metadata()
+      const tx = csl.Transaction.fromHex(cbor)
+      const auxiliaryData = tx.auxiliaryData()
+      generalTransactionMetadata = auxiliaryData?.metadata()
     }
 
-    const metadata674 = await generalTransactionMetadata?.get(
-      await csl.BigNum.fromStr('674'),
+    const metadata674 = generalTransactionMetadata?.get(
+      csl.BigNum.fromStr('674'),
     )
     if (metadata674) {
-      const decodedMetadata = await csl.decodeMetadatumToJsonStr(
+      const decodedMetadata = csl.decodeMetadatumToJsonStr(
         metadata674,
         MetadataJsonSchema.BasicConversions,
       )
@@ -73,11 +75,9 @@ export const useFormattedMetadata = ({
   cbor: string | null
   txBody: TransactionBody
 }) => {
-  const query = useQuery({
+  const query = useSuspenseQuery({
     queryFn: () => formatMetadata(unsignedTx, cbor, txBody),
     queryKey: ['useFormattedMetadata', cbor, unsignedTx, txBody],
-    useErrorBoundary: true,
-    suspense: true,
   })
 
   return query?.data

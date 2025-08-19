@@ -1,4 +1,5 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
@@ -19,7 +20,10 @@ export const BalanceHeaderCard = ({name, rate, hasDApps}: Props) => {
   return (
     <View style={[a.flex_row, a.justify_between, a.align_center]}>
       {hasDApps ? (
-        <Tooltip numberOfLine={3} title={strings.portfolio.totalPortfolioValueTooltip}>
+        <Tooltip
+          numberOfLine={3}
+          title={strings.portfolio.totalPortfolioValueTooltip}
+        >
           <View style={[a.flex_row, a.align_center, a.gap_xs]}>
             <Text style={[a.body_2_md_regular, {color: p.white_static}]}>
               {strings.portfolio.totalPortfolioValue}

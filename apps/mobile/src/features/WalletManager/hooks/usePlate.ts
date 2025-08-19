@@ -1,8 +1,8 @@
 import {cardanoConfig} from '@yoroi/blockchains'
+import {Wallet} from '@yoroi/types'
 
 import {walletChecksum} from '@emurgo/cip4-js'
 import {useSuspenseQuery} from '@tanstack/react-query'
-import {Wallet} from '@yoroi/types'
 
 import {deriveAddressFromXPub} from '~/wallets/cardano/account-manager/derive-address-from-xpub'
 

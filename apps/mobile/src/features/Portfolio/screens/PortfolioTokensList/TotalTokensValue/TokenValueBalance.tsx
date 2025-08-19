@@ -1,11 +1,13 @@
 import {amountBreakdown, infoExtractName} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
+
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
 import {useCurrencyPairing} from '~/features/Settings/useCases/changeAppSettings/Currency/CurrencyContext'
-import {usePrivacyMode} from '~/features/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
+import {usePrivacyMode} from '~/features/Settings/useCases/changeAppSettings/PrivacyMode/usePrivacyMode'
+
 import {SkeletonPrimaryToken} from './SkeletonPrimaryToken'
 
 type Props = {
@@ -20,7 +22,7 @@ export const TokenValueBalance = ({
   isPrimaryTokenActive,
   rate,
 }: Props) => {
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p} = useTheme()
   const {currency, config} = useCurrencyPairing()
   const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
   const name = infoExtractName(amount.info)

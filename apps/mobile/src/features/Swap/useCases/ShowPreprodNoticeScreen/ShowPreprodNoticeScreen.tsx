@@ -1,4 +1,5 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
 import {Text} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
@@ -8,7 +9,7 @@ import {PreprodNoticeScreenLogo} from '~/ui/PreprodNoticeScreenLogo/PreprodNotic
 
 export const ShowPreprodNoticeScreen = () => {
   const strings = useStrings()
-  const {palette: p} = useTheme()
+  const {palette: p, atoms: ta} = useTheme()
 
   return (
     <SafeAreaView
@@ -18,7 +19,7 @@ export const ShowPreprodNoticeScreen = () => {
         a.flex_1,
         a.align_center,
         a.justify_center,
-        {backgroundColor: p.bg_color_max},
+        ta.bg_color_max,
       ]}
     >
       <PreprodNoticeScreenLogo />
@@ -31,17 +32,18 @@ export const ShowPreprodNoticeScreen = () => {
           {color: p.gray_900},
         ]}
       >
-        {strings.preprodNoticeTitle}
+        {strings.swap.preprodNoticeTitle}
       </Text>
 
       <Text
         style={[
           a.body_1_lg_regular,
           a.text_center,
-          {maxWidth: 300, color: p.text_gray_medium},
+          ta.text_gray_medium,
+          {maxWidth: 300},
         ]}
       >
-        {strings.preprodNoticeText}
+        {strings.swap.preprodNoticeText}
       </Text>
     </SafeAreaView>
   )

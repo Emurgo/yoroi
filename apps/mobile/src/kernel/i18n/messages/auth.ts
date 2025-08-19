@@ -49,4 +49,4 @@ export const authMessages = defineMessages({
     id: 'components.firstrun.custompinscreen.pinInputConfirmationSubTitle',
     defaultMessage: '!!!Repeat a new PIN to quickly access your wallet',
   },
-}) 
+})

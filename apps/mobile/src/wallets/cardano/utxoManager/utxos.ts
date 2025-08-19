@@ -1,8 +1,10 @@
 import {first} from '@yoroi/common'
+
 import BigNumber from 'bignumber.js'
 
-import {RawUtxo} from '@yoroi/types'
+import {RawUtxo} from '~/wallets/types/other'
 import {asQuantity} from '~/wallets/utils/utils'
+
 import {CollateralConfig} from './types'
 
 export const collateralConfig: CollateralConfig = {
@@ -43,8 +45,10 @@ export const findCollateralCandidates = (
         maxUTxOs,
       }),
     )
-    .sort((a, b) =>
-      new BigNumber(asQuantity(a.amount)).comparedTo(asQuantity(b.amount)),
+    .sort(
+      (a, b) =>
+        new BigNumber(asQuantity(a.amount)).comparedTo(asQuantity(b.amount)) ??
+        0,
     )
 }
 

@@ -1,5 +1,6 @@
-import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 import {Portfolio} from '@yoroi/types'
+
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 import {Image} from 'expo-image'
 import * as React from 'react'
 import {useCallback, useMemo} from 'react'
@@ -84,13 +85,10 @@ export const usePortfolioImage = ({
   const [isError, setError] = React.useState(false)
   const [isLoading, setLoading] = React.useState(true)
 
-  const queryKey = [
-    'native-asset-img',
-    policy,
-    name,
-    `${width}x${height}`,
-    contentFit,
-  ]
+  const queryKey = React.useMemo(
+    () => ['native-asset-img', policy, name, `${width}x${height}`, contentFit],
+    [policy, name, width, height, contentFit],
+  )
 
   const query = useQuery({
     enabled: isMediaTypeSupported,
@@ -111,7 +109,7 @@ export const usePortfolioImage = ({
   )
   React.useEffect(() => () => clearTimeout(timerRef.current), [])
 
-  const onError = useCallback(() => {
+  const onError = React.useCallback(() => {
     const count = queryClient.getQueryState(queryKey)?.dataUpdateCount
     if (count && count < 10) {
       timerRef.current = setTimeout(() => query.refetch(), count * 300)
@@ -122,7 +120,7 @@ export const usePortfolioImage = ({
       }
       setError(true)
     }
-  }, [query, queryClient, queryKey, invalidate, policy, name, isDev])
+  }, [query, queryClient, queryKey, invalidate, policy, name])
 
   const onLoad = useCallback(() => {
     setLoading(false)

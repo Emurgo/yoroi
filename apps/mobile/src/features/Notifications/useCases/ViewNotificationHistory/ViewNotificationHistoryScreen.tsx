@@ -2,17 +2,18 @@ import {isString} from '@yoroi/common'
 import {useNotificationManager} from '@yoroi/notifications'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Notifications} from '@yoroi/types'
+
 import * as React from 'react'
 import {View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import Svg, {ClipPath, Defs, G, Path, Rect} from 'react-native-svg'
 
-import {triggerNotificationAction} from '~/features/Notifications/common/tools'
 import {
   getTransactionReceivedNotificationIcon,
   getTransactionReceivedNotificationTitle,
 } from '~/features/Notifications/common/TransactionReceivedNotification'
+import {triggerNotificationAction} from '~/features/Notifications/common/tools'
 import {useWalletNotifications} from '~/features/Notifications/common/useWalletNotifications'
 import {useTransactionInfos} from '~/features/Transactions/hooks/useTransactionInfos'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
@@ -22,6 +23,7 @@ import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {ScrollView} from '~/ui/ScrollView/ScrollView'
 import {Text} from '~/ui/Text/Text'
+
 import {EmptyNotificationsIllustration} from '../../illustrations/EmptyNotifications'
 
 export const ViewNotificationHistoryScreen = () => {

@@ -1,6 +1,6 @@
 import {parseSafe} from '@yoroi/common'
 import {useTheme} from '@yoroi/theme'
-import {z} from 'zod'
+
 import {PRICE_IMPACT_HIGH_RISK, PRICE_IMPACT_MODERATE_RISK} from './constants'
 import {SwapPriceImpactRisk} from './types'
 
@@ -15,13 +15,13 @@ type OrderTxMetadata = {
   provider: string
 }
 
-const OrderTxMetadataSchema = z.object({
-  sellTokenId: z.string(),
-  buyTokenId: z.string(),
-  sellQuantity: z.string(),
-  buyQuantity: z.string(),
-  provider: z.string(),
-})
+// const OrderTxMetadataSchema = z.object({
+//   sellTokenId: z.string(),
+//   buyTokenId: z.string(),
+//   sellQuantity: z.string(),
+//   buyQuantity: z.string(),
+//   provider: z.string(),
+// })
 
 const isOrderTxMetadata = (data: unknown): data is OrderTxMetadata => {
   if (!data || typeof data !== 'object') return false

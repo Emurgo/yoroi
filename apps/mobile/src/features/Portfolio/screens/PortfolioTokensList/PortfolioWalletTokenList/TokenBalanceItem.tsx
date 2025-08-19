@@ -5,6 +5,7 @@ import {
 } from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
+
 import * as React from 'react'
 import {Text, TouchableOpacity, View} from 'react-native'
 
@@ -15,7 +16,7 @@ import {
 import {useNavigateTo} from '~/features/Portfolio/common/hooks/useNavigateTo'
 import {usePortfolioTokenActivity} from '~/features/Portfolio/context/PortfolioTokenActivityProvider'
 import {useCurrencyPairing} from '~/features/Settings/useCases/changeAppSettings/Currency/CurrencyContext'
-import {usePrivacyMode} from '~/features/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
+import {usePrivacyMode} from '~/features/Settings/useCases/changeAppSettings/PrivacyMode/usePrivacyMode'
 import {PairedBalance} from '~/ui/PairedBalance/PairedBalance'
 import {PnlTag} from '~/ui/PnlTag/PnlTag'
 import {Space} from '~/ui/Space/Space'
@@ -25,7 +26,7 @@ type Props = {
   amount: Portfolio.Token.Amount
 }
 export const TokenBalanceItem = ({amount}: Props) => {
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p} = useTheme()
   const navigationTo = useNavigateTo()
   const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
 
@@ -93,7 +94,11 @@ export const TokenBalanceItem = ({amount}: Props) => {
         <PairedBalance
           hidePrimaryPair
           amount={amount}
-          textStyle={[a.body_3_sm_regular, a.text_right, {color: p.gray_600}]}
+          textStyle={{
+            ...a.body_3_sm_regular,
+            ...a.text_right,
+            color: p.gray_600,
+          }}
         />
       </View>
     </TouchableOpacity>

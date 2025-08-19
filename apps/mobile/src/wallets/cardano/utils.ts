@@ -1,8 +1,9 @@
+import {invalid} from '@yoroi/common'
+import {Balance, Chain, Portfolio, Wallet} from '@yoroi/types'
+
 import {WasmModuleProxy} from '@emurgo/cross-csl-core'
 import {SendToken} from '@emurgo/yoroi-lib'
 import {normalizeToAddress} from '@emurgo/yoroi-lib/dist/internals/utils/addresses'
-import {invalid} from '@yoroi/common'
-import {Balance, Chain, Portfolio, Wallet} from '@yoroi/types'
 import {BigNumber} from 'bignumber.js'
 import {Buffer} from 'buffer'
 
@@ -11,9 +12,9 @@ import {DefaultAsset} from '../types/tokens'
 import {YoroiEntry} from '../types/yoroi'
 import {Amounts} from '../utils/utils'
 import {CardanoMobile} from '../wallets'
+import {MultiToken} from './MultiToken'
 import {identifierToCardanoAsset} from './assetUtils'
 import {withMinAmounts} from './getMinAmounts'
-import {MultiToken} from './MultiToken'
 import {CardanoTypes, YoroiWallet} from './types'
 import {wrappedCsl} from './wrappedCsl'
 

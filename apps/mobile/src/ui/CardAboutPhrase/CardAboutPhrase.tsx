@@ -1,5 +1,6 @@
 import {Blockies} from '@yoroi/identicon'
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import {LinearGradient} from 'expo-linear-gradient'
 import * as React from 'react'
 import {Platform, StyleSheet, Text, View} from 'react-native'

@@ -1,4 +1,5 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
@@ -14,15 +15,13 @@ export const InfoBanner = ({content, title, iconSize = 30}: Props) => {
     <View
       style={[{backgroundColor: p.sys_cyan_100}, a.p_md, {borderRadius: 8}]}
     >
-      <View style={[ta.flex_row, ta.align_center]}>
+      <View style={[a.flex_row, a.align_center]}>
         <Icon.Info size={iconSize} color={p.primary_500} />
 
         <Space.Width.sm />
 
         {title != null && (
-          <Text style={[a.body_2_md_medium, {color: p.text_gray_max}]}>
-            {title}
-          </Text>
+          <Text style={[a.body_2_md_medium, ta.text_gray_max]}>{title}</Text>
         )}
       </View>
 

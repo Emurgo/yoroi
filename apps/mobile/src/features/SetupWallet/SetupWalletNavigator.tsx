@@ -1,12 +1,15 @@
-import {createStackNavigator} from '@react-navigation/stack'
-// import {useTheme} from '@yoroi/theme'
-import * as React from 'react'
-
 /* import {
   defaultStackNavigationOptions,
   WalletInitRoutes,
 } from '~/kernel/navigation/navigation' */
 // import {NetworkTag} from '../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
+import {createStackNavigator} from '@react-navigation/stack'
+// import {useTheme} from '@yoroi/theme'
+import * as React from 'react'
+
+// import {ConnectNanoXScreen} from './useCases/RestoreHwWallet/ConnectNanoXScreen'
+import {useStrings} from '~/kernel/i18n/useStrings'
+
 import {PreparingWalletScreen} from './common/PreparingWalletScreen/PreparingWalletScreen'
 import {ImportReadOnlyWalletScreen} from './legacy/ImportReadOnlyWallet/ImportReadOnlyWalletScreen'
 import {SaveReadOnlyWalletScreen} from './legacy/SaveReadOnlyWallet/SaveReadOnlyWalletScreen'
@@ -16,8 +19,6 @@ import {AboutRecoveryPhraseScreen} from './useCases/CreateWallet/AboutRecoveryPh
 import {RecoveryPhraseScreen} from './useCases/CreateWallet/RecoveryPhraseScreen'
 import {VerifyRecoveryPhraseScreen} from './useCases/CreateWallet/VerifyRecoveryPhraseScreen'
 import {WalletDetailsScreen} from './useCases/CreateWallet/WalletDetailsScreen'
-// import {ConnectNanoXScreen} from './useCases/RestoreHwWallet/ConnectNanoXScreen'
-import {useStrings} from '~/kernel/i18n/useStrings'
 import {RestoreWalletDetailsScreen} from './useCases/RestoreWallet/RestoreWalletDetailsScreen'
 import {RestoreWalletScreen} from './useCases/RestoreWallet/RestoreWalletScreen'
 

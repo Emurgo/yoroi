@@ -1,11 +1,12 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
 import {View} from 'react-native'
 
 import {formatPriceChange} from '~/features/Portfolio/common/helpers/priceChange'
 import {TokenChartInterval} from '~/features/Portfolio/common/hooks/useGetPortfolioTokenChart'
-import {useStrings} from '~/kernel/i18n/useStrings'
 import {useCurrencyPairing} from '~/features/Settings/useCases/changeAppSettings/Currency/CurrencyContext'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {PnlTag} from '~/ui/PnlTag/PnlTag'
 import {Text} from '~/ui/Text/Text'
 import {Tooltip} from '~/ui/Tooltip/Tooltip'
@@ -20,7 +21,7 @@ type Props = {
 }
 
 export const TokenPerformance = ({tokenPerformance, timeInterval}: Props) => {
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p} = useTheme()
   const strings = useStrings()
   const {currency, config} = useCurrencyPairing()
 

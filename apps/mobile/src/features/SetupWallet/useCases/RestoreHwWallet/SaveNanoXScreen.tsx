@@ -1,9 +1,10 @@
-import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useAsyncStorage} from '@yoroi/common'
 import {Blockies} from '@yoroi/identicon'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Api, Wallet} from '@yoroi/types'
+
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 import {
   InteractionManager,
@@ -11,8 +12,8 @@ import {
   ScrollView,
   Text,
   TouchableOpacity,
-  useWindowDimensions,
   View,
+  useWindowDimensions,
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
@@ -41,10 +42,11 @@ import {TextInput} from '~/ui/TextInput/TextInput'
 import {isEmptyString} from '~/wallets/utils/string'
 import {getWalletNameError} from '~/wallets/utils/validators'
 
+const mediumScreenHeight = 800
+const largerScreenHeight = 900
+
 const useSizeModal = () => {
   const HEIGHT_SCREEN = useWindowDimensions().height
-  const mediumScreenHeight = 800
-  const largerScreenHeight = 900
   const PERCENTAGE_NAME_PASSWORD =
     HEIGHT_SCREEN >= largerScreenHeight
       ? 58
@@ -69,7 +71,7 @@ const useSizeModal = () => {
 const addressMode: Wallet.AddressMode = 'single'
 export const SaveNanoXScreen = () => {
   const strings = useStrings()
-  const {palette: p, isDark} = useTheme()
+  const {palette: p} = useTheme()
   const storage = useAsyncStorage()
   const navigation = useNavigation<SetupWalletRouteNavigation>()
   const {track} = useMetrics()
@@ -262,7 +264,7 @@ export const SaveNanoXScreen = () => {
 
         <Space.Height.xl />
 
-        <ScrollView style={[a.flex_1]}>
+        <ScrollView style={a.flex_1}>
           <TextInput
             enablesReturnKeyAutomatically
             autoFocus
@@ -270,7 +272,9 @@ export const SaveNanoXScreen = () => {
             value={name}
             onChangeText={(walletName: string) => setName(walletName)}
             errorText={
-              !isEmptyString(walletNameErrorText) && !isPending
+              !isEmptyString(walletNameErrorText) &&
+              walletNameErrorText &&
+              !isPending
                 ? walletNameErrorText
                 : undefined
             }

@@ -1,6 +1,7 @@
-import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
+
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {BlurView} from 'expo-blur'
 import * as React from 'react'
 import {Linking, Platform, Text, TouchableOpacity, View} from 'react-native'
@@ -18,6 +19,7 @@ import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
 import {StepperProgress} from '~/ui/StepperProgress/StepperProgress'
 import {generateAdaMnemonic} from '~/wallets/cardano/mnemonic/mnemonic'
+
 import {EyeClosed} from '../../illustrations/EyeClosed'
 import {EyeOpen} from '../../illustrations/EyeOpen'
 
@@ -82,17 +84,7 @@ export const RecoveryPhraseScreen = () => {
       ),
       height: 552,
     })
-  }, [
-    openModal,
-    strings.setupWallet.recoveryPhraseCardFifthItem,
-    strings.setupWallet.recoveryPhraseCardFirstItem,
-    strings.setupWallet.recoveryPhraseCardFourthItem,
-    strings.setupWallet.recoveryPhraseCardSecondItem,
-    strings.setupWallet.recoveryPhraseCardThirdItem,
-    strings.setupWallet.recoveryPhraseCardTitle,
-    closeModal,
-    showCreateWalletInfoModalChanged,
-  ])
+  }, [strings, openModal, closeModal, showCreateWalletInfoModalChanged])
 
   React.useEffect(() => {
     if (showCreateWalletInfoModal) handleOnShowModal()

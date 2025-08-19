@@ -1,5 +1,6 @@
 import {cardanoConfig} from '@yoroi/blockchains'
 import {Wallet} from '@yoroi/types'
+
 import {Buffer} from 'buffer'
 
 import {cip30ExtensionMaker} from '../cip30/cip30'
@@ -47,7 +48,7 @@ class CIP95Extension {
       throw new Error('CIP95Extension: Unsupported wallet implementation')
 
     try {
-      const accountPubKey = await csl.Bip32PublicKey.fromBytes(
+      const accountPubKey = csl.Bip32PublicKey.fromBytes(
         Buffer.from(this.wallet.publicKeyHex, 'hex'),
       )
 
@@ -55,10 +56,10 @@ class CIP95Extension {
         cardanoConfig.implementations[walletImplementation]
       const baseDerivations = implementationConfig.derivations.base
 
-      const rawKey = await accountPubKey
+      const rawKey = accountPubKey
         .derive(baseDerivations.roles.drep)
-        .then((key) => key.derive(0))
-        .then((key) => key.toRawKey())
+        .derive(0)
+        .toRawKey()
 
       return rawKey.toHex()
     } finally {
@@ -67,10 +68,10 @@ class CIP95Extension {
   }
 
   private async getStakeKeyStatus() {
-    const stakingKey = await this.wallet.getStakingKey()
+    const stakingKey = this.wallet.getStakingKey()
     const stakingInfo = await this.wallet.getStakingInfo()
     const isRegistered = stakingInfo.status !== 'not-registered'
-    const hex = await stakingKey.toHex()
+    const hex = stakingKey.toHex()
     return {hex, isRegistered}
   }
 }

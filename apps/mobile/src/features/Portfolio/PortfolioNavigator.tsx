@@ -1,4 +1,4 @@
-import {atoms as a, useTheme} from '@yoroi/theme'
+import {useTheme} from '@yoroi/theme'
 
 import {createStackNavigator} from '@react-navigation/stack'
 import * as React from 'react'
@@ -11,8 +11,8 @@ import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
 import {PortfolioRoutes} from '~/kernel/navigation/types'
 import {Boundary} from '~/ui/Boundary/Boundary'
 
-import {PortfolioProvider} from './context/PortfolioProvider'
 import {NftsNavigator} from './NftsNavigator'
+import {PortfolioProvider} from './context/PortfolioProvider'
 import {PortfolioDashboardScreen} from './screens/PortfolioDashboard/PortfolioDashboardScreen'
 import ExportTokenTransactions from './screens/PortfolioTokenDetails/ExportTokenTransactions'
 import {PortfolioTokenDetailsScreen} from './screens/PortfolioTokenDetails/PortfolioTokenDetailsScreen'

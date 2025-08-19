@@ -1,6 +1,8 @@
-import {useQuery, UseQueryOptions} from '@tanstack/react-query'
 import {time} from '@yoroi/common'
 import {Catalyst, useCatalyst} from '@yoroi/staking'
+
+import {UseQueryOptions, useQuery} from '@tanstack/react-query'
+
 import {usePortfolioPrimaryBalance} from '~/features/Portfolio/common/hooks/usePortfolioPrimaryBalance'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {throwLoggedError} from '~/kernel/logger/helpers/throw-logged-error'

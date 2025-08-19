@@ -1,12 +1,13 @@
 import {amountBreakdown, infoExtractName} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
 import {Text, TouchableOpacity, View} from 'react-native'
 
-import {TokenInfoIcon} from '~/ui/TokenInfoIcon/TokenInfoIcon'
-import {PairedBalance} from '~/ui/PairedBalance/PairedBalance'
 import {ILiquidityPool} from '~/features/Portfolio/common/hooks/useGetLiquidityPool'
 import {AssetLogo} from '~/features/Portfolio/ui/AssetLogo/AssetLogo'
+import {PairedBalance} from '~/ui/PairedBalance/PairedBalance'
+import {TokenInfoIcon} from '~/ui/TokenInfoIcon/TokenInfoIcon'
 
 type Props = {
   tokenInfo: ILiquidityPool
@@ -19,7 +20,7 @@ export const DAppTokenItem = ({
   splitTokenSymbol,
   onPress,
 }: Props) => {
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p} = useTheme()
 
   const [firstToken, secondToken] = tokenInfo.assets
   const firstTokenBalance = amountBreakdown(firstToken).bn.toFormat(2)
@@ -40,7 +41,7 @@ export const DAppTokenItem = ({
             <TokenInfoIcon
               info={firstToken.info}
               size="sm"
-              imageStyle={[{width: 26, height: 26}]}
+              imageStyle={{width: 26, height: 26}}
             />
           </AssetLogo>
 
@@ -54,7 +55,7 @@ export const DAppTokenItem = ({
             <TokenInfoIcon
               info={secondToken.info}
               size="sm"
-              imageStyle={[{width: 26, height: 26}]}
+              imageStyle={{width: 26, height: 26}}
             />
           </AssetLogo>
         </View>
@@ -77,7 +78,11 @@ export const DAppTokenItem = ({
 
         <PairedBalance
           amount={firstToken}
-          textStyle={[{color: p.gray_600}, a.body_3_sm_regular, a.text_right]}
+          textStyle={{
+            color: p.gray_600,
+            ...a.body_3_sm_regular,
+            ...a.text_right,
+          }}
         />
       </View>
     </TouchableOpacity>

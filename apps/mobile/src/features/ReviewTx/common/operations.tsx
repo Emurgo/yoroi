@@ -1,24 +1,26 @@
-import {FullPoolInfo} from '@emurgo/yoroi-lib'
-import {useQuery} from '@tanstack/react-query'
 import {useTheme} from '@yoroi/theme'
 import {Balance} from '@yoroi/types'
+
+import {FullPoolInfo} from '@emurgo/yoroi-lib'
+import {useQuery} from '@tanstack/react-query'
 import * as React from 'react'
-import {Text, useWindowDimensions, View} from 'react-native'
+import {Text, View, useWindowDimensions} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 
 import {
   formatDrepHashToCIP105Format,
   formatDrepHashToCIP129Format,
 } from '~/features/Staking/Governance/common/drep'
+import {usePoolInfo} from '~/features/Staking/hooks/usePoolInfo'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Icon} from '~/ui/Icon'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
 import {wrappedCsl} from '~/wallets/cardano/wrappedCsl'
-import {usePoolInfo} from '~/features/Staking/hooks/usePoolInfo'
 import {formatTokenWithText} from '~/wallets/utils/format'
-import {asQuantity, Quantities} from '~/wallets/utils/utils'
-import {useStrings} from '~/kernel/i18n/useStrings'
+import {Quantities, asQuantity} from '~/wallets/utils/utils'
+
 import {PoolDetails} from './PoolDetails'
 import {CertificateType, FormattedTx} from './types'
 
@@ -95,7 +97,9 @@ export const StakeRewardsWithdrawalOperation = ({
         strike={strike}
       />
 
-      <Text style={styles.operationValue}>{strings.txReview.rewardsWithdrawalText}</Text>
+      <Text style={styles.operationValue}>
+        {strings.txReview.rewardsWithdrawalText}
+      </Text>
     </View>
   )
 }

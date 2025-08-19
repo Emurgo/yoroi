@@ -1,9 +1,10 @@
-import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useAsyncStorage} from '@yoroi/common'
 import {Blockies} from '@yoroi/identicon'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Api, Wallet} from '@yoroi/types'
+
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 import {
   InteractionManager,
@@ -12,8 +13,8 @@ import {
   ScrollView,
   Text,
   TouchableOpacity,
-  useWindowDimensions,
   View,
+  useWindowDimensions,
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {ViewProps} from 'react-native-svg/lib/typescript/fabric/utils'
@@ -41,34 +42,33 @@ import {StepperProgress} from '~/ui/StepperProgress/StepperProgress'
 import {TextInput} from '~/ui/TextInput/TextInput'
 import {isEmptyString} from '~/wallets/utils/string'
 import {
-  getWalletNameError,
   REQUIRED_PASSWORD_LENGTH,
+  getWalletNameError,
   validatePassword,
   validateWalletName,
 } from '~/wallets/utils/validators'
 
 const useSizeModal = () => {
-  const HEIGHT_SCREEN = useWindowDimensions().height
+  const heightScreen = useWindowDimensions().height
   const mediumScreenHeight = 800
   const largerScreenHeight = 900
-  const PERCENTAGE_NAME_PASSWORD =
-    HEIGHT_SCREEN >= largerScreenHeight
+  const percNamePassword =
+    heightScreen >= largerScreenHeight
       ? 58
-      : HEIGHT_SCREEN >= mediumScreenHeight
+      : heightScreen >= mediumScreenHeight
         ? 65
         : 85
-  const PERCENTAGE_CHECKSUM =
-    HEIGHT_SCREEN >= largerScreenHeight
+  const percChecksum =
+    heightScreen >= largerScreenHeight
       ? 48
-      : HEIGHT_SCREEN >= mediumScreenHeight
+      : heightScreen >= mediumScreenHeight
         ? 55
         : 75
 
-  const HEIGHT_MODAL_CHECKSUM = (HEIGHT_SCREEN / 100) * PERCENTAGE_CHECKSUM
-  const HEIGHT_MODAL_NAME_PASSWORD =
-    (HEIGHT_SCREEN / 100) * PERCENTAGE_NAME_PASSWORD
+  const modalHeightChecksum = (heightScreen / 100) * percChecksum
+  const modalHeightNamePassword = (heightScreen / 100) * percNamePassword
 
-  return {HEIGHT_MODAL_NAME_PASSWORD, HEIGHT_MODAL_CHECKSUM} as const
+  return {modalHeightNamePassword, modalHeightChecksum} as const
 }
 
 // when restoring, later will be part of the onboarding
@@ -79,7 +79,7 @@ export const WalletDetailsScreen = () => {
   const {palette: p} = useTheme()
   const {track} = useMetrics()
   const bold = useBold({style: a.body_1_lg_medium})
-  const {HEIGHT_MODAL_NAME_PASSWORD, HEIGHT_MODAL_CHECKSUM} = useSizeModal()
+  const {modalHeightNamePassword, modalHeightChecksum} = useSizeModal()
   const {openModal, closeModal} = useModal()
   const {walletManager} = useWalletManager()
   const walletNames = Array.from(walletManager.walletMetas.values()).map(
@@ -242,18 +242,14 @@ export const WalletDetailsScreen = () => {
           />
         </View>
       ),
-      height: HEIGHT_MODAL_NAME_PASSWORD,
+      height: modalHeightNamePassword,
     })
   }, [
+    strings,
     openModal,
-    strings.setupWallet.walletNameModalCardFirstItem,
-    strings.setupWallet.walletNameModalCardSecondItem,
-    strings.setupWallet.walletNameModalCardTitle,
-    strings.setupWallet.walletPasswordModalCardFirstItem,
-    strings.setupWallet.walletPasswordModalCardSecondItem,
-    strings.setupWallet.walletPasswordModalCardTitle,
     closeModal,
     showRestoreWalletInfoModalChanged,
+    modalHeightNamePassword,
   ])
 
   React.useEffect(() => {
@@ -292,7 +288,7 @@ export const WalletDetailsScreen = () => {
           />
         </View>
       ),
-      height: HEIGHT_MODAL_CHECKSUM,
+      height: modalHeightChecksum,
     })
   }
 
@@ -325,7 +321,9 @@ export const WalletDetailsScreen = () => {
             value={name}
             onChangeText={(walletName: string) => setName(walletName)}
             errorText={
-              !isEmptyString(walletNameErrorText) && !isPending
+              !isEmptyString(walletNameErrorText) &&
+              walletNameErrorText &&
+              !isPending
                 ? walletNameErrorText
                 : undefined
             }

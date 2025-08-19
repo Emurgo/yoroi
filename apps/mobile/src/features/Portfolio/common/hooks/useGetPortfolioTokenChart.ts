@@ -1,18 +1,19 @@
-import {useQuery, UseQueryOptions} from '@tanstack/react-query'
-import {networkConfigs} from '@yoroi/blockchains'
 import {isRight, time} from '@yoroi/common'
 import {isPrimaryToken} from '@yoroi/portfolio'
-import {Chain, Portfolio} from '@yoroi/types'
+import {Portfolio} from '@yoroi/types'
+
+import {UseQueryOptions, useQuery} from '@tanstack/react-query'
 
 import {fetchPtPriceActivity} from '~/features/Pairing/hooks/usePrimaryTokenActivity'
+import {useCurrencyPairing} from '~/features/Settings/useCases/changeAppSettings/Currency/CurrencyContext'
 import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {supportedCurrencies} from '~/kernel/constants'
+import {defaultCurrency} from '~/kernel/constants'
 import {useLanguage} from '~/kernel/i18n/LanguageProvider'
 import {logger} from '~/kernel/logger/logger'
 import {delay} from '~/wallets/utils/timeUtils'
+
 import {priceChange} from '../helpers/priceChange'
-import {useCurrencyPairing} from '~/features/Settings/useCases/changeAppSettings/Currency/CurrencyContext'
 import {usePortfolioTokenDetailParams} from './useNavigateTo'
 
 export const TokenChartInterval = {
@@ -55,7 +56,7 @@ const getTimestamps = (timeInterval: TokenChartInterval) => {
 }
 
 // TODO: needs fixing, it should be consumed by selected network
-const ptTicker = networkConfigs[Chain.Network.Mainnet].primaryTokenInfo.ticker
+// const ptTicker = networkConfigs[Chain.Network.Mainnet].primaryTokenInfo.ticker
 
 export const ptPriceQueryFn = async ({
   queryKey,
@@ -75,16 +76,19 @@ export const ptPriceQueryFn = async ({
 
 export const useGetPortfolioTokenChart = (
   timeInterval = TokenChartInterval.DAY as TokenChartInterval,
-  options: UseQueryOptions<
-    TokenChartData[] | null,
-    Error,
-    TokenChartData[] | null,
-    [
-      'useGetPortfolioTokenChart',
-      string,
-      TokenChartInterval,
-      ReturnType<typeof useCurrencyPairing>['currency']?,
-    ]
+  options: Omit<
+    UseQueryOptions<
+      TokenChartData[] | null,
+      Error,
+      TokenChartData[] | null,
+      [
+        'useGetPortfolioTokenChart',
+        string,
+        TokenChartInterval,
+        ReturnType<typeof useCurrencyPairing>['currency']?,
+      ]
+    >,
+    'queryKey' | 'queryFn'
   > = {},
 ) => {
   const {id: tokenId} = usePortfolioTokenDetailParams()
@@ -106,7 +110,7 @@ export const useGetPortfolioTokenChart = (
   >({
     enabled: tokenInfo && isPrimaryToken(tokenInfo.info),
     staleTime: time.halfHour,
-    cacheTime: time.oneHour,
+    gcTime: time.oneHour,
     refetchInterval: time.halfHour,
     queryKey: ['ptPriceHistory', timeInterval],
     queryFn: ptPriceQueryFn,
@@ -127,10 +131,8 @@ export const useGetPortfolioTokenChart = (
       const tickers = ptPriceQuery?.data ?? []
       if (tickers.length === 0) throw new Error('No PT price data')
 
-      const validCurrency =
-        currency === ptTicker
-          ? supportedCurrencies.USD
-          : (currency ?? supportedCurrencies.USD)
+      const validCurrency = (currency ??
+        defaultCurrency) as Portfolio.Currency.Symbol
 
       const initialPrice = tickers[0].prices[validCurrency]
       const records = tickers
@@ -154,7 +156,7 @@ export const useGetPortfolioTokenChart = (
   })
 
   const otherQuery = useQuery({
-    useErrorBoundary: true,
+    throwOnError: true,
     refetchOnMount: false,
     enabled: tokenInfo && !isPrimaryToken(tokenInfo.info),
     ...options,

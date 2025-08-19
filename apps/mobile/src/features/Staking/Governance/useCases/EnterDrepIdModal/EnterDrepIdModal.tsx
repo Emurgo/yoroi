@@ -1,6 +1,7 @@
 import {isNonNullable} from '@yoroi/common'
 import {parseDrepId, useIsValidDRepID} from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
 import {Alert, Linking, Text, View} from 'react-native'
 
@@ -35,7 +36,7 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
       const {hash, type} = parseDrepId(drepId, CardanoMobile)
       onSubmit?.({hash, type, CIP105: !error && drepId.length === 56})
     } catch (e) {
-      Alert.alert(strings.error, strings.invalidDRepId)
+      Alert.alert(strings.global.error, strings.invalidDRepId)
     }
   }
 

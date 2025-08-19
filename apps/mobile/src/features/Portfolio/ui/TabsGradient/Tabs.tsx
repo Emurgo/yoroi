@@ -1,4 +1,6 @@
 import {atoms as a} from '@yoroi/theme'
+
+import {LinearGradient} from 'expo-linear-gradient'
 import * as React from 'react'
 import {
   NativeScrollEvent,
@@ -6,7 +8,6 @@ import {
   ScrollView,
   View,
 } from 'react-native'
-import {LinearGradient} from 'expo-linear-gradient'
 
 export const TabsGradient = ({children}: React.PropsWithChildren) => {
   const [enableStartGradient, setEnableStartGradient] = React.useState(false)

@@ -1,23 +1,25 @@
-import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
+
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import * as React from 'react'
-import {ScrollView, View, Text} from 'react-native'
+import {ScrollView, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {LogoBanner} from '~/ui/LogoBanner/LogoBanner'
-import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
+
 import {ButtonCard} from '../../common/ButtonCard/ButtonCard'
-import {useStrings} from '~/kernel/i18n/useStrings'
+
 // import {SelectHwConnectionModal} from '../RestoreHwWallet/SelectHwConnectionModal'
 
 export const ChooseSetupTypeScreen = () => {
   const {palette: p} = useTheme()
   const strings = useStrings()
   const {walletImplementationChanged, setupTypeChanged} = useSetupWallet()
-  const {openModal} = useModal()
+  // const {openModal} = useModal()
   const {track} = useMetrics()
 
   useFocusEffect(

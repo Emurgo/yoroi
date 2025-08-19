@@ -1,8 +1,9 @@
-import {useIsFocused} from '@react-navigation/native'
 import {atomicBreakdown} from '@yoroi/common'
 import {isPrimaryToken} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
+
+import {useIsFocused} from '@react-navigation/native'
 import * as React from 'react'
 import {
   InteractionManager,
@@ -28,6 +29,7 @@ import {Space} from '~/ui/Space/Space'
 import {TextInput} from '~/ui/TextInput/TextInput'
 import {TokenAmountItem} from '~/ui/TokenAmountItem/TokenAmountItem'
 import {Quantities} from '~/wallets/utils/utils'
+
 import {NoBalance} from './ShowError/NoBalance'
 import {UnableToSpend} from './ShowError/UnableToSpend'
 
@@ -52,13 +54,11 @@ export const EditAmountScreen = () => {
 
   const amount = targets[selectedTargetIndex].entry.amounts[selectedTokenId]
 
-  if (!amount) {
-    // If amount is not found, navigate back to the token selection screen
-    React.useEffect(() => {
+  React.useEffect(() => {
+    if (!amount) {
       navigateTo.selectedTokens()
-    }, [navigateTo])
-    return null
-  }
+    }
+  }, [navigateTo, amount])
 
   const initialQuantity = amount.quantity
   const available =

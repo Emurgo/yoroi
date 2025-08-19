@@ -7,3 +7,5 @@ coverage/
 commitlint.config.js
 bob.config.js
 .release-it.json
+src/connector.js
+__mocks__/

@@ -1,23 +1,25 @@
 import {useCatalyst} from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
 import {InteractionManager, ScrollView} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useCopy} from '~/features/Copy/context/CopyProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useBlockGoBack} from '~/kernel/navigation/hooks'
+import {useBlockGoBack} from '~/kernel/navigation/hooks/useBlockGoBack'
 import {Button} from '~/ui/Button/Button'
 import {Checkbox} from '~/ui/Checkbox/Checkbox'
-import {Actions, Description} from '~/ui/common/components'
 import {ShareQRCodeCard} from '~/ui/ShareQRCodeCard/ShareQRCodeCard'
 import {Space} from '~/ui/Space/Space'
-import {useNavigateTo} from '../CatalystNavigator'
-import {useAllowScreenshot} from '../hooks/useAllowScreenShot'
+
+import {useNavigateTo} from '../../CatalystNavigator'
+import {Actions, Description} from '../../common/components'
 
 export const QrCode = () => {
   useBlockGoBack()
-  useAllowScreenshot()
+  //TODO: REVISIT
+  // useAllowScreenshot()
   const strings = useStrings()
   const [checked, setChecked] = React.useState(false)
   const {votingKeyEncrypted, reset} = useCatalyst()
@@ -66,12 +68,12 @@ export const QrCode = () => {
         <Checkbox
           onChange={setChecked}
           checked={checked}
-          style={[a.align_start]}
+          style={a.align_start}
           text={strings.registerCatalyst.step4QrCheckbox}
         />
       </ScrollView>
 
-      <Actions style={[a.px_lg]}>
+      <Actions style={a.px_lg}>
         <Button
           onPress={onNext}
           title={strings.registerCatalyst.confirm}

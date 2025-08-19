@@ -1,6 +1,8 @@
-import {useTheme} from '@yoroi/theme'
-import React, {memo, useEffect, useMemo, useState} from 'react'
-import {Dimensions, PanResponder} from 'react-native'
+import {atoms as a, useTheme} from '@yoroi/theme'
+
+import {curveNatural} from 'd3-shape'
+import * as React from 'react'
+import {Dimensions, PanResponder, View} from 'react-native'
 import {Circle, G, Line, Rect, Text as SvgText} from 'react-native-svg'
 import {LineChart as SvgLineChart} from 'react-native-svg-charts'
 
@@ -12,10 +14,105 @@ interface Props {
   onValueSelected: (value: number) => void
 }
 
-const TokenChartComponent = ({dataSources = [], onValueSelected}: Props) => {
-  const {atoms: ta, palette: p} = useTheme()
+interface TooltipProps {
+  x: any
+  y: any
+  positionX: number
+  valueList: number[]
+  labelList: string[]
+  dataSize: number
+  palette: any
+}
 
-  const {labelList, valueList, dataSize} = useMemo(() => {
+const Tooltip = ({
+  x,
+  y,
+  positionX,
+  valueList,
+  labelList,
+  dataSize,
+  palette,
+}: TooltipProps) => {
+  if (positionX < 0) {
+    return null
+  }
+
+  const price = valueList[positionX]
+
+  const minPrice = Math.min(...valueList)
+
+  const ttWidth = 112 // Width of tooltip
+  const ttHeight = 34 // Height of tooltip
+  const ttRadius = 8 // Radius of tooltip
+
+  const centerY = y(price)
+  const maxY = y(minPrice)
+
+  const xPosition = x(positionX)
+
+  const minX = x(0)
+  const maxX = x(dataSize)
+
+  let adjustedX = -ttWidth / 2
+  // when hit the start edge of the screen we move the tooltip to the right
+  if (xPosition <= minX + ttWidth) {
+    adjustedX = minX
+  }
+
+  if (xPosition >= maxX - ttWidth) {
+    adjustedX = -ttWidth
+  }
+
+  let adjustedY = centerY + ttHeight / 2
+
+  if (centerY > ttHeight * 2) {
+    adjustedY = centerY - ttHeight * 1.5
+  }
+
+  return (
+    <G x={xPosition} key="tooltip">
+      <G x={x}>
+        {/* Vertical line for tooltip */}
+        <Line
+          y1={centerY}
+          y2={maxY - 5}
+          stroke={palette.primary_500}
+          strokeWidth={2}
+          strokeDasharray={[6, 3]}
+        />
+
+        {/* Dot Circle or tooltip */}
+        <Circle cy={centerY} r={8} fill={palette.primary_500} />
+      </G>
+
+      {/* Tooltip content */}
+      <G x={adjustedX} y={adjustedY}>
+        <Rect
+          y={0}
+          rx={ttRadius}
+          ry={ttRadius}
+          width={ttWidth}
+          height={ttHeight}
+          fill={palette.primary_500}
+        />
+
+        <SvgText
+          x={6}
+          y={ttHeight / 2 + 4}
+          fontSize={12}
+          fill={palette.white_static}
+        >
+          {labelList[positionX]}
+        </SvgText>
+      </G>
+    </G>
+  )
+}
+
+const TokenChartComponent = ({dataSources = [], onValueSelected}: Props) => {
+  const {palette: p} = useTheme()
+
+  const {labelList, valueList, dataSize} = React.useMemo(() => {
     const dataChart = dataSources.reduce(
       (pre, next) => {
         return {
@@ -36,7 +133,7 @@ const TokenChartComponent = ({dataSources = [], onValueSelected}: Props) => {
     }
   }, [dataSources])
 
-  const [positionX, setPositionX] = useState(-1) // The currently selected X coordinate position
+  const [positionX, setPositionX] = React.useState(-1) // The currently selected X coordinate position
 
   const panResponder = PanResponder.create({
     onStartShouldSetPanResponder: () => true,
@@ -84,84 +181,7 @@ const TokenChartComponent = ({dataSources = [], onValueSelected}: Props) => {
     onValueSelected(positionIndex)
   }
 
-  const Tooltip = ({x, y}: any) => {
-    if (positionX < 0) {
-      return null
-    }
-
-    const price = valueList[positionX]
-
-    const minPrice = Math.min(...valueList)
-
-    const ttWidth = 112 // Width of tooltip
-    const ttHeight = 34 // Height of tooltip
-    const ttRadius = 8 // Radius of tooltip
-
-    const centerY = y(price)
-    const maxY = y(minPrice)
-
-    const xPosition = x(positionX)
-
-    const minX = x(0)
-    const maxX = x(dataSize)
-
-    let adjustedX = -ttWidth / 2
-    // when hit the start edge of the screen we move the tooltip to the right
-    if (xPosition <= minX + ttWidth) {
-      adjustedX = minX
-    }
-
-    if (xPosition >= maxX - ttWidth) {
-      adjustedX = -ttWidth
-    }
-
-    let adjustedY = centerY + ttHeight / 2
-
-    if (centerY > ttHeight * 2) {
-      adjustedY = centerY - ttHeight * 1.5
-    }
-
-    return (
-      <G x={xPosition} key="tooltip">
-        <G x={x}>
-          {/* Vertical line for tooltip */}
-          <Line
-            y1={centerY}
-            y2={maxY - 5}
-            stroke={p.primary_500}
-            strokeWidth={2}
-            strokeDasharray={[6, 3]}
-          />
-
-          {/* Dot Circle or tooltip */}
-          <Circle cy={centerY} r={8} fill={p.primary_500} />
-        </G>
-
-        {/* Tooltip content */}
-        <G x={adjustedX} y={adjustedY}>
-          <Rect
-            y={0}
-            rx={ttRadius}
-            ry={ttRadius}
-            width={ttWidth}
-            height={ttHeight}
-            fill={p.primary_500}
-          />
-
-          <SvgText
-            x={6}
-            y={ttHeight / 2 + 4}
-            fontSize={12}
-            fill={p.white_static}
-          >
-            {labelList[positionX]}
-          </SvgText>
-        </G>
-      </G>
-    )
-  }
-
-  useEffect(() => {
+  React.useEffect(() => {
     onValueSelected(dataSize - 1)
   }, [dataSize, onValueSelected])
 
@@ -173,15 +193,24 @@ const TokenChartComponent = ({dataSources = [], onValueSelected}: Props) => {
           data={valueList}
           svg={{stroke: p.primary_500, strokeWidth: 2}}
           contentInset={{top: 16, bottom: 16}}
-          curve={shape.curveNatural}
+          curve={curveNatural}
           animate={true}
           animationDuration={500}
         >
-          <Tooltip />
+          {(props: any) => (
+            <Tooltip
+              {...props}
+              positionX={positionX}
+              valueList={valueList}
+              labelList={labelList}
+              dataSize={dataSize}
+              palette={p}
+            />
+          )}
         </SvgLineChart>
       </View>
     </View>
   )
 }
 
-export const TokenChart = memo(TokenChartComponent)
+export const TokenChart = React.memo(TokenChartComponent)

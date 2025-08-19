@@ -1,6 +1,7 @@
 import {isPrimaryToken} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Explorers} from '@yoroi/types'
+
 import * as React from 'react'
 import {Linking, Text, View} from 'react-native'
 

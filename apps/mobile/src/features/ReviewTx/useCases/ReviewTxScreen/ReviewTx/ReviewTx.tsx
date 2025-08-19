@@ -1,8 +1,9 @@
-import {
-  createMaterialTopTabNavigator,
-  MaterialTopTabBarProps,
-} from '@react-navigation/material-top-tabs'
 import {atoms as a, useTheme} from '@yoroi/theme'
+
+import {
+  MaterialTopTabBarProps,
+  createMaterialTopTabNavigator,
+} from '@react-navigation/material-top-tabs'
 import * as React from 'react'
 import {
   FlatList,
@@ -14,12 +15,13 @@ import {
   ViewStyle,
 } from 'react-native'
 
-import {useStrings} from '~/kernel/i18n/useStrings'
 import {FormattedMetadata, FormattedTx} from '~/features/ReviewTx/common/types'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {ScrollView, useScrollView} from '~/ui/ScrollView/ScrollView'
 import {isEmptyString} from '~/wallets/utils/string'
+
 import {MetadataTab} from '../ReviewTx/Metadata/MetadataTab'
 import {OverviewTab} from '../ReviewTx/Overview/OverviewTab'
 import {UTxOsTab} from '../ReviewTx/UTxOs/UTxOsTab'

@@ -1,5 +1,6 @@
 import {OrderType} from '@yoroi/exchange'
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
 import {Text, TouchableOpacity, View} from 'react-native'
 
@@ -17,7 +18,7 @@ export const ButtonActionGroup = ({
   disabled,
 }: ButtonActionGroupProps) => {
   const handleOnPress = (orderType: OrderType) => onSelect(orderType)
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p} = useTheme()
 
   return (
     <View style={[a.flex_row]}>

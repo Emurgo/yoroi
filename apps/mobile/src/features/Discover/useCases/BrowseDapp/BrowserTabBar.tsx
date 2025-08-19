@@ -1,11 +1,7 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
-import {
-  Text,
-  TouchableOpacity,
-  TouchableOpacityProps,
-  View,
-} from 'react-native'
+import {Text, TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import Share from 'react-native-share'
 import WebView from 'react-native-webview'
@@ -13,10 +9,11 @@ import WebView from 'react-native-webview'
 import {useBrowser} from '~/features/Discover/common/BrowserProvider'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Icon} from '~/ui/Icon'
+
 import {WebViewState} from './WebViewItem'
 
 type Props = {
-  webViewRef: React.RefObject<WebView>
+  webViewRef: React.RefObject<WebView | null>
   webViewState: WebViewState
 }
 export const BrowserTabBar = ({webViewRef, webViewState}: Props) => {
@@ -129,10 +126,15 @@ const TabItem = ({total = 1}: TabItemProps) => {
       <Icon.Square color={p.gray_800} />
 
       <View style={[a.absolute, a.inset_0, a.justify_center, a.align_center]}>
-        <Text style={[{fontWeight: '500', fontSize: 10, lineHeight: 18}, {color: p.gray_800}]}>{total}</Text>
+        <Text
+          style={[
+            {fontWeight: '500', fontSize: 10, lineHeight: 18},
+            {color: p.gray_800},
+          ]}
+        >
+          {total}
+        </Text>
       </View>
     </View>
   )
 }
-
-

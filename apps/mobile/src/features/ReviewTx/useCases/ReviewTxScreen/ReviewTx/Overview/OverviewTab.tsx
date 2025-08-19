@@ -1,5 +1,3 @@
-import {CredKind} from '@emurgo/cross-csl-core'
-import {useQuery} from '@tanstack/react-query'
 import {
   parseBoolean,
   useAsyncStorage,
@@ -8,24 +6,27 @@ import {
 import {Blockies} from '@yoroi/identicon'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Balance, Portfolio} from '@yoroi/types'
+
+import {CredKind} from '@emurgo/cross-csl-core'
+import {useQuery} from '@tanstack/react-query'
 import {Image} from 'expo-image'
 import * as React from 'react'
 import {
   Linking,
   Text,
   TouchableOpacity,
-  useWindowDimensions,
   View,
+  useWindowDimensions,
 } from 'react-native'
 
-import {Operations, useOperations} from '~/features/ReviewTx/common/operations'
 import {TokenItem} from '~/features/ReviewTx/common/TokenItem'
+import {WalletBalance} from '~/features/ReviewTx/common/WalletBalance'
+import {Operations, useOperations} from '~/features/ReviewTx/common/operations'
 import {
   FormattedOutput,
   FormattedOutputs,
   FormattedTx,
 } from '~/features/ReviewTx/common/types'
-import {WalletBalance} from '~/features/ReviewTx/common/WalletBalance'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
@@ -39,6 +40,7 @@ import {Space} from '~/ui/Space/Space'
 import {WarningBanner} from '~/ui/WarningBanner/WarningBanner'
 import {formatTokenWithText} from '~/wallets/utils/format'
 import {Quantities} from '~/wallets/utils/utils'
+
 import {Accordion} from '../../../../common/Accordion'
 import {OperationsNoticeIcon} from '../../../../illustrations/OperationsNoticeIcon'
 

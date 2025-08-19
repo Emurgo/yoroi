@@ -1,5 +1,6 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {App} from '@yoroi/types'
+
 import * as React from 'react'
 import {ScrollView, TextProps, View} from 'react-native'
 

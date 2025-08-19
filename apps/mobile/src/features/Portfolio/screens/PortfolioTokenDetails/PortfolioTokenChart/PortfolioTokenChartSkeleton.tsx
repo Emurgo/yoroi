@@ -1,4 +1,5 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
 import {View} from 'react-native'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
@@ -6,7 +7,7 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 import {ChartPlaceholder} from './ChartPlaceholder'
 
 export const PortfolioTokenChartSkeleton = () => {
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p} = useTheme()
   return (
     <View style={[a.flex_col]}>
       <View style={[a.flex_row, a.justify_between, a.align_center]}>

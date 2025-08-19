@@ -1,11 +1,11 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
 import {Platform, Text, View} from 'react-native'
 
-import {useModal} from '~/ui/Modal/ModalContext'
-
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button, ButtonType} from '~/ui/Button/Button'
+import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
 
 type Props = {
@@ -16,7 +16,7 @@ type Props = {
 export const AskConfirmation = ({address, url, code}: Props) => {
   const strings = useStrings()
   const domain = getDomain(url)
-  const {atoms: ta, palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
 
   return (
     <View style={[a.flex_1, a.px_lg]}>

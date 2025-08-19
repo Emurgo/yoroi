@@ -1,5 +1,6 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Notifications} from '@yoroi/types'
+
 import * as React from 'react'
 import {View} from 'react-native'
 import Svg, {ClipPath, Defs, G, Path, Rect} from 'react-native-svg'
@@ -12,6 +13,7 @@ import {IconProps} from '~/ui/Icon/type'
 import {NotificationItem} from '~/ui/NotificationItem/NotificationItem'
 import {SwipeOutWrapper} from '~/ui/SwipeOutWrapper/SwipeOutWrapper'
 import {TransactionReceivedNotificationPopup} from '~/ui/TransactionReceivedNotificationPopup/TransactionReceivedNotificationPopup'
+
 import {BannerIds} from './banners'
 
 type Props = {
@@ -31,7 +33,6 @@ export const NotificationPopup = ({
   const strings = useStrings()
 
   const {track} = useMetrics()
-  const {palette: p} = useTheme()
 
   React.useEffect(() => {
     if (event.trigger === Notifications.Trigger.Push) {

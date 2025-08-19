@@ -1,6 +1,6 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
-import {Swap} from '@yoroi/types'
-import {NumberLocale} from '@yoroi/types/lib/typescript/intl/numbers'
+import {Numbers, Swap} from '@yoroi/types'
+
 import BigNumber from 'bignumber.js'
 import * as React from 'react'
 import {ScrollView, Text, TouchableOpacity, View} from 'react-native'
@@ -262,20 +262,20 @@ export const SwapSettings = () => {
   )
 }
 
-const validateSlippage = (text: string, format: NumberLocale) => {
+const validateSlippage = (text: string, format: Numbers.Locale) => {
   const slippage = parseNumber(text, format)
 
   return !isNaN(slippage) && slippage >= 0 && slippage <= 75
 }
 
-const parseNumber = (text: string, format: NumberLocale) => {
+const parseNumber = (text: string, format: Numbers.Locale) => {
   const [, quantity] = Quantities.parseFromText(text, MAX_DECIMALS, format)
   return Number(Quantities.denominated(quantity, MAX_DECIMALS))
 }
 
 const getChoiceBySlippage = (
   slippage: number,
-  format: NumberLocale,
+  format: Numbers.Locale,
 ): Choice => {
   return (
     CHOICES.find((choice) => choice.value === slippage) ?? {

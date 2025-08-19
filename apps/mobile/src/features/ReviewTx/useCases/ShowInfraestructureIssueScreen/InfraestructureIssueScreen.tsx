@@ -1,19 +1,21 @@
-import {useNavigation} from '@react-navigation/native'
 import {atoms as a, useTheme} from '@yoroi/theme'
+
+import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useBlockGoBack, useWalletNavigation} from '~/kernel/navigation/hooks'
+import {useBlockGoBack} from '~/kernel/navigation/hooks/useBlockGoBack'
+import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Button} from '~/ui/Button/Button'
+import {InfraestructureIssueIcon} from '~/ui/InfraestructureIssueIcon/InfraestructureIssueIcon'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
-import {InfraestructureIssueIcon} from '../illustrations/InfraestructureIssueIcon'
 
 export const InfraestructureIssueScreen = () => {
   useBlockGoBack()
   const strings = useStrings()
-  const {palette: p} = useTheme()
+  const {atoms: ta, palette: p} = useTheme()
   const {resetToTxHistory} = useWalletNavigation()
   const navigation = useNavigation()
 
@@ -24,7 +26,7 @@ export const InfraestructureIssueScreen = () => {
   return (
     <SafeArea
       style={[
-        {backgroundColor: p.bg_color_max},
+        ta.bg_color_max,
         a.p_lg,
         a.flex_1,
         a.align_center,
@@ -38,12 +40,7 @@ export const InfraestructureIssueScreen = () => {
       <Space.Height.lg />
 
       <Text
-        style={[
-          {color: p.gray_max},
-          a.heading_3_medium,
-          a.px_sm,
-          a.text_center,
-        ]}
+        style={[ta.text_gray_max, a.heading_3_medium, a.px_sm, a.text_center]}
       >
         {strings.txReview.infraestructureIssueTitle}
       </Text>
@@ -58,13 +55,13 @@ export const InfraestructureIssueScreen = () => {
         <Button
           onPress={resetToTxHistory}
           title={strings.txReview.infraestructureIssueButton}
-          style={[a.px_lg]}
+          style={a.px_lg}
         />
       </Actions>
     </SafeArea>
   )
 }
 
-const Actions = ({children}: {children: React.ReactNode}) => {
-  return <View style={{alignSelf: 'stretch'}}>{children}</View>
+const Actions = ({children}: React.PropsWithChildren) => {
+  return <View style={a.self_stretch}>{children}</View>
 }

@@ -1,4 +1,5 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
@@ -7,11 +8,12 @@ import {Button} from '~/ui/Button/Button'
 import {FailedTxIcon} from '~/ui/FailedTxIcon/FailedTxIcon'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
+
 import {useNavigateTo} from '../../common/navigation'
 
 export const FailedTxScreen = () => {
   const strings = useStrings()
-  const {palette: p} = useTheme()
+  const {palette: p, atoms: ta} = useTheme()
   const navigationTo = useNavigateTo()
 
   return (
@@ -21,7 +23,7 @@ export const FailedTxScreen = () => {
         a.flex_1,
         a.align_center,
         a.justify_center,
-        {backgroundColor: p.bg_color_max},
+        ta.bg_color_max,
       ]}
     >
       <Space.Height.xl />
@@ -40,7 +42,7 @@ export const FailedTxScreen = () => {
           {color: p.gray_max},
         ]}
       >
-        {strings.failedTxTitle}
+        {strings.swap.failedTxTitle}
       </Text>
 
       <Text
@@ -50,16 +52,16 @@ export const FailedTxScreen = () => {
           {maxWidth: 330, color: p.gray_600},
         ]}
       >
-        {strings.failedTxText}
+        {strings.swap.failedTxText}
       </Text>
 
-      <View style={[{flex: 1}]} />
+      <View style={a.flex_1} />
 
       <Actions>
         <Button
           onPress={navigationTo.startSwap}
-          title={strings.failedTxButton}
-          style={[a.px_lg]}
+          title={strings.swap.failedTxButton}
+          style={a.px_lg}
         />
       </Actions>
     </SafeArea>
@@ -70,11 +72,7 @@ const Actions = ({children}: {children: React.ReactNode}) => {
   const {palette: p} = useTheme()
 
   return (
-    <View
-      style={[
-        {alignSelf: 'stretch', borderTopWidth: 1, borderTopColor: p.gray_200},
-      ]}
-    >
+    <View style={[a.border_t, a.self_stretch, {borderTopColor: p.gray_200}]}>
       {children}
     </View>
   )

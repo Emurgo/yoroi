@@ -1,5 +1,6 @@
 import {useDappList} from '@yoroi/dapp-connector'
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
 import {FlatList, View} from 'react-native'
 
@@ -14,6 +15,7 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {SimpleTab} from '~/ui/SimpleTab/SimpleTab'
 import {Space} from '~/ui/Space/Space'
+
 import {CountDAppsAvailable} from './CountDAppsAvailable/CountDAppsAvailable'
 import {CountDAppsConnected} from './CountDAppsConnected/CountDAppsConnected'
 import {DAppListItem} from './DAppListItem/DAppListItem'

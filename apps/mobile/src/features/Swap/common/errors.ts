@@ -4,10 +4,11 @@ import {SubmitTxInsufficientCollateralError} from '~/wallets/cardano/api/errors'
 
 export const getErrorMessage = (
   error: unknown,
-  strings: Record<
-    'wrongPasswordMessage' | 'error' | 'missingCollateral',
-    string
-  >,
+  strings: {
+    wrongPasswordMessage: string
+    missingCollateral: string
+    error: string
+  },
 ) => {
   if (error instanceof App.Errors.WrongPassword) {
     return strings.wrongPasswordMessage

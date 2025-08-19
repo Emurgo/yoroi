@@ -1,7 +1,9 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
 import {ScrollView} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
+
 import {TermsOfService} from '~/features/Legal/ui/TermsOfService/TermsOfService'
 import {useLanguage} from '~/kernel/i18n/LanguageProvider'
 

@@ -1,4 +1,5 @@
 import {Notifications} from '@yoroi/types'
+
 import {Subject} from 'rxjs'
 
 /**

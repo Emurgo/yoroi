@@ -1,13 +1,14 @@
 import {useExchange} from '@yoroi/exchange'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Chain} from '@yoroi/types'
+
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
+import {PreprodNoticeIllustration} from '~/features/Exchange/illustrations/PreprodNoticeIllustration'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Space} from '~/ui/Space/Space'
-import {PreprodNoticeIllustration} from '../illustrations/PreprodNoticeIllustration'
 
 export const ShowPreprodNotice = () => {
   const strings = useStrings()
@@ -31,7 +32,7 @@ export const ShowPreprodNotice = () => {
         <Text
           style={[a.heading_3_medium, a.px_sm, a.text_center, ta.el_gray_max]}
         >
-          {strings.createOrderPreprodNoticeTitle}
+          {strings.exchange.createOrderPreprodNoticeTitle}
         </Text>
 
         <Text
@@ -42,7 +43,7 @@ export const ShowPreprodNotice = () => {
             {maxWidth: 300},
           ]}
         >
-          {strings.createOrderPreprodNoticeText}
+          {strings.exchange.createOrderPreprodNoticeText}
         </Text>
       </View>
     )

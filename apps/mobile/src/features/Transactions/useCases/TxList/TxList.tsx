@@ -1,13 +1,15 @@
-import {FlashList, FlashListProps} from '@shopify/flash-list'
 import {atoms as a} from '@yoroi/theme'
+
+import {FlashList, FlashListProps} from '@shopify/flash-list'
 import _ from 'lodash'
 import * as React from 'react'
 import {View} from 'react-native'
 
+import {useTransactionInfos} from '~/features/Transactions/hooks/useTransactionInfos'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {Space} from '~/ui/Space/Space'
-import {useTransactionInfos} from '~/features/Transactions/hooks/useTransactionInfos'
 import {TransactionInfo} from '~/wallets/types/other'
+
 import {useTxFilter} from './TxFilterProvider'
 import {TxListItem} from './TxListItem'
 

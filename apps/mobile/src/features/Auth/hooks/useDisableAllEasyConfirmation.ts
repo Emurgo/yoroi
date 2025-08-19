@@ -1,4 +1,4 @@
-import {useMutation, UseMutationOptions} from '@tanstack/react-query'
+import {UseMutationOptions, useMutation} from '@tanstack/react-query'
 
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 

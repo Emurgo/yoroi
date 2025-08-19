@@ -1,5 +1,6 @@
 import {amountBreakdown, infoExtractName} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
 import {
   Image,
@@ -12,8 +13,8 @@ import {
 } from 'react-native'
 
 import {IOpenOrders} from '~/features/Portfolio/common/hooks/useGetOpenOrders'
-import {useStrings} from '~/kernel/i18n/useStrings'
 import {AssetLogo} from '~/features/Portfolio/ui/AssetLogo/AssetLogo'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {PairedBalance} from '~/ui/PairedBalance/PairedBalance'
 import {TokenInfoIcon} from '~/ui/TokenInfoIcon/TokenInfoIcon'
 
@@ -78,7 +79,11 @@ export const OpenOrderModal = ({tokenInfo, splitTokenSymbol}: Props) => {
 
           <PairedBalance
             amount={firstToken}
-            textStyle={[a.body_3_sm_regular, a.text_right, {color: p.gray_600}]}
+            textStyle={{
+              ...a.body_3_sm_regular,
+              ...a.text_right,
+              color: p.gray_600,
+            }}
           />
         </View>
       </InfoGroup>

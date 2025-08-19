@@ -4,11 +4,13 @@ import {
   Notifications as NotificationTypes,
   Notifications as YoroiNotifications,
 } from '@yoroi/types'
+
 import * as Notifications from 'expo-notifications'
 import * as React from 'react'
 
 import {logger} from '~/kernel/logger/logger'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
+
 import {pushNotificationsManager} from './notification-manager'
 import {parseNotificationId} from './notifications'
 import {usePrimaryTokenPriceChangedNotification} from './primary-token-price-changed-notification'
@@ -69,8 +71,7 @@ const initPushNotifications = (
   )
 
   const responseListener =
-    Notifications.addNotificationResponseReceivedListener((response) => {
-      const {title, body, data} = response.notification.request.content
+    Notifications.addNotificationResponseReceivedListener((_response) => {
       const id = parseNotificationId(Date.now().toString())
       triggerNotificationAction({
         manager: pushNotificationsManager,

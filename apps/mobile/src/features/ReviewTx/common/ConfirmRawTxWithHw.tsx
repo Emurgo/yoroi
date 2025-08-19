@@ -1,17 +1,18 @@
-import {useMutation, UseMutationOptions} from '@tanstack/react-query'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {HW} from '@yoroi/types'
+
+import {UseMutationOptions, useMutation} from '@tanstack/react-query'
 import React, {useState} from 'react'
 import {ScrollView, View} from 'react-native'
 
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {ActivityIndicator} from '~/ui/ActivityIndicator/ActivityIndicator'
 import {LedgerConnect} from '~/ui/LedgerConnect/LedgerConnect'
 import {LedgerTransportSwitch} from '~/ui/LedgerTransportSwitch/LedgerTransportSwitch'
 import {Text} from '~/ui/Text/Text'
 import {withBLE, withUSB} from '~/wallets/hw/hwWallet'
-import {useStrings} from '~/kernel/i18n/useStrings'
 
 type TransportType = 'USB' | 'BLE'
 type Step = 'select-transport' | 'connect-transport' | 'loading'
@@ -83,7 +84,7 @@ export const ConfirmRawTxWithHW = ({onSuccess, cbor}: Props) => {
           {color: p.text_gray_medium},
         ]}
       >
-        {strings.continueOnLedger}
+        {strings.ledgerMessages.continueOnLedger}
       </Text>
     </View>
   )
@@ -99,28 +100,7 @@ export const useSignRawTxWithHw = (
   const {wallet} = useSelectedWallet()
   const mutation = useMutation({
     ...options,
-    useErrorBoundary: true,
-    mutationFn: async ({cbor, useUSB, hwDeviceInfo}) => {
-      await wallet.signRawTxWithLedger(cbor, useUSB, hwDeviceInfo)
-    },
-  })
-  return {
-    ...mutation,
-    signRawWithHw: mutation.mutate,
-  }
-}
-
-export const useSignRawTxWithHw = (
-  options?: UseMutationOptions<
-    void,
-    Error,
-    {cbor: string; useUSB: boolean; hwDeviceInfo: HW.DeviceInfo}
-  >,
-) => {
-  const {wallet} = useSelectedWallet()
-  const mutation = useMutation({
-    ...options,
-    useErrorBoundary: true,
+    throwOnError: true,
     mutationFn: async ({cbor, useUSB, hwDeviceInfo}) => {
       await wallet.signRawTxWithLedger(cbor, useUSB, hwDeviceInfo)
     },

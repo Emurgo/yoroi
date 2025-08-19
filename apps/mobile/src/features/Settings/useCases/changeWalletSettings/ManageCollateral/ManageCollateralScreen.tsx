@@ -1,6 +1,7 @@
-import {useMutation} from '@tanstack/react-query'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
+
+import {useMutation} from '@tanstack/react-query'
 import BigNumber from 'bignumber.js'
 import * as React from 'react'
 import {
@@ -9,9 +10,9 @@ import {
   ScrollView,
   TouchableOpacity,
   TouchableOpacityProps,
-  useWindowDimensions,
   View,
   ViewProps,
+  useWindowDimensions,
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
@@ -34,10 +35,11 @@ import {useSetCollateralId} from '~/wallets/cardano/utxoManager/useSetCollateral
 import {collateralConfig, utxosMaker} from '~/wallets/cardano/utxoManager/utxos'
 import {RawUtxo} from '~/wallets/types/other'
 import {YoroiEntry, YoroiSignedTx} from '~/wallets/types/yoroi'
-import {Amounts, asQuantity, Quantities} from '~/wallets/utils/utils'
+import {Amounts, Quantities, asQuantity} from '~/wallets/utils/utils'
+
 import {CollateralInfoModal} from './CollateralInfoModal'
-import {createCollateralEntry} from './helpers'
 import {InitialCollateralInfoModal} from './InitialCollateralInfoModal'
+import {createCollateralEntry} from './helpers'
 
 export const ManageCollateralScreen = () => {
   const {atoms: ta} = useTheme()
@@ -257,7 +259,6 @@ type ActionableAmountProps = {
   disabled?: boolean
 }
 const ActionableAmount = ({
-  amount,
   onRemove,
   collateralId,
   disabled,
@@ -282,9 +283,9 @@ const ActionableAmount = ({
   )
 }
 
-const Left = ({style, ...props}: ViewProps) => (
-  <View style={[style, {flex: 1}]} {...props} />
-)
+// const Left = ({style, ...props}: ViewProps) => (
+//   <View style={[style, {flex: 1}]} {...props} />
+// )
 const Right = ({style, ...props}: ViewProps) => (
   <View style={[style, a.pl_lg]} {...props} />
 )

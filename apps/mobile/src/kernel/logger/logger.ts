@@ -1,7 +1,7 @@
-import {freeze} from 'immer'
-
 import {numberReplacer} from '@yoroi/common'
 import {App} from '@yoroi/types'
+
+import {freeze} from 'immer'
 
 class Logger implements App.Logger.Manager {
   static readonly trailLimit = 500

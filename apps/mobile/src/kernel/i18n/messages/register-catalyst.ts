@@ -97,4 +97,4 @@ export const registerCatalystMessages = defineMessages({
     id: 'components.catalyst.step4.qrCheckbox',
     defaultMessage: '!!!Step 4 QR Checkbox',
   },
-}) 
+})

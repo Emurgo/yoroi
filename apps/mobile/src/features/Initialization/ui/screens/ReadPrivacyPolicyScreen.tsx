@@ -5,7 +5,6 @@ import {ScrollView} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {PrivacyPolicy} from '~/features/Legal/ui/PrivacyPolicy/PrivacyPolicy'
-
 import {useLanguage} from '~/kernel/i18n/LanguageProvider'
 
 export const ReadPrivacyPolicyScreen = () => {

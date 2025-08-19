@@ -1,4 +1,5 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
 import {Text, View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
@@ -70,5 +71,3 @@ export const BrowserTabsBar = () => {
     </View>
   )
 }
-
-

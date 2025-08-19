@@ -5,7 +5,7 @@ import {
 } from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
-import {PortfolioTokenAmount} from '@yoroi/types/lib/typescript/portfolio/amount'
+
 import * as React from 'react'
 import {Text, TouchableOpacity, View} from 'react-native'
 
@@ -16,17 +16,17 @@ import {
 import {useNavigateTo} from '~/features/Portfolio/common/hooks/useNavigateTo'
 import {usePortfolioTokenActivity} from '~/features/Portfolio/context/PortfolioTokenActivityProvider'
 import {useCurrencyPairing} from '~/features/Settings/useCases/changeAppSettings/Currency/CurrencyContext'
-import {usePrivacyMode} from '~/features/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
+import {usePrivacyMode} from '~/features/Settings/useCases/changeAppSettings/PrivacyMode/usePrivacyMode'
 import {PairedBalance} from '~/ui/PairedBalance/PairedBalance'
 import {PnlTag} from '~/ui/PnlTag/PnlTag'
 import {Space} from '~/ui/Space/Space'
 import {TokenInfoIcon} from '~/ui/TokenInfoIcon/TokenInfoIcon'
 
 type Props = {
-  tokenInfo: PortfolioTokenAmount
+  tokenInfo: Portfolio.Token.Amount
 }
 export const DashboardTokenItem = ({tokenInfo}: Props) => {
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p} = useTheme()
   const navigationTo = useNavigateTo()
   const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
   const formattedQuantity =
@@ -99,7 +99,7 @@ export const DashboardTokenItem = ({tokenInfo}: Props) => {
 }
 
 const TokenInfo = ({info}: {info: Portfolio.Token.Info}) => {
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p} = useTheme()
   const name = infoExtractName(info)
   const isPrimary = isPrimaryToken(info)
   const detail = isPrimary ? info.description : info.fingerprint

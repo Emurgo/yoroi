@@ -1,11 +1,12 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
+
 import * as React from 'react'
 import {Text, TouchableOpacity, useWindowDimensions} from 'react-native'
 
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {TokenDetails} from '~/ui/TokenDetails/TokenDetails'
-import {useStrings} from '~/kernel/i18n/useStrings'
 
 export const TokenItem = ({
   tokenInfo,
@@ -25,7 +26,7 @@ export const TokenItem = ({
 
   const handleShowTokenDetails = () => {
     openModal({
-      title: strings.txReview.tokenDetailsTitle,
+      title: strings.txReview.tokenDetails.title,
       content: <TokenDetails tokenInfo={tokenInfo} />,
       height: windowHeight * 0.8,
     })

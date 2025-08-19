@@ -1,10 +1,11 @@
-import {walletChecksum} from '@emurgo/cip4-js'
-import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useAsyncStorage} from '@yoroi/common'
 import {Blockies} from '@yoroi/identicon'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Api, Wallet} from '@yoroi/types'
+
+import {walletChecksum} from '@emurgo/cip4-js'
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 import {
   InteractionManager,
@@ -13,8 +14,8 @@ import {
   ScrollView,
   Text,
   TouchableOpacity,
-  useWindowDimensions,
   View,
+  useWindowDimensions,
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
@@ -41,8 +42,8 @@ import {StepperProgress} from '~/ui/StepperProgress/StepperProgress'
 import {TextInput} from '~/ui/TextInput/TextInput'
 import {isEmptyString} from '~/wallets/utils/string'
 import {
-  getWalletNameError,
   REQUIRED_PASSWORD_LENGTH,
+  getWalletNameError,
   validatePassword,
 } from '~/wallets/utils/validators'
 
@@ -290,7 +291,9 @@ export const RestoreWalletDetailsScreen = () => {
             value={name}
             onChangeText={(walletName: string) => setName(walletName)}
             errorText={
-              !isEmptyString(walletNameErrorText) && !isPending
+              !isEmptyString(walletNameErrorText) &&
+              walletNameErrorText &&
+              !isPending
                 ? walletNameErrorText
                 : undefined
             }

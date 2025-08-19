@@ -1,5 +1,6 @@
 import {useCatalyst} from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import cryptoRandomString from 'crypto-random-string'
 import * as React from 'react'
 import {useIntl} from 'react-intl'
@@ -16,16 +17,17 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import appstoreBadge from '~/assets/img/app-store-badge.png'
 import playstoreBadge from '~/assets/img/google-play-badge.png'
-import {useCatalystCurrentFund} from '~/features/Discover/common/useCatalystCurrentFund'
-import {useNavigateTo} from '~/features/RegisterCatalyst/common/navigation'
 import {useStakingInfo} from '~/features/Staking/hooks/useStakingInfo'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
 import {CatalystStep1} from '~/ui/CatalystStep1Illustration/CatalystStep1Illustration'
-import {Actions, Row, Stepper} from '~/ui/common/components'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
+
+import {useNavigateTo} from '../../CatalystNavigator'
+import {Actions, Row, Stepper} from '../../common/components'
+import {useCatalystCurrentFund} from '../../common/hooks'
 
 export const DownloadCatalystAppScreen = () => {
   const strings = useStrings()
@@ -76,11 +78,19 @@ export const DownloadCatalystAppScreen = () => {
     strings.registerCatalyst.confirm,
   ])
 
-  const fundName = fund.info.fundName
-  const registrationStart = `${formatDate(fund.info.snapshotStart)}: ${strings.registerCatalyst.snapshotStart}`
-  const votingStart = `${formatDate(fund.info.votingStart)}: ${strings.registerCatalyst.votingStart}`
-  const votingEnd = `${formatDate(fund.info.votingEnd)}: ${strings.registerCatalyst.votingEnd}`
-  const votingResults = `${formatDate(fund.info.tallyingEnd)}: ${strings.registerCatalyst.votingResults}`
+  const fundName = fund?.info.fundName
+  const registrationStart = fund?.info.snapshotStart
+    ? `${formatDate(fund?.info.snapshotStart)}: ${strings.registerCatalyst.snapshotStart}`
+    : ''
+  const votingStart = fund?.info.votingStart
+    ? `${formatDate(fund.info.votingStart)}: ${strings.registerCatalyst.votingStart}`
+    : ''
+  const votingEnd = fund?.info.votingEnd
+    ? `${formatDate(fund.info.votingEnd)}: ${strings.registerCatalyst.votingEnd}`
+    : ''
+  const votingResults = fund?.info.tallyingEnd
+    ? `${formatDate(fund.info.tallyingEnd)}: ${strings.registerCatalyst.votingResults}`
+    : ''
 
   return (
     <SafeAreaView

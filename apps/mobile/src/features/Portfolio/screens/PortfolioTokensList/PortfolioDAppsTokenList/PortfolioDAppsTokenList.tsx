@@ -1,5 +1,6 @@
 import {infoExtractName} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
 import {ScrollView, View} from 'react-native'
 
@@ -16,12 +17,13 @@ import {
   PortfolioDappsTab,
   usePortfolio,
 } from '~/features/Portfolio/context/PortfolioProvider'
+import {useSearch} from '~/features/Search/SearchContext'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Line} from '~/ui/Line/Line'
 import {Space} from '~/ui/Space/Space'
 import {TabPanel} from '~/ui/Tabs'
-import {useSearch} from '~/features/Search/SearchContext'
+
 import {TotalTokensValue} from '../TotalTokensValue/TotalTokensValue'
 import {LendAndBorrowTab} from './LendAndBorrowTab'
 import {LiquidityPoolTab} from './LiquidityPoolTab'

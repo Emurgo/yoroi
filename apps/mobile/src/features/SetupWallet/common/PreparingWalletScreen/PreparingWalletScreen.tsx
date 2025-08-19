@@ -1,14 +1,15 @@
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
 import {Text} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {logger} from '~/kernel/logger/logger'
 // import {useLaunchWalletAfterSyncing} from '~/features/WalletManager/hooks/useLaunchWalletAfterSyncing'
 // import {useSyncTemporarilyPaused} from '~/features/WalletManager/hooks/useSyncTemporarilyPaused'
-import {isEmptyString} from '~/wallets/utils/string'
 import {useStrings} from '~/kernel/i18n/useStrings'
+import {logger} from '~/kernel/logger/logger'
+import {isEmptyString} from '~/wallets/utils/string'
 
 /**
  * It requests the global syncing to stop on mounting to favor the sync of a specific wallet

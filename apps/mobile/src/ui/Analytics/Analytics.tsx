@@ -1,7 +1,7 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
-import {Text, TouchableOpacity, useWindowDimensions, View} from 'react-native'
+import {Text, TouchableOpacity, View, useWindowDimensions} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
 import {useBold} from '~/hooks/useBold'
@@ -10,10 +10,10 @@ import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Space} from '~/ui/Space/Space'
 
+import {Icon} from '../../ui/Icon'
 import {SettingsSwitch} from '../SettingsSwitch/SettingsSwitch'
 import {YoroiLogo} from '../YoroiLogo/YoroiLogo'
 import {AnalyticsImage} from './AnalyticsImage'
-import { Icon } from '../../ui/Icon'
 
 type Props = {
   type: 'notice' | 'settings'
@@ -55,10 +55,10 @@ const Notice = ({
   }, [])
 
   return (
-    <View style={{flex: 1, backgroundColor: p.bg_color_max}}>
+    <View style={[a.flex_1, ta.bg_color_max]}>
       <ScrollView
         bounces={false}
-        style={{flex: 1}}
+        style={[a.flex_1]}
         ref={scrollViewRef}
         persistentScrollbar={true}
         showsVerticalScrollIndicator={true}
@@ -121,13 +121,12 @@ const Notice = ({
 }
 
 const Settings = ({onReadMore}: {onReadMore?: () => void}) => {
-  const strings = useStrings()
   const metrics = useMetrics()
-  const {atoms: ta, palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
 
   return (
-    <View style={{flex: 1, backgroundColor: p.bg_color_max}}>
-      <View style={{flex: 1, paddingHorizontal: 16}}>
+    <View style={[a.flex_1, ta.bg_color_max]}>
+      <View style={[a.flex_1, a.px_lg]}>
         <CommonContent onReadMore={onReadMore} />
 
         <Space.Height.lg />
@@ -157,7 +156,7 @@ const CommonContent = ({
   showLogo?: boolean
 }) => {
   const strings = useStrings()
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p, atoms: ta} = useTheme()
   const bold = useBold({style: a.body_1_lg_medium})
 
   const list = [
@@ -203,21 +202,12 @@ const CommonContent = ({
         </Text>
 
         <Space.Height.lg />
-
       </View>
 
       <View style={[a.gap_xs]}>
         {list.map(({icon, key}) => (
-          <View
-            key={key}
-            style={[
-              a.flex_row,
-              a.align_center,  
-            ]}
-          >
-            <View style={[a.pr_sm]}> 
-              {icon}
-            </View>
+          <View key={key} style={[a.flex_row, a.align_center]}>
+            <View style={[a.pr_sm]}>{icon}</View>
 
             <Text style={[a.body_1_lg_regular]}>
               {key === 'private' || key === 'noip' || key === 'nosell'

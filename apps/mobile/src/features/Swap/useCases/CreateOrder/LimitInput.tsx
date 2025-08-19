@@ -1,18 +1,16 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
 import {Text, TextInput, View} from 'react-native'
 
 import {undefinedToken} from '~/features/Swap/common/constants'
-import {useStrings} from '~/kernel/i18n/useStrings'
 import {useSwap} from '~/features/Swap/common/useSwap'
-
-const BORDER_SIZE = 1
+import {useStrings} from '~/kernel/i18n/useStrings'
 
 export const LimitInput = () => {
   const strings = useStrings()
   const [isFocused, setIsFocused] = React.useState(false)
-  const {palette: p} = useTheme()
-  const {isDark} = useTheme()
+  const {palette: p, atoms: ta, isDark} = useTheme()
 
   const swapForm = useSwap()
   const tokenInInfo = swapForm.tokenInfos.get(
@@ -26,13 +24,13 @@ export const LimitInput = () => {
     <>
       <View
         style={[
+          a.rounded_sm,
+          a.w_full,
+          a.pl_lg,
+          a.pr_sm,
+          a.border,
           {
-            borderRadius: 8,
-            borderWidth: BORDER_SIZE,
-            width: '100%',
             height: 56,
-            paddingLeft: 16,
-            paddingRight: 8,
             borderColor: p.bg_color_min,
           },
           disabled && {backgroundColor: p.gray_50},
@@ -41,30 +39,21 @@ export const LimitInput = () => {
       >
         <Text
           style={[
+            a.absolute,
+            ta.bg_color_max,
             {
-              position: 'absolute',
               top: -7,
               left: 10,
               paddingHorizontal: 5,
               fontSize: 12,
-              backgroundColor: p.bg_color_max,
               color: p.gray_900,
             },
           ]}
         >
-          {strings.limitPrice}
+          {strings.swap.limitPrice}
         </Text>
 
-        <View
-          style={[
-            {
-              display: 'flex',
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              position: 'relative',
-            },
-          ]}
-        >
+        <View style={[a.flex_row, a.flex, a.justify_between, a.relative]}>
           <TextInput
             keyboardType="numeric"
             autoComplete="off"
@@ -94,15 +83,15 @@ export const LimitInput = () => {
 
           <View
             style={[
+              a.flex,
+              a.align_center,
+              a.justify_center,
+              a.pl_sm,
+              a.absolute,
               {
-                position: 'absolute',
                 top: 0,
                 right: 8,
-                paddingLeft: 8,
-                height: 56 - BORDER_SIZE * 2,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
+                height: 56 - 1 * 2,
               },
             ]}
           >

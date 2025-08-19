@@ -1,17 +1,18 @@
 import {useLinks} from '@yoroi/links'
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
 import {ScrollView, Text, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
-import {useStrings} from '~/kernel/i18n/useStrings'
 
 export const AskToOpenWalletScreen = () => {
   const strings = useStrings()
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p} = useTheme()
   const {closeModal} = useModal()
   const {actionFinished} = useLinks()
 
@@ -39,12 +40,12 @@ export const AskToOpenWalletScreen = () => {
           size="S"
           type={ButtonType.Secondary}
           onPress={handleOnCancel}
-          title={strings.links.cancel}
+          title={strings.global.cancel}
         />
 
         <Space.Width.md />
 
-        <Button size="S" onPress={closeModal} title={strings.links.ok} />
+        <Button size="S" onPress={closeModal} title={strings.global.ok} />
       </Actions>
     </SafeAreaView>
   )

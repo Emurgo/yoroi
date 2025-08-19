@@ -1,14 +1,11 @@
-import {atoms as a, SpacingSize, useTheme} from '@yoroi/theme'
+import {SpacingSize, atoms as a, useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
 import {View} from 'react-native'
 
 import {Space} from '~/ui/Space/Space'
 
-export const Divider = ({
-  verticalSpace = 'none',
-}: {
-  verticalSpace?: SpacingSize
-}) => {
+export const Divider = ({}: {verticalSpace?: SpacingSize}) => {
   const {palette: p} = useTheme()
   return (
     <>

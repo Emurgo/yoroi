@@ -1,7 +1,8 @@
 import {isString} from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
-import React, {forwardRef, ReactNode} from 'react'
-import {type ViewProps, Text, TouchableOpacity, View} from 'react-native'
+
+import React, {ReactNode, forwardRef} from 'react'
+import {Text, TouchableOpacity, View, type ViewProps} from 'react-native'
 
 import {Icon} from '../Icon'
 
@@ -17,16 +18,24 @@ interface AccordionProps extends ViewProps {
 }
 
 export const Accordion = forwardRef<View, AccordionProps>((props, ref) => {
-  const {style, label, onChange, wrapperStyle, expanded = false, children, ...etc} = props
+  const {
+    style,
+    label,
+    onChange,
+    wrapperStyle,
+    expanded = false,
+    children,
+    ...etc
+  } = props
 
-  const {atoms: ta, palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
 
   const handleToggle = () => {
     onChange(!expanded)
   }
 
   return (
-    <View ref={ref} style={[{backgroundColor: p.bg_color_max}, a.flex_1, style]} {...etc}>
+    <View ref={ref} style={[ta.bg_color_max, a.flex_1, style]} {...etc}>
       {/* Header */}
       <AccordionHeader expanded={expanded} onPress={handleToggle}>
         {label}
@@ -49,13 +58,18 @@ const AccordionHeader = ({
   expanded?: boolean
   onPress: () => void
 }) => {
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p} = useTheme()
 
   return (
-    <TouchableOpacity onPress={onPress} style={[ta.flex_row, ta.justify_between, ta.align_center, {minHeight: 24}]}>
-      <View style={ta.flex_1}>
+    <TouchableOpacity
+      onPress={onPress}
+      style={[a.flex_row, a.justify_between, a.align_center, {minHeight: 24}]}
+    >
+      <View style={a.flex_1}>
         {isString(children) ? (
-          <Text style={[a.body_1_lg_medium, a.font_semibold, {color: p.gray_800}]}>
+          <Text
+            style={[a.body_1_lg_medium, a.font_semibold, {color: p.gray_800}]}
+          >
             {children}
           </Text>
         ) : (
@@ -70,4 +84,4 @@ const AccordionHeader = ({
       )}
     </TouchableOpacity>
   )
-} 
+}

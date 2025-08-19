@@ -24,10 +24,13 @@ export const useShowCollateralNotFoundAlert = ({
 }) => {
   return () => {
     const collateral = wallet.getCollateralInfo()
-    const isCollateralUtxoPending = !collateral.isConfirmed && collateral.collateralId.length > 0
+    const isCollateralUtxoPending =
+      !collateral.isConfirmed && collateral.collateralId.length > 0
 
     if (isCollateralUtxoPending) {
-      Alert.alert(collateralTxPendingTitle, collateralTxPendingText, [{onPress: onCollateralPendingPress}])
+      Alert.alert(collateralTxPendingTitle, collateralTxPendingText, [
+        {onPress: onCollateralPendingPress},
+      ])
       return
     }
 

@@ -1,5 +1,6 @@
 import {useReceivedNotificationEvents} from '@yoroi/notifications'
 import {Notifications} from '@yoroi/types'
+
 import * as React from 'react'
 
 import {pushNotificationsManager} from './notification-manager'

@@ -1,27 +1,28 @@
-import {useFocusEffect} from '@react-navigation/native'
 import {infoFilterByName} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
+
+import {useFocusEffect} from '@react-navigation/native'
 import React, {ReactNode} from 'react'
 import {ScrollView, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {usePortfolioBalances} from '~/features/Portfolio/common/hooks/usePortfolioBalances'
-import {useStrings} from '~/kernel/i18n/useStrings'
 import {useTrackNftGallerySearchActivated} from '~/features/Portfolio/common/hooks/useTrackNftGallerySearchActivated'
 import {useNavigateTo} from '~/features/Portfolio/common/navigation'
 import {MediaGallery} from '~/features/Portfolio/ui/MediaGallery/MediaGallery'
 import {useSearch, useSearchOnNavBar} from '~/features/Search/SearchContext'
 import {NetworkTag} from '~/features/Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Space} from '~/ui/Space/Space'
+
 import {EmptyGallery} from './EmptyGallery'
 
 export const ListMediaGalleryScreen = () => {
   const navigateTo = useNavigateTo()
   const strings = useStrings()
-  const {palette: p} = useTheme()
   const {track} = useMetrics()
 
   const {wallet} = useSelectedWallet()
@@ -113,11 +114,11 @@ export const ListMediaGalleryScreen = () => {
 }
 
 const Wrapper = ({children}: {children: ReactNode}) => {
-  const {palette: p} = useTheme()
+  const {palette: p, atoms: ta} = useTheme()
   return (
     <SafeAreaView
       edges={['left', 'right', 'bottom']}
-      style={[{backgroundColor: p.bg_color_max}, a.flex_1]}
+      style={[ta.bg_color_max, a.flex_1]}
     >
       <View style={[a.flex_col, a.flex_1]}>
         <Space.Height.lg />

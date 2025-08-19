@@ -1,7 +1,8 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import {LinearGradient} from 'expo-linear-gradient'
 import * as React from 'react'
-import {useWindowDimensions, View} from 'react-native'
+import {View, useWindowDimensions} from 'react-native'
 
 import {useLastDateAddressUsed} from '~/features/Receive/common/ShareDetailsCard/useLastDateAddressUsed'
 import {useStrings} from '~/kernel/i18n/useStrings'
@@ -120,7 +121,7 @@ export const ShareDetailsCard = ({
             </Text>
 
             <Copiable
-              text={stakingHash}
+              text={stakingHash ?? ''}
               feedback={strings.receive.addressCopiedMsg}
             />
           </View>
@@ -149,7 +150,7 @@ export const ShareDetailsCard = ({
             </Text>
 
             <Copiable
-              text={spendingHash}
+              text={spendingHash ?? ''}
               feedback={strings.receive.addressCopiedMsg}
             />
           </View>

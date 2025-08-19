@@ -1,8 +1,9 @@
 import * as React from 'react'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
-import {useModal} from '~/ui/Modal/ModalContext'
 import {LiquidityPoolModal} from '~/features/Portfolio/screens/PortfolioTokensList/PortfolioDAppsTokenList/LiquidityPoolModal'
+import {useModal} from '~/ui/Modal/ModalContext'
+
 import {ILiquidityPool} from './useGetLiquidityPool'
 
 const LIQUIDITY_POOL_MODAL_HEIGHT = 278

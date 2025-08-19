@@ -1,11 +1,12 @@
-import {
-  useQuery,
-  useQueryClient,
-  UseQueryOptions,
-  UseSuspenseQueryOptions,
-} from '@tanstack/react-query'
 import {useTheme} from '@yoroi/theme'
 import {Balance, Wallet} from '@yoroi/types'
+
+import {
+  UseQueryOptions,
+  UseSuspenseQueryOptions,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query'
 import BigNumber from 'bignumber.js'
 import * as React from 'react'
 import {ActivityIndicator, View} from 'react-native'

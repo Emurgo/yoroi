@@ -1,7 +1,8 @@
-import {useQuery} from '@tanstack/react-query'
 import {useAsyncStorage, useMutationWithInvalidations} from '@yoroi/common'
 import {atoms as a} from '@yoroi/theme'
 import {Chain} from '@yoroi/types'
+
+import {useQuery} from '@tanstack/react-query'
 import * as React from 'react'
 import {Text, View} from 'react-native'
 

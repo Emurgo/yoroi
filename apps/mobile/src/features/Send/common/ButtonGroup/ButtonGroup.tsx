@@ -1,4 +1,5 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import {LinearGradient} from 'expo-linear-gradient'
 import * as React from 'react'
 import {Text, TouchableOpacity, View, ViewProps} from 'react-native'
@@ -16,7 +17,6 @@ export const ButtonGroup = <T extends string>({
   labels,
   onSelect,
   style,
-  ...props
 }: ButtonGroupProps<T> & ViewProps) => {
   const [selected, setSelected] = React.useState(initial)
   const {palette: p} = useTheme()

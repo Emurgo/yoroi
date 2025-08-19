@@ -1,6 +1,6 @@
-import {useNavigation} from '@react-navigation/native'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
+import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 import {ScrollView, View} from 'react-native'
 import Markdown from 'react-native-marked'
@@ -13,6 +13,7 @@ import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Checkbox} from '~/ui/Checkbox/Checkbox'
 import {useModal} from '~/ui/Modal/ModalContext'
+
 import {Disclaimer} from '../../common/types'
 import {loadText} from './loadText'
 import {useDisclaimerState} from './useDisclaimerState'
@@ -31,7 +32,7 @@ export const ShowDisclaimer = ({type, disabled}: Props) => {
   const [showed, setShowed] = React.useState(false)
   const [accepted, setAccepted] = useDisclaimerState(type)
   const [canContinue, setCanContinue] = React.useState(false)
-  const {atoms: ta, palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
 
   React.useEffect(() => {
     if (!disabled && !accepted && showed === false) {

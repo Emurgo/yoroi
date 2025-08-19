@@ -1,5 +1,3 @@
-import {useFocusEffect} from '@react-navigation/native'
-import {UseQueryOptions, useSuspenseQuery} from '@tanstack/react-query'
 import {
   parseBoolean,
   useAsyncStorage,
@@ -7,6 +5,8 @@ import {
 } from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
+import {useFocusEffect} from '@react-navigation/native'
+import {UseQueryOptions, useSuspenseQuery} from '@tanstack/react-query'
 import * as React from 'react'
 import {Platform, Pressable, Switch, Text, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
@@ -111,7 +111,7 @@ export const DarkThemeAnnouncementScreen = () => {
 }
 
 const Toggle = () => {
-  const {isLight, isDark, selectTheme, atoms: ta, palette: p} = useTheme()
+  const {isLight, isDark, selectTheme, palette: p} = useTheme()
   const {track} = useMetrics()
 
   const handleOnValueChange = () => {

@@ -1,5 +1,6 @@
-import {useNavigation} from '@react-navigation/native'
 import {atoms as a, useTheme} from '@yoroi/theme'
+
+import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 import {
   KeyboardAvoidingView,
@@ -145,9 +146,9 @@ export const RemoveWalletScreen = () => {
   )
 }
 
-const Description = (props: ViewProps) => {
-  return <View {...props} />
-}
+// const Description = (props: ViewProps) => {
+//   return <View {...props} />
+// }
 const WalletInfo = (props: ViewProps) => {
   const {atoms: ta} = useTheme()
   return <View {...props} style={ta.bg_color_max} />

@@ -1,8 +1,9 @@
-import {FlashList, FlashListProps} from '@shopify/flash-list'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Balance, Portfolio} from '@yoroi/types'
+
+import {FlashList, FlashListProps} from '@shopify/flash-list'
 import * as React from 'react'
-import {Text, TouchableOpacity, useWindowDimensions, View} from 'react-native'
+import {Text, TouchableOpacity, View, useWindowDimensions} from 'react-native'
 
 import {MediaPreview} from '~/ui/MediaPreview/MediaPreview'
 import {Space} from '~/ui/Space/Space'
@@ -69,7 +70,7 @@ function Media({
           info={info}
           width={imageSize}
           height={imageSize}
-          style={[a.rounded_sm, {backgroundColor: p.gray_100}]}
+          style={{...a.rounded_sm, backgroundColor: p.gray_100}}
         />
       </View>
 

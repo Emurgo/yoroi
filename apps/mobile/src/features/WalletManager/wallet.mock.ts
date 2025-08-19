@@ -2,8 +2,10 @@ import {AppApi} from '@yoroi/api'
 import {cardanoConfig, protocolParamsPlaceholder} from '@yoroi/blockchains'
 import {createPrimaryTokenInfo} from '@yoroi/portfolio'
 import {Portfolio, Wallet} from '@yoroi/types'
+
 import {noop} from 'lodash'
 import {Observable} from 'rxjs'
+
 import {YoroiWallet} from '../../wallets/cardano/types'
 import {mockEncryptedStorage} from '../../wallets/mocks/storage'
 import {mockTransactionInfos} from '../../wallets/mocks/transaction'
@@ -178,18 +180,18 @@ const wallet: YoroiWallet = {
     throw new Error('not implemented: signRawTx')
   },
   getAllUtxosForKey: () => [],
-  fetchPoolInfo: (...args: unknown[]) => {
+  fetchPoolInfo: (..._args: unknown[]) => {
     return Promise.resolve({
       [stakePoolId]: poolInfoAndHistory,
     } as StakePoolInfosAndHistories)
   },
-  getDelegationStatus: (...args: unknown[]) => {
+  getDelegationStatus: (..._args: unknown[]) => {
     return {isRegistered: false, poolKeyHash: null}
   },
   subscribeOnTxHistoryUpdate: () => {
     return () => null
   },
-  fetchAccountState: (...args: unknown[]) => {
+  fetchAccountState: (..._args: unknown[]) => {
     return Promise.resolve({
       ['reward-address-hex']: {
         remainingAmount: '0',
@@ -204,7 +206,7 @@ const wallet: YoroiWallet = {
   signTxWithLedger: () => {
     throw new Error('Not implemented: signTxWithLedger')
   },
-  checkServerStatus: (...args: unknown[]) => {
+  checkServerStatus: (..._args: unknown[]) => {
     return Promise.resolve({
       isServerOk: true,
       isMaintenance: false,
@@ -212,7 +214,7 @@ const wallet: YoroiWallet = {
       isQueueOnline: true,
     })
   },
-  fetchTxStatus: async (...args: unknown[]) => {
+  fetchTxStatus: async (..._args: unknown[]) => {
     return {}
   },
   submitTransaction: () => {
@@ -224,7 +226,7 @@ const wallet: YoroiWallet = {
   createVotingRegTx: () => {
     throw new Error('Not implemented: createVotingRegTx')
   },
-  subscribe: (...args: unknown[]) => {
+  subscribe: (..._args: unknown[]) => {
     throw new Error('not implemented: subscribe')
   },
   internalAddresses: [],
@@ -238,19 +240,19 @@ const wallet: YoroiWallet = {
     lastUsedIndex: 0,
     lastUsedIndexVisual: 0,
   },
-  generateNewReceiveAddress: (...args: unknown[]) => {
+  generateNewReceiveAddress: (..._args: unknown[]) => {
     return true
   },
-  saveMemo: async (...args: unknown[]) => {
+  saveMemo: async (..._args: unknown[]) => {
     throw new Error('not implemented: saveMemo')
   },
-  clear: async (...args: unknown[]) => {
+  clear: async (..._args: unknown[]) => {
     throw new Error('not implemented: clear')
   },
-  sync: async (...args: unknown[]) => {
+  sync: async (..._args: unknown[]) => {
     throw new Error('not implemented: sync')
   },
-  resync: async (...args: unknown[]) => {
+  resync: async (..._args: unknown[]) => {
     throw new Error('not implemented: resync')
   },
   fetchFundInfo: () => {

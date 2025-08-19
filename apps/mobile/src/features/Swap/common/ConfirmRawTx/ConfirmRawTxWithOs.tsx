@@ -1,10 +1,12 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import React, {useEffect} from 'react'
 import {ActivityIndicator, Text, View} from 'react-native'
 
 import {useAuthOsWithEasyConfirmation} from '~/features/Auth/hooks/useAuthOsWithEasyConfirmation'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
+
 import {getErrorMessage} from '../errors'
 
 export const ConfirmRawTxWithOs = ({
@@ -19,7 +21,7 @@ export const ConfirmRawTxWithOs = ({
   const {palette: p} = useTheme()
 
   const {authWithOs, error} = useAuthOsWithEasyConfirmation(
-    {id: wallet.id},
+    {walletId: wallet.id},
     {onSuccess: (rootKey) => onSuccess?.(rootKey)},
   )
 
@@ -28,7 +30,13 @@ export const ConfirmRawTxWithOs = ({
     authWithOs()
   }, [meta.isEasyConfirmationEnabled, authWithOs])
 
-  const errorMessage = error ? getErrorMessage(error, strings) : null
+  const errorMessage = error
+    ? getErrorMessage(error, {
+        wrongPasswordMessage: strings.swap.wrongPasswordMessage,
+        missingCollateral: strings.swap.missingCollateral,
+        error: strings.global.error,
+      })
+    : null
 
   if (errorMessage != null) {
     if (onError) {

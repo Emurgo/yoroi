@@ -1,8 +1,10 @@
 import {useExchange, useExchangeProvidersByOrderType} from '@yoroi/exchange'
 import {Chain} from '@yoroi/types'
+
 import BigNumber from 'bignumber.js'
 import * as React from 'react'
 
+import {usePortfolioPrimaryBalance} from '~/features/Portfolio/common/hooks/usePortfolioPrimaryBalance'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useLanguage} from '~/kernel/i18n/LanguageProvider'
@@ -10,7 +12,6 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {AmountCard} from '~/ui/AmountCard/AmountCard'
 import {Space} from '~/ui/Space/Space'
 import {Quantities} from '~/wallets/utils/utils'
-import {usePortfolioPrimaryBalance} from '../Portfolio/common/hooks/usePortfolioPrimaryBalance'
 
 export const EditAmount = ({disabled}: {disabled?: boolean}) => {
   const strings = useStrings()
@@ -47,14 +48,15 @@ export const EditAmount = ({disabled}: {disabled?: boolean}) => {
         const isNotEnoughBalance = new BigNumber(newValue).isGreaterThan(
           new BigNumber(balance.quantity.toString()),
         )
-        if (isNotEnoughBalance) inputErrorMessage = strings.notEnoughBalance
+        if (isNotEnoughBalance)
+          inputErrorMessage = strings.exchange.notEnoughBalance
       }
 
       if (orderType === 'buy') {
         const providerSelected = Object.fromEntries(providers)[providerId]
         const minAda = providerSelected?.supportedOrders?.buy?.min ?? 0
         if (newValue > 0 && newValue < minAda && orderType === 'buy')
-          inputErrorMessage = strings.minAdaRequired
+          inputErrorMessage = strings.exchange.minAdaRequired
       }
 
       const canExchange = inputErrorMessage == null && displayValue !== ''
@@ -75,8 +77,8 @@ export const EditAmount = ({disabled}: {disabled?: boolean}) => {
       providers,
       providerId,
       orderType,
-      strings.notEnoughBalance,
-      strings.minAdaRequired,
+      strings.exchange.notEnoughBalance,
+      strings.exchange.minAdaRequired,
       amountInputChanged,
       amount,
     ],
@@ -89,7 +91,7 @@ export const EditAmount = ({disabled}: {disabled?: boolean}) => {
       <Space.Height.xl />
 
       <AmountCard
-        label={strings.amountTitle}
+        label={strings.exchange.amountTitle}
         onChange={onChangeAmountQuantity}
         value={amount.displayValue}
         touched={true}

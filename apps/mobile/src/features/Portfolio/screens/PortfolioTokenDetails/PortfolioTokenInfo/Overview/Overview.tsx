@@ -1,5 +1,6 @@
 import {infoExtractName, isPrimaryToken} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import React, {useState} from 'react'
 import {Linking, Text, TouchableOpacity, View} from 'react-native'
 
@@ -13,10 +14,11 @@ import {ExplorerInfoLinks} from '~/ui/ExplorerInfoLinks/ExplorerInfoLinks'
 import {Space} from '~/ui/Space/Space'
 import {TokenInfoIcon} from '~/ui/TokenInfoIcon/TokenInfoIcon'
 import {isEmptyString} from '~/wallets/utils/string'
+
 import {TokenNews} from './TokenNews'
 
 export const Overview = () => {
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p} = useTheme()
   const strings = useStrings()
   const [expanded, setExpanded] = useState(true)
   const {id: tokenId} = usePortfolioTokenDetailParams()
@@ -44,7 +46,7 @@ export const Overview = () => {
           <TokenInfoIcon
             size="sm"
             info={tokenInfo}
-            imageStyle={[{width: 32, height: 32}, a.rounded_sm]}
+            imageStyle={{width: 32, height: 32, ...a.rounded_sm}}
           />
 
           <Text

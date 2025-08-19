@@ -1,4 +1,5 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
 import {View} from 'react-native'
 
@@ -7,11 +8,12 @@ import {
   usePortfolio,
 } from '~/features/Portfolio/context/PortfolioProvider'
 import {TabPanel, TabPanels} from '~/ui/Tabs'
+
 import {Overview} from './Overview/Overview'
 import {Performance} from './Performance'
 
 export const PortfolioTokenInfo = () => {
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p} = useTheme()
   const {detailsTab} = usePortfolio()
 
   return (

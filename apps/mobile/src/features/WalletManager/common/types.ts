@@ -1,13 +1,9 @@
-// TODO: fix after cross-csl-core is updated
-// import {WasmModuleProxy} from '@emurgo/cross-csl-core'
 import {App, Chain, HW, Network, Portfolio} from '@yoroi/types'
 
+import {WasmModuleProxy} from '@emurgo/cross-csl-core'
+
 import {KeychainManager} from '~/kernel/storage/Keychain'
-import {
-  CardanoTypes,
-  WalletEvent,
-  YoroiWallet,
-} from '~/wallets/cardano/types'
+import {CardanoTypes, WalletEvent, YoroiWallet} from '~/wallets/cardano/types'
 
 export type NetworkTokenManagers = Readonly<
   Record<Chain.SupportedNetworks, Portfolio.Manager.Token>
@@ -51,13 +47,8 @@ export type WalletFactory = {
 
   calcChecksum(pubKeyHex: string): CardanoTypes.WalletChecksum
 
-  makeKeys({
-    mnemonic,
-    csl,
-  }: {
-    mnemonic: string
-    // TODO: fix after cross-csl-core is updated
-    // csl: WasmModuleProxy
-    csl: any
-  }): Promise<{rootKey: string; accountPubKeyHex: string}>
+  makeKeys({mnemonic, csl}: {mnemonic: string; csl: WasmModuleProxy}): {
+    rootKey: string
+    accountPubKeyHex: string
+  }
 }
