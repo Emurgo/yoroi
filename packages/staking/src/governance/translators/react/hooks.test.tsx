@@ -89,7 +89,7 @@ describe('Governance Translators React', () => {
     expect(useMutationWithInvalidations).toHaveBeenCalledWith({
       mutationFn: expect.any(Function),
       invalidateQueries: [
-        ['wallet-id', managerMock.network, 'governanceLatestGovernanceAction'],
+        ['wallet-id', managerMock.network, 'useLatestGovernanceAction'],
       ],
     })
 
