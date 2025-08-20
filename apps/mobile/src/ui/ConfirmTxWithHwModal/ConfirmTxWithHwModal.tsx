@@ -71,8 +71,8 @@ const ConfirmTxWithHwModalContent = ({
   onNotSupportedCIP1694,
 }: Omit<Props, 'onCancel'>) => {
   const {walletManager} = useWalletManager()
-  const [transportType, setTransportType] = useState<TransportType>('USB')
-  const [step, setStep] = useState<Step>('select-transport')
+  const [transportType, setTransportType] = React.useState<TransportType>('USB')
+  const [step, setStep] = React.useState<Step>('select-transport')
   const {wallet, meta} = useSelectedWallet()
   const strings = useStrings()
   const {isDark, palette} = useTheme()
