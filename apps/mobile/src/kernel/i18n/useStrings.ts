@@ -353,7 +353,8 @@ export const useStrings = () => {
         nftCount: f(portfolioMessages.nftCount),
         noNftsFound: f(portfolioMessages.noNftsFound),
         noNftsInWallet: f(portfolioMessages.noNftsInWallet),
-        countOpenOrders: (qty: number) => f(portfolioMessages.countOpenOrders, {qty}),
+        countOpenOrders: (qty: number) =>
+          f(portfolioMessages.countOpenOrders, {qty}),
       },
 
       // UI strings

@@ -1,7 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/ban-types */
-/* eslint-disable react-prefer-function-component/react-prefer-function-component */
 // Type definitions for react-native-svg-charts 5.4.0
 // Project: https://github.com/JesperLekland/react-native-svg-charts
 // Definitions by: Krzysztof Miemiec <https://github.com/krzysztof-miemiec>

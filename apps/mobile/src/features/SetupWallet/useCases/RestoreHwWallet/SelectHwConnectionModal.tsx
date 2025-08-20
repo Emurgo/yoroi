@@ -29,7 +29,7 @@ const useIsAndroidUsbSupported = () => {
 }
 
 export const SelectHwConnectionModal = () => {
-  const {palette: p, atoms: ta} = useTheme()
+  const {atoms: ta} = useTheme()
   const strings = useStrings()
 
   return (
