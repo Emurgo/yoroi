@@ -81,7 +81,7 @@ export const WalletNavigator = () => {
           getComponent={() => GovernanceNavigator}
         />
         <Stack.Screen
-          name="catalyst-voting"
+          name="voting-registration"
           options={{headerShown: false}}
           getComponent={() => CatalystNavigator}
         />

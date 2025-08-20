@@ -1,7 +1,7 @@
 // @ts-ignore
 import chacha from 'chacha'
 import cryptoRandomString from 'crypto-random-string'
-import pbkdf2 from 'pbkdf2'
+import {pbkdf2} from 'react-native-fast-crypto'
 
 const PBKDF_ITERATIONS = 12983
 const SALT_SIZE = 16
@@ -18,23 +18,15 @@ const PROTO_VERSION = Buffer.from('01', 'hex')
 	----------------------------------------------------------
 */
 
-const promisifyPbkdf2: (
-  array: Uint8Array,
-  buffer: Buffer,
-) => Promise<Buffer> = (password, salt) => {
-  return new Promise((resolve, reject) => {
-    pbkdf2.pbkdf2(
-      password,
-      salt,
-      PBKDF_ITERATIONS,
-      KEY_SIZE,
-      DIGEST,
-      (err: Error | null, key: Buffer) => {
-        if (err) return reject(err)
-        return resolve(key)
-      },
-    )
-  })
+export function promisifyPbkdf2(password: Uint8Array, salt: Buffer): Buffer {
+  const key = pbkdf2(
+    Buffer.from(password),
+    salt,
+    PBKDF_ITERATIONS,
+    KEY_SIZE,
+    DIGEST,
+  )
+  return Buffer.from(key) // ensure Buffer type
 }
 
 export async function encryptWithPassword(
@@ -46,7 +38,7 @@ export async function encryptWithPassword(
   const data = Buffer.from(dataBytes)
   const aad = Buffer.from('', 'hex')
 
-  const key = await promisifyPbkdf2(passwordBuf, salt)
+  const key = promisifyPbkdf2(passwordBuf, salt)
 
   const cipher = chacha.createCipher(key, nonce)
   cipher.setAAD(aad, {plaintextLength: data.length})
@@ -91,7 +83,7 @@ export async function decryptWithPassword(
     throw new Error('not enough data to decrypt')
   }
 
-  const key = await promisifyPbkdf2(passwordBuf, salt)
+  const key = promisifyPbkdf2(passwordBuf, salt)
 
   const decipher = chacha.createDecipher(key, nonce)
   decipher.setAAD(aad)
