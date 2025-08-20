@@ -14,6 +14,7 @@ import * as React from 'react'
 import {AppNavigator} from '~/kernel/navigation/AppNavigator'
 import {Modal} from '~/ui/Modal/ModalScreen'
 
+import {ReviewTxProvider} from '~/features/ReviewTx/common/ReviewTxProvider'
 import {PlatformShell} from './PlatformShell'
 import {AuthProvider} from './src/features/Auth/context/AuthProvider'
 import {CopyProvider} from './src/features/Copy/context/CopyProvider'
@@ -78,15 +79,17 @@ function BusinessShell({children}: React.PropsWithChildren) {
           <WalletManagerProvider walletManager={walletManager}>
             <AutomaticWalletOpenerProvider>
               <TransferProvider>
-                <SetupWalletProvider>
-                  <YoroiNotificationManager>
-                    <CurrencyProvider>
-                      <CatalystProvider manager={catalystManager}>
-                        {children}
-                      </CatalystProvider>
-                    </CurrencyProvider>
-                  </YoroiNotificationManager>
-                </SetupWalletProvider>
+                <ReviewTxProvider>
+                  <SetupWalletProvider>
+                    <YoroiNotificationManager>
+                      <CurrencyProvider>
+                        <CatalystProvider manager={catalystManager}>
+                          {children}
+                        </CatalystProvider>
+                      </CurrencyProvider>
+                    </YoroiNotificationManager>
+                  </SetupWalletProvider>
+                </ReviewTxProvider>
               </TransferProvider>
             </AutomaticWalletOpenerProvider>
           </WalletManagerProvider>

@@ -1,8 +1,8 @@
-import {useTheme} from '@yoroi/theme'
+import {FullPoolInfo} from '@emurgo/yoroi-lib'
+import {useSuspenseQuery} from '@tanstack/react-query'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {Balance} from '@yoroi/types'
 
-import {FullPoolInfo} from '@emurgo/yoroi-lib'
-import {useQuery} from '@tanstack/react-query'
 import * as React from 'react'
 import {Text, View, useWindowDimensions} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
@@ -38,9 +38,9 @@ export const StakeRegistrationOperation = ({
   const {palette: p} = useTheme()
 
   return (
-    <View style={styles.operation}>
+    <View style={[a.flex, a.flex_row, a.align_center, a.justify_between]}>
       <Label
-        label={strings.txReview.registerStakingKey}
+        label={strings.txReview.operations.registerStakingKey}
         showWarning={showWarning}
         strike={strike}
       />
@@ -49,9 +49,9 @@ export const StakeRegistrationOperation = ({
 
       <Text
         style={[
-          styles.operationValue,
+          a.body_2_md_regular,
           {color: p.text_gray_medium},
-          strike && styles.strike,
+          strike && {textDecorationLine: 'line-through'},
         ]}
       >
         {formatTokenWithText(fee, wallet.portfolioPrimaryTokenInfo)}
@@ -70,9 +70,9 @@ export const StakeDeregistrationOperation = ({
   const strings = useStrings()
 
   return (
-    <View style={styles.operation}>
+    <View style={[a.flex, a.flex_row, a.align_center, a.justify_between]}>
       <Label
-        label={strings.txReview.deregisterStakingKey}
+        label={strings.txReview.operations.deregisterStakingKey}
         showWarning={showWarning}
         strike={strike}
       />
@@ -90,15 +90,15 @@ export const StakeRewardsWithdrawalOperation = ({
   const strings = useStrings()
 
   return (
-    <View style={styles.operation}>
+    <View style={[a.flex, a.flex_row, a.align_center, a.justify_between]}>
       <Label
-        label={strings.txReview.rewardsWithdrawalLabel}
+        label={strings.txReview.operations.rewardsWithdrawal.label}
         showWarning={showWarning}
         strike={strike}
       />
 
-      <Text style={styles.operationValue}>
-        {strings.txReview.rewardsWithdrawalText}
+      <Text style={[a.body_2_md_regular]}>
+        {strings.txReview.operations.rewardsWithdrawal.text}
       </Text>
     </View>
   )
@@ -121,7 +121,7 @@ export const StakeDelegationOperation = ({
 
   const handleShowPoolDetails = () => {
     openModal({
-      title: strings.txReview.poolDetailsTitle,
+      title: strings.txReview.poolDetails.title,
       content: <PoolDetails poolInfo={poolInfo} />,
       height: windowHeight * 0.8,
     })
@@ -130,9 +130,9 @@ export const StakeDelegationOperation = ({
   const poolName = generatePoolName(poolInfo) ?? poolId
 
   return (
-    <View style={styles.operation}>
+    <View style={[a.flex, a.flex_row, a.align_center, a.justify_between]}>
       <Label
-        label={strings.txReview.delegateStake}
+        label={strings.txReview.operations.delegateStake}
         showWarning={showWarning}
         strike={strike}
       />
@@ -142,9 +142,9 @@ export const StakeDelegationOperation = ({
       <TouchableOpacity activeOpacity={0.5} onPress={handleShowPoolDetails}>
         <Text
           style={[
-            styles.operationLink,
+            a.body_2_md_regular,
             {color: p.text_primary_medium},
-            strike && styles.strike,
+            strike && {textDecorationLine: 'line-through'},
           ]}
         >
           {poolName}
@@ -170,9 +170,9 @@ export const AbstainOperation = ({
   const strings = useStrings()
 
   return (
-    <View style={styles.operation}>
+    <View style={[a.flex, a.flex_row, a.align_center, a.justify_between]}>
       <Label
-        label={strings.txReview.selectAbstain}
+        label={strings.txReview.operations.selectAbstain}
         showWarning={showWarning}
         strike={strike}
       />
@@ -190,9 +190,9 @@ export const NoConfidenceOperation = ({
   const strings = useStrings()
 
   return (
-    <View style={styles.operation}>
+    <View style={[a.flex, a.flex_row, a.align_center, a.justify_between]}>
       <Label
-        label={strings.txReview.selectNoConfidence}
+        label={strings.txReview.operations.selectNoConfidence}
         showWarning={showWarning}
         strike={strike}
       />
@@ -219,9 +219,9 @@ export const VoteDelegationOperation = ({
 
   return (
     <>
-      <View style={styles.operation}>
+      <View style={[a.flex, a.flex_row, a.align_center, a.justify_between]}>
         <Label
-          label={strings.txReview.delegateVotingToDRep}
+          label={strings.txReview.operations.delegateVotingToDRep}
           showWarning={showWarning}
           strike={strike}
         />
@@ -230,9 +230,9 @@ export const VoteDelegationOperation = ({
 
         <Text
           style={[
-            styles.operationValue,
+            a.body_2_md_regular,
             {color: p.text_gray_medium},
-            strike && styles.strike,
+            strike && {textDecorationLine: 'line-through'},
           ]}
         >
           {CIP129label}
@@ -241,9 +241,9 @@ export const VoteDelegationOperation = ({
 
       <Space.Height.sm />
 
-      <View style={styles.operation}>
+      <View style={[a.flex, a.flex_row, a.align_center, a.justify_between]}>
         <Label
-          label={strings.txReview.delegateVotingToDRepSpecified}
+          label={strings.txReview.operations.delegateVotingToDRepSpecified}
           showWarning={showWarning}
           strike={strike}
         />
@@ -252,9 +252,9 @@ export const VoteDelegationOperation = ({
 
         <Text
           style={[
-            styles.operationValue,
+            a.body_2_md_regular,
             {color: p.text_gray_medium},
-            strike && styles.strike,
+            strike && {textDecorationLine: 'line-through'},
           ]}
         >
           {CIP105label}
@@ -278,9 +278,9 @@ export const DrepRegistrationOperation = ({
   const {palette: p} = useTheme()
 
   return (
-    <View style={styles.operation}>
+    <View style={[a.flex, a.flex_row, a.align_center, a.justify_between]}>
       <Label
-        label={strings.txReview.drepRegistration}
+        label={strings.txReview.operations.drepRegistration}
         showWarning={showWarning}
         strike={strike}
       />
@@ -289,9 +289,9 @@ export const DrepRegistrationOperation = ({
 
       <Text
         style={[
-          styles.operationValue,
+          a.body_2_md_regular,
           {color: p.text_gray_medium},
-          strike && styles.strike,
+          strike && {textDecorationLine: 'line-through'},
         ]}
       >
         {formatTokenWithText(fee, wallet.portfolioPrimaryTokenInfo)}
@@ -310,9 +310,9 @@ export const DrepDeregistrationOperation = ({
   const strings = useStrings()
 
   return (
-    <View style={styles.operation}>
+    <View style={[a.flex, a.flex_row, a.align_center, a.justify_between]}>
       <Label
-        label={strings.txReview.drepDeregistration}
+        label={strings.txReview.operations.drepDeregistration}
         showWarning={showWarning}
         strike={strike}
       />
@@ -334,9 +334,9 @@ export const PoolRegistrationOperation = ({
   const {palette: p} = useTheme()
 
   return (
-    <View style={styles.operation}>
+    <View style={[a.flex, a.flex_row, a.align_center, a.justify_between]}>
       <Label
-        label={strings.txReview.poolRegistration}
+        label={strings.txReview.operations.poolRegistration}
         showWarning={showWarning}
         strike={strike}
       />
@@ -345,9 +345,9 @@ export const PoolRegistrationOperation = ({
 
       <Text
         style={[
-          styles.operationValue,
+          a.body_2_md_regular,
           {color: p.text_gray_medium},
-          strike && styles.strike,
+          strike && {textDecorationLine: 'line-through'},
         ]}
       >
         {formatTokenWithText(fee, wallet.portfolioPrimaryTokenInfo)}
@@ -366,9 +366,9 @@ export const PoolRetirementOperation = ({
   const strings = useStrings()
 
   return (
-    <View style={styles.operation}>
+    <View style={[a.flex, a.flex_row, a.align_center, a.justify_between]}>
       <Label
-        label={strings.txReview.poolRetirement}
+        label={strings.txReview.operations.poolRetirement}
         showWarning={showWarning}
         strike={strike}
       />
@@ -385,9 +385,9 @@ export const DrepUpdateOperation = ({
   const strings = useStrings()
 
   return (
-    <View style={styles.operation}>
+    <View style={[a.flex, a.flex_row, a.align_center, a.justify_between]}>
       <Label
-        label={strings.txReview.drepUpdate}
+        label={strings.txReview.operations.drepUpdate}
         showWarning={showWarning}
         strike={strike}
       />
@@ -404,9 +404,9 @@ export const MoveInstantaneousRewardsOperation = ({
   const strings = useStrings()
 
   return (
-    <View style={styles.operation}>
+    <View style={[a.flex, a.flex_row, a.align_center, a.justify_between]}>
       <Label
-        label={strings.txReview.moveInstantaneousRewards}
+        label={strings.txReview.operations.moveInstantaneousRewards}
         showWarning={showWarning}
         strike={strike}
       />
@@ -423,9 +423,9 @@ export const CommitteeHotAuthorizationOperation = ({
   const strings = useStrings()
 
   return (
-    <View style={styles.operation}>
+    <View style={[a.flex, a.flex_row, a.align_center, a.justify_between]}>
       <Label
-        label={strings.txReview.committeeHotAuthorization}
+        label={strings.txReview.operations.committeeHotAuthorization}
         showWarning={showWarning}
         strike={strike}
       />
@@ -443,9 +443,9 @@ export const CommitteeColdResignOperation = ({
   const strings = useStrings()
 
   return (
-    <View style={styles.operation}>
+    <View style={[a.flex, a.flex_row, a.align_center, a.justify_between]}>
       <Label
-        label={strings.txReview.committeeColdResign}
+        label={strings.txReview.operations.committeeColdResign}
         showWarning={showWarning}
         strike={strike}
       />
@@ -464,19 +464,19 @@ const Label = ({
 }) => {
   const {palette: p} = useTheme()
   return (
-    <View style={styles.operationLabelContainer}>
+    <View style={[a.flex, a.flex_row, a.align_center]}>
       <Text
         style={[
-          styles.operationLabel,
+          a.body_2_md_regular,
           {color: p.text_gray_low},
-          strike && styles.strike,
+          strike && {textDecorationLine: 'line-through'},
         ]}
       >
         {label}
       </Text>
 
       {showWarning && (
-        <View style={styles.infoIcon}>
+        <View style={[a.pl_xs]}>
           <Icon.Info size={24} color={p.sys_orange_500} />
         </View>
       )}
@@ -845,10 +845,9 @@ export const getDrepBech32Id = async (poolId: string) => {
 }
 
 export const useDrepBech32Id = (poolId: string) => {
-  const query = useQuery({
+  const query = useSuspenseQuery({
     queryKey: ['drepBech32', poolId],
     queryFn: () => getDrepBech32Id(poolId),
-    suspense: true,
   })
 
   return query?.data ?? null
