@@ -86,7 +86,7 @@ export const ConfirmTxWithSpendingPasswordModal = ({
 
       {errorMessage != null && (
         <Text
-          style={[{color: p.sys_magenta_500, textAlign: 'center'}]}
+          style={[{color: p.sys_magenta_500}, a.text_center]}
           numberOfLines={3}
         >
           {errorMessage}
