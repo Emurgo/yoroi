@@ -41,7 +41,7 @@ export const ConfirmTxWithOsModal = ({
     },
   )
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (!meta.isEasyConfirmationEnabled) return
     authWithOs()
   }, [meta.isEasyConfirmationEnabled, authWithOs])
