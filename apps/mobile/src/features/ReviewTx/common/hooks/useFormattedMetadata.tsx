@@ -1,5 +1,5 @@
 import {MetadataJsonSchema} from '@emurgo/cross-csl-core'
-import {useQuery} from '@tanstack/react-query'
+import {useSuspenseQuery} from '@tanstack/react-query'
 import {isString} from '@yoroi/common'
 
 import {wrappedCsl} from '~/wallets/cardano/wrappedCsl'
@@ -73,11 +73,9 @@ export const useFormattedMetadata = ({
   cbor: string | null
   txBody: TransactionBody
 }) => {
-  const query = useQuery({
+  const query = useSuspenseQuery({
     queryFn: () => formatMetadata(unsignedTx, cbor, txBody),
     queryKey: ['useFormattedMetadata', cbor, unsignedTx, txBody],
-    useErrorBoundary: true,
-    suspense: true,
   })
 
   return query?.data

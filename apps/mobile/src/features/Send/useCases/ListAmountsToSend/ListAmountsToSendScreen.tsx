@@ -14,6 +14,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {useReviewTx} from '~/features/ReviewTx/common/ReviewTxProvider'
 import {useSearch} from '~/features/Search/SearchContext'
 import {useNavigateTo} from '~/features/Send/common/navigation'
+import {toYoroiEntry} from '~/features/Send/common/toYoroiEntry'
 import {useSaveMemo} from '~/features/Transactions/hooks/useSaveMemo'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
@@ -109,19 +110,14 @@ export const ListAmountsToSendScreen = () => {
     track.sendSelectAssetSelected(assetsToSendProperties({amounts}))
     // since the user can't see many targets we just send the first one
     // NOTE: update on multi target support
-    // Todo: uncomment below when bech32 package dependencies has been resolved
-    // createUnsignedTx([toYoroiEntry(targets[selectedTargetIndex].entry)], {
-    //   onSuccess: (yoroiUnsignedTx) => {
-    //     unsignedTxChanged(yoroiUnsignedTx)
-    //     navigateToTxReview({
-    //       onSuccess: (args) => handleOnSuccess(args?.signedTx),
-    //       onError,
-    //     })
-    //   },
-    // })
-    navigateToTxReview({
-      onSuccess: (args) => handleOnSuccess(undefined),
-      onError,
+    createUnsignedTx([toYoroiEntry(targets[selectedTargetIndex].entry)], {
+      onSuccess: (yoroiUnsignedTx) => {
+        unsignedTxChanged(yoroiUnsignedTx)
+        navigateToTxReview({
+          onSuccess: (args) => handleOnSuccess(args?.signedTx),
+          onError,
+        })
+      },
     })
   }
   const onAdd = () => {

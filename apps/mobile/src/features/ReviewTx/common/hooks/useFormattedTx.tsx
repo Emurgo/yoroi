@@ -1,16 +1,17 @@
 import {CredKind} from '@emurgo/cross-csl-core'
-import {useQuery} from '@tanstack/react-query'
+import {useSuspenseQuery} from '@tanstack/react-query'
 import {isNonNullable} from '@yoroi/common'
 import {ApiUtxoData, Portfolio} from '@yoroi/types'
 import {NetworkApi} from '@yoroi/types/lib/typescript/network/manager'
 import _ from 'lodash'
 
-import {usePortfolioTokenInfos} from '~/features/Portfolio/common/hooks/usePortfolioTokenInfos'
+import {usePortfolioTokenInfosSuspense} from '~/features/Portfolio/common/hooks/usePortfolioTokenInfos'
 import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {YoroiWallet} from '~/wallets/cardano/types'
 import {deriveRewardAddressFromAddress} from '~/wallets/cardano/utils'
 import {wrappedCsl} from '~/wallets/cardano/wrappedCsl'
+import {RawUtxo} from '~/wallets/types/other'
 import {asQuantity} from '~/wallets/utils/utils'
 import {
   FormattedCertificate,
@@ -35,24 +36,26 @@ export const useFormattedTx = (data: TransactionBody): FormattedTx => {
 
   const inputTokenIds = inputs.flatMap((i) => {
     const utxo = inputUtxos.find(
-      (utxo) =>
+      (utxo: RawUtxo) =>
         utxo?.tx_hash === i.transaction_id && utxo?.tx_index === i.index,
     )
     return (
       utxo?.assets.map(
-        (a) => `${a.policyId}.${a.assetId}` as Portfolio.Token.Id,
+        (a: {policyId: string; assetId: string}) =>
+          `${a.policyId}.${a.assetId}` as Portfolio.Token.Id,
       ) ?? []
     )
   })
 
   const referenceInputTokenIds = referenceInputs.flatMap((i) => {
     const utxo = referenceInputUtxos.find(
-      (utxo) =>
+      (utxo: RawUtxo) =>
         utxo?.tx_hash === i.transaction_id && utxo?.tx_index === i.index,
     )
     return (
       utxo?.assets.map(
-        (a) => `${a.policyId}.${a.assetId}` as Portfolio.Token.Id,
+        (a: {policyId: string; assetId: string}) =>
+          `${a.policyId}.${a.assetId}` as Portfolio.Token.Id,
       ) ?? []
     )
   })
@@ -81,10 +84,7 @@ export const useFormattedTx = (data: TransactionBody): FormattedTx => {
     ...mintTokenIds,
     ...referenceInputTokenIds,
   ])
-  const portfolioTokenInfos = usePortfolioTokenInfos(
-    {wallet, tokenIds},
-    {suspense: true},
-  )
+  const portfolioTokenInfos = usePortfolioTokenInfosSuspense({wallet, tokenIds})
 
   const formattedInputs = useFormattedInputs(
     wallet,
@@ -117,16 +117,13 @@ export const useFormattedTx = (data: TransactionBody): FormattedTx => {
 
 export const useFormattedInputs = (
   wallet: YoroiWallet,
-  tokenInfosResult: ReturnType<typeof usePortfolioTokenInfos>,
+  tokenInfosResult: ReturnType<typeof usePortfolioTokenInfosSuspense>,
   inputUtxos: ReturnType<typeof useUtxos>,
 ) => {
-  const query = useQuery<FormattedInputs>(
-    ['useFormattedInputs', inputUtxos],
-    async () => formatInputs(wallet, tokenInfosResult, inputUtxos),
-    {
-      suspense: true,
-    },
-  )
+  const query = useSuspenseQuery<FormattedInputs>({
+    queryKey: ['useFormattedInputs', inputUtxos],
+    queryFn: async () => formatInputs(wallet, tokenInfosResult, inputUtxos),
+  })
 
   if (!query.data) throw new Error('invalid formatted inputs')
   return query.data
@@ -135,15 +132,12 @@ export const useFormattedInputs = (
 export const useFormattedOutputs = (
   wallet: YoroiWallet,
   outputs: TransactionOutputs,
-  portfolioTokenInfos: ReturnType<typeof usePortfolioTokenInfos>,
+  portfolioTokenInfos: ReturnType<typeof usePortfolioTokenInfosSuspense>,
 ) => {
-  const query = useQuery<FormattedOutputs>(
-    ['useFormattedOutputs', outputs],
-    () => formatOutputs(wallet, outputs, portfolioTokenInfos),
-    {
-      suspense: true,
-    },
-  )
+  const query = useSuspenseQuery<FormattedOutputs>({
+    queryKey: ['useFormattedOutputs', outputs],
+    queryFn: () => formatOutputs(wallet, outputs, portfolioTokenInfos),
+  })
 
   if (!query.data) throw new Error('invalid formatted outputs')
   return query.data
@@ -151,11 +145,11 @@ export const useFormattedOutputs = (
 
 const formatInputs = async (
   wallet: YoroiWallet,
-  portfolioTokenInfos: ReturnType<typeof usePortfolioTokenInfos>,
+  portfolioTokenInfos: ReturnType<typeof usePortfolioTokenInfosSuspense>,
   inputUtxos: ReturnType<typeof useUtxos>,
 ): Promise<FormattedInputs> => {
   return Promise.all(
-    inputUtxos.map(async (utxo) => {
+    inputUtxos.map(async (utxo: RawUtxo) => {
       const address = utxo?.receiver
       const coin = utxo?.amount != null ? asQuantity(utxo.amount) : null
 
@@ -177,7 +171,8 @@ const formatInputs = async (
 
       const multiAssets =
         utxo?.assets
-          .map((a) => {
+          .map((a: {assetId: string; amount: string}) => {
+            if (a == null) return null
             const tokenInfo = portfolioTokenInfos.tokenInfos?.get(
               a.assetId as Portfolio.Token.Id,
             )
@@ -207,7 +202,7 @@ const formatInputs = async (
 const formatOutputs = async (
   wallet: YoroiWallet,
   outputs: TransactionOutputs,
-  portfolioTokenInfos: ReturnType<typeof usePortfolioTokenInfos>,
+  portfolioTokenInfos: ReturnType<typeof usePortfolioTokenInfosSuspense>,
 ): Promise<FormattedOutputs> => {
   return Promise.all(
     outputs.map(async (output) => {
@@ -282,7 +277,7 @@ const formatCertificates = (certificates: TransactionBody['certs']) => {
 
 const formatMintData = (
   mintData: TransactionBody['mint'] | null,
-  portfolioTokenInfos: ReturnType<typeof usePortfolioTokenInfos>,
+  portfolioTokenInfos: ReturnType<typeof usePortfolioTokenInfosSuspense>,
 ) => {
   if (mintData == null) return null
   return (mintData?.flatMap(([policyId, tokens]) =>
@@ -320,11 +315,10 @@ const getAddressKind = async (
 export const useUtxos = (inputs: TransactionInputs, wallet: YoroiWallet) => {
   const {networkManager} = useSelectedNetwork()
 
-  const query = useQuery({
+  const query = useSuspenseQuery({
     queryKey: ['useUtxos', inputs],
     queryFn: async () =>
       getAllUtxos(inputs, wallet, networkManager.api.utxoData),
-    suspense: true,
   })
 
   if (!query.data) throw new Error('invalid formatted inputs')

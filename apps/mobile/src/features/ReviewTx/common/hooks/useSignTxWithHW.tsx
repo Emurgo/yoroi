@@ -55,8 +55,8 @@ export const useSignTxWithHW = () => {
 
   const mutation = useMutation({
     mutationFn,
-    useErrorBoundary: false,
     mutationKey: ['useSignTxWithHW'],
+    throwOnError: true,
   })
 
   const sign = (options: SignTxWithHW) => {

@@ -1,9 +1,10 @@
 import * as React from 'react'
 
-import {ConfirmRawTxWithOs} from '~/features/Swap/common/ConfirmRawTx/ConfirmRawTxWithOs'
-import {ConfirmRawTxWithPassword} from '~/features/Swap/common/ConfirmRawTx/ConfirmRawTxWithPassword'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
+import {ConfirmTxWithHwModal} from '~/ui/ConfirmTxWithHwModal/ConfirmTxWithHwModal'
+import {ConfirmTxWithOsModal} from '~/ui/ConfirmTxWithOsModal/ConfirmTxWithOsModal'
+import {ConfirmTxWithSpendingPasswordModal} from '~/ui/ConfirmTxWithSpendingPasswordModal/ConfirmTxWithSpendingPasswordModal'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {YoroiSignedTx, YoroiUnsignedTx} from '~/wallets/types/yoroi'
 import {useNavigateTo} from './useNavigateTo'
@@ -49,24 +50,24 @@ export const useLegacyOnConfirm = ({
     const {isHW, isEasyConfirmationEnabled} = meta
 
     if (isHW) {
-      // openModal({
-      //   title: strings.global.signTransaction,
-      //   content: (
-      //     <ConfirmRawTxWithHW
-      //       onCancel={closeModal}
-      //       unsignedTx={unsignedTx}
-      //       onSuccess={handleOnSuccess}
-      //       onNotSupportedCIP1694={() => {
-      //         if (onNotSupportedCIP1694) {
-      //           closeModal()
-      //           onNotSupportedCIP1694()
-      //         }
-      //       }}
-      //       onCIP36SupportChange={onCIP36SupportChange ?? undefined}
-      //     />
-      //   ),
-      //   height: 400,
-      // })
+      openModal({
+        title: strings.global.signTransaction,
+        content: (
+          <ConfirmTxWithHwModal
+            onCancel={closeModal}
+            unsignedTx={unsignedTx}
+            onSuccess={handleOnSuccess}
+            onNotSupportedCIP1694={() => {
+              if (onNotSupportedCIP1694) {
+                closeModal()
+                onNotSupportedCIP1694()
+              }
+            }}
+            onCIP36SupportChange={onCIP36SupportChange ?? undefined}
+          />
+        ),
+        height: 400,
+      })
       return
     }
 
@@ -74,7 +75,7 @@ export const useLegacyOnConfirm = ({
       openModal({
         title: strings.global.signTransaction,
         content: (
-          <ConfirmRawTxWithPassword
+          <ConfirmTxWithSpendingPasswordModal
             unsignedTx={unsignedTx}
             onSuccess={handleOnSuccess}
             onError={handleOnError}
@@ -88,7 +89,7 @@ export const useLegacyOnConfirm = ({
     openModal({
       title: strings.global.signTransaction,
       content: (
-        <ConfirmRawTxWithOs
+        <ConfirmTxWithOsModal
           unsignedTx={unsignedTx}
           onSuccess={handleOnSuccess}
           onError={handleOnError}

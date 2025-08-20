@@ -33,6 +33,7 @@ config.resolver.nodeModulesPaths = [
   path.resolve(workspaceRoot, 'packages/theme/node_modules'),
   path.resolve(workspaceRoot, 'packages/transfer/node_modules'),
   path.resolve(workspaceRoot, 'packages/types/node_modules'),
+  path.resolve(workspaceRoot, 'packages/staking/node_modules'),
 ]
 
 // NOTE: workaround for the structure now
@@ -83,6 +84,7 @@ const shims = {
   'crypto': 'react-native-quick-crypto',
   'buffer': '@craftzdog/react-native-buffer',
   'react-native-get-random-values': 'react-native-quick-crypto',
+  'bech32': path.resolve(projectRoot, 'metro.bech32-compat.js'),
 }
 
 config.resolver.resolveRequest = (context, moduleName, platform) => {

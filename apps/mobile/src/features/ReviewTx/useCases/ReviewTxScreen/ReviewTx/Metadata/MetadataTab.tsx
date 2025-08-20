@@ -21,12 +21,12 @@ export const MetadataTab = ({metadata, hash}: FormattedMetadata) => {
 
       <View style={[a.flex_row, a.justify_between]}>
         <Text style={[a.body_2_md_regular, {color: p.text_gray_low}]}>
-          {strings.txReview.metadataHash}
+          {strings.txReview.metadata.metadataHash}
         </Text>
 
         <Space.Width.lg />
 
-        <Copiable style={[a.flex_1]} text={hash}>
+        <Copiable style={a.flex_1} text={hash}>
           <Text
             style={[
               a.text_right,
@@ -46,7 +46,7 @@ export const MetadataTab = ({metadata, hash}: FormattedMetadata) => {
         <View style={[a.flex_row, a.justify_between]}>
           <Copiable text={metadataFormatted}>
             <Text style={[a.body_1_lg_medium, {color: p.text_gray_medium}]}>
-              {strings.txReview.metadataJsonLabel}
+              {strings.txReview.metadata.metadataJsonLabel}
             </Text>
           </Copiable>
         </View>

@@ -1,5 +1,4 @@
-import {useQuery} from '@tanstack/react-query'
-
+import {useSuspenseQuery} from '@tanstack/react-query'
 import {wrappedCsl} from '~/wallets/cardano/wrappedCsl'
 import {YoroiUnsignedTx} from '~/wallets/types/yoroi'
 import {TransactionBody} from '../types'
@@ -11,7 +10,7 @@ export const useTxBody = ({
   cbor?: string | null
   unsignedTx?: YoroiUnsignedTx | null
 }): TransactionBody => {
-  const query = useQuery({
+  const query = useSuspenseQuery({
     queryKey: ['useTxBody', cbor, unsignedTx],
     queryFn: async () => {
       // ORDER IS IMPORTANT
@@ -26,8 +25,6 @@ export const useTxBody = ({
         throw new Error('useTxBody: missing cbor and unsignedTx')
       }
     },
-    useErrorBoundary: true,
-    suspense: true,
   })
 
   if (query.data === undefined)

@@ -25,7 +25,7 @@ export const YoroiLogo = () => {
 
       <Space.Height.sm />
 
-      <Text style={[a.body_2_md_regular, ta.text_gray_medium]}>
+      <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
         {strings.ui.yoroiLogoSubtitle}
       </Text>
     </View>

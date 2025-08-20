@@ -101,11 +101,17 @@ export const ReviewTx = ({
     (isMintScrollBarShown && activeTab === 'mint') ||
     (isReferenceInputsScrollBarShown && activeTab === 'reference_inputs')
 
+  const [currentTabIndex, setCurrentTabIndex] = React.useState(0)
+
+  React.useEffect(() => {
+    setActiveTab(tabsData[currentTabIndex][1])
+  }, [currentTabIndex, tabsData])
+
   return (
     <SafeArea style={[a.flex_1, {backgroundColor: p.bg_color_max}]}>
       <MaterialTab.Navigator
         tabBar={(props) => {
-          setActiveTab(tabsData[props.state.index][1])
+          setCurrentTabIndex(props.state.index)
           return <TabBar {...props} tabsData={tabsData} />
         }}
       >
