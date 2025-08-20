@@ -11,7 +11,7 @@ const STANDARD_VERSIONS = {
   'bignumber.js': '9.3.0',
   'rxjs': '7.8.2',
   'zod': '3.25.17',
-  'react': '19.1.1',
+  'react': '19.1.0',
   'react-native': '0.79.0',
   '@react-native-async-storage/async-storage': '2.1.2',
   '@tanstack/react-query': '5.81.5',

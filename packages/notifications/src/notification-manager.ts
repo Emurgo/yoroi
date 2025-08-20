@@ -93,7 +93,7 @@ const eventsManagerMaker = ({
 }) => {
   const newEvents$ = new Subject<Notifications.Event>()
   const unreadCounterByGroup$ = new BehaviorSubject<
-    Map<Notifications.Group, number>
+    Readonly<Map<Notifications.Group, number>>
   >(buildUnreadCounterDefaultValue())
 
   const updateUnreadCounter = async () => {
@@ -183,7 +183,9 @@ const shouldNotify = (
   return config[event.trigger].notify
 }
 
-const buildUnreadCounterDefaultValue = (): Map<Notifications.Group, number> => {
+const buildUnreadCounterDefaultValue = (): Readonly<
+  Map<Notifications.Group, number>
+> => {
   return new Map<Notifications.Group, number>(
     Object.values(notificationTriggerGroups).map((group) => [group, 0]),
   )

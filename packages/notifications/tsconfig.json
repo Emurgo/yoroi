@@ -26,8 +26,8 @@
     "noImplicitAny": true,
     "useUnknownInCatchVariables": true,
     "paths": {
-      "rxjs": ["../node_modules/rxjs"],
-      "rxjs/*": ["../node_modules/rxjs/*"],
+      "rxjs": ["./node_modules/rxjs"],
+      "rxjs/*": ["./node_modules/rxjs/*"],
       "@tanstack/react-query": ["./node_modules/@tanstack/react-query"],
       "@tanstack/query-core": ["./node_modules/@tanstack/query-core"],
       "src/*": ["./src/*"]
