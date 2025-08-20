@@ -2,12 +2,14 @@ module.exports = {
   preset: 'react-native',
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   transformIgnorePatterns: [
-    'node_modules/(?!(react-native|@react-native|@react-native-async-storage/async-storage|@testing-library/react-native|@tanstack/react-query)/)',
+    'node_modules/(?!(react-native|@react-native|@react-native-async-storage/async-storage|@testing-library/react-native)/)',
   ],
   moduleNameMapper: {
     '^react-native$': '<rootDir>/node_modules/react-native',
     '@react-native-async-storage/async-storage':
       '<rootDir>/node_modules/@react-native-async-storage/async-storage/jest/async-storage-mock',
+    '^@tanstack/react-query$':
+      '<rootDir>/node_modules/@tanstack/react-query',
   },
   setupFiles: ['<rootDir>/jest.setup.js'],
   testRegex: '(/__tests__/.*|(\\.|/)(test|spec))\\.[jt]sx?$',

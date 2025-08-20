@@ -74,9 +74,9 @@ export const resolveUserRecord = async (
   const virtualSubdomains = await parseAssocMapAsync(
     inlineDatum.fields[0], // validated with validateCNSUserRecord
     async (item) => {
-      const itemHex = await objToHex(item, csl)
+      const itemHex = objToHex(item, csl)
 
-      const bech32 = await parsePlutusAddressToBech32(
+      const bech32 = parsePlutusAddressToBech32(
         itemHex,
         csl,
         cnsApiConfig.networkId,
