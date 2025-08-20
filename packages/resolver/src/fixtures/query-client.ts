@@ -9,6 +9,7 @@ export const queryClientFixture = () =>
       },
       mutations: {
         retry: false,
+        gcTime: 0,
       },
     },
   })
