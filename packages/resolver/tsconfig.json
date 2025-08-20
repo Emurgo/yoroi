@@ -26,7 +26,6 @@
     "paths": {
       "@tanstack/react-query": ["./node_modules/@tanstack/react-query"],
       "@tanstack/query-core": ["./node_modules/@tanstack/query-core"],
-      "react": ["./node_modules/@types/react"],
       "src/*": ["./src/*"]
     }
   },
