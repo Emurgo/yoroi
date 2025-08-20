@@ -1,5 +1,6 @@
-import {createStackNavigator} from '@react-navigation/stack'
 import {useTheme} from '@yoroi/theme'
+
+import {createStackNavigator} from '@react-navigation/stack'
 import * as React from 'react'
 
 import {NetworkTag} from '~/features/Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
@@ -7,6 +8,7 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
 import {NftRoutes} from '~/kernel/navigation/types'
+
 import {ListMediaGalleryScreen} from './screens/PortfolioTokensList/PortfolioWalletTokenList/ListMediaGalleryScreen/ListMediaGalleryScreen'
 import {ZoomMediaImageScreen} from './screens/PortfolioTokensList/PortfolioWalletTokenList/ListMediaGalleryScreen/ZoomMediaImageScreen'
 import {MediaDetailsScreen} from './ui/MediaDetailsScreen/MediaDetailsScreen'

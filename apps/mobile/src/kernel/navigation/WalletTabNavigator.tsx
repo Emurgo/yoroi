@@ -1,9 +1,9 @@
+import {GovernanceProvider} from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 import * as React from 'react'
 
-import {GovernanceProvider} from '@yoroi/staking'
 import {DiscoverNavigator} from '~/features/Discover/DiscoverNavigator'
 import {MenuNavigator} from '~/features/Menu/Menu'
 import {PortfolioNavigator} from '~/features/Portfolio/PortfolioNavigator'
@@ -12,6 +12,7 @@ import {PoolTransitionProvider} from '~/features/Staking/Staking/PoolTransition/
 import {TxHistoryNavigator} from '~/features/Transactions/TxHistoryNavigator'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Icon} from '~/ui/Icon'
+
 import {WalletTabRoutes} from './types'
 
 const Tab = createBottomTabNavigator<WalletTabRoutes>()

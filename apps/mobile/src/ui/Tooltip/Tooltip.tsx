@@ -1,4 +1,5 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
 import {
   Dimensions,
@@ -10,7 +11,7 @@ import {
 } from 'react-native'
 import {Portal} from 'react-native-paper'
 
-import {addEventListener, getTooltipPosition, Measurement} from './utils'
+import {Measurement, addEventListener, getTooltipPosition} from './utils'
 
 type TooltipProps = {
   /**
@@ -69,7 +70,7 @@ export const Tooltip = ({
   })
   const showTooltipTimer = React.useRef<ReturnType<typeof setTimeout>[]>([])
   const hideTooltipTimer = React.useRef<ReturnType<typeof setTimeout>[]>([])
-  const childrenWrapperRef = React.useRef() as React.MutableRefObject<View>
+  const childrenWrapperRef = React.useRef<View>(null)
   const touched = React.useRef(false)
 
   React.useEffect(() => {
@@ -95,7 +96,7 @@ export const Tooltip = ({
   }, [])
 
   const handleOnLayout = ({nativeEvent: {layout}}: LayoutChangeEvent) => {
-    childrenWrapperRef.current.measure(
+    childrenWrapperRef.current?.measure(
       (_x, _y, width, height, pageX, pageY) => {
         setMeasurement({
           children: {pageX, pageY, height, width},
@@ -145,10 +146,10 @@ export const Tooltip = ({
     if (touched.current) {
       return null
     } else {
-      if (children.props.disabled) return null
-      return children.props.onPress?.()
+      if ((children as any).props?.disabled) return null
+      return (children as any).props?.onPress?.()
     }
-  }, [children.props, mode, visible])
+  }, [children, mode, visible])
 
   const pressProps =
     mode === 'hover'
@@ -184,7 +185,12 @@ export const Tooltip = ({
                   backgroundColor: p.gray_max,
                 },
                 {
-                  ...getTooltipPosition(measurement as Measurement, children),
+                  ...getTooltipPosition(
+                    measurement as Measurement,
+                    children as React.ReactElement<{
+                      style: ViewStyle | ViewStyle[] | null | undefined
+                    }>,
+                  ),
                   ...(measurement.measured ? {opacity: 1} : {opacity: 0}),
                 },
               ]}

@@ -1,6 +1,7 @@
-import {useNavigation} from '@react-navigation/native'
 import {useSetupWallet} from '@yoroi/setup-wallet'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
+
+import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 import {Alert, Platform, Text, View} from 'react-native'
 import DeviceInfo from 'react-native-device-info'
@@ -28,21 +29,12 @@ const useIsAndroidUsbSupported = () => {
 }
 
 export const SelectHwConnectionModal = () => {
-  const {palette: p} = useTheme()
+  const {palette: p, atoms: ta} = useTheme()
   const strings = useStrings()
 
   return (
-    <View style={[{paddingHorizontal: 16}]}>
-      <Text
-        style={[
-          {
-            fontSize: 16,
-            lineHeight: 24,
-            fontWeight: '400',
-            color: p.text_gray_medium,
-          },
-        ]}
-      >
+    <View style={[a.px_lg]}>
+      <Text style={[a.body_1_lg_regular, ta.text_gray_medium]}>
         {strings.setupWallet.hwModalText}
       </Text>
 
@@ -71,10 +63,7 @@ const SelectBluetoothSection = () => {
 
   const {request} = useLedgerPermissions({
     onError: () =>
-      Alert.alert(
-        strings.setupWallet.error,
-        strings.setupWallet.bluetoothError,
-      ),
+      Alert.alert(strings.global.error, strings.setupWallet.bluetoothError),
     onSuccess: () => {
       USBChanged(false)
       navigateHw()
@@ -96,7 +85,7 @@ const SelectBluetoothSection = () => {
 }
 
 const SelectUsbSection = () => {
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
   const strings = useStrings()
   const isAndroidUsbSupported = useIsAndroidUsbSupported()
   const {
@@ -118,16 +107,7 @@ const SelectUsbSection = () => {
       <>
         <Space.Height.lg />
 
-        <Text
-          style={[
-            {
-              color: p.text_gray_low,
-              fontSize: 14,
-              lineHeight: 20,
-              fontWeight: '400',
-            },
-          ]}
-        >
+        <Text style={[a.body_2_md_regular, ta.text_gray_low]}>
           {strings.setupWallet.hwModalIosWarning}
         </Text>
       </>

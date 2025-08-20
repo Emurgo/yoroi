@@ -1,7 +1,8 @@
-import TransportHID from '@ledgerhq/react-native-hid'
-import TransportBLE from '@ledgerhq/react-native-hw-transport-ble'
 import {atoms as a, lightPalette, useTheme} from '@yoroi/theme'
 import {HW} from '@yoroi/types'
+
+import TransportHID from '@ledgerhq/react-native-hid'
+import TransportBLE from '@ledgerhq/react-native-hw-transport-ble'
 import * as React from 'react'
 import type {IntlShape} from 'react-intl'
 import {defineMessages, useIntl} from 'react-intl'
@@ -10,43 +11,43 @@ import {Observer} from 'rxjs'
 
 import bleImage from '~/assets/img/bluetooth.png'
 import usbImage from '~/assets/img/ledger-nano-usb.png'
-import {DeviceItem} from '~/features/HW/LedgerConnect/DeviceItem'
+import {DeviceItem} from '~/features/HW/LedgerConnect/DeviceItem/DeviceItem'
 import {LocalizableError} from '~/kernel/i18n/LocalizableError'
-import {confirmationMessages, globalMessages} from '~/kernel/i18n/messages'
-import {ledgerMessages} from '~/kernel/i18n/messages/global'
+import {
+  confirmationMessages,
+  globalMessages,
+  ledgerMessages,
+} from '~/kernel/i18n/messages'
 import {logger} from '~/kernel/logger/logger'
 import {Button} from '~/ui/Button/Button'
 import {Space} from '~/ui/Space/Space'
 import {BluetoothDisabledError, RejectedByUserError} from '~/wallets/hw/hw'
 import {Device} from '~/wallets/types/hw'
+
 import {BulletPointItem} from '../BulletPointItem'
 import {Loading} from '../Loading/Loading'
 
 type ListHeaderWrapperProps = {
   msg: string
   err?: string | null
-  atoms: any
-  palette: any
 }
 
-const ListHeaderWrapper = ({
-  msg,
-  err,
-  atoms,
-  palette,
-}: ListHeaderWrapperProps) => (
-  <View style={[a.align_center, a.justify_center]}>
-    <Text style={[a.pb_lg, a.body_1_lg_medium, atoms.text_gray_medium]}>
-      {msg}
-    </Text>
-
-    {err != null && (
-      <Text style={[a.body_1_lg_medium, {color: palette.sys_magenta_500}]}>
-        {err}
+const ListHeaderWrapper = ({msg, err}: ListHeaderWrapperProps) => {
+  const {atoms: ta, palette: p} = useTheme()
+  return (
+    <View style={[a.align_center, a.justify_center]}>
+      <Text style={[a.pb_lg, a.body_1_lg_medium, ta.text_gray_medium]}>
+        {msg}
       </Text>
-    )}
-  </View>
-)
+
+      {err != null && (
+        <Text style={[a.body_1_lg_medium, {color: p.sys_magenta_500}]}>
+          {err}
+        </Text>
+      )}
+    </View>
+  )
+}
 
 type Props = {
   intl: IntlShape
@@ -238,7 +239,6 @@ class LedgerConnectInt extends React.Component<Props, State> {
   ListHeader = () => {
     const {error, waiting, deviceObj} = this.state
     const {intl, onWaitingMessage} = this.props
-    const {atoms: ta, palette: p} = useTheme()
 
     let msg, errMsg
     if (error != null) {
@@ -256,7 +256,7 @@ class LedgerConnectInt extends React.Component<Props, State> {
       }
     }
     if (msg == null) return null
-    return <ListHeaderWrapper msg={msg} err={errMsg} atoms={ta} palette={p} />
+    return <ListHeaderWrapper msg={msg} err={errMsg} />
   }
 
   render() {

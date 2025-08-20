@@ -1,14 +1,14 @@
+import {cardanoConfig} from '@yoroi/blockchains'
+import {Balance, Wallet} from '@yoroi/types'
+
 import * as CSL from '@emurgo/cross-csl-core'
 import {
   RemoteUnspentOutput,
-  signRawTransaction,
   UtxoAsset,
+  signRawTransaction,
 } from '@emurgo/yoroi-lib'
 import {normalizeToAddress} from '@emurgo/yoroi-lib/dist/internals/utils/addresses'
 import {parseTokenList} from '@emurgo/yoroi-lib/dist/internals/utils/assets'
-import {cardanoConfig} from '@yoroi/blockchains'
-import {Balance, Wallet} from '@yoroi/types'
-import {BalanceAmounts} from '@yoroi/types/src/balance/token'
 import {BigNumber} from 'bignumber.js'
 import {Buffer} from 'buffer'
 import _ from 'lodash'
@@ -16,8 +16,9 @@ import _ from 'lodash'
 import {logger} from '~/kernel/logger/logger'
 import {RawUtxo} from '~/wallets/types/other'
 import {YoroiUnsignedTx} from '~/wallets/types/yoroi'
-import {asQuantity, Utxos} from '~/wallets/utils/utils'
+import {Utxos, asQuantity} from '~/wallets/utils/utils'
 import {Cardano, CardanoMobile} from '~/wallets/wallets'
+
 import {toAssetNameHex, toPolicyId} from '../api/utils'
 import {identifierToCardanoAsset} from '../assetUtils'
 import * as cip8 from '../cip8/cip8'
@@ -146,9 +147,9 @@ class CIP30Extension {
   async signData(
     rootKey: string,
     address: string,
-    _payload: string,
+    payload: string,
   ): Promise<{signature: string; key: string}> {
-    // const payloadInBytes = Buffer.from(payload, 'hex')
+    const payloadInBytes = Buffer.from(payload, 'hex')
     const normalisedAddress = normalizeToAddress(CardanoMobile, address)
     const bech32Address = normalisedAddress?.toBech32(undefined)
     if (!bech32Address || !normalisedAddress) throw new Error('Invalid address')
@@ -175,12 +176,12 @@ class CIP30Extension {
           )
 
     const signingKey = createRawTxSigningKey(rootKey, signingPath)
-    const coseSign1 = cip8.sign(
+    const coseSign1 = await cip8.sign(
       Buffer.from(normalisedAddress.toHex(), 'hex'),
       signingKey,
       payloadInBytes,
     )
-    const key = cip8.makeCip8Key(signingKey.toPublic().asBytes())
+    const key = await cip8.makeCip8Key(signingKey.toPublic().asBytes())
 
     return {
       signature: Buffer.from(coseSign1.toBytes()).toString('hex'),
@@ -330,7 +331,7 @@ const _getUtxos = async (
     return paginate(validUtxos, pagination)
   }
 
-  const amounts: BalanceAmounts = {}
+  const amounts: Balance.Amounts = {}
 
   const isValueNumber = !isNaN(Number(valueStr))
 
@@ -484,7 +485,7 @@ const _drawCollateralInMultipleUtxos = async (
 
 const getAmountsFromValue = (value: string, primaryTokenId: string) => {
   const valueFromHex = CardanoMobile.Value.fromHex(value)
-  const amounts: BalanceAmounts = {}
+  const amounts: Balance.Amounts = {}
 
   if (valueFromHex.hasValue()) {
     amounts[primaryTokenId] = asQuantity(valueFromHex.coin().toStr())

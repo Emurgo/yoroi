@@ -1,9 +1,11 @@
-import {useIsFocused} from '@react-navigation/native'
 import {atoms as a, useTheme} from '@yoroi/theme'
+
+import {useIsFocused} from '@react-navigation/native'
 import * as React from 'react'
 import {ScrollView, View} from 'react-native'
 
 import {useBrowser} from '~/features/Discover/common/BrowserProvider'
+
 import {getGoogleSearchItem, urlWithProtocol} from '../../common/helpers'
 import {useNavigateTo} from '../../common/useNavigateTo'
 import {BrowserSearchToolbar} from '../BrowseDapp/BrowserSearchToolbar'

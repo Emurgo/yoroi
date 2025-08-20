@@ -1,10 +1,11 @@
 // import messaging from '@react-native-firebase/messaging'
+// import {WalletNavigation} from '~/kernel/navigation/navigation'
 import {isNumber, isRecord, isString} from '@yoroi/common'
 import {Portfolio, Notifications as YoroiNotifications} from '@yoroi/types'
+
 import * as Notifications from 'expo-notifications'
 import {Linking, PermissionsAndroid, Platform} from 'react-native'
 
-// import {WalletNavigation} from '~/kernel/navigation/navigation'
 import {BannerIds} from './banners'
 import {uiStorage} from './storage'
 

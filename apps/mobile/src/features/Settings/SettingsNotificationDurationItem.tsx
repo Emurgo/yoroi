@@ -1,5 +1,6 @@
 import {isNumber} from '@yoroi/common'
 import {useNotificationsConfig} from '@yoroi/notifications'
+
 import * as React from 'react'
 
 import {

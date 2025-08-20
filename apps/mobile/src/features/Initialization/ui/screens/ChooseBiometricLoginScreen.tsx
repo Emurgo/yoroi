@@ -11,13 +11,13 @@ import {Alert, Text, View} from 'react-native'
 import * as DeviceInfo from 'react-native-device-info'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {useAuth} from '~/features/Auth/context/AuthProvider'
+import {usePromise} from '~/hooks/usePromise'
 import {useStrings} from '~/kernel/i18n/useStrings'
+import {logger} from '~/kernel/logger/logger'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Button, ButtonType} from '~/ui/Button/Button'
 
-import {useAuth} from '~/features/Auth/context/AuthProvider'
-import {usePromise} from '~/hooks/usePromise'
-import {logger} from '~/kernel/logger/logger'
 import {Biometric} from '../illustrations/Biometric'
 
 export const ChooseBiometricLoginScreen = () => {

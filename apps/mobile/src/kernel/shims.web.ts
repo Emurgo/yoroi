@@ -1,6 +1,6 @@
+import {Buffer} from 'buffer'
 import 'fast-text-encoding'
 
-import {Buffer} from 'buffer'
 import '../kernel/i18n/polyfills'
 
 declare global {

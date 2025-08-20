@@ -1,5 +1,6 @@
 import {Blockies} from '@yoroi/identicon'
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
 import {Alert, Platform, Text, View} from 'react-native'
 

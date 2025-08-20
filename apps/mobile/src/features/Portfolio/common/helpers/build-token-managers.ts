@@ -5,6 +5,7 @@ import {
   portfolioTokenStorageMaker,
 } from '@yoroi/portfolio'
 import {App, Chain, Portfolio} from '@yoroi/types'
+
 import {freeze} from 'immer'
 
 const buildPortfolioTokenManager = ({

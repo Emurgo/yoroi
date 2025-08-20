@@ -1,3 +1,5 @@
+import {Api, App, HW, Network, Portfolio, Wallet} from '@yoroi/types'
+
 import {WalletChecksum as WalletChecksumType} from '@emurgo/cip4-js'
 import * as CoreTypes from '@emurgo/cross-csl-core'
 import {
@@ -10,28 +12,25 @@ import {
   TxMetadata as TxMetadataType,
   UnsignedTx as UnsignedTxType,
 } from '@emurgo/yoroi-lib'
-import {Api, App, HW, Network, Portfolio, Wallet} from '@yoroi/types'
-import {BigNumber} from 'bignumber.js'
 
-import type {
+import {WalletEncryptedStorage} from '~/kernel/storage/EncryptedStorage'
+
+import {
   FundInfoResponse,
   RawUtxo,
   TransactionInfo,
   TxStatusRequest,
   TxStatusResponse,
   WalletState,
-} from '@yoroi/types'
+} from '../types/other'
 import {
   AccountStates,
   StakePoolInfoRequest,
   StakePoolInfosAndHistories,
   StakingInfo,
   StakingStatus,
-  YoroiEntry,
-  YoroiSignedTx,
-  YoroiUnsignedTx,
-} from '@yoroi/types'
-import {WalletEncryptedStorage} from '~/kernel/storage/EncryptedStorage'
+} from '../types/staking'
+import {YoroiEntry, YoroiSignedTx, YoroiUnsignedTx} from '../types/yoroi'
 import type {Addresses} from './account-manager/account-manager'
 
 export type WalletEvent =

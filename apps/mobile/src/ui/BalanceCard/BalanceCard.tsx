@@ -11,6 +11,7 @@ import {usePortfolioTokenActivity} from '~/features/Portfolio/context/PortfolioT
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {BalanceCardSkeleton} from '~/ui/BalanceCardSkeleton/BalanceCardSkeleton'
 import {BalanceHeaderCard} from '~/ui/BalanceHeaderCard/BalanceHeaderCard'
+
 import {BalanceCardContent} from '../BalanceCardContent/BalanceCardContent'
 
 export const BalanceCard = () => {

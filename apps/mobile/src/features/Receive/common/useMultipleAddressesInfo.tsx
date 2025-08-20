@@ -1,14 +1,15 @@
 import {
-  UseMutationOptions,
-  useQuery,
-  UseQueryOptions,
-} from '@tanstack/react-query'
-import {
   isBoolean,
   parseSafe,
   useAsyncStorage,
   useMutationWithInvalidations,
 } from '@yoroi/common'
+
+import {
+  UseMutationOptions,
+  UseSuspenseQueryOptions,
+  useSuspenseQuery,
+} from '@tanstack/react-query'
 
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 
@@ -32,14 +33,13 @@ const useSetShowMultipleAddressesInfo = (
 }
 
 const useIsShowingMultipleAddressesInfo = (
-  options?: UseQueryOptions<boolean, Error, boolean>,
+  options?: UseSuspenseQueryOptions<boolean, Error, boolean>,
 ) => {
   const storage = useAsyncStorage()
   const {wallet} = useSelectedWallet()
   const walletStorage = storage.join(`wallet/${wallet.id}/`)
 
-  const query = useQuery({
-    suspense: true,
+  const query = useSuspenseQuery({
     queryKey: [wallet.id, isShowingMultipleAddressInfoKey],
     ...options,
     queryFn: async () => {

@@ -2,7 +2,7 @@ import {CredKind} from '@emurgo/cross-csl-core'
 import {useSuspenseQuery} from '@tanstack/react-query'
 import {isNonNullable} from '@yoroi/common'
 import {ApiUtxoData, Portfolio} from '@yoroi/types'
-import {NetworkApi} from '@yoroi/types/lib/typescript/network/manager'
+
 import _ from 'lodash'
 
 import {usePortfolioTokenInfosSuspense} from '~/features/Portfolio/common/hooks/usePortfolioTokenInfos'
@@ -13,6 +13,7 @@ import {deriveRewardAddressFromAddress} from '~/wallets/cardano/utils'
 import {wrappedCsl} from '~/wallets/cardano/wrappedCsl'
 import {RawUtxo} from '~/wallets/types/other'
 import {asQuantity} from '~/wallets/utils/utils'
+
 import {
   FormattedCertificate,
   FormattedFee,
@@ -23,6 +24,7 @@ import {
   TransactionInputs,
   TransactionOutputs,
 } from '../types'
+import {NetworkApi} from '../../../../../../../packages/types/lib/typescript/network/manager'
 
 export const useFormattedTx = (data: TransactionBody): FormattedTx => {
   const {wallet} = useSelectedWallet()
@@ -304,8 +306,8 @@ const getAddressKind = async (
   const {csl, release} = wrappedCsl()
 
   try {
-    const address = await csl.Address.fromBech32(addressBech32)
-    const addressKind = await (await address.paymentCred())?.kind()
+    const address = csl.Address.fromBech32(addressBech32)
+    const addressKind = address.paymentCred()?.kind()
     return addressKind ?? null
   } finally {
     release()

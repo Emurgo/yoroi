@@ -1,11 +1,13 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import {LinearGradient} from 'expo-linear-gradient'
 import * as React from 'react'
-import {useWindowDimensions, View} from 'react-native'
+import {View, useWindowDimensions} from 'react-native'
 import QRCode from 'react-native-qrcode-svg'
 
 import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
+
 import {YoroiLogoIllustration} from '../YoroiLogoIllustration/YoroiLogoIllustration'
 
 type ShareProps = {

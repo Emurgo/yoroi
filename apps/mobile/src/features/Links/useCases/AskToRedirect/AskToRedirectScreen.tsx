@@ -1,4 +1,5 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
 import {Linking, ScrollView, Text, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
@@ -37,12 +38,12 @@ export const AskToRedirectScreen = ({link}: {link: string}) => {
           size="S"
           type={ButtonType.Secondary}
           onPress={closeModal}
-          title={strings.links.cancel}
+          title={strings.global.cancel}
         />
 
         <Space.Width.md />
 
-        <Button size="S" onPress={handleOnConfirm} title={strings.links.ok} />
+        <Button size="S" onPress={handleOnConfirm} title={strings.global.ok} />
       </Actions>
     </SafeAreaView>
   )

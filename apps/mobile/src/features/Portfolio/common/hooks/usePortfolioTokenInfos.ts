@@ -1,11 +1,12 @@
-import {
-  useQuery,
-  UseQueryOptions,
-  useSuspenseQuery,
-  UseSuspenseQueryOptions,
-} from '@tanstack/react-query'
 import {createUnknownTokenInfo, isPrimaryToken} from '@yoroi/portfolio'
 import {Portfolio} from '@yoroi/types'
+
+import {
+  UseQueryOptions,
+  UseSuspenseQueryOptions,
+  useQuery,
+  useSuspenseQuery,
+} from '@tanstack/react-query'
 
 import {YoroiWallet} from '~/wallets/cardano/types'
 

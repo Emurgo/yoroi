@@ -6,6 +6,7 @@ import {View, ViewStyle} from 'react-native'
 import {Received} from '~/ui/Icon/Received'
 import {Send} from '~/ui/Icon/Send'
 import {Transaction} from '~/ui/Icon/Transaction'
+
 import {MultiParty} from './MultiParty'
 import {IconProps} from './type'
 

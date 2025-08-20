@@ -1,5 +1,6 @@
 import {amountBreakdown, infoExtractName} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
 import {Image, ImageSourcePropType, ImageStyle, Text, View} from 'react-native'
 
@@ -25,7 +26,7 @@ export const LiquidityPoolModal = ({tokenInfo, splitTokenSymbol}: Props) => {
   const secondTokenName = infoExtractName(secondToken.info)
 
   return (
-    <View style={[a.pl_lg, a.flex_col, a.gap_sm, {paddingVertical: 14}]}>
+    <View style={[a.pl_lg, a.flex_col, a.gap_sm, a.py_lg]}>
       <View style={[a.flex_row, a.align_center, a.gap_md]}>
         <View style={[a.relative, {width: 40, height: 40}]}>
           <AssetLogo
@@ -70,7 +71,11 @@ export const LiquidityPoolModal = ({tokenInfo, splitTokenSymbol}: Props) => {
 
           <PairedBalance
             amount={firstToken}
-            textStyle={[a.body_3_sm_regular, a.text_right, {color: p.gray_600}]}
+            textStyle={{
+              ...a.body_3_sm_regular,
+              ...a.text_right,
+              color: p.gray_600,
+            }}
           />
         </View>
       </InfoGroup>

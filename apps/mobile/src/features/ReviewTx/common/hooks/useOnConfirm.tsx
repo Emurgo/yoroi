@@ -1,5 +1,6 @@
-import {Transaction} from '@emurgo/cross-csl-core'
 import {Wallet} from '@yoroi/types'
+
+import {Transaction} from '@emurgo/cross-csl-core'
 import * as React from 'react'
 import {ErrorBoundary} from 'react-error-boundary'
 
@@ -11,6 +12,7 @@ import {getTransactionSigners} from '~/wallets/cardano/common/signatureUtils'
 import {YoroiWallet} from '~/wallets/cardano/types'
 import {createRawTxSigningKey} from '~/wallets/cardano/utils'
 import {YoroiSignedTx} from '~/wallets/types/yoroi'
+
 import {ConfirmRawTxWithHW} from '../ConfirmRawTxWithHw'
 import {useNavigateTo} from './useNavigateTo'
 import {usePromptRootKey} from './usePromptRootKey'
@@ -86,7 +88,7 @@ export const useOnConfirm = ({
       }
 
       openModal({
-        title: strings.global.signTransaction,
+        title: strings.staking.signTransaction,
         content: (
           <ErrorBoundary
             fallbackRender={({error, resetErrorBoundary}) => (
@@ -133,10 +135,8 @@ const submitTx = async (
   wallet: YoroiWallet,
   meta: Wallet.Meta,
 ) => {
-  const signers = await getTransactionSigners(cbor, wallet, meta)
-  const keys = await Promise.all(
-    signers.map(async (signer) => createRawTxSigningKey(rootKey, signer)),
-  )
+  const signers = getTransactionSigners(cbor, wallet, meta)
+  const keys = signers.map((signer) => createRawTxSigningKey(rootKey, signer))
   const response = await wallet.signRawTx(cbor, keys)
   if (!response) throw new Error('useOnConfirm:: not possible to sign tx')
   const hexBase64 = Buffer.from(response).toString('base64')

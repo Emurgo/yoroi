@@ -1,12 +1,6 @@
-import {wrappedCsl} from '../wrappedCsl'
 import {keyManager} from './key-manager'
 
 describe('makeKeys', () => {
-  const {csl, release} = wrappedCsl()
-  afterAll(() => {
-    release()
-  })
-
   it('makes root key and accountPubKeyHex - shelley - cip1852', async () => {
     const mnemonic = [
       'dry balcony arctic what garbage sort',
@@ -14,7 +8,7 @@ describe('makeKeys', () => {
       'slide assault bus',
     ].join(' ')
 
-    const keys = await keyManager('cardano-cip1852')({mnemonic, csl})
+    const keys = keyManager('cardano-cip1852')({mnemonic})
 
     expect(keys).toEqual({
       accountPubKeyHex:
@@ -24,14 +18,14 @@ describe('makeKeys', () => {
     })
   })
 
-  it('makes root key and accountPubKeyHex - byron - bip44', async () => {
+  it('makes root key and accountPubKeyHex - byron - bip44', () => {
     const mnemonic = [
       'dry balcony arctic what garbage sort',
       'cart shine egg lamp manual bottom',
       'slide assault bus',
     ].join(' ')
 
-    const keys = await keyManager('cardano-bip44')({mnemonic, csl})
+    const keys = keyManager('cardano-bip44')({mnemonic})
 
     expect(keys).toEqual({
       accountPubKeyHex:

@@ -1,14 +1,14 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
+
 import {LinearGradient} from 'expo-linear-gradient'
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
-type ShowDisclaimerProps = {
+type ShowDisclaimerProps = React.PropsWithChildren<{
   title: string
-  children: React.ReactNode
-}
+}>
 export const ShowDisclaimer = ({title, children}: ShowDisclaimerProps) => {
-  const {palette: p, atoms: a} = useTheme()
+  const {palette: p} = useTheme()
 
   return (
     <LinearGradient

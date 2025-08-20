@@ -1,9 +1,10 @@
-import {useFocusEffect, useNavigation} from '@react-navigation/native'
-import {FlashList} from '@shopify/flash-list'
 import {infoFilterByName, isPrimaryToken} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
 import {Portfolio} from '@yoroi/types'
+
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
+import {FlashList} from '@shopify/flash-list'
 import * as React from 'react'
 import {Alert, TouchableOpacity, View} from 'react-native'
 
@@ -19,6 +20,7 @@ import {NoAssetFoundImage} from '~/ui/NoAssetFoundImage/NoAssetFoundImage'
 import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
 import {TokenAmountItem} from '~/ui/TokenAmountItem/TokenAmountItem'
+
 import {MaxAmountsPerTx} from './Show/MaxAmountsPerTx'
 
 export const SelectTokenFromListScreen = () => {

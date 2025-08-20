@@ -149,6 +149,13 @@ export const metricsConsentRequestedStorageKeyManager = settingsStorageKeyMaker(
   },
 )
 
+// Settings - Privacy Mode
+export const privacyModeStorageKey = 'privacyMode'
+export const privacyModeStorageKeyManager = settingsStorageKeyMaker<boolean>({
+  key: privacyModeStorageKey,
+  parser: (data) => Boolean(parseBoolean(data)),
+})
+
 // Settings - Currency
 export const currencyStorageKey = 'currencySymbol'
 export const currencyStorageKeyManager =

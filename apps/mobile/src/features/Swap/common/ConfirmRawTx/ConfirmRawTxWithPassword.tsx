@@ -2,6 +2,7 @@ import React, {useState} from 'react'
 
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {Space} from '~/ui/Space/Space'
+
 import {ConfirmWithSpendingPassword} from '../ConfirmWithSpendingPassword'
 
 type Props = {
@@ -19,7 +20,7 @@ export const ConfirmRawTxWithPassword = ({
 
   const handlePasswordConfirm = async (password: string) => {
     const rootKey = await wallet.encryptedStorage.xpriv.read(password)
-    return onConfirm?.(rootKey)
+    return onConfirm?.(rootKey.value)
   }
 
   return (

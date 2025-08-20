@@ -1,13 +1,15 @@
-import {
-  useMutation,
-  UseMutationOptions,
-  useQuery,
-  useQueryClient,
-} from '@tanstack/react-query'
 import {parseSafe, useAsyncStorage} from '@yoroi/common'
 import {configCurrencies} from '@yoroi/portfolio'
 import {App, Portfolio} from '@yoroi/types'
+
+import {
+  UseMutationOptions,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query'
 import * as React from 'react'
+
 import {usePrimaryTokenActivity} from '~/features/Pairing/hooks/usePrimaryTokenActivity'
 
 export const supportedCurrencies = Object.keys(

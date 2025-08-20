@@ -1,32 +1,33 @@
-import {useMutation, UseMutationOptions} from '@tanstack/react-query'
 import {useCatalyst} from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
+
+import {UseMutationOptions, useMutation} from '@tanstack/react-query'
 import * as React from 'react'
 import {ActivityIndicator, ScrollView, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {useReviewTx} from '~/features/ReviewTx/common/ReviewTxProvider'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Button} from '~/ui/Button/Button'
+import {BACKSPACE, NumericKeyboard} from '~/ui/NumericKeyboard'
+import {Space} from '~/ui/Space/Space'
+import {generatePrivateKeyForCatalyst} from '~/wallets/cardano/catalyst'
+import {encryptWithPassword} from '~/wallets/cardano/catalyst/catalystCipher'
+
+import {useNavigateTo} from '../../CatalystNavigator'
 import {
   Actions,
   Description,
   PinBox,
   Row,
   Stepper,
-} from '~/ui/common/components'
-import {BACKSPACE, NumericKeyboard} from '~/ui/NumericKeyboard/NumericKeyboard'
-import {Space} from '~/ui/Space/Space'
-import {generatePrivateKeyForCatalyst} from '~/wallets/cardano/catalyst'
-import {encryptWithPassword} from '~/wallets/cardano/catalyst/catalystCipher'
-import {useNavigateTo} from '../CatalystNavigator'
-import {useReviewTx} from '../ReviewTx/common/ReviewTxProvider'
+} from '../../common/components'
 
 export const ConfirmPin = () => {
   const strings = useStrings()
-  const {isDark} = useTheme()
-  const {palette: p} = useTheme()
+  const {isDark, atoms: ta} = useTheme()
   const {pin, votingKeyEncryptedChanged} = useCatalyst()
   const navigateTo = useNavigateTo()
   const [currentActivePin, setCurrentActivePin] = React.useState(1)
@@ -34,7 +35,7 @@ export const ConfirmPin = () => {
   const {unsignedTxChanged} = useReviewTx()
   const {navigateToTxReview} = useWalletNavigation()
 
-  const {generateVotingKeys, isLoading} = useGenerateVotingKeys({
+  const {generateVotingKeys, isPending} = useGenerateVotingKeys({
     onSuccess: async ({catalystKeyHex, votingKeyEncrypted}) => {
       votingKeyEncryptedChanged(votingKeyEncrypted)
 
@@ -212,7 +213,7 @@ export const ConfirmPin = () => {
   return (
     <SafeAreaView
       edges={['left', 'right', 'bottom']}
-      style={[a.flex_1, {backgroundColor: p.bg_color_max}, a.px_lg, a.pb_lg]}
+      style={[a.flex_1, ta.bg_color_max, a.px_lg, a.pb_lg]}
     >
       <Padding style={a.px_lg}>
         <Stepper
@@ -272,14 +273,14 @@ export const ConfirmPin = () => {
         </Row>
       </ScrollView>
 
-      <View style={[{flex: 1}]} />
+      <View style={a.flex_1} />
 
       <Padding style={a.px_lg}>
         <Actions>
           <Button
             onPress={() => onNext()}
             title={strings.registerCatalyst.confirm}
-            disabled={!done || isLoading}
+            disabled={!done || isPending}
           />
         </Actions>
       </Padding>
@@ -288,17 +289,12 @@ export const ConfirmPin = () => {
 
       <NumericKeyboard onKeyDown={onKeyDown} />
 
-      {isLoading && (
+      {isPending && (
         <View
           style={[
-            {
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              backgroundColor: p.bg_color_max,
-            },
+            a.inset_0,
+            a.absolute,
+            ta.bg_color_max,
             a.align_center,
             a.justify_center,
           ]}
@@ -326,21 +322,25 @@ const useGenerateVotingKeys = (
     GenerateKeysInput
   >,
 ) => {
-  const mutation = useMutation(async (pin: string) => {
-    const catalystKey = await generatePrivateKeyForCatalyst()
-      .then((key) => key.toRawKey())
-      .then((key) => key.asBytes())
+  const mutation = useMutation({
+    mutationFn: async (pin: string) => {
+      const catalystKey = generatePrivateKeyForCatalyst().toRawKey().asBytes()
 
-    const catalystKeyHex = Buffer.from(catalystKey).toString('hex')
+      const catalystKeyHex = Buffer.from(catalystKey).toString('hex')
 
-    const password = new Uint8Array(Buffer.from(pin.split('').map(Number)))
-    const votingKeyEncrypted = await encryptWithPassword(password, catalystKey)
+      const password = new Uint8Array(Buffer.from(pin.split('').map(Number)))
+      const votingKeyEncrypted = await encryptWithPassword(
+        password,
+        catalystKey,
+      )
 
-    return {
-      catalystKeyHex,
-      votingKeyEncrypted,
-    }
-  }, options)
+      return {
+        catalystKeyHex,
+        votingKeyEncrypted,
+      }
+    },
+    ...options,
+  })
 
   return {
     ...mutation,

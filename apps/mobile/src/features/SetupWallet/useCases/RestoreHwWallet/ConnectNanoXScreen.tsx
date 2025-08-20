@@ -1,8 +1,10 @@
-import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {HW} from '@yoroi/types'
+
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import * as React from 'react'
+import {useIntl} from 'react-intl'
 import {View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
@@ -12,21 +14,24 @@ import {
 } from '~/features/SetupWallet/common/WalletDuplicatedModal/WalletDuplicatedModal'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {showErrorDialog} from '~/kernel/dialogs'
-
 import {LocalizableError} from '~/kernel/i18n/LocalizableError'
+import {errorMessages} from '~/kernel/i18n/messages/global'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {SetupWalletRouteNavigation} from '~/kernel/navigation/types'
+import {LedgerConnect} from '~/ui/LedgerConnect/LedgerConnect'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {StepperProgress} from '~/ui/StepperProgress/StepperProgress'
 import {getHWDeviceInfo} from '~/wallets/cardano/hw/hw'
-import {LedgerConnect} from '../legacy/HW'
+import {Device} from '~/wallets/types/hw'
 
-type Props = {}
+type Props = {
+  defaultDevices: Device[]
+}
 
 export const ConnectNanoXScreen = ({defaultDevices}: Props) => {
   const strings = useStrings()
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
   const {walletManager} = useWalletManager()
   const {openModal} = useModal()
   const {track} = useMetrics()
@@ -34,6 +39,7 @@ export const ConnectNanoXScreen = ({defaultDevices}: Props) => {
   const navigation = useNavigation<SetupWalletRouteNavigation>()
 
   const {hwDeviceInfoChanged, walletImplementation, useUSB} = useSetupWallet()
+  const intl = useIntl()
 
   useFocusEffect(
     React.useCallback(() => {
@@ -78,11 +84,11 @@ export const ConnectNanoXScreen = ({defaultDevices}: Props) => {
 
   const onError = (error: Error) => {
     if (error instanceof LocalizableError) {
-      showErrorDialog(strings.global.generalLocalizableError, {
-        message: error.defaultMessage,
+      showErrorDialog(errorMessages.generalLocalizableError, undefined, {
+        message: intl.formatMessage(error.descriptor),
       })
     } else {
-      showErrorDialog(strings.global.hwConnectionError, {
+      showErrorDialog(errorMessages.hwConnectionError, undefined, {
         message: String(error.message),
       })
     }
@@ -103,7 +109,7 @@ export const ConnectNanoXScreen = ({defaultDevices}: Props) => {
   return (
     <SafeAreaView
       edges={['left', 'right', 'bottom']}
-      style={[a.flex_1, {backgroundColor: p.bg_color_max}]}
+      style={[a.flex_1, ta.bg_color_max]}
     >
       <StepperProgress
         style={[a.p_lg]}

@@ -8,6 +8,7 @@ import {
 } from '@yoroi/notifications'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Notifications as NotificationTypes} from '@yoroi/types'
+
 import * as React from 'react'
 import {Switch as RNSwitch, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
@@ -16,6 +17,7 @@ import {useWalletManager} from '~/features/WalletManager/context/WalletManagerPr
 import {Button} from '~/ui/Button/Button'
 import {ScrollView} from '~/ui/ScrollView/ScrollView'
 import {Text} from '~/ui/Text/Text'
+
 import {useNotificationManagerMaker} from '../common/notification-manager'
 import {createTransactionReceivedNotification} from '../common/transaction-received-notification'
 
@@ -218,7 +220,7 @@ const TransactionReceivedSetting = ({
     <View>
       <Text>Transaction Received</Text>
 
-      <View style={[styles.row, a.gap_sm]}>
+      <View style={[a.flex_row, a.gap_sm]}>
         <Text>Notify</Text>
 
         <Switch
@@ -241,7 +243,7 @@ const RewardsUpdateSetting = ({
     <View>
       <Text>Rewards Updated</Text>
 
-      <View style={[styles.row, a.gap_sm]}>
+      <View style={[a.flex_row, a.gap_sm]}>
         <Text>Notify</Text>
 
         <Switch
@@ -266,7 +268,7 @@ const PrimaryTokenPriceChangedSetting = ({
     <View>
       <Text>Primary Token Price Changed</Text>
 
-      <View style={[styles.row, a.gap_sm]}>
+      <View style={[a.flex_row, a.gap_sm]}>
         <Text>Notify</Text>
 
         <Switch
@@ -275,13 +277,13 @@ const PrimaryTokenPriceChangedSetting = ({
         />
       </View>
 
-      <View style={[styles.row, a.gap_sm]}>
+      <View style={[a.flex_row, a.gap_sm]}>
         <Text>Threshold</Text>
 
         <Text>{value.thresholdInPercent}</Text>
       </View>
 
-      <View style={[styles.row, a.gap_sm]}>
+      <View style={[a.flex_row, a.gap_sm]}>
         <Text>Interval</Text>
 
         <Text>{value.interval}</Text>

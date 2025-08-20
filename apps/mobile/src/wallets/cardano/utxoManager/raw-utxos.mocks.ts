@@ -1,4 +1,4 @@
-import {RawUtxo} from '@yoroi/types'
+import {RawUtxo} from '~/wallets/types/other'
 
 export const mockRawUtxos: ReadonlyArray<RawUtxo> = [
   {

@@ -1,12 +1,14 @@
-import {normalizeToAddress} from '@emurgo/yoroi-lib/dist/internals/utils/addresses'
 import {Balance, Chain, Portfolio} from '@yoroi/types'
+
+// TODO: REVISIT this is not exported from yoroi-lib
+import {normalizeToAddress} from '@emurgo/yoroi-lib/dist/internals/utils/addresses'
 import BigNumber from 'bignumber.js'
 
-import {Address} from '@yoroi/types'
-import {Amounts, asQuantity, Quantities} from '../utils/utils'
+import {Address} from '../types/yoroi'
+import {Amounts, Quantities, asQuantity} from '../utils/utils'
 import {CardanoMobile} from '../wallets'
-import {cardanoValueFromMultiToken} from './cardanoValueFromMultiToken'
 import {MultiToken} from './MultiToken'
+import {cardanoValueFromMultiToken} from './cardanoValueFromMultiToken'
 
 export const withMinAmounts = (
   address: Address,

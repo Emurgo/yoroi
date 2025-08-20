@@ -9,20 +9,20 @@ import {Divider} from '~/ui/Divider/Divider'
 
 export const YoroiRecordLink = () => {
   const strings = useStrings()
-  const handlePress = () =>
+  const onPress = () =>
     Linking.openURL(
       'https://2025budget.intersectmbo.org/voters/drep1ygr9tuapcanc3kpeyy4dc3vmrz9cfe5q7v9wj3x9j0ap3tswtre9j',
     )
 
   return (
-    <TouchableOpacity onPress={handlePress}>
+    <TouchableOpacity onPress={onPress}>
       <Divider />
 
       <View style={[a.pt_md, a.align_start]}>
         <Button
           title={strings.staking.yoroiRecord}
           type={ButtonType.Link}
-          onPress={handlePress}
+          onPress={onPress}
         />
       </View>
     </TouchableOpacity>

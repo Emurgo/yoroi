@@ -1,14 +1,16 @@
-import {useNavigation} from '@react-navigation/native'
 import {parseNumber} from '@yoroi/common'
 import {
   useNotificationsConfig,
   useUpdateNotificationsConfig,
 } from '@yoroi/notifications'
 import {atoms as a, useTheme} from '@yoroi/theme'
+
+import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 import {ScrollView, Text, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {useFormatNumber} from '~/kernel/i18n/useFormatNumber'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Button} from '~/ui/Button/Button'
@@ -43,6 +45,7 @@ export const ManageNotificationDisplayDurationScreen = () => {
   const config = useConfig()
   const {mutate: updateConfig} = useUpdateNotificationsConfig()
   const navigation = useNavigation()
+  const formatNumber = useFormatNumber()
 
   const {atoms: ta, palette: p} = useTheme()
   const strings = useStrings()
@@ -239,14 +242,9 @@ const isInputValid = (text: string) => {
 }
 
 const useConfig = () => {
-  const {data: config} = useNotificationsConfig({suspense: true})
+  const {data: config} = useNotificationsConfig()
   if (!config) {
     throw new Error('Config not found')
   }
   return config
 }
-
-// function formatNumber(displayDuration: number): string {
-//   // TODO: Implement this
-//   return '0'
-// }

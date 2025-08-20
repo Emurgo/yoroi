@@ -1,4 +1,5 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import React, {useState} from 'react'
 import {ImageSourcePropType, Text, View, ViewStyle} from 'react-native'
 
@@ -40,12 +41,12 @@ export const WalletNameForm = ({
 
   const handleSubmit = () => {
     if (walletName.length === 0) {
-      setError(strings.setupWallet.walletNameForm.walletNameErrorMustBeFilled)
+      setError(strings.setupWallet.walletNameErrorMustBeFilled)
       return
     }
 
     if (walletName.length > 20) {
-      setError(strings.setupWallet.walletNameForm.walletNameErrorTooLong)
+      setError(strings.setupWallet.walletNameErrorTooLong)
       return
     }
 
@@ -69,8 +70,10 @@ export const WalletNameForm = ({
 
         {image && (
           <>
-            <View style={[a.align_center, a.mb_lg]}>
-              <Icon.WalletAvatar image={image} />
+            <View style={[a.align_center, a.pb_lg]}>
+              <Icon.WalletAvatar
+                image={typeof image === 'string' ? image : ''}
+              />
             </View>
 
             <Space.Height.lg />
@@ -78,13 +81,13 @@ export const WalletNameForm = ({
         )}
 
         <TextInput
-          label={strings.setupWallet.walletNameForm.walletNameInputLabel}
+          label={strings.setupWallet.walletDetailsNameInput}
           value={walletName}
           onChangeText={(text) => {
             setWalletName(text)
             setError('')
           }}
-          error={error}
+          errorText={error}
           autoFocus
           autoComplete="off"
           testID="walletNameInput"
@@ -93,7 +96,7 @@ export const WalletNameForm = ({
         <Space.Height.lg />
 
         <Button
-          title={strings.setupWallet.walletNameForm.save}
+          title={strings.setupWallet.save}
           onPress={handleSubmit}
           disabled={isWaiting}
           testID="saveButton"
@@ -131,7 +134,6 @@ const Step = ({currentStep, displayStepNumber, todoStep}: StepProps) => {
     >
       {displayStepNumber === true && (
         <Text
-          small
           style={{
             fontSize: 7,
             lineHeight: 10,
@@ -155,7 +157,7 @@ export const ProgressStep = ({
   totalSteps,
   displayStepNumber,
 }: ProgressStepProps) => {
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
   const steps: Array<React.ReactNode> = []
   for (let i = 0; i < totalSteps; i++) {
     steps.push(
@@ -169,11 +171,13 @@ export const ProgressStep = ({
   }
   return (
     <View
-      style={{
-        backgroundColor: p.bg_color_max,
-        height: 10,
-        ...a.flex_row,
-      }}
+      style={[
+        a.flex_row,
+        ta.bg_color_max,
+        {
+          height: 10,
+        },
+      ]}
     >
       {steps}
     </View>

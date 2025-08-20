@@ -1,3 +1,5 @@
+import {Balance, Portfolio} from '@yoroi/types'
+
 import {
   CertificateJSON,
   TransactionBodyJSON,
@@ -5,7 +7,6 @@ import {
   TransactionOutputsJSON,
 } from '@emurgo/cardano-serialization-lib-nodejs'
 import {CredKind} from '@emurgo/cross-csl-core'
-import {Balance, Portfolio} from '@yoroi/types'
 
 export type TransactionBody = TransactionBodyJSON
 export type TransactionInputs = TransactionInputsJSON

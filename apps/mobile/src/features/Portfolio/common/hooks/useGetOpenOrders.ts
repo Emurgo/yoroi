@@ -1,7 +1,8 @@
-import {useQuery, UseQueryOptions} from '@tanstack/react-query'
+import {UseQueryOptions, useQuery} from '@tanstack/react-query'
 import {ImageSourcePropType} from 'react-native'
 
 import {getDappFallbackLogo} from '~/features/Discover/common/helpers'
+
 import {IAsset, mockAmount} from './useGetLiquidityPool'
 
 export interface IOpenOrders {
@@ -36,15 +37,13 @@ const listOpenOrders: IOpenOrders[] = [
 ]
 
 export const useGetOpenOrders = (
-  options: UseQueryOptions<
-    IOpenOrders[],
-    Error,
-    IOpenOrders[],
-    ['useGetOpenOrders']
+  options: Omit<
+    UseQueryOptions<IOpenOrders[], Error, IOpenOrders[], ['useGetOpenOrders']>,
+    'queryKey' | 'queryFn'
   > = {},
 ) => {
   const query = useQuery({
-    useErrorBoundary: true,
+    throwOnError: true,
     ...options,
     queryKey: ['useGetOpenOrders'],
     queryFn: async () => {

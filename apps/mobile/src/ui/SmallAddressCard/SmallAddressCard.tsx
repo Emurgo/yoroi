@@ -1,4 +1,5 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import {LinearGradient} from 'expo-linear-gradient'
 import * as React from 'react'
 import {Text, TouchableOpacity, View} from 'react-native'
@@ -7,6 +8,7 @@ import Animated, {FadeInUp, FadeOut, Layout} from 'react-native-reanimated'
 import {useCopy} from '~/features/Copy/context/CopyProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Space} from '~/ui/Space/Space'
+
 import {SkeletonSmallCardAddress} from '../SkeletonAddressDetail/SkeletonAddressDetail'
 
 type SmallAddressCardProps = {

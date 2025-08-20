@@ -20,6 +20,10 @@ export const LoginWithHostScreen = () => {
     resolve()
   }, [resolve])
 
+  const handleOnPress = () => {
+    resolve()
+  }
+
   return (
     <View style={[a.flex_1, a.flex_col, a.justify_between]}>
       <Space.Height.lg fill />
@@ -32,7 +36,7 @@ export const LoginWithHostScreen = () => {
         <Button
           title={strings.auth.authorize}
           disabled={isPending}
-          onPress={resolve}
+          onPress={handleOnPress}
         />
       </BottomSection>
     </View>

@@ -317,4 +317,16 @@ export const portfolioMessages = defineMessages({
     id: 'nft.detail.metadata',
     defaultMessage: '!!!Metadata',
   },
+  nftCount: {
+    id: 'portfolio.nftCount',
+    defaultMessage: '!!!NFT Count',
+  },
+  noNftsFound: {
+    id: 'portfolio.noNftsFound',
+    defaultMessage: '!!!No NFTs found',
+  },
+  noNftsInWallet: {
+    id: 'portfolio.noNftsInWallet',
+    defaultMessage: '!!!No NFTs in wallet',
+  },
 })

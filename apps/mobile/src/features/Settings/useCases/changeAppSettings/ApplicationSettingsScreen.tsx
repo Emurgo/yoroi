@@ -1,18 +1,20 @@
 import {networkConfigs} from '@yoroi/blockchains'
 import {useSyncStorageToState} from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
 import {ScrollView} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
+
 import {useAuthSetting} from '~/features/Auth/hooks/useAuthSetting'
 import {useAuthWithOs} from '~/features/Auth/hooks/useAuthWithOs'
 import {useIsAuthOsSupported} from '~/features/Auth/hooks/useIsAuthOsSupported'
-import {useNavigateTo} from '~/features/Settings/common/navigation'
 import {
   NavigatedSettingsItem,
   SettingsItem,
   SettingsSection,
 } from '~/features/Settings/SettingsItems'
+import {useNavigateTo} from '~/features/Settings/common/navigation'
 import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
 import {isAndroid} from '~/kernel/constants'
 import {useLanguage} from '~/kernel/i18n/LanguageProvider'
@@ -25,8 +27,9 @@ import {
 import {Icon} from '~/ui/Icon'
 import {SettingsSwitch} from '~/ui/SettingsSwitch/SettingsSwitch'
 import {Space} from '~/ui/Space/Space'
+
 import {useCurrencyPairing} from './Currency/CurrencyContext'
-import {usePrivacyMode} from './PrivacyMode/PrivacyMode'
+import {usePrivacyMode} from './PrivacyMode/usePrivacyMode'
 import {
   changeScreenShareNativeSettingOnAndroid,
   useScreenShareSettingEnabled,
@@ -40,7 +43,7 @@ export const ApplicationSettingsScreen = () => {
     (lang) => lang.code === languageCode,
   ) as LanguageRecord
 
-  const {isTogglePrivacyModeLoading, isPrivacyActive} = usePrivacyMode()
+  const {isPrivacyActive} = usePrivacyMode()
   const {currency} = useCurrencyPairing()
 
   const authSetting = useAuthSetting()
@@ -155,7 +158,7 @@ export const ApplicationSettingsScreen = () => {
             <SettingsSwitch
               value={authSetting === 'os'}
               onValueChange={onToggleAuthWithOs}
-              disabled={!isAuthOsSupported || isTogglePrivacyModeLoading}
+              disabled={!isAuthOsSupported}
             />
           </SettingsItem>
 
@@ -186,8 +189,7 @@ export const ApplicationSettingsScreen = () => {
 
 // to avoid switch jumps
 const PrivacyModeSwitch = ({isPrivacyActive}: {isPrivacyActive: boolean}) => {
-  const {setPrivacyModeOn, setPrivacyModeOff, isTogglePrivacyModeLoading} =
-    usePrivacyMode()
+  const {setPrivacyModeOn, setPrivacyModeOff} = usePrivacyMode()
   const [isLocalPrivacyActive, setIsLocalPrivacyOff] =
     React.useState(isPrivacyActive)
 
@@ -207,7 +209,6 @@ const PrivacyModeSwitch = ({isPrivacyActive}: {isPrivacyActive: boolean}) => {
     <SettingsSwitch
       value={isLocalPrivacyActive}
       onValueChange={onTogglePrivacyMode}
-      disabled={isTogglePrivacyModeLoading}
     />
   )
 }

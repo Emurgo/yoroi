@@ -1,10 +1,11 @@
 import {amountFormatter} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
 import {View} from 'react-native'
 
 import {usePortfolioPrimaryBreakdown} from '~/features/Portfolio/common/hooks/usePortfolioPrimaryBreakdown'
-import {usePrivacyMode} from '~/features/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
+import {usePrivacyMode} from '~/features/Settings/useCases/changeAppSettings/PrivacyMode/usePrivacyMode'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Space} from '~/ui/Space/Space'
@@ -55,15 +56,9 @@ const FormattedAmount = ({amount}: {amount: string}) => {
   )
 }
 
-const Row = ({children}: {children: React.ReactNode}) => {
+const Row = ({children}: React.PropsWithChildren) => {
   return (
-    <View
-      style={{
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
-    >
+    <View style={[a.flex_row, a.justify_center, a.align_center]}>
       {children}
     </View>
   )
@@ -75,7 +70,7 @@ const Label = () => {
 
   return (
     <Text style={[{color: p.gray_600}, a.body_2_md_regular]}>
-      {strings.lockedDeposit}:
+      {strings.transactions.lockedDeposit}:
     </Text>
   )
 }

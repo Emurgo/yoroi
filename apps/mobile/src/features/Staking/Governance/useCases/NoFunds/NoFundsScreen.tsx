@@ -1,16 +1,17 @@
-import {useNavigation} from '@react-navigation/native'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Chain} from '@yoroi/types'
+
+import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 import {Linking, Text, View} from 'react-native'
 
 import {LearnMoreLink} from '~/features/Staking/Governance/common/LearnMoreLink/LearnMoreLink'
+import {NoFunds} from '~/features/Staking/Governance/illustrations/NoFunds'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {TxHistoryRouteNavigation} from '~/kernel/navigation/types'
 import {Button} from '~/ui/Button/Button'
 import {Space} from '~/ui/Space/Space'
-import {NoFunds} from '../illustrations/NoFunds'
 
 export const NoFundsScreen = () => {
   const strings = useStrings()
@@ -30,7 +31,9 @@ export const NoFundsScreen = () => {
   }
 
   const buttonText =
-    network === Chain.Network.Mainnet ? strings.buyAda : strings.goToFaucet
+    network === Chain.Network.Mainnet
+      ? strings.staking.buyAda
+      : strings.staking.goToFaucet
 
   return (
     <View style={[a.flex_1, a.p_xl, ta.bg_color_max]}>
@@ -48,7 +51,7 @@ export const NoFundsScreen = () => {
             {maxWidth: 320, color: p.gray_max},
           ]}
         >
-          {strings.noFunds}
+          {strings.staking.noFunds}
         </Text>
 
         <Space.Height.lg />

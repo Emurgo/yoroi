@@ -1,9 +1,9 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
-
 import {useBlockGoBack} from '~/kernel/navigation/hooks/useBlockGoBack'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Button} from '~/ui/Button/Button'
@@ -14,7 +14,7 @@ import {SuccessfulTxIcon} from '~/ui/SuccessfulTxIcon/SuccessfulTxIcon'
 export const SubmittedTxScreen = () => {
   useBlockGoBack()
   const strings = useStrings()
-  const {palette: p} = useTheme()
+  const {atoms: ta, palette: p} = useTheme()
   const {resetToTxHistory} = useWalletNavigation()
 
   return (
@@ -24,7 +24,7 @@ export const SubmittedTxScreen = () => {
         a.flex_1,
         a.align_center,
         a.justify_center,
-        {backgroundColor: p.bg_color_max},
+        ta.bg_color_max,
       ]}
     >
       <Space.Height._2xl />
@@ -34,12 +34,7 @@ export const SubmittedTxScreen = () => {
       <Space.Height.lg />
 
       <Text
-        style={[
-          a.heading_3_medium,
-          a.px_sm,
-          a.text_center,
-          {color: p.gray_max},
-        ]}
+        style={[a.heading_3_medium, a.px_sm, a.text_center, ta.text_gray_max]}
       >
         {strings.txReview.submittedTxTitle}
       </Text>
@@ -60,7 +55,7 @@ export const SubmittedTxScreen = () => {
         <Button
           onPress={resetToTxHistory}
           title={strings.txReview.submittedTxButton}
-          style={[a.px_lg]}
+          style={a.px_lg}
         />
       </Actions>
     </SafeArea>

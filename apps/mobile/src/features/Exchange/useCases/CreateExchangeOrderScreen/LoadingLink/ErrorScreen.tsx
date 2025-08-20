@@ -1,4 +1,5 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
@@ -27,14 +28,14 @@ export const ErrorScreen = () => {
           {maxWidth: 340},
         ]}
       >
-        {strings.linkError}
+        {strings.exchange.linkError}
       </Text>
 
       <Space.Height.lg />
 
       <Button
         testID="rampOnOffErrorCloseButton"
-        title={strings.close}
+        title={strings.global.close}
         style={a.px_lg}
         onPress={closeModal}
       />

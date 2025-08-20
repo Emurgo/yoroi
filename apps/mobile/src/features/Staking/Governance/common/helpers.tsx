@@ -1,4 +1,3 @@
-import {UseQueryOptions} from '@tanstack/react-query'
 import {useAsyncStorage} from '@yoroi/common'
 import {
   type StakingKeyState,
@@ -7,6 +6,8 @@ import {
   useStakingKeyState,
   useUpdateLatestGovernanceAction,
 } from '@yoroi/staking'
+
+import {UseQueryOptions} from '@tanstack/react-query'
 import * as React from 'react'
 
 import {useReviewTx} from '~/features/ReviewTx/common/ReviewTxProvider'
@@ -18,6 +19,7 @@ import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation
 import {InfoBanner} from '~/ui/InfoBanner/InfoBanner'
 import {YoroiUnsignedTx} from '~/wallets/types/yoroi'
 import {CardanoMobile} from '~/wallets/wallets'
+
 import {GovernanceVote} from '../types'
 import {useNavigateTo} from './navigation'
 

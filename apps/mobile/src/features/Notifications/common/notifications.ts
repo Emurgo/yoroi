@@ -1,5 +1,6 @@
 import {mountAsyncStorage} from '@yoroi/common'
 import {Notifications as NotificationTypes} from '@yoroi/types'
+
 import * as Notifications from 'expo-notifications'
 
 import {

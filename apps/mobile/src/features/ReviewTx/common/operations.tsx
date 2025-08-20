@@ -2,8 +2,9 @@ import {FullPoolInfo} from '@emurgo/yoroi-lib'
 import {useSuspenseQuery} from '@tanstack/react-query'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Balance} from '@yoroi/types'
+
 import * as React from 'react'
-import {Text, useWindowDimensions, View} from 'react-native'
+import {Text, View, useWindowDimensions} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 
 import {
@@ -18,7 +19,8 @@ import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
 import {wrappedCsl} from '~/wallets/cardano/wrappedCsl'
 import {formatTokenWithText} from '~/wallets/utils/format'
-import {asQuantity, Quantities} from '~/wallets/utils/utils'
+import {Quantities, asQuantity} from '~/wallets/utils/utils'
+
 import {PoolDetails} from './PoolDetails'
 import {CertificateType, FormattedTx} from './types'
 

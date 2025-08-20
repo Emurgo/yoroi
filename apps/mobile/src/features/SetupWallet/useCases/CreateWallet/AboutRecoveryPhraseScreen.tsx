@@ -1,5 +1,6 @@
-import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {atoms as a, useTheme} from '@yoroi/theme'
+
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 import {Linking, ScrollView, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'

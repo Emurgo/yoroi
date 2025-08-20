@@ -2,6 +2,7 @@ import {useClaim, useClaimTokens} from '@yoroi/claim'
 import {toBigInt} from '@yoroi/common'
 import {useTransfer} from '@yoroi/transfer'
 import {Scan} from '@yoroi/types'
+
 import * as React from 'react'
 import {Alert, Linking} from 'react-native'
 
@@ -14,6 +15,7 @@ import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWalle
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {pastedFormatter} from '~/wallets/utils/amountUtils'
+
 import {useNavigateTo} from './useNavigateTo'
 
 export const useTriggerScanAction = ({

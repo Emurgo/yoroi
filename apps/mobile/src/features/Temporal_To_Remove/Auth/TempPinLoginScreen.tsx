@@ -1,6 +1,7 @@
 import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 import {Alert} from 'react-native'
+
 import {PinInput} from '~/features/Auth/ui/shared/PinInput/PinInput'
 
 export const TempPinLoginScreen = () => {

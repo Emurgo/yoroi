@@ -1,11 +1,13 @@
+import {atoms as a, useTheme} from '@yoroi/theme'
+
 import {
   BottomSheetBackdrop,
   BottomSheetModal,
   BottomSheetView,
 } from '@gorhom/bottom-sheet'
-import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Text, View} from 'react-native'
+
 import {useModal} from './ModalContext'
 
 export const Modal = () => {

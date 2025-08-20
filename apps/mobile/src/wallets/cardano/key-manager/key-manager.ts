@@ -1,5 +1,6 @@
 import {cardanoConfig, derivationConfig} from '@yoroi/blockchains'
 import {Wallet} from '@yoroi/types'
+
 import {freeze} from 'immer'
 
 import {generateWalletRootKey} from '../mnemonic/mnemonic'

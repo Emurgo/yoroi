@@ -4,15 +4,16 @@ import * as React from 'react'
 
 import {logger} from '~/kernel/logger/logger'
 import {YoroiWallet} from '~/wallets/cardano/types'
+
 import {WalletManager} from '../wallet-manager'
 import {
-  WalletManagerActions,
   WalletManagerActionType,
+  WalletManagerActions,
   WalletManagerContextType,
+  WalletManagerState,
   walletManagerDefaultState,
   walletManagerInitialContext,
   walletManagerReducer,
-  WalletManagerState,
 } from './WalletManagerState'
 
 const WalletManagerContext = React.createContext<WalletManagerContextType>(

@@ -1,5 +1,6 @@
 import {isString} from '@yoroi/common'
 import {useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
 import {
   TextInput as RNTextInput,
@@ -11,6 +12,7 @@ import {
   HelperText as HelperTextRNP,
   TextInput as RNPTextInput,
 } from 'react-native-paper'
+
 import {isEmptyString} from '~/wallets/utils/string'
 
 type TextInputProps = RNTextInputProps &

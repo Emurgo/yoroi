@@ -1,4 +1,5 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
 import {Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
@@ -19,8 +20,8 @@ export const ServiceUnavailable = ({
   const {palette: p} = useTheme()
 
   return (
-    <SafeAreaView style={{flex: 1}} edges={['left', 'right', 'bottom']}>
-      <View style={[a.flex_1, a.align_center, a.justify_center, {padding: 16}]}>
+    <SafeAreaView style={a.flex_1} edges={['left', 'right', 'bottom']}>
+      <View style={[a.flex_1, a.align_center, a.justify_center, a.p_lg]}>
         <ConectionErrorImage />
 
         <Space.Height.lg />
@@ -28,27 +29,29 @@ export const ServiceUnavailable = ({
         <Text
           style={[
             a.heading_3_medium,
-            {color: p.gray_max, padding: 4, textAlign: 'center'},
+            a.text_center,
+            {color: p.gray_max, padding: 4},
           ]}
         >
-          {strings.serviceUnavailable}
+          {strings.swap.serviceUnavailable}
         </Text>
 
         <Text
           style={[
             a.body_2_md_regular,
-            {color: p.gray_600, textAlign: 'center', maxWidth: 300},
+            a.text_center,
+            {color: p.gray_600, maxWidth: 300},
           ]}
         >
-          {strings.serviceUnavailableInfo}
+          {strings.swap.serviceUnavailableInfo}
         </Text>
 
         <Space.Height.lg />
 
         <Button
           onPress={resetErrorBoundary}
-          title={strings.tryAgain}
-          style={{paddingHorizontal: 20}}
+          title={strings.swap.tryAgain}
+          style={a.px_xl}
         />
       </View>
     </SafeAreaView>

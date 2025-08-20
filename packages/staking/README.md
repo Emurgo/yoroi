@@ -188,7 +188,7 @@ console.log('DRep hash:', parsed.hash)
 console.log('DRep type:', parsed.type)
 
 // Convert hex key hash to Bech32 format
-const bech32Hash = await convertHexKeyHashToBech32Format(
+const bech32Hash = convertHexKeyHashToBech32Format(
   'hex-key-hash',
   cardanoWasm
 )

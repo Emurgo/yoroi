@@ -2,7 +2,7 @@ import {networkConfigs} from '@yoroi/blockchains'
 import {fetchData, isRight, time} from '@yoroi/common'
 import {Chain, Portfolio} from '@yoroi/types'
 
-import {useQuery, UseQueryOptions} from '@tanstack/react-query'
+import {UseQueryOptions, useQuery} from '@tanstack/react-query'
 
 import {persistPrefixKeyword} from '~/kernel/connection/ConnectionProvider'
 

@@ -1,4 +1,5 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
 import {Linking, Text, TouchableOpacity} from 'react-native'
 
@@ -19,16 +20,11 @@ export const LearnMoreLink = () => {
 
   return (
     <TouchableOpacity
-      style={[
-        {display: 'flex'},
-        {flexDirection: 'row'},
-        {alignItems: 'center'},
-        {justifyContent: 'center'},
-      ]}
+      style={[a.flex, a.flex_row, a.align_center, a.justify_center]}
       onPress={handleOnPress}
     >
       <Text style={[{color: p.primary_600}, {textDecorationLine: 'underline'}]}>
-        {strings.learnMoreAboutGovernance}
+        {strings.staking.learnMoreAboutGovernance}
       </Text>
     </TouchableOpacity>
   )

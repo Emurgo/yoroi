@@ -1,4 +1,6 @@
 import {useTheme} from '@yoroi/theme'
+import {atoms as a} from '@yoroi/theme'
+
 import * as React from 'react'
 import {
   Image,
@@ -9,7 +11,6 @@ import {
   ViewStyle,
 } from 'react-native'
 
-import {atoms as a} from '@yoroi/theme'
 import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 

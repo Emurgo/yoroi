@@ -1,6 +1,7 @@
 import {useLinks} from '@yoroi/links'
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {Links} from '@yoroi/types'
+
 import * as React from 'react'
 import {ScrollView, Text, View, ViewProps} from 'react-native'
 
@@ -8,6 +9,7 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
+
 import {ShowDisclaimer} from './ShowDisclaimer/ShowDisclaimer'
 
 const isEmptyString = (str: string | undefined | null): boolean => {
@@ -24,16 +26,14 @@ export const RequestedBrowserLaunchDappUrlScreen = ({
   onContinue: () => void
 }) => {
   const strings = useStrings()
-  const {palette: p} = useTheme()
+  const {palette: p, atoms: ta} = useTheme()
   const {actionFinished} = useLinks()
   const {closeModal} = useModal()
 
   // TODO: revisit check with product
   const description = isTrusted
-    ? strings.links.requestedBrowserLaunchDappUrl
-        .trustedBrowserLaunchDappUrlDescription
-    : strings.links.requestedBrowserLaunchDappUrl
-        .untrustedBrowserLaunchDappUrlDescription
+    ? strings.links.trustedBrowserLaunchDappUrlDescription
+    : strings.links.untrustedBrowserLaunchDappUrlDescription
 
   const handleOnCancel = () => {
     actionFinished()
@@ -42,20 +42,9 @@ export const RequestedBrowserLaunchDappUrlScreen = ({
 
   // NOTE: modal content therefore no need to use SafeAreaView
   return (
-    <View
-      style={[
-        {
-          backgroundColor: p.bg_color_max,
-          flex: 1,
-          paddingHorizontal: 16,
-          paddingBottom: 16,
-        },
-      ]}
-    >
+    <View style={[a.flex_1, ta.bg_color_max, a.px_lg, a.pb_lg]}>
       <ScrollView bounces={false}>
-        <ShowDisclaimer
-          title={strings.links.requestedBrowserLaunchDappUrl.disclaimer}
-        >
+        <ShowDisclaimer title={strings.global.disclaimer}>
           <Text
             style={[
               {
@@ -79,26 +68,22 @@ export const RequestedBrowserLaunchDappUrlScreen = ({
 
         <Message message={params.message} />
 
-        <View style={{flex: 1}} />
+        <View style={a.flex_1} />
       </ScrollView>
 
-      <Actions
-        style={[
-          {flexDirection: 'row', justifyContent: 'space-between', gap: 16},
-        ]}
-      >
+      <Actions style={[a.flex_row, a.justify_between, a.gap_lg]}>
         <Button
           size="S"
           type={ButtonType.Secondary}
           onPress={handleOnCancel}
-          title={strings.links.requestedBrowserLaunchDappUrl.cancel}
+          title={strings.global.cancel}
         />
 
         <Button
           size="S"
           type={ButtonType.Primary}
           onPress={onContinue}
-          title={strings.links.requestedBrowserLaunchDappUrl.continue}
+          title={strings.global.proceed}
         />
       </Actions>
     </View>
@@ -115,10 +100,10 @@ const Message = ({message}: {message?: string}) => {
   return (
     <View
       style={[
+        a.p_lg,
+        a.rounded_sm,
         {
           backgroundColor: p.gray_100,
-          padding: 16,
-          borderRadius: 8,
         },
       ]}
     >

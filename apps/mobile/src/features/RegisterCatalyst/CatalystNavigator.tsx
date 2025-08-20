@@ -1,6 +1,7 @@
+import {useTheme} from '@yoroi/theme'
+
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
-import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
@@ -12,6 +13,7 @@ import {
   VotingRegistrationRoutes,
 } from '~/kernel/navigation/types'
 import {Boundary} from '~/ui/Boundary/Boundary'
+
 import {NetworkTag} from '../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {ConfirmPin} from './useCases/ConfirmPin/ConfirmPin'
 import {DisplayPin} from './useCases/DisplayPin/DisplayPin'

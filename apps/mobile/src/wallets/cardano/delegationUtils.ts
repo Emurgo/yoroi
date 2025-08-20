@@ -2,7 +2,8 @@ import {CardanoAddressedUtxo} from '@emurgo/yoroi-lib'
 import {normalizeToAddress} from '@emurgo/yoroi-lib/dist/internals/utils/addresses'
 import {sortBy} from 'lodash'
 
-import {StakingStatus} from '@yoroi/types'
+import {StakingStatus} from '~/wallets/types/staking'
+
 import {CardanoMobile} from '../wallets'
 import type {TimestampedCertMeta} from './transactionManager/transactionManager'
 import {CardanoTypes} from './types'

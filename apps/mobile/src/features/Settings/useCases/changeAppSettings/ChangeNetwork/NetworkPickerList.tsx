@@ -1,6 +1,7 @@
 import {networkConfigs} from '@yoroi/blockchains'
 import {atoms as a} from '@yoroi/theme'
 import {Chain} from '@yoroi/types'
+
 import {freeze} from 'immer'
 import * as React from 'react'
 import {FlatList} from 'react-native'
@@ -10,6 +11,7 @@ import {useAutomaticWalletOpener} from '~/features/WalletManager/context/Automat
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
+
 import {useNavigateTo} from '../../../common/navigation'
 import {NetworkPickerItem} from './NetworkPickerItem'
 

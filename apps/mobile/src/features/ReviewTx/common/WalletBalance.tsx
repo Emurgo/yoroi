@@ -1,5 +1,6 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
-import {PortfolioTokenBalances} from '@yoroi/types/lib/typescript/portfolio/balances'
+import {Portfolio} from '@yoroi/types'
+
 import * as React from 'react'
 import {FlatList, Text, View} from 'react-native'
 
@@ -83,7 +84,7 @@ const TokenSquare = ({
 }: {
   title: string
   count: number
-  list: PortfolioTokenBalances['fts'] | PortfolioTokenBalances['nfts']
+  list: Portfolio.Token.Balances['fts'] | Portfolio.Token.Balances['nfts']
 }) => {
   const {palette: p} = useTheme()
 
@@ -149,7 +150,7 @@ const Container = ({children}: {children: React.ReactNode}) => {
 const TokenList = ({
   assetList,
 }: {
-  assetList: PortfolioTokenBalances['fts'] | PortfolioTokenBalances['nfts']
+  assetList: Portfolio.Token.Balances['fts'] | Portfolio.Token.Balances['nfts']
 }) => {
   return (
     <FlatList

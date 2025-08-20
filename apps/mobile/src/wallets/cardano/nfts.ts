@@ -1,11 +1,14 @@
 import {createTypeGuardFromSchema, isArrayOfType, isString} from '@yoroi/common'
 import {domainNormalizer} from '@yoroi/resolver'
 import {Balance} from '@yoroi/types'
+
 import {z} from 'zod'
 
 import {features} from '~/kernel/features'
+
 import {getAssetFingerprint} from '../utils/format'
 import {toDisplayAssetName} from './api/utils'
+
 export const convertNft = (options: {
   metadata?: unknown
   storageUrl: string

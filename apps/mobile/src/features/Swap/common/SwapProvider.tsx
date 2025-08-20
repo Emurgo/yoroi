@@ -1,9 +1,10 @@
-import {useFocusEffect} from '@react-navigation/native'
-import {useQuery} from '@tanstack/react-query'
 import {isLeft, isRight} from '@yoroi/common'
 import {isPrimaryToken, primaryTokenId} from '@yoroi/portfolio'
 import {swapManagerMaker, swapStorageMaker} from '@yoroi/swap'
 import {Balance, Portfolio, Swap} from '@yoroi/types'
+
+import {useFocusEffect} from '@react-navigation/native'
+import {useQuery} from '@tanstack/react-query'
 import {produce} from 'immer'
 import * as React from 'react'
 import {TextInput} from 'react-native'
@@ -15,6 +16,7 @@ import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWalle
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {convertBech32ToHex} from '~/wallets/cardano/common/signatureUtils'
+
 import {undefinedToken} from './constants'
 import {useNavigateTo} from './navigation'
 import {useGetInputs} from './useGetInputs'

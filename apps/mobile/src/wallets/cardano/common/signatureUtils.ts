@@ -1,3 +1,6 @@
+import {cardanoConfig, derivationConfig} from '@yoroi/blockchains'
+import {Wallet} from '@yoroi/types'
+
 import {SignTransactionRequest} from '@cardano-foundation/ledgerjs-hw-app-cardano'
 import * as CSL_TYPES from '@emurgo/cross-csl-core'
 import {
@@ -5,13 +8,12 @@ import {
   createLedgerPlutusPayload,
   getAllSigners,
 } from '@emurgo/yoroi-lib'
-import {cardanoConfig, derivationConfig} from '@yoroi/blockchains'
-import {Wallet} from '@yoroi/types'
 import {Buffer} from 'buffer'
 import {uniqWith} from 'lodash'
 
 import {throwLoggedError} from '~/kernel/logger/helpers/throw-logged-error'
 import {CardanoMobile} from '~/wallets/wallets'
+
 import {YoroiWallet} from '../types'
 
 export const createSwapCancellationLedgerPayload = (

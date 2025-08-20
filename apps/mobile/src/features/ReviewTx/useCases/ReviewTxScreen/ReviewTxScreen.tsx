@@ -1,11 +1,11 @@
 import React from 'react'
 
+import {useReviewTx} from '~/features/ReviewTx/common/ReviewTxProvider'
 import {useFormattedMetadata} from '~/features/ReviewTx/common/hooks/useFormattedMetadata'
 import {useFormattedTx} from '~/features/ReviewTx/common/hooks/useFormattedTx'
 import {useLegacyOnConfirm} from '~/features/ReviewTx/common/hooks/useLegacyOnConfirm'
 import {useOnConfirm} from '~/features/ReviewTx/common/hooks/useOnConfirm'
 import {useTxBody} from '~/features/ReviewTx/common/hooks/useTxBody'
-import {useReviewTx} from '~/features/ReviewTx/common/ReviewTxProvider'
 import {useUnsafeParams} from '~/kernel/navigation/hooks/useUnsafeParams'
 import {ReviewTxRoutes} from '~/kernel/navigation/types'
 import {ReviewTx} from './ReviewTx/ReviewTx'

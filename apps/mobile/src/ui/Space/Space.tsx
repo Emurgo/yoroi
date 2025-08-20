@@ -1,4 +1,4 @@
-import {atoms as a, SpacingSize, tokens} from '@yoroi/theme'
+import {SpacingSize, atoms as a, tokens} from '@yoroi/theme'
 
 import * as React from 'react'
 import {View, ViewStyle} from 'react-native'

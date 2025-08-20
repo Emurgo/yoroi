@@ -1,12 +1,13 @@
 import {isPrimaryToken} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
 import {
   FlatList,
   Text,
   TouchableOpacity,
-  useWindowDimensions,
   View,
+  useWindowDimensions,
 } from 'react-native'
 
 import {useNavigateTo} from '~/features/Portfolio/common/hooks/useNavigateTo'
@@ -16,6 +17,7 @@ import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWalle
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Icon} from '~/ui/Icon'
 import {Space} from '~/ui/Space/Space'
+
 import {DashboardTokenItem} from './DashboardTokenItem'
 import {TradeTokensBanner} from './TradeTokensBanner'
 

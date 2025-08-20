@@ -1,9 +1,11 @@
 import {Api} from '@yoroi/types'
+
 import {Platform} from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 
-import type {BackendConfig} from '@yoroi/types'
 import {logger} from '~/kernel/logger/logger'
+import {BackendConfig} from '~/wallets/types/other'
+
 import {ApiError, ApiHistoryError} from '../errors'
 
 type RequestMethod = 'POST' | 'GET'

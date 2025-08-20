@@ -1,4 +1,5 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
 import {TextInput as RNTextInput, View} from 'react-native'
 
@@ -9,6 +10,7 @@ import {Button} from '~/ui/Button/Button'
 import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
 import {TextInput} from '~/ui/TextInput/TextInput'
+
 import {getErrorMessage} from '../errors'
 
 export type ErrorData = {

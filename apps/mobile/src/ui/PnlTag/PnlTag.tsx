@@ -1,6 +1,7 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
-import {type ViewProps, Text, View} from 'react-native'
+import {Text, View, type ViewProps} from 'react-native'
 
 import {Icon} from '~/ui/Icon'
 

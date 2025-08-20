@@ -1,6 +1,7 @@
-import {useMutation, UseMutationOptions} from '@tanstack/react-query'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {HW} from '@yoroi/types'
+
+import {UseMutationOptions, useMutation} from '@tanstack/react-query'
 import React, {useState} from 'react'
 import {ScrollView, View} from 'react-native'
 
@@ -99,6 +100,7 @@ export const useSignRawTxWithHw = (
   const {wallet} = useSelectedWallet()
   const mutation = useMutation({
     ...options,
+    throwOnError: true,
     mutationFn: async ({cbor, useUSB, hwDeviceInfo}) => {
       await wallet.signRawTxWithLedger(cbor, useUSB, hwDeviceInfo)
     },

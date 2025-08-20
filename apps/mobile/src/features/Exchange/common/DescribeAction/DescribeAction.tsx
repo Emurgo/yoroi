@@ -1,5 +1,6 @@
 import {useExchange, useExchangeProvidersByOrderType} from '@yoroi/exchange'
 import {atoms as a} from '@yoroi/theme'
+
 import * as React from 'react'
 import {Linking, TouchableOpacity, View} from 'react-native'
 
@@ -30,46 +31,30 @@ export const DescribeAction = () => {
 
   return (
     <View style={[a.flex_1, a.px_lg]}>
-      <Text style={[{fontSize: 16, lineHeight: 22, fontFamily: 'Rubik'}]}>
-        {strings.descriptionBuySellADATransaction}
+      <Text style={a.body_1_lg_regular}>
+        {strings.exchange.descriptionBuySellADATransaction}
       </Text>
 
       <Space.Height.lg />
 
       <View style={[a.flex_row, a.align_center, {flexWrap: 'wrap'}]}>
-        <Text style={[{fontSize: 16, lineHeight: 22, fontFamily: 'Rubik'}]}>
-          {strings.contact}{' '}
-        </Text>
+        <Text style={a.body_1_lg_regular}>{strings.exchange.contact} </Text>
 
         <TouchableOpacity onPress={handleOnContactProvider}>
-          <Text
-            style={[
-              {fontSize: 16, lineHeight: 22, fontFamily: 'Rubik'},
-              {color: '#4B6DDE', textDecorationLine: 'underline'},
-            ]}
-          >
+          <Text style={[a.link_1_lg_underline, {color: '#4B6DDE'}]}>
             {name}{' '}
           </Text>
         </TouchableOpacity>
 
-        <Text style={[{fontSize: 16, lineHeight: 22, fontFamily: 'Rubik'}]}>
-          {strings.and}{' '}
-        </Text>
+        <Text style={a.body_1_lg_regular}>{strings.exchange.and} </Text>
 
         <TouchableOpacity onPress={handleOnContactYoroi}>
-          <Text
-            style={[
-              {fontSize: 16, lineHeight: 22, fontFamily: 'Rubik'},
-              {color: '#4B6DDE', textDecorationLine: 'underline'},
-            ]}
-          >
-            {strings.customerSupport}
+          <Text style={[a.link_1_lg_underline, {color: '#4B6DDE'}]}>
+            {strings.exchange.customerSupport}
           </Text>
         </TouchableOpacity>
 
-        <Text style={[{fontSize: 16, lineHeight: 22, fontFamily: 'Rubik'}]}>
-          {strings.significant}
-        </Text>
+        <Text style={a.body_1_lg_regular}>{strings.exchange.significant}</Text>
       </View>
     </View>
   )

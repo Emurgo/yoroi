@@ -5,12 +5,13 @@ import {
 } from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
+
 import * as React from 'react'
 import {
   TouchableOpacity,
-  useWindowDimensions,
   View,
   ViewProps,
+  useWindowDimensions,
 } from 'react-native'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
@@ -38,7 +39,7 @@ export const MiniTokenAmountItem = ({amount}: MiniTokenAmountItemProps) => {
 
   const handleShowTokenDetails = () => {
     openModal({
-      title: strings.txReview.tokenDetailsTitle,
+      title: strings.txReview.tokenDetails.title,
       content: <TokenDetails tokenInfo={info} />,
       height: isPrimary ? 450 : windowHeight * 0.8,
     })

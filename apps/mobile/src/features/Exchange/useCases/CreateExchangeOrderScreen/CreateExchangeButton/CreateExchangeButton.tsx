@@ -1,6 +1,7 @@
 import {useExchange} from '@yoroi/exchange'
 import {atoms as a} from '@yoroi/theme'
 import {Chain} from '@yoroi/types'
+
 import * as React from 'react'
 import {Linking, View, ViewStyle} from 'react-native'
 
@@ -28,9 +29,9 @@ export const CreateExchangeButton = ({
 
   const title = isBuy
     ? isPreprod
-      ? strings.createOrderPreprodFaucetButtonText
-      : strings.proceed
-    : strings.proceed
+      ? strings.exchange.createOrderPreprodFaucetButtonText
+      : strings.global.proceed
+    : strings.global.proceed
 
   const handleOnPress = () => {
     if (isPreprod && isBuy) {

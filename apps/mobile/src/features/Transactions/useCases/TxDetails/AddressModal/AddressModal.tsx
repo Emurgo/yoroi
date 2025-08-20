@@ -1,5 +1,6 @@
 import {addressVisualDerivationPathMaker} from '@yoroi/blockchains'
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import {fromPairs} from 'lodash'
 import * as React from 'react'
 import {Text, View} from 'react-native'

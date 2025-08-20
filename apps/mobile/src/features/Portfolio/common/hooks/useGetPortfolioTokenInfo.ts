@@ -1,5 +1,6 @@
-import {useQuery, UseQueryOptions} from '@tanstack/react-query'
 import {type Portfolio} from '@yoroi/types'
+
+import {UseQueryOptions, useQuery} from '@tanstack/react-query'
 import {ImageSourcePropType} from 'react-native'
 
 import AdaLogo from '../../../../../assets/img/asset_ada.png'

@@ -1,13 +1,13 @@
+import {atoms as a, useTheme} from '@yoroi/theme'
+
 import {useNavigation} from '@react-navigation/native'
-import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {TouchableOpacity} from 'react-native'
 
-import {TxHistoryRouteNavigation} from '~/kernel/navigation/types'
 import {Icon} from '~/ui/Icon'
 
 export const HeaderRightSwap = React.memo(() => {
-  const navigation = useNavigation<TxHistoryRouteNavigation>()
+  const navigation = useNavigation()
   const {palette: p} = useTheme()
 
   return (
@@ -26,7 +26,7 @@ export const HeaderRightSwap = React.memo(() => {
           },
         })
       }
-      style={{paddingRight: 8}}
+      style={a.pr_sm}
     >
       <Icon.TermsOfUse color={p.gray_max} size={24} />
     </TouchableOpacity>

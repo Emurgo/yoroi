@@ -1,6 +1,7 @@
 import {isString} from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
-import React, {ForwardedRef} from 'react'
+
+import * as React from 'react'
 import {
   TextInput as RNTextInput,
   TextInputProps as RNTextInputProps,
@@ -38,9 +39,6 @@ const useDebounced = (callback: VoidFunction, value: unknown, delay = 1000) => {
   React.useEffect(() => {
     if (first.current) {
       first.current = false
-      return () => {
-        return
-      }
     }
 
     const handler = setTimeout(() => callback(), delay)
@@ -50,7 +48,7 @@ const useDebounced = (callback: VoidFunction, value: unknown, delay = 1000) => {
 }
 
 export const TextInput = React.forwardRef(
-  (props: TextInputProps, ref: ForwardedRef<RNTextInput>) => {
+  (props: TextInputProps, ref: React.ForwardedRef<RNTextInput>) => {
     const {
       value,
       containerStyle,
@@ -230,7 +228,6 @@ const SecureTextEntryToggle = ({
   onPress: () => void
 }) => {
   const {palette: p} = useTheme()
-
   return (
     <AdornmentContainer style={{paddingRight: 16}}>
       <TouchableOpacity onPress={onPress}>
@@ -245,9 +242,9 @@ const SecureTextEntryToggle = ({
 }
 
 const InputContainer = ({children}: {children: React.ReactNode}) => {
-  return <View style={{flexDirection: 'row', flex: 1}}>{children}</View>
+  return <View style={[a.flex_row, a.flex_1]}>{children}</View>
 }
 
 const AdornmentContainer = ({style, children}: ViewProps) => {
-  return <View style={[{justifyContent: 'center'}, style]}>{children}</View>
+  return <View style={[a.justify_center, style]}>{children}</View>
 }

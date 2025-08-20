@@ -1,4 +1,5 @@
 import {hex} from '@yoroi/common'
+
 import {WalletEncryptedStorage} from '~/kernel/storage/EncryptedStorage'
 
 export const mockEncryptedStorage: WalletEncryptedStorage = {
@@ -15,5 +16,5 @@ export const mockEncryptedStorage: WalletEncryptedStorage = {
     write: () => Promise.resolve(),
     remove: () => Promise.resolve(),
   },
-  clear: () => Promise.resolve([undefined, undefined]),
+  clear: () => Promise.resolve(),
 }

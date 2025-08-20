@@ -1,10 +1,11 @@
-import {useSuspenseQuery} from '@tanstack/react-query'
 import {
   isBoolean,
   parseSafe,
   useAsyncStorage,
   useMutationWithInvalidations,
 } from '@yoroi/common'
+
+import {useSuspenseQuery} from '@tanstack/react-query'
 
 import {Disclaimer} from '../../common/types'
 

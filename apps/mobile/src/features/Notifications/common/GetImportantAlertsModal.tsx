@@ -1,6 +1,7 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
-import {InteractionManager, useWindowDimensions, View} from 'react-native'
+import {InteractionManager, View, useWindowDimensions} from 'react-native'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button, ButtonType} from '~/ui/Button/Button'
@@ -8,6 +9,7 @@ import {useModal} from '~/ui/Modal/ModalContext'
 import {PhoneBell} from '~/ui/PhoneBellIllustration/PhoneBellIllustration'
 import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
+
 import {uiStorage} from './storage'
 import {triggerNotificationsPermissionModal} from './tools'
 
@@ -27,7 +29,7 @@ export const useGetImportantAlertsModal = ({enabled}: {enabled: boolean}) => {
       if (hasShownModal) return
 
       openModal({
-        title: strings.getImportantAlerts,
+        title: strings.notifications.getImportantAlerts,
         content: <GetImportantAlertsModal />,
         height: 520,
       })
@@ -64,14 +66,14 @@ export const GetImportantAlertsModal = () => {
           {color: p.text_gray_medium},
         ]}
       >
-        {strings.turnOnAlerts}
+        {strings.notifications.turnOnAlerts}
       </Text>
 
       <Space.Height._2xs fill />
 
       <Button
         size="M"
-        title={strings.skip}
+        title={strings.notifications.skip}
         onPress={closeModal}
         type={ButtonType.Text}
         style={[a.flex_1, a.self_stretch, {flexGrow: 0}]}
@@ -79,7 +81,7 @@ export const GetImportantAlertsModal = () => {
 
       <Button
         size="M"
-        title={strings.turnOnNotifications}
+        title={strings.notifications.turnOnNotifications}
         onPress={handleTurnOnPress}
         style={[a.flex_1, a.self_stretch, {flexGrow: 0}]}
       />

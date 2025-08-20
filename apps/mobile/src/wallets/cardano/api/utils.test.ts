@@ -4,11 +4,11 @@ import {TokenRegistryEntry} from './tokenRegistry'
 import {
   fallbackTokenInfo,
   toDisplayAssetName,
-  tokenInfo,
   toPolicyId,
   toTokenFingerprint,
   toTokenId,
   toTokenSubject,
+  tokenInfo,
   utf8ToHex,
 } from './utils'
 

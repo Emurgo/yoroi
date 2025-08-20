@@ -410,11 +410,11 @@ export type ResolverWallet = {
   networkId: number
   network: Chain.SupportedNetworks
   confirmConnection: (dappOrigin: string) => Promise<boolean>
-  getBalance: (tokenId?: string) => Promise<Value>
-  getUnusedAddresses: () => Promise<Address[]>
-  getUsedAddresses: (pagination?: Pagination) => Promise<Address[]>
-  getChangeAddress: () => Promise<Address>
-  getRewardAddresses: () => Promise<Address[]>
+  getBalance: (tokenId?: string) => Value
+  getUnusedAddresses: () => Address[]
+  getUsedAddresses: (pagination?: Pagination) => Address[]
+  getChangeAddress: () => Address
+  getRewardAddresses: () => Address[]
   getUtxos: (
     value?: string,
     pagination?: Pagination,

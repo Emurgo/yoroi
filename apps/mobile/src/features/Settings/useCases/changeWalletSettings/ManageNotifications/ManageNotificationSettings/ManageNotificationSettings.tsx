@@ -1,4 +1,5 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import * as React from 'react'
 import {
   Alert,
@@ -20,12 +21,16 @@ import {Icon} from '~/ui/Icon'
 import {SettingsSwitch} from '~/ui/SettingsSwitch/SettingsSwitch'
 import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
+
 import {
   useChangeNotificationDisplaySettings,
   useNotificationDisplaySettings,
 } from '../../Notifications/NotificationsDisplaySettings'
 
-const getNotificationsAuthorizationStatus = () => {
+const getNotificationsAuthorizationStatus = ():
+  | 'authorized'
+  | 'not_determined'
+  | 'denied' => {
   // TODO: Alert.alert('getNotificationsAuthorizationStatus not implemented')
   return 'not_determined' as const
 }

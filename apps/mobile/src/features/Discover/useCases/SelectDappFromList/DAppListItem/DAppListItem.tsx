@@ -1,4 +1,5 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+
 import {Image} from 'expo-image'
 import * as React from 'react'
 import {
@@ -25,6 +26,7 @@ import {InfoBanner} from '~/ui/InfoBanner/InfoBanner'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
 import {WarningBanner} from '~/ui/WarningBanner/WarningBanner'
+
 import {
   type DAppItem,
   getDappFallbackLogo,

@@ -1,6 +1,7 @@
 import {amountBreakdown, amountFormatter} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
+
 import * as React from 'react'
 import {Text, TouchableOpacity, View} from 'react-native'
 
@@ -10,8 +11,9 @@ import {
 } from '~/features/Portfolio/common/helpers/priceChange'
 import {useNavigateTo} from '~/features/Portfolio/common/hooks/useNavigateTo'
 import {useCurrencyPairing} from '~/features/Settings/useCases/changeAppSettings/Currency/CurrencyContext'
-import {usePrivacyMode} from '~/features/Settings/useCases/changeAppSettings/PrivacyMode/PrivacyMode'
+import {usePrivacyMode} from '~/features/Settings/useCases/changeAppSettings/PrivacyMode/usePrivacyMode'
 import {Space} from '~/ui/Space/Space'
+
 import {PairedBalance} from '../PairedBalance/PairedBalance'
 import {PnlTag} from '../PnlTag/PnlTag'
 
@@ -56,7 +58,7 @@ export const BalanceCardContent = ({amount, headerCard}: Props) => {
             style={[a.flex_row, a.gap_2xs, a.align_baseline]}
             onPress={togglePrivacyMode}
           >
-            <PairedBalance amount={amount} textStyle={[a.body_2_md_regular]} />
+            <PairedBalance amount={amount} textStyle={a.body_2_md_regular} />
           </TouchableOpacity>
 
           <View style={[a.flex_row, a.gap_xs, a.align_stretch]}>

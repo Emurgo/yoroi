@@ -1,6 +1,7 @@
-import {PoolInfoApi} from '@emurgo/yoroi-lib'
-import {useQuery, UseQueryOptions} from '@tanstack/react-query'
 import {atoms as a, useTheme} from '@yoroi/theme'
+
+import {PoolInfoApi} from '@emurgo/yoroi-lib'
+import {UseQueryOptions, useQuery} from '@tanstack/react-query'
 import * as React from 'react'
 import {ActivityIndicator, Linking, View} from 'react-native'
 
@@ -51,7 +52,7 @@ export const StakePoolInfo = ({stakePoolId, ctaProps}: StakePoolInfoProps) => {
               ) ?? strings.dashboard.unknownPool
             }
             onPress={() =>
-              !isEmptyString(homepage) && Linking.openURL(homepage)
+              !isEmptyString(homepage) && homepage && Linking.openURL(homepage)
             }
             style={[a.self_start]}
             fontOverride={a.body_1_lg_medium}

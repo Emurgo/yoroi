@@ -1,5 +1,6 @@
-import {useNavigation} from '@react-navigation/native'
 import {atoms as a, useTheme} from '@yoroi/theme'
+
+import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 import {KeyboardAvoidingView, Platform, ScrollView, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
@@ -61,7 +62,9 @@ export const RenameWalletScreen = () => {
             label={strings.settings.renameWallet.walletNameInputLabel}
             value={newWalletName}
             onChangeText={(walletName: string) => setNewWalletName(walletName)}
-            errorText={!isEmptyString(errorText) ? errorText : undefined}
+            errorText={
+              !isEmptyString(errorText) && errorText ? errorText : undefined
+            }
             autoComplete="off"
           />
         </ScrollView>

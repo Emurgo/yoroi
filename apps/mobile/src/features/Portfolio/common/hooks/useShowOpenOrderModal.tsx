@@ -3,6 +3,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
 import {OpenOrderModal} from '~/features/Portfolio/screens/PortfolioTokensList/PortfolioDAppsTokenList/OpenOrderModal'
 import {useModal} from '~/ui/Modal/ModalContext'
+
 import {IOpenOrders} from './useGetOpenOrders'
 
 const OPEN_ORDER_MODAL_HEIGHT = 278

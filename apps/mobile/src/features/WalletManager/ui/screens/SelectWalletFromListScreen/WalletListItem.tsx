@@ -1,6 +1,7 @@
 // import {useFocusEffect} from '@react-navigation/native'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Wallet} from '@yoroi/types'
+
 import * as React from 'react'
 import {Alert, Animated, Text, TouchableOpacity, View} from 'react-native'
 import {Swipeable} from 'react-native-gesture-handler'
@@ -9,15 +10,15 @@ import {
   ChevronRightDarkIllustration,
   ChevronRightGrayIllustration,
 } from '~/features/SetupWallet/illustrations/ChevronRight'
+// import {useAutomaticWalletOpener} from '../context/AutomaticWalletOpeningProvider'
+import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
+import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
+import {useSyncWalletInfo} from '~/features/WalletManager/hooks/useSyncWalletInfo'
 import {features} from '~/kernel/features'
 import {Icon} from '~/ui/Icon'
 import {Loading} from '~/ui/Loading/Loading'
 import {Space} from '~/ui/Space/Space'
 import {isByron, isShelley} from '~/wallets/cardano/utils'
-// import {useAutomaticWalletOpener} from '../context/AutomaticWalletOpeningProvider'
-import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
-import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
-import {useSyncWalletInfo} from '~/features/WalletManager/hooks/useSyncWalletInfo'
 
 type Props = {
   walletMeta: Wallet.Meta

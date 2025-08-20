@@ -1,5 +1,6 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
+
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
@@ -22,10 +23,10 @@ import {formatTokenWithText} from '~/wallets/utils/format'
 export const UTxOsTab = ({tx}: {tx: FormattedTx}) => {
   const {palette: p} = useTheme()
   const strings = useStrings()
-  const [inputsExpanded, setInputsExpanded] = React.useState(false)
-  const [outputsExpanded, setOutputsExpanded] = React.useState(false)
 
   const {wallet} = useSelectedWallet()
+  const [inputsExpanded, setInputsExpanded] = React.useState(true)
+  const [outputsExpanded, setOutputsExpanded] = React.useState(true)
 
   // Fallback fee formatting if wallet is not available
   const feeText = wallet
@@ -185,7 +186,7 @@ const Fee = ({fee}: {fee: string}) => {
 
       <View style={[a.flex_row, a.justify_between]}>
         <Text style={[a.body_1_lg_medium, {color: p.text_gray_medium}]}>
-          {strings.txReview.utxos.utxosFeeLabel}
+          {strings.txReview.fee}
         </Text>
 
         <Text

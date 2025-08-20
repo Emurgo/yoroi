@@ -1,9 +1,10 @@
 import {time} from '@yoroi/common'
 import {Chain} from '@yoroi/types'
 
-import {useQuery, UseQueryOptions} from '@tanstack/react-query'
+import {UseQueryOptions, useQuery} from '@tanstack/react-query'
 
 import {persistPrefixKeyword} from '~/kernel/connection/ConnectionProvider'
+
 import {useSelectedNetwork} from './useSelectedNetwork'
 
 export const useBestBlock = ({

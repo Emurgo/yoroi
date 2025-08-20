@@ -1,12 +1,14 @@
 import {amountFormatter} from '@yoroi/portfolio'
+
 import * as React from 'react'
 
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
+
 import {
   NavigatedSettingsItem,
   NavigatedSettingsItemProps,
 } from './SettingsItems'
-import {usePrivacyMode} from './useCases/changeAppSettings/PrivacyMode/PrivacyMode'
+import {usePrivacyMode} from './useCases/changeAppSettings/PrivacyMode/usePrivacyMode'
 
 export const SettingsCollateralItem = ({
   label,

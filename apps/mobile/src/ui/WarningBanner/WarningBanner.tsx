@@ -1,12 +1,13 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
-import React, {ReactNode} from 'react'
+
+import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
 import {Icon} from '../Icon'
 import {Space} from '../Space/Space'
 
 type Props = {
-  content: ReactNode
+  content: React.ReactNode
   iconSize?: number
   title?: string
 }
@@ -19,12 +20,12 @@ export const WarningBanner = ({content, iconSize = 30, title = ''}: Props) => {
       <View style={[a.flex_row, a.align_center]}>
         <Icon.Info size={iconSize} color={p.sys_orange_500} />
 
-        <Space width="sm" />
+        <Space.Width.sm />
 
         <Text style={[styles.title, {color: p.text_gray_max}]}>{title}</Text>
       </View>
 
-      <Space height="sm" />
+      <Space.Height.sm />
 
       <Text style={[styles.text, {color: p.gray_max}]}>{content}</Text>
     </View>

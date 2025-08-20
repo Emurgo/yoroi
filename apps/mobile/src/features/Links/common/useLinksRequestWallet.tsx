@@ -1,10 +1,12 @@
 import {useLinks} from '@yoroi/links'
+
 import * as React from 'react'
 import {InteractionManager} from 'react-native'
 
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useModal} from '~/ui/Modal/ModalContext'
+
 import {AskToOpenWalletScreen} from '../useCases/AskToOpenAWalletScreen/AskToOpenAWalletScreen'
 
 const heightBreakpoint = 367
@@ -18,11 +20,11 @@ export const useLinksRequestWallet = () => {
 
   const askToOpenAWallet = React.useCallback(() => {
     openModal({
-      title: strings.askToOpenAWalletTitle,
+      title: strings.links.askToOpenAWalletTitle,
       content: <AskToOpenWalletScreen />,
       height: heightBreakpoint,
     })
-  }, [openModal, strings.askToOpenAWalletTitle])
+  }, [openModal, strings.links.askToOpenAWalletTitle])
 
   React.useEffect(() => {
     InteractionManager.runAfterInteractions(() => {
