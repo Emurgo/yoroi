@@ -1,6 +1,6 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {App} from '@yoroi/types'
-import React, {useEffect, useRef, useState} from 'react'
+import * as React from 'react'
 import {ActivityIndicator, TextInput as RNTextInput, View} from 'react-native'
 
 import {useStrings} from '../../kernel/i18n/useStrings'
