@@ -26,7 +26,7 @@ export const ConfirmTxWithSpendingPasswordModal = ({
   unsignedTx,
   onError,
 }: Props) => {
-  const spendingPasswordRef = useRef<RNTextInput>(null)
+  const spendingPasswordRef = React.useRef<RNTextInput>(null)
   const {wallet} = useSelectedWallet()
   const {isDark, palette: p} = useTheme()
   const {
@@ -41,7 +41,7 @@ export const ConfirmTxWithSpendingPasswordModal = ({
   } = useSubmitTx({wallet}, {onError})
   const strings = useStrings()
 
-  const [spendingPassword, setSpendingPassword] = useState(
+  const [spendingPassword, setSpendingPassword] = React.useState(
     features.prefillWalletInfo ? debugWalletInfo.PASSWORD : '',
   )
   const isPasswordCorrect = useIsPasswordCorrect(spendingPassword)
@@ -69,9 +69,7 @@ export const ConfirmTxWithSpendingPasswordModal = ({
 
   return (
     <View style={[a.flex_1, a.px_lg, a.pb_lg]}>
-      <Text
-        style={[{paddingHorizontal: 70}, a.text_center, a.pb_sm]}
-      >
+      <Text style={[{paddingHorizontal: 70}, a.text_center, a.pb_sm]}>
         {strings.staking.enterPassword}
       </Text>
 
@@ -124,9 +122,9 @@ export const ConfirmTxWithSpendingPasswordModal = ({
 
 const useIsPasswordCorrect = (password: string) => {
   const {wallet} = useSelectedWallet()
-  const [isPasswordCorrect, setIsPasswordCorrect] = useState(false)
+  const [isPasswordCorrect, setIsPasswordCorrect] = React.useState(false)
 
-  useEffect(() => {
+  React.useEffect(() => {
     let isMounted = true
     wallet.encryptedStorage.xpriv
       .read(password)
