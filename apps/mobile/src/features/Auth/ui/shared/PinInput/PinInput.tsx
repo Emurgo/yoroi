@@ -28,7 +28,7 @@ export const PinInput = React.forwardRef<PinInputRef, Props>((props, ref) => {
     onDone,
     onGoBack,
   } = props
-  const {atoms: ta, palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
   const [pin, setPin] = React.useState('')
 
   React.useImperativeHandle(ref, () => ({
@@ -37,22 +37,6 @@ export const PinInput = React.forwardRef<PinInputRef, Props>((props, ref) => {
     },
   }))
 
-  const onKeyDown = (value: string) => {
-    if (!enabled) return
-    if (value === BACKSPACE) {
-      if (pin.length === 0) onGoBack?.()
-      setPin(pin.substring(0, pin.length - 1))
-      return
-    }
-
-    if (pin.length === pinMaxLength) {
-      return
-    }
-
-    const newPin = pin.concat(value)
-    setPin(newPin)
-    if (newPin.length === pinMaxLength) onDone(newPin)
-  }
 
   return (
     <KeyboardAvoidingView 
