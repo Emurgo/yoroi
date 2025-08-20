@@ -53,7 +53,7 @@ clean_packages() {
         rm -f "packages/$pkg/package-lock.json"
       fi
       rm -rf "packages/$pkg/lib"
-      rm -rf "packages/$pkg/node_modules"
+      # rm -rf "packages/$pkg/node_modules"
       echo "  ✅ Cleaned '${pkg}'"
     ) &
     pids+=($!)
@@ -84,7 +84,7 @@ build_packages() {
       (
         cd "packages/$pkg"
         # --force is needed 19.1.0 react should be 19.1.1
-        npm install --force
+        npm install --frozen-lockfile
         npm run build
       )
       echo "  ✅ Built '${pkg}'"
@@ -116,7 +116,7 @@ rm -rf node_modules
 if [ "$CLEAN_MODE" = "true" ] || [ "$CLEAN_MODE" = "clean" ]; then
   rm -f "package-lock.json"
 fi
-npm install --force
+npm install --frozen-lockfile
 npm run lint 
 npm run tsc
 npm run test 
