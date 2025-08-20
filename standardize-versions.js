@@ -40,7 +40,7 @@ const STANDARD_VERSIONS = {
   "@yoroi/dapp-connector": "file:../dapp-connector",
 
   // Dev dependencies
-  "@babel/core": "7.25.2",
+  "@babel/core": "7.26.0",
   "@babel/preset-env": "7.25.3",
   "@babel/runtime": "7.25.0",
   "@commitlint/config-conventional": "17.0.2",
@@ -60,7 +60,7 @@ const STANDARD_VERSIONS = {
   "@types/jest": "29.5.12",
   "@types/react-test-renderer": "19.0.0",
   "@types/react-test-renderer": "19.0.0",
-  "@types/react": "19.0.0",
+  "@types/react": "19.0.10",
   "axios-mock-adapter": "1.22.0",
   "babel-jest": "29.7.0",
   commitlint: "17.0.2",
@@ -71,7 +71,7 @@ const STANDARD_VERSIONS = {
   "eslint-plugin-prettier": "5.4.0",
   eslint: "8.57.0",
   flowgen: "1.21.0",
-  "jest-expo": "53.0.5",
+  "jest-expo": "53.0.9",
   jest: "29.7.0",
   "pod-install": "0.1.0",
   prettier: "3.5.3",

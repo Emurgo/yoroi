@@ -17,6 +17,12 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
+# Select install command based on clean mode
+INSTALL_CMD="npm ci"
+if [ "$CLEAN_MODE" = "true" ] || [ "$CLEAN_MODE" = "clean" ]; then
+  INSTALL_CMD="npm install"
+fi
+
 # Define packages grouped by dependency levels
 # Level 0: No internal dependencies
 LEVEL_0=("types" "identicon")
@@ -82,7 +88,7 @@ build_packages() {
     (
       echo "  → Building '${pkg}'..."
       cd "packages/$pkg"
-      npm install --verbose
+      $INSTALL_CMD
       npm run build
       echo "  ✅ Built '${pkg}'"
     ) &
@@ -113,7 +119,7 @@ if [ "$CLEAN_MODE" = "true" ] || [ "$CLEAN_MODE" = "clean" ]; then
   rm -rf node_modules
   rm -f "package-lock.json"
 fi
-npm install --verbose
+$INSTALL_CMD
 npm run lint 
 npm run tsc
 npm run test 
