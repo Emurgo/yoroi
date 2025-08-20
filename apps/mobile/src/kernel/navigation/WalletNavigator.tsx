@@ -15,8 +15,8 @@ import {WalletTabNavigator} from '~/kernel/navigation/WalletTabNavigator'
 import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
 import {WalletStackRoutes} from '~/kernel/navigation/types'
 
-import {DashboardNavigator} from '../../features/Dashboard/DashboardNavigator'
-import {GovernanceNavigator} from '../../features/Staking/Governance/GovernanceNavigator'
+import {DashboardNavigator} from '~/features/Dashboard/DashboardNavigator'
+import {GovernanceNavigator} from '~/features/Staking/Governance/GovernanceNavigator'
 
 const Stack = createStackNavigator<WalletStackRoutes>()
 
