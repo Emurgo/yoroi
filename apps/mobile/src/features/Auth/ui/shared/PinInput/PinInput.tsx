@@ -93,7 +93,7 @@ export const PinInput = React.forwardRef<PinInputRef, Props>((props, ref) => {
             if (value.length === pinMaxLength) onDone(value)
           }
         }}
-        keyboardType="numeric"
+        keyboardType="number-pad"
         secureTextEntry
         maxLength={pinMaxLength}
         style={[
