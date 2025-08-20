@@ -59,7 +59,7 @@ export const settingsMessages = defineMessages({
     defaultMessage: '!!!Change Password',
   },
   changeCustomPinTitle: {
-    id: 'txReview.overview.receiveToLabel',
+    id: 'components.settings.changecustompinscreen.title',
     defaultMessage: '!!!Change Custom PIN',
   },
   collateral: {

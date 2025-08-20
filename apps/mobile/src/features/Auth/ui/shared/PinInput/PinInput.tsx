@@ -1,9 +1,9 @@
 import {atoms as a, space as s, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
-import {Text, View} from 'react-native'
+import {Text, View, TextInput, KeyboardAvoidingView, Platform} from 'react-native'
 
-import {BACKSPACE, NumericKeyboard} from '~/ui/NumericKeyboard'
+import {BACKSPACE} from '~/ui/NumericKeyboard'
 import {Space} from '~/ui/Space/Space'
 
 type Props = {
@@ -28,7 +28,7 @@ export const PinInput = React.forwardRef<PinInputRef, Props>((props, ref) => {
     onDone,
     onGoBack,
   } = props
-  const {atoms: ta} = useTheme()
+  const {atoms: ta, palette: p} = useTheme()
   const [pin, setPin] = React.useState('')
 
   React.useImperativeHandle(ref, () => ({
@@ -55,7 +55,11 @@ export const PinInput = React.forwardRef<PinInputRef, Props>((props, ref) => {
   }
 
   return (
-    <View style={[a.flex_1, ta.bg_color_max]}>
+    <KeyboardAvoidingView 
+      style={[a.flex_1, ta.bg_color_max]}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      keyboardVerticalOffset={0}
+    >
       <View style={[a.flex_1, a.align_center, a.justify_center]}>
         <Text
           style={[
@@ -96,8 +100,28 @@ export const PinInput = React.forwardRef<PinInputRef, Props>((props, ref) => {
         </View>
       </View>
 
-      <NumericKeyboard onKeyDown={onKeyDown} />
-    </View>
+      <TextInput
+        value={pin}
+        onChangeText={(value) => {
+          if (!enabled) return
+          if (value.length <= pinMaxLength) {
+            setPin(value)
+            if (value.length === pinMaxLength) onDone(value)
+          }
+        }}
+        keyboardType="numeric"
+        secureTextEntry
+        maxLength={pinMaxLength}
+        style={[
+          {opacity: 0, position: 'absolute', width: 1, height: 1}
+        ]}
+        placeholder=""
+        autoFocus
+        onSubmitEditing={() => {}}
+        editable={true}
+        selectTextOnFocus={false}
+      />
+    </KeyboardAvoidingView>
   )
 })
 
