@@ -70,7 +70,7 @@ export const ConfirmTxWithSpendingPasswordModal = ({
   return (
     <View style={[a.flex_1, a.px_lg, a.pb_lg]}>
       <Text
-        style={[{paddingHorizontal: 70, textAlign: 'center', paddingBottom: 8}]}
+        style={[{paddingHorizontal: 70}, a.text_center, a.pb_sm]}
       >
         {strings.staking.enterPassword}
       </Text>
