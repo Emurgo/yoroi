@@ -34,7 +34,7 @@ export const ConfirmPin = () => {
   const {unsignedTxChanged} = useReviewTx()
   const {navigateToTxReview} = useWalletNavigation()
 
-  const {generateVotingKeys, isLoading} = useGenerateVotingKeys({
+  const {generateVotingKeys, isPending: isLoading} = useGenerateVotingKeys({
     onSuccess: async ({catalystKeyHex, votingKeyEncrypted}) => {
       votingKeyEncryptedChanged(votingKeyEncrypted)
 
