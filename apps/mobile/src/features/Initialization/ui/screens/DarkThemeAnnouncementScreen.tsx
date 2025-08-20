@@ -70,7 +70,7 @@ export const DarkThemeAnnouncementScreen = () => {
 
           <Space.Height._2xl />
 
-          <Text style={[a.heading_3_medium, a.text_center]}>
+          <Text style={[a.heading_3_medium, a.text_center, ta.text_gray_max]}>
             {strings.initialization.darkThemeAnnouncement.header}
           </Text>
 
@@ -91,7 +91,7 @@ export const DarkThemeAnnouncementScreen = () => {
             style={[
               {color: p.el_gray_medium},
               a.text_center,
-              a.body_3_sm_regular,
+              a.body_2_md_regular,
             ]}
           >
             {strings.initialization.darkThemeAnnouncement.changeTheme}
