@@ -17,13 +17,16 @@ export const ReferenceInputsTab = ({
 }) => {
   const {palette: p} = useTheme()
   const strings = useStrings()
+  const [expanded, setExpanded] = React.useState(false)
 
   return (
     <View style={[a.flex_1, a.px_lg, {backgroundColor: p.bg_color_max}]}>
       <Space.Height.lg />
 
       <Accordion
-        label={`${strings.txReview.utxosInputsLabel} (${referenceInputs.length})`}
+        label={`${strings.txReview.utxos.utxosInputsLabel} (${referenceInputs.length})`}
+        expanded={expanded}
+        onChange={setExpanded}
       >
         <Inputs inputs={referenceInputs} />
       </Accordion>

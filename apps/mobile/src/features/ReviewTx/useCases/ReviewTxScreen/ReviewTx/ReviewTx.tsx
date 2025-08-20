@@ -23,7 +23,7 @@ import {ScrollView, useScrollView} from '~/ui/ScrollView/ScrollView'
 import {isEmptyString} from '~/wallets/utils/string'
 
 import {MetadataTab} from '../ReviewTx/Metadata/MetadataTab'
-import {OverviewTab} from '../ReviewTx/Overview/OverviewTab'
+import {OverviewTab, ReviewDetailsProps} from '../ReviewTx/Overview/OverviewTab'
 import {UTxOsTab} from '../ReviewTx/UTxOs/UTxOsTab'
 import {MintTab} from './Mint/MintTab'
 import {ReferenceInputsTab} from './ReferenceInputs/ReferenceInputs'
@@ -45,7 +45,7 @@ export const ReviewTx = ({
   formattedMetadata?: FormattedMetadata
   operations?: Array<React.ReactNode>
   operationsNotice?: React.ReactNode
-  details?: {title: string; component: React.ReactNode}
+  details?: ReviewDetailsProps
   receiverCustomTitle?: React.ReactNode
   createdBy?: React.ReactNode
   onConfirm: () => void
@@ -54,8 +54,8 @@ export const ReviewTx = ({
   const strings = useStrings()
 
   const tabsData: Array<[string, Tabs]> = [
-    [strings.txReview.overviewTab, 'overview'],
-    [strings.txReview.utxosTab, 'utxos'],
+    [strings.txReview.tabLabel.overview, 'overview'],
+    [strings.txReview.tabLabel.utxos, 'utxos'],
   ]
   const [activeTab, setActiveTab] = React.useState<Tabs>(tabsData[0][1])
 
@@ -65,10 +65,14 @@ export const ReviewTx = ({
   const showMintTab = !!formattedTx.mint
   const showReferenceInoutsTab = formattedTx.referenceInputs.length > 0
 
-  if (showMetadataTab) tabsData.push([strings.txReview.metadataTab, 'metadata'])
-  if (showMintTab) tabsData.push([strings.txReview.mintTab, 'mint'])
+  if (showMetadataTab)
+    tabsData.push([strings.txReview.tabLabel.metadataTab, 'metadata'])
+  if (showMintTab) tabsData.push([strings.txReview.tabLabel.mint, 'mint'])
   if (showReferenceInoutsTab)
-    tabsData.push([strings.txReview.referenceInputsTab, 'reference_inputs'])
+    tabsData.push([
+      strings.txReview.tabLabel.referenceInputs,
+      'reference_inputs',
+    ])
 
   // intentionally not using ref
   const {

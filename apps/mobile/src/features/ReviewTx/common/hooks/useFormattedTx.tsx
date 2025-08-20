@@ -1,18 +1,20 @@
+import {CredKind} from '@emurgo/cross-csl-core'
+import {useSuspenseQuery} from '@tanstack/react-query'
 import {isNonNullable} from '@yoroi/common'
 import {ApiUtxoData, Portfolio} from '@yoroi/types'
 
-import {CredKind} from '@emurgo/cross-csl-core'
-import {useSuspenseQuery} from '@tanstack/react-query'
 import _ from 'lodash'
 
-import {usePortfolioTokenInfos} from '~/features/Portfolio/common/hooks/usePortfolioTokenInfos'
+import {usePortfolioTokenInfosSuspense} from '~/features/Portfolio/common/hooks/usePortfolioTokenInfos'
 import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {YoroiWallet} from '~/wallets/cardano/types'
 import {deriveRewardAddressFromAddress} from '~/wallets/cardano/utils'
 import {wrappedCsl} from '~/wallets/cardano/wrappedCsl'
+import {RawUtxo} from '~/wallets/types/other'
 import {asQuantity} from '~/wallets/utils/utils'
 
+import {NetworkApi} from '../../../../../../../packages/types/lib/typescript/network/manager'
 import {
   FormattedCertificate,
   FormattedFee,
@@ -36,24 +38,26 @@ export const useFormattedTx = (data: TransactionBody): FormattedTx => {
 
   const inputTokenIds = inputs.flatMap((i) => {
     const utxo = inputUtxos.find(
-      (utxo) =>
+      (utxo: RawUtxo) =>
         utxo?.tx_hash === i.transaction_id && utxo?.tx_index === i.index,
     )
     return (
       utxo?.assets.map(
-        (a) => `${a.policyId}.${a.assetId}` as Portfolio.Token.Id,
+        (a: {policyId: string; assetId: string}) =>
+          `${a.policyId}.${a.assetId}` as Portfolio.Token.Id,
       ) ?? []
     )
   })
 
   const referenceInputTokenIds = referenceInputs.flatMap((i) => {
     const utxo = referenceInputUtxos.find(
-      (utxo) =>
+      (utxo: RawUtxo) =>
         utxo?.tx_hash === i.transaction_id && utxo?.tx_index === i.index,
     )
     return (
       utxo?.assets.map(
-        (a) => `${a.policyId}.${a.assetId}` as Portfolio.Token.Id,
+        (a: {policyId: string; assetId: string}) =>
+          `${a.policyId}.${a.assetId}` as Portfolio.Token.Id,
       ) ?? []
     )
   })
@@ -82,7 +86,7 @@ export const useFormattedTx = (data: TransactionBody): FormattedTx => {
     ...mintTokenIds,
     ...referenceInputTokenIds,
   ])
-  const portfolioTokenInfos = usePortfolioTokenInfos({wallet, tokenIds})
+  const portfolioTokenInfos = usePortfolioTokenInfosSuspense({wallet, tokenIds})
 
   const formattedInputs = useFormattedInputs(
     wallet,
@@ -115,7 +119,7 @@ export const useFormattedTx = (data: TransactionBody): FormattedTx => {
 
 export const useFormattedInputs = (
   wallet: YoroiWallet,
-  tokenInfosResult: ReturnType<typeof usePortfolioTokenInfos>,
+  tokenInfosResult: ReturnType<typeof usePortfolioTokenInfosSuspense>,
   inputUtxos: ReturnType<typeof useUtxos>,
 ) => {
   const query = useSuspenseQuery<FormattedInputs>({
@@ -130,11 +134,11 @@ export const useFormattedInputs = (
 export const useFormattedOutputs = (
   wallet: YoroiWallet,
   outputs: TransactionOutputs,
-  portfolioTokenInfos: ReturnType<typeof usePortfolioTokenInfos>,
+  portfolioTokenInfos: ReturnType<typeof usePortfolioTokenInfosSuspense>,
 ) => {
   const query = useSuspenseQuery<FormattedOutputs>({
     queryKey: ['useFormattedOutputs', outputs],
-    queryFn: async () => formatOutputs(wallet, outputs, portfolioTokenInfos),
+    queryFn: () => formatOutputs(wallet, outputs, portfolioTokenInfos),
   })
 
   if (!query.data) throw new Error('invalid formatted outputs')
@@ -143,11 +147,11 @@ export const useFormattedOutputs = (
 
 const formatInputs = async (
   wallet: YoroiWallet,
-  portfolioTokenInfos: ReturnType<typeof usePortfolioTokenInfos>,
+  portfolioTokenInfos: ReturnType<typeof usePortfolioTokenInfosSuspense>,
   inputUtxos: ReturnType<typeof useUtxos>,
 ): Promise<FormattedInputs> => {
   return Promise.all(
-    inputUtxos.map(async (utxo) => {
+    inputUtxos.map(async (utxo: RawUtxo) => {
       const address = utxo?.receiver
       const coin = utxo?.amount != null ? asQuantity(utxo.amount) : null
 
@@ -169,7 +173,8 @@ const formatInputs = async (
 
       const multiAssets =
         utxo?.assets
-          .map((a) => {
+          .map((a: {assetId: string; amount: string}) => {
+            if (a == null) return null
             const tokenInfo = portfolioTokenInfos.tokenInfos?.get(
               a.assetId as Portfolio.Token.Id,
             )
@@ -199,7 +204,7 @@ const formatInputs = async (
 const formatOutputs = async (
   wallet: YoroiWallet,
   outputs: TransactionOutputs,
-  portfolioTokenInfos: ReturnType<typeof usePortfolioTokenInfos>,
+  portfolioTokenInfos: ReturnType<typeof usePortfolioTokenInfosSuspense>,
 ): Promise<FormattedOutputs> => {
   return Promise.all(
     outputs.map(async (output) => {
@@ -222,18 +227,20 @@ const formatOutputs = async (
       const multiAssets = output.amount.multiasset
         ? Object.entries(output.amount.multiasset).flatMap(
             ([policyId, assets]) => {
-              return Object.entries(assets).map(([assetId, amount]) => {
-                const tokenInfo = portfolioTokenInfos.tokenInfos?.get(
-                  `${policyId}.${assetId}`,
-                )
-                if (tokenInfo == null) return null
-                const quantity = asQuantity(amount)
+              return Object.entries(assets as Record<string, string>).map(
+                ([assetId, amount]) => {
+                  const tokenInfo = portfolioTokenInfos.tokenInfos?.get(
+                    `${policyId}.${assetId}`,
+                  )
+                  if (tokenInfo == null) return null
+                  const quantity = asQuantity(amount)
 
-                return {
-                  tokenInfo,
-                  quantity,
-                }
-              })
+                  return {
+                    tokenInfo,
+                    quantity,
+                  }
+                },
+              )
             },
           )
         : []
@@ -274,7 +281,7 @@ const formatCertificates = (certificates: TransactionBody['certs']) => {
 
 const formatMintData = (
   mintData: TransactionBody['mint'] | null,
-  portfolioTokenInfos: ReturnType<typeof usePortfolioTokenInfos>,
+  portfolioTokenInfos: ReturnType<typeof usePortfolioTokenInfosSuspense>,
 ) => {
   if (mintData == null) return null
   return (mintData?.flatMap(([policyId, tokens]) =>
@@ -329,7 +336,7 @@ const getAllUtxos = async (
 ) => {
   return (
     Promise.all(
-      inputs.map((input) =>
+      inputs.map((input: TransactionInputs[0]) =>
         getUtxo(wallet, input.transaction_id, input.index, getUtxoData),
       ),
     ) ?? []

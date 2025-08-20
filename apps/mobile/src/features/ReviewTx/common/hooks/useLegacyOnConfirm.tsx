@@ -1,10 +1,12 @@
 import * as React from 'react'
 
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {useStrings} from '~/kernel/i18n/useStrings'
-import {useModal} from '~/ui/Modal/ModalContext'
-import {YoroiSignedTx, YoroiUnsignedTx} from '~/wallets/types/yoroi'
-
+import {useSelectedWallet} from '../../../../features/WalletManager/hooks/useSelectedWallet'
+import {useStrings} from '../../../../kernel/i18n/useStrings'
+import {ConfirmTxWithHwModal} from '../../../../ui/ConfirmTxWithHwModal/ConfirmTxWithHwModal'
+import {ConfirmTxWithOsModal} from '../../../../ui/ConfirmTxWithOsModal/ConfirmTxWithOsModal'
+import {ConfirmTxWithSpendingPasswordModal} from '../../../../ui/ConfirmTxWithSpendingPasswordModal/ConfirmTxWithSpendingPasswordModal'
+import {useModal} from '../../../../ui/Modal/ModalContext'
+import {YoroiSignedTx, YoroiUnsignedTx} from '../../../../wallets/types/yoroi'
 import {useNavigateTo} from './useNavigateTo'
 import {OnConfirm} from './useOnConfirm'
 
@@ -49,11 +51,19 @@ export const useLegacyOnConfirm = ({
 
     if (isHW) {
       openModal({
-        title: strings.staking.signTransaction,
+        title: strings.discover.confirmTx,
         content: (
-          <ConfirmRawTxWithHW
+          <ConfirmTxWithHwModal
+            onCancel={closeModal}
+            unsignedTx={unsignedTx}
             onSuccess={handleOnSuccess}
-            cbor={unsignedTx.cbor}
+            onNotSupportedCIP1694={() => {
+              if (onNotSupportedCIP1694) {
+                closeModal()
+                onNotSupportedCIP1694()
+              }
+            }}
+            onCIP36SupportChange={onCIP36SupportChange ?? undefined}
           />
         ),
         height: 400,
@@ -63,7 +73,7 @@ export const useLegacyOnConfirm = ({
 
     if (!isHW && !isEasyConfirmationEnabled) {
       openModal({
-        title: strings.signTransaction,
+        title: strings.discover.confirmTx,
         content: (
           <ConfirmTxWithSpendingPasswordModal
             unsignedTx={unsignedTx}
@@ -77,7 +87,7 @@ export const useLegacyOnConfirm = ({
     }
 
     openModal({
-      title: strings.signTransaction,
+      title: strings.discover.confirmTx,
       content: (
         <ConfirmTxWithOsModal
           unsignedTx={unsignedTx}

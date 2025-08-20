@@ -2,6 +2,7 @@ import {Chain, Portfolio, Scan} from '@yoroi/types'
 
 import {NavigatorScreenParams, useNavigation} from '@react-navigation/native'
 import {StackNavigationProp} from '@react-navigation/stack'
+import * as React from 'react'
 
 import {OnConfirm} from '~/features/ReviewTx/common/hooks/useOnConfirm'
 import {ReviewDetailsProps} from '~/features/ReviewTx/useCases/ReviewTxScreen/ReviewTx/Overview/OverviewTab'

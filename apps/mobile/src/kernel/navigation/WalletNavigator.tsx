@@ -3,6 +3,7 @@ import {useTheme} from '@yoroi/theme'
 import {createStackNavigator} from '@react-navigation/stack'
 import * as React from 'react'
 
+import {ReviewTxNavigator} from '~/features/ReviewTx/ReviewTxNavigator'
 import {SearchProvider} from '~/features/Search/SearchContext'
 import {SettingsScreenNavigator} from '~/features/Settings/SettingsScreenNavigator'
 import {NetworkTag} from '~/features/Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
@@ -53,6 +54,12 @@ export const WalletNavigator = () => {
           name="main-wallet-routes"
           options={{headerShown: false}}
           getComponent={() => WalletTabNavigator}
+        />
+
+        <Stack.Screen
+          name="review-tx-routes"
+          options={{headerShown: false}}
+          getComponent={() => ReviewTxNavigator}
         />
 
         <Stack.Screen

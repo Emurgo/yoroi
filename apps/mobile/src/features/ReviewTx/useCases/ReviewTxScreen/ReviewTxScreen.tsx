@@ -1,4 +1,3 @@
-import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 
 import {useReviewTx} from '~/features/ReviewTx/common/ReviewTxProvider'
@@ -7,24 +6,16 @@ import {useFormattedTx} from '~/features/ReviewTx/common/hooks/useFormattedTx'
 import {useLegacyOnConfirm} from '~/features/ReviewTx/common/hooks/useLegacyOnConfirm'
 import {useOnConfirm} from '~/features/ReviewTx/common/hooks/useOnConfirm'
 import {useTxBody} from '~/features/ReviewTx/common/hooks/useTxBody'
-import {isDev} from '~/kernel/env'
-import {useUnsafeParams} from '~/kernel/navigation/hooks'
-import {ReviewTxRoutes} from '~/kernel/navigation/types'
-import {Copiable} from '~/ui/Copiable/Copiable'
 
+import {ReviewTxRoutes} from '~/kernel/navigation/types'
+
+import {useUnsafeParams} from '~/kernel/navigation/hooks/useUnsafeParams'
 import {ReviewTx} from './ReviewTx/ReviewTx'
 
 export const ReviewTxScreen = () => {
-  const navigation = useNavigation()
-
   const {unsignedTx} = useReviewTx()
-  const params = useUnsafeParams<ReviewTxRoutes['review-tx']>()
+  const params = useUnsafeParams<NonNullable<ReviewTxRoutes['review-tx']>>()
   const cbor = params?.cbor
-
-  if (isDev)
-    navigation.setOptions({
-      headerRight: () => (cbor != null ? <Copiable text={cbor} /> : null),
-    })
 
   const {legacyOnConfirm} = useLegacyOnConfirm({
     unsignedTx,

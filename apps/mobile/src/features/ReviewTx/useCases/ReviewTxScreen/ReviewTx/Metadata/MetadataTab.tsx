@@ -27,7 +27,7 @@ export const MetadataTab = ({metadata, hash}: FormattedMetadata) => {
 
         <Space.Width.lg />
 
-        <Copiable style={{...a.flex_1}} text={hash}>
+        <Copiable style={a.flex_1} text={hash}>
           <Text
             style={[
               a.text_right,
