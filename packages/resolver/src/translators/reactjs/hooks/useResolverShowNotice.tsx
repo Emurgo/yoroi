@@ -12,8 +12,6 @@ export const useResolverShowNotice = (
   const query = useQuery({
     queryKey: ['useResolverShowNotice'],
     queryFn: showNotice.read,
-    staleTime: 0,
-    gcTime: 0,
     ...options,
   })
 
