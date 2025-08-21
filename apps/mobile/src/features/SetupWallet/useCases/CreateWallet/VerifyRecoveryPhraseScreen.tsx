@@ -224,7 +224,7 @@ const MnemonicInput = ({
           a.border,
           {borderColor: p.primary_200, backgroundColor: p.bg_color_max},
           {minHeight: 182},
-          {borderRadius: 6},
+          a.rounded_md,
           a.overflow_hidden,
           a.p_xs, 
         ]}
@@ -349,18 +349,6 @@ const WordBadges = ({
 
   const {palette: p} = useTheme()
 
-  const styles = {
-    usedWordBackground: {
-      position: 'absolute' as const,
-      backgroundColor: p.bg_color_max,
-      borderRadius: 6,
-      left: 2,
-      right: 2,
-      top: 2,
-      bottom: 2,
-    },
-  }
-
   return (
     <Animated.View layout={Layout} style={[a.flex_row, a.flex_wrap, a.gap_sm]}>
       {mnemonicEntries.map((entry) => {
@@ -398,7 +386,21 @@ const WordBadges = ({
                 ]}
               />
 
-              {isUsed && <View style={styles.usedWordBackground} />}
+              {isUsed && (
+                <View
+                  style={[
+                    a.absolute,
+                    a.rounded_md,
+                    {
+                      backgroundColor: p.bg_color_max,
+                      left: 2,
+                      right: 2,
+                      top: 2,
+                      bottom: 2,
+                    },
+                  ]}
+                />
+              )}
 
               <WordBadge
                 word={entry.word}
