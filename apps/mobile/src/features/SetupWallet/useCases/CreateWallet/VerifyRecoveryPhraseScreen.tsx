@@ -152,7 +152,7 @@ const ErrorMessage = () => {
     <View style={[a.flex_row, a.align_center, a.px_lg]}>
       <AlertIllustration />
 
-      <Space.Height.sm />
+      <Space.Width.sm />
 
       <Text style={[{color: p.sys_magenta_500}, a.body_2_md_regular]}>
         {strings.setupWallet.verifyRecoveryPhraseErrorMessage}
@@ -346,6 +346,18 @@ const WordBadges = ({
 
   const {palette: p} = useTheme()
 
+  const styles = {
+    usedWordBackground: {
+      position: 'absolute' as const,
+      backgroundColor: p.bg_color_max,
+      borderRadius: 6,
+      left: 2,
+      right: 2,
+      top: 2,
+      bottom: 2,
+    },
+  }
+
   return (
     <Animated.View layout={Layout} style={[a.flex_row, a.flex_wrap, a.gap_sm]}>
       {mnemonicEntries.map((entry) => {
@@ -383,18 +395,7 @@ const WordBadges = ({
                 ]}
               />
 
-              {isUsed && (
-                <View
-                  style={{
-                    backgroundColor: p.bg_color_max,
-                    borderRadius: 6,
-                    left: 2,
-                    right: 2,
-                    top: 2,
-                    bottom: 2,
-                  }}
-                />
-              )}
+              {isUsed && <View style={styles.usedWordBackground} />}
 
               <WordBadge
                 word={entry.word}
