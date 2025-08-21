@@ -5,7 +5,7 @@
   "scripts": {
     "start": "expo start -c",
     "android": "expo run:android",
-    "dgraph": "depcruise src --include-only \"^src\" --output-type dot | dot -T svg > dependency-graph.svg",
+    "dgraph": "dependency-cruiser src --include-only \"^src\" --output-type dot | dot -T svg > dependency-graph.svg",
     "intl:extract": "formatjs extract",
     "ios": "expo run:ios",
     "lint": "eslint . --ext .ts,.tsx",
