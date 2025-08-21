@@ -138,9 +138,9 @@ describe('Governance Translators React', () => {
     expect(certificate).toBeDefined()
   })
 
-  it('useVotingCertificate should call manager.createVotingCertificate', async () => {
+  it('useVotingCertificate should call manager.createVotingCertificate', () => {
     const {wrapper, manager} = createMocks({
-      createVotingCertificate: jest.fn().mockResolvedValue(true),
+      createVotingCertificate: jest.fn().mockReturnValue({}),
     })
 
     const cardano = init('global')
@@ -150,14 +150,14 @@ describe('Governance Translators React', () => {
     const publicKey = privateKey.toPublic()
     const stakingKey = publicKey.derive(2).derive(0).toRawKey()
     const {result} = renderHook(() => useVotingCertificate(), {wrapper})
-    await waitFor(() =>
-      result.current.createCertificate({vote: 'no-confidence', stakingKey}),
-    )
-    await waitFor(() => result.current.isSuccess)
+
+    const certificate = result.current({vote: 'no-confidence', stakingKey})
+
     expect(manager.createVotingCertificate).toHaveBeenCalledWith(
       'no-confidence',
       stakingKey,
     )
+    expect(certificate).toBeDefined()
   })
 })
 

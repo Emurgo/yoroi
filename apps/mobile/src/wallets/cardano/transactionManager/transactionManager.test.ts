@@ -21,6 +21,7 @@ import {
   syncTxs,
   toCachedTx,
 } from './transactionManager'
+import {Transaction} from '../../types/other'
 
 jest.mock('../api/api', () => ({
   getTipStatus: jest.fn().mockResolvedValue(mockedTipStatusResponse),

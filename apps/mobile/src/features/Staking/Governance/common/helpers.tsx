@@ -7,7 +7,6 @@ import {
   useUpdateLatestGovernanceAction,
 } from '@yoroi/staking'
 
-import {UseQueryOptions} from '@tanstack/react-query'
 import * as React from 'react'
 
 import {useReviewTx} from '~/features/ReviewTx/common/ReviewTxProvider'
@@ -24,23 +23,14 @@ import {GovernanceVote} from '../types'
 import {useNavigateTo} from './navigation'
 
 export const useIsParticipatingInGovernance = () => {
-  const status = useGovernanceStatus({
-    suspense: true,
-    useErrorBoundary: false,
-    retry: false,
-  })
+  const status = useGovernanceStatus()
   return status !== null
 }
 
-export const useGovernanceStatus = (
-  options: UseQueryOptions<StakingKeyState, Error> = {},
-) => {
+export const useGovernanceStatus = () => {
   const {wallet} = useSelectedWallet()
   const stakingKeyHash = useStakingKey(wallet)
-  const {data: stakingStatus, refetch} = useStakingKeyState(
-    stakingKeyHash,
-    options,
-  )
+  const {data: stakingStatus, refetch} = useStakingKeyState(stakingKeyHash)
 
   useWalletEvent(wallet, 'utxos', refetch)
 
@@ -130,7 +120,9 @@ export const useGovernanceActions = () => {
         ? {
             operationsNotice: (
               <InfoBanner
-                content={strings.delegateVotingToDRepDeprecatedFormatNotice}
+                content={
+                  strings.staking.delegateVotingToDRepDeprecatedFormatNotice
+                }
               />
             ),
           }

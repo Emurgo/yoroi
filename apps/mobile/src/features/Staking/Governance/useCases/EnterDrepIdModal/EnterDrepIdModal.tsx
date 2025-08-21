@@ -36,7 +36,7 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
       const {hash, type} = parseDrepId(drepId, CardanoMobile)
       onSubmit?.({hash, type, CIP105: !error && drepId.length === 56})
     } catch (e) {
-      Alert.alert(strings.global.error, strings.invalidDRepId)
+      Alert.alert(strings.global.error, strings.staking.invalidDRepId)
     }
   }
 
@@ -49,7 +49,7 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
       <Space.Height.sm />
 
       <Text style={[a.text_center, a.body_1_lg_regular, ta.text_gray_medium]}>
-        {strings.enterDrepIDInfo}
+        {strings.staking.enterDrepIDInfo}
       </Text>
 
       {FIND_DREPS_LINK.length > 0 && (
@@ -64,7 +64,7 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
             ]}
             onPress={handleOnLinkPress}
           >
-            {strings.findDRepHere}
+            {strings.staking.findDRepHere}
           </Text>
         </>
       )}
@@ -77,24 +77,24 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
         multiline
         errorDelay={1000}
         errorText={error?.message}
-        label={strings.drepID}
+        label={strings.staking.drepID}
         numberOfLines={2}
         focusable
         containerStyle={{minHeight: 80}}
-        renderComponentStyle={[
-          a.pt_lg,
-          a.pb_lg,
-          a.pl_lg,
-          a.pr_lg,
-          a.body_1_lg_regular,
-          {minHeight: 70},
-        ]}
+        renderComponentStyle={{
+          ...a.pt_lg,
+          ...a.pb_lg,
+          ...a.pl_lg,
+          ...a.pr_lg,
+          ...a.body_1_lg_regular,
+          minHeight: 70,
+        }}
       />
 
       <Space.Height.sm fill />
 
       <Button
-        title={strings.confirm}
+        title={strings.staking.confirm}
         disabled={
           isNonNullable(error) ||
           drepId.length === 0 ||

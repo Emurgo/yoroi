@@ -20,7 +20,8 @@ import {convertBech32ToHex} from '~/wallets/cardano/common/signatureUtils'
 import {undefinedToken} from './constants'
 import {useNavigateTo} from './navigation'
 import {useGetInputs} from './useGetInputs'
-import {useSwapConfigData, processSwapConfig} from './swapConfigUtils'
+import {processSwapConfig} from './swapConfigUtils'
+import {useSwapConfig} from './useSwapConfig'
 
 const SwapActionType = {
   ChangeOrderType: 'ChangeOrderType',
@@ -103,7 +104,7 @@ type SwapState = {
   createTx?: Swap.CreateResponse
 }
 
-type SwapContext = SwapState & {
+export type SwapContext = SwapState & {
   isLoading: boolean
   limitOptions?: Swap.LimitOptionsResponse
   tokenInfos: Map<Portfolio.Token.Id, Portfolio.Token.Info>
@@ -130,11 +131,11 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
   const stakingKey = useStakingKey(wallet)
   const address = wallet.externalAddresses[0]
   const addressHex = convertBech32ToHex(address)
-  const {getSwapConfig} = useSwapConfigData()
+  const {swapConfig} = useSwapConfig()
   const [isLoading, setIsLoading] = React.useState(false)
+
   const swapManager = React.useMemo(() => {
     const storage = swapStorageMaker()
-    const {partners} = processSwapConfig(swapConfig, tokenInfos)
     return swapManagerMaker({
       storage,
       network,
@@ -143,7 +144,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
       addressHex,
       primaryTokenInfo: wallet.portfolioPrimaryTokenInfo,
       isPrimaryToken,
-      partners,
+      partners: swapConfig.partners ?? {},
     })
   }, [
     network,
@@ -152,7 +153,6 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
     addressHex,
     wallet.portfolioPrimaryTokenInfo,
     swapConfig,
-    tokenInfos,
   ])
 
   const {data: orders = [], refetch: refetchOrders} = useQuery({
@@ -169,13 +169,6 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
     },
   })
 
-  const {data: swapConfig} = useQuery({
-    queryKey: ['useSwapConfig'],
-    queryFn: () => getSwapConfig(),
-  })
-
-  const {excludedTokens} = processSwapConfig(swapConfig, tokenInfos)
-
   const {data: tokenIds = [], refetch: refetchTokens} = useQuery({
     queryKey: [
       'useSwapTokenIds',
@@ -185,6 +178,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
     queryFn: async () => {
       const res = await swapManager.api.tokens()
       if (isRight(res)) {
+        const excludedTokens = swapConfig.excludedTokens ?? []
         const tokenIds = res.value.data
           .map(({id}) => id)
           .filter((id) => excludedTokens.indexOf(id) === -1)

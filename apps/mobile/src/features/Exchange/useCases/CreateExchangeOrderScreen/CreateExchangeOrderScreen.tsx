@@ -105,7 +105,7 @@ export const CreateExchangeOrderScreen = () => {
 
   const {signal, setupSignalTimeout} = useAbortSignal()
 
-  const {isLoading, refetch: createReferralLink} = useCreateReferralLink(
+  const {isPending: isLoading, createReferralLink} = useCreateReferralLink(
     {
       queries: urlOptions,
       providerId,
@@ -118,7 +118,7 @@ export const CreateExchangeOrderScreen = () => {
 
         await delay(1000)
 
-        openModal({content: <ErrorScreen />, full: true})
+        openModal({content: <ErrorScreen />})
       },
       onSuccess: (referralLink) => {
         closeModal()
@@ -142,7 +142,7 @@ export const CreateExchangeOrderScreen = () => {
   const handleOnExchange = () => {
     createReferralLink()
     setupSignalTimeout(3000)
-    openModal({content: <LoadingLinkScreen />, full: true})
+    openModal({content: <LoadingLinkScreen />})
   }
 
   const handleOnListProvidersByOrderType = () => {

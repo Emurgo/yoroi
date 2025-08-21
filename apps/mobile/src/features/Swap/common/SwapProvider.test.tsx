@@ -1,7 +1,7 @@
 import {render} from '@testing-library/react-native'
 import * as React from 'react'
 
-import {SwapProvider} from './SwapProvider'
+import {SwapContext, SwapProvider} from './SwapProvider'
 
 // Mock the dependencies
 jest.mock('~/features/Portfolio/common/hooks/usePortfolioTokenInfos', () => ({
@@ -92,12 +92,12 @@ jest.mock('@yoroi/swap', () => ({
 describe('SwapProvider', () => {
   it('should provide tokenInfos as a Map even when usePortfolioTokenInfos returns undefined', () => {
     const TestComponent = () => {
-      const {tokenInfos} = React.useContext(
+      const {tokenInfos} = React.useContext<SwapContext>(
         require('./SwapProvider').SwapContextInstance,
       )
 
       // This should not throw an error
-      tokenInfos.get('test-token')
+      tokenInfos.get('test-token.test-token')
 
       return null
     }

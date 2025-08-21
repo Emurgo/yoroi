@@ -4,7 +4,6 @@ import {
   UseMutationOptions,
   UseMutationResult,
   UseQueryOptions,
-  useMutation,
   useQuery,
 } from '@tanstack/react-query'
 
@@ -99,28 +98,15 @@ export const useDelegationCertificate = () => {
   }) => manager.createDelegationCertificate(hash, type, stakingKey)
 }
 
-export const useVotingCertificate = (
-  options: UseMutationOptions<
-    CardanoTypes.Certificate,
-    Error,
-    {vote: VoteKind; stakingKey: CardanoTypes.PublicKey}
-  > = {},
-) => {
+export const useVotingCertificate = () => {
   const {manager} = useGovernance()
-
-  const mutation = useMutation({
-    mutationKey: ['governanceVotingCertificate'],
-    mutationFn: async (variables) =>
-      await manager.createVotingCertificate(
-        variables.vote,
-        variables.stakingKey,
-      ),
-    ...options,
-  })
-  return {
-    ...mutation,
-    createCertificate: mutation.mutate,
-  }
+  return ({
+    vote,
+    stakingKey,
+  }: {
+    vote: VoteKind
+    stakingKey: CardanoTypes.PublicKey
+  }) => manager.createVotingCertificate(vote, stakingKey)
 }
 
 export const useBech32DRepID = (hexId: string) => {

@@ -1,7 +1,7 @@
 import {CredKind} from '@emurgo/cross-csl-core'
 import {useSuspenseQuery} from '@tanstack/react-query'
 import {isNonNullable} from '@yoroi/common'
-import {ApiUtxoData, Portfolio} from '@yoroi/types'
+import {Api, ApiUtxoData, Network, Portfolio} from '@yoroi/types'
 
 import _ from 'lodash'
 
@@ -14,7 +14,6 @@ import {wrappedCsl} from '~/wallets/cardano/wrappedCsl'
 import {RawUtxo} from '~/wallets/types/other'
 import {asQuantity} from '~/wallets/utils/utils'
 
-import {NetworkApi} from '../../../../../../../packages/types/lib/typescript/network/manager'
 import {
   FormattedCertificate,
   FormattedFee,
@@ -332,7 +331,7 @@ export const useUtxos = (inputs: TransactionInputs, wallet: YoroiWallet) => {
 const getAllUtxos = async (
   inputs: TransactionInputs,
   wallet: YoroiWallet,
-  getUtxoData: NetworkApi['utxoData'],
+  getUtxoData: Network.Api['utxoData'],
 ) => {
   return (
     Promise.all(
@@ -347,7 +346,7 @@ const getUtxo = async (
   wallet: YoroiWallet,
   txHash: string,
   txIndex: number,
-  getUtxoData: NetworkApi['utxoData'],
+  getUtxoData: Network.Api['utxoData'],
 ) => {
   const internalUtxo = wallet.utxos.find(
     (u) => u.tx_hash === txHash && u.tx_index === txIndex,

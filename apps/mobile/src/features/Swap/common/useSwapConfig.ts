@@ -1,19 +1,20 @@
+import {getSwapConfigApiMaker} from '@yoroi/swap'
+
 import {useQuery} from '@tanstack/react-query'
 
 import {useSwap} from './useSwap'
-import {useSwapConfigData, processSwapConfig} from './swapConfigUtils'
+import {processSwapConfig} from './swapConfigUtils'
 
+const getSwapConfig = getSwapConfigApiMaker()
 export const useSwapConfig = () => {
-  const {getSwapConfig} = useSwapConfigData()
+  const {tokenInfos} = useSwap()
   const query = useQuery({
     queryKey: ['useSwapConfig'],
     queryFn: () => getSwapConfig(),
   })
 
   const swapConfig = query.data
-  const {tokenInfos} = useSwap()
-
-  const configData = processSwapConfig(swapConfig, tokenInfos)
+  const configData = processSwapConfig(swapConfig ?? {}, tokenInfos)
 
   return {
     ...query,

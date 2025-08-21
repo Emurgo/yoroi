@@ -48,11 +48,9 @@ export const HomeScreen = () => {
     setIsPendingRefetchAfterTxConfirmation,
   ] = React.useState(false)
 
-  const {data: stakingStatus, getState} = useStakingKeyState()
   const stakingKeyHash = useStakingKey(wallet)
-  const refetchStakingKeyState = React.useCallback(() => {
-    return getState(stakingKeyHash)
-  }, [getState, stakingKeyHash])
+  const {data: stakingStatus, refetch: refetchStakingKeyState} =
+    useStakingKeyState(stakingKeyHash)
 
   useWalletEvent(wallet, 'utxos', refetchStakingKeyState)
 
@@ -283,15 +281,8 @@ const NeverParticipatedInGovernanceVariant = () => {
   useWalletEvent(wallet, 'utxos', stakingInfo.refetch)
   const needsToRegisterStakingKey = !hasStakingKeyRegistered
 
-  const {
-    createCertificate: createDelegationCertificate,
-    isLoading: isCreatingDelegationCertificate,
-  } = useDelegationCertificate()
-
-  const {
-    createCertificate: createVotingCertificate,
-    isLoading: isCreatingVotingCertificate,
-  } = useVotingCertificate()
+  const createDelegationCertificate = useDelegationCertificate()
+  const createVotingCertificate = useVotingCertificate()
 
   const createGovernanceTxMutation = useCreateGovernanceTx(wallet, {
     shouldThrow: false,
@@ -438,10 +429,7 @@ const NeverParticipatedInGovernanceVariant = () => {
     }
   }
 
-  const isCreatingTx =
-    createGovernanceTxMutation.isPending ||
-    isCreatingDelegationCertificate ||
-    isCreatingVotingCertificate
+  const isCreatingTx = createGovernanceTxMutation.isPending
 
   return (
     <ScrollView style={[a.px_lg, a.flex_1, {backgroundColor: p.bg_color_max}]}>

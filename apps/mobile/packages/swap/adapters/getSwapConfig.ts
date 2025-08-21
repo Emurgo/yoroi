@@ -5,7 +5,7 @@ import {Api, Portfolio, Swap} from '@yoroi/types'
 import {freeze} from 'immer'
 import {z} from 'zod'
 
-type SwapConfig = z.infer<typeof SwapConfigResponseSchema>
+export type SwapConfig = z.infer<typeof SwapConfigResponseSchema>
 type Options = {
   request: FetchData
 }

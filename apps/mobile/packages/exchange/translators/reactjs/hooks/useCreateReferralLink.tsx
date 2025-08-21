@@ -1,6 +1,6 @@
 import {Exchange} from '@yoroi/types'
 
-import {UseSuspenseQueryOptions, useSuspenseQuery} from '@tanstack/react-query'
+import {UseMutationOptions, useMutation} from '@tanstack/react-query'
 import {AxiosRequestConfig} from 'axios'
 
 export const useCreateReferralLink = (
@@ -15,10 +15,10 @@ export const useCreateReferralLink = (
     referralLinkCreate: Exchange.Manager['referralLink']['create']
     fetcherConfig?: AxiosRequestConfig
   },
-  options?: UseSuspenseQueryOptions<
+  options?: UseMutationOptions<
     URL,
     Error,
-    URL,
+    void,
     [
       'useCreateReferralLink',
       Exchange.ReferralUrlQueryStringParams,
@@ -26,15 +26,16 @@ export const useCreateReferralLink = (
     ]
   >,
 ) => {
-  const query = useSuspenseQuery({
+  const mutation = useMutation({
     ...options,
-    queryKey: ['useCreateReferralLink', queries, providerId],
-    queryFn: async ({signal}) =>
-      referralLinkCreate({providerId, queries}, {signal, ...fetcherConfig}),
+    mutationKey: ['useCreateReferralLink', queries, providerId],
+    mutationFn: async () =>
+      referralLinkCreate({providerId, queries}, fetcherConfig),
   })
 
   return {
-    ...query,
-    referralLink: query.data ?? '',
+    ...mutation,
+    referralLink: mutation.data ?? '',
+    createReferralLink: () => mutation.mutate(),
   }
 }

@@ -5,7 +5,7 @@ import {Links} from '@yoroi/types'
 
 import * as React from 'react'
 import {InteractionManager} from 'react-native'
-import uuid from 'uuid'
+import * as uuid from 'uuid'
 
 import {useBrowser} from '~/features/Discover/common/BrowserProvider'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'

@@ -16,6 +16,7 @@ import {ScrollView} from 'react-native-gesture-handler'
 import {LearnMoreLink} from '~/features/Staking/Governance/common/LearnMoreLink/LearnMoreLink'
 import {YoroiRecordLink} from '~/features/Staking/Governance/common/YoroiRecordLink/YoroiRecordLink'
 import {useCreateGovernanceTx} from '~/features/Staking/hooks/useCreateGovernanceTx'
+import {useStakingKey} from '~/features/Staking/hooks/useStakingKey'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useModal} from '~/ui/Modal/ModalContext'
@@ -32,7 +33,8 @@ export const ChangeVoteScreen = () => {
   const strings = useStrings()
   const {wallet, meta} = useSelectedWallet()
   const {atoms: ta} = useTheme()
-  const {data: stakingStatus} = useStakingKeyState()
+  const stakingKeyHash = useStakingKey(wallet)
+  const {data: stakingStatus} = useStakingKeyState(stakingKeyHash)
   const action = stakingStatus
     ? mapStakingKeyStateToGovernanceAction(stakingStatus)
     : null
@@ -47,15 +49,8 @@ export const ChangeVoteScreen = () => {
   >(null)
   const governanceActions = useGovernanceActions()
 
-  const {
-    createCertificate: createDelegationCertificate,
-    isLoading: isCreatingDelegationCertificate,
-  } = useDelegationCertificate()
-
-  const {
-    createCertificate: createVotingCertificate,
-    isLoading: isCreatingVotingCertificate,
-  } = useVotingCertificate()
+  const createDelegationCertificate = useDelegationCertificate()
+  const createVotingCertificate = useVotingCertificate()
 
   const createGovernanceTxMutation = useCreateGovernanceTx(wallet)
 
@@ -80,12 +75,12 @@ export const ChangeVoteScreen = () => {
   }
 
   const handleDelegate = () => {
-    openDRepIdModal(async (options) => {
-      const stakingKey = await wallet.getStakingKey()
+    openDRepIdModal((options) => {
+      const stakingKey = wallet.getStakingKey()
 
       setPendingVote('delegate-not-yoroi')
 
-      const certificate = await createDelegationCertificate({
+      const certificate = createDelegationCertificate({
         hash: options.hash,
         type: options.type,
         stakingKey,
@@ -178,10 +173,7 @@ export const ChangeVoteScreen = () => {
   const voteKind = action?.kind
   const voteHash =
     voteKind === 'delegate' && action != null ? action.hash : undefined
-  const isCreatingTx =
-    createGovernanceTxMutation.isPending ||
-    isCreatingVotingCertificate ||
-    isCreatingDelegationCertificate
+  const isCreatingTx = createGovernanceTxMutation.isPending
   const isDelegatingToDrep =
     voteKind === 'delegate' && voteHash !== GOVERNANCE_YOROI_DREP_ID_HEX
 

@@ -230,7 +230,9 @@ export const RestoreWalletDetailsScreen = () => {
             checksumLine={1}
             linesOfText={[
               strings.setupWallet.walletChecksumModalCardFirstItem,
-              strings.setupWallet.walletChecksumModalCardSecondItem,
+              strings.setupWallet.walletChecksumModalCardSecondItem(
+                plate.TextPart,
+              ),
               strings.setupWallet.walletChecksumModalCardThirdItem,
             ]}
           />

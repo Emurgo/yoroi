@@ -4,26 +4,18 @@ import * as React from 'react'
 import {Text, View} from 'react-native'
 
 import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {commit, version} from '~/kernel/constants'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Copiable} from '~/ui/Copiable/Copiable'
 import {Space} from '~/ui/Space/Space'
-import {YoroiWallet} from '~/wallets/cardano/types'
+
+// TODO: REVISIT after firebase messaging is back
+const FCMToken = ''
 
 export const About = () => {
   const strings = useStrings()
   const {palette: p} = useTheme()
-  const {wallet} = useSelectedWallet()
   const {network} = useSelectedNetwork()
-
-  const {version, commit} = wallet
-  const FCMToken = wallet.FCMToken
-
-  const getWalletType = (wallet: YoroiWallet) => {
-    if (wallet.isByron) return strings.settings.about.byronWallet
-    if (wallet.isShelley) return strings.settings.about.shelleyWallet
-    return strings.settings.about.unknownWalletType
-  }
 
   return (
     <View style={[a.p_lg, a.gap_lg]}>
@@ -109,17 +101,6 @@ export const About = () => {
           ]}
         >
           {strings.settings.about.walletType}
-        </Text>
-
-        <Text
-          style={[
-            {
-              color: p.gray_500,
-            },
-            a.body_1_lg_regular,
-          ]}
-        >
-          {getWalletType(wallet)}
         </Text>
       </View>
 
