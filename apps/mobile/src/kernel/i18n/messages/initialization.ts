@@ -58,15 +58,15 @@ export const initializationMessages = defineMessages({
     defaultMessage: '!!!Enable Button',
   },
   darkThemeAnnouncementHeader: {
-    id: 'components.initialization.acepttermsofservicescreen.title',
+    id: 'walletinit.theme.tryDarkTheme',
     defaultMessage: '!!!Dark Theme Announcement Header',
   },
   darkThemeAnnouncementDescription: {
-    id: 'components.initialization.acepttermsofservicescreen.title',
+    id: 'walletinit.theme.description',
     defaultMessage: '!!!Dark Theme Announcement Description',
   },
   darkThemeAnnouncementChangeTheme: {
-    id: 'components.initialization.acepttermsofservicescreen.title',
+    id: 'walletinit.theme.changeTheme',
     defaultMessage: '!!!Dark Theme Announcement Change Theme',
   },
   darkThemeAnnouncementContinue: {
