@@ -250,7 +250,11 @@ const MnemonicInput = ({
                   exiting={FadeOut}
                 >
                   <View style={[a.px_xs, a.py_xs, a.rounded_md, a.overflow_hidden]}>
-                    <Text style={[a.body_1_lg_regular, {color: p.text_primary_medium}, a.pr_xs]}>
+                    <Text style={[
+                      a.body_1_lg_regular, 
+                      {color: recoveryWordError ? p.sys_magenta_500 : p.text_primary_medium}, // Red number for errors
+                      a.pr_xs
+                    ]}>
                       {(index + 1).toString()}.
                     </Text>
                   </View>
@@ -285,10 +289,9 @@ const MnemonicInput = ({
                     <Text
                       style={[
                         a.body_1_lg_regular,
-                        {color: p.text_primary_medium},
+                        {color: recoveryWordError ? p.sys_magenta_500 : p.text_primary_medium},
                         a.px_sm,
-                        isPhraseComplete &&
-                          isValidPhrase && {color: p.black_static},
+                        isPhraseComplete && isValidPhrase && {color: p.black_static},
                       ]}
                     >
                       {entry.word}
