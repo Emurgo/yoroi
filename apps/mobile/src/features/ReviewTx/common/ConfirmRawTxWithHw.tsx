@@ -28,7 +28,7 @@ export const ConfirmRawTxWithHW = ({onSuccess, cbor}: Props) => {
   const [step, setStep] = useState<Step>('select-transport')
   const {meta} = useSelectedWallet()
   const strings = useStrings()
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
   const {signRawWithHw} = useSignRawTxWithHw({onSuccess})
 
   const onSelectTransport = (transportType: TransportType) => {
@@ -77,13 +77,7 @@ export const ConfirmRawTxWithHW = ({onSuccess, cbor}: Props) => {
     >
       <ActivityIndicator />
 
-      <Text
-        style={[
-          a.body_1_lg_regular,
-          a.text_center,
-          {color: p.text_gray_medium},
-        ]}
-      >
+      <Text style={[a.body_1_lg_regular, a.text_center, ta.text_gray_medium]}>
         {strings.ledgerMessages.continueOnLedger}
       </Text>
     </View>

@@ -1,24 +1,15 @@
 import * as React from 'react'
-import {QueryClient} from '@tanstack/react-query'
 
 import {Text, View} from 'react-native'
 import {render, waitFor} from '@testing-library/react-native'
 
-import {queryClientFixture} from '../../../fixtures/query-client'
 import {wrapperManagerFixture} from '../../../fixtures/manager-wrapper'
 import {resolverManagerMocks} from '../../manager.mocks'
 import {useResolverShowNotice} from './useResolverShowNotice'
 
-describe('useResolverCryptoAddresses', () => {
-  let queryClient: QueryClient
-
+describe('useResolverShowNotice', () => {
   beforeEach(() => {
     jest.clearAllMocks()
-    queryClient = queryClientFixture()
-  })
-
-  afterEach(() => {
-    queryClient.clear()
   })
 
   const mockResolverManager = {...resolverManagerMocks.success}
@@ -35,7 +26,6 @@ describe('useResolverCryptoAddresses', () => {
 
     mockResolverManager.showNotice.read = jest.fn().mockResolvedValue(false)
     const wrapper = wrapperManagerFixture({
-      queryClient,
       resolverManager: mockResolverManager,
     })
     const {getByTestId} = render(<TestResolver />, {wrapper})
@@ -61,7 +51,6 @@ describe('useResolverCryptoAddresses', () => {
     mockResolverManager.showNotice.read = jest.fn().mockRejectedValue('error')
 
     const wrapper = wrapperManagerFixture({
-      queryClient,
       resolverManager: mockResolverManager,
     })
     const {getByTestId} = render(<TestResolver />, {wrapper})

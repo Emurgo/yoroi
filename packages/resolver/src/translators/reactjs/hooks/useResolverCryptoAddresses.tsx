@@ -1,7 +1,5 @@
+import {useQuery, UseQueryOptions} from '@tanstack/react-query'
 import {Resolver} from '@yoroi/types'
-import {time} from '@yoroi/common'
-
-import {UseQueryOptions, useQuery} from '@tanstack/react-query'
 
 import {useResolver} from '../provider/ResolverProvider'
 
@@ -23,13 +21,13 @@ export const useResolverCryptoAddresses = (
   const {crypto} = useResolver()
 
   const query = useQuery({
-    throwOnError: true,
     queryKey: ['useResolverCryptoAddresses', resolve],
+    queryFn: async ({signal}: {signal?: AbortSignal}) => {
+      return await crypto.getCardanoAddresses({resolve, strategy}, {signal})
+    },
     staleTime: 0,
-    gcTime: time.seconds(10),
+    gcTime: 0,
     ...options,
-    queryFn: ({signal}) =>
-      crypto.getCardanoAddresses({resolve, strategy}, {signal}),
   })
 
   return {
