@@ -1,7 +1,7 @@
 import {CredKind} from '@emurgo/cross-csl-core'
 import {useSuspenseQuery} from '@tanstack/react-query'
 import {isNonNullable} from '@yoroi/common'
-import {Api, ApiUtxoData, Network, Portfolio} from '@yoroi/types'
+import {Api, Network, Portfolio} from '@yoroi/types'
 
 import _ from 'lodash'
 
@@ -362,7 +362,11 @@ const getUtxo = async (
   return internalUtxo
 }
 
-function toRawUtxo(utxosData: ApiUtxoData, txHash: string, txIndex: number) {
+function toRawUtxo(
+  utxosData: Api.Cardano.UtxoData,
+  txHash: string,
+  txIndex: number,
+) {
   const {address, amount, assets} = utxosData.output
 
   const mappedAssets = assets.map((asset) => ({

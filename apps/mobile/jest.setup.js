@@ -33,3 +33,13 @@ jest.mock('expo-constants', () => ({
     systemVersion: '16.0',
   },
 }))
+
+jest.mock('@react-native-async-storage/async-storage', () =>
+  require('@react-native-async-storage/async-storage/jest/async-storage-mock'),
+)
+
+jest.mock('@emurgo/cross-csl-mobile', () => require('@emurgo/cross-csl-nodejs'))
+
+jest.mock('@emurgo/csl-mobile-bridge-jsi', () => require('@emurgo/cardano-serialization-lib-nodejs'))
+
+jest.mock('@emurgo/msl-mobile-bridge-jsi', () => require('@emurgo/cardano-serialization-lib-nodejs'))

@@ -34,11 +34,12 @@ describe('useCreateReferralLink', () => {
         walletAddress: 'address',
       }
 
-      const {referralLink, createReferralLink, isPending} = useCreateReferralLink({
-        providerId,
-        queries,
-        referralLinkCreate: mockReferralLinkCreate,
-      })
+      const {referralLink, createReferralLink, isPending} =
+        useCreateReferralLink({
+          providerId,
+          queries,
+          referralLinkCreate: mockReferralLinkCreate,
+        })
 
       return (
         <View>

@@ -20,7 +20,6 @@ import {convertBech32ToHex} from '~/wallets/cardano/common/signatureUtils'
 import {undefinedToken} from './constants'
 import {useNavigateTo} from './navigation'
 import {useGetInputs} from './useGetInputs'
-import {processSwapConfig} from './swapConfigUtils'
 import {useSwapConfig} from './useSwapConfig'
 
 const SwapActionType = {
