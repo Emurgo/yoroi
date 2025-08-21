@@ -49,7 +49,7 @@ export const Text = (props: Props) => {
     Boolean(small) && a.body_3_sm_regular,
     Boolean(secondary) && {color: p.gray_700},
     Boolean(light) && {color: p.gray_min},
-    Boolean(bold) && {fontFamily: 'Rubik-Medium'},
+    Boolean(bold) && a.font_semibold,
     Boolean(monospace) &&
       Platform.select({
         ios: {fontFamily: 'Menlo'},

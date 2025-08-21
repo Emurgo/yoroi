@@ -5,18 +5,46 @@ import {fontSize, lineHeight, tokens} from '../tokens/tokens'
 // to build typography
 const fontFamily = {
   regular: {
-    fontFamily: Platform.select({
-      ios: 'Rubik, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
-      android: 'Rubik, "Roboto", "Noto Sans", sans-serif',
-      default: 'Rubik, sans-serif',
-    }),
+    fontFamily: 'Rubik',
   },
   medium: {
-    fontFamily: Platform.select({
-      ios: 'Rubik-Medium, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
-      android: 'Rubik-Medium, "Roboto", "Noto Sans", sans-serif',
-      default: 'Rubik-Medium, sans-serif',
-    }),
+    fontFamily: 'Rubik-Medium',
+  },
+  bold: {
+    fontFamily: 'Rubik-Bold',
+  },
+  light: {
+    fontFamily: 'Rubik-Light',
+  },
+  semibold: {
+    fontFamily: 'Rubik-SemiBold',
+  },
+  black: {
+    fontFamily: 'Rubik-Black',
+  },
+  extrabold: {
+    fontFamily: 'Rubik-ExtraBold',
+  },
+  italic: {
+    fontFamily: 'Rubik-Italic',
+  },
+  mediumItalic: {
+    fontFamily: 'Rubik-MediumItalic',
+  },
+  boldItalic: {
+    fontFamily: 'Rubik-BoldItalic',
+  },
+  lightItalic: {
+    fontFamily: 'Rubik-LightItalic',
+  },
+  semiboldItalic: {
+    fontFamily: 'Rubik-SemiBoldItalic',
+  },
+  blackItalic: {
+    fontFamily: 'Rubik-BlackItalic',
+  },
+  extraboldItalic: {
+    fontFamily: 'Rubik-ExtraBoldItalic',
   },
   monospace: {
     fontFamily: Platform.select({
@@ -165,19 +193,19 @@ const typograpghy = {
     textTransform: 'uppercase',
   },
   font_thin: {
-    fontWeight: tokens.fontWeight.thin,
+    ...fontFamily.light,
   },
   font_normal: {
-    fontWeight: tokens.fontWeight.normal,
+    ...fontFamily.regular,
   },
   font_semibold: {
-    fontWeight: tokens.fontWeight.semibold,
+    ...fontFamily.semibold,
   },
   font_bold: {
-    fontWeight: tokens.fontWeight.bold,
+    ...fontFamily.bold,
   },
   italic: {
-    fontStyle: 'italic',
+    ...fontFamily.italic,
   },
   monospace: {
     ...fontFamily.monospace,

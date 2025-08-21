@@ -25,23 +25,62 @@ export const useFonts = () => {
           'Rubik-SemiBoldItalic': require('../../assets/fonts/Rubik-SemiBoldItalic.ttf'),
           'Rubik-BlackItalic': require('../../assets/fonts/Rubik-BlackItalic.ttf'),
           'Rubik-ExtraBoldItalic': require('../../assets/fonts/Rubik-ExtraBoldItalic.ttf'),
+          'Rubik-Variable': require('../../assets/fonts/Rubik-VariableFont_wght.ttf'),
+          'Rubik-Italic-Variable': require('../../assets/fonts/Rubik-Italic-VariableFont_wght.ttf'),
         }
 
-        const fontPromises = Object.entries(fontMappings).map(
-          ([family, asset]) =>
-            Font.loadAsync({[family]: asset}).catch((error) => {
-              console.warn(`Failed to load font ${family}:`, error)
-              return null
-            }),
-        )
-
-        await Promise.allSettled(fontPromises)
-        setisLoaded(true)
-      } catch (error) {
-        logger.error(error as Error, {
+        logger.info('Loading fonts...', {
           origin: 'useFonts',
-          message: 'Font loading failed',
+          fontCount: Object.keys(fontMappings).length,
+          fontNames: Object.keys(fontMappings),
         })
+
+        // Load all fonts at once using the new API
+        await Font.loadAsync(fontMappings)
+
+        const keyFonts = [
+          'Rubik',
+          'Rubik-Regular',
+          'Rubik-Medium',
+          'Rubik-Bold',
+          'Rubik-Light',
+          'Rubik-SemiBold',
+          'Rubik-Black',
+          'Rubik-ExtraBold',
+          'Rubik-Italic',
+        ]
+        const fontStatus = keyFonts.map((font) => ({
+          font,
+          isLoaded: Font.isLoaded(font),
+        }))
+
+        logger.info('Font loading completed', {
+          origin: 'useFonts',
+          expectedFonts: Object.keys(fontMappings),
+          keyFontStatus: fontStatus,
+        })
+
+        const allFontsLoaded = keyFonts.every((font) => Font.isLoaded(font))
+        if (!allFontsLoaded) {
+          const failedFonts = keyFonts.filter((font) => !Font.isLoaded(font))
+          logger.warn('Some fonts failed to load', {
+            origin: 'useFonts',
+            failedFonts,
+            fontStatus,
+          })
+        } else {
+          logger.info('All key fonts loaded successfully', {
+            origin: 'useFonts',
+            fontStatus,
+          })
+        }
+      } catch (error) {
+        logger.error('Font loading error details:', {
+          error: error,
+          message: error instanceof Error ? error.message : 'Unknown error',
+          stack: error instanceof Error ? error.stack : undefined,
+        })
+      } finally {
         setisLoaded(true)
       }
     }

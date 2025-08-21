@@ -99,7 +99,6 @@ export const LimitInput = () => {
               style={[
                 {
                   fontSize: 16,
-                  fontFamily: 'Rubik-Regular',
                   color: p.gray_max,
                 },
               ]}
