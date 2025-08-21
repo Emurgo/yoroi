@@ -1,7 +1,7 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
-import {StyleProp, Text, ViewStyle} from 'react-native'
+import {StyleProp, Text, ViewStyle, View} from 'react-native'
 import Animated, {Layout} from 'react-native-reanimated'
 
 import {CheckIllustration} from '../CheckIllustration/CheckIllustration'
@@ -19,7 +19,7 @@ export const StepperProgress = ({
   totalSteps,
   style,
 }: StepperProgressProps) => {
-  const {palette: p} = useTheme()
+  const {atoms: ta, palette: p} = useTheme()
 
   if (currentStep > totalSteps)
     throw new Error(
@@ -32,14 +32,23 @@ export const StepperProgress = ({
     if (index <= currentStep - 2) return <CheckIllustration key={index} />
 
     return (
-      <Animated.View key={index} style={[a.flex_row, {gap: 8}]}>
-        <Text style={[a.body_1_lg_medium, {color: p.el_primary_medium}]}>
-          {currentStep}
-        </Text>
+      <Animated.View key={index} style={[a.flex_row, a.gap_sm, a.align_center]}>
+        <View
+          style={[
+            a.align_center,
+            a.justify_center,
+            a.rounded_full,
+            {width: 24, height: 24, backgroundColor: p.el_primary_medium}, // Filled circle for active step
+          ]}
+        >
+          <Text style={[a.body_2_md_medium, {color: p.white_static}]}>
+            {currentStep}
+          </Text>
+        </View>
 
         <Animated.Text
           layout={Layout}
-          style={[a.body_1_lg_medium, {color: p.text_primary_medium}]}
+          style={[a.body_1_lg_medium, ta.text_primary_medium]}
         >
           {currentStepTitle}
         </Animated.Text>
@@ -50,16 +59,27 @@ export const StepperProgress = ({
   const stepIndicatorSecondPart: Array<React.ReactNode> = Array.from({
     length: totalSteps - currentStep,
   }).map((_, index) => (
-    <Animated.View key={index + currentStep + 1} style={[a.flex_row, {gap: 8}]}>
-      <Text style={[a.body_1_lg_medium, {color: p.el_primary_medium}]}>
-        {index + currentStep + 1}
-      </Text>
+    <Animated.View key={index + currentStep + 1} style={[a.flex_row, a.gap_sm, a.align_center]}>
+      <View
+        style={[
+          a.align_center,
+          a.justify_center,
+          a.rounded_full,
+          a.border,
+          {width: 24, height: 24},
+          {borderColor: p.el_primary_medium}, // Only use palette when no themed atom exists
+        ]}
+      >
+        <Text style={[a.body_2_md_medium, ta.el_primary_medium]}>
+          {index + currentStep + 1}
+        </Text>
+      </View>
 
       <Animated.Text
         layout={Layout}
-        style={[a.body_1_lg_medium, {color: p.text_primary_medium}]}
+        style={[a.body_1_lg_medium, ta.text_primary_medium]}
       >
-        {currentStepTitle}
+        {/* Empty text for inactive steps */}
       </Animated.Text>
     </Animated.View>
   ))
@@ -69,7 +89,7 @@ export const StepperProgress = ({
   return (
     <Animated.View
       layout={Layout}
-      style={[a.flex_row, {gap: 16}, a.py_lg, style]}
+      style={[a.flex_row, a.gap_lg, a.py_lg, style]}
     >
       {stepIndicator}
     </Animated.View>

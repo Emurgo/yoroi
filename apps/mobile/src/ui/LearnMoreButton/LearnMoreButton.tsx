@@ -16,7 +16,7 @@ export const LearnMoreButton = ({
     <TouchableOpacity activeOpacity={activeOpacity} {...props}>
       <Text
         style={[
-          a.link_1_lg_underline,
+          a.link_1_lg,
           {alignSelf: 'center', color: p.primary_500},
         ]}
       >
