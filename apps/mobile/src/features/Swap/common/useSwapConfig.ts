@@ -1,36 +1,22 @@
-import {getSwapConfigApiMaker} from '@yoroi/swap'
-
 import {useQuery} from '@tanstack/react-query'
 
-import {undefinedToken} from './constants'
 import {useSwap} from './useSwap'
+import {useSwapConfigData, processSwapConfig} from './swapConfigUtils'
 
 export const useSwapConfig = () => {
-  const getSwapConfig = getSwapConfigApiMaker()
+  const {getSwapConfig} = useSwapConfigData()
   const query = useQuery({
     queryKey: ['useSwapConfig'],
     queryFn: () => getSwapConfig(),
   })
 
   const swapConfig = query.data
-
-  const candidateTokenId = swapConfig?.initialPair?.tokenOut
-
   const {tokenInfos} = useSwap()
 
-  const tokenOutId = tokenInfos.has(candidateTokenId ?? undefinedToken)
-    ? candidateTokenId
-    : undefined
-
-  const partners = swapConfig?.partners
-
-  const excludedTokens = swapConfig?.excludedTokens ?? []
+  const configData = processSwapConfig(swapConfig, tokenInfos)
 
   return {
     ...query,
-    swapConfig,
-    tokenOutId,
-    excludedTokens,
-    partners,
+    ...configData,
   }
 }

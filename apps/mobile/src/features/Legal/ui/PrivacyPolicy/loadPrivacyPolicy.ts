@@ -40,7 +40,6 @@ const codes = {
   'zh-Hans': '',
 }
 
-
 export const loadPrivacyPolicy = (languageCode: LanguageCode): string => {
   return codes[languageCode]
 }

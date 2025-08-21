@@ -3,35 +3,24 @@ set -euo pipefail
 
 # Parse command line arguments
 CLEAN_MODE=false
-PRUNE_MODE=false
-PROD_MODE=false
 while [[ $# -gt 0 ]]; do
   case $1 in
     --clean)
       CLEAN_MODE=true
       shift
       ;;
-    --prune)
-      PRUNE_MODE=true
-      shift
-      ;;
-    --prod)
-      PROD_MODE=true
-      shift
-      ;;
     *)
       echo "Unknown option: $1"
-      echo "Usage: $0 [--clean] [--prune] [--prod]"
+      echo "Usage: $0 [--clean]"
       exit 1
       ;;
   esac
 done
 
-# Select install command based on clean mode and production mode
-INSTALL_CMD="npm install"
-if [ "$PROD_MODE" = "true" ]; then
-  INSTALL_CMD="npm ci --omit=dev"
-  export NODE_ENV=production
+# Select install command based on clean mode
+INSTALL_CMD="npm ci"
+if [ "$CLEAN_MODE" = "true" ] || [ "$CLEAN_MODE" = "clean" ]; then
+  INSTALL_CMD="npm install"
 fi
 
 # Define packages grouped by dependency levels
@@ -70,7 +59,7 @@ clean_packages() {
         rm -f "packages/$pkg/package-lock.json"
         rm -rf "packages/$pkg/lib"
         rm -rf "packages/$pkg/node_modules"
-        echo "  ✅ Cleaned '${pkg}' -lock -lib -node_modules"
+        echo "  ✅ Cleaned '${pkg}'"
       fi
     ) &
     pids+=($!)
@@ -99,7 +88,7 @@ build_packages() {
     (
       echo "  → Building '${pkg}'..."
       cd "packages/$pkg"
-      eval "$INSTALL_CMD"
+      $INSTALL_CMD
       npm run build
       echo "  ✅ Built '${pkg}'"
     ) &
@@ -110,7 +99,7 @@ build_packages() {
   for pid in "${pids[@]}"; do
     wait "$pid"
   done
- 
+  
   echo "✅ Level $level_name completed"
 }
 
@@ -122,22 +111,4 @@ build_packages "3 (Features)" "${LEVEL_3[@]}"
 build_packages "4 (Advanced Features)" "${LEVEL_4[@]}"
 build_packages "5 (Final)" "${LEVEL_5[@]}"
 
-echo "📱 Building mobile app..."
-
-# Build mobile app
-cd apps/mobile
-if [ "$CLEAN_MODE" = "true" ] || [ "$CLEAN_MODE" = "clean" ]; then
-  rm -rf node_modules
-  rm -f "package-lock.json"
-fi
-eval "$INSTALL_CMD"
-cd ..
-
-echo "✅ All packages and mobile app built successfully!"
-
-# Run prune script if requested
-if [ "$PRUNE_MODE" = "true" ]; then
-  echo "🧹 Running package pruning..."
-  ./prune-pkgs.sh
-  echo "✅ Package pruning completed!"
-fi
+echo "✅ All packages built successfully!"

@@ -83,27 +83,27 @@ const STANDARD_VERSIONS = {
   "eslint-plugin-import": "2.32.0",
 };
 
-// Packages to process - adjusted paths to work from root directory
+// Packages to process
 const PACKAGES = [
   "apps/mobile",
-  "packages/api",
-  "packages/blockchains",
-  "packages/claim",
-  "packages/common",
-  "packages/dapp-connector",
-  "packages/exchange",
-  "packages/explorers",
-  "packages/identicon",
-  "packages/links",
-  "packages/notifications",
-  "packages/portfolio",
-  "packages/resolver",
-  "packages/setup-wallet",
-  "packages/staking",
-  "packages/swap",
-  "packages/theme",
-  "packages/transfer",
-  "packages/types",
+  "scripts/packages/api",
+  "scripts/packages/blockchains",
+  "scripts/packages/claim",
+  "scripts/packages/common",
+  "scripts/packages/dapp-connector",
+  "scripts/packages/exchange",
+  "scripts/packages/explorers",
+  "scripts/packages/identicon",
+  "scripts/packages/links",
+  "scripts/packages/notifications",
+  "scripts/packages/portfolio",
+  "scripts/packages/resolver",
+  "scripts/packages/setup-wallet",
+  "scripts/packages/staking",
+  "scripts/packages/swap",
+  "scripts/packages/theme",
+  "scripts/packages/transfer",
+  "scripts/packages/types",
 ];
 
 function updateDependencies(dependencies, section) {

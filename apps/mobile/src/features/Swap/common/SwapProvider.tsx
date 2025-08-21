@@ -20,7 +20,7 @@ import {convertBech32ToHex} from '~/wallets/cardano/common/signatureUtils'
 import {undefinedToken} from './constants'
 import {useNavigateTo} from './navigation'
 import {useGetInputs} from './useGetInputs'
-import {useSwapConfig} from './useSwapConfig'
+import {useSwapConfigData, processSwapConfig} from './swapConfigUtils'
 
 const SwapActionType = {
   ChangeOrderType: 'ChangeOrderType',
@@ -130,10 +130,11 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
   const stakingKey = useStakingKey(wallet)
   const address = wallet.externalAddresses[0]
   const addressHex = convertBech32ToHex(address)
-  const {partners, excludedTokens} = useSwapConfig()
+  const {getSwapConfig} = useSwapConfigData()
   const [isLoading, setIsLoading] = React.useState(false)
   const swapManager = React.useMemo(() => {
     const storage = swapStorageMaker()
+    const {partners} = processSwapConfig(swapConfig, tokenInfos)
     return swapManagerMaker({
       storage,
       network,
@@ -150,7 +151,8 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
     address,
     addressHex,
     wallet.portfolioPrimaryTokenInfo,
-    partners,
+    swapConfig,
+    tokenInfos,
   ])
 
   const {data: orders = [], refetch: refetchOrders} = useQuery({
@@ -166,6 +168,13 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
       return []
     },
   })
+
+  const {data: swapConfig} = useQuery({
+    queryKey: ['useSwapConfig'],
+    queryFn: () => getSwapConfig(),
+  })
+
+  const {excludedTokens} = processSwapConfig(swapConfig, tokenInfos)
 
   const {data: tokenIds = [], refetch: refetchTokens} = useQuery({
     queryKey: [

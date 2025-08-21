@@ -5,28 +5,12 @@ import {logger} from '~/kernel/logger/logger'
 
 import {RawUtxo} from '../types/other'
 import {CardanoMobile} from '../wallets'
-import {toAssetNameHex, toPolicyId} from './api/utils'
 import {CardanoTypes} from './types'
 import {cardanoValueFromRemoteFormat} from './utils'
 import {wrappedCsl} from './wrappedCsl'
 
-/**
- * Multi-asset related
- */
-export const identifierToCardanoAsset = (
-  tokenId: string,
-): {
-  policyId: CardanoTypes.ScriptHash
-  name: CardanoTypes.AssetName
-} => {
-  const policyId = toPolicyId(tokenId)
-  const assetNameHex = toAssetNameHex(tokenId)
-
-  return {
-    policyId: CardanoMobile.ScriptHash.fromBytes(Buffer.from(policyId, 'hex')),
-    name: CardanoMobile.AssetName.new(Buffer.from(assetNameHex, 'hex')),
-  }
-}
+// Re-export from assetHelpers to maintain backward compatibility
+export {identifierToCardanoAsset} from './assetHelpers'
 
 const addressPlaceholder =
   'addr1qx8nuj8a7gy8kes4pedpfdscrlxr6p8gkzyzmhdmsf4209xssydveuc8xyx4zh27fwcmr62mraeezjwf24hzkyejwfmqmpfpy5'

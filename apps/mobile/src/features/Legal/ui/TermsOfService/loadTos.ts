@@ -38,7 +38,6 @@ const tosByCode = {
   'zh-Hans': '',
 }
 
-
 export const loadTOS = (languageCode: keyof typeof tosByCode): string => {
   return tosByCode[languageCode]
 }

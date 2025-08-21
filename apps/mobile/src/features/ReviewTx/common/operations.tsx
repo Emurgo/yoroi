@@ -23,6 +23,7 @@ import {Quantities, asQuantity} from '~/wallets/utils/utils'
 
 import {PoolDetails} from './PoolDetails'
 import {CertificateType, FormattedTx} from './types'
+import {generatePoolName} from './poolUtils'
 
 export const StakeRegistrationOperation = ({
   fee,
@@ -154,11 +155,7 @@ export const StakeDelegationOperation = ({
   )
 }
 
-export const generatePoolName = (poolInfo: FullPoolInfo) => {
-  return poolInfo.explorer != null
-    ? `[${poolInfo.explorer.ticker}] ${poolInfo.explorer.name}`
-    : null
-}
+
 
 export const AbstainOperation = ({
   showWarning,

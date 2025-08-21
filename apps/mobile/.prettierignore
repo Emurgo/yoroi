@@ -1,5 +1,5 @@
 src/kernel/i18n/polyfills.ts
-src/index.ts
+index.ts
 coverage/
 **/*.js
 **/*.jsx

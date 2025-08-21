@@ -19,7 +19,7 @@ module.exports = function (api) {
           "idInterpolationPattern": "[sha512:contenthash:base64:6]",
           "ast": true
         }
-      ]
+      ],
     ],
   }
 }

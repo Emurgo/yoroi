@@ -1,6 +1,7 @@
 import {LanguageCode} from '~/kernel/i18n/localization'
 
 import {Disclaimer} from '../../common/types'
+
 // import DE_DE_DAPP from './dapp/de-DE.md'
 // import EN_US_DAPP from './dapp/en-US.md'
 // import ES_ES_DAPP from './dapp/es-ES.md'
@@ -133,7 +134,6 @@ const map = {
     'zh-Hans': '',
   },
 } as const
-
 
 export const loadText = (
   disclaimer: Disclaimer,

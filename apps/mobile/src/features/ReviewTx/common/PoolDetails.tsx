@@ -14,7 +14,7 @@ import {formatTokenWithText} from '~/wallets/utils/format'
 import {isEmptyString} from '~/wallets/utils/string'
 import {Quantities, asQuantity} from '~/wallets/utils/utils'
 
-import {generatePoolName} from './operations'
+import {generatePoolName} from './poolUtils'
 
 export const PoolDetails = ({poolInfo}: {poolInfo: FullPoolInfo}) => {
   const strings = useStrings()
