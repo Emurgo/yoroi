@@ -5,7 +5,7 @@ import {undefinedToken} from './constants'
 
 export const useSwapConfigData = () => {
   const getSwapConfig = getSwapConfigApiMaker()
-  
+
   return {
     getSwapConfig,
   }

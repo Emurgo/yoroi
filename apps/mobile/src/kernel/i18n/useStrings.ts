@@ -1673,7 +1673,10 @@ export const useStrings = () => {
           setupWalletMessages.walletChecksumModalCardFirstItem,
         ),
         walletChecksumModalCardSecondItem: (checksum: string) =>
-          intl.formatMessage(setupWalletMessages.walletChecksumModalCardSecondItem, {checksum}),
+          intl.formatMessage(
+            setupWalletMessages.walletChecksumModalCardSecondItem,
+            {checksum},
+          ),
         walletChecksumModalCardThirdItem: f(
           setupWalletMessages.walletChecksumModalCardThirdItem,
         ),

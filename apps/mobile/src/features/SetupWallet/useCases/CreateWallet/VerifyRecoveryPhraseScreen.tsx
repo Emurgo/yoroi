@@ -222,11 +222,15 @@ const MnemonicInput = ({
       <View
         style={[
           a.border,
-          {borderColor: p.primary_200, backgroundColor: p.bg_color_max, borderRadius: 6},
+          {
+            borderColor: p.primary_200,
+            backgroundColor: p.bg_color_max,
+            borderRadius: 6,
+          },
           {minHeight: 182},
-         
+
           a.overflow_hidden,
-          a.p_xs, 
+          a.p_xs,
         ]}
       >
         <View style={[a.p_sm, a.flex_row, a.flex_wrap, a.gap_sm]}>
@@ -249,12 +253,20 @@ const MnemonicInput = ({
                   entering={FadeIn}
                   exiting={FadeOut}
                 >
-                  <View style={[a.px_xs, a.py_xs, a.rounded_md, a.overflow_hidden]}>
-                    <Text style={[
-                      a.body_1_lg_regular, 
-                      {color: recoveryWordError ? p.sys_magenta_500 : p.text_primary_medium}, // Red number for errors
-                      a.pr_xs
-                    ]}>
+                  <View
+                    style={[a.px_xs, a.py_xs, a.rounded_md, a.overflow_hidden]}
+                  >
+                    <Text
+                      style={[
+                        a.body_1_lg_regular,
+                        {
+                          color: recoveryWordError
+                            ? p.sys_magenta_500
+                            : p.text_primary_medium,
+                        }, // Red number for errors
+                        a.pr_xs,
+                      ]}
+                    >
                       {(index + 1).toString()}.
                     </Text>
                   </View>
@@ -289,9 +301,14 @@ const MnemonicInput = ({
                     <Text
                       style={[
                         a.body_1_lg_regular,
-                        {color: recoveryWordError ? p.sys_magenta_500 : p.text_primary_medium},
+                        {
+                          color: recoveryWordError
+                            ? p.sys_magenta_500
+                            : p.text_primary_medium,
+                        },
                         a.px_sm,
-                        isPhraseComplete && isValidPhrase && {color: p.black_static},
+                        isPhraseComplete &&
+                          isValidPhrase && {color: p.black_static},
                       ]}
                     >
                       {entry.word}

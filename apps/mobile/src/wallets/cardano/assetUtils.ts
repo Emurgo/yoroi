@@ -4,8 +4,6 @@ import BigNumber from 'bignumber.js'
 import {logger} from '~/kernel/logger/logger'
 
 import {RawUtxo} from '../types/other'
-import {CardanoMobile} from '../wallets'
-import {CardanoTypes} from './types'
 import {cardanoValueFromRemoteFormat} from './utils'
 import {wrappedCsl} from './wrappedCsl'
 

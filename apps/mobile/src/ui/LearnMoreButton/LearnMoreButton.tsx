@@ -14,13 +14,7 @@ export const LearnMoreButton = ({
 
   return (
     <TouchableOpacity activeOpacity={activeOpacity} {...props}>
-      <Text
-        style={[
-          a.link_1_lg,
-          a.self_center,
-          {color: p.primary_500},
-        ]}
-      >
+      <Text style={[a.link_1_lg, a.self_center, {color: p.primary_500}]}>
         {strings.setupWallet.learnMore}
       </Text>
     </TouchableOpacity>

@@ -1,11 +1,9 @@
-import {FullPoolInfo} from '@emurgo/yoroi-lib'
-import {useSuspenseQuery} from '@tanstack/react-query'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Balance} from '@yoroi/types'
 
 import * as React from 'react'
-import {Text, View, useWindowDimensions} from 'react-native'
-import {TouchableOpacity} from 'react-native-gesture-handler'
+import {useSuspenseQuery} from '@tanstack/react-query'
+import {Text, TouchableOpacity, View, useWindowDimensions} from 'react-native'
 
 import {
   formatDrepHashToCIP105Format,
@@ -154,8 +152,6 @@ export const StakeDelegationOperation = ({
     </View>
   )
 }
-
-
 
 export const AbstainOperation = ({
   showWarning,

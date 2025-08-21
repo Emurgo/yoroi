@@ -8,7 +8,6 @@ import {
 import {ThemeProvider} from '@yoroi/theme'
 import {TransferProvider} from '@yoroi/transfer'
 
-import * as Font from 'expo-font'
 import * as React from 'react'
 
 import {AppNavigator} from '~/kernel/navigation/AppNavigator'
@@ -39,6 +38,7 @@ import {
 } from './src/kernel/storage/storages'
 import {CrashBoundary} from './src/ui/CrashBoundary/CrashBoundary'
 import {LoadingOverlayProvider} from './src/ui/LoadingOverlay/context'
+import {useFonts} from './src/hooks/useFonts'
 
 const catalystApi = catalystApiMaker()
 const catalystManager = catalystManagerMaker({
@@ -47,8 +47,9 @@ const catalystManager = catalystManagerMaker({
 
 function AppShell({children}: React.PropsWithChildren) {
   const isMigrated = useMigrations(rootStorage)
+  const isLoaded = useFonts()
 
-  if (!isMigrated) return null
+  if (!isMigrated || !isLoaded) return null
 
   return (
     <AsyncStorageProvider storage={rootStorage}>
@@ -100,42 +101,6 @@ function BusinessShell({children}: React.PropsWithChildren) {
 }
 
 export default function App() {
-  const [fontsLoaded, setFontsLoaded] = React.useState(false)
-
-  React.useEffect(() => {
-    async function loadFonts() {
-      try {
-        await Font.loadAsync({
-          'Rubik': require('./assets/fonts/Rubik-Regular.ttf'),
-          'Rubik-Regular': require('./assets/fonts/Rubik-Regular.ttf'),
-          'Rubik-Medium': require('./assets/fonts/Rubik-Medium.ttf'),
-          'Rubik-Bold': require('./assets/fonts/Rubik-Bold.ttf'),
-          'Rubik-Light': require('./assets/fonts/Rubik-Light.ttf'),
-          'Rubik-SemiBold': require('./assets/fonts/Rubik-SemiBold.ttf'),
-          'Rubik-Black': require('./assets/fonts/Rubik-Black.ttf'),
-          'Rubik-ExtraBold': require('./assets/fonts/Rubik-ExtraBold.ttf'),
-          'Rubik-Italic': require('./assets/fonts/Rubik-Italic.ttf'),
-          'Rubik-MediumItalic': require('./assets/fonts/Rubik-MediumItalic.ttf'),
-          'Rubik-BoldItalic': require('./assets/fonts/Rubik-BoldItalic.ttf'),
-          'Rubik-LightItalic': require('./assets/fonts/Rubik-LightItalic.ttf'),
-          'Rubik-SemiBoldItalic': require('./assets/fonts/Rubik-SemiBoldItalic.ttf'),
-          'Rubik-BlackItalic': require('./assets/fonts/Rubik-BlackItalic.ttf'),
-          'Rubik-ExtraBoldItalic': require('./assets/fonts/Rubik-ExtraBoldItalic.ttf'),
-        })
-        setFontsLoaded(true)
-      } catch (error) {
-        console.warn('Font loading failed:', error)
-        setFontsLoaded(true)
-      }
-    }
-
-    loadFonts()
-  }, [])
-
-  if (!fontsLoaded) {
-    return null
-  }
-
   return (
     <AppShell>
       <BusinessShell>

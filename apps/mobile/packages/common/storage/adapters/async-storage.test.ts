@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-shadow */
 import {App} from '@yoroi/types'
 
 import AsyncStorage from '@react-native-async-storage/async-storage'

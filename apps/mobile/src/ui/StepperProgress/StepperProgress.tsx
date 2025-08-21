@@ -59,7 +59,10 @@ export const StepperProgress = ({
   const stepIndicatorSecondPart: Array<React.ReactNode> = Array.from({
     length: totalSteps - currentStep,
   }).map((_, index) => (
-    <Animated.View key={index + currentStep + 1} style={[a.flex_row, a.gap_sm, a.align_center]}>
+    <Animated.View
+      key={index + currentStep + 1}
+      style={[a.flex_row, a.gap_sm, a.align_center]}
+    >
       <View
         style={[
           a.align_center,
@@ -67,7 +70,7 @@ export const StepperProgress = ({
           a.rounded_full,
           a.border,
           {width: 24, height: 24},
-          {borderColor: p.el_primary_medium}, 
+          {borderColor: p.el_primary_medium},
         ]}
       >
         <Text style={[a.body_2_md_medium, ta.el_primary_medium]}>
@@ -78,8 +81,7 @@ export const StepperProgress = ({
       <Animated.Text
         layout={Layout}
         style={[a.body_1_lg_medium, ta.text_primary_medium]}
-      >
-      </Animated.Text>
+      />
     </Animated.View>
   ))
 

@@ -1,14 +1,14 @@
 import * as Font from 'expo-font'
 import * as React from 'react'
 
+import {logger} from '~/kernel/logger/logger'
+
 export const useFonts = () => {
-  const [fontsLoaded, setFontsLoaded] = React.useState(false)
-  const [fontError, setFontError] = React.useState<Error | null>(null)
+  const [isLoaded, setisLoaded] = React.useState(false)
 
   React.useEffect(() => {
     async function loadFonts() {
       try {
-        // Define font mappings
         const fontMappings = {
           'Rubik': require('../../assets/fonts/Rubik-Regular.ttf'),
           'Rubik-Regular': require('../../assets/fonts/Rubik-Regular.ttf'),
@@ -27,27 +27,27 @@ export const useFonts = () => {
           'Rubik-ExtraBoldItalic': require('../../assets/fonts/Rubik-ExtraBoldItalic.ttf'),
         }
 
-        // Load fonts individually to better handle failures
-        const fontPromises = Object.entries(fontMappings).map(([family, asset]) =>
-          Font.loadAsync({ [family]: asset }).catch((error) => {
-            console.warn(`Failed to load font ${family}:`, error)
-            return null // Return null for failed fonts
-          })
+        const fontPromises = Object.entries(fontMappings).map(
+          ([family, asset]) =>
+            Font.loadAsync({[family]: asset}).catch((error) => {
+              console.warn(`Failed to load font ${family}:`, error)
+              return null
+            }),
         )
 
-        // Wait for all fonts to load, but don't fail if some fonts fail
         await Promise.allSettled(fontPromises)
-        setFontsLoaded(true)
+        setisLoaded(true)
       } catch (error) {
-        console.warn('Font loading failed:', error)
-        // Continue without custom fonts - fallback to system fonts
-        setFontsLoaded(true)
-        setFontError(error as Error)
+        logger.error(error as Error, {
+          origin: 'useFonts',
+          message: 'Font loading failed',
+        })
+        setisLoaded(true)
       }
     }
 
     loadFonts()
   }, [])
 
-  return { fontsLoaded, fontError }
+  return isLoaded
 }

@@ -51,7 +51,9 @@ export const Modal = () => {
       <BottomSheetView style={[a.flex_1, a.self_stretch]}>
         {title && (
           <View style={[a.px_lg, a.pt_lg, a.pb_lg]}>
-            <Text style={[a.heading_2_medium, {color: p.gray_900}, a.text_center]}>
+            <Text
+              style={[a.heading_2_medium, {color: p.gray_900}, a.text_center]}
+            >
               {title}
             </Text>
           </View>
