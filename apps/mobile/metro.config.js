@@ -23,6 +23,7 @@ config.resolver.resolveRequest = (context, moduleName, platform) => {
 }
 config.resolver.unstable_enableSymlinks = true
 config.resolver.unstable_enablePackageExports = true
+config.resolver.unstable_enableHierarchicalSearch = false
 config.resolver.assetExts.push('wasm')
 
 // -- transformer --
