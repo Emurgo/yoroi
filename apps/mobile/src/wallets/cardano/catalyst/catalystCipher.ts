@@ -18,7 +18,7 @@ const PROTO_VERSION = Buffer.from('01', 'hex')
 	----------------------------------------------------------
 */
 
-export function promisifyPbkdf2(password: Uint8Array, salt: Buffer): Buffer {
+export function generatePbkdf2Key(password: Uint8Array, salt: Buffer): Buffer {
   const key = pbkdf2(
     Buffer.from(password),
     salt,
@@ -38,7 +38,7 @@ export async function encryptWithPassword(
   const data = Buffer.from(dataBytes)
   const aad = Buffer.from('', 'hex')
 
-  const key = promisifyPbkdf2(passwordBuf, salt)
+  const key = generatePbkdf2Key(passwordBuf, salt)
 
   const cipher = chacha.createCipher(key, nonce)
   cipher.setAAD(aad, {plaintextLength: data.length})
@@ -83,7 +83,7 @@ export async function decryptWithPassword(
     throw new Error('not enough data to decrypt')
   }
 
-  const key = promisifyPbkdf2(passwordBuf, salt)
+  const key = generatePbkdf2Key(passwordBuf, salt)
 
   const decipher = chacha.createDecipher(key, nonce)
   decipher.setAAD(aad)
