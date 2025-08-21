@@ -75,7 +75,6 @@
     "@testing-library/react-native": "13.2.0",
     "@tsconfig/react-native": "3.0.3",
     "@types/jest": "29.5.12",
-    "@yoroi/common": "file:../common",
     "axios-mock-adapter": "1.22.0",
     "babel-jest": "29.7.0",
     "commitlint": "17.0.2",
