@@ -151,7 +151,7 @@ export const PortfolioWalletTokenList = () => {
         ListFooterComponent={renderFooterList}
         ItemSeparatorComponent={() => <Space.Height.md />}
         renderItem={({item}) => <TokenBalanceItem amount={item} />}
-        contentContainerStyle={{...a.px_lg, ...a.flex_grow}}
+        contentContainerStyle={a.px_lg}
         ListEmptyComponent={() => <TokenEmptyList />}
         estimatedItemSize={72}
       />
