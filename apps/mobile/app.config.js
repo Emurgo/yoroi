@@ -12,6 +12,7 @@ export default {
       resizeMode: 'contain',
       backgroundColor: '#ffffff',
     },
+    scheme: 'yoroi',
     ios: {
       supportsTablet: true,
       userInterfaceStyle: 'automatic',
@@ -69,6 +70,33 @@ export default {
         'android.permission.BLUETOOTH_SCAN',
         'android.permission.POST_NOTIFICATIONS',
         'android.permission.USB_PERMISSION',
+      ],
+      intentFilters: [
+        {
+          action: 'android.intent.action.VIEW',
+          category: [
+            'android.intent.category.DEFAULT',
+            'android.intent.category.BROWSABLE',
+          ],
+          data: {
+            scheme: 'yoroi',
+            host: 'yoroi-wallet.com',
+            pathPrefix: '/w1',
+          },
+        },
+        {
+          action: 'android.intent.action.VIEW',
+          category: [
+            'android.intent.category.DEFAULT',
+            'android.intent.category.BROWSABLE',
+          ],
+          data: {
+            scheme: 'https',
+            host: 'yoroi-wallet.com',
+            pathPrefix: '/w1',
+          },
+          autoVerify: true,
+        },
       ],
       splash: {
         image: './assets/yoroi/splash/light/bootsplash_logo.png',
