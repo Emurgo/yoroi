@@ -58,31 +58,31 @@ export const setupWalletMessages = defineMessages({
     defaultMessage: '!!!About recovery phrase',
   },
   aboutRecoveryPhraseCardFirstItem: {
-    id: 'components.walletinit.restorewallet.restorewalletscreen.mnemonicInputLabel',
+    id: 'components.walletinit.aboutRecoveryPhrase.aboutRecoveryPhraseCard.firstItem',
     defaultMessage: '!!!Write down the recovery phrase',
   },
   aboutRecoveryPhraseCardSecondItem: {
-    id: 'components.walletinit.recoveryPhrase.recoveryPhraseCard.secondItem',
+    id: 'components.walletinit.aboutRecoveryPhrase.aboutRecoveryPhraseCard.secondItem',
     defaultMessage: '!!!Keep it safe',
   },
   aboutRecoveryPhraseCardThirdItem: {
-    id: 'txReview.poolDetails.poolShare.label',
+    id: 'components.walletinit.aboutRecoveryPhrase.aboutRecoveryPhraseCard.thirdItem',
     defaultMessage: '!!!Never share it',
   },
   aboutRecoveryPhraseCardFourthItem: {
-    id: 'txReview.overview.receiveToLabel',
+    id: 'components.walletinit.aboutRecoveryPhrase.aboutRecoveryPhraseCard.fourthItem',
     defaultMessage: '!!!Store it securely',
   },
   aboutRecoveryPhraseCardFifthItem: {
-    id: 'txReview.overview.wallet',
+    id: 'components.walletinit.aboutRecoveryPhrase.aboutRecoveryPhraseCard.fifthItem',
     defaultMessage: '!!!Use it to restore your wallet',
   },
   recoveryPhraseTitle: {
-    id: 'components.walletinit.restorewallet.restorewalletscreen.mnemonicInputLabel',
+    id: 'components.walletinit.recoveryPhrase.title',
     defaultMessage: '!!!Recovery phrase',
   },
   stepRecoveryPhrase: {
-    id: 'components.walletinit.createwallet.recoveryphrasescreen.step',
+    id: 'components.walletinit.recoveryPhrase.recoveryStepper.title',
     defaultMessage: '!!!Step 1 of 3',
   },
   hideRecoveryPhraseButton: {
@@ -94,39 +94,39 @@ export const setupWalletMessages = defineMessages({
     defaultMessage: '!!!Show recovery phrase',
   },
   recoveryPhraseModalTitle: {
-    id: 'components.walletinit.restorewallet.restorewalletscreen.mnemonicInputLabel',
+    id: 'components.walletinit.recoveryPhrase.recoveryPhraseModal.title',
     defaultMessage: '!!!Recovery phrase',
   },
   recoveryPhraseCardTitle: {
-    id: 'components.walletinit.restorewallet.restorewalletscreen.mnemonicInputLabel',
+    id: 'components.walletinit.recoveryPhrase.recoveryPhraseCard.title',
     defaultMessage: '!!!Recovery phrase',
   },
   recoveryPhraseCardFirstItem: {
-    id: 'components.walletinit.restorewallet.restorewalletscreen.mnemonicInputLabel',
+    id: 'components.walletinit.recoveryPhrase.recoveryPhraseCard.firstItem',
     defaultMessage: '!!!Write down the recovery phrase',
   },
   recoveryPhraseCardSecondItem: {
-    id: 'components.walletinit.createwallet.recoveryphrasescreen.recoveryPhraseCardSecondItem',
+    id: 'components.walletinit.recoveryPhrase.recoveryPhraseCard.secondItem',
     defaultMessage: '!!!Keep it safe',
   },
   recoveryPhraseCardThirdItem: {
-    id: 'txReview.poolDetails.poolShare.label',
+    id: 'components.walletinit.recoveryPhrase.recoveryPhraseCard.thirdItem',
     defaultMessage: '!!!Never share it',
   },
   recoveryPhraseCardFourthItem: {
-    id: 'txReview.overview.receiveToLabel',
+    id: 'components.walletinit.recoveryPhrase.recoveryPhraseCard.fourthItem',
     defaultMessage: '!!!Store it securely',
   },
   recoveryPhraseCardFifthItem: {
-    id: 'txReview.overview.wallet',
+    id: 'components.walletinit.recoveryPhrase.recoveryPhraseCard.fifthItem',
     defaultMessage: '!!!Use it to restore your wallet',
   },
   verifyRecoveryPhraseTitle: {
-    id: 'components.walletinit.verifyRecoveryPhrase.verifyRecoveryStepper.title',
+    id: 'components.walletinit.verifyRecoveryPhrase.title',
     defaultMessage: '!!!Verify recovery phrase',
   },
   stepVerifyRecoveryPhrase: {
-    id: 'components.walletinit.createwallet.verifyrecoveryphrasescreen.step',
+    id: 'components.walletinit.verifyRecoveryPhrase.verifyRecoveryStepper.title',
     defaultMessage: '!!!Step 2 of 3',
   },
   verifyRecoveryPhraseErrorMessage: {
@@ -134,27 +134,27 @@ export const setupWalletMessages = defineMessages({
     defaultMessage: '!!!Incorrect word',
   },
   verifyRecoveryPhraseSuccessMessage: {
-    id: 'components.delegationsummary.warningbanner.message2',
+    id: 'components.walletinit.verifyRecoveryPhrase.successMessage',
     defaultMessage: '!!!Correct',
   },
   walletDetailsModalTitle: {
-    id: 'components.walletinit.walletDetails.stepWalletDetails',
+    id: 'components.walletinit.walletDetails.walletDetailsModalTitle.title',
     defaultMessage: '!!!Wallet details',
   },
   walletNameModalCardTitle: {
-    id: 'components.walletinit.walletform.walletNameInputLabel',
+    id: 'components.walletinit.walletDetails.walletNameModalCardTitle.title',
     defaultMessage: '!!!Wallet name',
   },
   walletNameModalCardFirstItem: {
-    id: 'txReview.overview.wallet',
+    id: 'components.walletinit.walletDetails.walletNameModalCardItem.first',
     defaultMessage: '!!!Choose a name for your wallet',
   },
   walletNameModalCardSecondItem: {
-    id: 'components.receive.receivescreen.usedAddress',
+    id: 'components.walletinit.walletDetails.walletNameModalCardItem.second',
     defaultMessage: '!!!This name will be used to identify your wallet',
   },
   walletPasswordModalCardTitle: {
-    id: 'txReview.overview.wallet',
+    id: 'components.walletinit.walletDetails.walletPasswordModalCardTitle.title',
     defaultMessage: '!!!Wallet password',
   },
   walletPasswordModalCardFirstItem: {
@@ -403,11 +403,11 @@ export const setupWalletMessages = defineMessages({
     defaultMessage: '!!!Testnet for testing',
   },
   aboutRecoveryPhraseTitle: {
-    id: 'components.walletinit.aboutRecoveryPhrase.aboutRecoveryStepper.title',
+    id: 'components.walletinit.aboutRecoveryPhrase.aboutRecoveryPhrase.title',
     defaultMessage: '!!!About recovery phrase',
   },
   stepAboutRecoveryPhrase: {
-    id: 'components.walletinit.aboutRecoveryPhrase.aboutRecoveryStepper.step',
+    id: 'components.walletinit.aboutRecoveryPhrase.aboutRecoveryStepper.title',
     defaultMessage: '!!!Step 1 of 3',
   },
 })

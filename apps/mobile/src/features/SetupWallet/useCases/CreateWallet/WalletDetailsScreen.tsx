@@ -263,12 +263,12 @@ export const WalletDetailsScreen = () => {
       content: (
         <View style={[a.flex_1, a.px_lg, a.pb_lg]}>
           <CardAboutPhrase
-            title={strings.setupWallet.walletChecksumModalCardThirdItem}
+            title={strings.setupWallet.walletChecksumModalCardTitle}
             checksumImage={seed}
             checksumLine={1}
             linesOfText={[
               strings.setupWallet.walletChecksumModalCardFirstItem,
-              strings.setupWallet.walletChecksumModalCardSecondItem,
+              strings.setupWallet.walletChecksumModalCardSecondItem(plate),
               strings.setupWallet.walletChecksumModalCardThirdItem,
             ]}
           />

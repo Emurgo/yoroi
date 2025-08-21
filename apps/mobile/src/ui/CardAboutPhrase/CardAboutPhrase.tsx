@@ -62,7 +62,7 @@ export const CardAboutPhrase = ({
           >
             {title}
           </Text>
-          <Space.Width.sm />
+          <Space.Height.md />
         </>
       )}
 
