@@ -222,9 +222,9 @@ const MnemonicInput = ({
       <View
         style={[
           a.border,
-          {borderColor: p.primary_200, backgroundColor: p.bg_color_max},
+          {borderColor: p.primary_200, backgroundColor: p.bg_color_max, borderRadius: 6},
           {minHeight: 182},
-          a.rounded_md,
+         
           a.overflow_hidden,
           a.p_xs, 
         ]}
@@ -267,7 +267,7 @@ const MnemonicInput = ({
                       a.overflow_hidden,
                       a.px_xs,
                       a.py_xs,
-                      a.rounded_md,
+                      {borderRadius: 6},
                       recoveryWordError && {backgroundColor: p.sys_magenta_100},
                     ]}
                   >
@@ -390,8 +390,8 @@ const WordBadges = ({
                 <View
                   style={[
                     a.absolute,
-                    a.rounded_md,
                     {
+                      borderRadius: 6,
                       backgroundColor: p.bg_color_max,
                       left: 2,
                       right: 2,

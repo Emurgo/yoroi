@@ -67,7 +67,7 @@ export const StepperProgress = ({
           a.rounded_full,
           a.border,
           {width: 24, height: 24},
-          {borderColor: p.el_primary_medium}, // Only use palette when no themed atom exists
+          {borderColor: p.el_primary_medium}, 
         ]}
       >
         <Text style={[a.body_2_md_medium, ta.el_primary_medium]}>
@@ -79,7 +79,6 @@ export const StepperProgress = ({
         layout={Layout}
         style={[a.body_1_lg_medium, ta.text_primary_medium]}
       >
-        {/* Empty text for inactive steps */}
       </Animated.Text>
     </Animated.View>
   ))

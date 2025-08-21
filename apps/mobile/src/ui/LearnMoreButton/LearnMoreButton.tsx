@@ -17,7 +17,8 @@ export const LearnMoreButton = ({
       <Text
         style={[
           a.link_1_lg,
-          {alignSelf: 'center', color: p.primary_500},
+          a.self_center,
+          {color: p.primary_500},
         ]}
       >
         {strings.setupWallet.learnMore}
