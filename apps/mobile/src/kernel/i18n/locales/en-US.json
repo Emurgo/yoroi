@@ -614,7 +614,6 @@
   "components.walletinit.walletinitmenu.cardanoTestnetbutton.description": "Works with test ADA (tADA)",
   "components.walletinit.aboutRecoveryPhrase.aboutRecoveryPhrase.title": "<b>Read this information carefully</b> before saving your recovery phrase:",
   "components.walletinit.aboutRecoveryPhrase.aboutRecoveryStepper.title": "About recovery phrase",
-  "components.walletinit.aboutRecoveryPhrase.aboutRecoveryStepper.step": "Step 1 of 3",
   "components.walletinit.aboutRecoveryPhrase.aboutRecoveryPhraseCard.firstItem": "<b>Recovery phrase</b> is a unique combination of words",
   "components.walletinit.aboutRecoveryPhrase.aboutRecoveryPhraseCard.secondItem": "<b>Recovery phrase</b> is the only way to access your wallet",
   "components.walletinit.aboutRecoveryPhrase.aboutRecoveryPhraseCard.thirdItem": "If you lose your <b>Recovery phrase</b>, it will not be possible to recover your wallet",
@@ -1208,7 +1207,7 @@
   "discover.modal.collateralTxPendingText": "The collateral transaction you've submitted is being processed and may take a few minutes to confirm.  Please wait for it to show in your transaction history and try again.",
   "walletinit.theme.tryDarkTheme": "Try Yoroi dark theme",
   "walletinit.theme.description": "Press the theme switcher and dive into the new stylish theme crafted to enhance your Cardano wallet experience",
-  "walletinit.theme.chanageTheme": "You can always change your theme later in the App settings",
+  "walletinit.theme.changeTheme": "You can always change your theme later in the App settings",
   "discover.confirmConnectionModal.title": "Confirm connection",
   "discover.confirmConnectionModal.connectTo": "Connect to",
   "discover.confirmConnectionModal.connect": "Connect",
@@ -1404,7 +1403,5 @@
   "notifications.skip": "Skip",
   "notifications.turnOnNotifications": "Turn on notifications",
   "notifications.notificationCenter": "Notification Center",
-  "components.walletinit.createwallet.recoveryphrasescreen.recoveryPhraseCardSecondItem": "Keep it safe",
-  "components.walletinit.createwallet.recoveryphrasescreen.step": "Step 1 of 3",
-  "components.walletinit.createwallet.verifyrecoveryphrasescreen.step": "Step 2 of 3"
+  "components.walletinit.createwallet.recoveryphrasescreen.recoveryPhraseCardSecondItem": "Keep it safe"
 }

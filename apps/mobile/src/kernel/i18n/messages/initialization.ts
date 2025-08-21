@@ -66,7 +66,7 @@ export const initializationMessages = defineMessages({
     defaultMessage: '!!!Dark Theme Announcement Description',
   },
   darkThemeAnnouncementChangeTheme: {
-    id: 'walletinit.theme.changeTheme',
+    id: 'walletinit.theme.tryDarkTheme',
     defaultMessage: '!!!Dark Theme Announcement Change Theme',
   },
   darkThemeAnnouncementContinue: {

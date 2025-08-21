@@ -119,6 +119,8 @@ export const VerifyRecoveryPhraseScreen = () => {
           removeLastEntryAndAddNew={removeLastEntryAndAddNew}
         />
 
+        <Space.Height.md />
+
         {!isLastWordValid() && userEntries.length > 0 && <ErrorMessage />}
       </ScrollView>
 
@@ -150,7 +152,7 @@ const ErrorMessage = () => {
     <View style={[a.flex_row, a.align_center, a.px_lg]}>
       <AlertIllustration />
 
-      <Space.Height.sm />
+      <Space.Width.sm />
 
       <Text style={[{color: p.sys_magenta_500}, a.body_2_md_regular]}>
         {strings.setupWallet.verifyRecoveryPhraseErrorMessage}
@@ -211,7 +213,7 @@ const MnemonicInput = ({
       layout={Layout}
       entering={FadeIn}
       exiting={FadeOut}
-      style={[a.p_2xs, a.overflow_hidden, {minHeight: 182}]}
+      style={[a.p_2xs, a.overflow_hidden, {minHeight: 182}, a.px_lg]}
     >
       <View
         style={[StyleSheet.absoluteFill, {backgroundColor: p.bg_color_max}]}
@@ -219,9 +221,12 @@ const MnemonicInput = ({
 
       <View
         style={[
-          {borderColor: p.primary_200, backgroundColor: p.bg_color_max},
+          a.border,
+          {borderColor: p.primary_200, backgroundColor: p.bg_color_max, borderRadius: 6},
           {minHeight: 182},
+         
           a.overflow_hidden,
+          a.p_xs, 
         ]}
       >
         <View style={[a.p_sm, a.flex_row, a.flex_wrap, a.gap_sm]}>
@@ -236,10 +241,7 @@ const MnemonicInput = ({
                 activeOpacity={0.5}
                 onPress={onPress}
                 disabled={!isLast || !recoveryWordError}
-                style={{
-                  ...a.flex_row,
-                  ...a.flex_wrap,
-                }}
+                style={[a.flex_row, a.align_center, a.gap_2xs]}
               >
                 <Animated.View
                   style={[a.flex_row, a.align_center, a.gap_2xs]}
@@ -247,13 +249,15 @@ const MnemonicInput = ({
                   entering={FadeIn}
                   exiting={FadeOut}
                 >
-                  <WordBadge
-                    word={`${(index + 1).toString()}.`}
-                    used
-                    recoveryWordError={recoveryWordError}
-                    defaultMnemonic={defaultMnemonic}
-                    style={a.pr_xs}
-                  />
+                  <View style={[a.px_xs, a.py_xs, a.rounded_md, a.overflow_hidden]}>
+                    <Text style={[
+                      a.body_1_lg_regular, 
+                      {color: recoveryWordError ? p.sys_magenta_500 : p.text_primary_medium}, // Red number for errors
+                      a.pr_xs
+                    ]}>
+                      {(index + 1).toString()}.
+                    </Text>
+                  </View>
 
                   <Animated.View
                     layout={Layout}
@@ -263,15 +267,15 @@ const MnemonicInput = ({
                       a.overflow_hidden,
                       a.px_xs,
                       a.py_xs,
-                      recoveryWordError && {
-                        backgroundColor: p.sys_magenta_100,
-                      },
+                      {borderRadius: 6},
+                      recoveryWordError && {backgroundColor: p.sys_magenta_100},
                     ]}
                   >
                     {!recoveryWordError && (
                       <View
                         style={[
-                          StyleSheet.absoluteFill,
+                          a.absolute,
+                          a.inset_0,
                           {
                             backgroundColor:
                               isPhraseComplete && isValidPhrase
@@ -282,16 +286,16 @@ const MnemonicInput = ({
                       />
                     )}
 
-                    <WordBadge
-                      word={entry.word}
-                      recoveryWordError={recoveryWordError}
-                      defaultMnemonic={defaultMnemonic}
+                    <Text
                       style={[
+                        a.body_1_lg_regular,
+                        {color: recoveryWordError ? p.sys_magenta_500 : p.text_primary_medium},
                         a.px_sm,
-                        isPhraseComplete &&
-                          isValidPhrase && {color: p.black_static},
+                        isPhraseComplete && isValidPhrase && {color: p.black_static},
                       ]}
-                    />
+                    >
+                      {entry.word}
+                    </Text>
                   </Animated.View>
                 </Animated.View>
               </TouchableOpacity>
@@ -384,14 +388,17 @@ const WordBadges = ({
 
               {isUsed && (
                 <View
-                  style={{
-                    backgroundColor: p.bg_color_max,
-                    borderRadius: 6,
-                    left: 2,
-                    right: 2,
-                    top: 2,
-                    bottom: 2,
-                  }}
+                  style={[
+                    a.absolute,
+                    {
+                      borderRadius: 6,
+                      backgroundColor: p.bg_color_max,
+                      left: 2,
+                      right: 2,
+                      top: 2,
+                      bottom: 2,
+                    },
+                  ]}
                 />
               )}
 

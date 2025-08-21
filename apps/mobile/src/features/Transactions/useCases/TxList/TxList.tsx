@@ -49,7 +49,7 @@ export const TxList = (props: Props) => {
     <View style={a.flex_1}>
       <FlashList
         data={loadedTxs}
-        contentContainerStyle={{...a.pt_lg, ...a.px_lg}}
+        contentContainerStyle={a.p_lg}
         renderItem={({item}) => <TxListItem transaction={item} />}
         ItemSeparatorComponent={() => <Space.Height.lg />}
         keyExtractor={(_, index) => index.toString()}

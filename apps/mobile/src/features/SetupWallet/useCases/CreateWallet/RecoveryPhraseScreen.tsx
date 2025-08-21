@@ -61,26 +61,20 @@ export const RecoveryPhraseScreen = () => {
             ]}
           />
 
-          <Space.Height.lg fill />
-
-          <LearnMoreButton
-            onPress={() => {
-              Linking.openURL(YoroiZendeskLink)
-            }}
-          />
-
-          <Space.Height.xl />
+          <Space.Height.lg />
         </View>
       ),
       footer: (
-        <Button
-          title={strings.setupWallet.continueButton}
-          onPress={() => {
-            closeModal()
-            showCreateWalletInfoModalChanged(false)
-          }}
-          testID="setup-step2-continue-button"
-        />
+        <View style={[a.px_lg, a.py_lg]}>
+          <Button
+            title={strings.setupWallet.continueButton}
+            onPress={() => {
+              closeModal()
+              showCreateWalletInfoModalChanged(false)
+            }}
+            testID="setup-step2-continue-button"
+          />
+        </View>
       ),
       height: 552,
     })
@@ -199,7 +193,7 @@ const Info = ({onPress, testID}: {onPress: () => void; testID?: string}) => {
   return (
     <TouchableOpacity style={[a.relative]} onPress={onPress}>
       <View
-        style={[a.absolute, {top: Platform.OS === 'ios' ? -22 : -18, left: 0}]}
+        style={[a.absolute, {top: Platform.OS === 'ios' ? -18 : -18, left: 0}]}
         testID={testID}
       >
         <InfoIcon size={24} color={isDark ? p.white_static : p.black_static} />
