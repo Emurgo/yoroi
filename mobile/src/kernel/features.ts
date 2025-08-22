@@ -19,7 +19,7 @@ export const features = {
 
 export const useYoroiConfig = () => {
   const {data, isLoading, error} = useQuery({
-    queryKey: ['yoroi-config', isDev],
+    queryKey: ['persist', 'yoroi-config', isDev],
     queryFn: async (): Promise<any> => {
       try {
         const url = isDev
