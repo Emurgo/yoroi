@@ -39,6 +39,7 @@ import {
 import {useNavigateTo} from '../../common/navigation'
 import {GovernanceVote} from '../../types'
 import {EnterDrepIdModal} from '../EnterDrepIdModal/EnterDrepIdModal'
+import {useYoroiConfig} from '~/kernel/features'
 
 export const HomeScreen = () => {
   const {wallet} = useSelectedWallet()
@@ -254,6 +255,7 @@ const formattingOptions = (p: any) => {
 }
 
 const NeverParticipatedInGovernanceVariant = () => {
+  const {isYoroiDrepBannerEnabled} = useYoroiConfig()
   const strings = useStrings()
   const {palette: p} = useTheme()
   const navigateTo = useNavigateTo()
@@ -442,15 +444,17 @@ const NeverParticipatedInGovernanceVariant = () => {
       <Space.Height.lg />
 
       <View style={[a.flex_1, a.gap_lg]}>
-        <Action
-          title={strings.staking.delegateToAYoroiDrep}
-          description={strings.staking.delegateToAYoroiDRepDescription}
-          onPress={handleDelegateToYoroi}
-          pending={isCreatingTx && pendingVote === 'delegate-to-yoroi'}
-          showGradient
-        >
-          <YoroiRecordLink />
-        </Action>
+        {isYoroiDrepBannerEnabled && (
+          <Action
+            title={strings.staking.delegateToAYoroiDrep}
+            description={strings.staking.delegateToAYoroiDRepDescription}
+            onPress={handleDelegateToYoroi}
+            pending={isCreatingTx && pendingVote === 'delegate-to-yoroi'}
+            showGradient
+          >
+            <YoroiRecordLink />
+          </Action>
+        )}
 
         <Action
           title={strings.staking.actionDelegateToADRepTitle}

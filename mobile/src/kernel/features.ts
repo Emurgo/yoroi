@@ -1,3 +1,4 @@
+import {useQuery} from '@tanstack/react-query'
 import {isDev} from './constants'
 
 export const features = {
@@ -14,6 +15,40 @@ export const features = {
   walletListSwipeableActions: isDev,
   swapTokenLinks: true,
   utxoConsolidation: isDev,
+}
+
+export const useYoroiConfig = () => {
+  const {data, isLoading, error} = useQuery({
+    queryKey: ['yoroi-config', isDev],
+    queryFn: async (): Promise<any> => {
+      try {
+        const url = isDev
+          ? 'https://raw.githubusercontent.com/Emurgo/yoroi-config/refs/heads/main/dev.json'
+          : 'https://raw.githubusercontent.com/Emurgo/yoroi-config/refs/heads/main/prod.json'
+
+        const response = await fetch(url)
+
+        if (!response.ok) {
+          throw new Error(`Failed to fetch config: ${response.status}`)
+        }
+
+        const data = await response.json()
+
+        return data
+      } catch (e) {
+        return {}
+      }
+    },
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    retry: 2,
+  })
+
+  return {
+    config: data,
+    isLoading,
+    error,
+    isYoroiDrepBannerEnabled: data?.banners?.delegateToYoroi ?? false,
+  }
 }
 
 export const debugWalletInfo = {

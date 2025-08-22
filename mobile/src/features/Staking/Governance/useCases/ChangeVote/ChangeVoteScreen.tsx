@@ -28,8 +28,10 @@ import {
   useGovernanceActions,
 } from '../../common/helpers'
 import {EnterDrepIdModal} from '../EnterDrepIdModal/EnterDrepIdModal'
+import {useYoroiConfig} from '~/kernel/features'
 
 export const ChangeVoteScreen = () => {
+  const {isYoroiDrepBannerEnabled} = useYoroiConfig()
   const strings = useStrings()
   const {wallet, meta} = useSelectedWallet()
   const {atoms: ta} = useTheme()
@@ -174,7 +176,7 @@ export const ChangeVoteScreen = () => {
   const voteHash =
     voteKind === 'delegate' && action != null ? action.hash : undefined
   const isCreatingTx = createGovernanceTxMutation.isPending
-  const isDelegatingToDrep =
+  const isDelegatingNotToYoroiDrep =
     voteKind === 'delegate' && voteHash !== GOVERNANCE_YOROI_DREP_ID_HEX
 
   return (
@@ -188,17 +190,18 @@ export const ChangeVoteScreen = () => {
       <Space.Height.lg />
 
       <View style={[a.flex_1, a.gap_lg]}>
-        {(voteKind !== 'delegate' || isDelegatingToDrep) && (
-          <Action
-            title={strings.staking.delegateToAYoroiDrep}
-            description={strings.staking.delegateToAYoroiDRepDescription}
-            onPress={handleDelegateToYoroi}
-            pending={isCreatingTx && pendingVote === 'delegate-to-yoroi'}
-            showGradient
-          >
-            <YoroiRecordLink />
-          </Action>
-        )}
+        {isYoroiDrepBannerEnabled &&
+          (voteKind !== 'delegate' || isDelegatingNotToYoroiDrep) && (
+            <Action
+              title={strings.staking.delegateToAYoroiDrep}
+              description={strings.staking.delegateToAYoroiDRepDescription}
+              onPress={handleDelegateToYoroi}
+              pending={isCreatingTx && pendingVote === 'delegate-to-yoroi'}
+              showGradient
+            >
+              <YoroiRecordLink />
+            </Action>
+          )}
 
         {voteKind !== 'delegate' && (
           <Action
