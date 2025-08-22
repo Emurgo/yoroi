@@ -17,7 +17,7 @@ const timeToShowModalInMs = 1000
 const modalStorageKey = 'hasShownGetImportantAlertsModal'
 
 export const useGetImportantAlertsModal = ({enabled}: {enabled: boolean}) => {
-  const {openModal} = useModal()
+  const {openModal, closeModal} = useModal()
   const {height: windowHeight} = useWindowDimensions()
   const strings = useStrings()
 
@@ -30,25 +30,30 @@ export const useGetImportantAlertsModal = ({enabled}: {enabled: boolean}) => {
 
       openModal({
         title: strings.notifications.getImportantAlerts,
-        content: <GetImportantAlertsModal />,
+        content: <GetImportantAlertsModal onClose={closeModal} />,
         height: 520,
       })
       await uiStorage.setItem(modalStorageKey, true)
     }, timeToShowModalInMs)
 
     return () => clearTimeout(timeout)
-  }, [openModal, strings, windowHeight, enabled])
+  }, [openModal, strings, windowHeight, enabled, closeModal])
 }
 
-export const GetImportantAlertsModal = () => {
+type GetImportantAlertsModalProps = {
+  onClose: () => void
+}
+
+export const GetImportantAlertsModal = ({
+  onClose,
+}: GetImportantAlertsModalProps) => {
   const strings = useStrings()
-  const {closeModal} = useModal()
   const {palette: p} = useTheme()
 
   const handleTurnOnPress = async () => {
     await triggerNotificationsPermissionModal()
 
-    InteractionManager.runAfterInteractions(() => closeModal())
+    InteractionManager.runAfterInteractions(() => onClose())
   }
 
   return (
@@ -74,7 +79,7 @@ export const GetImportantAlertsModal = () => {
       <Button
         size="M"
         title={strings.notifications.skip}
-        onPress={closeModal}
+        onPress={onClose}
         type={ButtonType.Text}
         style={[a.flex_1, a.self_stretch, {flexGrow: 0}]}
       />
