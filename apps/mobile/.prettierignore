@@ -1,6 +1,0 @@
-src/kernel/i18n/polyfills.ts
-coverage/
-**/*.js
-**/*.jsx
-**/*.md
-**/*.json

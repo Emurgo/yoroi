@@ -5,6 +5,7 @@
 .env
 translations/
 .translations/
+lib/
 
 # Xcode
 #
