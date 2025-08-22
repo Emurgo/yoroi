@@ -332,7 +332,6 @@ const useGenerateVotingKeys = (
         password,
         catalystKey,
       )
-
       return {
         catalystKeyHex,
         votingKeyEncrypted,

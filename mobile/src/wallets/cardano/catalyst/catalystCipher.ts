@@ -1,14 +1,14 @@
 // @ts-ignore
-import chacha from 'chacha'
-import cryptoRandomString from 'crypto-random-string'
-import {pbkdf2} from 'react-native-fast-crypto'
+import 'react-native-get-random-values'
+// @ts-ignore
+import QuickCrypto from 'react-native-quick-crypto'
+import {chacha20poly1305} from '@noble/ciphers/chacha'
 
 const PBKDF_ITERATIONS = 12983
 const SALT_SIZE = 16
 const KEY_SIZE = 32
 const DIGEST = 'sha512'
 const NONCE_SIZE = 12
-const TAG_SIZE = 16
 const PROTO_SIZE = 1
 const PROTO_VERSION = Buffer.from('01', 'hex')
 
@@ -18,44 +18,79 @@ const PROTO_VERSION = Buffer.from('01', 'hex')
 	----------------------------------------------------------
 */
 
-export function generatePbkdf2Key(password: Uint8Array, salt: Buffer): Buffer {
-  const key = pbkdf2(
-    Buffer.from(password),
-    salt,
-    PBKDF_ITERATIONS,
-    KEY_SIZE,
-    DIGEST,
+// Helper function to generate random hex string
+export function generateRandomHexString(length: number): string {
+  const bytes = new Uint8Array(length / 2)
+  crypto.getRandomValues(bytes)
+  return Array.from(bytes, (byte) => byte.toString(16).padStart(2, '0')).join(
+    '',
   )
-  return Buffer.from(key) // ensure Buffer type
+}
+
+export async function generatePbkdf2Key(
+  password: Uint8Array,
+  salt: Buffer,
+): Promise<Buffer> {
+  try {
+    const keyArrayBuffer = QuickCrypto.pbkdf2Sync(
+      Buffer.from(password),
+      salt,
+      PBKDF_ITERATIONS,
+      KEY_SIZE,
+      DIGEST,
+    )
+
+    const key = Buffer.from(keyArrayBuffer)
+
+    if (!key || key.length === 0) {
+      throw new Error('PBKDF2 returned empty key')
+    }
+
+    return key
+  } catch (error) {
+    console.error('PBKDF2 error:', error)
+    throw error
+  }
 }
 
 export async function encryptWithPassword(
   passwordBuf: Uint8Array,
   dataBytes: Uint8Array,
 ): Promise<string> {
-  const salt = Buffer.from(cryptoRandomString(2 * 16), 'hex')
-  const nonce = Buffer.from(cryptoRandomString(2 * 12), 'hex')
-  const data = Buffer.from(dataBytes)
-  const aad = Buffer.from('', 'hex')
+  try {
+    const salt = Buffer.from(generateRandomHexString(2 * 16), 'hex')
 
-  const key = generatePbkdf2Key(passwordBuf, salt)
+    const nonce = Buffer.from(generateRandomHexString(2 * 12), 'hex')
 
-  const cipher = chacha.createCipher(key, nonce)
-  cipher.setAAD(aad, {plaintextLength: data.length})
+    const data = Buffer.from(dataBytes)
 
-  const head = cipher.update(data)
-  const final = cipher.final()
-  const tag = cipher.getAuthTag()
+    const key = await generatePbkdf2Key(passwordBuf, salt)
 
-  const cipherText = Buffer.concat([
-    PROTO_VERSION,
-    salt,
-    nonce,
-    head,
-    final,
-    tag,
-  ])
-  return cipherText.toString('hex')
+    // Use @noble/ciphers for ChaCha20-Poly1305 encryption
+    try {
+      // Convert Buffer to Uint8Array for @noble/ciphers
+      const keyUint8 = new Uint8Array(key)
+      const nonceUint8 = new Uint8Array(nonce)
+      const dataUint8 = new Uint8Array(data)
+
+      const cipher = chacha20poly1305(keyUint8, nonceUint8)
+
+      const encrypted = cipher.encrypt(dataUint8)
+
+      const cipherText = Buffer.concat([
+        PROTO_VERSION,
+        salt,
+        nonce,
+        Buffer.from(encrypted),
+      ])
+
+      return cipherText.toString('hex')
+    } catch (cipherError) {
+      throw cipherError
+    }
+  } catch (error) {
+    throw error
+  }
 }
 
 export async function decryptWithPassword(
@@ -69,27 +104,21 @@ export async function decryptWithPassword(
     SALT_SIZE + PROTO_SIZE,
     SALT_SIZE + NONCE_SIZE + PROTO_SIZE,
   )
-  const cipherdata = ciphertext.slice(
-    SALT_SIZE + NONCE_SIZE + PROTO_SIZE,
-    -TAG_SIZE,
-  )
-  const tag = ciphertext.slice(
-    SALT_SIZE + PROTO_SIZE + NONCE_SIZE + cipherdata.length,
-  )
+  const encryptedData = ciphertext.slice(SALT_SIZE + NONCE_SIZE + PROTO_SIZE)
 
-  const aad = Buffer.from('', 'hex')
-
-  if (ciphertext.length <= SALT_SIZE + NONCE_SIZE + TAG_SIZE) {
+  if (ciphertext.length <= SALT_SIZE + NONCE_SIZE) {
     throw new Error('not enough data to decrypt')
   }
 
-  const key = generatePbkdf2Key(passwordBuf, salt)
+  const key = await generatePbkdf2Key(passwordBuf, salt)
 
-  const decipher = chacha.createDecipher(key, nonce)
-  decipher.setAAD(aad)
-  decipher.setAuthTag(tag)
+  // Use @noble/ciphers for ChaCha20-Poly1305 decryption
+  const keyUint8 = new Uint8Array(key)
+  const nonceUint8 = new Uint8Array(nonce)
+  const encryptedDataUint8 = new Uint8Array(encryptedData)
 
-  let decrypted = decipher.update(cipherdata, 'ignored', 'hex')
-  decrypted += decipher.final('hex')
-  return decrypted
+  const cipher = chacha20poly1305(keyUint8, nonceUint8)
+  const decrypted = cipher.decrypt(encryptedDataUint8)
+
+  return Buffer.from(decrypted).toString('hex')
 }

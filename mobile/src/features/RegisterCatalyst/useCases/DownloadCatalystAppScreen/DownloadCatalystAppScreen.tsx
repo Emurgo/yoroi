@@ -1,7 +1,7 @@
 import {useCatalyst} from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
-import cryptoRandomString from 'crypto-random-string'
+import 'react-native-get-random-values'
 import * as React from 'react'
 import {useIntl} from 'react-intl'
 import {
@@ -42,6 +42,7 @@ export const DownloadCatalystAppScreen = () => {
   const intl = useIntl()
   const navigateTo = useNavigateTo()
   const {pinChanged, reset: resetCatalyst} = useCatalyst()
+  const hasShownModal = React.useRef(false)
 
   const onNext = () => {
     resetCatalyst()
@@ -61,7 +62,8 @@ export const DownloadCatalystAppScreen = () => {
   )
 
   React.useEffect(() => {
-    if (stakingInfo?.status === 'not-registered')
+    if (stakingInfo?.status === 'not-registered' && !hasShownModal.current) {
+      hasShownModal.current = true
       openModal({
         title: strings.registerCatalyst.title,
         content: <WarningModal />,
@@ -73,13 +75,8 @@ export const DownloadCatalystAppScreen = () => {
         ),
         height: 300,
       })
-  }, [
-    closeModal,
-    openModal,
-    stakingInfo?.status,
-    strings.registerCatalyst.title,
-    strings.registerCatalyst.confirm,
-  ])
+    }
+  }, [stakingInfo?.status])
 
   const fundName = fund?.info.fundName
   const registrationStart = fund?.info.snapshotStart
@@ -201,4 +198,8 @@ const AppStoreButton = () => {
   )
 }
 
-const createPin = () => cryptoRandomString({length: 4, type: 'numeric'} as any)
+const createPin = () => {
+  const bytes = new Uint8Array(4)
+  crypto.getRandomValues(bytes)
+  return Array.from(bytes, (byte) => (byte % 10).toString()).join('')
+}
