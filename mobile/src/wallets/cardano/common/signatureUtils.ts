@@ -210,6 +210,7 @@ const needsToSignWithStakingKey = (tx: CSL_TYPES.Transaction) => {
     if (certificate.asVoteRegistrationAndDelegation()?.hasValue()) return true
   }
 
+  // TODO: REVISIT This needs to check if the withdrawal matches our wallet, aribitrary tx from dapps can have withdrawals on other wallets and we don't want to sign them with our staking key. In this case Anzens is failing.
   if (withdrawals && withdrawals.len() > 0) return true
   return false
 }
