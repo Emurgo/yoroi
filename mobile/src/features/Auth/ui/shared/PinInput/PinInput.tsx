@@ -1,9 +1,8 @@
 import {atoms as a, space as s, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
-import {Text, View, TextInput, KeyboardAvoidingView, Platform} from 'react-native'
+import {Text, View, TextInput, KeyboardAvoidingView, Platform, Pressable} from 'react-native'
 
-import {BACKSPACE} from '~/ui/NumericKeyboard'
 import {Space} from '~/ui/Space/Space'
 
 type Props = {
@@ -30,6 +29,7 @@ export const PinInput = React.forwardRef<PinInputRef, Props>((props, ref) => {
   } = props
   const {atoms: ta} = useTheme()
   const [pin, setPin] = React.useState('')
+  const inputRef = React.useRef<TextInput | null>(null)
 
   React.useImperativeHandle(ref, () => ({
     clear: () => {
@@ -37,74 +37,90 @@ export const PinInput = React.forwardRef<PinInputRef, Props>((props, ref) => {
     },
   }))
 
+  const handleFocus = React.useCallback(() => {
+    if (inputRef.current) {
+      if (Platform.OS === 'android') {
+        inputRef.current.blur()
+        setTimeout(() => {
+          inputRef.current?.focus()
+        }, 50)
+      } else {
+        inputRef.current.focus()
+      }
+    }
+  }, [])
 
   return (
-    <KeyboardAvoidingView 
+    <KeyboardAvoidingView
       style={[a.flex_1, ta.bg_color_max]}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       keyboardVerticalOffset={0}
     >
-      <View style={[a.flex_1, a.align_center, a.justify_center]}>
-        <Text
-          style={[
-            a.body_1_lg_medium,
-            ta.text_gray_max,
-            {fontSize: 20, lineHeight: 30},
-          ]}
-        >
-          {title}
-        </Text>
-
-        <Space.Height.sm />
-
-        {subtitles.map((subtitle) => (
+      <Pressable style={[a.flex_1]} onPress={handleFocus}>
+        <View style={[a.flex_1, a.align_center, a.justify_center]}>
           <Text
-            key={subtitle}
             style={[
-              a.body_2_md_regular,
-              ta.text_gray_medium,
-              a.text_center,
-              {
-                fontSize: 14,
-                lineHeight: 22,
-                maxWidth: 320,
-              },
+              a.body_1_lg_medium,
+              ta.text_gray_max,
+              {fontSize: 20, lineHeight: 30},
             ]}
           >
-            {subtitle == null ? null : subtitle}
+            {title}
           </Text>
-        ))}
 
-        <Space.Height._2xl />
+          <Space.Height.sm />
 
-        <View style={[a.flex_row, a.gap_sm]}>
-          {Array.from({length: pinMaxLength}, (_, index) => (
-            <PinPlaceholder key={index} isActive={index < pin.length} />
+          {subtitles.map((subtitle) => (
+            <Text
+              key={subtitle}
+              style={[
+                a.body_2_md_regular,
+                ta.text_gray_medium,
+                a.text_center,
+                {
+                  fontSize: 14,
+                  lineHeight: 22,
+                  maxWidth: 320,
+                },
+              ]}
+            >
+              {subtitle == null ? null : subtitle}
+            </Text>
           ))}
-        </View>
-      </View>
 
-      <TextInput
-        value={pin}
-        onChangeText={(value) => {
-          if (!enabled) return
-          if (value.length <= pinMaxLength) {
-            setPin(value)
-            if (value.length === pinMaxLength) onDone(value)
-          }
-        }}
-        keyboardType="number-pad"
-        secureTextEntry
-        maxLength={pinMaxLength}
-        style={[
+          <Space.Height._2xl />
+
+          <View style={[a.flex_row, a.gap_sm]}>
+            {Array.from({length: pinMaxLength}, (_, index) => (
+              <PinPlaceholder key={index} isActive={index < pin.length} />
+            ))}
+          </View>
+        </View>
+
+        <TextInput
+          ref={inputRef}
+          value={pin}
+          onChangeText={(value) => {
+            if (!enabled) return
+            if (value.length <= pinMaxLength) {
+              setPin(value)
+              if (value.length === pinMaxLength) onDone(value)
+            }
+          }}
+          keyboardType="number-pad"
+          secureTextEntry
+          maxLength={pinMaxLength}
+          style={[
           {opacity: 0, position: 'absolute', width: 1, height: 1}
-        ]}
-        placeholder=""
-        autoFocus
-        onSubmitEditing={() => {}}
-        editable={true}
-        selectTextOnFocus={false}
-      />
+          ]}
+          placeholder=""
+          autoFocus
+          blurOnSubmit={false}
+          onSubmitEditing={() => {}}
+          editable={true}
+          selectTextOnFocus={false}
+        />
+      </Pressable>
     </KeyboardAvoidingView>
   )
 })
