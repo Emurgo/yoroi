@@ -54,7 +54,7 @@ export const walletManagerMessages = defineMessages({
     defaultMessage: '!!!Add Wallet',
   },
   supportTicketLink: {
-    id: 'components.settings.settingsscreen.title',
+    id: 'components.walletselection.walletselectionscreen.supportTicketLink',
     defaultMessage: '!!!Support Ticket',
   },
 })
