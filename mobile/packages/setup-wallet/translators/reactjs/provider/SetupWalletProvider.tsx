@@ -1,0 +1,97 @@
+import * as React from 'react'
+
+import {
+  SetupWalletActionType,
+  SetupWalletActions,
+  SetupWalletContext,
+  SetupWalletState,
+  setupWalletDefaultState,
+  setupWalletInitialContext,
+  setupWalletReducer,
+} from '../state/state'
+
+export const SetupWalletCtx = React.createContext<SetupWalletContext>(
+  setupWalletInitialContext,
+)
+
+export const SetupWalletProvider = ({
+  children,
+  initialState,
+}: {
+  children: React.ReactNode
+  initialState?: Partial<SetupWalletState>
+}) => {
+  const [state, dispatch] = React.useReducer(setupWalletReducer, {
+    ...setupWalletDefaultState,
+    ...initialState,
+  })
+
+  const actions = React.useRef<SetupWalletActions>({
+    mnemonicChanged: (mnemonic: SetupWalletState['mnemonic']) =>
+      dispatch({type: SetupWalletActionType.MnemonicChanged, mnemonic}),
+    walletNameChanged: (walletName: SetupWalletState['walletName']) =>
+      dispatch({type: SetupWalletActionType.WalletNameChanged, walletName}),
+    walletPasswordChanged: (
+      walletPassword: SetupWalletState['walletPassword'],
+    ) =>
+      dispatch({
+        type: SetupWalletActionType.WalletPasswordChanged,
+        walletPassword,
+      }),
+    walletImplementationChanged: (
+      walletImplementation: SetupWalletState['walletImplementation'],
+    ) =>
+      dispatch({
+        type: SetupWalletActionType.WalletImplementationChanged,
+        walletImplementation,
+      }),
+    accountVisualChanged: (accountVisual: SetupWalletState['accountVisual']) =>
+      dispatch({
+        type: SetupWalletActionType.AccountVisualChanged,
+        accountVisual,
+      }),
+    publicKeyHexChanged: (publicKeyHex: SetupWalletState['publicKeyHex']) =>
+      dispatch({type: SetupWalletActionType.PublicKeyHexChanged, publicKeyHex}),
+    pathChanged: (path: SetupWalletState['path']) =>
+      dispatch({type: SetupWalletActionType.PathChanged, path}),
+    hwDeviceInfoChanged: (hwDeviceInfo: SetupWalletState['hwDeviceInfo']) =>
+      dispatch({type: SetupWalletActionType.HwDeviceInfoChanged, hwDeviceInfo}),
+    setupTypeChanged: (setUpType: SetupWalletState['setUpType']) =>
+      dispatch({type: SetupWalletActionType.SetupTypeChanged, setUpType}),
+    mnemonicTypeChanged: (mnemonicType: SetupWalletState['mnemonicType']) =>
+      dispatch({type: SetupWalletActionType.MnemonicTypeChanged, mnemonicType}),
+    useUSBChanged: (useUSB: SetupWalletState['useUSB']) =>
+      dispatch({type: SetupWalletActionType.UseUSBChanged, useUSB}),
+    reset: () => dispatch({type: SetupWalletActionType.Reset}),
+    showRestoreWalletInfoModalChanged: (
+      showRestoreWalletInfoModal: SetupWalletState['showRestoreWalletInfoModal'],
+    ) =>
+      dispatch({
+        type: SetupWalletActionType.ShowRestoreWalletInfoModalChanged,
+        showRestoreWalletInfoModal,
+      }),
+    showCreateWalletInfoModalChanged: (
+      showCreateWalletInfoModal: SetupWalletState['showCreateWalletInfoModal'],
+    ) =>
+      dispatch({
+        type: SetupWalletActionType.ShowCreateWalletInfoModalChanged,
+        showCreateWalletInfoModal,
+      }),
+    walletIdChanged: (walletId: SetupWalletState['walletId']) =>
+      dispatch({type: SetupWalletActionType.WalletIdChanged, walletId}),
+  }).current
+
+  const context = React.useMemo(
+    () => ({
+      ...state,
+      ...actions,
+    }),
+    [state, actions],
+  )
+
+  return (
+    <SetupWalletCtx.Provider value={context}>
+      {children}
+    </SetupWalletCtx.Provider>
+  )
+}

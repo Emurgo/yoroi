@@ -1,0 +1,25 @@
+import {App} from '@yoroi/types'
+
+import {SubmitTxInsufficientCollateralError} from '~/wallets/cardano/api/errors'
+
+export const getErrorMessage = (
+  error: unknown,
+  strings: {
+    wrongPasswordMessage: string
+    missingCollateral: string
+    error: string
+  },
+) => {
+  if (error instanceof App.Errors.WrongPassword) {
+    return strings.wrongPasswordMessage
+  }
+  if (error instanceof SubmitTxInsufficientCollateralError) {
+    return strings.missingCollateral
+  }
+
+  if (error instanceof Error) {
+    return error.message
+  }
+
+  return strings.error
+}
