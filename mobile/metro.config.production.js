@@ -1,4 +1,4 @@
-// metro.config.js
+// metro.config.production.js
 const {getDefaultConfig} = require('expo/metro-config')
 const path = require('path')
 
@@ -8,6 +8,9 @@ const config = getDefaultConfig(projectRoot, {
   unstable_enableNewArchitecture: true,
   experimentalImportBundleSupport: true,
 })
+
+// Set the app config to use production configuration
+process.env.EXPO_PUBLIC_APP_CONFIG = 'app.config.production.js'
 
 // -- resolver --
 config.resolver.resolveRequest = (context, moduleName, platform) => {

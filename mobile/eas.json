@@ -1,0 +1,86 @@
+{
+  "cli": {
+    "version": ">= 5.9.1"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal"
+    },
+    "preview": {
+      "distribution": "internal"
+    },
+    "nightly": {
+      "android": {
+        "buildType": "apk",
+        "gradleCommand": ":app:assembleRelease",
+        "env": {
+          "BUILD_VARIANT": "NIGHTLY",
+          "ANDROID_PACKAGE_NAME": "com.emurgo.nightly",
+          "ANDROID_KEYSTORE_FILE": "$HOME/.yoroi/android/nightly.keystore",
+          "ANDROID_KEYSTORE_ALIAS": "my-key-alias",
+          "ANDROID_KEYSTORE_PASSWORD": "your-keystore-password",
+          "ANDROID_TRACK": "internal"
+        }
+      },
+      "ios": {
+        "buildConfiguration": "Release",
+        "env": {
+          "BUILD_VARIANT": "NIGHTLY",
+          "APP_STORE_BUNDLE_ID": "com.emurgo.yoroi-nightly"
+        }
+      }
+    },
+    "production": {
+      "android": {
+        "buildType": "app-bundle",
+        "gradleCommand": ":app:bundleRelease",
+        "env": {
+          "BUILD_VARIANT": "PRODUCTION",
+          "ANDROID_PACKAGE_NAME": "com.emurgo",
+          "ANDROID_KEYSTORE_FILE": "$HOME/.yoroi/android/production.keystore",
+          "ANDROID_KEYSTORE_ALIAS": "my-key-alias",
+          "ANDROID_KEYSTORE_PASSWORD": "your-keystore-password",
+          "ANDROID_TRACK": "production"
+        }
+      },
+      "ios": {
+        "buildConfiguration": "Release",
+        "env": {
+          "BUILD_VARIANT": "PRODUCTION",
+          "APP_STORE_BUNDLE_ID": "com.emurgo.yoroi"
+        }
+      }
+    }
+  },
+  "submit": {
+    "production": {
+      "ios": {
+        "appleId": "your-apple-id@example.com",
+        "ascAppId": "your-app-store-connect-app-id",
+        "appleTeamId": "your-apple-team-id",
+        "apiKeyPath": "$HOME/.yoroi/ios/AuthKey_PH9Z89M567.p8",
+        "apiKeyId": "PH9Z89M567",
+        "apiKeyIssuerId": "feff08c0-5259-4e9a-bdbe-26cdb046e1d5"
+      },
+      "android": {
+        "serviceAccountKeyPath": "$HOME/.yoroi/android/service-account.json",
+        "track": "production"
+      }
+    },
+    "nightly": {
+      "ios": {
+        "appleId": "your-apple-id@example.com",
+        "ascAppId": "your-app-store-connect-app-id",
+        "appleTeamId": "your-apple-team-id",
+        "apiKeyPath": "$HOME/.yoroi/ios/AuthKey_PH9Z89M567.p8",
+        "apiKeyId": "PH9Z89M567",
+        "apiKeyIssuerId": "feff08c0-5259-4e9a-bdbe-26cdb046e1d5"
+      },
+      "android": {
+        "serviceAccountKeyPath": "$HOME/.yoroi/android/service-account.json",
+        "track": "internal"
+      }
+    }
+  }
+}

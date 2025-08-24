@@ -1,0 +1,94 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+fastlane_require "dotenv"
+fastlane_require "semver"
+
+default_platform(:android)
+
+platform :android do
+  desc "Deploy Nightly to Internal Testing"
+  lane :nightly do
+    # Set environment variables
+    ENV['BUILD_VARIANT'] = 'NIGHTLY'
+    ENV['EXPO_PUBLIC_APP_CONFIG'] = 'app.config.nightly.js'
+    ENV['ANDROID_KEYSTORE_FILE'] = ENV['ANDROID_KEYSTORE_FILE'] || "#{ENV['HOME']}/.yoroi/android/nightly.keystore"
+    
+    # Build the app using Expo
+    sh("EXPO_PUBLIC_APP_CONFIG=app.config.nightly.js BUILD_VARIANT=NIGHTLY npx expo run:android --variant release")
+    
+    # Upload to Play Store Internal Testing
+    upload_to_play_store(
+      track: 'internal',
+      apk: 'android/app/build/outputs/apk/release/app-release.apk',
+      json_key: ENV['ANDROID_SA_FILE'] || "#{ENV['HOME']}/.yoroi/android/service-account.json"
+    )
+  end
+
+  desc "Deploy Production to Play Store"
+  lane :production do
+    # Set environment variables
+    ENV['BUILD_VARIANT'] = 'PRODUCTION'
+    ENV['EXPO_PUBLIC_APP_CONFIG'] = 'app.config.production.js'
+    ENV['ANDROID_KEYSTORE_FILE'] = ENV['ANDROID_KEYSTORE_FILE'] || "#{ENV['HOME']}/.yoroi/android/production.keystore"
+    
+    # Build the app using Expo
+    sh("EXPO_PUBLIC_APP_CONFIG=app.config.production.js BUILD_VARIANT=PRODUCTION npx expo run:android --variant release")
+    
+    # Upload to Play Store Production
+    upload_to_play_store(
+      track: 'production',
+      aab: 'android/app/build/outputs/bundle/release/app-release.aab',
+      json_key: ENV['ANDROID_SA_FILE'] || "#{ENV['HOME']}/.yoroi/android/service-account.json"
+    )
+  end
+end
+
+platform :ios do
+  desc "Deploy Nightly to TestFlight"
+  lane :nightly do
+    # Set environment variables
+
+    ENV['BUILD_VARIANT'] = 'NIGHTLY'
+    ENV['EXPO_PUBLIC_APP_CONFIG'] = 'app.config.nightly.js'
+    
+    # Build the app using Expo
+    sh("EXPO_PUBLIC_APP_CONFIG=app.config.nightly.js BUILD_VARIANT=NIGHTLY npx expo run:ios --configuration Release")
+    
+    # Upload to TestFlight
+    upload_to_testflight(
+      api_key_path: ENV['APP_STORE_KEY_PATH'] || "#{ENV['HOME']}/.yoroi/ios/AuthKey_PH9Z89M567.p8",
+      api_key_id: ENV['APP_STORE_KEY_ID'] || 'PH9Z89M567',
+      issuer_id: ENV['APP_STORE_ISSUER_ID'] || 'feff08c0-5259-4e9a-bdbe-26cdb046e1d5'
+    )
+  end
+
+  desc "Deploy Production to App Store"
+  lane :production do
+    # Set environment variables
+    ENV['BUILD_VARIANT'] = 'PRODUCTION'
+    ENV['EXPO_PUBLIC_APP_CONFIG'] = 'app.config.production.js'
+    
+    # Build the app using Expo
+    sh("EXPO_PUBLIC_APP_CONFIG=app.config.production.js BUILD_VARIANT=PRODUCTION npx expo run:ios --configuration Release")
+    
+    # Upload to App Store
+    upload_to_app_store(
+      api_key_path: ENV['APP_STORE_KEY_PATH'] || "#{ENV['HOME']}/.yoroi/ios/AuthKey_PH9Z89M567.p8",
+      api_key_id: ENV['APP_STORE_KEY_ID'] || 'PH9Z89M567',
+      issuer_id: ENV['APP_STORE_ISSUER_ID'] || 'feff08c0-5259-4e9a-bdbe-26cdb046e1d5'
+    )
+  end
+end
