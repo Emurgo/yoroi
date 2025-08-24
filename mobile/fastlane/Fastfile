@@ -16,7 +16,20 @@
 fastlane_require "dotenv"
 fastlane_require "semver"
 
-default_platform(:android)
+# Read package.json version
+package_version = JSON.parse(File.read('../package.json'))['version']
+
+# iOS
+XC_PROJECT="./ios/yoroi.xcodeproj"
+XC_WORKSPACE="./ios/yoroi.xcworkspace"
+PLIST="yoroi/Info.plist"
+
+# Android
+GRADLE_FILE="android/app/build.gradle"
+
+before_all do |lane|
+  environment = lane_context[SharedValues::ENVIRONMENT]
+end
 
 platform :android do
   desc "Deploy Nightly to Internal Testing"
@@ -26,15 +39,25 @@ platform :android do
     ENV['EXPO_PUBLIC_APP_CONFIG'] = 'app.config.nightly.js'
     ENV['ANDROID_KEYSTORE_FILE'] = ENV['ANDROID_KEYSTORE_FILE'] || "#{ENV['HOME']}/.yoroi/android/nightly.keystore"
     
-    # Build the app using Expo
-    sh("EXPO_PUBLIC_APP_CONFIG=app.config.nightly.js BUILD_VARIANT=NIGHTLY npx expo run:android --variant release")
+    # Set version from package.json
+    set_version_android
     
-    # Upload to Play Store Internal Testing
-    upload_to_play_store(
-      track: 'internal',
-      apk: 'android/app/build/outputs/apk/release/app-release.apk',
-      json_key: ENV['ANDROID_SA_FILE'] || "#{ENV['HOME']}/.yoroi/android/service-account.json"
-    )
+    # Build the app using Expo
+    Dir.chdir("..") do
+      sh("EXPO_PUBLIC_APP_CONFIG=app.config.nightly.js BUILD_VARIANT=NIGHTLY npx expo run:android --variant release")
+    end
+    
+    # Upload to Play Store Internal Testing with proper signing
+    if ENV['DRY_RUN'] == 'true'
+      UI.message("DRY RUN: Skipping upload to Play Store")
+    else
+      upload_to_play_store(
+        track: ENV["ANDROID_TRACK"] || 'internal',
+        package_name: ENV["ANDROID_PACKAGE_NAME"],
+        json_key: ENV['ANDROID_SA_FILE'] || "#{ENV['HOME']}/.yoroi/android/service-account.json",
+        aab: 'android/app/build/outputs/bundle/release/app-release.aab'
+      )
+    end
   end
 
   desc "Deploy Production to Play Store"
@@ -44,15 +67,25 @@ platform :android do
     ENV['EXPO_PUBLIC_APP_CONFIG'] = 'app.config.production.js'
     ENV['ANDROID_KEYSTORE_FILE'] = ENV['ANDROID_KEYSTORE_FILE'] || "#{ENV['HOME']}/.yoroi/android/production.keystore"
     
-    # Build the app using Expo
-    sh("EXPO_PUBLIC_APP_CONFIG=app.config.production.js BUILD_VARIANT=PRODUCTION npx expo run:android --variant release")
+    # Set version from package.json
+    set_version_android
     
-    # Upload to Play Store Production
-    upload_to_play_store(
-      track: 'production',
-      aab: 'android/app/build/outputs/bundle/release/app-release.aab',
-      json_key: ENV['ANDROID_SA_FILE'] || "#{ENV['HOME']}/.yoroi/android/service-account.json"
-    )
+    # Build the app using Expo
+    Dir.chdir("..") do
+      sh("EXPO_PUBLIC_APP_CONFIG=app.config.production.js BUILD_VARIANT=PRODUCTION npx expo run:android --variant release")
+    end
+    
+    # Upload to Play Store Production with proper signing
+    if ENV['DRY_RUN'] == 'true'
+      UI.message("DRY RUN: Skipping upload to Play Store")
+    else
+      upload_to_play_store(
+        track: ENV["ANDROID_TRACK"] || 'production',
+        package_name: ENV["ANDROID_PACKAGE_NAME"],
+        json_key: ENV['ANDROID_SA_FILE'] || "#{ENV['HOME']}/.yoroi/android/service-account.json",
+        aab: 'android/app/build/outputs/bundle/release/app-release.aab'
+      )
+    end
   end
 end
 
@@ -60,19 +93,47 @@ platform :ios do
   desc "Deploy Nightly to TestFlight"
   lane :nightly do
     # Set environment variables
-
     ENV['BUILD_VARIANT'] = 'NIGHTLY'
     ENV['EXPO_PUBLIC_APP_CONFIG'] = 'app.config.nightly.js'
     
-    # Build the app using Expo
-    sh("EXPO_PUBLIC_APP_CONFIG=app.config.nightly.js BUILD_VARIANT=NIGHTLY npx expo run:ios --configuration Release")
+    # Set up code signing for CI
+    if is_ci
+      create_keychain(
+        name: ENV["CI_KEYCHAIN_NAME"],
+        password: ENV["CI_KEYCHAIN_PASSWORD"],
+        default_keychain: true,
+        unlock: true,
+        timeout: 3600,
+        lock_when_sleeps: false
+      )
+    end
     
-    # Upload to TestFlight
-    upload_to_testflight(
-      api_key_path: ENV['APP_STORE_KEY_PATH'] || "#{ENV['HOME']}/.yoroi/ios/AuthKey_PH9Z89M567.p8",
-      api_key_id: ENV['APP_STORE_KEY_ID'] || 'PH9Z89M567',
-      issuer_id: ENV['APP_STORE_ISSUER_ID'] || 'feff08c0-5259-4e9a-bdbe-26cdb046e1d5'
-    )
+    # Set version from package.json
+    set_version_ios
+    
+    # Build the app using Expo
+    Dir.chdir("..") do
+      sh("EXPO_PUBLIC_APP_CONFIG=app.config.nightly.js BUILD_VARIANT=NIGHTLY npx expo run:ios --configuration Release")
+    end
+    
+    # Upload to TestFlight with proper API key handling
+    if ENV['DRY_RUN'] == 'true'
+      UI.message("DRY RUN: Skipping upload to TestFlight")
+    else
+      api_key = app_store_connect_api_key(
+        key_id: ENV['APP_STORE_KEY_ID'] || 'PH9Z89M567',
+        issuer_id: ENV['APP_STORE_ISSUER_ID'] || 'feff08c0-5259-4e9a-bdbe-26cdb046e1d5',
+        key_filepath: ENV['APP_STORE_KEY_PATH'] || "#{ENV['HOME']}/.yoroi/ios/AuthKey_PH9Z89M567.p8",
+        duration: 1200,
+        in_house: false
+      )
+      
+      upload_to_testflight(
+        api_key: api_key,
+        app_identifier: ENV["APP_STORE_BUNDLE_ID"],
+        skip_waiting_for_build_processing: true
+      )
+    end
   end
 
   desc "Deploy Production to App Store"
@@ -81,14 +142,56 @@ platform :ios do
     ENV['BUILD_VARIANT'] = 'PRODUCTION'
     ENV['EXPO_PUBLIC_APP_CONFIG'] = 'app.config.production.js'
     
-    # Build the app using Expo
-    sh("EXPO_PUBLIC_APP_CONFIG=app.config.production.js BUILD_VARIANT=PRODUCTION npx expo run:ios --configuration Release")
+    # Set up code signing for CI
+    if is_ci
+      create_keychain(
+        name: ENV["CI_KEYCHAIN_NAME"],
+        password: ENV["CI_KEYCHAIN_PASSWORD"],
+        default_keychain: true,
+        unlock: true,
+        timeout: 3600,
+        lock_when_sleeps: false
+      )
+    end
     
-    # Upload to App Store
-    upload_to_app_store(
-      api_key_path: ENV['APP_STORE_KEY_PATH'] || "#{ENV['HOME']}/.yoroi/ios/AuthKey_PH9Z89M567.p8",
-      api_key_id: ENV['APP_STORE_KEY_ID'] || 'PH9Z89M567',
-      issuer_id: ENV['APP_STORE_ISSUER_ID'] || 'feff08c0-5259-4e9a-bdbe-26cdb046e1d5'
-    )
+    # Set version from package.json
+    set_version_ios
+    
+    # Build the app using Expo
+    Dir.chdir("..") do
+      sh("EXPO_PUBLIC_APP_CONFIG=app.config.production.js BUILD_VARIANT=PRODUCTION npx expo run:ios --configuration Release")
+    end
+    
+    # Upload to App Store with proper API key handling
+    if ENV['DRY_RUN'] == 'true'
+      UI.message("DRY RUN: Skipping upload to App Store")
+    else
+      api_key = app_store_connect_api_key(
+        key_id: ENV['APP_STORE_KEY_ID'] || 'PH9Z89M567',
+        issuer_id: ENV['APP_STORE_ISSUER_ID'] || 'feff08c0-5259-4e9a-bdbe-26cdb046e1d5',
+        key_filepath: ENV['APP_STORE_KEY_PATH'] || "#{ENV['HOME']}/.yoroi/ios/AuthKey_PH9Z89M567.p8",
+        duration: 1200,
+        in_house: false
+      )
+      
+      upload_to_app_store(
+        api_key: api_key,
+        app_identifier: ENV["APP_STORE_BUNDLE_ID"]
+      )
+    end
   end
+end
+
+lane :set_version_ios do
+  increment_version_number(
+      xcodeproj: XC_PROJECT,
+      version_number: package_version
+  )
+  UI.success("iOS app version updated to #{package_version}")
+end
+
+lane :set_version_android do
+  # For Android, we'll use a simple approach to set version
+  # The actual version will be set during the build process
+  UI.success("Android app version will be set to #{package_version} during build")
 end
