@@ -2,7 +2,8 @@ export default {
   expo: {
     name: 'Yoroi',
     slug: 'yoroi',
-    version: '1.0.0',
+    owner: 'emurgo',
+    version: '6.0.0',
     orientation: 'portrait',
     icon: './assets/yoroi/icon.png',
     userInterfaceStyle: 'automatic',
@@ -17,21 +18,22 @@ export default {
       userInterfaceStyle: 'automatic',
       bundleIdentifier: 'com.emurgo',
       buildNumber: process.env.BUILD_NUMBER || '1',
-      infoPlist: {
-        NSCameraUsageDescription:
-          'Allow $(PRODUCT_NAME) to access your camera to scan QR codes',
-        NSLocationWhenInUseUsageDescription:
-          'Allow $(PRODUCT_NAME) to access your location for Bluetooth scanning',
-        NSBluetoothAlwaysUsageDescription:
-          'Allow $(PRODUCT_NAME) to access Bluetooth for hardware wallet connection',
-        NSBluetoothPeripheralUsageDescription:
-          'Allow $(PRODUCT_NAME) to access Bluetooth for hardware wallet connection',
-        UIBackgroundModes: ['fetch', 'remote-notification'],
-        NSUserNotificationUsageDescription:
-          'Allow $(PRODUCT_NAME) to send you notifications about your wallet activity',
-        NSFaceIDUsageDescription:
-          'Allow $(PRODUCT_NAME) to access your face ID for biometric authentication',
-      },
+                        infoPlist: {
+                    NSCameraUsageDescription:
+                      'Allow $(PRODUCT_NAME) to access your camera to scan QR codes',
+                    NSLocationWhenInUseUsageDescription:
+                      'Allow $(PRODUCT_NAME) to access your location for Bluetooth scanning',
+                    NSBluetoothAlwaysUsageDescription:
+                      'Allow $(PRODUCT_NAME) to access Bluetooth for hardware wallet connection',
+                    NSBluetoothPeripheralUsageDescription:
+                      'Allow $(PRODUCT_NAME) to access Bluetooth for hardware wallet connection',
+                    UIBackgroundModes: ['fetch', 'remote-notification'],
+                    NSUserNotificationUsageDescription:
+                      'Allow $(PRODUCT_NAME) to send you notifications about your wallet activity',
+                    NSFaceIDUsageDescription:
+                      'Allow $(PRODUCT_NAME) to access your face ID for biometric authentication',
+                    ITSAppUsesNonExemptEncryption: false,
+                  },
       splash: {
         image: './assets/yoroi/splash/light/bootsplash_logo.png',
         resizeMode: 'contain',
@@ -51,7 +53,7 @@ export default {
         backgroundColor: '#ffffff',
       },
       package: 'com.emurgo',
-      versionCode: 3,
+      versionCode: 8,
       edgeToEdgeEnabled: true,
       userInterfaceStyle: 'automatic',
       permissions: [
@@ -95,6 +97,9 @@ export default {
       BANXA_TEST_WALLET: process.env.BANXA_TEST_WALLET || '',
       DISABLE_LOGBOX: process.env.DISABLE_LOGBOX || false,
       LOGGER_FILTER: process.env.LOGGER_FILTER || '',
+      eas: {
+        projectId: '3ba6aa05-1ac7-48a4-a5d7-571853056c63'
+      }
     },
     plugins: [
       'react-native-ble-plx',

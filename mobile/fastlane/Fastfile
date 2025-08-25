@@ -38,13 +38,19 @@ platform :android do
     ENV['BUILD_VARIANT'] = 'NIGHTLY'
     ENV['EXPO_PUBLIC_APP_CONFIG'] = 'app.config.nightly.js'
     ENV['ANDROID_KEYSTORE_FILE'] = ENV['ANDROID_KEYSTORE_FILE'] || "#{ENV['HOME']}/.yoroi/android/nightly.keystore"
+    ENV['ANDROID_PACKAGE_NAME'] = 'com.emurgo.nightly'
     
     # Set version from package.json
     set_version_android
     
-    # Build the app using Expo
+    # Set build number from package.json
+    package_json = JSON.parse(File.read('../package.json'))
+    build_number = package_json['build'] || 1
+    ENV['BUILD_NUMBER'] = build_number.to_s
+    
+    # Build the app using EAS Build
     Dir.chdir("..") do
-      sh("EXPO_PUBLIC_APP_CONFIG=app.config.nightly.js BUILD_VARIANT=NIGHTLY npx expo run:android --variant release")
+      sh("EXPO_PUBLIC_APP_CONFIG=app.config.nightly.js BUILD_VARIANT=NIGHTLY BUILD_NUMBER=#{build_number} npx eas build --platform android --profile nightly --local")
     end
     
     # Upload to Play Store Internal Testing with proper signing
@@ -66,13 +72,19 @@ platform :android do
     ENV['BUILD_VARIANT'] = 'PROD'
     ENV['EXPO_PUBLIC_APP_CONFIG'] = 'app.config.production.js'
     ENV['ANDROID_KEYSTORE_FILE'] = ENV['ANDROID_KEYSTORE_FILE'] || "#{ENV['HOME']}/.yoroi/android/production.keystore"
+    ENV['ANDROID_PACKAGE_NAME'] = 'com.emurgo'
     
     # Set version from package.json
     set_version_android
     
-    # Build the app using Expo
+    # Set build number from package.json
+    package_json = JSON.parse(File.read('../package.json'))
+    build_number = package_json['build'] || 1
+    ENV['BUILD_NUMBER'] = build_number.to_s
+    
+    # Build the app using EAS Build
     Dir.chdir("..") do
-      sh("EXPO_PUBLIC_APP_CONFIG=app.config.production.js BUILD_VARIANT=PROD npx expo run:android --variant release")
+      sh("EXPO_PUBLIC_APP_CONFIG=app.config.production.js BUILD_VARIANT=PROD BUILD_NUMBER=#{build_number} npx eas build --platform android --profile production --local")
     end
     
     # Upload to Play Store Production with proper signing
@@ -95,6 +107,9 @@ platform :ios do
     # Set environment variables
     ENV['BUILD_VARIANT'] = 'NIGHTLY'
     ENV['EXPO_PUBLIC_APP_CONFIG'] = 'app.config.nightly.js'
+    ENV['APP_STORE_KEY_ID'] = 'PH9Z89M567'
+    ENV['APP_STORE_ISSUER_ID'] = 'feff08c0-5259-4e9a-bdbe-26cdb046e1d5'
+    ENV['APP_STORE_KEY_PATH'] = "#{ENV['HOME']}/.yoroi/ios/AuthKey_PH9Z89M567.p8"
     
     # Set up code signing for CI
     if is_ci
@@ -111,9 +126,9 @@ platform :ios do
     # Set version from package.json
     set_version_ios
     
-    # Build the app using Expo
+    # Build the app using EAS Build
     Dir.chdir("..") do
-      sh("EXPO_PUBLIC_APP_CONFIG=app.config.nightly.js BUILD_VARIANT=NIGHTLY npx expo run:ios --configuration Release")
+      sh("EXPO_PUBLIC_APP_CONFIG=app.config.nightly.js BUILD_VARIANT=NIGHTLY npx eas build --platform ios --profile nightly --local --non-interactive")
     end
     
     # Upload to TestFlight with proper API key handling
@@ -141,6 +156,9 @@ platform :ios do
     # Set environment variables
     ENV['BUILD_VARIANT'] = 'PROD'
     ENV['EXPO_PUBLIC_APP_CONFIG'] = 'app.config.production.js'
+    ENV['APP_STORE_KEY_ID'] = 'PH9Z89M567'
+    ENV['APP_STORE_ISSUER_ID'] = 'feff08c0-5259-4e9a-bdbe-26cdb046e1d5'
+    ENV['APP_STORE_KEY_PATH'] = "#{ENV['HOME']}/.yoroi/ios/AuthKey_PH9Z89M567.p8"
     
     # Set up code signing for CI
     if is_ci
@@ -159,7 +177,7 @@ platform :ios do
     
     # Build the app using Expo
    Dir.chdir("..") do
-      sh("EXPO_PUBLIC_APP_CONFIG=app.config.production.js BUILD_VARIANT=PROD npx expo run:ios --configuration Release")
+      sh("EXPO_PUBLIC_APP_CONFIG=app.config.production.js BUILD_VARIANT=PROD npx eas build --platform ios --profile production --local --non-interactive")
     end
     
     # Upload to App Store with proper API key handling

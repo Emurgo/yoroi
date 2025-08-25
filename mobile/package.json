@@ -12,10 +12,18 @@
     "ios": "expo run:ios",
     "ios:nightly": "EXPO_PUBLIC_APP_CONFIG=app.config.nightly.js expo run:ios",
     "ios:production": "EXPO_PUBLIC_APP_CONFIG=app.config.production.js expo run:ios",
-    "build:android:nightly": "EXPO_PUBLIC_APP_CONFIG=app.config.nightly.js eas build --platform android --profile nightly",
-    "build:android:production": "EXPO_PUBLIC_APP_CONFIG=app.config.production.js eas build --platform android --profile production",
-    "build:ios:nightly": "EXPO_PUBLIC_APP_CONFIG=app.config.nightly.js eas build --platform ios --profile nightly",
-    "build:ios:production": "EXPO_PUBLIC_APP_CONFIG=app.config.production.js eas build --platform ios --profile production",
+    "build:android:nightly": "EXPO_PUBLIC_APP_CONFIG=app.config.nightly.js ./scripts/set-build-number.sh auto && npx eas build --platform android --profile nightly",
+    "build:android:production": "EXPO_PUBLIC_APP_CONFIG=app.config.production.js ./scripts/set-build-number.sh auto && npx eas build --platform android --profile production",
+    "build:ios:nightly": "EXPO_PUBLIC_APP_CONFIG=app.config.nightly.js ./scripts/set-build-number.sh auto && npx eas build --platform ios --profile nightly",
+    "build:ios:production": "EXPO_PUBLIC_APP_CONFIG=app.config.production.js ./scripts/set-build-number.sh auto && npx eas build --platform ios --profile production",
+    "submit:android:nightly": "npx eas submit --platform android --latest --android-package com.emurgo.nightly --track internal --non-interactive",
+    "submit:android:production": "npx eas submit --platform android --latest --android-package com.emurgo --track production --non-interactive",
+    "publish:android:nightly": "./scripts/publish-android.sh nightly",
+    "publish:android:production": "./scripts/publish-android.sh production",
+    "submit:ios:nightly": "npx eas submit --platform ios --latest --app-id com.emurgo.yoroi-nightly --non-interactive",
+    "submit:ios:production": "npx eas submit --platform ios --latest --app-id com.emurgo.yoroi --non-interactive",
+    "publish:ios:nightly": "./scripts/publish-ios.sh nightly",
+    "publish:ios:production": "./scripts/publish-ios.sh production",
     "build:local:nightly": "EXPO_PUBLIC_APP_CONFIG=app.config.nightly.js ./scripts/build-local-nightly.sh",
     "build:local:production": "EXPO_PUBLIC_APP_CONFIG=app.config.production.js ./scripts/build-local-production.sh",
     "publish:nightly": "EXPO_PUBLIC_APP_CONFIG=app.config.nightly.js ./scripts/publish-nightly.sh",
@@ -177,5 +185,5 @@
     "@emurgo/csl-mobile-bridge-jsi": "1.0.0-alpha.6",
     "react-native-svg": "15.11.2"
   },
-  "build": 3
+  "build": 7
 }
