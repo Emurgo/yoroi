@@ -124,13 +124,11 @@ const SupportTicketLink = () => {
 
   return (
     <TouchableOpacity
-      style={[a.flex_1, a.flex_row, a.justify_center]}
+      style={[a.flex_row, a.align_center, a.justify_center]}
       onPress={onPress}
     >
       <SupportIllustration color={p.text_primary_medium} />
-
       <Space.Width.sm />
-
       <Text style={[ta.text_primary_medium, a.button_2_md]}>
         {strings.walletManager.supportTicketLink.toLocaleUpperCase()}
       </Text>

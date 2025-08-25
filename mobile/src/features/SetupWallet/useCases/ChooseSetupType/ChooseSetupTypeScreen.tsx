@@ -12,6 +12,8 @@ import {LogoBanner} from '~/ui/LogoBanner/LogoBanner'
 import {Space} from '~/ui/Space/Space'
 
 import {ButtonCard} from '../../common/ButtonCard/ButtonCard'
+import {CreateWallet} from '../../illustrations/CreateWallet'
+import {RestoreWallet} from '../../illustrations/RestoreWallet'
 
 // import {SelectHwConnectionModal} from '../RestoreHwWallet/SelectHwConnectionModal'
 
@@ -67,7 +69,7 @@ export const ChooseSetupTypeScreen = () => {
         <View>
           <ButtonCard
             title={strings.setupWallet.createWalletButtonCard}
-            // icon={<CreateWallet style={position: 'absolute', right: 0} />}
+            icon={<CreateWallet style={[a.absolute, {right: 0}]} />}
             onPress={handleCreate}
             testID="setup-create-new-wallet-button"
           />
@@ -76,7 +78,7 @@ export const ChooseSetupTypeScreen = () => {
 
           <ButtonCard
             title={strings.setupWallet.restoreWalletButtonCard}
-            // icon={<RestoreWallet style={position: 'absolute', right: 0} />}
+            icon={<RestoreWallet style={[a.absolute, {right: 0}]} />}
             onPress={handleRestore}
             testID="setup-restore-wallet-button"
           />
