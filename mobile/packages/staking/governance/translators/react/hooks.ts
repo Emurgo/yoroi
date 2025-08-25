@@ -14,7 +14,7 @@ import {useGovernance} from './context'
 
 export const useIsValidDRepID = (
   id: string,
-  options: Partial<UseQueryOptions<void, Error>> = {},
+  options: Partial<UseQueryOptions<boolean, Error>> = {},
 ) => {
   const {manager} = useGovernance()
   return useQuery({

@@ -102,6 +102,8 @@ export const useGovernanceActions = () => {
   }) => {
     unsignedTxChanged(unsignedTx)
 
+    console.log('kdkdkdkdkk')
+
     navigateToTxReview({
       onSuccess: (args) => {
         if (args?.signedTx?.signedTx?.id == null)

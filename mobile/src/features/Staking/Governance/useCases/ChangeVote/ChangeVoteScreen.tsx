@@ -18,6 +18,7 @@ import {YoroiRecordLink} from '~/features/Staking/Governance/common/YoroiRecordL
 import {useCreateGovernanceTx} from '~/features/Staking/hooks/useCreateGovernanceTx'
 import {useStakingKey} from '~/features/Staking/hooks/useStakingKey'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useYoroiConfig} from '~/kernel/features'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
@@ -28,7 +29,6 @@ import {
   useGovernanceActions,
 } from '../../common/helpers'
 import {EnterDrepIdModal} from '../EnterDrepIdModal/EnterDrepIdModal'
-import {useYoroiConfig} from '~/kernel/features'
 
 export const ChangeVoteScreen = () => {
   const {isYoroiDrepBannerEnabled} = useYoroiConfig()
@@ -73,25 +73,30 @@ export const ChangeVoteScreen = () => {
         </GovernanceProvider>
       ),
       height: 360,
+      resizable: true,
     })
   }
 
   const handleDelegate = () => {
-    openDRepIdModal((options) => {
-      const stakingKey = wallet.getStakingKey()
+    openDRepIdModal(async (options) => {
+      const stakingKey = await wallet.getStakingKey()
 
       setPendingVote('delegate-not-yoroi')
 
-      const certificate = createDelegationCertificate({
+      const certificate = await createDelegationCertificate({
         hash: options.hash,
         type: options.type,
         stakingKey,
       })
 
+      console.log('handleDelegate-1')
+
       createGovernanceTxMutation.resolve({
         certificates: [certificate],
         addressMode: meta.addressMode,
       })
+
+      console.log('handleDelegate-2')
 
       if (createGovernanceTxMutation.value) {
         governanceActions.handleDelegateAction({
