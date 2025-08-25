@@ -29,6 +29,14 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 
 
+### upload_ios_nightly_ipa
+
+```sh
+[bundle exec] fastlane upload_ios_nightly_ipa
+```
+
+Upload existing iOS nightly IPA to TestFlight
+
 ----
 
 

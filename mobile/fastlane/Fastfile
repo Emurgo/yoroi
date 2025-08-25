@@ -126,7 +126,7 @@ platform :ios do
     # Set version from package.json
     set_version_ios
     
-    # Build the app using EAS Build
+    # Build the app using EAS Build locally
     Dir.chdir("..") do
       sh("EXPO_PUBLIC_APP_CONFIG=app.config.nightly.js BUILD_VARIANT=NIGHTLY npx eas build --platform ios --profile nightly --local --non-interactive")
     end
@@ -212,4 +212,27 @@ lane :set_version_android do
   # For Android, we'll use a simple approach to set version
   # The actual version will be set during the build process
   UI.success("Android app version will be set to #{package_version} during build")
+end
+
+desc "Upload existing iOS nightly IPA to TestFlight"
+lane :upload_ios_nightly_ipa do
+  # Upload to TestFlight with proper API key handling
+  if ENV['DRY_RUN'] == 'true'
+    UI.message("DRY RUN: Skipping upload to TestFlight")
+  else
+    api_key = app_store_connect_api_key(
+      key_id: ENV['APP_STORE_KEY_ID'] || 'PH9Z89M567',
+      issuer_id: ENV['APP_STORE_ISSUER_ID'] || 'feff08c0-5259-4e9a-bdbe-26cdb046e1d5',
+      key_filepath: ENV['APP_STORE_KEY_PATH'] || "#{ENV['HOME']}/.yoroi/ios/AuthKey_PH9Z89M567.p8",
+      duration: 1200,
+      in_house: false
+    )
+    
+    upload_to_testflight(
+      api_key: api_key,
+      ipa: "dist/ios/nightly/yoroi.ipa",
+      app_identifier: ENV["APP_STORE_BUNDLE_ID"] || "com.emurgo.yoroi-nightly",
+      skip_waiting_for_build_processing: true
+    )
+  end
 end
