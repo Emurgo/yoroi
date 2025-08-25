@@ -45,7 +45,7 @@ platform :android do
     
     # Set build number from package.json
     package_json = JSON.parse(File.read('../package.json'))
-    build_number = package_json['build'] || 1
+    build_number = 801
     ENV['BUILD_NUMBER'] = build_number.to_s
     
     # Build the app using EAS Build
@@ -79,7 +79,7 @@ platform :android do
     
     # Set build number from package.json
     package_json = JSON.parse(File.read('../package.json'))
-    build_number = package_json['build'] || 1
+    build_number = 801
     ENV['BUILD_NUMBER'] = build_number.to_s
     
     # Build the app using EAS Build
@@ -230,7 +230,7 @@ lane :upload_ios_nightly_ipa do
     
     upload_to_testflight(
       api_key: api_key,
-      ipa: "dist/ios/nightly/yoroi.ipa",
+      ipa: "dist/ios/nightly-801/yoroi.ipa",
       app_identifier: ENV["APP_STORE_BUNDLE_ID"] || "com.emurgo.yoroi-nightly",
       skip_waiting_for_build_processing: true
     )

@@ -17,7 +17,7 @@ export default {
       supportsTablet: true,
       userInterfaceStyle: 'automatic',
       bundleIdentifier: 'com.emurgo.yoroi-nightly',
-      buildNumber: process.env.BUILD_NUMBER || '1',
+      buildNumber: '801',
                         infoPlist: {
                     NSCameraUsageDescription:
                       'Allow $(PRODUCT_NAME) to access your camera to scan QR codes',
@@ -140,6 +140,7 @@ export default {
           ios: {
             deploymentTarget: '15.1',
             newArchEnabled: true,
+            buildNumber: '801',
           },
           android: {
             compileSdkVersion: 35,

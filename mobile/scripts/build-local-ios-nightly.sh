@@ -23,8 +23,11 @@ if [ -f "env.nightly" ]; then
   set +a
 fi
 
-# Increment build number via existing helper (sets BUILD_NUMBER)
-./scripts/set-build-number.sh auto
+# Set build number to 801 (next after 800)
+./scripts/set-build-number.sh 801
+
+# Ensure BUILD_NUMBER is exported for Expo config
+export BUILD_NUMBER=801
 
 SCHEME="yoroi"
 CONFIGURATION="Release"
@@ -49,6 +52,7 @@ xcodebuild \
   DEVELOPMENT_TEAM="${APPLE_TEAM_ID:-F8NVT2G2L4}" \
   CODE_SIGN_STYLE=Automatic \
   PRODUCT_BUNDLE_IDENTIFIER="${APP_STORE_BUNDLE_ID:-com.emurgo.yoroi-nightly}" \
+  CURRENT_PROJECT_VERSION="${BUILD_NUMBER:-801}" \
   -allowProvisioningUpdates \
   clean archive | xcpretty || true
 

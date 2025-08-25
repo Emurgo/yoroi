@@ -8,8 +8,8 @@ export BUILD_VARIANT=PRODUCTION
 export EXPO_PUBLIC_APP_CONFIG=app.config.production.js
 
 # Load environment variables from env.production
-if [ -f "env.production" ]; then
-    export $(cat env.production | grep -v '^#' | xargs)
+if [ -f ".env.production" ]; then
+    export $(cat .env.production | grep -v '^#' | xargs)
 fi
 
 # Build for Android
