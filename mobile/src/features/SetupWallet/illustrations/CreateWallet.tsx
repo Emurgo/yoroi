@@ -1,5 +1,12 @@
 import * as React from 'react'
-import Svg, {Defs, Ellipse, LinearGradient, Path, Stop, SvgProps} from 'react-native-svg'
+import Svg, {
+  Defs,
+  Ellipse,
+  LinearGradient,
+  Path,
+  Stop,
+  SvgProps,
+} from 'react-native-svg'
 
 export const CreateWallet = (props: SvgProps) => {
   return (
@@ -120,7 +127,10 @@ export const CreateWallet = (props: SvgProps) => {
         fill="#fff"
       />
 
-      <Path d="M56.37 65.605v-.737l.04.02v.737l-.04-.02zM56.63 65.011v.737l.04.02v-.736l-.04-.02z" fill="#fff" />
+      <Path
+        d="M56.37 65.605v-.737l.04.02v.737l-.04-.02zM56.63 65.011v.737l.04.02v-.736l-.04-.02z"
+        fill="#fff"
+      />
 
       <Path
         fillRule="evenodd"

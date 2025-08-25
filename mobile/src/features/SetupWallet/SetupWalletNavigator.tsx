@@ -21,7 +21,7 @@ import {VerifyRecoveryPhraseScreen} from './useCases/CreateWallet/VerifyRecovery
 import {WalletDetailsScreen} from './useCases/CreateWallet/WalletDetailsScreen'
 import {RestoreWalletDetailsScreen} from './useCases/RestoreWallet/RestoreWalletDetailsScreen'
 import {RestoreWalletScreen} from './useCases/RestoreWallet/RestoreWalletScreen'
-import { defaultStackNavigationOptions } from '~/kernel/navigation/common/helpers'
+import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
 import {useTheme} from '@yoroi/theme'
 
 const Stack = createStackNavigator<any /* WalletInitRoutes */>()
@@ -33,7 +33,7 @@ export const SetupWalletNavigator = () => {
     () => defaultStackNavigationOptions(p),
     [p],
   )
- 
+
   return (
     <Stack.Navigator
       screenOptions={{
