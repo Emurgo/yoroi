@@ -110,12 +110,12 @@ export const PinInput = React.forwardRef<PinInputRef, Props>((props, ref) => {
           keyboardType="number-pad"
           secureTextEntry
           maxLength={pinMaxLength}
-          style={[{opacity: 0, position: 'absolute', width: 1, height: 1}]}
+          style={[{opacity: 0, width: 1, height: 1}, a.absolute]}
           placeholder=""
           autoFocus
           blurOnSubmit={false}
           onSubmitEditing={() => {}}
-          editable={true}
+          editable
           selectTextOnFocus={false}
         />
       </Pressable>
