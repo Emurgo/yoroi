@@ -58,6 +58,22 @@ Deploy Nightly to Internal Testing
 
 Deploy Production to Play Store
 
+### android nightly_local
+
+```sh
+[bundle exec] fastlane android nightly_local
+```
+
+Publish locally built Android nightly to Internal Testing
+
+### android production_local
+
+```sh
+[bundle exec] fastlane android production_local
+```
+
+Publish locally built Android production to Play Store
+
 ----
 
 
@@ -78,6 +94,22 @@ Deploy Nightly to TestFlight
 ```
 
 Deploy Production to App Store
+
+### ios nightly_local
+
+```sh
+[bundle exec] fastlane ios nightly_local
+```
+
+Publish locally built iOS nightly to TestFlight
+
+### ios production_local
+
+```sh
+[bundle exec] fastlane ios production_local
+```
+
+Publish locally built iOS production to App Store
 
 ----
 
