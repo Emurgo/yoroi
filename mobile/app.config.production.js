@@ -18,22 +18,22 @@ export default {
       userInterfaceStyle: 'automatic',
       bundleIdentifier: 'com.emurgo',
       buildNumber: process.env.BUILD_NUMBER || '1',
-                        infoPlist: {
-                    NSCameraUsageDescription:
-                      'Allow $(PRODUCT_NAME) to access your camera to scan QR codes',
-                    NSLocationWhenInUseUsageDescription:
-                      'Allow $(PRODUCT_NAME) to access your location for Bluetooth scanning',
-                    NSBluetoothAlwaysUsageDescription:
-                      'Allow $(PRODUCT_NAME) to access Bluetooth for hardware wallet connection',
-                    NSBluetoothPeripheralUsageDescription:
-                      'Allow $(PRODUCT_NAME) to access Bluetooth for hardware wallet connection',
-                    UIBackgroundModes: ['fetch', 'remote-notification'],
-                    NSUserNotificationUsageDescription:
-                      'Allow $(PRODUCT_NAME) to send you notifications about your wallet activity',
-                    NSFaceIDUsageDescription:
-                      'Allow $(PRODUCT_NAME) to access your face ID for biometric authentication',
-                    ITSAppUsesNonExemptEncryption: false,
-                  },
+      infoPlist: {
+        NSCameraUsageDescription:
+          'Allow $(PRODUCT_NAME) to access your camera to scan QR codes',
+        NSLocationWhenInUseUsageDescription:
+          'Allow $(PRODUCT_NAME) to access your location for Bluetooth scanning',
+        NSBluetoothAlwaysUsageDescription:
+          'Allow $(PRODUCT_NAME) to access Bluetooth for hardware wallet connection',
+        NSBluetoothPeripheralUsageDescription:
+          'Allow $(PRODUCT_NAME) to access Bluetooth for hardware wallet connection',
+        UIBackgroundModes: ['fetch', 'remote-notification'],
+        NSUserNotificationUsageDescription:
+          'Allow $(PRODUCT_NAME) to send you notifications about your wallet activity',
+        NSFaceIDUsageDescription:
+          'Allow $(PRODUCT_NAME) to access your face ID for biometric authentication',
+        ITSAppUsesNonExemptEncryption: false,
+      },
       splash: {
         image: './assets/yoroi/splash/light/bootsplash_logo.png',
         resizeMode: 'contain',
@@ -98,8 +98,8 @@ export default {
       DISABLE_LOGBOX: process.env.DISABLE_LOGBOX || false,
       LOGGER_FILTER: process.env.LOGGER_FILTER || '',
       eas: {
-        projectId: '3ba6aa05-1ac7-48a4-a5d7-571853056c63'
-      }
+        projectId: '3ba6aa05-1ac7-48a4-a5d7-571853056c63',
+      },
     },
     plugins: [
       'react-native-ble-plx',
@@ -147,7 +147,9 @@ export default {
             buildToolsVersion: '35.0.0',
             newArchEnabled: true,
             signingConfig: {
-              keystore: process.env.ANDROID_KEYSTORE_FILE || '$HOME/.yoroi/android/production.keystore',
+              keystore:
+                process.env.ANDROID_KEYSTORE_FILE ||
+                '$HOME/.yoroi/android/production.keystore',
               storePassword: process.env.ANDROID_KEYSTORE_PASSWORD,
               keyAlias: process.env.ANDROID_KEYSTORE_ALIAS || 'my-key-alias',
               keyPassword: process.env.ANDROID_KEYSTORE_PASSWORD,
