@@ -1,8 +1,8 @@
-export default {
+module.exports = {
   expo: {
     name: 'Yoroi',
     slug: 'yoroi',
-    owner: 'emurgo',
+    owner: 'stacky',
     version: '6.0.0',
     orientation: 'portrait',
     icon: './assets/yoroi/icon.png',
@@ -17,7 +17,7 @@ export default {
       supportsTablet: true,
       userInterfaceStyle: 'automatic',
       bundleIdentifier: 'com.emurgo',
-      buildNumber: process.env.BUILD_NUMBER || '1',
+      buildNumber: '801',
       infoPlist: {
         NSCameraUsageDescription:
           'Allow $(PRODUCT_NAME) to access your camera to scan QR codes',
@@ -53,7 +53,7 @@ export default {
         backgroundColor: '#ffffff',
       },
       package: 'com.emurgo',
-      versionCode: 8,
+      versionCode: 1000,
       edgeToEdgeEnabled: true,
       userInterfaceStyle: 'automatic',
       permissions: [
@@ -89,7 +89,7 @@ export default {
       SENTRY_DSN: process.env.SENTRY_DSN || '',
       UNSTOPPABLE_API_KEY: process.env.UNSTOPPABLE_API_KEY || '',
       COMMIT: process.env.COMMIT || '',
-      BUILD_VARIANT: 'PRODUCTION',
+      BUILD_VARIANT: 'PROD',
       FRONTEND_FEE_ADDRESS_MAINNET:
         process.env.FRONTEND_FEE_ADDRESS_MAINNET || '',
       FRONTEND_FEE_ADDRESS_PREPROD:

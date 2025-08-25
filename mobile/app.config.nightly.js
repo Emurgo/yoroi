@@ -1,8 +1,8 @@
-export default {
+module.exports = {
   expo: {
     name: 'Yoroi Nightly',
     slug: 'yoroi-nightly',
-    owner: 'emurgo',
+    owner: 'stacky',
     version: '6.0.0',
     orientation: 'portrait',
     icon: './assets/yoroi-nightly/icon.png',
