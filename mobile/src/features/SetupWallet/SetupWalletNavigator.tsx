@@ -21,25 +21,25 @@ import {VerifyRecoveryPhraseScreen} from './useCases/CreateWallet/VerifyRecovery
 import {WalletDetailsScreen} from './useCases/CreateWallet/WalletDetailsScreen'
 import {RestoreWalletDetailsScreen} from './useCases/RestoreWallet/RestoreWalletDetailsScreen'
 import {RestoreWalletScreen} from './useCases/RestoreWallet/RestoreWalletScreen'
+import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
+import {useTheme} from '@yoroi/theme'
 
 const Stack = createStackNavigator<any /* WalletInitRoutes */>()
 export const SetupWalletNavigator = () => {
   const strings = useStrings()
-  // const {atoms: ta, palette: p} = useTheme()
+  const {palette: p} = useTheme()
 
-  /* const navigationOptions = React.useMemo(
-    () => defaultStackNavigationOptions(ta, p),
-    [ta, p],
+  const navigationOptions = React.useMemo(
+    () => defaultStackNavigationOptions(p),
+    [p],
   )
- */
+
   return (
     <Stack.Navigator
-      screenOptions={
-        {
-          // ...navigationOptions,
-          // headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
-        }
-      }
+      screenOptions={{
+        ...navigationOptions,
+        // headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
+      }}
     >
       <Stack.Screen
         name="setup-wallet-choose-setup-type-init"

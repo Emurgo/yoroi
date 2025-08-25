@@ -346,8 +346,9 @@ export const useStrings = () => {
         titleMediaDetails: f(portfolioMessages.titleMediaDetails),
         title: f(portfolioMessages.title),
         search: f(portfolioMessages.search),
-        tokens: (qty: number) => f(globalMessages.tokens, {qty}),
-        nfts: (qty: number) => f(globalMessages.nfts, {qty}),
+        tokens: (countTokens: number) =>
+          f(portfolioMessages.tokens, {countTokens}),
+        nfts: (countNfts: number) => f(portfolioMessages.nfts, {countNfts}),
         tokensAvailable: (qty: number) => f(globalMessages.tokens, {qty}),
         metadata: f(portfolioMessages.metadata),
         nftCount: f(portfolioMessages.nftCount),

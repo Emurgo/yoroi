@@ -46,13 +46,13 @@ export const ButtonCard = ({
       />
 
       {icon ? (
-        <Text style={(a.heading_4_medium, {color: p.gray_max})}>
+        <Text style={[a.heading_4_regular, {color: p.gray_max}]}>
           {splitInLines(title)}
         </Text>
       ) : (
         <View style={[a.align_center, a.justify_center]}>
           <Text
-            style={[a.heading_4_medium, a.text_center, {color: p.gray_max}]}
+            style={[a.heading_4_regular, a.text_center, {color: p.gray_max}]}
           >
             {title}
           </Text>

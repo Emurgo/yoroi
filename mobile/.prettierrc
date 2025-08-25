@@ -6,12 +6,11 @@
   "tabWidth": 2,
   "trailingComma": "all",
   "useTabs": false,
-  "importOrder": [
-    "^@yoroi/(.*)$",
-    "<THIRD_PARTY_MODULES>",
-    "^~(.*)$",
-    "^\\.{1,2}/(.*)$"
-  ],
+
+  "plugins": ["@trivago/prettier-plugin-sort-imports"],
+  "pluginSearchDirs": ["."],
+
+  "importOrder": ["^@yoroi/(.*)$", "<THIRD_PARTY_MODULES>", "^~(.*)$", "^\\.{1,2}/(.*)$"],
   "importOrderSeparation": true,
   "importOrderSortSpecifiers": true
 }
