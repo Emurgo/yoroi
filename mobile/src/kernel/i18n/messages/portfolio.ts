@@ -46,7 +46,7 @@ export const portfolioMessages = defineMessages({
     defaultMessage: '!!! NFTs',
   },
   tokensAvailable: {
-    id: 'global.ok',
+    id: 'portfolio.portfolioTokensListScreen.tokensAvailable',
     defaultMessage: '!!!{qty} tokens available',
   },
   countLiquidityPoolsAvailable: {
@@ -74,7 +74,7 @@ export const portfolioMessages = defineMessages({
     defaultMessage: '!!!Total dApp Value',
   },
   liquidityPool: {
-    id: 'components.delegationsummary.userSummary.totalDelegated',
+    id: 'portfolio.portfolioTokensListScreen.liquidityPool',
     defaultMessage: '!!!Liquidity Pool',
   },
   openOrders: {
@@ -82,7 +82,7 @@ export const portfolioMessages = defineMessages({
     defaultMessage: '!!!Open Orders',
   },
   lendAndBorrow: {
-    id: 'components.delegationsummary.userSummary.totalDelegated',
+    id: 'portfolio.portfolioTokensListScreen.lendAndBorrow',
     defaultMessage: '!!!Lend and Borrow',
   },
   tokenDetail: {
@@ -90,7 +90,7 @@ export const portfolioMessages = defineMessages({
     defaultMessage: '!!!Token details',
   },
   availableSoon: {
-    id: 'components.delegationsummary.userSummary.title',
+    id: 'portfolio.portfolioTokensDetailScreen.availableSoon',
     defaultMessage: '!!!Available Soon',
   },
   noDataFound: {
@@ -98,19 +98,19 @@ export const portfolioMessages = defineMessages({
     defaultMessage: '!!!No data found',
   },
   value: {
-    id: 'components.delegationsummary.userSummary.totalDelegated',
+    id: 'portfolio.portfolioTokensListScreen.value',
     defaultMessage: '!!!Value',
   },
   dex: {
-    id: 'components.delegationsummary.userSummary.title',
+    id: 'portfolio.portfolioTokensListScreen.dex',
     defaultMessage: '!!!DEX',
   },
   lp: {
-    id: 'components.delegationsummary.userSummary.title',
+    id: 'portfolio.portfolioTokensListScreen.lp',
     defaultMessage: '!!!LP',
   },
   total: {
-    id: 'components.delegationsummary.userSummary.totalDelegated',
+    id: 'global.total',
     defaultMessage: '!!!Total',
   },
   assetPrice: {
@@ -126,11 +126,11 @@ export const portfolioMessages = defineMessages({
     defaultMessage: '!!!Transaction ID',
   },
   performance: {
-    id: 'components.delegationsummary.userSummary.totalRewards',
+    id: 'portfolio.portfolioTokensDetailScreen.performance',
     defaultMessage: '!!!Performance',
   },
   overview: {
-    id: 'components.delegationsummary.userSummary.title',
+    id: 'portfolio.portfolioTokensDetailScreen.overview',
     defaultMessage: '!!!Overview',
   },
   transactions: {
@@ -138,31 +138,31 @@ export const portfolioMessages = defineMessages({
     defaultMessage: '!!!Transactions',
   },
   _1_week: {
-    id: 'components.delegationsummary.userSummary.title',
+    id: 'portfolio.portfolioTokensDetailScreen.1_week',
     defaultMessage: '!!!1 Week',
   },
   _24_hours: {
-    id: 'components.delegationsummary.userSummary.title',
+    id: 'portfolio.portfolioTokensDetailScreen.24_hours',
     defaultMessage: '!!!24 Hours',
   },
   _1_month: {
-    id: 'components.delegationsummary.userSummary.title',
+    id: 'portfolio.portfolioTokensDetailScreen.1_month',
     defaultMessage: '!!!1 Month',
   },
   _6_months: {
-    id: 'components.delegationsummary.userSummary.title',
+    id: 'portfolio.portfolioTokensDetailScreen.6_months',
     defaultMessage: '!!!6 Months',
   },
   _1_year: {
-    id: 'components.delegationsummary.userSummary.title',
+    id: 'portfolio.portfolioTokensDetailScreen.1_year',
     defaultMessage: '!!!1 Year',
   },
   all_time: {
-    id: 'components.delegationsummary.userSummary.title',
+    id: 'portfolio.portfolioTokensDetailScreen.all_time',
     defaultMessage: '!!!All Time',
   },
   netInvested: {
-    id: 'components.delegationsummary.userSummary.totalDelegated',
+    id: 'portfolio.portfolioTokensDetailScreen.netInvested',
     defaultMessage: '!!!Net Invested',
   },
   bought: {
@@ -202,59 +202,59 @@ export const portfolioMessages = defineMessages({
     defaultMessage: '!!!Unknown',
   },
   assets: {
-    id: 'components.delegationsummary.userSummary.totalRewards',
+    id: 'portfolio.portfolioTokensDetailScreen.assets',
     defaultMessage: '!!!Assets',
   },
   marketData: {
-    id: 'components.delegationsummary.userSummary.title',
+    id: 'portfolio.portfolioTokensDetailScreen.marketData',
     defaultMessage: '!!!Market Data',
   },
   tokenPriceChange: {
-    id: 'components.delegationsummary.userSummary.totalRewards',
+    id: 'portfolio.portfolioTokensDetailScreen.tokenPriceChange',
     defaultMessage: '!!!Token Price Change',
   },
   tokenPrice: {
-    id: 'components.txhistory.txdetails.fee',
+    id: 'portfolio.portfolioTokensDetailScreen.tokenPrice',
     defaultMessage: '!!!Token Price',
   },
   marketCap: {
-    id: 'components.delegationsummary.userSummary.totalDelegated',
+    id: 'portfolio.portfolioTokensDetailScreen.marketCap',
     defaultMessage: '!!!Market Cap',
   },
   _24hVolume: {
-    id: 'components.delegationsummary.userSummary.totalDelegated',
+    id: 'portfolio.portfolioTokensDetailScreen._24hVolume',
     defaultMessage: '!!!24h Volume',
   },
   rank: {
-    id: 'components.delegationsummary.userSummary.title',
+    id: 'portfolio.portfolioTokensDetailScreen.rank',
     defaultMessage: '!!!Rank',
   },
   circulating: {
-    id: 'components.delegationsummary.userSummary.totalDelegated',
+    id: 'portfolio.portfolioTokensDetailScreen.circulating',
     defaultMessage: '!!!Circulating',
   },
   totalSupply: {
-    id: 'components.delegationsummary.userSummary.totalDelegated',
+    id: 'portfolio.portfolioTokensDetailScreen.totalSupply',
     defaultMessage: '!!!Total Supply',
   },
   maxSupply: {
-    id: 'components.delegationsummary.userSummary.totalDelegated',
+    id: 'portfolio.portfolioTokensDetailScreen.maxSupply',
     defaultMessage: '!!!Max Supply',
   },
   allTimeHigh: {
-    id: 'components.delegationsummary.userSummary.totalRewards',
+    id: 'portfolio.portfolioTokensDetailScreen.allTimeHigh',
     defaultMessage: '!!!All Time High',
   },
   allTimeLow: {
-    id: 'components.delegationsummary.userSummary.totalRewards',
+    id: 'portfolio.portfolioTokensDetailScreen.allTimeLow',
     defaultMessage: '!!!All Time Low',
   },
   info: {
-    id: 'components.txhistory.txdetails.txDetails',
+    id: 'portfolio.portfolioTokensDetailScreen.info',
     defaultMessage: '!!!Info',
   },
   website: {
-    id: 'components.delegationsummary.delegatedStakepoolInfo.fullDescriptionButtonLabel',
+    id: 'portfolio.portfolioTokensDetailScreen.website',
     defaultMessage: '!!!Website',
   },
   policyID: {
@@ -266,7 +266,7 @@ export const portfolioMessages = defineMessages({
     defaultMessage: '!!!Fingerprint',
   },
   news: {
-    id: 'components.delegationsummary.userSummary.title',
+    id: 'discover.filterOptions.child.news',
     defaultMessage: '!!!News',
   },
   detailsOn: {
@@ -274,19 +274,19 @@ export const portfolioMessages = defineMessages({
     defaultMessage: '!!!Details on',
   },
   totalPortfolioValue: {
-    id: 'components.delegationsummary.userSummary.totalDelegated',
+    id: 'portfolio.portfolioDashboardScreen.totalPortfolioValue',
     defaultMessage: '!!!Total Portfolio Value',
   },
   totalPortfolioValueTooltip: {
-    id: 'components.delegationsummary.userSummary.title',
+    id: 'portfolio.portfolioDashboardScreen.totalPortfolioValueTooltip',
     defaultMessage: '!!!Total portfolio value tooltip',
   },
   totalWalletValueTooltip: {
-    id: 'components.delegationsummary.userSummary.title',
+    id: 'portfolio.portfolioTokensListScreen.totalWalletValueTooltip',
     defaultMessage: '!!!Total wallet value tooltip',
   },
   totalDAppsValueTooltip: {
-    id: 'components.delegationsummary.userSummary.title',
+    id: 'portfolio.portfolioTokensListScreen.totalDAppsValueTooltip',
     defaultMessage: '!!!Total dApps value tooltip',
   },
   portfolioSwapTokensTitle: {
@@ -294,7 +294,7 @@ export const portfolioMessages = defineMessages({
     defaultMessage: '!!!Portfolio Swap Tokens Title',
   },
   portfolioSwapTokensDescription: {
-    id: 'global.ok',
+    id: 'portfolio.portfolioDashboardScreen.portfolioSwapTokensDescription',
     defaultMessage: '!!!Portfolio swap tokens description',
   },
   startSwapping: {
@@ -316,6 +316,10 @@ export const portfolioMessages = defineMessages({
   metadata: {
     id: 'nft.detail.metadata',
     defaultMessage: '!!!Metadata',
+  },
+  tokens: {
+    id: 'portfolio.portfolioDashboardScreen.tokens',
+    defaultMessage: '!!!Tokens ({countTokens})',
   },
   nftCount: {
     id: 'portfolio.nftCount',
