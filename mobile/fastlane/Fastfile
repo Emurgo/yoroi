@@ -63,7 +63,7 @@ platform :android do
   desc "Deploy Production to Play Store"
   lane :production do
     # Set environment variables
-    ENV['BUILD_VARIANT'] = 'PRODUCTION'
+    ENV['BUILD_VARIANT'] = 'PROD'
     ENV['EXPO_PUBLIC_APP_CONFIG'] = 'app.config.production.js'
     ENV['ANDROID_KEYSTORE_FILE'] = ENV['ANDROID_KEYSTORE_FILE'] || "#{ENV['HOME']}/.yoroi/android/production.keystore"
     
@@ -72,7 +72,7 @@ platform :android do
     
     # Build the app using Expo
     Dir.chdir("..") do
-      sh("EXPO_PUBLIC_APP_CONFIG=app.config.production.js BUILD_VARIANT=PRODUCTION npx expo run:android --variant release")
+      sh("EXPO_PUBLIC_APP_CONFIG=app.config.production.js BUILD_VARIANT=PROD npx expo run:android --variant release")
     end
     
     # Upload to Play Store Production with proper signing
@@ -139,7 +139,7 @@ platform :ios do
   desc "Deploy Production to App Store"
   lane :production do
     # Set environment variables
-    ENV['BUILD_VARIANT'] = 'PRODUCTION'
+    ENV['BUILD_VARIANT'] = 'PROD'
     ENV['EXPO_PUBLIC_APP_CONFIG'] = 'app.config.production.js'
     
     # Set up code signing for CI
@@ -158,8 +158,8 @@ platform :ios do
     set_version_ios
     
     # Build the app using Expo
-    Dir.chdir("..") do
-      sh("EXPO_PUBLIC_APP_CONFIG=app.config.production.js BUILD_VARIANT=PRODUCTION npx expo run:ios --configuration Release")
+   Dir.chdir("..") do
+      sh("EXPO_PUBLIC_APP_CONFIG=app.config.production.js BUILD_VARIANT=PROD npx expo run:ios --configuration Release")
     end
     
     # Upload to App Store with proper API key handling

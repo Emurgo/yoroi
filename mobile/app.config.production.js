@@ -16,6 +16,7 @@ export default {
       supportsTablet: true,
       userInterfaceStyle: 'automatic',
       bundleIdentifier: 'com.emurgo',
+      buildNumber: process.env.BUILD_NUMBER || '1',
       infoPlist: {
         NSCameraUsageDescription:
           'Allow $(PRODUCT_NAME) to access your camera to scan QR codes',
@@ -50,6 +51,7 @@ export default {
         backgroundColor: '#ffffff',
       },
       package: 'com.emurgo',
+      versionCode: 3,
       edgeToEdgeEnabled: true,
       userInterfaceStyle: 'automatic',
       permissions: [

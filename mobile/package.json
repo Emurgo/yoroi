@@ -1,6 +1,6 @@
 {
   "name": "yoroi-v2",
-  "version": "1.0.0",
+  "version": "6.0.0",
   "main": "index.ts",
   "scripts": {
     "start": "expo start -c",
@@ -176,5 +176,6 @@
   "overrides": {
     "@emurgo/csl-mobile-bridge-jsi": "1.0.0-alpha.6",
     "react-native-svg": "15.11.2"
-  }
+  },
+  "build": 3
 }

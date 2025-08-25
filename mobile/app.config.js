@@ -17,7 +17,7 @@ const getAppConfig = () => {
     expo: {
       name: 'Yoroi Dev',
       slug: 'yoroi-dev',
-      version: '1.0.0',
+      version: '6.0.0',
       orientation: 'portrait',
       icon: './assets/yoroi/icon.png',
       userInterfaceStyle: 'automatic',
