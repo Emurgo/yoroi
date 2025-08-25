@@ -1,7 +1,14 @@
 import {atoms as a, space as s, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
-import {Text, View, TextInput, KeyboardAvoidingView, Platform, Pressable} from 'react-native'
+import {
+  Text,
+  View,
+  TextInput,
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+} from 'react-native'
 
 import {Space} from '~/ui/Space/Space'
 
@@ -19,14 +26,7 @@ export type PinInputRef = {
 }
 
 export const PinInput = React.forwardRef<PinInputRef, Props>((props, ref) => {
-  const {
-    enabled = true,
-    pinMaxLength,
-    title,
-    subtitles = [],
-    onDone,
-    onGoBack,
-  } = props
+  const {enabled = true, pinMaxLength, title, subtitles = [], onDone} = props
   const {atoms: ta} = useTheme()
   const [pin, setPin] = React.useState('')
   const inputRef = React.useRef<TextInput | null>(null)
@@ -110,9 +110,7 @@ export const PinInput = React.forwardRef<PinInputRef, Props>((props, ref) => {
           keyboardType="number-pad"
           secureTextEntry
           maxLength={pinMaxLength}
-          style={[
-          {opacity: 0, position: 'absolute', width: 1, height: 1}
-          ]}
+          style={[{opacity: 0, position: 'absolute', width: 1, height: 1}]}
           placeholder=""
           autoFocus
           blurOnSubmit={false}
