@@ -184,6 +184,5 @@
   "overrides": {
     "@emurgo/csl-mobile-bridge-jsi": "1.0.0-alpha.6",
     "react-native-svg": "15.11.2"
-  },
-  "build": 11
+  }
 }
