@@ -145,7 +145,7 @@ export const WalletListItem = ({walletMeta, onPress}: Props) => {
         >
           <Icon.WalletAvatar image={walletMeta.avatar} />
 
-          <Space.Height.md />
+          <Space.Width.md />
 
           <View style={[a.justify_between, a.flex_1]}>
             <Text

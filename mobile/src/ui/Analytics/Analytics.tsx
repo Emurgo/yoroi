@@ -209,7 +209,7 @@ const CommonContent = ({
           <View key={key} style={[a.flex_row, a.align_center]}>
             <View style={[a.pr_sm]}>{icon}</View>
 
-            <Text style={[a.body_1_lg_regular]}>
+            <Text style={[a.body_1_lg_regular, ta.text_gray_max]}>
               {key === 'private' || key === 'noip' || key === 'nosell'
                 ? strings.ui[key](bold)
                 : strings.ui[key]}
