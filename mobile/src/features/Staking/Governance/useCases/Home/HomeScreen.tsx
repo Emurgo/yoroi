@@ -31,6 +31,7 @@ import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
 import {TransactionInfo} from '~/wallets/types/other'
 
+import {useYoroiConfig} from '~/kernel/features'
 import {Action} from '../../common/Action/Action'
 import {
   mapStakingKeyStateToGovernanceAction,
@@ -39,7 +40,6 @@ import {
 import {useNavigateTo} from '../../common/navigation'
 import {GovernanceVote} from '../../types'
 import {EnterDrepIdModal} from '../EnterDrepIdModal/EnterDrepIdModal'
-import {useYoroiConfig} from '~/kernel/features'
 
 export const HomeScreen = () => {
   const {wallet} = useSelectedWallet()
@@ -261,7 +261,7 @@ const NeverParticipatedInGovernanceVariant = () => {
   const navigateTo = useNavigateTo()
   const {wallet, meta} = useSelectedWallet()
   const {manager} = useGovernance()
-  const {openModal} = useModal()
+  const {openModal, closeModal} = useModal()
   const stakingInfo = useStakingInfo(wallet)
   const {track} = useMetrics()
   const [pendingVote, setPendingVote] = React.useState<
@@ -315,6 +315,7 @@ const NeverParticipatedInGovernanceVariant = () => {
         </GovernanceProvider>
       ),
       height: 360,
+      resizable: true,
     })
   }
 
