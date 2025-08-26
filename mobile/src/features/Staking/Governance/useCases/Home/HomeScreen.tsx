@@ -25,13 +25,13 @@ import {useStakingKey} from '~/features/Staking/hooks/useStakingKey'
 import {useTransactionInfos} from '~/features/Transactions/hooks/useTransactionInfos'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useWalletEvent} from '~/features/WalletManager/hooks/useWalletEvent'
+import {useYoroiConfig} from '~/kernel/features'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
 import {TransactionInfo} from '~/wallets/types/other'
 
-import {useYoroiConfig} from '~/kernel/features'
 import {Action} from '../../common/Action/Action'
 import {
   mapStakingKeyStateToGovernanceAction,
@@ -261,7 +261,7 @@ const NeverParticipatedInGovernanceVariant = () => {
   const navigateTo = useNavigateTo()
   const {wallet, meta} = useSelectedWallet()
   const {manager} = useGovernance()
-  const {openModal, closeModal} = useModal()
+  const {openModal} = useModal()
   const stakingInfo = useStakingInfo(wallet)
   const {track} = useMetrics()
   const [pendingVote, setPendingVote] = React.useState<

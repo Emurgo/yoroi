@@ -2,12 +2,12 @@ import {atoms as a, space as s, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
 import {
-  Text,
-  View,
-  TextInput,
   KeyboardAvoidingView,
   Platform,
   Pressable,
+  Text,
+  TextInput,
+  View,
 } from 'react-native'
 
 import {Space} from '~/ui/Space/Space'

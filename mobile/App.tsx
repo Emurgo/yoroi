@@ -10,10 +10,10 @@ import {TransferProvider} from '@yoroi/transfer'
 
 import * as React from 'react'
 
+import {ReviewTxProvider} from '~/features/ReviewTx/common/ReviewTxProvider'
 import {AppNavigator} from '~/kernel/navigation/AppNavigator'
 import {Modal} from '~/ui/Modal/ModalScreen'
 
-import {ReviewTxProvider} from '~/features/ReviewTx/common/ReviewTxProvider'
 import {PlatformShell} from './PlatformShell'
 import {AuthProvider} from './src/features/Auth/context/AuthProvider'
 import {CopyProvider} from './src/features/Copy/context/CopyProvider'
@@ -24,6 +24,7 @@ import {CurrencyProvider} from './src/features/Settings/useCases/changeAppSettin
 import {AutomaticWalletOpenerProvider} from './src/features/WalletManager/context/AutomaticWalletOpeningProvider'
 import {WalletManagerProvider} from './src/features/WalletManager/context/WalletManagerProvider'
 import {walletManager} from './src/features/WalletManager/wallet-manager'
+import {useFonts} from './src/hooks/useFonts'
 import {ConnectionProvider} from './src/kernel/connection/ConnectionProvider'
 import {LanguageProvider} from './src/kernel/i18n/LanguageProvider'
 import {useMigrations} from './src/kernel/storage/migrations/useMigrations'
@@ -38,7 +39,6 @@ import {
 } from './src/kernel/storage/storages'
 import {CrashBoundary} from './src/ui/CrashBoundary/CrashBoundary'
 import {LoadingOverlayProvider} from './src/ui/LoadingOverlay/context'
-import {useFonts} from './src/hooks/useFonts'
 
 const catalystApi = catalystApiMaker()
 const catalystManager = catalystManagerMaker({

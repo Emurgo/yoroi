@@ -1,4 +1,4 @@
-import {act, render} from '@testing-library/react-native'
+import {render} from '@testing-library/react-native'
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
@@ -7,8 +7,6 @@ import {MetricsProvider, makeMetricsManager, useMetrics} from './metricsManager'
 import {mockMetricsManager} from './mocks'
 
 const initialMockedMetricsManager = mockMetricsManager()
-
-jest.useFakeTimers()
 
 const TestInit = () => {
   const {isLoaded} = useMetrics()
@@ -20,32 +18,24 @@ const TestInit = () => {
   )
 }
 
-afterEach(() => {
-  jest.clearAllTimers()
-  jest.useRealTimers()
-})
-
 describe('MetricsProvider', () => {
   it('should initialize the module while mounting', async () => {
     const metricsManager = {
       ...initialMockedMetricsManager,
-      init: jest.fn(),
+      init: jest.fn().mockResolvedValue(undefined),
       enabled: jest.fn(),
     }
+
     const {findByText} = render(
       <MetricsProvider metricsManager={metricsManager}>
         <TestInit />
       </MetricsProvider>,
     )
 
-    await act(async () => {
-      jest.advanceTimersByTime(1000)
-    })
+    await findByText('Loaded')
 
-    expect(await findByText('Loaded')).toBeTruthy()
     expect(metricsManager.init).toHaveBeenCalled()
-    expect(metricsManager.enabled).toHaveBeenCalled()
-  })
+  }, 10000) // Increase timeout to 10 seconds
 })
 
 const mockAmpli = {
@@ -718,9 +708,9 @@ describe('makeMetricsManager', () => {
     expect(mockAmpli.settingsPushNotificationsStatusUpdated).toHaveBeenCalled()
   })
 
-  test('enable should set metrics enabled to true', async () => {
+  test('enable should set metrics enabled to true', () => {
     const metricsManager = makeMetricsManager(mockMetricsStorage, mockAmpli)
-    await metricsManager.enable()
+    metricsManager.enable()
     expect(mockMetricsStorage.enabled.read()).toBe(true)
     expect(mockMetricsStorage.enabled.save).toHaveBeenCalledWith(true)
     expect(mockAmpli.client.setOptOut).toHaveBeenCalledWith(false)

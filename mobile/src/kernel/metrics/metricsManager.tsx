@@ -73,9 +73,11 @@ export const makeMetricsManager = (
       })
 
       // Some mocks may return void instead of an object containing a promise
-      const loadPromise = (loadResult && loadResult.promise) || Promise.resolve()
+      const loadPromise =
+        (loadResult && loadResult.promise) || Promise.resolve()
 
-      await loadPromise.then(() => {
+      await loadPromise
+        .then(() => {
           if (environment === 'development') {
             metricsModule.client.add({
               name: 'info-plugin',
@@ -383,7 +385,7 @@ export const MetricsProvider = ({
         setIsLoaded(true)
       }
     }
-    
+
     initMetrics()
   }, [metricsManager])
 
