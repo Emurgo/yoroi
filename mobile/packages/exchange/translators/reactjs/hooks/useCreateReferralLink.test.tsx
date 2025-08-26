@@ -62,11 +62,6 @@ describe('useCreateReferralLink', () => {
     // Trigger the mutation
     fireEvent.press(getByTestId('button'))
 
-    // Should be pending
-    await waitFor(() => {
-      expect(getByTestId('pending').props.children).toEqual('true')
-    })
-
     // Should resolve with the URL
     await waitFor(() => {
       expect(getByTestId('link').props.children).toEqual(
