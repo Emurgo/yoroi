@@ -1,0 +1,75 @@
+{
+  "cli": {
+    "version": ">= 5.9.1",
+    "appVersionSource": "remote"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal"
+    },
+    "preview": {
+      "distribution": "internal"
+    },
+    "nightly": {
+      "android": {
+        "buildType": "app-bundle",
+        "gradleCommand": ":app:bundleRelease",
+        "env": {
+          "BUILD_VARIANT": "NIGHTLY",
+          "ANDROID_PACKAGE_NAME": "com.emurgo.nightly",
+          "ANDROID_KEYSTORE_FILE": "$HOME/.yoroi/android/nightly.keystore",
+          "ANDROID_KEYSTORE_ALIAS": "my-key-alias",
+          "ANDROID_KEYSTORE_PASSWORD": "${ANDROID_KEYSTORE_PASS}",
+          "ANDROID_TRACK": "internal",
+          "BUILD_NUMBER": "${BUILD_NUMBER}",
+          "RUSTUP_HOME": "/home/expo/.rustup",
+          "CARGO_HOME": "/home/expo/.cargo",
+          "PATH": "/home/expo/.cargo/bin:$PATH"
+        }
+      },
+      "ios": {
+        "buildConfiguration": "Release",
+        "env": {
+          "BUILD_VARIANT": "NIGHTLY",
+          "APP_STORE_BUNDLE_ID": "com.emurgo.yoroi-nightly",
+          "BUILD_NUMBER": "${BUILD_NUMBER}",
+          "RUSTUP_HOME": "/home/expo/.rustup",
+          "CARGO_HOME": "/home/expo/.cargo",
+          "PATH": "/home/expo/.cargo/bin:/usr/bin:$PATH"
+        },
+        "image": "latest",
+        "prebuildCommand": "./scripts/build-ios.sh"
+      }
+    },
+    "production": {
+      "android": {
+        "buildType": "app-bundle",
+        "gradleCommand": ":app:bundleRelease",
+        "env": {
+          "BUILD_VARIANT": "PROD",
+          "ANDROID_PACKAGE_NAME": "com.emurgo",
+          "ANDROID_KEYSTORE_FILE": "$HOME/.yoroi/android/production.keystore",
+          "ANDROID_KEYSTORE_ALIAS": "my-key-alias",
+          "ANDROID_KEYSTORE_PASSWORD": "${ANDROID_KEYSTORE_PASS}",
+          "ANDROID_TRACK": "production",
+          "BUILD_NUMBER": "${BUILD_NUMBER}",
+          "RUSTUP_HOME": "/home/expo/.rustup",
+          "CARGO_HOME": "/home/expo/.cargo",
+          "PATH": "/home/expo/.cargo/bin:$PATH"
+        }
+      },
+      "ios": {
+        "buildConfiguration": "Release",
+        "env": {
+          "BUILD_VARIANT": "PROD",
+          "APP_STORE_BUNDLE_ID": "com.emurgo.yoroi",
+          "BUILD_NUMBER": "${BUILD_NUMBER}",
+          "RUSTUP_HOME": "/home/expo/.rustup",
+          "CARGO_HOME": "/home/expo/.cargo",
+          "PATH": "/home/expo/.cargo/bin:$PATH"
+        }
+      }
+    }
+  }
+}

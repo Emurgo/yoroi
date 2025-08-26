@@ -4,5 +4,10 @@ babel.config.js
 jest.config.js
 jest.setup.js
 coverage/ 
+app.config.js
+app.config.nightly.js
+app.config.production.js
 metro.config.js
+metro.config.nightly.js
+metro.config.production.js
 src/kernel/i18n/polyfills.ts

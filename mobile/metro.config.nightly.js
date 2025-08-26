@@ -1,4 +1,4 @@
-// metro.config.js
+// metro.config.nightly.js
 const {getDefaultConfig} = require('expo/metro-config')
 const path = require('path')
 
@@ -8,6 +8,9 @@ const config = getDefaultConfig(projectRoot, {
   unstable_enableNewArchitecture: true,
   experimentalImportBundleSupport: true,
 })
+
+// Set the app config to use nightly configuration
+process.env.EXPO_PUBLIC_APP_CONFIG = 'app.config.nightly.js'
 
 // -- resolver --
 config.resolver.resolveRequest = (context, moduleName, platform) => {

@@ -268,7 +268,7 @@ export const transactionsMessages = defineMessages({
     defaultMessage: '!!!Self',
   },
   directionMessagesMULTI: {
-    id: 'components.organizeWallet.description',
+    id: 'components.transactions.directionMessages.MULTI',
     defaultMessage: '!!!Multi',
   },
   addressPrefixReceive: {
