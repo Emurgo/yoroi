@@ -410,6 +410,9 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
           navigate.reviewSwap()
         }
       })
+      .catch((error) => {
+        setIsLoading(false)
+      })
   }, [
     getInputs,
     navigate,
