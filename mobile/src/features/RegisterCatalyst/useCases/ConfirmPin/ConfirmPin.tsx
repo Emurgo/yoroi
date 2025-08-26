@@ -15,6 +15,7 @@ import {BACKSPACE, NumericKeyboard} from '~/ui/NumericKeyboard'
 import {Space} from '~/ui/Space/Space'
 import {generatePrivateKeyForCatalyst} from '~/wallets/cardano/catalyst'
 import {encryptWithPassword} from '~/wallets/cardano/catalyst/catalystCipher'
+
 import {useNavigateTo} from '../../CatalystNavigator'
 import {
   Actions,
@@ -277,7 +278,7 @@ export const ConfirmPin = () => {
       <Padding style={a.px_lg}>
         <Actions>
           <Button
-            onPress={() => onNext()}
+            onPress={onNext}
             title={strings.registerCatalyst.confirm}
             disabled={!done || isLoading}
           />
@@ -328,10 +329,7 @@ const useGenerateVotingKeys = (
       const catalystKeyHex = Buffer.from(catalystKey).toString('hex')
 
       const password = new Uint8Array(Buffer.from(pin.split('').map(Number)))
-      const votingKeyEncrypted = await encryptWithPassword(
-        password,
-        catalystKey,
-      )
+      const votingKeyEncrypted = encryptWithPassword(password, catalystKey)
       return {
         catalystKeyHex,
         votingKeyEncrypted,

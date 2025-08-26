@@ -50,10 +50,10 @@ export function generatePbkdf2Key(password: Uint8Array, salt: Buffer): Buffer {
   }
 }
 
-export async function encryptWithPassword(
+export function encryptWithPassword(
   passwordBuf: Uint8Array,
   dataBytes: Uint8Array,
-): Promise<string> {
+): string {
   try {
     const salt = Buffer.from(generateRandomHexString(2 * 16), 'hex')
 
@@ -90,10 +90,10 @@ export async function encryptWithPassword(
   }
 }
 
-export async function decryptWithPassword(
+export function decryptWithPassword(
   passwordBuf: Uint8Array,
   ciphertextHex: string,
-): Promise<string> {
+): string {
   const ciphertext = Buffer.from(ciphertextHex, 'hex')
 
   const salt = ciphertext.slice(PROTO_SIZE, SALT_SIZE + PROTO_SIZE)
