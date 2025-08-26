@@ -1,8 +1,8 @@
 // @ts-ignore
+import {chacha20poly1305} from '@noble/ciphers/chacha'
 import 'react-native-get-random-values'
 // @ts-ignore
 import QuickCrypto from 'react-native-quick-crypto'
-import {chacha20poly1305} from '@noble/ciphers/chacha'
 
 const PBKDF_ITERATIONS = 12983
 const SALT_SIZE = 16
@@ -27,10 +27,7 @@ export function generateRandomHexString(length: number): string {
   )
 }
 
-export async function generatePbkdf2Key(
-  password: Uint8Array,
-  salt: Buffer,
-): Promise<Buffer> {
+export function generatePbkdf2Key(password: Uint8Array, salt: Buffer): Buffer {
   try {
     const keyArrayBuffer = QuickCrypto.pbkdf2Sync(
       Buffer.from(password),
@@ -64,7 +61,7 @@ export async function encryptWithPassword(
 
     const data = Buffer.from(dataBytes)
 
-    const key = await generatePbkdf2Key(passwordBuf, salt)
+    const key = generatePbkdf2Key(passwordBuf, salt)
 
     // Use @noble/ciphers for ChaCha20-Poly1305 encryption
     try {
@@ -110,7 +107,7 @@ export async function decryptWithPassword(
     throw new Error('not enough data to decrypt')
   }
 
-  const key = await generatePbkdf2Key(passwordBuf, salt)
+  const key = generatePbkdf2Key(passwordBuf, salt)
 
   // Use @noble/ciphers for ChaCha20-Poly1305 decryption
   const keyUint8 = new Uint8Array(key)
