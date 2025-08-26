@@ -139,7 +139,6 @@ const Content = ({filter}: {filter: Filter}) => {
   const {visible: isSearching} = useSearch()
   const swapForm = useSwap()
   const {wallet} = useSelectedWallet()
-  const network = wallet.networkManager.network
   const {palette: p} = useTheme()
 
   const orders = swapForm.orders?.filter(
