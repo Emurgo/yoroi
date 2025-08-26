@@ -68,7 +68,7 @@ export const SubmittedTxScreen = () => {
   )
 }
 
-const Actions = ({children}: {children: React.ReactNode}) => {
+const Actions = ({children}: React.PropsWithChildren) => {
   const {palette: p} = useTheme()
   return (
     <View
