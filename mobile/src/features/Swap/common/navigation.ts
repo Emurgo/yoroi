@@ -23,7 +23,7 @@ export const useNavigateTo = () => {
           params: {
             screen: 'swap',
             params: {
-              screen: 'main',
+              screen: 'review',
             },
           },
         },
