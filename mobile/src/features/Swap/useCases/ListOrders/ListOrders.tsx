@@ -70,7 +70,7 @@ export const ListOrders = () => {
 
   return (
     <View
-      style={[a.flex_1, a.p_lg, a.gap_lg, {backgroundColor: p.bg_color_max}]}
+      style={[a.flex_1, a.p_lg, a.gap_lg, ta.bg_color_max]}
     >
       <View style={[a.flex_row, a.gap_md, a.justify_center, a.align_center]}>
         <View>
