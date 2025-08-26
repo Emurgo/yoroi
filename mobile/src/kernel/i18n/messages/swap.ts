@@ -81,6 +81,14 @@ export const swapMessages = defineMessages({
     id: 'swap.swapScreen.selectToken',
     defaultMessage: '!!!Select Token',
   },
+  listOrdersTestnetNoticeTitle: {
+    id: 'swap.listOrders.testnetNotice.title',
+    defaultMessage: '!!!Swap orders are not available on testnet',
+  },
+  listOrdersTestnetNoticeDescription: {
+    id: 'swap.listOrders.testnetNotice.description',
+    defaultMessage: '!!!Please switch to mainnet to view your orders',
+  },
   searchTokens: {
     id: 'portfolio.portfolioTokensListScreen.searchTokens',
     defaultMessage: '!!!Search Tokens',
