@@ -14,7 +14,7 @@ import {SuccessfulTxIcon} from '~/ui/SuccessfulTxIcon/SuccessfulTxIcon'
 export const SubmittedTxScreen = () => {
   useBlockGoBack()
   const strings = useStrings()
-  const {palette: p} = useTheme()
+  const {palette: p, atoms: ta} = useTheme()
   const {resetToTxHistory} = useWalletNavigation()
 
   return (
