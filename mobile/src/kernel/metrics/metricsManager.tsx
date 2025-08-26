@@ -58,21 +58,24 @@ export const makeMetricsManager = (
   const init = async () => {
     const isEnabled = metricsStorage.enabled.read()
     if (!metricsModule.isLoaded) {
-      await metricsModule
-        .load({
-          environment,
-          client: {
-            configuration: {
-              optOut: !isEnabled,
-              flushIntervalMillis: flushIntervalMs,
-              trackingOptions: {
-                ipAddress: false,
-              },
+      const loadResult = metricsModule.load({
+        environment,
+        client: {
+          configuration: {
+            optOut: !isEnabled,
+            flushIntervalMillis: flushIntervalMs,
+            trackingOptions: {
+              ipAddress: false,
             },
           },
-          disabled: !isEnabled,
-        })
-        .promise.then(() => {
+        },
+        disabled: !isEnabled,
+      })
+
+      // Some mocks may return void instead of an object containing a promise
+      const loadPromise = (loadResult && loadResult.promise) || Promise.resolve()
+
+      await loadPromise.then(() => {
           if (environment === 'development') {
             metricsModule.client.add({
               name: 'info-plugin',
@@ -368,17 +371,20 @@ export const MetricsProvider = ({
   )
 
   React.useEffect(() => {
-    metricsManager
-      .init()
-      .catch((error) => {
+    const initMetrics = async () => {
+      try {
+        await metricsManager.init()
+      } catch (error) {
         logger.error('metricsManager init failed', {
           error,
           origin: 'metricsManager',
         })
-      })
-      .finally(() => {
+      } finally {
         setIsLoaded(true)
-      })
+      }
+    }
+    
+    initMetrics()
   }, [metricsManager])
 
   const context = React.useMemo(
