@@ -147,7 +147,7 @@ const Content = ({filter}: {filter: Filter}) => {
       (status !== 'open' && status !== 'canceled' && filter === 'completed'),
   )
 
-  const isTestnet = network !== Chain.Network.Mainnet
+  const isTestnet = !wallet.networkManager.isMainnet
 
   if (isTestnet) {
     return (
