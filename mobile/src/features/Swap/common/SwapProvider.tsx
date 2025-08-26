@@ -285,7 +285,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
       state.tokenInInput.tokenId ?? undefinedToken,
     )
     const tokenBalance =
-      Number(tokenAmount?.quantity ?? 0n) /
+      Number(tokenAmount?.quantity ?? BigInt(0)) /
       10 ** (tokenAmount?.info?.decimals ?? 0)
     const hasEnoughBalance = tokenBalance >= Number(state.tokenInInput.value)
     if (!hasEnoughBalance) {

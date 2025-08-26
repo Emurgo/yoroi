@@ -6,12 +6,10 @@ import {Text, View} from 'react-native'
 import {ErrorLogo} from '~/features/Exchange/illustrations/ErrorLogo'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
-import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
 
-export const ErrorScreen = () => {
+export const ErrorScreen = ({onClose}: {onClose?: () => void}) => {
   const strings = useStrings()
-  const {closeModal} = useModal()
   const {atoms: ta} = useTheme()
 
   return (
@@ -37,7 +35,7 @@ export const ErrorScreen = () => {
         testID="rampOnOffErrorCloseButton"
         title={strings.global.close}
         style={a.px_lg}
-        onPress={closeModal}
+        onPress={onClose}
       />
     </View>
   )
