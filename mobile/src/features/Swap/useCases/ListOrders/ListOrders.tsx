@@ -53,7 +53,7 @@ export const ListOrders = () => {
     onBack: navigateToTxHistory,
   })
 
-  const isTestnet = network !== Chain.Network.Mainnet
+  const isTestnet = !wallet.networkManager.isMainnet
 
   if (isTestnet) {
     return (
