@@ -20,7 +20,7 @@ export const SubmittedTxScreen = () => {
   return (
     <SafeArea
       style={[
-        {backgroundColor: p.bg_color_max},
+        ta.bg_color_max,
         a.p_lg,
         a.flex_1,
         a.align_center,
