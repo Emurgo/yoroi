@@ -1,5 +1,6 @@
 import {
-  parseBoolean,
+  isBoolean,
+  parseSafe,
   useAsyncStorage,
   useMutationWithInvalidations,
 } from '@yoroi/common'
@@ -727,9 +728,10 @@ const useShowOperationsNotice = (operations: Operations) => {
   const query = useSuspenseQuery({
     queryKey: ['useShowOperationsNotice'],
     queryFn: () =>
-      storage
-        .getItem(operationsNoticeShownKey)
-        .then((value: string | null) => parseBoolean(value) ?? true),
+      storage.getItem(operationsNoticeShownKey, (value: string | null) => {
+        const parsed = parseSafe(value)
+        return isBoolean(parsed) ? parsed : true
+      }),
   })
 
   React.useEffect(() => {
