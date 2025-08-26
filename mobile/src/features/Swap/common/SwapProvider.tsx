@@ -341,7 +341,31 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
           })
         }
       })
-  }, [state, swapManager.api])
+      .catch((error) => {
+        // Handle unhandled errors in estimate API call
+        action({
+          type: SwapActionType.EstimateError,
+          value: {
+            status: -1,
+            message: 'Failed to estimate swap. Please try again.',
+            responseData: {},
+          },
+        })
+      })
+  }, [
+    state.needsNewEstimate,
+    state.tokenInInput.tokenId,
+    state.tokenOutInput.tokenId,
+    state.tokenInInput.value,
+    state.tokenOutInput.value,
+    state.slippageInput.value,
+    state.lastInputTouched,
+    state.orderType,
+    state.wantedPrice,
+    state.selectedProtocol.value,
+    swapManager.api,
+    action,
+  ])
 
   const create = React.useCallback(async () => {
     if (
@@ -412,6 +436,14 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
       })
       .catch((error) => {
         setIsLoading(false)
+        action({
+          type: SwapActionType.CreateError,
+          value: {
+            status: -1,
+            message: 'Failed to create swap. Please try again.',
+            responseData: {},
+          },
+        })
       })
   }, [
     getInputs,
@@ -528,12 +560,18 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
         draft.lastInputTouched = state.lastInputTouched
         draft.tokenInInput.error = action.value
         draft.needsNewEstimate = false
+        if (action.value !== null) {
+          draft.canSwap = false
+        }
         break
 
       case SwapActionType.TokenOutErrorChanged:
         draft.lastInputTouched = state.lastInputTouched
         draft.tokenOutInput.error = action.value
         draft.needsNewEstimate = false
+        if (action.value !== null) {
+          draft.canSwap = false
+        }
         break
 
       case SwapActionType.SlippageInputChanged:
@@ -573,6 +611,7 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
         draft.lastInputTouched = state.lastInputTouched
         draft.tokenInInput.error = null
         draft.tokenOutInput.error = null
+        draft.canSwap = false
         break
 
       case SwapActionType.ResetAmounts:
@@ -581,6 +620,7 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
 
         draft.tokenInInput.error = null
         draft.tokenOutInput.error = null
+        draft.canSwap = false
         break
 
       case SwapActionType.ResetForm:
@@ -592,7 +632,8 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
         draft.needsNewEstimate = false
         draft.estimate = action.value
         draft.tokenOutInput.error = null
-        draft.canSwap = true
+        // Only enable swap if there are no input errors
+        draft.canSwap = state.tokenInInput.error === null
 
         if (state.lastInputTouched === 'in') {
           draft.tokenOutInput.value = String(
@@ -619,6 +660,7 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
         draft.needsNewEstimate = false
         draft.createTx = undefined
         draft.tokenOutInput.error = action.value.message
+        draft.canSwap = false
         break
 
       default:
