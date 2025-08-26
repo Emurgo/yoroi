@@ -52,44 +52,23 @@ export const ListOrders = () => {
     onBack: navigateToTxHistory,
   })
 
-<<<<<<< HEAD
   const isTestnet = !wallet.networkManager.isMainnet
-=======
-  const isTestnet = network !== Chain.Network.Mainnet
->>>>>>> origin/feature/swap-tx-review-integration
 
   if (isTestnet) {
     return (
       <View style={[a.flex_1, a.gap_lg, a.justify_center, a.align_center]}>
-<<<<<<< HEAD
         <Text style={[a.heading_3_medium, ta.text_gray_medium]}>
-          Swap orders are not available on testnet
+          {strings.swap.listOrdersTestnetNoticeTitle}
         </Text>
         <Text style={[a.body_1_lg_regular, ta.text_gray_low]}>
-=======
-        <Text style={[a.heading_3_medium, {color: p.text_gray_medium}]}>
-          Swap orders are not available on testnet
-        </Text>
-        <Text style={[a.body_1_lg_regular, {color: p.text_gray_low}]}>
->>>>>>> origin/feature/swap-tx-review-integration
-          Please switch to mainnet to view your orders
+          {strings.swap.listOrdersTestnetNoticeDescription}
         </Text>
       </View>
     )
   }
 
   return (
-<<<<<<< Updated upstream
-    <View
-<<<<<<< HEAD
-      style={[a.flex_1, a.p_lg, a.gap_lg, ta.bg_color_max]}
-=======
-      style={[a.flex_1, a.p_lg, a.gap_lg, {backgroundColor: p.bg_color_max}]}
->>>>>>> origin/feature/swap-tx-review-integration
-    >
-=======
     <View style={[a.flex_1, a.p_lg, a.gap_lg, ta.bg_color_max]}>
->>>>>>> Stashed changes
       <View style={[a.flex_row, a.gap_md, a.justify_center, a.align_center]}>
         <View>
           <Button
@@ -157,15 +136,8 @@ const Content = ({filter}: {filter: Filter}) => {
   const {visible: isSearching} = useSearch()
   const swapForm = useSwap()
   const {wallet} = useSelectedWallet()
-<<<<<<< Updated upstream
-<<<<<<< HEAD
-=======
-  const network = wallet.networkManager.network
->>>>>>> origin/feature/swap-tx-review-integration
   const {palette: p} = useTheme()
-=======
   const {atoms: ta} = useTheme()
->>>>>>> Stashed changes
 
   const orders = swapForm.orders?.filter(
     ({status}) =>
@@ -173,31 +145,16 @@ const Content = ({filter}: {filter: Filter}) => {
       (status !== 'open' && status !== 'canceled' && filter === 'completed'),
   )
 
-<<<<<<< HEAD
   const isTestnet = !wallet.networkManager.isMainnet
-=======
-  const isTestnet = network !== Chain.Network.Mainnet
->>>>>>> origin/feature/swap-tx-review-integration
 
   if (isTestnet) {
     return (
       <View style={[a.flex_1, a.gap_lg, a.justify_center, a.align_center]}>
-<<<<<<< HEAD
         <Text style={[a.heading_3_medium, ta.text_gray_medium]}>
           {strings.swap.listOrdersTestnetNoticeTitle}
         </Text>
         <Text style={[a.body_1_lg_regular, ta.text_gray_low]}>
-<<<<<<< Updated upstream
-=======
-        <Text style={[a.heading_3_medium, {color: p.text_gray_medium}]}>
-          Swap orders are not available on testnet
-        </Text>
-        <Text style={[a.body_1_lg_regular, {color: p.text_gray_low}]}>
->>>>>>> origin/feature/swap-tx-review-integration
-          Please switch to mainnet to view your orders
-=======
           {strings.swap.listOrdersTestnetNoticeDescription}
->>>>>>> Stashed changes
         </Text>
       </View>
     )
