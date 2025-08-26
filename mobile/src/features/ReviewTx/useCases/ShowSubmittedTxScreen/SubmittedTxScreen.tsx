@@ -28,7 +28,6 @@ export const SubmittedTxScreen = () => {
       ]}
     >
       <Space.Height._2xl />
-      <Space.Height._2xl />
 
       <SuccessfulTxIcon />
 
