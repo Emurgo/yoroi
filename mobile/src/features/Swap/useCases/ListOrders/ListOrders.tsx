@@ -58,7 +58,7 @@ export const ListOrders = () => {
   if (isTestnet) {
     return (
       <View style={[a.flex_1, a.gap_lg, a.justify_center, a.align_center]}>
-        <Text style={[a.heading_3_medium, {color: p.text_gray_medium}]}>
+        <Text style={[a.heading_3_medium, ta.text_gray_medium]}>
           Swap orders are not available on testnet
         </Text>
         <Text style={[a.body_1_lg_regular, {color: p.text_gray_low}]}>
