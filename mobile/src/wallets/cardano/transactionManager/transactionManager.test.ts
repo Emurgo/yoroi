@@ -4,6 +4,7 @@ import DeviceInfo from 'react-native-device-info'
 
 import {rootStorage} from '~/kernel/storage/storages'
 
+import {Transaction} from '../../types/other'
 import {ApiHistoryError} from '../errors'
 import {
   mockTx,
@@ -21,7 +22,6 @@ import {
   syncTxs,
   toCachedTx,
 } from './transactionManager'
-import {Transaction} from '../../types/other'
 
 jest.mock('../api/api', () => ({
   getTipStatus: jest.fn().mockResolvedValue(mockedTipStatusResponse),

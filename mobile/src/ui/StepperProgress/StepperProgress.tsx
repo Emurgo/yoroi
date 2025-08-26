@@ -1,7 +1,7 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
-import {StyleProp, Text, ViewStyle, View} from 'react-native'
+import {StyleProp, Text, View, ViewStyle} from 'react-native'
 import Animated, {Layout} from 'react-native-reanimated'
 
 import {CheckIllustration} from '../CheckIllustration/CheckIllustration'

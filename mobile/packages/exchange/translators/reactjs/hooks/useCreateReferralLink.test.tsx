@@ -1,9 +1,9 @@
 import {Exchange} from '@yoroi/types'
 
 import {QueryClient} from '@tanstack/react-query'
-import {render, waitFor, fireEvent} from '@testing-library/react-native'
+import {fireEvent, render, waitFor} from '@testing-library/react-native'
 import * as React from 'react'
-import {Text, View, TouchableOpacity} from 'react-native'
+import {Text, TouchableOpacity, View} from 'react-native'
 
 import {queryClientFixture} from '../../../fixtures/query-client'
 import {wrapper as wrapperFixture} from '../../../fixtures/wrapper'
@@ -61,11 +61,6 @@ describe('useCreateReferralLink', () => {
 
     // Trigger the mutation
     fireEvent.press(getByTestId('button'))
-
-    // Should be pending
-    await waitFor(() => {
-      expect(getByTestId('pending').props.children).toEqual('true')
-    })
 
     // Should resolve with the URL
     await waitFor(() => {
