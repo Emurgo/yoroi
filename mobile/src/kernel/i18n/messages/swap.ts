@@ -306,7 +306,7 @@ export const swapMessages = defineMessages({
     defaultMessage: '!!!Slippage Tolerance Error',
   },
   openOrders: {
-    id: 'swap.listOrders.open',
+    id: 'swap.swapScreen.openOrders',
     defaultMessage: '!!!Open Orders',
   },
   noAssetsFound: {
@@ -318,7 +318,7 @@ export const swapMessages = defineMessages({
     defaultMessage: '!!!No Assets Found For {search}',
   },
   completedOrders: {
-    id: 'swap.listOrders.completed',
+    id: 'swap.swapScreen.completedOrders',
     defaultMessage: '!!!Completed Orders',
   },
   signTransaction: {
@@ -398,7 +398,7 @@ export const swapMessages = defineMessages({
     defaultMessage: '!!!Volume',
   },
   listCompletedOrders: {
-    id: 'global.actions.dialogs.commonbuttons.completeButton',
+    id: 'swap.listOrders.completed',
     defaultMessage: '!!!List Completed Orders',
   },
   listOpenOrders: {
@@ -622,15 +622,15 @@ export const swapMessages = defineMessages({
     defaultMessage: '!!!Service Unavailable Info',
   },
   emptyOpenOrders: {
-    id: 'swap.listOrders.open',
+    id: 'swap.listOrders.emptyOpenOrders', 
     defaultMessage: '!!!Empty Open Orders',
   },
   emptyOpenOrdersSub: {
-    id: 'swap.listOrders.open',
+    id: 'swap.listOrders.emptyOpenOrdersSub',
     defaultMessage: '!!!Empty Open Orders Sub',
   },
   emptyCompletedOrders: {
-    id: 'global.actions.dialogs.commonbuttons.completeButton',
+    id: 'swap.listOrders.emptyCompletedOrders',
     defaultMessage: '!!!Empty Completed Orders',
   },
   emptySearchCompletedOrders: {

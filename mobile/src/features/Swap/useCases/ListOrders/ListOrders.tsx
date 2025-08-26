@@ -52,7 +52,7 @@ export const ListOrders = () => {
   })
 
   return (
-    <View style={[a.p_lg, a.gap_lg, {backgroundColor: p.bg_color_max}]}>
+    <View style={[a.flex_1, a.p_lg, a.gap_lg, {backgroundColor: p.bg_color_max}]}>
       <View style={[a.flex_row, a.gap_md, a.justify_center, a.align_center]}>
         <View>
           <Button
@@ -124,11 +124,12 @@ const Content = ({filter}: {filter: Filter}) => {
       (status === 'open' && filter === 'open') ||
       (status !== 'open' && status !== 'canceled' && filter === 'completed'),
   )
-
+  
   return (
     <View style={[a.flex_1]}>
       <View style={[a.flex_1]}>
         <FlatList
+          style={[a.flex_1]}
           contentContainerStyle={[a.gap_md]}
           data={orders}
           renderItem={({item}) => <Order order={item} />}
