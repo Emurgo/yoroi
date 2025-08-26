@@ -20,6 +20,11 @@ const TestInit = () => {
   )
 }
 
+afterEach(() => {
+  jest.clearAllTimers()
+  jest.useRealTimers()
+})
+
 describe('MetricsProvider', () => {
   it('should initialize the module while mounting', async () => {
     const metricsManager = {
@@ -46,6 +51,7 @@ describe('MetricsProvider', () => {
 const mockAmpli = {
   load: jest.fn().mockReturnValue({promise: Promise.resolve()}),
   client: {
+    add: jest.fn(),
     setOptOut: jest.fn(),
   },
   flush: jest.fn().mockReturnValue({promise: Promise.resolve()}),
@@ -215,10 +221,11 @@ describe('makeMetricsManager', () => {
       client: {
         configuration: {
           optOut: false,
-          flushIntervalMillis: expect.any(Number),
+          flushIntervalMillis: 5000,
           trackingOptions: {ipAddress: false},
         },
       },
+      disabled: false,
     })
   })
 
