@@ -52,21 +52,6 @@ export const ListOrders = () => {
     onBack: navigateToTxHistory,
   })
 
-  const isTestnet = !wallet.networkManager.isMainnet
-
-  if (isTestnet) {
-    return (
-      <View style={[a.flex_1, a.gap_lg, a.justify_center, a.align_center]}>
-        <Text style={[a.heading_3_medium, ta.text_gray_medium]}>
-          {strings.swap.listOrdersTestnetNoticeTitle}
-        </Text>
-        <Text style={[a.body_1_lg_regular, ta.text_gray_low]}>
-          {strings.swap.listOrdersTestnetNoticeDescription}
-        </Text>
-      </View>
-    )
-  }
-
   return (
     <View style={[a.flex_1, a.p_lg, a.gap_lg, ta.bg_color_max]}>
       <View style={[a.flex_row, a.gap_md, a.justify_center, a.align_center]}>
