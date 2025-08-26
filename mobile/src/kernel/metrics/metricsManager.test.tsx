@@ -1,4 +1,4 @@
-import {act, render} from '@testing-library/react-native'
+import {render} from '@testing-library/react-native'
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
@@ -25,7 +25,7 @@ describe('MetricsProvider', () => {
       init: jest.fn().mockResolvedValue(undefined),
       enabled: jest.fn(),
     }
-    
+
     const {findByText} = render(
       <MetricsProvider metricsManager={metricsManager}>
         <TestInit />

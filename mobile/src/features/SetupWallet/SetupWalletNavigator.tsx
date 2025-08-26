@@ -3,12 +3,15 @@
   WalletInitRoutes,
 } from '~/kernel/navigation/navigation' */
 // import {NetworkTag} from '../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
+import {useTheme} from '@yoroi/theme'
+
 import {createStackNavigator} from '@react-navigation/stack'
 // import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 
 // import {ConnectNanoXScreen} from './useCases/RestoreHwWallet/ConnectNanoXScreen'
 import {useStrings} from '~/kernel/i18n/useStrings'
+import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
 
 import {PreparingWalletScreen} from './common/PreparingWalletScreen/PreparingWalletScreen'
 import {ImportReadOnlyWalletScreen} from './legacy/ImportReadOnlyWallet/ImportReadOnlyWalletScreen'
@@ -21,8 +24,6 @@ import {VerifyRecoveryPhraseScreen} from './useCases/CreateWallet/VerifyRecovery
 import {WalletDetailsScreen} from './useCases/CreateWallet/WalletDetailsScreen'
 import {RestoreWalletDetailsScreen} from './useCases/RestoreWallet/RestoreWalletDetailsScreen'
 import {RestoreWalletScreen} from './useCases/RestoreWallet/RestoreWalletScreen'
-import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
-import {useTheme} from '@yoroi/theme'
 
 const Stack = createStackNavigator<any /* WalletInitRoutes */>()
 export const SetupWalletNavigator = () => {
