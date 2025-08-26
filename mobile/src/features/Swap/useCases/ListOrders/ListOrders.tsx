@@ -40,7 +40,6 @@ export const ListOrders = () => {
   const {navigateToTxHistory} = useWalletNavigation()
   const [filter, setFilter] = React.useState<Filter>('open')
   const swapForm = useSwap()
-  const {wallet} = useSelectedWallet()
 
   const strings = useStrings()
   const {palette: p, atoms: ta} = useTheme()
@@ -120,9 +119,6 @@ const Content = ({filter}: {filter: Filter}) => {
   const strings = useStrings()
   const {visible: isSearching} = useSearch()
   const swapForm = useSwap()
-  const {wallet} = useSelectedWallet()
-  const {palette: p} = useTheme()
-  const {atoms: ta} = useTheme()
 
   const orders = swapForm.orders?.filter(
     ({status}) =>

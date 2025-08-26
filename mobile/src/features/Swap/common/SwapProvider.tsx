@@ -341,8 +341,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
           })
         }
       })
-      .catch((error) => {
-        // Handle unhandled errors in estimate API call
+      .catch(() => {
         action({
           type: SwapActionType.EstimateError,
           value: {
@@ -434,7 +433,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
           navigate.reviewSwap()
         }
       })
-      .catch((error) => {
+      .catch(() => {
         setIsLoading(false)
         action({
           type: SwapActionType.CreateError,
