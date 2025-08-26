@@ -1,9 +1,15 @@
 import {atoms as a, space as s, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
-import {Text, View} from 'react-native'
+import {
+  Text,
+  View,
+  TextInput,
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+} from 'react-native'
 
-import {BACKSPACE, NumericKeyboard} from '~/ui/NumericKeyboard'
 import {Space} from '~/ui/Space/Space'
 
 type Props = {
@@ -20,16 +26,10 @@ export type PinInputRef = {
 }
 
 export const PinInput = React.forwardRef<PinInputRef, Props>((props, ref) => {
-  const {
-    enabled = true,
-    pinMaxLength,
-    title,
-    subtitles = [],
-    onDone,
-    onGoBack,
-  } = props
+  const {enabled = true, pinMaxLength, title, subtitles = [], onDone} = props
   const {atoms: ta} = useTheme()
   const [pin, setPin] = React.useState('')
+  const inputRef = React.useRef<TextInput | null>(null)
 
   React.useImperativeHandle(ref, () => ({
     clear: () => {
@@ -37,67 +37,89 @@ export const PinInput = React.forwardRef<PinInputRef, Props>((props, ref) => {
     },
   }))
 
-  const onKeyDown = (value: string) => {
-    if (!enabled) return
-    if (value === BACKSPACE) {
-      if (pin.length === 0) onGoBack?.()
-      setPin(pin.substring(0, pin.length - 1))
-      return
+  const handleFocus = React.useCallback(() => {
+    if (inputRef.current) {
+      if (Platform.OS === 'android') {
+        inputRef.current.blur()
+        setTimeout(() => {
+          inputRef.current?.focus()
+        }, 50)
+      } else {
+        inputRef.current.focus()
+      }
     }
-
-    if (pin.length === pinMaxLength) {
-      return
-    }
-
-    const newPin = pin.concat(value)
-    setPin(newPin)
-    if (newPin.length === pinMaxLength) onDone(newPin)
-  }
+  }, [])
 
   return (
-    <View style={[a.flex_1, ta.bg_color_max]}>
-      <View style={[a.flex_1, a.align_center, a.justify_center]}>
-        <Text
-          style={[
-            a.body_1_lg_medium,
-            ta.text_gray_max,
-            {fontSize: 20, lineHeight: 30},
-          ]}
-        >
-          {title}
-        </Text>
-
-        <Space.Height.sm />
-
-        {subtitles.map((subtitle) => (
+    <KeyboardAvoidingView
+      style={[a.flex_1, ta.bg_color_max]}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      keyboardVerticalOffset={0}
+    >
+      <Pressable style={[a.flex_1]} onPress={handleFocus}>
+        <View style={[a.flex_1, a.align_center, a.justify_center]}>
           <Text
-            key={subtitle}
             style={[
-              a.body_2_md_regular,
-              ta.text_gray_medium,
-              a.text_center,
-              {
-                fontSize: 14,
-                lineHeight: 22,
-                maxWidth: 320,
-              },
+              a.body_1_lg_medium,
+              ta.text_gray_max,
+              {fontSize: 20, lineHeight: 30},
             ]}
           >
-            {subtitle == null ? null : subtitle}
+            {title}
           </Text>
-        ))}
 
-        <Space.Height._2xl />
+          <Space.Height.sm />
 
-        <View style={[a.flex_row, a.gap_sm]}>
-          {Array.from({length: pinMaxLength}, (_, index) => (
-            <PinPlaceholder key={index} isActive={index < pin.length} />
+          {subtitles.map((subtitle) => (
+            <Text
+              key={subtitle}
+              style={[
+                a.body_2_md_regular,
+                ta.text_gray_medium,
+                a.text_center,
+                {
+                  fontSize: 14,
+                  lineHeight: 22,
+                  maxWidth: 320,
+                },
+              ]}
+            >
+              {subtitle == null ? null : subtitle}
+            </Text>
           ))}
-        </View>
-      </View>
 
-      <NumericKeyboard onKeyDown={onKeyDown} />
-    </View>
+          <Space.Height._2xl />
+
+          <View style={[a.flex_row, a.gap_sm]}>
+            {Array.from({length: pinMaxLength}, (_, index) => (
+              <PinPlaceholder key={index} isActive={index < pin.length} />
+            ))}
+          </View>
+        </View>
+
+        <TextInput
+          ref={inputRef}
+          value={pin}
+          onChangeText={(value) => {
+            if (!enabled) return
+            if (value.length <= pinMaxLength) {
+              setPin(value)
+              if (value.length === pinMaxLength) onDone(value)
+            }
+          }}
+          keyboardType="number-pad"
+          secureTextEntry
+          maxLength={pinMaxLength}
+          style={[{opacity: 0, width: 1, height: 1}, a.absolute]}
+          placeholder=""
+          autoFocus
+          blurOnSubmit={false}
+          onSubmitEditing={() => {}}
+          editable
+          selectTextOnFocus={false}
+        />
+      </Pressable>
+    </KeyboardAvoidingView>
   )
 })
 

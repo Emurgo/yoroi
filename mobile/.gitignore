@@ -6,6 +6,7 @@ node_modules/
 # local build
 ios/
 android/
+*.aab
 
 # VSCode
 .vscode/
