@@ -155,7 +155,7 @@ const Content = ({filter}: {filter: Filter}) => {
         <Text style={[a.heading_3_medium, ta.text_gray_medium]}>
           Swap orders are not available on testnet
         </Text>
-        <Text style={[a.body_1_lg_regular, {color: p.text_gray_low}]}>
+        <Text style={[a.body_1_lg_regular, ta.text_gray_low]}>
           Please switch to mainnet to view your orders
         </Text>
       </View>
