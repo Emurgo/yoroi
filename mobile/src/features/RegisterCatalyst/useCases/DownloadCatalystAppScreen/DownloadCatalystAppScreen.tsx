@@ -1,7 +1,6 @@
 import {useCatalyst} from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
-import 'react-native-get-random-values'
 import * as React from 'react'
 import {useIntl} from 'react-intl'
 import {
@@ -30,6 +29,7 @@ import {Button} from '~/ui/Button/Button'
 import {CatalystStep1} from '~/ui/CatalystStep1Illustration/CatalystStep1Illustration'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
+
 import {useNavigateTo} from '../../CatalystNavigator'
 
 export const DownloadCatalystAppScreen = () => {
@@ -199,7 +199,5 @@ const AppStoreButton = () => {
 }
 
 const createPin = () => {
-  const bytes = new Uint8Array(4)
-  crypto.getRandomValues(bytes)
-  return Array.from(bytes, (byte) => (byte % 10).toString()).join('')
+  return Math.floor(Math.random() * 9000 + 1000).toString()
 }

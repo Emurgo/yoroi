@@ -58,10 +58,10 @@ export const CatalystNavigator = () => {
         {/* STEP 2 */}
         <Stack.Screen name="display-pin" component={DisplayPin} />
 
-        {/*/!* STEP 3 *!/*/}
+        {/* STEP 3 */}
         <Stack.Screen name="confirm-pin" component={ConfirmPin} />
 
-        {/*/!* STEP 4 *!/*/}
+        {/* STEP 4 */}
         <Stack.Screen
           component={QrCode}
           name="qr-code"

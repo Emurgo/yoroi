@@ -40,7 +40,7 @@ describe('invalid decryption', () => {
     const corruptedCiphertext = ciphertext.slice(0, 32 + 12 + 16) // includes only metadata
     const promise = decryptWithPassword(pinBuff, corruptedCiphertext)
     await expect(promise).rejects.toThrow(
-      new Error('not enough data to decrypt'),
+      new Error('invalid ciphertext length: smaller than tagLength=16'),
     )
   })
 })
