@@ -1148,6 +1148,12 @@ export const useStrings = () => {
         sell: f(actionMessages.sell),
         buy: f(actionMessages.buy),
         max: f(globalMessages.max),
+        listOrdersTestnetNoticeTitle: f(
+          swapMessages.listOrdersTestnetNoticeTitle,
+        ),
+        listOrdersTestnetNoticeDescription: f(
+          swapMessages.listOrdersTestnetNoticeDescription,
+        ),
       },
 
       // Staking/PoolTransition strings
