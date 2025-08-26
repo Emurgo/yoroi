@@ -3,14 +3,13 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useBlockGoBack} from '~/kernel/navigation/hooks/useBlockGoBack'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Button} from '~/ui/Button/Button'
 import {FailedTxIcon} from '~/ui/FailedTxIcon/FailedTxIcon'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
-
-import {useStrings} from '../../common/hooks/useStrings'
 
 export const FailedTxScreen = () => {
   useBlockGoBack()
@@ -29,7 +28,6 @@ export const FailedTxScreen = () => {
       ]}
     >
       <Space.Height._2xl />
-      <Space.Height._2xl />
 
       <FailedTxIcon />
 
@@ -43,11 +41,11 @@ export const FailedTxScreen = () => {
           a.text_center,
         ]}
       >
-        {strings.failedTxTitle}
+        {strings.txReview.failedTxTitle}
       </Text>
 
       <Text style={[{color: p.gray_600}, a.body_1_lg_regular, a.text_center]}>
-        {strings.failedTxText}
+        {strings.txReview.failedTxText}
       </Text>
 
       <Space.Height._2xs fill />
@@ -55,8 +53,8 @@ export const FailedTxScreen = () => {
       <Actions>
         <Button
           onPress={resetToTxHistory}
-          title={strings.failedTxButton}
-          style={[a.px_lg]}
+          title={strings.txReview.failedTxButton}
+          style={a.px_lg}
         />
       </Actions>
     </SafeArea>
@@ -64,5 +62,5 @@ export const FailedTxScreen = () => {
 }
 
 const Actions = ({children}: {children: React.ReactNode}) => {
-  return <View style={[{alignSelf: 'stretch'}]}>{children}</View>
+  return <View style={{alignSelf: 'stretch'}}>{children}</View>
 }
