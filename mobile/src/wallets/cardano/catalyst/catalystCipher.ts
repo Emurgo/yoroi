@@ -80,7 +80,7 @@ export function encryptWithPassword(
 export function decryptWithPassword(
   passwordBuf: Uint8Array,
   ciphertextHex: string,
-): string {
+) {
   const ciphertext = Buffer.from(ciphertextHex, 'hex')
 
   const salt = ciphertext.slice(PROTO_SIZE, SALT_SIZE + PROTO_SIZE)
