@@ -75,7 +75,6 @@ export function encryptWithPassword(
 
   return cipherText.toString('hex')
 }
-}
 
 export function decryptWithPassword(
   passwordBuf: Uint8Array,

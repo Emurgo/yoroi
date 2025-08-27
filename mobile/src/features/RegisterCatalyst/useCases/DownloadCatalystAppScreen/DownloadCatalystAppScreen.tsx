@@ -46,7 +46,7 @@ export const DownloadCatalystAppScreen = () => {
 
   const onNext = () => {
     resetCatalyst()
-    const pin = createPin()
+    const pin = randomPin()
     pinChanged(pin)
     navigateTo.displayPin()
   }
@@ -193,7 +193,7 @@ const AppStoreButton = () => {
     const url =
       Platform.OS === 'ios'
         ? 'https://apps.apple.com/app/catalyst-voting/id1506091890'
-        : 'https://apps.apple.com/app/catalyst-voting/id1506091890'
+        : 'https://play.google.com/store/apps/details?id=io.iohk.vitvoting&pcampaignid=web_share'
     await Linking.openURL(url)
   }
 
@@ -204,6 +204,8 @@ const AppStoreButton = () => {
   )
 }
 
-const createPin = () => {
-  return Math.floor(Math.random() * 10000).toString().padStart(4, '0')
+const randomPin = () => {
+  return Math.floor(Math.random() * 10_000)
+    .toString()
+    .padStart(4, '0')
 }
