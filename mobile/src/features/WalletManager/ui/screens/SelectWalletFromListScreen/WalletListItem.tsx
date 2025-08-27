@@ -1,7 +1,7 @@
-// import {useFocusEffect} from '@react-navigation/native'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Wallet} from '@yoroi/types'
 
+import {useFocusEffect} from '@react-navigation/native'
 import * as React from 'react'
 import {Alert, Animated, Text, TouchableOpacity, View} from 'react-native'
 import {Swipeable} from 'react-native-gesture-handler'
@@ -10,7 +10,7 @@ import {
   ChevronRightDarkIllustration,
   ChevronRightGrayIllustration,
 } from '~/features/SetupWallet/illustrations/ChevronRight'
-// import {useAutomaticWalletOpener} from '../context/AutomaticWalletOpeningProvider'
+import {useAutomaticWalletOpener} from '~/features/WalletManager/context/AutomaticWalletOpeningProvider'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
 import {useSyncWalletInfo} from '~/features/WalletManager/hooks/useSyncWalletInfo'
@@ -37,10 +37,10 @@ export const WalletListItem = ({walletMeta, onPress}: Props) => {
     selected: {meta},
     walletManager,
   } = useWalletManager()
-  /* const {
+  const {
     shouldOpen: shouldAutomaticWalletOpen,
     setShouldOpen: setShouldAutomaticWalletOpen,
-  } = useAutomaticWalletOpener() */
+  } = useAutomaticWalletOpener()
 
   const isSelected = meta?.id === walletMeta.id
 
@@ -48,7 +48,7 @@ export const WalletListItem = ({walletMeta, onPress}: Props) => {
   const syncWalletInfo = useSyncWalletInfo(walletMeta.id)
   const hasSyncedLastSelectedNetwork = network === syncWalletInfo?.network
 
-  /* useFocusEffect(
+  useFocusEffect(
     React.useCallback(() => {
       if (
         shouldAutomaticWalletOpen &&
@@ -66,7 +66,7 @@ export const WalletListItem = ({walletMeta, onPress}: Props) => {
       shouldAutomaticWalletOpen,
       walletMeta,
     ]),
-  ) */
+  )
 
   // NOTE: dev only - temporary to show Product
   const handleOnDeleteWallet = () => {

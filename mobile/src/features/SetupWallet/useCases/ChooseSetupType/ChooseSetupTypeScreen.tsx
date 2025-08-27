@@ -8,20 +8,22 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
+import {SetupWalletRouteNavigation} from '~/kernel/navigation/types'
+import {HardwareWallet} from '~/ui/HardwareWalletIllustration/HardwareWalletIllustration'
 import {LogoBanner} from '~/ui/LogoBanner/LogoBanner'
+import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
 
 import {ButtonCard} from '../../common/ButtonCard/ButtonCard'
 import {CreateWallet} from '../../illustrations/CreateWallet'
 import {RestoreWallet} from '../../illustrations/RestoreWallet'
-
-// import {SelectHwConnectionModal} from '../RestoreHwWallet/SelectHwConnectionModal'
+import {SelectHwConnectionModal} from '../RestoreHwWallet/SelectHwConnectionModal'
 
 export const ChooseSetupTypeScreen = () => {
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
   const strings = useStrings()
   const {walletImplementationChanged, setupTypeChanged} = useSetupWallet()
-  // const {openModal} = useModal()
+  const {openModal, closeModal} = useModal()
   const {track} = useMetrics()
 
   useFocusEffect(
@@ -30,7 +32,7 @@ export const ChooseSetupTypeScreen = () => {
     }, [track]),
   )
 
-  const navigation = useNavigation<any>()
+  const navigation = useNavigation<SetupWalletRouteNavigation>()
 
   const handleCreate = () => {
     walletImplementationChanged('cardano-cip1852')
@@ -46,18 +48,18 @@ export const ChooseSetupTypeScreen = () => {
     navigation.navigate('setup-wallet-restore-choose-mnemonic-type')
   }
 
-  /* const handleHw = () => {
+  const handleHw = () => {
     openModal({
-      title: strings.hwModalTitle,
-      content: <SelectHwConnectionModal />,
+      title: strings.setupWallet.hwModalTitle,
+      content: <SelectHwConnectionModal closeModal={() => closeModal()} />,
       height: 305,
     })
-  } */
+  }
 
   return (
     <SafeAreaView
       edges={['left', 'right', 'bottom']}
-      style={[{flex: 1, backgroundColor: p.bg_color_max}, a.px_lg]}
+      style={[a.flex_1, ta.bg_color_max, a.px_lg]}
     >
       <Space.Height.lg />
 
@@ -84,13 +86,13 @@ export const ChooseSetupTypeScreen = () => {
           />
 
           <Space.Height.lg />
-          {/*
+
           <ButtonCard
-            title={strings.connectWalletButtonCard}
-            // icon={<HardwareWallet style={position: 'absolute', right: 0} />}
+            title={strings.setupWallet.connectWalletButtonCard}
+            icon={<HardwareWallet style={[a.absolute, {right: 0}]} />}
             onPress={handleHw}
             testID="setup-connect-HW-wallet-button"
-          /> */}
+          />
 
           <Space.Height.lg />
         </View>

@@ -28,7 +28,11 @@ const useIsAndroidUsbSupported = () => {
   return isAndroidUsbSupported
 }
 
-export const SelectHwConnectionModal = () => {
+export const SelectHwConnectionModal = ({
+  closeModal,
+}: {
+  closeModal: () => void
+}) => {
   const {atoms: ta} = useTheme()
   const strings = useStrings()
 
@@ -38,14 +42,14 @@ export const SelectHwConnectionModal = () => {
         {strings.setupWallet.hwModalText}
       </Text>
 
-      <SelectBluetoothSection />
+      <SelectBluetoothSection closeModal={closeModal} />
 
-      <SelectUsbSection />
+      <SelectUsbSection closeModal={closeModal} />
     </View>
   )
 }
 
-const SelectBluetoothSection = () => {
+const SelectBluetoothSection = ({closeModal}: {closeModal: () => void}) => {
   const strings = useStrings()
   const {
     useUSBChanged: USBChanged,
@@ -59,6 +63,7 @@ const SelectBluetoothSection = () => {
     setupTypeChanged('hw')
 
     navigation.navigate('setup-wallet-check-nano-x')
+    closeModal()
   }
 
   const {request} = useLedgerPermissions({
@@ -84,7 +89,7 @@ const SelectBluetoothSection = () => {
   )
 }
 
-const SelectUsbSection = () => {
+const SelectUsbSection = ({closeModal}: {closeModal: () => void}) => {
   const {atoms: ta} = useTheme()
   const strings = useStrings()
   const isAndroidUsbSupported = useIsAndroidUsbSupported()
@@ -100,6 +105,7 @@ const SelectUsbSection = () => {
     setupTypeChanged('hw')
 
     navigation.navigate('setup-wallet-check-nano-x')
+    closeModal()
   }
 
   if (Platform.OS === 'ios')
