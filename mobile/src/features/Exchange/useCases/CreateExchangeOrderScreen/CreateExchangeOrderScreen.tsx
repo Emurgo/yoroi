@@ -118,7 +118,7 @@ export const CreateExchangeOrderScreen = () => {
 
         await delay(1000)
 
-        openModal({content: <ErrorScreen />})
+        openModal({content: <ErrorScreen onClose={closeModal} />})
       },
       onSuccess: (referralLink) => {
         closeModal()
