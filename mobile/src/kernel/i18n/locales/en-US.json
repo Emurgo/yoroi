@@ -1036,6 +1036,8 @@
   "swap.listOrders.timeCreated": "Time created",
   "swap.listOrders.total": "Total",
   "swap.listOrders.txId": "Transaction ID",
+  "swap.listOrders.testnetNotice.title": "Swap orders are not available on testnet",
+  "swap.listOrders.testnetNotice.description": "Please switch to mainnet to view your orders",
   "swap.slippage.changeAmount": "Increase the amount to proceed or change slippage tolerance to 0%",
   "swap.slippage.slippageWarningText": "Are you sure you want to proceed this order with the current slippage tolerance? It could result in receiving no assets.",
   "swap.slippage.slippageWarningTitle": "Slippage Warning",

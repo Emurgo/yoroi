@@ -1,8 +1,8 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Balance} from '@yoroi/types'
 
-import * as React from 'react'
 import {useSuspenseQuery} from '@tanstack/react-query'
+import * as React from 'react'
 import {Text, TouchableOpacity, View, useWindowDimensions} from 'react-native'
 
 import {
@@ -20,8 +20,8 @@ import {formatTokenWithText} from '~/wallets/utils/format'
 import {Quantities, asQuantity} from '~/wallets/utils/utils'
 
 import {PoolDetails} from './PoolDetails'
-import {CertificateType, FormattedTx} from './types'
 import {generatePoolName} from './poolUtils'
+import {CertificateType, FormattedTx} from './types'
 
 export const StakeRegistrationOperation = ({
   fee,

@@ -30,7 +30,7 @@ export type GovernanceAction =
 
 export type GovernanceManager = {
   readonly network: Chain.Network
-  validateDRepID: (drepID: string) => Promise<void>
+  validateDRepID: (drepID: string) => Promise<boolean>
   createDelegationCertificate: (
     hash: string,
     type: 'script' | 'key',
@@ -145,13 +145,15 @@ class Manager implements GovernanceManager {
     )
   }
 
-  async validateDRepID(drepId: string): Promise<void> {
+  async validateDRepID(drepId: string): Promise<boolean> {
     const {hash} = parseDrepId(drepId, this.config.cardano)
     const drepStatus = await this.config.api.getDRepById(hash)
 
     if (!drepStatus || !drepStatus.epoch) {
       throw new Error('DRep ID not registered')
     }
+
+    return true
   }
 
   async createLedgerDelegationPayload(

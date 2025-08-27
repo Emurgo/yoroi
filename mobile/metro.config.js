@@ -1,5 +1,5 @@
 // metro.config.js
-const { getDefaultConfig } = require('expo/metro-config')
+const {getDefaultConfig} = require('expo/metro-config')
 const path = require('path')
 
 const projectRoot = __dirname
@@ -20,7 +20,7 @@ config.resolver.resolveRequest = (context, moduleName, platform) => {
     context,
     shims[moduleName] ?? moduleName,
     platform,
-  ) 
+  )
 }
 
 // Add alias resolution for @yoroi/ and ~/ paths
@@ -30,7 +30,10 @@ config.resolver.alias = {
   '@yoroi/blockchains': path.resolve(projectRoot, './packages/blockchains'),
   '@yoroi/claim': path.resolve(projectRoot, './packages/claim'),
   '@yoroi/common': path.resolve(projectRoot, './packages/common'),
-  '@yoroi/dapp-connector': path.resolve(projectRoot, './packages/dapp-connector'),
+  '@yoroi/dapp-connector': path.resolve(
+    projectRoot,
+    './packages/dapp-connector',
+  ),
   '@yoroi/exchange': path.resolve(projectRoot, './packages/exchange'),
   '@yoroi/explorers': path.resolve(projectRoot, './packages/explorers'),
   '@yoroi/identicon': path.resolve(projectRoot, './packages/identicon'),
@@ -44,7 +47,7 @@ config.resolver.alias = {
   '@yoroi/theme': path.resolve(projectRoot, './packages/theme'),
   '@yoroi/transfer': path.resolve(projectRoot, './packages/transfer'),
   '@yoroi/types': path.resolve(projectRoot, './packages/types'),
-  
+
   // ~ aliases
   '~/ui': path.resolve(projectRoot, './src/ui'),
   '~/features': path.resolve(projectRoot, './src/features'),
@@ -62,6 +65,6 @@ config.resolver.assetExts.push('wasm')
 
 // -- transformer --
 config.transformer.unstable_allowRequireContext = true
-config.transformer.minifierConfig = { compress: { drop_console: true } }
+config.transformer.minifierConfig = {compress: {drop_console: true}}
 
 module.exports = config

@@ -23,7 +23,6 @@ export const AggregatedBalance = () => {
   } = useSelectedNetwork()
   const {aggregatedBalances, tokenActivity, isLoading} =
     usePortfolioTokenActivity()
-
   const name = infoExtractName(primaryTokenInfo)
   const price = usePairing().ptActivity.close
 

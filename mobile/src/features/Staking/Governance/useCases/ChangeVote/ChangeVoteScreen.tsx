@@ -18,6 +18,7 @@ import {YoroiRecordLink} from '~/features/Staking/Governance/common/YoroiRecordL
 import {useCreateGovernanceTx} from '~/features/Staking/hooks/useCreateGovernanceTx'
 import {useStakingKey} from '~/features/Staking/hooks/useStakingKey'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useYoroiConfig} from '~/kernel/features'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
@@ -28,7 +29,6 @@ import {
   useGovernanceActions,
 } from '../../common/helpers'
 import {EnterDrepIdModal} from '../EnterDrepIdModal/EnterDrepIdModal'
-import {useYoroiConfig} from '~/kernel/features'
 
 export const ChangeVoteScreen = () => {
   const {isYoroiDrepBannerEnabled} = useYoroiConfig()
@@ -55,6 +55,32 @@ export const ChangeVoteScreen = () => {
   const createVotingCertificate = useVotingCertificate()
 
   const createGovernanceTxMutation = useCreateGovernanceTx(wallet)
+  const [pendingDelegateOptions, setPendingDelegateOptions] = React.useState<{
+    hash: string
+    type: 'key' | 'script'
+    CIP105: boolean
+  } | null>(null)
+
+  React.useEffect(() => {
+    if (
+      pendingDelegateOptions &&
+      createGovernanceTxMutation.value &&
+      !createGovernanceTxMutation.isPending
+    ) {
+      governanceActions.handleDelegateAction({
+        unsignedTx: createGovernanceTxMutation.value,
+        hash: pendingDelegateOptions.hash,
+        type: pendingDelegateOptions.type,
+        CIP105: pendingDelegateOptions.CIP105,
+      })
+      setPendingDelegateOptions(null)
+    }
+  }, [
+    pendingDelegateOptions,
+    createGovernanceTxMutation.value,
+    createGovernanceTxMutation.isPending,
+    governanceActions,
+  ])
 
   if (!isNonNullable(action)) throw new Error('User has never voted')
 
@@ -73,39 +99,37 @@ export const ChangeVoteScreen = () => {
         </GovernanceProvider>
       ),
       height: 360,
+      resizable: true,
     })
   }
 
   const handleDelegate = () => {
-    openDRepIdModal((options) => {
+    openDRepIdModal(async (options) => {
       const stakingKey = wallet.getStakingKey()
 
       setPendingVote('delegate-not-yoroi')
 
-      const certificate = createDelegationCertificate({
+      const certificate = await createDelegationCertificate({
         hash: options.hash,
         type: options.type,
         stakingKey,
+      })
+
+      setPendingDelegateOptions({
+        hash: options.hash,
+        type: options.type,
+        CIP105: options.CIP105,
       })
 
       createGovernanceTxMutation.resolve({
         certificates: [certificate],
         addressMode: meta.addressMode,
       })
-
-      if (createGovernanceTxMutation.value) {
-        governanceActions.handleDelegateAction({
-          unsignedTx: createGovernanceTxMutation.value,
-          hash: options.hash,
-          type: options.type,
-          CIP105: options.CIP105,
-        })
-      }
     })
   }
 
   const handleDelegateToYoroi = async () => {
-    const stakingKey = await wallet.getStakingKey()
+    const stakingKey = wallet.getStakingKey()
 
     setPendingVote('delegate-to-yoroi')
 
@@ -131,7 +155,7 @@ export const ChangeVoteScreen = () => {
   }
 
   const handleAbstain = async () => {
-    const stakingKey = await wallet.getStakingKey()
+    const stakingKey = wallet.getStakingKey()
     setPendingVote('abstain')
 
     const certificate = await createVotingCertificate({
@@ -152,7 +176,7 @@ export const ChangeVoteScreen = () => {
   }
 
   const handleNoConfidence = async () => {
-    const stakingKey = await wallet.getStakingKey()
+    const stakingKey = wallet.getStakingKey()
     setPendingVote('no-confidence')
 
     const certificate = await createVotingCertificate({

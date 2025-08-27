@@ -410,4 +410,16 @@ export const setupWalletMessages = defineMessages({
     id: 'components.walletinit.aboutRecoveryPhrase.aboutRecoveryStepper.title',
     defaultMessage: '!!!Step 1 of 3',
   },
+  connectNanoXTitle: {
+    id: 'components.walletinit.connectnanox.connectnanoxscreen.title',
+    defaultMessage: '!!!Connect hardware wallet',
+  },
+  saveNanoXTitle: {
+    id: 'components.walletinit.connectnanox.savenanoxscreen.title',
+    defaultMessage: '!!!Save hardware wallet',
+  },
+  checkNanoXTitle: {
+    id: 'components.walletinit.connectnanox.checknanoxscreen.title',
+    defaultMessage: '!!!Check hardware wallet',
+  },
 })

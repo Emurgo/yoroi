@@ -42,7 +42,7 @@ export const ListOrders = () => {
   const swapForm = useSwap()
 
   const strings = useStrings()
-  const {palette: p} = useTheme()
+  const {palette: p, atoms: ta} = useTheme()
 
   useSearchOnNavBar({
     placeholder: strings.swap.searchTokens,
@@ -52,7 +52,7 @@ export const ListOrders = () => {
   })
 
   return (
-    <View style={[a.flex_1, a.p_lg, a.gap_lg, {backgroundColor: p.bg_color_max}]}>
+    <View style={[a.flex_1, a.p_lg, a.gap_lg, ta.bg_color_max]}>
       <View style={[a.flex_row, a.gap_md, a.justify_center, a.align_center]}>
         <View>
           <Button
@@ -119,6 +119,7 @@ const Content = ({filter}: {filter: Filter}) => {
   const strings = useStrings()
   const {visible: isSearching} = useSearch()
   const swapForm = useSwap()
+
   const orders = swapForm.orders?.filter(
     ({status}) =>
       (status === 'open' && filter === 'open') ||

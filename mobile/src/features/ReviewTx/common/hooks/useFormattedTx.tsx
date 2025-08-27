@@ -1,8 +1,8 @@
-import {CredKind} from '@emurgo/cross-csl-core'
-import {useSuspenseQuery} from '@tanstack/react-query'
 import {isNonNullable} from '@yoroi/common'
 import {Api, Network, Portfolio} from '@yoroi/types'
 
+import {CredKind} from '@emurgo/cross-csl-core'
+import {useSuspenseQuery} from '@tanstack/react-query'
 import _ from 'lodash'
 
 import {usePortfolioTokenInfosSuspense} from '~/features/Portfolio/common/hooks/usePortfolioTokenInfos'

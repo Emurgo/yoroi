@@ -1148,6 +1148,12 @@ export const useStrings = () => {
         sell: f(actionMessages.sell),
         buy: f(actionMessages.buy),
         max: f(globalMessages.max),
+        listOrdersTestnetNoticeTitle: f(
+          swapMessages.listOrdersTestnetNoticeTitle,
+        ),
+        listOrdersTestnetNoticeDescription: f(
+          swapMessages.listOrdersTestnetNoticeDescription,
+        ),
       },
 
       // Staking/PoolTransition strings
@@ -1673,6 +1679,9 @@ export const useStrings = () => {
         walletChecksumModalCardFirstItem: f(
           setupWalletMessages.walletChecksumModalCardFirstItem,
         ),
+        connectNanoXTitle: f(setupWalletMessages.connectNanoXTitle),
+        saveNanoXTitle: f(setupWalletMessages.saveNanoXTitle),
+        checkNanoXTitle: f(setupWalletMessages.checkNanoXTitle),
         walletChecksumModalCardSecondItem: (checksum: string) =>
           intl.formatMessage(
             setupWalletMessages.walletChecksumModalCardSecondItem,

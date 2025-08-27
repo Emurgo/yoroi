@@ -14,17 +14,17 @@ import {SuccessfulTxIcon} from '~/ui/SuccessfulTxIcon/SuccessfulTxIcon'
 export const SubmittedTxScreen = () => {
   useBlockGoBack()
   const strings = useStrings()
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p, atoms: ta} = useTheme()
   const {resetToTxHistory} = useWalletNavigation()
 
   return (
     <SafeArea
       style={[
+        ta.bg_color_max,
         a.p_lg,
         a.flex_1,
         a.align_center,
         a.justify_center,
-        ta.bg_color_max,
       ]}
     >
       <Space.Height._2xl />
@@ -34,16 +34,21 @@ export const SubmittedTxScreen = () => {
       <Space.Height.lg />
 
       <Text
-        style={[a.heading_3_medium, a.px_sm, a.text_center, ta.text_gray_max]}
+        style={[
+          {color: p.gray_max},
+          a.heading_3_medium,
+          a.px_sm,
+          a.text_center,
+        ]}
       >
         {strings.txReview.submittedTxTitle}
       </Text>
 
       <Text
         style={[
+          {color: p.gray_600, maxWidth: 330},
           a.body_1_lg_regular,
           a.text_center,
-          {color: p.gray_600, maxWidth: 330},
         ]}
       >
         {strings.txReview.submittedTxText}
@@ -62,9 +67,8 @@ export const SubmittedTxScreen = () => {
   )
 }
 
-const Actions = ({children}: {children: React.ReactNode}) => {
+const Actions = ({children}: React.PropsWithChildren) => {
   const {palette: p} = useTheme()
-
   return (
     <View
       style={[
