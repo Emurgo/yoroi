@@ -205,5 +205,5 @@ const AppStoreButton = () => {
 }
 
 const createPin = () => {
-  return Math.floor(Math.random() * 9000 + 1000).toString()
+  return Math.floor(Math.random() * 10000).toString().padStart(4, '0')
 }
