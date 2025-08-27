@@ -81,8 +81,11 @@ export const AuthProvider: React.FC<React.PropsWithChildren<Props>> = ({
 
   const loginWithPin = React.useCallback(
     (pin: string) => {
-      checkPin(pin)
-      setLoggedState(loggedInState)
+      const isValid = checkPin(pin)
+      if (isValid) {
+        setLoggedState(loggedInState)
+      }
+      return isValid
     },
     [checkPin],
   )
@@ -204,7 +207,7 @@ type AuthContextActions = {
   loggedOut(): void
   changeAuthSetting(authSetting: AuthSetting): void
   authWithHost(): Promise<boolean>
-  loginWithPin(pin: string): void
+  loginWithPin(pin: string): boolean
   loginWithHost({noFallback}?: {noFallback?: boolean}): Promise<void>
   enableLoginWithHost: ({
     noFallback,
