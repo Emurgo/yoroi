@@ -45,7 +45,6 @@ export function generatePbkdf2Key(password: Uint8Array, salt: Buffer): Buffer {
 
     return key
   } catch (error) {
-    console.error('PBKDF2 error:', error)
     throw error
   }
 }
