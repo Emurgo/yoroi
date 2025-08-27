@@ -8,7 +8,7 @@ export const filterBySearch = (searchTerm: string) => {
     return () => true
   }
 
-  let cachedSearch = searchCache.get(searchTerm)
+  let cachedSearch = searchCache.get(normalizedSearch)
   if (!cachedSearch) {
     if (searchCache.size >= MAX_CACHE_SIZE) {
       const firstKey = searchCache.keys().next().value
@@ -18,7 +18,7 @@ export const filterBySearch = (searchTerm: string) => {
     }
 
     cachedSearch = normalizedSearch
-    searchCache.set(searchTerm, cachedSearch)
+    searchCache.set(normalizedSearch, cachedSearch)
   }
 
   const filterFunction = (
