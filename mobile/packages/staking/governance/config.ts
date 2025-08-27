@@ -16,9 +16,9 @@ export const GOVERNANCE_ENDPOINTS: Readonly<
   },
   [Chain.Network.Preprod]: {
     getStakeKeyState:
-      'https://yoroi-backend-zero-preprod.emurgornd.com/stakekeys/{{STAKE_KEY_HASH}}/state',
+      'https://yoroi-backend-zero-preprod-prod.emurgornd.com/stakekeys/{{STAKE_KEY_HASH}}/state',
     getDRepById:
-      'https://yoroi-backend-zero-preprod.emurgornd.com/dreps/{{DREP_ID}}/state',
+      'https://yoroi-backend-zero-preprod-prod.emurgornd.com/dreps/{{DREP_ID}}/state',
   },
   [Chain.Network.Preview]: {
     getStakeKeyState:
