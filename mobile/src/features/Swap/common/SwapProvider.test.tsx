@@ -579,7 +579,6 @@ describe('SwapProvider', () => {
   describe('SwapProvider Component', () => {
     it('should render children correctly', () => {
       const TestComponent = () => {
-        const context = React.useContext(SwapContextInstance)
         return <Text testID="context-value">Test Component</Text>
       }
 
@@ -799,10 +798,8 @@ describe('SwapProvider', () => {
 
     it('should fetch tokens on mount', () => {
       const mockTokensRefetch = jest.fn()
-      let callCount = 0
 
       mockUseQuery.mockImplementation((options: any) => {
-        callCount++
         if (options.queryKey?.[0] === 'useSwapTokenIds') {
           return {data: [], refetch: mockTokensRefetch}
         }
