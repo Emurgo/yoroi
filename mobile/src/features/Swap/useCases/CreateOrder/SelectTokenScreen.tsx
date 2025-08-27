@@ -261,11 +261,10 @@ const TokenList = ({direction}: Direction) => {
 type SelectableTokenProps = Direction & {
   tokenInfo: Portfolio.Token.Info
   quantity: bigint
-  onSelect?: (tokenInfo: Portfolio.Token.Info) => void
 }
 
 const SelectableToken = React.memo(
-  ({direction, tokenInfo, quantity, onSelect}: SelectableTokenProps) => {
+  ({direction, tokenInfo, quantity}: SelectableTokenProps) => {
     const {id, name, ticker} = tokenInfo
     const {closeSearch} = useSearch()
     const swapForm = useSwap()
