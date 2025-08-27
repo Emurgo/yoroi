@@ -1,8 +1,22 @@
-export const filterBySearch = (searchTerm: string) => {
-  const search = normalizeString(searchTerm)
-  if (search.length === 0) return () => true
+// Cache for normalized search terms to avoid repeated string operations
+const searchCache = new Map<string, string>()
 
-  return (item: string | {ticker?: string; name?: string; symbol?: string}) => {
+export const filterBySearch = (searchTerm: string) => {
+  // Early return for empty search
+  if (searchTerm.length === 0) {
+    return () => true
+  }
+
+  // Use cached normalized search term if available
+  let normalizedSearch = searchCache.get(searchTerm)
+  if (!normalizedSearch) {
+    normalizedSearch = normalizeString(searchTerm)
+    searchCache.set(searchTerm, normalizedSearch)
+  }
+
+  const filterFunction = (
+    item: string | {ticker?: string; name?: string; symbol?: string},
+  ) => {
     if (typeof item === 'string') return false
 
     const name = normalizeString(item.name ?? '')
@@ -10,11 +24,13 @@ export const filterBySearch = (searchTerm: string) => {
     const symbol = normalizeString(item.symbol ?? '')
 
     return (
-      ticker.includes(search) ||
-      name.includes(search) ||
-      symbol.includes(search)
+      ticker.includes(normalizedSearch) ||
+      name.includes(normalizedSearch) ||
+      symbol.includes(normalizedSearch)
     )
   }
+
+  return filterFunction
 }
 
 const normalizeString = (str: string) =>
