@@ -232,7 +232,6 @@ const KNOWLEDGE_BASE_LINK =
 
 const useNavigateTo = () => {
   const {
-    navigation,
     navigateToSettings,
     navigateToGovernanceCentre,
     navigateToStakingDashboard,

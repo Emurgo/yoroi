@@ -9,6 +9,7 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
 import {Checkbox} from '~/ui/Checkbox/Checkbox'
 import {Space} from '~/ui/Space/Space'
+
 import {useNavigateTo} from '../../CatalystNavigator'
 import {
   Actions,

@@ -13,6 +13,7 @@ import {Button} from '~/ui/Button/Button'
 import {Checkbox} from '~/ui/Checkbox/Checkbox'
 import {ShareQRCodeCard} from '~/ui/ShareQRCodeCard/ShareQRCodeCard'
 import {Space} from '~/ui/Space/Space'
+
 import {Actions, Description} from '../../common/components'
 
 export const QrCode = () => {

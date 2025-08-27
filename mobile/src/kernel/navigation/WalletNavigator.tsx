@@ -3,20 +3,19 @@ import {useTheme} from '@yoroi/theme'
 import {createStackNavigator} from '@react-navigation/stack'
 import * as React from 'react'
 
+import {DashboardNavigator} from '~/features/Dashboard/DashboardNavigator'
 import {CatalystNavigator} from '~/features/RegisterCatalyst/CatalystNavigator'
 import {ReviewTxNavigator} from '~/features/ReviewTx/ReviewTxNavigator'
 import {SearchProvider} from '~/features/Search/SearchContext'
 import {SettingsScreenNavigator} from '~/features/Settings/SettingsScreenNavigator'
 import {NetworkTag} from '~/features/Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {SetupWalletNavigator} from '~/features/SetupWallet/SetupWalletNavigator'
+import {GovernanceNavigator} from '~/features/Staking/Governance/GovernanceNavigator'
 import {SelectWalletFromList} from '~/features/WalletManager/ui/screens/SelectWalletFromListScreen/SelectWalletFromListScreen'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {WalletTabNavigator} from '~/kernel/navigation/WalletTabNavigator'
 import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
 import {WalletStackRoutes} from '~/kernel/navigation/types'
-
-import {DashboardNavigator} from '~/features/Dashboard/DashboardNavigator'
-import {GovernanceNavigator} from '~/features/Staking/Governance/GovernanceNavigator'
 
 const Stack = createStackNavigator<WalletStackRoutes>()
 

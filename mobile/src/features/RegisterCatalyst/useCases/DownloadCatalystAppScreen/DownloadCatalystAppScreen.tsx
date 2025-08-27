@@ -76,7 +76,13 @@ export const DownloadCatalystAppScreen = () => {
         height: 300,
       })
     }
-  }, [stakingInfo?.status])
+  }, [
+    closeModal,
+    openModal,
+    stakingInfo?.status,
+    strings.registerCatalyst.confirm,
+    strings.registerCatalyst.title,
+  ])
 
   const fundName = fund?.info.fundName
   const registrationStart = fund?.info.snapshotStart
