@@ -53,40 +53,28 @@ export function encryptWithPassword(
   passwordBuf: Uint8Array,
   dataBytes: Uint8Array,
 ): string {
-  try {
-    const salt = Buffer.from(generateRandomHexString(2 * 16), 'hex')
+  const salt = Buffer.from(generateRandomHexString(2 * SALT_SIZE), 'hex')
+  const nonce = Buffer.from(generateRandomHexString(2 * NONCE_SIZE), 'hex')
+  const data = Buffer.from(dataBytes)
+  const key = generatePbkdf2Key(passwordBuf, salt)
 
-    const nonce = Buffer.from(generateRandomHexString(2 * 12), 'hex')
+  const keyUint8 = new Uint8Array(key)
+  const nonceUint8 = new Uint8Array(nonce)
+  const dataUint8 = new Uint8Array(data)
 
-    const data = Buffer.from(dataBytes)
+  const cipher = chacha20poly1305(keyUint8, nonceUint8)
 
-    const key = generatePbkdf2Key(passwordBuf, salt)
+  const encrypted = cipher.encrypt(dataUint8)
 
-    // Use @noble/ciphers for ChaCha20-Poly1305 encryption
-    try {
-      // Convert Buffer to Uint8Array for @noble/ciphers
-      const keyUint8 = new Uint8Array(key)
-      const nonceUint8 = new Uint8Array(nonce)
-      const dataUint8 = new Uint8Array(data)
+  const cipherText = Buffer.concat([
+    PROTO_VERSION,
+    salt,
+    nonce,
+    Buffer.from(encrypted),
+  ])
 
-      const cipher = chacha20poly1305(keyUint8, nonceUint8)
-
-      const encrypted = cipher.encrypt(dataUint8)
-
-      const cipherText = Buffer.concat([
-        PROTO_VERSION,
-        salt,
-        nonce,
-        Buffer.from(encrypted),
-      ])
-
-      return cipherText.toString('hex')
-    } catch (cipherError) {
-      throw cipherError
-    }
-  } catch (error) {
-    throw error
-  }
+  return cipherText.toString('hex')
+}
 }
 
 export function decryptWithPassword(
