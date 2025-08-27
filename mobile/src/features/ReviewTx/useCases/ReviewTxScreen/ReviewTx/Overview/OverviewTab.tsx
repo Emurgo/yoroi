@@ -728,7 +728,7 @@ const useShowOperationsNotice = (operations: Operations) => {
   const query = useSuspenseQuery({
     queryKey: ['useShowOperationsNotice'],
     queryFn: () =>
-      storage.getItem(operationsNoticeShownKey, (value: string | null) => {
+      storage.getItem(operationsNoticeShownKey).then((value) => {
         const parsed = parseSafe(value)
         return isBoolean(parsed) ? parsed : true
       }),
