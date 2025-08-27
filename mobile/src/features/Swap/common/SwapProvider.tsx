@@ -500,43 +500,50 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
   )
 }
 
-const swapReducer = (state: SwapState, action: SwapAction) => {
+export const swapReducer = (state: SwapState, action: SwapAction) => {
   return produce(state, (draft) => {
-    draft.needsNewEstimate = true
-    draft.lastInputTouched = 'in'
-
     switch (action.type) {
       case SwapActionType.ChangeOrderType:
+        draft.needsNewEstimate = true
+        draft.lastInputTouched = 'in'
         draft.orderType = action.value
         break
 
       case SwapActionType.TokenInInputTouched:
+        draft.needsNewEstimate = true
+        draft.lastInputTouched = 'in'
         draft.tokenInInput.isTouched = true
         draft.tokenInInput.value = ''
         draft.tokenInInput.error = null
         break
 
       case SwapActionType.TokenOutInputTouched:
+        draft.needsNewEstimate = true
+        draft.lastInputTouched = 'in'
         draft.tokenOutInput.isTouched = true
         draft.tokenOutInput.value = ''
         draft.tokenOutInput.error = null
         break
 
       case SwapActionType.TokenInIdChanged:
+        draft.needsNewEstimate = true
+        draft.lastInputTouched = 'in'
         draft.tokenInInput.tokenId = action.value
         draft.selectedProtocol.isTouched = false
         draft.wantedPrice = ''
-
         break
 
       case SwapActionType.TokenOutIdChanged:
+        draft.needsNewEstimate = true
+        draft.lastInputTouched = 'in'
         draft.tokenOutInput.tokenId = action.value
         draft.selectedProtocol.isTouched = false
         draft.wantedPrice = ''
-
         break
 
       case SwapActionType.TokenInAmountChanged:
+        draft.needsNewEstimate = true
+        draft.lastInputTouched = 'in'
         draft.tokenInInput.value = parseNumber(action.value)
         if (action.value === '' || action.value === '0') {
           draft.tokenOutInput.value = '0'
@@ -546,6 +553,7 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
         break
 
       case SwapActionType.TokenOutAmountChanged:
+        draft.needsNewEstimate = true
         draft.lastInputTouched = 'out'
         draft.tokenOutInput.value = parseNumber(action.value)
         if (action.value === '' || action.value === '0') {
@@ -556,33 +564,39 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
         break
 
       case SwapActionType.TokenInErrorChanged:
+        draft.needsNewEstimate = false
         draft.lastInputTouched = state.lastInputTouched
         draft.tokenInInput.error = action.value
-        draft.needsNewEstimate = false
         if (action.value !== null) {
           draft.canSwap = false
         }
         break
 
       case SwapActionType.TokenOutErrorChanged:
+        draft.needsNewEstimate = false
         draft.lastInputTouched = state.lastInputTouched
         draft.tokenOutInput.error = action.value
-        draft.needsNewEstimate = false
         if (action.value !== null) {
           draft.canSwap = false
         }
         break
 
       case SwapActionType.SlippageInputChanged:
+        draft.needsNewEstimate = true
+        draft.lastInputTouched = 'in'
         draft.slippageInput.value = action.value
         break
 
       case SwapActionType.WantedPriceInputChanged:
+        draft.needsNewEstimate = true
+        draft.lastInputTouched = 'in'
         draft.wantedPrice = parseNumber(action.value)
         if (Number(draft.wantedPrice) === 0) draft.needsNewEstimate = false
         break
 
       case SwapActionType.SwitchTouched:
+        draft.needsNewEstimate = true
+        draft.lastInputTouched = 'in'
         draft.tokenOutInput.isTouched = state.tokenInInput.isTouched
         draft.tokenOutInput.tokenId = state.tokenInInput.tokenId
         draft.tokenOutInput.value = ''
@@ -597,16 +611,21 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
         break
 
       case SwapActionType.ProtocolSelected:
+        draft.needsNewEstimate = true
+        draft.lastInputTouched = 'in'
         draft.selectedProtocol.isTouched = true
         draft.selectedProtocol.value = action.value
         break
 
       case SwapActionType.ProtocolChanged:
+        draft.needsNewEstimate = true
+        draft.lastInputTouched = 'in'
         draft.selectedProtocol.isTouched = false
         draft.selectedProtocol.value = action.value
         break
 
       case SwapActionType.Refresh:
+        draft.needsNewEstimate = true
         draft.lastInputTouched = state.lastInputTouched
         draft.tokenInInput.error = null
         draft.tokenOutInput.error = null
@@ -614,6 +633,8 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
         break
 
       case SwapActionType.ResetAmounts:
+        draft.needsNewEstimate = true
+        draft.lastInputTouched = 'in'
         draft.tokenInInput.value = ''
         draft.tokenOutInput.value = ''
 
@@ -623,12 +644,11 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
         break
 
       case SwapActionType.ResetForm:
-        draft = defaultState
-        break
+        return defaultState
 
       case SwapActionType.EstimateResponse:
-        draft.lastInputTouched = state.lastInputTouched
         draft.needsNewEstimate = false
+        draft.lastInputTouched = state.lastInputTouched
         draft.estimate = action.value
         draft.tokenOutInput.error = null
         // Only enable swap if there are no input errors
@@ -645,6 +665,7 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
 
       case SwapActionType.EstimateError:
         draft.needsNewEstimate = false
+        draft.lastInputTouched = 'in'
         draft.estimate = undefined
         draft.tokenOutInput.error = action.value.message
         draft.canSwap = false
@@ -652,23 +673,25 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
 
       case SwapActionType.CreateResponse:
         draft.needsNewEstimate = false
+        draft.lastInputTouched = 'in'
         draft.createTx = action.value
         break
 
       case SwapActionType.CreateError:
         draft.needsNewEstimate = false
+        draft.lastInputTouched = 'in'
         draft.createTx = undefined
         draft.tokenOutInput.error = action.value.message
         draft.canSwap = false
         break
 
       default:
-        throw new Error(`swapReducer invalid action`)
+        return state
     }
   })
 }
 
-const defaultState: SwapState = Object.freeze({
+export const defaultState: SwapState = Object.freeze({
   needsNewEstimate: false,
   orderType: 'market',
   lastInputTouched: 'in',
