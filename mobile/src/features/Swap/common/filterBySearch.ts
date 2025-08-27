@@ -1,13 +1,10 @@
-// Cache for normalized search terms to avoid repeated string operations
 const searchCache = new Map<string, string>()
 
 export const filterBySearch = (searchTerm: string) => {
-  // Early return for empty search
   if (searchTerm.length === 0) {
     return () => true
   }
 
-  // Use cached normalized search term if available
   let normalizedSearch = searchCache.get(searchTerm)
   if (!normalizedSearch) {
     normalizedSearch = normalizeString(searchTerm)
