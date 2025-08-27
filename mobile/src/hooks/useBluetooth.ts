@@ -143,6 +143,20 @@ export const useBluetooth = (): UseBluetoothReturn => {
     }
   }, [])
 
+  const stopScan = React.useCallback(() => {
+    if (bleManagerRef.current) {
+      bleManagerRef.current.stopDeviceScan()
+    }
+
+    if (scanTimeoutRef.current) {
+      clearTimeout(scanTimeoutRef.current)
+      scanTimeoutRef.current = null
+    }
+
+    setState((prev) => ({...prev, isScanning: false}))
+    logger.debug('BLE scan stopped')
+  }, [])
+
   const startScan = React.useCallback(
     async ({timeout = time.seconds(10)}: {timeout?: number}): Promise<void> => {
       try {
@@ -229,22 +243,8 @@ export const useBluetooth = (): UseBluetoothReturn => {
         }))
       }
     },
-    [requestPermissions, initializeBleManager],
+    [requestPermissions, initializeBleManager, stopScan],
   )
-
-  const stopScan = React.useCallback(() => {
-    if (bleManagerRef.current) {
-      bleManagerRef.current.stopDeviceScan()
-    }
-
-    if (scanTimeoutRef.current) {
-      clearTimeout(scanTimeoutRef.current)
-      scanTimeoutRef.current = null
-    }
-
-    setState((prev) => ({...prev, isScanning: false}))
-    logger.debug('BLE scan stopped')
-  }, [])
 
   const connectToDevice = React.useCallback(
     async ({

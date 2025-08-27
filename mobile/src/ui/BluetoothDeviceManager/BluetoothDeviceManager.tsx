@@ -37,7 +37,7 @@ export const BluetoothDeviceManager: React.FC<BluetoothDeviceManagerProps> = ({
 
   const handleConnect = async (deviceId: string) => {
     try {
-      const success = await connectToDevice(deviceId)
+      const success = await connectToDevice({deviceId})
       if (success) {
         Alert.alert('Success', 'Device connected successfully!')
         onDeviceSelect?.(deviceId)
@@ -187,7 +187,7 @@ export const BluetoothDeviceManager: React.FC<BluetoothDeviceManagerProps> = ({
       {/* Control Buttons */}
       <View style={[a.flex_row, a.gap_sm, a.pb_md]}>
         <Button
-          onPress={state.isScanning ? stopScan : startScan}
+          onPress={() => (state.isScanning ? stopScan() : startScan({}))}
           type={state.isScanning ? ButtonType.Primary : ButtonType.Secondary}
           title={state.isScanning ? 'Stop Scan' : 'Start Scan'}
           disabled={!state.isEnabled}
