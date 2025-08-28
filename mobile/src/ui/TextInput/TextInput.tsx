@@ -143,7 +143,9 @@ export const TextInput = React.forwardRef(
                 // also there is a bug on ios for selectTextOnFocus: https://github.com/facebook/react-native/issues/30585
                 // note: selectTextOnFocus is not equal to selectTextOnAutoFocus
                 if (selectTextOnAutoFocus && value) {
-                  event.currentTarget.setSelection(0, value.length)
+                  event.currentTarget.setNativeProps({
+                    selection: {start: 0, end: value.length},
+                  })
                 }
 
                 if (onFocus) onFocus(event)

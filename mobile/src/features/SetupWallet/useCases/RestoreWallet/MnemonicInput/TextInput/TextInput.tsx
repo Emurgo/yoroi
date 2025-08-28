@@ -184,7 +184,9 @@ export const TextInput = React.forwardRef(
               autoFocus={selectTextOnAutoFocus || autoFocus}
               onFocus={(event) => {
                 if (selectTextOnAutoFocus && value) {
-                  event.currentTarget.setSelection(0, value.length)
+                  event.currentTarget.setNativeProps({
+                    selection: {start: 0, end: value.length},
+                  })
                 }
                 onFocus?.(event)
               }}
