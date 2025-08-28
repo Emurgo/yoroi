@@ -1,7 +1,6 @@
 import * as React from 'react'
 
 import {useLinksRequestAction} from './useLinksRequestAction'
-import {useLinksRequestWallet} from './useLinksRequestWallet'
 
 type ModalFunctions = {
   openModal: (args: {
@@ -22,9 +21,10 @@ type DeepLinkActionHandlerProps = {
   modalFunctions?: ModalFunctions
 }
 
-export const DeepLinkActionHandler = ({modalFunctions}: DeepLinkActionHandlerProps) => {
+export const DeepLinkActionHandler = ({
+  modalFunctions,
+}: DeepLinkActionHandlerProps) => {
   useLinksRequestAction(modalFunctions)
-  useLinksRequestWallet(modalFunctions)
-  
+
   return null
 }

@@ -19,6 +19,7 @@ module.exports = {
       userInterfaceStyle: 'automatic',
       bundleIdentifier: 'com.emurgo',
       buildNumber: '801',
+      associatedDomains: ['applinks:yoroi-wallet.com'],
       infoPlist: {
         NSCameraUsageDescription:
           'Allow $(PRODUCT_NAME) to access your camera to scan QR codes',

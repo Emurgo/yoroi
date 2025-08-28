@@ -32,6 +32,7 @@ const getAppConfig = () => {
         userInterfaceStyle: 'automatic',
         bundleIdentifier: 'com.emurgo.yoroi',
         buildNumber: '800',
+        associatedDomains: ['applinks:yoroi-wallet.com'],
         infoPlist: {
           NSCameraUsageDescription:
             'Allow $(PRODUCT_NAME) to access your camera to scan QR codes',
