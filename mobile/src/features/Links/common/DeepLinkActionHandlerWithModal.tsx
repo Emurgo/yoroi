@@ -6,7 +6,7 @@ import {DeepLinkActionHandler} from './DeepLinkActionHandler'
 
 export const DeepLinkActionHandlerWithModal = () => {
   const {openModal, closeModal} = useModal()
-  
+
   const modalFunctions = React.useMemo(
     () => ({
       openModal,

@@ -59,17 +59,19 @@ export const useLinksRequestWallet = (modalFunctions?: ModalFunctions) => {
     if (!isWalletRequested || wallet != null) return
 
     // Create a unique key for this wallet request
-    const requestKey = `${action.info.useCase}-${action.isTrusted}`
+    const requestKey = `${action.info.version}-${action.info.useCase}-${action.isTrusted}`
 
     // Skip if this request has already been processed
     if (processedWalletRequestRef.current === requestKey) return
 
-    // Mark this request as processed
-    processedWalletRequestRef.current = requestKey
-
-    InteractionManager.runAfterInteractions(() => {
+    // Mark as processed only after the action is actually handled
+    const handleWalletRequest = () => {
       askToOpenAWallet()
-    })
+      // Mark as processed after handling
+      processedWalletRequestRef.current = requestKey
+    }
+
+    InteractionManager.runAfterInteractions(handleWalletRequest)
   }, [action, wallet, askToOpenAWallet])
 
   // Reset processed request when action changes

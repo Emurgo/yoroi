@@ -43,7 +43,6 @@ export const useLinksRequestAction = (modalFunctions?: ModalFunctions) => {
   } = useWalletManager()
   const navigateTo = useNavigateTo()
 
-  // Track if action has been processed to prevent infinite loops
   const processedActionRef = React.useRef<string | null>(null)
 
   const {addTab, setTabActive, tabs} = useBrowser()
@@ -218,7 +217,6 @@ export const useLinksRequestAction = (modalFunctions?: ModalFunctions) => {
       isTrusted: boolean
     }) => {
       if (!modalFunctions) {
-        // Fallback: directly launch dapp without modal
         launchDappUrl({
           info: {
             version: 1,
@@ -270,16 +268,22 @@ export const useLinksRequestAction = (modalFunctions?: ModalFunctions) => {
   React.useEffect(() => {
     if (wallet == null || action == null) return
 
-    // Create a unique key for this action to prevent reprocessing
-    const actionKey = `${action.info.useCase}-${JSON.stringify(action.info.params)}`
+    const actionKey = React.useMemo(() => {
+      const params = action.info.params
+      let paramsKey = ''
+      if ('link' in params) {
+        paramsKey = `link:${params.link}`
+      } else if ('dappUrl' in params) {
+        paramsKey = `dappUrl:${params.dappUrl}`
+      } else if ('redirectTo' in params) {
+        paramsKey = `redirectTo:${params.redirectTo}`
+      }
+      return `${action.info.version}-${action.info.useCase}-${action.isTrusted}-${paramsKey}`
+    }, [action])
 
-    // Skip if this action has already been processed
     if (processedActionRef.current === actionKey) return
 
-    // Mark this action as processed
-    processedActionRef.current = actionKey
-
-    InteractionManager.runAfterInteractions(() => {
+    const handleAction = () => {
       switch (action.info.useCase) {
         case 'request/ada-with-link':
           openRequestedPaymentAdaWithLink(
@@ -301,10 +305,17 @@ export const useLinksRequestAction = (modalFunctions?: ModalFunctions) => {
           )
           break
       }
-    })
-  }, [action, wallet]) // Remove callback dependencies to prevent infinite loops
+      processedActionRef.current = actionKey
+    }
 
-  // Reset processed action when action changes
+    InteractionManager.runAfterInteractions(handleAction)
+  }, [
+    action,
+    wallet,
+    openRequestedBrowserLaunchDappUrl,
+    openRequestedPaymentAdaWithLink,
+  ])
+
   React.useEffect(() => {
     processedActionRef.current = null
   }, [action])
