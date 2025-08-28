@@ -52,11 +52,29 @@ export const EditAmountScreen = () => {
     targets,
   } = useTransfer()
 
-  if (!targets || selectedTargetIndex >= targets.length) {
-    return null
-  }
+  const amount =
+    targets?.[selectedTargetIndex]?.entry?.amounts?.[selectedTokenId]
 
-  const amount = targets[selectedTargetIndex]?.entry?.amounts?.[selectedTokenId]
+  const initialQuantity = amount?.quantity ?? BigInt(0)
+  const available =
+    (balances.records.get(selectedTokenId)?.quantity ?? BigInt(0)) -
+    (allocated.get(selectedTargetIndex)?.get(selectedTokenId) ?? BigInt(0))
+  const isPrimary = amount ? isPrimaryToken(amount.info) : false
+
+  const [quantity, setQuantity] = React.useState(initialQuantity)
+  const [inputValue, setInputValue] = React.useState(
+    initialQuantity === BigInt(0)
+      ? ''
+      : atomicBreakdown(
+          initialQuantity,
+          amount?.info.decimals ?? 0,
+        ).bn.toFormat(),
+  )
+  const spendable = isPrimary
+    ? available - primaryBreakdown.lockedAsStorageCost
+    : available
+
+  const isFocused = useIsFocused()
 
   React.useEffect(() => {
     if (!amount) {
@@ -64,45 +82,29 @@ export const EditAmountScreen = () => {
     }
   }, [navigateTo, amount])
 
-  if (!amount) {
-    return null
-  }
-
-  const initialQuantity = amount.quantity
-  const available =
-    (balances.records.get(selectedTokenId)?.quantity ?? BigInt(0)) -
-    (allocated.get(selectedTargetIndex)?.get(selectedTokenId) ?? BigInt(0))
-  const isPrimary = isPrimaryToken(amount.info)
-
-  const [quantity, setQuantity] = React.useState(initialQuantity)
-  const [inputValue, setInputValue] = React.useState(
-    initialQuantity === BigInt(0)
-      ? ''
-      : atomicBreakdown(initialQuantity, amount.info.decimals).bn.toFormat(),
-  )
-  const spendable = isPrimary
-    ? available - primaryBreakdown.lockedAsStorageCost
-    : available
-
   React.useEffect(() => {
-    setQuantity(initialQuantity)
-    setInputValue(
-      initialQuantity === BigInt(0)
-        ? ''
-        : atomicBreakdown(initialQuantity, amount.info.decimals).bn.toFormat(),
-    )
-  }, [amount.info.decimals, initialQuantity])
+    if (amount) {
+      setQuantity(initialQuantity)
+      setInputValue(
+        initialQuantity === BigInt(0)
+          ? ''
+          : atomicBreakdown(
+              initialQuantity,
+              amount.info.decimals,
+            ).bn.toFormat(),
+      )
+    }
+  }, [amount?.info.decimals, initialQuantity, amount])
 
-  const isFocused = useIsFocused()
   React.useEffect(() => {
     return () => {
-      if (amount.quantity === BigInt(0) && !isFocused) {
+      if (amount?.quantity === BigInt(0) && !isFocused) {
         InteractionManager.runAfterInteractions(() => {
           amountRemoved(selectedTokenId)
         })
       }
     }
-  }, [amount.quantity, amountRemoved, isFocused, selectedTokenId])
+  }, [amount?.quantity, amountRemoved, isFocused, selectedTokenId])
 
   const hasBalance = available >= quantity
   // primary can have locked amount
@@ -114,7 +116,7 @@ export const EditAmountScreen = () => {
       try {
         const [input, quantity] = Quantities.parseFromText(
           text,
-          amount.info.decimals ?? 0,
+          amount?.info.decimals ?? 0,
           numberLocale,
         )
 
@@ -127,23 +129,31 @@ export const EditAmountScreen = () => {
         )
       }
     },
-    [amount.info.decimals, numberLocale],
+    [amount?.info.decimals, numberLocale],
   )
 
   const handleOnMaxBalance = React.useCallback(() => {
-    setInputValue(
-      atomicBreakdown(spendable, amount.info.decimals).bn.toFormat(),
-    )
-    setQuantity(spendable)
-  }, [amount.info.decimals, spendable])
+    if (amount) {
+      setInputValue(
+        atomicBreakdown(spendable, amount.info.decimals).bn.toFormat(),
+      )
+      setQuantity(spendable)
+    }
+  }, [amount?.info.decimals, spendable, amount])
 
   const handleOnApply = React.useCallback(() => {
-    amountChanged({
-      info: amount.info,
-      quantity,
-    })
-    navigateTo.selectedTokens()
-  }, [amount.info, amountChanged, navigateTo, quantity])
+    if (amount) {
+      amountChanged({
+        info: amount.info,
+        quantity,
+      })
+      navigateTo.selectedTokens()
+    }
+  }, [amount?.info, amountChanged, navigateTo, quantity, amount])
+
+  if (!targets || selectedTargetIndex >= targets.length || !amount) {
+    return null
+  }
 
   return (
     <KeyboardAvoidingView style={[a.flex_1, {backgroundColor: p.bg_color_max}]}>
