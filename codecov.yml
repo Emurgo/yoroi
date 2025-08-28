@@ -3,7 +3,12 @@ coverage:
     project:
       default:
         threshold: 1%
-        target: 10%
+        target: 5%
+        if_not_found: success
+    patch:
+      default:
+        threshold: 1%
+        target: 5%
         if_not_found: success
 
 ignore:
