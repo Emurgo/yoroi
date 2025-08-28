@@ -52,13 +52,21 @@ export const EditAmountScreen = () => {
     targets,
   } = useTransfer()
 
-  const amount = targets[selectedTargetIndex].entry.amounts[selectedTokenId]
+  if (!targets || selectedTargetIndex >= targets.length) {
+    return null
+  }
+
+  const amount = targets[selectedTargetIndex]?.entry?.amounts?.[selectedTokenId]
 
   React.useEffect(() => {
     if (!amount) {
       navigateTo.selectedTokens()
     }
   }, [navigateTo, amount])
+
+  if (!amount) {
+    return null
+  }
 
   const initialQuantity = amount.quantity
   const available =
