@@ -319,6 +319,8 @@ export const useLinksRequestAction = (modalFunctions?: ModalFunctions) => {
   ])
 
   React.useEffect(() => {
-    processedActionRef.current = null
+    if (action == null) {
+      processedActionRef.current = null
+    }
   }, [action])
 }

@@ -74,8 +74,9 @@ export const useLinksRequestWallet = (modalFunctions?: ModalFunctions) => {
     InteractionManager.runAfterInteractions(handleWalletRequest)
   }, [action, wallet, askToOpenAWallet])
 
-  // Reset processed request when action changes
   React.useEffect(() => {
-    processedWalletRequestRef.current = null
+    if (action == null) {
+      processedWalletRequestRef.current = null
+    }
   }, [action])
 }
