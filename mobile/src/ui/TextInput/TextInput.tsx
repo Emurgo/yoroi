@@ -3,6 +3,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
 import {
+  Platform,
   TextInput as RNTextInput,
   TextInputProps as RNTextInputProps,
   TouchableOpacity,
@@ -94,6 +95,103 @@ export const TextInput = React.forwardRef(
       </HelperText>
     )
 
+    // Use native TextInput on iOS to avoid React Native Paper compatibility issues
+    if (Platform.OS === 'ios') {
+      return (
+        <View style={containerStyle}>
+          <View
+            style={[
+              {
+                borderWidth: 1,
+                borderColor: showError
+                  ? p.sys_magenta_500
+                  : faded
+                    ? p.gray_400
+                    : p.gray_max,
+                borderRadius: 8,
+                backgroundColor: faded ? p.gray_100 : p.bg_color_max,
+                paddingHorizontal: 16,
+                paddingVertical: 12,
+                flexDirection: 'row',
+                alignItems: 'center',
+              },
+            ]}
+          >
+            <RNTextInput
+              ref={ref}
+              style={[
+                {
+                  flex: 1,
+                  color: faded ? p.gray_900 : p.gray_900,
+                  fontSize: 16,
+                  textAlign,
+                },
+                renderComponentStyle,
+              ]}
+              value={value}
+              onChangeText={(text) => {
+                setErrorTextEnabled(false)
+                restProps.onChangeText?.(text)
+              }}
+              autoCorrect={false}
+              autoComplete={autoComplete}
+              autoCapitalize="none"
+              keyboardAppearance={isDark ? 'dark' : 'light'}
+              autoFocus={selectTextOnAutoFocus || autoFocus}
+              onFocus={(event) => {
+                // selectTextOnFocus + autoFocus doesn't work as expected
+                // also there is a bug on ios for selectTextOnFocus: https://github.com/facebook/react-native/issues/30585
+                // note: selectTextOnFocus is not equal to selectTextOnAutoFocus
+                if (selectTextOnAutoFocus && value) {
+                  event.currentTarget.setSelection(0, value.length)
+                }
+
+                if (onFocus) onFocus(event)
+              }}
+              onBlur={() => {
+                if (
+                  showErrorOnBlur &&
+                  !errorTextEnabled &&
+                  !isEmptyString(errorText)
+                ) {
+                  setErrorTextEnabled(true)
+                }
+              }}
+              secureTextEntry={secureTextEntry && !showPassword}
+              editable={editable}
+              placeholder={restProps.placeholder}
+              placeholderTextColor={faded ? p.gray_400 : p.gray_600}
+              {...restProps}
+            />
+
+            {right != null ? (
+              <View
+                style={[
+                  a.pr_lg,
+                  a.pb_lg,
+                  a.align_center,
+                  a.justify_end,
+                  a.flex_col,
+                ]}
+              >
+                {right}
+              </View>
+            ) : null}
+
+            {secureTextEntry ? (
+              <SecureTextEntryToggle
+                showPassword={showPassword}
+                onPress={() => setShowPassword(!showPassword)}
+              />
+            ) : null}
+          </View>
+
+          {!noHelper && helperToShow}
+        </View>
+      )
+    }
+
+    // Use React Native Paper TextInput for Android
     return (
       <View style={containerStyle}>
         <RNPTextInput

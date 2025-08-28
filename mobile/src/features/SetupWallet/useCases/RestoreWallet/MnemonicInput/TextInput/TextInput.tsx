@@ -3,6 +3,7 @@ import {useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
 import {
+  Platform,
   TextInput as RNTextInput,
   TextInputProps as RNTextInputProps,
   View,
@@ -129,6 +130,96 @@ export const TextInput = React.forwardRef(
       if (value === '') setIsValidWord(false)
     }, [value])
 
+    // Use native TextInput on iOS to avoid React Native Paper compatibility issues
+    if (Platform.OS === 'ios') {
+      return (
+        <View style={containerStyle}>
+          <View
+            style={[
+              {
+                borderWidth: 1,
+                borderColor: showError
+                  ? p.text_error
+                  : faded
+                    ? p.primary_300
+                    : p.gray_max,
+                borderRadius: 8,
+                backgroundColor: isValidPhrase
+                  ? p.el_secondary
+                  : isValidWord && isEmptyString(errorText)
+                    ? p.primary_100
+                    : 'transparent',
+                paddingHorizontal: 16,
+                paddingVertical: 12,
+                flexDirection: 'row',
+                alignItems: 'center',
+              },
+            ]}
+          >
+            <RNTextInput
+              ref={ref}
+              style={[
+                {
+                  flex: 1,
+                  color: isValidPhrase
+                    ? p.black_static
+                    : showError
+                      ? p.text_error
+                      : p.text_primary_medium,
+                  fontSize: 16,
+                  textAlign,
+                },
+                renderComponentStyle,
+              ]}
+              value={value}
+              onChangeText={(text) => {
+                setErrorTextEnabled(false)
+                setIsValidWord(false)
+                onChangeText?.(text)
+              }}
+              autoCorrect={false}
+              autoComplete={autoComplete}
+              autoCapitalize="none"
+              keyboardAppearance={isDark ? 'dark' : 'light'}
+              autoFocus={selectTextOnAutoFocus || autoFocus}
+              onFocus={(event) => {
+                if (selectTextOnAutoFocus && value) {
+                  event.currentTarget.setSelection(0, value.length)
+                }
+                onFocus?.(event)
+              }}
+              onBlur={(event) => {
+                if (!isEmptyString(errorText)) {
+                  if (showErrorOnBlur && !errorTextEnabled)
+                    setErrorTextEnabled(true)
+                  setIsValidWord(false)
+                } else if (value === '') {
+                  setIsValidWord(false)
+                  setErrorTextEnabled(false)
+                } else {
+                  setIsValidWord(true)
+                }
+                onBlur?.(event)
+              }}
+              placeholder={rest.placeholder}
+              placeholderTextColor={
+                faded
+                  ? isDark
+                    ? p.primary_700
+                    : p.primary_500
+                  : isValidWord && isEmptyString(errorText)
+                    ? 'transparent'
+                    : p.primary_300
+              }
+              {...rest}
+            />
+          </View>
+          {!noHelper && helperNode}
+        </View>
+      )
+    }
+
+    // Use React Native Paper TextInput for Android
     return (
       <View style={containerStyle}>
         <RNPTextInput
