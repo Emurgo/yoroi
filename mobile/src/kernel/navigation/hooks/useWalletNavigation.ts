@@ -1,8 +1,8 @@
 import {Chain, Portfolio} from '@yoroi/types'
 
 import {useNavigation} from '@react-navigation/native'
+import * as Linking from 'expo-linking'
 import * as React from 'react'
-import {Linking} from 'react-native'
 
 import {useSwap} from '~/features/Swap/common/useSwap'
 import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'

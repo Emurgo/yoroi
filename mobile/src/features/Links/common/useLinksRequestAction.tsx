@@ -12,18 +12,32 @@ import {useWalletManager} from '~/features/WalletManager/context/WalletManagerPr
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {useModal} from '~/ui/Modal/ModalContext'
 
 import {RequestedAdaPaymentWithLinkScreen} from '../useCases/RequestedAdaPaymentWithLinkScreen/RequestedAdaPaymentWithLinkScreen'
 import {RequestedBrowserLaunchDappUrlScreen} from '../useCases/RequestedBrowserLaunchDappUrlScreen/RequestedBrowserLaunchDappUrlScreen'
 import {useNavigateTo} from './useNavigationTo'
 
 const heightBreakpoint = 467
-export const useLinksRequestAction = () => {
+
+type ModalFunctions = {
+  openModal: (args: {
+    content: React.ReactNode
+    height?: number
+    footer?: React.ReactNode
+    isLoading?: boolean
+    canDiscard?: boolean
+    title?: string
+    canContinue?: boolean
+    onClose?: () => void
+    resizable?: boolean
+  }) => void
+  closeModal: () => void
+}
+
+export const useLinksRequestAction = (modalFunctions?: ModalFunctions) => {
   const strings = useStrings()
   const {track} = useMetrics()
   const {action, actionFinished} = useLinks()
-  const {openModal, closeModal} = useModal()
   const {
     selected: {wallet},
   } = useWalletManager()
@@ -62,14 +76,14 @@ export const useLinksRequestAction = () => {
                 quantity: ptAmount,
                 info: wallet.portfolioPrimaryTokenInfo,
               })
-              closeModal()
+              modalFunctions?.closeModal()
               actionFinished()
               navigateTo.startTransfer()
             }
           }
         } catch (error) {
           // TODO: revisit it should display an alert
-          closeModal()
+          modalFunctions?.closeModal()
           actionFinished()
           logger.error('Error parsing Cardano link', {error})
         }
@@ -78,9 +92,9 @@ export const useLinksRequestAction = () => {
     [
       actionFinished,
       amountChanged,
-      closeModal,
       linkActionChanged,
       memoChanged,
+      modalFunctions,
       navigateTo,
       receiverResolveChanged,
       reset,
@@ -96,6 +110,23 @@ export const useLinksRequestAction = () => {
       }: {params: Links.TransferRequestAdaWithLinkParams; isTrusted: boolean},
       decimals: number,
     ) => {
+      if (!modalFunctions) {
+        // Fallback: directly start transfer without modal
+        startTransferWithLink(
+          {
+            info: {
+              version: 1,
+              feature: 'transfer',
+              useCase: 'request/ada-with-link',
+              params,
+            },
+            isTrusted,
+          },
+          decimals,
+        )
+        return
+      }
+
       const title = isTrusted
         ? strings.links.trustedPaymentRequestedTitle
         : strings.links.untrustedPaymentRequestedTitle
@@ -118,16 +149,21 @@ export const useLinksRequestAction = () => {
           onContinue={handleOnContinue}
           params={params}
           isTrusted={isTrusted}
+          onClose={modalFunctions.closeModal}
         />
       )
 
-      openModal({title: title, content: content, height: heightBreakpoint})
+      modalFunctions.openModal({
+        title: title,
+        content: content,
+        height: heightBreakpoint,
+      })
     },
     [
       strings.links.trustedPaymentRequestedTitle,
       strings.links.untrustedPaymentRequestedTitle,
       startTransferWithLink,
-      openModal,
+      modalFunctions,
     ],
   )
 
@@ -147,12 +183,12 @@ export const useLinksRequestAction = () => {
           addTab(dappUrl, id)
           setTabActive(tabs.length)
 
-          closeModal()
+          modalFunctions?.closeModal()
           actionFinished()
           navigateTo.launchDappUrl()
         } catch (error) {
           // TODO: revisit it should display an alert
-          closeModal()
+          modalFunctions?.closeModal()
           actionFinished()
           logger.error('Error parsing Yoroi link', {error})
         }
@@ -161,8 +197,8 @@ export const useLinksRequestAction = () => {
     [
       actionFinished,
       addTab,
-      closeModal,
       linkActionChanged,
+      modalFunctions,
       navigateTo,
       setTabActive,
       tabs,
@@ -178,6 +214,20 @@ export const useLinksRequestAction = () => {
       params: Links.BrowserLaunchDappUrlParams
       isTrusted: boolean
     }) => {
+      if (!modalFunctions) {
+        // Fallback: directly launch dapp without modal
+        launchDappUrl({
+          info: {
+            version: 1,
+            feature: 'browser',
+            useCase: 'launch',
+            params,
+          },
+          isTrusted,
+        })
+        return
+      }
+
       const title = isTrusted
         ? strings.links.trustedBrowserLaunchDappUrlTitle
         : strings.links.untrustedBrowserLaunchDappUrlTitle
@@ -200,11 +250,15 @@ export const useLinksRequestAction = () => {
         />
       )
 
-      openModal({title: title, content: content, height: heightBreakpoint})
+      modalFunctions.openModal({
+        title: title,
+        content: content,
+        height: heightBreakpoint,
+      })
     },
     [
       launchDappUrl,
-      openModal,
+      modalFunctions,
       strings.links.trustedBrowserLaunchDappUrlTitle,
       strings.links.untrustedBrowserLaunchDappUrlTitle,
     ],

@@ -1,4 +1,3 @@
-// Dynamic app configuration based on environment
 const getAppConfig = () => {
   const buildVariant =
     process.env.BUILD_VARIANT || process.env.EXPO_PUBLIC_APP_CONFIG || 'DEV'
@@ -12,7 +11,6 @@ const getAppConfig = () => {
     return require('./app.config.production.js').default
   }
 
-  // Default development config
   return {
     expo: {
       name: 'Yoroi Dev',
@@ -28,6 +26,7 @@ const getAppConfig = () => {
         resizeMode: 'contain',
         backgroundColor: '#ffffff',
       },
+      scheme: 'yoroi',
       ios: {
         supportsTablet: false,
         userInterfaceStyle: 'automatic',
@@ -85,6 +84,33 @@ const getAppConfig = () => {
           'android.permission.BLUETOOTH_SCAN',
           'android.permission.POST_NOTIFICATIONS',
           'android.permission.USB_PERMISSION',
+        ],
+        intentFilters: [
+          {
+            action: 'android.intent.action.VIEW',
+            category: [
+              'android.intent.category.DEFAULT',
+              'android.intent.category.BROWSABLE',
+            ],
+            data: {
+              scheme: 'yoroi',
+              host: 'yoroi-wallet.com',
+              pathPrefix: '/w1',
+            },
+          },
+          {
+            action: 'android.intent.action.VIEW',
+            category: [
+              'android.intent.category.DEFAULT',
+              'android.intent.category.BROWSABLE',
+            ],
+            data: {
+              scheme: 'https',
+              host: 'yoroi-wallet.com',
+              pathPrefix: '/w1',
+            },
+            autoVerify: true,
+          },
         ],
         splash: {
           image: './assets/yoroi/splash/light/bootsplash_logo.png',

@@ -1,7 +1,7 @@
 import {linksYoroiParser, useLinks} from '@yoroi/links'
 
+import * as Linking from 'expo-linking'
 import * as React from 'react'
-import {Linking} from 'react-native'
 
 import {logger} from '~/kernel/logger/logger'
 
@@ -27,11 +27,10 @@ export const useDeepLinkWatcher = () => {
   )
 
   React.useEffect(() => {
-    const getUrl = ({url}: {url: string | null}) => {
+    const subscription = Linking.addEventListener('url', ({url}) => {
       if (url !== null) processLink(url)
-    }
-    Linking.addEventListener('url', getUrl)
-    return () => Linking.removeAllListeners('url')
+    })
+    return () => subscription?.remove()
   }, [processLink])
 
   // app is closed
