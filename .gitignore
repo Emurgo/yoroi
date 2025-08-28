@@ -5,6 +5,9 @@
 .env
 translations/
 .translations/
+lib/
+credentials/
+credentials.json
 
 # Xcode
 #

@@ -1,0 +1,191 @@
+module.exports = {
+  expo: {
+    name: 'Yoroi',
+    slug: 'yoroi',
+    owner: 'stacky',
+    version: '6.0.0',
+    orientation: 'portrait',
+    icon: './assets/yoroi/icon.png',
+    userInterfaceStyle: 'automatic',
+    newArchEnabled: true,
+    splash: {
+      image: './assets/yoroi/splash/light/bootsplash_logo.png',
+      resizeMode: 'contain',
+      backgroundColor: '#ffffff',
+    },
+    scheme: 'yoroi',
+    ios: {
+      supportsTablet: true,
+      userInterfaceStyle: 'automatic',
+      bundleIdentifier: 'com.emurgo',
+      buildNumber: '801',
+      infoPlist: {
+        NSCameraUsageDescription:
+          'Allow $(PRODUCT_NAME) to access your camera to scan QR codes',
+        NSLocationWhenInUseUsageDescription:
+          'Allow $(PRODUCT_NAME) to access your location for Bluetooth scanning',
+        NSBluetoothAlwaysUsageDescription:
+          'Allow $(PRODUCT_NAME) to access Bluetooth for hardware wallet connection',
+        NSBluetoothPeripheralUsageDescription:
+          'Allow $(PRODUCT_NAME) to access Bluetooth for hardware wallet connection',
+        UIBackgroundModes: ['fetch', 'remote-notification'],
+        NSUserNotificationUsageDescription:
+          'Allow $(PRODUCT_NAME) to send you notifications about your wallet activity',
+        NSFaceIDUsageDescription:
+          'Allow $(PRODUCT_NAME) to access your face ID for biometric authentication',
+        ITSAppUsesNonExemptEncryption: false,
+      },
+      splash: {
+        image: './assets/yoroi/splash/light/bootsplash_logo.png',
+        resizeMode: 'contain',
+        backgroundColor: '#ffffff',
+        dark: {
+          image: './assets/yoroi/splash/dark/bootsplash_logo.png',
+          backgroundColor: '#000000',
+        },
+      },
+    },
+    android: {
+      adaptiveIcon: {
+        foregroundImage:
+          './assets/yoroi/adaptive-icon/foreground/foreground.png',
+        backgroundImage:
+          './assets/yoroi/adaptive-icon/background/background.png',
+        backgroundColor: '#ffffff',
+      },
+      package: 'com.emurgo',
+      versionCode: 1000,
+      edgeToEdgeEnabled: true,
+      userInterfaceStyle: 'automatic',
+      permissions: [
+        'android.permission.INTERNET',
+        'android.permission.SYSTEM_ALERT_WINDOW',
+        'android.permission.VIBRATE',
+        'android.permission.USE_FINGERPRINT',
+        'android.permission.USE_BIOMETRIC',
+        'android.permission.ACCESS_NETWORK_STATE',
+        'android.permission.CAMERA',
+        'android.permission.ACCESS_FINE_LOCATION',
+        'android.permission.BLUETOOTH',
+        'android.permission.BLUETOOTH_ADMIN',
+        'android.permission.BLUETOOTH_CONNECT',
+        'android.permission.BLUETOOTH_SCAN',
+        'android.permission.POST_NOTIFICATIONS',
+        'android.permission.USB_PERMISSION',
+      ],
+      intentFilters: [
+        {
+          action: 'android.intent.action.VIEW',
+          category: [
+            'android.intent.category.DEFAULT',
+            'android.intent.category.BROWSABLE',
+          ],
+          data: {
+            scheme: 'yoroi',
+            host: 'yoroi-wallet.com',
+            pathPrefix: '/w1',
+          },
+        },
+        {
+          action: 'android.intent.action.VIEW',
+          category: [
+            'android.intent.category.DEFAULT',
+            'android.intent.category.BROWSABLE',
+          ],
+          data: {
+            scheme: 'https',
+            host: 'yoroi-wallet.com',
+            pathPrefix: '/w1',
+          },
+          autoVerify: true,
+        },
+      ],
+      splash: {
+        image: './assets/yoroi/splash/light/bootsplash_logo.png',
+        resizeMode: 'contain',
+        backgroundColor: '#ffffff',
+        dark: {
+          image: './assets/yoroi/splash/dark/bootsplash_logo.png',
+          backgroundColor: '#000000',
+        },
+      },
+    },
+    web: {
+      favicon: './assets/yoroi/favicon.png',
+    },
+    extra: {
+      SENTRY_DSN: process.env.SENTRY_DSN || '',
+      UNSTOPPABLE_API_KEY: process.env.UNSTOPPABLE_API_KEY || '',
+      COMMIT: process.env.COMMIT || '',
+      BUILD_VARIANT: 'PROD',
+      FRONTEND_FEE_ADDRESS_MAINNET:
+        process.env.FRONTEND_FEE_ADDRESS_MAINNET || '',
+      FRONTEND_FEE_ADDRESS_PREPROD:
+        process.env.FRONTEND_FEE_ADDRESS_PREPROD || '',
+      BANXA_TEST_WALLET: process.env.BANXA_TEST_WALLET || '',
+      DISABLE_LOGBOX: process.env.DISABLE_LOGBOX || false,
+      LOGGER_FILTER: process.env.LOGGER_FILTER || '',
+      eas: {
+        projectId: '3ba6aa05-1ac7-48a4-a5d7-571853056c63',
+      },
+    },
+    plugins: [
+      'react-native-ble-plx',
+      [
+        'react-native-edge-to-edge',
+        {
+          android: {
+            parentTheme: 'Default',
+            enforceNavigationBarContrast: false,
+          },
+        },
+      ],
+      'expo-font',
+      'expo-localization',
+      [
+        'expo-camera',
+        {
+          cameraPermission:
+            'Allow $(PRODUCT_NAME) to access your camera to scan QR codes',
+        },
+      ],
+      [
+        'expo-location',
+        {
+          locationAlwaysAndWhenInUsePermission:
+            'Allow $(PRODUCT_NAME) to use your location for Bluetooth scanning',
+        },
+      ],
+      [
+        'expo-notifications',
+        {
+          color: '#ffffff',
+        },
+      ],
+      [
+        'expo-build-properties',
+        {
+          ios: {
+            deploymentTarget: '15.1',
+            newArchEnabled: true,
+          },
+          android: {
+            compileSdkVersion: 35,
+            targetSdkVersion: 35,
+            buildToolsVersion: '35.0.0',
+            newArchEnabled: true,
+            signingConfig: {
+              keystore:
+                process.env.ANDROID_KEYSTORE_FILE ||
+                '$HOME/.yoroi/android/production.keystore',
+              storePassword: process.env.ANDROID_KEYSTORE_PASSWORD,
+              keyAlias: process.env.ANDROID_KEYSTORE_ALIAS || 'my-key-alias',
+              keyPassword: process.env.ANDROID_KEYSTORE_PASSWORD,
+            },
+          },
+        },
+      ],
+      './plugins/with-app-turbo-module-provider.js',
+    ],
+  },
+}

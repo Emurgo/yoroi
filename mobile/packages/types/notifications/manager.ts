@@ -1,0 +1,137 @@
+import {BehaviorSubject, Subject} from 'rxjs'
+
+import {AppStorage} from '../app/storage'
+
+export enum NotificationTrigger {
+  'TransactionReceived' = 'TransactionReceived',
+  'RewardsUpdated' = 'RewardsUpdated',
+  'PrimaryTokenPriceChanged' = 'PrimaryTokenPriceChanged',
+  'Push' = 'Push',
+  'Banner' = 'Banner',
+}
+
+export type NotificationManagerMakerProps = {
+  eventsStorage: AppStorage<true, string>
+  configStorage: AppStorage<true, string>
+  subscriptions?: Partial<{
+    [NotificationTrigger.TransactionReceived]: Subject<NotificationTransactionReceivedEvent>
+    [NotificationTrigger.RewardsUpdated]: Subject<NotificationRewardsUpdatedEvent>
+    [NotificationTrigger.PrimaryTokenPriceChanged]: Subject<NotificationPrimaryTokenPriceChangedEvent>
+    [NotificationTrigger.Push]: Subject<PushNotificationEvent>
+    [NotificationTrigger.Banner]: Subject<BannerNotificationEvent>
+  }>
+  eventsLimit?: number
+}
+
+export interface BannerNotificationEvent extends NotificationEventBase {
+  trigger: NotificationTrigger.Banner
+  metadata: {
+    title: string
+    body: string
+    data?: Record<string, unknown>
+  }
+}
+
+export interface PushNotificationEvent extends NotificationEventBase {
+  trigger: NotificationTrigger.Push
+  metadata: {
+    title: string
+    body: string
+    data?: Record<string, unknown>
+  }
+}
+
+export interface NotificationTransactionReceivedEvent
+  extends NotificationEventBase {
+  trigger: NotificationTrigger.TransactionReceived
+  metadata: {
+    walletId: string
+    previousTxsCounter: number
+    nextTxsCounter: number
+    txId: string
+    isSentByUser: boolean // check local pending
+  }
+}
+
+export interface NotificationRewardsUpdatedEvent extends NotificationEventBase {
+  trigger: NotificationTrigger.RewardsUpdated
+  metadata: {
+    walletId: string
+  }
+}
+
+export interface NotificationPrimaryTokenPriceChangedEvent
+  extends NotificationEventBase {
+  trigger: NotificationTrigger.PrimaryTokenPriceChanged
+  metadata: {
+    previousPrice: number
+    nextPrice: number
+  }
+}
+
+export type NotificationGroup = 'transaction-history' | 'portfolio' | 'push'
+
+export type NotificationEvent =
+  | NotificationTransactionReceivedEvent
+  | NotificationPrimaryTokenPriceChangedEvent
+  | NotificationRewardsUpdatedEvent
+  | PushNotificationEvent
+  | BannerNotificationEvent
+
+type NotificationEventId = number
+
+interface NotificationEventBase {
+  id: NotificationEventId
+  date: string
+  isRead: boolean
+}
+
+export type NotificationConfig = {
+  displayDuration: number
+  [NotificationTrigger.Push]: {
+    notify: boolean
+  }
+  [NotificationTrigger.PrimaryTokenPriceChanged]: {
+    notify: boolean
+    thresholdInPercent: number
+    interval: '24h' | '1h'
+  }
+  [NotificationTrigger.TransactionReceived]: {
+    notify: boolean
+  }
+  [NotificationTrigger.RewardsUpdated]: {
+    notify: boolean
+  }
+  [NotificationTrigger.Banner]: {
+    notify: boolean
+  }
+}
+
+export type NotificationManager = {
+  hydrate: () => void // build up subscriptions
+
+  unreadCounterByGroup$: BehaviorSubject<
+    Readonly<Map<NotificationGroup, number>>
+  >
+
+  newEvents$: Subject<NotificationEvent>
+
+  // Events represent a notification event that was trigger by a config rule
+  events: {
+    markAllAsRead: () => Promise<void>
+    markAsRead(id: NotificationEventId): Promise<void>
+    remove(id: NotificationEventId): Promise<ReadonlyArray<NotificationEvent>>
+    read: () => Promise<ReadonlyArray<NotificationEvent>>
+    push: (event: Readonly<NotificationEvent>) => Promise<void>
+    clear: () => Promise<void>
+  }
+  // Config sets the ground to what, when, and if should notify user
+  config: {
+    read: () => Promise<Readonly<NotificationConfig>> // return initial if empty
+    save: (config: Readonly<Partial<NotificationConfig>>) => Promise<void>
+    reset: () => Promise<void>
+  }
+
+  destroy: () => Promise<void> // tear down subscriptions
+  clear: () => Promise<void>
+}

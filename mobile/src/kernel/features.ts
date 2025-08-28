@@ -1,0 +1,78 @@
+import {useQuery} from '@tanstack/react-query'
+
+import {isDev} from './constants'
+
+export const features = {
+  useTestnet: false,
+  prefillWalletInfo: false,
+  showProdPoolsInDev: isDev,
+  moderatingNftsEnabled: false,
+  poolTransition: true,
+  portfolioPerformance: false,
+  portfolioNews: false,
+  portfolioExport: false,
+  walletListFeedback: isDev,
+  walletListAggregatedBalance: isDev,
+  walletListSwipeableActions: isDev,
+  swapTokenLinks: true,
+  utxoConsolidation: isDev,
+}
+
+export const useYoroiConfig = () => {
+  const {data, isLoading, error} = useQuery({
+    queryKey: ['persist', 'yoroi-config', isDev],
+    queryFn: async (): Promise<any> => {
+      try {
+        const url = isDev
+          ? 'https://raw.githubusercontent.com/Emurgo/yoroi-config/refs/heads/main/dev.json'
+          : 'https://raw.githubusercontent.com/Emurgo/yoroi-config/refs/heads/main/prod.json'
+
+        const response = await fetch(url)
+
+        if (!response.ok) {
+          throw new Error(`Failed to fetch config: ${response.status}`)
+        }
+
+        const data = await response.json()
+
+        return data
+      } catch (e) {
+        return {}
+      }
+    },
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    retry: 2,
+  })
+
+  return {
+    config: data,
+    isLoading,
+    error,
+    isYoroiDrepBannerEnabled: data?.banners?.delegateToYoroi ?? false,
+  }
+}
+
+export const debugWalletInfo = {
+  WALLET_NAME: features.useTestnet ? 'Auto Testnet' : 'Auto Nightly',
+  PASSWORD: '1234567890',
+  MNEMONIC1: [
+    'dry balcony arctic what garbage sort',
+    'cart shine egg lamp manual bottom',
+    'slide assault bus',
+  ].join(' '),
+  MNEMONIC2: [
+    'able grunt edge report orange wide',
+    'amount decrease congress flee smile impulse',
+    'parade perfect normal',
+  ].join(' '),
+  MNEMONIC3: [
+    'make exercise taxi asset',
+    'reject seek brain volcano roof',
+    'boss already cement scrub',
+    'nut priority',
+  ].join(' '),
+  SEND_ADDRESS: features.useTestnet
+    ? 'addr_test1qpaufs29emf7r62prt8r0l072nuvs4vezrgve2ty5csvvjwr3y3kdut55a40jff00qmg74686vz44v6k363md06qkq0qj8n0y9'
+    : 'addr1q8dewyn53xdjyzu20xjj6wg7kkxyqq63upxqevt24jga8fgcdwap96xuy84apchhj8u6r7uvl974sy9qz0sedc7ayjks3sxz7a',
+  SEND_AMOUNT: features.useTestnet ? '3.3333' : '1',
+}

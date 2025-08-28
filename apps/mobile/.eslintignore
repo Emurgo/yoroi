@@ -1,8 +1,0 @@
-node_modules/
-lib/
-babel.config.js
-jest.config.js
-jest.setup.js
-coverage/ 
-metro.config.js
-src/kernel/i18n/polyfills.ts
