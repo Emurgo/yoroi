@@ -43,6 +43,9 @@ export const useLinksRequestAction = (modalFunctions?: ModalFunctions) => {
   } = useWalletManager()
   const navigateTo = useNavigateTo()
 
+  // Track if action has been processed to prevent infinite loops
+  const processedActionRef = React.useRef<string | null>(null)
+
   const {addTab, setTabActive, tabs} = useBrowser()
   const {
     memoChanged,
@@ -265,35 +268,44 @@ export const useLinksRequestAction = (modalFunctions?: ModalFunctions) => {
   )
 
   React.useEffect(() => {
+    if (wallet == null || action == null) return
+
+    // Create a unique key for this action to prevent reprocessing
+    const actionKey = `${action.info.useCase}-${JSON.stringify(action.info.params)}`
+
+    // Skip if this action has already been processed
+    if (processedActionRef.current === actionKey) return
+
+    // Mark this action as processed
+    processedActionRef.current = actionKey
+
     InteractionManager.runAfterInteractions(() => {
-      if (wallet != null && action != null) {
-        switch (action.info.useCase) {
-          case 'request/ada-with-link':
-            openRequestedPaymentAdaWithLink(
-              {params: action.info.params, isTrusted: action.isTrusted},
-              wallet.portfolioPrimaryTokenInfo.decimals,
-            )
-            break
-          case 'launch':
-            openRequestedBrowserLaunchDappUrl({
-              params: action.info.params,
-              isTrusted: action.isTrusted,
-            })
-            break
-          default:
-            logger.error(
-              new Error(
-                `useLinksRequestAction: unknown useCase: ${action?.info.useCase}`,
-              ),
-            )
-            break
-        }
+      switch (action.info.useCase) {
+        case 'request/ada-with-link':
+          openRequestedPaymentAdaWithLink(
+            {params: action.info.params, isTrusted: action.isTrusted},
+            wallet.portfolioPrimaryTokenInfo.decimals,
+          )
+          break
+        case 'launch':
+          openRequestedBrowserLaunchDappUrl({
+            params: action.info.params,
+            isTrusted: action.isTrusted,
+          })
+          break
+        default:
+          logger.error(
+            new Error(
+              `useLinksRequestAction: unknown useCase: ${action?.info.useCase}`,
+            ),
+          )
+          break
       }
     })
-  }, [
-    action,
-    openRequestedBrowserLaunchDappUrl,
-    openRequestedPaymentAdaWithLink,
-    wallet,
-  ])
+  }, [action, wallet]) // Remove callback dependencies to prevent infinite loops
+
+  // Reset processed action when action changes
+  React.useEffect(() => {
+    processedActionRef.current = null
+  }, [action])
 }

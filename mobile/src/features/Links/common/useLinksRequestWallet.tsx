@@ -33,6 +33,9 @@ export const useLinksRequestWallet = (modalFunctions?: ModalFunctions) => {
   } = useWalletManager()
   const {action} = useLinks()
 
+  // Track if wallet request has been processed to prevent infinite loops
+  const processedWalletRequestRef = React.useRef<string | null>(null)
+
   const askToOpenAWallet = React.useCallback(() => {
     if (!modalFunctions) {
       logger.debug('useLinksRequestWallet: modal functions not available')
@@ -47,13 +50,30 @@ export const useLinksRequestWallet = (modalFunctions?: ModalFunctions) => {
   }, [modalFunctions, strings.links.askToOpenAWalletTitle])
 
   React.useEffect(() => {
+    if (action == null) return
+
+    const isWalletRequested =
+      action.info.useCase === 'request/ada-with-link' ||
+      action.info.useCase === 'launch'
+
+    if (!isWalletRequested || wallet != null) return
+
+    // Create a unique key for this wallet request
+    const requestKey = `${action.info.useCase}-${action.isTrusted}`
+
+    // Skip if this request has already been processed
+    if (processedWalletRequestRef.current === requestKey) return
+
+    // Mark this request as processed
+    processedWalletRequestRef.current = requestKey
+
     InteractionManager.runAfterInteractions(() => {
-      const isWalletRequested =
-        action?.info.useCase === 'request/ada-with-link' ||
-        action?.info.useCase === 'launch'
-      if (isWalletRequested && wallet == null) {
-        askToOpenAWallet()
-      }
+      askToOpenAWallet()
     })
-  }, [askToOpenAWallet, action?.info.useCase, wallet])
+  }, [action, wallet, askToOpenAWallet])
+
+  // Reset processed request when action changes
+  React.useEffect(() => {
+    processedWalletRequestRef.current = null
+  }, [action])
 }
