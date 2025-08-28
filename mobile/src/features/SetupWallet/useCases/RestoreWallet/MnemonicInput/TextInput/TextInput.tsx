@@ -8,27 +8,32 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import {
-  HelperText as HelperTextRNP,
-  TextInput as RNPTextInput,
-} from 'react-native-paper'
+import {HelperText as HelperTextRNP} from 'react-native-paper'
 
 import {isEmptyString} from '~/wallets/utils/string'
 
-type TextInputProps = RNTextInputProps &
-  Omit<React.ComponentProps<typeof RNPTextInput>, 'theme'> & {
-    containerStyle?: ViewStyle
-    renderComponentStyle?: ViewStyle
-    helper?: React.ReactNode
-    errorText?: string
-    errorOnMount?: boolean
-    errorDelay?: number
-    noHelper?: boolean
-    faded?: boolean
-    showErrorOnBlur?: boolean
-    selectTextOnAutoFocus?: boolean
-    isValidPhrase: boolean
-  }
+type TextInputProps = RNTextInputProps & {
+  containerStyle?: ViewStyle
+  renderComponentStyle?: ViewStyle
+  helper?: React.ReactNode
+  errorText?: string
+  errorOnMount?: boolean
+  errorDelay?: number
+  noHelper?: boolean
+  faded?: boolean
+  showErrorOnBlur?: boolean
+  selectTextOnAutoFocus?: boolean
+  isValidPhrase?: boolean
+  cursorColor?: string
+  selectionColor?: string
+  spellCheck?: boolean
+  enablesReturnKeyAutomatically?: boolean
+  blurOnSubmit?: boolean
+  onSubmitEditing?: () => void
+  onKeyPress?: (event: any) => void
+  keyboardType?: string
+  dense?: boolean
+}
 
 const useDebounced = (cb: VoidFunction, v: unknown, d = 1_000) => {
   const first = React.useRef(true)
@@ -64,8 +69,7 @@ export const TextInput = React.forwardRef(
       autoFocus,
       selectTextOnAutoFocus,
       isValidPhrase = false,
-      cursorColor,
-      selectionColor,
+      placeholder,
       ...rest
     } = props
 
@@ -174,6 +178,9 @@ export const TextInput = React.forwardRef(
               setIsValidWord(false)
               onChangeText?.(text)
             }}
+            onChange={(event) => {
+              onChange?.(event)
+            }}
             autoCorrect={false}
             autoComplete={autoComplete}
             autoCapitalize="none"
@@ -200,7 +207,7 @@ export const TextInput = React.forwardRef(
               }
               onBlur?.(event)
             }}
-            placeholder={rest.placeholder}
+            placeholder={placeholder}
             placeholderTextColor={
               faded
                 ? isDark
@@ -216,6 +223,5 @@ export const TextInput = React.forwardRef(
         {!noHelper && helperNode}
       </View>
     )
-
   },
 )

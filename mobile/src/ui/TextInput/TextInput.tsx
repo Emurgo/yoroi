@@ -10,29 +10,40 @@ import {
   ViewProps,
   ViewStyle,
 } from 'react-native'
-import {
-  HelperText as HelperTextRNP,
-  TextInput as RNPTextInput,
-} from 'react-native-paper'
+import {HelperText as HelperTextRNP} from 'react-native-paper'
 
 import {Icon} from '~/ui/Icon'
 import {isEmptyString} from '~/wallets/utils/string'
 
-export type TextInputProps = RNTextInputProps &
-  Omit<React.ComponentProps<typeof RNPTextInput>, 'theme'> & {
-    containerStyle?: ViewStyle
-    renderComponentStyle?: ViewStyle
-    helper?: React.ReactNode
-    errorText?: string
-    disabled?: boolean
-    errorOnMount?: boolean
-    errorDelay?: number
-    noHelper?: boolean
-    dense?: boolean
-    faded?: boolean
-    showErrorOnBlur?: boolean
-    selectTextOnAutoFocus?: boolean
-  }
+export type TextInputProps = RNTextInputProps & {
+  containerStyle?: ViewStyle
+  renderComponentStyle?: ViewStyle
+  helper?: React.ReactNode
+  errorText?: string
+  disabled?: boolean
+  errorOnMount?: boolean
+  errorDelay?: number
+  noHelper?: boolean
+  dense?: boolean
+  faded?: boolean
+  showErrorOnBlur?: boolean
+  selectTextOnAutoFocus?: boolean
+  right?: React.ReactNode
+  secureTextEntry?: boolean
+  label?: React.ReactNode
+  mode?: string
+  error?: boolean
+  underlineColor?: string
+  underlineColorAndroid?: string
+  cursorColor?: string
+  selectionColor?: string
+  spellCheck?: boolean
+  enablesReturnKeyAutomatically?: boolean
+  blurOnSubmit?: boolean
+  onSubmitEditing?: () => void
+  onKeyPress?: (event: any) => void
+  activeUnderlineColor?: string
+}
 
 const useDebounced = (callback: VoidFunction, value: unknown, delay = 1000) => {
   const first = React.useRef(true)
@@ -66,8 +77,12 @@ export const TextInput = React.forwardRef(
       showErrorOnBlur,
       autoComplete = 'off',
       onFocus,
+      onBlur,
+      onChangeText,
+      onChange,
       autoFocus,
       selectTextOnAutoFocus,
+      placeholder,
       ...restProps
     } = props
 
@@ -128,7 +143,10 @@ export const TextInput = React.forwardRef(
             value={value}
             onChangeText={(text) => {
               setErrorTextEnabled(false)
-              restProps.onChangeText?.(text)
+              onChangeText?.(text)
+            }}
+            onChange={(event) => {
+              onChange?.(event)
             }}
             autoCorrect={false}
             autoComplete={autoComplete}
@@ -147,7 +165,7 @@ export const TextInput = React.forwardRef(
 
               if (onFocus) onFocus(event)
             }}
-            onBlur={() => {
+            onBlur={(event) => {
               if (
                 showErrorOnBlur &&
                 !errorTextEnabled &&
@@ -155,10 +173,11 @@ export const TextInput = React.forwardRef(
               ) {
                 setErrorTextEnabled(true)
               }
+              onBlur?.(event)
             }}
             secureTextEntry={secureTextEntry && !showPassword}
             editable={editable}
-            placeholder={restProps.placeholder}
+            placeholder={placeholder}
             placeholderTextColor={faded ? p.gray_400 : p.gray_600}
             {...restProps}
           />
@@ -251,10 +270,6 @@ const SecureTextEntryToggle = ({
       </TouchableOpacity>
     </AdornmentContainer>
   )
-}
-
-const InputContainer = ({children}: {children: React.ReactNode}) => {
-  return <View style={[a.flex_row, a.flex_1]}>{children}</View>
 }
 
 const AdornmentContainer = ({style, children}: ViewProps) => {
