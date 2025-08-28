@@ -209,7 +209,7 @@ export const swapMessages = defineMessages({
     id: 'swap.swapScreen.marketPriceInfo',
     defaultMessage: '!!!Market Price Info',
   },
-    limitPriceInfo: {
+  limitPriceInfo: {
     id: 'swap.swapScreen.limitPriceInfo',
     defaultMessage: '!!!Limit Price Info',
   },
@@ -630,7 +630,7 @@ export const swapMessages = defineMessages({
     defaultMessage: '!!!Service Unavailable Info',
   },
   emptyOpenOrders: {
-    id: 'swap.listOrders.emptyOpenOrders', 
+    id: 'swap.listOrders.emptyOpenOrders',
     defaultMessage: '!!!Empty Open Orders',
   },
   emptyOpenOrdersSub: {

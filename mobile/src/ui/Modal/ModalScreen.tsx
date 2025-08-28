@@ -8,6 +8,8 @@ import {
 import * as React from 'react'
 import {Keyboard, Platform, Text, View, useWindowDimensions} from 'react-native'
 
+import {Space} from '~/ui/Space/Space'
+
 import {useModal} from './ModalContext'
 
 export const Modal = () => {
@@ -129,8 +131,13 @@ export const Modal = () => {
             )}
             <View style={[a.flex_1, a.self_stretch]}>{content}</View>
           </View>
-          
-          {footer && <View style={[a.px_lg, a.pb_lg, a.pt_md]}>{footer}</View>}
+
+          {footer && (
+            <View style={[a.px_lg, a.pb_lg, a.pt_md]}>
+              {footer}
+              <Space.Height.xl />
+            </View>
+          )}
         </View>
       </BottomSheetView>
     </BottomSheetModal>

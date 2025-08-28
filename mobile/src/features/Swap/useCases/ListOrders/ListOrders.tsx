@@ -125,7 +125,7 @@ const Content = ({filter}: {filter: Filter}) => {
       (status === 'open' && filter === 'open') ||
       (status !== 'open' && status !== 'canceled' && filter === 'completed'),
   )
-  
+
   return (
     <View style={[a.flex_1]}>
       <View style={[a.flex_1]}>

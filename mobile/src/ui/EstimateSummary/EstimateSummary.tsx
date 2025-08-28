@@ -13,8 +13,8 @@ import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {ProtocolAvatar} from '~/ui/ProtocolAvatar/ProtocolAvatar'
+import {Space} from '~/ui/Space/Space'
 import {SwapInfoLink} from '~/ui/SwapInfoLink/SwapInfoLink'
-import { Space } from '~/ui/Space/Space'
 
 export const EstimateSummary = () => {
   const strings = useStrings()
@@ -125,7 +125,7 @@ const Row = ({
   description?: string
   value: number | string | React.ReactNode
 }) => {
-  const {atoms:ta, palette: p} = useTheme()
+  const {atoms: ta, palette: p} = useTheme()
   const {openModal} = useModal()
 
   return (
@@ -144,23 +144,18 @@ const Row = ({
                 content: (
                   <View style={[a.flex_1, a.px_lg, a.pb_xl]}>
                     <View style={[a.flex_1, a.justify_center, a.pb_2xl]}>
-                      <Text
-                        style={[a.body_1_lg_regular, {color: p.gray_900}]}
-                      >
+                      <Text style={[a.body_1_lg_regular, ta.text_gray_max]}>
                         {description}
                       </Text>
                     </View>
                   </View>
-                  
                 ),
                 footer: <SwapInfoLink />,
-                height: 422,
-                resizable: true,
               })
             }
             type={ButtonType.SecondaryText}
             icon={({size}) => Icon.Info({size, color: p.text_gray_low})}
-            size="S" 
+            size="S"
           />
         )}
       </View>
