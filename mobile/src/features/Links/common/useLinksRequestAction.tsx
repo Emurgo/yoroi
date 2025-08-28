@@ -265,21 +265,22 @@ export const useLinksRequestAction = (modalFunctions?: ModalFunctions) => {
     ],
   )
 
+  const actionKey = React.useMemo(() => {
+    if (action == null) return null
+    const params = action.info.params
+    let paramsKey = ''
+    if ('link' in params) {
+      paramsKey = `link:${params.link}`
+    } else if ('dappUrl' in params) {
+      paramsKey = `dappUrl:${params.dappUrl}`
+    } else if ('redirectTo' in params) {
+      paramsKey = `redirectTo:${params.redirectTo}`
+    }
+    return `${action.info.version}-${action.info.useCase}-${action.isTrusted}-${paramsKey}`
+  }, [action])
+
   React.useEffect(() => {
     if (wallet == null || action == null) return
-
-    const actionKey = React.useMemo(() => {
-      const params = action.info.params
-      let paramsKey = ''
-      if ('link' in params) {
-        paramsKey = `link:${params.link}`
-      } else if ('dappUrl' in params) {
-        paramsKey = `dappUrl:${params.dappUrl}`
-      } else if ('redirectTo' in params) {
-        paramsKey = `redirectTo:${params.redirectTo}`
-      }
-      return `${action.info.version}-${action.info.useCase}-${action.isTrusted}-${paramsKey}`
-    }, [action])
 
     if (processedActionRef.current === actionKey) return
 
@@ -312,6 +313,7 @@ export const useLinksRequestAction = (modalFunctions?: ModalFunctions) => {
   }, [
     action,
     wallet,
+    actionKey,
     openRequestedBrowserLaunchDappUrl,
     openRequestedPaymentAdaWithLink,
   ])
