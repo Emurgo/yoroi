@@ -50,7 +50,7 @@ export const sendMessages = defineMessages({
     defaultMessage: '!!!Insufficient balance',
   },
   amountInputErrorMinPrimaryBalanceForTokens: {
-    id: 'global.ok',
+    id: 'global.info.minPrimaryBalanceForTokens',
     defaultMessage: '!!!Minimum primary balance for tokens',
   },
   memoLabel: {
@@ -131,7 +131,7 @@ export const sendMessages = defineMessages({
     defaultMessage: '!!!Max',
   },
   minPrimaryBalanceForTokens: {
-    id: 'global.ok',
+    id: 'global.info.minPrimaryBalanceForTokens',
     defaultMessage: '!!!Minimum primary balance for tokens',
   },
   addressInputLabel: {

@@ -94,11 +94,11 @@ export const swapMessages = defineMessages({
     defaultMessage: '!!!Search Tokens',
   },
   popularTokens: {
-    id: 'global.ok',
+    id: 'swap.swapScreen.popularTokens',
     defaultMessage: '!!!Popular Tokens',
   },
   allTokens: {
-    id: 'global.ok',
+    id: 'swap.swapScreen.allTokens',
     defaultMessage: '!!!All Tokens',
   },
   noTokensFound: {
@@ -170,7 +170,7 @@ export const swapMessages = defineMessages({
     defaultMessage: '!!!Swap Cancellation Details',
   },
   tokenSwap: {
-    id: 'global.ok',
+    id: 'swap.swapScreen.tokenSwapTab',
     defaultMessage: '!!!Token Swap',
   },
   orderSwap: {
@@ -298,7 +298,7 @@ export const swapMessages = defineMessages({
     defaultMessage: '!!!Pool Verification Info {pool}',
   },
   eachVerifiedToken: {
-    id: 'global.ok',
+    id: 'swap.swapScreen.eachVerifiedToken',
     defaultMessage: '!!!Each Verified Token',
   },
   verifiedBadge: {
