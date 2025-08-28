@@ -3,7 +3,6 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
 import {
-  Platform,
   TextInput as RNTextInput,
   TextInputProps as RNTextInputProps,
   TouchableOpacity,
@@ -95,183 +94,96 @@ export const TextInput = React.forwardRef(
       </HelperText>
     )
 
-    // Use native TextInput on iOS to avoid React Native Paper compatibility issues
-    if (Platform.OS === 'ios') {
-      return (
-        <View style={containerStyle}>
-          <View
-            style={[
-              {
-                borderWidth: 1,
-                borderColor: showError
-                  ? p.sys_magenta_500
-                  : faded
-                    ? p.gray_400
-                    : p.gray_max,
-                borderRadius: 8,
-                backgroundColor: faded ? p.gray_100 : p.bg_color_max,
-                paddingHorizontal: 16,
-                paddingVertical: 12,
-                flexDirection: 'row',
-                alignItems: 'center',
-              },
-            ]}
-          >
-            <RNTextInput
-              ref={ref}
-              style={[
-                {
-                  flex: 1,
-                  color: faded ? p.gray_900 : p.gray_900,
-                  fontSize: 16,
-                  textAlign,
-                },
-                renderComponentStyle,
-              ]}
-              value={value}
-              onChangeText={(text) => {
-                setErrorTextEnabled(false)
-                restProps.onChangeText?.(text)
-              }}
-              autoCorrect={false}
-              autoComplete={autoComplete}
-              autoCapitalize="none"
-              keyboardAppearance={isDark ? 'dark' : 'light'}
-              autoFocus={selectTextOnAutoFocus || autoFocus}
-              onFocus={(event) => {
-                // selectTextOnFocus + autoFocus doesn't work as expected
-                // also there is a bug on ios for selectTextOnFocus: https://github.com/facebook/react-native/issues/30585
-                // note: selectTextOnFocus is not equal to selectTextOnAutoFocus
-                if (selectTextOnAutoFocus && value) {
-                  event.currentTarget.setNativeProps({
-                    selection: {start: 0, end: value.length},
-                  })
-                }
-
-                if (onFocus) onFocus(event)
-              }}
-              onBlur={() => {
-                if (
-                  showErrorOnBlur &&
-                  !errorTextEnabled &&
-                  !isEmptyString(errorText)
-                ) {
-                  setErrorTextEnabled(true)
-                }
-              }}
-              secureTextEntry={secureTextEntry && !showPassword}
-              editable={editable}
-              placeholder={restProps.placeholder}
-              placeholderTextColor={faded ? p.gray_400 : p.gray_600}
-              {...restProps}
-            />
-
-            {right != null ? (
-              <View
-                style={[
-                  a.pr_lg,
-                  a.pb_lg,
-                  a.align_center,
-                  a.justify_end,
-                  a.flex_col,
-                ]}
-              >
-                {right}
-              </View>
-            ) : null}
-
-            {secureTextEntry ? (
-              <SecureTextEntryToggle
-                showPassword={showPassword}
-                onPress={() => setShowPassword(!showPassword)}
-              />
-            ) : null}
-          </View>
-
-          {!noHelper && helperToShow}
-        </View>
-      )
-    }
-
-    // Use React Native Paper TextInput for Android
     return (
       <View style={containerStyle}>
-        <RNPTextInput
-          ref={ref}
-          style={{textAlign}}
-          value={value}
-          onChange={() => setErrorTextEnabled(false)}
-          autoCorrect={false}
-          autoComplete={autoComplete}
-          autoCapitalize="none"
-          keyboardAppearance={isDark ? 'dark' : 'light'} // ios feature
-          autoFocus={selectTextOnAutoFocus || autoFocus}
-          onFocus={(event) => {
-            // selectTextOnFocus + autoFocus doesn't work as expected
-            // also there is a bug on ios for selectTextOnFocus: https://github.com/facebook/react-native/issues/30585
-            // note: selectTextOnFocus is not equal to selectTextOnAutoFocus
-            if (selectTextOnAutoFocus)
-              event.currentTarget.setSelection(0, value?.length)
-
-            if (onFocus) onFocus(event)
-          }}
-          onBlur={() => {
-            if (
-              showErrorOnBlur &&
-              !errorTextEnabled &&
-              !isEmptyString(errorText)
-            ) {
-              setErrorTextEnabled(true)
-            }
-          }}
-          theme={{
-            roundness: 8,
-            colors: {
-              background: faded ? p.gray_100 : p.bg_color_max,
-              placeholder: faded ? p.gray_400 : p.gray_600,
-              primary: faded ? p.gray_400 : p.gray_max,
-              error: p.sys_magenta_500,
+        <View
+          style={[
+            {
+              borderWidth: 1,
+              borderColor: showError
+                ? p.sys_magenta_500
+                : faded
+                  ? p.gray_400
+                  : p.gray_max,
+              borderRadius: 8,
+              backgroundColor: faded ? p.gray_100 : p.bg_color_max,
+              paddingHorizontal: 16,
+              paddingVertical: 12,
+              flexDirection: 'row',
+              alignItems: 'center',
             },
-          }}
-          secureTextEntry={secureTextEntry && !showPassword}
-          mode="outlined"
-          error={errorTextEnabled && !isEmptyString(errorText)}
-          render={({style, ...inputProps}) => (
-            <InputContainer>
-              <RNTextInput
-                {...inputProps}
-                style={[
-                  style,
-                  renderComponentStyle,
-                  {color: faded ? p.gray_900 : p.gray_900, flex: 1},
-                ]}
-                editable={editable}
-              />
+          ]}
+        >
+          <RNTextInput
+            ref={ref}
+            style={[
+              {
+                flex: 1,
+                color: faded ? p.gray_900 : p.gray_900,
+                fontSize: 16,
+                textAlign,
+              },
+              renderComponentStyle,
+            ]}
+            value={value}
+            onChangeText={(text) => {
+              setErrorTextEnabled(false)
+              restProps.onChangeText?.(text)
+            }}
+            autoCorrect={false}
+            autoComplete={autoComplete}
+            autoCapitalize="none"
+            keyboardAppearance={isDark ? 'dark' : 'light'}
+            autoFocus={selectTextOnAutoFocus || autoFocus}
+            onFocus={(event) => {
+              // selectTextOnFocus + autoFocus doesn't work as expected
+              // also there is a bug on ios for selectTextOnFocus: https://github.com/facebook/react-native/issues/30585
+              // note: selectTextOnFocus is not equal to selectTextOnAutoFocus
+              if (selectTextOnAutoFocus && value) {
+                event.currentTarget.setNativeProps({
+                  selection: {start: 0, end: value.length},
+                })
+              }
 
-              {right != null ? (
-                <AdornmentContainer
-                  style={[
-                    a.pr_lg,
-                    a.pb_lg,
-                    a.align_center,
-                    a.justify_end,
-                    a.flex_col,
-                  ]}
-                >
-                  {right}
-                </AdornmentContainer>
-              ) : null}
+              if (onFocus) onFocus(event)
+            }}
+            onBlur={() => {
+              if (
+                showErrorOnBlur &&
+                !errorTextEnabled &&
+                !isEmptyString(errorText)
+              ) {
+                setErrorTextEnabled(true)
+              }
+            }}
+            secureTextEntry={secureTextEntry && !showPassword}
+            editable={editable}
+            placeholder={restProps.placeholder}
+            placeholderTextColor={faded ? p.gray_400 : p.gray_600}
+            {...restProps}
+          />
 
-              {secureTextEntry ? (
-                <SecureTextEntryToggle
-                  showPassword={showPassword}
-                  onPress={() => setShowPassword(!showPassword)}
-                />
-              ) : null}
-            </InputContainer>
-          )}
-          {...restProps}
-        />
+          {right != null ? (
+            <View
+              style={[
+                a.pr_lg,
+                a.pb_lg,
+                a.align_center,
+                a.justify_end,
+                a.flex_col,
+              ]}
+            >
+              {right}
+            </View>
+          ) : null}
+
+          {secureTextEntry ? (
+            <SecureTextEntryToggle
+              showPassword={showPassword}
+              onPress={() => setShowPassword(!showPassword)}
+            />
+          ) : null}
+        </View>
 
         {!noHelper && helperToShow}
       </View>
