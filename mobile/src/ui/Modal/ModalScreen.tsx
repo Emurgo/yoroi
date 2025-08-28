@@ -20,7 +20,7 @@ export const Modal = () => {
     title,
     resizable,
   } = useModal()
-  const {palette: p, isDark} = useTheme()
+  const {atoms: ta, palette: p, isDark} = useTheme()
   const {height: screenHeight} = useWindowDimensions()
   const [keyboardHeight, setKeyboardHeight] = React.useState(0)
 
@@ -94,7 +94,7 @@ export const Modal = () => {
   return (
     <BottomSheetModal
       ref={bottomSheetModalRef}
-      index={0}
+      index={resizable ? 1 : 0}
       snapPoints={snapPoints}
       backdropComponent={renderBackdrop}
       enablePanDownToClose={canDiscard}
@@ -116,17 +116,22 @@ export const Modal = () => {
       }}
     >
       <BottomSheetView style={[a.flex_1, a.self_stretch]}>
-        {title && (
-          <View style={[a.px_lg, a.pt_lg, a.pb_lg]}>
-            <Text
-              style={[a.heading_2_medium, {color: p.gray_900}, a.text_center]}
-            >
-              {title}
-            </Text>
+        <View style={[a.flex_1, a.justify_between]}>
+          <View style={[a.flex_1]}>
+            {title && (
+              <View style={[a.px_lg, a.pt_lg, a.pb_lg]}>
+                <Text
+                  style={[a.heading_3_medium, ta.text_gray_max, a.text_center]}
+                >
+                  {title}
+                </Text>
+              </View>
+            )}
+            <View style={[a.flex_1, a.self_stretch]}>{content}</View>
           </View>
-        )}
-        {content}
-        {footer && <View style={[a.px_lg, a.pb_lg, a.pt_md]}>{footer}</View>}
+          
+          {footer && <View style={[a.px_lg, a.pb_lg, a.pt_md]}>{footer}</View>}
+        </View>
       </BottomSheetView>
     </BottomSheetModal>
   )
