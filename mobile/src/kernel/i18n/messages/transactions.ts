@@ -194,7 +194,7 @@ export const transactionsMessages = defineMessages({
     defaultMessage: '!!!Open In Explorer',
   },
   copiedLabel: {
-    id: 'components.txhistory.txdetails.transactionId',
+    id: 'components.receive.addressmodal.copiedLabel',
     defaultMessage: '!!!Copied Label',
   },
   organizeWallet: {
