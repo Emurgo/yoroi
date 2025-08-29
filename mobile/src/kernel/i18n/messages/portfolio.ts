@@ -258,11 +258,11 @@ export const portfolioMessages = defineMessages({
     defaultMessage: '!!!Website',
   },
   policyID: {
-    id: 'components.txhistory.txdetails.transactionId',
+    id: 'portfolio.portfolioTokensDetailScreen.policyID',
     defaultMessage: '!!!Policy ID',
   },
   fingerprint: {
-    id: 'components.txhistory.txdetails.transactionId',
+    id: 'portfolio.portfolioTokensDetailScreen.fingerprint',
     defaultMessage: '!!!Fingerprint',
   },
   news: {
