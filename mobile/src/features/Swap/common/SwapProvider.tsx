@@ -13,6 +13,7 @@ import {usePortfolioBalances} from '~/features/Portfolio/common/hooks/usePortfol
 import {usePortfolioTokenInfosSuspense} from '~/features/Portfolio/common/hooks/usePortfolioTokenInfos'
 import {useStakingKey} from '~/features/Staking/hooks/useStakingKey'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useYoroiConfig} from '~/kernel/features'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {convertBech32ToHex} from '~/wallets/cardano/common/signatureUtils'
@@ -20,7 +21,6 @@ import {convertBech32ToHex} from '~/wallets/cardano/common/signatureUtils'
 import {undefinedToken} from './constants'
 import {useNavigateTo} from './navigation'
 import {useGetInputs} from './useGetInputs'
-import {useSwapConfig} from './useSwapConfig'
 
 const SwapActionType = {
   ChangeOrderType: 'ChangeOrderType',
@@ -130,7 +130,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
   const stakingKey = useStakingKey(wallet)
   const address = wallet.externalAddresses[0]
   const addressHex = convertBech32ToHex(address)
-  const {swapConfig} = useSwapConfig()
+  const {config} = useYoroiConfig()
   const [isLoading, setIsLoading] = React.useState(false)
 
   const swapManager = React.useMemo(() => {
@@ -143,7 +143,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
       addressHex,
       primaryTokenInfo: wallet.portfolioPrimaryTokenInfo,
       isPrimaryToken,
-      partners: swapConfig.partners ?? {},
+      partners: config.swap?.partners ?? {},
     })
   }, [
     network,
@@ -151,7 +151,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
     address,
     addressHex,
     wallet.portfolioPrimaryTokenInfo,
-    swapConfig,
+    config.swap,
   ])
 
   const {data: orders = [], refetch: refetchOrders} = useQuery({
@@ -177,7 +177,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
     queryFn: async () => {
       const res = await swapManager.api.tokens()
       if (isRight(res)) {
-        const excludedTokens = swapConfig.excludedTokens ?? []
+        const excludedTokens = config.swap.excludedTokens ?? []
         const tokenIds = res.value.data
           .map(({id}) => id)
           .filter((id) => excludedTokens.indexOf(id) === -1)

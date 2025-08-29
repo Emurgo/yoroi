@@ -12,4 +12,3 @@ export {
   swapStorageMakerError,
   swapStorageMakerNormal,
 } from './adapters/async-storage/storage.mocks'
-export {getSwapConfigApiMaker, SwapConfig} from './adapters/getSwapConfig'
