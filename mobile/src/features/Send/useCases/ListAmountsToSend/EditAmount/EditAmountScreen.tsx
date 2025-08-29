@@ -52,19 +52,8 @@ export const EditAmountScreen = () => {
     targets,
   } = useTransfer()
 
-  if (
-    !targets ||
-    selectedTargetIndex < 0 ||
-    selectedTargetIndex >= targets.length
-  ) {
-    return null
-  }
-
-  if (!selectedTokenId) {
-    return null
-  }
-
-  const amount = targets[selectedTargetIndex]?.entry?.amounts?.[selectedTokenId]
+  const amount =
+    targets?.[selectedTargetIndex]?.entry?.amounts?.[selectedTokenId]
 
   React.useEffect(() => {
     if (!amount) {
@@ -73,11 +62,7 @@ export const EditAmountScreen = () => {
     }
   }, [navigateTo, amount])
 
-  if (!amount) {
-    return null
-  }
-
-  const initialQuantity = amount.quantity
+  const initialQuantity = amount?.quantity ?? BigInt(0)
   const available =
     (balances.records.get(selectedTokenId)?.quantity ?? BigInt(0)) -
     (allocated.get(selectedTargetIndex)?.get(selectedTokenId) ?? BigInt(0))
@@ -111,13 +96,13 @@ export const EditAmountScreen = () => {
   const isFocused = useIsFocused()
   React.useEffect(() => {
     return () => {
-      if (amount.quantity === BigInt(0) && !isFocused) {
+      if (amount?.quantity === BigInt(0) && !isFocused) {
         InteractionManager.runAfterInteractions(() => {
           amountRemoved(selectedTokenId)
         })
       }
     }
-  }, [amount.quantity, amountRemoved, isFocused, selectedTokenId])
+  }, [amount?.quantity, amountRemoved, isFocused, selectedTokenId])
 
   const hasBalance = available >= quantity
 
@@ -159,6 +144,23 @@ export const EditAmountScreen = () => {
     })
     navigateTo.selectedTokens()
   }, [amount?.info, amountChanged, navigateTo, quantity])
+
+  // Early returns after all hooks are called
+  if (
+    !targets ||
+    selectedTargetIndex < 0 ||
+    selectedTargetIndex >= targets.length
+  ) {
+    return null
+  }
+
+  if (!selectedTokenId) {
+    return null
+  }
+
+  if (!amount) {
+    return null
+  }
 
   return (
     <KeyboardAvoidingView style={[a.flex_1, {backgroundColor: p.bg_color_max}]}>
