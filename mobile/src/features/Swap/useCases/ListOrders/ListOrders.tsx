@@ -130,6 +130,7 @@ const Content = ({filter}: {filter: Filter}) => {
     <View style={[a.flex_1]}>
       <View style={[a.flex_1]}>
         <FlatList
+          style={[a.flex_1]}
           contentContainerStyle={[a.gap_md]}
           data={orders}
           renderItem={({item}) => <Order order={item} />}

@@ -8,6 +8,8 @@ import {
 import * as React from 'react'
 import {Keyboard, Platform, Text, View, useWindowDimensions} from 'react-native'
 
+import {Space} from '~/ui/Space/Space'
+
 import {useModal} from './ModalContext'
 
 export const Modal = () => {
@@ -20,7 +22,7 @@ export const Modal = () => {
     title,
     resizable,
   } = useModal()
-  const {palette: p, isDark} = useTheme()
+  const {atoms: ta, palette: p, isDark} = useTheme()
   const {height: screenHeight} = useWindowDimensions()
   const [keyboardHeight, setKeyboardHeight] = React.useState(0)
 
@@ -118,15 +120,19 @@ export const Modal = () => {
       <BottomSheetView style={[a.flex_1, a.self_stretch]}>
         {title && (
           <View style={[a.px_lg, a.pt_lg, a.pb_lg]}>
-            <Text
-              style={[a.heading_2_medium, {color: p.gray_900}, a.text_center]}
-            >
+            <Text style={[a.heading_3_medium, ta.text_gray_max, a.text_center]}>
               {title}
             </Text>
           </View>
         )}
         {content}
-        {footer && <View style={[a.px_lg, a.pb_lg, a.pt_md]}>{footer}</View>}
+
+        {footer && (
+          <View style={[a.px_lg, a.pb_lg, a.pt_md]}>
+            {footer}
+            <Space.Height.xl />
+          </View>
+        )}
       </BottomSheetView>
     </BottomSheetModal>
   )
