@@ -360,7 +360,7 @@ const EmptyList = () => {
 
 const EmptySearchResult = ({assetSearchTerm}: {assetSearchTerm: string}) => {
   const strings = useStrings()
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
   return (
     <View style={[a.flex_1]}>
       <Space.Height.xl />
@@ -371,7 +371,15 @@ const EmptySearchResult = ({assetSearchTerm}: {assetSearchTerm: string}) => {
 
       <Space.Height.lg />
 
-      <Text style={[a.flex_1, a.text_center, a.pt_xs, {color: p.gray_max}]}>
+      <Text
+        style={[
+          a.flex_1,
+          a.text_center,
+          a.pt_xs,
+          ta.text_gray_max,
+          a.body_1_lg_medium,
+        ]}
+      >
         {assetSearchTerm === ''
           ? strings.swap.noAssetsFound
           : strings.swap.noAssetsFoundFor(assetSearchTerm)}

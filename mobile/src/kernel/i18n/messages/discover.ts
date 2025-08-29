@@ -82,7 +82,7 @@ export const discoverMessages = defineMessages({
     defaultMessage: '!!!Retry',
   },
   confirmTx: {
-    id: 'global.txLabels.confirmTx',
+    id: 'global.txLabels.signingTx',
     defaultMessage: '!!!Confirm Transaction',
   },
   discoverTitle: {

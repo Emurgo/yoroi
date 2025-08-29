@@ -72,8 +72,6 @@ const Notice = ({
         >
           <CommonContent onReadMore={onReadMore} showLogo />
 
-          <Space.Height.lg />
-
           <Button
             size="S"
             type={ButtonType.Text}
@@ -83,10 +81,10 @@ const Notice = ({
             }}
             title={strings.ui.skip}
           />
+
+          <Space.Height.lg />
         </View>
       </ScrollView>
-
-      <Space.Height._2xl />
 
       <View
         style={[
