@@ -142,12 +142,10 @@ const Row = ({
               openModal({
                 title: label,
                 content: (
-                  <View style={[a.flex_1, a.px_lg, a.pb_xl]}>
-                    <View style={[a.flex_1, a.justify_center, a.pb_2xl]}>
-                      <Text style={[a.body_1_lg_regular, ta.text_gray_max]}>
-                        {description}
-                      </Text>
-                    </View>
+                  <View style={[a.px_lg, a.flex_1, a.justify_center, a.pb_2xl]}>
+                    <Text style={[a.body_1_lg_regular, ta.text_gray_max]}>
+                      {description}
+                    </Text>
                   </View>
                 ),
                 footer: <SwapInfoLink />,
