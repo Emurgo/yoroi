@@ -44,7 +44,7 @@ export const useLinksRequestWallet = (modalFunctions?: ModalFunctions) => {
 
     modalFunctions.openModal({
       title: strings.links.askToOpenAWalletTitle,
-      content: <AskToOpenWalletScreen />,
+      content: <AskToOpenWalletScreen closeModal={modalFunctions.closeModal} />,
       height: heightBreakpoint,
     })
   }, [modalFunctions, strings.links.askToOpenAWalletTitle])

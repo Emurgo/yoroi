@@ -7,13 +7,15 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button, ButtonType} from '~/ui/Button/Button'
-import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
 
-export const AskToOpenWalletScreen = () => {
+export const AskToOpenWalletScreen = ({
+  closeModal,
+}: {
+  closeModal: () => void
+}) => {
   const strings = useStrings()
   const {palette: p} = useTheme()
-  const {closeModal} = useModal()
   const {actionFinished} = useLinks()
 
   const handleOnCancel = () => {
