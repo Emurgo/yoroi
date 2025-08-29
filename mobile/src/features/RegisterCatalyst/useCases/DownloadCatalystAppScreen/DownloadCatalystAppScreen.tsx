@@ -1,7 +1,6 @@
 import {useCatalyst} from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
-import cryptoRandomString from 'crypto-random-string'
 import * as React from 'react'
 import {useIntl} from 'react-intl'
 import {
@@ -17,6 +16,12 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import appstoreBadge from '~/assets/img/app-store-badge.png'
 import playstoreBadge from '~/assets/img/google-play-badge.png'
+import {
+  Actions,
+  Row,
+  Stepper,
+} from '~/features/RegisterCatalyst/common/components'
+import {useCatalystCurrentFund} from '~/features/RegisterCatalyst/common/hooks'
 import {useStakingInfo} from '~/features/Staking/hooks/useStakingInfo'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
@@ -26,8 +31,6 @@ import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
 
 import {useNavigateTo} from '../../CatalystNavigator'
-import {Actions, Row, Stepper} from '../../common/components'
-import {useCatalystCurrentFund} from '../../common/hooks'
 
 export const DownloadCatalystAppScreen = () => {
   const strings = useStrings()
@@ -39,10 +42,11 @@ export const DownloadCatalystAppScreen = () => {
   const intl = useIntl()
   const navigateTo = useNavigateTo()
   const {pinChanged, reset: resetCatalyst} = useCatalyst()
+  const hasShownModal = React.useRef(false)
 
   const onNext = () => {
     resetCatalyst()
-    const pin = createPin()
+    const pin = randomPin()
     pinChanged(pin)
     navigateTo.displayPin()
   }
@@ -58,7 +62,8 @@ export const DownloadCatalystAppScreen = () => {
   )
 
   React.useEffect(() => {
-    if (stakingInfo?.status === 'not-registered')
+    if (stakingInfo?.status === 'not-registered' && !hasShownModal.current) {
+      hasShownModal.current = true
       openModal({
         title: strings.registerCatalyst.title,
         content: <WarningModal />,
@@ -70,12 +75,13 @@ export const DownloadCatalystAppScreen = () => {
         ),
         height: 300,
       })
+    }
   }, [
     closeModal,
     openModal,
     stakingInfo?.status,
-    strings.registerCatalyst.title,
     strings.registerCatalyst.confirm,
+    strings.registerCatalyst.title,
   ])
 
   const fundName = fund?.info.fundName
@@ -187,7 +193,7 @@ const AppStoreButton = () => {
     const url =
       Platform.OS === 'ios'
         ? 'https://apps.apple.com/app/catalyst-voting/id1506091890'
-        : 'https://apps.apple.com/app/catalyst-voting/id1506091890'
+        : 'https://play.google.com/store/apps/details?id=io.iohk.vitvoting&pcampaignid=web_share'
     await Linking.openURL(url)
   }
 
@@ -198,4 +204,8 @@ const AppStoreButton = () => {
   )
 }
 
-const createPin = () => cryptoRandomString({length: 4, type: 'numeric'} as any)
+const randomPin = () => {
+  return Math.floor(Math.random() * 10_000)
+    .toString()
+    .padStart(4, '0')
+}

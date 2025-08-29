@@ -35,7 +35,7 @@ export const ConfirmPin = () => {
   const {unsignedTxChanged} = useReviewTx()
   const {navigateToTxReview} = useWalletNavigation()
 
-  const {generateVotingKeys, isPending} = useGenerateVotingKeys({
+  const {generateVotingKeys, isPending: isLoading} = useGenerateVotingKeys({
     onSuccess: async ({catalystKeyHex, votingKeyEncrypted}) => {
       votingKeyEncryptedChanged(votingKeyEncrypted)
 
@@ -278,9 +278,9 @@ export const ConfirmPin = () => {
       <Padding style={a.px_lg}>
         <Actions>
           <Button
-            onPress={() => onNext()}
+            onPress={onNext}
             title={strings.registerCatalyst.confirm}
-            disabled={!done || isPending}
+            disabled={!done || isLoading}
           />
         </Actions>
       </Padding>
@@ -289,7 +289,7 @@ export const ConfirmPin = () => {
 
       <NumericKeyboard onKeyDown={onKeyDown} />
 
-      {isPending && (
+      {isLoading && (
         <View
           style={[
             a.inset_0,
@@ -329,11 +329,7 @@ const useGenerateVotingKeys = (
       const catalystKeyHex = Buffer.from(catalystKey).toString('hex')
 
       const password = new Uint8Array(Buffer.from(pin.split('').map(Number)))
-      const votingKeyEncrypted = await encryptWithPassword(
-        password,
-        catalystKey,
-      )
-
+      const votingKeyEncrypted = encryptWithPassword(password, catalystKey)
       return {
         catalystKeyHex,
         votingKeyEncrypted,
