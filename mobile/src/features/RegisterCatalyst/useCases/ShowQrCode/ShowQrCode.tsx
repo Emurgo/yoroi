@@ -6,6 +6,7 @@ import {InteractionManager, ScrollView} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useCopy} from '~/features/Copy/context/CopyProvider'
+import {useNavigateTo} from '~/features/RegisterCatalyst/CatalystNavigator'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useBlockGoBack} from '~/kernel/navigation/hooks/useBlockGoBack'
 import {Button} from '~/ui/Button/Button'
@@ -13,7 +14,6 @@ import {Checkbox} from '~/ui/Checkbox/Checkbox'
 import {ShareQRCodeCard} from '~/ui/ShareQRCodeCard/ShareQRCodeCard'
 import {Space} from '~/ui/Space/Space'
 
-import {useNavigateTo} from '../../CatalystNavigator'
 import {Actions, Description} from '../../common/components'
 
 export const QrCode = () => {

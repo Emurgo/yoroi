@@ -232,10 +232,10 @@ const KNOWLEDGE_BASE_LINK =
 
 const useNavigateTo = () => {
   const {
-    navigation,
     navigateToSettings,
     navigateToGovernanceCentre,
     navigateToStakingDashboard,
+    navigateToCatalystVotingDashboard,
   } = useWalletNavigation()
   const {wallet} = useSelectedWallet()
 
@@ -244,12 +244,7 @@ const useNavigateTo = () => {
   return {
     catalystVoting: () => {
       prefetchStakingInfo()
-      navigation.navigate('manage-wallets', {
-        screen: 'voting-registration',
-        params: {
-          screen: 'download-catalyst',
-        },
-      })
+      navigateToCatalystVotingDashboard()
     },
     stakingCenter: () => {
       navigateToStakingDashboard()

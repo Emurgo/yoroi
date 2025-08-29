@@ -483,5 +483,50 @@ export const useWalletNavigation = () => {
         },
       })
     },
+
+    navigateToCatalystVotingDashboard: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'voting-registration',
+        params: {
+          screen: 'download-catalyst',
+        },
+      })
+    },
+
+    navigateToCatalystDisplayPin: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'voting-registration',
+        params: {
+          screen: 'display-pin',
+        },
+      })
+    },
+
+    navigateToCatalystConfirmPin: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'voting-registration',
+        params: {
+          screen: 'confirm-pin',
+        },
+      })
+    },
+
+    navigateToCatalystCreateTx: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'voting-registration',
+        params: {
+          screen: 'create-tx',
+        },
+      })
+    },
+
+    navigateToCatalystQrCode: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'voting-registration',
+        params: {
+          screen: 'qr-code',
+        },
+      })
+    },
   } as const).current
 }
