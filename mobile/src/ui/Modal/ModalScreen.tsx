@@ -125,7 +125,7 @@ export const Modal = () => {
             </Text>
           </View>
         )}
-        <View style={[a.flex_1, a.self_stretch]}>{content}</View>
+        {content}
 
         {footer && (
           <View style={[a.px_lg, a.pb_lg, a.pt_md]}>
