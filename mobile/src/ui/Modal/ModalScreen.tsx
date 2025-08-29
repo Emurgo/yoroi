@@ -96,7 +96,7 @@ export const Modal = () => {
   return (
     <BottomSheetModal
       ref={bottomSheetModalRef}
-      index={resizable ? 1 : 0}
+      index={0}
       snapPoints={snapPoints}
       backdropComponent={renderBackdrop}
       enablePanDownToClose={canDiscard}
@@ -118,27 +118,21 @@ export const Modal = () => {
       }}
     >
       <BottomSheetView style={[a.flex_1, a.self_stretch]}>
-        <View style={[a.flex_1, a.justify_between]}>
-          <View style={[a.flex_1]}>
-            {title && (
-              <View style={[a.px_lg, a.pt_lg, a.pb_lg]}>
-                <Text
-                  style={[a.heading_3_medium, ta.text_gray_max, a.text_center]}
-                >
-                  {title}
-                </Text>
-              </View>
-            )}
-            <View style={[a.flex_1, a.self_stretch]}>{content}</View>
+        {title && (
+          <View style={[a.px_lg, a.pt_lg, a.pb_lg]}>
+            <Text style={[a.heading_3_medium, ta.text_gray_max, a.text_center]}>
+              {title}
+            </Text>
           </View>
+        )}
+        <View style={[a.flex_1, a.self_stretch]}>{content}</View>
 
-          {footer && (
-            <View style={[a.px_lg, a.pb_lg, a.pt_md]}>
-              {footer}
-              <Space.Height.xl />
-            </View>
-          )}
-        </View>
+        {footer && (
+          <View style={[a.px_lg, a.pb_lg, a.pt_md]}>
+            {footer}
+            <Space.Height.xl />
+          </View>
+        )}
       </BottomSheetView>
     </BottomSheetModal>
   )
