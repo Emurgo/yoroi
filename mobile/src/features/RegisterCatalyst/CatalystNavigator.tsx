@@ -4,6 +4,7 @@ import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import * as React from 'react'
 
+import {ConfirmPin} from '~/features/RegisterCatalyst/useCases/ConfirmPin/ConfirmPin'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
@@ -15,7 +16,6 @@ import {
 import {Boundary} from '~/ui/Boundary/Boundary'
 
 import {NetworkTag} from '../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
-import {ConfirmPin} from './useCases/ConfirmPin/ConfirmPin'
 import {DisplayPin} from './useCases/DisplayPin/DisplayPin'
 import {DownloadCatalystAppScreen} from './useCases/DownloadCatalystAppScreen/DownloadCatalystAppScreen'
 import {QrCode} from './useCases/ShowQrCode/ShowQrCode'
