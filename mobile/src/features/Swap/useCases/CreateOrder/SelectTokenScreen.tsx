@@ -1,12 +1,13 @@
 import {isNonNullable, isString} from '@yoroi/common'
-import {isPrimaryToken, sortTokenInfos} from '@yoroi/portfolio'
+import {amountBreakdown, isPrimaryToken, sortTokenInfos} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 
+import {FlashList} from '@shopify/flash-list'
 import BigNumber from 'bignumber.js'
 import * as React from 'react'
 import {ErrorBoundary} from 'react-error-boundary'
-import {FlatList, TouchableOpacity, View} from 'react-native'
+import {TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {getTokenIdParts} from '~/features/Portfolio/common/helpers/get-token-id-parts'
@@ -16,12 +17,10 @@ import {useSearch, useSearchOnNavBar} from '~/features/Search/SearchContext'
 import {filterBySearch} from '~/features/Swap/common/filterBySearch'
 import {useSwap} from '~/features/Swap/common/useSwap'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {useYoroiConfig} from '~/kernel/features'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useUnsafeParams} from '~/kernel/navigation/hooks/useUnsafeParams'
 import {SwapTokenRoutes} from '~/kernel/navigation/types'
-import {Boundary} from '~/ui/Boundary/Boundary'
 import {Counter} from '~/ui/Counter/Counter'
 import {NoAssetFoundImage} from '~/ui/NoAssetFoundImage/NoAssetFoundImage'
 import {ServiceUnavailable} from '~/ui/ServiceUnavailable/ServiceUnavailable'
@@ -36,15 +35,16 @@ import {useNavigateTo} from '../../common/navigation'
 
 type Direction = SwapTokenRoutes['select-token']
 
-const loading = {
-  fallback: (
-    <View style={[a.flex_1, a.flex_col]}>
-      {Array.from({length: 6}).map((_, i) => (
-        <AmountItemPlaceholder key={i} style={[a.py_sm, a.px_lg]} />
-      ))}
-    </View>
-  ),
-}
+const getSortTokensFn =
+  (calculateTokenValue: (token: Portfolio.Token.Amount) => BigNumber) =>
+  (a: Portfolio.Token.Amount, b: Portfolio.Token.Amount) => {
+    if (isPrimaryToken(a.info)) return -1
+    if (isPrimaryToken(b.info)) return 1
+
+    const valueA = calculateTokenValue(a)
+    const valueB = calculateTokenValue(b)
+    return valueB.comparedTo(valueA) ?? 0
+  }
 
 export const SelectTokenScreen = () => {
   const strings = useStrings()
@@ -58,93 +58,83 @@ export const SelectTokenScreen = () => {
 
   return (
     <SafeAreaView style={[a.flex_1, ta.bg_color_max]} edges={['left', 'right']}>
-      <Boundary loading={loading}>
-        <ErrorBoundary
-          fallbackRender={({resetErrorBoundary}) => (
-            <ServiceUnavailable resetErrorBoundary={resetErrorBoundary} />
-          )}
-        >
-          <TokenList direction={direction} />
-        </ErrorBoundary>
-      </Boundary>
+      <ErrorBoundary
+        fallbackRender={({resetErrorBoundary}) => (
+          <ServiceUnavailable resetErrorBoundary={resetErrorBoundary} />
+        )}
+      >
+        <TokenList direction={direction} />
+      </ErrorBoundary>
     </SafeAreaView>
+  )
+}
+
+const useTokenValueCalculator = (
+  tokenActivity: Portfolio.Api.TokenActivityResponse,
+) => {
+  return React.useCallback(
+    (tokenAmount: Portfolio.Token.Amount) => {
+      if (isPrimaryToken(tokenAmount.info)) return new BigNumber(Infinity)
+
+      const price =
+        tokenActivity[tokenAmount.info.id]?.price.close ?? new BigNumber(0)
+      const amount = amountBreakdown(tokenAmount).bn
+      return price.multipliedBy(amount)
+    },
+    [tokenActivity],
   )
 }
 
 const TokenList = ({direction}: Direction) => {
   const strings = useStrings()
   const {wallet} = useSelectedWallet()
-  const {tokenInfos} = useSwap()
+  const {tokenInfos, verifiedTokens} = useSwap()
   const {search: assetSearchTerm} = useSearch()
   const balances = usePortfolioBalances({wallet})
-  const {config} = useYoroiConfig()
-  const {tokenActivity, isLoading: isTokenActivityLoading} =
-    usePortfolioTokenActivity()
-  const [displayLimit, setDisplayLimit] = React.useState(20)
+  const {tokenActivity} = usePortfolioTokenActivity()
+  const {atoms: ta} = useTheme()
 
-  const isLoading =
-    isTokenActivityLoading || !tokenInfos || tokenInfos.size === 0
+  const calculateTokenValue = useTokenValueCalculator(tokenActivity)
 
   const ownedTokens = React.useMemo(() => {
     if (!balances.all || !tokenInfos || tokenInfos.size === 0) {
       return []
     }
 
-    const swappableBalances = balances.all.filter((token) =>
+    const availableTokens = balances.all.filter((token) =>
       tokenInfos.has(token.info.id),
     )
 
-    if (swappableBalances.length === 0) {
-      return []
+    if (
+      availableTokens.length === 1 &&
+      isPrimaryToken(availableTokens[0].info)
+    ) {
+      return [availableTokens[0].info.id]
     }
 
-    // Separate primary tokens and secondary tokens for more efficient sorting
-    const primaryTokens = swappableBalances.filter((token) =>
-      isPrimaryToken(token.info),
-    )
-    const secondaryTokens = swappableBalances.filter(
-      (token) => !isPrimaryToken(token.info),
-    )
+    if (availableTokens.length > 1) {
+      return availableTokens
+        .sort(getSortTokensFn(calculateTokenValue))
+        .map(({info: {id}}) => id)
+    }
 
-    const sortedSecondaryTokens = secondaryTokens
-      .sort((a, b) => {
-        const aPrice = tokenActivity[a.info.id]?.price.close ?? new BigNumber(0)
-        const bPrice = tokenActivity[b.info.id]?.price.close ?? new BigNumber(0)
-        return bPrice.comparedTo(aPrice) ?? 0
-      })
-      .slice(0, 200)
-
-    // Combine primary tokens first, then sorted secondary tokens
-    const allSortedTokens = [...primaryTokens, ...sortedSecondaryTokens]
-
-    return allSortedTokens.map(({info: {id}}) => id)
-  }, [balances.all, tokenActivity, tokenInfos])
-
-  const verifiedTokens = React.useMemo(
-    () =>
-      config.swap?.verifiedTokens?.filter((ti: Portfolio.Token.Id) =>
-        tokenInfos.has(ti),
-      ) ?? [],
-    [config.swap?.verifiedTokens, tokenInfos],
-  )
+    return availableTokens.map(({info: {id}}) => id)
+  }, [balances.all, tokenInfos, calculateTokenValue])
 
   const filteredTokenList = React.useMemo(() => {
     if (!tokenInfos || tokenInfos.size === 0) {
       return []
     }
 
-    const ownedTokensSet = new Set(ownedTokens)
-    const verifiedTokensSet = new Set(verifiedTokens)
+    const ownedList = ownedTokens
+      .map((ti) => tokenInfos.get(ti))
+      .filter(isNonNullable)
 
     if (direction === 'in') {
-      const ownedList = ownedTokens
-        .slice(0, 100)
-        .map((ti) => tokenInfos.get(ti))
-        .filter(isNonNullable)
-
-      return [strings.swap.yourAssets, ...ownedList].filter(
-        filterBySearch(assetSearchTerm),
-      )
+      const result = [strings.swap.yourAssets, ...ownedList]
+      return assetSearchTerm
+        ? result.filter(filterBySearch(assetSearchTerm))
+        : result
     }
 
     const verifiedList = verifiedTokens
@@ -152,22 +142,26 @@ const TokenList = ({direction}: Direction) => {
       .filter(isNonNullable)
       .filter(({id}: Portfolio.Token.Info) => !ownedTokens.includes(id))
 
-    const allTokenValues = Array.from(tokenInfos.values())
-    const limitedTokens = allTokenValues.slice(0, 300)
+    const remainingTokens = Array.from(tokenInfos.values()).filter(
+      ({id}) => !(ownedTokens.includes(id) || verifiedTokens.includes(id)),
+    )
 
-    const otherTokens = sortTokenInfos({
-      secondaryTokenInfos: limitedTokens.filter(
-        ({id}) => !(ownedTokensSet.has(id) || verifiedTokensSet.has(id)),
-      ),
+    const sortedRemainingTokens = sortTokenInfos({
+      secondaryTokenInfos: remainingTokens,
       primaryTokenInfo: wallet.portfolioPrimaryTokenInfo,
     })
 
-    return [
+    const result = [
       strings.swap.yourAssets,
+      ...ownedList,
       strings.swap.allAssets,
       ...verifiedList,
-      ...otherTokens,
-    ].filter(filterBySearch(assetSearchTerm))
+      ...sortedRemainingTokens,
+    ]
+
+    return assetSearchTerm
+      ? result.filter(filterBySearch(assetSearchTerm))
+      : result
   }, [
     ownedTokens,
     direction,
@@ -179,24 +173,18 @@ const TokenList = ({direction}: Direction) => {
     tokenInfos,
   ])
 
-  const displayTokenList = React.useMemo(() => {
-    return filteredTokenList.slice(0, displayLimit)
-  }, [filteredTokenList, displayLimit])
-
-  const loadMore = React.useCallback(() => {
-    setDisplayLimit((prev) => {
-      const newLimit = prev + 20
-      return newLimit < filteredTokenList.length ? newLimit : prev
-    })
-  }, [filteredTokenList.length])
-
-  React.useEffect(() => {
-    setDisplayLimit(20)
-  }, [assetSearchTerm])
-
-  const balanceRecords = React.useMemo(
-    () => wallet.balances.records,
-    [wallet.balances.records],
+  const renderItem = React.useCallback(
+    ({item}: {item: Portfolio.Token.Info | string}) =>
+      isString(item) ? (
+        <Text style={[ta.text_gray_low, a.p_lg]}>{item}</Text>
+      ) : (
+        <SelectableToken
+          tokenInfo={item}
+          quantity={balances.records.get(item.id)?.quantity ?? 0n}
+          direction={direction}
+        />
+      ),
+    [ta.text_gray_low, direction, balances],
   )
 
   const keyExtractor = React.useCallback(
@@ -205,71 +193,30 @@ const TokenList = ({direction}: Direction) => {
     [],
   )
 
-  const renderItem = React.useCallback(
-    ({item}: {item: Portfolio.Token.Info | string; index: number}) => (
-      <TokenItem
-        item={item}
-        direction={direction}
-        balanceRecords={balanceRecords}
-      />
-    ),
-    [direction, balanceRecords],
-  )
-
-  const ListEmptyComponent = React.useMemo(() => <EmptyList />, [])
-
-  if (isLoading || !balances.all) {
-    return loading.fallback
+  if (!balances.all || !tokenInfos || tokenInfos.size === 0) {
+    return (
+      <View style={a.flex_1}>
+        <View style={[a.flex_1, a.flex_col]}>
+          {Array.from({length: 6}).map((_, i) => (
+            <AmountItemPlaceholder key={i} style={[a.py_sm, a.px_lg]} />
+          ))}
+        </View>
+      </View>
+    )
   }
 
   return (
     <View style={a.flex_1}>
-      <FlatList
-        data={displayTokenList}
+      <FlashList
+        data={filteredTokenList}
         renderItem={renderItem}
         bounces={false}
         keyExtractor={keyExtractor}
         testID="assetsList"
-        ListEmptyComponent={ListEmptyComponent}
+        estimatedItemSize={72}
+        ListEmptyComponent={<EmptyList />}
         removeClippedSubviews={true}
-        maxToRenderPerBatch={10}
-        windowSize={10}
-        initialNumToRender={10}
-        updateCellsBatchingPeriod={50}
-        onEndReachedThreshold={0.5}
-        getItemLayout={(data, index) => {
-          const item = data?.[index]
-          const isHeader = typeof item === 'string'
-          const length = isHeader ? 40 : 72
-
-          // Calculate offset by iterating through previous items
-          let offset = 0
-          if (data && index > 0) {
-            for (let i = 0; i < index; i++) {
-              const prevItem = data[i]
-              offset += typeof prevItem === 'string' ? 40 : 72
-            }
-          }
-
-          return {
-            length,
-            offset,
-            index,
-          }
-        }}
-        maintainVisibleContentPosition={{
-          minIndexForVisible: 0,
-          autoscrollToTopThreshold: 10,
-        }}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={
-          displayTokenList.length === 0 ? a.flex_1 : undefined
-        }
-        onEndReached={loadMore}
-        disableVirtualization={false}
-        disableIntervalMomentum={false}
-        snapToAlignment="start"
-        decelerationRate="normal"
+        getItemType={(item) => (typeof item === 'string' ? 'header' : 'token')}
       />
 
       <Space.Height.md />
@@ -297,39 +244,18 @@ const SelectableToken = React.memo(
     const navigateTo = useNavigateTo()
     const {track} = useMetrics()
 
-    const shouldUpdateToken = React.useMemo(
-      () =>
-        direction === 'in'
-          ? id !== swapForm.tokenInInput.tokenId ||
-            !swapForm.tokenInInput.isTouched
-          : id !== swapForm.tokenOutInput.tokenId ||
-            !swapForm.tokenOutInput.isTouched,
-      [
-        direction,
-        id,
-        swapForm.tokenInInput.tokenId,
-        swapForm.tokenInInput.isTouched,
-        swapForm.tokenOutInput.tokenId,
-        swapForm.tokenOutInput.isTouched,
-      ],
-    )
-
-    const shouldSwitchTokens = React.useMemo(
-      () =>
-        direction === 'in'
-          ? id === swapForm.tokenOutInput.tokenId &&
-            swapForm.tokenOutInput.isTouched
-          : id === swapForm.tokenInInput.tokenId &&
-            swapForm.tokenInInput.isTouched,
-      [
-        direction,
-        id,
-        swapForm.tokenOutInput.tokenId,
-        swapForm.tokenOutInput.isTouched,
-        swapForm.tokenInInput.tokenId,
-        swapForm.tokenInInput.isTouched,
-      ],
-    )
+    const shouldUpdateToken =
+      direction === 'in'
+        ? id !== swapForm.tokenInInput.tokenId ||
+          !swapForm.tokenInInput.isTouched
+        : id !== swapForm.tokenOutInput.tokenId ||
+          !swapForm.tokenOutInput.isTouched
+    const shouldSwitchTokens =
+      direction === 'in'
+        ? id === swapForm.tokenOutInput.tokenId &&
+          swapForm.tokenOutInput.isTouched
+        : id === swapForm.tokenInInput.tokenId &&
+          swapForm.tokenInInput.isTouched
 
     const handleOnTokenSelection = React.useCallback(() => {
       const {policyId} = getTokenIdParts(id)
@@ -368,9 +294,9 @@ const SelectableToken = React.memo(
     }, [
       id,
       direction,
-      track,
       name,
       ticker,
+      track,
       shouldSwitchTokens,
       shouldUpdateToken,
       swapForm,
@@ -396,42 +322,10 @@ const SelectableToken = React.memo(
 
 SelectableToken.displayName = 'SelectableToken'
 
-const TokenItem = React.memo(
-  ({
-    item,
-    direction,
-    balanceRecords,
-  }: {
-    item: Portfolio.Token.Info | string
-    direction: 'in' | 'out'
-    balanceRecords: Map<string, any>
-  }) => {
-    const {palette: p} = useTheme()
-
-    if (isString(item)) {
-      return <Text style={[{color: p.text_gray_low}, a.p_lg]}>{item}</Text>
-    }
-
-    return (
-      <Boundary
-        loading={{
-          fallback: <AmountItemPlaceholder style={[a.py_sm, a.px_lg]} />,
-        }}
-      >
-        <SelectableToken
-          tokenInfo={item}
-          quantity={balanceRecords.get(item.id)?.quantity ?? 0n}
-          direction={direction}
-        />
-      </Boundary>
-    )
-  },
-)
-
 const EmptyList = () => {
-  const {search: assetSearchTerm} = useSearch()
+  const {search: assetSearchTerm, visible: isSearching} = useSearch()
 
-  if (assetSearchTerm.length > 0)
+  if (isSearching && assetSearchTerm.length > 0)
     return <EmptySearchResult assetSearchTerm={assetSearchTerm} />
 
   return null
