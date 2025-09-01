@@ -65,6 +65,14 @@ jest.mock('@yoroi/types', () => ({
     Order: {},
     ManagerSettings: {},
   },
+  App: {
+    Logger: {
+      Level: {
+        Debug: 'debug',
+        Warn: 'warn',
+      },
+    },
+  },
 }))
 
 jest.mock('@react-navigation/native', () => ({
@@ -117,10 +125,6 @@ jest.mock('./useGetInputs', () => ({
   useGetInputs: jest.fn(),
 }))
 
-jest.mock('./useSwapConfig', () => ({
-  useSwapConfig: jest.fn(),
-}))
-
 // We'll test the actual component, not a mock
 
 // Create a test wrapper component
@@ -151,7 +155,6 @@ const mockUseStrings = require('~/kernel/i18n/useStrings').useStrings
 const mockUseMetrics = require('~/kernel/metrics/metricsManager').useMetrics
 const mockUseNavigateTo = require('./navigation').useNavigateTo
 const mockUseGetInputs = require('./useGetInputs').useGetInputs
-const mockUseSwapConfig = require('./useSwapConfig').useSwapConfig
 const mockUseQuery = require('@tanstack/react-query').useQuery
 const mockConvertBech32ToHex =
   require('~/wallets/cardano/common/signatureUtils').convertBech32ToHex
@@ -214,13 +217,6 @@ describe('SwapProvider', () => {
 
     mockUseGetInputs.mockReturnValue({
       getInputs: jest.fn().mockResolvedValue({}),
-    })
-
-    mockUseSwapConfig.mockReturnValue({
-      swapConfig: {
-        partners: {},
-        excludedTokens: [],
-      },
     })
 
     mockConvertBech32ToHex.mockReturnValue('hex-address')
