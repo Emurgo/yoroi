@@ -72,8 +72,11 @@ export const ListAmountsToSendScreen = () => {
   const onEdit = (tokenId: Portfolio.Token.Id) => {
     if (isNft(amounts[tokenId].info)) return
 
+    const amount = amounts[tokenId]
+    if (!amount) return
+
     tokenSelectedChanged(tokenId)
-    navigateTo.editAmount()
+    navigateTo.editAmount(amount)
   }
   const onRemove = (tokenId: Portfolio.Token.Id) => {
     // use case: redirect to add token screen if there is no token left

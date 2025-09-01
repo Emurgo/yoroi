@@ -2,6 +2,7 @@ import {atomicBreakdown} from '@yoroi/common'
 import {isPrimaryToken} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
+import {Portfolio} from '@yoroi/types'
 
 import {useIsFocused} from '@react-navigation/native'
 import * as React from 'react'
@@ -22,6 +23,7 @@ import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWalle
 import {useLanguage} from '~/kernel/i18n/LanguageProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
+import {useParams} from '~/kernel/navigation/hooks/useParams'
 import {Button} from '~/ui/Button/Button'
 import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingView'
 import {PairedBalance} from '~/ui/PairedBalance/PairedBalance'
@@ -33,9 +35,15 @@ import {Quantities} from '~/wallets/utils/utils'
 import {NoBalance} from './ShowError/NoBalance'
 import {UnableToSpend} from './ShowError/UnableToSpend'
 
+const isEditAmountParams = (
+  params: object,
+): params is {amount: Portfolio.Token.Amount} => {
+  return 'amount' in params && params.amount != null
+}
+
 export const EditAmountScreen = () => {
   const strings = useStrings()
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
   const navigateTo = useNavigateTo()
   const {numberLocale} = useLanguage()
 
@@ -43,39 +51,24 @@ export const EditAmountScreen = () => {
   const balances = usePortfolioBalances({wallet})
   const primaryBreakdown = usePortfolioPrimaryBreakdown({wallet})
 
-  const {
-    selectedTokenId,
-    amountRemoved,
-    amountChanged,
-    allocated,
-    selectedTargetIndex,
-    targets,
-  } = useTransfer()
+  const {amountRemoved, amountChanged, allocated, selectedTargetIndex} =
+    useTransfer()
 
-  const amount =
-    targets?.[selectedTargetIndex]?.entry?.amounts?.[selectedTokenId]
+  const params = useParams(isEditAmountParams)
+  const amount = params.amount
+  const selectedTokenId = amount.info.id
 
-  React.useEffect(() => {
-    if (!amount) {
-      navigateTo.selectedTokens()
-      return
-    }
-  }, [navigateTo, amount])
-
-  const initialQuantity = amount?.quantity ?? BigInt(0)
+  const initialQuantity = amount.quantity
   const available =
     (balances.records.get(selectedTokenId)?.quantity ?? BigInt(0)) -
     (allocated.get(selectedTargetIndex)?.get(selectedTokenId) ?? BigInt(0))
-  const isPrimary = isPrimaryToken(amount?.info)
+  const isPrimary = isPrimaryToken(amount.info)
 
   const [quantity, setQuantity] = React.useState(initialQuantity)
   const [inputValue, setInputValue] = React.useState(
     initialQuantity === BigInt(0)
       ? ''
-      : atomicBreakdown(
-          initialQuantity,
-          amount?.info?.decimals ?? 0,
-        ).bn.toFormat(),
+      : atomicBreakdown(initialQuantity, amount.info.decimals).bn.toFormat(),
   )
   const spendable = isPrimary
     ? available - primaryBreakdown.lockedAsStorageCost
@@ -86,26 +79,23 @@ export const EditAmountScreen = () => {
     setInputValue(
       initialQuantity === BigInt(0)
         ? ''
-        : atomicBreakdown(
-            initialQuantity,
-            amount?.info?.decimals ?? 0,
-          ).bn.toFormat(),
+        : atomicBreakdown(initialQuantity, amount.info.decimals).bn.toFormat(),
     )
-  }, [amount?.info?.decimals, initialQuantity])
+  }, [amount.info.decimals, initialQuantity])
 
   const isFocused = useIsFocused()
   React.useEffect(() => {
     return () => {
-      if (amount?.quantity === BigInt(0) && !isFocused) {
+      if (amount.quantity === BigInt(0) && !isFocused) {
         InteractionManager.runAfterInteractions(() => {
           amountRemoved(selectedTokenId)
         })
       }
     }
-  }, [amount?.quantity, amountRemoved, isFocused, selectedTokenId])
+  }, [amount.quantity, amountRemoved, isFocused, selectedTokenId])
 
   const hasBalance = available >= quantity
-
+  // primary can have locked amount
   const isUnableToSpend = isPrimary && quantity > spendable
   const isZero = quantity === BigInt(0)
 
@@ -114,7 +104,7 @@ export const EditAmountScreen = () => {
       try {
         const [input, quantity] = Quantities.parseFromText(
           text,
-          amount?.info?.decimals ?? 0,
+          amount.info.decimals ?? 0,
           numberLocale,
         )
 
@@ -127,40 +117,23 @@ export const EditAmountScreen = () => {
         )
       }
     },
-    [amount?.info?.decimals, numberLocale],
+    [amount.info.decimals, numberLocale],
   )
 
   const handleOnMaxBalance = React.useCallback(() => {
     setInputValue(
-      atomicBreakdown(spendable, amount?.info?.decimals ?? 0).bn.toFormat(),
+      atomicBreakdown(spendable, amount.info.decimals).bn.toFormat(),
     )
     setQuantity(spendable)
-  }, [amount?.info?.decimals, spendable])
+  }, [amount.info.decimals, spendable])
 
   const handleOnApply = React.useCallback(() => {
     amountChanged({
-      info: amount?.info,
+      info: amount.info,
       quantity,
     })
     navigateTo.selectedTokens()
-  }, [amount?.info, amountChanged, navigateTo, quantity])
-
-  // Early returns after all hooks are called
-  if (
-    !targets ||
-    selectedTargetIndex < 0 ||
-    selectedTargetIndex >= targets.length
-  ) {
-    return null
-  }
-
-  if (!selectedTokenId) {
-    return null
-  }
-
-  if (!amount) {
-    return null
-  }
+  }, [amount.info, amountChanged, navigateTo, quantity])
 
   return (
     <KeyboardAvoidingView style={[a.flex_1, ta.bg_color_max]}>
@@ -171,7 +144,7 @@ export const EditAmountScreen = () => {
         <ScrollView style={[a.px_lg]} bounces={false}>
           <TokenAmountItem
             amount={{
-              info: amount?.info,
+              info: amount.info,
               quantity: spendable,
             }}
             ignorePrivacy
@@ -182,14 +155,14 @@ export const EditAmountScreen = () => {
           <AmountInput
             onChange={handleOnChangeQuantity}
             value={inputValue}
-            ticker={amount?.info?.ticker}
+            ticker={amount.info.ticker}
           />
 
           <Center>
             {isPrimary && (
               <PairedBalance
                 amount={{
-                  info: amount?.info,
+                  info: amount.info,
                   quantity,
                 }}
                 ignorePrivacy

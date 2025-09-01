@@ -443,10 +443,13 @@ export const useWalletNavigation = () => {
       })
     },
 
-    navigateToSendEditAmount: () => {
+    navigateToSendEditAmount: (amount: Portfolio.Token.Amount) => {
       navigation.navigate('manage-wallets', {
         screen: 'main-wallet-routes',
-        params: {screen: 'history', params: {screen: 'send-edit-amount'}},
+        params: {
+          screen: 'history',
+          params: {screen: 'send-edit-amount', params: {amount}},
+        },
       })
     },
 
