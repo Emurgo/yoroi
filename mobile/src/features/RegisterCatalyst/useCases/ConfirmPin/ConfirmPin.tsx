@@ -213,7 +213,7 @@ export const ConfirmPin = () => {
   return (
     <SafeAreaView
       edges={['left', 'right', 'bottom']}
-      style={[a.flex_1, ta.bg_color_max, a.px_lg, a.pb_lg]}
+      style={[a.flex_1, ta.bg_color_max, a.pb_lg]}
     >
       <Padding style={a.px_lg}>
         <Stepper
@@ -223,10 +223,10 @@ export const ConfirmPin = () => {
         />
       </Padding>
 
-      <ScrollView bounces={false} contentContainerStyle={[]}>
+      <ScrollView bounces={false} contentContainerStyle={[a.px_lg]}>
         <Description>{strings.registerCatalyst.step3Description}</Description>
 
-        <Space.Height.lg />
+        <Space.Height.xl />
 
         <Row style={[{justifyContent: 'center'}]}>
           <PinBox
@@ -279,7 +279,7 @@ export const ConfirmPin = () => {
         <Actions>
           <Button
             onPress={onNext}
-            title={strings.registerCatalyst.confirm}
+            title={strings.registerCatalyst.continue}
             disabled={!done || isLoading}
           />
         </Actions>
