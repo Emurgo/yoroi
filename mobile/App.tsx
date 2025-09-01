@@ -1,4 +1,5 @@
 import {AsyncStorageProvider} from '@yoroi/common'
+import {LinksProvider} from '@yoroi/links'
 import {SetupWalletProvider} from '@yoroi/setup-wallet'
 import {
   CatalystProvider,
@@ -82,13 +83,15 @@ function BusinessShell({children}: React.PropsWithChildren) {
               <TransferProvider>
                 <ReviewTxProvider>
                   <SetupWalletProvider>
-                    <YoroiNotificationManager>
-                      <CurrencyProvider>
-                        <CatalystProvider manager={catalystManager}>
-                          {children}
-                        </CatalystProvider>
-                      </CurrencyProvider>
-                    </YoroiNotificationManager>
+                    <LinksProvider>
+                      <YoroiNotificationManager>
+                        <CurrencyProvider>
+                          <CatalystProvider manager={catalystManager}>
+                            {children}
+                          </CatalystProvider>
+                        </CurrencyProvider>
+                      </YoroiNotificationManager>
+                    </LinksProvider>
                   </SetupWalletProvider>
                 </ReviewTxProvider>
               </TransferProvider>

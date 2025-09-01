@@ -1,14 +1,8 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 
+import * as Linking from 'expo-linking'
 import * as React from 'react'
-import {
-  Alert,
-  AppState,
-  Linking,
-  Platform,
-  ScrollView,
-  View,
-} from 'react-native'
+import {Alert, AppState, Platform, ScrollView, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {SettingsItem, SettingsSection} from '~/features/Settings/SettingsItems'

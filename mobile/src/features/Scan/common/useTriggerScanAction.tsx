@@ -3,8 +3,9 @@ import {toBigInt} from '@yoroi/common'
 import {useTransfer} from '@yoroi/transfer'
 import {Scan} from '@yoroi/types'
 
+import * as Linking from 'expo-linking'
 import * as React from 'react'
-import {Alert, Linking} from 'react-native'
+import {Alert} from 'react-native'
 
 import {useClaimErrorResolver} from '~/features/Claim/common/useClaimErrorResolver'
 import {

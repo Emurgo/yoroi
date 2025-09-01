@@ -2,9 +2,9 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 
 import {useFocusEffect} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
+import * as Linking from 'expo-linking'
 import * as React from 'react'
 import {
-  Linking,
   ScrollView,
   TouchableOpacity,
   View,

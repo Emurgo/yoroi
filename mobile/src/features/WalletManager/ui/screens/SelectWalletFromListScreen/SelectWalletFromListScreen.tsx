@@ -7,12 +7,14 @@ import * as React from 'react'
 import {Linking, Text, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {useLinksRequestWallet} from '~/features/Links/common/useLinksRequestWallet'
 import {isDev} from '~/kernel/constants'
 import {features} from '~/kernel/features'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Button} from '~/ui/Button/Button'
+import {useModal} from '~/ui/Modal/ModalContext'
 import {ScrollView, useScrollView} from '~/ui/ScrollView/ScrollView'
 import {Space} from '~/ui/Space/Space'
 
@@ -24,8 +26,16 @@ import {AggregatedBalance} from './AggregatedBalance'
 import {WalletListItem} from './WalletListItem'
 
 export const SelectWalletFromList = () => {
-  // TODO: REVISIT when links are restored
-  // useLinksRequestWallet()
+  const {openModal, closeModal} = useModal()
+  const modalFunctions = React.useMemo(
+    () => ({
+      openModal,
+      closeModal,
+    }),
+    [openModal, closeModal],
+  )
+
+  useLinksRequestWallet(modalFunctions)
   const {isScrollBarShown, setIsScrollBarShown, scrollViewRef} = useScrollView()
   const [showLine, setShowLine] = React.useState(false)
   const navigation = useNavigation()

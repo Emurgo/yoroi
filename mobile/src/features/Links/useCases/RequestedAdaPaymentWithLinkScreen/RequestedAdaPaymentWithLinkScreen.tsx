@@ -8,7 +8,6 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button, ButtonType} from '~/ui/Button/Button'
-import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
 import {isEmptyString} from '~/wallets/utils/string'
 
@@ -18,15 +17,16 @@ export const RequestedAdaPaymentWithLinkScreen = ({
   params,
   isTrusted,
   onContinue,
+  onClose,
 }: {
   params: Links.TransferRequestAdaWithLinkParams
   isTrusted?: boolean
   onContinue: () => void
+  onClose: () => void
 }) => {
   const strings = useStrings()
   const {palette: p, atoms: ta} = useTheme()
   const {actionFinished} = useLinks()
-  const {closeModal} = useModal()
 
   // TODO: revisit check with product
   const description = isTrusted
@@ -35,7 +35,7 @@ export const RequestedAdaPaymentWithLinkScreen = ({
 
   const handleOnCancel = () => {
     actionFinished()
-    closeModal()
+    onClose()
   }
 
   return (
