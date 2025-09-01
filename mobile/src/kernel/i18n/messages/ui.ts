@@ -182,7 +182,7 @@ export const uiMessages = defineMessages({
     defaultMessage: '!!!Try Again',
   },
   addToken: {
-    id: 'components.send.addToken',
+    id: 'global.addToken',
     defaultMessage: '!!!Add Token',
   },
   pairedBalanceError: {

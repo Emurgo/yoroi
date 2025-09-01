@@ -2,6 +2,7 @@ import {atomicBreakdown} from '@yoroi/common'
 import {isPrimaryToken} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
+import {Portfolio} from '@yoroi/types'
 
 import {useIsFocused} from '@react-navigation/native'
 import * as React from 'react'
@@ -22,6 +23,7 @@ import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWalle
 import {useLanguage} from '~/kernel/i18n/LanguageProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
+import {useParams} from '~/kernel/navigation/hooks/useParams'
 import {Button} from '~/ui/Button/Button'
 import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingView'
 import {PairedBalance} from '~/ui/PairedBalance/PairedBalance'
@@ -33,9 +35,15 @@ import {Quantities} from '~/wallets/utils/utils'
 import {NoBalance} from './ShowError/NoBalance'
 import {UnableToSpend} from './ShowError/UnableToSpend'
 
+const isEditAmountParams = (
+  params: object,
+): params is {amount: Portfolio.Token.Amount} => {
+  return 'amount' in params && params.amount != null
+}
+
 export const EditAmountScreen = () => {
   const strings = useStrings()
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
   const navigateTo = useNavigateTo()
   const {numberLocale} = useLanguage()
 
@@ -43,22 +51,12 @@ export const EditAmountScreen = () => {
   const balances = usePortfolioBalances({wallet})
   const primaryBreakdown = usePortfolioPrimaryBreakdown({wallet})
 
-  const {
-    selectedTokenId,
-    amountRemoved,
-    amountChanged,
-    allocated,
-    selectedTargetIndex,
-    targets,
-  } = useTransfer()
+  const {amountRemoved, amountChanged, allocated, selectedTargetIndex} =
+    useTransfer()
 
-  const amount = targets[selectedTargetIndex].entry.amounts[selectedTokenId]
-
-  React.useEffect(() => {
-    if (!amount) {
-      navigateTo.selectedTokens()
-    }
-  }, [navigateTo, amount])
+  const params = useParams(isEditAmountParams)
+  const amount = params.amount
+  const selectedTokenId = amount.info.id
 
   const initialQuantity = amount.quantity
   const available =
@@ -138,7 +136,7 @@ export const EditAmountScreen = () => {
   }, [amount.info, amountChanged, navigateTo, quantity])
 
   return (
-    <KeyboardAvoidingView style={[a.flex_1, {backgroundColor: p.bg_color_max}]}>
+    <KeyboardAvoidingView style={[a.flex_1, ta.bg_color_max]}>
       <SafeAreaView
         edges={['bottom', 'left', 'right']}
         style={[a.flex_1, a.gap_lg, a.py_lg]}

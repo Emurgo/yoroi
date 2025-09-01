@@ -896,6 +896,7 @@
   "global.nfts": "{qty, plural, one {asset} other {assets}}",
   "global.notSupported": "Feature not supported",
   "global.ok": "OK",
+  "global.addToken": "Add asset",
   "global.openAppSettings": "Open app settings",
   "global.openInExplorer": "Open in explorer",
   "global.pleaseConfirm": "Please confirm",

@@ -91,7 +91,7 @@ export const sendMessages = defineMessages({
       '!!!is the maximum number allowed to send in one transaction',
   },
   noBalance: {
-    id: 'global.actions.dialogs.logout.noButton',
+    id: 'components.send.sendscreen.amountInput.error.insufficientBalance',
     defaultMessage: '!!!No balance',
   },
   ok: {
