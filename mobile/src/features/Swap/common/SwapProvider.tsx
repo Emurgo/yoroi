@@ -177,7 +177,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
     queryFn: async () => {
       const res = await swapManager.api.tokens()
       if (isRight(res)) {
-        const excludedTokens = config.swap.excludedTokens ?? []
+        const excludedTokens = config.swap?.excludedTokens ?? []
         const tokenIds = res.value.data
           .map(({id}) => id)
           .filter((id) => excludedTokens.indexOf(id) === -1)
