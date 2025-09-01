@@ -37,7 +37,7 @@ export const DownloadCatalystAppScreen = () => {
   const {wallet} = useSelectedWallet()
   const {stakingInfo} = useStakingInfo(wallet)
   const {openModal, closeModal} = useModal()
-  const {palette: p} = useTheme()
+  const {palette: p, atoms: ta} = useTheme()
   const {fund} = useCatalystCurrentFund()
   const intl = useIntl()
   const navigateTo = useNavigateTo()
@@ -114,13 +114,13 @@ export const DownloadCatalystAppScreen = () => {
 
         <Space.Height.lg />
 
-        <Text style={[a.body_1_lg_medium]}>
+        <Text style={[a.body_1_lg_medium, ta.text_gray_medium]}>
           {strings.registerCatalyst.subTitle}
         </Text>
 
         <Space.Height.lg />
 
-        <Text style={[a.body_2_md_regular]}>
+        <Text style={[a.body_2_md_regular, ta.text_gray_medium]}>
           {strings.registerCatalyst.tip}
         </Text>
 
@@ -161,19 +161,25 @@ const FundInfo = ({children}: {children: React.ReactNode}) => {
 }
 
 const FundName = ({children}: {children: React.ReactNode}) => {
-  return <Text style={[a.body_2_md_medium]}>{children}</Text>
+  const {atoms: ta} = useTheme()
+  return (
+    <Text style={[a.body_2_md_medium, ta.text_gray_medium]}>{children}</Text>
+  )
 }
 
 const FundText = ({children}: {children: React.ReactNode}) => {
-  return <Text style={[a.body_2_md_regular]}>{children}</Text>
+  const {atoms: ta} = useTheme()
+  return (
+    <Text style={[a.body_2_md_regular, ta.text_gray_medium]}>{children}</Text>
+  )
 }
 
 const WarningModal = () => {
   const strings = useStrings()
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
   return (
     <View style={[a.px_lg, a.flex_1]}>
-      <Text style={[a.body_1_lg_regular, {color: p.text_gray_medium}]}>
+      <Text style={[a.body_1_lg_regular, ta.text_gray_medium]}>
         {strings.registerCatalyst.tip}
       </Text>
     </View>

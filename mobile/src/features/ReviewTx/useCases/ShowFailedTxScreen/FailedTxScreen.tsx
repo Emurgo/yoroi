@@ -27,7 +27,7 @@ export const FailedTxScreen = () => {
         a.justify_center,
       ]}
     >
-      <Space.Height._2xl />
+      <View style={{height: 144}} />
 
       <FailedTxIcon />
 
