@@ -163,7 +163,7 @@ export const EditAmountScreen = () => {
   }
 
   return (
-    <KeyboardAvoidingView style={[a.flex_1, {backgroundColor: p.bg_color_max}]}>
+    <KeyboardAvoidingView style={[a.flex_1, ta.bg_color_max]}>
       <SafeAreaView
         edges={['bottom', 'left', 'right']}
         style={[a.flex_1, a.gap_lg, a.py_lg]}
