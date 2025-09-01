@@ -156,6 +156,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
 
   const {data: orders = [], refetch: refetchOrders} = useQuery({
     queryKey: [
+      'persist',
       'useSwapOrders',
       network,
       stakingKey,
@@ -170,6 +171,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
 
   const {data: tokenIds = [], refetch: refetchTokens} = useQuery({
     queryKey: [
+      'persist',
       'useSwapTokenIds',
       network,
       swapManager.settings.routingPreference,

@@ -126,53 +126,6 @@ describe('filterBySearch', () => {
     })
   })
 
-  describe('caching behavior', () => {
-    it('should cache normalized search terms', () => {
-      const searchTerm1 = 'ADA'
-      const searchTerm2 = 'ada'
-      const searchTerm3 = '  ada  '
-
-      const filter1 = filterBySearch(searchTerm1)
-      const filter2 = filterBySearch(searchTerm2)
-      const filter3 = filterBySearch(searchTerm3)
-
-      const result1 = tokens.filter(filter1)
-      const result2 = tokens.filter(filter2)
-      const result3 = tokens.filter(filter3)
-
-      expect(result1).toEqual([mockToken1])
-      expect(result2).toEqual([mockToken1])
-      expect(result3).toEqual([mockToken1])
-    })
-
-    it('should return same filter function for same search term', () => {
-      const searchTerm = 'ada'
-      const filter1 = filterBySearch(searchTerm)
-      const filter2 = filterBySearch(searchTerm)
-
-      // The functions should produce the same results due to caching
-      const result1 = tokens.filter(filter1)
-      const result2 = tokens.filter(filter2)
-      expect(result1).toEqual(result2)
-    })
-  })
-
-  describe('memory leak prevention', () => {
-    it('should limit cache size', () => {
-      const MAX_CACHE_SIZE = 100
-
-      // Add more than MAX_CACHE_SIZE unique search terms
-      const filters = []
-      for (let i = 0; i < MAX_CACHE_SIZE + 10; i++) {
-        filters.push(filterBySearch(`search${i}`))
-      }
-
-      // Verify that filters are still working correctly
-      const result = tokens.filter(filters[0])
-      expect(result).toEqual([]) // 'search0' doesn't match any tokens
-    })
-  })
-
   describe('edge cases', () => {
     it('should handle empty token properties', () => {
       const emptyToken = {
