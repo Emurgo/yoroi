@@ -69,6 +69,10 @@ export const registerCatalystMessages = defineMessages({
     id: 'components.catalyst.confirmTx.bioAuthInstructions',
     defaultMessage: '!!!Auth OS instructions',
   },
+  continue: {
+    id: 'components.catalyst.continue',
+    defaultMessage: '!!!Continue',
+  },
   confirm: {
     id: 'components.catalyst.confirmTx.title',
     defaultMessage: '!!!Confirm',

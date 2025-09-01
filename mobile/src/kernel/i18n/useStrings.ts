@@ -409,6 +409,7 @@ export const useStrings = () => {
         ),
         authOsInstructions: f(registerCatalystMessages.authOsInstructions),
         confirm: f(registerCatalystMessages.confirm),
+        continue: f(registerCatalystMessages.continue),
         step4Description: f(registerCatalystMessages.step4Description),
         step4Title: f(registerCatalystMessages.step4Title),
         step4QrTitle: f(registerCatalystMessages.step4QrTitle),

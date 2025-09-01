@@ -101,7 +101,7 @@ export const DownloadCatalystAppScreen = () => {
   return (
     <SafeAreaView
       edges={['left', 'right', 'bottom']}
-      style={[{backgroundColor: p.bg_color_max}, a.px_lg, a.pb_lg]}
+      style={[{flex: 1}, {backgroundColor: p.bg_color_max}, a.px_lg, a.pb_lg]}
     >
       <Stepper
         title={strings.registerCatalyst.title}
@@ -114,15 +114,21 @@ export const DownloadCatalystAppScreen = () => {
 
         <Space.Height.lg />
 
-        <Text style={[a.body_1_lg_regular]}>
-          {strings.registerCatalyst.step2Description}
+        <Text style={[a.body_1_lg_medium]}>
+          {strings.registerCatalyst.subTitle}
         </Text>
 
         <Space.Height.lg />
 
+        <Text style={[a.body_2_md_regular]}>
+          {strings.registerCatalyst.tip}
+        </Text>
+
+        <Space.Height.xl />
+
         <Row>
           <PlayStoreButton />
-          <Space.Width.md />
+          <Space.Width._2xl />
           <AppStoreButton />
         </Row>
 
@@ -130,18 +136,22 @@ export const DownloadCatalystAppScreen = () => {
 
         <FundInfo>
           <FundName>{fundName}</FundName>
+          <Space.Height.sm />
           <FundText>{registrationStart}</FundText>
+
           <FundText>{votingStart}</FundText>
+
           <FundText>{votingEnd}</FundText>
+
           <FundText>{votingResults}</FundText>
         </FundInfo>
 
-        <Space.Height.xl />
-
-        <Actions>
-          <Button title={strings.registerCatalyst.confirm} onPress={onNext} />
-        </Actions>
+        <Space.Height.lg />
       </ScrollView>
+
+      <Actions>
+        <Button title={strings.registerCatalyst.continue} onPress={onNext} />
+      </Actions>
     </SafeAreaView>
   )
 }
@@ -151,13 +161,11 @@ const FundInfo = ({children}: {children: React.ReactNode}) => {
 }
 
 const FundName = ({children}: {children: React.ReactNode}) => {
-  const {palette: p} = useTheme()
-  return <Text style={[{color: p.text_gray_medium}]}>{children}</Text>
+  return <Text style={[a.body_2_md_medium]}>{children}</Text>
 }
 
 const FundText = ({children}: {children: React.ReactNode}) => {
-  const {palette: p} = useTheme()
-  return <Text style={[{color: p.text_gray_medium}]}>{children}</Text>
+  return <Text style={[a.body_2_md_regular]}>{children}</Text>
 }
 
 const WarningModal = () => {
