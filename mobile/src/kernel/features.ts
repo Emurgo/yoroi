@@ -45,7 +45,7 @@ export const useYoroiConfig = () => {
   })
 
   return {
-    config: data,
+    config: data ?? {},
     isLoading,
     error,
     isYoroiDrepBannerEnabled: data?.banners?.delegateToYoroi ?? false,

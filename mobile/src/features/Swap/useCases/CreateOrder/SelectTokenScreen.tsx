@@ -16,8 +16,8 @@ import {usePortfolioTokenActivity} from '~/features/Portfolio/context/PortfolioT
 import {useSearch, useSearchOnNavBar} from '~/features/Search/SearchContext'
 import {filterBySearch} from '~/features/Swap/common/filterBySearch'
 import {useSwap} from '~/features/Swap/common/useSwap'
-import {useSwapConfig} from '~/features/Swap/common/useSwapConfig'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useYoroiConfig} from '~/kernel/features'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useUnsafeParams} from '~/kernel/navigation/hooks/useUnsafeParams'
@@ -84,7 +84,7 @@ const TokenList = ({direction}: Direction) => {
   const {tokenInfos} = useSwap()
   const {search: assetSearchTerm} = useSearch()
   const balances = usePortfolioBalances({wallet})
-  const {swapConfig} = useSwapConfig()
+  const {config} = useYoroiConfig()
   const {tokenActivity} = usePortfolioTokenActivity()
   const {palette: p} = useTheme()
 
@@ -123,8 +123,11 @@ const TokenList = ({direction}: Direction) => {
   }, [balances.all, tokenInfos, calculateTokenValue])
 
   const verifiedTokens = React.useMemo(
-    () => swapConfig?.verifiedTokens?.filter((ti) => tokenInfos.has(ti)) ?? [],
-    [swapConfig?.verifiedTokens, tokenInfos],
+    () =>
+      config.swap?.verifiedTokens?.filter((ti: Portfolio.Token.Id) =>
+        tokenInfos.has(ti),
+      ) ?? [],
+    [config.swap?.verifiedTokens, tokenInfos],
   )
 
   const filteredTokenList = React.useMemo(() => {
@@ -144,9 +147,9 @@ const TokenList = ({direction}: Direction) => {
     }
 
     const verifiedList = verifiedTokens
-      .map((ti) => tokenInfos.get(ti))
+      .map((ti: Portfolio.Token.Id) => tokenInfos.get(ti))
       .filter(isNonNullable)
-      .filter(({id}) => !ownedTokens.includes(id))
+      .filter(({id}: Portfolio.Token.Info) => !ownedTokens.includes(id))
 
     const remainingTokens = Array.from(tokenInfos.values()).filter(
       ({id}) => !(ownedTokens.includes(id) || verifiedTokens.includes(id)),
