@@ -1,24 +1,8 @@
-const MAX_CACHE_SIZE = 100
-const searchCache = new Map<string, string>()
-
 export const filterBySearch = (searchTerm: string) => {
   const normalizedSearch = normalizeString(searchTerm)
 
   if (normalizedSearch.length === 0) {
     return () => true
-  }
-
-  let cachedSearch = searchCache.get(normalizedSearch)
-  if (!cachedSearch) {
-    if (searchCache.size >= MAX_CACHE_SIZE) {
-      const firstKey = searchCache.keys().next().value
-      if (firstKey !== undefined) {
-        searchCache.delete(firstKey)
-      }
-    }
-
-    cachedSearch = normalizedSearch
-    searchCache.set(normalizedSearch, cachedSearch)
   }
 
   const filterFunction = (
@@ -31,9 +15,9 @@ export const filterBySearch = (searchTerm: string) => {
     const symbol = normalizeString(item.symbol ?? '')
 
     return (
-      ticker.includes(cachedSearch) ||
-      name.includes(cachedSearch) ||
-      symbol.includes(cachedSearch)
+      ticker.includes(normalizedSearch) ||
+      name.includes(normalizedSearch) ||
+      symbol.includes(normalizedSearch)
     )
   }
 

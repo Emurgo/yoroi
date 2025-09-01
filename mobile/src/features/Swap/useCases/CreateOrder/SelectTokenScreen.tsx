@@ -17,7 +17,6 @@ import {useSearch, useSearchOnNavBar} from '~/features/Search/SearchContext'
 import {filterBySearch} from '~/features/Swap/common/filterBySearch'
 import {useSwap} from '~/features/Swap/common/useSwap'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {useYoroiConfig} from '~/kernel/features'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useUnsafeParams} from '~/kernel/navigation/hooks/useUnsafeParams'
@@ -36,9 +35,20 @@ import {useNavigateTo} from '../../common/navigation'
 
 type Direction = SwapTokenRoutes['select-token']
 
+const getSortTokensFn =
+  (calculateTokenValue: (token: Portfolio.Token.Amount) => BigNumber) =>
+  (a: Portfolio.Token.Amount, b: Portfolio.Token.Amount) => {
+    if (isPrimaryToken(a.info)) return -1
+    if (isPrimaryToken(b.info)) return 1
+
+    const valueA = calculateTokenValue(a)
+    const valueB = calculateTokenValue(b)
+    return valueB.comparedTo(valueA) ?? 0
+  }
+
 export const SelectTokenScreen = () => {
   const strings = useStrings()
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
   const {direction} = useUnsafeParams<Direction>()
 
   useSearchOnNavBar({
@@ -47,10 +57,7 @@ export const SelectTokenScreen = () => {
   })
 
   return (
-    <SafeAreaView
-      style={[a.flex_1, {backgroundColor: p.bg_color_max}]}
-      edges={['left', 'right']}
-    >
+    <SafeAreaView style={[a.flex_1, ta.bg_color_max]} edges={['left', 'right']}>
       <ErrorBoundary
         fallbackRender={({resetErrorBoundary}) => (
           <ServiceUnavailable resetErrorBoundary={resetErrorBoundary} />
@@ -67,7 +74,7 @@ const useTokenValueCalculator = (
 ) => {
   return React.useCallback(
     (tokenAmount: Portfolio.Token.Amount) => {
-      if (isPrimaryToken(tokenAmount.info)) return new BigNumber(Infinity) // Primary token always first
+      if (isPrimaryToken(tokenAmount.info)) return new BigNumber(Infinity)
 
       const price =
         tokenActivity[tokenAmount.info.id]?.price.close ?? new BigNumber(0)
@@ -81,12 +88,11 @@ const useTokenValueCalculator = (
 const TokenList = ({direction}: Direction) => {
   const strings = useStrings()
   const {wallet} = useSelectedWallet()
-  const {tokenInfos} = useSwap()
+  const {tokenInfos, verifiedTokens} = useSwap()
   const {search: assetSearchTerm} = useSearch()
   const balances = usePortfolioBalances({wallet})
-  const {config} = useYoroiConfig()
   const {tokenActivity} = usePortfolioTokenActivity()
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
 
   const calculateTokenValue = useTokenValueCalculator(tokenActivity)
 
@@ -108,27 +114,12 @@ const TokenList = ({direction}: Direction) => {
 
     if (availableTokens.length > 1) {
       return availableTokens
-        .sort((a, b) => {
-          if (isPrimaryToken(a.info)) return -1
-          if (isPrimaryToken(b.info)) return 1
-
-          const valueA = calculateTokenValue(a)
-          const valueB = calculateTokenValue(b)
-          return valueB.comparedTo(valueA) ?? 0
-        })
+        .sort(getSortTokensFn(calculateTokenValue))
         .map(({info: {id}}) => id)
     }
 
     return availableTokens.map(({info: {id}}) => id)
   }, [balances.all, tokenInfos, calculateTokenValue])
-
-  const verifiedTokens = React.useMemo(
-    () =>
-      config.swap?.verifiedTokens?.filter((ti: Portfolio.Token.Id) =>
-        tokenInfos.has(ti),
-      ) ?? [],
-    [config.swap?.verifiedTokens, tokenInfos],
-  )
 
   const filteredTokenList = React.useMemo(() => {
     if (!tokenInfos || tokenInfos.size === 0) {
@@ -155,26 +146,10 @@ const TokenList = ({direction}: Direction) => {
       ({id}) => !(ownedTokens.includes(id) || verifiedTokens.includes(id)),
     )
 
-    const MAX_TOKENS_TO_SORT = 1000
-    let sortedRemainingTokens: readonly Portfolio.Token.Info[] = []
-
-    if (remainingTokens.length > MAX_TOKENS_TO_SORT) {
-      const tokensToSort = remainingTokens.slice(0, MAX_TOKENS_TO_SORT)
-
-      const simpleSorted = [...tokensToSort].sort((a, b) => {
-        const nameA = (a.ticker || a.name).toLowerCase()
-        const nameB = (b.ticker || b.name).toLowerCase()
-        return nameA.localeCompare(nameB)
-      })
-
-      const remainingUnsorted = remainingTokens.slice(MAX_TOKENS_TO_SORT)
-      sortedRemainingTokens = [...simpleSorted, ...remainingUnsorted]
-    } else {
-      sortedRemainingTokens = sortTokenInfos({
-        secondaryTokenInfos: remainingTokens,
-        primaryTokenInfo: wallet.portfolioPrimaryTokenInfo,
-      })
-    }
+    const sortedRemainingTokens = sortTokenInfos({
+      secondaryTokenInfos: remainingTokens,
+      primaryTokenInfo: wallet.portfolioPrimaryTokenInfo,
+    })
 
     const result = [
       strings.swap.yourAssets,
@@ -201,15 +176,15 @@ const TokenList = ({direction}: Direction) => {
   const renderItem = React.useCallback(
     ({item}: {item: Portfolio.Token.Info | string}) =>
       isString(item) ? (
-        <Text style={[{color: p.text_gray_low}, a.p_lg]}>{item}</Text>
+        <Text style={[ta.text_gray_low, a.p_lg]}>{item}</Text>
       ) : (
         <SelectableToken
           tokenInfo={item}
-          quantity={wallet.balances.records.get(item.id)?.quantity ?? 0n}
+          quantity={balances.records.get(item.id)?.quantity ?? 0n}
           direction={direction}
         />
       ),
-    [p.text_gray_low, direction, wallet.balances.records],
+    [ta.text_gray_low, direction, balances],
   )
 
   const keyExtractor = React.useCallback(
@@ -221,12 +196,7 @@ const TokenList = ({direction}: Direction) => {
   if (!balances.all || !tokenInfos || tokenInfos.size === 0) {
     return (
       <View style={a.flex_1}>
-        <View
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-          }}
-        >
+        <View style={[a.flex_1, a.flex_col]}>
           {Array.from({length: 6}).map((_, i) => (
             <AmountItemPlaceholder key={i} style={[a.py_sm, a.px_lg]} />
           ))}

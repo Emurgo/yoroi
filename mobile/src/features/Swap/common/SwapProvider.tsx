@@ -107,6 +107,7 @@ export type SwapContext = SwapState & {
   isLoading: boolean
   limitOptions?: Swap.LimitOptionsResponse
   tokenInfos: Map<Portfolio.Token.Id, Portfolio.Token.Info>
+  verifiedTokens: Portfolio.Token.Id[]
   tokenInInputRef: React.RefObject<TextInput | null> | undefined
   tokenOutInputRef: React.RefObject<TextInput | null> | undefined
   wantedPriceInputRef: React.RefObject<TextInput | null> | undefined
@@ -156,6 +157,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
 
   const {data: orders = [], refetch: refetchOrders} = useQuery({
     queryKey: [
+      'persist',
       'useSwapOrders',
       network,
       stakingKey,
@@ -170,6 +172,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
 
   const {data: tokenIds = [], refetch: refetchTokens} = useQuery({
     queryKey: [
+      'persist',
       'useSwapTokenIds',
       network,
       swapManager.settings.routingPreference,
@@ -207,6 +210,14 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
       portfolioTokenInfos ??
       new Map<Portfolio.Token.Id, Portfolio.Token.Info>(),
     [portfolioTokenInfos],
+  )
+
+  const verifiedTokens = React.useMemo(
+    () =>
+      config.swap?.verifiedTokens?.filter((ti: Portfolio.Token.Id) =>
+        tokenInfos.has(ti),
+      ) ?? [],
+    [config.swap?.verifiedTokens, tokenInfos],
   )
 
   const tokenOutInputRef = React.useRef<TextInput | null>(null)
@@ -468,6 +479,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
       isLoading,
       limitOptions,
       tokenInfos,
+      verifiedTokens,
       tokenOutInputRef,
       tokenInInputRef,
       wantedPriceInputRef,
@@ -484,6 +496,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
       isLoading,
       limitOptions,
       tokenInfos,
+      verifiedTokens,
       orders,
       create,
       swapManager.api.cancel,
@@ -728,6 +741,7 @@ const SwapContextInstance = React.createContext<SwapContext>({
   ...defaultState,
   isLoading: false,
   tokenInfos: new Map<Portfolio.Token.Id, Portfolio.Token.Info>(),
+  verifiedTokens: [],
   tokenInInputRef: undefined,
   tokenOutInputRef: undefined,
   wantedPriceInputRef: undefined,

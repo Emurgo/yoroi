@@ -34,6 +34,7 @@ import {Boundary} from '~/ui/Boundary/Boundary'
 import {ShowSuccessScreen} from '../Claim/useCases/ShowSuccessScreen'
 import {ViewNotificationHistoryScreen} from '../Notifications/useCases/ViewNotificationHistory/ViewNotificationHistoryScreen'
 import {SwapNavigator} from '../Swap/navigator'
+import {useSelectedNetwork} from '../WalletManager/hooks/useSelectedNetwork'
 import {HeaderRightHistory} from './common/HeaderRightHistory'
 import {TxDetails} from './useCases/TxDetails/TxDetails'
 import {TxHistory} from './useCases/TxHistory/TxHistory'
@@ -43,13 +44,15 @@ const Stack = createStackNavigator<TxHistoryRoutes>()
 export const TxHistoryNavigator = () => {
   const strings = useStrings()
   const {palette: p} = useTheme()
+  const {
+    networkManager: {isMainnet},
+  } = useSelectedNetwork()
 
   const navigationOptions = React.useMemo(
     () => defaultStackNavigationOptions(p),
     [p],
   )
 
-  // Setup resolver manager
   const resolverStorage = React.useMemo(() => {
     return resolverStorageMaker()
   }, [])
@@ -62,9 +65,9 @@ export const TxHistoryNavigator = () => {
         },
       },
       cslFactory: () => require('@emurgo/cross-csl-core'),
-      isMainnet: true, // Default to mainnet
+      isMainnet,
     })
-  }, [])
+  }, [isMainnet])
 
   const resolverManager = React.useMemo(() => {
     return resolverManagerMaker(resolverStorage, resolverApi)
