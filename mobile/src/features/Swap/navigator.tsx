@@ -17,7 +17,6 @@ import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
 import {SwapTokenRoutes} from '~/kernel/navigation/types'
 
 import {HeaderRightSwap} from '../Transactions/common/HeaderRightSwap'
-import {SwapProvider} from './common/SwapProvider'
 import {SwapMainScreen} from './useCases/CreateOrder/SwapMainScreen'
 
 const Stack = createStackNavigator<SwapTokenRoutes>()
@@ -32,86 +31,84 @@ export const SwapNavigator = () => {
   )
 
   return (
-    <SwapProvider>
-      <Stack.Navigator
-        screenOptions={{
-          ...navigationOptions,
-          headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
+    <Stack.Navigator
+      screenOptions={{
+        ...navigationOptions,
+        headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
+      }}
+    >
+      <Stack.Screen
+        name="main"
+        options={{
+          title: strings.swap.swapTitle,
+          headerRight: () => <HeaderRightSwap />,
         }}
-      >
-        <Stack.Screen
-          name="main"
-          options={{
-            title: strings.swap.swapTitle,
-            headerRight: () => <HeaderRightSwap />,
-          }}
-          getComponent={() => SwapMainScreen}
-        />
+        getComponent={() => SwapMainScreen}
+      />
 
-        <Stack.Screen
-          name="orders"
-          options={{
-            title: strings.swap.listOrdersSheetTitle,
-          }}
-          getComponent={() => ListOrders}
-        />
+      <Stack.Screen
+        name="orders"
+        options={{
+          title: strings.swap.listOrdersSheetTitle,
+        }}
+        getComponent={() => ListOrders}
+      />
 
-        <Stack.Screen
-          name="settings"
-          options={{
-            title: 'Settings',
-          }}
-          getComponent={() => SwapSettings}
-        />
+      <Stack.Screen
+        name="settings"
+        options={{
+          title: 'Settings',
+        }}
+        getComponent={() => SwapSettings}
+      />
 
-        <Stack.Screen
-          name="review"
-          options={{
-            title: strings.swap.swapDetailsTitle,
-          }}
-          getComponent={() => ReviewSwap}
-        />
+      <Stack.Screen
+        name="review"
+        options={{
+          title: strings.swap.swapDetailsTitle,
+        }}
+        getComponent={() => ReviewSwap}
+      />
 
-        <Stack.Screen
-          name="select-token"
-          options={{
-            title: strings.swap.selectToken,
-          }}
-          getComponent={() => SelectTokenScreen}
-        />
+      <Stack.Screen
+        name="select-token"
+        options={{
+          title: strings.swap.selectToken,
+        }}
+        getComponent={() => SelectTokenScreen}
+      />
 
-        <Stack.Screen
-          name="select-protocol"
-          options={{
-            title: strings.swap.changePool,
-          }}
-          getComponent={() => SelectProtocolScreen}
-        />
+      <Stack.Screen
+        name="select-protocol"
+        options={{
+          title: strings.swap.changePool,
+        }}
+        getComponent={() => SelectProtocolScreen}
+      />
 
-        <Stack.Screen
-          name="preprod-notice"
-          options={{
-            title: strings.swap.preprodNoticeTitle,
-          }}
-          getComponent={() => ShowPreprodNoticeScreen}
-        />
+      <Stack.Screen
+        name="preprod-notice"
+        options={{
+          title: strings.swap.preprodNoticeTitle,
+        }}
+        getComponent={() => ShowPreprodNoticeScreen}
+      />
 
-        <Stack.Screen
-          name="submitted-tx"
-          options={{
-            title: strings.swap.submittedTxScreenTitle,
-          }}
-          getComponent={() => SwapSubmittedTxScreen}
-        />
+      <Stack.Screen
+        name="submitted-tx"
+        options={{
+          title: strings.swap.submittedTxScreenTitle,
+        }}
+        getComponent={() => SwapSubmittedTxScreen}
+      />
 
-        <Stack.Screen
-          name="failed-tx"
-          options={{
-            title: strings.swap.failedTxScreenTitle,
-          }}
-          getComponent={() => SwapFailedTxScreen}
-        />
-      </Stack.Navigator>
-    </SwapProvider>
+      <Stack.Screen
+        name="failed-tx"
+        options={{
+          title: strings.swap.failedTxScreenTitle,
+        }}
+        getComponent={() => SwapFailedTxScreen}
+      />
+    </Stack.Navigator>
   )
 }
