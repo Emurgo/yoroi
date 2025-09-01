@@ -334,37 +334,31 @@ const toSwapSplit = ({
   protocol: toSwapProtocol(dex),
 })
 
-export const toSwapProtocol = (dex: Dex): Swap.Protocol => {
-  const res =
-    {
-      [Dex.Muesliswap]: Swap.Protocol.Muesliswap,
-      [Dex.Muesliswap_v1]: Swap.Protocol.Muesliswap_v1,
-      [Dex.Muesliswap_v2]: Swap.Protocol.Muesliswap_v2,
-      [Dex.Muesliswap_clp]: Swap.Protocol.Muesliswap_clp,
-      [Dex.Muesliswap_orderbook]: Swap.Protocol.Muesliswap_orderbook,
-      [Dex.Minswap_v1]: Swap.Protocol.Minswap_v1,
-      [Dex.Minswap_v2]: Swap.Protocol.Minswap_v2,
-      [Dex.Minswap_stable]: Swap.Protocol.Minswap_stable,
-      [Dex.Wingriders_v1]: Swap.Protocol.Wingriders_v1,
-      [Dex.Wingriders_v2]: Swap.Protocol.Wingriders_v2,
-      [Dex.Wingriders_stable]: Swap.Protocol.Wingriders_stable,
-      [Dex.Vyfi_v1]: Swap.Protocol.Vyfi_v1,
-      [Dex.Sundaeswap_v1]: Swap.Protocol.Sundaeswap_v1,
-      [Dex.Sundaeswap_v3]: Swap.Protocol.Sundaeswap_v3,
-      [Dex.Cswap_v1]: Swap.Protocol.Cswap,
-      [Dex.Splash_v4]: Swap.Protocol.Splash_v4,
-      [Dex.Splash_v5]: Swap.Protocol.Splash_v5,
-      [Dex.Splash_v6]: Swap.Protocol.Splash_v6,
-      [Dex.Splash_degen_quad]: Swap.Protocol.Snekfun,
-      [Dex.Spectrum_v1]: Swap.Protocol.Spectrum_v1,
-      [Dex.Teddy_v1]: Swap.Protocol.Teddy_v1,
-      [Dex.Unsupported]: Swap.Protocol.Unsupported,
-    }[dex] ?? Swap.Protocol.Unsupported
-
-  if (res === Swap.Protocol.Unsupported)
-    console.log('Muesliswap unsupported dex', dex)
-  return res
-}
+export const toSwapProtocol = (dex: Dex): Swap.Protocol =>
+  ({
+    [Dex.Muesliswap]: Swap.Protocol.Muesliswap_v2,
+    [Dex.Muesliswap_v1]: Swap.Protocol.Muesliswap_v1,
+    [Dex.Muesliswap_v2]: Swap.Protocol.Muesliswap_v2,
+    [Dex.Muesliswap_clp]: Swap.Protocol.Muesliswap_clp,
+    [Dex.Muesliswap_orderbook]: Swap.Protocol.Muesliswap_orderbook,
+    [Dex.Minswap_v1]: Swap.Protocol.Minswap_v1,
+    [Dex.Minswap_v2]: Swap.Protocol.Minswap_v2,
+    [Dex.Minswap_stable]: Swap.Protocol.Minswap_stable,
+    [Dex.Wingriders_v1]: Swap.Protocol.Wingriders_v1,
+    [Dex.Wingriders_v2]: Swap.Protocol.Wingriders_v2,
+    [Dex.Wingriders_stable]: Swap.Protocol.Wingriders_stable,
+    [Dex.Vyfi_v1]: Swap.Protocol.Vyfi_v1,
+    [Dex.Sundaeswap_v1]: Swap.Protocol.Sundaeswap_v1,
+    [Dex.Sundaeswap_v3]: Swap.Protocol.Sundaeswap_v3,
+    [Dex.Cswap_v1]: Swap.Protocol.Cswap,
+    [Dex.Splash_v4]: Swap.Protocol.Splash_v4,
+    [Dex.Splash_v5]: Swap.Protocol.Splash_v5,
+    [Dex.Splash_v6]: Swap.Protocol.Splash_v6,
+    [Dex.Splash_degen_quad]: Swap.Protocol.Snekfun,
+    [Dex.Spectrum_v1]: Swap.Protocol.Spectrum_v1,
+    [Dex.Teddy_v1]: Swap.Protocol.Teddy_v1,
+    [Dex.Unsupported]: Swap.Protocol.Unsupported,
+  })[dex] ?? Swap.Protocol.Unsupported
 
 export const fromSwapProtocol = (dex: Swap.Protocol): Dex =>
   ({

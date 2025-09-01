@@ -77,17 +77,26 @@ describe('transformers', () => {
         buy_token:
           'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950',
         excluded_sources: [
+          'muesliswap',
+          'muesliswap-v1',
           'muesliswap-v2',
           'muesliswap-clp',
+          'muesliswap-orderbook',
           'minswap-v2',
           'minswap-stable',
           'spectrum-v1',
           'teddy-v1',
           'wingriders-v1',
           'wingriders-v2',
+          'wingriders-stable',
           'vyfi-v1',
           'sundaeswap-v1',
           'sundaeswap-v3',
+          'cswap-v1',
+          'splash-v4',
+          'splash-v5',
+          'splash-v6',
+          'splash-degen-quad',
         ],
         numbers_have_decimals: true,
         partner: 'somePartnerId',
@@ -263,8 +272,8 @@ describe('transformers', () => {
       expect(fromSwapProtocol(protocol)).toBe(dex)
     })
 
-    it('should return Dex.Unsupported for Cswap protocol', () => {
-      expect(fromSwapProtocol(Swap.Protocol.Cswap)).toBe(Dex.Unsupported)
+    it('should return Dex.Cswap_v1 for Cswap protocol', () => {
+      expect(fromSwapProtocol(Swap.Protocol.Cswap)).toBe(Dex.Cswap_v1)
     })
 
     it('should return Dex.Unsupported for Splash_v1 protocol', () => {

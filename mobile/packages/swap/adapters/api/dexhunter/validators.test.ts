@@ -6,13 +6,17 @@ describe('isDex', () => {
     'MINSWAP',
     'MINSWAPV2',
     'MUESLISWAP',
-    'MUESLISWAPV2',
     'SPLASH',
     'SUNDAESWAP',
     'SUNDAESWAPV3',
     'VYFI',
     'WINGRIDER',
     'WINGRIDERV2',
+    'SNEKFUN',
+    'SPECTRUM',
+    'CHADSWAP',
+    'CERRA',
+    'GENIUS',
   ]
 
   const invalidDexValues = ['INVALID_DEX', 123, null, undefined, {}, []]

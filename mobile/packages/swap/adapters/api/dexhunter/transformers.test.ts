@@ -941,19 +941,23 @@ describe('toPriceImpact', () => {
 
 describe('toSwapProtocol', () => {
   it.each`
-    dex                   | protocol
-    ${Dex.Minswap_v1}     | ${Swap.Protocol.Minswap_v1}
-    ${Dex.Minswap_v2}     | ${Swap.Protocol.Minswap_v2}
-    ${Dex.Wingriders_v1}  | ${Swap.Protocol.Wingriders_v1}
-    ${Dex.Wingriders_v2}  | ${Swap.Protocol.Wingriders_v2}
-    ${Dex.Vyfi_v1}        | ${Swap.Protocol.Vyfi_v1}
-    ${Dex.Sundaeswap_v1}  | ${Swap.Protocol.Sundaeswap_v1}
-    ${Dex.Sundaeswap_v3}  | ${Swap.Protocol.Sundaeswap_v3}
-    ${Dex.Splash_v1}      | ${Swap.Protocol.Splash_v1}
-    ${Dex.Muesliswap_v2}  | ${Swap.Protocol.Muesliswap_v2}
-    ${Dex.Muesliswap_clp} | ${Swap.Protocol.Muesliswap_clp}
-    ${Dex.Unsupported}    | ${Swap.Protocol.Unsupported}
-    ${'new-protocol'}     | ${Swap.Protocol.Unsupported}
+    dex                  | protocol
+    ${Dex.Minswap_v1}    | ${Swap.Protocol.Minswap_v1}
+    ${Dex.Minswap_v2}    | ${Swap.Protocol.Minswap_v2}
+    ${Dex.Wingriders_v1} | ${Swap.Protocol.Wingriders_v1}
+    ${Dex.Wingriders_v2} | ${Swap.Protocol.Wingriders_v2}
+    ${Dex.Vyfi_v1}       | ${Swap.Protocol.Vyfi_v1}
+    ${Dex.Sundaeswap_v1} | ${Swap.Protocol.Sundaeswap_v1}
+    ${Dex.Sundaeswap_v3} | ${Swap.Protocol.Sundaeswap_v3}
+    ${Dex.Splash_v1}     | ${Swap.Protocol.Splash_v1}
+    ${Dex.Muesliswap}    | ${Swap.Protocol.Muesliswap}
+    ${Dex.Snekfun}       | ${Swap.Protocol.Snekfun}
+    ${Dex.Spectrum_v1}   | ${Swap.Protocol.Spectrum_v1}
+    ${Dex.Chadswap}      | ${Swap.Protocol.Chadswap}
+    ${Dex.Cerra}         | ${Swap.Protocol.Cerra}
+    ${Dex.Genius}        | ${Swap.Protocol.Genius}
+    ${Dex.Unsupported}   | ${Swap.Protocol.Unsupported}
+    ${'new-protocol'}    | ${Swap.Protocol.Unsupported}
   `('should map $dex to $protocol', ({dex, protocol}) => {
     expect(toSwapProtocol(dex)).toBe(protocol)
   })
@@ -961,22 +965,34 @@ describe('toSwapProtocol', () => {
 
 describe('fromSwapProtocol', () => {
   it.each`
-    protocol                        | dex
-    ${Swap.Protocol.Minswap_v1}     | ${Dex.Minswap_v1}
-    ${Swap.Protocol.Minswap_v2}     | ${Dex.Minswap_v2}
-    ${Swap.Protocol.Wingriders_v1}  | ${Dex.Wingriders_v1}
-    ${Swap.Protocol.Wingriders_v2}  | ${Dex.Wingriders_v2}
-    ${Swap.Protocol.Vyfi_v1}        | ${Dex.Vyfi_v1}
-    ${Swap.Protocol.Sundaeswap_v1}  | ${Dex.Sundaeswap_v1}
-    ${Swap.Protocol.Sundaeswap_v3}  | ${Dex.Sundaeswap_v3}
-    ${Swap.Protocol.Splash_v1}      | ${Dex.Splash_v1}
-    ${Swap.Protocol.Muesliswap_v2}  | ${Dex.Muesliswap_v2}
-    ${Swap.Protocol.Muesliswap_clp} | ${Dex.Muesliswap_clp}
-    ${Swap.Protocol.Teddy_v1}       | ${Dex.Unsupported}
-    ${Swap.Protocol.Minswap_stable} | ${Dex.Unsupported}
-    ${Swap.Protocol.Spectrum_v1}    | ${Dex.Unsupported}
-    ${Swap.Protocol.Unsupported}    | ${Dex.Unsupported}
-    ${'new-protocol'}               | ${Dex.Unsupported}
+    protocol                              | dex
+    ${Swap.Protocol.Minswap_v1}           | ${Dex.Minswap_v1}
+    ${Swap.Protocol.Minswap_v2}           | ${Dex.Minswap_v2}
+    ${Swap.Protocol.Wingriders_v1}        | ${Dex.Wingriders_v1}
+    ${Swap.Protocol.Wingriders_v2}        | ${Dex.Wingriders_v2}
+    ${Swap.Protocol.Vyfi_v1}              | ${Dex.Vyfi_v1}
+    ${Swap.Protocol.Sundaeswap_v1}        | ${Dex.Sundaeswap_v1}
+    ${Swap.Protocol.Sundaeswap_v3}        | ${Dex.Sundaeswap_v3}
+    ${Swap.Protocol.Splash_v1}            | ${Dex.Splash_v1}
+    ${Swap.Protocol.Muesliswap}           | ${Dex.Muesliswap}
+    ${Swap.Protocol.Snekfun}              | ${Dex.Snekfun}
+    ${Swap.Protocol.Spectrum_v1}          | ${Dex.Spectrum_v1}
+    ${Swap.Protocol.Chadswap}             | ${Dex.Chadswap}
+    ${Swap.Protocol.Cerra}                | ${Dex.Cerra}
+    ${Swap.Protocol.Genius}               | ${Dex.Genius}
+    ${Swap.Protocol.Teddy_v1}             | ${Dex.Unsupported}
+    ${Swap.Protocol.Minswap_stable}       | ${Dex.Unsupported}
+    ${Swap.Protocol.Muesliswap_v1}        | ${Dex.Unsupported}
+    ${Swap.Protocol.Muesliswap_v2}        | ${Dex.Unsupported}
+    ${Swap.Protocol.Muesliswap_clp}       | ${Dex.Unsupported}
+    ${Swap.Protocol.Muesliswap_orderbook} | ${Dex.Unsupported}
+    ${Swap.Protocol.Wingriders_stable}    | ${Dex.Unsupported}
+    ${Swap.Protocol.Splash_v4}            | ${Dex.Splash_v1}
+    ${Swap.Protocol.Splash_v5}            | ${Dex.Splash_v1}
+    ${Swap.Protocol.Splash_v6}            | ${Dex.Splash_v1}
+    ${Swap.Protocol.Snekfun}              | ${Dex.Snekfun}
+    ${Swap.Protocol.Unsupported}          | ${Dex.Unsupported}
+    ${'new-protocol'}                     | ${Dex.Unsupported}
   `('should map $protocol to $dex', ({protocol, dex}) => {
     expect(fromSwapProtocol(protocol)).toBe(dex)
   })

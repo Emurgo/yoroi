@@ -2,8 +2,11 @@ import {getAllowedDexes} from './helpers'
 import {Dex} from './types'
 
 const allDexes: Array<Dex> = [
+  Dex.Muesliswap,
+  Dex.Muesliswap_v1,
   Dex.Muesliswap_v2,
   Dex.Muesliswap_clp,
+  Dex.Muesliswap_orderbook,
   Dex.Minswap_v1,
   Dex.Minswap_v2,
   Dex.Minswap_stable,
@@ -11,9 +14,15 @@ const allDexes: Array<Dex> = [
   Dex.Teddy_v1,
   Dex.Wingriders_v1,
   Dex.Wingriders_v2,
+  Dex.Wingriders_stable,
   Dex.Vyfi_v1,
   Dex.Sundaeswap_v1,
   Dex.Sundaeswap_v3,
+  Dex.Cswap_v1,
+  Dex.Splash_v4,
+  Dex.Splash_v5,
+  Dex.Splash_v6,
+  Dex.Splash_degen_quad,
 ]
 
 describe('getAllowedDexes', () => {

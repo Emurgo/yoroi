@@ -503,31 +503,25 @@ export const transformersMaker = ({
   } as const
 }
 
-export const toSwapProtocol = (dex: Dex): Swap.Protocol => {
-  const res =
-    {
-      [Dex.Cswap]: Swap.Protocol.Cswap,
-      [Dex.Minswap_v1]: Swap.Protocol.Minswap_v1,
-      [Dex.Minswap_v2]: Swap.Protocol.Minswap_v2,
-      [Dex.Wingriders_v1]: Swap.Protocol.Wingriders_v1,
-      [Dex.Wingriders_v2]: Swap.Protocol.Wingriders_v2,
-      [Dex.Vyfi_v1]: Swap.Protocol.Vyfi_v1,
-      [Dex.Sundaeswap_v1]: Swap.Protocol.Sundaeswap_v1,
-      [Dex.Sundaeswap_v3]: Swap.Protocol.Sundaeswap_v3,
-      [Dex.Splash_v1]: Swap.Protocol.Splash_v1,
-      [Dex.Snekfun]: Swap.Protocol.Snekfun,
-      [Dex.Spectrum_v1]: Swap.Protocol.Spectrum_v1,
-      [Dex.Chadswap]: Swap.Protocol.Chadswap,
-      [Dex.Muesliswap]: Swap.Protocol.Muesliswap,
-      [Dex.Cerra]: Swap.Protocol.Cerra,
-      [Dex.Genius]: Swap.Protocol.Genius,
-      [Dex.Unsupported]: Swap.Protocol.Unsupported,
-    }[dex] ?? Swap.Protocol.Unsupported
-
-  if (res === Swap.Protocol.Unsupported)
-    console.log('Dexhunter unsupported dex', dex)
-  return res
-}
+export const toSwapProtocol = (dex: Dex): Swap.Protocol =>
+  ({
+    [Dex.Cswap]: Swap.Protocol.Cswap,
+    [Dex.Minswap_v1]: Swap.Protocol.Minswap_v1,
+    [Dex.Minswap_v2]: Swap.Protocol.Minswap_v2,
+    [Dex.Wingriders_v1]: Swap.Protocol.Wingriders_v1,
+    [Dex.Wingriders_v2]: Swap.Protocol.Wingriders_v2,
+    [Dex.Vyfi_v1]: Swap.Protocol.Vyfi_v1,
+    [Dex.Sundaeswap_v1]: Swap.Protocol.Sundaeswap_v1,
+    [Dex.Sundaeswap_v3]: Swap.Protocol.Sundaeswap_v3,
+    [Dex.Splash_v1]: Swap.Protocol.Splash_v1,
+    [Dex.Snekfun]: Swap.Protocol.Snekfun,
+    [Dex.Spectrum_v1]: Swap.Protocol.Spectrum_v1,
+    [Dex.Chadswap]: Swap.Protocol.Chadswap,
+    [Dex.Muesliswap]: Swap.Protocol.Muesliswap,
+    [Dex.Cerra]: Swap.Protocol.Cerra,
+    [Dex.Genius]: Swap.Protocol.Genius,
+    [Dex.Unsupported]: Swap.Protocol.Unsupported,
+  })[dex] ?? Swap.Protocol.Unsupported
 
 export const fromSwapProtocol = (dex: Swap.Protocol): Dex =>
   ({
