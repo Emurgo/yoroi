@@ -230,11 +230,11 @@ export const uiMessages = defineMessages({
     defaultMessage: '!!!More',
   },
   skip: {
-    id: 'notifications.skip',
+    id: 'analytics.skip',
     defaultMessage: '!!!Skip',
   },
   accept: {
-    id: 'components.initialization.acepttermsofservicescreen.continueButton',
+    id: 'analytics.accept',
     defaultMessage: '!!!Accept',
   },
   toggle: {

@@ -322,7 +322,7 @@ export const swapMessages = defineMessages({
     defaultMessage: '!!!No Assets Found',
   },
   noAssetsFoundFor: {
-    id: 'components.send.assetselectorscreen.found',
+    id: 'swap.swapScreen.noAssetsFoundFor',
     defaultMessage: '!!!No Assets Found For {search}',
   },
   completedOrders: {
