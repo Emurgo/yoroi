@@ -398,8 +398,6 @@ export const useStrings = () => {
         votingStart: f(registerCatalystMessages.votingStart),
         votingEnd: f(registerCatalystMessages.votingEnd),
         votingResults: f(registerCatalystMessages.votingResults),
-        step1Title: f(registerCatalystMessages.step2Title),
-        step1Description: f(registerCatalystMessages.step2Description),
         step2Title: f(registerCatalystMessages.step2Title),
         step2Description: f(registerCatalystMessages.step2Description),
         checkbox: f(registerCatalystMessages.checkbox),
