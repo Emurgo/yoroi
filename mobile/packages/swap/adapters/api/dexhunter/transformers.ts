@@ -503,21 +503,31 @@ export const transformersMaker = ({
   } as const
 }
 
-export const toSwapProtocol = (dex: Dex): Swap.Protocol =>
-  ({
-    [Dex.Cswap]: Swap.Protocol.Cswap,
-    [Dex.Minswap_v1]: Swap.Protocol.Minswap_v1,
-    [Dex.Minswap_v2]: Swap.Protocol.Minswap_v2,
-    [Dex.Wingriders_v1]: Swap.Protocol.Wingriders_v1,
-    [Dex.Wingriders_v2]: Swap.Protocol.Wingriders_v2,
-    [Dex.Vyfi_v1]: Swap.Protocol.Vyfi_v1,
-    [Dex.Sundaeswap_v1]: Swap.Protocol.Sundaeswap_v1,
-    [Dex.Sundaeswap_v3]: Swap.Protocol.Sundaeswap_v3,
-    [Dex.Splash_v1]: Swap.Protocol.Splash_v1,
-    [Dex.Muesliswap_clp]: Swap.Protocol.Muesliswap_clp,
-    [Dex.Muesliswap_v2]: Swap.Protocol.Muesliswap_v2,
-    [Dex.Unsupported]: Swap.Protocol.Unsupported,
-  })[dex] ?? Swap.Protocol.Unsupported
+export const toSwapProtocol = (dex: Dex): Swap.Protocol => {
+  const res =
+    {
+      [Dex.Cswap]: Swap.Protocol.Cswap,
+      [Dex.Minswap_v1]: Swap.Protocol.Minswap_v1,
+      [Dex.Minswap_v2]: Swap.Protocol.Minswap_v2,
+      [Dex.Wingriders_v1]: Swap.Protocol.Wingriders_v1,
+      [Dex.Wingriders_v2]: Swap.Protocol.Wingriders_v2,
+      [Dex.Vyfi_v1]: Swap.Protocol.Vyfi_v1,
+      [Dex.Sundaeswap_v1]: Swap.Protocol.Sundaeswap_v1,
+      [Dex.Sundaeswap_v3]: Swap.Protocol.Sundaeswap_v3,
+      [Dex.Splash_v1]: Swap.Protocol.Splash_v1,
+      [Dex.Snekfun]: Swap.Protocol.Snekfun,
+      [Dex.Spectrum_v1]: Swap.Protocol.Spectrum_v1,
+      [Dex.Chadswap]: Swap.Protocol.Chadswap,
+      [Dex.Muesliswap]: Swap.Protocol.Muesliswap,
+      [Dex.Cerra]: Swap.Protocol.Cerra,
+      [Dex.Genius]: Swap.Protocol.Genius,
+      [Dex.Unsupported]: Swap.Protocol.Unsupported,
+    }[dex] ?? Swap.Protocol.Unsupported
+
+  if (res === Swap.Protocol.Unsupported)
+    console.log('Dexhunter unsupported dex', dex)
+  return res
+}
 
 export const fromSwapProtocol = (dex: Swap.Protocol): Dex =>
   ({
@@ -525,17 +535,28 @@ export const fromSwapProtocol = (dex: Swap.Protocol): Dex =>
     [Swap.Protocol.Minswap_v1]: Dex.Minswap_v1,
     [Swap.Protocol.Minswap_v2]: Dex.Minswap_v2,
     [Swap.Protocol.Minswap_stable]: Dex.Unsupported,
+    [Swap.Protocol.Muesliswap]: Dex.Muesliswap,
+    [Swap.Protocol.Muesliswap_v1]: Dex.Unsupported,
+    [Swap.Protocol.Muesliswap_v2]: Dex.Unsupported,
+    [Swap.Protocol.Muesliswap_clp]: Dex.Unsupported,
+    [Swap.Protocol.Muesliswap_orderbook]: Dex.Unsupported,
     [Swap.Protocol.Wingriders_v1]: Dex.Wingriders_v1,
     [Swap.Protocol.Wingriders_v2]: Dex.Wingriders_v2,
+    [Swap.Protocol.Wingriders_stable]: Dex.Unsupported,
     [Swap.Protocol.Vyfi_v1]: Dex.Vyfi_v1,
     [Swap.Protocol.Sundaeswap_v1]: Dex.Sundaeswap_v1,
     [Swap.Protocol.Sundaeswap_v3]: Dex.Sundaeswap_v3,
     [Swap.Protocol.Splash_v1]: Dex.Splash_v1,
+    [Swap.Protocol.Splash_v4]: Dex.Splash_v1,
+    [Swap.Protocol.Splash_v5]: Dex.Splash_v1,
+    [Swap.Protocol.Splash_v6]: Dex.Splash_v1,
+    [Swap.Protocol.Snekfun]: Dex.Snekfun,
     [Swap.Protocol.Teddy_v1]: Dex.Unsupported,
-    [Swap.Protocol.Muesliswap_v2]: Dex.Muesliswap_v2,
-    [Swap.Protocol.Muesliswap_clp]: Dex.Muesliswap_clp,
-    [Swap.Protocol.Spectrum_v1]: Dex.Unsupported,
+    [Swap.Protocol.Spectrum_v1]: Dex.Spectrum_v1,
     [Swap.Protocol.Unsupported]: Dex.Unsupported,
+    [Swap.Protocol.Chadswap]: Dex.Chadswap,
+    [Swap.Protocol.Cerra]: Dex.Cerra,
+    [Swap.Protocol.Genius]: Dex.Genius,
   })[dex] ?? Dex.Unsupported
 
 export const DexhunterProtocols = Object.values(Dex)

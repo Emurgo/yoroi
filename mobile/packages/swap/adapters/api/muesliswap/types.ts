@@ -2,8 +2,11 @@ import {FetchData} from '@yoroi/common'
 import {Chain, Portfolio} from '@yoroi/types'
 
 export const Dex = {
+  Muesliswap: 'muesliswap',
+  Muesliswap_v1: 'muesliswap-v1',
   Muesliswap_v2: 'muesliswap-v2',
   Muesliswap_clp: 'muesliswap-clp',
+  Muesliswap_orderbook: 'muesliswap-orderbook',
   Minswap_v1: 'minswap-v1',
   Minswap_v2: 'minswap-v2',
   Minswap_stable: 'minswap-stable',
@@ -11,9 +14,15 @@ export const Dex = {
   Teddy_v1: 'teddy-v1',
   Wingriders_v1: 'wingriders-v1',
   Wingriders_v2: 'wingriders-v2',
+  Wingriders_stable: 'wingriders-stable',
   Vyfi_v1: 'vyfi-v1',
   Sundaeswap_v1: 'sundaeswap-v1',
   Sundaeswap_v3: 'sundaeswap-v3',
+  Cswap_v1: 'cswap-v1',
+  Splash_v4: 'splash-v4',
+  Splash_v5: 'splash-v5',
+  Splash_v6: 'splash-v6',
+  Splash_degen_quad: 'splash-degen-quad',
   // fallback to avoid breaking changes order will always fail
   Unsupported: 'unsupported',
 } as const

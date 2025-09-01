@@ -11,8 +11,12 @@ export const Dex = {
   Sundaeswap_v1: 'SUNDAESWAP',
   Sundaeswap_v3: 'SUNDAESWAPV3',
   Splash_v1: 'SPLASH',
-  Muesliswap_clp: 'MUESLISWAP',
-  Muesliswap_v2: 'MUESLISWAPV2',
+  Snekfun: 'SNEKFUN',
+  Spectrum_v1: 'SPECTRUM',
+  Chadswap: 'CHADSWAP',
+  Muesliswap: 'MUESLISWAP',
+  Cerra: 'CERRA',
+  Genius: 'GENIUS',
   // fallback to avoid breaking changes order will always fail
   Unsupported: 'UNSUPPORTED',
 } as const
