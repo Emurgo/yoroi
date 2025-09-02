@@ -31,7 +31,9 @@ import {Info} from '~/ui/Icon/Info'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
+import {TokenAmountItem} from '~/ui/TokenAmountItem/TokenAmountItem'
 import {useSetCollateralId} from '~/wallets/cardano/utxoManager/useSetCollateralId'
+import {useCollateralInfo} from '~/wallets/cardano/utxoManager/useCollateralInfo'
 import {collateralConfig, utxosMaker} from '~/wallets/cardano/utxoManager/utxos'
 import {RawUtxo} from '~/wallets/types/other'
 import {YoroiEntry, YoroiSignedTx} from '~/wallets/types/yoroi'
@@ -45,7 +47,7 @@ export const ManageCollateralScreen = () => {
   const {atoms: ta} = useTheme()
 
   const {wallet, meta} = useSelectedWallet()
-  const {amount, collateralId, utxo} = wallet.getCollateralInfo()
+  const {amount, collateralId, utxo} = useCollateralInfo(wallet)
   const screenHeight = useWindowDimensions().height
 
   const hasCollateral = collateralId !== '' && utxo !== undefined
@@ -261,6 +263,7 @@ type ActionableAmountProps = {
 const ActionableAmount = ({
   onRemove,
   collateralId,
+  amount,
   disabled,
 }: ActionableAmountProps) => {
   const handleRemove = () => onRemove()
@@ -270,9 +273,9 @@ const ActionableAmount = ({
       style={[a.flex_row, a.justify_between, a.align_center]}
       testID="amountItem"
     >
-      {/*<Left>*/}
-      {/*  <TokenAmountItem amount={amount} />*/}
-      {/*</Left>*/}
+      <Left>
+        <TokenAmountItem amount={amount} />
+      </Left>
 
       {collateralId !== '' && (
         <Right>
@@ -283,9 +286,9 @@ const ActionableAmount = ({
   )
 }
 
-// const Left = ({style, ...props}: ViewProps) => (
-//   <View style={[style, {flex: 1}]} {...props} />
-// )
+const Left = ({style, ...props}: ViewProps) => (
+  <View style={[style, {flex: 1}]} {...props} />
+)
 const Right = ({style, ...props}: ViewProps) => (
   <View style={[style, a.pl_lg]} {...props} />
 )
