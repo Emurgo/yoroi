@@ -40,7 +40,7 @@ export const ShowPreprodNoticeScreen = () => {
           a.body_1_lg_regular,
           a.text_center,
           ta.text_gray_medium,
-          {maxWidth: 300},
+          {maxWidth: 250},
         ]}
       >
         {strings.swap.preprodNoticeText}

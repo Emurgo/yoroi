@@ -2,7 +2,7 @@ import {atoms as a} from '@yoroi/theme'
 
 import * as React from 'react'
 import {useIntl} from 'react-intl'
-import {View} from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {showErrorDialog} from '~/kernel/dialogs'
 import {errorMessages} from '~/kernel/i18n/messages/global'
@@ -27,13 +27,13 @@ export const LoginWithPinScreen = () => {
   }
 
   return (
-    <View style={[a.flex_1]}>
+    <SafeAreaView style={[a.flex_1]} edges={['left', 'right', 'bottom']}>
       <PinInput
         ref={pinInputRef}
         pinMaxLength={pinLength}
         title={strings.auth.titleLoginWithPin}
         onDone={handlePinSubmit}
       />
-    </View>
+    </SafeAreaView>
   )
 }

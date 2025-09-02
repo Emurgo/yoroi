@@ -4,6 +4,8 @@ import {useTheme} from '@yoroi/theme'
 import {createStackNavigator} from '@react-navigation/stack'
 import * as React from 'react'
 
+import {FailedTxScreen} from '~/features/ReviewTx/useCases/ShowFailedTxScreen/FailedTxScreen'
+import {SubmittedTxScreen} from '~/features/ReviewTx/useCases/ShowSubmittedTxScreen/SubmittedTxScreen'
 import {NetworkTag} from '~/features/Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {useGovernanceManagerMaker} from '~/features/Staking/Governance/common/helpers'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
@@ -13,8 +15,6 @@ import {DashboardRoutes} from '~/kernel/navigation/types'
 
 import {StakingCenter} from '../Staking/Staking/StakingCenter/StakingCenter'
 import {Dashboard} from './Dashboard'
-import {FailedTxScreen} from './ShowFailedTxScreen/FailedTxScreen'
-import {SubmittedTxScreen} from './ShowSubmittedTxScreen/SubmittedTxScreen'
 
 const Stack = createStackNavigator<DashboardRoutes>()
 export const DashboardNavigator = () => {
