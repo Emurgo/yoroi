@@ -3,7 +3,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import {useNavigation} from '@react-navigation/native'
 import {useQuery} from '@tanstack/react-query'
 import * as React from 'react'
-import {ActivityIndicator, View} from 'react-native'
+import {View} from 'react-native'
 import Markdown from 'react-native-marked'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
