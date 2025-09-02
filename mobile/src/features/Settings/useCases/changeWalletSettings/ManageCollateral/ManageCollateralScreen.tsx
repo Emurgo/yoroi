@@ -287,7 +287,7 @@ const ActionableAmount = ({
 }
 
 const Left = ({style, ...props}: ViewProps) => (
-  <View style={[style, {flex: 1}]} {...props} />
+  <View style={[style, a.flex_1]} {...props} />
 )
 const Right = ({style, ...props}: ViewProps) => (
   <View style={[style, a.pl_lg]} {...props} />
