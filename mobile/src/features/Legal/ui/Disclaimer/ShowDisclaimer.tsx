@@ -32,7 +32,7 @@ const useDisclaimerText = ({
   languageCode: LanguageCode
 }) => {
   const query = useQuery({
-    queryKey: ['disclaimer', type, languageCode],
+    queryKey: ['useDisclaimerText', type, languageCode],
     queryFn: () => loadText(type, languageCode),
   })
 
