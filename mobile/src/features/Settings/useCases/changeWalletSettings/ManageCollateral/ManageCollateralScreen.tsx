@@ -32,8 +32,8 @@ import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
 import {TokenAmountItem} from '~/ui/TokenAmountItem/TokenAmountItem'
-import {useSetCollateralId} from '~/wallets/cardano/utxoManager/useSetCollateralId'
 import {useCollateralInfo} from '~/wallets/cardano/utxoManager/useCollateralInfo'
+import {useSetCollateralId} from '~/wallets/cardano/utxoManager/useSetCollateralId'
 import {collateralConfig, utxosMaker} from '~/wallets/cardano/utxoManager/utxos'
 import {RawUtxo} from '~/wallets/types/other'
 import {YoroiEntry, YoroiSignedTx} from '~/wallets/types/yoroi'
@@ -314,6 +314,7 @@ const RemoveAmountButton = ({disabled, ...props}: TouchableOpacityProps) => {
 const Operation = () => {
   const {atoms: ta, palette: p} = useTheme()
   const strings = useStrings()
+  const screenHeight = useWindowDimensions().height
   const {openModal, closeModal} = useModal()
 
   const handleOnPressInfo = () => {
@@ -328,7 +329,7 @@ const Operation = () => {
           />
         </View>
       ),
-      height: 500,
+      height: Math.min(screenHeight * 0.9, 650),
     })
   }
 
