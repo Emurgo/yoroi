@@ -3,14 +3,14 @@ import {useTheme} from '@yoroi/theme'
 import {createStackNavigator} from '@react-navigation/stack'
 import * as React from 'react'
 
+import {FailedTxScreen as SwapFailedTxScreen} from '~/features/ReviewTx/useCases/ShowFailedTxScreen/FailedTxScreen'
+import {SubmittedTxScreen as SwapSubmittedTxScreen} from '~/features/ReviewTx/useCases/ShowSubmittedTxScreen/SubmittedTxScreen'
 import {NetworkTag} from '~/features/Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {SelectProtocolScreen} from '~/features/Swap/useCases/CreateOrder/SelectProtocolScreen'
 import {SelectTokenScreen} from '~/features/Swap/useCases/CreateOrder/SelectTokenScreen'
 import {ListOrders} from '~/features/Swap/useCases/ListOrders/ListOrders'
 import {ReviewSwap} from '~/features/Swap/useCases/ReviewSwap/ReviewSwap'
-import {FailedTxScreen as SwapFailedTxScreen} from '~/features/Swap/useCases/ShowFailedTxScreen/FailedTxScreen'
 import {ShowPreprodNoticeScreen} from '~/features/Swap/useCases/ShowPreprodNoticeScreen/ShowPreprodNoticeScreen'
-import {SubmittedTxScreen as SwapSubmittedTxScreen} from '~/features/Swap/useCases/ShowSubmittedTxScreen/SubmittedTxScreen'
 import {SwapSettings} from '~/features/Swap/useCases/SwapSettings/SwapSettings'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
@@ -89,7 +89,7 @@ export const SwapNavigator = () => {
       <Stack.Screen
         name="preprod-notice"
         options={{
-          title: strings.swap.preprodNoticeTitle,
+          title: strings.swap.swapTitle,
         }}
         getComponent={() => ShowPreprodNoticeScreen}
       />
@@ -97,7 +97,7 @@ export const SwapNavigator = () => {
       <Stack.Screen
         name="submitted-tx"
         options={{
-          title: strings.swap.submittedTxScreenTitle,
+          headerShown: false,
         }}
         getComponent={() => SwapSubmittedTxScreen}
       />
@@ -105,7 +105,7 @@ export const SwapNavigator = () => {
       <Stack.Screen
         name="failed-tx"
         options={{
-          title: strings.swap.failedTxScreenTitle,
+          headerShown: false,
         }}
         getComponent={() => SwapFailedTxScreen}
       />

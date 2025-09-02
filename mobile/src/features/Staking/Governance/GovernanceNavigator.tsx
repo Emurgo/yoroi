@@ -3,6 +3,8 @@ import {ThemedPalette, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
 
+import {FailedTxScreen} from '~/features/ReviewTx/useCases/ShowFailedTxScreen/FailedTxScreen'
+import {SubmittedTxScreen} from '~/features/ReviewTx/useCases/ShowSubmittedTxScreen/SubmittedTxScreen'
 import {NetworkTag} from '~/features/Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {
@@ -18,8 +20,6 @@ import {ChangeVoteScreen} from './useCases/ChangeVote/ChangeVoteScreen'
 import {HomeScreen} from './useCases/Home/HomeScreen'
 import {NoFundsScreen} from './useCases/NoFunds/NoFundsScreen'
 import {NotSupportedCardanoAppVersion} from './useCases/NotSupportedCardanoAppVersion/NotSupportedCardanoAppVersion'
-import {FailedTxScreen} from './useCases/ShowFailedTxScreen/FailedTxScreen'
-import {SubmittedTxScreen} from './useCases/ShowSubmittedTxScreen/SubmittedTxScreen'
 
 const Stack = NavigationStack
 
