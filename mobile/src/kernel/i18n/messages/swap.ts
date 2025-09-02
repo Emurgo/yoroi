@@ -658,11 +658,11 @@ export const swapMessages = defineMessages({
     defaultMessage: '!!!Back To Swap Orders',
   },
   preprodNoticeTitle: {
-    id: 'global.actions.dialogs.logout.noButton',
+    id: 'swap.swapScreen.preprodNoticeTitle',
     defaultMessage: '!!!Preprod Notice Title',
   },
   preprodNoticeText: {
-    id: 'global.actions.dialogs.logout.noButton',
+    id: 'swap.swapScreen.preprodNoticeText',
     defaultMessage: '!!!Preprod Notice Text',
   },
   failedTxScreenTitle: {
