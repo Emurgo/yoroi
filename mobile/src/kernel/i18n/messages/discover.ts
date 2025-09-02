@@ -106,11 +106,11 @@ export const discoverMessages = defineMessages({
     defaultMessage: '!!!Next',
   },
   totalDAppAvailable: {
-    id: 'global.available',
+    id: 'discover.discoverList.dAppAvailable',
     defaultMessage: '!!!{count} dApps available',
   },
   dAppConnected: {
-    id: 'nft.gallery.nftCount',
+    id: 'discover.discoverList.dAppConnected',
     defaultMessage: '!!!{count} dApps connected',
   },
   connected: {

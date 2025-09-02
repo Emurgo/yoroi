@@ -1,8 +1,9 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import {useNavigation} from '@react-navigation/native'
+import {useQuery} from '@tanstack/react-query'
 import * as React from 'react'
-import {ScrollView, View} from 'react-native'
+import {ActivityIndicator, View} from 'react-native'
 import Markdown from 'react-native-marked'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
@@ -23,6 +24,21 @@ type Props = {
   disabled?: boolean
 }
 
+const useDisclaimerText = ({
+  type,
+  languageCode,
+}: {
+  type: Disclaimer
+  languageCode: LanguageCode
+}) => {
+  const query = useQuery({
+    queryKey: ['disclaimer', type, languageCode],
+    queryFn: () => loadText(type, languageCode),
+  })
+
+  return query.data
+}
+
 export const ShowDisclaimer = ({type, disabled}: Props) => {
   const {languageCode} = useLanguage()
   const {openModal, closeModal} = useModal()
@@ -31,19 +47,52 @@ export const ShowDisclaimer = ({type, disabled}: Props) => {
   const navigation = useNavigation()
   const [showed, setShowed] = React.useState(false)
   const [accepted, setAccepted] = useDisclaimerState(type)
-  const [canContinue, setCanContinue] = React.useState(false)
-  const {atoms: ta} = useTheme()
+  const {atoms: ta, palette: p} = useTheme()
+  const disclaimerText = useDisclaimerText({type, languageCode})
 
   React.useEffect(() => {
     if (!disabled && !accepted && showed === false) {
       openModal({
         title: strings.global.disclaimer,
         content: (
-          <DisclaimerContent
-            type={type}
-            languageCode={languageCode}
-            onCanContinueChange={setCanContinue}
-          />
+          <SafeAreaView
+            edges={['bottom', 'left', 'right']}
+            style={[a.flex_1, ta.bg_color_max]}
+          >
+            <View style={[a.flex_1, a.px_lg]}>
+              <View style={{height: 400}}>
+                <Markdown
+                  value={disclaimerText || ''}
+                  flatListProps={{
+                    style: {
+                      backgroundColor: p.bg_color_max,
+                    },
+                  }}
+                  styles={{
+                    text: {
+                      ...a.body_1_lg_regular,
+                      ...ta.text_gray_max,
+                      ...a.py_sm,
+                    },
+                    h2: {
+                      ...a.body_1_lg_medium,
+                      ...ta.text_gray_max,
+                      ...a.py_sm,
+                    },
+                    h1: {
+                      ...ta.text_gray_max,
+                      ...a.heading_3_medium,
+                      ...a.py_sm,
+                    },
+                  }}
+                />
+              </View>
+
+              <View style={[a.py_lg]}>
+                <Check text={strings.global.accept} />
+              </View>
+            </View>
+          </SafeAreaView>
         ),
         footer: (
           <View style={[a.flex, a.flex_row, a.gap_lg, a.px_lg, a.pb_lg]}>
@@ -53,18 +102,17 @@ export const ShowDisclaimer = ({type, disabled}: Props) => {
               onPress={resetToTxHistory}
             />
 
-            <Button
+            <Proceed
               title={strings.global.proceed}
               onPress={() => {
                 setAccepted(true)
                 closeModal()
               }}
-              disabled={!canContinue}
             />
           </View>
         ),
         height: 700,
-        canDiscard: true,
+        canDiscard: false,
       })
       setShowed(true)
     }
@@ -84,61 +132,23 @@ export const ShowDisclaimer = ({type, disabled}: Props) => {
     strings.global.disclaimer,
     strings.global.proceed,
     type,
-    canContinue,
   ])
   return null
 }
 
-const DisclaimerContent = ({
-  type,
-  languageCode,
-  onCanContinueChange,
-}: {
-  type: Disclaimer
-  languageCode: LanguageCode
-  onCanContinueChange: (canContinue: boolean) => void
-}) => {
-  const {atoms: ta, palette: p} = useTheme()
-  const strings = useStrings()
-  const [canContinue, setCanContinue] = React.useState(false)
-
-  const handleCheckboxChange = (checked: boolean) => {
-    setCanContinue(checked)
-    onCanContinueChange(checked)
-  }
-
+const Check = ({text}: {text: string}) => {
+  const {canContinue = false, setCanContinue} = useModal()
   return (
-    <SafeAreaView
-      edges={['bottom', 'left', 'right']}
-      style={[a.flex_1, {backgroundColor: p.bg_color_max}]}
-    >
-      <ScrollView
-        style={[a.flex_1, a.px_lg]}
-        bounces={false}
-        showsVerticalScrollIndicator={true}
-      >
-        <Markdown
-          value={loadText(type, languageCode)}
-          styles={{
-            text: {...a.body_1_lg_regular, ...ta.text_gray_max, ...a.py_sm},
-            h2: {...a.body_1_lg_medium, ...ta.text_gray_max, ...a.py_sm},
-            h1: {
-              ...ta.text_gray_max,
-              ...a.heading_3_medium,
-              ...a.py_sm,
-            },
-          }}
-        />
-
-        <View style={[a.pt_lg, a.pb_xl]}>
-          <Checkbox
-            text={strings.global.accept}
-            checked={canContinue}
-            onChange={handleCheckboxChange}
-            testID="disclaimer-checkbox"
-          />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+    <Checkbox
+      text={text}
+      checked={canContinue}
+      onChange={() => setCanContinue(!canContinue)}
+    />
   )
+}
+
+const Proceed = ({title, onPress}: {title: string; onPress: () => void}) => {
+  const {canContinue = false} = useModal()
+
+  return <Button title={title} onPress={onPress} disabled={!canContinue} />
 }

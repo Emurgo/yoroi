@@ -182,11 +182,9 @@ export const ModalProvider = ({
 
   return (
     <GestureHandlerRootView style={{flex: 1}}>
-      <BottomSheetModalProvider>
-        <ModalContext.Provider value={context}>
-          {children}
-        </ModalContext.Provider>
-      </BottomSheetModalProvider>
+      <ModalContext.Provider value={context}>
+        <BottomSheetModalProvider>{children}</BottomSheetModalProvider>
+      </ModalContext.Provider>
     </GestureHandlerRootView>
   )
 }

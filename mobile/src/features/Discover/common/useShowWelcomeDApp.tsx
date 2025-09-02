@@ -3,7 +3,6 @@ import {isBoolean, parseSafe, useAsyncStorage} from '@yoroi/common'
 import * as React from 'react'
 
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {usePromise} from '~/hooks/usePromise'
 
 const storageRootDAppExplorer = 'dapp-explorer'
 const storageDAppWelcome = 'dapp-explorer-welcome-dialog'
@@ -17,21 +16,15 @@ export const useShowWelcomeDApp = () => {
 
   const [localValue, setLocalValue] = React.useState<boolean>(false)
 
-  const result = usePromise({
-    promise: async () => {
+  React.useEffect(() => {
+    const asyncEffect = async () => {
       const storedStorage = await walletStorage.getItem(storageDAppWelcome)
       const parsed = parseSafe(storedStorage)
-      return isBoolean(parsed) ? parsed : false
-    },
-    shouldSuspend: true,
-  })
-
-  // TODO: REVISIT when usePromise is better defined
-  React.useEffect(() => {
-    if (result.value !== undefined) {
-      setLocalValue(result.value)
+      const value = isBoolean(parsed) ? parsed : false
+      setLocalValue(value)
     }
-  }, [result.value])
+    asyncEffect()
+  }, [walletStorage])
 
   const updateValue = React.useCallback(
     async (value: boolean) => {
