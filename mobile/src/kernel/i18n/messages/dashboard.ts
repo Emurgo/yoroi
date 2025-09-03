@@ -2,7 +2,7 @@ import {defineMessages} from 'react-intl'
 
 export const dashboardMessages = defineMessages({
   title: {
-    id: 'components.common.navigation.dashboardButton',
+    id: 'components.delegationsummary.userSummary.title',
     defaultMessage: '!!!Dashboard',
   },
   balanceLabel: {
@@ -10,11 +10,11 @@ export const dashboardMessages = defineMessages({
     defaultMessage: '!!!Balance',
   },
   rewardsLabel: {
-    id: 'components.catalyst.insufficientBalance',
+    id: 'components.delegationsummary.userSummary.totalRewards',
     defaultMessage: '!!!Rewards',
   },
   delegatedLabel: {
-    id: 'components.stakingcenter.confirmDelegation.delegateButtonLabel',
+    id: 'components.delegationsummary.userSummary.totalDelegated',
     defaultMessage: '!!!Delegated',
   },
   withdrawButtonTitle: {
@@ -46,7 +46,7 @@ export const dashboardMessages = defineMessages({
     defaultMessage: '!!!OK',
   },
   warning: {
-    id: 'components.txhistory.flawedwalletmodal.title',
+    id: 'components.delegationsummary.delegatedStakepoolInfo.warning',
     defaultMessage: '!!!Warning',
   },
   goToWebsiteButtonLabel: {
@@ -76,5 +76,9 @@ export const dashboardMessages = defineMessages({
   endsInLabel: {
     id: 'components.delegationsummary.epochProgress.endsIn',
     defaultMessage: '!!!Ends in',
+  },
+  stakePoolDelegatedTitle: {
+    id: 'components.delegationsummary.delegatedStakepoolInfo.title',
+    defaultMessage: '!!!Stake pool delegated',
   },
 })

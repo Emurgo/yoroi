@@ -22,11 +22,11 @@ export const stakingMessages = defineMessages({
     defaultMessage: '!!!Withdraw',
   },
   rewards: {
-    id: 'components.catalyst.insufficientBalance',
+    id: 'components.delegationsummary.userSummary.totalRewards',
     defaultMessage: '!!!Rewards',
   },
   delegated: {
-    id: 'components.stakingcenter.confirmDelegation.delegateButtonLabel',
+    id: 'components.delegationsummary.userSummary.totalDelegated',
     defaultMessage: '!!!Delegated',
   },
   stakePool: {

@@ -474,6 +474,7 @@ export const useStrings = () => {
         stakingCenterButton: f(dashboardMessages.stakingCenterButton),
         epochProgressTitle: f(dashboardMessages.epochProgressTitle),
         endsInLabel: f(dashboardMessages.endsInLabel),
+        stakePoolDelegatedTitle: f(dashboardMessages.stakePoolDelegatedTitle),
       },
 
       // Settings strings
