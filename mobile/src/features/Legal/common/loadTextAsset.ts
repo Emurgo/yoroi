@@ -1,6 +1,8 @@
 import {Asset} from 'expo-asset'
 
-export const loadTextAsset = async (assetModule: any): Promise<string> => {
+import {logger} from '~/kernel/logger/logger'
+
+export const loadTextAsset = async (assetModule: string): Promise<string> => {
   try {
     const asset = Asset.fromModule(assetModule)
     await asset.downloadAsync()
@@ -13,7 +15,10 @@ export const loadTextAsset = async (assetModule: any): Promise<string> => {
 
     throw new Error('Failed to load asset')
   } catch (error) {
-    console.error('Error loading text asset:', error)
+    logger.error('error loading text asset', {
+      origin: 'loadTextAsset',
+      error,
+    })
     return ''
   }
 }
