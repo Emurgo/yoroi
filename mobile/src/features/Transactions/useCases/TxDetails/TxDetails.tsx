@@ -117,7 +117,9 @@ export const TxDetails = () => {
           <Text>{memo}</Text>
 
           <View style={[{borderTopWidth: 1, borderColor: p.gray_200}]}>
-            <Text style={[a.pt_lg, a.self_center]}>{submittedAt}</Text>
+            <Text style={[a.pt_lg, a.self_center, ta.text_gray_medium]}>
+              {submittedAt}
+            </Text>
 
             <Label>{strings.transactions.fromAddresses}</Label>
           </View>
