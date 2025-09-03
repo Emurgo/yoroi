@@ -8,6 +8,11 @@ import {Linking, Text, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useLinksRequestWallet} from '~/features/Links/common/useLinksRequestWallet'
+import {pushNotificationsManager} from '~/features/Notifications/common/notification-manager'
+import {
+  handleNotificationInternalNavigationAction,
+  shouldHandleNotificationInternalNavigationAction,
+} from '~/features/Notifications/common/tools'
 import {isDev} from '~/kernel/constants'
 import {features} from '~/kernel/features'
 import {useStrings} from '~/kernel/i18n/useStrings'
@@ -43,6 +48,7 @@ export const SelectWalletFromList = () => {
   const {track} = useMetrics()
   const walletMetas = useWalletMetas()
   const {walletManager} = useWalletManager()
+  const walletNavigation = useWalletNavigation()
 
   useFocusEffect(
     React.useCallback(() => {
@@ -54,16 +60,19 @@ export const SelectWalletFromList = () => {
     async (walletMeta: Wallet.Meta) => {
       walletManager.setSelectedWalletId(walletMeta.id)
       // TODO: REVISIT when notifications are restored
-      /* if (await shouldHandleNotificationInternalNavigationAction()) {
-        await handleNotificationInternalNavigationAction(pushNotificationsManager, walletNavigation)
+      if (await shouldHandleNotificationInternalNavigationAction()) {
+        await handleNotificationInternalNavigationAction(
+          pushNotificationsManager,
+          walletNavigation,
+        )
         return
-      } */
+      }
       navigation.navigate('manage-wallets', {
         screen: 'main-wallet-routes',
         params: {screen: 'history', params: {screen: 'history-list'}},
       })
     },
-    [walletManager, navigation],
+    [walletManager, navigation, walletNavigation],
   )
 
   const walletList = React.useMemo(

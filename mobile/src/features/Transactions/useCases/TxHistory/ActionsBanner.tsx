@@ -8,11 +8,11 @@ import {useCopy} from '~/features/Copy/context/CopyProvider'
 import {useReceive} from '~/features/Receive/common/ReceiveProvider'
 import {useMultipleAddressesInfo} from '~/features/Receive/common/useMultipleAddressesInfo'
 import {useReceiveAddressesStatus} from '~/features/Receive/common/useReceiveAddressesStatus'
+import {useRemoteConfig} from '~/features/RemoteConfig/hooks/useRemoteConfig'
 import {useSwap} from '~/features/Swap/common/useSwap'
 import {useAddressMode} from '~/features/WalletManager/hooks/useAddressMode'
 import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {useYoroiConfig} from '~/kernel/features'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
@@ -20,12 +20,12 @@ import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {Text} from '~/ui/Text/Text'
 
-export const ActionsBanner = (_props: {disabled: boolean}) => {
+export const ActionsBanner = (props: {disabled: boolean}) => {
   const strings = useStrings()
   const swapForm = useSwap()
-  const {config, isLoading} = useYoroiConfig()
-  const tokenOutId = config.swap?.tokenOutId
-  const disabled = _props.disabled || isLoading
+  const {config, isLoading} = useRemoteConfig()
+  const tokenOutId = config?.swap?.initialPair.tokenOut
+  const disabled = props.disabled || isLoading
   const navigateTo = useWalletNavigation()
   const {palette: p} = useTheme()
 

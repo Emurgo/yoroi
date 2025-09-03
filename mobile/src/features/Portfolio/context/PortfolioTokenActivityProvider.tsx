@@ -1,4 +1,4 @@
-import {invalid, isNonNullable, time} from '@yoroi/common'
+import {isNonNullable, time} from '@yoroi/common'
 import {isPrimaryToken} from '@yoroi/portfolio'
 import {Portfolio} from '@yoroi/types'
 
@@ -11,7 +11,7 @@ import {useWalletManager} from '~/features/WalletManager/context/WalletManagerPr
 import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
 import {logger} from '~/kernel/logger/logger'
 
-const queryKey = ['portfolioTokenActivity']
+const queryKey = ['usePortfolioTokenActivity']
 const defaultPortfolioTokenActivityState: PortfolioTokenActivityState = freeze(
   {
     secondaryTokenIds: [],
@@ -160,8 +160,7 @@ export const PortfolioTokenActivityProvider = ({
 }
 
 export const usePortfolioTokenActivity = () =>
-  React.useContext(PortfolioTokenActivityContext) ??
-  invalid('usePortfolioTokenActiviy requires PortfolioTokenActivitiyProvider')
+  React.useContext(PortfolioTokenActivityContext)
 
 type PortfolioTokenActivityState = Readonly<{
   secondaryTokenIds: Portfolio.Token.Id[]
