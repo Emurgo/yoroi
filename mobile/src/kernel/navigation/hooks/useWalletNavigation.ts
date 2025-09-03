@@ -275,15 +275,6 @@ export const useWalletNavigation = () => {
       navigation.navigate('notifications')
     },
 
-    navigateToAnalyticsSettings: () => {
-      navigation.navigate('manage-wallets', {
-        screen: 'toggle-analytics-settings',
-        params: {
-          screen: 'settings',
-        },
-      })
-    },
-
     navigateToGovernanceCentre: () => {
       navigation.navigate('manage-wallets', {
         screen: 'governance',
