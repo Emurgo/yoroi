@@ -1,7 +1,7 @@
 import {isLeft, isRight} from '@yoroi/common'
 import {isPrimaryToken, primaryTokenId} from '@yoroi/portfolio'
 import {swapManagerMaker, swapStorageMaker} from '@yoroi/swap'
-import {Balance, Portfolio, Swap} from '@yoroi/types'
+import {Api, Balance, Portfolio, Swap} from '@yoroi/types'
 
 import {useFocusEffect} from '@react-navigation/native'
 import {useQuery} from '@tanstack/react-query'
@@ -11,9 +11,9 @@ import {TextInput} from 'react-native'
 
 import {usePortfolioBalances} from '~/features/Portfolio/common/hooks/usePortfolioBalances'
 import {usePortfolioTokenInfosSuspense} from '~/features/Portfolio/common/hooks/usePortfolioTokenInfos'
+import {useRemoteConfig} from '~/features/RemoteConfig/hooks/useRemoteConfig'
 import {useStakingKey} from '~/features/Staking/hooks/useStakingKey'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {useYoroiConfig} from '~/kernel/features'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {convertBech32ToHex} from '~/wallets/cardano/common/signatureUtils'
@@ -68,9 +68,9 @@ type SwapAction =
   | {type: typeof SwapActionType.ResetAmounts}
   | {type: typeof SwapActionType.ResetForm}
   | {type: typeof SwapActionType.EstimateResponse; value: Swap.EstimateResponse}
-  | {type: typeof SwapActionType.EstimateError; value: any}
+  | {type: typeof SwapActionType.EstimateError; value: Api.ResponseError}
   | {type: typeof SwapActionType.CreateResponse; value: Swap.CreateResponse}
-  | {type: typeof SwapActionType.CreateError; value: any}
+  | {type: typeof SwapActionType.CreateError; value: Api.ResponseError}
 
 type SwapState = {
   needsNewEstimate: boolean
@@ -114,9 +114,9 @@ export type SwapContext = SwapState & {
   orders?: Array<Swap.Order>
   action: React.Dispatch<SwapAction>
   create: () => void
-  cancel: any
+  cancel: Swap.Manager['api']['cancel']
   managerSettings: Swap.ManagerSettings
-  assignManagerSettings: any
+  assignManagerSettings: Swap.Manager['assignSettings']
   refetchOrders: () => void
 }
 
@@ -131,7 +131,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
   const stakingKey = useStakingKey(wallet)
   const address = wallet.externalAddresses[0]
   const addressHex = convertBech32ToHex(address)
-  const {config} = useYoroiConfig()
+  const {config} = useRemoteConfig()
   const [isLoading, setIsLoading] = React.useState(false)
 
   const swapManager = React.useMemo(() => {
@@ -144,7 +144,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
       addressHex,
       primaryTokenInfo: wallet.portfolioPrimaryTokenInfo,
       isPrimaryToken,
-      partners: config.swap?.partners ?? {},
+      partners: config?.swap?.partners ?? {},
     })
   }, [
     network,
@@ -152,7 +152,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
     address,
     addressHex,
     wallet.portfolioPrimaryTokenInfo,
-    config.swap,
+    config?.swap?.partners,
   ])
 
   const {data: orders = [], refetch: refetchOrders} = useQuery({
@@ -178,10 +178,10 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
       swapManager.settings.routingPreference,
     ],
     queryFn: async () => {
-      const res = await swapManager.api.tokens()
-      if (isRight(res)) {
-        const excludedTokens = config.swap?.excludedTokens ?? []
-        const tokenIds = res.value.data
+      const response = await swapManager.api.tokens()
+      if (isRight(response)) {
+        const excludedTokens = config?.swap?.excludedTokens ?? []
+        const tokenIds = response.value.data
           .map(({id}) => id)
           .filter((id) => excludedTokens.indexOf(id) === -1)
         if (!tokenIds.includes(state.tokenOutInput.tokenId ?? undefinedToken))
@@ -214,10 +214,10 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
 
   const verifiedTokens = React.useMemo(
     () =>
-      config.swap?.verifiedTokens?.filter((ti: Portfolio.Token.Id) =>
+      config?.swap?.verifiedTokens?.filter((ti: Portfolio.Token.Id) =>
         tokenInfos.has(ti),
       ) ?? [],
-    [config.swap?.verifiedTokens, tokenInfos],
+    [config?.swap?.verifiedTokens, tokenInfos],
   )
 
   const tokenOutInputRef = React.useRef<TextInput | null>(null)

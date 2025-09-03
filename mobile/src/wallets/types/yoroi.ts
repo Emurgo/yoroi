@@ -1,4 +1,4 @@
-import {Balance} from '@yoroi/types'
+import {Balance, Portfolio} from '@yoroi/types'
 
 import {Datum} from '@emurgo/yoroi-lib'
 
@@ -57,3 +57,77 @@ export type YoroiNftModerationStatus =
   | 'approved'
   | 'pending'
   | 'manual_review'
+
+export type YoroiConfig = Readonly<{
+  pushLinkKeys: Readonly<{
+    internal: Readonly<{
+      catalystRegistration: Readonly<{
+        mobile: string
+        extension: string
+      }>
+    }>
+    external: Readonly<{
+      yoroiWebsite: string
+    }>
+  }>
+  banners: Readonly<{
+    midnightAnnouncement: Readonly<{
+      display: boolean
+    }>
+    yoroiDrep: Readonly<{
+      display: boolean
+    }>
+  }>
+  popups: Readonly<{
+    midnightDistribution: Readonly<{
+      display: boolean
+    }>
+    generalFeaturesAnnouncement: Readonly<{
+      display: boolean
+    }>
+    poolTransitionDialog: Readonly<{
+      display: boolean
+    }>
+    cardanoCardAnnouncement: Readonly<{
+      display: boolean
+    }>
+  }>
+  features: Readonly<{
+    airdrop: Readonly<{
+      enabled: boolean
+    }>
+  }>
+  dapps: Readonly<{
+    banned: ReadonlyArray<string>
+    recommended: ReadonlyArray<YoroiConfigRecommendedDapp>
+    filters: Readonly<{
+      Media: ReadonlyArray<string>
+      Investment: ReadonlyArray<string>
+      Trading: ReadonlyArray<string>
+      Community: ReadonlyArray<string>
+    }>
+  }>
+  swap: Readonly<{
+    initialPair: Readonly<{
+      tokenIn: Portfolio.Token.Id
+      tokenOut: Portfolio.Token.Id
+    }>
+    excludedTokens: ReadonlyArray<Portfolio.Token.Id>
+    verifiedTokens: ReadonlyArray<Portfolio.Token.Id>
+    partners: Readonly<{
+      dexhunter: string
+      muesliswap: string
+    }>
+  }>
+}>
+
+export type YoroiConfigRecommendedDapp = {
+  id: string
+  name: string
+  description: string
+  category: string
+  logo: string
+  uri: string
+  origins: ReadonlyArray<string>
+  isSingleAddress?: boolean
+}

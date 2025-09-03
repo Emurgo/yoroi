@@ -11,6 +11,7 @@ import {TransferProvider} from '@yoroi/transfer'
 
 import * as React from 'react'
 
+import {PortfolioTokenActivityProvider} from '~/features/Portfolio/context/PortfolioTokenActivityProvider'
 import {ReviewTxProvider} from '~/features/ReviewTx/common/ReviewTxProvider'
 import {AppNavigator} from '~/kernel/navigation/AppNavigator'
 import {Modal} from '~/ui/Modal/ModalScreen'
@@ -79,23 +80,25 @@ function BusinessShell({children}: React.PropsWithChildren) {
       <SearchProvider>
         <PairingProvider currencyStorageKeyManager={currencyStorageKeyManager}>
           <WalletManagerProvider walletManager={walletManager}>
-            <AutomaticWalletOpenerProvider>
-              <TransferProvider>
-                <ReviewTxProvider>
-                  <SetupWalletProvider>
-                    <LinksProvider>
-                      <YoroiNotificationManager>
-                        <CurrencyProvider>
-                          <CatalystProvider manager={catalystManager}>
-                            {children}
-                          </CatalystProvider>
-                        </CurrencyProvider>
-                      </YoroiNotificationManager>
-                    </LinksProvider>
-                  </SetupWalletProvider>
-                </ReviewTxProvider>
-              </TransferProvider>
-            </AutomaticWalletOpenerProvider>
+            <PortfolioTokenActivityProvider>
+              <AutomaticWalletOpenerProvider>
+                <TransferProvider>
+                  <ReviewTxProvider>
+                    <SetupWalletProvider>
+                      <LinksProvider>
+                        <YoroiNotificationManager>
+                          <CurrencyProvider>
+                            <CatalystProvider manager={catalystManager}>
+                              {children}
+                            </CatalystProvider>
+                          </CurrencyProvider>
+                        </YoroiNotificationManager>
+                      </LinksProvider>
+                    </SetupWalletProvider>
+                  </ReviewTxProvider>
+                </TransferProvider>
+              </AutomaticWalletOpenerProvider>
+            </PortfolioTokenActivityProvider>
           </WalletManagerProvider>
         </PairingProvider>
       </SearchProvider>

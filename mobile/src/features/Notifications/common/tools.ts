@@ -1,10 +1,10 @@
-// import messaging from '@react-native-firebase/messaging'
-// import {WalletNavigation} from '~/kernel/navigation/navigation'
 import {isNumber, isRecord, isString} from '@yoroi/common'
 import {Portfolio, Notifications as YoroiNotifications} from '@yoroi/types'
 
 import * as Notifications from 'expo-notifications'
 import {Linking, PermissionsAndroid, Platform} from 'react-native'
+
+import {WalletNavigation} from '~/kernel/navigation/types'
 
 import {BannerIds} from './banners'
 import {uiStorage} from './storage'
@@ -117,7 +117,7 @@ export const shouldHandleNotificationInternalNavigationAction = async () => {
 
 export const handleNotificationInternalNavigationAction = async (
   manager: YoroiNotifications.Manager,
-  walletNavigation: any,
+  walletNavigation: WalletNavigation,
 ) => {
   const id = await uiStorage.getItem(
     'triggerNotificationInternalNavigationAction',
@@ -134,7 +134,7 @@ export const handleNotificationInternalNavigationAction = async (
 
 const handleInternalNavigation = (
   event: YoroiNotifications.PushEvent,
-  walletNavigation: any,
+  walletNavigation: WalletNavigation,
   pushNotificationHistory: boolean,
 ) => {
   if (!isRecord(event.metadata.data)) return

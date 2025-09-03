@@ -20,6 +20,7 @@ import {
 
 // Mock all external dependencies
 jest.mock('@yoroi/common', () => ({
+  ...jest.requireActual('@yoroi/common'),
   isLeft: (value: any) => value.tag === 'left',
   isRight: (value: any) => value.tag === 'right',
 }))

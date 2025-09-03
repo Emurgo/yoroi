@@ -1,9 +1,9 @@
-import {infoExtractName, isFt, isNft} from '@yoroi/portfolio'
+import {infoExtractName} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import {LinearGradient} from 'expo-linear-gradient'
 import * as React from 'react'
-import {Text, View} from 'react-native'
+import {View} from 'react-native'
 
 import {usePairing} from '~/features/Pairing/context/PairingProvider'
 import {aggregatePrimaryAmount} from '~/features/Portfolio/common/helpers/aggregatePrimaryAmount'
@@ -16,7 +16,7 @@ import {Space} from '~/ui/Space/Space'
 import {useSelectedNetwork} from '../../../hooks/useSelectedNetwork'
 
 export const AggregatedBalance = () => {
-  const {palette: p, atoms: ta} = useTheme()
+  const {palette: p} = useTheme()
 
   const {
     networkManager: {primaryTokenInfo},
@@ -35,16 +35,6 @@ export const AggregatedBalance = () => {
       }),
     [aggregatedBalances, primaryTokenInfo, tokenActivity],
   )
-  const tokens = React.useMemo(() => {
-    return {
-      nfts: Object.values(aggregatedBalances ?? {}).filter(({info}) =>
-        isNft(info),
-      ),
-      fts: Object.values(aggregatedBalances ?? {}).filter(({info}) =>
-        isFt(info),
-      ),
-    }
-  }, [aggregatedBalances])
 
   return (
     <View style={[a.px_lg]}>
@@ -60,20 +50,6 @@ export const AggregatedBalance = () => {
           />
         </LinearGradient>
       )}
-
-      <Space.Width.lg />
-
-      <View style={[a.flex_row, a.justify_center]}>
-        <Text style={[ta.text_gray_max, a.monospace, a.p_xs, a.rounded_sm]}>
-          {tokens.nfts.length} NFT
-        </Text>
-
-        <Space.Width.lg />
-
-        <Text style={[ta.text_gray_max, a.monospace, a.p_xs, a.rounded_sm]}>
-          {tokens.fts.length} FT
-        </Text>
-      </View>
 
       <Space.Width.lg />
     </View>
