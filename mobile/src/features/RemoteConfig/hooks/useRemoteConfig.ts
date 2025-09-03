@@ -1,9 +1,9 @@
 import {fetchData, isLeft, time} from '@yoroi/common'
 
-import {logger} from '@sentry/react'
 import {useQuery} from '@tanstack/react-query'
 
 import {isDev} from '~/kernel/constants'
+import {logger} from '~/kernel/logger/logger'
 import {YoroiConfig} from '~/wallets/types/yoroi'
 
 const queryKey = ['persist', 'yoroi-config', isDev]
