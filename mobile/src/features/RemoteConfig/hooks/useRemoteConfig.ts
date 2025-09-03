@@ -8,7 +8,7 @@ import {YoroiConfig} from '~/wallets/types/yoroi'
 
 const queryKey = ['persist', 'yoroi-config', isDev]
 const basePath =
-  'https://raw.githubusercontent.com/Emurgo/yoroi-config/refs/heads/main/prod.json'
+  'https://raw.githubusercontent.com/Emurgo/yoroi-config/refs/heads/main/'
 const url = `${basePath}${isDev ? 'dev.json' : 'prod.json'}`
 
 export const useRemoteConfig = () => {
