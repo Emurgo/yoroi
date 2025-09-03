@@ -186,11 +186,11 @@ export const transactionsMessages = defineMessages({
     defaultMessage: '!!!Transaction Assurance Level',
   },
   omittedCount: {
-    id: 'nft.gallery.nftCount',
+    id: 'components.txhistory.txdetails.omittedCount',
     defaultMessage: '!!!Omitted Count',
   },
   openInExplorer: {
-    id: 'components.txhistory.txdetails.txDetails',
+    id: 'global.openInExplorer',
     defaultMessage: '!!!Open In Explorer',
   },
   copiedLabel: {
