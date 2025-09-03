@@ -62,6 +62,7 @@ config.resolver.unstable_enableSymlinks = true
 config.resolver.unstable_enablePackageExports = true
 config.resolver.unstable_enableHierarchicalSearch = false
 config.resolver.assetExts.push('wasm')
+config.resolver.assetExts.push('md')
 
 // -- transformer --
 config.transformer.unstable_allowRequireContext = true
