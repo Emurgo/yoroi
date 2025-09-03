@@ -46,11 +46,11 @@ export const receiveMessages = defineMessages({
     defaultMessage: '!!!Copy address',
   },
   specificAmountDescription: {
-    id: 'global.txLabels.amount',
+    id: 'components.receive.receivescreen.specificAmountDescription',
     defaultMessage: '!!!Specific amount description',
   },
   ADALabel: {
-    id: 'components.delegationsummary.notDelegatedInfo.firstLine',
+    id: 'components.receive.receivescreen.ADALabel',
     defaultMessage: '!!!ADA',
   },
   generateLink: {

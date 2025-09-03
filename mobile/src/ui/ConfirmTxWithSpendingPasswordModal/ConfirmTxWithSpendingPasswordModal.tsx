@@ -1,14 +1,14 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {App} from '@yoroi/types'
+
 import * as React from 'react'
 import {ActivityIndicator, TextInput as RNTextInput, View} from 'react-native'
-
-import {useStrings} from '../../kernel/i18n/useStrings'
 
 import {useSignTxWithPassword} from '../../features/Transactions/hooks/useSignTxWithPassword'
 import {useSubmitTx} from '../../features/Transactions/hooks/useSubmitTx'
 import {useSelectedWallet} from '../../features/WalletManager/hooks/useSelectedWallet'
 import {debugWalletInfo, features} from '../../kernel/features'
+import {useStrings} from '../../kernel/i18n/useStrings'
 import {YoroiSignedTx, YoroiUnsignedTx} from '../../wallets/types/yoroi'
 import {Button} from '../Button/Button'
 import {Space} from '../Space/Space'

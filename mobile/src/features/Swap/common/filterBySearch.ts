@@ -1,8 +1,13 @@
 export const filterBySearch = (searchTerm: string) => {
-  const search = normalizeString(searchTerm)
-  if (search.length === 0) return () => true
+  const normalizedSearch = normalizeString(searchTerm)
 
-  return (item: string | {ticker?: string; name?: string; symbol?: string}) => {
+  if (normalizedSearch.length === 0) {
+    return () => true
+  }
+
+  const filterFunction = (
+    item: string | {ticker?: string; name?: string; symbol?: string},
+  ) => {
     if (typeof item === 'string') return false
 
     const name = normalizeString(item.name ?? '')
@@ -10,11 +15,13 @@ export const filterBySearch = (searchTerm: string) => {
     const symbol = normalizeString(item.symbol ?? '')
 
     return (
-      ticker.includes(search) ||
-      name.includes(search) ||
-      symbol.includes(search)
+      ticker.includes(normalizedSearch) ||
+      name.includes(normalizedSearch) ||
+      symbol.includes(normalizedSearch)
     )
   }
+
+  return filterFunction
 }
 
 const normalizeString = (str: string) =>

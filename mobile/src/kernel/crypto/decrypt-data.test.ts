@@ -13,7 +13,7 @@ describe('decryptData', () => {
 
     const decryptedHex = decryptData({
       encryptedData: hex(ciphertextHex),
-      secretKey: hex(password),
+      secretKey: hex.fromUtf8(password),
     })
     expect(decryptedHex.utf8).toBe('masterkey')
   })

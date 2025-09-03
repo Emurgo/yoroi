@@ -27,7 +27,7 @@ export const FailedTxScreen = () => {
         a.justify_center,
       ]}
     >
-      <Space.Height._2xl />
+      <View style={{height: 144}} />
 
       <FailedTxIcon />
 
@@ -35,16 +35,16 @@ export const FailedTxScreen = () => {
 
       <Text
         style={[
+          {color: p.gray_max},
           a.heading_3_medium,
           a.px_sm,
           a.text_center,
-          {color: p.gray_max},
         ]}
       >
         {strings.txReview.failedTxTitle}
       </Text>
 
-      <Text style={[a.body_1_lg_regular, a.text_center, {color: p.gray_600}]}>
+      <Text style={[{color: p.gray_600}, a.body_1_lg_regular, a.text_center]}>
         {strings.txReview.failedTxText}
       </Text>
 
@@ -54,7 +54,7 @@ export const FailedTxScreen = () => {
         <Button
           onPress={resetToTxHistory}
           title={strings.txReview.failedTxButton}
-          style={[a.px_lg]}
+          style={a.px_lg}
         />
       </Actions>
     </SafeArea>

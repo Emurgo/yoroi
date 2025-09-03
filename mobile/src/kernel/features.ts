@@ -1,4 +1,5 @@
 import {useQuery} from '@tanstack/react-query'
+
 import {isDev} from './constants'
 
 export const features = {
@@ -44,7 +45,7 @@ export const useYoroiConfig = () => {
   })
 
   return {
-    config: data,
+    config: data ?? {},
     isLoading,
     error,
     isYoroiDrepBannerEnabled: data?.banners?.delegateToYoroi ?? false,

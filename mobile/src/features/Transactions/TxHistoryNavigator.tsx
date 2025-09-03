@@ -14,13 +14,13 @@ import {ReceiveProvider} from '~/features/Receive/common/ReceiveProvider'
 import {DescribeSelectedAddressScreen} from '~/features/Receive/useCases/DescribeSelectedAddressScreen'
 import {ListMultipleAddressesScreen} from '~/features/Receive/useCases/ListMultipleAddressesScreen'
 import {RequestSpecificAmountScreen} from '~/features/Receive/useCases/RequestSpecificAmountScreen'
+import {FailedTxScreen as SendFailedTxScreen} from '~/features/ReviewTx/useCases/ShowFailedTxScreen/FailedTxScreen'
+import {SubmittedTxScreen as SendSubmittedTxScreen} from '~/features/ReviewTx/useCases/ShowSubmittedTxScreen/SubmittedTxScreen'
 import {ScanCodeScreen} from '~/features/Scan/useCases/ScanCodeScreen'
 import {ShowCameraPermissionDeniedScreen} from '~/features/Scan/useCases/ShowCameraPermissionDeniedScreen/ShowCameraPermissionDeniedScreen'
 import {SelectTokenFromListScreen} from '~/features/Send/useCases/ListAmountsToSend/AddToken/SelectTokenFromListScreen'
 import {EditAmountScreen} from '~/features/Send/useCases/ListAmountsToSend/EditAmount/EditAmountScreen'
 import {ListAmountsToSendScreen} from '~/features/Send/useCases/ListAmountsToSend/ListAmountsToSendScreen'
-import {FailedTxScreen as SendFailedTxScreen} from '~/features/Send/useCases/ShowFailedTxScreen/FailedTxScreen'
-import {SubmittedTxScreen as SendSubmittedTxScreen} from '~/features/Send/useCases/ShowSubmittedTxScreen/SubmittedTxScreen'
 import {StartMultiTokenTxScreen} from '~/features/Send/useCases/StartMultiTokenTx/StartMultiTokenTxScreen'
 import {NetworkTag} from '~/features/Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {UtxoConsolidation} from '~/features/Transactions/useCases/UtxoConsolidation/UtxoConsolidation/UtxoConsolidation'
@@ -34,6 +34,7 @@ import {Boundary} from '~/ui/Boundary/Boundary'
 import {ShowSuccessScreen} from '../Claim/useCases/ShowSuccessScreen'
 import {ViewNotificationHistoryScreen} from '../Notifications/useCases/ViewNotificationHistory/ViewNotificationHistoryScreen'
 import {SwapNavigator} from '../Swap/navigator'
+import {useSelectedNetwork} from '../WalletManager/hooks/useSelectedNetwork'
 import {HeaderRightHistory} from './common/HeaderRightHistory'
 import {TxDetails} from './useCases/TxDetails/TxDetails'
 import {TxHistory} from './useCases/TxHistory/TxHistory'
@@ -43,13 +44,15 @@ const Stack = createStackNavigator<TxHistoryRoutes>()
 export const TxHistoryNavigator = () => {
   const strings = useStrings()
   const {palette: p} = useTheme()
+  const {
+    networkManager: {isMainnet},
+  } = useSelectedNetwork()
 
   const navigationOptions = React.useMemo(
     () => defaultStackNavigationOptions(p),
     [p],
   )
 
-  // Setup resolver manager
   const resolverStorage = React.useMemo(() => {
     return resolverStorageMaker()
   }, [])
@@ -62,9 +65,9 @@ export const TxHistoryNavigator = () => {
         },
       },
       cslFactory: () => require('@emurgo/cross-csl-core'),
-      isMainnet: true, // Default to mainnet
+      isMainnet,
     })
-  }, [])
+  }, [isMainnet])
 
   const resolverManager = React.useMemo(() => {
     return resolverManagerMaker(resolverStorage, resolverApi)
@@ -159,7 +162,7 @@ export const TxHistoryNavigator = () => {
             <Stack.Screen
               name="send-submitted-tx"
               options={{
-                title: strings.send.sendTitle,
+                headerShown: false,
               }}
               getComponent={() => SendSubmittedTxScreen}
             />
@@ -167,7 +170,7 @@ export const TxHistoryNavigator = () => {
             <Stack.Screen
               name="send-failed-tx"
               options={{
-                title: strings.send.sendTitle,
+                headerShown: false,
               }}
               getComponent={() => SendFailedTxScreen}
             />

@@ -14,6 +14,7 @@ type ModalState = {
   title: string
   canContinue?: boolean
   onClose?: () => void
+  resizable?: boolean
 }
 type ModalActions = {
   openModal: (args: {
@@ -25,6 +26,7 @@ type ModalActions = {
     title?: string
     canContinue?: boolean
     onClose?: () => void
+    resizable?: boolean
   }) => void
   closeModal: () => void
   setLoading: (isLoading: boolean) => void
@@ -87,6 +89,7 @@ export const ModalProvider = ({
       title,
       canContinue,
       onClose,
+      resizable,
     }: {
       content: React.ReactNode
       height?: number
@@ -96,6 +99,7 @@ export const ModalProvider = ({
       title?: string
       canContinue?: boolean
       onClose?: () => void
+      resizable?: boolean
     }) => {
       Keyboard.dismiss()
       dispatch({
@@ -108,6 +112,7 @@ export const ModalProvider = ({
         title,
         canContinue,
         onClose,
+        resizable,
       })
       handlePresentModalPress()
     },
@@ -177,11 +182,9 @@ export const ModalProvider = ({
 
   return (
     <GestureHandlerRootView style={{flex: 1}}>
-      <BottomSheetModalProvider>
-        <ModalContext.Provider value={context}>
-          {children}
-        </ModalContext.Provider>
-      </BottomSheetModalProvider>
+      <ModalContext.Provider value={context}>
+        <BottomSheetModalProvider>{children}</BottomSheetModalProvider>
+      </ModalContext.Provider>
     </GestureHandlerRootView>
   )
 }
@@ -197,6 +200,7 @@ type ModalAction =
       title?: string
       canContinue?: boolean
       onClose?: () => void
+      resizable?: boolean
     }
   | {type: 'close'}
   | {type: 'setLoading'; isLoading: boolean}
@@ -218,6 +222,7 @@ const modalReducer = (state: ModalState, action: ModalAction) => {
         title: action.title ?? defaultState.title,
         canContinue: action.canContinue ?? defaultState.canContinue,
         onClose: action.onClose,
+        resizable: action.resizable ?? defaultState.resizable,
         isOpen: true,
       }
 
@@ -272,4 +277,5 @@ const defaultState: ModalState = Object.freeze({
   canDiscard: true,
   title: '',
   canContinue: false,
+  resizable: false,
 })

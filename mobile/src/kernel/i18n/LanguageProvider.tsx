@@ -5,7 +5,12 @@ import * as React from 'react'
 import {IntlProvider} from 'react-intl'
 import {Text} from 'react-native'
 
-import {LanguageCode, findLocale, translations} from './localization'
+import {
+  LanguageCode,
+  findLocale,
+  systemTimeZone,
+  translations,
+} from './localization'
 
 const LanguageContext = React.createContext<undefined | LanguageContext>(
   undefined,
@@ -54,6 +59,7 @@ export const LanguageProvider = ({
         locale={selectedLanguageCode}
         messages={translations[selectedLanguageCode]}
         textComponent={Text}
+        timeZone={systemTimeZone}
       >
         {children}
       </IntlProvider>

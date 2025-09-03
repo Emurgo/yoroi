@@ -8,7 +8,7 @@ describe('randomHexString', () => {
   `('$description', ({length}) => {
     const result = randomHexString(length)
     expect(result.value.length).toBe(length)
-    expect(result).toMatch(/^[0-9a-f]+$/)
+    expect(result.value).toMatch(/^[0-9a-f]+$/)
   })
 
   it('generates different strings on each call', () => {

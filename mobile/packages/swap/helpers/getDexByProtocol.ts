@@ -7,8 +7,10 @@ export function getDexByProtocol(protocol: Swap.Protocol): Swap.Dex {
     case Swap.Protocol.Minswap_stable:
       return Swap.Dex.Minswap
 
+    case Swap.Protocol.Muesliswap_v1:
     case Swap.Protocol.Muesliswap_v2:
     case Swap.Protocol.Muesliswap_clp:
+    case Swap.Protocol.Muesliswap_orderbook:
       return Swap.Dex.Muesliswap
 
     case Swap.Protocol.Spectrum_v1:
@@ -26,15 +28,28 @@ export function getDexByProtocol(protocol: Swap.Protocol): Swap.Dex {
 
     case Swap.Protocol.Wingriders_v1:
     case Swap.Protocol.Wingriders_v2:
+    case Swap.Protocol.Wingriders_stable:
       return Swap.Dex.Wingriders
 
     case Swap.Protocol.Splash_v1:
+    case Swap.Protocol.Splash_v4:
+    case Swap.Protocol.Splash_v5:
+    case Swap.Protocol.Splash_v6:
       return Swap.Dex.Splash
 
     case Swap.Protocol.Cswap:
       return Swap.Dex.Cswap
 
+    case Swap.Protocol.Snekfun:
+    case Swap.Protocol.Chadswap:
+    case Swap.Protocol.Cerra:
+    case Swap.Protocol.Genius:
+      return Swap.Dex.Unsupported
+
     case Swap.Protocol.Unsupported:
+      return Swap.Dex.Unsupported
+
+    default:
       return Swap.Dex.Unsupported
   }
 }

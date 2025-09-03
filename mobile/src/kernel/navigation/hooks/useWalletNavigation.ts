@@ -1,8 +1,8 @@
 import {Chain, Portfolio} from '@yoroi/types'
 
 import {useNavigation} from '@react-navigation/native'
+import * as Linking from 'expo-linking'
 import * as React from 'react'
-import {Linking} from 'react-native'
 
 import {useSwap} from '~/features/Swap/common/useSwap'
 import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
@@ -443,10 +443,13 @@ export const useWalletNavigation = () => {
       })
     },
 
-    navigateToSendEditAmount: () => {
+    navigateToSendEditAmount: (amount: Portfolio.Token.Amount) => {
       navigation.navigate('manage-wallets', {
         screen: 'main-wallet-routes',
-        params: {screen: 'history', params: {screen: 'send-edit-amount'}},
+        params: {
+          screen: 'history',
+          params: {screen: 'send-edit-amount', params: {amount}},
+        },
       })
     },
 
@@ -480,6 +483,51 @@ export const useWalletNavigation = () => {
         params: {
           screen: 'history',
           params: {screen: 'receive-specific-amount'},
+        },
+      })
+    },
+
+    navigateToCatalystVotingDashboard: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'voting-registration',
+        params: {
+          screen: 'download-catalyst',
+        },
+      })
+    },
+
+    navigateToCatalystDisplayPin: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'voting-registration',
+        params: {
+          screen: 'display-pin',
+        },
+      })
+    },
+
+    navigateToCatalystConfirmPin: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'voting-registration',
+        params: {
+          screen: 'confirm-pin',
+        },
+      })
+    },
+
+    navigateToCatalystCreateTx: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'voting-registration',
+        params: {
+          screen: 'create-tx',
+        },
+      })
+    },
+
+    navigateToCatalystQrCode: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'voting-registration',
+        params: {
+          screen: 'qr-code',
         },
       })
     },

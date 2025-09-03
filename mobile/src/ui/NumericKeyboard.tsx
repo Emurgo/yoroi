@@ -58,7 +58,7 @@ const Key = ({value, onPress}: KeyboardKeyProps) => {
         a.border_l,
         a.border_r,
         ta.bg_color_max,
-        {borderColor: p.el_gray_medium},
+        {borderColor: p.el_gray_min},
       ]}
       onPress={() => onPress(value)}
       underlayColor={p.bg_color_min}
@@ -89,7 +89,7 @@ const EmptyKey = () => {
         a.border_l,
         a.border_r,
         ta.bg_color_max,
-        {borderColor: p.el_gray_medium},
+        {borderColor: p.el_gray_min},
         {backgroundColor: p.gray_300},
       ]}
       testID="pinKeyEmpty"
@@ -109,7 +109,7 @@ const BackspaceKey = ({onPress}: {onPress: (value: string) => void}) => {
         a.border_l,
         a.border_r,
         ta.bg_color_max,
-        {borderColor: p.el_gray_medium},
+        {borderColor: p.el_gray_min},
         {backgroundColor: p.gray_300},
       ]}
       onPress={() => onPress('BACKSPACE')}

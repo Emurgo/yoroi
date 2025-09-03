@@ -25,6 +25,7 @@ import {useStakingKey} from '~/features/Staking/hooks/useStakingKey'
 import {useTransactionInfos} from '~/features/Transactions/hooks/useTransactionInfos'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useWalletEvent} from '~/features/WalletManager/hooks/useWalletEvent'
+import {useYoroiConfig} from '~/kernel/features'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useModal} from '~/ui/Modal/ModalContext'
@@ -39,7 +40,6 @@ import {
 import {useNavigateTo} from '../../common/navigation'
 import {GovernanceVote} from '../../types'
 import {EnterDrepIdModal} from '../EnterDrepIdModal/EnterDrepIdModal'
-import {useYoroiConfig} from '~/kernel/features'
 
 export const HomeScreen = () => {
   const {wallet} = useSelectedWallet()
@@ -315,6 +315,7 @@ const NeverParticipatedInGovernanceVariant = () => {
         </GovernanceProvider>
       ),
       height: 360,
+      resizable: true,
     })
   }
 

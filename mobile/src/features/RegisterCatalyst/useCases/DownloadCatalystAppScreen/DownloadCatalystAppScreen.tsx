@@ -1,7 +1,6 @@
 import {useCatalyst} from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
-import cryptoRandomString from 'crypto-random-string'
 import * as React from 'react'
 import {useIntl} from 'react-intl'
 import {
@@ -17,6 +16,12 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import appstoreBadge from '~/assets/img/app-store-badge.png'
 import playstoreBadge from '~/assets/img/google-play-badge.png'
+import {
+  Actions,
+  Row,
+  Stepper,
+} from '~/features/RegisterCatalyst/common/components'
+import {useCatalystCurrentFund} from '~/features/RegisterCatalyst/common/hooks'
 import {useStakingInfo} from '~/features/Staking/hooks/useStakingInfo'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
@@ -26,23 +31,22 @@ import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
 
 import {useNavigateTo} from '../../CatalystNavigator'
-import {Actions, Row, Stepper} from '../../common/components'
-import {useCatalystCurrentFund} from '../../common/hooks'
 
 export const DownloadCatalystAppScreen = () => {
   const strings = useStrings()
   const {wallet} = useSelectedWallet()
   const {stakingInfo} = useStakingInfo(wallet)
   const {openModal, closeModal} = useModal()
-  const {palette: p} = useTheme()
+  const {palette: p, atoms: ta} = useTheme()
   const {fund} = useCatalystCurrentFund()
   const intl = useIntl()
   const navigateTo = useNavigateTo()
   const {pinChanged, reset: resetCatalyst} = useCatalyst()
+  const hasShownModal = React.useRef(false)
 
   const onNext = () => {
     resetCatalyst()
-    const pin = createPin()
+    const pin = randomPin()
     pinChanged(pin)
     navigateTo.displayPin()
   }
@@ -58,7 +62,8 @@ export const DownloadCatalystAppScreen = () => {
   )
 
   React.useEffect(() => {
-    if (stakingInfo?.status === 'not-registered')
+    if (stakingInfo?.status === 'not-registered' && !hasShownModal.current) {
+      hasShownModal.current = true
       openModal({
         title: strings.registerCatalyst.title,
         content: <WarningModal />,
@@ -70,12 +75,13 @@ export const DownloadCatalystAppScreen = () => {
         ),
         height: 300,
       })
+    }
   }, [
     closeModal,
     openModal,
     stakingInfo?.status,
-    strings.registerCatalyst.title,
     strings.registerCatalyst.confirm,
+    strings.registerCatalyst.title,
   ])
 
   const fundName = fund?.info.fundName
@@ -95,7 +101,7 @@ export const DownloadCatalystAppScreen = () => {
   return (
     <SafeAreaView
       edges={['left', 'right', 'bottom']}
-      style={[{backgroundColor: p.bg_color_max}, a.px_lg, a.pb_lg]}
+      style={[{flex: 1}, {backgroundColor: p.bg_color_max}, a.px_lg, a.pb_lg]}
     >
       <Stepper
         title={strings.registerCatalyst.title}
@@ -108,15 +114,21 @@ export const DownloadCatalystAppScreen = () => {
 
         <Space.Height.lg />
 
-        <Text style={[a.body_1_lg_regular]}>
-          {strings.registerCatalyst.step2Description}
+        <Text style={[a.body_1_lg_medium, ta.text_gray_medium]}>
+          {strings.registerCatalyst.subTitle}
         </Text>
 
         <Space.Height.lg />
 
+        <Text style={[a.body_2_md_regular, ta.text_gray_medium]}>
+          {strings.registerCatalyst.tip}
+        </Text>
+
+        <Space.Height.xl />
+
         <Row>
           <PlayStoreButton />
-          <Space.Width.md />
+          <Space.Width._2xl />
           <AppStoreButton />
         </Row>
 
@@ -124,18 +136,22 @@ export const DownloadCatalystAppScreen = () => {
 
         <FundInfo>
           <FundName>{fundName}</FundName>
+          <Space.Height.sm />
           <FundText>{registrationStart}</FundText>
+
           <FundText>{votingStart}</FundText>
+
           <FundText>{votingEnd}</FundText>
+
           <FundText>{votingResults}</FundText>
         </FundInfo>
 
-        <Space.Height.xl />
-
-        <Actions>
-          <Button title={strings.registerCatalyst.confirm} onPress={onNext} />
-        </Actions>
+        <Space.Height.lg />
       </ScrollView>
+
+      <Actions>
+        <Button title={strings.registerCatalyst.continue} onPress={onNext} />
+      </Actions>
     </SafeAreaView>
   )
 }
@@ -145,21 +161,25 @@ const FundInfo = ({children}: {children: React.ReactNode}) => {
 }
 
 const FundName = ({children}: {children: React.ReactNode}) => {
-  const {palette: p} = useTheme()
-  return <Text style={[{color: p.text_gray_medium}]}>{children}</Text>
+  const {atoms: ta} = useTheme()
+  return (
+    <Text style={[a.body_2_md_medium, ta.text_gray_medium]}>{children}</Text>
+  )
 }
 
 const FundText = ({children}: {children: React.ReactNode}) => {
-  const {palette: p} = useTheme()
-  return <Text style={[{color: p.text_gray_medium}]}>{children}</Text>
+  const {atoms: ta} = useTheme()
+  return (
+    <Text style={[a.body_2_md_regular, ta.text_gray_medium]}>{children}</Text>
+  )
 }
 
 const WarningModal = () => {
   const strings = useStrings()
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
   return (
     <View style={[a.px_lg, a.flex_1]}>
-      <Text style={[a.body_1_lg_regular, {color: p.text_gray_medium}]}>
+      <Text style={[a.body_1_lg_regular, ta.text_gray_medium]}>
         {strings.registerCatalyst.tip}
       </Text>
     </View>
@@ -187,7 +207,7 @@ const AppStoreButton = () => {
     const url =
       Platform.OS === 'ios'
         ? 'https://apps.apple.com/app/catalyst-voting/id1506091890'
-        : 'https://apps.apple.com/app/catalyst-voting/id1506091890'
+        : 'https://play.google.com/store/apps/details?id=io.iohk.vitvoting&pcampaignid=web_share'
     await Linking.openURL(url)
   }
 
@@ -198,4 +218,8 @@ const AppStoreButton = () => {
   )
 }
 
-const createPin = () => cryptoRandomString({length: 4, type: 'numeric'} as any)
+const randomPin = () => {
+  return Math.floor(Math.random() * 10_000)
+    .toString()
+    .padStart(4, '0')
+}

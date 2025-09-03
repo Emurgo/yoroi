@@ -35,7 +35,7 @@ export const ConfirmPin = () => {
   const {unsignedTxChanged} = useReviewTx()
   const {navigateToTxReview} = useWalletNavigation()
 
-  const {generateVotingKeys, isPending} = useGenerateVotingKeys({
+  const {generateVotingKeys, isPending: isLoading} = useGenerateVotingKeys({
     onSuccess: async ({catalystKeyHex, votingKeyEncrypted}) => {
       votingKeyEncryptedChanged(votingKeyEncrypted)
 
@@ -213,7 +213,7 @@ export const ConfirmPin = () => {
   return (
     <SafeAreaView
       edges={['left', 'right', 'bottom']}
-      style={[a.flex_1, ta.bg_color_max, a.px_lg, a.pb_lg]}
+      style={[a.flex_1, ta.bg_color_max, a.pb_lg]}
     >
       <Padding style={a.px_lg}>
         <Stepper
@@ -223,10 +223,10 @@ export const ConfirmPin = () => {
         />
       </Padding>
 
-      <ScrollView bounces={false} contentContainerStyle={[]}>
+      <ScrollView bounces={false} contentContainerStyle={[a.px_lg]}>
         <Description>{strings.registerCatalyst.step3Description}</Description>
 
-        <Space.Height.lg />
+        <Space.Height.xl />
 
         <Row style={[{justifyContent: 'center'}]}>
           <PinBox
@@ -278,9 +278,9 @@ export const ConfirmPin = () => {
       <Padding style={a.px_lg}>
         <Actions>
           <Button
-            onPress={() => onNext()}
-            title={strings.registerCatalyst.confirm}
-            disabled={!done || isPending}
+            onPress={onNext}
+            title={strings.registerCatalyst.continue}
+            disabled={!done || isLoading}
           />
         </Actions>
       </Padding>
@@ -289,7 +289,7 @@ export const ConfirmPin = () => {
 
       <NumericKeyboard onKeyDown={onKeyDown} />
 
-      {isPending && (
+      {isLoading && (
         <View
           style={[
             a.inset_0,
@@ -329,11 +329,7 @@ const useGenerateVotingKeys = (
       const catalystKeyHex = Buffer.from(catalystKey).toString('hex')
 
       const password = new Uint8Array(Buffer.from(pin.split('').map(Number)))
-      const votingKeyEncrypted = await encryptWithPassword(
-        password,
-        catalystKey,
-      )
-
+      const votingKeyEncrypted = encryptWithPassword(password, catalystKey)
       return {
         catalystKeyHex,
         votingKeyEncrypted,

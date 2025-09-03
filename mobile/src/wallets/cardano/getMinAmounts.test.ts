@@ -16,7 +16,7 @@ describe('withMinAmounts()', () => {
     }
 
     expect(
-      await withMinAmounts(
+      withMinAmounts(
         address,
         amounts,
         walletMocks.wallet.portfolioPrimaryTokenInfo,
@@ -41,7 +41,7 @@ describe('withMinAmounts()', () => {
     }
 
     expect(
-      await withMinAmounts(
+      withMinAmounts(
         address,
         amounts,
         walletMocks.wallet.portfolioPrimaryTokenInfo,
@@ -84,7 +84,7 @@ describe('withPrimaryToken()', () => {
 })
 
 describe('getMinAmounts()', () => {
-  it('should return the min amount', async () => {
+  it('should return the min amount', () => {
     const amounts: Balance.Amounts = {
       [walletMocks.wallet.portfolioPrimaryTokenInfo.id]: '123',
       '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950':
@@ -95,7 +95,7 @@ describe('getMinAmounts()', () => {
       'addr_test1qrrdv3uxj8shu27ea9djvnn3rl4w3lvh3cyck6yc36mvf6ctlqxj9g0azvpycncr9u600p6t556qhc3psk06uzzw6saq4kvdpq'
 
     expect(
-      await getMinAmounts(
+      getMinAmounts(
         address,
         amounts,
         walletMocks.wallet.portfolioPrimaryTokenInfo,
@@ -106,7 +106,7 @@ describe('getMinAmounts()', () => {
     })
   })
 
-  it('should throw an error', async () => {
+  it('should throw an error', () => {
     const amounts: Balance.Amounts = {
       [walletMocks.wallet.portfolioPrimaryTokenInfo.id]: '123',
       '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950':
@@ -118,8 +118,8 @@ describe('getMinAmounts()', () => {
 
     const primaryToken = walletMocks.wallet.portfolioPrimaryTokenInfo
 
-    await expect(
+    expect(() =>
       getMinAmounts(address, amounts, primaryToken, protocolParamsPlaceholder),
-    ).rejects.toEqual(new Error('getMinAmounts::Error not a valid address'))
+    ).toThrow(new Error('getMinAmounts::Error not a valid address'))
   })
 })

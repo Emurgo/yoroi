@@ -3,6 +3,7 @@ import {amountFormatter} from '@yoroi/portfolio'
 import * as React from 'react'
 
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
+import {useCollateralInfo} from '~/wallets/cardano/utxoManager/useCollateralInfo'
 
 import {
   NavigatedSettingsItem,
@@ -17,7 +18,7 @@ export const SettingsCollateralItem = ({
   disabled,
 }: NavigatedSettingsItemProps) => {
   const {selected} = useWalletManager()
-  const {amount} = selected.wallet!.getCollateralInfo()
+  const {amount} = useCollateralInfo(selected.wallet!)
 
   const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
 

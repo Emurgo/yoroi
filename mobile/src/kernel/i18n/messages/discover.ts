@@ -82,7 +82,7 @@ export const discoverMessages = defineMessages({
     defaultMessage: '!!!Retry',
   },
   confirmTx: {
-    id: 'global.txLabels.confirmTx',
+    id: 'global.txLabels.signingTx',
     defaultMessage: '!!!Confirm Transaction',
   },
   discoverTitle: {
@@ -106,11 +106,11 @@ export const discoverMessages = defineMessages({
     defaultMessage: '!!!Next',
   },
   totalDAppAvailable: {
-    id: 'global.available',
+    id: 'discover.discoverList.dAppAvailable',
     defaultMessage: '!!!{count} dApps available',
   },
   dAppConnected: {
-    id: 'nft.gallery.nftCount',
+    id: 'discover.discoverList.dAppConnected',
     defaultMessage: '!!!{count} dApps connected',
   },
   connected: {

@@ -1,5 +1,6 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {HW} from '@yoroi/types'
+
 import * as React from 'react'
 import {ErrorBoundary} from 'react-error-boundary'
 import {ActivityIndicator, View} from 'react-native'

@@ -62,7 +62,9 @@ export type TxHistoryRoutes = {
   'receive-multiple': undefined
   'send-start-tx': undefined
   'send-list-amounts-to-send': undefined
-  'send-edit-amount': undefined
+  'send-edit-amount': {
+    amount: Portfolio.Token.Amount
+  }
   'send-submitted-tx': undefined
   'send-failed-tx': undefined
   'send-select-token-from-list': undefined

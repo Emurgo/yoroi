@@ -201,7 +201,9 @@ const apiManagerMaker = (
           wantedPrice: Math.min(
             ...validResponses.map(({wantedPrice}) => wantedPrice),
           ),
-          options: Object.values(mergedOptions),
+          options: Object.values(mergedOptions).filter(
+            (option) => option.protocol !== Swap.Protocol.Unsupported,
+          ),
         }
 
         return {

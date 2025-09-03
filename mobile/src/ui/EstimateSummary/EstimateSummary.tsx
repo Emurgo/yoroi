@@ -13,6 +13,7 @@ import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {ProtocolAvatar} from '~/ui/ProtocolAvatar/ProtocolAvatar'
+import {Space} from '~/ui/Space/Space'
 import {SwapInfoLink} from '~/ui/SwapInfoLink/SwapInfoLink'
 
 export const EstimateSummary = () => {
@@ -76,6 +77,8 @@ export const EstimateSummary = () => {
         }
       />
 
+      <Space.Height.sm />
+
       <Row
         label={strings.swap.price}
         description={
@@ -86,17 +89,23 @@ export const EstimateSummary = () => {
         value={`1 ${tokenInTicker} = ${price} ${tokenOutTicker}`}
       />
 
+      <Space.Height.sm />
+
       <Row
         label={strings.swap.swapFeesTitle}
         description={strings.swap.swapFees}
         value={`${swapForm.estimate?.totalFee} ${wallet.portfolioPrimaryTokenInfo.ticker}`}
       />
 
+      <Space.Height.sm />
+
       <Row
         label={strings.swap.swapMinReceivedTitle}
         description={strings.swap.swapMinReceived}
         value={`${swapForm.estimate?.totalOutput} ${tokenOutTicker}`}
       />
+
+      <Space.Height.sm />
 
       <Row
         label={strings.swap.swapSlippageTitle}
@@ -116,13 +125,13 @@ const Row = ({
   description?: string
   value: number | string | React.ReactNode
 }) => {
-  const {palette: p} = useTheme()
+  const {atoms: ta, palette: p} = useTheme()
   const {openModal} = useModal()
 
   return (
     <View style={[a.flex_row, a.justify_between]}>
       <View style={[a.flex_row, a.align_center, a.gap_xs]}>
-        <Text style={[a.body_1_lg_regular, {color: p.text_gray_low}]}>
+        <Text style={[a.body_1_lg_regular, a.self_center, ta.text_gray_low]}>
           {label}
         </Text>
 
@@ -131,18 +140,19 @@ const Row = ({
             style={[a.pl_2xs, a.pr_2xs, a.pt_2xs, a.pb_2xs]}
             onPress={() =>
               openModal({
+                title: label,
                 content: (
-                  <Text
-                    style={[a.p_lg, a.body_1_lg_regular, {color: p.gray_900}]}
-                  >
-                    {description}
-                  </Text>
+                  <View style={[a.px_lg, a.flex_1, a.justify_center, a.pb_2xl]}>
+                    <Text style={[a.body_1_lg_regular, ta.text_gray_max]}>
+                      {description}
+                    </Text>
+                  </View>
                 ),
                 footer: <SwapInfoLink />,
               })
             }
             type={ButtonType.SecondaryText}
-            icon={Icon.Info}
+            icon={({size}) => Icon.Info({size, color: p.text_gray_low})}
             size="S"
           />
         )}

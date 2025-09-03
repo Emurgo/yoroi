@@ -9,10 +9,10 @@ import {useReceive} from '~/features/Receive/common/ReceiveProvider'
 import {useMultipleAddressesInfo} from '~/features/Receive/common/useMultipleAddressesInfo'
 import {useReceiveAddressesStatus} from '~/features/Receive/common/useReceiveAddressesStatus'
 import {useSwap} from '~/features/Swap/common/useSwap'
-import {useSwapConfig} from '~/features/Swap/common/useSwapConfig'
 import {useAddressMode} from '~/features/WalletManager/hooks/useAddressMode'
 import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useYoroiConfig} from '~/kernel/features'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
@@ -23,7 +23,8 @@ import {Text} from '~/ui/Text/Text'
 export const ActionsBanner = (_props: {disabled: boolean}) => {
   const strings = useStrings()
   const swapForm = useSwap()
-  const {tokenOutId, isLoading} = useSwapConfig()
+  const {config, isLoading} = useYoroiConfig()
+  const tokenOutId = config.swap?.tokenOutId
   const disabled = _props.disabled || isLoading
   const navigateTo = useWalletNavigation()
   const {palette: p} = useTheme()

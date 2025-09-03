@@ -1,3 +1,5 @@
+import {Portfolio} from '@yoroi/types'
+
 import {useNavigation} from '@react-navigation/native'
 import {useRef} from 'react'
 
@@ -22,7 +24,8 @@ export const useNavigateTo = () => {
       navigation.navigate('send-select-token-from-list')
     },
     startTx: () => navigation.navigate('send-start-tx'),
-    editAmount: () => navigation.navigate('send-edit-amount'),
+    editAmount: (amount: Portfolio.Token.Amount) =>
+      navigation.navigate('send-edit-amount', {amount}),
     reader: () => navigation.navigate('scan-start', {insideFeature: 'send'}),
     submittedTx: () => navigation.navigate('send-submitted-tx'),
     failedTx: () => navigation.navigate('send-failed-tx'),

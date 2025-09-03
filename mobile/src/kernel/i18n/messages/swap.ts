@@ -81,16 +81,24 @@ export const swapMessages = defineMessages({
     id: 'swap.swapScreen.selectToken',
     defaultMessage: '!!!Select Token',
   },
+  listOrdersTestnetNoticeTitle: {
+    id: 'swap.listOrders.testnetNotice.title',
+    defaultMessage: '!!!Swap orders are not available on testnet',
+  },
+  listOrdersTestnetNoticeDescription: {
+    id: 'swap.listOrders.testnetNotice.description',
+    defaultMessage: '!!!Please switch to mainnet to view your orders',
+  },
   searchTokens: {
     id: 'portfolio.portfolioTokensListScreen.searchTokens',
     defaultMessage: '!!!Search Tokens',
   },
   popularTokens: {
-    id: 'global.ok',
+    id: 'swap.swapScreen.popularTokens',
     defaultMessage: '!!!Popular Tokens',
   },
   allTokens: {
-    id: 'global.ok',
+    id: 'swap.swapScreen.allTokens',
     defaultMessage: '!!!All Tokens',
   },
   noTokensFound: {
@@ -162,7 +170,7 @@ export const swapMessages = defineMessages({
     defaultMessage: '!!!Swap Cancellation Details',
   },
   tokenSwap: {
-    id: 'global.ok',
+    id: 'swap.swapScreen.tokenSwapTab',
     defaultMessage: '!!!Token Swap',
   },
   orderSwap: {
@@ -198,11 +206,11 @@ export const swapMessages = defineMessages({
     defaultMessage: '!!!Market Price',
   },
   marketPriceInfo: {
-    id: 'portfolio.portfolioTokensDetailScreen.info',
+    id: 'swap.swapScreen.marketPriceInfo',
     defaultMessage: '!!!Market Price Info',
   },
   limitPriceInfo: {
-    id: 'portfolio.portfolioTokensDetailScreen.info',
+    id: 'swap.swapScreen.limitPriceInfo',
     defaultMessage: '!!!Limit Price Info',
   },
   limitPrice: {
@@ -246,15 +254,15 @@ export const swapMessages = defineMessages({
     defaultMessage: '!!!Swap Min ADA Title',
   },
   swapMinReceived: {
-    id: 'txReview.receiveLabel',
+    id: 'swap.swapScreen.swapMinReceived',
     defaultMessage: '!!!Swap Min Received',
   },
   swapMinReceivedTitle: {
-    id: 'txReview.receiveLabel',
+    id: 'swap.swapScreen.swapMinReceivedTitle',
     defaultMessage: '!!!Swap Min Received Title',
   },
   swapFeesTitle: {
-    id: 'txReview.fee',
+    id: 'swap.swapScreen.swapFeesTitle',
     defaultMessage: '!!!Swap Fees Title',
   },
   swapFees: {
@@ -290,7 +298,7 @@ export const swapMessages = defineMessages({
     defaultMessage: '!!!Pool Verification Info {pool}',
   },
   eachVerifiedToken: {
-    id: 'global.ok',
+    id: 'swap.swapScreen.eachVerifiedToken',
     defaultMessage: '!!!Each Verified Token',
   },
   verifiedBadge: {
@@ -306,7 +314,7 @@ export const swapMessages = defineMessages({
     defaultMessage: '!!!Slippage Tolerance Error',
   },
   openOrders: {
-    id: 'swap.listOrders.open',
+    id: 'swap.swapScreen.openOrders',
     defaultMessage: '!!!Open Orders',
   },
   noAssetsFound: {
@@ -314,11 +322,11 @@ export const swapMessages = defineMessages({
     defaultMessage: '!!!No Assets Found',
   },
   noAssetsFoundFor: {
-    id: 'components.send.assetselectorscreen.found',
+    id: 'swap.swapScreen.noAssetsFoundFor',
     defaultMessage: '!!!No Assets Found For {search}',
   },
   completedOrders: {
-    id: 'swap.listOrders.completed',
+    id: 'swap.swapScreen.completedOrders',
     defaultMessage: '!!!Completed Orders',
   },
   signTransaction: {
@@ -398,7 +406,7 @@ export const swapMessages = defineMessages({
     defaultMessage: '!!!Volume',
   },
   listCompletedOrders: {
-    id: 'global.actions.dialogs.commonbuttons.completeButton',
+    id: 'swap.listOrders.completed',
     defaultMessage: '!!!List Completed Orders',
   },
   listOpenOrders: {
@@ -418,7 +426,7 @@ export const swapMessages = defineMessages({
     defaultMessage: '!!!List Orders Sheet Content Title',
   },
   listOrdersSheetLink: {
-    id: 'components.settings.biometricslinkscreen.linkButton',
+    id: 'swap.listOrders.sheet.link',
     defaultMessage: '!!!List Orders Sheet Link',
   },
   listOrdersSheetAssetPrice: {
@@ -498,7 +506,7 @@ export const swapMessages = defineMessages({
     defaultMessage: '!!!Route',
   },
   routeDescription: {
-    id: 'txReview.tokenDetails.overViewTab.description.label',
+    id: 'swap.swapScreen.routeDescription',
     defaultMessage: '!!!Route Description',
   },
   usbExplanation: {
@@ -622,15 +630,15 @@ export const swapMessages = defineMessages({
     defaultMessage: '!!!Service Unavailable Info',
   },
   emptyOpenOrders: {
-    id: 'swap.listOrders.open',
+    id: 'swap.listOrders.emptyOpenOrders',
     defaultMessage: '!!!Empty Open Orders',
   },
   emptyOpenOrdersSub: {
-    id: 'swap.listOrders.open',
+    id: 'swap.listOrders.emptyOpenOrdersSub',
     defaultMessage: '!!!Empty Open Orders Sub',
   },
   emptyCompletedOrders: {
-    id: 'global.actions.dialogs.commonbuttons.completeButton',
+    id: 'swap.listOrders.emptyCompletedOrders',
     defaultMessage: '!!!Empty Completed Orders',
   },
   emptySearchCompletedOrders: {
@@ -650,11 +658,11 @@ export const swapMessages = defineMessages({
     defaultMessage: '!!!Back To Swap Orders',
   },
   preprodNoticeTitle: {
-    id: 'global.actions.dialogs.logout.noButton',
+    id: 'swap.swapScreen.preprodNoticeTitle',
     defaultMessage: '!!!Preprod Notice Title',
   },
   preprodNoticeText: {
-    id: 'global.actions.dialogs.logout.noButton',
+    id: 'swap.swapScreen.preprodNoticeText',
     defaultMessage: '!!!Preprod Notice Text',
   },
   failedTxScreenTitle: {

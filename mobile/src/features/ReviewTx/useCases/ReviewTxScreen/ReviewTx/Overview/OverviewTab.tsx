@@ -1,5 +1,6 @@
 import {
-  parseBoolean,
+  isBoolean,
+  parseSafe,
   useAsyncStorage,
   useMutationWithInvalidations,
 } from '@yoroi/common'
@@ -8,10 +9,10 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import {Balance, Portfolio} from '@yoroi/types'
 
 import {CredKind} from '@emurgo/cross-csl-core'
-import {useQuery} from '@tanstack/react-query'
-import {Image} from 'expo-image'
+import {useSuspenseQuery} from '@tanstack/react-query'
 import * as React from 'react'
 import {
+  Image,
   Linking,
   Text,
   TouchableOpacity,
@@ -678,15 +679,14 @@ export const CreatedByInfoItem = ({
   )
 }
 
-export const OperationsNotice = () => {
+export const OperationsNotice = ({onClose}: {onClose?: () => void}) => {
   const {palette: p} = useTheme()
   const strings = useStrings()
-  const {closeModal} = useModal()
   const {setOperationsNoticeShown} = useSetOperationsNoticeShown()
 
   const handleOnpress = () => {
     setOperationsNoticeShown()
-    closeModal()
+    onClose?.()
   }
 
   return (
@@ -722,17 +722,16 @@ export const OperationsNotice = () => {
 const operationsNoticeShownKey = 'operations-notice-shown-key'
 const useShowOperationsNotice = (operations: Operations) => {
   const storage = useAsyncStorage()
-  const {openModal} = useModal()
+  const {openModal, closeModal} = useModal()
   const strings = useStrings()
 
-  const query = useQuery({
-    // useErrorBoundary: true,
-    // suspense: true,
+  const query = useSuspenseQuery({
     queryKey: ['useShowOperationsNotice'],
     queryFn: () =>
-      storage
-        .getItem(operationsNoticeShownKey)
-        .then((value) => parseBoolean(value) ?? true),
+      storage.getItem(operationsNoticeShownKey).then((value) => {
+        const parsed = parseSafe(value)
+        return isBoolean(parsed) ? parsed : true
+      }),
   })
 
   React.useEffect(() => {
@@ -745,7 +744,7 @@ const useShowOperationsNotice = (operations: Operations) => {
         () =>
           openModal({
             title: strings.txReview.overview.operationsNoticeTitle,
-            content: <OperationsNotice />,
+            content: <OperationsNotice onClose={closeModal} />,
             height: 570,
           }),
         500,

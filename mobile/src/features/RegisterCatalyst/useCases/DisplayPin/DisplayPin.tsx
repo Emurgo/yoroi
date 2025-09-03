@@ -2,7 +2,7 @@ import {useCatalyst} from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
-import {ScrollView, View} from 'react-native'
+import {ScrollView} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
@@ -75,12 +75,10 @@ export const DisplayPin = () => {
         />
       </ScrollView>
 
-      <View style={[a.flex_1]} />
-
       <Actions>
         <Button
           onPress={() => handleOnNext()}
-          title={strings.registerCatalyst.confirm}
+          title={strings.registerCatalyst.continue}
           disabled={!checked}
         />
       </Actions>

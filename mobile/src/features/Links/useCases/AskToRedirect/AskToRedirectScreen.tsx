@@ -1,7 +1,8 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 
+import * as Linking from 'expo-linking'
 import * as React from 'react'
-import {Linking, ScrollView, Text, View, ViewProps} from 'react-native'
+import {ScrollView, Text, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useStrings} from '~/kernel/i18n/useStrings'

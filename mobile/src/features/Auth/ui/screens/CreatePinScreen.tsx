@@ -1,15 +1,15 @@
 import {atoms as a} from '@yoroi/theme'
 
 import * as React from 'react'
-import {View} from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {CreatePinInput} from '../shared/CreatePinInput/CreatePinInput'
 
 export const CreatePinScreen: React.FC<Props> = ({onDone}) => {
   return (
-    <View style={[a.flex_1]}>
+    <SafeAreaView style={[a.flex_1]} edges={['left', 'right', 'bottom']}>
       <CreatePinInput onDone={onDone} />
-    </View>
+    </SafeAreaView>
   )
 }
 

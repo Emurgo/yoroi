@@ -73,7 +73,7 @@ const ErrorBoundary = ({
   children,
   ...props
 }: ErrorBoundaryProps & {children: React.ReactNode}) => {
-  const {reset} = useQueryErrorResetBoundary()
+  const resetBoundary = useQueryErrorResetBoundary()
   if (props.enabled === false) return <>{children}</>
 
   const fallbackRender = (fallbackProps: ErrorFallbackProps) => {
@@ -81,7 +81,12 @@ const ErrorBoundary = ({
       ...fallbackProps,
       debug: props.debug,
       resetErrorBoundary: () => {
-        reset()
+        try {
+          resetBoundary.reset()
+        } catch (error) {
+          // Ignore errors during reset if QueryClient is not ready
+          console.warn('QueryClient reset failed:', error)
+        }
         fallbackProps.resetErrorBoundary()
       },
     }
@@ -108,11 +113,16 @@ const ErrorBoundary = ({
 
 export const ResetError = React.forwardRef<ResetErrorRef, ResetErrorProps>(
   ({resetErrorBoundary, children}, ref) => {
-    const {reset} = useQueryErrorResetBoundary()
+    const resetBoundary = useQueryErrorResetBoundary()
 
     React.useImperativeHandle(ref, () => ({
       reset: () => {
-        reset()
+        try {
+          resetBoundary.reset()
+        } catch (error) {
+          // Ignore errors during reset if QueryClient is not ready
+          console.warn('QueryClient reset failed:', error)
+        }
         resetErrorBoundary()
       },
     }))
