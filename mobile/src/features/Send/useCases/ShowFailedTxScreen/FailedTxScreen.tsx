@@ -1,4 +1,4 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
 import {Text, View} from 'react-native'
@@ -14,19 +14,17 @@ import {Space} from '~/ui/Space/Space'
 export const FailedTxScreen = () => {
   useBlockGoBack()
   const strings = useStrings()
-  const {palette: p} = useTheme()
+  const {palette: p, atoms: ta} = useTheme()
   const {resetToStartTransfer} = useWalletNavigation()
 
   return (
     <SafeArea
       style={[
-        {
-          backgroundColor: p.bg_color_max,
-          padding: 16,
-          flex: 1,
-          alignItems: 'center',
-          justifyContent: 'center',
-        },
+        ta.bg_color_max,
+        a.p_lg,
+        a.flex_1,
+        a.align_center,
+        a.justify_center,
       ]}
     >
       <Space.Height._2xl />

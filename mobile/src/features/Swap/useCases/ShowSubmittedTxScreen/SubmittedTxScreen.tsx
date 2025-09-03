@@ -14,7 +14,7 @@ import {useNavigateTo} from '../../common/navigation'
 
 export const SubmittedTxScreen = () => {
   const strings = useStrings()
-  const {palette: p} = useTheme()
+  const {palette: p, atoms: ta} = useTheme()
   const navigateTo = useNavigateTo()
   const swapForm = useSwap()
 
@@ -26,11 +26,11 @@ export const SubmittedTxScreen = () => {
   return (
     <SafeArea
       style={[
+        ta.bg_color_max,
         a.p_lg,
         a.flex_1,
         a.align_center,
         a.justify_center,
-        {backgroundColor: p.bg_color_max},
       ]}
     >
       <Space.Height._2xl />

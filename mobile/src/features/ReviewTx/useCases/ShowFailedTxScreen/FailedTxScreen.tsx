@@ -14,13 +14,13 @@ import {Space} from '~/ui/Space/Space'
 export const FailedTxScreen = () => {
   useBlockGoBack()
   const strings = useStrings()
-  const {palette: p} = useTheme()
+  const {palette: p, atoms: ta} = useTheme()
   const {resetToTxHistory} = useWalletNavigation()
 
   return (
     <SafeArea
       style={[
-        {backgroundColor: p.bg_color_max},
+        ta.bg_color_max,
         a.p_lg,
         a.flex_1,
         a.align_center,
