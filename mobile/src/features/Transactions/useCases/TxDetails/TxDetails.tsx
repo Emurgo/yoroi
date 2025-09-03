@@ -181,7 +181,7 @@ export const TxDetails = () => {
                 >
                   <Text
                     style={[{color: p.gray_900}, a.body_2_md_regular]}
-                  >{` +${item.assets.length} ${strings.transactions.assets(item.assets.length)} `}</Text>
+                  >{` +${item.assets.length} ${strings.transactions.assetsLabel} `}</Text>
 
                   <Icon.Chevron
                     direction={expandedOutItemId === item.id ? 'up' : 'down'}
