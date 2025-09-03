@@ -75,15 +75,10 @@ export const SubmittedTxScreen = () => {
   )
 }
 
-const Actions = ({children}: {children: React.ReactNode}) => {
+const Actions = ({children}: React.PropsWithChildren) => {
   const {palette: p} = useTheme()
-
   return (
-    <View
-      style={[
-        {alignSelf: 'stretch', borderTopWidth: 1, borderTopColor: p.gray_200},
-      ]}
-    >
+    <View style={[a.self_stretch, a.border_t, {borderTopColor: p.gray_200}]}>
       {children}
     </View>
   )

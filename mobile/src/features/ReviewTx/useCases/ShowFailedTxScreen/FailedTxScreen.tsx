@@ -62,5 +62,10 @@ export const FailedTxScreen = () => {
 }
 
 const Actions = ({children}: {children: React.ReactNode}) => {
-  return <View style={{alignSelf: 'stretch'}}>{children}</View>
+  const {palette: p} = useTheme()
+  return (
+    <View style={[a.self_stretch, a.border_t, {borderTopColor: p.gray_200}]}>
+      {children}
+    </View>
+  )
 }

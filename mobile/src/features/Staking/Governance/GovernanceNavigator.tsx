@@ -3,9 +3,9 @@ import {ThemedPalette, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
 
-import {FailedTxScreen} from '~/features/ReviewTx/useCases/ShowFailedTxScreen/FailedTxScreen'
-import {SubmittedTxScreen} from '~/features/ReviewTx/useCases/ShowSubmittedTxScreen/SubmittedTxScreen'
 import {NetworkTag} from '~/features/Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
+import {FailedTxScreen} from '~/features/Staking/Governance/useCases/ShowFailedTxScreen/FailedTxScreen'
+import {SubmittedTxScreen} from '~/features/Staking/Governance/useCases/ShowSubmittedTxScreen/SubmittedTxScreen'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {
   BackButton,
