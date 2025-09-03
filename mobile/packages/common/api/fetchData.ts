@@ -115,7 +115,7 @@ export const fetchData: FetchData = <T, D = any>(
     url: config.url,
     method: method,
     headers: config.headers ?? {
-      'Content-Type': 'application/json',
+      'Content-Type': 'application/json; charset=utf-8',
       'Cache-Control': 'no-cache, no-store, must-revalidate',
       'Pragma': 'no-cache',
       'Expires': '0',

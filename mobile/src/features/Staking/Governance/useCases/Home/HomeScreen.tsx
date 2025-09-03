@@ -8,7 +8,7 @@ import {
   useStakingKeyState,
   useVotingCertificate,
 } from '@yoroi/staking'
-import {atoms as a, useTheme} from '@yoroi/theme'
+import {ThemedPalette, atoms as a, useTheme} from '@yoroi/theme'
 
 import {NotEnoughMoneyToSendError} from '@emurgo/yoroi-lib/dist/errors'
 import {useFocusEffect} from '@react-navigation/native'
@@ -16,6 +16,7 @@ import React, {type ReactNode} from 'react'
 import {Text, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
+import {useRemoteConfig} from '~/features/RemoteConfig/hooks/useRemoteConfig'
 import {LearnMoreLink} from '~/features/Staking/Governance/common/LearnMoreLink/LearnMoreLink'
 import {YoroiRecordLink} from '~/features/Staking/Governance/common/YoroiRecordLink/YoroiRecordLink'
 import {formatDrepHashToCIP129Format} from '~/features/Staking/Governance/common/drep'
@@ -25,7 +26,6 @@ import {useStakingKey} from '~/features/Staking/hooks/useStakingKey'
 import {useTransactionInfos} from '~/features/Transactions/hooks/useTransactionInfos'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useWalletEvent} from '~/features/WalletManager/hooks/useWalletEvent'
-import {useYoroiConfig} from '~/kernel/features'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useModal} from '~/ui/Modal/ModalContext'
@@ -159,9 +159,9 @@ const ParticipatingInGovernanceVariant = ({
   }
 
   return (
-    <View style={[a.px_lg, a.flex_1, {backgroundColor: p.bg_color_max}]}>
+    <View style={[a.px_lg, a.flex_1, ta.bg_color_max]}>
       <View>
-        <Text style={[a.body_1_lg_regular, {color: p.text_gray_medium}]}>
+        <Text style={[a.body_1_lg_regular, ta.text_gray_medium]}>
           {introduction}
         </Text>
       </View>
@@ -231,7 +231,7 @@ const ParticipatingInGovernanceVariant = ({
   )
 }
 
-const formattingOptions = (p: any) => {
+const formattingOptions = (p: ThemedPalette) => {
   return {
     b: (text: ReactNode) => {
       return (
@@ -255,9 +255,10 @@ const formattingOptions = (p: any) => {
 }
 
 const NeverParticipatedInGovernanceVariant = () => {
-  const {isYoroiDrepBannerEnabled} = useYoroiConfig()
+  const {config} = useRemoteConfig()
+  const isYoroiDrepBannerEnabled = config?.banners?.yoroiDrep?.display ?? false
   const strings = useStrings()
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
   const navigateTo = useNavigateTo()
   const {wallet, meta} = useSelectedWallet()
   const {manager} = useGovernance()
@@ -321,17 +322,17 @@ const NeverParticipatedInGovernanceVariant = () => {
 
   const handleDelegate = () => {
     openDRepIdModal(async (options) => {
-      const stakingKey = await wallet.getStakingKey()
+      const stakingKey = wallet.getStakingKey()
 
       setPendingVote('delegate-not-yoroi')
 
-      const certificate = await createDelegationCertificate({
+      const certificate = createDelegationCertificate({
         hash: options.hash,
         type: options.type,
         stakingKey,
       })
       const stakeCert = needsToRegisterStakingKey
-        ? await manager.createStakeRegistrationCertificate(stakingKey)
+        ? manager.createStakeRegistrationCertificate(stakingKey)
         : null
       const certs =
         stakeCert !== null ? [stakeCert, certificate] : [certificate]
@@ -352,18 +353,18 @@ const NeverParticipatedInGovernanceVariant = () => {
     })
   }
 
-  const handleDelegateToYoroi = async () => {
-    const stakingKey = await wallet.getStakingKey()
+  const handleDelegateToYoroi = () => {
+    const stakingKey = wallet.getStakingKey()
 
     setPendingVote('delegate-to-yoroi')
 
-    const certificate = await createDelegationCertificate({
+    const certificate = createDelegationCertificate({
       hash: GOVERNANCE_YOROI_DREP_ID_HEX,
       type: 'key',
       stakingKey,
     })
     const stakeCert = needsToRegisterStakingKey
-      ? await manager.createStakeRegistrationCertificate(stakingKey)
+      ? manager.createStakeRegistrationCertificate(stakingKey)
       : null
     const certs = stakeCert !== null ? [stakeCert, certificate] : [certificate]
 
@@ -382,16 +383,16 @@ const NeverParticipatedInGovernanceVariant = () => {
     }
   }
 
-  const handleAbstain = async () => {
-    const stakingKey = await wallet.getStakingKey()
+  const handleAbstain = () => {
+    const stakingKey = wallet.getStakingKey()
     setPendingVote('abstain')
 
-    const certificate = await createVotingCertificate({
+    const certificate = createVotingCertificate({
       vote: 'abstain',
       stakingKey,
     })
     const stakeCert = needsToRegisterStakingKey
-      ? await manager.createStakeRegistrationCertificate(stakingKey)
+      ? manager.createStakeRegistrationCertificate(stakingKey)
       : null
     const certs = stakeCert !== null ? [stakeCert, certificate] : [certificate]
 
@@ -407,16 +408,16 @@ const NeverParticipatedInGovernanceVariant = () => {
     }
   }
 
-  const handleNoConfidence = async () => {
-    const stakingKey = await wallet.getStakingKey()
+  const handleNoConfidence = () => {
+    const stakingKey = wallet.getStakingKey()
     setPendingVote('no-confidence')
 
-    const certificate = await createVotingCertificate({
+    const certificate = createVotingCertificate({
       vote: 'no-confidence',
       stakingKey,
     })
     const stakeCert = needsToRegisterStakingKey
-      ? await manager.createStakeRegistrationCertificate(stakingKey)
+      ? manager.createStakeRegistrationCertificate(stakingKey)
       : null
     const certs = stakeCert !== null ? [stakeCert, certificate] : [certificate]
 
@@ -435,9 +436,9 @@ const NeverParticipatedInGovernanceVariant = () => {
   const isCreatingTx = createGovernanceTxMutation.isPending
 
   return (
-    <ScrollView style={[a.px_lg, a.flex_1, {backgroundColor: p.bg_color_max}]}>
+    <ScrollView style={[a.px_lg, a.flex_1, ta.bg_color_max]}>
       <View>
-        <Text style={[a.body_1_lg_regular, {color: p.text_gray_medium}]}>
+        <Text style={[a.body_1_lg_regular, ta.text_gray_medium]}>
           {strings.staking.reviewActions}
         </Text>
       </View>

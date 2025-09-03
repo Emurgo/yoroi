@@ -13,12 +13,12 @@ import * as React from 'react'
 import {Text, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
+import {useRemoteConfig} from '~/features/RemoteConfig/hooks/useRemoteConfig'
 import {LearnMoreLink} from '~/features/Staking/Governance/common/LearnMoreLink/LearnMoreLink'
 import {YoroiRecordLink} from '~/features/Staking/Governance/common/YoroiRecordLink/YoroiRecordLink'
 import {useCreateGovernanceTx} from '~/features/Staking/hooks/useCreateGovernanceTx'
 import {useStakingKey} from '~/features/Staking/hooks/useStakingKey'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {useYoroiConfig} from '~/kernel/features'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
@@ -31,7 +31,8 @@ import {
 import {EnterDrepIdModal} from '../EnterDrepIdModal/EnterDrepIdModal'
 
 export const ChangeVoteScreen = () => {
-  const {isYoroiDrepBannerEnabled} = useYoroiConfig()
+  const {config} = useRemoteConfig()
+  const isYoroiDrepBannerEnabled = Boolean(config?.banners?.yoroiDrep?.display)
   const strings = useStrings()
   const {wallet, meta} = useSelectedWallet()
   const {atoms: ta} = useTheme()
