@@ -59,7 +59,6 @@ export const SelectWalletFromList = () => {
   const handleOnSelect = React.useCallback(
     async (walletMeta: Wallet.Meta) => {
       walletManager.setSelectedWalletId(walletMeta.id)
-      // TODO: REVISIT when notifications are restored
       if (await shouldHandleNotificationInternalNavigationAction()) {
         await handleNotificationInternalNavigationAction(
           pushNotificationsManager,
