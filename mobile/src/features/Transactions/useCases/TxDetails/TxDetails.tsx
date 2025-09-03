@@ -114,10 +114,12 @@ export const TxDetails = () => {
 
           <Label>{strings.transactions.memo}</Label>
 
-          <Text>{memo}</Text>
+          <Text style={ta.text_gray_medium}>{memo}</Text>
 
           <View style={[{borderTopWidth: 1, borderColor: p.gray_200}]}>
-            <Text style={[a.pt_lg, a.self_center]}>{submittedAt}</Text>
+            <Text style={[a.pt_lg, a.self_center, ta.text_gray_medium]}>
+              {submittedAt}
+            </Text>
 
             <Label>{strings.transactions.fromAddresses}</Label>
           </View>
@@ -140,7 +142,7 @@ export const TxDetails = () => {
                 >
                   <Text
                     style={[{color: p.gray_900}, a.body_2_md_regular]}
-                  >{` -${item.assets.length} ${strings.transactions.assets} `}</Text>
+                  >{` -${item.assets.length} ${strings.transactions.assetsLabel} `}</Text>
 
                   <Icon.Chevron
                     direction={expandedInItemId === item.id ? 'up' : 'down'}
@@ -179,7 +181,7 @@ export const TxDetails = () => {
                 >
                   <Text
                     style={[{color: p.gray_900}, a.body_2_md_regular]}
-                  >{` +${item.assets.length} ${strings.transactions.assets} `}</Text>
+                  >{` +${item.assets.length} ${strings.transactions.assetsLabel} `}</Text>
 
                   <Icon.Chevron
                     direction={expandedOutItemId === item.id ? 'up' : 'down'}
@@ -197,7 +199,9 @@ export const TxDetails = () => {
           ))}
 
           {cntOmittedTo > 0 && (
-            <Text>{strings.transactions.omittedCount(cntOmittedTo)}</Text>
+            <Text style={ta.text_gray_medium}>
+              {strings.transactions.omittedCount(cntOmittedTo)}
+            </Text>
           )}
 
           <View style={[{borderTopWidth: 1, borderColor: p.gray_200}]}>
@@ -227,14 +231,15 @@ export const TxDetails = () => {
 }
 
 const Label = ({children}: {children: string}) => {
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
 
   return (
     <Text
       style={[
         a.pt_lg,
         a.body_2_md_regular,
-        {color: p.text_gray_medium, marginBottom: 8},
+        ta.text_gray_medium,
+        {marginBottom: 8},
       ]}
     >
       {children}

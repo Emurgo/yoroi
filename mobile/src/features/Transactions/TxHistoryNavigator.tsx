@@ -162,7 +162,7 @@ export const TxHistoryNavigator = () => {
             <Stack.Screen
               name="send-submitted-tx"
               options={{
-                title: strings.send.sendTitle,
+                headerShown: false,
               }}
               getComponent={() => SendSubmittedTxScreen}
             />
@@ -170,7 +170,7 @@ export const TxHistoryNavigator = () => {
             <Stack.Screen
               name="send-failed-tx"
               options={{
-                title: strings.send.sendTitle,
+                headerShown: false,
               }}
               getComponent={() => SendFailedTxScreen}
             />
