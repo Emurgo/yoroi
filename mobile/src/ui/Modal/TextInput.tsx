@@ -101,13 +101,13 @@ export const ModalTextInput = React.forwardRef<
     <View style={containerStyle}>
       <View
         style={[
+          a.border,
+          a.rounded_sm,
+          a.px_lg,
+          a.py_sm,
+          a.relative,
           {
-            borderWidth: 1,
-            borderRadius: 8,
             minHeight: 56,
-            paddingHorizontal: 16,
-            paddingVertical: 8,
-            position: 'relative',
             borderColor: showError
               ? p.sys_magenta_500
               : faded
@@ -121,19 +121,16 @@ export const ModalTextInput = React.forwardRef<
           <BottomSheetTextInput
             ref={ref}
             style={[
+              a.flex_1,
+              a.body_1_lg_regular,
+              a.p_0,
               {
-                flex: 1,
-                fontSize: 16,
-                lineHeight: 24,
                 minHeight: 24,
-                padding: 0,
                 margin: 0,
-              },
-              renderComponentStyle,
-              {
                 color: faded ? p.gray_900 : p.gray_900,
                 textAlign,
               },
+              renderComponentStyle,
             ]}
             value={value}
             placeholderTextColor={faded ? p.gray_400 : p.gray_600}
