@@ -116,6 +116,7 @@ export const transformersMaker = ({
         sell_token: tokenIn,
         buy_token: tokenOut,
         sell_amount: String(amountIn),
+        ...(partner !== undefined && {partner}),
 
         buy_amount: String(amountIn * wantedPrice),
         order_contract: protocol ? fromSwapProtocol(protocol) : undefined,
@@ -254,6 +255,7 @@ export const transformersMaker = ({
       }: Swap.CreateRequest): LimitOrderRequest => ({
         order_contract: fromSwapProtocol(protocol),
         buy_amount: String(amountIn * wantedPrice),
+        ...(partner !== undefined && {partner}),
 
         numbers_have_decimals: true,
         sell_token: tokenIn,
