@@ -522,5 +522,12 @@ export const useWalletNavigation = () => {
         },
       })
     },
+
+    navigateToAnalyticsSettings: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'settings',
+        params: {screen: 'analytics'},
+      })
+    },
   } as const).current
 }
