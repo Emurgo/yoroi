@@ -7,15 +7,19 @@
   "build": {
     "base": {
       "env": {
-        "EXPO_PUBLIC_SENTRY_DSN": "",
-        "EXPO_PUBLIC_UNSTOPPABLE_API_KEY": "",
-        "EXPO_PUBLIC_COMMIT": "",
-        "EXPO_PUBLIC_BUILD_VARIANT": "DEV",
-        "EXPO_PUBLIC_FRONTEND_FEE_ADDRESS_MAINNET": "",
-        "EXPO_PUBLIC_FRONTEND_FEE_ADDRESS_PREPROD": "",
-        "EXPO_PUBLIC_BANXA_TEST_WALLET": "",
-        "EXPO_PUBLIC_DISABLE_LOGBOX": false,
-        "EXPO_PUBLIC_LOGGER_FILTER": "",
+        "EXPO_PUBLIC_COMMIT": "093dec95a",
+
+        "EXPO_PUBLIC_BUILD_VARIANT": "NIGHTLY",
+        "EXPO_PUBLIC_SENTRY_DSN": "https://59637d7dcb274b6a9e9f708e0082b3d5@o1138840.ingest.sentry.io/6260389",
+        "EXPO_PUBLIC_DISABLE_LOGBOX": "true",
+        
+        "EXPO_PUBLIC_BANXA_TEST_WALLET": "addr1qyfuspldlchc5kechfe5jzdrr9jms2s9w0tq4hggy9zgkhxssydveuc8xyx4zh27fwcmr62mraeezjwf24hzkyejwfmq7yptmd",
+        
+        "EXPO_PUBLIC_FRONTEND_FEE_ADDRESS_MAINNET": "addr1q9ry6jfdgm0lcrtfpgwrgxg7qfahv80jlghhrthy6w8hmyjuw9ngccy937pm7yw0jjnxasm7hzxjrf8rzkqcj26788lqws5fke",
+        "EXPO_PUBLIC_FRONTEND_FEE_ADDRESS_PREPROD": "addr_test1qrgpjmyy8zk9nuza24a0f4e7mgp9gd6h3uayp0rqnjnkl54v4dlyj0kwfs0x4e38a7047lymzp37tx0y42glslcdtzhqzp57km",
+        
+        "EXPO_PUBLIC_UNSTOPPABLE_API_KEY": "czsajliz-wxgu6tujd1zqq7hey_pclfqhdjsqolsxjfsurgh",
+        
         "NODE_OPTIONS": "--max-old-space-size=8192",
         "JAVA_OPTS": "-Xmx16g -XX:MaxMetaspaceSize=16g",
         "GRADLE_OPTS": "-Dorg.gradle.jvmargs=-Xmx14g -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8 -Dorg.gradle.parallel=true -Dorg.gradle.daemon=false",
@@ -24,10 +28,12 @@
       "ios": {
         "image": "latest",
         "resourceClass": "large"
+
       },
       "android": {
-        "resourceClass": "large",
-        "image": "latest"
+        "image": "latest",
+        "resourceClass": "large"
+
       }
     },
     "development": {
@@ -38,21 +44,43 @@
     },
     "preview": {
       "extends": "base",
+      "env": {
+        "EXPO_PUBLIC_SENTRY_DSN": "https://fb3745d47d994059917e358dae581466@o1138840.ingest.sentry.io/4505319746764800",
+        "EXPO_PUBLIC_USE_TESTNET": "true",
+        "EXPO_PUBLIC_WALLET_1_MNEMONIC": "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon address",
+        "EXPO_PUBLIC_WALLET_1_NETWORK_ID": "300",
+        "EXPO_PUBLIC_WALLET_2_NETWORK_ID": "300",
+        "EXPO_PUBLIC_WALLET_2_MNEMONIC": "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon share",
+        "EXPO_PUBLIC_BANXA_TEST_WALLET": "addr1qyfuspldlchc5kechfe5jzdrr9jms2s9w0tq4hggy9zgkhxssydveuc8xyx4zh27fwcmr62mraeezjwf24hzkyejwfmq7yptmd",
+        "EXPO_PUBLIC_FRONTEND_FEE_ADDRESS_MAINNET": "addr1q9ry6jfdgm0lcrtfpgwrgxg7qfahv80jlghhrthy6w8hmyjuw9ngccy937pm7yw0jjnxasm7hzxjrf8rzkqcj26788lqws5fke",
+        "EXPO_PUBLIC_FRONTEND_FEE_ADDRESS_PREPROD": "addr_test1qrgpjmyy8zk9nuza24a0f4e7mgp9gd6h3uayp0rqnjnkl54v4dlyj0kwfs0x4e38a7047lymzp37tx0y42glslcdtzhqzp57km",
+        "EXPO_PUBLIC_UNSTOPPABLE_API_KEY": "czsajliz-wxgu6tujd1zqq7hey_pclfqhdjsqolsxjfsurgh",
+        "EXPO_PUBLIC_BUILD_VARIANT": "NIGHTLY"
+      },
       "distribution": "internal",
       "channel": "preview"
     },
     "production": {
       "extends": "base",
+      "env": {
+        "EXPO_PUBLIC_COMMIT": "093dec95a",
+        "EXPO_PUBLIC_BUILD_VARIANT": "PROD",
+        "EXPO_PUBLIC_SENTRY_DSN": "https://7f7c6cb60a6f429facd34f491dfc5133@o1138840.ingest.sentry.io/6783228",
+        "EXPO_PUBLIC_FRONTEND_FEE_ADDRESS_MAINNET": "addr1q9ry6jfdgm0lcrtfpgwrgxg7qfahv80jlghhrthy6w8hmyjuw9ngccy937pm7yw0jjnxasm7hzxjrf8rzkqcj26788lqws5fke",
+        "EXPO_PUBLIC_FRONTEND_FEE_ADDRESS_PREPROD": "addr_test1qrgpjmyy8zk9nuza24a0f4e7mgp9gd6h3uayp0rqnjnkl54v4dlyj0kwfs0x4e38a7047lymzp37tx0y42glslcdtzhqzp57km",
+        "EXPO_PUBLIC_UNSTOPPABLE_API_KEY": "czsajliz-wxgu6tujd1zqq7hey_pclfqhdjsqolsxjfsurgh"
+        
+      },
       "channel": "production",
-      "distribution": "production"
+      "autoIncrement": true
     }
   },
   "submit": {
     "production": {
       "ios": {
         "appleId": "amurmurmur@gmail.com",
-        "ascAppId": "6630386336",
-        "appleTeamId": "Q3SU9F6GYY"
+        "ascAppId": "1447326389",
+        "appleTeamId": "F8NVT2G2L4"
       }
     }
   }
