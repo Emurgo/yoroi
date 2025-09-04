@@ -1,74 +1,58 @@
 {
   "cli": {
-    "version": ">= 5.9.1",
+    "version": ">= 16.0.0",
+    "promptToConfigurePushNotifications": false,
     "appVersionSource": "remote"
   },
   "build": {
-    "development": {
-      "developmentClient": true,
-      "distribution": "internal"
-    },
-    "preview": {
-      "distribution": "internal"
-    },
-    "nightly": {
-      "android": {
-        "buildType": "app-bundle",
-        "gradleCommand": ":app:bundleRelease",
-        "env": {
-          "BUILD_VARIANT": "NIGHTLY",
-          "ANDROID_PACKAGE_NAME": "com.emurgo.nightly",
-          "ANDROID_KEYSTORE_FILE": "$HOME/.yoroi/android/nightly.keystore",
-          "ANDROID_KEYSTORE_ALIAS": "my-key-alias",
-          "ANDROID_KEYSTORE_PASSWORD": "${ANDROID_KEYSTORE_PASS}",
-          "ANDROID_TRACK": "internal",
-          "BUILD_NUMBER": "${BUILD_NUMBER}",
-          "RUSTUP_HOME": "/home/expo/.rustup",
-          "CARGO_HOME": "/home/expo/.cargo",
-          "PATH": "/home/expo/.cargo/bin:$PATH"
-        }
+    "base": {
+      "env": {
+        "EXPO_PUBLIC_SENTRY_DSN": "",
+        "EXPO_PUBLIC_UNSTOPPABLE_API_KEY": "",
+        "EXPO_PUBLIC_COMMIT": "",
+        "EXPO_PUBLIC_BUILD_VARIANT": "DEV",
+        "EXPO_PUBLIC_FRONTEND_FEE_ADDRESS_MAINNET": "",
+        "EXPO_PUBLIC_FRONTEND_FEE_ADDRESS_PREPROD": "",
+        "EXPO_PUBLIC_BANXA_TEST_WALLET": "",
+        "EXPO_PUBLIC_DISABLE_LOGBOX": false,
+        "EXPO_PUBLIC_LOGGER_FILTER": "",
+        "NODE_OPTIONS": "--max-old-space-size=8192",
+        "JAVA_OPTS": "-Xmx16g -XX:MaxMetaspaceSize=16g",
+        "GRADLE_OPTS": "-Dorg.gradle.jvmargs=-Xmx14g -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8 -Dorg.gradle.parallel=true -Dorg.gradle.daemon=false",
+        "EXPO_PUBLIC_POSTHOG_KEY": "phc_IbSwLTaIj80ihw5BTJ8spCp4TpjJltBFg7TUYFBEyk9"
       },
       "ios": {
-        "buildConfiguration": "Release",
-        "env": {
-          "BUILD_VARIANT": "NIGHTLY",
-          "APP_STORE_BUNDLE_ID": "com.emurgo.yoroi-nightly",
-          "BUILD_NUMBER": "${BUILD_NUMBER}",
-          "RUSTUP_HOME": "/home/expo/.rustup",
-          "CARGO_HOME": "/home/expo/.cargo",
-          "PATH": "/home/expo/.cargo/bin:/usr/bin:$PATH"
-        },
         "image": "latest",
-        "prebuildCommand": "./scripts/build-ios.sh"
+        "resourceClass": "large"
+      },
+      "android": {
+        "resourceClass": "large",
+        "image": "latest"
       }
     },
+    "development": {
+      "extends": "base",
+      "developmentClient": true,
+      "distribution": "internal",
+      "channel": "development"
+    },
+    "preview": {
+      "extends": "base",
+      "distribution": "internal",
+      "channel": "preview"
+    },
     "production": {
-      "android": {
-        "buildType": "app-bundle",
-        "gradleCommand": ":app:bundleRelease",
-        "env": {
-          "BUILD_VARIANT": "PROD",
-          "ANDROID_PACKAGE_NAME": "com.emurgo",
-          "ANDROID_KEYSTORE_FILE": "$HOME/.yoroi/android/production.keystore",
-          "ANDROID_KEYSTORE_ALIAS": "my-key-alias",
-          "ANDROID_KEYSTORE_PASSWORD": "${ANDROID_KEYSTORE_PASS}",
-          "ANDROID_TRACK": "production",
-          "BUILD_NUMBER": "${BUILD_NUMBER}",
-          "RUSTUP_HOME": "/home/expo/.rustup",
-          "CARGO_HOME": "/home/expo/.cargo",
-          "PATH": "/home/expo/.cargo/bin:$PATH"
-        }
-      },
+      "extends": "base",
+      "channel": "production",
+      "distribution": "production"
+    }
+  },
+  "submit": {
+    "production": {
       "ios": {
-        "buildConfiguration": "Release",
-        "env": {
-          "BUILD_VARIANT": "PROD",
-          "APP_STORE_BUNDLE_ID": "com.emurgo.yoroi",
-          "BUILD_NUMBER": "${BUILD_NUMBER}",
-          "RUSTUP_HOME": "/home/expo/.rustup",
-          "CARGO_HOME": "/home/expo/.cargo",
-          "PATH": "/home/expo/.cargo/bin:$PATH"
-        }
+        "appleId": "amurmurmur@gmail.com",
+        "ascAppId": "6630386336",
+        "appleTeamId": "Q3SU9F6GYY"
       }
     }
   }
