@@ -35,6 +35,7 @@ import {EnableLoginWithOsScreen} from './useCases/changeAppSettings/EnableLoginW
 import {PrivacyPolicyScreen} from './useCases/changeAppSettings/PrivacyPolicy'
 import {SystemLogScreen} from './useCases/changeAppSettings/SystemLogScreen/SystemLogScreen'
 import {TermsOfServiceScreen} from './useCases/changeAppSettings/TermsOfService'
+import {ToggleAnalyticsSettingsScreen} from './useCases/changeAppSettings/ToggleAnalyticsSettings/ToggleAnalyticsSettingsScreen'
 import {ChangePasswordScreen} from './useCases/changeWalletSettings/ChangePassword'
 import {
   DisableEasyConfirmationScreen,
@@ -221,6 +222,14 @@ export const SettingsScreenNavigator = () => {
         name="settings-preparing-wallet"
         component={PreparingWalletScreen}
         options={{headerShown: false}}
+      />
+
+      <Stack.Screen
+        name="analytics"
+        component={ToggleAnalyticsSettingsScreen}
+        options={{
+          title: strings.settings.toggleAnalytics.toggleAnalyticsSettingsTitle,
+        }}
       />
     </Stack.Navigator>
   )

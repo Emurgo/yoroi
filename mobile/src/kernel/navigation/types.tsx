@@ -25,7 +25,6 @@ export type WalletStackRoutes = {
   'review-tx-routes': NavigatorScreenParams<ReviewTxRoutes>
   'settings': NavigatorScreenParams<SettingsStackRoutes>
   'voting-registration': NavigatorScreenParams<VotingRegistrationRoutes>
-  'toggle-analytics-settings': NavigatorScreenParams<ToggleAnalyticsSettingsRoutes>
   'governance': NavigatorScreenParams<StakingGovernanceRoutes>
   'staking-dashboard': NavigatorScreenParams<DashboardRoutes>
 }
@@ -168,10 +167,6 @@ export type SettingsStackRoutes = {
 export type ManageNotificationsRoutes = {
   'manage-notification-display-duration': undefined
   'manage-notification-settings': undefined
-}
-
-export type ToggleAnalyticsSettingsRoutes = {
-  settings: undefined
 }
 
 export type SettingsRouteNavigation = StackNavigationProp<SettingsStackRoutes>
