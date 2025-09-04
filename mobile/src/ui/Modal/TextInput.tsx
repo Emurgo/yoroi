@@ -101,8 +101,13 @@ export const ModalTextInput = React.forwardRef<
     <View style={containerStyle}>
       <View
         style={[
-          inputContainerStyle,
           {
+            borderWidth: 1,
+            borderRadius: 8,
+            minHeight: 56,
+            paddingHorizontal: 16,
+            paddingVertical: 8,
+            position: 'relative',
             borderColor: showError
               ? p.sys_magenta_500
               : faded
@@ -116,7 +121,14 @@ export const ModalTextInput = React.forwardRef<
           <BottomSheetTextInput
             ref={ref}
             style={[
-              inputStyle,
+              {
+                flex: 1,
+                fontSize: 16,
+                lineHeight: 24,
+                minHeight: 24,
+                padding: 0,
+                margin: 0,
+              },
               renderComponentStyle,
               {
                 color: faded ? p.gray_900 : p.gray_900,
@@ -233,7 +245,7 @@ const SecureTextEntryToggle = ({
 }) => {
   const {palette: p} = useTheme()
   return (
-    <AdornmentContainer style={{paddingRight: 16}}>
+    <AdornmentContainer style={[a.pr_lg]}>
       <TouchableOpacity onPress={onPress}>
         {showPassword ? (
           <Icon.EyeOff color={p.el_gray_medium} size={30} />
@@ -251,22 +263,4 @@ const InputContainer = ({children}: {children: React.ReactNode}) => {
 
 const AdornmentContainer = ({style, children}: ViewProps) => {
   return <View style={[a.justify_center, style]}>{children}</View>
-}
-
-const inputContainerStyle: ViewStyle = {
-  borderWidth: 1,
-  borderRadius: 8,
-  minHeight: 56,
-  paddingHorizontal: 16,
-  paddingVertical: 8,
-  position: 'relative',
-}
-
-const inputStyle = {
-  flex: 1,
-  fontSize: 16,
-  lineHeight: 24,
-  minHeight: 24,
-  padding: 0,
-  margin: 0,
 }
