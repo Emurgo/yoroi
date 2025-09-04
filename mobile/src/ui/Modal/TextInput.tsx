@@ -86,13 +86,13 @@ export const ModalTextInput = React.forwardRef<
   const showHelperComponent = helper != null && !isString(helper)
 
   const helperToShow = showError ? (
-    <HelperText type="error" visible>
+    <HelperText type="error" visible faded={faded}>
       {errorText}
     </HelperText>
   ) : showHelperComponent ? (
     helper
   ) : (
-    <HelperText type="info" visible>
+    <HelperText type="info" visible faded={faded}>
       {helper}
     </HelperText>
   )
@@ -103,7 +103,11 @@ export const ModalTextInput = React.forwardRef<
         style={[
           inputContainerStyle,
           {
-            borderColor: showError ? p.sys_magenta_500 : p.gray_200,
+            borderColor: showError
+              ? p.sys_magenta_500
+              : faded
+                ? p.gray_400
+                : p.gray_200,
             backgroundColor: faded ? p.gray_100 : p.bg_color_max,
           },
         ]}
@@ -200,7 +204,12 @@ export const HelperText = ({
         a.pt_xs,
         a.px_sm,
         {
-          color: type === 'error' ? p.sys_magenta_500 : p.gray_700,
+          color:
+            type === 'error'
+              ? p.sys_magenta_500
+              : faded
+                ? p.gray_400
+                : p.gray_700,
         },
       ]}
       {...props}
