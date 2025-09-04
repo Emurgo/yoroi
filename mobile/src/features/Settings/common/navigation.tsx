@@ -20,7 +20,7 @@ export const useNavigateTo = () => {
     about: () => navigation.navigate('about'),
     termsOfUse: () => navigation.navigate('terms-of-use'),
     privacyPolicy: () => navigation.navigate('privacy-policy'),
-    analytics: () => walletNavigation.navigateToAnalyticsSettings(),
+    analytics: () => navigation.navigate('analytics'),
     changeCustomPin: () => navigation.navigate('change-custom-pin'),
     enableEasyConfirmation: () =>
       navigation.navigate('enable-easy-confirmation'),

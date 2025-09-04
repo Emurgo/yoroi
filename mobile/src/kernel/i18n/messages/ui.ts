@@ -238,7 +238,7 @@ export const uiMessages = defineMessages({
     defaultMessage: '!!!Accept',
   },
   toggle: {
-    id: 'txReview.overview.receiveToLabel',
+    id: 'analytics.toggle',
     defaultMessage: '!!!Toggle',
   },
 })

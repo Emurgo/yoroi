@@ -275,15 +275,6 @@ export const useWalletNavigation = () => {
       navigation.navigate('notifications')
     },
 
-    navigateToAnalyticsSettings: () => {
-      navigation.navigate('manage-wallets', {
-        screen: 'toggle-analytics-settings',
-        params: {
-          screen: 'settings',
-        },
-      })
-    },
-
     navigateToGovernanceCentre: () => {
       navigation.navigate('manage-wallets', {
         screen: 'governance',
@@ -529,6 +520,13 @@ export const useWalletNavigation = () => {
         params: {
           screen: 'qr-code',
         },
+      })
+    },
+
+    navigateToAnalyticsSettings: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'settings',
+        params: {screen: 'analytics'},
       })
     },
   } as const).current

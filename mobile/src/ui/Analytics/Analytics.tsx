@@ -121,6 +121,7 @@ const Notice = ({
 const Settings = ({onReadMore}: {onReadMore?: () => void}) => {
   const metrics = useMetrics()
   const {atoms: ta} = useTheme()
+  const strings = useStrings()
 
   return (
     <View style={[a.flex_1, ta.bg_color_max]}>
@@ -129,18 +130,21 @@ const Settings = ({onReadMore}: {onReadMore?: () => void}) => {
 
         <Space.Height.lg />
 
-        <SettingsSwitch
-          value={metrics.isEnabled}
-          onValueChange={(value) => {
-            if (value) {
-              metrics.enable()
-            } else {
-              metrics.disable()
-            }
-          }}
-          // TODO: REVISIT it looks the API has changed for this component
-          // title={strings.ui.toggle}
-        />
+        <View style={[a.flex_row, a.align_center, a.justify_between]}>
+          <Text style={[a.body_1_lg_medium, ta.text_gray_max]}>
+            {strings.ui.toggle}
+          </Text>
+          <SettingsSwitch
+            value={metrics.isEnabled}
+            onValueChange={(value) => {
+              if (value) {
+                metrics.enable()
+              } else {
+                metrics.disable()
+              }
+            }}
+          />
+        </View>
       </View>
     </View>
   )

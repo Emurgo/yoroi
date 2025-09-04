@@ -75,3 +75,5 @@ export const defaultCurrency: Portfolio.Currency.Symbol = 'USD'
 
 // Legal
 export const agreementDate = 1691967600000
+
+export const appVersion = Constants.expoConfig?.version ?? ''
