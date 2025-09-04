@@ -159,11 +159,11 @@ export const settingsMessages = defineMessages({
 
   // Remove Wallet
   removeWalletDescriptionParagraph1: {
-    id: 'components.settings.walletsettingscreen.removeWallet',
+    id: 'components.settings.removewalletscreen.descriptionParagraph1',
     defaultMessage: '!!!Remove Wallet Description Paragraph 1',
   },
   removeWalletDescriptionParagraph2: {
-    id: 'components.settings.walletsettingscreen.removeWallet',
+    id: 'components.settings.removewalletscreen.descriptionParagraph2',
     defaultMessage: '!!!Remove Wallet Description Paragraph 2',
   },
   removeWalletWalletName: {
@@ -175,11 +175,11 @@ export const settingsMessages = defineMessages({
     defaultMessage: '!!!Wallet Name Input',
   },
   removeWalletWalletNameMismatchError: {
-    id: 'global.error',
+    id: 'components.settings.removewalletscreen.walletNameMismatchError',
     defaultMessage: '!!!Wallet Name Mismatch Error',
   },
   removeWalletRemove: {
-    id: 'components.settings.collateral.removeCollateral',
+    id: 'components.settings.removewalletscreen.remove',
     defaultMessage: '!!!Remove',
   },
   removeWalletHasWrittenDownMnemonic: {
@@ -189,7 +189,7 @@ export const settingsMessages = defineMessages({
 
   // Rename Wallet
   renameWalletChangeButton: {
-    id: 'components.governance.actionYouHaveSelected',
+    id: 'components.settings.changewalletname.changeButton',
     defaultMessage: '!!!Change',
   },
   renameWalletWalletNameInputLabel: {
@@ -207,7 +207,7 @@ export const settingsMessages = defineMessages({
     defaultMessage: '!!!New Password Input Label',
   },
   changePasswordPasswordStrengthRequirement: {
-    id: 'components.walletinit.passwordstrengthindicator.passwordRequirementsNote',
+    id: 'components.settings.changepasswordscreen.newPasswordInputNotMatchError',
     defaultMessage: '!!!Password Strength Requirement',
   },
   changePasswordRepeatPasswordInputLabel: {
@@ -215,11 +215,11 @@ export const settingsMessages = defineMessages({
     defaultMessage: '!!!Repeat Password Input Label',
   },
   changePasswordRepeatPasswordInputNotMatchError: {
-    id: 'global.error',
+    id: 'components.settings.changepasswordscreen.repeatPasswordInputNotMatchError',
     defaultMessage: '!!!Repeat Password Input Not Match Error',
   },
   changePasswordContinueButton: {
-    id: 'global.continue',
+    id: 'components.settings.changepasswordscreen.continueButton',
     defaultMessage: '!!!Continue',
   },
 

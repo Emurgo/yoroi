@@ -437,6 +437,7 @@
   "components.settings.changepasswordscreen.newPasswordInputLabel": "New password",
   "components.settings.changepasswordscreen.oldPasswordInputLabel": "Current password",
   "components.settings.changepasswordscreen.repeatPasswordInputLabel": "Repeat new password",
+  "components.settings.changepasswordscreen.newPasswordInputNotMatchError": "Minimum {requiredPasswordLength} characters",
   "components.settings.changepasswordscreen.repeatPasswordInputNotMatchError": "Passwords do not match",
   "components.settings.changepasswordscreen.title": "Change spending password",
   "components.settings.changewalletname.changeButton": "Change name",
