@@ -1,17 +1,18 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 
+import {BottomSheetTextInput} from '@gorhom/bottom-sheet'
 import * as React from 'react'
-import {TextInput as RNTextInput, View} from 'react-native'
+import {View} from 'react-native'
 
 import {debugWalletInfo, features} from '~/kernel/features'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {ActivityIndicator} from '~/ui/ActivityIndicator/ActivityIndicator'
 import {Button} from '~/ui/Button/Button'
+import {ModalTextInput} from '~/ui/Modal/TextInput'
 import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
-import {TextInput} from '~/ui/TextInput/TextInput'
 
-import {getErrorMessage} from '../errors'
+import {getErrorMessage} from './errors'
 
 export type ErrorData = {
   errorMessage: string
@@ -33,7 +34,8 @@ export const ConfirmWithSpendingPassword = ({
   onPasswordChange,
   summary,
 }: Props) => {
-  const spendingPasswordRef = React.useRef<RNTextInput>(null)
+  const spendingPasswordRef =
+    React.useRef<React.ElementRef<typeof BottomSheetTextInput>>(null)
   const [spendingPassword, setSpendingPassword] = React.useState(
     features.prefillWalletInfo ? debugWalletInfo.PASSWORD : '',
   )
@@ -49,7 +51,7 @@ export const ConfirmWithSpendingPassword = ({
     : null
 
   return (
-    <View style={[a.flex_1, a.px_lg]}>
+    <View style={[a.flex_1]}>
       <Text
         style={[
           {paddingHorizontal: 70},
@@ -60,13 +62,13 @@ export const ConfirmWithSpendingPassword = ({
         {summary ?? strings.swap.enterSpendingPassword}
       </Text>
 
-      <TextInput
+      <ModalTextInput
         secureTextEntry
         ref={spendingPasswordRef}
         enablesReturnKeyAutomatically
         placeholder={strings.swap.spendingPassword}
         value={spendingPassword}
-        onChangeText={(text) => {
+        onChangeText={(text: string) => {
           setSpendingPassword(text)
           onPasswordChange?.()
         }}

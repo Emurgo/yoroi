@@ -7,7 +7,7 @@ import {useAuthOsWithEasyConfirmation} from '~/features/Auth/hooks/useAuthOsWith
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 
-import {getErrorMessage} from '../errors'
+import {getErrorMessage} from './errors'
 
 export const ConfirmRawTxWithOs = ({
   onSuccess,
