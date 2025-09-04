@@ -287,6 +287,7 @@ const quoteLimitRequest: LimitQuoteRequest = {
   numbers_have_decimals: true,
   sell_amount: '0',
   sell_token: quoteLimitInput.tokenIn,
+  partner: 'somePartnerId',
 }
 
 const quoteInput: Swap.EstimateRequest = {
@@ -482,6 +483,8 @@ const createLimitRequest = (address: string): LimitOrderRequest => ({
   buy_amount: '1',
   order_contract: 'minswap-v1',
   numbers_have_decimals: true,
+  partner: 'somePartnerId',
+  utxos: undefined,
 })
 
 const createInput: Array<Swap.CreateRequest> = [
