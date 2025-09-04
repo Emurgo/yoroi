@@ -19,8 +19,6 @@ export const Modal = () => {
   const screenHeight = Dimensions.get('window').height
   const baseHeight = Math.round(screenHeight * 0.4)
 
-  const keyboardAvoiding = true
-
   const snapPoints = React.useMemo(() => {
     const minHeight = height || baseHeight
 
@@ -28,20 +26,15 @@ export const Modal = () => {
       return [minHeight, screenHeight * 0.95]
     }
 
-    if (!keyboardAvoiding) {
-      const maxHeight = Math.max(minHeight * 1.75, screenHeight * 0.7)
-      return [minHeight, maxHeight]
-    }
-
     const adjustedHeight =
       keyboardHeight > 0 ? minHeight + keyboardHeight : minHeight
     const maxHeight = Math.min(adjustedHeight, screenHeight * 0.8)
 
     return [minHeight, maxHeight]
-  }, [height, keyboardHeight, baseHeight, screenHeight, keyboardAvoiding])
+  }, [height, keyboardHeight, baseHeight, screenHeight])
 
   React.useEffect(() => {
-    if (Platform.OS !== 'ios' || !keyboardAvoiding) return
+    if (Platform.OS !== 'ios') return
 
     const keyboardWillShow = (event: {endCoordinates: {height: number}}) => {
       setKeyboardHeight(event.endCoordinates.height)
@@ -70,7 +63,7 @@ export const Modal = () => {
       showSubscription?.remove()
       hideSubscription?.remove()
     }
-  }, [keyboardAvoiding, bottomSheetModalRef])
+  }, [bottomSheetModalRef])
 
   const renderBackdrop = React.useCallback(
     (props: any) => (
@@ -91,20 +84,8 @@ export const Modal = () => {
       snapPoints={snapPoints}
       backdropComponent={renderBackdrop}
       enablePanDownToClose={canDiscard}
-      keyboardBehavior={
-        keyboardAvoiding
-          ? Platform.OS === 'android'
-            ? 'extend'
-            : undefined
-          : 'interactive'
-      }
-      keyboardBlurBehavior={
-        keyboardAvoiding
-          ? Platform.OS === 'android'
-            ? 'restore'
-            : undefined
-          : 'restore'
-      }
+      keyboardBehavior={Platform.OS === 'android' ? 'extend' : undefined}
+      keyboardBlurBehavior={Platform.OS === 'android' ? 'restore' : undefined}
       android_keyboardInputMode="adjustResize"
       enableDynamicSizing={false}
       backgroundStyle={{
