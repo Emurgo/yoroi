@@ -335,7 +335,7 @@ export const settingsMessages = defineMessages({
     defaultMessage: '!!!Security Reporting',
   },
   applicationSettingsSelectLanguage: {
-    id: 'analytics.selectLanguage',
+    id: 'components.settings.applicationsettingsscreen.selectLanguage',
     defaultMessage: '!!!Select Language',
   },
   applicationSettingsSelectTheme: {
@@ -395,7 +395,7 @@ export const settingsMessages = defineMessages({
     defaultMessage: '!!!Screen Sharing',
   },
   applicationSettingsScreenSharingInfo: {
-    id: 'portfolio.portfolioTokensDetailScreen.info',
+    id: 'components.settings.applicationsettingsscreen.screenSharingInfo',
     defaultMessage: '!!!Screen Sharing Info',
   },
   applicationSettingsNetwork: {

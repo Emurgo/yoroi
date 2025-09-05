@@ -190,10 +190,22 @@ const ResyncButton = () => {
     // track.walletSettingsResyncClicked()
     const selection = await showConfirmationDialog(
       {
-        title: {id: 'global.disclaimer', defaultMessage: 'Disclaimer'},
-        message: {id: 'global.proceed', defaultMessage: 'Proceed?'},
-        btnNoLabel: {id: 'global.cancel', defaultMessage: 'Cancel'},
-        btnYesLabel: {id: 'global.proceed', defaultMessage: 'Proceed'},
+        title: {
+          id: 'global.actions.dialogs.resync.title',
+          defaultMessage: 'Disclaimer',
+        },
+        message: {
+          id: 'global.actions.dialogs.resync.message',
+          defaultMessage: 'Proceed?',
+        },
+        btnNoLabel: {
+          id: 'global.actions.dialogs.resync.noButton',
+          defaultMessage: 'Cancel',
+        },
+        btnYesLabel: {
+          id: 'global.actions.dialogs.resync.yesButton',
+          defaultMessage: 'Proceed',
+        },
       },
       intl,
     )
@@ -248,10 +260,22 @@ const useLogout = () => {
   return async () => {
     const selection = await showConfirmationDialog(
       {
-        title: {id: 'global.disclaimer', defaultMessage: 'Disclaimer'},
-        message: {id: 'global.proceed', defaultMessage: 'Proceed?'},
-        btnNoLabel: {id: 'global.cancel', defaultMessage: 'Cancel'},
-        btnYesLabel: {id: 'global.proceed', defaultMessage: 'Proceed'},
+        title: {
+          id: 'global.actions.dialogs.logout.title',
+          defaultMessage: 'Disclaimer',
+        },
+        message: {
+          id: 'global.actions.dialogs.logout.message',
+          defaultMessage: 'Proceed?',
+        },
+        btnNoLabel: {
+          id: 'global.actions.dialogs.logout.noButton',
+          defaultMessage: 'Cancel',
+        },
+        btnYesLabel: {
+          id: 'global.actions.dialogs.logout.yesButton',
+          defaultMessage: 'Proceed',
+        },
       },
       intl,
     )
