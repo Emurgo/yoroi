@@ -60,7 +60,7 @@ const mapProtocolToDex = (protocol: Swap.Protocol): Dex => {
 export const minswapApiMaker = (
   config: MinswapApiConfig,
 ): Readonly<Swap.Api> => {
-  const {address, network, request = fetchData} = config
+  const {address, network, partner, request = fetchData} = config
 
   if (network !== Chain.Network.Mainnet)
     return new Proxy(
@@ -213,7 +213,9 @@ export const minswapApiMaker = (
       },
 
       async estimate(body: Swap.EstimateRequest) {
+        console.log('Minswap estimate request:', body)
         const requestBody = transformers.estimate.request(body)
+        console.log('Minswap estimate request body:', requestBody)
 
         const response = await requestWithErrorHandling<EstimateResponse>(
           `${baseUrl}/estimate`,
@@ -222,6 +224,8 @@ export const minswapApiMaker = (
             body: JSON.stringify(requestBody),
           },
         )
+
+        console.log('Minswap estimate response:', response)
 
         if (isLeft(response)) return response
 
@@ -238,24 +242,71 @@ export const minswapApiMaker = (
       },
 
       async create(body: Swap.CreateRequest) {
+        console.log('Minswap create request:', body)
         const requestBody = transformers.create.request(body)
+        console.log('Minswap create request body:', requestBody)
 
+        // Make the build-tx call
         const response = await requestWithErrorHandling<CreateResponse>(
-          `${baseUrl}/create`,
+          `${baseUrl}/build-tx`,
           {
             method: 'POST',
             body: JSON.stringify(requestBody),
           },
         )
 
+        console.log('Minswap create response:', response)
+
         if (isLeft(response)) return response
+
+        // Make an ad-hoc estimate call to get the swap details
+        console.log('Minswap making ad-hoc estimate call for swap details')
+        const estimateRequest: Swap.EstimateRequest = {
+          amountIn: body.amountIn,
+          tokenIn: body.tokenIn,
+          tokenOut: body.tokenOut,
+          slippage: body.slippage ?? 1,
+          blockedProtocols: body.blockedProtocols,
+          protocol: body.protocol,
+        }
+
+        const estimateResponse = await this.estimate(estimateRequest)
+        console.log('Minswap ad-hoc estimate response:', estimateResponse)
+
+        // If estimate fails, return the create response with minimal data
+        if (isLeft(estimateResponse)) {
+          console.log(
+            'Minswap estimate failed, returning minimal create response',
+          )
+          return freeze(
+            {
+              tag: 'right',
+              value: {
+                status: response.value.status,
+                data: transformers.create.response(response.value.data),
+              },
+            },
+            true,
+          )
+        }
+
+        // Merge the CBOR from create with the estimate data
+        const estimateData = estimateResponse.value.data
+        const mergedData: Swap.CreateResponse = {
+          ...estimateData,
+          cbor: response.value.data.cbor,
+          aggregator: Swap.Aggregator.Minswap,
+          totalInput: estimateData.totalInput ?? body.amountIn,
+        }
+
+        console.log('Minswap merged create data:', mergedData)
 
         return freeze(
           {
             tag: 'right',
             value: {
               status: response.value.status,
-              data: transformers.create.response(response.value.data),
+              data: mergedData,
             },
           },
           true,

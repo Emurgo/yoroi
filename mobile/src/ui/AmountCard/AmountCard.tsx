@@ -161,7 +161,7 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
               amount={{
                 info,
                 quantity: BigInt(
-                  Math.floor(Number(quantity ?? 0) * 10 ** decimals),
+                  Math.floor(Number(quantity || '0') * 10 ** decimals),
                 ),
               }}
             />

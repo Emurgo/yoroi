@@ -216,15 +216,24 @@ const apiManagerMaker = (
       },
 
       async estimate(body: Swap.EstimateRequest) {
+        console.log('Swap manager estimate request:', body)
         const enabledAggregators = getEnabledAggregators()
+        console.log(
+          'Swap manager estimate - enabled aggregators:',
+          enabledAggregators,
+        )
 
         const responses: Array<Api.Response<Swap.EstimateResponse>> =
           await Promise.all(
-            enabledAggregators.map((aggregator) =>
-              adapters[aggregator].estimate(body),
-            ),
+            enabledAggregators.map(async (aggregator) => {
+              console.log(`Calling ${aggregator}.estimate()`)
+              const response = await adapters[aggregator].estimate(body)
+              console.log(`${aggregator} estimate response:`, response)
+              return response
+            }),
           )
 
+        console.log('Swap manager estimate responses:', responses)
         warnAllLeft(...responses)
 
         if (responses.every(isLeft))

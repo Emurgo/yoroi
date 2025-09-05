@@ -76,36 +76,29 @@ export type TokensRequest = {
 export type EstimateRequest = {
   token_in: string
   token_out: string
-  amount_in?: string
-  amount_out?: string
-  slippage?: number
-  excluded_sources?: Dex[]
+  amount: string
+  slippage: number
+  exclude_protocols?: string[]
+  include_protocols?: string[]
+  allow_multi_hops?: boolean
+  partner?: string
+  amount_in_decimal?: boolean
 }
 
 export type EstimateResponse = {
-  token_in: {
-    token_id: string
-    logo: string | null
-    ticker: string | null
-    is_verified: boolean | null
-    price_by_ada: number | null
-    project_name: string | null
-    decimals: number | null
-  }
-  token_out: {
-    token_id: string
-    logo: string | null
-    ticker: string | null
-    is_verified: boolean | null
-    price_by_ada: number | null
-    project_name: string | null
-    decimals: number | null
-  }
+  token_in: string
+  token_out: string
   amount_in: string
   amount_out: string
-  price_impact: number
-  minimum_received: string
-  fee: string
+  amount_in_decimal: boolean
+  avg_price_impact: number
+  min_amount_out: string
+  aggregator_fee: string
+  aggregator_fee_percent: number
+  deposits: string
+  total_dex_fee: string
+  total_lp_fee: string
+  paths: Array<any>
   route: Array<{
     pool: {
       pool_id: string
@@ -136,13 +129,19 @@ export type EstimateResponse = {
 }
 
 export type CreateRequest = {
-  token_in: string
-  token_out: string
-  amount_in: string
-  amount_out: string
-  slippage: number
-  user_address: string
-  excluded_sources?: Dex[]
+  sender: string
+  min_amount_out: string
+  estimate: {
+    amount: string
+    token_in: string
+    token_out: string
+    slippage: number
+    exclude_protocols?: string[]
+    include_protocols?: string[]
+    allow_multi_hops?: boolean
+    partner?: string
+  }
+  amount_in_decimal?: boolean
 }
 
 export type CreateResponse = {

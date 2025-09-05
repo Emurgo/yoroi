@@ -13,6 +13,7 @@ import {
   LimitOptionsResponse,
   MinswapApiConfig,
   PendingOrdersResponse,
+  TokensRequest,
   TokensResponse,
 } from './types'
 
@@ -44,17 +45,23 @@ const mapProtocolToDex = (protocol: Swap.Protocol): Dex => {
       return Dex.WingRidersStableV2
     case Swap.Protocol.Spectrum_v1:
       return Dex.Spectrum
+    case Swap.Protocol.Splash_v1:
+      return Dex.SplashStable
     default:
       return Dex.Unsupported
   }
 }
 
 export const transformersMaker = (config: MinswapApiConfig) => {
-  const {isPrimaryToken, primaryTokenInfo, address} = config
+  const {isPrimaryToken, primaryTokenInfo, address, partner} = config
 
   // Convert portfolio token ID to API token ID (like DexHunter)
-  const toTokenId = (tokenId: Portfolio.Token.Id) =>
-    isPrimaryToken(tokenId) ? 'lovelace' : tokenId.replace('.', '')
+  const toTokenId = (tokenId: Portfolio.Token.Id) => {
+    const result = isPrimaryToken(tokenId)
+      ? 'lovelace'
+      : tokenId.replace('.', '')
+    return result
+  }
 
   const transformToken = (token: {
     token_id: string
@@ -101,9 +108,52 @@ export const transformersMaker = (config: MinswapApiConfig) => {
     )
   }
 
+  // Transform Minswap paths to Swap.Split format
+  const transformPathsToSplits = (paths: Array<any>): Swap.Split[] => {
+    if (!paths || paths.length === 0) return []
+
+    return paths
+      .map((path) => {
+        // Each path is an array of hops
+        const firstHop = path[0]
+        if (!firstHop) return null
+
+        const split = freeze(
+          {
+            amountIn: parseFloat(firstHop.amount_in || '0'),
+            batcherFee: 0, // Minswap doesn't provide batcher fee per split
+            deposits: parseFloat(firstHop.deposits || '0'),
+            protocol: mapDexToProtocol(firstHop.protocol),
+            expectedOutput: parseFloat(firstHop.amount_out || '0'),
+            expectedOutputWithoutSlippage: parseFloat(
+              firstHop.min_amount_out || '0',
+            ),
+            fee: parseFloat(firstHop.dex_fee || '0'),
+            initialPrice:
+              parseFloat(firstHop.amount_out || '0') /
+              parseFloat(firstHop.amount_in || '1'),
+            finalPrice:
+              parseFloat(firstHop.amount_out || '0') /
+              parseFloat(firstHop.amount_in || '1'),
+            poolFee: parseFloat(firstHop.lp_fee || '0'),
+            poolId: firstHop.pool_id || '',
+            priceDistortion: 0, // Minswap doesn't provide this
+            priceImpact: firstHop.price_impact || 0,
+          },
+          true,
+        )
+        return split
+      })
+      .filter(Boolean) as Swap.Split[]
+  }
+
   return freeze(
     {
       tokens: {
+        request: (): TokensRequest => ({
+          query: '', // Empty string returns all tokens
+          only_verified: false, // Return all tokens, not just verified ones
+        }),
         response: (data: TokensResponse): Portfolio.Token.Info[] => {
           // Handle both flat structure (actual API) and nested structure (expected by types)
           const transformedTokens = data.tokens.map((token) => {
@@ -176,28 +226,37 @@ export const transformersMaker = (config: MinswapApiConfig) => {
           slippage,
           tokenIn,
           tokenOut,
-        }: Swap.EstimateRequest): EstimateRequest => ({
-          token_in: toTokenId(tokenIn),
-          token_out: toTokenId(tokenOut),
-          amount_in: amountIn?.toString(),
-          amount_out: undefined, // Will be calculated by API
-          slippage: slippage,
-          excluded_sources: blockedProtocols?.map((p) => mapProtocolToDex(p)),
-        }),
+        }: Swap.EstimateRequest): EstimateRequest => {
+          const request: EstimateRequest = {
+            token_in: toTokenId(tokenIn),
+            token_out: toTokenId(tokenOut),
+            amount: amountIn?.toString() || '0',
+            slippage: slippage || 1,
+            exclude_protocols: blockedProtocols?.map((p) =>
+              mapProtocolToDex(p),
+            ),
+            amount_in_decimal: true, // Tell API that amounts are in decimal format
+            ...(partner !== undefined && {partner}),
+          }
+          return request
+        },
         response: (data: EstimateResponse): Swap.EstimateResponse => {
+          // When amount_in_decimal: true, amounts are already in decimal format (ADA)
+          // No need to convert from lovelace
+
           return freeze(
             {
-              splits: [],
-              batcherFee: parseFloat(data.fee),
-              deposits: 0,
-              aggregatorFee: 0,
+              splits: transformPathsToSplits(data.paths),
+              batcherFee: parseFloat(data.deposits || '0'),
+              deposits: parseFloat(data.deposits || '0'),
+              aggregatorFee: parseFloat(data.aggregator_fee || '0'),
               frontendFee: 0,
               netPrice:
                 parseFloat(data.amount_out) / parseFloat(data.amount_in),
-              priceImpact: data.price_impact,
-              totalFee: parseFloat(data.fee),
+              priceImpact: data.avg_price_impact,
+              totalFee: parseFloat(data.total_dex_fee || '0'),
               totalOutput: parseFloat(data.amount_out),
-              totalOutputWithoutSlippage: parseFloat(data.minimum_received),
+              totalOutputWithoutSlippage: parseFloat(data.min_amount_out),
               totalInput: parseFloat(data.amount_in),
             },
             true,
@@ -212,16 +271,36 @@ export const transformersMaker = (config: MinswapApiConfig) => {
           slippage,
           tokenIn,
           tokenOut,
-        }: Swap.CreateRequest): CreateRequest => ({
-          token_in: toTokenId(tokenIn),
-          token_out: toTokenId(tokenOut),
-          amount_in: amountIn.toString(),
-          amount_out: '0', // Will be calculated by the API
-          slippage: slippage || 1,
-          user_address: address,
-          excluded_sources: blockedProtocols?.map((p) => mapProtocolToDex(p)),
-        }),
+        }: Swap.CreateRequest): CreateRequest => {
+          console.log('Minswap create transformer request:', {
+            amountIn,
+            blockedProtocols,
+            slippage,
+            tokenIn,
+            tokenOut,
+          })
+
+          const request = {
+            sender: address,
+            min_amount_out: '0', // Will be calculated by the API
+            estimate: {
+              amount: amountIn.toString(),
+              token_in: toTokenId(tokenIn),
+              token_out: toTokenId(tokenOut),
+              slippage: slippage || 1,
+              exclude_protocols: blockedProtocols?.map((p) =>
+                mapProtocolToDex(p),
+              ),
+              ...(partner !== undefined && {partner}),
+            },
+            amount_in_decimal: true, // Also set at the top level for build-tx
+          }
+
+          console.log('Minswap create transformer request body:', request)
+          return request
+        },
         response: (data: CreateResponse): Swap.CreateResponse => {
+          console.log('Minswap create transformer response:', data)
           return freeze(
             {
               splits: [],

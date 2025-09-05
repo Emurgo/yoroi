@@ -41,26 +41,22 @@ describe('transformersMaker', () => {
       const mockResponse = {
         tokens: [
           {
-            asset: {
-              token_id: 'lovelace',
-              logo: null,
-              ticker: 'ADA',
-              is_verified: true,
-              price_by_ada: 1,
-              project_name: 'Cardano',
-              decimals: 6,
-            },
+            token_id: 'lovelace',
+            logo: null,
+            ticker: 'ADA',
+            is_verified: true,
+            price_by_ada: 1,
+            project_name: 'Cardano',
+            decimals: 6,
           },
           {
-            asset: {
-              token_id: 'test-token-id',
-              logo: 'https://example.com/logo.png',
-              ticker: 'TEST',
-              is_verified: false,
-              price_by_ada: 0.1,
-              project_name: 'Test Token',
-              decimals: 6,
-            },
+            token_id: 'test-token-id',
+            logo: 'https://example.com/logo.png',
+            ticker: 'TEST',
+            is_verified: false,
+            price_by_ada: 0.1,
+            project_name: 'Test Token',
+            decimals: 6,
           },
         ],
         total: 2,
@@ -72,15 +68,15 @@ describe('transformersMaker', () => {
 
       expect(result).toHaveLength(2)
       expect(result[0]).toEqual({
-        id: 'lovelace' as `${string}.${string}`,
+        id: '.' as `${string}.${string}`,
         name: 'Cardano',
         ticker: 'ADA',
         decimals: 6,
         logo: null,
-        description: null,
-        website: null,
+        description: '',
+        website: '',
         policyId: '',
-        fingerprint: null,
+        fingerprint: '',
         group: 'ADA',
         kind: 'ft',
         image: null,
@@ -88,17 +84,24 @@ describe('transformersMaker', () => {
         symbol: 'ADA',
         metadatas: {},
         isPrimaryToken: true,
+        status: 'valid',
+        application: 'general',
+        tag: '',
+        reference: '',
+        originalImage: '',
+        nature: 'secondary',
+        type: 'ft',
       })
       expect(result[1]).toEqual({
-        id: 'test-token-id',
+        id: 'test-token-id.',
         name: 'Test Token',
         ticker: 'TEST',
         decimals: 6,
         logo: 'https://example.com/logo.png',
-        description: null,
-        website: null,
+        description: '',
+        website: '',
         policyId: 'test-token-id',
-        fingerprint: null,
+        fingerprint: '',
         group: null,
         kind: 'ft',
         image: 'https://example.com/logo.png',
@@ -106,6 +109,13 @@ describe('transformersMaker', () => {
         symbol: 'TEST',
         metadatas: {},
         isPrimaryToken: false,
+        status: 'valid',
+        application: 'general',
+        tag: '',
+        reference: '',
+        originalImage: '',
+        nature: 'secondary',
+        type: 'ft',
       })
     })
   })
@@ -150,95 +160,146 @@ describe('transformersMaker', () => {
 
       expect(result).toHaveLength(1)
       expect(result[0]).toEqual({
+        aggregator: 'minswap',
+        protocol: 'minswap-v2',
+        placedAt: 1234567890,
+        lastUpdate: 1234567890,
+        status: 'open',
+        tokenIn: 'lovelace',
+        tokenOut: 'test-token',
+        amountIn: 100,
+        actualAmountOut: 1000,
+        expectedAmountOut: 1000,
         txHash: 'txhash',
         outputIndex: 0,
-        fromToken: 'lovelace',
-        toToken: 'test-token',
-        fromAmount: '100',
-        toAmount: '1000',
-        paidAmount: '100',
-        receivedAmount: '1000',
-        batcherFee: '1',
-        attachedValues: [],
-        sender: 'addr1test',
-        beneficiary: 'addr1test',
-        deposit: '2',
-        status: 'open',
-        placedAt: 1234567890,
-        finalizedAt: null,
-        finalizedTxHash: null,
-        providerSpecifics: {
-          protocol: 'MinswapV2',
-          poolId: null,
-        },
-        aggregator: 'minswap',
+        updateTxHash: undefined,
+        customId: undefined,
       })
     })
   })
 
   describe('estimate', () => {
-    it('should transform estimate response correctly', () => {
+    it('should transform estimate request correctly', () => {
+      const mockRequest = {
+        amountIn: 10,
+        blockedProtocols: [],
+        slippage: 1,
+        tokenIn: '.' as const,
+        tokenOut:
+          'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441' as const,
+      }
+
+      const result = transformers.estimate.request(mockRequest)
+
+      expect(result).toEqual({
+        token_in: 'lovelace',
+        token_out:
+          'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae45655534441',
+        amount: '10',
+        slippage: 1,
+        exclude_protocols: [],
+        amount_in_decimal: true,
+      })
+    })
+
+    it('should transform estimate response correctly with real data', () => {
       const mockResponse = {
-        token_in: {
-          token_id: 'lovelace',
-          logo: null,
-          ticker: 'ADA',
-          is_verified: true,
-          price_by_ada: 1,
-          project_name: 'Cardano',
-          decimals: 6,
-        },
-        token_out: {
-          token_id: 'test-token',
-          logo: null,
-          ticker: 'TEST',
-          is_verified: true,
-          price_by_ada: 0.1,
-          project_name: 'Test Token',
-          decimals: 6,
-        },
-        amount_in: '100',
-        amount_out: '1000',
-        price_impact: 0.01,
-        minimum_received: '990',
-        fee: '1',
-        route: [
-          {
-            pool: {
-              pool_id: 'pool123',
-              fee: 0.003,
-              token_a: {
-                token_id: 'lovelace',
-                logo: null,
-                ticker: 'ADA',
-                is_verified: true,
-                price_by_ada: 1,
-                project_name: 'Cardano',
-                decimals: 6,
-              },
-              token_b: {
-                token_id: 'test-token',
-                logo: null,
-                ticker: 'TEST',
-                is_verified: true,
-                price_by_ada: 0.1,
-                project_name: 'Test Token',
-                decimals: 6,
-              },
+        token_in: 'lovelace',
+        token_out:
+          'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae45655534441',
+        amount_in: '10',
+        amount_out: '8.290409',
+        amount_in_decimal: true,
+        avg_price_impact: 0.3006573962454888,
+        min_amount_out: '8.208325',
+        aggregator_fee: '0',
+        aggregator_fee_percent: 0.1,
+        deposits: '2',
+        total_dex_fee: '0.7',
+        total_lp_fee: '0.03',
+        paths: [
+          [
+            {
+              amount_in: '10',
+              amount_out: '8.290409',
+              deposits: '2',
+              dex_fee: '0.7',
+              lp_fee: '0.03',
+              lp_token:
+                'f5808c2c990d86da54bfc97d89cee6efa20cd8461616359478d96b4cee5cfbc5b0dc10c873a0bcc69e49b9af21b899f59337a894874c6b596c2da136',
+              min_amount_out: '8.208325',
+              pool_id:
+                'f5808c2c990d86da54bfc97d89cee6efa20cd8461616359478d96b4c.ee5cfbc5b0dc10c873a0bcc69e49b9af21b899f59337a894874c6b596c2da136',
+              price_impact: 0.3006573962454888,
+              protocol: 'MinswapV2',
+              token_in: 'lovelace',
+              token_out:
+                'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae45655534441',
             },
-            amount_in: '100',
-            amount_out: '1000',
-          },
+          ],
         ],
-        aggregator: 'Minswap' as any,
+        route: [],
+        aggregator: 'Minswap' as const,
       }
 
       const result = transformers.estimate.response(mockResponse)
 
-      expect(result.splits).toEqual([])
-      expect(result.batcherFee).toBe(1)
-      expect(result.netPrice).toBe(10)
-      expect(result.priceImpact).toBe(0.01)
+      expect(result.splits).toHaveLength(1)
+      expect(result.splits[0]).toEqual({
+        amountIn: 10,
+        batcherFee: 0,
+        deposits: 2,
+        protocol: 'minswap-v2',
+        expectedOutput: 8.290409,
+        expectedOutputWithoutSlippage: 8.208325,
+        fee: 0.7,
+        initialPrice: 0.8290409000000001,
+        finalPrice: 0.8290409000000001,
+        poolFee: 0.03,
+        poolId:
+          'f5808c2c990d86da54bfc97d89cee6efa20cd8461616359478d96b4c.ee5cfbc5b0dc10c873a0bcc69e49b9af21b899f59337a894874c6b596c2da136',
+        priceDistortion: 0,
+        priceImpact: 0.3006573962454888,
+      })
+      expect(result.batcherFee).toBe(2)
+      expect(result.deposits).toBe(2)
+      expect(result.aggregatorFee).toBe(0)
+      expect(result.frontendFee).toBe(0)
+      expect(result.netPrice).toBeCloseTo(0.8290409)
+      expect(result.priceImpact).toBe(0.3006573962454888)
+      expect(result.totalFee).toBe(0.7)
+      expect(result.totalOutput).toBe(8.290409)
+      expect(result.totalOutputWithoutSlippage).toBe(8.208325)
+      expect(result.totalInput).toBe(10)
+    })
+  })
+
+  describe('create', () => {
+    it('should transform create request correctly', () => {
+      const mockRequest = {
+        amountIn: 10,
+        blockedProtocols: [],
+        slippage: 1,
+        tokenIn: '.' as const,
+        tokenOut:
+          'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441' as const,
+      }
+
+      const result = transformers.create.request(mockRequest)
+
+      expect(result).toEqual({
+        sender: 'addr1test',
+        min_amount_out: '0',
+        estimate: {
+          amount: '10',
+          token_in: 'lovelace',
+          token_out:
+            'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae45655534441',
+          slippage: 1,
+          exclude_protocols: [],
+        },
+        amount_in_decimal: true,
+      })
     })
   })
 })
