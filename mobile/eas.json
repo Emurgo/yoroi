@@ -7,7 +7,7 @@
   "build": {
     "base": {
       "env": {
-        "EXPO_PUBLIC_COMMIT": "093dec95a",
+        "EXPO_PUBLIC_COMMIT": "$EAS_BUILD_GIT_COMMIT_HASH",
         "RUST_ANDROID_GRADLE_PYTHON_COMMAND": "python3",
 
         "EXPO_PUBLIC_BUILD_VARIANT": "NIGHTLY",
@@ -63,7 +63,7 @@
     "production": {
       "extends": "base",
       "env": {
-        "EXPO_PUBLIC_COMMIT": "093dec95a",
+        "EXPO_PUBLIC_COMMIT": "$EAS_BUILD_GIT_COMMIT_HASH",
         "EXPO_PUBLIC_BUILD_VARIANT": "PROD",
         "EXPO_PUBLIC_SENTRY_DSN": "https://7f7c6cb60a6f429facd34f491dfc5133@o1138840.ingest.sentry.io/6783228",
         "EXPO_PUBLIC_FRONTEND_FEE_ADDRESS_MAINNET": "addr1q9ry6jfdgm0lcrtfpgwrgxg7qfahv80jlghhrthy6w8hmyjuw9ngccy937pm7yw0jjnxasm7hzxjrf8rzkqcj26788lqws5fke",
