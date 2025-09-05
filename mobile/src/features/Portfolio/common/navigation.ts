@@ -1,0 +1,18 @@
+import {Portfolio} from '@yoroi/types'
+
+import {useNavigation} from '@react-navigation/native'
+
+import {NftRouteNavigation} from '~/kernel/navigation/types'
+
+export const useNavigateTo = () => {
+  const navigation = useNavigation<NftRouteNavigation>()
+  const nftDetails = (id: Portfolio.Token.Id) =>
+    navigation.navigate('nft-details', {id})
+  const nftZoom = (id: Portfolio.Token.Id) =>
+    navigation.navigate('nft-image-zoom', {id})
+
+  return {
+    nftDetails,
+    nftZoom,
+  }
+}

@@ -1,0 +1,17 @@
+import {useMutationWithInvalidations} from '@yoroi/common'
+import {Notifications} from '@yoroi/types'
+
+import {useNotificationManager} from './NotificationProvider'
+
+export const useUpdateNotificationsConfig = () => {
+  const manager = useNotificationManager()
+
+  const mutationFn = async (newConfig: Partial<Notifications.Config>) => {
+    await manager.config.save(newConfig)
+  }
+
+  return useMutationWithInvalidations({
+    mutationFn,
+    invalidateQueries: [['notificationsConfig']],
+  })
+}

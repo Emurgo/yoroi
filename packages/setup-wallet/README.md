@@ -1,1 +1,0 @@
-# Transfer package for Yoroi

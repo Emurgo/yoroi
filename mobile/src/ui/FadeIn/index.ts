@@ -1,0 +1,1 @@
+export {FadeIn} from './FadeIn'

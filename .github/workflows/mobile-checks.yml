@@ -1,0 +1,45 @@
+name: mobile-checks
+
+on: 
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+    types: [opened, synchronize, reopened, ready_for_review]
+
+jobs:
+  check:
+    if: github.event.pull_request.draft != true
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22.12.0"
+          cache: 'npm'
+          cache-dependency-path: '**/package-lock.json'
+
+      - name: Install pkgs
+        run: npm ci
+        working-directory: mobile
+        shell: bash
+      - name: TypeScript check
+        run: npm run tsc
+        working-directory: mobile
+        shell: bash
+      - name: Lint
+        run: npm run lint
+        working-directory: mobile
+        shell: bash
+      - name: Test
+        run: npm run test
+        working-directory: mobile
+        shell: bash
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          files: |
+            mobile/coverage/lcov.info
+          fail_ci_if_error: false 
+          verbose: true
+          token: ${{ secrets.CODECOV_TOKEN }}

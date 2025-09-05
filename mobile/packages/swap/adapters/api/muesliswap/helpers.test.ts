@@ -1,0 +1,49 @@
+import {getAllowedDexes} from './helpers'
+import {Dex} from './types'
+
+const allDexes: Array<Dex> = [
+  Dex.Muesliswap,
+  Dex.Muesliswap_v1,
+  Dex.Muesliswap_v2,
+  Dex.Muesliswap_clp,
+  Dex.Muesliswap_orderbook,
+  Dex.Minswap_v1,
+  Dex.Minswap_v2,
+  Dex.Minswap_stable,
+  Dex.Spectrum_v1,
+  Dex.Teddy_v1,
+  Dex.Wingriders_v1,
+  Dex.Wingriders_v2,
+  Dex.Wingriders_stable,
+  Dex.Vyfi_v1,
+  Dex.Sundaeswap_v1,
+  Dex.Sundaeswap_v3,
+  Dex.Cswap_v1,
+  Dex.Splash_v4,
+  Dex.Splash_v5,
+  Dex.Splash_v6,
+  Dex.Splash_degen_quad,
+]
+
+describe('getAllowedDexes', () => {
+  it('should return all DEXes except blocked ones/unsupported', () => {
+    const result = getAllowedDexes({blocked: [Dex.Minswap_stable]})
+    const expected = allDexes.filter((dex) => dex !== Dex.Minswap_stable)
+    expect(result).toEqual(expected)
+  })
+
+  it('should return all DEXes if none are blocked', () => {
+    const result = getAllowedDexes({blocked: []})
+    expect(result).toEqual(allDexes)
+  })
+
+  it('should return all DEXes if no arg is passed', () => {
+    const result = getAllowedDexes()
+    expect(result).toEqual(allDexes)
+  })
+
+  it('should return an empty array if all DEXes are blocked', () => {
+    const result = getAllowedDexes({blocked: allDexes})
+    expect(result).toEqual([])
+  })
+})

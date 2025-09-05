@@ -1,0 +1,21 @@
+{
+  "bracketSpacing": false,
+  "quoteProps": "consistent",
+  "semi": false,
+  "singleQuote": true,
+  "tabWidth": 2,
+  "trailingComma": "all",
+  "useTabs": false,
+
+  "plugins": ["@trivago/prettier-plugin-sort-imports"],
+  "pluginSearchDirs": ["."],
+
+  "importOrder": [
+    "^@yoroi/(.*)$",
+    "<THIRD_PARTY_MODULES>",
+    "^~(.*)$",
+    "^\\.{1,2}/(.*)$"
+  ],
+  "importOrderSeparation": true,
+  "importOrderSortSpecifiers": true
+}

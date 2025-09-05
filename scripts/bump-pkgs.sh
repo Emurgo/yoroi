@@ -18,7 +18,7 @@ for pkg in packages/*; do
         echo "Bumping version for $pkg..."
         (
             cd "$pkg"
-            yarn version "$1"
+            npm version "$1"
         )
     fi
 done

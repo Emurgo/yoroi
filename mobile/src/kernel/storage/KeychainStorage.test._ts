@@ -1,0 +1,78 @@
+import {canAuthWithOS} from '../../features/Auth/common/hooks'
+
+describe('isAuthOsSupported', () => {
+  describe('android', () => {
+    describe('with fingerprint', () => {
+      it('can auth', async () => {
+        const osAuth = await canAuthWithOS({
+          platform: 'android',
+        })
+        expect(osAuth).toBe(true)
+      })
+    })
+    describe('with iris', () => {
+      it('can auth', async () => {
+        const osAuth = await canAuthWithOS({
+          platform: 'android',
+        })
+        expect(osAuth).toBe(true)
+      })
+    })
+    describe('with face', () => {
+      it('can auth', async () => {
+        const osAuth = await canAuthWithOS({
+          platform: 'android',
+        })
+        expect(osAuth).toBe(true)
+      })
+    })
+    describe('with no os auth', () => {
+      it('cant auth', async () => {
+        const osAuth = await canAuthWithOS({
+          platform: 'android',
+        })
+        expect(osAuth).toBe(false)
+      })
+    })
+  })
+
+  describe('ios', () => {
+    describe('with faceid', () => {
+      it('can auth', async () => {
+        const osAuth = await canAuthWithOS({
+          platform: 'ios',
+          canImplyAuthentication: true,
+        })
+        expect(osAuth).toBe(true)
+      })
+    })
+
+    describe('with touchid', () => {
+      it('can auth', async () => {
+        const osAuth = await canAuthWithOS({
+          platform: 'ios',
+          canImplyAuthentication: true,
+        })
+        expect(osAuth).toBe(true)
+      })
+    })
+
+    describe('cant imply auth', () => {
+      it('cant auth with faceid', async () => {
+        const osAuth = await canAuthWithOS({
+          platform: 'ios',
+          canImplyAuthentication: false,
+        })
+        expect(osAuth).toBe(false)
+      })
+
+      it('cant auth with touchid', async () => {
+        const osAuth = await canAuthWithOS({
+          platform: 'ios',
+          canImplyAuthentication: false,
+        })
+        expect(osAuth).toBe(false)
+      })
+    })
+  })
+})

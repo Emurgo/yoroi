@@ -1,0 +1,43 @@
+import {atoms as a} from '@yoroi/theme'
+
+import {FlashList} from '@shopify/flash-list'
+import * as React from 'react'
+import {View} from 'react-native'
+
+import {useAddressMode} from '~/features/WalletManager/hooks/useAddressMode'
+import {features} from '~/kernel/features'
+import {Space} from '~/ui/Space/Space'
+
+import {UtxoAddressGroup} from './UtxoAddressGroup'
+import {WarningSingleAddress} from './WarningSingleAddress'
+import {useUtxoList} from './useUtxoList'
+
+export const UtxoList = () => {
+  const {utxoList} = useUtxoList()
+  const {isSingle} = useAddressMode()
+
+  if (utxoList === undefined || !Array.isArray(utxoList)) return null
+
+  return (
+    <View style={[a.flex, a.flex_1, a.p_lg]}>
+      <FlashList
+        data={utxoList}
+        ListHeaderComponent={
+          features.utxoConsolidation && utxoList.length > 1 && isSingle ? (
+            <>
+              <WarningSingleAddress />
+
+              <Space.Height.lg />
+            </>
+          ) : null
+        }
+        renderItem={({item}) => <UtxoAddressGroup item={item} />}
+        ItemSeparatorComponent={() => <Space.Height.lg />}
+        keyExtractor={(item) => item.path}
+        nestedScrollEnabled={true}
+        testID="utxoList"
+        estimatedItemSize={200}
+      />
+    </View>
+  )
+}

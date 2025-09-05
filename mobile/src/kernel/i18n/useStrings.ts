@@ -1,0 +1,1879 @@
+import {ThemeName} from '@yoroi/theme'
+import {Portfolio} from '@yoroi/types'
+
+import {freeze} from 'immer'
+import type {ReactNode} from 'react'
+import * as React from 'react'
+import {useIntl} from 'react-intl'
+
+import {
+  actionMessages,
+  authMessages,
+  claimMessages,
+  confirmationMessages,
+  currencyNames,
+  dashboardMessages,
+  discoverMessages,
+  errorMessages,
+  exchangeMessages,
+  globalMessages,
+  hardwareWalletMessages,
+  initializationMessages,
+  ledgerMessages,
+  linksMessages,
+  manageCollateralMessages,
+  manageNotificationsMessages,
+  menuMessages,
+  notificationsMessages,
+  portfolioMessages,
+  receiveMessages,
+  registerCatalystMessages,
+  scanMessages,
+  sendMessages,
+  settingsMessages,
+  setupWalletMessages,
+  stakingMessages,
+  swapMessages,
+  themeNames,
+  transactionsMessages,
+  txLabels,
+  txReviewMessages,
+  uiMessages,
+  walletManagerMessages,
+} from './messages'
+
+export const useStrings = () => {
+  const intl = useIntl()
+
+  return React.useMemo(() => {
+    const f = intl.formatMessage
+
+    return freeze({
+      // Auth strings
+      auth: {
+        unknownError: f(authMessages.unknownError),
+        tooManyAttempts: f(authMessages.tooManyAttempts),
+        invalidPin: f(authMessages.invalidPin),
+        authorize: f(authMessages.authorize),
+        usePasscode: f(authMessages.usePasscode),
+        titleLoginWithPin: f(authMessages.titleLoginWithPin),
+        titleChangePin: f(authMessages.titleChangePin),
+        subtitleChangePin: f(authMessages.subtitleChangePin),
+        pinInputTitle: f(authMessages.pinInputTitle),
+        pinInputSubtitle: f(authMessages.pinInputSubtitle),
+        pinInputConfirmationTitle: f(authMessages.pinInputConfirmationTitle),
+        pinInputConfirmationSubTitle: f(
+          authMessages.pinInputConfirmationSubTitle,
+        ),
+      },
+
+      // Exchange strings
+      exchange: {
+        amountTitle: f(exchangeMessages.amountTitle),
+        and: f(exchangeMessages.and),
+        banxa: f(exchangeMessages.banxa),
+        buyCrypto: f(exchangeMessages.buyCrypto),
+        buySellCrypto: f(exchangeMessages.buySellCrypto),
+        congrats: f(exchangeMessages.congrats),
+        contact: f(exchangeMessages.contact),
+        contentDisclaimer: f(exchangeMessages.contentDisclaimer),
+        cryptoAmountYouGet: f(exchangeMessages.cryptoAmountYouGet),
+        currentBalance: f(exchangeMessages.currentBalance),
+        customerSupport: f(exchangeMessages.customerSupport),
+        descriptionBuySellADATransaction: f(
+          exchangeMessages.descriptionBuySellADATransaction,
+        ),
+        disclaimer: f(exchangeMessages.disclaimer),
+        contentDisclaimerPreprod: f(exchangeMessages.contentDisclaimerPreprod),
+        fiatAmountYouGet: f(exchangeMessages.fiatAmountYouGet),
+        goToTransactions: f(exchangeMessages.goToTransactions),
+        notEnoughBalance: f(exchangeMessages.notEnoughBalance),
+        minAdaRequired: f(exchangeMessages.minAdaRequired),
+        proceed: f(exchangeMessages.proceed),
+        provider: f(exchangeMessages.provider),
+        providerFee: f(exchangeMessages.providerFee),
+        sellCrypto: f(exchangeMessages.sellCrypto),
+        significant: f(exchangeMessages.significant),
+        sellCurrencyWarning: f(exchangeMessages.sellCurrencyWarning),
+        title: f(exchangeMessages.title),
+        getFirstCrypto: f(exchangeMessages.getFirstCrypto),
+        ourTrustedPartners: f(exchangeMessages.ourTrustedPartners),
+        needMoreCrypto: f(exchangeMessages.needMoreCrypto),
+        fee: f(exchangeMessages.fee),
+        preprodFaucetBannerTitle: f(exchangeMessages.preprodFaucetBannerTitle),
+        preprodFaucetBannerText: f(exchangeMessages.preprodFaucetBannerText),
+        preprodFaucetBannerButtonText: f(
+          exchangeMessages.preprodFaucetBannerButtonText,
+        ),
+        createOrderPreprodFaucetButtonText: f(
+          exchangeMessages.createOrderPreprodFaucetButtonText,
+        ),
+        createOrderPreprodNoticeTitle: f(
+          exchangeMessages.createOrderPreprodNoticeTitle,
+        ),
+        createOrderPreprodNoticeText: f(
+          exchangeMessages.createOrderPreprodNoticeText,
+        ),
+        playground: f(exchangeMessages.playground),
+        loadingLink: f(exchangeMessages.loadingLink),
+        linkError: f(exchangeMessages.linkError),
+      },
+
+      // Scan strings
+      scan: {
+        scanTitle: f(scanMessages.scanTitle),
+        cameraPermissionDeniedTitle: f(
+          scanMessages.cameraPermissionDeniedTitle,
+        ),
+        cameraPermissionDeniedHelp: f(scanMessages.cameraPermissionDeniedHelp),
+        requestingCameraPermission: f(scanMessages.requestingCameraPermission),
+        needCameraPermission: f(scanMessages.needCameraPermission),
+        grantPermission: f(scanMessages.grantPermission),
+        qrCodeScannedSuccessfully: f(scanMessages.qrCodeScannedSuccessfully),
+        scanAgain: f(scanMessages.scanAgain),
+        errorUnknownTitle: f(scanMessages.errorUnknownTitle),
+        errorUnknownHelp: f(scanMessages.errorUnknownHelp),
+        errorUnknownContentTitle: f(scanMessages.errorUnknownContentTitle),
+        errorUnknownContentHelp: f(scanMessages.errorUnknownContentHelp),
+        linksErrorExtraParamsDeniedTitle: f(
+          scanMessages.linksErrorExtraParamsDeniedTitle,
+        ),
+        linksErrorExtraParamsDeniedHelp: f(
+          scanMessages.linksErrorExtraParamsDeniedHelp,
+        ),
+        linksErrorForbiddenParamsProvidedTitle: f(
+          scanMessages.linksErrorForbiddenParamsProvidedTitle,
+        ),
+        linksErrorForbiddenParamsProvidedHelp: f(
+          scanMessages.linksErrorForbiddenParamsProvidedHelp,
+        ),
+        linksErrorRequiredParamsMissingTitle: f(
+          scanMessages.linksErrorRequiredParamsMissingTitle,
+        ),
+        linksErrorRequiredParamsMissingHelp: f(
+          scanMessages.linksErrorRequiredParamsMissingHelp,
+        ),
+        linksErrorParamsValidationFailedTitle: f(
+          scanMessages.linksErrorParamsValidationFailedTitle,
+        ),
+        linksErrorParamsValidationFailedHelp: f(
+          scanMessages.linksErrorParamsValidationFailedHelp,
+        ),
+        linksErrorUnsupportedAuthorityTitle: f(
+          scanMessages.linksErrorUnsupportedAuthorityTitle,
+        ),
+        linksErrorUnsupportedAuthorityHelp: f(
+          scanMessages.linksErrorUnsupportedAuthorityHelp,
+        ),
+        linksErrorUnsupportedVersionTitle: f(
+          scanMessages.linksErrorUnsupportedVersionTitle,
+        ),
+        linksErrorUnsupportedVersionHelp: f(
+          scanMessages.linksErrorUnsupportedVersionHelp,
+        ),
+        linksErrorSchemeNotImplementedTitle: f(
+          scanMessages.linksErrorSchemeNotImplementedTitle,
+        ),
+        linksErrorSchemeNotImplementedHelp: f(
+          scanMessages.linksErrorSchemeNotImplementedHelp,
+        ),
+        continue: f(scanMessages.continue),
+        openAppSettings: f(scanMessages.openAppSettings),
+      },
+
+      // Wallet Manager strings
+      walletManager: {
+        addWalletButton: f(walletManagerMessages.addWalletButton),
+        supportTicketLink: f(walletManagerMessages.supportTicketLink),
+      },
+
+      // Links strings
+      links: {
+        trustedPaymentRequestedTitle: f(
+          linksMessages.trustedPaymentRequestedTitle,
+        ),
+        trustedPaymentRequestedDescription: f(
+          linksMessages.trustedPaymentRequestedDescription,
+        ),
+        untrustedPaymentRequestedTitle: f(
+          linksMessages.untrustedPaymentRequestedTitle,
+        ),
+        untrustedPaymentRequestedDescription: f(
+          linksMessages.untrustedPaymentRequestedDescription,
+        ),
+        trustedBrowserLaunchDappUrlTitle: f(
+          linksMessages.trustedBrowserLaunchDappUrlTitle,
+        ),
+        trustedBrowserLaunchDappUrlDescription: f(
+          linksMessages.trustedBrowserLaunchDappUrlDescription,
+        ),
+        untrustedBrowserLaunchDappUrlTitle: f(
+          linksMessages.untrustedBrowserLaunchDappUrlTitle,
+        ),
+        untrustedBrowserLaunchDappUrlDescription: f(
+          linksMessages.untrustedBrowserLaunchDappUrlDescription,
+        ),
+        askToOpenAWalletTitle: f(linksMessages.askToOpenAWalletTitle),
+        askToOpenAWalletDescription: f(
+          linksMessages.askToOpenAWalletDescription,
+        ),
+        askToRedirectTitle: f(linksMessages.askToRedirectTitle),
+        askToRedirectDescription: f(linksMessages.askToRedirectDescription),
+      },
+
+      // Notifications strings
+      notifications: {
+        tapToView: f(notificationsMessages.tapToView),
+        stakingRewardsReceived: f(notificationsMessages.stakingRewardsReceived),
+        assetsReceived: f(notificationsMessages.assetsReceived),
+        intraWalletTransactionSent: f(
+          notificationsMessages.intraWalletTransactionSent,
+        ),
+        multipleAssetsReceived: f(notificationsMessages.multipleAssetsReceived),
+        received: f(notificationsMessages.received),
+        multipleAssetsSent: f(notificationsMessages.multipleAssetsSent),
+        sent: f(notificationsMessages.sent),
+        noNotifications: f(notificationsMessages.noNotifications),
+        markAllAsRead: f(notificationsMessages.markAllAsRead),
+        getImportantAlerts: f(notificationsMessages.getImportantAlerts),
+        turnOnAlerts: f(notificationsMessages.turnOnAlerts),
+        skip: f(notificationsMessages.skip),
+        turnOnNotifications: f(notificationsMessages.turnOnNotifications),
+        notificationCenter: f(notificationsMessages.notificationCenter),
+      },
+
+      // Claim strings
+      claim: {
+        askConfirmationTitle: f(claimMessages.askConfirmationTitle),
+        showSuccessTitle: f(claimMessages.showSuccessTitle),
+        acceptedTitle: f(claimMessages.acceptedTitle),
+        acceptedMessage: f(claimMessages.acceptedMessage),
+        processingTitle: f(claimMessages.processingTitle),
+        processingMessage: f(claimMessages.processingMessage),
+        doneTitle: f(claimMessages.doneTitle),
+        doneMessage: f(claimMessages.doneMessage),
+        addressSharingWarning: f(claimMessages.addressSharingWarning),
+        domain: f(claimMessages.domain),
+        code: f(claimMessages.code),
+        apiErrorTitle: f(claimMessages.apiErrorTitle),
+        apiErrorInvalidRequest: f(claimMessages.apiErrorInvalidRequest),
+        apiErrorNotFound: f(claimMessages.apiErrorNotFound),
+        apiErrorAlreadyClaimed: f(claimMessages.apiErrorAlreadyClaimed),
+        apiErrorExpired: f(claimMessages.apiErrorExpired),
+        apiErrorTooEarly: f(claimMessages.apiErrorTooEarly),
+        apiErrorRateLimited: f(claimMessages.apiErrorRateLimited),
+        continue: f(claimMessages.continue),
+      },
+
+      // Portfolio strings
+      portfolio: {
+        portfolio: f(portfolioMessages.portfolio),
+        totalWalletValue: f(portfolioMessages.totalWalletValue),
+        buyADATitle: f(portfolioMessages.buyADATitle),
+        buyADADescription: f(portfolioMessages.buyADADescription),
+        buyCrypto: f(portfolioMessages.buyCrypto),
+        tradeTokens: f(portfolioMessages.tradeTokens),
+        swap: f(portfolioMessages.swap),
+        tokenList: f(portfolioMessages.tokenList),
+        walletToken: f(portfolioMessages.walletToken),
+        dappsToken: f(portfolioMessages.dappsToken),
+        searchTokens: f(portfolioMessages.searchTokens),
+        noTokensFound: f(portfolioMessages.noTokensFound),
+        totalDAppValue: f(portfolioMessages.totalDAppValue),
+        liquidityPool: f(portfolioMessages.liquidityPool),
+        openOrders: f(portfolioMessages.openOrders),
+        lendAndBorrow: f(portfolioMessages.lendAndBorrow),
+        tokenDetail: f(portfolioMessages.tokenDetail),
+        availableSoon: f(portfolioMessages.availableSoon),
+        noDataFound: f(portfolioMessages.noDataFound),
+        value: f(portfolioMessages.value),
+        dex: f(portfolioMessages.dex),
+        lp: f(portfolioMessages.lp),
+        total: f(portfolioMessages.total),
+        assetPrice: f(portfolioMessages.assetPrice),
+        assetAmount: f(portfolioMessages.assetAmount),
+        txId: f(portfolioMessages.txId),
+        performance: f(portfolioMessages.performance),
+        overview: f(portfolioMessages.overview),
+        transactions: f(portfolioMessages.transactions),
+        _1_week: f(portfolioMessages._1_week),
+        _24_hours: f(portfolioMessages._24_hours),
+        _1_month: f(portfolioMessages._1_month),
+        _6_months: f(portfolioMessages._6_months),
+        _1_year: f(portfolioMessages._1_year),
+        all_time: f(portfolioMessages.all_time),
+        netInvested: f(portfolioMessages.netInvested),
+        bought: f(portfolioMessages.bought),
+        received: f(portfolioMessages.received),
+        sent: f(portfolioMessages.sent),
+        send: f(portfolioMessages.send),
+        sold: f(portfolioMessages.sold),
+        failed: f(portfolioMessages.failed),
+        stakeDelegated: f(portfolioMessages.stakeDelegated),
+        stakingReward: f(portfolioMessages.stakingReward),
+        unknown: f(portfolioMessages.unknown),
+        assets: f(portfolioMessages.assets),
+        marketData: f(portfolioMessages.marketData),
+        tokenPriceChange: f(portfolioMessages.tokenPriceChange),
+        tokenPriceChangeTooltip: (timeInterval: string) =>
+          f(portfolioMessages.tokenPriceChangeTooltip, {timeInterval}),
+        tokenPrice: f(portfolioMessages.tokenPrice),
+        marketCap: f(portfolioMessages.marketCap),
+        _24hVolume: f(portfolioMessages._24hVolume),
+        rank: f(portfolioMessages.rank),
+        circulating: f(portfolioMessages.circulating),
+        totalSupply: f(portfolioMessages.totalSupply),
+        maxSupply: f(portfolioMessages.maxSupply),
+        allTimeHigh: f(portfolioMessages.allTimeHigh),
+        allTimeLow: f(portfolioMessages.allTimeLow),
+        info: f(portfolioMessages.info),
+        website: f(portfolioMessages.website),
+        policyID: f(portfolioMessages.policyID),
+        fingerprint: f(portfolioMessages.fingerprint),
+        news: f(portfolioMessages.news),
+        detailsOn: f(portfolioMessages.detailsOn),
+        totalPortfolioValue: f(portfolioMessages.totalPortfolioValue),
+        totalPortfolioValueTooltip: f(
+          portfolioMessages.totalPortfolioValueTooltip,
+        ),
+        totalWalletValueTooltip: f(portfolioMessages.totalWalletValueTooltip),
+        totalDAppsValueTooltip: f(portfolioMessages.totalDAppsValueTooltip),
+        portfolioSwapTokensTitle: f(portfolioMessages.portfolioSwapTokensTitle),
+        portfolioSwapTokensDescription: f(
+          portfolioMessages.portfolioSwapTokensDescription,
+        ),
+        startSwapping: f(portfolioMessages.startSwapping),
+        titleMediaDetails: f(portfolioMessages.titleMediaDetails),
+        title: f(portfolioMessages.title),
+        search: f(portfolioMessages.search),
+        tokens: (countTokens: number) =>
+          f(portfolioMessages.tokens, {countTokens}),
+        nfts: (countNfts: number) => f(portfolioMessages.nfts, {countNfts}),
+        tokensAvailable: (qty: number) => f(globalMessages.tokens, {qty}),
+        metadata: f(portfolioMessages.metadata),
+        nftCount: f(portfolioMessages.nftCount),
+        noNftsFound: f(portfolioMessages.noNftsFound),
+        noNftsInWallet: f(portfolioMessages.noNftsInWallet),
+        countOpenOrders: (qty: number) =>
+          f(portfolioMessages.countOpenOrders, {qty}),
+      },
+
+      // UI strings
+      ui: {
+        yoroiLogo: f(uiMessages.yoroiLogo),
+        yoroiLogoSubtitle: f(uiMessages.yoroiLogoSubtitle),
+        tryAgain: f(uiMessages.tryAgain),
+        addToken: f(uiMessages.addToken),
+        pairedBalanceError: (currency: string) =>
+          f(uiMessages.pairedBalanceError, {currency}),
+        warning: f(uiMessages.warning),
+        contributors: f(uiMessages.contributors),
+        header: f(uiMessages.header),
+        description: f(uiMessages.description),
+        anonymous: f(uiMessages.anonymous),
+        analyticsHeader: f(uiMessages.analyticsHeader),
+        optout: f(uiMessages.optout),
+        private: (options: {b: (content: ReactNode[]) => ReactNode}) =>
+          f(uiMessages.private, options),
+        noip: (options: {b: (content: ReactNode[]) => ReactNode}) =>
+          f(uiMessages.noip, options),
+        nosell: (options: {b: (content: ReactNode[]) => ReactNode}) =>
+          f(uiMessages.nosell, options),
+        more: f(uiMessages.more),
+        skip: f(uiMessages.skip),
+        accept: f(uiMessages.accept),
+        toggle: f(uiMessages.toggle),
+      },
+
+      // RegisterCatalyst strings
+      registerCatalyst: {
+        title: f(registerCatalystMessages.title),
+        subTitle: f(registerCatalystMessages.subTitle),
+        stakingKeyNotRegistered: f(
+          registerCatalystMessages.stakingKeyNotRegistered,
+        ),
+        tip: f(registerCatalystMessages.tip),
+        registrationStart: f(registerCatalystMessages.registrationStart),
+        snapshotStart: f(registerCatalystMessages.snapshotStart),
+        votingStart: f(registerCatalystMessages.votingStart),
+        votingEnd: f(registerCatalystMessages.votingEnd),
+        votingResults: f(registerCatalystMessages.votingResults),
+        step2Title: f(registerCatalystMessages.step2Title),
+        step2Description: f(registerCatalystMessages.step2Description),
+        checkbox: f(registerCatalystMessages.checkbox),
+        step3Title: f(registerCatalystMessages.step3Title),
+        step3Description: f(registerCatalystMessages.step3Description),
+        confirmationTitle: f(registerCatalystMessages.confirmationTitle),
+        passwordSignDescription: f(
+          registerCatalystMessages.passwordSignDescription,
+        ),
+        authOsInstructions: f(registerCatalystMessages.authOsInstructions),
+        confirm: f(registerCatalystMessages.confirm),
+        continue: f(registerCatalystMessages.continue),
+        step4Description: f(registerCatalystMessages.step4Description),
+        step4Title: f(registerCatalystMessages.step4Title),
+        step4QrTitle: f(registerCatalystMessages.step4QrTitle),
+        step4QrShareLabel: f(registerCatalystMessages.step4QrShareLabel),
+        step4QrCopiedText: f(registerCatalystMessages.step4QrCopiedText),
+        step4QrCheckbox: f(registerCatalystMessages.step4QrCheckbox),
+      },
+
+      // HW strings
+      hw: {
+        error: f(globalMessages.error),
+        title: f(hardwareWalletMessages.title),
+        usbExplanation: f(hardwareWalletMessages.usbExplanation),
+        usbButton: f(hardwareWalletMessages.usbButton),
+        usbButtonNotSupported: f(hardwareWalletMessages.usbButtonNotSupported),
+        usbButtonDisabled: f(hardwareWalletMessages.usbButtonDisabled),
+        bluetoothExplanation: f(hardwareWalletMessages.bluetoothExplanation),
+        bluetoothButton: f(hardwareWalletMessages.bluetoothButton),
+        bluetoothError: f(hardwareWalletMessages.bluetoothError),
+        connectUsb: f(ledgerMessages.connectUsb),
+        keepUsbConnected: f(ledgerMessages.keepUsbConnected),
+        enableLocation: f(ledgerMessages.enableLocation),
+        enableTransport: f(ledgerMessages.enableTransport),
+        enterPin: f(ledgerMessages.enterPin),
+        openApp: f(ledgerMessages.openApp),
+        beforeConfirm: f(hardwareWalletMessages.beforeConfirm),
+      },
+
+      // Menu strings
+      menu: {
+        attention: f(globalMessages.attention),
+        back: f(confirmationMessages.commonButtons.backButton),
+        catalystVoting: f(menuMessages.catalystVoting),
+        settings: f(menuMessages.settings),
+        stakingCenter: f(menuMessages.stakingCenter),
+        supportTitle: f(menuMessages.supportTitle),
+        supportLink: f(menuMessages.supportLink),
+        knowledgeBase: f(menuMessages.knowledgeBase),
+        menu: f(menuMessages.menu),
+        releases: f(menuMessages.releases),
+        governanceCentre: f(menuMessages.governanceCentre),
+      },
+
+      // Dashboard strings
+      dashboard: {
+        title: f(dashboardMessages.title),
+        warning: f(dashboardMessages.warning),
+        goToWebsiteButtonLabel: f(dashboardMessages.goToWebsiteButtonLabel),
+        copied: f(dashboardMessages.copied),
+        unknownPool: f(dashboardMessages.unknownPool),
+        undelegate: f(dashboardMessages.undelegate),
+        failedTxTitle: f(dashboardMessages.failedTxTitle),
+        failedTxText: f(dashboardMessages.failedTxText),
+        failedTxButton: f(dashboardMessages.failedTxButton),
+        stakingCenterTitle: f(dashboardMessages.stakingCenterTitle),
+        firstLine: f(dashboardMessages.firstLine),
+        secondLine: f(dashboardMessages.secondLine),
+        availableFunds: f(globalMessages.availableFunds),
+        rewardsLabel: f(dashboardMessages.rewardsLabel),
+        delegatedLabel: f(dashboardMessages.delegatedLabel),
+        withdrawButtonTitle: f(dashboardMessages.withdrawButtonTitle),
+        stakingCenterButton: f(dashboardMessages.stakingCenterButton),
+        epochProgressTitle: f(dashboardMessages.epochProgressTitle),
+        endsInLabel: f(dashboardMessages.endsInLabel),
+      },
+
+      // Settings strings
+      settings: {
+        changeNetwork: {
+          networkNoticeTitle: f(
+            settingsMessages.changeNetworkNetworkNoticeTitle,
+          ),
+          networkNoticeMessage: f(
+            settingsMessages.changeNetworkNetworkNoticeMessage,
+          ),
+          networkNoticeListTitle: f(
+            settingsMessages.changeNetworkNetworkNoticeListTitle,
+          ),
+          networkNoticeList: f(settingsMessages.changeNetworkNetworkNoticeList),
+          networkNoticeButton: f(
+            settingsMessages.changeNetworkNetworkNoticeButton,
+          ),
+          preparingNetwork: f(settingsMessages.changeNetworkPreparingNetwork),
+          networkTagModalTitle: f(
+            settingsMessages.changeNetworkNetworkTagModalTitle,
+          ),
+          networkTagModalText: f(
+            settingsMessages.changeNetworkNetworkTagModalText,
+          ),
+          cancel: f(globalMessages.cancel),
+          switch: f(globalMessages.switch),
+        },
+        appSettingsTitle: f(settingsMessages.appSettingsTitle),
+        aboutTitle: f(settingsMessages.aboutTitle),
+        systemLogTitle: f(settingsMessages.systemLogTitle),
+        settingsTitle: f(settingsMessages.settingsTitle),
+        changeWalletNameTitle: f(settingsMessages.changeWalletNameTitle),
+        termsOfServiceTitle: f(settingsMessages.termsOfServiceTitle),
+        privacyPolicyTitle: f(settingsMessages.privacyPolicyTitle),
+        removeWalletTitle: f(settingsMessages.removeWalletTitle),
+        languageTitle: f(settingsMessages.languageTitle),
+        currency: f(globalMessages.currency),
+        themeTitle: f(settingsMessages.themeTitle),
+        networkTitle: f(settingsMessages.networkTitle),
+        enableEasyConfirmationTitle: f(
+          settingsMessages.enableEasyConfirmationTitle,
+        ),
+        disableEasyConfirmationTitle: f(
+          settingsMessages.disableEasyConfirmationTitle,
+        ),
+        changePasswordTitle: f(settingsMessages.changePasswordTitle),
+        changeCustomPinTitle: f(settingsMessages.changeCustomPinTitle),
+        collateral: f(settingsMessages.collateral),
+        customPinTitle: f(settingsMessages.customPinTitle),
+        walletTabTitle: f(settingsMessages.walletTabTitle),
+        appTabTitle: f(settingsMessages.appTabTitle),
+        notifications: f(settingsMessages.notifications),
+        about: {
+          currentVersion: f(globalMessages.currentVersion),
+          commit: f(globalMessages.commit),
+          network: f(globalMessages.network),
+          walletType: f(settingsMessages.aboutWalletType),
+          byronWallet: f(settingsMessages.aboutByronWallet),
+          shelleyWallet: f(settingsMessages.aboutShelleyWallet),
+          unknownWalletType: f(settingsMessages.aboutUnknownWalletType),
+          fcmToken: f(settingsMessages.aboutFcmToken),
+        },
+        enableLoginWithOs: {
+          error: f(globalMessages.error),
+          heading: f(settingsMessages.enableLoginWithOsHeading),
+          subHeading1: f(settingsMessages.enableLoginWithOsSubHeading1),
+          subHeading2: f(settingsMessages.enableLoginWithOsSubHeading2),
+          notNowButton: f(settingsMessages.enableLoginWithOsNotNowButton),
+          linkButton: f(settingsMessages.enableLoginWithOsLinkButton),
+        },
+        easyConfirmation: {
+          disableHeading: f(settingsMessages.easyConfirmationDisableHeading),
+          disableButton: f(settingsMessages.easyConfirmationDisableButton),
+          enableHeading: f(settingsMessages.easyConfirmationEnableHeading),
+          enableWarning: f(settingsMessages.easyConfirmationEnableWarning),
+          enableRootPassword: f(
+            settingsMessages.easyConfirmationEnableRootPassword,
+          ),
+          enableButton: f(settingsMessages.easyConfirmationEnableButton),
+        },
+        theme: {
+          translateThemeName: (theme: ThemeName) => f(themeNames[theme]),
+        },
+        currencySettings: {
+          translatedName: (symbol: Portfolio.Currency.Symbol) =>
+            f(currencyNames[symbol]),
+        },
+        removeWallet: {
+          descriptionParagraph1: f(
+            settingsMessages.removeWalletDescriptionParagraph1,
+          ),
+          descriptionParagraph2: f(
+            settingsMessages.removeWalletDescriptionParagraph2,
+          ),
+          walletName: f(settingsMessages.removeWalletWalletName),
+          walletNameInput: f(settingsMessages.removeWalletWalletNameInput),
+          walletNameMismatchError: f(
+            settingsMessages.removeWalletWalletNameMismatchError,
+          ),
+          remove: f(settingsMessages.removeWalletRemove),
+          hasWrittenDownMnemonic: f(
+            settingsMessages.removeWalletHasWrittenDownMnemonic,
+          ),
+        },
+        renameWallet: {
+          changeButton: f(settingsMessages.renameWalletChangeButton),
+          walletNameInputLabel: f(
+            settingsMessages.renameWalletWalletNameInputLabel,
+          ),
+          tooLong: f(globalMessages.walletNameErrorTooLong),
+          nameAlreadyTaken: f(globalMessages.walletNameErrorNameAlreadyTaken),
+          mustBeFilled: f(globalMessages.walletNameErrorMustBeFilled),
+        },
+        changePassword: {
+          oldPasswordInputLabel: f(
+            settingsMessages.changePasswordOldPasswordInputLabel,
+          ),
+          newPasswordInputLabel: f(
+            settingsMessages.changePasswordNewPasswordInputLabel,
+          ),
+          passwordStrengthRequirement: f(
+            settingsMessages.changePasswordPasswordStrengthRequirement,
+            {
+              requiredPasswordLength: 10,
+            },
+          ),
+          repeatPasswordInputLabel: f(
+            settingsMessages.changePasswordRepeatPasswordInputLabel,
+          ),
+          repeatPasswordInputNotMatchError: f(
+            settingsMessages.changePasswordRepeatPasswordInputNotMatchError,
+          ),
+          continueButton: f(settingsMessages.changePasswordContinueButton),
+          incorrectPassword: f(errorMessages.incorrectPassword.title),
+        },
+        toggleAnalytics: {
+          toggleAnalyticsSettingsTitle: f(
+            settingsMessages.toggleAnalyticsSettingsTitle,
+          ),
+        },
+        walletSettings: {
+          general: f(settingsMessages.walletSettingsGeneral),
+          actions: f(settingsMessages.walletSettingsActions),
+          switchWallet: f(settingsMessages.walletSettingsSwitchWallet),
+          logout: f(settingsMessages.walletSettingsLogout),
+          walletName: f(settingsMessages.walletSettingsWalletName),
+          security: f(settingsMessages.walletSettingsSecurity),
+          changePassword: f(settingsMessages.walletSettingsChangePassword),
+          easyConfirmation: f(settingsMessages.walletSettingsEasyConfirmation),
+          easyConfirmationInfo: f(
+            settingsMessages.walletSettingsEasyConfirmationInfo,
+          ),
+          removeWallet: f(settingsMessages.walletSettingsRemoveWallet),
+          network: f(settingsMessages.walletSettingsNetwork),
+          walletType: f(settingsMessages.walletSettingsWalletType),
+          byronWallet: f(settingsMessages.walletSettingsByronWallet),
+          shelleyWallet: f(settingsMessages.walletSettingsShelleyWallet),
+          unknownWalletType: f(
+            settingsMessages.walletSettingsUnknownWalletType,
+          ),
+          about: f(settingsMessages.walletSettingsAbout),
+          resync: f(settingsMessages.walletSettingsResync),
+          collateral: f(settingsMessages.walletSettingsCollateral),
+          multipleAddresses: f(
+            settingsMessages.walletSettingsMultipleAddresses,
+          ),
+          singleAddress: f(settingsMessages.walletSettingsSingleAddress),
+          multipleAddressesInfo: f(
+            settingsMessages.walletSettingsMultipleAddressesInfo,
+          ),
+          inAppNotifications: f(
+            settingsMessages.walletSettingsInAppNotifications,
+          ),
+          allowNotifications: f(
+            settingsMessages.walletSettingsAllowNotifications,
+          ),
+          displayDuration: f(settingsMessages.walletSettingsDisplayDuration),
+          notifications: f(settingsMessages.walletSettingsNotifications),
+        },
+        applicationSettings: {
+          general: f(settingsMessages.applicationSettingsGeneral),
+          securityReporting: f(
+            settingsMessages.applicationSettingsSecurityReporting,
+          ),
+          selectLanguage: f(settingsMessages.applicationSettingsSelectLanguage),
+          selectTheme: f(settingsMessages.applicationSettingsSelectTheme),
+          selectFiatCurrency: f(
+            settingsMessages.applicationSettingsSelectFiatCurrency,
+          ),
+          about: f(settingsMessages.applicationSettingsAbout),
+          changePin: f(settingsMessages.applicationSettingsChangePin),
+          privacyMode: f(settingsMessages.applicationSettingsPrivacyMode),
+          privacyModeInfo: f(
+            settingsMessages.applicationSettingsPrivacyModeInfo,
+          ),
+          biometricsSignIn: f(
+            settingsMessages.applicationSettingsBiometricsSignIn,
+          ),
+          biometricsSignInInfo: f(
+            settingsMessages.applicationSettingsBiometricsSignInInfo,
+          ),
+          termsOfservice: f(settingsMessages.applicationSettingsTermsOfservice),
+          crashReporting: f(settingsMessages.applicationSettingsCrashReporting),
+          crashReportingInfo: f(
+            settingsMessages.applicationSettingsCrashReportingInfo,
+          ),
+          analytics: f(settingsMessages.applicationSettingsAnalytics),
+          privacyPolicy: f(settingsMessages.applicationSettingsPrivacyPolicy),
+          screenSharing: f(settingsMessages.applicationSettingsScreenSharing),
+          screenSharingInfo: f(
+            settingsMessages.applicationSettingsScreenSharingInfo,
+          ),
+          network: f(settingsMessages.applicationSettingsNetwork),
+        },
+      },
+
+      // Receive strings
+      receive: {
+        amountToReceive: f(receiveMessages.amountToReceive),
+        receiveTitle: f(receiveMessages.receiveTitle),
+        addresscardTitle: f(receiveMessages.addresscardTitle),
+        shareLabel: f(receiveMessages.shareLabel),
+        walletAddress: f(receiveMessages.walletAddress),
+        spendingKeyHash: f(receiveMessages.spendingKeyHash),
+        stakingKeyHash: f(receiveMessages.stakingKeyHash),
+        address: f(receiveMessages.address),
+        specificAmount: f(receiveMessages.specificAmount),
+        requestSpecificAmountButton: f(
+          receiveMessages.requestSpecificAmountButton,
+        ),
+        copyAddressButton: f(receiveMessages.copyAddressButton),
+        specificAmountDescription: f(receiveMessages.specificAmountDescription),
+        ADALabel: f(receiveMessages.ADALabel),
+        generateLink: f(receiveMessages.generateLink),
+        multipleAddress: f(receiveMessages.multipleAddress),
+        singleAddress: f(globalMessages.singleAddress),
+        copyLinkBtn: f(receiveMessages.copyLinkBtn),
+        copyLinkMsg: f(receiveMessages.copyLinkMsg),
+        addressCopiedMsg: f(receiveMessages.addressCopiedMsg),
+        lastUsed: f(receiveMessages.lastUsed),
+        unusedAddress: f(receiveMessages.unusedAddress),
+        usedAddress: f(receiveMessages.usedAddress),
+        generateButton: f(receiveMessages.generateButton),
+        infoAddressLimit: f(receiveMessages.infoAddressLimit),
+        singleOrMultiple: f(receiveMessages.singleOrMultiple),
+        singleOrMultipleDetails: f(receiveMessages.singleOrMultipleDetails),
+        selectMultiple: f(receiveMessages.selectMultiple),
+        singleAddressWallet: f(receiveMessages.singleAddressWallet),
+        singleAddressWarning: f(receiveMessages.singleAddressWarning),
+        yoroiZendesk: f(globalMessages.yoroiZendesk),
+        ok: f(globalMessages.ok),
+      },
+
+      // Send strings
+      send: {
+        addressInputLabel: f(sendMessages.addressInputLabel),
+        addressReaderQrText: f(sendMessages.addressReaderQrText),
+        all: f(globalMessages.all),
+        amount: f(txLabels.amount),
+        apply: f(globalMessages.apply),
+        asset: f(sendMessages.asset),
+        assets: (qty: number) => f(globalMessages.assets, {qty}),
+        assetsLabel: f(globalMessages.assetsLabel),
+        availableFunds: f(globalMessages.availableFunds),
+        availableFundsBannerIsFetching: f(
+          sendMessages.availableFundsBannerIsFetching,
+        ),
+        availableFundsBannerNotAvailable: f(
+          sendMessages.availableFundsBannerNotAvailable,
+        ),
+        backButton: f(confirmationMessages.commonButtons.backButton),
+        balanceAfterLabel: f(sendMessages.balanceAfterLabel),
+        balanceAfterNotAvailable: f(sendMessages.balanceAfterNotAvailable),
+        checkboxSendAll: (options: {assetId: string}) =>
+          f(sendMessages.checkboxSendAll, options),
+        checkboxSendAllAssets: f(sendMessages.checkboxSendAllAssets),
+        continueButton: f(sendMessages.continueButton),
+        domainNotRegisteredError: f(sendMessages.domainNotRegisteredError),
+        domainRecordNotFoundError: f(sendMessages.domainRecordNotFoundError),
+        domainUnsupportedError: f(sendMessages.domainUnsupportedError),
+        editAmountTitle: f(sendMessages.editAmountTitle),
+        errorBannerMaxTokenLimit: f(sendMessages.errorBannerMaxTokenLimit),
+        errorBannerNetworkError: f(sendMessages.errorBannerNetworkError),
+        errorBannerPendingOutgoingTransaction: f(
+          sendMessages.errorBannerPendingOutgoingTransaction,
+        ),
+        failedTxButton: f(sendMessages.failedTxButton),
+        failedTxText: f(sendMessages.failedTxText),
+        failedTxTitle: f(sendMessages.failedTxTitle),
+        feeLabel: f(sendMessages.feeLabel),
+        feeNotAvailable: f(sendMessages.feeNotAvailable),
+        found: f(sendMessages.found),
+        helperAddressErrorInvalid: f(sendMessages.helperAddressErrorInvalid),
+        helperAddressErrorWrongBlockchain: f(
+          sendMessages.helperAddressErrorWrongBlockchain,
+        ),
+        helperAddressErrorWrongNetwork: f(
+          sendMessages.helperAddressErrorWrongNetwork,
+        ),
+        helperMemoErrorTooLong: f(sendMessages.helperMemoErrorTooLong),
+        helperMemoInstructions: f(sendMessages.helperMemoInstructions),
+        helperResolverErrorDomainNotFound: f(
+          sendMessages.helperResolverErrorDomainNotFound,
+        ),
+        listAmountsToSendTitle: f(sendMessages.listAmountsToSendTitle),
+        manyNameServersWarning: (options: {
+          b: (content: ReactNode[]) => ReactNode
+        }) => f(sendMessages.manyNameServersWarning, options),
+        max: f(globalMessages.max),
+        memoLabel: f(sendMessages.memoLabel),
+        minPrimaryBalanceForTokens: f(sendMessages.minPrimaryBalanceForTokens),
+        next: f(globalMessages.next),
+        nfts: (qty: number) => f(globalMessages.nfts, {qty}),
+        noAssets: f(sendMessages.noAssets),
+        noAssetsAddedYet: (fungible: string) =>
+          f(sendMessages.noAssetsAddedYet, {fungible}),
+        noBalance: f(sendMessages.noBalance),
+        ok: f(globalMessages.ok),
+        pleaseWait: f(globalMessages.pleaseWait),
+        pools: f(globalMessages.pools),
+        receiver: f(sendMessages.receiver),
+        resolvedAddress: f(sendMessages.resolvedAddress),
+        resolverNoticeTitle: f(sendMessages.resolverNoticeTitle),
+        resolverNoticeText: f(sendMessages.resolverNoticeText),
+        searchTokens: f(sendMessages.searchTokens),
+        selectAssetTitle: f(sendMessages.selectAssetTitle),
+        selectTokenTitle: f(sendMessages.selectTokenTitle),
+        sendAllContinueButton: f(
+          confirmationMessages.commonButtons.continueButton,
+        ),
+        sendAllWarningAlert1: (options: {assetNameOrId: string}) =>
+          f(sendMessages.sendAllWarningAlert1, options),
+        sendAllWarningAlert2: f(sendMessages.sendAllWarningAlert2),
+        sendAllWarningAlert3: f(sendMessages.sendAllWarningAlert3),
+        sendAllWarningText: f(sendMessages.sendAllWarningText),
+        sendAllWarningTitle: f(sendMessages.sendAllWarningTitle),
+        sendTitle: f(sendMessages.sendTitle),
+        submittedTxButton: f(sendMessages.submittedTxButton),
+        submittedTxText: f(sendMessages.submittedTxText),
+        submittedTxTitle: f(sendMessages.submittedTxTitle),
+        tokens: (qty: number) => f(globalMessages.tokens, {qty}),
+        unknownAsset: f(sendMessages.unknownAsset),
+        walletAddress: f(sendMessages.walletAddress),
+        youHave: f(sendMessages.youHave),
+      },
+
+      // Global strings
+      global: {
+        accept: f(globalMessages.accept),
+        error: f(globalMessages.error),
+        cancel: f(globalMessages.cancel),
+        ok: f(globalMessages.ok),
+        close: f(globalMessages.close),
+        walletSelectionScreenHeader: f(
+          globalMessages.walletSelectionScreenHeader,
+        ),
+        disclaimer: f(globalMessages.disclaimer),
+        proceed: f(globalMessages.proceed),
+        today: f(globalMessages.today),
+        yesterday: f(globalMessages.yesterday),
+        insufficientBalance: (params: {
+          requiredBalance: string
+          currentBalance: string
+        }) => f(globalMessages.insufficientBalance, params),
+        votingTitle: f(globalMessages.votingTitle),
+        available: f(globalMessages.available),
+      },
+
+      // Discover strings
+      discover: {
+        confirmTx: f(discoverMessages.confirmTx),
+        discoverTitle: f(discoverMessages.discoverTitle),
+        searchDApps: f(discoverMessages.searchDApps),
+        welcomeToYoroiDAppExplorer: f(
+          discoverMessages.welcomeToYoroiDAppExplorer,
+        ),
+        welcomeToYoroiDAppExplorerDescription: f(
+          discoverMessages.welcomeToYoroiDAppExplorerDescription,
+        ),
+        next: f(discoverMessages.next),
+        totalDAppAvailable: (count: number) =>
+          f(discoverMessages.totalDAppAvailable, {count}),
+        totalDAppConnected: (count: number) =>
+          f(discoverMessages.dAppConnected, {count}),
+        connected: f(discoverMessages.connected),
+        recommended: f(discoverMessages.recommended),
+        done: f(discoverMessages.done),
+        openDApp: f(discoverMessages.openDApp),
+        disconnectWalletFromDApp: f(discoverMessages.disconnectWalletFromDApp),
+        dAppActions: f(discoverMessages.dAppActions),
+        confirmConnectionModalTitle: f(
+          discoverMessages.confirmConnectionModalTitle,
+        ),
+        confirmConnectionModalConnectTo: f(
+          discoverMessages.confirmConnectionModalConnectTo,
+        ),
+        confirmConnectionModalConnect: f(
+          discoverMessages.confirmConnectionModalConnect,
+        ),
+        confirmConnectionModalAllowThisDAppTo: f(
+          discoverMessages.confirmConnectionModalAllowThisDAppTo,
+        ),
+        confirmConnectionModalPermission1: f(
+          discoverMessages.confirmConnectionModalPermission1,
+        ),
+        singleAddressWarning: f(discoverMessages.singleAddressWarning),
+        confirmConnectionModalPermission2: f(
+          discoverMessages.confirmConnectionModalPermission2,
+        ),
+        understand: f(discoverMessages.understand),
+        disclaimerModalText: f(discoverMessages.disclaimerModalText),
+        disclaimerModalTitle: f(discoverMessages.disclaimerModalTitle),
+        disconnectDApp: f(discoverMessages.disconnectDApp),
+        confirmDisconnectDAppDescription: f(
+          discoverMessages.confirmDisconnectDAppDescription,
+        ),
+        cancel: f(discoverMessages.cancel),
+        confirm: f(discoverMessages.confirm),
+        signDataNotSupported: f(discoverMessages.signDataNotSupported),
+        transactionReview: f(discoverMessages.transactionReview),
+        inputs: f(discoverMessages.inputs),
+        outputs: f(discoverMessages.outputs),
+        transactionIdCopied: f(discoverMessages.transactionIdCopied),
+        addressCopied: f(discoverMessages.addressCopied),
+        yourAddress: f(discoverMessages.yourAddress),
+        externalAddress: f(discoverMessages.externalAddress),
+        fee: f(discoverMessages.fee),
+        signData: f(discoverMessages.signData),
+        signMessage: f(discoverMessages.signMessage),
+        testnetWarningTitle: f(discoverMessages.testnetWarningTitle),
+        testnetWarningDescription: f(
+          discoverMessages.testnetWarningDescription,
+        ),
+        filterChildOptionsNews: f(discoverMessages.filterChildOptionsNews),
+        filterChildOptionsEntertainment: f(
+          discoverMessages.filterChildOptionsEntertainment,
+        ),
+        filterChildOptionsDeFi: f(discoverMessages.filterChildOptionsDeFi),
+        filterChildOptionsDEX: f(discoverMessages.filterChildOptionsDEX),
+        filterChildOptionsNFTMarketplace: f(
+          discoverMessages.filterChildOptionsNFTMarketplace,
+        ),
+        filterChildOptionsStablecoin: f(
+          discoverMessages.filterChildOptionsStablecoin,
+        ),
+        filterChildOptionsTradingTools: f(
+          discoverMessages.filterChildOptionsTradingTools,
+        ),
+        filterChildOptionsDAO: f(discoverMessages.filterChildOptionsDAO),
+        filterChildOptionsDecentralisedStorage: f(
+          discoverMessages.filterChildOptionsDecentralisedStorage,
+        ),
+        filterParentOptionsMedia: f(discoverMessages.filterParentOptionsMedia),
+        filterParentOptionsInvestment: f(
+          discoverMessages.filterParentOptionsInvestment,
+        ),
+        filterParentOptionsNFT: f(discoverMessages.filterParentOptionsNFT),
+        filterParentOptionsTrading: f(
+          discoverMessages.filterParentOptionsTrading,
+        ),
+        filterParentOptionsCommunity: f(
+          discoverMessages.filterParentOptionsCommunity,
+        ),
+        disconnectWarning: f(discoverMessages.disconnectWarning),
+        collateralNotFoundText: f(discoverMessages.collateralNotFoundText),
+        collateralNotFoundTitle: f(discoverMessages.collateralNotFoundTitle),
+        collateralNotFoundActionText: f(
+          discoverMessages.collateralNotFoundActionText,
+        ),
+        collateralTxPendingTitle: f(discoverMessages.collateralTxPendingTitle),
+        collateralTxPendingText: f(discoverMessages.collateralTxPendingText),
+      },
+
+      // Swap strings
+      swap: {
+        via: f(swapMessages.via),
+        placeOrder: f(swapMessages.placeOrder),
+        yourAssets: f(swapMessages.yourAssets),
+        allAssets: f(swapMessages.allAssets),
+        swapTitle: f(swapMessages.swapTitle),
+        swapDetailsTitle: f(swapMessages.swapDetailsTitle),
+        swapCancellationDetailsTitle: f(
+          swapMessages.swapCancellationDetailsTitle,
+        ),
+        tokenSwap: f(swapMessages.tokenSwap),
+        orderSwap: f(swapMessages.orderSwap),
+        dex: f(swapMessages.dex),
+        marketButton: f(swapMessages.marketButton),
+        limitButton: f(swapMessages.limitButton),
+        swapFrom: f(swapMessages.swapFrom),
+        swapTo: f(swapMessages.swapTo),
+        currentBalance: f(swapMessages.currentBalance),
+        balance: f(swapMessages.balance),
+        clear: f(swapMessages.clear),
+        selectToken: f(swapMessages.selectToken),
+        marketPrice: f(swapMessages.marketPrice),
+        marketPriceInfo: f(swapMessages.marketPriceInfo),
+        limitPriceInfo: f(swapMessages.limitPriceInfo),
+        limitPrice: f(swapMessages.limitPrice),
+        slippageTolerance: f(swapMessages.slippageTolerance),
+        slippageToleranceInfo: f(swapMessages.slippageToleranceInfo),
+        swapButton: f(swapMessages.swapButton),
+        verifiedBy: (pool: string) => f(swapMessages.verifiedBy, {pool}),
+        assetsIn: f(swapMessages.assetsIn),
+        slippageInfo: f(swapMessages.slippageInfo),
+        autoPool: f(swapMessages.autoPool),
+        auto: f(swapMessages.auto),
+        changePool: f(swapMessages.changePool),
+        swapMinAda: f(swapMessages.swapMinAda),
+        swapMinAdaTitle: f(swapMessages.swapMinAdaTitle),
+        swapMinReceived: f(swapMessages.swapMinReceived),
+        swapMinReceivedTitle: f(swapMessages.swapMinReceivedTitle),
+        swapFeesTitle: f(swapMessages.swapFeesTitle),
+        swapFees: f(swapMessages.swapFees),
+        swapSlippageTitle: f(swapMessages.swapSlippageTitle),
+        swapSlippage: f(swapMessages.swapSlippage),
+        swapLiquidityFee: f(swapMessages.swapLiquidityFee),
+        swapLiqProvFee: f(swapMessages.swapLiqProvFee),
+        swapLiquidityFeeInfo: (
+          fee: string,
+          options: {b: (content: React.ReactNode[]) => React.ReactNode},
+        ) => f(swapMessages.swapLiquidityFeeInfo, {fee, ...options}),
+        poolVerification: (pool: string) =>
+          f(swapMessages.poolVerification, {pool}),
+        poolVerificationInfo: (pool: string) =>
+          f(swapMessages.poolVerificationInfo, {pool}),
+        eachVerifiedToken: f(swapMessages.eachVerifiedToken),
+        verifiedBadge: f(swapMessages.verifiedBadge),
+        enterSlippage: f(swapMessages.enterSlippage),
+        slippageToleranceError: f(swapMessages.slippageToleranceError),
+        pools: (qty: number) => f(globalMessages.pools, {qty}),
+        openOrders: f(swapMessages.openOrders),
+        noAssetsFound: f(swapMessages.noAssetsFound),
+        noAssetsFoundFor: (search: string) =>
+          f(swapMessages.noAssetsFoundFor, {search}),
+        completedOrders: f(swapMessages.completedOrders),
+        signTransaction: f(swapMessages.signTransaction),
+        enterSpendingPassword: f(swapMessages.enterSpendingPassword),
+        spendingPassword: f(swapMessages.spendingPassword),
+        sign: f(swapMessages.sign),
+        searchTokens: f(swapMessages.searchTokens),
+        next: f(swapMessages.next),
+        chooseConnectionMethod: f(swapMessages.chooseConnectionMethod),
+        selecteAssetTitle: f(swapMessages.selecteAssetTitle),
+        tokens: (qty: number) => f(globalMessages.tokens, {qty}),
+        apply: f(globalMessages.apply),
+        found: f(swapMessages.found),
+        youHave: f(swapMessages.youHave),
+        price: f(swapMessages.price),
+        priceImpact: f(swapMessages.priceImpact),
+        priceImpactRiskHigh: ({riskValue}: {riskValue: number}) =>
+          f(swapMessages.priceImpactRiskHigh, {riskValue}),
+        priceImpactDescription: (risk: 'moderate' | 'high') =>
+          f(
+            risk === 'moderate'
+              ? swapMessages.priceImpactModerateDescription
+              : swapMessages.priceImpactHighDescription,
+          ),
+        priceImpactInfo: f(swapMessages.priceImpactInfo),
+        tvl: f(swapMessages.tvl),
+        poolFee: f(swapMessages.poolFee),
+        batcherFee: f(swapMessages.batcherFee),
+        assets: (qty: number) => f(globalMessages.assets, {qty}),
+        available: f(globalMessages.available),
+        asset: f(swapMessages.asset),
+        volume: f(swapMessages.volume),
+        total: f(globalMessages.total),
+        listCompletedOrders: f(swapMessages.listCompletedOrders),
+        listOpenOrders: f(swapMessages.listOpenOrders),
+        listOrdersSheetTitle: f(swapMessages.listOrdersSheetTitle),
+        listOrdersSheetButtonText: f(swapMessages.listOrdersSheetButtonText),
+        listOrdersSheetContentTitle: f(
+          swapMessages.listOrdersSheetContentTitle,
+        ),
+        listOrdersSheetLink: f(swapMessages.listOrdersSheetLink),
+        listOrdersSheetAssetPrice: f(swapMessages.listOrdersSheetAssetPrice),
+        listOrdersSheetAssetAmount: f(swapMessages.listOrdersSheetAssetAmount),
+        listOrdersSheetTotalReturned: f(
+          swapMessages.listOrdersSheetTotalReturned,
+        ),
+        listOrdersSheetCancellationFee: f(
+          swapMessages.listOrdersSheetCancellationFee,
+        ),
+        listOrdersSheetConfirm: f(swapMessages.listOrdersSheetConfirm),
+        listOrdersSheetBack: f(swapMessages.listOrdersSheetBack),
+        listOrdersTimeCreated: f(swapMessages.listOrdersTimeCreated),
+        listOrdersTimeCompleted: f(swapMessages.listOrdersTimeCompleted),
+        listOrdersLiquidityPool: f(swapMessages.listOrdersLiquidityPool),
+        listOrdersTotal: f(swapMessages.listOrdersTotal),
+        listOrdersTxId: f(swapMessages.listOrdersTxId),
+        limitPriceWarningTitle: f(swapMessages.limitPriceWarningTitle),
+        limitPriceWarningDescription: f(
+          swapMessages.limitPriceWarningDescription,
+        ),
+        limitPriceWarningYourPrice: f(swapMessages.limitPriceWarningYourPrice),
+        limitPriceWarningMarketPrice: f(
+          swapMessages.limitPriceWarningMarketPrice,
+        ),
+        limitPriceWarningBack: f(swapMessages.limitPriceWarningBack),
+        limitPriceWarningConfirm: f(swapMessages.limitPriceWarningConfirm),
+        error: f(globalMessages.error),
+        rejectedByUser: f(ledgerMessages.rejectedByUserError),
+        routingPreferences: f(swapMessages.routingPreferences),
+        route: f(swapMessages.route),
+        routeDescription: f(swapMessages.routeDescription),
+        usbExplanation: f(swapMessages.usbExplanation),
+        usbButton: f(swapMessages.usbButton),
+        usbConnectionIsBlocked: f(swapMessages.usbConnectionIsBlocked),
+        bluetoothExplanation: f(swapMessages.bluetoothExplanation),
+        bluetoothButton: f(swapMessages.bluetoothButton),
+        bluetoothError: f(swapMessages.bluetoothError),
+        transactionSigned: f(swapMessages.transactionSigned),
+        transactionDisplay: f(swapMessages.transactionDisplay),
+        seeOnExplorer: f(swapMessages.seeOnExplorer),
+        goToTransactions: f(swapMessages.goToTransactions),
+        wrongPasswordMessage: f(swapMessages.wrongPasswordMessage),
+        assignCollateral: f(swapMessages.assignCollateral),
+        collateralNotFound: f(swapMessages.collateralNotFound),
+        noActiveCollateral: f(swapMessages.noActiveCollateral),
+        collateralTxPending: f(swapMessages.collateralTxPending),
+        collateralTxPendingTitle: f(swapMessages.collateralTxPendingTitle),
+        failedTxTitle: f(swapMessages.failedTxTitle),
+        failedTxText: f(swapMessages.failedTxText),
+        failedTxButton: f(swapMessages.failedTxButton),
+        generalTxErrorMessage: f(errorMessages.generalTxError.message),
+        incorrectPasswordTitle: f(errorMessages.incorrectPassword.title),
+        incorrectPasswordMessage: f(errorMessages.incorrectPassword.message),
+        notEnoughBalance: f(swapMessages.notEnoughBalance),
+        notEnoughSupply: f(swapMessages.notEnoughSupply),
+        notEnoughFeeBalance: f(swapMessages.notEnoughFeeBalance),
+        noPool: f(swapMessages.noPool),
+        generalErrorTitle: f(errorMessages.generalError.title),
+        generalErrorMessage: (e: string) =>
+          f(errorMessages.generalError.message, {message: e}),
+        continueOnLedger: f(ledgerMessages.continueOnLedger),
+        continue: f(swapMessages.continue),
+        cancel: f(globalMessages.cancel),
+        tryAgain: f(globalMessages.tryAgain),
+        bluetoothDisabledError: f(ledgerMessages.bluetoothDisabledError),
+        ledgerBluetoothDisabledError: f(ledgerMessages.bluetoothDisabledError),
+        ledgerGeneralConnectionError: f(ledgerMessages.connectionError),
+        ledgerUserError: f(ledgerMessages.connectionError),
+        ledgerAdaAppNeedsToBeOpenError: f(ledgerMessages.appOpened),
+        slippageWarningTitle: f(swapMessages.slippageWarningTitle),
+        slippageWarningText: f(swapMessages.slippageWarningText),
+        slippageWarningYourSlippage: f(
+          swapMessages.slippageWarningYourSlippage,
+        ),
+        slippageWarningChangeAmount: f(
+          swapMessages.slippageWarningChangeAmount,
+        ),
+        serviceUnavailable: f(swapMessages.serviceUnavailable),
+        serviceUnavailableInfo: f(swapMessages.serviceUnavailableInfo),
+        emptyOpenOrders: f(swapMessages.emptyOpenOrders),
+        emptyOpenOrdersSub: f(swapMessages.emptyOpenOrdersSub),
+        emptyCompletedOrders: f(swapMessages.emptyCompletedOrders),
+        emptySearchCompletedOrders: f(swapMessages.emptySearchCompletedOrders),
+        emptySearchOpenOrders: f(swapMessages.emptySearchOpenOrders),
+        warning: f(swapMessages.warning),
+        missingCollateral: f(errorMessages.missingCollateral.title),
+        backToSwapOrders: f(swapMessages.backToSwapOrders),
+        preprodNoticeTitle: f(swapMessages.preprodNoticeTitle),
+        preprodNoticeText: f(swapMessages.preprodNoticeText),
+        failedTxScreenTitle: f(swapMessages.failedTxScreenTitle),
+        failedTxScreenText: f(swapMessages.failedTxScreenText),
+        failedTxScreenButton: f(swapMessages.failedTxScreenButton),
+        submittedTxScreenTitle: f(swapMessages.submittedTxScreenTitle),
+        submittedTxScreenText: f(swapMessages.submittedTxScreenText),
+        submittedTxScreenButton: f(swapMessages.submittedTxScreenButton),
+        from: f(swapMessages.from),
+        to: f(swapMessages.to),
+        sell: f(actionMessages.sell),
+        buy: f(actionMessages.buy),
+        max: f(globalMessages.max),
+        listOrdersTestnetNoticeTitle: f(
+          swapMessages.listOrdersTestnetNoticeTitle,
+        ),
+        listOrdersTestnetNoticeDescription: f(
+          swapMessages.listOrdersTestnetNoticeDescription,
+        ),
+      },
+
+      // Staking/PoolTransition strings
+      staking: {
+        title: f(stakingMessages.title),
+        warning: f(stakingMessages.warning),
+        finalWarning: f(stakingMessages.finalWarning),
+        currentPool: f(stakingMessages.currentPool),
+        newPool: f(stakingMessages.newPool),
+        estimatedRoa: f(stakingMessages.estimatedRoa),
+        fee: f(stakingMessages.fee),
+        poolGeneratesRewards: f(stakingMessages.poolGeneratesRewards),
+        poolNoRewards: f(stakingMessages.poolNoRewards),
+        poolWillStopRewards: f(stakingMessages.poolWillStopRewards),
+        skipNoRewards: f(stakingMessages.skipNoRewards),
+        updateKeepEarning: f(stakingMessages.updateKeepEarning),
+        update: f(stakingMessages.update),
+        governanceCentreTitle: f(stakingMessages.governanceCentreTitle),
+        confirmTxTitle: f(stakingMessages.confirmTxTitle),
+        learnMoreAboutGovernance: f(stakingMessages.learnMoreAboutGovernance),
+        actionDelegateToADRepTitle: f(
+          stakingMessages.actionDelegateToADRepTitle,
+        ),
+        actionDelegateToADRepDescription: f(
+          stakingMessages.actionDelegateToADRepDescription,
+        ),
+        actionAbstainTitle: f(stakingMessages.actionAbstainTitle),
+        actionAbstainDescription: f(stakingMessages.actionAbstainDescription),
+        actionNoConfidenceTitle: f(stakingMessages.actionNoConfidenceTitle),
+        actionNoConfidenceDescription: f(
+          stakingMessages.actionNoConfidenceDescription,
+        ),
+        drepKey: f(stakingMessages.drepKey),
+        delegatingToADRep: f(stakingMessages.delegatingToADRep),
+        delegateToADRep: f(stakingMessages.delegateToADRep),
+        abstaining: f(stakingMessages.abstaining),
+        delegateVotingToDRep: f(stakingMessages.delegateVotingToDRep),
+        selectAbstain: f(stakingMessages.selectAbstain),
+        selectNoConfidence: f(stakingMessages.selectNoConfidence),
+        operations: f(stakingMessages.operations),
+        drepID: f(stakingMessages.drepID),
+        thankYouForParticipating: f(stakingMessages.thankYouForParticipating),
+        thisTransactionCanTakeAWhile: f(
+          stakingMessages.thisTransactionCanTakeAWhile,
+        ),
+        participationBenefits: f(stakingMessages.participationBenefits),
+        goToGovernance: f(stakingMessages.goToGovernance),
+        findDRepHere: f(stakingMessages.findDRepHere),
+        reviewActions: f(stakingMessages.reviewActions),
+        actionYouHaveSelectedTxPending: (
+          action: string,
+          formattingOptions: any,
+        ) =>
+          f(stakingMessages.actionYouHaveSelectedTxPending, {
+            ...formattingOptions,
+            action,
+          }),
+        actionYouHaveSelected: (action: string, formattingOptions: any) =>
+          f(stakingMessages.actionYouHaveSelected, {
+            ...formattingOptions,
+            action,
+          }),
+        changeDRep: f(stakingMessages.changeDRep),
+        confirm: f(stakingMessages.confirm),
+        transactionDetails: f(stakingMessages.transactionDetails),
+        total: f(stakingMessages.total),
+        transactionFailed: f(stakingMessages.transactionFailed),
+        notSupportedVersionTitle: f(stakingMessages.notSupportedVersionTitle),
+        notSupportedVersionDescription: f(
+          stakingMessages.notSupportedVersionDescription,
+        ),
+        noFunds: f(stakingMessages.noFunds),
+        transactionFailedDescription: f(
+          stakingMessages.transactionFailedDescription,
+        ),
+        tryAgain: f(stakingMessages.tryAgain),
+        buyAda: f(stakingMessages.buyAda),
+        goToFaucet: f(stakingMessages.goToFaucet),
+        withdrawWarningTitle: f(stakingMessages.withdrawWarningTitle),
+        withdrawWarningDescription: f(
+          stakingMessages.withdrawWarningDescription,
+        ),
+        withdrawWarningButton: f(stakingMessages.withdrawWarningButton),
+        enterDRepID: f(stakingMessages.enterDRepID),
+        signTransaction: f(txLabels.signingTx),
+        password: f(txLabels.password),
+        sign: f(txLabels.sign),
+        error: f(globalMessages.error),
+        wrongPassword: f(errorMessages.incorrectPassword.title),
+        enterPassword: f(stakingMessages.enterPassword),
+        continueOnLedger: f(ledgerMessages.continueOnLedger),
+        fees: f(txLabels.fees),
+        hardwareWalletSupportComingSoon: f(
+          stakingMessages.hardwareWalletSupportComingSoon,
+        ),
+        workingOnHardwareWalletSupport: f(
+          stakingMessages.workingOnHardwareWalletSupport,
+        ),
+        goToWallet: f(stakingMessages.goToWallet),
+        txFees: f(stakingMessages.txFees),
+        registerStakingKey: f(stakingMessages.registerStakingKey),
+        enterDrepIDInfo: f(stakingMessages.enterDrepIDInfo),
+        goToStaking: f(stakingMessages.goToStaking),
+        readyToCollectRewards: f(stakingMessages.readyToCollectRewards),
+        notSupportedVersionButton: f(stakingMessages.notSupportedVersionButton),
+        scriptNotSupported: f(stakingMessages.scriptNotSupported),
+        submittedTxButton: f(stakingMessages.submittedTxButton),
+        submittedTxText: f(stakingMessages.submittedTxText),
+        submittedTxTitle: f(stakingMessages.submittedTxTitle),
+        failedTxButton: f(stakingMessages.failedTxButton),
+        failedTxText: f(stakingMessages.failedTxText),
+        failedTxTitle: f(stakingMessages.failedTxTitle),
+        invalidDRepId: f(stakingMessages.invalidDRepId),
+        delegateToAYoroiDrep: f(stakingMessages.delegateToAYoroiDrep),
+        delegatingToYoroiDRep: f(stakingMessages.delegatingToYoroiDRep),
+        delegateToAYoroiDRepDescription: f(
+          stakingMessages.delegateToAYoroiDRepDescription,
+        ),
+        delegateVotingToDRepDeprecatedFormatNotice: f(
+          stakingMessages.delegateVotingToDRepDeprecatedFormatNotice,
+        ),
+        yoroiRecord: f(stakingMessages.yoroiRecord),
+        newToGovernanceTitle: f(stakingMessages.newToGovernanceTitle),
+        newToGovernanceText: f(stakingMessages.newToGovernanceText),
+        // Add missing strings
+        delegationSuccess: f(stakingMessages.delegationSuccess),
+        delegationFailed: f(stakingMessages.delegationFailed),
+        delegationFailedMessage: f(stakingMessages.delegationFailed),
+        retry: f(stakingMessages.retry),
+        poolWarningCensoring: f(stakingMessages.warning),
+        poolWarningMultiBlock: f(stakingMessages.warning),
+        poolWarningUnknown: f(stakingMessages.warning),
+        poolWarningHeader: f(stakingMessages.warning),
+        poolWarningSuggested: f(stakingMessages.warning),
+        loading: f(stakingMessages.loading),
+        processingDelegation: f(stakingMessages.loading),
+        poolDetails: {
+          poolHash: f(stakingMessages.poolDetailsPoolHash),
+          delegate: f(stakingMessages.poolDetailsDelegate),
+          poolID: f(stakingMessages.poolDetailsPoolID),
+          invalidPoolID: f(stakingMessages.poolDetailsInvalidPoolID),
+          next: f(stakingMessages.poolDetailsNext),
+          disclaimerTitle: f(stakingMessages.poolDetailsDisclaimerTitle),
+          disclaimerText: f(stakingMessages.poolDetailsDisclaimerText),
+        },
+        noPoolDataDialog: {
+          title: f(stakingMessages.noPoolDataDialogTitle),
+          message: f(stakingMessages.noPoolDataDialogMessage),
+        },
+        confirmDelegation: {
+          title: f(stakingMessages.confirmDelegationTitle),
+          message: f(stakingMessages.confirmDelegationMessage),
+          delegateButtonLabel: f(
+            stakingMessages.confirmDelegationDelegateButtonLabel,
+          ),
+          cancelButtonLabel: f(
+            stakingMessages.confirmDelegationCancelButtonLabel,
+          ),
+        },
+      },
+
+      // ReviewTx strings
+      txReview: {
+        adaDescription: f(txReviewMessages.adaDescription),
+        confirm: f(txReviewMessages.confirm),
+        title: f(txReviewMessages.title),
+        tabLabel: {
+          utxos: f(txReviewMessages.tabLabelUtxos),
+          overview: f(txReviewMessages.tabLabelOverview),
+          mint: f(txReviewMessages.tabLabelMint),
+          referenceInputs: f(txReviewMessages.tabLabelReferenceInputs),
+          metadataTab: f(txReviewMessages.tabLabelMetadataTab),
+        },
+        metadata: {
+          metadataHash: f(txReviewMessages.metadataMetadataHash),
+          metadataJsonLabel: f(txReviewMessages.metadataMetadataJsonLabel),
+        },
+        overview: {
+          wallet: f(txReviewMessages.overviewWallet),
+          myWalletLabel: f(txReviewMessages.overviewMyWalletLabel),
+          sendLabel: f(txReviewMessages.overviewSendLabel),
+          receiveToLabel: f(txReviewMessages.overviewReceiveToLabel),
+          receiveToScriptLabel: f(
+            txReviewMessages.overviewReceiveToScriptLabel,
+          ),
+          multiExternalPartiesSectionLabel: f(
+            txReviewMessages.overviewMultiExternalPartiesSectionLabel,
+          ),
+          multiExternalPartiesSectionNotice: f(
+            txReviewMessages.overviewMultiExternalPartiesSectionNotice,
+          ),
+          operationsNoticeText: f(
+            txReviewMessages.overviewOperationsNoticeText,
+          ),
+          operationsNoticeButton: f(
+            txReviewMessages.overviewOperationsNoticeButton,
+          ),
+          operationsNoticeTitle: f(
+            txReviewMessages.overviewOperationsNoticeTitle,
+          ),
+        },
+        fee: f(txReviewMessages.fee),
+        utxos: {
+          utxosInputsLabel: f(txReviewMessages.utxosUtxosInputsLabel),
+          utxosOutputsLabel: f(txReviewMessages.utxosUtxosOutputsLabel),
+          utxosYourAddressLabel: f(txReviewMessages.utxosUtxosYourAddressLabel),
+          utxosForeignAddressLabel: f(
+            txReviewMessages.utxosUtxosForeignAddressLabel,
+          ),
+        },
+        tokenDetails: {
+          title: f(txReviewMessages.tokenDetailsTitle),
+          overViewTab: {
+            title: f(txReviewMessages.tokenDetailsOverViewTabTitle),
+            name: f(txReviewMessages.tokenDetailsOverViewTabNameLabel),
+            tokenSupply: f(
+              txReviewMessages.tokenDetailsOverViewTabTokenSupplyLabel,
+            ),
+            symbol: f(txReviewMessages.tokenDetailsOverViewTabSymbolLabel),
+            description: f(
+              txReviewMessages.tokenDetailsOverViewTabDescriptionLabel,
+            ),
+            details: f(txReviewMessages.tokenDetailsOverViewTabDetailsLabel),
+          },
+          jsonTab: {
+            title: f(txReviewMessages.tokenDetailsJsonTabTitle),
+            metadata: f(txReviewMessages.tokenDetailsJsonTabMetadata),
+          },
+          policyId: f(txReviewMessages.tokenDetailsPolicyIdLabel),
+          fingerprint: f(txReviewMessages.tokenDetailsFingerprintLabel),
+        },
+        poolDetails: {
+          title: f(txReviewMessages.poolDetailsTitle),
+          poolId: f(txReviewMessages.poolDetailsPoolIdLabel),
+          poolHash: f(txReviewMessages.poolDetailsPoolHashLabel),
+          poolSize: f(txReviewMessages.poolDetailsPoolSizeLabel),
+          poolRoa: f(txReviewMessages.poolDetailsPoolRoaLabel),
+          poolShare: f(txReviewMessages.poolDetailsPoolShareLabel),
+          poolSaturation: f(txReviewMessages.poolDetailsPoolSaturationLabel),
+          taxFix: f(txReviewMessages.poolDetailsTaxFixLabel),
+          taxRatio: f(txReviewMessages.poolDetailsTaxRatioLabel),
+          pledge: f(txReviewMessages.poolDetailsPledgeLabel),
+        },
+        walletBalance: {
+          title: f(txReviewMessages.walletBalanceTitle),
+          tokens: f(txReviewMessages.walletBalanceTokensTitle),
+          nfts: f(txReviewMessages.walletBalanceNFTsTitle),
+        },
+        operations: {
+          registerStakingKey: f(txReviewMessages.operationsRegisterStakingKey),
+          drepRegistration: f(txReviewMessages.operationsDrepRegistration),
+          poolRegistration: f(txReviewMessages.operationsPoolRegistration),
+          poolRetirement: f(txReviewMessages.operationsPoolRetirement),
+          drepUpdate: f(txReviewMessages.operationsDrepUpdate),
+          drepDeregistration: f(txReviewMessages.operationsDrepDeregistration),
+          deregisterStakingKey: f(
+            txReviewMessages.operationsDeregisterStakingKey,
+          ),
+          moveInstantaneousRewards: f(
+            txReviewMessages.operationsMoveInstantaneousRewards,
+          ),
+          committeeHotAuthorization: f(
+            txReviewMessages.operationsCommitteeHotAuthorization,
+          ),
+          committeeColdResign: f(
+            txReviewMessages.operationsCommitteeColdResign,
+          ),
+          rewardsWithdrawal: {
+            label: f(txReviewMessages.operationsRewardsWithdrawalLabel),
+            text: f(txReviewMessages.operationsRewardsWithdrawalText),
+          },
+          selectAbstain: f(txReviewMessages.operationsSelectAbstain),
+          selectNoConfidence: f(txReviewMessages.operationsSelectNoConfidence),
+          delegateVotingToDRep: f(
+            txReviewMessages.operationsDelegateVotingToDRep,
+          ),
+          delegateVotingToDRepSpecified: f(
+            txReviewMessages.operationsDelegateVotingToDRepSpecified,
+          ),
+          delegateStake: f(txReviewMessages.operationsDelegateStake),
+          log: f(txReviewMessages.operationsLogTitle),
+          warning: {
+            title: f(txReviewMessages.operationsWarningTitle),
+            text: f(txReviewMessages.operationsWarningText),
+          },
+        },
+        submittedTxTitle: f(txReviewMessages.submittedTxTitle),
+        submittedTxText: f(txReviewMessages.submittedTxText),
+        submittedTxButton: f(txReviewMessages.submittedTxButton),
+        failedTxTitle: f(txReviewMessages.failedTxTitle),
+        failedTxText: f(txReviewMessages.failedTxText),
+        failedTxButton: f(txReviewMessages.failedTxButton),
+        infraestructureIssueTitle: f(
+          txReviewMessages.infraestructureIssueTitle,
+        ),
+        infraestructureIssueText: f(txReviewMessages.infraestructureIssueText),
+        infraestructureIssueButton: f(
+          txReviewMessages.infraestructureIssueButton,
+        ),
+        receiveLabel: f(txReviewMessages.receiveLabel),
+        operationsLabel: f(txReviewMessages.operationsLabel),
+        policyIdLabel: f(txReviewMessages.policyIdLabel),
+        createdBy: f(txReviewMessages.createdBy),
+      },
+
+      // Transactions strings
+      transactions: {
+        title: f(transactionsMessages.title),
+        warningTitle: f(transactionsMessages.warningTitle),
+        warningMessage: f(transactionsMessages.message),
+        transactions: f(txLabels.transactions),
+        assets: (qty: number) => f(globalMessages.assets, {qty}),
+        sendLabel: f(actionMessages.send),
+        receiveLabel: f(actionMessages.receive),
+        buyLabel: f(actionMessages.buy),
+        buyTitle: f(actionMessages.buyTitle),
+        buyInfo: (options: any) => f(actionMessages.buyInfo, options),
+        proceed: f(actionMessages.proceed),
+        swapLabel: f(actionMessages.swap),
+        messageBuy: f(actionMessages.soon),
+        exchange: f(actionMessages.exchange),
+        addressCopiedMsg: f(receiveMessages.addressCopiedMsg),
+        lockedDeposit: f(globalMessages.lockedDeposit),
+        syncErrorBannerTextWithRefresh: f(
+          globalMessages.syncErrorBannerTextWithRefresh,
+        ),
+        syncErrorBannerTextWithoutRefresh: f(
+          globalMessages.syncErrorBannerTextWithoutRefresh,
+        ),
+        noTransactions: f(transactionsMessages.noTransactions),
+        direction: (direction: any) => {
+          const directionMap = {
+            SENT: transactionsMessages.directionMessagesSENT,
+            RECEIVED: transactionsMessages.directionMessagesRECEIVED,
+            SELF: transactionsMessages.directionMessagesSELF,
+            MULTI: transactionsMessages.directionMessagesMULTI,
+          }
+          return f(directionMap[direction as keyof typeof directionMap])
+        },
+        unknownAssetName: f(transactionsMessages.unknownAssetName),
+        walletAddress: f(transactionsMessages.walletAddress),
+        BIP32path: f(transactionsMessages.BIP32path),
+        copyLabel: f(transactionsMessages.copyLabel),
+        addressPrefixReceive: (idx: number) =>
+          f(transactionsMessages.addressPrefixReceive, {idx}),
+        addressPrefixChange: (idx: number) =>
+          f(transactionsMessages.addressPrefixChange, {idx}),
+        addressPrefixNotMine: f(transactionsMessages.addressPrefixNotMine),
+        spending: f(transactionsMessages.spending),
+        staking: f(transactionsMessages.staking),
+        addessModalTitle: f(transactionsMessages.addessModalTitle),
+        verifyLabel: f(transactionsMessages.verifyLabel),
+        txDetailsFee: f(transactionsMessages.txDetailsFee),
+        fromAddresses: f(transactionsMessages.fromAddresses),
+        toAddresses: f(transactionsMessages.toAddresses),
+        memo: f(transactionsMessages.memo),
+        transactionId: f(transactionsMessages.transactionId),
+        txAssuranceLevel: f(transactionsMessages.txAssuranceLevel),
+        confirmations: (cnt: number) =>
+          f(transactionsMessages.confirmations, {cnt}),
+        omittedCount: (cnt: number) =>
+          f(transactionsMessages.omittedCount, {cnt}),
+        openInExplorer: f(transactionsMessages.openInExplorer),
+        SENT: f(transactionsMessages.txTypeMessagesSENT),
+        RECEIVED: f(transactionsMessages.txTypeMessagesRECEIVED),
+        SELF: f(transactionsMessages.txTypeMessagesSELF),
+        MULTI: f(transactionsMessages.txTypeMessagesMULTI),
+        assetsLabel: f(globalMessages.assetsLabel),
+        copiedLabel: f(transactionsMessages.copiedLabel),
+        collateral: f(globalMessages.collateral),
+        organizeWallet: f(transactionsMessages.organizeWallet),
+        organizeWalletBanner: f(transactionsMessages.organizeWalletBanner),
+        organizeWalletDescription: f(
+          transactionsMessages.organizeWalletDescription,
+        ),
+        organizeWalletWarning: f(transactionsMessages.organizeWalletWarning),
+        organizeWalletButton: f(transactionsMessages.organizeWalletButton),
+        history: {
+          historyTitle: f(transactionsMessages.historyTitle),
+          txDetailsTitle: f(transactionsMessages.txDetailsTitle),
+        },
+        utxo: {
+          utxoListTitle: f(transactionsMessages.utxoListTitle),
+          utxoConsolidationTitle: f(
+            transactionsMessages.utxoConsolidationTitle,
+          ),
+          utxoConsolidationWarning: f(
+            transactionsMessages.utxoConsolidationWarning,
+          ),
+          organizeWalletButton: f(transactionsMessages.organizeWalletButton),
+        },
+        submitted: {
+          submittedTxTitle: f(transactionsMessages.submittedTxTitle),
+          submittedTxText: f(transactionsMessages.submittedTxText),
+          submittedTxButton: f(transactionsMessages.submittedTxButton),
+        },
+      },
+
+      // ManageCollateral strings
+      manageCollateral: {
+        lockedAsCollateral: f(manageCollateralMessages.lockedAsCollateral),
+        removeCollateral: f(manageCollateralMessages.removeCollateral),
+        collateralSpent: f(manageCollateralMessages.collateralSpent),
+        generateCollateral: f(manageCollateralMessages.generateCollateral),
+        notEnoughFundsAlertTitle: f(
+          manageCollateralMessages.notEnoughFundsAlertTitle,
+        ),
+        notEnoughFundsAlertMessage: f(
+          manageCollateralMessages.notEnoughFundsAlertMessage,
+        ),
+        notEnoughFundsAlertOK: f(
+          manageCollateralMessages.notEnoughFundsAlertOK,
+        ),
+        collateralInfoModalLabel: f(
+          manageCollateralMessages.collateralInfoModalLabel,
+        ),
+        collateralInfoModalTitle: f(
+          manageCollateralMessages.collateralInfoModalTitle,
+        ),
+        collateralInfoModalText: f(
+          manageCollateralMessages.collateralInfoModalText,
+        ),
+        initialCollateralInfoModalTitle: f(
+          manageCollateralMessages.initialCollateralInfoModalTitle,
+        ),
+        initialCollateralInfoModalText: f(
+          manageCollateralMessages.initialCollateralInfoModalText,
+        ),
+        initialCollateralInfoModalButton: f(
+          manageCollateralMessages.initialCollateralInfoModalButton,
+        ),
+        learnMore: f(globalMessages.learnMore),
+        cancel: f(globalMessages.cancel),
+      },
+
+      // ManageNotifications strings
+      manageNotifications: {
+        manageDisplayDurationScreenTitle: f(
+          manageNotificationsMessages.displayDuration,
+        ),
+        inAppNotifications: f(manageNotificationsMessages.inAppNotifications),
+        displayDuration: f(manageNotificationsMessages.displayDuration),
+        pushNotifications: f(manageNotificationsMessages.pushNotifications),
+        goToSettings: f(manageNotificationsMessages.goToSettings),
+        enableNotificationsThroughSettings: f(
+          manageNotificationsMessages.enableNotificationsThroughSettings,
+        ),
+        notifications: f(manageNotificationsMessages.notifications),
+      },
+
+      // ManageNotificationDisplayDuration strings
+      manageNotificationDisplayDuration: {
+        description: f(manageNotificationsMessages.description),
+        apply: f(manageNotificationsMessages.apply),
+        displayDuration: f(manageNotificationsMessages.displayDuration),
+        manual: f(manageNotificationsMessages.manual),
+        seconds: f(manageNotificationsMessages.seconds),
+        twoSeconds: f(manageNotificationsMessages.twoSeconds),
+        fourSeconds: f(manageNotificationsMessages.fourSeconds),
+        sixSeconds: f(manageNotificationsMessages.sixSeconds),
+        eightSeconds: f(manageNotificationsMessages.eightSeconds),
+        tenSeconds: f(manageNotificationsMessages.tenSeconds),
+        twelveSeconds: f(manageNotificationsMessages.twelveSeconds),
+        inputError: f(manageNotificationsMessages.inputError),
+      },
+
+      // Initialization strings
+      initialization: {
+        title: f(initializationMessages.title),
+        description: f(initializationMessages.description),
+        selectLanguage: f(initializationMessages.selectLanguage),
+        tosIAgreeWith: f(initializationMessages.tosIAgreeWith),
+        tosAgreement: f(initializationMessages.tosAgreement),
+        continue: f(initializationMessages.continue),
+        acceptTermsTitle: f(initializationMessages.acceptTermsTitle),
+        acceptPrivacyPolicyTitle: f(
+          initializationMessages.acceptPrivacyPolicyTitle,
+        ),
+        languagePickerTitle: f(initializationMessages.languagePickerTitle),
+        tosAnd: f(initializationMessages.tosAnd),
+        privacyPolicy: f(initializationMessages.privacyPolicy),
+        biometricDescription: f(initializationMessages.biometricDescription),
+        ignoreButton: f(initializationMessages.ignoreButton),
+        enableButton: f(initializationMessages.enableButton),
+        darkThemeAnnouncement: {
+          header: f(initializationMessages.darkThemeAnnouncementHeader),
+          description: f(
+            initializationMessages.darkThemeAnnouncementDescription,
+          ),
+          changeTheme: f(
+            initializationMessages.darkThemeAnnouncementChangeTheme,
+          ),
+          continue: f(initializationMessages.darkThemeAnnouncementContinue),
+        },
+      },
+
+      // Ledger Messages
+      ledgerMessages: {
+        appInstalled: f(ledgerMessages.appInstalled),
+        appOpened: f(ledgerMessages.appOpened),
+        bluetoothDisabledError: f(ledgerMessages.bluetoothDisabledError),
+        bluetoothEnabled: f(ledgerMessages.bluetoothEnabled),
+        connectionError: f(ledgerMessages.connectionError),
+        connectUsb: f(ledgerMessages.connectUsb),
+        continueOnLedger: f(ledgerMessages.continueOnLedger),
+        enableLocation: f(ledgerMessages.enableLocation),
+        enableTransport: f(ledgerMessages.enableTransport),
+        enterPin: f(ledgerMessages.enterPin),
+        haveOTGAdapter: f(ledgerMessages.haveOTGAdapter),
+        keepUsbConnected: f(ledgerMessages.keepUsbConnected),
+        locationEnabled: f(ledgerMessages.locationEnabled),
+        openApp: f(ledgerMessages.openApp),
+        rejectedByUserError: f(ledgerMessages.rejectedByUserError),
+        usbAlwaysConnected: f(ledgerMessages.usbAlwaysConnected),
+        followSteps: f(ledgerMessages.followSteps),
+        noDeviceInfoError: f(ledgerMessages.noDeviceInfoError),
+      },
+
+      // Setup Wallet strings
+      setupWallet: {
+        // Wallet initialization strings (flat structure)
+        walletChecksum: f(setupWalletMessages.walletChecksum),
+        walletChecksumModalCardFirstItem: f(
+          setupWalletMessages.walletChecksumModalCardFirstItem,
+        ),
+        connectNanoXTitle: f(setupWalletMessages.connectNanoXTitle),
+        saveNanoXTitle: f(setupWalletMessages.saveNanoXTitle),
+        checkNanoXTitle: f(setupWalletMessages.checkNanoXTitle),
+        walletChecksumModalCardSecondItem: (checksum: string) =>
+          intl.formatMessage(
+            setupWalletMessages.walletChecksumModalCardSecondItem,
+            {checksum},
+          ),
+        walletChecksumModalCardThirdItem: f(
+          setupWalletMessages.walletChecksumModalCardThirdItem,
+        ),
+        walletChecksumModalCardTitle: f(
+          setupWalletMessages.walletChecksumModalCardTitle,
+        ),
+        stepWalletDetails: f(setupWalletMessages.stepWalletDetails),
+        walletDetailsTitle: (bold: any) =>
+          f(setupWalletMessages.walletDetailsTitle, {b: bold.b}),
+        walletDetailsPasswordHelper: f(
+          setupWalletMessages.walletDetailsPasswordHelper,
+        ),
+        walletDetailsNameInput: f(setupWalletMessages.walletDetailsNameInput),
+        walletDetailsPasswordInput: f(
+          setupWalletMessages.walletDetailsPasswordInput,
+        ),
+        walletDetailsConfirmPasswordInput: f(
+          setupWalletMessages.walletDetailsConfirmPasswordInput,
+        ),
+        invalidChecksum: f(setupWalletMessages.invalidChecksum),
+        validChecksum: f(setupWalletMessages.validChecksum),
+        stepRestoreWalletScreen: f(setupWalletMessages.stepRestoreWalletScreen),
+        choose15WordsMnemonicTitle: f(
+          setupWalletMessages.choose15WordsMnemonicTitle,
+        ),
+        choose24WordsMnemonicTitle: f(
+          setupWalletMessages.choose24WordsMnemonicTitle,
+        ),
+        hwModalTitle: f(setupWalletMessages.hwModalTitle),
+        hwModalText: f(setupWalletMessages.hwModalText),
+        hwModalUsbButton: f(setupWalletMessages.hwModalUsbButton),
+        hwModalBtButton: f(setupWalletMessages.hwModalBtButton),
+        hwModalIosWarning: f(setupWalletMessages.hwModalIosWarning),
+        hwWalletDetailsTitle: (bold: any) =>
+          f(setupWalletMessages.hwWalletDetailsTitle, {b: bold.b}),
+        hwExportKey: f(setupWalletMessages.hwExportKey),
+        bluetoothError: f(setupWalletMessages.bluetoothError),
+        hwCheckIntroline: f(setupWalletMessages.hwCheckIntroline),
+        hwCheckTitle: f(setupWalletMessages.hwCheckTitle),
+        ledgerSupportLink: f(setupWalletMessages.ledgerSupportLink),
+        addNewWalletTitle: f(setupWalletMessages.addNewWalletTitle),
+        createWalletTitle: f(setupWalletMessages.createWalletTitle),
+        restoreWalletTitle: f(setupWalletMessages.restoreWalletTitle),
+        importReadOnlyTitle: f(setupWalletMessages.importReadOnlyTitle),
+        saveReadOnlyWalletTitle: f(setupWalletMessages.saveReadOnlyWalletTitle),
+        save: f(setupWalletMessages.save),
+        walletNameErrorTooLong: f(setupWalletMessages.walletNameErrorTooLong),
+        walletNameErrorMustBeFilled: f(
+          setupWalletMessages.walletNameErrorMustBeFilled,
+        ),
+        defaultWalletName: f(setupWalletMessages.defaultWalletName),
+        checksumLabel: f(setupWalletMessages.checksumLabel),
+        walletAddressLabel: f(setupWalletMessages.walletAddressLabel),
+        key: f(setupWalletMessages.key),
+        derivationPath: f(setupWalletMessages.derivationPath),
+        importReadOnlyWalletDescription: f(
+          setupWalletMessages.importReadOnlyWalletDescription,
+        ),
+        aboutRecoveryPhraseTitle: (bold: any) =>
+          f(setupWalletMessages.aboutRecoveryPhraseTitle, {b: bold.b}),
+        aboutRecoveryPhraseCardFirstItem: (bold: any) =>
+          f(setupWalletMessages.aboutRecoveryPhraseCardFirstItem, {b: bold.b}),
+        aboutRecoveryPhraseCardSecondItem: (bold: any) =>
+          f(setupWalletMessages.aboutRecoveryPhraseCardSecondItem, {b: bold.b}),
+        aboutRecoveryPhraseCardThirdItem: (bold: any) =>
+          f(setupWalletMessages.aboutRecoveryPhraseCardThirdItem, {b: bold.b}),
+        aboutRecoveryPhraseCardFourthItem: (bold: any) =>
+          f(setupWalletMessages.aboutRecoveryPhraseCardFourthItem, {b: bold.b}),
+        aboutRecoveryPhraseCardFifthItem: (bold: any) =>
+          f(setupWalletMessages.aboutRecoveryPhraseCardFifthItem, {b: bold.b}),
+        stepAboutRecoveryPhrase: f(setupWalletMessages.stepAboutRecoveryPhrase),
+        next: f(setupWalletMessages.next),
+        restoreDuplicatedWalletModalTitle: f(
+          setupWalletMessages.restoreDuplicatedWalletModalTitle,
+        ),
+        restoreWalletScreenTitle: (bold: any) =>
+          f(setupWalletMessages.restoreWalletScreenTitle, {b: bold.b}),
+        wordNotFound: f(setupWalletMessages.wordNotFound),
+        learnMore: f(setupWalletMessages.learnMore),
+        logoTitle: f(setupWalletMessages.logoTitle),
+        logoSubtitle: f(setupWalletMessages.logoSubtitle),
+        continueButton: f(setupWalletMessages.continueButton),
+        recoveryPhraseModalTitle: f(
+          setupWalletMessages.recoveryPhraseModalTitle,
+        ),
+        recoveryPhraseCardTitle: f(setupWalletMessages.recoveryPhraseCardTitle),
+        recoveryPhraseCardFirstItem: f(
+          setupWalletMessages.recoveryPhraseCardFirstItem,
+        ),
+        recoveryPhraseCardSecondItem: f(
+          setupWalletMessages.recoveryPhraseCardSecondItem,
+        ),
+        recoveryPhraseCardThirdItem: f(
+          setupWalletMessages.recoveryPhraseCardThirdItem,
+        ),
+        recoveryPhraseCardFourthItem: f(
+          setupWalletMessages.recoveryPhraseCardFourthItem,
+        ),
+        recoveryPhraseCardFifthItem: f(
+          setupWalletMessages.recoveryPhraseCardFifthItem,
+        ),
+        stepRecoveryPhrase: f(setupWalletMessages.stepRecoveryPhrase),
+        recoveryPhraseTitle: (bold: any) =>
+          f(setupWalletMessages.recoveryPhraseTitle, {b: bold.b}),
+        hideRecoveryPhraseButton: f(
+          setupWalletMessages.hideRecoveryPhraseButton,
+        ),
+        showRecoveryPhraseButton: f(
+          setupWalletMessages.showRecoveryPhraseButton,
+        ),
+        verifyRecoveryPhraseTitle: (bold: any) =>
+          f(setupWalletMessages.verifyRecoveryPhraseTitle, {b: bold.b}),
+        stepVerifyRecoveryPhrase: f(
+          setupWalletMessages.stepVerifyRecoveryPhrase,
+        ),
+        verifyRecoveryPhraseErrorMessage: f(
+          setupWalletMessages.verifyRecoveryPhraseErrorMessage,
+        ),
+        verifyRecoveryPhraseSuccessMessage: f(
+          setupWalletMessages.verifyRecoveryPhraseSuccessMessage,
+        ),
+        clearAll: f(setupWalletMessages.clearAll),
+        preparingWallet: f(setupWalletMessages.preparingWallet),
+        restoreDuplicatedWalletModalText: f(
+          setupWalletMessages.restoreDuplicatedWalletModalText,
+        ),
+        restoreDuplicatedWalletModalButton: f(
+          setupWalletMessages.restoreDuplicatedWalletModalButton,
+        ),
+        connectWalletButtonCard: f(setupWalletMessages.connectWalletButtonCard),
+        createWalletButtonCard: f(setupWalletMessages.createWalletButtonCard),
+        restoreWalletButtonCard: f(setupWalletMessages.restoreWalletButtonCard),
+        passwordStrengthRequirement: (values: any) =>
+          f(setupWalletMessages.passwordStrengthRequirement, values),
+        repeatPasswordInputError: f(
+          setupWalletMessages.repeatPasswordInputError,
+        ),
+        tooLong: f(globalMessages.walletNameErrorTooLong),
+        nameAlreadyTaken: f(globalMessages.walletNameErrorNameAlreadyTaken),
+        mustBeFilled: f(globalMessages.walletNameErrorMustBeFilled),
+        walletDetailsModalTitle: f(setupWalletMessages.walletDetailsModalTitle),
+        walletNameModalCardTitle: f(
+          setupWalletMessages.walletNameModalCardTitle,
+        ),
+        walletNameModalCardFirstItem: f(
+          setupWalletMessages.walletNameModalCardFirstItem,
+        ),
+        walletNameModalCardSecondItem: f(
+          setupWalletMessages.walletNameModalCardSecondItem,
+        ),
+        walletPasswordModalCardTitle: f(
+          setupWalletMessages.walletPasswordModalCardTitle,
+        ),
+        walletPasswordModalCardFirstItem: f(
+          setupWalletMessages.walletPasswordModalCardFirstItem,
+        ),
+        walletPasswordModalCardSecondItem: f(
+          setupWalletMessages.walletPasswordModalCardSecondItem,
+        ),
+      },
+
+      // Mapped strings for dynamic category mapping
+      getDappMappedStrings: () => {
+        const categoryMap: Record<string, string> = {
+          'Investment': f(discoverMessages.filterParentOptionsInvestment),
+          'Media': f(discoverMessages.filterParentOptionsMedia),
+          'Trading': f(discoverMessages.filterParentOptionsTrading),
+          'NFT': f(discoverMessages.filterParentOptionsNFT),
+          'Community': f(discoverMessages.filterParentOptionsCommunity),
+          'Entertainment': f(discoverMessages.filterChildOptionsEntertainment),
+          'DeFi': f(discoverMessages.filterChildOptionsDeFi),
+          'DEX': f(discoverMessages.filterChildOptionsDEX),
+          'NFT Marketplace': f(
+            discoverMessages.filterChildOptionsNFTMarketplace,
+          ),
+          'Stablecoin': f(discoverMessages.filterChildOptionsStablecoin),
+          'Trading Tools': f(discoverMessages.filterChildOptionsTradingTools),
+          'DAO': f(discoverMessages.filterChildOptionsDAO),
+          'Decentralised Storage': f(
+            discoverMessages.filterChildOptionsDecentralisedStorage,
+          ),
+          'News': f(discoverMessages.filterChildOptionsNews),
+        }
+
+        return (key: string) => categoryMap[key] || key
+      },
+    })
+  }, [intl])
+}
