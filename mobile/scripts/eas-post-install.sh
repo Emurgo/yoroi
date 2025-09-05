@@ -16,8 +16,14 @@ else
   export RUST_ANDROID_GRADLE_PYTHON_COMMAND=python3
 fi
 
-# Prebuild Rust JNI libraries for Emurgo bridges (arm64)
+# Prebuild Rust JNI libraries for Emurgo bridges (all Android platforms)
 cd android
-./gradlew :emurgo_csl-mobile-bridge-jsi:cargoBuildArm64 :emurgo_msl-mobile-bridge-jsi:cargoBuildArm64
-
-
+./gradlew \
+  :emurgo_csl-mobile-bridge-jsi:cargoBuildArm \
+  :emurgo_csl-mobile-bridge-jsi:cargoBuildArm64 \
+  :emurgo_csl-mobile-bridge-jsi:cargoBuildX86 \
+  :emurgo_csl-mobile-bridge-jsi:cargoBuildX86_64 \
+  :emurgo_msl-mobile-bridge-jsi:cargoBuildArm \
+  :emurgo_msl-mobile-bridge-jsi:cargoBuildArm64 \
+  :emurgo_msl-mobile-bridge-jsi:cargoBuildX86 \
+  :emurgo_msl-mobile-bridge-jsi:cargoBuildX86_64
