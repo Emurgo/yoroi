@@ -26,7 +26,16 @@ if command -v set-env >/dev/null 2>&1; then
 fi
 
 # iOS device + simulators
-rustup target add aarch64-apple-ios aarch64-apple-ios-sim x86_64-apple-ios
+rustup target add \
+ aarch64-apple-darwin \
+ aarch64-apple-ios \
+ aarch64-apple-ios-sim \
+ aarch64-linux-android \
+ armv7-linux-androideabi \
+ i686-linux-android \
+ wasm32-unknown-unknown \
+ x86_64-apple-ios \
+ x86_64-linux-android
 
 echo "Rust installed and iOS targets added"
 
