@@ -11,9 +11,7 @@ export const unstoppableApiKey = process.env.EXPO_PUBLIC_UNSTOPPABLE_API_KEY
 // Dev
 export const commit = process.env.EXPO_PUBLIC_COMMIT
 export const buildVariant = process.env.EXPO_PUBLIC_BUILD_VARIANT
-export const disableLogbox = Boolean(
-  process.env.EXPO_PUBLIC_DISABLE_LOGBOX,
-)
+export const disableLogbox = Boolean(process.env.EXPO_PUBLIC_DISABLE_LOGBOX)
 
 // Runtime
 export const isNightly = buildVariant === 'NIGHTLY'
@@ -42,11 +40,10 @@ export const isWeb =
 export const platform = isIOS ? 'ios' : isAndroid ? 'android' : 'web'
 
 // Swap Fees
-export const frontendFeeAddressMainnet = 
+export const frontendFeeAddressMainnet =
   process.env.EXPO_PUBLIC_FRONTEND_FEE_ADDRESS_MAINNET
-export const frontendFeeAddressPreprod = 
+export const frontendFeeAddressPreprod =
   process.env.EXPO_PUBLIC_FRONTEND_FEE_ADDRESS_PREPROD
-
 
 // Ramp on/off
 export const banxaTestWallet = process.env.EXPO_PUBLIC_BANXA_TEST_WALLET
