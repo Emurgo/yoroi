@@ -3,11 +3,11 @@ set -euo pipefail
 
 echo "EAS pre-install: Rust setup"
 
-# Only run on iOS builds
-if [[ "${EAS_BUILD_PLATFORM:-}" != "ios" ]]; then
-  echo "Skipping Rust install (platform: ${EAS_BUILD_PLATFORM:-unknown})"
-  exit 0
-fi
+# # Only run on iOS builds
+# if [[ "${EAS_BUILD_PLATFORM:-}" != "ios" ]]; then
+#   echo "Skipping Rust install (platform: ${EAS_BUILD_PLATFORM:-unknown})"
+#   exit 0
+# fi
 
 # Install rustup non-interactively if not installed
 if ! command -v rustup >/dev/null 2>&1; then
@@ -25,7 +25,7 @@ if command -v set-env >/dev/null 2>&1; then
   set-env PATH "$HOME/.cargo/bin:$PATH"
 fi
 
-# iOS device + simulators
+# iOS device + simulators + android
 rustup target add \
  aarch64-apple-darwin \
  aarch64-apple-ios \
@@ -37,6 +37,6 @@ rustup target add \
  x86_64-apple-ios \
  x86_64-linux-android
 
-echo "Rust installed and iOS targets added"
+echo "Rust installed and iOS and Android targets added"
 
 
