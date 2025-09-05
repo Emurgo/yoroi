@@ -40,3 +40,42 @@ rustup target add \
 echo "Rust installed and iOS and Android targets added"
 
 
+# If this is an Android build, ensure the requested Android NDK is installed early
+if [[ "${EAS_BUILD_PLATFORM:-}" == "android" ]]; then
+  # Default to the version Expo root project uses (seen in build logs)
+  NDK_VERSION="${ANDROID_NDK_VERSION:-27.1.12297006}"
+
+  SDK_ROOT="${ANDROID_SDK_ROOT:-${ANDROID_HOME:-${HOME}/Android/Sdk}}"
+  SDKMANAGER="${SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager"
+  if [[ ! -x "${SDKMANAGER}" ]]; then
+    SDKMANAGER="$(command -v sdkmanager || true)"
+  fi
+
+  if [[ -z "${SDKMANAGER}" ]]; then
+    echo "sdkmanager not found; cannot install NDK proactively. Gradle will attempt installation later."
+  else
+    echo "Ensuring Android NDK ${NDK_VERSION} is installed (SDK root: ${SDK_ROOT})"
+    # Accept licenses non-interactively
+    yes | "${SDKMANAGER}" --sdk_root="${SDK_ROOT}" --licenses >/dev/null 2>&1 || true
+
+    if [[ -d "${SDK_ROOT}/ndk/${NDK_VERSION}" ]]; then
+      echo "NDK ${NDK_VERSION} already installed at ${SDK_ROOT}/ndk/${NDK_VERSION}"
+    else
+      "${SDKMANAGER}" --sdk_root="${SDK_ROOT}" --install "ndk;${NDK_VERSION}"
+    fi
+
+    if [[ -d "${SDK_ROOT}/ndk/${NDK_VERSION}" ]]; then
+      export ANDROID_NDK_ROOT="${SDK_ROOT}/ndk/${NDK_VERSION}"
+      export ANDROID_NDK_HOME="${SDK_ROOT}/ndk/${NDK_VERSION}"
+      if command -v set-env >/dev/null 2>&1; then
+        set-env ANDROID_NDK_ROOT "${ANDROID_NDK_ROOT}"
+        set-env ANDROID_NDK_HOME "${ANDROID_NDK_HOME}"
+      fi
+      echo "NDK ready at ${ANDROID_NDK_ROOT}"
+    else
+      echo "Warning: NDK ${NDK_VERSION} not found after installation attempt"
+    fi
+  fi
+fi
+
+
