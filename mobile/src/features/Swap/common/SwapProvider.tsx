@@ -22,6 +22,22 @@ import {undefinedToken} from './constants'
 import {useNavigateTo} from './navigation'
 import {useGetInputs} from './useGetInputs'
 
+// Request ID tracking to ignore outdated responses
+const useRequestTracker = () => {
+  const requestIdRef = React.useRef(0)
+
+  const getNextRequestId = () => {
+    requestIdRef.current += 1
+    return requestIdRef.current
+  }
+
+  const isLatestRequest = (requestId: number) => {
+    return requestId === requestIdRef.current
+  }
+
+  return {getNextRequestId, isLatestRequest}
+}
+
 const SwapActionType = {
   ChangeOrderType: 'ChangeOrderType',
   TokenInInputTouched: 'TokenInInputTouched',
@@ -314,6 +330,9 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
     strings.swap.notEnoughBalance,
   ])
 
+  // Request tracking to prevent race conditions
+  const {getNextRequestId, isLatestRequest} = useRequestTracker()
+
   React.useEffect(() => {
     if (!state.needsNewEstimate) return
 
@@ -323,6 +342,9 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
       (state.tokenInInput.value === '' && state.tokenOutInput.value === '')
     )
       return
+
+    // Get a unique request ID for this call
+    const requestId = getNextRequestId()
 
     swapManager.api
       .estimate({
@@ -343,8 +365,14 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
         protocol: state.selectedProtocol.value,
       })
       .then((response) => {
+        // Only process response if this is still the latest request
+        if (!isLatestRequest(requestId)) return
+
         if (isLeft(response)) {
-          action({type: SwapActionType.EstimateError, value: response.error})
+          action({
+            type: SwapActionType.EstimateError,
+            value: response.error,
+          })
         } else {
           action({
             type: SwapActionType.EstimateResponse,
@@ -353,6 +381,9 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
         }
       })
       .catch(() => {
+        // Only process error if this is still the latest request
+        if (!isLatestRequest(requestId)) return
+
         action({
           type: SwapActionType.EstimateError,
           value: {
@@ -375,6 +406,8 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
     state.selectedProtocol.value,
     swapManager.api,
     action,
+    getNextRequestId,
+    isLatestRequest,
   ])
 
   const create = React.useCallback(async () => {
