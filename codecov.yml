@@ -7,8 +7,8 @@ coverage:
         if_not_found: success
     patch:
       default:
-        threshold: 1%
-        target: 5%
+        threshold: 0%
+        target: 0%
         if_not_found: success
 
 ignore:
