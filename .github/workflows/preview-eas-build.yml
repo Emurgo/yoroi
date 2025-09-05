@@ -7,7 +7,7 @@ on:
       - preview-next
 
 env:
-  GITHUB_TOKEN: ${{ secrets.PKG_TOKEN }}
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
   preview-build:
@@ -32,7 +32,7 @@ jobs:
 
       - name: 📦 Install Dependencies
         env:
-          GITHUB_TOKEN: ${{ secrets.PKG_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         working-directory: mobile
         run: npm ci
 
