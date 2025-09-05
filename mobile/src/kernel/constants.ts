@@ -1,8 +1,8 @@
 import {ThemeName} from '@yoroi/theme'
 import {App, Portfolio} from '@yoroi/types'
 
-import * as Device from 'expo-device'
 import Constants from 'expo-constants'
+import * as Device from 'expo-device'
 import {freeze} from 'immer'
 import {Platform} from 'react-native'
 
