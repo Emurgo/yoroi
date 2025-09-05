@@ -4,6 +4,7 @@
   "main": "index.ts",
   "scripts": {
     "eas-build-pre-install": "bash ./scripts/eas-pre-install.sh",
+    "eas-build-post-install": "bash ./scripts/eas-post-install.sh",
     "start": "expo start -c",
     "start:nightly": "EXPO_PUBLIC_APP_CONFIG=app.config.nightly.js expo start -c",
     "start:production": "EXPO_PUBLIC_APP_CONFIG=app.config.production.js expo start -c",

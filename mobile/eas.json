@@ -8,6 +8,7 @@
     "base": {
       "env": {
         "EXPO_PUBLIC_COMMIT": "093dec95a",
+        "RUST_ANDROID_GRADLE_PYTHON_COMMAND": "python3",
 
         "EXPO_PUBLIC_BUILD_VARIANT": "NIGHTLY",
         "EXPO_PUBLIC_SENTRY_DSN": "https://59637d7dcb274b6a9e9f708e0082b3d5@o1138840.ingest.sentry.io/6260389",
