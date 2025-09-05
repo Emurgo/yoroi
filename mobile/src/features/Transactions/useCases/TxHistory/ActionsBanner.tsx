@@ -46,13 +46,6 @@ export const ActionsBanner = (props: {disabled: boolean}) => {
       return
     }
 
-    swapForm.action({type: 'ResetForm'})
-
-    if (tokenOutId !== undefined) {
-      swapForm.action({type: 'TokenOutIdChanged', value: tokenOutId})
-      swapForm.action({type: 'TokenOutInputTouched'})
-    }
-
     track.swapInitiated({
       from_asset: [
         {
@@ -66,7 +59,8 @@ export const ActionsBanner = (props: {disabled: boolean}) => {
       slippage_tolerance: 1,
     })
 
-    navigateTo.navigateToSwap()
+    // Pass the tokenOutId to the navigation function which will handle setting it properly
+    navigateTo.navigateToSwap(tokenOutId)
   }
 
   const handleOnExchange = () => {

@@ -241,8 +241,9 @@ export const transformersMaker = (config: MinswapApiConfig) => {
           return request
         },
         response: (data: EstimateResponse): Swap.EstimateResponse => {
-          // When amount_in_decimal: true, amounts are already in decimal format (ADA)
-          // No need to convert from lovelace
+          const totalInput = parseFloat(data.amount_in)
+          const totalOutput = parseFloat(data.amount_out)
+          const totalOutputWithoutSlippage = parseFloat(data.min_amount_out)
 
           return freeze(
             {
@@ -251,13 +252,12 @@ export const transformersMaker = (config: MinswapApiConfig) => {
               deposits: parseFloat(data.deposits || '0'),
               aggregatorFee: parseFloat(data.aggregator_fee || '0'),
               frontendFee: 0,
-              netPrice:
-                parseFloat(data.amount_out) / parseFloat(data.amount_in),
+              netPrice: totalOutput / totalInput,
               priceImpact: data.avg_price_impact,
               totalFee: parseFloat(data.total_dex_fee || '0'),
-              totalOutput: parseFloat(data.amount_out),
-              totalOutputWithoutSlippage: parseFloat(data.min_amount_out),
-              totalInput: parseFloat(data.amount_in),
+              totalOutput: totalOutput,
+              totalOutputWithoutSlippage: totalOutputWithoutSlippage,
+              totalInput: totalInput,
             },
             true,
           )
