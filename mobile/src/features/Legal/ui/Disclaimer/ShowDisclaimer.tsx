@@ -36,7 +36,11 @@ const useDisclaimerText = ({
     queryFn: () => loadText(type, languageCode),
   })
 
-  return query.data
+  return {
+    data: query.data,
+    isLoading: query.isLoading,
+    error: query.error,
+  }
 }
 
 export const ShowDisclaimer = ({type, disabled}: Props) => {
@@ -48,10 +52,20 @@ export const ShowDisclaimer = ({type, disabled}: Props) => {
   const [showed, setShowed] = React.useState(false)
   const [accepted, setAccepted] = useDisclaimerState(type)
   const {atoms: ta, palette: p} = useTheme()
-  const disclaimerText = useDisclaimerText({type, languageCode})
+  const {
+    data: disclaimerText,
+    isLoading,
+    error,
+  } = useDisclaimerText({type, languageCode})
 
   React.useEffect(() => {
-    if (!disabled && !accepted && showed === false) {
+    if (
+      !disabled &&
+      !accepted &&
+      showed === false &&
+      !isLoading &&
+      disclaimerText
+    ) {
       openModal({
         title: strings.global.disclaimer,
         content: (
@@ -99,7 +113,10 @@ export const ShowDisclaimer = ({type, disabled}: Props) => {
             <Button
               type={ButtonType.Secondary}
               title={strings.global.cancel}
-              onPress={resetToTxHistory}
+              onPress={() => {
+                resetToTxHistory()
+                closeModal()
+              }}
             />
 
             <Proceed
@@ -124,6 +141,7 @@ export const ShowDisclaimer = ({type, disabled}: Props) => {
     navigation,
     openModal,
     disclaimerText,
+    isLoading,
     p.bg_color_max,
     ta.bg_color_max,
     ta.text_gray_max,

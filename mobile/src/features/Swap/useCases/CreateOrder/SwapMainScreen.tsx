@@ -4,6 +4,7 @@ import * as React from 'react'
 import {Text, View, useWindowDimensions} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
+import {ShowDisclaimer} from '~/features/Legal/ui/Disclaimer/ShowDisclaimer'
 import {undefinedToken} from '~/features/Swap/common/constants'
 import {useSwap} from '~/features/Swap/common/useSwap'
 import {useIsKeyboardOpen} from '~/hooks/useIsKeyboardOpen'
@@ -90,8 +91,7 @@ export const SwapMainScreen = () => {
   return (
     <View style={[a.flex_1, a.pb_lg, {backgroundColor: p.bg_color_max}]}>
       <ScrollView style={[a.px_lg]}>
-        {/* TODO: REVISIT Add disclaimer */}
-        {/*  <ShowDisclaimer type="swap" /> */}
+        <ShowDisclaimer type="swap" />
 
         <Space.Height.lg />
 

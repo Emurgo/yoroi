@@ -97,7 +97,6 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
             ]}
             underlineColorAndroid="transparent"
             editable={touched}
-            selectTextOnFocus
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
             ref={
