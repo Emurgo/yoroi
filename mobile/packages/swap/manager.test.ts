@@ -164,12 +164,28 @@ describe('swapManagerMaker', () => {
       value: {
         status: Api.HttpStatusCode.Ok,
         data: {
-          splits: [],
+          splits: [
+            {
+              protocol: Swap.Protocol.Minswap_v2,
+              initialPrice: 1.2,
+              batcherFee: 0,
+              amountIn: 50,
+              deposits: 0,
+              expectedOutput: 60,
+              expectedOutputWithoutSlippage: 59,
+              fee: 0,
+              finalPrice: 1.2,
+              poolFee: 0,
+              poolId: 'test-pool',
+              priceDistortion: 0,
+              priceImpact: 0,
+            },
+          ],
           batcherFee: 0,
           deposits: 0,
           aggregatorFee: 0,
           frontendFee: 0,
-          netPrice: 0,
+          netPrice: 1.2,
           priceImpact: 0,
           totalFee: 0,
           totalOutput: 0,
@@ -280,9 +296,7 @@ describe('swapManagerMaker', () => {
       expect(result.tag).toBe('right')
       expect(mockMuesliswapApi.tokens).toHaveBeenCalled()
       // Dexhunter should be excluded because it's not in the routing preference array
-      // The excluded response should be returned instead of calling the API
-      // Since the promise is created immediately, the API is still called, but the result is excluded
-      expect(mockDexhunterApi.tokens).toHaveBeenCalled()
+      expect(mockDexhunterApi.tokens).not.toHaveBeenCalled()
     })
 
     it('returns left if both are left', async () => {
@@ -296,10 +310,12 @@ describe('swapManagerMaker', () => {
       })
 
       const manager = swapManagerMaker(baseConfig)
+      manager.assignSettings({routingPreference: ['dexhunter', 'muesliswap']})
       const result = await manager.api.tokens()
-      if (result.tag !== 'left') fail()
       expect(result.tag).toBe('left')
-      expect(result.error.message).toBe('Unknown error')
+      if (result.tag === 'left') {
+        expect(result.error.message).toBe('Unknown error')
+      }
     })
 
     it('returns the right aggregator if the other aggregator is left', async () => {
@@ -353,12 +369,14 @@ describe('swapManagerMaker', () => {
       })
 
       const manager = swapManagerMaker(baseConfig)
+      manager.assignSettings({routingPreference: ['dexhunter', 'muesliswap']})
       const result = await manager.api.create(msApiMocks.inputs.create[0]!)
 
-      if (result.tag !== 'left') fail()
       expect(result.tag).toBe('left')
-      expect(result.error.message).toBe('ms create error')
-      expect(result.error.status).toBe(400)
+      if (result.tag === 'left') {
+        expect(result.error.message).toBe('ms create error')
+        expect(result.error.status).toBe(400)
+      }
     })
 
     it('should return "invalid" error', async () => {
@@ -381,12 +399,14 @@ describe('swapManagerMaker', () => {
       })
 
       const manager = swapManagerMaker(baseConfig)
+      manager.assignSettings({routingPreference: ['dexhunter', 'muesliswap']})
       const result = await manager.api.create(msApiMocks.inputs.create[0]!)
 
-      if (result.tag !== 'left') fail()
       expect(result.tag).toBe('left')
-      expect(result.error.message).toBe('Unknown error')
-      expect(result.error.status).toBe(-3)
+      if (result.tag === 'left') {
+        expect(result.error.message).toBe('Unknown error')
+        expect(result.error.status).toBe(-3)
+      }
     })
   })
 
@@ -604,6 +624,7 @@ describe('swapManagerMaker', () => {
       })
 
       const manager = swapManagerMaker(baseConfig)
+      manager.assignSettings({routingPreference: ['dexhunter', 'muesliswap']})
       const result = await manager.api.orders()
       expect(result.tag).toBe('left')
     })
@@ -700,6 +721,7 @@ describe('swapManagerMaker', () => {
       })
 
       const manager = swapManagerMaker(baseConfig)
+      manager.assignSettings({routingPreference: ['dexhunter', 'muesliswap']})
       const result = await manager.api.limitOptions({
         tokenIn: '.',
         tokenOut: '.',
@@ -734,6 +756,7 @@ describe('swapManagerMaker', () => {
       })
 
       const manager = swapManagerMaker(baseConfig)
+      manager.assignSettings({routingPreference: ['dexhunter', 'muesliswap']})
       const result = await manager.api.limitOptions({
         tokenIn: '.',
         tokenOut: '.',
@@ -777,6 +800,7 @@ describe('swapManagerMaker', () => {
       })
 
       const manager = swapManagerMaker(baseConfig)
+      manager.assignSettings({routingPreference: ['dexhunter', 'muesliswap']})
       const result = await manager.api.limitOptions({
         tokenIn: '.',
         tokenOut: '.',
@@ -819,6 +843,7 @@ describe('swapManagerMaker', () => {
       })
 
       const manager = swapManagerMaker(baseConfig)
+      manager.assignSettings({routingPreference: ['dexhunter', 'muesliswap']})
       const result = await manager.api.limitOptions({
         tokenIn: '.',
         tokenOut: '.',
@@ -850,6 +875,7 @@ describe('swapManagerMaker', () => {
       })
 
       const manager = swapManagerMaker(baseConfig)
+      manager.assignSettings({routingPreference: ['dexhunter', 'muesliswap']})
       const result = await manager.api.limitOptions({
         tokenIn: '.',
         tokenOut: '.',
@@ -929,14 +955,16 @@ describe('swapManagerMaker', () => {
       })
 
       const manager = swapManagerMaker(baseConfig)
+      manager.assignSettings({routingPreference: ['dexhunter', 'muesliswap']})
       await manager.api.tokens()
 
       const result = await manager.api.estimate(dhApiMocks.inputs.quote)
 
-      if (result.tag !== 'left') fail()
       expect(result.tag).toBe('left')
-      expect(result.error.message).toBe('ms orders error')
-      expect(result.error.status).toBe(400)
+      if (result.tag === 'left') {
+        expect(result.error.message).toBe('ms orders error')
+        expect(result.error.status).toBe(400)
+      }
     })
 
     it('should return "invalid" error', async () => {
@@ -959,14 +987,16 @@ describe('swapManagerMaker', () => {
       })
 
       const manager = swapManagerMaker(baseConfig)
+      manager.assignSettings({routingPreference: ['dexhunter', 'muesliswap']})
       await manager.api.tokens()
 
       const result = await manager.api.estimate(dhApiMocks.inputs.quote)
 
-      if (result.tag !== 'left') fail()
       expect(result.tag).toBe('left')
-      expect(result.error.message).toBe('Unknown error')
-      expect(result.error.status).toBe(-3)
+      if (result.tag === 'left') {
+        expect(result.error.message).toBe('Unknown error')
+        expect(result.error.status).toBe(-3)
+      }
     })
   })
 

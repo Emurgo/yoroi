@@ -40,14 +40,14 @@ describe('minswapApiMaker', () => {
     jest.clearAllMocks()
   })
 
-  it('should return proxy for non-mainnet networks', () => {
+  it('should return proxy for non-mainnet networks', async () => {
     const config = {
       ...mockConfig,
       network: Chain.Network.Preprod as Chain.SupportedNetworks,
     }
     const api = minswapApiMaker(config)
 
-    expect(api.tokens()).resolves.toEqual({
+    expect(api.tokens()).toEqual({
       tag: 'left',
       error: {
         status: -3,
@@ -102,7 +102,7 @@ describe('minswapApiMaker', () => {
     expect(isRight(result)).toBe(true)
     if (isRight(result)) {
       expect(result.value.data).toHaveLength(1)
-      expect(result.value.data[0].id).toBe('lovelace')
+      expect(result.value.data[0].id).toBe('.')
       expect(result.value.data[0].ticker).toBe('ADA')
     }
   })

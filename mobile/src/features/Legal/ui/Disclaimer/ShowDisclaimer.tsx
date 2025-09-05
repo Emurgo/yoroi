@@ -52,11 +52,10 @@ export const ShowDisclaimer = ({type, disabled}: Props) => {
   const [showed, setShowed] = React.useState(false)
   const [accepted, setAccepted] = useDisclaimerState(type)
   const {atoms: ta, palette: p} = useTheme()
-  const {
-    data: disclaimerText,
-    isLoading,
-    error,
-  } = useDisclaimerText({type, languageCode})
+  const {data: disclaimerText, isLoading} = useDisclaimerText({
+    type,
+    languageCode,
+  })
 
   React.useEffect(() => {
     if (

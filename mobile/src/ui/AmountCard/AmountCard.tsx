@@ -1,4 +1,3 @@
-import {toBigInt} from '@yoroi/common'
 import {isPrimaryTokenInfo} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 

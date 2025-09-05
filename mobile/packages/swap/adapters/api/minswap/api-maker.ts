@@ -1,4 +1,4 @@
-import {fetchData, isLeft, isRight} from '@yoroi/common'
+import {fetchData, isLeft} from '@yoroi/common'
 import {Api, Chain, Left, Swap} from '@yoroi/types'
 
 import {freeze} from 'immer'
@@ -7,13 +7,9 @@ import {transformersMaker} from './transformers'
 import {
   CancelRequest,
   CancelResponse,
-  CreateRequest,
   CreateResponse,
   Dex,
-  EstimateRequest,
   EstimateResponse,
-  LimitOptionsRequest,
-  LimitOptionsResponse,
   MinswapApiConfig,
   PendingOrdersResponse,
   TokensRequest,
@@ -24,43 +20,10 @@ const baseUrls = {
   [Chain.Network.Mainnet]: 'https://agg-api.minswap.org/aggregator',
 } as const
 
-const mapProtocolToDex = (protocol: Swap.Protocol): Dex => {
-  switch (protocol) {
-    case Swap.Protocol.Minswap_v2:
-      return Dex.MinswapV2
-    case Swap.Protocol.Minswap_v1:
-      return Dex.Minswap
-    case Swap.Protocol.Minswap_stable:
-      return Dex.MinswapStable
-    case Swap.Protocol.Muesliswap:
-      return Dex.MuesliSwap
-    case Swap.Protocol.Splash_v1:
-      return Dex.Splash
-    case Swap.Protocol.Sundaeswap_v3:
-      return Dex.SundaeSwapV3
-    case Swap.Protocol.Sundaeswap_v1:
-      return Dex.SundaeSwap
-    case Swap.Protocol.Vyfi_v1:
-      return Dex.VyFinance
-    case Swap.Protocol.Cswap:
-      return Dex.CswapV1
-    case Swap.Protocol.Wingriders_v2:
-      return Dex.WingRidersV2
-    case Swap.Protocol.Wingriders_v1:
-      return Dex.WingRiders
-    case Swap.Protocol.Wingriders_stable:
-      return Dex.WingRidersStableV2
-    case Swap.Protocol.Spectrum_v1:
-      return Dex.Spectrum
-    default:
-      return Dex.Unsupported
-  }
-}
-
 export const minswapApiMaker = (
   config: MinswapApiConfig,
 ): Readonly<Swap.Api> => {
-  const {address, network, partner, request = fetchData} = config
+  const {address, network, request = fetchData} = config
 
   if (network !== Chain.Network.Mainnet)
     return new Proxy(
