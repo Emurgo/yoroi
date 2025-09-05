@@ -3,6 +3,8 @@
   "version": "6.0.0",
   "main": "index.ts",
   "scripts": {
+    "eas-build-pre-install": "bash ./scripts/eas-pre-install.sh",
+    "eas-build-post-install": "bash ./scripts/eas-post-install.sh",
     "start": "expo start -c",
     "start:nightly": "EXPO_PUBLIC_APP_CONFIG=app.config.nightly.js expo start -c",
     "start:production": "EXPO_PUBLIC_APP_CONFIG=app.config.production.js expo start -c",
@@ -132,7 +134,8 @@
     "rxjs": "7.8.2",
     "tinycolor2": "1.6.0",
     "uuid": "11.1.0",
-    "zod": "3.25.17"
+    "zod": "3.25.17",
+    "expo-updates": "~0.28.17"
   },
   "devDependencies": {
     "@amplitude/ampli": "1.36.2",
