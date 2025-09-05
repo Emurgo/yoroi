@@ -1,5 +1,5 @@
-import {fetchData, isLeft} from '@yoroi/common'
-import {Api, Chain, Swap} from '@yoroi/types'
+import {fetchData, isLeft, isRight} from '@yoroi/common'
+import {Api, Chain, Left, Swap} from '@yoroi/types'
 
 import {freeze} from 'immer'
 
@@ -182,30 +182,57 @@ export const minswapApiMaker = (
         )
       },
 
-      async limitOptions(body: Swap.LimitOptionsRequest) {
-        const requestBody: LimitOptionsRequest = {
-          token_in: body.tokenIn,
-          token_out: body.tokenOut,
-          amount_in: '1', // Default amount for limit options
-          amount_out: '1', // Default amount for limit options
+      /* istanbul ignore next */
+      async limitOptions({tokenIn, tokenOut}: Swap.LimitOptionsRequest) {
+        const estimateResponse = await this.estimate({
+          tokenIn,
+          tokenOut,
+          slippage: 0,
+          amountIn: 50,
+        })
+
+        if (isLeft(estimateResponse)) {
+          return estimateResponse
         }
 
-        const response = await requestWithErrorHandling<LimitOptionsResponse>(
-          `${baseUrl}/limit-options`,
-          {
-            method: 'POST',
-            body: JSON.stringify(requestBody),
-          },
-        )
+        const wantedPrice = estimateResponse.value.data.netPrice
+        const defaultProtocol = estimateResponse.value.data.splits[0]?.protocol
 
-        if (isLeft(response)) return response
+        if (defaultProtocol === undefined) {
+          return freeze<Left<Api.ResponseError>>(
+            {
+              tag: 'left',
+              error: {
+                status: -3,
+                message: 'Invalid state',
+                responseData: null,
+              },
+            },
+            true,
+          )
+        }
+
+        // Minswap only supports MinswapV2 protocol
+        const options = [
+          {
+            protocol: Swap.Protocol.Minswap_v2,
+            initialPrice: wantedPrice,
+            batcherFee: estimateResponse.value.data.batcherFee,
+          },
+        ]
+
+        const result = {
+          defaultProtocol,
+          wantedPrice,
+          options,
+        }
 
         return freeze(
           {
             tag: 'right',
             value: {
-              status: response.value.status,
-              data: transformers.limitOptions.response(response.value.data),
+              status: Api.HttpStatusCode.Ok,
+              data: result,
             },
           },
           true,
@@ -213,9 +240,7 @@ export const minswapApiMaker = (
       },
 
       async estimate(body: Swap.EstimateRequest) {
-        console.log('Minswap estimate request:', body)
         const requestBody = transformers.estimate.request(body)
-        console.log('Minswap estimate request body:', requestBody)
 
         const response = await requestWithErrorHandling<EstimateResponse>(
           `${baseUrl}/estimate`,
@@ -224,8 +249,6 @@ export const minswapApiMaker = (
             body: JSON.stringify(requestBody),
           },
         )
-
-        console.log('Minswap estimate response:', response)
 
         if (isLeft(response)) return response
 
@@ -242,9 +265,7 @@ export const minswapApiMaker = (
       },
 
       async create(body: Swap.CreateRequest) {
-        console.log('Minswap create request:', body)
         const requestBody = transformers.create.request(body)
-        console.log('Minswap create request body:', requestBody)
 
         // Make the build-tx call
         const response = await requestWithErrorHandling<CreateResponse>(
@@ -255,12 +276,9 @@ export const minswapApiMaker = (
           },
         )
 
-        console.log('Minswap create response:', response)
-
         if (isLeft(response)) return response
 
         // Make an ad-hoc estimate call to get the swap details
-        console.log('Minswap making ad-hoc estimate call for swap details')
         const estimateRequest: Swap.EstimateRequest = {
           amountIn: body.amountIn,
           tokenIn: body.tokenIn,
@@ -271,13 +289,9 @@ export const minswapApiMaker = (
         }
 
         const estimateResponse = await this.estimate(estimateRequest)
-        console.log('Minswap ad-hoc estimate response:', estimateResponse)
 
         // If estimate fails, return the create response with minimal data
         if (isLeft(estimateResponse)) {
-          console.log(
-            'Minswap estimate failed, returning minimal create response',
-          )
           return freeze(
             {
               tag: 'right',
@@ -298,8 +312,6 @@ export const minswapApiMaker = (
           aggregator: Swap.Aggregator.Minswap,
           totalInput: estimateData.totalInput ?? body.amountIn,
         }
-
-        console.log('Minswap merged create data:', mergedData)
 
         return freeze(
           {

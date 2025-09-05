@@ -272,14 +272,6 @@ export const transformersMaker = (config: MinswapApiConfig) => {
           tokenIn,
           tokenOut,
         }: Swap.CreateRequest): CreateRequest => {
-          console.log('Minswap create transformer request:', {
-            amountIn,
-            blockedProtocols,
-            slippage,
-            tokenIn,
-            tokenOut,
-          })
-
           const request = {
             sender: address,
             min_amount_out: '0', // Will be calculated by the API
@@ -296,11 +288,9 @@ export const transformersMaker = (config: MinswapApiConfig) => {
             amount_in_decimal: true, // Also set at the top level for build-tx
           }
 
-          console.log('Minswap create transformer request body:', request)
           return request
         },
         response: (data: CreateResponse): Swap.CreateResponse => {
-          console.log('Minswap create transformer response:', data)
           return freeze(
             {
               splits: [],

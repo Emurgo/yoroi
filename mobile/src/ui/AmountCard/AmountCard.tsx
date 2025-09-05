@@ -136,7 +136,7 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
       </View>
 
       {error ? (
-        <View>
+        <View style={[a.flex_row, a.align_center, a.gap_sm]}>
           <Icon.Portfolio2 size={15} color={p.sys_magenta_500} />
 
           <Text style={[a.body_2_md_regular, {color: p.sys_magenta_500}]}>
