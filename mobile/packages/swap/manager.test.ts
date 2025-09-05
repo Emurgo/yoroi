@@ -6,6 +6,7 @@ import {
   api as dhApiMocks,
   primaryTokenInfo,
 } from './adapters/api/dexhunter/api.mocks'
+import {minswapApiMaker} from './adapters/api/minswap/api-maker'
 import {muesliswapApiMaker} from './adapters/api/muesliswap/api-maker'
 import {api as msApiMocks} from './adapters/api/muesliswap/api.mocks'
 import {standarizeError, swapManagerMaker} from './manager'
@@ -16,10 +17,14 @@ jest.mock('./adapters/api/dexhunter/api-maker', () => ({
 jest.mock('./adapters/api/muesliswap/api-maker', () => ({
   muesliswapApiMaker: jest.fn(),
 }))
+jest.mock('./adapters/api/minswap/api-maker', () => ({
+  minswapApiMaker: jest.fn(),
+}))
 
 describe('swapManagerMaker', () => {
   let mockDexhunterApi: jest.Mocked<Swap.Api>
   let mockMuesliswapApi: jest.Mocked<Swap.Api>
+  let mockMinswapApi: jest.Mocked<Swap.Api>
 
   const baseConfig = {
     address: 'someAddress',
@@ -43,6 +48,7 @@ describe('swapManagerMaker', () => {
     partners: {
       [Swap.Aggregator.Dexhunter]: 'somePartnerId',
       [Swap.Aggregator.Muesliswap]: 'somePartnerId',
+      [Swap.Aggregator.Minswap]: 'somePartnerId',
     },
   } as any
 
@@ -59,6 +65,15 @@ describe('swapManagerMaker', () => {
     } as any
 
     mockMuesliswapApi = {
+      tokens: jest.fn(),
+      orders: jest.fn(),
+      limitOptions: jest.fn(),
+      estimate: jest.fn(),
+      create: jest.fn(),
+      cancel: jest.fn(),
+    } as any
+
+    mockMinswapApi = {
       tokens: jest.fn(),
       orders: jest.fn(),
       limitOptions: jest.fn(),
@@ -114,8 +129,91 @@ describe('swapManagerMaker', () => {
         data: msApiMocks.results.create,
       },
     })
+
+    // Minswap mocks
+    mockMinswapApi.tokens.mockResolvedValue({
+      tag: 'right',
+      value: {
+        status: Api.HttpStatusCode.Ok,
+        data: [],
+      },
+    })
+
+    mockMinswapApi.orders.mockResolvedValue({
+      tag: 'right',
+      value: {
+        status: Api.HttpStatusCode.Ok,
+        data: [],
+      },
+    })
+
+    mockMinswapApi.limitOptions.mockResolvedValue({
+      tag: 'right',
+      value: {
+        status: Api.HttpStatusCode.Ok,
+        data: {
+          defaultProtocol: Swap.Protocol.Minswap_v2,
+          wantedPrice: 1,
+          options: [],
+        },
+      },
+    })
+
+    mockMinswapApi.estimate.mockResolvedValue({
+      tag: 'right',
+      value: {
+        status: Api.HttpStatusCode.Ok,
+        data: {
+          splits: [],
+          batcherFee: 0,
+          deposits: 0,
+          aggregatorFee: 0,
+          frontendFee: 0,
+          netPrice: 0,
+          priceImpact: 0,
+          totalFee: 0,
+          totalOutput: 0,
+          totalOutputWithoutSlippage: 0,
+          totalInput: 0,
+        },
+      },
+    })
+
+    mockMinswapApi.create.mockResolvedValue({
+      tag: 'right',
+      value: {
+        status: Api.HttpStatusCode.Ok,
+        data: {
+          splits: [],
+          batcherFee: 0,
+          deposits: 0,
+          aggregatorFee: 0,
+          frontendFee: 0,
+          netPrice: 0,
+          priceImpact: 0,
+          totalFee: 0,
+          totalInput: 0,
+          totalOutput: 0,
+          totalOutputWithoutSlippage: 0,
+          aggregator: Swap.Aggregator.Minswap,
+          cbor: 'test-cbor',
+        },
+      },
+    })
+
+    mockMinswapApi.cancel.mockResolvedValue({
+      tag: 'right',
+      value: {
+        status: Api.HttpStatusCode.Ok,
+        data: {
+          cbor: 'test-cancel-cbor',
+          additionalCancellationFee: undefined,
+        },
+      },
+    })
     ;(dexhunterApiMaker as jest.Mock).mockReturnValue(mockDexhunterApi)
     ;(muesliswapApiMaker as jest.Mock).mockReturnValue(mockMuesliswapApi)
+    ;(minswapApiMaker as jest.Mock).mockReturnValue(mockMinswapApi)
   })
 
   it('creates a manager with an API proxy', () => {
@@ -163,6 +261,15 @@ describe('swapManagerMaker', () => {
       const result = await manager.api.tokens()
       expect(result.tag).toBe('right')
       expect(mockDexhunterApi.tokens).toHaveBeenCalled()
+    })
+
+    it('calls minswap api if routing preference is minswap', async () => {
+      const manager = swapManagerMaker(baseConfig)
+      manager.assignSettings({routingPreference: ['minswap']})
+
+      const result = await manager.api.tokens()
+      expect(result.tag).toBe('right')
+      expect(mockMinswapApi.tokens).toHaveBeenCalled()
     })
 
     it('excludes aggregator if routing preference array does not include it', async () => {
@@ -876,6 +983,23 @@ describe('swapManagerMaker', () => {
       await manager.api.cancel(msApiMocks.inputs.cancel[0]!)
       expect(mockMuesliswapApi.cancel).toHaveBeenCalled()
       expect(mockDexhunterApi.cancel).not.toHaveBeenCalled()
+    })
+
+    it('delegates to minswap for minswap orders', async () => {
+      const manager = swapManagerMaker(baseConfig)
+      const minswapCancelRequest = {
+        order: {
+          txHash: 'test-tx-hash',
+          outputIndex: 0,
+          aggregator: Swap.Aggregator.Minswap,
+          protocol: Swap.Protocol.Minswap_v2,
+        },
+      } as Swap.CancelRequest
+
+      await manager.api.cancel(minswapCancelRequest)
+      expect(mockMinswapApi.cancel).toHaveBeenCalled()
+      expect(mockDexhunterApi.cancel).not.toHaveBeenCalled()
+      expect(mockMuesliswapApi.cancel).not.toHaveBeenCalled()
     })
   })
 })

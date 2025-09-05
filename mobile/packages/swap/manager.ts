@@ -4,6 +4,7 @@ import {Api, Portfolio, Swap} from '@yoroi/types'
 import {freeze} from 'immer'
 
 import {dexhunterApiMaker} from './adapters/api/dexhunter/api-maker'
+import {minswapApiMaker} from './adapters/api/minswap/api-maker'
 import {muesliswapApiMaker} from './adapters/api/muesliswap/api-maker'
 import {getBestSwap} from './helpers/getBestSwap'
 import {getPtPrice} from './helpers/getPtPrice'
@@ -34,6 +35,13 @@ export const swapManagerMaker: Swap.ManagerMaker = ({
     isPrimaryToken,
     partner: partners?.[Swap.Aggregator.Muesliswap],
   })
+  const minswapApi = minswapApiMaker({
+    address,
+    network,
+    primaryTokenInfo,
+    isPrimaryToken,
+    partner: partners?.[Swap.Aggregator.Minswap],
+  })
 
   const settings: Swap.ManagerSettings = {
     routingPreference: 'auto',
@@ -54,6 +62,7 @@ export const swapManagerMaker: Swap.ManagerMaker = ({
     {
       [Swap.Aggregator.Dexhunter]: dexhunterApi,
       [Swap.Aggregator.Muesliswap]: muesliswapApi,
+      [Swap.Aggregator.Minswap]: minswapApi,
     },
     settings,
     getPtPrice(primaryTokenInfo, dexhunterApi),
@@ -117,10 +126,11 @@ const apiManagerMaker = (
       },
 
       async orders() {
-        const responses = await Promise.all([
-          adapters.muesliswap.orders(),
-          adapters.dexhunter.orders(),
-        ])
+        const enabledAggregators = getEnabledAggregators()
+
+        const responses: Array<Api.Response<Swap.Order[]>> = await Promise.all(
+          enabledAggregators.map((aggregator) => adapters[aggregator].orders()),
+        )
 
         warnAllLeft(...responses)
 
@@ -284,9 +294,13 @@ const apiManagerMaker = (
       },
 
       async cancel(body: Swap.CancelRequest) {
-        return body.order.aggregator === Swap.Aggregator.Muesliswap
-          ? adapters.muesliswap.cancel(body)
-          : adapters.dexhunter.cancel(body)
+        if (body.order.aggregator === Swap.Aggregator.Muesliswap) {
+          return adapters.muesliswap.cancel(body)
+        }
+        if (body.order.aggregator === Swap.Aggregator.Minswap) {
+          return adapters.minswap.cancel(body)
+        }
+        return adapters.dexhunter.cancel(body)
       },
     },
     true,

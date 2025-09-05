@@ -211,7 +211,7 @@ export const SwapSettings = () => {
                 onValueChange={() =>
                   assignAggregator(
                     aggregator === 'auto'
-                      ? ['muesliswap', 'dexhunter']
+                      ? ['muesliswap', 'dexhunter', 'minswap']
                       : 'auto',
                   )
                 }
@@ -227,13 +227,23 @@ export const SwapSettings = () => {
 
                   <SettingsSwitch
                     value={aggregator.includes('dexhunter')}
-                    onValueChange={() =>
-                      assignAggregator(
-                        aggregator.includes('dexhunter')
-                          ? ['muesliswap']
-                          : [...aggregator, 'dexhunter'],
-                      )
-                    }
+                    onValueChange={() => {
+                      if (aggregator.includes('dexhunter')) {
+                        // Deselecting dexhunter
+                        const remainingOptions = aggregator.filter(
+                          (opt) => opt !== 'dexhunter',
+                        )
+                        // If no options would remain, turn on all others
+                        const newAggregator =
+                          remainingOptions.length === 0
+                            ? (['muesliswap', 'minswap'] as Swap.Aggregator[])
+                            : (remainingOptions as Swap.Aggregator[])
+                        assignAggregator(newAggregator)
+                      } else {
+                        // Selecting dexhunter
+                        assignAggregator([...aggregator, 'dexhunter'])
+                      }
+                    }}
                   />
                 </View>
 
@@ -244,13 +254,50 @@ export const SwapSettings = () => {
 
                   <SettingsSwitch
                     value={aggregator.includes('muesliswap')}
-                    onValueChange={() =>
-                      assignAggregator(
-                        aggregator.includes('muesliswap')
-                          ? ['dexhunter']
-                          : [...aggregator, 'muesliswap'],
-                      )
-                    }
+                    onValueChange={() => {
+                      if (aggregator.includes('muesliswap')) {
+                        // Deselecting muesliswap
+                        const remainingOptions = aggregator.filter(
+                          (opt) => opt !== 'muesliswap',
+                        )
+                        // If no options would remain, turn on all others
+                        const newAggregator =
+                          remainingOptions.length === 0
+                            ? (['dexhunter', 'minswap'] as Swap.Aggregator[])
+                            : (remainingOptions as Swap.Aggregator[])
+                        assignAggregator(newAggregator)
+                      } else {
+                        // Selecting muesliswap
+                        assignAggregator([...aggregator, 'muesliswap'])
+                      }
+                    }}
+                  />
+                </View>
+
+                <View style={[a.flex_row, a.justify_between, a.align_center]}>
+                  <Text style={[a.body_1_lg_regular, {color: p.text_gray_max}]}>
+                    Minswap
+                  </Text>
+
+                  <SettingsSwitch
+                    value={aggregator.includes('minswap')}
+                    onValueChange={() => {
+                      if (aggregator.includes('minswap')) {
+                        // Deselecting minswap
+                        const remainingOptions = aggregator.filter(
+                          (opt) => opt !== 'minswap',
+                        )
+                        // If no options would remain, turn on all others
+                        const newAggregator =
+                          remainingOptions.length === 0
+                            ? (['dexhunter', 'muesliswap'] as Swap.Aggregator[])
+                            : (remainingOptions as Swap.Aggregator[])
+                        assignAggregator(newAggregator)
+                      } else {
+                        // Selecting minswap
+                        assignAggregator([...aggregator, 'minswap'])
+                      }
+                    }}
                   />
                 </View>
               </>
