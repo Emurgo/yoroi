@@ -1,12 +1,17 @@
 import {toBigInt} from '@yoroi/common'
+import {isPrimaryTokenInfo} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
 import {Platform, Pressable, Text, TextInput, View} from 'react-native'
 
+import {usePortfolioBalances} from '~/features/Portfolio/common/hooks/usePortfolioBalances'
 import {useNavigateTo} from '~/features/Swap/common/navigation'
 import {useSwap} from '~/features/Swap/common/useSwap'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
+import {formatTokenWithText} from '~/wallets/utils/format'
 
 import {PairedBalance} from '../PairedBalance/PairedBalance'
 import {TokenInfoIcon} from '../TokenInfoIcon/TokenInfoIcon'
@@ -15,6 +20,8 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
   const {atoms: ta, palette: p} = useTheme()
   const swapForm = useSwap()
   const navigateTo = useNavigateTo()
+  const {wallet} = useSelectedWallet()
+  const balances = usePortfolioBalances({wallet})
   const [isFocused, setIsFocused] = React.useState(false)
 
   const amount =
@@ -23,10 +30,19 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
     ? swapForm.tokenInfos.get(amount.tokenId)
     : undefined
   const quantity = amount.value
-  const error = amount.error
+  // Only show errors for input direction (insufficient balance, etc.)
+  const error = direction === 'in' ? amount.error : null
   const touched = amount.isTouched
 
-  const formattedAmount = info ? `${info.name} (${info.ticker})` : ''
+  // Get balance for Max button
+  const balance = info ? balances.records.get(info.id)?.quantity : undefined
+  const decimals = info?.decimals ?? 0
+
+  // Format balance like rn71: show actual balance amount
+  const formattedAmount =
+    !info || (balance ?? 0n) === 0n
+      ? '0'
+      : formatTokenWithText(balance ?? 0n, info, 18)
 
   const focusInput = () => {
     const inputRef =
@@ -52,6 +68,13 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
     }
   }
 
+  const handleMaxPress = () => {
+    if (balance && info) {
+      const maxAmount = (Number(balance) / 10 ** decimals).toFixed(decimals)
+      swapForm.action({type: 'TokenInAmountChanged', value: maxAmount})
+    }
+  }
+
   return (
     <View style={[a.rounded_sm, a.p_lg, a.gap_lg, ta.bg_color_min]}>
       <View style={[a.flex_row, a.justify_between]}>
@@ -74,6 +97,10 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
 
           <Icon.Chevron direction="down" size={24} color={p.gray_max} />
         </Pressable>
+
+        {direction === 'in' && info && !isPrimaryTokenInfo(info) && (
+          <Button title="Max" type="Text" size="S" onPress={handleMaxPress} />
+        )}
 
         <Pressable
           style={[a.flex_1, a.flex_row, a.justify_end, a.align_center]}
@@ -117,25 +144,29 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
           </Text>
         </View>
       ) : (
-        <View style={[a.flex_row, a.align_center, a.gap_sm]}>
-          <Icon.Portfolio2 size={15} color={p.text_gray_medium} />
+        <View style={[a.flex_row, a.justify_between, a.align_center]}>
+          <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+            <Icon.Portfolio2 size={15} color={p.text_gray_medium} />
 
-          <Text
-            ellipsizeMode="middle"
-            style={[a.body_2_md_regular, ta.text_gray_medium]}
-          >
-            {formattedAmount}
-          </Text>
+            <Text
+              ellipsizeMode="middle"
+              style={[a.body_2_md_regular, ta.text_gray_medium]}
+            >
+              {formattedAmount}
+            </Text>
+          </View>
+
+          {info && (
+            <PairedBalance
+              amount={{
+                info,
+                quantity: BigInt(
+                  Math.floor(Number(quantity ?? 0) * 10 ** decimals),
+                ),
+              }}
+            />
+          )}
         </View>
-      )}
-
-      {info && (
-        <PairedBalance
-          amount={{
-            info,
-            quantity: toBigInt(quantity || '0', info.decimals),
-          }}
-        />
       )}
     </View>
   )
