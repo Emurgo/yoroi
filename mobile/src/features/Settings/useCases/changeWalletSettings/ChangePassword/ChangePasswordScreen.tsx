@@ -50,10 +50,7 @@ export const ChangePasswordScreen = () => {
     newPassword === currentPassword
 
   return (
-    <KeyboardAvoidingView
-      style={[ta.bg_color_max, a.flex_1]}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-    >
+    <KeyboardAvoidingView style={[ta.bg_color_max, a.flex_1]} enabled={true}>
       <SafeAreaView style={[a.flex_1]} edges={['left', 'right', 'bottom']}>
         <ScrollView
           contentContainerStyle={[a.p_lg]}
