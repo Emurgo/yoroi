@@ -1,10 +1,10 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 
 import React, {useState} from 'react'
+import {defineMessages, useIntl} from 'react-intl'
 import {TouchableOpacity, View} from 'react-native'
 import Markdown from 'react-native-marked'
 
-import {useStrings} from '~/kernel/i18n/useStrings'
 import {Icon} from '~/ui/Icon'
 
 export const LanguagePickerWarning = ({enabled}: {enabled: boolean}) => {
@@ -16,31 +16,17 @@ export const LanguagePickerWarning = ({enabled}: {enabled: boolean}) => {
   if (dismissed) return null
 
   return (
-    <View
-      style={{
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        padding: 16,
-      }}
-    >
+    <View style={a.p_lg}>
       <View
         style={[
+          a.p_lg,
+          a.rounded_sm,
           {
-            borderRadius: 8,
-            padding: 16,
+            backgroundColor: p.bg_color_min,
           },
-          {backgroundColor: p.bg_color_min},
         ]}
       >
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'flex-end',
-            marginBottom: 8,
-          }}
-        >
+        <View style={[a.flex_row, a.justify_end, a.align_center]}>
           <TouchableOpacity onPress={() => setDismissed(true)}>
             <Icon.Cross size={24} color={p.el_gray_max} />
           </TouchableOpacity>
@@ -48,11 +34,14 @@ export const LanguagePickerWarning = ({enabled}: {enabled: boolean}) => {
 
         <Markdown
           value={
-            strings.ui.contributors !== '_'
-              ? `${strings.ui.warning}: **${strings.ui.contributors}**`
-              : `${strings.ui.warning}.`
+            strings.contributors !== '_'
+              ? `${strings.warning}: **${strings.contributors}**`
+              : `${strings.warning}.`
           }
           styles={{
+            paragraph: {
+              backgroundColor: p.bg_color_min,
+            },
             text: {
               fontSize: 14,
               lineHeight: 20,
@@ -64,3 +53,25 @@ export const LanguagePickerWarning = ({enabled}: {enabled: boolean}) => {
     </View>
   )
 }
+
+const useStrings = () => {
+  const intl = useIntl()
+
+  return {
+    warning: intl.formatMessage(messages.warning),
+    contributors: intl.formatMessage(messages.contributors),
+  }
+}
+
+const messages = defineMessages({
+  warning: {
+    id: 'components.common.languagepicker.acknowledgement',
+    defaultMessage:
+      '!!!**The selected language translation is fully provided by the community**. ' +
+      'EMURGO is grateful to all those who have contributed',
+  },
+  contributors: {
+    id: 'components.common.languagepicker.contributors',
+    defaultMessage: '_',
+  },
+})
