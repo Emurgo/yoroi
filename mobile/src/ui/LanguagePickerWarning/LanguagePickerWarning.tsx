@@ -9,7 +9,7 @@ import {Icon} from '~/ui/Icon'
 
 export const LanguagePickerWarning = ({enabled}: {enabled: boolean}) => {
   const strings = useStrings()
-  const {palette: p} = useTheme()
+  const {palette: p, atoms: ta} = useTheme()
   const [dismissed, setDismissed] = useState(false)
 
   if (!enabled) return null
@@ -17,13 +17,7 @@ export const LanguagePickerWarning = ({enabled}: {enabled: boolean}) => {
 
   return (
     <View style={a.p_lg}>
-      <View
-        style={[
-          a.p_lg,
-          a.rounded_sm,
-          ta.bg_color_min,
-        ]}
-      >
+      <View style={[a.p_lg, a.rounded_sm, ta.bg_color_min]}>
         <View style={[a.flex_row, a.justify_end, a.align_center]}>
           <TouchableOpacity onPress={() => setDismissed(true)}>
             <Icon.Cross size={24} color={p.el_gray_max} />
@@ -39,8 +33,7 @@ export const LanguagePickerWarning = ({enabled}: {enabled: boolean}) => {
           styles={{
             paragraph: ta.bg_color_min,
             text: {
-              fontSize: 14,
-              lineHeight: 20,
+              ...a.body_2_md_regular,
               color: p.text_gray_medium,
             },
           }}
