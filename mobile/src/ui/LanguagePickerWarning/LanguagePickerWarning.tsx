@@ -22,7 +22,6 @@ export const LanguagePickerWarning = ({enabled}: {enabled: boolean}) => {
           a.p_lg,
           a.rounded_sm,
             backgroundColor: p.bg_color_min,
-          },
         ]}
       >
         <View style={[a.flex_row, a.justify_end, a.align_center]}>
