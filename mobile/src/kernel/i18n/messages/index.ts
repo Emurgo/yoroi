@@ -34,5 +34,5 @@ export {
   errorMessages,
   default as globalMessages,
   themeNames,
-  txLabels
+  txLabels,
 } from './global'
