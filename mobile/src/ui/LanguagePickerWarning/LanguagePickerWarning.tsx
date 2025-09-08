@@ -37,9 +37,7 @@ export const LanguagePickerWarning = ({enabled}: {enabled: boolean}) => {
               : `${strings.languagePicker.warning}.`
           }
           styles={{
-            paragraph: {
-              backgroundColor: p.bg_color_min,
-            },
+            paragraph: ta.bg_color_min,
             text: {
               fontSize: 14,
               lineHeight: 20,
