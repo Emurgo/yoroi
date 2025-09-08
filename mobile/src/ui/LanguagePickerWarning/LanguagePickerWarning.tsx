@@ -16,7 +16,7 @@ export const LanguagePickerWarning = ({enabled}: {enabled: boolean}) => {
   if (dismissed) return null
 
   return (
-    <View style={[a.p_lg]}>
+    <View style={a.p_lg}>
       <View
         style={[
           a.p_lg,
