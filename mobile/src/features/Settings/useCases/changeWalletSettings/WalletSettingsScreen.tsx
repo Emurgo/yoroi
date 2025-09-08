@@ -179,15 +179,13 @@ const ResyncButton = () => {
   const {palette: p} = useTheme()
   const strings = useStrings()
   const intl = useIntl()
+  const {track} = useMetrics()
 
   const {walletIdChanged} = useSetupWallet()
-  // const settingsNavigation = useNavigation<SettingsRouteNavigation>()
   const {resync} = useResync(wallet)
 
-  // const {track} = useMetrics()
-
   const onResync = async () => {
-    // track.walletSettingsResyncClicked()
+    track.walletSettingsResyncClicked()
     const selection = await showConfirmationDialog(
       {
         title: {

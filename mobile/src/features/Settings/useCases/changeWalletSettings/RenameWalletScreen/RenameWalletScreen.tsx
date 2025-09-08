@@ -46,7 +46,7 @@ export const RenameWalletScreen = () => {
   }
 
   return (
-    <KeyboardAvoidingView style={[ta.bg_color_max, a.flex_1]} enabled={true}>
+    <KeyboardAvoidingView style={[ta.bg_color_max, a.flex_1]} enabled>
       <SafeAreaView
         style={[a.flex_1, a.pt_lg, a.pb_lg]}
         edges={['left', 'right', 'bottom']}
