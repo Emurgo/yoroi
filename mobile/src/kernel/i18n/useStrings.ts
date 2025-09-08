@@ -19,6 +19,7 @@ import {
   globalMessages,
   hardwareWalletMessages,
   initializationMessages,
+  languagePickerMessages,
   ledgerMessages,
   linksMessages,
   manageCollateralMessages,
@@ -383,6 +384,12 @@ export const useStrings = () => {
         skip: f(uiMessages.skip),
         accept: f(uiMessages.accept),
         toggle: f(uiMessages.toggle),
+      },
+
+      // LanguagePicker strings
+      languagePicker: {
+        warning: f(languagePickerMessages.warning),
+        contributors: f(languagePickerMessages.contributors),
       },
 
       // RegisterCatalyst strings
