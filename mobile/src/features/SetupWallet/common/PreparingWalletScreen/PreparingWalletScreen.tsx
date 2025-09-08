@@ -5,8 +5,8 @@ import * as React from 'react'
 import {Text} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-// import {useLaunchWalletAfterSyncing} from '~/features/WalletManager/hooks/useLaunchWalletAfterSyncing'
-// import {useSyncTemporarilyPaused} from '~/features/WalletManager/hooks/useSyncTemporarilyPaused'
+import {useLaunchWalletAfterSyncing} from '~/features/WalletManager/hooks/useLaunchWalletAfterSyncing'
+import {useSyncTemporarilyPaused} from '~/features/WalletManager/hooks/useSyncTemporarilyPaused'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 import {isEmptyString} from '~/wallets/utils/string'
@@ -19,8 +19,8 @@ export const PreparingWalletScreen = () => {
   const strings = useStrings()
   const {walletId} = useSetupWallet()
   const {palette: p} = useTheme()
-  // const isGlobalSyncPaused = useSyncTemporarilyPaused()
-  // useLaunchWalletAfterSyncing({isGlobalSyncPaused, walletId})
+  const isGlobalSyncPaused = useSyncTemporarilyPaused()
+  useLaunchWalletAfterSyncing({isGlobalSyncPaused, walletId})
 
   if (isEmptyString(walletId)) {
     const error = new Error(
