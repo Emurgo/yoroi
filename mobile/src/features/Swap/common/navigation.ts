@@ -1,11 +1,13 @@
 import {useNavigation} from '@react-navigation/native'
 import {useRef} from 'react'
 
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {SwapTokenRouteseNavigation} from '~/kernel/navigation/types'
 
 export const useNavigateTo = () => {
   const navigation = useNavigation<SwapTokenRouteseNavigation>()
   const rootNavigation = useNavigation()
+  const strings = useStrings()
 
   return useRef({
     selectProtocol: () => navigation.navigate('select-protocol'),
@@ -28,8 +30,18 @@ export const useNavigateTo = () => {
           },
         },
       }),
-    submittedTx: () => navigation.navigate('submitted-tx'),
-    failedTx: () => navigation.navigate('failed-tx'),
+    submittedTx: () =>
+      navigation.navigate('submitted-tx', {
+        title: strings.swap.submittedTxScreenTitle,
+        message: strings.swap.submittedTxScreenText,
+        buttonTitle: strings.swap.submittedTxScreenButton,
+      }),
+    failedTx: () =>
+      navigation.navigate('failed-tx', {
+        title: strings.swap.failedTxTitle,
+        message: strings.swap.failedTxText,
+        buttonTitle: strings.swap.failedTxButton,
+      }),
     swapOpenOrders: () => navigation.navigate('orders'),
     resetToStartSwap: () => navigation.navigate('main'),
   }).current

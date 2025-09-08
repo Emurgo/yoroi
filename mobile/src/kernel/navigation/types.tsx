@@ -64,8 +64,16 @@ export type TxHistoryRoutes = {
   'send-edit-amount': {
     amount: Portfolio.Token.Amount
   }
-  'send-submitted-tx': undefined
-  'send-failed-tx': undefined
+  'send-submitted-tx': {
+    title?: string
+    message?: string
+    buttonTitle?: string
+  }
+  'send-failed-tx': {
+    title?: string
+    message?: string
+    buttonTitle?: string
+  }
   'send-select-token-from-list': undefined
   'swap': NavigatorScreenParams<SwapTokenRoutes>
 } & ScanRoutes &
@@ -101,8 +109,16 @@ export type SwapTokenRoutes = {
   'select-token': {direction: 'in' | 'out'}
   'select-protocol': undefined
   'preprod-notice': undefined
-  'submitted-tx': undefined
-  'failed-tx': undefined
+  'submitted-tx': {
+    title?: string
+    message?: string
+    buttonTitle?: string
+  }
+  'failed-tx': {
+    title?: string
+    message?: string
+    buttonTitle?: string
+  }
 }
 
 export type SwapTokenRouteseNavigation = StackNavigationProp<SwapTokenRoutes>
@@ -184,8 +200,16 @@ export type BrowserRoutes = {
 export type DashboardRoutes = {
   'staking-dashboard-main': undefined
   'staking-center': NavigatorScreenParams<StakingCenterRoutes>
-  'staking-submitted-tx': undefined
-  'staking-failed-tx': undefined
+  'staking-submitted-tx': {
+    title?: string
+    message?: string
+    buttonTitle?: string
+  }
+  'staking-failed-tx': {
+    title?: string
+    message?: string
+    buttonTitle?: string
+  }
 }
 
 export type PortfolioRoutes = {
@@ -222,8 +246,16 @@ export type ReviewTxRoutes = {
     onNotSupportedCIP1694?: () => void
     onCIP36SupportChange?: (supportsCIP36: boolean) => void
   }
-  'review-tx-submitted-tx': undefined
-  'review-tx-failed-tx': undefined
+  'review-tx-submitted-tx': {
+    title?: string
+    message?: string
+    buttonTitle?: string
+  }
+  'review-tx-failed-tx': {
+    title?: string
+    message?: string
+    buttonTitle?: string
+  }
 }
 
 export type VotingRegistrationRoutes = {

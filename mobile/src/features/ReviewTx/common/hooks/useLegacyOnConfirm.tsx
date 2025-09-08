@@ -37,6 +37,7 @@ export const useLegacyOnConfirm = ({
     navigateTo.showSubmittedTxScreen()
   }
   const handleOnError = (error: unknown) => {
+    closeModal()
     if (onError) {
       onError(error)
       return

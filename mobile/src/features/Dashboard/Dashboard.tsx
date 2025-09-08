@@ -223,12 +223,21 @@ export const Dashboard = () => {
 
 export const useNavigateTo = () => {
   const navigation = useNavigation<StackNavigationProp<DashboardRoutes>>()
+  const strings = useStrings()
 
   return {
     stakingCenter: () =>
       navigation.navigate('staking-center', {screen: 'staking-center-main'}),
-    submittedTx: () => navigation.navigate('staking-submitted-tx'),
-    failedTx: () => navigation.navigate('staking-failed-tx'),
+    submittedTx: () => navigation.navigate('staking-submitted-tx', {
+      title: strings.staking.submittedTxTitle,
+      message: strings.staking.submittedTxText,
+      buttonTitle: strings.staking.submittedTxButton,
+    }),
+    failedTx: () => navigation.navigate('staking-failed-tx', {
+      title: strings.staking.failedTxTitle,
+      message: strings.staking.failedTxText,
+      buttonTitle: strings.staking.failedTxButton,
+    }),
   }
 }
 

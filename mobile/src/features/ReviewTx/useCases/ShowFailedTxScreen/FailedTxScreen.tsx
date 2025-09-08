@@ -5,7 +5,9 @@ import {Text, View} from 'react-native'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useBlockGoBack} from '~/kernel/navigation/hooks/useBlockGoBack'
+import {useUnsafeParams} from '~/kernel/navigation/hooks/useUnsafeParams'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
+import {ReviewTxRoutes} from '~/kernel/navigation/types'
 import {Button} from '~/ui/Button/Button'
 import {FailedTxIcon} from '~/ui/FailedTxIcon/FailedTxIcon'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
@@ -16,6 +18,20 @@ export const FailedTxScreen = () => {
   const strings = useStrings()
   const {palette: p, atoms: ta} = useTheme()
   const {resetToTxHistory} = useWalletNavigation()
+
+  // Try to get parameters from different possible route types
+  const reviewTxParams =
+    useUnsafeParams<NonNullable<ReviewTxRoutes['review-tx-failed-tx']>>()
+  const governanceParams = useUnsafeParams<{
+    title?: string
+    message?: string
+    buttonTitle?: string
+  }>()
+
+  const title = reviewTxParams?.title || governanceParams?.title
+  const message = reviewTxParams?.message || governanceParams?.message
+  const buttonTitle =
+    reviewTxParams?.buttonTitle || governanceParams?.buttonTitle
 
   return (
     <SafeArea
@@ -41,11 +57,11 @@ export const FailedTxScreen = () => {
           a.text_center,
         ]}
       >
-        {strings.txReview.failedTxTitle}
+        {title || strings.txReview.failedTxTitle}
       </Text>
 
       <Text style={[{color: p.gray_600}, a.body_1_lg_regular, a.text_center]}>
-        {strings.txReview.failedTxText}
+        {message || strings.txReview.failedTxText}
       </Text>
 
       <Space.Height._2xs fill />
@@ -53,7 +69,7 @@ export const FailedTxScreen = () => {
       <Actions>
         <Button
           onPress={resetToTxHistory}
-          title={strings.txReview.failedTxButton}
+          title={buttonTitle || strings.txReview.failedTxButton}
           style={a.px_lg}
         />
       </Actions>
