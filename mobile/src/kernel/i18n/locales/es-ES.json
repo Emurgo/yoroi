@@ -448,7 +448,7 @@
   "components.settings.collateral.collateralInfoModalTitle": "¿Qué es la garantía?",
   "components.settings.collateral.collateralInfoModalText": "El mecanismo de garantía es una característica importante que ha sido diseñada para garantizar la ejecución exitosa del contrato inteligente. Se utiliza para garantizar que los nodos Cardano sean compensados por su trabajo en caso de que la validación de la fase 2 falle.",
   "components.settings.collateral.initialCollateralInfoModalTitle": "Creación colateral",
-  "components.settings.collateral.initialCollateralInfoModalText": "El colateral es obligatorio al interactuar con ciertos contratos inteligentes en Cardano, lo que requiere realizar una transacción de 0 ADA. Solo se deducirá ADA de tu colateral si la validación de la transacción falla.",
+  "components.settings.collateral.initialCollateralInfoModalText": "Collateral is mandatory when interacting with certain smart contracts on Cardano, which requires to make a 0 ADA transaction. ADA will only be deduced from your collateral if transaction validation fails.",
   "components.settings.collateral.initialCollateralInfoModalButton": "Añadir colateral",
   "components.settings.notifications.title": "Notificaciones",
   "components.settings.disableeasyconfirmationscreen.disableButton": "Disable",
