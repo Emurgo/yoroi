@@ -67,11 +67,33 @@ if [[ "${EAS_BUILD_PLATFORM:-}" == "android" ]]; then
     if [[ -d "${SDK_ROOT}/ndk/${NDK_VERSION}" ]]; then
       export ANDROID_NDK_ROOT="${SDK_ROOT}/ndk/${NDK_VERSION}"
       export ANDROID_NDK_HOME="${SDK_ROOT}/ndk/${NDK_VERSION}"
+      export ANDROID_NDK="${SDK_ROOT}/ndk/${NDK_VERSION}"
       if command -v set-env >/dev/null 2>&1; then
         set-env ANDROID_NDK_ROOT "${ANDROID_NDK_ROOT}"
         set-env ANDROID_NDK_HOME "${ANDROID_NDK_HOME}"
+        set-env ANDROID_NDK "${ANDROID_NDK}"
       fi
       echo "NDK ready at ${ANDROID_NDK_ROOT}"
+
+      # Ensure Gradle subprojects (like Emurgo bridges) can resolve NDK by setting ndk.dir
+      PROJECT_ROOT="$(cd "$(dirname "$0")"/.. && pwd)"
+      LOCAL_PROPERTIES="${PROJECT_ROOT}/android/local.properties"
+      mkdir -p "${PROJECT_ROOT}/android"
+      if [[ -f "${LOCAL_PROPERTIES}" ]]; then
+        if grep -q '^ndk.dir=' "${LOCAL_PROPERTIES}"; then
+          # Replace existing ndk.dir line
+          sed -i.bak -E "s|^ndk.dir=.*$|ndk.dir=${ANDROID_NDK_ROOT}|" "${LOCAL_PROPERTIES}" || true
+        else
+          echo "ndk.dir=${ANDROID_NDK_ROOT}" >> "${LOCAL_PROPERTIES}"
+        fi
+      else
+        # Also include sdk.dir if known
+        {
+          if [[ -n "${SDK_ROOT}" ]]; then echo "sdk.dir=${SDK_ROOT}"; fi
+          echo "ndk.dir=${ANDROID_NDK_ROOT}"
+        } > "${LOCAL_PROPERTIES}"
+      fi
+      echo "Wrote ndk.dir to ${LOCAL_PROPERTIES}"
     else
       echo "Warning: NDK ${NDK_VERSION} not found after installation attempt"
     fi

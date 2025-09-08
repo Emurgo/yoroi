@@ -24,6 +24,12 @@ if [[ -z "${LATEST_NDK_DIR}" || ! -d "${LATEST_NDK_DIR}" ]]; then
 fi
 export ANDROID_NDK_ROOT="${LATEST_NDK_DIR}"
 export ANDROID_NDK_HOME="${LATEST_NDK_DIR}"
+export ANDROID_NDK="${LATEST_NDK_DIR}"
+if command -v set-env >/dev/null 2>&1; then
+  set-env ANDROID_NDK_ROOT "${ANDROID_NDK_ROOT}"
+  set-env ANDROID_NDK_HOME "${ANDROID_NDK_HOME}"
+  set-env ANDROID_NDK "${ANDROID_NDK}"
+fi
 echo "Using NDK at ${LATEST_NDK_DIR}"
 
 # Ensure Python interpreter is available to linker wrapper
