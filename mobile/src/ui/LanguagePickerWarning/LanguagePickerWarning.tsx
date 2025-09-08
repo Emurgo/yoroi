@@ -1,10 +1,10 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import React, {useState} from 'react'
-import {defineMessages, useIntl} from 'react-intl'
 import {TouchableOpacity, View} from 'react-native'
 import Markdown from 'react-native-marked'
 
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Icon} from '~/ui/Icon'
 
 export const LanguagePickerWarning = ({enabled}: {enabled: boolean}) => {
@@ -34,9 +34,9 @@ export const LanguagePickerWarning = ({enabled}: {enabled: boolean}) => {
 
         <Markdown
           value={
-            strings.contributors !== '_'
-              ? `${strings.warning}: **${strings.contributors}**`
-              : `${strings.warning}.`
+            strings.ui.contributors !== '_'
+              ? `${strings.ui.languagePickerWarning}: **${strings.ui.contributors}**`
+              : `${strings.ui.languagePickerWarning}.`
           }
           styles={{
             paragraph: {
@@ -53,25 +53,3 @@ export const LanguagePickerWarning = ({enabled}: {enabled: boolean}) => {
     </View>
   )
 }
-
-const useStrings = () => {
-  const intl = useIntl()
-
-  return {
-    warning: intl.formatMessage(messages.warning),
-    contributors: intl.formatMessage(messages.contributors),
-  }
-}
-
-const messages = defineMessages({
-  warning: {
-    id: 'components.common.languagepicker.acknowledgement',
-    defaultMessage:
-      '!!!**The selected language translation is fully provided by the community**. ' +
-      'EMURGO is grateful to all those who have contributed',
-  },
-  contributors: {
-    id: 'components.common.languagepicker.contributors',
-    defaultMessage: '_',
-  },
-})

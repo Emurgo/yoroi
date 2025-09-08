@@ -368,6 +368,7 @@ export const useStrings = () => {
           f(uiMessages.pairedBalanceError, {currency}),
         warning: f(uiMessages.warning),
         contributors: f(uiMessages.contributors),
+        languagePickerWarning: f(uiMessages.languagePickerWarning),
         header: f(uiMessages.header),
         description: f(uiMessages.description),
         anonymous: f(uiMessages.anonymous),
