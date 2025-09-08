@@ -190,14 +190,8 @@ export const uiMessages = defineMessages({
     defaultMessage: '!!!Paired balance error for {currency}',
   },
   contributors: {
-    id: 'components.common.languagepicker.contributors',
-    defaultMessage: '_',
-  },
-  languagePickerWarning: {
-    id: 'components.common.languagepicker.acknowledgement',
-    defaultMessage:
-      '!!!**The selected language translation is fully provided by the community**. ' +
-      'EMURGO is grateful to all those who have contributed',
+    id: 'txReview.overview.receiveToLabel',
+    defaultMessage: '!!!Contributors',
   },
   header: {
     id: 'components.walletselection.walletselectionscreen.header',

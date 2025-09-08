@@ -19,6 +19,7 @@ import {
   globalMessages,
   hardwareWalletMessages,
   initializationMessages,
+  languagePickerMessages,
   ledgerMessages,
   linksMessages,
   manageCollateralMessages,
@@ -368,7 +369,6 @@ export const useStrings = () => {
           f(uiMessages.pairedBalanceError, {currency}),
         warning: f(uiMessages.warning),
         contributors: f(uiMessages.contributors),
-        languagePickerWarning: f(uiMessages.languagePickerWarning),
         header: f(uiMessages.header),
         description: f(uiMessages.description),
         anonymous: f(uiMessages.anonymous),
@@ -384,6 +384,12 @@ export const useStrings = () => {
         skip: f(uiMessages.skip),
         accept: f(uiMessages.accept),
         toggle: f(uiMessages.toggle),
+      },
+
+      // LanguagePicker strings
+      languagePicker: {
+        warning: f(languagePickerMessages.warning),
+        contributors: f(languagePickerMessages.contributors),
       },
 
       // RegisterCatalyst strings

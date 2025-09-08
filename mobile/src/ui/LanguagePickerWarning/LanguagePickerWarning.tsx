@@ -16,7 +16,7 @@ export const LanguagePickerWarning = ({enabled}: {enabled: boolean}) => {
   if (dismissed) return null
 
   return (
-    <View style={a.p_lg}>
+    <View style={[a.p_lg]}>
       <View
         style={[
           a.p_lg,
@@ -34,9 +34,9 @@ export const LanguagePickerWarning = ({enabled}: {enabled: boolean}) => {
 
         <Markdown
           value={
-            strings.ui.contributors !== '_'
-              ? `${strings.ui.languagePickerWarning}: **${strings.ui.contributors}**`
-              : `${strings.ui.languagePickerWarning}.`
+            strings.languagePicker.contributors !== '_'
+              ? `${strings.languagePicker.warning}: **${strings.languagePicker.contributors}**`
+              : `${strings.languagePicker.warning}.`
           }
           styles={{
             paragraph: {
