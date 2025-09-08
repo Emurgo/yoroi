@@ -95,12 +95,9 @@ function withAppTurboModuleProvider(config) {
     // Set ANDROID_NDK_HOME environment variable
     // process.env.ANDROID_NDK_HOME = ndkPath;
 
-    // Add NDK configuration to build.gradle
+    // Add NDK configuration to build.gradle (only ndkVersion; avoid deprecated ndk.dir/path)
     const ndkConfig = `
-    ndkVersion "${path.basename(ndkPath)}"
-    ndk {
-        path "${ndkPath.replace(/\\/g, '/')}"
-    }`;
+    ndkVersion "${path.basename(ndkPath)}"`;
 
     // Add externalNativeBuild configuration before buildTypes
     /*

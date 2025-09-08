@@ -31,7 +31,8 @@ export const useGetImportantAlertsModal = ({enabled}: {enabled: boolean}) => {
       openModal({
         title: strings.notifications.getImportantAlerts,
         content: <GetImportantAlertsModal onClose={closeModal} />,
-        height: 520,
+        footer: <View />,
+        height: Math.min(windowHeight * 0.9, 520),
       })
       await uiStorage.setItem(modalStorageKey, true)
     }, timeToShowModalInMs)

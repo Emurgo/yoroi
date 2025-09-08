@@ -112,6 +112,7 @@
       "favicon": "./assets/yoroi/favicon.png"
     },
     "plugins": [
+      "expo-android-keyboard-fix",
       "react-native-ble-plx",
       [
         "react-native-edge-to-edge",

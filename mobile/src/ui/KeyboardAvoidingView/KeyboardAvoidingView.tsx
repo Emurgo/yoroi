@@ -12,9 +12,16 @@ export const KeyboardAvoidingView = ({
   enabled,
   ...rest
 }: KeyboardAvoidingViewProps) => {
+  const keyboardBehavior: KeyboardAvoidingViewProps['behavior'] =
+    (behavior ?? Platform.OS === 'ios')
+      ? 'padding'
+      : parseInt(Platform.Version.toString(), 10) >= 35
+        ? 'padding'
+        : 'height'
+
   return (
     <RNKeyboardAvoidingView
-      behavior={behavior ?? 'padding'}
+      behavior={behavior ?? keyboardBehavior}
       keyboardVerticalOffset={keyboardVerticalOffset ?? 70}
       enabled={enabled ?? Platform.OS === 'ios'}
       {...rest}
