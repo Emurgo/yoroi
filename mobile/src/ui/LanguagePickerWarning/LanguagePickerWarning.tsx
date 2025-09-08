@@ -21,7 +21,6 @@ export const LanguagePickerWarning = ({enabled}: {enabled: boolean}) => {
         style={[
           a.p_lg,
           a.rounded_sm,
-          {
             backgroundColor: p.bg_color_min,
           },
         ]}
