@@ -15,6 +15,7 @@ import {useResync} from '~/features/WalletManager/hooks/useResync'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {DIALOG_BUTTONS, showConfirmationDialog} from '~/kernel/dialogs'
 import {useStrings} from '~/kernel/i18n/useStrings'
+import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {SettingsRouteNavigation} from '~/kernel/navigation/types'
 import {Icon} from '~/ui/Icon'
@@ -179,13 +180,11 @@ const ResyncButton = () => {
   const {palette: p} = useTheme()
   const strings = useStrings()
   const intl = useIntl()
-  const {track} = useMetrics()
 
   const {walletIdChanged} = useSetupWallet()
   const {resync} = useResync(wallet)
 
   const onResync = async () => {
-    track.walletSettingsResyncClicked()
     const selection = await showConfirmationDialog(
       {
         title: {

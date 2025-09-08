@@ -2,14 +2,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 
 import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
-import {
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  TextInputProps,
-  View,
-  ViewProps,
-} from 'react-native'
+import {ScrollView, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
@@ -17,6 +10,7 @@ import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWalle
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
 import {Checkbox} from '~/ui/Checkbox/Checkbox'
+import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingView'
 import {Space, SpaceHeight} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
 import {TextInput} from '~/ui/TextInput/TextInput'
@@ -41,10 +35,7 @@ export const RemoveWalletScreen = () => {
   }
 
   return (
-    <KeyboardAvoidingView
-      style={[a.flex_1]}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-    >
+    <KeyboardAvoidingView style={[a.flex_1]} enabled>
       <SafeAreaView edges={['bottom']} style={[a.flex_1, ta.bg_color_max]}>
         <ScrollView
           style={[a.flex_1]}
