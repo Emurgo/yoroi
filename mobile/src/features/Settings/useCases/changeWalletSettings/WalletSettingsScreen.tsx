@@ -30,6 +30,13 @@ import {
 } from '../../SettingsItems'
 import {useNavigateTo} from '../../common/navigation'
 
+const dialogOptions = {
+  title: {id: 'global.disclaimer', defaultMessage: 'Disclaimer'},
+  message: {id: 'global.proceed', defaultMessage: 'Proceed?'},
+  btnNoLabel: {id: 'global.cancel', defaultMessage: 'Cancel'},
+  btnYesLabel: {id: 'global.proceed', defaultMessage: 'Proceed'},
+}
+
 export const WalletSettingsScreen = () => {
   const strings = useStrings()
   const {atoms: ta, palette: p} = useTheme()
@@ -184,27 +191,7 @@ const ResyncButton = () => {
   const {resync} = useResync(wallet)
 
   const onResync = async () => {
-    const selection = await showConfirmationDialog(
-      {
-        title: {
-          id: 'global.actions.dialogs.resync.title',
-          defaultMessage: 'Disclaimer',
-        },
-        message: {
-          id: 'global.actions.dialogs.resync.message',
-          defaultMessage: 'Proceed?',
-        },
-        btnNoLabel: {
-          id: 'global.actions.dialogs.resync.noButton',
-          defaultMessage: 'Cancel',
-        },
-        btnYesLabel: {
-          id: 'global.actions.dialogs.resync.yesButton',
-          defaultMessage: 'Proceed',
-        },
-      },
-      intl,
-    )
+    const selection = await showConfirmationDialog(dialogOptions, intl)
     if (selection === DIALOG_BUTTONS.YES) {
       walletIdChanged(wallet.id)
       resync()
@@ -254,29 +241,9 @@ const useLogout = () => {
   const intl = useIntl()
 
   return async () => {
-    const selection = await showConfirmationDialog(
-      {
-        title: {
-          id: 'global.actions.dialogs.logout.title',
-          defaultMessage: 'Disclaimer',
-        },
-        message: {
-          id: 'global.actions.dialogs.logout.message',
-          defaultMessage: 'Proceed?',
-        },
-        btnNoLabel: {
-          id: 'global.actions.dialogs.logout.noButton',
-          defaultMessage: 'Cancel',
-        },
-        btnYesLabel: {
-          id: 'global.actions.dialogs.logout.yesButton',
-          defaultMessage: 'Proceed',
-        },
-      },
-      intl,
-    )
+    const selection = await showConfirmationDialog(dialogOptions, intl)
     if (selection === DIALOG_BUTTONS.YES) {
-      loggedOut() // triggers navigation to login
+      loggedOut()
     }
   }
 }
