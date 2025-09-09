@@ -82,6 +82,10 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
 
   return (
     <View style={[a.rounded_sm, a.p_lg, a.gap_lg, ta.bg_color_min]}>
+      <Text style={[a.body_2_md_medium, {color: p.text_gray_medium}]}>
+        {direction === 'in' ? strings.swap.from : strings.swap.to}
+      </Text>
+
       <View style={[a.flex_row, a.justify_between]}>
         <Pressable
           style={[a.flex_row, a.align_center]}
@@ -97,7 +101,7 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
               {color: p.text_gray_medium},
             ]}
           >
-            {info?.name ?? 'Select Token'}
+            {info?.name ?? strings.swap.selectToken}
           </Text>
 
           <Icon.Chevron direction="down" size={24} color={p.gray_max} />
@@ -147,7 +151,7 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
 
       {error ? (
         <View style={[a.flex_row, a.align_center, a.gap_sm]}>
-          <Icon.Portfolio2 size={15} color={p.sys_magenta_500} />
+          <Icon.Portfolio2 size={16} color={p.sys_magenta_500} />
 
           <Text style={[a.body_2_md_regular, {color: p.sys_magenta_500}]}>
             {error}
@@ -156,11 +160,11 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
       ) : (
         <View style={[a.flex_row, a.justify_between, a.align_center]}>
           <View style={[a.flex_row, a.align_center, a.gap_sm]}>
-            <Icon.Portfolio2 size={15} color={p.text_gray_medium} />
+            <Icon.Portfolio2 size={16} color={p.text_gray_low} />
 
             <Text
               ellipsizeMode="middle"
-              style={[a.body_2_md_regular, ta.text_gray_medium]}
+              style={[a.body_2_md_regular, ta.text_gray_low]}
             >
               {formattedAmount}
             </Text>
@@ -172,6 +176,7 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
                 info,
                 quantity: toBigInt(quantity || '0', decimals),
               }}
+              textStyle={a.body_2_md_regular}
             />
           )}
         </View>
