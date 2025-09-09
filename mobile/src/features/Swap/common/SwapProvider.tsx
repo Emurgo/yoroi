@@ -223,6 +223,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
   const tokenOutInputRef = React.useRef<TextInput | null>(null)
   const tokenInInputRef = React.useRef<TextInput | null>(null)
   const wantedPriceInputRef = React.useRef<TextInput | null>(null)
+  const estimateReqIdRef = React.useRef(0)
 
   const [state, action] = React.useReducer(swapReducer, defaultState)
 
@@ -324,6 +325,8 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
     )
       return
 
+    const reqId = ++estimateReqIdRef.current
+
     swapManager.api
       .estimate({
         slippage: state.slippageInput.value,
@@ -343,6 +346,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
         protocol: state.selectedProtocol.value,
       })
       .then((response) => {
+        if (reqId !== estimateReqIdRef.current) return
         if (isLeft(response)) {
           action({
             type: SwapActionType.EstimateError,
@@ -356,6 +360,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
         }
       })
       .catch(() => {
+        if (reqId !== estimateReqIdRef.current) return
         action({
           type: SwapActionType.EstimateError,
           value: {
