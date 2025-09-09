@@ -30,6 +30,13 @@ import {
 } from '../../SettingsItems'
 import {useNavigateTo} from '../../common/navigation'
 
+const dialogOptions = {
+  title: {id: 'global.disclaimer', defaultMessage: 'Disclaimer'},
+  message: {id: 'global.proceed', defaultMessage: 'Proceed?'},
+  btnNoLabel: {id: 'global.cancel', defaultMessage: 'Cancel'},
+  btnYesLabel: {id: 'global.proceed', defaultMessage: 'Proceed'},
+}
+
 export const WalletSettingsScreen = () => {
   const strings = useStrings()
   const {atoms: ta, palette: p} = useTheme()
@@ -181,22 +188,10 @@ const ResyncButton = () => {
   const intl = useIntl()
 
   const {walletIdChanged} = useSetupWallet()
-  // const settingsNavigation = useNavigation<SettingsRouteNavigation>()
   const {resync} = useResync(wallet)
 
-  // const {track} = useMetrics()
-
   const onResync = async () => {
-    // track.walletSettingsResyncClicked()
-    const selection = await showConfirmationDialog(
-      {
-        title: {id: 'global.disclaimer', defaultMessage: 'Disclaimer'},
-        message: {id: 'global.proceed', defaultMessage: 'Proceed?'},
-        btnNoLabel: {id: 'global.cancel', defaultMessage: 'Cancel'},
-        btnYesLabel: {id: 'global.proceed', defaultMessage: 'Proceed'},
-      },
-      intl,
-    )
+    const selection = await showConfirmationDialog(dialogOptions, intl)
     if (selection === DIALOG_BUTTONS.YES) {
       walletIdChanged(wallet.id)
       resync()
@@ -246,17 +241,9 @@ const useLogout = () => {
   const intl = useIntl()
 
   return async () => {
-    const selection = await showConfirmationDialog(
-      {
-        title: {id: 'global.disclaimer', defaultMessage: 'Disclaimer'},
-        message: {id: 'global.proceed', defaultMessage: 'Proceed?'},
-        btnNoLabel: {id: 'global.cancel', defaultMessage: 'Cancel'},
-        btnYesLabel: {id: 'global.proceed', defaultMessage: 'Proceed'},
-      },
-      intl,
-    )
+    const selection = await showConfirmationDialog(dialogOptions, intl)
     if (selection === DIALOG_BUTTONS.YES) {
-      loggedOut() // triggers navigation to login
+      loggedOut()
     }
   }
 }

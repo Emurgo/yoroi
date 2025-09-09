@@ -2,19 +2,15 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 
 import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
-import {
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  View,
-  ViewProps,
-} from 'react-native'
+import {ScrollView, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {usePromise} from '~/hooks/usePromise'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
+import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingView'
 import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
 import {TextInput} from '~/ui/TextInput/TextInput'
@@ -32,16 +28,12 @@ export const ChangePasswordScreen = () => {
   const [newPassword, setNewPassword] = React.useState('')
   const [repeatPassword, setRepeatPassword] = React.useState('')
 
-  const {changePassword, isLoading, error} = useChangePassword(wallet, {
+  const {changePassword, isPending, error} = useChangePassword(wallet, {
     onSuccess: () => navigation.goBack(),
   })
 
-  const handleChangePassword = async () => {
-    try {
-      await changePassword({currentPassword, newPassword})
-    } catch (err) {
-      // Error is already handled in the hook
-    }
+  const handleChangePassword = () => {
+    changePassword({currentPassword, newPassword})
   }
 
   const hasErrors =
@@ -50,10 +42,7 @@ export const ChangePasswordScreen = () => {
     newPassword === currentPassword
 
   return (
-    <KeyboardAvoidingView
-      style={[ta.bg_color_max, a.flex_1]}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-    >
+    <KeyboardAvoidingView style={[ta.bg_color_max, a.flex_1]} enabled>
       <SafeAreaView style={[a.flex_1]} edges={['left', 'right', 'bottom']}>
         <ScrollView
           contentContainerStyle={[a.p_lg]}
@@ -132,7 +121,7 @@ export const ChangePasswordScreen = () => {
         <Actions>
           <Button
             onPress={handleChangePassword}
-            disabled={hasErrors || isLoading}
+            disabled={hasErrors || isPending}
             title={strings.settings.changePassword.continueButton}
           />
         </Actions>
@@ -157,42 +146,31 @@ const useChangePassword = (
   },
 ) => {
   const {walletManager} = useWalletManager()
-  const [isLoading, setIsLoading] = React.useState(false)
-  const [error, setError] = React.useState<Error | null>(null)
 
-  const changePassword = async ({
-    currentPassword,
-    newPassword,
-  }: {
-    currentPassword: string
-    newPassword: string
-  }) => {
-    try {
-      setIsLoading(true)
-      setError(null)
-
+  const changePassword = React.useCallback(
+    async ({
+      currentPassword,
+      newPassword,
+    }: {
+      currentPassword: string
+      newPassword: string
+    }) => {
       await walletManager.changeWalletPassword({
         id: wallet.id,
         oldPassword: currentPassword,
         newPassword,
       })
+    },
+    [walletManager, wallet.id],
+  )
 
-      options?.onSuccess?.()
-    } catch (err) {
-      const error =
-        err instanceof Error ? err : new Error('Failed to change password')
-      setError(error)
-      options?.onError?.(error)
-      throw error
-    } finally {
-      setIsLoading(false)
-    }
-  }
+  const promise = usePromise({
+    promise: changePassword,
+    ...options,
+  })
 
   return {
-    changePassword,
-    isLoading,
-    error,
-    isError: error !== null,
+    changePassword: promise.resolve,
+    ...promise,
   }
 }
