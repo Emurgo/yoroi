@@ -153,9 +153,7 @@ const apiManagerMaker = (
         const merged: Record<Swap.Order['txHash'], Swap.Order> = {}
         const append = (order: Swap.Order) => {
           const key = `${order.txHash}#${order.outputIndex}`
-          /* istanbul ignore next */
           if (
-            // TODO: refactor to avoid istanbul ignore
             merged[key] === undefined ||
             order.aggregator === Swap.Aggregator.Dexhunter
           )
@@ -179,7 +177,6 @@ const apiManagerMaker = (
         }
       },
 
-      /* istanbul ignore next */
       async limitOptions(body: Swap.LimitOptionsRequest) {
         const enabledAggregators = getEnabledAggregators()
 

@@ -1,5 +1,5 @@
 import {isLeft} from '@yoroi/common'
-import {Api, Chain, Swap} from '@yoroi/types'
+import {Api, Chain, Portfolio, Swap} from '@yoroi/types'
 
 import {dexhunterApiMaker} from './adapters/api/dexhunter/api-maker'
 import {
@@ -653,27 +653,70 @@ describe('swapManagerMaker', () => {
       }
     })
 
-    it('returns dexhunter orders if muesliswap api result is left', async () => {
+    it('should prioritize dexhunter orders over existing orders', async () => {
+      const existingOrder = {
+        actualAmountOut: 0,
+        aggregator: 'muesliswap' as Swap.Aggregator,
+        amountIn: 0.008137,
+        expectedAmountOut: 1,
+        lastUpdate: undefined,
+        outputIndex: 0,
+        placedAt: 1737538157000,
+        protocol: 'minswap-v2' as Swap.Protocol,
+        status: 'canceled' as const,
+        tokenIn: '.' as Portfolio.Token.Id,
+        tokenOut:
+          '49e423161ef818adc475c783571cb479d5f15ad52a01a240eacc0d3b.434f434b' as Portfolio.Token.Id,
+        txHash:
+          '475ffb1f1820eee1790729d86ced473e9f7724ddcd7bf59b477e3293415f16bf',
+        updateTxHash:
+          '475ffb1f1820eee1790729d86ced473e9f7724ddcd7bf59b477e3293415f16bf',
+      }
+
+      const dexhunterOrder = {
+        actualAmountOut: 0,
+        aggregator: 'dexhunter' as Swap.Aggregator,
+        amountIn: -0.04999999999999982,
+        customId: 'customId-1',
+        expectedAmountOut: 1.889324,
+        lastUpdate: undefined,
+        outputIndex: 0,
+        placedAt: undefined,
+        protocol: 'vyfi-v1' as Swap.Protocol,
+        status: 'canceled' as const,
+        tokenIn: '.' as Portfolio.Token.Id,
+        tokenOut:
+          '1d7f33bd23d85e1a25d87d86fac4f199c3197a2f7afeb662a0f34e1e.776f726c646d6f62696c65746f6b656e' as Portfolio.Token.Id,
+        txHash:
+          '475ffb1f1820eee1790729d86ced473e9f7724ddcd7bf59b477e3293415f16bf',
+        updateTxHash:
+          '475ffb1f1820eee1790729d86ced473e9f7724ddcd7bf59b477e3293415f16bf',
+      }
+
+      mockMuesliswapApi.orders.mockResolvedValue({
+        tag: 'right',
+        value: {
+          status: 200,
+          data: [existingOrder],
+        },
+      })
+
       mockDexhunterApi.orders.mockResolvedValue({
         tag: 'right',
         value: {
           status: 200,
-          data: dhApiMocks.results.orders,
+          data: [dexhunterOrder],
         },
-      })
-
-      mockMuesliswapApi.orders.mockResolvedValue({
-        tag: 'left',
-        error: {status: 400, message: 'ms orders error', responseData: {}},
       })
 
       const manager = swapManagerMaker(baseConfig)
       const result = await manager.api.orders()
+
       expect(result.tag).toBe('right')
       if (result.tag === 'right') {
-        expect(result.value.data).toEqual(
-          expect.arrayContaining(dhApiMocks.results.orders),
-        )
+        // Should contain the dexhunter order, not the muesliswap order with same txHash
+        expect(result.value.data).toHaveLength(1)
+        expect(result.value.data[0]).toEqual(dexhunterOrder)
       }
     })
   })
@@ -855,7 +898,7 @@ describe('swapManagerMaker', () => {
       }
     })
 
-    it('returns invalid if all responses are excluded', async () => {
+    it('returns invalid if no valid responses are found', async () => {
       mockDexhunterApi.limitOptions.mockResolvedValue({
         tag: 'left',
         error: {
@@ -885,6 +928,55 @@ describe('swapManagerMaker', () => {
       if (result.tag === 'left') {
         expect(result.error.message).toBe('Unknown error')
         expect(result.error.status).toBe(-3)
+      }
+    })
+
+    it('filters out unsupported protocols from options', async () => {
+      const dhData = {
+        defaultProtocol: 'minswap-v2' as Swap.Protocol,
+        wantedPrice: 1.5,
+        options: [
+          {
+            protocol: 'minswap-v2' as Swap.Protocol,
+            initialPrice: 50,
+            batcherFee: 0,
+          },
+          {
+            protocol: 'unsupported' as Swap.Protocol,
+            initialPrice: 30,
+            batcherFee: 0,
+          },
+        ],
+      }
+
+      mockDexhunterApi.limitOptions.mockResolvedValue({
+        tag: 'right',
+        value: {
+          status: 200,
+          data: dhData,
+        },
+      })
+
+      mockMuesliswapApi.limitOptions.mockResolvedValue({
+        tag: 'left',
+        error: {
+          status: -3,
+          message: 'Aggregator excluded from call',
+          responseData: {},
+        },
+      })
+
+      const manager = swapManagerMaker(baseConfig)
+      manager.assignSettings({routingPreference: ['dexhunter', 'muesliswap']})
+      const result = await manager.api.limitOptions({
+        tokenIn: '.',
+        tokenOut: '.',
+      })
+
+      expect(result.tag).toBe('right')
+      if (result.tag === 'right') {
+        expect(result.value.data.options).toHaveLength(1)
+        expect(result.value.data.options[0].protocol).toBe('minswap-v2')
       }
     })
   })

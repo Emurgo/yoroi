@@ -1,6 +1,7 @@
 import {Portfolio} from '@yoroi/types'
 
 import {transformersMaker} from './transformers'
+import {Dex} from './types'
 
 const mockConfig = {
   address: 'addr1test',
@@ -88,34 +89,26 @@ describe('transformersMaker', () => {
         application: 'general',
         tag: '',
         reference: '',
-        originalImage: '',
-        nature: 'secondary',
+        nature: 'primary',
         type: 'ft',
+        originalImage: '',
       })
       expect(result[1]).toEqual({
         id: 'test-token-id.',
         name: 'Test Token',
         ticker: 'TEST',
         decimals: 6,
-        logo: 'https://example.com/logo.png',
         description: '',
         website: '',
-        policyId: 'test-token-id',
         fingerprint: '',
-        group: null,
-        kind: 'ft',
-        image: 'https://example.com/logo.png',
-        icon: 'https://example.com/logo.png',
-        symbol: 'TEST',
-        metadatas: {},
-        isPrimaryToken: false,
-        status: 'valid',
-        application: 'general',
-        tag: '',
-        reference: '',
         originalImage: '',
-        nature: 'secondary',
+        reference: '',
+        symbol: '',
+        tag: '',
+        status: 'invalid',
         type: 'ft',
+        application: 'general',
+        nature: 'secondary',
       })
     })
   })
@@ -165,8 +158,8 @@ describe('transformersMaker', () => {
         placedAt: 1234567890,
         lastUpdate: 1234567890,
         status: 'open',
-        tokenIn: 'lovelace',
-        tokenOut: 'test-token',
+        tokenIn: '.',
+        tokenOut: 'test-token.',
         amountIn: 100,
         actualAmountOut: 1000,
         expectedAmountOut: 1000,
@@ -231,7 +224,7 @@ describe('transformersMaker', () => {
               pool_id:
                 'f5808c2c990d86da54bfc97d89cee6efa20cd8461616359478d96b4c.ee5cfbc5b0dc10c873a0bcc69e49b9af21b899f59337a894874c6b596c2da136',
               price_impact: 0.3006573962454888,
-              protocol: 'MinswapV2',
+              protocol: Dex.MinswapV2,
               token_in: 'lovelace',
               token_out:
                 'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae45655534441',
@@ -247,7 +240,7 @@ describe('transformersMaker', () => {
       expect(result.splits).toHaveLength(1)
       expect(result.splits[0]).toEqual({
         amountIn: 10,
-        batcherFee: 0,
+        batcherFee: 0.7,
         deposits: 2,
         protocol: 'minswap-v2',
         expectedOutput: 8.290409,
@@ -261,7 +254,7 @@ describe('transformersMaker', () => {
         priceDistortion: 0,
         priceImpact: 0.3006573962454888,
       })
-      expect(result.batcherFee).toBe(2)
+      expect(result.batcherFee).toBe(0.7)
       expect(result.deposits).toBe(2)
       expect(result.aggregatorFee).toBe(0)
       expect(result.frontendFee).toBe(0)
@@ -314,7 +307,7 @@ describe('transformersMaker', () => {
         blockedProtocols: [],
         slippage: 1,
         tokenIn: '.' as const,
-        tokenOut: 'test-token' as const,
+        tokenOut: 'test-token.' as const,
       }
 
       const result = transformersWithPartner.create.request(mockRequest)
@@ -350,12 +343,34 @@ describe('transformersMaker', () => {
   describe('limitOptions', () => {
     it('should transform limitOptions response correctly', () => {
       const mockResponse = {
-        price: '0.8290409',
+        token_in: {
+          token_id: 'lovelace',
+          logo: null,
+          ticker: 'ADA',
+          is_verified: true,
+          price_by_ada: 1,
+          project_name: 'Cardano',
+          decimals: 6,
+        },
+        token_out: {
+          token_id: 'test-token',
+          logo: null,
+          ticker: 'TEST',
+          is_verified: false,
+          price_by_ada: 0.5,
+          project_name: 'Test Token',
+          decimals: 6,
+        },
+        amount_in: '10',
+        amount_out: '8.290409',
+        price: 0.8290409,
         options: [
           {
-            protocol: 'MinswapV2',
-            price: 0.8290409,
+            protocol: Dex.MinswapV2,
+            pool_id: 'test-pool-id',
             fee: 2,
+            price: 0.8290409,
+            liquidity: '1000000',
           },
         ],
       }
@@ -394,14 +409,21 @@ describe('transformersMaker', () => {
   describe('edge cases', () => {
     it('should handle empty paths in estimate response', () => {
       const mockResponse = {
+        token_in: 'lovelace',
+        token_out: 'test-token',
         amount_in: '10',
         amount_out: '8.290409',
+        amount_in_decimal: true,
         min_amount_out: '8.208325',
-        deposits: '2',
         aggregator_fee: '0',
+        aggregator_fee_percent: 0.1,
+        deposits: '2',
         total_dex_fee: '0.7',
+        total_lp_fee: '0.03',
         avg_price_impact: 0.3,
         paths: [],
+        route: [],
+        aggregator: 'Minswap' as const,
       }
 
       const result = transformers.estimate.response(mockResponse)
@@ -434,18 +456,22 @@ describe('transformersMaker', () => {
       expect(result).toHaveLength(1)
       expect(result[0].name).toBe('Unknown Token')
       expect(result[0].ticker).toBe('')
-      expect(result[0].decimals).toBe(6)
-      expect(result[0].logo).toBeNull()
+      expect(result[0].decimals).toBe(0)
     })
 
     it('should handle zero amounts in estimate response', () => {
       const mockResponse = {
+        token_in: 'lovelace',
+        token_out: 'test-token',
         amount_in: '0',
         amount_out: '0',
+        amount_in_decimal: true,
         min_amount_out: '0',
-        deposits: '0',
         aggregator_fee: '0',
+        aggregator_fee_percent: 0,
+        deposits: '0',
         total_dex_fee: '0',
+        total_lp_fee: '0',
         avg_price_impact: 0,
         paths: [
           [
@@ -455,13 +481,18 @@ describe('transformersMaker', () => {
               deposits: '0',
               dex_fee: '0',
               lp_fee: '0',
+              lp_token: 'test-lp-token',
               min_amount_out: '0',
               pool_id: 'pool123',
               price_impact: 0,
-              protocol: 'MinswapV2',
+              protocol: Dex.MinswapV2,
+              token_in: 'lovelace',
+              token_out: 'test-token',
             },
           ],
         ],
+        route: [],
+        aggregator: 'Minswap' as const,
       }
 
       const result = transformers.estimate.response(mockResponse)

@@ -1,4 +1,4 @@
-import {isRight} from '@yoroi/common'
+import {isLeft, isRight} from '@yoroi/common'
 import {Chain, Portfolio} from '@yoroi/types'
 
 import {minswapApiMaker} from './api-maker'
@@ -240,6 +240,32 @@ describe('minswapApiMaker', () => {
     if (isRight(result)) {
       expect(result.value.data.cbor).toBe('test-cbor-data')
       expect(result.value.data.aggregator).toBe('minswap')
+    }
+  })
+
+  it('should handle limitOptions when estimate fails', async () => {
+    const mockErrorResponse = {
+      tag: 'left' as const,
+      error: {
+        status: 400,
+        message: 'Estimate failed',
+        responseData: {},
+      },
+    }
+
+    mockConfig.request = jest.fn().mockResolvedValue(mockErrorResponse)
+    const api = minswapApiMaker(mockConfig)
+
+    const result = await api.limitOptions({
+      tokenIn: '.' as const,
+      tokenOut:
+        'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441' as const,
+    })
+
+    expect(isLeft(result)).toBe(true)
+    if (isLeft(result)) {
+      expect(result.error.message).toBe('Estimate failed')
+      expect(result.error.status).toBe(400)
     }
   })
 
