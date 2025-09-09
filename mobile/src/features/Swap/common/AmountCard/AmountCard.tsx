@@ -12,10 +12,9 @@ import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWalle
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
+import {PairedBalance} from '~/ui/PairedBalance/PairedBalance'
+import {TokenInfoIcon} from '~/ui/TokenInfoIcon/TokenInfoIcon'
 import {formatTokenWithText} from '~/wallets/utils/format'
-
-import {PairedBalance} from '../PairedBalance/PairedBalance'
-import {TokenInfoIcon} from '../TokenInfoIcon/TokenInfoIcon'
 
 export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
   const {atoms: ta, palette: p} = useTheme()
