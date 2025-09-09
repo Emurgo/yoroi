@@ -73,6 +73,21 @@ export type TokensRequest = {
   limit?: number
 }
 
+export type PathStep = {
+  pool_id: string
+  protocol: Dex
+  lp_token: string
+  token_in: string
+  token_out: string
+  amount_in: string
+  amount_out: string
+  min_amount_out: string
+  lp_fee: string
+  dex_fee: string
+  deposits: string
+  price_impact: number
+}
+
 export type EstimateRequest = {
   token_in: string
   token_out: string
@@ -98,7 +113,7 @@ export type EstimateResponse = {
   deposits: string
   total_dex_fee: string
   total_lp_fee: string
-  paths: Array<any>
+  paths: Array<PathStep[]>
   route: Array<{
     pool: {
       pool_id: string

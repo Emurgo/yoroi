@@ -301,5 +301,176 @@ describe('transformersMaker', () => {
         amount_in_decimal: true,
       })
     })
+
+    it('should transform create request with partner', () => {
+      const configWithPartner = {
+        ...mockConfig,
+        partner: 'test-partner',
+      }
+      const transformersWithPartner = transformersMaker(configWithPartner)
+
+      const mockRequest = {
+        amountIn: 10,
+        blockedProtocols: [],
+        slippage: 1,
+        tokenIn: '.' as const,
+        tokenOut: 'test-token' as const,
+      }
+
+      const result = transformersWithPartner.create.request(mockRequest)
+
+      expect(result.estimate.partner).toBe('test-partner')
+    })
+
+    it('should transform create response correctly', () => {
+      const mockResponse = {
+        cbor: 'test-cbor-data',
+      }
+
+      const result = transformers.create.response(mockResponse)
+
+      expect(result).toEqual({
+        splits: [],
+        batcherFee: 0,
+        deposits: 0,
+        aggregatorFee: 0,
+        frontendFee: 0,
+        netPrice: 0,
+        priceImpact: 0,
+        totalFee: 0,
+        totalInput: 0,
+        totalOutput: 0,
+        totalOutputWithoutSlippage: 0,
+        aggregator: 'minswap',
+        cbor: 'test-cbor-data',
+      })
+    })
+  })
+
+  describe('limitOptions', () => {
+    it('should transform limitOptions response correctly', () => {
+      const mockResponse = {
+        price: '0.8290409',
+        options: [
+          {
+            protocol: 'MinswapV2',
+            price: 0.8290409,
+            fee: 2,
+          },
+        ],
+      }
+
+      const result = transformers.limitOptions.response(mockResponse)
+
+      expect(result).toEqual({
+        defaultProtocol: 'minswap-v2',
+        wantedPrice: 0.8290409,
+        options: [
+          {
+            protocol: 'minswap-v2',
+            initialPrice: 0.8290409,
+            batcherFee: 2,
+          },
+        ],
+      })
+    })
+  })
+
+  describe('cancel', () => {
+    it('should transform cancel response correctly', () => {
+      const mockResponse = {
+        cbor: 'cancel-cbor-data',
+      }
+
+      const result = transformers.cancel.response(mockResponse)
+
+      expect(result).toEqual({
+        cbor: 'cancel-cbor-data',
+        additionalCancellationFee: undefined,
+      })
+    })
+  })
+
+  describe('edge cases', () => {
+    it('should handle empty paths in estimate response', () => {
+      const mockResponse = {
+        amount_in: '10',
+        amount_out: '8.290409',
+        min_amount_out: '8.208325',
+        deposits: '2',
+        aggregator_fee: '0',
+        total_dex_fee: '0.7',
+        avg_price_impact: 0.3,
+        paths: [],
+      }
+
+      const result = transformers.estimate.response(mockResponse)
+
+      expect(result.splits).toHaveLength(0)
+      expect(result.totalInput).toBe(10)
+      expect(result.totalOutput).toBe(8.290409)
+    })
+
+    it('should handle null values in token data', () => {
+      const mockResponse = {
+        tokens: [
+          {
+            token_id: 'test-token',
+            logo: null,
+            ticker: null,
+            is_verified: null,
+            price_by_ada: null,
+            project_name: null,
+            decimals: null,
+          },
+        ],
+        total: 1,
+        page: 1,
+        limit: 1000,
+      }
+
+      const result = transformers.tokens.response(mockResponse)
+
+      expect(result).toHaveLength(1)
+      expect(result[0].name).toBe('Unknown Token')
+      expect(result[0].ticker).toBe('')
+      expect(result[0].decimals).toBe(6)
+      expect(result[0].logo).toBeNull()
+    })
+
+    it('should handle zero amounts in estimate response', () => {
+      const mockResponse = {
+        amount_in: '0',
+        amount_out: '0',
+        min_amount_out: '0',
+        deposits: '0',
+        aggregator_fee: '0',
+        total_dex_fee: '0',
+        avg_price_impact: 0,
+        paths: [
+          [
+            {
+              amount_in: '0',
+              amount_out: '0',
+              deposits: '0',
+              dex_fee: '0',
+              lp_fee: '0',
+              min_amount_out: '0',
+              pool_id: 'pool123',
+              price_impact: 0,
+              protocol: 'MinswapV2',
+            },
+          ],
+        ],
+      }
+
+      const result = transformers.estimate.response(mockResponse)
+
+      expect(result.totalInput).toBe(0)
+      expect(result.totalOutput).toBe(0)
+      expect(result.netPrice).toBe(0)
+      expect(result.splits[0].initialPrice).toBe(0)
+      expect(result.splits[0].finalPrice).toBe(0)
+    })
   })
 })

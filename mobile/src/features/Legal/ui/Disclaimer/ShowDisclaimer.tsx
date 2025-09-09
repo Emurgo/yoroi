@@ -1,6 +1,5 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 
-import {useNavigation} from '@react-navigation/native'
 import {useQuery} from '@tanstack/react-query'
 import * as React from 'react'
 import {View} from 'react-native'
@@ -36,11 +35,7 @@ const useDisclaimerText = ({
     queryFn: () => loadText(type, languageCode),
   })
 
-  return {
-    data: query.data,
-    isLoading: query.isLoading,
-    error: query.error,
-  }
+  return query
 }
 
 export const ShowDisclaimer = ({type, disabled}: Props) => {
@@ -48,7 +43,6 @@ export const ShowDisclaimer = ({type, disabled}: Props) => {
   const {openModal, closeModal} = useModal()
   const strings = useStrings()
   const {resetToTxHistory} = useWalletNavigation()
-  const navigation = useNavigation()
   const [showed, setShowed] = React.useState(false)
   const [accepted, setAccepted] = useDisclaimerState(type)
   const {atoms: ta, palette: p} = useTheme()
@@ -132,26 +126,15 @@ export const ShowDisclaimer = ({type, disabled}: Props) => {
       })
       setShowed(true)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
-    accepted,
-    closeModal,
     disabled,
-    languageCode,
-    navigation,
-    openModal,
-    disclaimerText,
-    isLoading,
-    p.bg_color_max,
-    ta.bg_color_max,
-    ta.text_gray_max,
-    resetToTxHistory,
-    setAccepted,
+    accepted,
     showed,
-    strings.global.accept,
-    strings.global.cancel,
-    strings.global.disclaimer,
-    strings.global.proceed,
-    type,
+    isLoading,
+    disclaimerText,
+    openModal,
+    setShowed,
   ])
   return null
 }

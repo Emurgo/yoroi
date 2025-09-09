@@ -174,7 +174,6 @@ export const minswapApiMaker = (
           )
         }
 
-        // Minswap only supports MinswapV2 protocol
         const options = [
           {
             protocol: Swap.Protocol.Minswap_v2,
@@ -245,7 +244,7 @@ export const minswapApiMaker = (
           amountIn: body.amountIn,
           tokenIn: body.tokenIn,
           tokenOut: body.tokenOut,
-          slippage: body.slippage ?? 1,
+          slippage: body.slippage ?? 0,
           blockedProtocols: body.blockedProtocols,
           protocol: body.protocol,
         }

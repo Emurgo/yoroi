@@ -94,12 +94,26 @@ const apiManagerMaker = (
       async tokens() {
         const enabledAggregators = getEnabledAggregators()
 
-        const responses: Array<Api.Response<Portfolio.Token.Info[]>> =
-          await Promise.all(
-            enabledAggregators.map((aggregator) =>
-              adapters[aggregator].tokens(),
-            ),
-          )
+        const settledResults = await Promise.allSettled(
+          enabledAggregators.map((aggregator) => adapters[aggregator].tokens()),
+        )
+
+        const responses: Array<Api.Response<Portfolio.Token.Info[]>> = []
+        const errors: Array<string> = []
+
+        settledResults.forEach((result, index) => {
+          if (result.status === 'fulfilled') {
+            responses.push(result.value)
+          } else {
+            errors.push(
+              `Aggregator ${enabledAggregators[index]} failed: ${result.reason}`,
+            )
+          }
+        })
+
+        if (errors.length > 0) {
+          console.warn('Some aggregators failed:', errors)
+        }
 
         warnAllLeft(...responses)
 
@@ -218,13 +232,29 @@ const apiManagerMaker = (
       async estimate(body: Swap.EstimateRequest) {
         const enabledAggregators = getEnabledAggregators()
 
-        const responses: Array<Api.Response<Swap.EstimateResponse>> =
-          await Promise.all(
-            enabledAggregators.map(async (aggregator) => {
-              const response = await adapters[aggregator].estimate(body)
-              return response
-            }),
-          )
+        const settledResults = await Promise.allSettled(
+          enabledAggregators.map(async (aggregator) => {
+            const response = await adapters[aggregator].estimate(body)
+            return response
+          }),
+        )
+
+        const responses: Array<Api.Response<Swap.EstimateResponse>> = []
+        const errors: Array<string> = []
+
+        settledResults.forEach((result, index) => {
+          if (result.status === 'fulfilled') {
+            responses.push(result.value)
+          } else {
+            errors.push(
+              `Aggregator ${enabledAggregators[index]} failed: ${result.reason}`,
+            )
+          }
+        })
+
+        if (errors.length > 0) {
+          console.warn('Some aggregators failed during estimate:', errors)
+        }
 
         warnAllLeft(...responses)
 
@@ -241,6 +271,10 @@ const apiManagerMaker = (
         const estimates = responses
           .filter(isRight)
           .flatMap(({value}) => value.data)
+
+        if (estimates.length === 0) {
+          return invalid
+        }
 
         const bestEstimate = estimates.reduce(
           getBestSwap(await getPrice(body.tokenOut)),

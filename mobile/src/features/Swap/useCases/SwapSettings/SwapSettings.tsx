@@ -39,6 +39,26 @@ const CHOICES: Readonly<Choice[]> = [
 
 const MAX_DECIMALS = 1
 
+const ALL_AGGREGATORS: Swap.Aggregator[] = [
+  'muesliswap',
+  'dexhunter',
+  'minswap',
+]
+
+const toggleAggregator = (
+  current: Swap.Aggregator[],
+  target: Swap.Aggregator,
+): Swap.Aggregator[] => {
+  if (current.includes(target)) {
+    const remaining = current.filter((opt) => opt !== target)
+    return remaining.length === 0
+      ? ALL_AGGREGATORS.filter((opt) => opt !== target)
+      : remaining
+  } else {
+    return [...current, target]
+  }
+}
+
 export const SwapSettings = () => {
   const {numberLocale} = useLanguage()
   const {palette: p} = useTheme()
@@ -227,23 +247,11 @@ export const SwapSettings = () => {
 
                   <SettingsSwitch
                     value={aggregator.includes('dexhunter')}
-                    onValueChange={() => {
-                      if (aggregator.includes('dexhunter')) {
-                        // Deselecting dexhunter
-                        const remainingOptions = aggregator.filter(
-                          (opt) => opt !== 'dexhunter',
-                        )
-                        // If no options would remain, turn on all others
-                        const newAggregator =
-                          remainingOptions.length === 0
-                            ? (['muesliswap', 'minswap'] as Swap.Aggregator[])
-                            : (remainingOptions as Swap.Aggregator[])
-                        assignAggregator(newAggregator)
-                      } else {
-                        // Selecting dexhunter
-                        assignAggregator([...aggregator, 'dexhunter'])
-                      }
-                    }}
+                    onValueChange={() =>
+                      assignAggregator(
+                        toggleAggregator(aggregator, 'dexhunter'),
+                      )
+                    }
                   />
                 </View>
 
@@ -254,23 +262,11 @@ export const SwapSettings = () => {
 
                   <SettingsSwitch
                     value={aggregator.includes('muesliswap')}
-                    onValueChange={() => {
-                      if (aggregator.includes('muesliswap')) {
-                        // Deselecting muesliswap
-                        const remainingOptions = aggregator.filter(
-                          (opt) => opt !== 'muesliswap',
-                        )
-                        // If no options would remain, turn on all others
-                        const newAggregator =
-                          remainingOptions.length === 0
-                            ? (['dexhunter', 'minswap'] as Swap.Aggregator[])
-                            : (remainingOptions as Swap.Aggregator[])
-                        assignAggregator(newAggregator)
-                      } else {
-                        // Selecting muesliswap
-                        assignAggregator([...aggregator, 'muesliswap'])
-                      }
-                    }}
+                    onValueChange={() =>
+                      assignAggregator(
+                        toggleAggregator(aggregator, 'muesliswap'),
+                      )
+                    }
                   />
                 </View>
 
@@ -281,23 +277,9 @@ export const SwapSettings = () => {
 
                   <SettingsSwitch
                     value={aggregator.includes('minswap')}
-                    onValueChange={() => {
-                      if (aggregator.includes('minswap')) {
-                        // Deselecting minswap
-                        const remainingOptions = aggregator.filter(
-                          (opt) => opt !== 'minswap',
-                        )
-                        // If no options would remain, turn on all others
-                        const newAggregator =
-                          remainingOptions.length === 0
-                            ? (['dexhunter', 'muesliswap'] as Swap.Aggregator[])
-                            : (remainingOptions as Swap.Aggregator[])
-                        assignAggregator(newAggregator)
-                      } else {
-                        // Selecting minswap
-                        assignAggregator([...aggregator, 'minswap'])
-                      }
-                    }}
+                    onValueChange={() =>
+                      assignAggregator(toggleAggregator(aggregator, 'minswap'))
+                    }
                   />
                 </View>
               </>

@@ -127,7 +127,8 @@ describe('minswapApiMaker', () => {
                 decimals: 6,
               },
               token_out: {
-                token_id: 'test-token',
+                token_id:
+                  'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441',
                 logo: null,
                 ticker: 'TEST',
                 is_verified: true,
@@ -159,6 +160,203 @@ describe('minswapApiMaker', () => {
       expect(result.value.data[0].txHash).toBe('txhash')
       expect(result.value.data[0].outputIndex).toBe(0)
       expect(result.value.data[0].aggregator).toBe('minswap')
+    }
+  })
+
+  it('should handle estimate request', async () => {
+    const mockResponse = {
+      tag: 'right' as const,
+      value: {
+        status: 200,
+        data: {
+          amount_in: '10',
+          amount_out: '8.290409',
+          min_amount_out: '8.208325',
+          deposits: '2',
+          aggregator_fee: '0',
+          total_dex_fee: '0.7',
+          avg_price_impact: 0.3,
+          paths: [
+            [
+              {
+                amount_in: '10',
+                amount_out: '8.290409',
+                deposits: '2',
+                dex_fee: '0.7',
+                lp_fee: '0.03',
+                min_amount_out: '8.208325',
+                pool_id: 'pool123',
+                price_impact: 0.3,
+                protocol: 'MinswapV2',
+              },
+            ],
+          ],
+        },
+      },
+    }
+
+    mockConfig.request = jest.fn().mockResolvedValue(mockResponse)
+    const api = minswapApiMaker(mockConfig)
+
+    const result = await api.estimate({
+      amountIn: 10,
+      tokenIn: '.' as const,
+      tokenOut:
+        'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441' as const,
+      slippage: 1,
+    })
+
+    expect(isRight(result)).toBe(true)
+    if (isRight(result)) {
+      expect(result.value.data.totalInput).toBe(10)
+      expect(result.value.data.totalOutput).toBe(8.290409)
+      expect(result.value.data.splits).toHaveLength(1)
+    }
+  })
+
+  it('should handle create request', async () => {
+    const mockResponse = {
+      tag: 'right' as const,
+      value: {
+        status: 200,
+        data: {
+          cbor: 'test-cbor-data',
+        },
+      },
+    }
+
+    mockConfig.request = jest.fn().mockResolvedValue(mockResponse)
+    const api = minswapApiMaker(mockConfig)
+
+    const result = await api.create({
+      amountIn: 10,
+      tokenIn: '.' as const,
+      tokenOut:
+        'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441' as const,
+      slippage: 1,
+    })
+
+    expect(isRight(result)).toBe(true)
+    if (isRight(result)) {
+      expect(result.value.data.cbor).toBe('test-cbor-data')
+      expect(result.value.data.aggregator).toBe('minswap')
+    }
+  })
+
+  it('should handle limitOptions request', async () => {
+    const mockResponse = {
+      tag: 'right' as const,
+      value: {
+        status: 200,
+        data: {
+          amount_in: '50',
+          amount_out: '41.45',
+          min_amount_out: '41.04',
+          deposits: '2',
+          aggregator_fee: '0',
+          total_dex_fee: '0.7',
+          avg_price_impact: 0.3,
+          paths: [
+            [
+              {
+                amount_in: '50',
+                amount_out: '41.45',
+                deposits: '2',
+                dex_fee: '0.7',
+                lp_fee: '0.03',
+                min_amount_out: '41.04',
+                pool_id: 'pool123',
+                price_impact: 0.3,
+                protocol: 'MinswapV2',
+              },
+            ],
+          ],
+        },
+      },
+    }
+
+    mockConfig.request = jest.fn().mockResolvedValue(mockResponse)
+    const api = minswapApiMaker(mockConfig)
+
+    const result = await api.limitOptions({
+      tokenIn: '.' as const,
+      tokenOut:
+        'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441' as const,
+    })
+
+    expect(isRight(result)).toBe(true)
+    if (isRight(result)) {
+      expect(result.value.data.defaultProtocol).toBe('minswap-v2')
+      expect(result.value.data.options).toHaveLength(1)
+    }
+  })
+
+  it('should handle cancel request', async () => {
+    const mockResponse = {
+      tag: 'right' as const,
+      value: {
+        status: 200,
+        data: {
+          cbor: 'cancel-cbor-data',
+        },
+      },
+    }
+
+    mockConfig.request = jest.fn().mockResolvedValue(mockResponse)
+    const api = minswapApiMaker(mockConfig)
+
+    const result = await api.cancel({
+      order: {
+        aggregator: 'minswap' as const,
+        protocol: 'minswap-v2' as const,
+        txHash: 'txhash',
+        outputIndex: 0,
+        tokenIn: '.' as const,
+        tokenOut:
+          'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441' as const,
+        amountIn: 10,
+        actualAmountOut: 8,
+        expectedAmountOut: 8,
+        placedAt: Date.now(),
+        lastUpdate: Date.now(),
+        status: 'open' as const,
+      },
+    })
+
+    expect(isRight(result)).toBe(true)
+    if (isRight(result)) {
+      expect(result.value.data.cbor).toBe('cancel-cbor-data')
+    }
+  })
+
+  it('should handle API errors gracefully', async () => {
+    const mockError = {
+      tag: 'left' as const,
+      error: {
+        status: 500,
+        message: 'Internal server error',
+        responseData: {},
+      },
+    }
+
+    mockConfig.request = jest.fn().mockResolvedValue(mockError)
+    const api = minswapApiMaker(mockConfig)
+
+    const result = await api.tokens()
+
+    expect(result).toEqual(mockError)
+  })
+
+  it('should handle network errors', async () => {
+    mockConfig.request = jest.fn().mockRejectedValue(new Error('Network error'))
+    const api = minswapApiMaker(mockConfig)
+
+    const result = await api.tokens()
+
+    expect(result.tag).toBe('left')
+    if (result.tag === 'left') {
+      expect(result.error.status).toBe(-1)
+      expect(result.error.message).toBe('Network error')
     }
   })
 })

@@ -12,6 +12,7 @@ import {
   EstimateResponse,
   LimitOptionsResponse,
   MinswapApiConfig,
+  PathStep,
   PendingOrdersResponse,
   TokensRequest,
   TokensResponse,
@@ -55,7 +56,7 @@ const mapProtocolToDex = (protocol: Swap.Protocol): Dex => {
 export const transformersMaker = (config: MinswapApiConfig) => {
   const {isPrimaryToken, primaryTokenInfo, address, partner} = config
 
-  // Convert portfolio token ID to API token ID (like DexHunter)
+  // Convert portfolio token ID to API token ID
   const toTokenId = (tokenId: Portfolio.Token.Id) => {
     const result = isPrimaryToken(tokenId)
       ? 'lovelace'
@@ -63,88 +64,86 @@ export const transformersMaker = (config: MinswapApiConfig) => {
     return result
   }
 
-  const transformToken = (token: {
-    token_id: string
-    logo: string | null
-    ticker: string | null
-    is_verified: boolean | null
-    price_by_ada: number | null
-    project_name: string | null
-    decimals: number | null
-  }): Portfolio.Token.Info => {
-    const formattedTokenId: Portfolio.Token.Id =
-      token.token_id === 'lovelace'
-        ? primaryTokenInfo.id
-        : `${token.token_id.slice(0, 56)}.${token.token_id.slice(56)}`
+  const fromTokenId = (tokenId: string): Portfolio.Token.Id =>
+    tokenId === 'lovelace'
+      ? primaryTokenInfo.id
+      : `${tokenId.slice(0, 56)}.${tokenId.slice(56)}`
+
+  const transformToken = (
+    token: TokensResponse['tokens'][number],
+  ): Portfolio.Token.Info => {
+    if (isPrimaryToken(token.token_id) || token.token_id === 'lovelace')
+      return primaryTokenInfo
 
     return freeze(
       {
-        id: formattedTokenId,
-        name: token.project_name || token.ticker || 'Unknown Token',
-        ticker: token.ticker || '',
-        decimals: token.decimals || 6,
-        logo: token.logo || null,
-        description: '',
-        website: '',
-        policyId:
-          token.token_id === 'lovelace' ? '' : token.token_id.slice(0, 56),
-        fingerprint: '',
-        group: token.token_id === 'lovelace' ? 'ADA' : null,
-        kind: token.token_id === 'lovelace' ? 'ft' : 'ft',
-        image: token.logo || null,
-        icon: token.logo || null,
-        symbol: token.ticker || '',
-        metadatas: {},
-        isPrimaryToken: isPrimaryToken(formattedTokenId),
-        status: Portfolio.Token.Status.Valid,
+        id: fromTokenId(token.token_id),
+        name: token.project_name ?? token.ticker ?? 'Unknown Token',
+        decimals: token.decimals ?? 0,
+        ticker: token.ticker ?? '',
+        status: token.is_verified
+          ? Portfolio.Token.Status.Valid
+          : Portfolio.Token.Status.Invalid,
+
+        type: Portfolio.Token.Type.FT,
+        nature: Portfolio.Token.Nature.Secondary,
         application: Portfolio.Token.Application.General,
+        symbol: '',
         tag: '',
         reference: '',
+        fingerprint: '',
+        description: '',
+        website: '',
         originalImage: '',
-        nature: Portfolio.Token.Nature.Secondary,
-        type: Portfolio.Token.Type.FT,
       },
       true,
     )
   }
 
   // Transform Minswap paths to Swap.Split format
-  const transformPathsToSplits = (paths: Array<any>): Swap.Split[] => {
+  const transformPathsToSplits = (paths: Array<PathStep[]>): Swap.Split[] => {
     if (!paths || paths.length === 0) return []
 
     return paths
-      .map((path) => {
-        // Each path is an array of hops
+      .map((path: PathStep[]) => {
+        // Each path is an array of hops - take the first hop for single-hop swaps
         const firstHop = path[0]
         if (!firstHop) return null
 
+        // Parse numeric values with proper error handling
+        const amountIn = Number(firstHop.amount_in) || 0
+        const amountOut = Number(firstHop.amount_out) || 0
+        const minAmountOut = Number(firstHop.min_amount_out) || 0
+        const deposits = Number(firstHop.deposits) || 0
+        const batcherFee = Number(firstHop.dex_fee) || 0 // dex_fee maps to batcherFee
+        const lpFee = Number(firstHop.lp_fee) || 0
+        const priceImpact = firstHop.price_impact || 0
+
+        // Calculate prices safely
+        const initialPrice = amountIn > 0 ? amountOut / amountIn : 0
+        const finalPrice = amountIn > 0 ? amountOut / amountIn : 0
+
         const split = freeze(
           {
-            amountIn: parseFloat(firstHop.amount_in || '0'),
-            batcherFee: 0, // Minswap doesn't provide batcher fee per split
-            deposits: parseFloat(firstHop.deposits || '0'),
+            amountIn,
+            batcherFee,
+            deposits,
             protocol: mapDexToProtocol(firstHop.protocol),
-            expectedOutput: parseFloat(firstHop.amount_out || '0'),
-            expectedOutputWithoutSlippage: parseFloat(
-              firstHop.min_amount_out || '0',
-            ),
-            fee: parseFloat(firstHop.dex_fee || '0'),
-            initialPrice:
-              parseFloat(firstHop.amount_out || '0') /
-              parseFloat(firstHop.amount_in || '1'),
-            finalPrice:
-              parseFloat(firstHop.amount_out || '0') /
-              parseFloat(firstHop.amount_in || '1'),
-            poolFee: parseFloat(firstHop.lp_fee || '0'),
-            poolId: firstHop.pool_id || '',
-            priceDistortion: 0, // Minswap doesn't provide this
-            priceImpact: firstHop.price_impact || 0,
+            expectedOutput: amountOut,
+            expectedOutputWithoutSlippage: minAmountOut,
+            fee: batcherFee, // Keep fee field for backward compatibility
+            initialPrice,
+            finalPrice,
+            poolFee: lpFee,
+            poolId: firstHop.pool_id,
+            priceDistortion: 0,
+            priceImpact,
           },
           true,
         )
         return split
       })
-      .filter(Boolean) as Swap.Split[]
+      .filter(isNonNullable) as Swap.Split[]
   }
 
   return freeze(
@@ -177,20 +176,20 @@ export const transformersMaker = (config: MinswapApiConfig) => {
               freeze(
                 {
                   aggregator: Swap.Aggregator.Minswap,
-                  protocol: Swap.Protocol.Minswap_v2,
+                  protocol: mapDexToProtocol(order.protocol),
                   placedAt: order.created_at,
                   lastUpdate: order.created_at,
                   status: 'open' as const,
-                  tokenIn: order.token_in.token_id as `${string}.${string}`,
-                  tokenOut: order.token_out.token_id as `${string}.${string}`,
-                  amountIn: parseFloat(order.amount_in),
-                  actualAmountOut: parseFloat(order.min_amount_out),
-                  expectedAmountOut: parseFloat(order.min_amount_out),
+                  tokenIn: fromTokenId(order.token_in.token_id),
+                  tokenOut: fromTokenId(order.token_out.token_id),
+                  amountIn: Number(order.amount_in),
+                  actualAmountOut: Number(order.min_amount_out),
+                  expectedAmountOut: Number(order.min_amount_out),
                   txHash: order.tx_in.split('#')[0],
                   outputIndex: parseInt(order.tx_in.split('#')[1], 10),
-                  updateTxHash: undefined,
+                  updateTxHash: undefined, // Minswap only returns pending orders
                   customId: undefined,
-                },
+                } satisfies Swap.Order,
                 true,
               ),
             )
@@ -202,7 +201,7 @@ export const transformersMaker = (config: MinswapApiConfig) => {
           return freeze(
             {
               defaultProtocol: Swap.Protocol.Minswap_v2,
-              wantedPrice: parseFloat(data.price.toString()),
+              wantedPrice: Number(data.price.toString()),
               options: data.options.map((option) =>
                 freeze(
                   {
@@ -230,8 +229,8 @@ export const transformersMaker = (config: MinswapApiConfig) => {
           const request: EstimateRequest = {
             token_in: toTokenId(tokenIn),
             token_out: toTokenId(tokenOut),
-            amount: amountIn?.toString() || '0',
-            slippage: slippage || 1,
+            amount: amountIn?.toString() ?? '0',
+            slippage: slippage ?? 0,
             exclude_protocols: blockedProtocols?.map((p) =>
               mapProtocolToDex(p),
             ),
@@ -241,23 +240,26 @@ export const transformersMaker = (config: MinswapApiConfig) => {
           return request
         },
         response: (data: EstimateResponse): Swap.EstimateResponse => {
-          const totalInput = parseFloat(data.amount_in)
-          const totalOutput = parseFloat(data.amount_out)
-          const totalOutputWithoutSlippage = parseFloat(data.min_amount_out)
+          const totalInput = Number(data.amount_in)
+          const totalOutput = Number(data.amount_out)
+          const totalOutputWithoutSlippage = Number(data.min_amount_out)
+          const deposits = Number(data.deposits ?? '0')
+          const aggregatorFee = Number(data.aggregator_fee ?? '0')
+          const totalFee = Number(data.total_dex_fee ?? '0')
 
           return freeze(
             {
               splits: transformPathsToSplits(data.paths),
-              batcherFee: parseFloat(data.deposits || '0'),
-              deposits: parseFloat(data.deposits || '0'),
-              aggregatorFee: parseFloat(data.aggregator_fee || '0'),
+              batcherFee: totalFee,
+              deposits,
+              aggregatorFee,
               frontendFee: 0,
-              netPrice: totalOutput / totalInput,
+              netPrice: totalInput > 0 ? totalOutput / totalInput : 0,
               priceImpact: data.avg_price_impact,
-              totalFee: parseFloat(data.total_dex_fee || '0'),
-              totalOutput: totalOutput,
-              totalOutputWithoutSlippage: totalOutputWithoutSlippage,
-              totalInput: totalInput,
+              totalFee,
+              totalOutput,
+              totalOutputWithoutSlippage,
+              totalInput,
             },
             true,
           )

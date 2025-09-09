@@ -1,3 +1,4 @@
+import {atomicToDecimal, toBigInt} from '@yoroi/common'
 import {isPrimaryTokenInfo} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
@@ -8,6 +9,7 @@ import {usePortfolioBalances} from '~/features/Portfolio/common/hooks/usePortfol
 import {useNavigateTo} from '~/features/Swap/common/navigation'
 import {useSwap} from '~/features/Swap/common/useSwap'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {formatTokenWithText} from '~/wallets/utils/format'
@@ -17,6 +19,7 @@ import {TokenInfoIcon} from '../TokenInfoIcon/TokenInfoIcon'
 
 export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
   const {atoms: ta, palette: p} = useTheme()
+  const strings = useStrings()
   const swapForm = useSwap()
   const navigateTo = useNavigateTo()
   const {wallet} = useSelectedWallet()
@@ -69,7 +72,11 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
 
   const handleMaxPress = () => {
     if (balance && info) {
-      const maxAmount = (Number(balance) / 10 ** decimals).toFixed(decimals)
+      const decimalValue = atomicToDecimal({
+        value: balance,
+        decimals: decimals,
+      })
+      const maxAmount = decimalValue.toFixed(decimals)
       swapForm.action({type: 'TokenInAmountChanged', value: maxAmount})
     }
   }
@@ -98,7 +105,12 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
         </Pressable>
 
         {direction === 'in' && info && !isPrimaryTokenInfo(info) && (
-          <Button title="Max" type="Text" size="S" onPress={handleMaxPress} />
+          <Button
+            title={strings.swap.max}
+            type="Text"
+            size="S"
+            onPress={handleMaxPress}
+          />
         )}
 
         <Pressable
@@ -159,9 +171,7 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
             <PairedBalance
               amount={{
                 info,
-                quantity: BigInt(
-                  Math.floor(Number(quantity || '0') * 10 ** decimals),
-                ),
+                quantity: toBigInt(quantity || '0', decimals),
               }}
             />
           )}
