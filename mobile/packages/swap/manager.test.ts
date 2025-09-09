@@ -329,6 +329,22 @@ describe('swapManagerMaker', () => {
       expect(result.tag).toBe('right')
       expect(mockMuesliswapApi.tokens).toHaveBeenCalled()
     })
+
+    it('handles Promise.allSettled rejections gracefully', async () => {
+      // Mock one API to reject (simulate Promise.allSettled rejection)
+      mockDexhunterApi.tokens.mockRejectedValue(new Error('Network error'))
+      mockMuesliswapApi.tokens.mockResolvedValue({
+        tag: 'right',
+        value: {data: msApiMocks.results.tokens, status: 200},
+      })
+
+      const manager = swapManagerMaker(baseConfig)
+      manager.assignSettings({routingPreference: ['dexhunter', 'muesliswap']})
+
+      const result = await manager.api.tokens()
+      expect(result.tag).toBe('right')
+      expect(mockMuesliswapApi.tokens).toHaveBeenCalled()
+    })
   })
 
   describe('create()', () => {
@@ -1084,6 +1100,37 @@ describe('swapManagerMaker', () => {
 
       const result = await manager.api.estimate(dhApiMocks.inputs.quote)
 
+      expect(result.tag).toBe('left')
+      if (result.tag === 'left') {
+        expect(result.error.message).toBe('Unknown error')
+        expect(result.error.status).toBe(-3)
+      }
+    })
+
+    it('returns invalid when estimates array is empty', async () => {
+      // Mock all APIs to return left responses
+      mockDexhunterApi.estimate.mockResolvedValue({
+        tag: 'left',
+        error: {
+          status: -3,
+          message: 'Aggregator excluded from call',
+          responseData: {},
+        },
+      })
+      mockMuesliswapApi.estimate.mockResolvedValue({
+        tag: 'left',
+        error: {
+          status: -3,
+          message: 'Aggregator excluded from call',
+          responseData: {},
+        },
+      })
+
+      const manager = swapManagerMaker(baseConfig)
+      manager.assignSettings({routingPreference: ['dexhunter', 'muesliswap']})
+      await manager.api.tokens()
+
+      const result = await manager.api.estimate(dhApiMocks.inputs.quote)
       expect(result.tag).toBe('left')
       if (result.tag === 'left') {
         expect(result.error.message).toBe('Unknown error')

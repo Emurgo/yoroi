@@ -385,4 +385,55 @@ describe('minswapApiMaker', () => {
       expect(result.error.message).toBe('Network error')
     }
   })
+
+  it('should handle limitOptions when estimate returns empty splits', async () => {
+    const api = minswapApiMaker(mockConfig)
+
+    // Mock estimate to fail
+    mockConfig.request.mockResolvedValueOnce({
+      tag: 'left',
+      error: {
+        status: 500,
+        message: 'Estimate failed',
+        responseData: {},
+      },
+    })
+
+    const result = await api.limitOptions({
+      tokenIn: '.' as const,
+      tokenOut: 'test-token.' as const,
+    })
+
+    expect(result.tag).toBe('left')
+    if (result.tag === 'left') {
+      expect(result.error.message).toBe('Estimate failed')
+      expect(result.error.status).toBe(500)
+    }
+  })
+
+  it('should handle limitOptions when estimate returns empty splits array', async () => {
+    const api = minswapApiMaker(mockConfig)
+
+    // Mock estimate to return empty splits (line 163)
+    mockConfig.request.mockResolvedValueOnce({
+      tag: 'right',
+      value: {
+        status: 200,
+        data: {
+          splits: [], // Empty splits array
+        },
+      },
+    })
+
+    const result = await api.limitOptions({
+      tokenIn: '.' as const,
+      tokenOut: 'test-token.' as const,
+    })
+
+    expect(result.tag).toBe('left')
+    if (result.tag === 'left') {
+      expect(result.error.message).toBe('Invalid state')
+      expect(result.error.status).toBe(-3)
+    }
+  })
 })
