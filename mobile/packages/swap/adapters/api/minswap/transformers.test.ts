@@ -270,7 +270,7 @@ describe('transformersMaker', () => {
 
       expect(result).toHaveLength(1)
       expect(result[0]).toEqual({
-        aggregator: 'Minswap' as const,
+        aggregator: 'minswap' as const,
         protocol: 'minswap-v2',
         placedAt: 1234567890,
         lastUpdate: 1234567890,
@@ -642,7 +642,7 @@ describe('transformersMaker', () => {
         totalInput: 0,
         totalOutput: 0,
         totalOutputWithoutSlippage: 0,
-        aggregator: 'Minswap' as const,
+        aggregator: 'minswap' as const,
         cbor: 'test-cbor-data',
       })
     })
