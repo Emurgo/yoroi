@@ -8,7 +8,6 @@
   "useTabs": false,
 
   "plugins": ["@trivago/prettier-plugin-sort-imports"],
-  "pluginSearchDirs": ["."],
 
   "importOrder": [
     "^@yoroi/(.*)$",

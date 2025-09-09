@@ -2,6 +2,11 @@
   "projectType": "typescript",
   "defaultLang": "typescript",
   "formatOnSave": true,
+  "formatter": "prettier",
+  "prettier": {
+    "configPath": "./mobile/.prettierrc",
+    "executablePath": "./mobile/node_modules/.bin/prettier"
+  },
   "mpc": {
     "enabled": true,
     "providers": {
@@ -126,7 +131,7 @@
   },
   "typescript": {
     "format": {
-      "semicolons": true,
+      "semicolons": false,
       "singleQuote": true,
       "trailingComma": "all"
     },
