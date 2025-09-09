@@ -90,8 +90,9 @@ export const receiveMessages = defineMessages({
     defaultMessage: '!!!Generate',
   },
   infoAddressLimit: {
-    id: 'components.send.sendscreen.addressInputLabel',
-    defaultMessage: '!!!Address limit info',
+    id: 'components.receive.receivescreen.infoAddressLimit',
+    defaultMessage:
+      '!!!You have already reached your 20 addresses limit. If you need to operate with more than 20 addresses, reach out to us via ',
   },
   singleOrMultiple: {
     id: 'components.receive.receivescreen.singleOrMultiple',
