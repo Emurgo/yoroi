@@ -81,7 +81,7 @@ export const TransactionSummary = ({
   const priceInfoValue = `1 ${tokenInTicker} = ${price} ${tokenOutTicker}`
   const minAdaInfoValue = `${swapForm.createTx?.deposits} ${wallet.portfolioPrimaryTokenInfo.ticker}`
   const totalFee = `${swapForm.createTx?.totalFee} ${wallet.portfolioPrimaryTokenInfo.ticker}`
-  const minReceivedInfoValue = `${swapForm.createTx?.totalOutput} ${tokenOutTicker}`
+  const minReceivedInfoValue = `${swapForm.createTx?.totalOutputWithoutSlippage} ${tokenOutTicker}`
 
   const protocol = swapForm.createTx?.splits[0]?.protocol
 

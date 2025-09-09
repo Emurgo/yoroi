@@ -63,4 +63,16 @@ describe('getDexByProtocol', () => {
       Swap.Dex.Unsupported,
     )
   })
+
+  it('should return Unsupported for Cerra and Genius protocols', () => {
+    expect(getDexByProtocol(Swap.Protocol.Cerra)).toBe(Swap.Dex.Unsupported)
+    expect(getDexByProtocol(Swap.Protocol.Genius)).toBe(Swap.Dex.Unsupported)
+  })
+
+  it('should return Unsupported for invalid protocol', () => {
+    // Test the default case in the switch statement (line 4)
+    expect(getDexByProtocol('invalid-protocol' as any)).toBe(
+      Swap.Dex.Unsupported,
+    )
+  })
 })
