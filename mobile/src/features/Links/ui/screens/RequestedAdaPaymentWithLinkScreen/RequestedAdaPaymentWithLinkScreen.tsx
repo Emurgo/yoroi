@@ -3,15 +3,13 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import {Links} from '@yoroi/types'
 
 import * as React from 'react'
-import {ScrollView, Text, View, ViewProps} from 'react-native'
-import {SafeAreaView} from 'react-native-safe-area-context'
+import {ScrollView, Text, View} from 'react-native'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button, ButtonType} from '~/ui/Button/Button'
-import {Space} from '~/ui/Space/Space'
 import {isEmptyString} from '~/wallets/utils/string'
 
-import {ShowDisclaimer} from './ShowDisclaimer/ShowDisclaimer'
+import {ShowDisclaimer} from '../../shared/ShowDisclaimer/ShowDisclaimer'
 
 export const RequestedAdaPaymentWithLinkScreen = ({
   params,
@@ -25,7 +23,7 @@ export const RequestedAdaPaymentWithLinkScreen = ({
   onClose: () => void
 }) => {
   const strings = useStrings()
-  const {palette: p, atoms: ta} = useTheme()
+  const {atoms: ta} = useTheme()
   const {actionFinished} = useLinks()
 
   // TODO: revisit check with product
@@ -39,30 +37,18 @@ export const RequestedAdaPaymentWithLinkScreen = ({
   }
 
   return (
-    <SafeAreaView
-      edges={['bottom', 'left', 'right']}
-      style={[ta.bg_color_max, a.flex_1, a.px_lg]}
-    >
-      <ScrollView bounces={false}>
+    <View style={[ta.bg_color_max, a.flex_1, a.px_lg, a.pb_lg, a.gap_lg]}>
+      <ScrollView bounces={false} contentContainerStyle={a.gap_lg}>
         <ShowDisclaimer title={strings.global.disclaimer}>
-          <Text style={[a.body_2_md_regular, {color: p.text_gray_max}]}>
+          <Text style={[a.body_2_md_regular, ta.text_gray_max]}>
             {description}
           </Text>
         </ShowDisclaimer>
 
-        <Space.Height.md />
-
-        {/* TODO: revisit SHOW the app name or unknown */}
-        {/* TODO: revisit SHOW verified / not verified icon and text */}
-        {/* TODO: revisit SHOW if it was initialized by Yoroi -> authorization */}
-        {/* TODO: revisit SHOW if it was initialized by Wallet -> walletId -> name */}
-
         <Message message={params.message} />
-
-        <View style={[{flex: 1}]} />
       </ScrollView>
 
-      <Actions style={[a.flex_row, a.justify_between]}>
+      <Actions style={[a.flex_row, a.justify_between, a.gap_lg]}>
         <Button
           size="S"
           type={ButtonType.Secondary}
@@ -70,26 +56,24 @@ export const RequestedAdaPaymentWithLinkScreen = ({
           title={strings.global.cancel}
         />
 
-        <Space.Width.md />
-
         <Button size="S" onPress={onContinue} title={strings.global.proceed} />
       </Actions>
-    </SafeAreaView>
+    </View>
   )
 }
 
 const Message = ({message}: {message?: string}) => {
-  const {palette: p} = useTheme()
-  return (
-    !isEmptyString(message) && (
-      <>
-        <Text style={[a.body_2_md_regular, {color: p.text_gray_max}]}>
-          {message}
-        </Text>
+  const {atoms: ta} = useTheme()
 
-        <Space.Height.lg />
-      </>
-    )
+  if (isEmptyString(message)) {
+    return null
+  }
+
+  return (
+    <View style={[a.p_lg, a.rounded_sm, ta.bg_color_min]}>
+      <Text style={[a.body_2_md_regular, ta.text_gray_max]}>{message}</Text>
+    </View>
   )
 }
-const Actions = (props: ViewProps) => <View {...props} />
+
+const Actions = View

@@ -3,18 +3,14 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import {Links} from '@yoroi/types'
 
 import * as React from 'react'
-import {ScrollView, Text, View, ViewProps} from 'react-native'
+import {ScrollView, Text, View} from 'react-native'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/ModalContext'
-import {Space} from '~/ui/Space/Space'
+import {isEmptyString} from '~/wallets/utils/string'
 
-import {ShowDisclaimer} from './ShowDisclaimer/ShowDisclaimer'
-
-const isEmptyString = (str: string | undefined | null): boolean => {
-  return str == null || str.trim() === ''
-}
+import {ShowDisclaimer} from '../../shared/ShowDisclaimer/ShowDisclaimer'
 
 export const RequestedBrowserLaunchDappUrlScreen = ({
   params,
@@ -26,11 +22,10 @@ export const RequestedBrowserLaunchDappUrlScreen = ({
   onContinue: () => void
 }) => {
   const strings = useStrings()
-  const {palette: p, atoms: ta} = useTheme()
+  const {atoms: ta} = useTheme()
   const {actionFinished} = useLinks()
   const {closeModal} = useModal()
 
-  // TODO: revisit check with product
   const description = isTrusted
     ? strings.links.trustedBrowserLaunchDappUrlDescription
     : strings.links.untrustedBrowserLaunchDappUrlDescription
@@ -40,35 +35,16 @@ export const RequestedBrowserLaunchDappUrlScreen = ({
     closeModal()
   }
 
-  // NOTE: modal content therefore no need to use SafeAreaView
   return (
-    <View style={[a.flex_1, ta.bg_color_max, a.px_lg, a.pb_lg]}>
-      <ScrollView bounces={false}>
+    <View style={[a.flex_1, ta.bg_color_max, a.px_lg, a.gap_lg, a.pb_lg]}>
+      <ScrollView bounces={false} contentContainerStyle={a.gap_lg}>
         <ShowDisclaimer title={strings.global.disclaimer}>
-          <Text
-            style={[
-              {
-                color: p.text_gray_max,
-                fontSize: 14,
-                lineHeight: 20,
-                fontWeight: '400',
-              },
-            ]}
-          >
+          <Text style={[a.body_2_md_regular, ta.text_gray_max]}>
             {description}
           </Text>
         </ShowDisclaimer>
 
-        <Space.Height.lg />
-
-        {/* TODO: revisit SHOW the app name or unknown */}
-        {/* TODO: revisit SHOW verified / not verified icon and text */}
-        {/* TODO: revisit SHOW if it was initialized by Yoroi -> authorization */}
-        {/* TODO: revisit SHOW if it was initialized by Wallet -> walletId -> name */}
-
         <Message message={params.message} />
-
-        <View style={a.flex_1} />
       </ScrollView>
 
       <Actions style={[a.flex_row, a.justify_between, a.gap_lg]}>
@@ -91,36 +67,17 @@ export const RequestedBrowserLaunchDappUrlScreen = ({
 }
 
 const Message = ({message}: {message?: string}) => {
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
 
   if (isEmptyString(message)) {
     return null
   }
 
   return (
-    <View
-      style={[
-        a.p_lg,
-        a.rounded_sm,
-        {
-          backgroundColor: p.gray_100,
-        },
-      ]}
-    >
-      <Text
-        style={[
-          {
-            color: p.text_gray_max,
-            fontSize: 14,
-            lineHeight: 20,
-            fontWeight: '400',
-          },
-        ]}
-      >
-        {message}
-      </Text>
+    <View style={[a.p_lg, a.rounded_sm, ta.bg_color_min]}>
+      <Text style={[a.body_2_md_regular, ta.text_gray_max]}>{message}</Text>
     </View>
   )
 }
 
-const Actions = (props: ViewProps) => <View {...props} />
+const Actions = View
