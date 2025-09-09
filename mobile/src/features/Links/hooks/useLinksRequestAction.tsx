@@ -7,41 +7,30 @@ import * as React from 'react'
 import {InteractionManager} from 'react-native'
 import * as uuid from 'uuid'
 
+import {useAuth} from '~/features/Auth/context/AuthProvider'
 import {useBrowser} from '~/features/Discover/common/BrowserProvider'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
+import {useModal} from '~/ui/Modal/ModalContext'
 
-import {RequestedAdaPaymentWithLinkScreen} from '../useCases/RequestedAdaPaymentWithLinkScreen/RequestedAdaPaymentWithLinkScreen'
-import {RequestedBrowserLaunchDappUrlScreen} from '../useCases/RequestedBrowserLaunchDappUrlScreen/RequestedBrowserLaunchDappUrlScreen'
+import {RequestedAdaPaymentWithLinkScreen} from '../ui/screens/RequestedAdaPaymentWithLinkScreen/RequestedAdaPaymentWithLinkScreen'
+import {RequestedBrowserLaunchDappUrlScreen} from '../ui/screens/RequestedBrowserLaunchDappUrlScreen/RequestedBrowserLaunchDappUrlScreen'
 import {useNavigateTo} from './useNavigationTo'
 
 const heightBreakpoint = 467
 
-type ModalFunctions = {
-  openModal: (args: {
-    content: React.ReactNode
-    height?: number
-    footer?: React.ReactNode
-    isLoading?: boolean
-    canDiscard?: boolean
-    title?: string
-    canContinue?: boolean
-    onClose?: () => void
-    resizable?: boolean
-  }) => void
-  closeModal: () => void
-}
-
-export const useLinksRequestAction = (modalFunctions?: ModalFunctions) => {
+export const useLinksRequestAction = () => {
   const strings = useStrings()
   const {track} = useMetrics()
   const {action, actionFinished} = useLinks()
   const {
     selected: {wallet},
   } = useWalletManager()
+  const {closeModal, openModal} = useModal()
   const navigateTo = useNavigateTo()
+  const {isLoggedIn} = useAuth()
 
   const processedActionRef = React.useRef<string | null>(null)
 
@@ -56,10 +45,13 @@ export const useLinksRequestAction = (modalFunctions?: ModalFunctions) => {
 
   const startTransferWithLink = React.useCallback(
     (action: Links.YoroiAction, decimals: number) => {
-      logger.debug('useLinksRequestAction: startTransferWithLink', {
+      logger.debug('startTransferWithLink', {
         action,
         decimals,
+        isLoggedIn,
+        origin: 'useLinksRequestAction',
       })
+      if (!isLoggedIn) return
       if (action.info.useCase === 'request/ada-with-link') {
         reset()
         try {
@@ -78,14 +70,14 @@ export const useLinksRequestAction = (modalFunctions?: ModalFunctions) => {
                 quantity: ptAmount,
                 info: wallet.portfolioPrimaryTokenInfo,
               })
-              modalFunctions?.closeModal()
+              closeModal()
               actionFinished()
               navigateTo.startTransfer()
             }
           }
         } catch (error) {
           // TODO: revisit it should display an alert
-          modalFunctions?.closeModal()
+          closeModal()
           actionFinished()
           logger.error('Error parsing Cardano link', {error})
         }
@@ -96,11 +88,12 @@ export const useLinksRequestAction = (modalFunctions?: ModalFunctions) => {
       amountChanged,
       linkActionChanged,
       memoChanged,
-      modalFunctions,
+      closeModal,
       navigateTo,
       receiverResolveChanged,
       reset,
       wallet,
+      isLoggedIn,
     ],
   )
 
@@ -112,23 +105,14 @@ export const useLinksRequestAction = (modalFunctions?: ModalFunctions) => {
       }: {params: Links.TransferRequestAdaWithLinkParams; isTrusted: boolean},
       decimals: number,
     ) => {
-      if (!modalFunctions) {
-        // Fallback: directly start transfer without modal
-        startTransferWithLink(
-          {
-            info: {
-              version: 1,
-              feature: 'transfer',
-              useCase: 'request/ada-with-link',
-              params,
-            },
-            isTrusted,
-          },
-          decimals,
-        )
-        return
-      }
-
+      logger.debug('openRequestedPaymentAdaWithLink', {
+        params,
+        isTrusted,
+        decimals,
+        isLoggedIn,
+        origin: 'useLinksRequestAction',
+      })
+      if (!isLoggedIn) return
       const title = isTrusted
         ? strings.links.trustedPaymentRequestedTitle
         : strings.links.untrustedPaymentRequestedTitle
@@ -151,11 +135,11 @@ export const useLinksRequestAction = (modalFunctions?: ModalFunctions) => {
           onContinue={handleOnContinue}
           params={params}
           isTrusted={isTrusted}
-          onClose={modalFunctions.closeModal}
+          onClose={closeModal}
         />
       )
 
-      modalFunctions.openModal({
+      openModal({
         title: title,
         content: content,
         height: heightBreakpoint,
@@ -165,32 +149,38 @@ export const useLinksRequestAction = (modalFunctions?: ModalFunctions) => {
       strings.links.trustedPaymentRequestedTitle,
       strings.links.untrustedPaymentRequestedTitle,
       startTransferWithLink,
-      modalFunctions,
+      closeModal,
+      openModal,
+      isLoggedIn,
     ],
   )
 
   const launchDappUrl = React.useCallback(
     (action: Links.YoroiAction) => {
-      logger.debug('useLinksRequestAction: launchDappUrl', {action})
+      logger.debug('useLinksRequestAction: launchDappUrl', {
+        action,
+        isLoggedIn,
+        origin: 'useLinksRequestAction',
+      })
+      if (!isLoggedIn) return
       if (action.info.useCase === 'launch') {
         try {
           const dappUrl = decodeURIComponent(action.info.params.dappUrl)
           const redirectTo = action.info.params.redirectTo
           if (redirectTo != null) linkActionChanged(action)
 
-          logger.debug('useLinksRequestAction: launchDappUrl', {dappUrl})
           track.discoverConnectedBottomSheetOpenDAppClicked()
 
           const id = uuid.v4()
           addTab(dappUrl, id)
           setTabActive(tabs.length)
 
-          modalFunctions?.closeModal()
+          closeModal()
           actionFinished()
           navigateTo.launchDappUrl()
         } catch (error) {
           // TODO: revisit it should display an alert
-          modalFunctions?.closeModal()
+          closeModal()
           actionFinished()
           logger.error('Error parsing Yoroi link', {error})
         }
@@ -200,11 +190,12 @@ export const useLinksRequestAction = (modalFunctions?: ModalFunctions) => {
       actionFinished,
       addTab,
       linkActionChanged,
-      modalFunctions,
+      closeModal,
       navigateTo,
       setTabActive,
       tabs,
       track,
+      isLoggedIn,
     ],
   )
 
@@ -216,19 +207,13 @@ export const useLinksRequestAction = (modalFunctions?: ModalFunctions) => {
       params: Links.BrowserLaunchDappUrlParams
       isTrusted: boolean
     }) => {
-      if (!modalFunctions) {
-        launchDappUrl({
-          info: {
-            version: 1,
-            feature: 'browser',
-            useCase: 'launch',
-            params,
-          },
-          isTrusted,
-        })
-        return
-      }
-
+      logger.debug('openRequestedBrowserLaunchDappUrl', {
+        params,
+        isTrusted,
+        isLoggedIn,
+        origin: 'useLinksRequestAction',
+      })
+      if (!isLoggedIn) return
       const title = isTrusted
         ? strings.links.trustedBrowserLaunchDappUrlTitle
         : strings.links.untrustedBrowserLaunchDappUrlTitle
@@ -251,7 +236,7 @@ export const useLinksRequestAction = (modalFunctions?: ModalFunctions) => {
         />
       )
 
-      modalFunctions.openModal({
+      openModal({
         title: title,
         content: content,
         height: heightBreakpoint,
@@ -259,9 +244,10 @@ export const useLinksRequestAction = (modalFunctions?: ModalFunctions) => {
     },
     [
       launchDappUrl,
-      modalFunctions,
+      openModal,
       strings.links.trustedBrowserLaunchDappUrlTitle,
       strings.links.untrustedBrowserLaunchDappUrlTitle,
+      isLoggedIn,
     ],
   )
 
