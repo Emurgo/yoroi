@@ -19,7 +19,6 @@ type Props = {
   ignorePrivacy?: boolean
   textStyle?: TextStyle
   hidePrimaryPair?: boolean
-  useWhiteColor?: boolean
 }
 
 export const PairedBalance = React.forwardRef<ResetErrorRef, Props>(
