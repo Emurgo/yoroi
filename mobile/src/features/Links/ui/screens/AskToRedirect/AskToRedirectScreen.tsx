@@ -2,17 +2,15 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as Linking from 'expo-linking'
 import * as React from 'react'
-import {ScrollView, Text, View, ViewProps} from 'react-native'
-import {SafeAreaView} from 'react-native-safe-area-context'
+import {ScrollView, Text, View} from 'react-native'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/ModalContext'
-import {Space} from '~/ui/Space/Space'
 
 export const AskToRedirectScreen = ({link}: {link: string}) => {
   const strings = useStrings()
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
   const {closeModal} = useModal()
 
   const handleOnConfirm = () => {
@@ -20,21 +18,15 @@ export const AskToRedirectScreen = ({link}: {link: string}) => {
     Linking.openURL(link)
   }
 
-  // TODO: revisit check with product size and copy
   return (
-    <SafeAreaView
-      edges={['bottom', 'left', 'right']}
-      style={[a.flex_1, a.px_lg, {backgroundColor: p.bg_color_max}]}
-    >
-      <ScrollView bounces={false}>
-        <Text style={[a.body_2_md_regular, {color: p.gray_max}]}>
+    <View style={[a.flex_1, a.px_lg, ta.bg_color_max, a.pb_lg, a.gap_lg]}>
+      <ScrollView bounces={false} contentContainerStyle={a.gap_lg}>
+        <Text style={[a.body_2_md_regular, ta.text_gray_max]}>
           {strings.links.askToRedirectDescription}
         </Text>
-
-        <View style={[{flex: 1}]} />
       </ScrollView>
 
-      <Actions style={[a.flex_row, a.justify_between]}>
+      <Actions style={[a.flex_row, a.justify_between, a.gap_lg]}>
         <Button
           size="S"
           type={ButtonType.Secondary}
@@ -42,12 +34,10 @@ export const AskToRedirectScreen = ({link}: {link: string}) => {
           title={strings.global.cancel}
         />
 
-        <Space.Width.md />
-
         <Button size="S" onPress={handleOnConfirm} title={strings.global.ok} />
       </Actions>
-    </SafeAreaView>
+    </View>
   )
 }
 
-const Actions = (props: ViewProps) => <View {...props} />
+const Actions = View
