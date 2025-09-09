@@ -247,14 +247,6 @@ export const sendMessages = defineMessages({
     id: 'components.send.sendscreen.resolvedAddress',
     defaultMessage: '!!!Resolved address',
   },
-  resolverNoticeTitle: {
-    id: 'components.send.sendscreen.resolverNoticeTitle',
-    defaultMessage: '!!!Resolver notice title',
-  },
-  resolverNoticeText: {
-    id: 'components.send.sendscreen.resolverNoticeText',
-    defaultMessage: '!!!Resolver notice text',
-  },
   searchTokens: {
     id: 'components.send.sendscreen.searchTokens',
     defaultMessage: '!!!Search tokens',
