@@ -19,6 +19,7 @@ type Props = {
   ignorePrivacy?: boolean
   textStyle?: TextStyle
   hidePrimaryPair?: boolean
+  useWhiteColor?: boolean
 }
 
 export const PairedBalance = React.forwardRef<ResetErrorRef, Props>(
@@ -102,7 +103,7 @@ const Price = ({amount, textStyle, ignorePrivacy, hidePrimaryPair}: Props) => {
 
   return (
     <Text
-      style={[{color: p.white_static}, a.body_3_sm_regular, textStyle]}
+      style={[{color: p.text_gray_low}, a.body_3_sm_regular, textStyle]}
       testID="pairedTotalText"
     >
       {price}

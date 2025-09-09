@@ -370,16 +370,18 @@ export const swapMessages = defineMessages({
     defaultMessage: '!!!Price',
   },
   priceImpactRiskHigh: {
-    id: 'global.price',
-    defaultMessage: '!!!Price Impact Risk High {riskValue}',
+    id: 'swap.swapScreen.priceImpactRiskHigh',
+    defaultMessage: '!!!Price impact over {riskValue}%',
   },
   priceImpactModerateDescription: {
-    id: 'global.price',
-    defaultMessage: '!!!Price Impact Moderate Description',
+    id: 'swap.swapScreen.priceImpactModerateDescription',
+    defaultMessage:
+      '!!!may cause a difference in the amount you actually receive. Consider this at your own risk.',
   },
   priceImpactHighDescription: {
-    id: 'global.price',
-    defaultMessage: '!!!Price Impact High Description',
+    id: 'swap.swapScreen.priceImpactHighDescription',
+    defaultMessage:
+      '!!!may cause a significant loss of funds. Please bear this in mind and proceed with an extra caution.',
   },
   priceImpactInfo: {
     id: 'portfolio.portfolioTokensDetailScreen.info',
