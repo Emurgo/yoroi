@@ -41,14 +41,14 @@ export const PairedBalance = React.forwardRef<ResetErrorRef, Props>(
   },
 )
 
-const Price = ({amount, textStyle, ignorePrivacy, hidePrimaryPair}: Props) => {
+const Price = ({amount, ignorePrivacy, hidePrimaryPair}: Props) => {
   const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
   const {isPrimaryTokenActive} = usePortfolio()
   const {
     selected: {networkManager},
   } = useWalletManager()
   const portfolioPrimaryTokenInfo = networkManager.primaryTokenInfo
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
 
   const {
     currency: selectedCurrency,
@@ -102,7 +102,7 @@ const Price = ({amount, textStyle, ignorePrivacy, hidePrimaryPair}: Props) => {
 
   return (
     <Text
-      style={[{color: p.white_static}, a.body_3_sm_regular, textStyle]}
+      style={[a.body_3_sm_regular, ta.text_gray_max]}
       testID="pairedTotalText"
     >
       {price}
