@@ -228,16 +228,18 @@ export const useNavigateTo = () => {
   return {
     stakingCenter: () =>
       navigation.navigate('staking-center', {screen: 'staking-center-main'}),
-    submittedTx: () => navigation.navigate('staking-submitted-tx', {
-      title: strings.staking.submittedTxTitle,
-      message: strings.staking.submittedTxText,
-      buttonTitle: strings.staking.submittedTxButton,
-    }),
-    failedTx: () => navigation.navigate('staking-failed-tx', {
-      title: strings.staking.failedTxTitle,
-      message: strings.staking.failedTxText,
-      buttonTitle: strings.staking.failedTxButton,
-    }),
+    submittedTx: () =>
+      navigation.navigate('staking-submitted-tx', {
+        title: strings.staking.submittedTxTitle,
+        message: strings.staking.submittedTxText,
+        buttonTitle: strings.staking.submittedTxButton,
+      }),
+    failedTx: () =>
+      navigation.navigate('staking-failed-tx', {
+        title: strings.staking.failedTxTitle,
+        message: strings.staking.failedTxText,
+        buttonTitle: strings.staking.failedTxButton,
+      }),
   }
 }
 
