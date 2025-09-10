@@ -204,7 +204,7 @@ const ActionableAmount = ({
         </EditAmountButton>
       </Left>
 
-      <Right style={[a.pl_lg]}>
+      <Right style={a.pl_lg}>
         <RemoveAmountButton onPress={handleRemove} />
       </Right>
     </View>
