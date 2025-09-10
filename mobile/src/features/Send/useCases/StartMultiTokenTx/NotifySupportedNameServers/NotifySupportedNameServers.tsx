@@ -76,7 +76,6 @@ const NameServer = ({text}: {text: string}) => {
         a.align_center,
         {
           height: 22,
-          backgroundColor: p.gray_max,
         },
       ]}
     >
