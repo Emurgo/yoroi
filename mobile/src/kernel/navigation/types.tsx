@@ -64,16 +64,20 @@ export type TxHistoryRoutes = {
   'send-edit-amount': {
     amount: Portfolio.Token.Amount
   }
-  'send-submitted-tx': {
-    title?: string
-    message?: string
-    buttonTitle?: string
-  }
-  'send-failed-tx': {
-    title?: string
-    message?: string
-    buttonTitle?: string
-  }
+  'send-submitted-tx':
+    | {
+        title?: string
+        message?: string
+        buttonTitle?: string
+      }
+    | undefined
+  'send-failed-tx':
+    | {
+        title?: string
+        message?: string
+        buttonTitle?: string
+      }
+    | undefined
   'send-select-token-from-list': undefined
   'swap': NavigatorScreenParams<SwapTokenRoutes>
 } & ScanRoutes &

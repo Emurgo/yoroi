@@ -457,14 +457,20 @@ export const useWalletNavigation = () => {
     navigateToSendSubmittedTx: () => {
       navigation.navigate('manage-wallets', {
         screen: 'main-wallet-routes',
-        params: {screen: 'history', params: {screen: 'send-submitted-tx'}},
+        params: {
+          screen: 'history',
+          params: {screen: 'send-submitted-tx'},
+        },
       })
     },
 
     navigateToSendFailedTx: () => {
       navigation.navigate('manage-wallets', {
         screen: 'main-wallet-routes',
-        params: {screen: 'history', params: {screen: 'send-failed-tx'}},
+        params: {
+          screen: 'history',
+          params: {screen: 'send-failed-tx'},
+        },
       })
     },
 
