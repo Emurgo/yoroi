@@ -15,6 +15,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {usePrefetchStakingInfo} from '~/features/Dashboard/StakePoolInfos'
 import {useCanVote} from '~/features/RegisterCatalyst/common/hooks'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {features} from '~/kernel/features'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
@@ -89,6 +90,14 @@ export const Menu = () => {
             ) : null
           }
         />
+
+        {features.utxoList && (
+          <UtxoList
+            label={strings.menu.utxoList}
+            onPress={navigateTo.utxoList}
+            left={<Icon.Burger size={24} color={p.gray_600} />}
+          />
+        )}
 
         <Governance
           label={strings.menu.governanceCentre}
@@ -191,6 +200,7 @@ const Item = ({
 }
 
 const Staking = Item
+const UtxoList = Item
 const Governance = Item
 const AppSettings = Item
 const KnowledgeBase = Item
@@ -236,6 +246,7 @@ const useNavigateTo = () => {
     navigateToGovernanceCentre,
     navigateToStakingDashboard,
     navigateToCatalystVotingDashboard,
+    navigateToUtxoList,
   } = useWalletNavigation()
   const {wallet} = useSelectedWallet()
 
@@ -249,6 +260,7 @@ const useNavigateTo = () => {
     stakingCenter: () => {
       navigateToStakingDashboard()
     },
+    utxoList: () => navigateToUtxoList(),
     settings: () => navigateToSettings(),
     support: () => Linking.openURL(SUPPORT_TICKET_LINK),
     knowledgeBase: () => Linking.openURL(KNOWLEDGE_BASE_LINK),
