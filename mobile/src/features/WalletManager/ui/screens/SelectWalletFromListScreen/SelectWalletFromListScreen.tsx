@@ -7,7 +7,7 @@ import * as React from 'react'
 import {Linking, Text, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useLinksRequestWallet} from '~/features/Links/common/useLinksRequestWallet'
+import {useLinksRequestWallet} from '~/features/Links/hooks/useLinksRequestWallet'
 import {pushNotificationsManager} from '~/features/Notifications/common/notification-manager'
 import {
   handleNotificationInternalNavigationAction,

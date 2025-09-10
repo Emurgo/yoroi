@@ -13,7 +13,6 @@ import {FullErrorFallback} from '~/ui/Boundary/FullErrorFallback'
 
 import {NetworkTag} from '../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {BrowserNavigator} from './BrowserNavigator'
-import {BrowserProvider} from './common/BrowserProvider'
 import {ListSkeleton} from './useCases/SelectDappFromList/ListSkeleton'
 import {SelectDappFromListScreen} from './useCases/SelectDappFromList/SelectDappFromListScreen'
 import {useDappConnectorManager} from './useDappConnectorManager'
@@ -28,36 +27,34 @@ export const DiscoverNavigator = () => {
 
   return (
     <DappConnectorProvider manager={manager}>
-      <BrowserProvider>
-        <Stack.Navigator
-          screenOptions={{
-            ...defaultStackNavigationOptions(p),
-            headerLeft: () => null,
-            gestureEnabled: true,
-            headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
-          }}
-          initialRouteName="discover-select-dapp-from-list"
+      <Stack.Navigator
+        screenOptions={{
+          ...defaultStackNavigationOptions(p),
+          headerLeft: () => null,
+          gestureEnabled: true,
+          headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
+        }}
+        initialRouteName="discover-select-dapp-from-list"
+      >
+        <Stack.Screen
+          name="discover-select-dapp-from-list"
+          options={{title: strings.discover.discoverTitle}}
         >
-          <Stack.Screen
-            name="discover-select-dapp-from-list"
-            options={{title: strings.discover.discoverTitle}}
-          >
-            {() => (
-              <ErrorBoundary FallbackComponent={FullErrorFallback}>
-                <LoadingBoundary fallback={<ListSkeleton />}>
-                  <SelectDappFromListScreen />
-                </LoadingBoundary>
-              </ErrorBoundary>
-            )}
-          </Stack.Screen>
+          {() => (
+            <ErrorBoundary FallbackComponent={FullErrorFallback}>
+              <LoadingBoundary fallback={<ListSkeleton />}>
+                <SelectDappFromListScreen />
+              </LoadingBoundary>
+            </ErrorBoundary>
+          )}
+        </Stack.Screen>
 
-          <Stack.Screen
-            name="discover-browser"
-            component={BrowserNavigator}
-            options={{headerShown: false}}
-          />
-        </Stack.Navigator>
-      </BrowserProvider>
+        <Stack.Screen
+          name="discover-browser"
+          component={BrowserNavigator}
+          options={{headerShown: false}}
+        />
+      </Stack.Navigator>
     </DappConnectorProvider>
   )
 }

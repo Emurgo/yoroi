@@ -7,7 +7,7 @@ import {useWalletManager} from '~/features/WalletManager/context/WalletManagerPr
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 
-import {AskToOpenWalletScreen} from '../useCases/AskToOpenAWalletScreen/AskToOpenAWalletScreen'
+import {AskToOpenWalletScreen} from '../ui/screens/AskToOpenAWalletScreen/AskToOpenAWalletScreen'
 
 const heightBreakpoint = 367
 

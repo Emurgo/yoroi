@@ -306,6 +306,28 @@ describe('muesliswapApiMaker', () => {
       expect(result.tag).toBe('left')
       expect(result.error.message).toContain('random error')
     })
+
+    it('should handle transformer error in estimate', async () => {
+      // Mock successful API response but transformer will throw
+      mockFetchData.mockResolvedValueOnce({
+        tag: 'right',
+        value: {
+          status: 200,
+          data: 'invalid-data-that-will-cause-transformer-to-throw',
+        },
+      })
+
+      const muesliApi = muesliswapApiMaker(config)
+      const result = await muesliApi.estimate(api.inputs.quote)
+
+      expect(result.tag).toBe('left')
+      if (result.tag === 'left') {
+        expect(result.error.status).toBe(-3)
+        expect(result.error.message).toContain(
+          'No liquidity pools satisfy the estimate requirements',
+        )
+      }
+    })
   })
 
   describe('create()', () => {
