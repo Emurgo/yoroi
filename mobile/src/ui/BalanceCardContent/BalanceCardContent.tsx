@@ -23,6 +23,7 @@ type Props = {
 }
 
 export const BalanceCardContent = ({amount, headerCard}: Props) => {
+  const {palette: p} = useTheme()
   const navigationTo = useNavigateTo()
   const {togglePrivacyMode} = usePrivacyMode()
 
@@ -49,7 +50,10 @@ export const BalanceCardContent = ({amount, headerCard}: Props) => {
             style={[a.flex_row, a.gap_2xs, a.align_baseline]}
             onPress={togglePrivacyMode}
           >
-            <PairedBalance amount={amount} textStyle={a.body_2_md_regular} />
+            <PairedBalance
+              amount={amount}
+              textStyle={{...a.body_2_md_regular, color: p.white_static}}
+            />
           </TouchableOpacity>
 
           <View style={[a.flex_row, a.gap_xs, a.align_stretch]}>
