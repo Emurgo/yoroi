@@ -1,9 +1,11 @@
-// import {useSearch, useSearchOnNavBar} from '../../features/Search/SearchContext'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
 import {FlatList, Text, TouchableOpacity, View, ViewProps} from 'react-native'
 
+import {useStrings} from '~/kernel/i18n/useStrings'
+
+import {useSearch, useSearchOnNavBar} from '../../features/Search/SearchContext'
 import {useLanguage} from '../../kernel/i18n/LanguageProvider'
 import {
   LanguageRecord,
@@ -16,13 +18,15 @@ const INCLUDED_LANGUAGE_CODES = ['en-US', 'ja-JP']
 
 export const LanguagePicker = () => {
   const {palette: p} = useTheme()
-  const language = useLanguage()
+  const {languageCode, selectLanguage} = useLanguage()
+  const strings = useStrings()
 
-  const {languageCode, selectLanguage} = language
+  useSearchOnNavBar({
+    title: strings.settings.languageTitle,
+    placeholder: strings.initialization.languagePickerTitle,
+  })
 
-  const {search} = {
-    search: '',
-  }
+  const {search} = useSearch()
   const filteredLanguages = supportedLanguages.filter(
     (lang) => lang.code.includes(search) || lang.label.includes(search),
   ) as LanguageRecord[]
