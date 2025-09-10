@@ -198,7 +198,7 @@ const ActionableAmount = ({
       style={[a.flex_row, a.justify_between, a.align_center]}
       testID="amountItem"
     >
-      <Left style={[a.flex_1]}>
+      <Left style={a.flex_1}>
         <EditAmountButton onPress={handleEdit}>
           <TokenAmountItem amount={amount} ignorePrivacy />
         </EditAmountButton>
