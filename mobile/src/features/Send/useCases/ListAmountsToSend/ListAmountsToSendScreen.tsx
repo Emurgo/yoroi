@@ -217,7 +217,7 @@ type EditAmountButtonProps = React.PropsWithChildren<{
 const EditAmountButton = ({onPress, children}: EditAmountButtonProps) => {
   return (
     <TouchableOpacity
-      style={a.py_lg
+      style={a.py_lg}
       onPress={onPress}
       testID="editAmountButton"
     >
