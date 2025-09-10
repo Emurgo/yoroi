@@ -11,6 +11,7 @@ import {TransferProvider} from '@yoroi/transfer'
 
 import * as React from 'react'
 
+import {BrowserProvider} from '~/features/Discover/common/BrowserProvider'
 import {PortfolioTokenActivityProvider} from '~/features/Portfolio/context/PortfolioTokenActivityProvider'
 import {ReviewTxProvider} from '~/features/ReviewTx/common/ReviewTxProvider'
 import {AppNavigator} from '~/kernel/navigation/AppNavigator'
@@ -85,15 +86,17 @@ function BusinessShell({children}: React.PropsWithChildren) {
                 <TransferProvider>
                   <ReviewTxProvider>
                     <SetupWalletProvider>
-                      <LinksProvider>
-                        <YoroiNotificationManager>
-                          <CurrencyProvider>
-                            <CatalystProvider manager={catalystManager}>
-                              {children}
-                            </CatalystProvider>
-                          </CurrencyProvider>
-                        </YoroiNotificationManager>
-                      </LinksProvider>
+                      <BrowserProvider>
+                        <LinksProvider>
+                          <YoroiNotificationManager>
+                            <CurrencyProvider>
+                              <CatalystProvider manager={catalystManager}>
+                                {children}
+                              </CatalystProvider>
+                            </CurrencyProvider>
+                          </YoroiNotificationManager>
+                        </LinksProvider>
+                      </BrowserProvider>
                     </SetupWalletProvider>
                   </ReviewTxProvider>
                 </TransferProvider>

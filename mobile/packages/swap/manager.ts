@@ -4,6 +4,7 @@ import {Api, Portfolio, Swap} from '@yoroi/types'
 import {freeze} from 'immer'
 
 import {dexhunterApiMaker} from './adapters/api/dexhunter/api-maker'
+import {minswapApiMaker} from './adapters/api/minswap/api-maker'
 import {muesliswapApiMaker} from './adapters/api/muesliswap/api-maker'
 import {getBestSwap} from './helpers/getBestSwap'
 import {getPtPrice} from './helpers/getPtPrice'
@@ -34,6 +35,13 @@ export const swapManagerMaker: Swap.ManagerMaker = ({
     isPrimaryToken,
     partner: partners?.[Swap.Aggregator.Muesliswap],
   })
+  const minswapApi = minswapApiMaker({
+    address,
+    network,
+    primaryTokenInfo,
+    isPrimaryToken,
+    partner: partners?.[Swap.Aggregator.Minswap],
+  })
 
   const settings: Swap.ManagerSettings = {
     routingPreference: 'auto',
@@ -54,6 +62,7 @@ export const swapManagerMaker: Swap.ManagerMaker = ({
     {
       [Swap.Aggregator.Dexhunter]: dexhunterApi,
       [Swap.Aggregator.Muesliswap]: muesliswapApi,
+      [Swap.Aggregator.Minswap]: minswapApi,
     },
     settings,
     getPtPrice(primaryTokenInfo, dexhunterApi),
@@ -72,26 +81,39 @@ const apiManagerMaker = (
   settings: Swap.ManagerSettings,
   getPrice: (id: Portfolio.Token.Id) => Promise<number>,
 ): Swap.Api => {
+  // Helper function to get enabled aggregators based on routing preference
+  const getEnabledAggregators = (): Swap.Aggregator[] => {
+    if (settings.routingPreference === 'auto') {
+      return Object.keys(adapters) as Swap.Aggregator[]
+    }
+    return settings.routingPreference
+  }
+
   return freeze(
     {
       async tokens() {
-        const aggregatorPromises: Record<
-          Swap.Aggregator,
-          Promise<Api.Response<Portfolio.Token.Info[]>>
-        > = {
-          dexhunter: adapters.dexhunter.tokens(),
-          muesliswap: adapters.muesliswap.tokens(),
-        }
+        const enabledAggregators = getEnabledAggregators()
 
-        const responses: Array<Api.Response<Portfolio.Token.Info[]>> =
-          await Promise.all(
-            Object.entries(aggregatorPromises).map(([key, promise]) =>
-              settings.routingPreference === 'auto' ||
-              settings.routingPreference.includes(key as Swap.Aggregator)
-                ? promise
-                : excluded,
-            ),
-          )
+        const settledResults = await Promise.allSettled(
+          enabledAggregators.map((aggregator) => adapters[aggregator].tokens()),
+        )
+
+        const responses: Array<Api.Response<Portfolio.Token.Info[]>> = []
+        const errors: Array<string> = []
+
+        settledResults.forEach((result, index) => {
+          if (result.status === 'fulfilled') {
+            responses.push(result.value)
+          } else {
+            errors.push(
+              `Aggregator ${enabledAggregators[index]} failed: ${result.reason}`,
+            )
+          }
+        })
+
+        if (errors.length > 0) {
+          console.warn('Some aggregators failed:', errors)
+        }
 
         warnAllLeft(...responses)
 
@@ -118,10 +140,11 @@ const apiManagerMaker = (
       },
 
       async orders() {
-        const responses = await Promise.all([
-          adapters.muesliswap.orders(),
-          adapters.dexhunter.orders(),
-        ])
+        const enabledAggregators = getEnabledAggregators()
+
+        const responses: Array<Api.Response<Swap.Order[]>> = await Promise.all(
+          enabledAggregators.map((aggregator) => adapters[aggregator].orders()),
+        )
 
         warnAllLeft(...responses)
 
@@ -130,9 +153,7 @@ const apiManagerMaker = (
         const merged: Record<Swap.Order['txHash'], Swap.Order> = {}
         const append = (order: Swap.Order) => {
           const key = `${order.txHash}#${order.outputIndex}`
-          /* istanbul ignore next */
           if (
-            // TODO: refactor to avoid istanbul ignore
             merged[key] === undefined ||
             order.aggregator === Swap.Aggregator.Dexhunter
           )
@@ -156,23 +177,13 @@ const apiManagerMaker = (
         }
       },
 
-      /* istanbul ignore next */
       async limitOptions(body: Swap.LimitOptionsRequest) {
-        const aggregatorPromises: Record<
-          Swap.Aggregator,
-          Promise<Api.Response<Swap.LimitOptionsResponse>>
-        > = {
-          dexhunter: adapters.dexhunter.limitOptions(body),
-          muesliswap: adapters.muesliswap.limitOptions(body),
-        }
+        const enabledAggregators = getEnabledAggregators()
 
         const responses: Array<Api.Response<Swap.LimitOptionsResponse>> =
           await Promise.all(
-            Object.entries(aggregatorPromises).map(([key, promise]) =>
-              settings.routingPreference === 'auto' ||
-              settings.routingPreference.includes(key as Swap.Aggregator)
-                ? promise
-                : excluded,
+            enabledAggregators.map((aggregator) =>
+              adapters[aggregator].limitOptions(body),
             ),
           )
 
@@ -216,23 +227,31 @@ const apiManagerMaker = (
       },
 
       async estimate(body: Swap.EstimateRequest) {
-        const aggregatorPromises: Record<
-          Swap.Aggregator,
-          Promise<Api.Response<Swap.EstimateResponse>>
-        > = {
-          dexhunter: adapters.dexhunter.estimate(body),
-          muesliswap: adapters.muesliswap.estimate(body),
-        }
+        const enabledAggregators = getEnabledAggregators()
 
-        const responses: Array<Api.Response<Swap.EstimateResponse>> =
-          await Promise.all(
-            Object.entries(aggregatorPromises).map(([key, promise]) =>
-              settings.routingPreference === 'auto' ||
-              settings.routingPreference.includes(key as Swap.Aggregator)
-                ? promise
-                : excluded,
-            ),
-          )
+        const settledResults = await Promise.allSettled(
+          enabledAggregators.map(async (aggregator) => {
+            const response = await adapters[aggregator].estimate(body)
+            return response
+          }),
+        )
+
+        const responses: Array<Api.Response<Swap.EstimateResponse>> = []
+        const errors: Array<string> = []
+
+        settledResults.forEach((result, index) => {
+          if (result.status === 'fulfilled') {
+            responses.push(result.value)
+          } else {
+            errors.push(
+              `Aggregator ${enabledAggregators[index]} failed: ${result.reason}`,
+            )
+          }
+        })
+
+        if (errors.length > 0) {
+          console.warn('Some aggregators failed during estimate:', errors)
+        }
 
         warnAllLeft(...responses)
 
@@ -250,6 +269,10 @@ const apiManagerMaker = (
           .filter(isRight)
           .flatMap(({value}) => value.data)
 
+        if (estimates.length === 0) {
+          return invalid
+        }
+
         const bestEstimate = estimates.reduce(
           getBestSwap(await getPrice(body.tokenOut)),
           estimates[0]!,
@@ -265,21 +288,12 @@ const apiManagerMaker = (
       },
 
       async create(body: Swap.CreateRequest) {
-        const aggregatorPromises: Record<
-          Swap.Aggregator,
-          Promise<Api.Response<Swap.CreateResponse>>
-        > = {
-          dexhunter: adapters.dexhunter.create(body),
-          muesliswap: adapters.muesliswap.create(body),
-        }
+        const enabledAggregators = getEnabledAggregators()
 
         const responses: Array<Api.Response<Swap.CreateResponse>> =
           await Promise.all(
-            Object.entries(aggregatorPromises).map(([key, promise]) =>
-              settings.routingPreference === 'auto' ||
-              settings.routingPreference.includes(key as Swap.Aggregator)
-                ? promise
-                : excluded,
+            enabledAggregators.map((aggregator) =>
+              adapters[aggregator].create(body),
             ),
           )
 
@@ -312,26 +326,18 @@ const apiManagerMaker = (
       },
 
       async cancel(body: Swap.CancelRequest) {
-        return body.order.aggregator === Swap.Aggregator.Muesliswap
-          ? adapters.muesliswap.cancel(body)
-          : adapters.dexhunter.cancel(body)
+        if (body.order.aggregator === Swap.Aggregator.Muesliswap) {
+          return adapters.muesliswap.cancel(body)
+        }
+        if (body.order.aggregator === Swap.Aggregator.Minswap) {
+          return adapters.minswap.cancel(body)
+        }
+        return adapters.dexhunter.cancel(body)
       },
     },
     true,
   )
 }
-
-const excluded: Api.Response<any> = freeze(
-  {
-    tag: 'left',
-    error: {
-      status: -3,
-      message: 'Aggregator excluded from call',
-      responseData: {},
-    },
-  },
-  true,
-)
 
 const invalid: Api.Response<any> = freeze(
   {

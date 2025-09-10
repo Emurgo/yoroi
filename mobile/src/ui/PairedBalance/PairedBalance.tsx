@@ -48,7 +48,7 @@ const Price = ({amount, textStyle, ignorePrivacy, hidePrimaryPair}: Props) => {
     selected: {networkManager},
   } = useWalletManager()
   const portfolioPrimaryTokenInfo = networkManager.primaryTokenInfo
-  const {atoms: ta} = useTheme()
+  const {palette: p} = useTheme()
 
   const {
     currency: selectedCurrency,
@@ -102,7 +102,7 @@ const Price = ({amount, textStyle, ignorePrivacy, hidePrimaryPair}: Props) => {
 
   return (
     <Text
-      style={[a.body_3_sm_regular, ta.text_gray_medium, textStyle]}
+      style={[{color: p.white_static}, a.body_3_sm_regular, textStyle]}
       testID="pairedTotalText"
     >
       {price}

@@ -22,7 +22,7 @@ export const linksMessages = defineMessages({
     defaultMessage: '!!!Trusted Browser Launch',
   },
   trustedBrowserLaunchDappUrlDescription: {
-    id: 'txReview.overview.receiveToLabel',
+    id: 'links.trusted.browserLaunchDappUrl.description',
     defaultMessage: '!!!A trusted dApp wants to open a URL',
   },
   untrustedBrowserLaunchDappUrlTitle: {
@@ -30,23 +30,23 @@ export const linksMessages = defineMessages({
     defaultMessage: '!!!Untrusted Browser Launch',
   },
   untrustedBrowserLaunchDappUrlDescription: {
-    id: 'txReview.overview.receiveToLabel',
+    id: 'links.untrusted.browserLaunchDappUrl.description',
     defaultMessage: '!!!An untrusted dApp wants to open a URL',
   },
   askToOpenAWalletTitle: {
-    id: 'components.walletinit.restorewallet.restorewalletscreen.restoreDuplicatedWalletModalButton',
+    id: 'links.askToOpenAWallet.title',
     defaultMessage: '!!!Open Wallet',
   },
   askToOpenAWalletDescription: {
-    id: 'txReview.overview.wallet',
+    id: 'links.askToOpenAWallet.description',
     defaultMessage: '!!!A dApp wants to open a wallet',
   },
   askToRedirectTitle: {
-    id: 'global.buyInfo',
+    id: 'links.askToRedirect.title',
     defaultMessage: '!!!Redirect',
   },
   askToRedirectDescription: {
-    id: 'txReview.overview.receiveToLabel',
+    id: 'links.askToRedirect.description',
     defaultMessage: '!!!A dApp wants to redirect',
   },
 })
