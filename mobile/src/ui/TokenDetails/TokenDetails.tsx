@@ -31,6 +31,8 @@ export const TokenDetails = ({
 }) => {
   if (tokenInfo == null) return null
 
+  if (isPrimaryTokenInfo(tokenInfo)) return <PrimaryTokenInfo />
+
   return (
     <View style={[a.flex_1, a.px_lg]}>
       <Header info={tokenInfo} />
@@ -44,6 +46,7 @@ export const TokenDetails = ({
 
 const Header = ({info}: {info: Portfolio.Token.Info}) => {
   const {palette: p} = useTheme()
+  const {copy} = useCopy()
   const [policy, assetName] = info?.id.split('.') ?? ['', '']
 
   const title = !isEmptyString(info.ticker)
@@ -54,7 +57,13 @@ const Header = ({info}: {info: Portfolio.Token.Info}) => {
 
   return (
     <View style={[a.align_center]}>
-      <TokenInfoIcon info={info} size="xl" />
+      <TouchableOpacity
+        onPress={() => {
+          if (info?.id) copy({text: info?.id})
+        }}
+      >
+        <TokenInfoIcon info={info} size="xl" />
+      </TouchableOpacity>
 
       <Space.Height.sm />
 
@@ -115,13 +124,6 @@ const Info = ({info}: {info: Portfolio.Token.Info}) => {
           info.id,
         ],
       },
-    )
-
-  if (isPrimaryTokenInfo(info))
-    return (
-      <Text style={[a.body_2_md_regular, {color: p.text_gray_max}]}>
-        {strings.txReview.adaDescription}
-      </Text>
     )
 
   return (
@@ -413,6 +415,19 @@ const Description = ({info}: {info: Portfolio.Token.Info}) => {
 
       <Text style={[a.body_2_md_regular, {color: p.text_gray_max}]}>
         {info.description}
+      </Text>
+    </View>
+  )
+}
+
+const PrimaryTokenInfo = () => {
+  const {atoms: ta} = useTheme()
+  const strings = useStrings()
+
+  return (
+    <View style={[a.px_lg, a.pb_xl]}>
+      <Text style={[a.body_1_lg_medium, ta.text_gray_max]}>
+        {strings.txReview.adaDescription}
       </Text>
     </View>
   )

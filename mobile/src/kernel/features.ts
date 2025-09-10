@@ -14,6 +14,7 @@ export const features = {
   walletListSwipeableActions: isDev,
   swapTokenLinks: true,
   utxoConsolidation: isDev,
+  utxoList: isDev,
 }
 
 export const debugWalletInfo = {
