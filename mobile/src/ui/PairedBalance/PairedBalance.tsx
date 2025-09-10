@@ -41,7 +41,7 @@ export const PairedBalance = React.forwardRef<ResetErrorRef, Props>(
   },
 )
 
-const Price = ({amount, ignorePrivacy, hidePrimaryPair}: Props) => {
+const Price = ({amount, ignorePrivacy, hidePrimaryPair, textStyle}: Props) => {
   const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
   const {isPrimaryTokenActive} = usePortfolio()
   const {
