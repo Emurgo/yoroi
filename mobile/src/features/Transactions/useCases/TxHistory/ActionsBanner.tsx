@@ -1,4 +1,5 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {useTransfer} from '@yoroi/transfer'
 import {Chain} from '@yoroi/types'
 
 import * as React from 'react'
@@ -25,7 +26,8 @@ export const ActionsBanner = (props: {disabled: boolean}) => {
   const tokenOutId = config?.swap?.initialPair.tokenOut
   const disabled = props.disabled || isLoading
   const navigateTo = useWalletNavigation()
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
+  const {reset: resetTransfer} = useTransfer()
 
   const {isSingle, addressMode} = useAddressMode()
   const {next: nextReceiveAddress} = useReceiveAddressesStatus(addressMode)
@@ -92,6 +94,11 @@ export const ActionsBanner = (props: {disabled: boolean}) => {
     })
   }
 
+  const handleOnPressTransfer = () => {
+    resetTransfer()
+    navigateTo.navigateToSendStartTx()
+  }
+
   return (
     <View style={[a.py_xl, a.flex_row, a.justify_center, a.gap_lg]}>
       <View style={[a.align_center, a.justify_center]}>
@@ -108,8 +115,8 @@ export const ActionsBanner = (props: {disabled: boolean}) => {
           style={[
             a.pt_sm,
             a.body_3_sm_medium,
-            {color: p.text_gray_medium},
-            disabled && {color: p.text_gray_low},
+            ta.text_gray_medium,
+            disabled && ta.text_gray_low,
           ]}
         >
           {strings.transactions.receiveLabel}
@@ -122,7 +129,7 @@ export const ActionsBanner = (props: {disabled: boolean}) => {
             <Button
               type={ButtonType.Circle}
               icon={Icon.Send}
-              onPress={() => navigateTo.navigateToSendStartTx()}
+              onPress={handleOnPressTransfer}
               testID="sendButton"
               disabled={disabled}
             />
@@ -131,8 +138,8 @@ export const ActionsBanner = (props: {disabled: boolean}) => {
               style={[
                 a.pt_sm,
                 a.body_3_sm_medium,
-                {color: p.text_gray_medium},
-                disabled && {color: p.text_gray_low},
+                ta.text_gray_medium,
+                disabled && ta.text_gray_low,
               ]}
             >
               {strings.transactions.sendLabel}
@@ -152,8 +159,8 @@ export const ActionsBanner = (props: {disabled: boolean}) => {
               style={[
                 a.pt_sm,
                 a.body_3_sm_medium,
-                {color: p.text_gray_medium},
-                disabled && {color: p.text_gray_low},
+                ta.text_gray_medium,
+                disabled && ta.text_gray_low,
               ]}
             >
               {strings.transactions.swapLabel}
@@ -173,8 +180,8 @@ export const ActionsBanner = (props: {disabled: boolean}) => {
               style={[
                 a.pt_sm,
                 a.body_3_sm_medium,
-                {color: p.text_gray_medium},
-                disabled && {color: p.text_gray_low},
+                ta.text_gray_medium,
+                disabled && ta.text_gray_low,
               ]}
             >
               {strings.transactions.exchange}

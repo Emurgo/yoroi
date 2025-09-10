@@ -458,6 +458,7 @@ export const useStrings = () => {
         menu: f(menuMessages.menu),
         releases: f(menuMessages.releases),
         governanceCentre: f(menuMessages.governanceCentre),
+        utxoList: f(transactionsMessages.utxoListTitle),
       },
 
       // Dashboard strings

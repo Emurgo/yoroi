@@ -25,6 +25,7 @@ import {StartMultiTokenTxScreen} from '~/features/Send/useCases/StartMultiTokenT
 import {NetworkTag} from '~/features/Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
 import {UtxoConsolidation} from '~/features/Transactions/useCases/UtxoConsolidation/UtxoConsolidation/UtxoConsolidation'
 import {UtxoList} from '~/features/Transactions/useCases/UtxoList/UtxoList'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {unstoppableApiKey} from '~/kernel/constants'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
@@ -73,6 +74,8 @@ export const TxHistoryNavigator = () => {
     return resolverManagerMaker(resolverStorage, resolverApi)
   }, [resolverStorage, resolverApi])
 
+  const {meta} = useSelectedWallet()
+
   return (
     <ResolverProvider resolverManager={resolverManager}>
       <ReceiveProvider>
@@ -86,7 +89,7 @@ export const TxHistoryNavigator = () => {
             <Stack.Screen
               name="history-list"
               options={{
-                title: strings.transactions.history.historyTitle,
+                title: meta.name,
                 headerRight: () => <HeaderRightHistory />,
                 headerTransparent: true,
                 headerStyle: {
