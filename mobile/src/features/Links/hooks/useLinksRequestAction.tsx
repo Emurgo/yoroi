@@ -39,7 +39,7 @@ export const useLinksRequestAction = () => {
     memoChanged,
     receiverResolveChanged,
     amountChanged,
-    reset,
+    reset: resetTransfer,
     linkActionChanged,
   } = useTransfer()
 
@@ -53,7 +53,7 @@ export const useLinksRequestAction = () => {
       })
       if (!isLoggedIn) return
       if (action.info.useCase === 'request/ada-with-link') {
-        reset()
+        resetTransfer()
         try {
           const link = decodeURIComponent(action.info.params.link)
           if (wallet) {
@@ -91,7 +91,7 @@ export const useLinksRequestAction = () => {
       closeModal,
       navigateTo,
       receiverResolveChanged,
-      reset,
+      resetTransfer,
       wallet,
       isLoggedIn,
     ],
