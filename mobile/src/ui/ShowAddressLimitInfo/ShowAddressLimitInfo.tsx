@@ -18,13 +18,12 @@ export const ShowAddressLimitInfo = () => {
       entering={FadeInUp}
       exiting={FadeOut}
       style={[
+        a.py_md,
+        a.px_lg,
+        a.rounded_sm,
+        a.gap_sm,
         {
           alignSelf: 'stretch',
-          borderRadius: 8,
-          alignItems: 'flex-start',
-          justifyContent: 'space-between',
-          gap: 12,
-          padding: 16,
           backgroundColor: p.sys_cyan_100,
         },
       ]}

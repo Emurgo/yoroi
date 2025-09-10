@@ -1,6 +1,5 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 
-import {useNavigation} from '@react-navigation/native'
 import {useQuery} from '@tanstack/react-query'
 import * as React from 'react'
 import {View} from 'react-native'
@@ -36,7 +35,7 @@ const useDisclaimerText = ({
     queryFn: () => loadText(type, languageCode),
   })
 
-  return query.data
+  return query
 }
 
 export const ShowDisclaimer = ({type, disabled}: Props) => {
@@ -44,14 +43,22 @@ export const ShowDisclaimer = ({type, disabled}: Props) => {
   const {openModal, closeModal} = useModal()
   const strings = useStrings()
   const {resetToTxHistory} = useWalletNavigation()
-  const navigation = useNavigation()
   const [showed, setShowed] = React.useState(false)
   const [accepted, setAccepted] = useDisclaimerState(type)
   const {atoms: ta, palette: p} = useTheme()
-  const disclaimerText = useDisclaimerText({type, languageCode})
+  const {data: disclaimerText, isLoading} = useDisclaimerText({
+    type,
+    languageCode,
+  })
 
   React.useEffect(() => {
-    if (!disabled && !accepted && showed === false) {
+    if (
+      !disabled &&
+      !accepted &&
+      showed === false &&
+      !isLoading &&
+      disclaimerText
+    ) {
       openModal({
         title: strings.global.disclaimer,
         content: (
@@ -99,7 +106,10 @@ export const ShowDisclaimer = ({type, disabled}: Props) => {
             <Button
               type={ButtonType.Secondary}
               title={strings.global.cancel}
-              onPress={resetToTxHistory}
+              onPress={() => {
+                resetToTxHistory()
+                closeModal()
+              }}
             />
 
             <Proceed
@@ -116,25 +126,15 @@ export const ShowDisclaimer = ({type, disabled}: Props) => {
       })
       setShowed(true)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
-    accepted,
-    closeModal,
     disabled,
-    languageCode,
-    navigation,
-    openModal,
-    disclaimerText,
-    p.bg_color_max,
-    ta.bg_color_max,
-    ta.text_gray_max,
-    resetToTxHistory,
-    setAccepted,
+    accepted,
     showed,
-    strings.global.accept,
-    strings.global.cancel,
-    strings.global.disclaimer,
-    strings.global.proceed,
-    type,
+    isLoading,
+    disclaimerText,
+    openModal,
+    setShowed,
   ])
   return null
 }

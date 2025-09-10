@@ -9,7 +9,6 @@ import {useReceive} from '~/features/Receive/common/ReceiveProvider'
 import {useMultipleAddressesInfo} from '~/features/Receive/common/useMultipleAddressesInfo'
 import {useReceiveAddressesStatus} from '~/features/Receive/common/useReceiveAddressesStatus'
 import {useRemoteConfig} from '~/features/RemoteConfig/hooks/useRemoteConfig'
-import {useSwap} from '~/features/Swap/common/useSwap'
 import {useAddressMode} from '~/features/WalletManager/hooks/useAddressMode'
 import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
@@ -22,7 +21,6 @@ import {Text} from '~/ui/Text/Text'
 
 export const ActionsBanner = (props: {disabled: boolean}) => {
   const strings = useStrings()
-  const swapForm = useSwap()
   const {config, isLoading} = useRemoteConfig()
   const tokenOutId = config?.swap?.initialPair.tokenOut
   const disabled = props.disabled || isLoading
@@ -46,13 +44,6 @@ export const ActionsBanner = (props: {disabled: boolean}) => {
       return
     }
 
-    swapForm.action({type: 'ResetForm'})
-
-    if (tokenOutId !== undefined) {
-      swapForm.action({type: 'TokenOutIdChanged', value: tokenOutId})
-      swapForm.action({type: 'TokenOutInputTouched'})
-    }
-
     track.swapInitiated({
       from_asset: [
         {
@@ -66,7 +57,8 @@ export const ActionsBanner = (props: {disabled: boolean}) => {
       slippage_tolerance: 1,
     })
 
-    navigateTo.navigateToSwap()
+    // Pass the tokenOutId to the navigation function which will handle setting it properly
+    navigateTo.navigateToSwap(tokenOutId)
   }
 
   const handleOnExchange = () => {
