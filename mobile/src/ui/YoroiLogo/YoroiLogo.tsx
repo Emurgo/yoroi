@@ -1,0 +1,61 @@
+import {atoms as a, useTheme} from '@yoroi/theme'
+
+import * as React from 'react'
+import {Text, View} from 'react-native'
+import {Defs, LinearGradient, Path, Stop, Svg, SvgProps} from 'react-native-svg'
+
+import {useStrings} from '~/kernel/i18n/useStrings'
+import {Space} from '~/ui/Space/Space'
+
+const YOROI_COMPANY_NAME = 'Yoroi'
+
+export const YoroiLogo = () => {
+  const strings = useStrings()
+  const {palette: p, atoms: ta} = useTheme()
+
+  return (
+    <View style={[a.align_center]}>
+      <YoroiLogoSvg />
+
+      <Space.Height.sm />
+
+      <Text style={[{color: p.primary_600}, a.heading_1_medium]}>
+        {YOROI_COMPANY_NAME}
+      </Text>
+
+      <Space.Height.sm />
+
+      <Text style={[a.body_2_md_regular, ta.text_gray_medium]}>
+        {strings.ui.yoroiLogoSubtitle}
+      </Text>
+    </View>
+  )
+}
+
+const YoroiLogoSvg = (props: SvgProps) => {
+  return (
+    <Svg width={57} height={48} viewBox="0 0 57 48" fill="none" {...props}>
+      <Path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M26.96 19.488L.5 0H8.81l19.62 14.003L48.147 0H56.5L29.909 19.488a2.555 2.555 0 01-2.95 0zm10.346 22.313L4.936 18.744v-6.607L42.527 38.7l-5.22 3.101zm1.566-13.484l11.486-8.495v-6.337L34.435 25.08l4.437 3.236zm10.18 7.281l1.306-1.078v-6.203l-5.743 4.045 4.437 3.236zM4.937 33.034L26.342 48l5.351-2.967L4.937 26.157v6.877z"
+        fill="url(#paint0_linear_6040_147504)"
+      />
+
+      <Defs>
+        <LinearGradient
+          id="paint0_linear_6040_147504"
+          x1={59.0114}
+          y1={77.0656}
+          x2={112.398}
+          y2={-30.4088}
+          gradientUnits="userSpaceOnUse"
+        >
+          <Stop stopColor="#244ABF" />
+
+          <Stop offset={1} stopColor="#4760FF" />
+        </LinearGradient>
+      </Defs>
+    </Svg>
+  )
+}

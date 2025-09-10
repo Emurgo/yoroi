@@ -1,0 +1,16 @@
+github.mdc 
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Gitflow Workflow Rules
+
+- Once fully finished with the task create a pull request
+- Create pull request in a semantic compatible formatting like: 
+```
+feat(portfolio): [YV-12345] ticket title
+```
+- Make sure to use either: commitlint rulese when creating a PR found in .cursor.json file
+- Make sure to add a very short description to a PR of what has been done
+- Make sure the description is super basic, and in a natural language

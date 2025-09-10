@@ -1,0 +1,23 @@
+import {LocalizableError} from '~/kernel/i18n/LocalizableError'
+
+// thrown when the request did go through but
+// backend returned an unexpected result
+export class ApiError extends LocalizableError {
+  public values: {response: string | null} = {response: null}
+  constructor(response: string | null) {
+    super({
+      id: 'api.error',
+      defaultMessage: 'API error: {response}',
+    })
+    this.values = {response}
+  }
+}
+
+// thrown by the backend after a rollback
+export class ApiHistoryError extends ApiError {
+  public static readonly errors = {
+    REFERENCE_TX_NOT_FOUND: 'REFERENCE_TX_NOT_FOUND',
+    REFERENCE_BLOCK_MISMATCH: 'REFERENCE_BLOCK_MISMATCH',
+    REFERENCE_BEST_BLOCK_MISMATCH: 'REFERENCE_BEST_BLOCK_MISMATCH',
+  }
+}

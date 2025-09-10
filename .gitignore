@@ -2,6 +2,13 @@
 #
 .DS_Store
 
+.env
+translations/
+.translations/
+lib/
+credentials/
+credentials.json
+
 # Xcode
 #
 build/
@@ -87,3 +94,6 @@ apps/test/
 artifacts/
 html-report/
 
+#build
+.expo/
+.metro-cache/

@@ -1,0 +1,436 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+fastlane_require "dotenv"
+fastlane_require "semver"
+
+# Read package.json version
+package_version = JSON.parse(File.read('../package.json'))['version']
+
+# iOS - Dynamic paths based on build variant
+# These will be set dynamically in each lane based on BUILD_VARIANT
+
+# Android
+GRADLE_FILE="android/app/build.gradle"
+
+before_all do |lane|
+  environment = lane_context[SharedValues::ENVIRONMENT]
+end
+
+platform :android do
+  desc "Deploy Nightly to Internal Testing"
+  lane :nightly do
+    # Set environment variables
+    ENV['BUILD_VARIANT'] = 'NIGHTLY'
+    ENV['EXPO_PUBLIC_APP_CONFIG'] = 'app.config.nightly.js'
+    ENV['ANDROID_KEYSTORE_FILE'] = ENV['ANDROID_KEYSTORE_FILE'] || "#{ENV['HOME']}/.yoroi/android/nightly.keystore"
+    ENV['ANDROID_PACKAGE_NAME'] = 'com.emurgo.nightly'
+    
+    # Set version from package.json
+    set_version_android
+    
+    # Set build number from package.json
+    package_json = JSON.parse(File.read('../package.json'))
+    build_number = 801
+    ENV['BUILD_NUMBER'] = build_number.to_s
+    
+    # Build the app using EAS Build
+    Dir.chdir("..") do
+      sh("EXPO_PUBLIC_APP_CONFIG=app.config.nightly.js BUILD_VARIANT=NIGHTLY BUILD_NUMBER=#{build_number} npx eas build --platform android --profile nightly --local")
+    end
+    
+    # Upload to Play Store Internal Testing with proper signing
+    if ENV['DRY_RUN'] == 'true'
+      UI.message("DRY RUN: Skipping upload to Play Store")
+    else
+      upload_to_play_store(
+        track: ENV["ANDROID_TRACK"] || 'internal',
+        package_name: ENV["ANDROID_PACKAGE_NAME"],
+        json_key: ENV['ANDROID_SA_FILE'] || "#{ENV['HOME']}/.yoroi/android/service-account.json",
+        aab: 'android/app/build/outputs/bundle/release/app-release.aab'
+      )
+    end
+  end
+
+  desc "Deploy Production to Play Store"
+  lane :production do
+    # Set environment variables
+    ENV['BUILD_VARIANT'] = 'PROD'
+    ENV['EXPO_PUBLIC_APP_CONFIG'] = 'app.config.production.js'
+    ENV['ANDROID_KEYSTORE_FILE'] = ENV['ANDROID_KEYSTORE_FILE'] || "#{ENV['HOME']}/.yoroi/android/production.keystore"
+    ENV['ANDROID_PACKAGE_NAME'] = 'com.emurgo'
+    
+    # Set version from package.json
+    set_version_android
+    
+    # Set build number from package.json
+    package_json = JSON.parse(File.read('../package.json'))
+    build_number = 801
+    ENV['BUILD_NUMBER'] = build_number.to_s
+    
+    # Build the app using EAS Build
+    Dir.chdir("..") do
+      sh("EXPO_PUBLIC_APP_CONFIG=app.config.production.js BUILD_VARIANT=PROD BUILD_NUMBER=#{build_number} npx eas build --platform android --profile production --local")
+    end
+    
+    # Upload to Play Store Production with proper signing
+    if ENV['DRY_RUN'] == 'true'
+      UI.message("DRY RUN: Skipping upload to Play Store")
+    else
+      upload_to_play_store(
+        track: ENV["ANDROID_TRACK"] || 'production',
+        package_name: ENV["ANDROID_PACKAGE_NAME"],
+        json_key: ENV['ANDROID_SA_FILE'] || "#{ENV['HOME']}/.yoroi/android/service-account.json",
+        aab: 'android/app/build/outputs/bundle/release/app-release.aab'
+      )
+    end
+  end
+end
+
+platform :ios do
+  desc "Deploy Nightly to TestFlight"
+  lane :nightly do
+    # Set environment variables
+    ENV['BUILD_VARIANT'] = 'NIGHTLY'
+    ENV['EXPO_PUBLIC_APP_CONFIG'] = 'app.config.nightly.js'
+    ENV['APP_STORE_KEY_ID'] = 'PH9Z89M567'
+    ENV['APP_STORE_ISSUER_ID'] = 'feff08c0-5259-4e9a-bdbe-26cdb046e1d5'
+    ENV['APP_STORE_KEY_PATH'] = "#{ENV['HOME']}/.yoroi/ios/AuthKey_PH9Z89M567.p8"
+    
+    # Set iOS project paths based on build variant
+    xc_project = "./ios/YoroiNightly.xcodeproj"
+    xc_workspace = "./ios/YoroiNightly.xcworkspace"
+    plist = "YoroiNightly/Info.plist"
+    
+    # Set up code signing for CI
+    if is_ci
+      create_keychain(
+        name: ENV["CI_KEYCHAIN_NAME"],
+        password: ENV["CI_KEYCHAIN_PASSWORD"],
+        default_keychain: true,
+        unlock: true,
+        timeout: 3600,
+        lock_when_sleeps: false
+      )
+    end
+    
+    # Set version from package.json
+    set_version_ios(xc_project: xc_project)
+    
+    # Build the app using EAS Build locally
+    Dir.chdir("..") do
+      sh("EXPO_PUBLIC_APP_CONFIG=app.config.nightly.js BUILD_VARIANT=NIGHTLY npx eas build --platform ios --profile nightly --local --non-interactive")
+    end
+    
+    # Upload to TestFlight with proper API key handling
+    if ENV['DRY_RUN'] == 'true'
+      UI.message("DRY RUN: Skipping upload to TestFlight")
+    else
+      api_key = app_store_connect_api_key(
+        key_id: ENV['APP_STORE_KEY_ID'] || 'PH9Z89M567',
+        issuer_id: ENV['APP_STORE_ISSUER_ID'] || 'feff08c0-5259-4e9a-bdbe-26cdb046e1d5',
+        key_filepath: ENV['APP_STORE_KEY_PATH'] || "#{ENV['HOME']}/.yoroi/ios/AuthKey_PH9Z89M567.p8",
+        duration: 1200,
+        in_house: false
+      )
+      
+      upload_to_testflight(
+        api_key: api_key,
+        app_identifier: ENV["APP_STORE_BUNDLE_ID"],
+        skip_waiting_for_build_processing: true
+      )
+    end
+  end
+
+  desc "Deploy Production to App Store"
+  lane :production do
+    # Set environment variables
+    ENV['BUILD_VARIANT'] = 'PROD'
+    ENV['EXPO_PUBLIC_APP_CONFIG'] = 'app.config.production.js'
+    ENV['APP_STORE_KEY_ID'] = 'PH9Z89M567'
+    ENV['APP_STORE_ISSUER_ID'] = 'feff08c0-5259-4e9a-bdbe-26cdb046e1d5'
+    ENV['APP_STORE_KEY_PATH'] = "#{ENV['HOME']}/.yoroi/ios/AuthKey_PH9Z89M567.p8"
+    
+    # Set iOS project paths based on build variant
+    xc_project = "./ios/Yoroi.xcodeproj"
+    xc_workspace = "./ios/Yoroi.xcworkspace"
+    plist = "Yoroi/Info.plist"
+    
+    # Set up code signing for CI
+    if is_ci
+      create_keychain(
+        name: ENV["CI_KEYCHAIN_NAME"],
+        password: ENV["CI_KEYCHAIN_PASSWORD"],
+        default_keychain: true,
+        unlock: true,
+        timeout: 3600,
+        lock_when_sleeps: false
+      )
+    end
+    
+    # Set version from package.json
+    set_version_ios(xc_project: xc_project)
+    
+    # Build the app using Expo
+   Dir.chdir("..") do
+      sh("EXPO_PUBLIC_APP_CONFIG=app.config.production.js BUILD_VARIANT=PROD npx eas build --platform ios --profile production --local --non-interactive")
+    end
+    
+    # Upload to App Store with proper API key handling
+    if ENV['DRY_RUN'] == 'true'
+      UI.message("DRY RUN: Skipping upload to App Store")
+    else
+      api_key = app_store_connect_api_key(
+        key_id: ENV['APP_STORE_KEY_ID'] || 'PH9Z89M567',
+        issuer_id: ENV['APP_STORE_ISSUER_ID'] || 'feff08c0-5259-4e9a-bdbe-26cdb046e1d5',
+        key_filepath: ENV['APP_STORE_KEY_PATH'] || "#{ENV['HOME']}/.yoroi/ios/AuthKey_PH9Z89M567.p8",
+        duration: 1200,
+        in_house: false
+      )
+      
+      upload_to_app_store(
+        api_key: api_key,
+        app_identifier: ENV["APP_STORE_BUNDLE_ID"]
+      )
+    end
+  end
+end
+
+lane :set_version_ios do |options|
+  xc_project = options[:xc_project] || "./ios/Yoroi.xcodeproj"
+  increment_version_number(
+      xcodeproj: xc_project,
+      version_number: package_version
+  )
+  UI.success("iOS app version updated to #{package_version}")
+end
+
+lane :set_version_android do
+  # For Android, we'll use a simple approach to set version
+  # The actual version will be set during the build process
+  UI.success("Android app version will be set to #{package_version} during build")
+end
+
+desc "Upload existing iOS nightly IPA to TestFlight"
+lane :upload_ios_nightly_ipa do
+  # Upload to TestFlight with proper API key handling
+  if ENV['DRY_RUN'] == 'true'
+    UI.message("DRY RUN: Skipping upload to TestFlight")
+  else
+    api_key = app_store_connect_api_key(
+      key_id: ENV['APP_STORE_KEY_ID'] || 'PH9Z89M567',
+      issuer_id: ENV['APP_STORE_ISSUER_ID'] || 'feff08c0-5259-4e9a-bdbe-26cdb046e1d5',
+      key_filepath: ENV['APP_STORE_KEY_PATH'] || "#{ENV['HOME']}/.yoroi/ios/AuthKey_PH9Z89M567.p8",
+      duration: 1200,
+      in_house: false
+    )
+    
+    upload_to_testflight(
+      api_key: api_key,
+      ipa: "dist/ios/nightly-801/yoroi.ipa",
+      app_identifier: ENV["APP_STORE_BUNDLE_ID"] || "com.emurgo.yoroi-nightly",
+      skip_waiting_for_build_processing: true
+    )
+  end
+end
+
+# Local build lanes - these only handle publishing, not building
+platform :android do
+  desc "Publish locally built Android nightly to Internal Testing"
+  lane :nightly_local do
+    # Set environment variables
+    ENV['BUILD_VARIANT'] = 'NIGHTLY'
+    ENV['EXPO_PUBLIC_APP_CONFIG'] = 'app.config.nightly.js'
+    ENV['ANDROID_KEYSTORE_FILE'] = ENV['ANDROID_KEYSTORE_FILE'] || "#{ENV['HOME']}/.yoroi/android/nightly.keystore"
+    ENV['ANDROID_PACKAGE_NAME'] = 'com.emurgo.nightly'
+    
+    # Check if AAB file exists
+    aab_path = 'android/app/build/outputs/bundle/release/app-release.aab'
+    unless File.exist?(aab_path)
+      UI.user_error!("AAB file not found at #{aab_path}. Please build the app first.")
+    end
+    
+    # Upload to Play Store Internal Testing with proper signing
+    if ENV['DRY_RUN'] == 'true'
+      UI.message("DRY RUN: Skipping upload to Play Store")
+    else
+      upload_to_play_store(
+        track: ENV["ANDROID_TRACK"] || 'internal',
+        package_name: ENV["ANDROID_PACKAGE_NAME"],
+        json_key: ENV['ANDROID_SA_FILE'] || "#{ENV['HOME']}/.yoroi/android/service-account.json",
+        aab: aab_path
+      )
+    end
+  end
+
+  desc "Publish locally built Android production to Play Store"
+  lane :production_local do
+    # Set environment variables
+    ENV['BUILD_VARIANT'] = 'PROD'
+    ENV['EXPO_PUBLIC_APP_CONFIG'] = 'app.config.production.js'
+    ENV['ANDROID_KEYSTORE_FILE'] = ENV['ANDROID_KEYSTORE_FILE'] || "#{ENV['HOME']}/.yoroi/android/production.keystore"
+    ENV['ANDROID_PACKAGE_NAME'] = 'com.emurgo'
+    
+    # Check if AAB file exists
+    aab_path = 'android/app/build/outputs/bundle/release/app-release.aab'
+    unless File.exist?(aab_path)
+      UI.user_error!("AAB file not found at #{aab_path}. Please build the app first.")
+    end
+    
+    # Upload to Play Store Production with proper signing
+    if ENV['DRY_RUN'] == 'true'
+      UI.message("DRY RUN: Skipping upload to Play Store")
+    else
+      upload_to_play_store(
+        track: ENV["ANDROID_TRACK"] || 'production',
+        package_name: ENV["ANDROID_PACKAGE_NAME"],
+        json_key: ENV['ANDROID_SA_FILE'] || "#{ENV['HOME']}/.yoroi/android/service-account.json",
+        aab: aab_path
+      )
+    end
+  end
+end
+
+platform :ios do
+  desc "Publish locally built iOS nightly to TestFlight"
+  lane :nightly_local do
+    # Set environment variables
+    ENV['BUILD_VARIANT'] = 'NIGHTLY'
+    ENV['EXPO_PUBLIC_APP_CONFIG'] = 'app.config.nightly.js'
+    ENV['APP_STORE_KEY_ID'] = 'PH9Z89M567'
+    ENV['APP_STORE_ISSUER_ID'] = 'feff08c0-5259-4e9a-bdbe-26cdb046e1d5'
+    ENV['APP_STORE_KEY_PATH'] = "#{ENV['HOME']}/.yoroi/ios/AuthKey_PH9Z89M567.p8"
+    
+    # Find IPA file - check multiple possible locations
+    ipa_path = nil
+    possible_paths = [
+      'dist/ios/nightly/yoroi.ipa',
+      'dist/ios/nightly-local/yoroi.ipa',
+      'dist/ios/nightly-801/yoroi.ipa',
+      'dist/ios/*/yoroi.ipa',
+      'dist/ios/*/*.ipa',
+      'ios/build/Release-iphoneos/YoroiNightly.ipa',
+      'ios/build/Release-iphoneos/Yoroi.ipa',
+      'ios/build/Release-iphoneos/*.ipa',
+      'ios/build/*.ipa',
+      '*.ipa'
+    ]
+    
+    possible_paths.each do |path|
+      if path.include?('*')
+        # Handle wildcard paths
+        Dir.glob(path).each do |file|
+          if File.exist?(file) && file.end_with?('.ipa')
+            ipa_path = file
+            break
+          end
+        end
+      elsif File.exist?(path)
+        ipa_path = path
+        break
+      end
+    end
+    
+    unless ipa_path
+      UI.user_error!("IPA file not found. Please build the app first. Checked paths: #{possible_paths.join(', ')}")
+    end
+    
+    UI.message("Found IPA file at: #{ipa_path}")
+    
+    # Upload to TestFlight with proper API key handling
+    if ENV['DRY_RUN'] == 'true'
+      UI.message("DRY RUN: Skipping upload to TestFlight")
+    else
+      api_key = app_store_connect_api_key(
+        key_id: ENV['APP_STORE_KEY_ID'] || 'PH9Z89M567',
+        issuer_id: ENV['APP_STORE_ISSUER_ID'] || 'feff08c0-5259-4e9a-bdbe-26cdb046e1d5',
+        key_filepath: ENV['APP_STORE_KEY_PATH'] || "#{ENV['HOME']}/.yoroi/ios/AuthKey_PH9Z89M567.p8",
+        duration: 1200,
+        in_house: false
+      )
+      
+      upload_to_testflight(
+        api_key: api_key,
+        ipa: ipa_path,
+        app_identifier: ENV["APP_STORE_BUNDLE_ID"] || "com.emurgo.yoroi-nightly",
+        skip_waiting_for_build_processing: true
+      )
+    end
+  end
+
+  desc "Publish locally built iOS production to App Store"
+  lane :production_local do
+    # Set environment variables
+    ENV['BUILD_VARIANT'] = 'PROD'
+    ENV['EXPO_PUBLIC_APP_CONFIG'] = 'app.config.production.js'
+    ENV['APP_STORE_KEY_ID'] = 'PH9Z89M567'
+    ENV['APP_STORE_ISSUER_ID'] = 'feff08c0-5259-4e9a-bdbe-26cdb046e1d5'
+    ENV['APP_STORE_KEY_PATH'] = "#{ENV['HOME']}/.yoroi/ios/AuthKey_PH9Z89M567.p8"
+    
+    # Find IPA file - check multiple possible locations
+    ipa_path = nil
+    possible_paths = [
+      'dist/ios/production/yoroi.ipa',
+      'dist/ios/production-local/yoroi.ipa',
+      'dist/ios/*/yoroi.ipa',
+      'dist/ios/*/*.ipa',
+      'ios/build/Release-iphoneos/Yoroi.ipa',
+      'ios/build/Release-iphoneos/YoroiNightly.ipa',
+      'ios/build/Release-iphoneos/*.ipa',
+      'ios/build/*.ipa',
+      '*.ipa'
+    ]
+    
+    possible_paths.each do |path|
+      if path.include?('*')
+        # Handle wildcard paths
+        Dir.glob(path).each do |file|
+          if File.exist?(file) && file.end_with?('.ipa')
+            ipa_path = file
+            break
+          end
+        end
+      elsif File.exist?(path)
+        ipa_path = path
+        break
+      end
+    end
+    
+    unless ipa_path
+      UI.user_error!("IPA file not found. Please build the app first. Checked paths: #{possible_paths.join(', ')}")
+    end
+    
+    UI.message("Found IPA file at: #{ipa_path}")
+    
+    # Upload to App Store with proper API key handling
+    if ENV['DRY_RUN'] == 'true'
+      UI.message("DRY RUN: Skipping upload to App Store")
+    else
+      api_key = app_store_connect_api_key(
+        key_id: ENV['APP_STORE_KEY_ID'] || 'PH9Z89M567',
+        issuer_id: ENV['APP_STORE_ISSUER_ID'] || 'feff08c0-5259-4e9a-bdbe-26cdb046e1d5',
+        key_filepath: ENV['APP_STORE_KEY_PATH'] || "#{ENV['HOME']}/.yoroi/ios/AuthKey_PH9Z89M567.p8",
+        duration: 1200,
+        in_house: false
+      )
+      
+      upload_to_app_store(
+        api_key: api_key,
+        ipa: ipa_path,
+        app_identifier: ENV["APP_STORE_BUNDLE_ID"] || "com.emurgo.yoroi"
+      )
+    end
+  end
+end

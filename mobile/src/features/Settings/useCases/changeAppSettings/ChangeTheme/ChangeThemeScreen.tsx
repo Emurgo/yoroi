@@ -1,0 +1,19 @@
+import {atoms as a, useTheme} from '@yoroi/theme'
+
+import * as React from 'react'
+import {SafeAreaView} from 'react-native-safe-area-context'
+
+import {ThemePickerList} from './ThemePickerList'
+
+export const ChangeThemeScreen = () => {
+  const {atoms: ta} = useTheme()
+
+  return (
+    <SafeAreaView
+      edges={['bottom', 'right', 'left']}
+      style={[a.flex_1, ta.bg_color_max]}
+    >
+      <ThemePickerList />
+    </SafeAreaView>
+  )
+}

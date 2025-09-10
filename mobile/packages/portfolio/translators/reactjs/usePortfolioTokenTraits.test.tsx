@@ -1,0 +1,96 @@
+import {Chain} from '@yoroi/types'
+
+import {QueryClient} from '@tanstack/react-query'
+import {render, waitFor} from '@testing-library/react-native'
+import * as React from 'react'
+import {Text, View} from 'react-native'
+
+import {tokenTraitsMocks} from '../../adapters/token-traits.mocks'
+import {tokenMocks} from '../../adapters/token.mocks'
+import {queryClientFixture} from '../../fixtures/query-client'
+import {wrapperMaker} from '../../fixtures/wrapperMaker'
+import {usePortfolioTokenTraits} from './usePortfolioTokenTraits'
+
+describe('usePortfolioTokenTraits', () => {
+  let queryClient: QueryClient
+
+  beforeEach(() => {
+    jest.clearAllMocks()
+    queryClient = queryClientFixture()
+  })
+
+  afterEach(() => {
+    queryClient.clear()
+  })
+
+  it('success', async () => {
+    const mockedGetTokenTraits = jest
+      .fn()
+      .mockResolvedValue(tokenTraitsMocks.apiResponse.success)
+
+    const TestComponent = () => {
+      const {data} = usePortfolioTokenTraits({
+        id: tokenMocks.nftCryptoKitty.info.id,
+        network: Chain.Network.Mainnet,
+        getTokenTraits: mockedGetTokenTraits,
+      })
+
+      return (
+        <View>
+          <Text testID="data">{JSON.stringify(data?.totalItems)}</Text>
+        </View>
+      )
+    }
+    const wrapper = wrapperMaker({
+      queryClient,
+    })
+    const {getByTestId} = render(<TestComponent />, {wrapper})
+
+    expect(getByTestId('suspending')).toBeDefined()
+
+    // Then we should see the data
+    await waitFor(() => {
+      expect(getByTestId('data')).toBeDefined()
+    })
+
+    expect(getByTestId('data').props.children).toEqual(JSON.stringify(1))
+    expect(mockedGetTokenTraits).toHaveBeenCalledWith(
+      tokenMocks.nftCryptoKitty.info.id,
+    )
+  })
+
+  it('error', async () => {
+    const mockedGetTokenTraits = jest
+      .fn()
+      .mockResolvedValue(tokenTraitsMocks.apiResponse.error)
+
+    const TestComponent = () => {
+      const {data} = usePortfolioTokenTraits({
+        id: tokenMocks.nftCryptoKitty.info.id,
+        network: Chain.Network.Mainnet,
+        getTokenTraits: mockedGetTokenTraits,
+      })
+
+      return (
+        <View>
+          <Text testID="data">{JSON.stringify(data?.totalItems)}</Text>
+        </View>
+      )
+    }
+    const wrapper = wrapperMaker({
+      queryClient,
+    })
+    const {getByTestId} = render(<TestComponent />, {wrapper})
+
+    expect(getByTestId('suspending')).toBeDefined()
+
+    // Then we should see the error
+    await waitFor(() => {
+      expect(getByTestId('hasError')).toBeDefined()
+    })
+
+    expect(mockedGetTokenTraits).toHaveBeenCalledWith(
+      tokenMocks.nftCryptoKitty.info.id,
+    )
+  })
+})

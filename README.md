@@ -5,9 +5,7 @@
 ## Table of Contents
 
 - [Features](#features)
-- [Installation](#installation)
 - [Packages](#packages)
-- [Contributing](#contributing)
 - [License](#license)
 
 ## Features
@@ -35,10 +33,6 @@
 - **Domain Name Support**: Send and receive ADA using user-friendly addresses with integrated support for Cardano Name Service (CNS), ADAHandle, and Unstoppable Domains.
 - **Network Switching**: Easily toggle between Cardano networks (Mainnet, Preprod, Preview) for seamless testing.
 
-
-
-## Installation
-
 ### Mobile App
 
 To install the Yoroi wallet on your mobile device:
@@ -50,10 +44,6 @@ To install the Yoroi wallet on your mobile device:
 ## Packages
 
 Yoroi is a multi-repository project. Review the packages in the [packages](https://github.com/Emurgo/yoroi/tree/develop/packages) folder.
-
-## Contributing
-
-See the [contributing guide](https://github.com/Emurgo/yoroi/blob/develop/CONTRIBUTING.md) to learn how to contribute to the repository and the development workflow.
 
 ## License
 
