@@ -18,7 +18,6 @@ import {Space, SpaceHeight} from '~/ui/Space/Space'
 
 import {TxList} from '../TxList/TxList'
 import {useUtxoConsolidationBanner} from '../UtxoConsolidation/UtxoConsolidation/useUtxoConsolidationBanner'
-import {UtxoListButton} from '../UtxoList/UtxoListButton'
 import {ActionsBanner} from './ActionsBanner'
 import {BalanceBanner} from './BalanceBanner'
 import {CollapsibleHeader} from './CollapsibleHeader'
@@ -94,8 +93,6 @@ export const TxHistory = () => {
           },
         ]}
       >
-        <UtxoListButton />
-
         <Space.Height.lg />
 
         <Text

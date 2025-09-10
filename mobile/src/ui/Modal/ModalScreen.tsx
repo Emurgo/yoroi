@@ -127,11 +127,13 @@ export const Modal = () => {
         )}
         {content}
 
-        {footer && (
+        {footer ? (
           <View style={[a.px_lg, a.pb_lg, a.pt_md]}>
             {footer}
             <Space.Height.xl />
           </View>
+        ) : (
+          <Space.Height.xl />
         )}
       </BottomSheetView>
     </BottomSheetModal>

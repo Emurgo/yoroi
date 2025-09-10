@@ -1,7 +1,11 @@
 import {GovernanceProvider} from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
+import {
+  BottomTabBar,
+  BottomTabBarProps,
+  createBottomTabNavigator,
+} from '@react-navigation/bottom-tabs'
 import * as React from 'react'
 
 import {DiscoverNavigator} from '~/features/Discover/DiscoverNavigator'
@@ -14,9 +18,15 @@ import {TxHistoryNavigator} from '~/features/Transactions/TxHistoryNavigator'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Icon} from '~/ui/Icon'
 
+import {shouldShowTabBarForRoutes} from './common/helpers'
 import {WalletTabRoutes} from './types'
 
 const Tab = createBottomTabNavigator<WalletTabRoutes>()
+
+const TabBarWithHiddenContent = (props: BottomTabBarProps) => {
+  const shouldShow = shouldShowTabBarForRoutes(props.state)
+  return shouldShow ? <BottomTabBar {...props} /> : null
+}
 
 export const WalletTabNavigator = () => {
   const {palette: p, atoms: ta} = useTheme()
@@ -28,6 +38,7 @@ export const WalletTabNavigator = () => {
       <PoolTransitionProvider>
         <GovernanceProvider manager={manager}>
           <Tab.Navigator
+            tabBar={TabBarWithHiddenContent}
             screenOptions={{
               headerShown: false,
               tabBarStyle: {

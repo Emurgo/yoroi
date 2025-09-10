@@ -172,7 +172,10 @@ export const getTransactionSigners = (
 
   const signers = getRequiredSigners(tx, wallet, meta, partial)
   const implementation = meta.implementation
-  if (implementation === 'cardano-cip1852' && needsToSignWithStakingKey(tx)) {
+  if (
+    implementation === 'cardano-cip1852' &&
+    needsToSignWithStakingKey(tx, wallet)
+  ) {
     const implementationConfig = cardanoConfig.implementations[implementation]
     const additionalSigner: number[] = Array.from(
       implementationConfig.features.staking.addressing,
@@ -195,7 +198,10 @@ export const assertHasAllSigners = (
   }
 }
 
-const needsToSignWithStakingKey = (tx: CSL_TYPES.Transaction) => {
+const needsToSignWithStakingKey = (
+  tx: CSL_TYPES.Transaction,
+  wallet: YoroiWallet,
+) => {
   const body = tx.body()
   const [certificates, withdrawals] = [body.certs(), body.withdrawals()]
 
@@ -210,7 +216,14 @@ const needsToSignWithStakingKey = (tx: CSL_TYPES.Transaction) => {
     if (certificate.asVoteRegistrationAndDelegation()?.hasValue()) return true
   }
 
-  // TODO: REVISIT This needs to check if the withdrawal matches our wallet, aribitrary tx from dapps can have withdrawals on other wallets and we don't want to sign them with our staking key. In this case Anzens is failing.
-  if (withdrawals && withdrawals.len() > 0) return true
+  // Only require staking key if any withdrawal targets our wallet's reward address
+  if (withdrawals && wallet.rewardAddressHex) {
+    const keys = withdrawals.keys()
+    for (let i = 0; i < keys.len(); i++) {
+      const rewardAddress = keys.get(i)
+      const rewardAddressHex = rewardAddress.toAddress().toHex()
+      if (rewardAddressHex === wallet.rewardAddressHex) return true
+    }
+  }
   return false
 }

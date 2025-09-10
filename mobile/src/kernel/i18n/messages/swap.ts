@@ -14,11 +14,11 @@ export const swapMessages = defineMessages({
     defaultMessage: '!!!DEX',
   },
   from: {
-    id: 'components.txhistory.txdetails.fromAddresses',
+    id: 'swap.swapScreen.from',
     defaultMessage: '!!!From',
   },
   to: {
-    id: 'components.txhistory.txdetails.toAddresses',
+    id: 'swap.swapScreen.to',
     defaultMessage: '!!!To',
   },
   amount: {

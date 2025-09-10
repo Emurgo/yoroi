@@ -1,11 +1,12 @@
 import {isLeft} from '@yoroi/common'
-import {Api, Chain, Swap} from '@yoroi/types'
+import {Api, Chain, Portfolio, Swap} from '@yoroi/types'
 
 import {dexhunterApiMaker} from './adapters/api/dexhunter/api-maker'
 import {
   api as dhApiMocks,
   primaryTokenInfo,
 } from './adapters/api/dexhunter/api.mocks'
+import {minswapApiMaker} from './adapters/api/minswap/api-maker'
 import {muesliswapApiMaker} from './adapters/api/muesliswap/api-maker'
 import {api as msApiMocks} from './adapters/api/muesliswap/api.mocks'
 import {standarizeError, swapManagerMaker} from './manager'
@@ -16,10 +17,14 @@ jest.mock('./adapters/api/dexhunter/api-maker', () => ({
 jest.mock('./adapters/api/muesliswap/api-maker', () => ({
   muesliswapApiMaker: jest.fn(),
 }))
+jest.mock('./adapters/api/minswap/api-maker', () => ({
+  minswapApiMaker: jest.fn(),
+}))
 
 describe('swapManagerMaker', () => {
   let mockDexhunterApi: jest.Mocked<Swap.Api>
   let mockMuesliswapApi: jest.Mocked<Swap.Api>
+  let mockMinswapApi: jest.Mocked<Swap.Api>
 
   const baseConfig = {
     address: 'someAddress',
@@ -43,6 +48,7 @@ describe('swapManagerMaker', () => {
     partners: {
       [Swap.Aggregator.Dexhunter]: 'somePartnerId',
       [Swap.Aggregator.Muesliswap]: 'somePartnerId',
+      [Swap.Aggregator.Minswap]: 'somePartnerId',
     },
   } as any
 
@@ -59,6 +65,15 @@ describe('swapManagerMaker', () => {
     } as any
 
     mockMuesliswapApi = {
+      tokens: jest.fn(),
+      orders: jest.fn(),
+      limitOptions: jest.fn(),
+      estimate: jest.fn(),
+      create: jest.fn(),
+      cancel: jest.fn(),
+    } as any
+
+    mockMinswapApi = {
       tokens: jest.fn(),
       orders: jest.fn(),
       limitOptions: jest.fn(),
@@ -114,8 +129,107 @@ describe('swapManagerMaker', () => {
         data: msApiMocks.results.create,
       },
     })
+
+    // Minswap mocks
+    mockMinswapApi.tokens.mockResolvedValue({
+      tag: 'right',
+      value: {
+        status: Api.HttpStatusCode.Ok,
+        data: [],
+      },
+    })
+
+    mockMinswapApi.orders.mockResolvedValue({
+      tag: 'right',
+      value: {
+        status: Api.HttpStatusCode.Ok,
+        data: [],
+      },
+    })
+
+    mockMinswapApi.limitOptions.mockResolvedValue({
+      tag: 'right',
+      value: {
+        status: Api.HttpStatusCode.Ok,
+        data: {
+          defaultProtocol: Swap.Protocol.Minswap_v2,
+          wantedPrice: 1,
+          options: [],
+        },
+      },
+    })
+
+    mockMinswapApi.estimate.mockResolvedValue({
+      tag: 'right',
+      value: {
+        status: Api.HttpStatusCode.Ok,
+        data: {
+          splits: [
+            {
+              protocol: Swap.Protocol.Minswap_v2,
+              initialPrice: 1.2,
+              batcherFee: 0,
+              amountIn: 50,
+              deposits: 0,
+              expectedOutput: 60,
+              expectedOutputWithoutSlippage: 59,
+              fee: 0,
+              finalPrice: 1.2,
+              poolFee: 0,
+              poolId: 'test-pool',
+              priceDistortion: 0,
+              priceImpact: 0,
+            },
+          ],
+          batcherFee: 0,
+          deposits: 0,
+          aggregatorFee: 0,
+          frontendFee: 0,
+          netPrice: 1.2,
+          priceImpact: 0,
+          totalFee: 0,
+          totalOutput: 0,
+          totalOutputWithoutSlippage: 0,
+          totalInput: 0,
+        },
+      },
+    })
+
+    mockMinswapApi.create.mockResolvedValue({
+      tag: 'right',
+      value: {
+        status: Api.HttpStatusCode.Ok,
+        data: {
+          splits: [],
+          batcherFee: 0,
+          deposits: 0,
+          aggregatorFee: 0,
+          frontendFee: 0,
+          netPrice: 0,
+          priceImpact: 0,
+          totalFee: 0,
+          totalInput: 0,
+          totalOutput: 0,
+          totalOutputWithoutSlippage: 0,
+          aggregator: Swap.Aggregator.Minswap,
+          cbor: 'test-cbor',
+        },
+      },
+    })
+
+    mockMinswapApi.cancel.mockResolvedValue({
+      tag: 'right',
+      value: {
+        status: Api.HttpStatusCode.Ok,
+        data: {
+          cbor: 'test-cancel-cbor',
+          additionalCancellationFee: undefined,
+        },
+      },
+    })
     ;(dexhunterApiMaker as jest.Mock).mockReturnValue(mockDexhunterApi)
     ;(muesliswapApiMaker as jest.Mock).mockReturnValue(mockMuesliswapApi)
+    ;(minswapApiMaker as jest.Mock).mockReturnValue(mockMinswapApi)
   })
 
   it('creates a manager with an API proxy', () => {
@@ -165,6 +279,15 @@ describe('swapManagerMaker', () => {
       expect(mockDexhunterApi.tokens).toHaveBeenCalled()
     })
 
+    it('calls minswap api if routing preference is minswap', async () => {
+      const manager = swapManagerMaker(baseConfig)
+      manager.assignSettings({routingPreference: ['minswap']})
+
+      const result = await manager.api.tokens()
+      expect(result.tag).toBe('right')
+      expect(mockMinswapApi.tokens).toHaveBeenCalled()
+    })
+
     it('excludes aggregator if routing preference array does not include it', async () => {
       const manager = swapManagerMaker(baseConfig)
       manager.assignSettings({routingPreference: ['muesliswap']})
@@ -173,9 +296,7 @@ describe('swapManagerMaker', () => {
       expect(result.tag).toBe('right')
       expect(mockMuesliswapApi.tokens).toHaveBeenCalled()
       // Dexhunter should be excluded because it's not in the routing preference array
-      // The excluded response should be returned instead of calling the API
-      // Since the promise is created immediately, the API is still called, but the result is excluded
-      expect(mockDexhunterApi.tokens).toHaveBeenCalled()
+      expect(mockDexhunterApi.tokens).not.toHaveBeenCalled()
     })
 
     it('returns left if both are left', async () => {
@@ -189,10 +310,12 @@ describe('swapManagerMaker', () => {
       })
 
       const manager = swapManagerMaker(baseConfig)
+      manager.assignSettings({routingPreference: ['dexhunter', 'muesliswap']})
       const result = await manager.api.tokens()
-      if (result.tag !== 'left') fail()
       expect(result.tag).toBe('left')
-      expect(result.error.message).toBe('Unknown error')
+      if (result.tag === 'left') {
+        expect(result.error.message).toBe('Unknown error')
+      }
     })
 
     it('returns the right aggregator if the other aggregator is left', async () => {
@@ -202,6 +325,22 @@ describe('swapManagerMaker', () => {
       })
 
       const manager = swapManagerMaker(baseConfig)
+      const result = await manager.api.tokens()
+      expect(result.tag).toBe('right')
+      expect(mockMuesliswapApi.tokens).toHaveBeenCalled()
+    })
+
+    it('handles Promise.allSettled rejections gracefully', async () => {
+      // Mock one API to reject (simulate Promise.allSettled rejection)
+      mockDexhunterApi.tokens.mockRejectedValue(new Error('Network error'))
+      mockMuesliswapApi.tokens.mockResolvedValue({
+        tag: 'right',
+        value: {data: msApiMocks.results.tokens, status: 200},
+      })
+
+      const manager = swapManagerMaker(baseConfig)
+      manager.assignSettings({routingPreference: ['dexhunter', 'muesliswap']})
+
       const result = await manager.api.tokens()
       expect(result.tag).toBe('right')
       expect(mockMuesliswapApi.tokens).toHaveBeenCalled()
@@ -246,12 +385,14 @@ describe('swapManagerMaker', () => {
       })
 
       const manager = swapManagerMaker(baseConfig)
+      manager.assignSettings({routingPreference: ['dexhunter', 'muesliswap']})
       const result = await manager.api.create(msApiMocks.inputs.create[0]!)
 
-      if (result.tag !== 'left') fail()
       expect(result.tag).toBe('left')
-      expect(result.error.message).toBe('ms create error')
-      expect(result.error.status).toBe(400)
+      if (result.tag === 'left') {
+        expect(result.error.message).toBe('ms create error')
+        expect(result.error.status).toBe(400)
+      }
     })
 
     it('should return "invalid" error', async () => {
@@ -274,12 +415,14 @@ describe('swapManagerMaker', () => {
       })
 
       const manager = swapManagerMaker(baseConfig)
+      manager.assignSettings({routingPreference: ['dexhunter', 'muesliswap']})
       const result = await manager.api.create(msApiMocks.inputs.create[0]!)
 
-      if (result.tag !== 'left') fail()
       expect(result.tag).toBe('left')
-      expect(result.error.message).toBe('Unknown error')
-      expect(result.error.status).toBe(-3)
+      if (result.tag === 'left') {
+        expect(result.error.message).toBe('Unknown error')
+        expect(result.error.status).toBe(-3)
+      }
     })
   })
 
@@ -497,6 +640,7 @@ describe('swapManagerMaker', () => {
       })
 
       const manager = swapManagerMaker(baseConfig)
+      manager.assignSettings({routingPreference: ['dexhunter', 'muesliswap']})
       const result = await manager.api.orders()
       expect(result.tag).toBe('left')
     })
@@ -525,27 +669,70 @@ describe('swapManagerMaker', () => {
       }
     })
 
-    it('returns dexhunter orders if muesliswap api result is left', async () => {
+    it('should prioritize dexhunter orders over existing orders', async () => {
+      const existingOrder = {
+        actualAmountOut: 0,
+        aggregator: 'muesliswap' as Swap.Aggregator,
+        amountIn: 0.008137,
+        expectedAmountOut: 1,
+        lastUpdate: undefined,
+        outputIndex: 0,
+        placedAt: 1737538157000,
+        protocol: 'minswap-v2' as Swap.Protocol,
+        status: 'canceled' as const,
+        tokenIn: '.' as Portfolio.Token.Id,
+        tokenOut:
+          '49e423161ef818adc475c783571cb479d5f15ad52a01a240eacc0d3b.434f434b' as Portfolio.Token.Id,
+        txHash:
+          '475ffb1f1820eee1790729d86ced473e9f7724ddcd7bf59b477e3293415f16bf',
+        updateTxHash:
+          '475ffb1f1820eee1790729d86ced473e9f7724ddcd7bf59b477e3293415f16bf',
+      }
+
+      const dexhunterOrder = {
+        actualAmountOut: 0,
+        aggregator: 'dexhunter' as Swap.Aggregator,
+        amountIn: -0.04999999999999982,
+        customId: 'customId-1',
+        expectedAmountOut: 1.889324,
+        lastUpdate: undefined,
+        outputIndex: 0,
+        placedAt: undefined,
+        protocol: 'vyfi-v1' as Swap.Protocol,
+        status: 'canceled' as const,
+        tokenIn: '.' as Portfolio.Token.Id,
+        tokenOut:
+          '1d7f33bd23d85e1a25d87d86fac4f199c3197a2f7afeb662a0f34e1e.776f726c646d6f62696c65746f6b656e' as Portfolio.Token.Id,
+        txHash:
+          '475ffb1f1820eee1790729d86ced473e9f7724ddcd7bf59b477e3293415f16bf',
+        updateTxHash:
+          '475ffb1f1820eee1790729d86ced473e9f7724ddcd7bf59b477e3293415f16bf',
+      }
+
+      mockMuesliswapApi.orders.mockResolvedValue({
+        tag: 'right',
+        value: {
+          status: 200,
+          data: [existingOrder],
+        },
+      })
+
       mockDexhunterApi.orders.mockResolvedValue({
         tag: 'right',
         value: {
           status: 200,
-          data: dhApiMocks.results.orders,
+          data: [dexhunterOrder],
         },
-      })
-
-      mockMuesliswapApi.orders.mockResolvedValue({
-        tag: 'left',
-        error: {status: 400, message: 'ms orders error', responseData: {}},
       })
 
       const manager = swapManagerMaker(baseConfig)
       const result = await manager.api.orders()
+
       expect(result.tag).toBe('right')
       if (result.tag === 'right') {
-        expect(result.value.data).toEqual(
-          expect.arrayContaining(dhApiMocks.results.orders),
-        )
+        // Should contain the dexhunter order, not the muesliswap order with same txHash
+        expect(result.value.data).toHaveLength(1)
+        expect(result.value.data[0]).toEqual(dexhunterOrder)
       }
     })
   })
@@ -593,6 +780,7 @@ describe('swapManagerMaker', () => {
       })
 
       const manager = swapManagerMaker(baseConfig)
+      manager.assignSettings({routingPreference: ['dexhunter', 'muesliswap']})
       const result = await manager.api.limitOptions({
         tokenIn: '.',
         tokenOut: '.',
@@ -627,6 +815,7 @@ describe('swapManagerMaker', () => {
       })
 
       const manager = swapManagerMaker(baseConfig)
+      manager.assignSettings({routingPreference: ['dexhunter', 'muesliswap']})
       const result = await manager.api.limitOptions({
         tokenIn: '.',
         tokenOut: '.',
@@ -670,6 +859,7 @@ describe('swapManagerMaker', () => {
       })
 
       const manager = swapManagerMaker(baseConfig)
+      manager.assignSettings({routingPreference: ['dexhunter', 'muesliswap']})
       const result = await manager.api.limitOptions({
         tokenIn: '.',
         tokenOut: '.',
@@ -712,6 +902,7 @@ describe('swapManagerMaker', () => {
       })
 
       const manager = swapManagerMaker(baseConfig)
+      manager.assignSettings({routingPreference: ['dexhunter', 'muesliswap']})
       const result = await manager.api.limitOptions({
         tokenIn: '.',
         tokenOut: '.',
@@ -723,7 +914,7 @@ describe('swapManagerMaker', () => {
       }
     })
 
-    it('returns invalid if all responses are excluded', async () => {
+    it('returns invalid if no valid responses are found', async () => {
       mockDexhunterApi.limitOptions.mockResolvedValue({
         tag: 'left',
         error: {
@@ -743,6 +934,7 @@ describe('swapManagerMaker', () => {
       })
 
       const manager = swapManagerMaker(baseConfig)
+      manager.assignSettings({routingPreference: ['dexhunter', 'muesliswap']})
       const result = await manager.api.limitOptions({
         tokenIn: '.',
         tokenOut: '.',
@@ -752,6 +944,55 @@ describe('swapManagerMaker', () => {
       if (result.tag === 'left') {
         expect(result.error.message).toBe('Unknown error')
         expect(result.error.status).toBe(-3)
+      }
+    })
+
+    it('filters out unsupported protocols from options', async () => {
+      const dhData = {
+        defaultProtocol: 'minswap-v2' as Swap.Protocol,
+        wantedPrice: 1.5,
+        options: [
+          {
+            protocol: 'minswap-v2' as Swap.Protocol,
+            initialPrice: 50,
+            batcherFee: 0,
+          },
+          {
+            protocol: 'unsupported' as Swap.Protocol,
+            initialPrice: 30,
+            batcherFee: 0,
+          },
+        ],
+      }
+
+      mockDexhunterApi.limitOptions.mockResolvedValue({
+        tag: 'right',
+        value: {
+          status: 200,
+          data: dhData,
+        },
+      })
+
+      mockMuesliswapApi.limitOptions.mockResolvedValue({
+        tag: 'left',
+        error: {
+          status: -3,
+          message: 'Aggregator excluded from call',
+          responseData: {},
+        },
+      })
+
+      const manager = swapManagerMaker(baseConfig)
+      manager.assignSettings({routingPreference: ['dexhunter', 'muesliswap']})
+      const result = await manager.api.limitOptions({
+        tokenIn: '.',
+        tokenOut: '.',
+      })
+
+      expect(result.tag).toBe('right')
+      if (result.tag === 'right') {
+        expect(result.value.data.options).toHaveLength(1)
+        expect(result.value.data.options[0].protocol).toBe('minswap-v2')
       }
     })
   })
@@ -822,14 +1063,16 @@ describe('swapManagerMaker', () => {
       })
 
       const manager = swapManagerMaker(baseConfig)
+      manager.assignSettings({routingPreference: ['dexhunter', 'muesliswap']})
       await manager.api.tokens()
 
       const result = await manager.api.estimate(dhApiMocks.inputs.quote)
 
-      if (result.tag !== 'left') fail()
       expect(result.tag).toBe('left')
-      expect(result.error.message).toBe('ms orders error')
-      expect(result.error.status).toBe(400)
+      if (result.tag === 'left') {
+        expect(result.error.message).toBe('ms orders error')
+        expect(result.error.status).toBe(400)
+      }
     })
 
     it('should return "invalid" error', async () => {
@@ -852,14 +1095,47 @@ describe('swapManagerMaker', () => {
       })
 
       const manager = swapManagerMaker(baseConfig)
+      manager.assignSettings({routingPreference: ['dexhunter', 'muesliswap']})
       await manager.api.tokens()
 
       const result = await manager.api.estimate(dhApiMocks.inputs.quote)
 
-      if (result.tag !== 'left') fail()
       expect(result.tag).toBe('left')
-      expect(result.error.message).toBe('Unknown error')
-      expect(result.error.status).toBe(-3)
+      if (result.tag === 'left') {
+        expect(result.error.message).toBe('Unknown error')
+        expect(result.error.status).toBe(-3)
+      }
+    })
+
+    it('returns invalid when estimates array is empty', async () => {
+      // Mock all APIs to return left responses
+      mockDexhunterApi.estimate.mockResolvedValue({
+        tag: 'left',
+        error: {
+          status: -3,
+          message: 'Aggregator excluded from call',
+          responseData: {},
+        },
+      })
+      mockMuesliswapApi.estimate.mockResolvedValue({
+        tag: 'left',
+        error: {
+          status: -3,
+          message: 'Aggregator excluded from call',
+          responseData: {},
+        },
+      })
+
+      const manager = swapManagerMaker(baseConfig)
+      manager.assignSettings({routingPreference: ['dexhunter', 'muesliswap']})
+      await manager.api.tokens()
+
+      const result = await manager.api.estimate(dhApiMocks.inputs.quote)
+      expect(result.tag).toBe('left')
+      if (result.tag === 'left') {
+        expect(result.error.message).toBe('Unknown error')
+        expect(result.error.status).toBe(-3)
+      }
     })
   })
 
@@ -876,6 +1152,23 @@ describe('swapManagerMaker', () => {
       await manager.api.cancel(msApiMocks.inputs.cancel[0]!)
       expect(mockMuesliswapApi.cancel).toHaveBeenCalled()
       expect(mockDexhunterApi.cancel).not.toHaveBeenCalled()
+    })
+
+    it('delegates to minswap for minswap orders', async () => {
+      const manager = swapManagerMaker(baseConfig)
+      const minswapCancelRequest = {
+        order: {
+          txHash: 'test-tx-hash',
+          outputIndex: 0,
+          aggregator: Swap.Aggregator.Minswap,
+          protocol: Swap.Protocol.Minswap_v2,
+        },
+      } as Swap.CancelRequest
+
+      await manager.api.cancel(minswapCancelRequest)
+      expect(mockMinswapApi.cancel).toHaveBeenCalled()
+      expect(mockDexhunterApi.cancel).not.toHaveBeenCalled()
+      expect(mockMuesliswapApi.cancel).not.toHaveBeenCalled()
     })
   })
 })
