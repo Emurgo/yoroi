@@ -1,4 +1,5 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {useTransfer} from '@yoroi/transfer'
 import {Chain} from '@yoroi/types'
 
 import * as React from 'react'
@@ -9,7 +10,6 @@ import {useReceive} from '~/features/Receive/common/ReceiveProvider'
 import {useMultipleAddressesInfo} from '~/features/Receive/common/useMultipleAddressesInfo'
 import {useReceiveAddressesStatus} from '~/features/Receive/common/useReceiveAddressesStatus'
 import {useRemoteConfig} from '~/features/RemoteConfig/hooks/useRemoteConfig'
-import {useSwap} from '~/features/Swap/common/useSwap'
 import {useAddressMode} from '~/features/WalletManager/hooks/useAddressMode'
 import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
@@ -22,12 +22,12 @@ import {Text} from '~/ui/Text/Text'
 
 export const ActionsBanner = (props: {disabled: boolean}) => {
   const strings = useStrings()
-  const swapForm = useSwap()
   const {config, isLoading} = useRemoteConfig()
   const tokenOutId = config?.swap?.initialPair.tokenOut
   const disabled = props.disabled || isLoading
   const navigateTo = useWalletNavigation()
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
+  const {reset: resetTransfer} = useTransfer()
 
   const {isSingle, addressMode} = useAddressMode()
   const {next: nextReceiveAddress} = useReceiveAddressesStatus(addressMode)
@@ -46,13 +46,6 @@ export const ActionsBanner = (props: {disabled: boolean}) => {
       return
     }
 
-    swapForm.action({type: 'ResetForm'})
-
-    if (tokenOutId !== undefined) {
-      swapForm.action({type: 'TokenOutIdChanged', value: tokenOutId})
-      swapForm.action({type: 'TokenOutInputTouched'})
-    }
-
     track.swapInitiated({
       from_asset: [
         {
@@ -66,7 +59,8 @@ export const ActionsBanner = (props: {disabled: boolean}) => {
       slippage_tolerance: 1,
     })
 
-    navigateTo.navigateToSwap()
+    // Pass the tokenOutId to the navigation function which will handle setting it properly
+    navigateTo.navigateToSwap(tokenOutId)
   }
 
   const handleOnExchange = () => {
@@ -100,6 +94,11 @@ export const ActionsBanner = (props: {disabled: boolean}) => {
     })
   }
 
+  const handleOnPressTransfer = () => {
+    resetTransfer()
+    navigateTo.navigateToSendStartTx()
+  }
+
   return (
     <View style={[a.py_xl, a.flex_row, a.justify_center, a.gap_lg]}>
       <View style={[a.align_center, a.justify_center]}>
@@ -116,8 +115,8 @@ export const ActionsBanner = (props: {disabled: boolean}) => {
           style={[
             a.pt_sm,
             a.body_3_sm_medium,
-            {color: p.text_gray_medium},
-            disabled && {color: p.text_gray_low},
+            ta.text_gray_medium,
+            disabled && ta.text_gray_low,
           ]}
         >
           {strings.transactions.receiveLabel}
@@ -130,7 +129,7 @@ export const ActionsBanner = (props: {disabled: boolean}) => {
             <Button
               type={ButtonType.Circle}
               icon={Icon.Send}
-              onPress={() => navigateTo.navigateToSendStartTx()}
+              onPress={handleOnPressTransfer}
               testID="sendButton"
               disabled={disabled}
             />
@@ -139,8 +138,8 @@ export const ActionsBanner = (props: {disabled: boolean}) => {
               style={[
                 a.pt_sm,
                 a.body_3_sm_medium,
-                {color: p.text_gray_medium},
-                disabled && {color: p.text_gray_low},
+                ta.text_gray_medium,
+                disabled && ta.text_gray_low,
               ]}
             >
               {strings.transactions.sendLabel}
@@ -160,8 +159,8 @@ export const ActionsBanner = (props: {disabled: boolean}) => {
               style={[
                 a.pt_sm,
                 a.body_3_sm_medium,
-                {color: p.text_gray_medium},
-                disabled && {color: p.text_gray_low},
+                ta.text_gray_medium,
+                disabled && ta.text_gray_low,
               ]}
             >
               {strings.transactions.swapLabel}
@@ -181,8 +180,8 @@ export const ActionsBanner = (props: {disabled: boolean}) => {
               style={[
                 a.pt_sm,
                 a.body_3_sm_medium,
-                {color: p.text_gray_medium},
-                disabled && {color: p.text_gray_low},
+                ta.text_gray_medium,
+                disabled && ta.text_gray_low,
               ]}
             >
               {strings.transactions.exchange}

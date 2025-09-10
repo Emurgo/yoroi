@@ -1,0 +1,82 @@
+import {useLinks} from '@yoroi/links'
+
+import * as React from 'react'
+import {InteractionManager} from 'react-native'
+
+import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
+import {useStrings} from '~/kernel/i18n/useStrings'
+import {logger} from '~/kernel/logger/logger'
+
+import {AskToOpenWalletScreen} from '../ui/screens/AskToOpenAWalletScreen/AskToOpenAWalletScreen'
+
+const heightBreakpoint = 367
+
+type ModalFunctions = {
+  openModal: (args: {
+    content: React.ReactNode
+    height?: number
+    footer?: React.ReactNode
+    isLoading?: boolean
+    canDiscard?: boolean
+    title?: string
+    canContinue?: boolean
+    onClose?: () => void
+    resizable?: boolean
+  }) => void
+  closeModal: () => void
+}
+
+export const useLinksRequestWallet = (modalFunctions?: ModalFunctions) => {
+  const strings = useStrings()
+  const {
+    selected: {wallet},
+  } = useWalletManager()
+  const {action} = useLinks()
+
+  // Track if wallet request has been processed to prevent infinite loops
+  const processedWalletRequestRef = React.useRef<string | null>(null)
+
+  const askToOpenAWallet = React.useCallback(() => {
+    if (!modalFunctions) {
+      logger.debug('useLinksRequestWallet: modal functions not available')
+      return
+    }
+
+    modalFunctions.openModal({
+      title: strings.links.askToOpenAWalletTitle,
+      content: <AskToOpenWalletScreen closeModal={modalFunctions.closeModal} />,
+      height: heightBreakpoint,
+    })
+  }, [modalFunctions, strings.links.askToOpenAWalletTitle])
+
+  React.useEffect(() => {
+    if (action == null) return
+
+    const isWalletRequested =
+      action.info.useCase === 'request/ada-with-link' ||
+      action.info.useCase === 'launch'
+
+    if (!isWalletRequested || wallet != null) return
+
+    // Create a unique key for this wallet request
+    const requestKey = `${action.info.version}-${action.info.useCase}-${action.isTrusted}`
+
+    // Skip if this request has already been processed
+    if (processedWalletRequestRef.current === requestKey) return
+
+    // Mark as processed only after the action is actually handled
+    const handleWalletRequest = () => {
+      askToOpenAWallet()
+      // Mark as processed after handling
+      processedWalletRequestRef.current = requestKey
+    }
+
+    InteractionManager.runAfterInteractions(handleWalletRequest)
+  }, [action, wallet, askToOpenAWallet])
+
+  React.useEffect(() => {
+    if (action == null) {
+      processedWalletRequestRef.current = null
+    }
+  }, [action])
+}

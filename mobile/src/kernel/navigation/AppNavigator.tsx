@@ -24,8 +24,8 @@ import {
 } from '~/features/Initialization/ui/screens/DarkThemeAnnouncementScreen'
 import {LegalAgreement} from '~/features/Legal/common/types'
 import {useLegalAgreement} from '~/features/Legal/hooks/useLegalAgreement'
-import {DeepLinkActionHandlerWithModal} from '~/features/Links/common/DeepLinkActionHandlerWithModal'
-import {useDeepLinkWatcher} from '~/features/Links/common/useDeepLinkWatcher'
+import {useDeepLinkWatcher} from '~/features/Links/hooks/useDeepLinkWatcher'
+import {useLinksRequestAction} from '~/features/Links/hooks/useLinksRequestAction'
 import {useInitNotifications} from '~/features/Notifications/common/hooks'
 import {NotificationUIHandler} from '~/features/Notifications/useCases/NotificationUIHandler'
 import {NotificationsDevScreen} from '~/features/Notifications/useCases/NotificationsDevScreen'
@@ -38,7 +38,7 @@ import {WalletNavigator} from './WalletNavigator'
 import {defaultStackNavigationOptions} from './common/helpers'
 import {FirstAction} from './types'
 
-const Stack = createStackNavigator<any>()
+const Stack = createStackNavigator()
 
 export const AppNavigator = () => {
   const {palette: p} = useTheme()
@@ -49,6 +49,9 @@ export const AppNavigator = () => {
 
   // Enable deep link watching
   useDeepLinkWatcher()
+
+  // Enable deep link action handling with modal support (only when logged in)
+  useLinksRequestAction()
 
   const navOptions = React.useMemo(() => defaultStackNavigationOptions(p), [p])
 
@@ -159,9 +162,6 @@ export const AppNavigator = () => {
 
       {/* Notification UI Handler - rendered outside Stack.Navigator but inside NavigationContainer */}
       <NotificationUIHandler />
-
-      {/* Deep Link Action Handler - only when logged in */}
-      {isLoggedIn && <DeepLinkActionHandlerWithModal />}
     </>
   )
 }

@@ -122,7 +122,6 @@ export const muesliswapApiMaker = (
         }
       },
 
-      /* istanbul ignore next */
       async limitOptions({tokenIn, tokenOut}: Swap.LimitOptionsRequest) {
         const estimateResponse = await this.estimate({
           tokenIn,
@@ -218,7 +217,6 @@ export const muesliswapApiMaker = (
             true,
           )
         } catch (e) {
-          /* istanbul ignore next */
           return freeze(
             {
               tag: 'left',

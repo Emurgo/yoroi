@@ -39,6 +39,26 @@ const CHOICES: Readonly<Choice[]> = [
 
 const MAX_DECIMALS = 1
 
+const ALL_AGGREGATORS: Swap.Aggregator[] = [
+  'muesliswap',
+  'dexhunter',
+  'minswap',
+]
+
+const toggleAggregator = (
+  current: Swap.Aggregator[],
+  target: Swap.Aggregator,
+): Swap.Aggregator[] => {
+  if (current.includes(target)) {
+    const remaining = current.filter((opt) => opt !== target)
+    return remaining.length === 0
+      ? ALL_AGGREGATORS.filter((opt) => opt !== target)
+      : remaining
+  } else {
+    return [...current, target]
+  }
+}
+
 export const SwapSettings = () => {
   const {numberLocale} = useLanguage()
   const {palette: p} = useTheme()
@@ -211,7 +231,7 @@ export const SwapSettings = () => {
                 onValueChange={() =>
                   assignAggregator(
                     aggregator === 'auto'
-                      ? ['muesliswap', 'dexhunter']
+                      ? ['muesliswap', 'dexhunter', 'minswap']
                       : 'auto',
                   )
                 }
@@ -229,9 +249,7 @@ export const SwapSettings = () => {
                     value={aggregator.includes('dexhunter')}
                     onValueChange={() =>
                       assignAggregator(
-                        aggregator.includes('dexhunter')
-                          ? ['muesliswap']
-                          : [...aggregator, 'dexhunter'],
+                        toggleAggregator(aggregator, 'dexhunter'),
                       )
                     }
                   />
@@ -246,10 +264,21 @@ export const SwapSettings = () => {
                     value={aggregator.includes('muesliswap')}
                     onValueChange={() =>
                       assignAggregator(
-                        aggregator.includes('muesliswap')
-                          ? ['dexhunter']
-                          : [...aggregator, 'muesliswap'],
+                        toggleAggregator(aggregator, 'muesliswap'),
                       )
+                    }
+                  />
+                </View>
+
+                <View style={[a.flex_row, a.justify_between, a.align_center]}>
+                  <Text style={[a.body_1_lg_regular, {color: p.text_gray_max}]}>
+                    Minswap
+                  </Text>
+
+                  <SettingsSwitch
+                    value={aggregator.includes('minswap')}
+                    onValueChange={() =>
+                      assignAggregator(toggleAggregator(aggregator, 'minswap'))
                     }
                   />
                 </View>

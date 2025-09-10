@@ -19,6 +19,7 @@ import {
   globalMessages,
   hardwareWalletMessages,
   initializationMessages,
+  languagePickerMessages,
   ledgerMessages,
   linksMessages,
   manageCollateralMessages,
@@ -385,6 +386,12 @@ export const useStrings = () => {
         toggle: f(uiMessages.toggle),
       },
 
+      // LanguagePicker strings
+      languagePicker: {
+        warning: f(languagePickerMessages.warning),
+        contributors: f(languagePickerMessages.contributors),
+      },
+
       // RegisterCatalyst strings
       registerCatalyst: {
         title: f(registerCatalystMessages.title),
@@ -451,6 +458,7 @@ export const useStrings = () => {
         menu: f(menuMessages.menu),
         releases: f(menuMessages.releases),
         governanceCentre: f(menuMessages.governanceCentre),
+        utxoList: f(transactionsMessages.utxoListTitle),
       },
 
       // Dashboard strings

@@ -108,7 +108,6 @@ export const dexhunterApiMaker = (
         )
       },
 
-      /* istanbul ignore next */
       async limitOptions({tokenIn, tokenOut}: Swap.LimitOptionsRequest) {
         const estimateResponse = await this.estimate({
           tokenIn,

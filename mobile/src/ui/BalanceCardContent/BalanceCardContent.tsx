@@ -23,9 +23,9 @@ type Props = {
 }
 
 export const BalanceCardContent = ({amount, headerCard}: Props) => {
+  const {palette: p} = useTheme()
   const navigationTo = useNavigateTo()
-  const {isPrivacyActive, setPrivacyModeOff, setPrivacyModeOn} =
-    usePrivacyMode()
+  const {togglePrivacyMode} = usePrivacyMode()
 
   const {
     ptActivity: {close, open},
@@ -33,14 +33,6 @@ export const BalanceCardContent = ({amount, headerCard}: Props) => {
   } = useCurrencyPairing()
 
   const {changeValue, changePercent, variantPnl} = priceChange(open, close)
-
-  const togglePrivacyMode = () => {
-    if (isPrivacyActive) {
-      setPrivacyModeOn()
-    } else {
-      setPrivacyModeOff()
-    }
-  }
 
   return (
     <TouchableOpacity onPress={navigationTo.tokensList}>
@@ -58,7 +50,10 @@ export const BalanceCardContent = ({amount, headerCard}: Props) => {
             style={[a.flex_row, a.gap_2xs, a.align_baseline]}
             onPress={togglePrivacyMode}
           >
-            <PairedBalance amount={amount} textStyle={a.body_2_md_regular} />
+            <PairedBalance
+              amount={amount}
+              textStyle={{...a.body_2_md_regular, color: p.white_static}}
+            />
           </TouchableOpacity>
 
           <View style={[a.flex_row, a.gap_xs, a.align_stretch]}>
@@ -85,7 +80,7 @@ const Balance = ({amount}: BalanceProps) => {
 
   const balance = React.useMemo(
     () =>
-      isPrivacyActive === false
+      !isPrivacyActive
         ? amountBreakdown(amount).bn.toFormat(2)
         : amountFormatter({template: `${privacyPlaceholder}`})(amount),
     [amount, isPrivacyActive, privacyPlaceholder],

@@ -4,10 +4,8 @@ import {useTransfer} from '@yoroi/transfer'
 import {Portfolio} from '@yoroi/types'
 
 import {useNavigation} from '@react-navigation/native'
-import {useMutation} from '@tanstack/react-query'
 import * as React from 'react'
-import {useLayoutEffect} from 'react'
-import {TouchableOpacity, View, ViewProps} from 'react-native'
+import {TouchableOpacity, View} from 'react-native'
 import {FlatList} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
@@ -17,6 +15,7 @@ import {useNavigateTo} from '~/features/Send/common/navigation'
 import {toYoroiEntry} from '~/features/Send/common/toYoroiEntry'
 import {useSaveMemo} from '~/features/Transactions/hooks/useSaveMemo'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {usePromise} from '~/hooks/usePromise'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {assetsToSendProperties} from '~/kernel/metrics/helpers'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
@@ -28,7 +27,7 @@ import {Icon} from '~/ui/Icon'
 import {RemoveAmountButton} from '~/ui/RemoveAmountButton/RemoveAmountButton'
 import {Space} from '~/ui/Space/Space'
 import {TokenAmountItem} from '~/ui/TokenAmountItem/TokenAmountItem'
-import {YoroiEntry, YoroiSignedTx} from '~/wallets/types/yoroi'
+import {YoroiEntry, YoroiSignedTx, YoroiUnsignedTx} from '~/wallets/types/yoroi'
 
 export const ListAmountsToSendScreen = () => {
   const navigateTo = useNavigateTo()
@@ -39,37 +38,37 @@ export const ListAmountsToSendScreen = () => {
   const {track} = useMetrics()
   const {wallet} = useSelectedWallet()
   const {unsignedTxChanged} = useReviewTx()
-  const {palette: p} = useTheme()
-
-  useLayoutEffect(() => {
-    navigation.setOptions({headerLeft: () => <ListAmountsNavigateBackButton />})
-  }, [navigation])
-
+  const {atoms: ta} = useTheme()
   const {
     memo,
     targets,
     selectedTargetIndex,
     tokenSelectedChanged,
     amountRemoved,
+    reset,
   } = useTransfer()
   const {saveMemo} = useSaveMemo({wallet})
+
   const {amounts} = targets[selectedTargetIndex].entry
   const selectedTokensCounter = Object.keys(amounts).length
-
   const {
     meta: {addressMode},
   } = useSelectedWallet()
-  const {mutate: createUnsignedTx, isPending} = useMutation({
-    mutationFn: (entries: YoroiEntry[]) =>
-      wallet.createUnsignedTx({entries, addressMode}),
-    retry: false,
-  })
+
+  const sendProperties = React.useMemo(
+    () => assetsToSendProperties({amounts}),
+    [amounts],
+  )
+
+  React.useLayoutEffect(() => {
+    navigation.setOptions({headerLeft: () => <ListAmountsNavigateBackButton />})
+  }, [navigation])
 
   React.useEffect(() => {
     track.sendSelectAssetUpdated(assetsToSendProperties({amounts}))
   }, [amounts, selectedTokensCounter, track])
 
-  const onEdit = (tokenId: Portfolio.Token.Id) => {
+  const handleOnEdit = (tokenId: Portfolio.Token.Id) => {
     if (isNft(amounts[tokenId].info)) return
 
     const amount = amounts[tokenId]
@@ -78,7 +77,7 @@ export const ListAmountsToSendScreen = () => {
     tokenSelectedChanged(tokenId)
     navigateTo.editAmount(amount)
   }
-  const onRemove = (tokenId: Portfolio.Token.Id) => {
+  const handleOnRemove = (tokenId: Portfolio.Token.Id) => {
     // use case: redirect to add token screen if there is no token left
     if (selectedTokensCounter === 1) {
       clearSearch()
@@ -87,57 +86,63 @@ export const ListAmountsToSendScreen = () => {
     amountRemoved(tokenId)
   }
 
-  const sendProperties = React.useMemo(
-    () => assetsToSendProperties({amounts}),
-    [amounts],
+  const handleOnSuccess = React.useCallback(
+    (signedTx?: YoroiSignedTx) => {
+      if (signedTx?.signedTx?.id == null)
+        throw new Error('ListAmountsToSendScreen:: invalid state')
+      track.sendSummarySubmitted(sendProperties)
+
+      if (memo.length > 0) {
+        saveMemo({txId: signedTx.signedTx.id, memo: memo.trim()})
+      }
+
+      reset()
+      navigateTo.submittedTx()
+    },
+    [track, sendProperties, memo, saveMemo, reset, navigateTo],
   )
 
-  const handleOnSuccess = (signedTx?: YoroiSignedTx) => {
-    if (signedTx?.signedTx?.id == null)
-      throw new Error('ListAmountsToSendScreen:: invalid state')
-    track.sendSummarySubmitted(sendProperties)
-
-    if (memo.length > 0) {
-      saveMemo({txId: signedTx.signedTx.id, memo: memo.trim()})
-    }
-
-    navigateTo.submittedTx()
-  }
-
-  const onError = () => {
+  const handleOnError = React.useCallback(() => {
     track.sendSummarySubmitted(sendProperties)
     navigateTo.failedTx()
+  }, [track, sendProperties, navigateTo])
+
+  const createUnsignedTxPromise = React.useCallback(
+    (entries: YoroiEntry[]) => wallet.createUnsignedTx({entries, addressMode}),
+    [wallet, addressMode],
+  )
+
+  const handleCreateUnsignedTxSuccess = React.useCallback(
+    (yoroiUnsignedTx: YoroiUnsignedTx) => {
+      unsignedTxChanged(yoroiUnsignedTx)
+      navigateToTxReview({
+        onSuccess: (args) => handleOnSuccess(args?.signedTx),
+        onError: handleOnError,
+      })
+    },
+    [unsignedTxChanged, navigateToTxReview, handleOnSuccess, handleOnError],
+  )
+
+  const handleOnNext = () => {
+    track.sendSelectAssetSelected(assetsToSendProperties({amounts}))
+    createUnsignedTx([toYoroiEntry(targets[selectedTargetIndex].entry)])
   }
 
-  const onNext = () => {
-    track.sendSelectAssetSelected(assetsToSendProperties({amounts}))
-    // since the user can't see many targets we just send the first one
-    // NOTE: update on multi target support
-    createUnsignedTx([toYoroiEntry(targets[selectedTargetIndex].entry)], {
-      onSuccess: (yoroiUnsignedTx) => {
-        unsignedTxChanged(yoroiUnsignedTx)
-        navigateToTxReview({
-          onSuccess: (args) => handleOnSuccess(args?.signedTx),
-          onError,
-        })
-      },
-    })
-  }
-  const onAdd = () => {
+  const handleOnAdd = () => {
     clearSearch()
     navigateTo.addToken()
   }
 
+  const {resolve: createUnsignedTx, isPending} = usePromise({
+    promise: createUnsignedTxPromise,
+    onSuccess: handleCreateUnsignedTxSuccess,
+    onError: handleOnError,
+  })
+
   return (
     <SafeAreaView
       edges={['left', 'right', 'bottom']}
-      style={[
-        a.flex_1,
-        a.px_lg,
-        a.pb_lg,
-        a.gap_xl,
-        {backgroundColor: p.bg_color_max},
-      ]}
+      style={[a.flex_1, a.px_lg, a.pb_lg, a.gap_xl, ta.bg_color_max]}
     >
       <AmountsList
         data={Object.values(amounts)}
@@ -145,8 +150,8 @@ export const ListAmountsToSendScreen = () => {
           <Boundary>
             <ActionableAmount
               amount={amount}
-              onRemove={onRemove}
-              onEdit={onEdit}
+              onRemove={handleOnRemove}
+              onEdit={handleOnEdit}
             />
           </Boundary>
         )}
@@ -155,17 +160,17 @@ export const ListAmountsToSendScreen = () => {
         testID="selectedTokens"
       />
 
-      <Actions style={[{backgroundColor: 'transparent'}]}>
+      <Actions style={[a.bg_transparent]}>
         <Row>
           <Space.Height._2xs fill />
 
-          <AddTokenButton onPress={onAdd} />
+          <AddTokenButton onPress={handleOnAdd} />
         </Row>
 
         <Space.Height.xl />
 
         <NextButton
-          onPress={onNext}
+          onPress={handleOnNext}
           title={strings.send.next}
           disabled={selectedTokensCounter === 0}
           isLoading={isPending}
@@ -193,39 +198,26 @@ const ActionableAmount = ({
       style={[a.flex_row, a.justify_between, a.align_center]}
       testID="amountItem"
     >
-      <Left style={[{flex: 1}]}>
+      <Left style={a.flex_1}>
         <EditAmountButton onPress={handleEdit}>
           <TokenAmountItem amount={amount} ignorePrivacy />
         </EditAmountButton>
       </Left>
 
-      <Right style={[{paddingLeft: 16}]}>
+      <Right style={a.pl_lg}>
         <RemoveAmountButton onPress={handleRemove} />
       </Right>
     </View>
   )
 }
 
-const Left = ({style, ...props}: ViewProps) => <View style={style} {...props} />
-const Right = ({style, ...props}: ViewProps) => (
-  <View style={style} {...props} />
-)
-const Actions = ({style, ...props}: ViewProps) => {
-  return <View style={style} {...props} />
-}
-const Row = ({style, ...props}: ViewProps) => {
-  return <View style={style} {...props} />
-}
-
-// use case: edit amount
-type EditAmountButtonProps = {
+type EditAmountButtonProps = React.PropsWithChildren<{
   onPress(): void
-  children?: React.ReactNode
-}
+}>
 const EditAmountButton = ({onPress, children}: EditAmountButtonProps) => {
   return (
     <TouchableOpacity
-      style={{paddingVertical: 16}}
+      style={a.py_lg}
       onPress={onPress}
       testID="editAmountButton"
     >
@@ -233,9 +225,6 @@ const EditAmountButton = ({onPress, children}: EditAmountButtonProps) => {
     </TouchableOpacity>
   )
 }
-
-const NextButton = Button
-const AmountsList = FlatList
 
 const ListAmountsNavigateBackButton = () => {
   const navigation = useNavigateTo()
@@ -247,3 +236,10 @@ const ListAmountsNavigateBackButton = () => {
     </TouchableOpacity>
   )
 }
+
+const Left = View
+const Right = View
+const Actions = View
+const Row = View
+const NextButton = Button
+const AmountsList = FlatList
