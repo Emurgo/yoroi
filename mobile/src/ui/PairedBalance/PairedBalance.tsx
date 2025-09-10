@@ -41,7 +41,7 @@ export const PairedBalance = React.forwardRef<ResetErrorRef, Props>(
   },
 )
 
-const Price = ({amount, textStyle, ignorePrivacy, hidePrimaryPair}: Props) => {
+const Price = ({amount, ignorePrivacy, hidePrimaryPair}: Props) => {
   const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
   const {isPrimaryTokenActive} = usePortfolio()
   const {
@@ -102,7 +102,7 @@ const Price = ({amount, textStyle, ignorePrivacy, hidePrimaryPair}: Props) => {
 
   return (
     <Text
-        style={[a.body_3_sm_regular, ta.text_gray_max]}
+      style={[a.body_3_sm_regular, ta.text_gray_max]}
       testID="pairedTotalText"
     >
       {price}
