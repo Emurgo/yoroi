@@ -220,8 +220,8 @@ export const transactionsMessages = defineMessages({
     defaultMessage: '!!!Merge assets',
   },
   historyTitle: {
-    id: 'components.txhistory.txhistory.title',
-    defaultMessage: '!!!History Title',
+    id: 'components.common.navigation.walletButton',
+    defaultMessage: '!!!Wallet Title',
   },
   txDetailsTitle: {
     id: 'components.txhistory.txdetails.txDetails',

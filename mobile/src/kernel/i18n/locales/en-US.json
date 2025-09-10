@@ -103,6 +103,7 @@
   "components.common.navigation.delegateButton": "Delegate",
   "components.common.navigation.nftGallery": "Gallery",
   "components.common.navigation.dappExplorerButton": "Discover",
+  "components.common.navigation.walletButton": "Wallet",
   "components.common.navigation.transactionsButton": "Transactions",
   "components.common.navigation.discover": "Discover",
   "components.delegation.delegationnavigationbuttons.stakingCenterButton": "Go to Staking Center",
