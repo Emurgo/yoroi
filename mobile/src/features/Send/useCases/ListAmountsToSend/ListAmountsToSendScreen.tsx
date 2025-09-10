@@ -51,6 +51,7 @@ export const ListAmountsToSendScreen = () => {
     selectedTargetIndex,
     tokenSelectedChanged,
     amountRemoved,
+    reset,
   } = useTransfer()
   const {saveMemo} = useSaveMemo({wallet})
   const {amounts} = targets[selectedTargetIndex].entry
@@ -101,6 +102,8 @@ export const ListAmountsToSendScreen = () => {
       saveMemo({txId: signedTx.signedTx.id, memo: memo.trim()})
     }
 
+    // Reset the send form state after successful transaction
+    reset()
     navigateTo.submittedTx()
   }
 
