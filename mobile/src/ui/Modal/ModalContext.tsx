@@ -14,7 +14,7 @@ type ModalState = {
   title: string
   canContinue?: boolean
   onClose?: () => void
-  resizable?: boolean
+  full?: boolean
 }
 type ModalActions = {
   openModal: (args: {
@@ -26,7 +26,7 @@ type ModalActions = {
     title?: string
     canContinue?: boolean
     onClose?: () => void
-    resizable?: boolean
+    full?: boolean
   }) => void
   closeModal: () => void
   setLoading: (isLoading: boolean) => void
@@ -89,7 +89,7 @@ export const ModalProvider = ({
       title,
       canContinue,
       onClose,
-      resizable,
+      full,
     }: {
       content: React.ReactNode
       height?: number
@@ -99,7 +99,7 @@ export const ModalProvider = ({
       title?: string
       canContinue?: boolean
       onClose?: () => void
-      resizable?: boolean
+      full?: boolean
     }) => {
       Keyboard.dismiss()
       dispatch({
@@ -112,7 +112,7 @@ export const ModalProvider = ({
         title,
         canContinue,
         onClose,
-        resizable,
+        full,
       })
       handlePresentModalPress()
     },
@@ -200,7 +200,7 @@ type ModalAction =
       title?: string
       canContinue?: boolean
       onClose?: () => void
-      resizable?: boolean
+      full?: boolean
     }
   | {type: 'close'}
   | {type: 'setLoading'; isLoading: boolean}
@@ -222,7 +222,7 @@ const modalReducer = (state: ModalState, action: ModalAction) => {
         title: action.title ?? defaultState.title,
         canContinue: action.canContinue ?? defaultState.canContinue,
         onClose: action.onClose,
-        resizable: action.resizable ?? defaultState.resizable,
+        full: action.full ?? defaultState.full,
         isOpen: true,
       }
 
@@ -277,5 +277,5 @@ const defaultState: ModalState = Object.freeze({
   canDiscard: true,
   title: '',
   canContinue: false,
-  resizable: false,
+  full: false,
 })
