@@ -10,8 +10,8 @@ import {
   priceChange,
 } from '~/features/Portfolio/common/helpers/priceChange'
 import {useNavigateTo} from '~/features/Portfolio/common/hooks/useNavigateTo'
-import {useCurrencyPairing} from '~/features/Settings/useCases/changeAppSettings/Currency/CurrencyContext'
-import {usePrivacyMode} from '~/features/Settings/useCases/changeAppSettings/PrivacyMode/usePrivacyMode'
+import {useCurrencyPairing} from '~/features/Settings/ui/screens/ChangeApplicationSettingsScreen/ChangeCurrencyScreen/CurrencyContext'
+import {usePrivacyMode} from '~/features/Settings/ui/screens/ChangeApplicationSettingsScreen/PrivacyMode/usePrivacyMode'
 import {Space} from '~/ui/Space/Space'
 
 import {PairedBalance} from '../PairedBalance/PairedBalance'

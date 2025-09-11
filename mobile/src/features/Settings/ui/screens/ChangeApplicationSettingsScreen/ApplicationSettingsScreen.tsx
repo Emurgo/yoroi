@@ -28,12 +28,12 @@ import {Icon} from '~/ui/Icon'
 import {SettingsSwitch} from '~/ui/SettingsSwitch/SettingsSwitch'
 import {Space} from '~/ui/Space/Space'
 
-import {useCurrencyPairing} from './Currency/CurrencyContext'
+import {useCurrencyPairing} from './ChangeCurrencyScreen/CurrencyContext'
 import {usePrivacyMode} from './PrivacyMode/usePrivacyMode'
 import {
   changeScreenShareNativeSettingOnAndroid,
   useScreenShareSettingEnabled,
-} from './ScreenShare'
+} from './ScreenShare/ScreenShare'
 
 export const ApplicationSettingsScreen = () => {
   const strings = useStrings()

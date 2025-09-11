@@ -3,7 +3,7 @@ import {ThemeName} from '@yoroi/theme'
 import {freeze} from 'immer'
 import {MessageDescriptor, defineMessages} from 'react-intl'
 
-import {supportedCurrencies} from '~/features/Settings/useCases/changeAppSettings/Currency/CurrencyContext'
+import {supportedCurrencies} from '~/features/Settings/ui/screens/ChangeApplicationSettingsScreen/ChangeCurrencyScreen/CurrencyContext'
 
 export const confirmationMessages = freeze(
   {

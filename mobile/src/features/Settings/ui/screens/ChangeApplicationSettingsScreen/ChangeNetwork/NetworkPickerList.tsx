@@ -12,7 +12,7 @@ import {useWalletManager} from '~/features/WalletManager/context/WalletManagerPr
 import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 
-import {useNavigateTo} from '../../../common/navigation'
+import {useNavigateTo} from '../../../../common/navigation'
 import {NetworkPickerItem} from './NetworkPickerItem'
 
 export const NetworkPickerList = () => {

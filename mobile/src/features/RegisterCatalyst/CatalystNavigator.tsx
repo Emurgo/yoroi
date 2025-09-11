@@ -15,7 +15,7 @@ import {
 } from '~/kernel/navigation/types'
 import {Boundary} from '~/ui/Boundary/Boundary'
 
-import {NetworkTag} from '../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
+import {NetworkTag} from '../Settings/ui/screens/ChangeApplicationSettingsScreen/ChangeNetwork/NetworkTag'
 import {DisplayPin} from './useCases/DisplayPin/DisplayPin'
 import {DownloadCatalystAppScreen} from './useCases/DownloadCatalystAppScreen/DownloadCatalystAppScreen'
 import {QrCode} from './useCases/ShowQrCode/ShowQrCode'

@@ -4,9 +4,9 @@ import {App} from '@yoroi/types'
 import * as React from 'react'
 import {ScrollView, TextProps, View} from 'react-native'
 
-import {logger} from '../../../../../kernel/logger/logger'
-import {Space} from '../../../../../ui/Space/Space'
-import {Text} from '../../../../../ui/Text/Text'
+import {logger} from '../../../../../../kernel/logger/logger'
+import {Space} from '../../../../../../ui/Space/Space'
+import {Text} from '../../../../../../ui/Text/Text'
 
 export const SystemLogScreen = () => {
   const {atoms: ta} = useTheme()

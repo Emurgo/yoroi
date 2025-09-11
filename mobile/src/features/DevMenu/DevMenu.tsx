@@ -22,6 +22,8 @@ import {BluetoothDeviceManager} from '~/ui/BluetoothDeviceManager/BluetoothDevic
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {LoadingOverlay} from '~/ui/LoadingOverlay/LoadingOverlay'
 
+import {AboutScreen} from '../Settings/ui/screens/ChangeApplicationSettingsScreen/AboutScreen/AboutScreen'
+
 export function DevMenu() {
   const {isDark, config, basePalette, selectTheme, atoms: ta} = useTheme()
   const {authWithHost, changeAuthSetting} = useAuth()
@@ -40,6 +42,12 @@ export function DevMenu() {
   const metrics = useMetrics()
   const {currency, ptActivity} = usePairing()
   const navigation = useNavigation<any>()
+
+  return (
+    <SafeAreaView edges={['top']}>
+      <AboutScreen />
+    </SafeAreaView>
+  )
 
   return (
     <SafeAreaView style={[a.flex_1, ta.bg_color_max, a.gap_sm]}>

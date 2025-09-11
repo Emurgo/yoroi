@@ -6,7 +6,7 @@ import * as React from 'react'
 import {Text, TouchableOpacity, View} from 'react-native'
 
 import {usePortfolioPrimaryBalance} from '~/features/Portfolio/common/hooks/usePortfolioPrimaryBalance'
-import {usePrivacyMode} from '~/features/Settings/useCases/changeAppSettings/PrivacyMode/usePrivacyMode'
+import {usePrivacyMode} from '~/features/Settings/ui/screens/ChangeApplicationSettingsScreen/PrivacyMode/usePrivacyMode'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {ResetErrorRef} from '~/ui/Boundary/Boundary'
 import {Icon} from '~/ui/Icon'

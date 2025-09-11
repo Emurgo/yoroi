@@ -2,7 +2,6 @@ import {isNonNullable} from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import {useRoute} from '@react-navigation/native'
-import {BigNumber} from 'bignumber.js'
 import {fromPairs} from 'lodash'
 import React, {useState} from 'react'
 import {useIntl} from 'react-intl'
@@ -18,7 +17,7 @@ import {
 import {ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {usePrivacyMode} from '~/features/Settings/useCases/changeAppSettings/PrivacyMode/usePrivacyMode'
+import {usePrivacyMode} from '~/features/Settings/ui/screens/ChangeApplicationSettingsScreen/PrivacyMode/usePrivacyMode'
 import {useTransactionInfos} from '~/features/Transactions/hooks/useTransactionInfos'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'

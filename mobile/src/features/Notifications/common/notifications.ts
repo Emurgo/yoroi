@@ -6,7 +6,7 @@ import * as Notifications from 'expo-notifications'
 import {
   formatCurrency,
   getCurrencySymbol,
-} from '~/features/Settings/useCases/changeAppSettings/Currency/CurrencyContext'
+} from '~/features/Settings/ui/screens/ChangeApplicationSettingsScreen/ChangeCurrencyScreen/CurrencyContext'
 
 export const generateNotificationId = (): number => {
   return generateRandomInteger(0, Number.MAX_SAFE_INTEGER)

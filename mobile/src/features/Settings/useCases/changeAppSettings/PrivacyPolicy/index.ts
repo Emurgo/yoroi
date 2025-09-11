@@ -1,1 +1,0 @@
-export {PrivacyPolicyScreen} from './PrivacyPolicyScreen'

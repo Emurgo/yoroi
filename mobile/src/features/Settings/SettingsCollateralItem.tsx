@@ -9,7 +9,7 @@ import {
   NavigatedSettingsItem,
   NavigatedSettingsItemProps,
 } from './SettingsItems'
-import {usePrivacyMode} from './useCases/changeAppSettings/PrivacyMode/usePrivacyMode'
+import {usePrivacyMode} from './ui/screens/ChangeApplicationSettingsScreen/PrivacyMode/usePrivacyMode'
 
 export const SettingsCollateralItem = ({
   label,

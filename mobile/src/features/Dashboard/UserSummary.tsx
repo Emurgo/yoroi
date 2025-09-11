@@ -1,10 +1,9 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 
-import {BigNumber} from 'bignumber.js'
 import * as React from 'react'
 import {View} from 'react-native'
 
-import {usePrivacyMode} from '~/features/Settings/useCases/changeAppSettings/PrivacyMode/usePrivacyMode'
+import {usePrivacyMode} from '~/features/Settings/ui/screens/ChangeApplicationSettingsScreen/PrivacyMode/usePrivacyMode'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button, ButtonProps, ButtonType} from '~/ui/Button/Button'
