@@ -41,7 +41,7 @@ export const SelectDappFromListScreen = () => {
     [],
   )
   const {track} = useMetrics()
-  const [isShowedWelcomeDApp, , isWelcomeLoaded] = useShowWelcomeDApp()
+  const [isShowedWelcomeDApp] = useShowWelcomeDApp()
 
   React.useEffect(() => {
     if (currentTab === 'recommended') {
@@ -87,11 +87,13 @@ export const SelectDappFromListScreen = () => {
 
   return (
     <>
-      <WelcomeDAppModal disabled={!isWelcomeLoaded || isShowedWelcomeDApp} />
+      <WelcomeDAppModal
+        disabled={isShowedWelcomeDApp === undefined || isShowedWelcomeDApp}
+      />
 
       <ShowDisclaimer
         type="dapps"
-        disabled={!isWelcomeLoaded || !isShowedWelcomeDApp}
+        disabled={isShowedWelcomeDApp === undefined || !isShowedWelcomeDApp}
       />
 
       <View style={[a.flex_1, ta.bg_color_max, a.px_lg, a.gap_lg]}>

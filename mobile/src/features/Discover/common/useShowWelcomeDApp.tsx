@@ -14,8 +14,9 @@ export const useShowWelcomeDApp = () => {
     `wallet/${wallet.id}/${storageRootDAppExplorer}/`,
   )
 
-  const [localValue, setLocalValue] = React.useState<boolean>(false)
-  const [isLoaded, setIsLoaded] = React.useState<boolean>(false)
+  const [localValue, setLocalValue] = React.useState<boolean | undefined>(
+    undefined,
+  )
 
   React.useEffect(() => {
     const asyncEffect = async () => {
@@ -23,7 +24,6 @@ export const useShowWelcomeDApp = () => {
       const parsed = parseSafe(storedStorage)
       const value = isBoolean(parsed) ? parsed : false
       setLocalValue(value)
-      setIsLoaded(true)
     }
     asyncEffect()
   }, [walletStorage])
@@ -36,5 +36,5 @@ export const useShowWelcomeDApp = () => {
     [walletStorage],
   )
 
-  return [localValue, updateValue, isLoaded] as const
+  return [localValue, updateValue] as const
 }
