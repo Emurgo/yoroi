@@ -83,12 +83,15 @@ export const WebViewItem = ({tab, index}: Props) => {
     setWebViewState(event)
   }
 
+  const handleLoadStart = () => {
+    // Mark WebView as ready when it starts loading, before the dapp-connector script runs
+    markWebViewReady()
+  }
+
   const handleEventLoadWebView = (event: WebViewNavigationEvent) => {
     const url = event.nativeEvent.url
     if (url !== 'about:blank') {
       updateTab(+index, {url})
-      // Mark WebView as ready after successful load
-      markWebViewReady()
     }
   }
 
@@ -161,6 +164,7 @@ export const WebViewItem = ({tab, index}: Props) => {
             androidLayerType="hardware"
             source={{uri: webURL}}
             onNavigationStateChange={handleNavigationStateChange}
+            onLoadStart={handleLoadStart}
             onLoad={handleEventLoadWebView}
             javaScriptEnabled
             scalesPageToFit
