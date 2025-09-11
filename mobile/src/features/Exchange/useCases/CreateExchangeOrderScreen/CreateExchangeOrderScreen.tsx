@@ -90,16 +90,16 @@ export const CreateExchangeOrderScreen = () => {
     quantity,
     wallet.portfolioPrimaryTokenInfo.decimals,
   ).bn.toNumber()
-  const returnUrl = linksYoroiModuleMaker(
-    'yoroi',
-  ).exchange.order.showCreateResult({
-    provider: providerSelected?.id ?? '',
-    orderType,
-    walletId: wallet.id,
-    isTestnet: !wallet.isMainnet,
-    isSandbox: !wallet.isMainnet,
-    appId: providerSelected?.appId,
-  })
+  const returnUrl = encodeURIComponent(
+    linksYoroiModuleMaker('yoroi').exchange.order.showCreateResult({
+      provider: providerSelected?.id ?? '',
+      orderType,
+      walletId: wallet.id,
+      isTestnet: !wallet.isMainnet,
+      isSandbox: !wallet.isMainnet,
+      appId: providerSelected?.appId,
+    }),
+  )
   const walletAddress = wallet.isMainnet
     ? wallet.externalAddresses[0]
     : banxaTestWallet
