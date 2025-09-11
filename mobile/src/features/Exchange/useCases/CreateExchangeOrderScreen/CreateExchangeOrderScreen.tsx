@@ -38,17 +38,6 @@ import {ShowPreprodNotice} from './ShowPreprodNotice/ShowPreprodNotice'
 
 const BOTTOM_ACTION_SECTION = 180
 
-const getProviderDisplayName = (providerId: string): string => {
-  switch (providerId) {
-    case 'banxa':
-      return 'Banxa'
-    case 'encryptus':
-      return 'Encryptus'
-    default:
-      return providerId
-  }
-}
-
 export const CreateExchangeOrderScreen = () => {
   const {atoms: ta, palette: p} = useTheme()
 
@@ -202,9 +191,7 @@ export const CreateExchangeOrderScreen = () => {
             <EditAmount disabled={isLoading} />
 
             <ProviderItem
-              label={
-                providerSelected?.name ?? getProviderDisplayName(providerId)
-              }
+              label={providerSelected?.name ?? providerId}
               fee={feeText}
               leftAdornment={<Logo size={40} />}
               rightAdornment={<Icon.Chevron direction="right" />}
