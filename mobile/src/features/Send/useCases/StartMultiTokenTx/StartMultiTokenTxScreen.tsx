@@ -23,6 +23,7 @@ import {Space} from '~/ui/Space/Space'
 
 import {InputMemo} from './InputMemo/InputMemo'
 import {InputReceiver} from './InputReceiver/InputReceiver'
+import {NotifySupportedNameServers} from './NotifySupportedNameServers/NotifySupportedNameServers'
 import {SelectNameServer} from './SelectNameServer/SelectNameServer'
 import {ShowErrors} from './ShowErrors'
 
@@ -105,6 +106,8 @@ export const StartMultiTokenTxScreen = () => {
           onScrollBarChange={setIsScrollBarShown}
         >
           <ShowErrors />
+
+          <NotifySupportedNameServers />
 
           <InputReceiver
             value={receiver.resolve}

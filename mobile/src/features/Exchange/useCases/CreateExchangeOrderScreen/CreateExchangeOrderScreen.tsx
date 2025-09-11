@@ -66,6 +66,7 @@ export const CreateExchangeOrderScreen = () => {
     orderType,
     providerListByOrderType: provider.list.byOrderType,
   })
+
   const providerSelected = new Map(providers).get(providerId)
   const fee = providerSelected?.supportedOrders[orderType]?.fee ?? 0
 
@@ -142,7 +143,10 @@ export const CreateExchangeOrderScreen = () => {
   const handleOnExchange = () => {
     createReferralLink()
     setupSignalTimeout(3000)
-    openModal({content: <LoadingLinkScreen />})
+    openModal({
+      content: <LoadingLinkScreen />,
+      full: true,
+    })
   }
 
   const handleOnListProvidersByOrderType = () => {
@@ -187,7 +191,7 @@ export const CreateExchangeOrderScreen = () => {
             <EditAmount disabled={isLoading} />
 
             <ProviderItem
-              label={providerSelected?.name ?? ''}
+              label={providerSelected?.name ?? providerId}
               fee={feeText}
               leftAdornment={<Logo size={40} />}
               rightAdornment={<Icon.Chevron direction="right" />}
