@@ -87,9 +87,14 @@ export const SelectDappFromListScreen = () => {
 
   return (
     <>
-      <WelcomeDAppModal disabled={isShowedWelcomeDApp} />
+      <WelcomeDAppModal
+        disabled={isShowedWelcomeDApp === undefined || isShowedWelcomeDApp}
+      />
 
-      <ShowDisclaimer type="dapps" disabled={!isShowedWelcomeDApp} />
+      <ShowDisclaimer
+        type="dapps"
+        disabled={isShowedWelcomeDApp === undefined || !isShowedWelcomeDApp}
+      />
 
       <View style={[a.flex_1, ta.bg_color_max, a.px_lg, a.gap_lg]}>
         <ChainDAppsWarning />
