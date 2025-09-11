@@ -166,7 +166,7 @@ export const useShowDarkThemeAnnouncementScreen = (
     queryFn: () =>
       storage
         .getItem(darkThemeAnnouncementShownKey)
-        .then((value) => parseBoolean(value) ?? true),
+        .then((value: string | null) => parseBoolean(value) ?? true),
   })
 
   return {
