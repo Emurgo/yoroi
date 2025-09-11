@@ -316,7 +316,6 @@ const NeverParticipatedInGovernanceVariant = () => {
         </GovernanceProvider>
       ),
       height: 360,
-      resizable: true,
     })
   }
 
