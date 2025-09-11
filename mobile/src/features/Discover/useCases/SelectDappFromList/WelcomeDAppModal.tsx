@@ -15,11 +15,11 @@ export const WelcomeDAppModal = ({disabled}: {disabled?: boolean}) => {
   const {palette: p} = useTheme()
   const insets = useSafeAreaInsets()
   const {openModal, closeModal} = useModal()
-  const [seen, setSeen] = useShowWelcomeDApp()
+  const [seen, setSeen, isLoaded] = useShowWelcomeDApp()
   const [showing, setShowing] = React.useState(false)
 
   React.useEffect(() => {
-    if (disabled || seen || showing) return
+    if (disabled || seen || showing || !isLoaded) return
 
     openModal({
       title: strings.discover.welcomeToYoroiDAppExplorer,
@@ -54,6 +54,7 @@ export const WelcomeDAppModal = ({disabled}: {disabled?: boolean}) => {
     closeModal,
     disabled,
     insets.bottom,
+    isLoaded,
     openModal,
     seen,
     setSeen,
