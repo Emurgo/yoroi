@@ -6,7 +6,7 @@ import {
   BottomSheetView,
 } from '@gorhom/bottom-sheet'
 import * as React from 'react'
-import {Keyboard, Platform, Text, View, useWindowDimensions} from 'react-native'
+import {Text, View, useWindowDimensions} from 'react-native'
 
 import {Space} from '~/ui/Space/Space'
 
@@ -20,66 +20,24 @@ export const Modal = () => {
     canDiscard,
     footer,
     title,
-    resizable,
+    full,
   } = useModal()
   const {atoms: ta, palette: p, isDark} = useTheme()
   const {height: screenHeight} = useWindowDimensions()
-  const [keyboardHeight, setKeyboardHeight] = React.useState(0)
 
-  // Listen to keyboard events when modal is resizable
-  React.useEffect(() => {
-    if (!resizable) return
-
-    const keyboardDidShowListener = Keyboard.addListener(
-      Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow',
-      (e) => {
-        setKeyboardHeight(e.endCoordinates.height)
-        // Automatically expand to the keyboard-adjusted height
-        setTimeout(() => {
-          bottomSheetModalRef?.current?.snapToIndex(1)
-        }, 100)
-      },
-    )
-    const keyboardDidHideListener = Keyboard.addListener(
-      Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide',
-      () => {
-        setKeyboardHeight(0)
-        // Return to base height when keyboard is dismissed
-        setTimeout(() => {
-          bottomSheetModalRef?.current?.snapToIndex(0)
-        }, 100)
-      },
-    )
-
-    return () => {
-      keyboardDidShowListener?.remove()
-      keyboardDidHideListener?.remove()
-    }
-  }, [resizable, bottomSheetModalRef])
-
-  // TODO: REVISIT make the modal to avoid keyboard
   const snapPoints = React.useMemo(() => {
-    if (resizable) {
-      const baseHeight = Math.min(height, screenHeight * 0.8)
+    return full ? ['100%'] : [height]
+  }, [full, height])
 
-      if (keyboardHeight > 0) {
-        const availableSpace = screenHeight - keyboardHeight - 40
-        const keyboardAdjustedHeight = Math.max(
-          availableSpace * 0.95,
-          baseHeight + 600,
-        )
-        return [baseHeight, keyboardAdjustedHeight]
-      } else {
-        const keyboardAdjustedHeight = Math.min(
-          baseHeight + 700,
-          screenHeight * 0.9,
-        )
-        return [baseHeight, keyboardAdjustedHeight]
+  const animationConfigs = React.useMemo(() => {
+    if (full) {
+      return {
+        duration: 0,
+        easing: 'linear',
       }
-    } else {
-      return [height]
     }
-  }, [height, screenHeight, resizable, keyboardHeight])
+    return undefined
+  }, [full])
 
   const renderBackdrop = React.useCallback(
     (props: any) => (
@@ -100,24 +58,33 @@ export const Modal = () => {
       snapPoints={snapPoints}
       backdropComponent={renderBackdrop}
       enablePanDownToClose={canDiscard}
-      enableHandlePanningGesture={resizable}
-      enableContentPanningGesture={resizable}
+      enableHandlePanningGesture={false}
+      enableContentPanningGesture={false}
+      enableDynamicSizing={false}
+      topInset={0}
+      bottomInset={0}
+      animateOnMount={!full}
+      animationConfigs={animationConfigs}
       keyboardBehavior="extend"
       keyboardBlurBehavior="restore"
       android_keyboardInputMode="adjustResize"
       backgroundStyle={{
         backgroundColor: isDark ? p.gray_50 : p.white_static,
-        borderTopRightRadius: 20,
-        borderTopLeftRadius: 20,
+        borderTopRightRadius: 0,
+        borderTopLeftRadius: 0,
       }}
       handleIndicatorStyle={{
-        backgroundColor: p.gray_max,
-        height: 4,
-        width: 32,
-        borderRadius: 10,
+        backgroundColor: 'transparent',
+        height: 0,
+        width: 0,
+      }}
+      style={{
+        marginTop: 0,
       }}
     >
-      <BottomSheetView style={[a.flex_1, a.self_stretch]}>
+      <BottomSheetView
+        style={[a.flex_1, a.self_stretch, full && {minHeight: screenHeight}]}
+      >
         {title && (
           <View style={[a.px_lg, a.pt_lg, a.pb_lg]}>
             <Text style={[a.heading_3_medium, ta.text_gray_max, a.text_center]}>
@@ -125,7 +92,8 @@ export const Modal = () => {
             </Text>
           </View>
         )}
-        {content}
+
+        {full ? <View style={[a.flex_1]}>{content}</View> : content}
 
         {footer ? (
           <View style={[a.px_lg, a.pb_lg, a.pt_md]}>
@@ -133,7 +101,7 @@ export const Modal = () => {
             <Space.Height.xl />
           </View>
         ) : (
-          <Space.Height.xl />
+          !full && <Space.Height.xl />
         )}
       </BottomSheetView>
     </BottomSheetModal>

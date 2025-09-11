@@ -100,7 +100,6 @@ export const ChangeVoteScreen = () => {
         </GovernanceProvider>
       ),
       height: 360,
-      resizable: true,
     })
   }
 

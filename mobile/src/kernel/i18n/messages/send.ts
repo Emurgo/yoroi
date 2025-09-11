@@ -138,6 +138,15 @@ export const sendMessages = defineMessages({
     id: 'components.send.sendscreen.addressInputLabel',
     defaultMessage: '!!!Address',
   },
+  resolverNoticeTitle: {
+    id: 'components.send.sendscreen.resolverNoticeTitle',
+    defaultMessage: '!!!Address shortcuts supported',
+  },
+  resolverNoticeText: {
+    id: 'components.send.sendscreen.resolverNoticeText',
+    defaultMessage:
+      '!!!Yoroi offers a unique chance to use custom and lightning-fast alternatives to the traditional wallet address, such as',
+  },
   addressReaderQrText: {
     id: 'claim.code',
     defaultMessage: '!!!Scan QR code',
@@ -237,14 +246,6 @@ export const sendMessages = defineMessages({
   resolvedAddress: {
     id: 'components.send.sendscreen.resolvedAddress',
     defaultMessage: '!!!Resolved address',
-  },
-  resolverNoticeTitle: {
-    id: 'components.send.sendscreen.resolverNoticeTitle',
-    defaultMessage: '!!!Resolver notice title',
-  },
-  resolverNoticeText: {
-    id: 'components.send.sendscreen.resolverNoticeText',
-    defaultMessage: '!!!Resolver notice text',
   },
   searchTokens: {
     id: 'components.send.sendscreen.searchTokens',
