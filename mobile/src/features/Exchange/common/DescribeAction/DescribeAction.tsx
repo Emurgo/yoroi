@@ -1,5 +1,5 @@
 import {useExchange, useExchangeProvidersByOrderType} from '@yoroi/exchange'
-import {atoms as a} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
 import {Linking, TouchableOpacity, View} from 'react-native'
@@ -12,6 +12,7 @@ const YOROI_SUPPORT_URL = 'https://yoroi-wallet.com/#/support'
 
 export const DescribeAction = () => {
   const strings = useStrings()
+  const {atoms: ta} = useTheme()
   const {orderType, providerId, provider} = useExchange()
   const providers = useExchangeProvidersByOrderType({
     orderType,
@@ -37,11 +38,11 @@ export const DescribeAction = () => {
 
       <Space.Height.lg />
 
-      <View style={[a.flex_row, a.align_center, {flexWrap: 'wrap'}]}>
+      <View style={[a.flex_row, a.align_center, a.flex_wrap]}>
         <Text style={a.body_1_lg_regular}>{strings.exchange.contact} </Text>
 
         <TouchableOpacity onPress={handleOnContactProvider}>
-          <Text style={[a.link_1_lg_underline, {color: '#4B6DDE'}]}>
+          <Text style={[a.link_1_lg_underline, ta.text_primary_max]}>
             {name}{' '}
           </Text>
         </TouchableOpacity>
@@ -49,7 +50,7 @@ export const DescribeAction = () => {
         <Text style={a.body_1_lg_regular}>{strings.exchange.and} </Text>
 
         <TouchableOpacity onPress={handleOnContactYoroi}>
-          <Text style={[a.link_1_lg_underline, {color: '#4B6DDE'}]}>
+          <Text style={[a.link_1_lg_underline, ta.text_primary_max]}>
             {strings.exchange.customerSupport}
           </Text>
         </TouchableOpacity>

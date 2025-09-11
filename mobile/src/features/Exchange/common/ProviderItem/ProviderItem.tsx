@@ -49,7 +49,7 @@ export const ProviderItem = ({
 
         <Space.Width.md />
 
-        <View style={[a.flex_1]}>
+        <View style={a.flex_1}>
           <Text style={[a.body_1_lg_medium, {color: p.gray_900}]}>{label}</Text>
 
           <Text style={[a.body_3_sm_regular, {color: p.gray_600}]}>{fee}</Text>

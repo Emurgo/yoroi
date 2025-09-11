@@ -85,7 +85,7 @@ export const TxHistoryNavigator = () => {
   const exchangeManager = React.useMemo(() => {
     const api = exchangeApiMaker({
       isProduction: isMainnet,
-      partner: 'emurgo',
+      partner: 'yoroi',
     })
     return exchangeManagerMaker({api})
   }, [isMainnet])
@@ -95,7 +95,16 @@ export const TxHistoryNavigator = () => {
   return (
     <ResolverProvider resolverManager={resolverManager}>
       <ReceiveProvider>
-        <ExchangeProvider manager={exchangeManager}>
+        <ExchangeProvider
+          manager={exchangeManager}
+          initialState={{
+            providerId: 'banxa',
+            providerSuggestedByOrderType: {
+              buy: 'banxa',
+              sell: 'encryptus',
+            },
+          }}
+        >
           <Boundary loading={{size: 'full'}}>
             <Stack.Navigator
               screenOptions={{

@@ -27,7 +27,7 @@ import {ContentResult} from './ContentResult/ContentResult'
 
 export const ShowExchangeResultOrderScreen = () => {
   const strings = useStrings()
-  const {atoms: ta, palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
   const {openModal} = useModal()
   const {resetToWalletSelection} = useWalletNavigation()
   const {action, actionFinished} = useLinks()
@@ -71,13 +71,11 @@ export const ShowExchangeResultOrderScreen = () => {
       >
         <View
           style={[
-            {
-              flex: 1,
-              flexDirection: 'column',
-              justifyContent: 'center',
-              alignItems: 'center',
-              paddingHorizontal: 16,
-            },
+            a.flex_1,
+            a.flex_col,
+            a.justify_center,
+            a.align_center,
+            a.px_lg,
           ]}
         >
           <WalletAssetImage style={{...a.flex_1, width: 200, height: 228}} />
@@ -88,8 +86,8 @@ export const ShowExchangeResultOrderScreen = () => {
             style={[
               a.heading_3_medium,
               a.text_center,
+              ta.text_gray_medium,
               {
-                color: p.gray_900,
                 fontWeight: '500',
                 textAlignVertical: 'center',
               },
@@ -117,7 +115,7 @@ export const ShowExchangeResultOrderScreen = () => {
             <>
               <ContentResult title={strings.exchange.cryptoAmountYouGet}>
                 <Text
-                  style={[a.body_1_lg_regular, {color: p.gray_max}]}
+                  style={[a.body_1_lg_regular, ta.text_gray_max]}
                 >{`${params?.coinAmount ?? 0} ${params?.coin ?? ''}`}</Text>
               </ContentResult>
 
@@ -125,7 +123,7 @@ export const ShowExchangeResultOrderScreen = () => {
 
               <ContentResult title={strings.exchange.fiatAmountYouGet}>
                 <Text
-                  style={[a.body_1_lg_regular, {color: p.gray_max}]}
+                  style={[a.body_1_lg_regular, ta.text_gray_max]}
                 >{`${params?.fiatAmount ?? 0} ${params?.fiat ?? ''}`}</Text>
               </ContentResult>
             </>
@@ -141,7 +139,7 @@ export const ShowExchangeResultOrderScreen = () => {
 
                   <Space.Width.xs />
 
-                  <Text style={[a.body_1_lg_regular, {color: p.gray_max}]}>
+                  <Text style={[a.body_1_lg_regular, ta.text_gray_max]}>
                     {' '}
                     {name}{' '}
                   </Text>

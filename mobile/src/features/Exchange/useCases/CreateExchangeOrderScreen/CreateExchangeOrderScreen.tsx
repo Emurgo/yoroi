@@ -38,6 +38,17 @@ import {ShowPreprodNotice} from './ShowPreprodNotice/ShowPreprodNotice'
 
 const BOTTOM_ACTION_SECTION = 180
 
+const getProviderDisplayName = (providerId: string): string => {
+  switch (providerId) {
+    case 'banxa':
+      return 'Banxa'
+    case 'encryptus':
+      return 'Encryptus'
+    default:
+      return providerId
+  }
+}
+
 export const CreateExchangeOrderScreen = () => {
   const {atoms: ta, palette: p} = useTheme()
 
@@ -66,6 +77,7 @@ export const CreateExchangeOrderScreen = () => {
     orderType,
     providerListByOrderType: provider.list.byOrderType,
   })
+
   const providerSelected = new Map(providers).get(providerId)
   const fee = providerSelected?.supportedOrders[orderType]?.fee ?? 0
 
@@ -78,16 +90,16 @@ export const CreateExchangeOrderScreen = () => {
     quantity,
     wallet.portfolioPrimaryTokenInfo.decimals,
   ).bn.toNumber()
-  const returnUrl = encodeURIComponent(
-    linksYoroiModuleMaker('yoroi').exchange.order.showCreateResult({
-      provider: providerSelected?.id ?? '',
-      orderType,
-      walletId: wallet.id,
-      isTestnet: !wallet.isMainnet,
-      isSandbox: !wallet.isMainnet,
-      appId: providerSelected?.appId,
-    }),
-  )
+  const returnUrl = linksYoroiModuleMaker(
+    'yoroi',
+  ).exchange.order.showCreateResult({
+    provider: providerSelected?.id ?? '',
+    orderType,
+    walletId: wallet.id,
+    isTestnet: !wallet.isMainnet,
+    isSandbox: !wallet.isMainnet,
+    appId: providerSelected?.appId,
+  })
   const walletAddress = wallet.isMainnet
     ? wallet.externalAddresses[0]
     : banxaTestWallet
@@ -142,7 +154,10 @@ export const CreateExchangeOrderScreen = () => {
   const handleOnExchange = () => {
     createReferralLink()
     setupSignalTimeout(3000)
-    openModal({content: <LoadingLinkScreen />})
+    openModal({
+      content: <LoadingLinkScreen />,
+      full: true,
+    })
   }
 
   const handleOnListProvidersByOrderType = () => {
@@ -187,7 +202,9 @@ export const CreateExchangeOrderScreen = () => {
             <EditAmount disabled={isLoading} />
 
             <ProviderItem
-              label={providerSelected?.name ?? ''}
+              label={
+                providerSelected?.name ?? getProviderDisplayName(providerId)
+              }
               fee={feeText}
               leftAdornment={<Logo size={40} />}
               rightAdornment={<Icon.Chevron direction="right" />}
