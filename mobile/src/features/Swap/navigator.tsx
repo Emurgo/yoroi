@@ -5,7 +5,7 @@ import * as React from 'react'
 
 import {FailedTxScreen as SwapFailedTxScreen} from '~/features/ReviewTx/useCases/ShowFailedTxScreen/FailedTxScreen'
 import {SubmittedTxScreen as SwapSubmittedTxScreen} from '~/features/ReviewTx/useCases/ShowSubmittedTxScreen/SubmittedTxScreen'
-import {NetworkTag} from '~/features/Settings/ui/screens/ChangeApplicationSettingsScreen/ChangeNetwork/NetworkTag'
+import {NetworkTag} from '~/features/Settings/ui/shared/NetworkTag'
 import {SelectProtocolScreen} from '~/features/Swap/useCases/CreateOrder/SelectProtocolScreen'
 import {SelectTokenScreen} from '~/features/Swap/useCases/CreateOrder/SelectTokenScreen'
 import {ListOrders} from '~/features/Swap/useCases/ListOrders/ListOrders'

@@ -11,7 +11,7 @@ import {DiscoverRoutes} from '~/kernel/navigation/types'
 import {LoadingBoundary} from '~/ui/Boundary/Boundary'
 import {FullErrorFallback} from '~/ui/Boundary/FullErrorFallback'
 
-import {NetworkTag} from '../Settings/ui/screens/ChangeApplicationSettingsScreen/ChangeNetwork/NetworkTag'
+import {NetworkTag} from '../Settings/ui/shared/NetworkTag'
 import {BrowserNavigator} from './BrowserNavigator'
 import {ListSkeleton} from './useCases/SelectDappFromList/ListSkeleton'
 import {SelectDappFromListScreen} from './useCases/SelectDappFromList/SelectDappFromListScreen'

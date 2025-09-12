@@ -7,7 +7,7 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
 import {WalletInitRoutes} from '~/kernel/navigation/types'
 
-import {NetworkTag} from '../Settings/ui/screens/ChangeApplicationSettingsScreen/ChangeNetwork/NetworkTag'
+import {NetworkTag} from '../Settings/ui/shared/NetworkTag'
 import {PreparingWalletScreen} from './common/PreparingWalletScreen/PreparingWalletScreen'
 import {ImportReadOnlyWalletScreen} from './legacy/ImportReadOnlyWallet/ImportReadOnlyWalletScreen'
 import {SaveReadOnlyWalletScreen} from './legacy/SaveReadOnlyWallet/SaveReadOnlyWalletScreen'

@@ -186,12 +186,30 @@ export const legalAgreementStorageKeyManager =
     parser: parseLegalAgreement,
   })
 
+// App Messages
+export const appMessagesStorage = rootSyncStorage.join('appMessages/')
+export const appMessagesObservableStorage =
+  observableStorageMaker(appMessagesStorage)
+const appMessagesStorageKeyMaker = storageKeyMaker(appMessagesObservableStorage)
+
+// App Messages - Network Notice
+export const hasShownNetworkNoticeStorageKey = 'hasShownNetworkNotice'
+export const hasShownNetworkNoticeStorageKeyManager =
+  appMessagesStorageKeyMaker<boolean>({
+    key: hasShownNetworkNoticeStorageKey,
+    parser: (data) => Boolean(parseBoolean(data)),
+  })
+
 // Debug storage
 const observableFunction = (v: unknown) => {
   console.log(`key with value udpated -> `, v)
   return of(null)
 }
 appSettingsObservableStorage.observable.subscribe((v) => {
+  observableFunction(v)
+  debugStorage(rootMMKV)
+})
+appMessagesObservableStorage.observable.subscribe((v) => {
   observableFunction(v)
   debugStorage(rootMMKV)
 })

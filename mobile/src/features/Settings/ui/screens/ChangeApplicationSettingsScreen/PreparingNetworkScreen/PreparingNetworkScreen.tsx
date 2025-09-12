@@ -11,29 +11,19 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {useParams} from '~/kernel/navigation/hooks/useParams'
 import {SettingsStackRoutes} from '~/kernel/navigation/types'
 
-import {useLaunchRouteAfterSyncing} from './useLaunchRouteAfterSyncing'
+import {useLaunchRouteAfterSyncing} from '../../../../hooks/useLaunchRouteAfterSyncing'
 
 export const PreparingNetworkScreen = () => {
   const strings = useStrings()
-  const {atoms: ta, palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
+
   const {selectedNetwork} = useParams<Params>(isParams)
 
   useLaunchRouteAfterSyncing({selectedNetwork})
 
   return (
-    <SafeAreaView
-      edges={['left', 'right', 'bottom', 'top']}
-      style={[a.flex_1, a.align_center, a.justify_center, ta.bg_color_max]}
-    >
-      <Text
-        style={[
-          {
-            color: p.primary_500,
-          },
-          a.text_center,
-          a.heading_2_medium,
-        ]}
-      >
+    <SafeAreaView style={[a.flex_1, a.align_center, a.justify_center]}>
+      <Text style={[ta.text_primary_max, a.text_center, a.heading_2_medium]}>
         {strings.settings.changeNetwork.preparingNetwork}
       </Text>
     </SafeAreaView>

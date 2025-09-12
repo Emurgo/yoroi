@@ -189,7 +189,7 @@ const MainnetWarningDialog = ({
 
         <Space.Width.lg />
 
-        <Button size="S" title="Switch" onPress={onOk} />
+        <Button size="S" title={strings.global.switch} onPress={onOk} />
       </View>
     </View>
   )

@@ -28,7 +28,7 @@ import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
 
 import {InsufficientFundsModal} from '../RegisterCatalyst/common/InsufficientFundsModal'
-import {NetworkTag} from '../Settings/ui/screens/ChangeApplicationSettingsScreen/ChangeNetwork/NetworkTag'
+import {NetworkTag} from '../Settings/ui/shared/NetworkTag'
 import {usePoolTransition} from '../Staking/Staking/PoolTransition/usePoolTransition'
 
 const MenuStack = createStackNavigator<MenuRoutes>()

@@ -10,19 +10,19 @@ type Props = {
   nativeName: string
   code: LanguageCode
   isSelected?: boolean
-  selectLanguage: (code: LanguageCode) => void
+  onSelectLanguage: (code: LanguageCode) => void
 }
 
 export const LanguageItem = ({
   nativeName,
   code,
   isSelected,
-  selectLanguage,
+  onSelectLanguage,
 }: Props) => {
   const {atoms: ta, palette: p} = useTheme()
 
   const handleSelectLanguage = () => {
-    selectLanguage(code)
+    onSelectLanguage(code)
   }
 
   return (

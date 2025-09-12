@@ -20,22 +20,20 @@ import {Icon} from '~/ui/Icon'
 import {ChangePinScreen} from '../Auth/ui/screens/ChangePinScreen'
 import {EnableLoginWithPinScreen} from '../Auth/ui/screens/EnableLoginWithPinScreen'
 import {PreparingWalletScreen} from '../SetupWallet/common/PreparingWalletScreen/PreparingWalletScreen'
+import {useOpenNetworkNoticeModal} from './hooks/useOpenNetworkNoticeModal'
 import {AboutScreen} from './ui/screens/ChangeApplicationSettingsScreen/AboutScreen/AboutScreen'
 import {ApplicationSettingsScreen} from './ui/screens/ChangeApplicationSettingsScreen/ApplicationSettingsScreen'
-import {
-  ChangeNetworkScreen,
-  useHandleOpenNetworkNoticeModal,
-} from './ui/screens/ChangeApplicationSettingsScreen/ChangeNetwork/ChangeNetworkScreen'
-import {ChangeThemeScreen} from './ui/screens/ChangeApplicationSettingsScreen/ChangeNetwork/ChangeTheme/ChangeThemeScreen'
-import {NetworkTag} from './ui/screens/ChangeApplicationSettingsScreen/ChangeNetwork/NetworkTag'
-import {PreparingNetworkScreen} from './ui/screens/ChangeApplicationSettingsScreen/ChangeNetwork/PreparingNetworkScreen'
+import {ChangeThemeScreen} from './ui/screens/ChangeApplicationSettingsScreen/ChangeTheme/ChangeThemeScreen'
 import {EnableLoginWithOsScreen} from './ui/screens/ChangeApplicationSettingsScreen/EnableLoginWithOs/EnableLoginWithOsScreen'
+import {PreparingNetworkScreen} from './ui/screens/ChangeApplicationSettingsScreen/PreparingNetworkScreen/PreparingNetworkScreen'
 import {PrivacyPolicyScreen} from './ui/screens/ChangeApplicationSettingsScreen/PrivacyPolicy/PrivacyPolicyScreen'
 import {SelectCurrencySymbolScreen} from './ui/screens/ChangeApplicationSettingsScreen/SelectCurrencySymbolScreen/SelectCurrencySymbolScreen'
 import {SelectLanguageScreen} from './ui/screens/ChangeApplicationSettingsScreen/SelectLanguageScreen/SelectLanguageScreen'
+import {SelectNetworkScreen} from './ui/screens/ChangeApplicationSettingsScreen/SelectNetworkScreen/SelectNetworkScreen'
 import {SystemLogScreen} from './ui/screens/ChangeApplicationSettingsScreen/SystemLogScreen/SystemLogScreen'
 import {TermsOfServiceScreen} from './ui/screens/ChangeApplicationSettingsScreen/TermsOfService/TermsOfServiceScreen'
 import {ToggleAnalyticsSettingsScreen} from './ui/screens/ChangeApplicationSettingsScreen/ToggleAnalyticsSettings/ToggleAnalyticsSettingsScreen'
+import {NetworkTag} from './ui/shared/NetworkTag'
 import {ChangePasswordScreen} from './useCases/changeWalletSettings/ChangePassword'
 import {
   DisableEasyConfirmationScreen,
@@ -52,7 +50,12 @@ export const SettingsScreenNavigator = () => {
   const strings = useStrings()
   const {track} = useMetrics()
   const {palette: p} = useTheme()
-  const {handleOpenModal} = useHandleOpenNetworkNoticeModal()
+  const openNetworkNoticeModal = useOpenNetworkNoticeModal()
+  const openNetworkNoticeModalRef = React.useRef(openNetworkNoticeModal)
+  openNetworkNoticeModalRef.current = openNetworkNoticeModal
+  const handleOpenModal = React.useCallback(() => {
+    openNetworkNoticeModalRef.current()
+  }, [openNetworkNoticeModalRef])
 
   useFocusEffect(
     React.useCallback(() => {
@@ -149,7 +152,7 @@ export const SettingsScreenNavigator = () => {
 
       <Stack.Screen //
         name="change-network"
-        getComponent={() => ChangeNetworkScreen}
+        getComponent={() => SelectNetworkScreen}
         options={{
           title: strings.settings.networkTitle,
           headerRight: () => (

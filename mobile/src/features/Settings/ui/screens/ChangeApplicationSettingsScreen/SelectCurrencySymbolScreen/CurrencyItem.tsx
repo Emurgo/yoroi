@@ -11,14 +11,14 @@ import {Text} from '~/ui/Text/Text'
 type Props = {
   nativeName: string
   symbol: Portfolio.Currency.Symbol
-  selectCurrency: (symbol: Portfolio.Currency.Symbol) => void
+  onSelectCurrency: (symbol: Portfolio.Currency.Symbol) => void
   isSelected?: boolean
 }
 
 export const CurrencyItem = ({
   nativeName,
   symbol,
-  selectCurrency,
+  onSelectCurrency,
   isSelected,
 }: Props) => {
   const strings = useStrings()
@@ -27,7 +27,7 @@ export const CurrencyItem = ({
   const subtitle = `${nativeName} (${symbol})`
 
   const handleSelectCurrency = () => {
-    selectCurrency(symbol)
+    onSelectCurrency(symbol)
   }
 
   return (

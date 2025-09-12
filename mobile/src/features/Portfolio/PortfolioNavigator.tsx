@@ -4,7 +4,7 @@ import {createStackNavigator} from '@react-navigation/stack'
 import * as React from 'react'
 
 import {SearchProvider} from '~/features/Search/SearchContext'
-import {NetworkTag} from '~/features/Settings/ui/screens/ChangeApplicationSettingsScreen/ChangeNetwork/NetworkTag'
+import {NetworkTag} from '~/features/Settings/ui/shared/NetworkTag'
 import {TxDetails} from '~/features/Transactions/useCases/TxDetails/TxDetails'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
