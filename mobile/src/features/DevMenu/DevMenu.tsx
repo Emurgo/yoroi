@@ -22,7 +22,7 @@ import {BluetoothDeviceManager} from '~/ui/BluetoothDeviceManager/BluetoothDevic
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {LoadingOverlay} from '~/ui/LoadingOverlay/LoadingOverlay'
 
-import {SelectCurrencySymbolScreen} from '../Settings/ui/screens/ChangeApplicationSettingsScreen/SelectCurrencySymbolScreen/SelectCurrencySymbolScreen'
+import {SelectLanguageScreen} from '../Settings/ui/screens/ChangeApplicationSettingsScreen/SelectLanguageScreen/SelectLanguageScreen'
 
 export function DevMenu() {
   const {isDark, config, basePalette, selectTheme, atoms: ta} = useTheme()
@@ -45,7 +45,7 @@ export function DevMenu() {
 
   return (
     <SafeAreaView edges={['top']} style={a.flex_1}>
-      <SelectCurrencySymbolScreen />
+      <SelectLanguageScreen />
     </SafeAreaView>
   )
 

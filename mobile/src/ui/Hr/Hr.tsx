@@ -1,4 +1,4 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
 import {View, ViewProps} from 'react-native'
@@ -8,7 +8,11 @@ export const Hr = ({style, ...rest}: ViewProps) => {
   return (
     <View
       {...rest}
-      style={[{height: 1}, {backgroundColor: p.gray_200}, style]}
+      style={[
+        a.border_b,
+        {borderBottomColor: p.el_gray_min, minHeight: 1},
+        style,
+      ]}
     />
   )
 }

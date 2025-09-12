@@ -31,98 +31,38 @@ export const CurrencyItem = ({
   }
 
   return (
-    <TouchableOpacity onPress={handleSelectCurrency}>
-      <Row>
-        <Description>
-          <Title>{title}</Title>
-          <Subtitle>{subtitle}</Subtitle>
-        </Description>
+    <TouchableOpacity
+      onPress={handleSelectCurrency}
+      style={[a.flex_row, a.py_sm]}
+    >
+      <Description>
+        <Title>{title}</Title>
+        <Subtitle>{subtitle}</Subtitle>
+      </Description>
 
-        <Selected>
-          {isSelected && <Icon.Check size={24} color={p.primary_600} />}
-        </Selected>
-      </Row>
+      <Selected>
+        {isSelected && <Icon.Check size={24} color={p.primary_600} />}
+      </Selected>
     </TouchableOpacity>
   )
 }
 
-const Row = ({children}: React.PropsWithChildren) => {
-  const {palette: p} = useTheme()
-  return (
-    <View
-      style={[
-        a.flex_row,
-        a.border_b,
-        a.py_sm,
-        {
-          borderBottomColor: p.gray_200,
-        },
-      ]}
-    >
-      {children}
-    </View>
-  )
-}
-
 const Description = ({children}: React.PropsWithChildren) => {
-  return (
-    <View
-      style={[
-        {
-          flex: 8,
-        },
-        a.flex_col,
-      ]}
-    >
-      {children}
-    </View>
-  )
+  return <View style={[a.justify_between, a.flex_1]}>{children}</View>
 }
 
 const Selected = ({children}: React.PropsWithChildren) => {
-  return (
-    <View
-      style={[
-        a.align_end,
-        a.justify_center,
-        {
-          flex: 2,
-        },
-      ]}
-    >
-      {children}
-    </View>
-  )
+  return <View style={[a.align_end, a.justify_center]}>{children}</View>
 }
 
 const Title = ({children}: React.PropsWithChildren) => {
-  const {palette: p} = useTheme()
-  return (
-    <Text
-      style={[
-        {
-          color: p.gray_900,
-        },
-        a.body_1_lg_medium,
-      ]}
-    >
-      {children}
-    </Text>
-  )
+  const {atoms: ta} = useTheme()
+  return <Text style={[ta.text_gray_max, a.body_1_lg_medium]}>{children}</Text>
 }
 
 const Subtitle = ({children}: React.PropsWithChildren) => {
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
   return (
-    <Text
-      style={[
-        {
-          color: p.gray_900,
-        },
-        a.body_3_sm_regular,
-      ]}
-    >
-      {children}
-    </Text>
+    <Text style={[ta.text_gray_medium, a.body_3_sm_regular]}>{children}</Text>
   )
 }

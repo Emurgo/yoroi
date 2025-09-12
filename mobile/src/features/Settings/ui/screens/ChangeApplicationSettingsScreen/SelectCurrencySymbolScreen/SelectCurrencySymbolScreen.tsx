@@ -6,6 +6,7 @@ import {FlatList} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useCurrencyPairing} from '~/features/Settings/context/CurrencyProvider'
+import {Hr} from '~/ui/Hr/Hr'
 
 import {CurrencyItem} from './CurrencyItem'
 
@@ -16,11 +17,14 @@ export const SelectCurrencySymbolScreen = () => {
     .filter(({symbol}) => symbol !== 'ADA')
 
   return (
-    <SafeAreaView edges={['bottom', 'right', 'left']} style={a.flex_1}>
+    <SafeAreaView
+      edges={['bottom', 'right', 'left']}
+      style={[a.flex_1, a.px_lg]}
+    >
       <FlatList
-        contentContainerStyle={a.p_lg}
         data={currencies}
         keyExtractor={({symbol}) => symbol}
+        ItemSeparatorComponent={Hr}
         renderItem={({item: {symbol, data}}) => (
           <CurrencyItem
             isSelected={symbol === currency}

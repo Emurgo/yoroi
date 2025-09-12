@@ -4,13 +4,13 @@ import {createStackNavigator} from '@react-navigation/stack'
 import * as React from 'react'
 
 import {InitiatePinScreen} from '~/features/Auth/ui/screens/InitiatePinScreen'
+import {SelectLanguageScreen} from '~/features/Settings/ui/screens/ChangeApplicationSettingsScreen/SelectLanguageScreen/SelectLanguageScreen'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
 import {InititalizationRoutes} from '~/kernel/navigation/types'
 
 import {AnalyticsNoticeScreen} from '../screens/AnalyticsNoticeScreen'
 import {InitialScreen} from '../screens/InitialScreen'
-import {LanguagePickerScreen} from '../screens/LanguagePickerScreen'
 import {ReadPrivacyPolicyScreen} from '../screens/ReadPrivacyPolicyScreen'
 import {ReadTermsOfServiceScreen} from '../screens/ReadTermsOfServiceScreen'
 
@@ -27,38 +27,38 @@ export const InitializationNavigator = () => {
     >
       <Stack.Screen
         name="initial"
-        component={InitialScreen}
+        getComponent={() => InitialScreen}
         options={{headerShown: false}}
       />
 
       <Stack.Screen //
         name="language-pick"
         options={{title: strings.initialization.languagePickerTitle}}
-        component={LanguagePickerScreen}
+        getComponent={() => SelectLanguageScreen}
       />
 
       <Stack.Screen
         name="read-terms-of-service"
-        component={ReadTermsOfServiceScreen}
+        getComponent={() => ReadTermsOfServiceScreen}
         options={{title: strings.initialization.acceptTermsTitle}}
       />
 
       <Stack.Screen
         name="read-privacy-policy"
-        component={ReadPrivacyPolicyScreen}
+        getComponent={() => ReadPrivacyPolicyScreen}
         options={{title: strings.initialization.acceptPrivacyPolicyTitle}}
       />
 
       <Stack.Screen //
         name="enable-login-with-pin"
         options={{headerShown: false}}
-        component={InitiatePinScreen}
+        getComponent={() => InitiatePinScreen}
       />
 
       <Stack.Screen //
         name="analytics"
         options={{headerShown: false}}
-        component={AnalyticsNoticeScreen}
+        getComponent={() => AnalyticsNoticeScreen}
       />
     </Stack.Navigator>
   )

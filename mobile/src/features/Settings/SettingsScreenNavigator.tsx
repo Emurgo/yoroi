@@ -22,7 +22,6 @@ import {EnableLoginWithPinScreen} from '../Auth/ui/screens/EnableLoginWithPinScr
 import {PreparingWalletScreen} from '../SetupWallet/common/PreparingWalletScreen/PreparingWalletScreen'
 import {AboutScreen} from './ui/screens/ChangeApplicationSettingsScreen/AboutScreen/AboutScreen'
 import {ApplicationSettingsScreen} from './ui/screens/ChangeApplicationSettingsScreen/ApplicationSettingsScreen'
-import {ChangeLanguageScreen} from './ui/screens/ChangeApplicationSettingsScreen/ChangeLanguageScreen/ChangeLanguageScreen'
 import {
   ChangeNetworkScreen,
   useHandleOpenNetworkNoticeModal,
@@ -33,6 +32,7 @@ import {PreparingNetworkScreen} from './ui/screens/ChangeApplicationSettingsScre
 import {EnableLoginWithOsScreen} from './ui/screens/ChangeApplicationSettingsScreen/EnableLoginWithOs/EnableLoginWithOsScreen'
 import {PrivacyPolicyScreen} from './ui/screens/ChangeApplicationSettingsScreen/PrivacyPolicy/PrivacyPolicyScreen'
 import {SelectCurrencySymbolScreen} from './ui/screens/ChangeApplicationSettingsScreen/SelectCurrencySymbolScreen/SelectCurrencySymbolScreen'
+import {SelectLanguageScreen} from './ui/screens/ChangeApplicationSettingsScreen/SelectLanguageScreen/SelectLanguageScreen'
 import {SystemLogScreen} from './ui/screens/ChangeApplicationSettingsScreen/SystemLogScreen/SystemLogScreen'
 import {TermsOfServiceScreen} from './ui/screens/ChangeApplicationSettingsScreen/TermsOfService/TermsOfServiceScreen'
 import {ToggleAnalyticsSettingsScreen} from './ui/screens/ChangeApplicationSettingsScreen/ToggleAnalyticsSettings/ToggleAnalyticsSettingsScreen'
@@ -127,7 +127,7 @@ export const SettingsScreenNavigator = () => {
 
       <Stack.Screen //
         name="change-language"
-        getComponent={() => ChangeLanguageScreen}
+        getComponent={() => SelectLanguageScreen}
         options={{title: strings.settings.languageTitle}}
       />
 
