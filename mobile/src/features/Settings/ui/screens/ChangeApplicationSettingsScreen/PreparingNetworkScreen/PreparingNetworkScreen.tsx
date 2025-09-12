@@ -22,7 +22,9 @@ export const PreparingNetworkScreen = () => {
   useLaunchRouteAfterSyncing({selectedNetwork})
 
   return (
-    <SafeAreaView style={[a.flex_1, a.align_center, a.justify_center]}>
+    <SafeAreaView
+      style={[a.flex_1, a.px_lg, a.pt_lg, a.align_center, a.justify_center]}
+    >
       <Text style={[ta.text_primary_max, a.text_center, a.heading_2_medium]}>
         {strings.settings.changeNetwork.preparingNetwork}
       </Text>

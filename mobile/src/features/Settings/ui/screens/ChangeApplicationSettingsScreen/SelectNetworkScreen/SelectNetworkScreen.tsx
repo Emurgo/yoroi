@@ -16,7 +16,7 @@ import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetw
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Hr} from '~/ui/Hr/Hr'
 
-import {useNavigateTo} from '../../../../common/navigation'
+import {useNavigateTo} from '../../../../hooks/useNavigateTo'
 import {NetworkItem} from './NetworkItem'
 
 export const SelectNetworkScreen = () => {
@@ -48,7 +48,10 @@ export const SelectNetworkScreen = () => {
   }, [hasShownNetworkNotice, setHasShownNetworkNotice])
 
   return (
-    <SafeAreaView edges={['bottom', 'right', 'left']} style={a.flex_1}>
+    <SafeAreaView
+      edges={['bottom', 'right', 'left']}
+      style={[a.flex_1, a.pt_lg]}
+    >
       <FlatList
         contentContainerStyle={a.px_lg}
         data={networks}

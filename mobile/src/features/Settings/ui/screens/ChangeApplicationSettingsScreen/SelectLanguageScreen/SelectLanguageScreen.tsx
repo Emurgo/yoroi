@@ -34,7 +34,10 @@ export const SelectLanguageScreen = () => {
   ) as LanguageRecord[]
 
   return (
-    <SafeAreaView edges={['left', 'right', 'bottom']} style={a.flex_1}>
+    <SafeAreaView
+      edges={['left', 'right', 'bottom']}
+      style={[a.flex_1, a.pt_lg]}
+    >
       <FlatList
         contentContainerStyle={a.px_lg}
         data={filteredLanguages}

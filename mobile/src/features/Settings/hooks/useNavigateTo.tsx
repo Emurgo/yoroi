@@ -1,6 +1,7 @@
 import {Chain} from '@yoroi/types'
 
 import {useNavigation} from '@react-navigation/native'
+import * as React from 'react'
 
 import {useWalletNavigation} from '../../../kernel/navigation/hooks/useWalletNavigation'
 import {SettingsRouteNavigation} from '../../../kernel/navigation/types'
@@ -9,7 +10,7 @@ export const useNavigateTo = () => {
   const navigation = useNavigation<SettingsRouteNavigation>()
   const walletNavigation = useWalletNavigation()
 
-  return {
+  return React.useRef({
     enableLoginWithPin: () =>
       walletNavigation.navigation.navigate('enable-login-with-pin'),
     enableLoginWithOs: () => navigation.navigate('enable-login-with-os'),
@@ -28,5 +29,6 @@ export const useNavigateTo = () => {
       navigation.navigate('disable-easy-confirmation'),
     preparingNetworks: (selectedNetwork: Chain.SupportedNetworks) =>
       navigation.navigate('preparing-network', {selectedNetwork}),
-  }
+    systemLog: () => navigation.navigate('settings-system-log'),
+  }).current
 }

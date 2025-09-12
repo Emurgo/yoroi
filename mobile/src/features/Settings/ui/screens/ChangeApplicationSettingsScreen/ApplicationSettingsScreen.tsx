@@ -14,7 +14,7 @@ import {
   SettingsItem,
   SettingsSection,
 } from '~/features/Settings/SettingsItems'
-import {useNavigateTo} from '~/features/Settings/common/navigation'
+import {useNavigateTo} from '~/features/Settings/hooks/useNavigateTo'
 import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
 import {isAndroid} from '~/kernel/constants'
 import {useLanguage} from '~/kernel/i18n/LanguageProvider'

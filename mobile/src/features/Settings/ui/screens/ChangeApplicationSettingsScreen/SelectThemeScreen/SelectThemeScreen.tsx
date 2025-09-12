@@ -31,7 +31,10 @@ export const SelectThemeScreen = () => {
   }))
 
   return (
-    <SafeAreaView edges={['bottom', 'right', 'left']} style={a.flex_1}>
+    <SafeAreaView
+      edges={['bottom', 'right', 'left']}
+      style={[a.flex_1, a.pt_lg]}
+    >
       <FlatList
         contentContainerStyle={a.px_lg}
         data={themes}

@@ -26,12 +26,12 @@ import {useOpenNetworkNoticeModal} from './hooks/useOpenNetworkNoticeModal'
 import {AboutScreen} from './ui/screens/ChangeApplicationSettingsScreen/AboutScreen/AboutScreen'
 import {ApplicationSettingsScreen} from './ui/screens/ChangeApplicationSettingsScreen/ApplicationSettingsScreen'
 import {EnableLoginWithOsScreen} from './ui/screens/ChangeApplicationSettingsScreen/EnableLoginWithOs/EnableLoginWithOsScreen'
+import {ListSystemLogsScreen} from './ui/screens/ChangeApplicationSettingsScreen/ListSystemLogsScreen/ListSystemLogsScreen'
 import {PreparingNetworkScreen} from './ui/screens/ChangeApplicationSettingsScreen/PreparingNetworkScreen/PreparingNetworkScreen'
 import {SelectCurrencySymbolScreen} from './ui/screens/ChangeApplicationSettingsScreen/SelectCurrencySymbolScreen/SelectCurrencySymbolScreen'
 import {SelectLanguageScreen} from './ui/screens/ChangeApplicationSettingsScreen/SelectLanguageScreen/SelectLanguageScreen'
 import {SelectNetworkScreen} from './ui/screens/ChangeApplicationSettingsScreen/SelectNetworkScreen/SelectNetworkScreen'
 import {SelectThemeScreen} from './ui/screens/ChangeApplicationSettingsScreen/SelectThemeScreen/SelectThemeScreen'
-import {SystemLogScreen} from './ui/screens/ChangeApplicationSettingsScreen/SystemLogScreen/SystemLogScreen'
 import {ToggleAnalyticsSettingsScreen} from './ui/screens/ChangeApplicationSettingsScreen/ToggleAnalyticsSettings/ToggleAnalyticsSettingsScreen'
 import {NetworkTag} from './ui/shared/NetworkTag'
 import {ChangePasswordScreen} from './useCases/changeWalletSettings/ChangePassword'
@@ -85,7 +85,7 @@ export const SettingsScreenNavigator = () => {
 
       <Stack.Screen
         name="settings-system-log"
-        getComponent={() => SystemLogScreen}
+        getComponent={() => ListSystemLogsScreen}
         options={{title: strings.settings.systemLogTitle}}
       />
 
