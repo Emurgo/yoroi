@@ -16,7 +16,7 @@ import {
 } from '~/features/Settings/SettingsItems'
 import {useNavigateTo} from '~/features/Settings/common/navigation'
 import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
-import {isAndroid} from '~/kernel/constants'
+import {isAndroid, isDev} from '~/kernel/constants'
 import {useLanguage} from '~/kernel/i18n/LanguageProvider'
 import {LanguageRecord, supportedLanguages} from '~/kernel/i18n/localization'
 import {useStrings} from '~/kernel/i18n/useStrings'
@@ -170,7 +170,7 @@ export const ApplicationSettingsScreen = () => {
             <CrashReportsSwitch />
           </SettingsItem>
 
-          {isAndroid && (
+          {isAndroid && isDev && (
             <SettingsItem
               icon={<Icon.Share {...iconProps} />}
               label={strings.settings.applicationSettings.screenSharing}

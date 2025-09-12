@@ -42,6 +42,10 @@ export const useInitScreenShare = () => {
 export const changeScreenShareNativeSettingOnAndroid = (
   screenShareEnabled: boolean,
 ) => {
+  if (!FlagSecure) {
+    return
+  }
+
   if (screenShareEnabled) {
     FlagSecure.deactivate()
   } else {
