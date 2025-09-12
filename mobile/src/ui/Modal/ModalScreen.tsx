@@ -21,6 +21,7 @@ export const Modal = () => {
     footer,
     title,
     full,
+    isOpen,
   } = useModal()
   const {atoms: ta, palette: p, isDark} = useTheme()
   const {height: screenHeight} = useWindowDimensions()
@@ -28,6 +29,15 @@ export const Modal = () => {
   const snapPoints = React.useMemo(() => {
     return full ? ['100%'] : [height]
   }, [full, height])
+
+  React.useEffect(() => {
+    if (isOpen && bottomSheetModalRef?.current) {
+      // Force the modal to present when state changes
+      setTimeout(() => {
+        bottomSheetModalRef.current?.present()
+      }, 10)
+    }
+  }, [isOpen, bottomSheetModalRef])
 
   const animationConfigs = React.useMemo(() => {
     if (full) {
