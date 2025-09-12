@@ -3,6 +3,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import {useIsFocused} from '@react-navigation/native'
 import * as React from 'react'
 import {ScrollView, View} from 'react-native'
+import {v4} from 'uuid'
 
 import {useBrowser} from '~/features/Discover/common/BrowserProvider'
 
@@ -22,7 +23,7 @@ const getUrl = (searchValue: string, isEngineSearch: boolean) => {
 export const SearchDappInBrowserScreen = () => {
   const {palette: p} = useTheme()
   const navigateTo = useNavigateTo()
-  const {updateTab, tabs, tabActiveIndex} = useBrowser()
+  const {updateTab, tabs, tabActiveIndex, addTabAndSetActive} = useBrowser()
   const tabActive = tabs[tabActiveIndex]
   const [searchValue, setSearchValue] = React.useState('')
   const isFocused = useIsFocused()
@@ -55,6 +56,14 @@ export const SearchDappInBrowserScreen = () => {
   const handleSubmit = (isEngineSearch: boolean) => {
     if (searchValue === '') return
     const url = getUrl(searchValue, isEngineSearch)
+
+    if (tabActiveIndex < 0) {
+      const id = v4()
+      addTabAndSetActive(url, id)
+      navigateTo.browseDapp()
+      return
+    }
+
     updateTab(tabActiveIndex, {url})
     navigateTo.browseDapp()
   }

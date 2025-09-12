@@ -130,7 +130,7 @@ export const discoverMessages = defineMessages({
     defaultMessage: '!!!Open dApp',
   },
   disconnectWalletFromDApp: {
-    id: 'txReview.overview.wallet',
+    id: 'discover.discoverList.disconnectWalletFromDApp',
     defaultMessage: '!!!Disconnect wallet from dApp',
   },
   dAppActions: {
@@ -158,7 +158,7 @@ export const discoverMessages = defineMessages({
     defaultMessage: '!!!Permission 1',
   },
   singleAddressWarning: {
-    id: 'components.send.sendscreen.addressInputLabel',
+    id: 'components.receive.receivescreen.singleAddressWarning',
     defaultMessage: '!!!Single address warning',
   },
   confirmConnectionModalPermission2: {
@@ -166,11 +166,11 @@ export const discoverMessages = defineMessages({
     defaultMessage: '!!!Permission 2',
   },
   understand: {
-    id: 'rampOnOff.resultRampOnOff.and',
+    id: 'discover.unverifiedDappModal.understand',
     defaultMessage: '!!!Understand',
   },
   disclaimerModalText: {
-    id: 'discover.unverifiedDappModal.disclaimerModalTitle',
+    id: 'discover.unverifiedDappModal.disclaimerModalText',
     defaultMessage: '!!!Disclaimer modal text',
   },
   disclaimerModalTitle: {
@@ -238,11 +238,11 @@ export const discoverMessages = defineMessages({
     defaultMessage: '!!!Sign Message',
   },
   testnetWarningTitle: {
-    id: 'components.txhistory.flawedwalletmodal.title',
+    id: 'discover.testnetWarning.title',
     defaultMessage: '!!!Testnet warning title',
   },
   testnetWarningDescription: {
-    id: 'components.txhistory.flawedwalletmodal.title',
+    id: 'discover.testnetWarning.description',
     defaultMessage: '!!!Testnet warning description',
   },
   filterChildOptionsNews: {
@@ -290,7 +290,7 @@ export const discoverMessages = defineMessages({
     defaultMessage: '!!!Investment',
   },
   filterParentOptionsNFT: {
-    id: 'portfolio.portfolioDashboardScreen.nfts',
+    id: 'txReview.walletBalanceNFTs.title',
     defaultMessage: '!!!NFT',
   },
   filterParentOptionsTrading: {
@@ -302,7 +302,7 @@ export const discoverMessages = defineMessages({
     defaultMessage: '!!!Community',
   },
   disconnectWarning: {
-    id: 'components.txhistory.flawedwalletmodal.title',
+    id: 'discover.modal.disconnectWarning',
     defaultMessage: '!!!Disconnect warning',
   },
   collateralNotFoundText: {

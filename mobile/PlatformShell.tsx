@@ -12,10 +12,9 @@ import {
 import {RouterContainer} from './src/kernel/navigation/RouterContainer'
 import {ModalProvider} from './src/ui/Modal/ModalContext'
 
-const metricsManager = makeMetricsManager()
-
 export function PlatformShell({children}: React.PropsWithChildren) {
   useScreenCapture()
+  const metricsManager = React.useMemo(() => makeMetricsManager(), [])
 
   return (
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>

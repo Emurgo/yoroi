@@ -18,6 +18,7 @@ export const useConfirmConnection = () => {
       const selectedDapp = recommendedDApps.dapps.find((dapp) =>
         dapp.origins.includes(origin),
       )
+
       const name = selectedDapp?.name ?? origin
       const website = origin
       const logo = selectedDapp?.logo ?? ''
@@ -49,9 +50,10 @@ export const useConfirmConnection = () => {
             onConfirm: () => {
               shouldResolveOnClose = false
               closeModal()
-              InteractionManager.runAfterInteractions(() => {
+              // Small delay to ensure modal system is ready for next modal
+              setTimeout(() => {
                 openMainModal()
-              })
+              }, 100)
             },
           })
           return
