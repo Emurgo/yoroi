@@ -35,7 +35,7 @@ export const TermsOfServiceChangedScreen = () => {
   }
 
   return (
-    <SafeAreaView style={[a.flex_1, a.pt_lg]}>
+    <SafeAreaView style={[a.flex_1, a.pt_lg, ta.bg_color_max]}>
       <ScrollView
         bounces={false}
         contentContainerStyle={[a.flex_grow, a.px_lg]}

@@ -1,4 +1,4 @@
-import {atoms as a} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
 import {SafeAreaView} from 'react-native-safe-area-context'
@@ -13,6 +13,7 @@ export const AnalyticsNoticeScreen = () => {
   const navigateTo = useNavigateTo()
   const {track} = useMetrics()
   const {agree} = useLegalAgreement()
+  const {atoms: ta} = useTheme()
 
   const handleOnNext = () => {
     agree()
@@ -21,7 +22,7 @@ export const AnalyticsNoticeScreen = () => {
   }
 
   return (
-    <SafeAreaView style={a.flex_1}>
+    <SafeAreaView style={[a.flex_1, ta.bg_color_max]}>
       <Analytics type="notice" onNext={handleOnNext} />
     </SafeAreaView>
   )
