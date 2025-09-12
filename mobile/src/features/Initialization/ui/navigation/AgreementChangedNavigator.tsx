@@ -26,19 +26,19 @@ export const AgreementChangedNavigator = () => {
     >
       <Stack.Screen
         name="terms-of-service-changed"
-        component={TermsOfServiceChangedScreen}
+        getComponent={() => TermsOfServiceChangedScreen}
         options={{headerShown: false}}
       />
 
       <Stack.Screen
         name="analytics-changed"
-        component={AnalyticsChangedScreen}
+        getComponent={() => AnalyticsChangedScreen}
         options={{headerShown: false}}
       />
 
       <Stack.Screen
         name="read-terms-of-service"
-        component={ReadTermsOfServiceScreen}
+        getComponent={() => ReadTermsOfServiceScreen}
         options={{
           headerShown: true,
           title: strings.initialization.acceptTermsTitle,
@@ -47,7 +47,7 @@ export const AgreementChangedNavigator = () => {
 
       <Stack.Screen
         name="read-privacy-policy"
-        component={ReadPrivacyPolicyScreen}
+        getComponent={() => ReadPrivacyPolicyScreen}
         options={{
           headerShown: true,
           title: strings.initialization.acceptPrivacyPolicyTitle,

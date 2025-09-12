@@ -1,83 +1,85 @@
+import {time} from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
-import {Text, TouchableOpacity, View, useWindowDimensions} from 'react-native'
+import {
+  Linking,
+  Text,
+  TouchableOpacity,
+  View,
+  useWindowDimensions,
+} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
 import {useBold} from '~/hooks/useBold'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Button, ButtonType} from '~/ui/Button/Button'
+import {Icon} from '~/ui/Icon'
+import {SettingsSwitch} from '~/ui/SettingsSwitch/SettingsSwitch'
 import {Space} from '~/ui/Space/Space'
+import {YoroiLogo} from '~/ui/YoroiLogo/YoroiLogo'
 
-import {Icon} from '../../ui/Icon'
-import {SettingsSwitch} from '../SettingsSwitch/SettingsSwitch'
-import {YoroiLogo} from '../YoroiLogo/YoroiLogo'
-import {AnalyticsImage} from './AnalyticsImage'
+import {AnalyticsIllustration} from '../../illustrations/AnalyticsIllustration'
 
-type Props = {
-  type: 'notice' | 'settings'
-  onClose?: () => void
-  onReadMore?: () => void
+type Props =
+  | {
+      type: 'notice'
+      onNext: () => void
+    }
+  | {
+      type: 'settings'
+    }
+
+export const Analytics = (props: Props) => {
+  if (props.type === 'settings') return <Settings />
+  return <Notice onNext={props.onNext} />
 }
 
-export const Analytics = ({type, onClose, onReadMore}: Props) => {
-  if (type === 'settings') {
-    return <Settings onReadMore={onReadMore} />
-  }
-
-  return <Notice onClose={onClose} onReadMore={onReadMore} />
-}
-
-const BOTTOM_BUTTON_ROW_HEIGHT = 80
-
-const Notice = ({
-  onClose,
-  onReadMore,
-}: {
-  onClose?: () => void
-  onReadMore?: () => void
-}) => {
+const Notice = ({onNext}: {onNext?: () => void}) => {
   const strings = useStrings()
   const metrics = useMetrics()
   const {height: deviceHeight} = useWindowDimensions()
   const [contentHeight, setContentHeight] = React.useState(0)
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p, atoms: ta} = useTheme()
 
   const scrollViewRef = React.useRef<ScrollView | null>(null)
 
   React.useEffect(() => {
     const timeout = setTimeout(() => {
       scrollViewRef.current?.flashScrollIndicators()
-    }, 500)
+    }, time.seconds(0.5))
 
     return () => clearTimeout(timeout)
   }, [])
 
   return (
-    <View style={[a.flex_1, ta.bg_color_max]}>
+    <View style={[a.flex_1]}>
       <ScrollView
         bounces={false}
-        style={[a.flex_1]}
+        style={a.flex_1}
+        contentContainerStyle={a.px_lg}
         ref={scrollViewRef}
-        persistentScrollbar={true}
-        showsVerticalScrollIndicator={true}
+        persistentScrollbar
+        showsVerticalScrollIndicator
       >
         <View
           style={[a.align_center, a.px_lg]}
           onLayout={(event) => {
             const {height} = event.nativeEvent.layout
-            setContentHeight(height + BOTTOM_BUTTON_ROW_HEIGHT)
+            setContentHeight(height + buttonHeight)
           }}
         >
-          <CommonContent onReadMore={onReadMore} showLogo />
+          <Info showLogo />
+
+          <Space.Height.lg />
 
           <Button
             size="S"
             type={ButtonType.Text}
             onPress={() => {
               metrics.disable()
-              onClose?.()
+              onNext?.()
             }}
             title={strings.ui.skip}
           />
@@ -88,13 +90,14 @@ const Notice = ({
 
       <View
         style={[
+          a.absolute,
+          a.w_full,
+          ta.bg_color_max,
+          a.h_full,
+          a.px_lg,
           {
-            width: '100%',
-            position: 'absolute',
             bottom: 0,
-            backgroundColor: p.bg_color_max,
-            height: BOTTOM_BUTTON_ROW_HEIGHT,
-            padding: 16,
+            height: buttonHeight,
           },
           {
             // only show border top if the content is scrollable
@@ -109,7 +112,7 @@ const Notice = ({
           type={ButtonType.Primary}
           onPress={() => {
             metrics.enable()
-            onClose?.()
+            onNext?.()
           }}
           title={strings.ui.accept}
         />
@@ -118,48 +121,45 @@ const Notice = ({
   )
 }
 
-const Settings = ({onReadMore}: {onReadMore?: () => void}) => {
+const Settings = () => {
   const metrics = useMetrics()
   const {atoms: ta} = useTheme()
   const strings = useStrings()
 
+  const handleOnValueChange = (value: boolean) => {
+    if (value) {
+      metrics.enable()
+    } else {
+      metrics.disable()
+    }
+  }
+
   return (
-    <View style={[a.flex_1, ta.bg_color_max]}>
-      <View style={[a.flex_1, a.px_lg]}>
-        <CommonContent onReadMore={onReadMore} />
+    <View style={[a.px_lg, a.gap_lg]}>
+      <Info />
 
-        <Space.Height.lg />
+      <View style={[a.flex_row, a.align_center, a.justify_between]}>
+        <Text style={[a.body_1_lg_medium, ta.text_gray_max]}>
+          {strings.ui.toggle}
+        </Text>
 
-        <View style={[a.flex_row, a.align_center, a.justify_between]}>
-          <Text style={[a.body_1_lg_medium, ta.text_gray_max]}>
-            {strings.ui.toggle}
-          </Text>
-          <SettingsSwitch
-            value={metrics.isEnabled}
-            onValueChange={(value) => {
-              if (value) {
-                metrics.enable()
-              } else {
-                metrics.disable()
-              }
-            }}
-          />
-        </View>
+        <SettingsSwitch
+          value={metrics.isEnabled}
+          onValueChange={handleOnValueChange}
+        />
       </View>
     </View>
   )
 }
 
-const CommonContent = ({
-  onReadMore,
-  showLogo,
-}: {
-  onReadMore?: () => void
-  showLogo?: boolean
-}) => {
+const Info = ({showLogo}: {showLogo?: boolean}) => {
   const strings = useStrings()
   const {palette: p, atoms: ta} = useTheme()
   const bold = useBold({style: a.body_1_lg_medium})
+
+  const handleOnReadMore = () => {
+    openReadMoreLink()
+  }
 
   const list = [
     {
@@ -185,7 +185,7 @@ const CommonContent = ({
   ] as const
 
   return (
-    <>
+    <View style={a.gap_lg}>
       {showLogo && (
         <>
           <Space.Height._2xl />
@@ -194,19 +194,17 @@ const CommonContent = ({
         </>
       )}
 
-      <AnalyticsImage />
+      <View style={a.align_center}>
+        <AnalyticsIllustration />
+      </View>
 
-      <Space.Height.lg />
-
-      <View style={{alignItems: 'center'}}>
+      <View style={a.align_center}>
         <Text style={[a.body_1_lg_medium, ta.text_gray_max]}>
           {strings.ui.analyticsHeader}
         </Text>
-
-        <Space.Height.lg />
       </View>
 
-      <View style={[a.gap_xs]}>
+      <View>
         {list.map(({icon, key}) => (
           <View key={key} style={[a.flex_row, a.align_center]}>
             <View style={[a.pr_sm]}>{icon}</View>
@@ -220,15 +218,19 @@ const CommonContent = ({
         ))}
       </View>
 
-      <Space.Height.lg />
-
-      <TouchableOpacity onPress={onReadMore}>
+      <TouchableOpacity onPress={handleOnReadMore}>
         <Text style={[ta.text_primary_medium, a.text_center, a.link_1_lg]}>
           {strings.ui.more}
         </Text>
       </TouchableOpacity>
-
-      <Space.Height.md />
-    </>
+    </View>
   )
 }
+
+const openReadMoreLink = () => {
+  Linking.openURL(
+    'https://emurgohelpdesk.zendesk.com/hc/en-us/articles/7594394140303-What-s-user-insights-',
+  )
+}
+
+const buttonHeight = 80

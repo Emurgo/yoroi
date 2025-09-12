@@ -9,14 +9,13 @@ import Svg, {
   SvgProps,
 } from 'react-native-svg'
 
-export const AnalyticsImage = (props: SvgProps) => {
+export const AnalyticsIllustration = (props: SvgProps) => {
   return (
     <Svg width={281} height={224} fill="none" {...props}>
       <Path
         d="M98.531 218.428L273.5 123.352M32.042 171.056l163.219-88.69M88.38 71l184.318 100.027M8.5 136.15L163.006 220"
-        stroke="#1D45BA"
+        stroke="#D1D9E8"
         strokeWidth={0.5}
-        opacity={0.2}
       />
       <G clipPath="url(#a)">
         <Path
@@ -96,7 +95,7 @@ export const AnalyticsImage = (props: SvgProps) => {
           d="M48.717 118.141v2.171L37.5 113.781v-2.171l1.872 1.094 9.345 5.437z"
         />
         <Path
-          fill="#171A42"
+          fill="#D1D9E8"
           d="M193.564 148.537v11.516a16.82 16.82 0 01-.364 3.474v-11.516c.242-1.164.364-2.328.364-3.474z"
         />
         <Path fill="#2E3192" d="M145.299 148.554h-.07l.018-.017v.017h.052z" />
@@ -109,7 +108,7 @@ export const AnalyticsImage = (props: SvgProps) => {
           d="M193.182 147.182v12.767l-3.658-.191-42.526-2.276-1.751-.104v-13.67l47.935 3.474z"
         />
         <Path
-          fill="#171A42"
+          fill="#D1D9E8"
           d="M144.415 115.761l-.018 39.29.85 2.327v-13.67l-.832-27.947zm49.149 27.947v4.847a16.81 16.81 0 01-.364 3.473v-4.846a17.06 17.06 0 00.364-3.474z"
         />
         <Path

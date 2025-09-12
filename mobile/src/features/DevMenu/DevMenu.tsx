@@ -9,6 +9,7 @@ import {SystemBars} from 'react-native-edge-to-edge'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useAuth} from '~/features/Auth/context/AuthProvider'
+import {Analytics} from '~/features/Legal/ui/shared/Analytics/Analytics'
 import {usePairing} from '~/features/Pairing/context/PairingProvider'
 import {decryptData} from '~/kernel/crypto/decrypt-data'
 import {encryptData} from '~/kernel/crypto/encrypt-data'
@@ -21,8 +22,6 @@ import {rootMMKV, rootSyncStorage} from '~/kernel/storage/storages'
 import {BluetoothDeviceManager} from '~/ui/BluetoothDeviceManager/BluetoothDeviceManager'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {LoadingOverlay} from '~/ui/LoadingOverlay/LoadingOverlay'
-
-import {SelectThemeScreen} from '../Settings/ui/screens/ChangeApplicationSettingsScreen/SelectThemeScreen/SelectThemeScreen'
 
 export function DevMenu() {
   const {isDark, config, basePalette, selectTheme, atoms: ta} = useTheme()
@@ -45,7 +44,7 @@ export function DevMenu() {
 
   return (
     <SafeAreaView edges={['top']} style={a.flex_1}>
-      <SelectThemeScreen />
+      <Analytics type="notice" />
     </SafeAreaView>
   )
 

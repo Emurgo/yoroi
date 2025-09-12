@@ -14,7 +14,7 @@ import {useNavigateTo} from '../../hooks/useNavigateTo'
 
 export const TermsOfServiceChangedScreen = () => {
   const [accepted, setAccepted] = React.useState(false)
-  const {atoms: ta, palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
   const navigateTo = useNavigateTo()
 
   const onPressContinue = () => {
@@ -27,27 +27,30 @@ export const TermsOfServiceChangedScreen = () => {
 
   const strings = useStrings()
 
-  const onTosLinkPress = () => {
+  const handleOnTosLinkPress = () => {
     navigateTo.readTermsOfService()
   }
-  const onPrivacyLinkPress = () => {
+  const handleOnPrivacyLinkPress = () => {
     navigateTo.readPrivacyPolicy()
   }
 
   return (
-    <SafeAreaView style={[a.flex_1, a.p_lg, ta.bg_color_max]}>
-      <ScrollView bounces={false} contentContainerStyle={a.flex_grow}>
+    <SafeAreaView style={[a.flex_1, a.pt_lg]}>
+      <ScrollView
+        bounces={false}
+        contentContainerStyle={[a.flex_grow, a.px_lg]}
+      >
         <Icon.YoroiWallet size={64} />
 
         <Space.Height.xl />
 
-        <Text style={[a.heading_3_medium, {color: p.gray_900}, a.text_center]}>
+        <Text style={[a.heading_3_medium, ta.text_gray_max, a.text_center]}>
           {strings.initialization.title}
         </Text>
 
         <Space.Height.lg />
 
-        <Text style={[a.body_1_lg_regular, {color: p.gray_800}, a.text_center]}>
+        <Text style={[a.body_1_lg_regular, ta.text_gray_medium, a.text_center]}>
           {strings.initialization.description}
         </Text>
 
@@ -61,37 +64,35 @@ export const TermsOfServiceChangedScreen = () => {
         >
           <View style={[a.flex, a.flex_row, a.flex_wrap]}>
             <Text
-              style={[a.body_1_lg_regular, {color: p.gray_max}]}
+              style={[a.body_1_lg_regular, ta.text_gray_max]}
             >{`${strings.initialization.tosIAgreeWith} `}</Text>
 
-            <TouchableOpacity onPress={onTosLinkPress}>
+            <TouchableOpacity onPress={handleOnTosLinkPress}>
               <Text
                 style={[
                   a.body_1_lg_regular,
-                  {color: p.gray_800, textDecorationLine: 'underline'},
+                  ta.text_gray_medium,
+                  {textDecorationLine: 'underline'},
                 ]}
               >
                 {strings.initialization.tosAgreement}
               </Text>
             </TouchableOpacity>
 
-            <Text
-              style={[a.body_1_lg_regular, {color: p.gray_max}]}
-            >{` `}</Text>
+            <Text style={[a.body_1_lg_regular, ta.text_gray_max]}>{` `}</Text>
 
-            <Text style={[a.body_1_lg_regular, {color: p.gray_max}]}>
+            <Text style={[a.body_1_lg_regular, ta.text_gray_max]}>
               {strings.initialization.tosAnd}
             </Text>
 
-            <Text
-              style={[a.body_1_lg_regular, {color: p.gray_max}]}
-            >{` `}</Text>
+            <Text style={[a.body_1_lg_regular, ta.text_gray_max]}>{` `}</Text>
 
-            <TouchableOpacity onPress={onPrivacyLinkPress}>
+            <TouchableOpacity onPress={handleOnPrivacyLinkPress}>
               <Text
                 style={[
                   a.body_1_lg_regular,
-                  {color: p.gray_800, textDecorationLine: 'underline'},
+                  ta.text_gray_medium,
+                  {textDecorationLine: 'underline'},
                 ]}
               >
                 {strings.initialization.privacyPolicy}
