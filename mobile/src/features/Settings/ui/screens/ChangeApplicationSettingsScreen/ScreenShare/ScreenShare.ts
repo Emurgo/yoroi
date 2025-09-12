@@ -8,21 +8,6 @@ import {screenShareStorageKeyManager} from '~/kernel/storage/storages'
 
 const {FlagSecure} = NativeModules
 
-export const useScreenShareSettingEnabled = () => {
-  const [screenShareEnabled] = useSyncStorageToState(
-    screenShareStorageKeyManager,
-  )
-
-  const data = isAndroid ? screenShareEnabled : true
-
-  return {
-    data,
-    error: null,
-    isLoading: false,
-    isError: false,
-  }
-}
-
 export const useInitScreenShare = () => {
   const [screenShareEnabled] = useSyncStorageToState(
     screenShareStorageKeyManager,

@@ -26,7 +26,7 @@ export const AboutScreen = () => {
 
   return (
     <SafeAreaView
-      style={[a.flex_1, a.px_lg, a.pt_lg, a.gap_2xl]}
+      style={[a.flex_1, a.px_lg, a.pt_lg, a.gap_2xl, ta.bg_color_max]}
       edges={['left', 'right', 'bottom']}
     >
       <View style={[a.flex_row, a.justify_between, a.align_center]}>

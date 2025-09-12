@@ -134,14 +134,14 @@ export const screenShareStorageKeyManager = settingsStorageKeyMaker<boolean>({
 })
 
 // Settings - Metrics
-export const metricsEnabledStorageKey = 'metrics-enabled'
+export const metricsEnabledStorageKey = 'metricsEnabled'
 export const metricsEnabledStorageKeyManager = settingsStorageKeyMaker<boolean>(
   {
     key: metricsEnabledStorageKey,
     parser: (data) => Boolean(parseBoolean(data)),
   },
 )
-export const metricsConsentRequestedStorageKey = 'metrics-consentRequested'
+export const metricsConsentRequestedStorageKey = 'metricsConsentRequested'
 export const metricsConsentRequestedStorageKeyManager = settingsStorageKeyMaker(
   {
     key: metricsConsentRequestedStorageKey,
@@ -150,7 +150,7 @@ export const metricsConsentRequestedStorageKeyManager = settingsStorageKeyMaker(
 )
 
 // Settings - Privacy Mode
-export const privacyModeStorageKey = 'privacyMode'
+export const privacyModeStorageKey = 'privacyModeEnabled'
 export const privacyModeStorageKeyManager = settingsStorageKeyMaker<boolean>({
   key: privacyModeStorageKey,
   parser: (data) => Boolean(parseBoolean(data)),

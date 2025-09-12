@@ -1,4 +1,4 @@
-import {atoms as a} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
 import {FlatList} from 'react-native'
@@ -21,6 +21,7 @@ const translatedByYoroi: Array<LanguageCode> = ['en-US', 'ja-JP']
 
 export const SelectLanguageScreen = () => {
   const strings = useStrings()
+  const {atoms: ta} = useTheme()
   const {languageCode, selectLanguage} = useLanguage()
 
   useSearchOnNavBar({
@@ -36,7 +37,7 @@ export const SelectLanguageScreen = () => {
   return (
     <SafeAreaView
       edges={['left', 'right', 'bottom']}
-      style={[a.flex_1, a.pt_lg]}
+      style={[a.flex_1, a.pt_lg, ta.bg_color_max]}
     >
       <FlatList
         contentContainerStyle={a.px_lg}

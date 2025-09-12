@@ -1,5 +1,4 @@
 import {networkConfigs} from '@yoroi/blockchains'
-import {useSyncStorageToState} from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
@@ -15,53 +14,55 @@ import {
   SettingsSection,
 } from '~/features/Settings/SettingsItems'
 import {useNavigateTo} from '~/features/Settings/hooks/useNavigateTo'
+import {useScreenSharing} from '~/features/Settings/hooks/useScreenSharing'
 import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
 import {isAndroid} from '~/kernel/constants'
 import {useLanguage} from '~/kernel/i18n/LanguageProvider'
 import {LanguageRecord, supportedLanguages} from '~/kernel/i18n/localization'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {
-  crashReportsStorageKeyManager,
-  screenShareStorageKeyManager,
-} from '~/kernel/storage/storages'
 import {Icon} from '~/ui/Icon'
 import {SettingsSwitch} from '~/ui/SettingsSwitch/SettingsSwitch'
-import {Space} from '~/ui/Space/Space'
 
 import {useCurrencyPairing} from '../../../context/CurrencyProvider'
+import {useCrashReport} from '../../../hooks/useCrashReport'
 import {usePrivacyMode} from './PrivacyMode/usePrivacyMode'
-import {
-  changeScreenShareNativeSettingOnAndroid,
-  useScreenShareSettingEnabled,
-} from './ScreenShare/ScreenShare'
 
 export const ApplicationSettingsScreen = () => {
   const strings = useStrings()
+  const {isPrivacyActive, togglePrivacyMode} = usePrivacyMode()
+  const {isCrashReportEnabled, toggleIsCrashReportEnabled} = useCrashReport()
+  const {currency} = useCurrencyPairing()
+  const authSetting = useAuthSetting()
+  const isAuthOsSupported = useIsAuthOsSupported()
+  const navigateTo = useNavigateTo()
+  const {network} = useSelectedNetwork()
   const {atoms: ta, paletteName: name, palette: p} = useTheme()
   const {languageCode} = useLanguage()
+  const {authWithOs} = useAuthWithOs({onSuccess: navigateTo.enableLoginWithPin})
+  const {isScreenSharingEnabled, toggleIsScreenSharingEnabled} =
+    useScreenSharing()
+
   const language = supportedLanguages.find(
     (lang) => lang.code === languageCode,
   ) as LanguageRecord
 
-  const {isPrivacyActive} = usePrivacyMode()
-  const {currency} = useCurrencyPairing()
-
-  const authSetting = useAuthSetting()
-  const isAuthOsSupported = useIsAuthOsSupported()
-  const navigateTo = useNavigateTo()
-
-  const {authWithOs} = useAuthWithOs({onSuccess: navigateTo.enableLoginWithPin})
-
-  const {network} = useSelectedNetwork()
-
-  const {isLoading: isScreenShareLoading} = useScreenShareSettingEnabled()
-
-  const onToggleAuthWithOs = () => {
+  const handleOnToggleAuthWithOs = () => {
     if (authSetting === 'os') {
       authWithOs()
     } else {
       navigateTo.enableLoginWithOs()
     }
+  }
+
+  const handleOnTogglePrivacyMode = () => {
+    togglePrivacyMode()
+  }
+  const handleOnToggleCrashReports = () => {
+    toggleIsCrashReportEnabled()
+  }
+
+  const handleOnToggleScreenSharingEnabled = () => {
+    toggleIsScreenSharingEnabled()
   }
 
   const iconProps = {
@@ -72,9 +73,13 @@ export const ApplicationSettingsScreen = () => {
   return (
     <SafeAreaView
       edges={['bottom', 'right', 'left']}
-      style={[ta.bg_color_max, a.flex_1]}
+      style={[a.flex_1, ta.bg_color_max]}
     >
-      <ScrollView bounces={false} style={[a.flex_1, a.p_lg]}>
+      <ScrollView
+        bounces={false}
+        style={a.flex_1}
+        contentContainerStyle={[a.px_lg, a.gap_lg]}
+      >
         <SettingsSection title={strings.settings.applicationSettings.general}>
           <NavigatedSettingsItem
             icon={<Icon.Globe {...iconProps} />}
@@ -129,8 +134,6 @@ export const ApplicationSettingsScreen = () => {
           />
         </SettingsSection>
 
-        <Space.Height.xl />
-
         <SettingsSection
           title={strings.settings.applicationSettings.securityReporting}
         >
@@ -146,7 +149,11 @@ export const ApplicationSettingsScreen = () => {
             label={strings.settings.applicationSettings.privacyMode}
             info={strings.settings.applicationSettings.privacyModeInfo}
           >
-            <PrivacyModeSwitch isPrivacyActive={isPrivacyActive} />
+            <SettingsSwitch
+              value={isPrivacyActive}
+              onValueChange={handleOnTogglePrivacyMode}
+            />
+            {/* <PrivacyModeSwitch isPrivacyActive={isPrivacyActive} /> */}
           </SettingsItem>
 
           <SettingsItem
@@ -157,7 +164,7 @@ export const ApplicationSettingsScreen = () => {
           >
             <SettingsSwitch
               value={authSetting === 'os'}
-              onValueChange={onToggleAuthWithOs}
+              onValueChange={handleOnToggleAuthWithOs}
               disabled={!isAuthOsSupported}
             />
           </SettingsItem>
@@ -167,7 +174,10 @@ export const ApplicationSettingsScreen = () => {
             label={strings.settings.applicationSettings.crashReporting}
             info={strings.settings.applicationSettings.crashReportingInfo}
           >
-            <CrashReportsSwitch />
+            <SettingsSwitch
+              value={isCrashReportEnabled}
+              onValueChange={handleOnToggleCrashReports}
+            />
           </SettingsItem>
 
           {isAndroid && (
@@ -176,76 +186,15 @@ export const ApplicationSettingsScreen = () => {
               label={strings.settings.applicationSettings.screenSharing}
               info={strings.settings.applicationSettings.screenSharingInfo}
             >
-              <ScreenSharingSwitch disabled={isScreenShareLoading} />
+              <SettingsSwitch
+                value={isScreenSharingEnabled}
+                onValueChange={handleOnToggleScreenSharingEnabled}
+                disabled={!isAndroid}
+              />
             </SettingsItem>
           )}
         </SettingsSection>
-
-        <Space.Height.xl />
       </ScrollView>
     </SafeAreaView>
-  )
-}
-
-// to avoid switch jumps
-const PrivacyModeSwitch = ({isPrivacyActive}: {isPrivacyActive: boolean}) => {
-  const {setPrivacyModeOn, setPrivacyModeOff} = usePrivacyMode()
-  const [isLocalPrivacyActive, setIsLocalPrivacyOff] =
-    React.useState(isPrivacyActive)
-
-  const onTogglePrivacyMode = () => {
-    setIsLocalPrivacyOff((prevState) => {
-      const next = !prevState
-      if (next) {
-        setPrivacyModeOn()
-      } else {
-        setPrivacyModeOff()
-      }
-      return next
-    })
-  }
-
-  return (
-    <SettingsSwitch
-      value={isLocalPrivacyActive}
-      onValueChange={onTogglePrivacyMode}
-    />
-  )
-}
-
-// to avoid switch jumps
-const CrashReportsSwitch = ({}: {}) => {
-  const [isLocalCrashReportEnabled, setIsLocalCrashReportEnabled] =
-    useSyncStorageToState(crashReportsStorageKeyManager)
-
-  const onToggleCrashReports = () => {
-    setIsLocalCrashReportEnabled(!isLocalCrashReportEnabled)
-  }
-
-  return (
-    <SettingsSwitch
-      value={isLocalCrashReportEnabled}
-      onValueChange={onToggleCrashReports}
-    />
-  )
-}
-
-// to avoid switch jumps
-const ScreenSharingSwitch = ({disabled}: {disabled: boolean}) => {
-  const [isLocalScreenSharingEnabled, setIsLocalScreenSharingEnabled] =
-    useSyncStorageToState(screenShareStorageKeyManager)
-
-  const onToggleScreenSharing = () => {
-    const newState = !isLocalScreenSharingEnabled
-    setIsLocalScreenSharingEnabled(newState)
-    changeScreenShareNativeSettingOnAndroid(newState)
-  }
-
-  return (
-    <SettingsSwitch
-      value={isLocalScreenSharingEnabled}
-      onValueChange={onToggleScreenSharing}
-      disabled={disabled}
-    />
   )
 }

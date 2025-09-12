@@ -11,7 +11,7 @@ import {Hr} from '~/ui/Hr/Hr'
 import {ThemeItem} from './ThemeItem'
 
 export const SelectThemeScreen = () => {
-  const {selectTheme, config} = useTheme()
+  const {selectTheme, config, atoms: ta} = useTheme()
 
   const {track} = useMetrics()
 
@@ -33,7 +33,7 @@ export const SelectThemeScreen = () => {
   return (
     <SafeAreaView
       edges={['bottom', 'right', 'left']}
-      style={[a.flex_1, a.pt_lg]}
+      style={[a.flex_1, a.pt_lg, ta.bg_color_max]}
     >
       <FlatList
         contentContainerStyle={a.px_lg}

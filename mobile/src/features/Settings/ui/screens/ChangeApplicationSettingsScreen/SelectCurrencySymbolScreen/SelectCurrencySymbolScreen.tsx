@@ -1,4 +1,4 @@
-import {atoms as a} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 
 import * as React from 'react'
@@ -11,6 +11,7 @@ import {useCurrencyPairing} from '../../../../context/CurrencyProvider'
 import {CurrencyItem} from './CurrencyItem'
 
 export const SelectCurrencySymbolScreen = () => {
+  const {atoms: ta} = useTheme()
   const {configCurrencies, currency, selectCurrency} = useCurrencyPairing()
   const currencies = Object.entries(configCurrencies)
     .map(([k, v]) => ({symbol: k as Portfolio.Currency.Symbol, data: v}))
@@ -19,7 +20,7 @@ export const SelectCurrencySymbolScreen = () => {
   return (
     <SafeAreaView
       edges={['bottom', 'right', 'left']}
-      style={[a.flex_1, a.pt_lg]}
+      style={[a.flex_1, a.pt_lg, ta.bg_color_max]}
     >
       <FlatList
         contentContainerStyle={a.px_lg}

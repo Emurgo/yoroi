@@ -9,7 +9,6 @@ import {SystemBars} from 'react-native-edge-to-edge'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useAuth} from '~/features/Auth/context/AuthProvider'
-import {Analytics} from '~/features/Legal/ui/shared/Analytics/Analytics'
 import {usePairing} from '~/features/Pairing/context/PairingProvider'
 import {decryptData} from '~/kernel/crypto/decrypt-data'
 import {encryptData} from '~/kernel/crypto/encrypt-data'
@@ -41,12 +40,6 @@ export function DevMenu() {
   const metrics = useMetrics()
   const {currency, ptActivity} = usePairing()
   const navigation = useNavigation<any>()
-
-  return (
-    <SafeAreaView edges={['top']} style={a.flex_1}>
-      <Analytics type="notice" />
-    </SafeAreaView>
-  )
 
   return (
     <SafeAreaView style={[a.flex_1, ta.bg_color_max, a.gap_sm]}>

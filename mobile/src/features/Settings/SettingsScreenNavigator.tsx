@@ -25,7 +25,7 @@ import {Icon} from '~/ui/Icon'
 import {useOpenNetworkNoticeModal} from './hooks/useOpenNetworkNoticeModal'
 import {AboutScreen} from './ui/screens/ChangeApplicationSettingsScreen/AboutScreen/AboutScreen'
 import {ApplicationSettingsScreen} from './ui/screens/ChangeApplicationSettingsScreen/ApplicationSettingsScreen'
-import {EnableLoginWithOsScreen} from './ui/screens/ChangeApplicationSettingsScreen/EnableLoginWithOs/EnableLoginWithOsScreen'
+import {EnableLoginWithOsScreen} from './ui/screens/ChangeApplicationSettingsScreen/EnableLoginWithOsScreen/EnableLoginWithOsScreen'
 import {ListSystemLogsScreen} from './ui/screens/ChangeApplicationSettingsScreen/ListSystemLogsScreen/ListSystemLogsScreen'
 import {PreparingNetworkScreen} from './ui/screens/ChangeApplicationSettingsScreen/PreparingNetworkScreen/PreparingNetworkScreen'
 import {SelectCurrencySymbolScreen} from './ui/screens/ChangeApplicationSettingsScreen/SelectCurrencySymbolScreen/SelectCurrencySymbolScreen'
@@ -63,12 +63,10 @@ export const SettingsScreenNavigator = () => {
     }, [track]),
   )
 
+  const navOptions = React.useMemo(() => defaultStackNavigationOptions(p), [p])
+
   return (
-    <Stack.Navigator
-      screenOptions={{
-        ...defaultStackNavigationOptions(p),
-      }}
-    >
+    <Stack.Navigator screenOptions={navOptions}>
       <Stack.Screen //
         name="app-settings"
         getComponent={() => ApplicationSettingsScreen}

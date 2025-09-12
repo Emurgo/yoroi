@@ -10,6 +10,8 @@ import {Hr} from '~/ui/Hr/Hr'
 import {Text} from '~/ui/Text/Text'
 
 export const ListSystemLogsScreen = () => {
+  const {atoms: ta} = useTheme()
+
   const renderLogEntry = React.useCallback(
     ({item: entry}: {item: App.Logger.Entry}) => {
       return (
@@ -35,7 +37,7 @@ export const ListSystemLogsScreen = () => {
 
   return (
     <SafeAreaView
-      style={[a.flex_1, a.pt_lg]}
+      style={[a.flex_1, a.pt_lg, ta.bg_color_max]}
       edges={['bottom', 'right', 'left']}
     >
       <FlatList

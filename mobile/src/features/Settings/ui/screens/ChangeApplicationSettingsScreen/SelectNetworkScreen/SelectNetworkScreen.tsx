@@ -1,5 +1,5 @@
 import {networkConfigs} from '@yoroi/blockchains'
-import {atoms as a} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {Chain} from '@yoroi/types'
 
 import {freeze} from 'immer'
@@ -20,6 +20,7 @@ import {useNavigateTo} from '../../../../hooks/useNavigateTo'
 import {NetworkItem} from './NetworkItem'
 
 export const SelectNetworkScreen = () => {
+  const {atoms: ta} = useTheme()
   const {walletManager} = useWalletManager()
   const navigateTo = useNavigateTo()
   const {network: selectedNetwork} = useSelectedNetwork()
@@ -50,7 +51,7 @@ export const SelectNetworkScreen = () => {
   return (
     <SafeAreaView
       edges={['bottom', 'right', 'left']}
-      style={[a.flex_1, a.pt_lg]}
+      style={[a.flex_1, a.pt_lg, ta.bg_color_max]}
     >
       <FlatList
         contentContainerStyle={a.px_lg}

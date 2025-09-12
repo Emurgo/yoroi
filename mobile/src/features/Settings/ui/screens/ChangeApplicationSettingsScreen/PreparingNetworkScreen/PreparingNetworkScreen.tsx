@@ -23,7 +23,14 @@ export const PreparingNetworkScreen = () => {
 
   return (
     <SafeAreaView
-      style={[a.flex_1, a.px_lg, a.pt_lg, a.align_center, a.justify_center]}
+      style={[
+        a.flex_1,
+        a.px_lg,
+        a.pt_lg,
+        a.align_center,
+        a.justify_center,
+        ta.bg_color_max,
+      ]}
     >
       <Text style={[ta.text_primary_max, a.text_center, a.heading_2_medium]}>
         {strings.settings.changeNetwork.preparingNetwork}
