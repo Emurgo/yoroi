@@ -19,13 +19,11 @@ import {
   defaultStackNavigationOptions,
 } from '~/kernel/navigation/common/helpers'
 import {SettingsStackRoutes, SettingsTabRoutes} from '~/kernel/navigation/types'
-import {Boundary} from '~/ui/Boundary/Boundary'
 import {Icon} from '~/ui/Icon'
 
 import {useOpenNetworkNoticeModal} from './hooks/useOpenNetworkNoticeModal'
 import {AboutScreen} from './ui/screens/ChangeApplicationSettingsScreen/AboutScreen/AboutScreen'
 import {ApplicationSettingsScreen} from './ui/screens/ChangeApplicationSettingsScreen/ApplicationSettingsScreen'
-import {EnableLoginWithOsScreen} from './ui/screens/ChangeApplicationSettingsScreen/EnableLoginWithOsScreen/EnableLoginWithOsScreen'
 import {ListSystemLogsScreen} from './ui/screens/ChangeApplicationSettingsScreen/ListSystemLogsScreen/ListSystemLogsScreen'
 import {PreparingNetworkScreen} from './ui/screens/ChangeApplicationSettingsScreen/PreparingNetworkScreen/PreparingNetworkScreen'
 import {SelectCurrencySymbolScreen} from './ui/screens/ChangeApplicationSettingsScreen/SelectCurrencySymbolScreen/SelectCurrencySymbolScreen'
@@ -112,12 +110,6 @@ export const SettingsScreenNavigator = () => {
         name="privacy-policy"
         getComponent={() => ReadPrivacyPolicyScreen}
         options={{title: strings.settings.privacyPolicyTitle}}
-      />
-
-      <Stack.Screen //
-        name="enable-login-with-os"
-        getComponent={() => EnableLoginWithOsScreenWrapper}
-        options={{headerShown: false}}
       />
 
       <Stack.Screen //
@@ -256,14 +248,6 @@ const SettingsTabNavigator = () => {
 
       <Tab.Screen name="app-settings" component={ApplicationSettingsScreen} />
     </Tab.Navigator>
-  )
-}
-
-const EnableLoginWithOsScreenWrapper = () => {
-  return (
-    <Boundary>
-      <EnableLoginWithOsScreen />
-    </Boundary>
   )
 }
 

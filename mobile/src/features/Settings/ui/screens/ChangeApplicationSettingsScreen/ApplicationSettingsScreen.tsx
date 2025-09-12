@@ -5,9 +5,8 @@ import * as React from 'react'
 import {ScrollView} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useAuthSetting} from '~/features/Auth/hooks/useAuthSetting'
+import {useAuth} from '~/features/Auth/context/AuthProvider'
 import {useAuthWithOs} from '~/features/Auth/hooks/useAuthWithOs'
-import {useIsAuthOsSupported} from '~/features/Auth/hooks/useIsAuthOsSupported'
 import {
   NavigatedSettingsItem,
   SettingsItem,
@@ -31,8 +30,6 @@ export const ApplicationSettingsScreen = () => {
   const {isPrivacyModeEnabled, toggleIsPrivacyModeEnabled} = usePrivacyMode()
   const {isCrashReportEnabled, toggleIsCrashReportEnabled} = useCrashReport()
   const {currency} = useCurrencyPairing()
-  const authSetting = useAuthSetting()
-  const isAuthOsSupported = useIsAuthOsSupported()
   const navigateTo = useNavigateTo()
   const {network} = useSelectedNetwork()
   const {atoms: ta, paletteName: name, palette: p} = useTheme()
@@ -43,18 +40,11 @@ export const ApplicationSettingsScreen = () => {
     toggleIsScreenCaptureEnabled,
     canSwitchScreenCapture,
   } = useScreenCapture()
+  const {enableLoginWithHost, authSetting, canAuthWithHost} = useAuth()
 
   const language = supportedLanguages.find(
     (lang) => lang.code === languageCode,
   ) as LanguageRecord
-
-  const handleOnToggleAuthWithOs = () => {
-    if (authSetting === 'os') {
-      authWithOs()
-    } else {
-      navigateTo.enableLoginWithOs()
-    }
-  }
 
   const handleOntoggleIsPrivacyModeEnabled = () => {
     toggleIsPrivacyModeEnabled()
@@ -62,9 +52,15 @@ export const ApplicationSettingsScreen = () => {
   const handleOnToggleCrashReports = () => {
     toggleIsCrashReportEnabled()
   }
-
   const handleOnToggleScreenCaptureEnabled = () => {
     toggleIsScreenCaptureEnabled()
+  }
+  const handleOnToggleEnableLoginWithHost = () => {
+    if (authSetting === 'os') {
+      authWithOs()
+    } else {
+      enableLoginWithHost()
+    }
   }
 
   const iconProps = {
@@ -155,19 +151,18 @@ export const ApplicationSettingsScreen = () => {
               value={isPrivacyModeEnabled}
               onValueChange={handleOntoggleIsPrivacyModeEnabled}
             />
-            {/* <PrivacyModeSwitch isPrivacyModeEnabled={isPrivacyModeEnabled} /> */}
           </SettingsItem>
 
           <SettingsItem
             icon={<Icon.Bio {...iconProps} />}
             label={strings.settings.applicationSettings.biometricsSignIn}
             info={strings.settings.applicationSettings.biometricsSignInInfo}
-            disabled={!isAuthOsSupported}
+            disabled={!canAuthWithHost}
           >
             <SettingsSwitch
               value={authSetting === 'os'}
-              onValueChange={handleOnToggleAuthWithOs}
-              disabled={!isAuthOsSupported}
+              onValueChange={handleOnToggleEnableLoginWithHost}
+              disabled={!canAuthWithHost}
             />
           </SettingsItem>
 
