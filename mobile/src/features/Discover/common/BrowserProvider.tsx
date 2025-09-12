@@ -7,6 +7,7 @@ import {useWalletManager} from '~/features/WalletManager/context/WalletManagerPr
 
 const defaultActions: BrowserActions = {
   addTab: () => invalid('missing init'),
+  addTabAndSetActive: () => invalid('missing init'),
   setTabActive: () => invalid('missing init'),
   updateTab: () => invalid('missing init'),
   removeTab: () => invalid('missing init'),
@@ -78,6 +79,9 @@ export const BrowserProvider = ({
     addTab: (url, id) => {
       dispatch({type: BrowserActionType.AddTab, payload: {url, id}})
     },
+    addTabAndSetActive: (url, id) => {
+      dispatch({type: BrowserActionType.AddTabAndSetActive, payload: {url, id}})
+    },
     setTabActive: (index) => {
       dispatch({type: BrowserActionType.SetTabActive, index})
     },
@@ -113,6 +117,7 @@ export const useBrowser = () =>
 
 enum BrowserActionType {
   AddTab = 'addTab',
+  AddTabAndSetActive = 'addTabAndSetActive',
   SetState = 'setState',
   SetTabActive = 'setTabActive',
   UpdateTab = 'updateTab',
@@ -123,6 +128,10 @@ enum BrowserActionType {
 type BrowserContextAction =
   | {
       type: BrowserActionType.AddTab
+      payload: {url: string; id: string}
+    }
+  | {
+      type: BrowserActionType.AddTabAndSetActive
       payload: {url: string; id: string}
     }
   | {
@@ -151,6 +160,7 @@ type BrowserContextAction =
 
 type BrowserActions = Readonly<{
   addTab: (url: string, id: string) => void
+  addTabAndSetActive: (url: string, id: string) => void
   setTabActive: (index: number) => void
   updateTab: (tabIndex: number, tabInfo: Partial<Omit<TabItem, 'id'>>) => void
   removeTab: (index: number) => void
@@ -165,6 +175,11 @@ const browserReducer = (
     switch (action.type) {
       case BrowserActionType.AddTab:
         draft.tabs.push({url: action.payload.url, id: action.payload.id})
+        break
+
+      case BrowserActionType.AddTabAndSetActive:
+        draft.tabs.push({url: action.payload.url, id: action.payload.id})
+        draft.tabActiveIndex = draft.tabs.length - 1
         break
 
       case BrowserActionType.SetState:

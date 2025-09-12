@@ -23,7 +23,7 @@ const getUrl = (searchValue: string, isEngineSearch: boolean) => {
 export const SearchDappInBrowserScreen = () => {
   const {palette: p} = useTheme()
   const navigateTo = useNavigateTo()
-  const {updateTab, tabs, tabActiveIndex, addTab, setTabActive} = useBrowser()
+  const {updateTab, tabs, tabActiveIndex, addTabAndSetActive} = useBrowser()
   const tabActive = tabs[tabActiveIndex]
   const [searchValue, setSearchValue] = React.useState('')
   const isFocused = useIsFocused()
@@ -59,8 +59,7 @@ export const SearchDappInBrowserScreen = () => {
 
     if (tabActiveIndex < 0) {
       const id = v4()
-      addTab(url, id)
-      setTabActive(tabs.length)
+      addTabAndSetActive(url, id)
       navigateTo.browseDapp()
       return
     }
