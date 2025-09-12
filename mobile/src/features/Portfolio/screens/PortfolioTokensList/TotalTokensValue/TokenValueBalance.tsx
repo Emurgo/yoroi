@@ -6,7 +6,7 @@ import * as React from 'react'
 import {Text, View} from 'react-native'
 
 import {useCurrencyPairing} from '~/features/Settings/context/CurrencyProvider'
-import {usePrivacyMode} from '~/features/Settings/ui/screens/ChangeApplicationSettingsScreen/PrivacyMode/usePrivacyMode'
+import {usePrivacyMode} from '~/features/Settings/hooks/usePrivacyMode'
 
 import {SkeletonPrimaryToken} from './SkeletonPrimaryToken'
 

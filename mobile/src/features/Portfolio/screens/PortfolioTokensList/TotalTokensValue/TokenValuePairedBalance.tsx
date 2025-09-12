@@ -5,7 +5,7 @@ import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
 import {Text} from 'react-native'
 
-import {usePrivacyMode} from '~/features/Settings/ui/screens/ChangeApplicationSettingsScreen/PrivacyMode/usePrivacyMode'
+import {usePrivacyMode} from '~/features/Settings/hooks/usePrivacyMode'
 import {PairedBalance} from '~/ui/PairedBalance/PairedBalance'
 
 import {SkeletonPairedToken} from './SkeletonPairedToken'

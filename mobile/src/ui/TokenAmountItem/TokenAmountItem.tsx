@@ -12,7 +12,7 @@ import {Text, View, ViewProps, useWindowDimensions} from 'react-native'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
 
-import {usePrivacyMode} from '../../features/Settings/ui/screens/ChangeApplicationSettingsScreen/PrivacyMode/usePrivacyMode'
+import {usePrivacyMode} from '../../features/Settings/hooks/usePrivacyMode'
 import {usePriceImpactRiskTheme} from '../../features/Swap/common/helpers'
 import {SwapPriceImpactRisk} from '../../features/Swap/common/types'
 import {features} from '../../kernel/features'

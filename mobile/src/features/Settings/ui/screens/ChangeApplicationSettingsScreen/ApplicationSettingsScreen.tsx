@@ -14,9 +14,8 @@ import {
   SettingsSection,
 } from '~/features/Settings/SettingsItems'
 import {useNavigateTo} from '~/features/Settings/hooks/useNavigateTo'
-import {useScreenSharing} from '~/features/Settings/hooks/useScreenSharing'
+import {useScreenCapture} from '~/features/Settings/hooks/useScreenCapture'
 import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
-import {isAndroid} from '~/kernel/constants'
 import {useLanguage} from '~/kernel/i18n/LanguageProvider'
 import {LanguageRecord, supportedLanguages} from '~/kernel/i18n/localization'
 import {useStrings} from '~/kernel/i18n/useStrings'
@@ -25,7 +24,7 @@ import {SettingsSwitch} from '~/ui/SettingsSwitch/SettingsSwitch'
 
 import {useCurrencyPairing} from '../../../context/CurrencyProvider'
 import {useCrashReport} from '../../../hooks/useCrashReport'
-import {usePrivacyMode} from './PrivacyMode/usePrivacyMode'
+import {usePrivacyMode} from '../../../hooks/usePrivacyMode'
 
 export const ApplicationSettingsScreen = () => {
   const strings = useStrings()
@@ -39,8 +38,11 @@ export const ApplicationSettingsScreen = () => {
   const {atoms: ta, paletteName: name, palette: p} = useTheme()
   const {languageCode} = useLanguage()
   const {authWithOs} = useAuthWithOs({onSuccess: navigateTo.enableLoginWithPin})
-  const {isScreenSharingEnabled, toggleIsScreenSharingEnabled} =
-    useScreenSharing()
+  const {
+    isScreenSharingEnabled,
+    toggleIsScreenSharingEnabled,
+    canSwitchScreenSharing,
+  } = useScreenCapture()
 
   const language = supportedLanguages.find(
     (lang) => lang.code === languageCode,
@@ -180,7 +182,7 @@ export const ApplicationSettingsScreen = () => {
             />
           </SettingsItem>
 
-          {isAndroid && (
+          {canSwitchScreenSharing && (
             <SettingsItem
               icon={<Icon.Share {...iconProps} />}
               label={strings.settings.applicationSettings.screenSharing}
@@ -189,7 +191,6 @@ export const ApplicationSettingsScreen = () => {
               <SettingsSwitch
                 value={isScreenSharingEnabled}
                 onValueChange={handleOnToggleScreenSharingEnabled}
-                disabled={!isAndroid}
               />
             </SettingsItem>
           )}

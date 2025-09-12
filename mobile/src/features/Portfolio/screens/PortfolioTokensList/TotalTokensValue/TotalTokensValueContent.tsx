@@ -13,7 +13,7 @@ import {
   usePortfolio,
 } from '~/features/Portfolio/context/PortfolioProvider'
 import {useCurrencyPairing} from '~/features/Settings/context/CurrencyProvider'
-import {usePrivacyMode} from '~/features/Settings/ui/screens/ChangeApplicationSettingsScreen/PrivacyMode/usePrivacyMode'
+import {usePrivacyMode} from '~/features/Settings/hooks/usePrivacyMode'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Icon} from '~/ui/Icon'
 import {PnlTag} from '~/ui/PnlTag/PnlTag'

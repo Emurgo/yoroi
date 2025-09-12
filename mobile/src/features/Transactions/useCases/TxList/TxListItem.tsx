@@ -11,7 +11,7 @@ import {Text, TouchableOpacity, View, ViewProps} from 'react-native'
 
 // import {TxHistoryRouteNavigation} from '~/kernel/navigation/navigation'
 import {useCurrencyPairing} from '~/features/Settings/context/CurrencyProvider'
-import {usePrivacyMode} from '~/features/Settings/ui/screens/ChangeApplicationSettingsScreen/PrivacyMode/usePrivacyMode'
+import {usePrivacyMode} from '~/features/Settings/hooks/usePrivacyMode'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Boundary, ResetError} from '~/ui/Boundary/Boundary'
