@@ -20,9 +20,8 @@ import {Icon} from '~/ui/Icon'
 import {ChangePinScreen} from '../Auth/ui/screens/ChangePinScreen'
 import {EnableLoginWithPinScreen} from '../Auth/ui/screens/EnableLoginWithPinScreen'
 import {PreparingWalletScreen} from '../SetupWallet/common/PreparingWalletScreen/PreparingWalletScreen'
-import {About} from './ui/screens/ChangeApplicationSettingsScreen/AboutScreen/AboutScreen'
+import {AboutScreen} from './ui/screens/ChangeApplicationSettingsScreen/AboutScreen/AboutScreen'
 import {ApplicationSettingsScreen} from './ui/screens/ChangeApplicationSettingsScreen/ApplicationSettingsScreen'
-import {ChangeCurrencyScreen} from './ui/screens/ChangeApplicationSettingsScreen/ChangeCurrencyScreen/ChangeCurrencyScreen'
 import {ChangeLanguageScreen} from './ui/screens/ChangeApplicationSettingsScreen/ChangeLanguageScreen/ChangeLanguageScreen'
 import {
   ChangeNetworkScreen,
@@ -33,6 +32,7 @@ import {NetworkTag} from './ui/screens/ChangeApplicationSettingsScreen/ChangeNet
 import {PreparingNetworkScreen} from './ui/screens/ChangeApplicationSettingsScreen/ChangeNetwork/PreparingNetworkScreen'
 import {EnableLoginWithOsScreen} from './ui/screens/ChangeApplicationSettingsScreen/EnableLoginWithOs/EnableLoginWithOsScreen'
 import {PrivacyPolicyScreen} from './ui/screens/ChangeApplicationSettingsScreen/PrivacyPolicy/PrivacyPolicyScreen'
+import {SelectCurrencySymbolScreen} from './ui/screens/ChangeApplicationSettingsScreen/SelectCurrencySymbolScreen/SelectCurrencySymbolScreen'
 import {SystemLogScreen} from './ui/screens/ChangeApplicationSettingsScreen/SystemLogScreen/SystemLogScreen'
 import {TermsOfServiceScreen} from './ui/screens/ChangeApplicationSettingsScreen/TermsOfService/TermsOfServiceScreen'
 import {ToggleAnalyticsSettingsScreen} from './ui/screens/ChangeApplicationSettingsScreen/ToggleAnalyticsSettings/ToggleAnalyticsSettingsScreen'
@@ -68,7 +68,7 @@ export const SettingsScreenNavigator = () => {
     >
       <Stack.Screen //
         name="app-settings"
-        component={ApplicationSettingsScreen}
+        getComponent={() => ApplicationSettingsScreen}
         options={{
           title: strings.settings.appSettingsTitle,
         }}
@@ -76,19 +76,19 @@ export const SettingsScreenNavigator = () => {
 
       <Stack.Screen
         name="about"
-        component={About}
+        getComponent={() => AboutScreen}
         options={{title: strings.settings.aboutTitle}}
       />
 
       <Stack.Screen
         name="settings-system-log"
-        component={SystemLogScreen}
+        getComponent={() => SystemLogScreen}
         options={{title: strings.settings.systemLogTitle}}
       />
 
       <Stack.Screen //
         name="main-settings"
-        component={SettingsTabNavigator}
+        getComponent={() => SettingsTabNavigator}
         options={{
           title: strings.settings.settingsTitle,
           headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
@@ -97,43 +97,43 @@ export const SettingsScreenNavigator = () => {
 
       <Stack.Screen
         name="change-wallet-name"
-        component={RenameWalletScreen}
+        getComponent={() => RenameWalletScreen}
         options={{title: strings.settings.changeWalletNameTitle}}
       />
 
       <Stack.Screen
         name="terms-of-use"
-        component={TermsOfServiceScreen}
+        getComponent={() => TermsOfServiceScreen}
         options={{title: strings.settings.termsOfServiceTitle}}
       />
 
       <Stack.Screen
         name="privacy-policy"
-        component={PrivacyPolicyScreen}
+        getComponent={() => PrivacyPolicyScreen}
         options={{title: strings.settings.privacyPolicyTitle}}
       />
 
       <Stack.Screen //
         name="enable-login-with-os"
-        component={EnableLoginWithOsScreenWrapper}
+        getComponent={() => EnableLoginWithOsScreenWrapper}
         options={{headerShown: false}}
       />
 
       <Stack.Screen //
         name="remove-wallet"
-        component={RemoveWalletScreen}
+        getComponent={() => RemoveWalletScreen}
         options={{title: strings.settings.removeWalletTitle}}
       />
 
       <Stack.Screen //
         name="change-language"
-        component={ChangeLanguageScreen}
+        getComponent={() => ChangeLanguageScreen}
         options={{title: strings.settings.languageTitle}}
       />
 
       <Stack.Screen //
         name="change-currency"
-        component={ChangeCurrencyScreen}
+        getComponent={() => SelectCurrencySymbolScreen}
         options={{
           title: strings.settings.currency,
         }}
@@ -141,7 +141,7 @@ export const SettingsScreenNavigator = () => {
 
       <Stack.Screen //
         name="change-theme"
-        component={ChangeThemeScreen}
+        getComponent={() => ChangeThemeScreen}
         options={{
           title: strings.settings.themeTitle,
         }}
@@ -149,7 +149,7 @@ export const SettingsScreenNavigator = () => {
 
       <Stack.Screen //
         name="change-network"
-        component={ChangeNetworkScreen}
+        getComponent={() => ChangeNetworkScreen}
         options={{
           title: strings.settings.networkTitle,
           headerRight: () => (
@@ -166,7 +166,7 @@ export const SettingsScreenNavigator = () => {
 
       <Stack.Screen //
         name="preparing-network"
-        component={PreparingNetworkScreen}
+        getComponent={() => PreparingNetworkScreen}
         options={{
           headerShown: false,
         }}
@@ -174,59 +174,59 @@ export const SettingsScreenNavigator = () => {
 
       <Stack.Screen //
         name="enable-easy-confirmation"
-        component={EnableEasyConfirmationScreen}
+        getComponent={() => EnableEasyConfirmationScreen}
         options={{title: strings.settings.enableEasyConfirmationTitle}}
       />
 
       <Stack.Screen //
         name="disable-easy-confirmation"
-        component={DisableEasyConfirmationScreen}
+        getComponent={() => DisableEasyConfirmationScreen}
         options={{title: strings.settings.disableEasyConfirmationTitle}}
       />
 
       <Stack.Screen //
         name="change-password"
-        component={ChangePasswordScreen}
+        getComponent={() => ChangePasswordScreen}
         options={{title: strings.settings.changePasswordTitle}}
       />
 
       <Stack.Screen //
         name="change-custom-pin"
+        getComponent={() => ChangePinScreenWrapper}
         options={{
           title: strings.settings.changeCustomPinTitle,
         }}
-        component={ChangePinScreenWrapper}
       />
 
       <Stack.Screen //
         name="manage-collateral"
+        getComponent={() => ManageCollateralScreen}
         options={{
           title: strings.settings.collateral,
         }}
-        component={ManageCollateralScreen}
       />
 
       <Stack.Screen //
         name="manage-notifications"
+        getComponent={() => ManageNotificationsNavigator}
         options={{headerShown: false}}
-        component={ManageNotificationsNavigator}
       />
 
       <Stack.Screen
         name="enable-login-with-pin"
         options={{title: strings.settings.customPinTitle}}
-        component={EnableLoginWithPinWrapper}
+        getComponent={() => EnableLoginWithPinWrapper}
       />
 
       <Stack.Screen //
         name="settings-preparing-wallet"
-        component={PreparingWalletScreen}
+        getComponent={() => PreparingWalletScreen}
         options={{headerShown: false}}
       />
 
       <Stack.Screen
         name="analytics"
-        component={ToggleAnalyticsSettingsScreen}
+        getComponent={() => ToggleAnalyticsSettingsScreen}
         options={{
           title: strings.settings.toggleAnalytics.toggleAnalyticsSettingsTitle,
         }}

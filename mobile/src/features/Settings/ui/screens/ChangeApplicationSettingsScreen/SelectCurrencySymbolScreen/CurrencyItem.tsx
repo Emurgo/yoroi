@@ -12,10 +12,10 @@ type Props = {
   nativeName: string
   symbol: Portfolio.Currency.Symbol
   selectCurrency: (symbol: Portfolio.Currency.Symbol) => void
-  isSelected: boolean
+  isSelected?: boolean
 }
 
-export const CurrencyPickerItem = ({
+export const CurrencyItem = ({
   nativeName,
   symbol,
   selectCurrency,
@@ -31,12 +31,13 @@ export const CurrencyPickerItem = ({
   }
 
   return (
-    <TouchableOpacity activeOpacity={0.5} onPress={handleSelectCurrency}>
+    <TouchableOpacity onPress={handleSelectCurrency}>
       <Row>
         <Description>
           <Title>{title}</Title>
           <Subtitle>{subtitle}</Subtitle>
         </Description>
+
         <Selected>
           {isSelected && <Icon.Check size={24} color={p.primary_600} />}
         </Selected>
@@ -45,16 +46,16 @@ export const CurrencyPickerItem = ({
   )
 }
 
-const Row = ({children}: {children: React.ReactNode}) => {
+const Row = ({children}: React.PropsWithChildren) => {
   const {palette: p} = useTheme()
   return (
     <View
       style={[
         a.flex_row,
+        a.border_b,
+        a.py_sm,
         {
           borderBottomColor: p.gray_200,
-          borderBottomWidth: 1,
-          paddingVertical: 8,
         },
       ]}
     >
@@ -63,7 +64,7 @@ const Row = ({children}: {children: React.ReactNode}) => {
   )
 }
 
-const Description = ({children}: {children: React.ReactNode}) => {
+const Description = ({children}: React.PropsWithChildren) => {
   return (
     <View
       style={[
@@ -78,7 +79,7 @@ const Description = ({children}: {children: React.ReactNode}) => {
   )
 }
 
-const Selected = ({children}: {children: React.ReactNode}) => {
+const Selected = ({children}: React.PropsWithChildren) => {
   return (
     <View
       style={[
@@ -94,7 +95,7 @@ const Selected = ({children}: {children: React.ReactNode}) => {
   )
 }
 
-const Title = ({children}: {children: React.ReactNode}) => {
+const Title = ({children}: React.PropsWithChildren) => {
   const {palette: p} = useTheme()
   return (
     <Text
@@ -110,7 +111,7 @@ const Title = ({children}: {children: React.ReactNode}) => {
   )
 }
 
-const Subtitle = ({children}: {children: React.ReactNode}) => {
+const Subtitle = ({children}: React.PropsWithChildren) => {
   const {palette: p} = useTheme()
   return (
     <Text

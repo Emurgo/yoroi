@@ -10,7 +10,7 @@ import {useIntl} from 'react-intl'
 import {Text, TouchableOpacity, View, ViewProps} from 'react-native'
 
 // import {TxHistoryRouteNavigation} from '~/kernel/navigation/navigation'
-import {useCurrencyPairing} from '~/features/Settings/ui/screens/ChangeApplicationSettingsScreen/ChangeCurrencyScreen/CurrencyContext'
+import {useCurrencyPairing} from '~/features/Settings/context/CurrencyProvider'
 import {usePrivacyMode} from '~/features/Settings/ui/screens/ChangeApplicationSettingsScreen/PrivacyMode/usePrivacyMode'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'

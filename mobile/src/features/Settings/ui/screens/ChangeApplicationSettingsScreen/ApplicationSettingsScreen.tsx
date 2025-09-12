@@ -28,7 +28,7 @@ import {Icon} from '~/ui/Icon'
 import {SettingsSwitch} from '~/ui/SettingsSwitch/SettingsSwitch'
 import {Space} from '~/ui/Space/Space'
 
-import {useCurrencyPairing} from './ChangeCurrencyScreen/CurrencyContext'
+import {useCurrencyPairing} from '../../../context/CurrencyProvider'
 import {usePrivacyMode} from './PrivacyMode/usePrivacyMode'
 import {
   changeScreenShareNativeSettingOnAndroid,

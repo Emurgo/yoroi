@@ -1,12 +1,9 @@
-import {mountAsyncStorage} from '@yoroi/common'
 import {Notifications as NotificationTypes} from '@yoroi/types'
 
 import * as Notifications from 'expo-notifications'
 
-import {
-  formatCurrency,
-  getCurrencySymbol,
-} from '~/features/Settings/ui/screens/ChangeApplicationSettingsScreen/ChangeCurrencyScreen/CurrencyContext'
+import {formatCurrency} from '~/features/Settings/context/CurrencyProvider'
+import {currencyStorageKeyManager} from '~/kernel/storage/storages'
 
 export const generateNotificationId = (): number => {
   return generateRandomInteger(0, Number.MAX_SAFE_INTEGER)
@@ -37,11 +34,9 @@ export const displayNotificationEvent = async (
     notificationEvent.trigger ===
     NotificationTypes.Trigger.PrimaryTokenPriceChanged
   ) {
-    const appStorage = mountAsyncStorage({path: '/'})
-    const currencyCode = await getCurrencySymbol(appStorage)
-    const newPrice = formatCurrency(
+    const currencyCode = currencyStorageKeyManager.read()
+    const newPrice = formatCurrency(currencyCode)(
       notificationEvent.metadata.nextPrice,
-      currencyCode,
     )
 
     sendNotification({

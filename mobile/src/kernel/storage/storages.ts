@@ -162,7 +162,7 @@ export const currencyStorageKeyManager =
   settingsStorageKeyMaker<Portfolio.Currency.Symbol>({
     key: currencyStorageKey,
     parser: (data) => {
-      const parsed = parseCurrencySymbol(data)
+      const parsed = parseCurrencySymbol(parseSafe(data))
       return parsed ?? defaultCurrency
     },
   })
