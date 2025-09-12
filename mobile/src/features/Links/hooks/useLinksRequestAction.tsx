@@ -34,7 +34,7 @@ export const useLinksRequestAction = () => {
 
   const processedActionRef = React.useRef<string | null>(null)
 
-  const {addTab, setTabActive, tabs} = useBrowser()
+  const {addTabAndSetActive} = useBrowser()
   const {
     memoChanged,
     receiverResolveChanged,
@@ -172,8 +172,7 @@ export const useLinksRequestAction = () => {
           track.discoverConnectedBottomSheetOpenDAppClicked()
 
           const id = uuid.v4()
-          addTab(dappUrl, id)
-          setTabActive(tabs.length)
+          addTabAndSetActive(dappUrl, id)
 
           closeModal()
           actionFinished()
@@ -188,12 +187,10 @@ export const useLinksRequestAction = () => {
     },
     [
       actionFinished,
-      addTab,
+      addTabAndSetActive,
       linkActionChanged,
       closeModal,
       navigateTo,
-      setTabActive,
-      tabs,
       track,
       isLoggedIn,
     ],

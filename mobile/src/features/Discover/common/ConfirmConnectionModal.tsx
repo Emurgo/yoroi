@@ -60,6 +60,8 @@ export const useOpenConfirmConnectionModal = () => {
           />
         ),
         height: modalHeight,
+        onClose: props.onClose,
+        canDiscard: false, // Prevent accidental dismissal by tapping backdrop
       })
     },
     [
