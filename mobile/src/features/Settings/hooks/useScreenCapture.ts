@@ -4,23 +4,23 @@ import * as ScreenCapture from 'expo-screen-capture'
 import * as React from 'react'
 
 import {isAndroid, isDev} from '~/kernel/constants'
-import {screenShareStorageKeyManager} from '~/kernel/storage/storages'
+import {screenCaptureStorageKeyManager} from '~/kernel/storage/storages'
 
 export const useScreenCapture = () => {
   const [
-    isScreenSharingEnabled,
-    setIsScreenSharingEnabled,
-    resetIsScreenSharingEnabled,
-  ] = useSyncStorageToState(screenShareStorageKeyManager)
+    isScreenCaptureEnabled,
+    setIsScreenCaptureEnabled,
+    resetIsScreenCaptureEnabled,
+  ] = useSyncStorageToState(screenCaptureStorageKeyManager)
 
   return React.useMemo(() => {
-    const canSwitchScreenSharing = isAndroid && isDev
+    const canSwitchScreenCapture = isAndroid && isDev
 
     return {
-      canSwitchScreenSharing,
-      isScreenSharingEnabled,
-      setIsScreenSharingEnabled: (value: boolean) => {
-        if (!canSwitchScreenSharing) return false
+      canSwitchScreenCapture,
+      isScreenCaptureEnabled,
+      setIsScreenCaptureEnabled: (value: boolean) => {
+        if (!canSwitchScreenCapture) return false
 
         if (value) {
           ScreenCapture.allowScreenCaptureAsync()
@@ -28,23 +28,23 @@ export const useScreenCapture = () => {
           ScreenCapture.preventScreenCaptureAsync()
         }
 
-        setIsScreenSharingEnabled(value)
+        setIsScreenCaptureEnabled(value)
       },
-      resetIsScreenSharingEnabled,
+      resetIsScreenCaptureEnabled,
       init: () => {
         // shouldn't happen
-        if (isScreenSharingEnabled && canSwitchScreenSharing) {
+        if (isScreenCaptureEnabled && canSwitchScreenCapture) {
           ScreenCapture.allowScreenCaptureAsync()
         } else {
           ScreenCapture.preventScreenCaptureAsync()
         }
       },
-      toggleIsScreenSharingEnabled: () =>
-        setIsScreenSharingEnabled(!isScreenSharingEnabled),
+      toggleIsScreenCaptureEnabled: () =>
+        setIsScreenCaptureEnabled(!isScreenCaptureEnabled),
     }
   }, [
-    isScreenSharingEnabled,
-    setIsScreenSharingEnabled,
-    resetIsScreenSharingEnabled,
+    isScreenCaptureEnabled,
+    setIsScreenCaptureEnabled,
+    resetIsScreenCaptureEnabled,
   ])
 }

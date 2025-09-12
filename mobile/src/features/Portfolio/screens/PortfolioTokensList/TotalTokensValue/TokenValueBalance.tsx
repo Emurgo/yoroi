@@ -24,7 +24,7 @@ export const TokenValueBalance = ({
 }: Props) => {
   const {palette: p} = useTheme()
   const {currency, config} = useCurrencyPairing()
-  const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
+  const {isPrivacyModeEnabled, privacyPlaceholder} = usePrivacyMode()
   const name = infoExtractName(amount.info)
 
   return (
@@ -39,7 +39,7 @@ export const TokenValueBalance = ({
             {color: p.text_gray_medium},
           ]}
         >
-          {isPrivacyActive
+          {isPrivacyModeEnabled
             ? privacyPlaceholder
             : isPrimaryTokenActive
               ? amountBreakdown(amount).bn.toFormat(2)

@@ -58,7 +58,7 @@ type AssetRowProps = {
 
 const AssetRow = ({entry, onSelect}: AssetRowProps) => {
   const {wallet} = useSelectedWallet()
-  const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
+  const {isPrivacyModeEnabled, privacyPlaceholder} = usePrivacyMode()
   const {tokenInfo} = usePortfolioTokenInfo({
     id: normalisePtId(entry.identifier),
     network: wallet.networkManager.network,
@@ -77,7 +77,7 @@ const AssetRow = ({entry, onSelect}: AssetRowProps) => {
   const quantity = tokenInfo
     ? formatTokenAmount(asQuantity(entry.amount), tokenInfo)
     : entry.amount.toFormat()
-  const protectedQuantity = isPrivacyActive ? privacyPlaceholder : quantity
+  const protectedQuantity = isPrivacyModeEnabled ? privacyPlaceholder : quantity
 
   const item = (
     <>

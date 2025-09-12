@@ -45,7 +45,7 @@ export const TokenAmountItem = ({
   const {openModal} = useModal()
   const {height: windowHeight} = useWindowDimensions()
   const {atoms: ta, palette: p} = useTheme()
-  const {privacyPlaceholder, isPrivacyActive} = usePrivacyMode()
+  const {privacyPlaceholder, isPrivacyModeEnabled} = usePrivacyMode()
   const priceImpactRiskTheme = usePriceImpactRiskTheme(
     priceImpactRisk ?? 'none',
   )
@@ -56,7 +56,7 @@ export const TokenAmountItem = ({
   const name = infoExtractName(info)
 
   const formattedQuantity =
-    !isPrivacyActive || ignorePrivacy === true
+    !isPrivacyModeEnabled || ignorePrivacy === true
       ? amountFormatter({dropTraillingZeros: true})(amount)
       : privacyPlaceholder
 

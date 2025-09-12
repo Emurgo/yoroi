@@ -28,9 +28,9 @@ type Props = {
 export const DashboardTokenItem = ({tokenInfo}: Props) => {
   const {palette: p} = useTheme()
   const navigationTo = useNavigateTo()
-  const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
+  const {isPrivacyModeEnabled, privacyPlaceholder} = usePrivacyMode()
   const formattedQuantity =
-    isPrivacyActive === false
+    isPrivacyModeEnabled === false
       ? amountBreakdown(tokenInfo).bn.toFormat(2)
       : privacyPlaceholder
 

@@ -28,7 +28,7 @@ import {usePrivacyMode} from '../../../hooks/usePrivacyMode'
 
 export const ApplicationSettingsScreen = () => {
   const strings = useStrings()
-  const {isPrivacyActive, togglePrivacyMode} = usePrivacyMode()
+  const {isPrivacyModeEnabled, toggleIsPrivacyModeEnabled} = usePrivacyMode()
   const {isCrashReportEnabled, toggleIsCrashReportEnabled} = useCrashReport()
   const {currency} = useCurrencyPairing()
   const authSetting = useAuthSetting()
@@ -39,9 +39,9 @@ export const ApplicationSettingsScreen = () => {
   const {languageCode} = useLanguage()
   const {authWithOs} = useAuthWithOs({onSuccess: navigateTo.enableLoginWithPin})
   const {
-    isScreenSharingEnabled,
-    toggleIsScreenSharingEnabled,
-    canSwitchScreenSharing,
+    isScreenCaptureEnabled,
+    toggleIsScreenCaptureEnabled,
+    canSwitchScreenCapture,
   } = useScreenCapture()
 
   const language = supportedLanguages.find(
@@ -56,15 +56,15 @@ export const ApplicationSettingsScreen = () => {
     }
   }
 
-  const handleOnTogglePrivacyMode = () => {
-    togglePrivacyMode()
+  const handleOntoggleIsPrivacyModeEnabled = () => {
+    toggleIsPrivacyModeEnabled()
   }
   const handleOnToggleCrashReports = () => {
     toggleIsCrashReportEnabled()
   }
 
-  const handleOnToggleScreenSharingEnabled = () => {
-    toggleIsScreenSharingEnabled()
+  const handleOnToggleScreenCaptureEnabled = () => {
+    toggleIsScreenCaptureEnabled()
   }
 
   const iconProps = {
@@ -152,10 +152,10 @@ export const ApplicationSettingsScreen = () => {
             info={strings.settings.applicationSettings.privacyModeInfo}
           >
             <SettingsSwitch
-              value={isPrivacyActive}
-              onValueChange={handleOnTogglePrivacyMode}
+              value={isPrivacyModeEnabled}
+              onValueChange={handleOntoggleIsPrivacyModeEnabled}
             />
-            {/* <PrivacyModeSwitch isPrivacyActive={isPrivacyActive} /> */}
+            {/* <PrivacyModeSwitch isPrivacyModeEnabled={isPrivacyModeEnabled} /> */}
           </SettingsItem>
 
           <SettingsItem
@@ -182,15 +182,15 @@ export const ApplicationSettingsScreen = () => {
             />
           </SettingsItem>
 
-          {canSwitchScreenSharing && (
+          {canSwitchScreenCapture && (
             <SettingsItem
               icon={<Icon.Share {...iconProps} />}
               label={strings.settings.applicationSettings.screenSharing}
               info={strings.settings.applicationSettings.screenSharingInfo}
             >
               <SettingsSwitch
-                value={isScreenSharingEnabled}
-                onValueChange={handleOnToggleScreenSharingEnabled}
+                value={isScreenCaptureEnabled}
+                onValueChange={handleOnToggleScreenCaptureEnabled}
               />
             </SettingsItem>
           )}

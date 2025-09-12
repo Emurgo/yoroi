@@ -40,7 +40,7 @@ export const TotalTokensValueContent = ({amount, headerCard}: Props) => {
   } = useCurrencyPairing()
   const {isPrimaryTokenActive, setIsPrimaryTokenActive, listTab} =
     usePortfolio()
-  const {togglePrivacyMode} = usePrivacyMode()
+  const {toggleIsPrivacyModeEnabled} = usePrivacyMode()
 
   const {changePercent, changeValue, variantPnl} = priceChange(open, close)
 
@@ -54,7 +54,7 @@ export const TotalTokensValueContent = ({amount, headerCard}: Props) => {
         <View style={[a.flex_row, a.gap_2xs, a.align_end]}>
           <TouchableOpacity
             style={[a.flex_row, a.gap_2xs, a.align_end]}
-            onPress={() => togglePrivacyMode()}
+            onPress={() => toggleIsPrivacyModeEnabled()}
           >
             <TokenValueBalance
               rate={close}

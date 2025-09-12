@@ -21,7 +21,7 @@ export const TokenValuePairedBalance = ({
   isPrimaryTokenActive,
 }: Props) => {
   const {palette: p} = useTheme()
-  const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
+  const {isPrivacyModeEnabled, privacyPlaceholder} = usePrivacyMode()
 
   const name = infoExtractName(amount.info)
 
@@ -35,7 +35,7 @@ export const TokenValuePairedBalance = ({
     )
   return (
     <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>{`${
-      isPrivacyActive
+      isPrivacyModeEnabled
         ? privacyPlaceholder
         : amountBreakdown(amount).bn.toFormat(2)
     } ${name}`}</Text>

@@ -28,12 +28,12 @@ type Props = {
 export const TokenBalanceItem = ({amount}: Props) => {
   const {palette: p} = useTheme()
   const navigationTo = useNavigateTo()
-  const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
+  const {isPrivacyModeEnabled, privacyPlaceholder} = usePrivacyMode()
 
   const {info} = amount
   const name = infoExtractName(info)
   const symbol = infoExtractName(info, {mode: 'currency'})
-  const balanceFormatted = isPrivacyActive
+  const balanceFormatted = isPrivacyModeEnabled
     ? privacyPlaceholder
     : amountBreakdown(amount).bn.toFormat(2)
 

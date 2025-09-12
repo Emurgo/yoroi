@@ -16,7 +16,7 @@ import {Space} from '~/ui/Space/Space'
 export const BalanceBanner = React.forwardRef<ResetErrorRef>((_, ref) => {
   const {wallet, meta} = useSelectedWallet()
   const primaryBalance = usePortfolioPrimaryBalance({wallet})
-  const {togglePrivacyMode} = usePrivacyMode()
+  const {toggleIsPrivacyModeEnabled} = usePrivacyMode()
 
   return (
     <View>
@@ -33,7 +33,7 @@ export const BalanceBanner = React.forwardRef<ResetErrorRef>((_, ref) => {
       <Space.Height.sm />
 
       <TouchableOpacity
-        onPress={() => togglePrivacyMode()}
+        onPress={() => toggleIsPrivacyModeEnabled()}
         style={{
           flexDirection: 'column',
           justifyContent: 'center',
@@ -54,17 +54,17 @@ export const BalanceBanner = React.forwardRef<ResetErrorRef>((_, ref) => {
 
 type BalanceProps = {amount: Portfolio.Token.Amount; ignorePrivacy?: boolean}
 const Balance = ({amount, ignorePrivacy}: BalanceProps) => {
-  const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
+  const {isPrivacyModeEnabled, privacyPlaceholder} = usePrivacyMode()
   const {palette: p} = useTheme()
 
   const balance = React.useMemo(
     () =>
-      !isPrivacyActive || ignorePrivacy === true
+      !isPrivacyModeEnabled || ignorePrivacy === true
         ? amountFormatter({template: '{{value}} {{ticker}}'})(amount)
         : amountFormatter({template: `${privacyPlaceholder} {{ticker}}`})(
             amount,
           ),
-    [amount, ignorePrivacy, isPrivacyActive, privacyPlaceholder],
+    [amount, ignorePrivacy, isPrivacyModeEnabled, privacyPlaceholder],
   )
 
   return (

@@ -126,10 +126,10 @@ export const languageStorageKeyManager = settingsStorageKeyMaker<LanguageCode>({
   },
 })
 
-// Settings - Screen Share
-export const screenShareStorageKey = 'screenShareEnabled'
-export const screenShareStorageKeyManager = settingsStorageKeyMaker<boolean>({
-  key: screenShareStorageKey,
+// Settings - Screen Capture
+export const screenCaptureStorageKey = 'screenCaptureEnabled'
+export const screenCaptureStorageKeyManager = settingsStorageKeyMaker<boolean>({
+  key: screenCaptureStorageKey,
   parser: (data) => Boolean(parseBoolean(data)),
 })
 
@@ -150,11 +150,12 @@ export const metricsConsentRequestedStorageKeyManager = settingsStorageKeyMaker(
 )
 
 // Settings - Privacy Mode
-export const privacyModeStorageKey = 'privacyModeEnabled'
-export const privacyModeStorageKeyManager = settingsStorageKeyMaker<boolean>({
-  key: privacyModeStorageKey,
-  parser: (data) => Boolean(parseBoolean(data)),
-})
+export const privacyModeEnabledStorageKey = 'privacyModeEnabled'
+export const privacyModeEnabledStorageKeyManager =
+  settingsStorageKeyMaker<boolean>({
+    key: privacyModeEnabledStorageKey,
+    parser: (data) => Boolean(parseBoolean(data)),
+  })
 
 // Settings - Currency
 export const currencyStorageKey = 'currencySymbol'

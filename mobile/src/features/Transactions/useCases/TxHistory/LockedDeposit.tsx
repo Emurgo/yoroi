@@ -17,12 +17,12 @@ export const LockedDeposit = ({
   ignorePrivacy?: boolean
 }) => {
   const {wallet} = useSelectedWallet()
-  const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
+  const {isPrivacyModeEnabled, privacyPlaceholder} = usePrivacyMode()
   const {lockedAsStorageCost} = usePortfolioPrimaryBreakdown({wallet})
 
   const amount = React.useMemo(
     () =>
-      !isPrivacyActive || !ignorePrivacy
+      !isPrivacyModeEnabled || !ignorePrivacy
         ? amountFormatter({template: '{{value}} {{ticker}}'})({
             quantity: lockedAsStorageCost,
             info: wallet.portfolioPrimaryTokenInfo,
@@ -33,7 +33,7 @@ export const LockedDeposit = ({
           }),
     [
       ignorePrivacy,
-      isPrivacyActive,
+      isPrivacyModeEnabled,
       lockedAsStorageCost,
       privacyPlaceholder,
       wallet.portfolioPrimaryTokenInfo,

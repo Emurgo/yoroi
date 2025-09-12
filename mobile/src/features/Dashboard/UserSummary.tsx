@@ -32,7 +32,7 @@ export const UserSummary = ({
   const {palette: p} = useTheme()
   const strings = useStrings()
   const {wallet} = useSelectedWallet()
-  const {isPrivacyActive} = usePrivacyMode()
+  const {isPrivacyModeEnabled} = usePrivacyMode()
 
   return (
     <TitledCard title={strings.dashboard.title} testID="userSummaryTitleCard">
@@ -54,7 +54,7 @@ export const UserSummary = ({
               style={[a.body_1_lg_medium, {color: p.text_gray_medium}]}
               testID="userSummaryAvailableFundsText"
             >
-              {!isPrivacyActive
+              {!isPrivacyModeEnabled
                 ? totalAdaSum != null
                   ? formatAdaWithText(
                       asQuantity(totalAdaSum),
@@ -85,7 +85,7 @@ export const UserSummary = ({
               style={[a.body_1_lg_medium, {color: p.text_gray_medium}]}
               testID="userSummaryRewardsText"
             >
-              {!isPrivacyActive
+              {!isPrivacyModeEnabled
                 ? totalRewards != null
                   ? formatAdaWithText(
                       asQuantity(totalRewards),
@@ -116,7 +116,7 @@ export const UserSummary = ({
               style={[a.body_1_lg_medium, {color: p.text_gray_medium}]}
               testID="userSummaryDelegatedText"
             >
-              {!isPrivacyActive
+              {!isPrivacyModeEnabled
                 ? totalDelegated != null
                   ? formatAdaWithText(
                       asQuantity(totalDelegated),

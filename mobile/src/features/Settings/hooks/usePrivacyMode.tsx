@@ -2,24 +2,22 @@ import {useSyncStorageToState} from '@yoroi/common'
 
 import * as React from 'react'
 
-import {privacyModeStorageKeyManager} from '~/kernel/storage/storages'
+import {privacyModeEnabledStorageKeyManager} from '~/kernel/storage/storages'
 
 export const privacyPlaceholder = '******'
 
 export const usePrivacyMode = () => {
-  const [privacyMode, setPrivacyMode] = useSyncStorageToState(
-    privacyModeStorageKeyManager,
+  const [isPrivacyModeEnabled, setIsPrivacyModeEnabled] = useSyncStorageToState(
+    privacyModeEnabledStorageKeyManager,
   )
 
   return React.useMemo(
     () => ({
-      isPrivacyActive: privacyMode,
-      privacyMode,
-      togglePrivacyMode: () => setPrivacyMode(!privacyMode),
-      setPrivacyModeOff: () => setPrivacyMode(false),
-      setPrivacyModeOn: () => setPrivacyMode(true),
+      isPrivacyModeEnabled,
+      toggleIsPrivacyModeEnabled: () =>
+        setIsPrivacyModeEnabled(!isPrivacyModeEnabled),
       privacyPlaceholder,
     }),
-    [privacyMode, setPrivacyMode],
+    [isPrivacyModeEnabled, setIsPrivacyModeEnabled],
   )
 }

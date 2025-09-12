@@ -146,17 +146,17 @@ const Amount = ({
   tokenInfo: Portfolio.Token.Info
 }) => {
   const {palette: p} = useTheme()
-  const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
+  const {isPrivacyModeEnabled, privacyPlaceholder} = usePrivacyMode()
 
   return (
     <View style={[a.flex_1, a.flex_row]} testID="transactionAmount">
       <Text style={[{color: p.gray_900}, a.body_2_md_medium]}>
-        {!isPrivacyActive &&
+        {!isPrivacyModeEnabled &&
           formatTokenInteger(asQuantity(amount), tokenInfo, true)}
       </Text>
 
       <Text style={[{color: p.gray_900}, a.body_2_md_medium]}>
-        {!isPrivacyActive
+        {!isPrivacyModeEnabled
           ? formatTokenFractional(asQuantity(amount), tokenInfo)
           : privacyPlaceholder}
       </Text>
@@ -200,7 +200,7 @@ const PairedPrice = ({
 
 const Price = ({amount, wallet}: {wallet: YoroiWallet; amount: BigNumber}) => {
   const {palette: p} = useTheme()
-  const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
+  const {isPrivacyModeEnabled, privacyPlaceholder} = usePrivacyMode()
   const {
     config,
     currency,
@@ -220,12 +220,12 @@ const Price = ({amount, wallet}: {wallet: YoroiWallet; amount: BigNumber}) => {
     const price = priceBn.toFormat(config.decimals)
     const total = `${isPositive ? `+${price}` : `${price}`} ${currency}`
 
-    return !isPrivacyActive ? total : `${privacyPlaceholder} ${currency}`
+    return !isPrivacyModeEnabled ? total : `${privacyPlaceholder} ${currency}`
   }, [
     amount,
     config.decimals,
     currency,
-    isPrivacyActive,
+    isPrivacyModeEnabled,
     privacyPlaceholder,
     rate,
     wallet.portfolioPrimaryTokenInfo.decimals,
