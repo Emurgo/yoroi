@@ -7,7 +7,7 @@ import {
 
 import {useSuspenseQuery} from '@tanstack/react-query'
 
-import {Disclaimer} from '../../common/types'
+import {Disclaimer} from '../../../common/types'
 
 export const useDisclaimerState = (name: Disclaimer, key = 'accepted') => {
   const storage = useAsyncStorage()

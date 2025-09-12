@@ -22,8 +22,7 @@ import {BluetoothDeviceManager} from '~/ui/BluetoothDeviceManager/BluetoothDevic
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {LoadingOverlay} from '~/ui/LoadingOverlay/LoadingOverlay'
 
-import {useHasShowNetworkNotice} from '../Settings/hooks/useHasShowNetworkNotice'
-import {SelectNetworkScreen} from '../Settings/ui/screens/ChangeApplicationSettingsScreen/SelectNetworkScreen/SelectNetworkScreen'
+import {SelectThemeScreen} from '../Settings/ui/screens/ChangeApplicationSettingsScreen/SelectThemeScreen/SelectThemeScreen'
 
 export function DevMenu() {
   const {isDark, config, basePalette, selectTheme, atoms: ta} = useTheme()
@@ -43,15 +42,10 @@ export function DevMenu() {
   const metrics = useMetrics()
   const {currency, ptActivity} = usePairing()
   const navigation = useNavigation<any>()
-  const {setHasShownNetworkNotice} = useHasShowNetworkNotice()
-
-  React.useEffect(() => {
-    setHasShownNetworkNotice(false)
-  }, [setHasShownNetworkNotice])
 
   return (
     <SafeAreaView edges={['top']} style={a.flex_1}>
-      <SelectNetworkScreen />
+      <SelectThemeScreen />
     </SafeAreaView>
   )
 

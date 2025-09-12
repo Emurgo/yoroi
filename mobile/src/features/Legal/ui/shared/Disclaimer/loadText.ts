@@ -1,7 +1,7 @@
 import {LanguageCode} from '~/kernel/i18n/localization'
 
-import {loadTextAsset} from '../../common/loadTextAsset'
-import {Disclaimer} from '../../common/types'
+import {loadTextAsset} from '../../../common/loadTextAsset'
+import {Disclaimer} from '../../../common/types'
 // Dapp disclaimer assets
 import DE_DE_DAPP from './dapp/de-DE.md'
 import EN_US_DAPP from './dapp/en-US.md'

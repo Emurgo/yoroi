@@ -7,6 +7,11 @@ import * as React from 'react'
 import {TouchableOpacity} from 'react-native'
 
 import {useAuth} from '~/features/Auth/context/AuthProvider'
+import {ChangePinScreen} from '~/features/Auth/ui/screens/ChangePinScreen'
+import {EnableLoginWithPinScreen} from '~/features/Auth/ui/screens/EnableLoginWithPinScreen'
+import {ReadPrivacyPolicyScreen} from '~/features/Legal/ui/screens/ReadPrivacyPolicyScreen'
+import {ReadTermsOfServiceScreen} from '~/features/Legal/ui/screens/ReadTermsOfServiceScreen'
+import {PreparingWalletScreen} from '~/features/SetupWallet/common/PreparingWalletScreen/PreparingWalletScreen'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {
@@ -17,21 +22,16 @@ import {SettingsStackRoutes, SettingsTabRoutes} from '~/kernel/navigation/types'
 import {Boundary} from '~/ui/Boundary/Boundary'
 import {Icon} from '~/ui/Icon'
 
-import {ChangePinScreen} from '../Auth/ui/screens/ChangePinScreen'
-import {EnableLoginWithPinScreen} from '../Auth/ui/screens/EnableLoginWithPinScreen'
-import {PreparingWalletScreen} from '../SetupWallet/common/PreparingWalletScreen/PreparingWalletScreen'
 import {useOpenNetworkNoticeModal} from './hooks/useOpenNetworkNoticeModal'
 import {AboutScreen} from './ui/screens/ChangeApplicationSettingsScreen/AboutScreen/AboutScreen'
 import {ApplicationSettingsScreen} from './ui/screens/ChangeApplicationSettingsScreen/ApplicationSettingsScreen'
-import {ChangeThemeScreen} from './ui/screens/ChangeApplicationSettingsScreen/ChangeTheme/ChangeThemeScreen'
 import {EnableLoginWithOsScreen} from './ui/screens/ChangeApplicationSettingsScreen/EnableLoginWithOs/EnableLoginWithOsScreen'
 import {PreparingNetworkScreen} from './ui/screens/ChangeApplicationSettingsScreen/PreparingNetworkScreen/PreparingNetworkScreen'
-import {PrivacyPolicyScreen} from './ui/screens/ChangeApplicationSettingsScreen/PrivacyPolicy/PrivacyPolicyScreen'
 import {SelectCurrencySymbolScreen} from './ui/screens/ChangeApplicationSettingsScreen/SelectCurrencySymbolScreen/SelectCurrencySymbolScreen'
 import {SelectLanguageScreen} from './ui/screens/ChangeApplicationSettingsScreen/SelectLanguageScreen/SelectLanguageScreen'
 import {SelectNetworkScreen} from './ui/screens/ChangeApplicationSettingsScreen/SelectNetworkScreen/SelectNetworkScreen'
+import {SelectThemeScreen} from './ui/screens/ChangeApplicationSettingsScreen/SelectThemeScreen/SelectThemeScreen'
 import {SystemLogScreen} from './ui/screens/ChangeApplicationSettingsScreen/SystemLogScreen/SystemLogScreen'
-import {TermsOfServiceScreen} from './ui/screens/ChangeApplicationSettingsScreen/TermsOfService/TermsOfServiceScreen'
 import {ToggleAnalyticsSettingsScreen} from './ui/screens/ChangeApplicationSettingsScreen/ToggleAnalyticsSettings/ToggleAnalyticsSettingsScreen'
 import {NetworkTag} from './ui/shared/NetworkTag'
 import {ChangePasswordScreen} from './useCases/changeWalletSettings/ChangePassword'
@@ -106,13 +106,13 @@ export const SettingsScreenNavigator = () => {
 
       <Stack.Screen
         name="terms-of-use"
-        getComponent={() => TermsOfServiceScreen}
+        getComponent={() => ReadTermsOfServiceScreen}
         options={{title: strings.settings.termsOfServiceTitle}}
       />
 
       <Stack.Screen
         name="privacy-policy"
-        getComponent={() => PrivacyPolicyScreen}
+        getComponent={() => ReadPrivacyPolicyScreen}
         options={{title: strings.settings.privacyPolicyTitle}}
       />
 
@@ -144,7 +144,7 @@ export const SettingsScreenNavigator = () => {
 
       <Stack.Screen //
         name="change-theme"
-        getComponent={() => ChangeThemeScreen}
+        getComponent={() => SelectThemeScreen}
         options={{
           title: strings.settings.themeTitle,
         }}

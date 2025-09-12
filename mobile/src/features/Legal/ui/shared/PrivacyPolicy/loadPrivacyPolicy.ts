@@ -1,6 +1,6 @@
 import {LanguageCode} from '~/kernel/i18n/localization'
 
-import {loadTextAsset} from '../../common/loadTextAsset'
+import {loadTextAsset} from '../../../common/loadTextAsset'
 import DE_DE_PRIVACY_POLICY from './privacyPolicy/de-DE.md'
 import EN_US_PRIVACY_POLICY from './privacyPolicy/en-US.md'
 import ES_ES_PRIVACY_POLICY from './privacyPolicy/es-ES.md'

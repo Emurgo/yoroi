@@ -9,7 +9,7 @@ import {Icon} from '~/ui/Icon'
 
 export const LanguageWarning = ({enabled}: {enabled?: boolean}) => {
   const strings = useStrings()
-  const {atoms: ta} = useTheme()
+  const {atoms: ta, basePalette} = useTheme()
   const [dismissed, setDismissed] = React.useState(false)
 
   if (!enabled) return null
@@ -30,9 +30,14 @@ export const LanguageWarning = ({enabled}: {enabled?: boolean}) => {
 
       <Markdown
         value={contributors}
+        colorScheme={basePalette}
+        backgroundColor={ta.bg_color_max.backgroundColor}
         styles={{
           paragraph: ta.bg_color_min,
-          strong: ta.text_gray_medium,
+          strong: {
+            ...a.body_2_md_medium,
+            ...ta.text_gray_medium,
+          },
           text: {
             ...a.body_2_md_regular,
             ...ta.text_gray_medium,

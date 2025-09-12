@@ -4,6 +4,8 @@ import {createStackNavigator} from '@react-navigation/stack'
 import * as React from 'react'
 
 import {InitiatePinScreen} from '~/features/Auth/ui/screens/InitiatePinScreen'
+import {ReadPrivacyPolicyScreen} from '~/features/Legal/ui/screens/ReadPrivacyPolicyScreen'
+import {ReadTermsOfServiceScreen} from '~/features/Legal/ui/screens/ReadTermsOfServiceScreen'
 import {SelectLanguageScreen} from '~/features/Settings/ui/screens/ChangeApplicationSettingsScreen/SelectLanguageScreen/SelectLanguageScreen'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
@@ -11,8 +13,6 @@ import {InititalizationRoutes} from '~/kernel/navigation/types'
 
 import {AnalyticsNoticeScreen} from '../screens/AnalyticsNoticeScreen'
 import {InitialScreen} from '../screens/InitialScreen'
-import {ReadPrivacyPolicyScreen} from '../screens/ReadPrivacyPolicyScreen'
-import {ReadTermsOfServiceScreen} from '../screens/ReadTermsOfServiceScreen'
 
 const Stack = createStackNavigator<InititalizationRoutes>()
 export const InitializationNavigator = () => {

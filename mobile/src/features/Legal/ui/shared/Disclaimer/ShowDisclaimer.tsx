@@ -14,7 +14,7 @@ import {Button, ButtonType} from '~/ui/Button/Button'
 import {Checkbox} from '~/ui/Checkbox/Checkbox'
 import {useModal} from '~/ui/Modal/ModalContext'
 
-import {Disclaimer} from '../../common/types'
+import {Disclaimer} from '../../../common/types'
 import {loadText} from './loadText'
 import {useDisclaimerState} from './useDisclaimerState'
 
@@ -45,7 +45,7 @@ export const ShowDisclaimer = ({type, disabled}: Props) => {
   const {resetToTxHistory} = useWalletNavigation()
   const [showed, setShowed] = React.useState(false)
   const [accepted, setAccepted] = useDisclaimerState(type)
-  const {atoms: ta, palette: p} = useTheme()
+  const {atoms: ta, palette: p, basePalette} = useTheme()
   const {data: disclaimerText, isLoading} = useDisclaimerText({
     type,
     languageCode,
@@ -69,6 +69,8 @@ export const ShowDisclaimer = ({type, disabled}: Props) => {
             <View style={[a.flex_1, a.px_lg]}>
               <View style={{height: 400}}>
                 <Markdown
+                  colorScheme={basePalette}
+                  backgroundColor={ta.bg_color_max.backgroundColor}
                   value={disclaimerText || ''}
                   flatListProps={{
                     style: {

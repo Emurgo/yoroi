@@ -1,4 +1,4 @@
-import {loadTextAsset} from '../../common/loadTextAsset'
+import {loadTextAsset} from '../../../common/loadTextAsset'
 import DE_DE_TOS from './tos/de-DE.md'
 import EN_US_TOS from './tos/en-US.md'
 import ES_ES_TOS from './tos/es-ES.md'

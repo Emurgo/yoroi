@@ -7,9 +7,9 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
 import {InititalizationRoutes} from '~/kernel/navigation/types'
 
+import {ReadPrivacyPolicyScreen} from '../../../Legal/ui/screens/ReadPrivacyPolicyScreen'
+import {ReadTermsOfServiceScreen} from '../../../Legal/ui/screens/ReadTermsOfServiceScreen'
 import {AnalyticsChangedScreen} from '../screens/AnalyticsChangedScreen'
-import {ReadPrivacyPolicyScreen} from '../screens/ReadPrivacyPolicyScreen'
-import {ReadTermsOfServiceScreen} from '../screens/ReadTermsOfServiceScreen'
 import {TermsOfServiceChangedScreen} from '../screens/TermsOfServiceChangedScreen'
 
 const Stack = createStackNavigator<InititalizationRoutes>()
