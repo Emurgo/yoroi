@@ -29,7 +29,7 @@ export const EncryptedStorage = {
 
   // value is a hex, no leading `0x` I.e "DEAD"
   async write(key: StorageKey, value: string, password: string) {
-    const encrypted = await encryptData({
+    const encrypted = encryptData({
       plainData: hex(value),
       secretKey: hex.fromUtf8(password),
     })

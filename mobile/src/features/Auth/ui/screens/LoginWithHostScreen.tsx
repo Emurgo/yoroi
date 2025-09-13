@@ -1,7 +1,8 @@
-import {atoms as a} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
 import {View} from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {usePromise} from '~/hooks/usePromise'
 import {useStrings} from '~/kernel/i18n/useStrings'
@@ -13,6 +14,7 @@ import {Logo} from '../shared/illustrations/Logo'
 
 export const LoginWithHostScreen = () => {
   const strings = useStrings()
+  const {atoms: ta} = useTheme()
   const {loginWithHost} = useAuth()
   const {resolve, isPending} = usePromise(loginWithHost)
 
@@ -25,7 +27,15 @@ export const LoginWithHostScreen = () => {
   }
 
   return (
-    <View style={[a.flex_1, a.flex_col, a.justify_between]}>
+    <SafeAreaView
+      style={[
+        a.flex_1,
+        a.flex_col,
+        a.justify_between,
+        a.px_lg,
+        ta.bg_color_max,
+      ]}
+    >
       <Space.Height.lg fill />
 
       <MiddleSection>
@@ -39,7 +49,7 @@ export const LoginWithHostScreen = () => {
           onPress={handleOnPress}
         />
       </BottomSection>
-    </View>
+    </SafeAreaView>
   )
 }
 

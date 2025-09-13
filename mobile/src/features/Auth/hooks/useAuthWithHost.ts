@@ -17,17 +17,6 @@ export const useAuthWithHost = () => {
     getAuthHostConfig().then(setAuthWithHostConfig)
   }, [])
 
-  // TODO: REVISIT needs to happen after the navigation is ready
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     logger.debug('focus - update auth with host config', {
-  //       origin: 'useAuthWithHost',
-  //       type: 'ui',
-  //     })
-  //     getAuthHostConfig().then(setAuthWithHostConfig)
-  //   }, []),
-  // )
-
   useAppState({
     on: 'active',
     execute: () => {

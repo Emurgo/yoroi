@@ -28,7 +28,7 @@ import {
   SettingsItem,
   SettingsSection,
 } from '../../SettingsItems'
-import {useNavigateTo} from '../../common/navigation'
+import {useNavigateTo} from '../../hooks/useNavigateTo'
 
 const dialogOptions = {
   title: {id: 'global.disclaimer', defaultMessage: 'Disclaimer'},

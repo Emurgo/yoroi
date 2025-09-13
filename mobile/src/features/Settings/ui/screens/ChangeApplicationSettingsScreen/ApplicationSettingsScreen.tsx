@@ -1,0 +1,196 @@
+import {networkConfigs} from '@yoroi/blockchains'
+import {atoms as a, useTheme} from '@yoroi/theme'
+
+import * as React from 'react'
+import {ScrollView} from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context'
+
+import {useAuth} from '~/features/Auth/context/AuthProvider'
+import {useAuthWithOs} from '~/features/Auth/hooks/useAuthWithOs'
+import {
+  NavigatedSettingsItem,
+  SettingsItem,
+  SettingsSection,
+} from '~/features/Settings/SettingsItems'
+import {useNavigateTo} from '~/features/Settings/hooks/useNavigateTo'
+import {useScreenCapture} from '~/features/Settings/hooks/useScreenCapture'
+import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
+import {useLanguage} from '~/kernel/i18n/LanguageProvider'
+import {LanguageRecord, supportedLanguages} from '~/kernel/i18n/localization'
+import {useStrings} from '~/kernel/i18n/useStrings'
+import {Icon} from '~/ui/Icon'
+import {SettingsSwitch} from '~/ui/SettingsSwitch/SettingsSwitch'
+
+import {useCurrencyPairing} from '../../../context/CurrencyProvider'
+import {useCrashReport} from '../../../hooks/useCrashReport'
+import {usePrivacyMode} from '../../../hooks/usePrivacyMode'
+
+export const ApplicationSettingsScreen = () => {
+  const strings = useStrings()
+  const {isPrivacyModeEnabled, toggleIsPrivacyModeEnabled} = usePrivacyMode()
+  const {isCrashReportEnabled, toggleIsCrashReportEnabled} = useCrashReport()
+  const {currency} = useCurrencyPairing()
+  const navigateTo = useNavigateTo()
+  const {network} = useSelectedNetwork()
+  const {atoms: ta, paletteName: name, palette: p} = useTheme()
+  const {languageCode} = useLanguage()
+  const {authWithOs} = useAuthWithOs({onSuccess: navigateTo.enableLoginWithPin})
+  const {
+    isScreenCaptureEnabled,
+    toggleIsScreenCaptureEnabled,
+    canSwitchScreenCapture,
+  } = useScreenCapture()
+  const {enableLoginWithHost, authSetting, canAuthWithHost} = useAuth()
+
+  const language = supportedLanguages.find(
+    (lang) => lang.code === languageCode,
+  ) as LanguageRecord
+
+  const handleOntoggleIsPrivacyModeEnabled = () => {
+    toggleIsPrivacyModeEnabled()
+  }
+  const handleOnToggleCrashReports = () => {
+    toggleIsCrashReportEnabled()
+  }
+  const handleOnToggleScreenCaptureEnabled = () => {
+    toggleIsScreenCaptureEnabled()
+  }
+  const handleOnToggleEnableLoginWithHost = () => {
+    if (authSetting === 'os') {
+      authWithOs()
+    } else {
+      enableLoginWithHost()
+    }
+  }
+
+  const iconProps = {
+    color: p.gray_400,
+    size: 23,
+  }
+
+  return (
+    <SafeAreaView
+      edges={['bottom', 'right', 'left']}
+      style={[a.flex_1, ta.bg_color_max]}
+    >
+      <ScrollView
+        bounces={false}
+        style={a.flex_1}
+        contentContainerStyle={[a.px_lg, a.gap_lg]}
+      >
+        <SettingsSection title={strings.settings.applicationSettings.general}>
+          <NavigatedSettingsItem
+            icon={<Icon.Globe {...iconProps} />}
+            label={strings.settings.applicationSettings.network}
+            onNavigate={navigateTo.changeNetwork}
+            selected={networkConfigs[network].name}
+          />
+
+          <NavigatedSettingsItem
+            icon={<Icon.Language {...iconProps} />}
+            label={strings.settings.applicationSettings.selectLanguage}
+            onNavigate={navigateTo.changeLanguage}
+            selected={language.label}
+          />
+
+          <NavigatedSettingsItem
+            icon={<Icon.Coins {...iconProps} />}
+            label={strings.settings.applicationSettings.selectFiatCurrency}
+            selected={currency}
+            onNavigate={navigateTo.changeCurrency}
+          />
+
+          <NavigatedSettingsItem
+            icon={<Icon.Info {...iconProps} />}
+            label={strings.settings.applicationSettings.about}
+            onNavigate={navigateTo.about}
+          />
+
+          <NavigatedSettingsItem
+            icon={<Icon.TermsOfUse {...iconProps} />}
+            label={strings.settings.applicationSettings.termsOfservice}
+            onNavigate={navigateTo.termsOfUse}
+          />
+
+          <NavigatedSettingsItem
+            icon={<Icon.TermsOfUse {...iconProps} />}
+            label={strings.settings.applicationSettings.privacyPolicy}
+            onNavigate={navigateTo.privacyPolicy}
+          />
+
+          <NavigatedSettingsItem
+            icon={<Icon.Analytics {...iconProps} />}
+            label={strings.settings.applicationSettings.analytics}
+            onNavigate={navigateTo.analytics}
+          />
+
+          <NavigatedSettingsItem
+            icon={<Icon.Theme {...iconProps} />}
+            label={strings.settings.applicationSettings.selectTheme}
+            onNavigate={navigateTo.changeTheme}
+            selected={strings.settings.theme.translateThemeName(name)}
+          />
+        </SettingsSection>
+
+        <SettingsSection
+          title={strings.settings.applicationSettings.securityReporting}
+        >
+          <NavigatedSettingsItem
+            disabled={authSetting === 'os'}
+            icon={<Icon.Pin {...iconProps} />}
+            label={strings.settings.applicationSettings.changePin}
+            onNavigate={navigateTo.changeCustomPin}
+          />
+
+          <SettingsItem
+            icon={<Icon.EyeOff {...iconProps} />}
+            label={strings.settings.applicationSettings.privacyMode}
+            info={strings.settings.applicationSettings.privacyModeInfo}
+          >
+            <SettingsSwitch
+              value={isPrivacyModeEnabled}
+              onValueChange={handleOntoggleIsPrivacyModeEnabled}
+            />
+          </SettingsItem>
+
+          <SettingsItem
+            icon={<Icon.Bio {...iconProps} />}
+            label={strings.settings.applicationSettings.biometricsSignIn}
+            info={strings.settings.applicationSettings.biometricsSignInInfo}
+            disabled={!canAuthWithHost}
+          >
+            <SettingsSwitch
+              value={authSetting === 'os'}
+              onValueChange={handleOnToggleEnableLoginWithHost}
+              disabled={!canAuthWithHost}
+            />
+          </SettingsItem>
+
+          <SettingsItem
+            icon={<Icon.Export {...iconProps} />}
+            label={strings.settings.applicationSettings.crashReporting}
+            info={strings.settings.applicationSettings.crashReportingInfo}
+          >
+            <SettingsSwitch
+              value={isCrashReportEnabled}
+              onValueChange={handleOnToggleCrashReports}
+            />
+          </SettingsItem>
+
+          {canSwitchScreenCapture && (
+            <SettingsItem
+              icon={<Icon.Share {...iconProps} />}
+              label={strings.settings.applicationSettings.screenSharing}
+              info={strings.settings.applicationSettings.screenSharingInfo}
+            >
+              <SettingsSwitch
+                value={isScreenCaptureEnabled}
+                onValueChange={handleOnToggleScreenCaptureEnabled}
+              />
+            </SettingsItem>
+          )}
+        </SettingsSection>
+      </ScrollView>
+    </SafeAreaView>
+  )
+}

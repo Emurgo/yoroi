@@ -9,7 +9,7 @@ import {
   NavigatedSettingsItem,
   NavigatedSettingsItemProps,
 } from './SettingsItems'
-import {usePrivacyMode} from './useCases/changeAppSettings/PrivacyMode/usePrivacyMode'
+import {usePrivacyMode} from './hooks/usePrivacyMode'
 
 export const SettingsCollateralItem = ({
   label,
@@ -20,7 +20,7 @@ export const SettingsCollateralItem = ({
   const {selected} = useWalletManager()
   const {amount} = useCollateralInfo(selected.wallet!)
 
-  const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
+  const {isPrivacyModeEnabled, privacyPlaceholder} = usePrivacyMode()
 
   const formattedCollateral = React.useMemo(() => {
     const amountCollateral = {
@@ -28,12 +28,17 @@ export const SettingsCollateralItem = ({
       quantity: BigInt(amount.quantity),
     }
 
-    return !isPrivacyActive
+    return !isPrivacyModeEnabled
       ? amountFormatter({template: '{{value}} {{ticker}}'})(amountCollateral)
       : amountFormatter({template: `${privacyPlaceholder} {{ticker}}`})(
           amountCollateral,
         )
-  }, [amount.quantity, isPrivacyActive, privacyPlaceholder, selected.wallet])
+  }, [
+    amount.quantity,
+    isPrivacyModeEnabled,
+    privacyPlaceholder,
+    selected.wallet,
+  ])
 
   return (
     <NavigatedSettingsItem

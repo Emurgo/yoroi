@@ -7,6 +7,11 @@ import * as React from 'react'
 import {TouchableOpacity} from 'react-native'
 
 import {useAuth} from '~/features/Auth/context/AuthProvider'
+import {ChangePinScreen} from '~/features/Auth/ui/screens/ChangePinScreen'
+import {EnableLoginWithPinScreen} from '~/features/Auth/ui/screens/EnableLoginWithPinScreen'
+import {ReadPrivacyPolicyScreen} from '~/features/Legal/ui/screens/ReadPrivacyPolicyScreen'
+import {ReadTermsOfServiceScreen} from '~/features/Legal/ui/screens/ReadTermsOfServiceScreen'
+import {PreparingWalletScreen} from '~/features/SetupWallet/common/PreparingWalletScreen/PreparingWalletScreen'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {
@@ -14,28 +19,19 @@ import {
   defaultStackNavigationOptions,
 } from '~/kernel/navigation/common/helpers'
 import {SettingsStackRoutes, SettingsTabRoutes} from '~/kernel/navigation/types'
-import {Boundary} from '~/ui/Boundary/Boundary'
 import {Icon} from '~/ui/Icon'
 
-import {ChangePinScreen} from '../Auth/ui/screens/ChangePinScreen'
-import {EnableLoginWithPinScreen} from '../Auth/ui/screens/EnableLoginWithPinScreen'
-import {PreparingWalletScreen} from '../SetupWallet/common/PreparingWalletScreen/PreparingWalletScreen'
-import {About} from './useCases/changeAppSettings/About'
-import {ApplicationSettingsScreen} from './useCases/changeAppSettings/ApplicationSettingsScreen'
-import {ChangeLanguageScreen} from './useCases/changeAppSettings/ChangeLanguage'
-import {
-  ChangeNetworkScreen,
-  useHandleOpenNetworkNoticeModal,
-} from './useCases/changeAppSettings/ChangeNetwork/ChangeNetworkScreen'
-import {NetworkTag} from './useCases/changeAppSettings/ChangeNetwork/NetworkTag'
-import {PreparingNetworkScreen} from './useCases/changeAppSettings/ChangeNetwork/PreparingNetworkScreen'
-import {ChangeThemeScreen} from './useCases/changeAppSettings/ChangeTheme/ChangeThemeScreen'
-import {ChangeCurrencyScreen} from './useCases/changeAppSettings/Currency/ChangeCurrencyScreen'
-import {EnableLoginWithOsScreen} from './useCases/changeAppSettings/EnableLoginWithOs'
-import {PrivacyPolicyScreen} from './useCases/changeAppSettings/PrivacyPolicy'
-import {SystemLogScreen} from './useCases/changeAppSettings/SystemLogScreen/SystemLogScreen'
-import {TermsOfServiceScreen} from './useCases/changeAppSettings/TermsOfService'
-import {ToggleAnalyticsSettingsScreen} from './useCases/changeAppSettings/ToggleAnalyticsSettings/ToggleAnalyticsSettingsScreen'
+import {useOpenNetworkNoticeModal} from './hooks/useOpenNetworkNoticeModal'
+import {AboutScreen} from './ui/screens/ChangeApplicationSettingsScreen/AboutScreen/AboutScreen'
+import {ApplicationSettingsScreen} from './ui/screens/ChangeApplicationSettingsScreen/ApplicationSettingsScreen'
+import {ListSystemLogsScreen} from './ui/screens/ChangeApplicationSettingsScreen/ListSystemLogsScreen/ListSystemLogsScreen'
+import {PreparingNetworkScreen} from './ui/screens/ChangeApplicationSettingsScreen/PreparingNetworkScreen/PreparingNetworkScreen'
+import {SelectCurrencySymbolScreen} from './ui/screens/ChangeApplicationSettingsScreen/SelectCurrencySymbolScreen/SelectCurrencySymbolScreen'
+import {SelectLanguageScreen} from './ui/screens/ChangeApplicationSettingsScreen/SelectLanguageScreen/SelectLanguageScreen'
+import {SelectNetworkScreen} from './ui/screens/ChangeApplicationSettingsScreen/SelectNetworkScreen/SelectNetworkScreen'
+import {SelectThemeScreen} from './ui/screens/ChangeApplicationSettingsScreen/SelectThemeScreen/SelectThemeScreen'
+import {ToggleAnalyticsSettingsScreen} from './ui/screens/ChangeApplicationSettingsScreen/ToggleAnalyticsSettings/ToggleAnalyticsSettingsScreen'
+import {NetworkTag} from './ui/shared/NetworkTag'
 import {ChangePasswordScreen} from './useCases/changeWalletSettings/ChangePassword'
 import {
   DisableEasyConfirmationScreen,
@@ -52,7 +48,12 @@ export const SettingsScreenNavigator = () => {
   const strings = useStrings()
   const {track} = useMetrics()
   const {palette: p} = useTheme()
-  const {handleOpenModal} = useHandleOpenNetworkNoticeModal()
+  const openNetworkNoticeModal = useOpenNetworkNoticeModal()
+  const openNetworkNoticeModalRef = React.useRef(openNetworkNoticeModal)
+  openNetworkNoticeModalRef.current = openNetworkNoticeModal
+  const handleOpenModal = React.useCallback(() => {
+    openNetworkNoticeModalRef.current()
+  }, [openNetworkNoticeModalRef])
 
   useFocusEffect(
     React.useCallback(() => {
@@ -60,15 +61,13 @@ export const SettingsScreenNavigator = () => {
     }, [track]),
   )
 
+  const navOptions = React.useMemo(() => defaultStackNavigationOptions(p), [p])
+
   return (
-    <Stack.Navigator
-      screenOptions={{
-        ...defaultStackNavigationOptions(p),
-      }}
-    >
+    <Stack.Navigator screenOptions={navOptions}>
       <Stack.Screen //
         name="app-settings"
-        component={ApplicationSettingsScreen}
+        getComponent={() => ApplicationSettingsScreen}
         options={{
           title: strings.settings.appSettingsTitle,
         }}
@@ -76,19 +75,19 @@ export const SettingsScreenNavigator = () => {
 
       <Stack.Screen
         name="about"
-        component={About}
+        getComponent={() => AboutScreen}
         options={{title: strings.settings.aboutTitle}}
       />
 
       <Stack.Screen
         name="settings-system-log"
-        component={SystemLogScreen}
+        getComponent={() => ListSystemLogsScreen}
         options={{title: strings.settings.systemLogTitle}}
       />
 
       <Stack.Screen //
         name="main-settings"
-        component={SettingsTabNavigator}
+        getComponent={() => SettingsTabNavigator}
         options={{
           title: strings.settings.settingsTitle,
           headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
@@ -97,43 +96,37 @@ export const SettingsScreenNavigator = () => {
 
       <Stack.Screen
         name="change-wallet-name"
-        component={RenameWalletScreen}
+        getComponent={() => RenameWalletScreen}
         options={{title: strings.settings.changeWalletNameTitle}}
       />
 
       <Stack.Screen
         name="terms-of-use"
-        component={TermsOfServiceScreen}
+        getComponent={() => ReadTermsOfServiceScreen}
         options={{title: strings.settings.termsOfServiceTitle}}
       />
 
       <Stack.Screen
         name="privacy-policy"
-        component={PrivacyPolicyScreen}
+        getComponent={() => ReadPrivacyPolicyScreen}
         options={{title: strings.settings.privacyPolicyTitle}}
       />
 
       <Stack.Screen //
-        name="enable-login-with-os"
-        component={EnableLoginWithOsScreenWrapper}
-        options={{headerShown: false}}
-      />
-
-      <Stack.Screen //
         name="remove-wallet"
-        component={RemoveWalletScreen}
+        getComponent={() => RemoveWalletScreen}
         options={{title: strings.settings.removeWalletTitle}}
       />
 
       <Stack.Screen //
         name="change-language"
-        component={ChangeLanguageScreen}
+        getComponent={() => SelectLanguageScreen}
         options={{title: strings.settings.languageTitle}}
       />
 
       <Stack.Screen //
         name="change-currency"
-        component={ChangeCurrencyScreen}
+        getComponent={() => SelectCurrencySymbolScreen}
         options={{
           title: strings.settings.currency,
         }}
@@ -141,7 +134,7 @@ export const SettingsScreenNavigator = () => {
 
       <Stack.Screen //
         name="change-theme"
-        component={ChangeThemeScreen}
+        getComponent={() => SelectThemeScreen}
         options={{
           title: strings.settings.themeTitle,
         }}
@@ -149,7 +142,7 @@ export const SettingsScreenNavigator = () => {
 
       <Stack.Screen //
         name="change-network"
-        component={ChangeNetworkScreen}
+        getComponent={() => SelectNetworkScreen}
         options={{
           title: strings.settings.networkTitle,
           headerRight: () => (
@@ -166,7 +159,7 @@ export const SettingsScreenNavigator = () => {
 
       <Stack.Screen //
         name="preparing-network"
-        component={PreparingNetworkScreen}
+        getComponent={() => PreparingNetworkScreen}
         options={{
           headerShown: false,
         }}
@@ -174,59 +167,59 @@ export const SettingsScreenNavigator = () => {
 
       <Stack.Screen //
         name="enable-easy-confirmation"
-        component={EnableEasyConfirmationScreen}
+        getComponent={() => EnableEasyConfirmationScreen}
         options={{title: strings.settings.enableEasyConfirmationTitle}}
       />
 
       <Stack.Screen //
         name="disable-easy-confirmation"
-        component={DisableEasyConfirmationScreen}
+        getComponent={() => DisableEasyConfirmationScreen}
         options={{title: strings.settings.disableEasyConfirmationTitle}}
       />
 
       <Stack.Screen //
         name="change-password"
-        component={ChangePasswordScreen}
+        getComponent={() => ChangePasswordScreen}
         options={{title: strings.settings.changePasswordTitle}}
       />
 
       <Stack.Screen //
         name="change-custom-pin"
+        getComponent={() => ChangePinScreenWrapper}
         options={{
           title: strings.settings.changeCustomPinTitle,
         }}
-        component={ChangePinScreenWrapper}
       />
 
       <Stack.Screen //
         name="manage-collateral"
+        getComponent={() => ManageCollateralScreen}
         options={{
           title: strings.settings.collateral,
         }}
-        component={ManageCollateralScreen}
       />
 
       <Stack.Screen //
         name="manage-notifications"
+        getComponent={() => ManageNotificationsNavigator}
         options={{headerShown: false}}
-        component={ManageNotificationsNavigator}
       />
 
       <Stack.Screen
         name="enable-login-with-pin"
         options={{title: strings.settings.customPinTitle}}
-        component={EnableLoginWithPinWrapper}
+        getComponent={() => EnableLoginWithPinWrapper}
       />
 
       <Stack.Screen //
         name="settings-preparing-wallet"
-        component={PreparingWalletScreen}
+        getComponent={() => PreparingWalletScreen}
         options={{headerShown: false}}
       />
 
       <Stack.Screen
         name="analytics"
-        component={ToggleAnalyticsSettingsScreen}
+        getComponent={() => ToggleAnalyticsSettingsScreen}
         options={{
           title: strings.settings.toggleAnalytics.toggleAnalyticsSettingsTitle,
         }}
@@ -255,14 +248,6 @@ const SettingsTabNavigator = () => {
 
       <Tab.Screen name="app-settings" component={ApplicationSettingsScreen} />
     </Tab.Navigator>
-  )
-}
-
-const EnableLoginWithOsScreenWrapper = () => {
-  return (
-    <Boundary>
-      <EnableLoginWithOsScreen />
-    </Boundary>
   )
 }
 
