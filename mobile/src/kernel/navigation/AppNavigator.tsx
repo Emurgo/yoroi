@@ -120,18 +120,26 @@ export const AppNavigator = () => {
             )}
 
             {afterLoginAction === 'dark-theme-announcement' && (
-              <Stack.Screen //
-                name="dark-theme-announcement"
-                options={{headerShown: false}}
-                getComponent={() => DarkThemeAnnouncementScreen}
-              />
+              <>
+                <Stack.Screen //
+                  name="dark-theme-announcement"
+                  options={{headerShown: false}}
+                  getComponent={() => DarkThemeAnnouncementScreen}
+                />
+
+                <Stack.Screen //
+                  name="setup-wallet"
+                  options={{headerShown: false}}
+                  getComponent={() => SetupWalletNavigator}
+                />
+              </>
             )}
 
             {afterLoginAction === 'setup-wallet' && (
               <Stack.Screen //
                 name="setup-wallet"
                 options={{headerShown: false}}
-                component={SetupWalletNavigator}
+                getComponent={() => SetupWalletNavigator}
               />
             )}
 

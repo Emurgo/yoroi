@@ -15,7 +15,6 @@ import {useBold} from '~/hooks/useBold'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Button, ButtonType} from '~/ui/Button/Button'
-import {Icon} from '~/ui/Icon'
 import {SettingsSwitch} from '~/ui/SettingsSwitch/SettingsSwitch'
 import {Space} from '~/ui/Space/Space'
 import {YoroiLogo} from '~/ui/YoroiLogo/YoroiLogo'
@@ -64,7 +63,7 @@ const Notice = ({onNext}: {onNext?: () => void}) => {
         showsVerticalScrollIndicator
       >
         <View
-          style={[a.align_center, a.px_lg]}
+          style={[a.px_lg]}
           onLayout={(event) => {
             const {height} = event.nativeEvent.layout
             setContentHeight(height + buttonHeight)
@@ -163,24 +162,29 @@ const Info = ({showLogo}: {showLogo?: boolean}) => {
 
   const list = [
     {
-      icon: <Icon.CheckFilled size={16} color={p.sys_cyan_500} />,
+      icon: '✓',
       key: 'anonymous',
+      color: p.primary_700,
     },
     {
-      icon: <Icon.CheckFilled size={16} color={p.sys_cyan_500} />,
+      icon: '✓',
       key: 'optout',
+      color: p.primary_700,
     },
     {
-      icon: <Icon.CrossCircle size={16} color={p.sys_magenta_500} />,
+      icon: '✕',
       key: 'private',
+      color: p.sys_magenta_500,
     },
     {
-      icon: <Icon.CrossCircle size={16} color={p.sys_magenta_500} />,
+      icon: '✕',
       key: 'noip',
+      color: p.sys_magenta_500,
     },
     {
-      icon: <Icon.CrossCircle size={16} color={p.sys_magenta_500} />,
+      icon: '✕',
       key: 'nosell',
+      color: p.sys_magenta_500,
     },
   ] as const
 
@@ -199,15 +203,15 @@ const Info = ({showLogo}: {showLogo?: boolean}) => {
       </View>
 
       <View style={a.align_center}>
-        <Text style={[a.body_1_lg_medium, ta.text_gray_max]}>
+        <Text style={[a.heading_3_medium, ta.text_gray_max, a.text_center]}>
           {strings.ui.analyticsHeader}
         </Text>
       </View>
 
       <View>
-        {list.map(({icon, key}) => (
+        {list.map(({icon, key, color}) => (
           <View key={key} style={[a.flex_row, a.align_center]}>
-            <View style={[a.pr_sm]}>{icon}</View>
+            <Text style={[a.body_1_lg_regular, {color}, a.pr_sm]}>{icon}</Text>
 
             <Text style={[a.body_1_lg_regular, ta.text_gray_max]}>
               {key === 'private' || key === 'noip' || key === 'nosell'
@@ -219,7 +223,7 @@ const Info = ({showLogo}: {showLogo?: boolean}) => {
       </View>
 
       <TouchableOpacity onPress={handleOnReadMore}>
-        <Text style={[ta.text_primary_medium, a.text_center, a.link_1_lg]}>
+        <Text style={[a.link_1_lg, ta.text_primary_medium, a.text_center]}>
           {strings.ui.more}
         </Text>
       </TouchableOpacity>
