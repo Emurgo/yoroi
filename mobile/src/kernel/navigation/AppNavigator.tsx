@@ -141,7 +141,7 @@ export const AppNavigator = () => {
               <Stack.Screen //
                 name="setup-wallet"
                 options={{headerShown: false}}
-                component={SetupWalletNavigator}
+                getComponent={() => SetupWalletNavigator}
               />
             )}
 
