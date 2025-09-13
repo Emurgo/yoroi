@@ -153,9 +153,13 @@ const Settings = ({onReadMore}: {onReadMore?: () => void}) => {
 
             <SettingsSwitch
               value={metrics.isEnabled}
-              onValueChange={() =>
-                metrics.isEnabled ? metrics.disable() : metrics.enable()
-              }
+              onValueChange={(value) => {
+                if (value) {
+                  metrics.enable()
+                } else {
+                  metrics.disable()
+                }
+              }}
             />
           </View>
         </View>
