@@ -10,7 +10,6 @@ import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Space} from '~/ui/Space/Space'
 
-import {Icon} from '../../ui/Icon'
 import {SettingsSwitch} from '../SettingsSwitch/SettingsSwitch'
 import {YoroiLogo} from '../YoroiLogo/YoroiLogo'
 import {AnalyticsImage} from './AnalyticsImage'
@@ -81,10 +80,10 @@ const Notice = ({
             }}
             title={strings.ui.skip}
           />
-
-          <Space.Height.lg />
         </View>
       </ScrollView>
+
+      <Space.Height.lg />
 
       <View
         style={[
@@ -106,6 +105,7 @@ const Notice = ({
         ]}
       >
         <Button
+          size="S"
           type={ButtonType.Primary}
           onPress={() => {
             metrics.enable()
@@ -123,29 +123,43 @@ const Settings = ({onReadMore}: {onReadMore?: () => void}) => {
   const {atoms: ta} = useTheme()
   const strings = useStrings()
 
+  const scrollViewRef = React.useRef<ScrollView | null>(null)
+
+  React.useEffect(() => {
+    const timeout = setTimeout(() => {
+      scrollViewRef.current?.flashScrollIndicators()
+    }, 500)
+
+    return () => clearTimeout(timeout)
+  }, [])
+
   return (
     <View style={[a.flex_1, ta.bg_color_max]}>
-      <View style={[a.flex_1, a.px_lg]}>
-        <CommonContent onReadMore={onReadMore} />
+      <ScrollView
+        bounces={false}
+        ref={scrollViewRef}
+        persistentScrollbar={true}
+        showsVerticalScrollIndicator={true}
+      >
+        <View style={[a.flex_1, a.px_lg]}>
+          <CommonContent onReadMore={onReadMore} />
 
-        <Space.Height.lg />
+          <View style={[a.flex_row, a.align_center]}>
+            <Text style={[a.body_1_lg_medium, ta.text_gray_max]}>
+              {strings.ui.toggle}
+            </Text>
 
-        <View style={[a.flex_row, a.align_center, a.justify_between]}>
-          <Text style={[a.body_1_lg_medium, ta.text_gray_max]}>
-            {strings.ui.toggle}
-          </Text>
-          <SettingsSwitch
-            value={metrics.isEnabled}
-            onValueChange={(value) => {
-              if (value) {
-                metrics.enable()
-              } else {
-                metrics.disable()
+            <View style={[a.flex_1]} />
+
+            <SettingsSwitch
+              value={metrics.isEnabled}
+              onValueChange={() =>
+                metrics.isEnabled ? metrics.disable() : metrics.enable()
               }
-            }}
-          />
+            />
+          </View>
         </View>
-      </View>
+      </ScrollView>
     </View>
   )
 }
@@ -163,53 +177,57 @@ const CommonContent = ({
 
   const list = [
     {
-      icon: <Icon.CheckFilled size={16} color={p.sys_cyan_500} />,
+      icon: '✓',
       key: 'anonymous',
+      color: p.primary_700,
     },
     {
-      icon: <Icon.CheckFilled size={16} color={p.sys_cyan_500} />,
+      icon: '✓',
       key: 'optout',
+      color: p.primary_700,
     },
     {
-      icon: <Icon.CrossCircle size={16} color={p.sys_magenta_500} />,
+      icon: '✕',
       key: 'private',
+      color: p.sys_magenta_500,
     },
     {
-      icon: <Icon.CrossCircle size={16} color={p.sys_magenta_500} />,
+      icon: '✕',
       key: 'noip',
+      color: p.sys_magenta_500,
     },
     {
-      icon: <Icon.CrossCircle size={16} color={p.sys_magenta_500} />,
+      icon: '✕',
       key: 'nosell',
+      color: p.sys_magenta_500,
     },
   ] as const
 
   return (
     <>
+      <Space.Height.sm />
+
       {showLogo && (
         <>
-          <Space.Height._2xl />
           <YoroiLogo />
-          <Space.Height._2xl />
+          <Space.Height.sm />
         </>
       )}
 
       <AnalyticsImage />
 
-      <Space.Height.lg />
+      <Space.Height.sm />
 
-      <View style={{alignItems: 'center'}}>
-        <Text style={[a.body_1_lg_medium, ta.text_gray_max]}>
-          {strings.ui.analyticsHeader}
-        </Text>
+      <Text style={[a.heading_3_medium, ta.text_gray_max, a.text_center]}>
+        {strings.ui.analyticsHeader}
+      </Text>
 
-        <Space.Height.lg />
-      </View>
+      <Space.Height.sm />
 
-      <View style={[a.gap_xs]}>
-        {list.map(({icon, key}) => (
-          <View key={key} style={[a.flex_row, a.align_center]}>
-            <View style={[a.pr_sm]}>{icon}</View>
+      <View style={[a.flex_1, a.flex_grow, a.self_start]}>
+        {list.map(({icon, key, color}) => (
+          <View key={key} style={[a.flex_row, a.align_baseline]}>
+            <Text style={[a.body_1_lg_regular, {color}, a.pr_sm]}>{icon}</Text>
 
             <Text style={[a.body_1_lg_regular, ta.text_gray_max]}>
               {key === 'private' || key === 'noip' || key === 'nosell'
@@ -220,15 +238,15 @@ const CommonContent = ({
         ))}
       </View>
 
-      <Space.Height.lg />
+      <Space.Height.sm />
 
       <TouchableOpacity onPress={onReadMore}>
-        <Text style={[ta.text_primary_medium, a.text_center, a.link_1_lg]}>
+        <Text style={[a.link_1_lg, ta.text_primary_medium, a.text_center]}>
           {strings.ui.more}
         </Text>
       </TouchableOpacity>
 
-      <Space.Height.md />
+      <Space.Height.sm />
     </>
   )
 }
