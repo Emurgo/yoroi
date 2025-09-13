@@ -10,6 +10,7 @@ import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Space} from '~/ui/Space/Space'
 
+import {Icon} from '../../ui/Icon'
 import {SettingsSwitch} from '../SettingsSwitch/SettingsSwitch'
 import {YoroiLogo} from '../YoroiLogo/YoroiLogo'
 import {AnalyticsImage} from './AnalyticsImage'
@@ -153,9 +154,13 @@ const Settings = ({onReadMore}: {onReadMore?: () => void}) => {
 
             <SettingsSwitch
               value={metrics.isEnabled}
-              onValueChange={() =>
-                metrics.isEnabled ? metrics.disable() : metrics.enable()
-              }
+              onValueChange={(value) => {
+                if (value) {
+                  metrics.enable()
+                } else {
+                  metrics.disable()
+                }
+              }}
             />
           </View>
         </View>
@@ -177,29 +182,24 @@ const CommonContent = ({
 
   const list = [
     {
-      icon: '✓',
+      icon: <Icon.CheckFilled size={16} color={p.sys_cyan_500} />,
       key: 'anonymous',
-      color: p.primary_700,
     },
     {
-      icon: '✓',
+      icon: <Icon.CheckFilled size={16} color={p.sys_cyan_500} />,
       key: 'optout',
-      color: p.primary_700,
     },
     {
-      icon: '✕',
+      icon: <Icon.CrossCircle size={16} color={p.sys_magenta_500} />,
       key: 'private',
-      color: p.sys_magenta_500,
     },
     {
-      icon: '✕',
+      icon: <Icon.CrossCircle size={16} color={p.sys_magenta_500} />,
       key: 'noip',
-      color: p.sys_magenta_500,
     },
     {
-      icon: '✕',
+      icon: <Icon.CrossCircle size={16} color={p.sys_magenta_500} />,
       key: 'nosell',
-      color: p.sys_magenta_500,
     },
   ] as const
 
@@ -225,9 +225,9 @@ const CommonContent = ({
       <Space.Height.sm />
 
       <View style={[a.flex_1, a.flex_grow, a.self_start]}>
-        {list.map(({icon, key, color}) => (
-          <View key={key} style={[a.flex_row, a.align_baseline]}>
-            <Text style={[a.body_1_lg_regular, {color}, a.pr_sm]}>{icon}</Text>
+        {list.map(({icon, key}) => (
+          <View key={key} style={[a.flex_row, a.align_center]}>
+            <View style={[a.pr_sm]}>{icon}</View>
 
             <Text style={[a.body_1_lg_regular, ta.text_gray_max]}>
               {key === 'private' || key === 'noip' || key === 'nosell'
