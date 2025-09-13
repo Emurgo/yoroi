@@ -625,6 +625,11 @@ export class WalletManager {
       id,
     ])
 
+    // If the removed wallet is the currently selected one, clear the selection
+    if (this.#selectedWalletId$.value === id) {
+      this.#selectedWalletId$.next(null)
+    }
+
     // can't update the walletInfo here cuz it might be in the middle of wallet syncing
     this.#wallets.delete(id)
     const metas = new Map(this.#walletMetas$.value)

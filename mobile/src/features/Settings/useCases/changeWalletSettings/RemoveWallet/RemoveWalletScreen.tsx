@@ -31,7 +31,11 @@ export const RemoveWalletScreen = () => {
 
   const handleOnRemoveWallet = () => {
     walletManager.removeWallet(wallet.id)
-    navigation.goBack()
+    // Navigate to wallet selection screen since the current wallet is being removed
+    // Navigate to the manage-wallets screen with wallet-selection as the initial route
+    navigation.navigate('manage-wallets', {
+      screen: 'wallet-selection',
+    })
   }
 
   return (

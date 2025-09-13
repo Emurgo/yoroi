@@ -22,12 +22,11 @@ import {useConfirmHWConnectionModal} from './common/ConfirmHWConnectionModal'
 import {userRejectedError} from './common/errors'
 import {createDappConnector} from './common/helpers'
 import {useConfirmConnection} from './common/useConfirmConnection'
-import {useNavigateTo} from './common/useNavigateTo'
 import {useShowCollateralNotFoundAlert} from './common/useShowCollateralNotFoundAlert'
 
 export const useDappConnectorManager = () => {
   const appStorage = useAsyncStorage()
-  const navigateTo = useNavigateTo()
+  const {navigateToDiscoverBrowserDapp} = useWalletNavigation()
   const {wallet, meta} = useSelectedWallet()
   const {navigateToTxReview} = useWalletNavigation()
   const {tabs, tabActiveIndex} = useBrowser()
@@ -103,7 +102,7 @@ export const useDappConnectorManager = () => {
               }
 
               resolve(args?.rootKey)
-              navigateTo.browseDapp()
+              navigateToDiscoverBrowserDapp()
             },
             onCancel: () => {
               if (!shouldResolve) return
@@ -130,7 +129,7 @@ export const useDappConnectorManager = () => {
       track,
       navigateToTxReview,
       dappCollateralRequestUtils,
-      navigateTo,
+      navigateToDiscoverBrowserDapp,
     ],
   )
 
@@ -173,7 +172,7 @@ export const useDappConnectorManager = () => {
                 return
               }
               resolve(args?.tx)
-              navigateTo.browseDapp()
+              navigateToDiscoverBrowserDapp()
             },
             onError: (error) => {
               shouldResolve = false
@@ -196,7 +195,7 @@ export const useDappConnectorManager = () => {
         })
       })
     },
-    [track, activeTabOrigin, navigateToTxReview, navigateTo],
+    [track, activeTabOrigin, navigateToTxReview, navigateToDiscoverBrowserDapp],
   )
 
   const handleSendReorganisationTx = React.useCallback(

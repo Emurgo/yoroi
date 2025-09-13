@@ -19,7 +19,7 @@ export const WelcomeDAppModal = ({disabled}: {disabled?: boolean}) => {
   const [showing, setShowing] = React.useState(false)
 
   React.useEffect(() => {
-    if (disabled || seen || showing) return
+    if (disabled || seen || showing || seen === undefined) return
 
     openModal({
       title: strings.discover.welcomeToYoroiDAppExplorer,
