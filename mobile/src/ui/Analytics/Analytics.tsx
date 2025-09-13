@@ -10,7 +10,6 @@ import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Space} from '~/ui/Space/Space'
 
-import {Icon} from '../../ui/Icon'
 import {SettingsSwitch} from '../SettingsSwitch/SettingsSwitch'
 import {YoroiLogo} from '../YoroiLogo/YoroiLogo'
 import {AnalyticsImage} from './AnalyticsImage'
@@ -154,13 +153,9 @@ const Settings = ({onReadMore}: {onReadMore?: () => void}) => {
 
             <SettingsSwitch
               value={metrics.isEnabled}
-              onValueChange={(value) => {
-                if (value) {
-                  metrics.enable()
-                } else {
-                  metrics.disable()
-                }
-              }}
+              onValueChange={() =>
+                metrics.isEnabled ? metrics.disable() : metrics.enable()
+              }
             />
           </View>
         </View>
@@ -182,24 +177,29 @@ const CommonContent = ({
 
   const list = [
     {
-      icon: <Icon.CheckFilled size={16} color={p.sys_cyan_500} />,
+      icon: '✓',
       key: 'anonymous',
+      color: p.primary_700,
     },
     {
-      icon: <Icon.CheckFilled size={16} color={p.sys_cyan_500} />,
+      icon: '✓',
       key: 'optout',
+      color: p.primary_700,
     },
     {
-      icon: <Icon.CrossCircle size={16} color={p.sys_magenta_500} />,
+      icon: '✕',
       key: 'private',
+      color: p.sys_magenta_500,
     },
     {
-      icon: <Icon.CrossCircle size={16} color={p.sys_magenta_500} />,
+      icon: '✕',
       key: 'noip',
+      color: p.sys_magenta_500,
     },
     {
-      icon: <Icon.CrossCircle size={16} color={p.sys_magenta_500} />,
+      icon: '✕',
       key: 'nosell',
+      color: p.sys_magenta_500,
     },
   ] as const
 
@@ -225,9 +225,9 @@ const CommonContent = ({
       <Space.Height.sm />
 
       <View style={[a.flex_1, a.flex_grow, a.self_start]}>
-        {list.map(({icon, key}) => (
+        {list.map(({icon, key, color}) => (
           <View key={key} style={[a.flex_row, a.align_center]}>
-            <View style={[a.pr_sm]}>{icon}</View>
+            <Text style={[a.body_1_lg_regular, {color}, a.pr_sm]}>{icon}</Text>
 
             <Text style={[a.body_1_lg_regular, ta.text_gray_max]}>
               {key === 'private' || key === 'noip' || key === 'nosell'
