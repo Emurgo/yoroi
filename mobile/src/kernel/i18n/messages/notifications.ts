@@ -14,7 +14,7 @@ export const notificationsMessages = defineMessages({
     defaultMessage: '!!!Assets received',
   },
   intraWalletTransactionSent: {
-    id: 'components.send.sendscreen.feeNotAvailable',
+    id: 'notifications.intraWalletTransactionSent',
     defaultMessage: '!!!Intra-wallet transaction sent',
   },
   multipleAssetsReceived: {
@@ -22,7 +22,7 @@ export const notificationsMessages = defineMessages({
     defaultMessage: '!!!Multiple assets received',
   },
   received: {
-    id: 'portfolio.portfolioTokensDetailScreen.received',
+    id: 'notifications.received',
     defaultMessage: '!!!Received',
   },
   multipleAssetsSent: {
@@ -30,11 +30,11 @@ export const notificationsMessages = defineMessages({
     defaultMessage: '!!!Multiple assets sent',
   },
   sent: {
-    id: 'portfolio.portfolioTokensDetailScreen.sent',
+    id: 'notifications.sent',
     defaultMessage: '!!!Sent',
   },
   noNotifications: {
-    id: 'components.txhistory.notifications.title',
+    id: 'notifications.noNotifications',
     defaultMessage: '!!!No notifications',
   },
   markAllAsRead: {
