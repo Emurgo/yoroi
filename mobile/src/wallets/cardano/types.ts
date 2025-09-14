@@ -86,7 +86,7 @@ export interface YoroiWallet {
 
   // sync
   resync(): Promise<void>
-  clear(): void
+  clear(): Promise<void>
   sync(params: {isForced?: boolean}): Promise<void>
   // ---------------------------------------------------------------------------------------
 

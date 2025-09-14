@@ -12,10 +12,11 @@ import {useAuth} from '~/features/Auth/context/AuthProvider'
 import {useAuthSetting} from '~/features/Auth/hooks/useAuthSetting'
 import {useAddressMode} from '~/features/WalletManager/hooks/useAddressMode'
 import {useDisableEasyConfirmation} from '~/features/WalletManager/hooks/useDisableEasyConfirmation'
-import {useResync} from '~/features/WalletManager/hooks/useResync'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {DIALOG_BUTTONS, showConfirmationDialog} from '~/kernel/dialogs'
+import {confirmationMessages} from '~/kernel/i18n/messages/global'
 import {useStrings} from '~/kernel/i18n/useStrings'
+import {logger} from '~/kernel/logger/logger'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {SettingsRouteNavigation} from '~/kernel/navigation/types'
 import {Icon} from '~/ui/Icon'
@@ -31,10 +32,10 @@ import {
 } from '../../shared/SettingsItems'
 
 const dialogOptions = {
-  title: {id: 'global.disclaimer', defaultMessage: 'Disclaimer'},
-  message: {id: 'global.proceed', defaultMessage: 'Proceed?'},
-  btnNoLabel: {id: 'global.cancel', defaultMessage: 'Cancel'},
-  btnYesLabel: {id: 'global.proceed', defaultMessage: 'Proceed'},
+  title: confirmationMessages.resync.title,
+  message: confirmationMessages.resync.message,
+  btnNoLabel: confirmationMessages.resync.noButton,
+  btnYesLabel: confirmationMessages.resync.yesButton,
 }
 
 export const ChangeWalletSettingsScreen = () => {
@@ -44,6 +45,9 @@ export const ChangeWalletSettingsScreen = () => {
     useWalletNavigation()
   const authSetting = useAuthSetting()
   const addressMode = useAddressMode()
+  const {wallet} = useSelectedWallet()
+  const intl = useIntl()
+  const {walletIdChanged} = useSetupWallet()
 
   const logout = useLogout()
   const settingsNavigation = useNavigation<SettingsRouteNavigation>()
@@ -126,7 +130,25 @@ export const ChangeWalletSettingsScreen = () => {
             onNavigate={() => settingsNavigation.navigate('remove-wallet')}
           />
 
-          <ResyncButton />
+          <NavigatedSettingsItem
+            icon={<Icon.Resync {...iconProps} />}
+            label={strings.settings.walletSettings.resync}
+            onNavigate={async () => {
+              const selection = await showConfirmationDialog(
+                dialogOptions,
+                intl,
+              )
+              if (selection === DIALOG_BUTTONS.YES) {
+                logger.info('resync', {
+                  origin: 'ChangeWalletSettingsScreen',
+                  walletId: wallet.id,
+                })
+                walletIdChanged(wallet.id)
+                await wallet.clear()
+                settingsNavigation.navigate('settings-preparing-wallet')
+              }
+            }}
+          />
 
           <SettingsCollateralItem
             icon={<Icon.Collateral {...iconProps} />}
@@ -170,37 +192,6 @@ const useWalletType = (implementation: Wallet.Implementation): string => {
     return strings.settings.walletSettings.shelleyWallet
 
   return strings.settings.walletSettings.unknownWalletType
-}
-
-const ResyncButton = () => {
-  const {wallet} = useSelectedWallet()
-  const {palette: p} = useTheme()
-  const strings = useStrings()
-  const intl = useIntl()
-
-  const {walletIdChanged} = useSetupWallet()
-  const {resync} = useResync(wallet)
-
-  const onResync = async () => {
-    const selection = await showConfirmationDialog(dialogOptions, intl)
-    if (selection === DIALOG_BUTTONS.YES) {
-      walletIdChanged(wallet.id)
-      resync()
-    }
-  }
-
-  const iconProps = {
-    color: p.gray_400,
-    size: 23,
-  }
-
-  return (
-    <NavigatedSettingsItem
-      icon={<Icon.Resync {...iconProps} />}
-      label={strings.settings.walletSettings.resync}
-      onNavigate={onResync}
-    />
-  )
 }
 
 const AddressModeSwitcher = (props: {isSingle: boolean}) => {

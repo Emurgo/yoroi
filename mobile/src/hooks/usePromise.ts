@@ -76,6 +76,11 @@ export type UsePromiseOptions<T = unknown, A extends unknown[] = []> = {
   shouldThrow?: boolean
 }
 
+export type UsePromiseOptionsWithoutPromise<
+  T = unknown,
+  A extends unknown[] = [],
+> = Omit<UsePromiseOptions<T, A>, 'promise'>
+
 export type UsePromiseResult<T, A extends unknown[] = []> = Readonly<{
   value: T | undefined
   error: Error | undefined

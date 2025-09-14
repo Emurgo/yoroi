@@ -18,7 +18,7 @@ import {isEmptyString} from '~/wallets/utils/string'
 export const PreparingWalletScreen = () => {
   const strings = useStrings()
   const {walletId} = useSetupWallet()
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
   const isGlobalSyncPaused = useSyncTemporarilyPaused()
   useLaunchWalletAfterSyncing({isGlobalSyncPaused, walletId})
 
@@ -32,15 +32,9 @@ export const PreparingWalletScreen = () => {
 
   return (
     <SafeAreaView
-      edges={['left', 'right', 'bottom', 'top']}
-      style={[
-        a.flex_1,
-        a.align_center,
-        a.justify_center,
-        {backgroundColor: p.bg_color_max},
-      ]}
+      style={[a.flex_1, a.align_center, a.justify_center, ta.bg_color_max]}
     >
-      <Text style={[{color: p.primary_500}, a.text_center, a.heading_2_medium]}>
+      <Text style={[ta.text_primary_max, a.text_center, a.heading_2_medium]}>
         {strings.setupWallet.preparingWallet}
       </Text>
     </SafeAreaView>
