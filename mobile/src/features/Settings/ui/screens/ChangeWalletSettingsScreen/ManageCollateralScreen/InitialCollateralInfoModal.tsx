@@ -6,7 +6,7 @@ import {Linking, Text, View} from 'react-native'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Space} from '~/ui/Space/Space'
 
-import {InfoModalIllustration} from './illustrations/InfoModalIllustration'
+import {ColateralIlustration} from '../../../illustrations/ColateralIlustration'
 
 export const InitialCollateralInfoModal = () => {
   const {atoms: ta} = useTheme()
@@ -14,7 +14,7 @@ export const InitialCollateralInfoModal = () => {
 
   return (
     <View style={[a.flex_1, a.px_lg, a.align_center]}>
-      <InfoModalIllustration />
+      <ColateralIlustration />
 
       <Text style={[a.text_center, a.body_1_lg_regular, ta.text_gray_medium]}>
         {strings.manageCollateral.collateralInfoModalText}

@@ -22,7 +22,7 @@ import {BluetoothDeviceManager} from '~/ui/BluetoothDeviceManager/BluetoothDevic
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {LoadingOverlay} from '~/ui/LoadingOverlay/LoadingOverlay'
 
-import {EnableEasyConfirmationScreen} from '../Settings/ui/screens/ChangeWalletSettingsScreen/EnableEasyConfirmationScreen/EnableEasyConfirmationScreen'
+import {useCreateWalletMnemonic} from '../WalletManager/hooks/useCreateWalletMnemonic'
 
 export function DevMenu() {
   const {isDark, config, basePalette, selectTheme, atoms: ta} = useTheme()
@@ -31,6 +31,7 @@ export function DevMenu() {
   const strings = useStrings()
   const [isLoading, setIsLoading] = React.useState(false)
   const [showCrash, setShowCrash] = React.useState(false)
+  const {createWallet} = useCreateWalletMnemonic()
 
   const showLoadingFor3Seconds = React.useCallback(() => {
     setIsLoading(true)
@@ -42,8 +43,6 @@ export function DevMenu() {
   const metrics = useMetrics()
   const {currency, ptActivity} = usePairing()
   const navigation = useNavigation<any>()
-
-  return <EnableEasyConfirmationScreen />
 
   return (
     <SafeAreaView style={[a.flex_1, ta.bg_color_max, a.gap_sm]}>
@@ -174,6 +173,54 @@ export function DevMenu() {
         onDeviceSelect={(deviceId) => {
           console.log('Selected device:', deviceId)
         }}
+      />
+
+      <Button
+        disabled={isLoading}
+        onPress={() =>
+          createWallet({
+            mnemonicPhrase: process.env.EXPO_PUBLIC_WALLET_1_MNEMONIC ?? '',
+            name: 'Wallet 1',
+            password: '1234567890',
+            implementation: 'cardano-cip1852',
+            addressMode: 'multiple',
+            accountVisual: 0,
+          })
+        }
+        testID="btnRestoreWallet1"
+        title="Restore Wallet 1"
+      />
+
+      <Button
+        disabled={isLoading}
+        onPress={() =>
+          createWallet({
+            mnemonicPhrase: process.env.EXPO_PUBLIC_WALLET_2_MNEMONIC ?? '',
+            name: 'Wallet 2',
+            password: '1234567890',
+            implementation: 'cardano-cip1852',
+            addressMode: 'multiple',
+            accountVisual: 0,
+          })
+        }
+        testID="btnRestoreWallet2"
+        title="Restore Wallet 2"
+      />
+
+      <Button
+        disabled={isLoading}
+        onPress={() =>
+          createWallet({
+            mnemonicPhrase: process.env.EXPO_PUBLIC_WALLET_3_MNEMONIC ?? '',
+            name: 'Wallet 3',
+            password: '1234567890',
+            implementation: 'cardano-cip1852',
+            addressMode: 'multiple',
+            accountVisual: 0,
+          })
+        }
+        testID="btnRestoreWallet3"
+        title="Restore Wallet 3"
       />
     </SafeAreaView>
   )

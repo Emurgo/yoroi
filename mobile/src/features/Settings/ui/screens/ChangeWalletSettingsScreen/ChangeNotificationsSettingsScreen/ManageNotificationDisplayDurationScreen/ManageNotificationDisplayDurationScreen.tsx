@@ -7,7 +7,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 
 import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
-import {ScrollView, Text, TouchableOpacity, View} from 'react-native'
+import {ScrollView, Text, TouchableOpacity, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useFormatNumber} from '~/kernel/i18n/useFormatNumber'
@@ -87,18 +87,10 @@ export const ManageNotificationDisplayDurationScreen = () => {
     <KeyboardAvoidingView style={[a.flex_1, ta.bg_color_max]}>
       <SafeAreaView
         edges={['bottom', 'left', 'right']}
-        style={[a.flex_1, a.p_lg]}
+        style={[a.flex_1, a.py_lg]}
       >
-        <ScrollView bounces={false} style={a.flex_1}>
-          <Text
-            style={[
-              a.py_lg,
-              a.body_1_lg_regular,
-              {
-                color: p.gray_900,
-              },
-            ]}
-          >
+        <ScrollView bounces={false} style={[a.flex_1, a.px_lg]}>
+          <Text style={[a.py_lg, a.body_1_lg_regular, ta.text_gray_max]}>
             {strings.manageNotificationDisplayDuration.description}
           </Text>
 
@@ -117,17 +109,7 @@ export const ManageNotificationDisplayDurationScreen = () => {
                   ]}
                   onPress={() => handleChoicePress(choice.id)}
                 >
-                  <Text
-                    style={[
-                      a.body_1_lg_medium,
-                      {
-                        color: p.text_gray_max,
-                      },
-                      isSelected && {
-                        color: p.text_gray_max,
-                      },
-                    ]}
-                  >
+                  <Text style={[a.body_1_lg_medium, ta.text_gray_max]}>
                     {getLabelById(choice.id, strings)}
                   </Text>
                 </TouchableOpacity>
@@ -190,15 +172,21 @@ export const ManageNotificationDisplayDurationScreen = () => {
           </View>
         </ScrollView>
 
-        <Button
-          testID="applyButton"
-          title={strings.manageNotificationDisplayDuration.apply}
-          disabled={isButtonDisabled}
-          onPress={handleSubmit}
-        />
+        <Actions>
+          <Button
+            testID="applyButton"
+            title={strings.manageNotificationDisplayDuration.apply}
+            disabled={isButtonDisabled}
+            onPress={handleSubmit}
+          />
+        </Actions>
       </SafeAreaView>
     </KeyboardAvoidingView>
   )
+}
+
+const Actions = (props: ViewProps) => {
+  return <View {...props} style={[a.pt_lg, a.px_lg]} />
 }
 
 const getLabelById = (

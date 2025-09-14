@@ -5,24 +5,22 @@ import * as React from 'react'
 import {Alert, AppState, Platform, ScrollView, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {SettingsNotificationDurationItem} from '~/features/Settings/ui/screens/ChangeWalletSettingsScreen/ManageNotifications/SettingsNotificationDurationItem'
 import {
   SettingsItem,
   SettingsSection,
 } from '~/features/Settings/ui/shared/SettingsItems'
 import {useStrings} from '~/kernel/i18n/useStrings'
+import {logger} from '~/kernel/logger/logger'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {SettingsSwitch} from '~/ui/SettingsSwitch/SettingsSwitch'
-import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
 
-import {
-  useChangeNotificationDisplaySettings,
-  useNotificationDisplaySettings,
-} from '../../Notifications/NotificationsDisplaySettings'
+import {useChangeNotificationDisplaySettings} from '../../../../hooks/useChangeNotificationDisplaySettings'
+import {useNotificationDisplaySettings} from '../../../../hooks/useNotificationDisplaySettings'
+import {SettingsNotificationDurationItem} from './SettingsNotificationDurationItem'
 
 const getNotificationsAuthorizationStatus = ():
   | 'authorized'
@@ -32,7 +30,7 @@ const getNotificationsAuthorizationStatus = ():
   return 'not_determined' as const
 }
 
-export const ManageNotificationSettings = () => {
+export const ChangeNotificationSettingsScreen = () => {
   const strings = useStrings()
   const {navigateToNotificationDisplayDuration} = useWalletNavigation()
   const {atoms: ta, palette: p} = useTheme()
@@ -40,14 +38,16 @@ export const ManageNotificationSettings = () => {
   return (
     <SafeAreaView
       edges={['bottom', 'right', 'left']}
-      style={[a.flex_1, ta.bg_color_max]}
+      style={[a.flex_1, ta.bg_color_max, a.py_lg]}
     >
-      <ScrollView bounces={false} style={[a.flex_1, a.py_lg, a.px_lg]}>
+      <ScrollView
+        bounces={false}
+        style={a.flex_1}
+        contentContainerStyle={[a.gap_lg, a.px_lg]}
+      >
         <SettingsSection title={strings.manageNotifications.pushNotifications}>
           <PushNotificationSettingsItem />
         </SettingsSection>
-
-        <Space.Height.xl />
 
         <SettingsSection title={strings.manageNotifications.inAppNotifications}>
           <SettingsItem
@@ -70,6 +70,7 @@ export const ManageNotificationSettings = () => {
 
 export function useNotificationPermission() {
   const {track} = useMetrics()
+  const strings = useStrings()
   const [permission, setPermission] = React.useState<
     'authorized' | 'not_determined' | 'denied'
   >('not_determined')
@@ -98,7 +99,10 @@ export function useNotificationPermission() {
     const oldStatus = getNotificationsAuthorizationStatus()
 
     if (oldStatus === 'not_determined') {
-      Alert.alert('triggerNotificationsPermissionModal not implemented')
+      logger.info('triggerNotificationsPermissionModal not implemented', {
+        origin: 'ManageNotificationSettings',
+      })
+      Alert.alert(strings.global.error)
     } else {
       await navigateToAppSettings()
     }

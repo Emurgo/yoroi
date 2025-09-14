@@ -70,7 +70,7 @@ export const EnableEasyConfirmationScreen = () => {
   }
 
   return (
-    <KeyboardAvoidingView style={a.flex_1}>
+    <KeyboardAvoidingView style={a.flex_1} enabled>
       <SafeAreaView style={[ta.bg_color_max, a.flex_1, a.py_lg]}>
         <ScrollView
           keyboardShouldPersistTaps="always"

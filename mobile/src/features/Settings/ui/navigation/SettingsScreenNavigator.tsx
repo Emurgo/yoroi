@@ -34,11 +34,11 @@ import {ToggleAnalyticsSettingsScreen} from '../screens/ChangeApplicationSetting
 import {ChangePasswordScreen} from '../screens/ChangeWalletSettingsScreen/ChangePasswordScreen/ChangePasswordScreen'
 import {ChangeWalletSettingsScreen} from '../screens/ChangeWalletSettingsScreen/ChangeWalletSettingsScreen'
 import {EnableEasyConfirmationScreen} from '../screens/ChangeWalletSettingsScreen/EnableEasyConfirmationScreen/EnableEasyConfirmationScreen'
-import {ManageCollateralScreen} from '../screens/ChangeWalletSettingsScreen/ManageCollateral'
-import {ManageNotificationsNavigator} from '../screens/ChangeWalletSettingsScreen/ManageNotifications/ManageNotificationsNavigator'
+import {ManageCollateralScreen} from '../screens/ChangeWalletSettingsScreen/ManageCollateralScreen/ManageCollateralScreen'
 import {RemoveWalletScreen} from '../screens/ChangeWalletSettingsScreen/RemoveWallet/RemoveWalletScreen'
 import {RenameWalletScreen} from '../screens/ChangeWalletSettingsScreen/RenameWalletScreen/RenameWalletScreen'
 import {NetworkTag} from '../shared/NetworkTag'
+import {ManageNotificationsNavigator} from './ManageNotificationsNavigator'
 
 const Stack = createStackNavigator<SettingsStackRoutes>()
 export const SettingsScreenNavigator = () => {

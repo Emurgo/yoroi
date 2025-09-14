@@ -6,15 +6,11 @@ const getCollateralAddress = (wallet: YoroiWallet) => {
   return wallet.externalAddresses[0]
 }
 
-export const getCollateralAmountInLovelace = () => {
-  return collateralConfig.minLovelace
-}
-
 export const createCollateralEntry = (wallet: YoroiWallet): YoroiEntry => {
   return {
     address: getCollateralAddress(wallet),
     amounts: {
-      [wallet.portfolioPrimaryTokenInfo.id]: getCollateralAmountInLovelace(),
+      [wallet.portfolioPrimaryTokenInfo.id]: collateralConfig.minLovelace,
     },
   }
 }

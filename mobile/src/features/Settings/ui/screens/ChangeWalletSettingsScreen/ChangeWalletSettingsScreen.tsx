@@ -11,6 +11,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {useAuth} from '~/features/Auth/context/AuthProvider'
 import {useAuthSetting} from '~/features/Auth/hooks/useAuthSetting'
 import {useAddressMode} from '~/features/WalletManager/hooks/useAddressMode'
+import {useDisableEasyConfirmation} from '~/features/WalletManager/hooks/useDisableEasyConfirmation'
 import {useResync} from '~/features/WalletManager/hooks/useResync'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {DIALOG_BUTTONS, showConfirmationDialog} from '~/kernel/dialogs'
@@ -19,7 +20,6 @@ import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation
 import {SettingsRouteNavigation} from '~/kernel/navigation/types'
 import {Icon} from '~/ui/Icon'
 import {SettingsSwitch} from '~/ui/SettingsSwitch/SettingsSwitch'
-import {Space} from '~/ui/Space/Space'
 
 import {useNavigateTo} from '../../../hooks/useNavigateTo'
 import {SettingsCollateralItem} from '../../navigation/SettingsCollateralItem'
@@ -52,10 +52,11 @@ export const ChangeWalletSettingsScreen = () => {
   } = useSelectedWallet()
   const navigateTo = useNavigateTo()
   const walletType = useWalletType(implementation)
+  const {disableEasyConfirmation} = useDisableEasyConfirmation()
 
-  const onToggleEasyConfirmation = () => {
+  const handleOnToggleEasyConfirmation = () => {
     if (isEasyConfirmationEnabled) {
-      // TODO: REVISIT auth with os and than drop
+      disableEasyConfirmation()
     } else {
       navigateTo.enableEasyConfirmation()
     }
@@ -71,7 +72,11 @@ export const ChangeWalletSettingsScreen = () => {
       edges={['bottom', 'right', 'left']}
       style={[ta.bg_color_max, a.flex_1, a.pt_lg]}
     >
-      <ScrollView bounces={false} style={[a.flex_1, a.px_lg]}>
+      <ScrollView
+        bounces={false}
+        style={a.flex_1}
+        contentContainerStyle={[a.px_lg, a.gap_lg]}
+      >
         <SettingsSection title={strings.settings.walletSettings.general}>
           <NavigatedSettingsItem
             icon={<Icon.WalletStack {...iconProps} />}
@@ -92,8 +97,6 @@ export const ChangeWalletSettingsScreen = () => {
           />
         </SettingsSection>
 
-        <Space.Height.xl />
-
         <SettingsSection title={strings.settings.walletSettings.security}>
           <NavigatedSettingsItem
             icon={<Icon.Lock {...iconProps} />}
@@ -110,13 +113,11 @@ export const ChangeWalletSettingsScreen = () => {
           >
             <SettingsSwitch
               value={isEasyConfirmationEnabled}
-              onValueChange={onToggleEasyConfirmation}
+              onValueChange={handleOnToggleEasyConfirmation}
               disabled={authSetting === 'pin' || isHW || isReadOnly}
             />
           </SettingsItem>
         </SettingsSection>
-
-        <Space.Height.xl />
 
         <SettingsSection title={strings.settings.walletSettings.actions}>
           <NavigatedSettingsItem
@@ -142,8 +143,6 @@ export const ChangeWalletSettingsScreen = () => {
           </SettingsItem>
         </SettingsSection>
 
-        <Space.Height.xl />
-
         <SettingsSection title={strings.settings.notifications}>
           <NavigatedSettingsItem
             icon={<Icon.Bell {...iconProps} />}
@@ -152,16 +151,12 @@ export const ChangeWalletSettingsScreen = () => {
           />
         </SettingsSection>
 
-        <Space.Height.xl />
-
         <SettingsSection title={strings.settings.walletSettings.about}>
           <SettingsBuildItem
             label={strings.settings.walletSettings.walletType}
             value={walletType}
           />
         </SettingsSection>
-
-        <Space.Height.xl />
       </ScrollView>
     </SafeAreaView>
   )

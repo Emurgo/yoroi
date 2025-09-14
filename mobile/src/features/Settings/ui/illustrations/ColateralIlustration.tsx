@@ -1,7 +1,7 @@
 import * as React from 'react'
 import Svg, {Defs, LinearGradient, Path, Stop} from 'react-native-svg'
 
-export const InfoModalIllustration = () => {
+export const ColateralIlustration = () => {
   return (
     <Svg width={280} height={280} viewBox="0 0 280 280" fill="none">
       <Path

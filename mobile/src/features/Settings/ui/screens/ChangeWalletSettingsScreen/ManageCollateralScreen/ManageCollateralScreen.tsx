@@ -7,7 +7,6 @@ import * as React from 'react'
 import {
   Alert,
   LayoutAnimation,
-  ScrollView,
   TouchableOpacity,
   TouchableOpacityProps,
   View,
@@ -45,22 +44,20 @@ import {createCollateralEntry} from './helpers'
 
 export const ManageCollateralScreen = () => {
   const {atoms: ta} = useTheme()
-
   const {wallet, meta} = useSelectedWallet()
   const {amount, collateralId, utxo} = useCollateralInfo(wallet)
   const screenHeight = useWindowDimensions().height
-
-  const hasCollateral = collateralId !== '' && utxo !== undefined
   const didSpend = collateralId !== '' && utxo === undefined
   const {openModal, closeModal} = useModal()
   const strings = useStrings()
   const balances = useBalances(wallet)
   const {navigateToTxReview, resetToTxHistory} = useWalletNavigation()
   const {unsignedTxChanged} = useReviewTx()
+
   const lockedAmount = asQuantity(
     wallet.primaryBreakdown.lockedAsStorageCost.toString(),
   )
-
+  const hasCollateral = collateralId !== '' && utxo !== undefined
   const params = useUnsafeParams<SettingsStackRoutes['manage-collateral']>()
 
   const {mutate: createUnsignedTx, isPending: isLoadingTx} = useMutation({
@@ -163,54 +160,57 @@ export const ManageCollateralScreen = () => {
 
   return (
     <SafeAreaView
-      edges={['top', 'left', 'right', 'bottom']}
-      style={[ta.bg_color_max, a.flex_1, a.px_lg]}
+      edges={['left', 'right', 'bottom']}
+      style={[ta.bg_color_max, a.flex_1, a.p_lg]}
     >
-      <ScrollView>
-        <Text style={[a.flex_1, a.self_center]}>
-          {strings.manageCollateral.lockedAsCollateral}
-        </Text>
+      <Text style={[a.self_center, ta.text_gray_max]}>
+        {strings.manageCollateral.lockedAsCollateral}
+      </Text>
 
-        <Space.Height.sm />
+      <Space.Height.sm />
 
-        <ActionableAmount
-          amount={amount}
-          onRemove={handleRemoveCollateral}
-          collateralId={collateralId}
-          disabled={isLoading}
-        />
+      <ActionableAmount
+        amount={amount}
+        onRemove={handleRemoveCollateral}
+        collateralId={collateralId}
+        disabled={isLoading}
+      />
 
-        <Space.Height.lg />
+      {hasCollateral && (
+        <>
+          <Space.Height.lg />
 
-        {hasCollateral && (
-          <>
-            <Row>
-              <Copiable text={collateralId}>
-                <Text
-                  ellipsizeMode="middle"
-                  numberOfLines={1}
-                  monospace
-                  small
-                  style={{flex: 1}}
-                  secondary
-                >
-                  {collateralId}
-                </Text>
-              </Copiable>
-            </Row>
+          <Row>
+            <Copiable text={collateralId}>
+              <Text
+                ellipsizeMode="middle"
+                numberOfLines={1}
+                monospace
+                small
+                style={{flex: 1}}
+                secondary
+              >
+                {collateralId}
+              </Text>
+            </Copiable>
+          </Row>
 
-            <Space.Height.lg />
+          <Space.Height.lg />
 
-            <Text>{strings.manageCollateral.removeCollateral}</Text>
-          </>
-        )}
+          <Text>{strings.manageCollateral.removeCollateral}</Text>
+        </>
+      )}
 
-        {didSpend && (
+      <Space.Height.lg fill />
+
+      {didSpend && (
+        <>
           <ErrorPanel>
             <Text>{strings.manageCollateral.collateralSpent}</Text>
           </ErrorPanel>
-        )}
-      </ScrollView>
+          <Space.Height.lg />
+        </>
+      )}
 
       {shouldShowPrimaryButton && (
         <Button

@@ -1,6 +1,6 @@
+import {time} from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
-import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 import {ScrollView, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
@@ -8,19 +8,23 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {Button} from '~/ui/Button/Button'
+import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
+import {Button, ButtonType} from '~/ui/Button/Button'
 import {Checkbox} from '~/ui/Checkbox/Checkbox'
+import {Icon} from '~/ui/Icon'
 import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingView'
-import {Space, SpaceHeight} from '~/ui/Space/Space'
+import {useLoadingOverlay} from '~/ui/LoadingOverlay/context'
+import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
 import {TextInput} from '~/ui/TextInput/TextInput'
 
 export const RemoveWalletScreen = () => {
   const {atoms: ta, palette: p} = useTheme()
   const strings = useStrings()
-  const navigation = useNavigation()
+  const navigation = useWalletNavigation()
   const {wallet, meta} = useSelectedWallet()
   const {walletManager} = useWalletManager()
+  const {show, hide} = useLoadingOverlay()
 
   const [walletName, setWalletName] = React.useState('')
   const [hasMnemonicWrittenDown, setHasMnemonicWrittenDown] =
@@ -30,65 +34,61 @@ export const RemoveWalletScreen = () => {
     walletName !== meta.name || (!meta.isHW && !hasMnemonicWrittenDown)
 
   const handleOnRemoveWallet = () => {
-    walletManager.removeWallet(wallet.id)
-    // Navigate to wallet selection screen since the current wallet is being removed
-    // Navigate to the manage-wallets screen with wallet-selection as the initial route
-    navigation.navigate('manage-wallets', {
-      screen: 'wallet-selection',
-    })
+    show()
+    // reset nav state to unmount screens
+    navigation.resetToWalletSelection()
+    // delay the removal of the wallets
+    setTimeout(() => {
+      walletManager.removeWallet(wallet.id)
+    }, time.seconds(1.0))
+    setTimeout(() => {
+      hide()
+    }, time.seconds(1.3))
   }
 
+  const errorText =
+    walletName !== '' && walletName !== meta.name
+      ? strings.settings.removeWallet.walletNameMismatchError
+      : undefined
+
+  const right =
+    !errorText && walletName !== '' ? (
+      <Icon.Check size={24} color={p.text_success} />
+    ) : undefined
+
   return (
-    <KeyboardAvoidingView style={[a.flex_1]} enabled>
-      <SafeAreaView edges={['bottom']} style={[a.flex_1, ta.bg_color_max]}>
+    <KeyboardAvoidingView style={[a.flex_1, ta.bg_color_max]} enabled>
+      <SafeAreaView
+        style={[a.flex_1, ta.bg_color_max, a.py_lg]}
+        edges={['bottom', 'right', 'left']}
+      >
         <ScrollView
-          style={[a.flex_1]}
-          contentContainerStyle={[a.p_lg]}
+          style={a.flex_1}
+          contentContainerStyle={a.px_lg}
           keyboardShouldPersistTaps="handled"
         >
           <Description>
-            <Text
-              style={[
-                a.body_1_lg_regular,
-                {
-                  color: p.gray_900,
-                },
-              ]}
-            >
+            <Text style={[a.body_1_lg_regular, ta.text_gray_max]}>
               {strings.settings.removeWallet.descriptionParagraph1}
             </Text>
+
             <Space.Height.xl />
 
-            <Text
-              style={[
-                a.body_1_lg_regular,
-                {
-                  color: p.gray_900,
-                },
-              ]}
-            >
+            <Text style={[a.body_1_lg_regular, ta.text_gray_max]}>
               {strings.settings.removeWallet.descriptionParagraph2}
             </Text>
           </Description>
+
           <Space.Height._2xl />
 
-          <WalletInfo style={[a.p_lg, a.gap_md]}>
-            <Text
-              style={[
-                a.body_1_lg_medium,
-                {
-                  color: p.gray_900,
-                },
-              ]}
-            >
+          <WalletInfo style={a.gap_sm}>
+            <Text style={[a.body_1_lg_medium, ta.text_gray_max]}>
               {strings.settings.removeWallet.walletName}
             </Text>
 
-            <SpaceHeight size={10} />
-
-            <Text style={a.body_1_lg_regular}>{meta.name}</Text>
-
-            <Space.Height.xl />
+            <Text style={[a.body_1_lg_regular, ta.text_gray_max]}>
+              {meta.name}
+            </Text>
 
             <WalletNameInput
               autoFocus
@@ -98,18 +98,13 @@ export const RemoveWalletScreen = () => {
               value={walletName}
               onChangeText={setWalletName}
               style={[a.body_1_lg_regular]}
-              errorText={
-                walletName !== '' && walletName !== meta.name
-                  ? strings.settings.removeWallet.walletNameMismatchError
-                  : undefined
-              }
+              errorText={errorText}
+              right={right}
             />
           </WalletInfo>
         </ScrollView>
 
-        <Space.Height.lg />
-
-        <View style={[a.p_lg]}>
+        <View style={a.px_lg}>
           {!meta.isHW && (
             <Checkbox
               checked={hasMnemonicWrittenDown}
@@ -122,9 +117,7 @@ export const RemoveWalletScreen = () => {
             <Button
               onPress={handleOnRemoveWallet}
               title={strings.settings.removeWallet.remove}
-              style={{
-                backgroundColor: p.sys_magenta_500,
-              }}
+              type={ButtonType.Critical}
               disabled={disabled}
             />
           </Actions>
@@ -134,15 +127,9 @@ export const RemoveWalletScreen = () => {
   )
 }
 
-const Description = (props: ViewProps) => {
-  return <View {...props} />
-}
-const WalletInfo = (props: ViewProps) => {
-  const {atoms: ta} = useTheme()
-  return <View {...props} style={ta.bg_color_max} />
-}
-
+const Description = View
+const WalletInfo = View
 const WalletNameInput = TextInput
 const Actions = (props: ViewProps) => {
-  return <View {...props} style={a.py_lg} />
+  return <View {...props} style={a.pt_lg} />
 }
