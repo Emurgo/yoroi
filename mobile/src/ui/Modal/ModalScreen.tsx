@@ -4,13 +4,14 @@ import * as React from 'react'
 import {
   Animated,
   Easing,
-  Platform,
   Pressable,
   Modal as RNModal,
   Text,
   View,
 } from 'react-native'
+import {Gesture, GestureDetector} from 'react-native-gesture-handler'
 import {KeyboardAvoidingView} from 'react-native-keyboard-controller'
+import {runOnJS} from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
 import {Space} from '~/ui/Space/Space'
@@ -26,6 +27,15 @@ export const Modal = () => {
   const handleClose = React.useCallback(() => {
     closeModal()
   }, [closeModal])
+
+  const panGesture = Gesture.Pan()
+    .enabled(canDiscard && !full)
+    .onEnd((event) => {
+      'worklet'
+      if (event.translationY > 100 && event.velocityY > 0) {
+        runOnJS(handleClose)()
+      }
+    })
 
   React.useEffect(() => {
     if (isOpen) {
@@ -64,52 +74,70 @@ export const Modal = () => {
               opacity: backdropOpacity,
             },
           ]}
-        >
-          <Pressable
-            onPress={canDiscard ? handleClose : undefined}
-            style={[{flex: 1}]}
-          />
-        </Animated.View>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          keyboardVerticalOffset={0}
+        />
+        <Pressable
+          onPress={canDiscard ? handleClose : undefined}
           style={[a.flex_1, a.justify_end]}
         >
-          <View
-            style={[
-              full ? a.flex_1 : null,
-              a.self_stretch,
-              {backgroundColor: isDark ? p.gray_50 : p.white_static},
-              !full && {height},
-              {
-                borderTopLeftRadius: 24,
-                borderTopRightRadius: 24,
-                overflow: 'hidden',
-              },
-            ]}
-          >
-            {title ? (
-              <View style={[a.px_lg, a.pt_lg, a.pb_lg]}>
-                <Text
-                  style={[a.heading_3_medium, ta.text_gray_max, a.text_center]}
+          <KeyboardAvoidingView behavior="padding" style={[a.justify_end]}>
+            <GestureDetector gesture={panGesture}>
+              <Pressable onPress={(e) => e.stopPropagation()}>
+                <View
+                  style={[
+                    full ? a.flex_1 : null,
+                    a.self_stretch,
+                    {backgroundColor: isDark ? p.gray_50 : p.white_static},
+                    !full && {height},
+                    {
+                      borderTopLeftRadius: 24,
+                      borderTopRightRadius: 24,
+                      overflow: 'hidden',
+                    },
+                  ]}
                 >
-                  {title}
-                </Text>
-              </View>
-            ) : null}
+                  {canDiscard && !full && (
+                    <View style={[a.align_center, a.pt_sm, a.pb_xs]}>
+                      <View
+                        style={[
+                          {
+                            width: 36,
+                            height: 4,
+                            backgroundColor: isDark ? p.gray_400 : p.gray_300,
+                            borderRadius: 2,
+                          },
+                        ]}
+                      />
+                    </View>
+                  )}
+                  {title ? (
+                    <View style={[a.px_lg, a.pt_lg, a.pb_lg]}>
+                      <Text
+                        style={[
+                          a.heading_3_medium,
+                          ta.text_gray_max,
+                          a.text_center,
+                        ]}
+                      >
+                        {title}
+                      </Text>
+                    </View>
+                  ) : null}
 
-            {full ? <View style={[a.flex_1]}>{content}</View> : content}
+                  {full ? <View style={[a.flex_1]}>{content}</View> : content}
 
-            {footer ? (
-              <View style={[a.px_lg, a.pb_lg, a.pt_md]}>
-                {footer}
-                <Space.Height.xl />
-              </View>
-            ) : (
-              !full && <Space.Height.xl />
-            )}
-          </View>
-        </KeyboardAvoidingView>
+                  {footer ? (
+                    <View style={[a.px_lg, a.pb_lg, a.pt_md]}>
+                      {footer}
+                      <Space.Height.xl />
+                    </View>
+                  ) : (
+                    !full && <Space.Height.xl />
+                  )}
+                </View>
+              </Pressable>
+            </GestureDetector>
+          </KeyboardAvoidingView>
+        </Pressable>
       </View>
     </RNModal>
   )
