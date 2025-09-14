@@ -68,12 +68,11 @@ export const Modal = () => {
       setKeyboardVisible(true)
       const winH = Dimensions.get('window').height
       const endY = e?.endCoordinates?.screenY ?? winH
-      const androidHeight = Math.max(0, winH - endY - (safeBottom || 0))
+      const raw = winH - endY
+      const androidHeight = Math.max(0, raw - (safeBottom || 0))
       const kHeight =
         Platform.OS === 'android'
-          ? typeof e?.endCoordinates?.height === 'number'
-            ? Math.max(0, e.endCoordinates.height - (safeBottom || 0))
-            : androidHeight
+          ? Math.min(androidHeight, winH * 0.5)
           : (e?.endCoordinates?.height ?? 0)
       const duration = Platform.OS === 'ios' ? (e?.duration ?? 250) : 150
       Animated.timing(keyboardOffset, {
