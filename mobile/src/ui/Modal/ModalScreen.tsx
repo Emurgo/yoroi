@@ -3,6 +3,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {
   Animated,
+  Dimensions,
   Easing,
   Keyboard,
   Platform,
@@ -63,16 +64,19 @@ export const Modal = () => {
 
     const onShow = (e: any) => {
       setKeyboardVisible(true)
-      const endY = e?.endCoordinates?.screenY ?? windowHeight
-      const height =
-        Platform.OS === 'ios'
-          ? (e?.endCoordinates?.height ?? 0)
-          : Math.max(0, windowHeight - endY)
+      const endY = e?.endCoordinates?.screenY ?? Dimensions.get('screen').height
+      const androidHeight = Math.max(0, Dimensions.get('screen').height - endY)
+      const kHeight =
+        Platform.OS === 'android'
+          ? typeof e?.endCoordinates?.height === 'number'
+            ? e.endCoordinates.height
+            : androidHeight
+          : (e?.endCoordinates?.height ?? 0)
       const duration = Platform.OS === 'ios' ? (e?.duration ?? 250) : 150
       Animated.timing(keyboardOffset, {
-        toValue: height,
+        toValue: kHeight,
         duration,
-        useNativeDriver: true,
+        useNativeDriver: Platform.OS === 'ios',
       }).start()
     }
 
@@ -82,7 +86,7 @@ export const Modal = () => {
       Animated.timing(keyboardOffset, {
         toValue: 0,
         duration,
-        useNativeDriver: true,
+        useNativeDriver: Platform.OS === 'ios',
       }).start()
     }
 
@@ -132,13 +136,7 @@ export const Modal = () => {
               a.self_stretch,
               {backgroundColor: isDark ? p.gray_50 : p.white_static},
               !full && {height},
-              {
-                transform: [
-                  {
-                    translateY: Animated.multiply(keyboardOffset, -1),
-                  },
-                ],
-              },
+              {marginBottom: Platform.OS === 'android' ? keyboardOffset : 0},
               {
                 borderTopLeftRadius: 24,
                 borderTopRightRadius: 24,
