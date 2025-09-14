@@ -3,16 +3,14 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {
   Animated,
-  Dimensions,
   Easing,
-  Keyboard,
   Platform,
   Pressable,
   Modal as RNModal,
   Text,
   View,
-  useWindowDimensions,
 } from 'react-native'
+import {KeyboardAvoidingView} from 'react-native-keyboard-controller'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
 import {Space} from '~/ui/Space/Space'
@@ -23,94 +21,24 @@ export const Modal = () => {
   const {content, canDiscard, footer, title, full, isOpen, closeModal, height} =
     useModal()
   const {atoms: ta, palette: p, isDark} = useTheme()
-  const {height: windowHeight} = useWindowDimensions()
-  const {bottom: safeBottom} = useSafeAreaInsets()
+  useSafeAreaInsets()
   const backdropOpacity = React.useRef(new Animated.Value(0)).current
-  const keyboardOffset = React.useRef(new Animated.Value(0)).current
-  const sheetOpacity = React.useRef(new Animated.Value(0)).current
-  const [, setKeyboardVisible] = React.useState(false)
   const handleClose = React.useCallback(() => {
-    Keyboard.dismiss()
     closeModal()
   }, [closeModal])
 
   React.useEffect(() => {
     if (isOpen) {
-      sheetOpacity.setValue(0)
-      Animated.parallel([
-        Animated.timing(backdropOpacity, {
-          toValue: 1,
-          duration: 200,
-          useNativeDriver: true,
-        }),
-        Animated.timing(sheetOpacity, {
-          toValue: 1,
-          duration: 220,
-          easing: Easing.out(Easing.cubic),
-          useNativeDriver: true,
-        }),
-      ]).start()
+      Animated.timing(backdropOpacity, {
+        toValue: 1,
+        duration: 500,
+        easing: Easing.out(Easing.cubic),
+        useNativeDriver: true,
+      }).start()
     } else {
       backdropOpacity.setValue(0)
-      keyboardOffset.setValue(0)
-      sheetOpacity.setValue(0)
-      setKeyboardVisible(false)
     }
-  }, [isOpen, backdropOpacity, keyboardOffset, sheetOpacity])
-
-  React.useEffect(() => {
-    const showEvent =
-      Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow'
-    const hideEvent =
-      Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide'
-
-    const onShow = (e: any) => {
-      setKeyboardVisible(true)
-      const winH = Dimensions.get('window').height
-      const endY = e?.endCoordinates?.screenY ?? winH
-      const androidHeight = Math.max(0, winH - endY)
-      const kHeight =
-        Platform.OS === 'android'
-          ? typeof e?.endCoordinates?.height === 'number'
-            ? e.endCoordinates.height
-            : androidHeight
-          : (e?.endCoordinates?.height ?? 0)
-      const duration = Platform.OS === 'ios' ? (e?.duration ?? 250) : 150
-      Animated.timing(keyboardOffset, {
-        toValue: kHeight,
-        duration,
-        useNativeDriver: true,
-      }).start()
-    }
-
-    const onHide = (e: any) => {
-      setKeyboardVisible(false)
-      const duration = Platform.OS === 'ios' ? (e?.duration ?? 250) : 150
-      Animated.timing(keyboardOffset, {
-        toValue: 0,
-        duration,
-        useNativeDriver: true,
-      }).start()
-    }
-
-    const subShow = Keyboard.addListener(showEvent, onShow)
-    const subHide = Keyboard.addListener(hideEvent, onHide)
-    const subChangeFrame =
-      Platform.OS === 'android'
-        ? Keyboard.addListener('keyboardDidChangeFrame', (e: any) => {
-            const winH = Dimensions.get('window').height
-            const endY = e?.endCoordinates?.screenY ?? winH
-            const h = Math.max(0, winH - endY)
-            keyboardOffset.setValue(h)
-          })
-        : undefined
-
-    return () => {
-      subShow.remove()
-      subHide.remove()
-      subChangeFrame?.remove?.()
-    }
-  }, [keyboardOffset, windowHeight, safeBottom])
+  }, [isOpen, backdropOpacity])
 
   return (
     <RNModal
@@ -142,28 +70,22 @@ export const Modal = () => {
             style={[{flex: 1}]}
           />
         </Animated.View>
-        <View style={[a.self_stretch]}>
-          <Animated.View
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          keyboardVerticalOffset={0}
+          style={[a.self_stretch, a.justify_end]}
+        >
+          <View
             style={[
               full ? a.flex_1 : null,
               a.self_stretch,
               {backgroundColor: isDark ? p.gray_50 : p.white_static},
               !full && {height},
-              Platform.OS === 'android'
-                ? {
-                    transform: [
-                      {
-                        translateY: Animated.multiply(keyboardOffset, -1),
-                      },
-                    ],
-                  }
-                : null,
               {
                 borderTopLeftRadius: 24,
                 borderTopRightRadius: 24,
                 overflow: 'hidden',
               },
-              {opacity: sheetOpacity},
             ]}
           >
             {title ? (
@@ -186,8 +108,8 @@ export const Modal = () => {
             ) : (
               !full && <Space.Height.xl />
             )}
-          </Animated.View>
-        </View>
+          </View>
+        </KeyboardAvoidingView>
       </View>
     </RNModal>
   )
