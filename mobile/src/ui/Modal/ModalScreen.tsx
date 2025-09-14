@@ -13,6 +13,7 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
 import {Space} from '~/ui/Space/Space'
 
@@ -23,6 +24,7 @@ export const Modal = () => {
     useModal()
   const {atoms: ta, palette: p, isDark} = useTheme()
   const {height: windowHeight} = useWindowDimensions()
+  const {bottom: safeBottom} = useSafeAreaInsets()
   const backdropOpacity = React.useRef(new Animated.Value(0)).current
   const keyboardOffset = React.useRef(new Animated.Value(0)).current
   const sheetOpacity = React.useRef(new Animated.Value(0)).current
@@ -64,12 +66,13 @@ export const Modal = () => {
 
     const onShow = (e: any) => {
       setKeyboardVisible(true)
-      const endY = e?.endCoordinates?.screenY ?? Dimensions.get('screen').height
-      const androidHeight = Math.max(0, Dimensions.get('screen').height - endY)
+      const winH = Dimensions.get('window').height
+      const endY = e?.endCoordinates?.screenY ?? winH
+      const androidHeight = Math.max(0, winH - endY - (safeBottom || 0))
       const kHeight =
         Platform.OS === 'android'
           ? typeof e?.endCoordinates?.height === 'number'
-            ? e.endCoordinates.height
+            ? Math.max(0, e.endCoordinates.height - (safeBottom || 0))
             : androidHeight
           : (e?.endCoordinates?.height ?? 0)
       const duration = Platform.OS === 'ios' ? (e?.duration ?? 250) : 150
@@ -92,12 +95,22 @@ export const Modal = () => {
 
     const subShow = Keyboard.addListener(showEvent, onShow)
     const subHide = Keyboard.addListener(hideEvent, onHide)
+    const subChangeFrame =
+      Platform.OS === 'android'
+        ? Keyboard.addListener('keyboardDidChangeFrame', (e: any) => {
+            const winH = Dimensions.get('window').height
+            const endY = e?.endCoordinates?.screenY ?? winH
+            const h = Math.max(0, winH - endY - (safeBottom || 0))
+            keyboardOffset.setValue(h)
+          })
+        : undefined
 
     return () => {
       subShow.remove()
       subHide.remove()
+      subChangeFrame?.remove?.()
     }
-  }, [keyboardOffset, windowHeight])
+  }, [keyboardOffset, windowHeight, safeBottom])
 
   return (
     <RNModal
