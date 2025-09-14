@@ -7,13 +7,13 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useAuth} from '~/features/Auth/context/AuthProvider'
 import {useAuthWithOs} from '~/features/Auth/hooks/useAuthWithOs'
+import {useNavigateTo} from '~/features/Settings/hooks/useNavigateTo'
+import {useScreenCapture} from '~/features/Settings/hooks/useScreenCapture'
 import {
   NavigatedSettingsItem,
   SettingsItem,
   SettingsSection,
-} from '~/features/Settings/SettingsItems'
-import {useNavigateTo} from '~/features/Settings/hooks/useNavigateTo'
-import {useScreenCapture} from '~/features/Settings/hooks/useScreenCapture'
+} from '~/features/Settings/ui/shared/SettingsItems'
 import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
 import {useLanguage} from '~/kernel/i18n/LanguageProvider'
 import {LanguageRecord, supportedLanguages} from '~/kernel/i18n/localization'
