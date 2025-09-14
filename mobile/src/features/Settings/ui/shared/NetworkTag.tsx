@@ -21,19 +21,20 @@ import {Button, ButtonType} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
 
+type Props = React.PropsWithChildren<{
+  directChangeActive?: boolean
+  style?: ViewStyle
+  disabled?: boolean
+  textStyle?: TextStyle
+}>
+
 export const NetworkTag = ({
   children,
   directChangeActive,
   style,
   disabled,
   textStyle,
-}: {
-  children: React.ReactNode
-  directChangeActive?: boolean
-  style?: ViewStyle
-  disabled?: boolean
-  textStyle?: TextStyle
-}) => {
+}: Props) => {
   const {
     selected: {network: selectedNetwork},
     walletManager,
@@ -137,7 +138,7 @@ const PreprodTag = ({
   disabled,
 }: {
   onPress: () => void
-  disabled: boolean
+  disabled?: boolean
 }) => {
   const {palette: p} = useTheme()
 
@@ -146,7 +147,6 @@ const PreprodTag = ({
   return (
     <TouchableOpacity
       onPress={onPress}
-      activeOpacity={0.5}
       style={[
         {backgroundColor: p.sys_yellow_500},
         a.rounded_full,

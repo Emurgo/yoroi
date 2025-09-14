@@ -74,4 +74,6 @@ export const supportedCurrencies = Object.keys(
 // Legal
 export const agreementDate = 1691967600000
 
+// Others
 export const appVersion = Constants.expoConfig?.version ?? ''
+export const requiredPasswordLength = 10

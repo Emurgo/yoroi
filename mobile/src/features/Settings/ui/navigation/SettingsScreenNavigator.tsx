@@ -21,27 +21,24 @@ import {
 import {SettingsStackRoutes, SettingsTabRoutes} from '~/kernel/navigation/types'
 import {Icon} from '~/ui/Icon'
 
-import {useOpenNetworkNoticeModal} from './hooks/useOpenNetworkNoticeModal'
-import {AboutScreen} from './ui/screens/ChangeApplicationSettingsScreen/AboutScreen/AboutScreen'
-import {ApplicationSettingsScreen} from './ui/screens/ChangeApplicationSettingsScreen/ApplicationSettingsScreen'
-import {ListSystemLogsScreen} from './ui/screens/ChangeApplicationSettingsScreen/ListSystemLogsScreen/ListSystemLogsScreen'
-import {PreparingNetworkScreen} from './ui/screens/ChangeApplicationSettingsScreen/PreparingNetworkScreen/PreparingNetworkScreen'
-import {SelectCurrencySymbolScreen} from './ui/screens/ChangeApplicationSettingsScreen/SelectCurrencySymbolScreen/SelectCurrencySymbolScreen'
-import {SelectLanguageScreen} from './ui/screens/ChangeApplicationSettingsScreen/SelectLanguageScreen/SelectLanguageScreen'
-import {SelectNetworkScreen} from './ui/screens/ChangeApplicationSettingsScreen/SelectNetworkScreen/SelectNetworkScreen'
-import {SelectThemeScreen} from './ui/screens/ChangeApplicationSettingsScreen/SelectThemeScreen/SelectThemeScreen'
-import {ToggleAnalyticsSettingsScreen} from './ui/screens/ChangeApplicationSettingsScreen/ToggleAnalyticsSettings/ToggleAnalyticsSettingsScreen'
-import {NetworkTag} from './ui/shared/NetworkTag'
-import {ChangePasswordScreen} from './useCases/changeWalletSettings/ChangePassword'
-import {
-  DisableEasyConfirmationScreen,
-  EnableEasyConfirmationScreen,
-} from './useCases/changeWalletSettings/EasyConfirmation'
-import {ManageCollateralScreen} from './useCases/changeWalletSettings/ManageCollateral'
-import {ManageNotificationsNavigator} from './useCases/changeWalletSettings/ManageNotifications/ManageNotificationsNavigator'
-import {RemoveWalletScreen} from './useCases/changeWalletSettings/RemoveWallet'
-import {RenameWalletScreen} from './useCases/changeWalletSettings/RenameWalletScreen/RenameWalletScreen'
-import {WalletSettingsScreen} from './useCases/changeWalletSettings/WalletSettingsScreen'
+import {useOpenNetworkNoticeModal} from '../../hooks/useOpenNetworkNoticeModal'
+import {AboutScreen} from '../screens/ChangeApplicationSettingsScreen/AboutScreen/AboutScreen'
+import {ApplicationSettingsScreen} from '../screens/ChangeApplicationSettingsScreen/ApplicationSettingsScreen'
+import {ListSystemLogsScreen} from '../screens/ChangeApplicationSettingsScreen/ListSystemLogsScreen/ListSystemLogsScreen'
+import {PreparingNetworkScreen} from '../screens/ChangeApplicationSettingsScreen/PreparingNetworkScreen/PreparingNetworkScreen'
+import {SelectCurrencySymbolScreen} from '../screens/ChangeApplicationSettingsScreen/SelectCurrencySymbolScreen/SelectCurrencySymbolScreen'
+import {SelectLanguageScreen} from '../screens/ChangeApplicationSettingsScreen/SelectLanguageScreen/SelectLanguageScreen'
+import {SelectNetworkScreen} from '../screens/ChangeApplicationSettingsScreen/SelectNetworkScreen/SelectNetworkScreen'
+import {SelectThemeScreen} from '../screens/ChangeApplicationSettingsScreen/SelectThemeScreen/SelectThemeScreen'
+import {ToggleAnalyticsSettingsScreen} from '../screens/ChangeApplicationSettingsScreen/ToggleAnalyticsSettings/ToggleAnalyticsSettingsScreen'
+import {ChangePasswordScreen} from '../screens/ChangeWalletSettingsScreen/ChangePasswordScreen/ChangePasswordScreen'
+import {ChangeWalletSettingsScreen} from '../screens/ChangeWalletSettingsScreen/ChangeWalletSettingsScreen'
+import {EnableEasyConfirmationScreen} from '../screens/ChangeWalletSettingsScreen/EnableEasyConfirmationScreen/EnableEasyConfirmationScreen'
+import {ManageCollateralScreen} from '../screens/ChangeWalletSettingsScreen/ManageCollateral'
+import {ManageNotificationsNavigator} from '../screens/ChangeWalletSettingsScreen/ManageNotifications/ManageNotificationsNavigator'
+import {RemoveWalletScreen} from '../screens/ChangeWalletSettingsScreen/RemoveWallet/RemoveWalletScreen'
+import {RenameWalletScreen} from '../screens/ChangeWalletSettingsScreen/RenameWalletScreen/RenameWalletScreen'
+import {NetworkTag} from '../shared/NetworkTag'
 
 const Stack = createStackNavigator<SettingsStackRoutes>()
 export const SettingsScreenNavigator = () => {
@@ -172,12 +169,6 @@ export const SettingsScreenNavigator = () => {
       />
 
       <Stack.Screen //
-        name="disable-easy-confirmation"
-        getComponent={() => DisableEasyConfirmationScreen}
-        options={{title: strings.settings.disableEasyConfirmationTitle}}
-      />
-
-      <Stack.Screen //
         name="change-password"
         getComponent={() => ChangePasswordScreen}
         options={{title: strings.settings.changePasswordTitle}}
@@ -244,9 +235,15 @@ const SettingsTabNavigator = () => {
             : strings.settings.appTabTitle,
       })}
     >
-      <Tab.Screen name="wallet-settings" component={WalletSettingsScreen} />
+      <Tab.Screen
+        name="wallet-settings"
+        getComponent={() => ChangeWalletSettingsScreen}
+      />
 
-      <Tab.Screen name="app-settings" component={ApplicationSettingsScreen} />
+      <Tab.Screen
+        name="app-settings"
+        getComponent={() => ApplicationSettingsScreen}
+      />
     </Tab.Navigator>
   )
 }

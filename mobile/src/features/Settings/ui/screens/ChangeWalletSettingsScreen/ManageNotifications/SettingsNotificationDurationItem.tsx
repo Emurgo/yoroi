@@ -6,7 +6,7 @@ import * as React from 'react'
 import {
   NavigatedSettingsItem,
   NavigatedSettingsItemProps,
-} from './SettingsItems'
+} from '../../../shared/SettingsItems'
 
 export const SettingsNotificationDurationItem = ({
   label,

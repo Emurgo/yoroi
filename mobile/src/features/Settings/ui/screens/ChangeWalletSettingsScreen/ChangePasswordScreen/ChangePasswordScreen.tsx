@@ -7,16 +7,16 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useDebouncedValue} from '~/hooks/useDebouncedValue'
 import {usePromise} from '~/hooks/usePromise'
+import {requiredPasswordLength} from '~/kernel/constants'
 import {useStrings} from '~/kernel/i18n/useStrings'
+import {isEmptyString} from '~/kernel/utils'
 import {Button} from '~/ui/Button/Button'
 import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingView'
-import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
 import {TextInput} from '~/ui/TextInput/TextInput'
 import {YoroiWallet} from '~/wallets/cardano/types'
-
-const REQUIRED_PASSWORD_LENGTH = 10
 
 export const ChangePasswordScreen = () => {
   const strings = useStrings()
@@ -28,6 +28,9 @@ export const ChangePasswordScreen = () => {
   const [newPassword, setNewPassword] = React.useState('')
   const [repeatPassword, setRepeatPassword] = React.useState('')
 
+  const deboucedNewPassword = useDebouncedValue(newPassword)
+  const deboucedRepeatPassword = useDebouncedValue(repeatPassword)
+
   const {changePassword, isPending, error} = useChangePassword(wallet, {
     onSuccess: () => navigation.goBack(),
   })
@@ -37,20 +40,34 @@ export const ChangePasswordScreen = () => {
   }
 
   const hasErrors =
-    newPassword.length < REQUIRED_PASSWORD_LENGTH ||
-    newPassword !== repeatPassword ||
-    newPassword === currentPassword
+    deboucedNewPassword.length < requiredPasswordLength ||
+    (deboucedNewPassword !== repeatPassword &&
+      !isEmptyString(repeatPassword)) ||
+    deboucedNewPassword === currentPassword
+
+  const newPasswordErrorText =
+    deboucedNewPassword.length > 0 &&
+    deboucedNewPassword.length < requiredPasswordLength
+      ? strings.settings.changePassword.passwordStrengthRequirement
+      : undefined
+
+  const repeatPasswordErrorText =
+    deboucedRepeatPassword.length > 0 &&
+    deboucedNewPassword !== deboucedRepeatPassword
+      ? strings.settings.changePassword.repeatPasswordInputNotMatchError
+      : undefined
 
   return (
     <KeyboardAvoidingView style={[ta.bg_color_max, a.flex_1]} enabled>
-      <SafeAreaView style={[a.flex_1]} edges={['left', 'right', 'bottom']}>
+      <SafeAreaView
+        style={[a.flex_1, a.pt_lg, ta.bg_color_max, a.pb_lg]}
+        edges={['left', 'right', 'bottom']}
+      >
         <ScrollView
-          contentContainerStyle={[a.p_lg]}
+          contentContainerStyle={[a.px_lg, a.gap_md]}
           bounces={false}
           keyboardShouldPersistTaps="handled"
         >
-          <Space.Height.lg />
-
           <CurrentPasswordInput
             returnKeyType="done"
             errorDelay={0}
@@ -63,8 +80,6 @@ export const ChangePasswordScreen = () => {
             autoComplete="password"
           />
 
-          <Space.Height.lg />
-
           <PasswordInput
             returnKeyType="done"
             errorDelay={0}
@@ -74,15 +89,8 @@ export const ChangePasswordScreen = () => {
             onChangeText={setNewPassword}
             secureTextEntry
             autoComplete="new-password"
-            errorText={
-              newPassword.length > 0 &&
-              newPassword.length < REQUIRED_PASSWORD_LENGTH
-                ? strings.settings.changePassword.passwordStrengthRequirement
-                : undefined
-            }
+            errorText={newPasswordErrorText}
           />
-
-          <Space.Height.lg />
 
           <PasswordConfirmationInput
             returnKeyType="done"
@@ -93,17 +101,11 @@ export const ChangePasswordScreen = () => {
             onChangeText={setRepeatPassword}
             secureTextEntry
             autoComplete="new-password"
-            errorText={
-              repeatPassword.length > 0 && newPassword !== repeatPassword
-                ? strings.settings.changePassword
-                    .repeatPasswordInputNotMatchError
-                : undefined
-            }
+            errorText={repeatPasswordErrorText}
           />
 
           {error && (
             <>
-              <Space.Height.lg />
               <Text
                 style={[
                   a.body_1_lg_regular,
@@ -134,8 +136,7 @@ const CurrentPasswordInput = TextInput
 const PasswordInput = TextInput
 const PasswordConfirmationInput = TextInput
 const Actions = (props: ViewProps) => {
-  const {atoms: ta} = useTheme()
-  return <View {...props} style={[ta.bg_color_max, a.p_lg]} />
+  return <View {...props} style={[a.px_lg, a.pt_lg]} />
 }
 
 const useChangePassword = (

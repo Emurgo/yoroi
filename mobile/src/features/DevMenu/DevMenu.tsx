@@ -22,6 +22,8 @@ import {BluetoothDeviceManager} from '~/ui/BluetoothDeviceManager/BluetoothDevic
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {LoadingOverlay} from '~/ui/LoadingOverlay/LoadingOverlay'
 
+import {EnableEasyConfirmationScreen} from '../Settings/ui/screens/ChangeWalletSettingsScreen/EnableEasyConfirmationScreen/EnableEasyConfirmationScreen'
+
 export function DevMenu() {
   const {isDark, config, basePalette, selectTheme, atoms: ta} = useTheme()
   const {authWithHost, changeAuthSetting} = useAuth()
@@ -40,6 +42,8 @@ export function DevMenu() {
   const metrics = useMetrics()
   const {currency, ptActivity} = usePairing()
   const navigation = useNavigation<any>()
+
+  return <EnableEasyConfirmationScreen />
 
   return (
     <SafeAreaView style={[a.flex_1, ta.bg_color_max, a.gap_sm]}>

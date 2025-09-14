@@ -2,7 +2,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 
 import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
-import {ScrollView, View} from 'react-native'
+import {ScrollView, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
@@ -10,7 +10,6 @@ import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWalle
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
 import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingView'
-import {Space} from '~/ui/Space/Space'
 import {TextInput} from '~/ui/TextInput/TextInput'
 import {isEmptyString} from '~/wallets/utils/string'
 import {getWalletNameError} from '~/wallets/utils/validators'
@@ -48,7 +47,7 @@ export const RenameWalletScreen = () => {
   return (
     <KeyboardAvoidingView style={[ta.bg_color_max, a.flex_1]} enabled>
       <SafeAreaView
-        style={[a.flex_1, a.pt_lg, a.pb_lg]}
+        style={[a.flex_1, a.pt_lg, a.pb_lg, ta.bg_color_max]}
         edges={['left', 'right', 'bottom']}
       >
         <ScrollView contentContainerStyle={a.px_lg} bounces={false}>
@@ -67,18 +66,19 @@ export const RenameWalletScreen = () => {
           />
         </ScrollView>
 
-        <Space.Height.lg fill />
-
-        <View style={[ta.bg_color_max, a.pt_lg, a.px_lg]}>
+        <Actions>
           <Button
             onPress={handleOnRename}
             title={strings.settings.renameWallet.changeButton}
             disabled={hasErrors || isEmptyString(newWalletName)}
           />
-        </View>
+        </Actions>
       </SafeAreaView>
     </KeyboardAvoidingView>
   )
 }
 
 const WalletNameInput = TextInput
+const Actions = (props: ViewProps) => {
+  return <View {...props} style={[a.px_lg, a.pt_lg]} />
+}

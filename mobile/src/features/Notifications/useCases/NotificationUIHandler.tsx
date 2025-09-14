@@ -5,7 +5,7 @@ import {Notifications} from '@yoroi/types'
 import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 
-import {useNotificationDisplaySettings} from '~/features/Settings/useCases/changeWalletSettings/Notifications/NotificationsDisplaySettings'
+import {useNotificationDisplaySettings} from '~/features/Settings/ui/screens/ChangeWalletSettingsScreen/Notifications/NotificationsDisplaySettings'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {
   isTxHistoryRoute,

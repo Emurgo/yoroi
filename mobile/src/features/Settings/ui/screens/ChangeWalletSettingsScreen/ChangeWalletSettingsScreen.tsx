@@ -21,14 +21,14 @@ import {Icon} from '~/ui/Icon'
 import {SettingsSwitch} from '~/ui/SettingsSwitch/SettingsSwitch'
 import {Space} from '~/ui/Space/Space'
 
-import {SettingsCollateralItem} from '../../SettingsCollateralItem'
+import {useNavigateTo} from '../../../hooks/useNavigateTo'
+import {SettingsCollateralItem} from '../../navigation/SettingsCollateralItem'
 import {
   NavigatedSettingsItem,
   SettingsBuildItem,
   SettingsItem,
   SettingsSection,
-} from '../../SettingsItems'
-import {useNavigateTo} from '../../hooks/useNavigateTo'
+} from '../../shared/SettingsItems'
 
 const dialogOptions = {
   title: {id: 'global.disclaimer', defaultMessage: 'Disclaimer'},
@@ -37,7 +37,7 @@ const dialogOptions = {
   btnYesLabel: {id: 'global.proceed', defaultMessage: 'Proceed'},
 }
 
-export const WalletSettingsScreen = () => {
+export const ChangeWalletSettingsScreen = () => {
   const strings = useStrings()
   const {atoms: ta, palette: p} = useTheme()
   const {resetToWalletSelection, navigateToNotificationSettings} =
@@ -55,14 +55,10 @@ export const WalletSettingsScreen = () => {
 
   const onToggleEasyConfirmation = () => {
     if (isEasyConfirmationEnabled) {
-      navigateTo.disableEasyConfirmation()
+      // TODO: REVISIT auth with os and than drop
     } else {
       navigateTo.enableEasyConfirmation()
     }
-  }
-
-  const onSwitchWallet = () => {
-    resetToWalletSelection()
   }
 
   const iconProps = {
@@ -73,14 +69,14 @@ export const WalletSettingsScreen = () => {
   return (
     <SafeAreaView
       edges={['bottom', 'right', 'left']}
-      style={[ta.bg_color_max, a.flex_1]}
+      style={[ta.bg_color_max, a.flex_1, a.pt_lg]}
     >
-      <ScrollView bounces={false} style={[a.flex_1, a.p_lg]}>
+      <ScrollView bounces={false} style={[a.flex_1, a.px_lg]}>
         <SettingsSection title={strings.settings.walletSettings.general}>
           <NavigatedSettingsItem
             icon={<Icon.WalletStack {...iconProps} />}
             label={strings.settings.walletSettings.switchWallet}
-            onNavigate={onSwitchWallet}
+            onNavigate={resetToWalletSelection}
           />
 
           <NavigatedSettingsItem

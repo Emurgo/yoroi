@@ -1,52 +1,41 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 
-import React, {ReactElement} from 'react'
-import {TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
+import * as React from 'react'
+import {TouchableOpacity, View} from 'react-native'
 
 import {Hr} from '~/ui/Hr/Hr'
 import {Icon} from '~/ui/Icon'
-import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
 import {isEmptyString} from '~/wallets/utils/string'
 
-const Touchable = (props: TouchableOpacityProps) => (
-  <TouchableOpacity {...props} activeOpacity={0.5} />
-)
-
-type SettingsSectionProps = {
+type SettingsSectionProps = React.PropsWithChildren<{
   title?: string
-  children: React.ReactNode
-}
+}>
 
 export const SettingsSection = ({title, children}: SettingsSectionProps) => {
-  const {palette: p} = useTheme()
+  const {palette: p, atoms: ta} = useTheme()
 
   return (
     <View>
       {title != null && (
-        <>
-          <Text style={[a.body_2_md_regular, {color: p.gray_900}]}>
-            {title}
-          </Text>
+        <View style={a.gap_xs}>
+          <Text style={[a.body_2_md_regular, ta.text_gray_max]}>{title}</Text>
 
-          <Space.Height.xs />
-
-          <Hr style={[{height: 1}, {backgroundColor: p.gray_200}]} />
-        </>
+          <Hr color={p.gray_200} />
+        </View>
       )}
 
-      <View>{children}</View>
+      {children}
     </View>
   )
 }
 
-type SettingsItemProps = {
+type SettingsItemProps = React.PropsWithChildren<{
   label: string
-  children: React.ReactNode
   disabled?: boolean
-  icon?: ReactElement
+  icon?: React.ReactElement
   info?: string
-}
+}>
 
 export const SettingsItem = ({
   label,
@@ -55,21 +44,20 @@ export const SettingsItem = ({
   icon,
   info,
 }: SettingsItemProps) => {
-  const {palette: p} = useTheme()
+  const {palette: p, atoms: ta} = useTheme()
 
   return (
     <View>
-      <View style={a.py_lg}>
-        <View style={[a.flex_row, a.justify_between, a.align_center]}>
+      <View style={[a.py_lg, a.gap_sm]}>
+        <View style={[a.flex_row, a.justify_between, a.align_center, a.gap_sm]}>
           {icon}
-
-          {icon && <Space.Width.sm />}
 
           <Text
             style={[
               a.flex_1,
               a.body_1_lg_medium,
-              {color: disabled ? p.gray_500 : p.gray_900},
+              ta.text_gray_max,
+              disabled && ta.text_gray_medium,
             ]}
           >
             {label}
@@ -79,24 +67,18 @@ export const SettingsItem = ({
         </View>
 
         {!isEmptyString(info) && (
-          <>
-            <Space.Height.sm />
-
-            <Text style={[a.body_3_sm_regular, {color: p.gray_600}]}>
-              {info}
-            </Text>
-          </>
+          <Text style={[a.body_3_sm_regular, ta.text_gray_low]}>{info}</Text>
         )}
       </View>
 
-      <Hr style={[{height: 1}, {backgroundColor: p.gray_200}]} />
+      <Hr color={p.gray_200} />
     </View>
   )
 }
 export type NavigatedSettingsItemProps = {
   label: string
   onNavigate: () => void
-  icon?: ReactElement
+  icon?: React.ReactElement
   disabled?: boolean
   selected?: string
 }
@@ -108,23 +90,21 @@ export const NavigatedSettingsItem = ({
   disabled,
   selected,
 }: NavigatedSettingsItemProps) => {
-  const {palette: p} = useTheme()
+  const {palette: p, atoms: ta} = useTheme()
   return (
-    <Touchable onPress={onNavigate} disabled={disabled}>
+    <TouchableOpacity onPress={onNavigate} disabled={disabled}>
       <SettingsItem icon={icon} label={label} disabled={disabled}>
-        <View style={[a.flex_row, a.align_center]}>
+        <View style={[a.flex_row, a.align_center, a.gap_md]}>
           {!isEmptyString(selected) && (
-            <Text style={[a.body_1_lg_regular, {color: p.gray_500}]}>
+            <Text style={[a.body_1_lg_regular, ta.text_gray_medium]}>
               {selected}
             </Text>
           )}
 
-          <Space.Width.md />
-
           <Icon.Chevron direction="right" size={28} color={p.el_gray_min} />
         </View>
       </SettingsItem>
-    </Touchable>
+    </TouchableOpacity>
   )
 }
 

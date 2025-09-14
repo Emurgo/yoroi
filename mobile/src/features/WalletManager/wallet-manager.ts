@@ -508,17 +508,16 @@ export class WalletManager {
     })
   }
 
-  async enableEasyConfirmation(id: YoroiWallet['id'], password: string) {
+  async enableEasyConfirmation(wallet: YoroiWallet, password: string) {
     if (!this.#keychainManager)
       throwLoggedError(
         'WalletManager: enableEasyConfirmation KeychainManager not available',
       )
 
-    const encryptedStorage = makeWalletEncryptedStorage(id)
-    const rootKey = await encryptedStorage.xpriv.read(password)
-    this.#keychainManager.setWalletKey(id, rootKey.value)
+    const rootKey = await wallet.encryptedStorage.xpriv.read(password)
+    this.#keychainManager.setWalletKey(wallet.id, rootKey.value)
 
-    this.updateMeta(id, {
+    this.updateMeta(wallet.id, {
       isEasyConfirmationEnabled: true,
     })
   }

@@ -5,8 +5,11 @@ import * as React from 'react'
 import {Alert, AppState, Platform, ScrollView, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {SettingsItem, SettingsSection} from '~/features/Settings/SettingsItems'
-import {SettingsNotificationDurationItem} from '~/features/Settings/SettingsNotificationDurationItem'
+import {SettingsNotificationDurationItem} from '~/features/Settings/ui/screens/ChangeWalletSettingsScreen/ManageNotifications/SettingsNotificationDurationItem'
+import {
+  SettingsItem,
+  SettingsSection,
+} from '~/features/Settings/ui/shared/SettingsItems'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'

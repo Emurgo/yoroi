@@ -16,7 +16,7 @@ import {isEmptyString} from '~/wallets/utils/string'
 
 import {usePromptRootKey} from '../ReviewTx/common/hooks/usePromptRootKey'
 import {CreatedByInfoItem} from '../ReviewTx/useCases/ReviewTxScreen/ReviewTx/Overview/OverviewTab'
-import {getCollateralAmountInLovelace} from '../Settings/useCases/changeWalletSettings/ManageCollateral/helpers'
+import {getCollateralAmountInLovelace} from '../Settings/ui/screens/ChangeWalletSettingsScreen/ManageCollateral/helpers'
 import {useBrowser} from './common/BrowserProvider'
 import {useConfirmHWConnectionModal} from './common/ConfirmHWConnectionModal'
 import {userRejectedError} from './common/errors'
