@@ -71,43 +71,49 @@ export const Modal = () => {
           />
         </Animated.View>
         <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'position'}
           keyboardVerticalOffset={0}
-          style={[a.self_stretch, a.justify_end]}
+          style={[a.flex_1]}
         >
-          <View
-            style={[
-              full ? a.flex_1 : null,
-              a.self_stretch,
-              {backgroundColor: isDark ? p.gray_50 : p.white_static},
-              !full && {height},
-              {
-                borderTopLeftRadius: 24,
-                borderTopRightRadius: 24,
-                overflow: 'hidden',
-              },
-            ]}
-          >
-            {title ? (
-              <View style={[a.px_lg, a.pt_lg, a.pb_lg]}>
-                <Text
-                  style={[a.heading_3_medium, ta.text_gray_max, a.text_center]}
-                >
-                  {title}
-                </Text>
-              </View>
-            ) : null}
+          <View style={[a.flex_1, a.justify_end]}>
+            <View
+              style={[
+                full ? a.flex_1 : null,
+                a.self_stretch,
+                {backgroundColor: isDark ? p.gray_50 : p.white_static},
+                !full && {height},
+                {
+                  borderTopLeftRadius: 24,
+                  borderTopRightRadius: 24,
+                  overflow: 'hidden',
+                },
+              ]}
+            >
+              {title ? (
+                <View style={[a.px_lg, a.pt_lg, a.pb_lg]}>
+                  <Text
+                    style={[
+                      a.heading_3_medium,
+                      ta.text_gray_max,
+                      a.text_center,
+                    ]}
+                  >
+                    {title}
+                  </Text>
+                </View>
+              ) : null}
 
-            {full ? <View style={[a.flex_1]}>{content}</View> : content}
+              {full ? <View style={[a.flex_1]}>{content}</View> : content}
 
-            {footer ? (
-              <View style={[a.px_lg, a.pb_lg, a.pt_md]}>
-                {footer}
-                <Space.Height.xl />
-              </View>
-            ) : (
-              !full && <Space.Height.xl />
-            )}
+              {footer ? (
+                <View style={[a.px_lg, a.pb_lg, a.pt_md]}>
+                  {footer}
+                  <Space.Height.xl />
+                </View>
+              ) : (
+                !full && <Space.Height.xl />
+              )}
+            </View>
           </View>
         </KeyboardAvoidingView>
       </View>
