@@ -10,6 +10,7 @@ import {
   Modal as RNModal,
   Text,
   View,
+  useWindowDimensions,
 } from 'react-native'
 
 import {Space} from '~/ui/Space/Space'
@@ -20,6 +21,7 @@ export const Modal = () => {
   const {content, canDiscard, footer, title, full, isOpen, closeModal, height} =
     useModal()
   const {atoms: ta, palette: p, isDark} = useTheme()
+  const {height: windowHeight} = useWindowDimensions()
   const backdropOpacity = React.useRef(new Animated.Value(0)).current
   const keyboardOffset = React.useRef(new Animated.Value(0)).current
   const sheetOpacity = React.useRef(new Animated.Value(0)).current
@@ -61,7 +63,11 @@ export const Modal = () => {
 
     const onShow = (e: any) => {
       setKeyboardVisible(true)
-      const height = e?.endCoordinates?.height ?? 0
+      const endY = e?.endCoordinates?.screenY ?? windowHeight
+      const height =
+        Platform.OS === 'ios'
+          ? (e?.endCoordinates?.height ?? 0)
+          : Math.max(0, windowHeight - endY)
       const duration = Platform.OS === 'ios' ? (e?.duration ?? 250) : 150
       Animated.timing(keyboardOffset, {
         toValue: height,
@@ -87,13 +93,15 @@ export const Modal = () => {
       subShow.remove()
       subHide.remove()
     }
-  }, [keyboardOffset])
+  }, [keyboardOffset, windowHeight])
 
   return (
     <RNModal
       visible={isOpen}
       transparent
       animationType="none"
+      statusBarTranslucent
+      hardwareAccelerated
       onRequestClose={() => {
         if (canDiscard) handleClose()
       }}
