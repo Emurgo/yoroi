@@ -76,7 +76,7 @@ export const Modal = () => {
       Animated.timing(keyboardOffset, {
         toValue: kHeight,
         duration,
-        useNativeDriver: Platform.OS === 'ios',
+        useNativeDriver: true,
       }).start()
     }
 
@@ -86,7 +86,7 @@ export const Modal = () => {
       Animated.timing(keyboardOffset, {
         toValue: 0,
         duration,
-        useNativeDriver: Platform.OS === 'ios',
+        useNativeDriver: true,
       }).start()
     }
 
@@ -136,7 +136,15 @@ export const Modal = () => {
               a.self_stretch,
               {backgroundColor: isDark ? p.gray_50 : p.white_static},
               !full && {height},
-              {marginBottom: Platform.OS === 'android' ? keyboardOffset : 0},
+              Platform.OS === 'android'
+                ? {
+                    transform: [
+                      {
+                        translateY: Animated.multiply(keyboardOffset, -1),
+                      },
+                    ],
+                  }
+                : null,
               {
                 borderTopLeftRadius: 24,
                 borderTopRightRadius: 24,
