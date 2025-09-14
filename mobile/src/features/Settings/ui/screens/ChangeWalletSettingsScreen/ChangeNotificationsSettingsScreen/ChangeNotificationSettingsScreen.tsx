@@ -2,15 +2,15 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as Linking from 'expo-linking'
 import * as React from 'react'
-import {Alert, AppState, Platform, ScrollView, View} from 'react-native'
+import {AppState, Platform, ScrollView, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {getNotificationsAuthorizationStatus} from '~/features/Notifications/common/tools'
 import {
   SettingsItem,
   SettingsSection,
 } from '~/features/Settings/ui/shared/SettingsItems'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {logger} from '~/kernel/logger/logger'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Button, ButtonType} from '~/ui/Button/Button'
@@ -21,14 +21,6 @@ import {Text} from '~/ui/Text/Text'
 import {useChangeNotificationDisplaySettings} from '../../../../hooks/useChangeNotificationDisplaySettings'
 import {useNotificationDisplaySettings} from '../../../../hooks/useNotificationDisplaySettings'
 import {SettingsNotificationDurationItem} from './SettingsNotificationDurationItem'
-
-const getNotificationsAuthorizationStatus = ():
-  | 'authorized'
-  | 'not_determined'
-  | 'denied' => {
-  // TODO: Alert.alert('getNotificationsAuthorizationStatus not implemented')
-  return 'not_determined' as const
-}
 
 export const ChangeNotificationSettingsScreen = () => {
   const strings = useStrings()
@@ -70,14 +62,15 @@ export const ChangeNotificationSettingsScreen = () => {
 
 export function useNotificationPermission() {
   const {track} = useMetrics()
-  const strings = useStrings()
   const [permission, setPermission] = React.useState<
     'authorized' | 'not_determined' | 'denied'
   >('not_determined')
 
   React.useEffect(() => {
-    const handleAppStateChange = async () =>
-      setPermission(getNotificationsAuthorizationStatus())
+    const handleAppStateChange = async () => {
+      const status = await getNotificationsAuthorizationStatus()
+      setPermission(status)
+    }
     const subscription = AppState.addEventListener(
       'change',
       handleAppStateChange,
@@ -89,25 +82,22 @@ export function useNotificationPermission() {
   }, [])
 
   React.useEffect(() => {
-    const fetchPermission = async () =>
-      setPermission(getNotificationsAuthorizationStatus())
+    const fetchPermission = async () => {
+      const status = await getNotificationsAuthorizationStatus()
+      setPermission(status)
+    }
 
     fetchPermission()
   }, [])
 
   const togglePermissions = async () => {
-    const oldStatus = getNotificationsAuthorizationStatus()
+    const oldStatus = await getNotificationsAuthorizationStatus()
 
     if (oldStatus === 'not_determined') {
-      logger.info('triggerNotificationsPermissionModal not implemented', {
-        origin: 'ManageNotificationSettings',
-      })
-      Alert.alert(strings.global.error)
-    } else {
       await navigateToAppSettings()
     }
 
-    const currentStatus = getNotificationsAuthorizationStatus()
+    const currentStatus = await getNotificationsAuthorizationStatus()
     const nextStatus = currentStatus === 'authorized' ? 'denied' : 'authorized'
     track.settingsPushNotificationsStatusUpdated({
       is_enabled: nextStatus === 'authorized' ? 'enabled' : 'disabled',
