@@ -69,10 +69,7 @@ export const Menu = () => {
   )
 
   return (
-    <SafeAreaView
-      edges={['left', 'right', 'bottom']}
-      style={[ta.bg_color_max, a.flex_1]}
-    >
+    <SafeAreaView edges={['left', 'right']} style={[ta.bg_color_max, a.flex_1]}>
       <ScrollView contentContainerStyle={[a.flex_1, a.p_lg]} bounces={false}>
         <AppSettings //
           label={strings.menu.settings}
@@ -186,7 +183,7 @@ const Item = ({
 
       <Space.Width.lg />
 
-      <Text style={[a.body_2_md_regular, ta.el_gray_max]}>{label}</Text>
+      <Text style={[a.body_1_lg_medium, ta.text_gray_max]}>{label}</Text>
 
       <Space.Height.sm fill />
 
