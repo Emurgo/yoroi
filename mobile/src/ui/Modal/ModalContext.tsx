@@ -1,13 +1,10 @@
-import {BottomSheetModal, BottomSheetModalProvider} from '@gorhom/bottom-sheet'
 import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 import {Keyboard} from 'react-native'
-import {GestureHandlerRootView} from 'react-native-gesture-handler'
 
 type ModalState = {
   isOpen: boolean
   content: React.ReactNode
-  bottomSheetModalRef: React.RefObject<BottomSheetModal | null> | null
   height: number
   footer: React.ReactNode | undefined
   isLoading: boolean
@@ -57,19 +54,10 @@ export const ModalProvider = ({
   initialState?: Partial<ModalState>
 }) => {
   const navigation = useNavigation()
-  const bottomSheetModalRef = React.useRef<BottomSheetModal>(null)
   const [state, dispatch] = React.useReducer(modalReducer, {
     ...defaultState,
     ...initialState,
-    bottomSheetModalRef,
   })
-
-  const handlePresentModalPress = React.useCallback(() => {
-    bottomSheetModalRef.current?.present()
-  }, [])
-  const handleDismissModalPress = React.useCallback(() => {
-    bottomSheetModalRef.current?.close()
-  }, [])
 
   const closeModal = React.useCallback(() => {
     if (state.onClose) {
@@ -78,8 +66,7 @@ export const ModalProvider = ({
     dispatch({
       type: 'close',
     })
-    handleDismissModalPress()
-  }, [state, handleDismissModalPress])
+  }, [state])
 
   const openModal = React.useCallback(
     ({
@@ -116,9 +103,8 @@ export const ModalProvider = ({
         onClose,
         full,
       })
-      handlePresentModalPress()
     },
-    [handlePresentModalPress],
+    [],
   )
 
   const setLoading = React.useCallback((isLoading: boolean) => {
@@ -185,19 +171,14 @@ export const ModalProvider = ({
   React.useEffect(() => {
     const unsubscribe = navigation.addListener('state', () => {
       if (state.isOpen) {
-        handleDismissModalPress()
         dispatch({type: 'close'})
       }
     })
     return unsubscribe
-  }, [navigation, state.isOpen, handleDismissModalPress])
+  }, [navigation, state.isOpen])
 
   return (
-    <GestureHandlerRootView style={{flex: 1}}>
-      <ModalContext.Provider value={context}>
-        <BottomSheetModalProvider>{children}</BottomSheetModalProvider>
-      </ModalContext.Provider>
-    </GestureHandlerRootView>
+    <ModalContext.Provider value={context}>{children}</ModalContext.Provider>
   )
 }
 
@@ -241,7 +222,6 @@ const modalReducer = (state: ModalState, action: ModalAction) => {
     case 'close':
       return {
         ...defaultState,
-        bottomSheetModalRef: state.bottomSheetModalRef,
       }
 
     case 'setLoading':
@@ -282,7 +262,6 @@ const modalReducer = (state: ModalState, action: ModalAction) => {
 const defaultState: ModalState = Object.freeze({
   content: undefined,
   isOpen: false,
-  bottomSheetModalRef: null,
   height: 400,
   footer: undefined,
   isLoading: false,
