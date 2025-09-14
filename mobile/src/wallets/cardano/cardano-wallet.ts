@@ -803,7 +803,7 @@ export const makeCardanoWallet = (
         origin: 'CardanoWallet',
       })
       await this.clear()
-      // return this.sync({isForced: true})
+      return this.sync({isForced: true})
     }
     // end sync
 
