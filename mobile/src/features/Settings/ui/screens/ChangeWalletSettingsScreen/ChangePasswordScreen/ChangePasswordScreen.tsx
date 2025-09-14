@@ -41,8 +41,8 @@ export const ChangePasswordScreen = () => {
 
   const hasErrors =
     deboucedNewPassword.length < requiredPasswordLength ||
-    (deboucedNewPassword !== repeatPassword &&
-      !isEmptyString(repeatPassword)) ||
+    (deboucedNewPassword !== deboucedRepeatPassword &&
+      !isEmptyString(deboucedRepeatPassword)) ||
     deboucedNewPassword === currentPassword
 
   const newPasswordErrorText =
