@@ -1,4 +1,5 @@
 import {BottomSheetModal, BottomSheetModalProvider} from '@gorhom/bottom-sheet'
+import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 import {Keyboard} from 'react-native'
 import {GestureHandlerRootView} from 'react-native-gesture-handler'
@@ -55,6 +56,7 @@ export const ModalProvider = ({
   children: React.ReactNode
   initialState?: Partial<ModalState>
 }) => {
+  const navigation = useNavigation()
   const bottomSheetModalRef = React.useRef<BottomSheetModal>(null)
   const [state, dispatch] = React.useReducer(modalReducer, {
     ...defaultState,
@@ -179,6 +181,16 @@ export const ModalProvider = ({
     () => ({...state, ...actions}),
     [state, actions],
   )
+
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener('state', () => {
+      if (state.isOpen) {
+        handleDismissModalPress()
+        dispatch({type: 'close'})
+      }
+    })
+    return unsubscribe
+  }, [navigation, state.isOpen, handleDismissModalPress])
 
   return (
     <GestureHandlerRootView style={{flex: 1}}>

@@ -4,7 +4,7 @@ import {Wallet} from '@yoroi/types'
 
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import * as React from 'react'
-import {Linking, Text, TextInput, TouchableOpacity, View} from 'react-native'
+import {Linking, Text, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useLinksRequestWallet} from '~/features/Links/hooks/useLinksRequestWallet'
@@ -125,8 +125,6 @@ export const SelectWalletFromList = () => {
 
         <Space.Height.md />
 
-        <TestModalButton />
-
         {isDev && (
           <>
             <Space.Height.md />
@@ -188,28 +186,4 @@ const OnlyDevButton = () => {
       title="Dev options"
     />
   )
-}
-
-const TestModalButton = () => {
-  const {openModal, closeModal} = useModal()
-  const {atoms: ta} = useTheme()
-  const handleOnPress = React.useCallback(() => {
-    openModal({
-      title: 'Test modal',
-      content: (
-        <View style={[a.px_lg, a.py_lg]}>
-          <Text style={[ta.text_primary_max]}>This is a test modal</Text>
-          <Space.Height.md />
-          <TextInput
-            placeholder="Type to open keyboard"
-            style={[a.border, a.p_sm]}
-          />
-        </View>
-      ),
-      footer: <Button onPress={closeModal} title="Close" />,
-      canDiscard: true,
-    })
-  }, [openModal, closeModal, ta])
-
-  return <Button onPress={handleOnPress} title="Open test modal" />
 }
