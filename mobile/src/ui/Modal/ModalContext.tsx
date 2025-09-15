@@ -1,3 +1,5 @@
+import {App} from '@yoroi/types'
+
 import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 import {Keyboard} from 'react-native'
@@ -9,6 +11,7 @@ type ModalState = {
   footer: React.ReactNode | undefined
   isLoading: boolean
   canDiscard: boolean
+  withFeedback: boolean
   title: string
   canContinue?: boolean
   onClose?: () => void
@@ -21,6 +24,7 @@ type ModalActions = {
     footer?: React.ReactNode
     isLoading?: boolean
     canDiscard?: boolean
+    withFeedback?: boolean
     title?: string
     canContinue?: boolean
     onClose?: () => void
@@ -41,23 +45,29 @@ const ModalContext = React.createContext<
 export const useModal = () => {
   const value = React.useContext(ModalContext)
   if (!value) {
-    throw new Error('useModal must be used within a ModalProvider')
+    throw new App.Errors.InvalidState(
+      'useModal must be used within a ModalProvider',
+    )
   }
   return value
 }
 
-export const ModalProvider = ({
-  children,
-  initialState,
-}: {
-  children: React.ReactNode
+type Props = React.PropsWithChildren<{
   initialState?: Partial<ModalState>
-}) => {
+}>
+
+export const ModalProvider = ({children, initialState}: Props) => {
   const navigation = useNavigation()
   const [state, dispatch] = React.useReducer(modalReducer, {
     ...defaultState,
     ...initialState,
   })
+  const isOpenRef = React.useRef(state.isOpen)
+
+  // Keep ref in sync with state
+  React.useEffect(() => {
+    isOpenRef.current = state.isOpen
+  }, [state.isOpen])
 
   const closeModal = React.useCallback(() => {
     if (state.onClose) {
@@ -75,6 +85,7 @@ export const ModalProvider = ({
       footer,
       isLoading,
       canDiscard,
+      withFeedback,
       title,
       canContinue,
       onClose,
@@ -85,6 +96,7 @@ export const ModalProvider = ({
       footer?: React.ReactNode
       isLoading?: boolean
       canDiscard?: boolean
+      withFeedback?: boolean
       title?: string
       canContinue?: boolean
       onClose?: () => void
@@ -98,6 +110,7 @@ export const ModalProvider = ({
         footer,
         isLoading,
         canDiscard,
+        withFeedback,
         title,
         canContinue,
         onClose,
@@ -118,6 +131,13 @@ export const ModalProvider = ({
     dispatch({
       type: 'setFooter',
       footer,
+    })
+  }, [])
+
+  const setWithFeedback = React.useCallback((withFeedback: boolean) => {
+    dispatch({
+      type: 'setWithFeedback',
+      withFeedback,
     })
   }, [])
 
@@ -148,6 +168,7 @@ export const ModalProvider = ({
       openModal,
       setLoading,
       setFooter,
+      setWithFeedback,
       setTitle,
       setCanDiscard,
       setCanContinue,
@@ -157,6 +178,7 @@ export const ModalProvider = ({
       openModal,
       setLoading,
       setFooter,
+      setWithFeedback,
       setTitle,
       setCanDiscard,
       setCanContinue,
@@ -170,12 +192,12 @@ export const ModalProvider = ({
 
   React.useEffect(() => {
     const unsubscribe = navigation.addListener('state', () => {
-      if (state.isOpen) {
-        dispatch({type: 'close'})
+      if (isOpenRef.current) {
+        closeModal()
       }
     })
     return unsubscribe
-  }, [navigation, state.isOpen])
+  }, [navigation, closeModal])
 
   return (
     <ModalContext.Provider value={context}>{children}</ModalContext.Provider>
@@ -190,6 +212,7 @@ type ModalAction =
       footer?: React.ReactNode
       isLoading?: boolean
       canDiscard?: boolean
+      withFeedback?: boolean
       title?: string
       canContinue?: boolean
       onClose?: () => void
@@ -201,6 +224,7 @@ type ModalAction =
   | {type: 'setTitle'; title: string}
   | {type: 'setCanDiscard'; canDiscard: boolean}
   | {type: 'setCanContinue'; canContinue: boolean}
+  | {type: 'setWithFeedback'; withFeedback: boolean}
 
 const modalReducer = (state: ModalState, action: ModalAction) => {
   switch (action.type) {
@@ -213,6 +237,7 @@ const modalReducer = (state: ModalState, action: ModalAction) => {
         isLoading: action.isLoading ?? defaultState.isLoading,
         canDiscard: action.canDiscard ?? defaultState.canDiscard,
         title: action.title ?? defaultState.title,
+        withFeedback: action.withFeedback ?? defaultState.withFeedback,
         canContinue: action.canContinue ?? defaultState.canContinue,
         onClose: action.onClose,
         full: action.full ?? defaultState.full,
@@ -234,6 +259,12 @@ const modalReducer = (state: ModalState, action: ModalAction) => {
       return {
         ...state,
         footer: action.footer,
+      }
+
+    case 'setWithFeedback':
+      return {
+        ...state,
+        withFeedback: action.withFeedback,
       }
 
     case 'setTitle':
@@ -269,4 +300,5 @@ const defaultState: ModalState = Object.freeze({
   title: '',
   canContinue: false,
   full: false,
+  withFeedback: false,
 })
