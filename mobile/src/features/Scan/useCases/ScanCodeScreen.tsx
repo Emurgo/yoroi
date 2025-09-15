@@ -27,6 +27,7 @@ const scanParamsSchema = z.object({
 export const ScanCodeScreen = () => {
   const {atoms: ta} = useTheme()
   const strings = useStrings()
+  const navigation = useNavigation()
   const params = useParams<ScanRoutes['scan-start']>(
     (params): params is Readonly<{insideFeature: Scan.Feature}> => {
       return params && typeof params === 'object' && 'insideFeature' in params
@@ -38,10 +39,19 @@ export const ScanCodeScreen = () => {
   })
   const scanErrorResolver = useScanErrorResolver()
   const [permission, requestPermission] = useCameraPermissions()
+  const [scanned, setScanned] = React.useState(false)
   const cameraRef = React.useRef<CameraCodeScannerMethods>(null)
+
+  const handleScanAgain = React.useCallback(() => {
+    setScanned(false)
+    cameraRef.current?.continueScanning()
+  }, [])
 
   const handleBarCodeScanned = React.useCallback(
     (event: {data: string; type: string}) => {
+      if (scanned) return
+      setScanned(true)
+
       try {
         const parsedScanAction = parseScanAction(event.data)
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
@@ -52,16 +62,27 @@ export const ScanCodeScreen = () => {
         Alert.alert(errorDialog.title, errorDialog.message, [
           {
             text: strings.scan.continue,
-            onPress: () => cameraRef.current?.continueScanning(),
+            onPress: () => handleScanAgain(),
           },
         ])
       }
     },
-    [triggerScanAction, scanErrorResolver, strings.scan],
+    [
+      scanned,
+      triggerScanAction,
+      scanErrorResolver,
+      strings.scan,
+      handleScanAgain,
+    ],
   )
+
+  const navigateToTxHistory = React.useCallback(() => {
+    navigation.goBack()
+  }, [navigation])
 
   useFocusEffect(
     React.useCallback(() => {
+      setScanned(false)
       cameraRef.current?.continueScanning()
     }, []),
   )
@@ -106,6 +127,60 @@ export const ScanCodeScreen = () => {
         withMask={true}
         maskText={strings.scan.scanTitle}
       />
+      {scanned && (
+        <View
+          style={[
+            a.absolute,
+            a.inset_0,
+            a.justify_center,
+            a.align_center,
+            {backgroundColor: 'rgba(0, 0, 0, 0.5)'},
+          ]}
+        >
+          <View style={[a.p_lg, ta.bg_color_min, a.rounded_md, a.px_md]}>
+            <Text
+              style={[
+                a.body_1_lg_regular,
+                a.text_center,
+                a.pb_md,
+                ta.text_gray_max,
+              ]}
+            >
+              {strings.scan.qrCodeScannedSuccessfully}
+            </Text>
+            <View style={[a.flex_row, a.gap_md]}>
+              <TouchableOpacity
+                style={[
+                  a.flex_1,
+                  a.p_md,
+                  ta.bg_color_min,
+                  a.rounded_md,
+                  a.align_center,
+                ]}
+                onPress={() => navigateToTxHistory()}
+              >
+                <Text style={[a.body_1_lg_regular, ta.text_primary_max]}>
+                  {strings.scan.continue}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  a.flex_1,
+                  a.p_md,
+                  ta.bg_color_max,
+                  a.rounded_md,
+                  a.align_center,
+                ]}
+                onPress={handleScanAgain}
+              >
+                <Text style={[a.body_1_lg_regular, ta.text_primary_max]}>
+                  {strings.scan.scanAgain}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      )}
     </View>
   )
 }
