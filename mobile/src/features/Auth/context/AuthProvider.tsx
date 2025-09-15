@@ -127,7 +127,7 @@ export const AuthProvider: React.FC<React.PropsWithChildren<Props>> = ({
   const value = React.useMemo(
     () => ({
       ...loggedState,
-      authWithHostConfig,
+      ...authWithHostConfig,
       authWithHost,
       checkPin,
       createPin,
@@ -220,6 +220,5 @@ type AuthContextActions = {
 
 type AuthContext = AuthLoggedState &
   AuthSettingsState &
-  AuthContextActions & {
-    authWithHostConfig: AuthWithHostConfig
-  }
+  AuthContextActions &
+  AuthWithHostConfig

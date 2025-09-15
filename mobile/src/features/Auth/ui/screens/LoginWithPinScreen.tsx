@@ -1,4 +1,4 @@
-import {atoms as a} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
 import {useIntl} from 'react-intl'
@@ -15,6 +15,7 @@ import {PinInput, PinInputRef} from '../shared/PinInput/PinInput'
 export const LoginWithPinScreen = () => {
   const strings = useStrings()
   const intl = useIntl()
+  const {atoms: ta} = useTheme()
   const pinInputRef = React.useRef<null | PinInputRef>(null)
   const {loginWithPin} = useAuth()
 
@@ -27,7 +28,7 @@ export const LoginWithPinScreen = () => {
   }
 
   return (
-    <SafeAreaView style={[a.flex_1]} edges={['left', 'right', 'bottom']}>
+    <SafeAreaView style={[a.flex_1, ta.bg_color_max]}>
       <PinInput
         ref={pinInputRef}
         pinMaxLength={pinLength}

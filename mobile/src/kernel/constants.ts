@@ -1,3 +1,4 @@
+import {configCurrencies} from '@yoroi/portfolio'
 import {ThemeName} from '@yoroi/theme'
 import {App, Portfolio} from '@yoroi/types'
 
@@ -66,8 +67,13 @@ export const supportedThemes: Readonly<Record<ThemeName, ThemeName>> = freeze({
 
 // Currency
 export const defaultCurrency: Portfolio.Currency.Symbol = 'USD'
+export const supportedCurrencies = Object.keys(
+  configCurrencies,
+) as (keyof typeof configCurrencies)[]
 
 // Legal
 export const agreementDate = 1691967600000
 
+// Others
 export const appVersion = Constants.expoConfig?.version ?? ''
+export const requiredPasswordLength = 10

@@ -12,7 +12,7 @@ import {Text, View, ViewProps, useWindowDimensions} from 'react-native'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
 
-import {usePrivacyMode} from '../../features/Settings/useCases/changeAppSettings/PrivacyMode/usePrivacyMode'
+import {usePrivacyMode} from '../../features/Settings/hooks/usePrivacyMode'
 import {usePriceImpactRiskTheme} from '../../features/Swap/common/helpers'
 import {SwapPriceImpactRisk} from '../../features/Swap/common/types'
 import {features} from '../../kernel/features'
@@ -45,7 +45,7 @@ export const TokenAmountItem = ({
   const {openModal} = useModal()
   const {height: windowHeight} = useWindowDimensions()
   const {atoms: ta, palette: p} = useTheme()
-  const {privacyPlaceholder, isPrivacyActive} = usePrivacyMode()
+  const {privacyPlaceholder, isPrivacyModeEnabled} = usePrivacyMode()
   const priceImpactRiskTheme = usePriceImpactRiskTheme(
     priceImpactRisk ?? 'none',
   )
@@ -56,7 +56,7 @@ export const TokenAmountItem = ({
   const name = infoExtractName(info)
 
   const formattedQuantity =
-    !isPrivacyActive || ignorePrivacy === true
+    !isPrivacyModeEnabled || ignorePrivacy === true
       ? amountFormatter({dropTraillingZeros: true})(amount)
       : privacyPlaceholder
 

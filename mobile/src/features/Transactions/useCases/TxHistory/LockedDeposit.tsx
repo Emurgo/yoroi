@@ -5,7 +5,7 @@ import * as React from 'react'
 import {View} from 'react-native'
 
 import {usePortfolioPrimaryBreakdown} from '~/features/Portfolio/common/hooks/usePortfolioPrimaryBreakdown'
-import {usePrivacyMode} from '~/features/Settings/useCases/changeAppSettings/PrivacyMode/usePrivacyMode'
+import {usePrivacyMode} from '~/features/Settings/hooks/usePrivacyMode'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Space} from '~/ui/Space/Space'
@@ -17,12 +17,12 @@ export const LockedDeposit = ({
   ignorePrivacy?: boolean
 }) => {
   const {wallet} = useSelectedWallet()
-  const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
+  const {isPrivacyModeEnabled, privacyPlaceholder} = usePrivacyMode()
   const {lockedAsStorageCost} = usePortfolioPrimaryBreakdown({wallet})
 
   const amount = React.useMemo(
     () =>
-      !isPrivacyActive || !ignorePrivacy
+      !isPrivacyModeEnabled || !ignorePrivacy
         ? amountFormatter({template: '{{value}} {{ticker}}'})({
             quantity: lockedAsStorageCost,
             info: wallet.portfolioPrimaryTokenInfo,
@@ -33,7 +33,7 @@ export const LockedDeposit = ({
           }),
     [
       ignorePrivacy,
-      isPrivacyActive,
+      isPrivacyModeEnabled,
       lockedAsStorageCost,
       privacyPlaceholder,
       wallet.portfolioPrimaryTokenInfo,

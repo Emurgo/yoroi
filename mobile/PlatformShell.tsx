@@ -4,17 +4,21 @@ import {
   initialWindowMetrics,
 } from 'react-native-safe-area-context'
 
-import {useScreenCapture} from './src/features/ScreenCapture/useScreenCapture'
+import {useScreenCapture} from '~/features/Settings/hooks/useScreenCapture'
 import {
   MetricsProvider,
   makeMetricsManager,
-} from './src/kernel/metrics/metricsManager'
-import {RouterContainer} from './src/kernel/navigation/RouterContainer'
-import {ModalProvider} from './src/ui/Modal/ModalContext'
+} from '~/kernel/metrics/metricsManager'
+import {RouterContainer} from '~/kernel/navigation/RouterContainer'
+import {ModalProvider} from '~/ui/Modal/ModalContext'
 
 export function PlatformShell({children}: React.PropsWithChildren) {
-  useScreenCapture()
   const metricsManager = React.useMemo(() => makeMetricsManager(), [])
+  const {init} = useScreenCapture()
+
+  React.useEffect(() => {
+    init()
+  })
 
   return (
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>

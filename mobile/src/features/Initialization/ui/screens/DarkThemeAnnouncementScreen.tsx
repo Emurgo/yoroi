@@ -53,10 +53,7 @@ export const DarkThemeAnnouncementScreen = () => {
   }
 
   return (
-    <SafeAreaView
-      edges={['left', 'right', 'top', 'bottom']}
-      style={[a.flex_1, ta.bg_color_max, a.px_lg]}
-    >
+    <SafeAreaView style={[a.flex_1, ta.bg_color_max, a.px_lg]}>
       <ScrollView
         bounces={false}
         ref={scrollViewRef}

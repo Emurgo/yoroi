@@ -4,7 +4,7 @@ import * as React from 'react'
 import {Text, View, useWindowDimensions} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
-import {ShowDisclaimer} from '~/features/Legal/ui/Disclaimer/ShowDisclaimer'
+import {ShowDisclaimer} from '~/features/Legal/ui/shared/Disclaimer/ShowDisclaimer'
 import {AmountCard} from '~/features/Swap/common/AmountCard/AmountCard'
 import {undefinedToken} from '~/features/Swap/common/constants'
 import {useSwap} from '~/features/Swap/common/useSwap'

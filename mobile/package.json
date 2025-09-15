@@ -3,6 +3,7 @@
   "version": "6.0.0",
   "main": "index.ts",
   "scripts": {
+    "postinstall": "patch-package",
     "eas-build-pre-install": "bash ./scripts/eas-pre-install.sh",
     "eas-build-post-install": "bash ./scripts/eas-post-install.sh",
     "start": "expo start -c",

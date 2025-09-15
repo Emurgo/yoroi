@@ -24,6 +24,7 @@ import {parseWalletMeta} from '~/features/WalletManager/common/validators/wallet
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useCreateWalletMnemonic} from '~/features/WalletManager/hooks/useCreateWalletMnemonic'
 import {useBold} from '~/hooks/useBold'
+import {requiredPasswordLength} from '~/kernel/constants'
 import {showErrorDialog} from '~/kernel/dialogs'
 import {debugWalletInfo, features} from '~/kernel/features'
 import {errorMessages} from '~/kernel/i18n/messages/global'
@@ -41,11 +42,7 @@ import {Space} from '~/ui/Space/Space'
 import {StepperProgress} from '~/ui/StepperProgress/StepperProgress'
 import {TextInput} from '~/ui/TextInput/TextInput'
 import {isEmptyString} from '~/wallets/utils/string'
-import {
-  REQUIRED_PASSWORD_LENGTH,
-  getWalletNameError,
-  validatePassword,
-} from '~/wallets/utils/validators'
+import {getWalletNameError, validatePassword} from '~/wallets/utils/validators'
 
 const useSizeModal = () => {
   const HEIGHT_SCREEN = useWindowDimensions().height
@@ -146,7 +143,7 @@ export const RestoreWalletDetailsScreen = () => {
   const passwordErrorText =
     passwordErrors.passwordIsWeak && !isPending
       ? strings.setupWallet.passwordStrengthRequirement({
-          requiredPasswordLength: REQUIRED_PASSWORD_LENGTH,
+          requiredPasswordLength,
         })
       : undefined
   const passwordConfirmationErrorText =

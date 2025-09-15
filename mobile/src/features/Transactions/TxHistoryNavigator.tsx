@@ -27,7 +27,7 @@ import {SelectTokenFromListScreen} from '~/features/Send/useCases/ListAmountsToS
 import {EditAmountScreen} from '~/features/Send/useCases/ListAmountsToSend/EditAmount/EditAmountScreen'
 import {ListAmountsToSendScreen} from '~/features/Send/useCases/ListAmountsToSend/ListAmountsToSendScreen'
 import {StartMultiTokenTxScreen} from '~/features/Send/useCases/StartMultiTokenTx/StartMultiTokenTxScreen'
-import {NetworkTag} from '~/features/Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
+import {NetworkTag} from '~/features/Settings/ui/shared/NetworkTag'
 import {UtxoConsolidation} from '~/features/Transactions/useCases/UtxoConsolidation/UtxoConsolidation/UtxoConsolidation'
 import {UtxoList} from '~/features/Transactions/useCases/UtxoList/UtxoList'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'

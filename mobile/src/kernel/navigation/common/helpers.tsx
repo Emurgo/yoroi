@@ -81,8 +81,8 @@ export const defaultMaterialTopTabNavigationOptions = (
       backgroundColor: color.bg_color_max,
       elevation: 0,
       shadowOpacity: 0,
-      ...a.pt_lg,
-      ...a.pb_lg,
+      ...a.pt_md,
+      ...a.pb_md,
     },
     tabBarIndicatorStyle: {backgroundColor: color.primary_600, height: 2},
     tabBarLabelStyle: {

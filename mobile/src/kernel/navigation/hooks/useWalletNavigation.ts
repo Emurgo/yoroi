@@ -102,16 +102,9 @@ export const useWalletNavigation = () => {
         index: 0,
         routes: [
           {
-            name: 'manage-wallets',
+            name: 'setup-wallet',
             state: {
-              routes: [
-                {
-                  name: 'setup-wallet',
-                  state: {
-                    routes: [{name: 'setup-wallet-choose-setup-type-init'}],
-                  },
-                },
-              ],
+              routes: [{name: 'setup-wallet-choose-setup-type-init'}],
             },
           },
         ],
