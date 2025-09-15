@@ -1,12 +1,10 @@
-import {atoms as a, useTheme} from '@yoroi/theme'
+import {atoms as a} from '@yoroi/theme'
 
 import {useFocusEffect} from '@react-navigation/native'
-import {CameraView, useCameraPermissions} from 'expo-camera'
+import {CameraView} from 'expo-camera'
 import * as React from 'react'
-import {Text, TouchableOpacity, View} from 'react-native'
+import {Text, View} from 'react-native'
 import {Path, Svg, SvgProps} from 'react-native-svg'
-
-import {useStrings} from '~/kernel/i18n/useStrings'
 
 export type CameraCodeScannerMethods = {
   continueScanning: () => void
@@ -28,16 +26,12 @@ export type CameraCodeScannerProps = {
   }) => void
   withMask?: boolean
   maskText?: string
-  onCameraPermissionDenied?: () => void
 }
 
 export const CameraCodeScanner = React.forwardRef<
   CameraCodeScannerMethods,
   CameraCodeScannerProps
->(({onRead, withMask, maskText = '', onCameraPermissionDenied}, ref) => {
-  const {atoms: ta} = useTheme()
-  const strings = useStrings()
-  const [permission, requestPermission] = useCameraPermissions()
+>(({onRead, withMask, maskText = ''}, ref) => {
   const qrScanned = React.useRef(false)
 
   React.useImperativeHandle(ref, () => ({
@@ -54,10 +48,6 @@ export const CameraCodeScanner = React.forwardRef<
       if (qrScanned.current) qrScanned.current = false
     }, [qrScanned]),
   )
-
-  React.useEffect(() => {
-    if (permission?.granted === false) onCameraPermissionDenied?.()
-  }, [onCameraPermissionDenied, permission?.granted])
 
   const handleBarCodeScanned = React.useCallback(
     (event: {
@@ -79,28 +69,6 @@ export const CameraCodeScanner = React.forwardRef<
     },
     [onRead, qrScanned],
   )
-
-  if (!permission) return <View style={[a.flex_1, ta.bg_color_max]} />
-
-  if (!permission.granted) {
-    return (
-      <View
-        style={[a.flex_1, a.justify_center, a.align_center, ta.bg_color_max]}
-      >
-        <Text style={[a.body_1_lg_regular, ta.text_gray_max]}>
-          {strings.scan.needCameraPermission}
-        </Text>
-        <TouchableOpacity
-          onPress={requestPermission}
-          style={[a.pt_lg, a.p_md, ta.bg_color_min, a.rounded_md]}
-        >
-          <Text style={[a.body_1_lg_regular, ta.text_primary_max]}>
-            {strings.scan.grantPermission}
-          </Text>
-        </TouchableOpacity>
-      </View>
-    )
-  }
 
   return (
     <CameraView

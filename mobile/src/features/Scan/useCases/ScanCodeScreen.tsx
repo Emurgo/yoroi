@@ -2,9 +2,10 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import {Scan} from '@yoroi/types'
 
 import {useFocusEffect} from '@react-navigation/native'
+import {useCameraPermissions} from 'expo-camera'
 import * as Haptics from 'expo-haptics'
 import * as React from 'react'
-import {Alert, View} from 'react-native'
+import {Alert, Text, TouchableOpacity, View} from 'react-native'
 import {z} from 'zod'
 
 import {useTriggerScanAction} from '~/features/Scan/common/useTriggerScanAction'
@@ -36,6 +37,7 @@ export const ScanCodeScreen = () => {
     insideFeature: insideFeature as 'scan' | 'send',
   })
   const scanErrorResolver = useScanErrorResolver()
+  const [permission, requestPermission] = useCameraPermissions()
   const cameraRef = React.useRef<CameraCodeScannerMethods>(null)
 
   const handleBarCodeScanned = React.useCallback(
@@ -63,6 +65,38 @@ export const ScanCodeScreen = () => {
       cameraRef.current?.continueScanning()
     }, []),
   )
+
+  if (!permission) {
+    return (
+      <View
+        style={[a.flex_1, a.justify_center, a.align_center, ta.bg_color_max]}
+      >
+        <Text style={[a.body_1_lg_regular, ta.text_gray_max]}>
+          {strings.scan.requestingCameraPermission}
+        </Text>
+      </View>
+    )
+  }
+
+  if (!permission.granted) {
+    return (
+      <View
+        style={[a.flex_1, a.justify_center, a.align_center, ta.bg_color_max]}
+      >
+        <Text style={[a.body_1_lg_regular, ta.text_gray_max]}>
+          {strings.scan.needCameraPermission}
+        </Text>
+        <TouchableOpacity
+          onPress={requestPermission}
+          style={[a.pt_lg, a.p_md, ta.bg_color_min, a.rounded_md]}
+        >
+          <Text style={[a.body_1_lg_regular, ta.text_primary_max]}>
+            {strings.scan.grantPermission}
+          </Text>
+        </TouchableOpacity>
+      </View>
+    )
+  }
 
   return (
     <View style={[a.flex_1, ta.bg_color_max]}>
