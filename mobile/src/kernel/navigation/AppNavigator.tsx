@@ -51,21 +51,18 @@ export const AppNavigator = () => {
   // Enable deep link action handling with modal support (only when logged in)
   useLinksRequestAction()
 
-  const navOptions = React.useMemo(() => defaultStackNavigationOptions(p), [p])
+  const screenOptions = React.useMemo(
+    () => ({...defaultStackNavigationOptions(p), headerShown: false}),
+    [p],
+  )
 
   // Enable notifications inside navigation context
   useInitNotifications({localEnabled: true, pushEnabled: true})
 
   return (
     <>
-      <Stack.Navigator
-        screenOptions={{
-          ...navOptions,
-          headerShown: false /* used only for transition */,
-        }}
-      >
+      <Stack.Navigator screenOptions={screenOptions}>
         {/* Not Authenticated */}
-
         {isLoggedOut && (
           <Stack.Group>
             {firstAction === 'first-run' && (
@@ -108,7 +105,6 @@ export const AppNavigator = () => {
         )}
 
         {/* Authenticated */}
-
         {isLoggedIn && (
           <Stack.Group>
             {afterLoginAction === 'choose-biometric-login' && (
@@ -153,7 +149,6 @@ export const AppNavigator = () => {
         )}
 
         {/* Development */}
-
         {isDev && (
           <Stack.Group>
             <Stack.Screen name="developer" getComponent={() => DevMenu} />
@@ -166,7 +161,6 @@ export const AppNavigator = () => {
         )}
       </Stack.Navigator>
 
-      {/* Notification UI Handler - rendered outside Stack.Navigator but inside NavigationContainer */}
       <NotificationUIHandler />
     </>
   )
