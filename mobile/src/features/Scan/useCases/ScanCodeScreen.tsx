@@ -1,7 +1,7 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Scan} from '@yoroi/types'
 
-import {useFocusEffect} from '@react-navigation/native'
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useCameraPermissions} from 'expo-camera'
 import * as Haptics from 'expo-haptics'
 import * as React from 'react'
