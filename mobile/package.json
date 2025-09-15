@@ -9,12 +9,15 @@
     "start": "expo start -c",
     "start:nightly": "EXPO_PUBLIC_APP_CONFIG=app.config.nightly.js expo start -c",
     "start:production": "EXPO_PUBLIC_APP_CONFIG=app.config.production.js expo start -c",
-    "android": "expo run:android",
+    "android:device": "expo run:android --device",
     "android:reset": "rm -rf node_modules android && npm i && expo run:android",
+    "android:reset:device": "rm -rf node_modules android && npm i && expo run:android --device",
     "android:nightly": "EXPO_PUBLIC_APP_CONFIG=app.config.nightly.js expo run:android",
     "android:production": "EXPO_PUBLIC_APP_CONFIG=app.config.production.js expo run:android",
     "ios": "expo run:ios",
+    "ios:device": "expo run:ios --device",
     "ios:reset": "rm -rf node_modules ios && npm i && expo run:ios",
+    "ios:reset:device": "rm -rf node_modules ios && npm i && expo run:ios --device",
     "ios:nightly": "EXPO_PUBLIC_APP_CONFIG=app.config.nightly.js expo run:ios",
     "ios:production": "EXPO_PUBLIC_APP_CONFIG=app.config.production.js expo run:ios",
     "dgraph": "dependency-cruiser src --include-only \"^src\" --output-type dot | dot -T svg > dependency-graph.svg",
@@ -27,7 +30,8 @@
     "tsc": "tsc --noEmit",
     "tsc:fix": "tsc --noEmit --fix",
     "test": "jest --config jest.config.js",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "android": "expo run:android"
   },
   "dependencies": {
     "@amplitude/analytics-react-native": "1.4.13",
