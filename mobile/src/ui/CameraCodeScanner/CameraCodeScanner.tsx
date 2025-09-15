@@ -3,7 +3,7 @@ import {atoms as a} from '@yoroi/theme'
 import {useFocusEffect} from '@react-navigation/native'
 import {CameraView} from 'expo-camera'
 import * as React from 'react'
-import {Text, View} from 'react-native'
+import {Text, View, useWindowDimensions} from 'react-native'
 import {Path, Svg, SvgProps} from 'react-native-svg'
 
 export type CameraCodeScannerMethods = {
@@ -32,6 +32,7 @@ export const CameraCodeScanner = React.forwardRef<
   CameraCodeScannerMethods,
   CameraCodeScannerProps
 >(({onRead, withMask, maskText = ''}, ref) => {
+  const {height: deviceHeight, width: deviceWidth} = useWindowDimensions()
   const qrScanned = React.useRef(false)
 
   React.useImperativeHandle(ref, () => ({
@@ -64,10 +65,25 @@ export const CameraCodeScanner = React.forwardRef<
     }) => {
       if (qrScanned.current) return
 
-      qrScanned.current = true
-      onRead(event)
+      let isQrInsideScannerBounds = true
+
+      if (withMask && (event.bounds || event.boundingBox)) {
+        const scannerBounds = getScannerBounds({deviceHeight, deviceWidth})
+        isQrInsideScannerBounds = getIsQrInsideScannerBounds({
+          qrBounds: event.bounds,
+          qrBoundingBox: event.boundingBox,
+          scannerBounds,
+          deviceHeight,
+          deviceWidth,
+        })
+      }
+
+      if (isQrInsideScannerBounds) {
+        qrScanned.current = true
+        onRead(event)
+      }
     },
-    [onRead, qrScanned],
+    [deviceHeight, deviceWidth, onRead, qrScanned, withMask],
   )
 
   return (
@@ -235,3 +251,58 @@ const ArcSvg = (props: SvgProps) => {
 
 const QR_MAX_WIDTH = 310
 const QR_MAX_HEIGHT = 310
+
+const getScannerBounds = ({
+  deviceHeight,
+  deviceWidth,
+}: {
+  deviceHeight: number
+  deviceWidth: number
+}) => {
+  const top = deviceHeight / 2 - QR_MAX_HEIGHT / 2
+  const bottom = top + QR_MAX_HEIGHT
+  const left = deviceWidth / 2 - QR_MAX_WIDTH / 2
+  const right = left + QR_MAX_WIDTH
+
+  return {
+    width: QR_MAX_WIDTH,
+    height: QR_MAX_HEIGHT,
+    top,
+    bottom,
+    left,
+    right,
+  }
+}
+
+const getIsQrInsideScannerBounds = ({
+  qrBounds,
+  qrBoundingBox,
+  scannerBounds,
+}: {
+  qrBounds?: {
+    origin: {x: number; y: number}
+    size: {width: number; height: number}
+  }
+  qrBoundingBox?: {
+    origin: {x: number; y: number}
+    size: {width: number; height: number}
+  }
+  scannerBounds: ReturnType<typeof getScannerBounds>
+  deviceHeight: number
+  deviceWidth: number
+}) => {
+  if (!qrBounds && !qrBoundingBox) return false
+
+  const bounds = qrBounds || qrBoundingBox!
+
+  // Use a more lenient approach - check if QR center is inside scanner bounds
+  const qrCenterX = bounds.origin.x + bounds.size.width / 2
+  const qrCenterY = bounds.origin.y + bounds.size.height / 2
+
+  return (
+    qrCenterX >= scannerBounds.left &&
+    qrCenterX <= scannerBounds.right &&
+    qrCenterY >= scannerBounds.top &&
+    qrCenterY <= scannerBounds.bottom
+  )
+}
