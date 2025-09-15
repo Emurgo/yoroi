@@ -119,13 +119,13 @@ export const Modal = () => {
       Animated.parallel([
         Animated.timing(backdropOpacity, {
           toValue: 0,
-          duration: 200,
+          duration: time.seconds(0.2),
           easing: Easing.in(Easing.cubic),
           useNativeDriver: true,
         }),
         Animated.timing(sheetTranslateY, {
           toValue: 24,
-          duration: 250,
+          duration: time.seconds(0.25),
           easing: Easing.in(Easing.cubic),
           useNativeDriver: true,
         }),
@@ -134,6 +134,10 @@ export const Modal = () => {
       })
     }
   }, [isOpen, backdropOpacity, sheetTranslateY])
+
+  const handleOnRequestClose = React.useCallback(() => {
+    if (canDiscardEnabled) handleClose()
+  }, [canDiscardEnabled, handleClose])
 
   return (
     <RNModal
@@ -144,9 +148,7 @@ export const Modal = () => {
       hardwareAccelerated
       focusable
       navigationBarTranslucent
-      onRequestClose={() => {
-        if (canDiscard) handleClose()
-      }}
+      onRequestClose={handleOnRequestClose}
     >
       <GestureHandlerRootView style={[a.flex_1]}>
         <View style={[a.flex_1, a.self_stretch, a.justify_end]}>

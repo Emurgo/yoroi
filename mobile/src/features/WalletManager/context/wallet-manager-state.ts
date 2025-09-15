@@ -1,4 +1,4 @@
-import {Chain, Network, Wallet} from '@yoroi/types'
+import {App, Chain, Network, Wallet} from '@yoroi/types'
 
 import {castDraft, freeze, produce} from 'immer'
 
@@ -105,7 +105,10 @@ export const walletManagerInitialContext: WalletManagerContextType = freeze(
   true,
 )
 
-/* istanbul ignore next */
 function missingInit() {
-  throwLoggedError('WalletManagerContext is missing initialization')
+  throwLoggedError(
+    new App.Errors.InvalidState(
+      'WalletManagerContext is missing initialization',
+    ),
+  )
 }
