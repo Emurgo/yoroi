@@ -14,7 +14,9 @@ import {OnConfirm} from './useOnConfirm'
 export const useLegacyOnConfirm = ({
   unsignedTx,
   onSuccess,
+  onSuccessWithoutFeedback,
   onError,
+  onErrorWithoutFeedback,
   onNotSupportedCIP1694,
   onCIP36SupportChange,
 }: OnConfirm & {
@@ -29,18 +31,26 @@ export const useLegacyOnConfirm = ({
 
   const handleOnSuccess = (signedTx: YoroiSignedTx) => {
     closeModal()
+    if (onSuccessWithoutFeedback) {
+      onSuccessWithoutFeedback({signedTx})
+      return
+    }
+
     if (onSuccess) {
       onSuccess({signedTx})
-      return
     }
 
     navigateTo.showSubmittedTxScreen()
   }
   const handleOnError = (error: unknown) => {
     closeModal()
+    if (onErrorWithoutFeedback) {
+      onErrorWithoutFeedback(error)
+      return
+    }
+
     if (onError) {
       onError(error)
-      return
     }
     navigateTo.showFailedTxScreen()
   }

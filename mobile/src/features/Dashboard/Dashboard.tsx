@@ -84,9 +84,7 @@ export const Dashboard = () => {
         operations: [<StakeRewardsWithdrawalOperation key="0" />],
         onSuccess: () => {
           track.claimAdaTransactionSubmitted()
-          navigateTo.submittedTx()
         },
-        onError: navigateTo.failedTx,
       })
     }
   }, [unsignedTx, unsignedTxChanged, walletNavigateTo, track, navigateTo])

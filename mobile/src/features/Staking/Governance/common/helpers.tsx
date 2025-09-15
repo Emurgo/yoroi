@@ -112,9 +112,7 @@ export const useGovernanceActions = () => {
           type,
           txID: args.signedTx.signedTx.id,
         })
-        navigateTo.submittedTx()
       },
-      onError: navigateTo.failedTx,
       onNotSupportedCIP1694: navigateTo.notSupportedVersion,
       ...(CIP105
         ? {
@@ -142,9 +140,7 @@ export const useGovernanceActions = () => {
           vote: 'abstain',
           txID: args?.signedTx.signedTx.id,
         })
-        navigateTo.submittedTx()
       },
-      onError: navigateTo.failedTx,
       onNotSupportedCIP1694: navigateTo.notSupportedVersion,
     })
   }
@@ -165,9 +161,7 @@ export const useGovernanceActions = () => {
           vote: 'no-confidence',
           txID: args?.signedTx.signedTx.id,
         })
-        navigateTo.submittedTx()
       },
-      onError: navigateTo.failedTx,
       onNotSupportedCIP1694: navigateTo.notSupportedVersion,
     })
   }

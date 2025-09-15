@@ -14,7 +14,6 @@ import {Button} from '~/ui/Button/Button'
 import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingView'
 import {ProtocolAvatar} from '~/ui/ProtocolAvatar/ProtocolAvatar'
 
-import {useNavigateTo} from '../../common/navigation'
 import {TransactionSummary} from './TransactionSummary'
 
 const BOTTOM_ACTION_SECTION = 220
@@ -26,7 +25,6 @@ export const ReviewSwap = () => {
   const strings = useStrings()
   const {track} = useMetrics()
   const {navigateToTxReview} = useWalletNavigation()
-  const navigateTo = useNavigateTo()
 
   const swapForm = useSwap()
 
@@ -66,11 +64,6 @@ export const ReviewSwap = () => {
   const onSwapTxSuccess = () => {
     trackSwapOrderSubmitted()
     swapForm.action({type: 'ResetForm'})
-    navigateTo.submittedTx()
-  }
-
-  const onSwapTxError = () => {
-    navigateTo.failedTx()
   }
 
   const onNext = () => {
@@ -78,7 +71,6 @@ export const ReviewSwap = () => {
 
     navigateToTxReview({
       onSuccess: onSwapTxSuccess,
-      onError: onSwapTxError,
       cbor: swapForm.createTx?.cbor,
       receiverCustomTitle:
         protocol !== undefined ? (

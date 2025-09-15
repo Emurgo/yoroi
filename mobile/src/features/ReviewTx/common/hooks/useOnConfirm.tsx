@@ -27,9 +27,17 @@ export type OnConfirm = {
     rootKey?: string
     signedTx?: YoroiSignedTx
   }) => void
+  onSuccessWithoutFeedback?: (args?: {
+    tx?: Transaction
+    rootKey?: string
+    signedTx?: YoroiSignedTx
+  }) => void
   onError?: ((error: unknown) => void) | null
+  onErrorWithoutFeedback?: ((error: unknown) => void) | null
   onCancel?: () => void
   onClose?: () => void
+  onNotSupportedCIP1694?: (() => void) | null
+  onCIP36SupportChange?: ((isCIP36Supported: boolean) => void) | null
 }
 
 export const useOnConfirm = ({
@@ -37,7 +45,9 @@ export const useOnConfirm = ({
   partial,
   preventSubmit = false,
   onSuccess,
+  onSuccessWithoutFeedback,
   onError,
+  onErrorWithoutFeedback,
   onCancel,
   onClose,
 }: OnConfirm) => {
@@ -53,18 +63,26 @@ export const useOnConfirm = ({
     rootKey?: string
     signedTx?: YoroiSignedTx
   }) => {
+    if (onSuccessWithoutFeedback) {
+      onSuccessWithoutFeedback({rootKey: args?.rootKey, tx: args?.tx})
+      return
+    }
+
     if (onSuccess) {
       onSuccess({rootKey: args?.rootKey, tx: args?.tx})
-      return
     }
 
     navigateTo.showSubmittedTxScreen()
   }
 
   const handleOnError = (error: unknown) => {
+    if (onErrorWithoutFeedback) {
+      onErrorWithoutFeedback(error)
+      return
+    }
+
     if (onError) {
       onError(error)
-      return
     }
 
     navigateTo.showFailedTxScreen()

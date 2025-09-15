@@ -97,15 +97,13 @@ export const ListAmountsToSendScreen = () => {
       }
 
       reset()
-      navigateTo.submittedTx()
     },
-    [track, sendProperties, memo, saveMemo, reset, navigateTo],
+    [track, sendProperties, memo, saveMemo, reset],
   )
 
   const handleOnError = React.useCallback(() => {
     track.sendSummarySubmitted(sendProperties)
-    navigateTo.failedTx()
-  }, [track, sendProperties, navigateTo])
+  }, [track, sendProperties])
 
   const createUnsignedTxPromise = React.useCallback(
     (entries: YoroiEntry[]) => wallet.createUnsignedTx({entries, addressMode}),

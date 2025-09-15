@@ -245,7 +245,9 @@ export type ReviewTxRoutes = {
     onConfirm?: () => void
     onCancel?: OnConfirm['onCancel']
     onSuccess?: OnConfirm['onSuccess']
+    onSuccessWithoutFeedback?: OnConfirm['onSuccessWithoutFeedback']
     onError?: OnConfirm['onError']
+    onErrorWithoutFeedback?: OnConfirm['onErrorWithoutFeedback']
     onClose?: OnConfirm['onClose']
     onNotSupportedCIP1694?: () => void
     onCIP36SupportChange?: (supportsCIP36: boolean) => void
