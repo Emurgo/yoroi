@@ -30,7 +30,7 @@
     "tsc": "tsc --noEmit",
     "tsc:fix": "tsc --noEmit --fix",
     "test": "jest --config jest.config.js",
-    "format": "prettier --write .",
+    "format": "prettier --write ."
   },
   "dependencies": {
     "@amplitude/analytics-react-native": "1.4.13",
