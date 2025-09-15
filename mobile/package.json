@@ -48,7 +48,6 @@
     "@formatjs/intl-numberformat": "8.15.4",
     "@formatjs/intl-pluralrules": "5.4.4",
     "@formatjs/intl-relativetimeformat": "11.4.11",
-    "@gorhom/bottom-sheet": "5.1.6",
     "@ledgerhq/hw-transport-web-ble": "6.29.6",
     "@ledgerhq/hw-transport-webhid": "6.30.2",
     "@ledgerhq/react-native-hid": "6.32.6",
@@ -97,6 +96,7 @@
     "expo-screen-capture": "7.1.5",
     "expo-status-bar": "2.2.3",
     "expo-system-ui": "5.0.10",
+    "expo-updates": "~0.28.17",
     "fast-text-encoding": "1.0.6",
     "immer": "10.1.1",
     "lodash": "4.17.21",
@@ -112,6 +112,7 @@
     "react-native-edge-to-edge": "1.6.0",
     "react-native-gesture-handler": "2.24.0",
     "react-native-get-random-values": "1.11.0",
+    "react-native-keyboard-controller": "^1.18.6",
     "react-native-keychain": "10.0.0",
     "react-native-linear-gradient": "2.8.3",
     "react-native-marked": "7.0.2",
@@ -136,8 +137,7 @@
     "rxjs": "7.8.2",
     "tinycolor2": "1.6.0",
     "uuid": "11.1.0",
-    "zod": "3.25.17",
-    "expo-updates": "~0.28.17"
+    "zod": "3.25.17"
   },
   "devDependencies": {
     "@amplitude/ampli": "1.36.2",
