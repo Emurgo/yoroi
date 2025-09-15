@@ -10,7 +10,6 @@ import {ThemeProvider} from '@yoroi/theme'
 import {TransferProvider} from '@yoroi/transfer'
 
 import * as React from 'react'
-import {KeyboardProvider} from 'react-native-keyboard-controller'
 
 import {BrowserProvider} from '~/features/Discover/common/BrowserProvider'
 import {PortfolioTokenActivityProvider} from '~/features/Portfolio/context/PortfolioTokenActivityProvider'
@@ -115,10 +114,8 @@ export default function App() {
     <AppShell>
       <BusinessShell>
         <PlatformShell>
-          <KeyboardProvider statusBarTranslucent>
-            <Modal />
-            <AppNavigator />
-          </KeyboardProvider>
+          <Modal />
+          <AppNavigator />
         </PlatformShell>
       </BusinessShell>
     </AppShell>
