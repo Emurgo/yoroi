@@ -104,7 +104,7 @@ export const CameraCodeScanner = React.forwardRef<
 
   return (
     <CameraView
-      style={[a.absolute, a.inset_0, a.flex_1, {flexDirection: 'column'}]}
+      style={[a.absolute, a.inset_0, a.flex_1, a.flex_col]}
       facing="back"
       onBarcodeScanned={handleBarCodeScanned}
       barcodeScannerSettings={{
@@ -149,30 +149,26 @@ const Mask = React.memo(({maskText}: {maskText: string}) => {
 })
 
 const LayerTop = ({children}: {children?: React.ReactNode}) => (
-  <View
-    style={[a.flex_1, {backgroundColor: 'rgba(0, 0, 0, .7)', marginBottom: 0}]}
-  >
+  <View style={[a.flex_1, {backgroundColor: 'rgba(0, 0, 0, 0.7)'}]}>
     {children}
   </View>
 )
 const LayerCenter = ({children}: {children?: React.ReactNode}) => (
-  <View style={[{flexDirection: 'row', borderWidth: 0}]}>{children}</View>
+  <View style={[a.flex_row]}>{children}</View>
 )
 const LayerCenterLeft = ({children}: {children?: React.ReactNode}) => (
-  <View
-    style={[a.flex_1, {backgroundColor: 'rgba(0, 0, 0, .7)', borderWidth: 0}]}
-  >
+  <View style={[a.flex_1, {backgroundColor: 'rgba(0, 0, 0, 0.7)'}]}>
     {children}
   </View>
 )
 const LayerCenterRight = ({children}: {children?: React.ReactNode}) => (
-  <View style={[a.flex_1, {backgroundColor: 'rgba(0, 0, 0, .7)'}]}>
+  <View style={[a.flex_1, {backgroundColor: 'rgba(0, 0, 0, 0.7)'}]}>
     {children}
   </View>
 )
 const LayerBottom = ({children}: {children?: React.ReactNode}) => (
   <View
-    style={[a.flex_1, a.align_center, {backgroundColor: 'rgba(0, 0, 0, .7)'}]}
+    style={[a.flex_1, a.align_center, {backgroundColor: 'rgba(0, 0, 0, 0.7)'}]}
   >
     {children}
   </View>
@@ -181,16 +177,7 @@ const CameraOpening = ({children}: {children?: React.ReactNode}) => (
   <View style={[{height: QR_MAX_HEIGHT, width: QR_MAX_WIDTH}]}>{children}</View>
 )
 const InnerCameraOpeningTop = ({children}: {children?: React.ReactNode}) => (
-  <View
-    style={[
-      a.flex_1,
-      {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        position: 'relative',
-      },
-    ]}
-  >
+  <View style={[a.flex_1, a.flex_row, a.justify_between, a.relative]}>
     {children}
   </View>
 )
@@ -198,51 +185,45 @@ const InnerCameraOpeningCenter = ({children}: {children?: React.ReactNode}) => (
   <View style={[a.flex_1]}>{children}</View>
 )
 const InnerCameraOpeningBottom = ({children}: {children?: React.ReactNode}) => (
-  <View
-    style={[
-      a.flex_1,
-      {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        position: 'relative',
-      },
-    ]}
-  >
+  <View style={[a.flex_1, a.flex_row, a.justify_between, a.relative]}>
     {children}
   </View>
 )
-const TopLeftCorner = () => (
-  <Corner style={{position: 'absolute', top: 0, left: 0, flex: 1}} />
-)
+const TopLeftCorner = () => <Corner style={[a.absolute, {top: 0, left: 0}]} />
 const TopRightCorner = () => (
   <Corner
-    style={{
-      position: 'absolute',
-      top: 0,
-      right: 0,
-      flex: 1,
-      transform: [{rotate: '90deg'}],
-    }}
+    style={[
+      a.absolute,
+      {
+        top: 0,
+        right: 0,
+        transform: [{rotate: '90deg'}],
+      },
+    ]}
   />
 )
 const BottomRightCorner = () => (
   <Corner
-    style={{
-      position: 'absolute',
-      bottom: 0,
-      right: 0,
-      transform: [{rotate: '180deg'}],
-    }}
+    style={[
+      a.absolute,
+      {
+        bottom: 0,
+        right: 0,
+        transform: [{rotate: '180deg'}],
+      },
+    ]}
   />
 )
 const BottomLeftCorner = () => (
   <Corner
-    style={{
-      position: 'absolute',
-      bottom: 0,
-      left: 0,
-      transform: [{rotate: '270deg'}],
-    }}
+    style={[
+      a.absolute,
+      {
+        bottom: 0,
+        left: 0,
+        transform: [{rotate: '270deg'}],
+      },
+    ]}
   />
 )
 
@@ -251,7 +232,8 @@ const MaskText = ({children}: {children?: React.ReactNode}) => (
     style={[
       a.body_1_lg_medium,
       a.text_center,
-      {color: '#fff', maxWidth: 240, paddingTop: 20},
+      a.pt_lg,
+      {color: '#fff', maxWidth: 240},
     ]}
   >
     {children}
