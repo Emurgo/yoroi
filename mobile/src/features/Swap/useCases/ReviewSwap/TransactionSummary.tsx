@@ -4,6 +4,7 @@ import _ from 'lodash'
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
+import {Splits} from '~/features/Swap/common/EstimateSummary/EstimateSummary'
 import {SwapContextInstance} from '~/features/Swap/common/SwapProvider'
 import {
   PRICE_IMPACT_HIGH_RISK,
@@ -13,7 +14,6 @@ import {
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Divider} from '~/ui/Divider/Divider'
-import {Splits} from '~/ui/EstimateSummary/EstimateSummary'
 import {Icon} from '~/ui/Icon'
 import {ProtocolAvatar} from '~/ui/ProtocolAvatar/ProtocolAvatar'
 import {ShowPriceImpact} from '~/ui/ShowPriceImpact/ShowPriceImpact'
