@@ -31,7 +31,6 @@
     "tsc:fix": "tsc --noEmit --fix",
     "test": "jest --config jest.config.js",
     "format": "prettier --write .",
-    "android": "expo run:android"
   },
   "dependencies": {
     "@amplitude/analytics-react-native": "1.4.13",
