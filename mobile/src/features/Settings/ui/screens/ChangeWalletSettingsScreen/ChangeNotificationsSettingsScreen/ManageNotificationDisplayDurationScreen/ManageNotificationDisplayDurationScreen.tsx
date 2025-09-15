@@ -234,5 +234,8 @@ const useConfig = () => {
   if (!config) {
     throw new Error('Config not found')
   }
-  return config
+  return {
+    ...config,
+    displayDuration: config.displayDuration ?? 8,
+  }
 }
