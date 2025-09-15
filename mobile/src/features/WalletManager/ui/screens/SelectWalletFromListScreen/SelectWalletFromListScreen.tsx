@@ -123,6 +123,8 @@ export const SelectWalletFromList = () => {
 
         <AddWalletButton />
 
+        <Space.Height.md />
+
         {isDev && (
           <>
             <Space.Height.md />

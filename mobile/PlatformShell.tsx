@@ -1,4 +1,5 @@
 import * as React from 'react'
+import {KeyboardProvider} from 'react-native-keyboard-controller'
 import {
   SafeAreaProvider,
   initialWindowMetrics,
@@ -24,7 +25,9 @@ export function PlatformShell({children}: React.PropsWithChildren) {
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>
       <MetricsProvider metricsManager={metricsManager}>
         <RouterContainer>
-          <ModalProvider>{children}</ModalProvider>
+          <ModalProvider>
+            <KeyboardProvider statusBarTranslucent>{children}</KeyboardProvider>
+          </ModalProvider>
         </RouterContainer>
       </MetricsProvider>
     </SafeAreaProvider>
