@@ -390,7 +390,7 @@ const OrderCancellation = ({
     <Button
       style={[a.self_start, a.px_0]}
       type={ButtonType.SecondaryText}
-      title={strings.swap.listOrdersSheetButtonText}
+      title={strings.swap.cancel}
       isLoading={isLoading}
       onPress={onPress}
     />
@@ -419,29 +419,27 @@ const OrderCancellationConfirmation = ({
   const fee = response.value.data.additionalCancellationFee
 
   return (
-    <View>
-      <React.Fragment>
+    <View style={[a.gap_md, a.p_lg]}>
+      <Row
+        label={strings.swap.route}
+        value={<ProtocolAvatar protocol={order.protocol} preventOpenLink />}
+      />
+
+      <Row label={strings.swap.listOrdersSheetAssetPrice} value={price} />
+
+      <Row label={strings.swap.listOrdersSheetAssetAmount} value={amount} />
+
+      <Row
+        label={strings.swap.listOrdersSheetTotalReturned}
+        value={`${order.amountIn} ${tokenName(tokenInInfo)}`}
+      />
+
+      {fee !== undefined && (
         <Row
-          label={strings.swap.route}
-          value={<ProtocolAvatar protocol={order.protocol} preventOpenLink />}
+          label={strings.swap.listOrdersSheetCancellationFee}
+          value={`${fee} ${primaryTokenInfoMainnet.ticker}}`}
         />
-
-        <Row label={strings.swap.listOrdersSheetAssetPrice} value={price} />
-
-        <Row label={strings.swap.listOrdersSheetAssetAmount} value={amount} />
-
-        <Row
-          label={strings.swap.listOrdersSheetTotalReturned}
-          value={`${order.amountIn} ${tokenName(tokenInInfo)}`}
-        />
-
-        {fee !== undefined && (
-          <Row
-            label={strings.swap.listOrdersSheetCancellationFee}
-            value={`${fee} ${primaryTokenInfoMainnet.ticker}}`}
-          />
-        )}
-      </React.Fragment>
+      )}
 
       <Space.Height._2xs fill />
     </View>
