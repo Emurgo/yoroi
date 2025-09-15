@@ -57,11 +57,6 @@ export const useTriggerScanAction = ({
       const claimErrorDialog = claimErrorResolver(error)
       if (claimErrorDialog) {
         Alert.alert(claimErrorDialog.title, claimErrorDialog.message)
-      } else {
-        Alert.alert(
-          'Error',
-          'An unexpected error occurred during claim processing',
-        )
       }
     },
   })
