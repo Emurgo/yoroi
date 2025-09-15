@@ -271,8 +271,9 @@ export class WalletManager {
             return from(wallets)
           }),
           concatMap((wallet) => {
-            logger.debug('WalletManager: syncAll syncing walet', {
+            logger.debug('syncWallets: started', {
               walletId: wallet.id,
+              origin: 'WalletManager',
             })
             const info = this.#syncWalletInfos$.value.get(wallet.id)
             const syncWalletInfo: SyncWalletInfo = {
@@ -286,9 +287,10 @@ export class WalletManager {
             this.#syncWalletInfos$.next(freeze(infos))
             return from(wallet.sync({isForced: false})).pipe(
               catchError((error) => {
-                logger.error('WalletManager: syncAll error syncing walet', {
+                logger.error('syncWallets: error', {
                   error,
                   walletId: wallet.id,
+                  origin: 'WalletManager',
                 })
                 const syncWalletInfo: SyncWalletInfo = {
                   status: 'error',
@@ -307,8 +309,9 @@ export class WalletManager {
                   this.#syncWalletInfos$.value.get(wallet.id)?.status !==
                   'error'
                 ) {
-                  logger.debug('WalletManager: syncAll done syncing walet', {
+                  logger.debug('syncWallets: done', {
                     walletId: wallet.id,
+                    origin: 'WalletManager',
                   })
                   const syncWalletInfo: SyncWalletInfo = {
                     status: 'done',
