@@ -92,7 +92,7 @@ export const ManageCollateralScreen = () => {
       onSuccess: (yoroiUnsignedTx) => {
         unsignedTxChanged(yoroiUnsignedTx)
         navigateToTxReview({
-          onSuccess: (args) => handleOnSuccess(args?.signedTx),
+          onSuccessWithoutFeedback: (args) => handleOnSuccess(args?.signedTx),
           operations: [<Operation key="0" />],
         })
       },

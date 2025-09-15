@@ -28,7 +28,9 @@ export const ReviewTxScreen = () => {
   const {legacyOnConfirm} = useLegacyOnConfirm({
     unsignedTx,
     onSuccess: params?.onSuccess,
+    onSuccessWithoutFeedback: params?.onSuccessWithoutFeedback,
     onError: params?.onError,
+    onErrorWithoutFeedback: params?.onErrorWithoutFeedback,
     onNotSupportedCIP1694: params?.onNotSupportedCIP1694,
     onCIP36SupportChange: params?.onCIP36SupportChange,
   })
@@ -38,7 +40,9 @@ export const ReviewTxScreen = () => {
     partial: params?.partial,
     preventSubmit: params?.preventSubmit,
     onSuccess: params?.onSuccess,
+    onSuccessWithoutFeedback: params?.onSuccessWithoutFeedback,
     onError: params?.onError,
+    onErrorWithoutFeedback: params?.onErrorWithoutFeedback,
     onCancel: params?.onCancel,
     onClose: params?.onClose,
   })

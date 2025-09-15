@@ -14,24 +14,22 @@ import {SuccessfulTxIcon} from '~/ui/SuccessfulTxIcon/SuccessfulTxIcon'
 export const SubmittedTxScreen = () => {
   useBlockGoBack()
   const strings = useStrings()
-  const {palette: p} = useTheme()
+  const {palette: p, atoms: ta} = useTheme()
   const {resetToTxHistory} = useWalletNavigation()
 
   return (
     <SafeArea
       style={[
-        {backgroundColor: p.bg_color_max},
+        ta.bg_color_max,
         a.p_lg,
         a.flex_1,
         a.align_center,
         a.justify_center,
       ]}
     >
-      <Space.Height._2xl />
+      <View style={{height: 144}} />
 
       <SuccessfulTxIcon />
-
-      <Space.Height._2xl />
 
       <Space.Height.lg />
 
@@ -48,10 +46,9 @@ export const SubmittedTxScreen = () => {
 
       <Text
         style={[
-          {color: p.gray_600},
+          {color: p.gray_600, maxWidth: 330},
           a.body_1_lg_regular,
           a.text_center,
-          {maxWidth: 330},
         ]}
       >
         {strings.send.submittedTxText}
@@ -63,13 +60,18 @@ export const SubmittedTxScreen = () => {
         <Button
           onPress={resetToTxHistory}
           title={strings.send.submittedTxButton}
-          style={[a.px_lg]}
+          style={a.px_lg}
         />
       </Actions>
     </SafeArea>
   )
 }
 
-const Actions = ({children}: {children: React.ReactNode}) => {
-  return <View style={{alignSelf: 'stretch'}}>{children}</View>
+const Actions = ({children}: React.PropsWithChildren) => {
+  const {palette: p} = useTheme()
+  return (
+    <View style={[a.self_stretch, a.border_t, {borderTopColor: p.gray_200}]}>
+      {children}
+    </View>
+  )
 }

@@ -90,7 +90,7 @@ export const useDappConnectorManager = () => {
                 url={matchingDapp.uri}
               />
             ),
-            onSuccess: (args) => {
+            onSuccessWithoutFeedback: (args) => {
               shouldResolve = false
               if (isEmptyString(args?.rootKey) || args?.rootKey == null) {
                 reject(
@@ -115,7 +115,7 @@ export const useDappConnectorManager = () => {
                 reject(userRejectedError())
               }
             },
-            onError: (error) => {
+            onErrorWithoutFeedback: (error) => {
               shouldResolve = false
               logger.error('useDappConnectorManager::handleSignTx', {error})
               reject(error)

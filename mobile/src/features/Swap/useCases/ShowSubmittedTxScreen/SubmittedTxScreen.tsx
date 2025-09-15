@@ -14,7 +14,7 @@ import {useNavigateTo} from '../../common/navigation'
 
 export const SubmittedTxScreen = () => {
   const strings = useStrings()
-  const {palette: p} = useTheme()
+  const {palette: p, atoms: ta} = useTheme()
   const navigateTo = useNavigateTo()
   const swapForm = useSwap()
 
@@ -26,11 +26,11 @@ export const SubmittedTxScreen = () => {
   return (
     <SafeArea
       style={[
+        ta.bg_color_max,
         a.p_lg,
         a.flex_1,
         a.align_center,
         a.justify_center,
-        {backgroundColor: p.bg_color_max},
       ]}
     >
       <Space.Height._2xl />
@@ -75,15 +75,10 @@ export const SubmittedTxScreen = () => {
   )
 }
 
-const Actions = ({children}: {children: React.ReactNode}) => {
+const Actions = ({children}: React.PropsWithChildren) => {
   const {palette: p} = useTheme()
-
   return (
-    <View
-      style={[
-        {alignSelf: 'stretch', borderTopWidth: 1, borderTopColor: p.gray_200},
-      ]}
-    >
+    <View style={[a.self_stretch, a.border_t, {borderTopColor: p.gray_200}]}>
       {children}
     </View>
   )
