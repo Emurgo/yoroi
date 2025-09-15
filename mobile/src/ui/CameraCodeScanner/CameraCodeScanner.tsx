@@ -3,7 +3,7 @@ import {atoms as a} from '@yoroi/theme'
 import {useFocusEffect} from '@react-navigation/native'
 import {CameraView} from 'expo-camera'
 import * as React from 'react'
-import {Text, View, useWindowDimensions} from 'react-native'
+import {Platform, Text, View, useWindowDimensions} from 'react-native'
 import {Path, Svg, SvgProps} from 'react-native-svg'
 
 export type CameraCodeScannerMethods = {
@@ -75,6 +75,7 @@ export const CameraCodeScanner = React.forwardRef<
           scannerBounds,
           deviceHeight,
           deviceWidth,
+          isAndroid: Platform.OS === 'android',
         })
       }
 
@@ -278,6 +279,7 @@ const getIsQrInsideScannerBounds = ({
   qrBounds,
   qrBoundingBox,
   scannerBounds,
+  isAndroid,
 }: {
   qrBounds?: {
     origin: {x: number; y: number}
@@ -290,14 +292,23 @@ const getIsQrInsideScannerBounds = ({
   scannerBounds: ReturnType<typeof getScannerBounds>
   deviceHeight: number
   deviceWidth: number
+  isAndroid: boolean
 }) => {
-  if (!qrBounds && !qrBoundingBox) return false
+  if (!qrBounds && !qrBoundingBox) return true
 
   const bounds = qrBounds || qrBoundingBox!
-
-  // Use a more lenient approach - check if QR center is inside scanner bounds
   const qrCenterX = bounds.origin.x + bounds.size.width / 2
   const qrCenterY = bounds.origin.y + bounds.size.height / 2
+
+  if (isAndroid) {
+    const margin = 50
+    return (
+      qrCenterX >= scannerBounds.left - margin &&
+      qrCenterX <= scannerBounds.right + margin &&
+      qrCenterY >= scannerBounds.top - margin &&
+      qrCenterY <= scannerBounds.bottom + margin
+    )
+  }
 
   return (
     qrCenterX >= scannerBounds.left &&

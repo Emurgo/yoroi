@@ -27,7 +27,7 @@ export const useTriggerScanAction = ({
   const {
     wallet: {portfolioPrimaryTokenInfo},
   } = useSelectedWallet()
-  const {openModal, closeModal, setLoading} = useModal()
+  const {openModal, closeModal, setLoading: startLoading} = useModal()
 
   const navigateTo = useNavigateTo()
 
@@ -53,7 +53,7 @@ export const useTriggerScanAction = ({
       navigateTo.claimShowSuccess()
     },
     onError: (error) => {
-      setLoading(false)
+      startLoading(false)
       const claimErrorDialog = claimErrorResolver(error)
       if (claimErrorDialog) {
         Alert.alert(claimErrorDialog.title, claimErrorDialog.message)
@@ -108,22 +108,24 @@ export const useTriggerScanAction = ({
         scanActionClaimChanged(scanAction)
 
         const handleOnContinue = () => {
-          setLoading(true)
+          startLoading(true)
           claimTokens(scanAction)
         }
 
-        openModal({
-          title: strings.claim.askConfirmationTitle,
-          content: (
-            <AskConfirmation
-              address={address}
-              url={scanAction.url}
-              code={scanAction.code}
-            />
-          ),
-          footer: <AskConfirmationActions onContinue={handleOnContinue} />,
-          height: 400,
-        })
+        setTimeout(() => {
+          openModal({
+            title: strings.claim.askConfirmationTitle,
+            content: (
+              <AskConfirmation
+                address={address}
+                url={scanAction.url}
+                code={scanAction.code}
+              />
+            ),
+            footer: <AskConfirmationActions onContinue={handleOnContinue} />,
+            height: 400,
+          })
+        }, 300)
         break
       }
     }
