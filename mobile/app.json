@@ -23,6 +23,7 @@
       ],
       "infoPlist": {
         "NSCameraUsageDescription": "Allow $(PRODUCT_NAME) to access your camera to scan QR codes",
+        "NSPhotoLibraryUsageDescription": "Allow $(PRODUCT_NAME) to access your photo library to import wallet data and QR codes",
         "NSLocationWhenInUseUsageDescription": "Allow $(PRODUCT_NAME) to access your location for Bluetooth scanning",
         "NSBluetoothAlwaysUsageDescription": "Allow $(PRODUCT_NAME) to access Bluetooth for hardware wallet connection",
         "NSBluetoothPeripheralUsageDescription": "Allow $(PRODUCT_NAME) to access Bluetooth for hardware wallet connection",
