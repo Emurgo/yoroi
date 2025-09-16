@@ -117,7 +117,7 @@ export const SelectTokenFromListScreen = () => {
               <Tab
                 active={fungibilityFilter}
                 onPress={handleOnPressNFTs}
-                label={strings.send.nfts(2)}
+                label={strings.send.assetsLabel}
                 tab="nfts"
               />
             )}
