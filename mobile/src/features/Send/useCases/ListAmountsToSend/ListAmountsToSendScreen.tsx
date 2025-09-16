@@ -235,7 +235,7 @@ const ListAmountsNavigateBackButton = () => {
         navigateTo.startTxAfterReset()
       }}
     >
-      <Icon.Chevron direction="left" color={p.el_gray_max} />
+      <Icon.Chevron direction="left" color={ta.el_gray_max.color} />
     </TouchableOpacity>
   )
 }
