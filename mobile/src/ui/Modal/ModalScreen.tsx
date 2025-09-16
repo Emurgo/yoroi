@@ -167,43 +167,45 @@ export const Modal = () => {
             style={[a.flex_1, a.justify_end]}
           >
             <KeyboardAvoidingView behavior="padding" style={[a.justify_end]}>
-              <GestureDetector gesture={panGesture}>
-                <Pressable onPress={(e) => e.stopPropagation()}>
-                  <Animated.View
-                    style={[
-                      isFull ? a.flex_1 : {height: visibleHeight},
-                      a.self_stretch,
-                      a.overflow_hidden,
-                      {backgroundColor: isDark ? p.gray_50 : p.white_static},
-                      {transform: [{translateY: sheetTranslateY}]},
-                      {
-                        borderTopLeftRadius: s.xl,
-                        borderTopRightRadius: s.xl,
-                      },
-                    ]}
-                  >
-                    {canDiscardEnabled && !isFull && (
+              <Pressable onPress={(e) => e.stopPropagation()}>
+                <Animated.View
+                  style={[
+                    isFull ? a.flex_1 : {height: visibleHeight},
+                    a.self_stretch,
+                    a.overflow_hidden,
+                    {backgroundColor: isDark ? p.gray_50 : p.white_static},
+                    {transform: [{translateY: sheetTranslateY}]},
+                    {
+                      borderTopLeftRadius: s.xl,
+                      borderTopRightRadius: s.xl,
+                    },
+                  ]}
+                >
+                  {canDiscardEnabled && !isFull && (
+                    <GestureDetector gesture={panGesture}>
                       <View style={[a.align_center, a.pt_sm, a.pb_xs]}>
                         <DiscardIndicator withFeedback={withFeedbackEnabled} />
                       </View>
-                    )}
+                    </GestureDetector>
+                  )}
 
-                    {visibleTitle && (
-                      <View style={[a.py_sm]}>
-                        <Title title={visibleTitle} />
-                      </View>
-                    )}
+                  {visibleTitle && (
+                    <View style={[a.py_sm]}>
+                      <Title title={visibleTitle} />
+                    </View>
+                  )}
 
-                    {isFull ? (
-                      <View style={[a.flex_1]}>{visibleContent}</View>
-                    ) : (
-                      visibleContent
-                    )}
+                  {isFull ? (
+                    <View style={[a.flex_1, a.p_lg]}>{visibleContent}</View>
+                  ) : (
+                    visibleContent
+                  )}
 
-                    {visibleFooter && <View>{visibleFooter}</View>}
-                  </Animated.View>
-                </Pressable>
-              </GestureDetector>
+                  {visibleFooter && (
+                    <View style={[a.py_lg]}>{visibleFooter}</View>
+                  )}
+                </Animated.View>
+              </Pressable>
             </KeyboardAvoidingView>
           </Pressable>
         </View>

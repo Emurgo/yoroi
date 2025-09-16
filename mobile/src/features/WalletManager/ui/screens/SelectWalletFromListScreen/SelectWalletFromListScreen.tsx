@@ -4,7 +4,14 @@ import {Wallet} from '@yoroi/types'
 
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import * as React from 'react'
-import {Linking, Text, TouchableOpacity, View} from 'react-native'
+import {
+  Linking,
+  ScrollView as RnScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native'
+import {NativeViewGestureHandler} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useLinksRequestWallet} from '~/features/Links/hooks/useLinksRequestWallet'
@@ -18,10 +25,11 @@ import {features} from '~/kernel/features'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
-import {Button} from '~/ui/Button/Button'
+import {Button, ButtonType} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {ScrollView, useScrollView} from '~/ui/ScrollView/ScrollView'
 import {Space} from '~/ui/Space/Space'
+import {TextInput} from '~/ui/TextInput/TextInput'
 
 import {linkToSupportOpenTicket} from '../../../common/constants'
 import {useWalletManager} from '../../../context/WalletManagerProvider'
@@ -121,6 +129,10 @@ export const SelectWalletFromList = () => {
 
         <Space.Height.lg />
 
+        <OpenTextModalButton />
+
+        <Space.Height.md />
+
         <AddWalletButton />
 
         <Space.Height.md />
@@ -170,6 +182,87 @@ const AddWalletButton = () => {
       onPress={handleOnPress}
       title={strings.walletManager.addWalletButton}
     />
+  )
+}
+
+const OpenTextModalButton = () => {
+  const {openModal, closeModal} = useModal()
+  const strings = useStrings()
+  const onOpen = React.useCallback(() => {
+    openModal({
+      title: strings.global.disclaimer,
+      canDiscard: true,
+      content: <TextModalContent onClose={closeModal} />,
+      height: 700,
+      footer: (
+        <View style={[a.flex_row, a.justify_between]}>
+          <Button
+            type={ButtonType.Secondary}
+            onPress={closeModal}
+            title={strings.global.cancel}
+          />
+
+          <Button onPress={closeModal} title={strings.global.close} />
+        </View>
+      ),
+    })
+  }, [openModal, closeModal, strings.global.disclaimer])
+
+  return <Button onPress={onOpen} title={strings.ui.more} />
+}
+
+type TextModalContentProps = {
+  onClose: () => void
+}
+
+const TextModalContent = ({onClose}: TextModalContentProps) => {
+  const {atoms: ta} = useTheme()
+  const [text, setText] = React.useState('')
+  const strings = useStrings()
+
+  return (
+    <View style={[a.flex_1]}>
+      <NativeViewGestureHandler>
+        <RnScrollView
+          bounces={false}
+          nestedScrollEnabled
+          keyboardShouldPersistTaps="handled"
+          contentContainerStyle={[a.gap_md]}
+          style={[a.flex_1]}
+          showsVerticalScrollIndicator
+        >
+          <Text style={[ta.text_primary_medium, a.body_2_md_regular]}>
+            {strings.ui.description}
+          </Text>
+
+          <Space.Height.md />
+
+          {Array.from({length: 16}).map((_, idx) => (
+            <Text
+              key={`paragraph-${idx}`}
+              style={[ta.text_primary_medium, a.body_2_md_regular]}
+            >
+              {strings.ui.description}
+            </Text>
+          ))}
+
+          <Space.Height.md />
+
+          <View>
+            <Text style={[ta.text_primary_medium, a.body_2_md_medium]}>
+              {strings.send.memoLabel}
+            </Text>
+            <Space.Height.xs />
+            <TextInput
+              value={text}
+              onChangeText={setText}
+              placeholder={strings.ui.description}
+              multiline
+            />
+          </View>
+        </RnScrollView>
+      </NativeViewGestureHandler>
+    </View>
   )
 }
 
