@@ -225,12 +225,17 @@ const EditAmountButton = ({onPress, children}: EditAmountButtonProps) => {
 }
 
 const ListAmountsNavigateBackButton = () => {
-  const navigation = useNavigateTo()
-  const {palette: p} = useTheme()
+  const navigateTo = useNavigateTo()
+  const {atoms: ta} = useTheme()
 
   return (
-    <TouchableOpacity onPress={() => navigation.startTx()}>
-      <Icon.Chevron direction="left" color={p.el_gray_max} />
+    <TouchableOpacity
+      onPress={() => {
+        // Use the startTxAfterReset method which properly resets the stack
+        navigateTo.startTxAfterReset()
+      }}
+    >
+      <Icon.Chevron direction="left" color={ta.el_gray_max.color} />
     </TouchableOpacity>
   )
 }
