@@ -304,7 +304,12 @@ const SelectAmount = ({amount, disabled}: SelectAmountProps) => {
           quantity: BigInt(0),
         })
       }
-      navigation.navigate('send-edit-amount', {amount})
+      navigation.navigate('send-edit-amount', {
+        amount: {
+          info: amount.info,
+          quantity: BigInt(0),
+        },
+      })
     }
   }, [
     amount,
