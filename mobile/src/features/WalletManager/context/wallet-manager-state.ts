@@ -2,6 +2,7 @@ import {App, Chain, Network, Wallet} from '@yoroi/types'
 
 import {castDraft, freeze, produce} from 'immer'
 
+import {isDev} from '~/kernel/constants'
 import {throwLoggedError} from '~/kernel/logger/helpers/throw-logged-error'
 import {logger} from '~/kernel/logger/logger'
 import {YoroiWallet} from '~/wallets/cardano/types'
@@ -69,8 +70,9 @@ export type WalletManagerState = {
 export const walletManagerDefaultState: Readonly<WalletManagerState> = freeze(
   {
     selected: {
-      network: Chain.Network.Mainnet,
-      networkManager: networkManagers[Chain.Network.Mainnet],
+      network: isDev ? Chain.Network.Preprod : Chain.Network.Mainnet,
+      networkManager:
+        networkManagers[isDev ? Chain.Network.Preprod : Chain.Network.Mainnet],
       wallet: null,
       meta: null,
     },

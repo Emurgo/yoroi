@@ -18,6 +18,7 @@ import {
 } from 'rxjs'
 import {v4} from 'uuid'
 
+import {isDev} from '~/kernel/constants'
 import {throwLoggedError} from '~/kernel/logger/helpers/throw-logged-error'
 import {logger} from '~/kernel/logger/logger'
 import {makeWalletEncryptedStorage} from '~/kernel/storage/EncryptedStorage'
@@ -53,7 +54,7 @@ export class WalletManager {
     null,
   )
   readonly #selectedNetwork$ = new BehaviorSubject<Chain.SupportedNetworks>(
-    Chain.Network.Mainnet,
+    isDev ? Chain.Network.Preprod : Chain.Network.Mainnet,
   )
   readonly #isSyncing$ = new BehaviorSubject<boolean>(false)
   readonly #syncControl$ = new BehaviorSubject<boolean>(true)
