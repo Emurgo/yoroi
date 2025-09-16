@@ -1,13 +1,23 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
+import {View} from 'react-native'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 
 export const BalanceCardSkeleton = () => {
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
   return (
-    <SkeletonPlaceholder borderRadius={9} backgroundColor={p.gray_100}>
-      <SkeletonPlaceholder.Item width="100%" height={122} />
-    </SkeletonPlaceholder>
+    <View style={[a.overflow_hidden]}>
+      <SkeletonPlaceholder
+        key="u"
+        shimmerWidth={300}
+        speed={2000}
+        borderRadius={9}
+        highlightColor={ta.el_gray_max.color}
+        backgroundColor={ta.bg_color_min.backgroundColor}
+      >
+        <SkeletonPlaceholder.Item height={122} borderRadius={9} />
+      </SkeletonPlaceholder>
+    </View>
   )
 }
