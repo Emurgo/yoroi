@@ -226,7 +226,7 @@ const EditAmountButton = ({onPress, children}: EditAmountButtonProps) => {
 
 const ListAmountsNavigateBackButton = () => {
   const navigateTo = useNavigateTo()
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
 
   return (
     <TouchableOpacity
