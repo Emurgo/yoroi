@@ -4,10 +4,8 @@ import {useTheme} from '@yoroi/theme'
 import {createStackNavigator} from '@react-navigation/stack'
 import * as React from 'react'
 
-import {AuthSetting, AuthWithHostConfig} from '~/features/Auth/common/types'
+import {AuthSetting} from '~/features/Auth/common/types'
 import {useAuth} from '~/features/Auth/context/AuthProvider'
-import {useAuthSetting} from '~/features/Auth/hooks/useAuthSetting'
-import {useIsAuthOsSupported} from '~/features/Auth/hooks/useIsAuthOsSupported'
 import {InitiatePinScreen} from '~/features/Auth/ui/screens/InitiatePinScreen'
 import {LoginWithHostScreen} from '~/features/Auth/ui/screens/LoginWithHostScreen'
 import {LoginWithPinScreen} from '~/features/Auth/ui/screens/LoginWithPinScreen'
@@ -53,21 +51,18 @@ export const AppNavigator = () => {
   // Enable deep link action handling with modal support (only when logged in)
   useLinksRequestAction()
 
-  const navOptions = React.useMemo(() => defaultStackNavigationOptions(p), [p])
+  const screenOptions = React.useMemo(
+    () => ({...defaultStackNavigationOptions(p), headerShown: false}),
+    [p],
+  )
 
   // Enable notifications inside navigation context
   useInitNotifications({localEnabled: true, pushEnabled: true})
 
   return (
     <>
-      <Stack.Navigator
-        screenOptions={{
-          ...navOptions,
-          headerShown: false /* used only for transition */,
-        }}
-      >
+      <Stack.Navigator screenOptions={screenOptions}>
         {/* Not Authenticated */}
-
         {isLoggedOut && (
           <Stack.Group>
             {firstAction === 'first-run' && (
@@ -110,7 +105,6 @@ export const AppNavigator = () => {
         )}
 
         {/* Authenticated */}
-
         {isLoggedIn && (
           <Stack.Group>
             {afterLoginAction === 'choose-biometric-login' && (
@@ -122,18 +116,26 @@ export const AppNavigator = () => {
             )}
 
             {afterLoginAction === 'dark-theme-announcement' && (
-              <Stack.Screen //
-                name="dark-theme-announcement"
-                options={{headerShown: false}}
-                getComponent={() => DarkThemeAnnouncementScreen}
-              />
+              <>
+                <Stack.Screen //
+                  name="dark-theme-announcement"
+                  options={{headerShown: false}}
+                  getComponent={() => DarkThemeAnnouncementScreen}
+                />
+
+                <Stack.Screen //
+                  name="setup-wallet"
+                  options={{headerShown: false}}
+                  getComponent={() => SetupWalletNavigator}
+                />
+              </>
             )}
 
             {afterLoginAction === 'setup-wallet' && (
               <Stack.Screen //
                 name="setup-wallet"
                 options={{headerShown: false}}
-                component={SetupWalletNavigator}
+                getComponent={() => SetupWalletNavigator}
               />
             )}
 
@@ -147,7 +149,6 @@ export const AppNavigator = () => {
         )}
 
         {/* Development */}
-
         {isDev && (
           <Stack.Group>
             <Stack.Screen name="developer" getComponent={() => DevMenu} />
@@ -160,14 +161,13 @@ export const AppNavigator = () => {
         )}
       </Stack.Navigator>
 
-      {/* Notification UI Handler - rendered outside Stack.Navigator but inside NavigationContainer */}
       <NotificationUIHandler />
     </>
   )
 }
 
 const getFirstAction = (
-  authWithHostConfig: AuthWithHostConfig,
+  isEnrolled: boolean,
   authSetting: AuthSetting | undefined,
   legalAgreement: LegalAgreement | undefined | null,
 ): FirstAction => {
@@ -178,21 +178,19 @@ const getFirstAction = (
     return 'show-agreement-changed-notice'
 
   if (authSetting === 'pin') return 'auth-with-pin'
-  if (authSetting === 'os' && authWithHostConfig.isEnrolled)
-    return 'auth-with-os'
-  if (authSetting === 'os' && !authWithHostConfig.isEnrolled)
-    return 'request-new-pin'
+  if (authSetting === 'os' && isEnrolled) return 'auth-with-os'
+  if (authSetting === 'os' && !isEnrolled) return 'request-new-pin'
 
   return 'first-run' // setup not completed
 }
 
 const useFirstAction = () => {
-  const {authSetting, authWithHostConfig} = useAuth()
+  const {authSetting, isEnrolled} = useAuth()
   const {legalAgreement} = useLegalAgreement()
 
   return React.useMemo(
-    () => getFirstAction(authWithHostConfig, authSetting, legalAgreement),
-    [authSetting, authWithHostConfig, legalAgreement],
+    () => getFirstAction(isEnrolled, authSetting, legalAgreement),
+    [authSetting, isEnrolled, legalAgreement],
   )
 }
 
@@ -218,13 +216,11 @@ const useAfterLoginAction = () => {
   const hasWallets = useHasWallets()
   const {showBiometricsScreen} = useShowBiometricsScreen()
   const {showDarkThemeAnnouncement} = useShowDarkThemeAnnouncementScreen()
-  const isAuthOsSupported = useIsAuthOsSupported()
-  const authSetting = useAuthSetting()
+  const {canAuthWithHost, authSetting} = useAuth()
 
   return React.useMemo(() => {
     const shouldAskToUseAuthWithOs =
-      (showBiometricsScreen && isAuthOsSupported && authSetting !== 'os') ??
-      false
+      (showBiometricsScreen && canAuthWithHost && authSetting !== 'os') ?? false
     return getAfterLoginAction(
       shouldAskToUseAuthWithOs,
       showDarkThemeAnnouncement ?? false,
@@ -233,7 +229,7 @@ const useAfterLoginAction = () => {
   }, [
     authSetting,
     hasWallets,
-    isAuthOsSupported,
+    canAuthWithHost,
     showBiometricsScreen,
     showDarkThemeAnnouncement,
   ])

@@ -6,8 +6,8 @@ import * as React from 'react'
 import {Subject} from 'rxjs'
 
 import {fetchPtPriceActivity} from '~/features/Pairing/hooks/usePrimaryTokenActivity'
-import {getCurrencySymbol} from '~/features/Settings/useCases/changeAppSettings/Currency/CurrencyContext'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
+import {currencyStorageKeyManager} from '~/kernel/storage/storages'
 
 import {generateNotificationId} from './notifications'
 import {buildProcessedNotificationsStorage} from './processed-notifications-storage'
@@ -35,7 +35,7 @@ const buildNotifications = async (
     Date.now(),
     Date.now() - time.oneDay,
   ])
-  const currency = await getCurrencySymbol(appStorage)
+  const currency = currencyStorageKeyManager.read()
   const notificationsConfig = await manager.config.read()
   const primaryTokenChangeNotificationConfig =
     notificationsConfig[NotificationTypes.Trigger.PrimaryTokenPriceChanged]

@@ -28,6 +28,11 @@ jest.mock('@yoroi/common', () => ({
 jest.mock('@yoroi/portfolio', () => ({
   isPrimaryToken: jest.fn((tokenId) => tokenId === 'primary-token-id'),
   primaryTokenId: 'primary-token-id',
+  configCurrencies: {
+    USD: 'USD',
+    EUR: 'EUR',
+    JPY: 'JPY',
+  },
 }))
 
 jest.mock('@yoroi/swap', () => ({

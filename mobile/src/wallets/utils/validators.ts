@@ -1,5 +1,7 @@
 import _ from 'lodash'
 
+import {requiredPasswordLength} from '~/kernel/constants'
+
 type PasswordValidationErrors = {
   passwordReq?: boolean
   passwordConfirmationReq?: boolean
@@ -21,14 +23,12 @@ type PasswordStrength = {
 const pickOnlyFailingValidations = (validation: Record<string, unknown>) =>
   _.pickBy(validation)
 
-export const REQUIRED_PASSWORD_LENGTH = 10
-
 const getPasswordStrength = (password: string): PasswordStrength => {
   if (!password) {
     return {isStrong: false}
   }
 
-  if (password.length >= REQUIRED_PASSWORD_LENGTH) {
+  if (password.length >= requiredPasswordLength) {
     return {isStrong: true, satisfiesPasswordRequirement: true}
   }
 

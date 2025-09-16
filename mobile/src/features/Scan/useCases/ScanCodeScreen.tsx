@@ -1,8 +1,8 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Scan} from '@yoroi/types'
 
-import {useFocusEffect} from '@react-navigation/native'
-import {CameraView, useCameraPermissions} from 'expo-camera'
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
+import {useCameraPermissions} from 'expo-camera'
 import * as Haptics from 'expo-haptics'
 import * as React from 'react'
 import {Alert, Text, TouchableOpacity, View} from 'react-native'
@@ -11,8 +11,14 @@ import {z} from 'zod'
 import {useTriggerScanAction} from '~/features/Scan/common/useTriggerScanAction'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useParams} from '~/kernel/navigation/hooks/useParams'
-import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {ScanRoutes} from '~/kernel/navigation/types'
+import {
+  CameraCodeScanner,
+  CameraCodeScannerMethods,
+} from '~/ui/CameraCodeScanner/CameraCodeScanner'
+
+import {parseScanAction} from '../common/parsers'
+import {useScanErrorResolver} from '../common/useScanErrorResolver'
 
 const scanParamsSchema = z.object({
   insideFeature: z.enum(['scan', 'send']).optional(),
@@ -21,7 +27,7 @@ const scanParamsSchema = z.object({
 export const ScanCodeScreen = () => {
   const {atoms: ta} = useTheme()
   const strings = useStrings()
-  const {navigateToTxHistory} = useWalletNavigation()
+  const navigation = useNavigation()
   const params = useParams<ScanRoutes['scan-start']>(
     (params): params is Readonly<{insideFeature: Scan.Feature}> => {
       return params && typeof params === 'object' && 'insideFeature' in params
@@ -31,9 +37,15 @@ export const ScanCodeScreen = () => {
   const triggerScanAction = useTriggerScanAction({
     insideFeature: insideFeature as 'scan' | 'send',
   })
+  const scanErrorResolver = useScanErrorResolver()
   const [permission, requestPermission] = useCameraPermissions()
   const [scanned, setScanned] = React.useState(false)
-  const cameraRef = React.useRef<CameraView>(null)
+  const cameraRef = React.useRef<CameraCodeScannerMethods>(null)
+
+  const handleScanAgain = React.useCallback(() => {
+    setScanned(false)
+    cameraRef.current?.continueScanning()
+  }, [])
 
   const handleBarCodeScanned = React.useCallback(
     (event: {data: string; type: string}) => {
@@ -41,33 +53,37 @@ export const ScanCodeScreen = () => {
       setScanned(true)
 
       try {
+        const parsedScanAction = parseScanAction(event.data)
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
-        triggerScanAction({action: 'send-only-receiver', receiver: event.data})
-        navigateToTxHistory()
+        triggerScanAction(parsedScanAction)
       } catch (error) {
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error)
-        Alert.alert(
-          strings.scan.errorUnknownTitle,
-          strings.scan.errorUnknownHelp,
-          [
-            {
-              text: strings.scan.continue,
-              onPress: () => setScanned(false),
-            },
-          ],
-        )
+        const errorDialog = scanErrorResolver(error as Error)
+        Alert.alert(errorDialog.title, errorDialog.message, [
+          {
+            text: strings.scan.continue,
+            onPress: () => handleScanAgain(),
+          },
+        ])
       }
     },
-    [scanned, triggerScanAction, navigateToTxHistory, strings.scan],
+    [
+      scanned,
+      triggerScanAction,
+      scanErrorResolver,
+      strings.scan,
+      handleScanAgain,
+    ],
   )
 
-  const handleScanAgain = React.useCallback(() => {
-    setScanned(false)
-  }, [])
+  const navigateToTxHistory = React.useCallback(() => {
+    navigation.goBack()
+  }, [navigation])
 
   useFocusEffect(
     React.useCallback(() => {
       setScanned(false)
+      cameraRef.current?.continueScanning()
     }, []),
   )
 
@@ -105,14 +121,11 @@ export const ScanCodeScreen = () => {
 
   return (
     <View style={[a.flex_1, ta.bg_color_max]}>
-      <CameraView
+      <CameraCodeScanner
         ref={cameraRef}
-        style={[a.flex_1]}
-        facing="back"
-        onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}
-        barcodeScannerSettings={{
-          barcodeTypes: ['qr'],
-        }}
+        onRead={handleBarCodeScanned}
+        withMask={true}
+        maskText={strings.scan.scanTitle}
       />
       {scanned && (
         <View

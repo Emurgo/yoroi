@@ -724,6 +724,7 @@ const useShowOperationsNotice = (operations: Operations) => {
   const storage = useAsyncStorage()
   const {openModal, closeModal} = useModal()
   const strings = useStrings()
+  const screenHeight = useWindowDimensions().height
 
   const query = useSuspenseQuery({
     queryKey: ['useShowOperationsNotice'],
@@ -745,7 +746,7 @@ const useShowOperationsNotice = (operations: Operations) => {
           openModal({
             title: strings.txReview.overview.operationsNoticeTitle,
             content: <OperationsNotice onClose={closeModal} />,
-            height: 570,
+            height: Math.min(screenHeight * 0.9, 650),
           }),
         500,
       )

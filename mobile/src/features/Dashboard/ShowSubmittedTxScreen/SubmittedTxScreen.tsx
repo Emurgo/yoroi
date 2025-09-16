@@ -1,39 +1,77 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
-import {ScrollView, Text, View} from 'react-native'
+import {Text, View} from 'react-native'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
+import {useBlockGoBack} from '~/kernel/navigation/hooks/useBlockGoBack'
+import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Button} from '~/ui/Button/Button'
+import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
+import {SuccessfulTxIcon} from '~/ui/SuccessfulTxIcon/SuccessfulTxIcon'
 
 export const SubmittedTxScreen = () => {
+  useBlockGoBack()
   const strings = useStrings()
   const {palette: p, atoms: ta} = useTheme()
+  const {resetToTxHistory} = useWalletNavigation()
 
   return (
-    <View style={[a.flex_1, {backgroundColor: p.bg_color_max}]}>
-      <ScrollView style={[a.flex_1, a.p_lg]}>
-        <View style={[a.flex_1, a.align_center, a.justify_center]}>
-          <Text style={[a.heading_2_medium, ta.text_gray_max]}>
-            {strings.transactions.submitted.submittedTxTitle}
-          </Text>
+    <SafeArea
+      style={[
+        ta.bg_color_max,
+        a.p_lg,
+        a.flex_1,
+        a.align_center,
+        a.justify_center,
+      ]}
+    >
+      <View style={{height: 144}} />
 
-          <Space.Height.lg />
+      <SuccessfulTxIcon />
 
-          <Text style={[a.body_1_lg_regular, ta.text_gray_max]}>
-            {strings.transactions.submitted.submittedTxText}
-          </Text>
+      <Space.Height.lg />
 
-          <Space.Height.xl />
+      <Text
+        style={[
+          {color: p.gray_max},
+          a.heading_3_medium,
+          a.px_sm,
+          a.text_center,
+        ]}
+      >
+        {strings.staking.submittedTxTitle}
+      </Text>
 
-          <Button
-            title={strings.transactions.submitted.submittedTxButton}
-            // TODO: REVISIT
-            onPress={() => {}}
-          />
-        </View>
-      </ScrollView>
+      <Text
+        style={[
+          {color: p.gray_600, maxWidth: 330},
+          a.body_1_lg_regular,
+          a.text_center,
+        ]}
+      >
+        {strings.staking.submittedTxText}
+      </Text>
+
+      <Space.Height._2xs fill />
+
+      <Actions>
+        <Button
+          onPress={resetToTxHistory}
+          title={strings.staking.submittedTxButton}
+          style={a.px_lg}
+        />
+      </Actions>
+    </SafeArea>
+  )
+}
+
+const Actions = ({children}: React.PropsWithChildren) => {
+  const {palette: p} = useTheme()
+  return (
+    <View style={[a.self_stretch, a.border_t, {borderTopColor: p.gray_200}]}>
+      {children}
     </View>
   )
 }

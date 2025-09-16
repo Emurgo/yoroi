@@ -5,13 +5,9 @@ import * as React from 'react'
 
 import {FailedTxScreen} from '~/features/ReviewTx/useCases/ShowFailedTxScreen/FailedTxScreen'
 import {SubmittedTxScreen} from '~/features/ReviewTx/useCases/ShowSubmittedTxScreen/SubmittedTxScreen'
-import {NetworkTag} from '~/features/Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
+import {NetworkTag} from '~/features/Settings/ui/shared/NetworkTag'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {
-  BackButton,
-  defaultStackNavigationOptions,
-} from '~/kernel/navigation/common/helpers'
-import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
+import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 
 import {useGovernanceManagerMaker} from './common/helpers'
@@ -27,7 +23,6 @@ export const GovernanceNavigator = () => {
   const strings = useStrings()
   const manager = useGovernanceManagerMaker()
   const {palette: p} = useTheme()
-  const walletNavigation = useWalletNavigation()
 
   return (
     <GovernanceProvider manager={manager}>
@@ -44,12 +39,6 @@ export const GovernanceNavigator = () => {
             component={HomeScreen}
             options={{
               title: strings.staking.governanceCentreTitle,
-              headerLeft: (props) => (
-                <BackButton
-                  {...props}
-                  onPress={() => walletNavigation.navigateToTxHistory()}
-                />
-              ),
             }}
           />
 

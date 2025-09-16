@@ -2,6 +2,7 @@ import {App, Chain, Wallet} from '@yoroi/types'
 
 import * as React from 'react'
 
+import {throwLoggedError} from '~/kernel/logger/helpers/throw-logged-error'
 import {logger} from '~/kernel/logger/logger'
 import {YoroiWallet} from '~/wallets/cardano/types'
 
@@ -14,7 +15,7 @@ import {
   walletManagerDefaultState,
   walletManagerInitialContext,
   walletManagerReducer,
-} from './WalletManagerState'
+} from './wallet-manager-state'
 
 const WalletManagerContext = React.createContext<WalletManagerContextType>(
   walletManagerInitialContext,
@@ -125,11 +126,11 @@ export const useWalletManager = () => {
   const {selected, walletManager} = React.useContext(WalletManagerContext)
 
   if (walletManager == null) {
-    const error = new App.Errors.InvalidState(
-      'useWalletManager wallet manager is not set, invalid state reached',
+    throwLoggedError(
+      new App.Errors.InvalidState(
+        'useWalletManager wallet manager is not set, invalid state reached',
+      ),
     )
-    logger.error(error)
-    throw error
   }
 
   return React.useMemo(() => {

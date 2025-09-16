@@ -12,8 +12,8 @@ import {
   PortfolioListTab,
   usePortfolio,
 } from '~/features/Portfolio/context/PortfolioProvider'
-import {useCurrencyPairing} from '~/features/Settings/useCases/changeAppSettings/Currency/CurrencyContext'
-import {usePrivacyMode} from '~/features/Settings/useCases/changeAppSettings/PrivacyMode/usePrivacyMode'
+import {useCurrencyPairing} from '~/features/Settings/context/CurrencyProvider'
+import {usePrivacyMode} from '~/features/Settings/hooks/usePrivacyMode'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Icon} from '~/ui/Icon'
 import {PnlTag} from '~/ui/PnlTag/PnlTag'
@@ -40,7 +40,7 @@ export const TotalTokensValueContent = ({amount, headerCard}: Props) => {
   } = useCurrencyPairing()
   const {isPrimaryTokenActive, setIsPrimaryTokenActive, listTab} =
     usePortfolio()
-  const {togglePrivacyMode} = usePrivacyMode()
+  const {toggleIsPrivacyModeEnabled} = usePrivacyMode()
 
   const {changePercent, changeValue, variantPnl} = priceChange(open, close)
 
@@ -54,7 +54,7 @@ export const TotalTokensValueContent = ({amount, headerCard}: Props) => {
         <View style={[a.flex_row, a.gap_2xs, a.align_end]}>
           <TouchableOpacity
             style={[a.flex_row, a.gap_2xs, a.align_end]}
-            onPress={() => togglePrivacyMode()}
+            onPress={() => toggleIsPrivacyModeEnabled()}
           >
             <TokenValueBalance
               rate={close}

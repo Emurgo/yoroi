@@ -482,6 +482,7 @@ export const useStrings = () => {
         stakingCenterButton: f(dashboardMessages.stakingCenterButton),
         epochProgressTitle: f(dashboardMessages.epochProgressTitle),
         endsInLabel: f(dashboardMessages.endsInLabel),
+        stakePoolDelegatedTitle: f(dashboardMessages.stakePoolDelegatedTitle),
       },
 
       // Settings strings
@@ -841,6 +842,7 @@ export const useStrings = () => {
         ),
         disclaimer: f(globalMessages.disclaimer),
         proceed: f(globalMessages.proceed),
+        switch: f(globalMessages.switch),
         today: f(globalMessages.today),
         yesterday: f(globalMessages.yesterday),
         insufficientBalance: (params: {

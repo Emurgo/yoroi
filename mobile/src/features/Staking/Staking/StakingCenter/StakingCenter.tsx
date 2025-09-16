@@ -8,7 +8,6 @@ import {Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {WebView, WebViewMessageEvent} from 'react-native-webview'
 
-import {useNavigateTo} from '~/features/Dashboard/Dashboard'
 import {useStakingTx} from '~/features/Dashboard/StakePoolInfos'
 import {useReviewTx} from '~/features/ReviewTx/common/ReviewTxProvider'
 import {PoolDetailScreen} from '~/features/Staking/Staking/PoolDetails/PoolDetailScreen'
@@ -36,7 +35,6 @@ export const StakingCenter = () => {
   const {plate} = walletManager.checksum(wallet.publicKeyHex)
   const {navigateToTxReview} = useWalletNavigation()
   const {unsignedTxChanged} = useReviewTx()
-  const navigateTo = useNavigateTo()
 
   const [selectedPoolId, setSelectedPoolId] = React.useState<string | null>(
     null,
@@ -64,14 +62,12 @@ export const StakingCenter = () => {
   const onSuccess = React.useCallback(() => {
     queryClient.resetQueries({queryKey: [wallet.id, 'stakingInfo']})
     track.stakingCenterDelegationSubmitted()
-    navigateTo.submittedTx()
-  }, [queryClient, wallet.id, track, navigateTo])
+  }, [queryClient, wallet.id, track])
 
   const onError = React.useCallback(() => {
     setSelectedPoolId(null)
     queryClient.resetQueries({queryKey: [wallet.id, 'stakingInfo']})
-    navigateTo.failedTx()
-  }, [queryClient, wallet.id, navigateTo])
+  }, [queryClient, wallet.id])
 
   const {stakingTx} = useStakingTx(
     {wallet, poolId: selectedPoolId ?? undefined, meta},

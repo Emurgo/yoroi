@@ -50,7 +50,7 @@ export const swapMessages = defineMessages({
     defaultMessage: '!!!Minimum Received',
   },
   priceImpact: {
-    id: 'components.txhistory.txdetails.txDetails',
+    id: 'swap.swapScreen.priceImpact',
     defaultMessage: '!!!Price Impact',
   },
   confirmSwap: {
@@ -166,7 +166,7 @@ export const swapMessages = defineMessages({
     defaultMessage: '!!!Swap Details',
   },
   swapCancellationDetailsTitle: {
-    id: 'global.cancel',
+    id: 'swap.swapScreen.swapCancellationDetailsTitle',
     defaultMessage: '!!!Swap Cancellation Details',
   },
   tokenSwap: {

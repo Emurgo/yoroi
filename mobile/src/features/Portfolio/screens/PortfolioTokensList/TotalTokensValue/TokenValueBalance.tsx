@@ -5,8 +5,8 @@ import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
-import {useCurrencyPairing} from '~/features/Settings/useCases/changeAppSettings/Currency/CurrencyContext'
-import {usePrivacyMode} from '~/features/Settings/useCases/changeAppSettings/PrivacyMode/usePrivacyMode'
+import {useCurrencyPairing} from '~/features/Settings/context/CurrencyProvider'
+import {usePrivacyMode} from '~/features/Settings/hooks/usePrivacyMode'
 
 import {SkeletonPrimaryToken} from './SkeletonPrimaryToken'
 
@@ -24,7 +24,7 @@ export const TokenValueBalance = ({
 }: Props) => {
   const {palette: p} = useTheme()
   const {currency, config} = useCurrencyPairing()
-  const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
+  const {isPrivacyModeEnabled, privacyPlaceholder} = usePrivacyMode()
   const name = infoExtractName(amount.info)
 
   return (
@@ -39,7 +39,7 @@ export const TokenValueBalance = ({
             {color: p.text_gray_medium},
           ]}
         >
-          {isPrivacyActive
+          {isPrivacyModeEnabled
             ? privacyPlaceholder
             : isPrimaryTokenActive
               ? amountBreakdown(amount).bn.toFormat(2)

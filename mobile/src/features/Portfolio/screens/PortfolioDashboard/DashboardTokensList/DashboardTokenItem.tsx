@@ -15,8 +15,8 @@ import {
 } from '~/features/Portfolio/common/helpers/priceChange'
 import {useNavigateTo} from '~/features/Portfolio/common/hooks/useNavigateTo'
 import {usePortfolioTokenActivity} from '~/features/Portfolio/context/PortfolioTokenActivityProvider'
-import {useCurrencyPairing} from '~/features/Settings/useCases/changeAppSettings/Currency/CurrencyContext'
-import {usePrivacyMode} from '~/features/Settings/useCases/changeAppSettings/PrivacyMode/usePrivacyMode'
+import {useCurrencyPairing} from '~/features/Settings/context/CurrencyProvider'
+import {usePrivacyMode} from '~/features/Settings/hooks/usePrivacyMode'
 import {PairedBalance} from '~/ui/PairedBalance/PairedBalance'
 import {PnlTag} from '~/ui/PnlTag/PnlTag'
 import {Space} from '~/ui/Space/Space'
@@ -28,9 +28,9 @@ type Props = {
 export const DashboardTokenItem = ({tokenInfo}: Props) => {
   const {palette: p} = useTheme()
   const navigationTo = useNavigateTo()
-  const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
+  const {isPrivacyModeEnabled, privacyPlaceholder} = usePrivacyMode()
   const formattedQuantity =
-    isPrivacyActive === false
+    isPrivacyModeEnabled === false
       ? amountBreakdown(tokenInfo).bn.toFormat(2)
       : privacyPlaceholder
 

@@ -11,12 +11,12 @@ import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {cip30LedgerExtensionMaker} from '~/wallets/cardano/cip30/cip30-ledger'
 import {YoroiWallet} from '~/wallets/cardano/types'
+import {collateralConfig} from '~/wallets/cardano/utxoManager/utxos'
 import {BaseLedgerError} from '~/wallets/hw/hw'
 import {isEmptyString} from '~/wallets/utils/string'
 
 import {usePromptRootKey} from '../ReviewTx/common/hooks/usePromptRootKey'
 import {CreatedByInfoItem} from '../ReviewTx/useCases/ReviewTxScreen/ReviewTx/Overview/OverviewTab'
-import {getCollateralAmountInLovelace} from '../Settings/useCases/changeWalletSettings/ManageCollateral/helpers'
 import {useBrowser} from './common/BrowserProvider'
 import {useConfirmHWConnectionModal} from './common/ConfirmHWConnectionModal'
 import {userRejectedError} from './common/errors'
@@ -90,7 +90,7 @@ export const useDappConnectorManager = () => {
                 url={matchingDapp.uri}
               />
             ),
-            onSuccess: (args) => {
+            onSuccessWithoutFeedback: (args) => {
               shouldResolve = false
               if (isEmptyString(args?.rootKey) || args?.rootKey == null) {
                 reject(
@@ -115,7 +115,7 @@ export const useDappConnectorManager = () => {
                 reject(userRejectedError())
               }
             },
-            onError: (error) => {
+            onErrorWithoutFeedback: (error) => {
               shouldResolve = false
               logger.error('useDappConnectorManager::handleSignTx', {error})
               reject(error)
@@ -368,7 +368,7 @@ export const useDappCollateralRequestUtils = (wallet: YoroiWallet) => {
     const collateral = wallet.getCollateralInfo()
     return (
       !!collateral.utxo &&
-      collateral.amount.quantity >= BigInt(getCollateralAmountInLovelace())
+      collateral.amount.quantity >= BigInt(collateralConfig.minLovelace)
     )
   }
   const prepareDappId = (dappOrigin: DappConnection['dappOrigin']) =>

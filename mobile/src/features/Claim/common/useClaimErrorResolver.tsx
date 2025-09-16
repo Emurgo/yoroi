@@ -1,10 +1,12 @@
 import {Claim} from '@yoroi/types'
 
+import {useApiErrorResolver} from '~/hooks/useApiErrorResolver'
+
 import {useDialogs} from './useDialogs'
 
 export const useClaimErrorResolver = () => {
   const dialogs = useDialogs()
-  // const apiResolver = useApiErrorResolver()
+  const apiResolver = useApiErrorResolver()
 
   const resolver = (error: unknown) => {
     if (error instanceof Claim.Api.Errors.AlreadyClaimed)
@@ -18,7 +20,7 @@ export const useClaimErrorResolver = () => {
     if (error instanceof Claim.Api.Errors.TooEarly) return dialogs.errorTooEarly
 
     // falback to api errors
-    //return apiResolver(error)
+    return apiResolver(error)
   }
 
   return resolver

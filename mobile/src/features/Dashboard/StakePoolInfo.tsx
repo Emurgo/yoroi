@@ -38,7 +38,7 @@ export const StakePoolInfo = ({stakePoolId, ctaProps}: StakePoolInfoProps) => {
   return (
     <View>
       <TitledCard
-        title={strings.dashboard.title}
+        title={strings.dashboard.stakePoolDelegatedTitle}
         variant="poolInfo"
         testID="stakePoolInfoTitleCard"
       >

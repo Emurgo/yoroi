@@ -18,9 +18,11 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {debugStorage} from '~/kernel/storage/debug-storage'
 import {rootMMKV, rootSyncStorage} from '~/kernel/storage/storages'
-import {BluetoothDeviceManager} from '~/ui/BluetoothDeviceManager/BluetoothDeviceManager'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {LoadingOverlay} from '~/ui/LoadingOverlay/LoadingOverlay'
+
+import {useWalletManager} from '../WalletManager/context/WalletManagerProvider'
+import {useCreateWalletMnemonic} from '../WalletManager/hooks/useCreateWalletMnemonic'
 
 export function DevMenu() {
   const {isDark, config, basePalette, selectTheme, atoms: ta} = useTheme()
@@ -29,6 +31,8 @@ export function DevMenu() {
   const strings = useStrings()
   const [isLoading, setIsLoading] = React.useState(false)
   const [showCrash, setShowCrash] = React.useState(false)
+  const {createWallet} = useCreateWalletMnemonic()
+  const {walletManager} = useWalletManager()
 
   const showLoadingFor3Seconds = React.useCallback(() => {
     setIsLoading(true)
@@ -44,6 +48,7 @@ export function DevMenu() {
   return (
     <SafeAreaView style={[a.flex_1, ta.bg_color_max, a.gap_sm]}>
       <SystemBars style={isDark ? 'light' : 'dark'} />
+
       <View
         style={[a.flex_1, ta.bg_color_max, a.gap_sm, a.flex_row, a.flex_wrap]}
       >
@@ -160,16 +165,79 @@ export function DevMenu() {
           style={[a.pt_md, a.p_md, a.rounded_md]}
         />
 
+        <Button
+          onPress={() => {
+            if (walletManager.isSyncActive) {
+              walletManager.pauseSyncing()
+            } else {
+              walletManager.resumeSyncing()
+            }
+          }}
+          type={ButtonType.Secondary}
+          title={
+            walletManager.isSyncActive ? 'Pause Syncing' : 'Resume Syncing'
+          }
+          style={[a.pt_md, a.p_md, a.rounded_md]}
+        />
+
         <BuggyComponent showCrash={showCrash} />
 
         <LoadingOverlay isLoading={isLoading} />
       </View>
 
-      <BluetoothDeviceManager
+      {/* <BluetoothDeviceManager
         showConnectionStatus
         onDeviceSelect={(deviceId) => {
           console.log('Selected device:', deviceId)
         }}
+      /> */}
+
+      <Button
+        disabled={isLoading}
+        onPress={() =>
+          createWallet({
+            mnemonicPhrase: process.env.EXPO_PUBLIC_WALLET_1_MNEMONIC ?? '',
+            name: 'Wallet 1',
+            password: '1234567890',
+            implementation: 'cardano-cip1852',
+            addressMode: 'multiple',
+            accountVisual: 0,
+          })
+        }
+        testID="btnRestoreWallet1"
+        title="Restore Wallet 1"
+      />
+
+      <Button
+        disabled={isLoading}
+        onPress={() =>
+          createWallet({
+            mnemonicPhrase: process.env.EXPO_PUBLIC_WALLET_2_MNEMONIC ?? '',
+            name: 'Wallet 2',
+            password: '1234567890',
+            implementation: 'cardano-cip1852',
+            addressMode: 'multiple',
+            accountVisual: 0,
+          })
+        }
+        testID="btnRestoreWallet2"
+        title="Restore Wallet 2"
+      />
+
+      <Button
+        disabled={isLoading}
+        onPress={() =>
+          createWallet({
+            mnemonicPhrase: process.env.EXPO_PUBLIC_WALLET_3_MNEMONIC ?? '',
+            name: 'Wallet 3',
+            password: '1234567890',
+            implementation: 'cardano-cip1852',
+            addressMode: 'multiple',
+            accountVisual: 0,
+          })
+        }
+        testID="btnRestoreWallet3"
+        title="Restore Wallet 3"
       />
     </SafeAreaView>
   )

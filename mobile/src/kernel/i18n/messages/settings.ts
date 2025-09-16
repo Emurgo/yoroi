@@ -141,15 +141,15 @@ export const settingsMessages = defineMessages({
     defaultMessage: '!!!Disable',
   },
   easyConfirmationEnableHeading: {
-    id: 'components.settings.enableeasyconfirmationscreen.title',
+    id: 'components.settings.enableeasyconfirmationscreen.enableHeading',
     defaultMessage: '!!!Enable Easy Confirmation',
   },
   easyConfirmationEnableWarning: {
-    id: 'components.settings.enableeasyconfirmationscreen.enableButton',
+    id: 'components.settings.enableeasyconfirmationscreen.enableWarning',
     defaultMessage: '!!!Enable Warning',
   },
   easyConfirmationEnableRootPassword: {
-    id: 'components.settings.enableeasyconfirmationscreen.enableButton',
+    id: 'components.settings.enableeasyconfirmationscreen.enableMasterPassword',
     defaultMessage: '!!!Enable Root Password',
   },
   easyConfirmationEnableButton: {

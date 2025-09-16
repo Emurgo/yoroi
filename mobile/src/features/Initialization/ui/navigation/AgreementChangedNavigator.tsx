@@ -7,9 +7,9 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
 import {InititalizationRoutes} from '~/kernel/navigation/types'
 
+import {ReadPrivacyPolicyScreen} from '../../../Legal/ui/screens/ReadPrivacyPolicyScreen'
+import {ReadTermsOfServiceScreen} from '../../../Legal/ui/screens/ReadTermsOfServiceScreen'
 import {AnalyticsChangedScreen} from '../screens/AnalyticsChangedScreen'
-import {ReadPrivacyPolicyScreen} from '../screens/ReadPrivacyPolicyScreen'
-import {ReadTermsOfServiceScreen} from '../screens/ReadTermsOfServiceScreen'
 import {TermsOfServiceChangedScreen} from '../screens/TermsOfServiceChangedScreen'
 
 const Stack = createStackNavigator<InititalizationRoutes>()
@@ -26,19 +26,19 @@ export const AgreementChangedNavigator = () => {
     >
       <Stack.Screen
         name="terms-of-service-changed"
-        component={TermsOfServiceChangedScreen}
+        getComponent={() => TermsOfServiceChangedScreen}
         options={{headerShown: false}}
       />
 
       <Stack.Screen
         name="analytics-changed"
-        component={AnalyticsChangedScreen}
+        getComponent={() => AnalyticsChangedScreen}
         options={{headerShown: false}}
       />
 
       <Stack.Screen
         name="read-terms-of-service"
-        component={ReadTermsOfServiceScreen}
+        getComponent={() => ReadTermsOfServiceScreen}
         options={{
           headerShown: true,
           title: strings.initialization.acceptTermsTitle,
@@ -47,7 +47,7 @@ export const AgreementChangedNavigator = () => {
 
       <Stack.Screen
         name="read-privacy-policy"
-        component={ReadPrivacyPolicyScreen}
+        getComponent={() => ReadPrivacyPolicyScreen}
         options={{
           headerShown: true,
           title: strings.initialization.acceptPrivacyPolicyTitle,

@@ -1,16 +1,17 @@
-import {BottomSheetModal, BottomSheetModalProvider} from '@gorhom/bottom-sheet'
+import {App} from '@yoroi/types'
+
+import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 import {Keyboard} from 'react-native'
-import {GestureHandlerRootView} from 'react-native-gesture-handler'
 
 type ModalState = {
   isOpen: boolean
   content: React.ReactNode
-  bottomSheetModalRef: React.RefObject<BottomSheetModal | null> | null
   height: number
   footer: React.ReactNode | undefined
   isLoading: boolean
   canDiscard: boolean
+  withFeedback: boolean
   title: string
   canContinue?: boolean
   onClose?: () => void
@@ -23,6 +24,7 @@ type ModalActions = {
     footer?: React.ReactNode
     isLoading?: boolean
     canDiscard?: boolean
+    withFeedback?: boolean
     title?: string
     canContinue?: boolean
     onClose?: () => void
@@ -43,31 +45,29 @@ const ModalContext = React.createContext<
 export const useModal = () => {
   const value = React.useContext(ModalContext)
   if (!value) {
-    throw new Error('useModal must be used within a ModalProvider')
+    throw new App.Errors.InvalidState(
+      'useModal must be used within a ModalProvider',
+    )
   }
   return value
 }
 
-export const ModalProvider = ({
-  children,
-  initialState,
-}: {
-  children: React.ReactNode
+type Props = React.PropsWithChildren<{
   initialState?: Partial<ModalState>
-}) => {
-  const bottomSheetModalRef = React.useRef<BottomSheetModal>(null)
+}>
+
+export const ModalProvider = ({children, initialState}: Props) => {
+  const navigation = useNavigation()
   const [state, dispatch] = React.useReducer(modalReducer, {
     ...defaultState,
     ...initialState,
-    bottomSheetModalRef,
   })
+  const isOpenRef = React.useRef(state.isOpen)
 
-  const handlePresentModalPress = React.useCallback(() => {
-    bottomSheetModalRef.current?.present()
-  }, [])
-  const handleDismissModalPress = React.useCallback(() => {
-    bottomSheetModalRef.current?.close()
-  }, [])
+  // Keep ref in sync with state
+  React.useEffect(() => {
+    isOpenRef.current = state.isOpen
+  }, [state.isOpen])
 
   const closeModal = React.useCallback(() => {
     if (state.onClose) {
@@ -76,8 +76,7 @@ export const ModalProvider = ({
     dispatch({
       type: 'close',
     })
-    handleDismissModalPress()
-  }, [state, handleDismissModalPress])
+  }, [state])
 
   const openModal = React.useCallback(
     ({
@@ -86,6 +85,7 @@ export const ModalProvider = ({
       footer,
       isLoading,
       canDiscard,
+      withFeedback,
       title,
       canContinue,
       onClose,
@@ -96,6 +96,7 @@ export const ModalProvider = ({
       footer?: React.ReactNode
       isLoading?: boolean
       canDiscard?: boolean
+      withFeedback?: boolean
       title?: string
       canContinue?: boolean
       onClose?: () => void
@@ -109,14 +110,14 @@ export const ModalProvider = ({
         footer,
         isLoading,
         canDiscard,
+        withFeedback,
         title,
         canContinue,
         onClose,
         full,
       })
-      handlePresentModalPress()
     },
-    [handlePresentModalPress],
+    [],
   )
 
   const setLoading = React.useCallback((isLoading: boolean) => {
@@ -130,6 +131,13 @@ export const ModalProvider = ({
     dispatch({
       type: 'setFooter',
       footer,
+    })
+  }, [])
+
+  const setWithFeedback = React.useCallback((withFeedback: boolean) => {
+    dispatch({
+      type: 'setWithFeedback',
+      withFeedback,
     })
   }, [])
 
@@ -160,6 +168,7 @@ export const ModalProvider = ({
       openModal,
       setLoading,
       setFooter,
+      setWithFeedback,
       setTitle,
       setCanDiscard,
       setCanContinue,
@@ -169,6 +178,7 @@ export const ModalProvider = ({
       openModal,
       setLoading,
       setFooter,
+      setWithFeedback,
       setTitle,
       setCanDiscard,
       setCanContinue,
@@ -180,12 +190,17 @@ export const ModalProvider = ({
     [state, actions],
   )
 
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener('state', () => {
+      if (isOpenRef.current) {
+        closeModal()
+      }
+    })
+    return unsubscribe
+  }, [navigation, closeModal])
+
   return (
-    <GestureHandlerRootView style={{flex: 1}}>
-      <ModalContext.Provider value={context}>
-        <BottomSheetModalProvider>{children}</BottomSheetModalProvider>
-      </ModalContext.Provider>
-    </GestureHandlerRootView>
+    <ModalContext.Provider value={context}>{children}</ModalContext.Provider>
   )
 }
 
@@ -197,6 +212,7 @@ type ModalAction =
       footer?: React.ReactNode
       isLoading?: boolean
       canDiscard?: boolean
+      withFeedback?: boolean
       title?: string
       canContinue?: boolean
       onClose?: () => void
@@ -208,6 +224,7 @@ type ModalAction =
   | {type: 'setTitle'; title: string}
   | {type: 'setCanDiscard'; canDiscard: boolean}
   | {type: 'setCanContinue'; canContinue: boolean}
+  | {type: 'setWithFeedback'; withFeedback: boolean}
 
 const modalReducer = (state: ModalState, action: ModalAction) => {
   switch (action.type) {
@@ -220,6 +237,7 @@ const modalReducer = (state: ModalState, action: ModalAction) => {
         isLoading: action.isLoading ?? defaultState.isLoading,
         canDiscard: action.canDiscard ?? defaultState.canDiscard,
         title: action.title ?? defaultState.title,
+        withFeedback: action.withFeedback ?? defaultState.withFeedback,
         canContinue: action.canContinue ?? defaultState.canContinue,
         onClose: action.onClose,
         full: action.full ?? defaultState.full,
@@ -229,7 +247,6 @@ const modalReducer = (state: ModalState, action: ModalAction) => {
     case 'close':
       return {
         ...defaultState,
-        bottomSheetModalRef: state.bottomSheetModalRef,
       }
 
     case 'setLoading':
@@ -242,6 +259,12 @@ const modalReducer = (state: ModalState, action: ModalAction) => {
       return {
         ...state,
         footer: action.footer,
+      }
+
+    case 'setWithFeedback':
+      return {
+        ...state,
+        withFeedback: action.withFeedback,
       }
 
     case 'setTitle':
@@ -270,7 +293,6 @@ const modalReducer = (state: ModalState, action: ModalAction) => {
 const defaultState: ModalState = Object.freeze({
   content: undefined,
   isOpen: false,
-  bottomSheetModalRef: null,
   height: 400,
   footer: undefined,
   isLoading: false,
@@ -278,4 +300,5 @@ const defaultState: ModalState = Object.freeze({
   title: '',
   canContinue: false,
   full: false,
+  withFeedback: false,
 })

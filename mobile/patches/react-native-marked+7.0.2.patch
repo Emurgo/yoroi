@@ -1,0 +1,108 @@
+diff --git a/node_modules/react-native-marked/dist/commonjs/lib/Markdown.js b/node_modules/react-native-marked/dist/commonjs/lib/Markdown.js
+index d09fe61..78a3838 100644
+--- a/node_modules/react-native-marked/dist/commonjs/lib/Markdown.js
++++ b/node_modules/react-native-marked/dist/commonjs/lib/Markdown.js
+@@ -18,9 +18,10 @@ const Markdown = ({
+   baseUrl,
+   renderer,
+   styles,
+-  tokenizer
++  tokenizer,
++  colorScheme,
++  backgroundColor
+ }) => {
+-  const colorScheme = (0, _reactNative.useColorScheme)();
+   const rnElements = (0, _useMarkdown.default)(value, {
+     theme,
+     baseUrl,
+@@ -41,7 +42,7 @@ const Markdown = ({
+     maxToRenderPerBatch: 8,
+     initialNumToRender: 8,
+     style: {
+-      backgroundColor: colorScheme === "light" ? "#ffffff" : "#000000"
++      backgroundColor
+     },
+     ...flatListProps,
+     data: rnElements,
+diff --git a/node_modules/react-native-marked/dist/module/lib/Markdown.js b/node_modules/react-native-marked/dist/module/lib/Markdown.js
+index cd55907..6a8b524 100644
+--- a/node_modules/react-native-marked/dist/module/lib/Markdown.js
++++ b/node_modules/react-native-marked/dist/module/lib/Markdown.js
+@@ -1,7 +1,7 @@
+ "use strict";
+ 
+ import React, { useCallback } from "react";
+-import { FlatList, useColorScheme } from "react-native";
++import { FlatList } from "react-native";
+ import useMarkdown from "../hooks/useMarkdown";
+ import { jsx as _jsx } from "react/jsx-runtime";
+ const Markdown = ({
+@@ -11,9 +11,10 @@ const Markdown = ({
+   baseUrl,
+   renderer,
+   styles,
+-  tokenizer
++  tokenizer,
++  colorScheme,
++  backgroundColor
+ }) => {
+-  const colorScheme = useColorScheme();
+   const rnElements = useMarkdown(value, {
+     theme,
+     baseUrl,
+@@ -34,7 +35,7 @@ const Markdown = ({
+     maxToRenderPerBatch: 8,
+     initialNumToRender: 8,
+     style: {
+-      backgroundColor: colorScheme === "light" ? "#ffffff" : "#000000"
++      backgroundColor
+     },
+     ...flatListProps,
+     data: rnElements,
+diff --git a/node_modules/react-native-marked/dist/typescript/lib/Markdown.d.ts b/node_modules/react-native-marked/dist/typescript/lib/Markdown.d.ts
+index 6fd6113..908dd8e 100644
+--- a/node_modules/react-native-marked/dist/typescript/lib/Markdown.d.ts
++++ b/node_modules/react-native-marked/dist/typescript/lib/Markdown.d.ts
+@@ -1,5 +1,6 @@
+ import React from "react";
++import { ColorSchemeName, ColorValue } from "react-native";
+ import type { MarkdownProps } from "./types";
+-declare const Markdown: ({ value, flatListProps, theme, baseUrl, renderer, styles, tokenizer, }: MarkdownProps) => React.JSX.Element;
++declare const Markdown: ({ value, flatListProps, theme, baseUrl, renderer, styles, tokenizer, }: MarkdownProps & { colorScheme: ColorSchemeName, backgroundColor: ColorValue }) => React.JSX.Element;
+ export default Markdown;
+ //# sourceMappingURL=Markdown.d.ts.map
+\ No newline at end of file
+diff --git a/node_modules/react-native-marked/src/lib/Markdown.tsx b/node_modules/react-native-marked/src/lib/Markdown.tsx
+index 10aad35..aaf957d 100644
+--- a/node_modules/react-native-marked/src/lib/Markdown.tsx
++++ b/node_modules/react-native-marked/src/lib/Markdown.tsx
+@@ -1,5 +1,5 @@
+-import React, { type ReactElement, type ReactNode, useCallback } from "react";
+-import { FlatList, useColorScheme } from "react-native";
++import React, { useCallback, type ReactElement, type ReactNode } from "react";
++import { ColorSchemeName, ColorValue, FlatList } from "react-native";
+ import useMarkdown from "../hooks/useMarkdown";
+ import type { MarkdownProps } from "./types";
+ 
+@@ -11,9 +11,9 @@ const Markdown = ({
+ 	renderer,
+ 	styles,
+ 	tokenizer,
+-}: MarkdownProps) => {
+-	const colorScheme = useColorScheme();
+-
++	colorScheme,
++	backgroundColor,
++}: MarkdownProps & { colorScheme: ColorSchemeName, backgroundColor: ColorValue }) => {
+ 	const rnElements = useMarkdown(value, {
+ 		theme,
+ 		baseUrl,
+@@ -39,7 +39,7 @@ const Markdown = ({
+ 			maxToRenderPerBatch={8}
+ 			initialNumToRender={8}
+ 			style={{
+-				backgroundColor: colorScheme === "light" ? "#ffffff" : "#000000",
++				backgroundColor,
+ 			}}
+ 			{...flatListProps}
+ 			data={rnElements}
