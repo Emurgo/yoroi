@@ -21,8 +21,10 @@ import {rootMMKV, rootSyncStorage} from '~/kernel/storage/storages'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {LoadingOverlay} from '~/ui/LoadingOverlay/LoadingOverlay'
 import {useModal} from '~/ui/Modal/ModalContext'
+import {SafeAreaModalWrapper} from '~/ui/Modal/SafeAreaModalWrapper'
 import {TextInput} from '~/ui/TextInput/TextInput'
 
+import {InitialCollateralInfoModal} from '../Settings/ui/screens/ChangeWalletSettingsScreen/ManageCollateralScreen/InitialCollateralInfoModal'
 import {useWalletManager} from '../WalletManager/context/WalletManagerProvider'
 import {useCreateWalletMnemonic} from '../WalletManager/hooks/useCreateWalletMnemonic'
 
@@ -48,6 +50,14 @@ export function DevMenu() {
   const navigation = useNavigation<any>()
   const {openModal, closeModal} = useModal()
   const [demoText, setDemoText] = React.useState('')
+
+  if (true) {
+    return (
+      <SafeAreaModalWrapper title="Collateral Info" edges={['top']}>
+        <InitialCollateralInfoModal />
+      </SafeAreaModalWrapper>
+    )
+  }
 
   return (
     <SafeAreaView style={[a.flex_1, ta.bg_color_max, a.gap_sm, a.p_lg]}>

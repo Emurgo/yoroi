@@ -4,11 +4,10 @@ import {atoms as a, space as s, useTheme} from '@yoroi/theme'
 import * as Haptics from 'expo-haptics'
 import * as React from 'react'
 import {
-  Animated,
   Easing,
   Pressable,
+  Animated as RNAnimated,
   Modal as RNModal,
-  Text,
   View,
 } from 'react-native'
 import {
@@ -17,11 +16,16 @@ import {
   GestureHandlerRootView,
 } from 'react-native-gesture-handler'
 import {KeyboardAvoidingView} from 'react-native-keyboard-controller'
-import {runOnJS} from 'react-native-reanimated'
+import Animated, {
+  runOnJS,
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
-import {ModalContentWrapper} from './ModalContentWrapper'
 import {useModal} from './ModalContext'
+import {SafeAreaModalWrapper} from './SafeAreaModalWrapper'
 import {useDismissOrClose} from './hooks'
 
 export const DISMISS_THRESHOLD = 15
@@ -40,8 +44,7 @@ export const Modal = () => {
   } = useModal()
   const {palette: p, isDark} = useTheme()
   useSafeAreaInsets()
-  const backdropOpacity = React.useRef(new Animated.Value(0)).current
-  const sheetTranslateY = React.useRef(new Animated.Value(24)).current
+  const backdropOpacity = React.useRef(new RNAnimated.Value(0)).current
   const [isVisible, setIsVisible] = React.useState(isOpen)
 
   const lastContentRef = React.useRef(content)
@@ -81,53 +84,69 @@ export const Modal = () => {
 
   const handleDismissOrClose = useDismissOrClose()
 
-  const panGesture = Gesture.Pan()
-    .enabled(Boolean(canDiscardEnabled) && !isFull)
-    .onEnd((event) => {
-      'worklet'
-      if (event.translationY > DISMISS_THRESHOLD && event.velocityY > 0) {
-        runOnJS(handleDismissOrClose)()
-      }
-    })
+  // Shared values for both entrance and drag animations
+  const dragY = useSharedValue(0)
+  const modalTranslateY = useSharedValue(48) // Start off-screen
+
+  // Create drag gesture for the top area of the modal
+  const createDragGesture = () => {
+    return Gesture.Pan()
+      .onUpdate((event) => {
+        'worklet'
+        dragY.value = event.translationY
+      })
+      .onEnd((event) => {
+        'worklet'
+        if (event.translationY > 100 && event.velocityY > 0) {
+          runOnJS(handleDismissOrClose)()
+        } else {
+          dragY.value = withSpring(0)
+        }
+      })
+  }
+
+  // Combined animated style for both entrance and drag animations
+  const combinedModalStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{translateY: modalTranslateY.value + dragY.value}],
+    }
+  })
 
   React.useEffect(() => {
     if (isOpen) {
       setIsVisible(true)
       backdropOpacity.setValue(0)
-      sheetTranslateY.setValue(48)
-      Animated.parallel([
-        Animated.timing(backdropOpacity, {
+      modalTranslateY.value = 48
+      dragY.value = 0
+      RNAnimated.parallel([
+        RNAnimated.timing(backdropOpacity, {
           toValue: 1,
           duration: time.seconds(0.3),
           easing: Easing.out(Easing.quad),
           useNativeDriver: true,
         }),
-        Animated.spring(sheetTranslateY, {
-          toValue: 0,
-          useNativeDriver: true,
-          friction: 9,
-          tension: 70,
-        }),
       ]).start()
+      modalTranslateY.value = withSpring(0, {
+        damping: 15,
+        stiffness: 150,
+      })
     } else {
-      Animated.parallel([
-        Animated.timing(backdropOpacity, {
+      RNAnimated.parallel([
+        RNAnimated.timing(backdropOpacity, {
           toValue: 0,
           duration: time.seconds(0.2),
-          easing: Easing.in(Easing.cubic),
-          useNativeDriver: true,
-        }),
-        Animated.timing(sheetTranslateY, {
-          toValue: 24,
-          duration: time.seconds(0.25),
           easing: Easing.in(Easing.cubic),
           useNativeDriver: true,
         }),
       ]).start(() => {
         setIsVisible(false)
       })
+      modalTranslateY.value = withSpring(24, {
+        damping: 15,
+        stiffness: 150,
+      })
     }
-  }, [isOpen, backdropOpacity, sheetTranslateY])
+  }, [isOpen, backdropOpacity, modalTranslateY, dragY])
 
   const handleOnRequestClose = React.useCallback(() => {
     if (canDiscardEnabled) handleClose()
@@ -146,10 +165,11 @@ export const Modal = () => {
     >
       <GestureHandlerRootView style={[a.flex_1]}>
         <View style={[a.flex_1, a.self_stretch, a.justify_end]}>
-          <Animated.View
+          <RNAnimated.View
             style={[
               a.absolute,
               a.inset_0,
+              {zIndex: 0},
               {
                 backgroundColor: 'rgba(0,0,0,0.4)',
                 opacity: backdropOpacity,
@@ -158,46 +178,61 @@ export const Modal = () => {
           />
           <Pressable
             onPress={canDiscardEnabled ? handleDismissOrClose : undefined}
-            style={[a.absolute, a.inset_0]}
-          />
-          <KeyboardAvoidingView behavior="padding" style={[a.justify_end]}>
-            <Animated.View
-              style={[
-                isFull ? a.flex_1 : {height: visibleHeight},
-                a.self_stretch,
-                a.overflow_hidden,
-                {backgroundColor: isDark ? p.gray_50 : p.white_static},
-                {transform: [{translateY: sheetTranslateY}]},
-                {
-                  borderTopLeftRadius: s.xl,
-                  borderTopRightRadius: s.xl,
-                },
-              ]}
-            >
-              {canDiscardEnabled && !isFull && (
-                <GestureDetector gesture={panGesture}>
-                  <View style={[a.align_center, a.pt_sm, a.pb_xs]}>
-                    <DiscardIndicator withFeedback={withFeedbackEnabled} />
-                  </View>
-                </GestureDetector>
-              )}
+            style={[a.flex_1, a.justify_end]}
+          >
+            <KeyboardAvoidingView behavior="padding" style={[a.justify_end]}>
+              <Pressable onPress={(e) => e.stopPropagation()}>
+                <Animated.View
+                  style={[
+                    isFull ? a.flex_1 : {height: visibleHeight},
+                    a.self_stretch,
+                    a.overflow_hidden,
+                    {zIndex: 1},
+                    {backgroundColor: isDark ? p.gray_50 : p.white_static},
+                    {
+                      borderTopLeftRadius: s.xl,
+                      borderTopRightRadius: s.xl,
+                    },
+                    combinedModalStyle,
+                  ]}
+                >
+                  {canDiscardEnabled && !isFull && (
+                    <GestureDetector gesture={createDragGesture()}>
+                      <View style={[a.align_center, a.pt_sm, a.pb_xs]}>
+                        <DiscardIndicator withFeedback={withFeedbackEnabled} />
+                      </View>
+                    </GestureDetector>
+                  )}
 
-              {visibleTitle && (
-                <GestureDetector gesture={panGesture}>
-                  <View style={[a.py_sm]}>
-                    <Title title={visibleTitle} />
-                  </View>
-                </GestureDetector>
-              )}
-
-              {visibleContent && (
-                <ModalContentWrapper
-                  content={visibleContent}
-                  footer={visibleFooter}
-                />
-              )}
-            </Animated.View>
-          </KeyboardAvoidingView>
+                  {isFull ? (
+                    <View style={[a.flex_1]}>
+                      {visibleTitle || visibleFooter ? (
+                        <SafeAreaModalWrapper
+                          title={visibleTitle}
+                          footer={visibleFooter}
+                        >
+                          {visibleContent}
+                        </SafeAreaModalWrapper>
+                      ) : (
+                        visibleContent
+                      )}
+                    </View>
+                  ) : visibleTitle || visibleFooter ? (
+                    <SafeAreaModalWrapper
+                      title={visibleTitle}
+                      footer={visibleFooter}
+                    >
+                      {visibleContent}
+                    </SafeAreaModalWrapper>
+                  ) : (
+                    <SafeAreaModalWrapper>
+                      {visibleContent}
+                    </SafeAreaModalWrapper>
+                  )}
+                </Animated.View>
+              </Pressable>
+            </KeyboardAvoidingView>
+          </Pressable>
         </View>
       </GestureHandlerRootView>
     </RNModal>
@@ -205,22 +240,31 @@ export const Modal = () => {
 }
 
 const width = s._2xl * 1.5
-const DiscardIndicator = ({withFeedback = false}: {withFeedback?: boolean}) => {
+
+type DiscardIndicatorProps = {
+  withFeedback?: boolean
+}
+
+const DiscardIndicator = ({withFeedback = false}: DiscardIndicatorProps) => {
   const {atoms: ta} = useTheme()
-  const animatedWidth = React.useRef(new Animated.Value(width)).current
+  const animatedWidth = useSharedValue(width)
+
+  // Animated style for the width
+  const widthAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      width: animatedWidth.value,
+    }
+  })
 
   React.useEffect(() => {
     if (withFeedback) {
-      animatedWidth.setValue(s.xs)
+      animatedWidth.value = s.xs
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
-      Animated.timing(animatedWidth, {
-        toValue: width,
-        duration: time.seconds(1),
-        easing: Easing.out(Easing.quad),
-        useNativeDriver: false,
-      }).start()
+      animatedWidth.value = withSpring(width, {
+        duration: 1000,
+      })
     } else {
-      animatedWidth.setValue(width)
+      animatedWidth.value = width
     }
   }, [withFeedback, animatedWidth])
 
@@ -229,22 +273,13 @@ const DiscardIndicator = ({withFeedback = false}: {withFeedback?: boolean}) => {
       <Animated.View
         style={[
           {
-            width: animatedWidth,
             height: s.xs,
             backgroundColor: ta.el_gray_min.color,
           },
           a.rounded_xs,
+          widthAnimatedStyle,
         ]}
       />
     </View>
-  )
-}
-
-const Title = ({title}: {title: string}) => {
-  const {atoms: ta} = useTheme()
-  return (
-    <Text style={[a.heading_3_medium, ta.text_gray_max, a.text_center]}>
-      {title}
-    </Text>
   )
 }

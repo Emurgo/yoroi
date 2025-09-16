@@ -151,7 +151,7 @@ export const ManageCollateralScreen = () => {
           onCancel={closeModal}
         />
       ),
-      height: Math.min(screenHeight * 0.9, 650),
+      height: Math.min(screenHeight * 0.4, 350),
     })
   }
 
