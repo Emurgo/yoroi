@@ -28,27 +28,24 @@ export const LoginWithHostScreen = () => {
 
   return (
     <SafeAreaView
-      style={[
-        a.flex_1,
-        a.flex_col,
-        a.justify_between,
-        a.px_lg,
-        ta.bg_color_max,
-      ]}
+      style={[a.flex_1, ta.bg_color_max]}
+      edges={['top', 'left', 'right']}
     >
-      <Space.Height.lg fill />
+      <View style={[a.flex_1, a.flex_col, a.justify_between, a.px_lg]}>
+        <Space.Height.lg fill />
 
-      <MiddleSection>
-        <Logo />
-      </MiddleSection>
+        <MiddleSection>
+          <Logo />
+        </MiddleSection>
 
-      <BottomSection>
-        <Button
-          title={strings.auth.authorize}
-          disabled={isPending}
-          onPress={handleOnPress}
-        />
-      </BottomSection>
+        <BottomSection>
+          <Button
+            title={strings.auth.authorize}
+            disabled={isPending}
+            onPress={handleOnPress}
+          />
+        </BottomSection>
+      </View>
     </SafeAreaView>
   )
 }
