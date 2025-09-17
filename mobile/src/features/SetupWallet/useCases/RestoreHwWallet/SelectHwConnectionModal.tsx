@@ -3,14 +3,13 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 
 import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
-import {Alert, Platform, Text, View} from 'react-native'
+import {Alert, Platform, ScrollView, Text, View} from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {SetupWalletRouteNavigation} from '~/kernel/navigation/types'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
-import {Space} from '~/ui/Space/Space'
 import {HARDWARE_WALLETS, useLedgerPermissions} from '~/wallets/hw/hw'
 
 const useIsAndroidUsbSupported = () => {
@@ -28,22 +27,32 @@ const useIsAndroidUsbSupported = () => {
   return isAndroidUsbSupported
 }
 
-export const SelectHwConnectionModal = ({
-  closeModal,
-}: {
-  closeModal: () => void
-}) => {
+export const SelectHwConnectionModal = () => {
   const {atoms: ta} = useTheme()
   const strings = useStrings()
 
   return (
-    <View>
+    <ScrollView
+      style={[a.flex_1]}
+      contentContainerStyle={[a.px_lg, a.justify_end]}
+      bounces={false}
+      focusable
+    >
       <Text style={[a.body_1_lg_regular, ta.text_gray_medium]}>
         {strings.setupWallet.hwModalText}
       </Text>
+    </ScrollView>
+  )
+}
 
+export const SelectHwConnectionModalFooter = ({
+  closeModal,
+}: {
+  closeModal: () => void
+}) => {
+  return (
+    <View style={[a.gap_lg, a.w_full]}>
       <SelectBluetoothSection closeModal={closeModal} />
-
       <SelectUsbSection closeModal={closeModal} />
     </View>
   )
@@ -58,7 +67,8 @@ const SelectBluetoothSection = ({closeModal}: {closeModal: () => void}) => {
   } = useSetupWallet()
   const navigation = useNavigation<SetupWalletRouteNavigation>()
 
-  const navigateHw = () => {
+  const handleOnSuccess = () => {
+    USBChanged(false)
     walletImplementationChanged('cardano-cip1852')
     setupTypeChanged('hw')
 
@@ -70,27 +80,21 @@ const SelectBluetoothSection = ({closeModal}: {closeModal: () => void}) => {
     onError: () =>
       Alert.alert(strings.global.error, strings.setupWallet.bluetoothError),
     onSuccess: () => {
-      USBChanged(false)
-      navigateHw()
+      handleOnSuccess()
     },
   })
 
   return (
-    <>
-      <Space.Height.xl />
-
-      <Button
-        type={ButtonType.Secondary}
-        title={strings.setupWallet.hwModalBtButton}
-        icon={Icon.Bluetooth}
-        onPress={() => request()}
-      />
-    </>
+    <Button
+      type={ButtonType.Secondary}
+      title={strings.setupWallet.hwModalBtButton}
+      icon={Icon.Bluetooth}
+      onPress={() => request()}
+    />
   )
 }
 
 const SelectUsbSection = ({closeModal}: {closeModal: () => void}) => {
-  const {atoms: ta} = useTheme()
   const strings = useStrings()
   const isAndroidUsbSupported = useIsAndroidUsbSupported()
   const {
@@ -100,7 +104,8 @@ const SelectUsbSection = ({closeModal}: {closeModal: () => void}) => {
   } = useSetupWallet()
   const navigation = useNavigation<SetupWalletRouteNavigation>()
 
-  const navigateHw = () => {
+  const handleOnPress = () => {
+    USBChanged(true)
     walletImplementationChanged('cardano-cip1852')
     setupTypeChanged('hw')
 
@@ -108,33 +113,16 @@ const SelectUsbSection = ({closeModal}: {closeModal: () => void}) => {
     closeModal()
   }
 
-  if (Platform.OS === 'ios')
-    return (
-      <>
-        <Space.Height.lg />
-
-        <Text style={[a.body_2_md_regular, ta.text_gray_low]}>
-          {strings.setupWallet.hwModalIosWarning}
-        </Text>
-      </>
-    )
   if (!isAndroidUsbSupported) {
     return null
   }
 
   return (
-    <>
-      <Space.Height.xl />
-
-      <Button
-        type={ButtonType.Secondary}
-        title={strings.setupWallet.hwModalUsbButton}
-        icon={Icon.Usb}
-        onPress={() => {
-          USBChanged(true)
-          navigateHw()
-        }}
-      />
-    </>
+    <Button
+      type={ButtonType.Secondary}
+      title={strings.setupWallet.hwModalUsbButton}
+      icon={Icon.Usb}
+      onPress={handleOnPress}
+    />
   )
 }

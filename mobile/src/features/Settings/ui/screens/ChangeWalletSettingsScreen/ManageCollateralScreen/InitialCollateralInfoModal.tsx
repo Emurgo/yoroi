@@ -4,7 +4,6 @@ import * as React from 'react'
 import {Linking, ScrollView, Text} from 'react-native'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {Space} from '~/ui/Space/Space'
 
 import {ColateralIlustration} from '../../../illustrations/ColateralIlustration'
 
@@ -14,15 +13,15 @@ export const InitialCollateralInfoModal = () => {
 
   return (
     <ScrollView
-      style={[{maxHeight: 150}]}
-      contentContainerStyle={[a.px_lg, a.align_center]}
+      style={[a.flex_1]}
+      contentContainerStyle={[a.px_lg, a.align_center, a.gap_lg]}
+      bounces={false}
+      focusable
     >
       <ColateralIlustration />
 
       <Text style={[a.text_center, a.body_1_lg_regular, ta.text_gray_medium]}>
         {strings.manageCollateral.collateralInfoModalText}
-
-        <Space.Width._2xs />
       </Text>
 
       <Link />

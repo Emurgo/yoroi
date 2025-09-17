@@ -1,7 +1,7 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
-import {Text, View} from 'react-native'
+import {Text} from 'react-native'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {ScrollView} from '~/ui/ScrollView/ScrollView'
@@ -13,14 +13,12 @@ export const CollateralInfoModal = () => {
   const strings = useStrings()
 
   return (
-    <View style={[{maxHeight: 200}, a.px_lg, a.align_center]}>
-      <ScrollView contentContainerStyle={[a.debug, {height: 10}]}>
-        <ColateralIlustration />
+    <ScrollView contentContainerStyle={[a.flex_1, a.px_lg, a.align_center]}>
+      <ColateralIlustration />
 
-        <Text style={[a.text_center, a.body_1_lg_regular, ta.text_gray_medium]}>
-          {strings.manageCollateral.collateralInfoModalText}
-        </Text>
-      </ScrollView>
-    </View>
+      <Text style={[a.text_center, a.body_1_lg_regular, ta.text_gray_medium]}>
+        {strings.manageCollateral.collateralInfoModalText}
+      </Text>
+    </ScrollView>
   )
 }

@@ -6,6 +6,7 @@ import * as React from 'react'
 import {ScrollView, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {isIOS} from '~/kernel/constants'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {SetupWalletRouteNavigation} from '~/kernel/navigation/types'
@@ -17,7 +18,10 @@ import {Space} from '~/ui/Space/Space'
 import {ButtonCard} from '../../common/ButtonCard/ButtonCard'
 import {CreateWallet} from '../../illustrations/CreateWallet'
 import {RestoreWallet} from '../../illustrations/RestoreWallet'
-import {SelectHwConnectionModal} from '../RestoreHwWallet/SelectHwConnectionModal'
+import {
+  SelectHwConnectionModal,
+  SelectHwConnectionModalFooter,
+} from '../RestoreHwWallet/SelectHwConnectionModal'
 
 export const ChooseSetupTypeScreen = () => {
   const {atoms: ta} = useTheme()
@@ -51,8 +55,9 @@ export const ChooseSetupTypeScreen = () => {
   const handleHw = () => {
     openModal({
       title: strings.setupWallet.hwModalTitle,
-      content: <SelectHwConnectionModal closeModal={() => closeModal()} />,
-      height: 305,
+      content: <SelectHwConnectionModal />,
+      footer: <SelectHwConnectionModalFooter closeModal={() => closeModal()} />,
+      height: isIOS ? 180 : 250,
     })
   }
 

@@ -141,7 +141,7 @@ export const ManageCollateralScreen = () => {
     createCollateralTransaction()
   }
 
-  const handleCollateralInfoModal = () => {
+  const handleInitialCollateralInfoModal = () => {
     openModal({
       title: strings.manageCollateral.initialCollateralInfoModalTitle,
       content: <InitialCollateralInfoModal />,
@@ -151,7 +151,7 @@ export const ManageCollateralScreen = () => {
           onCancel={closeModal}
         />
       ),
-      height: Math.min(screenHeight * 0.4, 350),
+      height: Math.min(screenHeight * 0.7, 650),
     })
   }
 
@@ -215,7 +215,7 @@ export const ManageCollateralScreen = () => {
       {shouldShowPrimaryButton && (
         <Button
           title={strings.manageCollateral.generateCollateral}
-          onPress={handleCollateralInfoModal}
+          onPress={handleInitialCollateralInfoModal}
           disabled={isLoading}
         />
       )}
