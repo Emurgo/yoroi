@@ -96,7 +96,6 @@ export const ShowDisclaimer = ({type, disabled}: Props) => {
                 <Check text={strings.global.accept} />
               </View>
             </View>
-          </>
         ),
         footer: (
           <View style={[a.flex, a.flex_row, a.gap_lg]}>
