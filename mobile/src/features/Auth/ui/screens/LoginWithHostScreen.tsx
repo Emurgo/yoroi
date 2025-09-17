@@ -4,6 +4,7 @@ import * as React from 'react'
 import {View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {useAppState} from '~/hooks/useAppState'
 import {usePromise} from '~/hooks/usePromise'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
@@ -21,6 +22,17 @@ export const LoginWithHostScreen = () => {
   React.useEffect(() => {
     resolve()
   }, [resolve])
+
+  useAppState({
+    on: 'active',
+    execute: () => {
+      if (!isPending) {
+        setTimeout(() => {
+          resolve()
+        }, 100)
+      }
+    },
+  })
 
   const handleOnPress = () => {
     resolve()
