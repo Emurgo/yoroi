@@ -61,7 +61,7 @@ export const ShowDisclaimer = ({type, disabled}: Props) => {
       openModal({
         title: strings.global.disclaimer,
         content: (
-          <View style={[a.flex_1]}>
+          <View style={[a.flex_1, ta.bg_color_max]}>
             <View style={{height: 400}}>
               <Markdown
                 colorScheme={basePalette}
