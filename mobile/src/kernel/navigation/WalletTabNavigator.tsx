@@ -7,7 +7,6 @@ import {
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs'
 import * as React from 'react'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
 import {DiscoverNavigator} from '~/features/Discover/DiscoverNavigator'
 import {MenuNavigator} from '~/features/Menu/Menu'
@@ -33,7 +32,6 @@ export const WalletTabNavigator = () => {
   const {palette: p, atoms: ta} = useTheme()
   const strings = useStrings()
   const manager = useGovernanceManagerMaker()
-  const {bottom} = useSafeAreaInsets()
 
   return (
     <SwapProvider>

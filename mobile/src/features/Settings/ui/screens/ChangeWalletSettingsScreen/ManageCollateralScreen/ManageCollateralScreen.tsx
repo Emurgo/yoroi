@@ -239,20 +239,18 @@ const ModalsButtons = ({
   onCancel: () => void
 }) => {
   const strings = useStrings()
-  const handleConfirm = () => onConfirm()
-  const handleCancel = () => onCancel()
   return (
     <View style={[a.flex_row, a.gap_md]}>
       <Button
         style={[a.flex_1]}
         title={strings.manageCollateral.cancel}
-        onPress={handleCancel}
+        onPress={onConfirm}
         type={ButtonType.Secondary}
       />
       <Button
         style={[a.flex_1]}
         title={strings.manageCollateral.initialCollateralInfoModalButton}
-        onPress={handleConfirm}
+        onPress={onCancel}
       />
     </View>
   )
