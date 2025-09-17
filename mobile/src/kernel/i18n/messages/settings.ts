@@ -273,11 +273,11 @@ export const settingsMessages = defineMessages({
     defaultMessage: '!!!Wallet Type',
   },
   walletSettingsByronWallet: {
-    id: 'txReview.overview.wallet',
+    id: 'components.settings.walletsettingscreen.byronWallet',
     defaultMessage: '!!!Byron Wallet',
   },
   walletSettingsShelleyWallet: {
-    id: 'txReview.overview.wallet',
+    id: 'components.settings.walletsettingscreen.shelleyWallet',
     defaultMessage: '!!!Shelley Wallet',
   },
   walletSettingsUnknownWalletType: {
