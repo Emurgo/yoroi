@@ -31,6 +31,7 @@ import {SetupWalletNavigator} from '~/features/SetupWallet/SetupWalletNavigator'
 import {useHasWallets} from '~/features/WalletManager/hooks/useHasWallets'
 
 import {agreementDate, isDev} from '../constants'
+import {features} from '../features'
 import {useStrings} from '../i18n/useStrings'
 import {WalletNavigator} from './WalletNavigator'
 import {defaultStackNavigationOptions} from './common/helpers'
@@ -57,7 +58,10 @@ export const AppNavigator = () => {
   )
 
   // Enable notifications inside navigation context
-  useInitNotifications({localEnabled: true, pushEnabled: true})
+  useInitNotifications({
+    localEnabled: true,
+    pushEnabled: features.pushNotifications,
+  })
 
   return (
     <>
