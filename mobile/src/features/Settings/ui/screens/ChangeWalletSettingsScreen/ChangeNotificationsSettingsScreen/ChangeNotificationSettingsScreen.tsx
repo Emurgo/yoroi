@@ -10,6 +10,7 @@ import {
   SettingsItem,
   SettingsSection,
 } from '~/features/Settings/ui/shared/SettingsItems'
+import {features} from '~/kernel/features'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
@@ -37,9 +38,13 @@ export const ChangeNotificationSettingsScreen = () => {
         style={a.flex_1}
         contentContainerStyle={[a.gap_lg, a.px_lg]}
       >
-        <SettingsSection title={strings.manageNotifications.pushNotifications}>
-          <PushNotificationSettingsItem />
-        </SettingsSection>
+        {features.pushNotifications && (
+          <SettingsSection
+            title={strings.manageNotifications.pushNotifications}
+          >
+            <PushNotificationSettingsItem />
+          </SettingsSection>
+        )}
 
         <SettingsSection title={strings.manageNotifications.inAppNotifications}>
           <SettingsItem
