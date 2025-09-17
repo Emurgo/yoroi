@@ -32,10 +32,18 @@ import {
 } from '../../shared/SettingsItems'
 
 const dialogOptions = {
-  title: confirmationMessages.resync.title,
-  message: confirmationMessages.resync.message,
-  btnNoLabel: confirmationMessages.resync.noButton,
-  btnYesLabel: confirmationMessages.resync.yesButton,
+  resync: {
+    title: confirmationMessages.resync.title,
+    message: confirmationMessages.resync.message,
+    btnNoLabel: confirmationMessages.resync.noButton,
+    btnYesLabel: confirmationMessages.resync.yesButton,
+  },
+  logout: {
+    title: confirmationMessages.logout.title,
+    message: confirmationMessages.logout.message,
+    btnNoLabel: confirmationMessages.logout.noButton,
+    btnYesLabel: confirmationMessages.logout.yesButton,
+  },
 }
 
 export const ChangeWalletSettingsScreen = () => {
@@ -135,7 +143,7 @@ export const ChangeWalletSettingsScreen = () => {
             label={strings.settings.walletSettings.resync}
             onNavigate={async () => {
               const selection = await showConfirmationDialog(
-                dialogOptions,
+                dialogOptions.resync,
                 intl,
               )
               if (selection === DIALOG_BUTTONS.YES) {
@@ -223,7 +231,7 @@ const useLogout = () => {
   const intl = useIntl()
 
   return async () => {
-    const selection = await showConfirmationDialog(dialogOptions, intl)
+    const selection = await showConfirmationDialog(dialogOptions.logout, intl)
     if (selection === DIALOG_BUTTONS.YES) {
       loggedOut()
     }

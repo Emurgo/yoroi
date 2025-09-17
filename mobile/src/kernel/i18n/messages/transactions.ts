@@ -256,19 +256,19 @@ export const transactionsMessages = defineMessages({
     defaultMessage: '!!!Multi',
   },
   directionMessagesSENT: {
-    id: 'portfolio.portfolioTokensDetailScreen.sent',
+    id: 'components.txhistory.txhistorylistitem.transactionTypeSent',
     defaultMessage: '!!!Sent',
   },
   directionMessagesRECEIVED: {
-    id: 'portfolio.portfolioTokensDetailScreen.received',
+    id: 'components.txhistory.txhistorylistitem.transactionTypeReceived',
     defaultMessage: '!!!Received',
   },
   directionMessagesSELF: {
-    id: 'components.transactions.directionMessages.SELF',
+    id: 'components.txhistory.txhistorylistitem.transactionTypeSelf',
     defaultMessage: '!!!Self',
   },
   directionMessagesMULTI: {
-    id: 'components.transactions.directionMessages.MULTI',
+    id: 'components.txhistory.txhistorylistitem.transactionTypeMulti',
     defaultMessage: '!!!Multi',
   },
   addressPrefixReceive: {
