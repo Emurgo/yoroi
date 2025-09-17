@@ -253,8 +253,6 @@ const ModalsButtons = ({
         style={[a.flex_1]}
         title={strings.manageCollateral.initialCollateralInfoModalButton}
         onPress={handleConfirm}
-        hitSlop={{top: 12, bottom: 12, left: 12, right: 12}}
-        pressRetentionOffset={{top: 20, bottom: 20, left: 20, right: 20}}
       />
     </View>
   )
