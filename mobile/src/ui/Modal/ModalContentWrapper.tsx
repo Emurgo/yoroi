@@ -11,7 +11,6 @@ import {
 import {runOnJS} from 'react-native-reanimated'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-
 import {useDismissOrClose} from './hooks'
 
 type Props = {
@@ -24,7 +23,6 @@ export const ModalContentWrapper = ({content, footer}: Props) => {
   const [scrollViewHeight, setScrollViewHeight] = React.useState(0)
   const panRef = React.useRef<GestureType | undefined>(undefined)
   const handleDismissOrClose = useDismissOrClose()
-
 
   const panGesture = Gesture.Pan()
     .withRef(panRef)
