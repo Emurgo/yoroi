@@ -414,7 +414,8 @@ const Counter = <T,>({
         style={[
           a.px_lg,
           a.py_sm,
-          {justifyContent: 'center', flexDirection: 'row'},
+          a.justify_center,
+          a.flex_row,
         ]}
       >
         <Text style={[{color: p.primary_600}, a.body_2_md_regular]}>
