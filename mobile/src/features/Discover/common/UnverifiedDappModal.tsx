@@ -46,7 +46,7 @@ export const useOpenUnverifiedDappModal = () => {
         ),
         height: 320 + insets.bottom,
         onClose: options.onClose,
-        canDiscard: false,
+        canDiscard: false, // Prevent accidental dismissal by tapping backdrop
       })
     },
     [
