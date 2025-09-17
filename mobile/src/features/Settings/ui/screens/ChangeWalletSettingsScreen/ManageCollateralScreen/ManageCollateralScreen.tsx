@@ -214,7 +214,7 @@ export const ManageCollateralScreen = () => {
 
       {shouldShowPrimaryButton && (
         <Button
-          title={strings.manageCollateral.initialCollateralInfoModalButton}
+          title={strings.manageCollateral.generateCollateral}
           onPress={handleCollateralInfoModal}
           disabled={isLoading}
         />
