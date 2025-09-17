@@ -3,7 +3,6 @@ import {useWindowDimensions} from 'react-native'
 
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {ModalContentWrapper} from '~/ui/Modal/ModalContentWrapper'
 import {useModal} from '~/ui/Modal/ModalContext'
 
 import {
@@ -31,14 +30,8 @@ export const usePoolTransitionModal = () => {
     ) {
       openModal({
         title: strings.staking.title,
-        content: (
-          <ModalContentWrapper
-            content={<PoolTransitionModal poolTransition={poolTransition} />}
-            footer={
-              <PoolTransitionModalActions onContinue={navigateToUpdate} />
-            }
-          />
-        ),
+        content: <PoolTransitionModal poolTransition={poolTransition} />,
+        footer: <PoolTransitionModalActions onContinue={navigateToUpdate} />,
         height: modalHeight,
       })
       setShownWallets(() => [wallet.id, ...shownWallets])

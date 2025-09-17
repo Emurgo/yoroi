@@ -23,7 +23,6 @@ import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation
 import {MenuRoutes} from '~/kernel/navigation/types'
 import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
-import {ModalContentWrapper} from '~/ui/Modal/ModalContentWrapper'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
@@ -224,12 +223,8 @@ const Catalyst = ({
     } else {
       openModal({
         title: strings.menu.attention,
-        content: (
-          <ModalContentWrapper
-            content={<InsufficientFundsModal />}
-            footer={<Button title={strings.menu.back} onPress={closeModal} />}
-          />
-        ),
+        content: <InsufficientFundsModal />,
+        footer: <Button title={strings.menu.back} onPress={closeModal} />,
         height: modalHeight,
       })
     }

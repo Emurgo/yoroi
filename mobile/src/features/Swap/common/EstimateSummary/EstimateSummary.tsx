@@ -11,7 +11,6 @@ import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWalle
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
-import {ModalContentWrapper} from '~/ui/Modal/ModalContentWrapper'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {ProtocolAvatar} from '~/ui/ProtocolAvatar/ProtocolAvatar'
 import {Space} from '~/ui/Space/Space'
@@ -46,12 +45,8 @@ export const EstimateSummary = () => {
 
   const expand = () =>
     openModal({
-      content: (
-        <ModalContentWrapper
-          content={<Splits data={swapForm.estimate?.splits ?? []} />}
-          footer={<SwapInfoLink />}
-        />
-      ),
+      content: <Splits data={swapForm.estimate?.splits ?? []} />,
+      footer: <SwapInfoLink />,
     })
 
   return (
@@ -143,17 +138,13 @@ const Row = ({
               openModal({
                 title: label,
                 content: (
-                  <ModalContentWrapper
-                    content={
-                      <View style={[a.flex_1, a.justify_center]}>
-                        <Text style={[a.body_1_lg_regular, ta.text_gray_max]}>
-                          {description}
-                        </Text>
-                      </View>
-                    }
-                    footer={<SwapInfoLink />}
-                  />
+                  <View style={[a.flex_1, a.justify_center]}>
+                    <Text style={[a.body_1_lg_regular, ta.text_gray_max]}>
+                      {description}
+                    </Text>
+                  </View>
                 ),
+                footer: <SwapInfoLink />,
               })
             }
             type={ButtonType.SecondaryText}

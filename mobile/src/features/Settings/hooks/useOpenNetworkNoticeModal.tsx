@@ -5,7 +5,6 @@ import {Text, View} from 'react-native'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
-import {ModalContentWrapper} from '~/ui/Modal/ModalContentWrapper'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
 
@@ -25,32 +24,28 @@ export const useOpenNetworkNoticeModal = () => {
         title: strings.settings.changeNetwork.networkNoticeTitle,
         canDiscard: false,
         content: (
-          <ModalContentWrapper
-            content={
-              <View style={[a.flex_1]}>
-                <Text style={[a.body_1_lg_regular, {color: p.gray_900}]}>
-                  {strings.settings.changeNetwork.networkNoticeMessage}
-                </Text>
+          <View style={[a.flex_1]}>
+            <Text style={[a.body_1_lg_regular, {color: p.gray_900}]}>
+              {strings.settings.changeNetwork.networkNoticeMessage}
+            </Text>
 
-                <Space.Height.lg />
+            <Space.Height.lg />
 
-                <Text style={[a.body_1_lg_medium, {color: p.gray_900}]}>
-                  {strings.settings.changeNetwork.networkNoticeListTitle}
-                </Text>
+            <Text style={[a.body_1_lg_medium, {color: p.gray_900}]}>
+              {strings.settings.changeNetwork.networkNoticeListTitle}
+            </Text>
 
-                <Text style={[a.body_1_lg_regular, {color: p.gray_900}]}>
-                  {strings.settings.changeNetwork.networkNoticeList}
-                </Text>
+            <Text style={[a.body_1_lg_regular, {color: p.gray_900}]}>
+              {strings.settings.changeNetwork.networkNoticeList}
+            </Text>
 
-                <Space.Height.sm fill />
-              </View>
-            }
-            footer={
-              <Button
-                title={strings.settings.changeNetwork.networkNoticeButton}
-                onPress={handleClose}
-              />
-            }
+            <Space.Height.sm fill />
+          </View>
+        ),
+        footer: (
+          <Button
+            title={strings.settings.changeNetwork.networkNoticeButton}
+            onPress={handleClose}
           />
         ),
         height: 450,

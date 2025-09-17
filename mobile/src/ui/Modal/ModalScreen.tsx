@@ -186,11 +186,7 @@ export const Modal = () => {
                 </View>
               )}
 
-              {visibleContent &&
-              React.isValidElement(visibleContent) &&
-              visibleContent.type === ModalContentWrapper ? (
-                visibleContent
-              ) : (
+              {visibleContent && (
                 <ModalContentWrapper
                   content={visibleContent}
                   footer={visibleFooter}

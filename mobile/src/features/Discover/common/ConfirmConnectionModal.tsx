@@ -8,7 +8,6 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
-import {ModalContentWrapper} from '~/ui/Modal/ModalContentWrapper'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
 
@@ -43,25 +42,21 @@ export const useOpenConfirmConnectionModal = () => {
       openModal({
         title: strings.discover.confirmConnectionModalTitle,
         content: (
-          <ModalContentWrapper
-            content={
-              <ConfirmConnectionModal
-                name={props.name}
-                website={props.website}
-                logo={props.logo}
-                showSingleAddressWarning={props.showSingleAddressWarning}
-              />
-            }
-            footer={
-              <Button
-                title={strings.discover.confirmConnectionModalConnect}
-                onPress={() => {
-                  track.discoverWebViewBottomSheetConnectClicked()
-                  props.onConfirm()
-                  closeModal()
-                }}
-              />
-            }
+          <ConfirmConnectionModal
+            name={props.name}
+            website={props.website}
+            logo={props.logo}
+            showSingleAddressWarning={props.showSingleAddressWarning}
+          />
+        ),
+        footer: (
+          <Button
+            title={strings.discover.confirmConnectionModalConnect}
+            onPress={() => {
+              track.discoverWebViewBottomSheetConnectClicked()
+              props.onConfirm()
+              closeModal()
+            }}
           />
         ),
         height: modalHeight,

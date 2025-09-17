@@ -27,7 +27,6 @@ import {Copiable} from '~/ui/Copiable/Copiable'
 import {ErrorPanel} from '~/ui/ErrorPanel/ErrorPanel'
 import {Icon} from '~/ui/Icon'
 import {Info} from '~/ui/Icon/Info'
-import {ModalContentWrapper} from '~/ui/Modal/ModalContentWrapper'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
@@ -145,15 +144,11 @@ export const ManageCollateralScreen = () => {
   const handleCollateralInfoModal = () => {
     openModal({
       title: strings.manageCollateral.initialCollateralInfoModalTitle,
-      content: (
-        <ModalContentWrapper
-          content={<InitialCollateralInfoModal />}
-          footer={
-            <ModalsButtons
-              onConfirm={handleGenerateCollateral}
-              onCancel={closeModal}
-            />
-          }
+      content: <InitialCollateralInfoModal />,
+      footer: (
+        <ModalsButtons
+          onConfirm={handleGenerateCollateral}
+          onCancel={closeModal}
         />
       ),
       height: Math.min(screenHeight * 0.9, 650),
@@ -333,18 +328,14 @@ const Operation = () => {
   const handleOnPressInfo = () => {
     openModal({
       title: strings.manageCollateral.collateralInfoModalTitle,
-      content: (
-        <ModalContentWrapper
-          content={<CollateralInfoModal />}
-          footer={
-            <View style={[a.flex_row, a.gap_md]}>
-              <Button
-                title={strings.manageCollateral.collateralInfoModalLabel}
-                onPress={closeModal}
-              />
-            </View>
-          }
-        />
+      content: <CollateralInfoModal />,
+      footer: (
+        <View style={[a.flex_row, a.gap_md]}>
+          <Button
+            title={strings.manageCollateral.collateralInfoModalLabel}
+            onPress={closeModal}
+          />
+        </View>
       ),
       height: Math.min(screenHeight * 0.9, 650),
     })

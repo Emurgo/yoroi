@@ -23,7 +23,7 @@ export const WalletDuplicatedModal = ({
   const strings = useStrings()
 
   return (
-    <View style={[a.flex_1, a.px_lg]}>
+    <View style={[a.flex_1]}>
       <Text style={[a.body_1_lg_regular, {color: p.text_gray_low}]}>
         {strings.setupWallet.restoreDuplicatedWalletModalText}
       </Text>

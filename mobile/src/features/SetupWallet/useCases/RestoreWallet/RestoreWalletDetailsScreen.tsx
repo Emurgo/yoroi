@@ -37,7 +37,6 @@ import {Icon} from '~/ui/Icon'
 import {Info as InfoIcon} from '~/ui/InfoIcon/InfoIcon'
 import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingView'
 import {LearnMoreButton} from '~/ui/LearnMoreButton/LearnMoreButton'
-import {ModalContentWrapper} from '~/ui/Modal/ModalContentWrapper'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
 import {StepperProgress} from '~/ui/StepperProgress/StepperProgress'
@@ -179,42 +178,38 @@ export const RestoreWalletDetailsScreen = () => {
     openModal({
       title: strings.setupWallet.walletDetailsModalTitle,
       content: (
-        <ModalContentWrapper
-          content={
-            <View style={[a.flex_1, a.pb_lg, a.px_lg]}>
-              <CardAboutPhrase
-                title={strings.setupWallet.walletNameModalCardTitle}
-                linesOfText={[
-                  strings.setupWallet.walletNameModalCardFirstItem,
-                  strings.setupWallet.walletNameModalCardSecondItem,
-                ]}
-              />
+        <View style={[a.flex_1]}>
+          <CardAboutPhrase
+            title={strings.setupWallet.walletNameModalCardTitle}
+            linesOfText={[
+              strings.setupWallet.walletNameModalCardFirstItem,
+              strings.setupWallet.walletNameModalCardSecondItem,
+            ]}
+          />
 
-              <Space.Height.lg />
+          <Space.Height.lg />
 
-              <CardAboutPhrase
-                title={strings.setupWallet.walletPasswordModalCardTitle}
-                linesOfText={[
-                  strings.setupWallet.walletPasswordModalCardFirstItem,
-                  strings.setupWallet.walletPasswordModalCardSecondItem,
-                ]}
-              />
+          <CardAboutPhrase
+            title={strings.setupWallet.walletPasswordModalCardTitle}
+            linesOfText={[
+              strings.setupWallet.walletPasswordModalCardFirstItem,
+              strings.setupWallet.walletPasswordModalCardSecondItem,
+            ]}
+          />
 
-              <Space.Height.lg />
+          <Space.Height.lg />
 
-              <LearnMoreButton
-                onPress={() => {
-                  Linking.openURL(YoroiZendeskLink)
-                }}
-              />
-            </View>
-          }
-          footer={
-            <Button
-              title={strings.setupWallet.continueButton}
-              onPress={closeModal}
-            />
-          }
+          <LearnMoreButton
+            onPress={() => {
+              Linking.openURL(YoroiZendeskLink)
+            }}
+          />
+        </View>
+      ),
+      footer: (
+        <Button
+          title={strings.setupWallet.continueButton}
+          onPress={closeModal}
         />
       ),
       height: HEIGHT_MODAL_NAME_PASSWORD,
@@ -225,37 +220,33 @@ export const RestoreWalletDetailsScreen = () => {
     openModal({
       title: strings.setupWallet.walletDetailsModalTitle,
       content: (
-        <ModalContentWrapper
-          content={
-            <View style={[a.flex_1, a.pb_lg, a.px_lg]}>
-              <CardAboutPhrase
-                title={strings.setupWallet.walletChecksumModalCardTitle}
-                checksumImage={plate.ImagePart}
-                checksumLine={1}
-                linesOfText={[
-                  strings.setupWallet.walletChecksumModalCardFirstItem,
-                  strings.setupWallet.walletChecksumModalCardSecondItem(
-                    plate.TextPart,
-                  ),
-                  strings.setupWallet.walletChecksumModalCardThirdItem,
-                ]}
-              />
+        <View style={[a.flex_1, a.pb_lg, a.px_lg]}>
+          <CardAboutPhrase
+            title={strings.setupWallet.walletChecksumModalCardTitle}
+            checksumImage={plate.ImagePart}
+            checksumLine={1}
+            linesOfText={[
+              strings.setupWallet.walletChecksumModalCardFirstItem,
+              strings.setupWallet.walletChecksumModalCardSecondItem(
+                plate.TextPart,
+              ),
+              strings.setupWallet.walletChecksumModalCardThirdItem,
+            ]}
+          />
 
-              <Space.Height.lg />
+          <Space.Height.lg />
 
-              <LearnMoreButton
-                onPress={() => {
-                  Linking.openURL(YoroiZendeskLink)
-                }}
-              />
-            </View>
-          }
-          footer={
-            <Button
-              title={strings.setupWallet.continueButton}
-              onPress={closeModal}
-            />
-          }
+          <LearnMoreButton
+            onPress={() => {
+              Linking.openURL(YoroiZendeskLink)
+            }}
+          />
+        </View>
+      ),
+      footer: (
+        <Button
+          title={strings.setupWallet.continueButton}
+          onPress={closeModal}
         />
       ),
       height: HEIGHT_MODAL_CHECKSUM,

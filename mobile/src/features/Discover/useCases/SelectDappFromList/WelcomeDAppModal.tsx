@@ -8,7 +8,6 @@ import IllustrationDAppImage from '~/assets/img/illustration-dapp.png'
 import {useShowWelcomeDApp} from '~/features/Discover/common/useShowWelcomeDApp'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
-import {ModalContentWrapper} from '~/ui/Modal/ModalContentWrapper'
 import {useModal} from '~/ui/Modal/ModalContext'
 
 export const WelcomeDAppModal = ({disabled}: {disabled?: boolean}) => {
@@ -25,33 +24,26 @@ export const WelcomeDAppModal = ({disabled}: {disabled?: boolean}) => {
     openModal({
       title: strings.discover.welcomeToYoroiDAppExplorer,
       content: (
-        <ModalContentWrapper
-          content={
-            <View>
-              <Image
-                source={IllustrationDAppImage}
-                style={[a.w_full, {height: 200, resizeMode: 'cover'}]}
-              />
+        <View>
+          <Image
+            source={IllustrationDAppImage}
+            style={[a.w_full, {height: 200, resizeMode: 'cover'}]}
+          />
 
-              <Text
-                style={[
-                  a.body_1_lg_regular,
-                  {color: p.gray_900, marginTop: 16},
-                ]}
-              >
-                {strings.discover.welcomeToYoroiDAppExplorerDescription}
-              </Text>
-            </View>
-          }
-          footer={
-            <Button
-              onPress={() => {
-                setSeen(true)
-                closeModal()
-              }}
-              title={strings.discover.next}
-            />
-          }
+          <Text
+            style={[a.body_1_lg_regular, {color: p.gray_900, marginTop: 16}]}
+          >
+            {strings.discover.welcomeToYoroiDAppExplorerDescription}
+          </Text>
+        </View>
+      ),
+      footer: (
+        <Button
+          onPress={() => {
+            setSeen(true)
+            closeModal()
+          }}
+          title={strings.discover.next}
         />
       ),
       height: 530 + insets.bottom,

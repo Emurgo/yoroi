@@ -25,7 +25,6 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Button} from '~/ui/Button/Button'
 import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingView'
-import {ModalContentWrapper} from '~/ui/Modal/ModalContentWrapper'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {useScrollView} from '~/ui/ScrollView/ScrollView'
 import {Space} from '~/ui/Space/Space'
@@ -158,21 +157,15 @@ export const RestoreWalletScreen = () => {
       openModal({
         title: strings.setupWallet.restoreDuplicatedWalletModalTitle,
         content: (
-          <ModalContentWrapper
-            content={
-              <WalletDuplicatedModal
-                plate={plate}
-                seed={seed}
-                duplicatedAccountWalletMetaName={
-                  duplicatedAccountWalletMeta.name
-                }
-              />
-            }
-            footer={
-              <WalletDuplicatedModalActions
-                duplicatedAccountWalletMetaId={duplicatedAccountWalletMeta.id}
-              />
-            }
+          <WalletDuplicatedModal
+            plate={plate}
+            seed={seed}
+            duplicatedAccountWalletMetaName={duplicatedAccountWalletMeta.name}
+          />
+        ),
+        footer: (
+          <WalletDuplicatedModalActions
+            duplicatedAccountWalletMetaId={duplicatedAccountWalletMeta.id}
           />
         ),
       })

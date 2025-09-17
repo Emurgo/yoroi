@@ -20,7 +20,6 @@ import {debugStorage} from '~/kernel/storage/debug-storage'
 import {rootMMKV, rootSyncStorage} from '~/kernel/storage/storages'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {LoadingOverlay} from '~/ui/LoadingOverlay/LoadingOverlay'
-import {ModalContentWrapper} from '~/ui/Modal/ModalContentWrapper'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {TextInput} from '~/ui/TextInput/TextInput'
 
@@ -106,30 +105,23 @@ export function DevMenu() {
               canDiscard: true,
               height: 700,
               content: (
-                <ModalContentWrapper
-                  content={
-                    <DevLongContent
-                      demoText={demoText}
-                      setDemoText={setDemoText}
-                    />
-                  }
-                  footer={
-                    <View style={[a.flex_row, a.gap_lg]}>
-                      <Button
-                        style={[a.flex_1]}
-                        type={ButtonType.Secondary}
-                        onPress={closeModal}
-                        title="Cancel"
-                      />
+                <DevLongContent demoText={demoText} setDemoText={setDemoText} />
+              ),
+              footer: (
+                <View style={[a.flex_row, a.gap_lg]}>
+                  <Button
+                    style={[a.flex_1]}
+                    type={ButtonType.Secondary}
+                    onPress={closeModal}
+                    title="Cancel"
+                  />
 
-                      <Button
-                        style={[a.flex_1]}
-                        onPress={closeModal}
-                        title="Close"
-                      />
-                    </View>
-                  }
-                />
+                  <Button
+                    style={[a.flex_1]}
+                    onPress={closeModal}
+                    title="Close"
+                  />
+                </View>
               ),
             })
           }
@@ -144,26 +136,22 @@ export function DevMenu() {
               title: 'Demo Short Modal',
               canDiscard: true,
               height: 300,
-              content: (
-                <ModalContentWrapper
-                  content={<DevShortContent />}
-                  footer={
-                    <View style={[a.flex_row, a.gap_lg]}>
-                      <Button
-                        style={[a.flex_1]}
-                        type={ButtonType.Secondary}
-                        onPress={closeModal}
-                        title="Cancel"
-                      />
+              content: <DevShortContent />,
+              footer: (
+                <View style={[a.flex_row, a.gap_lg]}>
+                  <Button
+                    style={[a.flex_1]}
+                    type={ButtonType.Secondary}
+                    onPress={closeModal}
+                    title="Cancel"
+                  />
 
-                      <Button
-                        style={[a.flex_1]}
-                        onPress={closeModal}
-                        title="Close"
-                      />
-                    </View>
-                  }
-                />
+                  <Button
+                    style={[a.flex_1]}
+                    onPress={closeModal}
+                    title="Close"
+                  />
+                </View>
               ),
             })
           }

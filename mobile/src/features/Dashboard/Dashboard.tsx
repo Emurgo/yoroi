@@ -31,7 +31,6 @@ import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation
 import {DashboardRoutes} from '~/kernel/navigation/types'
 import {Banner} from '~/ui/Banner/Banner'
 import {Button} from '~/ui/Button/Button'
-import {ModalContentWrapper} from '~/ui/Modal/ModalContentWrapper'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
 import {isEmptyString} from '~/wallets/utils/string'
@@ -103,13 +102,9 @@ export const Dashboard = () => {
         openModal({
           title: strings.staking.withdrawWarningTitle,
           content: (
-            <ModalContentWrapper
-              content={
-                <WithdrawGovernanceWarningModal
-                  onParticipatePress={() =>
-                    walletNavigateTo.navigateToGovernanceCentre()
-                  }
-                />
+            <WithdrawGovernanceWarningModal
+              onParticipatePress={() =>
+                walletNavigateTo.navigateToGovernanceCentre()
               }
             />
           ),

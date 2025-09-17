@@ -25,7 +25,6 @@ import {Counter} from '~/ui/Counter/Counter'
 import {EmptyCompletedOrdersIllustration} from '~/ui/EmptyCompletedOrdersIllustration/EmptyCompletedOrdersIllustration'
 import {EmptyOpenOrdersIllustration} from '~/ui/EmptyOpenOrdersIllustration/EmptyOpenOrdersIllustration'
 import {Icon} from '~/ui/Icon'
-import {ModalContentWrapper} from '~/ui/Modal/ModalContentWrapper'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {ProtocolAvatar} from '~/ui/ProtocolAvatar/ProtocolAvatar'
 import {RefreshButton} from '~/ui/RefreshButton/RefreshButton'
@@ -188,32 +187,28 @@ const Content = ({filter}: {filter: Filter}) => {
               openModal({
                 title: strings.swap.listOrdersSheetTitle,
                 content: (
-                  <ModalContentWrapper
-                    content={
-                      <OrderCancellationConfirmation
-                        order={order}
-                        tokenInInfo={tokenInInfo}
-                        price={priceStr}
-                        amount={amountOutStr}
-                        response={response}
-                      />
-                    }
-                    footer={
-                      <View style={[a.flex_row, a.gap_md]}>
-                        <Button
-                          type={ButtonType.Secondary}
-                          title={strings.swap.listOrdersSheetBack}
-                          onPress={closeModal}
-                        />
-                        <Button
-                          style={[a.flex_1]}
-                          type={ButtonType.Critical}
-                          title={strings.swap.listOrdersSheetConfirm}
-                          onPress={closeModal}
-                        />
-                      </View>
-                    }
+                  <OrderCancellationConfirmation
+                    order={order}
+                    tokenInInfo={tokenInInfo}
+                    price={priceStr}
+                    amount={amountOutStr}
+                    response={response}
                   />
+                ),
+                footer: (
+                  <View style={[a.flex_row, a.gap_md]}>
+                    <Button
+                      type={ButtonType.Secondary}
+                      title={strings.swap.listOrdersSheetBack}
+                      onPress={closeModal}
+                    />
+                    <Button
+                      style={[a.flex_1]}
+                      type={ButtonType.Critical}
+                      title={strings.swap.listOrdersSheetConfirm}
+                      onPress={closeModal}
+                    />
+                  </View>
                 ),
                 height: 400,
               })
@@ -422,43 +417,37 @@ const OrderCancellation = ({
     openModal({
       title: strings.swap.listOrdersSheetTitle,
       content: (
-        <ModalContentWrapper
-          content={
-            <OrderCancellationConfirmation
-              order={order}
-              tokenInInfo={tokenInInfo}
-              price={price}
-              amount={amount}
-              response={response}
-            />
-          }
-          footer={
-            isLeft(response) ? (
-              <Button
-                type={ButtonType.Secondary}
-                title={strings.swap.listOrdersSheetBack}
-                onPress={closeModal}
-              />
-            ) : (
-              <View style={[a.flex_row, a.gap_md, a.align_center]}>
-                <Button
-                  style={[a.flex_1]}
-                  type={ButtonType.Secondary}
-                  title={strings.swap.listOrdersSheetBack}
-                  onPress={closeModal}
-                />
-
-                <Button
-                  style={[a.flex_1]}
-                  type={ButtonType.Critical}
-                  title={strings.swap.listOrdersSheetConfirm}
-                  onPress={onOrderCancelConfirm}
-                  disabled={response.value.data.cbor === undefined}
-                />
-              </View>
-            )
-          }
+        <OrderCancellationConfirmation
+          order={order}
+          tokenInInfo={tokenInInfo}
+          price={price}
+          amount={amount}
+          response={response}
         />
+      ),
+      footer: isLeft(response) ? (
+        <Button
+          type={ButtonType.Secondary}
+          title={strings.swap.listOrdersSheetBack}
+          onPress={closeModal}
+        />
+      ) : (
+        <View style={[a.flex_row, a.gap_md, a.align_center]}>
+          <Button
+            style={[a.flex_1]}
+            type={ButtonType.Secondary}
+            title={strings.swap.listOrdersSheetBack}
+            onPress={closeModal}
+          />
+
+          <Button
+            style={[a.flex_1]}
+            type={ButtonType.Critical}
+            title={strings.swap.listOrdersSheetConfirm}
+            onPress={onOrderCancelConfirm}
+            disabled={response.value.data.cbor === undefined}
+          />
+        </View>
       ),
       height: 400,
     })

@@ -5,7 +5,6 @@ import {InteractionManager, View, useWindowDimensions} from 'react-native'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button, ButtonType} from '~/ui/Button/Button'
-import {ModalContentWrapper} from '~/ui/Modal/ModalContentWrapper'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {PhoneBell} from '~/ui/PhoneBellIllustration/PhoneBellIllustration'
 import {Space} from '~/ui/Space/Space'
@@ -31,11 +30,7 @@ export const useGetImportantAlertsModal = ({enabled}: {enabled: boolean}) => {
 
       openModal({
         title: strings.notifications.getImportantAlerts,
-        content: (
-          <ModalContentWrapper
-            content={<GetImportantAlertsModal onClose={closeModal} />}
-          />
-        ),
+        content: <GetImportantAlertsModal onClose={closeModal} />,
         height: Math.min(windowHeight * 0.9, 520),
       })
       await uiStorage.setItem(modalStorageKey, true)

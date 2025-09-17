@@ -18,7 +18,6 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Button, ButtonType} from '~/ui/Button/Button'
-import {ModalContentWrapper} from '~/ui/Modal/ModalContentWrapper'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
 
@@ -61,20 +60,16 @@ export const NetworkTag = ({
         openModal({
           title: strings.settings.changeNetwork.networkTagModalTitle,
           content: (
-            <ModalContentWrapper
-              content={
-                <MainnetWarningDialog
-                  onCancel={closeModal}
-                  onOk={() => {
-                    track.networkSelected({
-                      to_network: nextNetwork,
-                      from_network: selectedNetwork,
-                    })
-                    walletManager.setSelectedNetwork(nextNetwork)
-                    closeModal()
-                  }}
-                />
-              }
+            <MainnetWarningDialog
+              onCancel={closeModal}
+              onOk={() => {
+                track.networkSelected({
+                  to_network: nextNetwork,
+                  from_network: selectedNetwork,
+                })
+                walletManager.setSelectedNetwork(nextNetwork)
+                closeModal()
+              }}
             />
           ),
           height: 280,
