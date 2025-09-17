@@ -91,7 +91,6 @@ export const SelectWalletFromList = () => {
       style={[a.flex_1, a.py_lg]}
       edges={['left', 'right', 'bottom']}
     >
-    >
       {features.walletListAggregatedBalance && <AggregatedBalance />}
 
       <ScrollView
