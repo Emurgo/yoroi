@@ -13,6 +13,7 @@ import {useIsKeyboardOpen} from '~/hooks/useIsKeyboardOpen'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
+import {ModalContentWrapper} from '~/ui/Modal/ModalContentWrapper'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {ProtocolAvatar} from '~/ui/ProtocolAvatar/ProtocolAvatar'
 import {RefreshButton} from '~/ui/RefreshButton/RefreshButton'
@@ -57,30 +58,34 @@ export const SwapMainScreen = () => {
       openModal({
         title: strings.swap.limitPriceWarningTitle,
         content: (
-          <WarnLimitPrice
-            wantedPrice={wantedPrice.toFixed(tokenOutInfo?.decimals ?? 6)}
-            marketPrice={marketPrice.toFixed(tokenOutInfo?.decimals ?? 6)}
-            tokenInTicker={tokenInTicker}
-            tokenOutTicker={tokenOutTicker}
-          />
-        ),
-        footer: (
-          <View
-            style={[a.align_center, a.justify_between, a.flex_row, a.gap_lg]}
-          >
-            <Button
-              size="S"
-              type={ButtonType.Secondary}
-              title={strings.swap.limitPriceWarningBack}
-              onPress={closeModal}
-            />
+          <ModalContentWrapper
+            content={
+              <WarnLimitPrice
+                wantedPrice={wantedPrice.toFixed(tokenOutInfo?.decimals ?? 6)}
+                marketPrice={marketPrice.toFixed(tokenOutInfo?.decimals ?? 6)}
+                tokenInTicker={tokenInTicker}
+                tokenOutTicker={tokenOutTicker}
+              />
+            }
+            footer={
+              <View style={[a.flex_row, a.gap_lg]}>
+                <Button
+                  style={[a.flex_1]}
+                  size="S"
+                  type={ButtonType.Secondary}
+                  title={strings.swap.limitPriceWarningBack}
+                  onPress={closeModal}
+                />
 
-            <Button
-              size="S"
-              title={strings.swap.limitPriceWarningConfirm}
-              onPress={swapForm.create}
-            />
-          </View>
+                <Button
+                  style={[a.flex_1]}
+                  size="S"
+                  title={strings.swap.limitPriceWarningConfirm}
+                  onPress={swapForm.create}
+                />
+              </View>
+            }
+          />
         ),
       })
     } else {

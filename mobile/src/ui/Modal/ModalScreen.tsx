@@ -6,7 +6,6 @@ import * as React from 'react'
 import {
   Animated,
   Easing,
-  Keyboard,
   Pressable,
   Modal as RNModal,
   Text,
@@ -21,9 +20,9 @@ import {KeyboardAvoidingView} from 'react-native-keyboard-controller'
 import {runOnJS} from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
-import {useIsKeyboardOpen} from '~/hooks/useIsKeyboardOpen'
-
+import {ModalContentWrapper} from './ModalContentWrapper'
 import {useModal} from './ModalContext'
+import {useDismissOrClose} from './hooks'
 
 export const Modal = () => {
   const {
@@ -42,7 +41,6 @@ export const Modal = () => {
   const backdropOpacity = React.useRef(new Animated.Value(0)).current
   const sheetTranslateY = React.useRef(new Animated.Value(24)).current
   const [isVisible, setIsVisible] = React.useState(isOpen)
-  const isKeyboardOpen = useIsKeyboardOpen()
 
   const lastContentRef = React.useRef(content)
   const lastTitleRef = React.useRef(title)
@@ -66,8 +64,8 @@ export const Modal = () => {
 
   const visibleContent = isOpen ? content : lastContentRef.current
   const visibleTitle = isOpen ? title : lastTitleRef.current
-  const visibleFooter = isOpen ? footer : lastFooterRef.current
   const visibleHeight = isOpen ? height : lastHeightRef.current
+  const visibleFooter = isOpen ? footer : lastFooterRef.current
 
   const isFull = isOpen ? full : lastFullRef.current
   const canDiscardEnabled = isOpen ? canDiscard : lastCanDiscardRef.current
@@ -79,13 +77,7 @@ export const Modal = () => {
     closeModal()
   }, [closeModal])
 
-  const handleDismissOrClose = React.useCallback(() => {
-    if (isKeyboardOpen) {
-      Keyboard.dismiss()
-      return
-    }
-    closeModal()
-  }, [closeModal, isKeyboardOpen])
+  const handleDismissOrClose = useDismissOrClose()
 
   const panGesture = Gesture.Pan()
     .enabled(Boolean(canDiscardEnabled) && !isFull)
@@ -164,50 +156,48 @@ export const Modal = () => {
           />
           <Pressable
             onPress={canDiscardEnabled ? handleDismissOrClose : undefined}
-            style={[a.flex_1, a.justify_end]}
-          >
-            <KeyboardAvoidingView behavior="padding" style={[a.justify_end]}>
-              <Pressable onPress={(e) => e.stopPropagation()}>
-                <Animated.View
-                  style={[
-                    isFull ? a.flex_1 : {height: visibleHeight},
-                    a.self_stretch,
-                    a.overflow_hidden,
-                    {backgroundColor: isDark ? p.gray_50 : p.white_static},
-                    {transform: [{translateY: sheetTranslateY}]},
-                    {
-                      borderTopLeftRadius: s.xl,
-                      borderTopRightRadius: s.xl,
-                    },
-                  ]}
-                >
-                  {canDiscardEnabled && !isFull && (
-                    <GestureDetector gesture={panGesture}>
-                      <View style={[a.align_center, a.pt_sm, a.pb_xs]}>
-                        <DiscardIndicator withFeedback={withFeedbackEnabled} />
-                      </View>
-                    </GestureDetector>
-                  )}
+            style={[a.absolute, a.inset_0]}
+          />
+          <KeyboardAvoidingView behavior="padding" style={[a.justify_end]}>
+            <Animated.View
+              style={[
+                isFull ? a.flex_1 : {height: visibleHeight},
+                a.self_stretch,
+                a.overflow_hidden,
+                {backgroundColor: isDark ? p.gray_50 : p.white_static},
+                {transform: [{translateY: sheetTranslateY}]},
+                {
+                  borderTopLeftRadius: s.xl,
+                  borderTopRightRadius: s.xl,
+                },
+              ]}
+            >
+              {canDiscardEnabled && !isFull && (
+                <GestureDetector gesture={panGesture}>
+                  <View style={[a.align_center, a.pt_sm, a.pb_xs]}>
+                    <DiscardIndicator withFeedback={withFeedbackEnabled} />
+                  </View>
+                </GestureDetector>
+              )}
 
-                  {visibleTitle && (
-                    <View style={[a.py_sm]}>
-                      <Title title={visibleTitle} />
-                    </View>
-                  )}
+              {visibleTitle && (
+                <View style={[a.py_sm]}>
+                  <Title title={visibleTitle} />
+                </View>
+              )}
 
-                  {isFull ? (
-                    <View style={[a.flex_1, a.p_lg]}>{visibleContent}</View>
-                  ) : (
-                    visibleContent
-                  )}
-
-                  {visibleFooter && (
-                    <View style={[a.py_lg]}>{visibleFooter}</View>
-                  )}
-                </Animated.View>
-              </Pressable>
-            </KeyboardAvoidingView>
-          </Pressable>
+              {visibleContent &&
+              React.isValidElement(visibleContent) &&
+              visibleContent.type === ModalContentWrapper ? (
+                visibleContent
+              ) : (
+                <ModalContentWrapper
+                  content={visibleContent}
+                  footer={visibleFooter}
+                />
+              )}
+            </Animated.View>
+          </KeyboardAvoidingView>
         </View>
       </GestureHandlerRootView>
     </RNModal>

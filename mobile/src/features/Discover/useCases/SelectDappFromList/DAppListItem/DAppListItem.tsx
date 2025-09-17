@@ -23,6 +23,7 @@ import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {InfoBanner} from '~/ui/InfoBanner/InfoBanner'
+import {ModalContentWrapper} from '~/ui/Modal/ModalContentWrapper'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
 import {WarningBanner} from '~/ui/WarningBanner/WarningBanner'
@@ -114,57 +115,59 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
     openModal({
       title: strings.discover.dAppActions,
       content: (
-        <View style={[a.flex_col, a.px_lg]}>
-          <View style={[{alignItems: 'center', gap: 8}]}>
-            <Image source={{uri: logo}} style={[{width: 48, height: 48}]} />
+        <ModalContentWrapper
+          content={
+            <View style={[a.flex_col, a.px_lg]}>
+              <View style={[{alignItems: 'center', gap: 8}]}>
+                <Image source={{uri: logo}} style={[{width: 48, height: 48}]} />
 
-            <Text style={[a.body_1_lg_medium, {color: p.gray_900}]}>
-              {dApp.name}
-            </Text>
-          </View>
+                <Text style={[a.body_1_lg_medium, {color: p.gray_900}]}>
+                  {dApp.name}
+                </Text>
+              </View>
 
-          <Space.Height.md />
+              <Space.Height.md />
 
-          {dApp.isSingleAddress && (
-            <>
+              {dApp.isSingleAddress && (
+                <>
+                  <Space.Height.lg />
+
+                  <SingleAddressDAppWarning />
+                </>
+              )}
+
               <Space.Height.lg />
 
-              <SingleAddressDAppWarning />
-            </>
-          )}
+              <InfoBanner
+                iconSize={20}
+                content={strings.discover.disconnectWarning}
+              />
 
-          <Space.Height.lg />
+              <Space.Height.lg />
+            </View>
+          }
+          footer={
+            <View style={[a.flex_row, a.gap_lg]}>
+              <Button
+                type={ButtonType.SecondaryText}
+                fontOverride={a.body_1_lg_medium}
+                onPress={handleOpenDApp}
+                icon={Icon.DApp}
+                title={strings.discover.openDApp}
+                size="S"
+              />
 
-          <InfoBanner
-            iconSize={20}
-            content={strings.discover.disconnectWarning}
-          />
-
-          <Space.Height.lg />
-        </View>
-      ),
-      footer: (
-        <View style={[a.align_start, a.gap_lg, a.pb_lg]}>
-          <Button
-            type={ButtonType.SecondaryText}
-            fontOverride={a.body_1_lg_medium}
-            style={[a.gap_lg]}
-            onPress={handleOpenDApp}
-            icon={Icon.DApp}
-            title={strings.discover.openDApp}
-            size="S"
-          />
-
-          <Button
-            type={ButtonType.SecondaryText}
-            fontOverride={a.body_1_lg_medium}
-            style={[a.gap_lg]}
-            onPress={() => handleConfirmDisconnect(dApp)}
-            icon={Icon.Disconnect}
-            title={strings.discover.disconnectWalletFromDApp}
-            size="S"
-          />
-        </View>
+              <Button
+                type={ButtonType.SecondaryText}
+                fontOverride={a.body_1_lg_medium}
+                onPress={() => handleConfirmDisconnect(dApp)}
+                icon={Icon.Disconnect}
+                title={strings.discover.disconnectWalletFromDApp}
+                size="S"
+              />
+            </View>
+          }
+        />
       ),
       height: dialogHeight,
     })

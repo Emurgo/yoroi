@@ -7,6 +7,7 @@ import {
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs'
 import * as React from 'react'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
 import {DiscoverNavigator} from '~/features/Discover/DiscoverNavigator'
 import {MenuNavigator} from '~/features/Menu/Menu'
@@ -32,6 +33,7 @@ export const WalletTabNavigator = () => {
   const {palette: p, atoms: ta} = useTheme()
   const strings = useStrings()
   const manager = useGovernanceManagerMaker()
+  const {bottom} = useSafeAreaInsets()
 
   return (
     <SwapProvider>
@@ -41,17 +43,22 @@ export const WalletTabNavigator = () => {
             tabBar={TabBarWithHiddenContent}
             screenOptions={{
               headerShown: false,
-              tabBarStyle: {
-                ...ta.bg_color_max,
-              },
+              tabBarStyle: [
+                {
+                  ...ta.bg_color_max,
+                },
+                {paddingBottom: bottom},
+              ],
               tabBarActiveTintColor: p.primary_600,
               tabBarInactiveTintColor: p.gray_600,
               tabBarLabelStyle: {
                 ...a.body_3_sm_medium,
               },
-              sceneStyle: {
-                backgroundColor: p.bg_color_max,
-              },
+              sceneStyle: [
+                {
+                  backgroundColor: p.bg_color_max,
+                },
+              ],
             }}
           >
             <Tab.Screen

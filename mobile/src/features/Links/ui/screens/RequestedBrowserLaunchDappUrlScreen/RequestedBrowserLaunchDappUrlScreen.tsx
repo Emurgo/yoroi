@@ -36,7 +36,7 @@ export const RequestedBrowserLaunchDappUrlScreen = ({
   }
 
   return (
-    <View style={[a.flex_1, ta.bg_color_max, a.px_lg, a.gap_lg, a.pb_lg]}>
+    <View style={[a.flex_1, ta.bg_color_max]}>
       <ScrollView bounces={false} contentContainerStyle={a.gap_lg}>
         <ShowDisclaimer title={strings.global.disclaimer}>
           <Text style={[a.body_2_md_regular, ta.text_gray_max]}>

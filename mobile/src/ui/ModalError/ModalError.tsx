@@ -29,7 +29,7 @@ export const ModalError = ({error, resetErrorBoundary, onCancel}: Props) => {
 
   return (
     <>
-      <View style={[a.px_lg, a.flex_grow, a.align_center, a.justify_center]}>
+      <View style={[a.flex_grow, a.align_center, a.justify_center]}>
         <View>
           <Icon.Danger color={p.sys_magenta_500} size={42} />
         </View>
@@ -45,7 +45,7 @@ export const ModalError = ({error, resetErrorBoundary, onCancel}: Props) => {
         </Text>
       </View>
 
-      <View style={[a.flex_row, a.align_center, a.justify_center, a.p_lg]}>
+      <View style={[a.flex_row, a.align_center, a.justify_center]}>
         <Button
           size="S"
           type={ButtonType.Secondary}

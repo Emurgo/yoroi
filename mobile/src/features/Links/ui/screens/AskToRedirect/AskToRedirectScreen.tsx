@@ -19,7 +19,7 @@ export const AskToRedirectScreen = ({link}: {link: string}) => {
   }
 
   return (
-    <View style={[a.flex_1, a.px_lg, ta.bg_color_max, a.pb_lg, a.gap_lg]}>
+    <View style={[a.flex_1, ta.bg_color_max]}>
       <ScrollView bounces={false} contentContainerStyle={a.gap_lg}>
         <Text style={[a.body_2_md_regular, ta.text_gray_max]}>
           {strings.links.askToRedirectDescription}

@@ -14,6 +14,7 @@ import {
 } from '~/features/Claim/useCases/AskConfirmation'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
+import {ModalContentWrapper} from '~/ui/Modal/ModalContentWrapper'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {pastedFormatter} from '~/wallets/utils/amountUtils'
 
@@ -116,14 +117,20 @@ export const useTriggerScanAction = ({
           openModal({
             title: strings.claim.askConfirmationTitle,
             content: (
-              <AskConfirmation
-                address={address}
-                url={scanAction.url}
-                code={scanAction.code}
+              <ModalContentWrapper
+                content={
+                  <AskConfirmation
+                    address={address}
+                    url={scanAction.url}
+                    code={scanAction.code}
+                  />
+                }
+                footer={
+                  <AskConfirmationActions onContinue={handleOnContinue} />
+                }
               />
             ),
-            footer: <AskConfirmationActions onContinue={handleOnContinue} />,
-            height: 400,
+            height: 500,
           })
         }, 300)
         break

@@ -20,6 +20,7 @@ import {useCreateGovernanceTx} from '~/features/Staking/hooks/useCreateGovernanc
 import {useStakingKey} from '~/features/Staking/hooks/useStakingKey'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
+import {ModalContentWrapper} from '~/ui/Modal/ModalContentWrapper'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
 
@@ -95,9 +96,13 @@ export const ChangeVoteScreen = () => {
     openModal({
       title: strings.staking.enterDRepID,
       content: (
-        <GovernanceProvider manager={manager}>
-          <EnterDrepIdModal onSubmit={onSubmit} />
-        </GovernanceProvider>
+        <ModalContentWrapper
+          content={
+            <GovernanceProvider manager={manager}>
+              <EnterDrepIdModal onSubmit={onSubmit} />
+            </GovernanceProvider>
+          }
+        />
       ),
       height: 360,
     })

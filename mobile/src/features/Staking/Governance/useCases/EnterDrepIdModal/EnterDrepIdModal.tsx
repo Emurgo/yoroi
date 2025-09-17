@@ -45,7 +45,7 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
   }
 
   return (
-    <View style={[a.flex_1, a.px_lg]}>
+    <View style={[a.flex_1]}>
       <Space.Height.sm />
 
       <Text style={[a.text_center, a.body_1_lg_regular, ta.text_gray_medium]}>

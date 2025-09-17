@@ -8,6 +8,7 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
+import {ModalContentWrapper} from '~/ui/Modal/ModalContentWrapper'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
 
@@ -42,21 +43,25 @@ export const useOpenConfirmConnectionModal = () => {
       openModal({
         title: strings.discover.confirmConnectionModalTitle,
         content: (
-          <ConfirmConnectionModal
-            name={props.name}
-            website={props.website}
-            logo={props.logo}
-            showSingleAddressWarning={props.showSingleAddressWarning}
-          />
-        ),
-        footer: (
-          <Button
-            title={strings.discover.confirmConnectionModalConnect}
-            onPress={() => {
-              track.discoverWebViewBottomSheetConnectClicked()
-              props.onConfirm()
-              closeModal()
-            }}
+          <ModalContentWrapper
+            content={
+              <ConfirmConnectionModal
+                name={props.name}
+                website={props.website}
+                logo={props.logo}
+                showSingleAddressWarning={props.showSingleAddressWarning}
+              />
+            }
+            footer={
+              <Button
+                title={strings.discover.confirmConnectionModalConnect}
+                onPress={() => {
+                  track.discoverWebViewBottomSheetConnectClicked()
+                  props.onConfirm()
+                  closeModal()
+                }}
+              />
+            }
           />
         ),
         height: modalHeight,
@@ -86,7 +91,7 @@ export const ConfirmConnectionModal = ({
   const imageUri = logo.length === 0 ? getDappFallbackLogo(website) : logo
 
   return (
-    <View style={[a.flex_1, a.px_lg]}>
+    <View style={[a.flex_1]}>
       <View
         style={[a.flex, a.flex_row, a.align_center, a.justify_center, a.gap_xl]}
       >

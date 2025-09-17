@@ -13,6 +13,7 @@ import {usePoolInfo} from '~/features/Staking/hooks/usePoolInfo'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Icon} from '~/ui/Icon'
+import {ModalContentWrapper} from '~/ui/Modal/ModalContentWrapper'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
 import {wrappedCsl} from '~/wallets/cardano/wrappedCsl'
@@ -121,7 +122,9 @@ export const StakeDelegationOperation = ({
   const handleShowPoolDetails = () => {
     openModal({
       title: strings.txReview.poolDetails.title,
-      content: <PoolDetails poolInfo={poolInfo} />,
+      content: (
+        <ModalContentWrapper content={<PoolDetails poolInfo={poolInfo} />} />
+      ),
       height: windowHeight * 0.8,
     })
   }

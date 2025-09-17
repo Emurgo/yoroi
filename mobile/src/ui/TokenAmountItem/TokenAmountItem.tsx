@@ -18,6 +18,7 @@ import {SwapPriceImpactRisk} from '../../features/Swap/common/types'
 import {features} from '../../kernel/features'
 import {Button, ButtonType} from '../Button/Button'
 import {Icon} from '../Icon'
+import {ModalContentWrapper} from '../Modal/ModalContentWrapper'
 import {useModal} from '../Modal/ModalContext'
 import {PairedBalance} from '../PairedBalance/PairedBalance'
 import {TokenDetails} from '../TokenDetails/TokenDetails'
@@ -66,7 +67,9 @@ export const TokenAmountItem = ({
   const handleShowTokenDetails = () => {
     openModal({
       title: strings.portfolio.tokenDetail,
-      content: <TokenDetails tokenInfo={info} />,
+      content: (
+        <ModalContentWrapper content={<TokenDetails tokenInfo={info} />} />
+      ),
       height: isPrimary ? 450 : windowHeight * 0.8,
     })
   }

@@ -25,6 +25,7 @@ import {Counter} from '~/ui/Counter/Counter'
 import {EmptyCompletedOrdersIllustration} from '~/ui/EmptyCompletedOrdersIllustration/EmptyCompletedOrdersIllustration'
 import {EmptyOpenOrdersIllustration} from '~/ui/EmptyOpenOrdersIllustration/EmptyOpenOrdersIllustration'
 import {Icon} from '~/ui/Icon'
+import {ModalContentWrapper} from '~/ui/Modal/ModalContentWrapper'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {ProtocolAvatar} from '~/ui/ProtocolAvatar/ProtocolAvatar'
 import {RefreshButton} from '~/ui/RefreshButton/RefreshButton'
@@ -119,6 +120,7 @@ const Content = ({filter}: {filter: Filter}) => {
   const strings = useStrings()
   const {visible: isSearching} = useSearch()
   const swapForm = useSwap()
+  const {openModal, closeModal} = useModal()
 
   const orders = swapForm.orders?.filter(
     ({status}) =>
@@ -149,6 +151,75 @@ const Content = ({filter}: {filter: Filter}) => {
               : strings.swap.listCompletedOrders
           }
         />
+      )}
+
+      {__DEV__ && orders != null && orders.length > 0 && (
+        <View style={[a.pt_sm]}>
+          <Button
+            type={ButtonType.SecondaryText}
+            title="Test Open Orders Modal"
+            onPress={() => {
+              const order = orders[0]
+              const tokenInInfo = swapForm.tokenInfos.get(order.tokenIn)
+              const tokenOutInfo = swapForm.tokenInfos.get(order.tokenOut)
+              if (!tokenInInfo || !tokenOutInfo) return
+
+              const amountOut =
+                order.actualAmountOut === 0
+                  ? order.expectedAmountOut
+                  : order.actualAmountOut
+              const priceCalc = amountOut === 0 ? 0 : order.amountIn / amountOut
+              const roundedPrice = priceCalc
+                .toFixed(tokenOutInfo?.decimals ?? 0)
+                .replace(/\.0+$/, '')
+              const price =
+                roundedPrice !== '0' ? roundedPrice : priceCalc.toFixed(6)
+              const priceStr = `1 ${tokenName(tokenInInfo)} = ${price} ${tokenName(
+                tokenOutInfo,
+              )}`
+              const amountOutStr = `${Number(
+                amountOut.toFixed(tokenOutInfo?.decimals ?? 0),
+              )} ${tokenName(tokenOutInfo)}`
+
+              const response = {
+                value: {data: {cbor: '00', additionalCancellationFee: 0}},
+              } as unknown as Api.Response<Swap.CancelResponse>
+
+              openModal({
+                title: strings.swap.listOrdersSheetTitle,
+                content: (
+                  <ModalContentWrapper
+                    content={
+                      <OrderCancellationConfirmation
+                        order={order}
+                        tokenInInfo={tokenInInfo}
+                        price={priceStr}
+                        amount={amountOutStr}
+                        response={response}
+                      />
+                    }
+                    footer={
+                      <View style={[a.flex_row, a.gap_md]}>
+                        <Button
+                          type={ButtonType.Secondary}
+                          title={strings.swap.listOrdersSheetBack}
+                          onPress={closeModal}
+                        />
+                        <Button
+                          style={[a.flex_1]}
+                          type={ButtonType.Critical}
+                          title={strings.swap.listOrdersSheetConfirm}
+                          onPress={closeModal}
+                        />
+                      </View>
+                    }
+                  />
+                ),
+                height: 400,
+              })
+            }}
+          />
+        </View>
       )}
     </View>
   )
@@ -351,36 +422,43 @@ const OrderCancellation = ({
     openModal({
       title: strings.swap.listOrdersSheetTitle,
       content: (
-        <OrderCancellationConfirmation
-          order={order}
-          tokenInInfo={tokenInInfo}
-          price={price}
-          amount={amount}
-          response={response}
-        />
-      ),
-      footer: isLeft(response) ? (
-        <Button
-          type={ButtonType.Secondary}
-          title={strings.swap.listOrdersSheetBack}
-          onPress={closeModal}
-        />
-      ) : (
-        <View style={[a.flex_row, a.gap_md, a.justify_center, a.align_center]}>
-          <Button
-            type={ButtonType.Secondary}
-            title={strings.swap.listOrdersSheetBack}
-            onPress={closeModal}
-          />
-
-          {response.value.data.cbor !== undefined && (
-            <Button
-              type={ButtonType.Critical}
-              title={strings.swap.listOrdersSheetConfirm}
-              onPress={onOrderCancelConfirm}
+        <ModalContentWrapper
+          content={
+            <OrderCancellationConfirmation
+              order={order}
+              tokenInInfo={tokenInInfo}
+              price={price}
+              amount={amount}
+              response={response}
             />
-          )}
-        </View>
+          }
+          footer={
+            isLeft(response) ? (
+              <Button
+                type={ButtonType.Secondary}
+                title={strings.swap.listOrdersSheetBack}
+                onPress={closeModal}
+              />
+            ) : (
+              <View style={[a.flex_row, a.gap_md, a.align_center]}>
+                <Button
+                  style={[a.flex_1]}
+                  type={ButtonType.Secondary}
+                  title={strings.swap.listOrdersSheetBack}
+                  onPress={closeModal}
+                />
+
+                <Button
+                  style={[a.flex_1]}
+                  type={ButtonType.Critical}
+                  title={strings.swap.listOrdersSheetConfirm}
+                  onPress={onOrderCancelConfirm}
+                  disabled={response.value.data.cbor === undefined}
+                />
+              </View>
+            )
+          }
+        />
       ),
       height: 400,
     })

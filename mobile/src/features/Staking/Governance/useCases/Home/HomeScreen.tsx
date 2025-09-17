@@ -28,6 +28,7 @@ import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWalle
 import {useWalletEvent} from '~/features/WalletManager/hooks/useWalletEvent'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
+import {ModalContentWrapper} from '~/ui/Modal/ModalContentWrapper'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
 import {TransactionInfo} from '~/wallets/types/other'
@@ -311,9 +312,13 @@ const NeverParticipatedInGovernanceVariant = () => {
     openModal({
       title: strings.staking.enterDRepID,
       content: (
-        <GovernanceProvider manager={manager}>
-          <EnterDrepIdModal onSubmit={onSubmit} />
-        </GovernanceProvider>
+        <ModalContentWrapper
+          content={
+            <GovernanceProvider manager={manager}>
+              <EnterDrepIdModal onSubmit={onSubmit} />
+            </GovernanceProvider>
+          }
+        />
       ),
       height: 360,
     })
