@@ -61,7 +61,6 @@ export const ShowDisclaimer = ({type, disabled}: Props) => {
       openModal({
         title: strings.global.disclaimer,
         content: (
-          <>
             <View style={[a.flex_1]}>
               <View style={{height: 400}}>
                 <Markdown
