@@ -11,7 +11,6 @@ import {
 import {runOnJS} from 'react-native-reanimated'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-// removed debug logger
 
 import {useDismissOrClose} from './hooks'
 
