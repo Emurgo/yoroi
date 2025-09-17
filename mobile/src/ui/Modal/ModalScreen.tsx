@@ -163,78 +163,61 @@ export const Modal = () => {
       navigationBarTranslucent
       onRequestClose={handleOnRequestClose}
     >
-      <GestureHandlerRootView style={[a.flex_1]}>
-        <View style={[a.flex_1, a.self_stretch, a.justify_end]}>
-          <RNAnimated.View
-            style={[
-              a.absolute,
-              a.inset_0,
-              {zIndex: 0},
-              {
-                backgroundColor: 'rgba(0,0,0,0.4)',
-                opacity: backdropOpacity,
-              },
-            ]}
-          />
+      <View style={[a.flex_1]}>
+        <RNAnimated.View
+          style={[
+            a.absolute,
+            a.inset_0,
+            {zIndex: 0},
+            {
+              backgroundColor: 'rgba(0,0,0,0.4)',
+              opacity: backdropOpacity,
+            },
+          ]}
+        />
+        {canDiscardEnabled && (
           <Pressable
-            onPress={canDiscardEnabled ? handleDismissOrClose : undefined}
-            style={[a.flex_1, a.justify_end]}
-          >
-            <KeyboardAvoidingView behavior="padding" style={[a.justify_end]}>
-              <Pressable onPress={(e) => e.stopPropagation()}>
-                <Animated.View
-                  style={[
-                    isFull ? a.flex_1 : {height: visibleHeight},
-                    a.self_stretch,
-                    a.overflow_hidden,
-                    {zIndex: 1},
-                    {backgroundColor: isDark ? p.gray_50 : p.white_static},
-                    {
-                      borderTopLeftRadius: s.xl,
-                      borderTopRightRadius: s.xl,
-                    },
-                    combinedModalStyle,
-                  ]}
-                >
-                  {canDiscardEnabled && !isFull && (
-                    <GestureDetector gesture={createDragGesture()}>
-                      <View style={[a.align_center, a.pt_sm, a.pb_xs]}>
-                        <DiscardIndicator withFeedback={withFeedbackEnabled} />
-                      </View>
-                    </GestureDetector>
-                  )}
-
-                  {isFull ? (
-                    <View style={[a.flex_1]}>
-                      {visibleTitle || visibleFooter ? (
-                        <SafeAreaModalWrapper
-                          title={visibleTitle}
-                          footer={visibleFooter}
-                        >
-                          {visibleContent}
-                        </SafeAreaModalWrapper>
-                      ) : (
-                        visibleContent
-                      )}
+            onPress={handleDismissOrClose}
+            style={[a.absolute, a.inset_0]}
+          />
+        )}
+        <View style={[a.flex_1, a.justify_end]}>
+          <KeyboardAvoidingView behavior="padding">
+            <Animated.View
+              style={[
+                isFull ? a.flex_1 : {height: visibleHeight},
+                a.self_stretch,
+                a.overflow_hidden,
+                {zIndex: 1},
+                {backgroundColor: isDark ? p.gray_50 : p.white_static},
+                {
+                  borderTopLeftRadius: s.xl,
+                  borderTopRightRadius: s.xl,
+                },
+                combinedModalStyle,
+              ]}
+            >
+              {canDiscardEnabled && !isFull && (
+                <GestureHandlerRootView>
+                  <GestureDetector gesture={createDragGesture()}>
+                    <View style={[a.align_center, a.pt_sm, a.pb_xs]}>
+                      <DiscardIndicator withFeedback={withFeedbackEnabled} />
                     </View>
-                  ) : visibleTitle || visibleFooter ? (
-                    <SafeAreaModalWrapper
-                      title={visibleTitle}
-                      footer={visibleFooter}
-                    >
-                      {visibleContent}
-                    </SafeAreaModalWrapper>
-                  ) : (
-                    <SafeAreaModalWrapper>
-                      {visibleContent}
-                    </SafeAreaModalWrapper>
-                  )}
-                </Animated.View>
-              </Pressable>
-            </KeyboardAvoidingView>
-          </Pressable>
+                  </GestureDetector>
+                </GestureHandlerRootView>
+              )}
+
+              <SafeAreaModalWrapper
+                title={visibleTitle}
+                footer={visibleFooter}
+                edges={isFull ? [] : undefined}
+              >
+                {visibleContent}
+              </SafeAreaModalWrapper>
+            </Animated.View>
+          </KeyboardAvoidingView>
         </View>
-      </GestureHandlerRootView>
+      </View>
     </RNModal>
   )
 }

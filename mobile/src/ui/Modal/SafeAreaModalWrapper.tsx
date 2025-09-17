@@ -21,7 +21,10 @@ export const SafeAreaModalWrapper = ({
   const {atoms: ta} = useTheme()
 
   return (
-    <SafeAreaView edges={edges} style={[a.flex_1, ta.bg_color_max]}>
+    <SafeAreaView
+      edges={edges}
+      style={[a.flex_1, ta.bg_color_max, a.justify_between]}
+    >
       {title && (
         <View style={[a.py_sm, a.px_lg]}>
           <Text style={[a.heading_3_medium, ta.text_gray_max, a.text_center]}>
@@ -30,11 +33,9 @@ export const SafeAreaModalWrapper = ({
         </View>
       )}
 
-      <View style={[a.flex_1, a.justify_between]}>
-        {children}
+      {children}
 
-        {footer && <View style={[a.py_lg, a.px_lg]}>{footer}</View>}
-      </View>
+      {footer && <View style={[a.py_lg, a.px_lg]}>{footer}</View>}
     </SafeAreaView>
   )
 }
