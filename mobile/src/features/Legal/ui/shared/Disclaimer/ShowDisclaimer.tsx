@@ -61,41 +61,41 @@ export const ShowDisclaimer = ({type, disabled}: Props) => {
       openModal({
         title: strings.global.disclaimer,
         content: (
-            <View style={[a.flex_1]}>
-              <View style={{height: 400}}>
-                <Markdown
-                  colorScheme={basePalette}
-                  backgroundColor={ta.bg_color_max.backgroundColor}
-                  value={disclaimerText || ''}
-                  flatListProps={{
-                    style: {
-                      backgroundColor: p.bg_color_max,
-                    },
-                  }}
-                  styles={{
-                    text: {
-                      ...a.body_1_lg_regular,
-                      ...ta.text_gray_max,
-                      ...a.py_sm,
-                    },
-                    h2: {
-                      ...a.body_1_lg_medium,
-                      ...ta.text_gray_max,
-                      ...a.py_sm,
-                    },
-                    h1: {
-                      ...ta.text_gray_max,
-                      ...a.heading_3_medium,
-                      ...a.py_sm,
-                    },
-                  }}
-                />
-              </View>
-
-              <View style={[a.py_lg]}>
-                <Check text={strings.global.accept} />
-              </View>
+          <View style={[a.flex_1]}>
+            <View style={{height: 400}}>
+              <Markdown
+                colorScheme={basePalette}
+                backgroundColor={ta.bg_color_max.backgroundColor}
+                value={disclaimerText || ''}
+                flatListProps={{
+                  style: {
+                    backgroundColor: p.bg_color_max,
+                  },
+                }}
+                styles={{
+                  text: {
+                    ...a.body_1_lg_regular,
+                    ...ta.text_gray_max,
+                    ...a.py_sm,
+                  },
+                  h2: {
+                    ...a.body_1_lg_medium,
+                    ...ta.text_gray_max,
+                    ...a.py_sm,
+                  },
+                  h1: {
+                    ...ta.text_gray_max,
+                    ...a.heading_3_medium,
+                    ...a.py_sm,
+                  },
+                }}
+              />
             </View>
+
+            <View style={[a.py_lg]}>
+              <Check text={strings.global.accept} />
+            </View>
+          </View>
         ),
         footer: (
           <View style={[a.flex, a.flex_row, a.gap_lg]}>
