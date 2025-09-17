@@ -26,7 +26,7 @@ import {MaxAmountsPerTx} from './Show/MaxAmountsPerTx'
 
 export const SelectTokenFromListScreen = () => {
   const strings = useStrings()
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
   const {targets, selectedTargetIndex, allocated} = useTransfer()
 
   const {wallet} = useSelectedWallet()
@@ -410,14 +410,7 @@ const Counter = <T,>({
 
   if (!isSearchOpened && fungibilityFilter === 'all') {
     return (
-      <View
-        style={[
-          a.px_lg,
-          a.py_sm,
-          a.justify_center,
-          a.flex_row,
-        ]}
-      >
+      <View style={[a.px_lg, a.py_sm, a.justify_center, a.flex_row]}>
         <Text style={[ta.text_primary_medium, a.body_2_md_regular]}>
           {strings.send.youHave}
         </Text>
@@ -431,14 +424,7 @@ const Counter = <T,>({
 
   if (!isSearchOpened && fungibilityFilter === 'fts') {
     return (
-      <View
-        style={[
-          a.px_lg,
-          a.py_sm,
-          a.justify_center,
-          a.flex_row,
-        ]}
-      >
+      <View style={[a.px_lg, a.py_sm, a.justify_center, a.flex_row]}>
         <Text style={[ta.text_primary_medium, a.body_2_md_regular]}>
           {strings.send.youHave}
         </Text>
