@@ -25,7 +25,6 @@ export const ModalContentWrapper = ({content, footer}: Props) => {
   const panRef = React.useRef<GestureType | undefined>(undefined)
   const handleDismissOrClose = useDismissOrClose()
 
-  React.useEffect(() => {}, [])
 
   const panGesture = Gesture.Pan()
     .withRef(panRef)
