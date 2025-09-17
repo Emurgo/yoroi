@@ -100,7 +100,7 @@ export const fetchDefault = <T = Record<string, any>>(
   // when full request needs to be logged
   // logger.debug(`fetchDefault: API call ${fullPath}`, {request})
   return checkedFetch(request).catch((error) => {
-    logger.error(error, {origin: 'fetchDefault', type: 'http'})
+    logger.error(error, {origin: 'fetchDefault', type: 'http', fullPath})
     throw error
   })
 }

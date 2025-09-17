@@ -2,6 +2,7 @@ import {networkConfigs} from '@yoroi/blockchains'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Chain} from '@yoroi/types'
 
+import {useFocusEffect} from '@react-navigation/native'
 import {freeze} from 'immer'
 import * as React from 'react'
 import {FlatList} from 'react-native'
@@ -40,13 +41,15 @@ export const SelectNetworkScreen = () => {
   const openNetworkNoticeModal = useOpenNetworkNoticeModal()
   const openNetworkNoticeModalRef = React.useRef(openNetworkNoticeModal)
 
-  React.useEffect(() => {
-    if (!hasShownNetworkNotice) {
-      openNetworkNoticeModalRef.current(() => {
-        setHasShownNetworkNotice(true)
-      })
-    }
-  }, [hasShownNetworkNotice, setHasShownNetworkNotice])
+  useFocusEffect(
+    React.useCallback(() => {
+      if (!hasShownNetworkNotice) {
+        openNetworkNoticeModalRef.current(() => {
+          setHasShownNetworkNotice(true)
+        })
+      }
+    }, [hasShownNetworkNotice, setHasShownNetworkNotice]),
+  )
 
   return (
     <SafeAreaView
