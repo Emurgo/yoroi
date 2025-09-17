@@ -33,10 +33,10 @@ export const useScreenCapture = () => {
       resetIsScreenCaptureEnabled,
       init: () => {
         // shouldn't happen
-        if (isScreenCaptureEnabled && canSwitchScreenCapture) {
-          ScreenCapture.allowScreenCaptureAsync()
-        } else {
+        if (!isScreenCaptureEnabled && canSwitchScreenCapture) {
           ScreenCapture.preventScreenCaptureAsync()
+        } else {
+          ScreenCapture.allowScreenCaptureAsync()
         }
       },
       toggleIsScreenCaptureEnabled: () =>

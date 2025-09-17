@@ -135,7 +135,7 @@ export const sendMessages = defineMessages({
     defaultMessage: '!!!Minimum primary balance for tokens',
   },
   addressInputLabel: {
-    id: 'components.send.sendscreen.addressInputLabel',
+    id: 'components.send.confirmscreen.receiver',
     defaultMessage: '!!!Address',
   },
   resolverNoticeTitle: {

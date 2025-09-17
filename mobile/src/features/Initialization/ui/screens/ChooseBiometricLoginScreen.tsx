@@ -47,23 +47,32 @@ export const ChooseBiometricLoginScreen = () => {
   const isLoading = isScreenShownLoading || isPending
 
   return (
-    <SafeAreaView style={[a.flex_1, a.px_lg, a.pb_lg, ta.bg_color_max]}>
-      <View style={[a.flex_1, a.justify_center, a.gap_lg]}>
+    <SafeAreaView
+      style={[a.flex_1, ta.bg_color_max]}
+      edges={['top', 'left', 'right']}
+    >
+      <View style={[a.flex_1, a.justify_center, a.gap_lg, a.px_lg]}>
         <View style={a.align_center}>
           <Biometric />
         </View>
 
-        <Text
-          style={[ta.text_gray_max, a.heading_3_medium, a.text_center, a.px_lg]}
-        >
-          {strings.initialization.biometricDescription}
-        </Text>
+        <View style={[a.align_center, a.gap_xs]}>
+          <Text style={[ta.text_gray_max, a.heading_3_medium, a.text_center]}>
+            {strings.settings.enableLoginWithOs.heading}
+          </Text>
+          <Text style={[ta.text_gray_max, a.body_1_lg_medium, a.text_center]}>
+            {strings.settings.enableLoginWithOs.subHeading1}
+          </Text>
+          <Text style={[ta.text_gray_max, a.body_1_lg_medium, a.text_center]}>
+            {strings.settings.enableLoginWithOs.subHeading2}
+          </Text>
+        </View>
       </View>
 
-      <View style={[a.gap_sm]}>
+      <View style={[a.gap_sm, a.px_lg, a.pb_lg]}>
         <Button
           type={ButtonType.Text}
-          title={strings.initialization.ignoreButton}
+          title={strings.settings.enableLoginWithOs.notNowButton}
           onPress={() => {
             setScreenShown()
           }}
@@ -71,7 +80,7 @@ export const ChooseBiometricLoginScreen = () => {
         />
 
         <Button
-          title={strings.initialization.enableButton}
+          title={strings.settings.enableLoginWithOs.linkButton}
           onPress={async () => {
             const isSimulator = await DeviceInfo.isEmulator()
             if (isSimulator) {
