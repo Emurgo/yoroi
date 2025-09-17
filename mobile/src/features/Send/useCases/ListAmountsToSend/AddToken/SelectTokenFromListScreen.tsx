@@ -406,7 +406,7 @@ const Counter = <T,>({
   isSearchOpened: boolean
 }) => {
   const strings = useStrings()
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
 
   if (!isSearchOpened && fungibilityFilter === 'all') {
     return (
@@ -418,12 +418,12 @@ const Counter = <T,>({
           a.flex_row,
         ]}
       >
-        <Text style={[{color: p.primary_600}, a.body_2_md_regular]}>
+        <Text style={[ta.text_primary_medium, a.body_2_md_regular]}>
           {strings.send.youHave}
         </Text>
 
         <Text
-          style={[{color: p.primary_600}, a.body_2_md_medium]}
+          style={[ta.text_primary_medium, a.body_2_md_medium]}
         >{` ${counter} ${strings.send.assets(counter)}`}</Text>
       </View>
     )
@@ -439,12 +439,12 @@ const Counter = <T,>({
           a.flex_row,
         ]}
       >
-        <Text style={[{color: p.primary_600}, a.body_2_md_regular]}>
+        <Text style={[ta.text_primary_medium, a.body_2_md_regular]}>
           {strings.send.youHave}
         </Text>
 
         <Text
-          style={[{color: p.primary_600}, a.body_2_md_medium]}
+          style={[ta.text_primary_medium, a.body_2_md_medium]}
         >{` ${counter} ${strings.send.tokens(counter)}`}</Text>
       </View>
     )
@@ -453,12 +453,12 @@ const Counter = <T,>({
   if (!isSearchOpened && fungibilityFilter === 'nfts') {
     return (
       <View style={[a.p_lg, {justifyContent: 'center', flexDirection: 'row'}]}>
-        <Text style={[{color: p.primary_600}, a.body_2_md_regular]}>
+        <Text style={[ta.text_primary_medium, a.body_2_md_regular]}>
           {strings.send.youHave}
         </Text>
 
         <Text
-          style={[{color: p.primary_600}, a.body_2_md_medium]}
+          style={[ta.text_primary_medium, a.body_2_md_medium]}
         >{` ${counter} ${strings.send.nfts(counter)}`}</Text>
       </View>
     )
@@ -468,10 +468,10 @@ const Counter = <T,>({
     return (
       <View style={[a.p_lg, {justifyContent: 'center', flexDirection: 'row'}]}>
         <Text
-          style={[{color: p.primary_600}, a.body_2_md_medium]}
+          style={[ta.text_primary_medium, a.body_2_md_medium]}
         >{`${counter} ${strings.send.assets(counter)} `}</Text>
 
-        <Text style={[{color: p.primary_600}, a.body_2_md_regular]}>
+        <Text style={[ta.text_primary_medium, a.body_2_md_regular]}>
           {strings.send.found}
         </Text>
       </View>
