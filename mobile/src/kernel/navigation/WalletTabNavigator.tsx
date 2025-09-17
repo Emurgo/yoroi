@@ -43,12 +43,11 @@ export const WalletTabNavigator = () => {
             tabBar={TabBarWithHiddenContent}
             screenOptions={{
               headerShown: false,
-              tabBarStyle: [
-                {
-                  ...ta.bg_color_max,
-                },
-                {paddingBottom: bottom},
-              ],
+              tabBarStyle: {
+                ...ta.bg_color_max,
+                borderTopWidth: 0.5,
+                borderTopColor: p.gray_200,
+              },
               tabBarActiveTintColor: p.primary_600,
               tabBarInactiveTintColor: p.gray_600,
               tabBarLabelStyle: {
