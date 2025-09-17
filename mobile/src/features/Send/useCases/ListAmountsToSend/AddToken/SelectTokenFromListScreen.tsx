@@ -7,6 +7,7 @@ import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {FlashList} from '@shopify/flash-list'
 import * as React from 'react'
 import {Alert, TouchableOpacity, View} from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {usePortfolioBalances} from '~/features/Portfolio/common/hooks/usePortfolioBalances'
 import {MediaGallery} from '~/features/Portfolio/ui/MediaGallery/MediaGallery'
@@ -95,7 +96,10 @@ export const SelectTokenFromListScreen = () => {
   )
 
   return (
-    <View style={[a.flex_1, {backgroundColor: p.bg_color_max}]}>
+    <SafeAreaView
+      style={[a.flex_1, {backgroundColor: p.bg_color_max}]}
+      edges={['bottom']}
+    >
       <View style={[a.px_lg]}>
         {isSearchOpened === false && (
           <Tabs>
@@ -149,7 +153,7 @@ export const SelectTokenFromListScreen = () => {
         isSearchOpened={isSearchOpened}
         isSearching={isSearching}
       />
-    </View>
+    </SafeAreaView>
   )
 }
 
@@ -406,7 +410,13 @@ const Counter = <T,>({
 
   if (!isSearchOpened && fungibilityFilter === 'all') {
     return (
-      <View style={[a.p_lg, {justifyContent: 'center', flexDirection: 'row'}]}>
+      <View
+        style={[
+          a.px_lg,
+          a.py_sm,
+          {justifyContent: 'center', flexDirection: 'row'},
+        ]}
+      >
         <Text style={[{color: p.primary_600}, a.body_2_md_regular]}>
           {strings.send.youHave}
         </Text>
@@ -420,7 +430,13 @@ const Counter = <T,>({
 
   if (!isSearchOpened && fungibilityFilter === 'fts') {
     return (
-      <View style={[a.p_lg, {justifyContent: 'center', flexDirection: 'row'}]}>
+      <View
+        style={[
+          a.px_lg,
+          a.py_sm,
+          {justifyContent: 'center', flexDirection: 'row'},
+        ]}
+      >
         <Text style={[{color: p.primary_600}, a.body_2_md_regular]}>
           {strings.send.youHave}
         </Text>
