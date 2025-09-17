@@ -53,11 +53,9 @@ export const WalletTabNavigator = () => {
               tabBarLabelStyle: {
                 ...a.body_3_sm_medium,
               },
-              sceneStyle: [
-                {
-                  backgroundColor: p.bg_color_max,
-                },
-              ],
+              sceneStyle: {
+                backgroundColor: p.bg_color_max,
+              },
             }}
           >
             <Tab.Screen
