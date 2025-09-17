@@ -15,7 +15,7 @@ type SafeAreaModalWrapperProps = React.PropsWithChildren<{
 export const SafeAreaModalWrapper = ({
   title,
   footer,
-  edges = ['left', 'right', 'bottom'],
+  edges = ['left', 'right'],
   children,
 }: SafeAreaModalWrapperProps) => {
   const {atoms: ta} = useTheme()
@@ -35,7 +35,7 @@ export const SafeAreaModalWrapper = ({
 
       {children}
 
-      {footer && <View style={[a.py_lg, a.px_lg]}>{footer}</View>}
+      {footer && <View style={[a.py_lg, a.px_lg, a.align_end]}>{footer}</View>}
     </SafeAreaView>
   )
 }

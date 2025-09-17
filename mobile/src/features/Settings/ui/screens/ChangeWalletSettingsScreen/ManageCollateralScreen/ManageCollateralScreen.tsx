@@ -160,7 +160,7 @@ export const ManageCollateralScreen = () => {
 
   return (
     <SafeAreaView
-      edges={['left', 'right', 'bottom']}
+      edges={['left', 'right']}
       style={[ta.bg_color_max, a.flex_1, a.p_lg]}
     >
       <Text style={[a.self_center, ta.text_gray_max]}>

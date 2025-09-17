@@ -17,15 +17,15 @@ export const InitialCollateralInfoModal = () => {
       style={[{maxHeight: 150}]}
       contentContainerStyle={[a.px_lg, a.align_center]}
     >
+      <ColateralIlustration />
+
       <Text style={[a.text_center, a.body_1_lg_regular, ta.text_gray_medium]}>
         {strings.manageCollateral.collateralInfoModalText}
 
         <Space.Width._2xs />
-
-        <Link />
       </Text>
 
-      <ColateralIlustration />
+      <Link />
     </ScrollView>
   )
 }

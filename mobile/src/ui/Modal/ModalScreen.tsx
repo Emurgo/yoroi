@@ -198,7 +198,7 @@ export const Modal = () => {
               ]}
             >
               {canDiscardEnabled && !isFull && (
-                <GestureHandlerRootView>
+                <GestureHandlerRootView style={[a.flex]}>
                   <GestureDetector gesture={createDragGesture()}>
                     <View style={[a.align_center, a.pt_sm, a.pb_xs]}>
                       <DiscardIndicator withFeedback={withFeedbackEnabled} />

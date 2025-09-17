@@ -13,8 +13,8 @@ export const CollateralInfoModal = () => {
   const strings = useStrings()
 
   return (
-    <View style={[a.px_lg, a.align_center]}>
-      <ScrollView contentContainerStyle={[]}>
+    <View style={[{maxHeight: 200}, a.px_lg, a.align_center]}>
+      <ScrollView contentContainerStyle={[a.debug, {height: 10}]}>
         <ColateralIlustration />
 
         <Text style={[a.text_center, a.body_1_lg_regular, ta.text_gray_medium]}>
