@@ -38,7 +38,7 @@ export const ModalContentWrapper = ({content, footer}: Props) => {
     })
 
   return (
-    <SafeAreaView style={[a.flex_1, a.pb_lg]} onLayout={() => {}}>
+    <SafeAreaView style={[a.flex_1, a.pb_lg]}>
       <GestureDetector gesture={panGesture}>
         <ScrollView
           bounces={false}
