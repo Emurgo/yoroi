@@ -27,7 +27,7 @@ export const ConfirmTxWithSpendingPasswordModal = ({
 }: Props) => {
   const spendingPasswordRef = React.useRef<RNTextInput>(null)
   const {wallet} = useSelectedWallet()
-  const {isDark} = useTheme()
+  const {isDark, palette: p} = useTheme()
   const {
     signTx,
     error: signError,
@@ -84,7 +84,10 @@ export const ConfirmTxWithSpendingPasswordModal = ({
       />
 
       {errorMessage != null && (
-        <Text style={[a.text_center]} numberOfLines={3}>
+        <Text
+          style={[a.text_center, {color: p.sys_magenta_500}]}
+          numberOfLines={3}
+        >
           {errorMessage}
         </Text>
       )}
