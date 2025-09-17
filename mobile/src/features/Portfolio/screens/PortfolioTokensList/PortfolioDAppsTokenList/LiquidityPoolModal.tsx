@@ -26,7 +26,7 @@ export const LiquidityPoolModal = ({tokenInfo, splitTokenSymbol}: Props) => {
   const secondTokenName = infoExtractName(secondToken.info)
 
   return (
-    <View style={[a.flex_col]}>
+    <View style={[a.flex_col, a.gap_sm]}>
       <View style={[a.flex_row, a.align_center, a.gap_md]}>
         <View style={[a.relative, {width: 40, height: 40}]}>
           <AssetLogo
