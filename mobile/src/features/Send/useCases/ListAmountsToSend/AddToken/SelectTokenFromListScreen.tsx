@@ -98,7 +98,7 @@ export const SelectTokenFromListScreen = () => {
   return (
     <SafeAreaView
       style={[a.flex_1, {backgroundColor: p.bg_color_max}]}
-      edges={['bottom']}
+      edges={['bottom', 'left', 'right']}
     >
       <View style={[a.px_lg]}>
         {isSearchOpened === false && (
