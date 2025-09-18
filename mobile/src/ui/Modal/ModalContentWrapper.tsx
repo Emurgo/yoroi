@@ -18,6 +18,7 @@ type Props = {
   footer?: React.ReactNode
 }
 
+const DISMISS_THRESHOLD = 30
 export const ModalContentWrapper = ({content, footer}: Props) => {
   const [scrollY, setScrollY] = React.useState(0)
   const [scrollViewHeight, setScrollViewHeight] = React.useState(0)
@@ -30,7 +31,11 @@ export const ModalContentWrapper = ({content, footer}: Props) => {
     .activeOffsetY([10, 9999])
     .onUpdate((event) => {
       'worklet'
-      if (scrollViewHeight > 0 && scrollY <= 0 && event.translationY > 60) {
+      if (
+        scrollViewHeight > 0 &&
+        scrollY <= 0 &&
+        event.translationY > DISMISS_THRESHOLD
+      ) {
         runOnJS(handleDismissOrClose)()
       }
     })
@@ -50,7 +55,7 @@ export const ModalContentWrapper = ({content, footer}: Props) => {
           onScroll={(e) => {
             const newScrollY = e.nativeEvent.contentOffset.y
             setScrollY(newScrollY)
-            if (newScrollY <= -60) handleDismissOrClose()
+            if (newScrollY <= -DISMISS_THRESHOLD) handleDismissOrClose()
           }}
           onLayout={(e) => setScrollViewHeight(e.nativeEvent.layout.height)}
           scrollEventThrottle={16}
