@@ -23,6 +23,7 @@ export const ModalContentWrapper = ({content, footer}: Props) => {
   const [scrollY, setScrollY] = React.useState(0)
   const [scrollViewHeight, setScrollViewHeight] = React.useState(0)
   const panRef = React.useRef<GestureType | undefined>(undefined)
+  const scrollViewRef = React.useRef<ScrollView>(null)
   const handleDismissOrClose = useDismissOrClose()
 
   const panGesture = Gesture.Pan()
@@ -40,10 +41,19 @@ export const ModalContentWrapper = ({content, footer}: Props) => {
       }
     })
 
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      scrollViewRef.current?.flashScrollIndicators()
+    }, 100)
+
+    return () => clearTimeout(timer)
+  }, [])
+
   return (
     <SafeAreaView style={[a.flex_1, a.pb_lg]}>
       <GestureDetector gesture={panGesture}>
         <ScrollView
+          ref={scrollViewRef}
           bounces={false}
           nestedScrollEnabled
           overScrollMode="always"

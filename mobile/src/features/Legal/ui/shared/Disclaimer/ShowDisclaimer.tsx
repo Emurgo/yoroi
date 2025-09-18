@@ -116,7 +116,7 @@ export const ShowDisclaimer = ({type, disabled}: Props) => {
             />
           </View>
         ),
-        height: 700,
+        height: 580,
         canDiscard: false,
       })
       setShowed(true)
