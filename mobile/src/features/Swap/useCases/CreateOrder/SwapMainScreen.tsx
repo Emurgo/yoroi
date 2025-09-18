@@ -91,7 +91,6 @@ export const SwapMainScreen = () => {
 
   return (
     <SafeAreaView style={[a.flex_1, a.pb_lg, ta.bg_color_max]}>
-      {' '}
       <ScrollView style={[a.px_lg]}>
         <ShowDisclaimer type="swap" />
 
