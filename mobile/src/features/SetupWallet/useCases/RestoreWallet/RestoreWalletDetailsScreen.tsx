@@ -351,7 +351,7 @@ export const RestoreWalletDetailsScreen = () => {
               size={24}
             />
 
-            <Space.Height.sm />
+            <Space.Width.sm />
 
             <Text
               style={[
@@ -368,7 +368,7 @@ export const RestoreWalletDetailsScreen = () => {
               {plate.TextPart}
             </Text>
 
-            <Space.Height.sm />
+            <Space.Width.sm />
 
             <Info onPress={showModalTipsPlateNumber} />
           </View>

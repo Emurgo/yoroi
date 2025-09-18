@@ -393,6 +393,8 @@ const OrderCancellation = ({
     setIsLoading(false)
 
     const onOrderCancelConfirm = () => {
+      closeModal()
+
       if (isLeft(response)) {
         navigateTo.failedTx()
       } else {
@@ -504,7 +506,7 @@ const OrderCancellationConfirmation = ({
       {fee !== undefined && (
         <Row
           label={strings.swap.listOrdersSheetCancellationFee}
-          value={`${fee} ${primaryTokenInfoMainnet.ticker}}`}
+          value={`${fee} ${primaryTokenInfoMainnet.ticker}`}
         />
       )}
 

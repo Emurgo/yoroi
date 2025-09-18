@@ -168,7 +168,6 @@ const MainnetWarningDialog = ({
   onOk: () => void
 }) => {
   const {atoms: ta} = useTheme()
-
   const strings = useStrings()
 
   return (

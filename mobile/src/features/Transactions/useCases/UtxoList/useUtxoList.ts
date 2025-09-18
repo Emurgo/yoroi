@@ -11,8 +11,8 @@ import {useQuery, useQueryClient} from '@tanstack/react-query'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useWalletEvent} from '~/features/WalletManager/hooks/useWalletEvent'
 import {toAssetNameHex, toPolicyId} from '~/wallets/cardano/api/utils'
-import {wrappedCsl} from '~/wallets/cardano/wrappedCsl'
 import {RawUtxo} from '~/wallets/types/other'
+import {CardanoMobile} from '~/wallets/wallets'
 
 export const useUtxoList = () => {
   const {
@@ -55,7 +55,7 @@ type Utxo = {
   txHash: string
   txIndex: number
   balance: Balance.Amounts
-  toTransactionUnspentOutputHex: () => Promise<string>
+  toTransactionUnspentOutputHex: () => string
 }
 
 export type UtxoList = Array<{
@@ -118,13 +118,11 @@ const transformUtxo = (utxo: RawUtxo): Utxo => {
   return transformedUtxo
 }
 
-async function toTransactionUnspentOutputHex(this: Utxo): Promise<string> {
-  const {csl, release} = wrappedCsl()
-  try {
-    return (await utxoToTransactionUnspentOutput({csl, utxo: this})).toHex()
-  } finally {
-    release()
-  }
+function toTransactionUnspentOutputHex(this: Utxo): string {
+  return utxoToTransactionUnspentOutput({
+    csl: CardanoMobile,
+    utxo: this,
+  }).toHex()
 }
 
 type UtxoToCsl = {
@@ -132,22 +130,22 @@ type UtxoToCsl = {
   utxo: Utxo
 }
 
-export const utxoToTransactionUnspentOutput = async ({
+export const utxoToTransactionUnspentOutput = ({
   csl,
   utxo,
-}: UtxoToCsl): Promise<TransactionUnspentOutput> => {
-  const input = await csl.TransactionInput.new(
-    await csl.TransactionHash.fromHex(utxo.txHash),
+}: UtxoToCsl): TransactionUnspentOutput => {
+  const input = csl.TransactionInput.new(
+    csl.TransactionHash.fromHex(utxo.txHash),
     utxo.txIndex,
   )
-  const value = await csl.Value.new(
-    await csl.BigNum.fromStr(utxo.balance[primaryTokenId] ?? '0'),
+  const value = csl.Value.new(
+    csl.BigNum.fromStr(utxo.balance[primaryTokenId] ?? '0'),
   )
 
   const assetIds = Object.keys(utxo.balance).filter((v) => v !== primaryTokenId)
 
   if (assetIds.length > 0) {
-    const multiAsset = await csl.MultiAsset.new()
+    const multiAsset = csl.MultiAsset.new()
 
     const groupedByPolicyId = assetIds.reduce(
       (acc, cur) => {
@@ -161,24 +159,24 @@ export const utxoToTransactionUnspentOutput = async ({
 
     for (const policyIdStr of Object.keys(groupedByPolicyId)) {
       const assetGroup = groupedByPolicyId[policyIdStr]
-      const policyId = await csl.ScriptHash.fromBytes(
+      const policyId = csl.ScriptHash.fromBytes(
         new Uint8Array(Buffer.from(policyIdStr, 'hex')),
       )
-      const assets = await csl.Assets.new()
+      const assets = csl.Assets.new()
       for (const asset of assetGroup) {
-        const name = await csl.AssetName.new(
+        const name = csl.AssetName.new(
           new Uint8Array(Buffer.from(toAssetNameHex(asset), 'hex')),
         )
-        const amount = await csl.BigNum.fromStr(utxo.balance[asset])
-        await assets.insert(name, amount)
+        const amount = csl.BigNum.fromStr(utxo.balance[asset])
+        assets.insert(name, amount)
       }
-      await multiAsset.insert(policyId, assets)
+      multiAsset.insert(policyId, assets)
     }
 
-    await value.setMultiasset(multiAsset)
+    value.setMultiasset(multiAsset)
   }
-  const receiver = await csl.Address.fromBech32(utxo.receiver)
+  const receiver = csl.Address.fromBech32(utxo.receiver)
   if (!receiver) throw new Error('Invalid receiver')
-  const output = await csl.TransactionOutput.new(receiver, value)
+  const output = csl.TransactionOutput.new(receiver, value)
   return csl.TransactionUnspentOutput.new(input, output)
 }

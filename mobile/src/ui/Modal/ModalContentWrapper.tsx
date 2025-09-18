@@ -2,7 +2,6 @@ import {atoms as a} from '@yoroi/theme'
 
 import * as React from 'react'
 import {View} from 'react-native'
-import type {GestureType} from 'react-native-gesture-handler'
 import {
   Gesture,
   GestureDetector,
@@ -21,25 +20,30 @@ type Props = {
 
 export const ModalContentWrapper = ({content, footer}: Props) => {
   const [scrollY, setScrollY] = React.useState(0)
-  const [scrollViewHeight, setScrollViewHeight] = React.useState(0)
-  const panRef = React.useRef<GestureType | undefined>(undefined)
   const scrollViewRef = React.useRef<ScrollView>(null)
   const handleDismissOrClose = useDismissOrClose()
 
-  const panGesture = Gesture.Pan()
-    .withRef(panRef)
+  const tryDismiss = React.useCallback(() => {
+    if (scrollY <= 0) handleDismissOrClose()
+  }, [scrollY, handleDismissOrClose])
+
+  const nativeGesture = Gesture.Native()
+  const tapGesture = Gesture.Tap().maxDeltaX(10).maxDeltaY(10).maxDuration(250) // to detect tap on the scroll view
+  const panToDismiss = Gesture.Pan()
     .enabled(scrollY <= 0)
-    .activeOffsetY([10, 9999])
-    .onUpdate((event) => {
+    .activeOffsetY([24, 9999])
+    .minDistance(24)
+    .onEnd((event) => {
       'worklet'
-      if (
-        scrollViewHeight > 0 &&
-        scrollY <= 0 &&
-        event.translationY > DISMISS_THRESHOLD
-      ) {
-        runOnJS(handleDismissOrClose)()
+      if (event.translationY > DISMISS_THRESHOLD) {
+        runOnJS(tryDismiss)()
       }
     })
+
+  const gesture = Gesture.Simultaneous(
+    nativeGesture,
+    Gesture.Exclusive(tapGesture, panToDismiss),
+  )
 
   React.useEffect(() => {
     const timer = setTimeout(() => {
@@ -51,26 +55,29 @@ export const ModalContentWrapper = ({content, footer}: Props) => {
 
   return (
     <SafeAreaView style={[a.flex_1, a.pb_lg]}>
-      <GestureDetector gesture={panGesture}>
+      <GestureDetector gesture={gesture}>
         <ScrollView
           ref={scrollViewRef}
           bounces={false}
           nestedScrollEnabled
-          overScrollMode="always"
-          keyboardShouldPersistTaps="handled"
+          overScrollMode="never"
+          keyboardShouldPersistTaps="always"
           showsVerticalScrollIndicator
           contentContainerStyle={[a.flex_grow, a.px_lg]}
           style={[a.flex_1]}
-          simultaneousHandlers={panRef}
+          removeClippedSubviews={false}
           onScroll={(e) => {
             const newScrollY = e.nativeEvent.contentOffset.y
             setScrollY(newScrollY)
-            if (newScrollY <= -DISMISS_THRESHOLD) handleDismissOrClose()
           }}
-          onLayout={(e) => setScrollViewHeight(e.nativeEvent.layout.height)}
           scrollEventThrottle={16}
+          onMomentumScrollEnd={() => {
+            if (scrollY <= 0) handleDismissOrClose()
+          }}
         >
-          {content}
+          <View style={[{pointerEvents: 'box-none'}, [a.flex_grow]]}>
+            {content}
+          </View>
         </ScrollView>
       </GestureDetector>
 

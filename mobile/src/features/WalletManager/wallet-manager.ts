@@ -26,8 +26,8 @@ import {Keychain, KeychainManager} from '~/kernel/storage/Keychain'
 import {rootStorage} from '~/kernel/storage/storages'
 import {keyManager} from '~/wallets/cardano/key-manager/key-manager'
 import {WalletEvent, YoroiWallet} from '~/wallets/cardano/types'
-import {wrappedCsl} from '~/wallets/cardano/wrappedCsl'
 import {validatePassword, validateWalletName} from '~/wallets/utils/validators'
+import {CardanoMobile} from '~/wallets/wallets'
 
 import {networkManagers} from './common/constants'
 import {
@@ -660,12 +660,10 @@ export class WalletManager {
     const walletFactory = getWalletFactory({network, implementation})
     const id = v4()
 
-    const {csl, release} = wrappedCsl()
     const {rootKey, accountPubKeyHex} = walletFactory.makeKeys({
       mnemonic,
-      csl,
+      csl: CardanoMobile,
     })
-    release()
 
     const encryptedStorage = makeWalletEncryptedStorage(id)
     await encryptedStorage.xpriv.write(rootKey, password)
