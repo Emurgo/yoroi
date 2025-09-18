@@ -155,7 +155,14 @@ export const AppNavigator = () => {
         {/* Development */}
         {isDev && (
           <Stack.Group>
-            <Stack.Screen name="developer" getComponent={() => DevMenu} />
+            <Stack.Screen
+              name="developer"
+              options={{
+                headerShown: true,
+                title: 'Developer Menu',
+              }}
+              getComponent={() => DevMenu}
+            />
 
             <Stack.Screen
               name="notifications"
