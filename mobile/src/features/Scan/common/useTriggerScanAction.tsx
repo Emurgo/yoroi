@@ -30,6 +30,7 @@ export const useTriggerScanAction = ({
   const {openModal, closeModal, setLoading: startLoading} = useModal()
 
   const navigateTo = useNavigateTo()
+  const timeoutRef = React.useRef<NodeJS.Timeout | null>(null)
 
   const {
     receiverResolveChanged,
@@ -112,7 +113,7 @@ export const useTriggerScanAction = ({
           claimTokens(scanAction)
         }
 
-        setTimeout(() => {
+        timeoutRef.current = setTimeout(() => {
           openModal({
             title: strings.claim.askConfirmationTitle,
             content: (
@@ -123,13 +124,21 @@ export const useTriggerScanAction = ({
               />
             ),
             footer: <AskConfirmationActions onContinue={handleOnContinue} />,
-            height: 500,
+            height: 400,
           })
         }, 300)
         break
       }
     }
   }
+
+  React.useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current)
+      }
+    }
+  }, [])
 
   return trigger
 }
