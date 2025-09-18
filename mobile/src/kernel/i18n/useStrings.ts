@@ -797,6 +797,7 @@ export const useStrings = () => {
         minPrimaryBalanceForTokens: f(sendMessages.minPrimaryBalanceForTokens),
         next: f(globalMessages.next),
         nfts: (qty: number) => f(globalMessages.nfts, {qty}),
+        nftsTab: f(sendMessages.nftsTab),
         noAssets: f(sendMessages.noAssets),
         noAssetsAddedYet: (fungible: string) =>
           f(sendMessages.noAssetsAddedYet, {fungible}),

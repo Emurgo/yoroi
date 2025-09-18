@@ -57,13 +57,12 @@ const Notice = ({onNext}: {onNext?: () => void}) => {
       <ScrollView
         bounces={false}
         style={a.flex_1}
-        contentContainerStyle={a.px_lg}
+        contentContainerStyle={[a.px_lg, {paddingBottom: buttonHeight + 16}]}
         ref={scrollViewRef}
         persistentScrollbar
         showsVerticalScrollIndicator
       >
         <View
-          style={[a.px_lg]}
           onLayout={(event) => {
             const {height} = event.nativeEvent.layout
             setContentHeight(height + buttonHeight)
@@ -92,8 +91,8 @@ const Notice = ({onNext}: {onNext?: () => void}) => {
           a.absolute,
           a.w_full,
           ta.bg_color_max,
-          a.h_full,
           a.px_lg,
+          a.justify_center,
           {
             bottom: 0,
             height: buttonHeight,
@@ -106,6 +105,7 @@ const Notice = ({onNext}: {onNext?: () => void}) => {
             }),
           },
         ]}
+        pointerEvents="box-none"
       >
         <Button
           type={ButtonType.Primary}
