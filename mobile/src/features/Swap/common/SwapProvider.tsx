@@ -766,7 +766,7 @@ const parseNumber = (text: string) =>
   !Number.isNaN(Number(text.replace(',', '.')))
     ? text
         .replace(',', '.')
-        .replace(/^0+(?=\d)/, '')
+        .replace(/^0+(?=\d|\.)/, '0')
         .replace(/^\.$/, '0.')
     : '0'
 
