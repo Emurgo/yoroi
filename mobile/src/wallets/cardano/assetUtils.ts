@@ -4,8 +4,8 @@ import BigNumber from 'bignumber.js'
 import {logger} from '~/kernel/logger/logger'
 
 import {RawUtxo} from '../types/other'
+import {CardanoMobile} from '../wallets'
 import {cardanoValueFromRemoteFormat} from './utils'
-import {wrappedCsl} from './wrappedCsl'
 
 // Re-export from assetHelpers to maintain backward compatibility
 export {identifierToCardanoAsset} from './assetHelpers'
@@ -22,16 +22,15 @@ export async function calcLockedDeposit({
   address?: string
   coinsPerUtxoByteStr: string
 }) {
-  const cslLocal = wrappedCsl()
-  const csl = cslLocal.csl
-  const cslProvided = wrappedCsl()
+  const csl = CardanoMobile
+  const cslProvided = CardanoMobile
   const result = new BigNumber(0)
   try {
     const utxosWithAssets = rawUtxos.filter((u) => u.assets.length > 0)
     const coinsPerUtxoByte = await csl.BigNum.fromStr(coinsPerUtxoByteStr)
     const dataCost = await csl.DataCost.newCoinsPerByte(coinsPerUtxoByte)
 
-    const normalizedAddress = await normalizeToAddress(cslProvided.csl, address)
+    const normalizedAddress = await normalizeToAddress(cslProvided, address)
     if (normalizedAddress === undefined)
       throw new Error('calcLockedDeposit::Error not a valid address')
 
@@ -51,8 +50,5 @@ export async function calcLockedDeposit({
       coinsPerUtxoByteStr,
     })
     return result
-  } finally {
-    cslProvided.release()
-    cslLocal.release()
   }
 }

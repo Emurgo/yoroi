@@ -1,15 +1,15 @@
 import {normalizeToAddress} from '@emurgo/yoroi-lib/dist/internals/utils/addresses'
 import {Buffer} from 'buffer'
 
+import {CardanoMobile} from '~/wallets/wallets'
+
 import {harden} from '../common/signatureUtils'
 import {getMasterKeyFromMnemonic} from '../mnemonic/mnemonic'
 import {createRawTxSigningKey} from '../utils'
-import {wrappedCsl} from '../wrappedCsl'
 import * as cip8 from './cip8'
 
 describe('CIP8', () => {
   it('should support signing', async () => {
-    const {csl} = wrappedCsl()
     const bech32 =
       'addr1qynqc23tpx4dqps6xgqy9s2l3xz5fxu734wwmzj9uddn0h2z6epfcukqmswgwwfruxh7gaddv9x0d5awccwahnhwleqqc4zkh4'
     const payload = '48656C6C6F'
@@ -19,7 +19,7 @@ describe('CIP8', () => {
     const signingKey = createRawTxSigningKey(rootKeyHex, path)
 
     const payloadInBytes = Buffer.from(payload, 'hex')
-    const normalisedAddress = normalizeToAddress(csl, bech32)
+    const normalisedAddress = normalizeToAddress(CardanoMobile, bech32)
     if (normalisedAddress != null) {
       const coseSign1 = await cip8.sign(
         Buffer.from(normalisedAddress.toHex(), 'hex'),

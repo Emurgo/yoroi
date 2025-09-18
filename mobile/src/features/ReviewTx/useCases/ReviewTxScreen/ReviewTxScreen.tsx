@@ -47,7 +47,11 @@ export const ReviewTxScreen = () => {
     onClose: params?.onClose,
   })
 
-  const txBody = useTxBody({cbor, unsignedTx})
+  const {
+    txBody,
+    isLoading: isTxBodyLoading,
+    error: txBodyError,
+  } = useTxBody({cbor, unsignedTx})
   const formattedTx = useFormattedTx(txBody)
   const formattedMetadata = useFormattedMetadata({
     txBody,
@@ -79,10 +83,17 @@ export const ReviewTxScreen = () => {
     throw new Error('ReviewTxScreen: invalid state')
   }
 
+  if (txBodyError) {
+    throw txBodyError
+  }
+
+  if (isTxBodyLoading || !txBody || !formattedTx) {
+    return null // Since the hooks are now synchronous, this shouldn't happen
+  }
   return (
     <ReviewTx
       formattedTx={formattedTx}
-      formattedMetadata={formattedMetadata}
+      formattedMetadata={formattedMetadata ?? undefined}
       operations={params?.operations}
       operationsNotice={params?.operationsNotice}
       details={params?.details}
