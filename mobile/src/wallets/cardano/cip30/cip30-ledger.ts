@@ -40,7 +40,7 @@ class CIP30LedgerExtension {
     const normalizedAddress = normalizeToAddress(CardanoMobile, address)
     if (!normalizedAddress) throw new Error('Invalid address')
     const rewardAddress =
-      await CardanoMobile.RewardAddress.fromAddress(normalizedAddress)
+      CardanoMobile.RewardAddress.fromAddress(normalizedAddress)
     const rewardAddressHex = rewardAddress?.toAddress().toHex()
 
     const stakingSigningPath =

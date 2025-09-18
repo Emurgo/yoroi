@@ -14,10 +14,18 @@ import {Copiable} from '~/ui/Copiable/Copiable'
 import {ReviewTx} from './ReviewTx/ReviewTx'
 
 export const ReviewTxScreen = () => {
+  console.log('[ReviewTxScreen] Component rendering')
+
   const navigation = useNavigation()
   const {unsignedTx} = useReviewTx()
   const params = useUnsafeParams<NonNullable<ReviewTxRoutes['review-tx']>>()
   const cbor = params?.cbor
+
+  console.log('[ReviewTxScreen] Initial state:', {
+    hasUnsignedTx: !!unsignedTx,
+    hasCbor: !!cbor,
+    paramsKeys: params ? Object.keys(params) : null,
+  })
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
@@ -52,11 +60,25 @@ export const ReviewTxScreen = () => {
     isLoading: isTxBodyLoading,
     error: txBodyError,
   } = useTxBody({cbor, unsignedTx})
+
+  console.log('[ReviewTxScreen] useTxBody result:', {
+    hasTxBody: !!txBody,
+    isTxBodyLoading,
+    txBodyError: txBodyError?.message,
+  })
+
   const {
     data: formattedTx,
     isLoading: isFormattedTxLoading,
     error: formattedTxError,
   } = useFormattedTx(txBody)
+
+  console.log('[ReviewTxScreen] useFormattedTx result:', {
+    hasFormattedTx: !!formattedTx,
+    isFormattedTxLoading,
+    formattedTxError: formattedTxError?.message,
+  })
+
   const formattedMetadata = useFormattedMetadata({
     txBody,
     unsignedTx,
@@ -95,9 +117,21 @@ export const ReviewTxScreen = () => {
     throw formattedTxError
   }
 
+  console.log('[ReviewTxScreen] Render conditions:', {
+    isTxBodyLoading,
+    isFormattedTxLoading,
+    hasTxBody: !!txBody,
+    hasFormattedTx: !!formattedTx,
+    willRenderNull:
+      isTxBodyLoading || isFormattedTxLoading || !txBody || !formattedTx,
+  })
+
   if (isTxBodyLoading || isFormattedTxLoading || !txBody || !formattedTx) {
+    console.log('[ReviewTxScreen] Returning null - loading or missing data')
     return null
   }
+
+  console.log('[ReviewTxScreen] Rendering ReviewTx component')
   return (
     <ReviewTx
       formattedTx={formattedTx}

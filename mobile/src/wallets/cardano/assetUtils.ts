@@ -13,7 +13,7 @@ export {identifierToCardanoAsset} from './assetHelpers'
 const addressPlaceholder =
   'addr1qx8nuj8a7gy8kes4pedpfdscrlxr6p8gkzyzmhdmsf4209xssydveuc8xyx4zh27fwcmr62mraeezjwf24hzkyejwfmqmpfpy5'
 
-export async function calcLockedDeposit({
+export function calcLockedDeposit({
   rawUtxos,
   address = addressPlaceholder,
   coinsPerUtxoByteStr,
@@ -27,10 +27,10 @@ export async function calcLockedDeposit({
   const result = new BigNumber(0)
   try {
     const utxosWithAssets = rawUtxos.filter((u) => u.assets.length > 0)
-    const coinsPerUtxoByte = await csl.BigNum.fromStr(coinsPerUtxoByteStr)
-    const dataCost = await csl.DataCost.newCoinsPerByte(coinsPerUtxoByte)
+    const coinsPerUtxoByte = csl.BigNum.fromStr(coinsPerUtxoByteStr)
+    const dataCost = csl.DataCost.newCoinsPerByte(coinsPerUtxoByte)
 
-    const normalizedAddress = await normalizeToAddress(cslProvided, address)
+    const normalizedAddress = normalizeToAddress(cslProvided, address)
     if (normalizedAddress === undefined)
       throw new Error('calcLockedDeposit::Error not a valid address')
 
