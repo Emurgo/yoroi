@@ -3,9 +3,10 @@ import {Wallet} from '@yoroi/types'
 
 import {Buffer} from 'buffer'
 
+import {CardanoMobile} from '~/wallets/wallets'
+
 import {cip30ExtensionMaker} from '../cip30/cip30'
 import {YoroiWallet} from '../types'
-import {wrappedCsl} from '../wrappedCsl'
 
 export const cip95ExtensionMaker = (wallet: YoroiWallet, meta: Wallet.Meta) => {
   return new CIP95Extension(wallet, meta)
@@ -42,29 +43,24 @@ class CIP95Extension {
   }
 
   async getPubDRepKey(): Promise<string> {
-    const {csl, release} = wrappedCsl()
     const walletImplementation = this.meta.implementation
     if (!supportsCIP95(walletImplementation))
       throw new Error('CIP95Extension: Unsupported wallet implementation')
 
-    try {
-      const accountPubKey = csl.Bip32PublicKey.fromBytes(
-        Buffer.from(this.wallet.publicKeyHex, 'hex'),
-      )
+    const accountPubKey = CardanoMobile.Bip32PublicKey.fromBytes(
+      Buffer.from(this.wallet.publicKeyHex, 'hex'),
+    )
 
-      const implementationConfig =
-        cardanoConfig.implementations[walletImplementation]
-      const baseDerivations = implementationConfig.derivations.base
+    const implementationConfig =
+      cardanoConfig.implementations[walletImplementation]
+    const baseDerivations = implementationConfig.derivations.base
 
-      const rawKey = accountPubKey
-        .derive(baseDerivations.roles.drep)
-        .derive(0)
-        .toRawKey()
+    const rawKey = accountPubKey
+      .derive(baseDerivations.roles.drep)
+      .derive(0)
+      .toRawKey()
 
-      return rawKey.toHex()
-    } finally {
-      release()
-    }
+    return rawKey.toHex()
   }
 
   private async getStakeKeyStatus() {

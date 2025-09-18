@@ -1158,7 +1158,7 @@ export const makeCardanoWallet = (
       // if it crashes, the utxo manager will be out of sync with wallet
       if (this.didUtxosUpdate(this._utxos, newUtxos) || isForced) {
         // NOTE: recalc locked deposit should happen also when epoch changes after conway
-        const lockedAsStorageCost = await calcLockedDeposit({
+        const lockedAsStorageCost = calcLockedDeposit({
           rawUtxos: newUtxos,
           coinsPerUtxoByteStr: this.protocolParams.coinsPerUtxoByte,
         })

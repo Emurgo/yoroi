@@ -1,7 +1,7 @@
-import {useSuspenseQuery} from '@tanstack/react-query'
+import * as React from 'react'
 
-import {wrappedCsl} from '~/wallets/cardano/wrappedCsl'
 import {YoroiUnsignedTx} from '~/wallets/types/yoroi'
+import {CardanoMobile} from '~/wallets/wallets'
 
 import {TransactionBody} from '../types'
 
@@ -12,37 +12,51 @@ export const useTxBody = ({
 }: {
   cbor?: string | null
   unsignedTx?: YoroiUnsignedTx | null
-}): TransactionBody => {
-  const query = useSuspenseQuery({
-    queryKey: ['useTxBody', cbor, unsignedTx],
-    queryFn: async () => {
+}): {
+  txBody: TransactionBody | null
+  isLoading: boolean
+  error: Error | null
+} => {
+  return React.useMemo(() => {
+    try {
       // ORDER IS IMPORTANT
       // cbor comes from navigation params and unsigned tx from provider
       // Reason is unsignedTx can change during the CATALYST registration funnel (CIP36)
       // TODO: eliminate the use of unsigned tx entirely
       if (cbor != undefined) {
-        return getCborTxBody(cbor)
+        const txBody = getCborTxBody(cbor)
+        return {
+          txBody,
+          isLoading: false,
+          error: null,
+        }
       } else if (unsignedTx != undefined) {
-        return getUnsignedTxTxBody(unsignedTx)
+        const txBody = getUnsignedTxTxBody(unsignedTx)
+        return {
+          txBody,
+          isLoading: false,
+          error: null,
+        }
       } else {
-        throw new Error('useTxBody: missing cbor and unsignedTx')
+        return {
+          txBody: null,
+          isLoading: false,
+          error: new Error('useTxBody: missing cbor and unsignedTx'),
+        }
       }
-    },
-  })
-
-  if (query.data === undefined)
-    throw new Error('useTxBody: cannot extract txBody')
-  return query.data
+    } catch (error) {
+      return {
+        txBody: null,
+        isLoading: false,
+        error: error as Error,
+      }
+    }
+  }, [cbor, unsignedTx])
 }
 const getCborTxBody = (cbor: string) => {
-  const {csl, release} = wrappedCsl()
-  try {
-    const tx = csl.Transaction.fromHex(cbor)
-    const jsonString = tx.toJson()
-    return JSON.parse(jsonString).body
-  } finally {
-    release()
-  }
+  const tx = CardanoMobile.Transaction.fromHex(cbor)
+  const jsonString = tx.toJson()
+  return JSON.parse(jsonString).body
 }
 
 const getUnsignedTxTxBody = (unsignedTx: YoroiUnsignedTx) => {

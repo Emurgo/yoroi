@@ -7,7 +7,6 @@ import {StakingStatus} from '~/wallets/types/staking'
 import {CardanoMobile} from '../wallets'
 import type {TimestampedCertMeta} from './transactionManager/transactionManager'
 import {CardanoTypes} from './types'
-import {wrappedCsl} from './wrappedCsl'
 
 const addrContainsAccountKey = (
   address: string,
@@ -103,13 +102,8 @@ export const normalizeToPoolHash = (poolIdOrHash: string): string => {
 }
 
 const getPoolHash = (poolId: string): string => {
-  const {csl, release} = wrappedCsl()
-  try {
-    const hash = csl.Ed25519KeyHash.fromBech32(poolId)
-    return hash.toHex()
-  } finally {
-    release()
-  }
+  const hash = CardanoMobile.Ed25519KeyHash.fromBech32(poolId)
+  return hash.toHex()
 }
 
 const isValidPoolId = (poolId: string): boolean => {
@@ -123,25 +117,16 @@ const isValidPoolId = (poolId: string): boolean => {
 }
 
 export const getPoolBech32Id = (poolId: string) => {
-  const {csl, release} = wrappedCsl()
-  try {
-    const keyHash = csl.Ed25519KeyHash.fromHex(poolId)
-    return keyHash.toBech32('pool')
-  } finally {
-    release()
-  }
+  const keyHash = CardanoMobile.Ed25519KeyHash.fromHex(poolId)
+  return keyHash.toBech32('pool')
 }
 
 const isValidPoolHash = (poolHash: string): boolean => {
   if (poolHash.length === 0) return false
-
-  const {csl, release} = wrappedCsl()
   try {
-    csl.Ed25519KeyHash.fromBytes(Buffer.from(poolHash, 'hex'))
+    CardanoMobile.Ed25519KeyHash.fromBytes(Buffer.from(poolHash, 'hex'))
     return true
   } catch (e) {
     return false
-  } finally {
-    release()
   }
 }
