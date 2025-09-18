@@ -82,9 +82,21 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
 
   return (
     <View style={[a.rounded_sm, a.p_lg, a.gap_lg, ta.bg_color_min]}>
-      <Text style={[a.body_2_md_medium, {color: p.text_gray_medium}]}>
-        {direction === 'in' ? strings.swap.from : strings.swap.to}
-      </Text>
+      <View style={[a.flex_row, a.justify_between, a.align_center]}>
+        <Text style={[a.body_2_md_medium, ta.text_gray_medium]}>
+          {direction === 'in' ? strings.swap.from : strings.swap.to}
+        </Text>
+
+        {direction === 'in' && info && !isPrimaryTokenInfo(info) && (
+          <Button
+            title={strings.swap.max}
+            type="Text"
+            size="S"
+            onPress={handleMaxPress}
+            style={[{flexGrow: 0, marginLeft: 'auto'}]}
+          />
+        )}
+      </View>
 
       <View style={[a.flex_row, a.justify_between]}>
         <Pressable
@@ -106,15 +118,6 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
 
           <Icon.Chevron direction="down" size={24} color={p.gray_max} />
         </Pressable>
-
-        {direction === 'in' && info && !isPrimaryTokenInfo(info) && (
-          <Button
-            title={strings.swap.max}
-            type="Text"
-            size="S"
-            onPress={handleMaxPress}
-          />
-        )}
 
         <Pressable
           style={[a.flex_1, a.flex_row, a.justify_end, a.align_center]}

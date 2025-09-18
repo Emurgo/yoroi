@@ -3,6 +3,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Text, View, useWindowDimensions} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
+import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {ShowDisclaimer} from '~/features/Legal/ui/shared/Disclaimer/ShowDisclaimer'
 import {AmountCard} from '~/features/Swap/common/AmountCard/AmountCard'
@@ -89,7 +90,10 @@ export const SwapMainScreen = () => {
   }
 
   return (
-    <View style={[a.flex_1, a.pb_lg, {backgroundColor: p.bg_color_max}]}>
+    <SafeAreaView
+      edges={['bottom', 'left', 'right']}
+      style={[a.flex_1, a.pb_lg, {backgroundColor: p.bg_color_max}]}
+    >
       <ScrollView style={[a.px_lg]}>
         <ShowDisclaimer type="swap" />
 
@@ -245,6 +249,6 @@ export const SwapMainScreen = () => {
           onPress={onSwapPress}
         />
       </View>
-    </View>
+    </SafeAreaView>
   )
 }
