@@ -31,7 +31,7 @@ const BOTTOM_ACTION_SECTION = 180
 export const SwapMainScreen = () => {
   const [contentHeight, setContentHeight] = React.useState(0)
   const strings = useStrings()
-  const {palette: p} = useTheme()
+  const {palette: p, atoms: ta} = useTheme()
   const {height: deviceHeight} = useWindowDimensions()
   const isKeyboardOpen = useIsKeyboardOpen()
   const swapForm = useSwap()
@@ -92,7 +92,7 @@ export const SwapMainScreen = () => {
   return (
     <SafeAreaView
       edges={['bottom', 'left', 'right']}
-      style={[a.flex_1, a.pb_lg, {backgroundColor: p.bg_color_max}]}
+      style={[a.flex_1, a.pb_lg, ta.bg_color_max]}
     >
       <ScrollView style={[a.px_lg]}>
         <ShowDisclaimer type="swap" />
