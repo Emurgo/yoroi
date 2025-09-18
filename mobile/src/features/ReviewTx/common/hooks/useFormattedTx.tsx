@@ -27,18 +27,22 @@ import {
 
 export const useFormattedTx = (
   data: TransactionBody | null,
-): FormattedTx | null => {
+): {
+  data: FormattedTx | null
+  isLoading: boolean
+  error: Error | null
+} => {
   const {wallet} = useSelectedWallet()
 
   const inputs = data?.inputs ?? []
   const outputs = data?.outputs ?? []
   const referenceInputs = data?.reference_inputs ?? []
 
-  const inputUtxos = useUtxos(inputs, wallet)
-  const referenceInputUtxos = useUtxos(referenceInputs, wallet)
+  const inputUtxosResult = useUtxos(inputs, wallet)
+  const referenceInputUtxosResult = useUtxos(referenceInputs, wallet)
 
   const inputTokenIds = inputs.flatMap((i) => {
-    const utxo = inputUtxos.find(
+    const utxo = inputUtxosResult.data.find(
       (utxo: RawUtxo) =>
         utxo?.tx_hash === i.transaction_id && utxo?.tx_index === i.index,
     )
@@ -51,7 +55,7 @@ export const useFormattedTx = (
   })
 
   const referenceInputTokenIds = referenceInputs.flatMap((i) => {
-    const utxo = referenceInputUtxos.find(
+    const utxo = referenceInputUtxosResult.data.find(
       (utxo: RawUtxo) =>
         utxo?.tx_hash === i.transaction_id && utxo?.tx_index === i.index,
     )
@@ -89,35 +93,67 @@ export const useFormattedTx = (
   ])
   const portfolioTokenInfos = usePortfolioTokenInfosSuspense({wallet, tokenIds})
 
-  const formattedInputs = useFormattedInputs(
+  const formattedInputsResult = useFormattedInputs(
     wallet,
     portfolioTokenInfos,
-    inputUtxos,
+    inputUtxosResult.data,
   )
-  const formattedReferenceInputs = useFormattedInputs(
+  const formattedReferenceInputsResult = useFormattedInputs(
     wallet,
     portfolioTokenInfos,
-    referenceInputUtxos,
+    referenceInputUtxosResult.data,
   )
-  const formattedOutputs = useFormattedOutputs(
+  const formattedOutputsResult = useFormattedOutputs(
     wallet,
     outputs,
     portfolioTokenInfos,
   )
 
-  if (!data) return null
+  const isLoading =
+    inputUtxosResult.isLoading ||
+    referenceInputUtxosResult.isLoading ||
+    formattedInputsResult.isLoading ||
+    formattedReferenceInputsResult.isLoading ||
+    formattedOutputsResult.isLoading
+
+  const error =
+    inputUtxosResult.error ||
+    referenceInputUtxosResult.error ||
+    formattedInputsResult.error ||
+    formattedReferenceInputsResult.error ||
+    formattedOutputsResult.error
+
+  if (error) {
+    return {
+      data: null,
+      isLoading: false,
+      error,
+    }
+  }
+
+  if (isLoading || !data) {
+    return {
+      data: null,
+      isLoading,
+      error: null,
+    }
+  }
 
   const formattedFee = formatFee(wallet, data)
   const formattedCertificates = formatCertificates(data.certs)
   const formattedMintData = formatMintData(data.mint, portfolioTokenInfos)
 
   return {
-    inputs: formattedInputs,
-    outputs: formattedOutputs,
-    fee: formattedFee,
-    certificates: formattedCertificates,
-    mint: formattedMintData,
-    referenceInputs: formattedReferenceInputs,
+    data: {
+      inputs: formattedInputsResult.data,
+      outputs: formattedOutputsResult.data,
+      fee: formattedFee,
+      certificates: formattedCertificates,
+      mint: formattedMintData,
+      referenceInputs: formattedReferenceInputsResult.data,
+    },
+    isLoading: false,
+    error: null,
   }
 }
 
@@ -125,7 +161,11 @@ export const useFormattedInputs = (
   wallet: YoroiWallet,
   tokenInfosResult: ReturnType<typeof usePortfolioTokenInfosSuspense>,
   inputUtxos: RawUtxo[],
-): FormattedInputs => {
+): {
+  data: FormattedInputs
+  isLoading: boolean
+  error: Error | null
+} => {
   const query = useQuery<FormattedInputs>({
     queryKey: ['useFormattedInputs', inputUtxos],
     queryFn: async () => formatInputs(wallet, tokenInfosResult, inputUtxos),
@@ -133,14 +173,22 @@ export const useFormattedInputs = (
     staleTime: 5 * 60 * 1000,
   })
 
-  return query.data ?? []
+  return {
+    data: query.data ?? [],
+    isLoading: query.isLoading,
+    error: query.error,
+  }
 }
 
 export const useFormattedOutputs = (
   wallet: YoroiWallet,
   outputs: TransactionOutputs,
   portfolioTokenInfos: ReturnType<typeof usePortfolioTokenInfosSuspense>,
-): FormattedOutputs => {
+): {
+  data: FormattedOutputs
+  isLoading: boolean
+  error: Error | null
+} => {
   const query = useQuery<FormattedOutputs>({
     queryKey: ['useFormattedOutputs', outputs],
     queryFn: () => formatOutputs(wallet, outputs, portfolioTokenInfos),
@@ -148,7 +196,11 @@ export const useFormattedOutputs = (
     staleTime: 5 * 60 * 1000,
   })
 
-  return query.data ?? []
+  return {
+    data: query.data ?? [],
+    isLoading: query.isLoading,
+    error: query.error,
+  }
 }
 
 const formatInputs = async (
@@ -321,7 +373,11 @@ const getAddressKind = (addressBech32: string): CredKind | null => {
 export const useUtxos = (
   inputs: TransactionInputs,
   wallet: YoroiWallet,
-): RawUtxo[] => {
+): {
+  data: RawUtxo[]
+  isLoading: boolean
+  error: Error | null
+} => {
   const {networkManager} = useSelectedNetwork()
 
   const query = useQuery<RawUtxo[]>({
@@ -332,7 +388,11 @@ export const useUtxos = (
     staleTime: 5 * 60 * 1000,
   })
 
-  return query.data ?? []
+  return {
+    data: query.data ?? [],
+    isLoading: query.isLoading,
+    error: query.error,
+  }
 }
 
 const getAllUtxos = async (

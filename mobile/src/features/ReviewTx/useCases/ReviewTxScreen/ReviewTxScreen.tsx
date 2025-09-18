@@ -52,7 +52,11 @@ export const ReviewTxScreen = () => {
     isLoading: isTxBodyLoading,
     error: txBodyError,
   } = useTxBody({cbor, unsignedTx})
-  const formattedTx = useFormattedTx(txBody)
+  const {
+    data: formattedTx,
+    isLoading: isFormattedTxLoading,
+    error: formattedTxError,
+  } = useFormattedTx(txBody)
   const formattedMetadata = useFormattedMetadata({
     txBody,
     unsignedTx,
@@ -87,8 +91,12 @@ export const ReviewTxScreen = () => {
     throw txBodyError
   }
 
-  if (isTxBodyLoading || !txBody || !formattedTx) {
-    return null // Since the hooks are now synchronous, this shouldn't happen
+  if (formattedTxError) {
+    throw formattedTxError
+  }
+
+  if (isTxBodyLoading || isFormattedTxLoading || !txBody || !formattedTx) {
+    return null
   }
   return (
     <ReviewTx
