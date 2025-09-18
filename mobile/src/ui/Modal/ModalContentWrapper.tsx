@@ -11,6 +11,7 @@ import {
 import {runOnJS} from 'react-native-reanimated'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {DISMISS_THRESHOLD} from './ModalScreen'
 import {useDismissOrClose} from './hooks'
 
 type Props = {
@@ -18,7 +19,6 @@ type Props = {
   footer?: React.ReactNode
 }
 
-const DISMISS_THRESHOLD = 25
 export const ModalContentWrapper = ({content, footer}: Props) => {
   const [scrollY, setScrollY] = React.useState(0)
   const [scrollViewHeight, setScrollViewHeight] = React.useState(0)
