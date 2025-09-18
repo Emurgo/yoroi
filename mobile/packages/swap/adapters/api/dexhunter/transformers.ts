@@ -143,13 +143,15 @@ export const transformersMaker = ({
             tx_hash = '',
             update_tx_hash = '',
           }) => ({
-            status: (
-              {
-                COMPLETE: 'matched',
-                CANCELLED: 'canceled',
-                PENDING: 'open',
-              } as const
-            )[status],
+            status:
+              (
+                {
+                  COMPLETE: 'matched',
+                  CANCELLED: 'canceled',
+                  PENDING: 'open',
+                  LIMIT: 'open',
+                } as const
+              )[status] ?? 'open',
             amountIn: amount_in,
             actualAmountOut: actual_out_amount,
             expectedAmountOut: expected_out_amount,
