@@ -259,7 +259,7 @@ const formatInputs = async (
   )
 }
 
-const formatOutputs = async (
+const formatOutputs = (
   wallet: YoroiWallet,
   outputs: TransactionOutputs,
   portfolioTokenInfos: ReturnType<typeof usePortfolioTokenInfosSuspense>,
@@ -272,7 +272,7 @@ const formatOutputs = async (
       const addressKind = getAddressKind(address)
       const rewardAddress =
         addressKind === CredKind.Key
-          ? await deriveAddress(address, wallet.networkManager.chainId)
+          ? deriveAddress(address, wallet.networkManager.chainId)
           : null
 
       const primaryAssets = [
@@ -352,9 +352,9 @@ const formatMintData = (
   ) ?? []) as Array<[Portfolio.Token.Info, string]>
 }
 
-const deriveAddress = async (address: string, chainId: number) => {
+const deriveAddress = (address: string, chainId: number) => {
   try {
-    return await deriveRewardAddressFromAddress(address, chainId)
+    return deriveRewardAddressFromAddress(address, chainId)
   } catch {
     return null
   }
