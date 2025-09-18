@@ -111,7 +111,7 @@ export const settingsMessages = defineMessages({
 
   // Enable Login with OS
   enableLoginWithOsHeading: {
-    id: 'components.login.appstartscreen.loginButton',
+    id: 'components.settings.biometricslinkscreen.heading',
     defaultMessage: '!!!Enable Login with OS',
   },
   enableLoginWithOsSubHeading1: {
@@ -123,7 +123,7 @@ export const settingsMessages = defineMessages({
     defaultMessage: '!!!Sub Heading 2',
   },
   enableLoginWithOsNotNowButton: {
-    id: 'components.walletinit.biometricScreen.ignoreButton.title',
+    id: 'components.settings.biometricslinkscreen.notNowButton',
     defaultMessage: '!!!Not Now',
   },
   enableLoginWithOsLinkButton: {
