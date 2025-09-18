@@ -18,7 +18,7 @@ type Props = {
   footer?: React.ReactNode
 }
 
-const DISMISS_THRESHOLD = 30
+const DISMISS_THRESHOLD = 25
 export const ModalContentWrapper = ({content, footer}: Props) => {
   const [scrollY, setScrollY] = React.useState(0)
   const [scrollViewHeight, setScrollViewHeight] = React.useState(0)
