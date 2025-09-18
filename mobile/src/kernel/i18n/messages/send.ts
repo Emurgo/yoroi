@@ -83,7 +83,7 @@ export const sendMessages = defineMessages({
   },
   nftsTab: {
     id: 'components.send.nftsTab',
-    defaultMessage: '!!!NFTs',
+    defaultMessage: '!!!Collectibles',
   },
   noAssetsAddedYet: {
     id: 'components.send.assetselectorscreen.noAssetsAddedYet',
