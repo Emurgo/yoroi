@@ -204,7 +204,7 @@ export const WalletDetailsScreen = () => {
     openModal({
       title: strings.setupWallet.walletDetailsModalTitle,
       content: (
-        <View style={[a.flex_1, a.px_lg, a.pb_lg]}>
+        <View style={[a.flex_1]}>
           <View style={[a.gap_lg]}>
             <CardAboutPhrase
               title={strings.setupWallet.walletNameModalCardTitle}
@@ -225,7 +225,7 @@ export const WalletDetailsScreen = () => {
         </View>
       ),
       footer: (
-        <View style={[a.px_lg, a.pb_lg, a.gap_lg]}>
+        <View style={[a.gap_lg]}>
           <LearnMoreButton
             onPress={() => {
               Linking.openURL(YoroiZendeskLink)
@@ -261,7 +261,7 @@ export const WalletDetailsScreen = () => {
     openModal({
       title: strings.setupWallet.walletDetailsModalTitle,
       content: (
-        <View style={[a.flex_1, a.px_lg, a.pb_lg]}>
+        <View style={[a.flex_1]}>
           <CardAboutPhrase
             title={strings.setupWallet.walletChecksumModalCardTitle}
             checksumImage={seed}
@@ -275,7 +275,7 @@ export const WalletDetailsScreen = () => {
         </View>
       ),
       footer: (
-        <View style={[a.px_lg, a.pb_lg, a.gap_lg]}>
+        <View style={[a.gap_lg]}>
           <LearnMoreButton
             onPress={() => {
               Linking.openURL(YoroiZendeskLink)

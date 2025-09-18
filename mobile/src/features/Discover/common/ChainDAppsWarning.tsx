@@ -1,18 +1,20 @@
 import {useAsyncStorage, useMutationWithInvalidations} from '@yoroi/common'
-import {atoms as a} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {Chain} from '@yoroi/types'
 
 import {useQuery} from '@tanstack/react-query'
+import {LinearGradient} from 'expo-linear-gradient'
 import * as React from 'react'
-import {Text, View} from 'react-native'
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {Button} from '~/ui/Button/Button'
+import {Icon} from '~/ui/Icon'
 
 export const ChainDAppsWarning = () => {
   const strings = useStrings()
+  const {atoms: ta, palette: p} = useTheme()
   const {
     selected: {network},
   } = useWalletManager()
@@ -26,24 +28,29 @@ export const ChainDAppsWarning = () => {
 
   if (isMainnet || hasAccepted) return null
   return (
-    <View
-      style={[
-        a.p_md,
-        {
-          backgroundColor: '#fff3cd',
-          borderColor: '#ffeaa7',
-          borderWidth: 1,
-          borderRadius: 8,
-        },
-      ]}
-    >
-      <Text style={[a.font_bold, a.pb_sm]}>
-        {strings.discover.testnetWarningTitle}
-      </Text>
-      <Text style={[a.pb_sm]}>
-        {strings.discover.testnetWarningDescription}
-      </Text>
-      <Button title={strings.discover.cancel} onPress={handleOnClose} />
+    <View style={[a.relative]}>
+      <LinearGradient
+        style={[StyleSheet.absoluteFill, a.rounded_sm]}
+        start={{x: 0, y: 0}}
+        end={{x: 0, y: 1}}
+        colors={p.bg_gradient_1}
+      />
+
+      <View style={[a.p_md, a.relative]}>
+        <TouchableOpacity
+          style={[a.absolute, a.p_sm, {top: 0, right: 0}]}
+          onPress={handleOnClose}
+        >
+          <Icon.CrossCircle size={22} color={p.gray_900} />
+        </TouchableOpacity>
+
+        <Text style={[a.body_2_md_medium, a.pb_sm, ta.text_gray_max]}>
+          {strings.discover.testnetWarningTitle}
+        </Text>
+        <Text style={[a.body_2_md_regular, ta.text_gray_max]}>
+          {strings.discover.testnetWarningDescription}
+        </Text>
+      </View>
     </View>
   )
 }

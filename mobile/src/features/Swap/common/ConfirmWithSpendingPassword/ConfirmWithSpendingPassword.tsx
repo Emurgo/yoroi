@@ -49,7 +49,7 @@ export const ConfirmWithSpendingPassword = ({
     : null
 
   return (
-    <View style={[a.flex_1, a.px_lg]}>
+    <View style={[a.flex_1]}>
       <Text
         style={[
           {paddingHorizontal: 70},

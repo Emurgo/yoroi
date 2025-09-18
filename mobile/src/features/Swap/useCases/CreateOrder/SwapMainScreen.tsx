@@ -3,6 +3,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Text, View, useWindowDimensions} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
+import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {ShowDisclaimer} from '~/features/Legal/ui/shared/Disclaimer/ShowDisclaimer'
 import {AmountCard} from '~/features/Swap/common/AmountCard/AmountCard'
@@ -30,7 +31,7 @@ const BOTTOM_ACTION_SECTION = 180
 export const SwapMainScreen = () => {
   const [contentHeight, setContentHeight] = React.useState(0)
   const strings = useStrings()
-  const {palette: p} = useTheme()
+  const {palette: p, atoms: ta} = useTheme()
   const {height: deviceHeight} = useWindowDimensions()
   const isKeyboardOpen = useIsKeyboardOpen()
   const swapForm = useSwap()
@@ -65,10 +66,9 @@ export const SwapMainScreen = () => {
           />
         ),
         footer: (
-          <View
-            style={[a.align_center, a.justify_between, a.flex_row, a.gap_lg]}
-          >
+          <View style={[a.flex_row, a.gap_lg]}>
             <Button
+              style={[a.flex_1]}
               size="S"
               type={ButtonType.Secondary}
               title={strings.swap.limitPriceWarningBack}
@@ -76,6 +76,7 @@ export const SwapMainScreen = () => {
             />
 
             <Button
+              style={[a.flex_1]}
               size="S"
               title={strings.swap.limitPriceWarningConfirm}
               onPress={swapForm.create}
@@ -89,7 +90,7 @@ export const SwapMainScreen = () => {
   }
 
   return (
-    <View style={[a.flex_1, a.pb_lg, {backgroundColor: p.bg_color_max}]}>
+    <SafeAreaView style={[a.flex_1, a.pb_lg, ta.bg_color_max]}>
       <ScrollView style={[a.px_lg]}>
         <ShowDisclaimer type="swap" />
 
@@ -223,7 +224,6 @@ export const SwapMainScreen = () => {
           </View>
         </View>
       </ScrollView>
-
       <View
         style={[
           a.p_lg,
@@ -245,6 +245,6 @@ export const SwapMainScreen = () => {
           onPress={onSwapPress}
         />
       </View>
-    </View>
+    </SafeAreaView>
   )
 }

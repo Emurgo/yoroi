@@ -1,8 +1,9 @@
 import {App} from '@yoroi/types'
 
-import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 import {Keyboard} from 'react-native'
+
+import {useAuth} from '~/features/Auth/context/AuthProvider'
 
 type ModalState = {
   isOpen: boolean
@@ -57,12 +58,13 @@ type Props = React.PropsWithChildren<{
 }>
 
 export const ModalProvider = ({children, initialState}: Props) => {
-  const navigation = useNavigation()
+  const {isLoggedOut} = useAuth()
   const [state, dispatch] = React.useReducer(modalReducer, {
     ...defaultState,
     ...initialState,
   })
   const isOpenRef = React.useRef(state.isOpen)
+  const prevLoggedOutRef = React.useRef(isLoggedOut)
 
   // Keep ref in sync with state
   React.useEffect(() => {
@@ -191,13 +193,15 @@ export const ModalProvider = ({children, initialState}: Props) => {
   )
 
   React.useEffect(() => {
-    const unsubscribe = navigation.addListener('state', () => {
-      if (isOpenRef.current) {
-        closeModal()
-      }
-    })
-    return unsubscribe
-  }, [navigation, closeModal])
+    if (
+      prevLoggedOutRef.current !== isLoggedOut &&
+      isLoggedOut &&
+      isOpenRef.current
+    ) {
+      closeModal()
+    }
+    prevLoggedOutRef.current = isLoggedOut
+  }, [isLoggedOut, closeModal])
 
   return (
     <ModalContext.Provider value={context}>{children}</ModalContext.Provider>

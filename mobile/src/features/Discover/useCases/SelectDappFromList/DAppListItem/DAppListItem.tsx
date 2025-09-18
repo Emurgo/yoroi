@@ -144,11 +144,10 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
         </View>
       ),
       footer: (
-        <View style={[a.align_start, a.gap_lg, a.pb_lg]}>
+        <View style={[a.flex_row, a.gap_lg]}>
           <Button
             type={ButtonType.SecondaryText}
             fontOverride={a.body_1_lg_medium}
-            style={[a.gap_lg]}
             onPress={handleOpenDApp}
             icon={Icon.DApp}
             title={strings.discover.openDApp}
@@ -158,7 +157,6 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
           <Button
             type={ButtonType.SecondaryText}
             fontOverride={a.body_1_lg_medium}
-            style={[a.gap_lg]}
             onPress={() => handleConfirmDisconnect(dApp)}
             icon={Icon.Disconnect}
             title={strings.discover.disconnectWalletFromDApp}

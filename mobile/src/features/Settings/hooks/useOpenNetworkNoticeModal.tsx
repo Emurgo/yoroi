@@ -24,7 +24,7 @@ export const useOpenNetworkNoticeModal = () => {
         title: strings.settings.changeNetwork.networkNoticeTitle,
         canDiscard: false,
         content: (
-          <View style={[a.flex_1, a.px_lg]}>
+          <View style={[a.flex_1]}>
             <Text style={[a.body_1_lg_regular, {color: p.gray_900}]}>
               {strings.settings.changeNetwork.networkNoticeMessage}
             </Text>

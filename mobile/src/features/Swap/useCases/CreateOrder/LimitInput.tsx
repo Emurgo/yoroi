@@ -13,12 +13,12 @@ export const LimitInput = () => {
   const {palette: p, atoms: ta, isDark} = useTheme()
 
   const swapForm = useSwap()
-  const tokenInInfo = swapForm.tokenInfos.get(
-    swapForm.tokenInInput.tokenId ?? undefinedToken,
+  const tokenOutInfo = swapForm.tokenInfos.get(
+    swapForm.tokenOutInput.tokenId ?? undefinedToken,
   )
   const disabled = swapForm.orderType === 'market'
 
-  const tokenInTicker = tokenInInfo?.ticker ?? tokenInInfo?.name ?? '-'
+  const tokenOutTicker = tokenOutInfo?.ticker ?? tokenOutInfo?.name ?? '-'
 
   return (
     <>
@@ -29,6 +29,7 @@ export const LimitInput = () => {
           a.pl_lg,
           a.pr_sm,
           a.border,
+          a.z_50,
           {
             height: 56,
             borderColor: p.bg_color_min,
@@ -95,15 +96,8 @@ export const LimitInput = () => {
               },
             ]}
           >
-            <Text
-              style={[
-                {
-                  fontSize: 16,
-                  color: p.gray_max,
-                },
-              ]}
-            >
-              {tokenInTicker}
+            <Text style={[a.body_1_lg_regular, ta.text_gray_max]}>
+              {tokenOutTicker}
             </Text>
           </View>
         </View>

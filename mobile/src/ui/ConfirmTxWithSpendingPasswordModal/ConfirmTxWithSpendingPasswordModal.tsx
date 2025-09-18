@@ -11,7 +11,6 @@ import {debugWalletInfo, features} from '../../kernel/features'
 import {useStrings} from '../../kernel/i18n/useStrings'
 import {YoroiSignedTx, YoroiUnsignedTx} from '../../wallets/types/yoroi'
 import {Button} from '../Button/Button'
-import {Space} from '../Space/Space'
 import {Text} from '../Text/Text'
 import {Checkmark, TextInput} from '../TextInput/TextInput'
 
@@ -68,8 +67,8 @@ export const ConfirmTxWithSpendingPasswordModal = ({
     : null
 
   return (
-    <View style={[a.flex_1, a.px_lg, a.pb_lg]}>
-      <Text style={[{paddingHorizontal: 70}, a.text_center, a.pb_sm]}>
+    <View style={[a.flex_grow]}>
+      <Text style={[a.text_center, a.pb_sm]}>
         {strings.staking.enterPassword}
       </Text>
 
@@ -86,14 +85,14 @@ export const ConfirmTxWithSpendingPasswordModal = ({
 
       {errorMessage != null && (
         <Text
-          style={[{color: p.sys_magenta_500}, a.text_center]}
+          style={[a.text_center, {color: p.sys_magenta_500}]}
           numberOfLines={3}
         >
           {errorMessage}
         </Text>
       )}
 
-      <Space.Height.lg fill />
+      <View style={[a.flex_grow]} />
 
       <View style={[a.pt_lg]}>
         <Button
