@@ -24,6 +24,8 @@ import {ModalContentWrapper} from './ModalContentWrapper'
 import {useModal} from './ModalContext'
 import {useDismissOrClose} from './hooks'
 
+export const DISMISS_THRESHOLD = 15
+
 export const Modal = () => {
   const {
     content,
@@ -83,7 +85,7 @@ export const Modal = () => {
     .enabled(Boolean(canDiscardEnabled) && !isFull)
     .onEnd((event) => {
       'worklet'
-      if (event.translationY > 100 && event.velocityY > 0) {
+      if (event.translationY > DISMISS_THRESHOLD && event.velocityY > 0) {
         runOnJS(handleDismissOrClose)()
       }
     })
@@ -181,9 +183,11 @@ export const Modal = () => {
               )}
 
               {visibleTitle && (
-                <View style={[a.py_sm]}>
-                  <Title title={visibleTitle} />
-                </View>
+                <GestureDetector gesture={panGesture}>
+                  <View style={[a.py_sm]}>
+                    <Title title={visibleTitle} />
+                  </View>
+                </GestureDetector>
               )}
 
               {visibleContent && (
