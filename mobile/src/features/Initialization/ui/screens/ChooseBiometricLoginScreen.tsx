@@ -47,10 +47,7 @@ export const ChooseBiometricLoginScreen = () => {
   const isLoading = isScreenShownLoading || isPending
 
   return (
-    <SafeAreaView
-      style={[a.flex_1, ta.bg_color_max]}
-      edges={['top', 'left', 'right']}
-    >
+    <SafeAreaView style={[a.flex_1, ta.bg_color_max]}>
       <View style={[a.flex_1, a.justify_center, a.gap_lg, a.px_lg]}>
         <View style={a.align_center}>
           <Biometric />

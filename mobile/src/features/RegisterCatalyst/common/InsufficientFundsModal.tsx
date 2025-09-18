@@ -27,7 +27,7 @@ const InsufficientFundsModalContent = () => {
   // Show loading state
   if (query.isLoading) {
     return (
-      <View style={[a.px_lg, a.flex_1, a.gap_lg, a.justify_between]}>
+      <View style={[a.flex_1, a.gap_lg, a.justify_between]}>
         <ActivityIndicator />
       </View>
     )
@@ -45,7 +45,7 @@ const InsufficientFundsModalContent = () => {
   const fmtPrimaryBalance = formatter(primaryBalance)
 
   return (
-    <View style={[a.px_lg, a.flex_1, a.gap_lg, a.justify_between]}>
+    <View style={[a.flex_1, a.gap_lg, a.justify_between]}>
       <Text style={[a.body_1_lg_regular, {color: p.gray_max}]}>
         {strings.global.insufficientBalance({
           requiredBalance: fmtMinPrimaryBalance,

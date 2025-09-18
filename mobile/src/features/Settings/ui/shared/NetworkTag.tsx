@@ -172,7 +172,7 @@ const MainnetWarningDialog = ({
   const strings = useStrings()
 
   return (
-    <View style={[a.px_lg, a.flex_1]}>
+    <View style={[a.flex_1]}>
       <Text style={[a.body_1_lg_regular, ta.text_gray_medium]}>
         {strings.settings.changeNetwork.networkTagModalText}
       </Text>

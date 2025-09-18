@@ -38,7 +38,7 @@ export const AddressModal = ({address, path}: Props) => {
     : null
 
   return (
-    <View style={[a.flex_1, a.px_lg]}>
+    <View style={[a.flex_1]}>
       <View
         style={[
           a.align_center,

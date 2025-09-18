@@ -37,7 +37,7 @@ export const SelectHwConnectionModal = ({
   const strings = useStrings()
 
   return (
-    <View style={[a.px_lg]}>
+    <View>
       <Text style={[a.body_1_lg_regular, ta.text_gray_medium]}>
         {strings.setupWallet.hwModalText}
       </Text>

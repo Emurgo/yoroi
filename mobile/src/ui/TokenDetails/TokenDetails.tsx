@@ -34,7 +34,7 @@ export const TokenDetails = ({
   if (isPrimaryTokenInfo(tokenInfo)) return <PrimaryTokenInfo />
 
   return (
-    <View style={[a.flex_1, a.px_lg]}>
+    <View style={[a.flex_1]}>
       <Header info={tokenInfo} />
 
       <Space.Width.lg />

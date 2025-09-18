@@ -31,7 +31,6 @@ export const useGetImportantAlertsModal = ({enabled}: {enabled: boolean}) => {
       openModal({
         title: strings.notifications.getImportantAlerts,
         content: <GetImportantAlertsModal onClose={closeModal} />,
-        footer: <View />,
         height: Math.min(windowHeight * 0.9, 520),
       })
       await uiStorage.setItem(modalStorageKey, true)
@@ -58,7 +57,7 @@ export const GetImportantAlertsModal = ({
   }
 
   return (
-    <View style={[a.px_lg, a.flex_1, a.align_center]}>
+    <View style={[a.flex_1, a.align_center]}>
       <View style={[a.py_lg]}>
         <PhoneBell />
       </View>

@@ -54,7 +54,7 @@ export const LedgerTransportSwitchView = ({
   }
 
   return (
-    <ScrollView style={[a.flex_1, a.px_lg]}>
+    <ScrollView style={[a.flex_1]}>
       <Text style={[a.heading_3_medium, a.text_center]}>
         {strings.hw.title}
       </Text>

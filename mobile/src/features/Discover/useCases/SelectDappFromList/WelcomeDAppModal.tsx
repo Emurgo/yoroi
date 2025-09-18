@@ -24,7 +24,7 @@ export const WelcomeDAppModal = ({disabled}: {disabled?: boolean}) => {
     openModal({
       title: strings.discover.welcomeToYoroiDAppExplorer,
       content: (
-        <View style={[a.px_lg]}>
+        <View>
           <Image
             source={IllustrationDAppImage}
             style={[a.w_full, {height: 200, resizeMode: 'cover'}]}

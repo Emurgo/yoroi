@@ -16,7 +16,7 @@ export const WithdrawGovernanceWarningModal = ({onParticipatePress}: Props) => {
   const {atoms: ta} = useTheme()
 
   return (
-    <View style={[a.flex_1, a.px_lg]}>
+    <View style={[a.flex_1]}>
       <Space.Height.lg />
 
       <Text
