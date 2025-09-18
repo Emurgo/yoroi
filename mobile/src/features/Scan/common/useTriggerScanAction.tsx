@@ -123,7 +123,7 @@ export const useTriggerScanAction = ({
               />
             ),
             footer: <AskConfirmationActions onContinue={handleOnContinue} />,
-            height: 400,
+            height: 500,
           })
         }, 300)
         break

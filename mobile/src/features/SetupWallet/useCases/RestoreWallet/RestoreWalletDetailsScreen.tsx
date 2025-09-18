@@ -178,7 +178,7 @@ export const RestoreWalletDetailsScreen = () => {
     openModal({
       title: strings.setupWallet.walletDetailsModalTitle,
       content: (
-        <View style={[a.flex_1, a.pb_lg, a.px_lg]}>
+        <View style={[a.flex_1]}>
           <CardAboutPhrase
             title={strings.setupWallet.walletNameModalCardTitle}
             linesOfText={[

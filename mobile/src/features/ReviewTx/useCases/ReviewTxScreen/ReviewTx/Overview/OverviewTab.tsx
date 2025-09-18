@@ -626,7 +626,7 @@ const Details = ({details}: {details?: ReviewDetailsProps}) => {
   const handleOnPress = () => {
     openModal({
       title: details.title ?? '',
-      content: <View style={[a.px_lg]}>{details.component}</View>,
+      content: <View style={[a.flex_1]}>{details.component}</View>,
       height: details.height ?? 400,
     })
   }
@@ -690,7 +690,7 @@ export const OperationsNotice = ({onClose}: {onClose?: () => void}) => {
   }
 
   return (
-    <View style={[a.flex_1, a.px_lg, a.align_center]}>
+    <View style={[a.flex_1, a.align_center]}>
       <Space.Height.lg />
 
       <OperationsNoticeIcon />

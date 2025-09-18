@@ -37,7 +37,7 @@ export const RequestedAdaPaymentWithLinkScreen = ({
   }
 
   return (
-    <View style={[ta.bg_color_max, a.flex_1, a.px_lg, a.pb_lg, a.gap_lg]}>
+    <View style={[ta.bg_color_max, a.flex_1, a.pb_lg, a.gap_lg]}>
       <ScrollView bounces={false} contentContainerStyle={a.gap_lg}>
         <ShowDisclaimer title={strings.global.disclaimer}>
           <Text style={[a.body_2_md_regular, ta.text_gray_max]}>

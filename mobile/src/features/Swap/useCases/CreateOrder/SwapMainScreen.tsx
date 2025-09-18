@@ -65,10 +65,9 @@ export const SwapMainScreen = () => {
           />
         ),
         footer: (
-          <View
-            style={[a.align_center, a.justify_between, a.flex_row, a.gap_lg]}
-          >
+          <View style={[a.flex_row, a.gap_lg]}>
             <Button
+              style={[a.flex_1]}
               size="S"
               type={ButtonType.Secondary}
               title={strings.swap.limitPriceWarningBack}
@@ -76,6 +75,7 @@ export const SwapMainScreen = () => {
             />
 
             <Button
+              style={[a.flex_1]}
               size="S"
               title={strings.swap.limitPriceWarningConfirm}
               onPress={swapForm.create}

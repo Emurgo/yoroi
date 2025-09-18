@@ -45,11 +45,7 @@ export const EstimateSummary = () => {
 
   const expand = () =>
     openModal({
-      content: (
-        <View style={a.p_lg}>
-          <Splits data={swapForm.estimate?.splits ?? []} />
-        </View>
-      ),
+      content: <Splits data={swapForm.estimate?.splits ?? []} />,
       footer: <SwapInfoLink />,
     })
 
@@ -142,7 +138,7 @@ const Row = ({
               openModal({
                 title: label,
                 content: (
-                  <View style={[a.px_lg, a.flex_1, a.justify_center, a.pb_2xl]}>
+                  <View style={[a.flex_1, a.justify_center]}>
                     <Text style={[a.body_1_lg_regular, ta.text_gray_max]}>
                       {description}
                     </Text>

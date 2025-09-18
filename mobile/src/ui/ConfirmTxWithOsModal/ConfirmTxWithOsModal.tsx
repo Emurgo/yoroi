@@ -51,7 +51,7 @@ export const ConfirmTxWithOsModal = ({
 
   if (error) {
     return (
-      <View style={[a.px_lg, a.align_center, a.justify_center]}>
+      <View style={[a.align_center, a.justify_center]}>
         <Text
           style={[{color: p.sys_magenta_500}, a.text_center]}
           numberOfLines={3}
@@ -63,7 +63,7 @@ export const ConfirmTxWithOsModal = ({
   }
 
   return (
-    <View style={[a.px_lg, a.align_center, a.justify_center]}>
+    <View style={[a.align_center, a.justify_center]}>
       <ActivityIndicator size="large" color={isDark ? 'white' : 'black'} />
     </View>
   )

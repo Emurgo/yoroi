@@ -130,18 +130,16 @@ export const useLinksRequestAction = () => {
           decimals,
         )
 
-      const content = (
-        <RequestedAdaPaymentWithLinkScreen
-          onContinue={handleOnContinue}
-          params={params}
-          isTrusted={isTrusted}
-          onClose={closeModal}
-        />
-      )
-
       openModal({
         title: title,
-        content: content,
+        content: (
+          <RequestedAdaPaymentWithLinkScreen
+            onContinue={handleOnContinue}
+            params={params}
+            isTrusted={isTrusted}
+            onClose={closeModal}
+          />
+        ),
         height: heightBreakpoint,
       })
     },
@@ -225,17 +223,15 @@ export const useLinksRequestAction = () => {
           isTrusted,
         })
 
-      const content = (
-        <RequestedBrowserLaunchDappUrlScreen
-          onContinue={handleOnContinue}
-          params={params}
-          isTrusted={isTrusted}
-        />
-      )
-
       openModal({
         title: title,
-        content: content,
+        content: (
+          <RequestedBrowserLaunchDappUrlScreen
+            onContinue={handleOnContinue}
+            params={params}
+            isTrusted={isTrusted}
+          />
+        ),
         height: heightBreakpoint,
       })
     },

@@ -123,15 +123,9 @@ export const SelectWalletFromList = () => {
 
         <AddWalletButton />
 
-        <Space.Height.md />
+        <Space.Height.lg />
 
-        {isDev && (
-          <>
-            <Space.Height.md />
-
-            <OnlyDevButton />
-          </>
-        )}
+        {isDev && <OnlyDevButton />}
       </View>
     </SafeAreaView>
   )

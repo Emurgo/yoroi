@@ -86,7 +86,7 @@ export const ConfirmConnectionModal = ({
   const imageUri = logo.length === 0 ? getDappFallbackLogo(website) : logo
 
   return (
-    <View style={[a.flex_1, a.px_lg]}>
+    <View style={[a.flex_1]}>
       <View
         style={[a.flex, a.flex_row, a.align_center, a.justify_center, a.gap_xl]}
       >

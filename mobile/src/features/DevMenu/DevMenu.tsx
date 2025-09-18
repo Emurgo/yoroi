@@ -20,6 +20,8 @@ import {debugStorage} from '~/kernel/storage/debug-storage'
 import {rootMMKV, rootSyncStorage} from '~/kernel/storage/storages'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {LoadingOverlay} from '~/ui/LoadingOverlay/LoadingOverlay'
+import {useModal} from '~/ui/Modal/ModalContext'
+import {TextInput} from '~/ui/TextInput/TextInput'
 
 import {useWalletManager} from '../WalletManager/context/WalletManagerProvider'
 import {useCreateWalletMnemonic} from '../WalletManager/hooks/useCreateWalletMnemonic'
@@ -44,6 +46,8 @@ export function DevMenu() {
   const metrics = useMetrics()
   const {currency, ptActivity} = usePairing()
   const navigation = useNavigation<any>()
+  const {openModal, closeModal} = useModal()
+  const [demoText, setDemoText] = React.useState('')
 
   return (
     <SafeAreaView style={[a.flex_1, ta.bg_color_max, a.gap_sm]}>
@@ -92,6 +96,68 @@ export function DevMenu() {
           type={ButtonType.Primary}
           title={showCrash ? 'Hide Crash' : 'Show Crash'}
           style={[a.p_md, {borderRadius: 8}]}
+        />
+
+        <Button
+          onPress={() =>
+            openModal({
+              title: 'Demo Long Modal',
+              canDiscard: true,
+              height: 700,
+              content: (
+                <DevLongContent demoText={demoText} setDemoText={setDemoText} />
+              ),
+              footer: (
+                <View style={[a.flex_row, a.gap_lg]}>
+                  <Button
+                    style={[a.flex_1]}
+                    type={ButtonType.Secondary}
+                    onPress={closeModal}
+                    title="Cancel"
+                  />
+
+                  <Button
+                    style={[a.flex_1]}
+                    onPress={closeModal}
+                    title="Close"
+                  />
+                </View>
+              ),
+            })
+          }
+          type={ButtonType.Secondary}
+          title="Open Demo Long Modal"
+          style={[a.pt_md, a.p_md, a.rounded_md]}
+        />
+
+        <Button
+          onPress={() =>
+            openModal({
+              title: 'Demo Short Modal',
+              canDiscard: true,
+              height: 300,
+              content: <DevShortContent />,
+              footer: (
+                <View style={[a.flex_row, a.gap_lg]}>
+                  <Button
+                    style={[a.flex_1]}
+                    type={ButtonType.Secondary}
+                    onPress={closeModal}
+                    title="Cancel"
+                  />
+
+                  <Button
+                    style={[a.flex_1]}
+                    onPress={closeModal}
+                    title="Close"
+                  />
+                </View>
+              ),
+            })
+          }
+          type={ButtonType.Secondary}
+          title="Open Demo Short Modal"
+          style={[a.pt_md, a.p_md, a.rounded_md]}
         />
 
         <Button
@@ -249,4 +315,52 @@ const BuggyComponent = ({showCrash}: {showCrash: boolean}) => {
   }
 
   return <></>
+}
+
+const DevLongContent = ({
+  demoText,
+  setDemoText,
+}: {
+  demoText: string
+  setDemoText: (t: string) => void
+}) => {
+  const {atoms: ta} = useTheme()
+  return (
+    <View style={[a.gap_md]}>
+      <Text style={[ta.text_primary_medium, a.body_2_md_regular]}>
+        Description
+      </Text>
+
+      {Array.from({length: 16}).map((_, idx) => (
+        <Text
+          key={`paragraph-${idx}`}
+          style={[ta.text_primary_medium, a.body_2_md_regular]}
+        >
+          Description paragraph
+        </Text>
+      ))}
+
+      <View>
+        <Text style={[ta.text_primary_medium, a.body_2_md_medium]}>Memo</Text>
+        <TextInput
+          value={demoText}
+          onChangeText={setDemoText}
+          placeholder="Type here"
+          multiline
+        />
+      </View>
+    </View>
+  )
+}
+
+const DevShortContent = () => {
+  const {atoms: ta} = useTheme()
+  return (
+    <View style={[a.gap_md]}>
+      <Text style={[ta.text_primary_medium, a.body_2_md_medium]}>
+        Short description
+      </Text>
+      <Text style={[ta.text_primary_medium, a.body_2_md_regular]}>Header</Text>
+    </View>
+  )
 }

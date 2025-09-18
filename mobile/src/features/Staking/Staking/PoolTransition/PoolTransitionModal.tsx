@@ -23,7 +23,7 @@ export const PoolTransitionModal = ({
   const isActive = timeSpan > 0
 
   return (
-    <View style={[a.flex_1, a.px_lg]}>
+    <View style={[a.flex_1]}>
       <Text style={[a.body_1_lg_regular, {color: p.gray_900}]}>
         {isActive ? strings.staking.warning : strings.staking.finalWarning}
       </Text>
@@ -192,7 +192,7 @@ export const PoolTransitionModalActions = ({
     }
   }
   return (
-    <View style={[a.px_lg, a.gap_lg]}>
+    <View style={[a.gap_lg]}>
       <Button
         type={ButtonType.SecondaryText}
         title={strings.staking.skipNoRewards}

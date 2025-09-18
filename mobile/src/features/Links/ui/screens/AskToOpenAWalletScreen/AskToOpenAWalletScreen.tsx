@@ -22,7 +22,7 @@ export const AskToOpenWalletScreen = ({
   }
 
   return (
-    <View style={[a.flex_1, a.px_lg, ta.bg_color_max, a.gap_lg, a.pb_lg]}>
+    <View style={[a.flex_1, ta.bg_color_max, a.gap_lg]}>
       <ScrollView bounces={false}>
         <Text style={[a.body_2_md_regular, ta.text_gray_max]}>
           {strings.links.askToOpenAWalletDescription}

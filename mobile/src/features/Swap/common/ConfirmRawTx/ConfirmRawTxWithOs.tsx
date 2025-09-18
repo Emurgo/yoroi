@@ -45,7 +45,7 @@ export const ConfirmRawTxWithOs = ({
     }
 
     return (
-      <View style={[a.align_center, a.justify_center, a.px_lg]}>
+      <View style={[a.align_center, a.justify_center]}>
         <Text
           style={[{color: p.sys_magenta_500, textAlign: 'center'}]}
           numberOfLines={3}
@@ -57,7 +57,7 @@ export const ConfirmRawTxWithOs = ({
   }
 
   return (
-    <View style={[a.align_center, a.justify_center, a.px_lg]}>
+    <View style={[a.align_center, a.justify_center]}>
       <ActivityIndicator />
     </View>
   )

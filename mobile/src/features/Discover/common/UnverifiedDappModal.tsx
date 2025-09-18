@@ -20,7 +20,7 @@ export const useOpenUnverifiedDappModal = () => {
       openModal({
         title: strings.discover.disclaimerModalTitle,
         content: (
-          <View style={[a.px_lg, a.flex_col, a.flex_1]}>
+          <View style={[a.flex_col, a.flex_1]}>
             <View
               style={[
                 a.flex,
