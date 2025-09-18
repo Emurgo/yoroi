@@ -8,7 +8,7 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
-import {useModal} from '~/ui/Modal/ModalContext'
+import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Space} from '~/ui/Space/Space'
 
 import {getDappFallbackLogo} from './helpers'

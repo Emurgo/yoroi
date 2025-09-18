@@ -6,18 +6,18 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Text} from '~/ui/Text/Text'
 
-type SafeAreaModalWrapperProps = React.PropsWithChildren<{
+type Props = React.PropsWithChildren<{
   title?: string
   footer?: React.ReactNode
   edges?: ('top' | 'bottom' | 'left' | 'right')[]
 }>
 
-export const SafeAreaModalWrapper = ({
+export const ModalScreenWrapper = ({
   title,
   footer,
   edges = ['left', 'right'],
   children,
-}: SafeAreaModalWrapperProps) => {
+}: Props) => {
   const {atoms: ta} = useTheme()
 
   return (

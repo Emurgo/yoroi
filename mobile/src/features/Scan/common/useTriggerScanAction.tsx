@@ -14,7 +14,7 @@ import {
 } from '~/features/Claim/useCases/AskConfirmation'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useModal} from '~/ui/Modal/ModalContext'
+import {useModal} from '~/ui/Modal/context/ModalContext'
 import {pastedFormatter} from '~/wallets/utils/amountUtils'
 
 import {useNavigateTo} from './useNavigateTo'

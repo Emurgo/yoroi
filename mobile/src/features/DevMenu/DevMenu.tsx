@@ -20,8 +20,8 @@ import {debugStorage} from '~/kernel/storage/debug-storage'
 import {rootMMKV, rootSyncStorage} from '~/kernel/storage/storages'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {LoadingOverlay} from '~/ui/LoadingOverlay/LoadingOverlay'
-import {useModal} from '~/ui/Modal/ModalContext'
-import {SafeAreaModalWrapper} from '~/ui/Modal/SafeAreaModalWrapper'
+import {useModal} from '~/ui/Modal/context/ModalContext'
+import {ModalScreenWrapper} from '~/ui/Modal/ui/screens/ModalScreen/ModalScreenWrapper'
 import {TextInput} from '~/ui/TextInput/TextInput'
 
 import {InitialCollateralInfoModal} from '../Settings/ui/screens/ChangeWalletSettingsScreen/ManageCollateralScreen/InitialCollateralInfoModal'
@@ -53,9 +53,9 @@ export function DevMenu() {
 
   if (true) {
     return (
-      <SafeAreaModalWrapper title="Collateral Info" edges={['top']}>
+      <ModalScreenWrapper title="Collateral Info" edges={['top']}>
         <InitialCollateralInfoModal />
-      </SafeAreaModalWrapper>
+      </ModalScreenWrapper>
     )
   }
 

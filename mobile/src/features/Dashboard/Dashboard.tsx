@@ -31,7 +31,7 @@ import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation
 import {DashboardRoutes} from '~/kernel/navigation/types'
 import {Banner} from '~/ui/Banner/Banner'
 import {Button} from '~/ui/Button/Button'
-import {useModal} from '~/ui/Modal/ModalContext'
+import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Space} from '~/ui/Space/Space'
 import {isEmptyString} from '~/wallets/utils/string'
 import {Amounts} from '~/wallets/utils/utils'

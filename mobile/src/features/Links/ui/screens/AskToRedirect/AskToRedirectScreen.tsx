@@ -6,7 +6,7 @@ import {ScrollView, Text, View} from 'react-native'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button, ButtonType} from '~/ui/Button/Button'
-import {useModal} from '~/ui/Modal/ModalContext'
+import {useModal} from '~/ui/Modal/context/ModalContext'
 
 export const AskToRedirectScreen = ({link}: {link: string}) => {
   const strings = useStrings()

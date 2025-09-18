@@ -4,7 +4,7 @@ import {ConfirmRawTxWithOs} from '~/features/Swap/common/ConfirmRawTx/ConfirmRaw
 import {ConfirmRawTxWithPassword} from '~/features/Swap/common/ConfirmRawTx/ConfirmRawTxWithPassword'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useModal} from '~/ui/Modal/ModalContext'
+import {useModal} from '~/ui/Modal/context/ModalContext'
 
 type PromptRootKeyOptions = {
   onSuccess: (rootKey: string) => void

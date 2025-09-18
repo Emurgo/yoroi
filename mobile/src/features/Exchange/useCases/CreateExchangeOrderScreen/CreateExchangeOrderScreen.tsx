@@ -23,7 +23,7 @@ import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Icon} from '~/ui/Icon'
 import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingView'
-import {useModal} from '~/ui/Modal/ModalContext'
+import {useModal} from '~/ui/Modal/context/ModalContext'
 import {delay} from '~/wallets/utils/timeUtils'
 
 import {useNavigateTo} from '../../common/useNavigateTo'

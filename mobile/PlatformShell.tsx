@@ -11,7 +11,7 @@ import {
   makeMetricsManager,
 } from '~/kernel/metrics/metricsManager'
 import {RouterContainer} from '~/kernel/navigation/RouterContainer'
-import {ModalProvider} from '~/ui/Modal/ModalContext'
+import {ModalProvider} from '~/ui/Modal/context/ModalContext'
 
 export function PlatformShell({children}: React.PropsWithChildren) {
   const metricsManager = React.useMemo(() => makeMetricsManager(), [])

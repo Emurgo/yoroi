@@ -5,7 +5,7 @@ import {Text, View} from 'react-native'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
-import {useModal} from '~/ui/Modal/ModalContext'
+import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Space} from '~/ui/Space/Space'
 
 export const useOpenNetworkNoticeModal = () => {

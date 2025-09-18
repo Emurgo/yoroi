@@ -9,7 +9,7 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
-import {useModal} from '~/ui/Modal/ModalContext'
+import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Space} from '~/ui/Space/Space'
 
 export const WalletDuplicatedModal = ({
@@ -21,12 +21,12 @@ export const WalletDuplicatedModal = ({
   seed: string
   duplicatedAccountWalletMetaName: string
 }) => {
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
   const strings = useStrings()
 
   return (
-    <View style={[a.flex_1]}>
-      <Text style={[a.body_1_lg_regular, {color: p.text_gray_low}]}>
+    <View style={[a.flex_1, a.px_lg]}>
+      <Text style={[a.body_1_lg_regular, ta.text_gray_low]}>
         {strings.setupWallet.restoreDuplicatedWalletModalText}
       </Text>
 
@@ -44,13 +44,13 @@ export const WalletDuplicatedModal = ({
         />
 
         <View style={[a.flex_1]}>
-          <Text style={[a.body_2_md_medium, {color: p.text_gray_medium}]}>
+          <Text style={[a.body_2_md_medium, ta.text_gray_medium]}>
             {duplicatedAccountWalletMetaName}
           </Text>
 
           <Space.Height.xs />
 
-          <Text style={[a.body_3_sm_regular, {color: p.gray_600}]}>
+          <Text style={[a.body_3_sm_regular, ta.text_gray_medium]}>
             {plate}
           </Text>
         </View>

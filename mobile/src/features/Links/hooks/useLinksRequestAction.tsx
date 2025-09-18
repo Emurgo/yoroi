@@ -13,7 +13,7 @@ import {useWalletManager} from '~/features/WalletManager/context/WalletManagerPr
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {useModal} from '~/ui/Modal/ModalContext'
+import {useModal} from '~/ui/Modal/context/ModalContext'
 
 import {RequestedAdaPaymentWithLinkScreen} from '../ui/screens/RequestedAdaPaymentWithLinkScreen/RequestedAdaPaymentWithLinkScreen'
 import {RequestedBrowserLaunchDappUrlScreen} from '../ui/screens/RequestedBrowserLaunchDappUrlScreen/RequestedBrowserLaunchDappUrlScreen'

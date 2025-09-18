@@ -23,7 +23,7 @@ import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {InfoBanner} from '~/ui/InfoBanner/InfoBanner'
-import {useModal} from '~/ui/Modal/ModalContext'
+import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Space} from '~/ui/Space/Space'
 import {WarningBanner} from '~/ui/WarningBanner/WarningBanner'
 

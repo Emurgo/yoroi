@@ -10,6 +10,7 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {SetupWalletRouteNavigation} from '~/kernel/navigation/types'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
+import {useModal} from '~/ui/Modal/context/ModalContext'
 import {HARDWARE_WALLETS, useLedgerPermissions} from '~/wallets/hw/hw'
 
 const useIsAndroidUsbSupported = () => {
@@ -34,7 +35,7 @@ export const SelectHwConnectionModal = () => {
   return (
     <ScrollView
       style={[a.flex_1]}
-      contentContainerStyle={[a.px_lg, a.justify_end]}
+      contentContainerStyle={[a.px_lg]}
       bounces={false}
       focusable
     >
@@ -45,20 +46,16 @@ export const SelectHwConnectionModal = () => {
   )
 }
 
-export const SelectHwConnectionModalFooter = ({
-  closeModal,
-}: {
-  closeModal: () => void
-}) => {
+export const SelectHwConnectionModalActions = () => {
   return (
-    <View style={[a.gap_lg, a.w_full]}>
-      <SelectBluetoothSection closeModal={closeModal} />
-      <SelectUsbSection closeModal={closeModal} />
+    <View style={[a.gap_lg, a.self_stretch]}>
+      <SelectBluetoothSection />
+      <SelectUsbSection />
     </View>
   )
 }
 
-const SelectBluetoothSection = ({closeModal}: {closeModal: () => void}) => {
+const SelectBluetoothSection = () => {
   const strings = useStrings()
   const {
     useUSBChanged: USBChanged,
@@ -66,6 +63,7 @@ const SelectBluetoothSection = ({closeModal}: {closeModal: () => void}) => {
     setupTypeChanged,
   } = useSetupWallet()
   const navigation = useNavigation<SetupWalletRouteNavigation>()
+  const {closeModal} = useModal()
 
   const handleOnSuccess = () => {
     USBChanged(false)
@@ -94,7 +92,7 @@ const SelectBluetoothSection = ({closeModal}: {closeModal: () => void}) => {
   )
 }
 
-const SelectUsbSection = ({closeModal}: {closeModal: () => void}) => {
+const SelectUsbSection = () => {
   const strings = useStrings()
   const isAndroidUsbSupported = useIsAndroidUsbSupported()
   const {
@@ -103,6 +101,7 @@ const SelectUsbSection = ({closeModal}: {closeModal: () => void}) => {
     setupTypeChanged,
   } = useSetupWallet()
   const navigation = useNavigation<SetupWalletRouteNavigation>()
+  const {closeModal} = useModal()
 
   const handleOnPress = () => {
     USBChanged(true)

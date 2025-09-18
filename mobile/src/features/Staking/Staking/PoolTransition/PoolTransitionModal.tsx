@@ -8,7 +8,7 @@ import {Image, Text, View, ViewProps} from 'react-native'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
-import {useModal} from '~/ui/Modal/ModalContext'
+import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Space} from '~/ui/Space/Space'
 import {formatTimeSpan} from '~/wallets/utils/timeUtils'
 

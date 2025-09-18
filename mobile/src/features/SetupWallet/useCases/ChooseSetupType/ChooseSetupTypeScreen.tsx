@@ -12,7 +12,7 @@ import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {SetupWalletRouteNavigation} from '~/kernel/navigation/types'
 import {HardwareWallet} from '~/ui/HardwareWalletIllustration/HardwareWalletIllustration'
 import {LogoBanner} from '~/ui/LogoBanner/LogoBanner'
-import {useModal} from '~/ui/Modal/ModalContext'
+import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Space} from '~/ui/Space/Space'
 
 import {ButtonCard} from '../../common/ButtonCard/ButtonCard'
@@ -20,14 +20,14 @@ import {CreateWallet} from '../../illustrations/CreateWallet'
 import {RestoreWallet} from '../../illustrations/RestoreWallet'
 import {
   SelectHwConnectionModal,
-  SelectHwConnectionModalFooter,
+  SelectHwConnectionModalActions,
 } from '../RestoreHwWallet/SelectHwConnectionModal'
 
 export const ChooseSetupTypeScreen = () => {
   const {atoms: ta} = useTheme()
   const strings = useStrings()
   const {walletImplementationChanged, setupTypeChanged} = useSetupWallet()
-  const {openModal, closeModal} = useModal()
+  const {openModal} = useModal()
   const {track} = useMetrics()
 
   useFocusEffect(
@@ -56,7 +56,7 @@ export const ChooseSetupTypeScreen = () => {
     openModal({
       title: strings.setupWallet.hwModalTitle,
       content: <SelectHwConnectionModal />,
-      footer: <SelectHwConnectionModalFooter closeModal={() => closeModal()} />,
+      footer: <SelectHwConnectionModalActions />,
       height: isIOS ? 180 : 250,
     })
   }

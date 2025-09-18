@@ -7,7 +7,7 @@ import {ScrollView, Text, View} from 'react-native'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button, ButtonType} from '~/ui/Button/Button'
-import {useModal} from '~/ui/Modal/ModalContext'
+import {useModal} from '~/ui/Modal/context/ModalContext'
 import {isEmptyString} from '~/wallets/utils/string'
 
 import {ShowDisclaimer} from '../../shared/ShowDisclaimer/ShowDisclaimer'

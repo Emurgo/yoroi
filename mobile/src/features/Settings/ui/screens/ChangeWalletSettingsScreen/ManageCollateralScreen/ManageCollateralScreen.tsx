@@ -27,7 +27,7 @@ import {Copiable} from '~/ui/Copiable/Copiable'
 import {ErrorPanel} from '~/ui/ErrorPanel/ErrorPanel'
 import {Icon} from '~/ui/Icon'
 import {Info} from '~/ui/Icon/Info'
-import {useModal} from '~/ui/Modal/ModalContext'
+import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
 import {TokenAmountItem} from '~/ui/TokenAmountItem/TokenAmountItem'
@@ -146,10 +146,7 @@ export const ManageCollateralScreen = () => {
       title: strings.manageCollateral.initialCollateralInfoModalTitle,
       content: <InitialCollateralInfoModal />,
       footer: (
-        <ModalsButtons
-          onConfirm={handleGenerateCollateral}
-          onCancel={closeModal}
-        />
+        <Actions onConfirm={handleGenerateCollateral} onCancel={closeModal} />
       ),
       height: Math.min(screenHeight * 0.7, 650),
     })
@@ -231,7 +228,7 @@ export const ManageCollateralScreen = () => {
   )
 }
 
-const ModalsButtons = ({
+const Actions = ({
   onConfirm,
   onCancel,
 }: {

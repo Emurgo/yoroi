@@ -27,7 +27,7 @@ import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWalle
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
 import {CatalystStep1} from '~/ui/CatalystStep1Illustration/CatalystStep1Illustration'
-import {useModal} from '~/ui/Modal/ModalContext'
+import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Space} from '~/ui/Space/Space'
 
 import {useNavigateTo} from '../../CatalystNavigator'

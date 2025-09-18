@@ -24,7 +24,7 @@ import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation
 import {MenuRoutes} from '~/kernel/navigation/types'
 import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
-import {useModal} from '~/ui/Modal/ModalContext'
+import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
 

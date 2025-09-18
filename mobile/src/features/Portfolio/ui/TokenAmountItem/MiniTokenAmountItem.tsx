@@ -15,7 +15,7 @@ import {
 } from 'react-native'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useModal} from '~/ui/Modal/ModalContext'
+import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Text} from '~/ui/Text/Text'
 import {TokenDetails} from '~/ui/TokenDetails/TokenDetails'
 import {TokenInfoIcon} from '~/ui/TokenInfoIcon/TokenInfoIcon'

@@ -24,11 +24,10 @@ import Animated, {
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
-import {useModal} from './ModalContext'
-import {SafeAreaModalWrapper} from './SafeAreaModalWrapper'
-import {useDismissOrClose} from './hooks'
+import {useDismissOrClose} from '~/ui/Modal/hooks'
 
-export const DISMISS_THRESHOLD = 15
+import {useModal} from '../../../context/ModalContext'
+import {ModalScreenWrapper} from './ModalScreenWrapper'
 
 export const Modal = () => {
   const {
@@ -207,13 +206,13 @@ export const Modal = () => {
                 </GestureHandlerRootView>
               )}
 
-              <SafeAreaModalWrapper
+              <ModalScreenWrapper
                 title={visibleTitle}
                 footer={visibleFooter}
                 edges={isFull ? [] : undefined}
               >
                 {visibleContent}
-              </SafeAreaModalWrapper>
+              </ModalScreenWrapper>
             </Animated.View>
           </KeyboardAvoidingView>
         </View>

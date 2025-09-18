@@ -6,7 +6,7 @@ import {ErrorBoundary} from 'react-error-boundary'
 
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useModal} from '~/ui/Modal/ModalContext'
+import {useModal} from '~/ui/Modal/context/ModalContext'
 import {ModalError} from '~/ui/ModalError/ModalError'
 import {getTransactionSigners} from '~/wallets/cardano/common/signatureUtils'
 import {YoroiWallet} from '~/wallets/cardano/types'

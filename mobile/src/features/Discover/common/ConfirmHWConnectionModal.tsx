@@ -11,7 +11,7 @@ import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWalle
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {LedgerConnect} from '~/ui/LedgerConnect/LedgerConnect'
 import {LedgerTransportSwitch} from '~/ui/LedgerTransportSwitch/LedgerTransportSwitch'
-import {useModal} from '~/ui/Modal/ModalContext'
+import {useModal} from '~/ui/Modal/context/ModalContext'
 import {ModalError} from '~/ui/ModalError/ModalError'
 import {Text} from '~/ui/Text/Text'
 import {withBLE, withUSB} from '~/wallets/hw/hwWallet'

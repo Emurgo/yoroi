@@ -5,7 +5,7 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {ConfirmTxWithHwModal} from '~/ui/ConfirmTxWithHwModal/ConfirmTxWithHwModal'
 import {ConfirmTxWithOsModal} from '~/ui/ConfirmTxWithOsModal/ConfirmTxWithOsModal'
 import {ConfirmTxWithSpendingPasswordModal} from '~/ui/ConfirmTxWithSpendingPasswordModal/ConfirmTxWithSpendingPasswordModal'
-import {useModal} from '~/ui/Modal/ModalContext'
+import {useModal} from '~/ui/Modal/context/ModalContext'
 import {YoroiSignedTx, YoroiUnsignedTx} from '~/wallets/types/yoroi'
 
 import {useNavigateTo} from './useNavigateTo'
