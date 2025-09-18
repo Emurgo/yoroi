@@ -46,9 +46,6 @@ export const RestoreWalletScreen = () => {
   const bold = useBold({style: a.body_1_lg_medium})
   const {openModal} = useModal()
   const {walletManager} = useWalletManager()
-  // const walletNames = Array.from(walletManager.walletMetas.values()).map(
-  //   ({name}) => name,
-  // )
   const [mnemonic, setMnemonic] = React.useState('')
   const {
     publicKeyHexChanged,

@@ -334,6 +334,7 @@
   "components.send.memofield.error": "Memo is too long",
   "components.send.memofield.label": "Memo",
   "components.send.memofield.message": "(Optional) Memo is stored locally",
+  "components.send.nftsTab": "NFTs",
   "components.send.selectasset.title": "Select Asset",
   "components.send.sendscreen.addressInputErrorInvalidAddress": "Please enter a valid address",
   "components.send.sendscreen.addressInputErrorInvalidDomain": "Please enter a valid domain",
