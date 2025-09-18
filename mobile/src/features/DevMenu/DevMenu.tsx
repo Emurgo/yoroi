@@ -4,7 +4,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import {useNavigation} from '@react-navigation/native'
 import {BigNumber} from 'bignumber.js'
 import * as React from 'react'
-import {Text, View} from 'react-native'
+import {Alert, Text, View} from 'react-native'
 import {SystemBars} from 'react-native-edge-to-edge'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
@@ -349,6 +349,28 @@ const DevLongContent = ({
           multiline
         />
       </View>
+
+      <Button
+        onPress={() =>
+          Alert.alert(
+            'CTA Action',
+            `Action triggered with memo: "${demoText || 'No memo provided'}"`,
+            [
+              {
+                text: 'Cancel',
+                style: 'cancel',
+              },
+              {
+                text: 'OK',
+                onPress: () => console.log('User confirmed CTA action'),
+              },
+            ],
+          )
+        }
+        type={ButtonType.Primary}
+        title="Primary CTA Action"
+        style={[a.pt_lg]}
+      />
     </View>
   )
 }
