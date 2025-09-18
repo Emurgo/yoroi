@@ -2,7 +2,7 @@ import {isNonNullable} from '@yoroi/common'
 import {Api, Network, Portfolio} from '@yoroi/types'
 
 import {CredKind} from '@emurgo/cross-csl-core'
-import {useSuspenseQuery} from '@tanstack/react-query'
+import {useQuery} from '@tanstack/react-query'
 import _ from 'lodash'
 
 import {usePortfolioTokenInfosSuspense} from '~/features/Portfolio/common/hooks/usePortfolioTokenInfos'
@@ -10,9 +10,9 @@ import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetw
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {YoroiWallet} from '~/wallets/cardano/types'
 import {deriveRewardAddressFromAddress} from '~/wallets/cardano/utils'
-import {wrappedCsl} from '~/wallets/cardano/wrappedCsl'
 import {RawUtxo} from '~/wallets/types/other'
 import {asQuantity} from '~/wallets/utils/utils'
+import {CardanoMobile} from '~/wallets/wallets'
 
 import {
   FormattedCertificate,
@@ -25,18 +25,24 @@ import {
   TransactionOutputs,
 } from '../types'
 
-export const useFormattedTx = (data: TransactionBody): FormattedTx => {
+export const useFormattedTx = (
+  data: TransactionBody | null,
+): {
+  data: FormattedTx | null
+  isLoading: boolean
+  error: Error | null
+} => {
   const {wallet} = useSelectedWallet()
 
   const inputs = data?.inputs ?? []
   const outputs = data?.outputs ?? []
   const referenceInputs = data?.reference_inputs ?? []
 
-  const inputUtxos = useUtxos(inputs, wallet)
-  const referenceInputUtxos = useUtxos(referenceInputs, wallet)
+  const inputUtxosResult = useUtxos(inputs, wallet)
+  const referenceInputUtxosResult = useUtxos(referenceInputs, wallet)
 
   const inputTokenIds = inputs.flatMap((i) => {
-    const utxo = inputUtxos.find(
+    const utxo = inputUtxosResult.data.find(
       (utxo: RawUtxo) =>
         utxo?.tx_hash === i.transaction_id && utxo?.tx_index === i.index,
     )
@@ -49,7 +55,7 @@ export const useFormattedTx = (data: TransactionBody): FormattedTx => {
   })
 
   const referenceInputTokenIds = referenceInputs.flatMap((i) => {
-    const utxo = referenceInputUtxos.find(
+    const utxo = referenceInputUtxosResult.data.find(
       (utxo: RawUtxo) =>
         utxo?.tx_hash === i.transaction_id && utxo?.tx_index === i.index,
     )
@@ -74,7 +80,7 @@ export const useFormattedTx = (data: TransactionBody): FormattedTx => {
   })
 
   const mintTokenIds =
-    data.mint?.map(
+    data?.mint?.map(
       ([policyId, asset]) =>
         `${policyId}.${Object.keys(asset)[0] ?? ''}` as Portfolio.Token.Id,
     ) ?? []
@@ -87,174 +93,164 @@ export const useFormattedTx = (data: TransactionBody): FormattedTx => {
   ])
   const portfolioTokenInfos = usePortfolioTokenInfosSuspense({wallet, tokenIds})
 
-  const formattedInputs = useFormattedInputs(
+  const formattedInputs = formatInputs(
     wallet,
     portfolioTokenInfos,
-    inputUtxos,
+    inputUtxosResult.data,
   )
-  const formattedReferenceInputs = useFormattedInputs(
+  const formattedReferenceInputs = formatInputs(
     wallet,
     portfolioTokenInfos,
-    referenceInputUtxos,
+    referenceInputUtxosResult.data,
   )
-  const formattedOutputs = useFormattedOutputs(
-    wallet,
-    outputs,
-    portfolioTokenInfos,
-  )
+  const formattedOutputs = formatOutputs(wallet, outputs, portfolioTokenInfos)
+
+  const isLoading =
+    inputUtxosResult.isLoading || referenceInputUtxosResult.isLoading
+
+  const error = inputUtxosResult.error || referenceInputUtxosResult.error
+
+  if (error) {
+    return {
+      data: null,
+      isLoading: false,
+      error,
+    }
+  }
+
+  if (isLoading || !data) {
+    return {
+      data: null,
+      isLoading,
+      error: null,
+    }
+  }
+
   const formattedFee = formatFee(wallet, data)
   const formattedCertificates = formatCertificates(data.certs)
   const formattedMintData = formatMintData(data.mint, portfolioTokenInfos)
 
   return {
-    inputs: formattedInputs,
-    outputs: formattedOutputs,
-    fee: formattedFee,
-    certificates: formattedCertificates,
-    mint: formattedMintData,
-    referenceInputs: formattedReferenceInputs,
+    data: {
+      inputs: formattedInputs,
+      outputs: formattedOutputs,
+      fee: formattedFee,
+      certificates: formattedCertificates,
+      mint: formattedMintData,
+      referenceInputs: formattedReferenceInputs,
+    },
+    isLoading: false,
+    error: null,
   }
 }
 
-export const useFormattedInputs = (
-  wallet: YoroiWallet,
-  tokenInfosResult: ReturnType<typeof usePortfolioTokenInfosSuspense>,
-  inputUtxos: ReturnType<typeof useUtxos>,
-) => {
-  const query = useSuspenseQuery<FormattedInputs>({
-    queryKey: ['useFormattedInputs', inputUtxos],
-    queryFn: async () => formatInputs(wallet, tokenInfosResult, inputUtxos),
-  })
-
-  if (!query.data) throw new Error('invalid formatted inputs')
-  return query.data
-}
-
-export const useFormattedOutputs = (
-  wallet: YoroiWallet,
-  outputs: TransactionOutputs,
-  portfolioTokenInfos: ReturnType<typeof usePortfolioTokenInfosSuspense>,
-) => {
-  const query = useSuspenseQuery<FormattedOutputs>({
-    queryKey: ['useFormattedOutputs', outputs],
-    queryFn: () => formatOutputs(wallet, outputs, portfolioTokenInfos),
-  })
-
-  if (!query.data) throw new Error('invalid formatted outputs')
-  return query.data
-}
-
-const formatInputs = async (
+const formatInputs = (
   wallet: YoroiWallet,
   portfolioTokenInfos: ReturnType<typeof usePortfolioTokenInfosSuspense>,
-  inputUtxos: ReturnType<typeof useUtxos>,
-): Promise<FormattedInputs> => {
-  return Promise.all(
-    inputUtxos.map(async (utxo: RawUtxo) => {
-      const address = utxo?.receiver
-      const coin = utxo?.amount != null ? asQuantity(utxo.amount) : null
+  inputUtxos: RawUtxo[],
+): FormattedInputs => {
+  return inputUtxos.map((utxo: RawUtxo) => {
+    const address = utxo?.receiver
+    const coin = utxo?.amount != null ? asQuantity(utxo.amount) : null
 
-      const addressKind = address != null ? await getAddressKind(address) : null
-      const rewardAddress =
-        address != null && addressKind === CredKind.Key
-          ? await deriveAddress(address, wallet.networkManager.chainId)
-          : null
+    const addressKind = address != null ? getAddressKind(address) : null
+    const rewardAddress =
+      address != null && addressKind === CredKind.Key
+        ? deriveAddress(address, wallet.networkManager.chainId)
+        : null
 
-      const primaryAssets =
-        coin != null
-          ? [
-              {
-                tokenInfo: wallet.portfolioPrimaryTokenInfo,
-                quantity: coin,
-              },
-            ]
-          : []
-
-      const multiAssets =
-        utxo?.assets
-          .map((a: {assetId: string; amount: string}) => {
-            if (a == null) return null
-            const tokenInfo = portfolioTokenInfos.tokenInfos?.get(
-              a.assetId as Portfolio.Token.Id,
-            )
-            if (!tokenInfo) return null
-            const quantity = asQuantity(a.amount)
-
-            return {
-              tokenInfo,
-              quantity: quantity,
-            }
-          })
-          .filter(Boolean) ?? []
-
-      return {
-        assets: [...primaryAssets, ...multiAssets].filter(isNonNullable),
-        address,
-        addressKind: addressKind ?? null,
-        rewardAddress,
-        ownAddress: address != null ? isOwnedAddress(wallet, address) : null,
-        txIndex: utxo.tx_index,
-        txHash: utxo.tx_hash,
-      }
-    }),
-  )
-}
-
-const formatOutputs = async (
-  wallet: YoroiWallet,
-  outputs: TransactionOutputs,
-  portfolioTokenInfos: ReturnType<typeof usePortfolioTokenInfosSuspense>,
-): Promise<FormattedOutputs> => {
-  return Promise.all(
-    outputs.map(async (output) => {
-      const address = output.address
-      const coin = asQuantity(output.amount.coin)
-
-      const addressKind = await getAddressKind(address)
-      const rewardAddress =
-        addressKind === CredKind.Key
-          ? await deriveAddress(address, wallet.networkManager.chainId)
-          : null
-
-      const primaryAssets = [
-        {
-          tokenInfo: wallet.portfolioPrimaryTokenInfo,
-          quantity: coin,
-        },
-      ]
-
-      const multiAssets = output.amount.multiasset
-        ? Object.entries(output.amount.multiasset).flatMap(
-            ([policyId, assets]) => {
-              return Object.entries(assets as Record<string, string>).map(
-                ([assetId, amount]) => {
-                  const tokenInfo = portfolioTokenInfos.tokenInfos?.get(
-                    `${policyId}.${assetId}`,
-                  )
-                  if (tokenInfo == null) return null
-                  const quantity = asQuantity(amount)
-
-                  return {
-                    tokenInfo,
-                    quantity,
-                  }
-                },
-              )
+    const primaryAssets =
+      coin != null
+        ? [
+            {
+              tokenInfo: wallet.portfolioPrimaryTokenInfo,
+              quantity: coin,
             },
-          )
+          ]
         : []
 
-      const assets = [...primaryAssets, ...multiAssets].filter(isNonNullable)
+    const multiAssets =
+      utxo?.assets
+        .map((a: {assetId: string; amount: string}) => {
+          if (a == null) return null
+          const tokenInfo = portfolioTokenInfos.tokenInfos?.get(
+            a.assetId as Portfolio.Token.Id,
+          )
+          if (!tokenInfo) return null
+          const quantity = asQuantity(a.amount)
 
-      return {
-        assets,
-        address,
-        addressKind,
-        rewardAddress,
-        ownAddress: isOwnedAddress(wallet, address),
-      }
-    }),
-  )
+          return {
+            tokenInfo,
+            quantity: quantity,
+          }
+        })
+        .filter(Boolean) ?? []
+
+    return {
+      assets: [...primaryAssets, ...multiAssets].filter(isNonNullable),
+      address,
+      addressKind: addressKind ?? null,
+      rewardAddress,
+      ownAddress: address != null ? isOwnedAddress(wallet, address) : null,
+      txIndex: utxo.tx_index,
+      txHash: utxo.tx_hash,
+    }
+  })
+}
+
+const formatOutputs = (
+  wallet: YoroiWallet,
+  outputs: TransactionOutputs,
+  portfolioTokenInfos: ReturnType<typeof usePortfolioTokenInfosSuspense>,
+): FormattedOutputs => {
+  return outputs.map((output) => {
+    const address = output.address
+    const coin = asQuantity(output.amount.coin)
+
+    const addressKind = getAddressKind(address)
+    const rewardAddress =
+      addressKind === CredKind.Key
+        ? deriveAddress(address, wallet.networkManager.chainId)
+        : null
+
+    const primaryAssets = [
+      {
+        tokenInfo: wallet.portfolioPrimaryTokenInfo,
+        quantity: coin,
+      },
+    ]
+
+    const multiAssets = output.amount.multiasset
+      ? Object.entries(output.amount.multiasset).flatMap(
+          ([policyId, assets]) => {
+            return Object.entries(assets as Record<string, string>).map(
+              ([assetId, amount]) => {
+                const tokenInfo = portfolioTokenInfos.tokenInfos?.get(
+                  `${policyId}.${assetId}`,
+                )
+                if (tokenInfo == null) return null
+                const quantity = asQuantity(amount)
+
+                return {
+                  tokenInfo,
+                  quantity,
+                }
+              },
+            )
+          },
+        )
+      : []
+
+    const assets = [...primaryAssets, ...multiAssets].filter(isNonNullable)
+
+    return {
+      assets,
+      address,
+      addressKind,
+      rewardAddress,
+      ownAddress: isOwnedAddress(wallet, address),
+    }
+  })
 }
 
 export const formatFee = (
@@ -293,52 +289,58 @@ const formatMintData = (
   ) ?? []) as Array<[Portfolio.Token.Info, string]>
 }
 
-const deriveAddress = async (address: string, chainId: number) => {
+const deriveAddress = (address: string, chainId: number) => {
   try {
-    return await deriveRewardAddressFromAddress(address, chainId)
+    return deriveRewardAddressFromAddress(address, chainId)
   } catch {
     return null
   }
 }
 
-const getAddressKind = async (
-  addressBech32: string,
-): Promise<CredKind | null> => {
-  const {csl, release} = wrappedCsl()
-
+const getAddressKind = (addressBech32: string): CredKind | null => {
   try {
-    const address = csl.Address.fromBech32(addressBech32)
+    const address = CardanoMobile.Address.fromBech32(addressBech32)
     const addressKind = address.paymentCred()?.kind()
     return addressKind ?? null
-  } finally {
-    release()
+  } catch {
+    return null
   }
 }
 
-export const useUtxos = (inputs: TransactionInputs, wallet: YoroiWallet) => {
+export const useUtxos = (
+  inputs: TransactionInputs,
+  wallet: YoroiWallet,
+): {
+  data: RawUtxo[]
+  isLoading: boolean
+  error: Error | null
+} => {
   const {networkManager} = useSelectedNetwork()
 
-  const query = useSuspenseQuery({
+  const query = useQuery<RawUtxo[]>({
     queryKey: ['useUtxos', inputs],
     queryFn: async () =>
       getAllUtxos(inputs, wallet, networkManager.api.utxoData),
+    enabled: inputs != null && inputs.length > 0,
+    staleTime: 5 * 60 * 1000,
   })
 
-  if (!query.data) throw new Error('invalid formatted inputs')
-  return query.data
+  return {
+    data: query.data ?? [],
+    isLoading: query.isLoading,
+    error: query.error,
+  }
 }
 
 const getAllUtxos = async (
   inputs: TransactionInputs,
   wallet: YoroiWallet,
   getUtxoData: Network.Api['utxoData'],
-) => {
-  return (
-    Promise.all(
-      inputs.map((input: TransactionInputs[0]) =>
-        getUtxo(wallet, input.transaction_id, input.index, getUtxoData),
-      ),
-    ) ?? []
+): Promise<RawUtxo[]> => {
+  return Promise.all(
+    inputs.map((input: TransactionInputs[0]) =>
+      getUtxo(wallet, input.transaction_id, input.index, getUtxoData),
+    ),
   )
 }
 
@@ -347,7 +349,7 @@ const getUtxo = async (
   txHash: string,
   txIndex: number,
   getUtxoData: Network.Api['utxoData'],
-) => {
+): Promise<RawUtxo> => {
   const internalUtxo = wallet.utxos.find(
     (u) => u.tx_hash === txHash && u.tx_index === txIndex,
   )
@@ -366,7 +368,7 @@ function toRawUtxo(
   utxosData: Api.Cardano.UtxoData,
   txHash: string,
   txIndex: number,
-) {
+): RawUtxo {
   const {address, amount, assets} = utxosData.output
 
   const mappedAssets = assets.map((asset) => ({

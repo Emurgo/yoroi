@@ -198,7 +198,7 @@ export const SettingsScreenNavigator = () => {
 
       <Stack.Screen
         name="enable-login-with-pin"
-        options={{title: strings.settings.customPinTitle}}
+        options={{title: strings.auth.pinInputTitle}}
         getComponent={() => EnableLoginWithPinWrapper}
       />
 

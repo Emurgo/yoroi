@@ -16,7 +16,6 @@ import {MultiToken} from './MultiToken'
 import {identifierToCardanoAsset} from './assetHelpers'
 import {withMinAmounts} from './getMinAmounts'
 import {CardanoTypes, YoroiWallet} from './types'
-import {wrappedCsl} from './wrappedCsl'
 
 export const deriveRewardAddressHex = (
   accountPubKeyHex: string,
@@ -42,24 +41,18 @@ export const deriveRewardAddressFromAddress = (
   address: string,
   chainId: number,
 ): string => {
-  const {csl, release} = wrappedCsl()
+  const result = CardanoMobile.RewardAddress.new(
+    chainId,
+    CardanoMobile.BaseAddress.fromAddress(
+      CardanoMobile.Address.fromBech32(address),
+    )?.stakeCred() ?? invalid('invalid base address'),
+  )
+    .toAddress()
+    .toBech32(undefined)
 
-  try {
-    const result = csl.RewardAddress.new(
-      chainId,
-      csl.BaseAddress.fromAddress(
-        csl.Address.fromBech32(address),
-      )?.stakeCred() ?? invalid('invalid base address'),
-    )
-      .toAddress()
-      .toBech32(undefined)
-
-    if (typeof result !== 'string')
-      throw new Error('Its not possible to derive reward address')
-    return result
-  } finally {
-    release()
-  }
+  if (typeof result !== 'string')
+    throw new Error('Its not possible to derive reward address')
+  return result
 }
 
 /**
@@ -253,27 +246,22 @@ export const getTransactionUnspentOutput = ({
   bytes: Uint8Array
   index: number
 }) => {
-  const {csl, release} = wrappedCsl()
-  try {
-    const tx = csl.Transaction.fromBytes(bytes)
-    const body = tx.body()
-    const originalOutput = body.outputs().get(index)
+  const tx = CardanoMobile.Transaction.fromBytes(bytes)
+  const body = tx.body()
+  const originalOutput = body.outputs().get(index)
 
-    const txHash = txId.split(':')[index]
-    const input = csl.TransactionInput.new(
-      csl.TransactionHash.fromHex(txHash),
-      0,
-    )
-    const value = originalOutput.amount()
-    const receiver = originalOutput.address()
-    const output = csl.TransactionOutput.new(receiver, value)
-    return copyFromCSL(
-      CardanoMobile.TransactionUnspentOutput,
-      CardanoMobile.TransactionUnspentOutput.new(input, output),
-    )
-  } finally {
-    release()
-  }
+  const txHash = txId.split(':')[index]
+  const input = CardanoMobile.TransactionInput.new(
+    CardanoMobile.TransactionHash.fromHex(txHash),
+    0,
+  )
+  const value = originalOutput.amount()
+  const receiver = originalOutput.address()
+  const output = CardanoMobile.TransactionOutput.new(receiver, value)
+  return copyFromCSL(
+    CardanoMobile.TransactionUnspentOutput,
+    CardanoMobile.TransactionUnspentOutput.new(input, output),
+  )
 }
 
 export const getHexAddressingMap = (
