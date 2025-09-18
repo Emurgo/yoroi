@@ -39,10 +39,7 @@ export const LoginWithHostScreen = () => {
   }
 
   return (
-    <SafeAreaView
-      style={[a.flex_1, ta.bg_color_max]}
-      edges={['top', 'left', 'right']}
-    >
+    <SafeAreaView style={[a.flex_1, ta.bg_color_max]}>
       <View style={[a.flex_1, a.flex_col, a.justify_between, a.px_lg]}>
         <Space.Height.lg fill />
 
