@@ -86,6 +86,17 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
         {direction === 'in' ? strings.swap.from : strings.swap.to}
       </Text>
 
+      {direction === 'in' && info && !isPrimaryTokenInfo(info) && (
+        <View style={[a.absolute, {right: 8, top: 8}]}>
+          <Button
+            title={strings.swap.max}
+            type="Text"
+            size="S"
+            onPress={handleMaxPress}
+          />
+        </View>
+      )}
+
       <View style={[a.flex_row, a.justify_between]}>
         <Pressable
           style={[a.flex_row, a.align_center]}
@@ -106,15 +117,6 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
 
           <Icon.Chevron direction="down" size={24} color={p.gray_max} />
         </Pressable>
-
-        {direction === 'in' && info && !isPrimaryTokenInfo(info) && (
-          <Button
-            title={strings.swap.max}
-            type="Text"
-            size="S"
-            onPress={handleMaxPress}
-          />
-        )}
 
         <Pressable
           style={[a.flex_1, a.flex_row, a.justify_end, a.align_center]}
