@@ -5,6 +5,19 @@ import {Keyboard} from 'react-native'
 
 import {useAuth} from '~/features/Auth/context/AuthProvider'
 
+type ModalQueueItem = {
+  content: React.ReactNode
+  height?: number
+  footer?: React.ReactNode
+  isLoading?: boolean
+  canDiscard?: boolean
+  withFeedback?: boolean
+  title?: string
+  canContinue?: boolean
+  onClose?: () => void
+  full?: boolean
+}
+
 type ModalState = {
   isOpen: boolean
   content: React.ReactNode
@@ -17,6 +30,7 @@ type ModalState = {
   canContinue?: boolean
   onClose?: () => void
   full?: boolean
+  queue: ModalQueueItem[]
 }
 type ModalActions = {
   openModal: (args: {
@@ -37,6 +51,7 @@ type ModalActions = {
   setTitle: (title: string) => void
   setCanDiscard: (canDiscard: boolean) => void
   setCanContinue: (canContinue: boolean) => void
+  clearQueue: () => void
 }
 
 const ModalContext = React.createContext<
@@ -64,19 +79,21 @@ export const ModalProvider = ({children, initialState}: Props) => {
     ...initialState,
   })
   const isOpenRef = React.useRef(state.isOpen)
+  const queueRef = React.useRef(state.queue)
   const prevLoggedOutRef = React.useRef(isLoggedOut)
 
-  // Keep ref in sync with state
   React.useEffect(() => {
     isOpenRef.current = state.isOpen
-  }, [state.isOpen])
+    queueRef.current = state.queue
+  }, [state.isOpen, state.queue])
 
   const closeModal = React.useCallback(() => {
     if (state.onClose) {
       state.onClose()
     }
+
     dispatch({
-      type: 'close',
+      type: 'closeAndProcessQueue',
     })
   }, [state])
 
@@ -105,6 +122,27 @@ export const ModalProvider = ({children, initialState}: Props) => {
       full?: boolean
     }) => {
       Keyboard.dismiss()
+
+      if (state.isOpen) {
+        dispatch({
+          type: 'addToQueue',
+          modalData: {
+            content,
+            height,
+            footer,
+            isLoading,
+            canDiscard,
+            withFeedback,
+            title,
+            canContinue,
+            onClose,
+            full,
+          },
+        })
+
+        return
+      }
+
       dispatch({
         type: 'open',
         content,
@@ -119,7 +157,7 @@ export const ModalProvider = ({children, initialState}: Props) => {
         full,
       })
     },
-    [],
+    [state.isOpen],
   )
 
   const setLoading = React.useCallback((isLoading: boolean) => {
@@ -164,6 +202,12 @@ export const ModalProvider = ({children, initialState}: Props) => {
     })
   }, [])
 
+  const clearQueue = React.useCallback(() => {
+    dispatch({
+      type: 'clearQueue',
+    })
+  }, [])
+
   const actions = React.useMemo<ModalActions>(
     () => ({
       closeModal,
@@ -174,6 +218,7 @@ export const ModalProvider = ({children, initialState}: Props) => {
       setTitle,
       setCanDiscard,
       setCanContinue,
+      clearQueue,
     }),
     [
       closeModal,
@@ -184,6 +229,7 @@ export const ModalProvider = ({children, initialState}: Props) => {
       setTitle,
       setCanDiscard,
       setCanContinue,
+      clearQueue,
     ],
   )
 
@@ -223,6 +269,9 @@ type ModalAction =
       full?: boolean
     }
   | {type: 'close'}
+  | {type: 'closeAndProcessQueue'}
+  | {type: 'addToQueue'; modalData: ModalQueueItem}
+  | {type: 'clearQueue'}
   | {type: 'setLoading'; isLoading: boolean}
   | {type: 'setFooter'; footer: React.ReactNode | undefined}
   | {type: 'setTitle'; title: string}
@@ -248,9 +297,46 @@ const modalReducer = (state: ModalState, action: ModalAction) => {
         isOpen: true,
       }
 
+    case 'addToQueue':
+      return {
+        ...state,
+        queue: [...state.queue, action.modalData],
+      }
+
+    case 'clearQueue':
+      return {
+        ...state,
+        queue: [],
+      }
+
     case 'close':
       return {
         ...defaultState,
+        queue: state.queue,
+      }
+
+    case 'closeAndProcessQueue':
+      if (state.queue.length > 0) {
+        const nextModal = state.queue[0]
+        return {
+          ...defaultState,
+          content: nextModal.content,
+          height: nextModal.height ?? defaultState.height,
+          footer: nextModal.footer ?? defaultState.footer,
+          isLoading: nextModal.isLoading ?? defaultState.isLoading,
+          canDiscard: nextModal.canDiscard ?? defaultState.canDiscard,
+          title: nextModal.title ?? defaultState.title,
+          withFeedback: nextModal.withFeedback ?? defaultState.withFeedback,
+          canContinue: nextModal.canContinue ?? defaultState.canContinue,
+          onClose: nextModal.onClose,
+          full: nextModal.full ?? defaultState.full,
+          isOpen: true,
+          queue: state.queue.slice(1),
+        }
+      } else {
+        return {
+          ...defaultState,
+        }
       }
 
     case 'setLoading':
@@ -305,4 +391,5 @@ const defaultState: ModalState = Object.freeze({
   canContinue: false,
   full: false,
   withFeedback: false,
+  queue: [],
 })
