@@ -60,7 +60,7 @@ export const Dashboard = () => {
   const {wallet, meta} = useSelectedWallet()
   const {isPending: isSyncing, sync} = useSync(wallet)
   const isOnline = useIsOnline(wallet)
-  const {openModal} = useModal()
+  const {openModal, closeModal} = useModal()
 
   const balances = useBalances(wallet)
   const primaryAmount = Amounts.getAmount(
@@ -87,7 +87,7 @@ export const Dashboard = () => {
         },
       })
     }
-  }, [unsignedTx, unsignedTxChanged, walletNavigateTo, track, navigateTo])
+  }, [unsignedTx, unsignedTxChanged, walletNavigateTo, track])
 
   React.useEffect(() => {
     if (withdrawError) {
@@ -103,9 +103,10 @@ export const Dashboard = () => {
           title: strings.staking.withdrawWarningTitle,
           content: (
             <WithdrawGovernanceWarningModal
-              onParticipatePress={() =>
+              onParticipatePress={() => {
+                closeModal()
                 walletNavigateTo.navigateToGovernanceCentre()
-              }
+              }}
             />
           ),
         })
