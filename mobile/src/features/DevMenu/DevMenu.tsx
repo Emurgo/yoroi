@@ -50,7 +50,7 @@ export function DevMenu() {
   const [demoText, setDemoText] = React.useState('')
 
   return (
-    <SafeAreaView style={[a.flex_1, ta.bg_color_max, a.gap_sm]}>
+    <SafeAreaView style={[a.flex_1, ta.bg_color_max, a.gap_sm, a.p_lg]}>
       <SystemBars style={isDark ? 'light' : 'dark'} />
 
       <View
@@ -325,6 +325,8 @@ const DevLongContent = ({
   setDemoText: (t: string) => void
 }) => {
   const {atoms: ta} = useTheme()
+  const {openModal, closeModal} = useModal()
+
   return (
     <View style={[a.gap_md]}>
       <Text style={[ta.text_primary_medium, a.body_2_md_regular]}>
@@ -333,8 +335,8 @@ const DevLongContent = ({
 
       {Array.from({length: 16}).map((_, idx) => (
         <Text
-          key={`paragraph-${idx}`}
           style={[ta.text_primary_medium, a.body_2_md_regular]}
+          {...{key: `paragraph-${idx}`}}
         >
           Description paragraph
         </Text>
@@ -349,6 +351,42 @@ const DevLongContent = ({
           multiline
         />
       </View>
+
+      <Button
+        onPress={() =>
+          openModal({
+            title: 'Queued Short Modal',
+            canDiscard: true,
+            height: 300,
+            content: (
+              <View style={[a.gap_md]}>
+                <Text style={[ta.text_primary_medium, a.body_2_md_medium]}>
+                  This modal was queued!
+                </Text>
+                <Text style={[ta.text_primary_medium, a.body_2_md_regular]}>
+                  This modal opened from the queue when the long modal was
+                  closed.
+                </Text>
+              </View>
+            ),
+            footer: (
+              <View style={[a.flex_row, a.gap_lg]}>
+                <Button
+                  style={[a.flex_1]}
+                  type={ButtonType.Secondary}
+                  onPress={closeModal}
+                  title="Cancel"
+                />
+
+                <Button style={[a.flex_1]} onPress={closeModal} title="Close" />
+              </View>
+            ),
+          })
+        }
+        type={ButtonType.Secondary}
+        title="Queue Short Modal"
+        style={[a.pt_lg]}
+      />
 
       <Button
         onPress={() =>
@@ -377,12 +415,58 @@ const DevLongContent = ({
 
 const DevShortContent = () => {
   const {atoms: ta} = useTheme()
+  const {openModal, closeModal} = useModal()
+
   return (
     <View style={[a.gap_md]}>
       <Text style={[ta.text_primary_medium, a.body_2_md_medium]}>
         Short description
       </Text>
       <Text style={[ta.text_primary_medium, a.body_2_md_regular]}>Header</Text>
+
+      <Button
+        onPress={() =>
+          openModal({
+            title: 'Queued Long Modal',
+            canDiscard: true,
+            height: 700,
+            content: (
+              <View style={[a.gap_md]}>
+                <Text style={[ta.text_primary_medium, a.body_2_md_medium]}>
+                  This long modal was queued!
+                </Text>
+                <Text style={[ta.text_primary_medium, a.body_2_md_regular]}>
+                  This modal opened from the queue when the short modal was
+                  closed.
+                </Text>
+                {Array.from({length: 10}).map((_, idx) => (
+                  <Text
+                    style={[ta.text_primary_medium, a.body_2_md_regular]}
+                    {...{key: `queued-paragraph-${idx}`}}
+                  >
+                    Queued content paragraph {idx + 1}
+                  </Text>
+                ))}
+              </View>
+            ),
+            footer: (
+              <View style={[a.flex_row, a.gap_lg]}>
+                <Button
+                  style={[a.flex_1]}
+                  type={ButtonType.Secondary}
+                  onPress={closeModal}
+                  title="Cancel"
+                />
+
+                <Button style={[a.flex_1]} onPress={closeModal} title="Close" />
+              </View>
+            ),
+          })
+        }
+        type={ButtonType.Secondary}
+        title="Queue Long Modal"
+        style={[a.pt_lg]}
+      />
     </View>
   )
 }
