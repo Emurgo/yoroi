@@ -54,7 +54,10 @@ export const useGovernanceBanner = () => {
         }
         return true
       } else {
-        manager.events.remove(BannerIds.GovernanceParticipation)
+        await manager.events.remove(BannerIds.GovernanceParticipation)
+        queryClient.invalidateQueries({
+          queryKey: ['receivedNotificationEvents'],
+        })
         return false
       }
     },
