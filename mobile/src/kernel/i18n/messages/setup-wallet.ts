@@ -255,23 +255,23 @@ export const setupWalletMessages = defineMessages({
     defaultMessage: '!!!Word not found',
   },
   hwModalTitle: {
-    id: 'components.walletinit.connectnanox.checknanoxscreen.title',
+    id: 'components.ledger.ledgertransportswitchmodal.title',
     defaultMessage: '!!!Connect hardware wallet',
   },
   hwModalText: {
-    id: 'components.walletinit.connectnanox.checknanoxscreen.introline',
+    id: 'components.ledger.ledgertransportswitchmodal.text',
     defaultMessage: '!!!Connect your hardware wallet to continue',
   },
   hwModalUsbButton: {
-    id: 'components.walletinit.connectnanox.checknanoxscreen.title',
+    id: 'components.ledger.ledgertransportswitchmodal.usbButton',
     defaultMessage: '!!!USB',
   },
   hwModalBtButton: {
-    id: 'components.walletinit.connectnanox.checknanoxscreen.title',
+    id: 'components.ledger.ledgertransportswitchmodal.bluetoothButton',
     defaultMessage: '!!!Bluetooth',
   },
   hwModalIosWarning: {
-    id: 'components.walletinit.connectnanox.checknanoxscreen.title',
+    id: 'components.ledger.ledgertransportswitchmodal.iosWarning',
     defaultMessage: '!!!iOS users must use USB',
   },
   hwWalletDetailsTitle: {
