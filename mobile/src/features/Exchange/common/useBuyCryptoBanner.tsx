@@ -87,8 +87,11 @@ export const useBuyCryptoBanner = () => {
         }
         return true
       } else {
-        manager.events.remove(BannerIds.BuyCrypto)
-        manager.events.remove(BannerIds.TestAda)
+        await manager.events.remove(BannerIds.BuyCrypto)
+        await manager.events.remove(BannerIds.TestAda)
+        queryClient.invalidateQueries({
+          queryKey: ['receivedNotificationEvents'],
+        })
         return false
       }
     },
