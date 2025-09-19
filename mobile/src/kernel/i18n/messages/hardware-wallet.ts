@@ -6,11 +6,11 @@ export const hardwareWalletMessages = defineMessages({
     defaultMessage: '!!!Hardware Wallet',
   },
   usbExplanation: {
-    id: 'components.walletinit.connectnanox.checknanoxscreen.introline',
+    id: 'components.ledger.ledgertransportswitchmodal.usbExplanation',
     defaultMessage: '!!!USB explanation',
   },
   usbButton: {
-    id: 'components.walletinit.connectnanox.checknanoxscreen.title',
+    id: 'components.ledger.ledgertransportswitchmodal.usbButton',
     defaultMessage: '!!!USB Button',
   },
   usbButtonNotSupported: {
@@ -18,15 +18,15 @@ export const hardwareWalletMessages = defineMessages({
     defaultMessage: '!!!USB button not supported',
   },
   usbButtonDisabled: {
-    id: 'components.walletinit.connectnanox.checknanoxscreen.title',
+    id: 'components.ledger.ledgertransportswitchmodal.usbButtonDisabled',
     defaultMessage: '!!!USB button disabled',
   },
   bluetoothExplanation: {
-    id: 'components.walletinit.connectnanox.checknanoxscreen.introline',
+    id: 'components.ledger.ledgertransportswitchmodal.bluetoothExplanation',
     defaultMessage: '!!!Bluetooth explanation',
   },
   bluetoothButton: {
-    id: 'components.walletinit.connectnanox.checknanoxscreen.title',
+    id: 'components.ledger.ledgertransportswitchmodal.bluetoothButton',
     defaultMessage: '!!!Bluetooth Button',
   },
   bluetoothError: {
