@@ -7,6 +7,7 @@ import {Alert, Linking, Text, View} from 'react-native'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
+import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
 import {TextInput} from '~/ui/TextInput/TextInput'
 import {CardanoMobile} from '~/wallets/wallets'
@@ -25,6 +26,7 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
   const strings = useStrings()
   const {atoms: ta, palette: p} = useTheme()
   const [drepId, setDrepId] = React.useState('')
+  const {closeModal} = useModal()
 
   const {error, isFetched, isFetching} = useIsValidDRepID(drepId, {
     retry: false,
@@ -35,6 +37,7 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
     try {
       const {hash, type} = parseDrepId(drepId, CardanoMobile)
       onSubmit?.({hash, type, CIP105: !error && drepId.length === 56})
+      closeModal()
     } catch (e) {
       Alert.alert(strings.global.error, strings.staking.invalidDRepId)
     }
