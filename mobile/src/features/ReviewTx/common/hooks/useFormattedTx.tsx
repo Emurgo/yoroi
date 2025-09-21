@@ -30,6 +30,7 @@ export const useFormattedTx = (
 ): {
   formattedTx: FormattedTx | null
   isLoading: boolean
+  error: Error | null
 } => {
   const {wallet} = useSelectedWallet()
 
@@ -42,6 +43,7 @@ export const useFormattedTx = (
 
   const isLoading =
     inputUtxosResult.isLoading || referenceInputUtxosResult.isLoading
+  const error = inputUtxosResult.error || referenceInputUtxosResult.error
 
   const inputTokenIds = inputs.flatMap((i) => {
     const utxo = inputUtxosResult.data.find(
@@ -95,10 +97,19 @@ export const useFormattedTx = (
   ])
   const {tokenInfos} = usePortfolioTokenInfos({wallet, tokenIds})
 
+  if (error) {
+    return {
+      formattedTx: null,
+      isLoading: false,
+      error,
+    }
+  }
+
   if (isLoading) {
     return {
       formattedTx: null,
       isLoading: true,
+      error: null,
     }
   }
 
@@ -131,6 +142,7 @@ export const useFormattedTx = (
       referenceInputs: formattedReferenceInputs,
     },
     isLoading: false,
+    error: null,
   }
 }
 
@@ -298,6 +310,7 @@ export const useUtxos = (inputs: TransactionInputs, wallet: YoroiWallet) => {
 
   const [utxos, setUtxos] = React.useState<any[]>([])
   const [isLoaded, setIsLoaded] = React.useState(false)
+  const [error, setError] = React.useState<Error | null>(null)
 
   const inputsRef = React.useRef<TransactionInputs>([])
   const stableInputs = React.useMemo(() => {
@@ -322,6 +335,7 @@ export const useUtxos = (inputs: TransactionInputs, wallet: YoroiWallet) => {
       if (isMounted) {
         setUtxos([])
         setIsLoaded(true)
+        setError(null)
       }
       return
     }
@@ -330,12 +344,14 @@ export const useUtxos = (inputs: TransactionInputs, wallet: YoroiWallet) => {
       if (isMounted) {
         setUtxos([])
         setIsLoaded(true)
+        setError(null)
       }
       return
     }
 
     if (isMounted) {
       setIsLoaded(false)
+      setError(null)
     }
 
     const fetchUtxos = async () => {
@@ -349,11 +365,13 @@ export const useUtxos = (inputs: TransactionInputs, wallet: YoroiWallet) => {
         if (isMounted) {
           setUtxos(result)
           setIsLoaded(true)
+          setError(null)
         }
-      } catch (error) {
+      } catch (fetchError) {
         if (isMounted) {
           setUtxos([])
           setIsLoaded(true)
+          setError(fetchError as Error)
         }
       }
     }
@@ -368,6 +386,7 @@ export const useUtxos = (inputs: TransactionInputs, wallet: YoroiWallet) => {
   return {
     data: utxos,
     isLoading: !isLoaded && stableInputs.length > 0,
+    error,
   }
 }
 
@@ -383,8 +402,8 @@ const getAllUtxos = async (
     const result = await Promise.all(promises)
 
     return result ?? []
-  } catch (error) {
-    throw error
+  } catch (fetchError) {
+    throw fetchError
   }
 }
 
