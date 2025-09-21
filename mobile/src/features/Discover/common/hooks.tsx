@@ -3,7 +3,6 @@ import {DappConnectorManager, useDappConnector} from '@yoroi/dapp-connector'
 import * as React from 'react'
 import {WebView, WebViewMessageEvent} from 'react-native-webview'
 
-import {logger} from '~/kernel/logger/logger'
 import {YoroiWallet} from '~/wallets/cardano/types'
 
 import {walletConfig} from './wallet-config'
@@ -19,15 +18,15 @@ export const useConnectWalletToWebView = (
   const sendMessageToWebView =
     (event: string) => (id: string, result: unknown, error?: Error) => {
       if (error) {
-        logger.debug('useConnectWalletToWebView: sending error to webview', {
+        /* logger.debug('useConnectWalletToWebView: sending error to webview', {
           error,
           event,
-        })
+        }) */
       } else {
-        logger.debug('useConnectWalletToWebView: sending result to webview', {
+        /* logger.debug('useConnectWalletToWebView: sending result to webview', {
           result,
           event,
-        })
+        }) */
       }
 
       webViewRef.current?.injectJavaScript(
@@ -38,12 +37,12 @@ export const useConnectWalletToWebView = (
   const handleWebViewEvent = async (e: WebViewMessageEvent) => {
     // Skip events if WebView is not ready yet
     if (!isWebViewReady) {
-      logger.debug(
+      /* logger.debug(
         'useConnectWalletToWebView: skipping event - WebView not ready yet',
         {
           data: e.nativeEvent.data,
         },
-      )
+      ) */
       return
     }
 
@@ -55,43 +54,43 @@ export const useConnectWalletToWebView = (
       if (fallbackUrl) {
         // Use the fallback URL from the tab data
         webViewUrl = fallbackUrl
-        logger.debug('useConnectWalletToWebView: using fallback URL', {
+        /* logger.debug('useConnectWalletToWebView: using fallback URL', {
           originalUrl: e.nativeEvent.url,
           fallbackUrl,
-        })
+        }) */
       } else {
         // Skip this event if we don't have a valid URL
-        logger.warn(
+        /* logger.warn(
           'useConnectWalletToWebView: skipping event - no valid URL',
           {
             originalUrl: e.nativeEvent.url,
             data,
           },
-        )
+        ) */
         return
       }
     }
 
     // Additional safety check: ensure we have a valid URL before proceeding
     if (!webViewUrl || webViewUrl === 'about:blank') {
-      logger.warn(
+      /* logger.warn(
         'useConnectWalletToWebView: skipping event - invalid URL after fallback',
         {
           webViewUrl,
           data,
         },
-      )
+      ) */
       return
     }
 
     try {
       await manager.handleEvent(data, webViewUrl, sendMessageToWebView(data))
     } catch (error) {
-      logger.error('useConnectWalletToWebView: error handling web event', {
+      /* logger.error('useConnectWalletToWebView: error handling web event', {
         error,
         data,
         webViewUrl,
-      })
+      }) */
     }
   }
 

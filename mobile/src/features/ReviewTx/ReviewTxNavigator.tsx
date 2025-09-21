@@ -30,6 +30,10 @@ export const ReviewTxNavigator = () => {
       <Stack.Screen name="review-tx" options={{title: strings.txReview.title}}>
         {() => (
           <Boundary
+            loading={{
+              enabled: true,
+              size: 'large',
+            }}
             error={{
               fallback,
             }}

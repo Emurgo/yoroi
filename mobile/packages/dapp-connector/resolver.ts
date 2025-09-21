@@ -55,7 +55,7 @@ export const resolver: Resolver = {
       isKeyOf('args', params) &&
       Array.isArray(params.args)
     ) {
-      console.log('Log From Dapp Connector:', ...params.args)
+      // console.log('Log From Dapp Connector:', ...params.args)
     }
   },
   enable: async (_params: unknown, context: Context) => {

@@ -47,21 +47,18 @@ export const ReviewTxScreen = () => {
     onClose: params?.onClose,
   })
 
-  const {
-    txBody,
-    isLoading: isTxBodyLoading,
-    error: txBodyError,
-  } = useTxBody({cbor, unsignedTx})
-  const {
-    data: formattedTx,
-    isLoading: isFormattedTxLoading,
-    error: formattedTxError,
-  } = useFormattedTx(txBody)
+  console.log('ReviewTxScreen-1')
+  const txBody = useTxBody({cbor, unsignedTx})
+  console.log('ReviewTxScreen-2')
+  const formattedTx = useFormattedTx(txBody)
+  console.log('ReviewTxScreen-3')
   const formattedMetadata = useFormattedMetadata({
     txBody,
     unsignedTx,
     cbor: cbor ?? null,
   })
+
+  console.log('ReviewTxScreen-4')
 
   React.useEffect(() => {
     return () => {
@@ -87,21 +84,10 @@ export const ReviewTxScreen = () => {
     throw new Error('ReviewTxScreen: invalid state')
   }
 
-  if (txBodyError) {
-    throw txBodyError
-  }
-
-  if (formattedTxError) {
-    throw formattedTxError
-  }
-
-  if (isTxBodyLoading || isFormattedTxLoading || !txBody || !formattedTx) {
-    return null
-  }
   return (
     <ReviewTx
       formattedTx={formattedTx}
-      formattedMetadata={formattedMetadata ?? undefined}
+      formattedMetadata={formattedMetadata}
       operations={params?.operations}
       operationsNotice={params?.operationsNotice}
       details={params?.details}
