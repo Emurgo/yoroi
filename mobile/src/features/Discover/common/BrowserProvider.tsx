@@ -122,7 +122,15 @@ export const BrowserProvider = ({
       webViewRegistryRef.current.delete(tabId)
     },
     sendDisconnectToOrigins: (origins: string[]) => {
-      browserState.tabs.forEach((tab) => {
+      // Get current tabs directly from the state via the ref to avoid stale closure
+      const getCurrentTabs = () => {
+        if (storageId === null) return []
+        const currentState = memoryStorage.get(storageId)
+        return currentState?.tabs || []
+      }
+
+      const currentTabs = getCurrentTabs()
+      currentTabs.forEach((tab) => {
         try {
           const tabOrigin = new URL(tab.url).origin
           if (origins.includes(tabOrigin)) {
