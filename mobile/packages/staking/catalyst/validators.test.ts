@@ -49,6 +49,47 @@ describe('Validators', () => {
 
       expect(parseFundInfo(validData)).toEqual(validData)
     })
+
+    it('should return the parsed fund info for valid data with empty challengeUrl', () => {
+      const validDataWithEmptyUrl = {
+        id: 1,
+        fundName: 'Fund 1',
+        fundStartTime: new Date('2022-01-01'),
+        fundEndTime: new Date('2022-02-01'),
+        registrationSnapshotTime: new Date('2022-01-15'),
+        challenges: [
+          {
+            id: 1,
+            challengeType: 'Type 1',
+            title: 'Challenge 1',
+            description: 'Description 1',
+            rewardsTotal: 100,
+            proposersRewards: 10,
+            challengeUrl: 'https://challenge1.com',
+          },
+          {
+            id: 2,
+            challengeType: 'Type 2',
+            title: 'Challenge 2',
+            description: 'Description 2',
+            rewardsTotal: 200,
+            proposersRewards: 20,
+            challengeUrl: '', // Empty string should pass validation
+          },
+        ],
+        snapshotStart: new Date('2022-01-10'),
+        votingStart: new Date('2022-01-20'),
+        votingEnd: new Date('2022-01-25'),
+        tallyingEnd: new Date('2022-01-30'),
+        resultsUrl: 'https://results.com',
+        surveyUrl: 'https://survey.com',
+        votingPowerThreshold: 25000000,
+      }
+
+      expect(parseFundInfo(validDataWithEmptyUrl)).toEqual(
+        validDataWithEmptyUrl,
+      )
+    })
   })
 
   describe('isFundInfo', () => {

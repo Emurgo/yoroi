@@ -66,10 +66,10 @@ export const useFormattedMetadata = ({
 }: {
   unsignedTx: YoroiUnsignedTx | null
   cbor: string | null
-  txBody: TransactionBody | null
-}): FormattedMetadata | null => {
-  return React.useMemo(() => {
-    if (txBody == null) return null
-    return formatMetadata(unsignedTx, cbor, txBody)
-  }, [unsignedTx, cbor, txBody])
+  txBody: TransactionBody
+}) => {
+  return React.useMemo(
+    () => formatMetadata(unsignedTx, cbor, txBody),
+    [unsignedTx, cbor, txBody],
+  )
 }

@@ -1,4 +1,3 @@
-import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 
 import {useReviewTx} from '~/features/ReviewTx/common/ReviewTxProvider'
@@ -9,21 +8,12 @@ import {useOnConfirm} from '~/features/ReviewTx/common/hooks/useOnConfirm'
 import {useTxBody} from '~/features/ReviewTx/common/hooks/useTxBody'
 import {useUnsafeParams} from '~/kernel/navigation/hooks/useUnsafeParams'
 import {ReviewTxRoutes} from '~/kernel/navigation/types'
-import {Copiable} from '~/ui/Copiable/Copiable'
 
 import {ReviewTx} from './ReviewTx/ReviewTx'
 
 export const ReviewTxScreen = () => {
-  const navigation = useNavigation()
   const {unsignedTx} = useReviewTx()
   const params = useUnsafeParams<NonNullable<ReviewTxRoutes['review-tx']>>()
-  const cbor = params?.cbor
-
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (cbor != null ? <Copiable text={cbor} /> : null),
-    })
-  }, [navigation, cbor])
 
   const {legacyOnConfirm} = useLegacyOnConfirm({
     unsignedTx,
@@ -36,7 +26,7 @@ export const ReviewTxScreen = () => {
   })
 
   const {onConfirm} = useOnConfirm({
-    cbor,
+    cbor: params?.cbor,
     partial: params?.partial,
     preventSubmit: params?.preventSubmit,
     onSuccess: params?.onSuccess,
@@ -47,20 +37,12 @@ export const ReviewTxScreen = () => {
     onClose: params?.onClose,
   })
 
-  const {
-    txBody,
-    isLoading: isTxBodyLoading,
-    error: txBodyError,
-  } = useTxBody({cbor, unsignedTx})
-  const {
-    data: formattedTx,
-    isLoading: isFormattedTxLoading,
-    error: formattedTxError,
-  } = useFormattedTx(txBody)
+  const txBody = useTxBody({cbor: params?.cbor, unsignedTx})
+  const {formattedTx, isLoading} = useFormattedTx(txBody)
   const formattedMetadata = useFormattedMetadata({
     txBody,
     unsignedTx,
-    cbor: cbor ?? null,
+    cbor: params?.cbor ?? null,
   })
 
   React.useEffect(() => {
@@ -75,11 +57,11 @@ export const ReviewTxScreen = () => {
       params?.onConfirm()
       return
     }
-    if (unsignedTx != null && cbor == null) {
+    if (unsignedTx != null && params?.cbor == null) {
       legacyOnConfirm()
       return
     }
-    if (cbor != null) {
+    if (params?.cbor != null) {
       onConfirm()
       return
     }
@@ -87,21 +69,14 @@ export const ReviewTxScreen = () => {
     throw new Error('ReviewTxScreen: invalid state')
   }
 
-  if (txBodyError) {
-    throw txBodyError
-  }
-
-  if (formattedTxError) {
-    throw formattedTxError
-  }
-
-  if (isTxBodyLoading || isFormattedTxLoading || !txBody || !formattedTx) {
+  if (isLoading || !formattedTx) {
     return null
   }
+
   return (
     <ReviewTx
       formattedTx={formattedTx}
-      formattedMetadata={formattedMetadata ?? undefined}
+      formattedMetadata={formattedMetadata}
       operations={params?.operations}
       operationsNotice={params?.operationsNotice}
       details={params?.details}
