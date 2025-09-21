@@ -5,7 +5,7 @@ import {CredKind} from '@emurgo/cross-csl-core'
 import _ from 'lodash'
 import * as React from 'react'
 
-import {usePortfolioTokenInfosSuspense} from '~/features/Portfolio/common/hooks/usePortfolioTokenInfos'
+import {usePortfolioTokenInfos} from '~/features/Portfolio/common/hooks/usePortfolioTokenInfos'
 import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {YoroiWallet} from '~/wallets/cardano/types'
@@ -26,39 +26,15 @@ import {
 } from '../types'
 
 export const useFormattedTx = (data: TransactionBody): FormattedTx => {
-  console.log('🚀 STARTING useFormattedTx')
   const {wallet} = useSelectedWallet()
-  console.log('🚀 Got wallet')
 
   const inputs = data?.inputs ?? []
   const outputs = data?.outputs ?? []
   const referenceInputs = data?.reference_inputs ?? []
-  console.log('🚀 Parsed inputs/outputs')
-
-  console.log('🚀 About to call useUtxos')
 
   const inputUtxos = useUtxos(inputs, wallet)
-  console.log('useFormattedTx - after first useUtxos')
 
   const referenceInputUtxos = useUtxos(referenceInputs, wallet)
-  console.log('useFormattedTx - after second useUtxos')
-
-  console.log('🎯 FINAL RESULT inputUtxos:', inputUtxos.length, 'items')
-  console.log(
-    '🎯 FINAL RESULT referenceInputUtxos:',
-    referenceInputUtxos.length,
-    'items',
-  )
-
-  if (inputUtxos.length > 0) {
-    console.log('🎯 SUCCESS! inputUtxos has data:', inputUtxos[0])
-  }
-  if (referenceInputUtxos.length > 0) {
-    console.log(
-      '🎯 SUCCESS! referenceInputUtxos has data:',
-      referenceInputUtxos[0],
-    )
-  }
 
   const inputTokenIds = inputs.flatMap((i) => {
     const utxo = inputUtxos.find(
@@ -110,26 +86,26 @@ export const useFormattedTx = (data: TransactionBody): FormattedTx => {
     ...mintTokenIds,
     ...referenceInputTokenIds,
   ])
-  const portfolioTokenInfos = usePortfolioTokenInfosSuspense({wallet, tokenIds})
+  const {tokenInfos} = usePortfolioTokenInfos({wallet, tokenIds})
 
   const formattedInputs: FormattedInputs = formatInputs(
     wallet,
-    portfolioTokenInfos,
+    tokenInfos,
     inputUtxos,
   )
   const formattedReferenceInputs: FormattedInputs = formatInputs(
     wallet,
-    portfolioTokenInfos,
+    tokenInfos,
     referenceInputUtxos,
   )
   const formattedOutputs: FormattedOutputs = formatOutputs(
     wallet,
     outputs,
-    portfolioTokenInfos,
+    tokenInfos,
   )
   const formattedFee = formatFee(wallet, data)
   const formattedCertificates = formatCertificates(data.certs)
-  const formattedMintData = formatMintData(data.mint, portfolioTokenInfos)
+  const formattedMintData = formatMintData(data.mint, tokenInfos)
 
   return {
     inputs: formattedInputs,
@@ -143,7 +119,7 @@ export const useFormattedTx = (data: TransactionBody): FormattedTx => {
 
 const formatInputs = (
   wallet: YoroiWallet,
-  portfolioTokenInfos: ReturnType<typeof usePortfolioTokenInfosSuspense>,
+  tokenInfos: Map<Portfolio.Token.Id, Portfolio.Token.Info> | undefined,
   inputUtxos: ReturnType<typeof useUtxos>,
 ): FormattedInputs => {
   return inputUtxos.map((utxo: RawUtxo) => {
@@ -170,9 +146,7 @@ const formatInputs = (
       utxo?.assets
         .map((a: {assetId: string; amount: string}) => {
           if (a == null) return null
-          const tokenInfo = portfolioTokenInfos.tokenInfos?.get(
-            a.assetId as Portfolio.Token.Id,
-          )
+          const tokenInfo = tokenInfos?.get(a.assetId as Portfolio.Token.Id)
           if (!tokenInfo) return null
           const quantity = asQuantity(a.amount)
 
@@ -198,7 +172,7 @@ const formatInputs = (
 const formatOutputs = (
   wallet: YoroiWallet,
   outputs: TransactionOutputs,
-  portfolioTokenInfos: ReturnType<typeof usePortfolioTokenInfosSuspense>,
+  tokenInfos: Map<Portfolio.Token.Id, Portfolio.Token.Info> | undefined,
 ): FormattedOutputs => {
   return outputs.map((output) => {
     const address = output.address
@@ -222,9 +196,7 @@ const formatOutputs = (
           ([policyId, assets]) => {
             return Object.entries(assets as Record<string, string>).map(
               ([assetId, amount]) => {
-                const tokenInfo = portfolioTokenInfos.tokenInfos?.get(
-                  `${policyId}.${assetId}`,
-                )
+                const tokenInfo = tokenInfos?.get(`${policyId}.${assetId}`)
                 if (tokenInfo == null) return null
                 const quantity = asQuantity(amount)
 
@@ -273,13 +245,13 @@ const formatCertificates = (certificates: TransactionBody['certs']) => {
 
 const formatMintData = (
   mintData: TransactionBody['mint'] | null,
-  portfolioTokenInfos: ReturnType<typeof usePortfolioTokenInfosSuspense>,
+  tokenInfos: Map<Portfolio.Token.Id, Portfolio.Token.Info> | undefined,
 ) => {
   if (mintData == null) return null
   return (mintData?.flatMap(([policyId, tokens]) =>
     Object.entries(tokens)
       .map(([assetNameHex, count]) => [
-        portfolioTokenInfos.tokenInfos?.get(`${policyId}.${assetNameHex}`),
+        tokenInfos?.get(`${policyId}.${assetNameHex}`),
         count,
       ])
       .filter(([tokenInfo]) => tokenInfo != null),
@@ -295,36 +267,41 @@ const deriveAddress = (address: string, chainId: number) => {
 }
 
 const getAddressKind = (addressBech32: string): CredKind | null => {
-  const address = CardanoMobile.Address.fromBech32(addressBech32)
-  const addressKind = address.paymentCred()?.kind()
-  return addressKind ?? null
+  try {
+    const address = CardanoMobile.Address.fromBech32(addressBech32)
+    const addressKind = address.paymentCred()?.kind()
+    return addressKind ?? null
+  } catch (e) {
+    return null
+  }
 }
 
 export const useUtxos = (inputs: TransactionInputs, wallet: YoroiWallet) => {
   const {networkManager} = useSelectedNetwork()
 
-  console.log('🔍 useUtxos called with:', {
-    inputsLength: inputs.length,
-    hasWallet: !!wallet,
-    hasNetworkManager: !!networkManager,
-  })
-
-  // Use useState to manage UTXO data and loading state
   const [utxos, setUtxos] = React.useState<any[]>([])
   const [isLoaded, setIsLoaded] = React.useState(false)
 
-  // Use useEffect for async side effects
-  React.useEffect(() => {
-    console.log('🔍 ⭐ useEffect trigger with:', {
-      inputsLength: inputs.length,
-      hasWallet: !!wallet,
-      hasNetworkManager: !!networkManager,
-    })
+  const inputsRef = React.useRef<TransactionInputs>([])
+  const stableInputs = React.useMemo(() => {
+    const inputsKey = inputs
+      .map((input) => `${input.transaction_id}:${input.index}`)
+      .join(',')
+    const prevInputsKey = inputsRef.current
+      .map((input) => `${input.transaction_id}:${input.index}`)
+      .join(',')
 
+    if (inputsKey !== prevInputsKey) {
+      inputsRef.current = inputs
+    }
+
+    return inputsRef.current
+  }, [inputs])
+
+  React.useEffect(() => {
     let isMounted = true
 
     if (!wallet || !networkManager) {
-      console.log('🔍 ⭐ Missing dependencies - setting empty')
       if (isMounted) {
         setUtxos([])
         setIsLoaded(true)
@@ -332,8 +309,7 @@ export const useUtxos = (inputs: TransactionInputs, wallet: YoroiWallet) => {
       return
     }
 
-    if (inputs.length === 0) {
-      console.log('🔍 ⭐ No inputs - setting empty')
+    if (stableInputs.length === 0) {
       if (isMounted) {
         setUtxos([])
         setIsLoaded(true)
@@ -341,7 +317,6 @@ export const useUtxos = (inputs: TransactionInputs, wallet: YoroiWallet) => {
       return
     }
 
-    console.log('🔍 ⭐ Starting async fetch...')
     if (isMounted) {
       setIsLoaded(false)
     }
@@ -349,21 +324,16 @@ export const useUtxos = (inputs: TransactionInputs, wallet: YoroiWallet) => {
     const fetchUtxos = async () => {
       try {
         const result = await getAllUtxos(
-          inputs,
+          stableInputs,
           wallet,
           networkManager.api.utxoData,
         )
-        console.log('🔍 ⭐ SUCCESS! Setting', result.length, 'UTXOs')
 
         if (isMounted) {
           setUtxos(result)
           setIsLoaded(true)
-          console.log('🔍 ⭐ State updated! Component should re-render now')
-        } else {
-          console.log('🔍 ⭐ Component unmounted, skipping state update')
         }
       } catch (error) {
-        console.error('🔍 ⭐ Error:', error)
         if (isMounted) {
           setUtxos([])
           setIsLoaded(true)
@@ -373,22 +343,12 @@ export const useUtxos = (inputs: TransactionInputs, wallet: YoroiWallet) => {
 
     fetchUtxos()
 
-    // Cleanup function
     return () => {
-      console.log('🔍 ⭐ useEffect cleanup - component unmounting')
       isMounted = false
     }
-  }, [inputs, wallet, networkManager])
+  }, [stableInputs, wallet, networkManager])
 
-  console.log('🔍 ⭐ useUtxos returning:', {
-    utxosLength: utxos.length,
-    isLoaded,
-    hasData: utxos.length > 0,
-  })
-
-  // Only return data when it's actually loaded
-  if (!isLoaded && inputs.length > 0) {
-    console.log('🔍 ⭐ Still loading, returning empty array')
+  if (!isLoaded && stableInputs.length > 0) {
     return []
   }
 
@@ -400,24 +360,14 @@ const getAllUtxos = async (
   wallet: YoroiWallet,
   getUtxoData: Network.Api['utxoData'],
 ) => {
-  console.log('🔍 📥 getAllUtxos STARTED with inputs:', inputs.length)
-
   try {
     const promises = inputs.map((input: TransactionInputs[0]) => {
-      console.log(
-        '🔍 📥 Processing input:',
-        `${input.transaction_id}:${input.index}`,
-      )
       return getUtxo(wallet, input.transaction_id, input.index, getUtxoData)
     })
-
-    console.log('🔍 📥 Created promises, waiting for Promise.all...')
     const result = await Promise.all(promises)
-    console.log('🔍 📥 Promise.all completed, result:', result)
 
     return result ?? []
   } catch (error) {
-    console.error('🔍 📥 getAllUtxos ERROR:', error)
     throw error
   }
 }
@@ -428,30 +378,18 @@ const getUtxo = async (
   txIndex: number,
   getUtxoData: Network.Api['utxoData'],
 ) => {
-  console.log('🔍 🎯 getUtxo STARTED for:', `${txHash}:${txIndex}`)
-
   const internalUtxo = wallet.utxos.find(
     (u) => u.tx_hash === txHash && u.tx_index === txIndex,
   )
 
-  console.log(
-    '🔍 🎯 Internal UTXO search result:',
-    internalUtxo ? 'FOUND' : 'NOT FOUND',
-  )
-
   if (!internalUtxo) {
-    console.log('🔍 🎯 Calling external API...')
     const externalUtxo = await getUtxoData({txHash, txIndex})
-    console.log('🔍 🎯 External API result:', externalUtxo ? 'SUCCESS' : 'NULL')
 
     if (externalUtxo == null) throw new Error('useUtxos: utxo not found')
 
     const rawUtxo = toRawUtxo(externalUtxo, txHash, txIndex)
-    console.log('🔍 🎯 Converted to raw UTXO:', rawUtxo)
     return rawUtxo
   }
-
-  console.log('🔍 🎯 Returning internal UTXO:', internalUtxo)
   return internalUtxo
 }
 

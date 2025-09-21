@@ -1,7 +1,7 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Balance} from '@yoroi/types'
 
-import {useSuspenseQuery} from '@tanstack/react-query'
+import {useQuery} from '@tanstack/react-query'
 import * as React from 'react'
 import {Text, TouchableOpacity, View, useWindowDimensions} from 'react-native'
 
@@ -833,9 +833,10 @@ export const getDrepBech32Id = async (poolId: string) => {
 }
 
 export const useDrepBech32Id = (poolId: string) => {
-  const query = useSuspenseQuery({
+  const query = useQuery({
     queryKey: ['drepBech32', poolId],
     queryFn: () => getDrepBech32Id(poolId),
+    initialData: null,
   })
 
   return query?.data ?? null

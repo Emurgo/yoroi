@@ -1,4 +1,3 @@
-import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 
 import {useReviewTx} from '~/features/ReviewTx/common/ReviewTxProvider'
@@ -9,21 +8,12 @@ import {useOnConfirm} from '~/features/ReviewTx/common/hooks/useOnConfirm'
 import {useTxBody} from '~/features/ReviewTx/common/hooks/useTxBody'
 import {useUnsafeParams} from '~/kernel/navigation/hooks/useUnsafeParams'
 import {ReviewTxRoutes} from '~/kernel/navigation/types'
-import {Copiable} from '~/ui/Copiable/Copiable'
 
 import {ReviewTx} from './ReviewTx/ReviewTx'
 
 export const ReviewTxScreen = () => {
-  const navigation = useNavigation()
   const {unsignedTx} = useReviewTx()
   const params = useUnsafeParams<NonNullable<ReviewTxRoutes['review-tx']>>()
-  const cbor = params?.cbor
-
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (cbor != null ? <Copiable text={cbor} /> : null),
-    })
-  }, [navigation, cbor])
 
   const {legacyOnConfirm} = useLegacyOnConfirm({
     unsignedTx,
@@ -36,7 +26,7 @@ export const ReviewTxScreen = () => {
   })
 
   const {onConfirm} = useOnConfirm({
-    cbor,
+    cbor: params?.cbor,
     partial: params?.partial,
     preventSubmit: params?.preventSubmit,
     onSuccess: params?.onSuccess,
@@ -47,18 +37,13 @@ export const ReviewTxScreen = () => {
     onClose: params?.onClose,
   })
 
-  console.log('ReviewTxScreen-1')
-  const txBody = useTxBody({cbor, unsignedTx})
-  console.log('ReviewTxScreen-2')
+  const txBody = useTxBody({cbor: params?.cbor, unsignedTx})
   const formattedTx = useFormattedTx(txBody)
-  console.log('ReviewTxScreen-3')
   const formattedMetadata = useFormattedMetadata({
     txBody,
     unsignedTx,
-    cbor: cbor ?? null,
+    cbor: params?.cbor ?? null,
   })
-
-  console.log('ReviewTxScreen-4')
 
   React.useEffect(() => {
     return () => {
@@ -72,11 +57,11 @@ export const ReviewTxScreen = () => {
       params?.onConfirm()
       return
     }
-    if (unsignedTx != null && cbor == null) {
+    if (unsignedTx != null && params?.cbor == null) {
       legacyOnConfirm()
       return
     }
-    if (cbor != null) {
+    if (params?.cbor != null) {
       onConfirm()
       return
     }
