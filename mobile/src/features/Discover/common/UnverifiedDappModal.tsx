@@ -41,7 +41,10 @@ export const useOpenUnverifiedDappModal = () => {
         footer: (
           <Button
             title={strings.discover.understand}
-            onPress={options.onConfirm}
+            onPress={() => {
+              options.onConfirm()
+              closeModal()
+            }}
           />
         ),
         height: 320 + insets.bottom,
@@ -52,6 +55,7 @@ export const useOpenUnverifiedDappModal = () => {
     [
       insets.bottom,
       openModal,
+      closeModal,
       p.gray_900,
       strings.discover.disclaimerModalText,
       strings.discover.disclaimerModalTitle,

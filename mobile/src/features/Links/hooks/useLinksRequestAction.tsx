@@ -272,6 +272,7 @@ export const useLinksRequestAction = () => {
           )
           break
         case 'launch':
+          console.log('openRequestedBrowserLaunchDappUrl')
           openRequestedBrowserLaunchDappUrl({
             params: action.info.params,
             isTrusted: action.isTrusted,
