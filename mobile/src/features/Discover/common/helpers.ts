@@ -169,3 +169,20 @@ export const getDappFallbackLogo = (website: string) => {
   const withoutProtocol = website.replace(/(^\w+:|^)\/\//, '')
   return `https://${withoutProtocol}/favicon.ico`
 }
+
+export const getTabIndexesByOrigins = (
+  tabs: Array<{url: string}>,
+  origins: string[],
+): number[] => {
+  return tabs.reduce<number[]>((acc, tab, index) => {
+    try {
+      const tabOrigin = new URL(tab.url).origin
+      if (origins.includes(tabOrigin)) {
+        acc.push(index)
+      }
+    } catch {
+      // Invalid URL, skip
+    }
+    return acc
+  }, [])
+}

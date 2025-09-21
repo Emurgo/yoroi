@@ -88,14 +88,10 @@ export const ModalProvider = ({children, initialState}: Props) => {
   }, [state.isOpen, state.queue])
 
   const closeModal = React.useCallback(() => {
-    if (state.onClose) {
-      state.onClose()
-    }
-
     dispatch({
       type: 'closeAndProcessQueue',
     })
-  }, [state])
+  }, [])
 
   const openModal = React.useCallback(
     ({
@@ -316,6 +312,14 @@ const modalReducer = (state: ModalState, action: ModalAction) => {
       }
 
     case 'closeAndProcessQueue':
+      if (state.onClose) {
+        try {
+          state.onClose()
+        } catch (error) {
+          console.error('[ModalReducer] Error calling onClose:', error)
+        }
+      }
+
       if (state.queue.length > 0) {
         const nextModal = state.queue[0]
         return {
@@ -391,5 +395,6 @@ const defaultState: ModalState = Object.freeze({
   canContinue: false,
   full: false,
   withFeedback: false,
+  onClose: undefined,
   queue: [],
 })
