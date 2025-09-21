@@ -9,7 +9,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import {Balance, Portfolio} from '@yoroi/types'
 
 import {CredKind} from '@emurgo/cross-csl-core'
-import {useSuspenseQuery} from '@tanstack/react-query'
+import {useQuery} from '@tanstack/react-query'
 import * as React from 'react'
 import {
   Image,
@@ -726,13 +726,14 @@ const useShowOperationsNotice = (operations: Operations) => {
   const strings = useStrings()
   const screenHeight = useWindowDimensions().height
 
-  const query = useSuspenseQuery({
+  const query = useQuery({
     queryKey: ['useShowOperationsNotice'],
     queryFn: () =>
       storage.getItem(operationsNoticeShownKey).then((value) => {
         const parsed = parseSafe(value)
         return isBoolean(parsed) ? parsed : true
       }),
+    initialData: true,
   })
 
   React.useEffect(() => {
