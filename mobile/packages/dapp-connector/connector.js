@@ -155,7 +155,38 @@ const initWallet = ({
   ]
 
   window.addEventListener('message', (event) => {
-    if (!event.data || typeof event.data.id !== 'string') return
+    if (!event.data) return
+
+    if (event.data.type === 'wallet-disconnect') {
+      logMessage('Wallet disconnected, clearing session')
+      try {
+        // eslint-disable-next-line no-undef
+        localStorage.removeItem('yoroi-session-id')
+      } catch {
+        // localStorage not available in some environments
+      }
+      promisesMap.clear()
+      enabling = false
+
+      if (window.cardano && window.cardano[walletName]) {
+        delete window.cardano[walletName]
+      }
+
+      // Notify any listeners about wallet disconnection
+      if (
+        typeof window.dispatchEvent === 'function' &&
+        typeof Event !== 'undefined'
+      ) {
+        try {
+          window.dispatchEvent(new Event('yoroi-wallet-disconnect'))
+        } catch {
+          // Event dispatch not available
+        }
+      }
+      return
+    }
+
+    if (typeof event.data.id !== 'string') return
     logMessage('Received message ' + JSON.stringify(event.data))
 
     const {id, result, error} = event.data

@@ -9,7 +9,7 @@ import {useInvalidateConnectedDapps} from './useDAppsConnected'
 
 export const useConfirmConnection = () => {
   const {openConfirmConnectionModal} = useOpenConfirmConnectionModal()
-  const {openUnverifiedDappModal, closeModal} = useOpenUnverifiedDappModal()
+  const {openUnverifiedDappModal} = useOpenUnverifiedDappModal()
   const invalidateConnectedDapps = useInvalidateConnectedDapps()
 
   return React.useCallback(
@@ -42,18 +42,17 @@ export const useConfirmConnection = () => {
         }
 
         if (!selectedDapp) {
-          let shouldResolveOnClose = true
+          let shouldOpenMainModal = false
           openUnverifiedDappModal({
             onClose: () => {
-              if (shouldResolveOnClose) resolve(false)
+              if (shouldOpenMainModal) {
+                openMainModal()
+              } else {
+                resolve(false)
+              }
             },
             onConfirm: () => {
-              shouldResolveOnClose = false
-              closeModal()
-              // Small delay to ensure modal system is ready for next modal
-              setTimeout(() => {
-                openMainModal()
-              }, 100)
+              shouldOpenMainModal = true
             },
           })
           return
@@ -65,7 +64,6 @@ export const useConfirmConnection = () => {
     [
       openConfirmConnectionModal,
       openUnverifiedDappModal,
-      closeModal,
       invalidateConnectedDapps,
     ],
   )
