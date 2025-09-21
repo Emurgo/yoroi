@@ -2,6 +2,7 @@ import {invalid} from '@yoroi/common'
 
 import {produce} from 'immer'
 import * as React from 'react'
+import WebView from 'react-native-webview'
 
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 
@@ -12,6 +13,9 @@ const defaultActions: BrowserActions = {
   updateTab: () => invalid('missing init'),
   removeTab: () => invalid('missing init'),
   openTabs: () => invalid('missing init'),
+  registerWebView: () => invalid('missing init'),
+  unregisterWebView: () => invalid('missing init'),
+  sendDisconnectToOrigins: () => invalid('missing init'),
 } as const
 
 const defaultState: BrowserState = {
@@ -19,6 +23,14 @@ const defaultState: BrowserState = {
   tabActiveIndex: -1,
   tabsOpen: false,
 } as const
+
+type WebViewRegistry = Map<
+  string,
+  {
+    webViewRef: React.RefObject<WebView | null>
+    sendDisconnectMessage: () => void
+  }
+>
 
 export type TabItem = {
   id: string
@@ -55,6 +67,8 @@ export const BrowserProvider = ({
     ...defaultState,
     ...initialState,
   })
+
+  const webViewRegistryRef = React.useRef<WebViewRegistry>(new Map())
 
   React.useEffect(() => {
     if (storageId === null) return
@@ -96,6 +110,31 @@ export const BrowserProvider = ({
     },
     openTabs: (isOpen) => {
       dispatch({type: BrowserActionType.OpenTabs, isOpen})
+    },
+    registerWebView: (
+      tabId: string,
+      webViewRef: React.RefObject<WebView | null>,
+      sendDisconnectMessage: () => void,
+    ) => {
+      webViewRegistryRef.current.set(tabId, {webViewRef, sendDisconnectMessage})
+    },
+    unregisterWebView: (tabId: string) => {
+      webViewRegistryRef.current.delete(tabId)
+    },
+    sendDisconnectToOrigins: (origins: string[]) => {
+      browserState.tabs.forEach((tab) => {
+        try {
+          const tabOrigin = new URL(tab.url).origin
+          if (origins.includes(tabOrigin)) {
+            const registration = webViewRegistryRef.current.get(tab.id)
+            if (registration) {
+              registration.sendDisconnectMessage()
+            }
+          }
+        } catch {
+          // Invalid URL, skip
+        }
+      })
     },
   }).current
 
@@ -165,6 +204,13 @@ type BrowserActions = Readonly<{
   updateTab: (tabIndex: number, tabInfo: Partial<Omit<TabItem, 'id'>>) => void
   removeTab: (index: number) => void
   openTabs: (isOpen: boolean) => void
+  registerWebView: (
+    tabId: string,
+    webViewRef: React.RefObject<WebView | null>,
+    sendDisconnectMessage: () => void,
+  ) => void
+  unregisterWebView: (tabId: string) => void
+  sendDisconnectToOrigins: (origins: string[]) => void
 }>
 
 const browserReducer = (

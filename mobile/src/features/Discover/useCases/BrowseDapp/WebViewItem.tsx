@@ -52,6 +52,8 @@ export const WebViewItem = ({tab, index}: Props) => {
     setTabActive,
     removeTab,
     tabActiveIndex,
+    registerWebView,
+    unregisterWebView,
   } = useBrowser()
   const webURL = tab?.url
   const {domainName} = getDomainFromUrl(webURL)
@@ -62,11 +64,12 @@ export const WebViewItem = ({tab, index}: Props) => {
   const scaleXWebview = useSharedValue(1)
   const opacityValue = useSharedValue(0)
 
-  const {initScript, handleEvent, markWebViewReady} = useConnectWalletToWebView(
-    wallet,
-    webViewRef,
-    webURL, // Pass the tab URL as fallback
-  )
+  const {initScript, handleEvent, markWebViewReady, sendDisconnectMessage} =
+    useConnectWalletToWebView(
+      wallet,
+      webViewRef,
+      webURL, // Pass the tab URL as fallback
+    )
 
   const containerStyleAnimated = useAnimatedStyle(() => {
     return {transform: [{scaleX: scaleXWebview.value}]}
@@ -115,6 +118,14 @@ export const WebViewItem = ({tab, index}: Props) => {
 
     removeTab(index)
   }
+
+  React.useEffect(() => {
+    registerWebView(tab.id, webViewRef, sendDisconnectMessage)
+
+    return () => {
+      unregisterWebView(tab.id)
+    }
+  }, [tab.id, registerWebView, unregisterWebView, sendDisconnectMessage])
 
   React.useEffect(() => {
     const scaleXRatio = 1 - 16 / SCREEN_WIDTH

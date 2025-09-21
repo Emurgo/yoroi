@@ -104,11 +104,20 @@ export const useConnectWalletToWebView = (
     setIsWebViewReady(true)
   }, [])
 
+  const sendDisconnectMessage = React.useCallback(() => {
+    const disconnectMessage = getInjectableMessage({
+      type: 'wallet-disconnect',
+      timestamp: Date.now(),
+    })
+    webViewRef.current?.injectJavaScript(disconnectMessage)
+  }, [webViewRef])
+
   return {
     handleEvent: handleWebViewEvent,
     initScript: getInitScript(sessionId, manager),
     sessionId,
     markWebViewReady,
+    sendDisconnectMessage,
   }
 }
 
