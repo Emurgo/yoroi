@@ -31,11 +31,13 @@ export const useDisconnectDapp = () => {
       sendDisconnectToOrigins(dApp.origins)
 
       // Close tabs before removing connections to ensure proper cleanup
+      let currentActiveIndex = tabActiveIndex
       tabIndexesToClose
         .sort((a: number, b: number) => b - a)
         .forEach((tabIndex: number) => {
-          if (tabIndex <= tabActiveIndex) {
-            setTabActive(Math.max(0, tabActiveIndex - 1))
+          if (tabIndex <= currentActiveIndex) {
+            currentActiveIndex = Math.max(0, currentActiveIndex - 1)
+            setTabActive(currentActiveIndex)
           }
           removeTab(tabIndex)
         })
