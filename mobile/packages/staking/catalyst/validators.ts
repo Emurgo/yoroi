@@ -11,7 +11,7 @@ const FundChallengeSchema = z.object({
   description: z.string(),
   rewardsTotal: z.number(),
   proposersRewards: z.number(),
-  challengeUrl: z.string().url(),
+  challengeUrl: z.string().url().or(z.literal('')),
 })
 
 export const FundInfoSchema = z.object({
