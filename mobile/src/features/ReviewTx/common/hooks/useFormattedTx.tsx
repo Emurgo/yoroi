@@ -25,19 +25,26 @@ import {
   TransactionOutputs,
 } from '../types'
 
-export const useFormattedTx = (data: TransactionBody): FormattedTx => {
+export const useFormattedTx = (
+  data: TransactionBody,
+): {
+  formattedTx: FormattedTx | null
+  isLoading: boolean
+} => {
   const {wallet} = useSelectedWallet()
 
   const inputs = data?.inputs ?? []
   const outputs = data?.outputs ?? []
   const referenceInputs = data?.reference_inputs ?? []
 
-  const inputUtxos = useUtxos(inputs, wallet)
+  const inputUtxosResult = useUtxos(inputs, wallet)
+  const referenceInputUtxosResult = useUtxos(referenceInputs, wallet)
 
-  const referenceInputUtxos = useUtxos(referenceInputs, wallet)
+  const isLoading =
+    inputUtxosResult.isLoading || referenceInputUtxosResult.isLoading
 
   const inputTokenIds = inputs.flatMap((i) => {
-    const utxo = inputUtxos.find(
+    const utxo = inputUtxosResult.data.find(
       (utxo: RawUtxo) =>
         utxo?.tx_hash === i.transaction_id && utxo?.tx_index === i.index,
     )
@@ -50,7 +57,7 @@ export const useFormattedTx = (data: TransactionBody): FormattedTx => {
   })
 
   const referenceInputTokenIds = referenceInputs.flatMap((i) => {
-    const utxo = referenceInputUtxos.find(
+    const utxo = referenceInputUtxosResult.data.find(
       (utxo: RawUtxo) =>
         utxo?.tx_hash === i.transaction_id && utxo?.tx_index === i.index,
     )
@@ -88,15 +95,22 @@ export const useFormattedTx = (data: TransactionBody): FormattedTx => {
   ])
   const {tokenInfos} = usePortfolioTokenInfos({wallet, tokenIds})
 
+  if (isLoading) {
+    return {
+      formattedTx: null,
+      isLoading: true,
+    }
+  }
+
   const formattedInputs: FormattedInputs = formatInputs(
     wallet,
     tokenInfos,
-    inputUtxos,
+    inputUtxosResult.data,
   )
   const formattedReferenceInputs: FormattedInputs = formatInputs(
     wallet,
     tokenInfos,
-    referenceInputUtxos,
+    referenceInputUtxosResult.data,
   )
   const formattedOutputs: FormattedOutputs = formatOutputs(
     wallet,
@@ -108,19 +122,22 @@ export const useFormattedTx = (data: TransactionBody): FormattedTx => {
   const formattedMintData = formatMintData(data.mint, tokenInfos)
 
   return {
-    inputs: formattedInputs,
-    outputs: formattedOutputs,
-    fee: formattedFee,
-    certificates: formattedCertificates,
-    mint: formattedMintData,
-    referenceInputs: formattedReferenceInputs,
+    formattedTx: {
+      inputs: formattedInputs,
+      outputs: formattedOutputs,
+      fee: formattedFee,
+      certificates: formattedCertificates,
+      mint: formattedMintData,
+      referenceInputs: formattedReferenceInputs,
+    },
+    isLoading: false,
   }
 }
 
 const formatInputs = (
   wallet: YoroiWallet,
   tokenInfos: Map<Portfolio.Token.Id, Portfolio.Token.Info> | undefined,
-  inputUtxos: ReturnType<typeof useUtxos>,
+  inputUtxos: RawUtxo[],
 ): FormattedInputs => {
   return inputUtxos.map((utxo: RawUtxo) => {
     const address = utxo?.receiver
@@ -348,11 +365,10 @@ export const useUtxos = (inputs: TransactionInputs, wallet: YoroiWallet) => {
     }
   }, [stableInputs, wallet, networkManager])
 
-  if (!isLoaded && stableInputs.length > 0) {
-    return []
+  return {
+    data: utxos,
+    isLoading: !isLoaded && stableInputs.length > 0,
   }
-
-  return utxos
 }
 
 const getAllUtxos = async (

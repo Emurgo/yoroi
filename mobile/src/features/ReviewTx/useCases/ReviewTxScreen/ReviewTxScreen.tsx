@@ -38,7 +38,7 @@ export const ReviewTxScreen = () => {
   })
 
   const txBody = useTxBody({cbor: params?.cbor, unsignedTx})
-  const formattedTx = useFormattedTx(txBody)
+  const {formattedTx, isLoading} = useFormattedTx(txBody)
   const formattedMetadata = useFormattedMetadata({
     txBody,
     unsignedTx,
@@ -67,6 +67,10 @@ export const ReviewTxScreen = () => {
     }
 
     throw new Error('ReviewTxScreen: invalid state')
+  }
+
+  if (isLoading || !formattedTx) {
+    return null
   }
 
   return (
