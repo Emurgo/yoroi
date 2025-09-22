@@ -21,7 +21,8 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            const { data: runs } = await github.rest.actions.listWorkflowRuns({
+            // First try to find mobile-checks run for this PR's head SHA
+            let { data: runs } = await github.rest.actions.listWorkflowRuns({
               owner: context.repo.owner,
               repo: context.repo.repo,
               workflow_id: 'mobile-checks.yml',
@@ -29,8 +30,20 @@ jobs:
               per_page: 1
             });
             
+            // If not found, try to find recent mobile-checks runs for the base branch
             if (runs.workflow_runs.length === 0) {
-              throw new Error('No mobile-checks workflow run found for this PR');
+              console.log('No mobile-checks run found for PR head SHA, checking base branch...');
+              runs = await github.rest.actions.listWorkflowRuns({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                workflow_id: 'mobile-checks.yml',
+                branch: context.payload.pull_request.base.ref,
+                per_page: 5
+              });
+            }
+            
+            if (runs.workflow_runs.length === 0) {
+              throw new Error('No mobile-checks workflow run found for this PR or base branch');
             }
             
             const run = runs.workflow_runs[0];
