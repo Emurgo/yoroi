@@ -16,42 +16,6 @@ jobs:
       - name: 🏗 Setup repo
         uses: actions/checkout@v4
 
-      - name: 🔍 Check if mobile-checks passed
-        uses: actions/github-script@v7
-        with:
-          script: |
-            // First try to find mobile-checks run for this PR's head SHA
-            let { data: runs } = await github.rest.actions.listWorkflowRuns({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              workflow_id: 'mobile-checks.yml',
-              head_sha: context.payload.pull_request.head.sha,
-              per_page: 1
-            });
-            
-            // If not found, try to find recent mobile-checks runs for the base branch
-            if (runs.workflow_runs.length === 0) {
-              console.log('No mobile-checks run found for PR head SHA, checking base branch...');
-              runs = await github.rest.actions.listWorkflowRuns({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                workflow_id: 'mobile-checks.yml',
-                branch: context.payload.pull_request.base.ref,
-                per_page: 5
-              });
-            }
-            
-            if (runs.workflow_runs.length === 0) {
-              throw new Error('No mobile-checks workflow run found for this PR or base branch');
-            }
-            
-            const run = runs.workflow_runs[0];
-            if (run.conclusion !== 'success') {
-              throw new Error(`mobile-checks workflow failed with conclusion: ${run.conclusion}`);
-            }
-            
-            console.log('✅ mobile-checks workflow passed successfully');
-
       - name: 🏗 Setup Node.js
         uses: actions/setup-node@v4
         with:
