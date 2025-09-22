@@ -37,10 +37,13 @@ jobs:
         run: npm ci
 
       - name: 🚀 Create production build
+        working-directory: mobile
         run: eas build --profile production --platform all --non-interactive
 
       - name: 🚀 Submit build to Apple TestFlight
+        working-directory: mobile
         run: eas submit --platform ios --profile production --non-interactive --latest
 
       - name: 🚀 Submit build to Android Google Play
+        working-directory: mobile
         run: eas submit --platform android --profile production --non-interactive --latest
