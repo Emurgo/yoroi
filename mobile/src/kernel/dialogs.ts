@@ -87,6 +87,8 @@ export const showErrorDialog = (
           new RegExp('{message}', 'gi'),
           msgOptions.message,
         )
+      } else if (typeof dialog.message.defaultMessage === 'string') {
+        message = dialog.message.defaultMessage
       } else {
         message = msgOptions.message
       }
