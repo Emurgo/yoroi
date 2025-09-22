@@ -9,6 +9,7 @@ import {ErrorBoundary} from 'react-error-boundary'
 import {useIntl} from 'react-intl'
 import {FlatList, Linking, Text, TouchableOpacity, View} from 'react-native'
 import {Divider} from 'react-native-paper'
+import {SafeAreaView} from 'react-native-safe-area-context'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 import {ViewProps} from 'react-native-svg/lib/typescript/fabric/utils'
 
@@ -52,66 +53,71 @@ export const ListOrders = () => {
   })
 
   return (
-    <View style={[a.flex_1, a.p_lg, a.gap_lg, ta.bg_color_max]}>
-      <View style={[a.flex_row, a.gap_md, a.justify_center, a.align_center]}>
-        <View>
-          <Button
-            onPress={() => setFilter('open')}
-            type={ButtonType.SecondaryText}
-            title={strings.swap.openOrders}
-            size="M"
-            fontOverride={a.body_1_lg_medium}
-            {...(filter === 'open' && {
-              style: [{backgroundColor: p.gray_100}],
-            })}
-          />
+    <SafeAreaView
+      edges={['bottom', 'left', 'right']}
+      style={[a.flex_1, ta.bg_color_max]}
+    >
+      <View style={[a.flex_1, a.pt_lg, a.pl_lg, a.pr_lg, a.gap_lg]}>
+        <View style={[a.flex_row, a.gap_md, a.justify_center, a.align_center]}>
+          <View>
+            <Button
+              onPress={() => setFilter('open')}
+              type={ButtonType.SecondaryText}
+              title={strings.swap.openOrders}
+              size="M"
+              fontOverride={a.body_1_lg_medium}
+              {...(filter === 'open' && {
+                style: [{backgroundColor: p.gray_100}],
+              })}
+            />
+          </View>
+
+          <View>
+            <Button
+              onPress={() => setFilter('completed')}
+              type={ButtonType.SecondaryText}
+              title={strings.swap.completedOrders}
+              size="M"
+              fontOverride={a.body_1_lg_medium}
+              {...(filter === 'completed' && {
+                style: [{backgroundColor: p.gray_100}],
+              })}
+            />
+          </View>
+
+          <RefreshButton onPress={swapForm.refetchOrders} />
         </View>
 
-        <View>
-          <Button
-            onPress={() => setFilter('completed')}
-            type={ButtonType.SecondaryText}
-            title={strings.swap.completedOrders}
-            size="M"
-            fontOverride={a.body_1_lg_medium}
-            {...(filter === 'completed' && {
-              style: [{backgroundColor: p.gray_100}],
-            })}
-          />
-        </View>
-
-        <RefreshButton onPress={swapForm.refetchOrders} />
-      </View>
-
-      <Boundary
-        loading={{
-          fallback: (
-            <View style={[a.gap_md]}>
-              {[0, 1, 2, 3].map((index) => (
-                <React.Fragment key={index}>
-                  <SkeletonPlaceholder
-                    borderRadius={8}
-                    backgroundColor={p.gray_100}
-                    highlightColor={p.gray_200}
-                    speed={1000}
-                  >
-                    <View style={{height: 140}} />
-                  </SkeletonPlaceholder>
-                </React.Fragment>
-              ))}
-            </View>
-          ),
-        }}
-      >
-        <ErrorBoundary
-          fallbackRender={({resetErrorBoundary}) => (
-            <ServiceUnavailable resetErrorBoundary={resetErrorBoundary} />
-          )}
+        <Boundary
+          loading={{
+            fallback: (
+              <View style={[a.gap_md]}>
+                {[0, 1, 2, 3].map((index) => (
+                  <React.Fragment key={index}>
+                    <SkeletonPlaceholder
+                      borderRadius={8}
+                      backgroundColor={p.gray_100}
+                      highlightColor={p.gray_200}
+                      speed={1000}
+                    >
+                      <View style={{height: 140}} />
+                    </SkeletonPlaceholder>
+                  </React.Fragment>
+                ))}
+              </View>
+            ),
+          }}
         >
-          <Content filter={filter} />
-        </ErrorBoundary>
-      </Boundary>
-    </View>
+          <ErrorBoundary
+            fallbackRender={({resetErrorBoundary}) => (
+              <ServiceUnavailable resetErrorBoundary={resetErrorBoundary} />
+            )}
+          >
+            <Content filter={filter} />
+          </ErrorBoundary>
+        </Boundary>
+      </View>
+    </SafeAreaView>
   )
 }
 

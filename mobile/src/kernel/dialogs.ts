@@ -66,16 +66,32 @@ export const showErrorDialog = (
     message = intl.formatMessage(dialog.message, msgOptions)
     yesButton = intl.formatMessage({id: 'global.ok', defaultMessage: 'OK'})
   } else {
-    title = dialog.title.defaultMessage
-
-    if (
-      msgOptions?.message != null &&
-      typeof dialog.message.defaultMessage === 'string'
+    if (typeof dialog.title.defaultMessage === 'string') {
+      title = dialog.title.defaultMessage
+    } else if (
+      Array.isArray(dialog.title.defaultMessage) &&
+      dialog.title.defaultMessage.length > 0 &&
+      'value' in dialog.title.defaultMessage[0]
     ) {
-      message = dialog.message.defaultMessage?.replace(
-        new RegExp('{message}', 'gi'),
-        msgOptions.message,
-      )
+      title = String(
+        (dialog.title.defaultMessage[0] as {value: string}).value,
+      ).replace(/^!!!/, '')
+    } else {
+      title = dialog.title.id || 'Error'
+    }
+
+    if (msgOptions?.message != null) {
+      const defaultMsg = String(dialog.message.defaultMessage || '')
+      if (defaultMsg.includes('{message}')) {
+        message = defaultMsg.replace(
+          new RegExp('{message}', 'gi'),
+          msgOptions.message,
+        )
+      } else if (typeof dialog.message.defaultMessage === 'string') {
+        message = dialog.message.defaultMessage
+      } else {
+        message = msgOptions.message
+      }
     } else {
       message = 'unknown error'
     }
