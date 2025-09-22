@@ -87,6 +87,7 @@ export const StakeRewardsWithdrawalOperation = ({
   strike?: boolean
 }) => {
   const strings = useStrings()
+  const {atoms: ta} = useTheme()
 
   return (
     <View style={[a.flex, a.flex_row, a.align_center, a.justify_between]}>
@@ -96,7 +97,7 @@ export const StakeRewardsWithdrawalOperation = ({
         strike={strike}
       />
 
-      <Text style={[a.body_2_md_regular]}>
+      <Text style={[a.body_2_md_regular, ta.text_gray_medium]}>
         {strings.txReview.operations.rewardsWithdrawal.text}
       </Text>
     </View>
