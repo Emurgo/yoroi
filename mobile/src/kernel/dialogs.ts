@@ -80,15 +80,7 @@ export const showErrorDialog = (
       title = dialog.title.id || 'Error'
     }
 
-    if (
-      msgOptions?.message != null &&
-      typeof dialog.message.defaultMessage === 'string'
-    ) {
-      message = dialog.message.defaultMessage?.replace(
-        new RegExp('{message}', 'gi'),
-        msgOptions.message,
-      )
-    } else if (msgOptions?.message != null) {
+    if (msgOptions?.message != null) {
       const defaultMsg = String(dialog.message.defaultMessage || '')
       if (defaultMsg.includes('{message}')) {
         message = defaultMsg.replace(
