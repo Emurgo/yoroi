@@ -2,9 +2,9 @@ name: mobile-checks
 
 on: 
   push:
-    branches: [ main, develop ]
+    branches: [ main, develop, preview, preview-next, production ]
   pull_request:
-    branches: [ main, develop ]
+    branches: [ main, develop, preview, preview-next, production ]
     types: [opened, synchronize, reopened, ready_for_review]
 
 jobs:
