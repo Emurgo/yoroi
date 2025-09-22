@@ -81,6 +81,10 @@ export const sendMessages = defineMessages({
     id: 'portfolio.portfolioDashboardScreen.nfts',
     defaultMessage: '!!! NFTs',
   },
+  nftsTab: {
+    id: 'components.send.nftsTab',
+    defaultMessage: '!!!Collectibles',
+  },
   noAssetsAddedYet: {
     id: 'components.send.assetselectorscreen.noAssetsAddedYet',
     defaultMessage: '!!!No {fungible} added yet',
@@ -135,8 +139,8 @@ export const sendMessages = defineMessages({
     defaultMessage: '!!!Minimum primary balance for tokens',
   },
   addressInputLabel: {
-    id: 'components.send.sendscreen.addressInputLabel',
-    defaultMessage: '!!!Address',
+    id: 'components.send.confirmscreen.receiver',
+    defaultMessage: '!!!Receiver address, ADA Handle or domains',
   },
   resolverNoticeTitle: {
     id: 'components.send.sendscreen.resolverNoticeTitle',

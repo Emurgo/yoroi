@@ -5,7 +5,9 @@ import {Text, View} from 'react-native'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useBlockGoBack} from '~/kernel/navigation/hooks/useBlockGoBack'
+import {useUnsafeParams} from '~/kernel/navigation/hooks/useUnsafeParams'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
+import {ReviewTxRoutes} from '~/kernel/navigation/types'
 import {Button} from '~/ui/Button/Button'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
@@ -16,6 +18,20 @@ export const SubmittedTxScreen = () => {
   const strings = useStrings()
   const {palette: p, atoms: ta} = useTheme()
   const {resetToTxHistory} = useWalletNavigation()
+
+  // Try to get parameters from different possible route types
+  const reviewTxParams =
+    useUnsafeParams<NonNullable<ReviewTxRoutes['review-tx-submitted-tx']>>()
+  const governanceParams = useUnsafeParams<{
+    title?: string
+    message?: string
+    buttonTitle?: string
+  }>()
+
+  const title = reviewTxParams?.title || governanceParams?.title
+  const message = reviewTxParams?.message || governanceParams?.message
+  const buttonTitle =
+    reviewTxParams?.buttonTitle || governanceParams?.buttonTitle
 
   return (
     <SafeArea
@@ -41,7 +57,7 @@ export const SubmittedTxScreen = () => {
           a.text_center,
         ]}
       >
-        {strings.txReview.submittedTxTitle}
+        {title || strings.txReview.submittedTxTitle}
       </Text>
 
       <Text
@@ -51,7 +67,7 @@ export const SubmittedTxScreen = () => {
           a.text_center,
         ]}
       >
-        {strings.txReview.submittedTxText}
+        {message || strings.txReview.submittedTxText}
       </Text>
 
       <Space.Height._2xs fill />
@@ -59,7 +75,7 @@ export const SubmittedTxScreen = () => {
       <Actions>
         <Button
           onPress={resetToTxHistory}
-          title={strings.txReview.submittedTxButton}
+          title={buttonTitle || strings.txReview.submittedTxButton}
           style={a.px_lg}
         />
       </Actions>
@@ -70,11 +86,7 @@ export const SubmittedTxScreen = () => {
 const Actions = ({children}: React.PropsWithChildren) => {
   const {palette: p} = useTheme()
   return (
-    <View
-      style={[
-        {alignSelf: 'stretch', borderTopWidth: 1, borderTopColor: p.gray_200},
-      ]}
-    >
+    <View style={[a.self_stretch, a.border_t, {borderTopColor: p.gray_200}]}>
       {children}
     </View>
   )

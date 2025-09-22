@@ -171,7 +171,7 @@ const ConfirmTxWithHwModalContent = ({
 
   if (step === 'connect-transport') {
     return (
-      <View style={[a.px_lg]}>
+      <View>
         <LedgerConnect
           useUSB={transportType === 'USB'}
           onConnectBLE={onConnectBLE}
@@ -182,9 +182,7 @@ const ConfirmTxWithHwModalContent = ({
   }
 
   return (
-    <View
-      style={[a.flex_1, a.align_center, a.justify_center, a.px_lg, {gap: 35}]}
-    >
+    <View style={[a.flex_1, a.align_center, a.justify_center, {gap: 35}]}>
       <ActivityIndicator size="large" color={isDark ? 'white' : 'black'} />
 
       <Text

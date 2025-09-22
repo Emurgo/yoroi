@@ -55,7 +55,7 @@ export const ConfirmPin = () => {
           })
           unsignedTxChanged(votingRegTx.votingRegTx)
         },
-        onSuccess: navigateTo.qrCode,
+        onSuccessWithoutFeedback: navigateTo.qrCode,
       })
     },
   })

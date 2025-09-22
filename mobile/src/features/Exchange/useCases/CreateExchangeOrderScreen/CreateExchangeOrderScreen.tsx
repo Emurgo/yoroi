@@ -14,7 +14,7 @@ import {ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {ProviderItem} from '~/features/Exchange/common/ProviderItem/ProviderItem'
-import {ShowDisclaimer} from '~/features/Legal/ui/Disclaimer/ShowDisclaimer'
+import {ShowDisclaimer} from '~/features/Legal/ui/shared/Disclaimer/ShowDisclaimer'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {banxaTestWallet} from '~/kernel/constants'
@@ -119,7 +119,9 @@ export const CreateExchangeOrderScreen = () => {
 
         await delay(1000)
 
-        openModal({content: <ErrorScreen onClose={closeModal} />})
+        openModal({
+          content: <ErrorScreen onClose={closeModal} />,
+        })
       },
       onSuccess: (referralLink) => {
         closeModal()

@@ -19,12 +19,12 @@ export const WelcomeDAppModal = ({disabled}: {disabled?: boolean}) => {
   const [showing, setShowing] = React.useState(false)
 
   React.useEffect(() => {
-    if (disabled || seen || showing) return
+    if (disabled || seen || showing || seen === undefined) return
 
     openModal({
       title: strings.discover.welcomeToYoroiDAppExplorer,
       content: (
-        <View style={[a.px_lg]}>
+        <View>
           <Image
             source={IllustrationDAppImage}
             style={[a.w_full, {height: 200, resizeMode: 'cover'}]}

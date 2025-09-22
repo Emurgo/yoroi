@@ -60,7 +60,7 @@ export const Dashboard = () => {
   const {wallet, meta} = useSelectedWallet()
   const {isPending: isSyncing, sync} = useSync(wallet)
   const isOnline = useIsOnline(wallet)
-  const {openModal} = useModal()
+  const {openModal, closeModal} = useModal()
 
   const balances = useBalances(wallet)
   const primaryAmount = Amounts.getAmount(
@@ -84,12 +84,10 @@ export const Dashboard = () => {
         operations: [<StakeRewardsWithdrawalOperation key="0" />],
         onSuccess: () => {
           track.claimAdaTransactionSubmitted()
-          navigateTo.submittedTx()
         },
-        onError: navigateTo.failedTx,
       })
     }
-  }, [unsignedTx, unsignedTxChanged, walletNavigateTo, track, navigateTo])
+  }, [unsignedTx, unsignedTxChanged, walletNavigateTo, track])
 
   React.useEffect(() => {
     if (withdrawError) {
@@ -105,9 +103,10 @@ export const Dashboard = () => {
           title: strings.staking.withdrawWarningTitle,
           content: (
             <WithdrawGovernanceWarningModal
-              onParticipatePress={() =>
+              onParticipatePress={() => {
+                closeModal()
                 walletNavigateTo.navigateToGovernanceCentre()
-              }
+              }}
             />
           ),
         })
@@ -223,12 +222,23 @@ export const Dashboard = () => {
 
 export const useNavigateTo = () => {
   const navigation = useNavigation<StackNavigationProp<DashboardRoutes>>()
+  const strings = useStrings()
 
   return {
     stakingCenter: () =>
       navigation.navigate('staking-center', {screen: 'staking-center-main'}),
-    submittedTx: () => navigation.navigate('staking-submitted-tx'),
-    failedTx: () => navigation.navigate('staking-failed-tx'),
+    submittedTx: () =>
+      navigation.navigate('staking-submitted-tx', {
+        title: strings.staking.submittedTxTitle,
+        message: strings.staking.submittedTxText,
+        buttonTitle: strings.staking.submittedTxButton,
+      }),
+    failedTx: () =>
+      navigation.navigate('staking-failed-tx', {
+        title: strings.staking.failedTxTitle,
+        message: strings.staking.failedTxText,
+        buttonTitle: strings.staking.failedTxButton,
+      }),
   }
 }
 

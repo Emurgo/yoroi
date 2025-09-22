@@ -43,10 +43,10 @@ export const usePoolTransition = () => {
   const {navigateToTxReview} = useWalletNavigation()
   const {unsignedTxChanged} = useReviewTx()
   const {stakingInfo, isLoading} = useStakingInfo(wallet)
-  const poolInfoApi = React.useMemo(
-    () => new PoolInfoApi(networkManager.legacyApiBaseUrl),
-    [networkManager.legacyApiBaseUrl],
-  )
+
+  const poolInfoApi = React.useMemo(() => {
+    return new PoolInfoApi(networkManager.legacyApiBaseUrl)
+  }, [networkManager.legacyApiBaseUrl])
 
   const isStaked = stakingInfo?.status === 'staked'
   const currentPoolId = isStaked ? stakingInfo?.poolId : ''
@@ -56,10 +56,11 @@ export const usePoolTransition = () => {
     retry: false,
     staleTime: Infinity,
     queryKey: [wallet.id, 'poolTransition', currentPoolId],
-    queryFn: () =>
-      features.poolTransition
+    queryFn: () => {
+      return features.poolTransition
         ? poolInfoApi.getTransition(currentPoolId, init)
-        : null,
+        : null
+    },
   })
 
   const poolTransition = poolTransitionQuery.data ?? null
@@ -70,6 +71,18 @@ export const usePoolTransition = () => {
     unsignedTxChanged(yoroiUnsignedTx)
     navigateToTxReview()
   }, [wallet, poolId, meta, unsignedTxChanged, navigateToTxReview])
+
+  if (isLoading) {
+    return {
+      isPoolRetiring: false,
+      isLoading: true,
+      poolTransition: null,
+      navigateToUpdate: () => Promise.resolve(),
+      data: null,
+      error: null,
+      refetch: () => poolTransitionQuery.refetch(),
+    }
+  }
 
   return {
     ...poolTransitionQuery,

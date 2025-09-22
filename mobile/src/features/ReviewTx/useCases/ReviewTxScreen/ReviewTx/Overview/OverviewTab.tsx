@@ -9,7 +9,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import {Balance, Portfolio} from '@yoroi/types'
 
 import {CredKind} from '@emurgo/cross-csl-core'
-import {useSuspenseQuery} from '@tanstack/react-query'
+import {useQuery} from '@tanstack/react-query'
 import * as React from 'react'
 import {
   Image,
@@ -626,7 +626,7 @@ const Details = ({details}: {details?: ReviewDetailsProps}) => {
   const handleOnPress = () => {
     openModal({
       title: details.title ?? '',
-      content: <View style={[a.px_lg]}>{details.component}</View>,
+      content: <View style={[a.flex_1]}>{details.component}</View>,
       height: details.height ?? 400,
     })
   }
@@ -690,7 +690,7 @@ export const OperationsNotice = ({onClose}: {onClose?: () => void}) => {
   }
 
   return (
-    <View style={[a.flex_1, a.px_lg, a.align_center]}>
+    <View style={[a.flex_1, a.align_center]}>
       <Space.Height.lg />
 
       <OperationsNoticeIcon />
@@ -724,14 +724,16 @@ const useShowOperationsNotice = (operations: Operations) => {
   const storage = useAsyncStorage()
   const {openModal, closeModal} = useModal()
   const strings = useStrings()
+  const screenHeight = useWindowDimensions().height
 
-  const query = useSuspenseQuery({
+  const query = useQuery({
     queryKey: ['useShowOperationsNotice'],
     queryFn: () =>
       storage.getItem(operationsNoticeShownKey).then((value) => {
         const parsed = parseSafe(value)
         return isBoolean(parsed) ? parsed : true
       }),
+    initialData: true,
   })
 
   React.useEffect(() => {
@@ -745,7 +747,7 @@ const useShowOperationsNotice = (operations: Operations) => {
           openModal({
             title: strings.txReview.overview.operationsNoticeTitle,
             content: <OperationsNotice onClose={closeModal} />,
-            height: 570,
+            height: Math.min(screenHeight * 0.9, 650),
           }),
         500,
       )

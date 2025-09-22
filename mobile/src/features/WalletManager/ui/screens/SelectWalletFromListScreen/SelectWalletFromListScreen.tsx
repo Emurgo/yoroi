@@ -125,7 +125,7 @@ export const SelectWalletFromList = () => {
 
         {isDev && (
           <>
-            <Space.Height.md />
+            <Space.Height.lg />
 
             <OnlyDevButton />
           </>

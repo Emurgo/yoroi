@@ -5,7 +5,7 @@ import {Portfolio} from '@yoroi/types'
 import {UseQueryOptions, useQuery} from '@tanstack/react-query'
 
 import {fetchPtPriceActivity} from '~/features/Pairing/hooks/usePrimaryTokenActivity'
-import {useCurrencyPairing} from '~/features/Settings/useCases/changeAppSettings/Currency/CurrencyContext'
+import {useCurrencyPairing} from '~/features/Settings/context/CurrencyProvider'
 import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {defaultCurrency} from '~/kernel/constants'

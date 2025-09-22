@@ -3,10 +3,12 @@ import {ThemedPalette, useTheme} from '@yoroi/theme'
 import {createStackNavigator} from '@react-navigation/stack'
 import * as React from 'react'
 
+import {isDev} from '~/kernel/constants'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
 import {ReviewTxRoutes} from '~/kernel/navigation/types'
 import {Boundary} from '~/ui/Boundary/Boundary'
+import {Copiable} from '~/ui/Copiable/Copiable'
 
 import {ReviewTxScreen} from './useCases/ReviewTxScreen/ReviewTxScreen'
 import {FailedTxScreen} from './useCases/ShowFailedTxScreen/FailedTxScreen'
@@ -27,9 +29,22 @@ export const ReviewTxNavigator = () => {
         ...screenOptions(p),
       }}
     >
-      <Stack.Screen name="review-tx" options={{title: strings.txReview.title}}>
+      <Stack.Screen
+        name="review-tx"
+        options={({route}) => ({
+          title: strings.txReview.title,
+          headerRight: () =>
+            route.params?.cbor != null && isDev ? (
+              <Copiable text={route.params.cbor} />
+            ) : null,
+        })}
+      >
         {() => (
           <Boundary
+            loading={{
+              enabled: true,
+              size: 'large',
+            }}
             error={{
               fallback,
             }}

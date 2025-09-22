@@ -1,10 +1,9 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 
-import {BigNumber} from 'bignumber.js'
 import * as React from 'react'
 import {View} from 'react-native'
 
-import {usePrivacyMode} from '~/features/Settings/useCases/changeAppSettings/PrivacyMode/usePrivacyMode'
+import {usePrivacyMode} from '~/features/Settings/hooks/usePrivacyMode'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button, ButtonProps, ButtonType} from '~/ui/Button/Button'
@@ -33,7 +32,7 @@ export const UserSummary = ({
   const {palette: p} = useTheme()
   const strings = useStrings()
   const {wallet} = useSelectedWallet()
-  const {isPrivacyActive} = usePrivacyMode()
+  const {isPrivacyModeEnabled} = usePrivacyMode()
 
   return (
     <TitledCard title={strings.dashboard.title} testID="userSummaryTitleCard">
@@ -55,7 +54,7 @@ export const UserSummary = ({
               style={[a.body_1_lg_medium, {color: p.text_gray_medium}]}
               testID="userSummaryAvailableFundsText"
             >
-              {!isPrivacyActive
+              {!isPrivacyModeEnabled
                 ? totalAdaSum != null
                   ? formatAdaWithText(
                       asQuantity(totalAdaSum),
@@ -86,7 +85,7 @@ export const UserSummary = ({
               style={[a.body_1_lg_medium, {color: p.text_gray_medium}]}
               testID="userSummaryRewardsText"
             >
-              {!isPrivacyActive
+              {!isPrivacyModeEnabled
                 ? totalRewards != null
                   ? formatAdaWithText(
                       asQuantity(totalRewards),
@@ -117,7 +116,7 @@ export const UserSummary = ({
               style={[a.body_1_lg_medium, {color: p.text_gray_medium}]}
               testID="userSummaryDelegatedText"
             >
-              {!isPrivacyActive
+              {!isPrivacyModeEnabled
                 ? totalDelegated != null
                   ? formatAdaWithText(
                       asQuantity(totalDelegated),

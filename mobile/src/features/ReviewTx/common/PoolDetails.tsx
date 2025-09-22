@@ -27,7 +27,7 @@ export const PoolDetails = ({poolInfo}: {poolInfo: FullPoolInfo}) => {
   const poolName = generatePoolName(poolInfo)
 
   return (
-    <View style={[a.flex_1, a.px_lg]}>
+    <View style={[a.flex_1]}>
       <PoolIcon imageUrl={explorer?.pic} />
 
       <Space.Height.sm />

@@ -28,7 +28,7 @@ import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
 
 import {InsufficientFundsModal} from '../RegisterCatalyst/common/InsufficientFundsModal'
-import {NetworkTag} from '../Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
+import {NetworkTag} from '../Settings/ui/shared/NetworkTag'
 import {usePoolTransition} from '../Staking/Staking/PoolTransition/usePoolTransition'
 
 const MenuStack = createStackNavigator<MenuRoutes>()
@@ -69,10 +69,7 @@ export const Menu = () => {
   )
 
   return (
-    <SafeAreaView
-      edges={['left', 'right', 'bottom']}
-      style={[ta.bg_color_max, a.flex_1]}
-    >
+    <SafeAreaView edges={['left', 'right']} style={[ta.bg_color_max, a.flex_1]}>
       <ScrollView contentContainerStyle={[a.flex_1, a.p_lg]} bounces={false}>
         <AppSettings //
           label={strings.menu.settings}
@@ -186,7 +183,7 @@ const Item = ({
 
       <Space.Width.lg />
 
-      <Text style={[a.body_2_md_regular, ta.el_gray_max]}>{label}</Text>
+      <Text style={[a.body_1_lg_medium, ta.text_gray_max]}>{label}</Text>
 
       <Space.Height.sm fill />
 

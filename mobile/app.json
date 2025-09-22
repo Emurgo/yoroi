@@ -18,18 +18,14 @@
       "supportsTablet": false,
       "userInterfaceStyle": "automatic",
       "bundleIdentifier": "com.emurgo.yoroi",
-      "associatedDomains": [
-        "applinks:yoroi-wallet.com"
-      ],
+      "associatedDomains": ["applinks:yoroi-wallet.com"],
       "infoPlist": {
         "NSCameraUsageDescription": "Allow $(PRODUCT_NAME) to access your camera to scan QR codes",
+        "NSPhotoLibraryUsageDescription": "Allow $(PRODUCT_NAME) to access your photo library to import wallet data and QR codes",
         "NSLocationWhenInUseUsageDescription": "Allow $(PRODUCT_NAME) to access your location for Bluetooth scanning",
         "NSBluetoothAlwaysUsageDescription": "Allow $(PRODUCT_NAME) to access Bluetooth for hardware wallet connection",
         "NSBluetoothPeripheralUsageDescription": "Allow $(PRODUCT_NAME) to access Bluetooth for hardware wallet connection",
-        "UIBackgroundModes": [
-          "fetch",
-          "remote-notification"
-        ],
+        "UIBackgroundModes": ["fetch", "remote-notification"],
         "NSUserNotificationUsageDescription": "Allow $(PRODUCT_NAME) to send you notifications about your wallet activity",
         "NSFaceIDUsageDescription": "Allow $(PRODUCT_NAME) to access your face ID for biometric authentication",
         "ITSAppUsesNonExemptEncryption": false
@@ -73,11 +69,8 @@
       ],
       "intentFilters": [
         {
-          "action": "android.intent.action.VIEW",
-          "category": [
-            "android.intent.category.DEFAULT",
-            "android.intent.category.BROWSABLE"
-          ],
+          "action": "VIEW",
+          "category": ["DEFAULT", "BROWSABLE"],
           "data": {
             "scheme": "yoroi",
             "host": "yoroi-wallet.com",
@@ -85,11 +78,8 @@
           }
         },
         {
-          "action": "android.intent.action.VIEW",
-          "category": [
-            "android.intent.category.DEFAULT",
-            "android.intent.category.BROWSABLE"
-          ],
+          "action": "VIEW",
+          "category": ["DEFAULT", "BROWSABLE"],
           "data": {
             "scheme": "https",
             "host": "yoroi-wallet.com",

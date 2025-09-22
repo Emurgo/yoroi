@@ -126,22 +126,22 @@ export const languageStorageKeyManager = settingsStorageKeyMaker<LanguageCode>({
   },
 })
 
-// Settings - Screen Share
-export const screenShareStorageKey = 'screenShareEnabled'
-export const screenShareStorageKeyManager = settingsStorageKeyMaker<boolean>({
-  key: screenShareStorageKey,
+// Settings - Screen Capture
+export const screenCaptureStorageKey = 'screenCaptureEnabled'
+export const screenCaptureStorageKeyManager = settingsStorageKeyMaker<boolean>({
+  key: screenCaptureStorageKey,
   parser: (data) => Boolean(parseBoolean(data)),
 })
 
 // Settings - Metrics
-export const metricsEnabledStorageKey = 'metrics-enabled'
+export const metricsEnabledStorageKey = 'metricsEnabled'
 export const metricsEnabledStorageKeyManager = settingsStorageKeyMaker<boolean>(
   {
     key: metricsEnabledStorageKey,
     parser: (data) => Boolean(parseBoolean(data)),
   },
 )
-export const metricsConsentRequestedStorageKey = 'metrics-consentRequested'
+export const metricsConsentRequestedStorageKey = 'metricsConsentRequested'
 export const metricsConsentRequestedStorageKeyManager = settingsStorageKeyMaker(
   {
     key: metricsConsentRequestedStorageKey,
@@ -150,11 +150,12 @@ export const metricsConsentRequestedStorageKeyManager = settingsStorageKeyMaker(
 )
 
 // Settings - Privacy Mode
-export const privacyModeStorageKey = 'privacyMode'
-export const privacyModeStorageKeyManager = settingsStorageKeyMaker<boolean>({
-  key: privacyModeStorageKey,
-  parser: (data) => Boolean(parseBoolean(data)),
-})
+export const privacyModeEnabledStorageKey = 'privacyModeEnabled'
+export const privacyModeEnabledStorageKeyManager =
+  settingsStorageKeyMaker<boolean>({
+    key: privacyModeEnabledStorageKey,
+    parser: (data) => Boolean(parseBoolean(data)),
+  })
 
 // Settings - Currency
 export const currencyStorageKey = 'currencySymbol'
@@ -162,7 +163,7 @@ export const currencyStorageKeyManager =
   settingsStorageKeyMaker<Portfolio.Currency.Symbol>({
     key: currencyStorageKey,
     parser: (data) => {
-      const parsed = parseCurrencySymbol(data)
+      const parsed = parseCurrencySymbol(parseSafe(data))
       return parsed ?? defaultCurrency
     },
   })
@@ -186,12 +187,30 @@ export const legalAgreementStorageKeyManager =
     parser: parseLegalAgreement,
   })
 
+// App Messages
+export const appMessagesStorage = rootSyncStorage.join('appMessages/')
+export const appMessagesObservableStorage =
+  observableStorageMaker(appMessagesStorage)
+const appMessagesStorageKeyMaker = storageKeyMaker(appMessagesObservableStorage)
+
+// App Messages - Network Notice
+export const hasShownNetworkNoticeStorageKey = 'hasShownNetworkNotice'
+export const hasShownNetworkNoticeStorageKeyManager =
+  appMessagesStorageKeyMaker<boolean>({
+    key: hasShownNetworkNoticeStorageKey,
+    parser: (data) => Boolean(parseBoolean(data)),
+  })
+
 // Debug storage
 const observableFunction = (v: unknown) => {
   console.log(`key with value udpated -> `, v)
   return of(null)
 }
 appSettingsObservableStorage.observable.subscribe((v) => {
+  observableFunction(v)
+  debugStorage(rootMMKV)
+})
+appMessagesObservableStorage.observable.subscribe((v) => {
   observableFunction(v)
   debugStorage(rootMMKV)
 })

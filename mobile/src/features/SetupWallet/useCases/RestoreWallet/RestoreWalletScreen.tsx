@@ -46,9 +46,6 @@ export const RestoreWalletScreen = () => {
   const bold = useBold({style: a.body_1_lg_medium})
   const {openModal} = useModal()
   const {walletManager} = useWalletManager()
-  // const walletNames = Array.from(walletManager.walletMetas.values()).map(
-  //   ({name}) => name,
-  // )
   const [mnemonic, setMnemonic] = React.useState('')
   const {
     publicKeyHexChanged,
@@ -193,7 +190,7 @@ export const RestoreWalletScreen = () => {
       edges={['left', 'right', 'bottom']}
       style={[a.flex_1, a.justify_between, {backgroundColor: p.bg_color_max}]}
     >
-      <KeyboardAvoidingView style={a.flex_1}>
+      <KeyboardAvoidingView style={a.flex_1} enabled>
         <View style={a.px_lg}>
           <StepperProgress
             currentStep={1}
@@ -302,7 +299,9 @@ const WordSuggestionList = ({
   const {height: screenHeight} = useWindowDimensions()
 
   const paddingBottom = React.useMemo(() => {
-    if (Platform.OS !== 'ios') return 16
+    if (Platform.OS === 'android') {
+      return screenHeight < 700 ? 24 : 32
+    }
     return screenHeight < 700 ? screenHeight * 0.01 : screenHeight * 0.05
   }, [screenHeight])
 

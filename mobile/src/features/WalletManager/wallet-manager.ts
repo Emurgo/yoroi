@@ -18,6 +18,7 @@ import {
 } from 'rxjs'
 import {v4} from 'uuid'
 
+import {isDev} from '~/kernel/constants'
 import {throwLoggedError} from '~/kernel/logger/helpers/throw-logged-error'
 import {logger} from '~/kernel/logger/logger'
 import {makeWalletEncryptedStorage} from '~/kernel/storage/EncryptedStorage'
@@ -25,8 +26,8 @@ import {Keychain, KeychainManager} from '~/kernel/storage/Keychain'
 import {rootStorage} from '~/kernel/storage/storages'
 import {keyManager} from '~/wallets/cardano/key-manager/key-manager'
 import {WalletEvent, YoroiWallet} from '~/wallets/cardano/types'
-import {wrappedCsl} from '~/wallets/cardano/wrappedCsl'
 import {validatePassword, validateWalletName} from '~/wallets/utils/validators'
+import {CardanoMobile} from '~/wallets/wallets'
 
 import {networkManagers} from './common/constants'
 import {
@@ -53,7 +54,7 @@ export class WalletManager {
     null,
   )
   readonly #selectedNetwork$ = new BehaviorSubject<Chain.SupportedNetworks>(
-    Chain.Network.Mainnet,
+    isDev ? Chain.Network.Preprod : Chain.Network.Mainnet,
   )
   readonly #isSyncing$ = new BehaviorSubject<boolean>(false)
   readonly #syncControl$ = new BehaviorSubject<boolean>(true)
@@ -271,8 +272,9 @@ export class WalletManager {
             return from(wallets)
           }),
           concatMap((wallet) => {
-            logger.debug('WalletManager: syncAll syncing walet', {
+            logger.debug('syncWallets: started', {
               walletId: wallet.id,
+              origin: 'WalletManager',
             })
             const info = this.#syncWalletInfos$.value.get(wallet.id)
             const syncWalletInfo: SyncWalletInfo = {
@@ -286,9 +288,10 @@ export class WalletManager {
             this.#syncWalletInfos$.next(freeze(infos))
             return from(wallet.sync({isForced: false})).pipe(
               catchError((error) => {
-                logger.error('WalletManager: syncAll error syncing walet', {
+                logger.error('syncWallets: error', {
                   error,
                   walletId: wallet.id,
+                  origin: 'WalletManager',
                 })
                 const syncWalletInfo: SyncWalletInfo = {
                   status: 'error',
@@ -307,8 +310,9 @@ export class WalletManager {
                   this.#syncWalletInfos$.value.get(wallet.id)?.status !==
                   'error'
                 ) {
-                  logger.debug('WalletManager: syncAll done syncing walet', {
+                  logger.debug('syncWallets: done', {
                     walletId: wallet.id,
+                    origin: 'WalletManager',
                   })
                   const syncWalletInfo: SyncWalletInfo = {
                     status: 'done',
@@ -508,17 +512,16 @@ export class WalletManager {
     })
   }
 
-  async enableEasyConfirmation(id: YoroiWallet['id'], password: string) {
+  async enableEasyConfirmation(wallet: YoroiWallet, password: string) {
     if (!this.#keychainManager)
       throwLoggedError(
         'WalletManager: enableEasyConfirmation KeychainManager not available',
       )
 
-    const encryptedStorage = makeWalletEncryptedStorage(id)
-    const rootKey = await encryptedStorage.xpriv.read(password)
-    this.#keychainManager.setWalletKey(id, rootKey.value)
+    const rootKey = await wallet.encryptedStorage.xpriv.read(password)
+    this.#keychainManager.setWalletKey(wallet.id, rootKey.value)
 
-    this.updateMeta(id, {
+    this.updateMeta(wallet.id, {
       isEasyConfirmationEnabled: true,
     })
   }
@@ -625,6 +628,11 @@ export class WalletManager {
       id,
     ])
 
+    // If the removed wallet is the currently selected one, clear the selection
+    if (this.#selectedWalletId$.value === id) {
+      this.#selectedWalletId$.next(null)
+    }
+
     // can't update the walletInfo here cuz it might be in the middle of wallet syncing
     this.#wallets.delete(id)
     const metas = new Map(this.#walletMetas$.value)
@@ -652,12 +660,10 @@ export class WalletManager {
     const walletFactory = getWalletFactory({network, implementation})
     const id = v4()
 
-    const {csl, release} = wrappedCsl()
     const {rootKey, accountPubKeyHex} = walletFactory.makeKeys({
       mnemonic,
-      csl,
+      csl: CardanoMobile,
     })
-    release()
 
     const encryptedStorage = makeWalletEncryptedStorage(id)
     await encryptedStorage.xpriv.write(rootKey, password)

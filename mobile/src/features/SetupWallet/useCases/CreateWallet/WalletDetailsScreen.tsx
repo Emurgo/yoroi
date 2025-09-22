@@ -24,6 +24,7 @@ import {parseWalletMeta} from '~/features/WalletManager/common/validators/wallet
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useCreateWalletMnemonic} from '~/features/WalletManager/hooks/useCreateWalletMnemonic'
 import {useBold} from '~/hooks/useBold'
+import {requiredPasswordLength} from '~/kernel/constants'
 import {showErrorDialog} from '~/kernel/dialogs'
 import {debugWalletInfo, features} from '~/kernel/features'
 import {errorMessages} from '~/kernel/i18n/messages/global'
@@ -42,7 +43,6 @@ import {StepperProgress} from '~/ui/StepperProgress/StepperProgress'
 import {TextInput} from '~/ui/TextInput/TextInput'
 import {isEmptyString} from '~/wallets/utils/string'
 import {
-  REQUIRED_PASSWORD_LENGTH,
   getWalletNameError,
   validatePassword,
   validateWalletName,
@@ -157,7 +157,7 @@ export const WalletDetailsScreen = () => {
   const passwordErrorText =
     passwordErrors.passwordIsWeak && !isPending
       ? strings.setupWallet.passwordStrengthRequirement({
-          requiredPasswordLength: REQUIRED_PASSWORD_LENGTH,
+          requiredPasswordLength,
         })
       : undefined
   const passwordConfirmationErrorText =
@@ -204,7 +204,7 @@ export const WalletDetailsScreen = () => {
     openModal({
       title: strings.setupWallet.walletDetailsModalTitle,
       content: (
-        <View style={[a.flex_1, a.px_lg, a.pb_lg]}>
+        <View style={[a.flex_1]}>
           <View style={[a.gap_lg]}>
             <CardAboutPhrase
               title={strings.setupWallet.walletNameModalCardTitle}
@@ -225,7 +225,7 @@ export const WalletDetailsScreen = () => {
         </View>
       ),
       footer: (
-        <View style={[a.px_lg, a.pb_lg, a.gap_lg]}>
+        <View style={[a.gap_lg]}>
           <LearnMoreButton
             onPress={() => {
               Linking.openURL(YoroiZendeskLink)
@@ -261,7 +261,7 @@ export const WalletDetailsScreen = () => {
     openModal({
       title: strings.setupWallet.walletDetailsModalTitle,
       content: (
-        <View style={[a.flex_1, a.px_lg, a.pb_lg]}>
+        <View style={[a.flex_1]}>
           <CardAboutPhrase
             title={strings.setupWallet.walletChecksumModalCardTitle}
             checksumImage={seed}
@@ -275,7 +275,7 @@ export const WalletDetailsScreen = () => {
         </View>
       ),
       footer: (
-        <View style={[a.px_lg, a.pb_lg, a.gap_lg]}>
+        <View style={[a.gap_lg]}>
           <LearnMoreButton
             onPress={() => {
               Linking.openURL(YoroiZendeskLink)

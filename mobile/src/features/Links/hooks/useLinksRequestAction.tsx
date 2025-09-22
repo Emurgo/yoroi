@@ -34,7 +34,7 @@ export const useLinksRequestAction = () => {
 
   const processedActionRef = React.useRef<string | null>(null)
 
-  const {addTab, setTabActive, tabs} = useBrowser()
+  const {addTabAndSetActive} = useBrowser()
   const {
     memoChanged,
     receiverResolveChanged,
@@ -130,18 +130,16 @@ export const useLinksRequestAction = () => {
           decimals,
         )
 
-      const content = (
-        <RequestedAdaPaymentWithLinkScreen
-          onContinue={handleOnContinue}
-          params={params}
-          isTrusted={isTrusted}
-          onClose={closeModal}
-        />
-      )
-
       openModal({
         title: title,
-        content: content,
+        content: (
+          <RequestedAdaPaymentWithLinkScreen
+            onContinue={handleOnContinue}
+            params={params}
+            isTrusted={isTrusted}
+            onClose={closeModal}
+          />
+        ),
         height: heightBreakpoint,
       })
     },
@@ -172,8 +170,7 @@ export const useLinksRequestAction = () => {
           track.discoverConnectedBottomSheetOpenDAppClicked()
 
           const id = uuid.v4()
-          addTab(dappUrl, id)
-          setTabActive(tabs.length)
+          addTabAndSetActive(dappUrl, id)
 
           closeModal()
           actionFinished()
@@ -188,12 +185,10 @@ export const useLinksRequestAction = () => {
     },
     [
       actionFinished,
-      addTab,
+      addTabAndSetActive,
       linkActionChanged,
       closeModal,
       navigateTo,
-      setTabActive,
-      tabs,
       track,
       isLoggedIn,
     ],
@@ -228,17 +223,15 @@ export const useLinksRequestAction = () => {
           isTrusted,
         })
 
-      const content = (
-        <RequestedBrowserLaunchDappUrlScreen
-          onContinue={handleOnContinue}
-          params={params}
-          isTrusted={isTrusted}
-        />
-      )
-
       openModal({
         title: title,
-        content: content,
+        content: (
+          <RequestedBrowserLaunchDappUrlScreen
+            onContinue={handleOnContinue}
+            params={params}
+            isTrusted={isTrusted}
+          />
+        ),
         height: heightBreakpoint,
       })
     },

@@ -153,7 +153,7 @@ export const makeCardanoWallet = (
 
       // TODO: revisit it should be part of staking manager (when staking is supported/desired)
       const rewardAddressHex = implementationConfig.features.staking
-        ? await deriveRewardAddressHex(
+        ? deriveRewardAddressHex(
             accountPubKeyHex,
             chainId,
             implementationConfig.features.staking.derivation.role,
@@ -434,7 +434,7 @@ export const makeCardanoWallet = (
         const {coinsPerUtxoByte, keyDeposit, linearFee, poolDeposit} =
           this.protocolParams
 
-        const unsignedTx = await Cardano.createUnsignedDelegationTx(
+        const unsignedTx = Cardano.createUnsignedDelegationTx(
           absSlotNumber,
           addressedUtxos,
           stakingKey,
@@ -573,7 +573,7 @@ export const makeCardanoWallet = (
 
         const absSlotNumber = await this.getAbsoluteSlotNumber()
         const changeAddr = this.getAddressedChangeAddress(addressMode)
-        const addressedUtxos = await this.getAddressedUtxos()
+        const addressedUtxos = this.getAddressedUtxos()
         const accountState = await legacyApi.getAccountState(
           {addresses: [this.rewardAddressHex]},
           networkManager.legacyApiBaseUrl,
@@ -582,7 +582,7 @@ export const makeCardanoWallet = (
         const {coinsPerUtxoByte, keyDeposit, linearFee, poolDeposit} =
           this.protocolParams
 
-        const withdrawalTx = await Cardano.createUnsignedWithdrawalTx(
+        const withdrawalTx = Cardano.createUnsignedWithdrawalTx(
           accountState,
           toLibToken(this.portfolioPrimaryTokenInfo),
           absSlotNumber,
@@ -633,13 +633,13 @@ export const makeCardanoWallet = (
       const primaryTokenId = this.portfolioPrimaryTokenInfo.id
       const absSlotNumber = await this.getAbsoluteSlotNumber()
       const changeAddr = this.getAddressedChangeAddress(addressMode)
-      const addressedUtxos = await this.getAddressedUtxos()
+      const addressedUtxos = this.getAddressedUtxos()
 
       const {coinsPerUtxoByte, keyDeposit, linearFee, poolDeposit} =
         this.protocolParams
 
       try {
-        const unsignedTx = await Cardano.createUnsignedTx(
+        const unsignedTx = Cardano.createUnsignedTx(
           absSlotNumber,
           addressedUtxos,
           [],
@@ -709,7 +709,7 @@ export const makeCardanoWallet = (
         const accountState = accountStates[this.rewardAddressHex]
         if (!accountState) throw new Error('Account state not found')
 
-        const stakingUtxos = await this.getAllUtxosForKey()
+        const stakingUtxos = this.getAllUtxosForKey()
         const amount = Quantities.sum([
           ...stakingUtxos.map((utxo) => utxo.amount as Balance.Quantity),
           accountState.remainingAmount as Balance.Quantity,
@@ -798,6 +798,10 @@ export const makeCardanoWallet = (
     }
 
     async resync() {
+      logger.info('resync', {
+        walletId: this.id,
+        origin: 'CardanoWallet',
+      })
       await this.clear()
       return this.sync({isForced: true})
     }
@@ -1154,7 +1158,7 @@ export const makeCardanoWallet = (
       // if it crashes, the utxo manager will be out of sync with wallet
       if (this.didUtxosUpdate(this._utxos, newUtxos) || isForced) {
         // NOTE: recalc locked deposit should happen also when epoch changes after conway
-        const lockedAsStorageCost = await calcLockedDeposit({
+        const lockedAsStorageCost = calcLockedDeposit({
           rawUtxos: newUtxos,
           coinsPerUtxoByteStr: this.protocolParams.coinsPerUtxoByte,
         })

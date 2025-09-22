@@ -11,23 +11,22 @@ import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {cip30LedgerExtensionMaker} from '~/wallets/cardano/cip30/cip30-ledger'
 import {YoroiWallet} from '~/wallets/cardano/types'
+import {collateralConfig} from '~/wallets/cardano/utxoManager/utxos'
 import {BaseLedgerError} from '~/wallets/hw/hw'
 import {isEmptyString} from '~/wallets/utils/string'
 
 import {usePromptRootKey} from '../ReviewTx/common/hooks/usePromptRootKey'
 import {CreatedByInfoItem} from '../ReviewTx/useCases/ReviewTxScreen/ReviewTx/Overview/OverviewTab'
-import {getCollateralAmountInLovelace} from '../Settings/useCases/changeWalletSettings/ManageCollateral/helpers'
 import {useBrowser} from './common/BrowserProvider'
 import {useConfirmHWConnectionModal} from './common/ConfirmHWConnectionModal'
 import {userRejectedError} from './common/errors'
 import {createDappConnector} from './common/helpers'
 import {useConfirmConnection} from './common/useConfirmConnection'
-import {useNavigateTo} from './common/useNavigateTo'
 import {useShowCollateralNotFoundAlert} from './common/useShowCollateralNotFoundAlert'
 
 export const useDappConnectorManager = () => {
   const appStorage = useAsyncStorage()
-  const navigateTo = useNavigateTo()
+  const {navigateToDiscoverBrowserDapp} = useWalletNavigation()
   const {wallet, meta} = useSelectedWallet()
   const {navigateToTxReview} = useWalletNavigation()
   const {tabs, tabActiveIndex} = useBrowser()
@@ -91,7 +90,7 @@ export const useDappConnectorManager = () => {
                 url={matchingDapp.uri}
               />
             ),
-            onSuccess: (args) => {
+            onSuccessWithoutFeedback: (args) => {
               shouldResolve = false
               if (isEmptyString(args?.rootKey) || args?.rootKey == null) {
                 reject(
@@ -103,7 +102,7 @@ export const useDappConnectorManager = () => {
               }
 
               resolve(args?.rootKey)
-              navigateTo.browseDapp()
+              navigateToDiscoverBrowserDapp()
             },
             onCancel: () => {
               if (!shouldResolve) return
@@ -116,7 +115,7 @@ export const useDappConnectorManager = () => {
                 reject(userRejectedError())
               }
             },
-            onError: (error) => {
+            onErrorWithoutFeedback: (error) => {
               shouldResolve = false
               logger.error('useDappConnectorManager::handleSignTx', {error})
               reject(error)
@@ -130,7 +129,7 @@ export const useDappConnectorManager = () => {
       track,
       navigateToTxReview,
       dappCollateralRequestUtils,
-      navigateTo,
+      navigateToDiscoverBrowserDapp,
     ],
   )
 
@@ -173,7 +172,7 @@ export const useDappConnectorManager = () => {
                 return
               }
               resolve(args?.tx)
-              navigateTo.browseDapp()
+              navigateToDiscoverBrowserDapp()
             },
             onError: (error) => {
               shouldResolve = false
@@ -196,7 +195,7 @@ export const useDappConnectorManager = () => {
         })
       })
     },
-    [track, activeTabOrigin, navigateToTxReview, navigateTo],
+    [track, activeTabOrigin, navigateToTxReview, navigateToDiscoverBrowserDapp],
   )
 
   const handleSendReorganisationTx = React.useCallback(
@@ -369,7 +368,7 @@ export const useDappCollateralRequestUtils = (wallet: YoroiWallet) => {
     const collateral = wallet.getCollateralInfo()
     return (
       !!collateral.utxo &&
-      collateral.amount.quantity >= BigInt(getCollateralAmountInLovelace())
+      collateral.amount.quantity >= BigInt(collateralConfig.minLovelace)
     )
   }
   const prepareDappId = (dappOrigin: DappConnection['dappOrigin']) =>

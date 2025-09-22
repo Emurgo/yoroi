@@ -20,7 +20,7 @@ export const useOpenUnverifiedDappModal = () => {
       openModal({
         title: strings.discover.disclaimerModalTitle,
         content: (
-          <View style={[a.px_lg, a.flex_col, a.flex_1]}>
+          <View style={[a.flex_col, a.flex_1]}>
             <View
               style={[
                 a.flex,
@@ -41,16 +41,21 @@ export const useOpenUnverifiedDappModal = () => {
         footer: (
           <Button
             title={strings.discover.understand}
-            onPress={options.onConfirm}
+            onPress={() => {
+              options.onConfirm()
+              closeModal()
+            }}
           />
         ),
         height: 320 + insets.bottom,
         onClose: options.onClose,
+        canDiscard: false, // Prevent accidental dismissal by tapping backdrop
       })
     },
     [
       insets.bottom,
       openModal,
+      closeModal,
       p.gray_900,
       strings.discover.disclaimerModalText,
       strings.discover.disclaimerModalTitle,

@@ -6,7 +6,7 @@ export class ApiError extends LocalizableError {
   public values: {response: string | null} = {response: null}
   constructor(response: string | null) {
     super({
-      id: 'api.error',
+      id: 'api.error.unknown',
       defaultMessage: 'API error: {response}',
     })
     this.values = {response}

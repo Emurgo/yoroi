@@ -10,12 +10,13 @@ export const claimMessages = defineMessages({
     defaultMessage: '!!!Claim Successful',
   },
   acceptedTitle: {
-    id: 'components.initialization.acepttermsofservicescreen.continueButton',
-    defaultMessage: '!!!Claim Accepted',
+    id: 'claim.accepted.title',
+    defaultMessage: '!!!Claim accepted 👍',
   },
   acceptedMessage: {
-    id: 'components.initialization.acepttermsofservicescreen.continueButton',
-    defaultMessage: '!!!Your claim has been accepted',
+    id: 'claim.accepted.message',
+    defaultMessage:
+      '!!!Claim has been accepted, you will receive your asset(s) soon, please scan the code again to check the status',
   },
   processingTitle: {
     id: 'claim.processing.title',
@@ -30,12 +31,14 @@ export const claimMessages = defineMessages({
     defaultMessage: '!!!Claim Complete',
   },
   doneMessage: {
-    id: 'global.actions.dialogs.commonbuttons.completeButton',
-    defaultMessage: '!!!Your claim has been completed',
+    id: 'claim.done.message',
+    defaultMessage:
+      '!!!Claim was completed, you should have received your asset(s), you can verify the transaction on the chain explorer',
   },
   addressSharingWarning: {
-    id: 'components.send.sendscreen.addressInputLabel',
-    defaultMessage: '!!!Address sharing warning',
+    id: 'claim.addressSharingWarning',
+    defaultMessage:
+      '!!!You will be sharing with the domain listed here your address',
   },
   domain: {
     id: 'claim.domain',
@@ -46,16 +49,16 @@ export const claimMessages = defineMessages({
     defaultMessage: '!!!Code',
   },
   apiErrorTitle: {
-    id: 'global.actions.dialogs.apiError.title',
-    defaultMessage: '!!!API Error',
+    id: 'claim.apiError.title',
+    defaultMessage: '!!!The claim failed',
   },
   apiErrorInvalidRequest: {
     id: 'claim.apiError.invalidRequest',
     defaultMessage: '!!!Invalid request',
   },
   apiErrorNotFound: {
-    id: 'components.walletinit.createwallet.createwalletscreen.notFound',
-    defaultMessage: '!!!Not found',
+    id: 'claim.apiError.notFound',
+    defaultMessage: '!!!The claim could not be found',
   },
   apiErrorAlreadyClaimed: {
     id: 'claim.apiError.alreadyClaimed',
@@ -66,12 +69,12 @@ export const claimMessages = defineMessages({
     defaultMessage: '!!!Expired',
   },
   apiErrorTooEarly: {
-    id: 'txReview.overview.receiveToLabel',
-    defaultMessage: '!!!Too early',
+    id: 'claim.apiError.tooEarly',
+    defaultMessage: "!!!This claim hasn't started yet, please try again later",
   },
   apiErrorRateLimited: {
-    id: 'swap.swapScreen.limitButton',
-    defaultMessage: '!!!Rate limited',
+    id: 'claim.apiError.rateLimited',
+    defaultMessage: '!!!Too many claims happening, wait a bit and try again',
   },
   continue: {
     id: 'global.continue',

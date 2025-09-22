@@ -13,8 +13,10 @@ import * as React from 'react'
 
 import {BrowserProvider} from '~/features/Discover/common/BrowserProvider'
 import {PortfolioTokenActivityProvider} from '~/features/Portfolio/context/PortfolioTokenActivityProvider'
+import {ReceiveProvider} from '~/features/Receive/common/ReceiveProvider'
 import {ReviewTxProvider} from '~/features/ReviewTx/common/ReviewTxProvider'
 import {AppNavigator} from '~/kernel/navigation/AppNavigator'
+import {Boundary} from '~/ui/Boundary/Boundary'
 import {Modal} from '~/ui/Modal/ModalScreen'
 
 import {PlatformShell} from './PlatformShell'
@@ -23,7 +25,7 @@ import {CopyProvider} from './src/features/Copy/context/CopyProvider'
 import {YoroiNotificationManager} from './src/features/Notifications/common/YoroiNotificationManager'
 import {PairingProvider} from './src/features/Pairing/context/PairingProvider'
 import {SearchProvider} from './src/features/Search/SearchContext'
-import {CurrencyProvider} from './src/features/Settings/useCases/changeAppSettings/Currency/CurrencyContext'
+import {CurrencyProvider} from './src/features/Settings/context/CurrencyProvider'
 import {AutomaticWalletOpenerProvider} from './src/features/WalletManager/context/AutomaticWalletOpeningProvider'
 import {WalletManagerProvider} from './src/features/WalletManager/context/WalletManagerProvider'
 import {walletManager} from './src/features/WalletManager/wallet-manager'
@@ -61,7 +63,9 @@ function AppShell({children}: React.PropsWithChildren) {
           <LanguageProvider storage={languageStorageKeyManager}>
             <CopyProvider>
               <CrashBoundary>
-                <LoadingOverlayProvider>{children}</LoadingOverlayProvider>
+                <LoadingOverlayProvider>
+                  <Boundary loading={{size: 'full'}}>{children}</Boundary>
+                </LoadingOverlayProvider>
               </CrashBoundary>
             </CopyProvider>
           </LanguageProvider>
@@ -91,7 +95,7 @@ function BusinessShell({children}: React.PropsWithChildren) {
                           <YoroiNotificationManager>
                             <CurrencyProvider>
                               <CatalystProvider manager={catalystManager}>
-                                {children}
+                                <ReceiveProvider>{children}</ReceiveProvider>
                               </CatalystProvider>
                             </CurrencyProvider>
                           </YoroiNotificationManager>

@@ -14,32 +14,35 @@ import {ReviewTx} from './ReviewTx/ReviewTx'
 export const ReviewTxScreen = () => {
   const {unsignedTx} = useReviewTx()
   const params = useUnsafeParams<NonNullable<ReviewTxRoutes['review-tx']>>()
-  const cbor = params?.cbor
 
   const {legacyOnConfirm} = useLegacyOnConfirm({
     unsignedTx,
     onSuccess: params?.onSuccess,
+    onSuccessWithoutFeedback: params?.onSuccessWithoutFeedback,
     onError: params?.onError,
+    onErrorWithoutFeedback: params?.onErrorWithoutFeedback,
     onNotSupportedCIP1694: params?.onNotSupportedCIP1694,
     onCIP36SupportChange: params?.onCIP36SupportChange,
   })
 
   const {onConfirm} = useOnConfirm({
-    cbor,
+    cbor: params?.cbor,
     partial: params?.partial,
     preventSubmit: params?.preventSubmit,
     onSuccess: params?.onSuccess,
+    onSuccessWithoutFeedback: params?.onSuccessWithoutFeedback,
     onError: params?.onError,
+    onErrorWithoutFeedback: params?.onErrorWithoutFeedback,
     onCancel: params?.onCancel,
     onClose: params?.onClose,
   })
 
-  const txBody = useTxBody({cbor, unsignedTx})
-  const formattedTx = useFormattedTx(txBody)
+  const txBody = useTxBody({cbor: params?.cbor, unsignedTx})
+  const {formattedTx, isLoading} = useFormattedTx(txBody)
   const formattedMetadata = useFormattedMetadata({
     txBody,
     unsignedTx,
-    cbor: cbor ?? null,
+    cbor: params?.cbor ?? null,
   })
 
   React.useEffect(() => {
@@ -54,16 +57,20 @@ export const ReviewTxScreen = () => {
       params?.onConfirm()
       return
     }
-    if (unsignedTx != null && cbor == null) {
+    if (unsignedTx != null && params?.cbor == null) {
       legacyOnConfirm()
       return
     }
-    if (cbor != null) {
+    if (params?.cbor != null) {
       onConfirm()
       return
     }
 
     throw new Error('ReviewTxScreen: invalid state')
+  }
+
+  if (isLoading || !formattedTx) {
+    return null
   }
 
   return (

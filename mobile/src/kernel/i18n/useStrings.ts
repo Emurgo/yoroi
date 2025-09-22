@@ -482,6 +482,7 @@ export const useStrings = () => {
         stakingCenterButton: f(dashboardMessages.stakingCenterButton),
         epochProgressTitle: f(dashboardMessages.epochProgressTitle),
         endsInLabel: f(dashboardMessages.endsInLabel),
+        stakePoolDelegatedTitle: f(dashboardMessages.stakePoolDelegatedTitle),
       },
 
       // Settings strings
@@ -796,6 +797,7 @@ export const useStrings = () => {
         minPrimaryBalanceForTokens: f(sendMessages.minPrimaryBalanceForTokens),
         next: f(globalMessages.next),
         nfts: (qty: number) => f(globalMessages.nfts, {qty}),
+        nftsTab: f(sendMessages.nftsTab),
         noAssets: f(sendMessages.noAssets),
         noAssetsAddedYet: (fungible: string) =>
           f(sendMessages.noAssetsAddedYet, {fungible}),
@@ -841,6 +843,7 @@ export const useStrings = () => {
         ),
         disclaimer: f(globalMessages.disclaimer),
         proceed: f(globalMessages.proceed),
+        switch: f(globalMessages.switch),
         today: f(globalMessages.today),
         yesterday: f(globalMessages.yesterday),
         insufficientBalance: (params: {

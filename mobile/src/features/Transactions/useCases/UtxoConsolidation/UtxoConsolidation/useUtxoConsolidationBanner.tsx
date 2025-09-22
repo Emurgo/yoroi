@@ -2,7 +2,7 @@ import {time} from '@yoroi/common'
 import {useNotificationManager} from '@yoroi/notifications'
 import {Chain, Notifications} from '@yoroi/types'
 
-import {useQuery} from '@tanstack/react-query'
+import {useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {BannerIds, showBanner} from '~/features/Notifications/common/banners'
 import {useUtxoList} from '~/features/Transactions/useCases/UtxoList/useUtxoList'
@@ -22,6 +22,7 @@ export const useUtxoConsolidationBanner = () => {
   const {isSingle} = useAddressMode()
   const isConsolidationNeeded = (utxoList?.length ?? 0) > 1 && isSingle
   const strings = useStrings()
+  const queryClient = useQueryClient()
 
   useQuery({
     queryKey: ['utxoConsolidationBanner', wallet?.id, network],
@@ -50,7 +51,10 @@ export const useUtxoConsolidationBanner = () => {
         }
         return true
       } else {
-        manager.events.remove(BannerIds.UtxoConsolidation)
+        await manager.events.remove(BannerIds.UtxoConsolidation)
+        queryClient.invalidateQueries({
+          queryKey: ['receivedNotificationEvents'],
+        })
         return false
       }
     },

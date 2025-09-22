@@ -1,7 +1,7 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Balance} from '@yoroi/types'
 
-import {useSuspenseQuery} from '@tanstack/react-query'
+import {useQuery} from '@tanstack/react-query'
 import * as React from 'react'
 import {Text, TouchableOpacity, View, useWindowDimensions} from 'react-native'
 
@@ -15,9 +15,9 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {Icon} from '~/ui/Icon'
 import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
-import {wrappedCsl} from '~/wallets/cardano/wrappedCsl'
 import {formatTokenWithText} from '~/wallets/utils/format'
 import {Quantities, asQuantity} from '~/wallets/utils/utils'
+import {CardanoMobile} from '~/wallets/wallets'
 
 import {PoolDetails} from './PoolDetails'
 import {generatePoolName} from './poolUtils'
@@ -87,6 +87,7 @@ export const StakeRewardsWithdrawalOperation = ({
   strike?: boolean
 }) => {
   const strings = useStrings()
+  const {atoms: ta} = useTheme()
 
   return (
     <View style={[a.flex, a.flex_row, a.align_center, a.justify_between]}>
@@ -96,7 +97,7 @@ export const StakeRewardsWithdrawalOperation = ({
         strike={strike}
       />
 
-      <Text style={[a.body_2_md_regular]}>
+      <Text style={[a.body_2_md_regular, ta.text_gray_medium]}>
         {strings.txReview.operations.rewardsWithdrawal.text}
       </Text>
     </View>
@@ -828,19 +829,15 @@ const updateOperationsCount = (
 }
 
 export const getDrepBech32Id = async (poolId: string) => {
-  const {csl, release} = wrappedCsl()
-  try {
-    const keyHash = await csl.Ed25519KeyHash.fromHex(poolId)
-    return keyHash.toBech32('drep')
-  } finally {
-    release()
-  }
+  const keyHash = CardanoMobile.Ed25519KeyHash.fromHex(poolId)
+  return keyHash.toBech32('drep')
 }
 
 export const useDrepBech32Id = (poolId: string) => {
-  const query = useSuspenseQuery({
+  const query = useQuery({
     queryKey: ['drepBech32', poolId],
     queryFn: () => getDrepBech32Id(poolId),
+    initialData: null,
   })
 
   return query?.data ?? null

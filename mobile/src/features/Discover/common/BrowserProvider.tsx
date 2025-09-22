@@ -2,15 +2,20 @@ import {invalid} from '@yoroi/common'
 
 import {produce} from 'immer'
 import * as React from 'react'
+import WebView from 'react-native-webview'
 
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 
 const defaultActions: BrowserActions = {
   addTab: () => invalid('missing init'),
+  addTabAndSetActive: () => invalid('missing init'),
   setTabActive: () => invalid('missing init'),
   updateTab: () => invalid('missing init'),
   removeTab: () => invalid('missing init'),
   openTabs: () => invalid('missing init'),
+  registerWebView: () => invalid('missing init'),
+  unregisterWebView: () => invalid('missing init'),
+  sendDisconnectToOrigins: () => invalid('missing init'),
 } as const
 
 const defaultState: BrowserState = {
@@ -18,6 +23,14 @@ const defaultState: BrowserState = {
   tabActiveIndex: -1,
   tabsOpen: false,
 } as const
+
+type WebViewRegistry = Map<
+  string,
+  {
+    webViewRef: React.RefObject<WebView | null>
+    sendDisconnectMessage: () => void
+  }
+>
 
 export type TabItem = {
   id: string
@@ -55,6 +68,8 @@ export const BrowserProvider = ({
     ...initialState,
   })
 
+  const webViewRegistryRef = React.useRef<WebViewRegistry>(new Map())
+
   React.useEffect(() => {
     if (storageId === null) return
     memoryStorage.set(storageId, browserState)
@@ -78,6 +93,9 @@ export const BrowserProvider = ({
     addTab: (url, id) => {
       dispatch({type: BrowserActionType.AddTab, payload: {url, id}})
     },
+    addTabAndSetActive: (url, id) => {
+      dispatch({type: BrowserActionType.AddTabAndSetActive, payload: {url, id}})
+    },
     setTabActive: (index) => {
       dispatch({type: BrowserActionType.SetTabActive, index})
     },
@@ -92,6 +110,39 @@ export const BrowserProvider = ({
     },
     openTabs: (isOpen) => {
       dispatch({type: BrowserActionType.OpenTabs, isOpen})
+    },
+    registerWebView: (
+      tabId: string,
+      webViewRef: React.RefObject<WebView | null>,
+      sendDisconnectMessage: () => void,
+    ) => {
+      webViewRegistryRef.current.set(tabId, {webViewRef, sendDisconnectMessage})
+    },
+    unregisterWebView: (tabId: string) => {
+      webViewRegistryRef.current.delete(tabId)
+    },
+    sendDisconnectToOrigins: (origins: string[]) => {
+      // Get current tabs directly from the state via the ref to avoid stale closure
+      const getCurrentTabs = () => {
+        if (storageId === null) return []
+        const currentState = memoryStorage.get(storageId)
+        return currentState?.tabs || []
+      }
+
+      const currentTabs = getCurrentTabs()
+      currentTabs.forEach((tab) => {
+        try {
+          const tabOrigin = new URL(tab.url).origin
+          if (origins.includes(tabOrigin)) {
+            const registration = webViewRegistryRef.current.get(tab.id)
+            if (registration) {
+              registration.sendDisconnectMessage()
+            }
+          }
+        } catch {
+          // Invalid URL, skip
+        }
+      })
     },
   }).current
 
@@ -113,6 +164,7 @@ export const useBrowser = () =>
 
 enum BrowserActionType {
   AddTab = 'addTab',
+  AddTabAndSetActive = 'addTabAndSetActive',
   SetState = 'setState',
   SetTabActive = 'setTabActive',
   UpdateTab = 'updateTab',
@@ -123,6 +175,10 @@ enum BrowserActionType {
 type BrowserContextAction =
   | {
       type: BrowserActionType.AddTab
+      payload: {url: string; id: string}
+    }
+  | {
+      type: BrowserActionType.AddTabAndSetActive
       payload: {url: string; id: string}
     }
   | {
@@ -151,10 +207,18 @@ type BrowserContextAction =
 
 type BrowserActions = Readonly<{
   addTab: (url: string, id: string) => void
+  addTabAndSetActive: (url: string, id: string) => void
   setTabActive: (index: number) => void
   updateTab: (tabIndex: number, tabInfo: Partial<Omit<TabItem, 'id'>>) => void
   removeTab: (index: number) => void
   openTabs: (isOpen: boolean) => void
+  registerWebView: (
+    tabId: string,
+    webViewRef: React.RefObject<WebView | null>,
+    sendDisconnectMessage: () => void,
+  ) => void
+  unregisterWebView: (tabId: string) => void
+  sendDisconnectToOrigins: (origins: string[]) => void
 }>
 
 const browserReducer = (
@@ -165,6 +229,11 @@ const browserReducer = (
     switch (action.type) {
       case BrowserActionType.AddTab:
         draft.tabs.push({url: action.payload.url, id: action.payload.id})
+        break
+
+      case BrowserActionType.AddTabAndSetActive:
+        draft.tabs.push({url: action.payload.url, id: action.payload.id})
+        draft.tabActiveIndex = draft.tabs.length - 1
         break
 
       case BrowserActionType.SetState:

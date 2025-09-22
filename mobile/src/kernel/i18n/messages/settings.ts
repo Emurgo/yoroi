@@ -111,7 +111,7 @@ export const settingsMessages = defineMessages({
 
   // Enable Login with OS
   enableLoginWithOsHeading: {
-    id: 'components.login.appstartscreen.loginButton',
+    id: 'components.settings.biometricslinkscreen.heading',
     defaultMessage: '!!!Enable Login with OS',
   },
   enableLoginWithOsSubHeading1: {
@@ -123,7 +123,7 @@ export const settingsMessages = defineMessages({
     defaultMessage: '!!!Sub Heading 2',
   },
   enableLoginWithOsNotNowButton: {
-    id: 'components.walletinit.biometricScreen.ignoreButton.title',
+    id: 'components.settings.biometricslinkscreen.notNowButton',
     defaultMessage: '!!!Not Now',
   },
   enableLoginWithOsLinkButton: {
@@ -141,15 +141,15 @@ export const settingsMessages = defineMessages({
     defaultMessage: '!!!Disable',
   },
   easyConfirmationEnableHeading: {
-    id: 'components.settings.enableeasyconfirmationscreen.title',
+    id: 'components.settings.enableeasyconfirmationscreen.enableHeading',
     defaultMessage: '!!!Enable Easy Confirmation',
   },
   easyConfirmationEnableWarning: {
-    id: 'components.settings.enableeasyconfirmationscreen.enableButton',
+    id: 'components.settings.enableeasyconfirmationscreen.enableWarning',
     defaultMessage: '!!!Enable Warning',
   },
   easyConfirmationEnableRootPassword: {
-    id: 'components.settings.enableeasyconfirmationscreen.enableButton',
+    id: 'components.settings.enableeasyconfirmationscreen.enableMasterPassword',
     defaultMessage: '!!!Enable Root Password',
   },
   easyConfirmationEnableButton: {
@@ -273,11 +273,11 @@ export const settingsMessages = defineMessages({
     defaultMessage: '!!!Wallet Type',
   },
   walletSettingsByronWallet: {
-    id: 'txReview.overview.wallet',
+    id: 'components.settings.walletsettingscreen.byronWallet',
     defaultMessage: '!!!Byron Wallet',
   },
   walletSettingsShelleyWallet: {
-    id: 'txReview.overview.wallet',
+    id: 'components.settings.walletsettingscreen.shelleyWallet',
     defaultMessage: '!!!Shelley Wallet',
   },
   walletSettingsUnknownWalletType: {

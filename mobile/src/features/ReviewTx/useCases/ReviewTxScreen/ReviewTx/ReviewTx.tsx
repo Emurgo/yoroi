@@ -53,11 +53,14 @@ export const ReviewTx = ({
   const {palette: p} = useTheme()
   const strings = useStrings()
 
-  const tabsData: Array<[string, Tabs]> = [
-    [strings.txReview.tabLabel.overview, 'overview'],
-    [strings.txReview.tabLabel.utxos, 'utxos'],
-  ]
-  const [activeTab, setActiveTab] = React.useState<Tabs>(tabsData[0][1])
+  const baseTabs = React.useMemo<Array<[string, Tabs]>>(
+    () => [
+      [strings.txReview.tabLabel.overview, 'overview'],
+      [strings.txReview.tabLabel.utxos, 'utxos'],
+    ],
+    [strings.txReview.tabLabel.overview, strings.txReview.tabLabel.utxos],
+  )
+  const [activeTab, setActiveTab] = React.useState<Tabs>(baseTabs[0][1])
 
   const showMetadataTab =
     !isEmptyString(formattedMetadata?.hash) &&
@@ -65,14 +68,23 @@ export const ReviewTx = ({
   const showMintTab = !!formattedTx.mint
   const showReferenceInoutsTab = formattedTx.referenceInputs.length > 0
 
-  if (showMetadataTab)
-    tabsData.push([strings.txReview.tabLabel.metadataTab, 'metadata'])
-  if (showMintTab) tabsData.push([strings.txReview.tabLabel.mint, 'mint'])
-  if (showReferenceInoutsTab)
-    tabsData.push([
-      strings.txReview.tabLabel.referenceInputs,
-      'reference_inputs',
-    ])
+  const tabsData = React.useMemo<Array<[string, Tabs]>>(() => {
+    const arr = [...baseTabs]
+    if (showMetadataTab)
+      arr.push([strings.txReview.tabLabel.metadataTab, 'metadata'])
+    if (showMintTab) arr.push([strings.txReview.tabLabel.mint, 'mint'])
+    if (showReferenceInoutsTab)
+      arr.push([strings.txReview.tabLabel.referenceInputs, 'reference_inputs'])
+    return arr
+  }, [
+    baseTabs,
+    showMetadataTab,
+    showMintTab,
+    showReferenceInoutsTab,
+    strings.txReview.tabLabel.metadataTab,
+    strings.txReview.tabLabel.mint,
+    strings.txReview.tabLabel.referenceInputs,
+  ])
 
   // intentionally not using ref
   const {
@@ -106,10 +118,13 @@ export const ReviewTx = ({
   return (
     <SafeArea style={[a.flex_1, {backgroundColor: p.bg_color_max}]}>
       <MaterialTab.Navigator
-        tabBar={(props) => {
-          setActiveTab(tabsData[props.state.index][1])
-          return <TabBar {...props} tabsData={tabsData} />
-        }}
+        tabBar={(props) => (
+          <TabBar
+            {...props}
+            tabsData={tabsData}
+            onActiveTabChange={setActiveTab}
+          />
+        )}
       >
         <MaterialTab.Screen name="overview">
           {() => (
@@ -198,8 +213,17 @@ const TabBar = ({
   navigation,
   state,
   tabsData,
-}: MaterialTopTabBarProps & {tabsData: Array<Array<string>>}) => {
+  onActiveTabChange,
+}: MaterialTopTabBarProps & {
+  tabsData: Array<Array<string>>
+  onActiveTabChange: (tab: Tabs) => void
+}) => {
   const {palette: p} = useTheme()
+
+  React.useEffect(() => {
+    onActiveTabChange(tabsData[state.index][1] as Tabs)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.index])
 
   return (
     <FlatList

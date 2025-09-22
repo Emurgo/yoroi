@@ -6,7 +6,7 @@ import * as React from 'react'
 import {Text, TouchableOpacity, View} from 'react-native'
 
 import {usePortfolioPrimaryBalance} from '~/features/Portfolio/common/hooks/usePortfolioPrimaryBalance'
-import {usePrivacyMode} from '~/features/Settings/useCases/changeAppSettings/PrivacyMode/usePrivacyMode'
+import {usePrivacyMode} from '~/features/Settings/hooks/usePrivacyMode'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {ResetErrorRef} from '~/ui/Boundary/Boundary'
 import {Icon} from '~/ui/Icon'
@@ -16,7 +16,7 @@ import {Space} from '~/ui/Space/Space'
 export const BalanceBanner = React.forwardRef<ResetErrorRef>((_, ref) => {
   const {wallet, meta} = useSelectedWallet()
   const primaryBalance = usePortfolioPrimaryBalance({wallet})
-  const {togglePrivacyMode} = usePrivacyMode()
+  const {toggleIsPrivacyModeEnabled} = usePrivacyMode()
 
   return (
     <View>
@@ -33,7 +33,7 @@ export const BalanceBanner = React.forwardRef<ResetErrorRef>((_, ref) => {
       <Space.Height.sm />
 
       <TouchableOpacity
-        onPress={() => togglePrivacyMode()}
+        onPress={() => toggleIsPrivacyModeEnabled()}
         style={{
           flexDirection: 'column',
           justifyContent: 'center',
@@ -54,17 +54,17 @@ export const BalanceBanner = React.forwardRef<ResetErrorRef>((_, ref) => {
 
 type BalanceProps = {amount: Portfolio.Token.Amount; ignorePrivacy?: boolean}
 const Balance = ({amount, ignorePrivacy}: BalanceProps) => {
-  const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
+  const {isPrivacyModeEnabled, privacyPlaceholder} = usePrivacyMode()
   const {palette: p} = useTheme()
 
   const balance = React.useMemo(
     () =>
-      !isPrivacyActive || ignorePrivacy === true
+      !isPrivacyModeEnabled || ignorePrivacy === true
         ? amountFormatter({template: '{{value}} {{ticker}}'})(amount)
         : amountFormatter({template: `${privacyPlaceholder} {{ticker}}`})(
             amount,
           ),
-    [amount, ignorePrivacy, isPrivacyActive, privacyPlaceholder],
+    [amount, ignorePrivacy, isPrivacyModeEnabled, privacyPlaceholder],
   )
 
   return (

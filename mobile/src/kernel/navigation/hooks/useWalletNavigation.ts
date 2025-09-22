@@ -102,16 +102,9 @@ export const useWalletNavigation = () => {
         index: 0,
         routes: [
           {
-            name: 'manage-wallets',
+            name: 'setup-wallet',
             state: {
-              routes: [
-                {
-                  name: 'setup-wallet',
-                  state: {
-                    routes: [{name: 'setup-wallet-choose-setup-type-init'}],
-                  },
-                },
-              ],
+              routes: [{name: 'setup-wallet-choose-setup-type-init'}],
             },
           },
         ],
@@ -457,14 +450,20 @@ export const useWalletNavigation = () => {
     navigateToSendSubmittedTx: () => {
       navigation.navigate('manage-wallets', {
         screen: 'main-wallet-routes',
-        params: {screen: 'history', params: {screen: 'send-submitted-tx'}},
+        params: {
+          screen: 'history',
+          params: {screen: 'send-submitted-tx'},
+        },
       })
     },
 
     navigateToSendFailedTx: () => {
       navigation.navigate('manage-wallets', {
         screen: 'main-wallet-routes',
-        params: {screen: 'history', params: {screen: 'send-failed-tx'}},
+        params: {
+          screen: 'history',
+          params: {screen: 'send-failed-tx'},
+        },
       })
     },
 

@@ -43,6 +43,8 @@ export const WalletTabNavigator = () => {
               headerShown: false,
               tabBarStyle: {
                 ...ta.bg_color_max,
+                borderTopWidth: 0.5,
+                borderTopColor: p.gray_600,
               },
               tabBarActiveTintColor: p.primary_600,
               tabBarInactiveTintColor: p.gray_600,

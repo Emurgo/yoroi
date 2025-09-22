@@ -7,8 +7,8 @@ import {Text, TextStyle} from 'react-native'
 
 import {usePortfolio} from '~/features/Portfolio/context/PortfolioProvider'
 import {usePortfolioTokenActivity} from '~/features/Portfolio/context/PortfolioTokenActivityProvider'
-import {useCurrencyPairing} from '~/features/Settings/useCases/changeAppSettings/Currency/CurrencyContext'
-import {usePrivacyMode} from '~/features/Settings/useCases/changeAppSettings/PrivacyMode/usePrivacyMode'
+import {useCurrencyPairing} from '~/features/Settings/context/CurrencyProvider'
+import {usePrivacyMode} from '~/features/Settings/hooks/usePrivacyMode'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
 
@@ -42,7 +42,7 @@ export const PairedBalance = React.forwardRef<ResetErrorRef, Props>(
 )
 
 const Price = ({amount, ignorePrivacy, hidePrimaryPair, textStyle}: Props) => {
-  const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
+  const {isPrivacyModeEnabled, privacyPlaceholder} = usePrivacyMode()
   const {isPrimaryTokenActive} = usePortfolio()
   const {
     selected: {networkManager},
@@ -71,7 +71,7 @@ const Price = ({amount, ignorePrivacy, hidePrimaryPair, textStyle}: Props) => {
 
     if (ptPrice == null) return `... ${currency}`
 
-    if (isPrivacyActive && !ignorePrivacy)
+    if (isPrivacyModeEnabled && !ignorePrivacy)
       return `${privacyPlaceholder} ${currency}`
 
     if (!isPrimaryToken(amount.info) && tokenPrice == null)
@@ -94,7 +94,7 @@ const Price = ({amount, ignorePrivacy, hidePrimaryPair, textStyle}: Props) => {
     selectedCurrency,
     config.decimals,
     ptPrice,
-    isPrivacyActive,
+    isPrivacyModeEnabled,
     ignorePrivacy,
     privacyPlaceholder,
     hidePrimaryPair,

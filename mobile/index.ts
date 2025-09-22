@@ -1,11 +1,9 @@
 /* prettier-ignore-file */
+import { registerRootComponent } from "expo";
+import "react-native-gesture-handler";
+import "./src/kernel/logger/helpers/init-logger";
+import "./src/kernel/shims";
 
-import {registerRootComponent} from 'expo'
+import App from "./App";
 
-import 'react-native-gesture-handler'
-import './src/kernel/logger/helpers/init-logger'
-import './src/kernel/shims'
-
-import App from './App'
-
-registerRootComponent(App)
+registerRootComponent(App);

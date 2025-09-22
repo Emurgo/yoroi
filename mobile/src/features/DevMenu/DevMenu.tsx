@@ -4,7 +4,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import {useNavigation} from '@react-navigation/native'
 import {BigNumber} from 'bignumber.js'
 import * as React from 'react'
-import {Text, View} from 'react-native'
+import {Alert, Text, View} from 'react-native'
 import {SystemBars} from 'react-native-edge-to-edge'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
@@ -18,9 +18,13 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {debugStorage} from '~/kernel/storage/debug-storage'
 import {rootMMKV, rootSyncStorage} from '~/kernel/storage/storages'
-import {BluetoothDeviceManager} from '~/ui/BluetoothDeviceManager/BluetoothDeviceManager'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {LoadingOverlay} from '~/ui/LoadingOverlay/LoadingOverlay'
+import {useModal} from '~/ui/Modal/ModalContext'
+import {TextInput} from '~/ui/TextInput/TextInput'
+
+import {useWalletManager} from '../WalletManager/context/WalletManagerProvider'
+import {useCreateWalletMnemonic} from '../WalletManager/hooks/useCreateWalletMnemonic'
 
 export function DevMenu() {
   const {isDark, config, basePalette, selectTheme, atoms: ta} = useTheme()
@@ -29,6 +33,8 @@ export function DevMenu() {
   const strings = useStrings()
   const [isLoading, setIsLoading] = React.useState(false)
   const [showCrash, setShowCrash] = React.useState(false)
+  const {createWallet} = useCreateWalletMnemonic()
+  const {walletManager} = useWalletManager()
 
   const showLoadingFor3Seconds = React.useCallback(() => {
     setIsLoading(true)
@@ -40,10 +46,13 @@ export function DevMenu() {
   const metrics = useMetrics()
   const {currency, ptActivity} = usePairing()
   const navigation = useNavigation<any>()
+  const {openModal, closeModal} = useModal()
+  const [demoText, setDemoText] = React.useState('')
 
   return (
-    <SafeAreaView style={[a.flex_1, ta.bg_color_max, a.gap_sm]}>
+    <SafeAreaView style={[a.flex_1, ta.bg_color_max, a.gap_sm, a.p_lg]}>
       <SystemBars style={isDark ? 'light' : 'dark'} />
+
       <View
         style={[a.flex_1, ta.bg_color_max, a.gap_sm, a.flex_row, a.flex_wrap]}
       >
@@ -87,6 +96,68 @@ export function DevMenu() {
           type={ButtonType.Primary}
           title={showCrash ? 'Hide Crash' : 'Show Crash'}
           style={[a.p_md, {borderRadius: 8}]}
+        />
+
+        <Button
+          onPress={() =>
+            openModal({
+              title: 'Demo Long Modal',
+              canDiscard: true,
+              height: 700,
+              content: (
+                <DevLongContent demoText={demoText} setDemoText={setDemoText} />
+              ),
+              footer: (
+                <View style={[a.flex_row, a.gap_lg]}>
+                  <Button
+                    style={[a.flex_1]}
+                    type={ButtonType.Secondary}
+                    onPress={closeModal}
+                    title="Cancel"
+                  />
+
+                  <Button
+                    style={[a.flex_1]}
+                    onPress={closeModal}
+                    title="Close"
+                  />
+                </View>
+              ),
+            })
+          }
+          type={ButtonType.Secondary}
+          title="Open Demo Long Modal"
+          style={[a.pt_md, a.p_md, a.rounded_md]}
+        />
+
+        <Button
+          onPress={() =>
+            openModal({
+              title: 'Demo Short Modal',
+              canDiscard: true,
+              height: 300,
+              content: <DevShortContent />,
+              footer: (
+                <View style={[a.flex_row, a.gap_lg]}>
+                  <Button
+                    style={[a.flex_1]}
+                    type={ButtonType.Secondary}
+                    onPress={closeModal}
+                    title="Cancel"
+                  />
+
+                  <Button
+                    style={[a.flex_1]}
+                    onPress={closeModal}
+                    title="Close"
+                  />
+                </View>
+              ),
+            })
+          }
+          type={ButtonType.Secondary}
+          title="Open Demo Short Modal"
+          style={[a.pt_md, a.p_md, a.rounded_md]}
         />
 
         <Button
@@ -160,16 +231,79 @@ export function DevMenu() {
           style={[a.pt_md, a.p_md, a.rounded_md]}
         />
 
+        <Button
+          onPress={() => {
+            if (walletManager.isSyncActive) {
+              walletManager.pauseSyncing()
+            } else {
+              walletManager.resumeSyncing()
+            }
+          }}
+          type={ButtonType.Secondary}
+          title={
+            walletManager.isSyncActive ? 'Pause Syncing' : 'Resume Syncing'
+          }
+          style={[a.pt_md, a.p_md, a.rounded_md]}
+        />
+
         <BuggyComponent showCrash={showCrash} />
 
         <LoadingOverlay isLoading={isLoading} />
       </View>
 
-      <BluetoothDeviceManager
+      {/* <BluetoothDeviceManager
         showConnectionStatus
         onDeviceSelect={(deviceId) => {
           console.log('Selected device:', deviceId)
         }}
+      /> */}
+
+      <Button
+        disabled={isLoading}
+        onPress={() =>
+          createWallet({
+            mnemonicPhrase: process.env.EXPO_PUBLIC_WALLET_1_MNEMONIC ?? '',
+            name: 'Wallet 1',
+            password: '1234567890',
+            implementation: 'cardano-cip1852',
+            addressMode: 'multiple',
+            accountVisual: 0,
+          })
+        }
+        testID="btnRestoreWallet1"
+        title="Restore Wallet 1"
+      />
+
+      <Button
+        disabled={isLoading}
+        onPress={() =>
+          createWallet({
+            mnemonicPhrase: process.env.EXPO_PUBLIC_WALLET_2_MNEMONIC ?? '',
+            name: 'Wallet 2',
+            password: '1234567890',
+            implementation: 'cardano-cip1852',
+            addressMode: 'multiple',
+            accountVisual: 0,
+          })
+        }
+        testID="btnRestoreWallet2"
+        title="Restore Wallet 2"
+      />
+
+      <Button
+        disabled={isLoading}
+        onPress={() =>
+          createWallet({
+            mnemonicPhrase: process.env.EXPO_PUBLIC_WALLET_3_MNEMONIC ?? '',
+            name: 'Wallet 3',
+            password: '1234567890',
+            implementation: 'cardano-cip1852',
+            addressMode: 'multiple',
+            accountVisual: 0,
+          })
+        }
+        testID="btnRestoreWallet3"
+        title="Restore Wallet 3"
       />
     </SafeAreaView>
   )
@@ -181,4 +315,158 @@ const BuggyComponent = ({showCrash}: {showCrash: boolean}) => {
   }
 
   return <></>
+}
+
+const DevLongContent = ({
+  demoText,
+  setDemoText,
+}: {
+  demoText: string
+  setDemoText: (t: string) => void
+}) => {
+  const {atoms: ta} = useTheme()
+  const {openModal, closeModal} = useModal()
+
+  return (
+    <View style={[a.gap_md]}>
+      <Text style={[ta.text_primary_medium, a.body_2_md_regular]}>
+        Description
+      </Text>
+
+      {Array.from({length: 16}).map((_, idx) => (
+        <Text
+          style={[ta.text_primary_medium, a.body_2_md_regular]}
+          {...{key: `paragraph-${idx}`}}
+        >
+          Description paragraph
+        </Text>
+      ))}
+
+      <View>
+        <Text style={[ta.text_primary_medium, a.body_2_md_medium]}>Memo</Text>
+        <TextInput
+          value={demoText}
+          onChangeText={setDemoText}
+          placeholder="Type here"
+          multiline
+        />
+      </View>
+
+      <Button
+        onPress={() =>
+          openModal({
+            title: 'Queued Short Modal',
+            canDiscard: true,
+            height: 300,
+            content: (
+              <View style={[a.gap_md]}>
+                <Text style={[ta.text_primary_medium, a.body_2_md_medium]}>
+                  This modal was queued!
+                </Text>
+                <Text style={[ta.text_primary_medium, a.body_2_md_regular]}>
+                  This modal opened from the queue when the long modal was
+                  closed.
+                </Text>
+              </View>
+            ),
+            footer: (
+              <View style={[a.flex_row, a.gap_lg]}>
+                <Button
+                  style={[a.flex_1]}
+                  type={ButtonType.Secondary}
+                  onPress={closeModal}
+                  title="Cancel"
+                />
+
+                <Button style={[a.flex_1]} onPress={closeModal} title="Close" />
+              </View>
+            ),
+          })
+        }
+        type={ButtonType.Secondary}
+        title="Queue Short Modal"
+        style={[a.pt_lg]}
+      />
+
+      <Button
+        onPress={() =>
+          Alert.alert(
+            'CTA Action',
+            `Action triggered with memo: "${demoText || 'No memo provided'}"`,
+            [
+              {
+                text: 'Cancel',
+                style: 'cancel',
+              },
+              {
+                text: 'OK',
+                onPress: () => console.log('User confirmed CTA action'),
+              },
+            ],
+          )
+        }
+        type={ButtonType.Primary}
+        title="Primary CTA Action"
+        style={[a.pt_lg]}
+      />
+    </View>
+  )
+}
+
+const DevShortContent = () => {
+  const {atoms: ta} = useTheme()
+  const {openModal, closeModal} = useModal()
+
+  return (
+    <View style={[a.gap_md]}>
+      <Text style={[ta.text_primary_medium, a.body_2_md_medium]}>
+        Short description
+      </Text>
+      <Text style={[ta.text_primary_medium, a.body_2_md_regular]}>Header</Text>
+
+      <Button
+        onPress={() =>
+          openModal({
+            title: 'Queued Long Modal',
+            canDiscard: true,
+            height: 700,
+            content: (
+              <View style={[a.gap_md]}>
+                <Text style={[ta.text_primary_medium, a.body_2_md_medium]}>
+                  This long modal was queued!
+                </Text>
+                <Text style={[ta.text_primary_medium, a.body_2_md_regular]}>
+                  This modal opened from the queue when the short modal was
+                  closed.
+                </Text>
+                {Array.from({length: 10}).map((_, idx) => (
+                  <Text
+                    style={[ta.text_primary_medium, a.body_2_md_regular]}
+                    {...{key: `queued-paragraph-${idx}`}}
+                  >
+                    Queued content paragraph {idx + 1}
+                  </Text>
+                ))}
+              </View>
+            ),
+            footer: (
+              <View style={[a.flex_row, a.gap_lg]}>
+                <Button
+                  style={[a.flex_1]}
+                  type={ButtonType.Secondary}
+                  onPress={closeModal}
+                  title="Cancel"
+                />
+
+                <Button style={[a.flex_1]} onPress={closeModal} title="Close" />
+              </View>
+            ),
+          })
+        }
+        type={ButtonType.Secondary}
+        title="Queue Long Modal"
+        style={[a.pt_lg]}
+      />
+    </View>
+  )
 }

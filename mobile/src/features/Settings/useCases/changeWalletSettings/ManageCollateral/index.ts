@@ -1,1 +1,0 @@
-export {ManageCollateralScreen} from './ManageCollateralScreen'

@@ -8,9 +8,9 @@ import {ChainDAppsWarning} from '~/features/Discover/common/ChainDAppsWarning'
 import {getGoogleSearchItem} from '~/features/Discover/common/helpers'
 import {useDAppsConnected} from '~/features/Discover/common/useDAppsConnected'
 import {useShowWelcomeDApp} from '~/features/Discover/common/useShowWelcomeDApp'
-import {ShowDisclaimer} from '~/features/Legal/ui/Disclaimer/ShowDisclaimer'
+import {ShowDisclaimer} from '~/features/Legal/ui/shared/Disclaimer/ShowDisclaimer'
 import {useSearch, useSearchOnNavBar} from '~/features/Search/SearchContext'
-import {NetworkTag} from '~/features/Settings/useCases/changeAppSettings/ChangeNetwork/NetworkTag'
+import {NetworkTag} from '~/features/Settings/ui/shared/NetworkTag'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {SimpleTab} from '~/ui/SimpleTab/SimpleTab'
@@ -87,9 +87,14 @@ export const SelectDappFromListScreen = () => {
 
   return (
     <>
-      <WelcomeDAppModal disabled={isShowedWelcomeDApp} />
+      <WelcomeDAppModal
+        disabled={isShowedWelcomeDApp === undefined || isShowedWelcomeDApp}
+      />
 
-      <ShowDisclaimer type="dapps" disabled={!isShowedWelcomeDApp} />
+      <ShowDisclaimer
+        type="dapps"
+        disabled={isShowedWelcomeDApp === undefined || !isShowedWelcomeDApp}
+      />
 
       <View style={[a.flex_1, ta.bg_color_max, a.px_lg, a.gap_lg]}>
         <ChainDAppsWarning />

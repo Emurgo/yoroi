@@ -1,7 +1,6 @@
 import React, {useState} from 'react'
 
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {Space} from '~/ui/Space/Space'
 
 import {ConfirmWithSpendingPassword} from '../ConfirmWithSpendingPassword'
 
@@ -68,16 +67,12 @@ const PasswordInput = ({
   }
 
   return (
-    <>
-      <ConfirmWithSpendingPassword
-        onSubmit={onConfirmPress}
-        onPasswordChange={handlePasswordChange}
-        isLoading={loading}
-        error={error ?? undefined}
-        summary={summary}
-      />
-
-      <Space.Height.sm />
-    </>
+    <ConfirmWithSpendingPassword
+      onSubmit={onConfirmPress}
+      onPasswordChange={handlePasswordChange}
+      isLoading={loading}
+      error={error ?? undefined}
+      summary={summary}
+    />
   )
 }

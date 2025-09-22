@@ -1,14 +1,23 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
-import {View, ViewProps} from 'react-native'
+import {ColorValue, View} from 'react-native'
 
-export const Hr = ({style, ...rest}: ViewProps) => {
+type Props = {
+  color?: ColorValue
+  height?: number
+}
+export const Hr = ({color, height = 1}: Props) => {
   const {palette: p} = useTheme()
   return (
     <View
-      {...rest}
-      style={[{height: 1}, {backgroundColor: p.gray_200}, style]}
+      style={[
+        a.border_b,
+        {
+          borderBottomColor: color != null ? color : p.el_gray_min,
+          borderBottomWidth: height,
+        },
+      ]}
     />
   )
 }
