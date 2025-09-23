@@ -47,20 +47,6 @@ export const minswapApiMaker = (
   const baseUrl = baseUrls[network]
   const transformers = transformersMaker(config)
 
-  // Capabilities & introspection stubs for future SwapCatalog usage
-  const capabilities = () => ({
-    supportsLimitOrders: false,
-    supportsReverseQuote: true,
-    supportsPools: false,
-    hasProtocolFilter: true,
-    canLockQuote: false,
-  })
-
-  const introspect = async () => ({
-    protocols: [],
-    pools: undefined,
-  })
-
   const requestWithErrorHandling = async <T>(
     url: string,
     options: RequestInit = {},
@@ -138,9 +124,6 @@ export const minswapApiMaker = (
           true,
         )
       },
-      capabilities,
-      introspect,
-
       async orders() {
         const response = await requestWithErrorHandling<PendingOrdersResponse>(
           `${baseUrl}/pending-orders?owner_address=${address}&amount_in_decimal=true`,
@@ -333,6 +316,11 @@ export const minswapApiMaker = (
           true,
         )
       },
+    },
+    true,
+  )
+}
+ },
     },
     true,
   )

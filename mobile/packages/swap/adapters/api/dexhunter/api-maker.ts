@@ -1,19 +1,19 @@
-import {fetchData, isLeft, isNonNullable, isRight} from '@yoroi/common'
-import {Api, Chain, Left, Swap} from '@yoroi/types'
+import { fetchData, isLeft, isNonNullable, isRight } from '@yoroi/common'
+import { Api, Chain, Left, Swap } from '@yoroi/types'
 
-import {freeze} from 'immer'
+import { freeze } from 'immer'
 
-import {DexhunterProtocols, transformersMaker} from './transformers'
+import { DexhunterProtocols, transformersMaker } from './transformers'
 import {
-  BuildResponse,
-  CancelResponse,
-  DexhunterApiConfig,
-  EstimateResponse,
-  LimitBuildResponse,
-  LimitEstimateResponse,
-  OrdersResponse,
-  ReverseEstimateResponse,
-  TokensResponse,
+    BuildResponse,
+    CancelResponse,
+    DexhunterApiConfig,
+    EstimateResponse,
+    LimitBuildResponse,
+    LimitEstimateResponse,
+    OrdersResponse,
+    ReverseEstimateResponse,
+    TokensResponse,
 } from './types'
 
 export const dexhunterApiMaker = (
@@ -56,20 +56,7 @@ export const dexhunterApiMaker = (
   }
 
   const transformers = transformersMaker(config)
-
-  // Capabilities & introspection stubs for future SwapCatalog usage
-  const capabilities = () => ({
-    supportsLimitOrders: true,
-    supportsReverseQuote: true,
-    supportsPools: false, // we will add stats/pools discovery later
-    hasProtocolFilter: true,
-    canLockQuote: false,
-  })
-
-  const introspect = async () => ({
-    protocols: [],
-    pools: undefined,
-  })
+  
 
   return freeze(
     {
@@ -93,11 +80,6 @@ export const dexhunterApiMaker = (
           true,
         )
       },
-      // Expose capabilities/introspect for future catalog integration
-      // These are extra properties on the returned object (not in Swap.Api type)
-      capabilities,
-      introspect,
-
       async orders() {
         const response = await request<OrdersResponse>({
           method: 'get',

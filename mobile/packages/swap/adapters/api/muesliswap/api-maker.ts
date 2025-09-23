@@ -1,7 +1,7 @@
-import {fetchData, isLeft, isNonNullable, isRight} from '@yoroi/common'
-import {Api, Chain, Left, Swap} from '@yoroi/types'
+import { fetchData, isLeft, isNonNullable, isRight } from '@yoroi/common'
+import { Api, Chain, Left, Swap } from '@yoroi/types'
 
-import {freeze} from 'immer'
+import { freeze } from 'immer'
 
 import {
   MuesliswapProtocols,
@@ -57,20 +57,7 @@ export const muesliswapApiMaker = (
 
   // Feature flag to enable providers/pools for FO-based excluded_sources (placeholder)
   // const providersFlag = false
-
-  // Capabilities & introspection stubs for future SwapCatalog usage
-  const capabilities = () => ({
-    supportsLimitOrders: true,
-    supportsReverseQuote: true,
-    supportsPools: true,
-    hasProtocolFilter: true,
-    canLockQuote: false,
-  })
-
-  const introspect = async () => ({
-    protocols: [],
-    pools: undefined,
-  })
+  
 
   return freeze(
     {
@@ -103,10 +90,6 @@ export const muesliswapApiMaker = (
           true,
         )
       },
-      // Expose capabilities/introspect for manager/catalog (no breaking change)
-      capabilities,
-      introspect,
-
       async orders() {
         const response = await request<OrdersHistoryResponse>(
           {
