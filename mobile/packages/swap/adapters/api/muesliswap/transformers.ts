@@ -122,17 +122,32 @@ export const transformersMaker = ({
         tokenIn,
         tokenOut,
         routeHint,
-      }: Swap.EstimateRequest & {routeHint?: any}): LimitQuoteRequest => ({
-        numbers_have_decimals: true,
-        sell_token: tokenIn,
-        buy_token: tokenOut,
-        sell_amount: String(amountIn),
-        ...(partner !== undefined && {partner}),
+      }: Swap.EstimateRequest & {routeHint?: any}): LimitQuoteRequest => {
+        // Prefer routeHint.orderContract, else map from protocol; avoid 'unsupported' or generic
+        const hintContract: Dex | undefined = routeHint?.orderContract as
+          | Dex
+          | undefined
+        const mapped = protocol ? fromSwapProtocol(protocol) : undefined
+        const normalized =
+          mapped === Dex.Muesliswap ? Dex.Muesliswap_v2 : mapped
+        const order_contract =
+          hintContract && hintContract !== Dex.Unsupported
+            ? hintContract
+            : normalized && normalized !== Dex.Unsupported
+              ? normalized
+              : undefined
 
-        buy_amount: String(amountIn * wantedPrice),
-        order_contract: protocol ? fromSwapProtocol(protocol) : undefined,
-        pool_id: routeHint?.poolIds?.[0] ?? undefined,
-      }),
+        return {
+          numbers_have_decimals: true,
+          sell_token: tokenIn,
+          buy_token: tokenOut,
+          sell_amount: String(amountIn),
+          ...(partner !== undefined && {partner}),
+          buy_amount: String(amountIn * wantedPrice),
+          order_contract,
+          pool_id: routeHint?.poolIds?.[0] ?? undefined,
+        }
+      },
     },
 
     quote: {
@@ -177,12 +192,23 @@ export const transformersMaker = ({
         }
 
         if (excluded_sources === undefined) {
-          excluded_sources = protocol
-            ? Object.values(Dex).filter(
+          if (providersCache?.liquidity_source_info && blockedProtocols) {
+            const mappedFO = blockedProtocols
+              .map(fromSwapProtocol)
+              .map(
                 (dex) =>
-                  dex !== Dex.Unsupported && dex !== fromSwapProtocol(protocol),
+                  (providersCache.liquidity_source_info as any)?.[dex]
+                    ?.frontend_option,
               )
-            : (blockedProtocols?.map(fromSwapProtocol) ?? [])
+              .filter((v): v is string => typeof v === 'string')
+            excluded_sources =
+              mappedFO.length > 0 ? (mappedFO as any) : undefined
+          } else if (protocol !== undefined) {
+            // Avoid sending invalid providers (e.g., 'muesliswap') when FO mapping is unavailable
+            excluded_sources = undefined
+          } else {
+            excluded_sources = undefined
+          }
         }
 
         return {
@@ -310,19 +336,34 @@ export const transformersMaker = ({
         amountIn,
         inputs,
         routeHint,
-      }: Swap.CreateRequest): LimitOrderRequest => ({
-        order_contract: fromSwapProtocol(protocol),
-        buy_amount: String(amountIn * wantedPrice),
-        ...(partner !== undefined && {partner}),
+      }: Swap.CreateRequest): LimitOrderRequest => {
+        const hintContract: Dex | undefined = routeHint?.orderContract as
+          | Dex
+          | undefined
+        const mapped = fromSwapProtocol(protocol)
+        const normalized =
+          mapped === Dex.Muesliswap ? Dex.Muesliswap_v2 : mapped
+        const order_contract =
+          hintContract && hintContract !== Dex.Unsupported
+            ? hintContract
+            : normalized && normalized !== Dex.Unsupported
+              ? normalized
+              : undefined
 
-        numbers_have_decimals: true,
-        sell_token: tokenIn,
-        buy_token: tokenOut,
-        sell_amount: String(amountIn),
-        user_address: address,
-        utxos: inputs,
-        pool_id: routeHint?.poolIds?.[0] ?? undefined,
-      }),
+        return {
+          order_contract,
+          buy_amount: String(amountIn * wantedPrice),
+          ...(partner !== undefined && {partner}),
+
+          numbers_have_decimals: true,
+          sell_token: tokenIn,
+          buy_token: tokenOut,
+          sell_amount: String(amountIn),
+          user_address: address,
+          utxos: inputs,
+          pool_id: routeHint?.poolIds?.[0] ?? undefined,
+        }
+      },
       response: ({
         quote: {
           buy_token_decimals,

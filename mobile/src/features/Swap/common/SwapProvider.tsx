@@ -268,33 +268,50 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
   })
 
   React.useEffect(() => {
-    const value = limitOptions?.defaultProtocol
-    if (
-      value !== undefined &&
-      state.selectedProtocol.isTouched === false &&
-      state.selectedProtocol.value !== value
-    ) {
-      action({type: 'ProtocolChanged', value})
+    const options = limitOptions?.options ?? []
+    const defaultProtocol = limitOptions?.defaultProtocol
+    const currentProtocol = state.selectedProtocol.value
+
+    // Determine desired protocol deterministically for limit mode
+    let desiredProtocol = currentProtocol
+
+    if (options.length === 1) {
+      // If there is exactly one option, always select it
+      desiredProtocol = options[0].protocol
     } else {
-      const current = limitOptions?.options.find(
-        (p) => p.protocol === state.selectedProtocol.value,
-      )
-      if (state.selectedProtocol.isTouched === true && current === undefined) {
-        action({type: 'ProtocolChanged', value})
+      const currentIsValid = options.some((p) => p.protocol === currentProtocol)
+      if (!currentIsValid) {
+        desiredProtocol = defaultProtocol ?? options[0]?.protocol
+      } else if (
+        state.selectedProtocol.isTouched === false &&
+        defaultProtocol !== undefined &&
+        currentProtocol !== defaultProtocol
+      ) {
+        // If user hasn't touched yet, prefer defaultProtocol
+        desiredProtocol = defaultProtocol
       }
+    }
+
+    if (desiredProtocol !== undefined && desiredProtocol !== currentProtocol) {
+      action({type: 'ProtocolChanged', value: desiredProtocol})
     }
 
     const wantedPrice = limitOptions?.wantedPrice
     if (
+      state.orderType === 'limit' &&
       wantedPrice !== undefined &&
       wantedPrice > 0 &&
-      state.selectedProtocol.value === limitOptions?.defaultProtocol
-    )
+      (options.length === 1 ||
+        state.selectedProtocol.value === defaultProtocol ||
+        desiredProtocol === defaultProtocol)
+    ) {
       action({type: 'WantedPriceInputChanged', value: String(wantedPrice)})
+    }
   }, [
     limitOptions?.defaultProtocol,
     limitOptions?.options,
     limitOptions?.wantedPrice,
+    state.orderType,
     state.selectedProtocol.isTouched,
     state.selectedProtocol.value,
   ])
