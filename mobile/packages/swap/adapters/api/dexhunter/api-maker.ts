@@ -1,19 +1,19 @@
-import { fetchData, isLeft, isNonNullable, isRight } from '@yoroi/common'
-import { Api, Chain, Left, Swap } from '@yoroi/types'
+import {fetchData, isLeft, isNonNullable, isRight} from '@yoroi/common'
+import {Api, Chain, Left, Swap} from '@yoroi/types'
 
-import { freeze } from 'immer'
+import {freeze} from 'immer'
 
-import { DexhunterProtocols, transformersMaker } from './transformers'
+import {DexhunterProtocols, transformersMaker} from './transformers'
 import {
-    BuildResponse,
-    CancelResponse,
-    DexhunterApiConfig,
-    EstimateResponse,
-    LimitBuildResponse,
-    LimitEstimateResponse,
-    OrdersResponse,
-    ReverseEstimateResponse,
-    TokensResponse,
+  BuildResponse,
+  CancelResponse,
+  DexhunterApiConfig,
+  EstimateResponse,
+  LimitBuildResponse,
+  LimitEstimateResponse,
+  OrdersResponse,
+  ReverseEstimateResponse,
+  TokensResponse,
 } from './types'
 
 export const dexhunterApiMaker = (
@@ -56,7 +56,6 @@ export const dexhunterApiMaker = (
   }
 
   const transformers = transformersMaker(config)
-  
 
   return freeze(
     {

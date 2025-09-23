@@ -1,7 +1,7 @@
-import { fetchData, isLeft, isNonNullable, isRight } from '@yoroi/common'
-import { Api, Chain, Left, Swap } from '@yoroi/types'
+import {fetchData, isLeft, isNonNullable, isRight} from '@yoroi/common'
+import {Api, Chain, Left, Swap} from '@yoroi/types'
 
-import { freeze } from 'immer'
+import {freeze} from 'immer'
 
 import {
   MuesliswapProtocols,
@@ -57,7 +57,6 @@ export const muesliswapApiMaker = (
 
   // Feature flag to enable providers/pools for FO-based excluded_sources (placeholder)
   // const providersFlag = false
-  
 
   return freeze(
     {

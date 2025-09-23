@@ -320,8 +320,3 @@ export const minswapApiMaker = (
     true,
   )
 }
- },
-    },
-    true,
-  )
-}
