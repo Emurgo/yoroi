@@ -1,0 +1,2209 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "MuesliSwap AggregatorV2",
+    "description": "\n# Welcome to the documentation for the MuesliSwap AggregatorV2 api!\n\n\n**Note**: This service is in **beta** and is not yet guaranteed to be accurate or reliable. \n\nFeatures:\n- Quote and place market orders with automatic multi-dex routing\n- Custom limit orders\n- Cancellations, including batch cancellations\n- Update open orders\n- Get supported tokens\n- Get current and historical orders\n- Get live pool states\n\nMost POST requests support either a JSON request body or query parameters.\n\nTransactions returned by this service are already signed by us when required, but\nmust be signed by the user before submitting to the blockchain.\n",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/limit_order_quote": {
+      "post": {
+        "summary": "Get a quote for a limit order",
+        "description": "Returns a quote for a limit order transaction for a given token pair and amount. If the dex is not specified, the dex with the best price will be used. If pool_id is provided, the limit order will be placed against that specific pool. Should match the identifier from /pools",
+        "operationId": "limit_order_quote_limit_order_quote_post",
+        "parameters": [
+          {
+            "name": "buy_token",
+            "in": "query",
+            "required": false,
+            "schema": {"type": "string", "title": "Buy Token"}
+          },
+          {
+            "name": "sell_token",
+            "in": "query",
+            "required": false,
+            "schema": {"type": "string", "title": "Sell Token"}
+          },
+          {
+            "name": "buy_amount",
+            "in": "query",
+            "required": false,
+            "schema": {"type": "string", "title": "Buy Amount"}
+          },
+          {
+            "name": "sell_amount",
+            "in": "query",
+            "required": false,
+            "schema": {"type": "string", "title": "Sell Amount"}
+          },
+          {
+            "name": "order_contract",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [{"type": "string"}, {"type": "null"}],
+              "title": "Order Contract"
+            }
+          },
+          {
+            "name": "pool_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [{"type": "string"}, {"type": "null"}],
+              "title": "Pool Id"
+            }
+          },
+          {
+            "name": "partner",
+            "in": "query",
+            "required": false,
+            "schema": {"type": "string", "default": "", "title": "Partner"}
+          },
+          {
+            "name": "numbers_have_decimals",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "title": "Numbers Have Decimals"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "anyOf": [
+                  {"$ref": "#/components/schemas/LimitOrderQuoteRequest"},
+                  {"type": "null"}
+                ],
+                "title": "Body"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Returns a quote",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LimitOrderQuoteResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/HTTPValidationError"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/limit_order": {
+      "post": {
+        "summary": "Builds a limit order TX",
+        "description": "Constructs a limit order transaction for a given token pair and amount. If the dex is not specified, the dex with the best price will be used. If pool_id is provided, the limit order will be placed against that specific pool. Should match the identifier from /pools",
+        "operationId": "create_limit_order_limit_order_post",
+        "parameters": [
+          {
+            "name": "buy_token",
+            "in": "query",
+            "required": false,
+            "schema": {"type": "string", "title": "Buy Token"}
+          },
+          {
+            "name": "sell_token",
+            "in": "query",
+            "required": false,
+            "schema": {"type": "string", "title": "Sell Token"}
+          },
+          {
+            "name": "buy_amount",
+            "in": "query",
+            "required": false,
+            "schema": {"type": "string", "title": "Buy Amount"}
+          },
+          {
+            "name": "sell_amount",
+            "in": "query",
+            "required": false,
+            "schema": {"type": "string", "title": "Sell Amount"}
+          },
+          {
+            "name": "order_contract",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [{"type": "string"}, {"type": "null"}],
+              "title": "Order Contract"
+            }
+          },
+          {
+            "name": "pool_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [{"type": "string"}, {"type": "null"}],
+              "title": "Pool Id"
+            }
+          },
+          {
+            "name": "partner",
+            "in": "query",
+            "required": false,
+            "schema": {"type": "string", "default": "", "title": "Partner"}
+          },
+          {
+            "name": "numbers_have_decimals",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "title": "Numbers Have Decimals"
+            }
+          },
+          {
+            "name": "user_address",
+            "in": "query",
+            "required": false,
+            "schema": {"type": "string", "title": "User Address"}
+          },
+          {
+            "name": "multi_address",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "title": "Multi Address"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "anyOf": [
+                  {"$ref": "#/components/schemas/LimitOrderRequest"},
+                  {"type": "null"}
+                ],
+                "title": "Body"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Returns a quote and the TX CBOR",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/OrderResponse"}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/HTTPValidationError"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/change_limits": {
+      "post": {
+        "summary": "Update an open order",
+        "description": "Equivalent to cancelling an order and placing a new one. If the sell amount changes, the user will either supply or receive the difference.",
+        "operationId": "change_limits_change_limits_post",
+        "parameters": [
+          {
+            "name": "tx_hash",
+            "in": "query",
+            "required": false,
+            "schema": {"type": "string", "title": "Tx Hash"}
+          },
+          {
+            "name": "output_idx",
+            "in": "query",
+            "required": false,
+            "schema": {"type": "integer", "title": "Output Idx"}
+          },
+          {
+            "name": "new_buy_amount",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [{"type": "string"}, {"type": "null"}],
+              "title": "New Buy Amount"
+            }
+          },
+          {
+            "name": "new_sell_amount",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [{"type": "string"}, {"type": "null"}],
+              "title": "New Sell Amount"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "anyOf": [
+                  {"$ref": "#/components/schemas/ChangeLimitsRequest"},
+                  {"type": "null"}
+                ],
+                "title": "Body"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Returns the TX CBOR",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/TxCBORResponse"}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/HTTPValidationError"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/order": {
+      "post": {
+        "summary": "Builds a market order TX",
+        "description": "Given either a buy or sell amount, constructs a market order transaction. The optimal dex or combination of dexes is automatically selected, unless specific dexes are provided.\n\nThe excluded_sources parameter expects values from the frontend_options returned by the /providers endpoint.",
+        "operationId": "order_order_post",
+        "parameters": [
+          {
+            "name": "buy_token",
+            "in": "query",
+            "required": false,
+            "schema": {"type": "string", "title": "Buy Token"}
+          },
+          {
+            "name": "sell_token",
+            "in": "query",
+            "required": false,
+            "schema": {"type": "string", "title": "Sell Token"}
+          },
+          {
+            "name": "buy_amount",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [{"type": "string"}, {"type": "null"}],
+              "title": "Buy Amount"
+            }
+          },
+          {
+            "name": "sell_amount",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [{"type": "string"}, {"type": "null"}],
+              "title": "Sell Amount"
+            }
+          },
+          {
+            "name": "slippage",
+            "in": "query",
+            "required": false,
+            "schema": {"type": "number", "default": 0, "title": "Slippage"}
+          },
+          {
+            "name": "excluded_sources",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {"type": "array", "items": {"type": "string"}},
+                {"type": "null"}
+              ],
+              "title": "Excluded Sources"
+            }
+          },
+          {
+            "name": "partner",
+            "in": "query",
+            "required": false,
+            "schema": {"type": "string", "default": "", "title": "Partner"}
+          },
+          {
+            "name": "numbers_have_decimals",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "title": "Numbers Have Decimals"
+            }
+          },
+          {
+            "name": "user_address",
+            "in": "query",
+            "required": false,
+            "schema": {"type": "string", "title": "User Address"}
+          },
+          {
+            "name": "multi_address",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "title": "Multi Address"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "anyOf": [
+                  {"$ref": "#/components/schemas/OrderRequest"},
+                  {"type": "null"}
+                ],
+                "title": "Body"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Returns the order quote and TX CBOR.",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/OrderResponse"}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/HTTPValidationError"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/quote": {
+      "post": {
+        "summary": "Get a quote for a market order",
+        "description": "Returns a quote for a market order transaction for a given token pair and amount. The optimal dex or combination of dexes is automatically selected, unless specific dexes are provided.\n\nThe excluded_sources parameter expects values from the frontend_options returned by the /providers endpoint.",
+        "operationId": "quote_quote_post",
+        "parameters": [
+          {
+            "name": "buy_token",
+            "in": "query",
+            "required": false,
+            "schema": {"type": "string", "title": "Buy Token"}
+          },
+          {
+            "name": "sell_token",
+            "in": "query",
+            "required": false,
+            "schema": {"type": "string", "title": "Sell Token"}
+          },
+          {
+            "name": "buy_amount",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [{"type": "string"}, {"type": "null"}],
+              "title": "Buy Amount"
+            }
+          },
+          {
+            "name": "sell_amount",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [{"type": "string"}, {"type": "null"}],
+              "title": "Sell Amount"
+            }
+          },
+          {
+            "name": "slippage",
+            "in": "query",
+            "required": false,
+            "schema": {"type": "number", "default": 0, "title": "Slippage"}
+          },
+          {
+            "name": "excluded_sources",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {"type": "array", "items": {"type": "string"}},
+                {"type": "null"}
+              ],
+              "title": "Excluded Sources"
+            }
+          },
+          {
+            "name": "partner",
+            "in": "query",
+            "required": false,
+            "schema": {"type": "string", "default": "", "title": "Partner"}
+          },
+          {
+            "name": "numbers_have_decimals",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "title": "Numbers Have Decimals"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "anyOf": [
+                  {"$ref": "#/components/schemas/OrderQuoteRequest"},
+                  {"type": "null"}
+                ],
+                "title": "Body"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Returns a quote",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {"$ref": "#/components/schemas/BuyQuoteResponse"},
+                    {"$ref": "#/components/schemas/SellQuoteResponse"}
+                  ],
+                  "title": "Response Quote Quote Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/HTTPValidationError"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cancel": {
+      "post": {
+        "summary": "Cancel an order",
+        "description": "Constructs a TX cancelling an order. The order must be open.",
+        "operationId": "multi_cancel_cancel_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {"$ref": "#/components/schemas/CancelRequest"}
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Returns the TX CBOR",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/TxCBORResponse"}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/HTTPValidationError"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/estimate_cancel": {
+      "post": {
+        "summary": "Cancel an order",
+        "description": "Constructs a TX cancelling an order. The order must be open.",
+        "operationId": "multi_cancel_estimate_cancel_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {"$ref": "#/components/schemas/CancelRequest"}
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Returns the TX CBOR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CancellationEstimationResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/HTTPValidationError"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/open_orders": {
+      "get": {
+        "summary": "Get open orders",
+        "description": "Returns all open orders for a given user. This is a subset of the functionality of /orders.",
+        "operationId": "open_orders_open_orders_get",
+        "parameters": [
+          {
+            "name": "user_address",
+            "in": "query",
+            "required": true,
+            "schema": {"type": "string", "title": "User Address"}
+          },
+          {
+            "name": "numbers_have_decimals",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "title": "Numbers Have Decimals"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a list of orders",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/OrderHistoryResponse"}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/HTTPValidationError"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pools": {
+      "get": {
+        "summary": "Get pool states",
+        "description": "Returns the current state of all pools meeting the given criteria.",
+        "operationId": "pools_pools_get",
+        "parameters": [
+          {
+            "name": "token_a",
+            "in": "query",
+            "required": true,
+            "schema": {"type": "string", "title": "Token A"}
+          },
+          {
+            "name": "token_b",
+            "in": "query",
+            "required": true,
+            "schema": {"type": "string", "title": "Token B"}
+          },
+          {
+            "name": "dex",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {"type": "string"},
+              "default": [
+                "muesliswap-v1",
+                "muesliswap-v2",
+                "muesliswap-clp",
+                "minswap-v1",
+                "minswap-v2",
+                "minswap-stable",
+                "spectrum-v1",
+                "teddy-v1",
+                "wingriders-v1",
+                "vyfi-v1",
+                "sundaeswap-v1",
+                "sundaeswap-v3",
+                "wingriders-v2",
+                "wingriders-stable",
+                "cswap-v1",
+                "splash-v4",
+                "splash-v5",
+                "splash-v6",
+                "splash-degen-quad"
+              ],
+              "title": "Dex"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a list of pools",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/PoolResponse"}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/HTTPValidationError"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/providers": {
+      "get": {
+        "summary": "Get supported providers",
+        "description": "This endpoint distinguishes the various concepts related to liquidity providers.\nThese are:\n- DEX: The decentralized exchange. Potentially covers many liquidity protocols, routes, order protocols\n- Order Protocol: Refers to the orderbook contract used to place orders for a liquidity protocol.\n- Liquidity Source/Protocol: Refers to the contract controlling the liquidity onchain, e.g. liquidity pool, liquidity orderbook.\n- Route: The route taken to execute a trade. Related to concepts like batcher fee and deposit. Useful to distinguish, e.g. Minswap direct vs routed, which have different fees but use the same orderbook.\n- Frontend Option: In between the concepts of Liquidity Protocol and DEX, offers users fine-grained control over which liquidity sources to choose from, without having to care about specific contract versions. These options are what should be passed to excluded_sources in /quote and /order\n\nThe data returned by this endpoint are generally in the form of mappings between the appropriate concepts.\nNote that string identifiers may be used for distinct concepts. For example, 'minswap' means different things in different contexts.",
+        "operationId": "providers_providers_get",
+        "responses": {
+          "200": {
+            "description": "Returns all information related to liquidity providers",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/ProviderInfoResponse"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tokens": {
+      "get": {
+        "summary": "Get supported tokens",
+        "description": "Returns the list of supported tokens.",
+        "operationId": "tokens_tokens_get",
+        "parameters": [
+          {
+            "name": "verified_only",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": true,
+              "title": "Verified Only"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a list of tokens",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {"$ref": "#/components/schemas/TokenInfo"},
+                  "title": "Response Tokens Tokens Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/HTTPValidationError"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/orders": {
+      "get": {
+        "summary": "Get orders",
+        "description": "Returns the orders for a given user that meet the given criteria.",
+        "operationId": "order_history_orders_get",
+        "parameters": [
+          {
+            "name": "user_address",
+            "in": "query",
+            "required": true,
+            "schema": {"type": "string", "title": "User Address"}
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "enum": ["open", "matched", "canceled", "partially_matched"],
+                "type": "string"
+              },
+              "default": [],
+              "title": "Status"
+            }
+          },
+          {
+            "name": "numbers_have_decimals",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "title": "Numbers Have Decimals"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a list of orders",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/OrderHistoryResponse"}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/HTTPValidationError"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/order_history": {
+      "get": {
+        "summary": "Get orders",
+        "description": "Returns the orders for a given user that meet the given criteria.",
+        "operationId": "order_history_order_history_get",
+        "parameters": [
+          {
+            "name": "user_address",
+            "in": "query",
+            "required": true,
+            "schema": {"type": "string", "title": "User Address"}
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "enum": ["open", "matched", "canceled", "partially_matched"],
+                "type": "string"
+              },
+              "default": [],
+              "title": "Status"
+            }
+          },
+          {
+            "name": "numbers_have_decimals",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "title": "Numbers Have Decimals"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a list of orders",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/OrderHistoryResponse"}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/HTTPValidationError"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/append_signature": {
+      "post": {
+        "summary": "Append Signature",
+        "description": "Appends the user's signature to a transaction.",
+        "operationId": "append_signature_append_signature_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {"$ref": "#/components/schemas/AppendSignatureRequest"}
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/SignedTxCBORResponse"}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/HTTPValidationError"}
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AppendSignatureRequest": {
+        "properties": {
+          "tx": {"type": "string", "title": "Tx"},
+          "signed_witness_set": {
+            "type": "string",
+            "title": "Signed Witness Set"
+          }
+        },
+        "type": "object",
+        "required": ["tx", "signed_witness_set"],
+        "title": "AppendSignatureRequest"
+      },
+      "AttachedValue": {
+        "properties": {
+          "amount": {"type": "integer", "title": "Amount"},
+          "token": {"type": "string", "title": "Token"}
+        },
+        "type": "object",
+        "required": ["amount", "token"],
+        "title": "AttachedValue"
+      },
+      "BatchingInfo": {
+        "properties": {
+          "reference_pool": {"type": "string", "title": "Reference Pool"},
+          "expected_output": {"type": "integer", "title": "Expected Output"},
+          "difference": {"type": "number", "title": "Difference"},
+          "status": {"type": "string", "title": "Status"}
+        },
+        "type": "object",
+        "required": [
+          "reference_pool",
+          "expected_output",
+          "difference",
+          "status"
+        ],
+        "title": "BatchingInfo"
+      },
+      "BuyOrderSplit": {
+        "properties": {
+          "amount_in": {
+            "anyOf": [{"type": "integer"}, {"type": "string"}],
+            "title": "Amount In"
+          },
+          "total_lvl_attached": {
+            "anyOf": [{"type": "integer"}, {"type": "string"}],
+            "title": "Total Lvl Attached"
+          },
+          "deposit": {
+            "anyOf": [{"type": "integer"}, {"type": "string"}],
+            "title": "Deposit"
+          },
+          "batcher_fee": {
+            "anyOf": [{"type": "integer"}, {"type": "string"}],
+            "title": "Batcher Fee"
+          },
+          "expected_output": {
+            "anyOf": [{"type": "integer"}, {"type": "string"}],
+            "title": "Expected Output"
+          },
+          "source_id": {
+            "anyOf": [
+              {"type": "string"},
+              {"items": {"type": "string"}, "type": "array"}
+            ],
+            "title": "Source Id"
+          },
+          "initial_price": {"type": "number", "title": "Initial Price"},
+          "final_price": {"type": "number", "title": "Final Price"},
+          "price_impact": {"type": "number", "title": "Price Impact"},
+          "price_distortion": {
+            "anyOf": [{"type": "number"}, {"type": "null"}],
+            "title": "Price Distortion"
+          },
+          "dex": {"type": "string", "title": "Dex"},
+          "route": {"type": "string", "title": "Route"},
+          "liquidity_protocol": {
+            "items": {"type": "string"},
+            "type": "array",
+            "title": "Liquidity Protocol"
+          },
+          "utxo": {
+            "items": {"type": "string"},
+            "type": "array",
+            "title": "Utxo"
+          },
+          "pool_fee": {
+            "anyOf": [
+              {"type": "number"},
+              {"items": {"type": "number"}, "type": "array"},
+              {"type": "null"}
+            ],
+            "title": "Pool Fee"
+          },
+          "intermediate_token": {
+            "anyOf": [{"type": "string"}, {"type": "null"}],
+            "title": "Intermediate Token"
+          },
+          "amount_in_without_slippage": {
+            "anyOf": [{"type": "integer"}, {"type": "string"}],
+            "title": "Amount In Without Slippage"
+          }
+        },
+        "type": "object",
+        "required": [
+          "amount_in",
+          "total_lvl_attached",
+          "deposit",
+          "batcher_fee",
+          "expected_output",
+          "source_id",
+          "initial_price",
+          "final_price",
+          "price_impact",
+          "price_distortion",
+          "dex",
+          "route",
+          "liquidity_protocol",
+          "utxo",
+          "pool_fee",
+          "amount_in_without_slippage"
+        ],
+        "title": "BuyOrderSplit"
+      },
+      "BuyQuoteResponse": {
+        "properties": {
+          "total_lvl_attached": {
+            "anyOf": [{"type": "integer"}, {"type": "string"}],
+            "title": "Total Lvl Attached"
+          },
+          "total_deposit": {
+            "anyOf": [{"type": "integer"}, {"type": "string"}],
+            "title": "Total Deposit"
+          },
+          "total_batcher_fee": {
+            "anyOf": [{"type": "integer"}, {"type": "string"}],
+            "title": "Total Batcher Fee"
+          },
+          "total_output": {
+            "anyOf": [{"type": "integer"}, {"type": "string"}],
+            "title": "Total Output"
+          },
+          "total_input": {
+            "anyOf": [{"type": "integer"}, {"type": "string"}],
+            "title": "Total Input"
+          },
+          "buy_token_decimals": {
+            "anyOf": [{"type": "integer"}, {"type": "null"}],
+            "title": "Buy Token Decimals"
+          },
+          "sell_token_decimals": {
+            "anyOf": [{"type": "integer"}, {"type": "null"}],
+            "title": "Sell Token Decimals"
+          },
+          "net_price": {"type": "number", "title": "Net Price"},
+          "net_price_impact": {"type": "number", "title": "Net Price Impact"},
+          "net_price_distortion": {
+            "anyOf": [{"type": "number"}, {"type": "null"}],
+            "title": "Net Price Distortion"
+          },
+          "service_fee": {
+            "anyOf": [{"type": "integer"}, {"type": "string"}],
+            "title": "Service Fee"
+          },
+          "numbers_have_decimals": {
+            "type": "boolean",
+            "title": "Numbers Have Decimals"
+          },
+          "data_freshness": {"$ref": "#/components/schemas/DataFreshness"},
+          "total_input_without_slippage": {
+            "anyOf": [{"type": "integer"}, {"type": "string"}],
+            "title": "Total Input Without Slippage"
+          },
+          "splits": {
+            "items": {"$ref": "#/components/schemas/BuyOrderSplit"},
+            "type": "array",
+            "title": "Splits"
+          }
+        },
+        "type": "object",
+        "required": [
+          "total_lvl_attached",
+          "total_deposit",
+          "total_batcher_fee",
+          "total_output",
+          "total_input",
+          "buy_token_decimals",
+          "sell_token_decimals",
+          "net_price",
+          "net_price_impact",
+          "net_price_distortion",
+          "service_fee",
+          "numbers_have_decimals",
+          "data_freshness",
+          "total_input_without_slippage",
+          "splits"
+        ],
+        "title": "BuyQuoteResponse"
+      },
+      "CancelRequest": {
+        "properties": {
+          "order_ids": {
+            "anyOf": [
+              {"items": {"type": "string"}, "type": "array"},
+              {"type": "null"}
+            ],
+            "title": "Order Ids"
+          },
+          "orders": {
+            "anyOf": [
+              {
+                "items": {"$ref": "#/components/schemas/OrderModel"},
+                "type": "array"
+              },
+              {"type": "null"}
+            ],
+            "title": "Orders"
+          }
+        },
+        "type": "object",
+        "title": "CancelRequest",
+        "examples": [
+          {
+            "order_ids": [
+              "fcee89372c23183209820024e848ed7eca6c8ee69fa1ae963361f6d2f07f6162#1"
+            ]
+          }
+        ]
+      },
+      "CancellationEstimationResponse": {
+        "properties": {"fee": {"type": "integer", "title": "Fee"}},
+        "type": "object",
+        "required": ["fee"],
+        "title": "CancellationEstimationResponse"
+      },
+      "ChangeLimitsRequest": {
+        "properties": {
+          "tx_hash": {"type": "string", "title": "Tx Hash"},
+          "output_idx": {"type": "integer", "title": "Output Idx"},
+          "new_buy_amount": {
+            "anyOf": [{"type": "string"}, {"type": "null"}],
+            "title": "New Buy Amount"
+          },
+          "new_sell_amount": {
+            "anyOf": [{"type": "string"}, {"type": "null"}],
+            "title": "New Sell Amount"
+          }
+        },
+        "type": "object",
+        "required": ["tx_hash", "output_idx"],
+        "title": "ChangeLimitsRequest"
+      },
+      "DataFreshness": {
+        "properties": {
+          "last_slot": {"type": "integer", "title": "Last Slot"},
+          "last_block": {"type": "string", "title": "Last Block"},
+          "is_stale": {"type": "boolean", "title": "Is Stale"},
+          "age": {"type": "integer", "title": "Age"}
+        },
+        "type": "object",
+        "required": ["last_slot", "last_block", "is_stale", "age"],
+        "title": "DataFreshness"
+      },
+      "DexInfoResponse": {
+        "properties": {
+          "order_protocols": {
+            "items": {"type": "string"},
+            "type": "array",
+            "title": "Order Protocols"
+          },
+          "liquidity_protocols": {
+            "items": {"type": "string"},
+            "type": "array",
+            "title": "Liquidity Protocols"
+          },
+          "routes": {
+            "items": {"type": "string"},
+            "type": "array",
+            "title": "Routes"
+          },
+          "name": {"type": "string", "title": "Name"},
+          "image": {"type": "string", "title": "Image"}
+        },
+        "type": "object",
+        "required": [
+          "order_protocols",
+          "liquidity_protocols",
+          "routes",
+          "name",
+          "image"
+        ],
+        "title": "DexInfoResponse"
+      },
+      "FeeGroupInfo": {
+        "properties": {
+          "fee": {"type": "integer", "title": "Fee"},
+          "partner": {"type": "string", "title": "Partner"},
+          "feeAddress": {"type": "string", "title": "Feeaddress"},
+          "orders": {
+            "items": {"$ref": "#/components/schemas/OrderInfo"},
+            "type": "array",
+            "title": "Orders"
+          },
+          "refundable": {"type": "boolean", "title": "Refundable"}
+        },
+        "type": "object",
+        "required": ["fee", "partner", "feeAddress", "orders", "refundable"],
+        "title": "FeeGroupInfo"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {"$ref": "#/components/schemas/ValidationError"},
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "LimitOrderQuoteRequest": {
+        "properties": {
+          "buy_token": {"type": "string", "title": "Buy Token"},
+          "sell_token": {"type": "string", "title": "Sell Token"},
+          "buy_amount": {"type": "string", "title": "Buy Amount"},
+          "sell_amount": {"type": "string", "title": "Sell Amount"},
+          "order_contract": {
+            "anyOf": [{"type": "string"}, {"type": "null"}],
+            "title": "Order Contract"
+          },
+          "pool_id": {
+            "anyOf": [{"type": "string"}, {"type": "null"}],
+            "title": "Pool Id",
+            "description": "Specify to use a specific pool. If provided, the order will be placed against this pool specifically. Should correspond to the identifier from the /pools EP"
+          },
+          "partner": {"type": "string", "title": "Partner", "default": ""},
+          "numbers_have_decimals": {
+            "type": "boolean",
+            "title": "Numbers Have Decimals",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": ["buy_token", "sell_token", "buy_amount", "sell_amount"],
+        "title": "LimitOrderQuoteRequest"
+      },
+      "LimitOrderQuoteResponse": {
+        "properties": {
+          "total_lvl_attached": {
+            "anyOf": [{"type": "integer"}, {"type": "string"}],
+            "title": "Total Lvl Attached"
+          },
+          "total_deposit": {
+            "anyOf": [{"type": "integer"}, {"type": "string"}],
+            "title": "Total Deposit"
+          },
+          "total_batcher_fee": {
+            "anyOf": [{"type": "integer"}, {"type": "string"}],
+            "title": "Total Batcher Fee"
+          },
+          "total_output": {
+            "anyOf": [{"type": "integer"}, {"type": "string"}],
+            "title": "Total Output"
+          },
+          "total_input": {
+            "anyOf": [{"type": "integer"}, {"type": "string"}],
+            "title": "Total Input"
+          },
+          "buy_token_decimals": {
+            "anyOf": [{"type": "integer"}, {"type": "null"}],
+            "title": "Buy Token Decimals"
+          },
+          "sell_token_decimals": {
+            "anyOf": [{"type": "integer"}, {"type": "null"}],
+            "title": "Sell Token Decimals"
+          },
+          "net_price": {"type": "number", "title": "Net Price"},
+          "net_price_impact": {"type": "number", "title": "Net Price Impact"},
+          "net_price_distortion": {
+            "anyOf": [{"type": "number"}, {"type": "null"}],
+            "title": "Net Price Distortion"
+          },
+          "service_fee": {
+            "anyOf": [{"type": "integer"}, {"type": "string"}],
+            "title": "Service Fee"
+          },
+          "numbers_have_decimals": {
+            "type": "boolean",
+            "title": "Numbers Have Decimals"
+          },
+          "data_freshness": {"$ref": "#/components/schemas/DataFreshness"},
+          "total_output_without_slippage": {
+            "anyOf": [{"type": "integer"}, {"type": "string"}],
+            "title": "Total Output Without Slippage"
+          },
+          "splits": {
+            "items": {"$ref": "#/components/schemas/SellOrderSplit"},
+            "type": "array",
+            "title": "Splits"
+          },
+          "liquidity_exists": {"type": "boolean", "title": "Liquidity Exists"}
+        },
+        "type": "object",
+        "required": [
+          "total_lvl_attached",
+          "total_deposit",
+          "total_batcher_fee",
+          "total_output",
+          "total_input",
+          "buy_token_decimals",
+          "sell_token_decimals",
+          "net_price",
+          "net_price_impact",
+          "net_price_distortion",
+          "service_fee",
+          "numbers_have_decimals",
+          "data_freshness",
+          "total_output_without_slippage",
+          "splits",
+          "liquidity_exists"
+        ],
+        "title": "LimitOrderQuoteResponse"
+      },
+      "LimitOrderRequest": {
+        "properties": {
+          "buy_token": {"type": "string", "title": "Buy Token"},
+          "sell_token": {"type": "string", "title": "Sell Token"},
+          "buy_amount": {"type": "string", "title": "Buy Amount"},
+          "sell_amount": {"type": "string", "title": "Sell Amount"},
+          "order_contract": {
+            "anyOf": [{"type": "string"}, {"type": "null"}],
+            "title": "Order Contract"
+          },
+          "pool_id": {
+            "anyOf": [{"type": "string"}, {"type": "null"}],
+            "title": "Pool Id",
+            "description": "Specify to use a specific pool. If provided, the order will be placed against this pool specifically. Should correspond to the identifier from the /pools EP"
+          },
+          "partner": {"type": "string", "title": "Partner", "default": ""},
+          "numbers_have_decimals": {
+            "type": "boolean",
+            "title": "Numbers Have Decimals",
+            "default": false
+          },
+          "user_address": {"type": "string", "title": "User Address"},
+          "multi_address": {
+            "type": "boolean",
+            "title": "Multi Address",
+            "default": false
+          },
+          "utxos": {
+            "anyOf": [
+              {"items": {"type": "string"}, "type": "array"},
+              {"type": "null"}
+            ],
+            "title": "Utxos",
+            "description": "Only supported in request body."
+          }
+        },
+        "type": "object",
+        "required": [
+          "buy_token",
+          "sell_token",
+          "buy_amount",
+          "sell_amount",
+          "user_address"
+        ],
+        "title": "LimitOrderRequest"
+      },
+      "LiquiditySourceInfo": {
+        "properties": {
+          "frontend_option": {"type": "string", "title": "Frontend Option"}
+        },
+        "type": "object",
+        "required": ["frontend_option"],
+        "title": "LiquiditySourceInfo"
+      },
+      "OrderContractInfo": {
+        "properties": {
+          "cancellation_mem": {"type": "integer", "title": "Cancellation Mem"},
+          "cancellation_steps": {
+            "type": "integer",
+            "title": "Cancellation Steps"
+          },
+          "is_orderbook": {
+            "type": "boolean",
+            "title": "Is Orderbook",
+            "description": "Whether the order contract is also a liquidity source. Distinguishes between order contracts that only connect orders with pools, and those that allow arbitrary trading"
+          },
+          "requires_pool_id": {
+            "type": "boolean",
+            "title": "Requires Pool Id",
+            "description": "Whether the order contract requires a pool ID to be specified when placing orders."
+          }
+        },
+        "type": "object",
+        "required": [
+          "cancellation_mem",
+          "cancellation_steps",
+          "is_orderbook",
+          "requires_pool_id"
+        ],
+        "title": "OrderContractInfo"
+      },
+      "OrderHistoryResponse": {
+        "properties": {
+          "orders": {
+            "items": {
+              "anyOf": [
+                {"$ref": "#/components/schemas/OrderHistoryResponseModel"},
+                {
+                  "$ref": "#/components/schemas/OrderHistoryResponseWithDecimalsModel"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Orders"
+          },
+          "numbers_have_decimals": {
+            "type": "boolean",
+            "title": "Numbers Have Decimals"
+          },
+          "data_freshness": {"$ref": "#/components/schemas/DataFreshness"}
+        },
+        "type": "object",
+        "required": ["orders", "numbers_have_decimals", "data_freshness"],
+        "title": "OrderHistoryResponse"
+      },
+      "OrderHistoryResponseModel": {
+        "properties": {
+          "dex": {"type": "string", "title": "Dex"},
+          "aggregator": {
+            "anyOf": [{"type": "string"}, {"type": "null"}],
+            "title": "Aggregator"
+          },
+          "fromToken": {"type": "string", "title": "Fromtoken"},
+          "toToken": {"type": "string", "title": "Totoken"},
+          "fromAmount": {
+            "anyOf": [{"type": "integer"}, {"type": "string"}],
+            "title": "Fromamount"
+          },
+          "toAmount": {
+            "anyOf": [{"type": "integer"}, {"type": "string"}],
+            "title": "Toamount"
+          },
+          "paidAmount": {
+            "anyOf": [{"type": "integer"}, {"type": "string"}],
+            "title": "Paidamount"
+          },
+          "receivedAmount": {
+            "anyOf": [{"type": "integer"}, {"type": "string"}],
+            "title": "Receivedamount"
+          },
+          "batcherFee": {
+            "anyOf": [{"type": "integer"}, {"type": "string"}],
+            "title": "Batcherfee"
+          },
+          "attachedValues": {
+            "items": {},
+            "type": "array",
+            "title": "Attachedvalues"
+          },
+          "sender": {"type": "string", "title": "Sender"},
+          "beneficiary": {"type": "string", "title": "Beneficiary"},
+          "txHash": {"type": "string", "title": "Txhash"},
+          "outputIdx": {
+            "anyOf": [{"type": "integer"}, {"type": "null"}],
+            "title": "Outputidx"
+          },
+          "deposit": {
+            "anyOf": [{"type": "integer"}, {"type": "string"}],
+            "title": "Deposit"
+          },
+          "status": {"type": "string", "title": "Status"},
+          "placedAt": {"type": "integer", "title": "Placedat"},
+          "finalizedAt": {
+            "anyOf": [{"type": "integer"}, {"type": "null"}],
+            "title": "Finalizedat"
+          },
+          "finalizedTxHash": {
+            "anyOf": [{"type": "string"}, {"type": "null"}],
+            "title": "Finalizedtxhash"
+          },
+          "providerSpecifics": {
+            "anyOf": [
+              {"additionalProperties": true, "type": "object"},
+              {"type": "null"}
+            ],
+            "title": "Providerspecifics"
+          }
+        },
+        "type": "object",
+        "required": [
+          "dex",
+          "fromToken",
+          "toToken",
+          "fromAmount",
+          "toAmount",
+          "paidAmount",
+          "receivedAmount",
+          "batcherFee",
+          "attachedValues",
+          "sender",
+          "beneficiary",
+          "txHash",
+          "deposit",
+          "status",
+          "placedAt"
+        ],
+        "title": "OrderHistoryResponseModel"
+      },
+      "OrderHistoryResponseWithDecimalsModel": {
+        "properties": {
+          "dex": {"type": "string", "title": "Dex"},
+          "aggregator": {
+            "anyOf": [{"type": "string"}, {"type": "null"}],
+            "title": "Aggregator"
+          },
+          "fromToken": {"type": "string", "title": "Fromtoken"},
+          "toToken": {"type": "string", "title": "Totoken"},
+          "fromAmount": {
+            "anyOf": [{"type": "integer"}, {"type": "string"}],
+            "title": "Fromamount"
+          },
+          "toAmount": {
+            "anyOf": [{"type": "integer"}, {"type": "string"}],
+            "title": "Toamount"
+          },
+          "paidAmount": {
+            "anyOf": [{"type": "integer"}, {"type": "string"}],
+            "title": "Paidamount"
+          },
+          "receivedAmount": {
+            "anyOf": [{"type": "integer"}, {"type": "string"}],
+            "title": "Receivedamount"
+          },
+          "batcherFee": {
+            "anyOf": [{"type": "integer"}, {"type": "string"}],
+            "title": "Batcherfee"
+          },
+          "attachedValues": {
+            "items": {},
+            "type": "array",
+            "title": "Attachedvalues"
+          },
+          "sender": {"type": "string", "title": "Sender"},
+          "beneficiary": {"type": "string", "title": "Beneficiary"},
+          "txHash": {"type": "string", "title": "Txhash"},
+          "outputIdx": {
+            "anyOf": [{"type": "integer"}, {"type": "null"}],
+            "title": "Outputidx"
+          },
+          "deposit": {
+            "anyOf": [{"type": "integer"}, {"type": "string"}],
+            "title": "Deposit"
+          },
+          "status": {"type": "string", "title": "Status"},
+          "placedAt": {"type": "integer", "title": "Placedat"},
+          "finalizedAt": {
+            "anyOf": [{"type": "integer"}, {"type": "null"}],
+            "title": "Finalizedat"
+          },
+          "finalizedTxHash": {
+            "anyOf": [{"type": "string"}, {"type": "null"}],
+            "title": "Finalizedtxhash"
+          },
+          "providerSpecifics": {
+            "anyOf": [
+              {"additionalProperties": true, "type": "object"},
+              {"type": "null"}
+            ],
+            "title": "Providerspecifics"
+          },
+          "fromTokenDecimals": {
+            "anyOf": [{"type": "integer"}, {"type": "null"}],
+            "title": "Fromtokendecimals"
+          },
+          "toTokenDecimals": {
+            "anyOf": [{"type": "integer"}, {"type": "null"}],
+            "title": "Totokendecimals"
+          }
+        },
+        "type": "object",
+        "required": [
+          "dex",
+          "fromToken",
+          "toToken",
+          "fromAmount",
+          "toAmount",
+          "paidAmount",
+          "receivedAmount",
+          "batcherFee",
+          "attachedValues",
+          "sender",
+          "beneficiary",
+          "txHash",
+          "deposit",
+          "status",
+          "placedAt",
+          "fromTokenDecimals",
+          "toTokenDecimals"
+        ],
+        "title": "OrderHistoryResponseWithDecimalsModel"
+      },
+      "OrderInfo": {
+        "properties": {
+          "txId": {"type": "string", "title": "Txid"},
+          "status": {"type": "string", "title": "Status"}
+        },
+        "type": "object",
+        "required": ["txId", "status"],
+        "title": "OrderInfo"
+      },
+      "OrderModel": {
+        "properties": {
+          "dex": {"type": "string", "title": "Dex"},
+          "aggregator": {
+            "anyOf": [{"type": "string"}, {"type": "null"}],
+            "title": "Aggregator"
+          },
+          "fromToken": {
+            "anyOf": [
+              {"$ref": "#/components/schemas/TokenModel"},
+              {"type": "string"}
+            ],
+            "title": "Fromtoken"
+          },
+          "toToken": {
+            "anyOf": [
+              {"$ref": "#/components/schemas/TokenModel"},
+              {"type": "string"}
+            ],
+            "title": "Totoken"
+          },
+          "fromAmount": {"type": "integer", "title": "Fromamount"},
+          "toAmount": {"type": "integer", "title": "Toamount"},
+          "paidAmount": {"type": "integer", "title": "Paidamount"},
+          "receivedAmount": {"type": "integer", "title": "Receivedamount"},
+          "batcherFee": {"type": "integer", "title": "Batcherfee"},
+          "attachedValues": {
+            "items": {"$ref": "#/components/schemas/AttachedValue"},
+            "type": "array",
+            "title": "Attachedvalues"
+          },
+          "sender": {"type": "string", "title": "Sender"},
+          "beneficiary": {"type": "string", "title": "Beneficiary"},
+          "txHash": {"type": "string", "title": "Txhash"},
+          "outputIdx": {"type": "integer", "title": "Outputidx"},
+          "deposit": {"type": "integer", "title": "Deposit"},
+          "status": {"type": "string", "title": "Status"},
+          "placedAt": {"type": "integer", "title": "Placedat"},
+          "finalizedAt": {
+            "anyOf": [{"type": "integer"}, {"type": "null"}],
+            "title": "Finalizedat"
+          },
+          "finalizedTxHash": {
+            "anyOf": [{"type": "string"}, {"type": "null"}],
+            "title": "Finalizedtxhash"
+          },
+          "providerSpecifics": {
+            "anyOf": [
+              {"additionalProperties": true, "type": "object"},
+              {"type": "null"}
+            ],
+            "title": "Providerspecifics"
+          },
+          "feeGroupId": {
+            "anyOf": [{"type": "integer"}, {"type": "null"}],
+            "title": "Feegroupid"
+          },
+          "feeGroupInfo": {
+            "anyOf": [
+              {"$ref": "#/components/schemas/FeeGroupInfo"},
+              {"type": "null"}
+            ]
+          },
+          "marketOrder": {"type": "boolean", "title": "Marketorder"},
+          "limitOrder": {"type": "boolean", "title": "Limitorder"},
+          "paidBatcherFee": {
+            "anyOf": [{"type": "integer"}, {"type": "null"}],
+            "title": "Paidbatcherfee"
+          },
+          "batching_info": {
+            "anyOf": [
+              {"$ref": "#/components/schemas/BatchingInfo"},
+              {"type": "null"}
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "dex",
+          "fromToken",
+          "toToken",
+          "fromAmount",
+          "toAmount",
+          "paidAmount",
+          "receivedAmount",
+          "batcherFee",
+          "attachedValues",
+          "sender",
+          "beneficiary",
+          "txHash",
+          "outputIdx",
+          "deposit",
+          "status",
+          "placedAt",
+          "marketOrder",
+          "limitOrder"
+        ],
+        "title": "OrderModel"
+      },
+      "OrderQuoteRequest": {
+        "properties": {
+          "buy_token": {"type": "string", "title": "Buy Token"},
+          "sell_token": {"type": "string", "title": "Sell Token"},
+          "buy_amount": {
+            "anyOf": [{"type": "string"}, {"type": "null"}],
+            "title": "Buy Amount"
+          },
+          "sell_amount": {
+            "anyOf": [{"type": "string"}, {"type": "null"}],
+            "title": "Sell Amount"
+          },
+          "slippage": {"type": "number", "title": "Slippage", "default": 0},
+          "excluded_sources": {
+            "anyOf": [
+              {"items": {"type": "string"}, "type": "array"},
+              {"type": "null"}
+            ],
+            "title": "Excluded Sources",
+            "description": "List of 'frontend options' to exclude from selection. These can be obtained from the /providers endpoint."
+          },
+          "partner": {"type": "string", "title": "Partner", "default": ""},
+          "numbers_have_decimals": {
+            "type": "boolean",
+            "title": "Numbers Have Decimals",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": ["buy_token", "sell_token"],
+        "title": "OrderQuoteRequest"
+      },
+      "OrderRequest": {
+        "properties": {
+          "buy_token": {"type": "string", "title": "Buy Token"},
+          "sell_token": {"type": "string", "title": "Sell Token"},
+          "buy_amount": {
+            "anyOf": [{"type": "string"}, {"type": "null"}],
+            "title": "Buy Amount"
+          },
+          "sell_amount": {
+            "anyOf": [{"type": "string"}, {"type": "null"}],
+            "title": "Sell Amount"
+          },
+          "slippage": {"type": "number", "title": "Slippage", "default": 0},
+          "excluded_sources": {
+            "anyOf": [
+              {"items": {"type": "string"}, "type": "array"},
+              {"type": "null"}
+            ],
+            "title": "Excluded Sources",
+            "description": "List of 'frontend options' to exclude from selection. These can be obtained from the /providers endpoint."
+          },
+          "partner": {"type": "string", "title": "Partner", "default": ""},
+          "numbers_have_decimals": {
+            "type": "boolean",
+            "title": "Numbers Have Decimals",
+            "default": false
+          },
+          "user_address": {"type": "string", "title": "User Address"},
+          "multi_address": {
+            "type": "boolean",
+            "title": "Multi Address",
+            "default": false
+          },
+          "utxos": {
+            "anyOf": [
+              {"items": {"type": "string"}, "type": "array"},
+              {"type": "null"}
+            ],
+            "title": "Utxos",
+            "description": "Only supported in request body."
+          }
+        },
+        "type": "object",
+        "required": ["buy_token", "sell_token", "user_address"],
+        "title": "OrderRequest"
+      },
+      "OrderResponse": {
+        "properties": {
+          "quote": {
+            "anyOf": [
+              {"$ref": "#/components/schemas/BuyQuoteResponse"},
+              {"$ref": "#/components/schemas/SellQuoteResponse"},
+              {"$ref": "#/components/schemas/LimitOrderQuoteResponse"}
+            ],
+            "title": "Quote"
+          },
+          "tx_cbor": {"type": "string", "title": "Tx Cbor"}
+        },
+        "type": "object",
+        "required": ["quote", "tx_cbor"],
+        "title": "OrderResponse"
+      },
+      "PoolResponse": {
+        "properties": {
+          "pools": {
+            "items": {"$ref": "#/components/schemas/PoolResponseModel"},
+            "type": "array",
+            "title": "Pools"
+          },
+          "data_freshness": {"$ref": "#/components/schemas/DataFreshness"}
+        },
+        "type": "object",
+        "required": ["pools", "data_freshness"],
+        "title": "PoolResponse"
+      },
+      "PoolResponseModel": {
+        "properties": {
+          "pool_id": {"type": "string", "title": "Pool Id"},
+          "token_a": {"type": "string", "title": "Token A"},
+          "token_b": {"type": "string", "title": "Token B"},
+          "token_a_liquidity": {
+            "type": "integer",
+            "title": "Token A Liquidity"
+          },
+          "token_b_liquidity": {
+            "type": "integer",
+            "title": "Token B Liquidity"
+          },
+          "pool_fee": {"type": "number", "title": "Pool Fee"},
+          "provider": {"type": "string", "title": "Provider"},
+          "utxo": {"type": "string", "title": "Utxo"},
+          "price": {
+            "additionalProperties": {"type": "number"},
+            "type": "object",
+            "title": "Price"
+          },
+          "tvl": {
+            "additionalProperties": {"type": "integer"},
+            "type": "object",
+            "title": "Tvl"
+          },
+          "batcher_address": {
+            "anyOf": [{"type": "string"}, {"type": "null"}],
+            "title": "Batcher Address"
+          },
+          "price_a": {
+            "anyOf": [{"type": "number"}, {"type": "null"}],
+            "title": "Price A"
+          },
+          "price_b": {
+            "anyOf": [{"type": "number"}, {"type": "null"}],
+            "title": "Price B"
+          }
+        },
+        "type": "object",
+        "required": [
+          "pool_id",
+          "token_a",
+          "token_b",
+          "token_a_liquidity",
+          "token_b_liquidity",
+          "pool_fee",
+          "provider",
+          "utxo",
+          "price",
+          "tvl"
+        ],
+        "title": "PoolResponseModel"
+      },
+      "ProviderInfoResponse": {
+        "properties": {
+          "dex_info": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/DexInfoResponse"
+            },
+            "type": "object",
+            "title": "DEX Info Mapping",
+            "description": "Mapping from DEX identifier to detailed DEX information."
+          },
+          "route_info": {
+            "additionalProperties": {"$ref": "#/components/schemas/RouteInfo"},
+            "type": "object",
+            "title": "Route Info Mapping",
+            "description": "Mapping from route identifier to route information."
+          },
+          "order_contract_info": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/OrderContractInfo"
+            },
+            "type": "object",
+            "title": "Order Contract Info Mapping",
+            "description": "Mapping from order contract identifier to order contract details."
+          },
+          "liquidity_source_info": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/LiquiditySourceInfo"
+            },
+            "type": "object",
+            "title": "Liquidity Source Info Mapping",
+            "description": "Mapping from liquidity source identifier to detailed source information."
+          }
+        },
+        "type": "object",
+        "required": [
+          "dex_info",
+          "route_info",
+          "order_contract_info",
+          "liquidity_source_info"
+        ],
+        "title": "ProviderInfoResponse",
+        "examples": [
+          {
+            "dex_info": {
+              "muesliswap": {
+                "image": "image_url",
+                "liquidity_protocols": [
+                  "muesliswap-orderbook",
+                  "muesliswap-v2",
+                  "muesliswap-clp"
+                ],
+                "name": "MuesliSwap",
+                "order_protocols": ["muesliswap-v1"],
+                "routes": ["muesliswap", "muesliswap-multihop"]
+              }
+            },
+            "liquidity_source_info": {
+              "muesliswap-v1": {"frontend_option": "muesliswap-amm"}
+            },
+            "order_contract_info": {
+              "muesliswap-v1": {
+                "cancellation_mem": 1600000,
+                "cancellation_steps": 500000000,
+                "is_orderbook": true,
+                "requires_pool_id": false
+              }
+            },
+            "route_info": {
+              "muesliswap": {"batcher_fee": 950000, "deposit": 2000000},
+              "muesliswap-multihop": {"batcher_fee": 950000, "deposit": 2000000}
+            }
+          }
+        ]
+      },
+      "RouteInfo": {
+        "properties": {
+          "batcher_fee": {"type": "integer", "title": "Batcher Fee"},
+          "deposit": {"type": "integer", "title": "Deposit"}
+        },
+        "type": "object",
+        "required": ["batcher_fee", "deposit"],
+        "title": "RouteInfo"
+      },
+      "SellOrderSplit": {
+        "properties": {
+          "amount_in": {
+            "anyOf": [{"type": "integer"}, {"type": "string"}],
+            "title": "Amount In"
+          },
+          "total_lvl_attached": {
+            "anyOf": [{"type": "integer"}, {"type": "string"}],
+            "title": "Total Lvl Attached"
+          },
+          "deposit": {
+            "anyOf": [{"type": "integer"}, {"type": "string"}],
+            "title": "Deposit"
+          },
+          "batcher_fee": {
+            "anyOf": [{"type": "integer"}, {"type": "string"}],
+            "title": "Batcher Fee"
+          },
+          "expected_output": {
+            "anyOf": [{"type": "integer"}, {"type": "string"}],
+            "title": "Expected Output"
+          },
+          "source_id": {
+            "anyOf": [
+              {"type": "string"},
+              {"items": {"type": "string"}, "type": "array"}
+            ],
+            "title": "Source Id"
+          },
+          "initial_price": {"type": "number", "title": "Initial Price"},
+          "final_price": {"type": "number", "title": "Final Price"},
+          "price_impact": {"type": "number", "title": "Price Impact"},
+          "price_distortion": {
+            "anyOf": [{"type": "number"}, {"type": "null"}],
+            "title": "Price Distortion"
+          },
+          "dex": {"type": "string", "title": "Dex"},
+          "route": {"type": "string", "title": "Route"},
+          "liquidity_protocol": {
+            "items": {"type": "string"},
+            "type": "array",
+            "title": "Liquidity Protocol"
+          },
+          "utxo": {
+            "items": {"type": "string"},
+            "type": "array",
+            "title": "Utxo"
+          },
+          "pool_fee": {
+            "anyOf": [
+              {"type": "number"},
+              {"items": {"type": "number"}, "type": "array"},
+              {"type": "null"}
+            ],
+            "title": "Pool Fee"
+          },
+          "intermediate_token": {
+            "anyOf": [{"type": "string"}, {"type": "null"}],
+            "title": "Intermediate Token"
+          },
+          "expected_output_without_slippage": {
+            "anyOf": [{"type": "integer"}, {"type": "string"}],
+            "title": "Expected Output Without Slippage"
+          }
+        },
+        "type": "object",
+        "required": [
+          "amount_in",
+          "total_lvl_attached",
+          "deposit",
+          "batcher_fee",
+          "expected_output",
+          "source_id",
+          "initial_price",
+          "final_price",
+          "price_impact",
+          "price_distortion",
+          "dex",
+          "route",
+          "liquidity_protocol",
+          "utxo",
+          "pool_fee",
+          "expected_output_without_slippage"
+        ],
+        "title": "SellOrderSplit"
+      },
+      "SellQuoteResponse": {
+        "properties": {
+          "total_lvl_attached": {
+            "anyOf": [{"type": "integer"}, {"type": "string"}],
+            "title": "Total Lvl Attached"
+          },
+          "total_deposit": {
+            "anyOf": [{"type": "integer"}, {"type": "string"}],
+            "title": "Total Deposit"
+          },
+          "total_batcher_fee": {
+            "anyOf": [{"type": "integer"}, {"type": "string"}],
+            "title": "Total Batcher Fee"
+          },
+          "total_output": {
+            "anyOf": [{"type": "integer"}, {"type": "string"}],
+            "title": "Total Output"
+          },
+          "total_input": {
+            "anyOf": [{"type": "integer"}, {"type": "string"}],
+            "title": "Total Input"
+          },
+          "buy_token_decimals": {
+            "anyOf": [{"type": "integer"}, {"type": "null"}],
+            "title": "Buy Token Decimals"
+          },
+          "sell_token_decimals": {
+            "anyOf": [{"type": "integer"}, {"type": "null"}],
+            "title": "Sell Token Decimals"
+          },
+          "net_price": {"type": "number", "title": "Net Price"},
+          "net_price_impact": {"type": "number", "title": "Net Price Impact"},
+          "net_price_distortion": {
+            "anyOf": [{"type": "number"}, {"type": "null"}],
+            "title": "Net Price Distortion"
+          },
+          "service_fee": {
+            "anyOf": [{"type": "integer"}, {"type": "string"}],
+            "title": "Service Fee"
+          },
+          "numbers_have_decimals": {
+            "type": "boolean",
+            "title": "Numbers Have Decimals"
+          },
+          "data_freshness": {"$ref": "#/components/schemas/DataFreshness"},
+          "total_output_without_slippage": {
+            "anyOf": [{"type": "integer"}, {"type": "string"}],
+            "title": "Total Output Without Slippage"
+          },
+          "splits": {
+            "items": {"$ref": "#/components/schemas/SellOrderSplit"},
+            "type": "array",
+            "title": "Splits"
+          }
+        },
+        "type": "object",
+        "required": [
+          "total_lvl_attached",
+          "total_deposit",
+          "total_batcher_fee",
+          "total_output",
+          "total_input",
+          "buy_token_decimals",
+          "sell_token_decimals",
+          "net_price",
+          "net_price_impact",
+          "net_price_distortion",
+          "service_fee",
+          "numbers_have_decimals",
+          "data_freshness",
+          "total_output_without_slippage",
+          "splits"
+        ],
+        "title": "SellQuoteResponse"
+      },
+      "SignedTxCBORResponse": {
+        "properties": {"tx_cbor": {"type": "string", "title": "Tx Cbor"}},
+        "type": "object",
+        "required": ["tx_cbor"],
+        "title": "SignedTxCBORResponse"
+      },
+      "TokenAddress": {
+        "properties": {
+          "name": {"type": "string", "title": "Name"},
+          "policyId": {"type": "string", "title": "Policyid"}
+        },
+        "type": "object",
+        "required": ["name", "policyId"],
+        "title": "TokenAddress"
+      },
+      "TokenInfo": {
+        "properties": {
+          "ticker": {
+            "anyOf": [{"type": "string"}, {"type": "null"}],
+            "title": "Ticker"
+          },
+          "name": {
+            "anyOf": [{"type": "string"}, {"type": "null"}],
+            "title": "Name"
+          },
+          "policyId": {"type": "string", "title": "Policyid"},
+          "hexName": {"type": "string", "title": "Hexname"},
+          "decimals": {
+            "anyOf": [{"type": "integer"}, {"type": "null"}],
+            "title": "Decimals"
+          },
+          "verified": {"type": "boolean", "title": "Verified"}
+        },
+        "type": "object",
+        "required": [
+          "ticker",
+          "name",
+          "policyId",
+          "hexName",
+          "decimals",
+          "verified"
+        ],
+        "title": "TokenInfo"
+      },
+      "TokenModel": {
+        "properties": {
+          "address": {"$ref": "#/components/schemas/TokenAddress"},
+          "symbol": {"type": "string", "title": "Symbol"},
+          "sign": {"type": "string", "title": "Sign"},
+          "image": {"type": "string", "title": "Image"},
+          "decimalPlaces": {"type": "integer", "title": "Decimalplaces"}
+        },
+        "type": "object",
+        "required": ["address", "symbol", "sign", "image", "decimalPlaces"],
+        "title": "TokenModel"
+      },
+      "TxCBORResponse": {
+        "properties": {
+          "tx_cbor": {"type": "string", "title": "Tx Cbor"},
+          "data_freshness": {"$ref": "#/components/schemas/DataFreshness"}
+        },
+        "type": "object",
+        "required": ["tx_cbor", "data_freshness"],
+        "title": "TxCBORResponse"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]},
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {"type": "string", "title": "Message"},
+          "type": {"type": "string", "title": "Error Type"}
+        },
+        "type": "object",
+        "required": ["loc", "msg", "type"],
+        "title": "ValidationError"
+      }
+    }
+  }
+}
