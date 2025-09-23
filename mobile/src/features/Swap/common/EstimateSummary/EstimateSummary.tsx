@@ -34,6 +34,11 @@ export const EstimateSummary = () => {
   const tokenOutTicker = tokenOutInfo?.ticker ?? tokenOutInfo?.name ?? '-'
 
   const protocol = swapForm.estimate?.splits[0]?.protocol
+  const fallbackImageUrl = swapForm.estimate?.splits[0]?.aggregatorImageUrl
+  const nameOverride =
+    protocol === Swap.Protocol.Unsupported
+      ? swapForm.estimate?.splits[0]?.aggregatorDexKey
+      : undefined
 
   if (swapForm.estimate === undefined) return null
 
@@ -59,6 +64,8 @@ export const EstimateSummary = () => {
             <View style={[a.flex_row, a.align_center, a.gap_xs]}>
               <ProtocolAvatar
                 protocol={protocol}
+                nameOverride={nameOverride}
+                fallbackImageUrl={fallbackImageUrl}
                 onPress={
                   swapForm.orderType === 'limit'
                     ? navigateTo.selectProtocol
@@ -197,7 +204,16 @@ export const Splits = ({data}: {data: Swap.Split[]}) => {
               a.justify_between,
             ]}
           >
-            <ProtocolAvatar protocol={split.protocol} preventOpenLink />
+            <ProtocolAvatar
+              protocol={split.protocol}
+              fallbackImageUrl={split.aggregatorImageUrl}
+              nameOverride={
+                split.protocol === Swap.Protocol.Unsupported
+                  ? split.aggregatorDexKey
+                  : undefined
+              }
+              preventOpenLink
+            />
 
             <Text style={[a.body_1_lg_regular, {color: p.el_gray_min}]}>
               {(

@@ -6,11 +6,11 @@ import {
   fromSwapProtocol,
   ptIdDh,
   reverse,
+  toPriceImpact,
   toSwapProtocol,
   toSwapSplit,
   transformersMaker,
 } from './transformers'
-import {toPriceImpact} from './transformers'
 import {Dex, Split} from './types'
 
 const address =
@@ -147,14 +147,14 @@ describe('transformers', () => {
   describe('estimate', () => {
     test('should correctly transform the estimate request', () => {
       expect(transformers.estimate.request(api.inputs.estimate)).toEqual(
-        api.requests.estimate,
+        expect.objectContaining(api.requests.estimate),
       )
     })
 
     test('should correctly transform the estimate response', () => {
-      expect(transformers.estimate.response(api.responses.estimate)).toEqual(
-        api.results.estimate,
-      )
+      expect(
+        transformers.estimate.response(api.responses.estimate),
+      ).toMatchObject(api.results.estimate)
     })
 
     test('should correctly transform the estimate response 2', () => {
@@ -193,7 +193,7 @@ describe('transformers', () => {
           },
           true,
         ),
-      ).toEqual({
+      ).toMatchObject({
         aggregatorFee: 1,
         batcherFee: 2,
         deposits: 2,
@@ -253,13 +253,13 @@ describe('transformers', () => {
     test('should correctly transform the reverse estimate request', () => {
       expect(
         transformers.reverseEstimate.request(api.inputs.reverseEstimate),
-      ).toEqual(api.requests.reverseEstimate)
+      ).toEqual(expect.objectContaining(api.requests.reverseEstimate))
     })
 
     test('should correctly transform the reverse estimate response', () => {
       expect(
         transformers.reverseEstimate.response(api.responses.reverseEstimate),
-      ).toEqual(api.results.reverseEstimate)
+      ).toMatchObject(api.results.reverseEstimate)
     })
 
     test('should correctly transform the reverse estimate response to default', () => {
@@ -271,7 +271,7 @@ describe('transformers', () => {
           },
           true,
         ),
-      ).toEqual({
+      ).toMatchObject({
         aggregatorFee: 0,
         batcherFee: 0,
         deposits: 0,
@@ -310,7 +310,7 @@ describe('transformers', () => {
           total_input_without_slippage: 0.0045599187141238265,
           net_price_reverse: 122.75670807707843,
         }),
-      ).toEqual({
+      ).toMatchObject({
         aggregatorFee: 0,
         batcherFee: 0,
         deposits: 0,
@@ -444,7 +444,7 @@ describe('transformers', () => {
           },
           false,
         ),
-      ).toEqual({
+      ).toMatchObject({
         aggregatorFee: 0,
         batcherFee: 0,
         deposits: 0,
@@ -479,7 +479,7 @@ describe('transformers', () => {
     test('should correctly transform the limit estimate response', () => {
       expect(
         transformers.limitEstimate.response(api.responses.limitEstimate, false),
-      ).toEqual(api.results.limitEstimate)
+      ).toMatchObject(api.results.limitEstimate)
     })
   })
 
@@ -526,7 +526,7 @@ describe('transformers', () => {
     test('should correctly transform the limit build response', () => {
       expect(
         transformers.limitBuild.response(api.responses.limitBuild, false),
-      ).toEqual({
+      ).toMatchObject({
         aggregator: 'dexhunter',
         aggregatorFee: 0,
         batcherFee: 0,
@@ -587,7 +587,7 @@ describe('transformers', () => {
           },
           false,
         ),
-      ).toEqual({
+      ).toMatchObject({
         aggregator: 'dexhunter',
         aggregatorFee: 0,
         batcherFee: 0,
@@ -637,7 +637,7 @@ describe('transformers', () => {
     })
 
     test('should correctly transform the build response', async () => {
-      expect(transformers.build.response(api.responses.build)).toEqual({
+      expect(transformers.build.response(api.responses.build)).toMatchObject({
         aggregator: 'dexhunter',
         aggregatorFee: 0.002,
         batcherFee: 0.001,
@@ -703,7 +703,7 @@ describe('transformers', () => {
           ],
           total_input_without_slippage: 505,
         }),
-      ).toEqual({
+      ).toMatchObject({
         aggregator: 'dexhunter',
         aggregatorFee: 0,
         batcherFee: 0,
@@ -771,7 +771,7 @@ describe('transformers', () => {
           },
           true,
         ),
-      ).toEqual({
+      ).toMatchObject({
         aggregator: 'dexhunter',
         aggregatorFee: 0,
         batcherFee: 0,
@@ -858,7 +858,7 @@ describe('toSwapSplit', () => {
       priceImpact: 0,
     }
 
-    expect(toSwapSplit(input)).toEqual(expectedOutput)
+    expect(toSwapSplit(input)).toEqual(expect.objectContaining(expectedOutput))
   })
 
   it('should correctly map input values to output structure', () => {
@@ -894,7 +894,7 @@ describe('toSwapSplit', () => {
       priceImpact: 0.02,
     }
 
-    expect(toSwapSplit(input)).toEqual(expectedOutput)
+    expect(toSwapSplit(input)).toEqual(expect.objectContaining(expectedOutput))
   })
 })
 

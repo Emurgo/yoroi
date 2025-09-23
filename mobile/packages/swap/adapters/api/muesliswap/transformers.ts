@@ -22,7 +22,17 @@ export const transformersMaker = ({
   address,
   partner,
 }: MuesliswapApiConfig) => {
+  // cache for providers payload to enrich splits with image URLs
+  let providersCache: any | null = null
+  const getProviderImage = (dex: string): string | undefined => {
+    const dexInfo = providersCache?.dex_info?.[dex]
+    return typeof dexInfo?.image === 'string' ? dexInfo.image : undefined
+  }
   return {
+    // allow api-maker to inject providers payload
+    __setProviders: (payload: any) => {
+      providersCache = payload
+    },
     tokens: {
       response: (res: TokensResponse): Array<Portfolio.Token.Info> =>
         res
@@ -111,7 +121,8 @@ export const transformersMaker = ({
         protocol,
         tokenIn,
         tokenOut,
-      }: Swap.EstimateRequest): LimitQuoteRequest => ({
+        routeHint,
+      }: Swap.EstimateRequest & {routeHint?: any}): LimitQuoteRequest => ({
         numbers_have_decimals: true,
         sell_token: tokenIn,
         buy_token: tokenOut,
@@ -120,6 +131,7 @@ export const transformersMaker = ({
 
         buy_amount: String(amountIn * wantedPrice),
         order_contract: protocol ? fromSwapProtocol(protocol) : undefined,
+        pool_id: routeHint?.poolIds?.[0] ?? undefined,
       }),
     },
 
@@ -132,22 +144,59 @@ export const transformersMaker = ({
         amountIn,
         amountOut,
         slippage,
-      }: Swap.EstimateRequest): QuoteRequest => ({
-        numbers_have_decimals: true,
-        sell_token: tokenIn,
-        buy_token: tokenOut,
-        ...(amountOut !== undefined && {buy_amount: String(amountOut)}),
-        ...(amountIn !== undefined && {sell_amount: String(amountIn)}),
-        ...(partner !== undefined && {partner}),
-        // muesli expects slippage as a percentage
-        slippage: slippage / 100,
-        excluded_sources: protocol
-          ? Object.values(Dex).filter(
-              (dex) =>
-                dex !== Dex.Unsupported && dex !== fromSwapProtocol(protocol),
+      }: Swap.EstimateRequest & {
+        routeHint?: {frontendOptions?: string[]}
+      }): QuoteRequest => {
+        // compute excluded_sources from Frontend Options when protocol is pinned and providers are available
+        let excluded_sources: ReadonlyArray<Dex> | Dex | undefined
+        if (
+          protocol !== undefined &&
+          providersCache?.dex_info &&
+          providersCache?.liquidity_source_info
+        ) {
+          const orderContract = fromSwapProtocol(protocol)
+          // find dex_info entry by matching key or scanning values
+          const dexEntry = providersCache.dex_info[orderContract]
+          if (dexEntry && Array.isArray(dexEntry.liquidity_protocols)) {
+            const allowedFO = dexEntry.liquidity_protocols
+              .map(
+                (lp: string) =>
+                  providersCache.liquidity_source_info?.[lp]?.frontend_option,
+              )
+              .filter((v: any) => typeof v === 'string')
+            const allFO = Object.values(
+              providersCache.liquidity_source_info ?? {},
             )
-          : (blockedProtocols?.map(fromSwapProtocol) ?? []),
-      }),
+              .map((v: any) => v?.frontend_option)
+              .filter((v: any) => typeof v === 'string')
+            const excludedFO = allFO.filter(
+              (fo: string) => !allowedFO.includes(fo),
+            )
+            excluded_sources = excludedFO as any
+          }
+        }
+
+        if (excluded_sources === undefined) {
+          excluded_sources = protocol
+            ? Object.values(Dex).filter(
+                (dex) =>
+                  dex !== Dex.Unsupported && dex !== fromSwapProtocol(protocol),
+              )
+            : (blockedProtocols?.map(fromSwapProtocol) ?? [])
+        }
+
+        return {
+          numbers_have_decimals: true,
+          sell_token: tokenIn,
+          buy_token: tokenOut,
+          ...(amountOut !== undefined && {buy_amount: String(amountOut)}),
+          ...(amountIn !== undefined && {sell_amount: String(amountIn)}),
+          ...(partner !== undefined && {partner}),
+          // muesli expects slippage as a percentage
+          slippage: slippage / 100,
+          excluded_sources,
+        }
+      },
       response: ({
         buy_token_decimals,
         sell_token_decimals,
@@ -178,7 +227,11 @@ export const transformersMaker = ({
           total_output_without_slippage === undefined
             ? undefined
             : Number(total_output_without_slippage),
-        splits: splits.map(toSwapSplit),
+        splits: splits.map((sp) => {
+          const s = toSwapSplit(sp)
+          const image = getProviderImage(sp.dex)
+          return image ? {...s, aggregatorImageUrl: image} : s
+        }),
       }),
     },
 
@@ -239,7 +292,11 @@ export const transformersMaker = ({
         totalInput: Number(total_input),
         totalOutput: Number(total_output),
         totalOutputWithoutSlippage: Number(total_output_without_slippage),
-        splits: splits.map(toSwapSplit),
+        splits: splits.map((sp) => {
+          const s = toSwapSplit(sp)
+          const image = getProviderImage(sp.dex)
+          return image ? {...s, aggregatorImageUrl: image} : s
+        }),
       }),
     },
 
@@ -252,6 +309,7 @@ export const transformersMaker = ({
         tokenOut,
         amountIn,
         inputs,
+        routeHint,
       }: Swap.CreateRequest): LimitOrderRequest => ({
         order_contract: fromSwapProtocol(protocol),
         buy_amount: String(amountIn * wantedPrice),
@@ -263,6 +321,7 @@ export const transformersMaker = ({
         sell_amount: String(amountIn),
         user_address: address,
         utxos: inputs,
+        pool_id: routeHint?.poolIds?.[0] ?? undefined,
       }),
       response: ({
         quote: {
@@ -297,12 +356,17 @@ export const transformersMaker = ({
         totalInput: Number(total_input),
         totalOutput: Number(total_output),
         totalOutputWithoutSlippage: Number(total_output_without_slippage),
-        splits: splits.map(toSwapSplit),
+        splits: splits.map((sp) => {
+          const s = toSwapSplit(sp)
+          const image = getProviderImage(sp.dex)
+          return image ? {...s, aggregatorImageUrl: image} : s
+        }),
       }),
     },
   } as const
 }
 
+// Note: getProviderImage is closed over from transformersMaker scope
 const toSwapSplit = ({
   amount_in,
   batcher_fee,
@@ -334,6 +398,9 @@ const toSwapSplit = ({
   ),
 
   protocol: toSwapProtocol(dex),
+  aggregator: Swap.Aggregator.Muesliswap,
+  aggregatorDexKey: dex,
+  aggregatorPoolId: source_id,
 })
 
 export const toSwapProtocol = (dex: Dex): Swap.Protocol =>

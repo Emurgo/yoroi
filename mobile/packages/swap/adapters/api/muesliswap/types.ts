@@ -131,6 +131,8 @@ export type LimitOrderRequest = {
   user_address: string
   // Changed from dex to order_contract
   order_contract?: Dex
+  // Optional pool selection for limit orders
+  pool_id?: string | null
   partner?: string
   numbers_have_decimals?: boolean
   utxos?: string[]
@@ -169,6 +171,7 @@ export type LimitQuoteRequest = {
   sell_amount: string
   // Changed from dex to order_contract
   order_contract?: Dex
+  pool_id?: string | null
   partner?: string
   numbers_have_decimals?: boolean
 }

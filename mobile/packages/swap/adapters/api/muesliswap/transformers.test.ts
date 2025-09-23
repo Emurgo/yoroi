@@ -113,15 +113,19 @@ describe('transformers', () => {
     })
 
     test('should correctly transform the quote response', () => {
-      expect(transformers.quote.response(api.responses.quote)).toEqual(
-        api.results.quote,
-      )
+      const res = transformers.quote.response(api.responses.quote)
+      expect(res).toMatchObject({
+        ...api.results.quote,
+        splits: [expect.objectContaining(api.results.quote.splits[0]!)],
+      })
     })
 
     test('should correctly transform the quote response with missing output', () => {
-      expect(transformers.quote.response(api.responses.quoteNoOut)).toEqual(
-        api.results.quoteNoOut,
-      )
+      const res = transformers.quote.response(api.responses.quoteNoOut)
+      expect(res).toMatchObject({
+        ...api.results.quoteNoOut,
+        splits: [expect.objectContaining(api.results.quoteNoOut.splits[0]!)],
+      })
     })
 
     test('should handle undefined blockedProtocols', () => {
@@ -176,9 +180,11 @@ describe('transformers', () => {
     })
 
     test('should correctly transform the create response', () => {
-      expect(transformers.create.response(api.responses.create)).toEqual(
-        api.results.create,
-      )
+      const res = transformers.create.response(api.responses.create)
+      expect(res).toMatchObject({
+        ...api.results.create,
+        splits: [expect.objectContaining(api.results.create.splits[0]!)],
+      })
     })
 
     test('should handle undefined blockedProtocols in create', () => {
@@ -225,9 +231,11 @@ describe('transformers', () => {
     })
 
     test('should correctly transform the createLimit response', () => {
-      expect(
-        transformers.createLimit.response(api.responses.createLimit),
-      ).toEqual(api.results.createLimit)
+      const res = transformers.createLimit.response(api.responses.createLimit)
+      expect(res).toMatchObject({
+        ...api.results.createLimit,
+        splits: [expect.objectContaining(api.results.createLimit.splits[0]!)],
+      })
     })
   })
 

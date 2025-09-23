@@ -138,6 +138,9 @@ export const transformersMaker = (config: MinswapApiConfig) => {
             poolId: firstHop.pool_id,
             priceDistortion: 0,
             priceImpact,
+            aggregator: Swap.Aggregator.Minswap,
+            aggregatorDexKey: firstHop.protocol,
+            aggregatorPoolId: firstHop.pool_id,
           },
           true,
         )
@@ -225,6 +228,7 @@ export const transformersMaker = (config: MinswapApiConfig) => {
           slippage,
           tokenIn,
           tokenOut,
+          protocol,
         }: Swap.EstimateRequest): EstimateRequest => {
           const request: EstimateRequest = {
             token_in: toTokenId(tokenIn),
@@ -234,6 +238,8 @@ export const transformersMaker = (config: MinswapApiConfig) => {
             exclude_protocols: blockedProtocols?.map((p) =>
               mapProtocolToDex(p),
             ),
+            include_protocols:
+              protocol !== undefined ? [mapProtocolToDex(protocol)] : undefined,
             amount_in_decimal: true, // Tell API that amounts are in decimal format
             ...(partner !== undefined && {partner}),
           }
@@ -273,6 +279,7 @@ export const transformersMaker = (config: MinswapApiConfig) => {
           slippage,
           tokenIn,
           tokenOut,
+          protocol,
         }: Swap.CreateRequest): CreateRequest => {
           const request = {
             sender: address,
@@ -285,6 +292,10 @@ export const transformersMaker = (config: MinswapApiConfig) => {
               exclude_protocols: blockedProtocols?.map((p) =>
                 mapProtocolToDex(p),
               ),
+              include_protocols:
+                protocol !== undefined
+                  ? [mapProtocolToDex(protocol)]
+                  : undefined,
               ...(partner !== undefined && {partner}),
             },
             amount_in_decimal: true, // Also set at the top level for build-tx

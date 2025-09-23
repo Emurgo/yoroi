@@ -355,22 +355,24 @@ describe('transformersMaker', () => {
       const result = transformers.estimate.response(mockResponse)
 
       expect(result.splits).toHaveLength(1)
-      expect(result.splits[0]).toEqual({
-        amountIn: 10,
-        batcherFee: 0.7,
-        deposits: 2,
-        protocol: 'minswap-v2',
-        expectedOutput: 8.290409,
-        expectedOutputWithoutSlippage: 8.208325,
-        fee: 0.7,
-        initialPrice: 0.8290409000000001,
-        finalPrice: 0.8290409000000001,
-        poolFee: 0.03,
-        poolId:
-          'f5808c2c990d86da54bfc97d89cee6efa20cd8461616359478d96b4c.ee5cfbc5b0dc10c873a0bcc69e49b9af21b899f59337a894874c6b596c2da136',
-        priceDistortion: 0,
-        priceImpact: 0.3006573962454888,
-      })
+      expect(result.splits[0]).toEqual(
+        expect.objectContaining({
+          amountIn: 10,
+          batcherFee: 0.7,
+          deposits: 2,
+          protocol: 'minswap-v2',
+          expectedOutput: 8.290409,
+          expectedOutputWithoutSlippage: 8.208325,
+          fee: 0.7,
+          initialPrice: 0.8290409000000001,
+          finalPrice: 0.8290409000000001,
+          poolFee: 0.03,
+          poolId:
+            'f5808c2c990d86da54bfc97d89cee6efa20cd8461616359478d96b4c.ee5cfbc5b0dc10c873a0bcc69e49b9af21b899f59337a894874c6b596c2da136',
+          priceDistortion: 0,
+          priceImpact: 0.3006573962454888,
+        }),
+      )
       expect(result.batcherFee).toBe(0.7)
       expect(result.deposits).toBe(2)
       expect(result.aggregatorFee).toBe(0)

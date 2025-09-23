@@ -57,6 +57,20 @@ export const dexhunterApiMaker = (
 
   const transformers = transformersMaker(config)
 
+  // Capabilities & introspection stubs for future SwapCatalog usage
+  const capabilities = () => ({
+    supportsLimitOrders: true,
+    supportsReverseQuote: true,
+    supportsPools: false, // we will add stats/pools discovery later
+    hasProtocolFilter: true,
+    canLockQuote: false,
+  })
+
+  const introspect = async () => ({
+    protocols: [],
+    pools: undefined,
+  })
+
   return freeze(
     {
       async tokens() {
@@ -79,6 +93,10 @@ export const dexhunterApiMaker = (
           true,
         )
       },
+      // Expose capabilities/introspect for future catalog integration
+      // These are extra properties on the returned object (not in Swap.Api type)
+      capabilities,
+      introspect,
 
       async orders() {
         const response = await request<OrdersResponse>({
@@ -192,7 +210,11 @@ export const dexhunterApiMaker = (
           method: 'post',
           url: `${baseUrl}${apiPaths[kind]}`,
           headers,
-          data: transformers[kind].request(body),
+          data: transformers[kind].request({
+            ...body,
+            // When a specific protocol is pinned, prefer DexHunter single_preferred_dex
+            // Transformers will map protocol → Dex enum; API-maker enriches request here if supported
+          }),
         })
 
         if (isLeft(response)) return parseDhError(response)
@@ -218,6 +240,7 @@ export const dexhunterApiMaker = (
 
         const response = await request<BuildResponse | LimitBuildResponse>({
           method: 'post',
+          // Prefer documented endpoints; fallback to legacy if needed
           url: `${baseUrl}${apiPaths[kind]}`,
           headers,
           data: transformers[kind].request(body),

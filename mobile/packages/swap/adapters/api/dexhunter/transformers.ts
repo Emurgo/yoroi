@@ -52,6 +52,9 @@ export const toSwapSplit = ({
   poolId: pool_id,
   priceDistortion: price_distortion,
   priceImpact: price_impact,
+  aggregator: Swap.Aggregator.Dexhunter,
+  aggregatorDexKey: dex,
+  aggregatorPoolId: pool_id,
 })
 
 export const toPriceImpact = (splits: Array<Partial<Split>>): number => {
@@ -197,6 +200,7 @@ export const transformersMaker = ({
         slippage,
         tokenIn,
         tokenOut,
+        protocol,
       }: Swap.EstimateRequest): EstimateRequest => ({
         slippage,
         amount_in: amountIn,
@@ -204,6 +208,7 @@ export const transformersMaker = ({
         blacklisted_dexes: blockedProtocols
           ?.map(fromSwapProtocol)
           .filter(isDex),
+        single_preferred_dex: protocol ? fromSwapProtocol(protocol) : undefined,
         token_in: toTokenId(tokenIn),
         token_out: toTokenId(tokenOut),
       }),
@@ -250,6 +255,7 @@ export const transformersMaker = ({
         slippage,
         tokenIn,
         tokenOut,
+        protocol,
       }: Swap.EstimateRequest): ReverseEstimateRequest => ({
         slippage,
 
@@ -258,6 +264,7 @@ export const transformersMaker = ({
         blacklisted_dexes: blockedProtocols
           ?.map(fromSwapProtocol)
           .filter(isDex),
+        single_preferred_dex: protocol ? fromSwapProtocol(protocol) : undefined,
         token_in: toTokenId(tokenIn),
         token_out: toTokenId(tokenOut),
       }),

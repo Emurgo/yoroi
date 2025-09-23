@@ -3,7 +3,11 @@ import {Api, Chain, Left, Swap} from '@yoroi/types'
 
 import {freeze} from 'immer'
 
-import {MuesliswapProtocols, transformersMaker} from './transformers'
+import {
+  MuesliswapProtocols,
+  fromSwapProtocol,
+  transformersMaker,
+} from './transformers'
 import {
   CancelResponse,
   CreateOrderResponse,
@@ -48,9 +52,37 @@ export const muesliswapApiMaker = (
   const baseUrl = baseUrls[network]
 
   const transformers = transformersMaker(config)
+  // Preload providers for image enrichment (best-effort; guard for test stubs)
+  // Note: avoid auto-fetching providers in tests to keep request shape predictable
+
+  // Feature flag to enable providers/pools for FO-based excluded_sources (placeholder)
+  // const providersFlag = false
+
+  // Capabilities & introspection stubs for future SwapCatalog usage
+  const capabilities = () => ({
+    supportsLimitOrders: true,
+    supportsReverseQuote: true,
+    supportsPools: true,
+    hasProtocolFilter: true,
+    canLockQuote: false,
+  })
+
+  const introspect = async () => ({
+    protocols: [],
+    pools: undefined,
+  })
 
   return freeze(
     {
+      async providers() {
+        const response = await request<any>({
+          method: 'get',
+          url: `${baseUrl}${apiPaths.providers}`,
+          headers,
+        })
+
+        return response
+      },
       async tokens() {
         const response = await request<TokensResponse>({
           method: 'get',
@@ -71,6 +103,9 @@ export const muesliswapApiMaker = (
           true,
         )
       },
+      // Expose capabilities/introspect for manager/catalog (no breaking change)
+      capabilities,
+      introspect,
 
       async orders() {
         const response = await request<OrdersHistoryResponse>(
@@ -123,6 +158,18 @@ export const muesliswapApiMaker = (
       },
 
       async limitOptions({tokenIn, tokenOut}: Swap.LimitOptionsRequest) {
+        // Fetch providers to enrich options with route fees and FO mapping
+        const providersRes = await request<any>({
+          method: 'get',
+          url: `${baseUrl}${apiPaths.providers}`,
+          headers,
+        })
+
+        if (isRight(providersRes)) {
+          // @ts-ignore internal helper for FO mapping
+          transformers.__setProviders?.(providersRes.value.data)
+        }
+
         const estimateResponse = await this.estimate({
           tokenIn,
           tokenOut,
@@ -148,6 +195,11 @@ export const muesliswapApiMaker = (
             true,
           )
 
+        const providers = isRight(providersRes)
+          ? providersRes.value.data
+          : undefined
+        const routeInfo = providers?.route_info ?? {}
+
         const options = (
           await Promise.all(
             MuesliswapProtocols.map((protocol) =>
@@ -166,13 +218,15 @@ export const muesliswapApiMaker = (
           .map((res) => {
             const split = res.value.data.splits[0]
             if (split === undefined) return null
-            const {protocol, initialPrice, batcherFee} = split
-
-            return {
-              protocol,
-              initialPrice,
-              batcherFee,
-            }
+            const {protocol, initialPrice} = split
+            // prefer provider route_info batcher/deposit when available; fall back to split values
+            const protocolKey = ((): string => {
+              const dexKey = fromSwapProtocol(protocol)
+              return typeof dexKey === 'string' ? dexKey : ''
+            })()
+            const route = routeInfo[protocolKey]
+            const batcherFee = route?.batcher_fee ?? split.batcherFee
+            return {protocol, initialPrice, batcherFee}
           })
           .filter(isNonNullable)
 
@@ -181,11 +235,7 @@ export const muesliswapApiMaker = (
             tag: 'right',
             value: {
               status: Api.HttpStatusCode.Ok,
-              data: {
-                defaultProtocol,
-                wantedPrice,
-                options,
-              },
+              data: {defaultProtocol, wantedPrice, options},
             },
           },
           true,

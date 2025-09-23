@@ -1,4 +1,5 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {Swap} from '@yoroi/types'
 
 import _ from 'lodash'
 import * as React from 'react'
@@ -84,6 +85,11 @@ export const TransactionSummary = ({
   const minReceivedInfoValue = `${swapForm.createTx?.totalOutputWithoutSlippage} ${tokenOutTicker}`
 
   const protocol = swapForm.createTx?.splits[0]?.protocol
+  const fallbackImageUrl = swapForm.createTx?.splits[0]?.aggregatorImageUrl
+  const nameOverride =
+    protocol === Swap.Protocol.Unsupported
+      ? swapForm.createTx?.splits[0]?.aggregatorDexKey
+      : undefined
 
   const feesInfo = [
     {
@@ -92,6 +98,8 @@ export const TransactionSummary = ({
         protocol !== undefined ? (
           <ProtocolAvatar
             protocol={protocol}
+            fallbackImageUrl={fallbackImageUrl}
+            nameOverride={nameOverride}
             append={
               swapForm.createTx?.aggregator != null
                 ? ` ${strings.swap.via} ${_.upperFirst(swapForm.createTx.aggregator)}${

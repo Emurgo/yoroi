@@ -1,7 +1,7 @@
 import {isLeft, isRight} from '@yoroi/common'
 import {isPrimaryToken, primaryTokenId} from '@yoroi/portfolio'
 import {swapManagerMaker, swapStorageMaker} from '@yoroi/swap'
-import {Api, Balance, Portfolio, Swap} from '@yoroi/types'
+import {Api, Balance, Chain, Portfolio, Swap} from '@yoroi/types'
 
 import {useFocusEffect} from '@react-navigation/native'
 import {useQuery} from '@tanstack/react-query'
@@ -133,6 +133,10 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
   const addressHex = convertBech32ToHex(address)
   const {config} = useRemoteConfig()
   const [isLoading, setIsLoading] = React.useState(false)
+  const isMainnet =
+    (Chain as any)?.Network != null
+      ? network === (Chain as any).Network.Mainnet
+      : true
 
   const swapManager = React.useMemo(() => {
     const storage = swapStorageMaker()
@@ -168,6 +172,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
       if (isRight(res)) return res.value.data
       return []
     },
+    enabled: isMainnet,
   })
 
   const {data: tokenIds = [], refetch: refetchTokens} = useQuery({
@@ -190,6 +195,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
       }
       return []
     },
+    enabled: isMainnet,
   })
 
   const refetches = React.useCallback(() => {
@@ -257,7 +263,8 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
     enabled:
       state.orderType === 'limit' &&
       state.tokenInInput.tokenId !== undefined &&
-      state.tokenOutInput.tokenId !== undefined,
+      state.tokenOutInput.tokenId !== undefined &&
+      isMainnet,
   })
 
   React.useEffect(() => {
@@ -325,6 +332,8 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
     )
       return
 
+    if (!isMainnet) return
+
     const reqId = ++estimateReqIdRef.current
 
     swapManager.api
@@ -383,9 +392,11 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
     state.selectedProtocol.value,
     swapManager.api,
     action,
+    isMainnet,
   ])
 
   const create = React.useCallback(async () => {
+    if (!isMainnet) return
     if (
       state.tokenInInput.tokenId === undefined ||
       state.tokenOutInput.tokenId === undefined
@@ -438,6 +449,18 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
         blockedProtocols: [],
         protocol: state.selectedProtocol.value,
         inputs,
+        routeHint:
+          state.estimate?.splits?.[0] != null
+            ? {
+                aggregator: state.estimate.splits[0].aggregator!,
+                aggregatorDexKey: state.estimate.splits[0].aggregatorDexKey,
+                poolIds:
+                  state.estimate.splits[0].aggregatorPoolId != null
+                    ? [state.estimate.splits[0].aggregatorPoolId]
+                    : undefined,
+                quoteId: state.estimate.splits[0].quoteId,
+              }
+            : undefined,
       })
       .then((response) => {
         setIsLoading(false)
@@ -479,6 +502,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
     swapManager.api,
     tokenInfos,
     track,
+    isMainnet,
   ])
 
   const context = React.useMemo(
@@ -498,6 +522,8 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
       managerSettings: swapManager.settings,
       assignManagerSettings: swapManager.assignSettings,
       refetchOrders,
+      // override canSwap if not on mainnet
+      canSwap: isMainnet ? state.canSwap : false,
     }),
     [
       state,
@@ -511,6 +537,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
       swapManager.settings,
       swapManager.assignSettings,
       refetchOrders,
+      isMainnet,
     ],
   )
 
