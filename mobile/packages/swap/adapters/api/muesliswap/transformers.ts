@@ -270,22 +270,63 @@ export const transformersMaker = ({
         tokenOut,
         amountIn,
         inputs,
-      }: Swap.CreateRequest): CreateOrderRequest => ({
-        numbers_have_decimals: true,
-        sell_token: tokenIn,
-        buy_token: tokenOut,
-        sell_amount: String(amountIn),
-        user_address: address,
-        ...(partner !== undefined && {partner}),
-        slippage: slippage / 100,
-        excluded_sources: protocol
-          ? Object.values(Dex).filter(
-              (dex) =>
-                dex !== Dex.Unsupported && dex !== fromSwapProtocol(protocol),
+        routeHint,
+      }: Swap.CreateRequest): CreateOrderRequest => {
+        // Compute excluded_sources using Frontend Options when possible to avoid invalid provider keys
+        let excluded_sources: ReadonlyArray<Dex> | Dex | undefined
+        if (providersCache?.liquidity_source_info) {
+          let allowedFO: string[] | undefined
+          // Prefer explicit hint from UI
+          if (routeHint && Array.isArray((routeHint as any).frontendOptions)) {
+            allowedFO = (routeHint as any).frontendOptions as string[]
+          } else if (
+            routeHint &&
+            typeof (routeHint as any).aggregatorDexKey === 'string'
+          ) {
+            // Fall back to the chosen split's provider key (FO) when available
+            allowedFO = [(routeHint as any).aggregatorDexKey as string]
+          } else if (protocol !== undefined) {
+            const mapped = fromSwapProtocol(protocol)
+            const fo = (providersCache.liquidity_source_info as any)?.[mapped]
+              ?.frontend_option
+            if (typeof fo === 'string') allowedFO = [fo]
+          }
+
+          if (allowedFO && allowedFO.length > 0) {
+            const allFO = Object.values(
+              providersCache.liquidity_source_info ?? {},
             )
-          : (blockedProtocols?.map(fromSwapProtocol) ?? []),
-        utxos: inputs,
-      }),
+              .map((v: any) => v?.frontend_option)
+              .filter((v: any) => typeof v === 'string')
+            const excludedFO = allFO.filter(
+              (fo: string) => !allowedFO!.includes(fo),
+            )
+            excluded_sources = excludedFO as any
+          } else if (blockedProtocols) {
+            const mappedFO = blockedProtocols
+              .map(fromSwapProtocol)
+              .map(
+                (dex) =>
+                  (providersCache.liquidity_source_info as any)?.[dex]
+                    ?.frontend_option,
+              )
+              .filter((v): v is string => typeof v === 'string')
+            if (mappedFO.length > 0) excluded_sources = mappedFO as any
+          }
+        }
+
+        return {
+          numbers_have_decimals: true,
+          sell_token: tokenIn,
+          buy_token: tokenOut,
+          sell_amount: String(amountIn),
+          user_address: address,
+          ...(partner !== undefined && {partner}),
+          slippage: slippage / 100,
+          excluded_sources,
+          utxos: inputs,
+        }
+      },
       response: ({
         quote: {
           buy_token_decimals,
