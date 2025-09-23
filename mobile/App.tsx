@@ -9,6 +9,7 @@ import {
 import {ThemeProvider} from '@yoroi/theme'
 import {TransferProvider} from '@yoroi/transfer'
 
+import * as Updates from 'expo-updates'
 import * as React from 'react'
 
 import {BrowserProvider} from '~/features/Discover/common/BrowserProvider'
@@ -113,7 +114,29 @@ function BusinessShell({children}: React.PropsWithChildren) {
   )
 }
 
+async function checkForUpdates() {
+  if (__DEV__) {
+    return
+  }
+  try {
+    const update = await Updates.checkForUpdateAsync()
+    if (update.isAvailable) {
+      await Updates.fetchUpdateAsync()
+      await Updates.reloadAsync()
+    }
+  } catch (e) {
+    console.error('Error checking for updates:', e)
+  }
+}
+
 export default function App() {
+  React.useEffect(() => {
+    if (__DEV__) {
+      return
+    }
+    checkForUpdates()
+  }, [])
+
   return (
     <AppShell>
       <BusinessShell>
