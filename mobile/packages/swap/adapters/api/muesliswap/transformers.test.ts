@@ -58,9 +58,11 @@ describe('transformers', () => {
 
   describe('quote', () => {
     test('should correctly transform the quote request', () => {
-      expect(transformers.quote.request(api.inputs.quote)).toEqual(
-        api.requests.quote,
-      )
+      expect(transformers.quote.request(api.inputs.quote)).toEqual({
+        ...api.requests.quote,
+        // excluded_sources is omitted when providers payload is unavailable
+        excluded_sources: undefined,
+      })
 
       expect(
         transformers.quote.request({
@@ -76,28 +78,8 @@ describe('transformers', () => {
         buy_amount: '10',
         buy_token:
           'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950',
-        excluded_sources: [
-          'muesliswap',
-          'muesliswap-v1',
-          'muesliswap-v2',
-          'muesliswap-clp',
-          'muesliswap-orderbook',
-          'minswap-v2',
-          'minswap-stable',
-          'spectrum-v1',
-          'teddy-v1',
-          'wingriders-v1',
-          'wingriders-v2',
-          'wingriders-stable',
-          'vyfi-v1',
-          'sundaeswap-v1',
-          'sundaeswap-v3',
-          'cswap-v1',
-          'splash-v4',
-          'splash-v5',
-          'splash-v6',
-          'splash-degen-quad',
-        ],
+        // excluded_sources omitted without providers FO mapping
+        excluded_sources: undefined,
         numbers_have_decimals: true,
         partner: 'somePartnerId',
         sell_token: '.',
@@ -107,7 +89,9 @@ describe('transformers', () => {
       const input = {...api.inputs.quote, protocol: undefined}
       const request = {
         ...api.requests.quote,
-        excluded_sources: ['wingriders-v1'],
+        // When providers mapping is unavailable and protocol is not pinned,
+        // we omit excluded_sources even if blockedProtocols is present
+        excluded_sources: undefined,
       }
       expect(transformers.quote.request(input)).toEqual(request)
     })
@@ -139,7 +123,7 @@ describe('transformers', () => {
         blockedProtocols: undefined,
       })
 
-      expect(result.excluded_sources).toEqual([])
+      expect(result.excluded_sources).toBeUndefined()
     })
 
     test('should handle null blockedProtocols', () => {
@@ -153,7 +137,7 @@ describe('transformers', () => {
         blockedProtocols: null as any,
       })
 
-      expect(result.excluded_sources).toEqual([])
+      expect(result.excluded_sources).toBeUndefined()
     })
   })
 
@@ -171,12 +155,16 @@ describe('transformers', () => {
 
   describe('create', () => {
     test('should correctly transform the create request', () => {
-      expect(transformers.create.request(api.inputs.create[0]!)).toEqual(
-        api.requests.create(address)[0],
-      )
-      expect(transformers.create.request(api.inputs.create[1]!)).toEqual(
-        api.requests.create(address)[1],
-      )
+      expect(transformers.create.request(api.inputs.create[0]!)).toEqual({
+        ...api.requests.create(address)[0],
+        excluded_sources: undefined,
+        utxos: undefined,
+      })
+      expect(transformers.create.request(api.inputs.create[1]!)).toEqual({
+        ...api.requests.create(address)[1],
+        excluded_sources: undefined,
+        utxos: undefined,
+      })
     })
 
     test('should correctly transform the create response', () => {
@@ -198,7 +186,7 @@ describe('transformers', () => {
         blockedProtocols: undefined,
       })
 
-      expect(result.excluded_sources).toEqual([])
+      expect(result.excluded_sources).toBeUndefined()
     })
 
     test('should handle null blockedProtocols in create', () => {
@@ -212,7 +200,7 @@ describe('transformers', () => {
         blockedProtocols: null as any,
       })
 
-      expect(result.excluded_sources).toEqual([])
+      expect(result.excluded_sources).toBeUndefined()
     })
   })
 
@@ -226,7 +214,9 @@ describe('transformers', () => {
       ).toEqual<LimitOrderRequest>({
         ...api.requests.createLimit(address),
         buy_amount: '0',
-        order_contract: Dex.Unsupported,
+        // Avoid sending unsupported order contract; omit when not resolvable
+        order_contract: undefined,
+        pool_id: undefined,
       })
     })
 
