@@ -1,8 +1,6 @@
 import {Swap} from '@yoroi/types'
 
 export function getDexByProtocol(protocol: Swap.Protocol): Swap.Dex {
-  // Attempt catalog-backed resolution if available as a future hook
-  // Currently falls back to static mapping below
   switch (protocol) {
     case Swap.Protocol.Minswap_v1:
     case Swap.Protocol.Minswap_v2:

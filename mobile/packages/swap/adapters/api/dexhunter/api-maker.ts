@@ -79,6 +79,7 @@ export const dexhunterApiMaker = (
           true,
         )
       },
+
       async orders() {
         const response = await request<OrdersResponse>({
           method: 'get',
@@ -191,11 +192,7 @@ export const dexhunterApiMaker = (
           method: 'post',
           url: `${baseUrl}${apiPaths[kind]}`,
           headers,
-          data: transformers[kind].request({
-            ...body,
-            // When a specific protocol is pinned, prefer DexHunter single_preferred_dex
-            // Transformers will map protocol → Dex enum; API-maker enriches request here if supported
-          }),
+          data: transformers[kind].request(body),
         })
 
         if (isLeft(response)) return parseDhError(response)
@@ -221,7 +218,6 @@ export const dexhunterApiMaker = (
 
         const response = await request<BuildResponse | LimitBuildResponse>({
           method: 'post',
-          // Prefer documented endpoints; fallback to legacy if needed
           url: `${baseUrl}${apiPaths[kind]}`,
           headers,
           data: transformers[kind].request(body),

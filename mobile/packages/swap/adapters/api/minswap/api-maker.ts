@@ -124,6 +124,7 @@ export const minswapApiMaker = (
           true,
         )
       },
+
       async orders() {
         const response = await requestWithErrorHandling<PendingOrdersResponse>(
           `${baseUrl}/pending-orders?owner_address=${address}&amount_in_decimal=true`,
