@@ -86,13 +86,13 @@ export const EditAmountScreen = () => {
   const isFocused = useIsFocused()
   React.useEffect(() => {
     return () => {
-      if (amount.quantity === BigInt(0) && !isFocused) {
+      if (quantity === BigInt(0) && !isFocused) {
         InteractionManager.runAfterInteractions(() => {
           amountRemoved(selectedTokenId)
         })
       }
     }
-  }, [amount.quantity, amountRemoved, isFocused, selectedTokenId])
+  }, [quantity, amountRemoved, isFocused, selectedTokenId])
 
   const hasBalance = available >= quantity
   // primary can have locked amount
@@ -225,7 +225,8 @@ const AmountInput = ({onChange, value, ticker}: AmountInputProps) => {
 
   return (
     <TextInput
-      keyboardType="numeric"
+      keyboardType="decimal-pad"
+      inputMode="decimal"
       mode="flat"
       autoComplete="off"
       value={value}
