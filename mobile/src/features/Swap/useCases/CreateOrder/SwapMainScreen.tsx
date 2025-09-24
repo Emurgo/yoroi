@@ -79,7 +79,10 @@ export const SwapMainScreen = () => {
               style={[a.flex_1]}
               size="S"
               title={strings.swap.limitPriceWarningConfirm}
-              onPress={swapForm.create}
+              onPress={() => {
+                closeModal()
+                swapForm.create()
+              }}
             />
           </View>
         ),
