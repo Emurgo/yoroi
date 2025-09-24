@@ -172,27 +172,33 @@ export const Quantities = {
     format: Numbers.Locale,
     precision = denomination,
   ): [string, Balance.Quantity] => {
-    const {decimalSeparator} = format
-    const invalid = new RegExp(`[^0-9${decimalSeparator}]`, 'g')
-    const sanitized = text === '' ? '' : text.replaceAll(invalid, '')
+    // Accept both '.' and ',' as decimal separators during typing; normalize to the locale separator
+    const localeSep = format.decimalSeparator
+    const altSep = localeSep === '.' ? ',' : '.'
+    const normalized =
+      text === ''
+        ? ''
+        : text
+            .replaceAll(altSep, localeSep) // unify to locale separator
+            .replace(new RegExp(`[^0-9${localeSep}]`, 'g'), '') // strip invalid
 
-    if (sanitized === '') return ['', Quantities.zero]
-    if (sanitized.startsWith(decimalSeparator))
-      return [`0${decimalSeparator}`, Quantities.zero]
+    if (normalized === '') return ['', Quantities.zero]
+    if (normalized.startsWith(localeSep))
+      return [`0${localeSep}`, Quantities.zero]
 
-    const parts = sanitized.split(decimalSeparator)
+    const parts = normalized.split(localeSep)
 
-    let fullDecValue = sanitized
-    let value = sanitized
+    let fullDecValue = normalized
+    let value = normalized
 
     let fullDecFormat = new BigNumber(
-      fullDecValue.replace(decimalSeparator, '.'),
+      fullDecValue.replace(localeSep, '.'),
     ).toFormat()
     let input = fullDecFormat
 
     if (parts.length <= 1) {
       const quantity = asQuantity(
-        new BigNumber(value.replace(decimalSeparator, '.'))
+        new BigNumber(value.replace(localeSep, '.'))
           .decimalPlaces(precision)
           .shiftedBy(denomination),
       )
@@ -202,16 +208,16 @@ export const Quantities = {
 
     const [int, dec] = parts
     // trailing `1` is to allow the user to type `1.0` without losing the decimal part
-    fullDecValue = `${int}${decimalSeparator}${dec?.slice(0, precision)}1`
-    value = `${int}${decimalSeparator}${dec?.slice(0, precision)}`
+    fullDecValue = `${int}${localeSep}${dec?.slice(0, precision)}1`
+    value = `${int}${localeSep}${dec?.slice(0, precision)}`
     fullDecFormat = new BigNumber(
-      fullDecValue.replace(decimalSeparator, '.'),
+      fullDecValue.replace(localeSep, '.'),
     ).toFormat()
     // remove trailing `1`
     input = fullDecFormat.slice(0, -1)
 
     const quantity = asQuantity(
-      new BigNumber(value.replace(decimalSeparator, '.'))
+      new BigNumber(value.replace(localeSep, '.'))
         .decimalPlaces(precision)
         .shiftedBy(denomination),
     )
