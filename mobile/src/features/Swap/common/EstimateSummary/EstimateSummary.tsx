@@ -9,6 +9,7 @@ import {useNavigateTo} from '~/features/Swap/common/navigation'
 import {useSwap} from '~/features/Swap/common/useSwap'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
+import {ActivityIndicator} from '~/ui/ActivityIndicator/ActivityIndicator'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {useModal} from '~/ui/Modal/ModalContext'
@@ -55,20 +56,24 @@ export const EstimateSummary = () => {
         label={strings.swap.route}
         description={strings.swap.routeDescription}
         value={
-          protocol !== undefined && (
-            <View style={[a.flex_row, a.align_center, a.gap_xs]}>
-              <ProtocolAvatar
-                protocol={protocol}
-                onPress={
-                  swapForm.orderType === 'limit'
-                    ? navigateTo.selectProtocol
-                    : expand
-                }
-                {...((swapForm.estimate?.splits.length ?? 0) > 1 && {
-                  append: '...',
-                })}
-              />
-            </View>
+          swapForm.needsNewEstimate ? (
+            <ActivityIndicator />
+          ) : (
+            protocol !== undefined && (
+              <View style={[a.flex_row, a.align_center, a.gap_xs]}>
+                <ProtocolAvatar
+                  protocol={protocol}
+                  onPress={
+                    swapForm.orderType === 'limit'
+                      ? navigateTo.selectProtocol
+                      : expand
+                  }
+                  {...((swapForm.estimate?.splits.length ?? 0) > 1 && {
+                    append: '...',
+                  })}
+                />
+              </View>
+            )
           )
         }
       />

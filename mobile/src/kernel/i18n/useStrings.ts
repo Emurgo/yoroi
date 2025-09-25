@@ -1102,6 +1102,9 @@ export const useStrings = () => {
         seeOnExplorer: f(swapMessages.seeOnExplorer),
         goToTransactions: f(swapMessages.goToTransactions),
         wrongPasswordMessage: f(swapMessages.wrongPasswordMessage),
+        youNeedToKeepAtLeastOneAggregatorEnabled: f(
+          swapMessages.youNeedToKeepAtLeastOneAggregatorEnabled,
+        ),
         assignCollateral: f(swapMessages.assignCollateral),
         collateralNotFound: f(swapMessages.collateralNotFound),
         noActiveCollateral: f(swapMessages.noActiveCollateral),

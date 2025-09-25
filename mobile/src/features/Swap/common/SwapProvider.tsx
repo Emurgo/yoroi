@@ -231,7 +231,16 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
     action({type: 'SlippageInputChanged', value: swapManager.settings.slippage})
   }, [swapManager.settings.slippage])
 
-  const {data: limitOptions} = useQuery({
+  const enabledLimitAggs =
+    state.orderType === 'limit'
+      ? Array.isArray(swapManager.settings.routingPreference)
+        ? swapManager.settings.routingPreference.filter(
+            (a) => a !== Swap.Aggregator.Minswap,
+          )
+        : ['dexhunter', 'muesliswap'] // 'auto' → allow
+      : []
+
+  const {data: limitOptions} = useQuery<Swap.LimitOptionsResponse | null>({
     queryKey: [
       'useSwapLimitOptions',
       network,
@@ -240,24 +249,17 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
       state.tokenOutInput.tokenId,
     ],
     queryFn: async () => {
-      if (
-        state.tokenInInput.tokenId === undefined ||
-        state.tokenOutInput.tokenId === undefined
-      )
-        throw Error()
-
       const res = await swapManager.api.limitOptions({
-        tokenIn: state.tokenInInput.tokenId,
-        tokenOut: state.tokenOutInput.tokenId,
+        tokenIn: state.tokenInInput.tokenId!,
+        tokenOut: state.tokenOutInput.tokenId!,
       })
-
-      if (isRight(res)) return res.value.data
-      return undefined
+      return isRight(res) ? res.value.data : null // never undefined
     },
     enabled:
       state.orderType === 'limit' &&
       state.tokenInInput.tokenId !== undefined &&
-      state.tokenOutInput.tokenId !== undefined,
+      state.tokenOutInput.tokenId !== undefined &&
+      enabledLimitAggs.length > 0,
   })
 
   React.useEffect(() => {
@@ -345,19 +347,53 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
         blockedProtocols: [],
         protocol: state.selectedProtocol.value,
       })
-      .then((response) => {
+      .then(async (response) => {
         if (reqId !== estimateReqIdRef.current) return
+
         if (isLeft(response)) {
-          action({
-            type: SwapActionType.EstimateError,
-            value: response.error,
-          })
-        } else {
-          action({
-            type: SwapActionType.EstimateResponse,
-            value: response.value.data,
-          })
+          if (state.orderType === 'limit') {
+            const candidates = (limitOptions?.options ?? [])
+              .map((o) => o.protocol)
+              .filter((p) => p !== state.selectedProtocol.value)
+
+            for (const proto of candidates) {
+              const alt = await swapManager.api.estimate({
+                slippage: state.slippageInput.value,
+                tokenIn: state.tokenInInput.tokenId!,
+                tokenOut: state.tokenOutInput.tokenId!,
+                ...(state.lastInputTouched === 'in'
+                  ? {
+                      amountIn: Number(state.tokenInInput.value),
+                      ...(state.orderType === 'limit' && {
+                        wantedPrice: Number(state.wantedPrice),
+                      }),
+                    }
+                  : {
+                      amountOut: Number(state.tokenOutInput.value),
+                    }),
+                blockedProtocols: [],
+                protocol: proto,
+              })
+
+              if (reqId === estimateReqIdRef.current && isRight(alt)) {
+                action({type: SwapActionType.ProtocolSelected, value: proto})
+                action({
+                  type: SwapActionType.EstimateResponse,
+                  value: alt.value.data,
+                })
+                return
+              }
+            }
+          }
+
+          action({type: SwapActionType.EstimateError, value: response.error})
+          return
         }
+
+        action({
+          type: SwapActionType.EstimateResponse,
+          value: response.value.data,
+        })
       })
       .catch(() => {
         if (reqId !== estimateReqIdRef.current) return
@@ -383,6 +419,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
     state.selectedProtocol.value,
     swapManager.api,
     action,
+    limitOptions?.options,
   ])
 
   const create = React.useCallback(async () => {
@@ -485,7 +522,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
     () => ({
       ...state,
       isLoading,
-      limitOptions,
+      limitOptions: limitOptions ?? undefined,
       tokenInfos,
       verifiedTokens,
       tokenOutInputRef,
@@ -513,6 +550,21 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
       refetchOrders,
     ],
   )
+
+  React.useEffect(() => {
+    if (state.orderType !== 'limit') return
+
+    const pref = swapManager.settings.routingPreference
+    const isMinswapOnly =
+      Array.isArray(pref) &&
+      pref.length === 1 &&
+      pref[0] === Swap.Aggregator.Minswap
+
+    if (isMinswapOnly) {
+      swapManager.assignSettings({routingPreference: 'auto'})
+      action({type: SwapActionType.Refresh})
+    }
+  }, [state.orderType, swapManager, action])
 
   return (
     <SwapContextInstance.Provider value={context}>

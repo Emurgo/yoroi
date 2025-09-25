@@ -48,34 +48,42 @@ const ALL_AGGREGATORS: Swap.Aggregator[] = [
 const toggleAggregator = (
   current: Swap.Aggregator[],
   target: Swap.Aggregator,
+  allowed: Swap.Aggregator[],
 ): Swap.Aggregator[] => {
   if (current.includes(target)) {
     const remaining = current.filter((opt) => opt !== target)
-    return remaining.length === 0
-      ? ALL_AGGREGATORS.filter((opt) => opt !== target)
-      : remaining
-  } else {
-    return [...current, target]
+    return remaining.length === 0 ? current : remaining
   }
+  return allowed.includes(target) ? [...current, target] : current
 }
 
 export const SwapSettings = () => {
   const {numberLocale} = useLanguage()
-  const {palette: p} = useTheme()
+  const {palette: p, atoms: ta} = useTheme()
 
   const swapForm = useSwap()
   const [aggregator, setAggregator] = React.useState(
     swapForm.managerSettings.routingPreference,
   )
+  const isLimit = swapForm.orderType === 'limit'
 
-  const assignAggregator = (a: Swap.ManagerSettings['routingPreference']) => {
-    setAggregator(a)
-    swapForm.assignManagerSettings({
-      ...swapForm.managerSettings,
-      routingPreference: a,
-    })
-    swapForm.action({type: 'Refresh'})
-  }
+  const allowedAggregators = React.useMemo(
+    () =>
+      isLimit
+        ? ALL_AGGREGATORS.filter((a) => a !== 'minswap')
+        : ALL_AGGREGATORS,
+    [isLimit],
+  )
+
+  const {managerSettings, assignManagerSettings, action} = swapForm
+  const assignAggregator = React.useCallback(
+    (a: Swap.ManagerSettings['routingPreference']) => {
+      setAggregator(a)
+      assignManagerSettings({...managerSettings, routingPreference: a})
+      action({type: 'Refresh'})
+    },
+    [managerSettings, assignManagerSettings, action],
+  )
 
   const defaultSelectedChoice = getChoiceBySlippage(
     Number(swapForm.managerSettings.slippage),
@@ -119,6 +127,16 @@ export const SwapSettings = () => {
   const isInputEnabled = isSelectedChoiceCustom
   const hasError =
     isSelectedChoiceCustom && !validateSlippage(inputValue, numberLocale)
+
+  React.useEffect(() => {
+    if (!isLimit || !Array.isArray(aggregator)) return
+
+    if (aggregator.length === 1 && aggregator[0] === 'minswap') {
+      assignAggregator('auto')
+    } else if (aggregator.includes('minswap')) {
+      assignAggregator(aggregator.filter((opt) => opt !== 'minswap'))
+    }
+  }, [isLimit, aggregator, assignAggregator])
 
   return (
     <KeyboardAvoidingView style={[a.flex_1, {backgroundColor: p.bg_color_max}]}>
@@ -231,7 +249,9 @@ export const SwapSettings = () => {
                 onValueChange={() =>
                   assignAggregator(
                     aggregator === 'auto'
-                      ? ['muesliswap', 'dexhunter', 'minswap']
+                      ? isLimit
+                        ? ['muesliswap', 'dexhunter']
+                        : ['muesliswap', 'dexhunter', 'minswap']
                       : 'auto',
                   )
                 }
@@ -249,7 +269,11 @@ export const SwapSettings = () => {
                     value={aggregator.includes('dexhunter')}
                     onValueChange={() =>
                       assignAggregator(
-                        toggleAggregator(aggregator, 'dexhunter'),
+                        toggleAggregator(
+                          aggregator,
+                          'dexhunter',
+                          allowedAggregators,
+                        ),
                       )
                     }
                   />
@@ -264,26 +288,45 @@ export const SwapSettings = () => {
                     value={aggregator.includes('muesliswap')}
                     onValueChange={() =>
                       assignAggregator(
-                        toggleAggregator(aggregator, 'muesliswap'),
+                        toggleAggregator(
+                          aggregator,
+                          'muesliswap',
+                          allowedAggregators,
+                        ),
                       )
                     }
                   />
                 </View>
 
                 <View style={[a.flex_row, a.justify_between, a.align_center]}>
-                  <Text style={[a.body_1_lg_regular, {color: p.text_gray_max}]}>
+                  <Text style={[a.body_1_lg_regular, ta.text_gray_max]}>
                     Minswap
                   </Text>
 
                   <SettingsSwitch
                     value={aggregator.includes('minswap')}
+                    disabled={isLimit}
                     onValueChange={() =>
-                      assignAggregator(toggleAggregator(aggregator, 'minswap'))
+                      assignAggregator(
+                        toggleAggregator(
+                          aggregator,
+                          'minswap',
+                          allowedAggregators,
+                        ),
+                      )
                     }
                   />
                 </View>
               </>
             )}
+
+            {aggregator !== 'auto' &&
+              Array.isArray(aggregator) &&
+              aggregator.length === 1 && (
+                <Text style={[a.body_2_md_regular, ta.text_warning]}>
+                  {strings.swap.youNeedToKeepAtLeastOneAggregatorEnabled}
+                </Text>
+              )}
           </View>
         </ScrollView>
       </SafeAreaView>

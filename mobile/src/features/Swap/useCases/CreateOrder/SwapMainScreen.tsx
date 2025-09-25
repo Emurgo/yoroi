@@ -189,17 +189,18 @@ export const SwapMainScreen = () => {
                 <AmountCard direction="out" />
               </View>
 
-              {!isEmptyString(swapForm.tokenOutInput.error) && (
-                <View style={[a.flex_row, a.align_center, a.gap_2xs]}>
-                  <Icon.Warning size={15} color={p.sys_magenta_500} />
+              {!swapForm.needsNewEstimate &&
+                !isEmptyString(swapForm.tokenOutInput.error) && (
+                  <View style={[a.flex_row, a.align_center, a.gap_2xs]}>
+                    <Icon.Warning size={15} color={p.sys_magenta_500} />
 
-                  <Text
-                    style={[a.body_3_sm_regular, {color: p.sys_magenta_500}]}
-                  >
-                    {swapForm.tokenOutInput.error}
-                  </Text>
-                </View>
-              )}
+                    <Text
+                      style={[a.body_3_sm_regular, {color: p.sys_magenta_500}]}
+                    >
+                      {swapForm.tokenOutInput.error}
+                    </Text>
+                  </View>
+                )}
             </View>
 
             {swapForm.orderType === 'limit' && <LimitInput />}

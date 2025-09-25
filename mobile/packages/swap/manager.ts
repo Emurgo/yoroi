@@ -178,7 +178,9 @@ const apiManagerMaker = (
       },
 
       async limitOptions(body: Swap.LimitOptionsRequest) {
-        const enabledAggregators = getEnabledAggregators()
+        const enabledAggregators = getEnabledAggregators().filter(
+          (aggregator) => aggregator !== Swap.Aggregator.Minswap,
+        )
 
         const responses: Array<Api.Response<Swap.LimitOptionsResponse>> =
           await Promise.all(
@@ -227,7 +229,14 @@ const apiManagerMaker = (
       },
 
       async estimate(body: Swap.EstimateRequest) {
-        const enabledAggregators = getEnabledAggregators()
+        const baseAggregators = getEnabledAggregators()
+
+        const enabledAggregators =
+          body.wantedPrice !== undefined
+            ? baseAggregators.filter(
+                (aggregator) => aggregator !== Swap.Aggregator.Minswap,
+              )
+            : baseAggregators
 
         const settledResults = await Promise.allSettled(
           enabledAggregators.map(async (aggregator) => {
@@ -288,7 +297,14 @@ const apiManagerMaker = (
       },
 
       async create(body: Swap.CreateRequest) {
-        const enabledAggregators = getEnabledAggregators()
+        const baseAggregators = getEnabledAggregators()
+
+        const enabledAggregators =
+          body.wantedPrice !== undefined
+            ? baseAggregators.filter(
+                (aggregator) => aggregator !== Swap.Aggregator.Minswap,
+              )
+            : baseAggregators
 
         const responses: Array<Api.Response<Swap.CreateResponse>> =
           await Promise.all(
@@ -396,6 +412,15 @@ export const standarizeError = <T>(input: Api.Response<T>): Api.Response<T> => {
       'Could not find the number of decimals',
     ):
       response.error.message = 'Unknown error'
+      break
+    case response.error.message
+      .toLowerCase()
+      .includes('not a supported provider'):
+    case response.error.message
+      .toLowerCase()
+      .includes('supported providers are'):
+      response.error.message =
+        'No supported route found. Check routing preference in swap settings.'
       break
   }
 

@@ -691,4 +691,8 @@ export const swapMessages = defineMessages({
     id: 'components.txhistory.txnavigationbuttons.sendButton',
     defaultMessage: '!!!Submitted Tx Screen Button',
   },
+  youNeedToKeepAtLeastOneAggregatorEnabled: {
+    id: 'swap.swapScreen.youNeedToKeepAtLeastOneAggregatorEnabled',
+    defaultMessage: '!!!You Need To Keep At Least One Aggregator Enabled',
+  },
 })
