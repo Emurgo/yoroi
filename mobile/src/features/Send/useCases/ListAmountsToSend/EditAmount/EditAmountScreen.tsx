@@ -10,9 +10,8 @@ import {
   InteractionManager,
   ScrollView,
   Text,
-  TouchableOpacity,
+  TextInput,
   View,
-  ViewProps,
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
@@ -24,11 +23,10 @@ import {useLanguage} from '~/kernel/i18n/LanguageProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 import {useParams} from '~/kernel/navigation/hooks/useParams'
-import {Button} from '~/ui/Button/Button'
+import {Button, ButtonType} from '~/ui/Button/Button'
 import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingView'
 import {PairedBalance} from '~/ui/PairedBalance/PairedBalance'
 import {Space} from '~/ui/Space/Space'
-import {TextInput} from '~/ui/TextInput/TextInput'
 import {TokenAmountItem} from '~/ui/TokenAmountItem/TokenAmountItem'
 import {Quantities} from '~/wallets/utils/utils'
 
@@ -43,7 +41,7 @@ const isEditAmountParams = (
 
 export const EditAmountScreen = () => {
   const strings = useStrings()
-  const {atoms: ta} = useTheme()
+  const {atoms: ta, palette: p} = useTheme()
   const navigateTo = useNavigateTo()
   const {numberLocale} = useLanguage()
 
@@ -152,13 +150,31 @@ export const EditAmountScreen = () => {
 
           <Space.Height.xl />
 
-          <AmountInput
-            onChange={handleOnChangeQuantity}
-            value={inputValue}
-            ticker={amount.info.ticker}
-          />
+          <View style={[a.flex_row, a.align_center, a.justify_end]}>
+            <TextInput
+              keyboardType="decimal-pad"
+              inputMode="decimal"
+              autoComplete="off"
+              value={inputValue}
+              placeholder="0"
+              placeholderTextColor={p.text_gray_low}
+              onChangeText={handleOnChangeQuantity}
+              selectTextOnFocus
+              autoFocus
+              allowFontScaling={false}
+              style={[ta.text_gray_max, a.heading_2_regular]}
+              underlineColorAndroid="transparent"
+              selectionColor={p.input_selected}
+              cursorColor={p.el_gray_max}
+            />
+            <Text
+              style={[ta.text_gray_max, a.heading_2_regular, {padding: 10}]}
+            >
+              {amount.info.ticker}
+            </Text>
+          </View>
 
-          <Center>
+          <View style={[a.align_center]}>
             {isPrimary && (
               <PairedBalance
                 amount={{
@@ -171,97 +187,32 @@ export const EditAmountScreen = () => {
 
             <Space.Height.md />
 
-            {!isPrimary && <MaxBalanceButton onPress={handleOnMaxBalance} />}
+            {!isPrimary && (
+              <Button
+                title={strings.send.max.toLocaleUpperCase()}
+                onPress={handleOnMaxBalance}
+                type={ButtonType.Text}
+              />
+            )}
 
             <Space.Height.md />
 
             {!hasBalance && <NoBalance />}
 
             {isUnableToSpend && hasBalance && <UnableToSpend />}
-          </Center>
+          </View>
         </ScrollView>
 
-        <HR />
+        <View style={{height: 1, backgroundColor: p.gray_200}} />
 
-        <Actions>
-          <ApplyButton
+        <View style={[a.px_lg]}>
+          <Button
             onPress={handleOnApply}
             title={strings.send.apply.toLocaleUpperCase()}
             disabled={isUnableToSpend || !hasBalance || isZero}
           />
-        </Actions>
+        </View>
       </SafeAreaView>
     </KeyboardAvoidingView>
   )
 }
-
-const Center = ({style, ...props}: ViewProps) => {
-  return <View style={[style, a.align_center]} {...props} />
-}
-const Actions = ({style, ...props}: ViewProps) => {
-  return <View style={[style, a.px_lg]} {...props} />
-}
-
-const MaxBalanceButton = ({onPress}: {onPress(): void}) => {
-  const strings = useStrings()
-  const {palette: p} = useTheme()
-
-  return (
-    <TouchableOpacity onPress={onPress}>
-      <Text style={[{color: p.primary_600}, a.body_1_lg_medium]}>
-        {strings.send.max.toLocaleUpperCase()}
-      </Text>
-    </TouchableOpacity>
-  )
-}
-
-type AmountInputProps = {
-  value: string
-  onChange(value: string): void
-  ticker: string | undefined
-}
-const AmountInput = ({onChange, value, ticker}: AmountInputProps) => {
-  const {palette: p} = useTheme()
-
-  return (
-    <TextInput
-      keyboardType="decimal-pad"
-      inputMode="decimal"
-      mode="flat"
-      autoComplete="off"
-      value={value}
-      placeholder="0"
-      onChangeText={onChange}
-      selectTextOnAutoFocus
-      allowFontScaling
-      right={<Ticker ticker={ticker} />}
-      style={[
-        {backgroundColor: p.bg_color_max},
-        a.heading_2_regular,
-        a.border_0,
-        a.text_right,
-      ]}
-      underlineColor="transparent"
-      underlineColorAndroid="transparent"
-      activeUnderlineColor="transparent"
-      selectionColor={p.input_selected}
-      cursorColor={p.el_gray_max}
-      noHelper
-    />
-  )
-}
-const Ticker = ({ticker}: {ticker?: string}) => {
-  const {palette: p} = useTheme()
-  return (
-    <Text style={[{color: p.text_gray_max}, a.heading_2_regular]}>
-      {ticker}
-    </Text>
-  )
-}
-
-const HR = () => {
-  const {palette: p} = useTheme()
-  return <View style={{height: 1, backgroundColor: p.gray_200}} />
-}
-
-const ApplyButton = Button

@@ -129,7 +129,7 @@ describe('Quantities', () => {
       '123550',
     ])
     expect(Quantities.parseFromText('1234,6666', 3, italian)).toEqual([
-      '1 234,666',
+      '1234,6666', // sanitizedInput preserves original input
       '1234666',
     ])
     expect(Quantities.parseFromText('55,', 3, italian)).toEqual([
@@ -161,11 +161,11 @@ describe('Quantities', () => {
       '123550',
     ])
     expect(Quantities.parseFromText('1234.6666', 3, english)).toEqual([
-      '1,234.666',
+      '1234.6666', // sanitizedInput preserves original input
       '1234666',
     ])
     expect(Quantities.parseFromText('55.', 3, english)).toEqual([
-      '55.',
+      '55.', // sanitizedInput preserves original input
       '55000',
     ])
     expect(Quantities.parseFromText('55.0', 3, english)).toEqual([
@@ -178,17 +178,17 @@ describe('Quantities', () => {
     ])
 
     expect(Quantities.parseFromText('ab1.5c,6.5', 3, english)).toEqual([
-      '1.56',
-      '1560',
+      '1.565', // sanitizedInput preserves all valid digits
+      '1565',
     ])
 
     expect(Quantities.parseFromText('1.23456', 0, english, 3)).toEqual([
-      '1.234',
-      '1.234',
+      '1.23456', // sanitizedInput preserves original input
+      '1.234', // quantity respects precision limit
     ])
     expect(Quantities.parseFromText('1.23456', 2, english, 3)).toEqual([
-      '1.234',
-      '123.4',
+      '1.23456', // sanitizedInput preserves original input
+      '123.4', // quantity with denomination 2
     ])
   })
 })

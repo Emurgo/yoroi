@@ -2,7 +2,7 @@ import BigNumber from 'bignumber.js'
 
 /**
  * @description Converts to a bigint in atomic units
- * don't use this to format inputs use parseDecimal instead
+ * don't use this to format inputs use parseNumberFromText instead
  * bare in mind that only '.' is accepted as decimal separator
  * if you pass a localized string it will keep only '.-0-9' characters
  * which means that your decimal separator can affect the result in languages that use ',' or ' ' as decimal separator
