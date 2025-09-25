@@ -4,6 +4,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
 import {Portfolio} from '@yoroi/types'
 
+import {useIsFocused} from '@react-navigation/native'
 import * as React from 'react'
 import {
   InteractionManager,
@@ -71,15 +72,26 @@ export const EditAmountScreen = () => {
   )
   const textInputRef = React.useRef<TextInput>(null)
 
+  // Update state when amount prop changes
+  React.useEffect(() => {
+    setQuantity(amount.quantity)
+    setInputValue(
+      amount.quantity === BigInt(0)
+        ? ''
+        : atomicBreakdown(amount.quantity, amount.info.decimals).str,
+    )
+  }, [amount.quantity, amount.info.decimals])
+
+  const isFocused = useIsFocused()
   React.useEffect(() => {
     return () => {
-      if (quantity === BigInt(0)) {
+      if (quantity === BigInt(0) && !isFocused) {
         InteractionManager.runAfterInteractions(() => {
           amountRemoved(selectedTokenId)
         })
       }
     }
-  }, [quantity, amountRemoved, selectedTokenId])
+  }, [quantity, amountRemoved, isFocused, selectedTokenId])
 
   const hasBalance = available >= quantity
   // primary can have locked amount
