@@ -146,8 +146,10 @@ export const parseNumberFromText = ({
         ? asQuantity(bnValue.shiftedBy(denomination))
         : undefined
 
+    const sanitizedInput = workingInput
+
     return {
-      sanitizedInput: workingInput,
+      sanitizedInput,
       formattedValue,
       numericValue: bnValue.toNumber(),
       quantity,
@@ -176,6 +178,14 @@ export const parseNumberFromText = ({
     }
   }
 
+  // Create sanitized input that preserves decimal separator but limits decimal places
+  let finalSanitizedInput = workingInput
+  if (parts.length > 1) {
+    const [intPart, decPart] = parts
+    const limitedDecPart = decPart.substring(0, precision)
+    finalSanitizedInput = `${intPart}${decimalSeparator}${limitedDecPart}`
+  }
+
   const bnValue = new BigNumber(
     value.replace(decimalSeparator, '.'),
   ).decimalPlaces(precision)
@@ -186,7 +196,7 @@ export const parseNumberFromText = ({
       : undefined
 
   return {
-    sanitizedInput: workingInput,
+    sanitizedInput: finalSanitizedInput,
     formattedValue,
     numericValue: bnValue.toNumber(),
     quantity,

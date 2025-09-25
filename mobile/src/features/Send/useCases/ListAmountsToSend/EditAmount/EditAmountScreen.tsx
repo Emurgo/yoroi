@@ -4,7 +4,6 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
 import {Portfolio} from '@yoroi/types'
 
-import {useIsFocused} from '@react-navigation/native'
 import * as React from 'react'
 import {
   InteractionManager,
@@ -56,41 +55,31 @@ export const EditAmountScreen = () => {
   const amount = params.amount
   const selectedTokenId = amount.info.id
 
-  const initialQuantity = amount.quantity
   const available =
     (balances.records.get(selectedTokenId)?.quantity ?? BigInt(0)) -
     (allocated.get(selectedTargetIndex)?.get(selectedTokenId) ?? BigInt(0))
   const isPrimary = isPrimaryToken(amount.info)
-
-  const [quantity, setQuantity] = React.useState(initialQuantity)
-  const [inputValue, setInputValue] = React.useState(
-    initialQuantity === BigInt(0)
-      ? ''
-      : atomicBreakdown(initialQuantity, amount.info.decimals).bn.toFormat(),
-  )
   const spendable = isPrimary
     ? available - primaryBreakdown.lockedAsStorageCost
     : available
 
-  React.useEffect(() => {
-    setQuantity(initialQuantity)
-    setInputValue(
-      initialQuantity === BigInt(0)
-        ? ''
-        : atomicBreakdown(initialQuantity, amount.info.decimals).bn.toFormat(),
-    )
-  }, [amount.info.decimals, initialQuantity])
+  const [quantity, setQuantity] = React.useState(amount.quantity)
+  const [inputValue, setInputValue] = React.useState(
+    amount.quantity === BigInt(0)
+      ? ''
+      : atomicBreakdown(amount.quantity, amount.info.decimals).str,
+  )
+  const textInputRef = React.useRef<TextInput>(null)
 
-  const isFocused = useIsFocused()
   React.useEffect(() => {
     return () => {
-      if (quantity === BigInt(0) && !isFocused) {
+      if (quantity === BigInt(0)) {
         InteractionManager.runAfterInteractions(() => {
           amountRemoved(selectedTokenId)
         })
       }
     }
-  }, [quantity, amountRemoved, isFocused, selectedTokenId])
+  }, [quantity, amountRemoved, selectedTokenId])
 
   const hasBalance = available >= quantity
   // primary can have locked amount
@@ -118,10 +107,14 @@ export const EditAmountScreen = () => {
     [amount.info.decimals, numberLocale],
   )
 
+  const handleOnFocus = React.useCallback(() => {
+    if (textInputRef.current && inputValue) {
+      textInputRef.current.setSelection(0, inputValue.length)
+    }
+  }, [inputValue])
+
   const handleOnMaxBalance = React.useCallback(() => {
-    setInputValue(
-      atomicBreakdown(spendable, amount.info.decimals).bn.toFormat(),
-    )
+    setInputValue(atomicBreakdown(spendable, amount.info.decimals).str)
     setQuantity(spendable)
   }, [amount.info.decimals, spendable])
 
@@ -152,6 +145,7 @@ export const EditAmountScreen = () => {
 
           <View style={[a.flex_row, a.align_center, a.justify_end]}>
             <TextInput
+              ref={textInputRef}
               keyboardType="decimal-pad"
               inputMode="decimal"
               autoComplete="off"
@@ -159,7 +153,7 @@ export const EditAmountScreen = () => {
               placeholder="0"
               placeholderTextColor={p.text_gray_low}
               onChangeText={handleOnChangeQuantity}
-              selectTextOnFocus
+              onFocus={handleOnFocus}
               autoFocus
               allowFontScaling={false}
               style={[ta.text_gray_max, a.heading_2_regular]}

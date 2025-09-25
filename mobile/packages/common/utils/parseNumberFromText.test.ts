@@ -116,7 +116,7 @@ describe('parseNumberFromText', () => {
       precision: 4,
     })
     expect(result).toEqual({
-      sanitizedInput: '123.456789', // Original input preserved
+      sanitizedInput: '123.4567', // Precision-limited input
       formattedValue: '123.4567', // Truncated to precision
       numericValue: 123.4567,
       quantity: '123456700',
@@ -143,7 +143,7 @@ describe('parseNumberFromText', () => {
       precision: 4,
     })
     expect(result).toEqual({
-      sanitizedInput: '123.456789', // Original input preserved
+      sanitizedInput: '123.4567', // Precision-limited input
       formattedValue: '123.4567', // Truncated to precision
       numericValue: 123.4567,
       quantity: undefined,
@@ -368,7 +368,7 @@ describe('parseNumberFromText', () => {
         precision: 4,
       })
       expect(result).toEqual({
-        sanitizedInput: '123.456789',
+        sanitizedInput: '123.4567', // Precision-limited input
         formattedValue: undefined,
         numericValue: 123.4567,
         quantity: '123456700',
