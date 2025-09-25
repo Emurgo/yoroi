@@ -302,13 +302,15 @@ const SelectAmount = ({amount, disabled}: SelectAmountProps) => {
       amountChanged(amount)
       navigation.navigate('send-list-amounts-to-send')
     } else {
-      if (currentAmount == null) {
-        amountChanged({
+      // Start editing with the current amount (or zero if newly added), not the max spendable
+      const amountToEdit =
+        currentAmount ??
+        ({
           info: amount.info,
           quantity: BigInt(0),
-        })
-      }
-      navigation.navigate('send-edit-amount', {amount})
+        } as Portfolio.Token.Amount)
+
+      navigation.navigate('send-edit-amount', {amount: amountToEdit})
     }
   }, [
     amount,

@@ -214,7 +214,7 @@ export const swapMessages = defineMessages({
     defaultMessage: '!!!Limit Price Info',
   },
   limitPrice: {
-    id: 'swap.swapScreen.limitPriceWarningTitle',
+    id: 'swap.swapScreen.limitPrice',
     defaultMessage: '!!!Limit Price',
   },
   slippageToleranceInfo: {
@@ -476,27 +476,27 @@ export const swapMessages = defineMessages({
     defaultMessage: '!!!List Orders Tx Id',
   },
   limitPriceWarningTitle: {
-    id: 'components.txhistory.flawedwalletmodal.title',
+    id: 'swap.swapScreen.limitPriceWarningTitle',
     defaultMessage: '!!!Limit Price Warning Title',
   },
   limitPriceWarningDescription: {
-    id: 'components.txhistory.flawedwalletmodal.title',
+    id: 'swap.swapScreen.limitPriceWarningDescription',
     defaultMessage: '!!!Limit Price Warning Description',
   },
   limitPriceWarningYourPrice: {
-    id: 'components.txhistory.flawedwalletmodal.title',
+    id: 'swap.swapScreen.limitPriceWarningYourPrice',
     defaultMessage: '!!!Limit Price Warning Your Price',
   },
   limitPriceWarningMarketPrice: {
-    id: 'components.txhistory.flawedwalletmodal.title',
+    id: 'swap.swapScreen.limitPriceWarningMarketPrice',
     defaultMessage: '!!!Limit Price Warning Market Price',
   },
   limitPriceWarningBack: {
-    id: 'components.txhistory.flawedwalletmodal.title',
+    id: 'swap.swapScreen.limitPriceWarningBack',
     defaultMessage: '!!!Limit Price Warning Back',
   },
   limitPriceWarningConfirm: {
-    id: 'txReview.confirm',
+    id: 'swap.swapScreen.limitPriceWarningConfirm',
     defaultMessage: '!!!Limit Price Warning Confirm',
   },
   routingPreferences: {
@@ -608,19 +608,19 @@ export const swapMessages = defineMessages({
     defaultMessage: '!!!Continue',
   },
   slippageWarningTitle: {
-    id: 'components.txhistory.flawedwalletmodal.title',
+    id: 'swap.slippage.slippageWarningTitle',
     defaultMessage: '!!!Slippage Warning Title',
   },
   slippageWarningText: {
-    id: 'components.txhistory.flawedwalletmodal.title',
+    id: 'swap.slippage.slippageWarningText',
     defaultMessage: '!!!Slippage Warning Text',
   },
   slippageWarningYourSlippage: {
-    id: 'components.txhistory.flawedwalletmodal.title',
+    id: 'swap.slippage.yourSlippage',
     defaultMessage: '!!!Slippage Warning Your Slippage',
   },
   slippageWarningChangeAmount: {
-    id: 'global.txLabels.amount',
+    id: 'swap.slippage.changeAmount',
     defaultMessage: '!!!Slippage Warning Change Amount',
   },
   serviceUnavailable: {
