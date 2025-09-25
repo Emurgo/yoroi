@@ -141,10 +141,12 @@ export const parseNumberFromText = ({
       value.replace(decimalSeparator, '.'),
     ).decimalPlaces(precision)
 
-    const quantity =
-      denomination !== undefined
-        ? asQuantity(bnValue.shiftedBy(denomination))
-        : undefined
+    let quantity: Balance.Quantity | undefined
+    if (denomination !== undefined) {
+      const atomic = bnValue.shiftedBy(denomination)
+      const integerAtomic = atomic.integerValue(BigNumber.ROUND_DOWN)
+      quantity = asQuantity(integerAtomic)
+    }
 
     const sanitizedInput = workingInput
 
@@ -190,10 +192,12 @@ export const parseNumberFromText = ({
     value.replace(decimalSeparator, '.'),
   ).decimalPlaces(precision)
 
-  const quantity =
-    denomination !== undefined
-      ? asQuantity(bnValue.shiftedBy(denomination))
-      : undefined
+  let quantity: Balance.Quantity | undefined
+  if (denomination !== undefined) {
+    const atomic = bnValue.shiftedBy(denomination)
+    const integerAtomic = atomic.integerValue(BigNumber.ROUND_DOWN)
+    quantity = asQuantity(integerAtomic)
+  }
 
   return {
     sanitizedInput: finalSanitizedInput,
