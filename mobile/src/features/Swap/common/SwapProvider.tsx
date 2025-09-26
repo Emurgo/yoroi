@@ -36,6 +36,7 @@ const SwapActionType = {
   SlippageInputChanged: 'SlippageInputChanged',
   SwitchTouched: 'SwitchTouched',
   ProtocolSelected: 'ProtocolSelected',
+  ProtocolApplied: 'ProtocolApplied',
   ProtocolChanged: 'ProtocolChanged',
   Refresh: 'Refresh',
   ResetAmounts: 'ResetAmounts',
@@ -60,6 +61,7 @@ type SwapAction =
   | {type: typeof SwapActionType.SlippageInputChanged; value: number}
   | {type: typeof SwapActionType.SwitchTouched}
   | {type: typeof SwapActionType.ProtocolSelected; value: Swap.Protocol}
+  | {type: typeof SwapActionType.ProtocolApplied; value: Swap.Protocol}
   | {
       type: typeof SwapActionType.ProtocolChanged
       value: Swap.Protocol | undefined
@@ -376,16 +378,20 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
               })
 
               if (reqId === estimateReqIdRef.current && isRight(alt)) {
-                action({type: SwapActionType.ProtocolSelected, value: proto})
                 action({
                   type: SwapActionType.EstimateResponse,
                   value: alt.value.data,
+                })
+                action({
+                  type: SwapActionType.ProtocolApplied,
+                  value: proto,
                 })
                 return
               }
             }
           }
 
+          if (reqId !== estimateReqIdRef.current) return
           action({type: SwapActionType.EstimateError, value: response.error})
           return
         }
@@ -687,6 +693,11 @@ export const swapReducer = (state: SwapState, action: SwapAction) => {
         draft.needsNewEstimate = true
         draft.lastInputTouched = 'in'
         draft.selectedProtocol.isTouched = true
+        draft.selectedProtocol.value = action.value
+        break
+
+      case SwapActionType.ProtocolApplied:
+        draft.lastInputTouched = state.lastInputTouched
         draft.selectedProtocol.value = action.value
         break
 
