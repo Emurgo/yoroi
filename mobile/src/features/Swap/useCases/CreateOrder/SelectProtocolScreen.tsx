@@ -44,7 +44,7 @@ export const SelectProtocolScreen = () => {
 
   return (
     <SafeAreaView
-      style={[{backgroundColor: p.bg_color_max}]}
+      style={[{backgroundColor: p.bg_color_max, flex: 1}]}
       edges={['left', 'right', 'bottom']}
     >
       <FlatList
