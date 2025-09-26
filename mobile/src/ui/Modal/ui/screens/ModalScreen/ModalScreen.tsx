@@ -24,8 +24,6 @@ import Animated, {
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
-import {useDismissOrClose} from '~/ui/Modal/hooks'
-
 import {useModal} from '../../../context/ModalContext'
 import {ModalScreenWrapper} from './ModalScreenWrapper'
 
@@ -77,17 +75,9 @@ export const Modal = () => {
     ? withFeedback
     : lastWithFeedbackRef.current
 
-  const handleClose = React.useCallback(() => {
-    closeModal()
-  }, [closeModal])
-
-  const handleDismissOrClose = useDismissOrClose()
-
-  // Shared values for both entrance and drag animations
   const dragY = useSharedValue(0)
-  const modalTranslateY = useSharedValue(48) // Start off-screen
+  const modalTranslateY = useSharedValue(48)
 
-  // Create drag gesture for the top area of the modal
   const createDragGesture = () => {
     return Gesture.Pan()
       .onUpdate((event) => {
@@ -97,7 +87,7 @@ export const Modal = () => {
       .onEnd((event) => {
         'worklet'
         if (event.translationY > 100 && event.velocityY > 0) {
-          runOnJS(handleDismissOrClose)()
+          runOnJS(closeModal)()
         } else {
           dragY.value = withSpring(0)
         }
@@ -148,8 +138,8 @@ export const Modal = () => {
   }, [isOpen, backdropOpacity, modalTranslateY, dragY])
 
   const handleOnRequestClose = React.useCallback(() => {
-    if (canDiscardEnabled) handleClose()
-  }, [canDiscardEnabled, handleClose])
+    if (canDiscardEnabled) closeModal()
+  }, [canDiscardEnabled, closeModal])
 
   return (
     <RNModal
@@ -175,10 +165,7 @@ export const Modal = () => {
           ]}
         />
         {canDiscardEnabled && (
-          <Pressable
-            onPress={handleDismissOrClose}
-            style={[a.absolute, a.inset_0]}
-          />
+          <Pressable onPress={closeModal} style={[a.absolute, a.inset_0]} />
         )}
         <View style={[a.flex_1, a.justify_end]}>
           <KeyboardAvoidingView behavior="padding">

@@ -4,6 +4,7 @@ import * as React from 'react'
 import {Keyboard} from 'react-native'
 
 import {useAuth} from '~/features/Auth/context/AuthProvider'
+import {useIsKeyboardOpen} from '~/hooks/useIsKeyboardOpen'
 
 type ModalQueueItem = {
   content: React.ReactNode
@@ -81,6 +82,7 @@ export const ModalProvider = ({children, initialState}: Props) => {
   const isOpenRef = React.useRef(state.isOpen)
   const queueRef = React.useRef(state.queue)
   const prevLoggedOutRef = React.useRef(isLoggedOut)
+  const isKeyboardOpen = useIsKeyboardOpen()
 
   React.useEffect(() => {
     isOpenRef.current = state.isOpen
@@ -88,10 +90,14 @@ export const ModalProvider = ({children, initialState}: Props) => {
   }, [state.isOpen, state.queue])
 
   const closeModal = React.useCallback(() => {
+    if (isKeyboardOpen) {
+      Keyboard.dismiss()
+      return
+    }
     dispatch({
       type: 'closeAndProcessQueue',
     })
-  }, [])
+  }, [isKeyboardOpen])
 
   const openModal = React.useCallback(
     ({
