@@ -7,7 +7,6 @@ import {Platform, Text, View} from 'react-native'
 import {usePortfolioPrimaryBalance} from '~/features/Portfolio/common/hooks/usePortfolioPrimaryBalance'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {ActivityIndicator} from '~/ui/ActivityIndicator/ActivityIndicator'
 import {Space} from '~/ui/Space/Space'
 
 import {useCatalystCurrentFund} from './hooks'
@@ -17,21 +16,12 @@ const formatter = amountFormatter({
   dropTraillingZeros: true,
 })
 
-const InsufficientFundsModalContent = () => {
+export const InsufficientFundsModal = () => {
   const strings = useStrings()
   const {wallet} = useSelectedWallet()
   const primaryBalance = usePortfolioPrimaryBalance({wallet})
-  const {fund, query} = useCatalystCurrentFund()
+  const {fund} = useCatalystCurrentFund()
   const {palette: p} = useTheme()
-
-  // Show loading state
-  if (query.isLoading) {
-    return (
-      <View style={[a.flex_1, a.gap_lg, a.justify_between]}>
-        <ActivityIndicator />
-      </View>
-    )
-  }
 
   // Default to 0 if fund data is not available yet
   const votingPowerThreshold = fund?.info?.votingPowerThreshold
@@ -57,5 +47,3 @@ const InsufficientFundsModalContent = () => {
     </View>
   )
 }
-
-export const InsufficientFundsModal = InsufficientFundsModalContent

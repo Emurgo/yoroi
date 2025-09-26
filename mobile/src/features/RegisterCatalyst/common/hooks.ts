@@ -12,7 +12,7 @@ import {isShelley} from '~/wallets/cardano/utils'
 export const useCanVote = (wallet: YoroiWallet) => {
   const {meta} = useSelectedWallet()
   const amount = usePortfolioPrimaryBalance({wallet})
-  const {fund} = useCatalystCurrentFund()
+  const {query, fund} = useCatalystCurrentFund()
 
   // Default to false if fund data is not available yet
   const sufficientFunds = fund
@@ -20,8 +20,10 @@ export const useCanVote = (wallet: YoroiWallet) => {
     : false
 
   return {
-    canVote: !meta.isReadOnly && isShelley(meta.implementation),
+    canVote:
+      !query.isLoading && !meta.isReadOnly && isShelley(meta.implementation),
     sufficientFunds,
+    isLoading: query.isLoading,
   }
 }
 
