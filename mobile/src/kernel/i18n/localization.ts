@@ -147,22 +147,10 @@ export const translations = freeze(
 
 export const getSystemNumberLocale = () => {
   const primary = Localization.getLocales()[0]
-  const primaryOsLocaleTag =
-    primary?.languageTag || Intl.NumberFormat().resolvedOptions().locale
 
-  // Prefer Expo-provided separators from the OS locale
-  const expoDecimal = primary?.decimalSeparator
-  const expoGroup = primary?.digitGroupingSeparator
-
-  // Fallback to Intl if Expo fields are unavailable
-  const intlParts = new Intl.NumberFormat(primaryOsLocaleTag).formatToParts(
-    1234567.89,
-  )
-  const intlDecimal = intlParts.find((p) => p.type === 'decimal')?.value
-  const intlGroup = intlParts.find((p) => p.type === 'group')?.value
-
-  const decimal = expoDecimal ?? intlDecimal ?? '.'
-  const group = expoGroup ?? intlGroup ?? ','
+  // Use Expo-provided separators from the OS locale
+  const decimal = primary?.decimalSeparator ?? '.'
+  const group = primary?.digitGroupingSeparator ?? ','
 
   return {
     prefix: '',
