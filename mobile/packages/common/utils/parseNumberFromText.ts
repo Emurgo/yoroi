@@ -73,7 +73,10 @@ export const parseNumberFromText = ({
   precision = denomination ?? 12,
 }: ParseNumberFromTextOptions): ParseNumberFromTextResult => {
   // Use English locale (dot as decimal separator) for sanitization when format is not provided
-  const decimalSeparator = format?.decimalSeparator ?? '.'
+  const decimalSeparator =
+    format?.decimalSeparator ??
+    BigNumber.config().FORMAT?.decimalSeparator ??
+    '.'
 
   // Handle keyboard-locale mismatch FIRST
   let normalizedText = text
