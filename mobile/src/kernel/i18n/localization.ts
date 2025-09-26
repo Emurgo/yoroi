@@ -1,3 +1,4 @@
+import BigNumber from 'bignumber.js'
 import * as Localization from 'expo-localization'
 import {freeze} from 'immer'
 
@@ -145,16 +146,23 @@ export const translations = freeze(
 )
 
 export const getSystemNumberLocale = () => {
+  const primary = Localization.getLocales()[0]
   const primaryOsLocaleTag =
-    Localization.getLocales()[0]?.languageTag ||
-    Intl.NumberFormat().resolvedOptions().locale
+    primary?.languageTag || Intl.NumberFormat().resolvedOptions().locale
 
-  const parts = new Intl.NumberFormat(primaryOsLocaleTag).formatToParts(
+  // Prefer Expo-provided separators from the OS locale
+  const expoDecimal = primary?.decimalSeparator
+  const expoGroup = primary?.digitGroupingSeparator
+
+  // Fallback to Intl if Expo fields are unavailable
+  const intlParts = new Intl.NumberFormat(primaryOsLocaleTag).formatToParts(
     1234567.89,
   )
+  const intlDecimal = intlParts.find((p) => p.type === 'decimal')?.value
+  const intlGroup = intlParts.find((p) => p.type === 'group')?.value
 
-  const decimal = parts.find((p) => p.type === 'decimal')?.value ?? '.'
-  const group = parts.find((p) => p.type === 'group')?.value ?? ','
+  const decimal = expoDecimal ?? intlDecimal ?? '.'
+  const group = expoGroup ?? intlGroup ?? ','
 
   return {
     prefix: '',
@@ -167,3 +175,7 @@ export const getSystemNumberLocale = () => {
     suffix: '',
   }
 }
+
+BigNumber.config({
+  FORMAT: getSystemNumberLocale(),
+})
