@@ -146,6 +146,14 @@
           }
         }
       ],
+      [
+        "@sentry/react-native/expo",
+        {
+          "url": "https://sentry.io/",
+          "project": "yoroi-mobile",
+          "organization": "emurgo-fintech-inc"
+        }
+      ],
       "./plugins/with-app-turbo-module-provider.js"
     ],
     "extra": {
