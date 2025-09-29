@@ -155,7 +155,7 @@ export const parseNumberFromText = ({
 
     return {
       sanitizedInput,
-      formattedValue,
+      formattedValue: formattedValue?.replace(/[,|.]$/, ''),
       numericValue: bnValue.toNumber(),
       quantity,
     }
@@ -204,7 +204,7 @@ export const parseNumberFromText = ({
 
   return {
     sanitizedInput: finalSanitizedInput,
-    formattedValue,
+    formattedValue: formattedValue?.replace(/[,|.]$/, ''),
     numericValue: bnValue.toNumber(),
     quantity,
   }
