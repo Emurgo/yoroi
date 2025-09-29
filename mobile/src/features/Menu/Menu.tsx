@@ -5,6 +5,7 @@ import {createStackNavigator} from '@react-navigation/stack'
 import * as Linking from 'expo-linking'
 import * as React from 'react'
 import {
+  ActivityIndicator,
   ScrollView,
   TouchableOpacity,
   View,
@@ -211,8 +212,9 @@ const Catalyst = ({
   onPress: () => void
 }) => {
   const strings = useStrings()
+  const {palette: p} = useTheme()
   const {wallet} = useSelectedWallet()
-  const {sufficientFunds} = useCanVote(wallet)
+  const {sufficientFunds, isLoading} = useCanVote(wallet)
   const {openModal, closeModal} = useModal()
   const screenHeight = useWindowDimensions().height
   const modalHeight = Math.min(screenHeight * 0.8, 280)
@@ -229,6 +231,19 @@ const Catalyst = ({
       })
     }
   }
+
+  if (isLoading) {
+    return (
+      <Item
+        disabled
+        onPress={() => null}
+        label={label}
+        left={left}
+        right={<ActivityIndicator color={p.gray_600} />}
+      />
+    )
+  }
+
   return <Item label={label} onPress={handlePress} left={left} />
 }
 
