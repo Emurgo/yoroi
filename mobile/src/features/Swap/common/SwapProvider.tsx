@@ -702,11 +702,13 @@ export const swapReducer = (state: SwapState, action: SwapAction) => {
         draft.canSwap = state.tokenInInput.error === null
 
         if (state.lastInputTouched === 'in') {
-          draft.tokenOutInput.value = String(
-            action.value.totalOutputWithoutSlippage ?? 0,
-          )
+          draft.tokenOutInput.value = parseNumberFromText({
+            text: String(action.value.totalOutputWithoutSlippage ?? 0),
+          }).sanitizedInput
         } else {
-          draft.tokenInInput.value = String(action.value.totalInput ?? 0)
+          draft.tokenInInput.value = parseNumberFromText({
+            text: String(action.value.totalInput ?? 0),
+          }).sanitizedInput
         }
         break
 

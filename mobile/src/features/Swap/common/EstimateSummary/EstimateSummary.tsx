@@ -1,3 +1,4 @@
+import {parseNumberFromText} from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Swap} from '@yoroi/types'
 
@@ -8,6 +9,7 @@ import {undefinedToken} from '~/features/Swap/common/constants'
 import {useNavigateTo} from '~/features/Swap/common/navigation'
 import {useSwap} from '~/features/Swap/common/useSwap'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useLanguage} from '~/kernel/i18n/LanguageProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
@@ -22,7 +24,9 @@ export const EstimateSummary = () => {
   const swapForm = useSwap()
   const {openModal} = useModal()
   const navigateTo = useNavigateTo()
-
+  const {numberLocale} = useLanguage()
+  const localFormat = (v: number | string) =>
+    parseNumberFromText({text: String(v), format: numberLocale}).formattedValue
   const tokenInInfo = swapForm.tokenInfos.get(
     swapForm.tokenInInput.tokenId ?? undefinedToken,
   )
@@ -82,7 +86,7 @@ export const EstimateSummary = () => {
             ? strings.swap.limitPriceInfo
             : strings.swap.marketPriceInfo
         }
-        value={`1 ${tokenInTicker} = ${price} ${tokenOutTicker}`}
+        value={`1 ${tokenInTicker} = ${localFormat(price)} ${tokenOutTicker}`}
       />
 
       <Space.Height.sm />
@@ -90,7 +94,7 @@ export const EstimateSummary = () => {
       <Row
         label={strings.swap.swapFeesTitle}
         description={strings.swap.swapFees}
-        value={`${swapForm.estimate?.totalFee} ${wallet.portfolioPrimaryTokenInfo.ticker}`}
+        value={`${localFormat(swapForm.estimate?.totalFee)} ${wallet.portfolioPrimaryTokenInfo.ticker}`}
       />
 
       <Space.Height.sm />
@@ -98,7 +102,7 @@ export const EstimateSummary = () => {
       <Row
         label={strings.swap.swapMinReceivedTitle}
         description={strings.swap.swapMinReceived}
-        value={`${swapForm.estimate?.totalOutput} ${tokenOutTicker}`}
+        value={`${localFormat(swapForm.estimate?.totalOutput)} ${tokenOutTicker}`}
       />
 
       <Space.Height.sm />
@@ -106,7 +110,7 @@ export const EstimateSummary = () => {
       <Row
         label={strings.swap.swapSlippageTitle}
         description={strings.swap.swapSlippage}
-        value={`${swapForm.slippageInput.value}%`}
+        value={`${localFormat(swapForm.slippageInput.value)}%`}
       />
     </View>
   )
