@@ -206,7 +206,7 @@ describe('parseNumberFromText', () => {
   it('should throw error for invalid quantity in asQuantity', () => {
     // This test covers the error case in asQuantity function
     // We need to test the asQuantity function directly since sanitization prevents invalid input
-    const {asQuantity} = require('./parseNumberFromText')
+    const {asQuantity} = require('./parse-number-from-text')
     expect(() => {
       asQuantity('invalid')
     }).toThrow('Invalid quantity')
