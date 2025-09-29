@@ -1,6 +1,6 @@
 import {Numbers} from '@yoroi/types'
 
-import {parseNumberFromText} from './parseNumberFromText'
+import {parseNumberFromText} from './parse-number-from-text'
 
 describe('parseNumberFromText', () => {
   const englishFormat: Numbers.Locale = {
