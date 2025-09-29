@@ -102,11 +102,13 @@ export const EstimateSummary = () => {
 
       <Space.Height.sm />
 
-      <Row
-        label={strings.swap.swapSlippageTitle}
-        description={strings.swap.swapSlippage}
-        value={`${localFormat(swapForm.slippageInput.value)}%`}
-      />
+      {swapForm.orderType === 'market' && (
+        <Row
+          label={strings.swap.swapSlippageTitle}
+          description={strings.swap.swapSlippage}
+          value={`${localFormat(swapForm.slippageInput.value)}%`}
+        />
+      )}
     </View>
   )
 }
