@@ -47,7 +47,8 @@ describe('minswapApiMaker', () => {
     }
     const api = minswapApiMaker(config)
 
-    expect(api.tokens()).toEqual({
+    const result = await api.tokens()
+    expect(result).toEqual({
       tag: 'left',
       error: {
         status: -3,
