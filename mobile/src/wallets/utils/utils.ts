@@ -1,3 +1,4 @@
+import {parseNumberFromText} from '@yoroi/common'
 import {Balance, Numbers} from '@yoroi/types'
 
 import BigNumber from 'bignumber.js'
@@ -172,51 +173,13 @@ export const Quantities = {
     format: Numbers.Locale,
     precision = denomination,
   ): [string, Balance.Quantity] => {
-    const {decimalSeparator} = format
-    const invalid = new RegExp(`[^0-9${decimalSeparator}]`, 'g')
-    const sanitized = text === '' ? '' : text.replaceAll(invalid, '')
-
-    if (sanitized === '') return ['', Quantities.zero]
-    if (sanitized.startsWith(decimalSeparator))
-      return [`0${decimalSeparator}`, Quantities.zero]
-
-    const parts = sanitized.split(decimalSeparator)
-
-    let fullDecValue = sanitized
-    let value = sanitized
-
-    let fullDecFormat = new BigNumber(
-      fullDecValue.replace(decimalSeparator, '.'),
-    ).toFormat()
-    let input = fullDecFormat
-
-    if (parts.length <= 1) {
-      const quantity = asQuantity(
-        new BigNumber(value.replace(decimalSeparator, '.'))
-          .decimalPlaces(precision)
-          .shiftedBy(denomination),
-      )
-
-      return [input, quantity]
-    }
-
-    const [int, dec] = parts
-    // trailing `1` is to allow the user to type `1.0` without losing the decimal part
-    fullDecValue = `${int}${decimalSeparator}${dec?.slice(0, precision)}1`
-    value = `${int}${decimalSeparator}${dec?.slice(0, precision)}`
-    fullDecFormat = new BigNumber(
-      fullDecValue.replace(decimalSeparator, '.'),
-    ).toFormat()
-    // remove trailing `1`
-    input = fullDecFormat.slice(0, -1)
-
-    const quantity = asQuantity(
-      new BigNumber(value.replace(decimalSeparator, '.'))
-        .decimalPlaces(precision)
-        .shiftedBy(denomination),
-    )
-
-    return [input, quantity]
+    const result = parseNumberFromText({
+      text,
+      denomination,
+      format,
+      precision,
+    })
+    return [result.sanitizedInput, (result.quantity ?? '0') as Balance.Quantity]
   },
   format: (
     quantity: Balance.Quantity,

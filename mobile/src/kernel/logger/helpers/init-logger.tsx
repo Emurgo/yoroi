@@ -30,17 +30,32 @@ if (isEnabled) {
   logger.disable()
 }
 
+const navigationIntegration = Sentry.reactNavigationIntegration({
+  enableTimeToInitialDisplay: true,
+})
+
 Sentry.init({
   dsn: sentryDsn,
   tracesSampleRate: sampleRate,
   environment,
   release,
   dist: distribution,
+  spotlight: __DEV__,
+  enableCaptureFailedRequests: true,
+  enableAppHangTracking: true,
+  enableAutoPerformanceTracing: true,
+  enableNative: true,
+  enableAppStartTracking: true,
+  enableNativeFramesTracking: true,
+  enableStallTracking: true,
+  enableUserInteractionTracing: true,
   beforeSend(event) {
     // https://github.com/getsentry/sentry-javascript/issues/2039
     // TODO: this will require to close the app when changing in the settings to take effect
     return isEnabled ? event : null
   },
+  integrations: [Sentry.httpClientIntegration(), navigationIntegration],
+  sendDefaultPii: true,
 })
 
 logger.addTransport(sentryAdapter().transporter)
