@@ -30,15 +30,17 @@ export const muesliswapApiMaker = (
       {
         get() {
           return () =>
-            freeze(
-              {
-                tag: 'left',
-                error: {
-                  status: -3,
-                  message: 'Muesliswap api only works on mainnet',
+            Promise.resolve(
+              freeze(
+                {
+                  tag: 'left',
+                  error: {
+                    status: -3,
+                    message: 'Muesliswap api only works on mainnet',
+                  },
                 },
-              },
-              true,
+                true,
+              ),
             )
         },
       },

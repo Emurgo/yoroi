@@ -30,15 +30,17 @@ export const minswapApiMaker = (
       {
         get() {
           return () =>
-            freeze(
-              {
-                tag: 'left',
-                error: {
-                  status: -3,
-                  message: 'Minswap api only works on mainnet',
+            Promise.resolve(
+              freeze(
+                {
+                  tag: 'left',
+                  error: {
+                    status: -3,
+                    message: 'Minswap api only works on mainnet',
+                  },
                 },
-              },
-              true,
+                true,
+              ),
             )
         },
       },
