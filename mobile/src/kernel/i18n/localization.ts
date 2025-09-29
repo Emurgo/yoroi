@@ -1,3 +1,4 @@
+import BigNumber from 'bignumber.js'
 import * as Localization from 'expo-localization'
 import {freeze} from 'immer'
 
@@ -56,6 +57,44 @@ export const supportedLanguagesCodes: ReadonlyArray<LanguageCode> =
 export const isLanguageCode = (data: unknown): data is LanguageCode =>
   supportedLanguages.some((l) => l.code === data)
 
+// Best-match resolver mapping base language -> supported LanguageCode
+const baseLanguageFallback: Readonly<Record<string, LanguageCode>> = freeze(
+  {
+    en: 'en-US',
+    es: 'es-ES',
+    fr: 'fr-FR',
+    de: 'de-DE',
+    id: 'id-ID',
+    ja: 'ja-JP',
+    ko: 'ko-KR',
+    pt: 'pt-BR',
+    ru: 'ru-RU',
+    vi: 'vi-VN',
+    zh: 'zh-Hans',
+  } as const,
+  true,
+)
+
+export const getBestSupportedLanguage = (
+  locales: ReadonlyArray<Localization.Locale> = Localization.getLocales(),
+): LanguageCode => {
+  // 1) exact match by full languageTag in priority order
+  for (const locale of locales) {
+    const tag = locale.languageTag as LanguageCode
+    if (supportedLanguagesCodes.includes(tag)) return tag
+  }
+
+  // 2) match by base language code (e.g., es-* -> es-ES)
+  for (const locale of locales) {
+    const base = locale.languageCode ?? locale.languageTag.split('-')[0]
+    const fallback = base != null ? baseLanguageFallback[base] : undefined
+    if (fallback != null) return fallback
+  }
+
+  // 3) default to English (US)
+  return LANGUAGES.ENGLISH
+}
+
 /**
  * NOTE: Locale Selection Logic
  *
@@ -66,11 +105,7 @@ export const isLanguageCode = (data: unknown): data is LanguageCode =>
  * 2. The first locale that matches our supported languages is selected
  * 3. If no match is found, it defaults to 'en-US'
  */
-const systemLocale = Localization.getLocales().find((l: Localization.Locale) =>
-  supportedLanguagesCodes.includes(l.languageTag as LanguageCode),
-)
-export const systemLanguageCode = (systemLocale?.languageTag ??
-  'en-US') as LanguageCode
+export const systemLanguageCode = getBestSupportedLanguage()
 export const findLocale = (languageCode: LanguageCode) => {
   const locale = Localization.getLocales().find(
     (l: Localization.Locale) => l.languageTag === languageCode,
@@ -109,3 +144,26 @@ export const translations = freeze(
   },
   true,
 )
+
+export const getSystemNumberLocale = () => {
+  const primary = Localization.getLocales()[0]
+
+  // Use Expo-provided separators from the OS locale
+  const decimal = primary?.decimalSeparator ?? '.'
+  const group = primary?.digitGroupingSeparator ?? ','
+
+  return {
+    prefix: '',
+    decimalSeparator: decimal,
+    groupSeparator: group,
+    groupSize: 3,
+    secondaryGroupSize: 0,
+    fractionGroupSeparator: ' ',
+    fractionGroupSize: 0,
+    suffix: '',
+  }
+}
+
+BigNumber.config({
+  FORMAT: getSystemNumberLocale(),
+})

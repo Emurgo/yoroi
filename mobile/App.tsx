@@ -9,6 +9,7 @@ import {
 import {ThemeProvider} from '@yoroi/theme'
 import {TransferProvider} from '@yoroi/transfer'
 
+import * as Sentry from '@sentry/react-native'
 import * as Updates from 'expo-updates'
 import * as React from 'react'
 
@@ -129,7 +130,7 @@ async function checkForUpdates() {
   }
 }
 
-export default function App() {
+export default Sentry.wrap(function App() {
   React.useEffect(() => {
     if (__DEV__) {
       return
@@ -147,4 +148,4 @@ export default function App() {
       </BusinessShell>
     </AppShell>
   )
-}
+})
