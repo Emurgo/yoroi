@@ -3,7 +3,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 
 import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
-import {Alert, Platform, ScrollView, Text, View} from 'react-native'
+import {Alert, Platform, Text} from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
@@ -11,6 +11,7 @@ import {SetupWalletRouteNavigation} from '~/kernel/navigation/types'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {useModal} from '~/ui/Modal/context/ModalContext'
+import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {HARDWARE_WALLETS, useLedgerPermissions} from '~/wallets/hw/hw'
 
 const useIsAndroidUsbSupported = () => {
@@ -28,31 +29,31 @@ const useIsAndroidUsbSupported = () => {
   return isAndroidUsbSupported
 }
 
-export const SelectHwConnectionModal = () => {
+const SelectHwConnectionModalContent = () => {
   const {atoms: ta} = useTheme()
   const strings = useStrings()
 
   return (
-    <ScrollView
-      style={[a.flex_1]}
-      contentContainerStyle={[a.px_lg]}
-      bounces={false}
-      focusable
-    >
+    <Modal.Content>
       <Text style={[a.body_1_lg_regular, ta.text_gray_medium]}>
         {strings.setupWallet.hwModalText}
       </Text>
-    </ScrollView>
+    </Modal.Content>
   )
 }
 
-export const SelectHwConnectionModalActions = () => {
+const SelectHwConnectionModalFooter = () => {
   return (
-    <View style={[a.gap_lg, a.self_stretch]}>
+    <Modal.Footer>
       <SelectBluetoothSection />
       <SelectUsbSection />
-    </View>
+    </Modal.Footer>
   )
+}
+
+export const SelectHwConnectionModal = {
+  Content: SelectHwConnectionModalContent,
+  Footer: SelectHwConnectionModalFooter,
 }
 
 const SelectBluetoothSection = () => {

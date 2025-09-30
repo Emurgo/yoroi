@@ -9,7 +9,7 @@ export const ModalFooterWrapper = ({
 }: React.PropsWithChildren<ViewProps>) => {
   return (
     <View
-      style={StyleSheet.flatten([a.gap_xs, a.self_stretch, style])}
+      style={StyleSheet.flatten([a.gap_sm, a.self_stretch, style])}
       {...rest}
     >
       {children}

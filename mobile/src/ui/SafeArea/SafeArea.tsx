@@ -11,7 +11,7 @@ export const SafeArea = ({children, style, ...rest}: SafeAreaViewProps) => {
   const {atoms: ta} = useTheme()
   return (
     <SafeAreaView
-      edges={['bottom', 'left', 'right', 'bottom']}
+      edges={['bottom', 'left', 'right']}
       {...rest}
       style={StyleSheet.flatten([a.flex_1, ta.bg_color_max, style])}
     >
