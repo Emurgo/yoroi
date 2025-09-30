@@ -1,4 +1,4 @@
-import {useTheme} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
 import {
@@ -6,16 +6,15 @@ import {
   type SafeAreaViewProps,
 } from 'react-native-safe-area-context'
 
-export const SafeArea = ({children, ...rest}: SafeAreaViewProps) => {
-  const {palette: p} = useTheme()
+export const SafeArea = ({children, style, ...rest}: SafeAreaViewProps) => {
+  const {atoms: ta} = useTheme()
   return (
     <SafeAreaView
-      edges={safeAreaEdges}
+      edges={['bottom', 'left', 'right', 'bottom']}
       {...rest}
-      style={[{flex: 1}, {backgroundColor: p.bg_color_max}, rest.style]}
+      style={[a.flex_1, ta.bg_color_max, style]}
     >
       {children}
     </SafeAreaView>
   )
 }
-const safeAreaEdges = ['bottom', 'left', 'right', 'bottom'] as const
