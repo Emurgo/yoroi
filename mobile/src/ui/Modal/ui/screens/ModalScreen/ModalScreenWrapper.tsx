@@ -15,8 +15,8 @@ type Props = SafeAreaViewProps & {
 export const ModalScreenWrapper = ({
   title,
   footer,
-  edges = ['left', 'right'],
   children,
+  edges,
   ...rest
 }: Props) => {
   const {atoms: ta} = useTheme()

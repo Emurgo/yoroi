@@ -40,6 +40,9 @@ const Modal = () => {
     closeModal,
     height,
     withFeedback,
+    hasExpanded,
+    canExpand,
+    setHasExpanded,
   } = useModal()
   const {palette: p, isDark} = useTheme()
   useSafeAreaInsets()
@@ -53,6 +56,8 @@ const Modal = () => {
   const lastHeightRef = React.useRef(height)
   const lastCanDiscardRef = React.useRef(canDiscard)
   const lastWithFeedbackRef = React.useRef(withFeedback)
+  const lastHasExpandedRef = React.useRef(hasExpanded)
+  const lastCanExpandRef = React.useRef(canExpand)
 
   React.useEffect(() => {
     if (isOpen) {
@@ -63,8 +68,21 @@ const Modal = () => {
       lastHeightRef.current = height
       lastCanDiscardRef.current = canDiscard
       lastWithFeedbackRef.current = withFeedback
+      lastHasExpandedRef.current = hasExpanded
+      lastCanExpandRef.current = canExpand
     }
-  }, [isOpen, content, title, footer, full, height, canDiscard, withFeedback])
+  }, [
+    isOpen,
+    content,
+    title,
+    footer,
+    full,
+    height,
+    canDiscard,
+    withFeedback,
+    hasExpanded,
+    canExpand,
+  ])
 
   const visibleContent = isOpen ? content : lastContentRef.current
   const visibleTitle = isOpen ? title : lastTitleRef.current
@@ -76,18 +94,38 @@ const Modal = () => {
   const withFeedbackEnabled = isOpen
     ? withFeedback
     : lastWithFeedbackRef.current
+  const hasExpandedEnabled = isOpen ? hasExpanded : lastHasExpandedRef.current
+  const canExpandEnabled = isOpen ? canExpand : lastCanExpandRef.current
 
   const dragY = useSharedValue(0)
   const modalTranslateY = useSharedValue(48)
+  const modalHeight = useSharedValue(visibleHeight)
+  const isExpanded = useSharedValue(hasExpandedEnabled)
 
   const createDragGesture = () => {
     return Gesture.Pan()
       .onUpdate((event) => {
         'worklet'
-        dragY.value = event.translationY
+        // Only allow upward movement if canExpand is true
+        if (event.translationY < 0 && !canExpandEnabled) {
+          // Prevent upward movement by clamping to 0
+          dragY.value = Math.max(0, event.translationY)
+        } else {
+          dragY.value = event.translationY
+        }
       })
       .onEnd((event) => {
         'worklet'
+        // Check for upward scroll (negative translationY) to expand modal
+        // Only allow expansion if canExpand is true
+        if (event.translationY < 0 && !hasExpandedEnabled && canExpandEnabled) {
+          const threshold = -(visibleHeight * 0.2)
+          if (event.translationY <= threshold) {
+            runOnJS(setHasExpanded)(true)
+          }
+        }
+
+        // Check for downward scroll to close modal
         if (event.translationY > 100 && event.velocityY > 0) {
           runOnJS(closeModal)()
         } else {
@@ -103,12 +141,20 @@ const Modal = () => {
     }
   })
 
+  const heightAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      height: isExpanded.value ? '100%' : modalHeight.value,
+    }
+  })
+
   React.useEffect(() => {
     if (isOpen) {
       setIsVisible(true)
       backdropOpacity.setValue(0)
       modalTranslateY.value = 48
       dragY.value = 0
+      modalHeight.value = visibleHeight
+      isExpanded.value = hasExpandedEnabled
       RNAnimated.parallel([
         RNAnimated.timing(backdropOpacity, {
           toValue: 1,
@@ -125,7 +171,7 @@ const Modal = () => {
       RNAnimated.parallel([
         RNAnimated.timing(backdropOpacity, {
           toValue: 0,
-          duration: time.seconds(0.2),
+          duration: time.seconds(0.3),
           easing: Easing.in(Easing.cubic),
           useNativeDriver: true,
         }),
@@ -137,7 +183,20 @@ const Modal = () => {
         stiffness: 150,
       })
     }
-  }, [isOpen, backdropOpacity, modalTranslateY, dragY])
+  }, [
+    isOpen,
+    backdropOpacity,
+    modalTranslateY,
+    dragY,
+    modalHeight,
+    visibleHeight,
+    hasExpandedEnabled,
+    isExpanded,
+  ])
+
+  React.useEffect(() => {
+    isExpanded.value = hasExpandedEnabled
+  }, [hasExpandedEnabled, isExpanded])
 
   const handleOnRequestClose = React.useCallback(() => {
     if (canDiscardEnabled) closeModal()
@@ -173,7 +232,6 @@ const Modal = () => {
           <KeyboardAvoidingView behavior="padding">
             <Animated.View
               style={[
-                isFull ? a.flex_1 : {height: visibleHeight},
                 a.self_stretch,
                 a.overflow_hidden,
                 {zIndex: 1},
@@ -183,9 +241,10 @@ const Modal = () => {
                   borderTopRightRadius: s.xl,
                 },
                 combinedModalStyle,
+                heightAnimatedStyle,
               ]}
             >
-              {canDiscardEnabled && !isFull && (
+              {canDiscardEnabled && !hasExpandedEnabled && !isFull && (
                 <GestureHandlerRootView style={[a.flex]}>
                   <GestureDetector gesture={createDragGesture()}>
                     <View style={[a.align_center, a.pt_sm, a.pb_xs]}>
@@ -198,7 +257,13 @@ const Modal = () => {
               <ModalScreenWrapper
                 title={visibleTitle}
                 footer={visibleFooter}
-                edges={isFull ? [] : undefined}
+                edges={
+                  isFull
+                    ? []
+                    : hasExpandedEnabled
+                      ? ['top', 'right', 'left']
+                      : ['right', 'left']
+                }
               >
                 {visibleContent}
               </ModalScreenWrapper>
@@ -220,7 +285,6 @@ const DiscardIndicator = ({withFeedback = false}: DiscardIndicatorProps) => {
   const {atoms: ta} = useTheme()
   const animatedWidth = useSharedValue(width)
 
-  // Animated style for the width
   const widthAnimatedStyle = useAnimatedStyle(() => {
     return {
       width: animatedWidth.value,
@@ -232,7 +296,7 @@ const DiscardIndicator = ({withFeedback = false}: DiscardIndicatorProps) => {
       animatedWidth.value = s.xs
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
       animatedWidth.value = withSpring(width, {
-        duration: 1000,
+        duration: time.oneSecond,
       })
     } else {
       animatedWidth.value = width

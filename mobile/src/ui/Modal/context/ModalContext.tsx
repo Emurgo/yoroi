@@ -17,6 +17,7 @@ type ModalQueueItem = {
   canContinue?: boolean
   onClose?: () => void
   full?: boolean
+  canExpand?: boolean
 }
 
 type ModalState = {
@@ -31,6 +32,8 @@ type ModalState = {
   canContinue?: boolean
   onClose?: () => void
   full?: boolean
+  hasExpanded?: boolean
+  canExpand?: boolean
   queue: ModalQueueItem[]
 }
 type ModalActions = {
@@ -45,6 +48,7 @@ type ModalActions = {
     canContinue?: boolean
     onClose?: () => void
     full?: boolean
+    canExpand?: boolean
   }) => void
   closeModal: () => void
   setLoading: (isLoading: boolean) => void
@@ -52,6 +56,8 @@ type ModalActions = {
   setTitle: (title: string) => void
   setCanDiscard: (canDiscard: boolean) => void
   setCanContinue: (canContinue: boolean) => void
+  setHasExpanded: (hasExpanded: boolean) => void
+  setCanExpand: (canExpand: boolean) => void
   clearQueue: () => void
 }
 
@@ -111,6 +117,7 @@ export const ModalProvider = ({children, initialState}: Props) => {
       canContinue,
       onClose,
       full,
+      canExpand,
     }: {
       content: React.ReactNode
       height?: number
@@ -122,6 +129,7 @@ export const ModalProvider = ({children, initialState}: Props) => {
       canContinue?: boolean
       onClose?: () => void
       full?: boolean
+      canExpand?: boolean
     }) => {
       Keyboard.dismiss()
 
@@ -139,6 +147,7 @@ export const ModalProvider = ({children, initialState}: Props) => {
             canContinue,
             onClose,
             full,
+            canExpand,
           },
         })
 
@@ -157,82 +166,71 @@ export const ModalProvider = ({children, initialState}: Props) => {
         canContinue,
         onClose,
         full,
+        canExpand,
       })
     },
     [state.isOpen],
   )
 
-  const setLoading = React.useCallback((isLoading: boolean) => {
-    dispatch({
-      type: 'setLoading',
-      isLoading,
-    })
-  }, [])
-
-  const setFooter = React.useCallback((footer: React.ReactNode | undefined) => {
-    dispatch({
-      type: 'setFooter',
-      footer,
-    })
-  }, [])
-
-  const setWithFeedback = React.useCallback((withFeedback: boolean) => {
-    dispatch({
-      type: 'setWithFeedback',
-      withFeedback,
-    })
-  }, [])
-
-  const setTitle = React.useCallback((title: string) => {
-    dispatch({
-      type: 'setTitle',
-      title,
-    })
-  }, [])
-
-  const setCanDiscard = React.useCallback((canDiscard: boolean) => {
-    dispatch({
-      type: 'setCanDiscard',
-      canDiscard,
-    })
-  }, [])
-
-  const setCanContinue = React.useCallback((canContinue: boolean) => {
-    dispatch({
-      type: 'setCanContinue',
-      canContinue,
-    })
-  }, [])
-
-  const clearQueue = React.useCallback(() => {
-    dispatch({
-      type: 'clearQueue',
-    })
-  }, [])
-
   const actions = React.useMemo<ModalActions>(
     () => ({
       closeModal,
       openModal,
-      setLoading,
-      setFooter,
-      setWithFeedback,
-      setTitle,
-      setCanDiscard,
-      setCanContinue,
-      clearQueue,
+      setLoading: (isLoading: boolean) => {
+        dispatch({
+          type: 'setLoading',
+          isLoading,
+        })
+      },
+      setFooter: (footer: React.ReactNode | undefined) => {
+        dispatch({
+          type: 'setFooter',
+          footer,
+        })
+      },
+      setWithFeedback: (withFeedback: boolean) => {
+        dispatch({
+          type: 'setWithFeedback',
+          withFeedback,
+        })
+      },
+      setTitle: (title: string) => {
+        dispatch({
+          type: 'setTitle',
+          title,
+        })
+      },
+      setCanDiscard: (canDiscard: boolean) => {
+        dispatch({
+          type: 'setCanDiscard',
+          canDiscard,
+        })
+      },
+      setCanContinue: (canContinue: boolean) => {
+        dispatch({
+          type: 'setCanContinue',
+          canContinue,
+        })
+      },
+      setHasExpanded: (hasExpanded: boolean) => {
+        dispatch({
+          type: 'setHasExpanded',
+          hasExpanded,
+        })
+      },
+      setCanExpand: (canExpand: boolean) => {
+        dispatch({
+          type: 'setCanExpand',
+          canExpand,
+        })
+      },
+      clearQueue: () => {
+        dispatch({
+          type: 'clearQueue',
+        })
+      },
     }),
-    [
-      closeModal,
-      openModal,
-      setLoading,
-      setFooter,
-      setWithFeedback,
-      setTitle,
-      setCanDiscard,
-      setCanContinue,
-      clearQueue,
-    ],
+    [closeModal, openModal],
   )
 
   const context = React.useMemo(
@@ -269,6 +267,7 @@ type ModalAction =
       canContinue?: boolean
       onClose?: () => void
       full?: boolean
+      canExpand?: boolean
     }
   | {type: 'close'}
   | {type: 'closeAndProcessQueue'}
@@ -280,6 +279,8 @@ type ModalAction =
   | {type: 'setCanDiscard'; canDiscard: boolean}
   | {type: 'setCanContinue'; canContinue: boolean}
   | {type: 'setWithFeedback'; withFeedback: boolean}
+  | {type: 'setHasExpanded'; hasExpanded: boolean}
+  | {type: 'setCanExpand'; canExpand: boolean}
 
 const modalReducer = (state: ModalState, action: ModalAction) => {
   switch (action.type) {
@@ -296,6 +297,8 @@ const modalReducer = (state: ModalState, action: ModalAction) => {
         canContinue: action.canContinue ?? defaultState.canContinue,
         onClose: action.onClose,
         full: action.full ?? defaultState.full,
+        hasExpanded: defaultState.hasExpanded, // Always reset to default when opening
+        canExpand: action.canExpand ?? defaultState.canExpand,
         isOpen: true,
       }
 
@@ -340,6 +343,8 @@ const modalReducer = (state: ModalState, action: ModalAction) => {
           canContinue: nextModal.canContinue ?? defaultState.canContinue,
           onClose: nextModal.onClose,
           full: nextModal.full ?? defaultState.full,
+          hasExpanded: defaultState.hasExpanded, // Always reset to default when opening from queue
+          canExpand: nextModal.canExpand ?? defaultState.canExpand,
           isOpen: true,
           queue: state.queue.slice(1),
         }
@@ -385,6 +390,18 @@ const modalReducer = (state: ModalState, action: ModalAction) => {
         canContinue: action.canContinue,
       }
 
+    case 'setHasExpanded':
+      return {
+        ...state,
+        hasExpanded: action.hasExpanded,
+      }
+
+    case 'setCanExpand':
+      return {
+        ...state,
+        canExpand: action.canExpand,
+      }
+
     default:
       throw new Error(`modalReducer invalid action`)
   }
@@ -400,6 +417,8 @@ const defaultState: ModalState = Object.freeze({
   title: '',
   canContinue: false,
   full: false,
+  hasExpanded: false,
+  canExpand: false,
   withFeedback: false,
   onClose: undefined,
   queue: [],
