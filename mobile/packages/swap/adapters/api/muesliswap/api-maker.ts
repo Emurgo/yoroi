@@ -54,18 +54,17 @@ export const muesliswapApiMaker = (
   // Preload providers for image enrichment and FO mapping (best-effort; guard for tests)
   // Avoid auto-fetching providers in tests to keep request shape predictable
   if (process.env.NODE_ENV !== 'test') {
-    ;(async () => {
-      try {
-        const res = await request<ProviderInfoResponse>({
-          method: 'get',
-          url: `${baseUrl}${apiPaths.providers}`,
-          headers,
-        })
+    request<ProviderInfoResponse>({
+      method: 'get',
+      url: `${baseUrl}${apiPaths.providers}`,
+      headers,
+    })
+      .then((res) => {
         if (isRight(res)) transformers.setProviders(res.value.data)
-      } catch {
+      })
+      .catch(() => {
         // ignore preload failures
-      }
-    })()
+      })
   }
 
   // Feature flag to enable providers/pools for FO-based excluded_sources (placeholder)
