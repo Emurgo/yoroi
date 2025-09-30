@@ -543,7 +543,7 @@ describe('transformers', () => {
             expectedOutputWithoutSlippage: 1130,
             fee: 0.3,
             finalPrice: 0.041994,
-            initialPrice: 0.04252918925670425,
+            initialPrice: 1130,
             poolFee: 0.3,
             poolId:
               '0be55d262b29f564998ff81efe21bdc0022621c12f15af08d0f2ddb1.3513ef4f9724b1bdbedd1f606ed93368f0442b236f3ff201bb28532cdf2a53a9',
@@ -655,7 +655,7 @@ describe('transformers', () => {
             expectedOutputWithoutSlippage: 1130,
             fee: 0.3,
             finalPrice: 0.041994,
-            initialPrice: 0.04252918925670425,
+            initialPrice: 1130,
             poolFee: 0.3,
             poolId:
               '0be55d262b29f564998ff81efe21bdc0022621c12f15af08d0f2ddb1.3513ef4f9724b1bdbedd1f606ed93368f0442b236f3ff201bb28532cdf2a53a9',
@@ -721,7 +721,7 @@ describe('transformers', () => {
             expectedOutputWithoutSlippage: 1130,
             fee: 0.3,
             finalPrice: 0.041994,
-            initialPrice: 0.04252918925670425,
+            initialPrice: 1130,
             poolFee: 0.3,
             poolId:
               '0be55d262b29f564998ff81efe21bdc0022621c12f15af08d0f2ddb1.3513ef4f9724b1bdbedd1f606ed93368f0442b236f3ff201bb28532cdf2a53a9',
@@ -887,7 +887,7 @@ describe('toSwapSplit', () => {
       expectedOutputWithoutSlippage: 98,
       fee: 1,
       finalPrice: 1.1,
-      initialPrice: 1.0,
+      initialPrice: 0.98,
       poolFee: 0.3,
       poolId: 'pool-123',
       priceDistortion: 0.05,
