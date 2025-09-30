@@ -50,7 +50,7 @@ export const ReviewTx = ({
   createdBy?: React.ReactNode
   onConfirm: () => void
 }) => {
-  const {palette: p} = useTheme()
+  const {palette: p, atoms: ta} = useTheme()
   const strings = useStrings()
 
   const baseTabs = React.useMemo<Array<[string, Tabs]>>(
@@ -116,7 +116,7 @@ export const ReviewTx = ({
     (isReferenceInputsScrollBarShown && activeTab === 'reference_inputs')
 
   return (
-    <SafeArea style={[a.flex_1, {backgroundColor: p.bg_color_max}]}>
+    <SafeArea>
       <MaterialTab.Navigator
         tabBar={(props) => (
           <TabBar
@@ -129,7 +129,7 @@ export const ReviewTx = ({
         <MaterialTab.Screen name="overview">
           {() => (
             <ScrollView
-              style={[a.flex_1, {backgroundColor: p.bg_color_max}]}
+              style={[a.flex_1, ta.bg_color_max]}
               onScrollBarChange={setOverviewIsScrollBarShown}
             >
               <OverviewTab
@@ -147,7 +147,7 @@ export const ReviewTx = ({
         <MaterialTab.Screen name="utxos">
           {() => (
             <ScrollView
-              style={[a.flex_1, {backgroundColor: p.bg_color_max}]}
+              style={[a.flex_1, ta.bg_color_max]}
               onScrollBarChange={setUtxosIsScrollBarShown}
             >
               <UTxOsTab tx={formattedTx} />
@@ -159,7 +159,7 @@ export const ReviewTx = ({
           <MaterialTab.Screen name="metadata">
             {() => (
               <ScrollView
-                style={[a.flex_1, {backgroundColor: p.bg_color_max}]}
+                style={[a.flex_1, ta.bg_color_max]}
                 onScrollBarChange={setMetadataIsScrollBarShown}
               >
                 <MetadataTab
@@ -175,7 +175,7 @@ export const ReviewTx = ({
           <MaterialTab.Screen name="mint">
             {() => (
               <ScrollView
-                style={[a.flex_1, {backgroundColor: p.bg_color_max}]}
+                style={[a.flex_1, ta.bg_color_max]}
                 onScrollBarChange={setMintIsScrollBarShown}
               >
                 <MintTab mintData={formattedTx.mint} />
@@ -188,7 +188,7 @@ export const ReviewTx = ({
           <MaterialTab.Screen name="reference_inputs">
             {() => (
               <ScrollView
-                style={[a.flex_1, {backgroundColor: p.bg_color_max}]}
+                style={[a.flex_1, ta.bg_color_max]}
                 onScrollBarChange={setReferenceInputsIsScrollBarShown}
               >
                 <ReferenceInputsTab

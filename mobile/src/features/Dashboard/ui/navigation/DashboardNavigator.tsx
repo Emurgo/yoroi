@@ -8,13 +8,13 @@ import {FailedTxScreen} from '~/features/ReviewTx/useCases/ShowFailedTxScreen/Fa
 import {SubmittedTxScreen} from '~/features/ReviewTx/useCases/ShowSubmittedTxScreen/SubmittedTxScreen'
 import {NetworkTag} from '~/features/Settings/ui/shared/NetworkTag'
 import {useGovernanceManagerMaker} from '~/features/Staking/Governance/common/helpers'
+import {StakingCenter} from '~/features/Staking/Staking/StakingCenter/StakingCenter'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
 import {DashboardRoutes} from '~/kernel/navigation/types'
 
-import {StakingCenter} from '../Staking/Staking/StakingCenter/StakingCenter'
-import {Dashboard} from './Dashboard'
+import {DashboardScreen} from '../screens/DashboardScreen'
 
 const Stack = createStackNavigator<DashboardRoutes>()
 export const DashboardNavigator = () => {
@@ -35,7 +35,7 @@ export const DashboardNavigator = () => {
       >
         <Stack.Screen
           name="staking-dashboard-main"
-          getComponent={() => Dashboard}
+          getComponent={() => DashboardScreen}
           options={{
             title: meta.name,
           }}
@@ -43,12 +43,12 @@ export const DashboardNavigator = () => {
 
         <Stack.Screen //
           name="staking-center"
-          component={StakingCenter}
+          getComponent={() => StakingCenter}
         />
 
         <Stack.Screen //
           name="staking-submitted-tx"
-          component={SubmittedTxScreen}
+          getComponent={() => SubmittedTxScreen}
           options={{
             headerShown: false,
           }}
@@ -56,7 +56,7 @@ export const DashboardNavigator = () => {
 
         <Stack.Screen //
           name="staking-failed-tx"
-          component={FailedTxScreen}
+          getComponent={() => FailedTxScreen}
           options={{
             headerShown: false,
           }}
