@@ -351,7 +351,11 @@ export const transformersMaker = ({
         inputs,
         routeHint,
       }: Swap.CreateRequest): LimitOrderRequest => {
-        const order_contract = mapProtocolToOrderContract({protocol, routeHint})
+        // Mutually exclusive: prefer pool_id when provided, otherwise use order_contract
+        const pool_id = routeHint?.poolIds?.[0]
+        const order_contract = pool_id
+          ? undefined
+          : mapProtocolToOrderContract({protocol, routeHint})
 
         return {
           order_contract,
@@ -364,7 +368,7 @@ export const transformersMaker = ({
           sell_amount: String(amountIn),
           user_address: address,
           utxos: inputs,
-          pool_id: routeHint?.poolIds?.[0] ?? undefined,
+          pool_id,
         }
       },
       response: ({
