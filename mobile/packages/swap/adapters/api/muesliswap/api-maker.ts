@@ -202,12 +202,14 @@ export const muesliswapApiMaker = (
             const split = res.value.data.splits[0]
             if (split === undefined) return null
             const {protocol, initialPrice} = split
-            // prefer provider route_info batcher/deposit when available; fall back to split values
-            const protocolKey = ((): string => {
-              const dexKey = fromSwapProtocol(protocol)
-              return typeof dexKey === 'string' ? dexKey : ''
-            })()
-            const route = routeInfo[protocolKey]
+            // Prefer provider route_info batcher/deposit when available; fall back to split values
+            const protocolKey: string | undefined =
+              split.aggregatorDexKey ??
+              ((): string | undefined => {
+                const dexKey = fromSwapProtocol(protocol)
+                return typeof dexKey === 'string' ? dexKey : undefined
+              })()
+            const route = protocolKey ? routeInfo[protocolKey] : undefined
             const batcherFee = route?.batcher_fee ?? split.batcherFee
             return {protocol, initialPrice, batcherFee}
           })

@@ -189,14 +189,15 @@ export const transformersMaker = ({
       request: ({
         amountIn = 0,
         wantedPrice = 0,
-
         protocol,
         tokenIn,
         tokenOut,
-        routeHint,
-      }: Swap.EstimateRequest & {routeHint?: RouteHint}): LimitQuoteRequest => {
-        // Prefer routeHint.orderContract, else map from protocol; avoid 'unsupported' or generic
-        const order_contract = mapProtocolToOrderContract({protocol, routeHint})
+      }: Swap.EstimateRequest): LimitQuoteRequest => {
+        // Map protocol to order contract; omit if unsupported/undefined
+        const order_contract = mapProtocolToOrderContract({
+          protocol,
+          routeHint: undefined,
+        })
 
         return {
           numbers_have_decimals: true,
@@ -206,7 +207,6 @@ export const transformersMaker = ({
           ...(partner !== undefined && {partner}),
           buy_amount: String(amountIn * wantedPrice),
           order_contract,
-          pool_id: routeHint?.poolIds?.[0] ?? undefined,
         }
       },
     },
