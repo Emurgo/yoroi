@@ -95,7 +95,7 @@ export const AskConfirmationActions = ({
   const {closeModal, isLoading} = useModal()
 
   return (
-    <View style={[a.flex_row, a.gap_lg]}>
+    <View style={[a.flex_row, a.gap_lg, a.pb_md]}>
       <Button
         size="S"
         type={ButtonType.Secondary}
