@@ -153,7 +153,7 @@ export const minswapApiMaker = (
             tag: 'left',
             error: {
               status: -3,
-              message: 'Invalid state',
+              message: 'Limit options not supported',
               responseData: null,
             },
           },
