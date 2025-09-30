@@ -2,29 +2,27 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
 import {View} from 'react-native'
-import {SafeAreaView} from 'react-native-safe-area-context'
+import {SafeAreaViewProps} from 'react-native-safe-area-context'
 
+import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Text} from '~/ui/Text/Text'
 
-type Props = React.PropsWithChildren<{
+type Props = SafeAreaViewProps & {
   title?: string
   footer?: React.ReactNode
-  edges?: ('top' | 'bottom' | 'left' | 'right')[]
-}>
+}
 
 export const ModalScreenWrapper = ({
   title,
   footer,
   edges = ['left', 'right'],
   children,
+  ...rest
 }: Props) => {
   const {atoms: ta} = useTheme()
 
   return (
-    <SafeAreaView
-      edges={edges}
-      style={[a.flex_1, ta.bg_color_max, a.justify_between]}
-    >
+    <SafeArea edges={edges} style={[a.justify_between]} {...rest}>
       {title && (
         <View style={[a.py_sm, a.px_lg]}>
           <Text style={[a.heading_3_medium, ta.text_gray_max, a.text_center]}>
@@ -35,7 +33,7 @@ export const ModalScreenWrapper = ({
 
       {children}
 
-      {footer && <View style={[a.py_lg, a.px_lg, a.align_end]}>{footer}</View>}
-    </SafeAreaView>
+      {footer && <View style={[a.p_lg, a.align_end]}>{footer}</View>}
+    </SafeArea>
   )
 }

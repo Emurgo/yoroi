@@ -4,10 +4,11 @@ import {View, ViewProps} from 'react-native'
 
 export const ModalFooterWrapper = ({
   children,
-  ...props
+  style,
+  ...rest
 }: React.PropsWithChildren<ViewProps>) => {
   return (
-    <View style={[a.gap_lg, a.self_stretch]} {...props}>
+    <View style={[a.gap_xs, a.self_stretch, style]} {...rest}>
       {children}
     </View>
   )

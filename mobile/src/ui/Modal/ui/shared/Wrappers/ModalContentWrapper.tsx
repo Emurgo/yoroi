@@ -7,15 +7,16 @@ import {ScrollView} from '~/ui/ScrollView/ScrollView'
 
 export const ModalContentWrapper = ({
   children,
-  ...props
+  style,
+  ...rest
 }: React.PropsWithChildren<ScrollViewProps>) => {
   return (
     <ScrollView
-      style={[a.flex_1]}
+      style={[a.flex_1, style]}
       contentContainerStyle={[a.px_lg]}
       bounces={false}
       focusable
-      {...props}
+      {...rest}
     >
       {children}
     </ScrollView>

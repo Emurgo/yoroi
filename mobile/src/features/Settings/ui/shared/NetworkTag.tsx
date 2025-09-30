@@ -19,6 +19,7 @@ import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/context/ModalContext'
+import {Modal} from '~/ui/Modal/ui/screens/ModalScreen/ModalScreen'
 import {Space} from '~/ui/Space/Space'
 
 type Props = React.PropsWithChildren<{
@@ -57,20 +58,40 @@ export const NetworkTag = ({
         ]
 
       if (nextNetwork === Chain.Network.Mainnet) {
+        const onConfirm = () => {
+          track.networkSelected({
+            to_network: nextNetwork,
+            from_network: selectedNetwork,
+          })
+          walletManager.setSelectedNetwork(nextNetwork)
+          closeModal()
+        }
         openModal({
           title: strings.settings.changeNetwork.networkTagModalTitle,
           content: (
-            <MainnetWarningDialog
-              onCancel={closeModal}
-              onOk={() => {
-                track.networkSelected({
-                  to_network: nextNetwork,
-                  from_network: selectedNetwork,
-                })
-                walletManager.setSelectedNetwork(nextNetwork)
-                closeModal()
-              }}
-            />
+            <Modal.Content>
+              <Text style={[a.body_1_lg_regular, ta.text_gray_medium]}>
+                {strings.settings.changeNetwork.networkTagModalText}
+              </Text>
+            </Modal.Content>
+          ),
+          footer: (
+            <Modal.Footer>
+              <Button
+                size="S"
+                type={ButtonType.Secondary}
+                title="Cancel"
+                onPress={closeModal}
+              />
+
+              <Space.Width.lg />
+
+              <Button
+                size="S"
+                title={strings.global.switch}
+                onPress={onConfirm}
+              />
+            </Modal.Footer>
           ),
           height: 280,
         })
@@ -157,39 +178,5 @@ const PreprodTag = ({
     >
       <Text>{name}</Text>
     </TouchableOpacity>
-  )
-}
-
-const MainnetWarningDialog = ({
-  onCancel,
-  onOk,
-}: {
-  onCancel: () => void
-  onOk: () => void
-}) => {
-  const {atoms: ta} = useTheme()
-  const strings = useStrings()
-
-  return (
-    <View style={[a.flex_1]}>
-      <Text style={[a.body_1_lg_regular, ta.text_gray_medium]}>
-        {strings.settings.changeNetwork.networkTagModalText}
-      </Text>
-
-      <Space.Height.lg fill />
-
-      <View style={[a.pb_lg, a.flex_row, a.justify_between]}>
-        <Button
-          size="S"
-          type={ButtonType.Secondary}
-          title="Cancel"
-          onPress={onCancel}
-        />
-
-        <Space.Width.lg />
-
-        <Button size="S" title={strings.global.switch} onPress={onOk} />
-      </View>
-    </View>
   )
 }

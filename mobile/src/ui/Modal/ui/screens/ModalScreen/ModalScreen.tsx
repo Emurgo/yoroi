@@ -25,9 +25,11 @@ import Animated, {
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
 import {useModal} from '../../../context/ModalContext'
+import {ModalContentWrapper} from '../../shared/Wrappers/ModalContentWrapper'
+import {ModalFooterWrapper} from '../../shared/Wrappers/ModalFooterWrapper'
 import {ModalScreenWrapper} from './ModalScreenWrapper'
 
-export const Modal = () => {
+const Modal = () => {
   const {
     content,
     canDiscard,
@@ -252,3 +254,8 @@ const DiscardIndicator = ({withFeedback = false}: DiscardIndicatorProps) => {
     </View>
   )
 }
+
+Modal.Content = ModalContentWrapper
+Modal.Footer = ModalFooterWrapper
+
+export {Modal}
