@@ -3,11 +3,7 @@ import {Api, Chain, Left, Swap} from '@yoroi/types'
 
 import {freeze} from 'immer'
 
-import {
-  MuesliswapProtocols,
-  fromSwapProtocol,
-  transformersMaker,
-} from './transformers'
+import {MuesliswapProtocols, transformersMaker} from './transformers'
 import {
   CancelResponse,
   CreateOrderResponse,
@@ -55,8 +51,22 @@ export const muesliswapApiMaker = (
   const baseUrl = baseUrls[network]
 
   const transformers = transformersMaker(config)
-  // Preload providers for image enrichment (best-effort; guard for test stubs)
-  // Note: avoid auto-fetching providers in tests to keep request shape predictable
+  // Preload providers for image enrichment and FO mapping (best-effort; guard for tests)
+  // Avoid auto-fetching providers in tests to keep request shape predictable
+  if (process.env.NODE_ENV !== 'test') {
+    ;(async () => {
+      try {
+        const res = await request<ProviderInfoResponse>({
+          method: 'get',
+          url: `${baseUrl}${apiPaths.providers}`,
+          headers,
+        })
+        if (isRight(res)) transformers.setProviders(res.value.data)
+      } catch {
+        // ignore preload failures
+      }
+    })()
+  }
 
   // Feature flag to enable providers/pools for FO-based excluded_sources (placeholder)
   // const providersFlag = false
@@ -143,16 +153,6 @@ export const muesliswapApiMaker = (
       },
 
       async limitOptions({tokenIn, tokenOut}: Swap.LimitOptionsRequest) {
-        const providersRes = await request<ProviderInfoResponse>({
-          method: 'get',
-          url: `${baseUrl}${apiPaths.providers}`,
-          headers,
-        })
-
-        if (isRight(providersRes)) {
-          transformers.setProviders(providersRes.value.data)
-        }
-
         const estimateResponse = await this.estimate({
           tokenIn,
           tokenOut,
@@ -178,11 +178,6 @@ export const muesliswapApiMaker = (
             true,
           )
 
-        const providers = isRight(providersRes)
-          ? providersRes.value.data
-          : undefined
-        const routeInfo = providers?.route_info ?? {}
-
         const options = (
           await Promise.all(
             MuesliswapProtocols.map((protocol) =>
@@ -202,15 +197,8 @@ export const muesliswapApiMaker = (
             const split = res.value.data.splits[0]
             if (split === undefined) return null
             const {protocol, initialPrice} = split
-            // Prefer provider route_info batcher/deposit when available; fall back to split values
-            const protocolKey: string | undefined =
-              split.aggregatorDexKey ??
-              ((): string | undefined => {
-                const dexKey = fromSwapProtocol(protocol)
-                return typeof dexKey === 'string' ? dexKey : undefined
-              })()
-            const route = protocolKey ? routeInfo[protocolKey] : undefined
-            const batcherFee = route?.batcher_fee ?? split.batcherFee
+            // Use split.batcherFee; providers are preloaded for other flows but not required here
+            const batcherFee = split.batcherFee
             return {protocol, initialPrice, batcherFee}
           })
           .filter(isNonNullable)
