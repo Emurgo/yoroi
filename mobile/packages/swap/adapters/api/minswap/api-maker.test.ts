@@ -210,7 +210,7 @@ describe('minswapApiMaker', () => {
     expect(isRight(result)).toBe(true)
     if (isRight(result)) {
       expect(result.value.data.totalInput).toBe(10)
-      expect(result.value.data.totalOutput).toBe(8.290409)
+      expect(result.value.data.totalOutput).toBe(8.208325)
       expect(result.value.data.splits).toHaveLength(1)
     }
   })

@@ -247,8 +247,8 @@ export const transformersMaker = (config: MinswapApiConfig) => {
         },
         response: (data: EstimateResponse): Swap.EstimateResponse => {
           const totalInput = Number(data.amount_in)
-          const totalOutput = Number(data.amount_out)
-          const totalOutputWithoutSlippage = Number(data.min_amount_out)
+          const totalOutput = Number(data.min_amount_out)
+          const totalOutputWithoutSlippage = Number(data.amount_out)
           const deposits = Number(data.deposits ?? '0')
           const aggregatorFee = Number(data.aggregator_fee ?? '0')
           const totalFee = Number(data.total_dex_fee ?? '0')

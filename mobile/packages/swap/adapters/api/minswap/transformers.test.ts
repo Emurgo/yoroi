@@ -377,11 +377,11 @@ describe('transformersMaker', () => {
       expect(result.deposits).toBe(2)
       expect(result.aggregatorFee).toBe(0)
       expect(result.frontendFee).toBe(0)
-      expect(result.netPrice).toBeCloseTo(0.8290409)
+      expect(result.netPrice).toBeCloseTo(0.8208325)
       expect(result.priceImpact).toBe(0.3006573962454888)
       expect(result.totalFee).toBe(0.7)
-      expect(result.totalOutput).toBe(8.290409)
-      expect(result.totalOutputWithoutSlippage).toBe(8.208325)
+      expect(result.totalOutput).toBe(8.208325)
+      expect(result.totalOutputWithoutSlippage).toBe(8.290409)
       expect(result.totalInput).toBe(10)
     })
 
@@ -740,7 +740,7 @@ describe('transformersMaker', () => {
 
       expect(result.splits).toHaveLength(0)
       expect(result.totalInput).toBe(10)
-      expect(result.totalOutput).toBe(8.290409)
+      expect(result.totalOutput).toBe(8.208325)
     })
 
     it('should handle null values in token data', () => {

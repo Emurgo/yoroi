@@ -105,7 +105,7 @@ type SwapState = {
 
 export type SwapContext = SwapState & {
   isLoading: boolean
-  limitOptions?: Swap.LimitOptionsResponse
+  limitOptions?: Swap.LimitOptionsResponse | null
   tokenInfos: Map<Portfolio.Token.Id, Portfolio.Token.Info>
   verifiedTokens: Portfolio.Token.Id[]
   tokenInInputRef: React.RefObject<TextInput | null> | undefined
@@ -254,7 +254,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
       })
 
       if (isRight(res)) return res.value.data
-      return undefined
+      return null
     },
     enabled:
       state.orderType === 'limit' &&

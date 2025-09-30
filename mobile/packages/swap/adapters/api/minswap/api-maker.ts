@@ -162,6 +162,27 @@ export const minswapApiMaker = (
       },
 
       async estimate(body: Swap.EstimateRequest) {
+        const kind: 'estimate' | 'reverseEstimate' | 'limitEstimate' =
+          body.wantedPrice !== undefined
+            ? 'limitEstimate'
+            : body.amountOut !== undefined
+              ? 'reverseEstimate'
+              : 'estimate'
+
+        if (kind !== 'estimate') {
+          return freeze({
+            tag: 'left',
+            error: {
+              status: -1,
+              message:
+                kind === 'reverseEstimate'
+                  ? 'Set input amount'
+                  : 'Minswap Aggregator only supports market',
+              responseData: null,
+            },
+          })
+        }
+
         const requestBody = transformers.estimate.request(body)
 
         const response = await requestWithErrorHandling<EstimateResponse>(

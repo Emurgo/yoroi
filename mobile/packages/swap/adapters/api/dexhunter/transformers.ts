@@ -54,7 +54,7 @@ export const toSwapSplit = ({
   priceImpact: price_impact,
   aggregator: Swap.Aggregator.Dexhunter,
   aggregatorDexKey: dex,
-  aggregatorPoolId: pool_id,
+  aggregatorPoolId: pool_id || undefined,
 })
 
 export const toPriceImpact = (splits: Array<Partial<Split>>): number => {
