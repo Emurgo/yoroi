@@ -146,55 +146,15 @@ export const minswapApiMaker = (
         )
       },
 
-      async limitOptions({tokenIn, tokenOut}: Swap.LimitOptionsRequest) {
-        const estimateResponse = await this.estimate({
-          tokenIn,
-          tokenOut,
-          slippage: 0,
-          amountIn: 50,
-        })
-
-        if (isLeft(estimateResponse)) {
-          return estimateResponse
-        }
-
-        const wantedPrice = estimateResponse.value.data.netPrice
-        const defaultProtocol = estimateResponse.value.data.splits[0]?.protocol
-
-        if (defaultProtocol === undefined) {
-          return freeze<Left<Api.ResponseError>>(
-            {
-              tag: 'left',
-              error: {
-                status: -3,
-                message: 'Invalid state',
-                responseData: null,
-              },
-            },
-            true,
-          )
-        }
-
-        const options = [
+      async limitOptions() {
+        // Minswap Aggregator doesn't support limit swaps yet
+        return freeze<Left<Api.ResponseError>>(
           {
-            protocol: Swap.Protocol.Minswap_v2,
-            initialPrice: wantedPrice,
-            batcherFee: estimateResponse.value.data.batcherFee,
-          },
-        ]
-
-        const result = {
-          defaultProtocol,
-          wantedPrice,
-          options,
-        }
-
-        return freeze(
-          {
-            tag: 'right',
-            value: {
-              status: Api.HttpStatusCode.Ok,
-              data: result,
+            tag: 'left',
+            error: {
+              status: -3,
+              message: 'Invalid state',
+              responseData: null,
             },
           },
           true,

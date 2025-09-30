@@ -180,7 +180,7 @@ const Row = ({
 }
 
 export const Splits = ({data}: {data: Swap.Split[]}) => {
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
 
   const total = data.reduce(
     (acc, curr) => (acc += curr.expectedOutputWithoutSlippage),
@@ -216,7 +216,7 @@ export const Splits = ({data}: {data: Swap.Split[]}) => {
               preventOpenLink
             />
 
-            <Text style={[a.body_1_lg_regular, {color: p.el_gray_min}]}>
+            <Text style={[a.body_1_lg_regular, ta.el_gray_max]}>
               {(
                 (100 * (split.expectedOutputWithoutSlippage ?? 0)) /
                 total

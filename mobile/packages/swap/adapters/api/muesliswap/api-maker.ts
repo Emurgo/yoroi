@@ -15,6 +15,7 @@ import {
   LimitQuoteResponse,
   MuesliswapApiConfig,
   OrdersHistoryResponse,
+  ProviderInfoResponse,
   QuoteResponse,
   TokensResponse,
 } from './types'
@@ -63,7 +64,7 @@ export const muesliswapApiMaker = (
   return freeze(
     {
       async providers() {
-        const response = await request<any>({
+        const response = await request<ProviderInfoResponse>({
           method: 'get',
           url: `${baseUrl}${apiPaths.providers}`,
           headers,
@@ -142,16 +143,14 @@ export const muesliswapApiMaker = (
       },
 
       async limitOptions({tokenIn, tokenOut}: Swap.LimitOptionsRequest) {
-        // Fetch providers to enrich options with route fees and FO mapping
-        const providersRes = await request<any>({
+        const providersRes = await request<ProviderInfoResponse>({
           method: 'get',
           url: `${baseUrl}${apiPaths.providers}`,
           headers,
         })
 
         if (isRight(providersRes)) {
-          // @ts-ignore internal helper for FO mapping
-          transformers.__setProviders?.(providersRes.value.data)
+          transformers.setProviders(providersRes.value.data)
         }
 
         const estimateResponse = await this.estimate({
@@ -285,7 +284,7 @@ export const muesliswapApiMaker = (
             tag: 'right',
             value: {
               status: response.value.status,
-              data: transformers[kind].response(response.value.data as any),
+              data: transformers[kind].response(response.value.data),
             },
           },
           true,
@@ -325,7 +324,8 @@ export const parseMuesliError = ({tag, error}: Left<Api.ResponseError>) =>
       error: {
         ...error,
         message: JSON.stringify(
-          (error.responseData as any)?.detail ?? 'Muesliswap API error',
+          (error.responseData as unknown as {detail?: unknown})?.detail ??
+            'Muesliswap API error',
           null,
           2,
         )
