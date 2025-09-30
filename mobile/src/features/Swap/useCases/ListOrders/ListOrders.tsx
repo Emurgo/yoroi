@@ -1,5 +1,5 @@
 import {primaryTokenInfoMainnet} from '@yoroi/blockchains'
-import {isLeft, truncateString} from '@yoroi/common'
+import {isLeft, parseNumberFromText, truncateString} from '@yoroi/common'
 import {infoExtractName} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Api, Portfolio, Swap} from '@yoroi/types'
@@ -18,6 +18,7 @@ import {useSearch, useSearchOnNavBar} from '~/features/Search/SearchContext'
 import {useSwap} from '~/features/Swap/common/useSwap'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useLanguage} from '~/kernel/i18n/LanguageProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Boundary} from '~/ui/Boundary/Boundary'
@@ -174,6 +175,7 @@ const Order = ({order}: {order: Swap.Order}) => {
   const {palette: p} = useTheme()
   const [expanded, setExpanded] = React.useState<boolean>(false)
   const swapForm = useSwap()
+  const {numberLocale} = useLanguage()
   const tokenInInfo = swapForm.tokenInfos.get(order.tokenIn)
   const tokenOutInfo = swapForm.tokenInfos.get(order.tokenOut)
 
@@ -182,14 +184,20 @@ const Order = ({order}: {order: Swap.Order}) => {
       ? order.expectedAmountOut
       : order.actualAmountOut
   const priceCalc = amountOut === 0 ? 0 : order.amountIn / amountOut
-  const roundedPrice = priceCalc
-    .toFixed(tokenOutInfo?.decimals ?? 0)
-    .replace(/\.0+$/, '')
-  const price = roundedPrice !== '0' ? roundedPrice : priceCalc.toFixed(6)
 
-  const priceStr = `1 ${tokenName(tokenInInfo)} = ${price} ${tokenName(tokenOutInfo)}`
+  const roundedPrice = parseNumberFromText({
+    text: String(priceCalc),
+    precision: Math.max(
+      tokenOutInfo?.decimals ?? 0,
+      tokenInInfo?.decimals ?? 0,
+      3,
+    ),
+    format: numberLocale,
+  }).formattedValue
 
-  const amountOutStr = `${Number(amountOut.toFixed(tokenOutInfo?.decimals ?? 0))} ${tokenName(tokenOutInfo)}`
+  const priceStr = `1 ${tokenName(tokenInInfo)} = ${roundedPrice} ${tokenName(tokenOutInfo)}`
+
+  const amountOutStr = `${parseNumberFromText({text: String(amountOut), precision: tokenOutInfo?.decimals ?? 0, format: numberLocale}).formattedValue} ${tokenName(tokenOutInfo)}`
 
   const lastTxHash = order.updateTxHash ?? order.txHash ?? ''
   const shortenedTxHash = `${truncateString({value: lastTxHash, maxLength: 22})}#${order.outputIndex ?? 0}`
@@ -559,7 +567,7 @@ const Details = ({
 }: CancellationProps & {response: Api.Response<Swap.CancelResponse>}) => {
   const strings = useStrings()
   const {wallet} = useSelectedWallet()
-
+  const {numberLocale} = useLanguage()
   const portfolioTokenInfos = usePortfolioTokenInfosSuspense({
     wallet,
     tokenIds: [order.tokenIn, order.tokenOut],
@@ -578,7 +586,7 @@ const Details = ({
       ? order.expectedAmountOut
       : order.actualAmountOut
 
-  const amountOutStr = `${Number(amountOut.toFixed(tokenOutInfo?.decimals ?? 0))} ${tokenName(tokenOutInfo)}`
+  const amountOutStr = `${parseNumberFromText({text: String(amountOut), precision: tokenOutInfo?.decimals ?? 0, format: numberLocale}).formattedValue} ${tokenName(tokenOutInfo)}`
 
   const isFromPrimary = tokenOutInfo?.nature === Portfolio.Token.Nature.Primary
   const fromDetail = isFromPrimary
@@ -591,7 +599,7 @@ const Details = ({
     ? tokenOutInfo?.description
     : tokenOutInfo?.fingerprint
   const toName = infoExtractName(tokenOutInfo)
-  const amountInStr = `${Number(order.amountIn.toFixed(tokenInInfo?.decimals ?? 0))} ${tokenName(tokenOutInfo)}`
+  const amountInStr = `${parseNumberFromText({text: String(order.amountIn), precision: tokenInInfo?.decimals ?? 0, format: numberLocale}).formattedValue} ${tokenName(tokenOutInfo)}`
 
   return (
     <View>

@@ -36,8 +36,9 @@ export const TransactionSummary = ({
   const {orderType} = swapForm
   const [showSplits, setShowSplits] = React.useState(false)
   const {numberLocale} = useLanguage()
-  const localFormat = (v: number | string) =>
-    parseNumberFromText({text: String(v), format: numberLocale}).formattedValue
+  const localFormat = (v: number | string, precision?: number) =>
+    parseNumberFromText({text: String(v), format: numberLocale, precision})
+      .formattedValue
   const tokenInInfo = swapForm.tokenInfos.get(
     swapForm.tokenInInput.tokenId ?? undefinedToken,
   )
@@ -79,11 +80,8 @@ export const TransactionSummary = ({
     swapForm.createTx?.netPrice ??
     swapForm.createTx?.splits[0].initialPrice ??
     0
-  const roundedPrice = netPrice
-    .toFixed(tokenOutInfo?.decimals ?? 0)
-    .replace(/\.0+$/, '')
-  const price = roundedPrice !== '0' ? roundedPrice : netPrice.toFixed(6)
-  const priceInfoValue = `1 ${tokenInTicker} = ${localFormat(price)} ${tokenOutTicker}`
+
+  const priceInfoValue = `1 ${tokenInTicker} = ${localFormat(netPrice, Math.max(tokenOutInfo?.decimals ?? 0, tokenInInfo?.decimals ?? 0, 3))} ${tokenOutTicker}`
   const minAdaInfoValue = `${swapForm.createTx?.deposits} ${wallet.portfolioPrimaryTokenInfo.ticker}`
   const totalFee = `${localFormat(swapForm.createTx?.totalFee ?? 0)} ${wallet.portfolioPrimaryTokenInfo.ticker}`
   const minReceivedInfoValue = `${localFormat(swapForm.createTx?.totalOutputWithoutSlippage ?? 0)} ${tokenOutTicker}`
