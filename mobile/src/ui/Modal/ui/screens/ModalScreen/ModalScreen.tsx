@@ -24,6 +24,8 @@ import Animated, {
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
+import {useIsKeyboardOpen} from '~/hooks/useIsKeyboardOpen'
+
 import {useModal} from '../../../context/ModalContext'
 import {ModalContentWrapper} from '../../shared/Wrappers/ModalContentWrapper'
 import {ModalFooterWrapper} from '../../shared/Wrappers/ModalFooterWrapper'
@@ -45,6 +47,7 @@ const Modal = () => {
     setHasExpanded,
   } = useModal()
   const {palette: p, isDark} = useTheme()
+  const isKeyboardOpen = useIsKeyboardOpen()
   useSafeAreaInsets()
   const backdropOpacity = React.useRef(new RNAnimated.Value(0)).current
   const [isVisible, setIsVisible] = React.useState(isOpen)
@@ -106,9 +109,7 @@ const Modal = () => {
     return Gesture.Pan()
       .onUpdate((event) => {
         'worklet'
-        // Only allow upward movement if canExpand is true
         if (event.translationY < 0 && !canExpandEnabled) {
-          // Prevent upward movement by clamping to 0
           dragY.value = Math.max(0, event.translationY)
         } else {
           dragY.value = event.translationY
@@ -116,17 +117,17 @@ const Modal = () => {
       })
       .onEnd((event) => {
         'worklet'
-        // Check for upward scroll (negative translationY) to expand modal
-        // Only allow expansion if canExpand is true
         if (event.translationY < 0 && !hasExpandedEnabled && canExpandEnabled) {
           const threshold = -(visibleHeight * 0.2)
           if (event.translationY <= threshold) {
             runOnJS(setHasExpanded)(true)
           }
         }
-
-        // Check for downward scroll to close modal
-        if (event.translationY > 100 && event.velocityY > 0) {
+        if (
+          event.translationY > 100 &&
+          event.velocityY > 0 &&
+          !isKeyboardOpen
+        ) {
           runOnJS(closeModal)()
         } else {
           dragY.value = withSpring(0)
