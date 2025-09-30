@@ -295,9 +295,9 @@ const DiscardIndicator = ({withFeedback = false}: DiscardIndicatorProps) => {
   React.useEffect(() => {
     if (withFeedback) {
       animatedWidth.value = s.xs
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)
       animatedWidth.value = withSpring(width, {
-        duration: time.oneSecond,
+        duration: time.seconds(2.3),
       })
     } else {
       animatedWidth.value = width

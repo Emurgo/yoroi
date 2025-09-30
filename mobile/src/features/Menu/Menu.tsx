@@ -22,7 +22,6 @@ import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {MenuRoutes} from '~/kernel/navigation/types'
-import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Space} from '~/ui/Space/Space'
@@ -215,7 +214,7 @@ const Catalyst = ({
   const {palette: p} = useTheme()
   const {wallet} = useSelectedWallet()
   const {sufficientFunds, isLoading} = useCanVote(wallet)
-  const {openModal, closeModal} = useModal()
+  const {openModal} = useModal()
   const screenHeight = useWindowDimensions().height
   const modalHeight = Math.min(screenHeight * 0.8, 280)
 
@@ -225,9 +224,10 @@ const Catalyst = ({
     } else {
       openModal({
         title: strings.menu.attention,
-        content: <InsufficientFundsModal />,
-        footer: <Button title={strings.menu.back} onPress={closeModal} />,
+        content: React.createElement(InsufficientFundsModal.Content),
+        footer: React.createElement(InsufficientFundsModal.Footer),
         height: modalHeight,
+        withFeedback: true,
       })
     }
   }
