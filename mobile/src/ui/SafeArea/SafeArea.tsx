@@ -1,6 +1,7 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
+import {StyleSheet} from 'react-native'
 import {
   SafeAreaView,
   type SafeAreaViewProps,
@@ -12,7 +13,7 @@ export const SafeArea = ({children, style, ...rest}: SafeAreaViewProps) => {
     <SafeAreaView
       edges={['bottom', 'left', 'right', 'bottom']}
       {...rest}
-      style={[a.flex_1, ta.bg_color_max, style]}
+      style={StyleSheet.flatten([a.flex_1, ta.bg_color_max, style])}
     >
       {children}
     </SafeAreaView>

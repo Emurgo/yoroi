@@ -29,7 +29,7 @@ import {useIsKeyboardOpen} from '~/hooks/useIsKeyboardOpen'
 import {useModal} from '../../../context/ModalContext'
 import {ModalContentWrapper} from '../../shared/Wrappers/ModalContentWrapper'
 import {ModalFooterWrapper} from '../../shared/Wrappers/ModalFooterWrapper'
-import {ModalScreenWrapper} from './ModalScreenWrapper'
+import {ModalWrapper} from './ModalWrapper'
 
 const Modal = () => {
   const {
@@ -255,7 +255,7 @@ const Modal = () => {
                 </GestureHandlerRootView>
               )}
 
-              <ModalScreenWrapper
+              <ModalWrapper
                 title={visibleTitle}
                 footer={visibleFooter}
                 edges={
@@ -267,7 +267,7 @@ const Modal = () => {
                 }
               >
                 {visibleContent}
-              </ModalScreenWrapper>
+              </ModalWrapper>
             </Animated.View>
           </KeyboardAvoidingView>
         </View>

@@ -19,7 +19,7 @@ import {ReceiveProvider} from '~/features/Receive/common/ReceiveProvider'
 import {ReviewTxProvider} from '~/features/ReviewTx/common/ReviewTxProvider'
 import {AppNavigator} from '~/kernel/navigation/AppNavigator'
 import {Boundary} from '~/ui/Boundary/Boundary'
-import {Modal} from '~/ui/Modal/ui/screens/ModalScreen/ModalScreen'
+import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 
 import {PlatformShell} from './PlatformShell'
 import {AuthProvider} from './src/features/Auth/context/AuthProvider'

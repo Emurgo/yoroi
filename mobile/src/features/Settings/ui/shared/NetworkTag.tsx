@@ -19,7 +19,7 @@ import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/context/ModalContext'
-import {Modal} from '~/ui/Modal/ui/screens/ModalScreen/ModalScreen'
+import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {Space} from '~/ui/Space/Space'
 
 type Props = React.PropsWithChildren<{

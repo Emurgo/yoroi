@@ -21,7 +21,7 @@ import {rootMMKV, rootSyncStorage} from '~/kernel/storage/storages'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {LoadingOverlay} from '~/ui/LoadingOverlay/LoadingOverlay'
 import {useModal} from '~/ui/Modal/context/ModalContext'
-import {ModalScreenWrapper} from '~/ui/Modal/ui/screens/ModalScreen/ModalScreenWrapper'
+import {ModalScreenWrapper} from '~/ui/Modal/ui/screens/Modal/ModalWrapper'
 import {TextInput} from '~/ui/TextInput/TextInput'
 
 import {InitialCollateralInfoModal} from '../Settings/ui/screens/ChangeWalletSettingsScreen/ManageCollateralScreen/InitialCollateralInfoModal'

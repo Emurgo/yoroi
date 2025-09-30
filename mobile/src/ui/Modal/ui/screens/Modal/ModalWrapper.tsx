@@ -12,7 +12,7 @@ type Props = SafeAreaViewProps & {
   footer?: React.ReactNode
 }
 
-export const ModalScreenWrapper = ({
+export const ModalWrapper = ({
   title,
   footer,
   children,

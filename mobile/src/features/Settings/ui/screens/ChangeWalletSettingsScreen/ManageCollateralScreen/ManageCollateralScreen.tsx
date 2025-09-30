@@ -28,6 +28,7 @@ import {ErrorPanel} from '~/ui/ErrorPanel/ErrorPanel'
 import {Icon} from '~/ui/Icon'
 import {Info} from '~/ui/Icon/Info'
 import {useModal} from '~/ui/Modal/context/ModalContext'
+import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
 import {TokenAmountItem} from '~/ui/TokenAmountItem/TokenAmountItem'
@@ -102,13 +103,12 @@ export const ManageCollateralScreen = () => {
   const isLoading = isLoadingTx || isLoadingCollateral
 
   const handleGenerateCollateral = () => {
-    closeModal()
-
     const utxos = utxosMaker(wallet.utxos)
     const possibleCollateralId = utxos.drawnCollateral()
 
     if (possibleCollateralId !== undefined) {
       handleSetCollateralId(possibleCollateralId)
+      closeModal()
       return
     }
 
@@ -138,6 +138,7 @@ export const ManageCollateralScreen = () => {
       return
     }
 
+    closeModal()
     createCollateralTransaction()
   }
 
@@ -237,19 +238,17 @@ const Actions = ({
 }) => {
   const strings = useStrings()
   return (
-    <View style={[a.flex_row, a.gap_md]}>
+    <Modal.Footer>
       <Button
-        style={[a.flex_1]}
         title={strings.manageCollateral.cancel}
         onPress={onCancel}
         type={ButtonType.Secondary}
       />
       <Button
-        style={[a.flex_1]}
         title={strings.manageCollateral.initialCollateralInfoModalButton}
         onPress={onConfirm}
       />
-    </View>
+    </Modal.Footer>
   )
 }
 
