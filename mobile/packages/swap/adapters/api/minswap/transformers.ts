@@ -121,7 +121,7 @@ export const transformersMaker = (config: MinswapApiConfig) => {
 
         // Calculate prices safely
         const initialPrice = amountIn > 0 ? amountOut / amountIn : 0
-        const finalPrice = amountIn > 0 ? amountOut / amountIn : 0
+        const finalPrice = initialPrice // Barely use the finalPrice and calculating it based on initial and price_impact could be dangerous
 
         const split = freeze(
           {
@@ -129,8 +129,8 @@ export const transformersMaker = (config: MinswapApiConfig) => {
             batcherFee,
             deposits,
             protocol: mapDexToProtocol(firstHop.protocol),
-            expectedOutput: amountOut,
-            expectedOutputWithoutSlippage: minAmountOut,
+            expectedOutput: minAmountOut,
+            expectedOutputWithoutSlippage: amountOut,
             fee: batcherFee, // Keep fee field for backward compatibility
             initialPrice,
             finalPrice,

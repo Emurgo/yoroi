@@ -47,7 +47,10 @@ export const toSwapSplit = ({
   expectedOutputWithoutSlippage: expected_output_without_slippage,
   fee,
   finalPrice: final_price,
-  initialPrice: initial_price,
+  initialPrice:
+    amount_in > 0
+      ? expected_output_without_slippage / amount_in
+      : initial_price,
   poolFee: pool_fee,
   poolId: pool_id,
   priceDistortion: price_distortion,
