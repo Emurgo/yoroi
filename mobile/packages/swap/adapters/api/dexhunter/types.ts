@@ -87,6 +87,7 @@ export type Split = {
 export type EstimateRequest = {
   amount_in?: number
   blacklisted_dexes?: Dex[]
+  single_preferred_dex?: Dex
   slippage?: number
   token_in?: string
   token_out?: string
@@ -117,6 +118,7 @@ export type EstimateResponse = {
 export type ReverseEstimateRequest = {
   amount_out?: number
   blacklisted_dexes?: Dex[]
+  single_preferred_dex?: Dex
   slippage: number
   token_in: string
   token_out: string

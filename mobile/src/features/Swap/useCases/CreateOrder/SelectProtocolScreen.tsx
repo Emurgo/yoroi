@@ -46,7 +46,7 @@ export const SelectProtocolScreen = () => {
     }).formattedValue
   }
 
-  const data = limitOptions.options
+  const data = limitOptions?.options ?? []
   const counter = data.length
 
   return (

@@ -29,36 +29,6 @@ export const Dex = {
 
 export type Dex = (typeof Dex)[keyof typeof Dex]
 
-export type ProvidersResponse = Record<
-  Dex,
-  {
-    batcher_fee: number
-    deposit: number
-    cancellation_mem: number
-    cancellation_steps: number
-  }
->
-
-export type PoolsRequest = {
-  dex?: Dex[]
-  token_a: Portfolio.Token.Id
-  token_b: Portfolio.Token.Id
-}
-
-export type PoolsResponse = Array<{
-  provider: Dex
-  token_a: Portfolio.Token.Id
-  token_b: Portfolio.Token.Id
-  token_a_liquidity: number
-  token_b_liquidity: number
-  pool_id: string
-  pool_fee: number
-  utxo: string
-  batcher_address: string | null
-  price_a: number | null
-  price_b: number | null
-}>
-
 export type TokensResponse = Array<{
   ticker: string
   name: string | null
@@ -67,19 +37,6 @@ export type TokensResponse = Array<{
   decimals: number | null
   verified: boolean
 }>
-
-export type OpenOrdersResponse = {
-  orders: Array<{
-    from_token: Portfolio.Token.Id
-    to_token: Portfolio.Token.Id
-    from_amount: string
-    to_amount: string
-    user_address: string
-    dex: Dex
-    utxo: string // tx_hash#output_idx
-  }>
-  numbers_have_decimals: boolean
-}
 
 export type OrdersHistoryResponse = {
   orders: Array<{
@@ -131,6 +88,8 @@ export type LimitOrderRequest = {
   user_address: string
   // Changed from dex to order_contract
   order_contract?: Dex
+  // Optional pool selection for limit orders
+  pool_id?: string | null
   partner?: string
   numbers_have_decimals?: boolean
   utxos?: string[]
@@ -143,8 +102,8 @@ export type CreateOrderRequest = {
   sell_amount?: string
   user_address: string
   slippage?: number
-  // Changed from dex to excluded_sources
-  excluded_sources?: ReadonlyArray<Dex> | Dex
+  // Frontend Options to exclude (from /providers liquidity_source_info)
+  excluded_sources?: ReadonlyArray<Dex | string>
   partner?: string
   numbers_have_decimals?: boolean
   utxos?: string[]
@@ -156,8 +115,8 @@ export type QuoteRequest = {
   buy_amount?: string
   sell_amount?: string
   slippage?: number
-  // Changed from dex to excluded_sources
-  excluded_sources?: ReadonlyArray<Dex> | Dex
+  // Frontend Options to exclude (from /providers liquidity_source_info)
+  excluded_sources?: ReadonlyArray<Dex | string>
   partner?: string
   numbers_have_decimals?: boolean
 }
@@ -169,6 +128,7 @@ export type LimitQuoteRequest = {
   sell_amount: string
   // Changed from dex to order_contract
   order_contract?: Dex
+  pool_id?: string | null
   partner?: string
   numbers_have_decimals?: boolean
 }
@@ -227,4 +187,43 @@ export type MuesliswapApiConfig = {
   stakingKey: string
   network: Chain.SupportedNetworks
   request?: FetchData
+}
+
+// Provider info types (for GET /providers)
+export type DexInfoResponse = {
+  order_protocols: string[]
+  liquidity_protocols: string[]
+  routes: string[]
+  name: string
+  image: string
+}
+
+export type RouteInfo = {
+  batcher_fee: number
+  deposit: number
+}
+
+export type OrderContractInfo = {
+  cancellation_mem: number
+  cancellation_steps: number
+  is_orderbook: boolean
+  requires_pool_id: boolean
+}
+
+export type LiquiditySourceInfo = {
+  frontend_option: string
+}
+
+export type ProviderInfoResponse = {
+  dex_info: Record<string, DexInfoResponse>
+  route_info: Record<string, RouteInfo>
+  order_contract_info: Record<string, OrderContractInfo>
+  liquidity_source_info: Record<string, LiquiditySourceInfo>
+}
+
+export type RouteHint = {
+  orderContract?: string
+  poolIds?: ReadonlyArray<string>
+  frontendOptions?: ReadonlyArray<string>
+  aggregatorDexKey?: string
 }
