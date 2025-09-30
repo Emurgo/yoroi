@@ -25,8 +25,9 @@ export const EstimateSummary = () => {
   const {openModal} = useModal()
   const navigateTo = useNavigateTo()
   const {numberLocale} = useLanguage()
-  const localFormat = (v: number | string) =>
-    parseNumberFromText({text: String(v), format: numberLocale}).formattedValue
+  const localFormat = (v: number | string, precision?: number) =>
+    parseNumberFromText({text: String(v), format: numberLocale, precision})
+      .formattedValue
   const tokenInInfo = swapForm.tokenInfos.get(
     swapForm.tokenInInput.tokenId ?? undefinedToken,
   )
@@ -40,12 +41,6 @@ export const EstimateSummary = () => {
   const protocol = swapForm.estimate?.splits[0]?.protocol
 
   if (swapForm.estimate === undefined) return null
-
-  const netPrice = swapForm.estimate.netPrice
-  const roundedPrice = netPrice
-    .toFixed(tokenOutInfo?.decimals ?? 0)
-    .replace(/\.0+$/, '')
-  const price = roundedPrice !== '0' ? roundedPrice : netPrice.toFixed(6)
 
   const expand = () =>
     openModal({
@@ -86,7 +81,7 @@ export const EstimateSummary = () => {
             ? strings.swap.limitPriceInfo
             : strings.swap.marketPriceInfo
         }
-        value={`1 ${tokenInTicker} = ${localFormat(price)} ${tokenOutTicker}`}
+        value={`1 ${tokenInTicker} = ${localFormat(swapForm.estimate?.netPrice ?? 0, Math.max(tokenOutInfo?.decimals ?? 0, tokenInInfo?.decimals ?? 0, 3))} ${tokenOutTicker}`}
       />
 
       <Space.Height.sm />
@@ -107,11 +102,13 @@ export const EstimateSummary = () => {
 
       <Space.Height.sm />
 
-      <Row
-        label={strings.swap.swapSlippageTitle}
-        description={strings.swap.swapSlippage}
-        value={`${localFormat(swapForm.slippageInput.value)}%`}
-      />
+      {swapForm.orderType === 'market' && (
+        <Row
+          label={strings.swap.swapSlippageTitle}
+          description={strings.swap.swapSlippage}
+          value={`${localFormat(swapForm.slippageInput.value)}%`}
+        />
+      )}
     </View>
   )
 }

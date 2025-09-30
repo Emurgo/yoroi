@@ -1,4 +1,4 @@
-import {atomicToDecimal, toBigInt} from '@yoroi/common'
+import {atomicToDecimal, parseNumberFromText} from '@yoroi/common'
 import {isPrimaryTokenInfo} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
@@ -30,7 +30,11 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
   const info = amount.tokenId
     ? swapForm.tokenInfos.get(amount.tokenId)
     : undefined
-  const quantity = amount.value
+  const quantity = parseNumberFromText({
+    text: amount.value,
+    denomination: info?.decimals ?? 0,
+  }).quantity
+
   // Only show errors for input direction (insufficient balance, etc.)
   const error = direction === 'in' ? amount.error : null
   const touched = amount.isTouched
@@ -125,7 +129,7 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
           <TextInput
             keyboardType="numeric"
             autoComplete="off"
-            value={quantity}
+            value={amount.value}
             placeholder="0"
             placeholderTextColor={p.text_gray_medium}
             onChangeText={handleAmountChange}
@@ -176,7 +180,7 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
             <PairedBalance
               amount={{
                 info,
-                quantity: toBigInt(quantity || '0', decimals),
+                quantity: BigInt(quantity || '0'),
               }}
               textStyle={a.body_2_md_regular}
             />

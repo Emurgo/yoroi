@@ -1,3 +1,4 @@
+import {parseNumberFromText} from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import {useNavigation} from '@react-navigation/native'
@@ -9,6 +10,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {undefinedToken} from '~/features/Swap/common/constants'
 import {useSwap} from '~/features/Swap/common/useSwap'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useLanguage} from '~/kernel/i18n/LanguageProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Counter} from '~/ui/Counter/Counter'
 import {ProtocolAvatar} from '~/ui/ProtocolAvatar/ProtocolAvatar'
@@ -19,7 +21,7 @@ export const SelectProtocolScreen = () => {
   const {wallet} = useSelectedWallet()
   const {limitOptions, ...swapForm} = useSwap()
   const {palette: p} = useTheme()
-
+  const {numberLocale} = useLanguage()
   if (limitOptions === undefined) return null
 
   const tokenInInfo = swapForm.tokenInfos.get(
@@ -33,10 +35,15 @@ export const SelectProtocolScreen = () => {
   const tokenOutTicker = tokenOutInfo?.ticker ?? tokenOutInfo?.name ?? '-'
 
   const formatPrice = (price: number) => {
-    const roundedPrice = price
-      .toFixed(tokenOutInfo?.decimals ?? 0)
-      .replace(/\.0+$/, '')
-    return roundedPrice !== '0' ? roundedPrice : price.toFixed(6)
+    return parseNumberFromText({
+      text: String(price),
+      format: numberLocale,
+      precision: Math.max(
+        tokenOutInfo?.decimals ?? 0,
+        tokenInInfo?.decimals ?? 0,
+        3,
+      ),
+    }).formattedValue
   }
 
   const data = limitOptions.options
