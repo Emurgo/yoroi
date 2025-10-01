@@ -16,7 +16,6 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native'
-import {SafeAreaView} from 'react-native-safe-area-context'
 import {ViewProps} from 'react-native-svg/lib/typescript/fabric/utils'
 
 import {YoroiZendeskLink} from '~/features/SetupWallet/common/constants'
@@ -35,10 +34,10 @@ import {Button} from '~/ui/Button/Button'
 import {CardAboutPhrase} from '~/ui/CardAboutPhrase/CardAboutPhrase'
 import {Icon} from '~/ui/Icon'
 import {Info as InfoIcon} from '~/ui/InfoIcon/InfoIcon'
-import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingView'
 import {LearnMoreButton} from '~/ui/LearnMoreButton/LearnMoreButton'
 import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
+import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
 import {StepperProgress} from '~/ui/StepperProgress/StepperProgress'
 import {TextInput} from '~/ui/TextInput/TextInput'
@@ -77,7 +76,7 @@ const addressMode: Wallet.AddressMode = 'single'
 export const WalletDetailsScreen = () => {
   const navigation = useNavigation<any>()
   const strings = useStrings()
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
   const {track} = useMetrics()
   const bold = useBold({style: a.body_1_lg_medium})
   const {modalHeightNamePassword, modalHeightChecksum} = useSizeModal()
@@ -292,128 +291,118 @@ export const WalletDetailsScreen = () => {
   }
 
   return (
-    <KeyboardAvoidingView style={[a.flex_1, {backgroundColor: p.bg_color_max}]}>
-      <SafeAreaView
-        edges={['left', 'right', 'bottom']}
-        style={[a.flex_1, a.pb_lg]}
-      >
-        <StepperProgress
-          style={[a.px_lg]}
-          currentStep={4}
-          currentStepTitle={strings.setupWallet.stepWalletDetails}
-          totalSteps={4}
+    <SafeArea>
+      <StepperProgress
+        style={[a.px_lg]}
+        currentStep={4}
+        currentStepTitle={strings.setupWallet.stepWalletDetails}
+        totalSteps={4}
+      />
+
+      <View style={[{height: 24}, a.px_lg, a.flex_row]}>
+        <Text style={[a.body_1_lg_regular, ta.text_gray_max]}>
+          {strings.setupWallet.walletDetailsTitle(bold)}
+        </Text>
+
+        <Info onPress={showModalTipsPassword} />
+      </View>
+
+      <ScrollView contentContainerStyle={[a.pt_lg, a.gap_lg, a.px_lg]}>
+        <TextInput
+          enablesReturnKeyAutomatically
+          autoFocus={!showRestoreWalletInfoModal}
+          label={strings.setupWallet.walletDetailsNameInput}
+          value={name}
+          onChangeText={(walletName: string) => setName(walletName)}
+          errorText={
+            !isEmptyString(walletNameErrorText) &&
+            walletNameErrorText &&
+            !isPending
+              ? walletNameErrorText
+              : undefined
+          }
+          errorDelay={0}
+          returnKeyType="next"
+          onSubmitEditing={() => passwordRef.current?.focus()}
+          testID="walletNameInput"
+          autoComplete="off"
+          showErrorOnBlur
         />
 
-        <View style={[{height: 24}, a.px_lg, a.flex_row]}>
-          <Text style={[a.body_1_lg_regular, {color: p.gray_900}]}>
-            {strings.setupWallet.walletDetailsTitle(bold)}
-          </Text>
+        <TextInput
+          enablesReturnKeyAutomatically
+          ref={passwordRef}
+          secureTextEntry
+          label={strings.setupWallet.walletDetailsPasswordInput}
+          value={password}
+          onChangeText={setPassword}
+          errorText={passwordErrorText}
+          returnKeyType="next"
+          helper={strings.setupWallet.walletDetailsPasswordHelper}
+          onSubmitEditing={() => passwordConfirmationRef.current?.focus()}
+          testID="walletPasswordInput"
+          autoComplete="off"
+          showErrorOnBlur
+          textContentType="oneTimeCode"
+        />
 
-          <Info onPress={showModalTipsPassword} />
-        </View>
+        <TextInput
+          enablesReturnKeyAutomatically
+          ref={passwordConfirmationRef}
+          secureTextEntry
+          returnKeyType="done"
+          label={strings.setupWallet.walletDetailsConfirmPasswordInput}
+          value={passwordConfirmation}
+          onChangeText={setPasswordConfirmation}
+          errorText={passwordConfirmationErrorText}
+          testID="walletRepeatPasswordInput"
+          autoComplete="off"
+          showErrorOnBlur
+          textContentType="oneTimeCode"
+        />
 
-        <ScrollView style={a.px_lg} contentContainerStyle={[a.pt_lg, a.gap_lg]}>
-          <TextInput
-            enablesReturnKeyAutomatically
-            autoFocus={!showRestoreWalletInfoModal}
-            label={strings.setupWallet.walletDetailsNameInput}
-            value={name}
-            onChangeText={(walletName: string) => setName(walletName)}
-            errorText={
-              !isEmptyString(walletNameErrorText) &&
-              walletNameErrorText &&
-              !isPending
-                ? walletNameErrorText
-                : undefined
-            }
-            errorDelay={0}
-            returnKeyType="next"
-            onSubmitEditing={() => passwordRef.current?.focus()}
-            testID="walletNameInput"
-            autoComplete="off"
-            showErrorOnBlur
+        <View
+          style={[a.flex_row, a.align_center, a.justify_center, a.align_center]}
+        >
+          <Icon.WalletAvatar
+            image={new Blockies({seed}).asBase64()}
+            style={{width: 24, height: 24}}
+            size={24}
           />
 
-          <TextInput
-            enablesReturnKeyAutomatically
-            ref={passwordRef}
-            secureTextEntry
-            label={strings.setupWallet.walletDetailsPasswordInput}
-            value={password}
-            onChangeText={setPassword}
-            errorText={passwordErrorText}
-            returnKeyType="next"
-            helper={strings.setupWallet.walletDetailsPasswordHelper}
-            onSubmitEditing={() => passwordConfirmationRef.current?.focus()}
-            testID="walletPasswordInput"
-            autoComplete="off"
-            showErrorOnBlur
-            textContentType="oneTimeCode"
-          />
+          <Space.Width.sm />
 
-          <TextInput
-            enablesReturnKeyAutomatically
-            ref={passwordConfirmationRef}
-            secureTextEntry
-            returnKeyType="done"
-            label={strings.setupWallet.walletDetailsConfirmPasswordInput}
-            value={passwordConfirmation}
-            onChangeText={setPasswordConfirmation}
-            errorText={passwordConfirmationErrorText}
-            testID="walletRepeatPasswordInput"
-            autoComplete="off"
-            showErrorOnBlur
-            textContentType="oneTimeCode"
-          />
-
-          <View
+          <Text
             style={[
-              a.flex_row,
-              a.align_center,
+              ta.text_gray_medium,
+              a.body_1_lg_regular,
+              a.text_center,
               a.justify_center,
               a.align_center,
             ]}
           >
-            <Icon.WalletAvatar
-              image={new Blockies({seed}).asBase64()}
-              style={{width: 24, height: 24}}
-              size={24}
-            />
+            {plate}
+          </Text>
 
-            <Space.Width.sm />
+          <Space.Width.sm />
 
-            <Text
-              style={[
-                {color: p.text_gray_medium},
-                a.body_1_lg_regular,
-                a.text_center,
-                a.justify_center,
-                a.align_center,
-              ]}
-            >
-              {plate}
-            </Text>
+          <Info onPress={showModalTipsPlateNumber} />
+        </View>
+      </ScrollView>
 
-            <Space.Width.sm />
-
-            <Info onPress={showModalTipsPlateNumber} />
-          </View>
-        </ScrollView>
-
-        <Actions style={a.px_lg}>
-          <Button
-            title={strings.setupWallet.next}
-            onPress={() => handleCreateWallet()}
-            disabled={
-              isPending ||
-              Object.keys(passwordErrors).length > 0 ||
-              Object.keys(nameErrors).length > 0
-            }
-            testID="walletFormContinueButton"
-          />
-        </Actions>
-      </SafeAreaView>
-    </KeyboardAvoidingView>
+      <Actions style={a.px_lg}>
+        <Button
+          title={strings.setupWallet.next}
+          onPress={() => handleCreateWallet()}
+          disabled={
+            isPending ||
+            Object.keys(passwordErrors).length > 0 ||
+            Object.keys(nameErrors).length > 0
+          }
+          testID="walletFormContinueButton"
+        />
+      </Actions>
+    </SafeArea>
   )
 }
 

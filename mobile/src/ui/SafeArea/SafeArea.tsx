@@ -7,15 +7,19 @@ import {
   type SafeAreaViewProps,
 } from 'react-native-safe-area-context'
 
+import {KeyboardAvoidingView} from '../KeyboardAvoidingView/KeyboardAvoidingView'
+
 export const SafeArea = ({children, style, ...rest}: SafeAreaViewProps) => {
   const {atoms: ta} = useTheme()
   return (
-    <SafeAreaView
-      edges={['bottom', 'left', 'right']}
-      {...rest}
-      style={StyleSheet.flatten([a.flex_1, ta.bg_color_max, style])}
-    >
-      {children}
-    </SafeAreaView>
+    <KeyboardAvoidingView style={a.flex_1} enabled>
+      <SafeAreaView
+        edges={['bottom', 'left', 'right']}
+        {...rest}
+        style={StyleSheet.flatten([a.flex_1, ta.bg_color_max, style])}
+      >
+        {children}
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   )
 }

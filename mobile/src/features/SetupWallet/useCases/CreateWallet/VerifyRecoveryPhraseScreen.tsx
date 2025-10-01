@@ -13,7 +13,6 @@ import {
 } from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 import Animated, {FadeIn, FadeOut, Layout} from 'react-native-reanimated'
-import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useBold} from '~/hooks/useBold'
@@ -22,6 +21,7 @@ import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Alert as AlertIllustration} from '~/ui/AlertIllustration/AlertIllustration'
 import {Button} from '~/ui/Button/Button'
 import {Check2 as Check2Illustration} from '~/ui/Check2Illustration/Check2Illustration'
+import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
 import {StepperProgress} from '~/ui/StepperProgress/StepperProgress'
 
@@ -32,7 +32,7 @@ export const VerifyRecoveryPhraseScreen = () => {
   const {mnemonic, publicKeyHexChanged, accountVisual, walletImplementation} =
     useSetupWallet()
   const {track} = useMetrics()
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
   const {walletManager} = useWalletManager()
 
   useFocusEffect(
@@ -81,15 +81,7 @@ export const VerifyRecoveryPhraseScreen = () => {
   }
 
   return (
-    <SafeAreaView
-      edges={['left', 'right', 'bottom']}
-      style={[
-        a.flex_1,
-        a.justify_between,
-        a.gap_lg,
-        {backgroundColor: p.bg_color_max},
-      ]}
-    >
+    <SafeArea>
       <StepperProgress
         currentStep={3}
         currentStepTitle={strings.setupWallet.stepVerifyRecoveryPhrase}
@@ -97,7 +89,7 @@ export const VerifyRecoveryPhraseScreen = () => {
         style={a.px_lg}
       />
 
-      <Text style={[a.body_1_lg_regular, {color: p.text_gray_medium}, a.px_lg]}>
+      <Text style={[a.body_1_lg_regular, ta.text_gray_medium, a.px_lg]}>
         {strings.setupWallet.verifyRecoveryPhraseTitle(bold)}
       </Text>
 
@@ -110,7 +102,7 @@ export const VerifyRecoveryPhraseScreen = () => {
 
       {isPhraseComplete && isLastWordValid() && <SuccessMessage />}
 
-      <ScrollView bounces={false} style={a.px_lg}>
+      <ScrollView bounces={false} contentContainerStyle={[a.px_lg]}>
         <WordBadges
           defaultMnemonic={mnemonicDefault}
           mnemonicEntries={mnemonicEntries}
@@ -124,7 +116,7 @@ export const VerifyRecoveryPhraseScreen = () => {
         {!isLastWordValid() && userEntries.length > 0 && <ErrorMessage />}
       </ScrollView>
 
-      <View style={[a.pb_lg, a.px_lg]}>
+      <View style={[a.px_lg]}>
         <Button
           title={strings.setupWallet.next}
           disabled={disabled}
@@ -141,7 +133,7 @@ export const VerifyRecoveryPhraseScreen = () => {
           testID="setup-next-button"
         />
       </View>
-    </SafeAreaView>
+    </SafeArea>
   )
 }
 
@@ -163,14 +155,14 @@ const ErrorMessage = () => {
 
 const SuccessMessage = () => {
   const strings = useStrings()
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
   return (
-    <View style={[a.flex_row, a.align_center, a.justify_start, a.px_lg]}>
+    <View
+      style={[a.flex_row, a.align_center, a.justify_start, a.p_lg, a.gap_sm]}
+    >
       <Check2Illustration />
 
-      <Space.Height.sm />
-
-      <Text style={[{color: p.text_gray_max}, a.body_1_lg_medium]}>
+      <Text style={[ta.text_gray_max, a.body_1_lg_medium]}>
         {strings.setupWallet.verifyRecoveryPhraseSuccessMessage}
       </Text>
     </View>

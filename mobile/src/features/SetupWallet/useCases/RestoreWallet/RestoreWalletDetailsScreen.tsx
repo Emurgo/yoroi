@@ -17,7 +17,6 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native'
-import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {YoroiZendeskLink} from '~/features/SetupWallet/common/constants'
 import {parseWalletMeta} from '~/features/WalletManager/common/validators/wallet-meta'
@@ -35,9 +34,10 @@ import {Button} from '~/ui/Button/Button'
 import {CardAboutPhrase} from '~/ui/CardAboutPhrase/CardAboutPhrase'
 import {Icon} from '~/ui/Icon'
 import {Info as InfoIcon} from '~/ui/InfoIcon/InfoIcon'
-import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingView'
 import {LearnMoreButton} from '~/ui/LearnMoreButton/LearnMoreButton'
 import {useModal} from '~/ui/Modal/context/ModalContext'
+import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
+import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
 import {StepperProgress} from '~/ui/StepperProgress/StepperProgress'
 import {TextInput} from '~/ui/TextInput/TextInput'
@@ -73,7 +73,7 @@ const addressMode: Wallet.AddressMode = 'single'
 export const RestoreWalletDetailsScreen = () => {
   const navigation = useNavigation<any>()
   const strings = useStrings()
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
   const {track} = useMetrics()
   const bold = useBold({style: a.body_1_lg_medium})
   const {HEIGHT_MODAL_NAME_PASSWORD, HEIGHT_MODAL_CHECKSUM} = useSizeModal()
@@ -178,7 +178,7 @@ export const RestoreWalletDetailsScreen = () => {
     openModal({
       title: strings.setupWallet.walletDetailsModalTitle,
       content: (
-        <View style={[a.flex_1]}>
+        <Modal.Content>
           <CardAboutPhrase
             title={strings.setupWallet.walletNameModalCardTitle}
             linesOfText={[
@@ -204,13 +204,15 @@ export const RestoreWalletDetailsScreen = () => {
               Linking.openURL(YoroiZendeskLink)
             }}
           />
-        </View>
+        </Modal.Content>
       ),
       footer: (
-        <Button
-          title={strings.setupWallet.continueButton}
-          onPress={closeModal}
-        />
+        <Modal.Footer>
+          <Button
+            title={strings.setupWallet.continueButton}
+            onPress={closeModal}
+          />
+        </Modal.Footer>
       ),
       height: HEIGHT_MODAL_NAME_PASSWORD,
     })
@@ -220,7 +222,7 @@ export const RestoreWalletDetailsScreen = () => {
     openModal({
       title: strings.setupWallet.walletDetailsModalTitle,
       content: (
-        <View style={[a.flex_1, a.pb_lg, a.px_lg]}>
+        <Modal.Content>
           <CardAboutPhrase
             title={strings.setupWallet.walletChecksumModalCardTitle}
             checksumImage={plate.ImagePart}
@@ -241,158 +243,146 @@ export const RestoreWalletDetailsScreen = () => {
               Linking.openURL(YoroiZendeskLink)
             }}
           />
-        </View>
+        </Modal.Content>
       ),
       footer: (
-        <Button
-          title={strings.setupWallet.continueButton}
-          onPress={closeModal}
-        />
+        <Modal.Footer>
+          <Button
+            title={strings.setupWallet.continueButton}
+            onPress={closeModal}
+          />
+        </Modal.Footer>
       ),
       height: HEIGHT_MODAL_CHECKSUM,
     })
   }
 
   return (
-    <KeyboardAvoidingView
-      style={[
-        {backgroundColor: p.bg_color_max},
-        a.justify_between,
-        a.px_lg,
-        a.flex_1,
-      ]}
-    >
-      <SafeAreaView
-        edges={['left', 'right', 'bottom']}
-        style={[a.pb_lg, a.flex_1]}
-      >
-        <StepperProgress
-          currentStep={2}
-          currentStepTitle={strings.setupWallet.stepWalletDetails}
-          totalSteps={2}
+    <SafeArea>
+      <StepperProgress
+        currentStep={2}
+        currentStepTitle={strings.setupWallet.stepWalletDetails}
+        totalSteps={2}
+      />
+
+      <View style={a.flex_row}>
+        <Text style={[a.body_1_lg_regular, ta.text_gray_max]}>
+          {strings.setupWallet.walletDetailsTitle(bold)}
+        </Text>
+
+        <Info onPress={showModalTipsPassword} />
+      </View>
+
+      <Space.Height.xl />
+
+      <ScrollView style={a.flex_1} contentContainerStyle={a.px_lg}>
+        <TextInput
+          enablesReturnKeyAutomatically
+          autoFocus
+          label={strings.setupWallet.walletDetailsNameInput}
+          value={name}
+          onChangeText={(walletName: string) => setName(walletName)}
+          errorText={
+            !isEmptyString(walletNameErrorText) &&
+            walletNameErrorText &&
+            !isPending
+              ? walletNameErrorText
+              : undefined
+          }
+          errorDelay={0}
+          returnKeyType="next"
+          onSubmitEditing={() => passwordRef.current?.focus()}
+          testID="walletNameInput"
+          autoComplete="off"
+          showErrorOnBlur
         />
-
-        <View style={a.flex_row}>
-          <Text style={[a.body_1_lg_regular, {color: p.gray_900}]}>
-            {strings.setupWallet.walletDetailsTitle(bold)}
-          </Text>
-
-          <Info onPress={showModalTipsPassword} />
-        </View>
 
         <Space.Height.xl />
 
-        <ScrollView style={a.flex_1}>
-          <TextInput
-            enablesReturnKeyAutomatically
-            autoFocus
-            label={strings.setupWallet.walletDetailsNameInput}
-            value={name}
-            onChangeText={(walletName: string) => setName(walletName)}
-            errorText={
-              !isEmptyString(walletNameErrorText) &&
-              walletNameErrorText &&
-              !isPending
-                ? walletNameErrorText
-                : undefined
-            }
-            errorDelay={0}
-            returnKeyType="next"
-            onSubmitEditing={() => passwordRef.current?.focus()}
-            testID="walletNameInput"
-            autoComplete="off"
-            showErrorOnBlur
+        <TextInput
+          enablesReturnKeyAutomatically
+          ref={passwordRef}
+          secureTextEntry
+          label={strings.setupWallet.walletDetailsPasswordInput}
+          value={password}
+          onChangeText={setPassword}
+          errorText={passwordErrorText}
+          returnKeyType="next"
+          helper={strings.setupWallet.walletDetailsPasswordHelper}
+          onSubmitEditing={() => passwordConfirmationRef.current?.focus()}
+          testID="walletPasswordInput"
+          autoComplete="off"
+          showErrorOnBlur
+          textContentType="oneTimeCode"
+        />
+
+        <Space.Height.xl />
+
+        <TextInput
+          enablesReturnKeyAutomatically
+          ref={passwordConfirmationRef}
+          secureTextEntry
+          returnKeyType="done"
+          label={strings.setupWallet.walletDetailsConfirmPasswordInput}
+          value={passwordConfirmation}
+          onChangeText={setPasswordConfirmation}
+          errorText={passwordConfirmationErrorText}
+          testID="walletRepeatPasswordInput"
+          autoComplete="off"
+          textContentType="oneTimeCode"
+        />
+
+        <Space.Height.xl />
+
+        <View style={[a.flex_row, a.align_center, a.justify_center]}>
+          <Icon.WalletAvatar
+            image={new Blockies({seed: plate.ImagePart}).asBase64()}
+            style={{
+              width: 24,
+              height: 24,
+            }}
+            size={24}
           />
 
-          <Space.Height.xl />
+          <Space.Width.sm />
 
-          <TextInput
-            enablesReturnKeyAutomatically
-            ref={passwordRef}
-            secureTextEntry
-            label={strings.setupWallet.walletDetailsPasswordInput}
-            value={password}
-            onChangeText={setPassword}
-            errorText={passwordErrorText}
-            returnKeyType="next"
-            helper={strings.setupWallet.walletDetailsPasswordHelper}
-            onSubmitEditing={() => passwordConfirmationRef.current?.focus()}
-            testID="walletPasswordInput"
-            autoComplete="off"
-            showErrorOnBlur
-            textContentType="oneTimeCode"
-          />
+          <Text
+            style={[
+              ta.text_gray_medium,
+              a.body_1_lg_regular,
+              a.text_center,
+              a.justify_center,
+              a.align_center,
+            ]}
+            testID="wallet-plate-number"
+          >
+            {plate.TextPart}
+          </Text>
 
-          <Space.Height.xl />
+          <Space.Width.sm />
 
-          <TextInput
-            enablesReturnKeyAutomatically
-            ref={passwordConfirmationRef}
-            secureTextEntry
-            returnKeyType="done"
-            label={strings.setupWallet.walletDetailsConfirmPasswordInput}
-            value={passwordConfirmation}
-            onChangeText={setPasswordConfirmation}
-            errorText={passwordConfirmationErrorText}
-            testID="walletRepeatPasswordInput"
-            autoComplete="off"
-            textContentType="oneTimeCode"
-          />
-
-          <Space.Height.xl />
-
-          <View style={[a.flex_row, a.align_center, a.justify_center]}>
-            <Icon.WalletAvatar
-              image={new Blockies({seed: plate.ImagePart}).asBase64()}
-              style={{
-                width: 24,
-                height: 24,
-              }}
-              size={24}
-            />
-
-            <Space.Width.sm />
-
-            <Text
-              style={[
-                {
-                  color: p.text_gray_medium,
-                },
-                a.body_1_lg_regular,
-                a.text_center,
-                a.justify_center,
-                a.align_center,
-              ]}
-              testID="wallet-plate-number"
-            >
-              {plate.TextPart}
-            </Text>
-
-            <Space.Width.sm />
-
-            <Info onPress={showModalTipsPlateNumber} />
-          </View>
-        </ScrollView>
-
-        <View>
-          <Button
-            title={strings.setupWallet.next}
-            onPress={() =>
-              createWallet({
-                name,
-                password,
-                mnemonicPhrase: mnemonic,
-                implementation: walletImplementation,
-                addressMode,
-                accountVisual,
-              })
-            }
-            testID="setup-restore-step2-next-button"
-            disabled={disabled}
-          />
+          <Info onPress={showModalTipsPlateNumber} />
         </View>
-      </SafeAreaView>
-    </KeyboardAvoidingView>
+      </ScrollView>
+
+      <View>
+        <Button
+          title={strings.setupWallet.next}
+          onPress={() =>
+            createWallet({
+              name,
+              password,
+              mnemonicPhrase: mnemonic,
+              implementation: walletImplementation,
+              addressMode,
+              accountVisual,
+            })
+          }
+          testID="setup-restore-step2-next-button"
+          disabled={disabled}
+        />
+      </View>
+    </SafeArea>
   )
 }
 
