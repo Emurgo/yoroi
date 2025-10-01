@@ -22,6 +22,7 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {ScrollView} from '~/ui/ScrollView/ScrollView'
+import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
 
 import {EmptyNotificationsIllustration} from '../../illustrations/EmptyNotifications'
@@ -70,7 +71,7 @@ export const ViewNotificationHistoryScreen = () => {
 
   return (
     <SafeAreaView
-      style={[a.px_lg, a.flex, {flex: 1, position: 'relative'}]}
+      style={[a.flex_1, a.px_lg]}
       edges={['right', 'left', 'bottom']}
     >
       <ScrollView contentContainerStyle={{paddingBottom: 60}}>
@@ -88,6 +89,7 @@ export const ViewNotificationHistoryScreen = () => {
       <View
         style={[
           a.absolute,
+          a.pb_lg,
           {bottom: 0, left: 0, right: 0, height: 60},
           a.align_center,
           a.justify_center,
@@ -100,6 +102,7 @@ export const ViewNotificationHistoryScreen = () => {
           onPress={handleMarkAllAsRead}
           type={ButtonType.Text}
         />
+        <Space.Height.xl />
       </View>
     </SafeAreaView>
   )
