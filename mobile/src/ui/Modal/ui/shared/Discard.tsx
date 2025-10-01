@@ -39,10 +39,16 @@ const DiscardIndicator = ({dragY, children}: Props) => {
     return Gesture.Pan()
       .onUpdate((event) => {
         'worklet'
-        if (event.translationY < 0 && !canExpand) {
-          dragY.value = Math.max(0, event.translationY)
+        // Apply smoothing to reduce jumps in translation values
+        const currentValue = dragY.value
+        const newValue = event.translationY
+        const smoothingFactor = 0.7
+        const smoothedValue =
+          currentValue + (newValue - currentValue) * smoothingFactor
+        if (smoothedValue < 0 && !canExpand) {
+          dragY.value = Math.max(0, smoothedValue)
         } else {
-          dragY.value = event.translationY
+          dragY.value = smoothedValue
         }
       })
       .onEnd((event) => {
@@ -56,7 +62,10 @@ const DiscardIndicator = ({dragY, children}: Props) => {
         if (event.translationY > 50 && event.velocityY > 0 && !isKeyboardOpen) {
           runOnJS(closeModal)()
         } else {
-          dragY.value = withSpring(0)
+          dragY.value = withSpring(0, {
+            damping: 20,
+            stiffness: 100,
+          })
         }
       })
   }, [

@@ -2,17 +2,14 @@ import {time} from '@yoroi/common'
 import {atoms as a, space as s, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
-import {
-  Easing,
-  Animated as RNAnimated,
-  Modal as RNModal,
-  View,
-} from 'react-native'
+import {Modal as RNModal, View} from 'react-native'
 import {KeyboardAvoidingView} from 'react-native-keyboard-controller'
 import Animated, {
+  runOnJS,
   useAnimatedStyle,
   useSharedValue,
   withSpring,
+  withTiming,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
@@ -36,7 +33,7 @@ const Modal = () => {
   } = useModal()
   const {palette: p, isDark} = useTheme()
   useSafeAreaInsets()
-  const backdropOpacity = React.useRef(new RNAnimated.Value(0)).current
+  const backdropOpacity = useSharedValue(0)
   const [isVisible, setIsVisible] = React.useState(isOpen)
 
   const lastContentRef = React.useRef(content)
@@ -84,40 +81,41 @@ const Modal = () => {
     }
   })
 
+  const backdropStyle = useAnimatedStyle(() => {
+    return {
+      opacity: backdropOpacity.value,
+    }
+  })
+
   React.useEffect(() => {
     if (isOpen) {
       setIsVisible(true)
-      backdropOpacity.setValue(0)
+      backdropOpacity.value = 0
       modalTranslateY.value = 48
       dragY.value = 0
       modalHeight.value = height
       isExpanded.value = hasExpandedEnabled
-      RNAnimated.parallel([
-        RNAnimated.timing(backdropOpacity, {
-          toValue: 1,
-          duration: time.seconds(0.3),
-          easing: Easing.out(Easing.quad),
-          useNativeDriver: true,
-        }),
-      ]).start()
+
+      backdropOpacity.value = withTiming(1, {
+        duration: time.seconds(0.3),
+      })
       modalTranslateY.value = withSpring(0, {
-        damping: 15,
-        stiffness: 150,
+        damping: 20,
+        stiffness: 100,
       })
     } else {
-      RNAnimated.parallel([
-        RNAnimated.timing(backdropOpacity, {
-          toValue: 0,
+      backdropOpacity.value = withTiming(
+        0,
+        {
           duration: time.seconds(0.3),
-          easing: Easing.in(Easing.cubic),
-          useNativeDriver: true,
-        }),
-      ]).start(() => {
-        setIsVisible(false)
-      })
+        },
+        () => {
+          runOnJS(setIsVisible)(false)
+        },
+      )
       modalTranslateY.value = withSpring(24, {
-        damping: 15,
-        stiffness: 150,
+        damping: 20,
+        stiffness: 100,
       })
     }
   }, [
@@ -151,15 +149,15 @@ const Modal = () => {
       onRequestClose={handleOnRequestClose}
     >
       <View style={[a.flex_1]}>
-        <RNAnimated.View
+        <Animated.View
           style={[
             a.absolute,
             a.inset_0,
             {zIndex: 0},
             {
               backgroundColor: 'rgba(0,0,0,0.4)',
-              opacity: backdropOpacity,
             },
+            backdropStyle,
           ]}
         />
         <Discard.Backdrop />
