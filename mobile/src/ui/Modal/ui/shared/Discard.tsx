@@ -20,7 +20,7 @@ import {useIsKeyboardOpen} from '~/hooks/useIsKeyboardOpen'
 
 import {useModal} from '../../context/ModalContext'
 
-const DiscardIndicator = ({onDragYChange, children}: Props) => {
+const DiscardIndicator = ({dragY, children}: Props) => {
   const {atoms: ta} = useTheme()
   const {
     canExpand,
@@ -34,9 +34,8 @@ const DiscardIndicator = ({onDragYChange, children}: Props) => {
   } = useModal()
   const isKeyboardOpen = useIsKeyboardOpen()
   const animatedWidth = useSharedValue(width)
-  const dragY = useSharedValue(0)
 
-  const createDragGesture = () => {
+  const dragGesture = React.useMemo(() => {
     return Gesture.Pan()
       .onUpdate((event) => {
         'worklet'
@@ -45,7 +44,6 @@ const DiscardIndicator = ({onDragYChange, children}: Props) => {
         } else {
           dragY.value = event.translationY
         }
-        runOnJS(onDragYChange)(dragY.value)
       })
       .onEnd((event) => {
         'worklet'
@@ -55,18 +53,21 @@ const DiscardIndicator = ({onDragYChange, children}: Props) => {
             runOnJS(setHasExpanded)(true)
           }
         }
-        if (
-          event.translationY > 100 &&
-          event.velocityY > 0 &&
-          !isKeyboardOpen
-        ) {
+        if (event.translationY > 50 && event.velocityY > 0 && !isKeyboardOpen) {
           runOnJS(closeModal)()
         } else {
           dragY.value = withSpring(0)
-          runOnJS(onDragYChange)(0)
         }
       })
-  }
+  }, [
+    canExpand,
+    hasExpanded,
+    height,
+    isKeyboardOpen,
+    setHasExpanded,
+    closeModal,
+    dragY,
+  ])
 
   const widthAnimatedStyle = useAnimatedStyle(() => {
     return {
@@ -90,7 +91,7 @@ const DiscardIndicator = ({onDragYChange, children}: Props) => {
 
   return (
     <GestureHandlerRootView style={[a.flex]}>
-      <GestureDetector gesture={createDragGesture()}>
+      <GestureDetector gesture={dragGesture}>
         <View style={[a.align_center, a.pt_sm, a.pb_xs]}>
           <View style={[{height: s.sm, width}]}>
             <Animated.View
@@ -120,7 +121,7 @@ export const DiscardBackdrop = () => {
 }
 
 type Props = React.PropsWithChildren<{
-  onDragYChange: (dragY: number) => void
+  dragY: Animated.SharedValue<number>
 }>
 
 const width = s._2xl * 1.5

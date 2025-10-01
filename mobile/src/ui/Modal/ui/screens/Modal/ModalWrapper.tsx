@@ -2,6 +2,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
 import {View} from 'react-native'
+import {SharedValue} from 'react-native-reanimated'
 import {SafeAreaViewProps} from 'react-native-safe-area-context'
 
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
@@ -12,13 +13,13 @@ import {Discard} from '../../shared/Discard'
 type Props = SafeAreaViewProps & {
   title?: string
   footer?: React.ReactNode
-  onDragYChange: (y: number) => void
+  dragY: SharedValue<number>
 }
 
 export const ModalWrapper = ({
   title,
   footer,
-  onDragYChange,
+  dragY,
   children,
   edges,
   ...rest
@@ -27,7 +28,7 @@ export const ModalWrapper = ({
 
   return (
     <SafeArea edges={edges} style={[a.justify_between]} {...rest}>
-      <Discard.Indicator onDragYChange={onDragYChange}>
+      <Discard.Indicator dragY={dragY}>
         {title && (
           <View style={[a.py_sm, a.px_lg]}>
             <Text style={[a.heading_3_medium, ta.text_gray_max, a.text_center]}>

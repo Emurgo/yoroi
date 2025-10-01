@@ -78,13 +78,6 @@ const Modal = () => {
     }
   })
 
-  const handleDragYChange = React.useCallback(
-    (newDragY: number) => {
-      dragY.value = newDragY
-    },
-    [dragY],
-  )
-
   const heightAnimatedStyle = useAnimatedStyle(() => {
     return {
       height: isExpanded.value ? '100%' : modalHeight.value,
@@ -197,7 +190,7 @@ const Modal = () => {
                       ? ['top', 'right', 'left']
                       : ['right', 'left']
                 }
-                onDragYChange={handleDragYChange}
+                dragY={dragY}
               >
                 {visibleContent}
               </ModalWrapper>
