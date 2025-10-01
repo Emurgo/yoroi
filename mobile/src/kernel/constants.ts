@@ -6,6 +6,7 @@ import Constants from 'expo-constants'
 import * as Device from 'expo-device'
 import {freeze} from 'immer'
 import {Platform} from 'react-native'
+import {cardanoConfig} from '@yoroi/blockchains'
 
 // Resolvers API Keys
 export const unstoppableApiKey = process.env.EXPO_PUBLIC_UNSTOPPABLE_API_KEY
@@ -79,5 +80,4 @@ export const agreementDate = 1691967600000
 export const appVersion = Constants.expoConfig?.version ?? ''
 export const requiredPasswordLength = 10
 
-export const LOVELACE_PER_ADA = 1_000_000n
-export const MIN_ADA_GOVERNANCE_BANNER = 5n * LOVELACE_PER_ADA
+export const minAdaForGovernanceBanner = 5n * cardanoConfig.denominations.ada

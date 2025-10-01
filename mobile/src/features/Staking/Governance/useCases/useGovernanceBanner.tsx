@@ -8,7 +8,7 @@ import {BannerIds, showBanner} from '~/features/Notifications/common/banners'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useWalletEvent} from '~/features/WalletManager/hooks/useWalletEvent'
-import {MIN_ADA_GOVERNANCE_BANNER} from '~/kernel/constants'
+import {minAdaForGovernanceBanner} from '~/kernel/constants'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 
@@ -37,7 +37,7 @@ export const useGovernanceBanner = () => {
     queryFn: async () => {
       const balance = wallet?.balanceManager.getPrimaryBalance()
       const adaLovelace = BigInt(balance?.quantity ?? '0')
-      const hasEnoughAda = adaLovelace > MIN_ADA_GOVERNANCE_BANNER
+      const hasEnoughAda = adaLovelace > minAdaForGovernanceBanner
       logger.info('Governance banner prerequisites ', {
         walletId: wallet?.id,
         isParticipating,
