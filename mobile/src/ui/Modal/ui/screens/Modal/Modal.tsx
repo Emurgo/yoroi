@@ -1,34 +1,25 @@
 import {time} from '@yoroi/common'
 import {atoms as a, space as s, useTheme} from '@yoroi/theme'
 
-import * as Haptics from 'expo-haptics'
 import * as React from 'react'
 import {
   Easing,
-  Pressable,
   Animated as RNAnimated,
   Modal as RNModal,
   View,
 } from 'react-native'
-import {
-  Gesture,
-  GestureDetector,
-  GestureHandlerRootView,
-} from 'react-native-gesture-handler'
 import {KeyboardAvoidingView} from 'react-native-keyboard-controller'
 import Animated, {
-  runOnJS,
   useAnimatedStyle,
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
-import {useIsKeyboardOpen} from '~/hooks/useIsKeyboardOpen'
-
 import {useModal} from '../../../context/ModalContext'
-import {ModalContentWrapper} from '../../shared/Wrappers/ModalContentWrapper'
-import {ModalFooterWrapper} from '../../shared/Wrappers/ModalFooterWrapper'
+import {Discard} from '../../shared/Discard'
+import {ModalContentWrapper} from '../../shared/ModalContentWrapper'
+import {ModalFooterWrapper} from '../../shared/ModalFooterWrapper'
 import {ModalWrapper} from './ModalWrapper'
 
 const Modal = () => {
@@ -41,13 +32,9 @@ const Modal = () => {
     isOpen,
     closeModal,
     height,
-    withFeedback,
     hasExpanded,
-    canExpand,
-    setHasExpanded,
   } = useModal()
   const {palette: p, isDark} = useTheme()
-  const isKeyboardOpen = useIsKeyboardOpen()
   useSafeAreaInsets()
   const backdropOpacity = React.useRef(new RNAnimated.Value(0)).current
   const [isVisible, setIsVisible] = React.useState(isOpen)
@@ -58,9 +45,7 @@ const Modal = () => {
   const lastFullRef = React.useRef(full)
   const lastHeightRef = React.useRef(height)
   const lastCanDiscardRef = React.useRef(canDiscard)
-  const lastWithFeedbackRef = React.useRef(withFeedback)
   const lastHasExpandedRef = React.useRef(hasExpanded)
-  const lastCanExpandRef = React.useRef(canExpand)
 
   React.useEffect(() => {
     if (isOpen) {
@@ -70,77 +55,35 @@ const Modal = () => {
       lastFullRef.current = full
       lastHeightRef.current = height
       lastCanDiscardRef.current = canDiscard
-      lastWithFeedbackRef.current = withFeedback
       lastHasExpandedRef.current = hasExpanded
-      lastCanExpandRef.current = canExpand
     }
-  }, [
-    isOpen,
-    content,
-    title,
-    footer,
-    full,
-    height,
-    canDiscard,
-    withFeedback,
-    hasExpanded,
-    canExpand,
-  ])
+  }, [isOpen, content, title, footer, full, height, canDiscard, hasExpanded])
 
   const visibleContent = isOpen ? content : lastContentRef.current
   const visibleTitle = isOpen ? title : lastTitleRef.current
-  const visibleHeight = isOpen ? height : lastHeightRef.current
   const visibleFooter = isOpen ? footer : lastFooterRef.current
 
   const isFull = isOpen ? full : lastFullRef.current
   const canDiscardEnabled = isOpen ? canDiscard : lastCanDiscardRef.current
-  const withFeedbackEnabled = isOpen
-    ? withFeedback
-    : lastWithFeedbackRef.current
   const hasExpandedEnabled = isOpen ? hasExpanded : lastHasExpandedRef.current
-  const canExpandEnabled = isOpen ? canExpand : lastCanExpandRef.current
 
-  const dragY = useSharedValue(0)
   const modalTranslateY = useSharedValue(48)
-  const modalHeight = useSharedValue(visibleHeight)
+  const modalHeight = useSharedValue(height)
   const isExpanded = useSharedValue(hasExpandedEnabled)
+  const dragY = useSharedValue(0)
 
-  const createDragGesture = () => {
-    return Gesture.Pan()
-      .onUpdate((event) => {
-        'worklet'
-        if (event.translationY < 0 && !canExpandEnabled) {
-          dragY.value = Math.max(0, event.translationY)
-        } else {
-          dragY.value = event.translationY
-        }
-      })
-      .onEnd((event) => {
-        'worklet'
-        if (event.translationY < 0 && !hasExpandedEnabled && canExpandEnabled) {
-          const threshold = -(visibleHeight * 0.2)
-          if (event.translationY <= threshold) {
-            runOnJS(setHasExpanded)(true)
-          }
-        }
-        if (
-          event.translationY > 100 &&
-          event.velocityY > 0 &&
-          !isKeyboardOpen
-        ) {
-          runOnJS(closeModal)()
-        } else {
-          dragY.value = withSpring(0)
-        }
-      })
-  }
-
-  // Combined animated style for both entrance and drag animations
-  const combinedModalStyle = useAnimatedStyle(() => {
+  const modalStyle = useAnimatedStyle(() => {
     return {
       transform: [{translateY: modalTranslateY.value + dragY.value}],
     }
   })
+
+  const handleDragYChange = React.useCallback(
+    (newDragY: number) => {
+      dragY.value = newDragY
+    },
+    [dragY],
+  )
 
   const heightAnimatedStyle = useAnimatedStyle(() => {
     return {
@@ -154,7 +97,7 @@ const Modal = () => {
       backdropOpacity.setValue(0)
       modalTranslateY.value = 48
       dragY.value = 0
-      modalHeight.value = visibleHeight
+      modalHeight.value = height
       isExpanded.value = hasExpandedEnabled
       RNAnimated.parallel([
         RNAnimated.timing(backdropOpacity, {
@@ -190,7 +133,7 @@ const Modal = () => {
     modalTranslateY,
     dragY,
     modalHeight,
-    visibleHeight,
+    height,
     hasExpandedEnabled,
     isExpanded,
   ])
@@ -226,9 +169,8 @@ const Modal = () => {
             },
           ]}
         />
-        {canDiscardEnabled && (
-          <Pressable onPress={closeModal} style={[a.absolute, a.inset_0]} />
-        )}
+        <Discard.Backdrop />
+
         <View style={[a.flex_1, a.justify_end]}>
           <KeyboardAvoidingView behavior="padding">
             <Animated.View
@@ -241,20 +183,10 @@ const Modal = () => {
                   borderTopLeftRadius: s.xl,
                   borderTopRightRadius: s.xl,
                 },
-                combinedModalStyle,
+                modalStyle,
                 heightAnimatedStyle,
               ]}
             >
-              {canDiscardEnabled && !hasExpandedEnabled && !isFull && (
-                <GestureHandlerRootView style={[a.flex]}>
-                  <GestureDetector gesture={createDragGesture()}>
-                    <View style={[a.align_center, a.pt_sm, a.pb_xs]}>
-                      <DiscardIndicator withFeedback={withFeedbackEnabled} />
-                    </View>
-                  </GestureDetector>
-                </GestureHandlerRootView>
-              )}
-
               <ModalWrapper
                 title={visibleTitle}
                 footer={visibleFooter}
@@ -265,6 +197,7 @@ const Modal = () => {
                       ? ['top', 'right', 'left']
                       : ['right', 'left']
                 }
+                onDragYChange={handleDragYChange}
               >
                 {visibleContent}
               </ModalWrapper>
@@ -273,50 +206,6 @@ const Modal = () => {
         </View>
       </View>
     </RNModal>
-  )
-}
-
-const width = s._2xl * 1.5
-
-type DiscardIndicatorProps = {
-  withFeedback?: boolean
-}
-
-const DiscardIndicator = ({withFeedback = false}: DiscardIndicatorProps) => {
-  const {atoms: ta} = useTheme()
-  const animatedWidth = useSharedValue(width)
-
-  const widthAnimatedStyle = useAnimatedStyle(() => {
-    return {
-      width: animatedWidth.value,
-    }
-  })
-
-  React.useEffect(() => {
-    if (withFeedback) {
-      animatedWidth.value = s.xs
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)
-      animatedWidth.value = withSpring(width, {
-        duration: time.seconds(2.3),
-      })
-    } else {
-      animatedWidth.value = width
-    }
-  }, [withFeedback, animatedWidth])
-
-  return (
-    <View style={[{height: s.sm, width}]}>
-      <Animated.View
-        style={[
-          {
-            height: s.xs,
-            backgroundColor: ta.el_gray_min.color,
-          },
-          a.rounded_xs,
-          widthAnimatedStyle,
-        ]}
-      />
-    </View>
   )
 }
 
