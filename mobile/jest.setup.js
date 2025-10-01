@@ -149,10 +149,3 @@ jest.mock('react-native-ble-plx', () => ({
     BleError: class BleError {
     },
 }))
-
-jest.mock('@yoroi/blockchains', () => ({
-    cardanoConfig: {
-      denominations: {lovelace: 1n, ada: 1_000_000n},
-      params: {minUtxoValue: 1_000_000n},
-    },
-  }));

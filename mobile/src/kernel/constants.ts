@@ -1,4 +1,3 @@
-import {cardanoConfig} from '@yoroi/blockchains'
 import {configCurrencies} from '@yoroi/portfolio'
 import {ThemeName} from '@yoroi/theme'
 import {App, Portfolio} from '@yoroi/types'
@@ -80,4 +79,4 @@ export const agreementDate = 1691967600000
 export const appVersion = Constants.expoConfig?.version ?? ''
 export const requiredPasswordLength = 10
 
-export const minAdaForGovernanceBanner = 5n * cardanoConfig.denominations.ada
+export const minAdaForGovernanceBanner = 5n * 1_000_000n
