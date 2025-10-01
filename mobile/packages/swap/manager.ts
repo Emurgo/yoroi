@@ -231,6 +231,7 @@ const apiManagerMaker = (
 
         const settledResults = await Promise.allSettled(
           enabledAggregators.map(async (aggregator) => {
+            // If amountOut is provided and adapter supports reverse estimate, rely on adapter implementation.
             const response = await adapters[aggregator].estimate(body)
             return response
           }),
@@ -288,6 +289,19 @@ const apiManagerMaker = (
       },
 
       async create(body: Swap.CreateRequest) {
+        // Feature flag: single adapter create (default true)
+        const singleAdapterCreate = true
+
+        if (singleAdapterCreate && body.routeHint?.aggregator != null) {
+          const adapter = adapters[body.routeHint.aggregator]
+          if (adapter == null) return invalid
+
+          const response = await adapter.create(body)
+          if (isLeft(response)) return standarizeError(response)
+          return response
+        }
+
+        // Fallback to legacy fan-out
         const enabledAggregators = getEnabledAggregators()
 
         const responses: Array<Api.Response<Swap.CreateResponse>> =

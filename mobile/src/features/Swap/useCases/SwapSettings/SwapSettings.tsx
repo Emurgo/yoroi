@@ -39,11 +39,12 @@ const CHOICES: Readonly<Choice[]> = [
 
 const MAX_DECIMALS = 1
 
-const ALL_AGGREGATORS: Swap.Aggregator[] = [
-  'muesliswap',
-  'dexhunter',
-  'minswap',
-]
+// Keeping for reference; not used directly after changing toggle behavior
+// const ALL_AGGREGATORS: Swap.Aggregator[] = [
+//   'muesliswap',
+//   'dexhunter',
+//   'minswap',
+// ]
 
 const toggleAggregator = (
   current: Swap.Aggregator[],
@@ -51,9 +52,7 @@ const toggleAggregator = (
 ): Swap.Aggregator[] => {
   if (current.includes(target)) {
     const remaining = current.filter((opt) => opt !== target)
-    return remaining.length === 0
-      ? ALL_AGGREGATORS.filter((opt) => opt !== target)
-      : remaining
+    return remaining
   } else {
     return [...current, target]
   }
@@ -252,11 +251,10 @@ export const SwapSettings = () => {
 
                   <SettingsSwitch
                     value={aggregator.includes('dexhunter')}
-                    onValueChange={() =>
-                      assignAggregator(
-                        toggleAggregator(aggregator, 'dexhunter'),
-                      )
-                    }
+                    onValueChange={() => {
+                      const next = toggleAggregator(aggregator, 'dexhunter')
+                      assignAggregator(next.length === 0 ? 'auto' : next)
+                    }}
                   />
                 </View>
 
@@ -267,11 +265,10 @@ export const SwapSettings = () => {
 
                   <SettingsSwitch
                     value={aggregator.includes('muesliswap')}
-                    onValueChange={() =>
-                      assignAggregator(
-                        toggleAggregator(aggregator, 'muesliswap'),
-                      )
-                    }
+                    onValueChange={() => {
+                      const next = toggleAggregator(aggregator, 'muesliswap')
+                      assignAggregator(next.length === 0 ? 'auto' : next)
+                    }}
                   />
                 </View>
 
@@ -282,9 +279,10 @@ export const SwapSettings = () => {
 
                   <SettingsSwitch
                     value={aggregator.includes('minswap')}
-                    onValueChange={() =>
-                      assignAggregator(toggleAggregator(aggregator, 'minswap'))
-                    }
+                    onValueChange={() => {
+                      const next = toggleAggregator(aggregator, 'minswap')
+                      assignAggregator(next.length === 0 ? 'auto' : next)
+                    }}
                   />
                 </View>
               </>

