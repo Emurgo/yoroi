@@ -38,6 +38,7 @@ import {Info as InfoIcon} from '~/ui/InfoIcon/InfoIcon'
 import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingView'
 import {LearnMoreButton} from '~/ui/LearnMoreButton/LearnMoreButton'
 import {useModal} from '~/ui/Modal/context/ModalContext'
+import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {Space} from '~/ui/Space/Space'
 import {StepperProgress} from '~/ui/StepperProgress/StepperProgress'
 import {TextInput} from '~/ui/TextInput/TextInput'
@@ -204,28 +205,26 @@ export const WalletDetailsScreen = () => {
     openModal({
       title: strings.setupWallet.walletDetailsModalTitle,
       content: (
-        <View style={[a.flex_1]}>
-          <View style={[a.gap_lg]}>
-            <CardAboutPhrase
-              title={strings.setupWallet.walletNameModalCardTitle}
-              linesOfText={[
-                strings.setupWallet.walletNameModalCardFirstItem,
-                strings.setupWallet.walletNameModalCardSecondItem,
-              ]}
-            />
+        <Modal.Content>
+          <CardAboutPhrase
+            title={strings.setupWallet.walletNameModalCardTitle}
+            linesOfText={[
+              strings.setupWallet.walletNameModalCardFirstItem,
+              strings.setupWallet.walletNameModalCardSecondItem,
+            ]}
+          />
 
-            <CardAboutPhrase
-              title={strings.setupWallet.walletPasswordModalCardTitle}
-              linesOfText={[
-                strings.setupWallet.walletPasswordModalCardFirstItem,
-                strings.setupWallet.walletPasswordModalCardSecondItem,
-              ]}
-            />
-          </View>
-        </View>
+          <CardAboutPhrase
+            title={strings.setupWallet.walletPasswordModalCardTitle}
+            linesOfText={[
+              strings.setupWallet.walletPasswordModalCardFirstItem,
+              strings.setupWallet.walletPasswordModalCardSecondItem,
+            ]}
+          />
+        </Modal.Content>
       ),
       footer: (
-        <View style={[a.gap_lg]}>
+        <Modal.Footer>
           <LearnMoreButton
             onPress={() => {
               Linking.openURL(YoroiZendeskLink)
@@ -240,7 +239,7 @@ export const WalletDetailsScreen = () => {
             }}
             testID="setup-modal-continue-button"
           />
-        </View>
+        </Modal.Footer>
       ),
       height: modalHeightNamePassword,
     })

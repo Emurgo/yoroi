@@ -10,9 +10,10 @@ import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation
 import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {useModal} from '~/ui/Modal/context/ModalContext'
+import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {Space} from '~/ui/Space/Space'
 
-export const WalletDuplicatedModal = ({
+const WalletDuplicatedModalContent = ({
   plate,
   seed,
   duplicatedAccountWalletMetaName,
@@ -25,7 +26,7 @@ export const WalletDuplicatedModal = ({
   const strings = useStrings()
 
   return (
-    <View style={[a.flex_1, a.px_lg]}>
+    <Modal.Content>
       <Text style={[a.body_1_lg_regular, ta.text_gray_low]}>
         {strings.setupWallet.restoreDuplicatedWalletModalText}
       </Text>
@@ -55,19 +56,16 @@ export const WalletDuplicatedModal = ({
           </Text>
         </View>
       </View>
-
-      <Space.Height.lg fill />
-    </View>
+    </Modal.Content>
   )
 }
 
-export const WalletDuplicatedModalActions = ({
+const WalletDuplicatedModalFooter = ({
   duplicatedAccountWalletMetaId,
 }: {
   duplicatedAccountWalletMetaId: string
 }) => {
   const {walletManager} = useWalletManager()
-  const {palette: p} = useTheme()
   const strings = useStrings()
   const {resetToTxHistory} = useWalletNavigation()
   const {closeModal} = useModal()
@@ -84,10 +82,16 @@ export const WalletDuplicatedModalActions = ({
   ])
 
   return (
-    <Button
-      title={strings.setupWallet.restoreDuplicatedWalletModalButton}
-      onPress={handleOpenWalletWithDuplicatedName}
-      style={{backgroundColor: p.primary_500}}
-    />
+    <Modal.Footer>
+      <Button
+        title={strings.setupWallet.restoreDuplicatedWalletModalButton}
+        onPress={handleOpenWalletWithDuplicatedName}
+      />
+    </Modal.Footer>
   )
+}
+
+export const WalletDuplicatedModal = {
+  Content: WalletDuplicatedModalContent,
+  Footer: WalletDuplicatedModalFooter,
 }
