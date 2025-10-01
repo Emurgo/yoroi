@@ -36,7 +36,7 @@ export const useGovernanceBanner = () => {
     staleTime: time.fiveMinutes,
     queryFn: async () => {
       const balance = wallet?.balanceManager.getPrimaryBalance()
-      const adaLovelace = balance?.quantity ?? 0n
+      const adaLovelace = BigInt(balance?.quantity ?? '0')
       const hasEnoughAda = adaLovelace > MIN_ADA_GOVERNANCE_BANNER
       logger.info('Governance banner prerequisites ', {
         walletId: wallet?.id,
