@@ -8,7 +8,9 @@ import {BannerIds, showBanner} from '~/features/Notifications/common/banners'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useWalletEvent} from '~/features/WalletManager/hooks/useWalletEvent'
+import {MIN_ADA_GOVERNANCE_BANNER} from '~/kernel/constants'
 import {useStrings} from '~/kernel/i18n/useStrings'
+import {logger} from '~/kernel/logger/logger'
 
 import {useIsParticipatingInGovernance} from '../common/helpers'
 
@@ -29,28 +31,38 @@ export const useGovernanceBanner = () => {
   )
 
   useQuery({
-    queryKey,
+    queryKey: [...queryKey, isParticipating],
+    enabled: isParticipating !== undefined,
     staleTime: time.fiveMinutes,
     queryFn: async () => {
-      if (!isParticipating) {
-        if (network === Chain.Network.Mainnet) {
-          const last = (await manager.events.read()).find(
-            (ev) =>
-              ev.trigger === Notifications.Trigger.Banner &&
-              ev.id === BannerIds.GovernanceParticipation,
-          )
+      const balance = wallet?.balanceManager.getPrimaryBalance()
+      const adaLovelace = balance?.quantity ?? 0n
+      const hasEnoughAda = adaLovelace > MIN_ADA_GOVERNANCE_BANNER
+      logger.info('Governance banner prerequisites ', {
+        walletId: wallet?.id,
+        isParticipating,
+        balanceLovelace: adaLovelace.toString(),
+      })
+      // show banner only if NOT participating and balance > 5 ADA
+      if (!isParticipating && network === Chain.Network.Mainnet) {
+        if (!hasEnoughAda) return false
 
-          if (
-            !last ||
-            new Date(last.date).getTime() + time.oneMonth < Date.now()
-          ) {
-            showBanner({
-              id: BannerIds.GovernanceParticipation,
-              title: strings.staking.newToGovernanceTitle,
-              body: strings.staking.newToGovernanceText,
-              isRead: !!last,
-            })
-          }
+        const last = (await manager.events.read()).find(
+          (ev) =>
+            ev.trigger === Notifications.Trigger.Banner &&
+            ev.id === BannerIds.GovernanceParticipation,
+        )
+
+        if (
+          !last ||
+          new Date(last.date).getTime() + time.oneMonth < Date.now()
+        ) {
+          showBanner({
+            id: BannerIds.GovernanceParticipation,
+            title: strings.staking.newToGovernanceTitle,
+            body: strings.staking.newToGovernanceText,
+            isRead: !!last,
+          })
         }
         return true
       } else {

@@ -22,9 +22,12 @@ import {CardanoMobile} from '~/wallets/wallets'
 import {GovernanceVote} from '../types'
 import {useNavigateTo} from './navigation'
 
-export const useIsParticipatingInGovernance = () => {
-  const status = useGovernanceStatus()
-  return status !== null
+export const useIsParticipatingInGovernance = (): boolean | undefined => {
+  const {wallet} = useSelectedWallet()
+  const stakingKeyHash = useStakingKey(wallet)
+  const {data: stakingStatus, isLoading} = useStakingKeyState(stakingKeyHash)
+  if (isLoading) return undefined
+  return stakingStatus?.drepDelegation != null
 }
 
 export const useGovernanceStatus = () => {

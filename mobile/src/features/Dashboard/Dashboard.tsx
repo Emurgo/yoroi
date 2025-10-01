@@ -98,6 +98,10 @@ export const Dashboard = () => {
   const createOnWithdraw =
     ({shouldDeregister}: {shouldDeregister: boolean}) =>
     () => {
+      if (isParticipatingInGovernance === undefined) {
+        // status still loading → avoid showing warning;
+        return
+      }
       if (!isParticipatingInGovernance) {
         openModal({
           title: strings.staking.withdrawWarningTitle,

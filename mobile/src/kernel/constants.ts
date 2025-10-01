@@ -78,3 +78,6 @@ export const agreementDate = 1691967600000
 // Others
 export const appVersion = Constants.expoConfig?.version ?? ''
 export const requiredPasswordLength = 10
+
+export const LOVELACE_PER_ADA = 1_000_000n
+export const MIN_ADA_GOVERNANCE_BANNER = 5n * LOVELACE_PER_ADA
