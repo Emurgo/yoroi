@@ -44,34 +44,39 @@ export const useGovernanceBanner = () => {
         balanceLovelace: adaLovelace.toString(),
       })
       // show banner only if NOT participating and balance > 5 ADA
-      if (!isParticipating && network === Chain.Network.Mainnet) {
-        if (!hasEnoughAda) return false
+      const onMainnet = network === Chain.Network.Mainnet
+      if (!onMainnet) return false
 
-        const last = (await manager.events.read()).find(
-          (ev) =>
-            ev.trigger === Notifications.Trigger.Banner &&
-            ev.id === BannerIds.GovernanceParticipation,
-        )
-
-        if (
-          !last ||
-          new Date(last.date).getTime() + time.oneMonth < Date.now()
-        ) {
-          showBanner({
-            id: BannerIds.GovernanceParticipation,
-            title: strings.staking.newToGovernanceTitle,
-            body: strings.staking.newToGovernanceText,
-            isRead: !!last,
-          })
-        }
-        return true
-      } else {
+      if (isParticipating) {
         await manager.events.remove(BannerIds.GovernanceParticipation)
         queryClient.invalidateQueries({
           queryKey: ['receivedNotificationEvents'],
         })
         return false
       }
+
+      if (!hasEnoughAda) {
+        await manager.events.remove(BannerIds.GovernanceParticipation)
+        queryClient.invalidateQueries({
+          queryKey: ['receivedNotificationEvents'],
+        })
+        return false
+      }
+
+      const last = (await manager.events.read()).find(
+        (ev) =>
+          ev.trigger === Notifications.Trigger.Banner &&
+          ev.id === BannerIds.GovernanceParticipation,
+      )
+      if (!last || new Date(last.date).getTime() + time.oneMonth < Date.now()) {
+        showBanner({
+          id: BannerIds.GovernanceParticipation,
+          title: strings.staking.newToGovernanceTitle,
+          body: strings.staking.newToGovernanceText,
+          isRead: !!last,
+        })
+      }
+      return true
     },
   })
 }
