@@ -69,11 +69,8 @@ export const ViewNotificationHistoryScreen = () => {
   }
 
   return (
-    <SafeAreaView
-      style={[a.flex_1, a.px_lg]}
-      edges={['right', 'left', 'bottom']}
-    >
-      <ScrollView contentContainerStyle={{paddingBottom: 60}}>
+    <SafeAreaView style={[a.flex_1]} edges={['right', 'left', 'bottom']}>
+      <ScrollView contentContainerStyle={[a.px_lg, a.pb_2xl]}>
         <View style={[a.gap_lg, a.flex]}>
           {walletNotifications.map((notification) => (
             <NotificationItem
@@ -88,8 +85,8 @@ export const ViewNotificationHistoryScreen = () => {
       <View
         style={[
           a.absolute,
-          a.pb_lg,
-          {bottom: 0, left: 0, right: 0, height: 60},
+          a.pb_2xl,
+          {bottom: 0, left: 0, right: 0, height: 70},
           a.align_center,
           a.justify_center,
           {zIndex: 10, backgroundColor: p.bg_color_max},

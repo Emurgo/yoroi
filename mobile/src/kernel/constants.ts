@@ -1,3 +1,4 @@
+import {cardanoConfig} from '@yoroi/blockchains'
 import {configCurrencies} from '@yoroi/portfolio'
 import {ThemeName} from '@yoroi/theme'
 import {App, Portfolio} from '@yoroi/types'
@@ -6,7 +7,6 @@ import Constants from 'expo-constants'
 import * as Device from 'expo-device'
 import {freeze} from 'immer'
 import {Platform} from 'react-native'
-import {cardanoConfig} from '@yoroi/blockchains'
 
 // Resolvers API Keys
 export const unstoppableApiKey = process.env.EXPO_PUBLIC_UNSTOPPABLE_API_KEY
