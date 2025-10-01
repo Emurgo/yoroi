@@ -12,7 +12,7 @@ import {MIN_ADA_GOVERNANCE_BANNER} from '~/kernel/constants'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 
-import {useIsParticipatingInGovernance} from '../common/helpers'
+import {useGovernanceParticipation} from '../common/helpers'
 
 export const useGovernanceBanner = () => {
   const strings = useStrings()
@@ -21,8 +21,8 @@ export const useGovernanceBanner = () => {
   const {
     selected: {network},
   } = useWalletManager()
+  const {isParticipating, isLoading} = useGovernanceParticipation()
 
-  const isParticipating = useIsParticipatingInGovernance()
   const queryKey = ['governanceBanner', wallet?.id, network]
   const queryClient = useQueryClient()
 
@@ -32,7 +32,7 @@ export const useGovernanceBanner = () => {
 
   useQuery({
     queryKey: [...queryKey, isParticipating],
-    enabled: isParticipating !== undefined,
+    enabled: !isLoading,
     staleTime: time.fiveMinutes,
     queryFn: async () => {
       const balance = wallet?.balanceManager.getPrimaryBalance()
