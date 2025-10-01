@@ -22,7 +22,6 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {ScrollView} from '~/ui/ScrollView/ScrollView'
-import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
 
 import {EmptyNotificationsIllustration} from '../../illustrations/EmptyNotifications'
@@ -102,7 +101,6 @@ export const ViewNotificationHistoryScreen = () => {
           onPress={handleMarkAllAsRead}
           type={ButtonType.Text}
         />
-        <Space.Height.xl />
       </View>
     </SafeAreaView>
   )
