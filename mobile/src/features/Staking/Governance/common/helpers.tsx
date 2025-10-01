@@ -25,7 +25,15 @@ import {useNavigateTo} from './navigation'
 export const useGovernanceParticipation = () => {
   const {wallet} = useSelectedWallet()
   const stakingKeyHash = useStakingKey(wallet)
-  const {data: stakingStatus, isLoading} = useStakingKeyState(stakingKeyHash)
+  const {
+    data: stakingStatus,
+    isLoading,
+    refetch,
+  } = useStakingKeyState(stakingKeyHash)
+
+  // Refresh governance status when UTXOs change
+  useWalletEvent(wallet, 'utxos', refetch)
+
   const isParticipating = stakingStatus?.drepDelegation != null
   return {isParticipating, isLoading} as const
 }
