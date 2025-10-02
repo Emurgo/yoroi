@@ -10,7 +10,7 @@ export const features = {
   portfolioNews: false,
   portfolioExport: false,
   walletListFeedback: isDev,
-  walletListAggregatedBalance: true,
+  walletListAggregatedBalance: isDev,
   walletListSwipeableActions: isDev,
   swapTokenLinks: true,
   utxoConsolidation: isDev,

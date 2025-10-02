@@ -88,7 +88,7 @@ export const SelectWalletFromList = () => {
 
   return (
     <SafeAreaView
-      style={[a.flex_1, a.py_lg]}
+      style={[a.flex_1, a.pb_lg]}
       edges={['left', 'right', 'bottom']}
     >
       {features.walletListAggregatedBalance && <AggregatedBalance />}
