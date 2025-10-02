@@ -1,24 +1,23 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
-import {Text, View, useWindowDimensions} from 'react-native'
+import {Text, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
-import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {ShowDisclaimer} from '~/features/Legal/ui/shared/Disclaimer/ShowDisclaimer'
 import {AmountCard} from '~/features/Swap/common/AmountCard/AmountCard'
 import {EstimateSummary} from '~/features/Swap/common/EstimateSummary/EstimateSummary'
 import {undefinedToken} from '~/features/Swap/common/constants'
 import {useSwap} from '~/features/Swap/common/useSwap'
-import {useIsKeyboardOpen} from '~/hooks/useIsKeyboardOpen'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {useModal} from '~/ui/Modal/context/ModalContext'
+import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {ProtocolAvatar} from '~/ui/ProtocolAvatar/ProtocolAvatar'
 import {RefreshButton} from '~/ui/RefreshButton/RefreshButton'
+import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {ShowPriceImpact} from '~/ui/ShowPriceImpact/ShowPriceImpact'
-import {Space} from '~/ui/Space/Space'
 import {isEmptyString} from '~/wallets/utils/string'
 
 import {useNavigateTo} from '../../common/navigation'
@@ -31,9 +30,7 @@ const BOTTOM_ACTION_SECTION = 180
 export const SwapMainScreen = () => {
   const [contentHeight, setContentHeight] = React.useState(0)
   const strings = useStrings()
-  const {palette: p, atoms: ta} = useTheme()
-  const {height: deviceHeight} = useWindowDimensions()
-  const isKeyboardOpen = useIsKeyboardOpen()
+  const {palette: p} = useTheme()
   const swapForm = useSwap()
   const {openModal, closeModal} = useModal()
   const navigateTo = useNavigateTo()
@@ -58,15 +55,17 @@ export const SwapMainScreen = () => {
       openModal({
         title: strings.swap.limitPriceWarningTitle,
         content: (
-          <WarnLimitPrice
-            wantedPrice={wantedPrice.toFixed(tokenOutInfo?.decimals ?? 6)}
-            marketPrice={marketPrice.toFixed(tokenOutInfo?.decimals ?? 6)}
-            tokenInTicker={tokenInTicker}
-            tokenOutTicker={tokenOutTicker}
-          />
+          <Modal.Content>
+            <WarnLimitPrice
+              wantedPrice={wantedPrice.toFixed(tokenOutInfo?.decimals ?? 6)}
+              marketPrice={marketPrice.toFixed(tokenOutInfo?.decimals ?? 6)}
+              tokenInTicker={tokenInTicker}
+              tokenOutTicker={tokenOutTicker}
+            />
+          </Modal.Content>
         ),
         footer: (
-          <View style={[a.flex_row, a.gap_lg]}>
+          <Modal.Footer>
             <Button
               style={[a.flex_1]}
               size="S"
@@ -84,7 +83,7 @@ export const SwapMainScreen = () => {
                 swapForm.create()
               }}
             />
-          </View>
+          </Modal.Footer>
         ),
       })
     } else {
@@ -93,11 +92,9 @@ export const SwapMainScreen = () => {
   }
 
   return (
-    <SafeAreaView style={[a.flex_1, a.pb_lg, ta.bg_color_max]}>
+    <SafeArea>
       <ScrollView style={[a.px_lg]}>
         <ShowDisclaimer type="swap" />
-
-        <Space.Height.lg />
 
         <View
           onLayout={(event) => {
@@ -227,15 +224,8 @@ export const SwapMainScreen = () => {
           </View>
         </View>
       </ScrollView>
-      <View
-        style={[
-          a.p_lg,
-          (deviceHeight < contentHeight || isKeyboardOpen) && a.border_t,
-          (deviceHeight < contentHeight || isKeyboardOpen) && {
-            borderTopColor: p.gray_200,
-          },
-        ]}
-      >
+
+      <SafeArea.Actions contentHeight={contentHeight}>
         <Button
           testID="swapButton"
           title={
@@ -247,7 +237,7 @@ export const SwapMainScreen = () => {
           isLoading={swapForm.isLoading}
           onPress={onSwapPress}
         />
-      </View>
-    </SafeAreaView>
+      </SafeArea.Actions>
+    </SafeArea>
   )
 }

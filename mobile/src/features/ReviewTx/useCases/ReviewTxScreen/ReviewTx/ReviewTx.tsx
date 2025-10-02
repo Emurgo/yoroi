@@ -118,6 +118,7 @@ export const ReviewTx = ({
   return (
     <SafeArea>
       <MaterialTab.Navigator
+        screenOptions={{swipeEnabled: false}}
         tabBar={(props) => (
           <TabBar
             {...props}
@@ -126,8 +127,9 @@ export const ReviewTx = ({
           />
         )}
       >
-        <MaterialTab.Screen name="overview">
-          {() => (
+        <MaterialTab.Screen
+          name="overview"
+          component={() => (
             <ScrollView
               style={[a.flex_1, ta.bg_color_max]}
               onScrollBarChange={setOverviewIsScrollBarShown}
@@ -142,10 +144,11 @@ export const ReviewTx = ({
               />
             </ScrollView>
           )}
-        </MaterialTab.Screen>
+        />
 
-        <MaterialTab.Screen name="utxos">
-          {() => (
+        <MaterialTab.Screen
+          name="utxos"
+          component={() => (
             <ScrollView
               style={[a.flex_1, ta.bg_color_max]}
               onScrollBarChange={setUtxosIsScrollBarShown}
@@ -153,11 +156,12 @@ export const ReviewTx = ({
               <UTxOsTab tx={formattedTx} />
             </ScrollView>
           )}
-        </MaterialTab.Screen>
+        />
 
         {showMetadataTab && (
-          <MaterialTab.Screen name="metadata">
-            {() => (
+          <MaterialTab.Screen
+            name="metadata"
+            component={() => (
               <ScrollView
                 style={[a.flex_1, ta.bg_color_max]}
                 onScrollBarChange={setMetadataIsScrollBarShown}
@@ -168,12 +172,13 @@ export const ReviewTx = ({
                 />
               </ScrollView>
             )}
-          </MaterialTab.Screen>
+          />
         )}
 
         {showMintTab && (
-          <MaterialTab.Screen name="mint">
-            {() => (
+          <MaterialTab.Screen
+            name="mint"
+            component={() => (
               <ScrollView
                 style={[a.flex_1, ta.bg_color_max]}
                 onScrollBarChange={setMintIsScrollBarShown}
@@ -181,12 +186,13 @@ export const ReviewTx = ({
                 <MintTab mintData={formattedTx.mint} />
               </ScrollView>
             )}
-          </MaterialTab.Screen>
+          />
         )}
 
         {showReferenceInoutsTab && (
-          <MaterialTab.Screen name="reference_inputs">
-            {() => (
+          <MaterialTab.Screen
+            name="reference_inputs"
+            component={() => (
               <ScrollView
                 style={[a.flex_1, ta.bg_color_max]}
                 onScrollBarChange={setReferenceInputsIsScrollBarShown}
@@ -196,7 +202,7 @@ export const ReviewTx = ({
                 />
               </ScrollView>
             )}
-          </MaterialTab.Screen>
+          />
         )}
       </MaterialTab.Navigator>
 
@@ -301,5 +307,5 @@ const Actions = ({
   children: React.ReactNode
   style?: StyleProp<ViewStyle>
 }) => {
-  return <View style={[a.p_lg, style]}>{children}</View>
+  return <View style={[a.px_lg, a.pt_lg, style]}>{children}</View>
 }

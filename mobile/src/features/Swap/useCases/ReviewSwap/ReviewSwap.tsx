@@ -2,9 +2,8 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import {Swap} from '@yoroi/types'
 
 import * as React from 'react'
-import {View, ViewProps, useWindowDimensions} from 'react-native'
+import {View, useWindowDimensions} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
-import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {undefinedToken} from '~/features/Swap/common/constants'
 import {useSwap} from '~/features/Swap/common/useSwap'
@@ -12,8 +11,8 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Button} from '~/ui/Button/Button'
-import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingView'
 import {ProtocolAvatar} from '~/ui/ProtocolAvatar/ProtocolAvatar'
+import {SafeArea} from '~/ui/SafeArea/SafeArea'
 
 import {TransactionSummary} from './TransactionSummary'
 
@@ -95,51 +94,37 @@ export const ReviewSwap = () => {
   }
 
   return (
-    <SafeAreaView
-      edges={['left', 'right', 'bottom']}
-      style={[a.flex_1, a.pt_lg, {backgroundColor: p.bg_color_max}]}
-    >
-      <View
-        style={[a.flex_1, a.justify_between, {backgroundColor: p.bg_color_max}]}
-      >
-        <KeyboardAvoidingView keyboardVerticalOffset={120}>
-          <ScrollView style={[a.px_lg]}>
-            <View
-              onLayout={(event) => {
-                const {height} = event.nativeEvent.layout
-                setContentHeight(height + BOTTOM_ACTION_SECTION)
-              }}
-            >
-              <TransactionSummary swapForm={swapForm} />
-            </View>
-          </ScrollView>
-        </KeyboardAvoidingView>
+    <SafeArea>
+      <View style={[a.flex_1, a.justify_between]}>
+        <ScrollView contentContainerStyle={a.px_lg}>
+          <View
+            onLayout={(event) => {
+              const {height} = event.nativeEvent.layout
+              setContentHeight(height + BOTTOM_ACTION_SECTION)
+            }}
+          >
+            <TransactionSummary swapForm={swapForm} />
+          </View>
+        </ScrollView>
       </View>
 
-      <Actions
-        style={{
-          ...(deviceHeight < contentHeight && {
-            borderTopWidth: 1,
-            borderTopColor: p.gray_200,
-          }),
-        }}
+      <View
+        style={[
+          a.px_lg,
+          {
+            ...(deviceHeight < contentHeight && {
+              borderTopWidth: 1,
+              borderTopColor: p.gray_200,
+            }),
+          },
+        ]}
       >
         <Button
           testID="swapButton"
           title={strings.swap.next}
           onPress={onNext}
         />
-      </Actions>
-    </SafeAreaView>
-  )
-}
-
-const Actions = ({style, ...props}: ViewProps) => {
-  const {palette: p} = useTheme()
-  return (
-    <View
-      style={[style, a.p_lg, {backgroundColor: p.bg_color_max}]}
-      {...props}
-    />
+      </View>
+    </SafeArea>
   )
 }

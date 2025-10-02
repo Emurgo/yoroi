@@ -1,11 +1,13 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
-import {StyleSheet} from 'react-native'
+import {StyleSheet, View, ViewProps, useWindowDimensions} from 'react-native'
 import {
   SafeAreaView,
   type SafeAreaViewProps,
 } from 'react-native-safe-area-context'
+
+import {useIsKeyboardOpen} from '~/hooks/useIsKeyboardOpen'
 
 import {KeyboardAvoidingView} from '../KeyboardAvoidingView/KeyboardAvoidingView'
 
@@ -31,6 +33,36 @@ export const SafeArea = ({
     </KeyboardAvoidingView>
   )
 }
+
+const SafeAreaActions = ({
+  children,
+  contentHeight,
+  style,
+  ...rest
+}: ViewProps & {contentHeight: number}) => {
+  const {palette: p} = useTheme()
+  const isKeyboardOpen = useIsKeyboardOpen()
+  const deviceHeight = useWindowDimensions().height
+  const showDivider = deviceHeight < contentHeight || isKeyboardOpen
+  return (
+    <View
+      style={StyleSheet.flatten([
+        a.pt_lg,
+        a.px_lg,
+        showDivider && a.border_t,
+        showDivider && {
+          borderTopColor: p.gray_200,
+        },
+        style,
+      ])}
+      {...rest}
+    >
+      {children}
+    </View>
+  )
+}
+
+SafeArea.Actions = SafeAreaActions
 
 type Props = SafeAreaViewProps & {
   keyboardVerticalOffset?: number
