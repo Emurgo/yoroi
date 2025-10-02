@@ -11,7 +11,7 @@ import {normalizeToAddress} from '@emurgo/yoroi-lib/dist/internals/utils/address
 import {parseTokenList} from '@emurgo/yoroi-lib/dist/internals/utils/assets'
 import {BigNumber} from 'bignumber.js'
 import {Buffer} from 'buffer'
-import _ from 'lodash'
+import * as _ from 'lodash'
 
 import {logger} from '~/kernel/logger/logger'
 import {RawUtxo} from '~/wallets/types/other'
