@@ -271,9 +271,10 @@ const AdaAmount = ({amount}: {amount: BigNumber}) => {
 const Fee = ({amount}: {amount: BigNumber}) => {
   const strings = useStrings()
   const {wallet} = useSelectedWallet()
+  const {atoms: ta} = useTheme()
 
   const text = `${strings.transactions.txDetailsFee} ${formatTokenWithSymbol(asQuantity(amount), wallet.portfolioPrimaryTokenInfo)}`
-  return <Text>{text}</Text>
+  return <Text style={[ta.text_gray_medium, a.body_3_sm_regular]}>{text}</Text>
 }
 
 const ExpandableAssetList: React.FC<{

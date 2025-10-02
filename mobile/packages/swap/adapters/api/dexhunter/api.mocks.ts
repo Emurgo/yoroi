@@ -374,7 +374,7 @@ const limitEstimateResult: Swap.EstimateResponse = {
       expectedOutputWithoutSlippage: 9223372036854.775,
       fee: 4,
       finalPrice: 1.0000130865062424,
-      initialPrice: 0.00011440337320702896,
+      initialPrice: 1,
       poolFee: 0.003,
       poolId:
         '000000000000000000000000000000000000000000000000000000006c6f76656c616365af2e27f580f7f08e93190a81f72462f153026d06450924726645891b44524950VYFIaddr1wx6vzxyapfw4f4ragkvqtk3y473wj4sul3fr98xhguvazlse88lan',
@@ -454,7 +454,7 @@ const reverseEstimateResult: Swap.EstimateResponse = {
       expectedOutputWithoutSlippage: 37.145984,
       fee: 4,
       finalPrice: 0.0001223828565601978,
-      initialPrice: 0.00012238115855095046,
+      initialPrice: 8147.835928931783,
       poolFee: 0.003,
       poolId:
         '000000000000000000000000000000000000000000000000000000006c6f76656c616365af2e27f580f7f08e93190a81f72462f153026d06450924726645891b44524950MINSWAPc1245066d133f864ff9220aabb1388bb801986e6da6754b8234ce8fc3c6029f6',
@@ -538,7 +538,7 @@ const estimateResult: Swap.EstimateResponse = {
       expectedOutputWithoutSlippage: 9223372036854.775,
       fee: 4,
       finalPrice: 1.0000131730805681,
-      initialPrice: 0.00011853462095991185,
+      initialPrice: 1,
       poolFee: 0.003,
       poolId:
         '000000000000000000000000000000000000000000000000000000006c6f76656c616365af2e27f580f7f08e93190a81f72462f153026d06450924726645891b44524950VYFIaddr1wx6vzxyapfw4f4ragkvqtk3y473wj4sul3fr98xhguvazlse88lan',
@@ -583,7 +583,7 @@ const createResult: Swap.CreateResponse = {
       expectedOutputWithoutSlippage: 1130,
       fee: 0.3,
       finalPrice: 0.041994,
-      initialPrice: 0.04252918925670425,
+      initialPrice: 1130,
       poolFee: 0.3,
       poolId:
         '0be55d262b29f564998ff81efe21bdc0022621c12f15af08d0f2ddb1.3513ef4f9724b1bdbedd1f606ed93368f0442b236f3ff201bb28532cdf2a53a9',

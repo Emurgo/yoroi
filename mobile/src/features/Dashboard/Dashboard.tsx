@@ -16,7 +16,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {useBalances} from '~/features/Portfolio/common/hooks/useBalances'
 import {useReviewTx} from '~/features/ReviewTx/common/ReviewTxProvider'
 import {StakeRewardsWithdrawalOperation} from '~/features/ReviewTx/common/operations'
-import {useIsParticipatingInGovernance} from '~/features/Staking/Governance/common/helpers'
+import {useGovernanceParticipation} from '~/features/Staking/Governance/common/helpers'
 import {WithdrawGovernanceWarningModal} from '~/features/Staking/Governance/useCases/WithdrawGovernanceWarningModal/WithdrawGovernanceWarningModal'
 import {PoolTransitionNotice} from '~/features/Staking/Staking/PoolTransition/PoolTransitionNotice'
 import {usePoolTransition} from '~/features/Staking/Staking/PoolTransition/usePoolTransition'
@@ -71,11 +71,12 @@ export const Dashboard = () => {
     stakingInfo,
     refetch: refetchStakingInfo,
     error,
-    isLoading,
+    isLoading: isStakingInfoLoading,
   } = useStakingInfo(wallet)
 
-  const isParticipatingInGovernance = useIsParticipatingInGovernance()
   const walletNavigateTo = useWalletNavigation()
+  const {isParticipating, isLoading: isGovernanceParticipationLoading} =
+    useGovernanceParticipation()
 
   React.useEffect(() => {
     if (unsignedTx) {
@@ -98,7 +99,11 @@ export const Dashboard = () => {
   const createOnWithdraw =
     ({shouldDeregister}: {shouldDeregister: boolean}) =>
     () => {
-      if (!isParticipatingInGovernance) {
+      if (isGovernanceParticipationLoading) {
+        // status still loading → avoid showing warning;
+        return
+      }
+      if (!isParticipating) {
         openModal({
           title: strings.staking.withdrawWarningTitle,
           content: (
@@ -123,7 +128,7 @@ export const Dashboard = () => {
     >
       <View style={[a.flex_1]}>
         {isOnline && error && (
-          <SyncErrorBanner showRefresh={!(isLoading || isSyncing)} />
+          <SyncErrorBanner showRefresh={!(isStakingInfoLoading || isSyncing)} />
         )}
 
         <ScrollView

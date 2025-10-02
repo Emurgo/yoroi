@@ -20,7 +20,7 @@ export const SelectProtocolScreen = () => {
   const strings = useStrings()
   const {wallet} = useSelectedWallet()
   const {limitOptions, ...swapForm} = useSwap()
-  const {palette: p} = useTheme()
+  const {palette: p, atoms: ta} = useTheme()
   const {numberLocale} = useLanguage()
   if (limitOptions === undefined) return null
 
@@ -46,12 +46,12 @@ export const SelectProtocolScreen = () => {
     }).formattedValue
   }
 
-  const data = limitOptions.options
+  const data = limitOptions?.options ?? []
   const counter = data.length
 
   return (
     <SafeAreaView
-      style={[{backgroundColor: p.bg_color_max}]}
+      style={[ta.bg_color_max, a.flex_1]}
       edges={['left', 'right', 'bottom']}
     >
       <FlatList
@@ -93,7 +93,7 @@ export const SelectProtocolScreen = () => {
               </View>
 
               <View style={[a.flex_row, a.justify_between, a.gap_md]}>
-                <Text style={[a.body_1_lg_regular, {color: p.text_gray_low}]}>
+                <Text style={[a.body_1_lg_regular, ta.text_gray_low]}>
                   {strings.swap.price}
                 </Text>
 
@@ -101,7 +101,7 @@ export const SelectProtocolScreen = () => {
                   style={[
                     a.body_1_lg_regular,
                     a.self_center,
-                    {color: p.text_gray_medium},
+                    ta.text_gray_medium,
                   ]}
                 >
                   {`1 ${tokenInTicker} = ${formatPrice(item.initialPrice)} ${tokenOutTicker}`}
@@ -109,7 +109,7 @@ export const SelectProtocolScreen = () => {
               </View>
 
               <View style={[a.flex_row, a.justify_between, a.gap_md]}>
-                <Text style={[a.body_1_lg_regular, {color: p.text_gray_low}]}>
+                <Text style={[a.body_1_lg_regular, ta.text_gray_low]}>
                   {strings.swap.batcherFee}
                 </Text>
 
@@ -117,7 +117,7 @@ export const SelectProtocolScreen = () => {
                   style={[
                     a.body_1_lg_regular,
                     a.self_center,
-                    {color: p.text_gray_medium},
+                    ta.text_gray_medium,
                   ]}
                 >
                   {`${item.batcherFee} ${wallet.portfolioPrimaryTokenInfo.ticker}`}

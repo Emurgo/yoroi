@@ -1051,7 +1051,7 @@
   "swap.swapScreen.autoPool": "(auto)",
   "swap.swapScreen.balance": "Balance",
   "swap.swapScreen.batcherFee": "Batcher Fee",
-  "swap.swapScreen.changePool": "change dex",
+  "swap.swapScreen.changePool": "Change DEX",
   "swap.swapScreen.completedOrders": "Completed orders",
   "swap.swapScreen.currentBalance": "Current balance",
   "swap.swapScreen.dex": "dex",

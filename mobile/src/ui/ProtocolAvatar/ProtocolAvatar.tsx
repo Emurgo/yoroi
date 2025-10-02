@@ -9,6 +9,8 @@ import {ProtocolIcon} from '../ProtocolIcon/ProtocolIcon'
 
 type Props = {
   protocol: Swap.Protocol
+  fallbackImageUrl?: string
+  nameOverride?: string
   append?: string
   onPress?: () => void
   preventOpenLink?: boolean
@@ -16,12 +18,15 @@ type Props = {
 
 export const ProtocolAvatar = ({
   protocol,
+  fallbackImageUrl,
+  nameOverride,
   append = '',
   onPress,
   preventOpenLink = false,
 }: Props) => {
   const {palette: p} = useTheme()
-  const formattedName = `${protocol.charAt(0).toUpperCase()}${protocol.slice(1).replace(/-/, ' ')}${append}`
+  const defaultName = `${protocol.charAt(0).toUpperCase()}${protocol.slice(1).replace(/-/, ' ')}${append}`
+  const formattedName = nameOverride ?? defaultName
 
   return (
     <TouchableOpacity
@@ -31,7 +36,11 @@ export const ProtocolAvatar = ({
       style={[a.flex_row, a.align_center, a.gap_sm]}
       disabled={preventOpenLink}
     >
-      <ProtocolIcon protocol={protocol} size={18} />
+      <ProtocolIcon
+        protocol={protocol}
+        size={18}
+        fallbackImageUrl={fallbackImageUrl}
+      />
 
       <Text
         style={[

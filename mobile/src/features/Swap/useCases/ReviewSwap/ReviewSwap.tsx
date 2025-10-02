@@ -1,4 +1,5 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {Swap} from '@yoroi/types'
 
 import * as React from 'react'
 import {View, ViewProps, useWindowDimensions} from 'react-native'
@@ -68,13 +69,22 @@ export const ReviewSwap = () => {
 
   const onNext = () => {
     const protocol = swapForm.createTx?.splits[0]?.protocol
+    const fallbackImageUrl = swapForm.createTx?.splits[0]?.aggregatorImageUrl
+    const nameOverride =
+      protocol === Swap.Protocol.Unsupported
+        ? swapForm.createTx?.splits[0]?.aggregatorDexKey
+        : undefined
 
     navigateToTxReview({
       onSuccess: onSwapTxSuccess,
       cbor: swapForm.createTx?.cbor,
       receiverCustomTitle:
         protocol !== undefined ? (
-          <ProtocolAvatar protocol={protocol} />
+          <ProtocolAvatar
+            protocol={protocol}
+            fallbackImageUrl={fallbackImageUrl}
+            nameOverride={nameOverride}
+          />
         ) : undefined,
       details: {
         component: <TransactionSummary swapForm={swapForm} />,
