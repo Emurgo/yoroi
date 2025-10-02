@@ -164,7 +164,7 @@ export const VerifyRecoveryPhraseScreen = () => {
         )}
       </ScrollView>
 
-      <View style={[a.px_lg, a.pt_lg]}>
+      <View style={a.px_lg}>
         <Button
           title={strings.setupWallet.next}
           disabled={disabled}

@@ -1832,8 +1832,10 @@ export const useStrings = () => {
         connectWalletButtonCard: f(setupWalletMessages.connectWalletButtonCard),
         createWalletButtonCard: f(setupWalletMessages.createWalletButtonCard),
         restoreWalletButtonCard: f(setupWalletMessages.restoreWalletButtonCard),
-        passwordStrengthRequirement: (values: any) =>
-          f(setupWalletMessages.passwordStrengthRequirement, values),
+        passwordStrengthRequirement: (values: number) =>
+          f(setupWalletMessages.passwordStrengthRequirement, {
+            requiredPasswordLength: values,
+          }),
         repeatPasswordInputError: f(
           setupWalletMessages.repeatPasswordInputError,
         ),

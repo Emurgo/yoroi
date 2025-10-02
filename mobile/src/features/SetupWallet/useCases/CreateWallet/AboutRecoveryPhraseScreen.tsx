@@ -36,20 +36,16 @@ export const AboutRecoveryPhraseScreen = () => {
 
   return (
     <SafeArea>
-      <ScrollView bounces={false} contentContainerStyle={[a.px_lg]}>
+      <ScrollView bounces={false} contentContainerStyle={[a.px_lg, a.gap_lg]}>
         <StepperProgress
           currentStep={1}
           currentStepTitle={strings.setupWallet.stepAboutRecoveryPhrase}
           totalSteps={4}
         />
 
-        <Space.Height.lg />
-
         <Text style={[ta.text_gray_medium, a.body_1_lg_regular]}>
           {strings.setupWallet.aboutRecoveryPhraseTitle(bold)}
         </Text>
-
-        <Space.Height.lg />
 
         <CardAboutPhrase
           showBackgroundColor

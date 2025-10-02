@@ -95,17 +95,15 @@ export const ConnectNanoXScreen = ({defaultDevices}: Props) => {
     }
   }
 
-  const handleOnConnectBLE = (deviceId: string) => {
-    return getHWDeviceInfo(walletImplementation, deviceId, null, useUSB)
+  const handleOnConnectBLE = (deviceId: string) =>
+    getHWDeviceInfo(walletImplementation, deviceId, null, useUSB)
       .then(onSuccess)
       .catch(onError)
-  }
 
-  const handleOnConnectUSB = (deviceObj: HW.DeviceObj) => {
-    return getHWDeviceInfo(walletImplementation, null, deviceObj, useUSB)
+  const handleOnConnectUSB = (deviceObj: HW.DeviceObj) =>
+    getHWDeviceInfo(walletImplementation, null, deviceObj, useUSB)
       .then(onSuccess)
       .catch(onError)
-  }
 
   return (
     <SafeArea>

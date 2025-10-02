@@ -156,9 +156,7 @@ export const WalletDetailsScreen = () => {
 
   const passwordErrorText =
     passwordErrors.passwordIsWeak && !isPending
-      ? strings.setupWallet.passwordStrengthRequirement({
-          requiredPasswordLength,
-        })
+      ? strings.setupWallet.passwordStrengthRequirement(requiredPasswordLength)
       : undefined
   const passwordConfirmationErrorText =
     passwordErrors.matchesConfirmation && !isPending
@@ -291,7 +289,7 @@ export const WalletDetailsScreen = () => {
   }
 
   return (
-    <SafeArea>
+    <SafeArea style={[a.gap_lg]}>
       <StepperProgress
         style={[a.px_lg]}
         currentStep={4}
@@ -299,7 +297,7 @@ export const WalletDetailsScreen = () => {
         totalSteps={4}
       />
 
-      <View style={[{height: 24}, a.px_lg, a.flex_row]}>
+      <View style={[a.px_lg, a.flex_row, a.align_center]}>
         <Text style={[a.body_1_lg_regular, ta.text_gray_max]}>
           {strings.setupWallet.walletDetailsTitle(bold)}
         </Text>
@@ -390,7 +388,7 @@ export const WalletDetailsScreen = () => {
         </View>
       </ScrollView>
 
-      <Actions style={a.px_lg}>
+      <Actions style={[a.px_lg]}>
         <Button
           title={strings.setupWallet.next}
           onPress={() => handleCreateWallet()}

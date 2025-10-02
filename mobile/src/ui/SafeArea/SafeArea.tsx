@@ -9,10 +9,18 @@ import {
 
 import {KeyboardAvoidingView} from '../KeyboardAvoidingView/KeyboardAvoidingView'
 
-export const SafeArea = ({children, style, ...rest}: SafeAreaViewProps) => {
+export const SafeArea = ({
+  children,
+  style,
+  keyboardVerticalOffset,
+  ...rest
+}: Props) => {
   const {atoms: ta} = useTheme()
   return (
-    <KeyboardAvoidingView style={a.flex_1}>
+    <KeyboardAvoidingView
+      style={a.flex_1}
+      keyboardVerticalOffset={keyboardVerticalOffset}
+    >
       <SafeAreaView
         edges={['bottom', 'left', 'right']}
         {...rest}
@@ -22,4 +30,8 @@ export const SafeArea = ({children, style, ...rest}: SafeAreaViewProps) => {
       </SafeAreaView>
     </KeyboardAvoidingView>
   )
+}
+
+type Props = SafeAreaViewProps & {
+  keyboardVerticalOffset?: number
 }
