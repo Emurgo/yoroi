@@ -22,9 +22,20 @@ import {CardanoMobile} from '~/wallets/wallets'
 import {GovernanceVote} from '../types'
 import {useNavigateTo} from './navigation'
 
-export const useIsParticipatingInGovernance = () => {
-  const status = useGovernanceStatus()
-  return status !== null
+export const useGovernanceParticipation = () => {
+  const {wallet} = useSelectedWallet()
+  const stakingKeyHash = useStakingKey(wallet)
+  const {
+    data: stakingStatus,
+    isLoading,
+    refetch,
+  } = useStakingKeyState(stakingKeyHash)
+
+  // Refresh governance status when UTXOs change
+  useWalletEvent(wallet, 'utxos', refetch)
+
+  const isParticipating = stakingStatus?.drepDelegation != null
+  return {isParticipating, isLoading} as const
 }
 
 export const useGovernanceStatus = () => {
