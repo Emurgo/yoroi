@@ -260,12 +260,13 @@ export const RestoreWalletDetailsScreen = () => {
   return (
     <SafeArea>
       <StepperProgress
+        style={[a.px_lg]}
         currentStep={2}
         currentStepTitle={strings.setupWallet.stepWalletDetails}
         totalSteps={2}
       />
 
-      <View style={a.flex_row}>
+      <View style={[a.flex_row, a.p_lg]}>
         <Text style={[a.body_1_lg_regular, ta.text_gray_max]}>
           {strings.setupWallet.walletDetailsTitle(bold)}
         </Text>
@@ -273,9 +274,7 @@ export const RestoreWalletDetailsScreen = () => {
         <Info onPress={showModalTipsPassword} />
       </View>
 
-      <Space.Height.xl />
-
-      <ScrollView style={a.flex_1} contentContainerStyle={a.px_lg}>
+      <ScrollView style={a.flex_1} contentContainerStyle={[a.px_lg, a.gap_lg]}>
         <TextInput
           enablesReturnKeyAutomatically
           autoFocus
@@ -297,8 +296,6 @@ export const RestoreWalletDetailsScreen = () => {
           showErrorOnBlur
         />
 
-        <Space.Height.xl />
-
         <TextInput
           enablesReturnKeyAutomatically
           ref={passwordRef}
@@ -316,8 +313,6 @@ export const RestoreWalletDetailsScreen = () => {
           textContentType="oneTimeCode"
         />
 
-        <Space.Height.xl />
-
         <TextInput
           enablesReturnKeyAutomatically
           ref={passwordConfirmationRef}
@@ -332,9 +327,7 @@ export const RestoreWalletDetailsScreen = () => {
           textContentType="oneTimeCode"
         />
 
-        <Space.Height.xl />
-
-        <View style={[a.flex_row, a.align_center, a.justify_center]}>
+        <View style={[a.flex_row, a.align_center, a.justify_center, a.gap_sm]}>
           <Icon.WalletAvatar
             image={new Blockies({seed: plate.ImagePart}).asBase64()}
             style={{
@@ -343,8 +336,6 @@ export const RestoreWalletDetailsScreen = () => {
             }}
             size={24}
           />
-
-          <Space.Width.sm />
 
           <Text
             style={[
@@ -359,13 +350,11 @@ export const RestoreWalletDetailsScreen = () => {
             {plate.TextPart}
           </Text>
 
-          <Space.Width.sm />
-
           <Info onPress={showModalTipsPlateNumber} />
         </View>
       </ScrollView>
 
-      <View>
+      <View style={[a.px_lg, a.pt_lg]}>
         <Button
           title={strings.setupWallet.next}
           onPress={() =>

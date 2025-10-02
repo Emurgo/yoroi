@@ -12,7 +12,7 @@ import {KeyboardAvoidingView} from '../KeyboardAvoidingView/KeyboardAvoidingView
 export const SafeArea = ({children, style, ...rest}: SafeAreaViewProps) => {
   const {atoms: ta} = useTheme()
   return (
-    <KeyboardAvoidingView style={a.flex_1} enabled>
+    <KeyboardAvoidingView style={a.flex_1}>
       <SafeAreaView
         edges={['bottom', 'left', 'right']}
         {...rest}

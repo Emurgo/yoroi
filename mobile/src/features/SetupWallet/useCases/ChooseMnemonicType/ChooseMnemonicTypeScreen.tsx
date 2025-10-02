@@ -1,14 +1,14 @@
 import {useSetupWallet} from '@yoroi/setup-wallet'
-import {atoms as a, useTheme} from '@yoroi/theme'
+import {atoms as a} from '@yoroi/theme'
 
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 import {View} from 'react-native'
-import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {LogoBanner} from '~/ui/LogoBanner/LogoBanner'
+import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
 
 import {ButtonCard} from '../../common/ButtonCard/ButtonCard'
@@ -19,7 +19,6 @@ export const ChooseMnemonicTypeScreen = () => {
   const strings = useStrings()
   const {mnemonicTypeChanged} = useSetupWallet()
   const {track} = useMetrics()
-  const {palette: p} = useTheme()
 
   const navigation = useNavigation<any>()
 
@@ -40,17 +39,14 @@ export const ChooseMnemonicTypeScreen = () => {
   )
 
   return (
-    <SafeAreaView
-      edges={['left', 'right', 'bottom']}
-      style={[a.flex_1, a.px_lg, {backgroundColor: p.bg_color_max}]}
-    >
+    <SafeArea style={a.px_lg}>
       <Space.Height.lg />
 
       <LogoBanner />
 
       <Space.Height.xl />
 
-      <View>
+      <View style={a.gap_lg}>
         <ButtonCard
           title={strings.setupWallet.choose15WordsMnemonicTitle}
           icon={<Mnemonic15Words style={[a.absolute, {right: 0}]} />}
@@ -58,17 +54,13 @@ export const ChooseMnemonicTypeScreen = () => {
           testID="mnemonic-15-word"
         />
 
-        <Space.Height.lg />
-
         <ButtonCard
           title={strings.setupWallet.choose24WordsMnemonicTitle}
           icon={<Mnemonic24Words style={[a.absolute, {right: 0}]} />}
           onPress={handle24Words}
           testID="mnemonic-24-word"
         />
-
-        <Space.Height.lg />
       </View>
-    </SafeAreaView>
+    </SafeArea>
   )
 }

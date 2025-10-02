@@ -15,7 +15,6 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native'
-import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {YoroiZendeskLink} from '~/features/SetupWallet/common/constants'
 import {Info as InfoIcon} from '~/features/SetupWallet/illustrations/Info'
@@ -33,9 +32,9 @@ import {SetupWalletRouteNavigation} from '~/kernel/navigation/types'
 import {Button} from '~/ui/Button/Button'
 import {CardAboutPhrase} from '~/ui/CardAboutPhrase/CardAboutPhrase'
 import {Icon} from '~/ui/Icon'
-import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingView'
 import {LearnMoreButton} from '~/ui/LearnMoreButton/LearnMoreButton'
 import {useModal} from '~/ui/Modal/context/ModalContext'
+import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
 import {StepperProgress} from '~/ui/StepperProgress/StepperProgress'
 import {TextInput} from '~/ui/TextInput/TextInput'
@@ -71,7 +70,7 @@ const useSizeModal = () => {
 const addressMode: Wallet.AddressMode = 'single'
 export const SaveNanoXScreen = () => {
   const strings = useStrings()
-  const {palette: p} = useTheme()
+  const {palette: p, atoms: ta} = useTheme()
   const storage = useAsyncStorage()
   const navigation = useNavigation<SetupWalletRouteNavigation>()
   const {track} = useMetrics()
@@ -232,99 +231,78 @@ export const SaveNanoXScreen = () => {
   }
 
   return (
-    <KeyboardAvoidingView
-      style={[
-        {backgroundColor: p.bg_color_max},
-        a.justify_between,
-        a.px_lg,
-        a.flex_1,
-      ]}
-    >
-      <SafeAreaView
-        edges={['left', 'right', 'bottom']}
-        style={[a.pb_lg, a.flex_1]}
-      >
-        <StepperProgress
-          currentStep={2}
-          currentStepTitle={strings.setupWallet.stepWalletDetails}
-          totalSteps={2}
+    <SafeArea style={[a.gap_lg]}>
+      <StepperProgress
+        style={[a.px_lg]}
+        currentStep={2}
+        currentStepTitle={strings.setupWallet.stepWalletDetails}
+        totalSteps={2}
+      />
+
+      <View style={[a.flex_row, a.px_lg]}>
+        <Text style={[a.body_1_lg_regular, ta.text_gray_medium]}>
+          {strings.setupWallet.hwWalletDetailsTitle(bold)}
+        </Text>
+
+        <Space.Width.xs />
+
+        <Info onPress={showModalTipsPassword} />
+      </View>
+
+      <ScrollView style={a.flex_1} contentContainerStyle={[a.px_lg]}>
+        <TextInput
+          enablesReturnKeyAutomatically
+          autoFocus
+          label={strings.setupWallet.walletDetailsNameInput}
+          value={name}
+          onChangeText={(walletName: string) => setName(walletName)}
+          errorText={
+            !isEmptyString(walletNameErrorText) &&
+            walletNameErrorText &&
+            !isPending
+              ? walletNameErrorText
+              : undefined
+          }
+          errorDelay={0}
+          returnKeyType="next"
+          testID="walletNameInput"
+          autoComplete="off"
+          showErrorOnBlur
         />
 
-        <Space.Height.xl />
+        <View style={[a.flex_row, a.align_center, a.justify_center, a.gap_sm]}>
+          <Icon.WalletAvatar
+            image={new Blockies({seed}).asBase64()}
+            style={[{width: 24, height: 24}]}
+            size={24}
+          />
 
-        <View style={[a.flex_row]}>
-          <Text style={[a.body_1_lg_regular, {color: p.text_gray_medium}]}>
-            {strings.setupWallet.hwWalletDetailsTitle(bold)}
+          <Text
+            style={[
+              a.body_1_lg_regular,
+              a.text_center,
+              a.justify_center,
+              a.align_center,
+              ta.text_gray_medium,
+            ]}
+            testID="wallet-plate-number"
+          >
+            {plate}
           </Text>
 
-          <Space.Width.xs />
-
-          <Info onPress={showModalTipsPassword} />
+          <Info onPress={showModalTipsPlateNumber} />
         </View>
+      </ScrollView>
 
-        <Space.Height.xl />
-
-        <ScrollView style={a.flex_1}>
-          <TextInput
-            enablesReturnKeyAutomatically
-            autoFocus
-            label={strings.setupWallet.walletDetailsNameInput}
-            value={name}
-            onChangeText={(walletName: string) => setName(walletName)}
-            errorText={
-              !isEmptyString(walletNameErrorText) &&
-              walletNameErrorText &&
-              !isPending
-                ? walletNameErrorText
-                : undefined
-            }
-            errorDelay={0}
-            returnKeyType="next"
-            testID="walletNameInput"
-            autoComplete="off"
-            showErrorOnBlur
-          />
-
-          <Space.Height.lg />
-
-          <View style={[a.flex_row, a.align_center, a.justify_center]}>
-            <Icon.WalletAvatar
-              image={new Blockies({seed}).asBase64()}
-              style={[{width: 24, height: 24}]}
-              size={24}
-            />
-
-            <Space.Width.sm />
-
-            <Text
-              style={[
-                a.body_1_lg_regular,
-                a.text_center,
-                a.justify_center,
-                a.align_center,
-                {color: p.text_gray_medium},
-              ]}
-              testID="wallet-plate-number"
-            >
-              {plate}
-            </Text>
-
-            <Space.Width.sm />
-
-            <Info onPress={showModalTipsPlateNumber} />
-          </View>
-        </ScrollView>
-
-        <View>
-          <Button
-            title={strings.setupWallet.next}
-            onPress={handleOnSubmit}
-            testID="setup-restore-step2-next-button"
-            disabled={disabled}
-          />
-        </View>
-      </SafeAreaView>
-    </KeyboardAvoidingView>
+      <View>
+        <Button
+          title={strings.setupWallet.next}
+          onPress={handleOnSubmit}
+          testID="setup-restore-step2-next-button"
+          disabled={disabled}
+        />
+      </View>
+    </SafeArea>
   )
 }
 

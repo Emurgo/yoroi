@@ -177,13 +177,12 @@ export const RestoreWalletScreen = () => {
 
   return (
     <SafeArea>
-      <View style={a.px_lg}>
-        <StepperProgress
-          currentStep={1}
-          currentStepTitle={strings.setupWallet.stepRestoreWalletScreen}
-          totalSteps={2}
-        />
-      </View>
+      <StepperProgress
+        style={[a.px_lg]}
+        currentStep={1}
+        currentStepTitle={strings.setupWallet.stepRestoreWalletScreen}
+        totalSteps={2}
+      />
 
       <ScrollView
         bounces={false}

@@ -9,7 +9,6 @@ export const KeyboardAvoidingView = ({
   children,
   keyboardVerticalOffset,
   behavior,
-  enabled,
   ...rest
 }: KeyboardAvoidingViewProps) => {
   const keyboardBehavior: KeyboardAvoidingViewProps['behavior'] =
@@ -23,7 +22,7 @@ export const KeyboardAvoidingView = ({
     <RNKeyboardAvoidingView
       behavior={behavior ?? keyboardBehavior}
       keyboardVerticalOffset={keyboardVerticalOffset ?? 70}
-      enabled={enabled ?? Platform.OS === 'ios'}
+      enabled={Platform.OS === 'ios'}
       {...rest}
     >
       {children}

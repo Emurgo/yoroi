@@ -11,14 +11,13 @@ import {
   ViewProps,
 } from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
-import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {SetupWalletRouteNavigation} from '~/kernel/navigation/types'
 import {BulletPointItem} from '~/ui/BulletPointItem'
 import {Button} from '~/ui/Button/Button'
-import {Space} from '~/ui/Space/Space'
+import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {StepperProgress} from '~/ui/StepperProgress/StepperProgress'
 import {Text} from '~/ui/Text/Text'
 
@@ -59,42 +58,32 @@ export const CheckNanoXScreen = () => {
   ]
 
   return (
-    <SafeAreaView
-      edges={['left', 'right', 'bottom']}
-      style={[a.flex_1, ta.bg_color_max]}
-    >
+    <SafeArea>
       <StepperProgress
-        style={[{paddingHorizontal: 16}]}
-        currentStepTitle="Intro"
+        style={[a.px_lg]}
+        currentStepTitle={strings.setupWallet.hwIntroTitle}
         currentStep={1}
         totalSteps={3}
       />
 
-      <ScrollView style={[{paddingHorizontal: 16}]} bounces={false}>
-        <Space.Height.lg />
-
-        <Text
-          style={[
-            a.body_1_lg_regular,
-            {
-              color: p.text_gray_medium,
-            },
-          ]}
-        >
+      <ScrollView
+        style={[a.flex_1]}
+        contentContainerStyle={[a.px_lg, a.gap_lg]}
+        bounces={false}
+      >
+        <Text style={[a.body_1_lg_regular, ta.text_gray_medium]}>
           {strings.setupWallet.hwCheckIntroline}
         </Text>
 
-        <Space.Height.lg />
-
-        {(useUSB ? usbRequirements : bleRequirements).map((item) => (
-          <BulletPointItem
-            key={item}
-            style={[a.body_1_lg_regular, {color: p.text_gray_medium}]}
-            textRow={item}
-          />
-        ))}
-
-        <Space.Height.lg />
+        <View>
+          {(useUSB ? usbRequirements : bleRequirements).map((item) => (
+            <BulletPointItem
+              key={item}
+              style={[a.body_1_lg_regular, ta.text_gray_medium]}
+              textRow={item}
+            />
+          ))}
+        </View>
 
         <Illustration />
 
@@ -108,7 +97,7 @@ export const CheckNanoXScreen = () => {
           testID="continueButton"
         />
       </Actions>
-    </SafeAreaView>
+    </SafeArea>
   )
 }
 
@@ -141,5 +130,5 @@ const Illustration = () => {
 }
 
 const Actions = (props: ViewProps) => {
-  return <View {...props} style={a.p_lg} />
+  return <View {...props} style={[a.px_lg, a.pt_lg]} />
 }

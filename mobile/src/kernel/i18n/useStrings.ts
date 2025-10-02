@@ -1736,6 +1736,7 @@ export const useStrings = () => {
           f(setupWalletMessages.hwWalletDetailsTitle, {b: bold.b}),
         hwExportKey: f(setupWalletMessages.hwExportKey),
         bluetoothError: f(setupWalletMessages.bluetoothError),
+        hwIntroTitle: f(setupWalletMessages.hwIntroTitle),
         hwCheckIntroline: f(setupWalletMessages.hwCheckIntroline),
         hwCheckTitle: f(setupWalletMessages.hwCheckTitle),
         ledgerSupportLink: f(setupWalletMessages.ledgerSupportLink),

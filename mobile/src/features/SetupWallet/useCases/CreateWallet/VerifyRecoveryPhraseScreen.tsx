@@ -41,14 +41,52 @@ export const VerifyRecoveryPhraseScreen = () => {
     }, [track]),
   )
 
-  const mnemonicEntries: Array<Entry> = mnemonic
-    .split(' ')
-    .sort()
-    .map((word: string, id: number) => ({word, id}))
+  // Debug: Log mnemonic state
+  React.useEffect(() => {
+    console.log('VerifyRecoveryPhraseScreen - mnemonic:', mnemonic)
+    console.log(
+      'VerifyRecoveryPhraseScreen - mnemonic length:',
+      mnemonic.length,
+    )
+  }, [mnemonic])
 
-  const mnemonicDefault: Array<Entry> = mnemonic
-    .split(' ')
-    .map((word: string, id: number) => ({word, id}))
+  // Handle empty mnemonic case
+  const processedMnemonic = mnemonic.trim() || ''
+
+  const mnemonicEntries: Array<Entry> = React.useMemo(
+    () =>
+      processedMnemonic
+        ? processedMnemonic
+            .split(' ')
+            .filter((word) => word.trim().length > 0) // Filter out empty strings
+            .sort()
+            .map((word: string, id: number) => ({word, id}))
+        : [],
+    [processedMnemonic],
+  )
+
+  const mnemonicDefault: Array<Entry> = React.useMemo(
+    () =>
+      processedMnemonic
+        ? processedMnemonic
+            .split(' ')
+            .filter((word) => word.trim().length > 0) // Filter out empty strings
+            .map((word: string, id: number) => ({word, id}))
+        : [],
+    [processedMnemonic],
+  )
+
+  // Debug: Log processed entries
+  React.useEffect(() => {
+    console.log(
+      'VerifyRecoveryPhraseScreen - mnemonicEntries:',
+      mnemonicEntries,
+    )
+    console.log(
+      'VerifyRecoveryPhraseScreen - mnemonicDefault:',
+      mnemonicDefault,
+    )
+  }, [mnemonicEntries, mnemonicDefault])
 
   const [userEntries, setUserEntries] = React.useState<Array<Entry>>([])
   const appendEntry = (entry: Entry) => setUserEntries([...userEntries, entry])
@@ -82,41 +120,51 @@ export const VerifyRecoveryPhraseScreen = () => {
 
   return (
     <SafeArea>
-      <StepperProgress
-        currentStep={3}
-        currentStepTitle={strings.setupWallet.stepVerifyRecoveryPhrase}
-        totalSteps={4}
-        style={a.px_lg}
-      />
-
-      <Text style={[a.body_1_lg_regular, ta.text_gray_medium, a.px_lg]}>
-        {strings.setupWallet.verifyRecoveryPhraseTitle(bold)}
-      </Text>
-
-      <MnemonicInput
-        onPress={removeLastEntry}
-        defaultMnemonic={mnemonicDefault}
-        userEntries={userEntries}
-        error={isPhraseComplete && !isValidPhrase}
-      />
-
-      {isPhraseComplete && isLastWordValid() && <SuccessMessage />}
-
-      <ScrollView bounces={false} contentContainerStyle={[a.px_lg]}>
-        <WordBadges
-          defaultMnemonic={mnemonicDefault}
-          mnemonicEntries={mnemonicEntries}
-          userEntries={userEntries}
-          onPress={appendEntry}
-          removeLastEntryAndAddNew={removeLastEntryAndAddNew}
+      <View style={[a.gap_lg]}>
+        <StepperProgress
+          currentStep={3}
+          currentStepTitle={strings.setupWallet.stepVerifyRecoveryPhrase}
+          totalSteps={4}
+          style={a.px_lg}
         />
 
-        <Space.Height.md />
+        <Text style={[a.body_1_lg_regular, ta.text_gray_medium, a.px_lg]}>
+          {strings.setupWallet.verifyRecoveryPhraseTitle(bold)}
+        </Text>
 
-        {!isLastWordValid() && userEntries.length > 0 && <ErrorMessage />}
+        <MnemonicInput
+          onPress={removeLastEntry}
+          defaultMnemonic={mnemonicDefault}
+          userEntries={userEntries}
+          error={isPhraseComplete && !isValidPhrase}
+        />
+
+        {isPhraseComplete && isLastWordValid() && <SuccessMessage />}
+      </View>
+
+      <ScrollView
+        bounces={false}
+        contentContainerStyle={[a.px_lg, a.pt_lg]}
+        style={a.flex_1}
+      >
+        {mnemonicEntries.length > 0 && (
+          <>
+            <WordBadges
+              defaultMnemonic={mnemonicDefault}
+              mnemonicEntries={mnemonicEntries}
+              userEntries={userEntries}
+              onPress={appendEntry}
+              removeLastEntryAndAddNew={removeLastEntryAndAddNew}
+            />
+
+            <Space.Height.md />
+
+            {!isLastWordValid() && userEntries.length > 0 && <ErrorMessage />}
+          </>
+        )}
       </ScrollView>
 
-      <View style={[a.px_lg]}>
+      <View style={[a.px_lg, a.pt_lg]}>
         <Button
           title={strings.setupWallet.next}
           disabled={disabled}
@@ -158,7 +206,7 @@ const SuccessMessage = () => {
   const {atoms: ta} = useTheme()
   return (
     <View
-      style={[a.flex_row, a.align_center, a.justify_start, a.p_lg, a.gap_sm]}
+      style={[a.flex_row, a.align_center, a.justify_start, a.px_lg, a.gap_sm]}
     >
       <Check2Illustration />
 
