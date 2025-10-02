@@ -11,7 +11,6 @@ import {Chain, Exchange} from '@yoroi/types'
 import * as React from 'react'
 import {Linking, View, useWindowDimensions} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
-import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {ProviderItem} from '~/features/Exchange/common/ProviderItem/ProviderItem'
 import {ShowDisclaimer} from '~/features/Legal/ui/shared/Disclaimer/ShowDisclaimer'
@@ -22,8 +21,9 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Icon} from '~/ui/Icon'
-import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingView'
 import {useModal} from '~/ui/Modal/context/ModalContext'
+import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
+import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {delay} from '~/wallets/utils/timeUtils'
 
 import {useNavigateTo} from '../../common/useNavigateTo'
@@ -39,7 +39,7 @@ import {ShowPreprodNotice} from './ShowPreprodNotice/ShowPreprodNotice'
 const BOTTOM_ACTION_SECTION = 180
 
 export const CreateExchangeOrderScreen = () => {
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p} = useTheme()
 
   const strings = useStrings()
   const {track} = useMetrics()
@@ -120,7 +120,11 @@ export const CreateExchangeOrderScreen = () => {
         await delay(1000)
 
         openModal({
-          content: <ErrorScreen onClose={closeModal} />,
+          content: (
+            <Modal.Content>
+              <ErrorScreen onClose={closeModal} />
+            </Modal.Content>
+          ),
         })
       },
       onSuccess: (referralLink) => {
@@ -146,7 +150,11 @@ export const CreateExchangeOrderScreen = () => {
     createReferralLink()
     setupSignalTimeout(3000)
     openModal({
-      content: <LoadingLinkScreen />,
+      content: (
+        <Modal.Content>
+          <LoadingLinkScreen />
+        </Modal.Content>
+      ),
       full: true,
     })
   }
@@ -170,53 +178,41 @@ export const CreateExchangeOrderScreen = () => {
       : `${fee}% ${strings.exchange.fee}`
 
   return (
-    <KeyboardAvoidingView style={[a.flex_1, ta.bg_color_max]}>
-      <SafeAreaView
-        edges={['bottom', 'left', 'right']}
-        style={{
-          ...a.flex_1,
-          ...a.py_lg,
-        }}
-      >
-        <ScrollView style={a.px_lg}>
-          <View
-            style={a.flex_1}
-            onLayout={(event) => {
-              const {height} = event.nativeEvent.layout
-              setContentHeight(height + BOTTOM_ACTION_SECTION)
-            }}
-          >
-            <SelectBuyOrSell disabled={isLoading} />
-
-            <ShowPreprodNotice />
-
-            <EditAmount disabled={isLoading} />
-
-            <ProviderItem
-              label={providerSelected?.name ?? providerId}
-              fee={feeText}
-              leftAdornment={<Logo size={40} />}
-              rightAdornment={<Icon.Chevron direction="right" />}
-              onPress={handleOnListProvidersByOrderType}
-              disabled
-            />
-
-            <ShowDisclaimer type="exchange" />
-          </View>
-        </ScrollView>
-
-        <CreateExchangeButton
-          style={{
-            ...(deviceHeight < contentHeight && {
-              borderTopWidth: 1,
-              borderTopColor: p.gray_200,
-            }),
+    <SafeArea>
+      <ScrollView style={a.px_lg}>
+        <View
+          style={a.flex_1}
+          onLayout={(event) => {
+            const {height} = event.nativeEvent.layout
+            setContentHeight(height + BOTTOM_ACTION_SECTION)
           }}
+        >
+          <SelectBuyOrSell disabled={isLoading} />
+
+          <ShowPreprodNotice />
+
+          <EditAmount disabled={isLoading} />
+
+          <ProviderItem
+            label={providerSelected?.name ?? providerId}
+            fee={feeText}
+            leftAdornment={<Logo size={40} />}
+            rightAdornment={<Icon.Chevron direction="right" />}
+            onPress={handleOnListProvidersByOrderType}
+            disabled
+          />
+
+          <ShowDisclaimer type="exchange" />
+        </View>
+      </ScrollView>
+
+      <SafeArea.Actions contentHeight={contentHeight}>
+        <CreateExchangeButton
           disabled={exchangeDisabled}
           onPress={handleOnExchange}
         />
-      </SafeAreaView>
-    </KeyboardAvoidingView>
+      </SafeArea.Actions>
+    </SafeArea>
   )
 }
 

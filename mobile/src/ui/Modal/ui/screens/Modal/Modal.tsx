@@ -2,8 +2,7 @@ import {time} from '@yoroi/common'
 import {atoms as a, space as s, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
-import {Modal as RNModal, View} from 'react-native'
-import {KeyboardAvoidingView} from 'react-native-keyboard-controller'
+import {DimensionValue, Modal as RNModal, View} from 'react-native'
 import Animated, {
   runOnJS,
   useAnimatedStyle,
@@ -12,6 +11,8 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
+
+import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingView'
 
 import {useModal} from '../../../context/ModalContext'
 import {Discard} from '../../shared/Discard'
@@ -65,7 +66,7 @@ const Modal = () => {
   const hasExpandedEnabled = isOpen ? hasExpanded : lastHasExpandedRef.current
 
   const modalTranslateY = useSharedValue(48)
-  const modalHeight = useSharedValue(height)
+  const modalHeight = useSharedValue<DimensionValue>(full ? '100%' : height)
   const isExpanded = useSharedValue(hasExpandedEnabled)
   const dragY = useSharedValue(0)
 
@@ -77,7 +78,7 @@ const Modal = () => {
 
   const heightAnimatedStyle = useAnimatedStyle(() => {
     return {
-      height: isExpanded.value ? '100%' : modalHeight.value,
+      height: isExpanded.value || full ? '100%' : modalHeight.value,
     }
   })
 
@@ -91,18 +92,20 @@ const Modal = () => {
     if (isOpen) {
       setIsVisible(true)
       backdropOpacity.value = 0
-      modalTranslateY.value = 48
+      modalTranslateY.value = isFull ? 0 : 48
       dragY.value = 0
-      modalHeight.value = height
+      modalHeight.value = isFull ? '100%' : height
       isExpanded.value = hasExpandedEnabled
 
       backdropOpacity.value = withTiming(1, {
         duration: time.seconds(0.3),
       })
-      modalTranslateY.value = withSpring(0, {
-        damping: 20,
-        stiffness: 100,
-      })
+      if (!isFull) {
+        modalTranslateY.value = withSpring(0, {
+          damping: 20,
+          stiffness: 100,
+        })
+      }
     } else {
       backdropOpacity.value = withTiming(
         0,
@@ -113,10 +116,12 @@ const Modal = () => {
           runOnJS(setIsVisible)(false)
         },
       )
-      modalTranslateY.value = withSpring(24, {
-        damping: 20,
-        stiffness: 100,
-      })
+      if (!isFull) {
+        modalTranslateY.value = withSpring(24, {
+          damping: 20,
+          stiffness: 100,
+        })
+      }
     }
   }, [
     isOpen,
@@ -127,6 +132,7 @@ const Modal = () => {
     height,
     hasExpandedEnabled,
     isExpanded,
+    isFull,
   ])
 
   React.useEffect(() => {
@@ -163,7 +169,7 @@ const Modal = () => {
         <Discard.Backdrop />
 
         <View style={[a.flex_1, a.justify_end]}>
-          <KeyboardAvoidingView behavior="padding">
+          <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={0}>
             <Animated.View
               style={[
                 a.self_stretch,

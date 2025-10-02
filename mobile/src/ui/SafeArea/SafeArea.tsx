@@ -10,6 +10,7 @@ import {
 import {useIsKeyboardOpen} from '~/hooks/useIsKeyboardOpen'
 
 import {KeyboardAvoidingView} from '../KeyboardAvoidingView/KeyboardAvoidingView'
+import {useModal} from '../Modal/context/ModalContext'
 
 export const SafeArea = ({
   children,
@@ -18,10 +19,12 @@ export const SafeArea = ({
   ...rest
 }: Props) => {
   const {atoms: ta} = useTheme()
+  const {isOpen} = useModal()
   return (
     <KeyboardAvoidingView
       style={a.flex_1}
-      keyboardVerticalOffset={keyboardVerticalOffset}
+      keyboardVerticalOffset={isOpen ? 0 : keyboardVerticalOffset}
+      enabled={!isOpen}
     >
       <SafeAreaView
         edges={['bottom', 'left', 'right']}

@@ -1,20 +1,17 @@
 import {useExchange} from '@yoroi/exchange'
-import {atoms as a} from '@yoroi/theme'
 import {Chain} from '@yoroi/types'
 
 import * as React from 'react'
-import {Linking, View, ViewStyle} from 'react-native'
+import {Linking} from 'react-native'
 
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
 
 export const CreateExchangeButton = ({
-  style,
   disabled,
   onPress,
 }: {
-  style: ViewStyle
   disabled: boolean
   onPress: () => void
 }) => {
@@ -43,14 +40,12 @@ export const CreateExchangeButton = ({
   }
 
   return (
-    <View style={[a.px_lg, a.pt_lg, style]}>
-      <Button
-        testID="rampOnOffButton"
-        title={title}
-        onPress={handleOnPress}
-        disabled={disabled}
-      />
-    </View>
+    <Button
+      testID="rampOnOffButton"
+      title={title}
+      onPress={handleOnPress}
+      disabled={disabled}
+    />
   )
 }
 
