@@ -1,6 +1,6 @@
 import {time} from '@yoroi/common'
 import {useNotificationManager} from '@yoroi/notifications'
-import {Chain, Notifications} from '@yoroi/types'
+import {Notifications} from '@yoroi/types'
 
 import {useQuery, useQueryClient} from '@tanstack/react-query'
 
@@ -44,7 +44,7 @@ export const useGovernanceBanner = () => {
         balanceLovelace: adaLovelace.toString(),
       })
       // show banner only if NOT participating and balance > 5 ADA
-      const onMainnet = network === Chain.Network.Mainnet
+      const onMainnet = wallet?.isMainnet === true
       if (!onMainnet) return false
 
       if (isParticipating) {
