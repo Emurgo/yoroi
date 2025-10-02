@@ -148,9 +148,11 @@ const WalletInfoSection = ({
     openModal({
       title: strings.txReview.walletBalance.title,
       content: (
-        <WalletBalance image={seedImage} plate={plate} name={meta.name} />
+        <Modal.Content>
+          <WalletBalance image={seedImage} plate={plate} name={meta.name} />
+        </Modal.Content>
       ),
-      height: windowHeight * 0.8,
+      height: windowHeight * 0.7,
     })
   }
 
@@ -627,7 +629,7 @@ const Details = ({details}: {details?: ReviewDetailsProps}) => {
   const handleOnPress = () => {
     openModal({
       title: details.title ?? '',
-      content: <View style={[a.flex_1]}>{details.component}</View>,
+      content: <Modal.Content>{details.component}</Modal.Content>,
       height: details.height ?? 400,
     })
   }
