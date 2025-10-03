@@ -4,7 +4,7 @@ import {normalizeToAddress} from '@emurgo/yoroi-lib/dist/internals/utils/address
 import * as React from 'react'
 
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {CardanoMobile} from '~/wallets/wallets'
+import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
 
 import {AddressErrorInvalid, AddressErrorWrongNetwork} from './errors'
 
@@ -38,7 +38,9 @@ export const useSendAddress = () => {
 // NOTE: should be a wallet function from address manager
 const validateAddress = (address: string, chainId: number) => {
   try {
-    const chainAddress = normalizeToAddress(CardanoMobile, address)
+    const chainAddress = CardanoMobileWrapped.cslScope((csl) => {
+      return normalizeToAddress(csl, address)
+    })
     if (!chainAddress) throw new AddressErrorInvalid()
 
     const chainAddressChainId = chainAddress.networkId()

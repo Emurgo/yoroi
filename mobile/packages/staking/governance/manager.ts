@@ -4,13 +4,13 @@ import {WasmModuleProxy, freeContext} from '@emurgo/cross-csl-core'
 
 import {CardanoTypes} from '../types'
 import {GovernanceApi} from './api'
-import {convertHexKeyHashToBech32Format, parseDrepId} from './helpers'
+import {parseDrepId} from './helpers'
 import {StakingKeyState} from './types'
 
 export type Config = {
   network: Chain.SupportedNetworks
   walletId: string
-  cardano: CardanoTypes.Wasm
+  cardano?: CardanoTypes.Wasm
   cslFactory?: (scope: string) => WasmModuleProxy
   storage: App.Storage
   api: GovernanceApi
@@ -67,6 +67,9 @@ export type GovernanceManager = {
 
   getStakingKeyState: (stakeKeyHash: string) => Promise<StakingKeyState>
   convertHexKeyHashToBech32Format: (hexKeyHash: string) => string
+
+  // Cleanup method to free CSL resources
+  cleanup: () => void
 }
 
 export const governanceManagerMaker = (config: Config): GovernanceManager => {
@@ -75,32 +78,25 @@ export const governanceManagerMaker = (config: Config): GovernanceManager => {
 
 class Manager implements GovernanceManager {
   readonly network: Chain.Network
+  private persistentCsl: WasmModuleProxy | null = null
+  private persistentScopeId: string | null = null
+
   constructor(private config: Config) {
     this.network = config.network
   }
 
-  private withCslScope<T>(callback: (csl: WasmModuleProxy) => T): T {
-    // Priority: use cslFactory if provided, otherwise fall back to cardano
-    if (this.config.cslFactory) {
-      const cslScopeId = String(Math.random())
-      const csl = this.config.cslFactory(cslScopeId)
-      try {
-        return callback(csl)
-      } finally {
-        freeContext(cslScopeId)
-      }
-    } else {
-      // Backward compatibility: use the cardano instance directly
-      return callback(this.config.cardano)
+  private getPersistentCsl(): WasmModuleProxy {
+    if (!this.persistentCsl && this.config.cslFactory) {
+      this.persistentScopeId = `governance-${Date.now()}-${Math.random()}`
+      this.persistentCsl = this.config.cslFactory(this.persistentScopeId)
     }
+    return this.persistentCsl || this.config.cardano!
   }
 
   convertHexKeyHashToBech32Format(hexKeyHash: string): string {
-    return convertHexKeyHashToBech32Format(
-      hexKeyHash,
-      this.config.cardano,
-      this.config.cslFactory,
-    )
+    const csl = this.getPersistentCsl()
+    const keyHash = csl.Ed25519KeyHash.fromHex(hexKeyHash)
+    return keyHash.toBech32('drep')
   }
 
   async getStakingKeyState(stakeKeyHash: string) {
@@ -140,58 +136,47 @@ class Manager implements GovernanceManager {
     type: 'script' | 'key',
     stakingKey: CardanoTypes.PublicKey,
   ): CardanoTypes.Certificate {
-    const certificateBytes = this.withCslScope((csl) => {
-      const {
-        Certificate,
-        Ed25519KeyHash,
-        Credential,
-        VoteDelegation,
-        DRep,
-        ScriptHash,
-      } = csl
+    const csl = this.getPersistentCsl()
+    const {
+      Certificate,
+      Ed25519KeyHash,
+      Credential,
+      VoteDelegation,
+      DRep,
+      ScriptHash,
+    } = csl
 
-      const stakingCredential = Credential.fromKeyhash(stakingKey.hash())
+    const stakingCredential = Credential.fromKeyhash(stakingKey.hash())
 
-      const votingDelegation =
-        type === 'key'
-          ? DRep.newKeyHash(Ed25519KeyHash.fromBytes(Buffer.from(hash, 'hex')))
-          : DRep.newScriptHash(ScriptHash.fromBytes(Buffer.from(hash, 'hex')))
+    const votingDelegation =
+      type === 'key'
+        ? DRep.newKeyHash(Ed25519KeyHash.fromBytes(Buffer.from(hash, 'hex')))
+        : DRep.newScriptHash(ScriptHash.fromBytes(Buffer.from(hash, 'hex')))
 
-      const certificate = Certificate.newVoteDelegation(
-        VoteDelegation.new(stakingCredential, votingDelegation),
-      )
+    const certificate = Certificate.newVoteDelegation(
+      VoteDelegation.new(stakingCredential, votingDelegation),
+    )
 
-      return certificate.toBytes()
-    })
-
-    return this.config.cardano.Certificate.fromBytes(certificateBytes)
+    return certificate
   }
 
   createStakeRegistrationCertificate(
     stakingKey: CardanoTypes.PublicKey,
   ): CardanoTypes.Certificate {
-    const certificateBytes = this.withCslScope((csl) => {
-      const {Certificate, Credential, StakeRegistration} = csl
+    const csl = this.getPersistentCsl()
+    const {Certificate, Credential, StakeRegistration} = csl
 
-      const stakingCredential = Credential.fromKeyhash(stakingKey.hash())
+    const stakingCredential = Credential.fromKeyhash(stakingKey.hash())
 
-      const certificate = Certificate.newStakeRegistration(
-        StakeRegistration.new(stakingCredential),
-      )
+    const certificate = Certificate.newStakeRegistration(
+      StakeRegistration.new(stakingCredential),
+    )
 
-      return certificate.toBytes()
-    })
-
-    return this.config.cardano.Certificate.fromBytes(certificateBytes)
+    return certificate
   }
 
   async validateDRepID(drepId: string): Promise<boolean> {
-    const hash = parseDrepId(
-      drepId,
-      this.config.cardano,
-      this.config.cslFactory,
-    ).hash
-
+    const {hash} = this.parseDrepId(drepId)
     const drepStatus = await this.config.api.getDRepById(hash)
 
     if (!drepStatus || !drepStatus.epoch) {
@@ -206,11 +191,7 @@ class Manager implements GovernanceManager {
     hash: string
     isValid: boolean
   }> {
-    const parsed = parseDrepId(
-      drepId,
-      this.config.cardano,
-      this.config.cslFactory,
-    )
+    const parsed = this.parseDrepId(drepId)
 
     try {
       const drepStatus = await this.config.api.getDRepById(parsed.hash)
@@ -219,6 +200,11 @@ class Manager implements GovernanceManager {
     } catch (error) {
       return {...parsed, isValid: false}
     }
+  }
+
+  private parseDrepId(drepId: string) {
+    const csl = this.getPersistentCsl()
+    return parseDrepId(drepId, csl)
   }
 
   async createLedgerDelegationPayload(
@@ -233,28 +219,25 @@ class Manager implements GovernanceManager {
     vote: VoteKind,
     stakingKey: CardanoTypes.PublicKey,
   ): CardanoTypes.Certificate {
-    const certificateBytes = this.withCslScope((csl) => {
-      const {Certificate, Credential, VoteDelegation, DRep} = csl
+    const csl = this.getPersistentCsl()
+    const {Certificate, Credential, VoteDelegation, DRep} = csl
 
-      const stakingCredential = Credential.fromKeyhash(stakingKey.hash())
+    const stakingCredential = Credential.fromKeyhash(stakingKey.hash())
 
-      let certificate: CardanoTypes.Certificate
-      if (vote === 'abstain') {
-        certificate = Certificate.newVoteDelegation(
-          VoteDelegation.new(stakingCredential, DRep.newAlwaysAbstain()),
-        )
-      } else if (vote === 'no-confidence') {
-        certificate = Certificate.newVoteDelegation(
-          VoteDelegation.new(stakingCredential, DRep.newAlwaysNoConfidence()),
-        )
-      } else {
-        throw new Error('Invalid vote')
-      }
+    let certificate: CardanoTypes.Certificate
+    if (vote === 'abstain') {
+      certificate = Certificate.newVoteDelegation(
+        VoteDelegation.new(stakingCredential, DRep.newAlwaysAbstain()),
+      )
+    } else if (vote === 'no-confidence') {
+      certificate = Certificate.newVoteDelegation(
+        VoteDelegation.new(stakingCredential, DRep.newAlwaysNoConfidence()),
+      )
+    } else {
+      throw new Error('Invalid vote')
+    }
 
-      return certificate.toBytes()
-    })
-
-    return this.config.cardano.Certificate.fromBytes(certificateBytes)
+    return certificate
   }
 
   async createLedgerVotingPayload(
@@ -285,6 +268,18 @@ class Manager implements GovernanceManager {
         .getItem(LATEST_ACTION_KEY)
     } catch {
       return null
+    }
+  }
+
+  cleanup(): void {
+    if (this.persistentScopeId) {
+      try {
+        freeContext(this.persistentScopeId)
+      } catch (e) {
+        // Ignore cleanup errors
+      }
+      this.persistentCsl = null
+      this.persistentScopeId = null
     }
   }
 }

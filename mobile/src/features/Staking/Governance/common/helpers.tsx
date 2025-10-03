@@ -18,7 +18,6 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {InfoBanner} from '~/ui/InfoBanner/InfoBanner'
 import {YoroiUnsignedTx} from '~/wallets/types/yoroi'
-import {CardanoMobile} from '~/wallets/wallets'
 
 import {GovernanceVote} from '../types'
 import {useNavigateTo} from './navigation'
@@ -88,7 +87,6 @@ export const useGovernanceManagerMaker = () => {
         walletId,
         network,
         api: governanceApiMaker({network}),
-        cardano: CardanoMobile,
         cslFactory,
         storage: governanceStorage,
       }),
@@ -105,6 +103,7 @@ export const useGovernanceActions = () => {
   )
   const {navigateToTxReview} = useWalletNavigation()
   const strings = useStrings()
+  const manager = useGovernanceManagerMaker()
 
   const handleDelegateAction = ({
     hash,
@@ -129,6 +128,8 @@ export const useGovernanceActions = () => {
           type,
           txID: args.signedTx.signedTx.id,
         })
+        // Cleanup CSL resources after successful transaction
+        manager.cleanup()
       },
       onNotSupportedCIP1694: navigateTo.notSupportedVersion,
       ...(CIP105
@@ -157,6 +158,8 @@ export const useGovernanceActions = () => {
           vote: 'abstain',
           txID: args?.signedTx.signedTx.id,
         })
+        // Cleanup CSL resources after successful transaction
+        manager.cleanup()
       },
       onNotSupportedCIP1694: navigateTo.notSupportedVersion,
     })
@@ -178,6 +181,8 @@ export const useGovernanceActions = () => {
           vote: 'no-confidence',
           txID: args?.signedTx.signedTx.id,
         })
+        // Cleanup CSL resources after successful transaction
+        manager.cleanup()
       },
       onNotSupportedCIP1694: navigateTo.notSupportedVersion,
     })
