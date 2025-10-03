@@ -10,7 +10,6 @@ import {
 } from '@yoroi/staking'
 import {ThemedPalette, atoms as a, useTheme} from '@yoroi/theme'
 
-import {NotEnoughMoneyToSendError} from '@emurgo/yoroi-lib/dist/errors'
 import {useFocusEffect} from '@react-navigation/native'
 import * as React from 'react'
 import {Text, View} from 'react-native'
@@ -20,7 +19,6 @@ import {useRemoteConfig} from '~/features/RemoteConfig/hooks/useRemoteConfig'
 import {LearnMoreLink} from '~/features/Staking/Governance/common/LearnMoreLink/LearnMoreLink'
 import {YoroiRecordLink} from '~/features/Staking/Governance/common/YoroiRecordLink/YoroiRecordLink'
 import {formatDrepHashToCIP129Format} from '~/features/Staking/Governance/common/drep'
-import {useCreateGovernanceTx} from '~/features/Staking/hooks/useCreateGovernanceTx'
 import {useStakingInfo} from '~/features/Staking/hooks/useStakingInfo'
 import {useStakingKey} from '~/features/Staking/hooks/useStakingKey'
 import {useTransactionInfos} from '~/features/Transactions/hooks/useTransactionInfos'
@@ -33,11 +31,9 @@ import {Space} from '~/ui/Space/Space'
 import {TransactionInfo} from '~/wallets/types/other'
 
 import {Action} from '../../common/Action/Action'
-import {
-  mapStakingKeyStateToGovernanceAction,
-  useGovernanceActions,
-} from '../../common/helpers'
+import {mapStakingKeyStateToGovernanceAction} from '../../common/helpers'
 import {useNavigateTo} from '../../common/navigation'
+import {useGovernanceTransaction} from '../../common/useGovernanceTransaction'
 import {GovernanceVote} from '../../types'
 import {EnterDrepIdModal} from '../EnterDrepIdModal/EnterDrepIdModal'
 
@@ -259,7 +255,6 @@ const NeverParticipatedInGovernanceVariant = () => {
   const isYoroiDrepBannerEnabled = config?.banners?.yoroiDrep?.display ?? false
   const strings = useStrings()
   const {atoms: ta} = useTheme()
-  const navigateTo = useNavigateTo()
   const {wallet, meta} = useSelectedWallet()
   const {manager} = useGovernance()
   const {openModal} = useModal()
@@ -272,7 +267,7 @@ const NeverParticipatedInGovernanceVariant = () => {
     | 'delegate-not-yoroi'
     | null
   >(null)
-  const governanceActions = useGovernanceActions()
+  const governanceTransaction = useGovernanceTransaction(wallet)
 
   useFocusEffect(
     React.useCallback(() => {
@@ -286,18 +281,6 @@ const NeverParticipatedInGovernanceVariant = () => {
 
   const createDelegationCertificate = useDelegationCertificate()
   const createVotingCertificate = useVotingCertificate()
-
-  const createGovernanceTxMutation = useCreateGovernanceTx(wallet, {
-    shouldThrow: false,
-    onError: (error) => {
-      if (error instanceof NotEnoughMoneyToSendError) {
-        navigateTo.noFunds()
-      } else {
-        // Re-throw other errors to trigger error boundary
-        throw error
-      }
-    },
-  })
 
   const openDRepIdModal = (
     onSubmit: (options: {
@@ -336,19 +319,7 @@ const NeverParticipatedInGovernanceVariant = () => {
       const certs =
         stakeCert !== null ? [stakeCert, certificate] : [certificate]
 
-      createGovernanceTxMutation.resolve({
-        certificates: certs,
-        addressMode: meta.addressMode,
-      })
-
-      if (createGovernanceTxMutation.value) {
-        governanceActions.handleDelegateAction({
-          unsignedTx: createGovernanceTxMutation.value,
-          hash: options.hash,
-          type: options.type,
-          CIP105: options.CIP105,
-        })
-      }
+      governanceTransaction.submitDelegation(options, certs, meta.addressMode)
     })
   }
 
@@ -367,19 +338,12 @@ const NeverParticipatedInGovernanceVariant = () => {
       : null
     const certs = stakeCert !== null ? [stakeCert, certificate] : [certificate]
 
-    createGovernanceTxMutation.resolve({
-      certificates: certs,
-      addressMode: meta.addressMode,
-    })
-
-    if (createGovernanceTxMutation.value) {
-      governanceActions.handleDelegateAction({
-        unsignedTx: createGovernanceTxMutation.value,
-        hash: GOVERNANCE_YOROI_DREP_ID_HEX,
-        type: 'key',
-        CIP105: false,
-      })
+    const options = {
+      hash: GOVERNANCE_YOROI_DREP_ID_HEX,
+      type: 'key' as const,
+      CIP105: false,
     }
+    governanceTransaction.submitDelegation(options, certs, meta.addressMode)
   }
 
   const handleAbstain = () => {
@@ -395,16 +359,7 @@ const NeverParticipatedInGovernanceVariant = () => {
       : null
     const certs = stakeCert !== null ? [stakeCert, certificate] : [certificate]
 
-    createGovernanceTxMutation.resolve({
-      certificates: certs,
-      addressMode: meta.addressMode,
-    })
-
-    if (createGovernanceTxMutation.value) {
-      governanceActions.handleAbstainAction({
-        unsignedTx: createGovernanceTxMutation.value,
-      })
-    }
+    governanceTransaction.submitVote('abstain', certs, meta.addressMode)
   }
 
   const handleNoConfidence = () => {
@@ -420,19 +375,10 @@ const NeverParticipatedInGovernanceVariant = () => {
       : null
     const certs = stakeCert !== null ? [stakeCert, certificate] : [certificate]
 
-    createGovernanceTxMutation.resolve({
-      certificates: certs,
-      addressMode: meta.addressMode,
-    })
-
-    if (createGovernanceTxMutation.value) {
-      governanceActions.handleNoConfidenceAction({
-        unsignedTx: createGovernanceTxMutation.value,
-      })
-    }
+    governanceTransaction.submitVote('no-confidence', certs, meta.addressMode)
   }
 
-  const isCreatingTx = createGovernanceTxMutation.isPending
+  const isCreatingTx = governanceTransaction.isCreatingTx
 
   return (
     <ScrollView style={[a.px_lg, a.flex_1, ta.bg_color_max]}>

@@ -1,70 +1,92 @@
+import {WasmModuleProxy, freeContext} from '@emurgo/cross-csl-core'
 import {bech32 as bech32Module} from 'bech32'
 
 import {CardanoTypes} from '../../types'
 
+const withCslScope = <T>(
+  cardano: CardanoTypes.Wasm,
+  cslFactory: ((scope: string) => WasmModuleProxy) | undefined,
+  callback: (csl: WasmModuleProxy) => T,
+): T => {
+  if (cslFactory) {
+    const cslScopeId = String(Math.random())
+    const csl = cslFactory(cslScopeId)
+    try {
+      return callback(csl)
+    } finally {
+      freeContext(cslScopeId)
+    }
+  } else {
+    return callback(cardano)
+  }
+}
+
 export const parseDrepId = (
   drepId: string,
   cardano: CardanoTypes.Wasm,
+  cslFactory?: (scope: string) => WasmModuleProxy,
 ): {type: 'key'; hash: string} | {type: 'script'; hash: string} => {
-  const isPotentiallyValidHex = /^(22|23)[0-9a-fA-F]{56}$/.test(drepId)
+  return withCslScope(cardano, cslFactory, (csl) => {
+    const isPotentiallyValidHex = /^(22|23)[0-9a-fA-F]{56}$/.test(drepId)
 
-  if (drepId.startsWith('drep_vkh1') && isValidBech32KeyHash(drepId, cardano)) {
-    return {
-      type: 'key',
-      hash: convertBech32KeyHashToHex(drepId, cardano),
+    if (drepId.startsWith('drep_vkh1') && isValidBech32KeyHash(drepId, csl)) {
+      return {
+        type: 'key',
+        hash: convertBech32KeyHashToHex(drepId, csl),
+      }
     }
-  }
 
-  if (drepId.startsWith('drep1') && isValidBech32KeyHash(drepId, cardano)) {
-    return {
-      type: 'key',
-      hash: convertBech32KeyHashToHex(drepId, cardano),
+    if (drepId.startsWith('drep1') && isValidBech32KeyHash(drepId, csl)) {
+      return {
+        type: 'key',
+        hash: convertBech32KeyHashToHex(drepId, csl),
+      }
     }
-  }
 
-  if (
-    drepId.startsWith('drep_script1') &&
-    isValidBech32ScriptHash(drepId, cardano)
-  ) {
-    return {
-      type: 'script',
-      hash: convertBech32ScriptHashToHex(drepId, cardano),
+    if (
+      drepId.startsWith('drep_script1') &&
+      isValidBech32ScriptHash(drepId, csl)
+    ) {
+      return {
+        type: 'script',
+        hash: convertBech32ScriptHashToHex(drepId, csl),
+      }
     }
-  }
 
-  if (drepId.startsWith('drep1') && drepId.length === 58) {
-    const base32Parsed = base32ToHex(drepId)
-    if (!base32Parsed) {
-      throw new Error('Invalid key DRep ID. Must have 58 hex characters')
+    if (drepId.startsWith('drep1') && drepId.length === 58) {
+      const base32Parsed = base32ToHex(drepId)
+      if (!base32Parsed) {
+        throw new Error('Invalid key DRep ID. Must have 58 hex characters')
+      }
+      return parseDrepId(base32Parsed, cardano, cslFactory)
     }
-    return parseDrepId(base32Parsed, cardano)
-  }
 
-  if (
-    isPotentiallyValidHex &&
-    drepId.startsWith('22') &&
-    isValidHexKeyHash(drepId.substr(2), cardano)
-  ) {
-    return {
-      type: 'key',
-      hash: drepId.substr(2),
+    if (
+      isPotentiallyValidHex &&
+      drepId.startsWith('22') &&
+      isValidHexKeyHash(drepId.substr(2), csl)
+    ) {
+      return {
+        type: 'key',
+        hash: drepId.substr(2),
+      }
     }
-  }
 
-  if (
-    isPotentiallyValidHex &&
-    drepId.startsWith('23') &&
-    isValidHexScriptHash(drepId.substr(2), cardano)
-  ) {
-    return {
-      type: 'script',
-      hash: drepId.substr(2),
+    if (
+      isPotentiallyValidHex &&
+      drepId.startsWith('23') &&
+      isValidHexScriptHash(drepId.substr(2), csl)
+    ) {
+      return {
+        type: 'script',
+        hash: drepId.substr(2),
+      }
     }
-  }
 
-  throw new Error(
-    'Invalid DRep ID. Must have a valid key or script bech32 format',
-  )
+    throw new Error(
+      'Invalid DRep ID. Must have a valid key or script bech32 format',
+    )
+  })
 }
 
 const isValidBech32KeyHash = (
@@ -134,9 +156,12 @@ const convertBech32ScriptHashToHex = (
 export const convertHexKeyHashToBech32Format = (
   drepId: string,
   cardano: CardanoTypes.Wasm,
+  cslFactory?: (scope: string) => WasmModuleProxy,
 ): string => {
-  const keyHash = cardano.Ed25519KeyHash.fromHex(drepId)
-  return keyHash.toBech32('drep')
+  return withCslScope(cardano, cslFactory, (csl) => {
+    const keyHash = csl.Ed25519KeyHash.fromHex(drepId)
+    return keyHash.toBech32('drep')
+  })
 }
 
 const base32ToHex = (base32: string): string | null => {

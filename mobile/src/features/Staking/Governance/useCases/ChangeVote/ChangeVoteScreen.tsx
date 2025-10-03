@@ -16,7 +16,6 @@ import {ScrollView} from 'react-native-gesture-handler'
 import {useRemoteConfig} from '~/features/RemoteConfig/hooks/useRemoteConfig'
 import {LearnMoreLink} from '~/features/Staking/Governance/common/LearnMoreLink/LearnMoreLink'
 import {YoroiRecordLink} from '~/features/Staking/Governance/common/YoroiRecordLink/YoroiRecordLink'
-import {useCreateGovernanceTx} from '~/features/Staking/hooks/useCreateGovernanceTx'
 import {useStakingKey} from '~/features/Staking/hooks/useStakingKey'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
@@ -24,10 +23,8 @@ import {useModal} from '~/ui/Modal/ModalContext'
 import {Space} from '~/ui/Space/Space'
 
 import {Action} from '../../common/Action/Action'
-import {
-  mapStakingKeyStateToGovernanceAction,
-  useGovernanceActions,
-} from '../../common/helpers'
+import {mapStakingKeyStateToGovernanceAction} from '../../common/helpers'
+import {useGovernanceTransaction} from '../../common/useGovernanceTransaction'
 import {EnterDrepIdModal} from '../EnterDrepIdModal/EnterDrepIdModal'
 
 export const ChangeVoteScreen = () => {
@@ -50,38 +47,10 @@ export const ChangeVoteScreen = () => {
     | 'delegate-not-yoroi'
     | null
   >(null)
-  const governanceActions = useGovernanceActions()
+  const governanceTransaction = useGovernanceTransaction(wallet)
 
   const createDelegationCertificate = useDelegationCertificate()
   const createVotingCertificate = useVotingCertificate()
-
-  const createGovernanceTxMutation = useCreateGovernanceTx(wallet)
-  const [pendingDelegateOptions, setPendingDelegateOptions] = React.useState<{
-    hash: string
-    type: 'key' | 'script'
-    CIP105: boolean
-  } | null>(null)
-
-  React.useEffect(() => {
-    if (
-      pendingDelegateOptions &&
-      createGovernanceTxMutation.value &&
-      !createGovernanceTxMutation.isPending
-    ) {
-      governanceActions.handleDelegateAction({
-        unsignedTx: createGovernanceTxMutation.value,
-        hash: pendingDelegateOptions.hash,
-        type: pendingDelegateOptions.type,
-        CIP105: pendingDelegateOptions.CIP105,
-      })
-      setPendingDelegateOptions(null)
-    }
-  }, [
-    pendingDelegateOptions,
-    createGovernanceTxMutation.value,
-    createGovernanceTxMutation.isPending,
-    governanceActions,
-  ])
 
   if (!isNonNullable(action)) throw new Error('User has never voted')
 
@@ -104,102 +73,80 @@ export const ChangeVoteScreen = () => {
   }
 
   const handleDelegate = () => {
-    openDRepIdModal(async (options) => {
+    openDRepIdModal((options) => {
       const stakingKey = wallet.getStakingKey()
 
       setPendingVote('delegate-not-yoroi')
 
-      const certificate = await createDelegationCertificate({
+      const certificate = createDelegationCertificate({
         hash: options.hash,
         type: options.type,
         stakingKey,
       })
 
-      setPendingDelegateOptions({
-        hash: options.hash,
-        type: options.type,
-        CIP105: options.CIP105,
-      })
-
-      createGovernanceTxMutation.resolve({
-        certificates: [certificate],
-        addressMode: meta.addressMode,
-      })
+      governanceTransaction.submitDelegation(
+        options,
+        [certificate],
+        meta.addressMode,
+      )
     })
   }
 
-  const handleDelegateToYoroi = async () => {
+  const handleDelegateToYoroi = () => {
     const stakingKey = wallet.getStakingKey()
 
     setPendingVote('delegate-to-yoroi')
 
-    const certificate = await createDelegationCertificate({
+    const certificate = createDelegationCertificate({
       hash: GOVERNANCE_YOROI_DREP_ID_HEX,
       type: 'key',
       stakingKey,
     })
 
-    createGovernanceTxMutation.resolve({
-      certificates: [certificate],
-      addressMode: meta.addressMode,
-    })
-
-    if (createGovernanceTxMutation.value) {
-      governanceActions.handleDelegateAction({
-        unsignedTx: createGovernanceTxMutation.value,
-        hash: GOVERNANCE_YOROI_DREP_ID_HEX,
-        type: 'key',
-        CIP105: false,
-      })
+    const options = {
+      hash: GOVERNANCE_YOROI_DREP_ID_HEX,
+      type: 'key' as const,
+      CIP105: false,
     }
+    governanceTransaction.submitDelegation(
+      options,
+      [certificate],
+      meta.addressMode,
+    )
   }
 
-  const handleAbstain = async () => {
+  const handleAbstain = () => {
     const stakingKey = wallet.getStakingKey()
     setPendingVote('abstain')
 
-    const certificate = await createVotingCertificate({
+    const certificate = createVotingCertificate({
       vote: 'abstain',
       stakingKey,
     })
 
-    createGovernanceTxMutation.resolve({
-      certificates: [certificate],
-      addressMode: meta.addressMode,
-    })
-
-    if (createGovernanceTxMutation.value) {
-      governanceActions.handleAbstainAction({
-        unsignedTx: createGovernanceTxMutation.value,
-      })
-    }
+    governanceTransaction.submitVote('abstain', [certificate], meta.addressMode)
   }
 
-  const handleNoConfidence = async () => {
+  const handleNoConfidence = () => {
     const stakingKey = wallet.getStakingKey()
     setPendingVote('no-confidence')
 
-    const certificate = await createVotingCertificate({
+    const certificate = createVotingCertificate({
       vote: 'no-confidence',
       stakingKey,
     })
 
-    createGovernanceTxMutation.resolve({
-      certificates: [certificate],
-      addressMode: meta.addressMode,
-    })
-
-    if (createGovernanceTxMutation.value) {
-      governanceActions.handleNoConfidenceAction({
-        unsignedTx: createGovernanceTxMutation.value,
-      })
-    }
+    governanceTransaction.submitVote(
+      'no-confidence',
+      [certificate],
+      meta.addressMode,
+    )
   }
 
   const voteKind = action?.kind
   const voteHash =
     voteKind === 'delegate' && action != null ? action.hash : undefined
-  const isCreatingTx = createGovernanceTxMutation.isPending
+  const isCreatingTx = governanceTransaction.isCreatingTx
   const isDelegatingNotToYoroiDrep =
     voteKind === 'delegate' && voteHash !== GOVERNANCE_YOROI_DREP_ID_HEX
 

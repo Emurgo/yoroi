@@ -34,6 +34,11 @@ export type GovernanceAction =
 export type GovernanceManager = {
   readonly network: Chain.Network
   validateDRepID: (drepID: string) => Promise<boolean>
+  validateAndParseDRepID: (drepID: string) => Promise<{
+    type: 'key' | 'script'
+    hash: string
+    isValid: boolean
+  }>
   createDelegationCertificate: (
     hash: string,
     type: 'script' | 'key',
@@ -91,9 +96,11 @@ class Manager implements GovernanceManager {
   }
 
   convertHexKeyHashToBech32Format(hexKeyHash: string): string {
-    return this.withCslScope((csl) => {
-      return convertHexKeyHashToBech32Format(hexKeyHash, csl)
-    })
+    return convertHexKeyHashToBech32Format(
+      hexKeyHash,
+      this.config.cardano,
+      this.config.cslFactory,
+    )
   }
 
   async getStakingKeyState(stakeKeyHash: string) {
@@ -133,7 +140,7 @@ class Manager implements GovernanceManager {
     type: 'script' | 'key',
     stakingKey: CardanoTypes.PublicKey,
   ): CardanoTypes.Certificate {
-    return this.withCslScope((csl) => {
+    const certificateBytes = this.withCslScope((csl) => {
       const {
         Certificate,
         Ed25519KeyHash,
@@ -150,30 +157,40 @@ class Manager implements GovernanceManager {
           ? DRep.newKeyHash(Ed25519KeyHash.fromBytes(Buffer.from(hash, 'hex')))
           : DRep.newScriptHash(ScriptHash.fromBytes(Buffer.from(hash, 'hex')))
 
-      return Certificate.newVoteDelegation(
+      const certificate = Certificate.newVoteDelegation(
         VoteDelegation.new(stakingCredential, votingDelegation),
       )
+
+      return certificate.toBytes()
     })
+
+    return this.config.cardano.Certificate.fromBytes(certificateBytes)
   }
 
   createStakeRegistrationCertificate(
     stakingKey: CardanoTypes.PublicKey,
   ): CardanoTypes.Certificate {
-    return this.withCslScope((csl) => {
+    const certificateBytes = this.withCslScope((csl) => {
       const {Certificate, Credential, StakeRegistration} = csl
 
       const stakingCredential = Credential.fromKeyhash(stakingKey.hash())
 
-      return Certificate.newStakeRegistration(
+      const certificate = Certificate.newStakeRegistration(
         StakeRegistration.new(stakingCredential),
       )
+
+      return certificate.toBytes()
     })
+
+    return this.config.cardano.Certificate.fromBytes(certificateBytes)
   }
 
   async validateDRepID(drepId: string): Promise<boolean> {
-    const hash = this.withCslScope((csl) => {
-      return parseDrepId(drepId, csl).hash
-    })
+    const hash = parseDrepId(
+      drepId,
+      this.config.cardano,
+      this.config.cslFactory,
+    ).hash
 
     const drepStatus = await this.config.api.getDRepById(hash)
 
@@ -182,6 +199,26 @@ class Manager implements GovernanceManager {
     }
 
     return true
+  }
+
+  async validateAndParseDRepID(drepId: string): Promise<{
+    type: 'key' | 'script'
+    hash: string
+    isValid: boolean
+  }> {
+    const parsed = parseDrepId(
+      drepId,
+      this.config.cardano,
+      this.config.cslFactory,
+    )
+
+    try {
+      const drepStatus = await this.config.api.getDRepById(parsed.hash)
+      const isValid = !!(drepStatus && drepStatus.epoch)
+      return {...parsed, isValid}
+    } catch (error) {
+      return {...parsed, isValid: false}
+    }
   }
 
   async createLedgerDelegationPayload(
@@ -196,25 +233,28 @@ class Manager implements GovernanceManager {
     vote: VoteKind,
     stakingKey: CardanoTypes.PublicKey,
   ): CardanoTypes.Certificate {
-    return this.withCslScope((csl) => {
+    const certificateBytes = this.withCslScope((csl) => {
       const {Certificate, Credential, VoteDelegation, DRep} = csl
 
       const stakingCredential = Credential.fromKeyhash(stakingKey.hash())
 
+      let certificate: CardanoTypes.Certificate
       if (vote === 'abstain') {
-        return Certificate.newVoteDelegation(
+        certificate = Certificate.newVoteDelegation(
           VoteDelegation.new(stakingCredential, DRep.newAlwaysAbstain()),
         )
-      }
-
-      if (vote === 'no-confidence') {
-        return Certificate.newVoteDelegation(
+      } else if (vote === 'no-confidence') {
+        certificate = Certificate.newVoteDelegation(
           VoteDelegation.new(stakingCredential, DRep.newAlwaysNoConfidence()),
         )
+      } else {
+        throw new Error('Invalid vote')
       }
 
-      throw new Error('Invalid vote')
+      return certificate.toBytes()
     })
+
+    return this.config.cardano.Certificate.fromBytes(certificateBytes)
   }
 
   async createLedgerVotingPayload(
