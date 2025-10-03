@@ -12,7 +12,7 @@ import {ThemedPalette, atoms as a, useTheme} from '@yoroi/theme'
 
 import {NotEnoughMoneyToSendError} from '@emurgo/yoroi-lib/dist/errors'
 import {useFocusEffect} from '@react-navigation/native'
-import React, {type ReactNode} from 'react'
+import * as React from 'react'
 import {Text, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
@@ -233,7 +233,7 @@ const ParticipatingInGovernanceVariant = ({
 
 const formattingOptions = (p: ThemedPalette) => {
   return {
-    b: (text: ReactNode) => {
+    b: (text: React.ReactNode) => {
       return (
         <Text
           style={[
@@ -246,7 +246,7 @@ const formattingOptions = (p: ThemedPalette) => {
         </Text>
       )
     },
-    textComponent: (text: ReactNode) => (
+    textComponent: (text: React.ReactNode) => (
       <Text style={[a.body_1_lg_regular, {color: p.text_gray_medium}]}>
         {text}
       </Text>

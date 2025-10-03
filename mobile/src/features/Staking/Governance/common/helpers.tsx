@@ -7,6 +7,7 @@ import {
   useUpdateLatestGovernanceAction,
 } from '@yoroi/staking'
 
+import {init} from '@emurgo/cross-csl-mobile'
 import * as React from 'react'
 
 import {useReviewTx} from '~/features/ReviewTx/common/ReviewTxProvider'
@@ -77,6 +78,10 @@ export const useGovernanceManagerMaker = () => {
     `wallet/${walletId}/staking-governance/`,
   )
 
+  const cslFactory = React.useCallback((scope: string) => {
+    return init(scope)
+  }, [])
+
   return React.useMemo(
     () =>
       governanceManagerMaker({
@@ -84,9 +89,10 @@ export const useGovernanceManagerMaker = () => {
         network,
         api: governanceApiMaker({network}),
         cardano: CardanoMobile,
+        cslFactory,
         storage: governanceStorage,
       }),
-    [governanceStorage, network, walletId],
+    [governanceStorage, network, walletId, cslFactory],
   )
 }
 
