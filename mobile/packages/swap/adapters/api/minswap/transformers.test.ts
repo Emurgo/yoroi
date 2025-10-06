@@ -486,7 +486,7 @@ describe('transformersMaker', () => {
       const result = transformers.estimate.response(mockResponse)
 
       // The default case should return Swap.Protocol.Unsupported
-      expect(result.splits[0].protocol).toBe('unsupported')
+      expect(result.splits[0]?.protocol).toBe('unsupported')
     })
 
     it('should handle all Dex protocol mappings in mapDexToProtocol', () => {
@@ -572,7 +572,7 @@ describe('transformersMaker', () => {
         }
 
         const result = transformers.estimate.response(mockResponse)
-        expect(result.splits[0].protocol).toBe(expected)
+        expect(result.splits[0]?.protocol).toBe(expected)
       })
     })
   })
@@ -764,9 +764,9 @@ describe('transformersMaker', () => {
       const result = transformers.tokens.response(mockResponse)
 
       expect(result).toHaveLength(1)
-      expect(result[0].name).toBe('Unknown Token')
-      expect(result[0].ticker).toBe('')
-      expect(result[0].decimals).toBe(0)
+      expect(result[0]?.name).toBe('Unknown Token')
+      expect(result[0]?.ticker).toBe('')
+      expect(result[0]?.decimals).toBe(0)
     })
 
     it('should handle zero amounts in estimate response', () => {
@@ -810,8 +810,8 @@ describe('transformersMaker', () => {
       expect(result.totalInput).toBe(0)
       expect(result.totalOutput).toBe(0)
       expect(result.netPrice).toBe(0)
-      expect(result.splits[0].initialPrice).toBe(0)
-      expect(result.splits[0].finalPrice).toBe(0)
+      expect(result.splits[0]?.initialPrice).toBe(0)
+      expect(result.splits[0]?.finalPrice).toBe(0)
     })
   })
 })
