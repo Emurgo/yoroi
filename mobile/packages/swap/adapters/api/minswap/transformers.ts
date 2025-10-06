@@ -188,8 +188,8 @@ export const transformersMaker = (config: MinswapApiConfig) => {
                   amountIn: Number(order.amount_in),
                   actualAmountOut: Number(order.min_amount_out),
                   expectedAmountOut: Number(order.min_amount_out),
-                  txHash: order.tx_in.split('#')[0],
-                  outputIndex: parseInt(order.tx_in.split('#')[1], 10),
+                  txHash: order.tx_in.split('#')[0]!,
+                  outputIndex: parseInt(order.tx_in.split('#')[1]!, 10),
                   updateTxHash: undefined, // Minswap only returns pending orders
                   customId: undefined,
                 } satisfies Swap.Order,
