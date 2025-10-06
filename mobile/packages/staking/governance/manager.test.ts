@@ -25,7 +25,6 @@ describe('createGovernanceManager', () => {
     walletId: 'walletId',
     network,
     cardano,
-    cslFactory: (scope: string) => init(scope),
     storage: mountAsyncStorage({path: 'wallet/'}),
     api: governanceApiMaker({network, client: fetcher}),
   } as const

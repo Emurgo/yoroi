@@ -7,7 +7,6 @@ import {
   useUpdateLatestGovernanceAction,
 } from '@yoroi/staking'
 
-import {init} from '@emurgo/cross-csl-mobile'
 import * as React from 'react'
 
 import {useReviewTx} from '~/features/ReviewTx/common/ReviewTxProvider'
@@ -18,6 +17,7 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {InfoBanner} from '~/ui/InfoBanner/InfoBanner'
 import {YoroiUnsignedTx} from '~/wallets/types/yoroi'
+import {CardanoMobile} from '~/wallets/wallets'
 
 import {GovernanceVote} from '../types'
 import {useNavigateTo} from './navigation'
@@ -77,20 +77,16 @@ export const useGovernanceManagerMaker = () => {
     `wallet/${walletId}/staking-governance/`,
   )
 
-  const cslFactory = React.useCallback((scope: string) => {
-    return init(scope)
-  }, [])
-
   return React.useMemo(
     () =>
       governanceManagerMaker({
         walletId,
         network,
         api: governanceApiMaker({network}),
-        cslFactory,
+        cardano: CardanoMobile,
         storage: governanceStorage,
       }),
-    [governanceStorage, network, walletId, cslFactory],
+    [governanceStorage, network, walletId],
   )
 }
 
@@ -103,7 +99,6 @@ export const useGovernanceActions = () => {
   )
   const {navigateToTxReview} = useWalletNavigation()
   const strings = useStrings()
-  const manager = useGovernanceManagerMaker()
 
   const handleDelegateAction = ({
     hash,
@@ -128,8 +123,6 @@ export const useGovernanceActions = () => {
           type,
           txID: args.signedTx.signedTx.id,
         })
-        // Cleanup CSL resources after successful transaction
-        manager.cleanup()
       },
       onNotSupportedCIP1694: navigateTo.notSupportedVersion,
       ...(CIP105
@@ -158,8 +151,6 @@ export const useGovernanceActions = () => {
           vote: 'abstain',
           txID: args?.signedTx.signedTx.id,
         })
-        // Cleanup CSL resources after successful transaction
-        manager.cleanup()
       },
       onNotSupportedCIP1694: navigateTo.notSupportedVersion,
     })
@@ -181,8 +172,6 @@ export const useGovernanceActions = () => {
           vote: 'no-confidence',
           txID: args?.signedTx.signedTx.id,
         })
-        // Cleanup CSL resources after successful transaction
-        manager.cleanup()
       },
       onNotSupportedCIP1694: navigateTo.notSupportedVersion,
     })
