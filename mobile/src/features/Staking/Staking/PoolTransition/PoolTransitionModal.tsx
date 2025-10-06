@@ -9,10 +9,11 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {useModal} from '~/ui/Modal/context/ModalContext'
+import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {Space} from '~/ui/Space/Space'
 import {formatTimeSpan} from '~/wallets/utils/timeUtils'
 
-export const PoolTransitionModal = ({
+const PoolTransitionModalContent = ({
   poolTransition,
 }: {
   poolTransition: PoolTransition
@@ -23,7 +24,7 @@ export const PoolTransitionModal = ({
   const isActive = timeSpan > 0
 
   return (
-    <View style={[a.flex_1]}>
+    <Modal.Content>
       <Text style={[a.body_1_lg_regular, {color: p.gray_900}]}>
         {isActive ? strings.staking.warning : strings.staking.finalWarning}
       </Text>
@@ -164,11 +165,11 @@ export const PoolTransitionModal = ({
           {strings.staking.poolGeneratesRewards}
         </Text>
       </View>
-    </View>
+    </Modal.Content>
   )
 }
 
-export const PoolTransitionModalActions = ({
+const PoolTransitionModalFooter = ({
   onContinue,
 }: {
   onContinue: () => Promise<void> | void
@@ -192,7 +193,7 @@ export const PoolTransitionModalActions = ({
     }
   }
   return (
-    <View style={[a.gap_lg]}>
+    <Modal.Footer>
       <Button
         type={ButtonType.SecondaryText}
         title={strings.staking.skipNoRewards}
@@ -204,7 +205,7 @@ export const PoolTransitionModalActions = ({
         onPress={handleOnUpdate}
         disabled={isLoading}
       />
-    </View>
+    </Modal.Footer>
   )
 }
 
@@ -218,3 +219,8 @@ const Row = (props: ViewProps) => {
 }
 
 const formatFee = (fee: string) => Number((Number(fee) * 100).toFixed(2))
+
+export const PoolTransitionModal = {
+  Content: PoolTransitionModalContent,
+  Footer: PoolTransitionModalFooter,
+}

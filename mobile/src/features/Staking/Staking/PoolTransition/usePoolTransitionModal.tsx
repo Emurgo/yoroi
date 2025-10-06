@@ -5,10 +5,7 @@ import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWalle
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useModal} from '~/ui/Modal/context/ModalContext'
 
-import {
-  PoolTransitionModal,
-  PoolTransitionModalActions,
-} from './PoolTransitionModal'
+import {PoolTransitionModal} from './PoolTransitionModal'
 import {usePoolTransitionContext} from './PoolTransitionProvider'
 import {usePoolTransition} from './usePoolTransition'
 
@@ -30,8 +27,10 @@ export const usePoolTransitionModal = () => {
     ) {
       openModal({
         title: strings.staking.title,
-        content: <PoolTransitionModal poolTransition={poolTransition} />,
-        footer: <PoolTransitionModalActions onContinue={navigateToUpdate} />,
+        content: (
+          <PoolTransitionModal.Content poolTransition={poolTransition} />
+        ),
+        footer: <PoolTransitionModal.Footer onContinue={navigateToUpdate} />,
         height: modalHeight,
       })
       setShownWallets(() => [wallet.id, ...shownWallets])

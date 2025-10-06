@@ -142,9 +142,7 @@ export const RestoreWalletDetailsScreen = () => {
 
   const passwordErrorText =
     passwordErrors.passwordIsWeak && !isPending
-      ? strings.setupWallet.passwordStrengthRequirement({
-          requiredPasswordLength,
-        })
+      ? strings.setupWallet.passwordStrengthRequirement(requiredPasswordLength)
       : undefined
   const passwordConfirmationErrorText =
     passwordErrors.matchesConfirmation && !isPending

@@ -14,6 +14,7 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {useModal} from '~/ui/Modal/context/ModalContext'
+import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {ProtocolAvatar} from '~/ui/ProtocolAvatar/ProtocolAvatar'
 import {Space} from '~/ui/Space/Space'
 import {SwapInfoLink} from '~/ui/SwapInfoLink/SwapInfoLink'
@@ -188,7 +189,7 @@ export const Splits = ({data}: {data: Swap.Split[]}) => {
   )
 
   return (
-    <View style={[a.gap_md]}>
+    <Modal.Content style={[a.gap_md]}>
       {[...data]
         .sort(
           (a, b) =>
@@ -225,6 +226,6 @@ export const Splits = ({data}: {data: Swap.Split[]}) => {
             </Text>
           </View>
         ))}
-    </View>
+    </Modal.Content>
   )
 }

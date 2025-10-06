@@ -225,7 +225,7 @@ export const SwapMainScreen = () => {
         </View>
       </ScrollView>
 
-      <SafeArea.Actions contentHeight={contentHeight}>
+      <SafeArea.Footer contentHeight={contentHeight}>
         <Button
           testID="swapButton"
           title={
@@ -237,7 +237,7 @@ export const SwapMainScreen = () => {
           isLoading={swapForm.isLoading}
           onPress={onSwapPress}
         />
-      </SafeArea.Actions>
+      </SafeArea.Footer>
     </SafeArea>
   )
 }

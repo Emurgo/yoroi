@@ -11,7 +11,7 @@ import * as React from 'react'
 import {TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {DescribeAction} from '~/features/Exchange/common/DescribeAction/DescribeAction'
+import {DescribeActionModal} from '~/features/Exchange/common/DescribeActionModal/DescribeActionModal'
 import {BanxaLogo} from '~/features/Exchange/illustrations/BanxaLogo'
 import {EncryptusLogo} from '~/features/Exchange/illustrations/EncryptusLogo'
 import {useStrings} from '~/kernel/i18n/useStrings'
@@ -56,7 +56,7 @@ export const ShowExchangeResultOrderScreen = () => {
   const handleOnShowDetails = () => {
     openModal({
       title: strings.exchange.buySellCrypto,
-      content: <DescribeAction />,
+      content: <DescribeActionModal />,
     })
   }
 

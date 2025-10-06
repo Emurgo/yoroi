@@ -206,12 +206,12 @@ export const CreateExchangeOrderScreen = () => {
         </View>
       </ScrollView>
 
-      <SafeArea.Actions contentHeight={contentHeight}>
+      <SafeArea.Footer contentHeight={contentHeight}>
         <CreateExchangeButton
           disabled={exchangeDisabled}
           onPress={handleOnExchange}
         />
-      </SafeArea.Actions>
+      </SafeArea.Footer>
     </SafeArea>
   )
 }
