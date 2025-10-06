@@ -204,18 +204,16 @@ const WalletInfoSection = ({
 }
 
 const FeeInfoItem = ({fee}: {fee: string}) => {
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
   const strings = useStrings()
 
   return (
     <View style={[a.flex_row, a.justify_between]}>
-      <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
+      <Text style={[a.body_2_md_regular, ta.text_gray_medium]}>
         {strings.txReview.fee}
       </Text>
 
-      <Text
-        style={[{color: p.gray_900}, a.body_2_md_regular]}
-      >{`-${fee}`}</Text>
+      <Text style={[ta.text_gray_max, a.body_2_md_regular]}>{`-${fee}`}</Text>
     </View>
   )
 }
@@ -344,16 +342,16 @@ const MyWalletTokens = ({
 }
 
 const MyWalletSectionLabel = () => {
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
   const strings = useStrings()
 
   return (
     <View style={[a.flex_row, a.align_center]}>
-      <Icon.Send size={30} color={p.el_primary_medium} />
+      <Icon.Send size={30} color={ta.el_primary_medium.color} />
 
       <Space.Width._2xs />
 
-      <Text style={[a.body_1_lg_medium, {color: p.text_gray_medium}]}>
+      <Text style={[a.body_1_lg_medium, ta.text_gray_medium]}>
         {strings.txReview.overview.sendLabel}
       </Text>
     </View>
@@ -368,7 +366,7 @@ const OneExternalPartySection = ({
   receiverCustomTitle?: React.ReactNode
 }) => {
   const address = output?.rewardAddress ?? output?.address ?? '-'
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
   const strings = useStrings()
 
   return (
@@ -376,7 +374,7 @@ const OneExternalPartySection = ({
       <Space.Height.sm />
 
       <View style={[a.flex_row, a.align_center, a.flex_row, a.justify_between]}>
-        <Text style={[a.body_2_md_medium, {color: p.text_gray_medium}]}>
+        <Text style={[a.body_2_md_medium, ta.text_gray_medium]}>
           {strings.txReview.overview.receiveToLabel}:
         </Text>
 
@@ -386,7 +384,8 @@ const OneExternalPartySection = ({
               style={[
                 a.flex_1,
                 a.body_2_md_regular,
-                {color: p.text_gray_medium, maxWidth: 260},
+                ta.text_gray_medium,
+                {maxWidth: 260},
               ]}
               numberOfLines={1}
               ellipsizeMode="middle"
@@ -398,7 +397,7 @@ const OneExternalPartySection = ({
               <>
                 <Space.Width.xs />
 
-                <Icon.DigitalAsset size={24} color={p.el_gray_medium} />
+                <Icon.DigitalAsset size={24} color={ta.el_gray_medium.color} />
               </>
             )}
           </Copiable>
@@ -622,7 +621,7 @@ export type ReviewDetailsProps = {
 
 const Details = ({details}: {details?: ReviewDetailsProps}) => {
   const {openModal} = useModal()
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
 
   if (details == null) return null
 
@@ -640,7 +639,7 @@ const Details = ({details}: {details?: ReviewDetailsProps}) => {
 
       <View style={[a.flex_row, a.justify_end]}>
         <TouchableOpacity onPress={handleOnPress} activeOpacity={0.5}>
-          <Text style={[a.body_2_md_medium, {color: p.text_primary_medium}]}>
+          <Text style={[a.body_2_md_medium, ta.text_primary_medium]}>
             {details?.title}
           </Text>
         </TouchableOpacity>

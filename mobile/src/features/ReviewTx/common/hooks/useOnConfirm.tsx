@@ -7,6 +7,7 @@ import {ErrorBoundary} from 'react-error-boundary'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useModal} from '~/ui/Modal/context/ModalContext'
+import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {ModalError} from '~/ui/ModalError/ModalError'
 import {getTransactionSigners} from '~/wallets/cardano/common/signatureUtils'
 import {YoroiWallet} from '~/wallets/cardano/types'
@@ -108,17 +109,19 @@ export const useOnConfirm = ({
       openModal({
         title: strings.staking.signTransaction,
         content: (
-          <ErrorBoundary
-            fallbackRender={({error, resetErrorBoundary}) => (
-              <ModalError
-                error={error}
-                resetErrorBoundary={resetErrorBoundary}
-                onCancel={onCancel}
-              />
-            )}
-          >
-            <ConfirmRawTxWithHW onSuccess={handleOnSuccess} cbor={cbor} />
-          </ErrorBoundary>
+          <Modal.Content>
+            <ErrorBoundary
+              fallbackRender={({error, resetErrorBoundary}) => (
+                <ModalError
+                  error={error}
+                  resetErrorBoundary={resetErrorBoundary}
+                  onCancel={onCancel}
+                />
+              )}
+            >
+              <ConfirmRawTxWithHW onSuccess={handleOnSuccess} cbor={cbor} />
+            </ErrorBoundary>
+          </Modal.Content>
         ),
         height: 400,
       })

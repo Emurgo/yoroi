@@ -37,7 +37,7 @@ export const SafeArea = ({
   )
 }
 
-const SafeAreaActions = ({
+const SafeAreaFooter = ({
   children,
   contentHeight,
   style,
@@ -65,7 +65,7 @@ const SafeAreaActions = ({
   )
 }
 
-SafeArea.Actions = SafeAreaActions
+SafeArea.Footer = SafeAreaFooter
 
 type Props = SafeAreaViewProps & {
   keyboardVerticalOffset?: number

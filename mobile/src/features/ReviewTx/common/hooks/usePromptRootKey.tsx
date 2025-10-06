@@ -5,6 +5,7 @@ import {ConfirmRawTxWithPassword} from '~/features/Swap/common/ConfirmRawTx/Conf
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useModal} from '~/ui/Modal/context/ModalContext'
+import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 
 type PromptRootKeyOptions = {
   onSuccess: (rootKey: string) => void
@@ -13,12 +14,12 @@ type PromptRootKeyOptions = {
   title?: string
   summary?: string
 }
+const modalHeight = 350
 
 export const usePromptRootKey = () => {
   const {openModal, closeModal} = useModal()
   const {meta} = useSelectedWallet()
   const strings = useStrings()
-  const modalHeight = 350
 
   const promptRootKey = React.useCallback(
     ({onSuccess, onError, onClose, title, summary}: PromptRootKeyOptions) => {
@@ -32,7 +33,12 @@ export const usePromptRootKey = () => {
         openModal({
           title: title ?? strings.discover.confirmTx,
           content: (
-            <ConfirmRawTxWithOs onSuccess={handleOnConfirm} onError={onError} />
+            <Modal.Content>
+              <ConfirmRawTxWithOs
+                onSuccess={handleOnConfirm}
+                onError={onError}
+              />
+            </Modal.Content>
           ),
           height: modalHeight,
           onClose,
@@ -43,10 +49,12 @@ export const usePromptRootKey = () => {
       openModal({
         title: title ?? strings.discover.confirmTx,
         content: (
-          <ConfirmRawTxWithPassword
-            summary={summary}
-            onConfirm={handleOnConfirm}
-          />
+          <Modal.Content>
+            <ConfirmRawTxWithPassword
+              summary={summary}
+              onConfirm={handleOnConfirm}
+            />
+          </Modal.Content>
         ),
         height: modalHeight,
         onClose,

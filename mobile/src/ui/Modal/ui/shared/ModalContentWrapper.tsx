@@ -9,11 +9,11 @@ export const ModalContentWrapper = ({
   children,
   style,
   ...rest
-}: React.PropsWithChildren<ScrollViewProps>) => {
+}: ScrollViewProps) => {
   return (
     <ScrollView
       style={[a.flex_1]}
-      contentContainerStyle={StyleSheet.flatten([a.px_lg, style])}
+      contentContainerStyle={StyleSheet.flatten([a.flex_grow, a.px_lg, style])}
       bounces={false}
       focusable
       {...rest}

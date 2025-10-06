@@ -24,6 +24,7 @@ import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {InfoBanner} from '~/ui/InfoBanner/InfoBanner'
 import {useModal} from '~/ui/Modal/context/ModalContext'
+import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {Space} from '~/ui/Space/Space'
 import {WarningBanner} from '~/ui/WarningBanner/WarningBanner'
 
@@ -41,7 +42,7 @@ type Props = {
   onPress?: () => void
 }
 export const DAppListItem = ({dApp, connected, onPress}: Props) => {
-  const {palette: p} = useTheme()
+  const {palette: p, atoms: ta} = useTheme()
   const {addTabAndSetActive} = useBrowser()
   const navigateTo = useNavigateTo()
   const {openModal, closeModal} = useModal()
@@ -114,34 +115,36 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
     openModal({
       title: strings.discover.dAppActions,
       content: (
-        <View style={[a.flex_col, a.px_lg]}>
-          <View style={[{alignItems: 'center', gap: 8}]}>
-            <Image source={{uri: logo}} style={[{width: 48, height: 48}]} />
+        <Modal.Content>
+          <View style={[a.flex_col, a.px_lg]}>
+            <View style={[a.align_center, a.gap_sm]}>
+              <Image source={{uri: logo}} style={[{width: 48, height: 48}]} />
 
-            <Text style={[a.body_1_lg_medium, {color: p.gray_900}]}>
-              {dApp.name}
-            </Text>
+              <Text style={[a.body_1_lg_medium, ta.text_gray_max]}>
+                {dApp.name}
+              </Text>
+            </View>
+
+            <Space.Height.md />
+
+            {dApp.isSingleAddress && (
+              <>
+                <Space.Height.lg />
+
+                <SingleAddressDAppWarning />
+              </>
+            )}
+
+            <Space.Height.lg />
+
+            <InfoBanner
+              iconSize={20}
+              content={strings.discover.disconnectWarning}
+            />
+
+            <Space.Height.lg />
           </View>
-
-          <Space.Height.md />
-
-          {dApp.isSingleAddress && (
-            <>
-              <Space.Height.lg />
-
-              <SingleAddressDAppWarning />
-            </>
-          )}
-
-          <Space.Height.lg />
-
-          <InfoBanner
-            iconSize={20}
-            content={strings.discover.disconnectWarning}
-          />
-
-          <Space.Height.lg />
-        </View>
+        </Modal.Content>
       ),
       footer: (
         <View style={[a.flex_row, a.gap_lg]}>
@@ -188,7 +191,7 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
         <View style={[{flex: 1}]}>
           <Text
             numberOfLines={1}
-            style={[a.body_1_lg_medium, {color: p.gray_900, fontWeight: '500'}]}
+            style={[a.body_1_lg_medium, ta.text_gray_max]}
           >
             {dApp.name}
           </Text>
@@ -207,7 +210,7 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
 
           <Space.Height.sm />
 
-          <View style={[{flexDirection: 'row', gap: 8, flexWrap: 'wrap'}]}>
+          <View style={[a.flex_row, a.gap_sm, a.flex_wrap]}>
             {connected && <LabelConnected />}
 
             {dApp.isSingleAddress && <LabelSingleAddress />}
@@ -226,7 +229,7 @@ const walletsCompatibilityLink =
   'https://emurgohelpdesk.zendesk.com/hc/en-us/articles/10413017088527-DApps-and-HD-wallets-compatability'
 
 const SingleAddressDAppWarning = () => {
-  const {palette: p} = useTheme()
+  const {palette: p, atoms: ta} = useTheme()
   const strings = useStrings()
 
   const handleOnPress = () => {
@@ -238,7 +241,7 @@ const SingleAddressDAppWarning = () => {
       content={
         <>
           <Text
-            style={[a.body_2_md_regular, {color: p.text_gray_max}]}
+            style={[a.body_2_md_regular, ta.text_gray_max]}
           >{`${strings.discover.singleAddressWarning} `}</Text>
 
           <Text

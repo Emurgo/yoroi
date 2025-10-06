@@ -3,9 +3,9 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {View} from 'react-native'
 import {SharedValue} from 'react-native-reanimated'
-import {SafeAreaViewProps} from 'react-native-safe-area-context'
+import {SafeAreaView, SafeAreaViewProps} from 'react-native-safe-area-context'
 
-import {SafeArea} from '~/ui/SafeArea/SafeArea'
+import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
 
 import {Discard} from '../../shared/Discard'
@@ -27,7 +27,11 @@ export const ModalWrapper = ({
   const {atoms: ta} = useTheme()
 
   return (
-    <SafeArea edges={edges} style={[a.justify_between]} {...rest}>
+    <SafeAreaView
+      edges={edges}
+      style={[a.justify_between, a.flex_1, a.flex_grow, ta.bg_color_max]}
+      {...rest}
+    >
       <Discard.Indicator dragY={dragY}>
         {title && (
           <View style={[a.py_sm, a.px_lg]}>
@@ -41,6 +45,7 @@ export const ModalWrapper = ({
       {children}
 
       {footer && <View style={[a.p_lg, a.align_end]}>{footer}</View>}
-    </SafeArea>
+      {!footer && <Space.Height.lg />}
+    </SafeAreaView>
   )
 }

@@ -4,15 +4,16 @@ import {App} from '@yoroi/types'
 import * as React from 'react'
 import {ActivityIndicator, TextInput as RNTextInput, View} from 'react-native'
 
-import {useSignTxWithPassword} from '../../features/Transactions/hooks/useSignTxWithPassword'
-import {useSubmitTx} from '../../features/Transactions/hooks/useSubmitTx'
-import {useSelectedWallet} from '../../features/WalletManager/hooks/useSelectedWallet'
-import {debugWalletInfo, features} from '../../kernel/features'
-import {useStrings} from '../../kernel/i18n/useStrings'
-import {YoroiSignedTx, YoroiUnsignedTx} from '../../wallets/types/yoroi'
-import {Button} from '../Button/Button'
-import {Text} from '../Text/Text'
-import {Checkmark, TextInput} from '../TextInput/TextInput'
+import {useSignTxWithPassword} from '~/features/Transactions/hooks/useSignTxWithPassword'
+import {useSubmitTx} from '~/features/Transactions/hooks/useSubmitTx'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {debugWalletInfo, features} from '~/kernel/features'
+import {useStrings} from '~/kernel/i18n/useStrings'
+import {Button} from '~/ui/Button/Button'
+import {Space} from '~/ui/Space/Space'
+import {Text} from '~/ui/Text/Text'
+import {Checkmark, TextInput} from '~/ui/TextInput/TextInput'
+import {YoroiSignedTx, YoroiUnsignedTx} from '~/wallets/types/yoroi'
 
 type Props = {
   onSuccess?: (signedTx: YoroiSignedTx) => void
@@ -20,7 +21,7 @@ type Props = {
   onError?: (error: unknown) => void
 }
 
-export const ConfirmTxWithSpendingPasswordModal = ({
+export const SignWithPasswordModal = ({
   onSuccess,
   unsignedTx,
   onError,
@@ -67,7 +68,7 @@ export const ConfirmTxWithSpendingPasswordModal = ({
     : null
 
   return (
-    <View style={[a.flex_grow]}>
+    <View style={[a.flex_1]}>
       <Text style={[a.text_center, a.pb_sm]}>
         {strings.staking.enterPassword}
       </Text>
@@ -92,7 +93,7 @@ export const ConfirmTxWithSpendingPasswordModal = ({
         </Text>
       )}
 
-      <View style={[a.flex_grow]} />
+      <Space.Height.lg fill />
 
       <View style={[a.pt_lg]}>
         <Button
