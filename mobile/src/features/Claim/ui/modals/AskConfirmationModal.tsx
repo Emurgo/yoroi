@@ -6,6 +6,7 @@ import {Platform, Text, View} from 'react-native'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/context/ModalContext'
+import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {Space} from '~/ui/Space/Space'
 
 type Props = {
@@ -13,13 +14,13 @@ type Props = {
   url: string
   code: string
 }
-export const AskConfirmation = ({address, url, code}: Props) => {
+const AskConfirmationModalContent = ({address, url, code}: Props) => {
   const strings = useStrings()
   const domain = getDomain(url)
   const {atoms: ta} = useTheme()
 
   return (
-    <View style={[a.flex_grow]}>
+    <Modal.Content>
       <Text
         style={[
           a.font_normal,
@@ -51,7 +52,7 @@ export const AskConfirmation = ({address, url, code}: Props) => {
       <Item label={strings.claim.code} value={code} />
 
       <Space.Height.lg fill />
-    </View>
+    </Modal.Content>
   )
 }
 
@@ -86,16 +87,12 @@ const Item = ({label, value}: {label: string; value: string}) => {
   )
 }
 
-export const AskConfirmationActions = ({
-  onContinue,
-}: {
-  onContinue: () => void
-}) => {
+const AskConfirmationModalFooter = ({onContinue}: {onContinue: () => void}) => {
   const strings = useStrings()
   const {closeModal, isLoading} = useModal()
 
   return (
-    <View style={[a.flex_row, a.gap_lg, a.pb_md]}>
+    <Modal.Footer>
       <Button
         size="S"
         type={ButtonType.Secondary}
@@ -110,7 +107,7 @@ export const AskConfirmationActions = ({
         onPress={onContinue}
         disabled={isLoading}
       />
-    </View>
+    </Modal.Footer>
   )
 }
 
@@ -121,4 +118,9 @@ function getDomain(url: string) {
   } catch (error) {
     return ''
   }
+}
+
+export const AskConfirmationModal = {
+  Content: AskConfirmationModalContent,
+  Footer: AskConfirmationModalFooter,
 }

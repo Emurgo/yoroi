@@ -6,6 +6,7 @@ import {InteractionManager, View, useWindowDimensions} from 'react-native'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/context/ModalContext'
+import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {PhoneBell} from '~/ui/PhoneBellIllustration/PhoneBellIllustration'
 import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
@@ -57,7 +58,7 @@ export const GetImportantAlertsModal = ({
   }
 
   return (
-    <View style={[a.flex_1, a.align_center]}>
+    <Modal.Content style={[a.align_center]}>
       <View style={[a.py_lg]}>
         <PhoneBell />
       </View>
@@ -90,6 +91,6 @@ export const GetImportantAlertsModal = ({
         onPress={handleTurnOnPress}
         style={[a.flex_1, a.self_stretch, {flexGrow: 0}]}
       />
-    </View>
+    </Modal.Content>
   )
 }
