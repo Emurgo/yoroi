@@ -992,7 +992,7 @@ describe('swapManagerMaker', () => {
       expect(result.tag).toBe('right')
       if (result.tag === 'right') {
         expect(result.value.data.options).toHaveLength(1)
-        expect(result.value.data.options[0].protocol).toBe('minswap-v2')
+        expect(result.value.data.options[0]?.protocol).toBe('minswap-v2')
       }
     })
   })
