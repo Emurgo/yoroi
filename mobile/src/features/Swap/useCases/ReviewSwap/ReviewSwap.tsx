@@ -108,23 +108,24 @@ export const ReviewSwap = () => {
         </ScrollView>
       </View>
 
-      <View
-        style={[
-          a.px_lg,
-          {
-            ...(deviceHeight < contentHeight && {
-              borderTopWidth: 1,
-              borderTopColor: p.gray_200,
-            }),
-          },
-        ]}
-      >
-        <Button
-          testID="swapButton"
-          title={strings.swap.next}
-          onPress={onNext}
-        />
-      </View>
+      <SafeArea.Footer>
+        <View
+          style={[
+            {
+              ...(deviceHeight < contentHeight && {
+                borderTopWidth: 1,
+                borderTopColor: p.gray_200,
+              }),
+            },
+          ]}
+        >
+          <Button
+            testID="swapButton"
+            title={strings.swap.next}
+            onPress={onNext}
+          />
+        </View>
+      </SafeArea.Footer>
     </SafeArea>
   )
 }

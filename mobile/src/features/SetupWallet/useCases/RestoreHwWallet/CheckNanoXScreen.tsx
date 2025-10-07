@@ -3,13 +3,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import * as React from 'react'
-import {
-  Linking,
-  Platform,
-  TouchableOpacity,
-  View,
-  ViewProps,
-} from 'react-native'
+import {Linking, Platform, TouchableOpacity, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
@@ -90,13 +84,13 @@ export const CheckNanoXScreen = () => {
         <LedgerSupportLink />
       </ScrollView>
 
-      <Actions>
+      <SafeArea.Footer>
         <Button
           onPress={handleOnContinue}
           title={strings.setupWallet.continueButton}
           testID="continueButton"
         />
-      </Actions>
+      </SafeArea.Footer>
     </SafeArea>
   )
 }
@@ -127,8 +121,4 @@ const Illustration = () => {
       <LedgerCheckIllustration />
     </View>
   )
-}
-
-const Actions = (props: ViewProps) => {
-  return <View {...props} style={[a.px_lg, a.pt_lg]} />
 }

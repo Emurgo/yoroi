@@ -263,15 +263,16 @@ export const SaveNanoXScreen = () => {
           <Info onPress={showModalTipsPlateNumber} />
         </View>
       </ScrollView>
-
-      <View style={[a.px_lg]}>
-        <Button
-          title={strings.setupWallet.next}
-          onPress={handleOnSubmit}
-          testID="setup-restore-step2-next-button"
-          disabled={disabled}
-        />
-      </View>
+      <SafeArea.Footer>
+        <View>
+          <Button
+            title={strings.setupWallet.next}
+            onPress={handleOnSubmit}
+            testID="setup-restore-step2-next-button"
+            disabled={disabled}
+          />
+        </View>
+      </SafeArea.Footer>
     </SafeArea>
   )
 }

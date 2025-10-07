@@ -10,6 +10,7 @@ import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWalle
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {isEmptyString} from '~/kernel/utils'
 import {Copiable} from '~/ui/Copiable/Copiable'
+import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {
   getSpendingKey,
   getStakingKey,
@@ -41,68 +42,70 @@ export const AddressModal = ({address, path}: Props) => {
   const spending = getSpendingKey(address)
 
   return (
-    <View style={[a.flex_1, a.gap_lg]}>
-      <View
-        style={[
-          a.align_center,
-          a.rounded_sm,
-          a.p_lg,
-          a.self_center,
-          {backgroundColor: p.white_static},
-        ]}
-      >
-        <QRCode
-          value={address}
-          size={140}
-          backgroundColor={p.white_static}
-          color={p.black_static}
-        />
-      </View>
-
-      <View style={[a.gap_sm]}>
-        <View>
-          <Text style={[a.body_2_md_regular, ta.text_gray_medium]}>
-            {strings.transactions.walletAddress}
-          </Text>
-
-          <Copiable title={address} text={address} />
+    <Modal.Content>
+      <View style={[a.flex_1, a.gap_lg]}>
+        <View
+          style={[
+            a.align_center,
+            a.rounded_sm,
+            a.p_lg,
+            a.self_center,
+            a.bg_white_static,
+          ]}
+        >
+          <QRCode
+            value={address}
+            size={140}
+            backgroundColor={p.white_static}
+            color={p.black_static}
+          />
         </View>
 
-        {derivationPath !== null && (
+        <View style={[a.gap_sm]}>
           <View>
             <Text style={[a.body_2_md_regular, ta.text_gray_medium]}>
-              {strings.transactions.BIP32path}
+              {strings.transactions.walletAddress}
             </Text>
 
-            <View style={a.flex_row}>
-              <Text style={[a.body_1_lg_regular, ta.text_gray_max]}>
-                {derivationPath}
+            <Copiable title={address} text={address} />
+          </View>
+
+          {derivationPath !== null && (
+            <View>
+              <Text style={[a.body_2_md_regular, ta.text_gray_medium]}>
+                {strings.transactions.BIP32path}
               </Text>
+
+              <View style={a.flex_row}>
+                <Text style={[a.body_1_lg_regular, ta.text_gray_max]}>
+                  {derivationPath}
+                </Text>
+              </View>
             </View>
-          </View>
-        )}
+          )}
 
-        {!isEmptyString(staking) && (
-          <View>
-            <Text style={[a.body_2_md_regular, ta.text_gray_medium]}>
-              {strings.transactions.staking}
-            </Text>
+          {!isEmptyString(staking) && (
+            <View>
+              <Text style={[a.body_2_md_regular, ta.text_gray_medium]}>
+                {strings.transactions.staking}
+              </Text>
 
-            <Copiable title={staking} text={staking} />
-          </View>
-        )}
+              <Copiable title={staking} text={staking} />
+            </View>
+          )}
 
-        {!isEmptyString(spending) && (
-          <View>
-            <Text style={[a.body_2_md_regular, ta.text_gray_medium]}>
-              {strings.transactions.spending}
-            </Text>
+          {!isEmptyString(spending) && (
+            <View>
+              <Text style={[a.body_2_md_regular, ta.text_gray_medium]}>
+                {strings.transactions.spending}
+              </Text>
 
-            <Copiable title={spending} text={spending} />
-          </View>
-        )}
+              <Copiable title={spending} text={spending} />
+            </View>
+          )}
+        </View>
       </View>
-    </View>
+    </Modal.Content>
   )
 }
 

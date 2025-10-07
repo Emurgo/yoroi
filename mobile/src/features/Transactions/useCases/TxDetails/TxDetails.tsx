@@ -28,7 +28,6 @@ import {Copiable} from '~/ui/Copiable/Copiable'
 import {FadeIn} from '~/ui/FadeIn'
 import {Icon} from '~/ui/Icon'
 import {useModal} from '~/ui/Modal/context/ModalContext'
-import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {MultiToken} from '~/wallets/cardano/MultiToken'
 import {CardanoTypes} from '~/wallets/cardano/types'
 import {TransactionInfo} from '~/wallets/types/other'
@@ -93,11 +92,7 @@ export const TxDetails = () => {
   const openAddressModal = (address: string) =>
     openModal({
       title: strings.transactions.addessModalTitle,
-      content: (
-        <Modal.Content>
-          <AddressModal address={address} />
-        </Modal.Content>
-      ),
+      content: <AddressModal address={address} />,
       height: modalHeight,
     })
 
