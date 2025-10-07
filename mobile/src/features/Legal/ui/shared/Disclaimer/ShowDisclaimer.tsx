@@ -63,7 +63,7 @@ export const ShowDisclaimer = ({type, disabled}: Props) => {
         title: strings.global.disclaimer,
         content: (
           <Modal.Content>
-            <View style={{height: 400}}>
+            <View style={{height: 600}}>
               <Markdown
                 colorScheme={basePalette}
                 backgroundColor={ta.bg_color_max.backgroundColor}
