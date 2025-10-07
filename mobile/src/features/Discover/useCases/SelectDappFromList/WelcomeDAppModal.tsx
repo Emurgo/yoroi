@@ -1,7 +1,7 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
-import {Image, Text, View} from 'react-native'
+import {Image, Text} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
 import IllustrationDAppImage from '~/assets/img/illustration-dapp.png'
@@ -9,6 +9,7 @@ import {useShowWelcomeDApp} from '~/features/Discover/common/useShowWelcomeDApp'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/context/ModalContext'
+import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 
 export const WelcomeDAppModal = ({disabled}: {disabled?: boolean}) => {
   const strings = useStrings()
@@ -24,7 +25,7 @@ export const WelcomeDAppModal = ({disabled}: {disabled?: boolean}) => {
     openModal({
       title: strings.discover.welcomeToYoroiDAppExplorer,
       content: (
-        <View>
+        <Modal.Content>
           <Image
             source={IllustrationDAppImage}
             style={[a.w_full, {height: 200, resizeMode: 'cover'}]}
@@ -35,16 +36,18 @@ export const WelcomeDAppModal = ({disabled}: {disabled?: boolean}) => {
           >
             {strings.discover.welcomeToYoroiDAppExplorerDescription}
           </Text>
-        </View>
+        </Modal.Content>
       ),
       footer: (
-        <Button
-          onPress={() => {
-            setSeen(true)
-            closeModal()
-          }}
-          title={strings.discover.next}
-        />
+        <Modal.Footer>
+          <Button
+            onPress={() => {
+              setSeen(true)
+              closeModal()
+            }}
+            title={strings.discover.next}
+          />
+        </Modal.Footer>
       ),
       height: 530 + insets.bottom,
       canDiscard: false,
