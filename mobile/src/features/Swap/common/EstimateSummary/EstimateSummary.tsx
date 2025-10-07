@@ -147,13 +147,17 @@ const Row = ({
               openModal({
                 title: label,
                 content: (
-                  <View style={[a.flex_1, a.justify_center]}>
+                  <Modal.Content style={[a.flex_1, a.justify_center]}>
                     <Text style={[a.body_1_lg_regular, ta.text_gray_max]}>
                       {description}
                     </Text>
-                  </View>
+                  </Modal.Content>
                 ),
-                footer: <SwapInfoLink />,
+                footer: (
+                  <Modal.Footer>
+                    <SwapInfoLink />
+                  </Modal.Footer>
+                ),
               })
             }
             type={ButtonType.SecondaryText}
