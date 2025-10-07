@@ -31,6 +31,6 @@
   "prettier.resolveGlobalModules": false,
   "prettier.prettierPath": "./mobile/node_modules/prettier",
   "eslint.workingDirectories": ["./mobile"],
-  "eslint.workingDirectory": "./mobile",
-  "files.autoSave": "onFocusChange"
+  "files.autoSave": "onFocusChange",
+  "typescript.tsdk": "./mobile/node_modules/typescript/lib"
 }
