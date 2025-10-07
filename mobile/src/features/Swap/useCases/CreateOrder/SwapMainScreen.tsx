@@ -16,7 +16,7 @@ import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {ProtocolAvatar} from '~/ui/ProtocolAvatar/ProtocolAvatar'
 import {RefreshButton} from '~/ui/RefreshButton/RefreshButton'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
-import {ScrollView} from '~/ui/ScrollView/ScrollView'
+import {ScrollView, useScrollView} from '~/ui/ScrollView/ScrollView'
 import {ShowPriceImpact} from '~/ui/ShowPriceImpact/ShowPriceImpact'
 import {isEmptyString} from '~/wallets/utils/string'
 
@@ -32,7 +32,7 @@ export const SwapMainScreen = () => {
   const swapForm = useSwap()
   const {openModal, closeModal} = useModal()
   const navigateTo = useNavigateTo()
-
+  const {scrollViewRef, setIsScrollBarShown} = useScrollView()
   const tokenInInfo = swapForm.tokenInfos?.get?.(
     swapForm.tokenInInput.tokenId ?? undefinedToken,
   )
