@@ -257,7 +257,7 @@ export const WalletDetailsScreen = () => {
     openModal({
       title: strings.setupWallet.walletDetailsModalTitle,
       content: (
-        <View style={[a.flex_1]}>
+        <Modal.Content>
           <CardAboutPhrase
             title={strings.setupWallet.walletChecksumModalCardTitle}
             checksumImage={seed}
@@ -268,10 +268,10 @@ export const WalletDetailsScreen = () => {
               strings.setupWallet.walletChecksumModalCardThirdItem,
             ]}
           />
-        </View>
+        </Modal.Content>
       ),
       footer: (
-        <View style={[a.gap_lg]}>
+        <Modal.Footer>
           <LearnMoreButton
             onPress={() => {
               Linking.openURL(YoroiZendeskLink)
@@ -282,7 +282,7 @@ export const WalletDetailsScreen = () => {
             title={strings.setupWallet.continueButton}
             onPress={closeModal}
           />
-        </View>
+        </Modal.Footer>
       ),
       height: modalHeightChecksum,
     })

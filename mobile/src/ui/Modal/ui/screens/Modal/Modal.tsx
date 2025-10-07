@@ -191,8 +191,8 @@ const Modal = () => {
                   isFull
                     ? []
                     : hasExpandedEnabled
-                      ? ['top', 'right', 'left']
-                      : ['right', 'left']
+                      ? ['top', 'right', 'left', 'bottom']
+                      : ['right', 'left', 'bottom']
                 }
                 dragY={dragY}
               >
