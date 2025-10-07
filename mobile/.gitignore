@@ -47,3 +47,4 @@ yarn-error.*
 *.tsbuildinfo
 
 .env.local
+.pnpm-lock.yaml

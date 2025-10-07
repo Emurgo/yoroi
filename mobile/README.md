@@ -23,25 +23,31 @@ Before you begin, ensure you have the following installed:
 
 ### Required Software
 
-- **Node.js** (v18 or higher) - [Download](https://nodejs.org/)
-- **npm** or **pnpm** (recommended) - [pnpm Installation](https://pnpm.io/installation)
-- **Git** - [Download](https://git-scm.com/)
+- **Node.js** (v22.12.0) - [Download](https://nodejs.org/)
+- **Git** (latest version) - [Download](https://git-scm.com/)
+- **Rust** (v1.86.0) - [Download](https://rustup.rs/)
+- **Java Development Kit (JDK)** (v17.0.10+7) - [Download](https://adoptium.net/)
+- **Ruby** (v3.2.2) - [Download](https://www.ruby-lang.org/)
+- **Python** (v3.11.3) - [Download](https://www.python.org/)
 
 ### Platform-Specific Requirements
 
 #### For iOS Development
+
 - **macOS** (required for iOS development)
 - **Xcode** (v15.0 or higher) - [Download from App Store](https://apps.apple.com/us/app/xcode/id497799835)
 - **iOS Simulator** (included with Xcode)
 - **CocoaPods** - Install with: `sudo gem install cocoapods`
 
 #### For Android Development
+
 - **Android Studio** - [Download](https://developer.android.com/studio)
 - **Android SDK** (API level 35)
 - **Android NDK** (v27.0.12077973)
 - **Java Development Kit (JDK)** (v17 or higher)
 
 #### For Web Development
+
 - **Modern web browser** (Chrome, Firefox, Safari, Edge)
 
 ### Rust Toolchain (Required for Native Modules)
@@ -72,17 +78,15 @@ rustup target add \
 ## Installation
 
 1. **Clone the repository:**
+
    ```bash
-   git clone https://github.com/emurgo/yoroi-mobile.git
-   cd yoroi-mobile
+   git clone https://github.com/emurgo/yoroi.git
+   cd mobile
    ```
 
 2. **Install dependencies:**
+
    ```bash
-   # Using pnpm (recommended)
-   pnpm install
-   
-   # Or using npm
    npm install
    ```
 
@@ -146,6 +150,7 @@ npm run format              # Format code with Prettier
 ### iOS Development
 
 #### Prerequisites
+
 - macOS with Xcode installed
 - iOS Simulator or physical iOS device
 - Apple Developer account (for device testing)
@@ -153,30 +158,35 @@ npm run format              # Format code with Prettier
 #### Setup Steps
 
 1. **Install iOS dependencies:**
+
    ```bash
    cd ios && pod install && cd ..
    ```
 
 2. **Run on iOS Simulator:**
+
    ```bash
    npm run ios
    ```
 
 3. **Run on Physical Device:**
+
    ```bash
    npm run ios:device
    ```
 
 4. **Build for iOS:**
+
    ```bash
    # Development build
    npx expo run:ios --configuration Debug
-   
+
    # Production build
    npx expo run:ios --configuration Release
    ```
 
 #### iOS-Specific Features
+
 - Face ID/Touch ID authentication
 - Camera access for QR code scanning
 - Bluetooth for hardware wallet connection
@@ -186,6 +196,7 @@ npm run format              # Format code with Prettier
 ### Android Development
 
 #### Prerequisites
+
 - Android Studio with Android SDK
 - Android emulator or physical device
 - Java Development Kit (JDK 17+)
@@ -193,12 +204,14 @@ npm run format              # Format code with Prettier
 #### Setup Steps
 
 1. **Configure Android SDK:**
+
    - Open Android Studio
    - Go to SDK Manager
    - Install Android SDK API 35
    - Install Android NDK v27.0.12077973
 
 2. **Set Environment Variables:**
+
    ```bash
    export ANDROID_HOME=$HOME/Android/Sdk
    export PATH=$PATH:$ANDROID_HOME/emulator
@@ -208,31 +221,34 @@ npm run format              # Format code with Prettier
    ```
 
 3. **Run on Android Emulator:**
+
    ```bash
    npm run android
    ```
 
 4. **Run on Physical Device:**
+
    ```bash
    npm run android:device
    ```
 
 5. **Build for Android:**
+
    ```bash
    # Development build
    npx expo run:android --variant debug
-   
+
    # Production build
    npx expo run:android --variant release
    ```
 
 #### Android-Specific Features
+
 - Fingerprint/Biometric authentication
 - Camera access for QR code scanning
 - Bluetooth for hardware wallet connection
 - Edge-to-edge display support
 - Adaptive icons
-
 
 ## Build and Deployment
 
@@ -241,6 +257,7 @@ npm run format              # Format code with Prettier
 The project uses Expo Application Services (EAS) for cloud builds:
 
 #### Prerequisites
+
 - Expo CLI: `npm install -g @expo/cli`
 - EAS CLI: `npm install -g eas-cli`
 - EAS account: `eas login`
@@ -275,11 +292,13 @@ eas build --platform all --profile production
 #### iOS Local Build
 
 1. **Configure Xcode project:**
+
    ```bash
    npx expo prebuild --platform ios
    ```
 
 2. **Open in Xcode:**
+
    ```bash
    open ios/yoroi.xcworkspace
    ```
@@ -289,11 +308,13 @@ eas build --platform all --profile production
 #### Android Local Build
 
 1. **Configure Android project:**
+
    ```bash
    npx expo prebuild --platform android
    ```
 
 2. **Build APK:**
+
    ```bash
    cd android
    ./gradlew assembleRelease
@@ -336,11 +357,13 @@ Configuration files are located in the root directory:
 ### Platform-Specific Configuration
 
 #### iOS Configuration
+
 - Bundle identifier: `com.emurgo.yoroi`
 - Minimum iOS version: 15.1
 - Permissions: Camera, Location, Bluetooth, Face ID
 
 #### Android Configuration
+
 - Package name: `com.emurgo`
 - Target SDK: 35
 - Minimum SDK: 21
@@ -353,6 +376,7 @@ Configuration files are located in the root directory:
 #### iOS Issues
 
 **Build fails with Rust errors:**
+
 ```bash
 # Clean and rebuild Rust modules
 cd node_modules/@emurgo/csl-mobile-bridge-jsi/rust
@@ -361,6 +385,7 @@ cargo build --release --target aarch64-apple-ios
 ```
 
 **Pod install fails:**
+
 ```bash
 # Clean and reinstall
 cd ios
@@ -369,6 +394,7 @@ pod install
 ```
 
 **Simulator not found:**
+
 ```bash
 # List available simulators
 xcrun simctl list devices
@@ -379,6 +405,7 @@ xcrun simctl boot "iPhone 15 Pro"
 #### Android Issues
 
 **Build fails with NDK errors:**
+
 ```bash
 # Ensure correct NDK version
 export ANDROID_NDK_VERSION=27.0.12077973
@@ -389,6 +416,7 @@ cd android
 ```
 
 **Emulator not found:**
+
 ```bash
 # List available emulators
 emulator -list-avds
@@ -397,6 +425,7 @@ emulator -avd your_avd_name
 ```
 
 **Gradle build fails:**
+
 ```bash
 # Clean Gradle cache
 cd android
@@ -408,12 +437,14 @@ rm -rf .gradle
 #### General Issues
 
 **Metro bundler issues:**
+
 ```bash
 # Clear Metro cache
 npx expo start -c
 ```
 
 **Node modules issues:**
+
 ```bash
 # Clean install
 rm -rf node_modules package-lock.json
@@ -421,6 +452,7 @@ npm install
 ```
 
 **TypeScript errors:**
+
 ```bash
 # Check TypeScript configuration
 npm run tsc
@@ -429,9 +461,11 @@ npm run tsc
 ### Performance Optimization
 
 1. **Enable Hermes (Android):**
+
    - Hermes is enabled by default in the configuration
 
 2. **Optimize bundle size:**
+
    - Use `expo export` for production builds
    - Enable tree shaking in Metro config
 
@@ -445,12 +479,14 @@ npm run tsc
 
 1. **Fork the repository**
 2. **Create a feature branch:**
+
    ```bash
    git checkout -b feature/your-feature-name
    ```
 
 3. **Make your changes**
 4. **Run tests and linting:**
+
    ```bash
    npm run test
    npm run lint
@@ -458,6 +494,7 @@ npm run tsc
    ```
 
 5. **Commit your changes:**
+
    ```bash
    git commit -m "feat: add your feature"
    ```
@@ -488,7 +525,6 @@ npm test -- --coverage
 ## License
 
 This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
-
 
 ## Acknowledgments
 
