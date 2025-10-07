@@ -6,7 +6,7 @@ import {Linking, ScrollView, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {ViewProps} from 'react-native-svg/lib/typescript/fabric/utils'
 
-import {YoroiZendeskLink} from '~/features/SetupWallet/common/constants'
+import {YoroiHelpLink} from '~/features/SetupWallet/common/constants'
 import {useBold} from '~/hooks/useBold'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
@@ -31,7 +31,7 @@ export const AboutRecoveryPhraseScreen = () => {
 
   const handleOnLearMoreButtonPress = () => {
     track.createWalletTermsPageViewed()
-    Linking.openURL(YoroiZendeskLink)
+    Linking.openURL(YoroiHelpLink)
   }
 
   return (

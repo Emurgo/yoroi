@@ -233,7 +233,7 @@ const Info = ({showLogo}: {showLogo?: boolean}) => {
 
 const openReadMoreLink = () => {
   Linking.openURL(
-    'https://emurgohelpdesk.zendesk.com/hc/en-us/articles/7594394140303-What-s-user-insights-',
+    'https://help.yoroi-wallet.com/en/article/whats-user-insights-1nmw7pq/',
   )
 }
 

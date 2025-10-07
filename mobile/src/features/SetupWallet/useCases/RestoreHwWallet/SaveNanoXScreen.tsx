@@ -17,7 +17,7 @@ import {
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {YoroiZendeskLink} from '~/features/SetupWallet/common/constants'
+import {YoroiHelpLink} from '~/features/SetupWallet/common/constants'
 import {Info as InfoIcon} from '~/features/SetupWallet/illustrations/Info'
 import {parseWalletMeta} from '~/features/WalletManager/common/validators/wallet-meta'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
@@ -181,7 +181,7 @@ export const SaveNanoXScreen = () => {
 
           <LearnMoreButton
             onPress={() => {
-              Linking.openURL(YoroiZendeskLink)
+              Linking.openURL(YoroiHelpLink)
             }}
           />
         </View>
@@ -216,7 +216,7 @@ export const SaveNanoXScreen = () => {
 
           <LearnMoreButton
             onPress={() => {
-              Linking.openURL(YoroiZendeskLink)
+              Linking.openURL(YoroiHelpLink)
             }}
           />
         </View>

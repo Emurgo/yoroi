@@ -733,7 +733,7 @@ export const useStrings = () => {
         selectMultiple: f(receiveMessages.selectMultiple),
         singleAddressWallet: f(receiveMessages.singleAddressWallet),
         singleAddressWarning: f(receiveMessages.singleAddressWarning),
-        yoroiZendesk: f(globalMessages.yoroiZendesk),
+        yoroiFAQ: f(globalMessages.yoroiFAQ),
         ok: f(globalMessages.ok),
       },
 

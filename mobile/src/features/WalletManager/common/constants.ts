@@ -33,5 +33,4 @@ export const availableNetworks = isDev
   ? supportedNetworksDev
   : supportedNetworksProd
 
-export const linkToSupportOpenTicket =
-  'https://emurgohelpdesk.zendesk.com/hc/en-us/requests/new?ticket_form_id=360013330335'
+export const linkToSupportOpenTicket = 'https://help.yoroi-wallet.com/en/'

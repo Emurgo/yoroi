@@ -19,7 +19,7 @@ import {
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {ViewProps} from 'react-native-svg/lib/typescript/fabric/utils'
 
-import {YoroiZendeskLink} from '~/features/SetupWallet/common/constants'
+import {YoroiHelpLink} from '~/features/SetupWallet/common/constants'
 import {parseWalletMeta} from '~/features/WalletManager/common/validators/wallet-meta'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useCreateWalletMnemonic} from '~/features/WalletManager/hooks/useCreateWalletMnemonic'
@@ -228,7 +228,7 @@ export const WalletDetailsScreen = () => {
         <View style={[a.gap_lg]}>
           <LearnMoreButton
             onPress={() => {
-              Linking.openURL(YoroiZendeskLink)
+              Linking.openURL(YoroiHelpLink)
             }}
           />
 
@@ -278,7 +278,7 @@ export const WalletDetailsScreen = () => {
         <View style={[a.gap_lg]}>
           <LearnMoreButton
             onPress={() => {
-              Linking.openURL(YoroiZendeskLink)
+              Linking.openURL(YoroiHelpLink)
             }}
           />
 
