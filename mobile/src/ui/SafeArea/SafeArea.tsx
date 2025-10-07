@@ -1,7 +1,7 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
-import {StyleSheet, View, ViewProps, useWindowDimensions} from 'react-native'
+import {StyleSheet, View, ViewProps} from 'react-native'
 import {
   SafeAreaView,
   type SafeAreaViewProps,
@@ -11,6 +11,7 @@ import {useIsKeyboardOpen} from '~/hooks/useIsKeyboardOpen'
 
 import {KeyboardAvoidingView} from '../KeyboardAvoidingView/KeyboardAvoidingView'
 import {useModal} from '../Modal/context/ModalContext'
+import {useScrollView} from '../ScrollView/ScrollView'
 
 export const SafeArea = ({
   children,
@@ -37,23 +38,18 @@ export const SafeArea = ({
   )
 }
 
-const SafeAreaFooter = ({
-  children,
-  contentHeight,
-  style,
-  ...rest
-}: ViewProps & {contentHeight: number}) => {
+const SafeAreaFooter = ({children, style, ...rest}: ViewProps) => {
   const {palette: p} = useTheme()
   const isKeyboardOpen = useIsKeyboardOpen()
-  const deviceHeight = useWindowDimensions().height
-  const showDivider = deviceHeight < contentHeight || isKeyboardOpen
+  const {isScrollBarShown} = useScrollView()
+  const shouldShowSeparator = isScrollBarShown || isKeyboardOpen
   return (
     <View
       style={StyleSheet.flatten([
         a.pt_lg,
         a.px_lg,
-        showDivider && a.border_t,
-        showDivider && {
+        shouldShowSeparator && a.border_t,
+        shouldShowSeparator && {
           borderTopColor: p.gray_200,
         },
         style,

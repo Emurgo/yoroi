@@ -2,7 +2,6 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
 import {Text, View} from 'react-native'
-import {ScrollView} from 'react-native-gesture-handler'
 
 import {ShowDisclaimer} from '~/features/Legal/ui/shared/Disclaimer/ShowDisclaimer'
 import {AmountCard} from '~/features/Swap/common/AmountCard/AmountCard'
@@ -17,6 +16,7 @@ import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {ProtocolAvatar} from '~/ui/ProtocolAvatar/ProtocolAvatar'
 import {RefreshButton} from '~/ui/RefreshButton/RefreshButton'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
+import {ScrollView, useScrollView} from '~/ui/ScrollView/ScrollView'
 import {ShowPriceImpact} from '~/ui/ShowPriceImpact/ShowPriceImpact'
 import {isEmptyString} from '~/wallets/utils/string'
 
@@ -25,10 +25,8 @@ import {LimitInput} from './LimitInput'
 import {WarnLimitPrice} from './WarnLimitPrice'
 
 const LIMIT_PRICE_WARNING_THRESHOLD = 0.1 // 10%
-const BOTTOM_ACTION_SECTION = 180
-
 export const SwapMainScreen = () => {
-  const [contentHeight, setContentHeight] = React.useState(0)
+  const {setIsScrollBarShown, scrollViewRef} = useScrollView()
   const strings = useStrings()
   const {palette: p} = useTheme()
   const swapForm = useSwap()
@@ -93,15 +91,14 @@ export const SwapMainScreen = () => {
 
   return (
     <SafeArea>
-      <ScrollView style={[a.px_lg]}>
+      <ScrollView
+        ref={scrollViewRef}
+        style={[a.px_lg]}
+        onScrollBarChange={setIsScrollBarShown}
+      >
         <ShowDisclaimer type="swap" />
 
-        <View
-          onLayout={(event) => {
-            const {height} = event.nativeEvent.layout
-            setContentHeight(height + BOTTOM_ACTION_SECTION)
-          }}
-        >
+        <View>
           <View style={[a.gap_lg]}>
             <View style={[a.flex_row, a.justify_between]}>
               <View style={[a.flex_row, a.align_center, a.gap_2xs]}>
@@ -225,7 +222,7 @@ export const SwapMainScreen = () => {
         </View>
       </ScrollView>
 
-      <SafeArea.Footer contentHeight={contentHeight}>
+      <SafeArea.Footer>
         <Button
           testID="swapButton"
           title={

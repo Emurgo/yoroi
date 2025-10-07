@@ -5,12 +5,11 @@ import {
   useExchangeProvidersByOrderType,
 } from '@yoroi/exchange'
 import {linksYoroiModuleMaker} from '@yoroi/links'
-import {atoms as a, useTheme} from '@yoroi/theme'
+import {atoms as a} from '@yoroi/theme'
 import {Chain, Exchange} from '@yoroi/types'
 
 import * as React from 'react'
-import {Linking, View, useWindowDimensions} from 'react-native'
-import {ScrollView} from 'react-native-gesture-handler'
+import {Linking, View} from 'react-native'
 
 import {ProviderItem} from '~/features/Exchange/common/ProviderItem/ProviderItem'
 import {ShowDisclaimer} from '~/features/Legal/ui/shared/Disclaimer/ShowDisclaimer'
@@ -24,6 +23,7 @@ import {Icon} from '~/ui/Icon'
 import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
+import {ScrollView, useScrollView} from '~/ui/ScrollView/ScrollView'
 import {delay} from '~/wallets/utils/timeUtils'
 
 import {useNavigateTo} from '../../common/useNavigateTo'
@@ -36,16 +36,13 @@ import {LoadingLinkScreen} from './LoadingLink/LoadingScreen'
 import {SelectBuyOrSell} from './SelectBuyOrSell/SelectBuyOrSell'
 import {ShowPreprodNotice} from './ShowPreprodNotice/ShowPreprodNotice'
 
-const BOTTOM_ACTION_SECTION = 180
-
 export const CreateExchangeOrderScreen = () => {
-  const {palette: p} = useTheme()
+  const {setIsScrollBarShown, scrollViewRef} = useScrollView()
 
   const strings = useStrings()
   const {track} = useMetrics()
   const {wallet} = useSelectedWallet()
   const walletNavigation = useWalletNavigation()
-  const [contentHeight, setContentHeight] = React.useState(0)
   const {
     selected: {network},
   } = useWalletManager()
@@ -71,8 +68,6 @@ export const CreateExchangeOrderScreen = () => {
   const fee = providerSelected?.supportedOrders[orderType]?.fee ?? 0
 
   const Logo = providerSelected?.id === 'banxa' ? BanxaLogo : EncryptusLogo
-
-  const {height: deviceHeight} = useWindowDimensions()
 
   const quantity = BigInt(amount.value)
   const orderAmount = atomicBreakdown(
@@ -179,14 +174,12 @@ export const CreateExchangeOrderScreen = () => {
 
   return (
     <SafeArea>
-      <ScrollView style={a.px_lg}>
-        <View
-          style={a.flex_1}
-          onLayout={(event) => {
-            const {height} = event.nativeEvent.layout
-            setContentHeight(height + BOTTOM_ACTION_SECTION)
-          }}
-        >
+      <ScrollView
+        ref={scrollViewRef}
+        style={a.px_lg}
+        onScrollBarChange={setIsScrollBarShown}
+      >
+        <View style={a.flex_1}>
           <SelectBuyOrSell disabled={isLoading} />
 
           <ShowPreprodNotice />
@@ -206,7 +199,7 @@ export const CreateExchangeOrderScreen = () => {
         </View>
       </ScrollView>
 
-      <SafeArea.Footer contentHeight={contentHeight}>
+      <SafeArea.Footer>
         <CreateExchangeButton
           disabled={exchangeDisabled}
           onPress={handleOnExchange}
