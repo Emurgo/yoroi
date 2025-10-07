@@ -4,6 +4,7 @@ import * as React from 'react'
 import {Linking, Text, View} from 'react-native'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
+import {Button, ButtonType} from '~/ui/Button/Button'
 import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {Space} from '~/ui/Space/Space'
 
@@ -27,6 +28,29 @@ export const InitialCollateralInfoModal = () => {
 
       <Link />
     </Modal.Content>
+  )
+}
+
+export const InitialCollateralInfoModalFooter = ({
+  onConfirm,
+  onCancel,
+}: {
+  onConfirm: () => void
+  onCancel: () => void
+}) => {
+  const strings = useStrings()
+  return (
+    <Modal.Footer>
+      <Button
+        title={strings.manageCollateral.cancel}
+        onPress={onCancel}
+        type={ButtonType.Secondary}
+      />
+      <Button
+        title={strings.manageCollateral.initialCollateralInfoModalButton}
+        onPress={onConfirm}
+      />
+    </Modal.Footer>
   )
 }
 

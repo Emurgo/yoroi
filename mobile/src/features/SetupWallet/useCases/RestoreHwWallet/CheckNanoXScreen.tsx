@@ -25,7 +25,7 @@ import {LedgerCheckIllustration} from '../../illustrations/LedgerCheckIllustrati
 
 export const CheckNanoXScreen = () => {
   const strings = useStrings()
-  const {palette: p, atoms: ta} = useTheme()
+  const {atoms: ta} = useTheme()
   const {track} = useMetrics()
 
   const navigation = useNavigation<SetupWalletRouteNavigation>()

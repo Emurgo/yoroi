@@ -11,7 +11,6 @@ import {
   View,
   ViewProps,
 } from 'react-native'
-import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useBalances} from '~/features/Portfolio/common/hooks/useBalances'
 import {useReviewTx} from '~/features/ReviewTx/common/ReviewTxProvider'
@@ -32,6 +31,7 @@ import {DashboardRoutes} from '~/kernel/navigation/types'
 import {Banner} from '~/ui/Banner/Banner'
 import {Button} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/context/ModalContext'
+import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
 import {isEmptyString} from '~/wallets/utils/string'
 import {Amounts} from '~/wallets/utils/utils'
@@ -107,7 +107,7 @@ export const DashboardScreen = () => {
     }
 
   return (
-    <SafeAreaView
+    <SafeArea
       edges={['bottom', 'left', 'right']}
       style={[a.flex_1, ta.bg_color_max]}
     >
@@ -206,7 +206,7 @@ export const DashboardScreen = () => {
           />
         </Actions>
       </View>
-    </SafeAreaView>
+    </SafeArea>
   )
 }
 

@@ -16,7 +16,7 @@ import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {ProtocolAvatar} from '~/ui/ProtocolAvatar/ProtocolAvatar'
 import {RefreshButton} from '~/ui/RefreshButton/RefreshButton'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
-import {ScrollView, useScrollView} from '~/ui/ScrollView/ScrollView'
+import {ScrollView} from '~/ui/ScrollView/ScrollView'
 import {ShowPriceImpact} from '~/ui/ShowPriceImpact/ShowPriceImpact'
 import {isEmptyString} from '~/wallets/utils/string'
 
@@ -25,8 +25,8 @@ import {LimitInput} from './LimitInput'
 import {WarnLimitPrice} from './WarnLimitPrice'
 
 const LIMIT_PRICE_WARNING_THRESHOLD = 0.1 // 10%
+
 export const SwapMainScreen = () => {
-  const {setIsScrollBarShown, scrollViewRef} = useScrollView()
   const strings = useStrings()
   const {palette: p} = useTheme()
   const swapForm = useSwap()
@@ -98,7 +98,7 @@ export const SwapMainScreen = () => {
       >
         <ShowDisclaimer type="swap" />
 
-        <View>
+        <View style={a.flex_1}>
           <View style={[a.gap_lg]}>
             <View style={[a.flex_row, a.justify_between]}>
               <View style={[a.flex_row, a.align_center, a.gap_2xs]}>

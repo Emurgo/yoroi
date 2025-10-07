@@ -115,39 +115,37 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
     openModal({
       title: strings.discover.dAppActions,
       content: (
-        <Modal.Content>
-          <View style={[a.flex_col, a.px_lg]}>
-            <View style={[a.align_center, a.gap_sm]}>
-              <Image source={{uri: logo}} style={[{width: 48, height: 48}]} />
+        <Modal.Content style={a.flex_col}>
+          <View style={[a.align_center, a.gap_sm]}>
+            <Image source={{uri: logo}} style={[{width: 48, height: 48}]} />
 
-              <Text style={[a.body_1_lg_medium, ta.text_gray_max]}>
-                {dApp.name}
-              </Text>
-            </View>
-
-            <Space.Height.md />
-
-            {dApp.isSingleAddress && (
-              <>
-                <Space.Height.lg />
-
-                <SingleAddressDAppWarning />
-              </>
-            )}
-
-            <Space.Height.lg />
-
-            <InfoBanner
-              iconSize={20}
-              content={strings.discover.disconnectWarning}
-            />
-
-            <Space.Height.lg />
+            <Text style={[a.body_1_lg_medium, ta.text_gray_max]}>
+              {dApp.name}
+            </Text>
           </View>
+
+          <Space.Height.md />
+
+          {dApp.isSingleAddress && (
+            <>
+              <Space.Height.lg />
+
+              <SingleAddressDAppWarning />
+            </>
+          )}
+
+          <Space.Height.lg />
+
+          <InfoBanner
+            iconSize={20}
+            content={strings.discover.disconnectWarning}
+          />
+
+          <Space.Height.lg />
         </Modal.Content>
       ),
       footer: (
-        <View style={[a.flex_row, a.gap_lg]}>
+        <Modal.Footer style={[a.flex_row, a.gap_lg]}>
           <Button
             type={ButtonType.SecondaryText}
             fontOverride={a.body_1_lg_medium}
@@ -165,7 +163,7 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
             title={strings.discover.disconnectWalletFromDApp}
             size="S"
           />
-        </View>
+        </Modal.Footer>
       ),
       height: dialogHeight,
     })

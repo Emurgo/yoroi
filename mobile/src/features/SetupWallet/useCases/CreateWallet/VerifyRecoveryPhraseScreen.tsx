@@ -41,15 +41,6 @@ export const VerifyRecoveryPhraseScreen = () => {
     }, [track]),
   )
 
-  // Debug: Log mnemonic state
-  React.useEffect(() => {
-    console.log('VerifyRecoveryPhraseScreen - mnemonic:', mnemonic)
-    console.log(
-      'VerifyRecoveryPhraseScreen - mnemonic length:',
-      mnemonic.length,
-    )
-  }, [mnemonic])
-
   // Handle empty mnemonic case
   const processedMnemonic = mnemonic.trim() || ''
 
@@ -75,18 +66,6 @@ export const VerifyRecoveryPhraseScreen = () => {
         : [],
     [processedMnemonic],
   )
-
-  // Debug: Log processed entries
-  React.useEffect(() => {
-    console.log(
-      'VerifyRecoveryPhraseScreen - mnemonicEntries:',
-      mnemonicEntries,
-    )
-    console.log(
-      'VerifyRecoveryPhraseScreen - mnemonicDefault:',
-      mnemonicDefault,
-    )
-  }, [mnemonicEntries, mnemonicDefault])
 
   const [userEntries, setUserEntries] = React.useState<Array<Entry>>([])
   const appendEntry = (entry: Entry) => setUserEntries([...userEntries, entry])

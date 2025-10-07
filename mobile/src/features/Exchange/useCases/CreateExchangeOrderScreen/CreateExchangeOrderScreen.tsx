@@ -10,6 +10,7 @@ import {Chain, Exchange} from '@yoroi/types'
 
 import * as React from 'react'
 import {Linking, View} from 'react-native'
+import {ScrollView} from 'react-native-gesture-handler'
 
 import {ProviderItem} from '~/features/Exchange/common/ProviderItem/ProviderItem'
 import {ShowDisclaimer} from '~/features/Legal/ui/shared/Disclaimer/ShowDisclaimer'
@@ -23,7 +24,6 @@ import {Icon} from '~/ui/Icon'
 import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
-import {ScrollView, useScrollView} from '~/ui/ScrollView/ScrollView'
 import {delay} from '~/wallets/utils/timeUtils'
 
 import {useNavigateTo} from '../../common/useNavigateTo'
@@ -37,8 +37,6 @@ import {SelectBuyOrSell} from './SelectBuyOrSell/SelectBuyOrSell'
 import {ShowPreprodNotice} from './ShowPreprodNotice/ShowPreprodNotice'
 
 export const CreateExchangeOrderScreen = () => {
-  const {setIsScrollBarShown, scrollViewRef} = useScrollView()
-
   const strings = useStrings()
   const {track} = useMetrics()
   const {wallet} = useSelectedWallet()
@@ -174,11 +172,7 @@ export const CreateExchangeOrderScreen = () => {
 
   return (
     <SafeArea>
-      <ScrollView
-        ref={scrollViewRef}
-        style={a.px_lg}
-        onScrollBarChange={setIsScrollBarShown}
-      >
+      <ScrollView style={a.px_lg}>
         <View style={a.flex_1}>
           <SelectBuyOrSell disabled={isLoading} />
 

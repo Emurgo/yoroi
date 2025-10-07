@@ -28,7 +28,6 @@ import {ErrorPanel} from '~/ui/ErrorPanel/ErrorPanel'
 import {Icon} from '~/ui/Icon'
 import {Info} from '~/ui/Icon/Info'
 import {useModal} from '~/ui/Modal/context/ModalContext'
-import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
 import {TokenAmountItem} from '~/ui/TokenAmountItem/TokenAmountItem'
@@ -40,7 +39,10 @@ import {YoroiEntry, YoroiSignedTx} from '~/wallets/types/yoroi'
 import {Amounts, Quantities, asQuantity} from '~/wallets/utils/utils'
 
 import {CollateralInfoModal} from './CollateralInfoModal'
-import {InitialCollateralInfoModal} from './InitialCollateralInfoModal'
+import {
+  InitialCollateralInfoModal,
+  InitialCollateralInfoModalFooter,
+} from './InitialCollateralInfoModal'
 import {createCollateralEntry} from './helpers'
 
 export const ManageCollateralScreen = () => {
@@ -147,7 +149,10 @@ export const ManageCollateralScreen = () => {
       title: strings.manageCollateral.initialCollateralInfoModalTitle,
       content: <InitialCollateralInfoModal />,
       footer: (
-        <Actions onConfirm={handleGenerateCollateral} onCancel={closeModal} />
+        <InitialCollateralInfoModalFooter
+          onConfirm={handleGenerateCollateral}
+          onCancel={closeModal}
+        />
       ),
       height: Math.min(screenHeight * 0.7, 650),
     })
@@ -226,29 +231,6 @@ export const ManageCollateralScreen = () => {
         />
       )}
     </SafeAreaView>
-  )
-}
-
-const Actions = ({
-  onConfirm,
-  onCancel,
-}: {
-  onConfirm: () => void
-  onCancel: () => void
-}) => {
-  const strings = useStrings()
-  return (
-    <Modal.Footer>
-      <Button
-        title={strings.manageCollateral.cancel}
-        onPress={onCancel}
-        type={ButtonType.Secondary}
-      />
-      <Button
-        title={strings.manageCollateral.initialCollateralInfoModalButton}
-        onPress={onConfirm}
-      />
-    </Modal.Footer>
   )
 }
 
