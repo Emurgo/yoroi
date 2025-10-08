@@ -45,6 +45,7 @@ Before you begin, ensure you have the following installed:
 - **Android SDK** (API level 35)
 - **Android NDK** (v27.0.12077973)
 - **Java Development Kit (JDK)** (v17 or higher)
+- **Alternative**: Use asdf to install all dependencies from .tool-versions:\*\*
 
 ### Rust Toolchain (Required for Native Modules)
 
@@ -71,6 +72,10 @@ rustup target add \
   x86_64-linux-android
 ```
 
+```bash
+asdf install
+```
+
 ## Installation
 
 1. **Clone the repository:**
@@ -84,12 +89,6 @@ rustup target add \
 
    ```bash
    npm install
-   ```
-
-   **Alternative: Use asdf to install all dependencies from .tool-versions:**
-
-   ```bash
-   asdf install
    ```
 
 3. **Install iOS dependencies (macOS only):**
