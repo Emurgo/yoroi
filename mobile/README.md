@@ -1,6 +1,6 @@
 # Yoroi Mobile Wallet
 
-A secure, multi-platform Cardano wallet built with React Native and Expo. Yoroi provides a user-friendly interface for managing ADA and other Cardano-based assets across iOS, Android, and Web platforms.
+A secure, multi-platform Cardano wallet built with React Native and Expo. Yoroi provides a user-friendly interface for managing ADA and other Cardano-based assets across iOS and Android platforms.
 
 ## Table of Contents
 
@@ -46,10 +46,6 @@ Before you begin, ensure you have the following installed:
 - **Android NDK** (v27.0.12077973)
 - **Java Development Kit (JDK)** (v17 or higher)
 
-#### For Web Development
-
-- **Modern web browser** (Chrome, Firefox, Safari, Edge)
-
 ### Rust Toolchain (Required for Native Modules)
 
 The app uses Rust-based native modules that need to be compiled for each platform:
@@ -81,13 +77,19 @@ rustup target add \
 
    ```bash
    git clone https://github.com/emurgo/yoroi.git
-   cd mobile
+   cd yoroi/mobile
    ```
 
 2. **Install dependencies:**
 
    ```bash
    npm install
+   ```
+
+   **Alternative: Use asdf to install all dependencies from .tool-versions:**
+
+   ```bash
+   asdf install
    ```
 
 3. **Install iOS dependencies (macOS only):**
@@ -102,7 +104,7 @@ rustup target add \
 The app supports multiple build variants:
 
 - **Development** - Default development build
-- **Nightly** - Testing build with additional features
+
 - **Production** - Release build
 
 ### Start Development Server
@@ -112,7 +114,6 @@ The app supports multiple build variants:
 npm start
 
 # Or for specific variants:
-npm run start:nightly
 npm run start:production
 ```
 
@@ -297,6 +298,8 @@ eas build --platform all --profile production
    npx expo prebuild --platform ios
    ```
 
+   > **Warning:** This command can overwrite files in `ios/`. In this repo, only run it when you intentionally want to regenerate/sync native changes (e.g., after adding/removing a native plugin). For routine development, use `npm run ios` instead.
+
 2. **Open in Xcode:**
 
    ```bash
@@ -312,6 +315,8 @@ eas build --platform all --profile production
    ```bash
    npx expo prebuild --platform android
    ```
+
+   > **Warning:** Same as above for Android. This command can overwrite files in `android/`. Only run it when you intentionally want to regenerate/sync native changes (e.g., after adding/removing a native plugin). For routine development, use `npm run android` instead.
 
 2. **Build APK:**
 
@@ -350,9 +355,7 @@ EXPO_PUBLIC_UNSTOPPABLE_API_KEY=your_api_key
 
 Configuration files are located in the root directory:
 
-- `app.json` - Main Expo configuration
-- `app.config.nightly.js` - Nightly build configuration
-- `app.config.production.js` - Production build configuration
+- `eas.json` - Main Expo configuration
 
 ### Platform-Specific Configuration
 
@@ -366,7 +369,7 @@ Configuration files are located in the root directory:
 
 - Package name: `com.emurgo`
 - Target SDK: 35
-- Minimum SDK: 21
+- Minimum SDK: 24
 - Permissions: Camera, Location, Bluetooth, Biometric
 
 ## Troubleshooting
