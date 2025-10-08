@@ -154,7 +154,6 @@ export const StakingCenter = () => {
       {shouldDisplayPoolList && (
         <View style={a.flex_1}>
           <Space.Height.sm />
-
           <WebView
             style={{opacity: isContentLoaded ? 1 : 0}}
             originWhitelist={['*']}
@@ -186,9 +185,6 @@ export const StakingCenter = () => {
             >
               <Text style={[a.body_1_lg_regular, ta.text_primary_max, a.pb_sm]}>
                 {strings.staking.loading}
-              </Text>
-              <Text style={[a.body_1_lg_regular, ta.text_primary_max]}>
-                {strings.staking.processingDelegation}
               </Text>
             </View>
           }
