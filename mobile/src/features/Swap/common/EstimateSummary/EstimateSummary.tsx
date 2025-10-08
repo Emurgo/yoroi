@@ -50,8 +50,8 @@ export const EstimateSummary = () => {
 
   const expand = () =>
     openModal({
-      content: <Splits data={swapForm.estimate?.splits ?? []} />,
-      footer: <SwapInfoLink />,
+      content: <Modal.Content><Splits data={swapForm.estimate?.splits ?? []} /></Modal.Content>,
+      footer: <Modal.Footer><SwapInfoLink /></Modal.Footer>,
     })
 
   return (
@@ -193,7 +193,7 @@ export const Splits = ({data}: {data: Swap.Split[]}) => {
   )
 
   return (
-    <Modal.Content style={[a.gap_md]}>
+    <View style={[a.gap_md]}>
       {[...data]
         .sort(
           (a, b) =>
@@ -230,6 +230,6 @@ export const Splits = ({data}: {data: Swap.Split[]}) => {
             </Text>
           </View>
         ))}
-    </Modal.Content>
+    </View>
   )
 }
