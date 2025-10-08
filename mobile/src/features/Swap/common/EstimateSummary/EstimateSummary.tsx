@@ -50,8 +50,16 @@ export const EstimateSummary = () => {
 
   const expand = () =>
     openModal({
-      content: <Modal.Content><Splits data={swapForm.estimate?.splits ?? []} /></Modal.Content>,
-      footer: <Modal.Footer><SwapInfoLink /></Modal.Footer>,
+      content: (
+        <Modal.Content>
+          <Splits data={swapForm.estimate?.splits ?? []} />
+        </Modal.Content>
+      ),
+      footer: (
+        <Modal.Footer>
+          <SwapInfoLink />
+        </Modal.Footer>
+      ),
     })
 
   return (

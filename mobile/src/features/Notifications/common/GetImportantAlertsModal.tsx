@@ -59,7 +59,7 @@ export const GetImportantAlertsModal = ({
 
   return (
     <Modal.Content style={[a.align_center]}>
-      <View style={[a.py_lg]}>
+      <View style={[a.self_stretch, a.align_center, a.py_lg]}>
         <PhoneBell />
       </View>
 
