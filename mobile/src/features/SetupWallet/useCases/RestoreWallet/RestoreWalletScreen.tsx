@@ -16,7 +16,7 @@ import {android} from '~/kernel/runtime'
 import {Button} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/context/ModalContext'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
-import {useScrollView} from '~/ui/ScrollView/ScrollView'
+import {useScrollView} from '~/ui/ScrollView/useScrollView'
 import {Space} from '~/ui/Space/Space'
 import {StepperProgress} from '~/ui/StepperProgress/StepperProgress'
 import {isEmptyString} from '~/wallets/utils/string'
@@ -215,15 +215,15 @@ export const RestoreWalletScreen = () => {
         />
       </ScrollView>
 
-      <View style={[a.px_lg]}>
-        {!isEmptyString(mnemonic) && isValidPhrase && (
+      {!isEmptyString(mnemonic) && isValidPhrase && (
+        <SafeArea.Footer>
           <Button
             title={strings.setupWallet.next}
             onPress={handleOnNext}
             testID="setup-restore-step1-next-button"
           />
-        )}
-      </View>
+        </SafeArea.Footer>
+      )}
 
       {suggestedWords.length > 0 && !hasFocusedInputError && (
         <WordSuggestionList

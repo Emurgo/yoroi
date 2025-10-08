@@ -16,7 +16,8 @@ import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {ProtocolAvatar} from '~/ui/ProtocolAvatar/ProtocolAvatar'
 import {RefreshButton} from '~/ui/RefreshButton/RefreshButton'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
-import {ScrollView, useScrollView} from '~/ui/ScrollView/ScrollView'
+import {ScrollView} from '~/ui/ScrollView/ScrollView'
+import {useScrollView} from '~/ui/ScrollView/useScrollView'
 import {ShowPriceImpact} from '~/ui/ShowPriceImpact/ShowPriceImpact'
 import {isEmptyString} from '~/wallets/utils/string'
 
@@ -27,12 +28,12 @@ import {WarnLimitPrice} from './WarnLimitPrice'
 const LIMIT_PRICE_WARNING_THRESHOLD = 0.1 // 10%
 
 export const SwapMainScreen = () => {
+  const {scrollViewRef} = useScrollView()
   const strings = useStrings()
-  const {palette: p} = useTheme()
+  const {palette: p, atoms: ta} = useTheme()
   const swapForm = useSwap()
   const {openModal, closeModal} = useModal()
   const navigateTo = useNavigateTo()
-  const {scrollViewRef, setIsScrollBarShown} = useScrollView()
   const tokenInInfo = swapForm.tokenInfos?.get?.(
     swapForm.tokenInInput.tokenId ?? undefinedToken,
   )
@@ -91,11 +92,7 @@ export const SwapMainScreen = () => {
 
   return (
     <SafeArea>
-      <ScrollView
-        ref={scrollViewRef}
-        style={[a.px_lg]}
-        onScrollBarChange={setIsScrollBarShown}
-      >
+      <ScrollView ref={scrollViewRef} style={[a.px_lg]}>
         <ShowDisclaimer type="swap" />
 
         <View style={a.flex_1}>
@@ -206,7 +203,7 @@ export const SwapMainScreen = () => {
               swapForm.selectedProtocol.value !== undefined &&
               swapForm.estimate === undefined && (
                 <View style={[a.flex_row, a.justify_between]}>
-                  <Text style={[a.body_1_lg_regular, {color: p.text_gray_low}]}>
+                  <Text style={[a.body_1_lg_regular, ta.text_gray_low]}>
                     {strings.swap.route}
                   </Text>
 

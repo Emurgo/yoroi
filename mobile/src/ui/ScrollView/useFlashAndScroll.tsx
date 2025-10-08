@@ -1,10 +1,12 @@
 import {time} from '@yoroi/common'
 
 import * as React from 'react'
-import {Keyboard, Platform, ScrollView} from 'react-native'
+import {Keyboard, Platform} from 'react-native'
+
+import {useScrollViewContext} from './context'
 
 export const useFlashAndScroll = () => {
-  const scrollViewRef = React.useRef<ScrollView | null>(null)
+  const {scrollViewRef} = useScrollViewContext()
 
   React.useLayoutEffect(() => {
     setTimeout(() => {
@@ -21,7 +23,7 @@ export const useFlashAndScroll = () => {
     return () => {
       showSubscription.remove()
     }
-  }, [])
+  }, [scrollViewRef])
 
   return scrollViewRef
 }

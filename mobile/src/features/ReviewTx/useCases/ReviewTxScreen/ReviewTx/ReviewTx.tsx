@@ -7,19 +7,20 @@ import {
 import * as React from 'react'
 import {
   FlatList,
-  StyleProp,
+  ScrollView as RNScrollView,
+  StyleSheet,
   Text,
   TouchableOpacity,
   TouchableOpacityProps,
   View,
-  ViewStyle,
 } from 'react-native'
 
 import {FormattedMetadata, FormattedTx} from '~/features/ReviewTx/common/types'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
-import {ScrollView, useScrollView} from '~/ui/ScrollView/ScrollView'
+import {ScrollView} from '~/ui/ScrollView/ScrollView'
+import {ScrollViewProvider} from '~/ui/ScrollView/context'
 import {isEmptyString} from '~/wallets/utils/string'
 
 import {MetadataTab} from '../ReviewTx/Metadata/MetadataTab'
@@ -30,6 +31,31 @@ import {ReferenceInputsTab} from './ReferenceInputs/ReferenceInputs'
 
 const MaterialTab = createMaterialTopTabNavigator()
 type Tabs = 'overview' | 'utxos' | 'metadata' | 'mint' | 'reference_inputs'
+
+const TabWrapper = ({
+  children,
+  onConfirm,
+}: {
+  children: React.ReactNode
+  onConfirm: () => void
+}) => {
+  const {atoms: ta} = useTheme()
+  const strings = useStrings()
+  const scrollViewRef = React.useRef<RNScrollView | null>(null)
+
+  return (
+    <ScrollViewProvider>
+      <SafeArea>
+        <ScrollView ref={scrollViewRef} style={[a.flex_1, ta.bg_color_max]}>
+          {children}
+        </ScrollView>
+        <SafeArea.Footer>
+          <Button title={strings.txReview.confirm} onPress={onConfirm} />
+        </SafeArea.Footer>
+      </SafeArea>
+    </ScrollViewProvider>
+  )
+}
 
 export const ReviewTx = ({
   formattedTx,
@@ -50,7 +76,6 @@ export const ReviewTx = ({
   createdBy?: React.ReactNode
   onConfirm: () => void
 }) => {
-  const {palette: p, atoms: ta} = useTheme()
   const strings = useStrings()
 
   const baseTabs = React.useMemo<Array<[string, Tabs]>>(
@@ -60,8 +85,6 @@ export const ReviewTx = ({
     ],
     [strings.txReview.tabLabel.overview, strings.txReview.tabLabel.utxos],
   )
-  const [activeTab, setActiveTab] = React.useState<Tabs>(baseTabs[0][1])
-
   const showMetadataTab =
     !isEmptyString(formattedMetadata?.hash) &&
     formattedMetadata?.metadata != null
@@ -86,132 +109,74 @@ export const ReviewTx = ({
     strings.txReview.tabLabel.referenceInputs,
   ])
 
-  // intentionally not using ref
-  const {
-    isScrollBarShown: isOverviewScrollBarShown,
-    setIsScrollBarShown: setOverviewIsScrollBarShown,
-  } = useScrollView()
-  const {
-    isScrollBarShown: isUtxosScrollBarShown,
-    setIsScrollBarShown: setUtxosIsScrollBarShown,
-  } = useScrollView()
-  const {
-    isScrollBarShown: isMetadataScrollBarShown,
-    setIsScrollBarShown: setMetadataIsScrollBarShown,
-  } = useScrollView()
-  const {
-    isScrollBarShown: isMintScrollBarShown,
-    setIsScrollBarShown: setMintIsScrollBarShown,
-  } = useScrollView()
-  const {
-    isScrollBarShown: isReferenceInputsScrollBarShown,
-    setIsScrollBarShown: setReferenceInputsIsScrollBarShown,
-  } = useScrollView()
-
-  const scrollbarActive =
-    (isOverviewScrollBarShown && activeTab === 'overview') ||
-    (isUtxosScrollBarShown && activeTab === 'utxos') ||
-    (isMetadataScrollBarShown && activeTab === 'metadata') ||
-    (isMintScrollBarShown && activeTab === 'mint') ||
-    (isReferenceInputsScrollBarShown && activeTab === 'reference_inputs')
-
   return (
-    <SafeArea>
-      <MaterialTab.Navigator
-        screenOptions={{swipeEnabled: false}}
-        tabBar={(props) => (
-          <TabBar
-            {...props}
-            tabsData={tabsData}
-            onActiveTabChange={setActiveTab}
-          />
+    <MaterialTab.Navigator
+      screenOptions={{swipeEnabled: false}}
+      tabBar={(props) => <TabBar {...props} tabsData={tabsData} />}
+    >
+      <MaterialTab.Screen
+        name="overview"
+        component={() => (
+          <TabWrapper onConfirm={onConfirm}>
+            <OverviewTab
+              tx={formattedTx}
+              extraOperations={operations}
+              operationsNotice={operationsNotice}
+              details={details}
+              createdBy={createdBy}
+              receiverCustomTitle={receiverCustomTitle}
+            />
+          </TabWrapper>
         )}
-      >
+      />
+
+      <MaterialTab.Screen
+        name="utxos"
+        component={() => (
+          <TabWrapper onConfirm={onConfirm}>
+            <UTxOsTab tx={formattedTx} />
+          </TabWrapper>
+        )}
+      />
+
+      {showMetadataTab && (
         <MaterialTab.Screen
-          name="overview"
+          name="metadata"
           component={() => (
-            <ScrollView
-              style={[a.flex_1, ta.bg_color_max]}
-              onScrollBarChange={setOverviewIsScrollBarShown}
-            >
-              <OverviewTab
-                tx={formattedTx}
-                extraOperations={operations}
-                operationsNotice={operationsNotice}
-                details={details}
-                createdBy={createdBy}
-                receiverCustomTitle={receiverCustomTitle}
+            <TabWrapper onConfirm={onConfirm}>
+              <MetadataTab
+                hash={formattedMetadata?.hash ?? null}
+                metadata={formattedMetadata?.metadata ?? null}
               />
-            </ScrollView>
+            </TabWrapper>
           )}
         />
+      )}
 
+      {showMintTab && (
         <MaterialTab.Screen
-          name="utxos"
+          name="mint"
           component={() => (
-            <ScrollView
-              style={[a.flex_1, ta.bg_color_max]}
-              onScrollBarChange={setUtxosIsScrollBarShown}
-            >
-              <UTxOsTab tx={formattedTx} />
-            </ScrollView>
+            <TabWrapper onConfirm={onConfirm}>
+              <MintTab mintData={formattedTx.mint} />
+            </TabWrapper>
           )}
         />
+      )}
 
-        {showMetadataTab && (
-          <MaterialTab.Screen
-            name="metadata"
-            component={() => (
-              <ScrollView
-                style={[a.flex_1, ta.bg_color_max]}
-                onScrollBarChange={setMetadataIsScrollBarShown}
-              >
-                <MetadataTab
-                  hash={formattedMetadata?.hash ?? null}
-                  metadata={formattedMetadata?.metadata ?? null}
-                />
-              </ScrollView>
-            )}
-          />
-        )}
-
-        {showMintTab && (
-          <MaterialTab.Screen
-            name="mint"
-            component={() => (
-              <ScrollView
-                style={[a.flex_1, ta.bg_color_max]}
-                onScrollBarChange={setMintIsScrollBarShown}
-              >
-                <MintTab mintData={formattedTx.mint} />
-              </ScrollView>
-            )}
-          />
-        )}
-
-        {showReferenceInoutsTab && (
-          <MaterialTab.Screen
-            name="reference_inputs"
-            component={() => (
-              <ScrollView
-                style={[a.flex_1, ta.bg_color_max]}
-                onScrollBarChange={setReferenceInputsIsScrollBarShown}
-              >
-                <ReferenceInputsTab
-                  referenceInputs={formattedTx.referenceInputs}
-                />
-              </ScrollView>
-            )}
-          />
-        )}
-      </MaterialTab.Navigator>
-
-      <Actions
-        style={scrollbarActive && [a.border_t, {borderTopColor: p.gray_200}]}
-      >
-        <Button title={strings.txReview.confirm} onPress={onConfirm} />
-      </Actions>
-    </SafeArea>
+      {showReferenceInoutsTab && (
+        <MaterialTab.Screen
+          name="reference_inputs"
+          component={() => (
+            <TabWrapper onConfirm={onConfirm}>
+              <ReferenceInputsTab
+                referenceInputs={formattedTx.referenceInputs}
+              />
+            </TabWrapper>
+          )}
+        />
+      )}
+    </MaterialTab.Navigator>
   )
 }
 
@@ -219,17 +184,10 @@ const TabBar = ({
   navigation,
   state,
   tabsData,
-  onActiveTabChange,
 }: MaterialTopTabBarProps & {
   tabsData: Array<Array<string>>
-  onActiveTabChange: (tab: Tabs) => void
 }) => {
   const {palette: p} = useTheme()
-
-  React.useEffect(() => {
-    onActiveTabChange(tabsData[state.index][1] as Tabs)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.index])
 
   return (
     <FlatList
@@ -243,10 +201,10 @@ const TabBar = ({
         />
       )}
       style={[
+        a.py_lg,
+        a.border_b,
         {
-          marginHorizontal: 16,
           maxHeight: 50,
-          borderBottomWidth: 1,
           borderBottomColor: p.gray_200,
         },
       ]}
@@ -264,48 +222,45 @@ export const Tab = ({
   testID,
   style,
 }: TouchableOpacityProps & {active: boolean; label: string}) => {
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
 
   return (
     <TouchableOpacity
-      style={[a.align_center, a.justify_center, a.py_md, style]}
+      style={StyleSheet.flatten([
+        a.align_center,
+        a.justify_center,
+        a.py_md,
+        a.debug,
+        style,
+      ])}
       onPress={onPress}
       testID={testID}
     >
-      <View style={[a.align_center, a.justify_center, a.px_lg]}>
-        <Text
-          style={[
-            a.body_1_lg_medium,
-            active ? {color: p.primary_600} : {color: p.gray_600},
-          ]}
-        >
-          {label}
-        </Text>
-      </View>
+      <Text
+        style={[
+          a.body_1_lg_medium,
+          active ? ta.text_primary_medium : ta.text_gray_medium,
+          {color: 'red'},
+          a.debug,
+        ]}
+      >
+        {active ? 'active' : 'inactive'}
+        {label}
+      </Text>
 
       {active && (
         <View
           style={[
             a.absolute,
+            a.w_full,
             {
               bottom: -2,
               height: 2.5,
-              width: '100%',
-              backgroundColor: p.el_primary_medium,
+              backgroundColor: ta.el_primary_medium.color,
             },
           ]}
         />
       )}
     </TouchableOpacity>
   )
-}
-
-const Actions = ({
-  children,
-  style,
-}: {
-  children: React.ReactNode
-  style?: StyleProp<ViewStyle>
-}) => {
-  return <View style={[a.px_lg, a.pt_lg, style]}>{children}</View>
 }

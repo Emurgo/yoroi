@@ -4,9 +4,9 @@ import * as React from 'react'
 import {ScrollView} from 'react-native'
 
 interface ScrollViewContextValue {
+  scrollViewRef: React.RefObject<ScrollView | null>
   isScrollBarShown: boolean
   setIsScrollBarShown: (isShown: boolean) => void
-  scrollViewRef: React.RefObject<ScrollView | null>
 }
 
 export const ScrollViewContext =
@@ -19,9 +19,9 @@ export const ScrollViewProvider: React.FC<React.PropsWithChildren> = ({
   const scrollViewRef = React.useRef<ScrollView | null>(null)
 
   const value: ScrollViewContextValue = {
+    scrollViewRef,
     isScrollBarShown,
     setIsScrollBarShown,
-    scrollViewRef,
   }
 
   return (
