@@ -1,10 +1,9 @@
 import * as React from 'react'
 import {ScrollView as RNScrollView, ScrollViewProps} from 'react-native'
 
-import {useScrollViewContext} from './context'
-import {useFlashAndScroll} from './useFlashAndScroll'
+import {useScrollView} from './useScrollView'
 
-export const ScrollView = React.forwardRef<RNScrollView, Props>(
+export const ScrollView = React.forwardRef<RNScrollView, ScrollViewProps>(
   ({onLayout, onContentSizeChange, ...rest}, ref) => {
     const [containerHeight, setContainerHeight] = React.useState(0)
     const [contentSize, setContentSize] = React.useState({width: 0, height: 0})
@@ -40,7 +39,3 @@ export const ScrollView = React.forwardRef<RNScrollView, Props>(
     )
   },
 )
-
-type Props = ScrollViewProps & {
-  onScrollBarChange?: (isScrollBarShown: boolean) => void
-}
