@@ -1,5 +1,5 @@
-import { useScrollViewContext } from './context'
-import { useFlashAndScroll } from './useFlashAndScroll'
+import {useScrollViewContext} from './context'
+import {useFlashAndScroll} from './useFlashAndScroll'
 
 export const useScrollView = () => {
   useFlashAndScroll()

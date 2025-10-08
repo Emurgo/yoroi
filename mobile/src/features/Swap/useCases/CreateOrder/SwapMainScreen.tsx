@@ -25,7 +25,8 @@ import {useNavigateTo} from '../../common/navigation'
 import {LimitInput} from './LimitInput'
 import {WarnLimitPrice} from './WarnLimitPrice'
 
-const LIMIT_PRICE_WARNING_THRESHOLD = 0.1 // 10%
+// TODO: should be part of the config
+const limitPriceThresholdForWarning = 0.1 // 10%
 
 export const SwapMainScreen = () => {
   const {scrollViewRef} = useScrollView()
@@ -48,7 +49,7 @@ export const SwapMainScreen = () => {
     const wantedPrice = Number(swapForm.wantedPrice)
     const marketPrice = swapForm.estimate?.netPrice ?? 0
     const difference = Math.abs(wantedPrice - marketPrice)
-    const threshold = marketPrice * LIMIT_PRICE_WARNING_THRESHOLD
+    const threshold = marketPrice * limitPriceThresholdForWarning
 
     if (swapForm.orderType === 'limit' && difference > threshold) {
       openModal({
