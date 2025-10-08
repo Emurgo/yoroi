@@ -25,9 +25,11 @@ export const KeyboardAvoidingView = ({
     <RNKeyboardAvoidingView
       behavior={behavior ?? keyboardBehavior}
       keyboardVerticalOffset={
-        keyboardVerticalOffset != null
-          ? keyboardVerticalOffset
-          : defaultKeyboardOffset
+        isKeyboardOpen
+          ? keyboardVerticalOffset != null
+            ? keyboardVerticalOffset
+            : defaultKeyboardOffset
+          : 0
       }
       enabled={isKeyboardOpen}
       {...rest}
