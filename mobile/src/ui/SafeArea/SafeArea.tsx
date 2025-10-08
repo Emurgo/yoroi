@@ -10,8 +10,7 @@ import {
 import {useIsKeyboardOpen} from '~/hooks/useIsKeyboardOpen'
 
 import {KeyboardAvoidingView} from '../KeyboardAvoidingView/KeyboardAvoidingView'
-import {useModal} from '../Modal/context/ModalContext'
-import {useScrollView} from '../ScrollView/ScrollView'
+import {useScrollViewContext} from '../ScrollView/context'
 
 export const SafeArea = ({
   children,
@@ -20,12 +19,10 @@ export const SafeArea = ({
   ...rest
 }: Props) => {
   const {atoms: ta} = useTheme()
-  const {isOpen} = useModal()
   return (
     <KeyboardAvoidingView
       style={a.flex_1}
-      keyboardVerticalOffset={isOpen ? 0 : keyboardVerticalOffset}
-      enabled={!isOpen}
+      keyboardVerticalOffset={keyboardVerticalOffset}
     >
       <SafeAreaView
         edges={['bottom', 'left', 'right']}
@@ -41,7 +38,7 @@ export const SafeArea = ({
 const SafeAreaFooter = ({children, style, ...rest}: ViewProps) => {
   const {palette: p} = useTheme()
   const isKeyboardOpen = useIsKeyboardOpen()
-  const {isScrollBarShown} = useScrollView()
+  const {isScrollBarShown} = useScrollViewContext()
   const shouldShowSeparator = isScrollBarShown || isKeyboardOpen
   return (
     <View

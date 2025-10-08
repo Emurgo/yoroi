@@ -20,6 +20,7 @@ import {ReviewTxProvider} from '~/features/ReviewTx/common/ReviewTxProvider'
 import {AppNavigator} from '~/kernel/navigation/AppNavigator'
 import {Boundary} from '~/ui/Boundary/Boundary'
 import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
+import {ScrollViewProvider} from '~/ui/ScrollView/context'
 
 import {PlatformShell} from './PlatformShell'
 import {AuthProvider} from './src/features/Auth/context/AuthProvider'
@@ -66,7 +67,9 @@ function AppShell({children}: React.PropsWithChildren) {
             <CopyProvider>
               <CrashBoundary>
                 <LoadingOverlayProvider>
-                  <Boundary loading={{size: 'full'}}>{children}</Boundary>
+                  <Boundary loading={{size: 'full'}}>
+                    <ScrollViewProvider>{children}</ScrollViewProvider>
+                  </Boundary>
                 </LoadingOverlayProvider>
               </CrashBoundary>
             </CopyProvider>

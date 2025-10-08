@@ -20,7 +20,8 @@ import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation
 import {Button} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/context/ModalContext'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
-import {ScrollView, useScrollView} from '~/ui/ScrollView/ScrollView'
+import {ScrollView} from '~/ui/ScrollView/ScrollView'
+import {useScrollView} from '~/ui/ScrollView/useScrollView'
 import {Space} from '~/ui/Space/Space'
 
 import {linkToSupportOpenTicket} from '../../../common/constants'
@@ -41,7 +42,7 @@ export const SelectWalletFromList = () => {
   )
 
   useLinksRequestWallet(modalFunctions)
-  const {setIsScrollBarShown, scrollViewRef} = useScrollView()
+  const {scrollViewRef} = useScrollView()
   const navigation = useNavigation()
   const {track} = useMetrics()
   const walletMetas = useWalletMetas()
@@ -91,7 +92,6 @@ export const SelectWalletFromList = () => {
       <ScrollView
         ref={scrollViewRef}
         style={[a.px_lg, a.pt_2xl]}
-        onScrollBarChange={setIsScrollBarShown}
         bounces={true}
       >
         {walletList}

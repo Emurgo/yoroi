@@ -1,13 +1,15 @@
+import {time} from '@yoroi/common'
+
 import * as React from 'react'
 import {Keyboard, Platform, ScrollView} from 'react-native'
 
 export const useFlashAndScroll = () => {
   const scrollViewRef = React.useRef<ScrollView | null>(null)
 
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     setTimeout(() => {
       scrollViewRef.current?.flashScrollIndicators()
-    }, 500)
+    }, time.seconds(0.3))
 
     const event =
       Platform.OS === 'android' ? 'keyboardDidShow' : 'keyboardWillShow'
