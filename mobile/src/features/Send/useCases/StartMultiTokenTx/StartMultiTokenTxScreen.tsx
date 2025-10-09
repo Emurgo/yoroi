@@ -1,4 +1,4 @@
-import {atoms as a, useTheme} from '@yoroi/theme'
+import {atoms as a} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
 
 import {useIsFocused} from '@react-navigation/native'
@@ -29,7 +29,6 @@ import {ShowErrors} from './ShowErrors'
 
 export const StartMultiTokenTxScreen = () => {
   const strings = useStrings()
-  const {palette: p} = useTheme()
   const navigateTo = useNavigateTo()
   const {wallet} = useSelectedWallet()
   const {track} = useMetrics()

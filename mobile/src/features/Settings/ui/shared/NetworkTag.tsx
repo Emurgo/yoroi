@@ -20,7 +20,6 @@ import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
-import {Space} from '~/ui/Space/Space'
 
 type Props = React.PropsWithChildren<{
   directChangeActive?: boolean
@@ -76,20 +75,20 @@ export const NetworkTag = ({
             </Modal.Content>
           ),
           footer: (
-            <Modal.Footer>
+            <Modal.Footer style={[a.flex_row, a.justify_end, a.gap_lg]}>
               <Button
                 size="S"
                 type={ButtonType.Secondary}
-                title="Cancel"
+                title={strings.global.cancel}
                 onPress={closeModal}
+                style={[a.flex_1]}
               />
-
-              <Space.Width.lg />
 
               <Button
                 size="S"
                 title={strings.global.switch}
                 onPress={onConfirm}
+                style={[a.flex_1]}
               />
             </Modal.Footer>
           ),
