@@ -29,6 +29,8 @@ Before you begin, ensure you have the following installed:
 - **Java Development Kit (JDK)** (v17.0.10+7) - [Download](https://adoptium.net/)
 - **Ruby** (v3.2.2) - [Download](https://www.ruby-lang.org/)
 - **Python** (v3.11.3) - [Download](https://www.python.org/)
+  **Note**: Use asdf to install all dependencies from .tool-versions:\*\*
+
 
 ### Platform-Specific Requirements
 
@@ -45,7 +47,6 @@ Before you begin, ensure you have the following installed:
 - **Android SDK** (API level 35)
 - **Android NDK** (v27.0.12077973)
 - **Java Development Kit (JDK)** (v17 or higher)
-- **Alternative**: Use asdf to install all dependencies from .tool-versions:\*\*
 
 ### Rust Toolchain (Required for Native Modules)
 
