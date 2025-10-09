@@ -29,6 +29,7 @@ Before you begin, ensure you have the following installed:
 - **Java Development Kit (JDK)** (v17.0.10+7) - [Download](https://adoptium.net/)
 - **Ruby** (v3.2.2) - [Download](https://www.ruby-lang.org/)
 - **Python** (v3.11.3) - [Download](https://www.python.org/)
+
   **Note**: Use asdf to install all dependencies from .tool-versions:\*\*
 
 
