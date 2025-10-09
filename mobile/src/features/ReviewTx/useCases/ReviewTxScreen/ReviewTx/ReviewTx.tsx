@@ -65,7 +65,7 @@ export const ReviewTx = ({
   onConfirm: () => void
 }) => {
   const strings = useStrings()
-  const {atoms: ta} = useTheme()
+  const {atoms: ta, palette: p} = useTheme()
 
   const showMetadataTab =
     !isEmptyString(formattedMetadata?.hash) &&
@@ -85,6 +85,7 @@ export const ReviewTx = ({
         tabBarActiveTintColor: ta.text_primary_medium.color,
         tabBarInactiveTintColor: ta.text_gray_medium.color,
         tabBarBounces: true,
+        tabBarStyle: {backgroundColor: p.bg_color_max},
       }}
     >
       <MaterialTab.Screen
