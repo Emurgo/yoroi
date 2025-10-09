@@ -13,7 +13,7 @@ import {
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {usePrefetchStakingInfo} from '~/features/Dashboard/StakePoolInfos'
+import {usePrefetchStakingInfo} from '~/features/Dashboard/ui/shared/StakePoolInfos'
 import {useCanVote} from '~/features/RegisterCatalyst/common/hooks'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {features} from '~/kernel/features'
@@ -22,9 +22,8 @@ import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {MenuRoutes} from '~/kernel/navigation/types'
-import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
-import {useModal} from '~/ui/Modal/ModalContext'
+import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
 
@@ -215,7 +214,7 @@ const Catalyst = ({
   const {palette: p} = useTheme()
   const {wallet} = useSelectedWallet()
   const {sufficientFunds, isLoading} = useCanVote(wallet)
-  const {openModal, closeModal} = useModal()
+  const {openModal} = useModal()
   const screenHeight = useWindowDimensions().height
   const modalHeight = Math.min(screenHeight * 0.8, 280)
 
@@ -225,9 +224,10 @@ const Catalyst = ({
     } else {
       openModal({
         title: strings.menu.attention,
-        content: <InsufficientFundsModal />,
-        footer: <Button title={strings.menu.back} onPress={closeModal} />,
+        content: React.createElement(InsufficientFundsModal.Content),
+        footer: React.createElement(InsufficientFundsModal.Footer),
         height: modalHeight,
+        withFeedback: true,
       })
     }
   }

@@ -11,7 +11,6 @@ import {
   View,
   ViewProps,
 } from 'react-native'
-import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useBalances} from '~/features/Portfolio/common/hooks/useBalances'
 import {useReviewTx} from '~/features/ReviewTx/common/ReviewTxProvider'
@@ -31,20 +30,21 @@ import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation
 import {DashboardRoutes} from '~/kernel/navigation/types'
 import {Banner} from '~/ui/Banner/Banner'
 import {Button} from '~/ui/Button/Button'
-import {useModal} from '~/ui/Modal/ModalContext'
+import {useModal} from '~/ui/Modal/context/ModalContext'
+import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
 import {isEmptyString} from '~/wallets/utils/string'
 import {Amounts} from '~/wallets/utils/utils'
 
-import {useStakingInfo} from '../Staking/hooks/useStakingInfo'
-import {EpochProgress} from './EpochProgress'
-import {NotDelegatedInfo} from './NotDelegatedInfo'
-import {StakePoolInfos} from './StakePoolInfos'
-import {UserSummary} from './UserSummary'
+import {useStakingInfo} from '../../../Staking/hooks/useStakingInfo'
+import {EpochProgress} from '../shared/EpochProgress'
+import {NotDelegatedInfo} from '../shared/NotDelegatedInfo'
+import {StakePoolInfos} from '../shared/StakePoolInfos'
+import {UserSummary} from '../shared/UserSummary'
 
-export const Dashboard = () => {
+export const DashboardScreen = () => {
   const {track} = useMetrics()
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
 
   const strings = useStrings()
   const navigateTo = useNavigateTo()
@@ -53,14 +53,23 @@ export const Dashboard = () => {
   const {
     isPending: isWithdrawLoading,
     hasRewards,
-    value: unsignedTx,
-    error: withdrawError,
     resolve: createWithdrawalTx,
-  } = useCreateWithdrawTx()
+  } = useCreateWithdrawTx({
+    onError: () => navigateTo.failedTx(),
+    onSuccess: (unsignedTx) => {
+      unsignedTxChanged(unsignedTx)
+      walletNavigateTo.navigateToTxReview({
+        operations: [<StakeRewardsWithdrawalOperation key="0" />],
+        onSuccess: () => {
+          track.claimAdaTransactionSubmitted()
+        },
+      })
+    },
+  })
   const {wallet, meta} = useSelectedWallet()
   const {isPending: isSyncing, sync} = useSync(wallet)
   const isOnline = useIsOnline(wallet)
-  const {openModal, closeModal} = useModal()
+  const {openModal} = useModal()
 
   const balances = useBalances(wallet)
   const primaryAmount = Amounts.getAmount(
@@ -78,24 +87,6 @@ export const Dashboard = () => {
   const {isParticipating, isLoading: isGovernanceParticipationLoading} =
     useGovernanceParticipation()
 
-  React.useEffect(() => {
-    if (unsignedTx) {
-      unsignedTxChanged(unsignedTx)
-      walletNavigateTo.navigateToTxReview({
-        operations: [<StakeRewardsWithdrawalOperation key="0" />],
-        onSuccess: () => {
-          track.claimAdaTransactionSubmitted()
-        },
-      })
-    }
-  }, [unsignedTx, unsignedTxChanged, walletNavigateTo, track])
-
-  React.useEffect(() => {
-    if (withdrawError) {
-      navigateTo.failedTx()
-    }
-  }, [withdrawError, navigateTo])
-
   const createOnWithdraw =
     ({shouldDeregister}: {shouldDeregister: boolean}) =>
     () => {
@@ -106,14 +97,8 @@ export const Dashboard = () => {
       if (!isParticipating) {
         openModal({
           title: strings.staking.withdrawWarningTitle,
-          content: (
-            <WithdrawGovernanceWarningModal
-              onParticipatePress={() => {
-                closeModal()
-                walletNavigateTo.navigateToGovernanceCentre()
-              }}
-            />
-          ),
+          content: React.createElement(WithdrawGovernanceWarningModal.Content),
+          footer: React.createElement(WithdrawGovernanceWarningModal.Footer),
         })
         return
       }
@@ -122,9 +107,9 @@ export const Dashboard = () => {
     }
 
   return (
-    <SafeAreaView
+    <SafeArea
       edges={['bottom', 'left', 'right']}
-      style={[a.flex_1, {backgroundColor: p.bg_color_max}]}
+      style={[a.flex_1, ta.bg_color_max]}
     >
       <View style={[a.flex_1]}>
         {isOnline && error && (
@@ -221,7 +206,7 @@ export const Dashboard = () => {
           />
         </Actions>
       </View>
-    </SafeAreaView>
+    </SafeArea>
   )
 }
 

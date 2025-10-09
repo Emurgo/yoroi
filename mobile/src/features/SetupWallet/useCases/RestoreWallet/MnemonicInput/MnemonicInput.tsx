@@ -417,7 +417,7 @@ const getMatchingWords = (targetWord: string) =>
   )
 
 const useAutoFocus = (ref: React.RefObject<MnemonicWordInputRef | null>) =>
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     const timeout = setTimeout(() => ref.current?.focus(), 100)
 
     return () => clearTimeout(timeout)

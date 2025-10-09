@@ -11,7 +11,8 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Checkbox} from '~/ui/Checkbox/Checkbox'
-import {useModal} from '~/ui/Modal/ModalContext'
+import {useModal} from '~/ui/Modal/context/ModalContext'
+import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 
 import {Disclaimer} from '../../../common/types'
 import {loadText} from './loadText'
@@ -61,8 +62,8 @@ export const ShowDisclaimer = ({type, disabled}: Props) => {
       openModal({
         title: strings.global.disclaimer,
         content: (
-          <View style={[a.flex_1, ta.bg_color_max]}>
-            <View style={{height: 400}}>
+          <Modal.Content>
+            <View style={{height: 600}}>
               <Markdown
                 colorScheme={basePalette}
                 backgroundColor={ta.bg_color_max.backgroundColor}
@@ -91,14 +92,14 @@ export const ShowDisclaimer = ({type, disabled}: Props) => {
                 }}
               />
             </View>
-
+          </Modal.Content>
+        ),
+        footer: (
+          <Modal.Footer>
             <View style={[a.py_lg]}>
               <Check text={strings.global.accept} />
             </View>
-          </View>
-        ),
-        footer: (
-          <View style={[a.flex, a.flex_row, a.gap_lg]}>
+
             <Button
               type={ButtonType.Secondary}
               title={strings.global.cancel}
@@ -114,9 +115,10 @@ export const ShowDisclaimer = ({type, disabled}: Props) => {
                 closeModal()
               }}
             />
-          </View>
+          </Modal.Footer>
         ),
-        height: 580,
+        withFeedback: true,
+        height: 600,
         canDiscard: false,
       })
       setShowed(true)

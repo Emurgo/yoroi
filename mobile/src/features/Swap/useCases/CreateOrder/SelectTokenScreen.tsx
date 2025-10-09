@@ -3,6 +3,7 @@ import {amountBreakdown, isPrimaryToken, sortTokenInfos} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 
+import {useNavigation} from '@react-navigation/native'
 import {FlashList} from '@shopify/flash-list'
 import BigNumber from 'bignumber.js'
 import * as React from 'react'
@@ -30,8 +31,6 @@ import {
   AmountItemPlaceholder,
   TokenAmountItem,
 } from '~/ui/TokenAmountItem/TokenAmountItem'
-
-import {useNavigateTo} from '../../common/navigation'
 
 type Direction = SwapTokenRoutes['select-token']
 
@@ -241,8 +240,8 @@ const SelectableToken = React.memo(
     const {id, name, ticker} = tokenInfo
     const {closeSearch} = useSearch()
     const swapForm = useSwap()
-    const navigateTo = useNavigateTo()
     const {track} = useMetrics()
+    const navigation = useNavigation()
 
     const shouldUpdateToken =
       direction === 'in'
@@ -289,7 +288,7 @@ const SelectableToken = React.memo(
             direction === 'in' ? 'TokenInInputTouched' : 'TokenOutInputTouched',
         })
       }
-      navigateTo.startSwap()
+      navigation.goBack()
       closeSearch()
     }, [
       id,
@@ -300,7 +299,7 @@ const SelectableToken = React.memo(
       shouldSwitchTokens,
       shouldUpdateToken,
       swapForm,
-      navigateTo,
+      navigation,
       closeSearch,
     ])
 

@@ -654,7 +654,7 @@
   "components.walletinit.connectnanox.savenanoxscreen.ledgerWalletNameSuggestion": "Ledger",
   "components.walletinit.connectnanox.savenanoxscreen.save": "Salvar",
   "components.walletinit.connectnanox.savenanoxscreen.title": "Connect hardware wallet",
-  "components.walletinit.createwallet.createwalletscreen.passwordLengthRequirement": "O tamanho mínimo para a senha é de {requiredPasswordLenght} caracteres",
+  "components.walletinit.createwallet.createwalletscreen.passwordLengthRequirement": "O tamanho mínimo para a senha é de {requiredPasswordLength} caracteres",
   "components.walletinit.createwallet.createwalletscreen.notFound": "Not found",
   "components.walletinit.createwallet.createwalletscreen.clearAll": "Clear all",
   "components.walletinit.createwallet.createwalletscreen.title": "Create wallet",

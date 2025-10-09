@@ -8,8 +8,9 @@ import QRCode from 'react-native-qrcode-svg'
 
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
+import {isEmptyString} from '~/kernel/utils'
 import {Copiable} from '~/ui/Copiable/Copiable'
-import {Space} from '~/ui/Space/Space'
+import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {
   getSpendingKey,
   getStakingKey,
@@ -28,7 +29,7 @@ type Props = {
 
 export const AddressModal = ({address, path}: Props) => {
   const strings = useStrings()
-  const {palette: p} = useTheme()
+  const {palette: p, atoms: ta} = useTheme()
   const {
     meta: {implementation},
   } = useSelectedWallet()
@@ -37,80 +38,74 @@ export const AddressModal = ({address, path}: Props) => {
     ? addressVisualDerivationPathMaker(implementation)(path)
     : null
 
+  const staking = getStakingKey(address)
+  const spending = getSpendingKey(address)
+
   return (
-    <View style={[a.flex_1]}>
-      <View
-        style={[
-          a.align_center,
-          a.rounded_sm,
-          a.p_lg,
-          {backgroundColor: p.white_static, alignSelf: 'center'},
-        ]}
-      >
-        <QRCode
-          value={address}
-          size={140}
-          backgroundColor={p.white_static}
-          color={p.black_static}
-        />
-      </View>
+    <Modal.Content>
+      <View style={[a.flex_1, a.gap_lg]}>
+        <View
+          style={[
+            a.align_center,
+            a.rounded_sm,
+            a.p_lg,
+            a.self_center,
+            a.bg_white_static,
+          ]}
+        >
+          <QRCode
+            value={address}
+            size={140}
+            backgroundColor={p.white_static}
+            color={p.black_static}
+          />
+        </View>
 
-      <Space.Width.sm />
-
-      <View>
-        <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
-          {strings.transactions.walletAddress}
-        </Text>
-
-        <Copiable title={address} text={address} />
-
-        <Space.Width.sm />
-
-        {derivationPath !== null && (
-          <>
-            <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
-              {strings.transactions.BIP32path}
+        <View style={[a.gap_sm]}>
+          <View>
+            <Text style={[a.body_2_md_regular, ta.text_gray_medium]}>
+              {strings.transactions.walletAddress}
             </Text>
 
-            <View style={a.flex_row}>
-              <Text style={[a.body_1_lg_regular, {flex: 1, color: p.gray_900}]}>
-                {derivationPath}
+            <Copiable title={address} text={address} />
+          </View>
+
+          {derivationPath !== null && (
+            <View>
+              <Text style={[a.body_2_md_regular, ta.text_gray_medium]}>
+                {strings.transactions.BIP32path}
               </Text>
+
+              <View style={a.flex_row}>
+                <Text style={[a.body_1_lg_regular, ta.text_gray_max]}>
+                  {derivationPath}
+                </Text>
+              </View>
             </View>
+          )}
 
-            <Space.Width.sm />
-          </>
-        )}
-
-        {(() => {
-          const staking = getStakingKey(address)
-          return staking != null && staking !== '' ? (
-            <>
-              <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
+          {!isEmptyString(staking) && (
+            <View>
+              <Text style={[a.body_2_md_regular, ta.text_gray_medium]}>
                 {strings.transactions.staking}
               </Text>
 
               <Copiable title={staking} text={staking} />
+            </View>
+          )}
 
-              <Space.Width.sm />
-            </>
-          ) : null
-        })()}
-
-        {(() => {
-          const spending = getSpendingKey(address)
-          return spending != null && spending !== '' ? (
-            <>
-              <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
+          {!isEmptyString(spending) && (
+            <View>
+              <Text style={[a.body_2_md_regular, ta.text_gray_medium]}>
                 {strings.transactions.spending}
               </Text>
 
               <Copiable title={spending} text={spending} />
-            </>
-          ) : null
-        })()}
+            </View>
+          )}
+        </View>
       </View>
-    </View>
+    </Modal.Content>
   )
 }
 
@@ -127,14 +122,14 @@ export default (props: ExternalProps) => {
     wallet.internalAddresses.map((addr, i) => [addr, i]),
   )[props.address]
 
-  if (externalIndex !== undefined)
+  if (externalIndex)
     return (
       <AddressModal
         path={{account: 0, index: externalIndex, role: 0}}
         {...props}
       />
     )
-  if (internalIndex !== undefined)
+  if (internalIndex)
     return (
       <AddressModal
         path={{account: 0, index: internalIndex, role: 1}}

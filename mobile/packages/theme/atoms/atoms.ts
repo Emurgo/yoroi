@@ -510,6 +510,13 @@ export const atoms = {
     backgroundColor: 'transparent',
   },
 
+  bg_white_static: {
+    backgroundColor: 'white',
+  },
+  bg_black_static: {
+    backgroundColor: 'black',
+  },
+
   debug: {
     backgroundColor: 'pink',
     borderWidth: 1,

@@ -1,6 +1,9 @@
 import {useTheme} from '@yoroi/theme'
 
-import {createStackNavigator} from '@react-navigation/stack'
+import {
+  StackNavigationOptions,
+  createStackNavigator,
+} from '@react-navigation/stack'
 import * as React from 'react'
 
 import {FailedTxScreen as SwapFailedTxScreen} from '~/features/ReviewTx/useCases/ShowFailedTxScreen/FailedTxScreen'
@@ -25,18 +28,16 @@ export const SwapNavigator = () => {
   const strings = useStrings()
   const {palette: p} = useTheme()
 
-  const navigationOptions = React.useMemo(
-    () => defaultStackNavigationOptions(p),
+  const screenOptions: StackNavigationOptions = React.useMemo(
+    () => ({
+      ...defaultStackNavigationOptions(p),
+      headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
+    }),
     [p],
   )
 
   return (
-    <Stack.Navigator
-      screenOptions={{
-        ...navigationOptions,
-        headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
-      }}
-    >
+    <Stack.Navigator screenOptions={screenOptions}>
       <Stack.Screen
         name="main"
         options={{

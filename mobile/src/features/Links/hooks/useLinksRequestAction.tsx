@@ -13,10 +13,10 @@ import {useWalletManager} from '~/features/WalletManager/context/WalletManagerPr
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {useModal} from '~/ui/Modal/ModalContext'
+import {useModal} from '~/ui/Modal/context/ModalContext'
 
-import {RequestedAdaPaymentWithLinkScreen} from '../ui/screens/RequestedAdaPaymentWithLinkScreen/RequestedAdaPaymentWithLinkScreen'
-import {RequestedBrowserLaunchDappUrlScreen} from '../ui/screens/RequestedBrowserLaunchDappUrlScreen/RequestedBrowserLaunchDappUrlScreen'
+import {RequestedAdaPaymentWithLinkModal} from '../ui/modals/RequestedAdaPaymentWithLinkModal'
+import {RequestedBrowserLaunchDappUrlModal} from '../ui/modals/RequestedBrowserLaunchDappUrlModal'
 import {useNavigateTo} from './useNavigationTo'
 
 const heightBreakpoint = 467
@@ -133,11 +133,14 @@ export const useLinksRequestAction = () => {
       openModal({
         title: title,
         content: (
-          <RequestedAdaPaymentWithLinkScreen
-            onContinue={handleOnContinue}
+          <RequestedAdaPaymentWithLinkModal.Content
             params={params}
             isTrusted={isTrusted}
-            onClose={closeModal}
+          />
+        ),
+        footer: (
+          <RequestedAdaPaymentWithLinkModal.Footer
+            onContinue={handleOnContinue}
           />
         ),
         height: heightBreakpoint,
@@ -147,7 +150,6 @@ export const useLinksRequestAction = () => {
       strings.links.trustedPaymentRequestedTitle,
       strings.links.untrustedPaymentRequestedTitle,
       startTransferWithLink,
-      closeModal,
       openModal,
       isLoggedIn,
     ],
@@ -226,10 +228,14 @@ export const useLinksRequestAction = () => {
       openModal({
         title: title,
         content: (
-          <RequestedBrowserLaunchDappUrlScreen
-            onContinue={handleOnContinue}
+          <RequestedBrowserLaunchDappUrlModal.Content
             params={params}
             isTrusted={isTrusted}
+          />
+        ),
+        footer: (
+          <RequestedBrowserLaunchDappUrlModal.Footer
+            onContinue={handleOnContinue}
           />
         ),
         height: heightBreakpoint,
