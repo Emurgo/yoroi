@@ -21,8 +21,6 @@ export const ReviewTxNavigator = () => {
   const {palette: p} = useTheme()
   const strings = useStrings()
 
-  const fallback = React.useCallback(() => <InfraestructureIssueScreen />, [])
-
   return (
     <Stack.Navigator
       screenOptions={{
@@ -38,31 +36,18 @@ export const ReviewTxNavigator = () => {
               <Copiable text={route.params.cbor} />
             ) : null,
         })}
-      >
-        {() => (
-          <Boundary
-            loading={{
-              enabled: true,
-              size: 'large',
-            }}
-            error={{
-              fallback,
-            }}
-          >
-            <ReviewTxScreen />
-          </Boundary>
-        )}
-      </Stack.Screen>
+        getComponent={() => ReviewTxScreenWrapper}
+      />
 
       <Stack.Screen
         name="review-tx-submitted-tx"
-        component={SubmittedTxScreen}
+        getComponent={() => SubmittedTxScreen}
         options={{headerShown: false}}
       />
 
       <Stack.Screen
         name="review-tx-failed-tx"
-        component={FailedTxScreen}
+        getComponent={() => FailedTxScreen}
         options={{headerShown: false}}
       />
     </Stack.Navigator>
@@ -73,3 +58,20 @@ const screenOptions = (color: ThemedPalette) => ({
   ...defaultStackNavigationOptions(color),
   gestureEnabled: true,
 })
+
+const ReviewTxScreenWrapper = () => {
+  const fallback = React.useCallback(() => <InfraestructureIssueScreen />, [])
+  return (
+    <Boundary
+      loading={{
+        enabled: true,
+        size: 'large',
+      }}
+      error={{
+        fallback,
+      }}
+    >
+      <ReviewTxScreen />
+    </Boundary>
+  )
+}

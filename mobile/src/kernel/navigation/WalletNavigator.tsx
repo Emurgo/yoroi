@@ -6,7 +6,7 @@ import {
 } from '@react-navigation/stack'
 import * as React from 'react'
 
-import {DashboardNavigator} from '~/features/Dashboard/DashboardNavigator'
+import {DashboardNavigator} from '~/features/Dashboard/ui/navigation/DashboardNavigator'
 import {CatalystNavigator} from '~/features/RegisterCatalyst/CatalystNavigator'
 import {ReviewTxNavigator} from '~/features/ReviewTx/ReviewTxNavigator'
 import {SettingsScreenNavigator} from '~/features/Settings/ui/navigation/SettingsScreenNavigator'

@@ -8,7 +8,7 @@ import {Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {WebView, WebViewMessageEvent} from 'react-native-webview'
 
-import {useStakingTx} from '~/features/Dashboard/StakePoolInfos'
+import {useStakingTx} from '~/features/Dashboard/ui/shared/StakePoolInfos'
 import {useReviewTx} from '~/features/ReviewTx/common/ReviewTxProvider'
 import {PoolDetailScreen} from '~/features/Staking/Staking/PoolDetails/PoolDetailScreen'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'

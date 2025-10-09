@@ -150,11 +150,11 @@ export const transactionsMessages = defineMessages({
     defaultMessage: '!!!Copy Label',
   },
   spending: {
-    id: 'components.txhistory.txhistory.title',
+    id: 'components.receive.addressmodal.spendingKeyHash',
     defaultMessage: '!!!Spending',
   },
   staking: {
-    id: 'components.txhistory.txhistory.title',
+    id: 'components.receive.addressmodal.stakingKeyHash',
     defaultMessage: '!!!Staking',
   },
   addessModalTitle: {

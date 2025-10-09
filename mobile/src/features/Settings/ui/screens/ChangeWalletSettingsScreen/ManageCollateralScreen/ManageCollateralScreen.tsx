@@ -27,7 +27,7 @@ import {Copiable} from '~/ui/Copiable/Copiable'
 import {ErrorPanel} from '~/ui/ErrorPanel/ErrorPanel'
 import {Icon} from '~/ui/Icon'
 import {Info} from '~/ui/Icon/Info'
-import {useModal} from '~/ui/Modal/ModalContext'
+import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
 import {TokenAmountItem} from '~/ui/TokenAmountItem/TokenAmountItem'
@@ -39,7 +39,10 @@ import {YoroiEntry, YoroiSignedTx} from '~/wallets/types/yoroi'
 import {Amounts, Quantities, asQuantity} from '~/wallets/utils/utils'
 
 import {CollateralInfoModal} from './CollateralInfoModal'
-import {InitialCollateralInfoModal} from './InitialCollateralInfoModal'
+import {
+  InitialCollateralInfoModal,
+  InitialCollateralInfoModalFooter,
+} from './InitialCollateralInfoModal'
 import {createCollateralEntry} from './helpers'
 
 export const ManageCollateralScreen = () => {
@@ -102,13 +105,12 @@ export const ManageCollateralScreen = () => {
   const isLoading = isLoadingTx || isLoadingCollateral
 
   const handleGenerateCollateral = () => {
-    closeModal()
-
     const utxos = utxosMaker(wallet.utxos)
     const possibleCollateralId = utxos.drawnCollateral()
 
     if (possibleCollateralId !== undefined) {
       handleSetCollateralId(possibleCollateralId)
+      closeModal()
       return
     }
 
@@ -138,20 +140,21 @@ export const ManageCollateralScreen = () => {
       return
     }
 
+    closeModal()
     createCollateralTransaction()
   }
 
-  const handleCollateralInfoModal = () => {
+  const handleInitialCollateralInfoModal = () => {
     openModal({
       title: strings.manageCollateral.initialCollateralInfoModalTitle,
       content: <InitialCollateralInfoModal />,
       footer: (
-        <ModalsButtons
+        <InitialCollateralInfoModalFooter
           onConfirm={handleGenerateCollateral}
           onCancel={closeModal}
         />
       ),
-      height: Math.min(screenHeight * 0.9, 650),
+      height: Math.min(screenHeight * 0.7, 650),
     })
   }
 
@@ -160,7 +163,7 @@ export const ManageCollateralScreen = () => {
 
   return (
     <SafeAreaView
-      edges={['left', 'right', 'bottom']}
+      edges={['left', 'right']}
       style={[ta.bg_color_max, a.flex_1, a.p_lg]}
     >
       <Text style={[a.self_center, ta.text_gray_max]}>
@@ -215,7 +218,7 @@ export const ManageCollateralScreen = () => {
       {shouldShowPrimaryButton && (
         <Button
           title={strings.manageCollateral.generateCollateral}
-          onPress={handleCollateralInfoModal}
+          onPress={handleInitialCollateralInfoModal}
           disabled={isLoading}
         />
       )}
@@ -228,31 +231,6 @@ export const ManageCollateralScreen = () => {
         />
       )}
     </SafeAreaView>
-  )
-}
-
-const ModalsButtons = ({
-  onConfirm,
-  onCancel,
-}: {
-  onConfirm: () => void
-  onCancel: () => void
-}) => {
-  const strings = useStrings()
-  return (
-    <View style={[a.flex_row, a.gap_md]}>
-      <Button
-        style={[a.flex_1]}
-        title={strings.manageCollateral.cancel}
-        onPress={onCancel}
-        type={ButtonType.Secondary}
-      />
-      <Button
-        style={[a.flex_1]}
-        title={strings.manageCollateral.initialCollateralInfoModalButton}
-        onPress={onConfirm}
-      />
-    </View>
   )
 }
 

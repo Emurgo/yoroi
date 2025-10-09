@@ -1,52 +1,41 @@
-import {atoms as a} from '@yoroi/theme'
-
 import * as React from 'react'
-import {ScrollView as RNScrollView, ScrollViewProps, View} from 'react-native'
+import {ScrollView as RNScrollView, ScrollViewProps} from 'react-native'
 
-import {useFlashAndScroll} from './useFlashAndScroll'
+import {useScrollView} from './useScrollView'
 
-export const ScrollView = React.forwardRef<RNScrollView, Props>(
-  ({children, onScrollBarChange, ...props}, ref) => {
-    const [wrapperHeight, setWrapperHeight] = React.useState(0)
+export const ScrollView = React.forwardRef<RNScrollView, ScrollViewProps>(
+  ({onLayout, onContentSizeChange, ...rest}, ref) => {
+    const [containerHeight, setContainerHeight] = React.useState(0)
+    const [contentSize, setContentSize] = React.useState({width: 0, height: 0})
+    const {setIsScrollBarShown} = useScrollView()
+
+    const checkScrollability = React.useCallback(() => {
+      if (containerHeight === 0 || contentSize.height === 0) {
+        return
+      }
+
+      const isScrollable = contentSize.height > containerHeight
+      setIsScrollBarShown(isScrollable)
+    }, [containerHeight, contentSize.height, setIsScrollBarShown])
+
+    React.useEffect(() => {
+      checkScrollability()
+    }, [checkScrollability])
 
     return (
       <RNScrollView
         ref={ref}
         onLayout={(event) => {
-          if (onScrollBarChange) {
-            const {height} = event.nativeEvent.layout
-
-            const shouldChange = wrapperHeight > Math.trunc(height)
-            onScrollBarChange(shouldChange)
-          }
-          props.onLayout?.(event)
+          const newHeight = Math.trunc(event.nativeEvent.layout.height)
+          setContainerHeight(newHeight)
+          onLayout?.(event)
         }}
-        {...props}
-      >
-        <View
-          style={[a.flex_grow]}
-          onLayout={(event) =>
-            setWrapperHeight(Math.trunc(event.nativeEvent.layout.height))
-          }
-        >
-          {children}
-        </View>
-      </RNScrollView>
+        onContentSizeChange={(contentWidth, contentHeight) => {
+          setContentSize({width: contentWidth, height: contentHeight})
+          onContentSizeChange?.(contentWidth, contentHeight)
+        }}
+        {...rest}
+      />
     )
   },
 )
-
-type Props = ScrollViewProps & {
-  onScrollBarChange?: (isScrollBarShown: boolean) => void
-}
-
-export const useScrollView = () => {
-  const scrollViewRef = useFlashAndScroll()
-  const [isScrollBarShown, setIsScrollBarShown] = React.useState(false)
-
-  return {
-    scrollViewRef,
-    isScrollBarShown,
-    setIsScrollBarShown,
-  }
-}

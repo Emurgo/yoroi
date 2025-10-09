@@ -15,6 +15,7 @@ import {
 import {IOpenOrders} from '~/features/Portfolio/common/hooks/useGetOpenOrders'
 import {AssetLogo} from '~/features/Portfolio/ui/AssetLogo/AssetLogo'
 import {useStrings} from '~/kernel/i18n/useStrings'
+import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {PairedBalance} from '~/ui/PairedBalance/PairedBalance'
 import {TokenInfoIcon} from '~/ui/TokenInfoIcon/TokenInfoIcon'
 
@@ -25,7 +26,7 @@ type Props = {
 
 export const OpenOrderModal = ({tokenInfo, splitTokenSymbol}: Props) => {
   const strings = useStrings()
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
 
   const [firstToken, secondToken] = tokenInfo.assets
   const firstTokenBalance = amountBreakdown(firstToken).bn.toFormat(2)
@@ -34,7 +35,7 @@ export const OpenOrderModal = ({tokenInfo, splitTokenSymbol}: Props) => {
   const secondTokenName = infoExtractName(secondToken.info)
 
   return (
-    <View style={[a.flex_col, a.gap_sm]}>
+    <Modal.Content style={[a.flex_col, a.gap_sm]}>
       <View style={[a.flex_row, a.align_center, a.gap_md]}>
         <View style={[a.relative, {width: 40, height: 40}]}>
           <AssetLogo
@@ -67,14 +68,14 @@ export const OpenOrderModal = ({tokenInfo, splitTokenSymbol}: Props) => {
         </View>
 
         <Text
-          style={[a.body_1_lg_medium, {color: p.gray_900}]}
+          style={[a.body_1_lg_medium, ta.text_gray_max]}
         >{`${firstTokenName} ${splitTokenSymbol} ${secondTokenName}`}</Text>
       </View>
 
       <InfoGroup label={strings.portfolio.total}>
         <View>
           <Text
-            style={[a.body_1_lg_regular, a.text_right, {color: p.gray_900}]}
+            style={[a.body_1_lg_regular, a.text_right, ta.text_gray_max]}
           >{`${firstTokenBalance} ${firstTokenName}`}</Text>
 
           <PairedBalance
@@ -82,7 +83,7 @@ export const OpenOrderModal = ({tokenInfo, splitTokenSymbol}: Props) => {
             textStyle={{
               ...a.body_3_sm_regular,
               ...a.text_right,
-              color: p.gray_600,
+              ...ta.text_gray_medium,
             }}
           />
         </View>
@@ -99,7 +100,7 @@ export const OpenOrderModal = ({tokenInfo, splitTokenSymbol}: Props) => {
             style={[
               a.body_1_lg_medium,
               a.font_semibold,
-              {color: p.primary_500},
+              ta.text_primary_medium,
             ]}
           >
             {tokenInfo.dex.name}
@@ -109,13 +110,13 @@ export const OpenOrderModal = ({tokenInfo, splitTokenSymbol}: Props) => {
 
       <InfoGroup label={strings.portfolio.assetPrice}>
         <Text
-          style={[a.body_1_lg_regular, a.text_right, {color: p.gray_900}]}
+          style={[a.body_1_lg_regular, a.text_right, ta.text_gray_max]}
         >{`${firstTokenBalance} ${firstTokenName}/${secondTokenName}`}</Text>
       </InfoGroup>
 
       <InfoGroup label={strings.portfolio.assetAmount}>
         <Text
-          style={[a.body_1_lg_regular, a.text_right, {color: p.gray_900}]}
+          style={[a.body_1_lg_regular, a.text_right, ta.text_gray_max]}
         >{`${secondTokenBalance} ${secondTokenName}`}</Text>
       </InfoGroup>
 
@@ -125,7 +126,7 @@ export const OpenOrderModal = ({tokenInfo, splitTokenSymbol}: Props) => {
           onTxPress={() => Linking.openURL('http://')}
         />
       </InfoGroup>
-    </View>
+    </Modal.Content>
   )
 }
 
@@ -137,10 +138,10 @@ const shortenString = (text: string) => {
 }
 
 const TxLink = ({onTxPress, txId}: {onTxPress: () => void; txId: string}) => {
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
   return (
     <TouchableOpacity onPress={onTxPress}>
-      <Text style={[{color: p.primary_500}, a.link_2_md_underline]}>
+      <Text style={[ta.text_primary_medium, a.link_2_md_underline]}>
         {txId}
       </Text>
     </TouchableOpacity>

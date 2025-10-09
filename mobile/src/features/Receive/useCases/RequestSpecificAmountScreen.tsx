@@ -14,7 +14,6 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native'
-import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useCopy} from '~/features/Copy/context/CopyProvider'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
@@ -22,9 +21,10 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
-import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingView'
-import {useModal} from '~/ui/Modal/ModalContext'
-import {ScrollView, useScrollView} from '~/ui/ScrollView/ScrollView'
+import {useModal} from '~/ui/Modal/context/ModalContext'
+import {SafeArea} from '~/ui/SafeArea/SafeArea'
+import {ScrollView} from '~/ui/ScrollView/ScrollView'
+import {useScrollView} from '~/ui/ScrollView/useScrollView'
 import {ShareQRCodeCard} from '~/ui/ShareQRCodeCard/ShareQRCodeCard'
 import {SkeletonAdressDetail} from '~/ui/SkeletonAddressDetail/SkeletonAddressDetail'
 import {TextInput} from '~/ui/TextInput/TextInput'
@@ -35,13 +35,13 @@ import {useReceive} from '../common/ReceiveProvider'
 
 export const RequestSpecificAmountScreen = () => {
   const strings = useStrings()
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
   const [amount, setAmount] = React.useState('')
   const {wallet} = useSelectedWallet()
 
   const {track} = useMetrics()
   const hasAmount = !isEmptyString(amount)
-  const {isScrollBarShown, setIsScrollBarShown, scrollViewRef} = useScrollView()
+  const {scrollViewRef} = useScrollView()
 
   const {selectedAddress} = useReceive()
 
@@ -83,62 +83,43 @@ export const RequestSpecificAmountScreen = () => {
   )
 
   return (
-    <KeyboardAvoidingView
-      style={[a.flex_1, {flex: 1}, {backgroundColor: p.bg_color_max}]}
-    >
-      <SafeAreaView
-        style={[a.flex_1, a.p_lg]}
-        edges={['left', 'right', 'bottom']}
-      >
-        <ScrollView
-          ref={scrollViewRef}
-          style={[a.flex_1]}
-          onScrollBarChange={setIsScrollBarShown}
-        >
-          <View style={[a.gap_lg]}>
-            <Text style={[a.body_1_lg_regular, {color: p.text_gray_medium}]}>
-              {strings.receive.specificAmountDescription}
+    <SafeArea>
+      <ScrollView ref={scrollViewRef} style={[a.flex_1]}>
+        <View style={[a.gap_lg]}>
+          <Text style={[a.body_1_lg_regular, ta.text_gray_medium]}>
+            {strings.receive.specificAmountDescription}
+          </Text>
+
+          <TextInput
+            label={strings.receive.ADALabel}
+            keyboardType="numeric"
+            onChangeText={handleOnChangeAmount}
+            value={amount}
+            testID="receive:request-specific-amount-ada-input"
+            noHelper
+          />
+
+          <View style={[a.gap_xs]}>
+            <Text style={[a.body_1_lg_regular, ta.text_gray_medium]}>
+              {strings.receive.address}
             </Text>
 
-            <TextInput
-              label={strings.receive.ADALabel}
-              keyboardType="numeric"
-              onChangeText={handleOnChangeAmount}
-              value={amount}
-              testID="receive:request-specific-amount-ada-input"
-              noHelper
-            />
-
-            <View style={[a.gap_xs]}>
-              <Text style={[a.body_1_lg_regular, {color: p.gray_600}]}>
-                {strings.receive.address}
-              </Text>
-
-              <Text style={[a.body_1_lg_regular, {color: p.text_gray_medium}]}>
-                {selectedAddress}
-              </Text>
-            </View>
+            <Text style={[a.body_1_lg_regular, ta.text_gray_medium]}>
+              {selectedAddress}
+            </Text>
           </View>
-        </ScrollView>
-
-        <View
-          style={[
-            a.pt_lg,
-            isScrollBarShown && {
-              borderTopWidth: 1,
-              borderTopColor: p.gray_200,
-            },
-          ]}
-        >
-          <Button
-            onPress={handleOnGenerateLink}
-            disabled={!hasAmount}
-            title={strings.receive.generateLink}
-            testID="receive:request-specific-amount:generate-link-button"
-          />
         </View>
-      </SafeAreaView>
-    </KeyboardAvoidingView>
+      </ScrollView>
+
+      <SafeArea.Footer>
+        <Button
+          onPress={handleOnGenerateLink}
+          disabled={!hasAmount}
+          title={strings.receive.generateLink}
+          testID="receive:request-specific-amount:generate-link-button"
+        />
+      </SafeArea.Footer>
+    </SafeArea>
   )
 }
 

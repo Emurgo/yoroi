@@ -13,7 +13,7 @@ import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {AddressDetailCard} from '~/ui/AddressDetailCard/AddressDetailCard'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
-import {useModal} from '~/ui/Modal/ModalContext'
+import {useModal} from '~/ui/Modal/context/ModalContext'
 import {
   SingleOrMultipleAddressesModal,
   singleOrMultipleAddressesModalHeight,

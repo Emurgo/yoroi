@@ -7,23 +7,21 @@ import OrganizeWalletImage from '~/assets/img/organize-wallet-utxos.png'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
-import {ScrollView, useScrollView} from '~/ui/ScrollView/ScrollView'
+import {SafeArea} from '~/ui/SafeArea/SafeArea'
+import {ScrollView} from '~/ui/ScrollView/ScrollView'
+import {useScrollView} from '~/ui/ScrollView/useScrollView'
 
 export const UtxoConsolidation = () => {
   const strings = useStrings()
   const {atoms: ta, palette: p} = useTheme()
-  const {isScrollBarShown, setIsScrollBarShown, scrollViewRef} = useScrollView()
+  const {scrollViewRef} = useScrollView()
   // TODO: Needs tx building with utxo selection
   const shouldShowNotice = true
   const handleOnPress = () => null
 
   return (
-    <View style={a.flex_1}>
-      <ScrollView
-        ref={scrollViewRef}
-        bounces={false}
-        onScrollBarChange={setIsScrollBarShown}
-      >
+    <SafeArea>
+      <ScrollView ref={scrollViewRef} bounces={false}>
         <View style={[a.p_lg, a.gap_lg]}>
           <Image
             source={OrganizeWalletImage}
@@ -53,17 +51,12 @@ export const UtxoConsolidation = () => {
         </View>
       </ScrollView>
 
-      <View
-        style={[
-          a.p_lg,
-          isScrollBarShown && [a.border_t, {borderTopColor: p.gray_200}],
-        ]}
-      >
+      <SafeArea.Footer>
         <Button
           onPress={handleOnPress}
           title={strings.transactions.utxo.organizeWalletButton}
         />
-      </View>
-    </View>
+      </SafeArea.Footer>
+    </SafeArea>
   )
 }

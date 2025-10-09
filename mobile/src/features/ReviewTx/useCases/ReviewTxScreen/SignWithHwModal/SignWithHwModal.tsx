@@ -5,18 +5,21 @@ import * as React from 'react'
 import {ErrorBoundary} from 'react-error-boundary'
 import {ActivityIndicator, View} from 'react-native'
 
-import {useSignTxWithHW} from '../../features/Transactions/hooks/useSignTxWithHW'
-import {useSubmitTx} from '../../features/Transactions/hooks/useSubmitTx'
-import {useWalletManager} from '../../features/WalletManager/context/WalletManagerProvider'
-import {useSelectedWallet} from '../../features/WalletManager/hooks/useSelectedWallet'
-import {useStrings} from '../../kernel/i18n/useStrings'
-import {withBLE, withUSB} from '../../wallets/hw/hwWallet'
-import {YoroiSignedTx, YoroiUnsignedTx} from '../../wallets/types/yoroi'
-import {delay} from '../../wallets/utils/timeUtils'
-import {LedgerConnect} from '../LedgerConnect/LedgerConnect'
-import {LedgerTransportSwitch} from '../LedgerTransportSwitch/LedgerTransportSwitch'
-import {ModalError} from '../ModalError/ModalError'
-import {Text} from '../Text/Text'
+import {useStrings} from '../../../../../kernel/i18n/useStrings'
+import {LedgerConnect} from '../../../../../ui/LedgerConnect/LedgerConnect'
+import {LedgerTransportSwitch} from '../../../../../ui/LedgerTransportSwitch/LedgerTransportSwitch'
+import {ModalError} from '../../../../../ui/ModalError/ModalError'
+import {Text} from '../../../../../ui/Text/Text'
+import {withBLE, withUSB} from '../../../../../wallets/hw/hwWallet'
+import {
+  YoroiSignedTx,
+  YoroiUnsignedTx,
+} from '../../../../../wallets/types/yoroi'
+import {delay} from '../../../../../wallets/utils/timeUtils'
+import {useSignTxWithHW} from '../../../../Transactions/hooks/useSignTxWithHW'
+import {useSubmitTx} from '../../../../Transactions/hooks/useSubmitTx'
+import {useWalletManager} from '../../../../WalletManager/context/WalletManagerProvider'
+import {useSelectedWallet} from '../../../../WalletManager/hooks/useSelectedWallet'
 
 type TransportType = 'USB' | 'BLE'
 type Step = 'select-transport' | 'connect-transport' | 'loading'
@@ -32,7 +35,7 @@ type Props = {
   onNotSupportedCIP1694?: () => void
 }
 
-export const ConfirmTxWithHwModal = ({
+export const SignWithHwModal = ({
   onSuccess,
   unsignedTx,
   onCancel,
@@ -51,7 +54,7 @@ export const ConfirmTxWithHwModal = ({
         />
       )}
     >
-      <ConfirmTxWithHwModalContent
+      <SignWithHwModalContent
         onSuccess={onSuccess}
         unsignedTx={unsignedTx}
         supportsCIP36={supportsCIP36}
@@ -63,7 +66,7 @@ export const ConfirmTxWithHwModal = ({
   )
 }
 
-const ConfirmTxWithHwModalContent = ({
+const SignWithHwModalContent = ({
   onSuccess,
   unsignedTx,
   supportsCIP36,
@@ -76,7 +79,7 @@ const ConfirmTxWithHwModalContent = ({
   const [step, setStep] = React.useState<Step>('select-transport')
   const {wallet, meta} = useSelectedWallet()
   const strings = useStrings()
-  const {isDark, palette} = useTheme()
+  const {isDark, atoms: ta} = useTheme()
 
   const {submitTx} = useSubmitTx({wallet})
 
@@ -182,12 +185,10 @@ const ConfirmTxWithHwModalContent = ({
   }
 
   return (
-    <View style={[a.flex_1, a.align_center, a.justify_center, {gap: 35}]}>
+    <View style={[a.flex_1, a.align_center, a.justify_center, a.gap_2xl]}>
       <ActivityIndicator size="large" color={isDark ? 'white' : 'black'} />
 
-      <Text
-        style={[{color: palette.text_gray_max, fontSize: 18}, a.text_center]}
-      >
+      <Text style={[ta.text_gray_max, a.body_1_lg_regular, a.text_center]}>
         {strings.swap.continueOnLedger}
       </Text>
     </View>
