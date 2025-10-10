@@ -84,7 +84,7 @@ export const RequestSpecificAmountScreen = () => {
 
   return (
     <SafeArea>
-      <ScrollView ref={scrollViewRef} style={[a.flex_1]}>
+      <ScrollView ref={scrollViewRef} style={[a.flex_1, a.px_lg]}>
         <View style={[a.gap_lg]}>
           <Text style={[a.body_1_lg_regular, ta.text_gray_medium]}>
             {strings.receive.specificAmountDescription}
