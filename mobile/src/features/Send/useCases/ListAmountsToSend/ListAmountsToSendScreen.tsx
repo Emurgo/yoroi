@@ -232,6 +232,5 @@ const ListAmountsNavigateBackButton = () => {
 
 const Left = View
 const Right = View
-const Row = View
 const NextButton = Button
 const AmountsList = FlatList
