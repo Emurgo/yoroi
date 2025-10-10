@@ -5,12 +5,13 @@ import * as React from 'react'
 import {Linking, TouchableOpacity, View} from 'react-native'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
+import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
 
 const YOROI_SUPPORT_URL = 'https://yoroi-wallet.com/#/support'
 
-export const DescribeAction = () => {
+export const DescribeActionModal = () => {
   const strings = useStrings()
   const {atoms: ta} = useTheme()
   const {orderType, providerId, provider} = useExchange()
@@ -31,7 +32,7 @@ export const DescribeAction = () => {
   }
 
   return (
-    <View style={[a.flex_1, a.px_lg]}>
+    <Modal.Content>
       <Text style={a.body_1_lg_regular}>
         {strings.exchange.descriptionBuySellADATransaction}
       </Text>
@@ -57,6 +58,6 @@ export const DescribeAction = () => {
 
         <Text style={a.body_1_lg_regular}>{strings.exchange.significant}</Text>
       </View>
-    </View>
+    </Modal.Content>
   )
 }

@@ -2,12 +2,14 @@ import {amountFormatter} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
-import {Platform, Text, View} from 'react-native'
+import {Text} from 'react-native'
 
 import {usePortfolioPrimaryBalance} from '~/features/Portfolio/common/hooks/usePortfolioPrimaryBalance'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {Space} from '~/ui/Space/Space'
+import {Button} from '~/ui/Button/Button'
+import {useModal} from '~/ui/Modal/context/ModalContext'
+import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 
 import {useCatalystCurrentFund} from './hooks'
 
@@ -16,12 +18,12 @@ const formatter = amountFormatter({
   dropTraillingZeros: true,
 })
 
-export const InsufficientFundsModal = () => {
+const InsufficientFundsModalContent = () => {
   const strings = useStrings()
   const {wallet} = useSelectedWallet()
   const primaryBalance = usePortfolioPrimaryBalance({wallet})
   const {fund} = useCatalystCurrentFund()
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
 
   // Default to 0 if fund data is not available yet
   const votingPowerThreshold = fund?.info?.votingPowerThreshold
@@ -35,15 +37,28 @@ export const InsufficientFundsModal = () => {
   const fmtPrimaryBalance = formatter(primaryBalance)
 
   return (
-    <View style={[a.flex_1, a.gap_lg, a.justify_between]}>
-      <Text style={[a.body_1_lg_regular, {color: p.gray_max}]}>
+    <Modal.Content>
+      <Text style={[a.body_1_lg_regular, ta.text_gray_max]}>
         {strings.global.insufficientBalance({
           requiredBalance: fmtMinPrimaryBalance,
           currentBalance: fmtPrimaryBalance,
         })}
       </Text>
-
-      {Platform.OS === 'android' && <Space.Height.lg />}
-    </View>
+    </Modal.Content>
   )
+}
+
+const InsufficientFundsModalFooter = () => {
+  const strings = useStrings()
+  const {closeModal} = useModal()
+  return (
+    <Modal.Footer>
+      <Button title={strings.menu.back} onPress={closeModal} />
+    </Modal.Footer>
+  )
+}
+
+export const InsufficientFundsModal = {
+  Content: InsufficientFundsModalContent,
+  Footer: InsufficientFundsModalFooter,
 }

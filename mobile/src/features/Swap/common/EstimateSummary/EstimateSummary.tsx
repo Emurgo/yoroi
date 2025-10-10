@@ -13,7 +13,8 @@ import {useLanguage} from '~/kernel/i18n/LanguageProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
-import {useModal} from '~/ui/Modal/ModalContext'
+import {useModal} from '~/ui/Modal/context/ModalContext'
+import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {ProtocolAvatar} from '~/ui/ProtocolAvatar/ProtocolAvatar'
 import {Space} from '~/ui/Space/Space'
 import {SwapInfoLink} from '~/ui/SwapInfoLink/SwapInfoLink'
@@ -49,8 +50,16 @@ export const EstimateSummary = () => {
 
   const expand = () =>
     openModal({
-      content: <Splits data={swapForm.estimate?.splits ?? []} />,
-      footer: <SwapInfoLink />,
+      content: (
+        <Modal.Content>
+          <Splits data={swapForm.estimate?.splits ?? []} />
+        </Modal.Content>
+      ),
+      footer: (
+        <Modal.Footer>
+          <SwapInfoLink />
+        </Modal.Footer>
+      ),
     })
 
   return (
@@ -146,13 +155,17 @@ const Row = ({
               openModal({
                 title: label,
                 content: (
-                  <View style={[a.flex_1, a.justify_center]}>
+                  <Modal.Content style={[a.flex_1, a.justify_center]}>
                     <Text style={[a.body_1_lg_regular, ta.text_gray_max]}>
                       {description}
                     </Text>
-                  </View>
+                  </Modal.Content>
                 ),
-                footer: <SwapInfoLink />,
+                footer: (
+                  <Modal.Footer>
+                    <SwapInfoLink />
+                  </Modal.Footer>
+                ),
               })
             }
             type={ButtonType.SecondaryText}

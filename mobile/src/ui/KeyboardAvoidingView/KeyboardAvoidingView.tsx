@@ -5,13 +5,15 @@ import {
   KeyboardAvoidingView as RNKeyboardAvoidingView,
 } from 'react-native'
 
+import {useIsKeyboardOpen} from '~/hooks/useIsKeyboardOpen'
+
 export const KeyboardAvoidingView = ({
   children,
   keyboardVerticalOffset,
   behavior,
-  enabled,
   ...rest
 }: KeyboardAvoidingViewProps) => {
+  const isKeyboardOpen = useIsKeyboardOpen()
   const keyboardBehavior: KeyboardAvoidingViewProps['behavior'] =
     (behavior ?? Platform.OS === 'ios')
       ? 'padding'
@@ -22,11 +24,17 @@ export const KeyboardAvoidingView = ({
   return (
     <RNKeyboardAvoidingView
       behavior={behavior ?? keyboardBehavior}
-      keyboardVerticalOffset={keyboardVerticalOffset ?? 70}
-      enabled={enabled ?? Platform.OS === 'ios'}
+      keyboardVerticalOffset={
+        keyboardVerticalOffset != null
+          ? keyboardVerticalOffset
+          : defaultKeyboardOffset
+      }
+      enabled={isKeyboardOpen}
       {...rest}
     >
       {children}
     </RNKeyboardAvoidingView>
   )
 }
+
+const defaultKeyboardOffset = Platform.OS === 'ios' ? 70 : 86

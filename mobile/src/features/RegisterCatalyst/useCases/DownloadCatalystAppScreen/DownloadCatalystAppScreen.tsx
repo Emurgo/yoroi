@@ -27,7 +27,8 @@ import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWalle
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
 import {CatalystStep1} from '~/ui/CatalystStep1Illustration/CatalystStep1Illustration'
-import {useModal} from '~/ui/Modal/ModalContext'
+import {useModal} from '~/ui/Modal/context/ModalContext'
+import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {Space} from '~/ui/Space/Space'
 
 import {useNavigateTo} from '../../CatalystNavigator'
@@ -66,12 +67,18 @@ export const DownloadCatalystAppScreen = () => {
       hasShownModal.current = true
       openModal({
         title: strings.registerCatalyst.title,
-        content: <WarningModal />,
+        content: (
+          <Modal.Content>
+            <WarningModal />
+          </Modal.Content>
+        ),
         footer: (
-          <Button
-            title={strings.registerCatalyst.confirm}
-            onPress={closeModal}
-          />
+          <Modal.Footer>
+            <Button
+              title={strings.registerCatalyst.confirm}
+              onPress={closeModal}
+            />
+          </Modal.Footer>
         ),
         height: 300,
       })
@@ -178,11 +185,9 @@ const WarningModal = () => {
   const strings = useStrings()
   const {atoms: ta} = useTheme()
   return (
-    <View style={[a.px_lg, a.flex_1]}>
-      <Text style={[a.body_1_lg_regular, ta.text_gray_medium]}>
-        {strings.registerCatalyst.tip}
-      </Text>
-    </View>
+    <Text style={[a.body_1_lg_regular, ta.text_gray_medium]}>
+      {strings.registerCatalyst.tip}
+    </Text>
   )
 }
 
