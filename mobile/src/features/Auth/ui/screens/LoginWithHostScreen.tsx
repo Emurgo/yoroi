@@ -1,21 +1,20 @@
-import {atoms as a, useTheme} from '@yoroi/theme'
+import {time} from '@yoroi/common'
+import {atoms as a} from '@yoroi/theme'
 
 import * as React from 'react'
 import {View} from 'react-native'
-import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useAppState} from '~/hooks/useAppState'
 import {usePromise} from '~/hooks/usePromise'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
-import {Space} from '~/ui/Space/Space'
+import {SafeArea} from '~/ui/SafeArea/SafeArea'
 
 import {useAuth} from '../../context/AuthProvider'
 import {Logo} from '../shared/illustrations/Logo'
 
 export const LoginWithHostScreen = () => {
   const strings = useStrings()
-  const {atoms: ta} = useTheme()
   const {loginWithHost} = useAuth()
   const {resolve, isPending} = usePromise(loginWithHost)
 
@@ -27,9 +26,10 @@ export const LoginWithHostScreen = () => {
     on: 'active',
     execute: () => {
       if (!isPending) {
-        setTimeout(() => {
+        const timer = setTimeout(() => {
           resolve()
-        }, 100)
+          clearTimeout(timer)
+        }, time.seconds(0.1))
       }
     },
   })
@@ -39,34 +39,24 @@ export const LoginWithHostScreen = () => {
   }
 
   return (
-    <SafeAreaView style={[a.flex_1, ta.bg_color_max]}>
-      <View style={[a.flex_1, a.flex_col, a.justify_between, a.px_lg]}>
-        <Space.Height.lg fill />
+    <SafeArea style={[a.justify_between]}>
+      <Center>
+        <Logo />
+      </Center>
 
-        <MiddleSection>
-          <Logo />
-        </MiddleSection>
-
-        <BottomSection>
-          <Button
-            title={strings.auth.authorize}
-            disabled={isPending}
-            onPress={handleOnPress}
-          />
-        </BottomSection>
-      </View>
-    </SafeAreaView>
+      <SafeArea.Footer>
+        <Button
+          title={strings.auth.authorize}
+          disabled={isPending}
+          onPress={handleOnPress}
+        />
+      </SafeArea.Footer>
+    </SafeArea>
   )
 }
 
-const MiddleSection = ({children}: React.PropsWithChildren) => {
+const Center = ({children}: React.PropsWithChildren) => {
   return (
-    <View style={[a.flex_1, a.flex_col, a.justify_center, a.align_center]}>
-      {children}
-    </View>
+    <View style={[a.flex_1, a.justify_center, a.align_center]}>{children}</View>
   )
-}
-
-const BottomSection = ({children}: React.PropsWithChildren) => {
-  return <View style={[a.flex_1, a.flex_col, a.justify_end]}>{children}</View>
 }
