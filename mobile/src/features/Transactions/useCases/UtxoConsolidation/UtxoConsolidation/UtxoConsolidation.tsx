@@ -9,7 +9,7 @@ import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {ScrollView} from '~/ui/ScrollView/ScrollView'
-import {useScrollView} from '~/ui/ScrollView/useScrollView'
+import {useScrollView} from '~/ui/ScrollView/hooks/useScrollView'
 
 export const UtxoConsolidation = () => {
   const strings = useStrings()
