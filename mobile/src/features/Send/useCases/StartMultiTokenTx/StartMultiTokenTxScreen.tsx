@@ -96,7 +96,8 @@ export const StartMultiTokenTxScreen = () => {
     <SafeArea>
       <ScrollView
         ref={scrollViewRef}
-        style={[a.flex_1, a.px_lg]}
+        style={[a.pt_lg]}
+        contentContainerStyle={[a.px_lg]}
         bounces={false}
       >
         <ShowErrors />
