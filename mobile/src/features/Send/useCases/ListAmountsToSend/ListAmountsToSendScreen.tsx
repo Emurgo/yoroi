@@ -105,6 +105,11 @@ export const ListAmountsToSendScreen = () => {
     track.sendSummarySubmitted(sendProperties)
   }, [track, sendProperties])
 
+  const handleOnAdd = () => {
+    clearSearch()
+    navigateTo.addToken()
+  }
+
   const createUnsignedTxPromise = React.useCallback(
     (entries: YoroiEntry[]) => wallet.createUnsignedTx({entries, addressMode}),
     [wallet, addressMode],
@@ -121,22 +126,16 @@ export const ListAmountsToSendScreen = () => {
     [unsignedTxChanged, navigateToTxReview, handleOnSuccess, handleOnError],
   )
 
-  const handleOnNext = () => {
-    track.sendSelectAssetSelected(assetsToSendProperties({amounts}))
-    createUnsignedTx([toYoroiEntry(targets[selectedTargetIndex].entry)])
-  }
-
-  const handleOnAdd = () => {
-    clearSearch()
-    navigateTo.addToken()
-  }
-
   const {resolve: createUnsignedTx, isPending} = usePromise({
     promise: createUnsignedTxPromise,
     onSuccess: handleCreateUnsignedTxSuccess,
     onError: handleOnError,
   })
 
+  const handleOnNext = () => {
+    track.sendSelectAssetSelected(assetsToSendProperties({amounts}))
+    createUnsignedTx([toYoroiEntry(targets[selectedTargetIndex].entry)])
+  }
   return (
     <SafeAreaView
       edges={['left', 'right', 'bottom']}

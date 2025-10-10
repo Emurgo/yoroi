@@ -1,13 +1,17 @@
+import {time} from '@yoroi/common'
+
 import * as React from 'react'
-import {Keyboard, Platform, ScrollView} from 'react-native'
+import {Keyboard, Platform} from 'react-native'
+
+import {useScrollViewContext} from './context'
 
 export const useFlashAndScroll = () => {
-  const scrollViewRef = React.useRef<ScrollView | null>(null)
+  const {scrollViewRef} = useScrollViewContext()
 
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     setTimeout(() => {
       scrollViewRef.current?.flashScrollIndicators()
-    }, 500)
+    }, time.seconds(0.3))
 
     const event =
       Platform.OS === 'android' ? 'keyboardDidShow' : 'keyboardWillShow'
@@ -19,7 +23,7 @@ export const useFlashAndScroll = () => {
     return () => {
       showSubscription.remove()
     }
-  }, [])
+  }, [scrollViewRef])
 
   return scrollViewRef
 }

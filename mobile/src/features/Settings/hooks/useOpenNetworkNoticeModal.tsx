@@ -1,15 +1,16 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
-import {Text, View} from 'react-native'
+import {Text} from 'react-native'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
-import {useModal} from '~/ui/Modal/ModalContext'
+import {useModal} from '~/ui/Modal/context/ModalContext'
+import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {Space} from '~/ui/Space/Space'
 
 export const useOpenNetworkNoticeModal = () => {
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
   const strings = useStrings()
   const {openModal, closeModal} = useModal()
 
@@ -24,34 +25,34 @@ export const useOpenNetworkNoticeModal = () => {
         title: strings.settings.changeNetwork.networkNoticeTitle,
         canDiscard: false,
         content: (
-          <View style={[a.flex_1]}>
-            <Text style={[a.body_1_lg_regular, {color: p.gray_900}]}>
+          <Modal.Content>
+            <Text style={[a.body_1_lg_regular, ta.text_gray_max]}>
               {strings.settings.changeNetwork.networkNoticeMessage}
             </Text>
 
             <Space.Height.lg />
 
-            <Text style={[a.body_1_lg_medium, {color: p.gray_900}]}>
+            <Text style={[a.body_1_lg_medium, ta.text_gray_max]}>
               {strings.settings.changeNetwork.networkNoticeListTitle}
             </Text>
 
-            <Text style={[a.body_1_lg_regular, {color: p.gray_900}]}>
+            <Text style={[a.body_1_lg_regular, ta.text_gray_max]}>
               {strings.settings.changeNetwork.networkNoticeList}
             </Text>
-
-            <Space.Height.sm fill />
-          </View>
+          </Modal.Content>
         ),
         footer: (
-          <Button
-            title={strings.settings.changeNetwork.networkNoticeButton}
-            onPress={handleClose}
-          />
+          <Modal.Footer>
+            <Button
+              title={strings.settings.changeNetwork.networkNoticeButton}
+              onPress={handleClose}
+            />
+          </Modal.Footer>
         ),
         height: 450,
       })
     },
-    [openModal, closeModal, strings, p.gray_900],
+    [openModal, closeModal, strings, ta.text_gray_max],
   )
 
   return openNetworkNoticeModal

@@ -2,7 +2,7 @@ import * as React from 'react'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
 import {LiquidityPoolModal} from '~/features/Portfolio/screens/PortfolioTokensList/PortfolioDAppsTokenList/LiquidityPoolModal'
-import {useModal} from '~/ui/Modal/ModalContext'
+import {useModal} from '~/ui/Modal/context/ModalContext'
 
 import {ILiquidityPool} from './useGetLiquidityPool'
 

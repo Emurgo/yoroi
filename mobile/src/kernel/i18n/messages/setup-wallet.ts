@@ -286,6 +286,10 @@ export const setupWalletMessages = defineMessages({
     id: 'components.walletinit.connectnanox.connectnanoxscreen.error',
     defaultMessage: '!!!Bluetooth error',
   },
+  hwIntroTitle: {
+    id: 'components.walletinit.connectnanox.checknanoxscreen.steppertitle',
+    defaultMessage: '!!!Intro',
+  },
   hwCheckIntroline: {
     id: 'components.walletinit.connectnanox.checknanoxscreen.introline',
     defaultMessage: '!!!Check your hardware wallet',

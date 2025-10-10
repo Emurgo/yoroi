@@ -9,6 +9,7 @@ import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWalle
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Copiable} from '~/ui/Copiable/Copiable'
 import {ExplorerInfoLinks} from '~/ui/ExplorerInfoLinks/ExplorerInfoLinks'
+import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {Space} from '~/ui/Space/Space'
 import {formatTokenWithText} from '~/wallets/utils/format'
 import {isEmptyString} from '~/wallets/utils/string'
@@ -19,7 +20,7 @@ import {generatePoolName} from './poolUtils'
 export const PoolDetails = ({poolInfo}: {poolInfo: FullPoolInfo}) => {
   const strings = useStrings()
   const {wallet} = useSelectedWallet()
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
 
   const {chain, explorer} = poolInfo
 
@@ -27,13 +28,13 @@ export const PoolDetails = ({poolInfo}: {poolInfo: FullPoolInfo}) => {
   const poolName = generatePoolName(poolInfo)
 
   return (
-    <View style={[a.flex_1]}>
+    <Modal.Content>
       <PoolIcon imageUrl={explorer?.pic} />
 
       <Space.Height.sm />
 
       <Row>
-        <Text style={[a.body_1_lg_medium, {color: p.text_gray_medium}]}>
+        <Text style={[a.body_1_lg_medium, ta.text_gray_medium]}>
           {poolName}
         </Text>
       </Row>
@@ -112,7 +113,7 @@ export const PoolDetails = ({poolInfo}: {poolInfo: FullPoolInfo}) => {
       {poolInfo.explorer && !isEmptyString(poolInfo.explorer.id) && (
         <ExplorerInfoLinks value={poolInfo.explorer.id} type="pool" />
       )}
-    </View>
+    </Modal.Content>
   )
 }
 
@@ -128,13 +129,13 @@ const PoolIcon = ({imageUrl}: {imageUrl: string | null | undefined}) => {
 
 const PoolId = ({poolId}: {poolId: string | undefined}) => {
   const strings = useStrings()
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
 
   if (isEmptyString(poolId) || poolId == null) return null
 
   return (
     <Row>
-      <Text style={[a.body_2_md_regular, {color: p.text_gray_low}]}>
+      <Text style={[a.body_2_md_regular, ta.text_gray_low]}>
         {strings.txReview.poolDetails.poolId}
       </Text>
 
@@ -147,7 +148,7 @@ const PoolId = ({poolId}: {poolId: string | undefined}) => {
               a.flex_1,
               a.text_right,
               a.body_2_md_regular,
-              {color: p.text_gray_max},
+              ta.text_gray_max,
             ]}
           >
             {poolId}
@@ -159,13 +160,13 @@ const PoolId = ({poolId}: {poolId: string | undefined}) => {
 }
 const PoolHash = ({poolHash}: {poolHash?: string}) => {
   const strings = useStrings()
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
 
   if (isEmptyString(poolHash) || poolHash == null) return null
 
   return (
     <Row>
-      <Text style={[a.body_2_md_regular, {color: p.text_gray_low}]}>
+      <Text style={[a.body_2_md_regular, ta.text_gray_low]}>
         {strings.txReview.poolDetails.poolHash}
       </Text>
 
@@ -178,7 +179,7 @@ const PoolHash = ({poolHash}: {poolHash?: string}) => {
               a.flex_1,
               a.text_right,
               a.body_2_md_regular,
-              {color: p.text_gray_max},
+              ta.text_gray_max,
             ]}
           >
             {poolHash}
@@ -190,23 +191,16 @@ const PoolHash = ({poolHash}: {poolHash?: string}) => {
 }
 
 const Info = ({label, value}: {label: string; value?: string}) => {
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
 
   if (isEmptyString(value)) return null
 
   return (
     <Row>
-      <Text style={[a.body_2_md_regular, {color: p.text_gray_low}]}>
-        {label}
-      </Text>
+      <Text style={[a.body_2_md_regular, ta.text_gray_low]}>{label}</Text>
 
       <Text
-        style={[
-          a.flex_1,
-          a.text_right,
-          a.body_2_md_regular,
-          {color: p.text_gray_max},
-        ]}
+        style={[a.flex_1, a.text_right, a.body_2_md_regular, ta.text_gray_max]}
       >
         {value}
       </Text>

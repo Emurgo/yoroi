@@ -652,7 +652,7 @@
   "components.walletinit.walletDetails.walletDetailsConfirmPasswordInput": "Confirm password",
   "components.walletinit.connectnanox.checknanoxscreen.introline": "Before continuing, please make sure that:",
   "components.walletinit.connectnanox.checknanoxscreen.learnMore": "Learn more about using Yoroi with Ledger",
-  "components.walletinit.connectnanox.checknanoxscreen.title": "Connect hardware wallet",
+  "components.walletinit.connectnanox.checknanoxscreen.title": "Connect to HW",
   "components.walletinit.connectnanox.checknanoxscreen.steppertitle": "Intro",
   "components.walletinit.connectnanox.connectnanoxscreen.caption": "Scanning bluetooth devices...",
   "components.walletinit.connectnanox.connectnanoxscreen.error": "An error occurred while trying to connect with your hardware wallet:",

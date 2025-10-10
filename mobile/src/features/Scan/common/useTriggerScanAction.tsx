@@ -8,13 +8,10 @@ import * as React from 'react'
 import {Alert} from 'react-native'
 
 import {useClaimErrorResolver} from '~/features/Claim/common/useClaimErrorResolver'
-import {
-  AskConfirmation,
-  AskConfirmationActions,
-} from '~/features/Claim/useCases/AskConfirmation'
+import {AskConfirmationModal} from '~/features/Claim/ui/modals/AskConfirmationModal'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useModal} from '~/ui/Modal/ModalContext'
+import {useModal} from '~/ui/Modal/context/ModalContext'
 import {pastedFormatter} from '~/wallets/utils/amountUtils'
 
 import {useNavigateTo} from './useNavigateTo'
@@ -117,13 +114,15 @@ export const useTriggerScanAction = ({
           openModal({
             title: strings.claim.askConfirmationTitle,
             content: (
-              <AskConfirmation
+              <AskConfirmationModal.Content
                 address={address}
                 url={scanAction.url}
                 code={scanAction.code}
               />
             ),
-            footer: <AskConfirmationActions onContinue={handleOnContinue} />,
+            footer: (
+              <AskConfirmationModal.Footer onContinue={handleOnContinue} />
+            ),
             height: 400,
           })
         }, 300)
