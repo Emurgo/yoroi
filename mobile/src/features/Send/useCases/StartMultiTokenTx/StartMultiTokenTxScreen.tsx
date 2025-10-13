@@ -18,7 +18,7 @@ import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Button} from '~/ui/Button/Button'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {ScrollView} from '~/ui/ScrollView/ScrollView'
-import {useScrollView} from '~/ui/ScrollView/useScrollView'
+import {useScrollView} from '~/ui/ScrollView/hooks/useScrollView'
 import {Space} from '~/ui/Space/Space'
 
 import {InputMemo} from './InputMemo/InputMemo'
@@ -96,7 +96,8 @@ export const StartMultiTokenTxScreen = () => {
     <SafeArea>
       <ScrollView
         ref={scrollViewRef}
-        style={[a.flex_1, a.px_lg]}
+        style={[a.pt_lg]}
+        contentContainerStyle={[a.px_lg]}
         bounces={false}
       >
         <ShowErrors />
