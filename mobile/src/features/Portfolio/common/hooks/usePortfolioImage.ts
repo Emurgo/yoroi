@@ -23,7 +23,7 @@ export const usePortfolioImageInvalidate = () => {
       )
 
       if (idsToInvalidate.length === 0) {
-        logger.log(
+        logger.debug(
           `Skipping invalidation - all images already invalidated this session: ${ids}`,
         )
         return
