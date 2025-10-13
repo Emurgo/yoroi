@@ -29,7 +29,7 @@ export const usePortfolioImageInvalidate = () => {
         return
       }
 
-      logger.log(`Invalidating images ${idsToInvalidate}`)
+      logger.debug(`Invalidating images ${idsToInvalidate}`)
 
       // Mark these images as invalidated for this session
       idsToInvalidate.forEach((id) => sessionInvalidatedImages.add(id))
