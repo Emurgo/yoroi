@@ -6,6 +6,7 @@ import {Text} from 'react-native'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Button} from '~/ui/Button/Button'
+import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 
 const WithdrawGovernanceWarningModalContent = () => {
@@ -31,8 +32,10 @@ const WithdrawGovernanceWarningModalContent = () => {
 const WithdrawGovernanceWarningModalFooter = () => {
   const walletNavigateTo = useWalletNavigation()
   const strings = useStrings()
+  const {closeModal} = useModal()
   const handleOnPress = () => {
     walletNavigateTo.navigateToGovernanceCentre()
+    closeModal()
   }
 
   return (
