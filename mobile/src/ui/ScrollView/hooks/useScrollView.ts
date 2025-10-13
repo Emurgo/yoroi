@@ -1,4 +1,4 @@
-import {useScrollViewContext} from './context'
+import {useScrollViewContext} from '../context/ScrollViewContext'
 
 export const useScrollView = () => {
   const {scrollViewRef, isScrollBarShown, setIsScrollBarShown} =

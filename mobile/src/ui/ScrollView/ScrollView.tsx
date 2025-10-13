@@ -1,7 +1,7 @@
 import * as React from 'react'
 import {ScrollView as RNScrollView, ScrollViewProps} from 'react-native'
 
-import {useScrollView} from './useScrollView'
+import {useScrollView} from './hooks/useScrollView'
 
 export const ScrollView = React.forwardRef<RNScrollView, ScrollViewProps>(
   ({onLayout, onContentSizeChange, ...rest}, ref) => {
