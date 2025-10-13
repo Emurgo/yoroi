@@ -12,7 +12,6 @@ import React, {ReactNode, useState} from 'react'
 import {
   Linking,
   RefreshControl,
-  SafeAreaView,
   ScrollView,
   TouchableOpacity,
   View,
@@ -26,9 +25,9 @@ import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {NftRoutes} from '~/kernel/navigation/types'
 import {Boundary} from '~/ui/Boundary/Boundary'
 import {Copiable} from '~/ui/Copiable/Copiable'
-import {FadeIn} from '~/ui/FadeIn/FadeIn'
 import {Hr} from '~/ui/Hr/Hr'
 import {MediaPreview} from '~/ui/MediaPreview/MediaPreview'
+import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
 import {Tab, TabPanel, TabPanels, Tabs} from '~/ui/Tabs'
 import {Text} from '~/ui/Text/Text'
@@ -36,10 +35,9 @@ import {Text} from '~/ui/Text/Text'
 import {useNavigateTo} from '../../common/navigation'
 
 export const MediaDetailsScreen = () => {
-  const {palette: p} = useTheme()
   const strings = useStrings()
   const {track} = useMetrics()
-  const {invalidate, isPending} = usePortfolioImageInvalidate()
+  const {forceInvalidate, isPending} = usePortfolioImageInvalidate()
 
   const [activeTab, setActiveTab] = useState<ActiveTab>('overview')
 
@@ -54,55 +52,53 @@ export const MediaDetailsScreen = () => {
   // TODO: revisit + product definition (missing is gone state)
   if (!amount) return null
 
-  const onRefresh = () => invalidate([amount.info.id])
+  const handleRefresh = () => forceInvalidate(amount.info.id)
 
   return (
-    <FadeIn style={{flex: 1, backgroundColor: p.bg_color_max}}>
-      <SafeAreaView>
-        <ScrollView
-          contentContainerStyle={[{paddingHorizontal: imagePadding}]}
-          refreshControl={
-            <RefreshControl onRefresh={onRefresh} refreshing={isPending} />
-          }
-        >
-          <SelectableMedia info={amount.info} />
+    <SafeArea>
+      <ScrollView
+        contentContainerStyle={[{paddingHorizontal: imagePadding}]}
+        refreshControl={
+          <RefreshControl onRefresh={handleRefresh} refreshing={isPending} />
+        }
+      >
+        <SelectableMedia info={amount.info} />
 
-          <Tabs>
-            <Tab
-              onPress={() => {
-                if (activeTab !== 'overview') {
-                  setActiveTab('overview')
-                  track.nftGalleryDetailsTab({nft_tab: 'Overview'})
-                }
-              }}
-              label={strings.portfolio.overview}
-              active={activeTab === 'overview'}
-              testID="overview"
-            />
+        <Tabs>
+          <Tab
+            onPress={() => {
+              if (activeTab !== 'overview') {
+                setActiveTab('overview')
+                track.nftGalleryDetailsTab({nft_tab: 'Overview'})
+              }
+            }}
+            label={strings.portfolio.overview}
+            active={activeTab === 'overview'}
+            testID="overview"
+          />
 
-            <Tab
-              onPress={() => {
-                if (activeTab !== 'metadata') {
-                  setActiveTab('metadata')
-                  track.nftGalleryDetailsTab({nft_tab: 'Metadata'})
-                }
-              }}
-              label={strings.portfolio.info}
-              active={activeTab === 'metadata'}
-              testID="metadata"
-            />
-          </Tabs>
+          <Tab
+            onPress={() => {
+              if (activeTab !== 'metadata') {
+                setActiveTab('metadata')
+                track.nftGalleryDetailsTab({nft_tab: 'Metadata'})
+              }
+            }}
+            label={strings.portfolio.info}
+            active={activeTab === 'metadata'}
+            testID="metadata"
+          />
+        </Tabs>
 
-          <Boundary loading={{enabled: true}}>
-            <Details
-              info={amount.info}
-              activeTab={activeTab}
-              networkManager={networkManager}
-            />
-          </Boundary>
-        </ScrollView>
-      </SafeAreaView>
-    </FadeIn>
+        <Boundary loading={{enabled: true}}>
+          <Details
+            info={amount.info}
+            activeTab={activeTab}
+            networkManager={networkManager}
+          />
+        </Boundary>
+      </ScrollView>
+    </SafeArea>
   )
 }
 

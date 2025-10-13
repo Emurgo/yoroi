@@ -10,14 +10,31 @@ import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetw
 import {isDev} from '~/kernel/constants'
 import {logger} from '~/kernel/logger/logger'
 
+export const sessionInvalidatedImages = new Set<string>()
+
 export const usePortfolioImageInvalidate = () => {
   const {
     networkManager: {tokenManager},
   } = useSelectedNetwork()
   const mutation = useMutation({
     mutationFn: async (ids: Array<Portfolio.Token.Id>) => {
-      logger.log(`Invalidating images ${ids}`)
-      await tokenManager.api.tokenImageInvalidate(ids)
+      const idsToInvalidate = ids.filter(
+        (id) => !sessionInvalidatedImages.has(id),
+      )
+
+      if (idsToInvalidate.length === 0) {
+        logger.log(
+          `Skipping invalidation - all images already invalidated this session: ${ids}`,
+        )
+        return
+      }
+
+      logger.log(`Invalidating images ${idsToInvalidate}`)
+
+      // Mark these images as invalidated for this session
+      idsToInvalidate.forEach((id) => sessionInvalidatedImages.add(id))
+
+      await tokenManager.api.tokenImageInvalidate(idsToInvalidate)
       await Image.clearDiskCache()
       await Image.clearMemoryCache()
     },
@@ -26,6 +43,10 @@ export const usePortfolioImageInvalidate = () => {
   return {
     ...mutation,
     invalidate: mutation.mutate,
+    forceInvalidate: (id: Portfolio.Token.Id) => {
+      sessionInvalidatedImages.delete(id)
+      mutation.mutate([id])
+    },
   }
 }
 
@@ -115,7 +136,11 @@ export const usePortfolioImage = ({
       timerRef.current = setTimeout(() => query.refetch(), count * 300)
     } else {
       if (isDev) {
-        invalidate([`${policy}.${name}`])
+        const imageId = `${policy}.${name}` as Portfolio.Token.Id
+        // Only invalidate if not already invalidated this session
+        if (!sessionInvalidatedImages.has(imageId)) {
+          invalidate([imageId])
+        }
         queryClient.invalidateQueries({queryKey})
       }
       setError(true)
