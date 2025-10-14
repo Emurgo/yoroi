@@ -20,7 +20,6 @@ const SingleOrMultipleAddressesModalContent = () => {
 
   return (
     <View style={[a.flex_1, a.align_center, a.justify_between, a.py_lg]}>
-      {/* @bankless TODO: maybe rexport the component from Figma, it's blowing the UI */}
       <QRs />
 
       <Text
