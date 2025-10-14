@@ -8,34 +8,17 @@ import {useMultipleAddressesInfo} from '~/features/Receive/common/useMultipleAdd
 import {useAddressMode} from '~/features/WalletManager/hooks/useAddressMode'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button, ButtonType} from '~/ui/Button/Button'
-import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
+
+import QRs from '../QRsIllustration/QRsIllustration'
 
 export const singleOrMultipleAddressesModalHeight = 580
 
-const SingleOrMultipleAddressesModalContent = () => {
-  const strings = useStrings()
-  const {atoms: ta} = useTheme()
-
-  return (
-    <View style={[a.flex_1, a.align_center, a.justify_between, a.py_lg]}>
-      {/* @bankless TODO: maybe rexport the component from Figma, it's blowing the UI */}
-      {/* <QRs /> */}
-
-      <Text
-        style={[
-          a.body_1_lg_regular,
-          a.justify_center,
-          a.text_center,
-          ta.text_gray_medium,
-        ]}
-      >
-        {strings.receive.singleOrMultipleDetails}
-      </Text>
-    </View>
-  )
+type Props = {
+  onConfirm: (addressMode: Wallet.AddressMode) => void
+  onClose: () => void
 }
 
-const SingleOrMultipleAddressesModalFooter = ({onConfirm, onClose}: Props) => {
+export const SingleOrMultipleAddressesModal = ({onConfirm, onClose}: Props) => {
   const strings = useStrings()
   const {enableMultipleMode, enableSingleMode} = useAddressMode()
 
@@ -65,8 +48,7 @@ const SingleOrMultipleAddressesModalFooter = ({onConfirm, onClose}: Props) => {
 
   return (
     <View style={[a.flex_1, a.align_center, a.justify_between, a.py_lg]}>
-      {/* TODO: REVISIT, this breaks the app. investigate why */}
-      {/*  <QRs /> */}
+      <QRs />
 
       <Text
         style={[

@@ -409,4 +409,4 @@ const QRs = (props: SvgProps) => (
     </Defs>
   </Svg>
 )
-export {QRs}
+export default QRs
