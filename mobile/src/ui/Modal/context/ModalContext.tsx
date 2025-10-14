@@ -50,7 +50,7 @@ type ModalActions = {
     full?: boolean
     canExpand?: boolean
   }) => void
-  closeModal: () => void
+  closeModal: (dismissAll?: boolean) => void
   setLoading: (isLoading: boolean) => void
   setFooter: (footer: React.ReactNode | undefined) => void
   setTitle: (title: string) => void
@@ -95,15 +95,19 @@ export const ModalProvider = ({children, initialState}: Props) => {
     queueRef.current = state.queue
   }, [state.isOpen, state.queue])
 
-  const closeModal = React.useCallback(() => {
-    if (isKeyboardOpen) {
-      Keyboard.dismiss()
-      return
-    }
-    dispatch({
-      type: 'closeAndProcessQueue',
-    })
-  }, [isKeyboardOpen])
+  const closeModal = React.useCallback(
+    (dismissAll?: boolean) => {
+      if (isKeyboardOpen) {
+        Keyboard.dismiss()
+        return
+      }
+      dispatch({
+        type: 'closeAndProcessQueue',
+        dismissAll: Boolean(dismissAll),
+      })
+    },
+    [isKeyboardOpen],
+  )
 
   const openModal = React.useCallback(
     ({
@@ -270,7 +274,7 @@ type ModalAction =
       canExpand?: boolean
     }
   | {type: 'close'}
-  | {type: 'closeAndProcessQueue'}
+  | {type: 'closeAndProcessQueue'; dismissAll?: boolean}
   | {type: 'addToQueue'; modalData: ModalQueueItem}
   | {type: 'clearQueue'}
   | {type: 'setLoading'; isLoading: boolean}
@@ -329,7 +333,7 @@ const modalReducer = (state: ModalState, action: ModalAction) => {
         }
       }
 
-      if (state.queue.length > 0) {
+      if (state.queue.length > 0 && action.dismissAll) {
         const nextModal = state.queue[0]
         return {
           ...defaultState,
@@ -348,10 +352,10 @@ const modalReducer = (state: ModalState, action: ModalAction) => {
           isOpen: true,
           queue: state.queue.slice(1),
         }
-      } else {
-        return {
-          ...defaultState,
-        }
+      }
+
+      return {
+        ...defaultState,
       }
 
     case 'setLoading':
