@@ -25,6 +25,27 @@ if command -v set-env >/dev/null 2>&1; then
   set-env PATH "$HOME/.cargo/bin:$PATH"
 fi
 
+# Propagate git commit hash to Expo runtime env so JS can read it via process.env.EXPO_PUBLIC_COMMIT
+if [[ -n "${EAS_BUILD_GIT_COMMIT_HASH:-}" ]]; then
+  echo "Setting EXPO_PUBLIC_COMMIT from EAS_BUILD_GIT_COMMIT_HASH"
+  if command -v set-env >/dev/null 2>&1; then
+    set-env EXPO_PUBLIC_COMMIT "${EAS_BUILD_GIT_COMMIT_HASH}"
+  else
+    export EXPO_PUBLIC_COMMIT="${EAS_BUILD_GIT_COMMIT_HASH}"
+  fi
+else
+  # Fallback for local builds where EAS_BUILD_GIT_COMMIT_HASH isn't available
+  if git rev-parse --verify HEAD >/dev/null 2>&1; then
+    GIT_SHA="$(git rev-parse HEAD)"
+    echo "Setting EXPO_PUBLIC_COMMIT from local git HEAD ${GIT_SHA}"
+    if command -v set-env >/dev/null 2>&1; then
+      set-env EXPO_PUBLIC_COMMIT "${GIT_SHA}"
+    else
+      export EXPO_PUBLIC_COMMIT="${GIT_SHA}"
+    fi
+  fi
+fi
+
 # iOS device + simulators + android
 rustup target add \
  aarch64-apple-darwin \
