@@ -7,7 +7,7 @@ import {useWalletManager} from '~/features/WalletManager/context/WalletManagerPr
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 
-import {AskToOpenWalletScreen} from '../ui/screens/AskToOpenAWalletScreen/AskToOpenAWalletScreen'
+import {AskToOpenWalletModal} from '../ui/modals/AskToOpenAWalletModal'
 
 const heightBreakpoint = 367
 
@@ -44,8 +44,9 @@ export const useLinksRequestWallet = (modalFunctions?: ModalFunctions) => {
 
     modalFunctions.openModal({
       title: strings.links.askToOpenAWalletTitle,
-      content: <AskToOpenWalletScreen closeModal={modalFunctions.closeModal} />,
+      content: React.createElement(AskToOpenWalletModal.Content),
       height: heightBreakpoint,
+      footer: React.createElement(AskToOpenWalletModal.Footer),
     })
   }, [modalFunctions, strings.links.askToOpenAWalletTitle])
 

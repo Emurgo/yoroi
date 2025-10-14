@@ -4,29 +4,19 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {validateMnemonic} from 'bip39'
 import * as React from 'react'
-import {
-  Keyboard,
-  Platform,
-  Text,
-  TouchableOpacity,
-  View,
-  useWindowDimensions,
-} from 'react-native'
+import {Keyboard, Text, TouchableOpacity, View} from 'react-native'
 import {FlatList, ScrollView} from 'react-native-gesture-handler'
-import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {
-  WalletDuplicatedModal,
-  WalletDuplicatedModalActions,
-} from '~/features/SetupWallet/common/WalletDuplicatedModal/WalletDuplicatedModal'
+import {WalletDuplicatedModal} from '~/features/SetupWallet/common/WalletDuplicatedModal/WalletDuplicatedModal'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useBold} from '~/hooks/useBold'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
+import {android} from '~/kernel/runtime'
 import {Button} from '~/ui/Button/Button'
-import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingView'
-import {useModal} from '~/ui/Modal/ModalContext'
-import {useScrollView} from '~/ui/ScrollView/ScrollView'
+import {useModal} from '~/ui/Modal/context/ModalContext'
+import {SafeArea} from '~/ui/SafeArea/SafeArea'
+import {useScrollView} from '~/ui/ScrollView/hooks/useScrollView'
 import {Space} from '~/ui/Space/Space'
 import {StepperProgress} from '~/ui/StepperProgress/StepperProgress'
 import {isEmptyString} from '~/wallets/utils/string'
@@ -41,7 +31,7 @@ export type MnemonicWordInputRef = {
 export const RestoreWalletScreen = () => {
   const navigation = useNavigation<any>()
   const strings = useStrings()
-  const {palette: p} = useTheme()
+  const {palette: p, atoms: ta} = useTheme()
   const {track} = useMetrics()
   const bold = useBold({style: a.body_1_lg_medium})
   const {openModal} = useModal()
@@ -154,14 +144,14 @@ export const RestoreWalletScreen = () => {
       openModal({
         title: strings.setupWallet.restoreDuplicatedWalletModalTitle,
         content: (
-          <WalletDuplicatedModal
+          <WalletDuplicatedModal.Content
             plate={plate}
             seed={seed}
             duplicatedAccountWalletMetaName={duplicatedAccountWalletMeta.name}
           />
         ),
         footer: (
-          <WalletDuplicatedModalActions
+          <WalletDuplicatedModal.Footer
             duplicatedAccountWalletMetaId={duplicatedAccountWalletMeta.id}
           />
         ),
@@ -186,103 +176,83 @@ export const RestoreWalletScreen = () => {
   ])
 
   return (
-    <SafeAreaView
-      edges={['left', 'right', 'bottom']}
-      style={[a.flex_1, a.justify_between, {backgroundColor: p.bg_color_max}]}
-    >
-      <KeyboardAvoidingView style={a.flex_1} enabled>
-        <View style={a.px_lg}>
-          <StepperProgress
-            currentStep={1}
-            currentStepTitle={strings.setupWallet.stepRestoreWalletScreen}
-            totalSteps={2}
-          />
-        </View>
-
-        <ScrollView
-          style={a.p_lg}
-          bounces={false}
-          keyboardShouldPersistTaps="always"
-        >
-          <Text style={[a.body_1_lg_regular, {color: p.gray_900}]}>
-            {strings.setupWallet.restoreWalletScreenTitle(bold)}
-          </Text>
-
-          <Space.Height.lg />
-
-          <MnemonicInput
-            isValidPhrase={isValidPhrase}
-            suggestedWords={suggestedWords}
-            setSuggestedWords={setSuggestedWords}
-            length={mnemonicType}
-            onDone={setMnemonic}
-            mnemonicSelectedWords={mnemonicSelectedWords}
-            setMnemonicSelectedWords={setMnemonicSelectedWords}
-            onSelect={onSelect}
-            onFocus={onFocus}
-            mnemonic={mnemonic}
-            mnenonicRefs={mnenonicRefs}
-            inputErrorsIndexes={inputErrorsIndexes}
-            onError={onError}
-            onClearError={onClearError}
-            scrollViewRef={scrollViewRef}
-          />
-        </ScrollView>
-
-        {!isEmptyString(mnemonic) && isValidPhrase && (
-          <NextButton onPress={handleOnNext} />
-        )}
-
-        {suggestedWords.length > 0 && !hasFocusedInputError && (
-          <WordSuggestionList
-            data={suggestedWords}
-            index={focusedIndex}
-            onSelect={onSelect}
-          />
-        )}
-
-        {suggestedWords.length === 0 && hasFocusedInputError && (
-          <View
-            style={{
-              backgroundColor: p.bg_color_max,
-              borderColor: p.gray_200,
-              borderTopWidth: 1,
-              paddingTop: 30,
-              paddingBottom: 30,
-              ...a.align_center,
-            }}
-          >
-            <Text
-              style={[
-                {
-                  color: p.text_gray_medium,
-                },
-                a.body_1_lg_regular,
-                a.text_center,
-              ]}
-            >
-              {strings.setupWallet.wordNotFound}
-            </Text>
-          </View>
-        )}
-      </KeyboardAvoidingView>
-    </SafeAreaView>
-  )
-}
-
-const NextButton = ({onPress}: {onPress: () => void}) => {
-  const {palette: p} = useTheme()
-  const strings = useStrings()
-
-  return (
-    <View style={a.p_lg}>
-      <Button
-        title={strings.setupWallet.next}
-        style={{backgroundColor: p.primary_500}}
-        onPress={onPress}
-        testID="setup-restore-step1-next-button"
+    <SafeArea>
+      <StepperProgress
+        style={[a.px_lg]}
+        currentStep={1}
+        currentStepTitle={strings.setupWallet.stepRestoreWalletScreen}
+        totalSteps={2}
       />
-    </View>
+
+      <ScrollView
+        bounces={false}
+        keyboardShouldPersistTaps="always"
+        contentContainerStyle={a.p_lg}
+        style={a.flex_1}
+      >
+        <Text style={[a.body_1_lg_regular, ta.text_gray_max]}>
+          {strings.setupWallet.restoreWalletScreenTitle(bold)}
+        </Text>
+
+        <Space.Height.lg />
+
+        <MnemonicInput
+          isValidPhrase={isValidPhrase}
+          suggestedWords={suggestedWords}
+          setSuggestedWords={setSuggestedWords}
+          length={mnemonicType}
+          onDone={setMnemonic}
+          mnemonicSelectedWords={mnemonicSelectedWords}
+          setMnemonicSelectedWords={setMnemonicSelectedWords}
+          onSelect={onSelect}
+          onFocus={onFocus}
+          mnemonic={mnemonic}
+          mnenonicRefs={mnenonicRefs}
+          inputErrorsIndexes={inputErrorsIndexes}
+          onError={onError}
+          onClearError={onClearError}
+          scrollViewRef={scrollViewRef}
+        />
+      </ScrollView>
+
+      {!isEmptyString(mnemonic) && isValidPhrase && (
+        <SafeArea.Footer>
+          <Button
+            title={strings.setupWallet.next}
+            onPress={handleOnNext}
+            testID="setup-restore-step1-next-button"
+          />
+        </SafeArea.Footer>
+      )}
+
+      {suggestedWords.length > 0 && !hasFocusedInputError && (
+        <WordSuggestionList
+          data={suggestedWords}
+          index={focusedIndex}
+          onSelect={onSelect}
+        />
+      )}
+
+      {suggestedWords.length === 0 && hasFocusedInputError && (
+        <View
+          style={[
+            ta.bg_color_max,
+            a.border_t,
+            a.py_sm,
+            a.align_center,
+            {
+              borderColor: p.gray_200,
+            },
+          ]}
+        >
+          <Text
+            style={[ta.text_gray_medium, a.body_1_lg_regular, a.text_center]}
+          >
+            {strings.setupWallet.wordNotFound}
+          </Text>
+        </View>
+      )}
+    </SafeArea>
   )
 }
 
@@ -295,28 +265,20 @@ const WordSuggestionList = ({
   index: number
   onSelect: (index: number, word: string) => void
 }) => {
-  const {palette: p} = useTheme()
-  const {height: screenHeight} = useWindowDimensions()
-
-  const paddingBottom = React.useMemo(() => {
-    if (Platform.OS === 'android') {
-      return screenHeight < 700 ? 24 : 32
-    }
-    return screenHeight < 700 ? screenHeight * 0.01 : screenHeight * 0.05
-  }, [screenHeight])
+  const {palette: p, atoms: ta} = useTheme()
 
   return (
     <View
       style={[
+        ta.bg_color_max,
+        a.border_t,
         {
-          backgroundColor: p.bg_color_max,
           borderColor: p.gray_200,
-          borderTopWidth: 1,
-          paddingBottom: paddingBottom,
+          ...android(a.pb_sm),
         },
         a.flex_row,
         a.align_center,
-        a.pt_lg,
+        a.pt_sm,
       ]}
     >
       <FlatList
@@ -351,31 +313,22 @@ const WordSuggestionButton = ({
   title: string
   onPress: () => void
 }) => {
-  const {palette: p} = useTheme()
+  const {palette: p, atoms: ta} = useTheme()
   return (
     <TouchableOpacity
       style={[
         a.px_lg,
         a.py_sm,
+        a.bg_transparent,
+        a.rounded_sm,
         {
           borderColor: p.primary_300,
           borderWidth: 2,
-          borderRadius: 8,
-          backgroundColor: 'transparent',
         },
       ]}
       onPress={onPress}
     >
-      <Text
-        style={[
-          {
-            color: p.text_primary_medium,
-          },
-          a.body_1_lg_regular,
-        ]}
-      >
-        {title}
-      </Text>
+      <Text style={[ta.text_primary_medium, a.body_1_lg_regular]}>{title}</Text>
     </TouchableOpacity>
   )
 }

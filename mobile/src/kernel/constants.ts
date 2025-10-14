@@ -78,3 +78,5 @@ export const agreementDate = 1691967600000
 // Others
 export const appVersion = Constants.expoConfig?.version ?? ''
 export const requiredPasswordLength = 10
+
+export const minAdaForGovernanceBanner = 5n * 1_000_000n

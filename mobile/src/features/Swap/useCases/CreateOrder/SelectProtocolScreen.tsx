@@ -1,3 +1,4 @@
+import {parseNumberFromText} from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import {useNavigation} from '@react-navigation/native'
@@ -9,6 +10,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {undefinedToken} from '~/features/Swap/common/constants'
 import {useSwap} from '~/features/Swap/common/useSwap'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useLanguage} from '~/kernel/i18n/LanguageProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Counter} from '~/ui/Counter/Counter'
 import {ProtocolAvatar} from '~/ui/ProtocolAvatar/ProtocolAvatar'
@@ -18,8 +20,8 @@ export const SelectProtocolScreen = () => {
   const strings = useStrings()
   const {wallet} = useSelectedWallet()
   const {limitOptions, ...swapForm} = useSwap()
-  const {palette: p} = useTheme()
-
+  const {palette: p, atoms: ta} = useTheme()
+  const {numberLocale} = useLanguage()
   if (limitOptions === undefined) return null
 
   const tokenInInfo = swapForm.tokenInfos.get(
@@ -33,18 +35,23 @@ export const SelectProtocolScreen = () => {
   const tokenOutTicker = tokenOutInfo?.ticker ?? tokenOutInfo?.name ?? '-'
 
   const formatPrice = (price: number) => {
-    const roundedPrice = price
-      .toFixed(tokenOutInfo?.decimals ?? 0)
-      .replace(/\.0+$/, '')
-    return roundedPrice !== '0' ? roundedPrice : price.toFixed(6)
+    return parseNumberFromText({
+      text: String(price),
+      format: numberLocale,
+      precision: Math.max(
+        tokenOutInfo?.decimals ?? 0,
+        tokenInInfo?.decimals ?? 0,
+        3,
+      ),
+    }).formattedValue
   }
 
-  const data = limitOptions.options
+  const data = limitOptions?.options ?? []
   const counter = data.length
 
   return (
     <SafeAreaView
-      style={[{backgroundColor: p.bg_color_max}]}
+      style={[ta.bg_color_max, a.flex_1]}
       edges={['left', 'right', 'bottom']}
     >
       <FlatList
@@ -86,7 +93,7 @@ export const SelectProtocolScreen = () => {
               </View>
 
               <View style={[a.flex_row, a.justify_between, a.gap_md]}>
-                <Text style={[a.body_1_lg_regular, {color: p.text_gray_low}]}>
+                <Text style={[a.body_1_lg_regular, ta.text_gray_low]}>
                   {strings.swap.price}
                 </Text>
 
@@ -94,7 +101,7 @@ export const SelectProtocolScreen = () => {
                   style={[
                     a.body_1_lg_regular,
                     a.self_center,
-                    {color: p.text_gray_medium},
+                    ta.text_gray_medium,
                   ]}
                 >
                   {`1 ${tokenInTicker} = ${formatPrice(item.initialPrice)} ${tokenOutTicker}`}
@@ -102,7 +109,7 @@ export const SelectProtocolScreen = () => {
               </View>
 
               <View style={[a.flex_row, a.justify_between, a.gap_md]}>
-                <Text style={[a.body_1_lg_regular, {color: p.text_gray_low}]}>
+                <Text style={[a.body_1_lg_regular, ta.text_gray_low]}>
                   {strings.swap.batcherFee}
                 </Text>
 
@@ -110,7 +117,7 @@ export const SelectProtocolScreen = () => {
                   style={[
                     a.body_1_lg_regular,
                     a.self_center,
-                    {color: p.text_gray_medium},
+                    ta.text_gray_medium,
                   ]}
                 >
                   {`${item.batcherFee} ${wallet.portfolioPrimaryTokenInfo.ticker}`}

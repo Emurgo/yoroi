@@ -21,6 +21,7 @@ import {isEmptyString} from '~/wallets/utils/string'
 
 import {Copiable} from '../Copiable/Copiable'
 import {ExplorerInfoLinks} from '../ExplorerInfoLinks/ExplorerInfoLinks'
+import {Modal} from '../Modal/ui/screens/Modal/Modal'
 import {SimpleTab} from '../SimpleTab/SimpleTab'
 import {TokenInfoIcon} from '../TokenInfoIcon/TokenInfoIcon'
 
@@ -34,13 +35,13 @@ export const TokenDetails = ({
   if (isPrimaryTokenInfo(tokenInfo)) return <PrimaryTokenInfo />
 
   return (
-    <View style={[a.flex_1]}>
+    <Modal.Content>
       <Header info={tokenInfo} />
 
       <Space.Width.lg />
 
       <Info info={tokenInfo} />
-    </View>
+    </Modal.Content>
   )
 }
 

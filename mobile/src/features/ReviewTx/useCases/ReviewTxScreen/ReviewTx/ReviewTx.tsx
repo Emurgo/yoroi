@@ -1,25 +1,15 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 
-import {
-  MaterialTopTabBarProps,
-  createMaterialTopTabNavigator,
-} from '@react-navigation/material-top-tabs'
+import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs'
 import * as React from 'react'
-import {
-  FlatList,
-  StyleProp,
-  Text,
-  TouchableOpacity,
-  TouchableOpacityProps,
-  View,
-  ViewStyle,
-} from 'react-native'
+import {ScrollView as RNScrollView} from 'react-native'
 
 import {FormattedMetadata, FormattedTx} from '~/features/ReviewTx/common/types'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
-import {ScrollView, useScrollView} from '~/ui/ScrollView/ScrollView'
+import {ScrollView} from '~/ui/ScrollView/ScrollView'
+import {ScrollViewProvider} from '~/ui/ScrollView/context/ScrollViewContext'
 import {isEmptyString} from '~/wallets/utils/string'
 
 import {MetadataTab} from '../ReviewTx/Metadata/MetadataTab'
@@ -29,7 +19,31 @@ import {MintTab} from './Mint/MintTab'
 import {ReferenceInputsTab} from './ReferenceInputs/ReferenceInputs'
 
 const MaterialTab = createMaterialTopTabNavigator()
-type Tabs = 'overview' | 'utxos' | 'metadata' | 'mint' | 'reference_inputs'
+
+const TabWrapper = ({
+  children,
+  onConfirm,
+}: {
+  children: React.ReactNode
+  onConfirm: () => void
+}) => {
+  const {atoms: ta} = useTheme()
+  const strings = useStrings()
+  const scrollViewRef = React.useRef<RNScrollView | null>(null)
+
+  return (
+    <ScrollViewProvider>
+      <SafeArea>
+        <ScrollView ref={scrollViewRef} style={[a.flex_1, ta.bg_color_max]}>
+          {children}
+        </ScrollView>
+        <SafeArea.Footer>
+          <Button title={strings.txReview.confirm} onPress={onConfirm} />
+        </SafeArea.Footer>
+      </SafeArea>
+    </ScrollViewProvider>
+  )
+}
 
 export const ReviewTx = ({
   formattedTx,
@@ -50,17 +64,8 @@ export const ReviewTx = ({
   createdBy?: React.ReactNode
   onConfirm: () => void
 }) => {
-  const {palette: p} = useTheme()
   const strings = useStrings()
-
-  const baseTabs = React.useMemo<Array<[string, Tabs]>>(
-    () => [
-      [strings.txReview.tabLabel.overview, 'overview'],
-      [strings.txReview.tabLabel.utxos, 'utxos'],
-    ],
-    [strings.txReview.tabLabel.overview, strings.txReview.tabLabel.utxos],
-  )
-  const [activeTab, setActiveTab] = React.useState<Tabs>(baseTabs[0][1])
+  const {atoms: ta, palette: p} = useTheme()
 
   const showMetadataTab =
     !isEmptyString(formattedMetadata?.hash) &&
@@ -68,238 +73,83 @@ export const ReviewTx = ({
   const showMintTab = !!formattedTx.mint
   const showReferenceInoutsTab = formattedTx.referenceInputs.length > 0
 
-  const tabsData = React.useMemo<Array<[string, Tabs]>>(() => {
-    const arr = [...baseTabs]
-    if (showMetadataTab)
-      arr.push([strings.txReview.tabLabel.metadataTab, 'metadata'])
-    if (showMintTab) arr.push([strings.txReview.tabLabel.mint, 'mint'])
-    if (showReferenceInoutsTab)
-      arr.push([strings.txReview.tabLabel.referenceInputs, 'reference_inputs'])
-    return arr
-  }, [
-    baseTabs,
-    showMetadataTab,
-    showMintTab,
-    showReferenceInoutsTab,
-    strings.txReview.tabLabel.metadataTab,
-    strings.txReview.tabLabel.mint,
-    strings.txReview.tabLabel.referenceInputs,
-  ])
-
-  // intentionally not using ref
-  const {
-    isScrollBarShown: isOverviewScrollBarShown,
-    setIsScrollBarShown: setOverviewIsScrollBarShown,
-  } = useScrollView()
-  const {
-    isScrollBarShown: isUtxosScrollBarShown,
-    setIsScrollBarShown: setUtxosIsScrollBarShown,
-  } = useScrollView()
-  const {
-    isScrollBarShown: isMetadataScrollBarShown,
-    setIsScrollBarShown: setMetadataIsScrollBarShown,
-  } = useScrollView()
-  const {
-    isScrollBarShown: isMintScrollBarShown,
-    setIsScrollBarShown: setMintIsScrollBarShown,
-  } = useScrollView()
-  const {
-    isScrollBarShown: isReferenceInputsScrollBarShown,
-    setIsScrollBarShown: setReferenceInputsIsScrollBarShown,
-  } = useScrollView()
-
-  const scrollbarActive =
-    (isOverviewScrollBarShown && activeTab === 'overview') ||
-    (isUtxosScrollBarShown && activeTab === 'utxos') ||
-    (isMetadataScrollBarShown && activeTab === 'metadata') ||
-    (isMintScrollBarShown && activeTab === 'mint') ||
-    (isReferenceInputsScrollBarShown && activeTab === 'reference_inputs')
-
   return (
-    <SafeArea style={[a.flex_1, {backgroundColor: p.bg_color_max}]}>
-      <MaterialTab.Navigator
-        tabBar={(props) => (
-          <TabBar
-            {...props}
-            tabsData={tabsData}
-            onActiveTabChange={setActiveTab}
-          />
-        )}
-      >
-        <MaterialTab.Screen name="overview">
-          {() => (
-            <ScrollView
-              style={[a.flex_1, {backgroundColor: p.bg_color_max}]}
-              onScrollBarChange={setOverviewIsScrollBarShown}
-            >
-              <OverviewTab
-                tx={formattedTx}
-                extraOperations={operations}
-                operationsNotice={operationsNotice}
-                details={details}
-                createdBy={createdBy}
-                receiverCustomTitle={receiverCustomTitle}
-              />
-            </ScrollView>
-          )}
-        </MaterialTab.Screen>
-
-        <MaterialTab.Screen name="utxos">
-          {() => (
-            <ScrollView
-              style={[a.flex_1, {backgroundColor: p.bg_color_max}]}
-              onScrollBarChange={setUtxosIsScrollBarShown}
-            >
-              <UTxOsTab tx={formattedTx} />
-            </ScrollView>
-          )}
-        </MaterialTab.Screen>
-
-        {showMetadataTab && (
-          <MaterialTab.Screen name="metadata">
-            {() => (
-              <ScrollView
-                style={[a.flex_1, {backgroundColor: p.bg_color_max}]}
-                onScrollBarChange={setMetadataIsScrollBarShown}
-              >
-                <MetadataTab
-                  hash={formattedMetadata?.hash ?? null}
-                  metadata={formattedMetadata?.metadata ?? null}
-                />
-              </ScrollView>
-            )}
-          </MaterialTab.Screen>
-        )}
-
-        {showMintTab && (
-          <MaterialTab.Screen name="mint">
-            {() => (
-              <ScrollView
-                style={[a.flex_1, {backgroundColor: p.bg_color_max}]}
-                onScrollBarChange={setMintIsScrollBarShown}
-              >
-                <MintTab mintData={formattedTx.mint} />
-              </ScrollView>
-            )}
-          </MaterialTab.Screen>
-        )}
-
-        {showReferenceInoutsTab && (
-          <MaterialTab.Screen name="reference_inputs">
-            {() => (
-              <ScrollView
-                style={[a.flex_1, {backgroundColor: p.bg_color_max}]}
-                onScrollBarChange={setReferenceInputsIsScrollBarShown}
-              >
-                <ReferenceInputsTab
-                  referenceInputs={formattedTx.referenceInputs}
-                />
-              </ScrollView>
-            )}
-          </MaterialTab.Screen>
-        )}
-      </MaterialTab.Navigator>
-
-      <Actions
-        style={scrollbarActive && [a.border_t, {borderTopColor: p.gray_200}]}
-      >
-        <Button title={strings.txReview.confirm} onPress={onConfirm} />
-      </Actions>
-    </SafeArea>
-  )
-}
-
-const TabBar = ({
-  navigation,
-  state,
-  tabsData,
-  onActiveTabChange,
-}: MaterialTopTabBarProps & {
-  tabsData: Array<Array<string>>
-  onActiveTabChange: (tab: Tabs) => void
-}) => {
-  const {palette: p} = useTheme()
-
-  React.useEffect(() => {
-    onActiveTabChange(tabsData[state.index][1] as Tabs)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.index])
-
-  return (
-    <FlatList
-      data={tabsData}
-      renderItem={({item: [label, key], index}) => (
-        <Tab
-          key={key}
-          active={state.index === index}
-          label={label}
-          onPress={() => navigation.navigate(key)}
-        />
-      )}
-      style={[
-        {
-          marginHorizontal: 16,
-          maxHeight: 50,
-          borderBottomWidth: 1,
-          borderBottomColor: p.gray_200,
+    <MaterialTab.Navigator
+      screenOptions={{
+        swipeEnabled: false,
+        tabBarShowLabel: true,
+        tabBarGap: a.gap_sm.gap,
+        tabBarLabelStyle: {
+          ...a.body_1_lg_medium,
         },
-      ]}
-      showsHorizontalScrollIndicator={false}
-      bounces={false}
-      horizontal
-    />
-  )
-}
-
-export const Tab = ({
-  onPress,
-  active,
-  label,
-  testID,
-  style,
-}: TouchableOpacityProps & {active: boolean; label: string}) => {
-  const {palette: p} = useTheme()
-
-  return (
-    <TouchableOpacity
-      style={[a.align_center, a.justify_center, a.py_md, style]}
-      onPress={onPress}
-      testID={testID}
+        tabBarActiveTintColor: ta.text_primary_medium.color,
+        tabBarInactiveTintColor: ta.text_gray_medium.color,
+        tabBarBounces: true,
+        tabBarStyle: {backgroundColor: p.bg_color_max},
+      }}
     >
-      <View style={[a.align_center, a.justify_center, a.px_lg]}>
-        <Text
-          style={[
-            a.body_1_lg_medium,
-            active ? {color: p.primary_600} : {color: p.gray_600},
-          ]}
-        >
-          {label}
-        </Text>
-      </View>
+      <MaterialTab.Screen
+        name={strings.txReview.tabLabel.overview}
+        component={() => (
+          <TabWrapper onConfirm={onConfirm}>
+            <OverviewTab
+              tx={formattedTx}
+              extraOperations={operations}
+              operationsNotice={operationsNotice}
+              details={details}
+              createdBy={createdBy}
+              receiverCustomTitle={receiverCustomTitle}
+            />
+          </TabWrapper>
+        )}
+      />
 
-      {active && (
-        <View
-          style={[
-            a.absolute,
-            {
-              bottom: -2,
-              height: 2.5,
-              width: '100%',
-              backgroundColor: p.el_primary_medium,
-            },
-          ]}
+      <MaterialTab.Screen
+        name={strings.txReview.tabLabel.utxos}
+        component={() => (
+          <TabWrapper onConfirm={onConfirm}>
+            <UTxOsTab tx={formattedTx} />
+          </TabWrapper>
+        )}
+      />
+
+      {showMetadataTab && (
+        <MaterialTab.Screen
+          name={strings.txReview.tabLabel.metadataTab}
+          component={() => (
+            <TabWrapper onConfirm={onConfirm}>
+              <MetadataTab
+                hash={formattedMetadata?.hash ?? null}
+                metadata={formattedMetadata?.metadata ?? null}
+              />
+            </TabWrapper>
+          )}
         />
       )}
-    </TouchableOpacity>
-  )
-}
 
-const Actions = ({
-  children,
-  style,
-}: {
-  children: React.ReactNode
-  style?: StyleProp<ViewStyle>
-}) => {
-  return <View style={[a.p_lg, style]}>{children}</View>
+      {showMintTab && (
+        <MaterialTab.Screen
+          name={strings.txReview.tabLabel.mint}
+          component={() => (
+            <TabWrapper onConfirm={onConfirm}>
+              <MintTab mintData={formattedTx.mint} />
+            </TabWrapper>
+          )}
+        />
+      )}
+
+      {showReferenceInoutsTab && (
+        <MaterialTab.Screen
+          name={strings.txReview.tabLabel.referenceInputs}
+          component={() => (
+            <TabWrapper onConfirm={onConfirm}>
+              <ReferenceInputsTab
+                referenceInputs={formattedTx.referenceInputs}
+              />
+            </TabWrapper>
+          )}
+        />
+      )}
+    </MaterialTab.Navigator>
+  )
 }

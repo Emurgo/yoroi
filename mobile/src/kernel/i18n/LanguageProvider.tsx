@@ -7,7 +7,7 @@ import {Text} from 'react-native'
 
 import {
   LanguageCode,
-  findLocale,
+  getSystemNumberLocale,
   systemTimeZone,
   translations,
 } from './localization'
@@ -29,27 +29,13 @@ export const LanguageProvider = ({
     })
 
   const value = React.useMemo(() => {
-    const locale = findLocale(selectedLanguageCode) ?? {
-      digitGroupingSeparator: ' ',
-      decimalSeparator: ',',
-    }
-
     return {
       languageCode: selectedLanguageCode,
       selectLanguage: (newLanguageCode: LanguageCode) => {
         setSelectedLanguageCode(newLanguageCode)
         storage.save(newLanguageCode)
       },
-      numberLocale: {
-        prefix: '',
-        decimalSeparator: locale.decimalSeparator ?? ',',
-        groupSeparator: locale.digitGroupingSeparator ?? ' ',
-        groupSize: 3,
-        secondaryGroupSize: 0,
-        fractionGroupSeparator: ' ',
-        fractionGroupSize: 0,
-        suffix: '',
-      },
+      numberLocale: getSystemNumberLocale(),
     }
   }, [selectedLanguageCode, storage])
 

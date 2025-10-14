@@ -169,6 +169,10 @@ describe('SwapProvider', () => {
   beforeEach(() => {
     jest.clearAllMocks()
 
+    // Reset the swapManagerMaker mock
+    const swapManagerMaker = require('@yoroi/swap').swapManagerMaker
+    swapManagerMaker.mockClear()
+
     // Setup default mock implementations
     mockUseSelectedWallet.mockReturnValue({
       wallet: {
@@ -182,6 +186,7 @@ describe('SwapProvider', () => {
         externalAddresses: [
           'addr1qxqs59lphg8g6qndelq8xwqn60ag3aeyfcp33c5p5x8e6q',
         ],
+        isMainnet: true,
       },
     })
 
@@ -837,7 +842,10 @@ describe('SwapProvider', () => {
         assignSettings: jest.fn(),
       }
 
-      require('@yoroi/swap').swapManagerMaker.mockReturnValue(swapManagerMock)
+      // Set up the mock BEFORE rendering
+      // Set up the mock BEFORE rendering
+      const swapManagerMaker = require('@yoroi/swap').swapManagerMaker
+      swapManagerMaker.mockReturnValue(swapManagerMock)
 
       // Mock useQuery to return proper data for limitOptions
       mockUseQuery.mockImplementation((options: any) => {
@@ -909,7 +917,9 @@ describe('SwapProvider', () => {
         assignSettings: jest.fn(),
       }
 
-      require('@yoroi/swap').swapManagerMaker.mockReturnValue(swapManagerMock)
+      // Set up the mock BEFORE rendering
+      const swapManagerMaker = require('@yoroi/swap').swapManagerMaker
+      swapManagerMaker.mockReturnValue(swapManagerMock)
 
       // Mock useQuery to return proper data for limitOptions
       mockUseQuery.mockImplementation((options: any) => {
@@ -1002,7 +1012,9 @@ describe('SwapProvider', () => {
         assignSettings: jest.fn(),
       }
 
-      require('@yoroi/swap').swapManagerMaker.mockReturnValue(swapManagerMock)
+      // Set up the mock BEFORE rendering
+      const swapManagerMaker = require('@yoroi/swap').swapManagerMaker
+      swapManagerMaker.mockReturnValue(swapManagerMock)
 
       let contextValue: any = null
 
@@ -1090,7 +1102,9 @@ describe('SwapProvider', () => {
         assignSettings: jest.fn(),
       }
 
-      require('@yoroi/swap').swapManagerMaker.mockReturnValue(swapManagerMock)
+      // Set up the mock BEFORE rendering
+      const swapManagerMaker = require('@yoroi/swap').swapManagerMaker
+      swapManagerMaker.mockReturnValue(swapManagerMock)
 
       let contextValue: any = null
 

@@ -1,3 +1,4 @@
+import {parseNumberFromText} from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Swap} from '@yoroi/types'
 
@@ -8,10 +9,12 @@ import {undefinedToken} from '~/features/Swap/common/constants'
 import {useNavigateTo} from '~/features/Swap/common/navigation'
 import {useSwap} from '~/features/Swap/common/useSwap'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useLanguage} from '~/kernel/i18n/LanguageProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
-import {useModal} from '~/ui/Modal/ModalContext'
+import {useModal} from '~/ui/Modal/context/ModalContext'
+import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {ProtocolAvatar} from '~/ui/ProtocolAvatar/ProtocolAvatar'
 import {Space} from '~/ui/Space/Space'
 import {SwapInfoLink} from '~/ui/SwapInfoLink/SwapInfoLink'
@@ -22,7 +25,10 @@ export const EstimateSummary = () => {
   const swapForm = useSwap()
   const {openModal} = useModal()
   const navigateTo = useNavigateTo()
-
+  const {numberLocale} = useLanguage()
+  const localFormat = (v: number | string, precision?: number) =>
+    parseNumberFromText({text: String(v), format: numberLocale, precision})
+      .formattedValue
   const tokenInInfo = swapForm.tokenInfos.get(
     swapForm.tokenInInput.tokenId ?? undefinedToken,
   )
@@ -34,19 +40,26 @@ export const EstimateSummary = () => {
   const tokenOutTicker = tokenOutInfo?.ticker ?? tokenOutInfo?.name ?? '-'
 
   const protocol = swapForm.estimate?.splits[0]?.protocol
+  const fallbackImageUrl = swapForm.estimate?.splits[0]?.aggregatorImageUrl
+  const nameOverride =
+    protocol === Swap.Protocol.Unsupported
+      ? swapForm.estimate?.splits[0]?.aggregatorDexKey
+      : undefined
 
   if (swapForm.estimate === undefined) return null
 
-  const netPrice = swapForm.estimate.netPrice
-  const roundedPrice = netPrice
-    .toFixed(tokenOutInfo?.decimals ?? 0)
-    .replace(/\.0+$/, '')
-  const price = roundedPrice !== '0' ? roundedPrice : netPrice.toFixed(6)
-
   const expand = () =>
     openModal({
-      content: <Splits data={swapForm.estimate?.splits ?? []} />,
-      footer: <SwapInfoLink />,
+      content: (
+        <Modal.Content>
+          <Splits data={swapForm.estimate?.splits ?? []} />
+        </Modal.Content>
+      ),
+      footer: (
+        <Modal.Footer>
+          <SwapInfoLink />
+        </Modal.Footer>
+      ),
     })
 
   return (
@@ -59,6 +72,8 @@ export const EstimateSummary = () => {
             <View style={[a.flex_row, a.align_center, a.gap_xs]}>
               <ProtocolAvatar
                 protocol={protocol}
+                nameOverride={nameOverride}
+                fallbackImageUrl={fallbackImageUrl}
                 onPress={
                   swapForm.orderType === 'limit'
                     ? navigateTo.selectProtocol
@@ -82,7 +97,7 @@ export const EstimateSummary = () => {
             ? strings.swap.limitPriceInfo
             : strings.swap.marketPriceInfo
         }
-        value={`1 ${tokenInTicker} = ${price} ${tokenOutTicker}`}
+        value={`1 ${tokenInTicker} = ${localFormat(swapForm.estimate?.netPrice ?? 0, Math.max(tokenOutInfo?.decimals ?? 0, tokenInInfo?.decimals ?? 0, 3))} ${tokenOutTicker}`}
       />
 
       <Space.Height.sm />
@@ -90,7 +105,7 @@ export const EstimateSummary = () => {
       <Row
         label={strings.swap.swapFeesTitle}
         description={strings.swap.swapFees}
-        value={`${swapForm.estimate?.totalFee} ${wallet.portfolioPrimaryTokenInfo.ticker}`}
+        value={`${localFormat(swapForm.estimate?.totalFee)} ${wallet.portfolioPrimaryTokenInfo.ticker}`}
       />
 
       <Space.Height.sm />
@@ -98,16 +113,18 @@ export const EstimateSummary = () => {
       <Row
         label={strings.swap.swapMinReceivedTitle}
         description={strings.swap.swapMinReceived}
-        value={`${swapForm.estimate?.totalOutput} ${tokenOutTicker}`}
+        value={`${localFormat(swapForm.estimate?.totalOutput)} ${tokenOutTicker}`}
       />
 
       <Space.Height.sm />
 
-      <Row
-        label={strings.swap.swapSlippageTitle}
-        description={strings.swap.swapSlippage}
-        value={`${swapForm.slippageInput.value}%`}
-      />
+      {swapForm.orderType === 'market' && (
+        <Row
+          label={strings.swap.swapSlippageTitle}
+          description={strings.swap.swapSlippage}
+          value={`${localFormat(swapForm.slippageInput.value)}%`}
+        />
+      )}
     </View>
   )
 }
@@ -138,13 +155,17 @@ const Row = ({
               openModal({
                 title: label,
                 content: (
-                  <View style={[a.flex_1, a.justify_center]}>
+                  <Modal.Content style={[a.flex_1, a.justify_center]}>
                     <Text style={[a.body_1_lg_regular, ta.text_gray_max]}>
                       {description}
                     </Text>
-                  </View>
+                  </Modal.Content>
                 ),
-                footer: <SwapInfoLink />,
+                footer: (
+                  <Modal.Footer>
+                    <SwapInfoLink />
+                  </Modal.Footer>
+                ),
               })
             }
             type={ButtonType.SecondaryText}
@@ -172,7 +193,7 @@ const Row = ({
 }
 
 export const Splits = ({data}: {data: Swap.Split[]}) => {
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
 
   const total = data.reduce(
     (acc, curr) => (acc += curr.expectedOutputWithoutSlippage),
@@ -197,9 +218,18 @@ export const Splits = ({data}: {data: Swap.Split[]}) => {
               a.justify_between,
             ]}
           >
-            <ProtocolAvatar protocol={split.protocol} preventOpenLink />
+            <ProtocolAvatar
+              protocol={split.protocol}
+              fallbackImageUrl={split.aggregatorImageUrl}
+              nameOverride={
+                split.protocol === Swap.Protocol.Unsupported
+                  ? split.aggregatorDexKey
+                  : undefined
+              }
+              preventOpenLink
+            />
 
-            <Text style={[a.body_1_lg_regular, {color: p.el_gray_min}]}>
+            <Text style={[a.body_1_lg_regular, ta.el_gray_max]}>
               {(
                 (100 * (split.expectedOutputWithoutSlippage ?? 0)) /
                 total

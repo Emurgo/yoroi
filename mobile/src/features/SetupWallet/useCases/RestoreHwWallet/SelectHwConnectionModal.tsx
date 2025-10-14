@@ -3,14 +3,15 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 
 import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
-import {Alert, Platform, Text, View} from 'react-native'
+import {Alert, Platform, Text} from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {SetupWalletRouteNavigation} from '~/kernel/navigation/types'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
-import {Space} from '~/ui/Space/Space'
+import {useModal} from '~/ui/Modal/context/ModalContext'
+import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {HARDWARE_WALLETS, useLedgerPermissions} from '~/wallets/hw/hw'
 
 const useIsAndroidUsbSupported = () => {
@@ -28,28 +29,34 @@ const useIsAndroidUsbSupported = () => {
   return isAndroidUsbSupported
 }
 
-export const SelectHwConnectionModal = ({
-  closeModal,
-}: {
-  closeModal: () => void
-}) => {
+const SelectHwConnectionModalContent = () => {
   const {atoms: ta} = useTheme()
   const strings = useStrings()
 
   return (
-    <View>
+    <Modal.Content>
       <Text style={[a.body_1_lg_regular, ta.text_gray_medium]}>
         {strings.setupWallet.hwModalText}
       </Text>
-
-      <SelectBluetoothSection closeModal={closeModal} />
-
-      <SelectUsbSection closeModal={closeModal} />
-    </View>
+    </Modal.Content>
   )
 }
 
-const SelectBluetoothSection = ({closeModal}: {closeModal: () => void}) => {
+const SelectHwConnectionModalFooter = () => {
+  return (
+    <Modal.Footer>
+      <SelectBluetoothSection />
+      <SelectUsbSection />
+    </Modal.Footer>
+  )
+}
+
+export const SelectHwConnectionModal = {
+  Content: SelectHwConnectionModalContent,
+  Footer: SelectHwConnectionModalFooter,
+}
+
+const SelectBluetoothSection = () => {
   const strings = useStrings()
   const {
     useUSBChanged: USBChanged,
@@ -57,8 +64,10 @@ const SelectBluetoothSection = ({closeModal}: {closeModal: () => void}) => {
     setupTypeChanged,
   } = useSetupWallet()
   const navigation = useNavigation<SetupWalletRouteNavigation>()
+  const {closeModal} = useModal()
 
-  const navigateHw = () => {
+  const handleOnSuccess = () => {
+    USBChanged(false)
     walletImplementationChanged('cardano-cip1852')
     setupTypeChanged('hw')
 
@@ -70,27 +79,21 @@ const SelectBluetoothSection = ({closeModal}: {closeModal: () => void}) => {
     onError: () =>
       Alert.alert(strings.global.error, strings.setupWallet.bluetoothError),
     onSuccess: () => {
-      USBChanged(false)
-      navigateHw()
+      handleOnSuccess()
     },
   })
 
   return (
-    <>
-      <Space.Height.xl />
-
-      <Button
-        type={ButtonType.Secondary}
-        title={strings.setupWallet.hwModalBtButton}
-        icon={Icon.Bluetooth}
-        onPress={() => request()}
-      />
-    </>
+    <Button
+      type={ButtonType.Secondary}
+      title={strings.setupWallet.hwModalBtButton}
+      icon={Icon.Bluetooth}
+      onPress={() => request()}
+    />
   )
 }
 
-const SelectUsbSection = ({closeModal}: {closeModal: () => void}) => {
-  const {atoms: ta} = useTheme()
+const SelectUsbSection = () => {
   const strings = useStrings()
   const isAndroidUsbSupported = useIsAndroidUsbSupported()
   const {
@@ -99,8 +102,10 @@ const SelectUsbSection = ({closeModal}: {closeModal: () => void}) => {
     setupTypeChanged,
   } = useSetupWallet()
   const navigation = useNavigation<SetupWalletRouteNavigation>()
+  const {closeModal} = useModal()
 
-  const navigateHw = () => {
+  const handleOnPress = () => {
+    USBChanged(true)
     walletImplementationChanged('cardano-cip1852')
     setupTypeChanged('hw')
 
@@ -108,33 +113,16 @@ const SelectUsbSection = ({closeModal}: {closeModal: () => void}) => {
     closeModal()
   }
 
-  if (Platform.OS === 'ios')
-    return (
-      <>
-        <Space.Height.lg />
-
-        <Text style={[a.body_2_md_regular, ta.text_gray_low]}>
-          {strings.setupWallet.hwModalIosWarning}
-        </Text>
-      </>
-    )
   if (!isAndroidUsbSupported) {
     return null
   }
 
   return (
-    <>
-      <Space.Height.xl />
-
-      <Button
-        type={ButtonType.Secondary}
-        title={strings.setupWallet.hwModalUsbButton}
-        icon={Icon.Usb}
-        onPress={() => {
-          USBChanged(true)
-          navigateHw()
-        }}
-      />
-    </>
+    <Button
+      type={ButtonType.Secondary}
+      title={strings.setupWallet.hwModalUsbButton}
+      icon={Icon.Usb}
+      onPress={handleOnPress}
+    />
   )
 }

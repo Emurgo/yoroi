@@ -1,4 +1,6 @@
+import {parseNumberFromText} from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {Swap} from '@yoroi/types'
 
 import _ from 'lodash'
 import * as React from 'react'
@@ -12,6 +14,7 @@ import {
   undefinedToken,
 } from '~/features/Swap/common/constants'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useLanguage} from '~/kernel/i18n/LanguageProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Divider} from '~/ui/Divider/Divider'
 import {Icon} from '~/ui/Icon'
@@ -32,7 +35,10 @@ export const TransactionSummary = ({
   const {wallet} = useSelectedWallet()
   const {orderType} = swapForm
   const [showSplits, setShowSplits] = React.useState(false)
-
+  const {numberLocale} = useLanguage()
+  const localFormat = (v: number | string, precision?: number) =>
+    parseNumberFromText({text: String(v), format: numberLocale, precision})
+      .formattedValue
   const tokenInInfo = swapForm.tokenInfos.get(
     swapForm.tokenInInput.tokenId ?? undefinedToken,
   )
@@ -74,16 +80,18 @@ export const TransactionSummary = ({
     swapForm.createTx?.netPrice ??
     swapForm.createTx?.splits[0].initialPrice ??
     0
-  const roundedPrice = netPrice
-    .toFixed(tokenOutInfo?.decimals ?? 0)
-    .replace(/\.0+$/, '')
-  const price = roundedPrice !== '0' ? roundedPrice : netPrice.toFixed(6)
-  const priceInfoValue = `1 ${tokenInTicker} = ${price} ${tokenOutTicker}`
+
+  const priceInfoValue = `1 ${tokenInTicker} = ${localFormat(netPrice, Math.max(tokenOutInfo?.decimals ?? 0, tokenInInfo?.decimals ?? 0, 3))} ${tokenOutTicker}`
   const minAdaInfoValue = `${swapForm.createTx?.deposits} ${wallet.portfolioPrimaryTokenInfo.ticker}`
-  const totalFee = `${swapForm.createTx?.totalFee} ${wallet.portfolioPrimaryTokenInfo.ticker}`
-  const minReceivedInfoValue = `${swapForm.createTx?.totalOutputWithoutSlippage} ${tokenOutTicker}`
+  const totalFee = `${localFormat(swapForm.createTx?.totalFee ?? 0)} ${wallet.portfolioPrimaryTokenInfo.ticker}`
+  const minReceivedInfoValue = `${localFormat(swapForm.createTx?.totalOutputWithoutSlippage ?? 0)} ${tokenOutTicker}`
 
   const protocol = swapForm.createTx?.splits[0]?.protocol
+  const fallbackImageUrl = swapForm.createTx?.splits[0]?.aggregatorImageUrl
+  const nameOverride =
+    protocol === Swap.Protocol.Unsupported
+      ? swapForm.createTx?.splits[0]?.aggregatorDexKey
+      : undefined
 
   const feesInfo = [
     {
@@ -92,6 +100,8 @@ export const TransactionSummary = ({
         protocol !== undefined ? (
           <ProtocolAvatar
             protocol={protocol}
+            fallbackImageUrl={fallbackImageUrl}
+            nameOverride={nameOverride}
             append={
               swapForm.createTx?.aggregator != null
                 ? ` ${strings.swap.via} ${_.upperFirst(swapForm.createTx.aggregator)}${

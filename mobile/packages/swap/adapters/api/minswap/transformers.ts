@@ -121,7 +121,7 @@ export const transformersMaker = (config: MinswapApiConfig) => {
 
         // Calculate prices safely
         const initialPrice = amountIn > 0 ? amountOut / amountIn : 0
-        const finalPrice = amountIn > 0 ? amountOut / amountIn : 0
+        const finalPrice = initialPrice // Barely use the finalPrice and calculating it based on initial and price_impact could be dangerous
 
         const split = freeze(
           {
@@ -129,8 +129,8 @@ export const transformersMaker = (config: MinswapApiConfig) => {
             batcherFee,
             deposits,
             protocol: mapDexToProtocol(firstHop.protocol),
-            expectedOutput: amountOut,
-            expectedOutputWithoutSlippage: minAmountOut,
+            expectedOutput: minAmountOut,
+            expectedOutputWithoutSlippage: amountOut,
             fee: batcherFee, // Keep fee field for backward compatibility
             initialPrice,
             finalPrice,
@@ -138,6 +138,9 @@ export const transformersMaker = (config: MinswapApiConfig) => {
             poolId: firstHop.pool_id,
             priceDistortion: 0,
             priceImpact,
+            aggregator: Swap.Aggregator.Minswap,
+            aggregatorDexKey: firstHop.protocol,
+            aggregatorPoolId: firstHop.pool_id,
           },
           true,
         )
@@ -185,8 +188,8 @@ export const transformersMaker = (config: MinswapApiConfig) => {
                   amountIn: Number(order.amount_in),
                   actualAmountOut: Number(order.min_amount_out),
                   expectedAmountOut: Number(order.min_amount_out),
-                  txHash: order.tx_in.split('#')[0],
-                  outputIndex: parseInt(order.tx_in.split('#')[1], 10),
+                  txHash: order.tx_in.split('#')[0]!,
+                  outputIndex: parseInt(order.tx_in.split('#')[1]!, 10),
                   updateTxHash: undefined, // Minswap only returns pending orders
                   customId: undefined,
                 } satisfies Swap.Order,
@@ -225,6 +228,7 @@ export const transformersMaker = (config: MinswapApiConfig) => {
           slippage,
           tokenIn,
           tokenOut,
+          protocol,
         }: Swap.EstimateRequest): EstimateRequest => {
           const request: EstimateRequest = {
             token_in: toTokenId(tokenIn),
@@ -234,6 +238,8 @@ export const transformersMaker = (config: MinswapApiConfig) => {
             exclude_protocols: blockedProtocols?.map((p) =>
               mapProtocolToDex(p),
             ),
+            include_protocols:
+              protocol !== undefined ? [mapProtocolToDex(protocol)] : undefined,
             amount_in_decimal: true, // Tell API that amounts are in decimal format
             ...(partner !== undefined && {partner}),
           }
@@ -241,8 +247,8 @@ export const transformersMaker = (config: MinswapApiConfig) => {
         },
         response: (data: EstimateResponse): Swap.EstimateResponse => {
           const totalInput = Number(data.amount_in)
-          const totalOutput = Number(data.amount_out)
-          const totalOutputWithoutSlippage = Number(data.min_amount_out)
+          const totalOutput = Number(data.min_amount_out)
+          const totalOutputWithoutSlippage = Number(data.amount_out)
           const deposits = Number(data.deposits ?? '0')
           const aggregatorFee = Number(data.aggregator_fee ?? '0')
           const totalFee = Number(data.total_dex_fee ?? '0')
@@ -273,6 +279,7 @@ export const transformersMaker = (config: MinswapApiConfig) => {
           slippage,
           tokenIn,
           tokenOut,
+          protocol,
         }: Swap.CreateRequest): CreateRequest => {
           const request = {
             sender: address,
@@ -285,6 +292,10 @@ export const transformersMaker = (config: MinswapApiConfig) => {
               exclude_protocols: blockedProtocols?.map((p) =>
                 mapProtocolToDex(p),
               ),
+              include_protocols:
+                protocol !== undefined
+                  ? [mapProtocolToDex(protocol)]
+                  : undefined,
               ...(partner !== undefined && {partner}),
             },
             amount_in_decimal: true, // Also set at the top level for build-tx

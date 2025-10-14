@@ -15,7 +15,6 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native'
-import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {YoroiZendeskLink} from '~/features/SetupWallet/common/constants'
 import {Info as InfoIcon} from '~/features/SetupWallet/illustrations/Info'
@@ -33,45 +32,21 @@ import {SetupWalletRouteNavigation} from '~/kernel/navigation/types'
 import {Button} from '~/ui/Button/Button'
 import {CardAboutPhrase} from '~/ui/CardAboutPhrase/CardAboutPhrase'
 import {Icon} from '~/ui/Icon'
-import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingView'
 import {LearnMoreButton} from '~/ui/LearnMoreButton/LearnMoreButton'
-import {useModal} from '~/ui/Modal/ModalContext'
+import {useModal} from '~/ui/Modal/context/ModalContext'
+import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
+import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
 import {StepperProgress} from '~/ui/StepperProgress/StepperProgress'
 import {TextInput} from '~/ui/TextInput/TextInput'
 import {isEmptyString} from '~/wallets/utils/string'
 import {getWalletNameError} from '~/wallets/utils/validators'
 
-const mediumScreenHeight = 800
-const largerScreenHeight = 900
-
-const useSizeModal = () => {
-  const HEIGHT_SCREEN = useWindowDimensions().height
-  const PERCENTAGE_NAME_PASSWORD =
-    HEIGHT_SCREEN >= largerScreenHeight
-      ? 58
-      : HEIGHT_SCREEN >= mediumScreenHeight
-        ? 65
-        : 85
-  const PERCENTAGE_CHECKSUM =
-    HEIGHT_SCREEN >= largerScreenHeight
-      ? 48
-      : HEIGHT_SCREEN >= mediumScreenHeight
-        ? 55
-        : 75
-
-  const HEIGHT_MODAL_CHECKSUM = (HEIGHT_SCREEN / 100) * PERCENTAGE_CHECKSUM
-  const HEIGHT_MODAL_NAME_PASSWORD =
-    (HEIGHT_SCREEN / 100) * PERCENTAGE_NAME_PASSWORD
-
-  return {HEIGHT_MODAL_NAME_PASSWORD, HEIGHT_MODAL_CHECKSUM} as const
-}
-
 // when hw, later will be part of the onboarding
 const addressMode: Wallet.AddressMode = 'single'
 export const SaveNanoXScreen = () => {
   const strings = useStrings()
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
   const storage = useAsyncStorage()
   const navigation = useNavigation<SetupWalletRouteNavigation>()
   const {track} = useMetrics()
@@ -158,7 +133,7 @@ export const SaveNanoXScreen = () => {
     openModal({
       title: strings.setupWallet.walletDetailsModalTitle,
       content: (
-        <View style={[a.flex_1]}>
+        <Modal.Content>
           <CardAboutPhrase
             title={strings.setupWallet.walletNameModalCardTitle}
             linesOfText={[
@@ -169,28 +144,20 @@ export const SaveNanoXScreen = () => {
 
           <Space.Height.lg />
 
-          <CardAboutPhrase
-            title={strings.setupWallet.walletPasswordModalCardTitle}
-            linesOfText={[
-              strings.setupWallet.walletPasswordModalCardFirstItem,
-              strings.setupWallet.walletPasswordModalCardSecondItem,
-            ]}
-          />
-
-          <Space.Height.lg />
-
           <LearnMoreButton
             onPress={() => {
               Linking.openURL(YoroiZendeskLink)
             }}
           />
-        </View>
+        </Modal.Content>
       ),
       footer: (
-        <Button
-          title={strings.setupWallet.continueButton}
-          onPress={closeModal}
-        />
+        <Modal.Footer>
+          <Button
+            title={strings.setupWallet.continueButton}
+            onPress={closeModal}
+          />
+        </Modal.Footer>
       ),
       height: HEIGHT_MODAL_NAME_PASSWORD,
     })
@@ -200,7 +167,7 @@ export const SaveNanoXScreen = () => {
     openModal({
       title: strings.setupWallet.walletDetailsModalTitle,
       content: (
-        <View style={[a.flex_1, a.pb_lg, a.px_lg]}>
+        <Modal.Content>
           <CardAboutPhrase
             title={strings.setupWallet.walletChecksumModalCardTitle}
             checksumImage={seed}
@@ -219,102 +186,84 @@ export const SaveNanoXScreen = () => {
               Linking.openURL(YoroiZendeskLink)
             }}
           />
-        </View>
+        </Modal.Content>
       ),
       footer: (
-        <Button
-          title={strings.setupWallet.continueButton}
-          onPress={closeModal}
-        />
+        <Modal.Footer>
+          <Button
+            title={strings.setupWallet.continueButton}
+            onPress={closeModal}
+          />
+        </Modal.Footer>
       ),
       height: HEIGHT_MODAL_CHECKSUM,
     })
   }
 
   return (
-    <KeyboardAvoidingView
-      style={[
-        {backgroundColor: p.bg_color_max},
-        a.justify_between,
-        a.px_lg,
-        a.flex_1,
-      ]}
-    >
-      <SafeAreaView
-        edges={['left', 'right', 'bottom']}
-        style={[a.pb_lg, a.flex_1]}
-      >
-        <StepperProgress
-          currentStep={2}
-          currentStepTitle={strings.setupWallet.stepWalletDetails}
-          totalSteps={2}
+    <SafeArea style={[a.gap_lg]}>
+      <StepperProgress
+        style={[a.px_lg]}
+        currentStep={2}
+        currentStepTitle={strings.setupWallet.stepWalletDetails}
+        totalSteps={2}
+      />
+
+      <View style={[a.flex_row, a.px_lg]}>
+        <Text style={[a.body_1_lg_regular, ta.text_gray_medium]}>
+          {strings.setupWallet.hwWalletDetailsTitle(bold)}
+        </Text>
+
+        <Space.Width.xs />
+
+        <Info onPress={showModalTipsPassword} />
+      </View>
+
+      <ScrollView contentContainerStyle={[a.px_lg, a.gap_lg]} style={a.flex_1}>
+        <TextInput
+          enablesReturnKeyAutomatically
+          autoFocus
+          label={strings.setupWallet.walletDetailsNameInput}
+          value={name}
+          onChangeText={(walletName: string) => setName(walletName)}
+          errorText={
+            !isEmptyString(walletNameErrorText) &&
+            walletNameErrorText &&
+            !isPending
+              ? walletNameErrorText
+              : undefined
+          }
+          errorDelay={0}
+          returnKeyType="next"
+          testID="walletNameInput"
+          autoComplete="off"
+          showErrorOnBlur
         />
 
-        <Space.Height.xl />
-
-        <View style={[a.flex_row]}>
-          <Text style={[a.body_1_lg_regular, {color: p.text_gray_medium}]}>
-            {strings.setupWallet.hwWalletDetailsTitle(bold)}
-          </Text>
-
-          <Space.Width.xs />
-
-          <Info onPress={showModalTipsPassword} />
-        </View>
-
-        <Space.Height.xl />
-
-        <ScrollView style={a.flex_1}>
-          <TextInput
-            enablesReturnKeyAutomatically
-            autoFocus
-            label={strings.setupWallet.walletDetailsNameInput}
-            value={name}
-            onChangeText={(walletName: string) => setName(walletName)}
-            errorText={
-              !isEmptyString(walletNameErrorText) &&
-              walletNameErrorText &&
-              !isPending
-                ? walletNameErrorText
-                : undefined
-            }
-            errorDelay={0}
-            returnKeyType="next"
-            testID="walletNameInput"
-            autoComplete="off"
-            showErrorOnBlur
+        <View style={[a.flex_row, a.align_center, a.justify_center, a.gap_sm]}>
+          <Icon.WalletAvatar
+            image={new Blockies({seed}).asBase64()}
+            style={[{width: 24, height: 24}]}
+            size={24}
           />
 
-          <Space.Height.lg />
+          <Text
+            style={[
+              a.body_1_lg_regular,
+              a.text_center,
+              a.justify_center,
+              a.align_center,
+              ta.text_gray_medium,
+            ]}
+            testID="wallet-plate-number"
+          >
+            {plate}
+          </Text>
 
-          <View style={[a.flex_row, a.align_center, a.justify_center]}>
-            <Icon.WalletAvatar
-              image={new Blockies({seed}).asBase64()}
-              style={[{width: 24, height: 24}]}
-              size={24}
-            />
-
-            <Space.Width.sm />
-
-            <Text
-              style={[
-                a.body_1_lg_regular,
-                a.text_center,
-                a.justify_center,
-                a.align_center,
-                {color: p.text_gray_medium},
-              ]}
-              testID="wallet-plate-number"
-            >
-              {plate}
-            </Text>
-
-            <Space.Width.sm />
-
-            <Info onPress={showModalTipsPlateNumber} />
-          </View>
-        </ScrollView>
-
+          <Info onPress={showModalTipsPlateNumber} />
+        </View>
+      </ScrollView>
+      <SafeArea.Footer>
         <View>
           <Button
             title={strings.setupWallet.next}
@@ -323,8 +272,8 @@ export const SaveNanoXScreen = () => {
             disabled={disabled}
           />
         </View>
-      </SafeAreaView>
-    </KeyboardAvoidingView>
+      </SafeArea.Footer>
+    </SafeArea>
   )
 }
 
@@ -335,4 +284,29 @@ const Info = ({onPress}: {onPress: () => void}) => {
       <InfoIcon size={24} color={isDark ? p.white_static : p.black_static} />
     </TouchableOpacity>
   )
+}
+
+const mediumScreenHeight = 800
+const largerScreenHeight = 900
+
+const useSizeModal = () => {
+  const HEIGHT_SCREEN = useWindowDimensions().height
+  const PERCENTAGE_NAME_PASSWORD =
+    HEIGHT_SCREEN >= largerScreenHeight
+      ? 48
+      : HEIGHT_SCREEN >= mediumScreenHeight
+        ? 50
+        : 55
+  const PERCENTAGE_CHECKSUM =
+    HEIGHT_SCREEN >= largerScreenHeight
+      ? 48
+      : HEIGHT_SCREEN >= mediumScreenHeight
+        ? 55
+        : 75
+
+  const HEIGHT_MODAL_CHECKSUM = (HEIGHT_SCREEN / 100) * PERCENTAGE_CHECKSUM
+  const HEIGHT_MODAL_NAME_PASSWORD =
+    (HEIGHT_SCREEN / 100) * PERCENTAGE_NAME_PASSWORD
+
+  return {HEIGHT_MODAL_NAME_PASSWORD, HEIGHT_MODAL_CHECKSUM} as const
 }

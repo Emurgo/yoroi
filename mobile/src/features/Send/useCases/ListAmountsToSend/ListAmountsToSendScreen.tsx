@@ -7,7 +7,6 @@ import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 import {TouchableOpacity, View} from 'react-native'
 import {FlatList} from 'react-native-gesture-handler'
-import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useReviewTx} from '~/features/ReviewTx/common/ReviewTxProvider'
 import {useSearch} from '~/features/Search/SearchContext'
@@ -25,7 +24,7 @@ import {Boundary} from '~/ui/Boundary/Boundary'
 import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {RemoveAmountButton} from '~/ui/RemoveAmountButton/RemoveAmountButton'
-import {Space} from '~/ui/Space/Space'
+import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {TokenAmountItem} from '~/ui/TokenAmountItem/TokenAmountItem'
 import {YoroiEntry, YoroiSignedTx, YoroiUnsignedTx} from '~/wallets/types/yoroi'
 
@@ -38,7 +37,6 @@ export const ListAmountsToSendScreen = () => {
   const {track} = useMetrics()
   const {wallet} = useSelectedWallet()
   const {unsignedTxChanged} = useReviewTx()
-  const {atoms: ta} = useTheme()
   const {
     memo,
     targets,
@@ -105,6 +103,11 @@ export const ListAmountsToSendScreen = () => {
     track.sendSummarySubmitted(sendProperties)
   }, [track, sendProperties])
 
+  const handleOnAdd = () => {
+    clearSearch()
+    navigateTo.addToken()
+  }
+
   const createUnsignedTxPromise = React.useCallback(
     (entries: YoroiEntry[]) => wallet.createUnsignedTx({entries, addressMode}),
     [wallet, addressMode],
@@ -121,27 +124,18 @@ export const ListAmountsToSendScreen = () => {
     [unsignedTxChanged, navigateToTxReview, handleOnSuccess, handleOnError],
   )
 
-  const handleOnNext = () => {
-    track.sendSelectAssetSelected(assetsToSendProperties({amounts}))
-    createUnsignedTx([toYoroiEntry(targets[selectedTargetIndex].entry)])
-  }
-
-  const handleOnAdd = () => {
-    clearSearch()
-    navigateTo.addToken()
-  }
-
   const {resolve: createUnsignedTx, isPending} = usePromise({
     promise: createUnsignedTxPromise,
     onSuccess: handleCreateUnsignedTxSuccess,
     onError: handleOnError,
   })
 
+  const handleOnNext = () => {
+    track.sendSelectAssetSelected(assetsToSendProperties({amounts}))
+    createUnsignedTx([toYoroiEntry(targets[selectedTargetIndex].entry)])
+  }
   return (
-    <SafeAreaView
-      edges={['left', 'right', 'bottom']}
-      style={[a.flex_1, a.px_lg, a.pb_lg, a.gap_xl, ta.bg_color_max]}
-    >
+    <SafeArea>
       <AmountsList
         data={Object.values(amounts)}
         renderItem={({item: amount}) => (
@@ -156,16 +150,12 @@ export const ListAmountsToSendScreen = () => {
         bounces={false}
         keyExtractor={(item) => item.info.id}
         testID="selectedTokens"
+        contentContainerStyle={[a.px_lg]}
+        style={[a.pt_lg]}
       />
 
-      <Actions style={[a.bg_transparent]}>
-        <Row>
-          <Space.Height._2xs fill />
-
-          <AddTokenButton onPress={handleOnAdd} />
-        </Row>
-
-        <Space.Height.xl />
+      <SafeArea.Footer style={[a.bg_transparent, a.gap_lg]}>
+        <AddTokenButton onPress={handleOnAdd} />
 
         <NextButton
           onPress={handleOnNext}
@@ -173,8 +163,8 @@ export const ListAmountsToSendScreen = () => {
           disabled={selectedTokensCounter === 0}
           isLoading={isPending}
         />
-      </Actions>
-    </SafeAreaView>
+      </SafeArea.Footer>
+    </SafeArea>
   )
 }
 
@@ -242,7 +232,5 @@ const ListAmountsNavigateBackButton = () => {
 
 const Left = View
 const Right = View
-const Actions = View
-const Row = View
 const NextButton = Button
 const AmountsList = FlatList

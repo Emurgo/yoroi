@@ -47,7 +47,8 @@ describe('minswapApiMaker', () => {
     }
     const api = minswapApiMaker(config)
 
-    expect(api.tokens()).toEqual({
+    const result = await api.tokens()
+    expect(result).toEqual({
       tag: 'left',
       error: {
         status: -3,
@@ -102,8 +103,8 @@ describe('minswapApiMaker', () => {
     expect(isRight(result)).toBe(true)
     if (isRight(result)) {
       expect(result.value.data).toHaveLength(1)
-      expect(result.value.data[0].id).toBe('.')
-      expect(result.value.data[0].ticker).toBe('ADA')
+      expect(result.value.data[0]?.id).toBe('.')
+      expect(result.value.data[0]?.ticker).toBe('ADA')
     }
   })
 
@@ -157,9 +158,9 @@ describe('minswapApiMaker', () => {
     expect(isRight(result)).toBe(true)
     if (isRight(result)) {
       expect(result.value.data).toHaveLength(1)
-      expect(result.value.data[0].txHash).toBe('txhash')
-      expect(result.value.data[0].outputIndex).toBe(0)
-      expect(result.value.data[0].aggregator).toBe('minswap')
+      expect(result.value.data[0]?.txHash).toBe('txhash')
+      expect(result.value.data[0]?.outputIndex).toBe(0)
+      expect(result.value.data[0]?.aggregator).toBe('minswap')
     }
   })
 
@@ -209,7 +210,7 @@ describe('minswapApiMaker', () => {
     expect(isRight(result)).toBe(true)
     if (isRight(result)) {
       expect(result.value.data.totalInput).toBe(10)
-      expect(result.value.data.totalOutput).toBe(8.290409)
+      expect(result.value.data.totalOutput).toBe(8.208325)
       expect(result.value.data.splits).toHaveLength(1)
     }
   })
@@ -243,17 +244,7 @@ describe('minswapApiMaker', () => {
     }
   })
 
-  it('should handle limitOptions when estimate fails', async () => {
-    const mockErrorResponse = {
-      tag: 'left' as const,
-      error: {
-        status: 400,
-        message: 'Estimate failed',
-        responseData: {},
-      },
-    }
-
-    mockConfig.request = jest.fn().mockResolvedValue(mockErrorResponse)
+  it("should handle limitOptions since Minswap Aggregator doesn't support limit swaps yet", async () => {
     const api = minswapApiMaker(mockConfig)
 
     const result = await api.limitOptions({
@@ -264,44 +255,12 @@ describe('minswapApiMaker', () => {
 
     expect(isLeft(result)).toBe(true)
     if (isLeft(result)) {
-      expect(result.error.message).toBe('Estimate failed')
-      expect(result.error.status).toBe(400)
+      expect(result.error.message).toBe('Limit options not supported')
+      expect(result.error.status).toBe(-3)
     }
   })
 
   it('should handle limitOptions request', async () => {
-    const mockResponse = {
-      tag: 'right' as const,
-      value: {
-        status: 200,
-        data: {
-          amount_in: '50',
-          amount_out: '41.45',
-          min_amount_out: '41.04',
-          deposits: '2',
-          aggregator_fee: '0',
-          total_dex_fee: '0.7',
-          avg_price_impact: 0.3,
-          paths: [
-            [
-              {
-                amount_in: '50',
-                amount_out: '41.45',
-                deposits: '2',
-                dex_fee: '0.7',
-                lp_fee: '0.03',
-                min_amount_out: '41.04',
-                pool_id: 'pool123',
-                price_impact: 0.3,
-                protocol: 'MinswapV2',
-              },
-            ],
-          ],
-        },
-      },
-    }
-
-    mockConfig.request = jest.fn().mockResolvedValue(mockResponse)
     const api = minswapApiMaker(mockConfig)
 
     const result = await api.limitOptions({
@@ -310,10 +269,10 @@ describe('minswapApiMaker', () => {
         'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441' as const,
     })
 
-    expect(isRight(result)).toBe(true)
-    if (isRight(result)) {
-      expect(result.value.data.defaultProtocol).toBe('minswap-v2')
-      expect(result.value.data.options).toHaveLength(1)
+    expect(isLeft(result)).toBe(true)
+    if (isLeft(result)) {
+      expect(result.error.message).toBe('Limit options not supported')
+      expect(result.error.status).toBe(-3)
     }
   })
 
@@ -389,16 +348,6 @@ describe('minswapApiMaker', () => {
   it('should handle limitOptions when estimate returns empty splits', async () => {
     const api = minswapApiMaker(mockConfig)
 
-    // Mock estimate to fail
-    mockConfig.request.mockResolvedValueOnce({
-      tag: 'left',
-      error: {
-        status: 500,
-        message: 'Estimate failed',
-        responseData: {},
-      },
-    })
-
     const result = await api.limitOptions({
       tokenIn: '.' as const,
       tokenOut: 'test-token.' as const,
@@ -406,25 +355,14 @@ describe('minswapApiMaker', () => {
 
     expect(result.tag).toBe('left')
     if (result.tag === 'left') {
-      expect(result.error.message).toBe('Estimate failed')
-      expect(result.error.status).toBe(500)
+      expect(result.error.message).toBe('Limit options not supported')
+      expect(result.error.status).toBe(-3)
     }
   })
 
   it('should handle limitOptions when estimate returns empty splits array', async () => {
     const api = minswapApiMaker(mockConfig)
 
-    // Mock estimate to return empty splits (line 163)
-    mockConfig.request.mockResolvedValueOnce({
-      tag: 'right',
-      value: {
-        status: 200,
-        data: {
-          splits: [], // Empty splits array
-        },
-      },
-    })
-
     const result = await api.limitOptions({
       tokenIn: '.' as const,
       tokenOut: 'test-token.' as const,
@@ -432,7 +370,7 @@ describe('minswapApiMaker', () => {
 
     expect(result.tag).toBe('left')
     if (result.tag === 'left') {
-      expect(result.error.message).toBe('Invalid state')
+      expect(result.error.message).toBe('Limit options not supported')
       expect(result.error.status).toBe(-3)
     }
   })

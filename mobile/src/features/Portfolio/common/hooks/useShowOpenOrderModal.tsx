@@ -2,7 +2,7 @@ import * as React from 'react'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
 import {OpenOrderModal} from '~/features/Portfolio/screens/PortfolioTokensList/PortfolioDAppsTokenList/OpenOrderModal'
-import {useModal} from '~/ui/Modal/ModalContext'
+import {useModal} from '~/ui/Modal/context/ModalContext'
 
 import {IOpenOrders} from './useGetOpenOrders'
 

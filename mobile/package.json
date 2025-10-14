@@ -1,6 +1,6 @@
 {
   "name": "yoroi-v2",
-  "version": "6.0.0",
+  "version": "6.1.0",
   "main": "index.ts",
   "scripts": {
     "postinstall": "patch-package",
@@ -152,6 +152,7 @@
     "@emurgo/cardano-serialization-lib-nodejs": "14.1.2",
     "@emurgo/cross-csl-nodejs": "8.0.0-alpha.1",
     "@emurgo/cross-msl-nodejs": "2.0.0",
+    "@expo/config-plugins": "^54.0.2",
     "@formatjs/cli": "6.7.1",
     "@react-native/eslint-config": "0.79.2",
     "@tanstack/eslint-plugin-query": "5.81.2",

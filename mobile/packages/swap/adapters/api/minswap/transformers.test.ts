@@ -355,31 +355,33 @@ describe('transformersMaker', () => {
       const result = transformers.estimate.response(mockResponse)
 
       expect(result.splits).toHaveLength(1)
-      expect(result.splits[0]).toEqual({
-        amountIn: 10,
-        batcherFee: 0.7,
-        deposits: 2,
-        protocol: 'minswap-v2',
-        expectedOutput: 8.290409,
-        expectedOutputWithoutSlippage: 8.208325,
-        fee: 0.7,
-        initialPrice: 0.8290409000000001,
-        finalPrice: 0.8290409000000001,
-        poolFee: 0.03,
-        poolId:
-          'f5808c2c990d86da54bfc97d89cee6efa20cd8461616359478d96b4c.ee5cfbc5b0dc10c873a0bcc69e49b9af21b899f59337a894874c6b596c2da136',
-        priceDistortion: 0,
-        priceImpact: 0.3006573962454888,
-      })
+      expect(result.splits[0]).toEqual(
+        expect.objectContaining({
+          amountIn: 10,
+          batcherFee: 0.7,
+          deposits: 2,
+          protocol: 'minswap-v2',
+          expectedOutput: 8.208325,
+          expectedOutputWithoutSlippage: 8.290409,
+          fee: 0.7,
+          initialPrice: 0.8290409000000001,
+          finalPrice: 0.8290409000000001,
+          poolFee: 0.03,
+          poolId:
+            'f5808c2c990d86da54bfc97d89cee6efa20cd8461616359478d96b4c.ee5cfbc5b0dc10c873a0bcc69e49b9af21b899f59337a894874c6b596c2da136',
+          priceDistortion: 0,
+          priceImpact: 0.3006573962454888,
+        }),
+      )
       expect(result.batcherFee).toBe(0.7)
       expect(result.deposits).toBe(2)
       expect(result.aggregatorFee).toBe(0)
       expect(result.frontendFee).toBe(0)
-      expect(result.netPrice).toBeCloseTo(0.8290409)
+      expect(result.netPrice).toBeCloseTo(0.8208325)
       expect(result.priceImpact).toBe(0.3006573962454888)
       expect(result.totalFee).toBe(0.7)
-      expect(result.totalOutput).toBe(8.290409)
-      expect(result.totalOutputWithoutSlippage).toBe(8.208325)
+      expect(result.totalOutput).toBe(8.208325)
+      expect(result.totalOutputWithoutSlippage).toBe(8.290409)
       expect(result.totalInput).toBe(10)
     })
 
@@ -484,7 +486,7 @@ describe('transformersMaker', () => {
       const result = transformers.estimate.response(mockResponse)
 
       // The default case should return Swap.Protocol.Unsupported
-      expect(result.splits[0].protocol).toBe('unsupported')
+      expect(result.splits[0]?.protocol).toBe('unsupported')
     })
 
     it('should handle all Dex protocol mappings in mapDexToProtocol', () => {
@@ -570,7 +572,7 @@ describe('transformersMaker', () => {
         }
 
         const result = transformers.estimate.response(mockResponse)
-        expect(result.splits[0].protocol).toBe(expected)
+        expect(result.splits[0]?.protocol).toBe(expected)
       })
     })
   })
@@ -738,7 +740,7 @@ describe('transformersMaker', () => {
 
       expect(result.splits).toHaveLength(0)
       expect(result.totalInput).toBe(10)
-      expect(result.totalOutput).toBe(8.290409)
+      expect(result.totalOutput).toBe(8.208325)
     })
 
     it('should handle null values in token data', () => {
@@ -762,9 +764,9 @@ describe('transformersMaker', () => {
       const result = transformers.tokens.response(mockResponse)
 
       expect(result).toHaveLength(1)
-      expect(result[0].name).toBe('Unknown Token')
-      expect(result[0].ticker).toBe('')
-      expect(result[0].decimals).toBe(0)
+      expect(result[0]?.name).toBe('Unknown Token')
+      expect(result[0]?.ticker).toBe('')
+      expect(result[0]?.decimals).toBe(0)
     })
 
     it('should handle zero amounts in estimate response', () => {
@@ -808,8 +810,8 @@ describe('transformersMaker', () => {
       expect(result.totalInput).toBe(0)
       expect(result.totalOutput).toBe(0)
       expect(result.netPrice).toBe(0)
-      expect(result.splits[0].initialPrice).toBe(0)
-      expect(result.splits[0].finalPrice).toBe(0)
+      expect(result.splits[0]?.initialPrice).toBe(0)
+      expect(result.splits[0]?.finalPrice).toBe(0)
     })
   })
 })

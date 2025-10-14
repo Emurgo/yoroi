@@ -55,6 +55,13 @@ export type SwapSplit = {
   poolId: string
   priceDistortion: number
   priceImpact: number
+  // Optional metadata for route fidelity
+  aggregator?: SwapAggregator
+  aggregatorDexKey?: string
+  aggregatorPoolId?: string
+  quoteId?: string
+  // Optional image URL to be used as a fallback icon in the UI
+  aggregatorImageUrl?: string
 }
 
 export type SwapEstimateResponse = {
@@ -78,6 +85,7 @@ export type SwapCreateRequest = {
   protocol?: SwapProtocol
   inputs?: Array<string>
   blockedProtocols?: Array<SwapProtocol>
+  routeHint?: SwapRouteHint
 } & (
   | {
       wantedPrice?: number
@@ -90,6 +98,17 @@ export type SwapCreateRequest = {
       multiples?: undefined
     }
 )
+
+export type SwapRouteHint = {
+  aggregator: SwapAggregator
+  aggregatorDexKey?: string
+  poolIds?: string[]
+  quoteId?: string
+  // Adapter-specific hints
+  singlePreferredDexKey?: string
+  frontendOptions?: string[]
+  orderContract?: string
+}
 
 export type SwapCreateResponse = {
   splits: SwapSplit[]

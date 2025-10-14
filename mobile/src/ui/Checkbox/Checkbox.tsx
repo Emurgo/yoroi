@@ -1,10 +1,17 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 
+import * as Haptics from 'expo-haptics'
 import * as React from 'react'
-import {Pressable, Text, TextProps, View, ViewStyle} from 'react-native'
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  TextProps,
+  View,
+  ViewStyle,
+} from 'react-native'
 
 import {Icon} from '~/ui/Icon'
-import {Space} from '~/ui/Space/Space'
 
 type Props = {
   checked: boolean
@@ -22,32 +29,34 @@ export const Checkbox = ({
   testID,
   textStyle,
 }: Props) => {
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
 
   return (
     <Pressable
-      style={[
-        {
-          flexDirection: 'row',
-          ...a.align_start,
-          ...a.justify_start,
-        },
+      style={StyleSheet.flatten([
+        a.flex_row,
+        a.align_start,
+        a.justify_start,
+        a.gap_sm,
         style,
-      ]}
-      onPress={() => onChange(!checked)}
+      ])}
+      onPress={() => {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+        onChange(!checked)
+      }}
       testID={testID}
     >
-      <View style={{...a.py_xs}}>
+      <View style={a.py_xs}>
         {checked ? <Icon.Checkbox /> : <Icon.EmptyCheckbox />}
       </View>
 
-      <Space.Width.sm />
-
       <Text
-        style={[
-          {flex: 1, ...a.body_1_lg_regular, color: p.gray_900},
+        style={StyleSheet.flatten([
+          a.flex_1,
+          a.body_1_lg_regular,
+          ta.text_gray_max,
           textStyle,
-        ]}
+        ])}
       >
         {text}
       </Text>

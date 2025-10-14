@@ -1,5 +1,5 @@
 import {primaryTokenInfoMainnet} from '@yoroi/blockchains'
-import {isLeft, truncateString} from '@yoroi/common'
+import {isLeft, parseNumberFromText, truncateString} from '@yoroi/common'
 import {infoExtractName} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Api, Portfolio, Swap} from '@yoroi/types'
@@ -18,6 +18,7 @@ import {useSearch, useSearchOnNavBar} from '~/features/Search/SearchContext'
 import {useSwap} from '~/features/Swap/common/useSwap'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useLanguage} from '~/kernel/i18n/LanguageProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Boundary} from '~/ui/Boundary/Boundary'
@@ -26,7 +27,8 @@ import {Counter} from '~/ui/Counter/Counter'
 import {EmptyCompletedOrdersIllustration} from '~/ui/EmptyCompletedOrdersIllustration/EmptyCompletedOrdersIllustration'
 import {EmptyOpenOrdersIllustration} from '~/ui/EmptyOpenOrdersIllustration/EmptyOpenOrdersIllustration'
 import {Icon} from '~/ui/Icon'
-import {useModal} from '~/ui/Modal/ModalContext'
+import {useModal} from '~/ui/Modal/context/ModalContext'
+import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {ProtocolAvatar} from '~/ui/ProtocolAvatar/ProtocolAvatar'
 import {RefreshButton} from '~/ui/RefreshButton/RefreshButton'
 import {ServiceUnavailable} from '~/ui/ServiceUnavailable/ServiceUnavailable'
@@ -174,6 +176,7 @@ const Order = ({order}: {order: Swap.Order}) => {
   const {palette: p} = useTheme()
   const [expanded, setExpanded] = React.useState<boolean>(false)
   const swapForm = useSwap()
+  const {numberLocale} = useLanguage()
   const tokenInInfo = swapForm.tokenInfos.get(order.tokenIn)
   const tokenOutInfo = swapForm.tokenInfos.get(order.tokenOut)
 
@@ -182,14 +185,20 @@ const Order = ({order}: {order: Swap.Order}) => {
       ? order.expectedAmountOut
       : order.actualAmountOut
   const priceCalc = amountOut === 0 ? 0 : order.amountIn / amountOut
-  const roundedPrice = priceCalc
-    .toFixed(tokenOutInfo?.decimals ?? 0)
-    .replace(/\.0+$/, '')
-  const price = roundedPrice !== '0' ? roundedPrice : priceCalc.toFixed(6)
 
-  const priceStr = `1 ${tokenName(tokenInInfo)} = ${price} ${tokenName(tokenOutInfo)}`
+  const roundedPrice = parseNumberFromText({
+    text: String(priceCalc),
+    precision: Math.max(
+      tokenOutInfo?.decimals ?? 0,
+      tokenInInfo?.decimals ?? 0,
+      3,
+    ),
+    format: numberLocale,
+  }).formattedValue
 
-  const amountOutStr = `${Number(amountOut.toFixed(tokenOutInfo?.decimals ?? 0))} ${tokenName(tokenOutInfo)}`
+  const priceStr = `1 ${tokenName(tokenInInfo)} = ${roundedPrice} ${tokenName(tokenOutInfo)}`
+
+  const amountOutStr = `${parseNumberFromText({text: String(amountOut), precision: tokenOutInfo?.decimals ?? 0, format: numberLocale}).formattedValue} ${tokenName(tokenOutInfo)}`
 
   const lastTxHash = order.updateTxHash ?? order.txHash ?? ''
   const shortenedTxHash = `${truncateString({value: lastTxHash, maxLength: 22})}#${order.outputIndex ?? 0}`
@@ -357,39 +366,41 @@ const OrderCancellation = ({
     }
 
     openModal({
-      title: strings.swap.listOrdersSheetTitle,
+      title: strings.swap.cancel,
       content: (
-        <OrderCancellationConfirmation
-          order={order}
-          tokenInInfo={tokenInInfo}
-          price={price}
-          amount={amount}
-          response={response}
-        />
+        <Modal.Content>
+          <OrderCancellationConfirmation
+            order={order}
+            tokenInInfo={tokenInInfo}
+            price={price}
+            amount={amount}
+            response={response}
+          />
+        </Modal.Content>
       ),
       footer: isLeft(response) ? (
-        <Button
-          type={ButtonType.Secondary}
-          title={strings.swap.listOrdersSheetBack}
-          onPress={closeModal}
-        />
-      ) : (
-        <View style={[a.flex_row, a.gap_md, a.align_center]}>
+        <Modal.Footer>
           <Button
-            style={[a.flex_1]}
+            type={ButtonType.Secondary}
+            title={strings.swap.listOrdersSheetBack}
+            onPress={closeModal}
+          />
+        </Modal.Footer>
+      ) : (
+        <Modal.Footer>
+          <Button
             type={ButtonType.Secondary}
             title={strings.swap.listOrdersSheetBack}
             onPress={closeModal}
           />
 
           <Button
-            style={[a.flex_1]}
             type={ButtonType.Critical}
-            title={strings.swap.listOrdersSheetConfirm}
+            title={strings.swap.cancel}
             onPress={onOrderCancelConfirm}
             disabled={response.value.data.cbor === undefined}
           />
-        </View>
+        </Modal.Footer>
       ),
       height: 400,
     })
@@ -414,12 +425,12 @@ const OrderCancellationConfirmation = ({
   response,
 }: CancellationProps & {response: Api.Response<Swap.CancelResponse>}) => {
   const strings = useStrings()
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
 
   if (isLeft(response))
     return (
       <View>
-        <Text style={[a.body_3_sm_regular, {color: p.text_warning}]}>
+        <Text style={[a.body_3_sm_regular, ta.text_warning]}>
           {response.error.message}
         </Text>
       </View>
@@ -428,7 +439,7 @@ const OrderCancellationConfirmation = ({
   const fee = response.value.data.additionalCancellationFee
 
   return (
-    <View style={[a.gap_md, a.p_lg]}>
+    <View style={[a.gap_md]}>
       <Row
         label={strings.swap.route}
         value={<ProtocolAvatar protocol={order.protocol} preventOpenLink />}
@@ -462,13 +473,11 @@ const Row = ({
   label: string
   value: string | React.ReactNode
 }) => {
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
 
   return (
     <View style={[a.flex_row, a.justify_between]}>
-      <Text style={[a.body_1_lg_regular, {color: p.text_gray_low}]}>
-        {label}
-      </Text>
+      <Text style={[a.body_1_lg_regular, ta.text_gray_low]}>{label}</Text>
 
       {typeof value === 'string' ? (
         <Text
@@ -476,7 +485,7 @@ const Row = ({
             a.body_1_lg_regular,
             a.flex_shrink,
             a.text_right,
-            {color: p.text_gray_medium},
+            ta.text_gray_medium,
           ]}
         >
           {value}
@@ -491,7 +500,7 @@ const Row = ({
 const ListEmptyComponent = ({filter}: {filter: Filter}) => {
   const {search: assetSearchTerm, visible: isSearching} = useSearch()
   const strings = useStrings()
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
 
   return (
     <View style={[a.gap_lg, a.pt_2xl]}>
@@ -506,7 +515,7 @@ const ListEmptyComponent = ({filter}: {filter: Filter}) => {
               a.flex_1,
               a.text_center,
               a.heading_3_medium,
-              {color: p.gray_max},
+              ta.text_gray_max,
             ]}
           >
             {isSearching
@@ -520,7 +529,7 @@ const ListEmptyComponent = ({filter}: {filter: Filter}) => {
                 a.flex_1,
                 a.text_center,
                 a.body_1_lg_regular,
-                {color: p.text_gray_low},
+                ta.text_gray_low,
               ]}
             >
               {strings.swap.emptyOpenOrdersSub}
@@ -538,7 +547,7 @@ const ListEmptyComponent = ({filter}: {filter: Filter}) => {
               a.flex_1,
               a.text_center,
               a.heading_3_medium,
-              {color: p.gray_max},
+              ta.text_gray_max,
             ]}
           >
             {isSearching
@@ -559,7 +568,7 @@ const Details = ({
 }: CancellationProps & {response: Api.Response<Swap.CancelResponse>}) => {
   const strings = useStrings()
   const {wallet} = useSelectedWallet()
-
+  const {numberLocale} = useLanguage()
   const portfolioTokenInfos = usePortfolioTokenInfosSuspense({
     wallet,
     tokenIds: [order.tokenIn, order.tokenOut],
@@ -578,7 +587,7 @@ const Details = ({
       ? order.expectedAmountOut
       : order.actualAmountOut
 
-  const amountOutStr = `${Number(amountOut.toFixed(tokenOutInfo?.decimals ?? 0))} ${tokenName(tokenOutInfo)}`
+  const amountOutStr = `${parseNumberFromText({text: String(amountOut), precision: tokenOutInfo?.decimals ?? 0, format: numberLocale}).formattedValue} ${tokenName(tokenOutInfo)}`
 
   const isFromPrimary = tokenOutInfo?.nature === Portfolio.Token.Nature.Primary
   const fromDetail = isFromPrimary
@@ -591,7 +600,7 @@ const Details = ({
     ? tokenOutInfo?.description
     : tokenOutInfo?.fingerprint
   const toName = infoExtractName(tokenOutInfo)
-  const amountInStr = `${Number(order.amountIn.toFixed(tokenInInfo?.decimals ?? 0))} ${tokenName(tokenOutInfo)}`
+  const amountInStr = `${parseNumberFromText({text: String(order.amountIn), precision: tokenInInfo?.decimals ?? 0, format: numberLocale}).formattedValue} ${tokenName(tokenOutInfo)}`
 
   return (
     <View>

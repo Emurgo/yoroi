@@ -1,3 +1,4 @@
+import {parseNumberFromText} from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Numbers, Swap} from '@yoroi/types'
 
@@ -13,7 +14,6 @@ import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingView'
 import {SettingsSwitch} from '~/ui/SettingsSwitch/SettingsSwitch'
 import {TextInput} from '~/ui/TextInput/TextInput'
-import {Quantities} from '~/wallets/utils/utils'
 
 type CustomChoice = {
   label: 'Custom'
@@ -39,11 +39,12 @@ const CHOICES: Readonly<Choice[]> = [
 
 const MAX_DECIMALS = 1
 
-const ALL_AGGREGATORS: Swap.Aggregator[] = [
-  'muesliswap',
-  'dexhunter',
-  'minswap',
-]
+// Keeping for reference; not used directly after changing toggle behavior
+// const ALL_AGGREGATORS: Swap.Aggregator[] = [
+//   'muesliswap',
+//   'dexhunter',
+//   'minswap',
+// ]
 
 const toggleAggregator = (
   current: Swap.Aggregator[],
@@ -51,9 +52,7 @@ const toggleAggregator = (
 ): Swap.Aggregator[] => {
   if (current.includes(target)) {
     const remaining = current.filter((opt) => opt !== target)
-    return remaining.length === 0
-      ? ALL_AGGREGATORS.filter((opt) => opt !== target)
-      : remaining
+    return remaining
   } else {
     return [...current, target]
   }
@@ -110,10 +109,15 @@ export const SwapSettings = () => {
   }
 
   const handleInputChange = (text: string) => {
-    const [value] = Quantities.parseFromText(text, MAX_DECIMALS, numberLocale)
-    setInputValue(value)
+    const result = parseNumberFromText({
+      text,
+      format: numberLocale,
+      precision: MAX_DECIMALS,
+    })
+    setInputValue(result.sanitizedInput)
 
-    if (validateSlippage(value, numberLocale)) commit(value)
+    if (validateSlippage(result.sanitizedInput, numberLocale))
+      commit(result.sanitizedInput)
   }
 
   const isInputEnabled = isSelectedChoiceCustom
@@ -247,11 +251,10 @@ export const SwapSettings = () => {
 
                   <SettingsSwitch
                     value={aggregator.includes('dexhunter')}
-                    onValueChange={() =>
-                      assignAggregator(
-                        toggleAggregator(aggregator, 'dexhunter'),
-                      )
-                    }
+                    onValueChange={() => {
+                      const next = toggleAggregator(aggregator, 'dexhunter')
+                      assignAggregator(next.length === 0 ? 'auto' : next)
+                    }}
                   />
                 </View>
 
@@ -262,11 +265,10 @@ export const SwapSettings = () => {
 
                   <SettingsSwitch
                     value={aggregator.includes('muesliswap')}
-                    onValueChange={() =>
-                      assignAggregator(
-                        toggleAggregator(aggregator, 'muesliswap'),
-                      )
-                    }
+                    onValueChange={() => {
+                      const next = toggleAggregator(aggregator, 'muesliswap')
+                      assignAggregator(next.length === 0 ? 'auto' : next)
+                    }}
                   />
                 </View>
 
@@ -277,9 +279,10 @@ export const SwapSettings = () => {
 
                   <SettingsSwitch
                     value={aggregator.includes('minswap')}
-                    onValueChange={() =>
-                      assignAggregator(toggleAggregator(aggregator, 'minswap'))
-                    }
+                    onValueChange={() => {
+                      const next = toggleAggregator(aggregator, 'minswap')
+                      assignAggregator(next.length === 0 ? 'auto' : next)
+                    }}
                   />
                 </View>
               </>
@@ -298,8 +301,13 @@ const validateSlippage = (text: string, format: Numbers.Locale) => {
 }
 
 const parseNumber = (text: string, format: Numbers.Locale) => {
-  const [, quantity] = Quantities.parseFromText(text, MAX_DECIMALS, format)
-  return Number(Quantities.denominated(quantity, MAX_DECIMALS))
+  const result = parseNumberFromText({
+    text,
+    format,
+    precision: MAX_DECIMALS, // Use same precision as before
+  })
+
+  return result.numericValue
 }
 
 const getChoiceBySlippage = (

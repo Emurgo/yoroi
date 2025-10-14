@@ -1,4 +1,4 @@
-import {isLeft, isRight} from '@yoroi/common'
+import {isLeft, isRight, parseNumberFromText} from '@yoroi/common'
 import {isPrimaryToken, primaryTokenId} from '@yoroi/portfolio'
 import {swapManagerMaker, swapStorageMaker} from '@yoroi/swap'
 import {Api, Balance, Portfolio, Swap} from '@yoroi/types'
@@ -105,7 +105,7 @@ type SwapState = {
 
 export type SwapContext = SwapState & {
   isLoading: boolean
-  limitOptions?: Swap.LimitOptionsResponse
+  limitOptions?: Swap.LimitOptionsResponse | null
   tokenInfos: Map<Portfolio.Token.Id, Portfolio.Token.Info>
   verifiedTokens: Portfolio.Token.Id[]
   tokenInInputRef: React.RefObject<TextInput | null> | undefined
@@ -168,6 +168,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
       if (isRight(res)) return res.value.data
       return []
     },
+    enabled: wallet.isMainnet,
   })
 
   const {data: tokenIds = [], refetch: refetchTokens} = useQuery({
@@ -190,6 +191,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
       }
       return []
     },
+    enabled: wallet.isMainnet,
   })
 
   const refetches = React.useCallback(() => {
@@ -252,42 +254,60 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
       })
 
       if (isRight(res)) return res.value.data
-      return undefined
+      return null
     },
     enabled:
       state.orderType === 'limit' &&
       state.tokenInInput.tokenId !== undefined &&
-      state.tokenOutInput.tokenId !== undefined,
+      state.tokenOutInput.tokenId !== undefined &&
+      wallet.isMainnet,
   })
 
   React.useEffect(() => {
-    const value = limitOptions?.defaultProtocol
-    if (
-      value !== undefined &&
-      state.selectedProtocol.isTouched === false &&
-      state.selectedProtocol.value !== value
-    ) {
-      action({type: 'ProtocolChanged', value})
+    const options = limitOptions?.options ?? []
+    const defaultProtocol = limitOptions?.defaultProtocol
+    const currentProtocol = state.selectedProtocol.value
+
+    // Determine desired protocol deterministically for limit mode
+    let desiredProtocol = currentProtocol
+
+    if (options.length === 1) {
+      // If there is exactly one option, always select it
+      desiredProtocol = options[0].protocol
     } else {
-      const current = limitOptions?.options.find(
-        (p) => p.protocol === state.selectedProtocol.value,
-      )
-      if (state.selectedProtocol.isTouched === true && current === undefined) {
-        action({type: 'ProtocolChanged', value})
+      const currentIsValid = options.some((p) => p.protocol === currentProtocol)
+      if (!currentIsValid) {
+        desiredProtocol = defaultProtocol ?? options[0]?.protocol
+      } else if (
+        state.selectedProtocol.isTouched === false &&
+        defaultProtocol !== undefined &&
+        currentProtocol !== defaultProtocol
+      ) {
+        // If user hasn't touched yet, prefer defaultProtocol
+        desiredProtocol = defaultProtocol
       }
+    }
+
+    if (desiredProtocol !== undefined && desiredProtocol !== currentProtocol) {
+      action({type: 'ProtocolChanged', value: desiredProtocol})
     }
 
     const wantedPrice = limitOptions?.wantedPrice
     if (
+      state.orderType === 'limit' &&
       wantedPrice !== undefined &&
       wantedPrice > 0 &&
-      state.selectedProtocol.value === limitOptions?.defaultProtocol
-    )
+      (options.length === 1 ||
+        state.selectedProtocol.value === defaultProtocol ||
+        desiredProtocol === defaultProtocol)
+    ) {
       action({type: 'WantedPriceInputChanged', value: String(wantedPrice)})
+    }
   }, [
     limitOptions?.defaultProtocol,
     limitOptions?.options,
     limitOptions?.wantedPrice,
+    state.orderType,
     state.selectedProtocol.isTouched,
     state.selectedProtocol.value,
   ])
@@ -299,7 +319,11 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
     const tokenBalance =
       Number(tokenAmount?.quantity ?? BigInt(0)) /
       10 ** (tokenAmount?.info?.decimals ?? 0)
-    const hasEnoughBalance = tokenBalance >= Number(state.tokenInInput.value)
+    const hasEnoughBalance =
+      tokenBalance >=
+      parseNumberFromText({
+        text: state.tokenInInput.value,
+      }).numericValue
     if (!hasEnoughBalance) {
       action({
         type: 'TokenInErrorChanged',
@@ -325,6 +349,8 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
     )
       return
 
+    if (!wallet.isMainnet) return
+
     const reqId = ++estimateReqIdRef.current
 
     swapManager.api
@@ -334,13 +360,19 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
         tokenOut: state.tokenOutInput.tokenId,
         ...(state.lastInputTouched === 'in'
           ? {
-              amountIn: Number(state.tokenInInput.value),
+              amountIn: parseNumberFromText({
+                text: state.tokenInInput.value,
+              }).numericValue,
               ...(state.orderType === 'limit' && {
-                wantedPrice: Number(state.wantedPrice),
+                wantedPrice: parseNumberFromText({
+                  text: state.wantedPrice,
+                }).numericValue,
               }),
             }
           : {
-              amountOut: Number(state.tokenOutInput.value),
+              amountOut: parseNumberFromText({
+                text: state.tokenOutInput.value,
+              }).numericValue,
             }),
         blockedProtocols: [],
         protocol: state.selectedProtocol.value,
@@ -383,9 +415,11 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
     state.selectedProtocol.value,
     swapManager.api,
     action,
+    wallet.isMainnet,
   ])
 
   const create = React.useCallback(async () => {
+    if (!wallet.isMainnet) return
     if (
       state.tokenInInput.tokenId === undefined ||
       state.tokenOutInput.tokenId === undefined
@@ -398,9 +432,12 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
     const tokenOutInfo = tokenInfos.get(state.tokenOutInput.tokenId)
 
     const quantityIn =
-      Number(state.tokenInInput.value) * 10 ** (tokenInInfo?.decimals ?? 0)
+      parseNumberFromText({
+        text: state.tokenInInput.value,
+        denomination: tokenInInfo?.decimals ?? 0,
+      }).quantity ?? '0'
     const amountsIn: Balance.Amounts = {
-      [state.tokenInInput.tokenId]: `${quantityIn}`,
+      [state.tokenInInput.tokenId]: quantityIn,
     }
     const inputs = await getInputs(amountsIn)
 
@@ -431,13 +468,31 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
       .create({
         tokenIn: state.tokenInInput.tokenId,
         tokenOut: state.tokenOutInput.tokenId,
-        amountIn: Number(state.tokenInInput.value),
+        amountIn: parseNumberFromText({
+          text: state.tokenInInput.value,
+        }).numericValue,
         ...(state.orderType === 'limit'
-          ? {wantedPrice: Number(state.wantedPrice)}
+          ? {
+              wantedPrice: parseNumberFromText({
+                text: state.wantedPrice,
+              }).numericValue,
+            }
           : {slippage: state.slippageInput.value}),
         blockedProtocols: [],
         protocol: state.selectedProtocol.value,
         inputs,
+        routeHint:
+          state.estimate?.splits?.[0] != null
+            ? {
+                aggregator: state.estimate.splits[0].aggregator!,
+                aggregatorDexKey: state.estimate.splits[0].aggregatorDexKey,
+                poolIds:
+                  state.estimate.splits[0].aggregatorPoolId != null
+                    ? [state.estimate.splits[0].aggregatorPoolId]
+                    : undefined,
+                quoteId: state.estimate.splits[0].quoteId,
+              }
+            : undefined,
       })
       .then((response) => {
         setIsLoading(false)
@@ -479,6 +534,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
     swapManager.api,
     tokenInfos,
     track,
+    wallet.isMainnet,
   ])
 
   const context = React.useMemo(
@@ -498,6 +554,8 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
       managerSettings: swapManager.settings,
       assignManagerSettings: swapManager.assignSettings,
       refetchOrders,
+      // override canSwap if not on mainnet
+      canSwap: wallet.isMainnet ? state.canSwap : false,
     }),
     [
       state,
@@ -511,6 +569,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
       swapManager.settings,
       swapManager.assignSettings,
       refetchOrders,
+      wallet.isMainnet,
     ],
   )
 
@@ -565,7 +624,9 @@ export const swapReducer = (state: SwapState, action: SwapAction) => {
       case SwapActionType.TokenInAmountChanged:
         draft.needsNewEstimate = true
         draft.lastInputTouched = 'in'
-        draft.tokenInInput.value = parseNumber(action.value)
+        draft.tokenInInput.value = parseNumberFromText({
+          text: action.value,
+        }).sanitizedInput
         if (action.value === '' || action.value === '0') {
           draft.tokenOutInput.value = '0'
           draft.estimate = undefined
@@ -576,7 +637,9 @@ export const swapReducer = (state: SwapState, action: SwapAction) => {
       case SwapActionType.TokenOutAmountChanged:
         draft.needsNewEstimate = true
         draft.lastInputTouched = 'out'
-        draft.tokenOutInput.value = parseNumber(action.value)
+        draft.tokenOutInput.value = parseNumberFromText({
+          text: action.value,
+        }).sanitizedInput
         if (action.value === '' || action.value === '0') {
           draft.tokenInInput.value = '0'
           draft.estimate = undefined
@@ -611,8 +674,11 @@ export const swapReducer = (state: SwapState, action: SwapAction) => {
       case SwapActionType.WantedPriceInputChanged:
         draft.needsNewEstimate = true
         draft.lastInputTouched = 'in'
-        draft.wantedPrice = parseNumber(action.value)
-        if (Number(draft.wantedPrice) === 0) draft.needsNewEstimate = false
+        const wantedPrice = parseNumberFromText({
+          text: action.value,
+        })
+        draft.wantedPrice = wantedPrice.sanitizedInput
+        if (wantedPrice.numericValue === 0) draft.needsNewEstimate = false
         break
 
       case SwapActionType.SwitchTouched:
@@ -676,11 +742,13 @@ export const swapReducer = (state: SwapState, action: SwapAction) => {
         draft.canSwap = state.tokenInInput.error === null
 
         if (state.lastInputTouched === 'in') {
-          draft.tokenOutInput.value = String(
-            action.value.totalOutputWithoutSlippage ?? 0,
-          )
+          draft.tokenOutInput.value = parseNumberFromText({
+            text: String(action.value.totalOutputWithoutSlippage ?? 0),
+          }).sanitizedInput
         } else {
-          draft.tokenInInput.value = String(action.value.totalInput ?? 0)
+          draft.tokenInInput.value = parseNumberFromText({
+            text: String(action.value.totalInput ?? 0),
+          }).sanitizedInput
         }
         break
 
@@ -761,13 +829,5 @@ const SwapContextInstance = React.createContext<SwapContext>({
   assignManagerSettings: () => ({routingPreference: 'auto', slippage: 1}),
   refetchOrders: () => null,
 })
-
-const parseNumber = (text: string) =>
-  !Number.isNaN(Number(text.replace(',', '.')))
-    ? text
-        .replace(',', '.')
-        .replace(/^0+(?=\d|\.)/, '0')
-        .replace(/^\.$/, '0.')
-    : '0'
 
 export {SwapContextInstance}
