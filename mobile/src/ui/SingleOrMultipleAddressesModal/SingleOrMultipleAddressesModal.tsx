@@ -48,6 +48,7 @@ export const SingleOrMultipleAddressesModal = ({onConfirm, onClose}: Props) => {
 
   return (
     <View style={[a.flex_1, a.align_center, a.justify_between, a.py_lg]}>
+      {/* TODO: REVISIT, this breaks the app. investigate why */}
       <QRs />
 
       <Text

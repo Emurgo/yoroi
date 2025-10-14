@@ -17,7 +17,7 @@ import {ProtocolAvatar} from '~/ui/ProtocolAvatar/ProtocolAvatar'
 import {RefreshButton} from '~/ui/RefreshButton/RefreshButton'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {ScrollView} from '~/ui/ScrollView/ScrollView'
-import {useScrollView} from '~/ui/ScrollView/useScrollView'
+import {useScrollView} from '~/ui/ScrollView/hooks/useScrollView'
 import {ShowPriceImpact} from '~/ui/ShowPriceImpact/ShowPriceImpact'
 import {isEmptyString} from '~/wallets/utils/string'
 

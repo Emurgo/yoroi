@@ -9,7 +9,6 @@ import {useFocusEffect} from '@react-navigation/native'
 import * as React from 'react'
 import {
   GestureResponderEvent,
-  ScrollView as RNScrollView,
   Text,
   View,
   useWindowDimensions,
@@ -22,9 +21,10 @@ import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {useModal} from '~/ui/Modal/context/ModalContext'
+import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {ScrollView} from '~/ui/ScrollView/ScrollView'
-import {useScrollView} from '~/ui/ScrollView/useScrollView'
+import {useScrollView} from '~/ui/ScrollView/hooks/useScrollView'
 import {ShareQRCodeCard} from '~/ui/ShareQRCodeCard/ShareQRCodeCard'
 import {SkeletonAdressDetail} from '~/ui/SkeletonAddressDetail/SkeletonAddressDetail'
 import {TextInput} from '~/ui/TextInput/TextInput'
@@ -53,7 +53,8 @@ export const RequestSpecificAmountScreen = () => {
     track.receiveAmountGeneratedPageViewed({ada_amount: Number(amount)})
     openModal({
       title: strings.receive.amountToReceive,
-      content: <Modal amount={amount} address={selectedAddress} />,
+      content: <ModalContent amount={amount} address={selectedAddress} />,
+      footer: <ModalFooter amount={amount} address={selectedAddress} />,
       height: modalHeight,
     })
   }, [
@@ -84,7 +85,11 @@ export const RequestSpecificAmountScreen = () => {
 
   return (
     <SafeArea>
-      <ScrollView ref={scrollViewRef} style={[a.flex_1]}>
+      <ScrollView
+        ref={scrollViewRef}
+        style={[a.pt_lg]}
+        contentContainerStyle={[a.px_lg]}
+      >
         <View style={[a.gap_lg]}>
           <Text style={[a.body_1_lg_regular, ta.text_gray_medium]}>
             {strings.receive.specificAmountDescription}
@@ -123,8 +128,9 @@ export const RequestSpecificAmountScreen = () => {
   )
 }
 
-const Modal = ({amount, address}: {amount: string; address: string}) => {
+const ModalContent = ({amount, address}: {amount: string; address: string}) => {
   const strings = useStrings()
+  const {copy} = useCopy()
   const {track} = useMetrics()
 
   const cardanoLinks = linksCardanoModuleMaker()
@@ -150,47 +156,70 @@ const Modal = ({amount, address}: {amount: string; address: string}) => {
     ? `${amount} ${portfolioPrimaryTokenInfo.ticker.toLocaleUpperCase()}`
     : ''
 
+  return (
+    <Modal.Content
+      contentContainerStyle={[
+        a.flex_grow,
+        a.justify_between,
+        a.gap_lg,
+        a.px_lg,
+      ]}
+    >
+      {hasAddress ? (
+        <ShareQRCodeCard
+          title={title}
+          shareContent={content}
+          qrContent={content}
+          onLongPress={(event: GestureResponderEvent) =>
+            copy({
+              text: content,
+              feedback: strings.receive.addressCopiedMsg,
+              event,
+            })
+          }
+          testID="receive:specific-amount"
+          onShare={() => track.receiveShareAddressClicked()}
+          shareLabel={strings.receive.shareLabel}
+        />
+      ) : (
+        <View style={[a.flex_1]}>
+          <SkeletonAdressDetail />
+        </View>
+      )}
+    </Modal.Content>
+  )
+}
+
+const ModalFooter = ({amount, address}: {amount: string; address: string}) => {
+  const strings = useStrings()
   const {copy} = useCopy()
 
-  return (
-    <View style={[a.p_lg, a.flex_1]}>
-      <RNScrollView
-        contentContainerStyle={[a.flex_grow, a.justify_between, a.gap_lg]}
-      >
-        {hasAddress ? (
-          <ShareQRCodeCard
-            title={title}
-            shareContent={content}
-            qrContent={content}
-            onLongPress={(event: GestureResponderEvent) =>
-              copy({
-                text: content,
-                feedback: strings.receive.addressCopiedMsg,
-                event,
-              })
-            }
-            testID="receive:specific-amount"
-            onShare={() => track.receiveShareAddressClicked()}
-            shareLabel={strings.receive.shareLabel}
-          />
-        ) : (
-          <View style={[{flex: 1}]}>
-            <SkeletonAdressDetail />
-          </View>
-        )}
-      </RNScrollView>
+  const cardanoLinks = linksCardanoModuleMaker()
+  const cardanoRequestLink = cardanoLinks.create({
+    config: configCardanoLegacyTransfer,
+    params: {
+      address: address,
+      amount: Number(amount),
+    },
+  })
+  const yoroiLinks = linksYoroiModuleMaker('yoroi')
+  const yoroiPaymentRequestLink = yoroiLinks.transfer.request.adaWithLink({
+    link: cardanoRequestLink.link,
+  })
 
-      <View style={[a.pt_lg]}>
-        <Button
-          onPress={(event: GestureResponderEvent) =>
-            copy({text: content, feedback: strings.receive.copyLinkMsg, event})
-          }
-          disabled={!hasAmount}
-          title={strings.receive.copyLinkBtn}
-          icon={Icon.Copy}
-          testID="receive:request-specific-amount:copy-link-button"
-        />
-      </View>
-    </View>
+  const hasAmount = !isEmptyString(amount)
+  const content = hasAmount ? yoroiPaymentRequestLink : address
+
+  return (
+    <Modal.Footer>
+      <Button
+        onPress={(event: GestureResponderEvent) =>
+          copy({text: content, feedback: strings.receive.copyLinkMsg, event})
+        }
+        title={strings.receive.copyLinkBtn}
+        icon={Icon.Copy}
+        testID="receive:request-specific-amount:copy-link-button"
+      />
+    </Modal.Footer>
   )
 }

@@ -10,7 +10,7 @@ import {
 import {useIsKeyboardOpen} from '~/hooks/useIsKeyboardOpen'
 
 import {KeyboardAvoidingView} from '../KeyboardAvoidingView/KeyboardAvoidingView'
-import {useScrollViewContext} from '../ScrollView/context'
+import {useScrollViewContext} from '../ScrollView/context/ScrollViewContext'
 
 export const SafeArea = ({
   children,
