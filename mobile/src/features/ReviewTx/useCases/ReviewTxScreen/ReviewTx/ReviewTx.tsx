@@ -9,7 +9,7 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {ScrollView} from '~/ui/ScrollView/ScrollView'
-import {ScrollViewProvider} from '~/ui/ScrollView/context'
+import {ScrollViewProvider} from '~/ui/ScrollView/context/ScrollViewContext'
 import {isEmptyString} from '~/wallets/utils/string'
 
 import {MetadataTab} from '../ReviewTx/Metadata/MetadataTab'

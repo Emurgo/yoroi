@@ -53,7 +53,7 @@ export const AboutScreen = () => {
           style={[a.body_1_lg_regular, ta.text_gray_medium]}
           numberOfLines={1}
         >
-          {commit}
+          {commit?.slice(0, 9)}
         </Text>
       </View>
 

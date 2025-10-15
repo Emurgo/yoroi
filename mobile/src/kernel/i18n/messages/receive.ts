@@ -99,7 +99,7 @@ export const receiveMessages = defineMessages({
     defaultMessage: '!!!Single or multiple',
   },
   singleOrMultipleDetails: {
-    id: 'nft.detail.title',
+    id: 'components.receive.receivescreen.singleOrMultipleDetails',
     defaultMessage: '!!!Single or multiple details',
   },
   selectMultiple: {

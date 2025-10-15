@@ -21,7 +21,7 @@ import {Button} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/context/ModalContext'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {ScrollView} from '~/ui/ScrollView/ScrollView'
-import {useScrollView} from '~/ui/ScrollView/useScrollView'
+import {useScrollView} from '~/ui/ScrollView/hooks/useScrollView'
 import {Space} from '~/ui/Space/Space'
 
 import {linkToSupportOpenTicket} from '../../../common/constants'
