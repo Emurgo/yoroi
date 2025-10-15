@@ -4,6 +4,8 @@ import * as React from 'react'
 import {Linking, Text, View} from 'react-native'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
+import {Button, ButtonType} from '~/ui/Button/Button'
+import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {Space} from '~/ui/Space/Space'
 
 import {ColateralIlustration} from '../../../illustrations/ColateralIlustration'
@@ -13,24 +15,46 @@ export const InitialCollateralInfoModal = () => {
   const strings = useStrings()
 
   return (
-    <View style={[a.flex_1, a.align_center]}>
-      <ColateralIlustration />
+    <Modal.Content>
+      <View style={[a.align_center]}>
+        <ColateralIlustration />
+      </View>
 
-      <Text style={[a.text_center, a.body_1_lg_regular, ta.text_gray_medium]}>
+      <Text style={[a.body_1_lg_regular, ta.text_gray_medium]}>
         {strings.manageCollateral.collateralInfoModalText}
-
-        <Space.Width._2xs />
-
-        <Link />
       </Text>
 
-      <Space.Height.lg fill />
-    </View>
+      <Space.Height.md />
+
+      <Link />
+    </Modal.Content>
   )
 }
 
-const learnMoreLink =
-  'https://emurgohelpdesk.zendesk.com/hc/en-us/articles/11061970057743-About-the-collateral-mechanism-on-Cardano'
+export const InitialCollateralInfoModalFooter = ({
+  onConfirm,
+  onCancel,
+}: {
+  onConfirm: () => void
+  onCancel: () => void
+}) => {
+  const strings = useStrings()
+  return (
+    <Modal.Footer>
+      <Button
+        title={strings.manageCollateral.cancel}
+        onPress={onCancel}
+        type={ButtonType.Secondary}
+      />
+      <Button
+        title={strings.manageCollateral.initialCollateralInfoModalButton}
+        onPress={onConfirm}
+      />
+    </Modal.Footer>
+  )
+}
+
+const learnMoreLink = 'https://help.yoroi-wallet.com/en/'
 
 const Link = () => {
   const strings = useStrings()

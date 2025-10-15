@@ -3,22 +3,15 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import * as React from 'react'
-import {
-  Linking,
-  Platform,
-  TouchableOpacity,
-  View,
-  ViewProps,
-} from 'react-native'
+import {Linking, Platform, TouchableOpacity, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
-import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {SetupWalletRouteNavigation} from '~/kernel/navigation/types'
 import {BulletPointItem} from '~/ui/BulletPointItem'
 import {Button} from '~/ui/Button/Button'
-import {Space} from '~/ui/Space/Space'
+import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {StepperProgress} from '~/ui/StepperProgress/StepperProgress'
 import {Text} from '~/ui/Text/Text'
 
@@ -26,7 +19,7 @@ import {LedgerCheckIllustration} from '../../illustrations/LedgerCheckIllustrati
 
 export const CheckNanoXScreen = () => {
   const strings = useStrings()
-  const {palette: p, atoms: ta} = useTheme()
+  const {atoms: ta} = useTheme()
   const {track} = useMetrics()
 
   const navigation = useNavigation<SetupWalletRouteNavigation>()
@@ -59,61 +52,51 @@ export const CheckNanoXScreen = () => {
   ]
 
   return (
-    <SafeAreaView
-      edges={['left', 'right', 'bottom']}
-      style={[a.flex_1, ta.bg_color_max]}
-    >
+    <SafeArea>
       <StepperProgress
-        style={[{paddingHorizontal: 16}]}
-        currentStepTitle="Intro"
+        style={[a.px_lg]}
+        currentStepTitle={strings.setupWallet.hwIntroTitle}
         currentStep={1}
         totalSteps={3}
       />
 
-      <ScrollView style={[{paddingHorizontal: 16}]} bounces={false}>
-        <Space.Height.lg />
-
-        <Text
-          style={[
-            a.body_1_lg_regular,
-            {
-              color: p.text_gray_medium,
-            },
-          ]}
-        >
+      <ScrollView
+        style={[a.flex_1]}
+        contentContainerStyle={[a.px_lg, a.gap_lg]}
+        bounces={false}
+      >
+        <Text style={[a.body_1_lg_regular, ta.text_gray_medium]}>
           {strings.setupWallet.hwCheckIntroline}
         </Text>
 
-        <Space.Height.lg />
-
-        {(useUSB ? usbRequirements : bleRequirements).map((item) => (
-          <BulletPointItem
-            key={item}
-            style={[a.body_1_lg_regular, {color: p.text_gray_medium}]}
-            textRow={item}
-          />
-        ))}
-
-        <Space.Height.lg />
+        <View>
+          {(useUSB ? usbRequirements : bleRequirements).map((item) => (
+            <BulletPointItem
+              key={item}
+              style={[a.body_1_lg_regular, ta.text_gray_medium]}
+              textRow={item}
+            />
+          ))}
+        </View>
 
         <Illustration />
 
         <LedgerSupportLink />
       </ScrollView>
 
-      <Actions>
+      <SafeArea.Footer>
         <Button
           onPress={handleOnContinue}
           title={strings.setupWallet.continueButton}
           testID="continueButton"
         />
-      </Actions>
-    </SafeAreaView>
+      </SafeArea.Footer>
+    </SafeArea>
   )
 }
 
 const ledgerSupport =
-  'https://emurgohelpdesk.zendesk.com/hc/en-us/sections/4413677248399-Hardware-Wallet-Ledger-Trezor'
+  'https://help.yoroi-wallet.com/en/article/how-to-connect-a-ledger-hardware-wallet-to-yoroi-1ghfwpw/'
 
 const LedgerSupportLink = () => {
   const handleOnPress = () => Linking.openURL(ledgerSupport)
@@ -138,8 +121,4 @@ const Illustration = () => {
       <LedgerCheckIllustration />
     </View>
   )
-}
-
-const Actions = (props: ViewProps) => {
-  return <View {...props} style={a.p_lg} />
 }

@@ -36,7 +36,8 @@ import {Copiable} from '~/ui/Copiable/Copiable'
 import {Divider} from '~/ui/Divider/Divider'
 import {Icon} from '~/ui/Icon'
 import {InfoBanner} from '~/ui/InfoBanner/InfoBanner'
-import {useModal} from '~/ui/Modal/ModalContext'
+import {useModal} from '~/ui/Modal/context/ModalContext'
+import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {Space} from '~/ui/Space/Space'
 import {WarningBanner} from '~/ui/WarningBanner/WarningBanner'
 import {formatTokenWithText} from '~/wallets/utils/format'
@@ -60,7 +61,7 @@ export const OverviewTab = ({
   details?: {title: string; component: React.ReactNode}
   createdBy?: React.ReactNode
 }) => {
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
   const operations = useOperations(tx.certificates)
   const strings = useStrings()
   useShowOperationsNotice(operations)
@@ -79,7 +80,7 @@ export const OverviewTab = ({
   )
 
   return (
-    <View style={[a.flex_1, a.px_lg, {backgroundColor: p.bg_color_max}]}>
+    <View style={[a.flex_1, a.px_lg, ta.bg_color_max]}>
       <Space.Height.lg />
 
       {operationsComponentsDuplicated && (
@@ -134,7 +135,7 @@ const WalletInfoSection = ({
   tx: FormattedTx
   createdBy?: React.ReactNode
 }) => {
-  const {palette: p} = useTheme()
+  const {palette: p, atoms: ta} = useTheme()
   const strings = useStrings()
   const {wallet, meta} = useSelectedWallet()
   const {walletManager} = useWalletManager()
@@ -147,16 +148,18 @@ const WalletInfoSection = ({
     openModal({
       title: strings.txReview.walletBalance.title,
       content: (
-        <WalletBalance image={seedImage} plate={plate} name={meta.name} />
+        <Modal.Content>
+          <WalletBalance image={seedImage} plate={plate} name={meta.name} />
+        </Modal.Content>
       ),
-      height: windowHeight * 0.8,
+      height: windowHeight * 0.7,
     })
   }
 
   return (
     <>
       <View style={[a.flex_row, a.justify_between]}>
-        <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
+        <Text style={[a.body_2_md_regular, ta.text_gray_medium]}>
           {strings.txReview.overview.wallet}
         </Text>
 
@@ -201,18 +204,16 @@ const WalletInfoSection = ({
 }
 
 const FeeInfoItem = ({fee}: {fee: string}) => {
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
   const strings = useStrings()
 
   return (
     <View style={[a.flex_row, a.justify_between]}>
-      <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
+      <Text style={[a.body_2_md_regular, ta.text_gray_medium]}>
         {strings.txReview.fee}
       </Text>
 
-      <Text
-        style={[{color: p.gray_900}, a.body_2_md_regular]}
-      >{`-${fee}`}</Text>
+      <Text style={[ta.text_gray_max, a.body_2_md_regular]}>{`-${fee}`}</Text>
     </View>
   )
 }
@@ -341,16 +342,16 @@ const MyWalletTokens = ({
 }
 
 const MyWalletSectionLabel = () => {
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
   const strings = useStrings()
 
   return (
     <View style={[a.flex_row, a.align_center]}>
-      <Icon.Send size={30} color={p.el_primary_medium} />
+      <Icon.Send size={30} color={ta.el_primary_medium.color} />
 
       <Space.Width._2xs />
 
-      <Text style={[a.body_1_lg_medium, {color: p.text_gray_medium}]}>
+      <Text style={[a.body_1_lg_medium, ta.text_gray_medium]}>
         {strings.txReview.overview.sendLabel}
       </Text>
     </View>
@@ -365,7 +366,7 @@ const OneExternalPartySection = ({
   receiverCustomTitle?: React.ReactNode
 }) => {
   const address = output?.rewardAddress ?? output?.address ?? '-'
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
   const strings = useStrings()
 
   return (
@@ -373,7 +374,7 @@ const OneExternalPartySection = ({
       <Space.Height.sm />
 
       <View style={[a.flex_row, a.align_center, a.flex_row, a.justify_between]}>
-        <Text style={[a.body_2_md_medium, {color: p.text_gray_medium}]}>
+        <Text style={[a.body_2_md_medium, ta.text_gray_medium]}>
           {strings.txReview.overview.receiveToLabel}:
         </Text>
 
@@ -383,7 +384,8 @@ const OneExternalPartySection = ({
               style={[
                 a.flex_1,
                 a.body_2_md_regular,
-                {color: p.text_gray_medium, maxWidth: 260},
+                ta.text_gray_medium,
+                {maxWidth: 260},
               ]}
               numberOfLines={1}
               ellipsizeMode="middle"
@@ -395,7 +397,7 @@ const OneExternalPartySection = ({
               <>
                 <Space.Width.xs />
 
-                <Icon.DigitalAsset size={24} color={p.el_gray_medium} />
+                <Icon.DigitalAsset size={24} color={ta.el_gray_medium.color} />
               </>
             )}
           </Copiable>
@@ -619,14 +621,14 @@ export type ReviewDetailsProps = {
 
 const Details = ({details}: {details?: ReviewDetailsProps}) => {
   const {openModal} = useModal()
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
 
   if (details == null) return null
 
   const handleOnPress = () => {
     openModal({
       title: details.title ?? '',
-      content: <View style={[a.flex_1]}>{details.component}</View>,
+      content: <Modal.Content>{details.component}</Modal.Content>,
       height: details.height ?? 400,
     })
   }
@@ -637,7 +639,7 @@ const Details = ({details}: {details?: ReviewDetailsProps}) => {
 
       <View style={[a.flex_row, a.justify_end]}>
         <TouchableOpacity onPress={handleOnPress} activeOpacity={0.5}>
-          <Text style={[a.body_2_md_medium, {color: p.text_primary_medium}]}>
+          <Text style={[a.body_2_md_medium, ta.text_primary_medium]}>
             {details?.title}
           </Text>
         </TouchableOpacity>
@@ -653,12 +655,12 @@ export const CreatedByInfoItem = ({
   logo?: string
   url: string
 }) => {
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
   const strings = useStrings()
 
   return (
     <View style={[a.flex_row, a.justify_between]}>
-      <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
+      <Text style={[a.body_2_md_regular, ta.text_gray_medium]}>
         {strings.txReview.createdBy}
       </Text>
 
@@ -670,7 +672,7 @@ export const CreatedByInfoItem = ({
         <Space.Width.sm />
 
         <TouchableOpacity onPress={() => Linking.openURL(url)}>
-          <Text style={[{color: p.text_primary_medium}, a.body_2_md_medium]}>
+          <Text style={[ta.text_primary_medium, a.body_2_md_medium]}>
             {url.replace(/^https?:\/\//, '').replace(/\/+$/, '')}
           </Text>
         </TouchableOpacity>
@@ -679,50 +681,53 @@ export const CreatedByInfoItem = ({
   )
 }
 
-export const OperationsNotice = ({onClose}: {onClose?: () => void}) => {
-  const {palette: p} = useTheme()
+export const OperationsNoticeModalContent = () => {
+  const {atoms: ta} = useTheme()
   const strings = useStrings()
-  const {setOperationsNoticeShown} = useSetOperationsNoticeShown()
-
-  const handleOnpress = () => {
-    setOperationsNoticeShown()
-    onClose?.()
-  }
 
   return (
-    <View style={[a.flex_1, a.align_center]}>
-      <Space.Height.lg />
+    <Modal.Content>
+      <View style={[a.align_center]}>
+        <Space.Height.lg />
 
-      <OperationsNoticeIcon />
+        <OperationsNoticeIcon />
+      </View>
 
       <Space.Height._2xl />
 
-      <Text
-        style={[
-          a.text_center,
-          a.body_1_lg_regular,
-          {color: p.text_gray_medium},
-        ]}
-      >
+      <Text style={[a.text_center, a.body_1_lg_regular, ta.text_gray_medium]}>
         {strings.txReview.overview.operationsNoticeText}
       </Text>
 
       <Space.Height._2xs fill />
+    </Modal.Content>
+  )
+}
 
-      <View style={{alignSelf: 'stretch'}}>
-        <Button
-          title={strings.txReview.overview.operationsNoticeButton}
-          onPress={handleOnpress}
-        />
-      </View>
-    </View>
+const OperationsNoticeModalFooter = () => {
+  const strings = useStrings()
+  const {setOperationsNoticeShown} = useSetOperationsNoticeShown()
+  const {closeModal} = useModal()
+
+  const handleOnpress = () => {
+    setOperationsNoticeShown()
+    closeModal()
+  }
+
+  return (
+    <Modal.Footer>
+      <Button
+        title={strings.txReview.overview.operationsNoticeButton}
+        onPress={handleOnpress}
+      />
+    </Modal.Footer>
   )
 }
 
 const operationsNoticeShownKey = 'operations-notice-shown-key'
 const useShowOperationsNotice = (operations: Operations) => {
   const storage = useAsyncStorage()
-  const {openModal, closeModal} = useModal()
+  const {openModal} = useModal()
   const strings = useStrings()
   const screenHeight = useWindowDimensions().height
 
@@ -746,7 +751,8 @@ const useShowOperationsNotice = (operations: Operations) => {
         () =>
           openModal({
             title: strings.txReview.overview.operationsNoticeTitle,
-            content: <OperationsNotice onClose={closeModal} />,
+            content: <OperationsNoticeModalContent />,
+            footer: <OperationsNoticeModalFooter />,
             height: Math.min(screenHeight * 0.9, 650),
           }),
         500,

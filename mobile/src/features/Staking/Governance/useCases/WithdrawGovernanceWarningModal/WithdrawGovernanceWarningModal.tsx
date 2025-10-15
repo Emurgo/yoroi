@@ -1,24 +1,20 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
-import {Text, View} from 'react-native'
+import {Text} from 'react-native'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
+import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Button} from '~/ui/Button/Button'
-import {Space} from '~/ui/Space/Space'
+import {useModal} from '~/ui/Modal/context/ModalContext'
+import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 
-type Props = {
-  onParticipatePress: () => void
-}
-
-export const WithdrawGovernanceWarningModal = ({onParticipatePress}: Props) => {
+const WithdrawGovernanceWarningModalContent = () => {
   const strings = useStrings()
   const {atoms: ta} = useTheme()
 
   return (
-    <View style={[a.flex_1]}>
-      <Space.Height.lg />
-
+    <Modal.Content>
       <Text
         style={[
           a.body_1_lg_regular,
@@ -29,15 +25,30 @@ export const WithdrawGovernanceWarningModal = ({onParticipatePress}: Props) => {
       >
         {strings.staking.withdrawWarningDescription}
       </Text>
+    </Modal.Content>
+  )
+}
 
-      <Space.Height.sm fill />
+const WithdrawGovernanceWarningModalFooter = () => {
+  const walletNavigateTo = useWalletNavigation()
+  const strings = useStrings()
+  const {closeModal} = useModal()
+  const handleOnPress = () => {
+    walletNavigateTo.navigateToGovernanceCentre()
+    closeModal()
+  }
 
+  return (
+    <Modal.Footer>
       <Button
         title={strings.staking.withdrawWarningButton}
-        onPress={onParticipatePress}
+        onPress={handleOnPress}
       />
-
-      <Space.Height.lg />
-    </View>
+    </Modal.Footer>
   )
+}
+
+export const WithdrawGovernanceWarningModal = {
+  Content: WithdrawGovernanceWarningModalContent,
+  Footer: WithdrawGovernanceWarningModalFooter,
 }

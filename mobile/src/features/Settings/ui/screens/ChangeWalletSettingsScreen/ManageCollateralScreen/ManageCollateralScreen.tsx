@@ -7,13 +7,13 @@ import * as React from 'react'
 import {
   Alert,
   LayoutAnimation,
+  ScrollView,
   TouchableOpacity,
   TouchableOpacityProps,
   View,
   ViewProps,
   useWindowDimensions,
 } from 'react-native'
-import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useBalances} from '~/features/Portfolio/common/hooks/useBalances'
 import {useReviewTx} from '~/features/ReviewTx/common/ReviewTxProvider'
@@ -27,7 +27,8 @@ import {Copiable} from '~/ui/Copiable/Copiable'
 import {ErrorPanel} from '~/ui/ErrorPanel/ErrorPanel'
 import {Icon} from '~/ui/Icon'
 import {Info} from '~/ui/Icon/Info'
-import {useModal} from '~/ui/Modal/ModalContext'
+import {useModal} from '~/ui/Modal/context/ModalContext'
+import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
 import {TokenAmountItem} from '~/ui/TokenAmountItem/TokenAmountItem'
@@ -39,7 +40,10 @@ import {YoroiEntry, YoroiSignedTx} from '~/wallets/types/yoroi'
 import {Amounts, Quantities, asQuantity} from '~/wallets/utils/utils'
 
 import {CollateralInfoModal} from './CollateralInfoModal'
-import {InitialCollateralInfoModal} from './InitialCollateralInfoModal'
+import {
+  InitialCollateralInfoModal,
+  InitialCollateralInfoModalFooter,
+} from './InitialCollateralInfoModal'
 import {createCollateralEntry} from './helpers'
 
 export const ManageCollateralScreen = () => {
@@ -102,13 +106,12 @@ export const ManageCollateralScreen = () => {
   const isLoading = isLoadingTx || isLoadingCollateral
 
   const handleGenerateCollateral = () => {
-    closeModal()
-
     const utxos = utxosMaker(wallet.utxos)
     const possibleCollateralId = utxos.drawnCollateral()
 
     if (possibleCollateralId !== undefined) {
       handleSetCollateralId(possibleCollateralId)
+      closeModal()
       return
     }
 
@@ -138,20 +141,21 @@ export const ManageCollateralScreen = () => {
       return
     }
 
+    closeModal()
     createCollateralTransaction()
   }
 
-  const handleCollateralInfoModal = () => {
+  const handleInitialCollateralInfoModal = () => {
     openModal({
       title: strings.manageCollateral.initialCollateralInfoModalTitle,
       content: <InitialCollateralInfoModal />,
       footer: (
-        <ModalsButtons
+        <InitialCollateralInfoModalFooter
           onConfirm={handleGenerateCollateral}
           onCancel={closeModal}
         />
       ),
-      height: Math.min(screenHeight * 0.9, 650),
+      height: Math.min(screenHeight * 0.7, 650),
     })
   }
 
@@ -159,100 +163,75 @@ export const ManageCollateralScreen = () => {
   const shouldShowBackButton = !shouldShowPrimaryButton && !!params?.backButton
 
   return (
-    <SafeAreaView
-      edges={['left', 'right', 'bottom']}
-      style={[ta.bg_color_max, a.flex_1, a.p_lg]}
-    >
-      <Text style={[a.self_center, ta.text_gray_max]}>
-        {strings.manageCollateral.lockedAsCollateral}
-      </Text>
+    <SafeArea>
+      <ScrollView style={[ta.bg_color_max, a.flex_1, a.p_lg]} bounces={false}>
+        <Text style={[a.self_center, ta.text_gray_max]}>
+          {strings.manageCollateral.lockedAsCollateral}
+        </Text>
 
-      <Space.Height.sm />
+        <Space.Height.sm />
 
-      <ActionableAmount
-        amount={amount}
-        onRemove={handleRemoveCollateral}
-        collateralId={collateralId}
-        disabled={isLoading}
-      />
-
-      {hasCollateral && (
-        <>
-          <Space.Height.lg />
-
-          <Row>
-            <Copiable text={collateralId}>
-              <Text
-                ellipsizeMode="middle"
-                numberOfLines={1}
-                monospace
-                small
-                style={{flex: 1}}
-                secondary
-              >
-                {collateralId}
-              </Text>
-            </Copiable>
-          </Row>
-
-          <Space.Height.lg />
-
-          <Text>{strings.manageCollateral.removeCollateral}</Text>
-        </>
-      )}
-
-      <Space.Height.lg fill />
-
-      {didSpend && (
-        <>
-          <ErrorPanel>
-            <Text>{strings.manageCollateral.collateralSpent}</Text>
-          </ErrorPanel>
-          <Space.Height.lg />
-        </>
-      )}
-
-      {shouldShowPrimaryButton && (
-        <Button
-          title={strings.manageCollateral.generateCollateral}
-          onPress={handleCollateralInfoModal}
+        <ActionableAmount
+          amount={amount}
+          onRemove={handleRemoveCollateral}
+          collateralId={collateralId}
           disabled={isLoading}
         />
-      )}
 
-      {shouldShowBackButton && params?.backButton && (
-        <Button
-          title={params.backButton.content}
-          onPress={params.backButton.onPress}
-          type={ButtonType.Secondary}
-        />
-      )}
-    </SafeAreaView>
-  )
-}
+        {hasCollateral && (
+          <>
+            <Space.Height.lg />
 
-const ModalsButtons = ({
-  onConfirm,
-  onCancel,
-}: {
-  onConfirm: () => void
-  onCancel: () => void
-}) => {
-  const strings = useStrings()
-  return (
-    <View style={[a.flex_row, a.gap_md]}>
-      <Button
-        style={[a.flex_1]}
-        title={strings.manageCollateral.cancel}
-        onPress={onCancel}
-        type={ButtonType.Secondary}
-      />
-      <Button
-        style={[a.flex_1]}
-        title={strings.manageCollateral.initialCollateralInfoModalButton}
-        onPress={onConfirm}
-      />
-    </View>
+            <Row>
+              <Copiable text={collateralId}>
+                <Text
+                  ellipsizeMode="middle"
+                  numberOfLines={1}
+                  monospace
+                  small
+                  style={{flex: 1}}
+                  secondary
+                >
+                  {collateralId}
+                </Text>
+              </Copiable>
+            </Row>
+
+            <Space.Height.lg />
+
+            <Text>{strings.manageCollateral.removeCollateral}</Text>
+          </>
+        )}
+
+        <Space.Height.lg fill />
+
+        {didSpend && (
+          <>
+            <ErrorPanel>
+              <Text>{strings.manageCollateral.collateralSpent}</Text>
+            </ErrorPanel>
+            <Space.Height.lg />
+          </>
+        )}
+      </ScrollView>
+      <SafeArea.Footer>
+        {shouldShowPrimaryButton && (
+          <Button
+            title={strings.manageCollateral.generateCollateral}
+            onPress={handleInitialCollateralInfoModal}
+            disabled={isLoading}
+          />
+        )}
+
+        {shouldShowBackButton && params?.backButton && (
+          <Button
+            title={params.backButton.content}
+            onPress={params.backButton.onPress}
+            type={ButtonType.Secondary}
+          />
+        )}
+      </SafeArea.Footer>
+    </SafeArea>
   )
 }
 

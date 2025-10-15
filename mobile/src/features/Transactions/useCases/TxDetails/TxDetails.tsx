@@ -11,11 +11,8 @@ import {
   Text,
   TouchableOpacity,
   View,
-  ViewProps,
   useWindowDimensions,
 } from 'react-native'
-import {ScrollView} from 'react-native-gesture-handler'
-import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {usePrivacyMode} from '~/features/Settings/hooks/usePrivacyMode'
 import {useTransactionInfos} from '~/features/Transactions/hooks/useTransactionInfos'
@@ -25,9 +22,11 @@ import {Banner} from '~/ui/Banner/Banner'
 import {Boundary} from '~/ui/Boundary/Boundary'
 import {Button} from '~/ui/Button/Button'
 import {Copiable} from '~/ui/Copiable/Copiable'
-import {FadeIn} from '~/ui/FadeIn'
 import {Icon} from '~/ui/Icon'
-import {useModal} from '~/ui/Modal/ModalContext'
+import {useModal} from '~/ui/Modal/context/ModalContext'
+import {SafeArea} from '~/ui/SafeArea/SafeArea'
+import {ScrollView} from '~/ui/ScrollView/ScrollView'
+import {useScrollView} from '~/ui/ScrollView/hooks/useScrollView'
 import {MultiToken} from '~/wallets/cardano/MultiToken'
 import {CardanoTypes} from '~/wallets/cardano/types'
 import {TransactionInfo} from '~/wallets/types/other'
@@ -40,8 +39,9 @@ import {AssetList} from './AssetList'
 
 export const TxDetails = () => {
   const {openModal} = useModal()
+  const {scrollViewRef} = useScrollView()
   const screenHeight = useWindowDimensions().height
-  const modalHeight = Math.min(screenHeight * 0.8, 650) // to include derivation path in case it is possible
+  const modalHeight = Math.min(screenHeight * 0.8, 650)
   const strings = useStrings()
   const intl = useIntl()
   const {atoms: ta, palette: p} = useTheme()
@@ -97,135 +97,126 @@ export const TxDetails = () => {
     })
 
   return (
-    <SafeAreaView
-      edges={['bottom', 'left', 'right']}
-      style={[a.flex_1, ta.bg_color_max]}
-    >
-      <FadeIn style={a.flex_1}>
-        <ScrollView contentContainerStyle={a.px_lg}>
-          <Banner label={strings.transactions.direction(transaction.direction)}>
-            <Boundary>
-              <AdaAmount amount={amount} />
+    <SafeArea>
+      <ScrollView contentContainerStyle={a.px_lg} ref={scrollViewRef}>
+        <Banner label={strings.transactions.direction(transaction.direction)}>
+          <Boundary>
+            <AdaAmount amount={amount} />
 
-              {txFee && <Fee amount={txFee} />}
-            </Boundary>
-          </Banner>
+            {txFee && <Fee amount={txFee} />}
+          </Boundary>
+        </Banner>
 
-          <Label>{strings.transactions.memo}</Label>
+        <Label>{strings.transactions.memo}</Label>
 
-          <Text style={ta.text_gray_medium}>{memo}</Text>
+        <Text style={ta.text_gray_medium}>{memo}</Text>
 
-          <View style={[{borderTopWidth: 1, borderColor: p.gray_200}]}>
-            <Text style={[a.pt_lg, a.self_center, ta.text_gray_medium]}>
-              {submittedAt}
-            </Text>
+        <View style={[{borderTopWidth: 1, borderColor: p.gray_200}]}>
+          <Text style={[a.pt_lg, a.self_center, ta.text_gray_medium]}>
+            {submittedAt}
+          </Text>
 
-            <Label>{strings.transactions.fromAddresses}</Label>
+          <Label>{strings.transactions.fromAddresses}</Label>
+        </View>
+
+        {fromFiltered.map((item) => (
+          <View key={item.id}>
+            <AddressEntry {...item} showModalForAddress={openAddressModal} />
+
+            {item.assets.length > 0 && (
+              <TouchableOpacity
+                style={[
+                  a.pt_md,
+                  a.pb_xl,
+                  a.flex_row,
+                  a.justify_between,
+                  a.align_center,
+                ]}
+                activeOpacity={0.5}
+                onPress={() => toggleExpandIn(item.id)}
+              >
+                <Text
+                  style={[ta.text_gray_max, a.body_2_md_regular]}
+                >{` -${item.assets.length} ${strings.transactions.assetsLabel} `}</Text>
+
+                <Icon.Chevron
+                  direction={expandedInItemId === item.id ? 'up' : 'down'}
+                  color={p.gray_500}
+                  size={23}
+                />
+              </TouchableOpacity>
+            )}
+
+            <ExpandableAssetList
+              expanded={expandedInItemId === item.id}
+              assets={item.assets}
+            />
           </View>
+        ))}
 
-          {fromFiltered.map((item) => (
-            <View key={item.id}>
-              <AddressEntry {...item} showModalForAddress={openAddressModal} />
+        <View style={[{borderTopWidth: 1, borderColor: p.gray_200}]}>
+          <Label>{strings.transactions.toAddresses}</Label>
+        </View>
 
-              {item.assets.length > 0 && (
-                <TouchableOpacity
-                  style={[
-                    a.pt_md,
-                    a.pb_xl,
-                    a.flex_row,
-                    a.justify_between,
-                    a.align_center,
-                  ]}
-                  activeOpacity={0.5}
-                  onPress={() => toggleExpandIn(item.id)}
-                >
-                  <Text
-                    style={[{color: p.gray_900}, a.body_2_md_regular]}
-                  >{` -${item.assets.length} ${strings.transactions.assetsLabel} `}</Text>
+        {toFiltered.map((item) => (
+          <View key={item.id}>
+            <AddressEntry {...item} showModalForAddress={openAddressModal} />
 
-                  <Icon.Chevron
-                    direction={expandedInItemId === item.id ? 'up' : 'down'}
-                    color={p.gray_500}
-                    size={23}
-                  />
-                </TouchableOpacity>
-              )}
+            {item.assets.length > 0 && (
+              <TouchableOpacity
+                style={[
+                  a.pt_md,
+                  a.pb_xl,
+                  a.flex_row,
+                  a.justify_between,
+                  a.align_center,
+                ]}
+                activeOpacity={0.5}
+                onPress={() => toggleExpandOut(item.id)}
+              >
+                <Text
+                  style={[ta.text_gray_max, a.body_2_md_regular]}
+                >{` +${item.assets.length} ${strings.transactions.assetsLabel} `}</Text>
 
-              <ExpandableAssetList
-                expanded={expandedInItemId === item.id}
-                assets={item.assets}
-              />
-            </View>
-          ))}
+                <Icon.Chevron
+                  direction={expandedOutItemId === item.id ? 'up' : 'down'}
+                  color={p.gray_500}
+                  size={23}
+                />
+              </TouchableOpacity>
+            )}
 
-          <View style={[{borderTopWidth: 1, borderColor: p.gray_200}]}>
-            <Label>{strings.transactions.toAddresses}</Label>
+            <ExpandableAssetList
+              expanded={expandedOutItemId === item.id}
+              assets={item.assets}
+            />
           </View>
+        ))}
 
-          {toFiltered.map((item) => (
-            <View key={item.id}>
-              <AddressEntry {...item} showModalForAddress={openAddressModal} />
+        {cntOmittedTo > 0 && (
+          <Text style={ta.text_gray_medium}>
+            {strings.transactions.omittedCount(cntOmittedTo)}
+          </Text>
+        )}
 
-              {item.assets.length > 0 && (
-                <TouchableOpacity
-                  style={[
-                    a.pt_md,
-                    a.pb_xl,
-                    a.flex_row,
-                    a.justify_between,
-                    a.align_center,
-                  ]}
-                  activeOpacity={0.5}
-                  onPress={() => toggleExpandOut(item.id)}
-                >
-                  <Text
-                    style={[{color: p.gray_900}, a.body_2_md_regular]}
-                  >{` +${item.assets.length} ${strings.transactions.assetsLabel} `}</Text>
+        <View style={[{borderTopWidth: 1, borderColor: p.gray_200}]}>
+          <Label>{strings.transactions.txAssuranceLevel}</Label>
+        </View>
 
-                  <Icon.Chevron
-                    direction={expandedOutItemId === item.id ? 'up' : 'down'}
-                    color={p.gray_500}
-                    size={23}
-                  />
-                </TouchableOpacity>
-              )}
+        <Label>{strings.transactions.transactionId}</Label>
 
-              <ExpandableAssetList
-                expanded={expandedOutItemId === item.id}
-                assets={item.assets}
-              />
-            </View>
-          ))}
+        <Copiable title={transaction.id} text={transaction.id} />
+      </ScrollView>
 
-          {cntOmittedTo > 0 && (
-            <Text style={ta.text_gray_medium}>
-              {strings.transactions.omittedCount(cntOmittedTo)}
-            </Text>
-          )}
-
-          <View style={[{borderTopWidth: 1, borderColor: p.gray_200}]}>
-            <Label>{strings.transactions.txAssuranceLevel}</Label>
-          </View>
-
-          {/* <Boundary loading={{size: 'small'}}>
-            <Confirmations transaction={transaction} />
-          </Boundary> */}
-
-          <Label>{strings.transactions.transactionId}</Label>
-
-          <Copiable title={transaction.id} text={transaction.id} />
-        </ScrollView>
-
-        <Actions style={[{borderTopWidth: 1, borderColor: p.gray_200}]}>
-          <Button
-            onPress={() =>
-              Linking.openURL(explorers.cardanoscan.tx(transaction.id))
-            }
-            title={strings.transactions.openInExplorer}
-          />
-        </Actions>
-      </FadeIn>
-    </SafeAreaView>
+      <SafeArea.Footer>
+        <Button
+          onPress={() =>
+            Linking.openURL(explorers.cardanoscan.tx(transaction.id))
+          }
+          title={strings.transactions.openInExplorer}
+        />
+      </SafeArea.Footer>
+    </SafeArea>
   )
 }
 
@@ -325,10 +316,6 @@ const AddressEntry = ({
     </>
   )
 }
-
-const Actions = ({style, ...props}: ViewProps) => (
-  <View style={[{padding: 16}, style]} {...props} />
-)
 
 const getShownAddresses = (
   strings: any,

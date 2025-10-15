@@ -1,12 +1,10 @@
-import {atoms as a, useTheme} from '@yoroi/theme'
-
 import * as React from 'react'
 import {useIntl} from 'react-intl'
-import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {showErrorDialog} from '~/kernel/dialogs'
 import {errorMessages} from '~/kernel/i18n/messages/global'
 import {useStrings} from '~/kernel/i18n/useStrings'
+import {SafeArea} from '~/ui/SafeArea/SafeArea'
 
 import {pinLength} from '../../common/constants'
 import {useAuth} from '../../context/AuthProvider'
@@ -15,7 +13,6 @@ import {PinInput, PinInputRef} from '../shared/PinInput/PinInput'
 export const LoginWithPinScreen = () => {
   const strings = useStrings()
   const intl = useIntl()
-  const {atoms: ta} = useTheme()
   const pinInputRef = React.useRef<null | PinInputRef>(null)
   const {loginWithPin} = useAuth()
 
@@ -28,13 +25,13 @@ export const LoginWithPinScreen = () => {
   }
 
   return (
-    <SafeAreaView style={[a.flex_1, ta.bg_color_max]}>
+    <SafeArea>
       <PinInput
         ref={pinInputRef}
         pinMaxLength={pinLength}
         title={strings.auth.titleLoginWithPin}
         onDone={handlePinSubmit}
       />
-    </SafeAreaView>
+    </SafeArea>
   )
 }

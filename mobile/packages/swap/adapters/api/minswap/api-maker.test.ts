@@ -103,8 +103,8 @@ describe('minswapApiMaker', () => {
     expect(isRight(result)).toBe(true)
     if (isRight(result)) {
       expect(result.value.data).toHaveLength(1)
-      expect(result.value.data[0].id).toBe('.')
-      expect(result.value.data[0].ticker).toBe('ADA')
+      expect(result.value.data[0]?.id).toBe('.')
+      expect(result.value.data[0]?.ticker).toBe('ADA')
     }
   })
 
@@ -158,9 +158,9 @@ describe('minswapApiMaker', () => {
     expect(isRight(result)).toBe(true)
     if (isRight(result)) {
       expect(result.value.data).toHaveLength(1)
-      expect(result.value.data[0].txHash).toBe('txhash')
-      expect(result.value.data[0].outputIndex).toBe(0)
-      expect(result.value.data[0].aggregator).toBe('minswap')
+      expect(result.value.data[0]?.txHash).toBe('txhash')
+      expect(result.value.data[0]?.outputIndex).toBe(0)
+      expect(result.value.data[0]?.aggregator).toBe('minswap')
     }
   })
 

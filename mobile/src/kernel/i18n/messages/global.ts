@@ -805,9 +805,9 @@ export default freeze(
       id: 'global.singleAddress',
       defaultMessage: '!!!Single Address',
     },
-    yoroiZendesk: {
-      id: 'global.yoroiZendesk',
-      defaultMessage: '!!!Yoroi Zendesk',
+    yoroiFAQ: {
+      id: 'global.yoroiFAQ',
+      defaultMessage: '!!!Yoroi FAQ',
     },
     collateral: {
       id: 'global.collateral',

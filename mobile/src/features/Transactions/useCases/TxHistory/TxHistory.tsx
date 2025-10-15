@@ -12,6 +12,7 @@ import {useGovernanceBanner} from '~/features/Staking/Governance/useCases/useGov
 import {usePoolTransitionModal} from '~/features/Staking/Staking/PoolTransition/usePoolTransitionModal'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useSync} from '~/features/WalletManager/hooks/useSync'
+import {features} from '~/kernel/features'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Space, SpaceHeight} from '~/ui/Space/Space'
@@ -34,7 +35,7 @@ export const TxHistory = () => {
   const {atoms: ta, palette: p, isDark} = useTheme()
 
   const {track} = useMetrics()
-  useGetImportantAlertsModal({enabled: true})
+  useGetImportantAlertsModal({enabled: features.pushNotifications})
 
   useFocusEffect(
     React.useCallback(() => {

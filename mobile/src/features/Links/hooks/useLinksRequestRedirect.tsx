@@ -2,10 +2,10 @@ import * as React from 'react'
 import {InteractionManager} from 'react-native'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useModal} from '~/ui/Modal/ModalContext'
+import {useModal} from '~/ui/Modal/context/ModalContext'
 import {isEmptyString} from '~/wallets/utils/string'
 
-import {AskToRedirectScreen} from '../ui/screens/AskToRedirect/AskToRedirectScreen'
+import {AskToRedirectModal} from '../ui/modals/AskToRedirectModal'
 
 const heightBreakpoint = 367
 export const useLinksRequestRedirect = (redirectTo?: string) => {
@@ -16,8 +16,9 @@ export const useLinksRequestRedirect = (redirectTo?: string) => {
     (link: string) => {
       openModal({
         title: strings.links.askToRedirectTitle,
-        content: <AskToRedirectScreen link={link} />,
+        content: <AskToRedirectModal.Content />,
         height: heightBreakpoint,
+        footer: <AskToRedirectModal.Footer link={link} />,
       })
     },
     [openModal, strings.links.askToRedirectTitle],

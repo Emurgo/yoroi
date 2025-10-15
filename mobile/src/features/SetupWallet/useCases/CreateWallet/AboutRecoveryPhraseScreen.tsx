@@ -3,16 +3,16 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 import {Linking, ScrollView, Text, View} from 'react-native'
-import {SafeAreaView} from 'react-native-safe-area-context'
 import {ViewProps} from 'react-native-svg/lib/typescript/fabric/utils'
 
-import {YoroiZendeskLink} from '~/features/SetupWallet/common/constants'
+import {YoroiHelpLink} from '~/features/SetupWallet/common/constants'
 import {useBold} from '~/hooks/useBold'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Button} from '~/ui/Button/Button'
 import {CardAboutPhrase} from '~/ui/CardAboutPhrase/CardAboutPhrase'
 import {LearnMoreButton} from '~/ui/LearnMoreButton/LearnMoreButton'
+import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
 import {StepperProgress} from '~/ui/StepperProgress/StepperProgress'
 
@@ -21,7 +21,7 @@ export const AboutRecoveryPhraseScreen = () => {
   const strings = useStrings()
   const navigation = useNavigation<any>()
   const {track} = useMetrics()
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
 
   useFocusEffect(
     React.useCallback(() => {
@@ -31,28 +31,21 @@ export const AboutRecoveryPhraseScreen = () => {
 
   const handleOnLearMoreButtonPress = () => {
     track.createWalletTermsPageViewed()
-    Linking.openURL(YoroiZendeskLink)
+    Linking.openURL(YoroiHelpLink)
   }
 
   return (
-    <SafeAreaView
-      edges={['left', 'right', 'bottom']}
-      style={[a.flex_1, a.pb_lg, {backgroundColor: p.bg_color_max}]}
-    >
-      <ScrollView bounces={false} contentContainerStyle={[a.px_lg]}>
+    <SafeArea>
+      <ScrollView bounces={false} contentContainerStyle={[a.px_lg, a.gap_lg]}>
         <StepperProgress
           currentStep={1}
           currentStepTitle={strings.setupWallet.stepAboutRecoveryPhrase}
           totalSteps={4}
         />
 
-        <Space.Height.lg />
-
-        <Text style={[{color: p.text_gray_medium}, a.body_1_lg_regular]}>
+        <Text style={[ta.text_gray_medium, a.body_1_lg_regular]}>
           {strings.setupWallet.aboutRecoveryPhraseTitle(bold)}
         </Text>
-
-        <Space.Height.lg />
 
         <CardAboutPhrase
           showBackgroundColor
@@ -80,7 +73,7 @@ export const AboutRecoveryPhraseScreen = () => {
           testID="setup-step1-next-button"
         />
       </Actions>
-    </SafeAreaView>
+    </SafeArea>
   )
 }
 

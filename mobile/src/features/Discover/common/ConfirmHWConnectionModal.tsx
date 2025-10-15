@@ -11,7 +11,8 @@ import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWalle
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {LedgerConnect} from '~/ui/LedgerConnect/LedgerConnect'
 import {LedgerTransportSwitch} from '~/ui/LedgerTransportSwitch/LedgerTransportSwitch'
-import {useModal} from '~/ui/Modal/ModalContext'
+import {useModal} from '~/ui/Modal/context/ModalContext'
+import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {ModalError} from '~/ui/ModalError/ModalError'
 import {Text} from '~/ui/Text/Text'
 import {withBLE, withUSB} from '~/wallets/hw/hwWallet'
@@ -37,17 +38,19 @@ export const useConfirmHWConnectionModal = () => {
       openModal({
         title: strings.swap.signTransaction,
         content: (
-          <ErrorBoundary
-            fallbackRender={({error, resetErrorBoundary}) => (
-              <ModalError
-                error={error}
-                resetErrorBoundary={resetErrorBoundary}
-                onCancel={onCancel}
-              />
-            )}
-          >
-            <ConfirmHWConnectionModal onConfirm={onConfirm} />
-          </ErrorBoundary>
+          <Modal.Content>
+            <ErrorBoundary
+              fallbackRender={({error, resetErrorBoundary}) => (
+                <ModalError
+                  error={error}
+                  resetErrorBoundary={resetErrorBoundary}
+                  onCancel={onCancel}
+                />
+              )}
+            >
+              <ConfirmHWConnectionModal onConfirm={onConfirm} />
+            </ErrorBoundary>
+          </Modal.Content>
         ),
         height: 350,
         onClose,

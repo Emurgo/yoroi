@@ -5,7 +5,6 @@ import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {BlurView} from 'expo-blur'
 import * as React from 'react'
 import {Platform, Text, TouchableOpacity, View} from 'react-native'
-import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useBold} from '~/hooks/useBold'
 import {useStrings} from '~/kernel/i18n/useStrings'
@@ -13,7 +12,9 @@ import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Button} from '~/ui/Button/Button'
 import {CardAboutPhrase} from '~/ui/CardAboutPhrase/CardAboutPhrase'
 import {Info as InfoIcon} from '~/ui/InfoIcon/InfoIcon'
-import {useModal} from '~/ui/Modal/ModalContext'
+import {useModal} from '~/ui/Modal/context/ModalContext'
+import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
+import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
 import {StepperProgress} from '~/ui/StepperProgress/StepperProgress'
 import {generateAdaMnemonic} from '~/wallets/cardano/mnemonic/mnemonic'
@@ -47,7 +48,7 @@ export const RecoveryPhraseScreen = () => {
     openModal({
       title: strings.setupWallet.recoveryPhraseModalTitle,
       content: (
-        <View style={[a.flex_1, a.px_lg]}>
+        <Modal.Content>
           <CardAboutPhrase
             title={strings.setupWallet.recoveryPhraseCardTitle}
             linesOfText={[
@@ -58,12 +59,10 @@ export const RecoveryPhraseScreen = () => {
               strings.setupWallet.recoveryPhraseCardFifthItem,
             ]}
           />
-
-          <Space.Height.lg />
-        </View>
+        </Modal.Content>
       ),
       footer: (
-        <View style={[a.px_lg, a.py_lg]}>
+        <Modal.Footer>
           <Button
             title={strings.setupWallet.continueButton}
             onPress={() => {
@@ -72,7 +71,7 @@ export const RecoveryPhraseScreen = () => {
             }}
             testID="setup-step2-continue-button"
           />
-        </View>
+        </Modal.Footer>
       ),
       height: 552,
     })
@@ -84,10 +83,7 @@ export const RecoveryPhraseScreen = () => {
   }, [showCreateWalletInfoModal])
 
   return (
-    <SafeAreaView
-      edges={['left', 'right', 'bottom']}
-      style={[a.flex_1, a.px_lg, {backgroundColor: p.bg_color_max}]}
-    >
+    <SafeArea style={[a.px_lg]}>
       <View style={[a.gap_lg]}>
         <StepperProgress
           currentStep={2}
@@ -180,9 +176,7 @@ export const RecoveryPhraseScreen = () => {
         }}
         testID="setup-step2-next-button"
       />
-
-      <Space.Height.lg />
-    </SafeAreaView>
+    </SafeArea>
   )
 }
 
