@@ -18,7 +18,7 @@ import {
   useWindowDimensions,
 } from 'react-native'
 
-import {YoroiZendeskLink} from '~/features/SetupWallet/common/constants'
+import {YoroiHelpLink} from '~/features/SetupWallet/common/constants'
 import {parseWalletMeta} from '~/features/WalletManager/common/validators/wallet-meta'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useCreateWalletMnemonic} from '~/features/WalletManager/hooks/useCreateWalletMnemonic'
@@ -199,7 +199,7 @@ export const RestoreWalletDetailsScreen = () => {
 
           <LearnMoreButton
             onPress={() => {
-              Linking.openURL(YoroiZendeskLink)
+              Linking.openURL(YoroiHelpLink)
             }}
           />
         </Modal.Content>
@@ -238,7 +238,7 @@ export const RestoreWalletDetailsScreen = () => {
 
           <LearnMoreButton
             onPress={() => {
-              Linking.openURL(YoroiZendeskLink)
+              Linking.openURL(YoroiHelpLink)
             }}
           />
         </Modal.Content>

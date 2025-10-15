@@ -6,7 +6,7 @@ import {Linking, Text, TouchableOpacity} from 'react-native'
 import {useStrings} from '~/kernel/i18n/useStrings'
 
 const LEARN_MORE_LINK =
-  'https://emurgohelpdesk.zendesk.com/hc/en-us/sections/8582793481231-Governance'
+  'https://help.yoroi-wallet.com/en/article/how-can-i-participate-in-governance-through-yoroi-155o8l3/'
 
 export const LearnMoreLink = () => {
   const strings = useStrings()
