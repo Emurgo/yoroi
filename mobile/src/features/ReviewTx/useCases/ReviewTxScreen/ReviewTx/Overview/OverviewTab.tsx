@@ -746,7 +746,6 @@ const useShowOperationsNotice = (operations: Operations) => {
       clearTimeout(timeout)
 
       timeout = setTimeout(() => {
-        // Mark as shown immediately to avoid duplicate opens in StrictMode/dev
         setOperationsNoticeShown()
 
         openModal({
