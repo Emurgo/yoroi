@@ -807,10 +807,6 @@ const useSetOperationsNoticeShown = () => {
     },
     invalidateQueries: [['useShowOperationsNotice', wallet.id]],
     onSuccess: () => {
-      if (__DEV__) {
-        console.debug('[useShowOperationsNotice] invalidated query', {
-          queryKey: ['useShowOperationsNotice', wallet.id],
-        })
       }
     },
   })
