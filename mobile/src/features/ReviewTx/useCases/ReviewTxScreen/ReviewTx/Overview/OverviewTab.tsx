@@ -724,8 +724,8 @@ const useShowOperationsNotice = (operations: Operations) => {
   const {openModal} = useModal()
   const strings = useStrings()
   const screenHeight = useWindowDimensions().height
-  const {setOperationsNoticeShown} = useSetOperationsNoticeShown()
   const {wallet} = useSelectedWallet()
+  const {setOperationsNoticeShown} = useSetOperationsNoticeShown()
 
   const walletKey = React.useMemo(
     () => `${operationsNoticeShownKey}:${wallet.id}`,
@@ -806,7 +806,6 @@ const useSetOperationsNoticeShown = () => {
       await storage.setItem(walletKey, JSON.stringify(false))
     },
     invalidateQueries: [['useShowOperationsNotice', wallet.id]],
-    },
   })
 
   return {
