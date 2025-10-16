@@ -775,7 +775,6 @@ const useShowOperationsNotice = (operations: Operations) => {
   }, [
     operations.components.length,
     query.data,
-    query.isLoading,
     query.isPlaceholderData,
     query.isSuccess,
     openModal,
