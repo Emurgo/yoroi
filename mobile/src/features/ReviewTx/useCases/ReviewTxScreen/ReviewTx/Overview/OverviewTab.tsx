@@ -724,18 +724,12 @@ const useShowOperationsNotice = (operations: Operations) => {
   const {openModal} = useModal()
   const strings = useStrings()
   const screenHeight = useWindowDimensions().height
-  const {wallet} = useSelectedWallet()
   const {setOperationsNoticeShown} = useSetOperationsNoticeShown()
 
-  const walletKey = React.useMemo(
-    () => `${operationsNoticeShownKey}:${wallet.id}`,
-    [wallet.id],
-  )
-
   const query = useQuery({
-    queryKey: ['useShowOperationsNotice', wallet.id],
+    queryKey: ['useShowOperationsNotice'],
     queryFn: () =>
-      storage.getItem(walletKey).then((value) => {
+      storage.getItem(operationsNoticeShownKey).then((value) => {
         const parsed = parseSafe(value)
         return isBoolean(parsed) ? parsed : true
       }),
@@ -758,9 +752,8 @@ const useShowOperationsNotice = (operations: Operations) => {
           footer: <OperationsNoticeModalFooter />,
           height: Math.min(screenHeight * 0.9, 650),
           canDiscard: true,
+          onClose: () => setOperationsNoticeShown(),
         })
-
-        setOperationsNoticeShown()
       }, 500)
     }
 
@@ -788,24 +781,17 @@ const useShowOperationsNotice = (operations: Operations) => {
     strings,
     screenHeight,
     setOperationsNoticeShown,
-    wallet.id,
-    walletKey,
   ])
 }
 
 const useSetOperationsNoticeShown = () => {
   const storage = useAsyncStorage()
-  const {wallet} = useSelectedWallet()
-  const walletKey = React.useMemo(
-    () => `${operationsNoticeShownKey}:${wallet.id}`,
-    [wallet.id],
-  )
 
   const mutation = useMutationWithInvalidations({
     mutationFn: async () => {
-      await storage.setItem(walletKey, JSON.stringify(false))
+      await storage.setItem(operationsNoticeShownKey, JSON.stringify(false))
     },
-    invalidateQueries: [['useShowOperationsNotice', wallet.id]],
+    invalidateQueries: [['useShowOperationsNotice']],
   })
 
   return {
