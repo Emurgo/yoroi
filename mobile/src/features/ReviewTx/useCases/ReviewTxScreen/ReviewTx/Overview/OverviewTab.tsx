@@ -739,7 +739,7 @@ const useShowOperationsNotice = (operations: Operations) => {
         const parsed = parseSafe(value)
         return isBoolean(parsed) ? parsed : true
       }),
-    initialData: true,
+    initialData: false,
   })
 
   React.useEffect(() => {
@@ -763,7 +763,8 @@ const useShowOperationsNotice = (operations: Operations) => {
 
     if (
       operations.components.length > 0 &&
-      query.data &&
+      !query.isLoading &&
+      query.data === true &&
       !hasShownModal.current
     ) {
       openOperationsNotice()
@@ -777,6 +778,7 @@ const useShowOperationsNotice = (operations: Operations) => {
   }, [
     operations.components.length,
     query.data,
+    query.isLoading,
     openModal,
     strings,
     screenHeight,
