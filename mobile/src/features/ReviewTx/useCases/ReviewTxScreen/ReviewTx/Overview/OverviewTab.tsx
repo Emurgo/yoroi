@@ -9,7 +9,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import {Balance, Portfolio} from '@yoroi/types'
 
 import {CredKind} from '@emurgo/cross-csl-core'
-import {useQuery, useQueryClient} from '@tanstack/react-query'
+import {useQuery} from '@tanstack/react-query'
 import * as React from 'react'
 import {
   Image,
@@ -725,17 +725,24 @@ const useShowOperationsNotice = (operations: Operations) => {
   const strings = useStrings()
   const screenHeight = useWindowDimensions().height
   const {setOperationsNoticeShown} = useSetOperationsNoticeShown()
+  const {wallet} = useSelectedWallet()
+
+  const walletKey = React.useMemo(
+    () => `${operationsNoticeShownKey}:${wallet.id}`,
+    [wallet.id],
+  )
 
   const query = useQuery({
-    queryKey: ['useShowOperationsNotice'],
+    queryKey: ['useShowOperationsNotice', wallet.id],
     queryFn: () =>
-      storage.getItem(operationsNoticeShownKey).then((value) => {
+      storage.getItem(walletKey).then((value) => {
         const parsed = parseSafe(value)
         return isBoolean(parsed) ? parsed : true
       }),
-    initialData: false,
+    placeholderData: false,
     staleTime: Infinity,
     gcTime: Infinity,
+    refetchOnMount: 'always',
   })
 
   React.useEffect(() => {
@@ -752,14 +759,15 @@ const useShowOperationsNotice = (operations: Operations) => {
           height: Math.min(screenHeight * 0.9, 650),
           canDiscard: true,
         })
-        // Update query cache and storage via mutation
+
         setOperationsNoticeShown()
       }, 500)
     }
 
     const shouldOpen =
       operations.components.length > 0 &&
-      !query.isLoading &&
+      query.isSuccess &&
+      !query.isPlaceholderData &&
       query.data === true
 
     if (shouldOpen) {
@@ -774,23 +782,44 @@ const useShowOperationsNotice = (operations: Operations) => {
     operations.components.length,
     query.data,
     query.isLoading,
+    query.isPlaceholderData,
+    query.isSuccess,
     openModal,
     strings,
     screenHeight,
     setOperationsNoticeShown,
+    wallet.id,
+    walletKey,
   ])
 }
 
 const useSetOperationsNoticeShown = () => {
   const storage = useAsyncStorage()
-  const queryClient = useQueryClient()
+  const {wallet} = useSelectedWallet()
+  const walletKey = React.useMemo(
+    () => `${operationsNoticeShownKey}:${wallet.id}`,
+    [wallet.id],
+  )
 
   const mutation = useMutationWithInvalidations({
     mutationFn: async () => {
-      queryClient.setQueryData(['useShowOperationsNotice'], false)
-      await storage.setItem(operationsNoticeShownKey, JSON.stringify(false))
+      if (__DEV__) {
+        console.debug('[useShowOperationsNotice] storage write', {
+          walletId: wallet.id,
+          walletKey,
+          value: false,
+        })
+      }
+      await storage.setItem(walletKey, JSON.stringify(false))
     },
-    invalidateQueries: [],
+    invalidateQueries: [['useShowOperationsNotice', wallet.id]],
+    onSuccess: () => {
+      if (__DEV__) {
+        console.debug('[useShowOperationsNotice] invalidated query', {
+          queryKey: ['useShowOperationsNotice', wallet.id],
+        })
+      }
+    },
   })
 
   return {
