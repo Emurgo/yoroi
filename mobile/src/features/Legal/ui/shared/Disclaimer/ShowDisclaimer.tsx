@@ -56,6 +56,8 @@ export const ShowDisclaimer = ({type, disabled}: Props) => {
     openModal({
       title: strings.global.disclaimer,
       content: (
+        // Not using Modal.Content here to avoid nested VirtualizedLists warning
+        // Markdown component uses FlatList internally, which conflicts with Modal.Content's ScrollView
         <View style={{height: 600}}>
           <Markdown
             colorScheme={basePalette}
