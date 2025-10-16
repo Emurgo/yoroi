@@ -9,7 +9,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import {Balance, Portfolio} from '@yoroi/types'
 
 import {CredKind} from '@emurgo/cross-csl-core'
-import {useQuery} from '@tanstack/react-query'
+import {useQuery, useQueryClient} from '@tanstack/react-query'
 import * as React from 'react'
 import {
   Image,
@@ -730,7 +730,7 @@ const useShowOperationsNotice = (operations: Operations) => {
   const {openModal} = useModal()
   const strings = useStrings()
   const screenHeight = useWindowDimensions().height
-  const hasOpenedInSession = React.useRef(false)
+  const queryClient = useQueryClient()
 
   const query = useQuery({
     queryKey: ['useShowOperationsNotice'],
@@ -740,8 +740,8 @@ const useShowOperationsNotice = (operations: Operations) => {
         return isBoolean(parsed) ? parsed : true
       }),
     initialData: false,
-    staleTime: Infinity, // Never refetch - only load once
-    gcTime: Infinity, // Keep in cache forever
+    staleTime: Infinity,
+    gcTime: Infinity,
   })
 
   React.useEffect(() => {
@@ -758,15 +758,14 @@ const useShowOperationsNotice = (operations: Operations) => {
           height: Math.min(screenHeight * 0.9, 650),
           canDiscard: true,
         })
-        hasOpenedInSession.current = true
+        queryClient.setQueryData(['useShowOperationsNotice'], false)
       }, 500)
     }
 
     const shouldOpen =
       operations.components.length > 0 &&
       !query.isLoading &&
-      query.data === true &&
-      !hasOpenedInSession.current
+      query.data === true
 
     if (shouldOpen) {
       openOperationsNotice()
@@ -783,6 +782,7 @@ const useShowOperationsNotice = (operations: Operations) => {
     openModal,
     strings,
     screenHeight,
+    queryClient,
   ])
 }
 
