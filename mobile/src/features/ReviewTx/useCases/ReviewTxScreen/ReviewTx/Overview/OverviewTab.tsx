@@ -746,13 +746,15 @@ const useShowOperationsNotice = (operations: Operations) => {
       clearTimeout(timeout)
 
       timeout = setTimeout(() => {
+        // Mark as shown immediately to avoid duplicate opens in StrictMode/dev
+        setOperationsNoticeShown()
+
         openModal({
           title: strings.txReview.overview.operationsNoticeTitle,
           content: <OperationsNoticeModalContent />,
           footer: <OperationsNoticeModalFooter />,
           height: Math.min(screenHeight * 0.9, 650),
           canDiscard: true,
-          onClose: () => setOperationsNoticeShown(),
         })
       }, 500)
     }
