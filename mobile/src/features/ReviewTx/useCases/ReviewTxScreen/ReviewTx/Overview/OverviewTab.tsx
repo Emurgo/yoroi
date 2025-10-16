@@ -706,19 +706,13 @@ export const OperationsNoticeModalContent = () => {
 
 const OperationsNoticeModalFooter = () => {
   const strings = useStrings()
-  const {setOperationsNoticeShown} = useSetOperationsNoticeShown()
   const {closeModal} = useModal()
-
-  const handleOnpress = () => {
-    closeModal()
-    setOperationsNoticeShown()
-  }
 
   return (
     <Modal.Footer>
       <Button
         title={strings.txReview.overview.operationsNoticeButton}
-        onPress={handleOnpress}
+        onPress={closeModal}
       />
     </Modal.Footer>
   )
@@ -730,7 +724,7 @@ const useShowOperationsNotice = (operations: Operations) => {
   const {openModal} = useModal()
   const strings = useStrings()
   const screenHeight = useWindowDimensions().height
-  const queryClient = useQueryClient()
+  const {setOperationsNoticeShown} = useSetOperationsNoticeShown()
 
   const query = useQuery({
     queryKey: ['useShowOperationsNotice'],
@@ -758,7 +752,8 @@ const useShowOperationsNotice = (operations: Operations) => {
           height: Math.min(screenHeight * 0.9, 650),
           canDiscard: true,
         })
-        queryClient.setQueryData(['useShowOperationsNotice'], false)
+        // Update query cache and storage via mutation
+        setOperationsNoticeShown()
       }, 500)
     }
 
@@ -782,15 +777,17 @@ const useShowOperationsNotice = (operations: Operations) => {
     openModal,
     strings,
     screenHeight,
-    queryClient,
+    setOperationsNoticeShown,
   ])
 }
 
 const useSetOperationsNoticeShown = () => {
   const storage = useAsyncStorage()
+  const queryClient = useQueryClient()
 
   const mutation = useMutationWithInvalidations({
     mutationFn: async () => {
+      queryClient.setQueryData(['useShowOperationsNotice'], false)
       await storage.setItem(operationsNoticeShownKey, JSON.stringify(false))
     },
     invalidateQueries: [],
