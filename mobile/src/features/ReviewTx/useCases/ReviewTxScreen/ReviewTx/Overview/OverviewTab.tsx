@@ -710,8 +710,8 @@ const OperationsNoticeModalFooter = () => {
   const {closeModal} = useModal()
 
   const handleOnpress = () => {
-    setOperationsNoticeShown()
     closeModal()
+    setOperationsNoticeShown()
   }
 
   return (
@@ -730,7 +730,7 @@ const useShowOperationsNotice = (operations: Operations) => {
   const {openModal} = useModal()
   const strings = useStrings()
   const screenHeight = useWindowDimensions().height
-  const hasShownModal = React.useRef(false)
+  const hasOpenedInSession = React.useRef(false)
 
   const query = useQuery({
     queryKey: ['useShowOperationsNotice'],
@@ -740,6 +740,8 @@ const useShowOperationsNotice = (operations: Operations) => {
         return isBoolean(parsed) ? parsed : true
       }),
     initialData: false,
+    staleTime: Infinity, // Never refetch - only load once
+    gcTime: Infinity, // Keep in cache forever
   })
 
   React.useEffect(() => {
@@ -749,31 +751,30 @@ const useShowOperationsNotice = (operations: Operations) => {
       clearTimeout(timeout)
 
       timeout = setTimeout(() => {
-        if (!hasShownModal.current) {
-          openModal({
-            title: strings.txReview.overview.operationsNoticeTitle,
-            content: <OperationsNoticeModalContent />,
-            footer: <OperationsNoticeModalFooter />,
-            height: Math.min(screenHeight * 0.9, 650),
-          })
-          hasShownModal.current = true
-        }
+        openModal({
+          title: strings.txReview.overview.operationsNoticeTitle,
+          content: <OperationsNoticeModalContent />,
+          footer: <OperationsNoticeModalFooter />,
+          height: Math.min(screenHeight * 0.9, 650),
+          canDiscard: true,
+        })
+        hasOpenedInSession.current = true
       }, 500)
     }
 
-    if (
+    const shouldOpen =
       operations.components.length > 0 &&
       !query.isLoading &&
       query.data === true &&
-      !hasShownModal.current
-    ) {
+      !hasOpenedInSession.current
+
+    if (shouldOpen) {
       openOperationsNotice()
     }
 
     return () => {
       clearTimeout(timeout)
       timeout = undefined
-      hasShownModal.current = false
     }
   }, [
     operations.components.length,
@@ -789,9 +790,10 @@ const useSetOperationsNoticeShown = () => {
   const storage = useAsyncStorage()
 
   const mutation = useMutationWithInvalidations({
-    mutationFn: async () =>
-      storage.setItem(operationsNoticeShownKey, JSON.stringify(false)),
-    invalidateQueries: [['useShowOperationsNotice']],
+    mutationFn: async () => {
+      await storage.setItem(operationsNoticeShownKey, JSON.stringify(false))
+    },
+    invalidateQueries: [],
   })
 
   return {
