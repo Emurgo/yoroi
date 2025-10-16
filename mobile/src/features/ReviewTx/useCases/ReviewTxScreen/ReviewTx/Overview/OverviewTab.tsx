@@ -803,13 +803,6 @@ const useSetOperationsNoticeShown = () => {
 
   const mutation = useMutationWithInvalidations({
     mutationFn: async () => {
-      if (__DEV__) {
-        console.debug('[useShowOperationsNotice] storage write', {
-          walletId: wallet.id,
-          walletKey,
-          value: false,
-        })
-      }
       await storage.setItem(walletKey, JSON.stringify(false))
     },
     invalidateQueries: [['useShowOperationsNotice', wallet.id]],
