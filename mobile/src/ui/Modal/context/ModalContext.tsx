@@ -137,7 +137,13 @@ export const ModalProvider = ({children, initialState}: Props) => {
     }) => {
       Keyboard.dismiss()
 
+      console.log('[ModalContext] openModal', {
+        title,
+        isOpen: isOpenRef.current,
+      })
+
       if (isOpenRef.current) {
+        console.log('[ModalContext] Queuing modal')
         dispatch({
           type: 'addToQueue',
           modalData: {
@@ -158,6 +164,7 @@ export const ModalProvider = ({children, initialState}: Props) => {
         return
       }
 
+      console.log('[ModalContext] Opening modal immediately')
       dispatch({
         type: 'open',
         content,
@@ -325,6 +332,10 @@ const modalReducer = (state: ModalState, action: ModalAction) => {
       }
 
     case 'closeAndProcessQueue':
+      console.log('[ModalReducer] closeAndProcessQueue', {
+        queueLength: state.queue.length,
+      })
+
       if (state.onClose) {
         try {
           state.onClose()
@@ -335,6 +346,10 @@ const modalReducer = (state: ModalState, action: ModalAction) => {
 
       if (state.queue.length > 0 && action.dismissAll) {
         const nextModal = state.queue[0]
+        console.log(
+          '[ModalReducer] Processing queue, opening:',
+          nextModal.title,
+        )
         return {
           ...defaultState,
           content: nextModal.content,
@@ -354,6 +369,7 @@ const modalReducer = (state: ModalState, action: ModalAction) => {
         }
       }
 
+      console.log('[ModalReducer] Closing completely')
       return {
         ...defaultState,
       }

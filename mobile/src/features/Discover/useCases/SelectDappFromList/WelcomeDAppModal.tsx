@@ -20,8 +20,10 @@ export const WelcomeDAppModal = ({disabled}: {disabled?: boolean}) => {
   const [showing, setShowing] = React.useState(false)
 
   React.useEffect(() => {
+    console.log('[WelcomeDAppModal] Effect', {disabled, seen, showing})
     if (disabled || seen || showing || seen === undefined) return
 
+    console.log('[WelcomeDAppModal] Opening modal')
     openModal({
       title: strings.discover.welcomeToYoroiDAppExplorer,
       content: (
@@ -43,7 +45,7 @@ export const WelcomeDAppModal = ({disabled}: {disabled?: boolean}) => {
           <Button
             onPress={() => {
               setSeen(true)
-              closeModal(false)
+              closeModal()
             }}
             title={strings.discover.next}
           />
