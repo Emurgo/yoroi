@@ -51,6 +51,87 @@ export const ShowDisclaimer = ({type, disabled}: Props) => {
     languageCode,
   })
 
+  const openDisclaimerModal = React.useCallback(() => {
+    if (accepted || !disclaimerText) return
+    openModal({
+      title: strings.global.disclaimer,
+      content: (
+        <Modal.Content>
+          <View style={{height: 600}}>
+            <Markdown
+              colorScheme={basePalette}
+              backgroundColor={ta.bg_color_max.backgroundColor}
+              value={disclaimerText || ''}
+              flatListProps={{
+                style: {
+                  backgroundColor: p.bg_color_max,
+                },
+              }}
+              styles={{
+                text: {
+                  ...a.body_1_lg_regular,
+                  ...ta.text_gray_max,
+                  ...a.py_sm,
+                },
+                h2: {
+                  ...a.body_1_lg_medium,
+                  ...ta.text_gray_max,
+                  ...a.py_sm,
+                },
+                h1: {
+                  ...ta.text_gray_max,
+                  ...a.heading_3_medium,
+                  ...a.py_sm,
+                },
+              }}
+            />
+          </View>
+        </Modal.Content>
+      ),
+      footer: (
+        <Modal.Footer>
+          <View style={[a.py_lg]}>
+            <Check text={strings.global.accept} />
+          </View>
+
+          <Button
+            type={ButtonType.Secondary}
+            title={strings.global.cancel}
+            onPress={() => {
+              resetToTxHistory()
+              closeModal()
+            }}
+          />
+          <Proceed
+            title={strings.global.proceed}
+            onPress={() => {
+              setAccepted(true)
+              closeModal()
+            }}
+          />
+        </Modal.Footer>
+      ),
+      withFeedback: true,
+      height: 600,
+      canDiscard: false,
+    })
+    setShowed(true)
+  }, [
+    accepted,
+    disclaimerText,
+    openModal,
+    strings.global.disclaimer,
+    strings.global.accept,
+    strings.global.cancel,
+    strings.global.proceed,
+    basePalette,
+    ta,
+    p.bg_color_max,
+    resetToTxHistory,
+    closeModal,
+    setAccepted,
+  ])
+
   React.useEffect(() => {
     if (
       !disabled &&
@@ -59,80 +140,17 @@ export const ShowDisclaimer = ({type, disabled}: Props) => {
       !isLoading &&
       disclaimerText
     ) {
-      openModal({
-        title: strings.global.disclaimer,
-        content: (
-          <Modal.Content>
-            <View style={{height: 600}}>
-              <Markdown
-                colorScheme={basePalette}
-                backgroundColor={ta.bg_color_max.backgroundColor}
-                value={disclaimerText || ''}
-                flatListProps={{
-                  style: {
-                    backgroundColor: p.bg_color_max,
-                  },
-                }}
-                styles={{
-                  text: {
-                    ...a.body_1_lg_regular,
-                    ...ta.text_gray_max,
-                    ...a.py_sm,
-                  },
-                  h2: {
-                    ...a.body_1_lg_medium,
-                    ...ta.text_gray_max,
-                    ...a.py_sm,
-                  },
-                  h1: {
-                    ...ta.text_gray_max,
-                    ...a.heading_3_medium,
-                    ...a.py_sm,
-                  },
-                }}
-              />
-            </View>
-          </Modal.Content>
-        ),
-        footer: (
-          <Modal.Footer>
-            <View style={[a.py_lg]}>
-              <Check text={strings.global.accept} />
-            </View>
-
-            <Button
-              type={ButtonType.Secondary}
-              title={strings.global.cancel}
-              onPress={() => {
-                resetToTxHistory()
-                closeModal()
-              }}
-            />
-            <Proceed
-              title={strings.global.proceed}
-              onPress={() => {
-                setAccepted(true)
-                closeModal()
-              }}
-            />
-          </Modal.Footer>
-        ),
-        withFeedback: true,
-        height: 600,
-        canDiscard: false,
-      })
-      setShowed(true)
+      openDisclaimerModal()
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     disabled,
     accepted,
     showed,
     isLoading,
     disclaimerText,
-    openModal,
-    setShowed,
+    openDisclaimerModal,
   ])
+
   return null
 }
 
