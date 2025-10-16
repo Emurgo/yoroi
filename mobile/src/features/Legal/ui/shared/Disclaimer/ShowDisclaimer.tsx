@@ -131,13 +131,6 @@ export const ShowDisclaimer = ({type, disabled}: Props) => {
   ])
 
   React.useEffect(() => {
-    console.log('[ShowDisclaimer] Effect', {
-      disabled,
-      accepted,
-      showed,
-      isLoading,
-      hasText: !!disclaimerText,
-    })
     if (
       !disabled &&
       !accepted &&
@@ -145,7 +138,6 @@ export const ShowDisclaimer = ({type, disabled}: Props) => {
       !isLoading &&
       disclaimerText
     ) {
-      console.log('[ShowDisclaimer] Opening modal')
       openDisclaimerModal()
     }
   }, [

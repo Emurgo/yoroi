@@ -50,7 +50,7 @@ type ModalActions = {
     full?: boolean
     canExpand?: boolean
   }) => void
-  closeModal: (dismissAll?: boolean) => void
+  closeModal: () => void
   setLoading: (isLoading: boolean) => void
   setFooter: (footer: React.ReactNode | undefined) => void
   setTitle: (title: string) => void
@@ -95,19 +95,15 @@ export const ModalProvider = ({children, initialState}: Props) => {
     queueRef.current = state.queue
   }, [state.isOpen, state.queue])
 
-  const closeModal = React.useCallback(
-    (dismissAll?: boolean) => {
-      if (isKeyboardOpen) {
-        Keyboard.dismiss()
-        return
-      }
-      dispatch({
-        type: 'closeAndProcessQueue',
-        dismissAll: Boolean(dismissAll),
-      })
-    },
-    [isKeyboardOpen],
-  )
+  const closeModal = React.useCallback(() => {
+    if (isKeyboardOpen) {
+      Keyboard.dismiss()
+      return
+    }
+    dispatch({
+      type: 'closeAndProcessQueue',
+    })
+  }, [isKeyboardOpen])
 
   const openModal = React.useCallback(
     ({
@@ -137,13 +133,7 @@ export const ModalProvider = ({children, initialState}: Props) => {
     }) => {
       Keyboard.dismiss()
 
-      console.log('[ModalContext] openModal', {
-        title,
-        isOpen: isOpenRef.current,
-      })
-
       if (isOpenRef.current) {
-        console.log('[ModalContext] Queuing modal')
         dispatch({
           type: 'addToQueue',
           modalData: {
@@ -164,7 +154,6 @@ export const ModalProvider = ({children, initialState}: Props) => {
         return
       }
 
-      console.log('[ModalContext] Opening modal immediately')
       dispatch({
         type: 'open',
         content,
@@ -281,7 +270,7 @@ type ModalAction =
       canExpand?: boolean
     }
   | {type: 'close'}
-  | {type: 'closeAndProcessQueue'; dismissAll?: boolean}
+  | {type: 'closeAndProcessQueue'}
   | {type: 'addToQueue'; modalData: ModalQueueItem}
   | {type: 'clearQueue'}
   | {type: 'setLoading'; isLoading: boolean}
@@ -332,10 +321,6 @@ const modalReducer = (state: ModalState, action: ModalAction) => {
       }
 
     case 'closeAndProcessQueue':
-      console.log('[ModalReducer] closeAndProcessQueue', {
-        queueLength: state.queue.length,
-      })
-
       if (state.onClose) {
         try {
           state.onClose()
@@ -344,12 +329,8 @@ const modalReducer = (state: ModalState, action: ModalAction) => {
         }
       }
 
-      if (state.queue.length > 0 && action.dismissAll) {
+      if (state.queue.length > 0) {
         const nextModal = state.queue[0]
-        console.log(
-          '[ModalReducer] Processing queue, opening:',
-          nextModal.title,
-        )
         return {
           ...defaultState,
           content: nextModal.content,
@@ -369,7 +350,6 @@ const modalReducer = (state: ModalState, action: ModalAction) => {
         }
       }
 
-      console.log('[ModalReducer] Closing completely')
       return {
         ...defaultState,
       }
