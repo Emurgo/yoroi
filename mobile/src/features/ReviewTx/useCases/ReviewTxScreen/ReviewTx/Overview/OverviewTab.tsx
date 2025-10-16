@@ -730,6 +730,7 @@ const useShowOperationsNotice = (operations: Operations) => {
   const {openModal} = useModal()
   const strings = useStrings()
   const screenHeight = useWindowDimensions().height
+  const hasShownModal = React.useRef(false)
 
   const query = useQuery({
     queryKey: ['useShowOperationsNotice'],
@@ -747,23 +748,39 @@ const useShowOperationsNotice = (operations: Operations) => {
     const openOperationsNotice = () => {
       clearTimeout(timeout)
 
-      timeout = setTimeout(
-        () =>
+      timeout = setTimeout(() => {
+        if (!hasShownModal.current) {
           openModal({
             title: strings.txReview.overview.operationsNoticeTitle,
             content: <OperationsNoticeModalContent />,
             footer: <OperationsNoticeModalFooter />,
             height: Math.min(screenHeight * 0.9, 650),
-          }),
-        500,
-      )
+          })
+          hasShownModal.current = true
+        }
+      }, 500)
     }
 
-    if (operations.components.length > 0 && query.data) openOperationsNotice()
+    if (
+      operations.components.length > 0 &&
+      query.data &&
+      !hasShownModal.current
+    ) {
+      openOperationsNotice()
+    }
 
-    return () => clearTimeout(timeout)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+    return () => {
+      clearTimeout(timeout)
+      timeout = undefined
+      hasShownModal.current = false
+    }
+  }, [
+    operations.components.length,
+    query.data,
+    openModal,
+    strings,
+    screenHeight,
+  ])
 }
 
 const useSetOperationsNoticeShown = () => {
