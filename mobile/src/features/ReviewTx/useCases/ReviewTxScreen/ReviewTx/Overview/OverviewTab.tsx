@@ -806,8 +806,6 @@ const useSetOperationsNoticeShown = () => {
       await storage.setItem(walletKey, JSON.stringify(false))
     },
     invalidateQueries: [['useShowOperationsNotice', wallet.id]],
-    onSuccess: () => {
-      }
     },
   })
 
