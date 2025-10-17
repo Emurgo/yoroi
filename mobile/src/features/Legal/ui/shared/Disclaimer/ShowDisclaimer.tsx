@@ -45,6 +45,11 @@ export const ShowDisclaimer = ({type, disabled}: Props) => {
   const {resetToTxHistory} = useWalletNavigation()
   const [showed, setShowed] = React.useState(false)
   const [accepted, setAccepted] = useDisclaimerState(type)
+
+  // Reset showed when the disclaimer type changes
+  React.useEffect(() => {
+    setShowed(false)
+  }, [type])
   const {atoms: ta, palette: p, basePalette} = useTheme()
   const {data: disclaimerText, isLoading} = useDisclaimerText({
     type,
