@@ -98,6 +98,6 @@ Nous pouvons mettre à jour cette politique de temps à autre afin de tenir comp
 
 ## 11. Contactez-nous
 
-Si vous avez des questions, des préoccupations ou des demandes concernant cette politique ou nos pratiques en matière de confidentialité, veuillez nous contacter sur https://yoroi-wallet.com/#/support
+Si vous avez des questions, des préoccupations ou des demandes concernant cette politique ou nos pratiques en matière de confidentialité, veuillez nous contacter sur https://help.yoroi-wallet.com/en/
 
 En utilisant ou en accédant au Logiciel, vous reconnaissez avoir lu et compris la présente Politique de confidentialité et consentez à la collecte, l'utilisation et la divulgation de vos données personnelles telles que décrites dans les présentes.

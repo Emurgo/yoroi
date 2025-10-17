@@ -98,6 +98,6 @@ Wir können diese Richtlinie von Zeit zu Zeit aktualisieren, um Änderungen der 
 
 ## 11. Kontaktiere uns
 
-Wenn Sie Fragen, Bedenken oder Anfragen zu dieser Richtlinie oder unseren Datenschutzrichtlinien haben, kontaktieren Sie uns bitte unter https://yoroi-wallet.com/#/support
+Wenn Sie Fragen, Bedenken oder Anfragen zu dieser Richtlinie oder unseren Datenschutzrichtlinien haben, kontaktieren Sie uns bitte unter https://help.yoroi-wallet.com/en/
 
 Durch die Nutzung oder den Zugriff auf die Software erkennen Sie an, dass Sie diese Datenschutzerklärung gelesen und verstanden haben und der Sammlung zugestimmt haben, Verwendung und Weitergabe Ihrer personenbezogenen Daten, wie hier beschrieben.
