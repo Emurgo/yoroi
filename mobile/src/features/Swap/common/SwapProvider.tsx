@@ -156,13 +156,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
   ])
 
   const {data: orders = [], refetch: refetchOrders} = useQuery({
-    queryKey: [
-      'persist',
-      'useSwapOrders',
-      network,
-      stakingKey,
-      swapManager.settings.routingPreference,
-    ],
+    queryKey: ['persist', 'useSwapOrders', network, stakingKey],
     queryFn: async () => {
       const res = await swapManager.api.orders()
       if (isRight(res)) return res.value.data

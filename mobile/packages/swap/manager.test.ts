@@ -629,7 +629,7 @@ describe('swapManagerMaker', () => {
       }
     })
 
-    it('returns left if both are left', async () => {
+    it('returns left if all aggregators are left', async () => {
       mockDexhunterApi.orders.mockResolvedValue({
         tag: 'left',
         error: {status: 400, message: 'dh orders error', responseData: {}},
@@ -638,9 +638,12 @@ describe('swapManagerMaker', () => {
         tag: 'left',
         error: {status: 400, message: 'ms orders error', responseData: {}},
       })
+      mockMinswapApi.orders.mockResolvedValue({
+        tag: 'left',
+        error: {status: 400, message: 'mn orders error', responseData: {}},
+      })
 
       const manager = swapManagerMaker(baseConfig)
-      manager.assignSettings({routingPreference: ['dexhunter', 'muesliswap']})
       const result = await manager.api.orders()
       expect(result.tag).toBe('left')
     })

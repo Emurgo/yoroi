@@ -155,6 +155,10 @@
       },
     },
   },
+  "trustedDependencies": [
+    "@sentry/cli",
+    "@shopify/flash-list",
+  ],
   "overrides": {
     "react-native-svg": "15.11.2",
     "@emurgo/csl-mobile-bridge-jsi": "1.0.0-alpha.7",

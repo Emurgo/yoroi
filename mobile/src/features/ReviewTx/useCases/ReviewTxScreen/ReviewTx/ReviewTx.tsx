@@ -90,7 +90,7 @@ export const ReviewTx = ({
     >
       <MaterialTab.Screen
         name={strings.txReview.tabLabel.overview}
-        component={() => (
+        children={() => (
           <TabWrapper onConfirm={onConfirm}>
             <OverviewTab
               tx={formattedTx}
@@ -106,7 +106,7 @@ export const ReviewTx = ({
 
       <MaterialTab.Screen
         name={strings.txReview.tabLabel.utxos}
-        component={() => (
+        children={() => (
           <TabWrapper onConfirm={onConfirm}>
             <UTxOsTab tx={formattedTx} />
           </TabWrapper>
@@ -116,7 +116,7 @@ export const ReviewTx = ({
       {showMetadataTab && (
         <MaterialTab.Screen
           name={strings.txReview.tabLabel.metadataTab}
-          component={() => (
+          children={() => (
             <TabWrapper onConfirm={onConfirm}>
               <MetadataTab
                 hash={formattedMetadata?.hash ?? null}
@@ -130,7 +130,7 @@ export const ReviewTx = ({
       {showMintTab && (
         <MaterialTab.Screen
           name={strings.txReview.tabLabel.mint}
-          component={() => (
+          children={() => (
             <TabWrapper onConfirm={onConfirm}>
               <MintTab mintData={formattedTx.mint} />
             </TabWrapper>
@@ -141,7 +141,7 @@ export const ReviewTx = ({
       {showReferenceInoutsTab && (
         <MaterialTab.Screen
           name={strings.txReview.tabLabel.referenceInputs}
-          component={() => (
+          children={() => (
             <TabWrapper onConfirm={onConfirm}>
               <ReferenceInputsTab
                 referenceInputs={formattedTx.referenceInputs}
