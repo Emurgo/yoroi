@@ -145,6 +145,10 @@
     "uuid": "11.1.0",
     "zod": "3.25.17"
   },
+  "trustedDependencies": [
+    "@sentry/cli",
+    "@shopify/flash-list"
+  ],
   "devDependencies": {
     "@amplitude/ampli": "1.36.2",
     "@babel/core": "7.26.0",
