@@ -7,30 +7,29 @@
   "build": {
     "base": {
       "env": {
-        "EXPO_PUBLIC_COMMIT": "$EAS_BUILD_GIT_COMMIT_HASH",
         "RUST_ANDROID_GRADLE_PYTHON_COMMAND": "python3",
         "ANDROID_NDK_VERSION": "27.0.12077973",
 
         "EXPO_PUBLIC_BUILD_VARIANT": "NIGHTLY",
         "EXPO_PUBLIC_SENTRY_DSN": "https://59637d7dcb274b6a9e9f708e0082b3d5@o1138840.ingest.sentry.io/6260389",
         "EXPO_PUBLIC_DISABLE_LOGBOX": "true",
-        
+
         "EXPO_PUBLIC_BANXA_TEST_WALLET": "addr1qyfuspldlchc5kechfe5jzdrr9jms2s9w0tq4hggy9zgkhxssydveuc8xyx4zh27fwcmr62mraeezjwf24hzkyejwfmq7yptmd",
-        
+
         "EXPO_PUBLIC_FRONTEND_FEE_ADDRESS_MAINNET": "addr1q9ry6jfdgm0lcrtfpgwrgxg7qfahv80jlghhrthy6w8hmyjuw9ngccy937pm7yw0jjnxasm7hzxjrf8rzkqcj26788lqws5fke",
         "EXPO_PUBLIC_FRONTEND_FEE_ADDRESS_PREPROD": "addr_test1qrgpjmyy8zk9nuza24a0f4e7mgp9gd6h3uayp0rqnjnkl54v4dlyj0kwfs0x4e38a7047lymzp37tx0y42glslcdtzhqzp57km",
-        
+
         "EXPO_PUBLIC_UNSTOPPABLE_API_KEY": "czsajliz-wxgu6tujd1zqq7hey_pclfqhdjsqolsxjfsurgh",
-        
+
         "NODE_OPTIONS": "--max-old-space-size=8192",
         "JAVA_OPTS": "-Xmx16g -XX:MaxMetaspaceSize=16g",
         "GRADLE_OPTS": "-Dorg.gradle.jvmargs=-Xmx14g -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8 -Dorg.gradle.parallel=true -Dorg.gradle.daemon=false",
         "EXPO_PUBLIC_POSTHOG_KEY": "phc_IbSwLTaIj80ihw5BTJ8spCp4TpjJltBFg7TUYFBEyk9"
       },
+      "bun": "1.3.0",
       "ios": {
         "image": "latest",
         "resourceClass": "large"
-
       },
       "android": {
         "image": "latest",
@@ -64,13 +63,11 @@
     "production": {
       "extends": "base",
       "env": {
-        "EXPO_PUBLIC_COMMIT": "$EAS_BUILD_GIT_COMMIT_HASH",
         "EXPO_PUBLIC_BUILD_VARIANT": "PROD",
         "EXPO_PUBLIC_SENTRY_DSN": "https://7f7c6cb60a6f429facd34f491dfc5133@o1138840.ingest.sentry.io/6783228",
         "EXPO_PUBLIC_FRONTEND_FEE_ADDRESS_MAINNET": "addr1q9ry6jfdgm0lcrtfpgwrgxg7qfahv80jlghhrthy6w8hmyjuw9ngccy937pm7yw0jjnxasm7hzxjrf8rzkqcj26788lqws5fke",
         "EXPO_PUBLIC_FRONTEND_FEE_ADDRESS_PREPROD": "addr_test1qrgpjmyy8zk9nuza24a0f4e7mgp9gd6h3uayp0rqnjnkl54v4dlyj0kwfs0x4e38a7047lymzp37tx0y42glslcdtzhqzp57km",
         "EXPO_PUBLIC_UNSTOPPABLE_API_KEY": "czsajliz-wxgu6tujd1zqq7hey_pclfqhdjsqolsxjfsurgh"
-        
       },
       "channel": "production",
       "autoIncrement": true
