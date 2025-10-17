@@ -50,7 +50,7 @@ type ModalActions = {
     full?: boolean
     canExpand?: boolean
   }) => void
-  closeModal: (dismissAll?: boolean) => void
+  closeModal: () => void
   setLoading: (isLoading: boolean) => void
   setFooter: (footer: React.ReactNode | undefined) => void
   setTitle: (title: string) => void
@@ -95,19 +95,15 @@ export const ModalProvider = ({children, initialState}: Props) => {
     queueRef.current = state.queue
   }, [state.isOpen, state.queue])
 
-  const closeModal = React.useCallback(
-    (dismissAll?: boolean) => {
-      if (isKeyboardOpen) {
-        Keyboard.dismiss()
-        return
-      }
-      dispatch({
-        type: 'closeAndProcessQueue',
-        dismissAll: Boolean(dismissAll),
-      })
-    },
-    [isKeyboardOpen],
-  )
+  const closeModal = React.useCallback(() => {
+    if (isKeyboardOpen) {
+      Keyboard.dismiss()
+      return
+    }
+    dispatch({
+      type: 'closeAndProcessQueue',
+    })
+  }, [isKeyboardOpen])
 
   const openModal = React.useCallback(
     ({
@@ -137,7 +133,7 @@ export const ModalProvider = ({children, initialState}: Props) => {
     }) => {
       Keyboard.dismiss()
 
-      if (state.isOpen) {
+      if (isOpenRef.current) {
         dispatch({
           type: 'addToQueue',
           modalData: {
@@ -173,7 +169,7 @@ export const ModalProvider = ({children, initialState}: Props) => {
         canExpand,
       })
     },
-    [state.isOpen],
+    [],
   )
 
   const actions = React.useMemo<ModalActions>(
@@ -274,7 +270,7 @@ type ModalAction =
       canExpand?: boolean
     }
   | {type: 'close'}
-  | {type: 'closeAndProcessQueue'; dismissAll?: boolean}
+  | {type: 'closeAndProcessQueue'}
   | {type: 'addToQueue'; modalData: ModalQueueItem}
   | {type: 'clearQueue'}
   | {type: 'setLoading'; isLoading: boolean}
@@ -333,7 +329,7 @@ const modalReducer = (state: ModalState, action: ModalAction) => {
         }
       }
 
-      if (state.queue.length > 0 && action.dismissAll) {
+      if (state.queue.length > 0) {
         const nextModal = state.queue[0]
         return {
           ...defaultState,
@@ -347,7 +343,7 @@ const modalReducer = (state: ModalState, action: ModalAction) => {
           canContinue: nextModal.canContinue ?? defaultState.canContinue,
           onClose: nextModal.onClose,
           full: nextModal.full ?? defaultState.full,
-          hasExpanded: defaultState.hasExpanded, // Always reset to default when opening from queue
+          hasExpanded: defaultState.hasExpanded,
           canExpand: nextModal.canExpand ?? defaultState.canExpand,
           isOpen: true,
           queue: state.queue.slice(1),

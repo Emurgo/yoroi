@@ -43,7 +43,7 @@ export const WelcomeDAppModal = ({disabled}: {disabled?: boolean}) => {
           <Button
             onPress={() => {
               setSeen(true)
-              closeModal(false)
+              closeModal()
             }}
             title={strings.discover.next}
           />
