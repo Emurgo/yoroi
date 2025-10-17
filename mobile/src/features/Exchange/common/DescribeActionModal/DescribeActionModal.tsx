@@ -9,7 +9,7 @@ import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
 
-const YOROI_SUPPORT_URL = 'https://yoroi-wallet.com/#/support'
+const YOROI_SUPPORT_URL = 'https://help.yoroi-wallet.com/en/'
 
 export const DescribeActionModal = () => {
   const strings = useStrings()
