@@ -26,6 +26,7 @@
         "GRADLE_OPTS": "-Dorg.gradle.jvmargs=-Xmx14g -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8 -Dorg.gradle.parallel=true -Dorg.gradle.daemon=false",
         "EXPO_PUBLIC_POSTHOG_KEY": "phc_IbSwLTaIj80ihw5BTJ8spCp4TpjJltBFg7TUYFBEyk9"
       },
+      "bun": "1.3.0",
       "ios": {
         "image": "latest",
         "resourceClass": "large"
