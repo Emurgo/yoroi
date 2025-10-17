@@ -2,6 +2,7 @@ import {UseMutationOptions, useMutation} from '@tanstack/react-query'
 import {MessageDescriptor} from 'react-intl'
 import {Permission, PermissionsAndroid, Platform} from 'react-native'
 
+import {useBackgroundTimerControl} from '~/hooks/BackgroundTimerContext'
 import {LocalizableError} from '~/kernel/i18n/LocalizableError'
 
 const requestLedgerPermissions = async () => {
@@ -17,9 +18,20 @@ const requestLedgerPermissions = async () => {
 export const useLedgerPermissions = (
   options?: UseMutationOptions<void, Error>,
 ) => {
+  const {disable, enable} = useBackgroundTimerControl()
+
   const mutation = useMutation({
     ...options,
-    mutationFn: requestLedgerPermissions,
+    mutationFn: async () => {
+      // Disable background timer before requesting permissions
+      disable()
+      try {
+        await requestLedgerPermissions()
+      } finally {
+        // Re-enable background timer after permission dialog is dismissed
+        enable()
+      }
+    },
   })
 
   return {

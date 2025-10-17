@@ -34,6 +34,7 @@ import {CurrencyProvider} from './src/features/Settings/context/CurrencyProvider
 import {AutomaticWalletOpenerProvider} from './src/features/WalletManager/context/AutomaticWalletOpeningProvider'
 import {WalletManagerProvider} from './src/features/WalletManager/context/WalletManagerProvider'
 import {walletManager} from './src/features/WalletManager/wallet-manager'
+import {BackgroundTimerProvider} from './src/hooks/BackgroundTimerContext'
 import {useFonts} from './src/hooks/useFonts'
 import {ConnectionProvider} from './src/kernel/connection/ConnectionProvider'
 import {LanguageProvider} from './src/kernel/i18n/LanguageProvider'
@@ -84,39 +85,43 @@ function AppShell({children}: React.PropsWithChildren) {
 
 function BusinessShell({children}: React.PropsWithChildren) {
   return (
-    <AuthProvider
-      authStorageKeyManager={authStorageKeyManager}
-      pinStorageKeyManager={pinStorageKeyManager}
-      installationIdKeyManager={installationIdStorageKeyManager}
-    >
-      <SearchProvider>
-        <PairingProvider currencyStorageKeyManager={currencyStorageKeyManager}>
-          <WalletManagerProvider walletManager={walletManager}>
-            <PortfolioTokenActivityProvider>
-              <AutomaticWalletOpenerProvider>
-                <TransferProvider>
-                  <ReviewTxProvider>
-                    <SetupWalletProvider>
-                      <BrowserProvider>
-                        <LinksProvider>
-                          <YoroiNotificationManager>
-                            <CurrencyProvider>
-                              <CatalystProvider manager={catalystManager}>
-                                <ReceiveProvider>{children}</ReceiveProvider>
-                              </CatalystProvider>
-                            </CurrencyProvider>
-                          </YoroiNotificationManager>
-                        </LinksProvider>
-                      </BrowserProvider>
-                    </SetupWalletProvider>
-                  </ReviewTxProvider>
-                </TransferProvider>
-              </AutomaticWalletOpenerProvider>
-            </PortfolioTokenActivityProvider>
-          </WalletManagerProvider>
-        </PairingProvider>
-      </SearchProvider>
-    </AuthProvider>
+    <BackgroundTimerProvider>
+      <AuthProvider
+        authStorageKeyManager={authStorageKeyManager}
+        pinStorageKeyManager={pinStorageKeyManager}
+        installationIdKeyManager={installationIdStorageKeyManager}
+      >
+        <SearchProvider>
+          <PairingProvider
+            currencyStorageKeyManager={currencyStorageKeyManager}
+          >
+            <WalletManagerProvider walletManager={walletManager}>
+              <PortfolioTokenActivityProvider>
+                <AutomaticWalletOpenerProvider>
+                  <TransferProvider>
+                    <ReviewTxProvider>
+                      <SetupWalletProvider>
+                        <BrowserProvider>
+                          <LinksProvider>
+                            <YoroiNotificationManager>
+                              <CurrencyProvider>
+                                <CatalystProvider manager={catalystManager}>
+                                  <ReceiveProvider>{children}</ReceiveProvider>
+                                </CatalystProvider>
+                              </CurrencyProvider>
+                            </YoroiNotificationManager>
+                          </LinksProvider>
+                        </BrowserProvider>
+                      </SetupWalletProvider>
+                    </ReviewTxProvider>
+                  </TransferProvider>
+                </AutomaticWalletOpenerProvider>
+              </PortfolioTokenActivityProvider>
+            </WalletManagerProvider>
+          </PairingProvider>
+        </SearchProvider>
+      </AuthProvider>
+    </BackgroundTimerProvider>
   )
 }
 
