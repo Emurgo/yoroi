@@ -124,7 +124,8 @@ export const useBluetooth = (): UseBluetoothReturn => {
       }))
       logger.debug('Requesting Bluetooth permissions...')
 
-      // Disable background timer before requesting permissions
+      // Disable background timer before requesting permissions (Android-specific)
+      // On Android, permission dialogs send the app to background, which could trigger auto-logout
       disable()
       await requestBluetoothPermissions()
 

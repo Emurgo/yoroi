@@ -1,5 +1,16 @@
 import * as React from 'react'
 
+/**
+ * BackgroundTimerContext - Android-specific solution for permission dialog handling
+ *
+ * On Android, permission dialogs (e.g., Bluetooth, Location) send the app to background,
+ * which can trigger auto-logout timers. This context allows temporarily disabling the
+ * background timer while permission dialogs are active.
+ *
+ * On iOS, this provider is not mounted and hooks return no-op functions, making the
+ * code seamlessly cross-platform without explicit Platform checks at usage sites.
+ */
+
 type BackgroundTimerContextType = {
   isDisabled: boolean
   disable: () => void
@@ -42,11 +53,17 @@ export const BackgroundTimerProvider: React.FC<React.PropsWithChildren> = ({
 
 export const useBackgroundTimerControl = () => {
   const context = React.useContext(BackgroundTimerContext)
+
+  // If no provider exists (e.g., on iOS), return no-op functions
+  // This allows the code to work seamlessly across platforms
   if (!context) {
-    throw new Error(
-      'useBackgroundTimerControl must be used within BackgroundTimerProvider',
-    )
+    return {
+      isDisabled: false,
+      disable: () => {},
+      enable: () => {},
+    }
   }
+
   return context
 }
 

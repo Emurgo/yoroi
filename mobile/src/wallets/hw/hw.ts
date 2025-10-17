@@ -23,7 +23,8 @@ export const useLedgerPermissions = (
   const mutation = useMutation({
     ...options,
     mutationFn: async () => {
-      // Disable background timer before requesting permissions
+      // Disable background timer before requesting permissions (Android-specific)
+      // On Android, permission dialogs send the app to background, which could trigger auto-logout
       disable()
       try {
         await requestLedgerPermissions()

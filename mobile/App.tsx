@@ -12,6 +12,7 @@ import {TransferProvider} from '@yoroi/transfer'
 import * as Sentry from '@sentry/react-native'
 import * as Updates from 'expo-updates'
 import * as React from 'react'
+import {Platform} from 'react-native'
 
 import {BrowserProvider} from '~/features/Discover/common/BrowserProvider'
 import {PortfolioTokenActivityProvider} from '~/features/Portfolio/context/PortfolioTokenActivityProvider'
@@ -84,8 +85,13 @@ function AppShell({children}: React.PropsWithChildren) {
 }
 
 function BusinessShell({children}: React.PropsWithChildren) {
+  // Only provide BackgroundTimerProvider on Android where permission dialogs
+  // send the app to background, potentially triggering auto-logout
+  const ConditionalBackgroundTimerProvider =
+    Platform.OS === 'android' ? BackgroundTimerProvider : React.Fragment
+
   return (
-    <BackgroundTimerProvider>
+    <ConditionalBackgroundTimerProvider>
       <AuthProvider
         authStorageKeyManager={authStorageKeyManager}
         pinStorageKeyManager={pinStorageKeyManager}
@@ -121,7 +127,7 @@ function BusinessShell({children}: React.PropsWithChildren) {
           </PairingProvider>
         </SearchProvider>
       </AuthProvider>
-    </BackgroundTimerProvider>
+    </ConditionalBackgroundTimerProvider>
   )
 }
 
