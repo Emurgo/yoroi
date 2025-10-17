@@ -56,37 +56,37 @@ export const ShowDisclaimer = ({type, disabled}: Props) => {
     openModal({
       title: strings.global.disclaimer,
       content: (
-        // Not using Modal.Content here to avoid nested VirtualizedLists warning
-        // Markdown component uses FlatList internally, which conflicts with Modal.Content's ScrollView
-        <View style={{height: 600}}>
-          <Markdown
-            colorScheme={basePalette}
-            backgroundColor={ta.bg_color_max.backgroundColor}
-            value={disclaimerText || ''}
-            flatListProps={{
-              style: {
-                backgroundColor: p.bg_color_max,
-              },
-            }}
-            styles={{
-              text: {
-                ...a.body_1_lg_regular,
-                ...ta.text_gray_max,
-                ...a.py_sm,
-              },
-              h2: {
-                ...a.body_1_lg_medium,
-                ...ta.text_gray_max,
-                ...a.py_sm,
-              },
-              h1: {
-                ...ta.text_gray_max,
-                ...a.heading_3_medium,
-                ...a.py_sm,
-              },
-            }}
-          />
-        </View>
+        <Modal.Content>
+          <View style={{height: 600}}>
+            <Markdown
+              colorScheme={basePalette}
+              backgroundColor={ta.bg_color_max.backgroundColor}
+              value={disclaimerText || ''}
+              flatListProps={{
+                style: {
+                  backgroundColor: p.bg_color_max,
+                },
+              }}
+              styles={{
+                text: {
+                  ...a.body_1_lg_regular,
+                  ...ta.text_gray_max,
+                  ...a.py_sm,
+                },
+                h2: {
+                  ...a.body_1_lg_medium,
+                  ...ta.text_gray_max,
+                  ...a.py_sm,
+                },
+                h1: {
+                  ...ta.text_gray_max,
+                  ...a.heading_3_medium,
+                  ...a.py_sm,
+                },
+              }}
+            />
+          </View>
+        </Modal.Content>
       ),
       footer: (
         <Modal.Footer>
