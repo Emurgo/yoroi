@@ -22,8 +22,8 @@ export function useBackgroundTimer({after, execute}: Props) {
       if (bgTimeRef.current !== null && !isDisabled) {
         const timeSpentInBg = Date.now() - bgTimeRef.current
         if (timeSpentInBg >= after) execute()
+        bgTimeRef.current = null
       }
-      bgTimeRef.current = null
     },
   })
 }
