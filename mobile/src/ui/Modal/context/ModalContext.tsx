@@ -133,7 +133,7 @@ export const ModalProvider = ({children, initialState}: Props) => {
     }) => {
       Keyboard.dismiss()
 
-      if (state.isOpen) {
+      if (isOpenRef.current) {
         dispatch({
           type: 'addToQueue',
           modalData: {
@@ -169,7 +169,7 @@ export const ModalProvider = ({children, initialState}: Props) => {
         canExpand,
       })
     },
-    [state.isOpen],
+    [],
   )
 
   const actions = React.useMemo<ModalActions>(
@@ -343,15 +343,15 @@ const modalReducer = (state: ModalState, action: ModalAction) => {
           canContinue: nextModal.canContinue ?? defaultState.canContinue,
           onClose: nextModal.onClose,
           full: nextModal.full ?? defaultState.full,
-          hasExpanded: defaultState.hasExpanded, // Always reset to default when opening from queue
+          hasExpanded: defaultState.hasExpanded,
           canExpand: nextModal.canExpand ?? defaultState.canExpand,
           isOpen: true,
           queue: state.queue.slice(1),
         }
-      } else {
-        return {
-          ...defaultState,
-        }
+      }
+
+      return {
+        ...defaultState,
       }
 
     case 'setLoading':
