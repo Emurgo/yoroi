@@ -243,4 +243,5 @@ focusManager.setEventListener((onFocus) => {
       window.removeEventListener('focus', handler)
     }
   }
+  return
 })

@@ -99,13 +99,13 @@ export const shouldShowTabBarForRoutes = (state: NavigationState) => {
 
   if (routes.length === 1) {
     const [route] = routes
-    return Object.keys(routesWithTabBar).includes(route)
+    return Object.keys(routesWithTabBar).includes(route ?? '')
   }
 
   const [route, subRoute] = routes
   return (
     isKeyOf(route, routesWithTabBar) &&
-    routesWithTabBar[route].includes(subRoute)
+    routesWithTabBar[route ?? ''].includes(subRoute ?? '')
   )
 }
 
