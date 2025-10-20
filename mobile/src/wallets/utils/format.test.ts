@@ -25,7 +25,7 @@ describe('formatAda', () => {
     ]
     tests.forEach(([ada, formatted]) => {
       expect(
-        formatTokenAmount(asQuantity(ada), primaryTokenInfoMainnet),
+        formatTokenAmount(asQuantity(ada!), primaryTokenInfoMainnet),
       ).toEqual(formatted)
     })
   })
@@ -40,7 +40,7 @@ describe('formatAda', () => {
     ]
     tests.forEach(([ada, formatted]) => {
       expect(
-        formatTokenAmount(asQuantity(ada), primaryTokenInfoMainnet),
+        formatTokenAmount(asQuantity(ada!), primaryTokenInfoMainnet),
       ).toEqual(formatted)
     })
   })
@@ -64,7 +64,7 @@ describe('formatAdaFractional', () => {
     ]
     tests.forEach(([ada, formatted]) => {
       expect(
-        formatTokenFractional(asQuantity(ada), primaryTokenInfoMainnet),
+        formatTokenFractional(asQuantity(ada!), primaryTokenInfoMainnet),
       ).toEqual(formatted)
     })
   })
@@ -79,7 +79,7 @@ describe('formatAdaFractional', () => {
     ]
     tests.forEach(([ada, formatted]) => {
       expect(
-        formatTokenFractional(asQuantity(ada), primaryTokenInfoMainnet),
+        formatTokenFractional(asQuantity(ada!), primaryTokenInfoMainnet),
       ).toEqual(formatted)
     })
   })
@@ -104,7 +104,7 @@ describe('formatAdaInteger', () => {
     ]
     tests.forEach(([ada, formatted]) => {
       expect(
-        formatTokenInteger(asQuantity(ada), primaryTokenInfoMainnet),
+        formatTokenInteger(asQuantity(ada!), primaryTokenInfoMainnet),
       ).toEqual(formatted)
     })
   })
@@ -120,7 +120,7 @@ describe('formatAdaInteger', () => {
     ]
     tests.forEach(([ada, formatted]) => {
       expect(
-        formatTokenInteger(asQuantity(ada), primaryTokenInfoMainnet),
+        formatTokenInteger(asQuantity(ada!), primaryTokenInfoMainnet),
       ).toEqual(formatted)
     })
   })

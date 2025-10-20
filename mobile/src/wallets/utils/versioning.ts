@@ -27,7 +27,7 @@ export const versionCompare = (
   const chunksBint = chunksB.map((i) => parseInt(i, 10))
   for (let i = 0; i < chunksA.length; i++) {
     if (chunksAint[i] !== chunksBint[i]) {
-      return chunksAint[i] > chunksBint[i] ? 1 : -1
+      return chunksAint[i]! > chunksBint[i]! ? 1 : -1
     }
   }
   return 0
