@@ -209,11 +209,11 @@ export const createRawTxSigningKey = (
     Buffer.from(rootKey, 'hex'),
   )
   const accountPrivateKey = masterKey
-    .derive(derivationPath[0])
-    .derive(derivationPath[1])
-    .derive(derivationPath[2])
-    .derive(derivationPath[3])
-    .derive(derivationPath[4])
+    .derive(derivationPath[0]!)
+    .derive(derivationPath[1]!)
+    .derive(derivationPath[2]!)
+    .derive(derivationPath[3]!)
+    .derive(derivationPath[4]!)
 
   const rawKey = accountPrivateKey.toRawKey()
   const bech32 = rawKey.toBech32()
@@ -235,33 +235,6 @@ export const copyMultipleFromCSL = <T extends {toHex: () => string}>(
   creator: {fromHex: (hex: string) => T},
 ) => {
   return items.map((item) => copyFromCSL(creator, item))
-}
-
-export const getTransactionUnspentOutput = ({
-  txId,
-  bytes,
-  index,
-}: {
-  txId: string
-  bytes: Uint8Array
-  index: number
-}) => {
-  const tx = CardanoMobile.Transaction.fromBytes(bytes)
-  const body = tx.body()
-  const originalOutput = body.outputs().get(index)
-
-  const txHash = txId.split(':')[index]
-  const input = CardanoMobile.TransactionInput.new(
-    CardanoMobile.TransactionHash.fromHex(txHash),
-    0,
-  )
-  const value = originalOutput.amount()
-  const receiver = originalOutput.address()
-  const output = CardanoMobile.TransactionOutput.new(receiver, value)
-  return copyFromCSL(
-    CardanoMobile.TransactionUnspentOutput,
-    CardanoMobile.TransactionUnspentOutput.new(input, output),
-  )
 }
 
 export const getHexAddressingMap = (
