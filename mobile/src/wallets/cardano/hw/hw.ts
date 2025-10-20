@@ -158,13 +158,13 @@ export const checkDeviceVersion = (
   }
 
   for (let i = 0; i < minVersionArray.length; i++) {
-    const minRequired = parseInt(minVersionArray[i], 10)
+    const minRequired = parseInt(minVersionArray[i]!, 10)
 
-    if (deviceVersionArray[i] < minRequired) {
+    if (deviceVersionArray[i]! < minRequired) {
       throw new DeprecatedAdaAppError()
     }
 
-    if (deviceVersionArray[i] > minRequired) {
+    if (deviceVersionArray[i]! > minRequired) {
       // This part of the version is greater than the min required
       // which means next parts don't need to be checked
       // E.g. [3, 0, 0] is greater than [2, 9, 9] just because the 3 is greater than 2

@@ -1,7 +1,7 @@
 import {isLeft, isRight, parseNumberFromText} from '@yoroi/common'
 import {isPrimaryToken, primaryTokenId} from '@yoroi/portfolio'
 import {swapManagerMaker, swapStorageMaker} from '@yoroi/swap'
-import {Api, Balance, Portfolio, Swap} from '@yoroi/types'
+import {Api, App, Balance, Portfolio, Swap} from '@yoroi/types'
 
 import {useFocusEffect} from '@react-navigation/native'
 import {useQuery} from '@tanstack/react-query'
@@ -120,7 +120,7 @@ export type SwapContext = SwapState & {
   refetchOrders: () => void
 }
 
-export const SwapProvider = ({children}: {children: React.ReactNode}) => {
+export const SwapProvider = ({children}: React.PropsWithChildren) => {
   const navigate = useNavigateTo()
   const strings = useStrings()
   const {track} = useMetrics()
@@ -129,12 +129,14 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
   const network = wallet.networkManager.network
   const balances = usePortfolioBalances({wallet})
   const stakingKey = useStakingKey(wallet)
-  const address = wallet.externalAddresses[0]
-  const addressHex = convertBech32ToHex(address)
   const {config} = useRemoteConfig()
   const [isLoading, setIsLoading] = React.useState(false)
 
   const swapManager = React.useMemo(() => {
+    const address = wallet.externalAddresses[0]
+    if (!address) throw new App.Errors.InvalidState('No External Address')
+
+    const addressHex = convertBech32ToHex(address)
     const storage = swapStorageMaker()
     return swapManagerMaker({
       storage,
@@ -149,8 +151,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
   }, [
     network,
     stakingKey,
-    address,
-    addressHex,
+    wallet.externalAddresses,
     wallet.portfolioPrimaryTokenInfo,
     config?.swap?.partners,
   ])
@@ -267,7 +268,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
 
     if (options.length === 1) {
       // If there is exactly one option, always select it
-      desiredProtocol = options[0].protocol
+      desiredProtocol = options[0]!.protocol
     } else {
       const currentIsValid = options.some((p) => p.protocol === currentProtocol)
       if (!currentIsValid) {
@@ -454,7 +455,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
       slippage_tolerance: state.slippageInput.value,
       from_amount: state.tokenInInput.value,
       to_amount: state.tokenOutInput.value,
-      pool_source: state.estimate?.splits[0].poolId ?? '',
+      pool_source: state.estimate?.splits[0]?.poolId ?? '',
       swap_fees: state.estimate?.totalFee,
     })
 
@@ -575,6 +576,8 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
 }
 
 export const swapReducer = (state: SwapState, action: SwapAction) => {
+  if (action.type === SwapActionType.ResetForm) return defaultState
+
   return produce(state, (draft) => {
     switch (action.type) {
       case SwapActionType.ChangeOrderType:
@@ -724,9 +727,6 @@ export const swapReducer = (state: SwapState, action: SwapAction) => {
         draft.canSwap = false
         break
 
-      case SwapActionType.ResetForm:
-        return defaultState
-
       case SwapActionType.EstimateResponse:
         draft.needsNewEstimate = false
         draft.lastInputTouched = state.lastInputTouched
@@ -767,9 +767,6 @@ export const swapReducer = (state: SwapState, action: SwapAction) => {
         draft.tokenOutInput.error = action.value.message
         draft.canSwap = false
         break
-
-      default:
-        return state
     }
   })
 }

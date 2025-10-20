@@ -39,7 +39,7 @@ export const SearchDappInBrowserScreen = () => {
 
   React.useEffect(() => {
     const handleSetUrl = () => {
-      setSearchValue(tabActive?.url)
+      setSearchValue(tabActive?.url ?? '')
     }
 
     const handleClearSearchValue = () => {

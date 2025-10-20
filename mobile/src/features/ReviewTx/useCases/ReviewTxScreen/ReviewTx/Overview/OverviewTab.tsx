@@ -109,7 +109,7 @@ export const OverviewTab = ({
       {notOwnedOutputs.length === 1 && (
         <OneExternalPartySection
           receiverCustomTitle={receiverCustomTitle}
-          output={notOwnedOutputs[0]}
+          output={notOwnedOutputs[0]!}
         />
       )}
 

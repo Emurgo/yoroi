@@ -300,13 +300,13 @@ function getLatestYoroiTransaction(
   let best = blockInfo[0]
 
   for (let i = 1; i < blockInfo.length; i++) {
-    if (blockInfo[i].blockNum > best.blockNum) {
+    if (blockInfo[i]!.blockNum > best!.blockNum) {
       best = blockInfo[i]
       continue
     }
 
-    if (blockInfo[i].blockNum === best.blockNum) {
-      if (blockInfo[i].txOrdinal > best.txOrdinal) {
+    if (blockInfo[i]!.blockNum === best!.blockNum) {
+      if (blockInfo[i]!.txOrdinal > best!.txOrdinal) {
         best = blockInfo[i]
         continue
       }
@@ -343,13 +343,13 @@ function getLatestApiTransaction(
   let best = blockInfo[0]
 
   for (let i = 1; i < blockInfo.length; i++) {
-    if (blockInfo[i].blockNum > best.blockNum) {
+    if (blockInfo[i]!.blockNum > best!.blockNum) {
       best = blockInfo[i]
       continue
     }
 
-    if (blockInfo[i].blockNum === best.blockNum) {
-      if (blockInfo[i].txOrdinal > best.txOrdinal) {
+    if (blockInfo[i]!.blockNum === best!.blockNum) {
+      if (blockInfo[i]!.txOrdinal > best!.txOrdinal) {
         best = blockInfo[i]
         continue
       }
@@ -498,9 +498,7 @@ const confirmationCountsSelector = (state: TransactionManagerState) => {
     }
 
     const getBlockNum = ({address}: {address: string}) =>
-      perAddressSyncMetadata[address]
-        ? perAddressSyncMetadata[address].bestBlockNum
-        : 0
+      perAddressSyncMetadata[address]?.bestBlockNum ?? 0
 
     const bestBlockNum: any = max([
       state.bestBlockNum || 0,

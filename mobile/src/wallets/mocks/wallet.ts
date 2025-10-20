@@ -339,7 +339,7 @@ const fetchNftModerationStatus = {
         'pending',
         'manual_review',
       ] as const
-      return statuses[Math.floor(Math.random() * statuses.length)]
+      return statuses[Math.floor(Math.random() * statuses.length)]!
     },
   },
   error: async (..._args: unknown[]) => {

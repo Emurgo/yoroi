@@ -47,7 +47,13 @@ export const ListAmountsToSendScreen = () => {
   } = useTransfer()
   const {saveMemo} = useSaveMemo({wallet})
 
-  const {amounts} = targets[selectedTargetIndex].entry
+  const selectedTarget = targets[selectedTargetIndex]
+  const amounts = React.useMemo(() => {
+    const targetAmounts: Record<Portfolio.Token.Id, Portfolio.Token.Amount> =
+      selectedTarget?.entry.amounts ?? {}
+    if (!selectedTarget) return {}
+    return targetAmounts
+  }, [selectedTarget])
   const selectedTokensCounter = Object.keys(amounts).length
   const {
     meta: {addressMode},
@@ -67,10 +73,9 @@ export const ListAmountsToSendScreen = () => {
   }, [amounts, selectedTokensCounter, track])
 
   const handleOnEdit = (tokenId: Portfolio.Token.Id) => {
-    if (isNft(amounts[tokenId].info)) return
-
     const amount = amounts[tokenId]
     if (!amount) return
+    if (isNft(amount.info)) return
 
     tokenSelectedChanged(tokenId)
     navigateTo.editAmount(amount)
@@ -132,7 +137,8 @@ export const ListAmountsToSendScreen = () => {
 
   const handleOnNext = () => {
     track.sendSelectAssetSelected(assetsToSendProperties({amounts}))
-    createUnsignedTx([toYoroiEntry(targets[selectedTargetIndex].entry)])
+    if (!selectedTarget) return
+    createUnsignedTx([toYoroiEntry(selectedTarget.entry)])
   }
   return (
     <SafeArea>

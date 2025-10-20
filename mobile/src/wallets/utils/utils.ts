@@ -9,7 +9,7 @@ import {TokenId, YoroiEntry} from '../types/yoroi'
 export const Entries = {
   first: (entries: YoroiEntry[]): YoroiEntry => {
     if (entries.length === 0) throw new Error('invalid entries')
-    return entries[0]
+    return entries[0]!
   },
   remove: (
     entries: YoroiEntry[],
@@ -34,7 +34,7 @@ export const Amounts = {
       (result, [tokenId, quantity]) => ({
         ...result,
         [tokenId]: result[tokenId]
-          ? Quantities.sum([result[tokenId], quantity])
+          ? Quantities.sum([result[tokenId]!, quantity])
           : quantity,
       }),
       {} as Balance.Amounts,
@@ -211,7 +211,7 @@ export const Utxos = {
         const amounts = {
           ...previousAmounts,
           [primaryTokenId]: Quantities.sum([
-            previousAmounts[primaryTokenId],
+            previousAmounts[primaryTokenId] ?? '0',
             currentUtxo.amount as Balance.Quantity,
           ]),
         }

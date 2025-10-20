@@ -99,10 +99,10 @@ export const NetworkTag = ({
       }
 
       track.networkSelected({
-        to_network: nextNetwork,
+        to_network: nextNetwork!,
         from_network: selectedNetwork,
       })
-      walletManager.setSelectedNetwork(nextNetwork)
+      walletManager.setSelectedNetwork(nextNetwork!)
       return
     }
 
