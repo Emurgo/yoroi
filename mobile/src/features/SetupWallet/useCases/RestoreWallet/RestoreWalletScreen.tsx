@@ -80,7 +80,7 @@ export const RestoreWalletScreen = () => {
     const newWords = [...mnemonicSelectedWords]
     newWords[index] = word
     setMnemonicSelectedWords(newWords)
-    mnenonicRefs[index].current?.selectWord(isEmptyString(word) ? '' : word)
+    mnenonicRefs[index]?.current?.selectWord(isEmptyString(word) ? '' : word)
 
     const mnemonicWordsComplete = newWords.every(Boolean)
     const isValid: boolean = mnemonicWordsComplete
