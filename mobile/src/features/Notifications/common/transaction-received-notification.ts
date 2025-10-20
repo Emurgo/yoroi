@@ -53,24 +53,25 @@ const buildNotifications = async ({
 
     await storage.addValues(newTxIds)
 
-    const transactions = wallet.transactions
-
     newTxIds.forEach((id) => {
-      const txDate = transactions[id].submittedAt ?? new Date().toISOString()
-      const isConfirmedAfterDeadline =
-        new Date(txDate).getTime() > sinceDate.getTime()
-      if (!isConfirmedAfterDeadline) return
-      const metadata: NotificationTypes.TransactionReceivedEvent['metadata'] = {
-        txId: id,
-        isSentByUser:
-          transactions[id]?.direction === TRANSACTION_DIRECTION.SENT,
-        nextTxsCounter: newTxIds.length + processed.length,
-        previousTxsCounter: processed.length,
-        walletId,
+      const tx = wallet.transactions[id]
+      if (tx) {
+        const txDate = tx.submittedAt ?? new Date().toISOString()
+        const isConfirmedAfterDeadline =
+          new Date(txDate).getTime() > sinceDate.getTime()
+        if (!isConfirmedAfterDeadline) return
+        const metadata: NotificationTypes.TransactionReceivedEvent['metadata'] =
+          {
+            txId: id,
+            isSentByUser: tx.direction === TRANSACTION_DIRECTION.SENT,
+            nextTxsCounter: newTxIds.length + processed.length,
+            previousTxsCounter: processed.length,
+            walletId,
+          }
+        notifications.push(
+          createTransactionReceivedNotification(metadata, new Date(txDate)),
+        )
       }
-      notifications.push(
-        createTransactionReceivedNotification(metadata, new Date(txDate)),
-      )
     })
   }
 
