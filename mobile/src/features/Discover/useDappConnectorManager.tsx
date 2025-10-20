@@ -26,7 +26,7 @@ import {useShowCollateralNotFoundAlert} from './common/useShowCollateralNotFound
 
 export const useDappConnectorManager = () => {
   const appStorage = useAsyncStorage()
-  const {navigateToDiscoverBrowserDapp} = useWalletNavigation()
+  const {goBackToDiscoverBrowser} = useWalletNavigation()
   const {wallet, meta} = useSelectedWallet()
   const {navigateToTxReview} = useWalletNavigation()
   const {tabs, tabActiveIndex} = useBrowser()
@@ -102,23 +102,26 @@ export const useDappConnectorManager = () => {
               }
 
               resolve(args?.rootKey)
-              navigateToDiscoverBrowserDapp()
+              goBackToDiscoverBrowser()
             },
             onCancel: () => {
               if (!shouldResolve) return
               shouldResolve = false
               reject(userRejectedError())
+              goBackToDiscoverBrowser()
             },
             onClose: () => {
               if (shouldResolve) {
                 shouldResolve = false
                 reject(userRejectedError())
               }
+              goBackToDiscoverBrowser()
             },
             onErrorWithoutFeedback: (error) => {
               shouldResolve = false
               logger.error('useDappConnectorManager::handleSignTx', {error})
               reject(error)
+              goBackToDiscoverBrowser()
             },
           })
         })
@@ -129,7 +132,7 @@ export const useDappConnectorManager = () => {
       track,
       navigateToTxReview,
       dappCollateralRequestUtils,
-      navigateToDiscoverBrowserDapp,
+      goBackToDiscoverBrowser,
     ],
   )
 
@@ -172,7 +175,7 @@ export const useDappConnectorManager = () => {
                 return
               }
               resolve(args?.tx)
-              navigateToDiscoverBrowserDapp()
+              goBackToDiscoverBrowser()
             },
             onError: (error) => {
               shouldResolve = false
@@ -180,22 +183,25 @@ export const useDappConnectorManager = () => {
                 error,
               })
               reject(error)
+              goBackToDiscoverBrowser()
             },
             onCancel: () => {
               if (!shouldResolve) return
               shouldResolve = false
               reject(userRejectedError())
+              goBackToDiscoverBrowser()
             },
             onClose: () => {
               if (!shouldResolve) return
               shouldResolve = false
               reject(userRejectedError())
+              goBackToDiscoverBrowser()
             },
           })
         })
       })
     },
-    [track, activeTabOrigin, navigateToTxReview, navigateToDiscoverBrowserDapp],
+    [track, activeTabOrigin, navigateToTxReview, goBackToDiscoverBrowser],
   )
 
   const handleSendReorganisationTx = React.useCallback(

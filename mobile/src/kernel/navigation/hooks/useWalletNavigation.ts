@@ -292,6 +292,10 @@ export const useWalletNavigation = () => {
       })
     },
 
+    goBackToDiscoverBrowser: () => {
+      navigation.goBack()
+    },
+
     navigateToSwap: (tokenOutId?: Portfolio.Token.Id) => {
       if (network === Chain.Network.Preprod) {
         navigation.navigate('manage-wallets', {
