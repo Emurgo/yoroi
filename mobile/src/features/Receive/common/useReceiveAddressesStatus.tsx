@@ -1,4 +1,4 @@
-import {Wallet} from '@yoroi/types'
+import {App, Wallet} from '@yoroi/types'
 
 import {useReceiveAddresses} from '~/features/WalletManager/hooks/useReceiveAddresses'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
@@ -39,6 +39,9 @@ export const useReceiveAddressesStatus = (
   )
   const multipleAddress = addressesStatus.unused[0] ?? addressesStatus.used[0]
   const nextAddress = isSingle ? singleAddress : multipleAddress
+  if (!nextAddress) {
+    throw new App.Errors.InvalidState('No next address found for receiving')
+  }
   const result: ReceiveAddressesStatus = {
     used: addressesStatus.used,
     unused: limitUnused,
