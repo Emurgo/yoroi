@@ -1,4 +1,5 @@
 import {UseMutationOptions, useMutation} from '@tanstack/react-query'
+import * as React from 'react'
 import {MessageDescriptor} from 'react-intl'
 import {Permission, PermissionsAndroid, Platform} from 'react-native'
 
@@ -20,19 +21,21 @@ export const useLedgerPermissions = (
 ) => {
   const {disable, enable} = useBackgroundTimerControl()
 
+  const mutationFn = React.useCallback(async () => {
+    // Disable background timer before requesting permissions (Android-specific)
+    // On Android, permission dialogs send the app to background, which could trigger auto-logout
+    disable()
+    try {
+      await requestLedgerPermissions()
+    } finally {
+      // Re-enable background timer after permission dialog is dismissed
+      enable()
+    }
+  }, [disable, enable])
+
   const mutation = useMutation({
     ...options,
-    mutationFn: async () => {
-      // Disable background timer before requesting permissions (Android-specific)
-      // On Android, permission dialogs send the app to background, which could trigger auto-logout
-      disable()
-      try {
-        await requestLedgerPermissions()
-      } finally {
-        // Re-enable background timer after permission dialog is dismissed
-        enable()
-      }
-    },
+    mutationFn,
   })
 
   return {
