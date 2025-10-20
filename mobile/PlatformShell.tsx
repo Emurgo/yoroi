@@ -1,4 +1,5 @@
 import * as React from 'react'
+import {Platform} from 'react-native'
 import {KeyboardProvider} from 'react-native-keyboard-controller'
 import {
   SafeAreaProvider,
@@ -13,9 +14,13 @@ import {
 import {RouterContainer} from '~/kernel/navigation/RouterContainer'
 import {ModalProvider} from '~/ui/Modal/context/ModalContext'
 
+import {BackgroundTimerProvider} from './src/hooks/BackgroundTimerContext'
+
 export function PlatformShell({children}: React.PropsWithChildren) {
   const metricsManager = React.useMemo(() => makeMetricsManager(), [])
   const {init} = useScreenCapture()
+  // Only enable on Android where permission dialogs trigger auto-logout
+  const isAndroid = Platform.OS === 'android'
 
   React.useEffect(() => {
     init()
@@ -26,7 +31,11 @@ export function PlatformShell({children}: React.PropsWithChildren) {
       <MetricsProvider metricsManager={metricsManager}>
         <RouterContainer>
           <ModalProvider>
-            <KeyboardProvider statusBarTranslucent>{children}</KeyboardProvider>
+            <BackgroundTimerProvider active={isAndroid}>
+              <KeyboardProvider statusBarTranslucent>
+                {children}
+              </KeyboardProvider>
+            </BackgroundTimerProvider>
           </ModalProvider>
         </RouterContainer>
       </MetricsProvider>
