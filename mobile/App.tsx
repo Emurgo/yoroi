@@ -12,7 +12,6 @@ import {TransferProvider} from '@yoroi/transfer'
 import * as Sentry from '@sentry/react-native'
 import * as Updates from 'expo-updates'
 import * as React from 'react'
-import {Platform} from 'react-native'
 
 import {BrowserProvider} from '~/features/Discover/common/BrowserProvider'
 import {PortfolioTokenActivityProvider} from '~/features/Portfolio/context/PortfolioTokenActivityProvider'
@@ -35,7 +34,6 @@ import {CurrencyProvider} from './src/features/Settings/context/CurrencyProvider
 import {AutomaticWalletOpenerProvider} from './src/features/WalletManager/context/AutomaticWalletOpeningProvider'
 import {WalletManagerProvider} from './src/features/WalletManager/context/WalletManagerProvider'
 import {walletManager} from './src/features/WalletManager/wallet-manager'
-import {BackgroundTimerProvider} from './src/hooks/BackgroundTimerContext'
 import {useFonts} from './src/hooks/useFonts'
 import {ConnectionProvider} from './src/kernel/connection/ConnectionProvider'
 import {LanguageProvider} from './src/kernel/i18n/LanguageProvider'
@@ -85,47 +83,40 @@ function AppShell({children}: React.PropsWithChildren) {
 }
 
 function BusinessShell({children}: React.PropsWithChildren) {
-  // Only enable on Android where permission dialogs trigger auto-logout
-  const isAndroid = Platform.OS === 'android'
-
   return (
-    <BackgroundTimerProvider active={isAndroid}>
-      <AuthProvider
-        authStorageKeyManager={authStorageKeyManager}
-        pinStorageKeyManager={pinStorageKeyManager}
-        installationIdKeyManager={installationIdStorageKeyManager}
-      >
-        <SearchProvider>
-          <PairingProvider
-            currencyStorageKeyManager={currencyStorageKeyManager}
-          >
-            <WalletManagerProvider walletManager={walletManager}>
-              <PortfolioTokenActivityProvider>
-                <AutomaticWalletOpenerProvider>
-                  <TransferProvider>
-                    <ReviewTxProvider>
-                      <SetupWalletProvider>
-                        <BrowserProvider>
-                          <LinksProvider>
-                            <YoroiNotificationManager>
-                              <CurrencyProvider>
-                                <CatalystProvider manager={catalystManager}>
-                                  <ReceiveProvider>{children}</ReceiveProvider>
-                                </CatalystProvider>
-                              </CurrencyProvider>
-                            </YoroiNotificationManager>
-                          </LinksProvider>
-                        </BrowserProvider>
-                      </SetupWalletProvider>
-                    </ReviewTxProvider>
-                  </TransferProvider>
-                </AutomaticWalletOpenerProvider>
-              </PortfolioTokenActivityProvider>
-            </WalletManagerProvider>
-          </PairingProvider>
-        </SearchProvider>
-      </AuthProvider>
-    </BackgroundTimerProvider>
+    <AuthProvider
+      authStorageKeyManager={authStorageKeyManager}
+      pinStorageKeyManager={pinStorageKeyManager}
+      installationIdKeyManager={installationIdStorageKeyManager}
+    >
+      <SearchProvider>
+        <PairingProvider currencyStorageKeyManager={currencyStorageKeyManager}>
+          <WalletManagerProvider walletManager={walletManager}>
+            <PortfolioTokenActivityProvider>
+              <AutomaticWalletOpenerProvider>
+                <TransferProvider>
+                  <ReviewTxProvider>
+                    <SetupWalletProvider>
+                      <BrowserProvider>
+                        <LinksProvider>
+                          <YoroiNotificationManager>
+                            <CurrencyProvider>
+                              <CatalystProvider manager={catalystManager}>
+                                <ReceiveProvider>{children}</ReceiveProvider>
+                              </CatalystProvider>
+                            </CurrencyProvider>
+                          </YoroiNotificationManager>
+                        </LinksProvider>
+                      </BrowserProvider>
+                    </SetupWalletProvider>
+                  </ReviewTxProvider>
+                </TransferProvider>
+              </AutomaticWalletOpenerProvider>
+            </PortfolioTokenActivityProvider>
+          </WalletManagerProvider>
+        </PairingProvider>
+      </SearchProvider>
+    </AuthProvider>
   )
 }
 
