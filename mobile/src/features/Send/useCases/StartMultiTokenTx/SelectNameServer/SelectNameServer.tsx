@@ -16,7 +16,16 @@ export const SelectNameServer = () => {
   const bold = useBold()
   const {targets, selectedTargetIndex, nameServerSelectedChanged} =
     useTransfer()
-  const receiver = targets[selectedTargetIndex].receiver
+  const [animatedValue] = React.useState(new Animated.Value(0))
+  const [waitAnimation, setWaitAnimation] = React.useState(false)
+
+  const target = targets[selectedTargetIndex]
+  const receiver: Resolver.Receiver = target?.receiver ?? {
+    resolve: '',
+    as: 'address',
+    selectedNameServer: undefined,
+    addressRecords: {},
+  }
   const {addressRecords} = receiver
   const addressRecordsEntries = toAddressRecordsEntries(addressRecords)
   const labels = addressRecordsEntries.map(
@@ -24,9 +33,6 @@ export const SelectNameServer = () => {
   )
 
   const shouldShow = addressRecordsEntries.length > 1
-
-  const [animatedValue] = React.useState(new Animated.Value(0))
-  const [waitAnimation, setWaitAnimation] = React.useState(false)
 
   React.useEffect(() => {
     animatedValue.stopAnimation()
@@ -47,7 +53,10 @@ export const SelectNameServer = () => {
   }, [animatedValue, shouldShow])
 
   const handleOnSelectNameServer = (index: number) => {
-    const [nameServer] = addressRecordsEntries[index]
+    const entry = addressRecordsEntries[index]
+    if (!entry) return
+
+    const [nameServer] = entry
     nameServerSelectedChanged(nameServer)
   }
 
