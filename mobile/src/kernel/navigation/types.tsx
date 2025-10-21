@@ -361,6 +361,7 @@ export type WalletNavigation = {
   navigateToAnalyticsSettings: () => void
   navigateToGovernanceCentre: () => void
   navigateToDiscoverBrowserDapp: () => void
+  navigateToSwap: (tokenOutId?: Portfolio.Token.Id) => void
   navigateToExchange: () => void
   navigateToUtxoList: () => void
   navigateToUtxoConsolidation: () => void
