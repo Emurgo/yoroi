@@ -51,9 +51,16 @@ class Api implements GovernanceApi {
       stakeKeyHash,
     )
     try {
-      const {drepDelegation} = await client<GetStakingKeyStateResponse>({
+      const response = await client<GetStakingKeyStateResponse>({
         url,
       })
+
+      // Added null check to handle undefined response, this was crashing the app
+      if (!response || response === null) {
+        return {}
+      }
+
+      const {drepDelegation} = response
       return {drepDelegation}
     } catch (error) {
       if (error instanceof Error && error.message.includes('404')) {
