@@ -5,11 +5,11 @@ import {isAmountInCollateralRange, isPureUtxo, utxosMaker} from './utxos'
 describe('UTXO utility functions', () => {
   describe('isPureUtxo', () => {
     it('returns true for pure UTXOs', () => {
-      expect(isPureUtxo(mockRawUtxos[0])).toBe(true)
+      expect(isPureUtxo(mockRawUtxos[0]!)).toBe(true)
     })
 
     it('returns false for non-pure UTXOs', () => {
-      expect(isPureUtxo(mockRawUtxos[1])).toBe(false)
+      expect(isPureUtxo(mockRawUtxos[1]!)).toBe(false)
     })
   })
 

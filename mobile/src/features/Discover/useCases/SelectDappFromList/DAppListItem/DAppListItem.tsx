@@ -223,8 +223,7 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
   )
 }
 
-const walletsCompatibilityLink =
-  'https://emurgohelpdesk.zendesk.com/hc/en-us/articles/10413017088527-DApps-and-HD-wallets-compatability'
+const walletsCompatibilityLink = 'https://help.yoroi-wallet.com/en/'
 
 const SingleAddressDAppWarning = () => {
   const {palette: p, atoms: ta} = useTheme()

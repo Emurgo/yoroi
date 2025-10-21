@@ -141,5 +141,5 @@ const formatStakepoolNameWithTicker = (ticker?: string, name?: string) => {
   ]
     .join(' ')
     .trim()
-  if (nameWithTicker.length > 0) return nameWithTicker
+  return nameWithTicker
 }

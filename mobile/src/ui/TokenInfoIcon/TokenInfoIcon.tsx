@@ -30,8 +30,8 @@ export const TokenInfoIcon = ({
   const {palette: p} = useTheme()
   const [policy, name] = !info ? '.' : info.id.split('.')
   const {uri, headers, onError, onLoad, isError} = usePortfolioImage({
-    policy,
-    name,
+    policy: policy ?? '',
+    name: name ?? '',
     width: 64,
     height: 64,
   })

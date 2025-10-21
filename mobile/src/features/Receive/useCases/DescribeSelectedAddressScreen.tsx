@@ -24,17 +24,15 @@ import {isEmptyString} from '~/wallets/utils/string'
 import {useReceive} from '../common/ReceiveProvider'
 import {useMultipleAddressesInfo} from '../common/useMultipleAddressesInfo'
 import {useNavigateTo} from '../common/useNavigateTo'
+import {useReceiveAddressesStatus} from '../common/useReceiveAddressesStatus'
 
 export const DescribeSelectedAddressScreen = () => {
   const strings = useStrings()
   const navigateTo = useNavigateTo()
   const {selectedAddress} = useReceive()
-  const {
-    /* isSingle,  */
-  } = useAddressMode()
-  // const addresses = useReceiveAddressesStatus(addressMode)
-  // TODO: REVISIT, RESTORE THIS FEATURE
-  // const isMultipleAddressesUsed = addresses.used.length > 1
+  const {isSingle: isSingleAddressMode, addressMode} = useAddressMode()
+  const addresses = useReceiveAddressesStatus(addressMode)
+  const isMultipleAddressesUsed = addresses.used.length > 1
   const {isShowingMultipleAddressInfo} = useMultipleAddressesInfo()
   const {openModal, closeModal} = useModal()
 
@@ -60,6 +58,7 @@ export const DescribeSelectedAddressScreen = () => {
     },
     [navigateTo],
   )
+
   React.useEffect(() => {
     if (!isShowingMultipleAddressInfo) return
 
@@ -80,6 +79,8 @@ export const DescribeSelectedAddressScreen = () => {
     return () => clearTimeout(timeout)
   }, [
     isShowingMultipleAddressInfo,
+    isSingleAddressMode,
+    isMultipleAddressesUsed,
     openModal,
     strings.receive.singleOrMultiple,
     handleOnModalConfirm,

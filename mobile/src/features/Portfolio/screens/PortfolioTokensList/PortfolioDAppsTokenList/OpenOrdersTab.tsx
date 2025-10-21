@@ -20,7 +20,7 @@ type Props = {
 }
 export const OpenOrdersTab = ({isFetching, tokensList, isSearching}: Props) => {
   const strings = useStrings()
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
   const hasEmpty = tokensList.length === 0
 
   const {onShow} = useShowOpenOrderModal()
@@ -37,7 +37,7 @@ export const OpenOrdersTab = ({isFetching, tokensList, isSearching}: Props) => {
     if (isSearching)
       return (
         <View>
-          <Text style={[a.body_2_md_regular, {color: p.gray_700}]}>
+          <Text style={[a.body_2_md_regular, ta.text_gray_medium]}>
             {strings.portfolio.countOpenOrders(tokensList.length)}
           </Text>
 
@@ -72,7 +72,7 @@ export const OpenOrdersTab = ({isFetching, tokensList, isSearching}: Props) => {
         ListFooterComponent={renderFooterList()}
         ItemSeparatorComponent={() => <Space.Width.sm />}
         showsHorizontalScrollIndicator={false}
-        keyExtractor={(item, index) => index.toString()}
+        keyExtractor={(_, index) => index.toString()}
         renderItem={({item}) => (
           <DAppTokenItem
             onPress={() => onTokenPress(item)}

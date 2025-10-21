@@ -190,7 +190,7 @@ describe('syncTxs (undefined means no updates)', () => {
 
   it('should return current txs plus new txs if there are new transactions and continue to request while is not the last', async () => {
     const params = {
-      addressesByChunks: [mockedAddressesByChunks[0]],
+      addressesByChunks: [mockedAddressesByChunks[0]!],
       baseApiUrl: mockedBackendConfig.API_ROOT,
       transactions: {},
       api: {

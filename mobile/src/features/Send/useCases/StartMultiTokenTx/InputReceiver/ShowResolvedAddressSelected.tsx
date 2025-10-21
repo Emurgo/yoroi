@@ -10,10 +10,11 @@ import {Space} from '~/ui/Space/Space'
 
 export const ShowResolvedAddressSelected = () => {
   const strings = useStrings()
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
   const {targets, selectedTargetIndex} = useTransfer()
-  const {selectedNameServer} = targets[selectedTargetIndex].receiver
-  const {address} = targets[selectedTargetIndex].entry
+  const selectedTarget = targets[selectedTargetIndex]
+  const selectedNameServer = selectedTarget?.receiver.selectedNameServer
+  const address = selectedTarget?.entry.address ?? ''
 
   const hide = address.length === 0 || selectedNameServer == null
 
@@ -27,16 +28,13 @@ export const ShowResolvedAddressSelected = () => {
     <View>
       <Space.Height._2xs />
 
-      <View style={[{flexDirection: 'row', justifyContent: 'space-between'}]}>
-        <Text
-          style={[a.body_3_sm_regular, {color: p.gray_700}]}
-          numberOfLines={1}
-        >
+      <View style={[a.flex_row, a.justify_between]}>
+        <Text style={[a.body_3_sm_regular, ta.text_gray_max]} numberOfLines={1}>
           {serverName}
         </Text>
 
         <Text
-          style={[a.body_3_sm_regular, {color: p.gray_500}]}
+          style={[a.body_3_sm_regular, ta.text_gray_medium]}
           numberOfLines={1}
         >
           {resolvedAddressInfo}

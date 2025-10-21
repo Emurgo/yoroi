@@ -273,7 +273,7 @@ const useFilteredDappList = (tab: TDAppTabs, categoriesSelected: string[]) => {
     return allDapps
       .filter((dApp) =>
         categoriesSelected.some((filter) =>
-          list.filters[filter].includes(dApp.category),
+          list?.filters?.[filter]?.includes(dApp.category),
         ),
       )
       .sort((dAppFirst, dAppSecond) =>

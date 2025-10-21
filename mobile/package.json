@@ -45,8 +45,8 @@
     "@emurgo/cross-csl-mobile": "8.0.0-alpha.1",
     "@emurgo/cross-msl-core": "2.0.0",
     "@emurgo/cross-msl-mobile": "2.0.0",
-    "@emurgo/csl-mobile-bridge-jsi": "1.0.0-alpha.6",
-    "@emurgo/msl-mobile-bridge-jsi": "1.0.0-alpha.6",
+    "@emurgo/csl-mobile-bridge-jsi": "1.0.0-alpha.7",
+    "@emurgo/msl-mobile-bridge-jsi": "1.0.0-alpha.7",
     "@emurgo/yoroi-lib": "3.0.0-beta.1",
     "@formatjs/intl-datetimeformat": "6.18.0",
     "@formatjs/intl-getcanonicallocales": "2.5.5",
@@ -126,8 +126,8 @@
     "react-native-pager-view": "6.7.1",
     "react-native-paper": "5.14.5",
     "react-native-qrcode-svg": "6.3.15",
-    "react-native-quick-base64": "2.2.0",
-    "react-native-quick-crypto": "0.7.13",
+    "react-native-quick-base64": "2.2.2",
+    "react-native-quick-crypto": "0.7.17",
     "react-native-randombytes": "3.6.2",
     "react-native-reanimated": "3.17.4",
     "react-native-safe-area-context": "5.4.0",
@@ -188,7 +188,8 @@
     "typescript": "5.8.3"
   },
   "overrides": {
-    "@emurgo/csl-mobile-bridge-jsi": "1.0.0-alpha.6",
+    "@emurgo/csl-mobile-bridge-jsi": "1.0.0-alpha.7",
+    "@emurgo/msl-mobile-bridge-jsi": "1.0.0-alpha.7",
     "react-native-svg": "15.11.2"
   }
 }

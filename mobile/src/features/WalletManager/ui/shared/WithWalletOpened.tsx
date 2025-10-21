@@ -10,7 +10,7 @@ import {
   resolverManagerMaker,
   resolverStorageMaker,
 } from '@yoroi/resolver'
-import {Resolver} from '@yoroi/types'
+import {App, Resolver} from '@yoroi/types'
 
 import * as React from 'react'
 
@@ -22,8 +22,11 @@ import {useSelectedWallet} from '../../hooks/useSelectedWallet'
 export const WithWalletOpened = ({children}: React.PropsWithChildren) => {
   const {wallet} = useSelectedWallet()
   const claimManager = React.useMemo(() => {
+    const address = wallet.externalAddresses[0]
+    if (!address) throw new App.Errors.InvalidState('Missing external address')
+
     return claimManagerMaker({
-      address: wallet.externalAddresses[0],
+      address,
       primaryTokenInfo: wallet.portfolioPrimaryTokenInfo,
       tokenManager: wallet.networkManager.tokenManager,
     })

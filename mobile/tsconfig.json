@@ -8,6 +8,15 @@
     "strict": true,
     "baseUrl": ".",
     "jsx": "react-native",
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "noImplicitUseStrict": false,
+    "noStrictGenericChecks": false,
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
     "typeRoots": [
       "./src/types",
       "./node_modules/@types"

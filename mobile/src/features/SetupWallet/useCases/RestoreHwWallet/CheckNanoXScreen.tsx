@@ -96,7 +96,7 @@ export const CheckNanoXScreen = () => {
 }
 
 const ledgerSupport =
-  'https://emurgohelpdesk.zendesk.com/hc/en-us/sections/4413677248399-Hardware-Wallet-Ledger-Trezor'
+  'https://help.yoroi-wallet.com/en/article/how-to-connect-a-ledger-hardware-wallet-to-yoroi-1ghfwpw/'
 
 const LedgerSupportLink = () => {
   const handleOnPress = () => Linking.openURL(ledgerSupport)

@@ -19,7 +19,8 @@ export const useSendReceiver = () => {
     receiverResolveChanged,
     addressRecordsFetched,
   } = useTransfer()
-  const receiver = targets[selectedTargetIndex].receiver
+  const target = targets[selectedTargetIndex]
+  const receiver = target?.receiver ?? {resolve: '', as: 'address'}
   const isUnsupportedDomain =
     !isResolvableDomain(receiver.resolve) && isDomain(receiver.resolve)
 

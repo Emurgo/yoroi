@@ -1,5 +1,5 @@
 import {cardanoConfig} from '@yoroi/blockchains'
-import {Balance, Wallet} from '@yoroi/types'
+import {App, Balance, Wallet} from '@yoroi/types'
 
 import * as CSL from '@emurgo/cross-csl-core'
 import {
@@ -211,6 +211,7 @@ class CIP30Extension {
     assertCollateralValue(valueNum)
 
     const bech32Address = this.wallet.externalAddresses[0]
+    if (!bech32Address) throw new App.Errors.InvalidState('No external address')
     const amounts = {
       [this.wallet.portfolioPrimaryTokenInfo.id]: asQuantity(valueStr),
     }
@@ -237,6 +238,7 @@ const remoteAssetToMultiasset = (remoteAssets: UtxoAsset[]): CSL.MultiAsset => {
   const multiasset = CardanoMobile.MultiAsset.new()
   for (const policyHex of Object.keys(groupedAssets)) {
     const assetGroup = groupedAssets[policyHex]
+    if (!assetGroup) continue
     const policyId = CardanoMobile.ScriptHash.fromBytes(
       new Uint8Array(Buffer.from(policyHex, 'hex')),
     )
@@ -278,7 +280,7 @@ const _getBalance = (
   if (tokenId === 'TADA' || tokenId === 'ADA') tokenId = '.'
   const amounts = Utxos.toAmounts(utxos, primaryTokenId)
   const value = CardanoMobile.Value.new(
-    CardanoMobile.BigNum.fromStr(amounts[primaryTokenId]),
+    CardanoMobile.BigNum.fromStr(amounts[primaryTokenId] ?? '0'),
   )
   const normalizedInHex = Object.keys(amounts)
     .filter((t) => {
@@ -307,7 +309,7 @@ const _getBalance = (
     for (const asset of assetValue) {
       if (!asset) continue
       const assetName = CardanoMobile.AssetName.fromHex(asset.nameHex)
-      const assetValue = CardanoMobile.BigNum.fromStr(asset.amount)
+      const assetValue = CardanoMobile.BigNum.fromStr(asset.amount ?? '0')
       assets.insert(assetName, assetValue)
     }
     multiAsset.insert(policyId, assets)

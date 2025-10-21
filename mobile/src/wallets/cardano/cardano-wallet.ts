@@ -274,8 +274,12 @@ export const makeCardanoWallet = (
     }
 
     getChangeAddress(addressMode: Wallet.AddressMode): string {
+      const externalAddress = this.externalChain.addresses[0]
+      if (!externalAddress)
+        throw new App.Errors.InvalidState('No External Address')
+
       // SA mode uses only externalChain index 0
-      if (addressMode === 'single') return this.externalChain.addresses[0]
+      if (addressMode === 'single') return externalAddress
 
       const candidateAddresses = this.internalChain.addresses
       const unseen = candidateAddresses.filter(
@@ -353,6 +357,8 @@ export const makeCardanoWallet = (
 
     getFirstPaymentAddress() {
       const externalAddress = this.externalAddresses[0]
+      if (!externalAddress)
+        throw new App.Errors.InvalidState('No External Address')
       const addr = Cardano.Wasm.Address.fromBech32(externalAddress)
       const address = Cardano.Wasm.BaseAddress.fromAddress(addr)
       if (!address)
@@ -1364,7 +1370,8 @@ export const makeCardanoWallet = (
 
     private isUsedAddress(address: string) {
       const perAddressTxs = this.transactionManager.perAddressTxs
-      return !!perAddressTxs[address] && perAddressTxs[address].length > 0
+      const txs = perAddressTxs[address]
+      return !!txs && txs.length > 0
     }
   }
 }

@@ -54,9 +54,9 @@ export const filterAddressesByStakingKey = (
 
 export const getDelegationStatus = (
   rewardAddress: string,
-  txCertificatesForKey: Record<string, TimestampedCertMeta>,
+  txCertificatesForKey: Record<string, TimestampedCertMeta> = {},
 ): StakingStatus => {
-  const sortedCerts: any = sortBy(
+  const sortedCerts = sortBy(
     txCertificatesForKey,
     (txCerts) => txCerts.submittedAt,
   )

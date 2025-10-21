@@ -245,9 +245,13 @@ const browserReducer = (
         break
 
       case BrowserActionType.UpdateTab:
-        draft.tabs[action.payload.tabIndex] = {
-          ...draft.tabs[action.payload.tabIndex],
-          ...action.payload.tabInfo,
+        const tab = draft.tabs[action.payload.tabIndex]
+        if (tab) {
+          draft.tabs[action.payload.tabIndex] = {
+            ...tab,
+            ...action.payload.tabInfo,
+            id: tab.id,
+          }
         }
         break
 

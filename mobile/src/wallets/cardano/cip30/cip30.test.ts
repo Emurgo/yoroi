@@ -27,27 +27,27 @@ describe('cip30ExtensionMaker', () => {
 
   it('should support getBalance', async () => {
     const cip30 = cip30ExtensionMaker(mocks.wallet, mocks.walletMeta)
-    const result = await cip30.getBalance()
+    const result = cip30.getBalance()
     expect(result).toBeDefined()
-    expect(await (await result.coin()).toStr()).toBe('2282543724')
+    expect(result.coin().toStr()).toBe('2282543724')
   })
 
   it('should support getUnusedAddresses', async () => {
     const cip30 = cip30ExtensionMaker(mocks.wallet, mocks.walletMeta)
-    const result = await cip30.getUnusedAddresses()
+    const result = cip30.getUnusedAddresses()
     expect(result).toEqual([])
   })
 
   it('should support getUsedAddresses', async () => {
     const cip30 = cip30ExtensionMaker(mocks.wallet, mocks.walletMeta)
-    const result = await cip30.getUsedAddresses()
+    const result = cip30.getUsedAddresses()
     expect(result).toEqual([])
   })
 
   it('should support getChangeAddress', async () => {
     const cip30 = cip30ExtensionMaker(mocks.wallet, mocks.walletMeta)
-    const result = await cip30.getChangeAddress()
-    const bech32 = await result.toBech32(undefined)
+    const result = cip30.getChangeAddress()
+    const bech32 = result.toBech32(undefined)
     const expectedAddress =
       'addr1qxy9yjhvxh700xeluhvdpwlauuvnzav42edveyggy8fusqvg2f9wcd0u77dnlewc6zalmecex96e24j6ejgssgwneqqs762af9'
     expect(bech32).toBe(expectedAddress)
@@ -62,10 +62,10 @@ describe('cip30ExtensionMaker', () => {
       },
       mocks.walletMeta,
     )
-    const result = await cip30.getRewardAddresses()
+    const result = cip30.getRewardAddresses()
     expect(result).toHaveLength(1)
     const [address] = result
-    expect(await address.toBech32(undefined)).toBe(
+    expect(address?.toBech32(undefined)).toBe(
       'addr1qxy9yjhvxh700xeluhvdpwlauuvnzav42edveyggy8fusqvg2f9wcd0u77dnlewc6zalmecex96e24j6ejgssgwneqqs762af9',
     )
   })
@@ -75,7 +75,7 @@ describe('cip30ExtensionMaker', () => {
     const result = await cip30.getCollateral()
     expect(result).toHaveLength(1)
     const [utxo] = result ?? []
-    expect(await utxo.toHex()).toBe(
+    expect(utxo?.toHex()).toBe(
       '8282582022d391c7a97559cb4784bd975214919618acce75cde573a7150a176700e761810282583900d0f356065392d8fd5a1021aa1f876110700aad101cf15b35a7c247b2c3892366f174a76af9252f78368f5747d3055ab3568ea3b6bf40b01e1a0053274d',
     )
   })
@@ -84,7 +84,7 @@ describe('cip30ExtensionMaker', () => {
     const cip30 = cip30ExtensionMaker(mocks.wallet, mocks.walletMeta)
     const rootKey = getMasterKeyFromMnemonic(mnemonic)
     const rootKeyHex = Buffer.from(rootKey).toString('hex')
-    const result = await cip30.signTx(rootKeyHex, txCbor, true)
+    const result = cip30.signTx(rootKeyHex, txCbor, true)
     expect(result).toBeDefined()
   })
 

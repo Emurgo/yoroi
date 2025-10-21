@@ -126,11 +126,12 @@ export const SwapSettings = () => {
 
   return (
     <KeyboardAvoidingView style={[a.flex_1, {backgroundColor: p.bg_color_max}]}>
-      <SafeAreaView
-        edges={['bottom', 'left', 'right']}
-        style={[a.flex_1, a.p_lg]}
-      >
-        <ScrollView bounces={false} style={[a.flex_1]}>
+      <SafeAreaView edges={['bottom', 'left', 'right']} style={[a.flex_1]}>
+        <ScrollView
+          bounces={false}
+          style={[a.flex_1]}
+          contentContainerStyle={[a.px_lg]}
+        >
           <Text style={[a.py_lg, a.body_1_lg_regular, {color: p.gray_600}]}>
             {strings.swap.slippageTolerance}
           </Text>

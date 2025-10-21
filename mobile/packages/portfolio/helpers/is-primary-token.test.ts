@@ -2,7 +2,7 @@ import {tokenInfoMocks} from '../adapters/token-info.mocks'
 import {primaryTokenId} from '../constants'
 import {isPrimaryToken} from './is-primary-token'
 
-describe('isPrimary', () => {
+describe('isPrimaryToken', () => {
   it('should return true if the token nature is Primary', () => {
     const result = isPrimaryToken(tokenInfoMocks.primaryETH)
 
@@ -31,5 +31,8 @@ describe('isPrimary', () => {
     const result = isPrimaryToken(null)
 
     expect(result).toBe(false)
+
+    const result2 = isPrimaryToken(undefined)
+    expect(result2).toBe(false)
   })
 })

@@ -50,7 +50,7 @@
   "scripts": {
     "build": "npm run tsc && npm run lint && npm run test --ci --silent && npm run clean && bob build",
     "build:dev": "npm run tsc && npm run clean && bob build",
-    "build:release": "npm build && npm flow",
+    "build:release": "npm run build && npm run flow",
     "clean": "del-cli lib",
     "dgraph": "depcruise src --include-only \"^src\" --output-type dot | dot -T svg > dependency-graph.svg",
     "flow": ". ./scripts/flowgen.sh",
