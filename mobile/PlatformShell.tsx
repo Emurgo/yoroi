@@ -23,29 +23,13 @@ export function PlatformShell({children}: React.PropsWithChildren) {
 
   return (
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-<<<<<<< Updated upstream
-      <MetricsProvider metricsManager={metricsManager}>
-        <RouterContainer>
-          <ModalProvider>
-            <BackgroundTimerProvider active={isAndroid}>
-              <KeyboardProvider statusBarTranslucent>
-                {children}
-              </KeyboardProvider>
-            </BackgroundTimerProvider>
-          </ModalProvider>
-        </RouterContainer>
-      </MetricsProvider>
-=======
       <RouterContainer>
         <ModalProvider>
           <BackgroundTimerProvider active={isAndroid}>
-            <KeyboardProvider statusBarTranslucent>
-              {children}
-            </KeyboardProvider>
+            <KeyboardProvider statusBarTranslucent>{children}</KeyboardProvider>
           </BackgroundTimerProvider>
         </ModalProvider>
       </RouterContainer>
->>>>>>> Stashed changes
     </SafeAreaProvider>
   )
 }
