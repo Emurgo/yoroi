@@ -95,7 +95,6 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
   }
 
   const handlePress = () => {
-    if (connected) return
     if (onPress) return onPress()
 
     if (!connected || isGoogleSearchItem(dApp)) {
