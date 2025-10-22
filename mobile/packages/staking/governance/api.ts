@@ -1,74 +1,102 @@
-import {Fetcher, fetcher} from '@yoroi/common'
-import {Chain} from '@yoroi/types'
+import {FetchData, fetchData, isLeft} from '@yoroi/common'
+import {Api, Chain} from '@yoroi/types'
 
 import {GOVERNANCE_ENDPOINTS} from './config'
 import {DRepId} from './types'
 
 export type GovernanceApi = {
-  getDRepById: (drepId: DRepId) => Promise<{txId: string; epoch: number} | null>
+  getDRepById: (
+    drepId: DRepId,
+  ) => Promise<Api.Response<{txId: string; epoch: number} | null>>
   getStakingKeyState: (
     stakeKeyHash: string,
-  ) => Promise<GetStakingKeyStateResponse>
+  ) => Promise<Api.Response<GetStakingKeyStateResponse>>
 }
 
 export const governanceApiMaker = ({
   network,
-  client = fetcher,
+  request = fetchData,
 }: {
   network: Chain.SupportedNetworks
-  client?: Config['client']
+  request?: FetchData
 }) => {
-  return new Api({network, client})
+  return new GovernanceApiImpl({network, request})
 }
 
-class Api implements GovernanceApi {
+class GovernanceApiImpl implements GovernanceApi {
   constructor(private config: Config) {}
 
-  async getDRepById(drepId: DRepId) {
-    const {network, client} = this.config
+  async getDRepById(
+    drepId: DRepId,
+  ): Promise<Api.Response<{txId: string; epoch: number} | null>> {
+    const {network, request} = this.config
     const backend = getApiConfig(network)
+    const url = backend.getDRepById.replace('{{DREP_ID}}', drepId)
 
-    try {
-      const url = backend.getDRepById.replace('{{DREP_ID}}', drepId)
-      const response = await client<GetDRepByIdResponse>({url})
-      const txId = response?.registration?.tx
-      const epoch = response?.registration?.epoch
-      return txId && epoch ? {txId, epoch} : null
-    } catch (error) {
-      if (error instanceof Error && error.message.includes('404')) {
-        return null
+    const response = await request<GetDRepByIdResponse>({url})
+
+    if (isLeft(response)) {
+      // Handle 404 as null (DRep not found)
+      if (response.error.status === 404) {
+        return {
+          tag: 'right',
+          value: {status: 200, data: null},
+        } as const
       }
-
-      throw error
+      return response
     }
+
+    const {data} = response.value
+    const txId = data?.registration?.tx
+    const epoch = data?.registration?.epoch
+
+    return {
+      tag: 'right',
+      value: {
+        status: response.value.status,
+        data: txId && epoch ? {txId, epoch} : null,
+      },
+    } as const
   }
 
-  async getStakingKeyState(stakeKeyHash: string) {
-    const {network, client} = this.config
+  async getStakingKeyState(
+    stakeKeyHash: string,
+  ): Promise<Api.Response<GetStakingKeyStateResponse>> {
+    const {network, request} = this.config
     const backend = getApiConfig(network)
     const url = backend.getStakeKeyState.replace(
       '{{STAKE_KEY_HASH}}',
       stakeKeyHash,
     )
-    try {
-      const response = await client<GetStakingKeyStateResponse>({
-        url,
-      })
 
-      // Added null check to handle undefined response, this was crashing the app
-      if (!response || response === null) {
-        return {}
+    const response = await request<GetStakingKeyStateResponse>({url})
+
+    if (isLeft(response)) {
+      if (response.error.status === 404) {
+        return {
+          tag: 'right',
+          value: {status: 200, data: {}},
+        } as const
       }
-
-      const {drepDelegation} = response
-      return {drepDelegation}
-    } catch (error) {
-      if (error instanceof Error && error.message.includes('404')) {
-        return {}
-      }
-
-      throw error
+      return response
     }
+
+    const {data} = response.value
+
+    if (data == null) {
+      return {
+        tag: 'right',
+        value: {status: response.value.status, data: {}},
+      } as const
+    }
+
+    return {
+      tag: 'right',
+      value: {
+        status: response.value.status,
+        data: {drepDelegation: data.drepDelegation},
+      },
+    } as const
   }
 }
 
@@ -78,7 +106,7 @@ const getApiConfig = (network: Chain.SupportedNetworks) => {
 
 type Config = {
   network: Chain.SupportedNetworks
-  client: Fetcher
+  request: FetchData
 }
 
 type GetStakingKeyStateResponse = {
