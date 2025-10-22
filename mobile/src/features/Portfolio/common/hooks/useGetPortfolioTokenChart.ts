@@ -46,10 +46,10 @@ const getTimestamps = (timeInterval: TokenChartInterval) => {
     [TokenChartInterval.ALL]: [new Date('2018').getTime(), 256],
   }[timeInterval ?? TokenChartInterval.DAY]
 
-  const step = (now - from) / resolution
+  const step = (now - from!) / resolution!
   const spread = Array.from(
-    {length: resolution},
-    (_, i) => from + Math.round(step * i),
+    {length: resolution!},
+    (_, i) => from! + Math.round(step * i),
   )
   spread.push(now)
   return spread
@@ -137,7 +137,7 @@ export const useGetPortfolioTokenChart = (
       const validCurrency = (currency ??
         defaultCurrency) as Portfolio.Currency.Symbol
 
-      const initialPrice = tickers[0].prices[validCurrency]
+      const initialPrice = tickers[0]!.prices[validCurrency]
       const records = tickers
         .map((ticker) => {
           const value = ticker.prices[validCurrency]
@@ -179,7 +179,7 @@ export const useGetPortfolioTokenChart = (
 
         if (prices.length === 0) return null
 
-        const initialPrice = prices[0].open.toNumber()
+        const initialPrice = prices[0]!.open.toNumber()
         const records = prices
           .map((price) => {
             const value = price.close.toNumber()

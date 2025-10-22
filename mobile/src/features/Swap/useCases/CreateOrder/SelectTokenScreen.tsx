@@ -106,9 +106,9 @@ const TokenList = ({direction}: Direction) => {
 
     if (
       availableTokens.length === 1 &&
-      isPrimaryToken(availableTokens[0].info)
+      isPrimaryToken(availableTokens[0]?.info)
     ) {
-      return [availableTokens[0].info.id]
+      return [availableTokens[0]!.info.id]
     }
 
     if (availableTokens.length > 1) {

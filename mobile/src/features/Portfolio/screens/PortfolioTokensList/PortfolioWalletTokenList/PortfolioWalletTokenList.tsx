@@ -73,7 +73,8 @@ export const PortfolioWalletTokenList = () => {
       }) ?? [],
     [balances.fts, tokenActivity],
   )
-  const isJustPt = tokensList.length === 1 && isPrimaryToken(tokensList[0].info)
+  const isJustPt =
+    tokensList.length === 1 && isPrimaryToken(tokensList[0]?.info)
 
   const isFirstUser = isJustPt && isZeroADABalance
 

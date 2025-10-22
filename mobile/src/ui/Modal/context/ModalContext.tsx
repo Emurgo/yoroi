@@ -330,7 +330,7 @@ const modalReducer = (state: ModalState, action: ModalAction) => {
       }
 
       if (state.queue.length > 0) {
-        const nextModal = state.queue[0]
+        const nextModal = state.queue[0]!
         return {
           ...defaultState,
           content: nextModal.content,

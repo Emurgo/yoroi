@@ -71,7 +71,7 @@ export const showErrorDialog = (
     } else if (
       Array.isArray(dialog.title.defaultMessage) &&
       dialog.title.defaultMessage.length > 0 &&
-      'value' in dialog.title.defaultMessage[0]
+      'value' in dialog.title.defaultMessage[0]!
     ) {
       title = String(
         (dialog.title.defaultMessage[0] as {value: string}).value,

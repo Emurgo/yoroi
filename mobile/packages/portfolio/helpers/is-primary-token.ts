@@ -2,7 +2,9 @@ import {Portfolio} from '@yoroi/types'
 
 import {primaryTokenId} from '../constants'
 
-export function isPrimaryToken(info: Portfolio.Token.Info): boolean
+export function isPrimaryToken(
+  info: Portfolio.Token.Info | undefined | null,
+): boolean
 export function isPrimaryToken(
   id: Portfolio.Token.Id | string | undefined | null,
 ): boolean

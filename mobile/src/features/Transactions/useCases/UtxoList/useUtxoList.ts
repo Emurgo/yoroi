@@ -75,7 +75,7 @@ const getUtxoList = ({
     (acc, cur) => {
       const address = cur.receiver
       acc[address] = acc[address] ?? []
-      acc[address].push(transformUtxo(cur))
+      acc[address]!.push(transformUtxo(cur))
       return acc
     },
     {} as Record<string, Array<Utxo>>,
@@ -90,7 +90,7 @@ const getUtxoList = ({
     return {
       address,
       path: getDerivationPath({account, role, index}),
-      utxos: items[address],
+      utxos: items[address] ?? [],
     }
   })
 }
@@ -151,7 +151,7 @@ export const utxoToTransactionUnspentOutput = ({
       (acc, cur) => {
         const policyId = toPolicyId(cur)
         acc[policyId] = acc[policyId] ?? []
-        acc[policyId].push(cur)
+        acc[policyId]!.push(cur)
         return acc
       },
       {} as Record<string, Array<string>>,
@@ -159,6 +159,8 @@ export const utxoToTransactionUnspentOutput = ({
 
     for (const policyIdStr of Object.keys(groupedByPolicyId)) {
       const assetGroup = groupedByPolicyId[policyIdStr]
+      if (!assetGroup) continue
+
       const policyId = csl.ScriptHash.fromBytes(
         new Uint8Array(Buffer.from(policyIdStr, 'hex')),
       )
@@ -167,7 +169,7 @@ export const utxoToTransactionUnspentOutput = ({
         const name = csl.AssetName.new(
           new Uint8Array(Buffer.from(toAssetNameHex(asset), 'hex')),
         )
-        const amount = csl.BigNum.fromStr(utxo.balance[asset])
+        const amount = csl.BigNum.fromStr(utxo.balance[asset] ?? '0')
         assets.insert(name, amount)
       }
       multiAsset.insert(policyId, assets)

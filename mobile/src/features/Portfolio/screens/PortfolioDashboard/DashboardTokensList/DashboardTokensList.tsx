@@ -43,7 +43,7 @@ export const DashboardTokensList = () => {
 
   const isJustADA = React.useMemo(() => {
     if (tokensList.length !== 1) return false
-    const tokenInfo = tokensList[0].info
+    const tokenInfo = tokensList[0]!.info
     const isPrimary = isPrimaryToken(tokenInfo)
     return isPrimary
   }, [tokensList])
@@ -64,14 +64,14 @@ export const DashboardTokensList = () => {
             a.overflow_hidden,
             a.w_full,
             a.pl_lg,
-            {paddingRight: 15},
+            a.pr_lg,
             a.align_start,
           ]}
         >
           <View
             style={[{aspectRatio: 195 / 186, width: cardItemWidthForJustAda}]}
           >
-            <DashboardTokenItem tokenInfo={tokensList[0]} />
+            <DashboardTokenItem tokenInfo={tokensList[0]!} />
           </View>
 
           <View
@@ -119,7 +119,7 @@ type HeadingProps = {
   onPress: () => void
 }
 const Heading = ({countTokens, onPress, isFirstUser}: HeadingProps) => {
-  const {palette: p} = useTheme()
+  const {palette: p, atoms: ta} = useTheme()
   const strings = useStrings()
 
   return (
@@ -127,7 +127,7 @@ const Heading = ({countTokens, onPress, isFirstUser}: HeadingProps) => {
       onPress={onPress}
       style={[a.px_lg, a.flex_row, a.justify_between, a.align_center]}
     >
-      <Text style={[a.body_1_lg_medium, {color: p.gray_900}]}>
+      <Text style={[a.body_1_lg_medium, ta.text_gray_max]}>
         {strings.portfolio.tokens(isFirstUser ? 0 : countTokens)}
       </Text>
 

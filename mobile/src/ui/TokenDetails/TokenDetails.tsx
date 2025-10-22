@@ -46,7 +46,7 @@ export const TokenDetails = ({
 }
 
 const Header = ({info}: {info: Portfolio.Token.Info}) => {
-  const {palette: p} = useTheme()
+  const {palette: p, atoms: ta} = useTheme()
   const {copy} = useCopy()
   const [policy, assetName] = info?.id.split('.') ?? ['', '']
 
@@ -73,7 +73,8 @@ const Header = ({info}: {info: Portfolio.Token.Info}) => {
           style={[
             a.body_1_lg_medium,
             a.text_center,
-            {color: p.text_gray_medium, maxWidth: 300},
+            ta.text_gray_medium,
+            {maxWidth: 300},
           ]}
         >
           {title}
@@ -92,7 +93,7 @@ const Header = ({info}: {info: Portfolio.Token.Info}) => {
 
       <Space.Height.xl />
 
-      <PolicyId policyId={policy} />
+      <PolicyId policyId={policy ?? ''} />
 
       <Space.Height.lg />
 

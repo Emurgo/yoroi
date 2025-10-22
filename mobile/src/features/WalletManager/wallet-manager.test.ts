@@ -130,6 +130,6 @@ const snapshot = async () => {
 const getWalletMeta = (id: string, snapshot: Record<string, unknown>) =>
   snapshot[`/wallet/${id}`]
 const getXPriv = (id: string, snapshot: Record<string, string>) =>
-  hex(snapshot[`/keystore/${id}-MASTER_PASSWORD`])
+  hex(snapshot[`/keystore/${id}-MASTER_PASSWORD`] ?? '')
 const getXPub = (id: string, snapshot: Record<string, string>) =>
-  hex(snapshot[`/keystore/${id}/0`])
+  hex(snapshot[`/keystore/${id}/0`] ?? '')

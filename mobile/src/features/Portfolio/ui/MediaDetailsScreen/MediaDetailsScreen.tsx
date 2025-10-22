@@ -181,12 +181,10 @@ const MetadataRow = ({
   title: string
   children: ReactNode
 }) => {
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
   return (
     <View style={[{paddingVertical: imagePadding}]}>
-      <Text style={[a.body_1_lg_medium, {color: p.text_gray_medium}]}>
-        {title}
-      </Text>
+      <Text style={[a.body_1_lg_medium, ta.text_gray_medium]}>{title}</Text>
 
       <Space.Height._2xs />
 
@@ -201,7 +199,7 @@ type NftOverviewProps = {
   explorers: Record<Explorers.Explorer, Explorers.Manager>
 }
 const NftOverview = ({info, explorers, traits}: NftOverviewProps) => {
-  const {palette: p} = useTheme()
+  const {palette: p, atoms: ta} = useTheme()
   const strings = useStrings()
 
   const [policyId] = info.id.split('.')
@@ -225,7 +223,7 @@ const NftOverview = ({info, explorers, traits}: NftOverviewProps) => {
       </MetadataRow>
 
       <MetadataRow title={strings.portfolio.policyID}>
-        <Copiable title={policyId} text={policyId} />
+        <Copiable title={policyId} text={policyId!} />
       </MetadataRow>
 
       {traits?.traits.map((trait) => (
@@ -233,34 +231,21 @@ const NftOverview = ({info, explorers, traits}: NftOverviewProps) => {
       ))}
 
       <MetadataRow title={strings.portfolio.info}>
-        <View
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-          }}
-        >
+        <View style={[a.flex, a.flex_row]}>
           <TouchableOpacity
             onPress={() =>
               Linking.openURL(explorers.cardanoscan.token(info.fingerprint))
             }
             style={{flex: 2}}
           >
-            <View
-              style={[
-                {
-                  display: 'flex',
-                  alignItems: 'flex-start',
-                  flexDirection: 'row',
-                },
-              ]}
-            >
+            <View style={[a.flex, a.align_start, a.flex_row]}>
               <Space.Width._2xs />
 
               <Text
                 style={[
                   a.link_1_lg_underline,
                   a.flex_1,
-                  {color: p.primary_500},
+                  ta.text_primary_medium,
                 ]}
               >
                 Cardanoscan
@@ -274,22 +259,14 @@ const NftOverview = ({info, explorers, traits}: NftOverviewProps) => {
             }
             style={{flex: 4}}
           >
-            <View
-              style={[
-                {
-                  display: 'flex',
-                  alignItems: 'flex-start',
-                  flexDirection: 'row',
-                },
-              ]}
-            >
+            <View style={[a.flex, a.align_start, a.flex_row]}>
               <Space.Width._2xs />
 
               <Text
                 style={[
                   a.link_1_lg_underline,
                   a.flex_1,
-                  {color: p.primary_500},
+                  ta.text_primary_medium,
                 ]}
               >
                 Cexplorer
@@ -311,7 +288,7 @@ const normalizeMetadataString = (content?: unknown): string => {
 }
 
 const Trait = ({trait}: {trait: Portfolio.Token.Trait}) => {
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
   const expandedTraitValue = traitValueExpander(trait.value)
   const isOpenableLink =
     expandedTraitValue.type === 'link' &&
@@ -321,12 +298,7 @@ const Trait = ({trait}: {trait: Portfolio.Token.Trait}) => {
     <MetadataRow title={trait.type}>
       <View style={[a.flex_row, a.align_center, a.justify_between, a.gap_lg]}>
         {isOpenableLink && expandedTraitValue.type === 'link' ? (
-          <View
-            style={[
-              {display: 'flex', alignItems: 'flex-start', flexDirection: 'row'},
-              a.flex_1,
-            ]}
-          >
+          <View style={[a.flex, a.align_start, a.flex_row, a.flex_1]}>
             <TouchableOpacity
               onPress={() =>
                 Linking.openURL(expandedTraitValue.transformedValue)
@@ -336,7 +308,7 @@ const Trait = ({trait}: {trait: Portfolio.Token.Trait}) => {
                 style={[
                   a.link_1_lg_underline,
                   a.flex_1,
-                  {color: p.primary_500},
+                  ta.text_primary_medium,
                 ]}
               >
                 {trait.value}
@@ -344,16 +316,17 @@ const Trait = ({trait}: {trait: Portfolio.Token.Trait}) => {
             </TouchableOpacity>
           </View>
         ) : (
-          <Text style={[a.body_2_md_regular, {color: p.gray_600}, a.flex_1]}>
+          <Text style={[a.body_2_md_regular, ta.text_gray_medium, a.flex_1]}>
             {trait.value}
           </Text>
         )}
 
         <Text
           style={[
+            {minWidth: 60},
             a.body_2_md_regular,
             a.text_right,
-            {minWidth: 60, color: p.gray_600},
+            ta.text_gray_medium,
           ]}
         >
           {trait.rarity}

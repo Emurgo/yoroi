@@ -282,7 +282,7 @@ export class AddressChain {
 
   getIndexOfAddress(address: string): number {
     const idx = this.addressToIdxMap[address]
-    return idx
+    return idx ?? -1
   }
 
   getBlocks() {
