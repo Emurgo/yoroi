@@ -1,7 +1,7 @@
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
-import {useFocusEffect, useNavigation} from '@react-navigation/native'
+import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 import {
   StyleProp,
@@ -17,7 +17,6 @@ import Animated, {FadeIn, FadeOut, Layout} from 'react-native-reanimated'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useBold} from '~/hooks/useBold'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Alert as AlertIllustration} from '~/ui/AlertIllustration/AlertIllustration'
 import {Button} from '~/ui/Button/Button'
 import {Check2 as Check2Illustration} from '~/ui/Check2Illustration/Check2Illustration'
@@ -31,15 +30,8 @@ export const VerifyRecoveryPhraseScreen = () => {
   const strings = useStrings()
   const {mnemonic, publicKeyHexChanged, accountVisual, walletImplementation} =
     useSetupWallet()
-  const {track} = useMetrics()
   const {atoms: ta} = useTheme()
   const {walletManager} = useWalletManager()
-
-  useFocusEffect(
-    React.useCallback(() => {
-      track.createWalletSavePhraseStepViewed()
-    }, [track]),
-  )
 
   // Handle empty mnemonic case
   const processedMnemonic = mnemonic.trim() || ''
@@ -358,7 +350,6 @@ const WordBadges = ({
   onPress,
   removeLastEntryAndAddNew,
 }: WordBadgesProps) => {
-  const {track} = useMetrics()
   const isWordUsed = (entryId: number) =>
     userEntries.some((entry) => entry.id === entryId)
 
@@ -374,8 +365,6 @@ const WordBadges = ({
   }
 
   const selectWord = (entry: {id: number; word: string}) => {
-    track.createWalletVerifyPhraseWordSelected()
-
     if (isLastWordValid() || userEntries.length === 0) {
       onPress(entry)
     } else {

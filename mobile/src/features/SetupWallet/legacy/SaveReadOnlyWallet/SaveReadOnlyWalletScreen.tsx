@@ -18,7 +18,6 @@ import {showErrorDialog} from '~/kernel/dialogs'
 import {errorMessages} from '~/kernel/i18n/messages/global'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {throwLoggedError} from '~/kernel/logger/helpers/throw-logged-error'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {SetupWalletRouteNavigation} from '~/kernel/navigation/types'
 import {Boundary} from '~/ui/Boundary/Boundary'
 import {Icon} from '~/ui/Icon'
@@ -33,7 +32,6 @@ export const SaveReadOnlyWalletScreen = () => {
   const storage = useAsyncStorage()
   const navigation = useNavigation<SetupWalletRouteNavigation>()
   const strings = useStrings()
-  const {track} = useMetrics()
   const {atoms: ta} = useTheme()
   const {
     publicKeyHex,
@@ -61,8 +59,6 @@ export const SaveReadOnlyWalletScreen = () => {
           ),
         )
       }
-
-      track.restoreWalletDetailsSettled()
 
       navigation.navigate('setup-wallet-preparing-wallet')
     },

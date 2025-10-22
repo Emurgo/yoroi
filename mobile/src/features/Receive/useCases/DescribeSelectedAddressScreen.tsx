@@ -1,14 +1,12 @@
 import {atoms as a} from '@yoroi/theme'
 import {Wallet} from '@yoroi/types'
 
-import {useFocusEffect} from '@react-navigation/native'
 import * as React from 'react'
 import {GestureResponderEvent, ScrollView} from 'react-native'
 
 import {useCopy} from '~/features/Copy/context/CopyProvider'
 import {useAddressMode} from '~/features/WalletManager/hooks/useAddressMode'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {AddressDetailCard} from '~/ui/AddressDetailCard/AddressDetailCard'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
@@ -36,13 +34,10 @@ export const DescribeSelectedAddressScreen = () => {
   const {isShowingMultipleAddressInfo} = useMultipleAddressesInfo()
   const {openModal, closeModal} = useModal()
 
-  const {track} = useMetrics()
-
   const {copy} = useCopy()
   const hasAddress = !isEmptyString(selectedAddress)
 
   const onCopy = (event: GestureResponderEvent) => {
-    track.receiveCopyAddressClicked({copy_address_location: 'CTA Copy Address'})
     copy({
       text: selectedAddress,
       feedback: strings.receive.addressCopiedMsg,
@@ -86,12 +81,6 @@ export const DescribeSelectedAddressScreen = () => {
     handleOnModalConfirm,
     closeModal,
   ])
-
-  useFocusEffect(
-    React.useCallback(() => {
-      track.receivePageViewed()
-    }, [track]),
-  )
 
   return (
     <SafeArea>

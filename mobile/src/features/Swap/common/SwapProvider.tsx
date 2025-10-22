@@ -15,7 +15,6 @@ import {useRemoteConfig} from '~/features/RemoteConfig/hooks/useRemoteConfig'
 import {useStakingKey} from '~/features/Staking/hooks/useStakingKey'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {convertBech32ToHex} from '~/wallets/cardano/common/signatureUtils'
 
 import {undefinedToken} from './constants'
@@ -123,7 +122,6 @@ export type SwapContext = SwapState & {
 export const SwapProvider = ({children}: React.PropsWithChildren) => {
   const navigate = useNavigateTo()
   const strings = useStrings()
-  const {track} = useMetrics()
   const {wallet} = useSelectedWallet()
   const {getInputs} = useGetInputs()
   const network = wallet.networkManager.network
@@ -424,7 +422,6 @@ export const SwapProvider = ({children}: React.PropsWithChildren) => {
     setIsLoading(true)
 
     const tokenInInfo = tokenInfos.get(state.tokenInInput.tokenId)
-    const tokenOutInfo = tokenInfos.get(state.tokenOutInput.tokenId)
 
     const quantityIn =
       parseNumberFromText({
@@ -435,29 +432,6 @@ export const SwapProvider = ({children}: React.PropsWithChildren) => {
       [state.tokenInInput.tokenId]: quantityIn,
     }
     const inputs = await getInputs(amountsIn)
-
-    track.swapOrderSelected({
-      from_asset: [
-        {
-          asset_name: tokenInInfo?.name,
-          asset_ticker: tokenInInfo?.ticker,
-          policy_id: tokenInInfo?.id.split('.')[0],
-        },
-      ],
-      to_asset: [
-        {
-          asset_name: tokenOutInfo?.name,
-          asset_ticker: tokenOutInfo?.ticker,
-          policy_id: tokenOutInfo?.id.split('.')[0],
-        },
-      ],
-      order_type: state.orderType,
-      slippage_tolerance: state.slippageInput.value,
-      from_amount: state.tokenInInput.value,
-      to_amount: state.tokenOutInput.value,
-      pool_source: state.estimate?.splits[0]?.poolId ?? '',
-      swap_fees: state.estimate?.totalFee,
-    })
 
     swapManager.api
       .create({
@@ -517,18 +491,15 @@ export const SwapProvider = ({children}: React.PropsWithChildren) => {
     getInputs,
     navigate,
     state.estimate?.splits,
-    state.estimate?.totalFee,
     state.orderType,
     state.selectedProtocol.value,
     state.slippageInput.value,
     state.tokenInInput.tokenId,
     state.tokenInInput.value,
     state.tokenOutInput.tokenId,
-    state.tokenOutInput.value,
     state.wantedPrice,
     swapManager.api,
     tokenInfos,
-    track,
     wallet.isMainnet,
   ])
 

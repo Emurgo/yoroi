@@ -1,12 +1,11 @@
 import {useTheme} from '@yoroi/theme'
 
-import {useFocusEffect, useNavigation} from '@react-navigation/native'
+import {useNavigation} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import * as React from 'react'
 
 import {ConfirmPin} from '~/features/RegisterCatalyst/useCases/ConfirmPin/ConfirmPin'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {
@@ -24,13 +23,6 @@ const Stack = createStackNavigator<VotingRegistrationRoutes>()
 export const CatalystNavigator = () => {
   const {palette: p} = useTheme()
   const strings = useStrings()
-  const {track} = useMetrics()
-
-  useFocusEffect(
-    React.useCallback(() => {
-      track.votingPageViewed()
-    }, [track]),
-  )
 
   const navigationOptions = React.useMemo(
     () => defaultStackNavigationOptions(p),

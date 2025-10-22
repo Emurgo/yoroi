@@ -1,0 +1,170 @@
+import {atoms as a, useTheme} from '@yoroi/theme'
+
+import {useQuery} from '@tanstack/react-query'
+import * as React from 'react'
+import {View} from 'react-native'
+import Markdown from 'react-native-marked'
+
+import {useLanguage} from '~/kernel/i18n/LanguageProvider'
+import {LanguageCode} from '~/kernel/i18n/localization'
+import {useStrings} from '~/kernel/i18n/useStrings'
+import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
+import {Button, ButtonType} from '~/ui/Button/Button'
+import {Checkbox} from '~/ui/Checkbox/Checkbox'
+import {useModal} from '~/ui/Modal/context/ModalContext'
+import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
+
+import {Disclaimer} from '../../../common/types'
+import {loadText} from './loadText'
+import {useDisclaimerState} from './useDisclaimerState'
+
+const useDisclaimerText = ({
+  type,
+  languageCode,
+}: {
+  type: Disclaimer
+  languageCode: LanguageCode
+}) => {
+  return useQuery({
+    queryKey: ['useDisclaimerText', type, languageCode],
+    queryFn: () => loadText(type, languageCode),
+  })
+}
+
+type UseDisclaimerOptions = {
+  type: Disclaimer
+  onCancel?: () => void
+}
+
+type UseDisclaimerReturn = {
+  accepted: boolean
+  isLoading: boolean
+  showDisclaimer: () => void
+}
+
+export const useDisclaimer = ({
+  type,
+  onCancel,
+}: UseDisclaimerOptions): UseDisclaimerReturn => {
+  const {languageCode} = useLanguage()
+  const {openModal, closeModal} = useModal()
+  const strings = useStrings()
+  const {resetToTxHistory} = useWalletNavigation()
+  const {atoms: ta, palette: p, basePalette} = useTheme()
+
+  const [accepted, setAccepted] = useDisclaimerState(type)
+  const {data: disclaimerText, isLoading} = useDisclaimerText({
+    type,
+    languageCode,
+  })
+
+  const handleCancel = React.useCallback(() => {
+    if (onCancel) {
+      onCancel()
+    } else {
+      resetToTxHistory()
+    }
+    closeModal()
+  }, [onCancel, resetToTxHistory, closeModal])
+
+  const showDisclaimer = React.useCallback(() => {
+    if (accepted || !disclaimerText) return
+
+    openModal({
+      title: strings.global.disclaimer,
+      content: (
+        <Modal.Content>
+          <View style={{height: 600}}>
+            <Markdown
+              colorScheme={basePalette}
+              backgroundColor={ta.bg_color_max.backgroundColor}
+              value={disclaimerText || ''}
+              flatListProps={{
+                style: {
+                  backgroundColor: p.bg_color_max,
+                },
+              }}
+              styles={{
+                text: {
+                  ...a.body_1_lg_regular,
+                  ...ta.text_gray_max,
+                  ...a.py_sm,
+                },
+                h2: {
+                  ...a.body_1_lg_medium,
+                  ...ta.text_gray_max,
+                  ...a.py_sm,
+                },
+                h1: {
+                  ...ta.text_gray_max,
+                  ...a.heading_3_medium,
+                  ...a.py_sm,
+                },
+              }}
+            />
+          </View>
+        </Modal.Content>
+      ),
+      footer: (
+        <Modal.Footer>
+          <View style={[a.py_lg]}>
+            <Check text={strings.global.accept} />
+          </View>
+
+          <Button
+            type={ButtonType.Secondary}
+            title={strings.global.cancel}
+            onPress={handleCancel}
+          />
+          <Proceed
+            title={strings.global.proceed}
+            onPress={() => {
+              setAccepted(true)
+              closeModal()
+            }}
+          />
+        </Modal.Footer>
+      ),
+      withFeedback: true,
+      height: 600,
+      canDiscard: false,
+    })
+  }, [
+    accepted,
+    disclaimerText,
+    openModal,
+    strings.global.disclaimer,
+    strings.global.accept,
+    strings.global.cancel,
+    strings.global.proceed,
+    basePalette,
+    ta,
+    p.bg_color_max,
+    handleCancel,
+    closeModal,
+    setAccepted,
+  ])
+
+  return {
+    accepted,
+    isLoading,
+    showDisclaimer,
+  }
+}
+
+const Check = ({text}: {text: string}) => {
+  const {canContinue = false, setCanContinue} = useModal()
+  return (
+    <Checkbox
+      text={text}
+      checked={canContinue}
+      onChange={() => setCanContinue(!canContinue)}
+    />
+  )
+}
+
+const Proceed = ({title, onPress}: {title: string; onPress: () => void}) => {
+  const {canContinue = false} = useModal()
+
+  return <Button title={title} onPress={onPress} disabled={!canContinue} />
+}

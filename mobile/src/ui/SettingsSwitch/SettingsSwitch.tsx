@@ -5,19 +5,19 @@ import {Switch} from 'react-native'
 
 export const SettingsSwitch = ({
   value,
-  onValueChange,
   disabled,
+  onValueChange,
 }: {
   value: boolean
-  onValueChange: (value: boolean) => void
   disabled?: boolean
+  onValueChange?: () => void
 }) => {
   const {palette: p} = useTheme()
   return (
     <Switch
       value={value}
-      onValueChange={onValueChange}
       disabled={disabled}
+      onValueChange={() => onValueChange?.()}
       trackColor={{false: p.gray_300, true: p.primary_500}}
       thumbColor={p.white_static}
     />

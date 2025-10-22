@@ -14,7 +14,6 @@ import {useSendReceiver} from '~/features/Send/common/useSendReceiver'
 import {useHasPendingTx} from '~/features/Transactions/hooks/useHasPendingTx'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Button} from '~/ui/Button/Button'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {ScrollView} from '~/ui/ScrollView/ScrollView'
@@ -31,12 +30,7 @@ export const StartMultiTokenTxScreen = () => {
   const strings = useStrings()
   const navigateTo = useNavigateTo()
   const {wallet} = useSelectedWallet()
-  const {track} = useMetrics()
   const isFocused = useIsFocused()
-
-  React.useEffect(() => {
-    track.sendInitiated()
-  }, [track])
 
   const hasPendingTx = useHasPendingTx({wallet})
 

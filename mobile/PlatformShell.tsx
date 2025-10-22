@@ -7,17 +7,12 @@ import {
 } from 'react-native-safe-area-context'
 
 import {useScreenCapture} from '~/features/Settings/hooks/useScreenCapture'
-import {
-  MetricsProvider,
-  makeMetricsManager,
-} from '~/kernel/metrics/metricsManager'
 import {RouterContainer} from '~/kernel/navigation/RouterContainer'
 import {ModalProvider} from '~/ui/Modal/context/ModalContext'
 
 import {BackgroundTimerProvider} from './src/hooks/BackgroundTimerContext'
 
 export function PlatformShell({children}: React.PropsWithChildren) {
-  const metricsManager = React.useMemo(() => makeMetricsManager(), [])
   const {init} = useScreenCapture()
   // Only enable on Android where permission dialogs trigger auto-logout
   const isAndroid = Platform.OS === 'android'
@@ -28,6 +23,7 @@ export function PlatformShell({children}: React.PropsWithChildren) {
 
   return (
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+<<<<<<< Updated upstream
       <MetricsProvider metricsManager={metricsManager}>
         <RouterContainer>
           <ModalProvider>
@@ -39,6 +35,17 @@ export function PlatformShell({children}: React.PropsWithChildren) {
           </ModalProvider>
         </RouterContainer>
       </MetricsProvider>
+=======
+      <RouterContainer>
+        <ModalProvider>
+          <BackgroundTimerProvider active={isAndroid}>
+            <KeyboardProvider statusBarTranslucent>
+              {children}
+            </KeyboardProvider>
+          </BackgroundTimerProvider>
+        </ModalProvider>
+      </RouterContainer>
+>>>>>>> Stashed changes
     </SafeAreaProvider>
   )
 }
