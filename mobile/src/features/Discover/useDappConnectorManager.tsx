@@ -2,7 +2,6 @@ import {useAsyncStorage} from '@yoroi/common'
 import {DappConnection, DappConnector} from '@yoroi/dapp-connector'
 
 import {Transaction} from '@emurgo/cross-csl-core'
-import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
@@ -27,7 +26,7 @@ import {useShowCollateralNotFoundAlert} from './common/useShowCollateralNotFound
 
 export const useDappConnectorManager = () => {
   const appStorage = useAsyncStorage()
-  const navigation = useNavigation()
+  const {navigateToDiscoverBrowserDapp} = useWalletNavigation()
   const {wallet, meta} = useSelectedWallet()
   const {navigateToTxReview} = useWalletNavigation()
   const {tabs, tabActiveIndex} = useBrowser()
@@ -82,6 +81,7 @@ export const useDappConnectorManager = () => {
               : null
 
           track.dappPopupSignTransactionPageViewed()
+          navigateToDiscoverBrowserDapp()
           navigateToTxReview({
             cbor,
             preventSubmit: true,
@@ -103,26 +103,23 @@ export const useDappConnectorManager = () => {
               }
 
               resolve(args?.rootKey)
-              navigation.goBack()
+              navigateToDiscoverBrowserDapp()
             },
             onCancel: () => {
               if (!shouldResolve) return
               shouldResolve = false
               reject(userRejectedError())
-              navigation.goBack()
             },
             onClose: () => {
               if (shouldResolve) {
                 shouldResolve = false
                 reject(userRejectedError())
               }
-              navigation.goBack()
             },
             onErrorWithoutFeedback: (error) => {
               shouldResolve = false
               logger.error('useDappConnectorManager::handleSignTx', {error})
               reject(error)
-              navigation.goBack()
             },
           })
         })
@@ -133,7 +130,7 @@ export const useDappConnectorManager = () => {
       track,
       navigateToTxReview,
       dappCollateralRequestUtils,
-      navigation,
+      navigateToDiscoverBrowserDapp,
     ],
   )
 
@@ -148,6 +145,7 @@ export const useDappConnectorManager = () => {
       manager: DappConnector
     }) => {
       track.dappPopupSignTransactionPageViewed()
+      navigateToDiscoverBrowserDapp()
       return new Promise<Transaction>((resolve, reject) => {
         let shouldResolve = true
         return manager.getDAppList().then(({dapps}) => {
@@ -176,7 +174,7 @@ export const useDappConnectorManager = () => {
                 return
               }
               resolve(args?.tx)
-              navigation.goBack()
+              navigateToDiscoverBrowserDapp()
             },
             onError: (error) => {
               shouldResolve = false
@@ -184,25 +182,22 @@ export const useDappConnectorManager = () => {
                 error,
               })
               reject(error)
-              navigation.goBack()
             },
             onCancel: () => {
               if (!shouldResolve) return
               shouldResolve = false
               reject(userRejectedError())
-              navigation.goBack()
             },
             onClose: () => {
               if (!shouldResolve) return
               shouldResolve = false
               reject(userRejectedError())
-              navigation.goBack()
             },
           })
         })
       })
     },
-    [track, activeTabOrigin, navigateToTxReview, navigation],
+    [track, activeTabOrigin, navigateToTxReview, navigateToDiscoverBrowserDapp],
   )
 
   const handleSendReorganisationTx = React.useCallback(

@@ -97,18 +97,22 @@ export const defaultMaterialTopTabNavigationOptions = (
 export const shouldShowTabBarForRoutes = (state: NavigationState) => {
   const routes = getFocusedRouteName(state)
 
-  if (routes.length === 1) {
-    const [route] = routes
-    return Object.keys(routesWithTabBar).includes(route ?? '')
+  if (routes.length === 0) return false
+
+  const mainRoute = routes[0]
+
+  if (!isKeyOf(mainRoute, routesWithTabBar)) {
+    return false
   }
 
-  const [route, subRoute] = routes
-  return (
-    isKeyOf(route, routesWithTabBar) &&
-    routesWithTabBar[route ?? ''].includes(subRoute ?? '')
-  )
-}
+  if (routes.length === 1) {
+    return mainRoute !== 'discover'
+  }
 
+  const lastRoute = routes[routes.length - 1]
+
+  return routesWithTabBar[mainRoute].includes(lastRoute ?? '')
+}
 const routesWithTabBar: Record<keyof WalletTabRoutes, string[]> = {
   history: ['history-list'],
   portfolio: ['dashboard-portfolio'],
