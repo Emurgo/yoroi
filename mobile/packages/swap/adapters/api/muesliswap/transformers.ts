@@ -351,8 +351,10 @@ export const transformersMaker = ({
         inputs,
         routeHint,
       }: Swap.CreateRequest): LimitOrderRequest => {
+        // For multi-hop swaps (multiple pool IDs), don't send pool_id
+        const isMultiHop = routeHint?.poolIds && routeHint.poolIds.length > 1
         // Mutually exclusive: prefer pool_id when provided, otherwise use order_contract
-        const pool_id = routeHint?.poolIds?.[0]
+        const pool_id = isMultiHop ? undefined : routeHint?.poolIds?.[0]
         const order_contract = pool_id
           ? undefined
           : mapProtocolToOrderContract({protocol, routeHint})
