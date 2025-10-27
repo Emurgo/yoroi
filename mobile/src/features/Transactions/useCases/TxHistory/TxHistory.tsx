@@ -75,7 +75,7 @@ export const TxHistory = () => {
       end={{x: isDark ? 0 : 0, y: isDark ? 0.5 : 0}}
       style={{flex: 1}}
     >
-      <SpaceHeight size={91} />
+      <SpaceHeight size={100} />
 
       <CollapsibleHeader expanded={expanded}>
         <BalanceBanner />
