@@ -86,11 +86,6 @@ class Manager implements GovernanceManager {
     const response = await api.getStakingKeyState(stakeKeyHash)
 
     if (isLeft(response)) {
-      // 404 means user hasn't participated in governance yet
-      if (response.error.status === 404) {
-        return {}
-      }
-
       logger?.error('Failed to fetch staking key state', {
         stakeKeyHash,
         error: response.error,
