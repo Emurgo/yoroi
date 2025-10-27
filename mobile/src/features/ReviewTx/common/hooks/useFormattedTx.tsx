@@ -264,12 +264,18 @@ export const formatFee = (
 }
 
 const formatCertificates = (certificates: TransactionBody['certs']) => {
-  return (
-    certificates?.map((cert) => {
-      const [type, certificate] = Object.entries(cert)[0]
+  if (!certificates) return null
+
+  const formatted = certificates
+    .map((cert) => {
+      const entry = Object.entries(cert)[0]
+      if (entry == null) return null
+      const [type, certificate] = entry
       return {type, value: certificate} as unknown as FormattedCertificate
-    }) ?? null
-  )
+    })
+    .filter(isNonNullable)
+
+  return formatted
 }
 
 const formatMintData = (

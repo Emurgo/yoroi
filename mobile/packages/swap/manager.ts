@@ -140,7 +140,7 @@ const apiManagerMaker = (
       },
 
       async orders() {
-        const enabledAggregators = getEnabledAggregators()
+        const enabledAggregators = Object.keys(adapters) as Swap.Aggregator[]
 
         const responses: Array<Api.Response<Swap.Order[]>> = await Promise.all(
           enabledAggregators.map((aggregator) => adapters[aggregator].orders()),

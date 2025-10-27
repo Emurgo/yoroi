@@ -54,8 +54,7 @@ export const InitialCollateralInfoModalFooter = ({
   )
 }
 
-const learnMoreLink =
-  'https://emurgohelpdesk.zendesk.com/hc/en-us/articles/11061970057743-About-the-collateral-mechanism-on-Cardano'
+const learnMoreLink = 'https://help.yoroi-wallet.com/en/'
 
 const Link = () => {
   const strings = useStrings()

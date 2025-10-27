@@ -7,8 +7,9 @@ async function write(key: string, value: string) {
   return Keychain.setGenericPassword(key, value, {
     service: key,
   }).then((result) => {
-    if (result === false)
+    if (result == false)
       return Promise.reject(new Error('Unable to store secret'))
+    return result
   })
 }
 

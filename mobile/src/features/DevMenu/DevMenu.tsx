@@ -50,11 +50,21 @@ export function DevMenu() {
   const [demoText, setDemoText] = React.useState('')
 
   return (
-    <SafeAreaView style={[a.flex_1, ta.bg_color_max, a.gap_sm, a.p_lg]}>
+    <SafeAreaView
+      style={[a.flex_1, ta.bg_color_max]}
+      edges={['left', 'right', 'bottom']}
+    >
       <SystemBars style={isDark ? 'light' : 'dark'} />
 
       <View
-        style={[a.flex_1, ta.bg_color_max, a.gap_sm, a.flex_row, a.flex_wrap]}
+        style={[
+          a.flex_1,
+          ta.bg_color_max,
+          a.gap_sm,
+          a.flex_row,
+          a.flex_wrap,
+          a.p_lg,
+        ]}
       >
         <Text style={[a.body_2_md_regular, ta.text_gray_max]}>
           base: {basePalette} selectedTheme: {config} currency: {currency}{' '}
@@ -257,54 +267,55 @@ export function DevMenu() {
           console.log('Selected device:', deviceId)
         }}
       /> */}
+      <View style={[a.gap_xs]}>
+        <Button
+          disabled={isLoading}
+          onPress={() =>
+            createWallet({
+              mnemonicPhrase: process.env.EXPO_PUBLIC_WALLET_1_MNEMONIC ?? '',
+              name: 'Wallet 1',
+              password: '1234567890',
+              implementation: 'cardano-cip1852',
+              addressMode: 'multiple',
+              accountVisual: 0,
+            })
+          }
+          testID="btnRestoreWallet1"
+          title="Restore Wallet 1"
+        />
 
-      <Button
-        disabled={isLoading}
-        onPress={() =>
-          createWallet({
-            mnemonicPhrase: process.env.EXPO_PUBLIC_WALLET_1_MNEMONIC ?? '',
-            name: 'Wallet 1',
-            password: '1234567890',
-            implementation: 'cardano-cip1852',
-            addressMode: 'multiple',
-            accountVisual: 0,
-          })
-        }
-        testID="btnRestoreWallet1"
-        title="Restore Wallet 1"
-      />
+        <Button
+          disabled={isLoading}
+          onPress={() =>
+            createWallet({
+              mnemonicPhrase: process.env.EXPO_PUBLIC_WALLET_2_MNEMONIC ?? '',
+              name: 'Wallet 2',
+              password: '1234567890',
+              implementation: 'cardano-cip1852',
+              addressMode: 'multiple',
+              accountVisual: 0,
+            })
+          }
+          testID="btnRestoreWallet2"
+          title="Restore Wallet 2"
+        />
 
-      <Button
-        disabled={isLoading}
-        onPress={() =>
-          createWallet({
-            mnemonicPhrase: process.env.EXPO_PUBLIC_WALLET_2_MNEMONIC ?? '',
-            name: 'Wallet 2',
-            password: '1234567890',
-            implementation: 'cardano-cip1852',
-            addressMode: 'multiple',
-            accountVisual: 0,
-          })
-        }
-        testID="btnRestoreWallet2"
-        title="Restore Wallet 2"
-      />
-
-      <Button
-        disabled={isLoading}
-        onPress={() =>
-          createWallet({
-            mnemonicPhrase: process.env.EXPO_PUBLIC_WALLET_3_MNEMONIC ?? '',
-            name: 'Wallet 3',
-            password: '1234567890',
-            implementation: 'cardano-cip1852',
-            addressMode: 'multiple',
-            accountVisual: 0,
-          })
-        }
-        testID="btnRestoreWallet3"
-        title="Restore Wallet 3"
-      />
+        <Button
+          disabled={isLoading}
+          onPress={() =>
+            createWallet({
+              mnemonicPhrase: process.env.EXPO_PUBLIC_WALLET_3_MNEMONIC ?? '',
+              name: 'Wallet 3',
+              password: '1234567890',
+              implementation: 'cardano-cip1852',
+              addressMode: 'multiple',
+              accountVisual: 0,
+            })
+          }
+          testID="btnRestoreWallet3"
+          title="Restore Wallet 3"
+        />
+      </View>
     </SafeAreaView>
   )
 }

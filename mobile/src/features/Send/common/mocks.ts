@@ -12,11 +12,11 @@ export const mocks = {
           {
             ...defaultTransferState.targets[0],
             receiver: {
-              ...defaultTransferState.targets[0].receiver,
+              ...defaultTransferState.targets[0]!.receiver,
               receiver: 'invalid_address',
             },
             entry: {
-              ...defaultTransferState.targets[0].entry,
+              ...defaultTransferState.targets[0]!.entry,
               address: 'invalid_address',
             },
           },
@@ -34,7 +34,7 @@ export const mocks = {
           {
             ...defaultTransferState.targets[0],
             entry: {
-              ...defaultTransferState.targets[0].entry,
+              ...defaultTransferState.targets[0]!.entry,
             },
           },
         ],
@@ -49,7 +49,7 @@ export const mocks = {
         {
           ...defaultTransferState.targets[0],
           entry: {
-            ...defaultTransferState.targets[0].entry,
+            ...defaultTransferState.targets[0]!.entry,
             amounts: {
               [tokenMocks.primaryETH.info.id]: {
                 ...tokenMocks.primaryETH.balance,
@@ -67,7 +67,7 @@ export const mocks = {
         {
           ...defaultTransferState.targets[0],
           entry: {
-            ...defaultTransferState.targets[0].entry,
+            ...defaultTransferState.targets[0]!.entry,
             amounts: {
               [tokenMocks.primaryETH.info.id]: tokenMocks.primaryETH.balance,
             },
@@ -82,7 +82,7 @@ export const mocks = {
         {
           ...defaultTransferState.targets[0],
           entry: {
-            ...defaultTransferState.targets[0].entry,
+            ...defaultTransferState.targets[0]!.entry,
             amounts: {
               [tokenMocks.nftCryptoKitty.info.id]:
                 tokenMocks.nftCryptoKitty.balance,
@@ -98,7 +98,7 @@ export const mocks = {
         {
           ...defaultTransferState.targets[0],
           entry: {
-            ...defaultTransferState.targets[0].entry,
+            ...defaultTransferState.targets[0]!.entry,
             amounts: {
               [tokenMocks.nftCryptoKitty.info.id]:
                 tokenMocks.nftCryptoKitty.balance,
@@ -114,7 +114,7 @@ export const mocks = {
         {
           ...defaultTransferState.targets[0],
           entry: {
-            ...defaultTransferState.targets[0].entry,
+            ...defaultTransferState.targets[0]!.entry,
             amounts: {
               [tokenMocks.primaryETH.info.id]: {
                 ...tokenMocks.primaryETH.balance,
@@ -135,7 +135,7 @@ export const mocks = {
         {
           ...defaultTransferState.targets[0],
           entry: {
-            ...defaultTransferState.targets[0].entry,
+            ...defaultTransferState.targets[0]!.entry,
             amounts: {
               [tokenMocks.primaryETH.info.id]: tokenMocks.primaryETH.balance,
             },
@@ -151,7 +151,7 @@ export const mocks = {
         {
           ...defaultTransferState.targets[0],
           entry: {
-            ...defaultTransferState.targets[0].entry,
+            ...defaultTransferState.targets[0]!.entry,
             amounts: {
               [tokenMocks.primaryETH.info.id]: tokenMocks.primaryETH.balance,
             },
@@ -165,7 +165,7 @@ export const mocks = {
         {
           ...defaultTransferState.targets[0],
           entry: {
-            ...defaultTransferState.targets[0].entry,
+            ...defaultTransferState.targets[0]!.entry,
             amounts: tokenBalanceMocks.storage.entries1,
           },
         },
@@ -177,7 +177,7 @@ export const mocks = {
         {
           ...defaultTransferState.targets[0],
           entry: {
-            ...defaultTransferState.targets[0].entry,
+            ...defaultTransferState.targets[0]!.entry,
             amounts: tokenBalanceMocks.storage.entries1WithPrimary,
           },
         },

@@ -104,10 +104,11 @@ export class MultiToken {
     return this.getDefaultEntry().amount
   }
 
+  // TODO: REVISIT this can return undefined
   getDefaultEntry: (arg0: void) => TokenEntry = () => {
     return this.values.filter(
       (value) => value.identifier === this.defaults.defaultIdentifier,
-    )[0]
+    )[0]!
   }
 
   getDefaultId: (arg0: void) => string = () => this.defaults.defaultIdentifier
@@ -157,9 +158,10 @@ export class MultiToken {
     })
 
     const values = entries.map(_asTokenEntry)
+    // TODO: REVISIT this can return undefined
     const defaults = entries
       .filter((value) => value.isDefault)
-      .map((value) => ({defaultIdentifier: value.identifier}))[0]
+      .map((value) => ({defaultIdentifier: value.identifier}))[0]!
     return new MultiToken(values, defaults)
   }
 }

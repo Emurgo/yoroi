@@ -124,7 +124,7 @@ const usePanAnimation = ({
           })(e, gestureState)
         }
       },
-      onPanResponderRelease: (e, gestureState) => {
+      onPanResponderRelease: (_, gestureState) => {
         const shouldFinishSwipe =
           gestureState.dx >
           screenWidth * screenLimitInPercentAfterWhichShouldRelease

@@ -78,7 +78,7 @@ export const TransactionSummary = ({
 
   const netPrice =
     swapForm.createTx?.netPrice ??
-    swapForm.createTx?.splits[0].initialPrice ??
+    swapForm.createTx?.splits[0]?.initialPrice ??
     0
 
   const priceInfoValue = `1 ${tokenInTicker} = ${localFormat(netPrice, Math.max(tokenOutInfo?.decimals ?? 0, tokenInInfo?.decimals ?? 0, 3))} ${tokenOutTicker}`

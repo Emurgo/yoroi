@@ -247,10 +247,8 @@ const Catalyst = ({
   return <Item label={label} onPress={handlePress} left={left} />
 }
 
-const SUPPORT_TICKET_LINK =
-  'https://emurgohelpdesk.zendesk.com/hc/en-us/requests/new?ticket_form_id=360013330335'
-const KNOWLEDGE_BASE_LINK =
-  'https://emurgohelpdesk.zendesk.com/hc/en-us/categories/4412619927695-Yoroi'
+const SUPPORT_TICKET_LINK = 'https://help.yoroi-wallet.com/en/'
+const KNOWLEDGE_BASE_LINK = 'https://help.yoroi-wallet.com/en/'
 
 const useNavigateTo = () => {
   const {

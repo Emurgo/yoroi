@@ -6,6 +6,8 @@ import {BleManager, Device, LogLevel, State} from 'react-native-ble-plx'
 
 import {logger} from '~/kernel/logger/logger'
 
+import {useBackgroundTimerControl} from './BackgroundTimerContext'
+
 export interface BluetoothDevice {
   id: string
   name: string | null
@@ -71,6 +73,7 @@ const requestBluetoothPermissions = async (): Promise<void> => {
 }
 
 export const useBluetooth = (): UseBluetoothReturn => {
+  const {disable, enable} = useBackgroundTimerControl()
   const [state, setState] = React.useState<BluetoothState>({
     isScanning: false,
     isConnected: false,
@@ -121,6 +124,9 @@ export const useBluetooth = (): UseBluetoothReturn => {
       }))
       logger.debug('Requesting Bluetooth permissions...')
 
+      // Disable background timer before requesting permissions (Android-specific)
+      // On Android, permission dialogs send the app to background, which could trigger auto-logout
+      disable()
       await requestBluetoothPermissions()
 
       logger.debug('Bluetooth permissions granted')
@@ -140,8 +146,11 @@ export const useBluetooth = (): UseBluetoothReturn => {
             : 'Failed to request Bluetooth permissions',
       }))
       throw error
+    } finally {
+      // Re-enable background timer after permission dialog is dismissed
+      enable()
     }
-  }, [])
+  }, [disable, enable])
 
   const stopScan = React.useCallback(() => {
     if (bleManagerRef.current) {

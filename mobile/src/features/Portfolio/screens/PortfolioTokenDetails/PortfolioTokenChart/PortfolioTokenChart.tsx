@@ -21,7 +21,9 @@ export const PortfolioTokenChart = () => {
     TokenChartInterval.DAY,
   )
 
-  const {data, isFetching} = useGetPortfolioTokenChart(timeInterval)
+  const {data, isFetching} = useGetPortfolioTokenChart(timeInterval, {
+    disableNonPrimaryToken: true,
+  })
 
   const handleChartSelected = useCallback((index: number) => {
     // We ignore index = -1 cause it used for hide the tooltip.

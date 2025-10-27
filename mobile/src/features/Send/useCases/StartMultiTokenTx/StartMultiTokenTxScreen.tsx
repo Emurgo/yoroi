@@ -47,8 +47,7 @@ export const StartMultiTokenTxScreen = () => {
     memoChanged,
     receiverResolveChanged,
   } = useTransfer()
-  const {amounts} = targets[selectedTargetIndex].entry
-  const receiver = targets[selectedTargetIndex].receiver
+
   const {scrollViewRef} = useScrollView()
 
   const {
@@ -74,8 +73,11 @@ export const StartMultiTokenTxScreen = () => {
   const hasMemoError = memo.length > memoMaxLenght
   const canGoNext = !hasPendingTx && isValidAddress && !hasMemoError
 
+  const target = targets[selectedTargetIndex]
+
   const handleOnNext = () => {
-    const shouldOpenAddToken = Object.keys(amounts).length === 0
+    const amounts = target?.entry.amounts
+    const shouldOpenAddToken = !amounts || Object.keys(amounts).length === 0
     if (shouldOpenAddToken) {
       navigateTo.addToken()
     } else {
@@ -105,7 +107,7 @@ export const StartMultiTokenTxScreen = () => {
         <NotifySupportedNameServers />
 
         <InputReceiver
-          value={receiver.resolve}
+          value={target?.receiver.resolve ?? ''}
           onChangeText={handleOnChangeReceiver}
           isLoading={isLoading}
           isValid={isValidAddress}

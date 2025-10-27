@@ -10,11 +10,11 @@ import {Copiable} from '~/ui/Copiable/Copiable'
 import {Space} from '~/ui/Space/Space'
 
 export const MintTab = ({mintData}: {mintData: FormattedTx['mint']}) => {
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
   const strings = useStrings()
 
   return (
-    <View style={[a.flex_1, a.px_lg, {backgroundColor: p.bg_color_max}]}>
+    <View style={[a.flex_1, a.px_lg, ta.bg_color_max]}>
       {mintData?.map(([info, count], index) => {
         const [policyId] = info.id.split('.')
 
@@ -24,18 +24,14 @@ export const MintTab = ({mintData}: {mintData: FormattedTx['mint']}) => {
 
             <View style={[a.flex_1, a.flex_row, a.justify_between]}>
               <Text
-                style={[a.body_2_md_medium, {color: p.text_gray_medium}]}
+                style={[a.body_2_md_medium, ta.text_gray_medium]}
               >{`${strings.txReview.policyIdLabel}:`}</Text>
 
               <Space.Width.sm />
 
-              <Copiable text={policyId} style={a.flex_1}>
+              <Copiable text={policyId!} style={a.flex_1}>
                 <Text
-                  style={[
-                    a.flex_1,
-                    a.body_2_md_regular,
-                    {color: p.text_gray_medium},
-                  ]}
+                  style={[a.flex_1, a.body_2_md_regular, ta.text_gray_medium]}
                 >
                   {policyId}
                 </Text>

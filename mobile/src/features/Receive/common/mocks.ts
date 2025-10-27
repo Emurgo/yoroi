@@ -9,7 +9,7 @@ export const mocks = Object.freeze({
   address:
     'addr1qxstpe4lqp9y04s094twu6p63ht2rdhu9sdd40s5n0leppecjfk0ywkc7w8rxrdxp2xvkk9tewfr39n5naexzryg3c7sxmnh0t',
   usedAddressDate: '02/02/2024, 14:32',
-  yoroiZendesk: 'Yoroi Zendesk',
+  yoroiFAQ: 'Yoroi FAQ',
   addressList: [{isUsed: true, loading: false}],
   isLoading: false,
   infoCardOnLimmit: false,

@@ -297,7 +297,7 @@ const txs: Array<RawTransaction> = [
 describe('processTxHistoryData', () => {
   it('regular, point-to-point ADA tx (received)', async () => {
     const tx = processTxHistoryData(
-      toCachedTx(txs[0]),
+      toCachedTx(txs[0]!),
       myAddresses,
       100, // confirmations
       'fake memo',
@@ -313,7 +313,7 @@ describe('processTxHistoryData', () => {
 
   it('regular, point-to-point ADA tx (sent)', async () => {
     const tx = processTxHistoryData(
-      toCachedTx(txs[1]),
+      toCachedTx(txs[1]!),
       myAddresses,
       100, // confirmations
       'fake memo',
@@ -329,7 +329,7 @@ describe('processTxHistoryData', () => {
 
   it('point-to-point ADA tx with tokens (received)', async () => {
     const tx = processTxHistoryData(
-      toCachedTx(txs[2]),
+      toCachedTx(txs[2]!),
       myAddresses,
       100, // confirmations
       'fake memo',
@@ -343,8 +343,8 @@ describe('processTxHistoryData', () => {
     const netTokenBalance = delta.nonDefaultEntries()
 
     expect(netTokenBalance.length).toBe(1)
-    expect(netTokenBalance[0].amount.toString()).toBe('2')
-    expect(netTokenBalance[0].identifier).toBe(
+    expect(netTokenBalance[0]!.amount.toString()).toBe('2')
+    expect(netTokenBalance[0]!.identifier).toBe(
       '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
     )
     expect(tx.direction).toBe(TRANSACTION_DIRECTION.RECEIVED)
@@ -352,7 +352,7 @@ describe('processTxHistoryData', () => {
 
   it('intrawallet ADA tx with tokens', async () => {
     const tx = processTxHistoryData(
-      toCachedTx(txs[3]),
+      toCachedTx(txs[3]!),
       myAddresses,
       100, // confirmations
       'fake memo',
@@ -366,8 +366,8 @@ describe('processTxHistoryData', () => {
     const netTokenBalance = delta.nonDefaultEntries()
 
     expect(netTokenBalance.length).toBe(1)
-    expect(netTokenBalance[0].amount.toString()).toBe('0')
-    expect(netTokenBalance[0].identifier).toBe(
+    expect(netTokenBalance[0]!.amount.toString()).toBe('0')
+    expect(netTokenBalance[0]!.identifier).toBe(
       '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
     )
     expect(tx.direction).toBe(TRANSACTION_DIRECTION.SELF)

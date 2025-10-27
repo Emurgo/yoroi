@@ -1,5 +1,6 @@
 import {isNonNullable} from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {App} from '@yoroi/types'
 
 import {useRoute} from '@react-navigation/native'
 import {fromPairs} from 'lodash'
@@ -60,6 +61,8 @@ export const TxDetails = () => {
   )
   const transactions = useTransactionInfos({wallet})
   const transaction = transactions[id]
+
+  if (!transaction) throw new App.Errors.InvalidState('TX selected is gone')
   const memo = !isEmptyString(transaction.memo) ? transaction.memo : '-'
 
   const submittedAt = isNonNullable(transaction.submittedAt)
