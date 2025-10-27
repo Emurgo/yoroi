@@ -36,24 +36,23 @@ class GovernanceApiImpl implements GovernanceApi {
     const response = await request<GetDRepByIdResponse>({url})
 
     if (isLeft(response)) {
-      // Handle 404 as null (DRep not found)
       if (response.error.status === 404) {
         return {
           tag: 'right',
-          value: {status: 200, data: null},
+          value: {status: 404, data: null},
         } as const
       }
       return response
     }
 
-    const {data} = response.value
+    const {data, status} = response.value
     const txId = data?.registration?.tx
     const epoch = data?.registration?.epoch
 
     return {
       tag: 'right',
       value: {
-        status: response.value.status,
+        status: status,
         data: txId && epoch ? {txId, epoch} : null,
       },
     } as const
@@ -75,25 +74,25 @@ class GovernanceApiImpl implements GovernanceApi {
       if (response.error.status === 404) {
         return {
           tag: 'right',
-          value: {status: 200, data: {}},
+          value: {status: 404, data: {}},
         } as const
       }
       return response
     }
 
-    const {data} = response.value
+    const {data, status} = response.value
 
     if (data == null) {
       return {
         tag: 'right',
-        value: {status: response.value.status, data: {}},
+        value: {status: status, data: {}},
       } as const
     }
 
     return {
       tag: 'right',
       value: {
-        status: response.value.status,
+        status: status,
         data: {drepDelegation: data.drepDelegation},
       },
     } as const
