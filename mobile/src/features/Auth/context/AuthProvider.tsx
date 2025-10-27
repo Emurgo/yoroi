@@ -26,7 +26,7 @@ export const AuthProvider: React.FC<React.PropsWithChildren<Props>> = ({
 
   // NOTE: This should be configurable
   useBackgroundTimer({
-    after: time.minutes(1),
+    after: time.minutes(5),
     execute: () => {
       if (loggedState.status === 'logged-in') {
         logger.debug('logout (auto)', {origin: 'AuthProvider', type: 'user'})
