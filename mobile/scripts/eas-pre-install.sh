@@ -25,25 +25,25 @@ if command -v set-env >/dev/null 2>&1; then
   set-env PATH "$HOME/.cargo/bin:$PATH"
 fi
 
-# Propagate git commit hash to Expo runtime env so JS can read it via process.env.EXPO_PUBLIC_COMMIT
+# Determine git commit hash and always set EXPO_PUBLIC_COMMIT for Expo runtime
+COMMIT_CANDIDATE=""
 if [[ -n "${EAS_BUILD_GIT_COMMIT_HASH:-}" ]]; then
+  COMMIT_CANDIDATE="${EAS_BUILD_GIT_COMMIT_HASH}"
   echo "Setting EXPO_PUBLIC_COMMIT from EAS_BUILD_GIT_COMMIT_HASH"
-  if command -v set-env >/dev/null 2>&1; then
-    set-env EXPO_PUBLIC_COMMIT "${EAS_BUILD_GIT_COMMIT_HASH}"
-  else
-    export EXPO_PUBLIC_COMMIT="${EAS_BUILD_GIT_COMMIT_HASH}"
-  fi
+elif git rev-parse --verify HEAD >/dev/null 2>&1; then
+  COMMIT_CANDIDATE="$(git rev-parse HEAD)"
+  echo "Setting EXPO_PUBLIC_COMMIT from local git HEAD ${COMMIT_CANDIDATE}"
 else
-  # Fallback for local builds where EAS_BUILD_GIT_COMMIT_HASH isn't available
-  if git rev-parse --verify HEAD >/dev/null 2>&1; then
-    GIT_SHA="$(git rev-parse HEAD)"
-    echo "Setting EXPO_PUBLIC_COMMIT from local git HEAD ${GIT_SHA}"
-    if command -v set-env >/dev/null 2>&1; then
-      set-env EXPO_PUBLIC_COMMIT "${GIT_SHA}"
-    else
-      export EXPO_PUBLIC_COMMIT="${GIT_SHA}"
-    fi
-  fi
+  COMMIT_CANDIDATE="unknown"
+  echo "Warning: Unable to determine commit hash; using 'unknown'"
+fi
+
+# Some CI environments may set EXPO_PUBLIC_COMMIT to the literal string '$EAS_BUILD_GIT_COMMIT_HASH'.
+# Always override to ensure a real value is embedded in the bundle.
+if command -v set-env >/dev/null 2>&1; then
+  set-env EXPO_PUBLIC_COMMIT "${COMMIT_CANDIDATE}"
+else
+  export EXPO_PUBLIC_COMMIT="${COMMIT_CANDIDATE}"
 fi
 
 # iOS device + simulators + android
