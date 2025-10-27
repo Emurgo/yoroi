@@ -6,12 +6,17 @@ import {GovernanceApi} from './api'
 import {convertHexKeyHashToBech32Format, parseDrepId} from './helpers'
 import {StakingKeyState} from './types'
 
+export type Logger = {
+  error: (message: string, data?: unknown) => void
+}
+
 export type Config = {
   network: Chain.SupportedNetworks
   walletId: string
   cardano: CardanoTypes.Wasm
   storage: App.Storage
   api: GovernanceApi
+  logger?: Logger
 }
 
 export type VoteKind = 'abstain' | 'no-confidence'
@@ -77,10 +82,19 @@ class Manager implements GovernanceManager {
   }
 
   async getStakingKeyState(stakeKeyHash: string): Promise<StakingKeyState> {
-    const {api} = this.config
+    const {api, logger} = this.config
     const response = await api.getStakingKeyState(stakeKeyHash)
 
     if (isLeft(response)) {
+      // 404 means user hasn't participated in governance yet
+      if (response.error.status === 404) {
+        return {}
+      }
+
+      logger?.error('Failed to fetch staking key state', {
+        stakeKeyHash,
+        error: response.error,
+      })
       return {}
     }
 
@@ -158,6 +172,10 @@ class Manager implements GovernanceManager {
     const response = await this.config.api.getDRepById(hash)
 
     if (isLeft(response)) {
+      this.config.logger?.error('DRep validation failed', {
+        drepId,
+        error: response.error,
+      })
       throw new Error('DRep ID not registered')
     }
 

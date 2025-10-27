@@ -63,7 +63,7 @@ describe('Governance API with Monad Pattern', () => {
       }
     })
 
-    it('should handle 404 error as empty state', async () => {
+    it('should return error for 404 (not found)', async () => {
       const mockRequest: FetchData = jest.fn().mockResolvedValue({
         tag: 'left',
         error: {
@@ -76,9 +76,9 @@ describe('Governance API with Monad Pattern', () => {
       const api = governanceApiMaker({network, request: mockRequest})
       const result = await api.getStakingKeyState('test-stake-key-hash')
 
-      expect(isRight(result)).toBe(true)
-      if (isRight(result)) {
-        expect(result.value.data).toEqual({})
+      expect(isLeft(result)).toBe(true)
+      if (isLeft(result)) {
+        expect(result.error.status).toBe(404)
       }
     })
 
@@ -177,7 +177,7 @@ describe('Governance API with Monad Pattern', () => {
       }
     })
 
-    it('should handle 404 as null (DRep not found)', async () => {
+    it('should return error for 404 (DRep not found)', async () => {
       const mockRequest: FetchData = jest.fn().mockResolvedValue({
         tag: 'left',
         error: {
@@ -190,9 +190,9 @@ describe('Governance API with Monad Pattern', () => {
       const api = governanceApiMaker({network, request: mockRequest})
       const result = await api.getDRepById('test-drep-id')
 
-      expect(isRight(result)).toBe(true)
-      if (isRight(result)) {
-        expect(result.value.data).toBeNull()
+      expect(isLeft(result)).toBe(true)
+      if (isLeft(result)) {
+        expect(result.error.status).toBe(404)
       }
     })
 

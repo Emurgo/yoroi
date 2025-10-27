@@ -1,5 +1,6 @@
 import {useAsyncStorage} from '@yoroi/common'
 import {
+  type Logger,
   type StakingKeyState,
   governanceApiMaker,
   governanceManagerMaker,
@@ -14,6 +15,7 @@ import {useStakingKey} from '~/features/Staking/hooks/useStakingKey'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useWalletEvent} from '~/features/WalletManager/hooks/useWalletEvent'
 import {useStrings} from '~/kernel/i18n/useStrings'
+import {logger} from '~/kernel/logger/logger'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {InfoBanner} from '~/ui/InfoBanner/InfoBanner'
 import {YoroiUnsignedTx} from '~/wallets/types/yoroi'
@@ -77,6 +79,15 @@ export const useGovernanceManagerMaker = () => {
     `wallet/${walletId}/staking-governance/`,
   )
 
+  const loggerAdapter = React.useMemo<Logger>(
+    () => ({
+      error: (message: string, data?: unknown) => {
+        logger.error(message, data as Record<string, unknown>)
+      },
+    }),
+    [],
+  )
+
   return React.useMemo(
     () =>
       governanceManagerMaker({
@@ -85,8 +96,9 @@ export const useGovernanceManagerMaker = () => {
         api: governanceApiMaker({network}),
         cardano: CardanoMobile,
         storage: governanceStorage,
+        logger: loggerAdapter,
       }),
-    [governanceStorage, network, walletId],
+    [governanceStorage, network, walletId, loggerAdapter],
   )
 }
 
