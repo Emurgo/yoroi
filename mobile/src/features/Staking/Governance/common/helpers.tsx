@@ -1,6 +1,5 @@
 import {useAsyncStorage} from '@yoroi/common'
 import {
-  type Logger,
   type StakingKeyState,
   governanceApiMaker,
   governanceManagerMaker,
@@ -79,15 +78,6 @@ export const useGovernanceManagerMaker = () => {
     `wallet/${walletId}/staking-governance/`,
   )
 
-  const loggerAdapter = React.useMemo<Logger>(
-    () => ({
-      error: (message: string, data?: unknown) => {
-        logger.error(message, data as Record<string, unknown>)
-      },
-    }),
-    [],
-  )
-
   return React.useMemo(
     () =>
       governanceManagerMaker({
@@ -96,9 +86,9 @@ export const useGovernanceManagerMaker = () => {
         api: governanceApiMaker({network}),
         cardano: CardanoMobile,
         storage: governanceStorage,
-        logger: loggerAdapter,
+        logger,
       }),
-    [governanceStorage, network, walletId, loggerAdapter],
+    [governanceStorage, network, walletId],
   )
 }
 

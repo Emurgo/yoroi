@@ -6,17 +6,13 @@ import {GovernanceApi} from './api'
 import {convertHexKeyHashToBech32Format, parseDrepId} from './helpers'
 import {StakingKeyState} from './types'
 
-export type Logger = {
-  error: (message: string, data?: unknown) => void
-}
-
 export type Config = {
   network: Chain.SupportedNetworks
   walletId: string
   cardano: CardanoTypes.Wasm
   storage: App.Storage
   api: GovernanceApi
-  logger?: Logger
+  logger?: App.Logger.Manager
 }
 
 export type VoteKind = 'abstain' | 'no-confidence'

@@ -6,11 +6,7 @@ export {
   convertHexKeyHashToBech32Format,
   parseDrepId,
 } from './helpers'
-export {
-  governanceManagerMaker,
-  type GovernanceManager,
-  type Logger,
-} from './manager'
+export {governanceManagerMaker, type GovernanceManager} from './manager'
 export {
   GovernanceProvider,
   useBech32DRepID,
