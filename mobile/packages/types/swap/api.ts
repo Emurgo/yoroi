@@ -58,7 +58,7 @@ export type SwapSplit = {
   // Optional metadata for route fidelity
   aggregator?: SwapAggregator
   aggregatorDexKey?: string
-  aggregatorPoolId?: string
+  aggregatorPoolId?: string | string[]
   quoteId?: string
   // Optional image URL to be used as a fallback icon in the UI
   aggregatorImageUrl?: string

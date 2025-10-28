@@ -457,7 +457,7 @@ export const SwapProvider = ({children}: React.PropsWithChildren) => {
                 aggregatorDexKey: state.estimate.splits[0].aggregatorDexKey,
                 poolIds:
                   state.estimate.splits[0].aggregatorPoolId != null
-                    ? [state.estimate.splits[0].aggregatorPoolId]
+                    ? [state.estimate.splits[0].aggregatorPoolId].flat()
                     : undefined,
                 quoteId: state.estimate.splits[0].quoteId,
               }
