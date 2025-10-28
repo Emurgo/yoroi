@@ -17,6 +17,7 @@ import {
 } from 'react-native'
 
 import {useAnalyticsTracking} from '~/features/Analytics/hooks/useAnalyticsTracking'
+import {AnalyticsEventEnum} from '~/features/Analytics/types/analytics-event-enum'
 import {YoroiHelpLink} from '~/features/SetupWallet/common/constants'
 import {Info as InfoIcon} from '~/features/SetupWallet/illustrations/Info'
 import {parseWalletMeta} from '~/features/WalletManager/common/validators/wallet-meta'
@@ -79,7 +80,7 @@ export const SaveNanoXScreen = () => {
         throw error
       }
 
-      trackEvent('Connect Wallet Details Submitted', {
+      trackEvent(AnalyticsEventEnum.ConnectWalletDetailsSubmitted, {
         hardware_wallet: 'Ledger',
       })
 

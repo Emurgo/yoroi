@@ -6,6 +6,7 @@ import * as React from 'react'
 import {GestureResponderEvent, View} from 'react-native'
 
 import {useAnalyticsTracking} from '~/features/Analytics/hooks/useAnalyticsTracking'
+import {AnalyticsEventEnum} from '~/features/Analytics/types/analytics-event-enum'
 import {useCopy} from '~/features/Copy/context/CopyProvider'
 import {useReceive} from '~/features/Receive/common/ReceiveProvider'
 import {useMultipleAddressesInfo} from '~/features/Receive/common/useMultipleAddressesInfo'
@@ -50,7 +51,7 @@ export const ActionsBanner = (props: {disabled: boolean}) => {
   }
 
   const handleOnExchange = () => {
-    trackEvent('Wallet Page Exchange Clicked')
+    trackEvent(AnalyticsEventEnum.WalletPageExchangeClicked)
     navigateTo.navigateToExchange()
   }
 

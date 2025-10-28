@@ -1,123 +1,131 @@
+import {AnalyticsEventEnum} from '../types/analytics-event-enum'
+
 // Onboarding Events
 export type OnboardingEvent =
-  | 'Onboarding Pin Code Page Viewed'
-  | 'Onboarding Biometrics Page Viewed'
-  | 'Onboarding Theme Page Viewed'
+  | AnalyticsEventEnum.OnboardingPinCodePageViewed
+  | AnalyticsEventEnum.OnboardingBiometricsPageViewed
+  | AnalyticsEventEnum.OnboardingThemePageViewed
 
 // Send Events
-export type SendEvent = 'Send Initiated' | 'Send Select Asset Page Viewed'
+export type SendEvent =
+  | AnalyticsEventEnum.SendInitiated
+  | AnalyticsEventEnum.SendSelectAssetPageViewed
 
 // Transaction Review Events
 export type TransactionReviewEvent =
-  | 'Transaction Review Modal Viewed'
-  | 'Transaction Review Submit Modal Viewed'
-  | 'Transaction Results Popup Viewed'
+  | AnalyticsEventEnum.TransactionReviewModalViewed
+  | AnalyticsEventEnum.TransactionReviewSubmitModalViewed
+  | AnalyticsEventEnum.TransactionResultsPopupViewed
 
 export type TransactionReviewProperties = {
-  'Transaction Review Modal Viewed': {
+  [AnalyticsEventEnum.TransactionReviewModalViewed]: {
     type: string
     asset_count: number
     asset_list: string
   }
-  'Transaction Review Submit Modal Viewed': undefined
-  'Transaction Results Popup Viewed': {
+  [AnalyticsEventEnum.TransactionReviewSubmitModalViewed]: undefined
+  [AnalyticsEventEnum.TransactionResultsPopupViewed]: {
     status: 'Success' | 'Failure'
   }
 }
 
 // Staking Events
-export type StakingEvent = 'Staking Center Page Viewed'
+export type StakingEvent = AnalyticsEventEnum.StakingCenterPageViewed
 
 // Governance Events
-export type GovernanceEvent = 'Governance Dashboard Page Viewed'
+export type GovernanceEvent = AnalyticsEventEnum.GovernanceDashboardPageViewed
 
 // Fiat Ramp Events
 export type FiatRampEvent =
-  | 'Wallet Page Buy Banner Clicked'
-  | 'Wallet Page Exchange Clicked'
+  | AnalyticsEventEnum.WalletPageBuyBannerClicked
+  | AnalyticsEventEnum.WalletPageExchangeClicked
 
 // Swap Events
-export type SwapEvent = 'Swap Initiated' | 'Swap Review Page Viewed'
+export type SwapEvent =
+  | AnalyticsEventEnum.SwapInitiated
+  | AnalyticsEventEnum.SwapReviewPageViewed
 
 // Portfolio Events
 export type PortfolioEvent =
-  | 'Portfolio Dashboard Page Viewed'
-  | 'Portfolio Tokens List Page Viewed'
+  | AnalyticsEventEnum.PortfolioDashboardPageViewed
+  | AnalyticsEventEnum.PortfolioTokensListPageViewed
 
 // NFT Events
 export type NFTEvent =
-  | 'NFT Gallery Page Viewed'
-  | 'NFT Gallery Details Page Viewed'
+  | AnalyticsEventEnum.NFTGalleryPageViewed
+  | AnalyticsEventEnum.NFTGalleryDetailsPageViewed
 
 export type NFTProperties = {
-  'NFT Gallery Page Viewed': {
+  [AnalyticsEventEnum.NFTGalleryPageViewed]: {
     nft_count: number
   }
-  'NFT Gallery Details Page Viewed': undefined
+  [AnalyticsEventEnum.NFTGalleryDetailsPageViewed]: undefined
 }
 
 // Dapps Events
 export type DappsEvent =
-  | 'Discover Page Viewed'
-  | 'Dapp Connector Sign Transaction Submitted'
-  | 'Dapp Connector Sign Transaction Page Viewed'
-  | 'Discover Web View Viewed'
+  | AnalyticsEventEnum.DiscoverPageViewed
+  | AnalyticsEventEnum.DappConnectorSignTransactionSubmitted
+  | AnalyticsEventEnum.DappConnectorSignTransactionPageViewed
+  | AnalyticsEventEnum.DiscoverWebViewViewed
 
 export type DappsProperties = {
-  'Discover Page Viewed': undefined
-  'Dapp Connector Sign Transaction Submitted': undefined
-  'Dapp Connector Sign Transaction Page Viewed': {
+  [AnalyticsEventEnum.DiscoverPageViewed]: undefined
+  [AnalyticsEventEnum.DappConnectorSignTransactionSubmitted]: undefined
+  [AnalyticsEventEnum.DappConnectorSignTransactionPageViewed]: {
     asset_count: number
     asset_list: string[]
   }
-  'Discover Web View Viewed': undefined
+  [AnalyticsEventEnum.DiscoverWebViewViewed]: undefined
 }
 
 // Receive Events
-export type ReceiveEvent = 'Receive Page Viewed' | 'Receive Page List Viewed'
+export type ReceiveEvent =
+  | AnalyticsEventEnum.ReceivePageViewed
+  | AnalyticsEventEnum.ReceivePageListViewed
 
 // Wallet Management Events
 export type WalletManagementEvent =
-  | 'All Wallets Page Viewed'
-  | 'Connect Wallet Check Page Viewed'
-  | 'Connect Wallet Connect Page Viewed'
-  | 'Connect Wallet Details Page Viewed'
-  | 'Connect Wallet Details Submitted'
-  | 'Create Wallet Select Method Page Viewed'
-  | 'Create Wallet Learn Phrase Step Viewed'
-  | 'Create Wallet Save Phrase Step Viewed'
-  | 'Create Wallet Verify Phrase Step Viewed'
-  | 'Create Wallet Details Submitted'
-  | 'Restore Wallet Type Step Viewed'
-  | 'Restore Wallet Enter Phrase Step Viewed'
-  | 'Restore Wallet Details Step Viewed'
+  | AnalyticsEventEnum.AllWalletsPageViewed
+  | AnalyticsEventEnum.ConnectWalletCheckPageViewed
+  | AnalyticsEventEnum.ConnectWalletConnectPageViewed
+  | AnalyticsEventEnum.ConnectWalletDetailsPageViewed
+  | AnalyticsEventEnum.ConnectWalletDetailsSubmitted
+  | AnalyticsEventEnum.CreateWalletSelectMethodPageViewed
+  | AnalyticsEventEnum.CreateWalletLearnPhraseStepViewed
+  | AnalyticsEventEnum.CreateWalletSavePhraseStepViewed
+  | AnalyticsEventEnum.CreateWalletVerifyPhraseStepViewed
+  | AnalyticsEventEnum.CreateWalletDetailsSubmitted
+  | AnalyticsEventEnum.RestoreWalletTypeStepViewed
+  | AnalyticsEventEnum.RestoreWalletEnterPhraseStepViewed
+  | AnalyticsEventEnum.RestoreWalletDetailsStepViewed
 
 export type WalletManagementProperties = {
-  'All Wallets Page Viewed': undefined
-  'Connect Wallet Check Page Viewed': undefined
-  'Connect Wallet Connect Page Viewed': undefined
-  'Connect Wallet Details Page Viewed': undefined
-  'Connect Wallet Details Submitted': {
+  [AnalyticsEventEnum.AllWalletsPageViewed]: undefined
+  [AnalyticsEventEnum.ConnectWalletCheckPageViewed]: undefined
+  [AnalyticsEventEnum.ConnectWalletConnectPageViewed]: undefined
+  [AnalyticsEventEnum.ConnectWalletDetailsPageViewed]: undefined
+  [AnalyticsEventEnum.ConnectWalletDetailsSubmitted]: {
     hardware_wallet: 'Trezor' | 'Ledger'
   }
-  'Create Wallet Select Method Page Viewed': undefined
-  'Create Wallet Learn Phrase Step Viewed': undefined
-  'Create Wallet Save Phrase Step Viewed': undefined
-  'Create Wallet Verify Phrase Step Viewed': undefined
-  'Create Wallet Details Submitted': undefined
-  'Restore Wallet Type Step Viewed': undefined
-  'Restore Wallet Enter Phrase Step Viewed': undefined
-  'Restore Wallet Details Step Viewed': undefined
+  [AnalyticsEventEnum.CreateWalletSelectMethodPageViewed]: undefined
+  [AnalyticsEventEnum.CreateWalletLearnPhraseStepViewed]: undefined
+  [AnalyticsEventEnum.CreateWalletSavePhraseStepViewed]: undefined
+  [AnalyticsEventEnum.CreateWalletVerifyPhraseStepViewed]: undefined
+  [AnalyticsEventEnum.CreateWalletDetailsSubmitted]: undefined
+  [AnalyticsEventEnum.RestoreWalletTypeStepViewed]: undefined
+  [AnalyticsEventEnum.RestoreWalletEnterPhraseStepViewed]: undefined
+  [AnalyticsEventEnum.RestoreWalletDetailsStepViewed]: undefined
 }
 
 // Catalyst Voting Events
-export type CatalystVotingEvent = 'Voting Page Viewed'
+export type CatalystVotingEvent = AnalyticsEventEnum.VotingPageViewed
 
 // Settings Events
-export type SettingsEvent = 'Settings Page Viewed'
+export type SettingsEvent = AnalyticsEventEnum.SettingsPageViewed
 
 // Landing Events
-export type LandingEvent = 'Transactions Page Viewed'
+export type LandingEvent = AnalyticsEventEnum.TransactionsPageViewed
 
 // Union of all events
 export type AnalyticsEvent =

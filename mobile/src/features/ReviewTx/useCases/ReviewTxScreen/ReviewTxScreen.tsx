@@ -1,6 +1,7 @@
 import * as React from 'react'
 
 import {useAnalyticsTracking} from '~/features/Analytics/hooks/useAnalyticsTracking'
+import {AnalyticsEventEnum} from '~/features/Analytics/types/analytics-event-enum'
 import {useReviewTx} from '~/features/ReviewTx/common/ReviewTxProvider'
 import {useFormattedMetadata} from '~/features/ReviewTx/common/hooks/useFormattedMetadata'
 import {useFormattedTx} from '~/features/ReviewTx/common/hooks/useFormattedTx'
@@ -86,7 +87,7 @@ export const ReviewTxScreen = () => {
       formattedTx,
       params?.context,
     )
-    trackEvent('Transaction Review Modal Viewed', properties)
+    trackEvent(AnalyticsEventEnum.TransactionReviewModalViewed, properties)
   }, [trackEvent, formattedTx, areTokenInfosLoaded, params?.context])
 
   React.useEffect(() => {
@@ -102,12 +103,12 @@ export const ReviewTxScreen = () => {
       return
     }
     if (unsignedTx != null && params?.cbor == null) {
-      trackEvent('Transaction Review Submit Modal Viewed')
+      trackEvent(AnalyticsEventEnum.TransactionReviewSubmitModalViewed)
       legacyOnConfirm()
       return
     }
     if (params?.cbor != null) {
-      trackEvent('Transaction Review Submit Modal Viewed')
+      trackEvent(AnalyticsEventEnum.TransactionReviewSubmitModalViewed)
       onConfirm()
       return
     }

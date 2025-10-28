@@ -19,6 +19,7 @@ import {
 import {ViewProps} from 'react-native-svg/lib/typescript/fabric/utils'
 
 import {useAnalyticsTracking} from '~/features/Analytics/hooks/useAnalyticsTracking'
+import {AnalyticsEventEnum} from '~/features/Analytics/types/analytics-event-enum'
 import {YoroiHelpLink} from '~/features/SetupWallet/common/constants'
 import {parseWalletMeta} from '~/features/WalletManager/common/validators/wallet-meta'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
@@ -128,7 +129,7 @@ export const WalletDetailsScreen = () => {
         throw error
       }
 
-      trackEvent('Create Wallet Details Submitted')
+      trackEvent(AnalyticsEventEnum.CreateWalletDetailsSubmitted)
 
       navigation.navigate('setup-wallet-preparing-wallet')
     },
