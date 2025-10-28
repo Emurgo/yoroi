@@ -9,14 +9,14 @@ export type MetricsEnabledStorage = {
 type Props = React.PropsWithChildren<{
   initialEnabled?: boolean
   platform: 'IOS' | 'Android' | 'Web'
-  client?: AnalyticsProvider | null
+  client: AnalyticsProvider
   metricsEnabledStorage: MetricsEnabledStorage
 }>
 
 type AnalyticsContextValue = {
   enabled: boolean
   setEnabled: (enabled: boolean) => void
-  client: AnalyticsProvider | null
+  client: AnalyticsProvider
   capture: (
     event: string,
     properties?: Record<string, string | number | boolean | null | string[]>,
@@ -40,7 +40,7 @@ export function AnalyticsRootProvider({
   const [enabled, setEnabledState] = React.useState<boolean>(
     Boolean(initialEnabled),
   )
-  const client = clientProp ?? null
+  const client = clientProp
 
   const setEnabled = React.useCallback(
     (next: boolean) => {
@@ -54,7 +54,7 @@ export function AnalyticsRootProvider({
 
   const capture = React.useCallback<AnalyticsContextValue['capture']>(
     (event, properties) => {
-      if (!enabled || !client) return
+      if (!enabled) return
       client.capture(event, {
         ...(properties ?? {}),
         platform,
@@ -73,7 +73,7 @@ export function AnalyticsRootProvider({
 
   const install = React.useCallback<AnalyticsContextValue['install']>(
     (campaign, source) => {
-      if (!enabled || !client) return
+      if (!enabled) return
       client.install(campaign, source)
       capture('Installed', {campaign, source})
     },
