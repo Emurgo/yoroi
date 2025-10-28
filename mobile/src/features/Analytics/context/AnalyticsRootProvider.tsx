@@ -1,5 +1,4 @@
 import * as React from 'react'
-import {Platform} from 'react-native'
 
 import {metricsEnabledStorageKeyManager} from '~/kernel/storage/storages'
 
@@ -7,6 +6,7 @@ import type {AnalyticsProvider} from '../types/analytics'
 
 type Props = React.PropsWithChildren<{
   initialEnabled?: boolean
+  platform: 'IOS' | 'Android' | 'Web'
 }>
 
 type AnalyticsContextValue = {
@@ -20,20 +20,22 @@ type AnalyticsContextValue = {
   ) => void
   navigate: (to: string) => void
   install: (campaign: string, source: string) => void
-  platform: 'IOS' | 'Android'
+  platform: 'IOS' | 'Android' | 'Web'
 }
 
 const AnalyticsContext = React.createContext<AnalyticsContextValue | undefined>(
   undefined,
 )
 
-export function AnalyticsRootProvider({children, initialEnabled}: Props) {
+export function AnalyticsRootProvider({
+  children,
+  initialEnabled,
+  platform,
+}: Props) {
   const [enabled, setEnabledState] = React.useState<boolean>(
     Boolean(initialEnabled),
   )
   const [client, setClient] = React.useState<AnalyticsProvider | null>(null)
-
-  const platform = Platform.OS === 'ios' ? 'IOS' : 'Android'
 
   const setEnabled = React.useCallback((next: boolean) => {
     setEnabledState(next)
@@ -55,18 +57,19 @@ export function AnalyticsRootProvider({children, initialEnabled}: Props) {
 
   const navigate = React.useCallback<AnalyticsContextValue['navigate']>(
     (to) => {
-      if (!enabled || !client) return
-      client.navigate(to)
+      if (!enabled) return
+      capture('navigate', {to})
     },
-    [client, enabled],
+    [capture, enabled],
   )
 
   const install = React.useCallback<AnalyticsContextValue['install']>(
     (campaign, source) => {
       if (!enabled || !client) return
       client.install(campaign, source)
+      capture('Installed', {campaign, source})
     },
-    [client, enabled],
+    [client, capture, enabled],
   )
 
   const value = React.useMemo<AnalyticsContextValue>(

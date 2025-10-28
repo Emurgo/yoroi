@@ -7,11 +7,11 @@ import {
   initialWindowMetrics,
 } from 'react-native-safe-area-context'
 
-import {PosthogClient} from '~/features/Analytics/adapters/PosthogClient'
 import {
   AnalyticsRootProvider,
   useAnalyticsContext,
 } from '~/features/Analytics/context/AnalyticsRootProvider'
+import {createPosthogClient} from '~/features/Analytics/helpers/createPosthogClient'
 import {useScreenCapture} from '~/features/Settings/hooks/useScreenCapture'
 import {RouterContainer} from '~/kernel/navigation/RouterContainer'
 import {
@@ -33,9 +33,8 @@ function AnalyticsInitializer({children}: React.PropsWithChildren) {
       setClient(null)
       return
     }
-    const platform = Platform.OS === 'ios' ? 'IOS' : 'Android'
     const sdk = new PostHog(apiKey, {host, disabled: !enabled})
-    const client = new PosthogClient({client: sdk, platform})
+    const client = createPosthogClient({sdk})
     if (installationId) client.identify(installationId)
     setClient(client)
     return () => setClient(null)
@@ -49,6 +48,7 @@ export function PlatformShell({children}: React.PropsWithChildren) {
   const {init} = useScreenCapture()
   // Only enable on Android where permission dialogs trigger auto-logout
   const isAndroid = Platform.OS === 'android'
+  const platform = Platform.OS === 'ios' ? 'IOS' : 'Android'
 
   React.useEffect(() => {
     init()
@@ -56,7 +56,10 @@ export function PlatformShell({children}: React.PropsWithChildren) {
 
   return (
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-      <AnalyticsRootProvider initialEnabled={metricsEnabled}>
+      <AnalyticsRootProvider
+        initialEnabled={metricsEnabled}
+        platform={platform}
+      >
         <AnalyticsInitializer>
           <RouterContainer>
             <ModalProvider>
