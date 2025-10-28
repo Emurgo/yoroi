@@ -60,9 +60,9 @@ function usePosthogClient(enabled: boolean) {
     const apiKey = process.env.EXPO_PUBLIC_POSTHOG_KEY
     const host = process.env.EXPO_PUBLIC_POSTHOG_HOST
     if (!apiKey || !host) return null
-    const sdk = new PostHog(apiKey, {host, disabled: false})
+    const sdk = new PostHog(apiKey, {host, disabled: !enabled})
     return createPosthogClient({sdk})
-  }, [])
+  }, [enabled])
 
   React.useEffect(() => {
     if (client && installationId && enabled) client.identify(installationId)
