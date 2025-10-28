@@ -21,7 +21,7 @@ export function createPosthogClient({sdk}: {sdk: SDK}): AnalyticsProvider {
       if (currentUserId) sdk.identify(currentUserId, {campaign, source})
     },
     identify: (userId, traits) => {
-      const hasValidUserId = typeof userId === 'string' && userId.trim() !== ''
+      const hasValidUserId = userId && userId.length > 0
       if (hasValidUserId) {
         currentUserId = userId
         sdk.identify(userId, traits)
