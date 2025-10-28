@@ -1,6 +1,6 @@
 import type {AnalyticsProvider} from '../types/analytics'
 
-type PlatformTag = 'IOS' | 'Android'
+type PlatformTag = 'IOS' | 'Android' | 'Web'
 
 type Properties = Record<string, string | number | boolean | null | string[]>
 
