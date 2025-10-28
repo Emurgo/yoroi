@@ -17,7 +17,6 @@ type AnalyticsContextValue = {
   enabled: boolean
   setEnabled: (enabled: boolean) => void
   client: AnalyticsProvider | null
-  setClient: (client: AnalyticsProvider | null) => void
   capture: (
     event: string,
     properties?: Record<string, string | number | boolean | null | string[]>,
@@ -41,13 +40,7 @@ export function AnalyticsRootProvider({
   const [enabled, setEnabledState] = React.useState<boolean>(
     Boolean(initialEnabled),
   )
-  const [client, setClient] = React.useState<AnalyticsProvider | null>(
-    clientProp ?? null,
-  )
-
-  React.useEffect(() => {
-    if (typeof clientProp !== 'undefined') setClient(clientProp)
-  }, [clientProp])
+  const client = clientProp ?? null
 
   const setEnabled = React.useCallback(
     (next: boolean) => {
@@ -92,22 +85,12 @@ export function AnalyticsRootProvider({
       enabled,
       setEnabled,
       client,
-      setClient,
       capture,
       navigate,
       install,
       platform,
     }),
-    [
-      enabled,
-      setEnabled,
-      client,
-      setClient,
-      capture,
-      navigate,
-      install,
-      platform,
-    ],
+    [enabled, setEnabled, client, capture, navigate, install, platform],
   )
 
   return (
