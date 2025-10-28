@@ -19,17 +19,39 @@ export function usePageViewTracking<T extends AnalyticsEvent>(
 ) {
   const {trackEvent} = useAnalyticsTracking()
 
+  const eventRef = React.useRef(event)
+  const propertiesRef = React.useRef(properties)
+  const delayRef = React.useRef(delay)
+
+  React.useEffect(() => {
+    eventRef.current = event
+  }, [event])
+
+  React.useEffect(() => {
+    propertiesRef.current = properties
+  }, [properties])
+
+  React.useEffect(() => {
+    delayRef.current = delay
+  }, [delay])
+
   useFocusEffect(
     React.useCallback(() => {
-      if (delay > 0) {
+      const d = delayRef.current ?? 0
+      if (d > 0) {
         const timer = setTimeout(() => {
-          trackEvent(event, properties)
-        }, delay)
+          trackEvent(
+            eventRef.current as T,
+            propertiesRef.current as typeof properties,
+          )
+        }, d)
         return () => clearTimeout(timer)
-      } else {
-        trackEvent(event, properties)
-        return () => {}
       }
-    }, [trackEvent, event, properties, delay]),
+      trackEvent(
+        eventRef.current as T,
+        propertiesRef.current as typeof properties,
+      )
+      return () => {}
+    }, [trackEvent]),
   )
 }
