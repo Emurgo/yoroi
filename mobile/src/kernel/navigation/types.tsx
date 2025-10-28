@@ -252,12 +252,6 @@ export type ReviewTxRoutes = {
     onClose?: OnConfirm['onClose']
     onNotSupportedCIP1694?: () => void
     onCIP36SupportChange?: (supportsCIP36: boolean) => void
-    assetCount?: number
-    assetList?: Array<{
-      policy_id: string
-      asset_name: string
-      asset_ticker: string
-    }>
   }
   'review-tx-submitted-tx': {
     title?: string
