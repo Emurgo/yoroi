@@ -38,6 +38,7 @@ export function PlatformShell({children}: React.PropsWithChildren) {
         initialEnabled={metricsEnabled}
         platform={platform}
         client={client}
+        metricsEnabledStorage={metricsEnabledStorageKeyManager}
       >
         <RouterContainer>
           <ModalProvider>

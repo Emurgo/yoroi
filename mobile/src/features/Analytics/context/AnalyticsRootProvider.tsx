@@ -1,13 +1,16 @@
 import * as React from 'react'
 
-import {metricsEnabledStorageKeyManager} from '~/kernel/storage/storages'
-
 import type {AnalyticsProvider} from '../types/analytics'
+
+export type MetricsEnabledStorage = {
+  save: (value: boolean) => void
+}
 
 type Props = React.PropsWithChildren<{
   initialEnabled?: boolean
   platform: 'IOS' | 'Android' | 'Web'
   client?: AnalyticsProvider | null
+  metricsEnabledStorage: MetricsEnabledStorage
 }>
 
 type AnalyticsContextValue = {
@@ -33,6 +36,7 @@ export function AnalyticsRootProvider({
   initialEnabled,
   platform,
   client: clientProp,
+  metricsEnabledStorage,
 }: Props) {
   const [enabled, setEnabledState] = React.useState<boolean>(
     Boolean(initialEnabled),
@@ -45,12 +49,15 @@ export function AnalyticsRootProvider({
     if (typeof clientProp !== 'undefined') setClient(clientProp)
   }, [clientProp])
 
-  const setEnabled = React.useCallback((next: boolean) => {
-    setEnabledState(next)
-    try {
-      metricsEnabledStorageKeyManager.save(next)
-    } catch {}
-  }, [])
+  const setEnabled = React.useCallback(
+    (next: boolean) => {
+      setEnabledState(next)
+      try {
+        metricsEnabledStorage.save(next)
+      } catch {}
+    },
+    [metricsEnabledStorage],
+  )
 
   const capture = React.useCallback<AnalyticsContextValue['capture']>(
     (event, properties) => {
