@@ -4,7 +4,7 @@ import {useAnalyticsContext} from '../context/AnalyticsRootProvider'
 import type {
   AnalyticsEvent,
   AnalyticsEventProperties,
-} from '../events/analytics-events'
+} from '../types/analytics-events'
 
 export function useAnalyticsTracking() {
   const {capture} = useAnalyticsContext()
