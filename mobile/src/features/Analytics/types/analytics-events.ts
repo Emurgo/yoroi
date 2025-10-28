@@ -1,17 +1,14 @@
-import {AnalyticsEventEnum} from '../types/analytics-event-enum'
+import {AnalyticsEventEnum} from './analytics-event-enum'
 
-// Onboarding Events
 export type OnboardingEvent =
   | AnalyticsEventEnum.OnboardingPinCodePageViewed
   | AnalyticsEventEnum.OnboardingBiometricsPageViewed
   | AnalyticsEventEnum.OnboardingThemePageViewed
 
-// Send Events
 export type SendEvent =
   | AnalyticsEventEnum.SendInitiated
   | AnalyticsEventEnum.SendSelectAssetPageViewed
 
-// Transaction Review Events
 export type TransactionReviewEvent =
   | AnalyticsEventEnum.TransactionReviewModalViewed
   | AnalyticsEventEnum.TransactionReviewSubmitModalViewed
@@ -29,28 +26,22 @@ export type TransactionReviewProperties = {
   }
 }
 
-// Staking Events
 export type StakingEvent = AnalyticsEventEnum.StakingCenterPageViewed
 
-// Governance Events
 export type GovernanceEvent = AnalyticsEventEnum.GovernanceDashboardPageViewed
 
-// Fiat Ramp Events
 export type FiatRampEvent =
   | AnalyticsEventEnum.WalletPageBuyBannerClicked
   | AnalyticsEventEnum.WalletPageExchangeClicked
 
-// Swap Events
 export type SwapEvent =
   | AnalyticsEventEnum.SwapInitiated
   | AnalyticsEventEnum.SwapReviewPageViewed
 
-// Portfolio Events
 export type PortfolioEvent =
   | AnalyticsEventEnum.PortfolioDashboardPageViewed
   | AnalyticsEventEnum.PortfolioTokensListPageViewed
 
-// NFT Events
 export type NFTEvent =
   | AnalyticsEventEnum.NFTGalleryPageViewed
   | AnalyticsEventEnum.NFTGalleryDetailsPageViewed
@@ -62,7 +53,6 @@ export type NFTProperties = {
   [AnalyticsEventEnum.NFTGalleryDetailsPageViewed]: undefined
 }
 
-// Dapps Events
 export type DappsEvent =
   | AnalyticsEventEnum.DiscoverPageViewed
   | AnalyticsEventEnum.DappConnectorSignTransactionSubmitted
@@ -79,12 +69,10 @@ export type DappsProperties = {
   [AnalyticsEventEnum.DiscoverWebViewViewed]: undefined
 }
 
-// Receive Events
 export type ReceiveEvent =
   | AnalyticsEventEnum.ReceivePageViewed
   | AnalyticsEventEnum.ReceivePageListViewed
 
-// Wallet Management Events
 export type WalletManagementEvent =
   | AnalyticsEventEnum.AllWalletsPageViewed
   | AnalyticsEventEnum.ConnectWalletCheckPageViewed
@@ -118,16 +106,12 @@ export type WalletManagementProperties = {
   [AnalyticsEventEnum.RestoreWalletDetailsStepViewed]: undefined
 }
 
-// Catalyst Voting Events
 export type CatalystVotingEvent = AnalyticsEventEnum.VotingPageViewed
 
-// Settings Events
 export type SettingsEvent = AnalyticsEventEnum.SettingsPageViewed
 
-// Landing Events
 export type LandingEvent = AnalyticsEventEnum.TransactionsPageViewed
 
-// Union of all events
 export type AnalyticsEvent =
   | OnboardingEvent
   | SendEvent
@@ -145,12 +129,10 @@ export type AnalyticsEvent =
   | SettingsEvent
   | LandingEvent
 
-// Properties for events that need them
 export type AnalyticsEventProperties = TransactionReviewProperties &
   NFTProperties &
   DappsProperties &
   WalletManagementProperties & {
-    // Events without properties
     [K in Exclude<
       AnalyticsEvent,
       keyof (TransactionReviewProperties &

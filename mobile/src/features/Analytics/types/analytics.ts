@@ -12,3 +12,7 @@ export interface AnalyticsProvider {
     traits?: Record<string, string | number | boolean | null | string[]>,
   ) => void
 }
+
+export type MetricsEnabledStorage = {
+  save: (value: boolean) => void
+}

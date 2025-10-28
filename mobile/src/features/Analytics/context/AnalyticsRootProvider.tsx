@@ -1,10 +1,6 @@
 import * as React from 'react'
 
-import type {AnalyticsProvider} from '../types/analytics'
-
-export type MetricsEnabledStorage = {
-  save: (value: boolean) => void
-}
+import type {AnalyticsProvider, MetricsEnabledStorage} from '../types/analytics'
 
 type Props = React.PropsWithChildren<{
   initialEnabled?: boolean

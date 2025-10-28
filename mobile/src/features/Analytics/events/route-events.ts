@@ -1,18 +1,5 @@
 import {AnalyticsEventEnum} from '../types/analytics-event-enum'
-import type {AnalyticsEvent, AnalyticsEventProperties} from './analytics-events'
-
-type TransactionResultsProps =
-  AnalyticsEventProperties['Transaction Results Popup Viewed']
-
-export type RouteToEventMap = Record<
-  string,
-  | AnalyticsEvent
-  | {
-      event: AnalyticsEvent
-      properties?: TransactionResultsProps | undefined
-    }
-  | undefined
->
+import type {RouteToEventMap} from '../types/route-events'
 
 export const routeToEvent: RouteToEventMap = {
   'wallet-selection': AnalyticsEventEnum.AllWalletsPageViewed,
