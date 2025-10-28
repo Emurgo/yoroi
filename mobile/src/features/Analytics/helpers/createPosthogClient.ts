@@ -5,6 +5,7 @@ type SDK = {
     userId: string,
     traits?: Record<string, string | number | boolean | null | string[]>,
   ) => void
+  reset?: () => void
   capture: (
     event: string,
     properties?: Record<string, string | number | boolean | null | string[]>,
@@ -20,8 +21,14 @@ export function createPosthogClient({sdk}: {sdk: SDK}): AnalyticsProvider {
       if (currentUserId) sdk.identify(currentUserId, {campaign, source})
     },
     identify: (userId, traits) => {
-      currentUserId = userId
-      if (userId) sdk.identify(userId, traits)
+      const hasValidUserId = typeof userId === 'string' && userId.trim() !== ''
+      if (hasValidUserId) {
+        currentUserId = userId
+        sdk.identify(userId, traits)
+        return
+      }
+      currentUserId = undefined
+      if (sdk.reset) sdk.reset()
     },
   }
 }
