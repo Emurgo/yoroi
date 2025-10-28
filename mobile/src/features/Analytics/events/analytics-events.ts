@@ -15,7 +15,7 @@ export type TransactionReviewEvent =
 
 export type TransactionReviewProperties = {
   'Transaction Review Modal Viewed': {
-    certificates?: string
+    type: string
     asset_count: number
     asset_list: string
   }
