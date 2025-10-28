@@ -12,7 +12,6 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useFormatNumber} from '~/kernel/i18n/useFormatNumber'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Button} from '~/ui/Button/Button'
 import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingView'
 import {TextInput} from '~/ui/TextInput/TextInput'
@@ -41,7 +40,6 @@ const CHOICES: Readonly<Choice[]> = [
 ] as const
 
 export const ManageNotificationDisplayDurationScreen = () => {
-  const {track} = useMetrics()
   const config = useConfig()
   const {mutate: updateConfig} = useUpdateNotificationsConfig()
   const navigation = useNavigation()
@@ -78,7 +76,6 @@ export const ManageNotificationDisplayDurationScreen = () => {
       selectedChoice.id === 'Manual'
         ? parseNumber(inputValue)
         : selectedChoice.value
-    track.settingInAppNotificationTimerUpdated({duration: displayDuration ?? 0})
     updateConfig({displayDuration})
     navigation.goBack()
   }

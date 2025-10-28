@@ -11,30 +11,19 @@ import {
 import {useSearchOnNavBar} from '~/features/Search/SearchContext'
 import {NetworkTag} from '~/features/Settings/ui/shared/NetworkTag'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Tab, TabPanel, Tabs} from '~/ui/Tabs'
 
 import {PortfolioDAppsTokenList} from './PortfolioDAppsTokenList/PortfolioDAppsTokenList'
 import {PortfolioWalletTokenList} from './PortfolioWalletTokenList/PortfolioWalletTokenList'
 
-const tabs = {
-  [PortfolioListTab.Wallet]: 'Wallet Token',
-  [PortfolioListTab.Dapps]: 'Dapps Token',
-} as const
-
 export const PortfolioTokenListScreen = () => {
   const {palette: p} = useTheme()
   const strings = useStrings()
-  const {track} = useMetrics()
   const {listTab, setListTab} = usePortfolio()
   // TODO: missing dAppsBalance
   const dAppsBalance = useGetDAppsPortfolioBalance(0n)
   const hasDApps =
     dAppsBalance !== undefined && Number(dAppsBalance.quantity) > 0
-
-  React.useEffect(() => {
-    track.portfolioTokensListPageViewed({tokens_tab: tabs[listTab]})
-  }, [listTab, track])
 
   useSearchOnNavBar({
     title: strings.portfolio.tokenList,

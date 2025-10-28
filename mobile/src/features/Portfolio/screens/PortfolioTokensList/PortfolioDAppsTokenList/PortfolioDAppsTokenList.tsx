@@ -19,7 +19,6 @@ import {
 } from '~/features/Portfolio/context/PortfolioProvider'
 import {useSearch} from '~/features/Search/SearchContext'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Line} from '~/ui/Line/Line'
 import {Space} from '~/ui/Space/Space'
 import {TabPanel} from '~/ui/Tabs'
@@ -34,7 +33,6 @@ export const PortfolioDAppsTokenList = () => {
   const {palette: p} = useTheme()
   const {search, isSearching} = useSearch()
   const {wallet} = useSelectedWallet()
-  const {track} = useMetrics()
   const primaryBalance = usePortfolioPrimaryBalance({wallet})
   const {dappsTab} = usePortfolio()
 
@@ -76,22 +74,6 @@ export const PortfolioDAppsTokenList = () => {
 
     return listOpenOrders
   }, [openOrders, isSearching, filterListWithSearch])
-
-  React.useEffect(() => {
-    let timeout: ReturnType<typeof setTimeout> | undefined
-
-    const sendMetrics = () => {
-      clearTimeout(timeout)
-
-      timeout = setTimeout(() => {
-        track.portfolioTokensListSearchActivated({search_term: search})
-      }, 500) // 0.5s requirement
-    }
-
-    if (isSearching && search.length > 0) sendMetrics()
-
-    return () => clearTimeout(timeout)
-  }, [isSearching, search, track])
 
   return (
     <ScrollView

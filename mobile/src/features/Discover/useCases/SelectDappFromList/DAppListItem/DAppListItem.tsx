@@ -19,7 +19,6 @@ import {LabelSingleAddress} from '~/features/Discover/common/LabelSingleAddress'
 import {useDisconnectDapp} from '~/features/Discover/common/useDisconnectDapp'
 import {useNavigateTo} from '~/features/Discover/common/useNavigateTo'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {InfoBanner} from '~/ui/InfoBanner/InfoBanner'
@@ -48,8 +47,6 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
   const {openModal, closeModal} = useModal()
   const insets = useSafeAreaInsets()
   const strings = useStrings()
-  const {track} = useMetrics()
-
   const heightDialogByHeightScreen = dApp.isSingleAddress ? 612 : 492
 
   const heightDialogByInit = INIT_DIALOG_DAPP_ACTIONS_HEIGHT + insets.bottom
@@ -70,8 +67,6 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
   }
 
   const handleOpenDApp = () => {
-    track.discoverConnectedBottomSheetOpenDAppClicked()
-
     closeModal()
 
     const id = v4()
@@ -100,13 +95,7 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
   }
 
   const handlePress = () => {
-    track.discoverDAppItemClicked()
-    if (connected) track.discoverConnectedDAppItemClicked()
-
-    if (onPress) {
-      onPress()
-      return
-    }
+    if (onPress) return onPress()
 
     if (!connected || isGoogleSearchItem(dApp)) {
       return handleOpenDApp()

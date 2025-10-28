@@ -10,7 +10,6 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {useSwap} from '~/features/Swap/common/useSwap'
 import {useLanguage} from '~/kernel/i18n/LanguageProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingView'
 import {SettingsSwitch} from '~/ui/SettingsSwitch/SettingsSwitch'
 import {TextInput} from '~/ui/TextInput/TextInput'
@@ -90,15 +89,12 @@ export const SwapSettings = () => {
   const [inputValue, setInputValue] = React.useState(defaultInputValue)
 
   const strings = useStrings()
-  const {track} = useMetrics()
-
   const selectedChoice = getChoiceByLabel(selectedChoiceLabel)
   const isSelectedChoiceCustom = selectedChoiceLabel === 'Custom'
 
   const commit = (value: string | number) => {
     const slippage =
       typeof value === 'string' ? parseNumber(value, numberLocale) : value
-    track.swapSlippageChanged({slippage_tolerance: slippage})
     swapForm.action({type: 'SlippageInputChanged', value: slippage})
     swapForm.assignManagerSettings({...swapForm.managerSettings, slippage})
   }

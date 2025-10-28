@@ -15,7 +15,6 @@ import {useAuth} from '~/features/Auth/context/AuthProvider'
 import {usePromise} from '~/hooks/usePromise'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Button, ButtonType} from '~/ui/Button/Button'
 
 import {Biometric} from '../illustrations/Biometric'
@@ -24,11 +23,6 @@ export const ChooseBiometricLoginScreen = () => {
   const {atoms: ta} = useTheme()
   const {enableLoginWithHost} = useAuth()
   const strings = useStrings()
-  const {track} = useMetrics()
-
-  React.useEffect(() => {
-    track.onboardingBiometricsPageViewed()
-  }, [track])
 
   const {setScreenShown, isPending: isScreenShownLoading} = useSetScreenShown()
   const {isPending, resolve} = usePromise({
