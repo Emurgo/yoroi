@@ -5,6 +5,7 @@ import {useIsFocused} from '@react-navigation/native'
 import * as React from 'react'
 import {TextInput} from 'react-native'
 
+import {usePageViewTracking} from '~/features/Analytics/hooks/usePageViewTracking'
 import {memoMaxLenght} from '~/features/Send/common/constants'
 import {AddressErrorWrongNetwork} from '~/features/Send/common/errors'
 import {useNextTick} from '~/features/Send/common/hooks/useNextTick'
@@ -33,6 +34,8 @@ export const StartMultiTokenTxScreen = () => {
   const isFocused = useIsFocused()
 
   const hasPendingTx = useHasPendingTx({wallet})
+
+  usePageViewTracking('Send Initiated')
 
   const {
     targets,

@@ -58,6 +58,7 @@ export const DashboardScreen = () => {
       unsignedTxChanged(unsignedTx)
       walletNavigateTo.navigateToTxReview({
         operations: [<StakeRewardsWithdrawalOperation key="0" />],
+        context: 'withdraw rewards',
       })
     },
   })

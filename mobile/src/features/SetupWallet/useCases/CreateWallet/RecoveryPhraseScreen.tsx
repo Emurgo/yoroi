@@ -6,6 +6,7 @@ import {BlurView} from 'expo-blur'
 import * as React from 'react'
 import {Platform, Text, TouchableOpacity, View} from 'react-native'
 
+import {usePageViewTracking} from '~/features/Analytics/hooks/usePageViewTracking'
 import {useBold} from '~/hooks/useBold'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
@@ -33,6 +34,8 @@ export const RecoveryPhraseScreen = () => {
     showCreateWalletInfoModalChanged,
   } = useSetupWallet()
   const {palette: p} = useTheme()
+
+  usePageViewTracking('Create Wallet Save Phrase Step Viewed')
 
   const mnemonic = React.useMemo(() => generateAdaMnemonic(), [])
 

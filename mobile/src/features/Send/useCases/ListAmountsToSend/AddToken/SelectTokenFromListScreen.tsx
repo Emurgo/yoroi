@@ -8,6 +8,7 @@ import {FlashList} from '@shopify/flash-list'
 import * as React from 'react'
 import {Alert, TouchableOpacity, View} from 'react-native'
 
+import {usePageViewTracking} from '~/features/Analytics/hooks/usePageViewTracking'
 import {usePortfolioBalances} from '~/features/Portfolio/common/hooks/usePortfolioBalances'
 import {MediaGallery} from '~/features/Portfolio/ui/MediaGallery/MediaGallery'
 import {useSearch, useSearchOnNavBar} from '~/features/Search/SearchContext'
@@ -32,6 +33,8 @@ export const SelectTokenFromListScreen = () => {
   const [fungibilityFilter, setFungibilityFilter] =
     React.useState<Portfolio.FungibilityFilter>('all')
   const [isPending, startTransition] = React.useTransition()
+
+  usePageViewTracking('Send Select Asset Page Viewed')
 
   useSearchOnNavBar({
     placeholder: strings.send.searchTokens,

@@ -77,6 +77,11 @@ export const ListAmountsToSendScreen = () => {
     amountRemoved(tokenId)
   }
 
+  const sendProperties = React.useMemo(
+    () => assetsToSendProperties({amounts}),
+    [amounts],
+  )
+
   const handleOnSuccess = React.useCallback(
     (signedTx?: YoroiSignedTx) => {
       if (signedTx?.signedTx?.id == null)
@@ -106,9 +111,12 @@ export const ListAmountsToSendScreen = () => {
       unsignedTxChanged(yoroiUnsignedTx)
       navigateToTxReview({
         onSuccess: (args) => handleOnSuccess(args?.signedTx),
+        context: 'send',
+        assetCount: sendProperties.asset_count,
+        assetList: sendProperties.assets,
       })
     },
-    [unsignedTxChanged, navigateToTxReview, handleOnSuccess],
+    [unsignedTxChanged, navigateToTxReview, handleOnSuccess, sendProperties],
   )
 
   const {resolve: createUnsignedTx, isPending} = usePromise({
@@ -214,6 +222,26 @@ const ListAmountsNavigateBackButton = () => {
       <Icon.Chevron direction="left" color={ta.el_gray_max.color} />
     </TouchableOpacity>
   )
+}
+
+const maxAmountsPerTrack = 30
+export const assetsToSendProperties = ({
+  amounts,
+}: {
+  amounts: Portfolio.Token.AmountRecords
+}) => {
+  const limitedAssets = Object.entries(amounts).slice(
+    0,
+    maxAmountsPerTrack,
+  ) as [Portfolio.Token.Id, Portfolio.Token.Amount][]
+  return {
+    asset_count: limitedAssets.length,
+    assets: limitedAssets.map(([_, amount]) => ({
+      policy_id: amount.info.id,
+      asset_name: amount.info.name,
+      asset_ticker: amount.info.ticker,
+    })),
+  }
 }
 
 const Left = View

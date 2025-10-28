@@ -4,6 +4,7 @@ import {useFocusEffect} from '@react-navigation/native'
 import * as React from 'react'
 import {ScrollView} from 'react-native'
 
+import {usePageViewTracking} from '~/features/Analytics/hooks/usePageViewTracking'
 import {usePortfolio} from '~/features/Portfolio/context/PortfolioProvider'
 import {BalanceCard} from '~/ui/BalanceCard/BalanceCard'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
@@ -19,6 +20,8 @@ export const PortfolioDashboardScreen = () => {
       resetTabs()
     }, [resetTabs]),
   )
+
+  usePageViewTracking('Portfolio Dashboard Page Viewed')
 
   return (
     <SafeArea>

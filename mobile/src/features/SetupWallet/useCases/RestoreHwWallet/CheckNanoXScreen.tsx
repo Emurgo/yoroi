@@ -6,6 +6,7 @@ import * as React from 'react'
 import {Linking, Platform, TouchableOpacity, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
+import {usePageViewTracking} from '~/features/Analytics/hooks/usePageViewTracking'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {SetupWalletRouteNavigation} from '~/kernel/navigation/types'
 import {BulletPointItem} from '~/ui/BulletPointItem'
@@ -23,6 +24,8 @@ export const CheckNanoXScreen = () => {
   const handleOnContinue = () =>
     navigation.navigate('setup-wallet-connect-nano-x')
   const {useUSB} = useSetupWallet()
+
+  usePageViewTracking('Connect Wallet Check Page Viewed')
 
   const commonRequirements = [
     strings.ledgerMessages.appInstalled,

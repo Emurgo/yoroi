@@ -5,6 +5,7 @@ import * as React from 'react'
 import {View} from 'react-native'
 import Svg, {ClipPath, Defs, G, Path, Rect} from 'react-native-svg'
 
+import {useAnalyticsTracking} from '~/features/Analytics/hooks/useAnalyticsTracking'
 import {TransactionReceivedNotificationPopup} from '~/features/Notifications/useCases/TransactionReceivedNotificationPopup'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
@@ -31,6 +32,8 @@ export const NotificationPopup = ({
   const navigation = useWalletNavigation()
   const strings = useStrings()
 
+  const {trackEvent} = useAnalyticsTracking()
+
   const handleOnSwipeOut = () => {
     onCancel()
   }
@@ -48,6 +51,7 @@ export const NotificationPopup = ({
 
     if (event.trigger === Notifications.Trigger.Banner) {
       if (event.id === BannerIds.BuyCrypto || event.id === BannerIds.TestAda) {
+        trackEvent('Wallet Page Buy Banner Clicked')
         navigation.navigateToExchange()
       }
       if (event.id === BannerIds.GovernanceParticipation) {

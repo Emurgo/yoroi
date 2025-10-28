@@ -5,6 +5,7 @@ import {Chain} from '@yoroi/types'
 import * as React from 'react'
 import {GestureResponderEvent, View} from 'react-native'
 
+import {useAnalyticsTracking} from '~/features/Analytics/hooks/useAnalyticsTracking'
 import {useCopy} from '~/features/Copy/context/CopyProvider'
 import {useReceive} from '~/features/Receive/common/ReceiveProvider'
 import {useMultipleAddressesInfo} from '~/features/Receive/common/useMultipleAddressesInfo'
@@ -27,7 +28,7 @@ export const ActionsBanner = (props: {disabled: boolean}) => {
   const navigateTo = useWalletNavigation()
   const {atoms: ta} = useTheme()
   const {reset: resetTransfer} = useTransfer()
-
+  const {trackEvent} = useAnalyticsTracking()
   const {isSingle, addressMode} = useAddressMode()
   const {next: nextReceiveAddress} = useReceiveAddressesStatus(addressMode)
   const {selectedAddressChanged} = useReceive()
@@ -49,6 +50,7 @@ export const ActionsBanner = (props: {disabled: boolean}) => {
   }
 
   const handleOnExchange = () => {
+    trackEvent('Wallet Page Exchange Clicked')
     navigateTo.navigateToExchange()
   }
 

@@ -11,6 +11,7 @@ import {Alert, Text, View} from 'react-native'
 import * as DeviceInfo from 'react-native-device-info'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {usePageViewTracking} from '~/features/Analytics/hooks/usePageViewTracking'
 import {useAuth} from '~/features/Auth/context/AuthProvider'
 import {usePromise} from '~/hooks/usePromise'
 import {useStrings} from '~/kernel/i18n/useStrings'
@@ -23,6 +24,8 @@ export const ChooseBiometricLoginScreen = () => {
   const {atoms: ta} = useTheme()
   const {enableLoginWithHost} = useAuth()
   const strings = useStrings()
+
+  usePageViewTracking('Onboarding Biometrics Page Viewed')
 
   const {setScreenShown, isPending: isScreenShownLoading} = useSetScreenShown()
   const {isPending, resolve} = usePromise({

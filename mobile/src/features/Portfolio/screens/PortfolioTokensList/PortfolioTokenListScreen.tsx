@@ -3,6 +3,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {usePageViewTracking} from '~/features/Analytics/hooks/usePageViewTracking'
 import {useGetDAppsPortfolioBalance} from '~/features/Portfolio/common/hooks/useGetDAppsPortfolioBalance'
 import {
   PortfolioListTab,
@@ -20,6 +21,8 @@ export const PortfolioTokenListScreen = () => {
   const {palette: p} = useTheme()
   const strings = useStrings()
   const {listTab, setListTab} = usePortfolio()
+
+  usePageViewTracking('Portfolio Tokens List Page Viewed')
   // TODO: missing dAppsBalance
   const dAppsBalance = useGetDAppsPortfolioBalance(0n)
   const hasDApps =

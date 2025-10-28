@@ -7,6 +7,7 @@ import * as React from 'react'
 import {Keyboard, Text, TouchableOpacity, View} from 'react-native'
 import {FlatList, ScrollView} from 'react-native-gesture-handler'
 
+import {usePageViewTracking} from '~/features/Analytics/hooks/usePageViewTracking'
 import {WalletDuplicatedModal} from '~/features/SetupWallet/common/WalletDuplicatedModal/WalletDuplicatedModal'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useBold} from '~/hooks/useBold'
@@ -34,6 +35,9 @@ export const RestoreWalletScreen = () => {
   const bold = useBold({style: a.body_1_lg_medium})
   const {openModal} = useModal()
   const {walletManager} = useWalletManager()
+
+  usePageViewTracking('Restore Wallet Enter Phrase Step Viewed')
+
   const [mnemonic, setMnemonic] = React.useState('')
   const {
     publicKeyHexChanged,

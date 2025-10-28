@@ -16,6 +16,8 @@ import {
   useWindowDimensions,
 } from 'react-native'
 
+import {useAnalyticsTracking} from '~/features/Analytics/hooks/useAnalyticsTracking'
+import {usePageViewTracking} from '~/features/Analytics/hooks/usePageViewTracking'
 import {YoroiHelpLink} from '~/features/SetupWallet/common/constants'
 import {Info as InfoIcon} from '~/features/SetupWallet/illustrations/Info'
 import {parseWalletMeta} from '~/features/WalletManager/common/validators/wallet-meta'
@@ -56,6 +58,10 @@ export const SaveNanoXScreen = () => {
     features.prefillWalletInfo ? debugWalletInfo.WALLET_NAME : '',
   )
 
+  const {trackEvent} = useAnalyticsTracking()
+
+  usePageViewTracking('Connect Wallet Details Page Viewed')
+
   const {walletImplementation, hwDeviceInfo, accountVisual, walletIdChanged} =
     useSetupWallet()
 
@@ -75,6 +81,10 @@ export const SaveNanoXScreen = () => {
         logger.error(error)
         throw error
       }
+
+      trackEvent('Connect Wallet Details Submitted', {
+        hardware_wallet: 'Ledger',
+      })
 
       navigation.navigate('setup-wallet-preparing-wallet')
     },

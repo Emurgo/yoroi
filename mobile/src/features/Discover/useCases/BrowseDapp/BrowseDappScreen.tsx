@@ -3,6 +3,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {FlatList, View} from 'react-native'
 
+import {usePageViewTracking} from '~/features/Analytics/hooks/usePageViewTracking'
 import {useBrowser} from '~/features/Discover/common/BrowserProvider'
 import {Space} from '~/ui/Space/Space'
 
@@ -13,6 +14,8 @@ export const BrowseDappScreen = () => {
   const {palette: p} = useTheme()
   const flatListRef = React.useRef<FlatList>(null)
   const {tabs, tabsOpen} = useBrowser()
+
+  usePageViewTracking('Discover Web View Viewed')
 
   return (
     <View style={[a.flex_1, {backgroundColor: p.bg_color_max}]}>

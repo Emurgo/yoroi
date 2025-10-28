@@ -18,6 +18,7 @@ import {
   useWindowDimensions,
 } from 'react-native'
 
+import {usePageViewTracking} from '~/features/Analytics/hooks/usePageViewTracking'
 import {usePortfolioImageInvalidate} from '~/features/Portfolio/common/hooks/usePortfolioImage'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
@@ -36,6 +37,8 @@ import {useNavigateTo} from '../../common/navigation'
 export const MediaDetailsScreen = () => {
   const strings = useStrings()
   const {forceInvalidate, isPending} = usePortfolioImageInvalidate()
+
+  usePageViewTracking('NFT Gallery Details Page Viewed')
 
   const [activeTab, setActiveTab] = useState<ActiveTab>('overview')
 

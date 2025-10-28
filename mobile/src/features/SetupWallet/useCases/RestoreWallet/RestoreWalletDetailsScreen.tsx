@@ -18,6 +18,7 @@ import {
   useWindowDimensions,
 } from 'react-native'
 
+import {usePageViewTracking} from '~/features/Analytics/hooks/usePageViewTracking'
 import {YoroiHelpLink} from '~/features/SetupWallet/common/constants'
 import {parseWalletMeta} from '~/features/WalletManager/common/validators/wallet-meta'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
@@ -89,6 +90,8 @@ export const RestoreWalletDetailsScreen = () => {
     accountVisual,
   } = useSetupWallet()
   const plate = walletChecksum(publicKeyHex)
+
+  usePageViewTracking('Restore Wallet Details Step Viewed')
 
   const passwordRef = React.useRef<RNTextInput>(null)
   const [password, setPassword] = React.useState(
