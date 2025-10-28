@@ -15,7 +15,7 @@ import {ReviewTx} from './ReviewTx/ReviewTx'
 
 const getTransactionAnalyticsProperties = (
   formattedTx: FormattedTx,
-  context?: string,
+  context?: NonNullable<ReviewTxRoutes['review-tx']>['context'],
 ) => {
   const notOwnedOutputs = formattedTx.outputs.filter(
     (output) => !output.ownAddress,
