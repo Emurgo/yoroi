@@ -4,7 +4,7 @@ import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Api, Wallet} from '@yoroi/types'
 
-import {useFocusEffect, useNavigation} from '@react-navigation/native'
+import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 import {
   InteractionManager,
@@ -29,7 +29,6 @@ import {debugWalletInfo, features} from '~/kernel/features'
 import {errorMessages} from '~/kernel/i18n/messages/global'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Button} from '~/ui/Button/Button'
 import {CardAboutPhrase} from '~/ui/CardAboutPhrase/CardAboutPhrase'
 import {Icon} from '~/ui/Icon'
@@ -77,7 +76,6 @@ export const WalletDetailsScreen = () => {
   const navigation = useNavigation<any>()
   const strings = useStrings()
   const {atoms: ta} = useTheme()
-  const {track} = useMetrics()
   const bold = useBold({style: a.body_1_lg_medium})
   const {modalHeightNamePassword, modalHeightChecksum} = useSizeModal()
   const {openModal, closeModal} = useModal()
@@ -105,12 +103,6 @@ export const WalletDetailsScreen = () => {
     features.prefillWalletInfo ? debugWalletInfo.PASSWORD : '',
   )
 
-  useFocusEffect(
-    React.useCallback(() => {
-      track.createWalletDetailsStepViewed()
-    }, [track]),
-  )
-
   const passwordConfirmationRef = React.useRef<RNTextInput>(null)
   const [passwordConfirmation, setPasswordConfirmation] = React.useState(
     features.prefillWalletInfo ? debugWalletInfo.PASSWORD : '',
@@ -134,8 +126,6 @@ export const WalletDetailsScreen = () => {
         logger.error(error)
         throw error
       }
-
-      track.createWalletDetailsSettled()
 
       navigation.navigate('setup-wallet-preparing-wallet')
     },
@@ -178,8 +168,6 @@ export const WalletDetailsScreen = () => {
   )
 
   const handleCreateWallet = React.useCallback(() => {
-    track.createWalletDetailsSubmitted()
-
     createWallet({
       name,
       password,
@@ -194,7 +182,6 @@ export const WalletDetailsScreen = () => {
     mnemonic,
     name,
     password,
-    track,
     walletImplementation,
   ])
 

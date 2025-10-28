@@ -5,7 +5,6 @@ import {FlatList} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {supportedThemes} from '~/kernel/constants'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Hr} from '~/ui/Hr/Hr'
 
 import {ThemeItem} from './ThemeItem'
@@ -13,17 +12,7 @@ import {ThemeItem} from './ThemeItem'
 export const SelectThemeScreen = () => {
   const {selectTheme, config, atoms: ta} = useTheme()
 
-  const {track} = useMetrics()
-
   const handleOnSelectTheme = (theme: ThemeName) => {
-    track.themeSelected({
-      theme:
-        theme === 'default-light'
-          ? 'light'
-          : theme === 'default-dark'
-            ? 'dark'
-            : 'auto',
-    })
     selectTheme(theme)
   }
   const themes = Object.entries(supportedThemes).map(([, v]) => ({

@@ -14,7 +14,6 @@ import {useAddressMode} from '~/features/WalletManager/hooks/useAddressMode'
 import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
@@ -36,8 +35,7 @@ export const ActionsBanner = (props: {disabled: boolean}) => {
   const {hideMultipleAddressesInfo, isShowingMultipleAddressInfo} =
     useMultipleAddressesInfo()
 
-  const {meta, wallet} = useSelectedWallet()
-  const {track} = useMetrics()
+  const {meta} = useSelectedWallet()
   const {network} = useSelectedNetwork()
 
   const handleOnSwap = () => {
@@ -46,25 +44,11 @@ export const ActionsBanner = (props: {disabled: boolean}) => {
       return
     }
 
-    track.swapInitiated({
-      from_asset: [
-        {
-          asset_name: wallet.portfolioPrimaryTokenInfo.name,
-          asset_ticker: wallet.portfolioPrimaryTokenInfo.ticker,
-          policy_id: '',
-        },
-      ],
-      to_asset: [{asset_name: '', asset_ticker: '', policy_id: ''}],
-      order_type: 'market',
-      slippage_tolerance: 1,
-    })
-
     // Pass the tokenOutId to the navigation function which will handle setting it properly
     navigateTo.navigateToSwap(tokenOutId)
   }
 
   const handleOnExchange = () => {
-    track.walletPageExchangeClicked()
     navigateTo.navigateToExchange()
   }
 
@@ -84,9 +68,6 @@ export const ActionsBanner = (props: {disabled: boolean}) => {
   }
 
   const handleOnLongPressReceive = (event: GestureResponderEvent) => {
-    track.receiveCopyAddressClicked({
-      copy_address_location: 'Long Press wallet Address',
-    })
     copy({
       text: nextReceiveAddress,
       event,

@@ -7,7 +7,6 @@ import Svg, {ClipPath, Defs, G, Path, Rect} from 'react-native-svg'
 
 import {TransactionReceivedNotificationPopup} from '~/features/Notifications/useCases/TransactionReceivedNotificationPopup'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Icon} from '~/ui/Icon'
 import {IconProps} from '~/ui/Icon/type'
@@ -32,51 +31,22 @@ export const NotificationPopup = ({
   const navigation = useWalletNavigation()
   const strings = useStrings()
 
-  const {track} = useMetrics()
-
-  React.useEffect(() => {
-    if (event.trigger === Notifications.Trigger.Push) {
-      track.pushNotificationViewed()
-    } else {
-      track.inAppNotificationViewed()
-    }
-  }, [event.trigger, track])
-
   const handleOnSwipeOut = () => {
     onCancel()
-
-    if (event.trigger === Notifications.Trigger.TransactionReceived) {
-      track.inAppNotificationClosed({type: 'tx_received'})
-    }
-
-    if (event.trigger === Notifications.Trigger.RewardsUpdated) {
-      track.inAppNotificationClosed({type: 'staking_rewards'})
-    }
-
-    if (event.trigger === Notifications.Trigger.Banner) {
-      track.inAppNotificationClosed({type: 'banner'})
-    }
   }
 
   const handleOnPress = () => {
     onPress()
 
-    if (event.trigger === Notifications.Trigger.Push) {
-      track.pushNotificationPressed()
-    }
-
     if (event.trigger === Notifications.Trigger.TransactionReceived) {
-      track.inAppNotificationOpened({type: 'tx_received'})
       navigation.navigateToTxHistory()
     }
 
     if (event.trigger === Notifications.Trigger.RewardsUpdated) {
-      track.inAppNotificationOpened({type: 'staking_rewards'})
       navigation.navigateToStakingDashboard()
     }
 
     if (event.trigger === Notifications.Trigger.Banner) {
-      track.inAppNotificationOpened()
       if (event.id === BannerIds.BuyCrypto || event.id === BannerIds.TestAda) {
         navigation.navigateToExchange()
       }

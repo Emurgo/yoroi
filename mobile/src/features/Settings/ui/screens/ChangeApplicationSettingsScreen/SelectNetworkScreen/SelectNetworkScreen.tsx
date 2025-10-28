@@ -14,7 +14,6 @@ import {availableNetworks} from '~/features/WalletManager/common/constants'
 import {useAutomaticWalletOpener} from '~/features/WalletManager/context/AutomaticWalletOpeningProvider'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Hr} from '~/ui/Hr/Hr'
 
 import {useNavigateTo} from '../../../../hooks/useNavigateTo'
@@ -27,12 +26,10 @@ export const SelectNetworkScreen = () => {
   const {network: selectedNetwork} = useSelectedNetwork()
   const {setShouldOpen: setShouldAutomaticWalletOpen} =
     useAutomaticWalletOpener()
-  const {track} = useMetrics()
   const {hasShownNetworkNotice, setHasShownNetworkNotice} =
     useHasShowNetworkNotice()
 
   const handleOnSelectNetwork = (network: Chain.SupportedNetworks) => {
-    track.networkSelected({from_network: selectedNetwork, to_network: network})
     setShouldAutomaticWalletOpen(true)
     walletManager.setSelectedNetwork(network)
     navigateTo.preparingNetworks(network)

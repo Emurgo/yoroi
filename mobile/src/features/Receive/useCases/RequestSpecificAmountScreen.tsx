@@ -5,7 +5,6 @@ import {
 } from '@yoroi/links'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
-import {useFocusEffect} from '@react-navigation/native'
 import * as React from 'react'
 import {
   GestureResponderEvent,
@@ -17,7 +16,6 @@ import {
 import {useCopy} from '~/features/Copy/context/CopyProvider'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {useModal} from '~/ui/Modal/context/ModalContext'
@@ -39,7 +37,6 @@ export const RequestSpecificAmountScreen = () => {
   const [amount, setAmount] = React.useState('')
   const {wallet} = useSelectedWallet()
 
-  const {track} = useMetrics()
   const hasAmount = !isEmptyString(amount)
   const {scrollViewRef} = useScrollView()
 
@@ -50,7 +47,6 @@ export const RequestSpecificAmountScreen = () => {
   const {openModal} = useModal()
 
   const handleOnGenerateLink = React.useCallback(() => {
-    track.receiveAmountGeneratedPageViewed({ada_amount: Number(amount)})
     openModal({
       title: strings.receive.amountToReceive,
       content: <ModalContent amount={amount} address={selectedAddress} />,
@@ -58,7 +54,6 @@ export const RequestSpecificAmountScreen = () => {
       height: modalHeight,
     })
   }, [
-    track,
     amount,
     openModal,
     strings.receive.amountToReceive,
@@ -76,12 +71,6 @@ export const RequestSpecificAmountScreen = () => {
       setAmount(edited)
     }
   }
-
-  useFocusEffect(
-    React.useCallback(() => {
-      track.receiveAmountPageViewed()
-    }, [track]),
-  )
 
   return (
     <SafeArea>
@@ -131,8 +120,6 @@ export const RequestSpecificAmountScreen = () => {
 const ModalContent = ({amount, address}: {amount: string; address: string}) => {
   const strings = useStrings()
   const {copy} = useCopy()
-  const {track} = useMetrics()
-
   const cardanoLinks = linksCardanoModuleMaker()
   const cardanoRequestLink = cardanoLinks.create({
     config: configCardanoLegacyTransfer,
@@ -178,7 +165,6 @@ const ModalContent = ({amount, address}: {amount: string; address: string}) => {
             })
           }
           testID="receive:specific-amount"
-          onShare={() => track.receiveShareAddressClicked()}
           shareLabel={strings.receive.shareLabel}
         />
       ) : (

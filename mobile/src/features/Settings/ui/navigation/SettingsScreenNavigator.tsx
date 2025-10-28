@@ -1,7 +1,7 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs'
-import {useFocusEffect, useNavigation} from '@react-navigation/native'
+import {useNavigation} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import * as React from 'react'
 import {TouchableOpacity} from 'react-native'
@@ -13,7 +13,6 @@ import {ReadPrivacyPolicyScreen} from '~/features/Legal/ui/screens/ReadPrivacyPo
 import {ReadTermsOfServiceScreen} from '~/features/Legal/ui/screens/ReadTermsOfServiceScreen'
 import {PreparingWalletScreen} from '~/features/SetupWallet/common/PreparingWalletScreen/PreparingWalletScreen'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {
   defaultMaterialTopTabNavigationOptions,
   defaultStackNavigationOptions,
@@ -43,7 +42,6 @@ import {ManageNotificationsNavigator} from './ManageNotificationsNavigator'
 const Stack = createStackNavigator<SettingsStackRoutes>()
 export const SettingsScreenNavigator = () => {
   const strings = useStrings()
-  const {track} = useMetrics()
   const {palette: p} = useTheme()
   const openNetworkNoticeModal = useOpenNetworkNoticeModal()
   const openNetworkNoticeModalRef = React.useRef(openNetworkNoticeModal)
@@ -51,12 +49,6 @@ export const SettingsScreenNavigator = () => {
   const handleOpenModal = React.useCallback(() => {
     openNetworkNoticeModalRef.current()
   }, [openNetworkNoticeModalRef])
-
-  useFocusEffect(
-    React.useCallback(() => {
-      track.settingsPageViewed()
-    }, [track]),
-  )
 
   const navOptions = React.useMemo(() => defaultStackNavigationOptions(p), [p])
 

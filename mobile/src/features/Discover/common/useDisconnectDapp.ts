@@ -2,8 +2,6 @@ import {useDappConnector} from '@yoroi/dapp-connector'
 
 import * as React from 'react'
 
-import {useMetrics} from '~/kernel/metrics/metricsManager'
-
 import {useBrowser} from './BrowserProvider'
 import type {DAppItem} from './helpers'
 import {getTabIndexesByOrigins} from './helpers'
@@ -11,7 +9,6 @@ import {useInvalidateConnectedDapps} from './useDAppsConnected'
 
 export const useDisconnectDapp = () => {
   const {manager} = useDappConnector()
-  const {track} = useMetrics()
   const invalidateConnectedDapps = useInvalidateConnectedDapps()
   const {
     sendDisconnectToOrigins,
@@ -23,8 +20,6 @@ export const useDisconnectDapp = () => {
 
   return React.useCallback(
     async (dApp: DAppItem) => {
-      track.discoverConnectedBottomSheetDisconnectClicked()
-
       const tabIndexesToClose = getTabIndexesByOrigins(tabs, dApp.origins)
 
       // First send disconnect notification to WebViews
@@ -50,7 +45,6 @@ export const useDisconnectDapp = () => {
     },
     [
       manager,
-      track,
       invalidateConnectedDapps,
       sendDisconnectToOrigins,
       tabs,

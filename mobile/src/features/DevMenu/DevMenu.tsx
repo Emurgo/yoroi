@@ -15,7 +15,6 @@ import {encryptData} from '~/kernel/crypto/encrypt-data'
 import {useLanguage} from '~/kernel/i18n/LanguageProvider'
 import {LocalizableError} from '~/kernel/i18n/LocalizableError'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {debugStorage} from '~/kernel/storage/debug-storage'
 import {rootMMKV, rootSyncStorage} from '~/kernel/storage/storages'
 import {Button, ButtonType} from '~/ui/Button/Button'
@@ -43,7 +42,7 @@ export function DevMenu() {
       clearTimeout(t)
     }, 3000)
   }, [])
-  const metrics = useMetrics()
+
   const {currency, ptActivity} = usePairing()
   const navigation = useNavigation<any>()
   const {openModal, closeModal} = useModal()
@@ -184,21 +183,12 @@ export function DevMenu() {
           style={[a.pt_md, a.p_md, a.rounded_md]}
         />
 
-        <Button
-          onPress={() => {
-            metrics.isEnabled ? metrics.disable() : metrics.enable()
-          }}
-          type={ButtonType.Secondary}
-          title={metrics.isEnabled ? 'Disable Metrics' : 'Enable Metrics'}
-        />
+        <Button type={ButtonType.Secondary} title="Metrics (Disabled)" />
 
         <Button
-          onPress={() => {
-            metrics.track.buyAdaSuccessRedirect()
-          }}
           type={ButtonType.Secondary}
-          title="Test Metrics"
-          disabled={!metrics.isEnabled}
+          title="Test Metrics (Disabled)"
+          disabled={true}
         />
 
         <Button

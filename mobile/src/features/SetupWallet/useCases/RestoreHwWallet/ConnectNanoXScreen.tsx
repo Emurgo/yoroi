@@ -2,7 +2,7 @@ import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a} from '@yoroi/theme'
 import {HW} from '@yoroi/types'
 
-import {useFocusEffect, useNavigation} from '@react-navigation/native'
+import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 import {useIntl} from 'react-intl'
 import {View} from 'react-native'
@@ -13,7 +13,6 @@ import {showErrorDialog} from '~/kernel/dialogs'
 import {LocalizableError} from '~/kernel/i18n/LocalizableError'
 import {errorMessages} from '~/kernel/i18n/messages/global'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {SetupWalletRouteNavigation} from '~/kernel/navigation/types'
 import {LedgerConnect} from '~/ui/LedgerConnect/LedgerConnect'
 import {useModal} from '~/ui/Modal/context/ModalContext'
@@ -31,19 +30,10 @@ export const ConnectNanoXScreen = ({defaultDevices}: Props) => {
   const strings = useStrings()
   const {walletManager} = useWalletManager()
   const {openModal} = useModal()
-  const {track} = useMetrics()
-
   const navigation = useNavigation<SetupWalletRouteNavigation>()
 
   const {hwDeviceInfoChanged, walletImplementation, useUSB} = useSetupWallet()
   const intl = useIntl()
-
-  useFocusEffect(
-    React.useCallback(() => {
-      track.connectWalletConnectPageViewed()
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []),
-  )
 
   const onSuccess = (hwDeviceInfo: HW.DeviceInfo) => {
     hwDeviceInfoChanged(hwDeviceInfo)

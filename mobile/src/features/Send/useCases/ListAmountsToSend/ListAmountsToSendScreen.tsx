@@ -16,8 +16,6 @@ import {useSaveMemo} from '~/features/Transactions/hooks/useSaveMemo'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {usePromise} from '~/hooks/usePromise'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {assetsToSendProperties} from '~/kernel/metrics/helpers'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {AddTokenButton} from '~/ui/AddTokenButton/AddTokenButton'
 import {Boundary} from '~/ui/Boundary/Boundary'
@@ -34,7 +32,6 @@ export const ListAmountsToSendScreen = () => {
   const strings = useStrings()
   const {clearSearch} = useSearch()
   const navigation = useNavigation()
-  const {track} = useMetrics()
   const {wallet} = useSelectedWallet()
   const {unsignedTxChanged} = useReviewTx()
   const {
@@ -59,18 +56,9 @@ export const ListAmountsToSendScreen = () => {
     meta: {addressMode},
   } = useSelectedWallet()
 
-  const sendProperties = React.useMemo(
-    () => assetsToSendProperties({amounts}),
-    [amounts],
-  )
-
   React.useLayoutEffect(() => {
     navigation.setOptions({headerLeft: () => <ListAmountsNavigateBackButton />})
   }, [navigation])
-
-  React.useEffect(() => {
-    track.sendSelectAssetUpdated(assetsToSendProperties({amounts}))
-  }, [amounts, selectedTokensCounter, track])
 
   const handleOnEdit = (tokenId: Portfolio.Token.Id) => {
     const amount = amounts[tokenId]
@@ -93,7 +81,6 @@ export const ListAmountsToSendScreen = () => {
     (signedTx?: YoroiSignedTx) => {
       if (signedTx?.signedTx?.id == null)
         throw new Error('ListAmountsToSendScreen:: invalid state')
-      track.sendSummarySubmitted(sendProperties)
 
       if (memo.length > 0) {
         saveMemo({txId: signedTx.signedTx.id, memo: memo.trim()})
@@ -101,12 +88,8 @@ export const ListAmountsToSendScreen = () => {
 
       reset()
     },
-    [track, sendProperties, memo, saveMemo, reset],
+    [memo, saveMemo, reset],
   )
-
-  const handleOnError = React.useCallback(() => {
-    track.sendSummarySubmitted(sendProperties)
-  }, [track, sendProperties])
 
   const handleOnAdd = () => {
     clearSearch()
@@ -123,20 +106,17 @@ export const ListAmountsToSendScreen = () => {
       unsignedTxChanged(yoroiUnsignedTx)
       navigateToTxReview({
         onSuccess: (args) => handleOnSuccess(args?.signedTx),
-        onError: handleOnError,
       })
     },
-    [unsignedTxChanged, navigateToTxReview, handleOnSuccess, handleOnError],
+    [unsignedTxChanged, navigateToTxReview, handleOnSuccess],
   )
 
   const {resolve: createUnsignedTx, isPending} = usePromise({
     promise: createUnsignedTxPromise,
     onSuccess: handleCreateUnsignedTxSuccess,
-    onError: handleOnError,
   })
 
   const handleOnNext = () => {
-    track.sendSelectAssetSelected(assetsToSendProperties({amounts}))
     if (!selectedTarget) return
     createUnsignedTx([toYoroiEntry(selectedTarget.entry)])
   }
