@@ -1,6 +1,6 @@
 ### Analytics
 
-Typed analytics utilities and PostHog wiring for the mobile app.
+Typed analytics utilities and PostHog wiring for the client app.
 
 ### Key pieces
 
@@ -79,10 +79,10 @@ Use the typed helper for button clicks, submissions, etc.
 ```tsx
 import {useAnalyticsTracking} from '~/features/Analytics/hooks/useAnalyticsTracking'
 
-export function ReviewTxSubmit({assetCount, assetList, certificates}: {
+export function ReviewTxSubmit({assetCount, assetList, type}: {
   assetCount: number
   assetList: string
-  certificates?: string
+  type?: string
 }) {
   const {trackEvent} = useAnalyticsTracking()
 
@@ -90,7 +90,7 @@ export function ReviewTxSubmit({assetCount, assetList, certificates}: {
     trackEvent('Transaction Review Modal Viewed', {
       asset_count: assetCount,
       asset_list: assetList,
-      certificates,
+      type,
     })
 
   return <Button title="Open" onPress={onOpen} />
