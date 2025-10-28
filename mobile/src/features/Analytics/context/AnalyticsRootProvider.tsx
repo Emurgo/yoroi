@@ -7,6 +7,7 @@ import type {AnalyticsProvider} from '../types/analytics'
 type Props = React.PropsWithChildren<{
   initialEnabled?: boolean
   platform: 'IOS' | 'Android' | 'Web'
+  client?: AnalyticsProvider | null
 }>
 
 type AnalyticsContextValue = {
@@ -31,11 +32,18 @@ export function AnalyticsRootProvider({
   children,
   initialEnabled,
   platform,
+  client: clientProp,
 }: Props) {
   const [enabled, setEnabledState] = React.useState<boolean>(
     Boolean(initialEnabled),
   )
-  const [client, setClient] = React.useState<AnalyticsProvider | null>(null)
+  const [client, setClient] = React.useState<AnalyticsProvider | null>(
+    clientProp ?? null,
+  )
+
+  React.useEffect(() => {
+    if (typeof clientProp !== 'undefined') setClient(clientProp)
+  }, [clientProp])
 
   const setEnabled = React.useCallback((next: boolean) => {
     setEnabledState(next)

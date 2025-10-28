@@ -9,8 +9,7 @@ Typed analytics utilities and PostHog wiring for the client app.
 - **Typed events**: Event names and properties live in `events/analytics-events.ts` and are enforced at compile time.
 - **Hooks**:
   - `useAnalyticsTracking` → `trackEvent(event, properties?)`
-  - `usePageViewTracking(event, properties?)` (fires on screen focus)
-  - `useDelayedPageViewTracking(event, properties?, delayMs?)`
+  - `usePageViewTracking(event, properties?, delayMs?)` (fires on screen focus)
 
 ### Setup
 
@@ -61,13 +60,13 @@ export function NftGalleryScreen({count}: {count: number}) {
 }
 ```
 
-Use a delayed variant if the screen needs to load before tracking:
+Use delay if the screen needs to load before tracking:
 
 ```tsx
-import {useDelayedPageViewTracking} from '~/features/Analytics/hooks/usePageViewTracking'
+import {usePageViewTracking} from '~/features/Analytics/hooks/usePageViewTracking'
 
 export function ReviewScreen() {
-  useDelayedPageViewTracking('Swap Review Page Viewed', undefined, 800)
+  usePageViewTracking('Swap Review Page Viewed', undefined, 800)
   return <View />
 }
 ```
