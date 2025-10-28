@@ -8,7 +8,6 @@ import {
 } from 'react-native-safe-area-context'
 
 import {AnalyticsRootProvider} from '~/features/Analytics/context/AnalyticsRootProvider'
-import {createNoopClient} from '~/features/Analytics/helpers/createNoopClient'
 import {createPosthogClient} from '~/features/Analytics/helpers/createPosthogClient'
 import {useScreenCapture} from '~/features/Settings/hooks/useScreenCapture'
 import {RouterContainer} from '~/kernel/navigation/RouterContainer'
@@ -61,7 +60,7 @@ function usePosthogClient(enabled: boolean) {
   const client = React.useMemo(() => {
     const apiKey = process.env.EXPO_PUBLIC_POSTHOG_KEY
     const host = process.env.EXPO_PUBLIC_POSTHOG_HOST
-    if (!apiKey || !host) return createNoopClient()
+    if (!apiKey || !host) throw new Error('Analytics client is not configured')
     const sdk = new PostHog(apiKey, {host, disabled: !enabled})
     return createPosthogClient({sdk})
   }, [enabled])
