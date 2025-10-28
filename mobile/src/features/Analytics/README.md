@@ -9,11 +9,10 @@ Typed analytics utilities and PostHog wiring for the client app.
 - **Typed events**: Event names and properties live in `events/analytics-events.ts` and are enforced at compile time.
 - **Hooks**:
   - `useAnalyticsTracking` → `trackEvent(event, properties?)`
-  - `usePageViewTracking(event, properties?, delayMs?)` (fires on screen focus)
 
 ### Setup
 
-`PlatformShell` already wraps the app with `AnalyticsRootProvider` and initializes PostHog via `AnalyticsInitializer`.
+`PlatformShell` wraps the app with `AnalyticsRootProvider` and initializes PostHog.
 
 - Required env vars:
   - `EXPO_PUBLIC_POSTHOG_KEY`
@@ -38,13 +37,18 @@ export function AnalyticsToggle() {
 
 ### Tracking page views
 
-Use on screen components to auto-fire when the screen is focused.
+Track page views from screens using `useAnalyticsTracking`.
 
 ```tsx
-import {usePageViewTracking} from '~/features/Analytics/hooks/usePageViewTracking'
+import * as React from 'react'
+import {View} from 'react-native'
+import {useAnalyticsTracking} from '~/features/Analytics/hooks/useAnalyticsTracking'
 
 export function PortfolioDashboardScreen() {
-  usePageViewTracking('Portfolio Dashboard Page Viewed')
+  const {trackEvent} = useAnalyticsTracking()
+  React.useEffect(() => {
+    trackEvent('Portfolio Dashboard Page Viewed')
+  }, [trackEvent])
   return <View />
 }
 ```
@@ -52,21 +56,15 @@ export function PortfolioDashboardScreen() {
 With properties (types enforced by the event definition):
 
 ```tsx
-import {usePageViewTracking} from '~/features/Analytics/hooks/usePageViewTracking'
+import * as React from 'react'
+import {View} from 'react-native'
+import {useAnalyticsTracking} from '~/features/Analytics/hooks/useAnalyticsTracking'
 
 export function NftGalleryScreen({count}: {count: number}) {
-  usePageViewTracking('NFT Gallery Page Viewed', {nft_count: count})
-  return <View />
-}
-```
-
-Use delay if the screen needs to load before tracking:
-
-```tsx
-import {usePageViewTracking} from '~/features/Analytics/hooks/usePageViewTracking'
-
-export function ReviewScreen() {
-  usePageViewTracking('Swap Review Page Viewed', undefined, 800)
+  const {trackEvent} = useAnalyticsTracking()
+  React.useEffect(() => {
+    trackEvent('NFT Gallery Page Viewed', {nft_count: count})
+  }, [trackEvent, count])
   return <View />
 }
 ```
@@ -81,7 +79,7 @@ import {useAnalyticsTracking} from '~/features/Analytics/hooks/useAnalyticsTrack
 export function ReviewTxSubmit({assetCount, assetList, type}: {
   assetCount: number
   assetList: string
-  type?: string
+  type: string
 }) {
   const {trackEvent} = useAnalyticsTracking()
 
@@ -138,7 +136,6 @@ Add names and (optional) property types in `events/analytics-events.ts`. This ma
 - `context/AnalyticsRootProvider.tsx`
 - `helpers/createPosthogClient.ts`
 - `hooks/useAnalyticsTracking.ts`
-- `hooks/usePageViewTracking.ts`
 - `events/analytics-events.ts`
 - `types/analytics.ts`
 

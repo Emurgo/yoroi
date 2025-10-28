@@ -6,7 +6,6 @@ import React, {ReactNode} from 'react'
 import {ScrollView, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {usePageViewTracking} from '~/features/Analytics/hooks/usePageViewTracking'
 import {usePortfolioBalances} from '~/features/Portfolio/common/hooks/usePortfolioBalances'
 import {useNavigateTo} from '~/features/Portfolio/common/navigation'
 import {MediaGallery} from '~/features/Portfolio/ui/MediaGallery/MediaGallery'
@@ -23,8 +22,6 @@ export const ListMediaGalleryScreen = () => {
   const strings = useStrings()
   const {wallet} = useSelectedWallet()
   const balances = usePortfolioBalances({wallet})
-
-  usePageViewTracking('NFT Gallery Page Viewed')
 
   // use case: search nfts
   useSearchOnNavBar({

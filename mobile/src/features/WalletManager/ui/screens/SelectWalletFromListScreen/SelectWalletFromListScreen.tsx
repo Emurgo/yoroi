@@ -6,7 +6,6 @@ import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 import {Linking, Text, TouchableOpacity} from 'react-native'
 
-import {usePageViewTracking} from '~/features/Analytics/hooks/usePageViewTracking'
 import {useLinksRequestWallet} from '~/features/Links/hooks/useLinksRequestWallet'
 import {pushNotificationsManager} from '~/features/Notifications/common/notification-manager'
 import {
@@ -40,8 +39,6 @@ export const SelectWalletFromList = () => {
     }),
     [openModal, closeModal],
   )
-
-  usePageViewTracking('All Wallets Page Viewed')
 
   useLinksRequestWallet(modalFunctions)
   const {scrollViewRef} = useScrollView()

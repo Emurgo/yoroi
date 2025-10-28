@@ -14,7 +14,6 @@ import {
 import {ScrollView} from 'react-native-gesture-handler'
 import Animated, {FadeIn, FadeOut, Layout} from 'react-native-reanimated'
 
-import {usePageViewTracking} from '~/features/Analytics/hooks/usePageViewTracking'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useBold} from '~/hooks/useBold'
 import {useStrings} from '~/kernel/i18n/useStrings'
@@ -33,8 +32,6 @@ export const VerifyRecoveryPhraseScreen = () => {
     useSetupWallet()
   const {atoms: ta} = useTheme()
   const {walletManager} = useWalletManager()
-
-  usePageViewTracking('Create Wallet Verify Phrase Step Viewed')
 
   // Handle empty mnemonic case
   const processedMnemonic = mnemonic.trim() || ''

@@ -8,7 +8,9 @@ import {
 } from 'react-native-safe-area-context'
 
 import {AnalyticsRootProvider} from '~/features/Analytics/context/AnalyticsRootProvider'
+import {routeToEvent} from '~/features/Analytics/events/route-events'
 import {createPosthogClient} from '~/features/Analytics/helpers/createPosthogClient'
+import {useAnalyticsTracking} from '~/features/Analytics/hooks/useAnalyticsTracking'
 import {useScreenCapture} from '~/features/Settings/hooks/useScreenCapture'
 import {RouterContainer} from '~/kernel/navigation/RouterContainer'
 import {
@@ -23,7 +25,7 @@ export function PlatformShell({children}: React.PropsWithChildren) {
   const metricsEnabled = metricsEnabledStorageKeyManager.read()
 
   const {init} = useScreenCapture()
-  // Only enable on Android where permission dialogs trigger auto-logout
+
   const isAndroid = Platform.OS === 'android'
   const platform = isAndroid ? 'Android' : 'IOS'
   const client = usePosthogClient(metricsEnabled)
@@ -40,7 +42,7 @@ export function PlatformShell({children}: React.PropsWithChildren) {
         client={client}
         metricsEnabledStorage={metricsEnabledStorageKeyManager}
       >
-        <RouterContainer>
+        <TrackedRouterContainer>
           <ModalProvider>
             <BackgroundTimerProvider active={isAndroid}>
               <KeyboardProvider statusBarTranslucent>
@@ -48,7 +50,7 @@ export function PlatformShell({children}: React.PropsWithChildren) {
               </KeyboardProvider>
             </BackgroundTimerProvider>
           </ModalProvider>
-        </RouterContainer>
+        </TrackedRouterContainer>
       </AnalyticsRootProvider>
     </SafeAreaProvider>
   )
@@ -70,4 +72,32 @@ function usePosthogClient(enabled: boolean) {
   }, [client, installationId, enabled])
 
   return client
+}
+
+function TrackedRouterContainer({children}: React.PropsWithChildren) {
+  const {trackEvent} = useAnalyticsTracking()
+  const [currentRoute, setCurrentRoute] = React.useState<string | undefined>()
+
+  const handleRouteChange = React.useCallback((routeName?: string) => {
+    setCurrentRoute(routeName)
+  }, [])
+
+  const debouncedTrack = React.useCallback(() => {
+    if (!currentRoute) return
+    const mapped = routeToEvent[currentRoute]
+    if (!mapped) return
+    if (typeof mapped === 'string') trackEvent(mapped)
+    else trackEvent(mapped.event, mapped.properties)
+  }, [currentRoute, trackEvent])
+
+  React.useEffect(() => {
+    const timer = setTimeout(debouncedTrack, 100)
+    return () => clearTimeout(timer)
+  }, [debouncedTrack])
+
+  return (
+    <RouterContainer onRouteChange={handleRouteChange}>
+      {children}
+    </RouterContainer>
+  )
 }

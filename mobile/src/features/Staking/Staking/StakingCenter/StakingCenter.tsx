@@ -8,7 +8,6 @@ import {Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {WebView, WebViewMessageEvent} from 'react-native-webview'
 
-import {usePageViewTracking} from '~/features/Analytics/hooks/usePageViewTracking'
 import {useStakingTx} from '~/features/Dashboard/ui/shared/StakePoolInfos'
 import {useReviewTx} from '~/features/ReviewTx/common/ReviewTxProvider'
 import {PoolDetailScreen} from '~/features/Staking/Staking/PoolDetails/PoolDetailScreen'
@@ -51,8 +50,6 @@ export const StakingCenter = () => {
       }
     }, [languageCode, plate]),
   )
-
-  usePageViewTracking('Staking Center Page Viewed')
 
   const onSuccess = React.useCallback(() => {
     queryClient.resetQueries({queryKey: [wallet.id, 'stakingInfo']})

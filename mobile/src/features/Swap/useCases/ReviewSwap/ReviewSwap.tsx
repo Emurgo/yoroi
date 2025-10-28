@@ -5,7 +5,6 @@ import * as React from 'react'
 import {View, useWindowDimensions} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
-import {usePageViewTracking} from '~/features/Analytics/hooks/usePageViewTracking'
 import {useSwap} from '~/features/Swap/common/useSwap'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
@@ -23,8 +22,6 @@ export const ReviewSwap = () => {
   const {height: deviceHeight} = useWindowDimensions()
   const strings = useStrings()
   const {navigateToTxReview} = useWalletNavigation()
-
-  usePageViewTracking('Swap Review Page Viewed')
 
   const swapForm = useSwap()
 

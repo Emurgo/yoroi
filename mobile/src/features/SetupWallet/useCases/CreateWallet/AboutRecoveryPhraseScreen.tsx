@@ -5,7 +5,6 @@ import * as React from 'react'
 import {Linking, ScrollView, Text, View} from 'react-native'
 import {ViewProps} from 'react-native-svg/lib/typescript/fabric/utils'
 
-import {usePageViewTracking} from '~/features/Analytics/hooks/usePageViewTracking'
 import {YoroiHelpLink} from '~/features/SetupWallet/common/constants'
 import {useBold} from '~/hooks/useBold'
 import {useStrings} from '~/kernel/i18n/useStrings'
@@ -21,8 +20,6 @@ export const AboutRecoveryPhraseScreen = () => {
   const strings = useStrings()
   const navigation = useNavigation<any>()
   const {atoms: ta} = useTheme()
-
-  usePageViewTracking('Create Wallet Learn Phrase Step Viewed')
 
   const handleOnLearMoreButtonPress = () => {
     Linking.openURL(YoroiHelpLink)

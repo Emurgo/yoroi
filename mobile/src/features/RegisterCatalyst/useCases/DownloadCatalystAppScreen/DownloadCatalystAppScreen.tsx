@@ -16,7 +16,6 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import appstoreBadge from '~/assets/img/app-store-badge.png'
 import playstoreBadge from '~/assets/img/google-play-badge.png'
-import {usePageViewTracking} from '~/features/Analytics/hooks/usePageViewTracking'
 import {
   Actions,
   Row,
@@ -45,8 +44,6 @@ export const DownloadCatalystAppScreen = () => {
   const navigateTo = useNavigateTo()
   const {pinChanged, reset: resetCatalyst} = useCatalyst()
   const hasShownModal = React.useRef(false)
-
-  usePageViewTracking('Voting Page Viewed')
 
   const onNext = () => {
     resetCatalyst()

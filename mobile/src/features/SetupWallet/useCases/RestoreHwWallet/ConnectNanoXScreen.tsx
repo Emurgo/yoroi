@@ -7,7 +7,6 @@ import * as React from 'react'
 import {useIntl} from 'react-intl'
 import {View} from 'react-native'
 
-import {usePageViewTracking} from '~/features/Analytics/hooks/usePageViewTracking'
 import {WalletDuplicatedModal} from '~/features/SetupWallet/common/WalletDuplicatedModal/WalletDuplicatedModal'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {showErrorDialog} from '~/kernel/dialogs'
@@ -32,8 +31,6 @@ export const ConnectNanoXScreen = ({defaultDevices}: Props) => {
   const {walletManager} = useWalletManager()
   const {openModal} = useModal()
   const navigation = useNavigation<SetupWalletRouteNavigation>()
-
-  usePageViewTracking('Connect Wallet Connect Page Viewed')
 
   const {hwDeviceInfoChanged, walletImplementation, useUSB} = useSetupWallet()
   const intl = useIntl()

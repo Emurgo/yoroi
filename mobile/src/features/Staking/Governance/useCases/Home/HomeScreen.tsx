@@ -15,7 +15,6 @@ import React, {type ReactNode} from 'react'
 import {Text, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
-import {usePageViewTracking} from '~/features/Analytics/hooks/usePageViewTracking'
 import {useRemoteConfig} from '~/features/RemoteConfig/hooks/useRemoteConfig'
 import {LearnMoreLink} from '~/features/Staking/Governance/common/LearnMoreLink/LearnMoreLink'
 import {YoroiRecordLink} from '~/features/Staking/Governance/common/YoroiRecordLink/YoroiRecordLink'
@@ -47,8 +46,6 @@ export const HomeScreen = () => {
     isPendingRefetchAfterTxConfirmation,
     setIsPendingRefetchAfterTxConfirmation,
   ] = React.useState(false)
-
-  usePageViewTracking('Governance Dashboard Page Viewed')
 
   const stakingKeyHash = useStakingKey(wallet)
   const {data: stakingStatus, refetch: refetchStakingKeyState} =

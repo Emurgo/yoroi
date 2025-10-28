@@ -5,7 +5,6 @@ import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 import {ScrollView, View} from 'react-native'
 
-import {usePageViewTracking} from '~/features/Analytics/hooks/usePageViewTracking'
 import {isIOS} from '~/kernel/constants'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {SetupWalletRouteNavigation} from '~/kernel/navigation/types'
@@ -24,8 +23,6 @@ export const ChooseSetupTypeScreen = () => {
   const strings = useStrings()
   const {walletImplementationChanged, setupTypeChanged} = useSetupWallet()
   const {openModal} = useModal()
-
-  usePageViewTracking('Create Wallet Select Method Page Viewed')
 
   const navigation = useNavigation<SetupWalletRouteNavigation>()
 

@@ -3,7 +3,6 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
-import {usePageViewTracking} from '~/features/Analytics/hooks/usePageViewTracking'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useBlockGoBack} from '~/kernel/navigation/hooks/useBlockGoBack'
 import {useUnsafeParams} from '~/kernel/navigation/hooks/useUnsafeParams'
@@ -19,10 +18,6 @@ export const FailedTxScreen = () => {
   const strings = useStrings()
   const {palette: p, atoms: ta} = useTheme()
   const {resetToTxHistory} = useWalletNavigation()
-
-  usePageViewTracking('Transaction Results Popup Viewed', {
-    status: 'Failure',
-  })
 
   // Try to get parameters from different possible route types
   const reviewTxParams =

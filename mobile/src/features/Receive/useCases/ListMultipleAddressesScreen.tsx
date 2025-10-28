@@ -12,7 +12,6 @@ import {
 import Animated, {Layout} from 'react-native-reanimated'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {usePageViewTracking} from '~/features/Analytics/hooks/usePageViewTracking'
 import {useAddressMode} from '~/features/WalletManager/hooks/useAddressMode'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
@@ -41,8 +40,6 @@ export const ListMultipleAddressesScreen = () => {
   const {addressMode} = useAddressMode()
   const addresses = useReceiveAddressesStatus(addressMode)
   const [showAddressLimitInfo, setShowAddressLimitInfo] = React.useState(true)
-
-  usePageViewTracking('Receive Page List Viewed')
 
   const addressInfos = toAddressInfos(addresses)
   const hasReachedGapLimit = !addresses.canIncrease

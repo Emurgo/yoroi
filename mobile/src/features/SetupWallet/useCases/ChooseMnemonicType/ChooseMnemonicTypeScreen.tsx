@@ -5,7 +5,6 @@ import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 import {View} from 'react-native'
 
-import {usePageViewTracking} from '~/features/Analytics/hooks/usePageViewTracking'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {SetupWalletRouteNavigation} from '~/kernel/navigation/types'
 import {LogoBanner} from '~/ui/LogoBanner/LogoBanner'
@@ -20,8 +19,6 @@ export const ChooseMnemonicTypeScreen = () => {
   const strings = useStrings()
   const {mnemonicTypeChanged} = useSetupWallet()
   const navigation = useNavigation<SetupWalletRouteNavigation>()
-
-  usePageViewTracking('Restore Wallet Type Step Viewed')
 
   const handle15Words = () => {
     mnemonicTypeChanged(15)

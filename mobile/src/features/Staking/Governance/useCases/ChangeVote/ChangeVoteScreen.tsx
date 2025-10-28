@@ -13,7 +13,6 @@ import * as React from 'react'
 import {Text, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
-import {usePageViewTracking} from '~/features/Analytics/hooks/usePageViewTracking'
 import {useRemoteConfig} from '~/features/RemoteConfig/hooks/useRemoteConfig'
 import {LearnMoreLink} from '~/features/Staking/Governance/common/LearnMoreLink/LearnMoreLink'
 import {YoroiRecordLink} from '~/features/Staking/Governance/common/YoroiRecordLink/YoroiRecordLink'
@@ -55,8 +54,6 @@ export const ChangeVoteScreen = () => {
 
   const createDelegationCertificate = useDelegationCertificate()
   const createVotingCertificate = useVotingCertificate()
-
-  usePageViewTracking('Governance Dashboard Page Viewed')
 
   const createGovernanceTxMutation = useCreateGovernanceTx(wallet)
   const [pendingDelegateOptions, setPendingDelegateOptions] = React.useState<{

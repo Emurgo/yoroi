@@ -3,7 +3,6 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
-import {usePageViewTracking} from '~/features/Analytics/hooks/usePageViewTracking'
 import {ShowDisclaimer} from '~/features/Legal/ui/shared/Disclaimer/ShowDisclaimer'
 import {AmountCard} from '~/features/Swap/common/AmountCard/AmountCard'
 import {EstimateSummary} from '~/features/Swap/common/EstimateSummary/EstimateSummary'
@@ -36,8 +35,6 @@ export const SwapMainScreen = () => {
   const swapForm = useSwap()
   const {openModal, closeModal} = useModal()
   const navigateTo = useNavigateTo()
-
-  usePageViewTracking('Swap Initiated')
 
   const tokenInInfo = swapForm.tokenInfos?.get?.(
     swapForm.tokenInInput.tokenId ?? undefinedToken,

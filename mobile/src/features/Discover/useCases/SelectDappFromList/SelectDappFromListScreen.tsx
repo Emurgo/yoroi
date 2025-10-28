@@ -4,7 +4,6 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {FlatList, View} from 'react-native'
 
-import {usePageViewTracking} from '~/features/Analytics/hooks/usePageViewTracking'
 import {ChainDAppsWarning} from '~/features/Discover/common/ChainDAppsWarning'
 import {getGoogleSearchItem} from '~/features/Discover/common/helpers'
 import {useDAppsConnected} from '~/features/Discover/common/useDAppsConnected'
@@ -40,8 +39,6 @@ export const SelectDappFromListScreen = () => {
     [],
   )
   const [isShowedWelcomeDApp] = useShowWelcomeDApp()
-
-  usePageViewTracking('Discover Page Viewed')
 
   useSearchOnNavBar({
     title: strings.discover.discoverTitle,

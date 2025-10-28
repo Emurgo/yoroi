@@ -14,7 +14,11 @@ const prefixes = [...supportedPrefixes]
 const navRef =
   React.createRef<NavigationContainerRef<ReactNavigation.RootParamList>>()
 
-export function RouterContainer({children}: React.PropsWithChildren) {
+type Props = React.PropsWithChildren<{
+  onRouteChange?: (routeName: string | undefined) => void
+}>
+
+export function RouterContainer({children, onRouteChange}: Props) {
   const [currentRouteName, setCurrentRouteName] = React.useState<
     string | undefined
   >(undefined)
@@ -24,9 +28,10 @@ export function RouterContainer({children}: React.PropsWithChildren) {
       if (state) {
         const routeName = getCurrentRouteName(state)
         setCurrentRouteName(routeName)
+        if (onRouteChange) onRouteChange(routeName)
       }
     },
-    [],
+    [onRouteChange],
   )
 
   useStatusBar(currentRouteName)

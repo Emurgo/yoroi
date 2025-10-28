@@ -4,7 +4,6 @@ import {Wallet} from '@yoroi/types'
 import * as React from 'react'
 import {GestureResponderEvent, ScrollView} from 'react-native'
 
-import {usePageViewTracking} from '~/features/Analytics/hooks/usePageViewTracking'
 import {useCopy} from '~/features/Copy/context/CopyProvider'
 import {useAddressMode} from '~/features/WalletManager/hooks/useAddressMode'
 import {useStrings} from '~/kernel/i18n/useStrings'
@@ -34,8 +33,6 @@ export const DescribeSelectedAddressScreen = () => {
   const isMultipleAddressesUsed = addresses.used.length > 1
   const {isShowingMultipleAddressInfo} = useMultipleAddressesInfo()
   const {openModal, closeModal} = useModal()
-
-  usePageViewTracking('Receive Page Viewed')
 
   const {copy} = useCopy()
   const hasAddress = !isEmptyString(selectedAddress)

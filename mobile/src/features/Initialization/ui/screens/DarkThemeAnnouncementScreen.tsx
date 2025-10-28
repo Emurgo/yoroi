@@ -11,7 +11,6 @@ import {Platform, Pressable, Switch, Text, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {usePageViewTracking} from '~/features/Analytics/hooks/usePageViewTracking'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Button} from '~/ui/Button/Button'
@@ -25,8 +24,6 @@ export const DarkThemeAnnouncementScreen = () => {
   const {isDark, atoms: ta, palette: p} = useTheme()
   const {setScreenShown, isPending: isSetScreenShownLoading} =
     useSetScreenShown()
-
-  usePageViewTracking('Onboarding Theme Page Viewed')
 
   const scrollViewRef = React.useRef<ScrollView | null>(null)
 
