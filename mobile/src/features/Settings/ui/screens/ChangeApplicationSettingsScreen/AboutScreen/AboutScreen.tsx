@@ -6,7 +6,7 @@ import {Text, TouchableHighlight, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {usePromise} from '~/hooks/usePromise'
-import {appVersion, commit} from '~/kernel/constants'
+import {appVersion, commit, isNightly} from '~/kernel/constants'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Copiable} from '~/ui/Copiable/Copiable'
 
@@ -15,7 +15,7 @@ import {useNavigateTo} from '../../../../hooks/useNavigateTo'
 export const AboutScreen = () => {
   const strings = useStrings()
   const {atoms: ta} = useTheme()
-  const {value: FCMToken} = usePromise({
+  const {value: FCMToken, resolve: fetchFCMToken} = usePromise({
     promise: Notifications.getDevicePushTokenAsync,
   })
   const navigation = useNavigateTo()
@@ -23,6 +23,10 @@ export const AboutScreen = () => {
   const handleOnLongPress = () => {
     navigation.systemLog()
   }
+
+  React.useEffect(() => {
+    if (isNightly) fetchFCMToken()
+  }, [fetchFCMToken])
 
   return (
     <SafeAreaView
@@ -57,7 +61,7 @@ export const AboutScreen = () => {
         </Text>
       </View>
 
-      {FCMToken != null && (
+      {isNightly && FCMToken != null && (
         <View style={[a.flex_row, a.justify_between, a.align_center]}>
           <Text style={[a.body_1_lg_medium, ta.text_gray_medium]}>
             {strings.settings.about.fcmToken}
