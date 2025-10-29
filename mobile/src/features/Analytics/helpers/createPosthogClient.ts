@@ -28,7 +28,6 @@ export function createPosthogClient({sdk}: {sdk: SDK}): AnalyticsProvider {
         return
       }
       currentUserId = undefined
-      if (sdk.reset) sdk.reset()
     },
   }
 }
