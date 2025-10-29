@@ -1,4 +1,5 @@
 import {supportedPrefixes} from '@yoroi/links'
+import {useTheme} from '@yoroi/theme'
 
 import {
   NavigationContainer,
@@ -7,8 +8,7 @@ import {
 } from '@react-navigation/native'
 import * as React from 'react'
 
-import {getCurrentRouteName} from './common/helpers'
-import {useStatusBar} from './hooks/useStatusBar'
+import {applyStatusBarForRoute} from './common/helpers'
 
 const prefixes = [...supportedPrefixes]
 const navRef =
@@ -19,22 +19,16 @@ type Props = React.PropsWithChildren<{
 }>
 
 export function RouterContainer({children, onRouteChange}: Props) {
-  const [currentRouteName, setCurrentRouteName] = React.useState<
-    string | undefined
-  >(undefined)
+  const {palette, isDark} = useTheme()
 
   const handleStateChange = React.useCallback(
-    (state: NavigationState | undefined) => {
-      if (state) {
-        const routeName = getCurrentRouteName(state)
-        setCurrentRouteName(routeName)
-        if (onRouteChange) onRouteChange(routeName)
-      }
+    (_state: NavigationState | undefined) => {
+      const routeName = navRef.current?.getCurrentRoute()?.name
+      applyStatusBarForRoute(routeName, palette, isDark)
+      if (onRouteChange) onRouteChange(routeName)
     },
-    [onRouteChange],
+    [onRouteChange, palette, isDark],
   )
-
-  useStatusBar(currentRouteName)
 
   return (
     <NavigationContainer

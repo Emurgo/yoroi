@@ -76,24 +76,28 @@ function usePosthogClient(enabled: boolean) {
 
 function TrackedRouterContainer({children}: React.PropsWithChildren) {
   const {trackEvent} = useAnalyticsTracking()
-  const [currentRoute, setCurrentRoute] = React.useState<string | undefined>()
+  const timeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  const handleRouteChange = React.useCallback((routeName?: string) => {
-    setCurrentRoute(routeName)
-  }, [])
+  const handleRouteChange = React.useCallback(
+    (routeName?: string) => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current)
+      if (!routeName) return
 
-  const debouncedTrack = React.useCallback(() => {
-    if (!currentRoute) return
-    const mapped = routeToEvent[currentRoute]
-    if (!mapped) return
-    if (typeof mapped === 'string') trackEvent(mapped)
-    else trackEvent(mapped.event, mapped.properties)
-  }, [currentRoute, trackEvent])
+      timeoutRef.current = setTimeout(() => {
+        const mapped = routeToEvent[routeName]
+        if (!mapped) return
+        if (typeof mapped === 'string') trackEvent(mapped)
+        else trackEvent(mapped.event, mapped.properties)
+      }, 100)
+    },
+    [trackEvent],
+  )
 
   React.useEffect(() => {
-    const timer = setTimeout(debouncedTrack, 100)
-    return () => clearTimeout(timer)
-  }, [debouncedTrack])
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current)
+    }
+  }, [])
 
   return (
     <RouterContainer onRouteChange={handleRouteChange}>
