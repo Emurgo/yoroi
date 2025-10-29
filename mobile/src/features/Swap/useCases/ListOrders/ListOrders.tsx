@@ -184,7 +184,7 @@ const Order = ({order}: {order: Swap.Order}) => {
     order.actualAmountOut === 0
       ? order.expectedAmountOut
       : order.actualAmountOut
-  const priceCalc = amountOut === 0 ? 0 : order.amountIn / amountOut
+  const priceCalc = order.amountIn === 0 ? 0 : amountOut / order.amountIn
 
   const roundedPrice = parseNumberFromText({
     text: String(priceCalc),
