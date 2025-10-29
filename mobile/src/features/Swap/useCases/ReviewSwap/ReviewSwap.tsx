@@ -42,6 +42,7 @@ export const ReviewSwap = () => {
     navigateToTxReview({
       onSuccess: onSwapTxSuccess,
       cbor: swapForm.createTx?.cbor,
+      context: 'swap',
       receiverCustomTitle:
         protocol !== undefined ? (
           <ProtocolAvatar

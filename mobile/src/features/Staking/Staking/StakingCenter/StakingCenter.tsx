@@ -69,7 +69,7 @@ export const StakingCenter = () => {
     if (!stakingTx) return
     if (selectedPoolId == null) return
     unsignedTxChanged(stakingTx)
-    navigateToTxReview({onSuccess, onError})
+    navigateToTxReview({onSuccess, onError, context: 'delegate'})
   }, [
     stakingTx,
     selectedPoolId,

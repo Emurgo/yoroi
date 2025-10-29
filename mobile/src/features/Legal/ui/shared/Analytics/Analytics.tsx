@@ -5,8 +5,10 @@ import * as React from 'react'
 import {Linking, Text, TouchableOpacity, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
+import {useAnalyticsContext} from '~/features/Analytics/context/AnalyticsRootProvider'
 import {useBold} from '~/hooks/useBold'
 import {useStrings} from '~/kernel/i18n/useStrings'
+import {metricsConsentRequestedStorageKeyManager} from '~/kernel/storage/storages'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {SettingsSwitch} from '~/ui/SettingsSwitch/SettingsSwitch'
@@ -31,6 +33,7 @@ export const Analytics = (props: Props) => {
 
 const Notice = ({onNext}: {onNext?: () => void}) => {
   const strings = useStrings()
+  const {setEnabled} = useAnalyticsContext()
 
   const scrollViewRef = React.useRef<ScrollView | null>(null)
 
@@ -62,6 +65,10 @@ const Notice = ({onNext}: {onNext?: () => void}) => {
           size="S"
           type={ButtonType.Text}
           onPress={() => {
+            try {
+              metricsConsentRequestedStorageKeyManager.save(true)
+            } catch {}
+            setEnabled(false)
             onNext?.()
           }}
           title={strings.ui.skip}
@@ -72,6 +79,10 @@ const Notice = ({onNext}: {onNext?: () => void}) => {
         <Button
           type={ButtonType.Primary}
           onPress={() => {
+            try {
+              metricsConsentRequestedStorageKeyManager.save(true)
+            } catch {}
+            setEnabled(true)
             onNext?.()
           }}
           title={strings.ui.accept}
@@ -84,6 +95,11 @@ const Notice = ({onNext}: {onNext?: () => void}) => {
 const Settings = () => {
   const {atoms: ta} = useTheme()
   const strings = useStrings()
+  const {enabled, setEnabled} = useAnalyticsContext()
+
+  const handleOnToggle = React.useCallback(() => {
+    setEnabled(!enabled)
+  }, [enabled, setEnabled])
 
   return (
     <SafeArea style={[a.px_lg, a.gap_lg]}>
@@ -94,7 +110,7 @@ const Settings = () => {
           {strings.ui.toggle}
         </Text>
 
-        <SettingsSwitch value={false} />
+        <SettingsSwitch value={enabled} onValueChange={handleOnToggle} />
       </View>
     </SafeArea>
   )

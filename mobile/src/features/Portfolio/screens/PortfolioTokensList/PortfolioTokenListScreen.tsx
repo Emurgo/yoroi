@@ -20,6 +20,7 @@ export const PortfolioTokenListScreen = () => {
   const {palette: p} = useTheme()
   const strings = useStrings()
   const {listTab, setListTab} = usePortfolio()
+
   // TODO: missing dAppsBalance
   const dAppsBalance = useGetDAppsPortfolioBalance(0n)
   const hasDApps =

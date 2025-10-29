@@ -98,6 +98,7 @@ export const ManageCollateralScreen = () => {
         navigateToTxReview({
           onSuccessWithoutFeedback: (args) => handleOnSuccess(args?.signedTx),
           operations: [<Operation key="0" />],
+          context: 'send',
         })
       },
     })

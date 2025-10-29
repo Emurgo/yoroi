@@ -349,6 +349,7 @@ const OrderCancellation = ({
       } else {
         navigateToTxReview({
           cbor: response.value.data.cbor,
+          context: 'swap',
           details: {
             title: strings.swap.swapCancellationDetailsTitle,
             component: (

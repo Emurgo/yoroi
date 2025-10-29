@@ -81,6 +81,7 @@ export const useDappConnectorManager = () => {
           navigateToTxReview({
             cbor,
             preventSubmit: true,
+            context: 'dapp',
             createdBy: matchingDapp != null && (
               <CreatedByInfoItem
                 logo={matchingDapp.logo}
@@ -150,13 +151,14 @@ export const useDappConnectorManager = () => {
             cbor,
             partial,
             preventSubmit: true,
+            context: 'dapp',
             createdBy: matchingDapp != null && (
               <CreatedByInfoItem
                 logo={matchingDapp.logo}
                 url={matchingDapp.uri}
               />
             ),
-            onSuccess: (args) => {
+            onSuccessWithoutFeedback: (args) => {
               shouldResolve = false
               if (!args?.tx) {
                 reject(
@@ -169,7 +171,7 @@ export const useDappConnectorManager = () => {
               resolve(args?.tx)
               navigateToDiscoverBrowserDapp()
             },
-            onError: (error) => {
+            onErrorWithoutFeedback: (error) => {
               shouldResolve = false
               logger.error('useDappConnectorManager::handleSignTxWithHW', {
                 error,

@@ -34,6 +34,7 @@ export const RestoreWalletScreen = () => {
   const bold = useBold({style: a.body_1_lg_medium})
   const {openModal} = useModal()
   const {walletManager} = useWalletManager()
+
   const [mnemonic, setMnemonic] = React.useState('')
   const {
     publicKeyHexChanged,

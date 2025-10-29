@@ -69,7 +69,7 @@ export const usePoolTransition = () => {
   const navigateToUpdate = React.useCallback(async () => {
     const yoroiUnsignedTx = await createDelegationTx(wallet, poolId, meta)
     unsignedTxChanged(yoroiUnsignedTx)
-    navigateToTxReview()
+    navigateToTxReview({context: 'delegate'})
   }, [wallet, poolId, meta, unsignedTxChanged, navigateToTxReview])
 
   if (isLoading) {
