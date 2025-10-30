@@ -15,12 +15,11 @@ import {encryptData} from '~/kernel/crypto/encrypt-data'
 import {useLanguage} from '~/kernel/i18n/LanguageProvider'
 import {LocalizableError} from '~/kernel/i18n/LocalizableError'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {debugStorage} from '~/kernel/storage/debug-storage'
 import {rootMMKV, rootSyncStorage} from '~/kernel/storage/storages'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {LoadingOverlay} from '~/ui/LoadingOverlay/LoadingOverlay'
-import {useModal} from '~/ui/Modal/ModalContext'
+import {useModal} from '~/ui/Modal/context/ModalContext'
 import {TextInput} from '~/ui/TextInput/TextInput'
 
 import {useWalletManager} from '../WalletManager/context/WalletManagerProvider'
@@ -43,18 +42,28 @@ export function DevMenu() {
       clearTimeout(t)
     }, 3000)
   }, [])
-  const metrics = useMetrics()
+
   const {currency, ptActivity} = usePairing()
   const navigation = useNavigation<any>()
   const {openModal, closeModal} = useModal()
   const [demoText, setDemoText] = React.useState('')
 
   return (
-    <SafeAreaView style={[a.flex_1, ta.bg_color_max, a.gap_sm, a.p_lg]}>
+    <SafeAreaView
+      style={[a.flex_1, ta.bg_color_max]}
+      edges={['left', 'right', 'bottom']}
+    >
       <SystemBars style={isDark ? 'light' : 'dark'} />
 
       <View
-        style={[a.flex_1, ta.bg_color_max, a.gap_sm, a.flex_row, a.flex_wrap]}
+        style={[
+          a.flex_1,
+          ta.bg_color_max,
+          a.gap_sm,
+          a.flex_row,
+          a.flex_wrap,
+          a.p_lg,
+        ]}
       >
         <Text style={[a.body_2_md_regular, ta.text_gray_max]}>
           base: {basePalette} selectedTheme: {config} currency: {currency}{' '}
@@ -174,21 +183,12 @@ export function DevMenu() {
           style={[a.pt_md, a.p_md, a.rounded_md]}
         />
 
-        <Button
-          onPress={() => {
-            metrics.isEnabled ? metrics.disable() : metrics.enable()
-          }}
-          type={ButtonType.Secondary}
-          title={metrics.isEnabled ? 'Disable Metrics' : 'Enable Metrics'}
-        />
+        <Button type={ButtonType.Secondary} title="Metrics (Disabled)" />
 
         <Button
-          onPress={() => {
-            metrics.track.buyAdaSuccessRedirect()
-          }}
           type={ButtonType.Secondary}
-          title="Test Metrics"
-          disabled={!metrics.isEnabled}
+          title="Test Metrics (Disabled)"
+          disabled={true}
         />
 
         <Button
@@ -257,54 +257,55 @@ export function DevMenu() {
           console.log('Selected device:', deviceId)
         }}
       /> */}
+      <View style={[a.gap_xs]}>
+        <Button
+          disabled={isLoading}
+          onPress={() =>
+            createWallet({
+              mnemonicPhrase: process.env.EXPO_PUBLIC_WALLET_1_MNEMONIC ?? '',
+              name: 'Wallet 1',
+              password: '1234567890',
+              implementation: 'cardano-cip1852',
+              addressMode: 'multiple',
+              accountVisual: 0,
+            })
+          }
+          testID="btnRestoreWallet1"
+          title="Restore Wallet 1"
+        />
 
-      <Button
-        disabled={isLoading}
-        onPress={() =>
-          createWallet({
-            mnemonicPhrase: process.env.EXPO_PUBLIC_WALLET_1_MNEMONIC ?? '',
-            name: 'Wallet 1',
-            password: '1234567890',
-            implementation: 'cardano-cip1852',
-            addressMode: 'multiple',
-            accountVisual: 0,
-          })
-        }
-        testID="btnRestoreWallet1"
-        title="Restore Wallet 1"
-      />
+        <Button
+          disabled={isLoading}
+          onPress={() =>
+            createWallet({
+              mnemonicPhrase: process.env.EXPO_PUBLIC_WALLET_2_MNEMONIC ?? '',
+              name: 'Wallet 2',
+              password: '1234567890',
+              implementation: 'cardano-cip1852',
+              addressMode: 'multiple',
+              accountVisual: 0,
+            })
+          }
+          testID="btnRestoreWallet2"
+          title="Restore Wallet 2"
+        />
 
-      <Button
-        disabled={isLoading}
-        onPress={() =>
-          createWallet({
-            mnemonicPhrase: process.env.EXPO_PUBLIC_WALLET_2_MNEMONIC ?? '',
-            name: 'Wallet 2',
-            password: '1234567890',
-            implementation: 'cardano-cip1852',
-            addressMode: 'multiple',
-            accountVisual: 0,
-          })
-        }
-        testID="btnRestoreWallet2"
-        title="Restore Wallet 2"
-      />
-
-      <Button
-        disabled={isLoading}
-        onPress={() =>
-          createWallet({
-            mnemonicPhrase: process.env.EXPO_PUBLIC_WALLET_3_MNEMONIC ?? '',
-            name: 'Wallet 3',
-            password: '1234567890',
-            implementation: 'cardano-cip1852',
-            addressMode: 'multiple',
-            accountVisual: 0,
-          })
-        }
-        testID="btnRestoreWallet3"
-        title="Restore Wallet 3"
-      />
+        <Button
+          disabled={isLoading}
+          onPress={() =>
+            createWallet({
+              mnemonicPhrase: process.env.EXPO_PUBLIC_WALLET_3_MNEMONIC ?? '',
+              name: 'Wallet 3',
+              password: '1234567890',
+              implementation: 'cardano-cip1852',
+              addressMode: 'multiple',
+              accountVisual: 0,
+            })
+          }
+          testID="btnRestoreWallet3"
+          title="Restore Wallet 3"
+        />
+      </View>
     </SafeAreaView>
   )
 }

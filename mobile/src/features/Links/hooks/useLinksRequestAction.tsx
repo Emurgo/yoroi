@@ -12,18 +12,16 @@ import {useBrowser} from '~/features/Discover/common/BrowserProvider'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {useModal} from '~/ui/Modal/ModalContext'
+import {useModal} from '~/ui/Modal/context/ModalContext'
 
-import {RequestedAdaPaymentWithLinkScreen} from '../ui/screens/RequestedAdaPaymentWithLinkScreen/RequestedAdaPaymentWithLinkScreen'
-import {RequestedBrowserLaunchDappUrlScreen} from '../ui/screens/RequestedBrowserLaunchDappUrlScreen/RequestedBrowserLaunchDappUrlScreen'
+import {RequestedAdaPaymentWithLinkModal} from '../ui/modals/RequestedAdaPaymentWithLinkModal'
+import {RequestedBrowserLaunchDappUrlModal} from '../ui/modals/RequestedBrowserLaunchDappUrlModal'
 import {useNavigateTo} from './useNavigationTo'
 
 const heightBreakpoint = 467
 
 export const useLinksRequestAction = () => {
   const strings = useStrings()
-  const {track} = useMetrics()
   const {action, actionFinished} = useLinks()
   const {
     selected: {wallet},
@@ -133,11 +131,14 @@ export const useLinksRequestAction = () => {
       openModal({
         title: title,
         content: (
-          <RequestedAdaPaymentWithLinkScreen
-            onContinue={handleOnContinue}
+          <RequestedAdaPaymentWithLinkModal.Content
             params={params}
             isTrusted={isTrusted}
-            onClose={closeModal}
+          />
+        ),
+        footer: (
+          <RequestedAdaPaymentWithLinkModal.Footer
+            onContinue={handleOnContinue}
           />
         ),
         height: heightBreakpoint,
@@ -147,7 +148,6 @@ export const useLinksRequestAction = () => {
       strings.links.trustedPaymentRequestedTitle,
       strings.links.untrustedPaymentRequestedTitle,
       startTransferWithLink,
-      closeModal,
       openModal,
       isLoggedIn,
     ],
@@ -166,8 +166,6 @@ export const useLinksRequestAction = () => {
           const dappUrl = decodeURIComponent(action.info.params.dappUrl)
           const redirectTo = action.info.params.redirectTo
           if (redirectTo != null) linkActionChanged(action)
-
-          track.discoverConnectedBottomSheetOpenDAppClicked()
 
           const id = uuid.v4()
           addTabAndSetActive(dappUrl, id)
@@ -189,7 +187,6 @@ export const useLinksRequestAction = () => {
       linkActionChanged,
       closeModal,
       navigateTo,
-      track,
       isLoggedIn,
     ],
   )
@@ -226,10 +223,14 @@ export const useLinksRequestAction = () => {
       openModal({
         title: title,
         content: (
-          <RequestedBrowserLaunchDappUrlScreen
-            onContinue={handleOnContinue}
+          <RequestedBrowserLaunchDappUrlModal.Content
             params={params}
             isTrusted={isTrusted}
+          />
+        ),
+        footer: (
+          <RequestedBrowserLaunchDappUrlModal.Footer
+            onContinue={handleOnContinue}
           />
         ),
         height: heightBreakpoint,

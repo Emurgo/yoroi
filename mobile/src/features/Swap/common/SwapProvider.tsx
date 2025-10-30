@@ -1,7 +1,7 @@
 import {isLeft, isRight, parseNumberFromText} from '@yoroi/common'
 import {isPrimaryToken, primaryTokenId} from '@yoroi/portfolio'
 import {swapManagerMaker, swapStorageMaker} from '@yoroi/swap'
-import {Api, Balance, Portfolio, Swap} from '@yoroi/types'
+import {Api, App, Balance, Portfolio, Swap} from '@yoroi/types'
 
 import {useFocusEffect} from '@react-navigation/native'
 import {useQuery} from '@tanstack/react-query'
@@ -15,7 +15,6 @@ import {useRemoteConfig} from '~/features/RemoteConfig/hooks/useRemoteConfig'
 import {useStakingKey} from '~/features/Staking/hooks/useStakingKey'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {convertBech32ToHex} from '~/wallets/cardano/common/signatureUtils'
 
 import {undefinedToken} from './constants'
@@ -120,21 +119,22 @@ export type SwapContext = SwapState & {
   refetchOrders: () => void
 }
 
-export const SwapProvider = ({children}: {children: React.ReactNode}) => {
+export const SwapProvider = ({children}: React.PropsWithChildren) => {
   const navigate = useNavigateTo()
   const strings = useStrings()
-  const {track} = useMetrics()
   const {wallet} = useSelectedWallet()
   const {getInputs} = useGetInputs()
   const network = wallet.networkManager.network
   const balances = usePortfolioBalances({wallet})
   const stakingKey = useStakingKey(wallet)
-  const address = wallet.externalAddresses[0]
-  const addressHex = convertBech32ToHex(address)
   const {config} = useRemoteConfig()
   const [isLoading, setIsLoading] = React.useState(false)
 
   const swapManager = React.useMemo(() => {
+    const address = wallet.externalAddresses[0]
+    if (!address) throw new App.Errors.InvalidState('No External Address')
+
+    const addressHex = convertBech32ToHex(address)
     const storage = swapStorageMaker()
     return swapManagerMaker({
       storage,
@@ -149,20 +149,13 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
   }, [
     network,
     stakingKey,
-    address,
-    addressHex,
+    wallet.externalAddresses,
     wallet.portfolioPrimaryTokenInfo,
     config?.swap?.partners,
   ])
 
   const {data: orders = [], refetch: refetchOrders} = useQuery({
-    queryKey: [
-      'persist',
-      'useSwapOrders',
-      network,
-      stakingKey,
-      swapManager.settings.routingPreference,
-    ],
+    queryKey: ['persist', 'useSwapOrders', network, stakingKey],
     queryFn: async () => {
       const res = await swapManager.api.orders()
       if (isRight(res)) return res.value.data
@@ -273,7 +266,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
 
     if (options.length === 1) {
       // If there is exactly one option, always select it
-      desiredProtocol = options[0].protocol
+      desiredProtocol = options[0]!.protocol
     } else {
       const currentIsValid = options.some((p) => p.protocol === currentProtocol)
       if (!currentIsValid) {
@@ -429,7 +422,6 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
     setIsLoading(true)
 
     const tokenInInfo = tokenInfos.get(state.tokenInInput.tokenId)
-    const tokenOutInfo = tokenInfos.get(state.tokenOutInput.tokenId)
 
     const quantityIn =
       parseNumberFromText({
@@ -440,29 +432,6 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
       [state.tokenInInput.tokenId]: quantityIn,
     }
     const inputs = await getInputs(amountsIn)
-
-    track.swapOrderSelected({
-      from_asset: [
-        {
-          asset_name: tokenInInfo?.name,
-          asset_ticker: tokenInInfo?.ticker,
-          policy_id: tokenInInfo?.id.split('.')[0],
-        },
-      ],
-      to_asset: [
-        {
-          asset_name: tokenOutInfo?.name,
-          asset_ticker: tokenOutInfo?.ticker,
-          policy_id: tokenOutInfo?.id.split('.')[0],
-        },
-      ],
-      order_type: state.orderType,
-      slippage_tolerance: state.slippageInput.value,
-      from_amount: state.tokenInInput.value,
-      to_amount: state.tokenOutInput.value,
-      pool_source: state.estimate?.splits[0].poolId ?? '',
-      swap_fees: state.estimate?.totalFee,
-    })
 
     swapManager.api
       .create({
@@ -488,7 +457,7 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
                 aggregatorDexKey: state.estimate.splits[0].aggregatorDexKey,
                 poolIds:
                   state.estimate.splits[0].aggregatorPoolId != null
-                    ? [state.estimate.splits[0].aggregatorPoolId]
+                    ? [state.estimate.splits[0].aggregatorPoolId].flat()
                     : undefined,
                 quoteId: state.estimate.splits[0].quoteId,
               }
@@ -522,18 +491,15 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
     getInputs,
     navigate,
     state.estimate?.splits,
-    state.estimate?.totalFee,
     state.orderType,
     state.selectedProtocol.value,
     state.slippageInput.value,
     state.tokenInInput.tokenId,
     state.tokenInInput.value,
     state.tokenOutInput.tokenId,
-    state.tokenOutInput.value,
     state.wantedPrice,
     swapManager.api,
     tokenInfos,
-    track,
     wallet.isMainnet,
   ])
 
@@ -581,6 +547,8 @@ export const SwapProvider = ({children}: {children: React.ReactNode}) => {
 }
 
 export const swapReducer = (state: SwapState, action: SwapAction) => {
+  if (action.type === SwapActionType.ResetForm) return defaultState
+
   return produce(state, (draft) => {
     switch (action.type) {
       case SwapActionType.ChangeOrderType:
@@ -730,9 +698,6 @@ export const swapReducer = (state: SwapState, action: SwapAction) => {
         draft.canSwap = false
         break
 
-      case SwapActionType.ResetForm:
-        return defaultState
-
       case SwapActionType.EstimateResponse:
         draft.needsNewEstimate = false
         draft.lastInputTouched = state.lastInputTouched
@@ -773,9 +738,6 @@ export const swapReducer = (state: SwapState, action: SwapAction) => {
         draft.tokenOutInput.error = action.value.message
         draft.canSwap = false
         break
-
-      default:
-        return state
     }
   })
 }

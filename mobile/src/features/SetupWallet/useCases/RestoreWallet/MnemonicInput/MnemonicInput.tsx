@@ -51,18 +51,24 @@ export const MnemonicInput = ({
   mnenonicRefs: React.RefObject<MnemonicWordInputRef | null>[]
   inputErrorsIndexes: Array<number>
   mnemonic: string
-  scrollViewRef: React.MutableRefObject<ScrollView | null>
+  scrollViewRef: React.RefObject<ScrollView | null>
   onError: (index: number) => void
   onClearError: (index: number) => void
 }) => {
   const strings = useStrings()
-  const {palette: p} = useTheme()
+  const {palette: p, atoms: ta} = useTheme()
 
   const isMnemonicCompleted = !isEmptyString(mnemonic)
   const error =
     !isValidPhrase && isMnemonicCompleted
       ? strings.setupWallet.invalidChecksum
       : ''
+
+  const handleClearAll = () => {
+    setMnemonicSelectedWords(Array.from({length}).map(() => ''))
+    mnenonicRefs.forEach((ref) => ref.current?.selectWord(''))
+    mnenonicRefs[0]?.current?.focus()
+  }
 
   return (
     <View>
@@ -96,21 +102,14 @@ export const MnemonicInput = ({
         <View style={[a.flex_row, a.align_center, a.gap_sm]}>
           <Check2 color={p.secondary_600} />
 
-          <Text style={[a.body_1_lg_medium, {color: p.gray_max}]}>
+          <Text style={[a.body_1_lg_medium, ta.text_gray_max]}>
             {strings.setupWallet.validChecksum}
           </Text>
         </View>
       )}
 
       {!isMnemonicCompleted && (
-        <ClearAllButton
-          onPress={() => {
-            setMnemonicSelectedWords(Array.from({length}).map(() => ''))
-            mnenonicRefs.forEach((ref) => ref.current?.selectWord(''))
-            mnenonicRefs[0].current?.focus()
-          }}
-          testID="clearAll-button"
-        />
+        <ClearAllButton onPress={handleClearAll} testID="clearAll-button" />
       )}
 
       <Space.Height.lg />
@@ -126,7 +125,7 @@ const ClearAllButton = ({
   testID?: string
 }) => {
   const strings = useStrings()
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
 
   return (
     <View style={[a.flex_row, a.align_center, a.gap_sm]} testID={testID}>
@@ -135,7 +134,8 @@ const ClearAllButton = ({
           style={[
             a.button_2_md,
             a.pl_sm,
-            {color: p.text_primary_medium, textTransform: 'uppercase'},
+            ta.text_primary_medium,
+            {textTransform: 'uppercase'},
           ]}
         >
           {strings.setupWallet.clearAll}
@@ -172,7 +172,7 @@ const MnemonicWordsInput = ({
   onClearError,
 }: MnemonicWordsInputProps) => {
   const rowHeightRef = React.useRef<number | null>(null)
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
 
   useAutoFocus(mnenonicRefs[0])
 
@@ -200,14 +200,7 @@ const MnemonicWordsInput = ({
             }
             testID={`mnemonicInput${index}`}
           >
-            <Text
-              style={[
-                {
-                  color: p.text_primary_medium,
-                },
-                a.body_1_lg_regular,
-              ]}
-            >
+            <Text style={[ta.text_primary_medium, a.body_1_lg_regular]}>
               {index + 1}.
             </Text>
 
@@ -233,7 +226,7 @@ const MnemonicWordsInput = ({
               isValidPhrase={isValidPhrase}
               onKeyPress={(currentWord: string) => {
                 if (
-                  mnenonicRefs[index].current &&
+                  mnenonicRefs[index]?.current &&
                   isEmptyString(currentWord) &&
                   index > 0
                 ) {
@@ -312,7 +305,7 @@ const MnemonicWordInput = React.forwardRef<
 
     const handleOnSubmitEditing = React.useCallback(() => {
       if (!isEmptyString(suggestedWords[0])) {
-        onSelect(normalizeText(suggestedWords[0]))
+        onSelect(normalizeText(suggestedWords[0] ?? ''))
       }
     }, [suggestedWords, onSelect])
 
@@ -416,9 +409,11 @@ const getMatchingWords = (targetWord: string) =>
     word.startsWith(normalizeText(targetWord)),
   )
 
-const useAutoFocus = (ref: React.RefObject<MnemonicWordInputRef | null>) =>
-  React.useEffect(() => {
-    const timeout = setTimeout(() => ref.current?.focus(), 100)
+const useAutoFocus = (
+  ref: React.RefObject<MnemonicWordInputRef | null> | undefined,
+) =>
+  React.useLayoutEffect(() => {
+    const timeout = setTimeout(() => ref?.current?.focus(), 100)
 
     return () => clearTimeout(timeout)
   }, [ref])

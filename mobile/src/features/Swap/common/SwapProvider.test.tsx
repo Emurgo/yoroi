@@ -111,10 +111,6 @@ jest.mock('~/kernel/i18n/useStrings', () => ({
   useStrings: jest.fn(),
 }))
 
-jest.mock('~/kernel/metrics/metricsManager', () => ({
-  useMetrics: jest.fn(),
-}))
-
 jest.mock('~/wallets/cardano/common/signatureUtils', () => ({
   convertBech32ToHex: jest.fn(),
 }))
@@ -158,7 +154,6 @@ const mockUsePortfolioBalances =
 const mockUsePortfolioTokenInfosSuspense =
   require('~/features/Portfolio/common/hooks/usePortfolioTokenInfos').usePortfolioTokenInfosSuspense
 const mockUseStrings = require('~/kernel/i18n/useStrings').useStrings
-const mockUseMetrics = require('~/kernel/metrics/metricsManager').useMetrics
 const mockUseNavigateTo = require('./navigation').useNavigateTo
 const mockUseGetInputs = require('./useGetInputs').useGetInputs
 const mockUseQuery = require('@tanstack/react-query').useQuery
@@ -213,12 +208,6 @@ describe('SwapProvider', () => {
     mockUseStrings.mockReturnValue({
       swap: {
         notEnoughBalance: 'Not enough balance',
-      },
-    })
-
-    mockUseMetrics.mockReturnValue({
-      track: {
-        swapOrderSelected: jest.fn(),
       },
     })
 

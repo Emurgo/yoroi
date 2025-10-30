@@ -1,19 +1,17 @@
-import {atoms as a, useTheme} from '@yoroi/theme'
+import {atoms as a} from '@yoroi/theme'
 import {Wallet} from '@yoroi/types'
 
-import {useFocusEffect} from '@react-navigation/native'
 import * as React from 'react'
-import {GestureResponderEvent, ScrollView, View} from 'react-native'
-import {SafeAreaView} from 'react-native-safe-area-context'
+import {GestureResponderEvent, ScrollView} from 'react-native'
 
 import {useCopy} from '~/features/Copy/context/CopyProvider'
 import {useAddressMode} from '~/features/WalletManager/hooks/useAddressMode'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {AddressDetailCard} from '~/ui/AddressDetailCard/AddressDetailCard'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
-import {useModal} from '~/ui/Modal/ModalContext'
+import {useModal} from '~/ui/Modal/context/ModalContext'
+import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {
   SingleOrMultipleAddressesModal,
   singleOrMultipleAddressesModalHeight,
@@ -24,28 +22,22 @@ import {isEmptyString} from '~/wallets/utils/string'
 import {useReceive} from '../common/ReceiveProvider'
 import {useMultipleAddressesInfo} from '../common/useMultipleAddressesInfo'
 import {useNavigateTo} from '../common/useNavigateTo'
+import {useReceiveAddressesStatus} from '../common/useReceiveAddressesStatus'
 
 export const DescribeSelectedAddressScreen = () => {
   const strings = useStrings()
-  const {palette: p} = useTheme()
   const navigateTo = useNavigateTo()
   const {selectedAddress} = useReceive()
-  const {
-    /* isSingle,  */
-  } = useAddressMode()
-  // const addresses = useReceiveAddressesStatus(addressMode)
-  // TODO: REVISIT, RESTORE THIS FEATURE
-  // const isMultipleAddressesUsed = addresses.used.length > 1
+  const {isSingle: isSingleAddressMode, addressMode} = useAddressMode()
+  const addresses = useReceiveAddressesStatus(addressMode)
+  const isMultipleAddressesUsed = addresses.used.length > 1
   const {isShowingMultipleAddressInfo} = useMultipleAddressesInfo()
   const {openModal, closeModal} = useModal()
-
-  const {track} = useMetrics()
 
   const {copy} = useCopy()
   const hasAddress = !isEmptyString(selectedAddress)
 
   const onCopy = (event: GestureResponderEvent) => {
-    track.receiveCopyAddressClicked({copy_address_location: 'CTA Copy Address'})
     copy({
       text: selectedAddress,
       feedback: strings.receive.addressCopiedMsg,
@@ -61,52 +53,49 @@ export const DescribeSelectedAddressScreen = () => {
     },
     [navigateTo],
   )
+
   React.useEffect(() => {
     if (!isShowingMultipleAddressInfo) return
 
     const timeout = setTimeout(() => {
       openModal({
         title: strings.receive.singleOrMultiple,
-        content: (
-          <SingleOrMultipleAddressesModal
+        content: <SingleOrMultipleAddressesModal.Content />,
+        footer: (
+          <SingleOrMultipleAddressesModal.Footer
             onConfirm={handleOnModalConfirm}
             onClose={closeModal}
           />
         ),
         height: singleOrMultipleAddressesModalHeight,
+        canDiscard: false,
       })
     }, 300)
     return () => clearTimeout(timeout)
   }, [
     isShowingMultipleAddressInfo,
+    isSingleAddressMode,
+    isMultipleAddressesUsed,
     openModal,
     strings.receive.singleOrMultiple,
     handleOnModalConfirm,
     closeModal,
   ])
 
-  useFocusEffect(
-    React.useCallback(() => {
-      track.receivePageViewed()
-    }, [track]),
-  )
-
   return (
-    <SafeAreaView
-      style={[a.p_lg, a.flex_1, {backgroundColor: p.bg_color_max}]}
-      edges={['left', 'right', 'bottom']}
-    >
-      <ScrollView style={[a.flex_1]}>
-        <View style={[a.align_center, a.flex_1]}>
-          {hasAddress ? (
-            <AddressDetailCard title={strings.receive.addresscardTitle} />
-          ) : (
-            <SkeletonAdressDetail />
-          )}
-        </View>
+    <SafeArea>
+      <ScrollView
+        contentContainerStyle={[a.px_lg, a.align_center]}
+        style={[a.pt_lg]}
+      >
+        {hasAddress ? (
+          <AddressDetailCard title={strings.receive.addresscardTitle} />
+        ) : (
+          <SkeletonAdressDetail />
+        )}
       </ScrollView>
 
-      <View style={[a.flex_col, a.gap_sm]}>
+      <SafeArea.Footer style={[a.gap_lg]}>
         <Button
           type={ButtonType.Text}
           title={strings.receive.requestSpecificAmountButton}
@@ -121,7 +110,7 @@ export const DescribeSelectedAddressScreen = () => {
           title={strings.receive.copyAddressButton}
           icon={Icon.Copy}
         />
-      </View>
-    </SafeAreaView>
+      </SafeArea.Footer>
+    </SafeArea>
   )
 }

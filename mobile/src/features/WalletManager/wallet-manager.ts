@@ -747,8 +747,6 @@ export const walletManager = new WalletManager({
   keychainManager: Keychain,
 })
 
-export const mockWalletManager = {} as WalletManager
-
 const parseDeletedWalletIds = (data: unknown) => {
   const isWalletIds = (data: unknown): data is Array<string> => {
     return (

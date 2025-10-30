@@ -13,9 +13,12 @@ export const useSendAddress = () => {
   const {chainId} = wallet.networkManager
 
   const {targets, selectedTargetIndex} = useTransfer()
-  const {address} = targets[selectedTargetIndex].entry
+  const target = targets[selectedTargetIndex]
 
   const {addressValidated, addressError} = React.useMemo(() => {
+    if (!target) return {addressValidated: undefined, addressError: undefined}
+
+    const {address} = target.entry
     if (address.length === 0) {
       return {addressValidated: undefined, addressError: undefined}
     }
@@ -26,7 +29,7 @@ export const useSendAddress = () => {
     } catch (error) {
       return {addressValidated: false, addressError: error as Error}
     }
-  }, [address, chainId])
+  }, [target, chainId])
 
   return {
     addressValidated,
@@ -48,7 +51,6 @@ const validateAddress = (address: string, chainId: number) => {
 
     return true
   } catch (error) {
-    // Ensure we throw a proper Error object for React Query
     if (error instanceof Error) {
       throw error
     }

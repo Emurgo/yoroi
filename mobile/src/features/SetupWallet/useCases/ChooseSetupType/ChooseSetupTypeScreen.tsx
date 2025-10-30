@@ -1,17 +1,17 @@
 import {useSetupWallet} from '@yoroi/setup-wallet'
-import {atoms as a, useTheme} from '@yoroi/theme'
+import {atoms as a} from '@yoroi/theme'
 
-import {useFocusEffect, useNavigation} from '@react-navigation/native'
+import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 import {ScrollView, View} from 'react-native'
-import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {isIOS} from '~/kernel/constants'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {SetupWalletRouteNavigation} from '~/kernel/navigation/types'
 import {HardwareWallet} from '~/ui/HardwareWalletIllustration/HardwareWalletIllustration'
 import {LogoBanner} from '~/ui/LogoBanner/LogoBanner'
-import {useModal} from '~/ui/Modal/ModalContext'
+import {useModal} from '~/ui/Modal/context/ModalContext'
+import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
 
 import {ButtonCard} from '../../common/ButtonCard/ButtonCard'
@@ -20,17 +20,9 @@ import {RestoreWallet} from '../../illustrations/RestoreWallet'
 import {SelectHwConnectionModal} from '../RestoreHwWallet/SelectHwConnectionModal'
 
 export const ChooseSetupTypeScreen = () => {
-  const {atoms: ta} = useTheme()
   const strings = useStrings()
   const {walletImplementationChanged, setupTypeChanged} = useSetupWallet()
-  const {openModal, closeModal} = useModal()
-  const {track} = useMetrics()
-
-  useFocusEffect(
-    React.useCallback(() => {
-      track.createWalletSelectMethodPageViewed()
-    }, [track]),
-  )
+  const {openModal} = useModal()
 
   const navigation = useNavigation<SetupWalletRouteNavigation>()
 
@@ -51,23 +43,25 @@ export const ChooseSetupTypeScreen = () => {
   const handleHw = () => {
     openModal({
       title: strings.setupWallet.hwModalTitle,
-      content: <SelectHwConnectionModal closeModal={() => closeModal()} />,
-      height: 305,
+      content: React.createElement(SelectHwConnectionModal.Content),
+      footer: React.createElement(SelectHwConnectionModal.Footer),
+      withFeedback: true,
+      height: isIOS ? 250 : 300,
     })
   }
 
   return (
-    <SafeAreaView
-      edges={['left', 'right', 'bottom']}
-      style={[a.flex_1, ta.bg_color_max, a.px_lg]}
-    >
+    <SafeArea>
       <Space.Height.lg />
 
       <LogoBanner />
 
       <Space.Height.xl />
 
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={[a.px_lg]}
+      >
         <View>
           <ButtonCard
             title={strings.setupWallet.createWalletButtonCard}
@@ -97,6 +91,6 @@ export const ChooseSetupTypeScreen = () => {
           <Space.Height.lg />
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </SafeArea>
   )
 }

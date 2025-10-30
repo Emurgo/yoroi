@@ -16,7 +16,6 @@ import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWalle
 import {features} from '~/kernel/features'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {throwLoggedError} from '~/kernel/logger/helpers/throw-logged-error'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
 import {Tab, Tabs} from '~/ui/Tabs/Tabs'
@@ -30,7 +29,6 @@ export const PortfolioTokenDetailsScreen = () => {
   const {atoms: ta} = useTheme()
   const strings = useStrings()
   const {detailsTab, setDetailsTab} = usePortfolio()
-  const {track} = useMetrics()
   const [isStickyTab, setIsStickyTab] = React.useState(false)
   const {id: tokenId} = usePortfolioTokenDetailParams()
   const {wallet} = useSelectedWallet()
@@ -52,10 +50,6 @@ export const PortfolioTokenDetailsScreen = () => {
     const offsetY = e.nativeEvent.contentOffset.y
     setIsStickyTab(offsetY > HEADER_HEIGHT)
   }
-
-  React.useEffect(() => {
-    track.portfolioTokenDetails({token_details_tab: detailsTab})
-  }, [detailsTab, track])
 
   const renderTabs = React.useMemo(() => {
     return (

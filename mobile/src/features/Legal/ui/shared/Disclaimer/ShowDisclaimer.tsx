@@ -11,7 +11,8 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Checkbox} from '~/ui/Checkbox/Checkbox'
-import {useModal} from '~/ui/Modal/ModalContext'
+import {useModal} from '~/ui/Modal/context/ModalContext'
+import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 
 import {Disclaimer} from '../../../common/types'
 import {loadText} from './loadText'
@@ -44,11 +45,97 @@ export const ShowDisclaimer = ({type, disabled}: Props) => {
   const {resetToTxHistory} = useWalletNavigation()
   const [showed, setShowed] = React.useState(false)
   const [accepted, setAccepted] = useDisclaimerState(type)
+
+  // Reset showed when the disclaimer type changes
+  React.useEffect(() => {
+    setShowed(false)
+  }, [type])
   const {atoms: ta, palette: p, basePalette} = useTheme()
   const {data: disclaimerText, isLoading} = useDisclaimerText({
     type,
     languageCode,
   })
+
+  const openDisclaimerModal = React.useCallback(() => {
+    if (accepted || !disclaimerText) return
+    openModal({
+      title: strings.global.disclaimer,
+      content: (
+        <Modal.Content>
+          <View style={{height: 600}}>
+            <Markdown
+              colorScheme={basePalette}
+              backgroundColor={ta.bg_color_max.backgroundColor}
+              value={disclaimerText || ''}
+              flatListProps={{
+                style: {
+                  backgroundColor: p.bg_color_max,
+                },
+              }}
+              styles={{
+                text: {
+                  ...a.body_1_lg_regular,
+                  ...ta.text_gray_max,
+                  ...a.py_sm,
+                },
+                h2: {
+                  ...a.body_1_lg_medium,
+                  ...ta.text_gray_max,
+                  ...a.py_sm,
+                },
+                h1: {
+                  ...ta.text_gray_max,
+                  ...a.heading_3_medium,
+                  ...a.py_sm,
+                },
+              }}
+            />
+          </View>
+        </Modal.Content>
+      ),
+      footer: (
+        <Modal.Footer>
+          <View style={[a.py_lg]}>
+            <Check text={strings.global.accept} />
+          </View>
+
+          <Button
+            type={ButtonType.Secondary}
+            title={strings.global.cancel}
+            onPress={() => {
+              resetToTxHistory()
+              closeModal()
+            }}
+          />
+          <Proceed
+            title={strings.global.proceed}
+            onPress={() => {
+              setAccepted(true)
+              closeModal()
+            }}
+          />
+        </Modal.Footer>
+      ),
+      withFeedback: true,
+      height: 600,
+      canDiscard: false,
+    })
+    setShowed(true)
+  }, [
+    accepted,
+    disclaimerText,
+    openModal,
+    strings.global.disclaimer,
+    strings.global.accept,
+    strings.global.cancel,
+    strings.global.proceed,
+    basePalette,
+    ta,
+    p.bg_color_max,
+    resetToTxHistory,
+    closeModal,
+    setAccepted,
+  ])
 
   React.useEffect(() => {
     if (
@@ -58,79 +145,17 @@ export const ShowDisclaimer = ({type, disabled}: Props) => {
       !isLoading &&
       disclaimerText
     ) {
-      openModal({
-        title: strings.global.disclaimer,
-        content: (
-          <View style={[a.flex_1, ta.bg_color_max]}>
-            <View style={{height: 400}}>
-              <Markdown
-                colorScheme={basePalette}
-                backgroundColor={ta.bg_color_max.backgroundColor}
-                value={disclaimerText || ''}
-                flatListProps={{
-                  style: {
-                    backgroundColor: p.bg_color_max,
-                  },
-                }}
-                styles={{
-                  text: {
-                    ...a.body_1_lg_regular,
-                    ...ta.text_gray_max,
-                    ...a.py_sm,
-                  },
-                  h2: {
-                    ...a.body_1_lg_medium,
-                    ...ta.text_gray_max,
-                    ...a.py_sm,
-                  },
-                  h1: {
-                    ...ta.text_gray_max,
-                    ...a.heading_3_medium,
-                    ...a.py_sm,
-                  },
-                }}
-              />
-            </View>
-
-            <View style={[a.py_lg]}>
-              <Check text={strings.global.accept} />
-            </View>
-          </View>
-        ),
-        footer: (
-          <View style={[a.flex, a.flex_row, a.gap_lg]}>
-            <Button
-              type={ButtonType.Secondary}
-              title={strings.global.cancel}
-              onPress={() => {
-                resetToTxHistory()
-                closeModal()
-              }}
-            />
-            <Proceed
-              title={strings.global.proceed}
-              onPress={() => {
-                setAccepted(true)
-                closeModal()
-              }}
-            />
-          </View>
-        ),
-        height: 580,
-        canDiscard: false,
-      })
-      setShowed(true)
+      openDisclaimerModal()
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     disabled,
     accepted,
     showed,
     isLoading,
     disclaimerText,
-    openModal,
-    setShowed,
+    openDisclaimerModal,
   ])
+
   return null
 }
 

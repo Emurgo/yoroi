@@ -31,7 +31,7 @@ export const setupWalletMessages = defineMessages({
   },
   learnMore: {
     id: 'components.walletinit.learnMoreInfo.button.title',
-    defaultMessage: '!!!Learn more on Yoroi Zendesk',
+    defaultMessage: '!!!Learn more on Yoroi FAQ',
   },
   continueButton: {
     id: 'components.walletinit.txnavigationbuttons.continueButton',
@@ -285,6 +285,10 @@ export const setupWalletMessages = defineMessages({
   bluetoothError: {
     id: 'components.walletinit.connectnanox.connectnanoxscreen.error',
     defaultMessage: '!!!Bluetooth error',
+  },
+  hwIntroTitle: {
+    id: 'components.walletinit.connectnanox.checknanoxscreen.steppertitle',
+    defaultMessage: '!!!Intro',
   },
   hwCheckIntroline: {
     id: 'components.walletinit.connectnanox.checknanoxscreen.introline',

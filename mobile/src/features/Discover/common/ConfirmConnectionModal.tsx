@@ -5,10 +5,10 @@ import * as React from 'react'
 import {Text, View} from 'react-native'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
-import {useModal} from '~/ui/Modal/ModalContext'
+import {useModal} from '~/ui/Modal/context/ModalContext'
+import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {Space} from '~/ui/Space/Space'
 
 import {getDappFallbackLogo} from './helpers'
@@ -31,8 +31,6 @@ const confirmConnectionModalWithWarningHeight = 530
 export const useOpenConfirmConnectionModal = () => {
   const {openModal, closeModal} = useModal()
   const strings = useStrings()
-  const {track} = useMetrics()
-
   const open = React.useCallback(
     (props: OpenModalProps) => {
       const modalHeight = props.showSingleAddressWarning
@@ -42,26 +40,29 @@ export const useOpenConfirmConnectionModal = () => {
       openModal({
         title: strings.discover.confirmConnectionModalTitle,
         content: (
-          <ConfirmConnectionModal
-            name={props.name}
-            website={props.website}
-            logo={props.logo}
-            showSingleAddressWarning={props.showSingleAddressWarning}
-          />
+          <Modal.Content>
+            <ConfirmConnectionModal
+              name={props.name}
+              website={props.website}
+              logo={props.logo}
+              showSingleAddressWarning={props.showSingleAddressWarning}
+            />
+          </Modal.Content>
         ),
         footer: (
-          <Button
-            title={strings.discover.confirmConnectionModalConnect}
-            onPress={() => {
-              track.discoverWebViewBottomSheetConnectClicked()
-              props.onConfirm()
-              closeModal()
-            }}
-          />
+          <Modal.Footer>
+            <Button
+              title={strings.discover.confirmConnectionModalConnect}
+              onPress={() => {
+                props.onConfirm()
+                closeModal()
+              }}
+            />
+          </Modal.Footer>
         ),
         height: modalHeight,
         onClose: props.onClose,
-        canDiscard: false, // Prevent accidental dismissal by tapping backdrop
+        canDiscard: false,
       })
     },
     [
@@ -69,7 +70,6 @@ export const useOpenConfirmConnectionModal = () => {
       closeModal,
       strings.discover.confirmConnectionModalTitle,
       strings.discover.confirmConnectionModalConnect,
-      track,
     ],
   )
   return {openConfirmConnectionModal: open, closeModal}

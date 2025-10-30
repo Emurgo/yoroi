@@ -3,6 +3,7 @@ import {amountBreakdown, isPrimaryToken, sortTokenInfos} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 
+import {useNavigation} from '@react-navigation/native'
 import {FlashList} from '@shopify/flash-list'
 import BigNumber from 'bignumber.js'
 import * as React from 'react'
@@ -10,7 +11,6 @@ import {ErrorBoundary} from 'react-error-boundary'
 import {TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {getTokenIdParts} from '~/features/Portfolio/common/helpers/get-token-id-parts'
 import {usePortfolioBalances} from '~/features/Portfolio/common/hooks/usePortfolioBalances'
 import {usePortfolioTokenActivity} from '~/features/Portfolio/context/PortfolioTokenActivityProvider'
 import {useSearch, useSearchOnNavBar} from '~/features/Search/SearchContext'
@@ -18,7 +18,6 @@ import {filterBySearch} from '~/features/Swap/common/filterBySearch'
 import {useSwap} from '~/features/Swap/common/useSwap'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useUnsafeParams} from '~/kernel/navigation/hooks/useUnsafeParams'
 import {SwapTokenRoutes} from '~/kernel/navigation/types'
 import {Counter} from '~/ui/Counter/Counter'
@@ -30,8 +29,6 @@ import {
   AmountItemPlaceholder,
   TokenAmountItem,
 } from '~/ui/TokenAmountItem/TokenAmountItem'
-
-import {useNavigateTo} from '../../common/navigation'
 
 type Direction = SwapTokenRoutes['select-token']
 
@@ -107,9 +104,9 @@ const TokenList = ({direction}: Direction) => {
 
     if (
       availableTokens.length === 1 &&
-      isPrimaryToken(availableTokens[0].info)
+      isPrimaryToken(availableTokens[0]?.info)
     ) {
-      return [availableTokens[0].info.id]
+      return [availableTokens[0]!.info.id]
     }
 
     if (availableTokens.length > 1) {
@@ -238,11 +235,10 @@ type SelectableTokenProps = Direction & {
 
 const SelectableToken = React.memo(
   ({direction, tokenInfo, quantity}: SelectableTokenProps) => {
-    const {id, name, ticker} = tokenInfo
+    const {id} = tokenInfo
     const {closeSearch} = useSearch()
     const swapForm = useSwap()
-    const navigateTo = useNavigateTo()
-    const {track} = useMetrics()
+    const navigation = useNavigation()
 
     const shouldUpdateToken =
       direction === 'in'
@@ -258,22 +254,6 @@ const SelectableToken = React.memo(
           swapForm.tokenInInput.isTouched
 
     const handleOnTokenSelection = React.useCallback(() => {
-      const {policyId} = getTokenIdParts(id)
-
-      if (direction === 'in') {
-        track.swapAssetFromChanged({
-          from_asset: [
-            {asset_name: name, asset_ticker: ticker, policy_id: policyId},
-          ],
-        })
-      } else {
-        track.swapAssetToChanged({
-          to_asset: [
-            {asset_name: name, asset_ticker: ticker, policy_id: policyId},
-          ],
-        })
-      }
-
       if (shouldSwitchTokens) {
         swapForm.action({type: 'ResetAmounts'})
         swapForm.action({type: 'SwitchTouched'})
@@ -289,18 +269,15 @@ const SelectableToken = React.memo(
             direction === 'in' ? 'TokenInInputTouched' : 'TokenOutInputTouched',
         })
       }
-      navigateTo.startSwap()
+      navigation.goBack()
       closeSearch()
     }, [
       id,
       direction,
-      name,
-      ticker,
-      track,
       shouldSwitchTokens,
       shouldUpdateToken,
       swapForm,
-      navigateTo,
+      navigation,
       closeSearch,
     ])
 

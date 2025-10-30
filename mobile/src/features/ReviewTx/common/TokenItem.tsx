@@ -5,7 +5,7 @@ import * as React from 'react'
 import {Text, TouchableOpacity, useWindowDimensions} from 'react-native'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useModal} from '~/ui/Modal/ModalContext'
+import {useModal} from '~/ui/Modal/context/ModalContext'
 import {TokenDetails} from '~/ui/TokenDetails/TokenDetails'
 
 export const TokenItem = ({

@@ -2,10 +2,9 @@ import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Wallet} from '@yoroi/types'
 
-import {useFocusEffect, useNavigation} from '@react-navigation/native'
+import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
-import {Linking, Text, TouchableOpacity, View} from 'react-native'
-import {SafeAreaView} from 'react-native-safe-area-context'
+import {Linking, Text, TouchableOpacity} from 'react-native'
 
 import {useLinksRequestWallet} from '~/features/Links/hooks/useLinksRequestWallet'
 import {pushNotificationsManager} from '~/features/Notifications/common/notification-manager'
@@ -16,11 +15,12 @@ import {
 import {isDev} from '~/kernel/constants'
 import {features} from '~/kernel/features'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Button} from '~/ui/Button/Button'
-import {useModal} from '~/ui/Modal/ModalContext'
-import {ScrollView, useScrollView} from '~/ui/ScrollView/ScrollView'
+import {useModal} from '~/ui/Modal/context/ModalContext'
+import {SafeArea} from '~/ui/SafeArea/SafeArea'
+import {ScrollView} from '~/ui/ScrollView/ScrollView'
+import {useScrollView} from '~/ui/ScrollView/hooks/useScrollView'
 import {Space} from '~/ui/Space/Space'
 
 import {linkToSupportOpenTicket} from '../../../common/constants'
@@ -41,20 +41,11 @@ export const SelectWalletFromList = () => {
   )
 
   useLinksRequestWallet(modalFunctions)
-  const {isScrollBarShown, setIsScrollBarShown, scrollViewRef} = useScrollView()
-  const [showLine, setShowLine] = React.useState(false)
+  const {scrollViewRef} = useScrollView()
   const navigation = useNavigation()
-  const {palette: p} = useTheme()
-  const {track} = useMetrics()
   const walletMetas = useWalletMetas()
   const {walletManager} = useWalletManager()
   const walletNavigation = useWalletNavigation()
-
-  useFocusEffect(
-    React.useCallback(() => {
-      track.allWalletsPageViewed()
-    }, [track]),
-  )
 
   const handleOnSelect = React.useCallback(
     async (walletMeta: Wallet.Meta) => {
@@ -87,66 +78,40 @@ export const SelectWalletFromList = () => {
   )
 
   return (
-    <SafeAreaView
-      style={[a.flex_1, a.py_lg]}
-      edges={['left', 'right', 'bottom']}
-    >
+    <SafeArea style={[a.gap_md]}>
       {features.walletListAggregatedBalance && <AggregatedBalance />}
 
       <ScrollView
         ref={scrollViewRef}
         style={[a.px_lg, a.pt_2xl]}
-        onScrollBarChange={setIsScrollBarShown}
-        onScrollBeginDrag={() => setShowLine(true)}
-        onScrollEndDrag={() => setShowLine(false)}
         bounces={true}
       >
         {walletList}
-
-        <Space.Height.lg />
       </ScrollView>
 
-      <View
-        style={[
-          a.px_lg,
-          (showLine || isScrollBarShown) && {
-            ...a.border_t,
-            borderTopColor: p.gray_200,
-          },
-        ]}
-      >
-        <Space.Height.lg />
-
+      <SafeArea.Footer style={[a.gap_lg]}>
         <SupportTicketLink />
-
-        <Space.Height.lg />
 
         <AddWalletButton />
 
-        {isDev && (
-          <>
-            <Space.Height.lg />
-
-            <OnlyDevButton />
-          </>
-        )}
-      </View>
-    </SafeAreaView>
+        {isDev && <OnlyDevButton />}
+      </SafeArea.Footer>
+    </SafeArea>
   )
 }
 
 const SupportTicketLink = () => {
-  const {palette: p, atoms: ta} = useTheme()
+  const {atoms: ta} = useTheme()
   const onPress = () => Linking.openURL(linkToSupportOpenTicket)
   const strings = useStrings()
 
   return (
     <TouchableOpacity
-      style={[a.flex_row, a.align_center, a.justify_center]}
+      style={[a.flex_row, a.align_center, a.justify_center, a.gap_sm]}
       onPress={onPress}
     >
-      <SupportIllustration color={p.text_primary_medium} />
-      <Space.Width.sm />
+      <SupportIllustration color={ta.text_primary_medium.color} />
+
       <Text style={[ta.text_primary_medium, a.button_2_md]}>
         {strings.walletManager.supportTicketLink.toLocaleUpperCase()}
       </Text>

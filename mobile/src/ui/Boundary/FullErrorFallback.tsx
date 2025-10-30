@@ -7,6 +7,7 @@ import {useTranslatedError} from '~/hooks/useTranslatedError'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
 
+import {SafeArea} from '../SafeArea/SafeArea'
 import {ErrorFallbackProps} from './types'
 
 export const FullErrorFallback = ({
@@ -20,12 +21,9 @@ export const FullErrorFallback = ({
   const translatedError = useTranslatedError(error)
 
   return (
-    <View
+    <SafeArea
       style={[
-        a.h_full,
-        a.w_full,
         a.p_lg,
-        a.flex_1,
         a.align_center,
         a.gap_lg,
         ta.bg_color_max,
@@ -49,6 +47,6 @@ export const FullErrorFallback = ({
           }}
         />
       )}
-    </View>
+    </SafeArea>
   )
 }

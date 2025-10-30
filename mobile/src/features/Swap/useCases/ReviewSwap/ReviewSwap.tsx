@@ -2,18 +2,15 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import {Swap} from '@yoroi/types'
 
 import * as React from 'react'
-import {View, ViewProps, useWindowDimensions} from 'react-native'
+import {View, useWindowDimensions} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
-import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {undefinedToken} from '~/features/Swap/common/constants'
 import {useSwap} from '~/features/Swap/common/useSwap'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Button} from '~/ui/Button/Button'
-import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingView'
 import {ProtocolAvatar} from '~/ui/ProtocolAvatar/ProtocolAvatar'
+import {SafeArea} from '~/ui/SafeArea/SafeArea'
 
 import {TransactionSummary} from './TransactionSummary'
 
@@ -24,46 +21,13 @@ export const ReviewSwap = () => {
   const {palette: p} = useTheme()
   const {height: deviceHeight} = useWindowDimensions()
   const strings = useStrings()
-  const {track} = useMetrics()
   const {navigateToTxReview} = useWalletNavigation()
 
   const swapForm = useSwap()
 
   if (swapForm.createTx === undefined) return null
-  const tokenInInfo = swapForm.tokenInfos.get(
-    swapForm.tokenInInput.tokenId ?? undefinedToken,
-  )
-  const tokenOutInfo = swapForm.tokenInfos.get(
-    swapForm.tokenOutInput.tokenId ?? undefinedToken,
-  )
-
-  const trackSwapOrderSubmitted = () => {
-    track.swapOrderSubmitted({
-      from_asset: [
-        {
-          asset_name: tokenInInfo?.name,
-          asset_ticker: tokenInInfo?.ticker,
-          policy_id: tokenInInfo?.id.split('.')[0],
-        },
-      ],
-      to_asset: [
-        {
-          asset_name: tokenOutInfo?.name,
-          asset_ticker: tokenOutInfo?.ticker,
-          policy_id: tokenOutInfo?.id.split('.')[0],
-        },
-      ],
-      order_type: swapForm.orderType,
-      slippage_tolerance: swapForm.slippageInput.value,
-      from_amount: String(swapForm.createTx?.totalInput ?? 0),
-      to_amount: String(swapForm.createTx?.totalOutput ?? 0),
-      pool_source: swapForm.createTx?.splits[0]?.poolId ?? '',
-      swap_fees: Number(swapForm.createTx?.totalFee),
-    })
-  }
 
   const onSwapTxSuccess = () => {
-    trackSwapOrderSubmitted()
     swapForm.action({type: 'ResetForm'})
   }
 
@@ -78,6 +42,7 @@ export const ReviewSwap = () => {
     navigateToTxReview({
       onSuccess: onSwapTxSuccess,
       cbor: swapForm.createTx?.cbor,
+      context: 'swap',
       receiverCustomTitle:
         protocol !== undefined ? (
           <ProtocolAvatar
@@ -95,51 +60,38 @@ export const ReviewSwap = () => {
   }
 
   return (
-    <SafeAreaView
-      edges={['left', 'right', 'bottom']}
-      style={[a.flex_1, a.pt_lg, {backgroundColor: p.bg_color_max}]}
-    >
-      <View
-        style={[a.flex_1, a.justify_between, {backgroundColor: p.bg_color_max}]}
-      >
-        <KeyboardAvoidingView keyboardVerticalOffset={120}>
-          <ScrollView style={[a.px_lg]}>
-            <View
-              onLayout={(event) => {
-                const {height} = event.nativeEvent.layout
-                setContentHeight(height + BOTTOM_ACTION_SECTION)
-              }}
-            >
-              <TransactionSummary swapForm={swapForm} />
-            </View>
-          </ScrollView>
-        </KeyboardAvoidingView>
+    <SafeArea>
+      <View style={[a.flex_1, a.justify_between]}>
+        <ScrollView contentContainerStyle={a.px_lg}>
+          <View
+            onLayout={(event) => {
+              const {height} = event.nativeEvent.layout
+              setContentHeight(height + BOTTOM_ACTION_SECTION)
+            }}
+          >
+            <TransactionSummary swapForm={swapForm} />
+          </View>
+        </ScrollView>
       </View>
 
-      <Actions
-        style={{
-          ...(deviceHeight < contentHeight && {
-            borderTopWidth: 1,
-            borderTopColor: p.gray_200,
-          }),
-        }}
-      >
-        <Button
-          testID="swapButton"
-          title={strings.swap.next}
-          onPress={onNext}
-        />
-      </Actions>
-    </SafeAreaView>
-  )
-}
-
-const Actions = ({style, ...props}: ViewProps) => {
-  const {palette: p} = useTheme()
-  return (
-    <View
-      style={[style, a.p_lg, {backgroundColor: p.bg_color_max}]}
-      {...props}
-    />
+      <SafeArea.Footer>
+        <View
+          style={[
+            {
+              ...(deviceHeight < contentHeight && {
+                borderTopWidth: 1,
+                borderTopColor: p.gray_200,
+              }),
+            },
+          ]}
+        >
+          <Button
+            testID="swapButton"
+            title={strings.swap.next}
+            onPress={onNext}
+          />
+        </View>
+      </SafeArea.Footer>
+    </SafeArea>
   )
 }

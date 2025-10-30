@@ -3,11 +3,10 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
 import {Portfolio} from '@yoroi/types'
 
-import {useFocusEffect, useNavigation} from '@react-navigation/native'
+import {useNavigation} from '@react-navigation/native'
 import {FlashList} from '@shopify/flash-list'
 import * as React from 'react'
 import {Alert, TouchableOpacity, View} from 'react-native'
-import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {usePortfolioBalances} from '~/features/Portfolio/common/hooks/usePortfolioBalances'
 import {MediaGallery} from '~/features/Portfolio/ui/MediaGallery/MediaGallery'
@@ -15,9 +14,9 @@ import {useSearch, useSearchOnNavBar} from '~/features/Search/SearchContext'
 import {limitOfSecondaryAmountsPerTx} from '~/features/Send/common/constants'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {TxHistoryRouteNavigation} from '~/kernel/navigation/types'
 import {NoAssetFoundImage} from '~/ui/NoAssetFoundImage/NoAssetFoundImage'
+import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
 import {TokenAmountItem} from '~/ui/TokenAmountItem/TokenAmountItem'
@@ -26,7 +25,6 @@ import {MaxAmountsPerTx} from './Show/MaxAmountsPerTx'
 
 export const SelectTokenFromListScreen = () => {
   const strings = useStrings()
-  const {atoms: ta} = useTheme()
   const {targets, selectedTargetIndex, allocated} = useTransfer()
 
   const {wallet} = useSelectedWallet()
@@ -43,6 +41,10 @@ export const SelectTokenFromListScreen = () => {
   const shouldShowNfts = fungibilityFilter === 'nfts' && !isSearchOpened
 
   const spendableAmounts = React.useMemo(() => {
+    const target = targets[selectedTargetIndex]
+    if (!target) return []
+
+    const {amounts} = target.entry
     const allocatedToOtherTargets =
       allocated.get(selectedTargetIndex) ?? new Map()
     const toSpendableAmount = toSpendableAmountMapper(allocatedToOtherTargets)
@@ -50,7 +52,7 @@ export const SelectTokenFromListScreen = () => {
     return balances.all
       .map(toSpendableAmount)
       .filter(hasSpendableAmount)
-      .filter(filterOutSelected(targets[selectedTargetIndex].entry.amounts))
+      .filter(filterOutSelected(amounts))
   }, [allocated, balances, selectedTargetIndex, targets])
 
   const filteredAmounts = React.useMemo(() => {
@@ -69,14 +71,10 @@ export const SelectTokenFromListScreen = () => {
     return spendableAmounts.filter(({info}) => infoFilterByName(search)(info))
   }, [fungibilityFilter, isSearchOpened, search, spendableAmounts])
 
-  const {track} = useMetrics()
-  useFocusEffect(
-    React.useCallback(() => {
-      track.sendSelectAssetPageViewed()
-    }, [track]),
-  )
+  const currentAmounts =
+    targets[selectedTargetIndex]?.entry.amounts ??
+    ({} as Record<Portfolio.Token.Id, Portfolio.Token.Amount>)
 
-  const currentAmounts = targets[selectedTargetIndex].entry.amounts
   const hasPrimary = currentAmounts[wallet.portfolioPrimaryTokenInfo.id] != null
   const currentAmountsSize = Object.keys(currentAmounts).length
   const secondaryAmountsCounter = currentAmountsSize - (hasPrimary ? 1 : 0)
@@ -96,10 +94,7 @@ export const SelectTokenFromListScreen = () => {
   )
 
   return (
-    <SafeAreaView
-      style={[a.flex_1, ta.bg_color_max]}
-      edges={['bottom', 'left', 'right']}
-    >
+    <SafeArea>
       <View style={[a.px_lg]}>
         {isSearchOpened === false && (
           <Tabs>
@@ -153,7 +148,7 @@ export const SelectTokenFromListScreen = () => {
         isSearchOpened={isSearchOpened}
         isSearching={isSearching}
       />
-    </SafeAreaView>
+    </SafeArea>
   )
 }
 
@@ -265,17 +260,15 @@ const Tab = <T,>({onPress, active, tab, label}: TabProps<T>) => {
         isActive && {borderBottomColor: p.primary_600, borderBottomWidth: 2},
       ]}
     >
-      <Text
-        style={[{textAlign: 'center'}, a.py_md, a.body_1_lg_medium, {color}]}
-      >
+      <Text style={[a.text_center, a.py_md, a.body_1_lg_medium, {color}]}>
         {label}
       </Text>
     </TouchableOpacity>
   )
 }
 
-const Tabs = ({children}: {children: React.ReactNode}) => {
-  return <View style={{flexDirection: 'row'}}>{children}</View>
+const Tabs = ({children}: React.PropsWithChildren) => {
+  return <View style={[a.flex_row]}>{children}</View>
 }
 
 type SelectAmountProps = {
@@ -288,8 +281,6 @@ const SelectAmount = ({amount, disabled}: SelectAmountProps) => {
   const {closeSearch} = useSearch()
   const {tokenSelectedChanged, amountChanged, targets, selectedTargetIndex} =
     useTransfer()
-  const currentAmount =
-    targets[selectedTargetIndex].entry.amounts[amount.info.id]
 
   const isPrimary = isPrimaryToken(amount.info)
 
@@ -302,22 +293,20 @@ const SelectAmount = ({amount, disabled}: SelectAmountProps) => {
       amountChanged(amount)
       navigation.navigate('send-list-amounts-to-send')
     } else {
-      // Start editing with the current amount (or zero if newly added), not the max spendable
-      const amountToEdit =
-        currentAmount ??
-        ({
-          info: amount.info,
-          quantity: BigInt(0),
-        } as Portfolio.Token.Amount)
-
-      navigation.navigate('send-edit-amount', {amount: amountToEdit})
+      const currentAmount: Portfolio.Token.Amount = targets[selectedTargetIndex]
+        ?.entry.amounts[amount.info.id] ?? {
+        info: amount.info,
+        quantity: BigInt(0),
+      }
+      navigation.navigate('send-edit-amount', {amount: currentAmount})
     }
   }, [
     amount,
     amountChanged,
     closeSearch,
-    currentAmount,
     navigation,
+    selectedTargetIndex,
+    targets,
     tokenSelectedChanged,
   ])
 
@@ -358,18 +347,18 @@ const EmptyStatuses = ({
 }
 
 const NoSpendableAmount = ({text}: {text: string}) => {
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
   return (
     <View style={[a.flex_1, a.justify_center, a.align_center]}>
       <Space.Height._2xl />
 
       <NoAssetFoundImage
-        style={[a.flex_1, {alignSelf: 'center', width: 200, height: 228}]}
+        style={[a.flex_1, a.self_center, {width: 200, height: 228}]}
       />
 
       <Space.Height.lg />
 
-      <Text style={[a.heading_3_medium, {color: p.text_gray_max}, a.flex_1]}>
+      <Text style={[a.heading_3_medium, ta.text_gray_max, a.flex_1]}>
         {text}
       </Text>
     </View>
@@ -378,18 +367,18 @@ const NoSpendableAmount = ({text}: {text: string}) => {
 
 const EmptySearchResult = () => {
   const strings = useStrings()
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
   return (
     <View style={[a.flex_1, a.justify_center, a.align_center]}>
       <Space.Height._2xl />
 
       <NoAssetFoundImage
-        style={[a.flex_1, {alignSelf: 'center', width: 200, height: 228}]}
+        style={[a.flex_1, a.self_center, {width: 200, height: 228}]}
       />
 
       <Space.Height.lg />
 
-      <Text style={[a.heading_3_medium, {color: p.text_gray_max}, a.flex_1]}>
+      <Text style={[a.heading_3_medium, ta.text_gray_max, a.flex_1]}>
         {strings.send.noAssets}
       </Text>
     </View>
@@ -454,7 +443,7 @@ const Counter = <T,>({
 
   if (isSearching) {
     return (
-      <View style={[a.p_lg, {justifyContent: 'center', flexDirection: 'row'}]}>
+      <View style={[a.p_lg, a.justify_center, a.flex_row]}>
         <Text
           style={[ta.text_primary_medium, a.body_2_md_medium]}
         >{`${counter} ${strings.send.assets(counter)} `}</Text>

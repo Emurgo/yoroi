@@ -1,6 +1,5 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 
-import {useFocusEffect} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import * as Linking from 'expo-linking'
 import * as React from 'react'
@@ -13,18 +12,16 @@ import {
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {usePrefetchStakingInfo} from '~/features/Dashboard/StakePoolInfos'
+import {usePrefetchStakingInfo} from '~/features/Dashboard/ui/shared/StakePoolInfos'
 import {useCanVote} from '~/features/RegisterCatalyst/common/hooks'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {features} from '~/kernel/features'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {MenuRoutes} from '~/kernel/navigation/types'
-import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
-import {useModal} from '~/ui/Modal/ModalContext'
+import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
 
@@ -61,13 +58,6 @@ export const Menu = () => {
   const {atoms: ta, palette: p} = useTheme()
   const navigateTo = useNavigateTo()
   const {isPoolRetiring} = usePoolTransition()
-  const {track} = useMetrics()
-
-  useFocusEffect(
-    React.useCallback(() => {
-      track.menuPageViewed()
-    }, [track]),
-  )
 
   return (
     <SafeAreaView edges={['left', 'right']} style={[ta.bg_color_max, a.flex_1]}>
@@ -215,7 +205,7 @@ const Catalyst = ({
   const {palette: p} = useTheme()
   const {wallet} = useSelectedWallet()
   const {sufficientFunds, isLoading} = useCanVote(wallet)
-  const {openModal, closeModal} = useModal()
+  const {openModal} = useModal()
   const screenHeight = useWindowDimensions().height
   const modalHeight = Math.min(screenHeight * 0.8, 280)
 
@@ -225,9 +215,10 @@ const Catalyst = ({
     } else {
       openModal({
         title: strings.menu.attention,
-        content: <InsufficientFundsModal />,
-        footer: <Button title={strings.menu.back} onPress={closeModal} />,
+        content: React.createElement(InsufficientFundsModal.Content),
+        footer: React.createElement(InsufficientFundsModal.Footer),
         height: modalHeight,
+        withFeedback: true,
       })
     }
   }
@@ -247,10 +238,8 @@ const Catalyst = ({
   return <Item label={label} onPress={handlePress} left={left} />
 }
 
-const SUPPORT_TICKET_LINK =
-  'https://emurgohelpdesk.zendesk.com/hc/en-us/requests/new?ticket_form_id=360013330335'
-const KNOWLEDGE_BASE_LINK =
-  'https://emurgohelpdesk.zendesk.com/hc/en-us/categories/4412619927695-Yoroi'
+const SUPPORT_TICKET_LINK = 'https://help.yoroi-wallet.com/en/'
+const KNOWLEDGE_BASE_LINK = 'https://help.yoroi-wallet.com/en/'
 
 const useNavigateTo = () => {
   const {

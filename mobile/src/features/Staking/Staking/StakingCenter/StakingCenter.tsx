@@ -8,7 +8,7 @@ import {Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {WebView, WebViewMessageEvent} from 'react-native-webview'
 
-import {useStakingTx} from '~/features/Dashboard/StakePoolInfos'
+import {useStakingTx} from '~/features/Dashboard/ui/shared/StakePoolInfos'
 import {useReviewTx} from '~/features/ReviewTx/common/ReviewTxProvider'
 import {PoolDetailScreen} from '~/features/Staking/Staking/PoolDetails/PoolDetailScreen'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
@@ -17,7 +17,6 @@ import {showConfirmationDialog, showErrorDialog} from '~/kernel/dialogs'
 import {useLanguage} from '~/kernel/i18n/LanguageProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {LoadingOverlay} from '~/ui/LoadingOverlay/LoadingOverlay'
 import {Space} from '~/ui/Space/Space'
@@ -30,7 +29,6 @@ export const StakingCenter = () => {
   const {languageCode} = useLanguage()
   const {wallet, meta} = useSelectedWallet()
   const {walletManager} = useWalletManager()
-  const {track} = useMetrics()
   const intl = useIntl()
   const {plate} = walletManager.checksum(wallet.publicKeyHex)
   const {navigateToTxReview} = useWalletNavigation()
@@ -45,12 +43,6 @@ export const StakingCenter = () => {
 
   useFocusEffect(
     React.useCallback(() => {
-      track.stakingCenterPageViewed()
-    }, [track]),
-  )
-
-  useFocusEffect(
-    React.useCallback(() => {
       setUrl(prepareStakingURL(languageCode, plate))
       return () => {
         setUrl(null) // force rerender, so the list's CTAs are reset
@@ -61,8 +53,7 @@ export const StakingCenter = () => {
 
   const onSuccess = React.useCallback(() => {
     queryClient.resetQueries({queryKey: [wallet.id, 'stakingInfo']})
-    track.stakingCenterDelegationSubmitted()
-  }, [queryClient, wallet.id, track])
+  }, [queryClient, wallet.id])
 
   const onError = React.useCallback(() => {
     setSelectedPoolId(null)
@@ -77,13 +68,11 @@ export const StakingCenter = () => {
   React.useEffect(() => {
     if (!stakingTx) return
     if (selectedPoolId == null) return
-    track.stakingCenterDelegationInitiated()
     unsignedTxChanged(stakingTx)
-    navigateToTxReview({onSuccess, onError})
+    navigateToTxReview({onSuccess, onError, context: 'delegate'})
   }, [
     stakingTx,
     selectedPoolId,
-    track,
     unsignedTxChanged,
     navigateToTxReview,
     onSuccess,
@@ -154,7 +143,6 @@ export const StakingCenter = () => {
       {shouldDisplayPoolList && (
         <View style={a.flex_1}>
           <Space.Height.sm />
-
           <WebView
             style={{opacity: isContentLoaded ? 1 : 0}}
             originWhitelist={['*']}
@@ -186,9 +174,6 @@ export const StakingCenter = () => {
             >
               <Text style={[a.body_1_lg_regular, ta.text_primary_max, a.pb_sm]}>
                 {strings.staking.loading}
-              </Text>
-              <Text style={[a.body_1_lg_regular, ta.text_primary_max]}>
-                {strings.staking.processingDelegation}
               </Text>
             </View>
           }

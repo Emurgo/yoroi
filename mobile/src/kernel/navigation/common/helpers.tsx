@@ -7,10 +7,13 @@ import {
   StackNavigationOptions,
   TransitionPresets,
 } from '@react-navigation/stack'
+import {setBackgroundColorAsync} from 'expo-system-ui'
 import * as React from 'react'
 import {
   Dimensions,
   Platform,
+  StatusBar,
+  StatusBarStyle,
   TouchableOpacity,
   TouchableOpacityProps,
   View,
@@ -99,13 +102,13 @@ export const shouldShowTabBarForRoutes = (state: NavigationState) => {
 
   if (routes.length === 1) {
     const [route] = routes
-    return Object.keys(routesWithTabBar).includes(route)
+    return Object.keys(routesWithTabBar).includes(route ?? '')
   }
 
   const [route, subRoute] = routes
   return (
     isKeyOf(route, routesWithTabBar) &&
-    routesWithTabBar[route].includes(subRoute)
+    routesWithTabBar[route ?? ''].includes(subRoute ?? '')
   )
 }
 
@@ -129,12 +132,6 @@ const getFocusedRouteName = (
   }
 
   return [name]
-}
-
-export const getCurrentRouteName = (
-  state: NavigationState,
-): string | undefined => {
-  return state.routes[state.index]?.name
 }
 
 export const isWalletSelectionRoute = (
@@ -178,3 +175,122 @@ export const BackButton = (props: TouchableOpacityProps & {color?: string}) => {
     </TouchableOpacity>
   )
 }
+
+type StatusBarColor = {
+  bgColorAndroid: Color
+  statusBarStyle: StatusBarStyle | undefined
+}
+
+export const applyStatusBarForRoute = (
+  currentRouteName: string | undefined,
+  color: ThemedPalette,
+  isDark?: boolean,
+) => {
+  if (currentRouteName === 'modal') {
+    if (Platform.OS === 'android')
+      StatusBar.setBackgroundColor(
+        simulateOpacity(
+          getStatusBarStyleByRoute({currentRouteName, isDark, color})
+            .bgColorAndroid,
+        ),
+        true,
+      )
+  } else {
+    const style = getStatusBarStyleByRoute({
+      currentRouteName,
+      isDark,
+      color,
+    })
+    if (Platform.OS === 'android') {
+      StatusBar.setBackgroundColor(style.bgColorAndroid)
+      StatusBar.setTranslucent(true)
+    }
+    style.statusBarStyle !== undefined &&
+      StatusBar.setBarStyle(style.statusBarStyle, true)
+  }
+
+  setBackgroundColorAsync(color.bg_color_max)
+}
+
+const getStatusBarStyleByRoute = ({
+  currentRouteName,
+  isDark,
+  color,
+}: {
+  currentRouteName: string | undefined
+  isDark?: boolean
+  color: ThemedPalette
+}): StatusBarColor => {
+  if (currentRouteName) {
+    if (currentRouteName === 'history-list') {
+      return {
+        bgColorAndroid: 'rgba(0,0,0,0)',
+        statusBarStyle: undefined,
+      }
+    } else if (oldBlueRoutes.includes(currentRouteName)) {
+      return {
+        bgColorAndroid: '#254BC9',
+        statusBarStyle: 'light-content',
+      }
+    } else if (currentRouteName === 'scan-start') {
+      return {
+        bgColorAndroid: color.black_static,
+        statusBarStyle: 'dark-content',
+      }
+    }
+  }
+  return {
+    bgColorAndroid: isDark ? color.bg_color_max : color.white_static,
+    statusBarStyle: isDark ? 'light-content' : 'dark-content',
+  }
+}
+
+const oldBlueRoutes = ['enable-login-with-os', 'auth-with-os']
+
+export const simulateOpacity = (color: Color): Color => {
+  if (!isHex(color)) {
+    return color
+  }
+  const expandedColor = expandColor(color)
+  const alphaChannel = expandedColor.substring(7, 9).toLowerCase()
+
+  const opaquedColor = [...expandedColor.substring(1, 7)]
+    .reduce(toRgb, [] as string[])
+    .map(halveIntensity)
+    .join('')
+    .toLowerCase()
+
+  return `#${opaquedColor}${alphaChannel}`
+}
+
+const halveIntensity = (hex: string) => {
+  return Math.floor(parseInt(hex, 16) / 2)
+    .toString(16)
+    .padStart(2, '0')
+}
+
+const toRgb = (fullHexColor: string[], value: string, index: number) => {
+  if (index % 2 === 0) fullHexColor.push(value)
+  else fullHexColor[fullHexColor.length - 1] += value
+  return fullHexColor
+}
+
+const expandColor = (color: Color) => {
+  if ((color.length === 4 || color.length === 5) && isHex(color)) {
+    return '#'.concat(
+      color
+        .substring(1)
+        .split('')
+        .map((char) => char + char)
+        .join(''),
+    )
+  }
+  return color
+}
+
+const isHex = (color: Color) =>
+  /^#([0-9A-Fa-f]{3}([0-9A-Fa-f]{1})?|[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?)$/.test(
+    color,
+  )
+
+type Color = `#${string}` | `rgba(${number},${number},${number},${number})`

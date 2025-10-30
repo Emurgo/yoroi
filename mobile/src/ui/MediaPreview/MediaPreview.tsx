@@ -35,8 +35,8 @@ export const MediaPreview = ({
   const [policy, name] = info.id.split('.')
   const {uri, headers, onError, onLoad, isError, isLoading} = usePortfolioImage(
     {
-      policy,
-      name,
+      policy: policy ?? '',
+      name: name ?? '',
       width: 512,
       height: 512,
       contentFit,

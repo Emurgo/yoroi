@@ -223,7 +223,7 @@ export const TxHistoryNavigator = () => {
         <Stack.Screen
           name="exchange-create-order"
           options={{
-            title: strings.exchange.buyCrypto,
+            title: strings.exchange.title,
           }}
           getComponent={() => CreateExchangeOrderScreen}
         />

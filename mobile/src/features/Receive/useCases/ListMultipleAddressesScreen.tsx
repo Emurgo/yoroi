@@ -1,6 +1,5 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 
-import {useFocusEffect} from '@react-navigation/native'
 import * as React from 'react'
 import {
   InteractionManager,
@@ -16,7 +15,6 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {useAddressMode} from '~/features/WalletManager/hooks/useAddressMode'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Button} from '~/ui/Button/Button'
 import {ShowAddressLimitInfo} from '~/ui/ShowAddressLimitInfo/ShowAddressLimitInfo'
 import {SmallAddressCard} from '~/ui/SmallAddressCard/SmallAddressCard'
@@ -35,7 +33,6 @@ export const ListMultipleAddressesScreen = () => {
   const strings = useStrings()
   const {palette: p, atoms: ta} = useTheme()
   const navigate = useNavigateTo()
-  const {track} = useMetrics()
   const {wallet} = useSelectedWallet()
   const inView = React.useRef(Number.MAX_SAFE_INTEGER)
 
@@ -71,15 +68,8 @@ export const ListMultipleAddressesScreen = () => {
   )
 
   const handleOnGenerateNewReceiveAddress = () => {
-    track.receiveGenerateNewAddressClicked()
     wallet.generateNewReceiveAddress()
   }
-
-  useFocusEffect(
-    React.useCallback(() => {
-      track.receivePageListViewed()
-    }, [track]),
-  )
 
   const handleOnScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     if (event.nativeEvent.contentOffset.y <= 0) {

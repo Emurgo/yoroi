@@ -165,8 +165,8 @@ export const parseNumberFromText = ({
   // trailing `1` is to allow the user to type `1.0` without losing the decimal part
   if (dec === '') {
     // No decimal digits, just format the integer part
-    fullDecValue = int
-    value = int
+    fullDecValue = int ?? ''
+    value = int ?? ''
     if (format) {
       const fullDecFormat = new BigNumber(fullDecValue).toFormat()
       formattedValue = fullDecFormat.replace('.', decimalSeparator)
@@ -187,8 +187,8 @@ export const parseNumberFromText = ({
   let finalSanitizedInput = workingInput
   if (parts.length > 1) {
     const [intPart, decPart] = parts
-    const limitedDecPart = decPart.substring(0, precision)
-    finalSanitizedInput = `${intPart}${decimalSeparator}${limitedDecPart}`
+    const limitedDecPart = decPart?.substring(0, precision) ?? ''
+    finalSanitizedInput = `${intPart ?? ''}${decimalSeparator}${limitedDecPart}`
   }
 
   const bnValue = new BigNumber(

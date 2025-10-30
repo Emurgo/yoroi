@@ -30,6 +30,7 @@ export const useFormattedTx = (
 ): {
   formattedTx: FormattedTx | null
   isLoading: boolean
+  areTokenInfosLoaded: boolean
   error: Error | null
 } => {
   const {wallet} = useSelectedWallet()
@@ -95,12 +96,16 @@ export const useFormattedTx = (
     ...mintTokenIds,
     ...referenceInputTokenIds,
   ])
-  const {tokenInfos} = usePortfolioTokenInfos({wallet, tokenIds})
+  const {tokenInfos, isLoading: isTokenInfosLoading} = usePortfolioTokenInfos({
+    wallet,
+    tokenIds,
+  })
 
   if (error) {
     return {
       formattedTx: null,
       isLoading: false,
+      areTokenInfosLoaded: !isTokenInfosLoading,
       error,
     }
   }
@@ -109,6 +114,7 @@ export const useFormattedTx = (
     return {
       formattedTx: null,
       isLoading: true,
+      areTokenInfosLoaded: !isTokenInfosLoading,
       error: null,
     }
   }
@@ -142,6 +148,7 @@ export const useFormattedTx = (
       referenceInputs: formattedReferenceInputs,
     },
     isLoading: false,
+    areTokenInfosLoaded: !isTokenInfosLoading,
     error: null,
   }
 }
@@ -264,12 +271,18 @@ export const formatFee = (
 }
 
 const formatCertificates = (certificates: TransactionBody['certs']) => {
-  return (
-    certificates?.map((cert) => {
-      const [type, certificate] = Object.entries(cert)[0]
+  if (!certificates) return null
+
+  const formatted = certificates
+    .map((cert) => {
+      const entry = Object.entries(cert)[0]
+      if (entry == null) return null
+      const [type, certificate] = entry
       return {type, value: certificate} as unknown as FormattedCertificate
-    }) ?? null
-  )
+    })
+    .filter(isNonNullable)
+
+  return formatted
 }
 
 const formatMintData = (

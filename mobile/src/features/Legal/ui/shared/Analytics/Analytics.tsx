@@ -2,19 +2,15 @@ import {time} from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
-import {
-  Linking,
-  Text,
-  TouchableOpacity,
-  View,
-  useWindowDimensions,
-} from 'react-native'
+import {Linking, Text, TouchableOpacity, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
+import {useAnalyticsContext} from '~/features/Analytics/context/AnalyticsRootProvider'
 import {useBold} from '~/hooks/useBold'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
+import {metricsConsentRequestedStorageKeyManager} from '~/kernel/storage/storages'
 import {Button, ButtonType} from '~/ui/Button/Button'
+import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {SettingsSwitch} from '~/ui/SettingsSwitch/SettingsSwitch'
 import {Space} from '~/ui/Space/Space'
 import {YoroiLogo} from '~/ui/YoroiLogo/YoroiLogo'
@@ -37,10 +33,7 @@ export const Analytics = (props: Props) => {
 
 const Notice = ({onNext}: {onNext?: () => void}) => {
   const strings = useStrings()
-  const metrics = useMetrics()
-  const {height: deviceHeight} = useWindowDimensions()
-  const [contentHeight, setContentHeight] = React.useState(0)
-  const {palette: p, atoms: ta} = useTheme()
+  const {setEnabled} = useAnalyticsContext()
 
   const scrollViewRef = React.useRef<ScrollView | null>(null)
 
@@ -53,88 +46,63 @@ const Notice = ({onNext}: {onNext?: () => void}) => {
   }, [])
 
   return (
-    <View style={[a.flex_1]}>
+    <SafeArea style={a.pt_2xl}>
       <ScrollView
         bounces={false}
         style={a.flex_1}
         contentContainerStyle={[a.px_lg, {paddingBottom: buttonHeight + 16}]}
         ref={scrollViewRef}
         persistentScrollbar
-        showsVerticalScrollIndicator
+        showsVerticalScrollIndicator={false}
       >
-        <View
-          onLayout={(event) => {
-            const {height} = event.nativeEvent.layout
-            setContentHeight(height + buttonHeight)
-          }}
-        >
+        <View>
           <Info showLogo />
-
-          <Space.Height.lg />
-
-          <Button
-            size="S"
-            type={ButtonType.Text}
-            onPress={() => {
-              metrics.disable()
-              onNext?.()
-            }}
-            title={strings.ui.skip}
-          />
-
-          <Space.Height.lg />
         </View>
       </ScrollView>
 
-      <View
-        style={[
-          a.absolute,
-          a.w_full,
-          ta.bg_color_max,
-          a.px_lg,
-          a.justify_center,
-          {
-            bottom: 0,
-            height: buttonHeight,
-          },
-          {
-            // only show border top if the content is scrollable
-            ...(deviceHeight < contentHeight && {
-              borderTopWidth: 1,
-              borderTopColor: p.gray_500,
-            }),
-          },
-        ]}
-        pointerEvents="box-none"
-      >
+      <SafeArea.Footer>
+        <Button
+          size="S"
+          type={ButtonType.Text}
+          onPress={() => {
+            try {
+              metricsConsentRequestedStorageKeyManager.save(true)
+            } catch {}
+            setEnabled(false)
+            onNext?.()
+          }}
+          title={strings.ui.skip}
+        />
+
+        <Space.Height.lg />
+
         <Button
           type={ButtonType.Primary}
           onPress={() => {
-            metrics.enable()
+            try {
+              metricsConsentRequestedStorageKeyManager.save(true)
+            } catch {}
+            setEnabled(true)
             onNext?.()
           }}
           title={strings.ui.accept}
         />
-      </View>
-    </View>
+      </SafeArea.Footer>
+    </SafeArea>
   )
 }
 
 const Settings = () => {
-  const metrics = useMetrics()
   const {atoms: ta} = useTheme()
   const strings = useStrings()
+  const {enabled, setEnabled} = useAnalyticsContext()
 
-  const handleOnValueChange = (value: boolean) => {
-    if (value) {
-      metrics.enable()
-    } else {
-      metrics.disable()
-    }
-  }
+  const handleOnToggle = React.useCallback(() => {
+    setEnabled(!enabled)
+  }, [enabled, setEnabled])
 
   return (
-    <View style={[a.px_lg, a.gap_lg]}>
+    <SafeArea style={[a.px_lg, a.gap_lg]}>
       <Info />
 
       <View style={[a.flex_row, a.align_center, a.justify_between]}>
@@ -142,12 +110,9 @@ const Settings = () => {
           {strings.ui.toggle}
         </Text>
 
-        <SettingsSwitch
-          value={metrics.isEnabled}
-          onValueChange={handleOnValueChange}
-        />
+        <SettingsSwitch value={enabled} onValueChange={handleOnToggle} />
       </View>
-    </View>
+    </SafeArea>
   )
 }
 
@@ -233,7 +198,7 @@ const Info = ({showLogo}: {showLogo?: boolean}) => {
 
 const openReadMoreLink = () => {
   Linking.openURL(
-    'https://emurgohelpdesk.zendesk.com/hc/en-us/articles/7594394140303-What-s-user-insights-',
+    'https://help.yoroi-wallet.com/en/article/whats-user-insights-1nmw7pq/',
   )
 }
 

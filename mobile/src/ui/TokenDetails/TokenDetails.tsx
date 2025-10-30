@@ -21,6 +21,7 @@ import {isEmptyString} from '~/wallets/utils/string'
 
 import {Copiable} from '../Copiable/Copiable'
 import {ExplorerInfoLinks} from '../ExplorerInfoLinks/ExplorerInfoLinks'
+import {Modal} from '../Modal/ui/screens/Modal/Modal'
 import {SimpleTab} from '../SimpleTab/SimpleTab'
 import {TokenInfoIcon} from '../TokenInfoIcon/TokenInfoIcon'
 
@@ -34,18 +35,18 @@ export const TokenDetails = ({
   if (isPrimaryTokenInfo(tokenInfo)) return <PrimaryTokenInfo />
 
   return (
-    <View style={[a.flex_1]}>
+    <Modal.Content>
       <Header info={tokenInfo} />
 
       <Space.Width.lg />
 
       <Info info={tokenInfo} />
-    </View>
+    </Modal.Content>
   )
 }
 
 const Header = ({info}: {info: Portfolio.Token.Info}) => {
-  const {palette: p} = useTheme()
+  const {palette: p, atoms: ta} = useTheme()
   const {copy} = useCopy()
   const [policy, assetName] = info?.id.split('.') ?? ['', '']
 
@@ -72,7 +73,8 @@ const Header = ({info}: {info: Portfolio.Token.Info}) => {
           style={[
             a.body_1_lg_medium,
             a.text_center,
-            {color: p.text_gray_medium, maxWidth: 300},
+            ta.text_gray_medium,
+            {maxWidth: 300},
           ]}
         >
           {title}
@@ -91,7 +93,7 @@ const Header = ({info}: {info: Portfolio.Token.Info}) => {
 
       <Space.Height.xl />
 
-      <PolicyId policyId={policy} />
+      <PolicyId policyId={policy ?? ''} />
 
       <Space.Height.lg />
 

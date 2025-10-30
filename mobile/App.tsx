@@ -17,9 +17,12 @@ import {BrowserProvider} from '~/features/Discover/common/BrowserProvider'
 import {PortfolioTokenActivityProvider} from '~/features/Portfolio/context/PortfolioTokenActivityProvider'
 import {ReceiveProvider} from '~/features/Receive/common/ReceiveProvider'
 import {ReviewTxProvider} from '~/features/ReviewTx/common/ReviewTxProvider'
+import {isDev} from '~/kernel/constants'
+import {logger} from '~/kernel/logger/logger'
 import {AppNavigator} from '~/kernel/navigation/AppNavigator'
 import {Boundary} from '~/ui/Boundary/Boundary'
-import {Modal} from '~/ui/Modal/ModalScreen'
+import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
+import {ScrollViewProvider} from '~/ui/ScrollView/context/ScrollViewContext'
 
 import {PlatformShell} from './PlatformShell'
 import {AuthProvider} from './src/features/Auth/context/AuthProvider'
@@ -66,7 +69,9 @@ function AppShell({children}: React.PropsWithChildren) {
             <CopyProvider>
               <CrashBoundary>
                 <LoadingOverlayProvider>
-                  <Boundary loading={{size: 'full'}}>{children}</Boundary>
+                  <Boundary loading={{size: 'full'}}>
+                    <ScrollViewProvider>{children}</ScrollViewProvider>
+                  </Boundary>
                 </LoadingOverlayProvider>
               </CrashBoundary>
             </CopyProvider>
@@ -116,26 +121,20 @@ function BusinessShell({children}: React.PropsWithChildren) {
 }
 
 async function checkForUpdates() {
-  if (__DEV__) {
-    return
-  }
   try {
     const update = await Updates.checkForUpdateAsync()
     if (update.isAvailable) {
       await Updates.fetchUpdateAsync()
       await Updates.reloadAsync()
     }
-  } catch (e) {
-    console.error('Error checking for updates:', e)
+  } catch (error) {
+    logger.error(error as Error, {origin: 'checkForUpdates'})
   }
 }
 
 export default Sentry.wrap(function App() {
   React.useEffect(() => {
-    if (__DEV__) {
-      return
-    }
-    checkForUpdates()
+    if (!isDev) checkForUpdates()
   }, [])
 
   return (

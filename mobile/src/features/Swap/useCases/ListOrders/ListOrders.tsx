@@ -27,7 +27,8 @@ import {Counter} from '~/ui/Counter/Counter'
 import {EmptyCompletedOrdersIllustration} from '~/ui/EmptyCompletedOrdersIllustration/EmptyCompletedOrdersIllustration'
 import {EmptyOpenOrdersIllustration} from '~/ui/EmptyOpenOrdersIllustration/EmptyOpenOrdersIllustration'
 import {Icon} from '~/ui/Icon'
-import {useModal} from '~/ui/Modal/ModalContext'
+import {useModal} from '~/ui/Modal/context/ModalContext'
+import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {ProtocolAvatar} from '~/ui/ProtocolAvatar/ProtocolAvatar'
 import {RefreshButton} from '~/ui/RefreshButton/RefreshButton'
 import {ServiceUnavailable} from '~/ui/ServiceUnavailable/ServiceUnavailable'
@@ -183,7 +184,7 @@ const Order = ({order}: {order: Swap.Order}) => {
     order.actualAmountOut === 0
       ? order.expectedAmountOut
       : order.actualAmountOut
-  const priceCalc = amountOut === 0 ? 0 : order.amountIn / amountOut
+  const priceCalc = order.amountIn === 0 ? 0 : amountOut / order.amountIn
 
   const roundedPrice = parseNumberFromText({
     text: String(priceCalc),
@@ -348,6 +349,7 @@ const OrderCancellation = ({
       } else {
         navigateToTxReview({
           cbor: response.value.data.cbor,
+          context: 'swap',
           details: {
             title: strings.swap.swapCancellationDetailsTitle,
             component: (
@@ -365,39 +367,41 @@ const OrderCancellation = ({
     }
 
     openModal({
-      title: strings.swap.listOrdersSheetTitle,
+      title: strings.swap.cancel,
       content: (
-        <OrderCancellationConfirmation
-          order={order}
-          tokenInInfo={tokenInInfo}
-          price={price}
-          amount={amount}
-          response={response}
-        />
+        <Modal.Content>
+          <OrderCancellationConfirmation
+            order={order}
+            tokenInInfo={tokenInInfo}
+            price={price}
+            amount={amount}
+            response={response}
+          />
+        </Modal.Content>
       ),
       footer: isLeft(response) ? (
-        <Button
-          type={ButtonType.Secondary}
-          title={strings.swap.listOrdersSheetBack}
-          onPress={closeModal}
-        />
-      ) : (
-        <View style={[a.flex_row, a.gap_md, a.align_center]}>
+        <Modal.Footer>
           <Button
-            style={[a.flex_1]}
+            type={ButtonType.Secondary}
+            title={strings.swap.listOrdersSheetBack}
+            onPress={closeModal}
+          />
+        </Modal.Footer>
+      ) : (
+        <Modal.Footer>
+          <Button
             type={ButtonType.Secondary}
             title={strings.swap.listOrdersSheetBack}
             onPress={closeModal}
           />
 
           <Button
-            style={[a.flex_1]}
             type={ButtonType.Critical}
-            title={strings.swap.listOrdersSheetConfirm}
+            title={strings.swap.cancel}
             onPress={onOrderCancelConfirm}
             disabled={response.value.data.cbor === undefined}
           />
-        </View>
+        </Modal.Footer>
       ),
       height: 400,
     })
@@ -422,12 +426,12 @@ const OrderCancellationConfirmation = ({
   response,
 }: CancellationProps & {response: Api.Response<Swap.CancelResponse>}) => {
   const strings = useStrings()
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
 
   if (isLeft(response))
     return (
       <View>
-        <Text style={[a.body_3_sm_regular, {color: p.text_warning}]}>
+        <Text style={[a.body_3_sm_regular, ta.text_warning]}>
           {response.error.message}
         </Text>
       </View>
@@ -436,7 +440,7 @@ const OrderCancellationConfirmation = ({
   const fee = response.value.data.additionalCancellationFee
 
   return (
-    <View style={[a.gap_md, a.p_lg]}>
+    <View style={[a.gap_md]}>
       <Row
         label={strings.swap.route}
         value={<ProtocolAvatar protocol={order.protocol} preventOpenLink />}
@@ -470,13 +474,11 @@ const Row = ({
   label: string
   value: string | React.ReactNode
 }) => {
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
 
   return (
     <View style={[a.flex_row, a.justify_between]}>
-      <Text style={[a.body_1_lg_regular, {color: p.text_gray_low}]}>
-        {label}
-      </Text>
+      <Text style={[a.body_1_lg_regular, ta.text_gray_low]}>{label}</Text>
 
       {typeof value === 'string' ? (
         <Text
@@ -484,7 +486,7 @@ const Row = ({
             a.body_1_lg_regular,
             a.flex_shrink,
             a.text_right,
-            {color: p.text_gray_medium},
+            ta.text_gray_medium,
           ]}
         >
           {value}
@@ -499,7 +501,7 @@ const Row = ({
 const ListEmptyComponent = ({filter}: {filter: Filter}) => {
   const {search: assetSearchTerm, visible: isSearching} = useSearch()
   const strings = useStrings()
-  const {palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
 
   return (
     <View style={[a.gap_lg, a.pt_2xl]}>
@@ -514,7 +516,7 @@ const ListEmptyComponent = ({filter}: {filter: Filter}) => {
               a.flex_1,
               a.text_center,
               a.heading_3_medium,
-              {color: p.gray_max},
+              ta.text_gray_max,
             ]}
           >
             {isSearching
@@ -528,7 +530,7 @@ const ListEmptyComponent = ({filter}: {filter: Filter}) => {
                 a.flex_1,
                 a.text_center,
                 a.body_1_lg_regular,
-                {color: p.text_gray_low},
+                ta.text_gray_low,
               ]}
             >
               {strings.swap.emptyOpenOrdersSub}
@@ -546,7 +548,7 @@ const ListEmptyComponent = ({filter}: {filter: Filter}) => {
               a.flex_1,
               a.text_center,
               a.heading_3_medium,
-              {color: p.gray_max},
+              ta.text_gray_max,
             ]}
           >
             {isSearching

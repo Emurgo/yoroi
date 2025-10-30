@@ -51,16 +51,16 @@ export const debugStorage = async <
     for (let i = 0; i < parts.length; i++) {
       const part = parts[i]
       if (i === parts.length - 1) {
-        current[part] = formattedValue
+        current[part ?? ''] = formattedValue
       } else {
         if (
-          !current[part] ||
-          typeof current[part] === 'string' ||
-          current[part] === null
+          !current[part ?? ''] ||
+          typeof current[part ?? ''] === 'string' ||
+          current[part ?? ''] === null
         ) {
-          current[part] = {}
+          current[part ?? ''] = {}
         }
-        current = current[part] as Tree
+        current = current[part ?? ''] as Tree
       }
     }
   }

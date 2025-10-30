@@ -733,7 +733,7 @@ export const useStrings = () => {
         selectMultiple: f(receiveMessages.selectMultiple),
         singleAddressWallet: f(receiveMessages.singleAddressWallet),
         singleAddressWarning: f(receiveMessages.singleAddressWarning),
-        yoroiZendesk: f(globalMessages.yoroiZendesk),
+        yoroiFAQ: f(globalMessages.yoroiFAQ),
         ok: f(globalMessages.ok),
       },
 
@@ -1736,6 +1736,7 @@ export const useStrings = () => {
           f(setupWalletMessages.hwWalletDetailsTitle, {b: bold.b}),
         hwExportKey: f(setupWalletMessages.hwExportKey),
         bluetoothError: f(setupWalletMessages.bluetoothError),
+        hwIntroTitle: f(setupWalletMessages.hwIntroTitle),
         hwCheckIntroline: f(setupWalletMessages.hwCheckIntroline),
         hwCheckTitle: f(setupWalletMessages.hwCheckTitle),
         ledgerSupportLink: f(setupWalletMessages.ledgerSupportLink),
@@ -1831,8 +1832,10 @@ export const useStrings = () => {
         connectWalletButtonCard: f(setupWalletMessages.connectWalletButtonCard),
         createWalletButtonCard: f(setupWalletMessages.createWalletButtonCard),
         restoreWalletButtonCard: f(setupWalletMessages.restoreWalletButtonCard),
-        passwordStrengthRequirement: (values: any) =>
-          f(setupWalletMessages.passwordStrengthRequirement, values),
+        passwordStrengthRequirement: (values: number) =>
+          f(setupWalletMessages.passwordStrengthRequirement, {
+            requiredPasswordLength: values,
+          }),
         repeatPasswordInputError: f(
           setupWalletMessages.repeatPasswordInputError,
         ),

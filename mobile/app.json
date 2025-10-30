@@ -3,7 +3,7 @@
     "name": "Yoroi",
     "slug": "yoroi",
     "owner": "emurgo",
-    "version": "6.0.0",
+    "version": "6.1.0",
     "orientation": "portrait",
     "icon": "./assets/yoroi/icon.png",
     "userInterfaceStyle": "automatic",
@@ -154,7 +154,8 @@
           "organization": "emurgo-fintech-inc"
         }
       ],
-      "./plugins/with-app-turbo-module-provider.js"
+      "./plugins/with-app-turbo-module-provider.js",
+      "./plugins/with-async-storage-db-size.js"
     ],
     "extra": {
       "eas": {

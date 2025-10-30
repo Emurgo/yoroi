@@ -10,8 +10,7 @@ import {
 } from '@yoroi/staking'
 import {ThemedPalette, atoms as a, useTheme} from '@yoroi/theme'
 
-import {useFocusEffect} from '@react-navigation/native'
-import * as React from 'react'
+import React from 'react'
 import {Text, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
@@ -25,8 +24,7 @@ import {useTransactionInfos} from '~/features/Transactions/hooks/useTransactionI
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useWalletEvent} from '~/features/WalletManager/hooks/useWalletEvent'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
-import {useModal} from '~/ui/Modal/ModalContext'
+import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Space} from '~/ui/Space/Space'
 import {TransactionInfo} from '~/wallets/types/other'
 
@@ -259,7 +257,6 @@ const NeverParticipatedInGovernanceVariant = () => {
   const {manager} = useGovernance()
   const {openModal} = useModal()
   const stakingInfo = useStakingInfo(wallet)
-  const {track} = useMetrics()
   const [pendingVote, setPendingVote] = React.useState<
     | 'abstain'
     | 'no-confidence'
@@ -268,12 +265,6 @@ const NeverParticipatedInGovernanceVariant = () => {
     | null
   >(null)
   const governanceTransaction = useGovernanceTransaction(wallet)
-
-  useFocusEffect(
-    React.useCallback(() => {
-      track.governanceDashboardPageViewed()
-    }, [track]),
-  )
 
   const hasStakingKeyRegistered = stakingInfo?.data?.status !== 'not-registered'
   useWalletEvent(wallet, 'utxos', stakingInfo.refetch)
@@ -289,8 +280,6 @@ const NeverParticipatedInGovernanceVariant = () => {
       CIP105: boolean
     }) => void,
   ) => {
-    track.governanceChooseDrepPageViewed()
-
     openModal({
       title: strings.staking.enterDRepID,
       content: (

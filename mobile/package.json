@@ -1,6 +1,6 @@
 {
   "name": "yoroi-v2",
-  "version": "6.0.0",
+  "version": "6.1.0",
   "main": "index.ts",
   "scripts": {
     "postinstall": "patch-package",
@@ -25,8 +25,6 @@
     "intl:extract": "formatjs extract",
     "lint": "eslint . --ext .ts,.tsx",
     "lint:fix": "eslint . --ext .ts,.tsx --fix",
-    "metrics:pull": "ampli pull mobile",
-    "metrics:status": "ampli status --instanceName=track",
     "web": "expo start --web",
     "tsc": "tsc --noEmit",
     "tsc:fix": "tsc --noEmit --fix",
@@ -34,8 +32,6 @@
     "format": "prettier --write ."
   },
   "dependencies": {
-    "@amplitude/analytics-react-native": "1.4.13",
-    "@amplitude/analytics-types": "1.3.5",
     "@cardano-foundation/ledgerjs-hw-app-cardano": "7.1.4",
     "@craftzdog/react-native-buffer": "6.1.0",
     "@emurgo/cardano-serialization-lib-browser": "14.1.2",
@@ -45,8 +41,8 @@
     "@emurgo/cross-csl-mobile": "8.0.0-alpha.1",
     "@emurgo/cross-msl-core": "2.0.0",
     "@emurgo/cross-msl-mobile": "2.0.0",
-    "@emurgo/csl-mobile-bridge-jsi": "1.0.0-alpha.6",
-    "@emurgo/msl-mobile-bridge-jsi": "1.0.0-alpha.6",
+    "@emurgo/csl-mobile-bridge-jsi": "1.0.0-alpha.7",
+    "@emurgo/msl-mobile-bridge-jsi": "1.0.0-alpha.7",
     "@emurgo/yoroi-lib": "3.0.0-beta.1",
     "@formatjs/intl-datetimeformat": "6.18.0",
     "@formatjs/intl-getcanonicallocales": "2.5.5",
@@ -80,6 +76,7 @@
     "d3-shape": "3.2.0",
     "expo": "53.0.20",
     "expo-android-keyboard-fix": "2.1.0",
+    "expo-application": "~6.1.5",
     "expo-asset": "11.1.7",
     "expo-blur": "14.1.5",
     "expo-build-properties": "0.14.8",
@@ -88,7 +85,8 @@
     "expo-constants": "17.1.7",
     "expo-crypto": "14.1.5",
     "expo-dev-client": "5.2.4",
-    "expo-device": "7.1.4",
+    "expo-device": "~7.1.4",
+    "expo-file-system": "~18.1.11",
     "expo-font": "13.3.2",
     "expo-haptics": "14.1.4",
     "expo-image": "2.4.0",
@@ -96,7 +94,7 @@
     "expo-linear-gradient": "14.1.5",
     "expo-linking": "~7.1.7",
     "expo-local-authentication": "16.0.5",
-    "expo-localization": "16.1.6",
+    "expo-localization": "~16.1.6",
     "expo-location": "18.1.6",
     "expo-notifications": "0.31.4",
     "expo-screen-capture": "7.1.5",
@@ -108,6 +106,7 @@
     "lodash": "4.17.21",
     "lottie-react-native": "7.2.2",
     "mersenne-twister": "1.1.0",
+    "posthog-react-native": "^4.10.3",
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "react-error-boundary": "6.0.0",
@@ -126,8 +125,8 @@
     "react-native-pager-view": "6.7.1",
     "react-native-paper": "5.14.5",
     "react-native-qrcode-svg": "6.3.15",
-    "react-native-quick-base64": "2.2.0",
-    "react-native-quick-crypto": "0.7.13",
+    "react-native-quick-base64": "2.2.2",
+    "react-native-quick-crypto": "0.7.17",
     "react-native-randombytes": "3.6.2",
     "react-native-reanimated": "3.17.4",
     "react-native-safe-area-context": "5.4.0",
@@ -145,13 +144,17 @@
     "uuid": "11.1.0",
     "zod": "3.25.17"
   },
+  "trustedDependencies": [
+    "@sentry/cli",
+    "@shopify/flash-list"
+  ],
   "devDependencies": {
-    "@amplitude/ampli": "1.36.2",
     "@babel/core": "7.26.0",
     "@babel/plugin-transform-export-namespace-from": "7.27.1",
     "@emurgo/cardano-serialization-lib-nodejs": "14.1.2",
     "@emurgo/cross-csl-nodejs": "8.0.0-alpha.1",
     "@emurgo/cross-msl-nodejs": "2.0.0",
+    "@expo/config-plugins": "^54.0.2",
     "@formatjs/cli": "6.7.1",
     "@react-native/eslint-config": "0.79.2",
     "@tanstack/eslint-plugin-query": "5.81.2",
@@ -183,7 +186,8 @@
     "typescript": "5.8.3"
   },
   "overrides": {
-    "@emurgo/csl-mobile-bridge-jsi": "1.0.0-alpha.6",
+    "@emurgo/csl-mobile-bridge-jsi": "1.0.0-alpha.7",
+    "@emurgo/msl-mobile-bridge-jsi": "1.0.0-alpha.7",
     "react-native-svg": "15.11.2"
   }
 }

@@ -1,10 +1,9 @@
-import {atoms as a, useTheme} from '@yoroi/theme'
+import {atoms as a} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
 
 import {useIsFocused} from '@react-navigation/native'
 import * as React from 'react'
-import {TextInput, View, ViewProps} from 'react-native'
-import {SafeAreaView} from 'react-native-safe-area-context'
+import {TextInput} from 'react-native'
 
 import {memoMaxLenght} from '~/features/Send/common/constants'
 import {AddressErrorWrongNetwork} from '~/features/Send/common/errors'
@@ -15,10 +14,10 @@ import {useSendReceiver} from '~/features/Send/common/useSendReceiver'
 import {useHasPendingTx} from '~/features/Transactions/hooks/useHasPendingTx'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Button} from '~/ui/Button/Button'
-import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingView'
-import {ScrollView, useScrollView} from '~/ui/ScrollView/ScrollView'
+import {SafeArea} from '~/ui/SafeArea/SafeArea'
+import {ScrollView} from '~/ui/ScrollView/ScrollView'
+import {useScrollView} from '~/ui/ScrollView/hooks/useScrollView'
 import {Space} from '~/ui/Space/Space'
 
 import {InputMemo} from './InputMemo/InputMemo'
@@ -29,15 +28,9 @@ import {ShowErrors} from './ShowErrors'
 
 export const StartMultiTokenTxScreen = () => {
   const strings = useStrings()
-  const {palette: p} = useTheme()
   const navigateTo = useNavigateTo()
   const {wallet} = useSelectedWallet()
-  const {track} = useMetrics()
   const isFocused = useIsFocused()
-
-  React.useEffect(() => {
-    track.sendInitiated()
-  }, [track])
 
   const hasPendingTx = useHasPendingTx({wallet})
 
@@ -48,9 +41,8 @@ export const StartMultiTokenTxScreen = () => {
     memoChanged,
     receiverResolveChanged,
   } = useTransfer()
-  const {amounts} = targets[selectedTargetIndex].entry
-  const receiver = targets[selectedTargetIndex].receiver
-  const {isScrollBarShown, setIsScrollBarShown, scrollViewRef} = useScrollView()
+
+  const {scrollViewRef} = useScrollView()
 
   const {
     isWrongBlockchainError,
@@ -75,8 +67,11 @@ export const StartMultiTokenTxScreen = () => {
   const hasMemoError = memo.length > memoMaxLenght
   const canGoNext = !hasPendingTx && isValidAddress && !hasMemoError
 
+  const target = targets[selectedTargetIndex]
+
   const handleOnNext = () => {
-    const shouldOpenAddToken = Object.keys(amounts).length === 0
+    const amounts = target?.entry.amounts
+    const shouldOpenAddToken = !amounts || Object.keys(amounts).length === 0
     if (shouldOpenAddToken) {
       navigateTo.addToken()
     } else {
@@ -94,66 +89,48 @@ export const StartMultiTokenTxScreen = () => {
   useNextTick(focusOnReceiver)
 
   return (
-    <KeyboardAvoidingView style={[a.flex_1, {backgroundColor: p.bg_color_max}]}>
-      <SafeAreaView
-        edges={['bottom', 'right', 'left']}
-        style={[a.gap_lg, a.py_lg, a.flex_1]}
+    <SafeArea>
+      <ScrollView
+        ref={scrollViewRef}
+        style={[a.pt_lg]}
+        contentContainerStyle={[a.px_lg]}
+        bounces={false}
       >
-        <ScrollView
-          ref={scrollViewRef}
-          style={[a.flex_1, a.px_lg]}
-          bounces={false}
-          onScrollBarChange={setIsScrollBarShown}
-        >
-          <ShowErrors />
+        <ShowErrors />
 
-          <NotifySupportedNameServers />
+        <NotifySupportedNameServers />
 
-          <InputReceiver
-            value={receiver.resolve}
-            onChangeText={handleOnChangeReceiver}
-            isLoading={isLoading}
-            isValid={isValidAddress}
-            error={hasReceiverError}
-            errorText={receiverErrorMessage}
-            ref={inputRef}
-          />
+        <InputReceiver
+          value={target?.receiver.resolve ?? ''}
+          onChangeText={handleOnChangeReceiver}
+          isLoading={isLoading}
+          isValid={isValidAddress}
+          error={hasReceiverError}
+          errorText={receiverErrorMessage}
+          ref={inputRef}
+        />
 
-          <SelectNameServer />
+        <SelectNameServer />
 
-          <Space.Height.lg />
+        <Space.Height.lg />
 
-          <InputMemo
-            value={memo}
-            onChangeText={handleOnChangeMemo}
-            isValid={!hasMemoError}
-          />
-        </ScrollView>
+        <InputMemo
+          value={memo}
+          onChangeText={handleOnChangeMemo}
+          isValid={!hasMemoError}
+        />
+      </ScrollView>
 
-        <Actions
-          style={isScrollBarShown && [a.border_t, {borderTopColor: p.gray_200}]}
-        >
-          <Padding>
-            <NextButton
-              onPress={handleOnNext}
-              title={strings.send.next}
-              disabled={!canGoNext}
-              testID="nextButton"
-            />
-          </Padding>
-        </Actions>
-      </SafeAreaView>
-    </KeyboardAvoidingView>
+      <SafeArea.Footer>
+        <NextButton
+          onPress={handleOnNext}
+          title={strings.send.next}
+          disabled={!canGoNext}
+          testID="nextButton"
+        />
+      </SafeArea.Footer>
+    </SafeArea>
   )
-}
-
-const Actions = ({style, ...props}: ViewProps) => {
-  return <View style={style} {...props} />
-}
-
-// NOTE: just to display the scrollable line on top of action
-const Padding = ({style, ...props}: ViewProps) => {
-  return <View style={[a.px_lg, style]} {...props} />
 }
 
 const useReceiverError = ({
