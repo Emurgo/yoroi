@@ -1,6 +1,6 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 
-import {useFocusEffect, useNavigation} from '@react-navigation/native'
+import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 import {Linking, ScrollView, Text, View} from 'react-native'
 import {ViewProps} from 'react-native-svg/lib/typescript/fabric/utils'
@@ -8,7 +8,6 @@ import {ViewProps} from 'react-native-svg/lib/typescript/fabric/utils'
 import {YoroiHelpLink} from '~/features/SetupWallet/common/constants'
 import {useBold} from '~/hooks/useBold'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Button} from '~/ui/Button/Button'
 import {CardAboutPhrase} from '~/ui/CardAboutPhrase/CardAboutPhrase'
 import {LearnMoreButton} from '~/ui/LearnMoreButton/LearnMoreButton'
@@ -20,17 +19,9 @@ export const AboutRecoveryPhraseScreen = () => {
   const bold = useBold({style: a.body_1_lg_medium})
   const strings = useStrings()
   const navigation = useNavigation<any>()
-  const {track} = useMetrics()
   const {atoms: ta} = useTheme()
 
-  useFocusEffect(
-    React.useCallback(() => {
-      track.createWalletLearnPhraseStepViewed()
-    }, [track]),
-  )
-
   const handleOnLearMoreButtonPress = () => {
-    track.createWalletTermsPageViewed()
     Linking.openURL(YoroiHelpLink)
   }
 

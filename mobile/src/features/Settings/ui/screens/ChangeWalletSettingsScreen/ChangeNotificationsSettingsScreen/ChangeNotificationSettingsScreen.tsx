@@ -12,7 +12,6 @@ import {
 } from '~/features/Settings/ui/shared/SettingsItems'
 import {features} from '~/kernel/features'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
@@ -66,7 +65,6 @@ export const ChangeNotificationSettingsScreen = () => {
 }
 
 export function useNotificationPermission() {
-  const {track} = useMetrics()
   const [permission, setPermission] = React.useState<
     'authorized' | 'not_determined' | 'denied'
   >('not_determined')
@@ -104,9 +102,6 @@ export function useNotificationPermission() {
 
     const currentStatus = await getNotificationsAuthorizationStatus()
     const nextStatus = currentStatus === 'authorized' ? 'denied' : 'authorized'
-    track.settingsPushNotificationsStatusUpdated({
-      is_enabled: nextStatus === 'authorized' ? 'enabled' : 'disabled',
-    })
     setPermission(nextStatus)
   }
 
@@ -153,14 +148,10 @@ const InAppNotificationDisplaySwitcher = () => {
   const displayNotifications = useNotificationDisplaySettings()
   const {mutate} = useChangeNotificationDisplaySettings()
   const [localValue, setLocalValue] = React.useState(displayNotifications)
-  const {track} = useMetrics()
-
   const handleOnToggle = () => {
     const newValue = !localValue
     setLocalValue(newValue)
     mutate(newValue)
-    const status = newValue ? 'enabled' : 'disabled'
-    track.settingsInAppNotificationsStatusUpdated({status})
   }
 
   return <SettingsSwitch value={localValue} onValueChange={handleOnToggle} />

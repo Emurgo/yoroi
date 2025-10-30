@@ -127,6 +127,7 @@ export const useGovernanceActions = () => {
         })
       },
       onNotSupportedCIP1694: navigateTo.notSupportedVersion,
+      context: 'delegate vote',
       ...(CIP105
         ? {
             operationsNotice: (
@@ -155,6 +156,7 @@ export const useGovernanceActions = () => {
         })
       },
       onNotSupportedCIP1694: navigateTo.notSupportedVersion,
+      context: 'delegate vote',
     })
   }
 
@@ -176,6 +178,7 @@ export const useGovernanceActions = () => {
         })
       },
       onNotSupportedCIP1694: navigateTo.notSupportedVersion,
+      context: 'delegate vote',
     })
   }
 

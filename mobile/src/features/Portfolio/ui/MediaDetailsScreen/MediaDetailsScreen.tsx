@@ -21,7 +21,6 @@ import {
 import {usePortfolioImageInvalidate} from '~/features/Portfolio/common/hooks/usePortfolioImage'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {NftRoutes} from '~/kernel/navigation/types'
 import {Boundary} from '~/ui/Boundary/Boundary'
 import {Copiable} from '~/ui/Copiable/Copiable'
@@ -36,7 +35,6 @@ import {useNavigateTo} from '../../common/navigation'
 
 export const MediaDetailsScreen = () => {
   const strings = useStrings()
-  const {track} = useMetrics()
   const {forceInvalidate, isPending} = usePortfolioImageInvalidate()
 
   const [activeTab, setActiveTab] = useState<ActiveTab>('overview')
@@ -69,7 +67,6 @@ export const MediaDetailsScreen = () => {
             onPress={() => {
               if (activeTab !== 'overview') {
                 setActiveTab('overview')
-                track.nftGalleryDetailsTab({nft_tab: 'Overview'})
               }
             }}
             label={strings.portfolio.overview}
@@ -81,7 +78,6 @@ export const MediaDetailsScreen = () => {
             onPress={() => {
               if (activeTab !== 'metadata') {
                 setActiveTab('metadata')
-                track.nftGalleryDetailsTab({nft_tab: 'Metadata'})
               }
             }}
             label={strings.portfolio.info}

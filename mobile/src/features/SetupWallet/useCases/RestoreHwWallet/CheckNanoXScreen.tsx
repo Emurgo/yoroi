@@ -1,13 +1,12 @@
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
-import {useFocusEffect, useNavigation} from '@react-navigation/native'
+import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 import {Linking, Platform, TouchableOpacity, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {SetupWalletRouteNavigation} from '~/kernel/navigation/types'
 import {BulletPointItem} from '~/ui/BulletPointItem'
 import {Button} from '~/ui/Button/Button'
@@ -20,19 +19,10 @@ import {LedgerCheckIllustration} from '../../illustrations/LedgerCheckIllustrati
 export const CheckNanoXScreen = () => {
   const strings = useStrings()
   const {atoms: ta} = useTheme()
-  const {track} = useMetrics()
-
   const navigation = useNavigation<SetupWalletRouteNavigation>()
   const handleOnContinue = () =>
     navigation.navigate('setup-wallet-connect-nano-x')
   const {useUSB} = useSetupWallet()
-
-  useFocusEffect(
-    React.useCallback(() => {
-      track.connectWalletCheckPageViewed()
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []),
-  )
 
   const commonRequirements = [
     strings.ledgerMessages.appInstalled,

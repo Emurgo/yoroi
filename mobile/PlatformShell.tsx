@@ -1,3 +1,4 @@
+import PostHog from 'posthog-react-native'
 import * as React from 'react'
 import {Platform} from 'react-native'
 import {KeyboardProvider} from 'react-native-keyboard-controller'
@@ -6,21 +7,28 @@ import {
   initialWindowMetrics,
 } from 'react-native-safe-area-context'
 
+import {AnalyticsRootProvider} from '~/features/Analytics/context/AnalyticsRootProvider'
+import {routeToEvent} from '~/features/Analytics/events/route-events'
+import {createPosthogClient} from '~/features/Analytics/helpers/createPosthogClient'
+import {useAnalyticsTracking} from '~/features/Analytics/hooks/useAnalyticsTracking'
 import {useScreenCapture} from '~/features/Settings/hooks/useScreenCapture'
-import {
-  MetricsProvider,
-  makeMetricsManager,
-} from '~/kernel/metrics/metricsManager'
 import {RouterContainer} from '~/kernel/navigation/RouterContainer'
+import {
+  initInstallationId,
+  metricsEnabledStorageKeyManager,
+} from '~/kernel/storage/storages'
 import {ModalProvider} from '~/ui/Modal/context/ModalContext'
 
 import {BackgroundTimerProvider} from './src/hooks/BackgroundTimerContext'
 
 export function PlatformShell({children}: React.PropsWithChildren) {
-  const metricsManager = React.useMemo(() => makeMetricsManager(), [])
+  const metricsEnabled = metricsEnabledStorageKeyManager.read()
+
   const {init} = useScreenCapture()
-  // Only enable on Android where permission dialogs trigger auto-logout
+
   const isAndroid = Platform.OS === 'android'
+  const platform = isAndroid ? 'Android' : 'IOS'
+  const client = usePosthogClient(metricsEnabled)
 
   React.useEffect(() => {
     init()
@@ -28,8 +36,13 @@ export function PlatformShell({children}: React.PropsWithChildren) {
 
   return (
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-      <MetricsProvider metricsManager={metricsManager}>
-        <RouterContainer>
+      <AnalyticsRootProvider
+        initialEnabled={metricsEnabled}
+        platform={platform}
+        client={client}
+        metricsEnabledStorage={metricsEnabledStorageKeyManager}
+      >
+        <TrackedRouterContainer>
           <ModalProvider>
             <BackgroundTimerProvider active={isAndroid}>
               <KeyboardProvider statusBarTranslucent>
@@ -37,8 +50,58 @@ export function PlatformShell({children}: React.PropsWithChildren) {
               </KeyboardProvider>
             </BackgroundTimerProvider>
           </ModalProvider>
-        </RouterContainer>
-      </MetricsProvider>
+        </TrackedRouterContainer>
+      </AnalyticsRootProvider>
     </SafeAreaProvider>
+  )
+}
+
+function usePosthogClient(enabled: boolean) {
+  const installationId = React.useMemo(() => initInstallationId(), [])
+
+  const client = React.useMemo(() => {
+    const apiKey = process.env.EXPO_PUBLIC_POSTHOG_KEY
+    const host = process.env.EXPO_PUBLIC_POSTHOG_HOST
+    if (!apiKey || !host) throw new Error('Analytics client is not configured')
+    const sdk = new PostHog(apiKey, {host, disabled: !enabled})
+    return createPosthogClient({sdk})
+  }, [enabled])
+
+  React.useEffect(() => {
+    if (installationId && enabled) client.identify(installationId)
+  }, [client, installationId, enabled])
+
+  return client
+}
+
+function TrackedRouterContainer({children}: React.PropsWithChildren) {
+  const {trackEvent} = useAnalyticsTracking()
+  const timeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  const handleRouteChange = React.useCallback(
+    (routeName?: string) => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current)
+      if (!routeName) return
+
+      timeoutRef.current = setTimeout(() => {
+        const mapped = routeToEvent[routeName]
+        if (!mapped) return
+        if (typeof mapped === 'string') trackEvent(mapped)
+        else trackEvent(mapped.event, mapped.properties)
+      }, 100)
+    },
+    [trackEvent],
+  )
+
+  React.useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current)
+    }
+  }, [])
+
+  return (
+    <RouterContainer onRouteChange={handleRouteChange}>
+      {children}
+    </RouterContainer>
   )
 }

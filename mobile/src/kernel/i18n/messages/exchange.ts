@@ -98,7 +98,7 @@ export const exchangeMessages = defineMessages({
     defaultMessage: '!!!Sell currency warning',
   },
   title: {
-    id: 'global.buyInfo',
+    id: 'global.exchange',
     defaultMessage: '!!!Exchange',
   },
   getFirstCrypto: {

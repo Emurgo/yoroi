@@ -12,7 +12,6 @@ import {ShowDisclaimer} from '~/features/Legal/ui/shared/Disclaimer/ShowDisclaim
 import {useSearch, useSearchOnNavBar} from '~/features/Search/SearchContext'
 import {NetworkTag} from '~/features/Settings/ui/shared/NetworkTag'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {SimpleTab} from '~/ui/SimpleTab/SimpleTab'
 import {Space} from '~/ui/Space/Space'
 
@@ -27,7 +26,6 @@ const DAppTabs = {
   recommended: 'recommended',
 } as const
 type TDAppTabs = keyof typeof DAppTabs
-type Category = 'Investment' | 'Media' | 'Trading' | 'NFT' | 'Community'
 
 const HeaderTitleComponent = ({children}: {children: React.ReactNode}) => (
   <NetworkTag style={{width: 200}}>{children}</NetworkTag>
@@ -40,14 +38,7 @@ export const SelectDappFromListScreen = () => {
   const [categoriesSelected, setCategoriesSelected] = React.useState<string[]>(
     [],
   )
-  const {track} = useMetrics()
   const [isShowedWelcomeDApp] = useShowWelcomeDApp()
-
-  React.useEffect(() => {
-    if (currentTab === 'recommended') {
-      track.discoverPageViewed()
-    }
-  }, [currentTab, track])
 
   useSearchOnNavBar({
     title: strings.discover.discoverTitle,
@@ -67,8 +58,6 @@ export const SelectDappFromListScreen = () => {
 
   const handleToggleCategory = React.useCallback(
     (category: string) => {
-      track.discoverFilterSelected({dapp_filter: category as Category})
-
       if (categoriesSelected.includes(category)) {
         setCategoriesSelected(categoriesSelected.filter((c) => c !== category))
         return
@@ -76,7 +65,7 @@ export const SelectDappFromListScreen = () => {
 
       setCategoriesSelected([...categoriesSelected, category])
     },
-    [categoriesSelected, track],
+    [categoriesSelected],
   )
 
   const myDapps = useFilteredDappList(currentTab, categoriesSelected)
@@ -190,7 +179,6 @@ const HeaderControl = ({
 
 const useFilteredDappList = (tab: TDAppTabs, categoriesSelected: string[]) => {
   const {search, visible} = useSearch()
-  const {track} = useMetrics()
   const {data: list} = useDappList()
   const {data: connectedOrigins = []} = useDAppsConnected()
   const hasConnectedDapps = connectedOrigins.length > 0
@@ -207,22 +195,6 @@ const useFilteredDappList = (tab: TDAppTabs, categoriesSelected: string[]) => {
       return !list?.dapps.some((dapp) => dapp.origins.includes(connectedOrigin))
     },
   )
-
-  React.useEffect(() => {
-    let timeout: ReturnType<typeof setTimeout> | undefined
-
-    const sendMetrics = () => {
-      clearTimeout(timeout)
-
-      timeout = setTimeout(() => {
-        track.discoverSearchActivated({search_term: search})
-      }, 500) // 0.5s requirement
-    }
-
-    if (isSearching && search.length > 0) sendMetrics()
-
-    return () => clearTimeout(timeout)
-  }, [isSearching, search, track])
 
   const getDAppsConnectedButNotInList = () => {
     return dAppOriginsThatAreConnectedButNotInList.map((origin) => {

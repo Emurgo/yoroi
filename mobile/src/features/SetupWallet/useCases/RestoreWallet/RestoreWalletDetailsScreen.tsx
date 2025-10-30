@@ -5,7 +5,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import {Api, Wallet} from '@yoroi/types'
 
 import {walletChecksum} from '@emurgo/cip4-js'
-import {useFocusEffect, useNavigation} from '@react-navigation/native'
+import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 import {
   InteractionManager,
@@ -29,7 +29,6 @@ import {debugWalletInfo, features} from '~/kernel/features'
 import {errorMessages} from '~/kernel/i18n/messages/global'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Button} from '~/ui/Button/Button'
 import {CardAboutPhrase} from '~/ui/CardAboutPhrase/CardAboutPhrase'
 import {Icon} from '~/ui/Icon'
@@ -74,7 +73,6 @@ export const RestoreWalletDetailsScreen = () => {
   const navigation = useNavigation<any>()
   const strings = useStrings()
   const {atoms: ta} = useTheme()
-  const {track} = useMetrics()
   const bold = useBold({style: a.body_1_lg_medium})
   const {HEIGHT_MODAL_NAME_PASSWORD, HEIGHT_MODAL_CHECKSUM} = useSizeModal()
   const {openModal, closeModal} = useModal()
@@ -121,8 +119,6 @@ export const RestoreWalletDetailsScreen = () => {
         throw error
       }
 
-      track.restoreWalletDetailsSettled()
-
       navigation.navigate('setup-wallet-preparing-wallet')
     },
     onError: (error) => {
@@ -148,12 +144,6 @@ export const RestoreWalletDetailsScreen = () => {
     passwordErrors.matchesConfirmation && !isPending
       ? strings.setupWallet.repeatPasswordInputError
       : undefined
-
-  useFocusEffect(
-    React.useCallback(() => {
-      track.restoreWalletDetailsStepViewed()
-    }, [track]),
-  )
 
   const nameErrors = !isCreateWalletSuccess
     ? walletManager.validateWalletName(name)

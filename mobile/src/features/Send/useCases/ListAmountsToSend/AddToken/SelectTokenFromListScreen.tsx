@@ -3,7 +3,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
 import {Portfolio} from '@yoroi/types'
 
-import {useFocusEffect, useNavigation} from '@react-navigation/native'
+import {useNavigation} from '@react-navigation/native'
 import {FlashList} from '@shopify/flash-list'
 import * as React from 'react'
 import {Alert, TouchableOpacity, View} from 'react-native'
@@ -14,7 +14,6 @@ import {useSearch, useSearchOnNavBar} from '~/features/Search/SearchContext'
 import {limitOfSecondaryAmountsPerTx} from '~/features/Send/common/constants'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {TxHistoryRouteNavigation} from '~/kernel/navigation/types'
 import {NoAssetFoundImage} from '~/ui/NoAssetFoundImage/NoAssetFoundImage'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
@@ -72,16 +71,10 @@ export const SelectTokenFromListScreen = () => {
     return spendableAmounts.filter(({info}) => infoFilterByName(search)(info))
   }, [fungibilityFilter, isSearchOpened, search, spendableAmounts])
 
-  const {track} = useMetrics()
-  useFocusEffect(
-    React.useCallback(() => {
-      track.sendSelectAssetPageViewed()
-    }, [track]),
-  )
-
   const currentAmounts =
     targets[selectedTargetIndex]?.entry.amounts ??
     ({} as Record<Portfolio.Token.Id, Portfolio.Token.Amount>)
+
   const hasPrimary = currentAmounts[wallet.portfolioPrimaryTokenInfo.id] != null
   const currentAmountsSize = Object.keys(currentAmounts).length
   const secondaryAmountsCounter = currentAmountsSize - (hasPrimary ? 1 : 0)
