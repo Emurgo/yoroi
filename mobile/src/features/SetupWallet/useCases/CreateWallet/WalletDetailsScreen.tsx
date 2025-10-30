@@ -18,6 +18,8 @@ import {
 } from 'react-native'
 import {ViewProps} from 'react-native-svg/lib/typescript/fabric/utils'
 
+import {useAnalyticsTracking} from '~/features/Analytics/hooks/useAnalyticsTracking'
+import {AnalyticsEventEnum} from '~/features/Analytics/types/analytics-event-enum'
 import {YoroiHelpLink} from '~/features/SetupWallet/common/constants'
 import {parseWalletMeta} from '~/features/WalletManager/common/validators/wallet-meta'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
@@ -83,7 +85,7 @@ export const WalletDetailsScreen = () => {
   const walletNames = Array.from(walletManager.walletMetas.values()).map(
     ({name}) => name,
   )
-
+  const {trackEvent} = useAnalyticsTracking()
   const storage = useAsyncStorage()
   const {
     mnemonic,
@@ -126,6 +128,8 @@ export const WalletDetailsScreen = () => {
         logger.error(error)
         throw error
       }
+
+      trackEvent(AnalyticsEventEnum.CreateWalletDetailsSubmitted)
 
       navigation.navigate('setup-wallet-preparing-wallet')
     },

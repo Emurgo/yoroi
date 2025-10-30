@@ -47,6 +47,7 @@ export const ConfirmPin = () => {
 
       unsignedTxChanged(votingRegTx.votingRegTx)
       navigateToTxReview({
+        context: 'delegate vote',
         onCIP36SupportChange: async (supportsCIP36: boolean) => {
           votingRegTx = await wallet.createVotingRegTx({
             catalystKeyHex,

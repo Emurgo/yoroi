@@ -10,6 +10,15 @@ import {Routes as StakingGovernanceRoutes} from '~/features/Staking/Governance/c
 
 export type Guard<Params> = (params: Params | object) => params is Params
 
+export type ReviewContext =
+  | 'swap'
+  | 'send'
+  | 'dapp'
+  | 'delegate'
+  | 'undelegate'
+  | 'withdraw rewards'
+  | 'delegate vote'
+
 export type WalletTabRoutes = {
   history: NavigatorScreenParams<TxHistoryRoutes>
   portfolio: NavigatorScreenParams<PortfolioRoutes>
@@ -242,6 +251,7 @@ export type ReviewTxRoutes = {
     receiverCustomTitle?: React.ReactNode
     details?: ReviewDetailsProps
     createdBy?: React.ReactNode
+    context?: ReviewContext
     onConfirm?: () => void
     onCancel?: OnConfirm['onCancel']
     onSuccess?: OnConfirm['onSuccess']

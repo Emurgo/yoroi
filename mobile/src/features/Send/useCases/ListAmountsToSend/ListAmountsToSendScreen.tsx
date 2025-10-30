@@ -106,6 +106,7 @@ export const ListAmountsToSendScreen = () => {
       unsignedTxChanged(yoroiUnsignedTx)
       navigateToTxReview({
         onSuccess: (args) => handleOnSuccess(args?.signedTx),
+        context: 'send',
       })
     },
     [unsignedTxChanged, navigateToTxReview, handleOnSuccess],
