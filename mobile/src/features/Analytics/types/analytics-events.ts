@@ -55,17 +55,10 @@ export type NFTProperties = {
 
 export type DappsEvent =
   | AnalyticsEventEnum.DiscoverPageViewed
-  | AnalyticsEventEnum.DappConnectorSignTransactionSubmitted
-  | AnalyticsEventEnum.DappConnectorSignTransactionPageViewed
   | AnalyticsEventEnum.DiscoverWebViewViewed
 
 export type DappsProperties = {
   [AnalyticsEventEnum.DiscoverPageViewed]: undefined
-  [AnalyticsEventEnum.DappConnectorSignTransactionSubmitted]: undefined
-  [AnalyticsEventEnum.DappConnectorSignTransactionPageViewed]: {
-    asset_count: number
-    asset_list: string[]
-  }
   [AnalyticsEventEnum.DiscoverWebViewViewed]: undefined
 }
 
