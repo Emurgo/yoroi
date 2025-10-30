@@ -496,7 +496,12 @@ describe('SwapProvider', () => {
       const stateWithInput = {
         ...defaultState,
         lastInputTouched: 'in' as const,
-        tokenInInput: {...defaultState.tokenInInput, error: null}, // No error to enable swap
+        // Set a non-zero amount and no error to allow swap
+        tokenInInput: {
+          ...defaultState.tokenInInput,
+          value: '1',
+          error: null,
+        },
       }
 
       const result = swapReducer(stateWithInput, {
