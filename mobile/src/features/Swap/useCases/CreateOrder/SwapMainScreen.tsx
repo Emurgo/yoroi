@@ -1,3 +1,4 @@
+import {parseNumberFromText} from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
@@ -47,8 +48,10 @@ export const SwapMainScreen = () => {
   const tokenOutTicker = tokenOutInfo?.ticker ?? tokenOutInfo?.name ?? '-'
 
   const onSwapPress = () => {
-    const wantedPrice = Number(swapForm.wantedPrice)
-    const marketPrice = swapForm.estimate?.netPrice ?? 0
+    const wantedPrice = parseNumberFromText({
+      text: swapForm.wantedPrice,
+    }).numericValue
+    const marketPrice = swapForm.limitOptions?.wantedPrice ?? 0
     const difference = Math.abs(wantedPrice - marketPrice)
     const threshold = marketPrice * limitPriceThresholdForWarning
 
@@ -67,23 +70,23 @@ export const SwapMainScreen = () => {
         ),
         footer: (
           <Modal.Footer>
-            <Button
-              style={[a.flex_1]}
-              size="S"
-              type={ButtonType.Secondary}
-              title={strings.swap.limitPriceWarningBack}
-              onPress={closeModal}
-            />
+            <View style={[a.flex_row, a.justify_between, a.gap_md]}>
+              <Button
+                size="S"
+                type={ButtonType.Secondary}
+                title={strings.swap.limitPriceWarningBack}
+                onPress={closeModal}
+              />
 
-            <Button
-              style={[a.flex_1]}
-              size="S"
-              title={strings.swap.limitPriceWarningConfirm}
-              onPress={() => {
-                closeModal()
-                swapForm.create()
-              }}
-            />
+              <Button
+                size="S"
+                title={strings.swap.limitPriceWarningConfirm}
+                onPress={() => {
+                  closeModal()
+                  swapForm.create()
+                }}
+              />
+            </View>
           </Modal.Footer>
         ),
       })
