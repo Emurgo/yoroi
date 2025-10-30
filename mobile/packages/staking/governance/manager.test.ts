@@ -1,4 +1,4 @@
-import {fetcher, mountAsyncStorage} from '@yoroi/common'
+import {mountAsyncStorage} from '@yoroi/common'
 import {Chain} from '@yoroi/types'
 
 import {init} from '@emurgo/cross-csl-nodejs'
@@ -9,13 +9,25 @@ import {GovernanceAction, governanceManagerMaker} from './manager'
 const apiMock: GovernanceApi = {
   getDRepById: () =>
     Promise.resolve({
-      txId: 'tx',
-      epoch: 123,
-    }),
+      tag: 'right',
+      value: {
+        status: 200,
+        data: {
+          txId: 'tx',
+          epoch: 123,
+        },
+      },
+    } as const),
   getStakingKeyState: () =>
     Promise.resolve({
-      drepDelegation: {tx: 'tx', slot: 123, epoch: 123, drep: 'abstain'},
-    }),
+      tag: 'right',
+      value: {
+        status: 200,
+        data: {
+          drepDelegation: {tx: 'tx', slot: 123, epoch: 123, drep: 'abstain'},
+        },
+      },
+    } as const),
 }
 
 describe('createGovernanceManager', () => {
@@ -26,7 +38,7 @@ describe('createGovernanceManager', () => {
     network,
     cardano,
     storage: mountAsyncStorage({path: 'wallet/'}),
-    api: governanceApiMaker({network, client: fetcher}),
+    api: governanceApiMaker({network}),
   } as const
 
   afterEach(async () => {

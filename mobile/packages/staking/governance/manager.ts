@@ -1,3 +1,4 @@
+import {isLeft} from '@yoroi/common'
 import {App, Chain} from '@yoroi/types'
 
 import {CardanoTypes} from '../types'
@@ -11,6 +12,7 @@ export type Config = {
   cardano: CardanoTypes.Wasm
   storage: App.Storage
   api: GovernanceApi
+  logger?: App.Logger.Manager
 }
 
 export type VoteKind = 'abstain' | 'no-confidence'
@@ -75,24 +77,35 @@ class Manager implements GovernanceManager {
     return convertHexKeyHashToBech32Format(hexKeyHash, this.config.cardano)
   }
 
-  async getStakingKeyState(stakeKeyHash: string) {
-    const {api} = this.config
+  async getStakingKeyState(stakeKeyHash: string): Promise<StakingKeyState> {
+    const {api, logger} = this.config
     const response = await api.getStakingKeyState(stakeKeyHash)
-    if (response.drepDelegation) {
-      if (response.drepDelegation.drep === 'no_confidence') {
-        const {tx, slot, epoch} = response.drepDelegation
+
+    if (isLeft(response)) {
+      logger?.error('Failed to fetch staking key state', {
+        stakeKeyHash,
+        error: response.error,
+      })
+      return {}
+    }
+
+    const {data} = response.value
+
+    if (data.drepDelegation) {
+      if (data.drepDelegation.drep === 'no_confidence') {
+        const {tx, slot, epoch} = data.drepDelegation
         return {
           drepDelegation: {action: 'no-confidence', tx, slot, epoch},
         } as const
       }
-      if (response.drepDelegation.drep === 'abstain') {
-        const {tx, slot, epoch} = response.drepDelegation
+      if (data.drepDelegation.drep === 'abstain') {
+        const {tx, slot, epoch} = data.drepDelegation
         return {
           drepDelegation: {action: 'abstain', tx, slot, epoch},
         } as const
       }
 
-      const {tx, slot, epoch, drep, drepKind} = response.drepDelegation
+      const {tx, slot, epoch, drep, drepKind} = data.drepDelegation
       return {
         drepDelegation: {
           action: 'drep',
@@ -147,7 +160,17 @@ class Manager implements GovernanceManager {
 
   async validateDRepID(drepId: string): Promise<boolean> {
     const {hash} = parseDrepId(drepId, this.config.cardano)
-    const drepStatus = await this.config.api.getDRepById(hash)
+    const response = await this.config.api.getDRepById(hash)
+
+    if (isLeft(response)) {
+      this.config.logger?.error('DRep validation failed', {
+        drepId,
+        error: response.error,
+      })
+      throw new Error('DRep ID not registered')
+    }
+
+    const drepStatus = response.value.data
 
     if (!drepStatus || !drepStatus.epoch) {
       throw new Error('DRep ID not registered')
