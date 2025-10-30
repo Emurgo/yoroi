@@ -34,8 +34,6 @@ export enum AnalyticsEventEnum {
   TransactionReviewSubmitModalViewed = 'Transaction Review Submit Modal Viewed',
   WalletPageBuyBannerClicked = 'Wallet Page Buy Banner Clicked',
   WalletPageExchangeClicked = 'Wallet Page Exchange Clicked',
-  DappConnectorSignTransactionSubmitted = 'Dapp Connector Sign Transaction Submitted',
-  DappConnectorSignTransactionPageViewed = 'Dapp Connector Sign Transaction Page Viewed',
   ConnectWalletDetailsSubmitted = 'Connect Wallet Details Submitted',
   CreateWalletDetailsSubmitted = 'Create Wallet Details Submitted',
   SettingsPageViewed = 'Settings Page Viewed',
