@@ -22,7 +22,9 @@ import {ModalProvider} from '~/ui/Modal/context/ModalContext'
 import {BackgroundTimerProvider} from './src/hooks/BackgroundTimerContext'
 
 export function PlatformShell({children}: React.PropsWithChildren) {
-  const metricsEnabled = metricsEnabledStorageKeyManager.read()
+  const [metricsEnabled, setMetricsEnabled] = React.useState<boolean>(
+    metricsEnabledStorageKeyManager.read(),
+  )
 
   const {init} = useScreenCapture()
 
@@ -41,6 +43,7 @@ export function PlatformShell({children}: React.PropsWithChildren) {
         platform={platform}
         client={client}
         metricsEnabledStorage={metricsEnabledStorageKeyManager}
+        onEnabledChange={setMetricsEnabled}
       >
         <TrackedRouterContainer>
           <ModalProvider>
