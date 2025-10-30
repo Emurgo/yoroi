@@ -21,7 +21,7 @@ export const WarnLimitPrice = ({
   const {atoms: ta} = useTheme()
 
   return (
-    <View style={[a.justify_between, a.flex_1, a.px_lg, a.pb_lg]}>
+    <View style={[a.justify_between, a.flex_1]}>
       <View>
         <Text style={[a.body_1_lg_regular, ta.text_gray_medium]}>
           {strings.swap.limitPriceWarningDescription}
