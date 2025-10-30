@@ -246,7 +246,7 @@ export const swapMessages = defineMessages({
     defaultMessage: '!!!Change Pool',
   },
   swapMinAda: {
-    id: 'swap.swapScreen.swapTitle',
+    id: 'swap.swapScreen.swapMinAdaTitle',
     defaultMessage: '!!!Swap Min ADA',
   },
   swapMinAdaTitle: {
