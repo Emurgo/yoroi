@@ -6,9 +6,9 @@ import BigNumber from 'bignumber.js'
 
 import {Address} from '../types/yoroi'
 import {Amounts, Quantities, asQuantity} from '../utils/utils'
-import {CardanoMobile} from '../wallets'
 import {MultiToken} from './MultiToken'
 import {cardanoValueFromMultiToken} from './cardanoValueFromMultiToken'
+import {CardanoMobileWrapped} from './wrappedCsl'
 
 export const withMinAmounts = (
   address: Address,
@@ -39,37 +39,35 @@ export const getMinAmounts = (
   primaryTokenInfo: Portfolio.Token.Info,
   protocolParams: Chain.Cardano.ProtocolParams,
 ) => {
-  const multiToken = new MultiToken(
-    [
-      {identifier: primaryTokenInfo.id, amount: new BigNumber('0')},
-      ...Amounts.toArray(amounts).map(({tokenId, quantity}) => ({
-        identifier: tokenId,
-        amount: new BigNumber(quantity),
-      })),
-    ],
-    {defaultIdentifier: primaryTokenInfo.id},
-  )
+  return CardanoMobileWrapped.cslScope((csl) => {
+    const multiToken = new MultiToken(
+      [
+        {identifier: primaryTokenInfo.id, amount: new BigNumber('0')},
+        ...Amounts.toArray(amounts).map(({tokenId, quantity}) => ({
+          identifier: tokenId,
+          amount: new BigNumber(quantity),
+        })),
+      ],
+      {defaultIdentifier: primaryTokenInfo.id},
+    )
 
-  const value = cardanoValueFromMultiToken(multiToken)
-  const coinsPerUtxoByte = CardanoMobile.BigNum.fromStr(
-    protocolParams.coinsPerUtxoByte,
-  )
+    const value = cardanoValueFromMultiToken(multiToken)
+    const coinsPerUtxoByte = csl.BigNum.fromStr(protocolParams.coinsPerUtxoByte)
 
-  const normalizedAddress = normalizeToAddress(CardanoMobile, address)
+    const normalizedAddress = normalizeToAddress(csl, address)
 
-  if (normalizedAddress === undefined)
-    throw new Error('getMinAmounts::Error not a valid address')
+    if (normalizedAddress === undefined)
+      throw new Error('getMinAmounts::Error not a valid address')
 
-  const txOutput = CardanoMobile.TransactionOutput.new(normalizedAddress, value)
-  const dataCost = CardanoMobile.DataCost.newCoinsPerByte(coinsPerUtxoByte)
+    const txOutput = csl.TransactionOutput.new(normalizedAddress, value)
+    const dataCost = csl.DataCost.newCoinsPerByte(coinsPerUtxoByte)
 
-  const minAda = asQuantity(
-    CardanoMobile.minAdaForOutput(txOutput, dataCost).toStr(),
-  )
+    const minAda = asQuantity(csl.minAdaForOutput(txOutput, dataCost).toStr())
 
-  return {
-    [primaryTokenInfo.id]: minAda,
-  } as Balance.Amounts
+    return {
+      [primaryTokenInfo.id]: minAda,
+    } as Balance.Amounts
+  })
 }
 
 export const withPrimaryToken = (
