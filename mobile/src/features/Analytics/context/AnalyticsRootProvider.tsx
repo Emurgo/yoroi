@@ -7,6 +7,7 @@ type Props = React.PropsWithChildren<{
   platform: 'IOS' | 'Android' | 'Web'
   client: AnalyticsProvider
   metricsEnabledStorage: MetricsEnabledStorage
+  onEnabledChange?: (enabled: boolean) => void
 }>
 
 type AnalyticsContextValue = {
@@ -32,6 +33,7 @@ export function AnalyticsRootProvider({
   platform,
   client: clientProp,
   metricsEnabledStorage,
+  onEnabledChange,
 }: Props) {
   const [enabled, setEnabledState] = React.useState<boolean>(
     Boolean(initialEnabled),
@@ -41,11 +43,10 @@ export function AnalyticsRootProvider({
   const setEnabled = React.useCallback(
     (next: boolean) => {
       setEnabledState(next)
-      try {
-        metricsEnabledStorage.save(next)
-      } catch {}
+      metricsEnabledStorage.save(next)
+      onEnabledChange?.(next)
     },
-    [metricsEnabledStorage],
+    [metricsEnabledStorage, onEnabledChange],
   )
 
   const capture = React.useCallback<AnalyticsContextValue['capture']>(

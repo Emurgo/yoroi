@@ -389,18 +389,20 @@ const OrderCancellation = ({
         </Modal.Footer>
       ) : (
         <Modal.Footer>
-          <Button
-            type={ButtonType.Secondary}
-            title={strings.swap.listOrdersSheetBack}
-            onPress={closeModal}
-          />
+          <View style={[a.flex_row, a.gap_md]}>
+            <Button
+              type={ButtonType.Secondary}
+              title={strings.swap.listOrdersSheetBack}
+              onPress={closeModal}
+            />
 
-          <Button
-            type={ButtonType.Critical}
-            title={strings.swap.cancel}
-            onPress={onOrderCancelConfirm}
-            disabled={response.value.data.cbor === undefined}
-          />
+            <Button
+              type={ButtonType.Critical}
+              title={strings.swap.cancel}
+              onPress={onOrderCancelConfirm}
+              disabled={response.value.data.cbor === undefined}
+            />
+          </View>
         </Modal.Footer>
       ),
       height: 400,
