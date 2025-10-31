@@ -12,7 +12,6 @@ import {useBrowser} from '~/features/Discover/common/BrowserProvider'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useModal} from '~/ui/Modal/context/ModalContext'
 
 import {RequestedAdaPaymentWithLinkModal} from '../ui/modals/RequestedAdaPaymentWithLinkModal'
@@ -23,7 +22,6 @@ const heightBreakpoint = 467
 
 export const useLinksRequestAction = () => {
   const strings = useStrings()
-  const {track} = useMetrics()
   const {action, actionFinished} = useLinks()
   const {
     selected: {wallet},
@@ -169,8 +167,6 @@ export const useLinksRequestAction = () => {
           const redirectTo = action.info.params.redirectTo
           if (redirectTo != null) linkActionChanged(action)
 
-          track.discoverConnectedBottomSheetOpenDAppClicked()
-
           const id = uuid.v4()
           addTabAndSetActive(dappUrl, id)
 
@@ -191,7 +187,6 @@ export const useLinksRequestAction = () => {
       linkActionChanged,
       closeModal,
       navigateTo,
-      track,
       isLoggedIn,
     ],
   )

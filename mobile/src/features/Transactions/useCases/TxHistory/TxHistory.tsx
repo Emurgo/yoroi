@@ -1,6 +1,5 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 
-import {useFocusEffect} from '@react-navigation/native'
 import {LinearGradient} from 'expo-linear-gradient'
 import * as React from 'react'
 import {LayoutAnimation, Text, View} from 'react-native'
@@ -14,7 +13,6 @@ import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWalle
 import {useSync} from '~/features/WalletManager/hooks/useSync'
 import {features} from '~/kernel/features'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Space, SpaceHeight} from '~/ui/Space/Space'
 
 import {TxList} from '../TxList/TxList'
@@ -34,14 +32,7 @@ export const TxHistory = () => {
   const strings = useStrings()
   const {atoms: ta, palette: p, isDark} = useTheme()
 
-  const {track} = useMetrics()
   useGetImportantAlertsModal({enabled: features.pushNotifications})
-
-  useFocusEffect(
-    React.useCallback(() => {
-      track.transactionsPageViewed()
-    }, [track]),
-  )
 
   const {wallet, meta} = useSelectedWallet()
   const [showWarning, setShowWarning] = React.useState(
@@ -75,7 +66,7 @@ export const TxHistory = () => {
       end={{x: isDark ? 0 : 0, y: isDark ? 0.5 : 0}}
       style={{flex: 1}}
     >
-      <SpaceHeight size={91} />
+      <SpaceHeight size={100} />
 
       <CollapsibleHeader expanded={expanded}>
         <BalanceBanner />

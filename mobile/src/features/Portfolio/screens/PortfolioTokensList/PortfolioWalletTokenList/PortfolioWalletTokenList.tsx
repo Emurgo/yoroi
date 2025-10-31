@@ -20,7 +20,6 @@ import {TokenEmptyList} from '~/features/Portfolio/ui/TokenEmptyList/TokenEmptyL
 import {useSearch} from '~/features/Search/SearchContext'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {makeList} from '~/kernel/utils'
 import {Line} from '~/ui/Line/Line'
 import {Space} from '~/ui/Space/Space'
@@ -35,8 +34,6 @@ export const PortfolioWalletTokenList = () => {
   const {search, isSearching} = useSearch()
   const isZeroADABalance = useZeroBalance()
   const {resetTabs} = usePortfolio()
-  const {track} = useMetrics()
-
   const {
     wallet: {balances, portfolioPrimaryTokenInfo},
   } = useSelectedWallet()
@@ -94,22 +91,6 @@ export const PortfolioWalletTokenList = () => {
       resetTabs()
     }, [resetTabs]),
   )
-
-  React.useEffect(() => {
-    let timeout: ReturnType<typeof setTimeout> | undefined
-
-    const sendMetrics = () => {
-      clearTimeout(timeout)
-
-      timeout = setTimeout(() => {
-        track.portfolioTokensListSearchActivated({search_term: search})
-      }, 500) // 0.5s requirement
-    }
-
-    if (isSearching && search.length > 0) sendMetrics()
-
-    return () => clearTimeout(timeout)
-  }, [isSearching, search, track])
 
   const renderFooterList = () => {
     if (isSearching) return null

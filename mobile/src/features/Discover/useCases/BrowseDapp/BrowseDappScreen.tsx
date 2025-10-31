@@ -1,11 +1,10 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 
-import {useFocusEffect} from '@react-navigation/native'
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 import {FlatList, View} from 'react-native'
 
 import {useBrowser} from '~/features/Discover/common/BrowserProvider'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Space} from '~/ui/Space/Space'
 
 import {BrowserTabsBar} from './BrowserTabsBar'
@@ -15,12 +14,14 @@ export const BrowseDappScreen = () => {
   const {palette: p} = useTheme()
   const flatListRef = React.useRef<FlatList>(null)
   const {tabs, tabsOpen} = useBrowser()
-  const {track} = useMetrics()
+  const navigation = useNavigation()
 
   useFocusEffect(
     React.useCallback(() => {
-      track.discoverWebViewViewed()
-    }, [track]),
+      const tabNav = navigation.getParent()?.getParent()
+      tabNav?.setOptions({tabBarStyle: {display: 'none'}})
+      return () => tabNav?.setOptions({tabBarStyle: undefined})
+    }, [navigation]),
   )
 
   return (

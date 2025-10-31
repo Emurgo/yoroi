@@ -1,13 +1,12 @@
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a} from '@yoroi/theme'
 
-import {useFocusEffect, useNavigation} from '@react-navigation/native'
+import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 import {ScrollView, View} from 'react-native'
 
 import {isIOS} from '~/kernel/constants'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {SetupWalletRouteNavigation} from '~/kernel/navigation/types'
 import {HardwareWallet} from '~/ui/HardwareWalletIllustration/HardwareWalletIllustration'
 import {LogoBanner} from '~/ui/LogoBanner/LogoBanner'
@@ -24,13 +23,6 @@ export const ChooseSetupTypeScreen = () => {
   const strings = useStrings()
   const {walletImplementationChanged, setupTypeChanged} = useSetupWallet()
   const {openModal} = useModal()
-  const {track} = useMetrics()
-
-  useFocusEffect(
-    React.useCallback(() => {
-      track.createWalletSelectMethodPageViewed()
-    }, [track]),
-  )
 
   const navigation = useNavigation<SetupWalletRouteNavigation>()
 

@@ -5,7 +5,6 @@ import * as React from 'react'
 import {Text, View} from 'react-native'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {useModal} from '~/ui/Modal/context/ModalContext'
@@ -32,8 +31,6 @@ const confirmConnectionModalWithWarningHeight = 530
 export const useOpenConfirmConnectionModal = () => {
   const {openModal, closeModal} = useModal()
   const strings = useStrings()
-  const {track} = useMetrics()
-
   const open = React.useCallback(
     (props: OpenModalProps) => {
       const modalHeight = props.showSingleAddressWarning
@@ -57,7 +54,6 @@ export const useOpenConfirmConnectionModal = () => {
             <Button
               title={strings.discover.confirmConnectionModalConnect}
               onPress={() => {
-                track.discoverWebViewBottomSheetConnectClicked()
                 props.onConfirm()
                 closeModal()
               }}
@@ -74,7 +70,6 @@ export const useOpenConfirmConnectionModal = () => {
       closeModal,
       strings.discover.confirmConnectionModalTitle,
       strings.discover.confirmConnectionModalConnect,
-      track,
     ],
   )
   return {openConfirmConnectionModal: open, closeModal}

@@ -1,7 +1,7 @@
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
-import {useFocusEffect, useNavigation} from '@react-navigation/native'
+import {useNavigation} from '@react-navigation/native'
 import {validateMnemonic} from 'bip39'
 import * as React from 'react'
 import {Keyboard, Text, TouchableOpacity, View} from 'react-native'
@@ -11,7 +11,6 @@ import {WalletDuplicatedModal} from '~/features/SetupWallet/common/WalletDuplica
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useBold} from '~/hooks/useBold'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {android} from '~/kernel/runtime'
 import {Button} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/context/ModalContext'
@@ -32,10 +31,10 @@ export const RestoreWalletScreen = () => {
   const navigation = useNavigation<any>()
   const strings = useStrings()
   const {palette: p, atoms: ta} = useTheme()
-  const {track} = useMetrics()
   const bold = useBold({style: a.body_1_lg_medium})
   const {openModal} = useModal()
   const {walletManager} = useWalletManager()
+
   const [mnemonic, setMnemonic] = React.useState('')
   const {
     publicKeyHexChanged,
@@ -91,7 +90,6 @@ export const RestoreWalletScreen = () => {
       Keyboard.dismiss()
       setIsValidPhrase(true)
       setMnemonic(newWords.join(' '))
-      track.restoreWalletEnterPhraseStepStatus({recovery_prhase_status: true})
 
       return
     }
@@ -99,7 +97,6 @@ export const RestoreWalletScreen = () => {
     if (mnemonicWordsComplete && !isValid) {
       setIsValidPhrase(false)
       setMnemonic(newWords.join(' '))
-      track.restoreWalletEnterPhraseStepStatus({recovery_prhase_status: false})
 
       return
     }
@@ -118,15 +115,6 @@ export const RestoreWalletScreen = () => {
   const onFocus = (index: number) => {
     setFocusedIndex(index)
   }
-
-  useFocusEffect(
-    React.useCallback(() => {
-      const recoveryPhraseLenght = String(mnemonicType) as '15' | '24'
-      track.restoreWalletEnterPhraseStepViewed({
-        recovery_phrase_lenght: recoveryPhraseLenght,
-      })
-    }, [mnemonicType, track]),
-  )
 
   const handleOnNext = React.useCallback(async () => {
     const {accountPubKeyHex} = walletManager.generateWalletKeys(

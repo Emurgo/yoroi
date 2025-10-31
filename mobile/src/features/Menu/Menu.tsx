@@ -1,6 +1,5 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 
-import {useFocusEffect} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import * as Linking from 'expo-linking'
 import * as React from 'react'
@@ -18,7 +17,6 @@ import {useCanVote} from '~/features/RegisterCatalyst/common/hooks'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {features} from '~/kernel/features'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {MenuRoutes} from '~/kernel/navigation/types'
@@ -60,13 +58,6 @@ export const Menu = () => {
   const {atoms: ta, palette: p} = useTheme()
   const navigateTo = useNavigateTo()
   const {isPoolRetiring} = usePoolTransition()
-  const {track} = useMetrics()
-
-  useFocusEffect(
-    React.useCallback(() => {
-      track.menuPageViewed()
-    }, [track]),
-  )
 
   return (
     <SafeAreaView edges={['left', 'right']} style={[ta.bg_color_max, a.flex_1]}>

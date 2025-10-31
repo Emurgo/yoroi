@@ -5,10 +5,8 @@ import * as React from 'react'
 import {View, useWindowDimensions} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
-import {undefinedToken} from '~/features/Swap/common/constants'
 import {useSwap} from '~/features/Swap/common/useSwap'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Button} from '~/ui/Button/Button'
 import {ProtocolAvatar} from '~/ui/ProtocolAvatar/ProtocolAvatar'
@@ -23,46 +21,13 @@ export const ReviewSwap = () => {
   const {palette: p} = useTheme()
   const {height: deviceHeight} = useWindowDimensions()
   const strings = useStrings()
-  const {track} = useMetrics()
   const {navigateToTxReview} = useWalletNavigation()
 
   const swapForm = useSwap()
 
   if (swapForm.createTx === undefined) return null
-  const tokenInInfo = swapForm.tokenInfos.get(
-    swapForm.tokenInInput.tokenId ?? undefinedToken,
-  )
-  const tokenOutInfo = swapForm.tokenInfos.get(
-    swapForm.tokenOutInput.tokenId ?? undefinedToken,
-  )
-
-  const trackSwapOrderSubmitted = () => {
-    track.swapOrderSubmitted({
-      from_asset: [
-        {
-          asset_name: tokenInInfo?.name,
-          asset_ticker: tokenInInfo?.ticker,
-          policy_id: tokenInInfo?.id.split('.')[0],
-        },
-      ],
-      to_asset: [
-        {
-          asset_name: tokenOutInfo?.name,
-          asset_ticker: tokenOutInfo?.ticker,
-          policy_id: tokenOutInfo?.id.split('.')[0],
-        },
-      ],
-      order_type: swapForm.orderType,
-      slippage_tolerance: swapForm.slippageInput.value,
-      from_amount: String(swapForm.createTx?.totalInput ?? 0),
-      to_amount: String(swapForm.createTx?.totalOutput ?? 0),
-      pool_source: swapForm.createTx?.splits[0]?.poolId ?? '',
-      swap_fees: Number(swapForm.createTx?.totalFee),
-    })
-  }
 
   const onSwapTxSuccess = () => {
-    trackSwapOrderSubmitted()
     swapForm.action({type: 'ResetForm'})
   }
 
@@ -77,6 +42,7 @@ export const ReviewSwap = () => {
     navigateToTxReview({
       onSuccess: onSwapTxSuccess,
       cbor: swapForm.createTx?.cbor,
+      context: 'swap',
       receiverCustomTitle:
         protocol !== undefined ? (
           <ProtocolAvatar

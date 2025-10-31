@@ -1,14 +1,13 @@
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
-import {useFocusEffect, useNavigation} from '@react-navigation/native'
+import {useNavigation} from '@react-navigation/native'
 import {BlurView} from 'expo-blur'
 import * as React from 'react'
 import {Platform, Text, TouchableOpacity, View} from 'react-native'
 
 import {useBold} from '~/hooks/useBold'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Button} from '~/ui/Button/Button'
 import {CardAboutPhrase} from '~/ui/CardAboutPhrase/CardAboutPhrase'
 import {Info as InfoIcon} from '~/ui/InfoIcon/InfoIcon'
@@ -33,16 +32,9 @@ export const RecoveryPhraseScreen = () => {
     showCreateWalletInfoModal,
     showCreateWalletInfoModalChanged,
   } = useSetupWallet()
-  const {track} = useMetrics()
   const {palette: p} = useTheme()
 
   const mnemonic = React.useMemo(() => generateAdaMnemonic(), [])
-
-  useFocusEffect(
-    React.useCallback(() => {
-      track.createWalletLearnPhraseStepViewed()
-    }, [track]),
-  )
 
   const handleOnShowModal = React.useCallback(() => {
     openModal({

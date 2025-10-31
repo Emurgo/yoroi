@@ -5,7 +5,6 @@ import * as React from 'react'
 
 import {NetworkTag} from '~/features/Settings/ui/shared/NetworkTag'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
 import {NftRoutes} from '~/kernel/navigation/types'
 
@@ -18,15 +17,6 @@ const Stack = createStackNavigator<NftRoutes>()
 export const NftsNavigator = () => {
   const {palette: p} = useTheme()
   const strings = useStrings()
-  const {track} = useMetrics()
-
-  const trackDetails = React.useCallback(() => {
-    return {
-      focus: () => {
-        track.nftGalleryDetailsPageViewed()
-      },
-    }
-  }, [track])
 
   return (
     <Stack.Navigator
@@ -46,7 +36,6 @@ export const NftsNavigator = () => {
           title: strings.portfolio.titleMediaDetails,
           headerTitleAlign: 'center',
         }}
-        listeners={trackDetails}
         getComponent={() => MediaDetailsScreen}
       />
 

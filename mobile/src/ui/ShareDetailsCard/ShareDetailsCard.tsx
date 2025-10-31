@@ -6,7 +6,6 @@ import {View, useWindowDimensions} from 'react-native'
 
 import {useLastDateAddressUsed} from '~/features/Receive/common/ShareDetailsCard/useLastDateAddressUsed'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Copiable} from '~/ui/Copiable/Copiable'
 import {Text} from '~/ui/Text/Text'
 import {isEmptyString} from '~/wallets/utils/string'
@@ -23,19 +22,12 @@ export const ShareDetailsCard = ({
   stakingHash,
 }: AddressDetailsProps) => {
   const strings = useStrings()
-  const {track} = useMetrics()
   const lastUsed = useLastDateAddressUsed(address)
   const {palette: p} = useTheme()
   const screenWidth = useWindowDimensions().width
 
   const hasStakingHash = !isEmptyString(stakingHash)
   const hasSpendingHash = !isEmptyString(spendingHash)
-
-  const handleAddressOnCopy = () => {
-    track.receiveCopyAddressClicked({
-      copy_address_location: 'Tap Address Details',
-    })
-  }
 
   return (
     <View
@@ -93,7 +85,6 @@ export const ShareDetailsCard = ({
 
           <Copiable
             text={address}
-            onCopy={handleAddressOnCopy}
             feedback={strings.receive.addressCopiedMsg}
           />
         </View>

@@ -25,7 +25,6 @@ import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetw
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useSync} from '~/features/WalletManager/hooks/useSync'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {DashboardRoutes} from '~/kernel/navigation/types'
 import {Banner} from '~/ui/Banner/Banner'
@@ -43,7 +42,6 @@ import {StakePoolInfos} from '../shared/StakePoolInfos'
 import {UserSummary} from '../shared/UserSummary'
 
 export const DashboardScreen = () => {
-  const {track} = useMetrics()
   const {atoms: ta} = useTheme()
 
   const strings = useStrings()
@@ -60,9 +58,7 @@ export const DashboardScreen = () => {
       unsignedTxChanged(unsignedTx)
       walletNavigateTo.navigateToTxReview({
         operations: [<StakeRewardsWithdrawalOperation key="0" />],
-        onSuccess: () => {
-          track.claimAdaTransactionSubmitted()
-        },
+        context: 'withdraw rewards',
       })
     },
   })

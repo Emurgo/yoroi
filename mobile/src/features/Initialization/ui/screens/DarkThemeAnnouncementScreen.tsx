@@ -5,7 +5,6 @@ import {
 } from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
-import {useFocusEffect} from '@react-navigation/native'
 import {UseQueryOptions, useSuspenseQuery} from '@tanstack/react-query'
 import * as React from 'react'
 import {Platform, Pressable, Switch, Text, View} from 'react-native'
@@ -13,7 +12,6 @@ import {ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Button} from '~/ui/Button/Button'
 import {Space} from '~/ui/Space/Space'
@@ -24,18 +22,10 @@ import {LightThemeIlustration} from '../illustrations/LightThemeIlustration'
 export const DarkThemeAnnouncementScreen = () => {
   const strings = useStrings()
   const {isDark, atoms: ta, palette: p} = useTheme()
-  const {track} = useMetrics()
   const {setScreenShown, isPending: isSetScreenShownLoading} =
     useSetScreenShown()
 
   const scrollViewRef = React.useRef<ScrollView | null>(null)
-
-  useFocusEffect(
-    React.useCallback(() => {
-      track.onboardingThemePageViewed()
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []),
-  )
 
   React.useEffect(() => {
     const timeout = setTimeout(() => {
@@ -109,11 +99,8 @@ export const DarkThemeAnnouncementScreen = () => {
 
 const Toggle = () => {
   const {isLight, isDark, selectTheme, palette: p} = useTheme()
-  const {track} = useMetrics()
-
   const handleOnValueChange = () => {
     selectTheme(isLight ? 'default-dark' : 'default-light')
-    track.themeSelected({theme: isLight ? 'dark' : 'light'})
   }
 
   return (

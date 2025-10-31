@@ -17,7 +17,6 @@ import {useWalletManager} from '~/features/WalletManager/context/WalletManagerPr
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {banxaTestWallet} from '~/kernel/constants'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Icon} from '~/ui/Icon'
 import {useModal} from '~/ui/Modal/context/ModalContext'
@@ -41,7 +40,6 @@ export const CreateExchangeOrderScreen = () => {
   const {scrollViewRef} = useScrollView()
 
   const strings = useStrings()
-  const {track} = useMetrics()
   const {wallet} = useSelectedWallet()
   const walletNavigation = useWalletNavigation()
   const {
@@ -128,19 +126,11 @@ export const CreateExchangeOrderScreen = () => {
 
         if (referralLink.toString() !== '') {
           Linking.openURL(referralLink.toString())
-          track.exchangeSubmitted({
-            ramp_type: orderType === 'sell' ? 'Sell' : 'Buy',
-            ada_amount: orderAmount,
-          })
           walletNavigation.navigateToTxHistory()
         }
       },
     },
   )
-
-  React.useEffect(() => {
-    track.exchangePageViewed()
-  }, [track])
 
   const handleOnExchange = () => {
     createReferralLink()
