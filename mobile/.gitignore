@@ -48,3 +48,9 @@ yarn-error.*
 
 .env.local
 .pnpm-lock.yaml
+
+# Firebase
+google-services.json
+GoogleService-Info.plist
+firebase-adminsdk-*.json
+serviceAccountKey.json

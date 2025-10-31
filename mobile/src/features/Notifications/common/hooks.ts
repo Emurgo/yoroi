@@ -1,11 +1,10 @@
-import {isString} from '@yoroi/common'
 import {useNotificationManager} from '@yoroi/notifications'
 import {
   Notifications as NotificationTypes,
   Notifications as YoroiNotifications,
 } from '@yoroi/types'
 
-import * as Notifications from 'expo-notifications'
+import messaging from '@react-native-firebase/messaging'
 import * as React from 'react'
 
 import {logger} from '~/kernel/logger/logger'
@@ -38,40 +37,63 @@ const createPushNotification = (options: {
   } as const
 }
 
-const initPushNotifications = (
+function initFCMPushNotifications(
   walletNavigation: ReturnType<typeof useWalletNavigation>,
-) => {
-  // Configure Expo notifications
-  Notifications.setNotificationHandler({
-    handleNotification: async () => ({
-      shouldShowAlert: true,
-      shouldPlaySound: true,
-      shouldSetBadge: false,
-      shouldShowBanner: true,
-      shouldShowList: true,
-    }),
+) {
+  // Request FCM permission
+  messaging()
+    .requestPermission()
+    .then((authStatus) => {
+      const enabled =
+        authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+        authStatus === messaging.AuthorizationStatus.PROVISIONAL
+
+      if (enabled) {
+        logger.info('FCM: Push notification permission enabled')
+      }
+    })
+    .catch((error) => {
+      logger.error('FCM: Error requesting permission:', error)
+    })
+
+  // Get FCM token
+  messaging()
+    .getToken()
+    .then((token) => {
+      logger.info(`FCM Device Token: ${token}`)
+      // TODO: Send this token to your backend
+    })
+    .catch((error) => {
+      logger.error('FCM: Error getting token:', error)
+    })
+
+  // Handle foreground messages
+  const unsubscribeForeground = messaging().onMessage(async (remoteMessage) => {
+    logger.info('FCM: Foreground message received', {
+      title: remoteMessage.notification?.title,
+      body: remoteMessage.notification?.body,
+    })
+
+    const {notification, data} = remoteMessage
+    if (notification?.title && notification?.body) {
+      const pushNotification = createPushNotification({
+        id: Date.now(),
+        title: notification.title,
+        description: notification.body,
+        data: data as Record<string, unknown>,
+      })
+      pushNotificationsManager.events.push(pushNotification)
+    }
   })
 
-  const notificationListener = Notifications.addNotificationReceivedListener(
-    (notification) => {
-      const {title, body, data} = notification.request.content
+  // Handle notification opened app
+  const unsubscribeOpened = messaging().onNotificationOpenedApp(
+    (remoteMessage) => {
+      logger.info('FCM: Notification opened app', {
+        title: remoteMessage.notification?.title,
+        body: remoteMessage.notification?.body,
+      })
 
-      if (isString(title) && isString(body)) {
-        const pushNotification = createPushNotification({
-          id: Date.now(),
-          title,
-          description: body,
-          data: data as Record<string, unknown>,
-        })
-        pushNotificationsManager.events.push(pushNotification)
-
-        logger.info('Expo Notification received: ', {title, body})
-      }
-    },
-  )
-
-  const responseListener =
-    Notifications.addNotificationResponseReceivedListener((_response) => {
       const id = parseNotificationId(Date.now().toString())
       triggerNotificationAction({
         manager: pushNotificationsManager,
@@ -79,11 +101,35 @@ const initPushNotifications = (
         walletNavigation,
         source: 'os',
       })
+    },
+  )
+
+  // Check if app was opened by a notification
+  messaging()
+    .getInitialNotification()
+    .then((remoteMessage) => {
+      if (remoteMessage) {
+        logger.info('FCM: App opened by notification', {
+          title: remoteMessage.notification?.title,
+          body: remoteMessage.notification?.body,
+        })
+
+        const id = parseNotificationId(Date.now().toString())
+        triggerNotificationAction({
+          manager: pushNotificationsManager,
+          id,
+          walletNavigation,
+          source: 'os',
+        })
+      }
+    })
+    .catch((error) => {
+      logger.error('FCM: Error getting initial notification:', error)
     })
 
   return () => {
-    notificationListener?.remove()
-    responseListener?.remove()
+    unsubscribeForeground()
+    unsubscribeOpened()
   }
 }
 
@@ -110,8 +156,9 @@ export const useInitNotifications = ({
     [localEnabled, manager],
   )
   React.useEffect(
-    () => (pushEnabled ? initPushNotifications(walletNavigation) : undefined),
-    [walletNavigation, pushEnabled, manager],
+    () =>
+      pushEnabled ? initFCMPushNotifications(walletNavigation) : undefined,
+    [walletNavigation, pushEnabled],
   )
   useTransactionReceivedNotifications({enabled: localEnabled})
   usePrimaryTokenPriceChangedNotification({enabled: false}) // Temporarily disabled until requested by product team
