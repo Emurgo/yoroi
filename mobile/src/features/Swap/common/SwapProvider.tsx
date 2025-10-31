@@ -739,6 +739,17 @@ export const swapReducer = (state: SwapState, action: SwapAction) => {
         draft.canSwap = false
         break
     }
+
+    // Ensure canSwap is disabled when amount is empty or zero
+    const tokenInNumeric = parseNumberFromText({
+      text: draft.tokenInInput.value,
+    }).numericValue
+    const tokenOutNumeric = parseNumberFromText({
+      text: draft.tokenOutInput.value,
+    }).numericValue
+    if (tokenInNumeric === 0 || tokenOutNumeric === 0) {
+      draft.canSwap = false
+    }
   })
 }
 
