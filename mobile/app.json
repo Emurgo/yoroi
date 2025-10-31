@@ -3,7 +3,7 @@
     "name": "Yoroi",
     "slug": "yoroi",
     "owner": "emurgo",
-    "version": "6.1.0",
+    "version": "6.1.1",
     "orientation": "portrait",
     "icon": "./assets/yoroi/icon.png",
     "userInterfaceStyle": "automatic",
