@@ -93,19 +93,7 @@ class CIP30Extension {
     value?: string,
     pagination?: Pagination,
   ): Promise<CSL.TransactionUnspentOutput[] | null> {
-    return CardanoMobileWrapped.cslScope(async (csl) => {
-      const utxos = await _getUtxos(
-        csl,
-        this.wallet,
-        this.meta,
-        value,
-        pagination,
-      )
-      if (utxos === null) return null
-      return utxos.map((u) =>
-        CardanoMobile.TransactionUnspentOutput.fromHex(u.toHex()),
-      )
-    })
+    return _getUtxos(CardanoMobile, this.wallet, this.meta, value, pagination)
   }
 
   async getCollateral(
@@ -195,12 +183,13 @@ class CIP30Extension {
             )
 
       const signingKey = createRawTxSigningKey(rootKey, signingPath, csl)
+      const publicKeyBytes = signingKey.toPublic().asBytes()
       const coseSign1 = await cip8.sign(
         Buffer.from(normalisedAddress.toHex(), 'hex'),
         signingKey,
         payloadInBytes,
       )
-      const key = await cip8.makeCip8Key(signingKey.toPublic().asBytes())
+      const key = await cip8.makeCip8Key(publicKeyBytes)
 
       return {
         signature: Buffer.from(coseSign1.toBytes()).toString('hex'),
