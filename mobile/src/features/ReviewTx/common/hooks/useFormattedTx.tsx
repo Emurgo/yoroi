@@ -309,15 +309,15 @@ const deriveAddress = (address: string, chainId: number) => {
 }
 
 const getAddressKind = (addressBech32: string): CredKind | null => {
-  try {
-    return CardanoMobileWrapped.cslScope((csl) => {
+  return CardanoMobileWrapped.cslScope((csl) => {
+    try {
       const address = csl.Address.fromBech32(addressBech32)
       const addressKind = address.paymentCred()?.kind()
       return addressKind ?? null
-    })
-  } catch (e) {
-    return null
-  }
+    } catch (e) {
+      return null
+    }
+  })
 }
 
 export const useUtxos = (inputs: TransactionInputs, wallet: YoroiWallet) => {
