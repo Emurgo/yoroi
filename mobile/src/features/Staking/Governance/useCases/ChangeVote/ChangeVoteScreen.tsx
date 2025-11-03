@@ -16,6 +16,7 @@ import {ScrollView} from 'react-native-gesture-handler'
 import {useRemoteConfig} from '~/features/RemoteConfig/hooks/useRemoteConfig'
 import {LearnMoreLink} from '~/features/Staking/Governance/common/LearnMoreLink/LearnMoreLink'
 import {YoroiRecordLink} from '~/features/Staking/Governance/common/YoroiRecordLink/YoroiRecordLink'
+import {useCreateGovernanceTx} from '~/features/Staking/hooks/useCreateGovernanceTx'
 import {useStakingKey} from '~/features/Staking/hooks/useStakingKey'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
@@ -23,8 +24,10 @@ import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Space} from '~/ui/Space/Space'
 
 import {Action} from '../../common/Action/Action'
-import {mapStakingKeyStateToGovernanceAction} from '../../common/helpers'
-import {useGovernanceTransaction} from '../../common/useGovernanceTransaction'
+import {
+  mapStakingKeyStateToGovernanceAction,
+  useGovernanceActions,
+} from '../../common/helpers'
 import {EnterDrepIdModal} from '../EnterDrepIdModal/EnterDrepIdModal'
 
 export const ChangeVoteScreen = () => {
@@ -47,10 +50,38 @@ export const ChangeVoteScreen = () => {
     | 'delegate-not-yoroi'
     | null
   >(null)
-  const governanceTransaction = useGovernanceTransaction(wallet)
+  const governanceActions = useGovernanceActions()
 
   const createDelegationCertificate = useDelegationCertificate()
   const createVotingCertificate = useVotingCertificate()
+
+  const createGovernanceTxMutation = useCreateGovernanceTx(wallet)
+  const [pendingDelegateOptions, setPendingDelegateOptions] = React.useState<{
+    hash: string
+    type: 'key' | 'script'
+    CIP105: boolean
+  } | null>(null)
+
+  React.useEffect(() => {
+    if (
+      pendingDelegateOptions &&
+      createGovernanceTxMutation.value &&
+      !createGovernanceTxMutation.isPending
+    ) {
+      governanceActions.handleDelegateAction({
+        unsignedTx: createGovernanceTxMutation.value,
+        hash: pendingDelegateOptions.hash,
+        type: pendingDelegateOptions.type,
+        CIP105: pendingDelegateOptions.CIP105,
+      })
+      setPendingDelegateOptions(null)
+    }
+  }, [
+    pendingDelegateOptions,
+    createGovernanceTxMutation.value,
+    createGovernanceTxMutation.isPending,
+    governanceActions,
+  ])
 
   if (!isNonNullable(action)) throw new Error('User has never voted')
 
@@ -73,80 +104,102 @@ export const ChangeVoteScreen = () => {
   }
 
   const handleDelegate = () => {
-    openDRepIdModal((options) => {
+    openDRepIdModal(async (options) => {
       const stakingKey = wallet.getStakingKey()
 
       setPendingVote('delegate-not-yoroi')
 
-      const certificate = createDelegationCertificate({
+      const certificate = await createDelegationCertificate({
         hash: options.hash,
         type: options.type,
         stakingKey,
       })
 
-      governanceTransaction.submitDelegation(
-        options,
-        [certificate],
-        meta.addressMode,
-      )
+      setPendingDelegateOptions({
+        hash: options.hash,
+        type: options.type,
+        CIP105: options.CIP105,
+      })
+
+      createGovernanceTxMutation.resolve({
+        certificates: [certificate],
+        addressMode: meta.addressMode,
+      })
     })
   }
 
-  const handleDelegateToYoroi = () => {
+  const handleDelegateToYoroi = async () => {
     const stakingKey = wallet.getStakingKey()
 
     setPendingVote('delegate-to-yoroi')
 
-    const certificate = createDelegationCertificate({
+    const certificate = await createDelegationCertificate({
       hash: GOVERNANCE_YOROI_DREP_ID_HEX,
       type: 'key',
       stakingKey,
     })
 
-    const options = {
-      hash: GOVERNANCE_YOROI_DREP_ID_HEX,
-      type: 'key' as const,
-      CIP105: false,
+    createGovernanceTxMutation.resolve({
+      certificates: [certificate],
+      addressMode: meta.addressMode,
+    })
+
+    if (createGovernanceTxMutation.value) {
+      governanceActions.handleDelegateAction({
+        unsignedTx: createGovernanceTxMutation.value,
+        hash: GOVERNANCE_YOROI_DREP_ID_HEX,
+        type: 'key',
+        CIP105: false,
+      })
     }
-    governanceTransaction.submitDelegation(
-      options,
-      [certificate],
-      meta.addressMode,
-    )
   }
 
-  const handleAbstain = () => {
+  const handleAbstain = async () => {
     const stakingKey = wallet.getStakingKey()
     setPendingVote('abstain')
 
-    const certificate = createVotingCertificate({
+    const certificate = await createVotingCertificate({
       vote: 'abstain',
       stakingKey,
     })
 
-    governanceTransaction.submitVote('abstain', [certificate], meta.addressMode)
+    createGovernanceTxMutation.resolve({
+      certificates: [certificate],
+      addressMode: meta.addressMode,
+    })
+
+    if (createGovernanceTxMutation.value) {
+      governanceActions.handleAbstainAction({
+        unsignedTx: createGovernanceTxMutation.value,
+      })
+    }
   }
 
-  const handleNoConfidence = () => {
+  const handleNoConfidence = async () => {
     const stakingKey = wallet.getStakingKey()
     setPendingVote('no-confidence')
 
-    const certificate = createVotingCertificate({
+    const certificate = await createVotingCertificate({
       vote: 'no-confidence',
       stakingKey,
     })
 
-    governanceTransaction.submitVote(
-      'no-confidence',
-      [certificate],
-      meta.addressMode,
-    )
+    createGovernanceTxMutation.resolve({
+      certificates: [certificate],
+      addressMode: meta.addressMode,
+    })
+
+    if (createGovernanceTxMutation.value) {
+      governanceActions.handleNoConfidenceAction({
+        unsignedTx: createGovernanceTxMutation.value,
+      })
+    }
   }
 
   const voteKind = action?.kind
   const voteHash =
     voteKind === 'delegate' && action != null ? action.hash : undefined
-  const isCreatingTx = governanceTransaction.isCreatingTx
+  const isCreatingTx = createGovernanceTxMutation.isPending
   const isDelegatingNotToYoroiDrep =
     voteKind === 'delegate' && voteHash !== GOVERNANCE_YOROI_DREP_ID_HEX
 

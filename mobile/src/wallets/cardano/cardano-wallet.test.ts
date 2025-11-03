@@ -5,6 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import {getWalletFactory} from '~/features/WalletManager/network-manager/get-wallet-factory'
 
 import {keyManager} from './key-manager/key-manager'
+import {CardanoMobileWrapped} from './wrappedCsl'
 
 describe('CardanoWallet', () => {
   afterEach(() => AsyncStorage.clear())
@@ -21,10 +22,13 @@ describe('CardanoWallet', () => {
     const id = '261c7e0f-dd72-490c-8ce9-6714b512b969'
 
     // keys
-    const {accountPubKeyHex} = keyManager('cardano-cip1852')({
-      mnemonic,
-      accountVisual,
-    })
+    const {accountPubKeyHex} = CardanoMobileWrapped.cslScope((csl) =>
+      keyManager('cardano-cip1852')({
+        csl,
+        mnemonic,
+        accountVisual,
+      }),
+    )
 
     const wallet = await ShelleyWalletPreprod.build({
       id,

@@ -1,5 +1,5 @@
 import {isNonNullable} from '@yoroi/common'
-import {useGovernance, useIsValidDRepID} from '@yoroi/staking'
+import {parseDrepId, useIsValidDRepID} from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
@@ -11,6 +11,7 @@ import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {Space} from '~/ui/Space/Space'
 import {TextInput} from '~/ui/TextInput/TextInput'
+import {CardanoMobile} from '~/wallets/wallets'
 
 export type Props = {
   onSubmit?: (options: {
@@ -27,19 +28,15 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
   const {atoms: ta, palette: p} = useTheme()
   const [drepId, setDrepId] = React.useState('')
   const {closeModal} = useModal()
-  const {manager} = useGovernance()
 
   const {error, isFetched, isFetching} = useIsValidDRepID(drepId, {
     retry: false,
     enabled: drepId.length > 0,
   })
 
-  const handleOnPress = async () => {
+  const handleOnPress = () => {
     try {
-      const {hash, type, isValid} = await manager.validateAndParseDRepID(drepId)
-      if (!isValid) {
-        throw new Error('Invalid DRep ID')
-      }
+      const {hash, type} = parseDrepId(drepId, CardanoMobile)
       onSubmit?.({hash, type, CIP105: !error && drepId.length === 56})
       closeModal()
     } catch (e) {

@@ -121,12 +121,14 @@ class CIP30Extension {
 
       if (canUseCurrentCollateral && currentCollateral.utxo) {
         const utxo = cardanoUtxoFromRemoteFormat(
+          csl,
           rawUtxoToRemoteUnspentOutput(currentCollateral.utxo),
         )
         return [recreateTransactionUnspentOutput(utxo)]
       }
 
       const oneUtxoCollateral = _drawCollateralInOneUtxo(
+        csl,
         this.wallet,
         asQuantity(valueNum),
       )
@@ -283,22 +285,21 @@ const remoteAssetToMultiasset = (remoteAssets: UtxoAsset[]): CSL.MultiAsset => {
   return multiasset
 }
 const cardanoUtxoFromRemoteFormat = (
+  csl: WasmModuleProxy,
   u: RemoteUnspentOutput,
 ): CSL.TransactionUnspentOutput => {
-  return CardanoMobileWrapped.cslScope((csl) => {
-    const input = csl.TransactionInput.new(
-      csl.TransactionHash.fromHex(u.txHash),
-      u.txIndex,
-    )
-    const value = csl.Value.new(csl.BigNum.fromStr(u.amount))
-    if ((u.assets || []).length > 0) {
-      value.setMultiasset(remoteAssetToMultiasset([...u.assets]))
-    }
-    const receiver = csl.Address.fromBech32(u.receiver)
-    if (!receiver) throw new Error('Invalid receiver')
-    const output = csl.TransactionOutput.new(receiver, value)
-    return csl.TransactionUnspentOutput.new(input, output)
-  })
+  const input = csl.TransactionInput.new(
+    csl.TransactionHash.fromHex(u.txHash),
+    u.txIndex,
+  )
+  const value = csl.Value.new(csl.BigNum.fromStr(u.amount))
+  if ((u.assets || []).length > 0) {
+    value.setMultiasset(remoteAssetToMultiasset([...u.assets]))
+  }
+  const receiver = csl.Address.fromBech32(u.receiver)
+  if (!receiver) throw new Error('Invalid receiver')
+  const output = csl.TransactionOutput.new(receiver, value)
+  return csl.TransactionUnspentOutput.new(input, output)
 }
 
 const _getBalance = (
@@ -359,7 +360,7 @@ const _getUtxos = async (
 
   if (valueStr.length === 0) {
     const validUtxos = wallet.utxos.map((o) =>
-      cardanoUtxoFromRemoteFormat(rawUtxoToRemoteUnspentOutput(o)),
+      cardanoUtxoFromRemoteFormat(csl, rawUtxoToRemoteUnspentOutput(o)),
     )
     return paginate(validUtxos, pagination)
   }
@@ -417,7 +418,7 @@ export const _getRequiredUtxos = async (
       unsignedTx,
       remoteUnspentOutputs,
     )
-    return requiredUtxos.map((o) => cardanoUtxoFromRemoteFormat(o))
+    return requiredUtxos.map((o) => cardanoUtxoFromRemoteFormat(csl, o))
   } catch (e) {
     return null
   }
@@ -465,6 +466,7 @@ const paginate = <T>(
 }
 
 const _drawCollateralInOneUtxo = (
+  csl: WasmModuleProxy,
   wallet: YoroiWallet,
   quantity: Balance.Quantity,
 ) => {
@@ -479,6 +481,7 @@ const _drawCollateralInOneUtxo = (
   const collateralUtxo = utxos.findById(possibleCollateralId)
   if (!collateralUtxo) return null
   return cardanoUtxoFromRemoteFormat(
+    csl,
     rawUtxoToRemoteUnspentOutput(collateralUtxo),
   )
 }
