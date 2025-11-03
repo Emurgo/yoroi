@@ -93,7 +93,17 @@ class CIP30Extension {
     value?: string,
     pagination?: Pagination,
   ): Promise<CSL.TransactionUnspentOutput[] | null> {
-    return _getUtxos(CardanoMobile, this.wallet, this.meta, value, pagination)
+    const utxos = await _getUtxos(
+      CardanoMobile,
+      this.wallet,
+      this.meta,
+      value,
+      pagination,
+    )
+    if (utxos === null) return null
+    return utxos.map((u) =>
+      CardanoMobile.TransactionUnspentOutput.fromHex(u.toHex()),
+    )
   }
 
   async getCollateral(
