@@ -60,7 +60,7 @@ class CIP30Extension {
         this.wallet.portfolioPrimaryTokenInfo.id,
         csl,
       )
-      return copyFromCSL(csl.Value, value)
+      return copyFromCSL(CardanoMobile.Value, value)
     })
   }
 
@@ -102,7 +102,9 @@ class CIP30Extension {
         pagination,
       )
       if (utxos === null) return null
-      return utxos.map((u) => csl.TransactionUnspentOutput.fromHex(u.toHex()))
+      return utxos.map((u) =>
+        CardanoMobile.TransactionUnspentOutput.fromHex(u.toHex()),
+      )
     })
   }
 

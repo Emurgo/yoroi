@@ -19,9 +19,10 @@ describe('BIP39', () => {
   })
 
   it('correctly derives wallet root key', async () => {
-    const rootKey = CardanoMobileWrapped.cslScope((csl) =>
-      generateWalletRootKey(mnemonic, csl),
-    )
-    expect(Buffer.from(rootKey.asBytes()).toString('hex')).toEqual(expectedKey)
+    const rootKeyBytes = CardanoMobileWrapped.cslScope((csl) => {
+      const rootKey = generateWalletRootKey(mnemonic, csl)
+      return rootKey.asBytes()
+    })
+    expect(Buffer.from(rootKeyBytes).toString('hex')).toEqual(expectedKey)
   })
 })

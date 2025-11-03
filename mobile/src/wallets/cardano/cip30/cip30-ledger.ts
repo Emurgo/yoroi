@@ -10,12 +10,13 @@ import {createSignedLedgerTxFromCbor} from '@emurgo/yoroi-lib'
 import {normalizeToAddress} from '@emurgo/yoroi-lib/dist/internals/utils/addresses'
 
 import {toLedgerSignRequest} from '~/features/Discover/common/ledger'
+import {CardanoMobile} from '~/wallets/wallets'
 
 import {buildCoseSign1FromSignature, makeCip8Key} from '../cip8/cip8'
 import {assertHasAllSigners} from '../common/signatureUtils'
 import {signMessageWithLedger, signTxWithLedger} from '../hw/hw'
 import {YoroiWallet} from '../types'
-import {getAddressedUtxos, getHexAddressingMap} from '../utils'
+import {copyFromCSL, getAddressedUtxos, getHexAddressingMap} from '../utils'
 import {CardanoMobileWrapped} from '../wrappedCsl'
 
 export const cip30LedgerExtensionMaker = (
@@ -120,7 +121,8 @@ class CIP30LedgerExtension {
         implementationConfig.derivations.base.harden.purpose,
         this.wallet.publicKeyHex,
       )
-      return csl.Transaction.fromBytes(bytes)
+      const tx = csl.Transaction.fromBytes(bytes)
+      return copyFromCSL(CardanoMobile.Transaction, tx)
     })
   }
 }
