@@ -73,6 +73,15 @@ export const WalletManagerProvider: React.FC<
   )
 
   React.useEffect(() => {
+    // Initial hydration to ensure wallet metadata is available immediately
+    // This prevents race conditions where navigation checks for wallets
+    // before they're loaded from storage
+    walletManager.hydrate().catch((error) => {
+      logger.error('WalletManagerProvider: initial hydration failed', {error})
+    })
+  }, [walletManager])
+
+  React.useEffect(() => {
     // sync, it doesn't wait for the login
     walletManager.startSyncing()
     return () => walletManager.stopSyncing()
