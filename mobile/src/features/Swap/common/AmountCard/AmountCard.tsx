@@ -36,7 +36,6 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
 
   // Only show errors for input direction (insufficient balance, etc.)
   const error = direction === 'in' ? amount.error : null
-  const touched = amount.isTouched
 
   // Get balance for Max button
   const balance = info ? balances.records.get(info.id)?.quantity : undefined
@@ -146,7 +145,14 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
               Platform.OS === 'ios' ? {lineHeight: 22} : {},
             ]}
             underlineColorAndroid="transparent"
-            editable={touched}
+            editable={Boolean(info)}
+            onPressIn={(e) => {
+              if (info) {
+                e.stopPropagation()
+              } else {
+                navigateToTokenSelection()
+              }
+            }}
             ref={
               direction === 'in'
                 ? swapForm.tokenInInputRef
