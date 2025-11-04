@@ -2,6 +2,10 @@ import {Chain} from '@yoroi/types'
 
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
+import {getWalletFactory} from '~/features/WalletManager/network-manager/get-wallet-factory'
+
+import {keyManager} from './key-manager/key-manager'
+
 // Mock the global networkManagers before any wallet factory code imports it
 // This prevents real network calls when wallets are built
 jest.mock('~/features/WalletManager/common/constants', () => {
@@ -25,10 +29,6 @@ jest.mock('~/features/WalletManager/common/constants', () => {
     networkManagers,
   }
 })
-
-import {getWalletFactory} from '~/features/WalletManager/network-manager/get-wallet-factory'
-
-import {keyManager} from './key-manager/key-manager'
 
 describe('CardanoWallet', () => {
   afterEach(() => AsyncStorage.clear())
