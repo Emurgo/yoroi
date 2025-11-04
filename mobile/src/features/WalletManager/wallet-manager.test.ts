@@ -1,20 +1,38 @@
-import {buildNetworkManagers} from '@yoroi/blockchains'
 import {hex, parseSafe} from '@yoroi/common'
 
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import {decryptData} from '~/kernel/crypto/decrypt-data'
-import {logger} from '~/kernel/logger/logger'
 import {rootStorage} from '~/kernel/storage/storages'
 
-import {buildPortfolioTokenManagers} from '../Portfolio/common/helpers/build-token-managers'
+import {networkManagers} from './common/constants'
 import {WalletManager} from './wallet-manager'
 
-describe('walletManager', () => {
-  // TODO: should be mocked
-  const {tokenManagers} = buildPortfolioTokenManagers()
-  const networkManagers = buildNetworkManagers({tokenManagers, logger})
+// Mock the global networkManagers before any wallet factory code imports it
+// This prevents real network calls when wallets are created/loaded
+jest.mock('./common/constants', () => {
+  const actual = jest.requireActual('./common/constants')
+  const {buildNetworkManagers} = jest.requireActual('@yoroi/blockchains')
+  const {tokenManagers} = jest
+    .requireActual('../Portfolio/common/helpers/build-token-managers')
+    .buildPortfolioTokenManagers()
+  const mockApiMaker = jest.fn().mockReturnValue({
+    getProtocolParams: jest.fn().mockResolvedValue({}),
+    getBestBlock: jest.fn().mockResolvedValue({}),
+    getUtxoData: jest.fn().mockResolvedValue({}),
+  })
+  const networkManagers = buildNetworkManagers({
+    tokenManagers,
+    logger: actual.logger,
+    apiMaker: mockApiMaker,
+  })
+  return {
+    ...actual,
+    networkManagers,
+  }
+})
 
+describe('walletManager', () => {
   beforeEach(() => {
     AsyncStorage.clear()
   })
@@ -129,7 +147,7 @@ const snapshot = async () => {
 
 const getWalletMeta = (id: string, snapshot: Record<string, unknown>) =>
   snapshot[`/wallet/${id}`]
-const getXPriv = (id: string, snapshot: Record<string, string>) =>
-  hex(snapshot[`/keystore/${id}-MASTER_PASSWORD`] ?? '')
-const getXPub = (id: string, snapshot: Record<string, string>) =>
-  hex(snapshot[`/keystore/${id}/0`] ?? '')
+const getXPriv = (id: string, snapshot: Record<string, unknown>) =>
+  hex(String(snapshot[`/keystore/${id}-MASTER_PASSWORD`] ?? ''))
+const getXPub = (id: string, snapshot: Record<string, unknown>) =>
+  hex(String(snapshot[`/keystore/${id}/0`] ?? ''))
