@@ -32,6 +32,7 @@ import {PairingProvider} from './src/features/Pairing/context/PairingProvider'
 import {SearchProvider} from './src/features/Search/SearchContext'
 import {CurrencyProvider} from './src/features/Settings/context/CurrencyProvider'
 import {AutomaticWalletOpenerProvider} from './src/features/WalletManager/context/AutomaticWalletOpeningProvider'
+import {WalletManagerHydrationWrapper} from './src/features/WalletManager/context/WalletManagerHydrationWrapper'
 import {WalletManagerProvider} from './src/features/WalletManager/context/WalletManagerProvider'
 import {walletManager} from './src/features/WalletManager/wallet-manager'
 import {useFonts} from './src/hooks/useFonts'
@@ -91,29 +92,31 @@ function BusinessShell({children}: React.PropsWithChildren) {
     >
       <SearchProvider>
         <PairingProvider currencyStorageKeyManager={currencyStorageKeyManager}>
-          <WalletManagerProvider walletManager={walletManager}>
-            <PortfolioTokenActivityProvider>
-              <AutomaticWalletOpenerProvider>
-                <TransferProvider>
-                  <ReviewTxProvider>
-                    <SetupWalletProvider>
-                      <BrowserProvider>
-                        <LinksProvider>
-                          <YoroiNotificationManager>
-                            <CurrencyProvider>
-                              <CatalystProvider manager={catalystManager}>
-                                <ReceiveProvider>{children}</ReceiveProvider>
-                              </CatalystProvider>
-                            </CurrencyProvider>
-                          </YoroiNotificationManager>
-                        </LinksProvider>
-                      </BrowserProvider>
-                    </SetupWalletProvider>
-                  </ReviewTxProvider>
-                </TransferProvider>
-              </AutomaticWalletOpenerProvider>
-            </PortfolioTokenActivityProvider>
-          </WalletManagerProvider>
+          <WalletManagerHydrationWrapper walletManager={walletManager}>
+            <WalletManagerProvider walletManager={walletManager}>
+              <PortfolioTokenActivityProvider>
+                <AutomaticWalletOpenerProvider>
+                  <TransferProvider>
+                    <ReviewTxProvider>
+                      <SetupWalletProvider>
+                        <BrowserProvider>
+                          <LinksProvider>
+                            <YoroiNotificationManager>
+                              <CurrencyProvider>
+                                <CatalystProvider manager={catalystManager}>
+                                  <ReceiveProvider>{children}</ReceiveProvider>
+                                </CatalystProvider>
+                              </CurrencyProvider>
+                            </YoroiNotificationManager>
+                          </LinksProvider>
+                        </BrowserProvider>
+                      </SetupWalletProvider>
+                    </ReviewTxProvider>
+                  </TransferProvider>
+                </AutomaticWalletOpenerProvider>
+              </PortfolioTokenActivityProvider>
+            </WalletManagerProvider>
+          </WalletManagerHydrationWrapper>
         </PairingProvider>
       </SearchProvider>
     </AuthProvider>
