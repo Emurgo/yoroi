@@ -2,10 +2,12 @@ import {infoFilterByName} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 
-import React, {ReactNode} from 'react'
+import * as React from 'react'
 import {ScrollView, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {useAnalyticsTracking} from '~/features/Analytics/hooks/useAnalyticsTracking'
+import {AnalyticsEventEnum} from '~/features/Analytics/types/analytics-event-enum'
 import {usePortfolioBalances} from '~/features/Portfolio/common/hooks/usePortfolioBalances'
 import {useNavigateTo} from '~/features/Portfolio/common/navigation'
 import {MediaGallery} from '~/features/Portfolio/ui/MediaGallery/MediaGallery'
@@ -22,6 +24,13 @@ export const ListMediaGalleryScreen = () => {
   const strings = useStrings()
   const {wallet} = useSelectedWallet()
   const balances = usePortfolioBalances({wallet})
+  const {trackEvent} = useAnalyticsTracking()
+
+  React.useEffect(() => {
+    trackEvent(AnalyticsEventEnum.NFTGalleryPageViewed, {
+      nft_count: balances.nfts.length,
+    })
+  }, [trackEvent, balances.nfts.length])
 
   // use case: search nfts
   useSearchOnNavBar({
@@ -100,7 +109,7 @@ export const ListMediaGalleryScreen = () => {
   )
 }
 
-const Wrapper = ({children}: {children: ReactNode}) => {
+const Wrapper = ({children}: React.PropsWithChildren) => {
   const {atoms: ta} = useTheme()
   return (
     <SafeAreaView
