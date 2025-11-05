@@ -160,8 +160,12 @@ const apiManagerMaker = (
             merged[key] = order
 
           // Make sure we have Dexhunter's customId in case we need to cancel the order with them
-          if (order.customId && merged[key])
-            merged[key].customId = order.customId
+          if (
+            order.customId &&
+            merged[key] &&
+            merged[key].customId === undefined
+          )
+            merged[key] = {...merged[key], customId: order.customId}
         }
 
         responses
