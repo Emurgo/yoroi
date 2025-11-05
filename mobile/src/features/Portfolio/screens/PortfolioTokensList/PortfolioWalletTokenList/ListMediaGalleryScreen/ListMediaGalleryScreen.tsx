@@ -109,7 +109,7 @@ export const ListMediaGalleryScreen = () => {
   )
 }
 
-const Wrapper = ({children}: {children: React.ReactNode}) => {
+const Wrapper = ({children}: React.PropsWithChildren) => {
   const {atoms: ta} = useTheme()
   return (
     <SafeAreaView
