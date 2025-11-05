@@ -4,9 +4,9 @@ import {
   Platform,
   KeyboardAvoidingView as RNKeyboardAvoidingView,
 } from 'react-native'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
-import { useIsKeyboardOpen } from '~/hooks/useIsKeyboardOpen'
+import {useIsKeyboardOpen} from '~/hooks/useIsKeyboardOpen'
 
 export const KeyboardAvoidingView = ({
   children,
