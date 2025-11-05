@@ -239,6 +239,6 @@ const getTransactionInfoDetails = (
 }
 
 const formatAssets = (quantity: string, name: string) => {
-  const text = `${quantity} ${name}`
-  return text.length > 15 ? `${text.slice(0, 15)}...` : text
+  const truncatedName = name.length > 15 ? `${name.slice(0, 15)}...` : name
+  return `${quantity} ${truncatedName}`
 }
