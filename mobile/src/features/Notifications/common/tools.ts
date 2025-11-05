@@ -29,10 +29,6 @@ export const triggerNotificationsPermissionModal = async () => {
     }
   }
 
-  if (existingStatus === 'denied' && Platform.OS === 'ios') {
-    await Linking.openSettings()
-  }
-
   if (finalStatus === 'granted') {
     try {
       await messaging().registerDeviceForRemoteMessages()
