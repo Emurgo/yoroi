@@ -37,4 +37,4 @@ export const KeyboardAvoidingView = ({
   )
 }
 
-const defaultKeyboardOffset = Platform.OS === 'ios' ? 70 : 86
+const defaultKeyboardOffset = 70
