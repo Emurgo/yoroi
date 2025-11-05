@@ -6,6 +6,30 @@ import {getWalletFactory} from '~/features/WalletManager/network-manager/get-wal
 
 import {keyManager} from './key-manager/key-manager'
 
+// Mock the global networkManagers before any wallet factory code imports it
+// This prevents real network calls when wallets are built
+jest.mock('~/features/WalletManager/common/constants', () => {
+  const actual = jest.requireActual('~/features/WalletManager/common/constants')
+  const {buildNetworkManagers} = jest.requireActual('@yoroi/blockchains')
+  const {tokenManagers} = jest
+    .requireActual('~/features/Portfolio/common/helpers/build-token-managers')
+    .buildPortfolioTokenManagers()
+  const mockApiMaker = jest.fn().mockReturnValue({
+    getProtocolParams: jest.fn().mockResolvedValue({}),
+    getBestBlock: jest.fn().mockResolvedValue({}),
+    getUtxoData: jest.fn().mockResolvedValue({}),
+  })
+  const networkManagers = buildNetworkManagers({
+    tokenManagers,
+    logger: actual.logger,
+    apiMaker: mockApiMaker,
+  })
+  return {
+    ...actual,
+    networkManagers,
+  }
+})
+
 describe('CardanoWallet', () => {
   afterEach(() => AsyncStorage.clear())
 
