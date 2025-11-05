@@ -68,7 +68,31 @@ export const minswapApiMaker = (
         data: options.body,
       })
 
-      if (isLeft(response)) return response
+      if (isLeft(response)) {
+        // Normalize error message if it's undefined
+        const error = response.error
+        if (!error.message) {
+          const messageFromResponseData =
+            typeof error.responseData === 'object' &&
+            error.responseData != null &&
+            'message' in error.responseData &&
+            typeof error.responseData.message === 'string'
+              ? error.responseData.message
+              : 'Unknown error'
+
+          return freeze(
+            {
+              ...response,
+              error: {
+                ...error,
+                message: messageFromResponseData,
+              },
+            },
+            true,
+          )
+        }
+        return response
+      }
 
       return freeze(
         {
