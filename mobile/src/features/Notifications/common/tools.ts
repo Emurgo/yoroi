@@ -21,12 +21,12 @@ export const triggerNotificationsPermissionModal = async () => {
   if (existingStatus !== 'granted') {
     const result = await Notifications.requestPermissionsAsync()
     finalStatus = result.status
+  }
 
-    if (Platform.OS === 'android' && finalStatus === 'granted') {
-      await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
-      )
-    }
+  if (Platform.OS === 'android' && finalStatus === 'granted') {
+    await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
+    )
   }
 
   if (finalStatus === 'granted') {
