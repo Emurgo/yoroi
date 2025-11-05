@@ -5,6 +5,7 @@ import {
   Notifications as YoroiNotifications,
 } from '@yoroi/types'
 
+import messaging from '@react-native-firebase/messaging'
 import * as Notifications from 'expo-notifications'
 import * as React from 'react'
 
@@ -41,7 +42,6 @@ const createPushNotification = (options: {
 const initPushNotifications = (
   walletNavigation: ReturnType<typeof useWalletNavigation>,
 ) => {
-  // Configure Expo notifications
   Notifications.setNotificationHandler({
     handleNotification: async () => ({
       shouldShowAlert: true,
@@ -52,9 +52,34 @@ const initPushNotifications = (
     }),
   })
 
-  const notificationListener = Notifications.addNotificationReceivedListener(
-    (notification) => {
-      const {title, body, data} = notification.request.content
+  const registerFirebaseIfPermissionsGranted = async () => {
+    try {
+      const {status} = await Notifications.getPermissionsAsync()
+      if (status === 'granted') {
+        await messaging().registerDeviceForRemoteMessages()
+        await messaging().requestPermission()
+      }
+    } catch (error) {
+      logger.error('Firebase registration failed', {error})
+    }
+  }
+
+  registerFirebaseIfPermissionsGranted()
+
+  const firebaseForegroundUnsubscribe = messaging().onMessage(
+    async (remoteMessage) => {
+      const {status} = await Notifications.getPermissionsAsync()
+
+      if (status !== 'granted') {
+        logger.info('Firebase message received but notifications are disabled')
+        return
+      }
+
+      console.log('Firebase message received in foreground:', remoteMessage)
+
+      const title = remoteMessage.notification?.title
+      const body = remoteMessage.notification?.body
+      const data = remoteMessage.data
 
       if (isString(title) && isString(body)) {
         const pushNotification = createPushNotification({
@@ -63,9 +88,22 @@ const initPushNotifications = (
           description: body,
           data: data as Record<string, unknown>,
         })
-        pushNotificationsManager.events.push(pushNotification)
+        await pushNotificationsManager.events.push(pushNotification)
 
-        logger.info('Expo Notification received: ', {title, body})
+        logger.info(
+          'Firebase campaign notification added to Yoroi notifications: ',
+          {
+            title,
+            body,
+            data,
+            messageId: remoteMessage.messageId,
+          },
+        )
+      } else if (data) {
+        logger.info('Firebase data-only message received: ', {
+          data,
+          messageId: remoteMessage.messageId,
+        })
       }
     },
   )
@@ -82,7 +120,7 @@ const initPushNotifications = (
     })
 
   return () => {
-    notificationListener?.remove()
+    firebaseForegroundUnsubscribe()
     responseListener?.remove()
   }
 }

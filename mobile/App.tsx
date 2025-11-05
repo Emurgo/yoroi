@@ -9,7 +9,6 @@ import {
 import {ThemeProvider} from '@yoroi/theme'
 import {TransferProvider} from '@yoroi/transfer'
 
-import messaging from '@react-native-firebase/messaging'
 import * as Sentry from '@sentry/react-native'
 import * as Updates from 'expo-updates'
 import * as React from 'react'
@@ -136,18 +135,6 @@ async function checkForUpdates() {
 export default Sentry.wrap(function App() {
   React.useEffect(() => {
     if (!isDev) checkForUpdates()
-  }, [])
-
-  React.useEffect(() => {
-    const register = async () => {
-      try {
-        await messaging().registerDeviceForRemoteMessages()
-        await messaging().requestPermission()
-        const token = await messaging().getToken()
-        console.log('FCM token:', token)
-      } catch {}
-    }
-    register()
   }, [])
 
   return (

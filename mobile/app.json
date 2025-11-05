@@ -103,7 +103,7 @@
     "web": {
       "favicon": "./assets/yoroi/favicon.png"
     },
-    "plugins": [
+      "plugins": [
       "@react-native-firebase/app",
       "@react-native-firebase/messaging",
       "expo-android-keyboard-fix",
@@ -131,12 +131,7 @@
           "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location for Bluetooth scanning"
         }
       ],
-      [
-        "expo-notifications",
-        {
-          "color": "#ffffff"
-        }
-      ],
+      "expo-notifications",
       [
         "expo-build-properties",
         {
