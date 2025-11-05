@@ -23,7 +23,6 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
   const navigateTo = useNavigateTo()
   const {wallet} = useSelectedWallet()
   const balances = usePortfolioBalances({wallet})
-  const [isFocused, setIsFocused] = React.useState(false)
 
   const amount =
     direction === 'in' ? swapForm.tokenInInput : swapForm.tokenOutInput
@@ -37,7 +36,6 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
 
   // Only show errors for input direction (insufficient balance, etc.)
   const error = direction === 'in' ? amount.error : null
-  const touched = amount.isTouched
 
   // Get balance for Max button
   const balance = info ? balances.records.get(info.id)?.quantity : undefined
@@ -85,7 +83,10 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
   }
 
   return (
-    <View style={[a.rounded_sm, a.p_lg, a.gap_lg, ta.bg_color_min]}>
+    <Pressable
+      style={[a.rounded_sm, a.p_lg, a.gap_lg, ta.bg_color_min]}
+      onPress={() => (info ? focusInput() : navigateToTokenSelection())}
+    >
       <Text style={[a.body_2_md_medium, {color: p.text_gray_medium}]}>
         {direction === 'in' ? strings.swap.from : strings.swap.to}
       </Text>
@@ -104,7 +105,10 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
       <View style={[a.flex_row, a.justify_between]}>
         <Pressable
           style={[a.flex_row, a.align_center]}
-          onPress={navigateToTokenSelection}
+          onPress={(e) => {
+            e.stopPropagation()
+            navigateToTokenSelection()
+          }}
         >
           <TokenInfoIcon info={info} size="md" />
 
@@ -122,10 +126,7 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
           <Icon.Chevron direction="down" size={24} color={p.gray_max} />
         </Pressable>
 
-        <Pressable
-          style={[a.flex_1, a.flex_row, a.justify_end, a.align_center]}
-          onPress={() => (info ? focusInput() : navigateToTokenSelection())}
-        >
+        <View style={[a.flex_1, a.flex_row, a.justify_end, a.align_center]}>
           <TextInput
             keyboardType="numeric"
             autoComplete="off"
@@ -134,25 +135,30 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
             placeholderTextColor={p.text_gray_medium}
             onChangeText={handleAmountChange}
             allowFontScaling
-            selectionColor={isFocused ? p.input_selected : p.black_static}
+            selectionColor={p.input_selected}
             style={[
               a.py_0,
               a.heading_3_medium,
               a.text_right,
+              a.flex_1,
               {color: p.gray_900},
               Platform.OS === 'ios' ? {lineHeight: 22} : {},
             ]}
             underlineColorAndroid="transparent"
-            editable={touched}
-            onFocus={() => setIsFocused(true)}
-            onBlur={() => setIsFocused(false)}
+            editable={Boolean(info)}
+            onPressIn={(e) => {
+              e.stopPropagation()
+              if (!info) {
+                navigateToTokenSelection()
+              }
+            }}
             ref={
               direction === 'in'
                 ? swapForm.tokenInInputRef
                 : swapForm.tokenOutInputRef
             }
           />
-        </Pressable>
+        </View>
       </View>
 
       {error ? (
@@ -187,6 +193,6 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
           )}
         </View>
       )}
-    </View>
+    </Pressable>
   )
 }
