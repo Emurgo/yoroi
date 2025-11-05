@@ -379,8 +379,21 @@ export class WalletManager {
       .then((tuples) => tuples.map(([_, walletMeta]) => walletMeta))
       .then((walletMetas) => walletMetas.filter(isWalletMeta)) // filter corrupted wallet metas
 
+    // Update walletMetas$ immediately with all metadata from storage
+    // This ensures hasWallets is accurate before wallets are fully loaded
+    // (which may involve slow network calls)
+    const allMetas = new Map(this.#walletMetas$.value)
+    for (const meta of walletMetas) {
+      if (!allMetas.has(meta.id) || isForced) {
+        allMetas.set(meta.id, meta)
+      }
+    }
+    if (allMetas.size !== this.#walletMetas$.value.size || isForced) {
+      this.#walletMetas$.next(freeze(allMetas))
+    }
+
     const metasToLoad = walletMetas.filter(
-      (meta) => !this.#walletMetas$.value.has(meta.id) || isForced,
+      (meta) => !this.#wallets.has(meta.id) || isForced,
     )
 
     // metas dictates wallets to be loaded
@@ -396,10 +409,6 @@ export class WalletManager {
         ),
       )
       for (const wallet of loadedWallets) this.#wallets.set(wallet.id, wallet)
-
-      const metas = new Map(this.#walletMetas$.value)
-      for (const meta of metasToLoad) metas.set(meta.id, meta)
-      this.#walletMetas$.next(freeze(metas))
     }
 
     return {
