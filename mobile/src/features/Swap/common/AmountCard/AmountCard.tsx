@@ -147,9 +147,8 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
             underlineColorAndroid="transparent"
             editable={Boolean(info)}
             onPressIn={(e) => {
-              if (info) {
-                e.stopPropagation()
-              } else {
+              e.stopPropagation()
+              if (!info) {
                 navigateToTokenSelection()
               }
             }}
