@@ -1,9 +1,9 @@
-import {fetchData, isLeft} from '@yoroi/common'
-import {Api, Chain, Left, Swap} from '@yoroi/types'
+import { fetchData, isLeft } from '@yoroi/common'
+import { Api, Chain, Left, Swap } from '@yoroi/types'
 
-import {freeze} from 'immer'
+import { freeze } from 'immer'
 
-import {transformersMaker} from './transformers'
+import { transformersMaker } from './transformers'
 import {
   CancelRequest,
   CancelResponse,
@@ -49,74 +49,9 @@ export const minswapApiMaker = (
   const baseUrl = baseUrls[network]
   const transformers = transformersMaker(config)
 
-  const requestWithErrorHandling = async <T>(
-    url: string,
-    options: RequestInit = {},
-  ): Promise<Api.Response<T>> => {
-    try {
-      const response = await request({
-        url,
-        method: (options.method === 'POST' ? 'post' : 'get') as
-          | 'get'
-          | 'post'
-          | 'put'
-          | 'delete',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        data: options.body,
-      })
-
-      if (isLeft(response)) {
-        // Normalize error message if it's undefined
-        const error = response.error
-        if (!error.message) {
-          const messageFromResponseData =
-            typeof error.responseData === 'object' &&
-            error.responseData != null &&
-            'message' in error.responseData &&
-            typeof error.responseData.message === 'string'
-              ? error.responseData.message
-              : 'Unknown error'
-
-          return freeze(
-            {
-              ...response,
-              error: {
-                ...error,
-                message: messageFromResponseData,
-              },
-            },
-            true,
-          )
-        }
-        return response
-      }
-
-      return freeze(
-        {
-          tag: 'right',
-          value: {
-            status: response.value.status,
-            data: response.value.data as T,
-          },
-        },
-        true,
-      )
-    } catch (error) {
-      return freeze(
-        {
-          tag: 'left',
-          error: {
-            status: -1,
-            message: error instanceof Error ? error.message : 'Unknown error',
-            responseData: {},
-          },
-        },
-        true,
-      )
-    }
+  const headers = {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
   }
 
   return freeze(
@@ -129,15 +64,14 @@ export const minswapApiMaker = (
           limit: 1000,
         }
 
-        const response = await requestWithErrorHandling<TokensResponse>(
-          `${baseUrl}/tokens`,
-          {
-            method: 'POST',
-            body: JSON.stringify(requestBody),
-          },
-        )
+        const response = await request<TokensResponse>({
+          method: 'post',
+          url: `${baseUrl}/tokens`,
+          headers,
+          data: requestBody,
+        })
 
-        if (isLeft(response)) return response
+        if (isLeft(response)) return parseMinswapError(response)
 
         return freeze(
           {
@@ -152,11 +86,13 @@ export const minswapApiMaker = (
       },
 
       async orders() {
-        const response = await requestWithErrorHandling<PendingOrdersResponse>(
-          `${baseUrl}/pending-orders?owner_address=${address}&amount_in_decimal=true`,
-        )
+        const response = await request<PendingOrdersResponse>({
+          method: 'get',
+          url: `${baseUrl}/pending-orders?owner_address=${address}&amount_in_decimal=true`,
+          headers,
+        })
 
-        if (isLeft(response)) return response
+        if (isLeft(response)) return parseMinswapError(response)
 
         return freeze(
           {
@@ -209,15 +145,14 @@ export const minswapApiMaker = (
 
         const requestBody = transformers.estimate.request(body)
 
-        const response = await requestWithErrorHandling<EstimateResponse>(
-          `${baseUrl}/estimate`,
-          {
-            method: 'POST',
-            body: JSON.stringify(requestBody),
-          },
-        )
+        const response = await request<EstimateResponse>({
+          method: 'post',
+          url: `${baseUrl}/estimate`,
+          headers,
+          data: requestBody,
+        })
 
-        if (isLeft(response)) return response
+        if (isLeft(response)) return parseMinswapError(response)
 
         return freeze(
           {
@@ -235,15 +170,14 @@ export const minswapApiMaker = (
         const requestBody = transformers.create.request(body)
 
         // Make the build-tx call
-        const response = await requestWithErrorHandling<CreateResponse>(
-          `${baseUrl}/build-tx`,
-          {
-            method: 'POST',
-            body: JSON.stringify(requestBody),
-          },
-        )
+        const response = await request<CreateResponse>({
+          method: 'post',
+          url: `${baseUrl}/build-tx`,
+          headers,
+          data: requestBody,
+        })
 
-        if (isLeft(response)) return response
+        if (isLeft(response)) return parseMinswapError(response)
 
         // Make an ad-hoc estimate call to get the swap details
         const estimateRequest: Swap.EstimateRequest = {
@@ -303,15 +237,14 @@ export const minswapApiMaker = (
           ],
         }
 
-        const response = await requestWithErrorHandling<CancelResponse>(
-          `${baseUrl}/cancel-tx`,
-          {
-            method: 'POST',
-            body: JSON.stringify(requestBody),
-          },
-        )
+        const response = await request<CancelResponse>({
+          method: 'post',
+          url: `${baseUrl}/cancel-tx`,
+          headers,
+          data: requestBody,
+        })
 
-        if (isLeft(response)) return response
+        if (isLeft(response)) return parseMinswapError(response)
 
         return freeze(
           {
@@ -328,3 +261,18 @@ export const minswapApiMaker = (
     true,
   )
 }
+
+const parseMinswapError = ({tag, error}: Left<Api.ResponseError>) =>
+  freeze<Left<Api.ResponseError>>(
+    {
+      tag,
+      error: {
+        ...error,
+        message:
+          typeof error.responseData?.message === 'string'
+            ? error.responseData.message
+            : error.message || 'Minswap API error',
+      },
+    },
+    true,
+  )
