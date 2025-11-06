@@ -1,9 +1,9 @@
-import { fetchData, isLeft } from '@yoroi/common'
-import { Api, Chain, Left, Swap } from '@yoroi/types'
+import {fetchData, isLeft} from '@yoroi/common'
+import {Api, Chain, Left, Swap} from '@yoroi/types'
 
-import { freeze } from 'immer'
+import {freeze} from 'immer'
 
-import { transformersMaker } from './transformers'
+import {transformersMaker} from './transformers'
 import {
   CancelRequest,
   CancelResponse,
@@ -269,8 +269,8 @@ const parseMinswapError = ({tag, error}: Left<Api.ResponseError>) =>
       error: {
         ...error,
         message:
-          typeof error.responseData?.message === 'string'
-            ? error.responseData.message
+          typeof (error.responseData as any)?.message === 'string'
+            ? (error.responseData as any).message
             : error.message || 'Minswap API error',
       },
     },
