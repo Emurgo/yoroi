@@ -196,37 +196,44 @@ const getTransactionInfoDetails = (
   const ptReceived = sumPtFromOutputs(info.outputs)
   const ptSent = sumPtFromOutputs(info.inputs)
 
-  const hasReceivedPt = !Quantities.isZero(ptReceived)
-  const hasSentPt = !Quantities.isZero(ptSent)
-
   const assetsReceived = info.outputs.flatMap((o) => o.assets)
   const assetsSent = info.inputs.flatMap((i) => i.assets)
 
-  const hasReceivedMultipleAssets =
-    assetsReceived.length > 1 || (assetsReceived.length === 1 && hasReceivedPt)
-  const hasSentMultipleAssets =
-    assetsSent.length > 1 || (assetsSent.length === 1 && hasSentPt)
+  const hasReceivedMultipleAssets = assetsReceived.length > 1
+  const hasSentMultipleAssets = assetsSent.length > 1
 
   const firstAssetIdReceived =
-    assetsReceived[0]?.identifier ?? primaryTokenInfo.id
-  const firstAssetAmountReceived = hasReceivedPt
-    ? ptReceived
-    : sumTokenFromTxData(info.outputs, firstAssetIdReceived)
-  const firstReceivedAsset = hasReceivedPt
-    ? {name: primaryTokenInfo.name, denomination: primaryTokenInfo.decimals}
-    : findToken(
-        Object.values(info.tokens),
-        firstAssetIdReceived,
-        primaryTokenInfo,
-      )
+    assetsReceived.length > 0
+      ? assetsReceived[0]!.identifier
+      : primaryTokenInfo.id
+  const firstAssetAmountReceived =
+    assetsReceived.length > 0
+      ? sumTokenFromTxData(info.outputs, firstAssetIdReceived)
+      : ptReceived
+  const firstReceivedAsset =
+    assetsReceived.length > 0
+      ? findToken(
+          Object.values(info.tokens),
+          firstAssetIdReceived,
+          primaryTokenInfo,
+        )
+      : {name: primaryTokenInfo.name, denomination: primaryTokenInfo.decimals}
 
-  const firstAssetIdSent = assetsSent[0]?.identifier ?? primaryTokenInfo.id
-  const firstAssetAmountSent = hasSentPt
-    ? ptSent
-    : sumTokenFromTxData(info.inputs, firstAssetIdSent)
-  const firstSentAsset = hasSentPt
-    ? {name: primaryTokenInfo.name, denomination: primaryTokenInfo.decimals}
-    : findToken(Object.values(info.tokens), firstAssetIdSent, primaryTokenInfo)
+  // Prioritize non-primary tokens for display
+  const firstAssetIdSent =
+    assetsSent.length > 0 ? assetsSent[0]!.identifier : primaryTokenInfo.id
+  const firstAssetAmountSent =
+    assetsSent.length > 0
+      ? sumTokenFromTxData(info.inputs, firstAssetIdSent)
+      : ptSent
+  const firstSentAsset =
+    assetsSent.length > 0
+      ? findToken(
+          Object.values(info.tokens),
+          firstAssetIdSent,
+          primaryTokenInfo,
+        )
+      : {name: primaryTokenInfo.name, denomination: primaryTokenInfo.decimals}
 
   return {
     hasReceivedMultipleAssets,
