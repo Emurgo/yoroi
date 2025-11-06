@@ -68,9 +68,15 @@ export const CardanoMobileWrapped = {
   cslScope: <T>(callback: (csl: WasmModuleProxy) => T): T => {
     const {csl, release} = wrappedCsl()
     try {
-      return callback(csl)
-    } finally {
+      const result = callback(csl)
+      if (result instanceof Promise) {
+        return result.finally(release) as T
+      }
       release()
+      return result
+    } catch (error) {
+      release()
+      throw error
     }
   },
 }

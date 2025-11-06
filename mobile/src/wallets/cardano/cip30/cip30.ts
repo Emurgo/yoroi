@@ -65,45 +65,58 @@ class CIP30Extension {
   }
 
   getUnusedAddresses(): CSL.Address[] {
-    const bech32Addresses = this.wallet.receiveAddresses.filter(
-      (address) => !this.wallet.isUsedAddressIndex[address],
-    )
-    return bech32Addresses.map((addr) => CardanoMobile.Address.fromBech32(addr))
+    return CardanoMobileWrapped.cslScope((csl) => {
+      const bech32Addresses = this.wallet.receiveAddresses.filter(
+        (address) => !this.wallet.isUsedAddressIndex[address],
+      )
+      const addresses = bech32Addresses.map((addr) =>
+        csl.Address.fromBech32(addr),
+      )
+      return copyMultipleFromCSL(addresses, CardanoMobile.Address)
+    })
   }
 
   getUsedAddresses(pagination?: Pagination): CSL.Address[] {
-    const allAddresses = this.wallet.externalAddresses
-    const selectedAddresses = paginate(allAddresses, pagination)
-    return selectedAddresses.map((addr) =>
-      CardanoMobile.Address.fromBech32(addr),
-    )
+    return CardanoMobileWrapped.cslScope((csl) => {
+      const allAddresses = this.wallet.externalAddresses
+      const selectedAddresses = paginate(allAddresses, pagination)
+      const addresses = selectedAddresses.map((addr) =>
+        csl.Address.fromBech32(addr),
+      )
+      return copyMultipleFromCSL(addresses, CardanoMobile.Address)
+    })
   }
 
   getChangeAddress(): CSL.Address {
-    const changeAddr = this.wallet.getChangeAddress(this.meta.addressMode)
-    return CardanoMobile.Address.fromBech32(changeAddr)
+    return CardanoMobileWrapped.cslScope((csl) => {
+      const changeAddr = this.wallet.getChangeAddress(this.meta.addressMode)
+      const address = csl.Address.fromBech32(changeAddr)
+      return copyFromCSL(CardanoMobile.Address, address)
+    })
   }
 
   getRewardAddresses(): CSL.Address[] {
-    const address = CardanoMobile.Address.fromHex(this.wallet.rewardAddressHex)
-    return [address]
+    return CardanoMobileWrapped.cslScope((csl) => {
+      const address = csl.Address.fromHex(this.wallet.rewardAddressHex)
+      return [copyFromCSL(CardanoMobile.Address, address)]
+    })
   }
 
   async getUtxos(
     value?: string,
     pagination?: Pagination,
   ): Promise<CSL.TransactionUnspentOutput[] | null> {
-    const utxos = await _getUtxos(
-      CardanoMobile,
-      this.wallet,
-      this.meta,
-      value,
-      pagination,
-    )
-    if (utxos === null) return null
-    return utxos.map((u) =>
-      CardanoMobile.TransactionUnspentOutput.fromHex(u.toHex()),
-    )
+    return CardanoMobileWrapped.cslScope(async (csl) => {
+      const utxos = await _getUtxos(
+        csl,
+        this.wallet,
+        this.meta,
+        value,
+        pagination,
+      )
+      if (utxos === null) return null
+      return copyMultipleFromCSL(utxos, CardanoMobile.TransactionUnspentOutput)
+    })
   }
 
   async getCollateral(
@@ -257,7 +270,10 @@ class CIP30Extension {
   }
 }
 
-const remoteAssetToMultiasset = (remoteAssets: UtxoAsset[]): CSL.MultiAsset => {
+const remoteAssetToMultiasset = (
+  remoteAssets: UtxoAsset[],
+  csl: WasmModuleProxy,
+): CSL.MultiAsset => {
   const groupedAssets = remoteAssets.reduce(
     (res, a) => {
       ;(res[toPolicyId(a.assetId)] = res[toPolicyId(a.assetId)] || []).push(a)
@@ -265,20 +281,20 @@ const remoteAssetToMultiasset = (remoteAssets: UtxoAsset[]): CSL.MultiAsset => {
     },
     {} as Record<string, UtxoAsset[]>,
   )
-  const multiasset = CardanoMobile.MultiAsset.new()
+  const multiasset = csl.MultiAsset.new()
   for (const policyHex of Object.keys(groupedAssets)) {
     const assetGroup = groupedAssets[policyHex]
     if (!assetGroup) continue
-    const policyId = CardanoMobile.ScriptHash.fromBytes(
+    const policyId = csl.ScriptHash.fromBytes(
       new Uint8Array(Buffer.from(policyHex, 'hex')),
     )
-    const assets = CardanoMobile.Assets.new()
+    const assets = csl.Assets.new()
     for (const asset of assetGroup) {
       assets.insert(
-        CardanoMobile.AssetName.new(
+        csl.AssetName.new(
           new Uint8Array(Buffer.from(toAssetNameHex(asset.assetId), 'hex')),
         ),
-        CardanoMobile.BigNum.fromStr(asset.amount),
+        csl.BigNum.fromStr(asset.amount),
       )
     }
     multiasset.insert(policyId, assets)
@@ -295,7 +311,7 @@ const cardanoUtxoFromRemoteFormat = (
   )
   const value = csl.Value.new(csl.BigNum.fromStr(u.amount))
   if ((u.assets || []).length > 0) {
-    value.setMultiasset(remoteAssetToMultiasset([...u.assets]))
+    value.setMultiasset(remoteAssetToMultiasset([...u.assets], csl))
   }
   const receiver = csl.Address.fromBech32(u.receiver)
   if (!receiver) throw new Error('Invalid receiver')
