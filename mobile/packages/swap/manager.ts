@@ -417,8 +417,9 @@ export const standarizeError = <T>(input: Api.Response<T>): Api.Response<T> => {
     case response.error.message.includes(
       'Transaction Building ErrorNo Remaining UTxOs',
     ):
+    case response.error.message.includes('Insufficient balance'):
       response.error.message =
-        'Insufficient balance: consider fees, assets blocked by staking or multiaddress holdings'
+        'Insufficient balance: consider fees and assets blocked by staking.'
 
       break
     case response.error.message.includes('amount_in_invalid'):
