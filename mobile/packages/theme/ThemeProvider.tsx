@@ -73,15 +73,10 @@ export const ThemeProvider = ({
   const hostTheme = useColorScheme() ?? 'dark'
   const [selectedThemeConfig, setSelectedThemeConfig] =
     React.useState<ThemeConfig>(() => storage.read())
-  const [paletteName, setPaletteName] = React.useState<ThemeName>(
-    detectTheme(hostTheme, selectedThemeConfig),
+  const paletteName = React.useMemo<ThemeName>(
+    () => detectTheme(hostTheme, selectedThemeConfig),
+    [hostTheme, selectedThemeConfig],
   )
-
-  React.useEffect(() => {
-    if (selectedThemeConfig === 'system') {
-      setPaletteName(detectTheme(hostTheme, selectedThemeConfig))
-    }
-  }, [hostTheme, selectedThemeConfig])
 
   const value = React.useMemo<ThemeContext>(
     () => ({
@@ -126,7 +121,6 @@ export const ThemeProvider = ({
 
       selectTheme: (newThemeName: ThemeConfig) => {
         setSelectedThemeConfig(newThemeName)
-        setPaletteName(detectTheme(hostTheme, newThemeName))
         storage.save(newThemeName)
       },
       isLight: themes[paletteName].base === 'light',
@@ -134,7 +128,7 @@ export const ThemeProvider = ({
       basePaletteInverted:
         themes[paletteName].base === 'dark' ? 'light' : 'dark',
     }),
-    [hostTheme, storage, paletteName, selectedThemeConfig],
+    [storage, paletteName, selectedThemeConfig],
   )
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
