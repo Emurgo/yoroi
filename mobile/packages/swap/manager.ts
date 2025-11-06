@@ -6,6 +6,7 @@ import {freeze} from 'immer'
 import {dexhunterApiMaker} from './adapters/api/dexhunter/api-maker'
 import {minswapApiMaker} from './adapters/api/minswap/api-maker'
 import {muesliswapApiMaker} from './adapters/api/muesliswap/api-maker'
+import {steelswapApiMaker} from './adapters/api/steelswap/api-maker'
 import {getBestSwap} from './helpers/getBestSwap'
 import {getPtPrice} from './helpers/getPtPrice'
 
@@ -42,6 +43,13 @@ export const swapManagerMaker: Swap.ManagerMaker = ({
     isPrimaryToken,
     partner: partners?.[Swap.Aggregator.Minswap],
   })
+  const steelswapApi = steelswapApiMaker({
+    address,
+    network,
+    primaryTokenInfo,
+    isPrimaryToken,
+    partner: partners?.[Swap.Aggregator.Steelswap],
+  })
 
   const settings: Swap.ManagerSettings = {
     routingPreference: 'auto',
@@ -63,6 +71,7 @@ export const swapManagerMaker: Swap.ManagerMaker = ({
       [Swap.Aggregator.Dexhunter]: dexhunterApi,
       [Swap.Aggregator.Muesliswap]: muesliswapApi,
       [Swap.Aggregator.Minswap]: minswapApi,
+      [Swap.Aggregator.Steelswap]: steelswapApi,
     },
     settings,
     getPtPrice(primaryTokenInfo, dexhunterApi),
@@ -361,7 +370,9 @@ const apiManagerMaker = (
             ? adapters.muesliswap
             : body.order.aggregator === Swap.Aggregator.Minswap
               ? adapters.minswap
-              : adapters.dexhunter
+              : body.order.aggregator === Swap.Aggregator.Steelswap
+                ? adapters.steelswap
+                : adapters.dexhunter
 
         const initialResponse = await initialAdapter.cancel(body)
 

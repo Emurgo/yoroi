@@ -232,7 +232,7 @@ export const SwapSettings = () => {
                 onValueChange={() =>
                   assignAggregator(
                     aggregator === 'auto'
-                      ? ['muesliswap', 'dexhunter', 'minswap']
+                      ? ['muesliswap', 'dexhunter', 'minswap', 'steelswap']
                       : 'auto',
                   )
                 }
@@ -278,6 +278,20 @@ export const SwapSettings = () => {
                     value={aggregator.includes('minswap')}
                     onValueChange={() => {
                       const next = toggleAggregator(aggregator, 'minswap')
+                      assignAggregator(next.length === 0 ? 'auto' : next)
+                    }}
+                  />
+                </View>
+
+                <View style={[a.flex_row, a.justify_between, a.align_center]}>
+                  <Text style={[a.body_1_lg_regular, {color: p.text_gray_max}]}>
+                    Steelswap
+                  </Text>
+
+                  <SettingsSwitch
+                    value={aggregator.includes('steelswap')}
+                    onValueChange={() => {
+                      const next = toggleAggregator(aggregator, 'steelswap')
                       assignAggregator(next.length === 0 ? 'auto' : next)
                     }}
                   />
