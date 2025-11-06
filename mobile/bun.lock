@@ -49,7 +49,6 @@
         "cbor2": "2.0.1",
         "d3-shape": "3.2.0",
         "expo": "53.0.20",
-        "expo-android-keyboard-fix": "2.1.0",
         "expo-application": "~6.1.5",
         "expo-asset": "11.1.7",
         "expo-blur": "14.1.5",
@@ -91,7 +90,7 @@
         "react-native-edge-to-edge": "1.6.0",
         "react-native-gesture-handler": "2.24.0",
         "react-native-get-random-values": "1.11.0",
-        "react-native-keyboard-controller": "^1.18.6",
+        "react-native-keyboard-controller": "^1.19.5",
         "react-native-keychain": "10.0.0",
         "react-native-linear-gradient": "2.8.3",
         "react-native-marked": "7.0.2",
@@ -1413,8 +1412,6 @@
 
     "expo": ["expo@53.0.20", "", { "dependencies": { "@babel/runtime": "^7.20.0", "@expo/cli": "0.24.20", "@expo/config": "~11.0.13", "@expo/config-plugins": "~10.1.2", "@expo/fingerprint": "0.13.4", "@expo/metro-config": "0.20.17", "@expo/vector-icons": "^14.0.0", "babel-preset-expo": "~13.2.3", "expo-asset": "~11.1.7", "expo-constants": "~17.1.7", "expo-file-system": "~18.1.11", "expo-font": "~13.3.2", "expo-keep-awake": "~14.1.4", "expo-modules-autolinking": "2.1.14", "expo-modules-core": "2.5.0", "react-native-edge-to-edge": "1.6.0", "whatwg-url-without-unicode": "8.0.0-3" }, "peerDependencies": { "@expo/dom-webview": "*", "@expo/metro-runtime": "*", "react": "*", "react-native": "*", "react-native-webview": "*" }, "optionalPeers": ["@expo/dom-webview", "@expo/metro-runtime"], "bin": { "expo": "bin/cli", "expo-modules-autolinking": "bin/autolinking", "fingerprint": "bin/fingerprint" } }, "sha512-Nh+HIywVy9KxT/LtH08QcXqrxtUOA9BZhsXn3KCsAYA+kNb80M8VKN8/jfQF+I6CgeKyFKJoPNsWgI0y0VBGrA=="],
 
-    "expo-android-keyboard-fix": ["expo-android-keyboard-fix@2.1.0", "", { "peerDependencies": { "expo": "*" } }, "sha512-DhC3z5UforGneYI4eYZrzuLHdvAFfzGCDLcJHbqUUn3+7dWUJYvJqECWhY57ntt/dJLyuSeL8f2UKbaRY5S3Qw=="],
-
     "expo-application": ["expo-application@6.1.5", "", { "peerDependencies": { "expo": "*" } }, "sha512-ToImFmzw8luY043pWFJhh2ZMm4IwxXoHXxNoGdlhD4Ym6+CCmkAvCglg0FK8dMLzAb+/XabmOE7Rbm8KZb6NZg=="],
 
     "expo-asset": ["expo-asset@11.1.7", "", { "dependencies": { "@expo/image-utils": "^0.7.6", "expo-constants": "~17.1.7" }, "peerDependencies": { "expo": "*", "react": "*", "react-native": "*" } }, "sha512-b5P8GpjUh08fRCf6m5XPVAh7ra42cQrHBIMgH2UXP+xsj4Wufl6pLy6jRF5w6U7DranUMbsXm8TOyq4EHy7ADg=="],
@@ -2225,7 +2222,7 @@
 
     "react-native-is-edge-to-edge": ["react-native-is-edge-to-edge@1.2.1", "", { "peerDependencies": { "react": "*", "react-native": "*" } }, "sha512-FLbPWl/MyYQWz+KwqOZsSyj2JmLKglHatd3xLZWskXOpRaio4LfEDEz8E/A6uD8QoTHW6Aobw1jbEwK7KMgR7Q=="],
 
-    "react-native-keyboard-controller": ["react-native-keyboard-controller@1.18.6", "", { "dependencies": { "react-native-is-edge-to-edge": "^1.2.1" }, "peerDependencies": { "react": "*", "react-native": "*", "react-native-reanimated": ">=3.0.0" } }, "sha512-K/RMw3MdtuykkACFN5d9RTapAcO0v4T34gmSyHkEraU5UsX+fxEHd6j4MvL7KUihvmLLod0NV/mQC0nL4cOurw=="],
+    "react-native-keyboard-controller": ["react-native-keyboard-controller@1.19.5", "", { "dependencies": { "react-native-is-edge-to-edge": "^1.2.1" }, "peerDependencies": { "react": "*", "react-native": "*", "react-native-reanimated": ">=3.0.0" } }, "sha512-OvtEfgt8EzEDz2J045CQ1aKMO0nWzsEthHWhYiYMv5QLMT9LY50GbHls4sIg8oobrHX3qi5zVgAUG1jCs0iIWg=="],
 
     "react-native-keychain": ["react-native-keychain@10.0.0", "", {}, "sha512-YzPKSAnSzGEJ12IK6CctNLU79T1W15WDrElRQ+1/FsOazGX9ucFPTQwgYe8Dy8jiSEDJKM4wkVa3g4lD2Z+Pnw=="],
 

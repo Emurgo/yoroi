@@ -103,10 +103,9 @@
     "web": {
       "favicon": "./assets/yoroi/favicon.png"
     },
-      "plugins": [
+    "plugins": [
       "@react-native-firebase/app",
       "@react-native-firebase/messaging",
-      "expo-android-keyboard-fix",
       "react-native-ble-plx",
       [
         "react-native-edge-to-edge",

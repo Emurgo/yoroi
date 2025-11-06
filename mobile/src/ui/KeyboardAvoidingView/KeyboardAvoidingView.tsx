@@ -4,6 +4,7 @@ import {
   Platform,
   KeyboardAvoidingView as RNKeyboardAvoidingView,
 } from 'react-native'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
 import {useIsKeyboardOpen} from '~/hooks/useIsKeyboardOpen'
 
@@ -21,6 +22,11 @@ export const KeyboardAvoidingView = ({
         ? 'padding'
         : 'height'
 
+  const insets = useSafeAreaInsets()
+
+  const defaultKeyboardOffset =
+    Platform.OS === 'ios' ? insets.top + 20 : insets.bottom + 16
+
   return (
     <RNKeyboardAvoidingView
       behavior={behavior ?? keyboardBehavior}
@@ -36,5 +42,3 @@ export const KeyboardAvoidingView = ({
     </RNKeyboardAvoidingView>
   )
 }
-
-const defaultKeyboardOffset = Platform.OS === 'ios' ? 70 : 86
