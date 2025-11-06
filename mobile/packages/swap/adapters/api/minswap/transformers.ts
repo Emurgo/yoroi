@@ -280,6 +280,7 @@ export const transformersMaker = (config: MinswapApiConfig) => {
           tokenIn,
           tokenOut,
           protocol,
+          inputs,
         }: Swap.CreateRequest): CreateRequest => {
           const request = {
             sender: address,
@@ -299,6 +300,7 @@ export const transformersMaker = (config: MinswapApiConfig) => {
               ...(partner !== undefined && {partner}),
             },
             amount_in_decimal: true, // Also set at the top level for build-tx
+            ...(inputs && inputs.length > 0 && {inputs_to_choose: inputs}),
           }
 
           return request

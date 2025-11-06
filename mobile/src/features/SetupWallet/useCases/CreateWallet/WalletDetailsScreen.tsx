@@ -136,13 +136,9 @@ export const WalletDetailsScreen = () => {
     onError: (error) => {
       InteractionManager.runAfterInteractions(() => {
         return error instanceof Api.Errors.Network
-          ? showErrorDialog({
-              title: errorMessages.networkError.title,
-              message: errorMessages.networkError.message,
-            })
-          : showErrorDialog({
-              title: errorMessages.generalError.title,
-              message: errorMessages.generalError.message,
+          ? showErrorDialog(errorMessages.networkError)
+          : showErrorDialog(errorMessages.generalError, undefined, {
+              message: error.message,
             })
       })
     },
