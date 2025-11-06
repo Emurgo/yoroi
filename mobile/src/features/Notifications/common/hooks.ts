@@ -75,7 +75,7 @@ const initPushNotifications = (
         return
       }
 
-      console.log('Firebase message received in foreground:', remoteMessage)
+      logger.info('Firebase message received in foreground: ', {remoteMessage})
 
       const title = remoteMessage.notification?.title
       const body = remoteMessage.notification?.body
