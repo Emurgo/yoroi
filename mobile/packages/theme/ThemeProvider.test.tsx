@@ -169,6 +169,47 @@ describe('ThemeProvider and useTheme Tests', () => {
     expect(screen.getByText('system')).toBeTruthy()
     expect(screen.getByText('default-dark')).toBeTruthy()
   })
+
+  test('ThemeProvider updates palette when OS theme changes in system mode', () => {
+    // Start with light OS theme
+    ;(useColorScheme as jest.Mock).mockReturnValue('light')
+
+    const TestComponent = () => {
+      const theme = useTheme()
+      return (
+        <>
+          <Text testID="config">{theme.config}</Text>
+          <Text testID="palette">{theme.paletteName}</Text>
+          <Text testID="base">{theme.basePalette}</Text>
+        </>
+      )
+    }
+
+    const {rerender} = render(
+      <ThemeProvider storage={mockStorage}>
+        <TestComponent />
+      </ThemeProvider>,
+    )
+
+    // Should start with light theme (system mode with light OS theme)
+    expect(screen.getByTestId('config')).toHaveTextContent('system')
+    expect(screen.getByTestId('palette')).toHaveTextContent('default-light')
+    expect(screen.getByTestId('base')).toHaveTextContent('light')
+
+    // Simulate OS theme change to dark
+    ;(useColorScheme as jest.Mock).mockReturnValue('dark')
+
+    rerender(
+      <ThemeProvider storage={mockStorage}>
+        <TestComponent />
+      </ThemeProvider>,
+    )
+
+    // Should update to dark theme (system mode with dark OS theme)
+    expect(screen.getByTestId('config')).toHaveTextContent('system')
+    expect(screen.getByTestId('palette')).toHaveTextContent('default-dark')
+    expect(screen.getByTestId('base')).toHaveTextContent('dark')
+  })
 })
 
 describe('useThemedAtoms and useBasePalette Tests', () => {

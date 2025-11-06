@@ -77,6 +77,12 @@ export const ThemeProvider = ({
     detectTheme(hostTheme, selectedThemeConfig),
   )
 
+  React.useEffect(() => {
+    if (selectedThemeConfig === 'system') {
+      setPaletteName(detectTheme(hostTheme, selectedThemeConfig))
+    }
+  }, [hostTheme, selectedThemeConfig])
+
   const value = React.useMemo<ThemeContext>(
     () => ({
       config: selectedThemeConfig,
