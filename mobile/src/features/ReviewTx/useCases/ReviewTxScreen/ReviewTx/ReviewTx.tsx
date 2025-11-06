@@ -85,6 +85,7 @@ export const ReviewTx = ({
         tabBarActiveTintColor: ta.text_primary_medium.color,
         tabBarInactiveTintColor: ta.text_gray_medium.color,
         tabBarBounces: true,
+        tabBarScrollEnabled: true,
         tabBarStyle: {backgroundColor: p.bg_color_max},
       }}
     >
