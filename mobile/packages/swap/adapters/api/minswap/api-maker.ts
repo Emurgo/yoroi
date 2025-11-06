@@ -49,50 +49,9 @@ export const minswapApiMaker = (
   const baseUrl = baseUrls[network]
   const transformers = transformersMaker(config)
 
-  const requestWithErrorHandling = async <T>(
-    url: string,
-    options: RequestInit = {},
-  ): Promise<Api.Response<T>> => {
-    try {
-      const response = await request({
-        url,
-        method: (options.method === 'POST' ? 'post' : 'get') as
-          | 'get'
-          | 'post'
-          | 'put'
-          | 'delete',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        data: options.body,
-      })
-
-      if (isLeft(response)) return response
-
-      return freeze(
-        {
-          tag: 'right',
-          value: {
-            status: response.value.status,
-            data: response.value.data as T,
-          },
-        },
-        true,
-      )
-    } catch (error) {
-      return freeze(
-        {
-          tag: 'left',
-          error: {
-            status: -1,
-            message: error instanceof Error ? error.message : 'Unknown error',
-            responseData: {},
-          },
-        },
-        true,
-      )
-    }
+  const headers = {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
   }
 
   return freeze(
@@ -105,45 +64,76 @@ export const minswapApiMaker = (
           limit: 1000,
         }
 
-        const response = await requestWithErrorHandling<TokensResponse>(
-          `${baseUrl}/tokens`,
-          {
-            method: 'POST',
-            body: JSON.stringify(requestBody),
-          },
-        )
+        try {
+          const response = await request<TokensResponse>({
+            method: 'post',
+            url: `${baseUrl}/tokens`,
+            headers,
+            data: requestBody,
+          })
 
-        if (isLeft(response)) return response
+          if (isLeft(response)) return parseMinswapError(response)
 
-        return freeze(
-          {
-            tag: 'right',
-            value: {
-              status: response.value.status,
-              data: transformers.tokens.response(response.value.data),
+          return freeze(
+            {
+              tag: 'right',
+              value: {
+                status: response.value.status,
+                data: transformers.tokens.response(response.value.data),
+              },
             },
-          },
-          true,
-        )
+            true,
+          )
+        } catch (error) {
+          return freeze<Left<Api.ResponseError>>(
+            {
+              tag: 'left',
+              error: {
+                status: -1,
+                message:
+                  error instanceof Error ? error.message : 'Network error',
+                responseData: null,
+              },
+            },
+            true,
+          )
+        }
       },
 
       async orders() {
-        const response = await requestWithErrorHandling<PendingOrdersResponse>(
-          `${baseUrl}/pending-orders?owner_address=${address}&amount_in_decimal=true`,
-        )
+        try {
+          const response = await request<PendingOrdersResponse>({
+            method: 'get',
+            url: `${baseUrl}/pending-orders?owner_address=${address}&amount_in_decimal=true`,
+            headers,
+          })
 
-        if (isLeft(response)) return response
+          if (isLeft(response)) return parseMinswapError(response)
 
-        return freeze(
-          {
-            tag: 'right',
-            value: {
-              status: response.value.status,
-              data: transformers.orders.response(response.value.data),
+          return freeze(
+            {
+              tag: 'right',
+              value: {
+                status: response.value.status,
+                data: transformers.orders.response(response.value.data),
+              },
             },
-          },
-          true,
-        )
+            true,
+          )
+        } catch (error) {
+          return freeze<Left<Api.ResponseError>>(
+            {
+              tag: 'left',
+              error: {
+                status: -1,
+                message:
+                  error instanceof Error ? error.message : 'Network error',
+                responseData: null,
+              },
+            },
+            true,
+          )
+        }
       },
 
       async limitOptions() {
@@ -185,41 +175,70 @@ export const minswapApiMaker = (
 
         const requestBody = transformers.estimate.request(body)
 
-        const response = await requestWithErrorHandling<EstimateResponse>(
-          `${baseUrl}/estimate`,
-          {
-            method: 'POST',
-            body: JSON.stringify(requestBody),
-          },
-        )
+        try {
+          const response = await request<EstimateResponse>({
+            method: 'post',
+            url: `${baseUrl}/estimate`,
+            headers,
+            data: requestBody,
+          })
 
-        if (isLeft(response)) return response
+          if (isLeft(response)) return parseMinswapError(response)
 
-        return freeze(
-          {
-            tag: 'right',
-            value: {
-              status: response.value.status,
-              data: transformers.estimate.response(response.value.data),
+          return freeze(
+            {
+              tag: 'right',
+              value: {
+                status: response.value.status,
+                data: transformers.estimate.response(response.value.data),
+              },
             },
-          },
-          true,
-        )
+            true,
+          )
+        } catch (error) {
+          return freeze<Left<Api.ResponseError>>(
+            {
+              tag: 'left',
+              error: {
+                status: -1,
+                message:
+                  error instanceof Error ? error.message : 'Network error',
+                responseData: null,
+              },
+            },
+            true,
+          )
+        }
       },
 
       async create(body: Swap.CreateRequest) {
         const requestBody = transformers.create.request(body)
 
         // Make the build-tx call
-        const response = await requestWithErrorHandling<CreateResponse>(
-          `${baseUrl}/build-tx`,
-          {
-            method: 'POST',
-            body: JSON.stringify(requestBody),
-          },
-        )
+        let response: Api.Response<CreateResponse>
+        try {
+          response = await request<CreateResponse>({
+            method: 'post',
+            url: `${baseUrl}/build-tx`,
+            headers,
+            data: requestBody,
+          })
+        } catch (error) {
+          return freeze<Left<Api.ResponseError>>(
+            {
+              tag: 'left',
+              error: {
+                status: -1,
+                message:
+                  error instanceof Error ? error.message : 'Network error',
+                responseData: null,
+              },
+            },
+            true,
+          )
+        }
 
-        if (isLeft(response)) return response
+        if (isLeft(response)) return parseMinswapError(response)
 
         // Make an ad-hoc estimate call to get the swap details
         const estimateRequest: Swap.EstimateRequest = {
@@ -279,28 +298,57 @@ export const minswapApiMaker = (
           ],
         }
 
-        const response = await requestWithErrorHandling<CancelResponse>(
-          `${baseUrl}/cancel-tx`,
-          {
-            method: 'POST',
-            body: JSON.stringify(requestBody),
-          },
-        )
+        try {
+          const response = await request<CancelResponse>({
+            method: 'post',
+            url: `${baseUrl}/cancel-tx`,
+            headers,
+            data: requestBody,
+          })
 
-        if (isLeft(response)) return response
+          if (isLeft(response)) return parseMinswapError(response)
 
-        return freeze(
-          {
-            tag: 'right',
-            value: {
-              status: response.value.status,
-              data: transformers.cancel.response(response.value.data),
+          return freeze(
+            {
+              tag: 'right',
+              value: {
+                status: response.value.status,
+                data: transformers.cancel.response(response.value.data),
+              },
             },
-          },
-          true,
-        )
+            true,
+          )
+        } catch (error) {
+          return freeze<Left<Api.ResponseError>>(
+            {
+              tag: 'left',
+              error: {
+                status: -1,
+                message:
+                  error instanceof Error ? error.message : 'Network error',
+                responseData: null,
+              },
+            },
+            true,
+          )
+        }
       },
     },
     true,
   )
 }
+
+const parseMinswapError = ({tag, error}: Left<Api.ResponseError>) =>
+  freeze<Left<Api.ResponseError>>(
+    {
+      tag,
+      error: {
+        ...error,
+        message:
+          typeof (error.responseData as any)?.message === 'string'
+            ? (error.responseData as any).message
+            : error.message || 'Minswap API error',
+      },
+    },
+    true,
+  )
