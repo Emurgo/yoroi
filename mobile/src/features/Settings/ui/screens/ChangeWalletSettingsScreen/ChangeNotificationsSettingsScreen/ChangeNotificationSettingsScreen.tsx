@@ -2,10 +2,13 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as Linking from 'expo-linking'
 import * as React from 'react'
-import {AppState, Platform, ScrollView, View} from 'react-native'
+import {AppState, Platform, ScrollView} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {getNotificationsAuthorizationStatus} from '~/features/Notifications/common/tools'
+import {
+  getNotificationsAuthorizationStatus,
+  triggerNotificationsPermissionModal,
+} from '~/features/Notifications/common/tools'
 import {
   SettingsItem,
   SettingsSection,
@@ -13,10 +16,8 @@ import {
 import {features} from '~/kernel/features'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
-import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {SettingsSwitch} from '~/ui/SettingsSwitch/SettingsSwitch'
-import {Text} from '~/ui/Text/Text'
 
 import {useChangeNotificationDisplaySettings} from '../../../../hooks/useChangeNotificationDisplaySettings'
 import {useNotificationDisplaySettings} from '../../../../hooks/useNotificationDisplaySettings'
@@ -93,54 +94,35 @@ export function useNotificationPermission() {
     fetchPermission()
   }, [])
 
-  const togglePermissions = async () => {
-    const oldStatus = await getNotificationsAuthorizationStatus()
-
-    if (oldStatus === 'not_determined') {
+  const handleToggle = async () => {
+    if (permission === 'not_determined') {
+      await triggerNotificationsPermissionModal()
+      const newStatus = await getNotificationsAuthorizationStatus()
+      setPermission(newStatus)
+    } else {
       await navigateToAppSettings()
     }
-
-    const currentStatus = await getNotificationsAuthorizationStatus()
-    const nextStatus = currentStatus === 'authorized' ? 'denied' : 'authorized'
-    setPermission(nextStatus)
   }
 
-  return {permission, togglePermissions}
+  return {permission, handleToggle}
 }
 
 const PushNotificationSettingsItem = () => {
   const {palette: p} = useTheme()
   const strings = useStrings()
 
-  const {permission, togglePermissions} = useNotificationPermission()
-
-  if (permission === 'authorized' || permission === 'not_determined') {
-    return (
-      <SettingsItem
-        icon={<Icon.Bell color={p.gray_500} size={23} />}
-        label={strings.settings.walletSettings.allowNotifications}
-      >
-        <SettingsSwitch
-          value={permission === 'authorized'}
-          onValueChange={togglePermissions}
-        />
-      </SettingsItem>
-    )
-  }
+  const {permission, handleToggle} = useNotificationPermission()
 
   return (
-    <View>
-      <Text style={[a.body_1_lg_medium, a.py_sm]}>
-        {strings.manageNotifications.enableNotificationsThroughSettings}
-      </Text>
-
-      <Button
-        style={[a.justify_start, a.p_0]}
-        title={strings.manageNotifications.goToSettings}
-        onPress={navigateToAppSettings}
-        type={ButtonType.Text}
+    <SettingsItem
+      icon={<Icon.Bell color={p.gray_500} size={23} />}
+      label={strings.settings.walletSettings.allowNotifications}
+    >
+      <SettingsSwitch
+        value={permission === 'authorized'}
+        onValueChange={handleToggle}
       />
-    </View>
+    </SettingsItem>
   )
 }
 
