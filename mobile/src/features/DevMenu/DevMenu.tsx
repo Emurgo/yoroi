@@ -27,6 +27,7 @@ import {useWalletNameOverride} from '../Discover/common/WalletNameOverrideContex
 import {WalletNameOverrideModalContent} from '../Discover/common/WalletNameOverrideModalContent'
 import {useWalletManager} from '../WalletManager/context/WalletManagerProvider'
 import {useCreateWalletMnemonic} from '../WalletManager/hooks/useCreateWalletMnemonic'
+import {CborReviewModalContent} from './CborReviewModalContent'
 
 export function DevMenu() {
   const {isDark, config, basePalette, selectTheme, atoms: ta} = useTheme()
@@ -255,6 +256,20 @@ export function DevMenu() {
           }}
           type={ButtonType.Secondary}
           title={`Wallet Name Override: ${walletNameOverride ?? 'yoroi'}`}
+          style={[a.pt_md, a.p_md, a.rounded_md]}
+        />
+
+        <Button
+          onPress={() => {
+            openModal({
+              title: 'Custom Transaction',
+              canDiscard: true,
+              height: 500,
+              content: <CborReviewModalContent />,
+            })
+          }}
+          type={ButtonType.Secondary}
+          title="Custom Transaction"
           style={[a.pt_md, a.p_md, a.rounded_md]}
         />
 
