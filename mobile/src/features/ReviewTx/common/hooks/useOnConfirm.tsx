@@ -12,6 +12,7 @@ import {ModalError} from '~/ui/ModalError/ModalError'
 import {getTransactionSigners} from '~/wallets/cardano/common/signatureUtils'
 import {YoroiWallet} from '~/wallets/cardano/types'
 import {createRawTxSigningKey} from '~/wallets/cardano/utils'
+import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
 import {YoroiSignedTx} from '~/wallets/types/yoroi'
 
 import {ConfirmRawTxWithHW} from '../ConfirmRawTxWithHw'
@@ -133,7 +134,9 @@ export const useOnConfirm = ({
       onSuccess: async (rootKey: string) => {
         if (!preventSubmit) {
           try {
-            await submitTx(cbor, rootKey, wallet, meta)
+            const success = await submitTx(cbor, rootKey, wallet, meta)
+            if (!success)
+              throw new Error('useOnConfirm:: not possible to sign tx')
           } catch (e) {
             handleOnError(e)
             return
@@ -155,11 +158,16 @@ const submitTx = async (
   rootKey: string,
   wallet: YoroiWallet,
   meta: Wallet.Meta,
-) => {
-  const signers = getTransactionSigners(cbor, wallet, meta)
-  const keys = signers.map((signer) => createRawTxSigningKey(rootKey, signer))
-  const response = await wallet.signRawTx(cbor, keys)
-  if (!response) throw new Error('useOnConfirm:: not possible to sign tx')
-  const hexBase64 = Buffer.from(response).toString('base64')
-  await wallet.submitTransaction(hexBase64)
+): Promise<boolean> => {
+  return CardanoMobileWrapped.cslScope(async (csl) => {
+    const signers = getTransactionSigners(cbor, wallet, meta)
+    const keys = signers.map((signer) =>
+      createRawTxSigningKey(rootKey, signer, csl),
+    )
+    const response = await wallet.signRawTx(cbor, keys)
+    if (!response) return false
+    const hexBase64 = Buffer.from(response).toString('base64')
+    await wallet.submitTransaction(hexBase64)
+    return true
+  })
 }
