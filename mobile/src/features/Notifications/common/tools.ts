@@ -1,9 +1,11 @@
 import {isNumber, isRecord, isString} from '@yoroi/common'
 import {Portfolio, Notifications as YoroiNotifications} from '@yoroi/types'
 
+import messaging from '@react-native-firebase/messaging'
 import * as Notifications from 'expo-notifications'
 import {Linking, PermissionsAndroid, Platform} from 'react-native'
 
+import {logger} from '~/kernel/logger/logger'
 import {WalletNavigation} from '~/kernel/navigation/types'
 
 import {BannerIds} from './banners'
@@ -12,18 +14,28 @@ import {uiStorage} from './storage'
 const permissionModalStorageKey = 'triggeredNotificationsPermissionModal'
 
 export const triggerNotificationsPermissionModal = async () => {
-  // Request permissions using Expo notifications
   const {status: existingStatus} = await Notifications.getPermissionsAsync()
 
+  let finalStatus = existingStatus
+
   if (existingStatus !== 'granted') {
-    await Notifications.requestPermissionsAsync()
+    const result = await Notifications.requestPermissionsAsync()
+    finalStatus = result.status
   }
 
-  // Android requires manual permission request for POST_NOTIFICATIONS
-  if (Platform.OS === 'android') {
+  if (Platform.OS === 'android' && finalStatus === 'granted') {
     await PermissionsAndroid.request(
       PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
     )
+  }
+
+  if (finalStatus === 'granted') {
+    try {
+      await messaging().registerDeviceForRemoteMessages()
+      await messaging().requestPermission()
+    } catch (error) {
+      logger.error('Firebase registration failed', {error})
+    }
   }
 
   await uiStorage.setItem(permissionModalStorageKey, true)
