@@ -51,6 +51,14 @@ export const getNotificationsAuthorizationStatus = async () => {
     (await uiStorage.getItem(permissionModalStorageKey)) !== true
 
   if (status === 'granted') {
+    if (Platform.OS === 'android') {
+      const androidPermissionStatus = await PermissionsAndroid.check(
+        PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
+      )
+      if (!androidPermissionStatus) {
+        return 'denied'
+      }
+    }
     return 'authorized'
   }
 
