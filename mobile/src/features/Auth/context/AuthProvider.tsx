@@ -5,6 +5,7 @@ import {freeze} from 'immer'
 import * as React from 'react'
 
 import {useBackgroundTimer} from '~/hooks/useBackgroundTimer'
+import {isDev} from '~/kernel/constants'
 import {decryptData} from '~/kernel/crypto/decrypt-data'
 import {encryptData} from '~/kernel/crypto/encrypt-data'
 import {logger} from '~/kernel/logger/logger'
@@ -23,6 +24,11 @@ export const AuthProvider: React.FC<React.PropsWithChildren<Props>> = ({
     authStorageKeyManager,
   )
   const {authWithHostConfig, authWithHost} = useAuthWithHost()
+  const [isAuthDev, setIsAuthDev] = React.useState(isDev)
+
+  const toggleDevMode = React.useCallback(() => {
+    setIsAuthDev((prev) => !prev)
+  }, [])
 
   // NOTE: This should be configurable
   useBackgroundTimer({
@@ -147,6 +153,8 @@ export const AuthProvider: React.FC<React.PropsWithChildren<Props>> = ({
       },
       changeAuthSetting,
       authSetting,
+      isAuthDev,
+      toggleDevMode,
     }),
     [
       authWithHostConfig,
@@ -159,6 +167,8 @@ export const AuthProvider: React.FC<React.PropsWithChildren<Props>> = ({
       loggedState,
       authSetting,
       changeAuthSetting,
+      isAuthDev,
+      toggleDevMode,
     ],
   )
   return <Context.Provider value={value}>{children}</Context.Provider>
@@ -216,6 +226,8 @@ type AuthContextActions = {
   }) => Promise<boolean>
   checkPin(pin: string): boolean
   createPin(pin: string): void
+  isAuthDev: boolean
+  toggleDevMode(): void
 }
 
 type AuthContext = AuthLoggedState &

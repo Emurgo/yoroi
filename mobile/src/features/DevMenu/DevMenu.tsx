@@ -20,6 +20,7 @@ import {rootMMKV, rootSyncStorage} from '~/kernel/storage/storages'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {LoadingOverlay} from '~/ui/LoadingOverlay/LoadingOverlay'
 import {useModal} from '~/ui/Modal/context/ModalContext'
+import {ScrollView} from '~/ui/ScrollView/ScrollView'
 import {TextInput} from '~/ui/TextInput/TextInput'
 
 import {useWalletNameOverride} from '../Discover/common/WalletNameOverrideContext'
@@ -58,15 +59,9 @@ export function DevMenu() {
     >
       <SystemBars style={isDark ? 'light' : 'dark'} />
 
-      <View
-        style={[
-          a.flex_1,
-          ta.bg_color_max,
-          a.gap_sm,
-          a.flex_row,
-          a.flex_wrap,
-          a.p_lg,
-        ]}
+      <ScrollView
+        style={[a.flex_1]}
+        contentContainerStyle={[a.gap_sm, a.flex_row, a.flex_wrap, a.p_lg]}
       >
         <Text style={[a.body_2_md_regular, ta.text_gray_max]}>
           base: {basePalette} selectedTheme: {config} currency: {currency}{' '}
@@ -264,9 +259,9 @@ export function DevMenu() {
         />
 
         <BuggyComponent showCrash={showCrash} />
+      </ScrollView>
 
-        <LoadingOverlay isLoading={isLoading} />
-      </View>
+      <LoadingOverlay isLoading={isLoading} />
 
       {/* <BluetoothDeviceManager
         showConnectionStatus

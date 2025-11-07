@@ -30,7 +30,7 @@ import {NotificationsDevScreen} from '~/features/Notifications/useCases/Notifica
 import {SetupWalletNavigator} from '~/features/SetupWallet/SetupWalletNavigator'
 import {useHasWallets} from '~/features/WalletManager/hooks/useHasWallets'
 
-import {agreementDate, isDev} from '../constants'
+import {agreementDate} from '../constants'
 import {features} from '../features'
 import {useStrings} from '../i18n/useStrings'
 import {WalletNavigator} from './WalletNavigator'
@@ -40,9 +40,9 @@ import {FirstAction} from './types'
 const Stack = createStackNavigator()
 
 export const AppNavigator = () => {
+  const {isAuthDev, isLoggedOut, isLoggedIn} = useAuth()
   const {palette: p} = useTheme()
   const firstAction = useFirstAction()
-  const {isLoggedOut, isLoggedIn} = useAuth()
   const afterLoginAction = useAfterLoginAction()
   const strings = useStrings()
 
@@ -153,7 +153,7 @@ export const AppNavigator = () => {
         )}
 
         {/* Development */}
-        {isDev && (
+        {isAuthDev && (
           <Stack.Group>
             <Stack.Screen
               name="developer"
