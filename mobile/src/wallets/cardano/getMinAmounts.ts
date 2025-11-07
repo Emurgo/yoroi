@@ -51,7 +51,7 @@ export const getMinAmounts = (
       {defaultIdentifier: primaryTokenInfo.id},
     )
 
-    const value = cardanoValueFromMultiToken(multiToken)
+    const value = cardanoValueFromMultiToken(multiToken, csl)
     const coinsPerUtxoByte = csl.BigNum.fromStr(protocolParams.coinsPerUtxoByte)
 
     const normalizedAddress = normalizeToAddress(csl, address)
