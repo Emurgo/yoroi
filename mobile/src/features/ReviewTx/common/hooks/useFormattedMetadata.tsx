@@ -21,11 +21,11 @@ export const formatMetadata = (
     unsignedTx.unsignedTx.auxiliaryData &&
     hash != null
   ) {
-    const generalTransactionMetadata =
-      unsignedTx.unsignedTx.auxiliaryData?.metadata()
-    if (generalTransactionMetadata) {
-      CardanoMobileWrapped.cslScope((csl) => {
-        const metadata674 = generalTransactionMetadata?.get(
+    CardanoMobileWrapped.cslScope((csl) => {
+      const generalTransactionMetadata =
+        unsignedTx.unsignedTx.auxiliaryData?.metadata()
+      if (generalTransactionMetadata) {
+        const metadata674 = generalTransactionMetadata.get(
           csl.BigNum.fromStr('674'),
         )
         if (metadata674) {
@@ -36,8 +36,8 @@ export const formatMetadata = (
           const msg = [parseMsg(JSON.parse(decodedMetadata)?.msg ?? [''])]
           metadata = {msg}
         }
-      })
-    }
+      }
+    })
   } else if (cbor != null && hash != null) {
     CardanoMobileWrapped.cslScope((csl) => {
       const tx = csl.Transaction.fromHex(cbor)
