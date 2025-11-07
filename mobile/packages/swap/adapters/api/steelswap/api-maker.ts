@@ -178,6 +178,18 @@ export const steelswapApiMaker = (
       },
 
       async estimate(body: Swap.EstimateRequest) {
+        // Reject limit estimates (wantedPrice) - not supported
+        if (body.wantedPrice !== undefined) {
+          return freeze({
+            tag: 'left' as const,
+            error: {
+              status: -1,
+              message: 'Steelswap Aggregator only supports market',
+              responseData: null,
+            },
+          })
+        }
+
         // Ensure cache is populated before using getTokenDecimals
         if (!isCachePopulated()) {
           await api.tokens()

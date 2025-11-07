@@ -304,6 +304,26 @@ describe('steelswapApiMaker', () => {
       expect(isLeft(result)).toBe(true)
     })
 
+    it('should reject limit estimates (wantedPrice)', async () => {
+      const api = steelswapApiMaker(mockConfig)
+      const result = await api.estimate({
+        tokenIn: '.' as const,
+        tokenOut:
+          'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441' as const,
+        amountIn: 2,
+        slippage: 0.5,
+        wantedPrice: 1.5, // Limit estimate - should be rejected
+      })
+
+      expect(isLeft(result)).toBe(true)
+      if (isLeft(result)) {
+        expect(result.error.message).toBe(
+          'Steelswap Aggregator only supports market',
+        )
+        expect(result.error.status).toBe(-1)
+      }
+    })
+
     it('should handle estimate response with invalid structure', async () => {
       const mockResponse = {
         splitGroup: [[]],
