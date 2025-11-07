@@ -4,6 +4,7 @@ import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWalle
 import {_getRequiredUtxos} from '~/wallets/cardano/cip30/cip30'
 import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
 
+// Returns empty array if not enough UTXOs are found
 export const useGetInputs = () => {
   const {wallet, meta} = useSelectedWallet()
 
@@ -57,18 +58,20 @@ export const useGetInputs = () => {
           csl,
         )
 
+        // If we can't get UTXOs for the original amounts, we can't proceed
+        if (!originalUtxos || originalUtxos.length === 0) {
+          return []
+        }
+
         // Extract selected UTXO identifiers to exclude them from the second call
+        // Match by both txHash and txIndex since utxo_id format may vary
         const selectedUtxoKeys = new Set<string>()
-        if (originalUtxos && originalUtxos.length > 0) {
-          // Extract txHash and txIndex from CSL UTXOs to match with RawUtxos
-          // Match by both txHash and txIndex since utxo_id format may vary
-          for (const utxo of originalUtxos) {
-            const input = utxo.input()
-            const txHash = input.transactionId().toHex()
-            const txIndex = input.index()
-            const key = `${txHash}:${txIndex}`
-            selectedUtxoKeys.add(key)
-          }
+        for (const utxo of originalUtxos) {
+          const input = utxo.input()
+          const txHash = input.transactionId().toHex()
+          const txIndex = input.index()
+          const key = `${txHash}:${txIndex}`
+          selectedUtxoKeys.add(key)
         }
 
         // Filter out already selected UTXOs from the pool
