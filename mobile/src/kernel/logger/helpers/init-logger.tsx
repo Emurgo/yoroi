@@ -40,7 +40,7 @@ Sentry.init({
   environment,
   release,
   dist: distribution,
-  spotlight: __DEV__,
+  spotlight: isDev,
   enableCaptureFailedRequests: true,
   enableAppHangTracking: true,
   enableAutoPerformanceTracing: true,

@@ -1,5 +1,7 @@
 import {freeze} from 'immer'
 
+import {isDev} from '~/kernel/constants'
+
 import {anzensLogo, banxaLogo, cardanoSpotLogo, encryptusLogo} from './logos'
 
 export const trustedApps: Readonly<
@@ -9,7 +11,7 @@ export const trustedApps: Readonly<
   >
 > = freeze(
   new Map(
-    __DEV__
+    isDev
       ? [
           [
             'yoroi',

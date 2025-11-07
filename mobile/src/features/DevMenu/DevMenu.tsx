@@ -22,6 +22,8 @@ import {LoadingOverlay} from '~/ui/LoadingOverlay/LoadingOverlay'
 import {useModal} from '~/ui/Modal/context/ModalContext'
 import {TextInput} from '~/ui/TextInput/TextInput'
 
+import {useWalletNameOverride} from '../Discover/common/WalletNameOverrideContext'
+import {WalletNameOverrideModalContent} from '../Discover/common/WalletNameOverrideModalContent'
 import {useWalletManager} from '../WalletManager/context/WalletManagerProvider'
 import {useCreateWalletMnemonic} from '../WalletManager/hooks/useCreateWalletMnemonic'
 
@@ -47,6 +49,7 @@ export function DevMenu() {
   const navigation = useNavigation<any>()
   const {openModal, closeModal} = useModal()
   const [demoText, setDemoText] = React.useState('')
+  const {walletNameOverride} = useWalletNameOverride()
 
   return (
     <SafeAreaView
@@ -243,6 +246,20 @@ export function DevMenu() {
           title={
             walletManager.isSyncActive ? 'Pause Syncing' : 'Resume Syncing'
           }
+          style={[a.pt_md, a.p_md, a.rounded_md]}
+        />
+
+        <Button
+          onPress={() => {
+            openModal({
+              title: 'Wallet Name Override',
+              canDiscard: true,
+              height: 300,
+              content: <WalletNameOverrideModalContent />,
+            })
+          }}
+          type={ButtonType.Secondary}
+          title={`Wallet Name Override: ${walletNameOverride ?? 'yoroi'}`}
           style={[a.pt_md, a.p_md, a.rounded_md]}
         />
 
