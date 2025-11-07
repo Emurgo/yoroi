@@ -266,15 +266,21 @@ export const transformersMaker = ({
 
         const totalInput = splitOutput.quantityA / 10 ** tokenADecimals
         const totalOutput = splitOutput.quantityB / 10 ** tokenBDecimals
-        const batcherFee = splitOutput.totalFee / 10 ** lovelaceDecimals // Sum of batcher fees
         const deposits = splitOutput.totalDeposit / 10 ** lovelaceDecimals // Sum of deposits
+
+        // Add all fees in base units first to avoid precision issues, then convert once
+        const totalVolumeFeeInBase = splitOutput.pools.reduce(
+          (sum, pool) => sum + pool.volumeFee,
+          0,
+        )
+        const totalFeeInBase =
+          splitOutput.totalFee + splitOutput.steelswapFee + totalVolumeFeeInBase
+        // Convert total fee to decimal once
+        const totalFee = totalFeeInBase / 10 ** lovelaceDecimals
+
+        // Individual fees for backwards compatibility (convert after calculation)
+        const batcherFee = splitOutput.totalFee / 10 ** lovelaceDecimals // Sum of batcher fees
         const aggregatorFee = splitOutput.steelswapFee / 10 ** lovelaceDecimals // Aggregator fee
-        // Sum of all pool volume fees (pool fees)
-        const totalVolumeFee =
-          splitOutput.pools.reduce((sum, pool) => sum + pool.volumeFee, 0) /
-          10 ** lovelaceDecimals
-        // Total fee = batcher fees + volume fees + aggregator fees
-        const totalFee = batcherFee + totalVolumeFee + aggregatorFee
 
         // Price from API is inverted (input/output instead of output/input)
         // Calculate correct price: output per input (same as Minswap)
