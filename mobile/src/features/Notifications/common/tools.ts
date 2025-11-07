@@ -16,7 +16,7 @@ const permissionModalStorageKey = 'triggeredNotificationsPermissionModal'
 export const triggerNotificationsPermissionModal = async () => {
   const {status: existingStatus} = await Notifications.getPermissionsAsync()
 
-  let finalStatus = existingStatus
+  let finalStatus: Notifications.PermissionStatus = existingStatus
 
   if (existingStatus !== 'granted') {
     const result = await Notifications.requestPermissionsAsync()
@@ -24,9 +24,13 @@ export const triggerNotificationsPermissionModal = async () => {
   }
 
   if (Platform.OS === 'android' && finalStatus === 'granted') {
-    await PermissionsAndroid.request(
+    const androidPermissionResult = await PermissionsAndroid.request(
       PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
     )
+
+    if (androidPermissionResult !== PermissionsAndroid.RESULTS.GRANTED) {
+      finalStatus = 'denied' as Notifications.PermissionStatus
+    }
   }
 
   if (finalStatus === 'granted') {
