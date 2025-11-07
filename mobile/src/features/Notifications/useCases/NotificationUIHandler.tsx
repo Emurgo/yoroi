@@ -59,8 +59,6 @@ const useCollectNewNotifications = ({enabled}: {enabled: boolean}) => {
   )
 
   React.useEffect(() => {
-    if (!enabled || !isString(selectedWalletId) || isWalletSelectionScreen)
-      return
     const pushEvent = (event: Notifications.Event) => {
       setEvents((e) => [...e, event])
     }
@@ -72,6 +70,12 @@ const useCollectNewNotifications = ({enabled}: {enabled: boolean}) => {
         }
       },
     )
+
+    if (!enabled || !isString(selectedWalletId) || isWalletSelectionScreen) {
+      return () => {
+        pushSubscription.unsubscribe()
+      }
+    }
 
     const localSubscription = manager.newEvents$.subscribe((event) => {
       if (

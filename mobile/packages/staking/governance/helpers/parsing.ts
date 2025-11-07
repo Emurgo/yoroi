@@ -1,4 +1,4 @@
-import {bech32 as bech32Module} from 'bech32'
+import * as bech32Module from 'bech32'
 
 import {CardanoTypes} from '../../types'
 

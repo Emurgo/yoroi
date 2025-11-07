@@ -1,23 +1,20 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 
-import * as Notifications from 'expo-notifications'
 import * as React from 'react'
 import {Text, TouchableHighlight, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {usePromise} from '~/hooks/usePromise'
 import {appVersion, commit} from '~/kernel/constants'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Copiable} from '~/ui/Copiable/Copiable'
 
 import {useNavigateTo} from '../../../../hooks/useNavigateTo'
+import {useFCMToken} from './useFCMToken'
 
 export const AboutScreen = () => {
   const strings = useStrings()
   const {atoms: ta} = useTheme()
-  const {value: FCMToken} = usePromise({
-    promise: Notifications.getDevicePushTokenAsync,
-  })
+  const FCMToken = useFCMToken()
   const navigation = useNavigateTo()
 
   const handleOnLongPress = () => {
@@ -63,13 +60,12 @@ export const AboutScreen = () => {
             {strings.settings.about.fcmToken}
           </Text>
 
-          <Copiable text={FCMToken.data}>
+          <Copiable text={FCMToken}>
             <Text
               style={[a.body_1_lg_regular, ta.text_gray_medium]}
               numberOfLines={1}
-              ellipsizeMode="middle"
             >
-              {FCMToken.data}
+              {`${FCMToken.slice(0, 8)}...${FCMToken.slice(-8)}`}
             </Text>
           </Copiable>
         </View>

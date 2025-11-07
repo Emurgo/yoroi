@@ -97,3 +97,5 @@ html-report/
 #build
 .expo/
 .metro-cache/
+**/google-services.json
+**/GoogleService-Info.plist
