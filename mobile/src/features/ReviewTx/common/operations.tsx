@@ -15,9 +15,9 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {Icon} from '~/ui/Icon'
 import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Space} from '~/ui/Space/Space'
+import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
 import {formatTokenWithText} from '~/wallets/utils/format'
 import {Quantities, asQuantity} from '~/wallets/utils/utils'
-import {CardanoMobile} from '~/wallets/wallets'
 
 import {PoolDetails} from './PoolDetails'
 import {generatePoolName} from './poolUtils'
@@ -829,8 +829,10 @@ const updateOperationsCount = (
 }
 
 export const getDrepBech32Id = async (poolId: string) => {
-  const keyHash = CardanoMobile.Ed25519KeyHash.fromHex(poolId)
-  return keyHash.toBech32('drep')
+  return CardanoMobileWrapped.cslScope((csl) => {
+    const keyHash = csl.Ed25519KeyHash.fromHex(poolId)
+    return keyHash.toBech32('drep')
+  })
 }
 
 export const useDrepBech32Id = (poolId: string) => {

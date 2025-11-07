@@ -11,11 +11,11 @@ import {BaseAsset, RawUtxo} from '../types/other'
 import {DefaultAsset} from '../types/tokens'
 import {YoroiEntry} from '../types/yoroi'
 import {Amounts} from '../utils/utils'
-import {CardanoMobile} from '../wallets'
 import {MultiToken} from './MultiToken'
 import {identifierToCardanoAsset} from './assetHelpers'
 import {withMinAmounts} from './getMinAmounts'
 import {CardanoTypes, YoroiWallet} from './types'
+import {CardanoMobileWrapped} from './wrappedCsl'
 
 export const deriveRewardAddressHex = (
   accountPubKeyHex: string,
@@ -23,57 +23,57 @@ export const deriveRewardAddressHex = (
   role: number,
   index: number,
 ): string => {
-  const accountPubKeyPtr = CardanoMobile.Bip32PublicKey.fromBytes(
-    Buffer.from(accountPubKeyHex, 'hex'),
-  )
-  const stakingKey = accountPubKeyPtr.derive(role).derive(index).toRawKey()
-  const credential = CardanoMobile.Credential.fromKeyhash(stakingKey.hash())
-  const rewardAddr = CardanoMobile.RewardAddress.new(chainId, credential)
-  const rewardAddrAsAddr = rewardAddr.toAddress()
+  return CardanoMobileWrapped.cslScope((csl) => {
+    const accountPubKeyPtr = csl.Bip32PublicKey.fromBytes(
+      Buffer.from(accountPubKeyHex, 'hex'),
+    )
+    const stakingKey = accountPubKeyPtr.derive(role).derive(index).toRawKey()
+    const credential = csl.Credential.fromKeyhash(stakingKey.hash())
+    const rewardAddr = csl.RewardAddress.new(chainId, credential)
+    const rewardAddrAsAddr = rewardAddr.toAddress()
 
-  const result = Buffer.from(rewardAddrAsAddr.toBytes() as any, 'hex').toString(
-    'hex',
-  )
-  return result
+    const result = Buffer.from(rewardAddrAsAddr.toBytes()).toString('hex')
+    return result
+  })
 }
 
 export const deriveRewardAddressFromAddress = (
   address: string,
   chainId: number,
 ): string => {
-  const result = CardanoMobile.RewardAddress.new(
-    chainId,
-    CardanoMobile.BaseAddress.fromAddress(
-      CardanoMobile.Address.fromBech32(address),
-    )?.stakeCred() ?? invalid('invalid base address'),
-  )
-    .toAddress()
-    .toBech32(undefined)
+  return CardanoMobileWrapped.cslScope((csl) => {
+    const result = csl.RewardAddress.new(
+      chainId,
+      csl.BaseAddress.fromAddress(
+        csl.Address.fromBech32(address),
+      )?.stakeCred() ?? invalid('invalid base address'),
+    )
+      .toAddress()
+      .toBech32(undefined)
 
-  if (typeof result !== 'string')
-    throw new Error('Its not possible to derive reward address')
-  return result
+    if (typeof result !== 'string')
+      throw new Error('Its not possible to derive reward address')
+    return result
+  })
 }
 
 /**
  * Multi-asset related
  */
 
-export const cardanoValueFromRemoteFormat = (utxo: RawUtxo) => {
-  const value = CardanoMobile.Value.new(
-    CardanoMobile.BigNum.fromStr(utxo.amount),
-  )
+export const cardanoValueFromRemoteFormat = (
+  utxo: RawUtxo,
+  csl: WasmModuleProxy,
+) => {
+  const value = csl.Value.new(csl.BigNum.fromStr(utxo.amount))
   if (utxo.assets.length === 0) return value
-  const assets = CardanoMobile.MultiAsset.new()
+  const assets = csl.MultiAsset.new()
 
   for (const remoteAsset of utxo.assets) {
     const {policyId, name} = identifierToCardanoAsset(remoteAsset.assetId)
     let policyContent = assets.get(policyId)
-    policyContent = policyContent?.hasValue()
-      ? policyContent
-      : CardanoMobile.Assets.new()
-    policyContent.insert(name, CardanoMobile.BigNum.fromStr(remoteAsset.amount))
-    // recall: we always have to insert since WASM returns copies of objects
+    policyContent = policyContent?.hasValue() ? policyContent : csl.Assets.new()
+    policyContent.insert(name, csl.BigNum.fromStr(remoteAsset.amount))
     assets.insert(policyId, policyContent)
   }
 
@@ -177,37 +177,38 @@ export const isTokenInfo = (
 }
 
 export const generateCIP30UtxoCbor = (utxo: RawUtxo) => {
-  const txHash = CardanoMobile.TransactionHash.fromBytes(
-    Buffer.from(utxo.tx_hash, 'hex'),
-  )
-  if (!txHash) throw new Error('Invalid tx hash')
+  return CardanoMobileWrapped.cslScope((csl) => {
+    const txHash = csl.TransactionHash.fromBytes(
+      Buffer.from(utxo.tx_hash, 'hex'),
+    )
+    if (!txHash) throw new Error('Invalid tx hash')
 
-  const index = utxo.tx_index
-  const input = CardanoMobile.TransactionInput.new(txHash, index)
-  const address = CardanoMobile.Address.fromBech32(utxo.receiver)
-  if (!address) throw new Error('Invalid address')
+    const index = utxo.tx_index
+    const input = csl.TransactionInput.new(txHash, index)
+    const address = csl.Address.fromBech32(utxo.receiver)
+    if (!address) throw new Error('Invalid address')
 
-  const amount = CardanoMobile.BigNum.fromStr(utxo.amount)
-  if (!amount) throw new Error('Invalid amount')
+    const amount = csl.BigNum.fromStr(utxo.amount)
+    if (!amount) throw new Error('Invalid amount')
 
-  const collateral = CardanoMobile.Value.new(amount)
-  const output = CardanoMobile.TransactionOutput.new(address, collateral)
-  const transactionUnspentOutput = CardanoMobile.TransactionUnspentOutput.new(
-    input,
-    output,
-  )
+    const collateral = csl.Value.new(amount)
+    const output = csl.TransactionOutput.new(address, collateral)
+    const transactionUnspentOutput = csl.TransactionUnspentOutput.new(
+      input,
+      output,
+    )
 
-  return transactionUnspentOutput.toHex()
+    return transactionUnspentOutput.toHex()
+  })
 }
 
 export const createRawTxSigningKey = (
   rootKey: string,
   derivationPath: number[],
+  csl: WasmModuleProxy,
 ) => {
   if (derivationPath.length !== 5) throw new Error('Invalid derivation path')
-  const masterKey = CardanoMobile.Bip32PrivateKey.fromBytes(
-    Buffer.from(rootKey, 'hex'),
-  )
+  const masterKey = csl.Bip32PrivateKey.fromBytes(Buffer.from(rootKey, 'hex'))
   const accountPrivateKey = masterKey
     .derive(derivationPath[0]!)
     .derive(derivationPath[1]!)
@@ -218,7 +219,7 @@ export const createRawTxSigningKey = (
   const rawKey = accountPrivateKey.toRawKey()
   const bech32 = rawKey.toBech32()
 
-  const pkey = CardanoMobile.PrivateKey.fromBech32(bech32)
+  const pkey = csl.PrivateKey.fromBech32(bech32)
   if (!pkey) throw new Error('Invalid private key')
   return pkey
 }

@@ -158,6 +158,14 @@ const apiManagerMaker = (
             order.aggregator === Swap.Aggregator.Dexhunter
           )
             merged[key] = order
+
+          // Make sure we have Dexhunter's customId in case we need to cancel the order with them
+          if (
+            order.customId &&
+            merged[key] &&
+            merged[key].customId === undefined
+          )
+            merged[key] = {...merged[key], customId: order.customId}
         }
 
         responses
@@ -417,8 +425,9 @@ export const standarizeError = <T>(input: Api.Response<T>): Api.Response<T> => {
     case response.error.message.includes(
       'Transaction Building ErrorNo Remaining UTxOs',
     ):
+    case response.error.message.includes('Insufficient balance'):
       response.error.message =
-        'Insufficient balance: consider fees, assets blocked by staking or multiaddress holdings'
+        'Insufficient balance: consider fees and assets blocked by staking.'
 
       break
     case response.error.message.includes('amount_in_invalid'):
