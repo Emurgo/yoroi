@@ -100,6 +100,7 @@ export function useNotificationPermission() {
       const newStatus = await getNotificationsAuthorizationStatus()
       setPermission(newStatus)
     } else {
+      setPermission(permission === 'authorized' ? 'denied' : 'authorized')
       await navigateToAppSettings()
     }
   }
