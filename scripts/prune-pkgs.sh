@@ -13,6 +13,7 @@ PACKAGES=(
   "notifications"
   "links"
   "dapp-connector"
+  "p2p-communication"
   "exchange"
   "resolver"
   "claim"

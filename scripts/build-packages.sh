@@ -31,7 +31,7 @@ LEVEL_0=("types" "identicon")
 LEVEL_1=("common")
 
 # Level 2: Depends on Level 1
-LEVEL_2=("theme" "api" "explorers" "portfolio" "notifications" "links" "dapp-connector")
+LEVEL_2=("theme" "api" "explorers" "portfolio" "notifications" "links" "dapp-connector" "p2p-communication")
 
 # Level 3: Depends on Level 2
 LEVEL_3=("exchange" "resolver" "claim" "setup-wallet")
