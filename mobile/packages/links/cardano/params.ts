@@ -1,7 +1,15 @@
 import {isArrayOfString, isString, isUrl} from '@yoroi/common'
 import {Links, Writable} from '@yoroi/types'
 
+import {validateCardanoAddress} from './helpers'
 import {LinksCardanoUriConfig} from './types'
+import {
+  isValidBlockHeight,
+  validateBlockHash,
+  validateNamespacedDomain,
+  validateScheme,
+  validateTransactionHash,
+} from './validators'
 
 /**
  * Prepares and validates parameters for a Cardano URI link based on a given configuration.
@@ -127,9 +135,89 @@ export const getParamValidator =
           `The param ${key} on ${config.scheme} ${config.authority} ${config.version} must be a number without thousand separators and using dot as decimal separator`,
         )
       }
-      case 'address':
+      case 'address': {
+        // Validate Cardano address format
+        if (isString(value) && validateCardanoAddress(value)) break
+        throw new Links.Errors.ParamsValidationFailed(
+          `The param ${key} on ${config.scheme} ${config.authority} ${config.version} must be a valid Cardano address`,
+        )
+      }
       case 'code': {
         // if other check besides `claim` authority is needed it should be added here conditionally
+        if (isString(value)) break
+        throw new Links.Errors.ParamsValidationFailed(
+          `The param ${key} on ${config.scheme} ${config.authority} ${config.version} must be a string`,
+        )
+      }
+      case 'peerId': {
+        if (isString(value) && value.length > 0) break
+        throw new Links.Errors.ParamsValidationFailed(
+          `The param ${key} on ${config.scheme} ${config.authority} ${config.version} must be a non-empty string`,
+        )
+      }
+      case 'signalingUrl': {
+        if (isUrl(value)) break
+        throw new Links.Errors.ParamsValidationFailed(
+          `The param ${key} on ${config.scheme} ${config.authority} ${config.version} must be a valid URL`,
+        )
+      }
+      case 'scheme': {
+        if (isString(value) && validateScheme(value)) break
+        throw new Links.Errors.ParamsValidationFailed(
+          `The param ${key} on ${config.scheme} ${config.authority} ${config.version} must be a valid URI scheme`,
+        )
+      }
+      case 'namespaced_domain': {
+        if (isString(value) && validateNamespacedDomain(value)) break
+        throw new Links.Errors.ParamsValidationFailed(
+          `The param ${key} on ${config.scheme} ${config.authority} ${config.version} must be a valid namespaced domain`,
+        )
+      }
+      case 'app_path': {
+        if (isString(value)) break
+        throw new Links.Errors.ParamsValidationFailed(
+          `The param ${key} on ${config.scheme} ${config.authority} ${config.version} must be a string`,
+        )
+      }
+      case 'url': {
+        // Reconstructed URL for browse authority
+        if (isString(value) && isUrl(value)) break
+        throw new Links.Errors.ParamsValidationFailed(
+          `The param ${key} on ${config.scheme} ${config.authority} ${config.version} must be a valid URL`,
+        )
+      }
+      case 'hash': {
+        // Transaction or block hash validation depends on authority
+        if (config.authority === 'transaction') {
+          if (isString(value) && validateTransactionHash(value)) break
+          throw new Links.Errors.ParamsValidationFailed(
+            `The param ${key} on ${config.scheme} ${config.authority} ${config.version} must be a valid transaction hash`,
+          )
+        } else if (config.authority === 'block') {
+          if (isString(value) && validateBlockHash(value)) break
+          throw new Links.Errors.ParamsValidationFailed(
+            `The param ${key} on ${config.scheme} ${config.authority} ${config.version} must be a valid block hash`,
+          )
+        }
+        // Fallback for other authorities
+        if (isString(value)) break
+        throw new Links.Errors.ParamsValidationFailed(
+          `The param ${key} on ${config.scheme} ${config.authority} ${config.version} must be a string`,
+        )
+      }
+      case 'height': {
+        if (isString(value) && isValidBlockHeight(value)) break
+        throw new Links.Errors.ParamsValidationFailed(
+          `The param ${key} on ${config.scheme} ${config.authority} ${config.version} must be a valid block height (non-negative integer)`,
+        )
+      }
+      case 'pool': {
+        if (isString(value) && value.length > 0) break
+        throw new Links.Errors.ParamsValidationFailed(
+          `The param ${key} on ${config.scheme} ${config.authority} ${config.version} must be a non-empty string`,
+        )
+      }
+      case 'asset': {
         if (isString(value)) break
         throw new Links.Errors.ParamsValidationFailed(
           `The param ${key} on ${config.scheme} ${config.authority} ${config.version} must be a string`,

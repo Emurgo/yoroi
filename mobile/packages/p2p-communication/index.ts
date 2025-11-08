@@ -40,6 +40,13 @@ export {
 
 export {getPersistentDappId, getPersistentWalletId} from './utils/id-utils'
 
+export {
+  generateP2PDeeplink,
+  parseP2PDeeplink,
+  generateCIP158P2PDeeplink,
+} from './utils/deeplink-utils'
+export type {P2PConnectionDeeplink} from './utils/deeplink-utils'
+
 // Types
 export type {
   MessageType,

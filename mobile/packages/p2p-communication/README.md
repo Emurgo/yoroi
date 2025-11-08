@@ -521,6 +521,71 @@ For wallet-to-wallet connections, peer IDs can be shared via:
 
 The peer ID format is: `wallet-{deviceHash}-{installTime}` or `dapp-{deviceHash}-{timestamp}`
 
+### Deep Link Format
+
+The package provides utilities for generating and parsing P2P connection deeplinks:
+
+#### Standard Format (wallet://)
+
+```
+wallet://connect?peerId=xyz&signalingUrl=wss://signaling-server.com
+```
+
+#### CIP-158 Compatible Format (web+cardano://)
+
+```
+web+cardano://connect/v1?peerId=xyz&signalingUrl=wss://signaling-server.com
+```
+
+**Parameters:**
+- `peerId` (required): The peer ID to connect to
+- `signalingUrl` (optional): The WebSocket URL of the signaling server. If omitted, the connection will use the signalingUrl from the connection configuration.
+
+#### Usage Example
+
+```typescript
+import {
+  generateP2PDeeplink,
+  parseP2PDeeplink,
+  generateCIP158P2PDeeplink,
+} from '@yoroi/p2p-communication'
+
+// Generate deeplink for QR code
+const deeplink = generateP2PDeeplink({
+  peerId: 'dapp-abc123-xyz789',
+  signalingUrl: 'wss://signaling-server.com',
+})
+
+// Or generate CIP-158 compatible deeplink
+const cip158Deeplink = generateCIP158P2PDeeplink({
+  peerId: 'dapp-abc123-xyz789',
+  signalingUrl: 'wss://signaling-server.com',
+})
+
+// Parse deeplink from QR scan
+const parsed = parseP2PDeeplink(scannedQrCode)
+if (parsed) {
+  // Use parsed.signalingUrl if provided, otherwise use default from config
+  const signalingUrl = parsed.signalingUrl || defaultSignalingUrl
+  
+  // Update connection config with signaling URL
+  connectionManager = connectionManagerMaker({
+    storage,
+    webrtcAdapter,
+    peerConfig: {
+      signalingUrl,
+    },
+  })
+  
+  // Connect to peer
+  await connectionManager.initialize()
+  const peerConnection = connectionManager.getPeerConnection()
+  if (peerConnection) {
+    await peerConnection.connectToPeer(parsed.peerId)
+  }
+}
+```
+
 ## License
 
 See main project license.
