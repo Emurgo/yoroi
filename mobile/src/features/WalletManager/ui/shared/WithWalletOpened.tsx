@@ -15,13 +15,46 @@ import {App, Resolver} from '@yoroi/types'
 import * as React from 'react'
 
 import {unstoppableApiKey} from '~/kernel/constants'
+import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 
+import {useWalletManager} from '../../context/WalletManagerProvider'
 import {useSelectedNetwork} from '../../hooks/useSelectedNetwork'
-import {useSelectedWallet} from '../../hooks/useSelectedWallet'
+import {useSelectWalletModal} from '../modals/SelectWalletModal'
 
 export const WithWalletOpened = ({children}: React.PropsWithChildren) => {
-  const {wallet} = useSelectedWallet()
+  const {
+    selected: {wallet, meta},
+  } = useWalletManager()
+  const {openSelectWalletModal} = useSelectWalletModal()
+  const walletNavigation = useWalletNavigation()
+  const [hasShownModal, setHasShownModal] = React.useState(false)
+
+  // Show modal if wallet is not selected (only once per mount)
+  React.useEffect(() => {
+    if (!wallet || !meta) {
+      if (!hasShownModal) {
+        setHasShownModal(true)
+        openSelectWalletModal({
+          onSelect: () => {
+            setHasShownModal(false)
+          },
+          onCancel: () => {
+            setHasShownModal(false)
+            walletNavigation.resetToWalletSelection()
+          },
+        })
+      }
+    } else {
+      setHasShownModal(false)
+    }
+  }, [wallet, meta, hasShownModal, openSelectWalletModal, walletNavigation])
+
+  // Must call hooks before early return (React rules)
   const claimManager = React.useMemo(() => {
+    if (!wallet || !meta) {
+      // Return a placeholder - won't be used since we return null below
+      return null
+    }
     const address = wallet.externalAddresses[0]
     if (!address) throw new App.Errors.InvalidState('Missing external address')
 
@@ -30,11 +63,16 @@ export const WithWalletOpened = ({children}: React.PropsWithChildren) => {
       primaryTokenInfo: wallet.portfolioPrimaryTokenInfo,
       tokenManager: wallet.networkManager.tokenManager,
     })
-  }, [
-    wallet.externalAddresses,
-    wallet.portfolioPrimaryTokenInfo,
-    wallet.networkManager.tokenManager,
-  ])
+  }, [wallet, meta])
+
+  // Don't render children until wallet is selected
+  // The modal is shown and non-dismissible, so user must select a wallet
+  if (!wallet || !meta || !claimManager) {
+    return null
+  }
+
+  // From this point, wallet and meta are guaranteed to be non-null
+  // Children can safely use useSelectedWallet() without null checks
 
   return (
     <NetworkWrapper>

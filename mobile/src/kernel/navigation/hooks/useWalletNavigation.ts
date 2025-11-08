@@ -409,6 +409,54 @@ export const useWalletNavigation = () => {
       })
     },
 
+    navigateToAddressDetails: (address: string) => {
+      navigation.navigate('manage-wallets', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'history',
+          params: {screen: 'address-details', params: {address}},
+        },
+      })
+    },
+
+    navigateToBlockDetails: ({
+      hash,
+      height,
+    }: {
+      hash?: string
+      height?: string
+    }) => {
+      navigation.navigate('manage-wallets', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'history',
+          params: {
+            screen: 'block-details',
+            params: {hash, height},
+          },
+        },
+      })
+    },
+
+    navigateToP2PConnection: ({
+      peerId,
+      signalingUrl,
+    }: {
+      peerId: string
+      signalingUrl?: string
+    }) => {
+      navigation.navigate('manage-wallets', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'history',
+          params: {
+            screen: 'p2p-connection',
+            params: {peerId, signalingUrl},
+          },
+        },
+      })
+    },
+
     // Send Navigation Functions
     navigateToSendStartTx: () => {
       navigation.navigate('manage-wallets', {

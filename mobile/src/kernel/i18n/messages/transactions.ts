@@ -283,4 +283,16 @@ export const transactionsMessages = defineMessages({
     id: 'components.txhistory.txdetails.addressPrefixNotMine',
     defaultMessage: '!!!External Address',
   },
+  addressDetailsTitle: {
+    id: 'components.transactions.addressDetailsTitle',
+    defaultMessage: '!!!Address Details',
+  },
+  blockDetailsTitle: {
+    id: 'components.transactions.blockDetailsTitle',
+    defaultMessage: '!!!Block Details',
+  },
+  address: {
+    id: 'components.transactions.address',
+    defaultMessage: '!!!Address',
+  },
 })

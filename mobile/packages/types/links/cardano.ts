@@ -16,7 +16,18 @@ export interface LinksUriConfig {
 
 export interface LinksWebCardanoUriConfig extends LinksUriConfig {
   readonly scheme: 'web+cardano'
-  readonly authority: '' | 'transfer' | 'claim'
+  readonly authority:
+    | ''
+    | 'transfer'
+    | 'claim'
+    | 'browse'
+    | 'pay'
+    | 'payment'
+    | 'stake'
+    | 'transaction'
+    | 'block'
+    | 'address'
+    | 'connect'
   readonly version: 'v1' | ''
 }
 

@@ -29,7 +29,10 @@ export const parseScanAction = (codeContent: string): Scan.Action => {
   if (parsedCardanoLink === undefined)
     throw new Links.Errors.SchemeNotImplemented()
 
-  if (parsedCardanoLink.config.authority === 'claim') {
+  const {authority} = parsedCardanoLink.config
+
+  // Handle claim authority
+  if (authority === 'claim') {
     const {faucet_url: url, code, ...params} = parsedCardanoLink.params
     return freeze(
       {
@@ -42,6 +45,117 @@ export const parseScanAction = (codeContent: string): Scan.Action => {
     )
   }
 
+  // Handle browse authority (CIP-158)
+  if (authority === 'browse') {
+    const {scheme, namespaced_domain, app_path, url, ...queryParams} =
+      parsedCardanoLink.params
+    const reversedDomain = namespaced_domain.split('.').reverse().join('.')
+    const queryString =
+      Object.keys(queryParams).length > 0
+        ? '?' +
+          new URLSearchParams(queryParams as Record<string, string>).toString()
+        : ''
+    return freeze({
+      action: 'browse-dapp',
+      scheme: scheme as string,
+      domain: reversedDomain,
+      path: app_path as string | undefined,
+      url: url as string,
+      query: queryString || undefined,
+    } as const)
+  }
+
+  // Handle pay authority (CIP-PR843)
+  if (authority === 'pay') {
+    const {address, amount, asset, memo} = parsedCardanoLink.params
+    return freeze({
+      action: 'pay-request',
+      address: address as string,
+      amount: amount ? String(amount) : undefined,
+      asset: asset as string | undefined,
+      memo: memo as string | undefined,
+    } as const)
+  }
+
+  // Handle payment authority (CIP-13)
+  if (authority === 'payment') {
+    const {address, amount, asset, memo} = parsedCardanoLink.params
+    return freeze({
+      action: 'pay-request',
+      address: address as string,
+      amount: amount ? String(amount) : undefined,
+      asset: asset as string | undefined,
+      memo: memo as string | undefined,
+    } as const)
+  }
+
+  // Handle stake authority (CIP-13)
+  if (authority === 'stake') {
+    const {pool} = parsedCardanoLink.params
+    return freeze({
+      action: 'stake-pool',
+      pool: pool as string,
+    } as const)
+  }
+
+  // Handle transaction authority (CIP-107)
+  if (authority === 'transaction') {
+    const {hash} = parsedCardanoLink.params
+    return freeze({
+      action: 'view-transaction',
+      hash: hash as string,
+    } as const)
+  }
+
+  // Handle block authority (CIP-107)
+  if (authority === 'block') {
+    const {hash, height} = parsedCardanoLink.params
+    return freeze({
+      action: 'view-block',
+      hash: hash as string | undefined,
+      height: height ? String(height) : undefined,
+    } as const)
+  }
+
+  // Handle address authority (CIP-134)
+  if (authority === 'address') {
+    const {address} = parsedCardanoLink.params
+    return freeze({
+      action: 'view-address',
+      address: address as string,
+    } as const)
+  }
+
+  // Handle connect authority (P2P connections)
+  if (authority === 'connect') {
+    const {peerId, signalingUrl} = parsedCardanoLink.params
+    return freeze({
+      action: 'p2p-connect',
+      peerId: peerId as string,
+      signalingUrl: signalingUrl as string | undefined,
+    } as const)
+  }
+
+  // LEGACY COMPATIBILITY: Handle legacy transfer (empty authority)
+  // This handles the old format where address was in the path
+  if (authority === '') {
+    const {address: receiver, amount, memo, message} = parsedCardanoLink.params
+    return freeze(
+      {
+        action: 'send-single-pt',
+        receiver,
+        params: {
+          amount,
+          memo,
+          message,
+        },
+      } as const,
+      true,
+    )
+  }
+
+  // Fallback: if we don't recognize the authority, treat as legacy transfer
+  // This maintains backward compatibility
   const {address: receiver, amount, memo, message} = parsedCardanoLink.params
   return freeze(
     {

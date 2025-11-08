@@ -1,5 +1,5 @@
 import {
-  configCardanoLegacyTransfer,
+  configCardanoPayV1,
   linksCardanoModuleMaker,
   linksYoroiModuleMaker,
 } from '@yoroi/links'
@@ -122,7 +122,7 @@ const ModalContent = ({amount, address}: {amount: string; address: string}) => {
   const {copy} = useCopy()
   const cardanoLinks = linksCardanoModuleMaker()
   const cardanoRequestLink = cardanoLinks.create({
-    config: configCardanoLegacyTransfer,
+    config: configCardanoPayV1,
     params: {
       address: address,
       amount: Number(amount),
@@ -182,7 +182,7 @@ const ModalFooter = ({amount, address}: {amount: string; address: string}) => {
 
   const cardanoLinks = linksCardanoModuleMaker()
   const cardanoRequestLink = cardanoLinks.create({
-    config: configCardanoLegacyTransfer,
+    config: configCardanoPayV1,
     params: {
       address: address,
       amount: Number(amount),

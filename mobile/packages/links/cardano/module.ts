@@ -33,7 +33,6 @@ import {preapareParams} from './params'
 import {LinksCardanoUriConfig} from './types'
 import {
   isValidBlockHeight,
-  isValidHex64,
   validateBlockHash,
   validateNamespacedDomain,
   validateScheme,
@@ -82,22 +81,50 @@ export const linksCardanoModuleMaker =
         addSearchParams(url, restParams)
       } else if (config.authority === 'browse') {
         // CIP-158 Browse: path-based authority
-        const {scheme, namespaced_domain, app_path, url: reconstructedUrl, ...queryParams} = sanitizedParams
+        const {
+          scheme,
+          namespaced_domain,
+          app_path,
+          url: reconstructedUrl,
+          ...queryParams
+        } = sanitizedParams
         const pathSegments = [config.version, scheme, namespaced_domain]
         if (app_path) {
           pathSegments.push(...app_path.split('/').filter(Boolean))
         }
-        url = new URL(config.scheme + '://' + config.authority + '/' + pathSegments.join('/'))
+        url = new URL(
+          config.scheme +
+            '://' +
+            config.authority +
+            '/' +
+            pathSegments.join('/'),
+        )
         addSearchParams(url, queryParams)
       } else if (config.authority === 'transaction') {
         // CIP-107 Transaction: path-based authority
         const {hash, ...restParams} = sanitizedParams
-        url = new URL(config.scheme + '://' + config.authority + '/' + config.version + '/' + hash)
+        url = new URL(
+          config.scheme +
+            '://' +
+            config.authority +
+            '/' +
+            config.version +
+            '/' +
+            hash,
+        )
         addSearchParams(url, restParams)
       } else if (config.authority === 'address') {
         // CIP-134 Address: path-based authority
         const {address, ...restParams} = sanitizedParams
-        url = new URL(config.scheme + '://' + config.authority + '/' + config.version + '/' + address)
+        url = new URL(
+          config.scheme +
+            '://' +
+            config.authority +
+            '/' +
+            config.version +
+            '/' +
+            address,
+        )
         addSearchParams(url, restParams)
       } else {
         // Query-based authorities (claim, pay, payment, stake, block, connect)
@@ -145,10 +172,10 @@ export const linksCardanoModuleMaker =
           )
         }
         const [, scheme, namespacedDomain, ...appPathParts] = pathParts
-        if (!validateScheme(scheme)) {
+        if (!scheme || !validateScheme(scheme)) {
           throw new Links.Errors.ParamsValidationFailed('Invalid scheme format')
         }
-        if (!validateNamespacedDomain(namespacedDomain)) {
+        if (!namespacedDomain || !validateNamespacedDomain(namespacedDomain)) {
           throw new Links.Errors.ParamsValidationFailed(
             'Invalid namespaced domain format',
           )
@@ -175,7 +202,7 @@ export const linksCardanoModuleMaker =
           )
         }
         const [, hash] = pathParts
-        if (!validateTransactionHash(hash)) {
+        if (!hash || !validateTransactionHash(hash)) {
           throw new Links.Errors.ParamsValidationFailed(
             'Invalid transaction hash format',
           )
@@ -198,7 +225,7 @@ export const linksCardanoModuleMaker =
           )
         }
         const [, address] = pathParts
-        if (!validateCardanoAddress(address)) {
+        if (!address || !validateCardanoAddress(address)) {
           throw new Links.Errors.ParamsValidationFailed(
             'Invalid Cardano address format',
           )
@@ -227,12 +254,16 @@ export const linksCardanoModuleMaker =
             'Cannot provide both block hash and height',
           )
         }
-        if (hash && !validateBlockHash(hash)) {
+        if (hash && typeof hash === 'string' && !validateBlockHash(hash)) {
           throw new Links.Errors.ParamsValidationFailed(
             'Invalid block hash format',
           )
         }
-        if (height && !isValidBlockHeight(height)) {
+        if (
+          height &&
+          typeof height === 'string' &&
+          !isValidBlockHeight(height)
+        ) {
           throw new Links.Errors.ParamsValidationFailed(
             'Invalid block height format',
           )

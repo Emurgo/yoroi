@@ -22,6 +22,7 @@ import {
 } from '~/features/Initialization/ui/screens/DarkThemeAnnouncementScreen'
 import {LegalAgreement} from '~/features/Legal/common/types'
 import {useLegalAgreement} from '~/features/Legal/hooks/useLegalAgreement'
+import {ScanActionHandler} from '~/features/Links/components/ScanActionHandler'
 import {useDeepLinkWatcher} from '~/features/Links/hooks/useDeepLinkWatcher'
 import {useLinksRequestAction} from '~/features/Links/hooks/useLinksRequestAction'
 import {useInitNotifications} from '~/features/Notifications/common/hooks'
@@ -47,7 +48,7 @@ export const AppNavigator = () => {
   const strings = useStrings()
 
   // Enable deep link watching
-  useDeepLinkWatcher()
+  useDeepLinkWatcher() // Returns {pendingScanAction, clearPendingScanAction} - to be used by ScanActionHandler component
 
   // Enable deep link action handling with modal support (only when logged in)
   useLinksRequestAction()
@@ -65,6 +66,8 @@ export const AppNavigator = () => {
 
   return (
     <>
+      {/* Handle web+cardano:// deep links */}
+      {isLoggedIn && <ScanActionHandler />}
       <Stack.Navigator screenOptions={screenOptions}>
         {/* Not Authenticated */}
         {isLoggedOut && (

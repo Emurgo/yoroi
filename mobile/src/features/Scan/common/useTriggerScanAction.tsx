@@ -5,15 +5,19 @@ import {Scan} from '@yoroi/types'
 
 import * as Linking from 'expo-linking'
 import * as React from 'react'
-import {Alert} from 'react-native'
+import * as uuid from 'uuid'
 
 import {useClaimErrorResolver} from '~/features/Claim/common/useClaimErrorResolver'
 import {AskConfirmationModal} from '~/features/Claim/ui/modals/AskConfirmationModal'
+import {useBrowser} from '~/features/Discover/common/BrowserProvider'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
+import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {useModal} from '~/ui/Modal/context/ModalContext'
 import {pastedFormatter} from '~/wallets/utils/amountUtils'
 
+import {useInfoModal} from './modals/InfoModal'
+import {useTransactionNotFoundModal} from './modals/TransactionNotFoundModal'
 import {useNavigateTo} from './useNavigateTo'
 
 export const useTriggerScanAction = ({
@@ -23,8 +27,13 @@ export const useTriggerScanAction = ({
 }) => {
   const {
     wallet: {portfolioPrimaryTokenInfo},
+    wallet,
   } = useSelectedWallet()
   const {openModal, closeModal, setLoading: startLoading} = useModal()
+  const {addTabAndSetActive} = useBrowser()
+  const walletNavigation = useWalletNavigation()
+  const {openInfoModal} = useInfoModal()
+  const {openTransactionNotFoundModal} = useTransactionNotFoundModal()
 
   const navigateTo = useNavigateTo()
   const timeoutRef = React.useRef<NodeJS.Timeout | null>(null)
@@ -54,7 +63,10 @@ export const useTriggerScanAction = ({
       startLoading(false)
       const claimErrorDialog = claimErrorResolver(error)
       if (claimErrorDialog) {
-        Alert.alert(claimErrorDialog.title, claimErrorDialog.message)
+        openInfoModal({
+          title: claimErrorDialog.title,
+          message: claimErrorDialog.message,
+        })
       }
     },
   })
@@ -126,6 +138,92 @@ export const useTriggerScanAction = ({
             height: 400,
           })
         }, 300)
+        break
+      }
+
+      case 'browse-dapp': {
+        // CIP-158: Launch dApp in browser
+        const id = uuid.v4()
+        addTabAndSetActive(scanAction.url, id)
+        walletNavigation.navigateToDiscoverBrowserDapp()
+        break
+      }
+
+      case 'pay-request': {
+        // CIP-PR843 or CIP-13: Payment request
+        if (insideFeature !== 'send') resetTransferState()
+
+        receiverResolveChanged(scanAction.address)
+
+        if (scanAction.amount) {
+          tokenSelectedChanged(portfolioPrimaryTokenInfo.id)
+          amountChanged({
+            info: portfolioPrimaryTokenInfo,
+            quantity: toBigInt(
+              pastedFormatter(scanAction.amount),
+              portfolioPrimaryTokenInfo.decimals,
+            ),
+          })
+        }
+        if (scanAction.memo) {
+          memoChanged(scanAction.memo)
+        }
+
+        navigateTo.startTransfer()
+        break
+      }
+
+      case 'stake-pool': {
+        // CIP-13: Navigate to staking center with pool
+        walletNavigation.navigateToStakingDashboard()
+        // TODO: Pass pool ID to staking center when UI supports it
+        openInfoModal({
+          title: strings.scan.stakePoolTitle,
+          message: `Pool ID: ${scanAction.pool}`,
+        })
+        break
+      }
+
+      case 'view-transaction': {
+        // CIP-107: View transaction details
+        // Find transaction by hash (transaction.id is the hash)
+        const transaction = Object.values(wallet.transactions).find(
+          (tx) => tx.id === scanAction.hash,
+        )
+        if (transaction) {
+          walletNavigation.navigateToTxDetails(transaction.id)
+        } else {
+          // Transaction not found in wallet history, show explorer link
+          const explorers = wallet.networkManager.explorers
+          openTransactionNotFoundModal({
+            hash: scanAction.hash,
+            explorerUrl: explorers.cardanoscan.tx(scanAction.hash),
+          })
+        }
+        break
+      }
+
+      case 'view-block': {
+        // CIP-107: View block details
+        walletNavigation.navigateToBlockDetails({
+          hash: scanAction.hash,
+          height: scanAction.height,
+        })
+        break
+      }
+
+      case 'view-address': {
+        // CIP-134: View address details
+        walletNavigation.navigateToAddressDetails(scanAction.address)
+        break
+      }
+
+      case 'p2p-connect': {
+        // P2P connection: Navigate to P2P connection screen
+        walletNavigation.navigateToP2PConnection({
+          peerId: scanAction.peerId,
+          signalingUrl: scanAction.signalingUrl,
+        })
         break
       }
     }

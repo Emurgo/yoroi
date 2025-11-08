@@ -63,6 +63,17 @@ export type TxHistoryRoutes = {
   'tx-details': {
     id: string
   }
+  'address-details': {
+    address: string
+  }
+  'block-details': {
+    hash?: string
+    height?: string
+  }
+  'p2p-connection': {
+    peerId: string
+    signalingUrl?: string
+  }
   'utxo-list': undefined
   'utxo-consolidation': undefined
   'receive-single': undefined

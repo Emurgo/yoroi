@@ -262,10 +262,17 @@ import {ResolverReceiver} from './resolver/receiver'
 import {ResolverStorage} from './resolver/storage'
 import {
   ScanAction,
+  ScanActionBrowseDapp,
   ScanActionClaim,
   ScanActionLaunchUrl,
+  ScanActionP2PConnect,
+  ScanActionPayRequest,
   ScanActionSendOnlyReceiver,
   ScanActionSendSinglePt,
+  ScanActionStakePool,
+  ScanActionViewAddress,
+  ScanActionViewBlock,
+  ScanActionViewTransaction,
   ScanFeature,
 } from './scan/actions'
 import {ScanErrorUnknown, ScanErrorUnknownContent} from './scan/errors'
@@ -726,6 +733,13 @@ export namespace Scan {
   export type ActionSendOnlyReceiver = ScanActionSendOnlyReceiver
   export type ActionSendSinglePt = ScanActionSendSinglePt
   export type ActionScanLaunchUrl = ScanActionLaunchUrl
+  export type ActionBrowseDapp = ScanActionBrowseDapp
+  export type ActionPayRequest = ScanActionPayRequest
+  export type ActionStakePool = ScanActionStakePool
+  export type ActionViewTransaction = ScanActionViewTransaction
+  export type ActionViewBlock = ScanActionViewBlock
+  export type ActionViewAddress = ScanActionViewAddress
+  export type ActionP2PConnect = ScanActionP2PConnect
 }
 
 export namespace Claim {

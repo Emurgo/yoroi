@@ -53,4 +53,3 @@ export const validateTransactionHash = (hash: string): boolean => {
 export const validateBlockHash = (hash: string): boolean => {
   return isValidHex64(hash)
 }
-

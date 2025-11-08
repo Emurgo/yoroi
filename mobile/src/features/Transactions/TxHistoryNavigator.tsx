@@ -11,6 +11,7 @@ import {CreateExchangeOrderScreen} from '~/features/Exchange/useCases/CreateExch
 import {SelectProviderFromListScreen} from '~/features/Exchange/useCases/SelectProviderFromListScreen/SelectProviderFromListScreen'
 import {ShowExchangeResultOrderScreen} from '~/features/Exchange/useCases/ShowExchangeResultOrderScreen/ShowExchangeResultOrderScreen'
 import {ViewNotificationHistoryScreen} from '~/features/Notifications/useCases/ViewNotificationHistory/ViewNotificationHistoryScreen'
+import {P2PConnectionScreen} from '~/features/P2P/useCases/P2PConnectionScreen/P2PConnectionScreen'
 import {DescribeSelectedAddressScreen} from '~/features/Receive/useCases/DescribeSelectedAddressScreen'
 import {ListMultipleAddressesScreen} from '~/features/Receive/useCases/ListMultipleAddressesScreen'
 import {RequestSpecificAmountScreen} from '~/features/Receive/useCases/RequestSpecificAmountScreen'
@@ -30,6 +31,8 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
 import {TxHistoryRoutes} from '~/kernel/navigation/types'
 
+import {AddressDetails} from '../Transactions/useCases/AddressDetails/AddressDetails'
+import {BlockDetails} from '../Transactions/useCases/BlockDetails/BlockDetails'
 import {UtxoConsolidation} from '../Transactions/useCases/UtxoConsolidation/UtxoConsolidation/UtxoConsolidation'
 import {UtxoList} from '../Transactions/useCases/UtxoList/UtxoList'
 import {HeaderRightHistory} from './common/HeaderRightHistory'
@@ -84,6 +87,30 @@ export const TxHistoryNavigator = () => {
             title: strings.transactions.history.txDetailsTitle,
           }}
           getComponent={() => TxDetails}
+        />
+
+        <Stack.Screen
+          name="address-details"
+          options={{
+            title: strings.transactions.addressDetailsTitle,
+          }}
+          getComponent={() => AddressDetails}
+        />
+
+        <Stack.Screen
+          name="block-details"
+          options={{
+            title: strings.transactions.blockDetailsTitle,
+          }}
+          getComponent={() => BlockDetails}
+        />
+
+        <Stack.Screen
+          name="p2p-connection"
+          options={{
+            title: strings.scan.p2pConnectionTitle,
+          }}
+          getComponent={() => P2PConnectionScreen}
         />
 
         <Stack.Screen

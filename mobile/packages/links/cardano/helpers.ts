@@ -119,7 +119,8 @@ export const isCardanoClaimV1 = (url: URL): boolean => {
 
 export const isCardanoBrowseV1 = (url: URL): boolean => {
   if (url.hostname === configCardanoBrowseV1.authority) {
-    if (url.pathname.startsWith(`/${configCardanoBrowseV1.version}/`)) return true
+    if (url.pathname.startsWith(`/${configCardanoBrowseV1.version}/`))
+      return true
     throw new Links.Errors.UnsupportedVersion()
   }
   return false
@@ -151,7 +152,8 @@ export const isCardanoStakeV1 = (url: URL): boolean => {
 
 export const isCardanoTransactionV1 = (url: URL): boolean => {
   if (url.hostname === configCardanoTransactionV1.authority) {
-    if (url.pathname.startsWith(`/${configCardanoTransactionV1.version}/`)) return true
+    if (url.pathname.startsWith(`/${configCardanoTransactionV1.version}/`))
+      return true
     throw new Links.Errors.UnsupportedVersion()
   }
   return false
@@ -167,7 +169,8 @@ export const isCardanoBlockV1 = (url: URL): boolean => {
 
 export const isCardanoAddressV1 = (url: URL): boolean => {
   if (url.hostname === configCardanoAddressV1.authority) {
-    if (url.pathname.startsWith(`/${configCardanoAddressV1.version}/`)) return true
+    if (url.pathname.startsWith(`/${configCardanoAddressV1.version}/`))
+      return true
     throw new Links.Errors.UnsupportedVersion()
   }
   return false

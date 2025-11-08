@@ -180,6 +180,13 @@ export const useStrings = () => {
         ),
         continue: f(scanMessages.continue),
         openAppSettings: f(scanMessages.openAppSettings),
+        transactionTitle: f(scanMessages.transactionTitle),
+        blockTitle: f(scanMessages.blockTitle),
+        addressTitle: f(scanMessages.addressTitle),
+        stakePoolTitle: f(scanMessages.stakePoolTitle),
+        p2pConnectTitle: f(scanMessages.p2pConnectTitle),
+        p2pConnectionTitle: f(scanMessages.p2pConnectionTitle),
+        cancel: f(scanMessages.cancel),
       },
 
       // Wallet Manager strings
@@ -1547,6 +1554,9 @@ export const useStrings = () => {
           historyTitle: f(transactionsMessages.historyTitle),
           txDetailsTitle: f(transactionsMessages.txDetailsTitle),
         },
+        addressDetailsTitle: f(transactionsMessages.addressDetailsTitle),
+        blockDetailsTitle: f(transactionsMessages.blockDetailsTitle),
+        address: f(transactionsMessages.address),
         utxo: {
           utxoListTitle: f(transactionsMessages.utxoListTitle),
           utxoConsolidationTitle: f(
