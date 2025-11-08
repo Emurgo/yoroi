@@ -267,6 +267,7 @@ import {
   ScanActionLaunchUrl,
   ScanActionP2PConnect,
   ScanActionPayRequest,
+  ScanActionRestoreWallet,
   ScanActionSendOnlyReceiver,
   ScanActionSendSinglePt,
   ScanActionStakePool,
@@ -740,6 +741,7 @@ export namespace Scan {
   export type ActionViewBlock = ScanActionViewBlock
   export type ActionViewAddress = ScanActionViewAddress
   export type ActionP2PConnect = ScanActionP2PConnect
+  export type ActionRestoreWallet = ScanActionRestoreWallet
 }
 
 export namespace Claim {

@@ -15,6 +15,7 @@ import {
   configCardanoPaymentV1,
   configCardanoStakeV1,
   configCardanoTransactionV1,
+  configCardanoWalletV1,
 } from './constants'
 import {
   isCardanoAddress,
@@ -27,6 +28,7 @@ import {
   isCardanoPaymentV1,
   isCardanoStakeV1,
   isCardanoTransactionV1,
+  isCardanoWalletV1,
   validateCardanoAddress,
 } from './helpers'
 import {preapareParams} from './params'
@@ -85,7 +87,8 @@ export const linksCardanoModuleMaker =
           scheme,
           namespaced_domain,
           app_path,
-          url: reconstructedUrl,
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          url: _,
           ...queryParams
         } = sanitizedParams
         const pathSegments = [config.version, scheme, namespaced_domain]
@@ -126,6 +129,11 @@ export const linksCardanoModuleMaker =
             address,
         )
         addSearchParams(url, restParams)
+      } else if (config.authority === 'wallet') {
+        // Wallet authority: query-based
+        url = new URL(config.scheme + '://' + config.authority + '/')
+        addSearchParams(url, sanitizedParams)
+        url.pathname = config.version
       } else {
         // Query-based authorities (claim, pay, payment, stake, block, connect)
         url = new URL(config.scheme + '://' + config.authority + '/')
@@ -274,6 +282,8 @@ export const linksCardanoModuleMaker =
         config = configCardanoBlockV1
       } else if (isCardanoConnectV1(url)) {
         config = configCardanoConnectV1
+      } else if (isCardanoWalletV1(url)) {
+        config = configCardanoWalletV1
       } else if (url.pathname !== '' && url.hostname === '') {
         // LEGACY COMPATIBILITY: legacy transfer address is the authority but should be handled as a param
         if (!isCardanoAddress(url.pathname))

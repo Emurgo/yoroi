@@ -133,6 +133,31 @@ export interface LinksCardanoConnectV1 extends Links.WebCardanoUriConfig {
   }
 }
 
+// Wallet authority (new, follows CIP-158 pattern)
+// Allows restoring wallets from links/QR codes
+export interface LinksCardanoWalletV1 extends Links.WebCardanoUriConfig {
+  readonly scheme: 'web+cardano'
+  readonly authority: 'wallet'
+  readonly version: 'v1'
+  readonly rules: {
+    readonly requiredParams: Readonly<['type']> // 'full' | 'readonly'
+    readonly optionalParams: Readonly<
+      [
+        'mnemonic', // For full wallets: mnemonic phrase (space-separated)
+        'rootKey', // For full wallets: root private key hex
+        'accountPubKey', // For read-only: account public key hex
+        'encryption', // Encryption algorithm identifier (future: 'plain' | 'aes-256-gcm' | ...)
+        'name', // Wallet name suggestion
+        'implementation', // Wallet implementation hint
+        'addressMode', // Address mode hint
+        'accountVisual', // Account visual index
+      ]
+    >
+    readonly forbiddenParams: Readonly<[]>
+    readonly extraParams: 'drop'
+  }
+}
+
 export type LinksCardanoUriConfig =
   | LinksCardanoClaimV1
   | LinksCardanoLegacyTransfer
@@ -144,3 +169,4 @@ export type LinksCardanoUriConfig =
   | LinksCardanoBlockV1
   | LinksCardanoAddressV1
   | LinksCardanoConnectV1
+  | LinksCardanoWalletV1

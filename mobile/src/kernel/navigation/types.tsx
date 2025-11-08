@@ -54,6 +54,9 @@ export type WalletInitRoutes = {
   'setup-wallet-recovery-phrase-mnemonic': undefined
   'setup-wallet-verify-recovery-phrase-mnemonic': undefined
   'setup-wallet-preparing-wallet': undefined
+  'setup-wallet-restore-from-link': {
+    action: Scan.ActionRestoreWallet
+  }
 }
 
 export type SetupWalletRouteNavigation = StackNavigationProp<WalletInitRoutes>

@@ -28,6 +28,7 @@ export interface LinksWebCardanoUriConfig extends LinksUriConfig {
     | 'block'
     | 'address'
     | 'connect'
+    | 'wallet'
   readonly version: 'v1' | ''
 }
 

@@ -22,6 +22,7 @@ import {ConnectNanoXScreen} from './useCases/RestoreHwWallet/ConnectNanoXScreen'
 import {SaveNanoXScreen} from './useCases/RestoreHwWallet/SaveNanoXScreen'
 import {RestoreWalletDetailsScreen} from './useCases/RestoreWallet/RestoreWalletDetailsScreen'
 import {RestoreWalletScreen} from './useCases/RestoreWallet/RestoreWalletScreen'
+import {RestoreWalletFromLinkScreen} from './useCases/RestoreWalletFromLink/RestoreWalletFromLinkScreen'
 
 const Stack = createStackNavigator<WalletInitRoutes>()
 export const SetupWalletNavigator = () => {
@@ -138,6 +139,12 @@ export const SetupWalletNavigator = () => {
         name="setup-wallet-preparing-wallet"
         getComponent={() => PreparingWalletScreen}
         options={{headerShown: false}}
+      />
+
+      <Stack.Screen
+        name="setup-wallet-restore-from-link"
+        getComponent={() => RestoreWalletFromLinkScreen}
+        options={{title: strings.setupWallet.restoreWalletTitle}}
       />
     </Stack.Navigator>
   )

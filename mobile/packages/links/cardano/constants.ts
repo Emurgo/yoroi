@@ -13,6 +13,7 @@ import {
   LinksCardanoPaymentV1,
   LinksCardanoStakeV1,
   LinksCardanoTransactionV1,
+  LinksCardanoWalletV1,
 } from './types'
 
 export const cardanoScheme: Links.WebCardanoUriConfig['scheme'] = 'web+cardano'
@@ -164,6 +165,30 @@ export const configCardanoConnectV1: Readonly<LinksCardanoConnectV1> = freeze(
     rules: {
       requiredParams: ['peerId'],
       optionalParams: ['signalingUrl'],
+      forbiddenParams: [],
+      extraParams: 'drop',
+    },
+  },
+  true,
+)
+
+export const configCardanoWalletV1: Readonly<LinksCardanoWalletV1> = freeze(
+  {
+    scheme: cardanoScheme,
+    authority: 'wallet',
+    version: 'v1',
+    rules: {
+      requiredParams: ['type'],
+      optionalParams: [
+        'mnemonic',
+        'rootKey',
+        'accountPubKey',
+        'encryption',
+        'name',
+        'implementation',
+        'addressMode',
+        'accountVisual',
+      ],
       forbiddenParams: [],
       extraParams: 'drop',
     },

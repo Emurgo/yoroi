@@ -136,6 +136,33 @@ export const parseScanAction = (codeContent: string): Scan.Action => {
     } as const)
   }
 
+  // Handle wallet authority (wallet restoration)
+  if (authority === 'wallet') {
+    const {
+      type,
+      mnemonic,
+      rootKey,
+      accountPubKey,
+      encryption,
+      name,
+      implementation,
+      addressMode,
+      accountVisual,
+    } = parsedCardanoLink.params
+    return freeze({
+      action: 'restore-wallet',
+      type: type as 'full' | 'readonly',
+      mnemonic: mnemonic as string | undefined,
+      rootKey: rootKey as string | undefined,
+      accountPubKey: accountPubKey as string | undefined,
+      encryption: encryption as string | undefined,
+      name: name as string | undefined,
+      implementation: implementation as string | undefined,
+      addressMode: addressMode as string | undefined,
+      accountVisual: accountVisual as string | undefined,
+    } as const)
+  }
+
   // LEGACY COMPATIBILITY: Handle legacy transfer (empty authority)
   // This handles the old format where address was in the path
   if (authority === '') {

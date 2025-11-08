@@ -71,6 +71,19 @@ export type ScanActionP2PConnect = Readonly<{
   signalingUrl?: string
 }>
 
+export type ScanActionRestoreWallet = Readonly<{
+  action: 'restore-wallet'
+  type: 'full' | 'readonly'
+  mnemonic?: string
+  rootKey?: string
+  accountPubKey?: string
+  encryption?: string
+  name?: string
+  implementation?: string
+  addressMode?: string
+  accountVisual?: string
+}>
+
 export type ScanAction =
   | ScanActionSendOnlyReceiver
   | ScanActionSendSinglePt
@@ -83,5 +96,6 @@ export type ScanAction =
   | ScanActionViewBlock
   | ScanActionViewAddress
   | ScanActionP2PConnect
+  | ScanActionRestoreWallet
 
 export type ScanFeature = 'send' | 'scan'

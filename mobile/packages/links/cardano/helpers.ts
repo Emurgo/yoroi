@@ -11,6 +11,7 @@ import {
   configCardanoPaymentV1,
   configCardanoStakeV1,
   configCardanoTransactionV1,
+  configCardanoWalletV1,
 } from './constants'
 
 /**
@@ -179,6 +180,14 @@ export const isCardanoAddressV1 = (url: URL): boolean => {
 export const isCardanoConnectV1 = (url: URL): boolean => {
   if (url.hostname === configCardanoConnectV1.authority) {
     if (url.pathname === `/${configCardanoConnectV1.version}`) return true
+    throw new Links.Errors.UnsupportedVersion()
+  }
+  return false
+}
+
+export const isCardanoWalletV1 = (url: URL): boolean => {
+  if (url.hostname === configCardanoWalletV1.authority) {
+    if (url.pathname === `/${configCardanoWalletV1.version}`) return true
     throw new Links.Errors.UnsupportedVersion()
   }
   return false

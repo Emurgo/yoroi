@@ -5,6 +5,8 @@ import {validateCardanoAddress} from './helpers'
 import {LinksCardanoUriConfig} from './types'
 import {
   isValidBlockHeight,
+  isValidHexKey,
+  isValidMnemonic,
   validateBlockHash,
   validateNamespacedDomain,
   validateScheme,
@@ -88,6 +90,32 @@ export const preapareParams = ({
         key: optionalParam,
         value: paramEntries.get(optionalParam),
       })
+    }
+  }
+
+  // Special validation for wallet authority: parameter combinations
+  if (config.authority === 'wallet') {
+    const type = paramEntries.get('type')
+    if (type === 'full') {
+      const hasMnemonic = paramEntries.has('mnemonic')
+      const hasRootKey = paramEntries.has('rootKey')
+      if (!hasMnemonic && !hasRootKey) {
+        throw new Links.Errors.RequiredParamsMissing(
+          `For type=full, either mnemonic or rootKey must be provided on ${config.scheme} ${config.authority} ${config.version}`,
+        )
+      }
+      if (hasMnemonic && hasRootKey) {
+        throw new Links.Errors.ParamsValidationFailed(
+          `For type=full, cannot provide both mnemonic and rootKey on ${config.scheme} ${config.authority} ${config.version}`,
+        )
+      }
+    } else if (type === 'readonly') {
+      const hasAccountPubKey = paramEntries.has('accountPubKey')
+      if (!hasAccountPubKey) {
+        throw new Links.Errors.RequiredParamsMissing(
+          `For type=readonly, accountPubKey must be provided on ${config.scheme} ${config.authority} ${config.version}`,
+        )
+      }
     }
   }
 
@@ -242,6 +270,73 @@ export const getParamValidator =
           break
         throw new Links.Errors.ParamsValidationFailed(
           `The param ${key} on ${config.scheme} ${config.authority} ${config.version} must be a string or array of strings with max 64 chars`,
+        )
+      }
+      // Wallet authority parameters
+      case 'type': {
+        if (isString(value) && (value === 'full' || value === 'readonly')) break
+        throw new Links.Errors.ParamsValidationFailed(
+          `The param ${key} on ${config.scheme} ${config.authority} ${config.version} must be either 'full' or 'readonly'`,
+        )
+      }
+      case 'mnemonic': {
+        if (isString(value) && isValidMnemonic(value)) break
+        throw new Links.Errors.ParamsValidationFailed(
+          `The param ${key} on ${config.scheme} ${config.authority} ${config.version} must be a valid BIP39 mnemonic phrase (12, 15, or 24 words)`,
+        )
+      }
+      case 'rootKey': {
+        if (isString(value) && isValidHexKey(value)) break
+        throw new Links.Errors.ParamsValidationFailed(
+          `The param ${key} on ${config.scheme} ${config.authority} ${config.version} must be a valid hexadecimal root key`,
+        )
+      }
+      case 'accountPubKey': {
+        if (isString(value) && isValidHexKey(value)) break
+        throw new Links.Errors.ParamsValidationFailed(
+          `The param ${key} on ${config.scheme} ${config.authority} ${config.version} must be a valid hexadecimal account public key`,
+        )
+      }
+      case 'encryption': {
+        if (isString(value) && value.length > 0) break
+        throw new Links.Errors.ParamsValidationFailed(
+          `The param ${key} on ${config.scheme} ${config.authority} ${config.version} must be a non-empty string`,
+        )
+      }
+      case 'name': {
+        if (isString(value) && value.length > 0) break
+        throw new Links.Errors.ParamsValidationFailed(
+          `The param ${key} on ${config.scheme} ${config.authority} ${config.version} must be a non-empty string`,
+        )
+      }
+      case 'implementation': {
+        if (
+          isString(value) &&
+          (value === 'cardano-cip1852' || value === 'cardano-bip44')
+        )
+          break
+        throw new Links.Errors.ParamsValidationFailed(
+          `The param ${key} on ${config.scheme} ${config.authority} ${config.version} must be either 'cardano-cip1852' or 'cardano-bip44'`,
+        )
+      }
+      case 'addressMode': {
+        if (isString(value) && (value === 'single' || value === 'multiple'))
+          break
+        throw new Links.Errors.ParamsValidationFailed(
+          `The param ${key} on ${config.scheme} ${config.authority} ${config.version} must be either 'single' or 'multiple'`,
+        )
+      }
+      case 'accountVisual': {
+        const numValue = Number(value)
+        if (
+          isString(value) &&
+          !Number.isNaN(numValue) &&
+          Number.isInteger(numValue) &&
+          numValue >= 0
+        )
+          break
+        throw new Links.Errors.ParamsValidationFailed(
+          `The param ${key} on ${config.scheme} ${config.authority} ${config.version} must be a non-negative integer`,
         )
       }
     }

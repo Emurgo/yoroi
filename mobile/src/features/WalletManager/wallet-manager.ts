@@ -24,7 +24,10 @@ import {logger} from '~/kernel/logger/logger'
 import {makeWalletEncryptedStorage} from '~/kernel/storage/EncryptedStorage'
 import {Keychain, KeychainManager} from '~/kernel/storage/Keychain'
 import {rootStorage} from '~/kernel/storage/storages'
-import {keyManager} from '~/wallets/cardano/key-manager/key-manager'
+import {
+  deriveAccountFromRootKey,
+  keyManager,
+} from '~/wallets/cardano/key-manager/key-manager'
 import {WalletEvent, YoroiWallet} from '~/wallets/cardano/types'
 import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
 import {validatePassword, validateWalletName} from '~/wallets/utils/validators'
@@ -748,6 +751,101 @@ export class WalletManager {
       isEasyConfirmationEnabled: false,
       isHW: hwDeviceInfo !== null,
       hwDeviceInfo,
+    }
+    await this.#walletsRootStorage.setItem(id, meta)
+    await this.hydrate()
+    return meta
+  }
+
+  /**
+   * Derives and stores accountPubKeyHex for any accountVisual from an existing wallet's root key
+   * This allows deriving multiple accounts from a single root key
+   */
+  async deriveAndStoreAccount({
+    id,
+    accountVisual,
+    password,
+  }: {
+    id: string
+    accountVisual: number
+    password: string
+  }): Promise<string> {
+    // Read root key
+    const encryptedStorage = makeWalletEncryptedStorage(id)
+    const rootKeyResult = await encryptedStorage.xpriv.read(password)
+    const rootKeyHex = rootKeyResult.value
+
+    // Get wallet meta to determine implementation
+    const meta = await this.#walletsRootStorage.getItem(id, parseWalletMeta)
+    if (!meta) {
+      throwLoggedError('WalletManager: deriveAndStoreAccount wallet not found')
+    }
+
+    // Derive accountPubKeyHex for the specified accountVisual
+    const accountPubKeyHex = CardanoMobileWrapped.cslScope((csl) =>
+      deriveAccountFromRootKey(
+        rootKeyHex,
+        accountVisual,
+        meta.implementation,
+        csl,
+      ),
+    )
+
+    // Store it
+    await encryptedStorage.xpub.write(accountVisual, accountPubKeyHex)
+
+    return accountPubKeyHex
+  }
+
+  /**
+   * Creates a wallet from a root key hex (for restoration from links)
+   */
+  async createWalletFromRootKey({
+    name,
+    rootKeyHex,
+    password,
+    implementation,
+    addressMode,
+    accountVisual,
+  }: {
+    name: string
+    rootKeyHex: string
+    password: string
+    implementation: Wallet.Implementation
+    addressMode: Wallet.AddressMode
+    accountVisual: number
+  }) {
+    const network = this.selectedNetwork
+
+    const walletFactory = getWalletFactory({network, implementation})
+    const id = v4()
+
+    // Derive accountPubKeyHex from rootKeyHex
+    const accountPubKeyHex = CardanoMobileWrapped.cslScope((csl) =>
+      deriveAccountFromRootKey(rootKeyHex, accountVisual, implementation, csl),
+    )
+
+    const encryptedStorage = makeWalletEncryptedStorage(id)
+    await encryptedStorage.xpriv.write(rootKeyHex, password)
+    await encryptedStorage.xpub.write(accountVisual, accountPubKeyHex)
+
+    const {ImagePart: seed, TextPart: plate} =
+      walletFactory.calcChecksum(accountPubKeyHex)
+    const avatar = new Blockies({seed}).asBase64()
+
+    const meta: Wallet.Meta = {
+      version: WalletManager.version,
+      id,
+      name,
+      avatar,
+      plate,
+      implementation,
+
+      addressMode,
+      isReadOnly: false,
+      isEasyConfirmationEnabled: false,
+      isHW: false,
+      hwDeviceInfo: null,
     }
     await this.#walletsRootStorage.setItem(id, meta)
     await this.hydrate()

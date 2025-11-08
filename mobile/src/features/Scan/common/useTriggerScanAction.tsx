@@ -226,6 +226,12 @@ export const useTriggerScanAction = ({
         })
         break
       }
+
+      case 'restore-wallet': {
+        // Wallet restoration: Navigate to restore wallet from link screen
+        walletNavigation.navigateToRestoreWalletFromLink(scanAction)
+        break
+      }
     }
   }
 
