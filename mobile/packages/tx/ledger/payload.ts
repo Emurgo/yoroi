@@ -45,10 +45,8 @@ export async function buildVotingLedgerPayloadV5(
   stakingDerivationPath?: number[],
 ): Promise<SignTransactionRequest> {
   const wasm = unsignedTx.txBuilder as unknown as WasmModuleProxy
-  await assertTagsState(
-    wasm,
-    await (await unsignedTx.txBuilder.build()).then((tx) => tx.toHex()),
-  )
+  const builtTx = await unsignedTx.txBuilder.build()
+  await assertTagsState(wasm, await builtTx.toHex())
   const ledgerInputs = await transformToLedgerInputs(unsignedTx)
   const ledgerOutputs = await transformToLedgerOutputs(wasm, {
     networkId: networkId,
@@ -68,10 +66,7 @@ export async function buildVotingLedgerPayloadV5(
   ) {
     if (!stakingDerivationPath)
       throw new Error('stakingDerivationPath should have value for withdrawals')
-    const withs = await formatLedgerWithdrawals(
-      withdrawals as import('@emurgo/cross-csl-core').Withdrawals,
-      stakingDerivationPath,
-    )
+    const withs = await formatLedgerWithdrawals(withdrawals, stakingDerivationPath)
     ledgerWithdrawal.push(...withs)
   }
 
@@ -89,12 +84,7 @@ export async function buildVotingLedgerPayloadV5(
       throw new Error(
         'stakingDerivationPath should have value for certificates',
       )
-    const certs = (await formatLedgerCertificates(
-      certificates as import('@emurgo/cross-csl-core').Certificates,
-      stakingDerivationPath,
-    )) as Array<
-      import('@cardano-foundation/ledgerjs-hw-app-cardano').Certificate
-    >
+    const certs = await formatLedgerCertificates(certificates, stakingDerivationPath)
     ledgerCertificates.push(...certs)
   }
 
@@ -112,7 +102,7 @@ export async function buildVotingLedgerPayloadV5(
       inputs: ledgerInputs,
       outputs: ledgerOutputs,
       ttl: ttl === undefined ? ttl : ttl.toString(),
-      fee: await unsignedTx.txBody.fee().then((x: any) => x.toStr()),
+      fee: await (await unsignedTx.txBody.fee()).toStr(),
       network: {
         networkId: networkId,
         protocolMagic: byronNetworkMagic,
@@ -126,7 +116,7 @@ export async function buildVotingLedgerPayloadV5(
     options: {
       tagCborSets: await doAllSetsHaveTag(
         wasm,
-        await (await unsignedTx.txBuilder.build()).then((tx) => tx.toHex()),
+        await (await unsignedTx.txBuilder.build()).toHex(),
       ),
     },
   }
@@ -142,10 +132,8 @@ export async function buildLedgerPayload(
   stakingDerivationPath?: number[],
 ): Promise<SignTransactionRequest> {
   const wasm = unsignedTx.txBuilder as unknown as WasmModuleProxy
-  await assertTagsState(
-    wasm,
-    await (await unsignedTx.txBuilder.build()).then((tx) => tx.toHex()),
-  )
+  const builtTx = await unsignedTx.txBuilder.build()
+  await assertTagsState(wasm, await builtTx.toHex())
 
   const ledgerInputs = await transformToLedgerInputs(unsignedTx)
   const ledgerOutputs = await transformToLedgerOutputs(wasm, {
@@ -166,10 +154,7 @@ export async function buildLedgerPayload(
   ) {
     if (!stakingDerivationPath)
       throw new Error('stakingDerivationPath should have value for withdrawals')
-    const withs = await formatLedgerWithdrawals(
-      withdrawals as import('@emurgo/cross-csl-core').Withdrawals,
-      stakingDerivationPath,
-    )
+    const withs = await formatLedgerWithdrawals(withdrawals, stakingDerivationPath)
     ledgerWithdrawal.push(...withs)
   }
 
@@ -187,10 +172,7 @@ export async function buildLedgerPayload(
       throw new Error(
         'stakingDerivationPath should have value for certificates',
       )
-    const certs = await formatLedgerCertificates(
-      certificates as import('@emurgo/cross-csl-core').Certificates,
-      stakingDerivationPath,
-    )
+    const certs = await formatLedgerCertificates(certificates, stakingDerivationPath)
     ledgerCertificates.push(...certs)
   }
 
@@ -219,7 +201,7 @@ export async function buildLedgerPayload(
       inputs: ledgerInputs,
       outputs: ledgerOutputs,
       ttl: ttl === undefined ? ttl : ttl.toString(),
-      fee: await unsignedTx.txBody.fee().then((x: any) => x.toStr()),
+      fee: await (await unsignedTx.txBody.fee()).toStr(),
       network: {
         networkId: networkId,
         protocolMagic: byronNetworkMagic,
@@ -233,7 +215,7 @@ export async function buildLedgerPayload(
     options: {
       tagCborSets: await doAllSetsHaveTag(
         wasm,
-        await (await unsignedTx.txBuilder.build()).then((tx) => tx.toHex()),
+        await (await unsignedTx.txBuilder.build()).toHex(),
       ),
     },
   } as SignTransactionRequest

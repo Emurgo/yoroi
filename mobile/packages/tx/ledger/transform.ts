@@ -31,6 +31,8 @@ import {Addressing, AddressingAddress, Bip44DerivationLevels} from '../types'
 
 // Note: This will need to be updated when we migrate UnsignedTx type
 // For now, we'll use a minimal interface that matches what Ledger functions need
+import type {TransactionBody, Withdrawals, Certificates} from '@emurgo/cross-csl-core'
+
 export interface LedgerUnsignedTx {
   senderUtxos: Array<{
     txHash: string
@@ -38,29 +40,15 @@ export interface LedgerUnsignedTx {
     addressing: Addressing
   }>
   txBuilder: {
-    build(): Promise<{
-      inputs(): Promise<{
-        len(): Promise<number>
-        get(index: number): Promise<{
-          transactionId(): Promise<{toBytes(): Promise<Uint8Array>}>
-          index(): Promise<number>
-        }>
-      }>
-    }>
+    build(): Promise<TransactionBody>
   }
   txBody: {
     outputs(): Promise<TransactionOutputs>
     fee(): Promise<{toStr(): Promise<string>}>
   }
   change: Array<AddressingAddress>
-  withdrawals?: {
-    hasValue(): Promise<boolean>
-    len(): Promise<number>
-  } | null
-  certificates?: {
-    hasValue(): Promise<boolean>
-    len(): Promise<number>
-  } | null
+  withdrawals?: Withdrawals | null
+  certificates?: Certificates | null
   ttl?: number
   auxiliaryData?: {
     hasValue(): Promise<boolean>

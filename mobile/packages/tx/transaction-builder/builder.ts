@@ -3,6 +3,7 @@ import {Balance} from '@yoroi/types'
 import type {
   Certificate,
   TransactionBody,
+  TransactionBuilder as CSLTransactionBuilder,
   TransactionInput as CSLTransactionInput,
   TransactionOutput as CSLTransactionOutput,
   TransactionUnspentOutput,
