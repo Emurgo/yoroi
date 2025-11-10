@@ -1,6 +1,11 @@
 import {init} from '@emurgo/cross-csl-mobile'
-import {createYoroiLib} from '@emurgo/yoroi-lib'
 
+// CardanoMobile is the WASM module instance
+// For WASM access, use CardanoMobile directly
+// For transaction building, use @yoroi/tx functions
 export const CardanoMobile = init('global')
 
-export const Cardano = createYoroiLib(CardanoMobile)
+// ⚠️ LEGACY: Cardano wrapper removed
+// Use CardanoMobile directly for WASM access
+// Use @yoroi/tx functions for transaction building
+// Old Cardano.* methods are available via @yoroi/tx/legacy (deprecated)

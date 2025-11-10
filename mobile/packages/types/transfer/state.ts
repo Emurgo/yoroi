@@ -1,4 +1,4 @@
-import {Datum as DatumType} from '@emurgo/yoroi-lib'
+import {Datum as DatumType} from '@yoroi/tx'
 
 import {PortfolioTokenAmount} from '../portfolio/amount'
 import {PortfolioTokenId} from '../portfolio/token'

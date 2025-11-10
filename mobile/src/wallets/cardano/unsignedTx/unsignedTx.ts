@@ -1,6 +1,12 @@
 import {Balance, Network} from '@yoroi/types'
 
-import {Change, Datum, MultiTokenValue} from '@yoroi/tx'
+import {
+  Change,
+  Datum,
+  MultiTokenValue,
+  getBalanceForStakingCredentials,
+} from '@yoroi/tx'
+import {CardanoMobile} from '~/wallets/wallets'
 
 import {
   YoroiEntry,
@@ -9,7 +15,6 @@ import {
   YoroiVoting,
 } from '~/wallets/types/yoroi'
 import {Amounts, Entries, Quantities, asQuantity} from '~/wallets/utils/utils'
-import {Cardano, CardanoMobile} from '~/wallets/wallets'
 
 import {CardanoTypes} from '../types'
 
@@ -38,8 +43,10 @@ export const yoroiUnsignedTx = ({
   const changeAddresses = Entries.toAddresses(change)
   // entries === (outputs - change)
   entries = entries ?? Entries.remove(outputsEntries, changeAddresses)
-  const stakingBalances =
-    Cardano.getBalanceForStakingCredentials(addressedUtxos)
+  const stakingBalances = await getBalanceForStakingCredentials(
+    CardanoMobile,
+    addressedUtxos,
+  )
 
   const yoroiTx: YoroiUnsignedTx = {
     entries,

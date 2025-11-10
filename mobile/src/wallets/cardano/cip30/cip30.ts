@@ -9,7 +9,9 @@ import {
   signRawTransaction,
   normalizeToAddress,
   parseTokenList,
+  calculateTxId,
 } from '@yoroi/tx'
+import {CardanoMobile} from '~/wallets/wallets'
 import {BigNumber} from 'bignumber.js'
 import {Buffer} from 'buffer'
 import * as _ from 'lodash'
@@ -18,7 +20,6 @@ import {logger} from '~/kernel/logger/logger'
 import {RawUtxo} from '~/wallets/types/other'
 import {YoroiUnsignedTx} from '~/wallets/types/yoroi'
 import {Utxos, asQuantity} from '~/wallets/utils/utils'
-import {Cardano, CardanoMobile} from '~/wallets/wallets'
 
 import {toAssetNameHex, toPolicyId} from '../api/utils'
 import {identifierToCardanoAsset} from '../assetUtils'
@@ -168,7 +169,7 @@ class CIP30Extension {
 
   async submitTx(cbor: string): Promise<string> {
     const base64 = Buffer.from(cbor, 'hex').toString('base64')
-    const txId = Cardano.calculateTxId(base64, 'base64')
+    const txId = await calculateTxId(CardanoMobile, base64, 'base64')
     await this.wallet.submitTransaction(base64)
     return txId
   }

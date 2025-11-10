@@ -11,7 +11,7 @@ import {
   TokenEntry as TokenEntryType,
   TxMetadata as TxMetadataType,
   UnsignedTx as UnsignedTxType,
-} from '@emurgo/yoroi-lib'
+} from '@yoroi/tx'
 import {AxiosRequestConfig} from 'axios'
 
 export namespace CardanoTypes {

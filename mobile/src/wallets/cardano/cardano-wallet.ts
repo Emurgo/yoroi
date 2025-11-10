@@ -13,6 +13,15 @@ import {
   createSignedLedgerTxFromCbor,
   signRawTransaction,
   Datum,
+  calculateTxId,
+  getBalanceForStakingCredentials,
+  buildVotingLedgerPayloadV5,
+  buildLedgerPayload,
+  buildLedgerSignedTx,
+  createUnsignedTx,
+  createUnsignedDelegationTx,
+  createUnsignedWithdrawalTx,
+  createUnsignedVotingTx,
 } from '@yoroi/tx'
 import {BigNumber} from 'bignumber.js'
 import {Buffer} from 'buffer'
@@ -46,7 +55,7 @@ import type {
 import {StakingInfo} from '../types/staking'
 import {YoroiEntry, YoroiSignedTx, YoroiUnsignedTx} from '../types/yoroi'
 import {Quantities} from '../utils/utils'
-import {Cardano, CardanoMobile} from '../wallets'
+import {CardanoMobile} from '../wallets'
 import {
   AccountManager,
   Addresses,
@@ -359,8 +368,8 @@ export const makeCardanoWallet = (
       const externalAddress = this.externalAddresses[0]
       if (!externalAddress)
         throw new App.Errors.InvalidState('No External Address')
-      const addr = Cardano.Wasm.Address.fromBech32(externalAddress)
-      const address = Cardano.Wasm.BaseAddress.fromAddress(addr)
+      const addr = CardanoMobile.Address.fromBech32(externalAddress)
+      const address = CardanoMobile.BaseAddress.fromAddress(addr)
       if (!address)
         throwLoggedError(
           'ShelleyWallet: getFirstPaymentAddress invalid address',
@@ -440,7 +449,8 @@ export const makeCardanoWallet = (
         const {coinsPerUtxoByte, keyDeposit, linearFee, poolDeposit} =
           this.protocolParams
 
-        const unsignedTx = Cardano.createUnsignedDelegationTx(
+        const unsignedTx = await createUnsignedDelegationTx(
+          CardanoMobile,
           absSlotNumber,
           addressedUtxos,
           stakingKey,
@@ -519,7 +529,8 @@ export const makeCardanoWallet = (
             baseAddr.toAddress().toBech32(undefined),
           )
 
-          const unsignedTx = await Cardano.createUnsignedVotingTx(
+          const unsignedTx = await createUnsignedVotingTx(
+            CardanoMobile,
             absSlotNumber,
             toLibToken(this.portfolioPrimaryTokenInfo),
             votingPublicKey,
@@ -588,7 +599,8 @@ export const makeCardanoWallet = (
         const {coinsPerUtxoByte, keyDeposit, linearFee, poolDeposit} =
           this.protocolParams
 
-        const withdrawalTx = Cardano.createUnsignedWithdrawalTx(
+        const withdrawalTx = await createUnsignedWithdrawalTx(
+          CardanoMobile,
           accountState,
           toLibToken(this.portfolioPrimaryTokenInfo),
           absSlotNumber,
@@ -645,7 +657,8 @@ export const makeCardanoWallet = (
         this.protocolParams
 
       try {
-        const unsignedTx = Cardano.createUnsignedTx(
+        const unsignedTx = await createUnsignedTx(
+          CardanoMobile,
           absSlotNumber,
           addressedUtxos,
           [],
@@ -877,7 +890,8 @@ export const makeCardanoWallet = (
       } = this.protocolParams
 
       try {
-        const unsignedTx = Cardano.createUnsignedTx(
+        const unsignedTx = await createUnsignedTx(
+          CardanoMobile,
           absSlotNumber,
           addressedUtxos,
           recipients,
@@ -1068,8 +1082,8 @@ export const makeCardanoWallet = (
             'ShelleyWallet: signTxWithLedger ledger app version <= 5, no CIP-36 support',
             {appAdaVersion},
           )
-          const ledgerPayload = await Cardano.buildVotingLedgerPayloadV5(
-            unsignedTx.unsignedTx,
+          const ledgerPayload = await buildVotingLedgerPayloadV5(
+            unsignedTx.unsignedTx as any, // TODO: Fix type when TransactionBuilder is complete
             this.networkManager.chainId,
             this.networkManager.protocolMagic,
             Array.from(implementationConfig.features.staking.addressing),
@@ -1081,8 +1095,9 @@ export const makeCardanoWallet = (
             useUSB,
           )
 
-          const signedTx = await Cardano.buildLedgerSignedTx(
-            unsignedTx.unsignedTx,
+          const signedTx = await buildLedgerSignedTx(
+            CardanoMobile,
+            unsignedTx.unsignedTx as any, // TODO: Fix type when TransactionBuilder is complete
             signedLedgerTx,
             implementationConfig.derivations.base.harden.purpose,
             this.publicKeyHex,
@@ -1108,8 +1123,8 @@ export const makeCardanoWallet = (
           implementationConfig.features.staking.addressing,
         )
       }
-      const ledgerPayload = await Cardano.buildLedgerPayload(
-        unsignedTx.unsignedTx,
+      const ledgerPayload = await buildLedgerPayload(
+        unsignedTx.unsignedTx as any, // TODO: Fix type when TransactionBuilder is complete
         this.networkManager.chainId,
         this.networkManager.protocolMagic,
         stakingAddressing,
@@ -1129,8 +1144,9 @@ export const makeCardanoWallet = (
             'data' in datum,
         )
 
-      const signedTx = await Cardano.buildLedgerSignedTx(
-        unsignedTx.unsignedTx,
+      const signedTx = await buildLedgerSignedTx(
+        CardanoMobile,
+        unsignedTx.unsignedTx as any, // TODO: Fix type when TransactionBuilder is complete
         signedLedgerTx,
         implementationConfig.derivations.base.harden.purpose,
         this.publicKeyHex,
