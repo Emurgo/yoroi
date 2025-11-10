@@ -1,4 +1,5 @@
 import {CardanoAddressedUtxo, normalizeToAddress} from '@yoroi/tx'
+
 import {sortBy} from 'lodash'
 
 import {StakingStatus} from '~/wallets/types/staking'

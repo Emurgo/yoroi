@@ -1,21 +1,13 @@
 import {isString, parseSafe} from '@yoroi/common'
-import {App} from '@yoroi/types'
-
 import {
-  UtxoService,
+  Utxo,
+  UtxoAtSafePoint,
+  UtxoDiffToBestBlock,
   UtxoStorage,
   init as initUtxo,
-  Utxo,
-  UtxoAtSafePoint,
-  UtxoDiffToBestBlock,
 } from '@yoroi/tx'
+import {App} from '@yoroi/types'
 
-// Legacy UtxoModels namespace for backward compatibility
-const UtxoModels = {
-  Utxo,
-  UtxoAtSafePoint,
-  UtxoDiffToBestBlock,
-} as const
 import {parseInt} from 'lodash'
 
 import {RawUtxo} from '~/wallets/types/other'
@@ -100,7 +92,7 @@ export const makeUtxoManagerStorage = (storage: App.Storage) => {
   } as const
 }
 
-const serializer = (utxo: UtxoModels.Utxo): RawUtxo => ({
+const serializer = (utxo: Utxo): RawUtxo => ({
   utxo_id: utxo.utxoId,
   tx_hash: utxo.txHash,
   tx_index: utxo.txIndex,
@@ -121,7 +113,7 @@ export const makeUtxoStorage = (storage: App.Storage) => {
     storage.setItem(diffPath, utxoDiffToBestBlock)
 
   const getUtxoAtSafePoint = async (): Promise<
-    UtxoModels.UtxoAtSafePoint | undefined
+    UtxoAtSafePoint | undefined
   > => {
     const safePoint = await storage.getItem(safePointPath, parseSafePoint)
     if (!safePoint) return undefined

@@ -45,7 +45,10 @@ export const yoroiUnsignedTx = ({
   entries = entries ?? Entries.remove(outputsEntries, changeAddresses)
   const stakingBalances = await getBalanceForStakingCredentials(
     CardanoMobile,
-    addressedUtxos,
+    addressedUtxos.map((utxo) => ({
+      receiver: utxo.receiver,
+      amount: utxo.amount,
+    })),
   )
 
   const yoroiTx: YoroiUnsignedTx = {

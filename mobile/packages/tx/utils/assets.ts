@@ -1,17 +1,17 @@
 // Cardano asset utilities
 // Functions for working with Cardano assets and tokens
 
-import {BigNumber} from 'bignumber.js'
 import {
-  WasmModuleProxy,
-  Value,
+  AssetName,
   MultiAsset,
   ScriptHash,
-  AssetName,
+  Value,
+  WasmModuleProxy,
 } from '@emurgo/cross-csl-core'
+import {BigNumber} from 'bignumber.js'
+
+import {RemoteUnspentOutput, SendToken, Token} from '../types'
 import {MultiToken} from '../types/multi-token'
-import {Token, RemoteUnspentOutput, SendToken} from '../types'
-import {isHex} from '@yoroi/common'
 
 /**
  * Convert MultiToken to Cardano Value
@@ -272,4 +272,3 @@ export class AssetNameUtils {
     return {tag, asciiName}
   }
 }
-

@@ -1,5 +1,6 @@
-import {useQuery} from '@tanstack/react-query'
 import {Resolver} from '@yoroi/types'
+
+import {useQuery} from '@tanstack/react-query'
 import {useMemo} from 'react'
 
 /**
@@ -7,7 +8,7 @@ import {useMemo} from 'react'
  */
 export const useAddressResolution = (
   address: string | null,
-  resolverApi?: Resolver.Api
+  resolverApi?: Resolver.Api,
 ) => {
   return useQuery<Resolver.AddressesResponse | null>({
     queryKey: ['addressResolution', address],
@@ -19,7 +20,7 @@ export const useAddressResolution = (
       try {
         const response = await resolverApi.getCardanoAddresses({
           resolve: address,
-          strategy: 'first' // Get first successful resolution
+          strategy: 'first', // Get first successful resolution
         })
         return response
       } catch (error) {
@@ -29,7 +30,7 @@ export const useAddressResolution = (
     },
     enabled: !!address && !!resolverApi,
     staleTime: 10 * 60 * 1000, // 10 minutes
-    retry: 1
+    retry: 1,
   })
 }
 
@@ -38,11 +39,11 @@ export const useAddressResolution = (
  */
 export const useManyAddressResolution = (
   addresses: string[],
-  resolverApi?: Resolver.Api
+  resolverApi?: Resolver.Api,
 ) => {
   const uniqueAddresses = useMemo(
     () => Array.from(new Set(addresses)),
-    [addresses]
+    [addresses],
   )
 
   return useQuery<Record<string, Resolver.AddressesResponse | null>>({
@@ -55,14 +56,14 @@ export const useManyAddressResolution = (
           try {
             const response = await resolverApi.getCardanoAddresses({
               resolve: address,
-              strategy: 'first'
+              strategy: 'first',
             })
             return {address, response}
           } catch (error) {
             console.error(`Failed to resolve address ${address}:`, error)
             return {address, response: null}
           }
-        })
+        }),
       )
 
       return results.reduce(
@@ -70,12 +71,12 @@ export const useManyAddressResolution = (
           acc[address] = response
           return acc
         },
-        {} as Record<string, Resolver.AddressesResponse | null>
+        {} as Record<string, Resolver.AddressesResponse | null>,
       )
     },
     enabled: uniqueAddresses.length > 0 && !!resolverApi,
     staleTime: 10 * 60 * 1000, // 10 minutes
-    retry: 1
+    retry: 1,
   })
 }
 
@@ -83,7 +84,7 @@ export const useManyAddressResolution = (
  * Extract resolved name from address resolution response
  */
 export const getResolvedName = (
-  response: Resolver.AddressesResponse | null
+  response: Resolver.AddressesResponse | null,
 ): string | null => {
   if (!response) return null
 
@@ -98,4 +99,3 @@ export const getResolvedName = (
 
   return null
 }
-

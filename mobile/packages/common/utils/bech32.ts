@@ -5,4 +5,3 @@ export const bech32ToHex = (bech: string) => {
   if (!decoded) return undefined
   return Buffer.from(bech32.fromWords(decoded.words)).toString('hex')
 }
-

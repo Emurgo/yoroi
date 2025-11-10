@@ -1,7 +1,7 @@
+import {AssetNameUtils} from '@yoroi/tx'
 import {Balance} from '@yoroi/types'
 
 import AssetFingerprint from '@emurgo/cip14-js'
-import {AssetNameUtils} from '@yoroi/tx'
 
 import {LegacyToken} from '~/wallets/types/tokens'
 

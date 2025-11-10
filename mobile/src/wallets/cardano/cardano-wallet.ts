@@ -5,24 +5,22 @@ import {
   protocolParamsPlaceholder,
 } from '@yoroi/blockchains'
 import {isNonNullable} from '@yoroi/common'
+import type {Datum} from '@yoroi/tx'
+import {
+  buildLedgerPayload,
+  buildLedgerSignedTx,
+  buildVotingLedgerPayloadV5,
+  createSignedLedgerTxFromCbor,
+  createUnsignedDelegationTx,
+  createUnsignedTx,
+  createUnsignedVotingTx,
+  createUnsignedWithdrawalTx,
+  signRawTransaction,
+} from '@yoroi/tx'
 import {Api, App, Balance, HW, Network, Portfolio, Wallet} from '@yoroi/types'
 
 import {walletChecksum} from '@emurgo/cip4-js'
 import * as CSL from '@emurgo/cross-csl-core'
-import {
-  createSignedLedgerTxFromCbor,
-  signRawTransaction,
-  Datum,
-  calculateTxId,
-  getBalanceForStakingCredentials,
-  buildVotingLedgerPayloadV5,
-  buildLedgerPayload,
-  buildLedgerSignedTx,
-  createUnsignedTx,
-  createUnsignedDelegationTx,
-  createUnsignedWithdrawalTx,
-  createUnsignedVotingTx,
-} from '@yoroi/tx'
 import {BigNumber} from 'bignumber.js'
 import {Buffer} from 'buffer'
 import {freeze} from 'immer'
@@ -1051,7 +1049,7 @@ export const makeCardanoWallet = (
         useUSB,
       )
 
-      const bytes = createSignedLedgerTxFromCbor(
+      const bytes = await createSignedLedgerTxFromCbor(
         CardanoMobile,
         cbor,
         signedLedgerTx,

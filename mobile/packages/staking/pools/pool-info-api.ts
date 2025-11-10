@@ -127,8 +127,9 @@ export function getMaybeNewEntriesByPool(
   deadline: number
 } {
   for (const groupName of Object.keys(transitionData.old)) {
-    const oldEntries: Array<PoolTransitionOldEntry> =
+    const oldEntries: Array<PoolTransitionOldEntry> | undefined =
       transitionData.old[groupName]
+    if (!oldEntries) continue
     const oldEntry: PoolTransitionOldEntry | undefined = oldEntries.find(
       (e) => e[0] === poolId,
     )
@@ -202,7 +203,8 @@ export class PoolInfoApi {
   public async getSingleFullPoolInfo(
     hash: string,
   ): Promise<FullPoolInfo | null> {
-    return (await this.getManyFullPoolInfo([hash]))[hash]
+    const result = (await this.getManyFullPoolInfo([hash]))[hash]
+    return result ?? null
   }
 
   /**
@@ -226,7 +228,8 @@ export class PoolInfoApi {
   public async getSingleChainPoolInfo(
     hash: string,
   ): Promise<FullChainPoolInfo | null> {
-    return (await this.getManyChainPoolInfo([hash]))[hash]
+    const result = (await this.getManyChainPoolInfo([hash]))[hash]
+    return result ?? null
   }
 
   /**
@@ -261,12 +264,11 @@ export class PoolInfoApi {
   public async getManyExplorerPoolInfo(
     hashes: string[],
   ): Promise<ExplorerPoolInfoMap> {
-    const hashInfoTuples = await Promise.all<[string, ExplorerPoolInfo | null]>(
-      hashes.map(async (hash) => [
-        hash,
-        await this.getSingleExplorerPoolInfo(hash),
-      ]),
-    )
+    const hashInfoTuples: Array<[string, ExplorerPoolInfo | null]> = []
+    for (const hash of hashes) {
+      const info = await this.getSingleExplorerPoolInfo(hash)
+      hashInfoTuples.push([hash, info])
+    }
     return tuplesIntoRecord(hashInfoTuples) as ExplorerPoolInfoMap
   }
 
@@ -299,7 +301,9 @@ export class PoolInfoApi {
     )
 
     if (!data.pools) return null
-    const [pool] = Object.values(data.pools)
+    const pools = Object.values(data.pools)
+    const pool = pools[0]
+    if (!pool) return null
 
     return {
       id: pool.id_bech,

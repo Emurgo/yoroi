@@ -1,6 +1,6 @@
+import {PoolTransition} from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
-import {PoolTransition} from '@yoroi/staking'
 import {LinearGradient} from 'expo-linear-gradient'
 import * as React from 'react'
 import {Image, Text, View, ViewProps} from 'react-native'

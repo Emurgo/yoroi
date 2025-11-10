@@ -1,7 +1,9 @@
 import {Balance} from '@yoroi/types'
-import {ModernUtxo} from '../utxo/models'
-import {Datum} from '../types'
+
 import type {Certificate} from '@emurgo/cross-csl-core'
+
+import {Datum} from '../types'
+import {ModernUtxo} from '../utxo/models'
 
 export type TransactionOutput = {
   address: string
@@ -52,4 +54,3 @@ export type UnsignedTransaction = {
   options: TransactionOptions
   cbor?: string // CBOR hex string
 }
-

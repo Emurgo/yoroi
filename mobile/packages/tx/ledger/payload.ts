@@ -1,26 +1,25 @@
 // Ledger payload building functions
 // Builds transaction payloads for Ledger hardware wallet signing
-
 import {
   SignTransactionRequest,
   TransactionSigningMode,
   TxAuxiliaryData,
-  TxAuxiliaryDataType,
 } from '@cardano-foundation/ledgerjs-hw-app-cardano'
 import {WasmModuleProxy} from '@emurgo/cross-csl-core'
+
 import {LedgerUnsignedTx} from './transform'
 import {
-  transformToLedgerInputs,
-  transformToLedgerOutputs,
-  formatLedgerCertificates,
-  formatLedgerWithdrawals,
   assertTagsState,
   doAllSetsHaveTag,
+  formatLedgerCertificates,
+  formatLedgerWithdrawals,
+  transformToLedgerInputs,
+  transformToLedgerOutputs,
 } from './transform'
 
 // Helper to build CIP-15 payload (legacy voting)
 function buildLedgerCIP15Payload(
-  catalystRegistrationData: unknown,
+  _catalystRegistrationData: unknown,
 ): TxAuxiliaryData {
   // TODO: Implement CIP-15 payload building
   // This is used for older Ledger app versions
@@ -29,7 +28,7 @@ function buildLedgerCIP15Payload(
 
 // Helper to build CIP-36 payload (modern voting)
 function buildLedgerCIP36Payload(
-  catalystRegistrationData: unknown,
+  _catalystRegistrationData: unknown,
 ): TxAuxiliaryData {
   // TODO: Implement CIP-36 payload building
   // This is used for newer Ledger app versions
@@ -59,17 +58,16 @@ export async function buildVotingLedgerPayloadV5(
   })
 
   const withdrawals = unsignedTx.withdrawals
-  const ledgerWithdrawal: Array<import('@cardano-foundation/ledgerjs-hw-app-cardano').Withdrawal> =
-    []
+  const ledgerWithdrawal: Array<
+    import('@cardano-foundation/ledgerjs-hw-app-cardano').Withdrawal
+  > = []
   if (
     withdrawals != null &&
     (await withdrawals.hasValue()) &&
     (await withdrawals.len()) > 0
   ) {
     if (!stakingDerivationPath)
-      throw new Error(
-        'stakingDerivationPath should have value for withdrawals',
-      )
+      throw new Error('stakingDerivationPath should have value for withdrawals')
     const withs = await formatLedgerWithdrawals(
       withdrawals as import('@emurgo/cross-csl-core').Withdrawals,
       stakingDerivationPath,
@@ -79,8 +77,9 @@ export async function buildVotingLedgerPayloadV5(
 
   const certificates = unsignedTx.certificates
 
-  const ledgerCertificates: Array<import('@cardano-foundation/ledgerjs-hw-app-cardano').Certificate> =
-    []
+  const ledgerCertificates: Array<
+    import('@cardano-foundation/ledgerjs-hw-app-cardano').Certificate
+  > = []
   if (
     certificates != null &&
     (await certificates.hasValue()) &&
@@ -93,7 +92,9 @@ export async function buildVotingLedgerPayloadV5(
     const certs = (await formatLedgerCertificates(
       certificates as import('@emurgo/cross-csl-core').Certificates,
       stakingDerivationPath,
-    )) as Array<import('@cardano-foundation/ledgerjs-hw-app-cardano').Certificate>
+    )) as Array<
+      import('@cardano-foundation/ledgerjs-hw-app-cardano').Certificate
+    >
     ledgerCertificates.push(...certs)
   }
 
@@ -117,8 +118,7 @@ export async function buildVotingLedgerPayloadV5(
         protocolMagic: byronNetworkMagic,
       },
       withdrawals: ledgerWithdrawal.length === 0 ? null : ledgerWithdrawal,
-      certificates:
-        ledgerCertificates.length === 0 ? null : ledgerCertificates,
+      certificates: ledgerCertificates.length === 0 ? null : ledgerCertificates,
       auxiliaryData,
       validityIntervalStart: undefined,
     },
@@ -156,17 +156,16 @@ export async function buildLedgerPayload(
   })
 
   const withdrawals = unsignedTx.withdrawals
-  const ledgerWithdrawal: Array<import('@cardano-foundation/ledgerjs-hw-app-cardano').Withdrawal> =
-    []
+  const ledgerWithdrawal: Array<
+    import('@cardano-foundation/ledgerjs-hw-app-cardano').Withdrawal
+  > = []
   if (
     withdrawals != null &&
     (await withdrawals.hasValue()) &&
     (await withdrawals.len()) > 0
   ) {
     if (!stakingDerivationPath)
-      throw new Error(
-        'stakingDerivationPath should have value for withdrawals',
-      )
+      throw new Error('stakingDerivationPath should have value for withdrawals')
     const withs = await formatLedgerWithdrawals(
       withdrawals as import('@emurgo/cross-csl-core').Withdrawals,
       stakingDerivationPath,
@@ -176,8 +175,9 @@ export async function buildLedgerPayload(
 
   const certificates = unsignedTx.certificates
 
-  const ledgerCertificates: Array<import('@cardano-foundation/ledgerjs-hw-app-cardano').Certificate> =
-    []
+  const ledgerCertificates: Array<
+    import('@cardano-foundation/ledgerjs-hw-app-cardano').Certificate
+  > = []
   if (
     certificates != null &&
     (await certificates.hasValue()) &&
@@ -225,8 +225,7 @@ export async function buildLedgerPayload(
         protocolMagic: byronNetworkMagic,
       },
       withdrawals: ledgerWithdrawal.length === 0 ? null : ledgerWithdrawal,
-      certificates:
-        ledgerCertificates.length === 0 ? null : ledgerCertificates,
+      certificates: ledgerCertificates.length === 0 ? null : ledgerCertificates,
       auxiliaryData,
       validityIntervalStart: undefined,
       scriptDataHashHex: unsignedTx.scriptDataHash,
@@ -239,4 +238,3 @@ export async function buildLedgerPayload(
     },
   } as SignTransactionRequest
 }
-

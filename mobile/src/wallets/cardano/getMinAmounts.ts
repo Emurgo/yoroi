@@ -1,6 +1,6 @@
+import {normalizeToAddress} from '@yoroi/tx'
 import {Balance, Chain, Portfolio} from '@yoroi/types'
 
-import {normalizeToAddress} from '@yoroi/tx'
 import BigNumber from 'bignumber.js'
 
 import {Address} from '../types/yoroi'

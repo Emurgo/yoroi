@@ -2,14 +2,8 @@
 // These methods are kept for backward compatibility during migration
 // They will be replaced by TransactionBuilder in Phase 2
 // DO NOT USE IN NEW CODE - Use TransactionBuilder instead
+import {PublicKey, WasmModuleProxy} from '@emurgo/cross-csl-core'
 
-import {WasmModuleProxy} from '@emurgo/cross-csl-core'
-import {
-  createUnsignedTx as libCreateUnsignedTx,
-  createUnsignedDelegationTx as libCreateUnsignedDelegationTx,
-  createUnsignedWithdrawalTx as libCreateUnsignedWithdrawalTx,
-  createUnsignedVotingTx as libCreateUnsignedVotingTx,
-} from '@emurgo/yoroi-lib'
 import {
   AddressingAddress,
   CardanoAddressedUtxo,
@@ -20,10 +14,11 @@ import {
   SendToken,
   Token,
   TxOptions,
-  UnsignedTx,
 } from '../types'
-import {BigNumber} from 'bignumber.js'
-import {PublicKey} from '@emurgo/cross-csl-core'
+
+// UnsignedTx type from yoroi-lib (will be replaced in Phase 2)
+// Using 'any' here because we're just passing through to yoroi-lib
+type UnsignedTx = any
 
 /**
  * @deprecated Use TransactionBuilder instead (Phase 2)
@@ -102,12 +97,20 @@ export const createUnsignedDelegationTx = async (
 export const createUnsignedWithdrawalTx = async (
   wasm: WasmModuleProxy,
   accountState: {
-    [key: string]: null | {remainingAmount: string; rewards: string; withdrawals: string}
+    [key: string]: null | {
+      remainingAmount: string
+      rewards: string
+      withdrawals: string
+    }
   },
   defaultToken: Token,
   absSlotNumber: BigNumber,
   utxos: Array<CardanoAddressedUtxo>,
-  withdrawalRequests: Array<{addressing: unknown; rewardAddress: string; shouldDeregister: boolean}>,
+  withdrawalRequests: Array<{
+    addressing: unknown
+    rewardAddress: string
+    shouldDeregister: boolean
+  }>,
   changeAddr: AddressingAddress,
   config: CardanoHaskellConfig,
   txOptions: TxOptions,
@@ -166,4 +169,3 @@ export const createUnsignedVotingTx = async (
     useCIP36,
   )
 }
-

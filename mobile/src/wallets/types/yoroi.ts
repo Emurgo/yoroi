@@ -1,6 +1,5 @@
-import {Balance, Portfolio} from '@yoroi/types'
-
 import {Datum} from '@yoroi/tx'
+import {Balance, Portfolio} from '@yoroi/types'
 
 import {CardanoTypes} from '../cardano/types'
 

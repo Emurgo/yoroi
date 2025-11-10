@@ -1,4 +1,5 @@
-import type {Witness, WasmModuleProxy} from '@emurgo/cross-csl-core'
+import type {WasmModuleProxy, Witness} from '@emurgo/cross-csl-core'
+
 import {UnsignedTransaction} from './types'
 
 export type WitnessInfo = {
@@ -77,7 +78,7 @@ export class WitnessManager {
  */
 export async function getRequiredSigners(
   unsignedTx: UnsignedTransaction,
-  wasm: WasmModuleProxy
+  _wasm: WasmModuleProxy,
 ): Promise<string[]> {
   // TODO: Implement extraction of required signers from transaction
   // This will analyze:
@@ -89,22 +90,21 @@ export async function getRequiredSigners(
   const signers: string[] = []
 
   // Extract from inputs
-  for (const input of unsignedTx.inputs) {
+  for (const _input of unsignedTx.inputs) {
     // TODO: Extract key hash from input.utxo.receiver address
     // const keyHash = await extractKeyHashFromAddress(input.utxo.receiver, wasm)
     // signers.push(keyHash)
   }
 
   // Extract from certificates
-  for (const cert of unsignedTx.certificates) {
+  for (const _cert of unsignedTx.certificates) {
     // TODO: Extract required signers from certificate
   }
 
   // Extract from withdrawals
-  for (const withdrawal of unsignedTx.withdrawals) {
+  for (const _withdrawal of unsignedTx.withdrawals) {
     // TODO: Extract key hash from withdrawal.rewardAddress
   }
 
   return signers
 }
-

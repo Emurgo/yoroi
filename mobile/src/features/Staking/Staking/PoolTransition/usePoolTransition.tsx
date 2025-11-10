@@ -1,7 +1,7 @@
+import {PoolInfoApi} from '@yoroi/staking'
 import {Wallet} from '@yoroi/types'
 
 import {init} from '@emurgo/cross-csl-mobile'
-import {PoolInfoApi} from '@yoroi/staking'
 import {useQuery} from '@tanstack/react-query'
 import BigNumber from 'bignumber.js'
 import * as React from 'react'

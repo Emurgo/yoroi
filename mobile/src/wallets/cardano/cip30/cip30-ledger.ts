@@ -1,4 +1,5 @@
 import {cardanoConfig} from '@yoroi/blockchains'
+import {createSignedLedgerTxFromCbor, normalizeToAddress} from '@yoroi/tx'
 import {HW, Wallet} from '@yoroi/types'
 
 import {
@@ -6,10 +7,6 @@ import {
   MessageData,
 } from '@cardano-foundation/ledgerjs-hw-app-cardano'
 import {Transaction} from '@emurgo/cross-csl-core'
-import {
-  createSignedLedgerTxFromCbor,
-  normalizeToAddress,
-} from '@yoroi/tx'
 
 import {toLedgerSignRequest} from '~/features/Discover/common/ledger'
 import {CardanoMobile} from '~/wallets/wallets'

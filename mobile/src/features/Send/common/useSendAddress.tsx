@@ -1,6 +1,6 @@
 import {useTransfer} from '@yoroi/transfer'
-
 import {normalizeToAddress} from '@yoroi/tx'
+
 import * as React from 'react'
 
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'

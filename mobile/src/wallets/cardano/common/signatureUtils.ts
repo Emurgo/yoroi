@@ -1,9 +1,9 @@
 import {cardanoConfig, derivationConfig} from '@yoroi/blockchains'
+import {Addressing, createLedgerPlutusPayload, getAllSigners} from '@yoroi/tx'
 import {Wallet} from '@yoroi/types'
 
 import {SignTransactionRequest} from '@cardano-foundation/ledgerjs-hw-app-cardano'
 import * as CSL_TYPES from '@emurgo/cross-csl-core'
-import {Addressing, createLedgerPlutusPayload, getAllSigners} from '@yoroi/tx'
 import {Buffer} from 'buffer'
 import {uniqWith} from 'lodash'
 

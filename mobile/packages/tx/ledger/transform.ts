@@ -1,7 +1,22 @@
 // Ledger transformation utilities
 // Transforms Cardano transactions to Ledger hardware wallet format
+import {isHex} from '@yoroi/common'
 
-import {bech32} from 'bech32'
+import {
+  AddressType as LedgerAddressType,
+  AssetGroup as LedgerAssetGroup,
+  Certificate as LedgerCertificate,
+  CertificateType as LedgerCertificateType,
+  CredentialParamsType as LedgerCredentialParamsType,
+  DRepParams as LedgerDRepParams,
+  DRepParamsType as LedgerDRepParamsType,
+  DeviceOwnedAddress as LedgerDeviceOwnedAddress,
+  Token as LedgerToken,
+  TxInput as LedgerTxInput,
+  TxOutput as LedgerTxOutput,
+  Withdrawal as LedgerWithdrawal,
+  TxOutputDestinationType,
+} from '@cardano-foundation/ledgerjs-hw-app-cardano'
 import {
   Address,
   Certificates,
@@ -10,23 +25,9 @@ import {
   WasmModuleProxy,
   Withdrawals,
 } from '@emurgo/cross-csl-core'
-import {
-  Certificate as LedgerCertificate,
-  AssetGroup as LedgerAssetGroup,
-  TxOutputDestinationType,
-  AddressType as LedgerAddressType,
-  Token as LedgerToken,
-  CertificateType as LedgerCertificateType,
-  CredentialParamsType as LedgerCredentialParamsType,
-  TxOutput as LedgerTxOutput,
-  TxInput as LedgerTxInput,
-  DeviceOwnedAddress as LedgerDeviceOwnedAddress,
-  Withdrawal as LedgerWithdrawal,
-  DRepParamsType as LedgerDRepParamsType,
-  DRepParams as LedgerDRepParams,
-} from '@cardano-foundation/ledgerjs-hw-app-cardano'
+import {bech32} from 'bech32'
+
 import {Addressing, AddressingAddress, Bip44DerivationLevels} from '../types'
-import {isHex} from '@yoroi/common'
 
 // Note: This will need to be updated when we migrate UnsignedTx type
 // For now, we'll use a minimal interface that matches what Ledger functions need
@@ -167,7 +168,7 @@ export const transformToLedgerOutputs = async (
     }
 
     const dataHash = (await output.hasDataHash())
-      ? (await output.dataHash().then((x) => x?.toHex())) ?? ''
+      ? ((await output.dataHash().then((x) => x?.toHex())) ?? '')
       : undefined
 
     if (changeAddr != null && changeAddr.addressing) {
@@ -184,9 +185,7 @@ export const transformToLedgerOutputs = async (
           .amount()
           .then((x) => x.coin())
           .then((x) => x.toStr()),
-        tokenBundle: await toLedgerTokenBundle(
-          await outputAmount.multiasset(),
-        ),
+        tokenBundle: await toLedgerTokenBundle(await outputAmount.multiasset()),
         datumHashHex: dataHash,
         destination: {
           type: TxOutputDestinationType.DEVICE_OWNED,
@@ -225,8 +224,7 @@ export const verifyFromBip44Root = (addressing: Addressing): void => {
   if (accountPosition !== Bip44DerivationLevels.PURPOSE.level) {
     throw new Error(`verifyFromBip44Root addressing does not start from root`)
   }
-  const lastLevelSpecified =
-    addressing.startLevel + addressing.path.length - 1
+  const lastLevelSpecified = addressing.startLevel + addressing.path.length - 1
   if (lastLevelSpecified !== Bip44DerivationLevels.ADDRESS.level) {
     throw new Error(`verifyFromBip44Root incorrect addressing size`)
   }
@@ -472,15 +470,13 @@ export const formatLedgerCertificates = async (
   return result
 }
 
-const mapDrepParams = async (
-  certificate: {
-    drep(): Promise<{
-      kind(): Promise<number>
-      toKeyHash(): Promise<{toBytes(): Promise<Uint8Array>} | null> | null
-      toScriptHash(): Promise<{toBytes(): Promise<Uint8Array>} | null> | null
-    }>
-  },
-): Promise<LedgerDRepParams | undefined> => {
+const mapDrepParams = async (certificate: {
+  drep(): Promise<{
+    kind(): Promise<number>
+    toKeyHash(): Promise<{toBytes(): Promise<Uint8Array>} | null> | null
+    toScriptHash(): Promise<{toBytes(): Promise<Uint8Array>} | null> | null
+  }>
+}): Promise<LedgerDRepParams | undefined> => {
   const drep = await certificate.drep()
   const drepKind = await drep.kind()
 
@@ -599,4 +595,3 @@ export const doAllSetsHaveTag = async (
   const tagsState = await wasm.hasTransactionSetTag(Buffer.from(txHex, 'hex'))
   return tagsState === wasm.TransactionSetsState.AllSetsHaveTag
 }
-

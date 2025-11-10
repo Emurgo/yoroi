@@ -1,8 +1,14 @@
 // Cardano address utilities
 // Cardano-specific address normalization and manipulation functions
-
-import {Address, WasmModuleProxy, Credential, Bip32PublicKey} from '@emurgo/cross-csl-core'
 import {isHex} from '@yoroi/common'
+
+import {
+  Address,
+  Bip32PublicKey,
+  Credential,
+  WasmModuleProxy,
+} from '@emurgo/cross-csl-core'
+
 import {Addressing} from '../types'
 
 /**
@@ -45,9 +51,7 @@ export async function toHexOrBase58(
 /**
  * Filter addresses by staking key
  */
-export async function filterAddressesByStakingKey<
-  T extends {receiver: string},
->(
+export async function filterAddressesByStakingKey<T extends {receiver: string}>(
   wasm: WasmModuleProxy,
   stakingKey: Credential,
   utxos: ReadonlyArray<T>,
@@ -87,8 +91,7 @@ export async function addrContainsAccountKey(
   ).toString('hex')
 
   const baseAddress = await wasm.BaseAddress.fromAddress(wasmAddr)
-  if (!baseAddress)
-    throw new Error('addrContainsAccountKey: baseAddress null')
+  if (!baseAddress) throw new Error('addrContainsAccountKey: baseAddress null')
   const stakeCredBytes = await baseAddress.stakeCred().then((x) => x.toBytes())
   if (baseAddress != null) {
     if (Buffer.from(stakeCredBytes).toString('hex') === accountKeyString) {
@@ -128,4 +131,3 @@ export const derivePublicByAddressing = async (
 
   return derivedKey
 }
-

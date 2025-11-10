@@ -1,4 +1,5 @@
 import {BigNumber} from 'bignumber.js'
+
 import {Token, TokenEntry} from './index'
 
 export class MultiToken {
@@ -13,7 +14,7 @@ export class MultiToken {
     this.defaults = defaults
     this.add({
       identifier: defaults.identifier,
-      amount: new BigNumber(0)
+      amount: new BigNumber(0),
     })
     values.forEach((value) => this.add(value))
   }
@@ -24,7 +25,7 @@ export class MultiToken {
 
   add(entry: TokenEntry): MultiToken {
     const existingEntry = this.values.find(
-      (value) => value.identifier === entry.identifier
+      (value) => value.identifier === entry.identifier,
     )
     if (existingEntry == null) {
       this.values.push(entry)
@@ -45,7 +46,7 @@ export class MultiToken {
     const existingValue = this.get(identifier)
     if (existingValue != null && existingValue.eq(0)) {
       this.values = this.values.filter(
-        (value) => value.identifier !== identifier
+        (value) => value.identifier !== identifier,
       )
     }
   }
@@ -53,7 +54,7 @@ export class MultiToken {
   subtract(entry: TokenEntry): MultiToken {
     return this.add({
       identifier: entry.identifier,
-      amount: entry.amount.negated()
+      amount: entry.amount.negated(),
     })
   }
 
@@ -82,9 +83,9 @@ export class MultiToken {
     return new MultiToken(
       this.values.map((token) => ({
         ...token,
-        amount: token.amount.absoluteValue()
+        amount: token.amount.absoluteValue(),
       })),
-      this.defaults
+      this.defaults,
     )
   }
 
@@ -92,9 +93,9 @@ export class MultiToken {
     return new MultiToken(
       this.values.map((token) => ({
         ...token,
-        amount: token.amount.negated()
+        amount: token.amount.negated(),
       })),
-      this.defaults
+      this.defaults,
     )
   }
 
@@ -104,20 +105,18 @@ export class MultiToken {
 
   getDefaultEntry(): TokenEntry {
     return this.values.filter(
-      (value) => value.identifier === this.defaults.identifier
+      (value) => value.identifier === this.defaults.identifier,
     )[0]
   }
 
   nonDefaultEntries(): Array<TokenEntry> {
     return this.values.filter(
-      (value) => !(value.identifier === this.defaults.identifier)
+      (value) => !(value.identifier === this.defaults.identifier),
     )
   }
 
   asMap(): Map<string, BigNumber> {
-    return new Map(
-      this.values.map((value) => [value.identifier, value.amount])
-    )
+    return new Map(this.values.map((value) => [value.identifier, value.amount]))
   }
 
   isEqualTo(tokens: MultiToken): boolean {
@@ -143,4 +142,3 @@ export class MultiToken {
     return this.values.filter((token) => token.amount.gt(0)).length === 0
   }
 }
-

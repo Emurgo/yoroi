@@ -1,4 +1,5 @@
 import {normalizeToAddress} from '@yoroi/tx'
+
 import BigNumber from 'bignumber.js'
 
 import {logger} from '~/kernel/logger/logger'

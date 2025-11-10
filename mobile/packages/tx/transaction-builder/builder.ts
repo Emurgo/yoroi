@@ -1,21 +1,23 @@
 import {Balance} from '@yoroi/types'
+
+import type {Certificate, WasmModuleProxy} from '@emurgo/cross-csl-core'
+
+import {Datum} from '../types'
 import {ModernUtxo} from '../utxo/models'
 import {
-  TransactionInput,
-  TransactionOutput,
   TransactionCertificate,
-  TransactionWithdrawal,
-  TransactionReferenceInput,
+  TransactionInput,
   TransactionMetadata,
   TransactionOptions,
-  UnsignedTransaction
+  TransactionOutput,
+  TransactionReferenceInput,
+  TransactionWithdrawal,
+  UnsignedTransaction,
 } from './types'
-import type {Certificate, WasmModuleProxy} from '@emurgo/cross-csl-core'
-import {Datum} from '../types'
 
 /**
  * Flexible Transaction Builder for Cardano transactions
- * 
+ *
  * Supports:
  * - Manual UTXO selection
  * - Multiple certificates
@@ -45,7 +47,7 @@ export class TransactionBuilder {
 
   removeInput(txHash: string, txIndex: number): TransactionBuilder {
     this.inputs = this.inputs.filter(
-      (input) => input.utxo.txHash !== txHash || input.utxo.txIndex !== txIndex
+      (input) => input.utxo.txHash !== txHash || input.utxo.txIndex !== txIndex,
     )
     return this
   }
@@ -54,7 +56,7 @@ export class TransactionBuilder {
   addOutput(
     address: string,
     amounts: Balance.Amounts,
-    datum?: Datum
+    datum?: Datum,
   ): TransactionBuilder {
     this.outputs.push({address, amounts, datum})
     return this
@@ -114,7 +116,7 @@ export class TransactionBuilder {
    * Build the transaction (will be implemented with WASM)
    * For now, returns the structured transaction
    */
-  async build(wasm: WasmModuleProxy): Promise<UnsignedTransaction> {
+  async build(_wasm: WasmModuleProxy): Promise<UnsignedTransaction> {
     // TODO: Implement full transaction building with WASM
     // This will include:
     // - Converting inputs/outputs to WASM types
@@ -132,7 +134,7 @@ export class TransactionBuilder {
       withdrawals: this.withdrawals,
       referenceInputs: this.referenceInputs,
       metadata: this.metadata.length > 0 ? this.metadata : undefined,
-      options: this.options
+      options: this.options,
     }
   }
 
@@ -156,8 +158,8 @@ export class TransactionBuilder {
    * Load builder state from CBOR
    */
   static async loadFromCBOR(
-    cbor: string,
-    wasm: WasmModuleProxy
+    _cbor: string,
+    _wasm: WasmModuleProxy,
   ): Promise<TransactionBuilder> {
     // TODO: Deserialize CBOR and reconstruct builder state
     // This will:
@@ -179,7 +181,7 @@ export class TransactionBuilder {
   /**
    * Estimate transaction fee
    */
-  async estimateFee(wasm: WasmModuleProxy): Promise<Balance.Amounts> {
+  async estimateFee(_wasm: WasmModuleProxy): Promise<Balance.Amounts> {
     // TODO: Implement fee estimation
     // This will build a temporary transaction and calculate fees
     return {}
@@ -204,8 +206,7 @@ export class TransactionBuilder {
       withdrawals: [...this.withdrawals],
       referenceInputs: [...this.referenceInputs],
       metadata: [...this.metadata],
-      options: {...this.options}
+      options: {...this.options},
     }
   }
 }
-

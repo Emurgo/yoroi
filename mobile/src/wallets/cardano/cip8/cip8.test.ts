@@ -1,4 +1,5 @@
 import {normalizeToAddress} from '@yoroi/tx'
+
 import {Buffer} from 'buffer'
 
 import {CardanoMobile} from '~/wallets/wallets'

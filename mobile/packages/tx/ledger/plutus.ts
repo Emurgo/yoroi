@@ -1,6 +1,5 @@
 // Ledger Plutus transaction payload building
 // Functions for building Ledger payloads for Plutus (smart contract) transactions
-
 import {
   SignTransactionRequest,
   TransactionSigningMode,
@@ -8,8 +7,13 @@ import {
   TxRequiredSignerType,
 } from '@cardano-foundation/ledgerjs-hw-app-cardano'
 import {Ed25519KeyHash, WasmModuleProxy} from '@emurgo/cross-csl-core'
+
 import {Addressing, AddressingAddress} from '../types'
-import {assertTagsState, doAllSetsHaveTag, transformToLedgerOutputs} from './transform'
+import {
+  assertTagsState,
+  doAllSetsHaveTag,
+  transformToLedgerOutputs,
+} from './transform'
 
 type CreateLedgerPlutusPayloadParams = {
   wasm: WasmModuleProxy
@@ -136,14 +140,12 @@ export const createLedgerPlutusPayload = async (
   }
 }
 
-const getRequiredSigners = async (
-  body: {
-    requiredSigners(): Promise<{
-      len(): Promise<number>
-      get(index: number): Promise<Ed25519KeyHash>
-    } | null>
-  },
-): Promise<Array<Ed25519KeyHash>> => {
+const getRequiredSigners = async (body: {
+  requiredSigners(): Promise<{
+    len(): Promise<number>
+    get(index: number): Promise<Ed25519KeyHash>
+  } | null>
+}): Promise<Array<Ed25519KeyHash>> => {
   const signers = await body.requiredSigners()
   const signersArray: Array<Ed25519KeyHash> = []
   if (signers) {
@@ -154,4 +156,3 @@ const getRequiredSigners = async (
   }
   return signersArray
 }
-

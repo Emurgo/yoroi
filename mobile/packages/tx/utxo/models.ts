@@ -1,5 +1,11 @@
 import {Balance} from '@yoroi/types'
-import type {TransactionUnspentOutput, WasmModuleProxy} from '@emurgo/cross-csl-core'
+
+import type {
+  TransactionUnspentOutput,
+  WasmModuleProxy,
+} from '@emurgo/cross-csl-core'
+// Legacy types (for backward compatibility during migration)
+import BigNumber from 'bignumber.js'
 
 // Modern UTXO type matching useUtxoList.ts pattern
 export type ModernUtxo = {
@@ -9,16 +15,15 @@ export type ModernUtxo = {
   balance: Balance.Amounts // Record<TokenId, Quantity>
   derivationPath?: string // For display
   toTransactionUnspentOutputHex: () => string
-  toTransactionUnspentOutput: (wasm: WasmModuleProxy) => TransactionUnspentOutput
+  toTransactionUnspentOutput: (
+    wasm: WasmModuleProxy,
+  ) => TransactionUnspentOutput
 }
-
-// Legacy types (for backward compatibility during migration)
-import BigNumber from 'bignumber.js'
 
 export enum UtxoApiResult {
   SUCCESS = 'SUCCESS',
   BESTBLOCK_ROLLBACK = 'BESTBLOCK_ROLLBACK',
-  SAFEBLOCK_ROLLBACK = 'SAFEBLOCK_ROLLBACK'
+  SAFEBLOCK_ROLLBACK = 'SAFEBLOCK_ROLLBACK',
 }
 
 export type Block = {
@@ -59,7 +64,7 @@ export type Utxo = {
 
 export enum DiffType {
   INPUT = 'input',
-  OUTPUT = 'output'
+  OUTPUT = 'output',
 }
 
 export type UtxoDiffItem = {
@@ -102,4 +107,3 @@ export type TipStatusReference = {
     lastFoundBestBlock: string
   }
 }
-

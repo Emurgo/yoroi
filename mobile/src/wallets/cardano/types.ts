@@ -1,7 +1,3 @@
-import {Api, App, HW, Network, Portfolio, Wallet} from '@yoroi/types'
-
-import {WalletChecksum as WalletChecksumType} from '@emurgo/cip4-js'
-import * as CoreTypes from '@emurgo/cross-csl-core'
 import {
   Addressing as AddressingType,
   CardanoAddressedUtxo as CardanoAddressedUtxoType,
@@ -12,6 +8,10 @@ import {
   TxMetadata as TxMetadataType,
   UnsignedTx as UnsignedTxType,
 } from '@yoroi/tx'
+import {Api, App, HW, Network, Portfolio, Wallet} from '@yoroi/types'
+
+import {WalletChecksum as WalletChecksumType} from '@emurgo/cip4-js'
+import * as CoreTypes from '@emurgo/cross-csl-core'
 
 import {WalletEncryptedStorage} from '~/kernel/storage/EncryptedStorage'
 
@@ -299,4 +299,8 @@ export namespace CardanoTypes {
   export type TokenEntry = TokenEntryType
 }
 
-export {RegistrationStatus, NoOutputsError, NotEnoughMoneyToSendError} from '@yoroi/tx'
+export {
+  RegistrationStatus,
+  NoOutputsError,
+  NotEnoughMoneyToSendError,
+} from '@yoroi/tx'

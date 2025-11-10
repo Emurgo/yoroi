@@ -1,6 +1,6 @@
+import {TokenEntry} from '@yoroi/tx'
 import {Portfolio} from '@yoroi/types'
 
-import {TokenEntry} from '@yoroi/tx'
 import {BigNumber} from 'bignumber.js'
 
 type TokenLookupKey = {

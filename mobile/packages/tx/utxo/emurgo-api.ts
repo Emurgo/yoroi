@@ -1,8 +1,9 @@
+import {chunk, flatten} from '@yoroi/common'
+
 import axios from 'axios'
 import BigNumber from 'bignumber.js'
-import {chunk, flatten} from '@yoroi/common'
-import {UtxoApiContract} from './api'
 
+import {UtxoApiContract} from './api'
 import {
   Asset,
   DiffType,
@@ -14,7 +15,7 @@ import {
   UtxoDiff,
   UtxoDiffItem,
   UtxoDiffItemOutput,
-  UtxoDiffSincePointRequest
+  UtxoDiffSincePointRequest,
 } from './models'
 
 export type UtxoAtPointItemResponse = {
@@ -72,7 +73,7 @@ const handleReferencePointErrors = <T>(err: any): UtxoApiResponse<T> => {
     switch (errResponse) {
       case 'REFERENCE_POINT_BLOCK_NOT_FOUND':
         return {
-          result: UtxoApiResult.SAFEBLOCK_ROLLBACK
+          result: UtxoApiResult.SAFEBLOCK_ROLLBACK,
         }
       default:
         throw err
@@ -83,7 +84,7 @@ const handleReferencePointErrors = <T>(err: any): UtxoApiResponse<T> => {
 }
 
 const handleReferencePointAndBestBlockErrors = <T>(
-  err: any
+  err: any,
 ): UtxoApiResponse<T> => {
   if (
     err.response &&
@@ -96,11 +97,11 @@ const handleReferencePointAndBestBlockErrors = <T>(
       // check BE is not throwing it
       case 'REFERENCE_BESTBLOCK_NOT_FOUND':
         return {
-          result: UtxoApiResult.BESTBLOCK_ROLLBACK
+          result: UtxoApiResult.BESTBLOCK_ROLLBACK,
         }
       case 'REFERENCE_POINT_BLOCK_NOT_FOUND':
         return {
-          result: UtxoApiResult.SAFEBLOCK_ROLLBACK
+          result: UtxoApiResult.SAFEBLOCK_ROLLBACK,
         }
       default:
         throw err
@@ -128,13 +129,13 @@ export class BatchedEmurgoUtxoApi implements UtxoApiContract {
   }
 
   async getTipStatusWithReference(
-    bestBlocks: string[]
+    bestBlocks: string[],
   ): Promise<UtxoApiResponse<TipStatusReference>> {
     return await this._base.getTipStatusWithReference(bestBlocks)
   }
 
   async getUtxoAtPoint(
-    req: UtxoAtPointRequest
+    req: UtxoAtPointRequest,
   ): Promise<UtxoApiResponse<Utxo[]>> {
     try {
       const addressChunks = chunk(req.addresses, this._maxAddresses)
@@ -142,15 +143,13 @@ export class BatchedEmurgoUtxoApi implements UtxoApiContract {
         async (addresses) =>
           await this._base.getUtxoAtPoint({
             referenceBlockHash: req.referenceBlockHash,
-            addresses: addresses
-          })
+            addresses: addresses,
+          }),
       )
-      const values = (await Promise.all(promises)).map(
-        (x) => x.value as Utxo[]
-      )
+      const values = (await Promise.all(promises)).map((x) => x.value as Utxo[])
       return {
         result: UtxoApiResult.SUCCESS,
-        value: flatten(values)
+        value: flatten(values),
       }
     } catch (err: any) {
       return handleReferencePointErrors(err)
@@ -158,7 +157,7 @@ export class BatchedEmurgoUtxoApi implements UtxoApiContract {
   }
 
   async getUtxoDiffSincePoint(
-    req: UtxoDiffSincePointRequest
+    req: UtxoDiffSincePointRequest,
   ): Promise<UtxoApiResponse<UtxoDiff>> {
     try {
       const addressChunks = chunk(req.addresses, this._maxAddresses)
@@ -167,14 +166,14 @@ export class BatchedEmurgoUtxoApi implements UtxoApiContract {
           await this._base.getUtxoDiffSincePoint({
             afterBestBlocks: req.afterBestBlocks,
             untilBlockHash: req.untilBlockHash,
-            addresses: addresses
-          })
+            addresses: addresses,
+          }),
       )
       const values = (await Promise.all(promises)).map(
-        (x) => x.value as UtxoDiff
+        (x) => x.value as UtxoDiff,
       )
       const uniqueMatchedBestBlocks = new Set(
-        values.map((e) => e.reference.lastFoundBestBlock)
+        values.map((e) => e.reference.lastFoundBestBlock),
       )
       if (uniqueMatchedBestBlocks.size > 1) {
         return {result: UtxoApiResult.BESTBLOCK_ROLLBACK}
@@ -183,7 +182,7 @@ export class BatchedEmurgoUtxoApi implements UtxoApiContract {
         ...values.map((e) => {
           const v = e.reference.lastFoundSafeBlock
           return v == null ? -1 : req.afterBestBlocks.indexOf(v)
-        })
+        }),
       )
       if (latestMatchedSafeBlockIndex < 0) {
         return {result: UtxoApiResult.SAFEBLOCK_ROLLBACK}
@@ -194,9 +193,10 @@ export class BatchedEmurgoUtxoApi implements UtxoApiContract {
           diffItems: flatten(values.map((x) => x.diffItems)),
           reference: {
             lastFoundBestBlock: values[0].reference.lastFoundBestBlock,
-            lastFoundSafeBlock: req.afterBestBlocks[latestMatchedSafeBlockIndex]
-          }
-        }
+            lastFoundSafeBlock:
+              req.afterBestBlocks[latestMatchedSafeBlockIndex],
+          },
+        },
       }
     } catch (err: any) {
       return handleReferencePointErrors(err)
@@ -228,23 +228,23 @@ export class EmurgoUtxoApi implements UtxoApiContract {
   }
 
   async getTipStatusWithReference(
-    bestBlocks: string[]
+    bestBlocks: string[],
   ): Promise<UtxoApiResponse<TipStatusReference>> {
     try {
       const url = `${this.apiUrl}v2/tipStatus`
       const resp = await axios.post<TipStatusResponse>(url, {
         reference: {
-          bestBlocks: bestBlocks
-        }
+          bestBlocks: bestBlocks,
+        },
       })
       return {
         result: UtxoApiResult.SUCCESS,
         value: {
           reference: {
             lastFoundBestBlock: resp.data.reference.lastFoundBestBlock,
-            lastFoundSafeBlock: resp.data.reference.lastFoundSafeBlock
-          }
-        }
+            lastFoundSafeBlock: resp.data.reference.lastFoundSafeBlock,
+          },
+        },
       }
     } catch (err: any) {
       if (
@@ -257,7 +257,7 @@ export class EmurgoUtxoApi implements UtxoApiContract {
         switch (errResponse) {
           case 'REFERENCE_POINT_BLOCK_NOT_FOUND':
             return {
-              result: UtxoApiResult.SAFEBLOCK_ROLLBACK
+              result: UtxoApiResult.SAFEBLOCK_ROLLBACK,
             }
           default:
             throw err
@@ -269,7 +269,7 @@ export class EmurgoUtxoApi implements UtxoApiContract {
   }
 
   async getUtxoAtPoint(
-    req: UtxoAtPointRequest
+    req: UtxoAtPointRequest,
   ): Promise<UtxoApiResponse<Utxo[]>> {
     try {
       let page = 1
@@ -294,9 +294,9 @@ export class EmurgoUtxoApi implements UtxoApiContract {
             blockNum: u.block_num,
             receiver: u.receiver,
             txHash: u.tx_hash,
-            txIndex: u.tx_index
+            txIndex: u.tx_index,
           }
-        })
+        }),
       }
     } catch (err: any) {
       if (this.throwRequestErrors) {
@@ -307,7 +307,7 @@ export class EmurgoUtxoApi implements UtxoApiContract {
   }
 
   async getUtxoDiffSincePoint(
-    req: UtxoDiffSincePointRequest
+    req: UtxoDiffSincePointRequest,
   ): Promise<UtxoApiResponse<UtxoDiff>> {
     try {
       const url = `${this.apiUrl}v2/txs/utxoDiffSincePoint`
@@ -315,29 +315,29 @@ export class EmurgoUtxoApi implements UtxoApiContract {
         addresses: req.addresses,
         untilBlockHash: req.untilBlockHash,
         afterBestblocks: req.afterBestBlocks,
-        diffLimit: this.pageSize
+        diffLimit: this.pageSize,
       })
 
       if (response.data.lastFoundBestblock == null) {
         throw new Error(
-          'Unexpected state: no bestblock match is found in the request reference!'
+          'Unexpected state: no bestblock match is found in the request reference!',
         )
       }
 
       const reference = {
         lastFoundBestBlock: response.data.lastFoundBestblock,
-        lastFoundSafeBlock: response.data.lastFoundSafeblock
+        lastFoundSafeBlock: response.data.lastFoundSafeblock,
       }
 
       let allDiffItems: UtxoDiffSincePointItemResponse[] = [
-        ...response.data.diffItems
+        ...response.data.diffItems,
       ]
       while (response.data.diffItems.length === this.pageSize) {
         response = await axios.post<UtxoDiffSincePointResponse>(url, {
           addresses: req.addresses,
           untilBlockHash: req.untilBlockHash,
           afterPoint: response.data.lastDiffPointSelected,
-          diffLimit: this.pageSize
+          diffLimit: this.pageSize,
         })
         allDiffItems = allDiffItems.concat(response.data.diffItems)
       }
@@ -350,7 +350,7 @@ export class EmurgoUtxoApi implements UtxoApiContract {
               return {
                 amount: new BigNumber(u.amount),
                 id: u.id,
-                type: u.type
+                type: u.type,
               } as UtxoDiffItem
             } else {
               return {
@@ -364,13 +364,13 @@ export class EmurgoUtxoApi implements UtxoApiContract {
                   receiver: u.receiver,
                   txHash: u.tx_hash,
                   txIndex: u.tx_index,
-                  utxoId: u.id
-                }
+                  utxoId: u.id,
+                },
               } as UtxoDiffItemOutput
             }
           }),
-          reference: reference
-        }
+          reference: reference,
+        },
       }
     } catch (err: any) {
       if (this.throwRequestErrors) {
@@ -382,16 +382,15 @@ export class EmurgoUtxoApi implements UtxoApiContract {
 
   private async getUtxoAtPointPage(
     req: UtxoAtPointRequest,
-    page: number
+    page: number,
   ): Promise<UtxoAtPointItemResponse[]> {
     const url = `${this.apiUrl}v2/txs/utxoAtPoint`
     const resp = await axios.post<UtxoAtPointItemResponse[]>(url, {
       addresses: req.addresses,
       referenceBlockHash: req.referenceBlockHash,
       page,
-      pageSize: this.pageSize
+      pageSize: this.pageSize,
     })
     return resp.data
   }
 }
-

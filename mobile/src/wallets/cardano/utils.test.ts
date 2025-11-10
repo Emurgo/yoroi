@@ -1,7 +1,6 @@
 import {primaryTokenInfoMainnet} from '@yoroi/blockchains'
-import {Balance} from '@yoroi/types'
-
 import {SendToken} from '@yoroi/tx'
+import {Balance} from '@yoroi/types'
 
 import {Token} from '../types/tokens'
 import {toSendToken, toSendTokenList} from './utils'

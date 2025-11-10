@@ -1,7 +1,7 @@
 // Ledger signer utilities
 // Functions for determining required signers for transactions
-
 import {Ed25519KeyHash, WasmModuleProxy} from '@emurgo/cross-csl-core'
+
 import {Addressing, CardanoAddressedUtxo} from '../types'
 
 type GetAllSignersOptions = {
@@ -172,9 +172,9 @@ const getRequiredSignersAddressing = async ({
       paymentStakeCredential,
       stakeCredential,
     )
-    const bech32Address = await baseAddress.toAddress().then((a) =>
-      a.toBech32(undefined),
-    )
+    const bech32Address = await baseAddress
+      .toAddress()
+      .then((a) => a.toBech32(undefined))
     const addressing = getAddressAddressing(bech32Address)
     if (!addressing) {
       if (!partial) {
@@ -189,4 +189,3 @@ const getRequiredSignersAddressing = async ({
 
   return addressingArray
 }
-
