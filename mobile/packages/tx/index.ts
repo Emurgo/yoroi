@@ -13,10 +13,47 @@ export type {UnsignedTx, SignedTx} from './types'
 // All transaction building now uses TransactionBuilder
 // The legacy wrapper has been removed as all calls have been migrated
 
-// Export main classes
-export {TransactionBuilder} from './transaction-builder'
+// Export functional transaction builder API
+export {
+  createTransactionBuilder,
+  buildTransaction,
+  buildTransactionCBOR,
+  addInput,
+  addInputs,
+  addOutput,
+  addOutputs,
+  addCertificate,
+  addCertificates,
+  addWithdrawal,
+  addReferenceInput,
+  addCollateralInput,
+  addCollateralInputs,
+  excludeUtxo,
+  excludeUtxos,
+  addMetadata,
+  setChangeAddress,
+  setChangeOutput,
+  setFee,
+  setTTL,
+  setValidityInterval,
+  isTransactionReady,
+  getTransactionState,
+} from './transaction-builder'
+
+// Export multiparty transaction utilities
+export {
+  createWitnessState,
+  addWitness,
+  isFullySigned,
+  getMissingSigners,
+  getWitnesses,
+  clearWitnesses,
+  setRequiredSigners,
+  getRequiredSigners,
+  getRequiredSignersFromTransaction,
+} from './transaction-builder/multiparty'
+
 export {UtxoService, init as initUtxo} from './utxo'
-export {WitnessManager, getRequiredSigners} from './transaction-builder/multiparty'
 
 // Export types
 export type {ModernUtxo} from './utxo/models'
@@ -46,4 +83,5 @@ export {
   AssetNameUtils,
 } from './utils/assets'
 export {calculateTxId, hashTransaction, getBalanceForStakingCredentials} from './utils/transactions'
+export {signTransaction} from './utils/signing'
 

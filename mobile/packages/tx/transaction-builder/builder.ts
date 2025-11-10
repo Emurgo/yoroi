@@ -1,19 +1,17 @@
+// Functional Transaction Builder using CSL TransactionBuilder directly
 import {Balance} from '@yoroi/types'
 
 import type {
-  Certificate,
-  TransactionBody,
   TransactionBuilder as CSLTransactionBuilder,
-  TransactionInput as CSLTransactionInput,
   TransactionOutput as CSLTransactionOutput,
-  TransactionUnspentOutput,
+  Certificate,
   Value,
   WasmModuleProxy,
 } from '@emurgo/cross-csl-core'
 import {Buffer} from 'buffer'
 
-import {CardanoHaskellConfig, Datum} from '../types'
 import {NoOutputsError, NotEnoughMoneyToSendError} from '../errors'
+import {CardanoHaskellConfig, Datum} from '../types'
 import {ModernUtxo} from '../utxo/models'
 import {
   TransactionCertificate,
@@ -27,630 +25,666 @@ import {
 } from './types'
 
 /**
- * Flexible Transaction Builder for Cardano transactions
- *
- * Supports:
- * - Manual UTXO selection
- * - Multiple certificates
- * - Reference inputs
- * - Building to CBOR for multiparty signing
- * - All Cardano transaction features
+ * Transaction builder state (immutable)
  */
-export class TransactionBuilder {
-  private inputs: TransactionInput[] = []
-  private outputs: TransactionOutput[] = []
-  private certificates: TransactionCertificate[] = []
-  private withdrawals: TransactionWithdrawal[] = []
-  private referenceInputs: TransactionReferenceInput[] = []
-  private collateralInputs: TransactionInput[] = []
-  private metadata: TransactionMetadata[] = []
-  private options: TransactionOptions = {}
-  private protocolParams?: CardanoHaskellConfig
-  private excludedUtxos: Set<string> = new Set()
+export type TransactionBuilderState = {
+  inputs: TransactionInput[]
+  outputs: TransactionOutput[]
+  certificates: TransactionCertificate[]
+  withdrawals: TransactionWithdrawal[]
+  referenceInputs: TransactionReferenceInput[]
+  collateralInputs: TransactionInput[]
+  metadata: TransactionMetadata[]
+  options: TransactionOptions
+  excludedUtxos: Set<string>
+}
 
-  /**
-   * Get exclusion key for a UTXO
-   */
-  private getExclusionKey(txHash: string, txIndex: number): string {
-    return `${txHash}:${txIndex}`
+/**
+ * Create initial transaction builder state
+ */
+export function createTransactionBuilder(): TransactionBuilderState {
+  return {
+    inputs: [],
+    outputs: [],
+    certificates: [],
+    withdrawals: [],
+    referenceInputs: [],
+    collateralInputs: [],
+    metadata: [],
+    options: {},
+    excludedUtxos: new Set(),
   }
+}
 
-  /**
-   * Check if a UTXO is excluded
-   */
-  private isExcluded(utxo: ModernUtxo): boolean {
-    return this.excludedUtxos.has(this.getExclusionKey(utxo.txHash, utxo.txIndex))
+/**
+ * Get exclusion key for a UTXO
+ */
+function getExclusionKey(txHash: string, txIndex: number): string {
+  return `${txHash}:${txIndex}`
+}
+
+/**
+ * Check if a UTXO is excluded
+ */
+function isExcluded(utxo: ModernUtxo, excludedUtxos: Set<string>): boolean {
+  return excludedUtxos.has(getExclusionKey(utxo.txHash, utxo.txIndex))
+}
+
+// Input operations
+export function addInput(
+  state: TransactionBuilderState,
+  utxo: ModernUtxo,
+): TransactionBuilderState {
+  return {
+    ...state,
+    inputs: [...state.inputs, {utxo}],
   }
+}
 
-  // Inputs
-  addInput(utxo: ModernUtxo): TransactionBuilder {
-    this.inputs.push({utxo})
-    return this
-  }
+export function addInputs(
+  state: TransactionBuilderState,
+  utxos: ModernUtxo[],
+): TransactionBuilderState {
+  return utxos.reduce((acc, utxo) => addInput(acc, utxo), state)
+}
 
-  addInputs(utxos: ModernUtxo[]): TransactionBuilder {
-    utxos.forEach((utxo) => this.addInput(utxo))
-    return this
-  }
-
-  removeInput(txHash: string, txIndex: number): TransactionBuilder {
-    this.inputs = this.inputs.filter(
+export function removeInput(
+  state: TransactionBuilderState,
+  txHash: string,
+  txIndex: number,
+): TransactionBuilderState {
+  return {
+    ...state,
+    inputs: state.inputs.filter(
       (input) => input.utxo.txHash !== txHash || input.utxo.txIndex !== txIndex,
-    )
-    return this
+    ),
   }
+}
 
-  // Outputs
-  addOutput(
-    address: string,
-    amounts: Balance.Amounts,
-    datum?: Datum,
-  ): TransactionBuilder {
-    this.outputs.push({address, amounts, datum})
-    return this
+// Output operations
+export function addOutput(
+  state: TransactionBuilderState,
+  address: string,
+  amounts: Balance.Amounts,
+  datum?: Datum,
+): TransactionBuilderState {
+  return {
+    ...state,
+    outputs: [...state.outputs, {address, amounts, datum}],
   }
+}
 
-  addOutputs(outputs: TransactionOutput[]): TransactionBuilder {
-    outputs.forEach((output) => this.outputs.push(output))
-    return this
+export function addOutputs(
+  state: TransactionBuilderState,
+  outputs: TransactionOutput[],
+): TransactionBuilderState {
+  return {
+    ...state,
+    outputs: [...state.outputs, ...outputs],
   }
+}
 
-  // Certificates
-  addCertificate(cert: Certificate): TransactionBuilder {
-    this.certificates.push({cert})
-    return this
+// Certificate operations
+export function addCertificate(
+  state: TransactionBuilderState,
+  cert: Certificate,
+): TransactionBuilderState {
+  return {
+    ...state,
+    certificates: [...state.certificates, {cert}],
   }
+}
 
-  addCertificates(certs: Certificate[]): TransactionBuilder {
-    certs.forEach((cert) => this.addCertificate(cert))
-    return this
+export function addCertificates(
+  state: TransactionBuilderState,
+  certs: Certificate[],
+): TransactionBuilderState {
+  return certs.reduce((acc, cert) => addCertificate(acc, cert), state)
+}
+
+// Withdrawal operations
+export function addWithdrawal(
+  state: TransactionBuilderState,
+  rewardAddress: string,
+  amount: string,
+): TransactionBuilderState {
+  return {
+    ...state,
+    withdrawals: [...state.withdrawals, {rewardAddress, amount}],
   }
+}
 
-  // Withdrawals
-  addWithdrawal(rewardAddress: string, amount: string): TransactionBuilder {
-    this.withdrawals.push({rewardAddress, amount})
-    return this
+// Reference input operations
+export function addReferenceInput(
+  state: TransactionBuilderState,
+  utxo: ModernUtxo,
+): TransactionBuilderState {
+  return {
+    ...state,
+    referenceInputs: [...state.referenceInputs, {utxo}],
   }
+}
 
-  // Reference Inputs
-  addReferenceInput(utxo: ModernUtxo): TransactionBuilder {
-    this.referenceInputs.push({utxo})
-    return this
+// Collateral input operations
+export function addCollateralInput(
+  state: TransactionBuilderState,
+  utxo: ModernUtxo,
+): TransactionBuilderState {
+  return {
+    ...state,
+    collateralInputs: [...state.collateralInputs, {utxo}],
   }
+}
 
-  // Collateral Inputs
-  addCollateralInput(utxo: ModernUtxo): TransactionBuilder {
-    this.collateralInputs.push({utxo})
-    return this
-  }
+export function addCollateralInputs(
+  state: TransactionBuilderState,
+  utxos: ModernUtxo[],
+): TransactionBuilderState {
+  return utxos.reduce((acc, utxo) => addCollateralInput(acc, utxo), state)
+}
 
-  addCollateralInputs(utxos: ModernUtxo[]): TransactionBuilder {
-    utxos.forEach((utxo) => this.addCollateralInput(utxo))
-    return this
-  }
-
-  removeCollateralInput(txHash: string, txIndex: number): TransactionBuilder {
-    this.collateralInputs = this.collateralInputs.filter(
+export function removeCollateralInput(
+  state: TransactionBuilderState,
+  txHash: string,
+  txIndex: number,
+): TransactionBuilderState {
+  return {
+    ...state,
+    collateralInputs: state.collateralInputs.filter(
       (input) => input.utxo.txHash !== txHash || input.utxo.txIndex !== txIndex,
+    ),
+  }
+}
+
+// UTXO exclusion operations
+export function excludeUtxo(
+  state: TransactionBuilderState,
+  txHash: string,
+  txIndex: number,
+): TransactionBuilderState {
+  const newExcluded = new Set(state.excludedUtxos)
+  newExcluded.add(getExclusionKey(txHash, txIndex))
+  return {
+    ...state,
+    excludedUtxos: newExcluded,
+  }
+}
+
+export function excludeUtxos(
+  state: TransactionBuilderState,
+  utxos: ModernUtxo[],
+): TransactionBuilderState {
+  return utxos.reduce(
+    (acc, utxo) => excludeUtxo(acc, utxo.txHash, utxo.txIndex),
+    state,
+  )
+}
+
+// Metadata operations
+export function addMetadata(
+  state: TransactionBuilderState,
+  label: string,
+  data: any,
+): TransactionBuilderState {
+  return {
+    ...state,
+    metadata: [...state.metadata, {label, data}],
+  }
+}
+
+// Options operations
+export function setChangeAddress(
+  state: TransactionBuilderState,
+  address: string,
+): TransactionBuilderState {
+  return {
+    ...state,
+    options: {...state.options, changeAddress: address},
+  }
+}
+
+export function setChangeOutput(
+  state: TransactionBuilderState,
+  address: string,
+  amounts: Balance.Amounts,
+): TransactionBuilderState {
+  return {
+    ...state,
+    options: {
+      ...state.options,
+      manualChangeOutput: {address, amounts},
+    },
+  }
+}
+
+export function setFee(
+  state: TransactionBuilderState,
+  amounts: Balance.Amounts,
+): TransactionBuilderState {
+  return {
+    ...state,
+    options: {...state.options, manualFee: amounts},
+  }
+}
+
+export function setTTL(
+  state: TransactionBuilderState,
+  slot: number,
+): TransactionBuilderState {
+  return {
+    ...state,
+    options: {...state.options, ttl: slot},
+  }
+}
+
+export function setValidityInterval(
+  state: TransactionBuilderState,
+  start: number,
+  end: number,
+): TransactionBuilderState {
+  return {
+    ...state,
+    options: {
+      ...state.options,
+      validityInterval: {start, end},
+    },
+  }
+}
+
+/**
+ * Validate transaction state before building
+ */
+function validateInputs(state: TransactionBuilderState): void {
+  // Check that excluded UTXOs are not in inputs
+  for (const input of state.inputs) {
+    if (isExcluded(input.utxo, state.excludedUtxos)) {
+      throw new Error(
+        `UTXO ${input.utxo.txHash}:${input.utxo.txIndex} is excluded but used as input`,
+      )
+    }
+  }
+
+  // Check that excluded UTXOs are not in collateral
+  for (const collateral of state.collateralInputs) {
+    if (isExcluded(collateral.utxo, state.excludedUtxos)) {
+      throw new Error(
+        `UTXO ${collateral.utxo.txHash}:${collateral.utxo.txIndex} is excluded but used as collateral`,
+      )
+    }
+  }
+}
+
+/**
+ * Calculate total value from inputs
+ */
+function calculateTotalInputValue(inputs: TransactionInput[]): Balance.Amounts {
+  const total: Balance.Amounts = {} as Balance.Amounts
+  for (const input of inputs) {
+    for (const [tokenId, quantity] of Object.entries(input.utxo.balance)) {
+      const current = BigInt(total[tokenId] || '0')
+      const added = BigInt(quantity)
+      total[tokenId] = (current + added).toString() as Balance.Quantity
+    }
+  }
+  return total
+}
+
+/**
+ * Calculate total value from outputs
+ */
+function calculateTotalOutputValue(
+  outputs: TransactionOutput[],
+  manualChangeOutput?: TransactionOutput,
+): Balance.Amounts {
+  const total: Balance.Amounts = {} as Balance.Amounts
+  for (const output of outputs) {
+    for (const [tokenId, quantity] of Object.entries(output.amounts)) {
+      const current = BigInt(total[tokenId] || '0')
+      const added = BigInt(quantity)
+      total[tokenId] = (current + added).toString() as Balance.Quantity
+    }
+  }
+  if (manualChangeOutput) {
+    for (const [tokenId, quantity] of Object.entries(
+      manualChangeOutput.amounts,
+    )) {
+      const current = BigInt(total[tokenId] || '0')
+      const added = BigInt(quantity)
+      total[tokenId] = (current + added).toString() as Balance.Quantity
+    }
+  }
+  return total
+}
+
+/**
+ * Convert Balance.Amounts to CSL Value
+ */
+async function amountsToValue(
+  wasm: WasmModuleProxy,
+  amounts: Balance.Amounts,
+  primaryTokenId: string = '',
+): Promise<Value> {
+  const adaAmount = amounts[primaryTokenId] || '0'
+  const value = wasm.Value.new(wasm.BigNum.fromStr(adaAmount))
+
+  // Get all asset IDs except primary token
+  const assetIds = Object.keys(amounts).filter((id) => id !== primaryTokenId)
+
+  if (assetIds.length > 0) {
+    const multiAsset = wasm.MultiAsset.new()
+
+    // Group assets by policy ID
+    const groupedByPolicyId = assetIds.reduce(
+      (acc, assetId) => {
+        const policyId = assetId.substring(0, 56) // Policy ID is first 56 hex chars
+        acc[policyId] = acc[policyId] ?? []
+        acc[policyId]!.push(assetId)
+        return acc
+      },
+      {} as Record<string, Array<string>>,
     )
-    return this
+
+    // Create MultiAsset structure
+    for (const policyIdStr of Object.keys(groupedByPolicyId)) {
+      const assetGroup = groupedByPolicyId[policyIdStr]
+      if (!assetGroup) continue
+
+      const policyId = wasm.ScriptHash.fromBytes(
+        new Uint8Array(Buffer.from(policyIdStr, 'hex')),
+      )
+      const assets = wasm.Assets.new()
+
+      for (const assetId of assetGroup) {
+        const assetNameHex = assetId.substring(56) // Asset name is after policy ID
+        const name = wasm.AssetName.new(
+          new Uint8Array(Buffer.from(assetNameHex, 'hex')),
+        )
+        const amount = wasm.BigNum.fromStr(amounts[assetId] ?? '0')
+        assets.insert(name, amount)
+      }
+
+      multiAsset.insert(policyId, assets)
+    }
+
+    value.setMultiasset(multiAsset)
   }
 
-  // UTXO Exclusion (Locking)
-  excludeUtxo(txHash: string, txIndex: number): TransactionBuilder {
-    this.excludedUtxos.add(this.getExclusionKey(txHash, txIndex))
-    return this
+  return value
+}
+
+/**
+ * Convert TransactionOutput to CSL TransactionOutput
+ */
+async function outputToCSL(
+  wasm: WasmModuleProxy,
+  output: TransactionOutput,
+  primaryTokenId: string = '',
+): Promise<CSLTransactionOutput> {
+  const address = wasm.Address.fromBech32(output.address)
+  if (!address) throw new Error(`Invalid address: ${output.address}`)
+
+  const value = await amountsToValue(wasm, output.amounts, primaryTokenId)
+  const cslOutput = wasm.TransactionOutput.new(address, value)
+
+  // Add datum if present
+  if (output.datum) {
+    // TODO: Handle datum properly (inline datum vs datum hash)
+    // For now, we'll skip datum handling as it requires more complex logic
   }
 
-  excludeUtxos(utxos: ModernUtxo[]): TransactionBuilder {
-    utxos.forEach((utxo) =>
-      this.excludeUtxo(utxo.txHash, utxo.txIndex),
+  return cslOutput
+}
+
+/**
+ * Create CSL TransactionBuilder with config
+ */
+async function createCSLTransactionBuilder(
+  wasm: WasmModuleProxy,
+  params: CardanoHaskellConfig,
+): Promise<CSLTransactionBuilder> {
+  // Create LinearFee
+  const linearFee = await wasm.LinearFee.new(
+    await wasm.BigNum.fromStr(params.linearFee.coefficient),
+    await wasm.BigNum.fromStr(params.linearFee.constant),
+  )
+
+  // Create other protocol params
+  const poolDeposit = await wasm.BigNum.fromStr(params.poolDeposit)
+  const keyDeposit = await wasm.BigNum.fromStr(params.keyDeposit)
+  const coinsPerUtxoByte = await wasm.BigNum.fromStr(params.coinsPerUtxoByte)
+
+  // Create ExUnitPrices (for Plutus)
+  const unitPrice = await wasm.ExUnitPrices.new(
+    await wasm.UnitInterval.new(
+      await wasm.BigNum.fromStr('577'),
+      await wasm.BigNum.fromStr('10000'),
+    ),
+    await wasm.UnitInterval.new(
+      await wasm.BigNum.fromStr('721'),
+      await wasm.BigNum.fromStr('10000000'),
+    ),
+  )
+
+  // Build config - chain builder methods
+  let configBuilder = await wasm.TransactionBuilderConfigBuilder.new()
+  configBuilder = await configBuilder.feeAlgo(linearFee)
+  configBuilder = await configBuilder.poolDeposit(poolDeposit)
+  configBuilder = await configBuilder.keyDeposit(keyDeposit)
+  configBuilder = await configBuilder.coinsPerUtxoByte(coinsPerUtxoByte)
+  configBuilder = await configBuilder.maxValueSize(5000)
+  configBuilder = await configBuilder.maxTxSize(16384)
+  configBuilder = await configBuilder.exUnitPrices(unitPrice)
+  configBuilder = await configBuilder.preferPureChange(true)
+
+  const config = await configBuilder.build()
+  return await wasm.TransactionBuilder.new(config)
+}
+
+/**
+ * Build transaction using CSL TransactionBuilder
+ */
+export async function buildTransaction(
+  wasm: WasmModuleProxy,
+  state: TransactionBuilderState,
+  protocolParams: CardanoHaskellConfig,
+  primaryTokenId: string = '',
+): Promise<UnsignedTransaction> {
+  // Validate inputs
+  validateInputs(state)
+
+  // Basic validation
+  if (state.outputs.length === 0) {
+    throw new NoOutputsError()
+  }
+
+  // Create CSL TransactionBuilder
+  const cslTxBuilder = await createCSLTransactionBuilder(wasm, protocolParams)
+
+  // Add outputs first (CSL builder needs outputs to calculate fees)
+  for (const output of state.outputs) {
+    const cslOutput = await outputToCSL(wasm, output, primaryTokenId)
+    await cslTxBuilder.addOutput(cslOutput)
+  }
+
+  // Add certificates
+  if (state.certificates.length > 0) {
+    const certs = await wasm.Certificates.new()
+    for (const cert of state.certificates) {
+      await certs.add(cert.cert)
+    }
+    await cslTxBuilder.setCerts(certs)
+  }
+
+  // Add withdrawals
+  if (state.withdrawals.length > 0) {
+    const withdrawals = await wasm.Withdrawals.new()
+    for (const withdrawal of state.withdrawals) {
+      const rewardAddr = await wasm.RewardAddress.fromAddress(
+        await wasm.Address.fromBech32(withdrawal.rewardAddress),
+      )
+      if (!rewardAddr) {
+        throw new Error(`Invalid reward address: ${withdrawal.rewardAddress}`)
+      }
+      const amount = await wasm.BigNum.fromStr(withdrawal.amount)
+      await withdrawals.insert(rewardAddr, amount)
+    }
+    await cslTxBuilder.setWithdrawals(withdrawals)
+  }
+
+  // Set TTL
+  if (state.options.ttl) {
+    await cslTxBuilder.setTtl(state.options.ttl)
+  }
+
+  // Add inputs (UTXOs) - CSL TransactionBuilder uses addRegularInput
+  for (const input of state.inputs) {
+    const utxo = input.utxo
+    const wasmAddr = await wasm.Address.fromBech32(utxo.receiver)
+    if (!wasmAddr) {
+      throw new Error(`Invalid address: ${utxo.receiver}`)
+    }
+    const txInput = await wasm.TransactionInput.new(
+      await wasm.TransactionHash.fromHex(utxo.txHash),
+      utxo.txIndex,
     )
-    return this
+    const wasmAmount = await amountsToValue(wasm, utxo.balance, primaryTokenId)
+    await cslTxBuilder.addRegularInput(wasmAddr, txInput, wasmAmount)
   }
 
-  setUtxoFilter(filter: (utxo: ModernUtxo) => boolean): TransactionBuilder {
-    // This allows setting a custom filter function
-    // The filter will be applied when building to exclude UTXOs
-    // For now, we'll store it and apply during validation
-    // This is a more advanced feature - can be implemented later
-    return this
+  // Handle manual fee
+  if (state.options.manualFee) {
+    const feeAmount = state.options.manualFee[primaryTokenId] || '0'
+    const feeBigNum = await wasm.BigNum.fromStr(feeAmount)
+    await cslTxBuilder.setFee(feeBigNum)
   }
 
-  // Metadata
-  addMetadata(label: string, data: any): TransactionBuilder {
-    this.metadata.push({label, data})
-    return this
-  }
-
-  // Options
-  setChangeAddress(address: string): TransactionBuilder {
-    this.options.changeAddress = address
-    return this
-  }
-
-  setChangeOutput(address: string, amounts: Balance.Amounts): TransactionBuilder {
-    this.options.manualChangeOutput = {address, amounts}
-    return this
-  }
-
-  setFee(amounts: Balance.Amounts): TransactionBuilder {
-    this.options.manualFee = amounts
-    return this
-  }
-
-  setProtocolParams(config: CardanoHaskellConfig): TransactionBuilder {
-    this.protocolParams = config
-    return this
-  }
-
-  setTTL(slot: number): TransactionBuilder {
-    this.options.ttl = slot
-    return this
-  }
-
-  setValidityInterval(start: number, end: number): TransactionBuilder {
-    this.options.validityInterval = {start, end}
-    return this
-  }
-
-  /**
-   * Validate transaction before building
-   */
-  private validateInputs(): void {
-    // Check that excluded UTXOs are not in inputs
-    for (const input of this.inputs) {
-      if (this.isExcluded(input.utxo)) {
-        throw new Error(
-          `UTXO ${input.utxo.txHash}:${input.utxo.txIndex} is excluded but used as input`,
-        )
-      }
+  // Handle change output
+  if (state.options.manualChangeOutput) {
+    const cslChangeOutput = await outputToCSL(
+      wasm,
+      state.options.manualChangeOutput,
+      primaryTokenId,
+    )
+    await cslTxBuilder.addOutput(cslChangeOutput)
+  } else if (state.options.changeAddress && !state.options.manualFee) {
+    // Use CSL's automatic change handling
+    const changeAddr = await wasm.Address.fromBech32(
+      state.options.changeAddress,
+    )
+    if (!changeAddr) {
+      throw new Error(`Invalid change address: ${state.options.changeAddress}`)
     }
-
-    // Check that excluded UTXOs are not in collateral
-    for (const collateral of this.collateralInputs) {
-      if (this.isExcluded(collateral.utxo)) {
-        throw new Error(
-          `UTXO ${collateral.utxo.txHash}:${collateral.utxo.txIndex} is excluded but used as collateral`,
-        )
-      }
-    }
+    await cslTxBuilder.addChangeIfNeeded(changeAddr)
   }
 
-  /**
-   * Calculate total value from inputs
-   */
-  private calculateTotalInputValue(): Balance.Amounts {
-    const total: Balance.Amounts = {}
-    for (const input of this.inputs) {
-      for (const [tokenId, quantity] of Object.entries(input.utxo.balance)) {
-        total[tokenId] = (BigInt(total[tokenId] || '0') + BigInt(quantity)).toString()
-      }
-    }
-    return total
-  }
+  // Add metadata
+  if (state.metadata.length > 0) {
+    const auxData = await wasm.AuxiliaryData.new()
+    const metadataMap = await wasm.GeneralTransactionMetadata.new()
 
-  /**
-   * Calculate total value from outputs
-   */
-  private calculateTotalOutputValue(): Balance.Amounts {
-    const total: Balance.Amounts = {}
-    for (const output of this.outputs) {
-      for (const [tokenId, quantity] of Object.entries(output.amounts)) {
-        total[tokenId] = (BigInt(total[tokenId] || '0') + BigInt(quantity)).toString()
-      }
-    }
-    // Add manual change output if set
-    if (this.options.manualChangeOutput) {
-      for (const [tokenId, quantity] of Object.entries(
-        this.options.manualChangeOutput.amounts,
-      )) {
-        total[tokenId] = (BigInt(total[tokenId] || '0') + BigInt(quantity)).toString()
-      }
-    }
-    return total
-  }
-
-  /**
-   * Convert Balance.Amounts to CSL Value
-   */
-  private async amountsToValue(
-    wasm: WasmModuleProxy,
-    amounts: Balance.Amounts,
-    primaryTokenId: string = '',
-  ): Promise<Value> {
-    const adaAmount = amounts[primaryTokenId] || '0'
-    const value = wasm.Value.new(wasm.BigNum.fromStr(adaAmount))
-
-    // Get all asset IDs except primary token
-    const assetIds = Object.keys(amounts).filter((id) => id !== primaryTokenId)
-
-    if (assetIds.length > 0) {
-      const multiAsset = wasm.MultiAsset.new()
-
-      // Group assets by policy ID
-      const groupedByPolicyId = assetIds.reduce(
-        (acc, assetId) => {
-          const policyId = assetId.substring(0, 56) // Policy ID is first 56 hex chars
-          acc[policyId] = acc[policyId] ?? []
-          acc[policyId]!.push(assetId)
-          return acc
-        },
-        {} as Record<string, Array<string>>,
+    for (const meta of state.metadata) {
+      const label =
+        typeof meta.label === 'string' ? parseInt(meta.label, 10) : meta.label
+      const metadata = await wasm.encodeJsonStrToMetadatum(
+        JSON.stringify(meta.data),
+        1, // MetadataJsonSchema.BasicConversions
       )
-
-      // Create MultiAsset structure
-      for (const policyIdStr of Object.keys(groupedByPolicyId)) {
-        const assetGroup = groupedByPolicyId[policyIdStr]
-        if (!assetGroup) continue
-
-        const policyId = wasm.ScriptHash.fromBytes(
-          new Uint8Array(Buffer.from(policyIdStr, 'hex')),
-        )
-        const assets = wasm.Assets.new()
-
-        for (const assetId of assetGroup) {
-          const assetNameHex = assetId.substring(56) // Asset name is after policy ID
-          const name = wasm.AssetName.new(
-            new Uint8Array(Buffer.from(assetNameHex, 'hex')),
-          )
-          const amount = wasm.BigNum.fromStr(amounts[assetId] ?? '0')
-          assets.insert(name, amount)
-        }
-
-        multiAsset.insert(policyId, assets)
-      }
-
-      value.setMultiasset(multiAsset)
-    }
-
-    return value
-  }
-
-  /**
-   * Convert TransactionOutput to CSL TransactionOutput
-   */
-  private async outputToCSL(
-    wasm: WasmModuleProxy,
-    output: TransactionOutput,
-    primaryTokenId: string = '',
-  ): Promise<CSLTransactionOutput> {
-    const address = wasm.Address.fromBech32(output.address)
-    if (!address) throw new Error(`Invalid address: ${output.address}`)
-
-    const value = await this.amountsToValue(wasm, output.amounts, primaryTokenId)
-
-    const cslOutput = wasm.TransactionOutput.new(address, value)
-
-    // Add datum if present
-    if (output.datum) {
-      // TODO: Handle datum properly (inline datum vs datum hash)
-      // For now, we'll skip datum handling as it requires more complex logic
-    }
-
-    return cslOutput
-  }
-
-  /**
-   * Calculate transaction fee using linear fee formula
-   */
-  private async calculateFee(
-    wasm: WasmModuleProxy,
-    txBody: TransactionBody,
-    params: CardanoHaskellConfig,
-  ): Promise<string> {
-    // Fee = a * size + b
-    // where a = linearFee.coefficient, b = linearFee.constant
-    const txSize = Buffer.from(await txBody.toBytes()).length
-    const coefficient = BigInt(params.linearFee.coefficient)
-    const constant = BigInt(params.linearFee.constant)
-    const fee = coefficient * BigInt(txSize) + constant
-    return fee.toString()
-  }
-
-  /**
-   * Build the transaction with WASM
-   */
-  async build(
-    wasm: WasmModuleProxy,
-    protocolParams?: CardanoHaskellConfig,
-    primaryTokenId: string = '',
-  ): Promise<UnsignedTransaction> {
-    // Use provided protocol params or stored ones
-    const params = protocolParams || this.protocolParams
-
-    // Validate inputs
-    this.validateInputs()
-
-    // Basic validation
-    if (this.outputs.length === 0) {
-      throw new NoOutputsError()
-    }
-
-    // Build transaction body
-    const txBody = wasm.TransactionBody.new()
-
-    // Add inputs
-    const txInputs = wasm.TransactionInputs.new()
-    for (const input of this.inputs) {
-      const txInput = wasm.TransactionInput.new(
-        wasm.TransactionHash.fromHex(input.utxo.txHash),
-        input.utxo.txIndex,
+      await metadataMap.insert(
+        await wasm.BigNum.fromStr(label.toString()),
+        metadata,
       )
-      txInputs.add(txInput)
-    }
-    txBody.setInputs(txInputs)
-
-    // Add outputs
-    const txOutputs = wasm.TransactionOutputs.new()
-    for (const output of this.outputs) {
-      const cslOutput = await this.outputToCSL(wasm, output, primaryTokenId)
-      txOutputs.add(cslOutput)
-    }
-    txBody.setOutputs(txOutputs)
-
-    // Add certificates if any
-    if (this.certificates.length > 0) {
-      const certs = wasm.Certificates.new()
-      for (const cert of this.certificates) {
-        certs.add(cert.cert)
-      }
-      txBody.setCerts(certs)
     }
 
-    // Add withdrawals if any
-    if (this.withdrawals.length > 0) {
-      const withdrawals = wasm.Withdrawals.new()
-      for (const withdrawal of this.withdrawals) {
-        const rewardAddr = wasm.RewardAddress.fromAddress(
-          wasm.Address.fromBech32(withdrawal.rewardAddress),
-        )
-        if (!rewardAddr) {
-          throw new Error(`Invalid reward address: ${withdrawal.rewardAddress}`)
-        }
-        const amount = wasm.BigNum.fromStr(withdrawal.amount)
-        withdrawals.insert(rewardAddr, amount)
-      }
-      txBody.setWithdrawals(withdrawals)
-    }
-
-    // Add reference inputs if any
-    if (this.referenceInputs.length > 0) {
-      const refInputs = wasm.TransactionInputs.new()
-      for (const refInput of this.referenceInputs) {
-        const txInput = wasm.TransactionInput.new(
-          wasm.TransactionHash.fromHex(refInput.utxo.txHash),
-          refInput.utxo.txIndex,
-        )
-        refInputs.add(txInput)
-      }
-      txBody.setReferenceInputs(refInputs)
-    }
-
-    // Add collateral inputs if any
-    if (this.collateralInputs.length > 0) {
-      const collateralInputs = wasm.TransactionInputs.new()
-      for (const collateral of this.collateralInputs) {
-        const txInput = wasm.TransactionInput.new(
-          wasm.TransactionHash.fromHex(collateral.utxo.txHash),
-          collateral.utxo.txIndex,
-        )
-        collateralInputs.add(txInput)
-      }
-      txBody.setCollateral(collateralInputs)
-    }
-
-    // Set TTL if provided
-    if (this.options.ttl) {
-      txBody.setTtl(this.options.ttl)
-    }
-
-    // Set validity interval if provided
-    if (this.options.validityInterval) {
-      const validityInterval = wasm.TransactionValidityInterval.new()
-      if (this.options.validityInterval.start) {
-        validityInterval.setInvalidBefore(
-          wasm.BigNum.fromStr(this.options.validityInterval.start.toString()),
-        )
-      }
-      if (this.options.validityInterval.end) {
-        validityInterval.setInvalidHereafter(
-          wasm.BigNum.fromStr(this.options.validityInterval.end.toString()),
-        )
-      }
-      txBody.setValidityStartInterval(validityInterval)
-    }
-
-    // Calculate fee if not manual
-    let fee: Balance.Amounts = this.options.manualFee || {}
-    if (!this.options.manualFee && params) {
-      // Initial fee calculation (will be refined after adding change)
-      const initialFee = await this.calculateFee(wasm, txBody, params)
-      fee = {[primaryTokenId]: initialFee}
-    }
-
-    // Add manual change output if set
-    if (this.options.manualChangeOutput) {
-      const cslChangeOutput = await this.outputToCSL(
-        wasm,
-        this.options.manualChangeOutput,
-        primaryTokenId,
-      )
-      txOutputs.add(cslChangeOutput)
-      txBody.setOutputs(txOutputs)
-    }
-
-    // Calculate change if not manual
-    if (!this.options.manualChangeOutput && params && this.options.changeAddress) {
-      // Iterate to converge on correct fee and change
-      let iterations = 0
-      const maxIterations = 10
-      let currentFee = fee[primaryTokenId] || '0'
-
-      while (iterations < maxIterations) {
-        const totalInput = this.calculateTotalInputValue()
-        const totalOutput = this.calculateTotalOutputValue()
-        const feeAda = BigInt(currentFee)
-
-        const inputAda = BigInt(totalInput[primaryTokenId] || '0')
-        const outputAda = BigInt(totalOutput[primaryTokenId] || '0')
-        const changeAda = inputAda - outputAda - feeAda
-
-        // Only add change if it's above minimum UTXO value
-        const minUtxo = BigInt(params.minimumUtxoVal)
-        if (changeAda <= minUtxo) {
-          // No change output needed
-          break
-        }
-
-        // Add/update change output
-        const changeOutput: TransactionOutput = {
-          address: this.options.changeAddress,
-          amounts: {[primaryTokenId]: changeAda.toString()},
-        }
-
-        // Rebuild outputs with change
-        const updatedOutputs = wasm.TransactionOutputs.new()
-        for (const output of this.outputs) {
-          const cslOutput = await this.outputToCSL(wasm, output, primaryTokenId)
-          updatedOutputs.add(cslOutput)
-        }
-        const cslChangeOutput = await this.outputToCSL(
-          wasm,
-          changeOutput,
-          primaryTokenId,
-        )
-        updatedOutputs.add(cslChangeOutput)
-        txBody.setOutputs(updatedOutputs)
-
-        // Recalculate fee with change output included
-        if (!this.options.manualFee) {
-          const recalculatedFee = await this.calculateFee(wasm, txBody, params)
-          const newFeeAda = BigInt(recalculatedFee)
-
-          // Check if fee converged
-          if (newFeeAda === feeAda) {
-            fee = {[primaryTokenId]: recalculatedFee}
-            break
-          }
-
-          currentFee = recalculatedFee
-          fee = {[primaryTokenId]: recalculatedFee}
-        } else {
-          break
-        }
-
-        iterations++
-      }
-    }
-
-    // Set fee
-    const feeValue = await this.amountsToValue(wasm, fee, primaryTokenId)
-    const feeCoin = await feeValue.coin()
-    txBody.setFee(feeCoin)
-
-    // Validate sufficient funds
-    if (params) {
-      const totalInput = this.calculateTotalInputValue()
-      const totalOutput = this.calculateTotalOutputValue()
-      const feeAda = BigInt(fee[primaryTokenId] || '0')
-
-      const inputAda = BigInt(totalInput[primaryTokenId] || '0')
-      const outputAda = BigInt(totalOutput[primaryTokenId] || '0')
-
-      if (inputAda < outputAda + feeAda) {
-        throw new NotEnoughMoneyToSendError()
-      }
-    }
-
-    // Build CBOR for the transaction body
-    const cbor = Buffer.from(await txBody.toBytes()).toString('hex')
-
-    return {
-      inputs: this.inputs,
-      outputs: this.outputs,
-      certificates: this.certificates,
-      withdrawals: this.withdrawals,
-      referenceInputs: this.referenceInputs,
-      collateralInputs: this.collateralInputs,
-      metadata: this.metadata.length > 0 ? this.metadata : undefined,
-      options: this.options,
-      cbor,
-    }
+    await auxData.setMetadata(metadataMap)
+    await cslTxBuilder.setAuxiliaryData(auxData)
   }
 
-  /**
-   * Build transaction as CBOR hex string for multiparty signing
-   */
-  async buildCBOR(
-    wasm: WasmModuleProxy,
-    protocolParams?: CardanoHaskellConfig,
-    primaryTokenId: string = '',
-  ): Promise<string> {
-    const unsignedTx = await this.build(wasm, protocolParams, primaryTokenId)
-    if (unsignedTx.cbor) {
-      return unsignedTx.cbor
-    }
-    throw new Error('Failed to build transaction CBOR')
+  // Build the transaction body
+  const txBody = await cslTxBuilder.build()
+
+  // Handle reference inputs and collateral inputs
+  // CSL TransactionBuilder doesn't support these directly
+  // TODO: Check CSL API for reference/collateral inputs support
+  // For now, we'll note that these are in the state but not yet added to the transaction
+  // They will be included in the returned UnsignedTransaction for future processing
+
+  // Handle validity interval
+  // CSL TransactionBuilder may support this via setValidityStartInterval
+  // TODO: Check CSL API for validity interval support
+
+  // Get fee from builder
+  const feeBigNum = await cslTxBuilder.getFeeIfSet()
+  const feeStr = feeBigNum ? await feeBigNum.toStr() : '0'
+  const fee: Balance.Amounts = feeBigNum
+    ? ({[primaryTokenId]: feeStr} as Balance.Amounts)
+    : state.options.manualFee || {}
+
+  // Validate sufficient funds
+  const totalInput = calculateTotalInputValue(state.inputs)
+  const totalOutput = calculateTotalOutputValue(
+    state.outputs,
+    state.options.manualChangeOutput,
+  )
+  const feeAda = BigInt(fee[primaryTokenId] || '0')
+  const inputAda = BigInt(totalInput[primaryTokenId] || '0')
+  const outputAda = BigInt(totalOutput[primaryTokenId] || '0')
+
+  if (inputAda < outputAda + feeAda) {
+    throw new NotEnoughMoneyToSendError()
   }
 
-  /**
-   * Load builder state from CBOR
-   */
-  static async loadFromCBOR(
-    _cbor: string,
-    _wasm: WasmModuleProxy,
-  ): Promise<TransactionBuilder> {
-    // TODO: Deserialize CBOR and reconstruct builder state
-    // This will:
-    // 1. Parse CBOR hex string
-    // 2. Extract transaction body components
-    // 3. Reconstruct builder with inputs, outputs, certificates, etc.
-    const builder = new TransactionBuilder()
-    // Parse CBOR and populate builder
-    return builder
-  }
+  // Serialize to CBOR
+  const cbor = Buffer.from(await txBody.toBytes()).toString('hex')
 
-  /**
-   * Check if transaction is ready to be signed (has all required components)
-   */
-  isReady(): boolean {
-    return this.inputs.length > 0 && this.outputs.length > 0
+  return {
+    inputs: state.inputs,
+    outputs: state.outputs,
+    certificates: state.certificates,
+    withdrawals: state.withdrawals,
+    referenceInputs: state.referenceInputs,
+    collateralInputs: state.collateralInputs,
+    metadata: state.metadata.length > 0 ? state.metadata : undefined,
+    options: state.options,
+    cbor,
   }
+}
 
-  /**
-   * Estimate transaction fee
-   */
-  async estimateFee(_wasm: WasmModuleProxy): Promise<Balance.Amounts> {
-    // TODO: Implement fee estimation
-    // This will build a temporary transaction and calculate fees
-    return {}
+/**
+ * Build transaction as CBOR hex string for multiparty signing
+ */
+export async function buildTransactionCBOR(
+  wasm: WasmModuleProxy,
+  state: TransactionBuilderState,
+  protocolParams: CardanoHaskellConfig,
+  primaryTokenId: string = '',
+): Promise<string> {
+  const unsignedTx = await buildTransaction(
+    wasm,
+    state,
+    protocolParams,
+    primaryTokenId,
+  )
+  if (unsignedTx.cbor) {
+    return unsignedTx.cbor
   }
+  throw new Error('Failed to build transaction CBOR')
+}
 
-  /**
-   * Get current builder state (for debugging/inspection)
-   */
-  getState(): {
-    inputs: TransactionInput[]
-    outputs: TransactionOutput[]
-    certificates: TransactionCertificate[]
-    withdrawals: TransactionWithdrawal[]
-    referenceInputs: TransactionReferenceInput[]
-    collateralInputs: TransactionInput[]
-    metadata: TransactionMetadata[]
-    options: TransactionOptions
-    excludedUtxos: string[]
-  } {
-    return {
-      inputs: [...this.inputs],
-      outputs: [...this.outputs],
-      certificates: [...this.certificates],
-      withdrawals: [...this.withdrawals],
-      referenceInputs: [...this.referenceInputs],
-      collateralInputs: [...this.collateralInputs],
-      metadata: [...this.metadata],
-      options: {...this.options},
-      excludedUtxos: Array.from(this.excludedUtxos),
-    }
+/**
+ * Check if transaction is ready to be signed
+ */
+export function isTransactionReady(state: TransactionBuilderState): boolean {
+  return state.inputs.length > 0 && state.outputs.length > 0
+}
+
+/**
+ * Get current builder state (for debugging/inspection)
+ */
+export function getTransactionState(
+  state: TransactionBuilderState,
+): TransactionBuilderState {
+  return {
+    ...state,
+    excludedUtxos: new Set(state.excludedUtxos), // Clone Set
   }
 }

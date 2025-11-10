@@ -19,19 +19,19 @@ import {
 } from '@cardano-foundation/ledgerjs-hw-app-cardano'
 import {
   Address,
-  Certificates,
+  Certificates as CSLCertificates,
   MultiAsset,
   TransactionOutputs,
   WasmModuleProxy,
-  Withdrawals,
+  Withdrawals as CSLWithdrawals,
 } from '@emurgo/cross-csl-core'
-import {bech32} from 'bech32'
+import * as bech32 from 'bech32'
 
 import {Addressing, AddressingAddress, Bip44DerivationLevels} from '../types'
 
 // Note: This will need to be updated when we migrate UnsignedTx type
 // For now, we'll use a minimal interface that matches what Ledger functions need
-import type {TransactionBody, Withdrawals, Certificates} from '@emurgo/cross-csl-core'
+import type {TransactionBody} from '@emurgo/cross-csl-core'
 
 export interface LedgerUnsignedTx {
   senderUtxos: Array<{
@@ -47,8 +47,8 @@ export interface LedgerUnsignedTx {
     fee(): Promise<{toStr(): Promise<string>}>
   }
   change: Array<AddressingAddress>
-  withdrawals?: Withdrawals | null
-  certificates?: Certificates | null
+      withdrawals?: CSLWithdrawals | null
+      certificates?: CSLCertificates | null
   ttl?: number
   auxiliaryData?: {
     hasValue(): Promise<boolean>
@@ -384,7 +384,7 @@ export const compareCborKey = (hex1: string, hex2: string): number => {
  * Format certificates for Ledger
  */
 export const formatLedgerCertificates = async (
-  certificates: Certificates,
+  certificates: CSLCertificates,
   stakingDerivationPath: number[],
 ): Promise<Array<LedgerCertificate>> => {
   const result: Array<LedgerCertificate> = []
@@ -521,7 +521,7 @@ const mapDrepParams = async (certificate: {
  * Format withdrawals for Ledger
  */
 export const formatLedgerWithdrawals = async (
-  withdrawals: Withdrawals,
+  withdrawals: CSLWithdrawals,
   stakingDerivationPath: number[],
 ): Promise<Array<LedgerWithdrawal>> => {
   const result: Array<LedgerWithdrawal> = []

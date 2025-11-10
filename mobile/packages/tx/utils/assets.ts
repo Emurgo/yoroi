@@ -199,76 +199,85 @@ export async function parseTokenList(
 }
 
 /**
- * Asset name utilities
+ * ASCII asset name blacklist
  */
-export class AssetNameUtils {
-  static readonly ASCII_ASSET_NAME_BLACKLIST = [
-    'ADA',
-    'ADAF',
-    'ADAT',
-    'ADAB',
-    'ADAN',
-    'ADAC',
-    'ADAL',
-    'ADAR',
-    'ADAS',
-    'ADAI',
-    'ADAM',
-    'ADAP',
-    'ADAU',
-    'ADAV',
-    'ADAW',
-    'ADAX',
-    'ADAY',
-    'ADAZ',
-  ]
+export const ASCII_ASSET_NAME_BLACKLIST = [
+  'ADA',
+  'ADAF',
+  'ADAT',
+  'ADAB',
+  'ADAN',
+  'ADAC',
+  'ADAL',
+  'ADAR',
+  'ADAS',
+  'ADAI',
+  'ADAM',
+  'ADAP',
+  'ADAU',
+  'ADAV',
+  'ADAW',
+  'ADAX',
+  'ADAY',
+  'ADAZ',
+] as const
 
-  /**
-   * Resolve CIP-67 tag from asset name hex
-   */
-  static resolveCip67Tag(assetNameHEX: string): {
-    hexName: string
-    tag: string | null
-  } {
-    if (assetNameHEX.length < 4) {
-      return {hexName: assetNameHEX, tag: null}
-    }
-
-    const tag = assetNameHEX.substring(0, 4)
-    const hexName = assetNameHEX.substring(4)
-
-    // CIP-67 tags are 2 bytes (4 hex chars) representing a number
-    // Valid tags are typically in specific ranges
-    // For now, we'll return the tag if it exists
-    return {hexName, tag}
+/**
+ * Resolve CIP-67 tag from asset name hex
+ */
+export function resolveCip67Tag(assetNameHEX: string): {
+  hexName: string
+  tag: string | null
+} {
+  if (assetNameHEX.length < 4) {
+    return {hexName: assetNameHEX, tag: null}
   }
 
-  /**
-   * Resolve ASCII name from hex
-   */
-  static resolveAsciiName(hexName: string): string | null {
-    try {
-      const bytes = Buffer.from(hexName, 'hex')
-      const ascii = bytes.toString('ascii')
-      // Check if it's valid ASCII (printable characters)
-      if (/^[\x20-\x7E]*$/.test(ascii)) {
-        return ascii
-      }
-    } catch {
-      // Invalid hex
-    }
-    return null
-  }
+  const tag = assetNameHEX.substring(0, 4)
+  const hexName = assetNameHEX.substring(4)
 
-  /**
-   * Resolve asset properties (tag + ASCII name)
-   */
-  static resolveProperties(assetNameHEX: string): {
-    tag: string | null
-    asciiName: string | null
-  } {
-    const {hexName, tag} = this.resolveCip67Tag(assetNameHEX)
-    const asciiName = this.resolveAsciiName(hexName)
-    return {tag, asciiName}
-  }
+  // CIP-67 tags are 2 bytes (4 hex chars) representing a number
+  // Valid tags are typically in specific ranges
+  // For now, we'll return the tag if it exists
+  return {hexName, tag}
 }
+
+/**
+ * Resolve ASCII name from hex
+ */
+export function resolveAsciiName(hexName: string): string | null {
+  try {
+    const bytes = Buffer.from(hexName, 'hex')
+    const ascii = bytes.toString('ascii')
+    // Check if it's valid ASCII (printable characters)
+    if (/^[\x20-\x7E]*$/.test(ascii)) {
+      return ascii
+    }
+  } catch {
+    // Invalid hex
+  }
+  return null
+}
+
+/**
+ * Resolve asset properties (tag + ASCII name)
+ */
+export function resolveAssetProperties(assetNameHEX: string): {
+  tag: string | null
+  asciiName: string | null
+} {
+  const {hexName, tag} = resolveCip67Tag(assetNameHEX)
+  const asciiName = resolveAsciiName(hexName)
+  return {tag, asciiName}
+}
+
+/**
+ * Asset name utilities (for backward compatibility)
+ * @deprecated Use individual functions instead
+ */
+export const AssetNameUtils = {
+  ASCII_ASSET_NAME_BLACKLIST,
+  resolveCip67Tag,
+  resolveAsciiName,
+  resolveProperties: resolveAssetProperties,
+} as const

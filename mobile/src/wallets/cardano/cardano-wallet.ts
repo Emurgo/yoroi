@@ -7,10 +7,15 @@ import {
 import {isNonNullable} from '@yoroi/common'
 import type {CardanoHaskellConfig, Datum, ModernUtxo} from '@yoroi/tx'
 import {
-  TransactionBuilder,
   adaptUnsignedTransaction,
+  addCertificate,
+  addInputs,
+  addMetadata,
+  addOutput,
+  addWithdrawal,
   buildLedgerPayload,
   buildLedgerSignedTx,
+  buildTransaction,
   buildVotingLedgerPayloadV5,
   createCIP15VotingMetadata,
   createCIP36VotingMetadata,
@@ -18,9 +23,13 @@ import {
   createStakeDelegationCertificate,
   createStakeDeregistrationCertificate,
   createStakeRegistrationCertificate,
+  createTransactionBuilder,
   modernUtxosToCardanoAddressedUtxos,
   rawUtxoToModernUtxo,
+  setChangeAddress,
+  setTTL,
   signRawTransaction,
+  signTransaction,
 } from '@yoroi/tx'
 import {Api, App, Balance, HW, Network, Portfolio, Wallet} from '@yoroi/types'
 
@@ -450,13 +459,11 @@ export const makeCardanoWallet = (
           networkId: this.networkManager.chainId,
         }
 
-        // Build transaction using TransactionBuilder
-        const builder = new TransactionBuilder()
+        // Build transaction using functional TransactionBuilder
+        let builderState = createTransactionBuilder()
 
         // Add all UTXOs as inputs
-        for (const utxo of modernUtxos) {
-          builder.addInput(utxo)
-        }
+        builderState = addInputs(builderState, modernUtxos)
 
         // Add certificates based on delegation type
         if (delegationType === RegistrationStatus.RegisterAndDelegate) {
@@ -465,7 +472,7 @@ export const makeCardanoWallet = (
             CardanoMobile,
             stakingKey,
           )
-          builder.addCertificate(regCert)
+          builderState = addCertificate(builderState, regCert)
         }
 
         if (poolId) {
@@ -475,28 +482,26 @@ export const makeCardanoWallet = (
             stakingKey,
             poolId,
           )
-          builder.addCertificate(delegCert)
+          builderState = addCertificate(builderState, delegCert)
         } else {
           // Deregister (no pool means deregistration)
           const deregCert = createStakeDeregistrationCertificate(
             CardanoMobile,
             stakingKey,
           )
-          builder.addCertificate(deregCert)
+          builderState = addCertificate(builderState, deregCert)
         }
 
         // Set change address
-        builder.setChangeAddress(changeAddr.address)
+        builderState = setChangeAddress(builderState, changeAddr.address)
 
         // Set TTL
-        builder.setTTL(absSlotNumber.toNumber())
-
-        // Set protocol parameters
-        builder.setProtocolParams(protocolParams)
+        builderState = setTTL(builderState, absSlotNumber.toNumber())
 
         // Build the transaction
-        const unsignedTx = await builder.build(
+        const unsignedTx = await buildTransaction(
           CardanoMobile,
+          builderState,
           protocolParams,
           primaryTokenId,
         )
@@ -563,13 +568,11 @@ export const makeCardanoWallet = (
 
           const rewardAddress = this.getRewardAddress().toBech32(undefined)
 
-          // Build transaction using TransactionBuilder
-          const builder = new TransactionBuilder()
+          // Build transaction using functional TransactionBuilder
+          let builderState = createTransactionBuilder()
 
           // Add all UTXOs as inputs
-          for (const utxo of modernUtxos) {
-            builder.addInput(utxo)
-          }
+          builderState = addInputs(builderState, modernUtxos)
 
           // Create and add voting metadata
           const votingMetadata = supportsCIP36
@@ -587,20 +590,22 @@ export const makeCardanoWallet = (
                 nonce,
               )
 
-          builder.addMetadata(String(votingMetadata.label), votingMetadata.data)
+          builderState = addMetadata(
+            builderState,
+            String(votingMetadata.label),
+            votingMetadata.data,
+          )
 
           // Set change address
-          builder.setChangeAddress(changeAddr.address)
+          builderState = setChangeAddress(builderState, changeAddr.address)
 
           // Set TTL
-          builder.setTTL(absSlotNumber.toNumber())
-
-          // Set protocol parameters
-          builder.setProtocolParams(protocolParams)
+          builderState = setTTL(builderState, absSlotNumber.toNumber())
 
           // Build the transaction
-          const unsignedTx = await builder.build(
+          const unsignedTx = await buildTransaction(
             CardanoMobile,
+            builderState,
             protocolParams,
             primaryTokenId,
           )
@@ -679,17 +684,15 @@ export const makeCardanoWallet = (
         const rewardAddress = this.rewardAddressHex
         const rewards = accountState[rewardAddress]?.rewards || '0'
 
-        // Build transaction using TransactionBuilder
-        const builder = new TransactionBuilder()
+        // Build transaction using functional TransactionBuilder
+        let builderState = createTransactionBuilder()
 
         // Add all UTXOs as inputs
-        for (const utxo of modernUtxos) {
-          builder.addInput(utxo)
-        }
+        builderState = addInputs(builderState, modernUtxos)
 
         // Add withdrawal
         if (BigInt(rewards) > 0n) {
-          builder.addWithdrawal(rewardAddress, rewards)
+          builderState = addWithdrawal(builderState, rewardAddress, rewards)
         }
 
         // Add deregistration certificate if needed
@@ -699,21 +702,19 @@ export const makeCardanoWallet = (
             CardanoMobile,
             stakingKey,
           )
-          builder.addCertificate(deregCert)
+          builderState = addCertificate(builderState, deregCert)
         }
 
         // Set change address
-        builder.setChangeAddress(changeAddr.address)
+        builderState = setChangeAddress(builderState, changeAddr.address)
 
         // Set TTL
-        builder.setTTL(absSlotNumber.toNumber())
-
-        // Set protocol parameters
-        builder.setProtocolParams(protocolParams)
+        builderState = setTTL(builderState, absSlotNumber.toNumber())
 
         // Build the transaction
-        const unsignedTx = await builder.build(
+        const unsignedTx = await buildTransaction(
           CardanoMobile,
+          builderState,
           protocolParams,
           primaryTokenId,
         )
@@ -763,31 +764,27 @@ export const makeCardanoWallet = (
       }
 
       try {
-        // Build transaction using TransactionBuilder
-        const builder = new TransactionBuilder()
+        // Build transaction using functional TransactionBuilder
+        let builderState = createTransactionBuilder()
 
         // Add all UTXOs as inputs
-        for (const utxo of modernUtxos) {
-          builder.addInput(utxo)
-        }
+        builderState = addInputs(builderState, modernUtxos)
 
         // Add voting certificates
         for (const cert of votingCertificates) {
-          builder.addCertificate(cert)
+          builderState = addCertificate(builderState, cert)
         }
 
         // Set change address
-        builder.setChangeAddress(changeAddr.address)
+        builderState = setChangeAddress(builderState, changeAddr.address)
 
         // Set TTL
-        builder.setTTL(absSlotNumber.toNumber())
-
-        // Set protocol parameters
-        builder.setProtocolParams(protocolParams)
+        builderState = setTTL(builderState, absSlotNumber.toNumber())
 
         // Build the transaction
-        const unsignedTx = await builder.build(
+        const unsignedTx = await buildTransaction(
           CardanoMobile,
+          builderState,
           protocolParams,
           primaryTokenId,
         )
@@ -1014,40 +1011,41 @@ export const makeCardanoWallet = (
       }
 
       try {
-        // Build transaction using TransactionBuilder
-        const builder = new TransactionBuilder()
+        // Build transaction using functional TransactionBuilder
+        let builderState = createTransactionBuilder()
 
         // Add all UTXOs as inputs (TransactionBuilder will handle selection)
         // For now, we add all UTXOs - in the future, we can add smart selection
-        for (const utxo of modernUtxos) {
-          builder.addInput(utxo)
-        }
+        builderState = addInputs(builderState, modernUtxos)
 
         // Add outputs from entries
         for (const entry of entries) {
-          builder.addOutput(entry.address, entry.amounts, entry.datum)
+          builderState = addOutput(
+            builderState,
+            entry.address,
+            entry.amounts,
+            entry.datum,
+          )
         }
 
         // Set change address
-        builder.setChangeAddress(changeAddr.address)
+        builderState = setChangeAddress(builderState, changeAddr.address)
 
         // Set TTL
-        builder.setTTL(absSlotNumber.toNumber())
+        builderState = setTTL(builderState, absSlotNumber.toNumber())
 
         // Add metadata if present
         if (metadata && metadata.length > 0) {
           for (const meta of metadata) {
             const label = String(meta.label)
-            builder.addMetadata(label, meta.data)
+            builderState = addMetadata(builderState, label, meta.data)
           }
         }
 
-        // Set protocol parameters
-        builder.setProtocolParams(protocolParams)
-
         // Build the transaction
-        const unsignedTx = await builder.build(
+        const unsignedTx = await buildTransaction(
           CardanoMobile,
+          builderState,
           protocolParams,
           primaryTokenId,
         )
@@ -1125,25 +1123,42 @@ export const makeCardanoWallet = (
             'data' in datum,
         )
 
-      if (datumDatas.length > 0) {
-        const signedTx = unsignedTx.unsignedTx.sign(
-          derivationConfig.keyLevel.account,
-          accountPrivateKeyHex,
-          new Set<string>(),
-          [],
-          undefined,
-          datumDatas,
-        )
+      // Get CBOR from legacy UnsignedTx
+      const txCbor = Buffer.from(
+        await unsignedTx.unsignedTx.toBytes(),
+      ).toString('hex')
 
-        return yoroiSignedTx({unsignedTx, signedTx})
-      }
+      // Prepare staking keys for signing
+      const stakingKeysForSigning =
+        stakingKeys && stakingPrivateKey
+          ? [
+              {
+                keyHex: Buffer.from(stakingPrivateKey.asBytes()).toString(
+                  'hex',
+                ),
+              },
+            ]
+          : undefined
 
-      const signedTx = unsignedTx.unsignedTx.sign(
-        derivationConfig.keyLevel.account,
+      // Sign the transaction using the new signing function
+      const signedTx = await signTransaction(
+        CardanoMobile,
+        {
+          inputs: [],
+          outputs: [],
+          certificates: [],
+          withdrawals: [],
+          referenceInputs: [],
+          collateralInputs: [],
+          metadata: [],
+          options: {},
+          cbor: txCbor,
+        },
         accountPrivateKeyHex,
-        new Set<string>(),
-        stakingKeys,
-        stakingPrivateKey,
+        stakingKeysForSigning,
+        datumDatas.length > 0
+          ? datumDatas.map((d) => ({data: d.data}))
+          : undefined,
       )
 
       return yoroiSignedTx({unsignedTx, signedTx})
@@ -1243,13 +1258,18 @@ export const makeCardanoWallet = (
             useUSB,
           )
 
-          const signedTx = await buildLedgerSignedTx(
+          const signedTxResult = await buildLedgerSignedTx(
             CardanoMobile,
             unsignedTx.unsignedTx as any, // TODO: Fix type when TransactionBuilder is complete
             signedLedgerTx,
             implementationConfig.derivations.base.harden.purpose,
             this.publicKeyHex,
             false,
+          )
+
+          // Convert signed transaction bytes to Transaction object
+          const signedTx = await CardanoMobile.Transaction.fromBytes(
+            signedTxResult.encodedTx,
           )
 
           return yoroiSignedTx({unsignedTx, signedTx})
@@ -1292,7 +1312,7 @@ export const makeCardanoWallet = (
             'data' in datum,
         )
 
-      const signedTx = await buildLedgerSignedTx(
+      const signedTxResult = await buildLedgerSignedTx(
         CardanoMobile,
         unsignedTx.unsignedTx as any, // TODO: Fix type when TransactionBuilder is complete
         signedLedgerTx,
@@ -1300,6 +1320,11 @@ export const makeCardanoWallet = (
         this.publicKeyHex,
         true,
         datumDatas.length > 0 ? datumDatas : undefined,
+      )
+
+      // Convert signed transaction bytes to Transaction object
+      const signedTx = await CardanoMobile.Transaction.fromBytes(
+        signedTxResult.encodedTx,
       )
 
       return yoroiSignedTx({unsignedTx, signedTx})

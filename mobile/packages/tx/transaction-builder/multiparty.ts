@@ -1,3 +1,4 @@
+// Functional multiparty transaction utilities
 import type {WasmModuleProxy, Witness} from '@emurgo/cross-csl-core'
 
 import {UnsignedTransaction} from './types'
@@ -13,70 +14,99 @@ export type MultipartyTransaction = {
   requiredSigners: string[] // Key hashes of required signers
 }
 
+export type WitnessState = {
+  witnesses: WitnessInfo[]
+  requiredSigners: string[]
+}
+
 /**
- * Manages witnesses for multiparty transactions
+ * Create initial witness state
  */
-export class WitnessManager {
-  private witnesses: WitnessInfo[] = []
-  private requiredSigners: string[] = []
-
-  /**
-   * Add a witness (signature) to the transaction
-   */
-  addWitness(witness: Witness, signerKeyHash: string): void {
-    this.witnesses.push({witness, signerKeyHash})
+export function createWitnessState(): WitnessState {
+  return {
+    witnesses: [],
+    requiredSigners: [],
   }
+}
 
-  /**
-   * Check if transaction is fully signed
-   */
-  isFullySigned(requiredSigners: string[]): boolean {
-    const signedKeyHashes = new Set(this.witnesses.map((w) => w.signerKeyHash))
-    return requiredSigners.every((keyHash) => signedKeyHashes.has(keyHash))
+/**
+ * Add a witness (signature) to the transaction
+ */
+export function addWitness(
+  state: WitnessState,
+  witness: Witness,
+  signerKeyHash: string,
+): WitnessState {
+  return {
+    ...state,
+    witnesses: [...state.witnesses, {witness, signerKeyHash}],
   }
+}
 
-  /**
-   * Get list of missing signers
-   */
-  getMissingSigners(requiredSigners: string[]): string[] {
-    const signedKeyHashes = new Set(this.witnesses.map((w) => w.signerKeyHash))
-    return requiredSigners.filter((keyHash) => !signedKeyHashes.has(keyHash))
-  }
+/**
+ * Check if transaction is fully signed
+ */
+export function isFullySigned(
+  state: WitnessState,
+  requiredSigners: string[],
+): boolean {
+  const signedKeyHashes = new Set(state.witnesses.map((w) => w.signerKeyHash))
+  return requiredSigners.every((keyHash) => signedKeyHashes.has(keyHash))
+}
 
-  /**
-   * Get all witnesses
-   */
-  getWitnesses(): WitnessInfo[] {
-    return [...this.witnesses]
-  }
+/**
+ * Get list of missing signers
+ */
+export function getMissingSigners(
+  state: WitnessState,
+  requiredSigners: string[],
+): string[] {
+  const signedKeyHashes = new Set(state.witnesses.map((w) => w.signerKeyHash))
+  return requiredSigners.filter((keyHash) => !signedKeyHashes.has(keyHash))
+}
 
-  /**
-   * Clear all witnesses
-   */
-  clear(): void {
-    this.witnesses = []
-  }
+/**
+ * Get all witnesses
+ */
+export function getWitnesses(state: WitnessState): WitnessInfo[] {
+  return [...state.witnesses]
+}
 
-  /**
-   * Set required signers
-   */
-  setRequiredSigners(signers: string[]): void {
-    this.requiredSigners = [...signers]
+/**
+ * Clear all witnesses
+ */
+export function clearWitnesses(state: WitnessState): WitnessState {
+  return {
+    ...state,
+    witnesses: [],
   }
+}
 
-  /**
-   * Get required signers
-   */
-  getRequiredSigners(): string[] {
-    return [...this.requiredSigners]
+/**
+ * Set required signers
+ */
+export function setRequiredSigners(
+  state: WitnessState,
+  signers: string[],
+): WitnessState {
+  return {
+    ...state,
+    requiredSigners: [...signers],
   }
+}
+
+/**
+ * Get required signers
+ */
+export function getRequiredSigners(state: WitnessState): string[] {
+  return [...state.requiredSigners]
 }
 
 /**
  * Helper to extract required signers from a transaction
  * This analyzes the transaction inputs to determine which keys need to sign
  */
-export async function getRequiredSigners(
+export async function getRequiredSignersFromTransaction(
   unsignedTx: UnsignedTransaction,
   _wasm: WasmModuleProxy,
 ): Promise<string[]> {
