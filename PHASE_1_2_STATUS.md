@@ -76,15 +76,20 @@
 - ✅ Includes derivation path support
 - ✅ Legacy types maintained for backward compatibility
 
-**2.2 Flexible Transaction Builder** ✅
-- ✅ Created `TransactionBuilder` class with flexible API
-- ✅ Supports manual UTXO selection
-- ✅ Supports multiple certificates
-- ✅ Supports reference inputs
-- ✅ Supports metadata
-- ✅ Supports withdrawals
-- ✅ Builder pattern with method chaining
-- ⚠️ **PARTIAL**: WASM integration not yet implemented (TODO comments added)
+    **2.2 Flexible Transaction Builder** ✅
+    - ✅ Created `TransactionBuilder` class with flexible API
+    - ✅ Supports manual UTXO selection
+    - ✅ Supports multiple certificates
+    - ✅ Supports reference inputs
+    - ✅ Supports metadata
+    - ✅ Supports withdrawals
+    - ✅ Supports collateral inputs
+    - ✅ Supports UTXO exclusion/locking
+    - ✅ Supports manual fee and change output
+    - ✅ Builder pattern with method chaining
+    - ✅ **COMPLETE**: Full WASM integration implemented
+    - ✅ **COMPLETE**: Fee calculation with iterative change recalculation
+    - ✅ **COMPLETE**: Change output automatic addition
 
 **2.3 Multiparty Transaction Support** ✅
 - ✅ Added `buildCBOR()` method for serializing to CBOR hex
@@ -102,10 +107,15 @@
   - `contractInfo` field for smart contract details
 - ⚠️ **PARTIAL**: Integration with `useFormattedTx` not yet complete
 
-**2.5 Interactive Transaction Crafting** ❌ NOT DONE
-- ❌ Crafting UI not yet created
-- ❌ React hook for builder not yet created
-- ❌ Draft transaction saving not yet implemented
+    **2.5 Helper Functions** ✅
+    - ✅ Certificate helpers (stake registration, deregistration, delegation, vote delegation)
+    - ✅ UTXO filter helpers (by address, min ADA, pure ADA, collateral range, sorting, selection)
+    - ✅ Metadata helpers (CIP-15 and CIP-36 voting metadata)
+
+    **2.6 Interactive Transaction Crafting** ❌ NOT DONE
+    - ❌ Crafting UI not yet created
+    - ❌ React hook for builder not yet created
+    - ❌ Draft transaction saving not yet implemented
 
 ---
 

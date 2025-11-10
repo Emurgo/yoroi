@@ -53,4 +53,3 @@ export function modernUtxosToCardanoAddressedUtxos(
 ): CardanoAddressedUtxo[] {
   return modernUtxos.map(modernUtxoToCardanoAddressedUtxo)
 }
-
