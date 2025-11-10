@@ -5,7 +5,7 @@ import {
   protocolParamsPlaceholder,
 } from '@yoroi/blockchains'
 import {isNonNullable} from '@yoroi/common'
-import type {Datum} from '@yoroi/tx'
+import type {Datum, ModernUtxo} from '@yoroi/tx'
 import {
   buildLedgerPayload,
   buildLedgerSignedTx,
@@ -15,6 +15,8 @@ import {
   createUnsignedTx,
   createUnsignedVotingTx,
   createUnsignedWithdrawalTx,
+  modernUtxosToCardanoAddressedUtxos,
+  rawUtxoToModernUtxo,
   signRawTransaction,
 } from '@yoroi/tx'
 import {Api, App, Balance, HW, Network, Portfolio, Wallet} from '@yoroi/types'
@@ -427,7 +429,8 @@ export const makeCardanoWallet = (
 
         const absSlotNumber = await this.getAbsoluteSlotNumber()
         const changeAddr = this.getAddressedChangeAddress(addressMode)
-        const addressedUtxos = this.getAddressedUtxos()
+        const modernUtxos = this.getAddressedUtxos()
+        const addressedUtxos = modernUtxosToCardanoAddressedUtxos(modernUtxos)
         const registrationStatus = this.getDelegationStatus().isRegistered
         const stakingKey = this.getStakingKey()
         const delegationType = registrationStatus
@@ -515,7 +518,8 @@ export const makeCardanoWallet = (
           const txOptions = {}
           const nonce = absSlotNumber.toNumber()
 
-          const addressedUtxos = this.getAddressedUtxos()
+        const modernUtxos = this.getAddressedUtxos()
+        const addressedUtxos = modernUtxosToCardanoAddressedUtxos(modernUtxos)
 
           const baseAddr = this.getFirstPaymentAddress()
 
@@ -588,7 +592,8 @@ export const makeCardanoWallet = (
 
         const absSlotNumber = await this.getAbsoluteSlotNumber()
         const changeAddr = this.getAddressedChangeAddress(addressMode)
-        const addressedUtxos = this.getAddressedUtxos()
+        const modernUtxos = this.getAddressedUtxos()
+        const addressedUtxos = modernUtxosToCardanoAddressedUtxos(modernUtxos)
         const accountState = await legacyApi.getAccountState(
           {addresses: [this.rewardAddressHex]},
           networkManager.legacyApiBaseUrl,
@@ -649,7 +654,8 @@ export const makeCardanoWallet = (
       const primaryTokenId = this.portfolioPrimaryTokenInfo.id
       const absSlotNumber = await this.getAbsoluteSlotNumber()
       const changeAddr = this.getAddressedChangeAddress(addressMode)
-      const addressedUtxos = this.getAddressedUtxos()
+      const modernUtxos = this.getAddressedUtxos()
+      const addressedUtxos = modernUtxosToCardanoAddressedUtxos(modernUtxos)
 
       const {coinsPerUtxoByte, keyDeposit, linearFee, poolDeposit} =
         this.protocolParams
@@ -695,9 +701,11 @@ export const makeCardanoWallet = (
 
     getAllUtxosForKey() {
       if (implementationConfig.features.staking) {
+        const modernUtxos = this.getAddressedUtxos()
+        const addressedUtxos = modernUtxosToCardanoAddressedUtxos(modernUtxos)
         return filterAddressesByStakingKey(
           CardanoMobile.Credential.fromKeyhash(this.getStakingKey().hash()),
-          this.getAddressedUtxos(),
+          addressedUtxos,
           false,
         )
       }
@@ -828,24 +836,19 @@ export const makeCardanoWallet = (
       return signRawTransaction(CardanoMobile, txHex, pKeys)
     }
 
-    private getAddressedUtxos() {
-      const addressedUtxos = this.utxos.map(
-        (utxo: RawUtxo): CardanoTypes.CardanoAddressedUtxo => {
-          const addressing = this.getAddressing(utxo.receiver)
+    private getAddressedUtxos(): ModernUtxo[] {
+      const primaryTokenId = this.portfolioPrimaryTokenInfo.id
 
-          return {
-            addressing,
-            txIndex: utxo.tx_index,
-            txHash: utxo.tx_hash,
-            amount: utxo.amount,
-            receiver: utxo.receiver,
-            utxoId: utxo.utxo_id,
-            assets: utxo.assets,
-          }
-        },
-      )
+      return this.utxos.map((utxo: RawUtxo): ModernUtxo => {
+        const addressing = this.getAddressing(utxo.receiver)
 
-      return addressedUtxos
+        return rawUtxoToModernUtxo(
+          utxo,
+          addressing,
+          undefined, // derivationPath - can be added later if needed for display
+          primaryTokenId,
+        )
+      })
     }
 
     private async getAbsoluteSlotNumber() {
@@ -870,7 +873,8 @@ export const makeCardanoWallet = (
       const absSlotNumber = await this.getAbsoluteSlotNumber()
 
       const changeAddr = this.getAddressedChangeAddress(addressMode)
-      const addressedUtxos = this.getAddressedUtxos()
+      const modernUtxos = this.getAddressedUtxos()
+      const addressedUtxos = modernUtxosToCardanoAddressedUtxos(modernUtxos)
 
       const recipients = await toRecipients(
         entries,

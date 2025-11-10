@@ -20,6 +20,9 @@ export {TransactionBuilder} from './transaction-builder'
 export {UtxoService, init as initUtxo} from './utxo'
 export {WitnessManager, getRequiredSigners} from './transaction-builder/multiparty'
 
+// Export types
+export type {ModernUtxo} from './utxo/models'
+
 // Export Ledger functions
 export {
   buildLedgerPayload,

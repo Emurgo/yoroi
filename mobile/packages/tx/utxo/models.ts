@@ -7,13 +7,16 @@ import type {
 // Legacy types (for backward compatibility during migration)
 import BigNumber from 'bignumber.js'
 
+import {Addressing} from '../types'
+
 // Modern UTXO type matching useUtxoList.ts pattern
 export type ModernUtxo = {
   receiver: string
   txHash: string
   txIndex: number
   balance: Balance.Amounts // Record<TokenId, Quantity>
-  derivationPath?: string // For display
+  derivationPath?: string // For display (BIP32 path string, e.g., "m/1852'/1815'/0'/0/0")
+  addressing?: Addressing // For signing (path array + startLevel)
   toTransactionUnspentOutputHex: () => string
   toTransactionUnspentOutput: (
     wasm: WasmModuleProxy,
