@@ -23,11 +23,10 @@ import {
   Withdrawals as CSLWithdrawals,
   MultiAsset,
   TransactionOutputs,
-  WasmModuleProxy,
 } from '@emurgo/cross-csl-core'
 // Note: This will need to be updated when we migrate UnsignedTx type
 // For now, we'll use a minimal interface that matches what Ledger functions need
-import type {TransactionBody} from '@emurgo/cross-csl-core'
+import type {TransactionBody, WasmModuleProxy} from '@emurgo/cross-csl-core'
 import * as bech32 from 'bech32'
 
 import {CardanoMobileWrapped} from '../../../src/wallets/cardano/wrappedCsl'
@@ -96,7 +95,11 @@ export const transformToLedgerInputs = (
   return ordered
 }
 
-const areAddressesTheSame = (csl, addr1: string, addr2: string): boolean => {
+const areAddressesTheSame = (
+  csl: WasmModuleProxy,
+  addr1: string,
+  addr2: string,
+): boolean => {
   const addrToHex = (addr: string): string => {
     const addrBech32 = bech32.decodeUnsafe(addr, addr.length)
     let hex: string
@@ -125,7 +128,7 @@ const areAddressesTheSame = (csl, addr1: string, addr2: string): boolean => {
  * Transform transaction outputs to Ledger format
  */
 export const transformToLedgerOutputs = async (
-  _csl,
+  _csl: WasmModuleProxy,
   request: {
     networkId: number
     txOutputs: TransactionOutputs
@@ -208,7 +211,7 @@ export const verifyFromBip44Root = (addressing: Addressing): void => {
  * Convert address to Ledger address parameters
  */
 export const toLedgerAddressParameters = (
-  csl,
+  csl: WasmModuleProxy,
   request: {
     networkId: number
     address: Address
@@ -525,7 +528,7 @@ export const formatLedgerWithdrawals = (
 /**
  * Helper to convert address to hex or base58
  */
-function toHexOrBase58(csl, address: Address): string {
+function toHexOrBase58(csl: WasmModuleProxy, address: Address): string {
   const asByron = csl.ByronAddress.fromAddress(address)
   if (asByron === null || !asByron) {
     return Buffer.from(address.toBytes()).toString('hex')
@@ -536,7 +539,7 @@ function toHexOrBase58(csl, address: Address): string {
 /**
  * Assert that transaction sets have proper tag state for Ledger signing
  */
-export const assertTagsState = (csl, txHex: string): void => {
+export const assertTagsState = (csl: WasmModuleProxy, txHex: string): void => {
   const tagsState = csl.hasTransactionSetTag(Buffer.from(txHex, 'hex'))
 
   if (tagsState === csl.TransactionSetsState.MixedSets) {
@@ -548,7 +551,7 @@ export const assertTagsState = (csl, txHex: string): void => {
  * Check if all transaction sets have tags
  */
 export const doAllSetsHaveTag = (
-  csl,
+  csl: WasmModuleProxy,
   txHex: string,
 ): boolean => {
   const tagsState = csl.hasTransactionSetTag(Buffer.from(txHex, 'hex'))
