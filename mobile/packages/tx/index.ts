@@ -6,6 +6,9 @@ export * from './errors'
 export * from './ledger'
 export * from './utils'
 
+// Export legacy types for backward compatibility
+export type {UnsignedTx, SignedTx} from './types'
+
 // ⚠️ LEGACY: Deprecated transaction building methods - REMOVED
 // All transaction building now uses TransactionBuilder
 // The legacy wrapper has been removed as all calls have been migrated

@@ -8,7 +8,7 @@ import type {
   Withdrawals,
   Certificates,
 } from '@emurgo/cross-csl-core'
-import {Buffer} from 'buffer'
+// Buffer is used implicitly via WASM
 
 import {Addressing, AddressingAddress} from '../types'
 import {UnsignedTransaction} from '../transaction-builder/types'
