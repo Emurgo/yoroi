@@ -10,11 +10,11 @@ import {
   CERTIFICATE_KIND,
   RawTransaction,
   TRANSACTION_STATUS,
-  Transaction,
+  WalletTransaction,
   Transactions,
   TxHistoryRequest,
 } from '~/wallets/types/other'
-import {RemoteCertificateMeta} from '~/wallets/types/staking'
+import {RemoteCertificateMeta} from '@yoroi/staking'
 import {Version, versionCompare} from '~/wallets/utils/versioning'
 
 import * as yoroiApi from '../api/api'
@@ -64,7 +64,7 @@ export class TransactionManager {
     transactions,
   }: {
     storage: TxManagerStorage
-    transactions: Record<string, Transaction>
+    transactions: Record<string, WalletTransaction>
   }) {
     this.#storage = storage
     this.#state = {
@@ -144,9 +144,9 @@ export async function syncTxs({
 }: Readonly<{
   addressesByChunks: Array<Array<string>>
   baseApiUrl: string
-  transactions: Record<string, Transaction>
+  transactions: Record<string, WalletTransaction>
   api: Pick<typeof yoroiApi, 'getTipStatus' | 'fetchNewTxHistory'>
-}>): Promise<Record<string, Transaction> | undefined> {
+}>): Promise<Record<string, WalletTransaction> | undefined> {
   const {bestBlock} = await api.getTipStatus(baseApiUrl)
   if (!bestBlock.hash) return
 
@@ -278,7 +278,7 @@ function txHistoryPayloadFactory(
 }
 
 function getLatestYoroiTransaction(
-  txs: Array<Transaction>,
+  txs: Array<WalletTransaction>,
 ): undefined | TimeForTx {
   const blockInfo: Array<TimeForTx> = []
 
@@ -359,7 +359,7 @@ function getLatestApiTransaction(
   return best
 }
 
-export function toCachedTx(tx: RawTransaction): Transaction {
+export function toCachedTx(tx: RawTransaction): WalletTransaction {
   return {
     id: tx.hash,
     type: tx.type,
@@ -491,7 +491,7 @@ const perAddressCertificatesSelector = (
 
 const confirmationCountsSelector = (state: TransactionManagerState) => {
   const {perAddressSyncMetadata, transactions} = state
-  return mapValues(transactions, (tx: Transaction) => {
+  return mapValues(transactions, (tx: WalletTransaction) => {
     if (tx.status !== TRANSACTION_STATUS.SUCCESSFUL) {
       // TODO(ppershing): do failed transactions have assurance?
       return null
@@ -517,8 +517,8 @@ type SyncMetadata = {
 }
 
 type TxManagerStorage = {
-  loadTxs: () => Promise<Record<string, Transaction>>
-  saveTxs: (txs: Record<string, Transaction>) => Promise<void>
+  loadTxs: () => Promise<Record<string, WalletTransaction>>
+  saveTxs: (txs: Record<string, WalletTransaction>) => Promise<void>
   clear: () => Promise<void>
 }
 
@@ -571,11 +571,11 @@ const parseTxids = (data: string | null | undefined) => {
   return isTxids(txids) ? txids : []
 }
 
-const parseTx = (data: string | null | undefined): Transaction | undefined => {
+const parseTx = (data: string | null | undefined): WalletTransaction | undefined => {
   if (!data) return
 
-  const isTx = (data: unknown): data is Transaction => {
-    const tx = data as Transaction
+  const isTx = (data: unknown): data is WalletTransaction => {
+    const tx = data as WalletTransaction
 
     return (
       exists(tx) &&

@@ -10,10 +10,8 @@ import {YoroiWallet} from '../../wallets/cardano/types'
 import {mockEncryptedStorage} from '../../wallets/mocks/storage'
 import {mockTransactionInfos} from '../../wallets/mocks/transaction'
 import {utxos} from '../../wallets/mocks/utxos'
-import {
-  RemotePoolMetaSuccess,
-  StakePoolInfosAndHistories,
-} from '../../wallets/types/staking'
+import {StakePoolInfosAndHistories} from '@yoroi/staking'
+import {RemotePoolMetaSuccess} from '../../wallets/types/staking'
 import {CardanoMobile} from '../../wallets/wallets'
 import {networkManagers} from './common/constants'
 

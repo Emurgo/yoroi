@@ -9,10 +9,10 @@ import {
   TRANSACTION_DIRECTION,
   TRANSACTION_STATUS,
   TRANSACTION_TYPE,
-  Transaction,
   TransactionInfo,
+  WalletTransaction,
 } from '~/wallets/types/other'
-import {Token} from '~/wallets/types/tokens'
+import {TransactionToken} from '~/wallets/types/tokens'
 
 import {
   MultiToken,
@@ -44,8 +44,10 @@ const getTransactionAssurance = (
   return 'HIGH'
 }
 
-const getTxTokens = (tx: Transaction): Record<string, Token> => {
-  const tokens: Record<string, Token> = {}
+const getTxTokens = (
+  tx: WalletTransaction,
+): Record<string, TransactionToken> => {
+  const tokens: Record<string, TransactionToken> = {}
   const rawTokens: Array<BaseAsset> = []
   tx.inputs.forEach((i) => rawTokens.push(...i.assets))
   tx.outputs.forEach((o) => rawTokens.push(...o.assets))
@@ -54,14 +56,11 @@ const getTxTokens = (tx: Transaction): Record<string, Token> => {
       tokens[t.assetId] = {
         isDefault: false,
         identifier: t.assetId,
-        metadata: {
-          policyId: t.policyId,
-          assetName: t.name,
-          numberOfDecimals: 0,
-          ticker: null,
-          longName: null,
-          maxSupply: null,
-        },
+        policyId: t.policyId,
+        assetName: t.name,
+        numberOfDecimals: 0,
+        ticker: null,
+        longName: null,
       }
     }
   })
@@ -83,7 +82,7 @@ const _sum = (
 
 const _multiPartyWarningCache: Record<string, boolean> = {}
 export const processTxHistoryData = (
-  tx: Transaction,
+  tx: WalletTransaction,
   ownAddresses: Array<string>,
   confirmations: number,
   memo: string | null,

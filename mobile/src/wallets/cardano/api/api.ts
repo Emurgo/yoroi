@@ -4,14 +4,13 @@ import {
   AccountStateRequest,
   AccountStateResponse,
   FundInfoResponse,
-  PoolInfoRequest,
   RawTransaction,
   TipStatusResponse,
   TxHistoryRequest,
   TxStatusRequest,
   TxStatusResponse,
 } from '~/wallets/types/other'
-import {StakePoolInfosAndHistories} from '~/wallets/types/staking'
+import {StakePoolInfoRequest, StakePoolInfosAndHistories} from '@yoroi/staking'
 
 import {ServerStatus} from '../types'
 import {handleError} from './errors'
@@ -87,7 +86,7 @@ export const bulkGetAccountState = async (
 }
 
 export const getPoolInfo = (
-  request: PoolInfoRequest,
+  request: StakePoolInfoRequest,
   baseApiUrl: string,
 ): Promise<StakePoolInfosAndHistories> => {
   return fetchDefault('pool/info', request, baseApiUrl)

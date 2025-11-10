@@ -17,9 +17,9 @@ import {logger} from '~/kernel/logger/logger'
 import {toTokenInfo, utf8ToHex} from '../cardano/api/utils'
 import {CardanoTypes, YoroiWallet} from '../cardano/types'
 import {TransactionInfo} from '../types/other'
+import {StakePoolInfosAndHistories} from '@yoroi/staking'
 import {
   RemotePoolMetaSuccess,
-  StakePoolInfosAndHistories,
   StakingInfo,
   StakingStatus,
 } from '../types/staking'
@@ -544,7 +544,6 @@ const tokenInfos: Record<string, Balance.TokenInfo> = {
         ticker: '',
         longName: '',
         numberOfDecimals: 0,
-        maxSupply: null,
       },
     }),
   '29d222ce763455e3d7a09a665ce554f00ac89d2e99a1a83d267170c6.4d494e':
@@ -558,7 +557,6 @@ const tokenInfos: Record<string, Balance.TokenInfo> = {
         ticker: '',
         longName: '',
         numberOfDecimals: 0,
-        maxSupply: null,
       },
     }),
   '1d129dc9c03f95a863489883914f05a52e13135994a32f0cbeacc65f.74484f444c52':
@@ -572,7 +570,6 @@ const tokenInfos: Record<string, Balance.TokenInfo> = {
         ticker: '',
         longName: '',
         numberOfDecimals: 0,
-        maxSupply: null,
       },
     }),
   '1ca1fc0c880d25850cb00303788dfb51bdf2f902f6dce47d1ad09d5b.44': toTokenInfo({
@@ -634,7 +631,6 @@ const tokenInfos: Record<string, Balance.TokenInfo> = {
         ticker: '8DEC',
         longName: '',
         numberOfDecimals: 8,
-        maxSupply: null,
       },
     }),
     image:
@@ -670,7 +666,6 @@ const tokenInfos: Record<string, Balance.TokenInfo> = {
         ticker: '12DEC',
         longName: '',
         numberOfDecimals: 12,
-        maxSupply: null,
       },
     }),
   '1d129dc9c03f95a863489883914f05a52e13135994a32f0cbeacc65e.74484f444c55':
@@ -684,7 +679,6 @@ const tokenInfos: Record<string, Balance.TokenInfo> = {
         ticker: '20DEC',
         longName: '',
         numberOfDecimals: 20,
-        maxSupply: null,
       },
     }),
 }

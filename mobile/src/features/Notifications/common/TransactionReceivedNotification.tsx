@@ -11,7 +11,7 @@ import {Icon} from '~/ui/Icon'
 import {NotificationItem} from '~/ui/NotificationItem/NotificationItem'
 import {YoroiWallet} from '~/wallets/cardano/types'
 import {TransactionInfo} from '~/wallets/types/other'
-import {Token} from '~/wallets/types/tokens'
+import {TransactionToken} from '~/wallets/types/tokens'
 import {Quantities, asQuantity} from '~/wallets/utils/utils'
 
 export const getTransactionReceivedNotificationTitle = (
@@ -164,7 +164,7 @@ const sumTokenFromTxData = (
 }
 
 const findToken = (
-  tokens: Token[],
+  tokens: TransactionToken[],
   identifier: string,
   primaryTokenInfo: Portfolio.Token.Info,
 ) => {
@@ -176,9 +176,8 @@ const findToken = (
   }
 
   const token = tokens.find((t) => t.identifier === identifier)
-  const name =
-    token?.metadata?.longName ?? token?.metadata?.ticker ?? identifier
-  const denomination = token?.metadata.numberOfDecimals ?? 0
+  const name = token?.longName ?? token?.ticker ?? identifier
+  const denomination = token?.numberOfDecimals ?? 0
   return {name, denomination}
 }
 

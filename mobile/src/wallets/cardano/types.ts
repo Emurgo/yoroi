@@ -27,9 +27,8 @@ import {
   AccountStates,
   StakePoolInfoRequest,
   StakePoolInfosAndHistories,
-  StakingInfo,
-  StakingStatus,
-} from '../types/staking'
+} from '@yoroi/staking'
+import {StakingInfo, StakingStatus} from '../types/staking'
 import {YoroiEntry, YoroiSignedTx, YoroiUnsignedTx} from '../types/yoroi'
 import type {Addresses} from './account-manager/account-manager'
 

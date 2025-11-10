@@ -40,6 +40,5 @@ const secondaryToken: Token = {
     ticker: '2',
     numberOfDecimals: 0,
     longName: null,
-    maxSupply: null,
   },
 }

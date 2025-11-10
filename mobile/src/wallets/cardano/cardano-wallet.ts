@@ -59,11 +59,11 @@ import {
 import type {
   AccountStateResponse,
   FundInfoResponse,
-  PoolInfoRequest,
   RawUtxo,
   TxStatusRequest,
   TxStatusResponse,
 } from '../types/other'
+import {StakePoolInfoRequest, StakePoolInfosAndHistories} from '@yoroi/staking'
 import {StakingInfo} from '../types/staking'
 import {YoroiEntry, YoroiSignedTx, YoroiUnsignedTx} from '../types/yoroi'
 import {Quantities} from '../utils/utils'
@@ -1442,7 +1442,7 @@ export const makeCardanoWallet = (
       )
     }
 
-    async fetchPoolInfo(request: PoolInfoRequest) {
+    async fetchPoolInfo(request: StakePoolInfoRequest) {
       return legacyApi.getPoolInfo(
         request,
         this.networkManager.legacyApiBaseUrl,

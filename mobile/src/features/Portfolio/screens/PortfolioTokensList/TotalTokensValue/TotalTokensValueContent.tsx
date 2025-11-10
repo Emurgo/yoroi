@@ -80,11 +80,7 @@ export const TotalTokensValueContent = ({amount, headerCard}: Props) => {
           />
 
           <Tooltip
-            title={
-              listTab === PortfolioListTab.Dapps
-                ? strings.portfolio.totalDAppsValueTooltip
-                : strings.portfolio.totalWalletValueTooltip
-            }
+            title={strings.portfolio.totalWalletValueTooltip}
           >
             <View style={[a.flex_row, a.gap_xs, a.align_stretch]}>
               {isLoading ? (

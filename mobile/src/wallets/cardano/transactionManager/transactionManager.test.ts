@@ -4,7 +4,7 @@ import DeviceInfo from 'react-native-device-info'
 
 import {rootStorage} from '~/kernel/storage/storages'
 
-import {Transaction} from '../../types/other'
+import {WalletTransaction} from '../../types/other'
 import {ApiHistoryError} from '../errors'
 import {
   mockTx,
@@ -39,7 +39,7 @@ describe('transactionManager', () => {
     DeviceInfo.getVersion = () => '9.9.9'
 
     const mockStorage = rootStorage.join('txs/')
-    await mockStorage.multiSet<Transaction | [string]>([
+    await mockStorage.multiSet<WalletTransaction | [string]>([
       [mockTx.id, mockTx],
       ['txids', [mockTx.id]],
     ])

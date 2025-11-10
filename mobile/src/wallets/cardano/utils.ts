@@ -7,7 +7,6 @@ import {BigNumber} from 'bignumber.js'
 import {Buffer} from 'buffer'
 
 import {BaseAsset, RawUtxo} from '../types/other'
-import {DefaultAsset} from '../types/tokens'
 import {YoroiEntry} from '../types/yoroi'
 import {Amounts} from '../utils/utils'
 import {MultiToken} from './MultiToken'
@@ -170,7 +169,7 @@ export const toSendToken =
   }
 
 export const isTokenInfo = (
-  token: Balance.TokenInfo | DefaultAsset,
+  token: Balance.TokenInfo | Portfolio.Token.Info,
 ): token is Balance.TokenInfo => {
   return !!(token as Balance.TokenInfo).kind
 }

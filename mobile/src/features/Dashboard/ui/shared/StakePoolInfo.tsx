@@ -13,7 +13,7 @@ import {Copiable} from '~/ui/Copiable/Copiable'
 import {Text} from '~/ui/Text/Text'
 import {TitledCard} from '~/ui/TitledCard/TitledCard'
 import {YoroiWallet} from '~/wallets/cardano/types'
-import {StakePoolInfoAndHistory} from '~/wallets/types/staking'
+import {StakePoolInfoAndHistory} from '@yoroi/staking'
 import {isEmptyString} from '~/wallets/utils/string'
 
 type StakePoolInfoProps = {

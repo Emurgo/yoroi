@@ -1,4 +1,4 @@
-import {Datum} from '@yoroi/tx'
+import {TransactionOutput} from '@yoroi/tx'
 import {Balance, Portfolio} from '@yoroi/types'
 
 import {CardanoTypes} from '../cardano/types'
@@ -12,9 +12,9 @@ export type YoroiSignedTx = YoroiTxInfo & {
 }
 
 export type YoroiTxInfo = {
-  entries: YoroiEntry[]
+  entries: TransactionOutput[]
   fee: Balance.Amounts
-  change: YoroiEntry[]
+  change: TransactionOutput[]
   metadata: YoroiMetadata
   staking: YoroiStaking
   voting: YoroiVoting
@@ -22,10 +22,10 @@ export type YoroiTxInfo = {
 }
 
 export type YoroiStaking = {
-  registrations?: YoroiEntry[]
-  deregistrations?: YoroiEntry[]
-  delegations?: YoroiEntry[]
-  withdrawals?: YoroiEntry[]
+  registrations?: TransactionOutput[]
+  deregistrations?: TransactionOutput[]
+  delegations?: TransactionOutput[]
+  withdrawals?: TransactionOutput[]
 }
 
 export type YoroiVoting = {
@@ -40,11 +40,8 @@ export type YoroiVoting = {
 export type Address = string
 export type TokenId = string
 
-export type YoroiEntry = {
-  address: Address
-  amounts: Balance.Amounts
-  datum?: Datum
-}
+// Re-export TransactionOutput as YoroiEntry for backward compatibility during migration
+export type YoroiEntry = TransactionOutput
 
 export type YoroiMetadata = {
   [label: string]: string

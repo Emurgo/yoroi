@@ -1,7 +1,7 @@
 import {TokenEntryPlain} from '../cardano/MultiToken'
 import {CardanoTypes} from '../cardano/types'
-import {RemoteAccountState, RemoteCertificateMeta} from './staking'
-import {Token} from './tokens'
+import {RemoteAccountState, RemoteCertificateMeta} from '@yoroi/staking'
+import {TransactionToken} from './tokens'
 
 // note(v-almonacid): this
 /**
@@ -42,10 +42,6 @@ export type AccountStateRequest = {
   addresses: Array<string>
 }
 export type AccountStateResponse = Record<string, null | RemoteAccountState>
-
-export type PoolInfoRequest = {
-  poolIds: Array<string>
-}
 
 // bestblock
 type BestblockResponse = {
@@ -188,7 +184,7 @@ export type TransactionInfo = {
   lastUpdatedAt: string
   status: TransactionStatus
   assurance: TransactionAssurance
-  tokens: Record<string, Token>
+  tokens: Record<string, TransactionToken>
   blockNumber: number
   memo: null | string
   metadata: TxMetadataInfo | undefined
@@ -219,8 +215,8 @@ export const TRANSACTION_TYPE = {
 }
 type TransactionType = (typeof TRANSACTION_TYPE)[keyof typeof TRANSACTION_TYPE]
 export type BaseAsset = RemoteAsset
-export type Transactions = {[txid: string]: Transaction}
-export type Transaction = {
+export type Transactions = {[txid: string]: WalletTransaction}
+export type WalletTransaction = {
   id: string
   type?: TransactionType
   fee?: string
