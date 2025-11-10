@@ -21,6 +21,8 @@ export {
   createSignedLedgerTxFromCbor,
   signRawTransaction,
 } from './ledger/signing'
+export {createLedgerPlutusPayload} from './ledger/plutus'
+export {getAllSigners} from './ledger/signers'
 
 // Export utility functions
 export {
