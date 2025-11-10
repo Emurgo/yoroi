@@ -1,5 +1,4 @@
-import {CardanoAddressedUtxo} from '@emurgo/yoroi-lib'
-import {normalizeToAddress} from '@emurgo/yoroi-lib/dist/internals/utils/addresses'
+import {CardanoAddressedUtxo, normalizeToAddress} from '@yoroi/tx'
 import {sortBy} from 'lodash'
 
 import {StakingStatus} from '~/wallets/types/staking'

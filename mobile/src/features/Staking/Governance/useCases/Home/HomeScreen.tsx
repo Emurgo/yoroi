@@ -10,7 +10,7 @@ import {
 } from '@yoroi/staking'
 import {ThemedPalette, atoms as a, useTheme} from '@yoroi/theme'
 
-import {NotEnoughMoneyToSendError} from '@emurgo/yoroi-lib/dist/errors'
+import {NotEnoughMoneyToSendError} from '@yoroi/tx'
 import React, {type ReactNode} from 'react'
 import {Text, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'

@@ -1,6 +1,6 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 
-import {FullPoolInfo} from '@emurgo/yoroi-lib'
+import {FullPoolInfo} from '@yoroi/staking'
 import {Image} from 'expo-image'
 import * as React from 'react'
 import {Text, View} from 'react-native'

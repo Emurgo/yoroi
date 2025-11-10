@@ -12,8 +12,8 @@ import * as CSL from '@emurgo/cross-csl-core'
 import {
   createSignedLedgerTxFromCbor,
   signRawTransaction,
-} from '@emurgo/yoroi-lib'
-import {Datum} from '@emurgo/yoroi-lib/dist/internals/models'
+  Datum,
+} from '@yoroi/tx'
 import {BigNumber} from 'bignumber.js'
 import {Buffer} from 'buffer'
 import {freeze} from 'immer'

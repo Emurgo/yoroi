@@ -7,9 +7,9 @@ import {
   RemoteUnspentOutput,
   UtxoAsset,
   signRawTransaction,
-} from '@emurgo/yoroi-lib'
-import {normalizeToAddress} from '@emurgo/yoroi-lib/dist/internals/utils/addresses'
-import {parseTokenList} from '@emurgo/yoroi-lib/dist/internals/utils/assets'
+  normalizeToAddress,
+  parseTokenList,
+} from '@yoroi/tx'
 import {BigNumber} from 'bignumber.js'
 import {Buffer} from 'buffer'
 import * as _ from 'lodash'

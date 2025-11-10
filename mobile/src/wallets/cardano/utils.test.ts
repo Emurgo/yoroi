@@ -1,7 +1,7 @@
 import {primaryTokenInfoMainnet} from '@yoroi/blockchains'
 import {Balance} from '@yoroi/types'
 
-import {SendToken} from '@emurgo/yoroi-lib'
+import {SendToken} from '@yoroi/tx'
 
 import {Token} from '../types/tokens'
 import {toSendToken, toSendTokenList} from './utils'

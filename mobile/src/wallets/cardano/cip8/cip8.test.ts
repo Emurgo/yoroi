@@ -1,4 +1,4 @@
-import {normalizeToAddress} from '@emurgo/yoroi-lib/dist/internals/utils/addresses'
+import {normalizeToAddress} from '@yoroi/tx'
 import {Buffer} from 'buffer'
 
 import {CardanoMobile} from '~/wallets/wallets'

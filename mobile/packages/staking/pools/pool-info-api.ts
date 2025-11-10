@@ -1,16 +1,16 @@
 // PoolInfoApi migrated from @emurgo/yoroi-lib
 // This file contains the PoolInfoApi class for fetching stake pool information
-
-import axios from 'axios'
 import {
+  chunk,
   isHex,
   joinUrl,
   mergeRecords,
   tuplesIntoRecord,
   valueIntoRecord,
-  chunk,
 } from '@yoroi/common'
-import type {WasmModuleProxy, Ed25519KeyHash} from '@emurgo/cross-csl-core'
+
+import type {Ed25519KeyHash, WasmModuleProxy} from '@emurgo/cross-csl-core'
+import axios from 'axios'
 
 const explorerApi = 'https://a.cexplorer.io/yoroi-api/'
 
@@ -70,7 +70,6 @@ type TransitionData = {
   saturationThreshold?: number
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const TRANSITION_DATA_STUB: TransitionData = {
   new: {
     emurgo: [
@@ -122,7 +121,7 @@ export const DEFAULT_SATURATION_THRESHOLD = 0.8
 
 export function getMaybeNewEntriesByPool(
   poolId: string,
-  transitionData: TransitionData
+  transitionData: TransitionData,
 ): null | {
   newEntries: Array<string>
   deadline: number
@@ -131,7 +130,7 @@ export function getMaybeNewEntriesByPool(
     const oldEntries: Array<PoolTransitionOldEntry> =
       transitionData.old[groupName]
     const oldEntry: PoolTransitionOldEntry | undefined = oldEntries.find(
-      (e) => e[0] === poolId
+      (e) => e[0] === poolId,
     )
     if (oldEntry != null) {
       const [, deadline, isEnabled] = oldEntry
@@ -147,7 +146,7 @@ type WasmFactory = (scope: string) => WasmModuleProxy
 
 export async function normalisePoolIdentifierOrKey(
   poolIdOrHash: string,
-  wasmFactory: WasmFactory
+  wasmFactory: WasmFactory,
 ): Promise<PoolIdentity> {
   const wasm = wasmFactory('pool-normalize')
   const key: Ed25519KeyHash = await (isHex(poolIdOrHash)
@@ -201,7 +200,7 @@ export class PoolInfoApi {
    * @param hash HEX key-hash
    */
   public async getSingleFullPoolInfo(
-    hash: string
+    hash: string,
   ): Promise<FullPoolInfo | null> {
     return (await this.getManyFullPoolInfo([hash]))[hash]
   }
@@ -225,7 +224,7 @@ export class PoolInfoApi {
    * @param hash HEX key-hash
    */
   public async getSingleChainPoolInfo(
-    hash: string
+    hash: string,
   ): Promise<FullChainPoolInfo | null> {
     return (await this.getManyChainPoolInfo([hash]))[hash]
   }
@@ -234,18 +233,18 @@ export class PoolInfoApi {
    * @param hashes - an array of HEX pool key hashes
    */
   public async getManyChainPoolInfo(
-    hashes: string[]
+    hashes: string[],
   ): Promise<ChainPoolInfoMap> {
     const responses: Array<ChainPoolInfoMap> = await Promise.all(
       chunk(hashes, this.requestSize).map((batch) =>
-        this.getManyChainPoolInfoBatch(batch)
-      )
+        this.getManyChainPoolInfoBatch(batch),
+      ),
     )
     return mergeRecords(responses) as ChainPoolInfoMap
   }
 
   private async getManyChainPoolInfoBatch(
-    hashes: string[]
+    hashes: string[],
   ): Promise<ChainPoolInfoMap> {
     const url = joinUrl(this.apiUrl, '/pool/info')
 
@@ -260,13 +259,13 @@ export class PoolInfoApi {
    * @param hashes - an array of HEX pool key hashes
    */
   public async getManyExplorerPoolInfo(
-    hashes: string[]
+    hashes: string[],
   ): Promise<ExplorerPoolInfoMap> {
     const hashInfoTuples = await Promise.all<[string, ExplorerPoolInfo | null]>(
       hashes.map(async (hash) => [
         hash,
         await this.getSingleExplorerPoolInfo(hash),
-      ])
+      ]),
     )
     return tuplesIntoRecord(hashInfoTuples) as ExplorerPoolInfoMap
   }
@@ -285,7 +284,7 @@ export class PoolInfoApi {
    * @param hash HEX key-hash
    */
   public async getSingleExplorerPoolInfo(
-    hash: string
+    hash: string,
   ): Promise<ExplorerPoolInfo | null> {
     const params = new URLSearchParams({search: hash})
 
@@ -296,7 +295,7 @@ export class PoolInfoApi {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
-      }
+      },
     )
 
     if (!data.pools) return null
@@ -319,7 +318,7 @@ export class PoolInfoApi {
 
   private async getFirstUnsaturatedPool(
     poolIds: Array<string>,
-    threshold: number
+    threshold: number,
   ): Promise<ExplorerPoolInfo | null> {
     let pool = null
     for (const suggestedId of poolIds) {
@@ -336,7 +335,7 @@ export class PoolInfoApi {
     try {
       const response = await axios.get<TransitionData>(
         '/v2.1/pools/poolTransitionInfo',
-        {baseURL: this.apiUrl}
+        {baseURL: this.apiUrl},
       )
       if (response.status === 200) {
         return response.data
@@ -353,7 +352,7 @@ export class PoolInfoApi {
    */
   public async getTransition(
     hash: string,
-    wasmFactory: WasmFactory
+    wasmFactory: WasmFactory,
   ): Promise<PoolTransition | null> {
     const transitionData = await this.getPoolTransitionInfo()
     if (transitionData == null) return null
@@ -368,7 +367,7 @@ export class PoolInfoApi {
       DEFAULT_SATURATION_THRESHOLD
     if (saturationThreshold < 0 || saturationThreshold > 1) {
       console.warn(
-        `Incorrect saturation threshold value "${saturationThreshold}", expected between 0 and 1. Using default "${DEFAULT_SATURATION_THRESHOLD}"`
+        `Incorrect saturation threshold value "${saturationThreshold}", expected between 0 and 1. Using default "${DEFAULT_SATURATION_THRESHOLD}"`,
       )
       saturationThreshold = DEFAULT_SATURATION_THRESHOLD
     }
@@ -387,4 +386,3 @@ export class PoolInfoApi {
     }
   }
 }
-

@@ -1,8 +1,7 @@
 import {Balance} from '@yoroi/types'
 
 import AssetFingerprint from '@emurgo/cip14-js'
-// TODO: REVISIT check why is not exported from yoroi-lib
-import {AssetNameUtils} from '@emurgo/yoroi-lib/dist/internals/utils/assets'
+import {AssetNameUtils} from '@yoroi/tx'
 
 import {LegacyToken} from '~/wallets/types/tokens'
 

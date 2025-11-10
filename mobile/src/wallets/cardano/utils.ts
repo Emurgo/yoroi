@@ -2,8 +2,7 @@ import {invalid} from '@yoroi/common'
 import {Balance, Chain, Portfolio, Wallet} from '@yoroi/types'
 
 import {WasmModuleProxy} from '@emurgo/cross-csl-core'
-import {SendToken} from '@emurgo/yoroi-lib'
-import {normalizeToAddress} from '@emurgo/yoroi-lib/dist/internals/utils/addresses'
+import {SendToken, normalizeToAddress} from '@yoroi/tx'
 import {BigNumber} from 'bignumber.js'
 import {Buffer} from 'buffer'
 

@@ -11,19 +11,33 @@
 - ✅ Updated build script to include `tx` package
 
 **1.2 Migrate Core Transaction Building** ⚠️ PARTIAL
-- ⚠️ **NOT DONE**: Old transaction building methods (`createUnsignedTx`, etc.) - These are kept for backward compatibility but will be replaced in Phase 2
-- ⚠️ **NOT DONE**: Ledger integration functions - Need to be migrated from yoroi-lib
-- ⚠️ **NOT DONE**: Cardano-specific utilities (normalizeToAddress, parseTokenList, etc.) - Need to be migrated
+- ⚠️ **LEGACY/DEPRECATED**: Old transaction building methods (`createUnsignedTx`, etc.) - **See LEGACY_AND_BACKWARD_COMPATIBILITY.md** - These are kept for backward compatibility but will be replaced in Phase 2
+- ✅ **DONE**: Ledger integration functions - Migrated to `@yoroi/tx/ledger/`
+  - ✅ `buildLedgerPayload()` - Standard transaction payload
+  - ✅ `buildVotingLedgerPayloadV5()` - Legacy voting payload
+  - ✅ `buildLedgerSignedTx()` - Build signed tx from Ledger response
+  - ✅ `createSignedLedgerTxFromCbor()` - Sign from CBOR
+  - ✅ `signRawTransaction()` - Sign raw CBOR with private keys
+  - ✅ Transformation utilities (inputs, outputs, certificates, withdrawals)
+- ✅ **DONE**: Cardano-specific utilities - Migrated to `@yoroi/tx/utils/`
+  - ✅ `normalizeToAddress()` - Address normalization
+  - ✅ `parseTokenList()` - Token list parsing
+  - ✅ `calculateTxId()` - Transaction ID calculation
+  - ✅ `hashTransaction()` - Transaction hashing
+  - ✅ `getBalanceForStakingCredentials()` - Staking balance calculation
+  - ✅ `AssetNameUtils` - Asset name utilities
+  - ✅ Asset conversion utilities (cardanoValueFromMultiToken, etc.)
 
 **1.3 Migrate UtxoService** ✅
 - ✅ Moved `UtxoService` class to `@yoroi/tx/utxo/`
 - ✅ Moved `UtxoStorage` interface
 - ✅ Moved `initUtxo()` factory function
-- ✅ Migrated UTXO models (legacy types maintained)
+- ✅ Migrated UTXO models (legacy types maintained for backward compatibility - **See LEGACY_AND_BACKWARD_COMPATIBILITY.md**)
 
-**1.4 Move PoolInfoApi to Staking Package** ❌ NOT DONE
-- ❌ PoolInfoApi still needs to be moved to `@yoroi/staking/pools/`
-- ❌ Pool-related types need to be moved
+**1.4 Move PoolInfoApi to Staking Package** ✅
+- ✅ PoolInfoApi moved to `@yoroi/staking/pools/`
+- ✅ Pool-related types moved
+- ✅ Updated staking package exports
 
 **1.5 Organize Utils & Types** ✅
 - ✅ Moved generic utilities to `@yoroi/common`:
@@ -127,10 +141,17 @@
 ## Next Steps
 
 ### Immediate (Phase 1 Completion)
-1. **Migrate Ledger integration** from yoroi-lib to `@yoroi/tx`
-2. **Migrate Cardano utilities** (normalizeToAddress, parseTokenList, etc.)
-3. **Move PoolInfoApi** to `@yoroi/staking/pools/`
-4. **Update imports** from `@emurgo/yoroi-lib` to `@yoroi/tx` throughout mobile app
+1. ✅ **Migrate Ledger integration** from yoroi-lib to `@yoroi/tx` (completed)
+2. ✅ **Migrate Cardano utilities** (normalizeToAddress, parseTokenList, etc.) (completed)
+3. ✅ **Move PoolInfoApi** to `@yoroi/staking/pools/` (completed)
+4. ✅ **Update imports** from `@emurgo/yoroi-lib` to `@yoroi/tx` throughout mobile app (mostly completed)
+   - ✅ Updated all utility function imports (normalizeToAddress, parseTokenList, etc.)
+   - ✅ Updated all type imports (Datum, CardanoAddressedUtxo, SendToken, etc.)
+   - ✅ Updated all Ledger function imports (createSignedLedgerTxFromCbor, signRawTransaction)
+   - ✅ Updated all PoolInfoApi imports to `@yoroi/staking`
+   - ✅ Updated all error imports (NotEnoughMoneyToSendError, NoOutputsError)
+   - ⚠️ **TODO**: `createLedgerPlutusPayload`, `getAllSigners` - **See LEGACY_AND_BACKWARD_COMPATIBILITY.md** - Need migration from yoroi-lib
+   - ⚠️ **LEGACY**: `createYoroiLib` - **See LEGACY_AND_BACKWARD_COMPATIBILITY.md** - Legacy wrapper, kept for backward compatibility
 5. **Remove unused features** from yoroi-lib (or mark as deprecated)
 
 ### Short-term (Phase 2 Completion)

@@ -11,7 +11,7 @@ import {
   TokenEntry as TokenEntryType,
   TxMetadata as TxMetadataType,
   UnsignedTx as UnsignedTxType,
-} from '@emurgo/yoroi-lib'
+} from '@yoroi/tx'
 
 import {WalletEncryptedStorage} from '~/kernel/storage/EncryptedStorage'
 
@@ -299,8 +299,4 @@ export namespace CardanoTypes {
   export type TokenEntry = TokenEntryType
 }
 
-export {RegistrationStatus} from '@emurgo/yoroi-lib'
-export {
-  NoOutputsError,
-  NotEnoughMoneyToSendError,
-} from '@emurgo/yoroi-lib/dist/errors'
+export {RegistrationStatus, NoOutputsError, NotEnoughMoneyToSendError} from '@yoroi/tx'

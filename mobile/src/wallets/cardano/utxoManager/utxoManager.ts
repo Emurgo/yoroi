@@ -1,12 +1,21 @@
 import {isString, parseSafe} from '@yoroi/common'
 import {App} from '@yoroi/types'
 
-import {UtxoModels, UtxoStorage, initUtxo} from '@emurgo/yoroi-lib'
 import {
+  UtxoService,
+  UtxoStorage,
+  init as initUtxo,
   Utxo,
   UtxoAtSafePoint,
   UtxoDiffToBestBlock,
-} from '@emurgo/yoroi-lib/dist/utxo/models'
+} from '@yoroi/tx'
+
+// Legacy UtxoModels namespace for backward compatibility
+const UtxoModels = {
+  Utxo,
+  UtxoAtSafePoint,
+  UtxoDiffToBestBlock,
+} as const
 import {parseInt} from 'lodash'
 
 import {RawUtxo} from '~/wallets/types/other'

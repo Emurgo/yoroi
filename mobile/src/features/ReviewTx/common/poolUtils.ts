@@ -1,4 +1,4 @@
-import {FullPoolInfo} from '@emurgo/yoroi-lib'
+import {FullPoolInfo} from '@yoroi/staking'
 
 /**
  * Pool utility functions

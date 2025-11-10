@@ -1,6 +1,6 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 
-import {PoolInfoApi} from '@emurgo/yoroi-lib'
+import {PoolInfoApi} from '@yoroi/staking'
 import {UseQueryOptions, useQuery} from '@tanstack/react-query'
 import * as React from 'react'
 import {ActivityIndicator, Linking, View} from 'react-native'

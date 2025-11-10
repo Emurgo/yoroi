@@ -1,4 +1,4 @@
-import {FullPoolInfo, PoolInfoApi} from '@emurgo/yoroi-lib'
+import {FullPoolInfo, PoolInfoApi} from '@yoroi/staking'
 import {useQuery} from '@tanstack/react-query'
 import * as React from 'react'
 

@@ -1,10 +1,6 @@
 import {Balance, Network} from '@yoroi/types'
 
-import {
-  Change,
-  Datum,
-  MultiTokenValue,
-} from '@emurgo/yoroi-lib/dist/internals/models'
+import {Change, Datum, MultiTokenValue} from '@yoroi/tx'
 
 import {
   YoroiEntry,
