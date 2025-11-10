@@ -1,4 +1,12 @@
-import {MultiToken} from './multi-token'
+import {Balance} from '@yoroi/types'
+
+// Legacy types for backward compatibility
+// These are WASM types from CSL that were previously exported from yoroi-lib
+import type {
+  AuxiliaryData,
+  Transaction as CSLTransaction,
+  TransactionBody,
+} from '@emurgo/cross-csl-core'
 
 interface Bip44DerivationLevel {
   level: number
@@ -13,28 +21,28 @@ export type StakingKeyBalances = {[key: string]: string}
 export enum RegistrationStatus {
   DelegateOnly,
   RegisterAndDelegate,
-  Deregister
+  Deregister,
 }
 
 export const Bip44DerivationLevels = {
   ROOT: {
-    level: 0
+    level: 0,
   } as Bip44DerivationLevel,
   PURPOSE: {
-    level: 1
+    level: 1,
   } as Bip44DerivationLevel,
   COIN_TYPE: {
-    level: 2
+    level: 2,
   } as Bip44DerivationLevel,
   ACCOUNT: {
-    level: 3
+    level: 3,
   } as Bip44DerivationLevel,
   CHAIN: {
-    level: 4
+    level: 4,
   } as Bip44DerivationLevel,
   ADDRESS: {
-    level: 5
-  } as Bip44DerivationLevel
+    level: 5,
+  } as Bip44DerivationLevel,
 }
 
 export type AccountStatePart = {
@@ -58,7 +66,7 @@ export type CardanoAddressedUtxo = RemoteUnspentOutput & {
 }
 
 export type Change = AddressingAddress & {
-  values: MultiToken
+  amounts: Balance.Amounts
 }
 
 export type AddressingAddress = {
@@ -75,7 +83,7 @@ export type Addressing = {
 
 export type TxOutput = {
   address: string
-  amount: MultiToken
+  amounts: Balance.Amounts
   datum?: Datum
 }
 
@@ -117,10 +125,8 @@ export type TokenEntry = {
   identifier: string
 }
 
-export type MultiTokenValue = {
-  values: Array<TokenEntry>
-  defaults: Token
-}
+// @deprecated Use Balance.Amounts instead
+export type MultiTokenValue = Balance.Amounts
 
 export type TxOptions = {
   metadata?: ReadonlyArray<TxMetadata>
@@ -139,14 +145,6 @@ export type CardanoHaskellConfig = {
   poolDeposit: string
   networkId: number
 }
-
-// Legacy types for backward compatibility
-// These are WASM types from CSL that were previously exported from yoroi-lib
-import type {
-  Transaction as CSLTransaction,
-  TransactionBody,
-  AuxiliaryData,
-} from '@emurgo/cross-csl-core'
 
 // Legacy UnsignedTx type that matches the runtime structure from yoroi-lib
 // The actual runtime object from yoroi-lib has txBody and auxiliaryData as properties
@@ -171,19 +169,15 @@ export type LinearFee = {
 export enum MetadataJsonSchema {
   NoConversions = 0,
   BasicConversions = 1,
-  DetailedSchema = 2
+  DetailedSchema = 2,
 }
 
 export enum CatalystLabels {
   DATA = 61284,
-  SIG = 61285
+  SIG = 61285,
 }
 
 export enum CoinType {
   CARDANO = 2147485463, // HARD_DERIVATION_START + 1815;
-  ERGO = 2147484077 // HARD_DERIVATION_START + 429;
+  ERGO = 2147484077, // HARD_DERIVATION_START + 429;
 }
-
-// Re-export MultiToken
-export * from './multi-token'
-

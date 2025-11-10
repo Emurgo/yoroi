@@ -8,7 +8,6 @@ import {Buffer} from 'buffer'
 
 import {BaseAsset, RawUtxo} from '../types/other'
 import {Amounts} from '../utils/utils'
-import {MultiToken} from './MultiToken'
 import {identifierToCardanoAsset} from './assetHelpers'
 import {withMinAmounts} from './getMinAmounts'
 import {CardanoTypes, YoroiWallet} from './types'
@@ -86,25 +85,20 @@ type RemoteValue = {
   readonly assets?: ReadonlyArray<BaseAsset>
 }
 
-export const multiTokenFromRemote = (remoteValue: RemoteValue) => {
-  const result = new MultiToken([], {
-    defaultIdentifier: '.',
-  })
-  result.add({
-    identifier: '.',
-    amount: new BigNumber(remoteValue.amount),
-  })
+export const amountsFromRemote = (remoteValue: RemoteValue): Balance.Amounts => {
+  const amounts: Balance.Amounts = {} as Balance.Amounts
 
+  // Add primary token (ADA)
+  amounts['.'] = remoteValue.amount
+
+  // Add other assets
   if (remoteValue.assets != null) {
     for (const token of remoteValue.assets) {
-      result.add({
-        identifier: token.assetId,
-        amount: new BigNumber(token.amount),
-      })
+      amounts[token.assetId] = token.amount
     }
   }
 
-  return result
+  return amounts
 }
 
 export const isByron = (implementation: Wallet.Implementation) =>

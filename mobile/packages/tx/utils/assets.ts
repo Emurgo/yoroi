@@ -2,68 +2,92 @@
 // Functions for working with Cardano assets and tokens
 import {AssetName, MultiAsset, ScriptHash, Value} from '@emurgo/cross-csl-core'
 import {BigNumber} from 'bignumber.js'
+import {Balance} from '@yoroi/types'
 
 import {CardanoMobileWrapped} from '../../../src/wallets/cardano/wrappedCsl'
 import {RemoteUnspentOutput, SendToken, Token} from '../types'
-import {MultiToken} from '../types/multi-token'
 
 /**
- * Convert MultiToken to Cardano Value
+ * Convert Balance.Amounts to Cardano Value
  */
-export async function cardanoValueFromMultiToken(
-  tokens: MultiToken,
+export async function cardanoValueFromAmounts(
+  amounts: Balance.Amounts,
+  primaryTokenId: string,
 ): Promise<Value> {
   return CardanoMobileWrapped.cslScope((csl) => {
-    const value = csl.Value.new(
-      csl.BigNum.fromStr(tokens.getDefaultEntry().amount.toString()),
+    const adaAmount = amounts[primaryTokenId] || '0'
+    const value = csl.Value.new(csl.BigNum.fromStr(adaAmount))
+
+    // Get all asset IDs except primary token
+    const assetIds = Object.keys(amounts).filter((id) => id !== primaryTokenId)
+
+    if (assetIds.length === 0) return value
+
+    const multiAsset = csl.MultiAsset.new()
+
+    // Group assets by policy ID
+    const groupedByPolicyId = assetIds.reduce(
+      (acc, assetId) => {
+        const policyId = assetId.substring(0, 56) // Policy ID is first 56 hex chars
+        acc[policyId] = acc[policyId] ?? []
+        acc[policyId]!.push(assetId)
+        return acc
+      },
+      {} as Record<string, Array<string>>,
     )
-    // recall: primary asset counts towards size
-    if (tokens.size() === 1) return value
 
-    const assets = csl.MultiAsset.new()
-    for (const entry of tokens.nonDefaultEntries()) {
-      const {policyId, name} = identifierToCardanoAsset(csl, entry.identifier)
+    // Create MultiAsset structure
+    for (const policyIdStr of Object.keys(groupedByPolicyId)) {
+      const assetGroup = groupedByPolicyId[policyIdStr]
+      if (!assetGroup) continue
 
-      const asset = assets.get(policyId)
+      const policyId = csl.ScriptHash.fromBytes(
+        new Uint8Array(Buffer.from(policyIdStr, 'hex')),
+      )
+      const assets = csl.Assets.new()
 
-      const policyContent = asset ?? csl.Assets.new()
+      for (const assetId of assetGroup) {
+        const assetNameHex = assetId.substring(56) // Asset name is after policy ID
+        const name = csl.AssetName.new(
+          new Uint8Array(Buffer.from(assetNameHex, 'hex')),
+        )
+        const amount = csl.BigNum.fromStr(amounts[assetId] ?? '0')
+        assets.insert(name, amount)
+      }
 
-      policyContent.insert(name, csl.BigNum.fromStr(entry.amount.toString()))
-      // recall: we always have to insert since WASM returns copies of objects
-      assets.insert(policyId, policyContent)
+      multiAsset.insert(policyId, assets)
     }
-    if (assets.len() > 0) {
-      value.setMultiasset(assets)
+
+    if (multiAsset.len() > 0) {
+      value.setMultiasset(multiAsset)
     }
     return value
   })
 }
 
 /**
- * Convert Cardano Value to MultiToken
+ * Convert Cardano Value to Balance.Amounts
  */
-export async function multiTokenFromCardanoValue(
+export async function amountsFromCardanoValue(
   value: Value,
-  defaults: Token,
-): Promise<MultiToken> {
+  primaryTokenId: string,
+): Promise<Balance.Amounts> {
   return CardanoMobileWrapped.cslScope((csl) => {
-    const multiToken = new MultiToken([], defaults)
-    const coin = value.coin()
-    multiToken.add({
-      amount: new BigNumber(coin.toStr()),
-      identifier: defaults.identifier,
-    })
+    const amounts: Balance.Amounts = {} as Balance.Amounts
 
+    // Add primary token (ADA)
+    const coin = value.coin()
+    amounts[primaryTokenId] = coin.toStr()
+
+    // Add other assets
     const ma = value.multiasset()
     if (ma) {
       for (const token of parseTokenList(csl, ma)) {
-        multiToken.add({
-          amount: new BigNumber(token.amount),
-          identifier: token.assetId,
-        })
+        amounts[token.assetId] = token.amount
       }
     }
-    return multiToken
+
+    return amounts
   })
 }
 
@@ -101,61 +125,57 @@ export function identifierToCardanoAsset(
  * Build send token list from tokens and UTXOs
  */
 export function buildSendTokenList(
-  defaultToken: Token,
+  primaryTokenId: string,
   tokens: SendToken[],
-  utxos: Array<MultiToken>,
-): MultiToken {
-  const amount = new MultiToken([], defaultToken)
+  utxos: Array<Balance.Amounts>,
+): Balance.Amounts {
+  const amounts: Balance.Amounts = {} as Balance.Amounts
 
   for (const token of tokens) {
     if (token.amount != null) {
       // if we add a specific amount of a specific token to the output, just add it
-      amount.add({
-        amount: new BigNumber(token.amount),
-        identifier: token.token.identifier,
-      })
+      const tokenId = token.token.identifier
+      const currentAmount = amounts[tokenId] || '0'
+      const newAmount = new BigNumber(currentAmount)
+        .plus(token.amount)
+        .toString()
+      amounts[tokenId] = newAmount
     } else if (token.shouldSendAll) {
       // if we want to send all of a specific token, sum it from all utxos
+      const tokenId = token.token.identifier
       const total = utxos.reduce((sum, utxo) => {
-        const tokenAmount = utxo.get(token.token.identifier)
+        const tokenAmount = utxo[tokenId]
         if (tokenAmount != null) {
           return sum.plus(tokenAmount)
         }
         return sum
       }, new BigNumber(0))
 
-      amount.add({
-        amount: total,
-        identifier: token.token.identifier,
-      })
+      amounts[tokenId] = total.toString()
     }
   }
 
-  return amount
+  return amounts
 }
 
 /**
- * Convert remote UTXO format to MultiToken
+ * Convert remote UTXO format to Balance.Amounts
  */
-export function multiTokenFromRemote(
+export function amountsFromRemote(
   utxo: RemoteUnspentOutput,
-  defaultToken: Token,
-): MultiToken {
-  const multiToken = new MultiToken([], defaultToken)
+  primaryTokenId: string,
+): Balance.Amounts {
+  const amounts: Balance.Amounts = {} as Balance.Amounts
 
-  multiToken.add({
-    amount: new BigNumber(utxo.amount),
-    identifier: defaultToken.identifier,
-  })
+  // Add primary token (ADA)
+  amounts[primaryTokenId] = utxo.amount
 
+  // Add other assets
   for (const asset of utxo.assets) {
-    multiToken.add({
-      amount: new BigNumber(asset.amount),
-      identifier: asset.assetId,
-    })
+    amounts[asset.assetId] = asset.amount
   }
 
-  return multiToken
+  return amounts
 }
 
 /**

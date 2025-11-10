@@ -53,7 +53,7 @@ export {
   getRequiredSignersFromTransaction,
 } from './transaction-builder/multiparty'
 
-export {UtxoService, init as initUtxo} from './utxo'
+export {createUtxoService, init as initUtxo} from './utxo'
 
 // Export types
 export type {ModernUtxo, Utxo, UtxoAtSafePoint, UtxoDiffToBestBlock} from './utxo/models'
@@ -77,8 +77,10 @@ export {
   derivePublicByAddressing,
 } from './utils/addresses'
 export {
-  cardanoValueFromMultiToken,
-  multiTokenFromCardanoValue,
+  cardanoValueFromAmounts,
+  amountsFromCardanoValue,
+  buildSendTokenList,
+  amountsFromRemote,
   parseTokenList,
   AssetNameUtils,
 } from './utils/assets'

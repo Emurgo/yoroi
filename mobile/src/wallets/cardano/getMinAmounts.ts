@@ -5,8 +5,7 @@ import BigNumber from 'bignumber.js'
 
 import {Address} from '../types/yoroi'
 import {Amounts, Quantities, asQuantity} from '../utils/utils'
-import {MultiToken} from './MultiToken'
-import {cardanoValueFromMultiToken} from './cardanoValueFromMultiToken'
+import {cardanoValueFromAmounts} from './cardanoValueFromAmounts'
 import {CardanoMobileWrapped} from './wrappedCsl'
 
 export const withMinAmounts = async (
@@ -44,18 +43,10 @@ export const getMinAmounts = async (
     throw new Error('getMinAmounts::Error not a valid address')
 
   return CardanoMobileWrapped.cslScope((csl) => {
-    const multiToken = new MultiToken(
-      [
-        {identifier: primaryTokenInfo.id, amount: new BigNumber('0')},
-        ...Amounts.toArray(amounts).map(({tokenId, quantity}) => ({
-          identifier: tokenId,
-          amount: new BigNumber(quantity),
-        })),
-      ],
-      {defaultIdentifier: primaryTokenInfo.id},
-    )
+    // Ensure primary token is included (with 0 if not present)
+    const amountsWithPrimary = withPrimaryToken(amounts, primaryTokenInfo)
 
-    const value = cardanoValueFromMultiToken(multiToken, csl)
+    const value = cardanoValueFromAmounts(amountsWithPrimary, primaryTokenInfo.id, csl)
     const coinsPerUtxoByte = csl.BigNum.fromStr(protocolParams.coinsPerUtxoByte)
 
     const txOutput = csl.TransactionOutput.new(normalizedAddress, value)

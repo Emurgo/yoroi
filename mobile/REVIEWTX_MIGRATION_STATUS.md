@@ -20,9 +20,11 @@ These flows still use `unsignedTxChanged()` + `ReviewTxProvider` context:
 **All wallet methods (`createUnsignedTx`, `createDelegationTx`, `createVotingRegTx`, etc.) are already using the new `@yoroi/tx` package's `buildTransaction`**, which returns `UnsignedTransaction` with a `cbor` property.
 
 However, they then:
-1. Convert the new `UnsignedTransaction` to legacy format using `adaptUnsignedTransaction`
-2. Wrap it in `YoroiUnsignedTx` 
-3. Return it to callers who use `unsignedTxChanged()` to put it in context
+1. ~~Convert the new `UnsignedTransaction` to legacy format using `adaptUnsignedTransaction`~~ ✅ REMOVED
+2. ~~Wrap it in `YoroiUnsignedTx`~~ ✅ REMOVED
+3. ~~Return it to callers who use `unsignedTxChanged()` to put it in context~~ ✅ REMOVED
+
+**Note**: All wallet methods now return `{cbor: string}` directly.
 
 ## Migration Path
 
@@ -49,11 +51,13 @@ To complete the migration:
 ```
 wallet.createUnsignedTx()
   → buildTransaction() [@yoroi/tx] → UnsignedTransaction { cbor: "..." }
-  → adaptUnsignedTransaction() → LegacyUnsignedTx
-  → yoroiUnsignedTx() → YoroiUnsignedTx { unsignedTx: LegacyUnsignedTx }
-  → unsignedTxChanged() → ReviewTxProvider context
-  → ReviewTxScreen reads from context
+  → Returns { cbor: string } directly ✅
 ```
+
+**Legacy flow has been removed:**
+- ~~adaptUnsignedTransaction() → LegacyUnsignedTx~~ ✅ REMOVED
+- ~~yoroiUnsignedTx() → YoroiUnsignedTx~~ ✅ REMOVED  
+- ~~unsignedTxChanged() → ReviewTxProvider context~~ ✅ REMOVED
 
 ## Target Code Flow
 
