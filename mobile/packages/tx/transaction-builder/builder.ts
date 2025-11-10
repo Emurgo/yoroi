@@ -428,8 +428,16 @@ function outputToCSL(
 
   // Add datum if present
   if (output.datum) {
-    // TODO: Handle datum properly (inline datum vs datum hash)
-    // For now, we'll skip datum handling as it requires more complex logic
+    if ('data' in output.datum) {
+      // Inline datum: create PlutusData from hex, hash it, and set the hash
+      const plutusData = csl.PlutusData.fromHex(output.datum.data)
+      const datumHash = csl.hashPlutusData(plutusData)
+      cslOutput.setDataHash(datumHash)
+    } else if ('hash' in output.datum) {
+      // Datum hash: set the hash directly
+      const datumHash = csl.DataHash.fromHex(output.datum.hash)
+      cslOutput.setDataHash(datumHash)
+    }
   }
 
   return cslOutput

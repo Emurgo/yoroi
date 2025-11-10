@@ -4,7 +4,13 @@ import {
   SignTransactionRequest,
   TransactionSigningMode,
   TxAuxiliaryData,
+  TxAuxiliaryDataType,
+  CIP36VoteRegistrationFormat,
+  CIP36VoteDelegationType,
+  TxOutputDestinationType,
+  LedgerAddressType,
 } from '@cardano-foundation/ledgerjs-hw-app-cardano'
+import {blake2b as blake2bHash} from '@noble/hashes/blake2b'
 
 import {CardanoMobileWrapped} from '../../../src/wallets/cardano/wrappedCsl'
 import {
@@ -26,20 +32,61 @@ type CatalystRegistrationData = {
 
 // Helper to build CIP-15 payload (legacy voting)
 function buildLedgerCIP15Payload(
-  _catalystRegistrationData: CatalystRegistrationData,
+  catalystRegistrationData: CatalystRegistrationData,
+  stakingDerivationPath: number[],
 ): TxAuxiliaryData {
-  // TODO: Implement CIP-15 payload building
-  // This is used for older Ledger app versions
-  throw new Error('CIP-15 payload building not yet implemented')
+  const {votingPublicKeyHex, paymentAddress} = catalystRegistrationData
+  return {
+    type: TxAuxiliaryDataType.CIP36_REGISTRATION,
+    params: {
+      format: CIP36VoteRegistrationFormat.CIP_15,
+      voteKeyHex: votingPublicKeyHex.replace(/^0x/, ''),
+      stakingPath: stakingDerivationPath,
+      paymentDestination: {
+        type: TxOutputDestinationType.THIRD_PARTY,
+        params: {
+          addressHex: CardanoMobileWrapped.cslScope((csl) => {
+            const addr = csl.Address.fromBech32(paymentAddress)
+            return Buffer.from(addr.toBytes()).toString('hex')
+          }),
+        },
+      },
+      nonce: catalystRegistrationData.nonce,
+    },
+  }
 }
 
 // Helper to build CIP-36 payload (modern voting)
 function buildLedgerCIP36Payload(
-  _catalystRegistrationData: CatalystRegistrationData,
+  catalystRegistrationData: CatalystRegistrationData,
+  stakingDerivationPath: number[],
 ): TxAuxiliaryData {
-  // TODO: Implement CIP-36 payload building
-  // This is used for newer Ledger app versions
-  throw new Error('CIP-36 payload building not yet implemented')
+  const {votingPublicKeyHex, paymentAddress, nonce} = catalystRegistrationData
+  return {
+    type: TxAuxiliaryDataType.CIP36_REGISTRATION,
+    params: {
+      format: CIP36VoteRegistrationFormat.CIP_36,
+      delegations: [
+        {
+          type: CIP36VoteDelegationType.KEY,
+          voteKeyHex: votingPublicKeyHex.replace(/^0x/, ''),
+          weight: 1,
+        },
+      ],
+      stakingPath: stakingDerivationPath,
+      paymentDestination: {
+        type: TxOutputDestinationType.THIRD_PARTY,
+        params: {
+          addressHex: CardanoMobileWrapped.cslScope((csl) => {
+            const addr = csl.Address.fromBech32(paymentAddress)
+            return Buffer.from(addr.toBytes()).toString('hex')
+          }),
+        },
+      },
+      nonce,
+      votingPurpose: 0,
+    },
+  }
 }
 
 /**
@@ -105,8 +152,14 @@ export async function buildVotingLedgerPayloadV5(
     let auxiliaryData: TxAuxiliaryData | null = null
 
     if (unsignedTx.catalystRegistrationData) {
+      if (!stakingDerivationPath) {
+        throw new Error(
+          'stakingDerivationPath is required for catalyst registration',
+        )
+      }
       auxiliaryData = buildLedgerCIP15Payload(
         unsignedTx.catalystRegistrationData,
+        stakingDerivationPath,
       )
     }
 
@@ -202,20 +255,30 @@ export async function buildLedgerPayload(
     let auxiliaryData: TxAuxiliaryData | null = null
 
     if (unsignedTx.catalystRegistrationData) {
+      if (!stakingDerivationPath) {
+        throw new Error(
+          'stakingDerivationPath is required for catalyst registration',
+        )
+      }
       auxiliaryData = buildLedgerCIP36Payload(
         unsignedTx.catalystRegistrationData,
+        stakingDerivationPath,
       )
     } else if (
       unsignedTx.auxiliaryData &&
       unsignedTx.auxiliaryData.hasValue()
     ) {
-      // TODO: Implement blake2b hash for auxiliary data
-      // const auxiliaryDataHash = blake2b(
-      //   unsignedTx.auxiliaryData.toBytes(),
-      //   256
-      // )
-      // For now, we'll need to implement this when we have the blake2b utility
-      throw new Error('Auxiliary data hash calculation not yet implemented')
+      // Calculate blake2b hash for auxiliary data (256 bits = 32 bytes)
+      const auxiliaryDataBytes = unsignedTx.auxiliaryData.toBytes()
+      const auxiliaryDataHash = Buffer.from(
+        blake2bHash(auxiliaryDataBytes, {dkLen: 32}),
+      ).toString('hex')
+      auxiliaryData = {
+        type: TxAuxiliaryDataType.ARBITRARY_HASH,
+        params: {
+          hashHex: auxiliaryDataHash,
+        },
+      }
     }
 
     return {

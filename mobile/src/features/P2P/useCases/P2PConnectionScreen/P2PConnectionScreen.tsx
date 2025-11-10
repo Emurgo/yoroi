@@ -117,7 +117,10 @@ export const P2PConnectionScreen = () => {
       storage: storageAdapter,
       webrtcAdapter,
       peerConfig: {
-        signalingUrl: signalingUrl || 'wss://signaling-server.example.com', // TODO: Get from config
+        signalingUrl:
+          signalingUrl ||
+          process.env.EXPO_PUBLIC_P2P_SIGNALING_URL ||
+          'wss://signaling-server.example.com',
         targetPeerId,
       },
       isWallet: true,

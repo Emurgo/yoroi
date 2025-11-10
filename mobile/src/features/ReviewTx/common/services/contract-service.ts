@@ -4,6 +4,10 @@
  * Queries a service to get information about smart contract addresses
  */
 
+import {CredKind} from '@emurgo/cross-csl-core'
+
+import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
+
 export type SmartContractInfo = {
   address: string
   name?: string
@@ -30,9 +34,10 @@ export class ContractService {
    */
   async getContractInfo(address: string): Promise<SmartContractInfo | null> {
     try {
-      // TODO: Implement actual API call to contract service
-      // This would query a service that maintains a registry of smart contracts
-      // For now, return null (contract not found or not a contract address)
+      // Only query API if this is a contract address
+      if (!ContractService.isContractAddress(address)) {
+        return null
+      }
 
       const response = await fetch(
         `${this.config.apiUrl}/contracts/${address}`,
@@ -87,10 +92,22 @@ export class ContractService {
    * Check if an address is a smart contract address
    * This can be done locally by checking the address type
    */
-  static isContractAddress(_address: string): boolean {
-    // Smart contract addresses in Cardano typically start with specific prefixes
-    // or have specific address types (CredKind.Script)
-    // This is a simplified check - actual implementation would use WASM to decode
-    return false // TODO: Implement proper check
+  static isContractAddress(address: string): boolean {
+    return CardanoMobileWrapped.cslScope((csl) => {
+      try {
+        const cslAddress = csl.Address.fromBech32(address)
+        const paymentCred = cslAddress.paymentCred()
+        if (!paymentCred) {
+          return false
+        }
+        const credKind = paymentCred.kind()
+        // Script addresses have CredKind.Script (value 1)
+        // Key addresses have CredKind.Key (value 0)
+        return credKind === CredKind.Script
+      } catch {
+        // If address parsing fails, it's not a valid address, so not a contract
+        return false
+      }
+    })
   }
 }

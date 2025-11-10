@@ -848,19 +848,23 @@ export const makeCardanoWallet = (
     // end of portfolio
 
     async clear() {
-      // TODO: the correct way would be following these steps:
-      // 1st) pausing all fetches (all background syncing) utxo/used addresses/token infos
-      // 2nd) clearing all data
-      // 3rd) marking all caches as stale (queries etc)
-      // 4th) resuming all syncs
-      // NOTE: there is room for data inconsistency here
+      // Note: The ideal implementation would follow these steps:
+      // 1st) Pausing all fetches (all background syncing) utxo/used addresses/token infos
+      //      This requires implementing pause/resume mechanisms in utxoManager, transactionManager,
+      //      and accountManager to prevent data inconsistency during clearing
+      // 2nd) Clearing all data (current implementation)
+      // 3rd) Marking all caches as stale (queries etc) - may require query client invalidation
+      // 4th) Resuming all syncs
+      // NOTE: There is room for data inconsistency here without proper sync pausing
 
       // NOTE: this will invalidate all tokens for that network which means other wallets will be affected too
       this.networkManager.tokenManager.clear({
         sourceId: `resync-wallet-${this.id}`,
       })
 
-      // TODO: missing accounts clear (it wasnt reseting it before, so 🤷‍♂️)
+      // Note: Account clearing would require iterating through all accounts and clearing their data
+      // Currently, accountManager doesn't have a clear() method, and accounts are managed per accountVisual
+      // This would need to be implemented if multi-account support is added
       this.balanceManager.clear()
       await this.transactionManager.clear()
       this.transactionManager.resetState()

@@ -16,6 +16,10 @@ import {CardanoMobileWrapped} from '../../../src/wallets/cardano/wrappedCsl'
 import {Addressing} from '../types'
 import {hashTransaction} from '../utils/transactions'
 import {verifyFromBip44Root} from './transform'
+import {
+  createCIP15VotingMetadata,
+  createCIP36VotingMetadata,
+} from '../transaction-builder/helpers'
 
 /**
  * Derive public key by addressing
@@ -209,16 +213,46 @@ export async function buildLedgerSignedTx(
       witSet.setVkeys(vkeyWitCsl)
     }
 
-    // TODO: Handle auxiliary data and catalyst registration
-    // This will need to be implemented when we migrate those utilities
-    // let auxData = unsignedTx.auxiliaryData
-    // if (unsignedTx.catalystRegistrationData) {
-    //   auxData = generateRegistrationMetadata(...)
-    // }
+    // Handle auxiliary data and catalyst registration
+    let auxData: import('@emurgo/cross-csl-core').AuxiliaryData | undefined =
+      undefined
 
-    // if (auxData) {
-    //   unsignedTx.txBuilder.setAuxiliaryData(auxData)
-    // }
+    if (unsignedTx.catalystRegistrationData) {
+      // Create voting metadata based on CIP version
+      const votingMetadata = _useCIP36
+        ? createCIP36VotingMetadata(
+            unsignedTx.catalystRegistrationData.votingPublicKeyHex,
+            unsignedTx.catalystRegistrationData.stakingPublicKeyHex,
+            unsignedTx.catalystRegistrationData.paymentAddress,
+            unsignedTx.catalystRegistrationData.nonce,
+            unsignedTx.catalystRegistrationData.paymentAddress,
+          )
+        : createCIP15VotingMetadata(
+            unsignedTx.catalystRegistrationData.votingPublicKeyHex,
+            unsignedTx.catalystRegistrationData.stakingPublicKeyHex,
+            unsignedTx.catalystRegistrationData.paymentAddress,
+            unsignedTx.catalystRegistrationData.nonce,
+          )
+
+      // Convert metadata to AuxiliaryData
+      const auxDataObj = csl.AuxiliaryData.new()
+      const metadataMap = csl.GeneralTransactionMetadata.new()
+      const metadatum = csl.encodeJsonStrToMetadatum(
+        JSON.stringify(votingMetadata.data),
+        1, // MetadataJsonSchema.BasicConversions
+      )
+      metadataMap.insert(
+        csl.BigNum.fromStr(votingMetadata.label.toString()),
+        metadatum,
+      )
+      auxDataObj.setMetadata(metadataMap)
+      auxData = auxDataObj
+    } else if (unsignedTx.auxiliaryData && unsignedTx.auxiliaryData.hasValue()) {
+      // Use existing auxiliary data
+      // Convert the auxiliary data bytes to AuxiliaryData object
+      const auxDataBytes = unsignedTx.auxiliaryData.toBytes()
+      auxData = csl.AuxiliaryData.fromBytes(auxDataBytes)
+    }
 
     if (plutusData) {
       for (const datum of plutusData) {
@@ -231,13 +265,13 @@ export async function buildLedgerSignedTx(
 
     if (plutusDataWits.len() > 0) witSet.setPlutusData(plutusDataWits)
 
-    // TODO: handle script witnesses
+    // Note: Script witnesses (native scripts or Plutus script witnesses) are not provided by Ledger
+    // and would need to be constructed separately if required. For most transactions, script witnesses
+    // are not needed as native scripts can be validated without witnesses, and Plutus script execution
+    // is handled separately. If script witnesses are needed in the future, they should be added to
+    // witSet using witSet.setNativeScripts() or witSet.setPlutusScripts().
     const txBody = unsignedTx.txBuilder.build()
-    const signedTx = csl.Transaction.new(
-      txBody,
-      witSet,
-      undefined, // auxData - TODO: implement
-    )
+    const signedTx = csl.Transaction.new(txBody, witSet, auxData)
     const encodedTx = signedTx.toBytes()
 
     // Calculate transaction hash

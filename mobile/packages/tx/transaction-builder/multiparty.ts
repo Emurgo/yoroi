@@ -5,6 +5,8 @@ import type {
   WasmModuleProxy,
 } from '@emurgo/cross-csl-core'
 
+import {CardanoMobileWrapped} from '../../../src/wallets/cardano/wrappedCsl'
+import {normalizeToAddress} from '../utils/addresses'
 import {UnsignedTransaction} from './types'
 
 // Witness can be either Vkeywitness or BootstrapWitness
@@ -115,35 +117,119 @@ export function getRequiredSigners(state: WitnessState): string[] {
  */
 export async function getRequiredSignersFromTransaction(
   unsignedTx: UnsignedTransaction,
-  _csl: WasmModuleProxy,
+  csl: WasmModuleProxy,
 ): Promise<string[]> {
-  // TODO: Implement extraction of required signers from transaction
-  // This will analyze:
-  // - Input addresses to get payment key hashes
-  // - Certificate signers (for stake key registration/delegation)
-  // - Withdrawal addresses to get reward key hashes
-  // - Any other required signers
-
   const signers: string[] = []
+  const seenHashes = new Set<string>()
 
-  // Extract from inputs
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  for (const _input of unsignedTx.inputs) {
-    // TODO: Extract key hash from input.utxo.receiver address
-    // const keyHash = await extractKeyHashFromAddress(input.utxo.receiver, wasm)
-    // signers.push(keyHash)
+  // Helper to add key hash if not already seen
+  const addKeyHash = (keyHash: string | null | undefined) => {
+    if (keyHash && !seenHashes.has(keyHash)) {
+      signers.push(keyHash)
+      seenHashes.add(keyHash)
+    }
   }
 
-  // Extract from certificates
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  for (const _cert of unsignedTx.certificates) {
-    // TODO: Extract required signers from certificate
+  // Extract from inputs - get payment key hash from each input address
+  for (const input of unsignedTx.inputs) {
+    const address = await normalizeToAddress(input.utxo.receiver)
+    if (!address) continue
+
+    // Try different address types to extract payment key hash
+    const baseAddr = csl.BaseAddress.fromAddress(address)
+    if (baseAddr) {
+      const paymentCred = baseAddr.paymentCred()
+      const keyHash = paymentCred.toKeyhash()
+      if (keyHash) {
+        addKeyHash(keyHash.toHex())
+      }
+      continue
+    }
+
+    const enterpriseAddr = csl.EnterpriseAddress.fromAddress(address)
+    if (enterpriseAddr) {
+      const paymentCred = enterpriseAddr.paymentCred()
+      const keyHash = paymentCred.toKeyhash()
+      if (keyHash) {
+        addKeyHash(keyHash.toHex())
+      }
+      continue
+    }
+
+    const pointerAddr = csl.PointerAddress.fromAddress(address)
+    if (pointerAddr) {
+      const paymentCred = pointerAddr.paymentCred()
+      const keyHash = paymentCred.toKeyhash()
+      if (keyHash) {
+        addKeyHash(keyHash.toHex())
+      }
+      continue
+    }
   }
 
-  // Extract from withdrawals
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  for (const _withdrawal of unsignedTx.withdrawals) {
-    // TODO: Extract key hash from withdrawal.rewardAddress
+  // Extract from certificates - get stake key hash from certificate
+  for (const certWrapper of unsignedTx.certificates) {
+    const cert = certWrapper.cert
+
+    // Check for stake registration
+    const stakeReg = cert.asStakeRegistration()
+    if (stakeReg && stakeReg.hasValue()) {
+      const stakeCred = stakeReg.stakeCredential()
+      const keyHash = stakeCred.toKeyhash()
+      if (keyHash) {
+        addKeyHash(keyHash.toHex())
+      }
+      continue
+    }
+
+    // Check for stake deregistration
+    const stakeDereg = cert.asStakeDeregistration()
+    if (stakeDereg && stakeDereg.hasValue()) {
+      const stakeCred = stakeDereg.stakeCredential()
+      const keyHash = stakeCred.toKeyhash()
+      if (keyHash) {
+        addKeyHash(keyHash.toHex())
+      }
+      continue
+    }
+
+    // Check for stake delegation
+    const stakeDeleg = cert.asStakeDelegation()
+    if (stakeDeleg && stakeDeleg.hasValue()) {
+      const stakeCred = stakeDeleg.stakeCredential()
+      const keyHash = stakeCred.toKeyhash()
+      if (keyHash) {
+        addKeyHash(keyHash.toHex())
+      }
+      continue
+    }
+
+    // Check for vote delegation (CIP-1694)
+    const voteDeleg = cert.asVoteDelegation()
+    if (voteDeleg) {
+      const stakeCred = voteDeleg.stakeCredential()
+      const keyHash = stakeCred.toKeyhash()
+      if (keyHash) {
+        addKeyHash(keyHash.toHex())
+      }
+      continue
+    }
+  }
+
+  // Extract from withdrawals - get stake key hash from reward address
+  for (const withdrawal of unsignedTx.withdrawals) {
+    const address = await normalizeToAddress(withdrawal.rewardAddress)
+    if (!address) continue
+
+    const rewardAddr = csl.RewardAddress.fromAddress(address)
+    if (rewardAddr) {
+      // For reward addresses, paymentCred contains the stake credential
+      const stakeCred = rewardAddr.paymentCred()
+      const keyHash = stakeCred.toKeyhash()
+      if (keyHash) {
+        addKeyHash(keyHash.toHex())
+      }
+    }
   }
 
   return signers

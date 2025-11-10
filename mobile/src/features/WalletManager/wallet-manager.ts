@@ -442,8 +442,12 @@ export class WalletManager {
 
         await this.#walletsRootStorage.removeItem(id) // remove wallet meta
         await encryptedStorage.xpriv.remove() // remove auth with password
-        // TODO: remove all accounts
-        await encryptedStorage.xpub.remove(0) // remove all accounts
+        // Note: Currently removes account 0. If multi-account support is added,
+        // this should iterate through all accounts and remove them:
+        // for (let accountIndex = 0; accountIndex < maxAccounts; accountIndex++) {
+        //   await encryptedStorage.xpub.remove(accountIndex)
+        // }
+        await encryptedStorage.xpub.remove(0) // remove account 0
 
         await this.#keychainManager?.removeWalletKey(id) // remove auth with os
       }),

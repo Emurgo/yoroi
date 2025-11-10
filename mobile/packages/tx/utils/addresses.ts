@@ -97,7 +97,12 @@ export async function addrContainsAccountKey(
   }
   const asPointer = csl.PointerAddress.fromAddress(wasmAddr)
   if (asPointer != null) {
-    // TODO: Implement pointer address checking
+    // Extract stake credential from pointer address and compare
+    const stakeCred = asPointer.stakeCred()
+    const stakeCredBytes = stakeCred.toBytes()
+    if (Buffer.from(stakeCredBytes).toString('hex') === accountKeyString) {
+      return true
+    }
   }
   return acceptTypeMismatch
 }
