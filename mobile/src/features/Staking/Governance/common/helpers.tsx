@@ -6,7 +6,9 @@ import {
   useStakingKeyState,
   useUpdateLatestGovernanceAction,
 } from '@yoroi/staking'
+import {calculateTxId} from '@yoroi/tx'
 
+import {Buffer} from 'buffer'
 import * as React from 'react'
 
 import {useStakingKey} from '~/features/Staking/hooks/useStakingKey'
@@ -112,17 +114,19 @@ export const useGovernanceActions = () => {
   }) => {
     navigateToTxReview({
       cbor: unsignedTx.cbor,
-      onSuccess: (args) => {
-        if (
-          !args?.signedTx?.signedTx ||
-          (args.signedTx.signedTx as any)?.id == null
-        )
+      onSuccess: async (args) => {
+        if (!args?.signedTx)
           throw new Error('useGovernanceActions:: invalid state')
+        const txBytes = args.signedTx.toBytes()
+        const txID = await calculateTxId(
+          Buffer.from(txBytes).toString('hex'),
+          'hex',
+        )
         updateLatestGovernanceAction({
           kind: 'delegate-to-drep',
           hash,
           type,
-          txID: (args.signedTx.signedTx as any).id,
+          txID,
         })
       },
       onNotSupportedCIP1694: navigateTo.notSupportedVersion,
@@ -144,16 +148,18 @@ export const useGovernanceActions = () => {
   const handleAbstainAction = ({unsignedTx}: {unsignedTx: {cbor: string}}) => {
     navigateToTxReview({
       cbor: unsignedTx.cbor,
-      onSuccess: (args) => {
-        if (
-          !args?.signedTx?.signedTx ||
-          (args.signedTx.signedTx as any)?.id == null
-        )
+      onSuccess: async (args) => {
+        if (!args?.signedTx)
           throw new Error('useGovernanceActions:: invalid state')
+        const txBytes = args.signedTx.toBytes()
+        const txID = await calculateTxId(
+          Buffer.from(txBytes).toString('hex'),
+          'hex',
+        )
         updateLatestGovernanceAction({
           kind: 'vote',
           vote: 'abstain',
-          txID: (args.signedTx.signedTx as any).id,
+          txID,
         })
       },
       onNotSupportedCIP1694: navigateTo.notSupportedVersion,
@@ -168,16 +174,18 @@ export const useGovernanceActions = () => {
   }) => {
     navigateToTxReview({
       cbor: unsignedTx.cbor,
-      onSuccess: (args) => {
-        if (
-          !args?.signedTx?.signedTx ||
-          (args.signedTx.signedTx as any)?.id == null
-        )
+      onSuccess: async (args) => {
+        if (!args?.signedTx)
           throw new Error('useGovernanceActions:: invalid state')
+        const txBytes = args.signedTx.toBytes()
+        const txID = await calculateTxId(
+          Buffer.from(txBytes).toString('hex'),
+          'hex',
+        )
         updateLatestGovernanceAction({
           kind: 'vote',
           vote: 'no-confidence',
-          txID: (args.signedTx.signedTx as any).id,
+          txID,
         })
       },
       onNotSupportedCIP1694: navigateTo.notSupportedVersion,

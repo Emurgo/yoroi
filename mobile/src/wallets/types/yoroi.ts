@@ -3,14 +3,18 @@ import {Balance, Portfolio} from '@yoroi/types'
 
 import {CardanoTypes} from '../cardano/types'
 
+// Legacy types - deprecated, use UnsignedTransaction and Transaction (CSL) instead
+// @deprecated Use UnsignedTransaction from @yoroi/tx instead
 export type YoroiUnsignedTx = YoroiTxInfo & {
   unsignedTx: CardanoTypes.UnsignedTx
 }
 
+// @deprecated Use Transaction (CSL) instead
 export type YoroiSignedTx = YoroiTxInfo & {
   signedTx: CardanoTypes.SignedTx
 }
 
+// Utility type for UI - can be derived from UnsignedTransaction when needed
 export type YoroiTxInfo = {
   entries: TransactionOutput[]
   fee: Balance.Amounts

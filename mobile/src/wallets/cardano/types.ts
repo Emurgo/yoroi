@@ -10,14 +10,16 @@ import {
   SignedTx as SignedTxType,
   StakingKeyBalances as StakingKeyBalancesType,
   TokenEntry as TokenEntryType,
+  TransactionOutput,
   TxMetadata as TxMetadataType,
+  UnsignedTransaction,
   UnsignedTx as UnsignedTxType,
 } from '@yoroi/tx'
-import {TransactionOutput} from '@yoroi/tx'
 import {Api, App, HW, Network, Portfolio, Wallet} from '@yoroi/types'
 
 import {WalletChecksum as WalletChecksumType} from '@emurgo/cip4-js'
 import * as CoreTypes from '@emurgo/cross-csl-core'
+import * as CSL from '@emurgo/cross-csl-core'
 
 import {WalletEncryptedStorage} from '~/kernel/storage/EncryptedStorage'
 
@@ -30,7 +32,6 @@ import {
   WalletState,
 } from '../types/other'
 import {StakingInfo, StakingStatus} from '../types/staking'
-import {YoroiSignedTx, YoroiUnsignedTx} from '../types/yoroi'
 import type {Addresses} from './account-manager/account-manager'
 
 export type WalletEvent =
@@ -112,15 +113,18 @@ export interface YoroiWallet {
     metadata?: Array<CardanoTypes.TxMetadata>
     addressMode: Wallet.AddressMode
   }): Promise<{cbor: string}>
-  signTx(signRequest: YoroiUnsignedTx, rootKey: string): Promise<YoroiSignedTx>
+  signTx(
+    signRequest: UnsignedTransaction,
+    rootKey: string,
+  ): Promise<CSL.Transaction>
   submitTransaction(signedTx: string): Promise<void>
 
   // Ledger
   signTxWithLedger(
-    request: YoroiUnsignedTx,
+    request: UnsignedTransaction,
     useUSB: boolean,
     hwDeviceInfo: HW.DeviceInfo,
-  ): Promise<YoroiSignedTx>
+  ): Promise<CSL.Transaction>
   ledgerSupportsCIP36(
     useUSB: boolean,
     hwDeviceInfo: HW.DeviceInfo,
@@ -300,7 +304,7 @@ export namespace CardanoTypes {
 }
 
 export {
-  RegistrationStatus,
   NoOutputsError,
   NotEnoughMoneyToSendError,
+  RegistrationStatus,
 } from '@yoroi/tx'

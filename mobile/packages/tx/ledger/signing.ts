@@ -8,6 +8,7 @@ import {
   Bip32PublicKey,
   BootstrapWitness,
   PrivateKey,
+  TransactionBody,
   Vkeywitness,
 } from '@emurgo/cross-csl-core'
 
@@ -54,11 +55,13 @@ export async function buildLedgerSignedTx(
   unsignedTx: {
     senderUtxos: Array<{
       receiver: string
+      txHash: string
+      txIndex: number
       addressing: Addressing
     }>
     txBuilder: {
-      build(): unknown
-      setAuxiliaryData(data: unknown): void
+      build(): TransactionBody
+      setAuxiliaryData(data: TransactionBody): void
     }
     auxiliaryData?: {
       hasValue(): boolean
@@ -231,7 +234,7 @@ export async function buildLedgerSignedTx(
     // TODO: handle script witnesses
     const txBody = unsignedTx.txBuilder.build()
     const signedTx = csl.Transaction.new(
-      txBody as any,
+      txBody,
       witSet,
       undefined, // auxData - TODO: implement
     )

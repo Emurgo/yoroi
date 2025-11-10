@@ -20,12 +20,14 @@ export async function adaptToLedgerUnsignedTx(
   changeAddresses: Array<AddressingAddress>,
 ): Promise<{
   senderUtxos: Array<{
+    receiver: string
     txHash: string
     txIndex: number
     addressing: Addressing
   }>
   txBuilder: {
     build(): TransactionBody
+    setAuxiliaryData(data: TransactionBody): void
   }
   txBody: {
     outputs(): TransactionOutputs
@@ -39,7 +41,12 @@ export async function adaptToLedgerUnsignedTx(
     hasValue(): boolean
     toBytes(): Uint8Array
   } | null
-  catalystRegistrationData?: unknown
+  catalystRegistrationData?: {
+    votingPublicKeyHex: string
+    stakingPublicKeyHex: string
+    paymentAddress: string
+    nonce: number
+  }
   scriptDataHash?: string
 }> {
   // Parse CBOR to get transaction body
@@ -50,10 +57,12 @@ export async function adaptToLedgerUnsignedTx(
   }
 
   return CardanoMobileWrapped.cslScope((csl) => {
-    const txBody = csl.TransactionBody.fromHex(unsignedTx.cbor!)
+    const tx = csl.Transaction.fromHex(unsignedTx.cbor!)
+    const txBody = tx.body()
 
     // Extract sender UTXOs with addressing
     const senderUtxos = unsignedTx.inputs.map((input) => ({
+      receiver: input.utxo.receiver,
       txHash: input.utxo.txHash,
       txIndex: input.utxo.txIndex,
       addressing: input.utxo.addressing || {
@@ -62,10 +71,14 @@ export async function adaptToLedgerUnsignedTx(
       },
     }))
 
-    // Create txBuilder that can build the transaction
+    // Create txBuilder that can build the transaction and set auxiliary data
     const txBuilder = {
       build(): TransactionBody {
         return txBody
+      },
+      setAuxiliaryData(_data: TransactionBody): void {
+        // Auxiliary data is already in the transaction body from CBOR
+        // This method is provided for interface compatibility
       },
     }
 

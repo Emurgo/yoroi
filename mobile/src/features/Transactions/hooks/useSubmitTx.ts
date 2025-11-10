@@ -1,26 +1,30 @@
 import {useMutationWithInvalidations} from '@yoroi/common'
+import {calculateTxId} from '@yoroi/tx'
 
+import * as CSL from '@emurgo/cross-csl-core'
 import {UseMutationOptions} from '@tanstack/react-query'
 
 import {YoroiWallet} from '~/wallets/cardano/types'
 import {TxSubmissionStatus} from '~/wallets/types/other'
-import {YoroiSignedTx} from '~/wallets/types/yoroi'
 import {delay} from '~/wallets/utils/timeUtils'
 
 export const useSubmitTx = (
   {wallet}: {wallet: YoroiWallet},
-  options: UseMutationOptions<TxSubmissionStatus, Error, YoroiSignedTx> = {},
+  options: UseMutationOptions<TxSubmissionStatus, Error, CSL.Transaction> = {},
 ) => {
   const mutation = useMutationWithInvalidations({
     mutationFn: async (signedTx) => {
       const serverStatus = await wallet.checkServerStatus()
-      const base64 = Buffer.from((signedTx.signedTx as any).encodedTx).toString(
-        'base64',
-      )
+      const txBytes = signedTx.toBytes()
+      const base64 = Buffer.from(txBytes).toString('base64')
       await wallet.submitTransaction(base64)
 
       if (serverStatus.isQueueOnline) {
-        return fetchTxStatus(wallet, (signedTx.signedTx as any).id, false)
+        const txId = await calculateTxId(
+          Buffer.from(txBytes).toString('hex'),
+          'hex',
+        )
+        return fetchTxStatus(wallet, txId, false)
       }
 
       return {
@@ -50,7 +54,8 @@ const fetchTxStatus = async (
     })
 
     const confirmations = txStatus.depth?.[txHash] || 0
-    const submission: any = txStatus.submissionStatus?.[txHash]
+    const submission: TxSubmissionStatus | undefined =
+      txStatus.submissionStatus?.[txHash]
 
     // processed
     if (confirmations > 0) {

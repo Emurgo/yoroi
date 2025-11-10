@@ -20,13 +20,14 @@ import {
 import {
   Address,
   Certificates as CSLCertificates,
+  TransactionBody,
   Withdrawals as CSLWithdrawals,
   MultiAsset,
   TransactionOutputs,
 } from '@emurgo/cross-csl-core'
 // Note: This will need to be updated when we migrate UnsignedTx type
 // For now, we'll use a minimal interface that matches what Ledger functions need
-import type {TransactionBody, WasmModuleProxy} from '@emurgo/cross-csl-core'
+import type {WasmModuleProxy} from '@emurgo/cross-csl-core'
 import * as bech32 from 'bech32'
 
 import {CardanoMobileWrapped} from '../../../src/wallets/cardano/wrappedCsl'
@@ -34,12 +35,14 @@ import {Addressing, AddressingAddress, Bip44DerivationLevels} from '../types'
 
 export interface LedgerUnsignedTx {
   senderUtxos: Array<{
+    receiver: string
     txHash: string
     txIndex: number
     addressing: Addressing
   }>
   txBuilder: {
     build(): TransactionBody
+    setAuxiliaryData(data: TransactionBody): void
   }
   txBody: {
     outputs(): TransactionOutputs
@@ -53,7 +56,12 @@ export interface LedgerUnsignedTx {
     hasValue(): boolean
     toBytes(): Uint8Array
   } | null
-  catalystRegistrationData?: unknown
+  catalystRegistrationData?: {
+    votingPublicKeyHex: string
+    stakingPublicKeyHex: string
+    paymentAddress: string
+    nonce: number
+  }
   scriptDataHash?: string
 }
 

@@ -278,7 +278,7 @@ const formatCertificates = (certificates: TransactionBody['certs']) => {
       const entry = Object.entries(cert)[0]
       if (entry == null) return null
       const [type, certificate] = entry
-      return {type, value: certificate} as unknown as FormattedCertificate
+      return {type, value: certificate} as FormattedCertificate
     })
     .filter(isNonNullable)
 
@@ -323,7 +323,7 @@ const getAddressKind = (addressBech32: string): CredKind | null => {
 export const useUtxos = (inputs: TransactionInputs, wallet: YoroiWallet) => {
   const {networkManager} = useSelectedNetwork()
 
-  const [utxos, setUtxos] = React.useState<any[]>([])
+  const [utxos, setUtxos] = React.useState<RawUtxo[]>([])
   const [isLoaded, setIsLoaded] = React.useState(false)
   const [error, setError] = React.useState<Error | null>(null)
 

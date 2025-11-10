@@ -235,9 +235,7 @@ export const copyMultipleFromCSL = <T extends {toHex: () => string}>(
   return items.map((item) => copyFromCSL(creator, item))
 }
 
-export const getHexAddressingMap = async (
-  wallet: YoroiWallet,
-) => {
+export const getHexAddressingMap = async (wallet: YoroiWallet) => {
   const addressedUtxos = await Promise.all(
     wallet.utxos.map(async (utxo: RawUtxo) => {
       const addressing = wallet.getAddressing(utxo.receiver)

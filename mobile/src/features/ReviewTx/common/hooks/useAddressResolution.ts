@@ -88,13 +88,15 @@ export const getResolvedName = (
 ): string | null => {
   if (!response) return null
 
-  // The response contains the original resolve value (the alias)
-  // and the resolved address
-  // We can return the alias as the "name"
-  if ((response as any).address) {
-    // For now, return the original resolve value as the name
-    // This could be enhanced to extract a more user-friendly name
-    return (response as any).address
+  // The response is an array of address responses
+  // We can return the first resolved address as the "name"
+  if (Array.isArray(response) && response.length > 0) {
+    const firstResponse = response[0]
+    if (firstResponse?.address) {
+      // For now, return the resolved address as the name
+      // This could be enhanced to extract a more user-friendly name
+      return firstResponse.address
+    }
   }
 
   return null

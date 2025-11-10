@@ -46,7 +46,13 @@ export const filterAddressesByStakingKey = async (
   const result: Array<CardanoAddressedUtxo> = []
 
   for (const utxo of utxos) {
-    if (await addrContainsAccountKey(utxo.receiver, stakingKey, acceptTypeMismatch)) {
+    if (
+      await addrContainsAccountKey(
+        utxo.receiver,
+        stakingKey,
+        acceptTypeMismatch,
+      )
+    ) {
       result.push(utxo)
     }
   }

@@ -58,7 +58,12 @@ export const ReviewTxScreen = () => {
 
   const txBody = useTxBody({cbor: params?.cbor})
   const {formattedTx, isLoading, areTokenInfosLoaded} = useFormattedTx(
-    txBody ?? ({} as any),
+    txBody ?? {
+      inputs: [],
+      outputs: [],
+      fee: {coin: '0'},
+      reference_inputs: [],
+    },
   )
   const formattedMetadata = useFormattedMetadata({
     txBody,

@@ -6,6 +6,8 @@ import {
 } from '@yoroi/tx'
 import {Balance, Network} from '@yoroi/types'
 
+import type {Credential} from '@emurgo/cross-csl-core'
+
 import {
   YoroiMetadata,
   YoroiUnsignedTx,
@@ -44,6 +46,7 @@ export const yoroiUnsignedTx = async ({
   // This function expects a legacy format that doesn't match TransactionBody
   // Since it's not used in production, we'll use type assertions to make it compile
   // In practice, this should never be called with a real TransactionBody
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const legacyTx = unsignedTx as any
 
   const fee = toAmounts(legacyTx.fee?.values || [])
@@ -129,8 +132,15 @@ export const toMetadata = (metadata: ReadonlyArray<CardanoTypes.TxMetadata>) =>
     {} as YoroiMetadata,
   )
 
+type LegacyChange = {
+  address: string
+  values?: {
+    values: Array<CardanoTypes.TokenEntry>
+  }
+}
+
 const toEntriesFromChange = (
-  changes: ReadonlyArray<any>,
+  changes: ReadonlyArray<LegacyChange>,
 ): TransactionOutput[] => {
   return changes.map((change) => ({
     address: toDisplayAddress(change.address),
@@ -145,18 +155,38 @@ export const toEntriesFromOutputs = (
     datum?: Datum
   }>,
 ): TransactionOutput[] => {
-  return outputs.map((output) => ({
-    address: toDisplayAddress(output.address),
-    amounts: toAmounts(
-      'values' in output.value ? output.value.values : (output.value as any).values || []
-    ),
-    datum: output.datum,
-  }))
+  return outputs.map((output) => {
+    let tokenEntries: Array<CardanoTypes.TokenEntry> = []
+    if ('values' in output.value && Array.isArray(output.value.values)) {
+      tokenEntries = output.value.values
+    } else {
+      const legacyValue = output.value as {values?: Array<CardanoTypes.TokenEntry>}
+      if (legacyValue.values && Array.isArray(legacyValue.values)) {
+        tokenEntries = legacyValue.values
+      }
+    }
+    return {
+      address: toDisplayAddress(output.address),
+      amounts: toAmounts(tokenEntries),
+      datum: output.datum,
+    }
+  })
+}
+
+type LegacyWithdrawals = {
+  hasValue?(): boolean
+  len?(): number
+  keys?(): {
+    get(index: number): {toAddress?(): {toBytes?(): Uint8Array}} | null
+  }
+  get?(rewardAddress: {toAddress?(): {toBytes?(): Uint8Array}}): {
+    toStr?(): string
+  } | null
 }
 
 const Staking = {
   toWithdrawals: (
-    withdrawals: any,
+    withdrawals: LegacyWithdrawals,
     primaryTokenId: string,
   ): TransactionOutput[] => {
     if (!withdrawals?.hasValue?.()) return [] // no withdrawals
@@ -170,9 +200,9 @@ const Staking = {
       if (!rewardAddress) continue
       const amount = (withdrawals.get?.(rewardAddress)?.toStr?.() ??
         Quantities.zero) as Balance.Quantity
-      const address = Buffer.from(rewardAddress.toAddress?.()?.toBytes?.() || []).toString(
-        'hex',
-      )
+      const address = Buffer.from(
+        rewardAddress.toAddress?.()?.toBytes?.() || [],
+      ).toString('hex')
 
       result.push({
         address,
@@ -189,7 +219,7 @@ const Staking = {
     primaryTokenId,
     keyDeposit,
   }: {
-    deregistrations: Array<{stakeCredential(): any}>
+    deregistrations: Array<{stakeCredential(): Credential}>
     networkManager: Network.Manager
     primaryTokenId: string
     keyDeposit: string
@@ -212,7 +242,7 @@ const Staking = {
     primaryTokenId,
     keyDeposit,
   }: {
-    registrations: Array<{stakeCredential(): any}>
+    registrations: Array<{stakeCredential(): Credential}>
     networkManager: Network.Manager
     primaryTokenId: string
     keyDeposit: string

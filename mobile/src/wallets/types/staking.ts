@@ -1,5 +1,5 @@
-import {Balance} from '@yoroi/types'
 import type {RemoteCertificateMeta} from '@yoroi/staking'
+import {Balance} from '@yoroi/types'
 
 // App-specific staking types (UI state)
 export type StakingInfo =

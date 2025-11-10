@@ -23,11 +23,10 @@ import {
   StakingInfo,
   StakingStatus,
 } from '../types/staking'
-import {
-  YoroiNftModerationStatus,
-  YoroiSignedTx,
-  YoroiUnsignedTx,
-} from '../types/yoroi'
+import * as CSL from '@emurgo/cross-csl-core'
+import {UnsignedTransaction} from '@yoroi/tx'
+
+import {YoroiNftModerationStatus} from '../types/yoroi'
 import {getTokenFingerprint} from '../utils/format'
 import {CardanoMobile} from '../wallets'
 import {mockEncryptedStorage} from './storage'
@@ -104,12 +103,34 @@ const wallet: YoroiWallet = {
   portfolioPrimaryTokenInfo: primaryTokenInfoMainnet,
 
   balanceManager: {
+    hydrate: noop,
+    refresh: noop,
+    updatePrimaryStated: noop,
+    updatePrimaryDerived: noop,
+    syncBalances: noop,
+    subscribe: () => ({unsubscribe: noop}),
+    unsubscribe: noop,
+    observable$: new Observable<Portfolio.Event.BalanceManager>(),
+    getPrimaryBreakdown: () => ({
+      availableRewards: 0n,
+      totalFromTxs: 0n,
+      lockedAsStorageCost: 0n,
+    }),
+    getPrimaryBalance: () => ({
+      quantity: 0n,
+      info: primaryTokenInfoMainnet,
+    }),
+    getHasOnlyPrimary: () => true,
+    getBalances: () => ({
+      records: new Map(),
+      all: [],
+      fts: [],
+      nfts: [],
+    }),
+    getIsEmpty: () => true,
+    destroy: noop,
     clear: noop,
-    sync: noop,
-    resync: noop,
-    startSync: noop,
-    stopSync: noop,
-  } as any,
+  } as Portfolio.Manager.Balance,
 
   getStakingInfo: async () => {
     throw new Error('not implemented: getStakingInfo')
@@ -178,18 +199,18 @@ const wallet: YoroiWallet = {
     throw new Error('not implemented: signRawTx')
   },
   getAllUtxosForKey: () => [],
-  fetchPoolInfo: (..._args: unknown[]) => {
+  fetchPoolInfo: (..._args: never[]) => {
     return Promise.resolve({
       [stakePoolId]: poolInfoAndHistory,
     } as StakePoolInfosAndHistories)
   },
-  getDelegationStatus: (..._args: unknown[]) => {
+  getDelegationStatus: (..._args: never[]) => {
     return {isRegistered: false, poolKeyHash: null}
   },
   subscribeOnTxHistoryUpdate: () => {
     return () => null
   },
-  fetchAccountState: (..._args: unknown[]) => {
+  fetchAccountState: (..._args: never[]) => {
     return Promise.resolve({
       ['reward-address-hex']: {
         remainingAmount: '0',
@@ -204,7 +225,7 @@ const wallet: YoroiWallet = {
   signTxWithLedger: () => {
     throw new Error('Not implemented: signTxWithLedger')
   },
-  checkServerStatus: (..._args: unknown[]) => {
+  checkServerStatus: (..._args: never[]) => {
     return Promise.resolve({
       isServerOk: true,
       isMaintenance: false,
@@ -212,7 +233,7 @@ const wallet: YoroiWallet = {
       isQueueOnline: true,
     })
   },
-  fetchTxStatus: async (..._args: unknown[]) => {
+  fetchTxStatus: async (..._args: never[]) => {
     return {}
   },
   submitTransaction: () => {
@@ -224,8 +245,8 @@ const wallet: YoroiWallet = {
   createVotingRegTx: () => {
     throw new Error('Not implemented: createVotingRegTx')
   },
-  subscribe: (..._args: unknown[]) => {
-    return (..._args: unknown[]) => {}
+  subscribe: (..._args: never[]) => {
+    return (..._args: never[]) => {}
   },
   internalAddresses: [],
   externalAddresses: [],
@@ -238,13 +259,13 @@ const wallet: YoroiWallet = {
     lastUsedIndex: 0,
     lastUsedIndexVisual: 0,
   },
-  generateNewReceiveAddress: (..._args: unknown[]) => {
+  generateNewReceiveAddress: (..._args: never[]) => {
     return true
   },
-  saveMemo: async (..._args: unknown[]) => {},
-  clear: async (..._args: unknown[]) => {},
-  sync: async (..._args: unknown[]) => {},
-  resync: async (..._args: unknown[]) => {},
+  saveMemo: async (..._args: never[]) => {},
+  clear: async (..._args: never[]) => {},
+  sync: async (..._args: never[]) => {},
+  resync: async (..._args: never[]) => {},
   fetchFundInfo: () => {
     throw new Error('not implemented: fetchFundInfo')
   },
@@ -273,7 +294,7 @@ const metaHw: Wallet.Meta = {
 const txid = '31b1abca49857fd50c7959cc019d14c7dc5deaa754ba45372fb21748c411f210'
 
 const getTransactions = {
-  success: async (..._args: unknown[]) => {
+  success: async (..._args: never[]) => {
     const txInfo = mockTransactionInfo({id: txid})
 
     return {
@@ -281,57 +302,57 @@ const getTransactions = {
     }
   },
 
-  error: async (..._args: unknown[]) => {
+  error: async (..._args: never[]) => {
     return Promise.reject(new Error('Mock error'))
   },
-  loading: async (..._args: unknown[]) => {
-    return new Promise(() => null) as unknown as {
+  loading: async (..._args: never[]) => {
+    return new Promise<{
       [txid: string]: TransactionInfo
-    }
+    }>(() => null)
   },
 }
 
 const fetchPoolInfo = {
   success: {
-    poolFound: async (..._args: unknown[]) => {
+    poolFound: async (..._args: never[]) => {
       return {
         [mocks.stakePoolId]: mocks.poolInfoAndHistory,
       } as StakePoolInfosAndHistories
     },
-    poolNotFound: async (..._args: unknown[]) => {
+    poolNotFound: async (..._args: never[]) => {
       return {[mocks.stakePoolId]: null} as StakePoolInfosAndHistories
     },
   },
-  error: async (..._args: unknown[]) => {
+  error: async (..._args: never[]) => {
     return Promise.reject(new Error('Mock error'))
   },
-  loading: async (..._args: unknown[]) => {
-    return new Promise(() => null) as unknown as StakePoolInfosAndHistories
+  loading: async (..._args: never[]) => {
+    return new Promise<StakePoolInfosAndHistories>(() => null)
   },
 }
 
 const fetchNftModerationStatus = {
   success: {
     approved: async (
-      ..._args: unknown[]
+      ..._args: never[]
     ): Promise<YoroiNftModerationStatus> => {
       return 'approved'
     },
-    consent: async (..._args: unknown[]): Promise<YoroiNftModerationStatus> => {
+    consent: async (..._args: never[]): Promise<YoroiNftModerationStatus> => {
       return 'consent'
     },
-    blocked: async (..._args: unknown[]): Promise<YoroiNftModerationStatus> => {
+    blocked: async (..._args: never[]): Promise<YoroiNftModerationStatus> => {
       return 'blocked'
     },
     pendingReview: async (
-      ..._args: unknown[]
+      ..._args: never[]
     ): Promise<YoroiNftModerationStatus> => {
       return 'pending'
     },
-    loading: async (..._args: unknown[]): Promise<YoroiNftModerationStatus> => {
-      return new Promise(() => undefined) as any
+    loading: async (..._args: never[]): Promise<YoroiNftModerationStatus> => {
+      return new Promise<YoroiNftModerationStatus>(() => undefined)
     },
-    random: async (..._args: unknown[]): Promise<YoroiNftModerationStatus> => {
+    random: async (..._args: never[]): Promise<YoroiNftModerationStatus> => {
       const statuses = [
         'approved',
         'consent',
@@ -342,143 +363,143 @@ const fetchNftModerationStatus = {
       return statuses[Math.floor(Math.random() * statuses.length)]!
     },
   },
-  error: async (..._args: unknown[]) => {
+  error: async (..._args: never[]) => {
     return Promise.reject(new Error('Mock error'))
   },
-  loading: async (..._args: unknown[]) => {
-    return new Promise(() => null) as unknown as YoroiNftModerationStatus
+  loading: async (..._args: never[]) => {
+    return new Promise< YoroiNftModerationStatus
   },
 }
 
 const getDelegationStatus = {
   success: {
-    delegating: (..._args: unknown[]) => {
+    delegating: (..._args: never[]) => {
       return {isRegistered: true, poolKeyHash: stakePoolId} as StakingStatus
     },
-    registered: (..._args: unknown[]) => {
+    registered: (..._args: never[]) => {
       return {isRegistered: true} as StakingStatus
     },
-    notRegistered: (..._args: unknown[]) => {
+    notRegistered: (..._args: never[]) => {
       return {isRegistered: false, poolKeyHash: null} as StakingStatus
     },
   },
-  error: (..._args: unknown[]) => {
+  error: (..._args: never[]) => {
     throw new Error('Mock error')
   },
-  loading: (..._args: unknown[]) => {
-    return new Promise(() => null) as unknown as StakingStatus
+  loading: (..._args: never[]) => {
+    return new Promise<StakingStatus>(() => null)
   },
 }
 
 const getStakingInfo = {
   success: {
-    registered: async (..._args: unknown[]) => {
+    registered: async (..._args: never[]) => {
       return {status: 'registered'} as StakingInfo
     },
-    notRegistered: async (..._args: unknown[]) => {
+    notRegistered: async (..._args: never[]) => {
       return {status: 'not-registered'} as StakingInfo
     },
   },
-  error: async (..._args: unknown[]) => {
+  error: async (..._args: never[]) => {
     return Promise.reject(new Error('Mock error'))
   },
-  loading: async (..._args: unknown[]) => {
-    return new Promise(() => null) as unknown as StakingInfo
+  loading: async (..._args: never[]) => {
+    return new Promise< StakingInfo
   },
 }
 
 const createUnsignedTx = {
-  success: async (..._args: unknown[]) => {
-    return mocks.yoroiUnsignedTx
+  success: async (..._args: Array<never>) => {
+    return mocks.unsignedTransaction
   },
-  error: async (..._args: unknown[]) => {
+  error: async (..._args: Array<never>) => {
     return Promise.reject(new Error('Mock error'))
   },
-  loading: async (..._args: unknown[]) => {
-    return new Promise(() => null) as unknown as YoroiUnsignedTx
+  loading: async (..._args: Array<never>) => {
+    return new Promise<UnsignedTransaction>(() => null)
   },
 }
 
 const createDelegationTx = {
-  success: async (..._args: unknown[]) => {
-    return mocks.yoroiUnsignedTx
+  success: async (..._args: Array<never>) => {
+    return mocks.unsignedTransaction
   },
-  error: async (..._args: unknown[]) => {
+  error: async (..._args: Array<never>) => {
     return Promise.reject(new Error('Mock error'))
   },
-  loading: async (..._args: unknown[]) => {
-    return new Promise(() => null) as unknown as YoroiUnsignedTx
+  loading: async (..._args: Array<never>) => {
+    return new Promise<UnsignedTransaction>(() => null)
   },
 }
 
 const setCollateralId = {
-  success: async (..._args: unknown[]) => {
-    return mocks.yoroiUnsignedTx
+  success: async (..._args: Array<never>) => {
+    return mocks.unsignedTransaction
   },
-  error: async (..._args: unknown[]) => {
+  error: async (..._args: Array<never>) => {
     return Promise.reject(new Error('Mock error'))
   },
-  loading: async (..._args: unknown[]) => {
-    return new Promise(() => null) as unknown as void
+  loading: async (..._args: Array<never>) => {
+    return new Promise<void>(() => null)
   },
 }
 
 const createWithdrawalTx = {
-  success: async (..._args: unknown[]) => {
-    return mocks.yoroiUnsignedTx
+  success: async (..._args: Array<never>) => {
+    return mocks.unsignedTransaction
   },
-  error: async (..._args: unknown[]) => {
+  error: async (..._args: Array<never>) => {
     return Promise.reject(new Error('Mock error'))
   },
-  loading: async (..._args: unknown[]) => {
-    return new Promise(() => null) as unknown as YoroiUnsignedTx
+  loading: async (..._args: Array<never>) => {
+    return new Promise<UnsignedTransaction>(() => null)
   },
 }
 
 const createVotingRegTx = {
-  success: async (..._args: unknown[]) => {
+  success: async (..._args: Array<never>) => {
     return {
-      votingRegTx: mocks.yoroiUnsignedTx,
+      votingRegTx: mocks.unsignedTransaction,
       votingKeyEncrypted: 'votingKeyEncrypted',
     }
   },
-  error: async (..._args: unknown[]) => {
+  error: async (..._args: Array<never>) => {
     return Promise.reject(new Error('Mock error'))
   },
-  loading: async (..._args: unknown[]) => {
+  loading: async (..._args: Array<never>) => {
     return new Promise(() => null)
   },
 }
 
 const signTx = {
-  success: async (..._args: unknown[]) => {
-    return yoroiSignedTx
+  success: async (..._args: Array<never>) => {
+    return mocks.signedTransaction
   },
-  error: async (..._args: unknown[]) => {
+  error: async (..._args: Array<never>) => {
     return Promise.reject(new Error('Mock error'))
   },
-  loading: async (..._args: unknown[]) => {
-    return new Promise(() => null) as unknown as YoroiSignedTx
+  loading: async (..._args: Array<never>) => {
+    return new Promise<CSL.Transaction>(() => null)
   },
 }
 const signTxWithLedger = {
-  success: async (..._args: unknown[]) => {
-    return yoroiSignedTx
+  success: async (..._args: Array<never>) => {
+    return mocks.signedTransaction
   },
-  error: async (..._args: unknown[]) => {
+  error: async (..._args: Array<never>) => {
     return Promise.reject(new Error('Mock error'))
   },
-  loading: async (..._args: unknown[]): Promise<YoroiSignedTx> => {
+  loading: async (..._args: Array<never>): Promise<CSL.Transaction> => {
     return new Promise(() => null)
   },
 }
 
 const submitTransaction = {
-  success: async (..._args: unknown[]) => {},
-  error: async (..._args: unknown[]) => {
+  success: async (..._args: never[]) => {},
+  error: async (..._args: never[]) => {
     return Promise.reject(new Error('Mock error'))
   },
-  loading: async (..._args: unknown[]) => {
+  loading: async (..._args: never[]) => {
     return new Promise<void>(() => null)
   },
 }
@@ -714,44 +735,33 @@ const stakingInfo: StakingInfo = {
   poolId: 'poolId',
 }
 
-const yoroiUnsignedTx: YoroiUnsignedTx & {mock: true} = {
-  entries: [
+const unsignedTransaction: UnsignedTransaction & {mock: true} = {
+  inputs: [],
+  outputs: [
     {
       address: 'address1',
       amounts: {'.': '99999'},
     },
   ],
-  fee: {'.': '12345'},
-  metadata: {},
-  change: [{address: 'change_address', amounts: {'.': '1'}}],
-  staking: {
-    registrations: [],
-    deregistrations: [],
-    delegations: [],
-    withdrawals: [],
-  },
-  voting: {},
-  unsignedTx: {} as any,
+  certificates: [],
+  withdrawals: [],
+  referenceInputs: [],
+  collateralInputs: [],
+  metadata: [],
+  options: {},
+  cbor: 'mock-cbor-hex',
   mock: true,
-  governance: false,
 }
 
-const yoroiSignedTx: YoroiSignedTx & {mock: true} = {
-  entries: [],
-  fee: {'.': '12345'},
-  metadata: {},
-  change: [],
-  staking: {
-    registrations: [],
-    deregistrations: [],
-    delegations: [],
-    withdrawals: [],
-  },
-  voting: {},
-  signedTx: {id: 'tx-id', encodedTx: new Uint8Array([1, 2, 3])},
-  mock: true,
-  governance: false,
-}
+// Mock signed transaction - we'll create a minimal CSL.Transaction mock
+// In practice, tests should use actual CSL.Transaction objects
+const signedTransaction = {
+  toBytes: () => new Uint8Array([1, 2, 3]),
+  toHex: () => 'mock-tx-hex',
+  body: () => ({} as CSL.TransactionBody),
+  witnessSet: () => ({} as CSL.TransactionWitnessSet),
+  auxiliaryData: () => undefined,
+} as CSL.Transaction
 
 export const nft: Balance.TokenInfo = {
   kind: 'nft',
@@ -795,8 +805,6 @@ export const mocks = {
   poolInfoAndHistory,
   tokenEntries,
   tokenInfos,
-  yoroiUnsignedTx,
-  yoroiSignedTx,
   utxos,
   setCollateralId,
   fetchNftModerationStatus,

@@ -13,7 +13,6 @@ import {getTransactionSigners} from '~/wallets/cardano/common/signatureUtils'
 import {YoroiWallet} from '~/wallets/cardano/types'
 import {createRawTxSigningKey} from '~/wallets/cardano/utils'
 import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
-import {YoroiSignedTx} from '~/wallets/types/yoroi'
 
 import {ConfirmRawTxWithHW} from '../ConfirmRawTxWithHw'
 import {useNavigateTo} from './useNavigateTo'
@@ -27,12 +26,12 @@ export type OnConfirm = {
   onSuccess?: (args?: {
     tx?: Transaction
     rootKey?: string
-    signedTx?: YoroiSignedTx
+    signedTx?: Transaction
   }) => void
   onSuccessWithoutFeedback?: (args?: {
     tx?: Transaction
     rootKey?: string
-    signedTx?: YoroiSignedTx
+    signedTx?: Transaction
   }) => void
   onError?: ((error: unknown) => void) | null
   onErrorWithoutFeedback?: ((error: unknown) => void) | null
@@ -63,7 +62,7 @@ export const useOnConfirm = ({
   const handleOnSuccess = (args?: {
     tx?: Transaction
     rootKey?: string
-    signedTx?: YoroiSignedTx
+    signedTx?: Transaction
   }) => {
     if (onSuccessWithoutFeedback) {
       onSuccessWithoutFeedback({rootKey: args?.rootKey, tx: args?.tx})

@@ -7,8 +7,8 @@ import {
 } from '@cardano-foundation/ledgerjs-hw-app-cardano'
 
 import {CardanoMobileWrapped} from '../../../src/wallets/cardano/wrappedCsl'
-import {LedgerUnsignedTx} from './transform'
 import {
+  LedgerUnsignedTx,
   assertTagsState,
   doAllSetsHaveTag,
   formatLedgerCertificates,
@@ -17,9 +17,16 @@ import {
   transformToLedgerOutputs,
 } from './transform'
 
+type CatalystRegistrationData = {
+  votingPublicKeyHex: string
+  stakingPublicKeyHex: string
+  paymentAddress: string
+  nonce: number
+}
+
 // Helper to build CIP-15 payload (legacy voting)
 function buildLedgerCIP15Payload(
-  _catalystRegistrationData: unknown,
+  _catalystRegistrationData: CatalystRegistrationData,
 ): TxAuxiliaryData {
   // TODO: Implement CIP-15 payload building
   // This is used for older Ledger app versions
@@ -28,7 +35,7 @@ function buildLedgerCIP15Payload(
 
 // Helper to build CIP-36 payload (modern voting)
 function buildLedgerCIP36Payload(
-  _catalystRegistrationData: unknown,
+  _catalystRegistrationData: CatalystRegistrationData,
 ): TxAuxiliaryData {
   // TODO: Implement CIP-36 payload building
   // This is used for newer Ledger app versions
@@ -124,7 +131,7 @@ export async function buildVotingLedgerPayloadV5(
       options: {
         tagCborSets: doAllSetsHaveTag(
           csl,
-          unsignedTx.txBuilder.build().toHex(),
+          Buffer.from(unsignedTx.txBuilder.build().toBytes()).toString('hex'),
         ),
       },
     }
@@ -232,7 +239,7 @@ export async function buildLedgerPayload(
       options: {
         tagCborSets: doAllSetsHaveTag(
           csl,
-          unsignedTx.txBuilder.build().toHex(),
+          Buffer.from(unsignedTx.txBuilder.build().toBytes()).toString('hex'),
         ),
       },
     } as SignTransactionRequest

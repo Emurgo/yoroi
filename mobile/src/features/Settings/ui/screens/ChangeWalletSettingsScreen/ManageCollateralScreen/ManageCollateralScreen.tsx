@@ -1,7 +1,8 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
-import {TransactionOutput} from '@yoroi/tx'
+import {TransactionOutput, calculateTxId} from '@yoroi/tx'
 import {Portfolio} from '@yoroi/types'
 
+import * as CSL from '@emurgo/cross-csl-core'
 import {useMutation} from '@tanstack/react-query'
 import BigNumber from 'bignumber.js'
 import * as React from 'react'
@@ -36,7 +37,6 @@ import {useCollateralInfo} from '~/wallets/cardano/utxoManager/useCollateralInfo
 import {useSetCollateralId} from '~/wallets/cardano/utxoManager/useSetCollateralId'
 import {collateralConfig, utxosMaker} from '~/wallets/cardano/utxoManager/utxos'
 import {RawUtxo} from '~/wallets/types/other'
-import {YoroiSignedTx} from '~/wallets/types/yoroi'
 import {Amounts, Quantities, asQuantity} from '~/wallets/utils/utils'
 
 import {CollateralInfoModal} from './CollateralInfoModal'
@@ -80,10 +80,14 @@ export const ManageCollateralScreen = () => {
     setCollateralId(collateralId)
   }
 
-  const handleOnSuccess = (signedTx?: YoroiSignedTx) => {
-    if (!signedTx?.signedTx || (signedTx.signedTx as any)?.id == null)
-      throw new Error('ManageCollateralScreen:: invalid state')
-    const collateralId = `${(signedTx.signedTx as any).id}:0`
+  const handleOnSuccess = async (signedTx?: CSL.Transaction) => {
+    if (!signedTx) throw new Error('ManageCollateralScreen:: invalid state')
+    const txBytes = signedTx.toBytes()
+    const txId = await calculateTxId(
+      Buffer.from(txBytes).toString('hex'),
+      'hex',
+    )
+    const collateralId = `${txId}:0`
     setCollateralId(collateralId)
     resetToTxHistory()
   }

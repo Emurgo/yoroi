@@ -6,8 +6,14 @@ import {
 } from '@yoroi/blockchains'
 import {isNonNullable} from '@yoroi/common'
 import {StakePoolInfoRequest} from '@yoroi/staking'
-import type {CardanoHaskellConfig, Datum, ModernUtxo} from '@yoroi/tx'
+import type {
+  CardanoHaskellConfig,
+  Datum,
+  ModernUtxo,
+  UnsignedTransaction,
+} from '@yoroi/tx'
 import {
+  adaptToLedgerUnsignedTx,
   addCertificate,
   addInputs,
   addMetadata,
@@ -65,10 +71,8 @@ import type {
   TxStatusResponse,
 } from '../types/other'
 import {StakingInfo} from '../types/staking'
-import {YoroiSignedTx, YoroiUnsignedTx} from '../types/yoroi'
 import {Quantities} from '../utils/utils'
 import {CardanoMobile} from '../wallets'
-import {CardanoMobileWrapped} from './wrappedCsl'
 import {
   AccountManager,
   Addresses,
@@ -76,9 +80,7 @@ import {
 } from './account-manager/account-manager'
 import * as legacyApi from './api/api'
 import {calcLockedDeposit} from './assetUtils'
-import {
-  getDelegationStatus,
-} from './delegationUtils'
+import {getDelegationStatus} from './delegationUtils'
 import {
   doesCardanoAppVersionSupportCIP36,
   doesCardanoAppVersionSupportCIP1694,
@@ -87,7 +89,6 @@ import {
 } from './hw/hw'
 import {keyManager} from './key-manager/key-manager'
 import {processTxHistoryData} from './processTransactions/processTransactions'
-import {yoroiSignedTx} from './signedTx'
 import {TransactionManager} from './transactionManager/transactionManager'
 import {
   CardanoTypes,
@@ -106,6 +107,7 @@ import {
 } from './utils'
 import {UtxoManager, makeUtxoManager} from './utxoManager/utxoManager'
 import {utxosMaker} from './utxoManager/utxos'
+import {CardanoMobileWrapped} from './wrappedCsl'
 
 export const makeCardanoWallet = (
   networkManager: Network.Manager,
@@ -1015,7 +1017,11 @@ export const makeCardanoWallet = (
       }
     }
 
-    async signTx(unsignedTx: YoroiUnsignedTx, decryptedMasterKey: string) {
+    async signTx(unsignedTx: UnsignedTransaction, decryptedMasterKey: string) {
+      if (!unsignedTx.cbor) {
+        throw new Error('UnsignedTransaction must have CBOR to sign')
+      }
+
       const masterKey = CardanoMobile.Bip32PrivateKey.fromBytes(
         new Uint8Array(Buffer.from(decryptedMasterKey, 'hex')),
       )
@@ -1037,12 +1043,28 @@ export const makeCardanoWallet = (
           .toRawKey()
       }
 
-      const needsStakingKey =
-        isNonEmpty(unsignedTx.staking.delegations) ||
-        isNonEmpty(unsignedTx.staking.registrations) ||
-        isNonEmpty(unsignedTx.staking.deregistrations) ||
-        isNonEmpty(unsignedTx.staking.withdrawals) ||
-        unsignedTx.governance
+      // Derive staking key requirements from certificates and withdrawals
+      let needsStakingKey = false
+      if (
+        unsignedTx.certificates.length > 0 ||
+        unsignedTx.withdrawals.length > 0
+      ) {
+        needsStakingKey = true
+      }
+
+      // Check for governance-related certificates (vote delegation, etc.)
+      for (const certWrapper of unsignedTx.certificates) {
+        const cert = certWrapper.cert
+        const voteDeleg = cert.asVoteDelegation()
+        const stakeVoteDeleg = cert.asStakeAndVoteDelegation()
+        if (
+          (voteDeleg != null && voteDeleg.hasValue()) ||
+          (stakeVoteDeleg != null && stakeVoteDeleg.hasValue())
+        ) {
+          needsStakingKey = true
+          break
+        }
+      }
 
       if (needsStakingKey && !stakingPrivateKey) {
         throwLoggedError(
@@ -1053,18 +1075,14 @@ export const makeCardanoWallet = (
       const stakingKeys =
         needsStakingKey && stakingPrivateKey ? [stakingPrivateKey] : undefined
 
-      const datumDatas = unsignedTx.entries
-        .map((entry: TransactionOutput) => entry.datum)
+      // Extract datum data from outputs
+      const datumDatas = unsignedTx.outputs
+        .map((output) => output.datum)
         .filter(isNonNullable)
         .filter(
           (datum: Datum): datum is Exclude<Datum, {hash: string}> =>
             'data' in datum,
         )
-
-      // Get CBOR from legacy UnsignedTx
-      const txCbor = Buffer.from(
-        await unsignedTx.unsignedTx.toBytes(),
-      ).toString('hex')
 
       // Prepare staking keys for signing
       const stakingKeysForSigning =
@@ -1080,17 +1098,7 @@ export const makeCardanoWallet = (
 
       // Sign the transaction using the new signing function
       const signedTx = await signTransaction(
-        {
-          inputs: [],
-          outputs: [],
-          certificates: [],
-          withdrawals: [],
-          referenceInputs: [],
-          collateralInputs: [],
-          metadata: [],
-          options: {},
-          cbor: txCbor,
-        },
+        unsignedTx,
         accountPrivateKeyHex,
         stakingKeysForSigning,
         datumDatas.length > 0
@@ -1098,7 +1106,7 @@ export const makeCardanoWallet = (
           : undefined,
       )
 
-      return yoroiSignedTx({unsignedTx, signedTx})
+      return signedTx
     }
 
     async ledgerSupportsCIP36(
@@ -1164,26 +1172,51 @@ export const makeCardanoWallet = (
     }
 
     async signTxWithLedger(
-      unsignedTx: YoroiUnsignedTx,
+      unsignedTx: UnsignedTransaction,
       useUSB: boolean,
       hwDeviceInfo: HW.DeviceInfo,
-    ): Promise<YoroiSignedTx> {
+    ): Promise<CSL.Transaction> {
+      if (!unsignedTx.cbor) {
+        throw new Error(
+          'UnsignedTransaction must have CBOR to sign with Ledger',
+        )
+      }
+
       const appAdaVersion = await getCardanoAppMajorVersion(
         hwDeviceInfo,
         useUSB,
       )
 
+      // Check for voting registration in metadata (label 61284 = CatalystLabels.DATA)
+      const hasVotingRegistration = unsignedTx.metadata?.some(
+        (meta) =>
+          String(meta.label) === '61284' || Number(meta.label) === 61284,
+      )
+
       if (
         !doesCardanoAppVersionSupportCIP36(appAdaVersion) &&
-        unsignedTx.voting.registration
+        hasVotingRegistration
       ) {
         if (implementationConfig.features.staking) {
           logger.info(
             'ShelleyWallet: signTxWithLedger ledger app version <= 5, no CIP-36 support',
             {appAdaVersion},
           )
+
+          // Get change address from UnsignedTransaction options or use default
+          const changeAddress =
+            unsignedTx.options.changeAddress ||
+            this.getChangeAddress('multiple')
+          const addressing = this.getAddressing(changeAddress)
+          const changeAddr = {address: changeAddress, addressing}
+
+          // Convert UnsignedTransaction to LedgerUnsignedTx format
+          const ledgerUnsignedTx = await adaptToLedgerUnsignedTx(unsignedTx, [
+            changeAddr,
+          ])
+
           const ledgerPayload = await buildVotingLedgerPayloadV5(
-            unsignedTx.unsignedTx as any, // TODO: Fix type when TransactionBuilder is complete
+            ledgerUnsignedTx,
             this.networkManager.chainId,
             this.networkManager.protocolMagic,
             Array.from(implementationConfig.features.staking.addressing),
@@ -1196,7 +1229,11 @@ export const makeCardanoWallet = (
           )
 
           const signedTxResult = await buildLedgerSignedTx(
-            unsignedTx.unsignedTx as any, // TODO: Fix type when TransactionBuilder is complete
+            {
+              senderUtxos: ledgerUnsignedTx.senderUtxos,
+              txBuilder: ledgerUnsignedTx.txBuilder,
+              auxiliaryData: ledgerUnsignedTx.auxiliaryData,
+            },
             signedLedgerTx,
             implementationConfig.derivations.base.harden.purpose,
             this.publicKeyHex,
@@ -1208,7 +1245,7 @@ export const makeCardanoWallet = (
             signedTxResult.encodedTx,
           )
 
-          return yoroiSignedTx({unsignedTx, signedTx})
+          return signedTx
         }
 
         throwLoggedError(
@@ -1221,14 +1258,26 @@ export const makeCardanoWallet = (
         {appAdaVersion},
       )
 
+      // Get change address from UnsignedTransaction options or use default
+      const changeAddress =
+        unsignedTx.options.changeAddress || this.getChangeAddress('multiple')
+      const addressing = this.getAddressing(changeAddress)
+      const changeAddr = {address: changeAddress, addressing}
+
+      // Convert UnsignedTransaction to LedgerUnsignedTx format
+      const ledgerUnsignedTx = await adaptToLedgerUnsignedTx(unsignedTx, [
+        changeAddr,
+      ])
+
       let stakingAddressing
       if (implementationConfig.features.staking) {
         stakingAddressing = Array.from(
           implementationConfig.features.staking.addressing,
         )
       }
+
       const ledgerPayload = await buildLedgerPayload(
-        unsignedTx.unsignedTx as any, // TODO: Fix type when TransactionBuilder is complete
+        ledgerUnsignedTx,
         this.networkManager.chainId,
         this.networkManager.protocolMagic,
         stakingAddressing,
@@ -1240,8 +1289,9 @@ export const makeCardanoWallet = (
         useUSB,
       )
 
-      const datumDatas = unsignedTx.entries
-        .map((entry: TransactionOutput) => entry.datum)
+      // Extract datum data from outputs
+      const datumDatas = unsignedTx.outputs
+        .map((output) => output.datum)
         .filter(isNonNullable)
         .filter(
           (datum: Datum): datum is Exclude<Datum, {hash: string}> =>
@@ -1249,7 +1299,11 @@ export const makeCardanoWallet = (
         )
 
       const signedTxResult = await buildLedgerSignedTx(
-        unsignedTx.unsignedTx as any, // TODO: Fix type when TransactionBuilder is complete
+        {
+          senderUtxos: ledgerUnsignedTx.senderUtxos,
+          txBuilder: ledgerUnsignedTx.txBuilder,
+          auxiliaryData: ledgerUnsignedTx.auxiliaryData,
+        },
         signedLedgerTx,
         implementationConfig.derivations.base.harden.purpose,
         this.publicKeyHex,
@@ -1262,7 +1316,7 @@ export const makeCardanoWallet = (
         signedTxResult.encodedTx,
       )
 
-      return yoroiSignedTx({unsignedTx, signedTx})
+      return signedTx
     }
 
     // =================== backend API =================== //
@@ -1498,10 +1552,6 @@ export const makeCardanoWallet = (
       return !!txs && txs.length > 0
     }
   }
-}
-
-const isNonEmpty = (arr: unknown[] | undefined) => {
-  return arr && arr.length > 0
 }
 
 const parseTransactions = (

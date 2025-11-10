@@ -9,7 +9,7 @@ export type SmartContractInfo = {
   name?: string
   purpose?: string
   description?: string
-  parameters?: Record<string, any>
+  parameters?: Record<string, unknown>
   contractType?: 'plutus-v1' | 'plutus-v2' | 'plutus-v3'
 }
 

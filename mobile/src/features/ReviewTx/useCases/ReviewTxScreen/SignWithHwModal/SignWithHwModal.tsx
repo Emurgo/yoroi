@@ -1,7 +1,8 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {UnsignedTransaction} from '@yoroi/tx'
 import {HW} from '@yoroi/types'
 
-import {TransactionBody} from '@emurgo/cross-csl-core'
+import * as CSL from '@emurgo/cross-csl-core'
 import * as React from 'react'
 import {ErrorBoundary} from 'react-error-boundary'
 import {ActivityIndicator, View} from 'react-native'
@@ -12,7 +13,6 @@ import {LedgerTransportSwitch} from '../../../../../ui/LedgerTransportSwitch/Led
 import {ModalError} from '../../../../../ui/ModalError/ModalError'
 import {Text} from '../../../../../ui/Text/Text'
 import {withBLE, withUSB} from '../../../../../wallets/hw/hwWallet'
-import {YoroiSignedTx} from '../../../../../wallets/types/yoroi'
 import {delay} from '../../../../../wallets/utils/timeUtils'
 import {useSignTxWithHW} from '../../../../Transactions/hooks/useSignTxWithHW'
 import {useSubmitTx} from '../../../../Transactions/hooks/useSubmitTx'
@@ -23,8 +23,8 @@ type TransportType = 'USB' | 'BLE'
 type Step = 'select-transport' | 'connect-transport' | 'loading'
 
 type Props = {
-  onSuccess?: (signedTx: YoroiSignedTx) => void
-  unsignedTx: {unsignedTx: TransactionBody}
+  onSuccess?: (signedTx: CSL.Transaction) => void
+  unsignedTx: UnsignedTransaction
   onCancel?: () => void
   supportsCIP36?: boolean
   onCIP36SupportChange?: (isSupported: boolean) => void
@@ -113,7 +113,10 @@ const SignWithHwModalContent = ({
     }
 
     if (
-      (unsignedTx.unsignedTx as any).catalystRegistrationData &&
+      unsignedTx.metadata?.some(
+        (meta) =>
+          String(meta.label) === '61284' || Number(meta.label) === 61284,
+      ) &&
       onCIP36SupportChange
     ) {
       const isCIP36Supported = await wallet.ledgerSupportsCIP36(
@@ -126,7 +129,7 @@ const SignWithHwModalContent = ({
       }
     }
 
-    signTx({unsignedTx: unsignedTx as any, useUSB: false, hwDeviceInfo})
+    signTx({unsignedTx, useUSB: false, hwDeviceInfo})
   }
 
   const onConnectUSB = async (deviceObj: HW.DeviceObj) => {
@@ -145,7 +148,10 @@ const SignWithHwModalContent = ({
     }
 
     if (
-      (unsignedTx.unsignedTx as any).catalystRegistrationData &&
+      unsignedTx.metadata?.some(
+        (meta) =>
+          String(meta.label) === '61284' || Number(meta.label) === 61284,
+      ) &&
       onCIP36SupportChange
     ) {
       const isCIP36Supported = await wallet.ledgerSupportsCIP36(
@@ -158,7 +164,7 @@ const SignWithHwModalContent = ({
       }
     }
 
-    signTx({unsignedTx: unsignedTx as any, useUSB: true, hwDeviceInfo})
+    signTx({unsignedTx, useUSB: true, hwDeviceInfo})
   }
 
   if (step === 'select-transport') {

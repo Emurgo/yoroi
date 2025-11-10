@@ -232,23 +232,20 @@ class CIP30Extension {
       // We can't use await here, so we need to use synchronous operations
       // For now, we'll use a type assertion to work around the async requirement
       // TODO: Make this function async in the interface
-      return getTransactionSigners(
-        cbor,
-        this.wallet,
-        this.meta,
-        partial,
-      ).then((signers) => {
-        const keys = signers.map((signer) =>
-          createRawTxSigningKey(rootKey, signer, csl),
-        )
-        return signRawTransaction(cbor, keys).then((signedTxBytes) => {
-          const signedTx = csl.Transaction.fromBytes(signedTxBytes)
-          return copyFromCSL(
-            CardanoMobile.TransactionWitnessSet,
-            signedTx.witnessSet(),
+      return getTransactionSigners(cbor, this.wallet, this.meta, partial).then(
+        (signers) => {
+          const keys = signers.map((signer) =>
+            createRawTxSigningKey(rootKey, signer, csl),
           )
-        })
-      }) as any as CSL.TransactionWitnessSet
+          return signRawTransaction(cbor, keys).then((signedTxBytes) => {
+            const signedTx = csl.Transaction.fromBytes(signedTxBytes)
+            return copyFromCSL(
+              CardanoMobile.TransactionWitnessSet,
+              signedTx.witnessSet(),
+            )
+          })
+        },
+      ) as any as CSL.TransactionWitnessSet
     })
   }
 

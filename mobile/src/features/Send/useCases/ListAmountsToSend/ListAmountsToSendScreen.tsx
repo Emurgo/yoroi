@@ -1,9 +1,10 @@
 import {isNft} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
-import {TransactionOutput} from '@yoroi/tx'
+import {TransactionOutput, calculateTxId} from '@yoroi/tx'
 import {Portfolio} from '@yoroi/types'
 
+import * as CSL from '@emurgo/cross-csl-core'
 import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 import {TouchableOpacity, View} from 'react-native'
@@ -24,7 +25,6 @@ import {Icon} from '~/ui/Icon'
 import {RemoveAmountButton} from '~/ui/RemoveAmountButton/RemoveAmountButton'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {TokenAmountItem} from '~/ui/TokenAmountItem/TokenAmountItem'
-import {YoroiSignedTx} from '~/wallets/types/yoroi'
 
 export const ListAmountsToSendScreen = () => {
   const navigateTo = useNavigateTo()
@@ -77,10 +77,13 @@ export const ListAmountsToSendScreen = () => {
   }
 
   const handleOnSuccess = React.useCallback(
-    (signedTx?: YoroiSignedTx) => {
-      const txId = (signedTx?.signedTx as any)?.id
-      if (txId == null)
-        throw new Error('ListAmountsToSendScreen:: invalid state')
+    async (signedTx?: CSL.Transaction) => {
+      if (!signedTx) throw new Error('ListAmountsToSendScreen:: invalid state')
+      const txBytes = signedTx.toBytes()
+      const txId = await calculateTxId(
+        Buffer.from(txBytes).toString('hex'),
+        'hex',
+      )
 
       if (memo.length > 0) {
         saveMemo({txId, memo: memo.trim()})

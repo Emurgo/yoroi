@@ -13,7 +13,7 @@ import {
   toMetadata,
 } from './unsignedTx'
 
-describe('YoroiUnsignedTx', () => {
+describe('unsignedTx utilities (deprecated)', () => {
   it('toAmounts converts TokenEntry[] to Balance.Amounts', () => {
     const tokenEntries: Array<CardanoTypes.TokenEntry> = [
       {identifier: '.', amount: new BigNumber('1')},

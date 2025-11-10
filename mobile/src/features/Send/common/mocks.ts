@@ -1,8 +1,6 @@
 import {tokenBalanceMocks, tokenMocks} from '@yoroi/portfolio'
 import {defaultTransferState} from '@yoroi/transfer'
 
-import {mocks as walletMocks} from '~/wallets/mocks/wallet'
-
 export const mocks = {
   startTx: {
     error: {
@@ -129,7 +127,7 @@ export const mocks = {
   confirmTx: {
     success: {
       ...defaultTransferState,
-      yoroiUnsignedTx: walletMocks.yoroiUnsignedTx,
+      unsignedTx: undefined,
       selectedTokenId: tokenBalanceMocks.primaryETH.info.id,
       targets: [
         {
