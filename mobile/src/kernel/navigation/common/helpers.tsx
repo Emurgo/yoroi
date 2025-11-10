@@ -145,7 +145,8 @@ export const isTxHistoryRoute = (
   state: Partial<NavigationState> | NavigationState['routes'][0]['state'],
 ) => {
   const routes = getFocusedRouteName(state)
-  return routes.includes('history-list')
+  const focusedRoute = routes[routes.length - 1]
+  return focusedRoute === 'history-list'
 }
 
 export const BackButton = (props: TouchableOpacityProps & {color?: string}) => {
