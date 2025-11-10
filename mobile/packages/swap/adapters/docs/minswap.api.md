@@ -178,45 +178,8 @@
                         "description": "Token balance entry with asset information",
                         "properties": {
                           "asset": {
-                            "description": "Detailed information about the token",
-                            "type": "object",
-                            "required": ["token_id"],
-                            "properties": {
-                              "token_id": {
-                                "type": "string",
-                                "description": "Token identifier, two possible formats:\n- For ADA: use \"lovelace\"\n- For other tokens: concatenate <policyId><tokenName> in hex\nExample: \"29d222ce763455e3d7a09a665ce554f00ac89d2e99a1a83d267170c64d494e\" for MIN token\n"
-                              },
-                              "logo": {
-                                "type": "string",
-                                "nullable": true,
-                                "description": "Logo url of the token\nCan be null if no logo is available\n"
-                              },
-                              "ticker": {
-                                "type": "string",
-                                "nullable": true,
-                                "description": "Token ticker symbol (if available)\nCan be null for tokens without a ticker symbol\nExample: \"MIN\", \"iUSD\", \"DJED\"\n"
-                              },
-                              "is_verified": {
-                                "type": "boolean",
-                                "nullable": true,
-                                "description": "Token verification status on Minswap\n- true: Token is verified by Minswap\n- false: Token is not verified\n- null: Verification status unknown\n"
-                              },
-                              "price_by_ada": {
-                                "type": "number",
-                                "nullable": true,
-                                "description": "Token price denominated in ADA\nCan be null if price information is unavailable\nExample: 1.5 means 1 token = 1.5 ADA\n"
-                              },
-                              "project_name": {
-                                "type": "string",
-                                "nullable": true,
-                                "description": "Name of the project that issued the token\nCan be null for unknown projects\nExample: \"Minswap\", \"Indigo\"\n"
-                              },
-                              "decimals": {
-                                "type": "number",
-                                "nullable": true,
-                                "description": "Number of decimal places for the token\n- ADA always has 6 decimals (1 ADA = 1,000,000 lovelace)\n- Most tokens follow the 6 decimal standard\n- Can be null for tokens with unknown decimals\nExample: 6 means divide by 1,000,000 to get actual amount\n"
-                              }
-                            }
+                            "$ref": "#/components/schemas/Asset",
+                            "description": "Detailed information about the token"
                           },
                           "amount": {
                             "type": "string",
@@ -233,6 +196,50 @@
                 }
               }
             }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Asset": {
+        "type": "object",
+        "required": ["token_id"],
+        "properties": {
+          "token_id": {
+            "type": "string",
+            "description": "Token identifier, two possible formats:\n- For ADA: use \"lovelace\"\n- For other tokens: concatenate <policyId><tokenName> in hex\nExample: \"29d222ce763455e3d7a09a665ce554f00ac89d2e99a1a83d267170c64d494e\" for MIN token\n"
+          },
+          "logo": {
+            "type": "string",
+            "nullable": true,
+            "description": "Logo url of the token\nCan be null if no logo is available\n"
+          },
+          "ticker": {
+            "type": "string",
+            "nullable": true,
+            "description": "Token ticker symbol (if available)\nCan be null for tokens without a ticker symbol\nExample: \"MIN\", \"iUSD\", \"DJED\"\n"
+          },
+          "is_verified": {
+            "type": "boolean",
+            "nullable": true,
+            "description": "Token verification status on Minswap\n- true: Token is verified by Minswap\n- false: Token is not verified\n- null: Verification status unknown\n"
+          },
+          "price_by_ada": {
+            "type": "number",
+            "nullable": true,
+            "description": "Token price denominated in ADA\nCan be null if price information is unavailable\nExample: 1.5 means 1 token = 1.5 ADA\n"
+          },
+          "project_name": {
+            "type": "string",
+            "nullable": true,
+            "description": "Name of the project that issued the token\nCan be null for unknown projects\nExample: \"Minswap\", \"Indigo\"\n"
+          },
+          "decimals": {
+            "type": "number",
+            "nullable": true,
+            "description": "Number of decimal places for the token\n- ADA always has 6 decimals (1 ADA = 1,000,000 lovelace)\n- Most tokens follow the 6 decimal standard\n- Can be null for tokens with unknown decimals\nExample: 6 means divide by 1,000,000 to get actual amount\n"
           }
         }
       }
@@ -303,46 +310,7 @@
                     "tokens": {
                       "type": "array",
                       "description": "Array of tokens matching the search criteria.\nMay be empty if no tokens match or all are filtered out.\n",
-                      "items": {
-                        "type": "object",
-                        "required": ["token_id"],
-                        "properties": {
-                          "token_id": {
-                            "type": "string",
-                            "description": "Token identifier, two possible formats:\n- For ADA: use \"lovelace\"\n- For other tokens: concatenate <policyId><tokenName> in hex\nExample: \"29d222ce763455e3d7a09a665ce554f00ac89d2e99a1a83d267170c64d494e\" for MIN token\n"
-                          },
-                          "logo": {
-                            "type": "string",
-                            "nullable": true,
-                            "description": "Logo url of the token\nCan be null if no logo is available\n"
-                          },
-                          "ticker": {
-                            "type": "string",
-                            "nullable": true,
-                            "description": "Token ticker symbol (if available)\nCan be null for tokens without a ticker symbol\nExample: \"MIN\", \"iUSD\", \"DJED\"\n"
-                          },
-                          "is_verified": {
-                            "type": "boolean",
-                            "nullable": true,
-                            "description": "Token verification status on Minswap\n- true: Token is verified by Minswap\n- false: Token is not verified\n- null: Verification status unknown\n"
-                          },
-                          "price_by_ada": {
-                            "type": "number",
-                            "nullable": true,
-                            "description": "Token price denominated in ADA\nCan be null if price information is unavailable\nExample: 1.5 means 1 token = 1.5 ADA\n"
-                          },
-                          "project_name": {
-                            "type": "string",
-                            "nullable": true,
-                            "description": "Name of the project that issued the token\nCan be null for unknown projects\nExample: \"Minswap\", \"Indigo\"\n"
-                          },
-                          "decimals": {
-                            "type": "number",
-                            "nullable": true,
-                            "description": "Number of decimal places for the token\n- ADA always has 6 decimals (1 ADA = 1,000,000 lovelace)\n- Most tokens follow the 6 decimal standard\n- Can be null for tokens with unknown decimals\nExample: 6 means divide by 1,000,000 to get actual amount\n"
-                          }
-                        }
-                      }
+                      "items": {"$ref": "#/components/schemas/Asset"}
                     },
                     "search_after": {
                       "type": "array",
@@ -353,6 +321,50 @@
                 }
               }
             }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Asset": {
+        "type": "object",
+        "required": ["token_id"],
+        "properties": {
+          "token_id": {
+            "type": "string",
+            "description": "Token identifier, two possible formats:\n- For ADA: use \"lovelace\"\n- For other tokens: concatenate <policyId><tokenName> in hex\nExample: \"29d222ce763455e3d7a09a665ce554f00ac89d2e99a1a83d267170c64d494e\" for MIN token\n"
+          },
+          "logo": {
+            "type": "string",
+            "nullable": true,
+            "description": "Logo url of the token\nCan be null if no logo is available\n"
+          },
+          "ticker": {
+            "type": "string",
+            "nullable": true,
+            "description": "Token ticker symbol (if available)\nCan be null for tokens without a ticker symbol\nExample: \"MIN\", \"iUSD\", \"DJED\"\n"
+          },
+          "is_verified": {
+            "type": "boolean",
+            "nullable": true,
+            "description": "Token verification status on Minswap\n- true: Token is verified by Minswap\n- false: Token is not verified\n- null: Verification status unknown\n"
+          },
+          "price_by_ada": {
+            "type": "number",
+            "nullable": true,
+            "description": "Token price denominated in ADA\nCan be null if price information is unavailable\nExample: 1.5 means 1 token = 1.5 ADA\n"
+          },
+          "project_name": {
+            "type": "string",
+            "nullable": true,
+            "description": "Name of the project that issued the token\nCan be null for unknown projects\nExample: \"Minswap\", \"Indigo\"\n"
+          },
+          "decimals": {
+            "type": "number",
+            "nullable": true,
+            "description": "Number of decimal places for the token\n- ADA always has 6 decimals (1 ADA = 1,000,000 lovelace)\n- Most tokens follow the 6 decimal standard\n- Can be null for tokens with unknown decimals\nExample: 6 means divide by 1,000,000 to get actual amount\n"
           }
         }
       }
@@ -407,48 +419,12 @@
                   },
                   "include_protocols": {
                     "type": "array",
-                    "items": {
-                      "type": "string",
-                      "enum": [
-                        "MinswapV2",
-                        "Minswap",
-                        "MinswapStable",
-                        "MuesliSwap",
-                        "Splash",
-                        "SundaeSwapV3",
-                        "SundaeSwap",
-                        "VyFinance",
-                        "CswapV1",
-                        "WingRidersV2",
-                        "WingRiders",
-                        "WingRidersStableV2",
-                        "Spectrum",
-                        "SplashStable"
-                      ]
-                    },
+                    "items": {"$ref": "#/components/schemas/Protocol"},
                     "description": "Optional list of DEX protocols to include from routing:\n- Useful for choosing specific DEXs\n- Minswap protocols are always included\n- This overrides exclude_protocols if both are provided\n"
                   },
                   "exclude_protocols": {
                     "type": "array",
-                    "items": {
-                      "type": "string",
-                      "enum": [
-                        "MinswapV2",
-                        "Minswap",
-                        "MinswapStable",
-                        "MuesliSwap",
-                        "Splash",
-                        "SundaeSwapV3",
-                        "SundaeSwap",
-                        "VyFinance",
-                        "CswapV1",
-                        "WingRidersV2",
-                        "WingRiders",
-                        "WingRidersStableV2",
-                        "Spectrum",
-                        "SplashStable"
-                      ]
-                    },
+                    "items": {"$ref": "#/components/schemas/Protocol"},
                     "description": "Optional list of DEX protocols to exclude from routing:\n- Useful for avoiding specific DEXs\n- Minswap protocols cannot be excluded\n"
                   },
                   "allow_multi_hops": {
@@ -527,24 +503,8 @@
                               "description": "Unique identifier for the liquidity pool\nFormat varies by protocol\n"
                             },
                             "protocol": {
-                              "description": "DEX protocol used for this hop\nEach protocol may have different fee structures\n",
-                              "type": "string",
-                              "enum": [
-                                "MinswapV2",
-                                "Minswap",
-                                "MinswapStable",
-                                "MuesliSwap",
-                                "Splash",
-                                "SundaeSwapV3",
-                                "SundaeSwap",
-                                "VyFinance",
-                                "CswapV1",
-                                "WingRidersV2",
-                                "WingRiders",
-                                "WingRidersStableV2",
-                                "Spectrum",
-                                "SplashStable"
-                              ]
+                              "$ref": "#/components/schemas/Protocol",
+                              "description": "DEX protocol used for this hop\nEach protocol may have different fee structures\n"
                             },
                             "lp_token": {
                               "type": "string",
@@ -608,6 +568,29 @@
             }
           }
         }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Protocol": {
+        "type": "string",
+        "enum": [
+          "MinswapV2",
+          "Minswap",
+          "MinswapStable",
+          "MuesliSwap",
+          "Splash",
+          "SundaeSwapV3",
+          "SundaeSwap",
+          "VyFinance",
+          "CswapV1",
+          "WingRidersV2",
+          "WingRiders",
+          "WingRidersStableV2",
+          "Spectrum",
+          "SplashStable"
+        ]
       }
     }
   }
@@ -678,48 +661,12 @@
                       },
                       "include_protocols": {
                         "type": "array",
-                        "items": {
-                          "type": "string",
-                          "enum": [
-                            "MinswapV2",
-                            "Minswap",
-                            "MinswapStable",
-                            "MuesliSwap",
-                            "Splash",
-                            "SundaeSwapV3",
-                            "SundaeSwap",
-                            "VyFinance",
-                            "CswapV1",
-                            "WingRidersV2",
-                            "WingRiders",
-                            "WingRidersStableV2",
-                            "Spectrum",
-                            "SplashStable"
-                          ]
-                        },
+                        "items": {"$ref": "#/components/schemas/Protocol"},
                         "description": "Optional list of DEX protocols to include\nMust match include_protocols used in /estimate\n"
                       },
                       "exclude_protocols": {
                         "type": "array",
-                        "items": {
-                          "type": "string",
-                          "enum": [
-                            "MinswapV2",
-                            "Minswap",
-                            "MinswapStable",
-                            "MuesliSwap",
-                            "Splash",
-                            "SundaeSwapV3",
-                            "SundaeSwap",
-                            "VyFinance",
-                            "CswapV1",
-                            "WingRidersV2",
-                            "WingRiders",
-                            "WingRidersStableV2",
-                            "Spectrum",
-                            "SplashStable"
-                          ]
-                        },
+                        "items": {"$ref": "#/components/schemas/Protocol"},
                         "description": "Optional list of DEX protocols to exclude\nMust match exclude_protocols used in /estimate\n"
                       },
                       "allow_multi_hops": {
@@ -731,6 +678,11 @@
                         "description": "Partner identifier for fee tracking\nMust match partner used in /estimate if provided\n"
                       }
                     }
+                  },
+                  "inputs_to_choose": {
+                    "type": "array",
+                    "description": "Optional list of preferred UTxO inputs to use when building the transaction.\n",
+                    "items": {"type": "string"}
                   },
                   "amount_in_decimal": {
                     "type": "boolean",
@@ -760,6 +712,29 @@
             }
           }
         }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Protocol": {
+        "type": "string",
+        "enum": [
+          "MinswapV2",
+          "Minswap",
+          "MinswapStable",
+          "MuesliSwap",
+          "Splash",
+          "SundaeSwapV3",
+          "SundaeSwap",
+          "VyFinance",
+          "CswapV1",
+          "WingRidersV2",
+          "WingRiders",
+          "WingRidersStableV2",
+          "Spectrum",
+          "SplashStable"
+        ]
       }
     }
   }
@@ -898,73 +873,16 @@
                             "description": "Wallet address that created the order"
                           },
                           "protocol": {
-                            "description": "DEX protocol where the order was placed",
-                            "type": "string",
-                            "enum": [
-                              "MinswapV2",
-                              "Minswap",
-                              "MinswapStable",
-                              "MuesliSwap",
-                              "Splash",
-                              "SundaeSwapV3",
-                              "SundaeSwap",
-                              "VyFinance",
-                              "CswapV1",
-                              "WingRidersV2",
-                              "WingRiders",
-                              "WingRidersStableV2",
-                              "Spectrum",
-                              "SplashStable"
-                            ]
+                            "$ref": "#/components/schemas/Protocol",
+                            "description": "DEX protocol where the order was placed"
                           },
                           "token_in": {
-                            "description": "Token being sold in this order",
-                            "type": "object",
-                            "required": ["token_id"],
-                            "properties": {
-                              "token_id": {
-                                "type": "string",
-                                "description": "Token identifier, two possible formats:\n- For ADA: use \"lovelace\"\n- For other tokens: concatenate <policyId><tokenName> in hex\nExample: \"29d222ce763455e3d7a09a665ce554f00ac89d2e99a1a83d267170c64d494e\" for MIN token\n"
-                              },
-                              "logo": {
-                                "type": "string",
-                                "nullable": true,
-                                "description": "Logo url of the token\nCan be null if no logo is available\n"
-                              },
-                              "ticker": {
-                                "type": "string",
-                                "nullable": true,
-                                "description": "Token ticker symbol (if available)\nCan be null for tokens without a ticker symbol\nExample: \"MIN\", \"iUSD\", \"DJED\"\n"
-                              },
-                              "is_verified": {
-                                "type": "boolean",
-                                "nullable": true,
-                                "description": "Token verification status on Minswap\n- true: Token is verified by Minswap\n- false: Token is not verified\n- null: Verification status unknown\n"
-                              },
-                              "price_by_ada": {
-                                "type": "number",
-                                "nullable": true,
-                                "description": "Token price denominated in ADA\nCan be null if price information is unavailable\nExample: 1.5 means 1 token = 1.5 ADA\n"
-                              },
-                              "project_name": {
-                                "type": "string",
-                                "nullable": true,
-                                "description": "Name of the project that issued the token\nCan be null for unknown projects\nExample: \"Minswap\", \"Indigo\"\n"
-                              },
-                              "decimals": {
-                                "type": "number",
-                                "nullable": true,
-                                "description": "Number of decimal places for the token\n- ADA always has 6 decimals (1 ADA = 1,000,000 lovelace)\n- Most tokens follow the 6 decimal standard\n- Can be null for tokens with unknown decimals\nExample: 6 means divide by 1,000,000 to get actual amount\n"
-                              }
-                            }
+                            "$ref": "#/components/schemas/Asset",
+                            "description": "Token being sold in this order"
                           },
                           "token_out": {
-                            "description": "Token being bought in this order",
-                            "type": "object",
-                            "required": ["token_id"],
-                            "properties": {
-                              "$ref": "#/paths/~1pending-orders/get/responses/200/content/application~1json/schema/properties/orders/items/properties/token_in/properties"
-                            }
+                            "$ref": "#/components/schemas/Asset",
+                            "description": "Token being bought in this order"
                           },
                           "amount_in": {
                             "type": "string",
@@ -1013,6 +931,69 @@
                 }
               }
             }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Protocol": {
+        "type": "string",
+        "enum": [
+          "MinswapV2",
+          "Minswap",
+          "MinswapStable",
+          "MuesliSwap",
+          "Splash",
+          "SundaeSwapV3",
+          "SundaeSwap",
+          "VyFinance",
+          "CswapV1",
+          "WingRidersV2",
+          "WingRiders",
+          "WingRidersStableV2",
+          "Spectrum",
+          "SplashStable"
+        ]
+      },
+      "Asset": {
+        "type": "object",
+        "required": ["token_id"],
+        "properties": {
+          "token_id": {
+            "type": "string",
+            "description": "Token identifier, two possible formats:\n- For ADA: use \"lovelace\"\n- For other tokens: concatenate <policyId><tokenName> in hex\nExample: \"29d222ce763455e3d7a09a665ce554f00ac89d2e99a1a83d267170c64d494e\" for MIN token\n"
+          },
+          "logo": {
+            "type": "string",
+            "nullable": true,
+            "description": "Logo url of the token\nCan be null if no logo is available\n"
+          },
+          "ticker": {
+            "type": "string",
+            "nullable": true,
+            "description": "Token ticker symbol (if available)\nCan be null for tokens without a ticker symbol\nExample: \"MIN\", \"iUSD\", \"DJED\"\n"
+          },
+          "is_verified": {
+            "type": "boolean",
+            "nullable": true,
+            "description": "Token verification status on Minswap\n- true: Token is verified by Minswap\n- false: Token is not verified\n- null: Verification status unknown\n"
+          },
+          "price_by_ada": {
+            "type": "number",
+            "nullable": true,
+            "description": "Token price denominated in ADA\nCan be null if price information is unavailable\nExample: 1.5 means 1 token = 1.5 ADA\n"
+          },
+          "project_name": {
+            "type": "string",
+            "nullable": true,
+            "description": "Name of the project that issued the token\nCan be null for unknown projects\nExample: \"Minswap\", \"Indigo\"\n"
+          },
+          "decimals": {
+            "type": "number",
+            "nullable": true,
+            "description": "Number of decimal places for the token\n- ADA always has 6 decimals (1 ADA = 1,000,000 lovelace)\n- Most tokens follow the 6 decimal standard\n- Can be null for tokens with unknown decimals\nExample: 6 means divide by 1,000,000 to get actual amount\n"
           }
         }
       }
@@ -1072,24 +1053,8 @@
                           "description": "Transaction input pointer (TxHash#Index) for the order\nFormat: \"<transaction_hash>#<output_index>\"\nExample: \"1abc...#0\"\n"
                         },
                         "protocol": {
-                          "description": "DEX protocol where the order was placed\nMust match the protocol used to create the order\n",
-                          "type": "string",
-                          "enum": [
-                            "MinswapV2",
-                            "Minswap",
-                            "MinswapStable",
-                            "MuesliSwap",
-                            "Splash",
-                            "SundaeSwapV3",
-                            "SundaeSwap",
-                            "VyFinance",
-                            "CswapV1",
-                            "WingRidersV2",
-                            "WingRiders",
-                            "WingRidersStableV2",
-                            "Spectrum",
-                            "SplashStable"
-                          ]
+                          "$ref": "#/components/schemas/Protocol",
+                          "description": "DEX protocol where the order was placed\nMust match the protocol used to create the order\n"
                         }
                       },
                       "required": ["tx_in", "protocol"]
@@ -1119,6 +1084,29 @@
             }
           }
         }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Protocol": {
+        "type": "string",
+        "enum": [
+          "MinswapV2",
+          "Minswap",
+          "MinswapStable",
+          "MuesliSwap",
+          "Splash",
+          "SundaeSwapV3",
+          "SundaeSwap",
+          "VyFinance",
+          "CswapV1",
+          "WingRidersV2",
+          "WingRiders",
+          "WingRidersStableV2",
+          "Spectrum",
+          "SplashStable"
+        ]
       }
     }
   }

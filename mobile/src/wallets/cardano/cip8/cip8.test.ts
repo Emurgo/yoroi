@@ -16,7 +16,7 @@ describe('CIP8', () => {
     const rootKey = getMasterKeyFromMnemonic(mnemonic)
     const rootKeyHex = Buffer.from(rootKey).toString('hex')
     const path = [harden(1852), harden(1815), harden(0), 0, 0]
-    const signingKey = createRawTxSigningKey(rootKeyHex, path)
+    const signingKey = createRawTxSigningKey(rootKeyHex, path, CardanoMobile)
 
     const payloadInBytes = Buffer.from(payload, 'hex')
     const normalisedAddress = normalizeToAddress(CardanoMobile, bech32)

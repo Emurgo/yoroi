@@ -1,25 +1,24 @@
-import {CardanoMobile} from '../wallets'
+import {WasmModuleProxy} from '@emurgo/cross-csl-core'
+
 import {MultiToken} from './MultiToken'
 import {identifierToCardanoAsset} from './assetHelpers'
 
-export const cardanoValueFromMultiToken = (tokens: MultiToken) => {
-  const value = CardanoMobile.Value.new(
-    CardanoMobile.BigNum.fromStr(tokens.getDefaultEntry().amount.toString()),
+export const cardanoValueFromMultiToken = (
+  tokens: MultiToken,
+  csl: WasmModuleProxy,
+) => {
+  const value = csl.Value.new(
+    csl.BigNum.fromStr(tokens.getDefaultEntry().amount.toString()),
   )
-  // recall: primary asset counts towards size
   if (tokens.size() === 1) return value
-  const assets = CardanoMobile.MultiAsset.new()
+  const assets = csl.MultiAsset.new()
 
   for (const entry of tokens.nonDefaultEntries()) {
     const {policyId, name} = identifierToCardanoAsset(entry.identifier)
     const asset = assets.get(policyId)
-    const policyContent = asset?.hasValue() ? asset : CardanoMobile.Assets.new()
+    const policyContent = asset?.hasValue() ? asset : csl.Assets.new()
 
-    policyContent.insert(
-      name,
-      CardanoMobile.BigNum.fromStr(entry.amount.toString()),
-    )
-    // recall: we always have to insert since WASM returns copies of objects
+    policyContent.insert(name, csl.BigNum.fromStr(entry.amount.toString()))
     assets.insert(policyId, policyContent)
   }
 

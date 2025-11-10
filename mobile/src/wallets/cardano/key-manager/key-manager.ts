@@ -1,6 +1,7 @@
 import {cardanoConfig, derivationConfig} from '@yoroi/blockchains'
 import {Wallet} from '@yoroi/types'
 
+import {WasmModuleProxy} from '@emurgo/cross-csl-core'
 import {freeze} from 'immer'
 
 import {generateWalletRootKey} from '../mnemonic/mnemonic'
@@ -8,15 +9,17 @@ import {generateWalletRootKey} from '../mnemonic/mnemonic'
 export const keyManager =
   (implementation: Wallet.Implementation) =>
   ({
+    csl,
     mnemonic,
     accountVisual = 0,
   }: {
+    csl: WasmModuleProxy
     mnemonic: string
     accountVisual?: number
   }) => {
     const config = cardanoConfig.implementations[implementation]
 
-    const rootKeyPtr = generateWalletRootKey(mnemonic)
+    const rootKeyPtr = generateWalletRootKey(mnemonic, csl)
 
     const rootKey: string = Buffer.from(rootKeyPtr.asBytes()).toString('hex')
 

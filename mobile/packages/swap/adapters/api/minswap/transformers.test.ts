@@ -625,6 +625,38 @@ describe('transformersMaker', () => {
       expect(result.estimate.partner).toBe('test-partner')
     })
 
+    it('should include inputs_to_choose when inputs are provided', () => {
+      const mockRequest = {
+        amountIn: 10,
+        blockedProtocols: [],
+        slippage: 1,
+        tokenIn: '.' as const,
+        tokenOut:
+          'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441' as const,
+        inputs: ['utxo1', 'utxo2'],
+      }
+
+      const result = transformers.create.request(mockRequest)
+
+      expect(result.inputs_to_choose).toEqual(['utxo1', 'utxo2'])
+    })
+
+    it('should not include inputs_to_choose when inputs are empty', () => {
+      const mockRequest = {
+        amountIn: 10,
+        blockedProtocols: [],
+        slippage: 1,
+        tokenIn: '.' as const,
+        tokenOut:
+          'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441' as const,
+        inputs: [],
+      }
+
+      const result = transformers.create.request(mockRequest)
+
+      expect(result.inputs_to_choose).toBeUndefined()
+    })
+
     it('should transform create response correctly', () => {
       const mockResponse = {
         cbor: 'test-cbor-data',

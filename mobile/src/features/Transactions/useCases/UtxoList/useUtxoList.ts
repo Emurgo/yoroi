@@ -11,8 +11,8 @@ import {useQuery, useQueryClient} from '@tanstack/react-query'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useWalletEvent} from '~/features/WalletManager/hooks/useWalletEvent'
 import {toAssetNameHex, toPolicyId} from '~/wallets/cardano/api/utils'
+import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
 import {RawUtxo} from '~/wallets/types/other'
-import {CardanoMobile} from '~/wallets/wallets'
 
 export const useUtxoList = () => {
   const {
@@ -119,10 +119,12 @@ const transformUtxo = (utxo: RawUtxo): Utxo => {
 }
 
 function toTransactionUnspentOutputHex(this: Utxo): string {
-  return utxoToTransactionUnspentOutput({
-    csl: CardanoMobile,
-    utxo: this,
-  }).toHex()
+  return CardanoMobileWrapped.cslScope((csl) =>
+    utxoToTransactionUnspentOutput({
+      csl,
+      utxo: this,
+    }).toHex(),
+  )
 }
 
 type UtxoToCsl = {
