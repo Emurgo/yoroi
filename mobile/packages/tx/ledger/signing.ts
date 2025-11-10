@@ -80,7 +80,7 @@ export async function buildLedgerSignedTx(
   encodedTx: Uint8Array
 }> {
   return CardanoMobileWrapped.cslScope(async (csl) => {
-    const key = wasm.Bip32PublicKey.fromBytes(Buffer.from(publicKeyHex, 'hex'))
+    const key = csl.Bip32PublicKey.fromBytes(Buffer.from(publicKeyHex, 'hex'))
     const addressing: Addressing = {
       path: [
         purpose,
@@ -105,10 +105,10 @@ export async function buildLedgerSignedTx(
       )
     }
     const keyLevel = addressing.startLevel + addressing.path.length - 1
-    const witSet = wasm.TransactionWitnessSet.new()
+    const witSet = csl.TransactionWitnessSet.new()
     const bootstrapWitnesses: Array<BootstrapWitness> = []
     const vkeys: Array<Vkeywitness> = []
-    const plutusDataWits = wasm.PlutusList.new()
+    const plutusDataWits = csl.PlutusList.new()
 
     // Note: Ledger removes duplicate witnesses
     // but there may be a one-to-many relationship
@@ -123,9 +123,9 @@ export async function buildLedgerSignedTx(
         key,
       })
 
-      if (wasm.ByronAddress.isValid(utxo.receiver)) {
-        const byronAddr = wasm.ByronAddress.fromBase58(utxo.receiver)
-        const bootstrapWit = wasm.BootstrapWitness.new(
+      if (csl.ByronAddress.isValid(utxo.receiver)) {
+        const byronAddr = csl.ByronAddress.fromBase58(utxo.receiver)
+        const bootstrapWit = csl.BootstrapWitness.new(
           csl.Vkey.new(addressKey.toRawKey()),
           csl.Ed25519Signature.fromBytes(Buffer.from(witness, 'hex')),
           addressKey.chaincode(),
@@ -142,7 +142,7 @@ export async function buildLedgerSignedTx(
         continue
       }
 
-      const vkeyWit = wasm.Vkeywitness.new(
+      const vkeyWit = csl.Vkeywitness.new(
         csl.Vkey.new(addressKey.toRawKey()),
         csl.Ed25519Signature.fromBytes(Buffer.from(witness, 'hex')),
       )
@@ -169,7 +169,7 @@ export async function buildLedgerSignedTx(
           level: keyLevel,
           key,
         })
-        const vkeyWit = wasm.Vkeywitness.new(
+        const vkeyWit = csl.Vkeywitness.new(
           csl.Vkey.new(stakingKey.toRawKey()),
           csl.Ed25519Signature.fromBytes(
             Buffer.from(witness.witnessSignatureHex, 'hex'),
@@ -187,23 +187,23 @@ export async function buildLedgerSignedTx(
     }
 
     if (bootstrapWitnesses.length > 0) {
-      const bootstrapWitWasm = wasm.BootstrapWitnesses.new()
+      const bootstrapWitCsl = csl.BootstrapWitnesses.new()
 
       for (const bootstrapWit of bootstrapWitnesses) {
-        bootstrapWitWasm.add(bootstrapWit)
+        bootstrapWitCsl.add(bootstrapWit)
       }
 
-      witSet.setBootstraps(bootstrapWitWasm)
+      witSet.setBootstraps(bootstrapWitCsl)
     }
 
     if (vkeys.length > 0) {
-      const vkeyWitWasm = wasm.Vkeywitnesses.new()
+      const vkeyWitCsl = csl.Vkeywitnesses.new()
 
       for (const vkey of vkeys) {
-        vkeyWitWasm.add(vkey)
+        vkeyWitCsl.add(vkey)
       }
 
-      witSet.setVkeys(vkeyWitWasm)
+      witSet.setVkeys(vkeyWitCsl)
     }
 
     // TODO: Handle auxiliary data and catalyst registration
@@ -220,7 +220,7 @@ export async function buildLedgerSignedTx(
     if (plutusData) {
       for (const datum of plutusData) {
         if (datum.data) {
-          const plutusDatum = wasm.PlutusData.fromHex(datum.data)
+          const plutusDatum = csl.PlutusData.fromHex(datum.data)
           plutusDataWits.add(plutusDatum)
         }
       }
@@ -230,7 +230,7 @@ export async function buildLedgerSignedTx(
 
     // TODO: handle script witnesses
     const txBody = unsignedTx.txBuilder.build()
-    const signedTx = wasm.Transaction.new(
+    const signedTx = csl.Transaction.new(
       txBody as any,
       witSet,
       undefined, // auxData - TODO: implement
@@ -265,7 +265,7 @@ export async function createSignedLedgerTxFromCbor(
   publicKeyHex: string,
 ): Promise<Uint8Array> {
   return CardanoMobileWrapped.cslScope((wasm) => {
-    const fixedTx = wasm.FixedTransaction.fromHex(cbor)
+    const fixedTx = csl.FixedTransaction.fromHex(cbor)
     if (!fixedTx) throw new Error('invalid tx hex')
 
     const addressing: Addressing = {
@@ -277,7 +277,7 @@ export async function createSignedLedgerTxFromCbor(
       startLevel: 1,
     }
 
-    const key = wasm.Bip32PublicKey.fromBytes(Buffer.from(publicKeyHex, 'hex'))
+    const key = csl.Bip32PublicKey.fromBytes(Buffer.from(publicKeyHex, 'hex'))
     const keyLevel = addressing.startLevel + addressing.path.length - 1
 
     for (let i = 0; i < signedData.witnesses.length; i++) {
@@ -288,7 +288,7 @@ export async function createSignedLedgerTxFromCbor(
         {startLevel: 1, path: witnessData.path},
         {level: keyLevel, key},
       )
-      const witness = wasm.Vkeywitness.new(
+      const witness = csl.Vkeywitness.new(
         csl.Vkey.new(addressKey.toRawKey()),
         csl.Ed25519Signature.fromBytes(
           Buffer.from(witnessData.witnessSignatureHex, 'hex'),
@@ -319,7 +319,7 @@ export async function signRawTransaction(
   pKeys: PrivateKey[],
 ): Promise<Uint8Array> {
   return CardanoMobileWrapped.cslScope((wasm) => {
-    const fixedTx = wasm.FixedTransaction.fromHex(cbor)
+    const fixedTx = csl.FixedTransaction.fromHex(cbor)
     if (!fixedTx) throw new Error('invalid tx hex')
 
     for (let i = 0; i < pKeys.length; i++) {
