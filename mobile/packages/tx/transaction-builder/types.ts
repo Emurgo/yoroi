@@ -42,6 +42,8 @@ export type TransactionOptions = {
     end: number
   }
   metadata?: TransactionMetadata[]
+  manualChangeOutput?: TransactionOutput
+  manualFee?: Balance.Amounts
 }
 
 export type UnsignedTransaction = {
@@ -50,6 +52,7 @@ export type UnsignedTransaction = {
   certificates: TransactionCertificate[]
   withdrawals: TransactionWithdrawal[]
   referenceInputs: TransactionReferenceInput[]
+  collateralInputs: TransactionInput[]
   metadata?: TransactionMetadata[]
   options: TransactionOptions
   cbor?: string // CBOR hex string
