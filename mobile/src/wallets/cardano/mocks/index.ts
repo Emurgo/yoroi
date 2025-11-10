@@ -2,7 +2,7 @@ import {
   BackendConfig,
   RawTransaction,
   TipStatusResponse,
-  Transaction,
+  WalletTransaction,
 } from '~/wallets/types/other'
 
 export const mockedBackendConfig: BackendConfig = {
@@ -15,7 +15,7 @@ export const mockedBackendConfig: BackendConfig = {
   TX_HISTORY_RESPONSE_LIMIT: 2,
 }
 
-export const mockTx: Transaction = {
+export const mockTx: WalletTransaction = {
   id: '0a8962dde362eef1f840defe6f916fdf9701ad53c7cb5dd4a74ab85df8e9bffc',
   type: 'shelley',
   fee: '179537',
@@ -587,9 +587,9 @@ export const mockedEmptyHistoryResponse: {
   isLast: true,
 }
 
-export const mockedEmptyLocalTransactions: Record<string, Transaction> = {}
+export const mockedEmptyLocalWalletTransactions: Record<string, WalletTransaction> = {}
 
-export const mockedLocalTransactions: Record<string, Transaction> = {
+export const mockedLocalWalletTransactions: Record<string, WalletTransaction> = {
   '54ab3dc8e717040b9b4c523d0756cfc59a30f107e053b4cd474e11e818be0ddf': {
     id: '54ab3dc8e717040b9b4c523d0756cfc59a30f107e053b4cd474e11e818be0ddf',
     type: 'shelley',
@@ -1001,3 +1001,7 @@ export const mockedLocalTransactions: Record<string, Transaction> = {
     memo: null,
   },
 }
+
+// Backward compatibility aliases
+export const mockedEmptyLocalTransactions = mockedEmptyLocalWalletTransactions
+export const mockedLocalTransactions = mockedLocalWalletTransactions

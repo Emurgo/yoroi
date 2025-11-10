@@ -20,7 +20,7 @@ describe('CIP8', () => {
     const signingKey = createRawTxSigningKey(rootKeyHex, path, CardanoMobile)
 
     const payloadInBytes = Buffer.from(payload, 'hex')
-    const normalisedAddress = normalizeToAddress(CardanoMobile, bech32)
+    const normalisedAddress = await normalizeToAddress(bech32)
     if (normalisedAddress != null) {
       const coseSign1 = await cip8.sign(
         Buffer.from(normalisedAddress.toHex(), 'hex'),

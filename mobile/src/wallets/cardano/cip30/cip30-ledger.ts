@@ -38,7 +38,7 @@ class CIP30LedgerExtension {
     useUSB: boolean,
   ): Promise<{signature: string; key: string}> {
     return CardanoMobileWrapped.cslScope(async (csl) => {
-      const normalizedAddress = normalizeToAddress(csl, address)
+      const normalizedAddress = await normalizeToAddress(address)
       if (!normalizedAddress) throw new Error('Invalid address')
       const rewardAddress = csl.RewardAddress.fromAddress(normalizedAddress)
       const rewardAddressHex = rewardAddress?.toAddress().toHex()
@@ -49,12 +49,13 @@ class CIP30LedgerExtension {
               .staking.addressing
           : null
 
+      const bech32Address = normalizedAddress.toBech32(undefined)
+      if (!bech32Address) throw new Error('Invalid address')
       const signingPath =
         rewardAddressHex === this.wallet.rewardAddressHex &&
         Array.isArray(stakingSigningPath)
           ? stakingSigningPath
-          : this.wallet.getAddressing(normalizedAddress.toBech32(undefined))
-              .path
+          : this.wallet.getAddressing(bech32Address).path
 
       const ledgerPayload: MessageData = {
         messageHex: payload,
@@ -84,7 +85,7 @@ class CIP30LedgerExtension {
     useUSB: boolean,
   ): Promise<Transaction> {
     return CardanoMobileWrapped.cslScope(async (csl) => {
-      if (!partial) assertHasAllSigners(cbor, this.wallet, this.meta)
+      if (!partial) await assertHasAllSigners(cbor, this.wallet, this.meta)
 
       const stakingSigningPath =
         this.meta.implementation === 'cardano-cip1852'
@@ -94,13 +95,14 @@ class CIP30LedgerExtension {
             )
           : undefined
 
+      const addressingMap = await getHexAddressingMap(this.wallet)
       const payload = await toLedgerSignRequest(
         csl,
         cbor,
         this.wallet.networkManager.chainId,
         this.wallet.networkManager.protocolMagic,
-        getHexAddressingMap(csl, this.wallet),
-        getHexAddressingMap(csl, this.wallet),
+        addressingMap,
+        addressingMap,
         getAddressedUtxos(this.wallet),
         [],
         stakingSigningPath,
@@ -114,7 +116,6 @@ class CIP30LedgerExtension {
       const implementationConfig =
         cardanoConfig.implementations[this.meta.implementation]
       const bytes = await createSignedLedgerTxFromCbor(
-        csl,
         cbor,
         signedLedgerTx,
         implementationConfig.derivations.base.harden.purpose,

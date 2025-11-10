@@ -9,14 +9,14 @@ import {MultiToken} from './MultiToken'
 import {cardanoValueFromMultiToken} from './cardanoValueFromMultiToken'
 import {CardanoMobileWrapped} from './wrappedCsl'
 
-export const withMinAmounts = (
+export const withMinAmounts = async (
   address: Address,
   amounts: Balance.Amounts,
   primaryTokenInfo: Portfolio.Token.Info,
   protocolParams: Chain.Cardano.ProtocolParams,
-): Balance.Amounts => {
+): Promise<Balance.Amounts> => {
   const amountsWithPrimaryToken = withPrimaryToken(amounts, primaryTokenInfo)
-  const minAmounts = getMinAmounts(
+  const minAmounts = await getMinAmounts(
     address,
     amountsWithPrimaryToken,
     primaryTokenInfo,
@@ -32,12 +32,17 @@ export const withMinAmounts = (
   }))
 }
 
-export const getMinAmounts = (
+export const getMinAmounts = async (
   address: Address,
   amounts: Balance.Amounts,
   primaryTokenInfo: Portfolio.Token.Info,
   protocolParams: Chain.Cardano.ProtocolParams,
 ) => {
+  const normalizedAddress = await normalizeToAddress(address)
+
+  if (normalizedAddress === undefined)
+    throw new Error('getMinAmounts::Error not a valid address')
+
   return CardanoMobileWrapped.cslScope((csl) => {
     const multiToken = new MultiToken(
       [
@@ -52,11 +57,6 @@ export const getMinAmounts = (
 
     const value = cardanoValueFromMultiToken(multiToken, csl)
     const coinsPerUtxoByte = csl.BigNum.fromStr(protocolParams.coinsPerUtxoByte)
-
-    const normalizedAddress = normalizeToAddress(csl, address)
-
-    if (normalizedAddress === undefined)
-      throw new Error('getMinAmounts::Error not a valid address')
 
     const txOutput = csl.TransactionOutput.new(normalizedAddress, value)
     const dataCost = csl.DataCost.newCoinsPerByte(coinsPerUtxoByte)

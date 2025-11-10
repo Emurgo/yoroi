@@ -422,7 +422,7 @@ type TimeForTx = {
 
 const perAddressTxsSelector = (state: TransactionManagerState) => {
   const transactions = state.transactions
-  const addressToTxs: Record<string, Array<Transaction['id']>> = {}
+  const addressToTxs: Record<string, Array<WalletTransaction['id']>> = {}
 
   const addTxTo = (txId: string, addr: string) => {
     const current = addressToTxs[addr] || ([] as Array<string>)

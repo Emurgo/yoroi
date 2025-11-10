@@ -56,7 +56,7 @@ export {
 export {UtxoService, init as initUtxo} from './utxo'
 
 // Export types
-export type {ModernUtxo} from './utxo/models'
+export type {ModernUtxo, Utxo, UtxoAtSafePoint, UtxoDiffToBestBlock} from './utxo/models'
 
 // Export Ledger functions
 export {

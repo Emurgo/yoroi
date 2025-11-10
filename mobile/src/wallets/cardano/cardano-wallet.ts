@@ -68,6 +68,7 @@ import {StakingInfo} from '../types/staking'
 import {YoroiSignedTx, YoroiUnsignedTx} from '../types/yoroi'
 import {Quantities} from '../utils/utils'
 import {CardanoMobile} from '../wallets'
+import {CardanoMobileWrapped} from './wrappedCsl'
 import {
   AccountManager,
   Addresses,
@@ -76,7 +77,6 @@ import {
 import * as legacyApi from './api/api'
 import {calcLockedDeposit} from './assetUtils'
 import {
-  filterAddressesByStakingKey,
   getDelegationStatus,
 } from './delegationUtils'
 import {
@@ -497,7 +497,6 @@ export const makeCardanoWallet = (
 
         // Build the transaction
         const unsignedTx = await buildTransaction(
-          CardanoMobile,
           builderState,
           protocolParams,
           primaryTokenId,
@@ -591,7 +590,6 @@ export const makeCardanoWallet = (
 
           // Build the transaction
           const unsignedTx = await buildTransaction(
-            CardanoMobile,
             builderState,
             protocolParams,
             primaryTokenId,
@@ -676,7 +674,6 @@ export const makeCardanoWallet = (
 
         // Build the transaction
         const unsignedTx = await buildTransaction(
-          CardanoMobile,
           builderState,
           protocolParams,
           primaryTokenId,
@@ -736,7 +733,6 @@ export const makeCardanoWallet = (
 
         // Build the transaction
         const unsignedTx = await buildTransaction(
-          CardanoMobile,
           builderState,
           protocolParams,
           primaryTokenId,
@@ -757,15 +753,28 @@ export const makeCardanoWallet = (
       }
     }
 
-    getAllUtxosForKey() {
+    getAllUtxosForKey(): Array<CardanoTypes.CardanoAddressedUtxo> {
       if (implementationConfig.features.staking) {
         const modernUtxos = this.getAddressedUtxos()
         const addressedUtxos = modernUtxosToCardanoAddressedUtxos(modernUtxos)
-        return filterAddressesByStakingKey(
-          CardanoMobile.Credential.fromKeyhash(this.getStakingKey().hash()),
-          addressedUtxos,
-          false,
-        )
+        // Filter synchronously by checking if address contains the staking key
+        const stakingKeyHashHex = this.getStakingKey().hash().toHex()
+        return addressedUtxos.filter((utxo) => {
+          try {
+            return CardanoMobileWrapped.cslScope((csl) => {
+              const addr = csl.Address.fromBech32(utxo.receiver)
+              if (!addr) return false
+              const baseAddr = csl.BaseAddress.fromAddress(addr)
+              if (!baseAddr) return false
+              const stakeCred = baseAddr.stakeCred()
+              const keyHash = stakeCred.toKeyhash()
+              if (!keyHash) return false
+              return keyHash.toHex() === stakingKeyHashHex
+            })
+          } catch {
+            return false
+          }
+        })
       }
       throwLoggedError('getAllUtxosForKey staking not supported')
     }
@@ -891,7 +900,7 @@ export const makeCardanoWallet = (
     // end sync
 
     public async signRawTx(txHex: string, pKeys: CSL.PrivateKey[]) {
-      return signRawTransaction(CardanoMobile, txHex, pKeys)
+      return signRawTransaction(txHex, pKeys)
     }
 
     private getAddressedUtxos(): ModernUtxo[] {
@@ -986,7 +995,6 @@ export const makeCardanoWallet = (
 
         // Build the transaction
         const unsignedTx = await buildTransaction(
-          CardanoMobile,
           builderState,
           protocolParams,
           primaryTokenId,
@@ -1072,7 +1080,6 @@ export const makeCardanoWallet = (
 
       // Sign the transaction using the new signing function
       const signedTx = await signTransaction(
-        CardanoMobile,
         {
           inputs: [],
           outputs: [],
@@ -1126,13 +1133,14 @@ export const makeCardanoWallet = (
         )
       }
 
+      const addressingMap = await getHexAddressingMap(this)
       const payload = await toLedgerSignRequest(
         CardanoMobile,
         cbor,
         this.networkManager.chainId,
         this.networkManager.protocolMagic,
-        getHexAddressingMap(CardanoMobile, this),
-        getHexAddressingMap(CardanoMobile, this),
+        addressingMap,
+        addressingMap,
         getAddressedUtxos(this),
         [],
         stakingAddressing,
@@ -1145,7 +1153,6 @@ export const makeCardanoWallet = (
       )
 
       const bytes = await createSignedLedgerTxFromCbor(
-        CardanoMobile,
         cbor,
         signedLedgerTx,
         implementationConfig.derivations.base.harden.purpose,
@@ -1189,7 +1196,6 @@ export const makeCardanoWallet = (
           )
 
           const signedTxResult = await buildLedgerSignedTx(
-            CardanoMobile,
             unsignedTx.unsignedTx as any, // TODO: Fix type when TransactionBuilder is complete
             signedLedgerTx,
             implementationConfig.derivations.base.harden.purpose,
@@ -1243,7 +1249,6 @@ export const makeCardanoWallet = (
         )
 
       const signedTxResult = await buildLedgerSignedTx(
-        CardanoMobile,
         unsignedTx.unsignedTx as any, // TODO: Fix type when TransactionBuilder is complete
         signedLedgerTx,
         implementationConfig.derivations.base.harden.purpose,
@@ -1283,7 +1288,7 @@ export const makeCardanoWallet = (
       // if it crashes, the utxo manager will be out of sync with wallet
       if (this.didUtxosUpdate(this._utxos, newUtxos) || isForced) {
         // NOTE: recalc locked deposit should happen also when epoch changes after conway
-        const lockedAsStorageCost = calcLockedDeposit({
+        const lockedAsStorageCost = await calcLockedDeposit({
           rawUtxos: newUtxos,
           coinsPerUtxoByteStr: this.protocolParams.coinsPerUtxoByte,
         })

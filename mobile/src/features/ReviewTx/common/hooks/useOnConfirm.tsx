@@ -160,7 +160,7 @@ const submitTx = async (
   meta: Wallet.Meta,
 ): Promise<boolean> => {
   return CardanoMobileWrapped.cslScope(async (csl) => {
-    const signers = getTransactionSigners(cbor, wallet, meta)
+    const signers = await getTransactionSigners(cbor, wallet, meta)
     const keys = signers.map((signer) =>
       createRawTxSigningKey(rootKey, signer, csl),
     )

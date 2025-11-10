@@ -113,7 +113,7 @@ export const formatTokenInteger = (
   withPositiveSign = false,
 ) => {
   const decimals =
-    'numberOfDecimals' in token ? token.numberOfDecimals : token.decimals
+    ('numberOfDecimals' in token ? token.numberOfDecimals : token.decimals) ?? 0
   const normalizationFactor = Math.pow(10, decimals)
   const bigNumber = new BigNumber(amount)
   const num = bigNumber.dividedToIntegerBy(normalizationFactor)
@@ -133,7 +133,7 @@ export const formatTokenFractional = (
   token: Balance.TokenInfo | Portfolio.Token.Info | TransactionToken,
 ) => {
   const decimals =
-    'numberOfDecimals' in token ? token.numberOfDecimals : token.decimals
+    ('numberOfDecimals' in token ? token.numberOfDecimals : token.decimals) ?? 0
   const normalizationFactor = Math.pow(10, decimals)
   const fractional = new BigNumber(quantity)
     .abs()

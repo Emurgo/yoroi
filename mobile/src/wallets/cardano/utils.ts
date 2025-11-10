@@ -235,16 +235,18 @@ export const copyMultipleFromCSL = <T extends {toHex: () => string}>(
   return items.map((item) => copyFromCSL(creator, item))
 }
 
-export const getHexAddressingMap = (
-  csl: WasmModuleProxy,
+export const getHexAddressingMap = async (
   wallet: YoroiWallet,
 ) => {
-  const addressedUtxos = wallet.utxos.map((utxo: RawUtxo) => {
-    const addressing = wallet.getAddressing(utxo.receiver)
-    const hexAddress = normalizeToAddress(csl, utxo.receiver)?.toHex()
+  const addressedUtxos = await Promise.all(
+    wallet.utxos.map(async (utxo: RawUtxo) => {
+      const addressing = wallet.getAddressing(utxo.receiver)
+      const normalizedAddress = await normalizeToAddress(utxo.receiver)
+      const hexAddress = normalizedAddress?.toHex()
 
-    return {addressing, hexAddress}
-  })
+      return {addressing, hexAddress}
+    }),
+  )
 
   const addressing = addressedUtxos
   return addressing.reduce<{[addressHex: string]: Array<number>}>(

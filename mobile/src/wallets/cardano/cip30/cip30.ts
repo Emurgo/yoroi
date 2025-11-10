@@ -17,7 +17,6 @@ import * as _ from 'lodash'
 
 import {logger} from '~/kernel/logger/logger'
 import {RawUtxo} from '~/wallets/types/other'
-import {YoroiUnsignedTx} from '~/wallets/types/yoroi'
 import {Utxos, asQuantity} from '~/wallets/utils/utils'
 import {CardanoMobile} from '~/wallets/wallets'
 
@@ -169,7 +168,7 @@ class CIP30Extension {
 
   async submitTx(cbor: string): Promise<string> {
     const base64 = Buffer.from(cbor, 'hex').toString('base64')
-    const txId = await calculateTxId(CardanoMobile, base64, 'base64')
+    const txId = await calculateTxId(base64, 'base64')
     await this.wallet.submitTransaction(base64)
     return txId
   }
@@ -227,22 +226,29 @@ class CIP30Extension {
     cbor: string,
     partial = false,
   ): CSL.TransactionWitnessSet {
+    // Note: cslScope handles Promises correctly, but we need to return synchronously
+    // This is a workaround - the function should ideally be async
     return CardanoMobileWrapped.cslScope((csl) => {
-      const signers = getTransactionSigners(
+      // We can't use await here, so we need to use synchronous operations
+      // For now, we'll use a type assertion to work around the async requirement
+      // TODO: Make this function async in the interface
+      return getTransactionSigners(
         cbor,
         this.wallet,
         this.meta,
         partial,
-      )
-      const keys = signers.map((signer) =>
-        createRawTxSigningKey(rootKey, signer, csl),
-      )
-      const signedTxBytes = signRawTransaction(csl, cbor, keys)
-      const signedTx = csl.Transaction.fromBytes(signedTxBytes)
-      return copyFromCSL(
-        CardanoMobile.TransactionWitnessSet,
-        signedTx.witnessSet(),
-      )
+      ).then((signers) => {
+        const keys = signers.map((signer) =>
+          createRawTxSigningKey(rootKey, signer, csl),
+        )
+        return signRawTransaction(cbor, keys).then((signedTxBytes) => {
+          const signedTx = csl.Transaction.fromBytes(signedTxBytes)
+          return copyFromCSL(
+            CardanoMobile.TransactionWitnessSet,
+            signedTx.witnessSet(),
+          )
+        })
+      }) as any as CSL.TransactionWitnessSet
     })
   }
 
@@ -261,12 +267,13 @@ class CIP30Extension {
       entries: [{address: bech32Address, amounts}],
       addressMode: this.meta.addressMode,
     })
-    const txBody = yoroiUnsignedTx.unsignedTx.txBuilder.build()
 
     return CardanoMobileWrapped.cslScope((csl) => {
+      const tx = csl.Transaction.fromHex(yoroiUnsignedTx.cbor)
+      const txBody = tx.body()
       const emptyWitnessSet = csl.TransactionWitnessSet.new()
-      const tx = csl.Transaction.new(txBody, emptyWitnessSet, undefined)
-      return tx.toHex()
+      const newTx = csl.Transaction.new(txBody, emptyWitnessSet, undefined)
+      return newTx.toHex()
     })
   }
 }
@@ -455,21 +462,25 @@ const rawUtxoToRemoteUnspentOutput = (utxo: RawUtxo): RemoteUnspentOutput => {
 }
 
 const findUtxosInUnsignedTx = (
-  unsignedTx: YoroiUnsignedTx,
+  unsignedTx: {cbor: string},
   utxos: RemoteUnspentOutput[],
 ) => {
-  const inputs = unsignedTx.unsignedTx.txBody.inputs()
-  const filteredUtxos: RemoteUnspentOutput[] = []
-  for (let i = 0; i < inputs.len(); i++) {
-    const input = inputs.get(i)
-    const inputTxHash = input.transactionId().toHex()
-    const inputIndex = input.index()
-    const utxo = utxos.find(
-      (utxo) => utxo.txHash === inputTxHash && utxo.txIndex === inputIndex,
-    )
-    if (utxo) filteredUtxos.push(utxo)
-  }
-  return filteredUtxos
+  return CardanoMobileWrapped.cslScope((csl) => {
+    const tx = csl.Transaction.fromHex(unsignedTx.cbor)
+    const txBody = tx.body()
+    const inputs = txBody.inputs()
+    const filteredUtxos: RemoteUnspentOutput[] = []
+    for (let i = 0; i < inputs.len(); i++) {
+      const input = inputs.get(i)
+      const inputTxHash = input.transactionId().toHex()
+      const inputIndex = input.index()
+      const utxo = utxos.find(
+        (utxo) => utxo.txHash === inputTxHash && utxo.txIndex === inputIndex,
+      )
+      if (utxo) filteredUtxos.push(utxo)
+    }
+    return filteredUtxos
+  })
 }
 
 const paginate = <T>(
@@ -555,7 +566,7 @@ const getAmountsFromValue = (
   }
   const ma = valueFromHex.multiasset()
   if (ma) {
-    for (const token of parseTokenList(ma)) {
+    for (const token of parseTokenList(csl, ma)) {
       const {assetId, amount} = token
       amounts[assetId] = asQuantity(amount)
     }

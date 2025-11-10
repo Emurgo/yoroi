@@ -12,14 +12,14 @@ import {CardanoMobile} from '~/wallets/wallets'
 
 import {YoroiWallet} from '../types'
 
-export const createSwapCancellationLedgerPayload = (
+export const createSwapCancellationLedgerPayload = async (
   cbor: string,
   wallet: YoroiWallet,
   chainId: number,
   protocolMagic: number,
   getAddressing: (address: string) => Addressing,
   stakeVKHash: CSL_TYPES.Ed25519KeyHash,
-): SignTransactionRequest => {
+): Promise<SignTransactionRequest> => {
   const changeAddrs = [
     ...wallet.internalAddresses,
     ...wallet.internalAddresses,
@@ -33,8 +33,7 @@ export const createSwapCancellationLedgerPayload = (
     )
     return utxo ? getAddressing(utxo.receiver) : null
   }
-  return createLedgerPlutusPayload({
-    wasm: CardanoMobile,
+  return await createLedgerPlutusPayload({
     cbor,
     addresses: changeAddrs,
     networkId: chainId,
@@ -54,14 +53,14 @@ export const convertBech32ToHex = (bech32Address: string) => {
 
 export const harden = (num: number) => derivationConfig.hardStart + num
 
-const getRequiredSigners = (
+const getRequiredSigners = async (
   tx: CSL_TYPES.Transaction,
   wallet: YoroiWallet,
   meta: Wallet.Meta,
   partial = true,
-): number[][] => {
+): Promise<number[][]> => {
   const stakeVKHash = wallet.getStakingKey().hash()
-  const body = tx.body()
+  const txBody = tx.body()
 
   const implementation = meta.implementation
 
@@ -97,9 +96,37 @@ const getRequiredSigners = (
     )
     return {path, startLevel}
   }
-  const signers = getAllSigners({
-    wasm: CardanoMobile,
-    body,
+
+  // Adapter to convert TransactionBody to the format expected by getAllSigners
+  // TransactionBody.requiredSigners() returns Ed25519KeyHashes | null
+  // TransactionBody.collateral() returns TransactionInputs | null
+  const bodyAdapter = {
+    requiredSigners() {
+      const signers = txBody.requiredSigners()
+      if (!signers) return null
+      return {
+        len: () => signers.len(),
+        get: (index: number) => signers.get(index),
+      }
+    },
+    inputs: () => txBody.inputs(),
+    collateral: () => {
+      // collateral() returns Optional<TransactionInputs> | TransactionInputs | null
+      const collateralOpt = txBody.collateral()
+      if (!collateralOpt) return null
+      // Check if it's Optional (has hasValue method)
+      if (typeof (collateralOpt as any).hasValue === 'function') {
+        const opt = collateralOpt as any
+        if (!opt.hasValue()) return null
+        return opt.value()
+      }
+      // If it's already TransactionInputs, return it directly
+      return collateralOpt as any
+    },
+  }
+
+  const signers = await getAllSigners({
+    body: bodyAdapter,
     networkId: wallet.networkManager.chainId,
     stakeVKHash,
     getAddressAddressing,
@@ -158,15 +185,15 @@ export const getDerivationPathForAddress = (
   ]
 }
 
-export const getTransactionSigners = (
+export const getTransactionSigners = async (
   cbor: string,
   wallet: YoroiWallet,
   meta: Wallet.Meta,
   partial = true,
-) => {
+): Promise<number[][]> => {
   const tx = CardanoMobile.Transaction.fromHex(cbor)
 
-  const signers = getRequiredSigners(tx, wallet, meta, partial)
+  const signers = await getRequiredSigners(tx, wallet, meta, partial)
   const implementation = meta.implementation
   if (
     implementation === 'cardano-cip1852' &&
@@ -182,13 +209,13 @@ export const getTransactionSigners = (
   return signers
 }
 
-export const assertHasAllSigners = (
+export const assertHasAllSigners = async (
   cbor: string,
   wallet: YoroiWallet,
   meta: Wallet.Meta,
 ) => {
   try {
-    getTransactionSigners(cbor, wallet, meta, false)
+    await getTransactionSigners(cbor, wallet, meta, false)
   } catch (error) {
     throwLoggedError('Missing keys to sign transaction')
   }

@@ -1,4 +1,5 @@
 import {Balance} from '@yoroi/types'
+import type {RemoteCertificateMeta} from '@yoroi/staking'
 
 // App-specific staking types (UI state)
 export type StakingInfo =
@@ -32,6 +33,6 @@ export type RemotePoolMetaSuccess = {
     slot: number
     tx_ordinal: number
     cert_ordinal: number
-    payload: RemoteCertificate
+    payload: RemoteCertificateMeta
   }>
 }

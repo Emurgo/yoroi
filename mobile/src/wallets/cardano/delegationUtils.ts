@@ -8,18 +8,18 @@ import type {TimestampedCertMeta} from './transactionManager/transactionManager'
 import {CardanoTypes} from './types'
 import {CardanoMobileWrapped} from './wrappedCsl'
 
-const addrContainsAccountKey = (
+const addrContainsAccountKey = async (
   address: string,
   targetAccountKey: CardanoTypes.StakeCredential,
   acceptTypeMismatch: boolean,
 ) => {
+  const wasmAddr = await normalizeToAddress(address)
+
+  if (wasmAddr == null) {
+    throw new Error(`addrContainsAccountKey: invalid address ${address}`)
+  }
+
   return CardanoMobileWrapped.cslScope((csl) => {
-    const wasmAddr = normalizeToAddress(csl, address)
-
-    if (wasmAddr == null) {
-      throw new Error(`addrContainsAccountKey: invalid address ${address}`)
-    }
-
     const accountKeyString = Buffer.from(targetAccountKey.toBytes()).toString(
       'hex',
     )
@@ -38,7 +38,7 @@ const addrContainsAccountKey = (
   })
 }
 
-export const filterAddressesByStakingKey = (
+export const filterAddressesByStakingKey = async (
   stakingKey: CardanoTypes.StakeCredential,
   utxos: ReadonlyArray<CardanoAddressedUtxo>,
   acceptTypeMismatch: boolean,
@@ -46,7 +46,7 @@ export const filterAddressesByStakingKey = (
   const result: Array<CardanoAddressedUtxo> = []
 
   for (const utxo of utxos) {
-    if (addrContainsAccountKey(utxo.receiver, stakingKey, acceptTypeMismatch)) {
+    if (await addrContainsAccountKey(utxo.receiver, stakingKey, acceptTypeMismatch)) {
       result.push(utxo)
     }
   }

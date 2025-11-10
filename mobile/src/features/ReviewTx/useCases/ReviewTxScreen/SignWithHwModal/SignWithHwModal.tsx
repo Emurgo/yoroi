@@ -158,7 +158,7 @@ const SignWithHwModalContent = ({
       }
     }
 
-    signTx({unsignedTx, useUSB: true, hwDeviceInfo})
+    signTx({unsignedTx: unsignedTx as any, useUSB: true, hwDeviceInfo})
   }
 
   if (step === 'select-transport') {

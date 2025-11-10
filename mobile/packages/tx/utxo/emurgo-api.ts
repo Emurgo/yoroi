@@ -187,12 +187,17 @@ export class BatchedEmurgoUtxoApi implements UtxoApiContract {
       if (latestMatchedSafeBlockIndex < 0) {
         return {result: UtxoApiResult.SAFEBLOCK_ROLLBACK}
       }
+      const firstValue = values[0]
+      if (!firstValue) {
+        // Fallback if values is empty (shouldn't happen, but TypeScript needs this)
+        throw new Error('No values returned from UTXO API')
+      }
       return {
         result: UtxoApiResult.SUCCESS,
         value: {
           diffItems: flatten(values.map((x) => x.diffItems)),
           reference: {
-            lastFoundBestBlock: values[0].reference.lastFoundBestBlock,
+            lastFoundBestBlock: firstValue.reference.lastFoundBestBlock,
             lastFoundSafeBlock:
               req.afterBestBlocks[latestMatchedSafeBlockIndex],
           },

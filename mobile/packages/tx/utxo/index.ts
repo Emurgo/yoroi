@@ -108,6 +108,7 @@ export class UtxoService {
 
       for (let i = indexOfDiffFromBestBlock; i < localDiff.length; i++) {
         const diffToRemove = localDiff[i]
+        if (!diffToRemove) continue
         await this._utxoStorage.removeDiffWithBestBlock(
           diffToRemove.lastBestBlockHash
         )
@@ -253,7 +254,9 @@ export class UtxoService {
       )
     }
 
-    const newSafeUtxos = Object.keys(utxoMap).map((k) => utxoMap[k])
+    const newSafeUtxos = Object.keys(utxoMap)
+      .map((k) => utxoMap[k])
+      .filter((utxo): utxo is Utxo => utxo !== undefined)
     await this._utxoStorage.replaceUtxoAtSafePoint(
       newSafeUtxos,
       lastFoundSafeBlock
