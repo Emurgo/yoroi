@@ -4,4 +4,6 @@ export * from './catalyst/manager'
 export * from './catalyst/translators/context'
 export * from './catalyst/api-maker'
 
+export * from './pools'
+
 export * from './types'
