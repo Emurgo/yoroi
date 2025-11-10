@@ -491,7 +491,7 @@ export class WalletManager {
     mnemonic: string,
     accountVisual?: number,
   ) {
-    return CardanoMobileWrapped.cslScope((wasm) =>
+    return CardanoMobileWrapped.cslScope((csl) =>
       keyManager(walletImplementation)({
         csl,
         mnemonic,
@@ -675,7 +675,7 @@ export class WalletManager {
     const walletFactory = getWalletFactory({network, implementation})
     const id = v4()
 
-    const {rootKey, accountPubKeyHex} = CardanoMobileWrapped.cslScope((wasm) =>
+    const {rootKey, accountPubKeyHex} = CardanoMobileWrapped.cslScope((csl) =>
       walletFactory.makeKeys({
         mnemonic,
         csl,
@@ -782,7 +782,7 @@ export class WalletManager {
     }
 
     // Derive accountPubKeyHex for the specified accountVisual
-    const accountPubKeyHex = CardanoMobileWrapped.cslScope((wasm) =>
+    const accountPubKeyHex = CardanoMobileWrapped.cslScope((csl) =>
       deriveAccountFromRootKey(
         rootKeyHex,
         accountVisual,
@@ -821,7 +821,7 @@ export class WalletManager {
     const id = v4()
 
     // Derive accountPubKeyHex from rootKeyHex
-    const accountPubKeyHex = CardanoMobileWrapped.cslScope((wasm) =>
+    const accountPubKeyHex = CardanoMobileWrapped.cslScope((csl) =>
       deriveAccountFromRootKey(rootKeyHex, accountVisual, implementation, csl),
     )
 

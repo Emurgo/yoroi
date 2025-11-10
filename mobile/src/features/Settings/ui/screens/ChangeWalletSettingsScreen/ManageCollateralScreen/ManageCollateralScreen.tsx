@@ -17,7 +17,6 @@ import {
 } from 'react-native'
 
 import {useBalances} from '~/features/Portfolio/common/hooks/useBalances'
-import {useReviewTx} from '~/features/ReviewTx/common/ReviewTxProvider'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useUnsafeParams} from '~/kernel/navigation/hooks/useUnsafeParams'
@@ -57,7 +56,6 @@ export const ManageCollateralScreen = () => {
   const strings = useStrings()
   const balances = useBalances(wallet)
   const {navigateToTxReview, resetToTxHistory} = useWalletNavigation()
-  const {unsignedTxChanged} = useReviewTx()
 
   const lockedAmount = asQuantity(
     wallet.primaryBreakdown.lockedAsStorageCost.toString(),
@@ -83,9 +81,9 @@ export const ManageCollateralScreen = () => {
   }
 
   const handleOnSuccess = (signedTx?: YoroiSignedTx) => {
-    if (signedTx?.signedTx?.id == null)
+    if (!signedTx?.signedTx || (signedTx.signedTx as any)?.id == null)
       throw new Error('ManageCollateralScreen:: invalid state')
-    const collateralId = `${signedTx.signedTx.id}:0`
+    const collateralId = `${(signedTx.signedTx as any).id}:0`
     setCollateralId(collateralId)
     resetToTxHistory()
   }
@@ -94,9 +92,9 @@ export const ManageCollateralScreen = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
 
     createUnsignedTx([createCollateralEntry(wallet)], {
-      onSuccess: (yoroiUnsignedTx) => {
-        unsignedTxChanged(yoroiUnsignedTx)
+      onSuccess: (result) => {
         navigateToTxReview({
+          cbor: result.cbor,
           onSuccessWithoutFeedback: (args) => handleOnSuccess(args?.signedTx),
           operations: [<Operation key="0" />],
           context: 'send',

@@ -6,7 +6,6 @@ import {useQuery} from '@tanstack/react-query'
 import BigNumber from 'bignumber.js'
 import * as React from 'react'
 
-import {useReviewTx} from '~/features/ReviewTx/common/ReviewTxProvider'
 import {useStakingInfo} from '~/features/Staking/hooks/useStakingInfo'
 import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
@@ -41,7 +40,6 @@ export const usePoolTransition = () => {
   const {wallet, meta} = useSelectedWallet()
   const {networkManager} = useSelectedNetwork()
   const {navigateToTxReview} = useWalletNavigation()
-  const {unsignedTxChanged} = useReviewTx()
   const {stakingInfo, isLoading} = useStakingInfo(wallet)
 
   const poolInfoApi = React.useMemo(() => {
@@ -67,10 +65,9 @@ export const usePoolTransition = () => {
   const poolId = poolTransition?.suggested.hash ?? ''
 
   const navigateToUpdate = React.useCallback(async () => {
-    const yoroiUnsignedTx = await createDelegationTx(wallet, poolId, meta)
-    unsignedTxChanged(yoroiUnsignedTx)
-    navigateToTxReview({context: 'delegate'})
-  }, [wallet, poolId, meta, unsignedTxChanged, navigateToTxReview])
+    const result = await createDelegationTx(wallet, poolId, meta)
+    navigateToTxReview({cbor: result.cbor, context: 'delegate'})
+  }, [wallet, poolId, meta, navigateToTxReview])
 
   if (isLoading) {
     return {

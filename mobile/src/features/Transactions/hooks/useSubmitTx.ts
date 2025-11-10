@@ -14,11 +14,13 @@ export const useSubmitTx = (
   const mutation = useMutationWithInvalidations({
     mutationFn: async (signedTx) => {
       const serverStatus = await wallet.checkServerStatus()
-      const base64 = Buffer.from(signedTx.signedTx.encodedTx).toString('base64')
+      const base64 = Buffer.from((signedTx.signedTx as any).encodedTx).toString(
+        'base64',
+      )
       await wallet.submitTransaction(base64)
 
       if (serverStatus.isQueueOnline) {
-        return fetchTxStatus(wallet, signedTx.signedTx.id, false)
+        return fetchTxStatus(wallet, (signedTx.signedTx as any).id, false)
       }
 
       return {

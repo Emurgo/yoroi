@@ -16,7 +16,6 @@ import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWalle
 import {ButtonProps} from '~/ui/Button/Button'
 import {YoroiWallet} from '~/wallets/cardano/types'
 import {StakingInfo} from '~/wallets/types/staking'
-import {YoroiUnsignedTx} from '~/wallets/types/yoroi'
 import {Quantities} from '~/wallets/utils/utils'
 
 import {StakePoolInfo} from './StakePoolInfo'
@@ -77,9 +76,9 @@ export const useStakingTx = (
     poolId,
   }: {wallet: YoroiWallet; poolId?: string; meta: Wallet.Meta},
   options: UseQueryOptions<
-    YoroiUnsignedTx,
+    {cbor: string},
     Error,
-    YoroiUnsignedTx,
+    {cbor: string},
     [string, 'stakingTx']
   >,
 ) => {

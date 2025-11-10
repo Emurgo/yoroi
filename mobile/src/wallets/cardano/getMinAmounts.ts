@@ -38,7 +38,7 @@ export const getMinAmounts = (
   primaryTokenInfo: Portfolio.Token.Info,
   protocolParams: Chain.Cardano.ProtocolParams,
 ) => {
-  return CardanoMobileWrapped.cslScope((wasm) => {
+  return CardanoMobileWrapped.cslScope((csl) => {
     const multiToken = new MultiToken(
       [
         {identifier: primaryTokenInfo.id, amount: new BigNumber('0')},

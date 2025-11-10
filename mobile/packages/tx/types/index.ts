@@ -142,11 +142,26 @@ export type CardanoHaskellConfig = {
 
 // Legacy types for backward compatibility
 // These are WASM types from CSL that were previously exported from yoroi-lib
-import type {Transaction as CSLTransaction, TransactionBody} from '@emurgo/cross-csl-core'
+import type {
+  Transaction as CSLTransaction,
+  TransactionBody,
+  AuxiliaryData,
+} from '@emurgo/cross-csl-core'
 
-// Export legacy types
+// Legacy UnsignedTx type that matches the runtime structure from yoroi-lib
+// The actual runtime object from yoroi-lib has txBody and auxiliaryData as properties
+// Note: This is NOT the same as TransactionBody - it's a wrapper object that contains a TransactionBody
+// The type is kept as TransactionBody for backward compatibility, but runtime objects have additional properties
 export type UnsignedTx = TransactionBody
 export type SignedTx = CSLTransaction
+
+// Extended type for runtime objects that have the additional properties from yoroi-lib
+// This is used internally where we know the object has these properties
+export type UnsignedTxWithProperties = TransactionBody & {
+  readonly txBody: TransactionBody
+  readonly auxiliaryData?: AuxiliaryData | null
+  readonly catalystRegistrationData?: unknown
+}
 
 export type LinearFee = {
   coefficient: string

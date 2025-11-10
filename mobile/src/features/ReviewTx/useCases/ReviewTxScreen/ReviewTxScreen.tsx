@@ -2,10 +2,8 @@ import * as React from 'react'
 
 import {useAnalyticsTracking} from '~/features/Analytics/hooks/useAnalyticsTracking'
 import {AnalyticsEventEnum} from '~/features/Analytics/types/analytics-event-enum'
-import {useReviewTx} from '~/features/ReviewTx/common/ReviewTxProvider'
 import {useFormattedMetadata} from '~/features/ReviewTx/common/hooks/useFormattedMetadata'
 import {useFormattedTx} from '~/features/ReviewTx/common/hooks/useFormattedTx'
-import {useLegacyOnConfirm} from '~/features/ReviewTx/common/hooks/useLegacyOnConfirm'
 import {useOnConfirm} from '~/features/ReviewTx/common/hooks/useOnConfirm'
 import {useTxBody} from '~/features/ReviewTx/common/hooks/useTxBody'
 import {FormattedTx} from '~/features/ReviewTx/common/types'
@@ -43,18 +41,8 @@ const getTransactionAnalyticsProperties = (
 }
 
 export const ReviewTxScreen = () => {
-  const {unsignedTx} = useReviewTx()
   const params = useUnsafeParams<NonNullable<ReviewTxRoutes['review-tx']>>()
   const {trackEvent} = useAnalyticsTracking()
-  const {legacyOnConfirm} = useLegacyOnConfirm({
-    unsignedTx,
-    onSuccess: params?.onSuccess,
-    onSuccessWithoutFeedback: params?.onSuccessWithoutFeedback,
-    onError: params?.onError,
-    onErrorWithoutFeedback: params?.onErrorWithoutFeedback,
-    onNotSupportedCIP1694: params?.onNotSupportedCIP1694,
-    onCIP36SupportChange: params?.onCIP36SupportChange,
-  })
 
   const {onConfirm} = useOnConfirm({
     cbor: params?.cbor,
@@ -68,11 +56,12 @@ export const ReviewTxScreen = () => {
     onClose: params?.onClose,
   })
 
-  const txBody = useTxBody({cbor: params?.cbor, unsignedTx})
-  const {formattedTx, isLoading, areTokenInfosLoaded} = useFormattedTx(txBody)
+  const txBody = useTxBody({cbor: params?.cbor})
+  const {formattedTx, isLoading, areTokenInfosLoaded} = useFormattedTx(
+    txBody ?? ({} as any),
+  )
   const formattedMetadata = useFormattedMetadata({
     txBody,
-    unsignedTx,
     cbor: params?.cbor ?? null,
   })
 
@@ -102,18 +91,13 @@ export const ReviewTxScreen = () => {
       params?.onConfirm()
       return
     }
-    if (unsignedTx != null && params?.cbor == null) {
-      trackEvent(AnalyticsEventEnum.TransactionReviewSubmitModalViewed)
-      legacyOnConfirm()
-      return
-    }
     if (params?.cbor != null) {
       trackEvent(AnalyticsEventEnum.TransactionReviewSubmitModalViewed)
       onConfirm()
       return
     }
 
-    throw new Error('ReviewTxScreen: invalid state')
+    throw new Error('ReviewTxScreen: invalid state - cbor is required')
   }
 
   if (isLoading || !formattedTx) {

@@ -9,7 +9,6 @@ import {
 
 import * as React from 'react'
 
-import {useReviewTx} from '~/features/ReviewTx/common/ReviewTxProvider'
 import {useStakingKey} from '~/features/Staking/hooks/useStakingKey'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useWalletEvent} from '~/features/WalletManager/hooks/useWalletEvent'
@@ -17,7 +16,6 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {InfoBanner} from '~/ui/InfoBanner/InfoBanner'
-import {YoroiUnsignedTx} from '~/wallets/types/yoroi'
 import {CardanoMobile} from '~/wallets/wallets'
 
 import {GovernanceVote} from '../types'
@@ -95,7 +93,6 @@ export const useGovernanceManagerMaker = () => {
 export const useGovernanceActions = () => {
   const {wallet} = useSelectedWallet()
   const navigateTo = useNavigateTo()
-  const {unsignedTxChanged} = useReviewTx()
   const {updateLatestGovernanceAction} = useUpdateLatestGovernanceAction(
     wallet.id,
   )
@@ -110,20 +107,22 @@ export const useGovernanceActions = () => {
   }: {
     hash: string
     type: 'key' | 'script'
-    unsignedTx: YoroiUnsignedTx
+    unsignedTx: {cbor: string}
     CIP105: boolean
   }) => {
-    unsignedTxChanged(unsignedTx)
-
     navigateToTxReview({
+      cbor: unsignedTx.cbor,
       onSuccess: (args) => {
-        if (args?.signedTx?.signedTx?.id == null)
+        if (
+          !args?.signedTx?.signedTx ||
+          (args.signedTx.signedTx as any)?.id == null
+        )
           throw new Error('useGovernanceActions:: invalid state')
         updateLatestGovernanceAction({
           kind: 'delegate-to-drep',
           hash,
           type,
-          txID: args.signedTx.signedTx.id,
+          txID: (args.signedTx.signedTx as any).id,
         })
       },
       onNotSupportedCIP1694: navigateTo.notSupportedVersion,
@@ -142,17 +141,19 @@ export const useGovernanceActions = () => {
     })
   }
 
-  const handleAbstainAction = ({unsignedTx}: {unsignedTx: YoroiUnsignedTx}) => {
-    unsignedTxChanged(unsignedTx)
-
+  const handleAbstainAction = ({unsignedTx}: {unsignedTx: {cbor: string}}) => {
     navigateToTxReview({
+      cbor: unsignedTx.cbor,
       onSuccess: (args) => {
-        if (args?.signedTx?.signedTx?.id == null)
+        if (
+          !args?.signedTx?.signedTx ||
+          (args.signedTx.signedTx as any)?.id == null
+        )
           throw new Error('useGovernanceActions:: invalid state')
         updateLatestGovernanceAction({
           kind: 'vote',
           vote: 'abstain',
-          txID: args?.signedTx.signedTx.id,
+          txID: (args.signedTx.signedTx as any).id,
         })
       },
       onNotSupportedCIP1694: navigateTo.notSupportedVersion,
@@ -163,18 +164,20 @@ export const useGovernanceActions = () => {
   const handleNoConfidenceAction = ({
     unsignedTx,
   }: {
-    unsignedTx: YoroiUnsignedTx
+    unsignedTx: {cbor: string}
   }) => {
-    unsignedTxChanged(unsignedTx)
-
     navigateToTxReview({
+      cbor: unsignedTx.cbor,
       onSuccess: (args) => {
-        if (args?.signedTx?.signedTx?.id == null)
+        if (
+          !args?.signedTx?.signedTx ||
+          (args.signedTx.signedTx as any)?.id == null
+        )
           throw new Error('useGovernanceActions:: invalid state')
         updateLatestGovernanceAction({
           kind: 'vote',
           vote: 'no-confidence',
-          txID: args?.signedTx.signedTx.id,
+          txID: (args.signedTx.signedTx as any).id,
         })
       },
       onNotSupportedCIP1694: navigateTo.notSupportedVersion,

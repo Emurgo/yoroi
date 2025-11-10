@@ -16,7 +16,6 @@ import * as React from 'react'
 import {BrowserProvider} from '~/features/Discover/common/BrowserProvider'
 import {PortfolioTokenActivityProvider} from '~/features/Portfolio/context/PortfolioTokenActivityProvider'
 import {ReceiveProvider} from '~/features/Receive/common/ReceiveProvider'
-import {ReviewTxProvider} from '~/features/ReviewTx/common/ReviewTxProvider'
 import {isDev} from '~/kernel/constants'
 import {logger} from '~/kernel/logger/logger'
 import {AppNavigator} from '~/kernel/navigation/AppNavigator'
@@ -97,21 +96,19 @@ function BusinessShell({children}: React.PropsWithChildren) {
               <PortfolioTokenActivityProvider>
                 <AutomaticWalletOpenerProvider>
                   <TransferProvider>
-                    <ReviewTxProvider>
-                      <SetupWalletProvider>
-                        <BrowserProvider>
-                          <LinksProvider>
-                            <YoroiNotificationManager>
-                              <CurrencyProvider>
-                                <CatalystProvider manager={catalystManager}>
-                                  <ReceiveProvider>{children}</ReceiveProvider>
-                                </CatalystProvider>
-                              </CurrencyProvider>
-                            </YoroiNotificationManager>
-                          </LinksProvider>
-                        </BrowserProvider>
-                      </SetupWalletProvider>
-                    </ReviewTxProvider>
+                    <SetupWalletProvider>
+                      <BrowserProvider>
+                        <LinksProvider>
+                          <YoroiNotificationManager>
+                            <CurrencyProvider>
+                              <CatalystProvider manager={catalystManager}>
+                                <ReceiveProvider>{children}</ReceiveProvider>
+                              </CatalystProvider>
+                            </CurrencyProvider>
+                          </YoroiNotificationManager>
+                        </LinksProvider>
+                      </BrowserProvider>
+                    </SetupWalletProvider>
                   </TransferProvider>
                 </AutomaticWalletOpenerProvider>
               </PortfolioTokenActivityProvider>

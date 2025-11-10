@@ -4,7 +4,6 @@ import {normalizeToAddress} from '@yoroi/tx'
 import * as React from 'react'
 
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {CardanoMobile} from '~/wallets/wallets'
 
 import {AddressErrorInvalid, AddressErrorWrongNetwork} from './errors'
 
@@ -15,33 +14,54 @@ export const useSendAddress = () => {
   const {targets, selectedTargetIndex} = useTransfer()
   const target = targets[selectedTargetIndex]
 
-  const {addressValidated, addressError} = React.useMemo(() => {
-    if (!target) return {addressValidated: undefined, addressError: undefined}
+  const [addressValidated, setAddressValidated] = React.useState<
+    boolean | undefined
+  >(undefined)
+  const [addressError, setAddressError] = React.useState<Error | undefined>(
+    undefined,
+  )
+  const [isValidatingAddress, setIsValidatingAddress] = React.useState(false)
+
+  React.useEffect(() => {
+    if (!target) {
+      setAddressValidated(undefined)
+      setAddressError(undefined)
+      return
+    }
 
     const {address} = target.entry
     if (address.length === 0) {
-      return {addressValidated: undefined, addressError: undefined}
+      setAddressValidated(undefined)
+      setAddressError(undefined)
+      return
     }
 
-    try {
-      validateAddress(address, chainId)
-      return {addressValidated: true, addressError: undefined}
-    } catch (error) {
-      return {addressValidated: false, addressError: error as Error}
-    }
+    setIsValidatingAddress(true)
+    validateAddress(address, chainId)
+      .then(() => {
+        setAddressValidated(true)
+        setAddressError(undefined)
+      })
+      .catch((error) => {
+        setAddressValidated(false)
+        setAddressError(error as Error)
+      })
+      .finally(() => {
+        setIsValidatingAddress(false)
+      })
   }, [target, chainId])
 
   return {
     addressValidated,
     addressError,
-    isValidatingAddress: false,
+    isValidatingAddress,
   }
 }
 
 // NOTE: should be a wallet function from address manager
-const validateAddress = (address: string, chainId: number) => {
+const validateAddress = async (address: string, chainId: number) => {
   try {
-    const chainAddress = normalizeToAddress(CardanoMobile, address)
+    const chainAddress = await normalizeToAddress(address)
     if (!chainAddress) throw new AddressErrorInvalid()
 
     const chainAddressChainId = chainAddress.networkId()

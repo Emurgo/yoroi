@@ -127,6 +127,7 @@ export async function getRequiredSignersFromTransaction(
   const signers: string[] = []
 
   // Extract from inputs
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   for (const _input of unsignedTx.inputs) {
     // TODO: Extract key hash from input.utxo.receiver address
     // const keyHash = await extractKeyHashFromAddress(input.utxo.receiver, wasm)
@@ -134,11 +135,13 @@ export async function getRequiredSignersFromTransaction(
   }
 
   // Extract from certificates
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   for (const _cert of unsignedTx.certificates) {
     // TODO: Extract required signers from certificate
   }
 
   // Extract from withdrawals
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   for (const _withdrawal of unsignedTx.withdrawals) {
     // TODO: Extract key hash from withdrawal.rewardAddress
   }

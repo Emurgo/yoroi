@@ -19,7 +19,7 @@ describe('BIP39', () => {
   })
 
   it('correctly derives wallet root key', async () => {
-    const rootKeyBytes = CardanoMobileWrapped.cslScope((wasm) => {
+    const rootKeyBytes = CardanoMobileWrapped.cslScope((csl) => {
       const rootKey = generateWalletRootKey(mnemonic, csl)
       return rootKey.asBytes()
     })

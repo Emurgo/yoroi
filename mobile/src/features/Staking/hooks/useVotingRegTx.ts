@@ -4,10 +4,9 @@ import * as React from 'react'
 
 import {UsePromiseOptions, usePromise} from '~/hooks/usePromise'
 import {YoroiWallet} from '~/wallets/cardano/types'
-import {YoroiUnsignedTx} from '~/wallets/types/yoroi'
 
 type VotingRegTxAndEncryptedKey = {
-  votingRegTx: YoroiUnsignedTx
+  votingRegTx: {cbor: string}
 }
 
 export const useVotingRegTx = (

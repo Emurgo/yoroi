@@ -46,7 +46,7 @@ describe('CardanoWallet', () => {
     const id = '261c7e0f-dd72-490c-8ce9-6714b512b969'
 
     // keys
-    const {accountPubKeyHex} = CardanoMobileWrapped.cslScope((wasm) =>
+    const {accountPubKeyHex} = CardanoMobileWrapped.cslScope((csl) =>
       keyManager('cardano-cip1852')({
         csl,
         mnemonic,

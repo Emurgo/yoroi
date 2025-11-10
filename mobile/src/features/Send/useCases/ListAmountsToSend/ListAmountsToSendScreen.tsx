@@ -9,7 +9,6 @@ import * as React from 'react'
 import {TouchableOpacity, View} from 'react-native'
 import {FlatList} from 'react-native-gesture-handler'
 
-import {useReviewTx} from '~/features/ReviewTx/common/ReviewTxProvider'
 import {useSearch} from '~/features/Search/SearchContext'
 import {useNavigateTo} from '~/features/Send/common/navigation'
 import {toTransactionOutput} from '~/features/Send/common/toTransactionOutput'
@@ -25,7 +24,7 @@ import {Icon} from '~/ui/Icon'
 import {RemoveAmountButton} from '~/ui/RemoveAmountButton/RemoveAmountButton'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {TokenAmountItem} from '~/ui/TokenAmountItem/TokenAmountItem'
-import {YoroiSignedTx, YoroiUnsignedTx} from '~/wallets/types/yoroi'
+import {YoroiSignedTx} from '~/wallets/types/yoroi'
 
 export const ListAmountsToSendScreen = () => {
   const navigateTo = useNavigateTo()
@@ -34,7 +33,6 @@ export const ListAmountsToSendScreen = () => {
   const {clearSearch} = useSearch()
   const navigation = useNavigation()
   const {wallet} = useSelectedWallet()
-  const {unsignedTxChanged} = useReviewTx()
   const {
     memo,
     targets,
@@ -105,14 +103,14 @@ export const ListAmountsToSendScreen = () => {
   )
 
   const handleCreateUnsignedTxSuccess = React.useCallback(
-    (yoroiUnsignedTx: YoroiUnsignedTx) => {
-      unsignedTxChanged(yoroiUnsignedTx)
+    (result: {cbor: string}) => {
       navigateToTxReview({
+        cbor: result.cbor,
         onSuccess: (args) => handleOnSuccess(args?.signedTx),
         context: 'send',
       })
     },
-    [unsignedTxChanged, navigateToTxReview, handleOnSuccess],
+    [navigateToTxReview, handleOnSuccess],
   )
 
   const {resolve: createUnsignedTx, isPending} = usePromise({

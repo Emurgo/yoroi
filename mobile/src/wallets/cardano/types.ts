@@ -111,7 +111,7 @@ export interface YoroiWallet {
     entries: TransactionOutput[]
     metadata?: Array<CardanoTypes.TxMetadata>
     addressMode: Wallet.AddressMode
-  }): Promise<YoroiUnsignedTx>
+  }): Promise<{cbor: string}>
   signTx(signRequest: YoroiUnsignedTx, rootKey: string): Promise<YoroiSignedTx>
   submitTransaction(signedTx: string): Promise<void>
 
@@ -140,7 +140,7 @@ export interface YoroiWallet {
     supportsCIP36: boolean
     addressMode: Wallet.AddressMode
     catalystKeyHex: string
-  }): Promise<{votingRegTx: YoroiUnsignedTx}>
+  }): Promise<{votingRegTx: {cbor: string}}>
   fetchFundInfo(): Promise<FundInfoResponse>
 
   // Staking
@@ -149,11 +149,11 @@ export interface YoroiWallet {
     poolId: string
     delegatedAmount: BigNumber
     addressMode: Wallet.AddressMode
-  }): Promise<YoroiUnsignedTx>
+  }): Promise<{cbor: string}>
   createWithdrawalTx(params: {
     shouldDeregister: boolean
     addressMode: Wallet.AddressMode
-  }): Promise<YoroiUnsignedTx>
+  }): Promise<{cbor: string}>
   getDelegationStatus(): StakingStatus
   getAllUtxosForKey(): Array<CardanoTypes.CardanoAddressedUtxo>
   getStakingInfo: () => Promise<StakingInfo>
@@ -165,7 +165,7 @@ export interface YoroiWallet {
   createUnsignedGovernanceTx(params: {
     addressMode: Wallet.AddressMode
     votingCertificates: CardanoTypes.Certificate[]
-  }): Promise<YoroiUnsignedTx>
+  }): Promise<{cbor: string}>
 
   // Password
   encryptedStorage: WalletEncryptedStorage

@@ -5,13 +5,12 @@ import * as React from 'react'
 
 import {UsePromiseOptions, usePromise} from '~/hooks/usePromise'
 import {YoroiWallet} from '~/wallets/cardano/types'
-import {YoroiUnsignedTx} from '~/wallets/types/yoroi'
 
 export const useCreateGovernanceTx = (
   wallet: YoroiWallet,
   options?: Omit<
     UsePromiseOptions<
-      YoroiUnsignedTx,
+      {cbor: string},
       [{certificates: Certificate[]; addressMode: Wallet.AddressMode}]
     >,
     'promise'

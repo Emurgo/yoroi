@@ -20,7 +20,7 @@ export const deriveRewardAddressHex = (
   role: number,
   index: number,
 ): string => {
-  return CardanoMobileWrapped.cslScope((wasm) => {
+  return CardanoMobileWrapped.cslScope((csl) => {
     const accountPubKeyPtr = csl.Bip32PublicKey.fromBytes(
       Buffer.from(accountPubKeyHex, 'hex'),
     )
@@ -38,7 +38,7 @@ export const deriveRewardAddressFromAddress = (
   address: string,
   chainId: number,
 ): string => {
-  return CardanoMobileWrapped.cslScope((wasm) => {
+  return CardanoMobileWrapped.cslScope((csl) => {
     const result = csl.RewardAddress.new(
       chainId,
       csl.BaseAddress.fromAddress(
@@ -174,7 +174,7 @@ export const isTokenInfo = (
 }
 
 export const generateCIP30UtxoCbor = (utxo: RawUtxo) => {
-  return CardanoMobileWrapped.cslScope((wasm) => {
+  return CardanoMobileWrapped.cslScope((csl) => {
     const txHash = csl.TransactionHash.fromBytes(
       Buffer.from(utxo.tx_hash, 'hex'),
     )

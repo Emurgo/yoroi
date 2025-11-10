@@ -2,14 +2,13 @@ import * as React from 'react'
 
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {UsePromiseOptionsWithoutPromise, usePromise} from '~/hooks/usePromise'
-import {YoroiUnsignedTx} from '~/wallets/types/yoroi'
 import {Quantities} from '~/wallets/utils/utils'
 
 import {useStakingInfo} from './useStakingInfo'
 
 export const useCreateWithdrawTx = (
   options?: UsePromiseOptionsWithoutPromise<
-    YoroiUnsignedTx,
+    {cbor: string},
     [{shouldDeregister: boolean}]
   >,
 ) => {

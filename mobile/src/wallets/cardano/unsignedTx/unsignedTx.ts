@@ -1,5 +1,3 @@
-import {Balance, Network} from '@yoroi/types'
-
 import {
   Change,
   Datum,
@@ -7,7 +5,7 @@ import {
   TransactionOutput,
   getBalanceForStakingCredentials,
 } from '@yoroi/tx'
-import {CardanoMobile} from '~/wallets/wallets'
+import {Balance, Network} from '@yoroi/types'
 
 import {
   YoroiMetadata,
@@ -15,10 +13,11 @@ import {
   YoroiVoting,
 } from '~/wallets/types/yoroi'
 import {Amounts, Entries, Quantities, asQuantity} from '~/wallets/utils/utils'
+import {CardanoMobile} from '~/wallets/wallets'
 
 import {CardanoTypes} from '../types'
 
-export const yoroiUnsignedTx = ({
+export const yoroiUnsignedTx = async ({
   unsignedTx,
   networkManager,
   votingRegistration,
@@ -121,7 +120,9 @@ export const toMetadata = (metadata: ReadonlyArray<CardanoTypes.TxMetadata>) =>
     {} as YoroiMetadata,
   )
 
-const toEntriesFromChange = (changes: ReadonlyArray<Change>): TransactionOutput[] => {
+const toEntriesFromChange = (
+  changes: ReadonlyArray<Change>,
+): TransactionOutput[] => {
   return changes.map((change) => ({
     address: toDisplayAddress(change.address),
     amounts: toAmounts(change.values.values),

@@ -6,7 +6,6 @@ import * as React from 'react'
 import {ActivityIndicator, ScrollView, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useReviewTx} from '~/features/ReviewTx/common/ReviewTxProvider'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
@@ -32,7 +31,6 @@ export const ConfirmPin = () => {
   const navigateTo = useNavigateTo()
   const [currentActivePin, setCurrentActivePin] = React.useState(1)
   const {wallet, meta} = useSelectedWallet()
-  const {unsignedTxChanged} = useReviewTx()
   const {navigateToTxReview} = useWalletNavigation()
 
   const {generateVotingKeys, isPending: isLoading} = useGenerateVotingKeys({
@@ -45,8 +43,8 @@ export const ConfirmPin = () => {
         addressMode: meta.addressMode,
       })
 
-      unsignedTxChanged(votingRegTx.votingRegTx)
       navigateToTxReview({
+        cbor: votingRegTx.votingRegTx.cbor,
         context: 'delegate vote',
         onCIP36SupportChange: async (supportsCIP36: boolean) => {
           votingRegTx = await wallet.createVotingRegTx({
@@ -54,7 +52,6 @@ export const ConfirmPin = () => {
             supportsCIP36,
             addressMode: meta.addressMode,
           })
-          unsignedTxChanged(votingRegTx.votingRegTx)
         },
         onSuccessWithoutFeedback: navigateTo.qrCode,
       })

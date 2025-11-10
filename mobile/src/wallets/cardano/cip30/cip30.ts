@@ -54,7 +54,7 @@ class CIP30Extension {
   ) {}
 
   getBalance(tokenId = '*'): CSL.Value {
-    return CardanoMobileWrapped.cslScope((wasm) => {
+    return CardanoMobileWrapped.cslScope((csl) => {
       const value = _getBalance(
         tokenId,
         this.wallet.utxos,
@@ -66,7 +66,7 @@ class CIP30Extension {
   }
 
   getUnusedAddresses(): CSL.Address[] {
-    return CardanoMobileWrapped.cslScope((wasm) => {
+    return CardanoMobileWrapped.cslScope((csl) => {
       const bech32Addresses = this.wallet.receiveAddresses.filter(
         (address) => !this.wallet.isUsedAddressIndex[address],
       )
@@ -78,7 +78,7 @@ class CIP30Extension {
   }
 
   getUsedAddresses(pagination?: Pagination): CSL.Address[] {
-    return CardanoMobileWrapped.cslScope((wasm) => {
+    return CardanoMobileWrapped.cslScope((csl) => {
       const allAddresses = this.wallet.externalAddresses
       const selectedAddresses = paginate(allAddresses, pagination)
       const addresses = selectedAddresses.map((addr) =>
@@ -89,7 +89,7 @@ class CIP30Extension {
   }
 
   getChangeAddress(): CSL.Address {
-    return CardanoMobileWrapped.cslScope((wasm) => {
+    return CardanoMobileWrapped.cslScope((csl) => {
       const changeAddr = this.wallet.getChangeAddress(this.meta.addressMode)
       const address = csl.Address.fromBech32(changeAddr)
       return copyFromCSL(CardanoMobile.Address, address)
@@ -97,7 +97,7 @@ class CIP30Extension {
   }
 
   getRewardAddresses(): CSL.Address[] {
-    return CardanoMobileWrapped.cslScope((wasm) => {
+    return CardanoMobileWrapped.cslScope((csl) => {
       const address = csl.Address.fromHex(this.wallet.rewardAddressHex)
       return [copyFromCSL(CardanoMobile.Address, address)]
     })
@@ -181,10 +181,10 @@ class CIP30Extension {
   ): Promise<{signature: string; key: string}> {
     return CardanoMobileWrapped.cslScope(async (csl) => {
       const payloadInBytes = Buffer.from(payload, 'hex')
-      const normalisedAddress = normalizeToAddress(csl, address)
-      const bech32Address = normalisedAddress?.toBech32(undefined)
-      if (!bech32Address || !normalisedAddress)
-        throw new Error('Invalid address')
+      const normalisedAddress = await normalizeToAddress(address)
+      if (!normalisedAddress) throw new Error('Invalid address')
+      const bech32Address = normalisedAddress.toBech32(undefined)
+      if (!bech32Address) throw new Error('Invalid address')
 
       const rewardAddress = csl.RewardAddress.fromAddress(normalisedAddress)
       const rewardAddressHex = rewardAddress?.toAddress().toHex()
@@ -227,7 +227,7 @@ class CIP30Extension {
     cbor: string,
     partial = false,
   ): CSL.TransactionWitnessSet {
-    return CardanoMobileWrapped.cslScope((wasm) => {
+    return CardanoMobileWrapped.cslScope((csl) => {
       const signers = getTransactionSigners(
         cbor,
         this.wallet,
@@ -263,7 +263,7 @@ class CIP30Extension {
     })
     const txBody = yoroiUnsignedTx.unsignedTx.txBuilder.build()
 
-    return CardanoMobileWrapped.cslScope((wasm) => {
+    return CardanoMobileWrapped.cslScope((csl) => {
       const emptyWitnessSet = csl.TransactionWitnessSet.new()
       const tx = csl.Transaction.new(txBody, emptyWitnessSet, undefined)
       return tx.toHex()
@@ -421,10 +421,11 @@ export const _getRequiredUtxos = async (
   const remoteUnspentOutputs: RemoteUnspentOutput[] = allUtxos.map((utxo) =>
     rawUtxoToRemoteUnspentOutput(utxo),
   )
-  const rewardAddress = normalizeToAddress(
-    csl,
+  const normalisedRewardAddress = await normalizeToAddress(
     wallet.rewardAddressHex,
-  )?.toBech32(undefined)
+  )
+  if (!normalisedRewardAddress) throw new Error('Invalid wallet state')
+  const rewardAddress = normalisedRewardAddress.toBech32(undefined)
   if (!rewardAddress) throw new Error('Invalid wallet state')
 
   try {

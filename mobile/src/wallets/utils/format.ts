@@ -26,12 +26,6 @@ export const getAssetFingerprint = (policyId: string, assetNameHex: string) => {
   return getTokenFingerprint({policyId, assetNameHex})
 }
 
-const decodeHexAscii = (text: string) => {
-  const bytes = [...Buffer.from(text, 'hex')]
-  const isAscii = bytes.every((byte) => byte > 32 && byte < 127)
-  return isAscii ? String.fromCharCode(...bytes) : undefined
-}
-
 const getTicker = (token: Balance.TokenInfo | Portfolio.Token.Info) => {
   if (isTokenInfo(token)) {
     return token.kind === 'ft' ? token.ticker : undefined
@@ -41,10 +35,6 @@ const getTicker = (token: Balance.TokenInfo | Portfolio.Token.Info) => {
 const getSymbol = (token: Balance.TokenInfo | Portfolio.Token.Info) => {
   const ticker = getTicker(token)
   return ticker
-}
-
-const getName = (token: Balance.TokenInfo | Portfolio.Token.Info) => {
-  return token.name || token.ticker || token.fingerprint || ''
 }
 
 const getDecimals = (token: Balance.TokenInfo | Portfolio.Token.Info) => {

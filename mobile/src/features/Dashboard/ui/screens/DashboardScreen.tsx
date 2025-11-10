@@ -13,7 +13,6 @@ import {
 } from 'react-native'
 
 import {useBalances} from '~/features/Portfolio/common/hooks/useBalances'
-import {useReviewTx} from '~/features/ReviewTx/common/ReviewTxProvider'
 import {StakeRewardsWithdrawalOperation} from '~/features/ReviewTx/common/operations'
 import {useGovernanceParticipation} from '~/features/Staking/Governance/common/helpers'
 import {WithdrawGovernanceWarningModal} from '~/features/Staking/Governance/useCases/WithdrawGovernanceWarningModal/WithdrawGovernanceWarningModal'
@@ -47,16 +46,15 @@ export const DashboardScreen = () => {
   const strings = useStrings()
   const navigateTo = useNavigateTo()
   const {isPoolRetiring} = usePoolTransition()
-  const {unsignedTxChanged} = useReviewTx()
   const {
     isPending: isWithdrawLoading,
     hasRewards,
     resolve: createWithdrawalTx,
   } = useCreateWithdrawTx({
     onError: () => navigateTo.failedTx(),
-    onSuccess: (unsignedTx) => {
-      unsignedTxChanged(unsignedTx)
+    onSuccess: (result) => {
       walletNavigateTo.navigateToTxReview({
+        cbor: result.cbor,
         operations: [<StakeRewardsWithdrawalOperation key="0" />],
         context: 'withdraw rewards',
       })

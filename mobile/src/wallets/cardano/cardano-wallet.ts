@@ -5,10 +5,9 @@ import {
   protocolParamsPlaceholder,
 } from '@yoroi/blockchains'
 import {isNonNullable} from '@yoroi/common'
-import {StakePoolInfoRequest, StakePoolInfosAndHistories} from '@yoroi/staking'
+import {StakePoolInfoRequest} from '@yoroi/staking'
 import type {CardanoHaskellConfig, Datum, ModernUtxo} from '@yoroi/tx'
 import {
-  adaptUnsignedTransaction,
   addCertificate,
   addInputs,
   addMetadata,
@@ -90,7 +89,6 @@ import {keyManager} from './key-manager/key-manager'
 import {processTxHistoryData} from './processTransactions/processTransactions'
 import {yoroiSignedTx} from './signedTx'
 import {TransactionManager} from './transactionManager/transactionManager'
-import {toLibToken} from './transformers/to-lib-token'
 import {
   CardanoTypes,
   NoOutputsError,
@@ -101,7 +99,6 @@ import {
   YoroiWallet,
   isYoroiWallet,
 } from './types'
-import {yoroiUnsignedTx} from './unsignedTx/unsignedTx'
 import {
   deriveRewardAddressHex,
   getAddressedUtxos,
@@ -435,14 +432,13 @@ export const makeCardanoWallet = (
       poolId: string | undefined
       delegatedAmount: BigNumber
       addressMode: Wallet.AddressMode
-    }) {
+    }): Promise<{cbor: string}> {
       if (implementationConfig.features.staking) {
         const primaryTokenId = this.portfolioPrimaryTokenInfo.id
 
         const absSlotNumber = await this.getAbsoluteSlotNumber()
         const changeAddr = this.getAddressedChangeAddress(addressMode)
         const modernUtxos = this.getAddressedUtxos()
-        const addressedUtxos = modernUtxosToCardanoAddressedUtxos(modernUtxos)
         const registrationStatus = this.getDelegationStatus().isRegistered
         const stakingKey = this.getStakingKey()
         const delegationType = registrationStatus
@@ -507,20 +503,11 @@ export const makeCardanoWallet = (
           primaryTokenId,
         )
 
-        // Convert to legacy format for yoroiUnsignedTx
-        const legacyUnsignedTx = await adaptUnsignedTransaction(
-          CardanoMobile,
-          unsignedTx,
-          toLibToken(this.portfolioPrimaryTokenInfo),
-        )
+        if (!unsignedTx.cbor) {
+          throw new Error('Transaction CBOR not available')
+        }
 
-        return yoroiUnsignedTx({
-          unsignedTx: legacyUnsignedTx as unknown as CardanoTypes.UnsignedTx,
-          networkManager: this.networkManager,
-          addressedUtxos,
-          primaryTokenId,
-          keyDeposit,
-        })
+        return {cbor: unsignedTx.cbor}
       }
 
       throwLoggedError('createDelegationTx staking not supported')
@@ -562,7 +549,6 @@ export const makeCardanoWallet = (
           const nonce = absSlotNumber.toNumber()
 
           const modernUtxos = this.getAddressedUtxos()
-          const addressedUtxos = modernUtxosToCardanoAddressedUtxos(modernUtxos)
 
           const baseAddr = this.getFirstPaymentAddress()
           const paymentAddressCIP36 = baseAddr.toAddress().toBech32(undefined)
@@ -611,35 +597,12 @@ export const makeCardanoWallet = (
             primaryTokenId,
           )
 
-          // Convert to legacy format for yoroiUnsignedTx
-          const legacyUnsignedTx = await adaptUnsignedTransaction(
-            CardanoMobile,
-            unsignedTx,
-            toLibToken(this.portfolioPrimaryTokenInfo),
-          )
-
-          const votingRegistration: {
-            votingPublicKey: string
-            stakingPublicKey: string
-            rewardAddress: string
-            nonce: number
-          } = {
-            votingPublicKey: votingPublicKey.toBech32(),
-            stakingPublicKey: stakingPublicKey.toBech32(),
-            rewardAddress,
-            nonce,
+          if (!unsignedTx.cbor) {
+            throw new Error('Transaction CBOR not available')
           }
 
           return {
-            votingRegTx: yoroiUnsignedTx({
-              unsignedTx:
-                legacyUnsignedTx as unknown as CardanoTypes.UnsignedTx,
-              networkManager: this.networkManager,
-              votingRegistration,
-              addressedUtxos,
-              primaryTokenId,
-              keyDeposit,
-            }),
+            votingRegTx: {cbor: unsignedTx.cbor},
           }
         } catch (e) {
           if (e instanceof LocalizableError || e instanceof Error) throw e
@@ -656,14 +619,13 @@ export const makeCardanoWallet = (
     }: {
       shouldDeregister: boolean
       addressMode: Wallet.AddressMode
-    }): Promise<YoroiUnsignedTx> {
+    }): Promise<{cbor: string}> {
       if (implementationConfig.features.staking) {
         const primaryTokenId = this.portfolioPrimaryTokenInfo.id
 
         const absSlotNumber = await this.getAbsoluteSlotNumber()
         const changeAddr = this.getAddressedChangeAddress(addressMode)
         const modernUtxos = this.getAddressedUtxos()
-        const addressedUtxos = modernUtxosToCardanoAddressedUtxos(modernUtxos)
         const accountState = await legacyApi.getAccountState(
           {addresses: [this.rewardAddressHex]},
           networkManager.legacyApiBaseUrl,
@@ -720,20 +682,11 @@ export const makeCardanoWallet = (
           primaryTokenId,
         )
 
-        // Convert to legacy format for yoroiUnsignedTx
-        const legacyUnsignedTx = await adaptUnsignedTransaction(
-          CardanoMobile,
-          unsignedTx,
-          toLibToken(this.portfolioPrimaryTokenInfo),
-        )
+        if (!unsignedTx.cbor) {
+          throw new Error('Transaction CBOR not available')
+        }
 
-        return yoroiUnsignedTx({
-          unsignedTx: legacyUnsignedTx as unknown as CardanoTypes.UnsignedTx,
-          networkManager: this.networkManager,
-          addressedUtxos,
-          primaryTokenId,
-          keyDeposit,
-        })
+        return {cbor: unsignedTx.cbor}
       }
 
       throwLoggedError('createWithdrawalTx staking not supported')
@@ -745,12 +698,11 @@ export const makeCardanoWallet = (
     }: {
       votingCertificates: CardanoTypes.Certificate[]
       addressMode: Wallet.AddressMode
-    }) {
+    }): Promise<{cbor: string}> {
       const primaryTokenId = this.portfolioPrimaryTokenInfo.id
       const absSlotNumber = await this.getAbsoluteSlotNumber()
       const changeAddr = this.getAddressedChangeAddress(addressMode)
       const modernUtxos = this.getAddressedUtxos()
-      const addressedUtxos = modernUtxosToCardanoAddressedUtxos(modernUtxos)
 
       const {coinsPerUtxoByte, keyDeposit, linearFee, poolDeposit} =
         this.protocolParams
@@ -790,22 +742,11 @@ export const makeCardanoWallet = (
           primaryTokenId,
         )
 
-        // Convert to legacy format for yoroiUnsignedTx
-        const legacyUnsignedTx = await adaptUnsignedTransaction(
-          CardanoMobile,
-          unsignedTx,
-          toLibToken(this.portfolioPrimaryTokenInfo),
-        )
+        if (!unsignedTx.cbor) {
+          throw new Error('Transaction CBOR not available')
+        }
 
-        return yoroiUnsignedTx({
-          unsignedTx: legacyUnsignedTx as unknown as CardanoTypes.UnsignedTx,
-          networkManager: this.networkManager,
-          addressedUtxos,
-          entries: [],
-          governance: true,
-          primaryTokenId,
-          keyDeposit,
-        })
+        return {cbor: unsignedTx.cbor}
       } catch (e) {
         if (
           e instanceof NotEnoughMoneyToSendError ||
@@ -985,7 +926,7 @@ export const makeCardanoWallet = (
       entries: TransactionOutput[]
       addressMode: Wallet.AddressMode
       metadata?: Array<CardanoTypes.TxMetadata>
-    }) {
+    }): Promise<{cbor: string}> {
       const primaryTokenId = this.portfolioPrimaryTokenInfo.id
       const absSlotNumber = await this.getAbsoluteSlotNumber()
 
@@ -1051,23 +992,11 @@ export const makeCardanoWallet = (
           primaryTokenId,
         )
 
-        // Convert to legacy format for yoroiUnsignedTx
-        const legacyUnsignedTx = await adaptUnsignedTransaction(
-          CardanoMobile,
-          unsignedTx,
-          toLibToken(this.portfolioPrimaryTokenInfo),
-        )
+        if (!unsignedTx.cbor) {
+          throw new Error('Transaction CBOR not available')
+        }
 
-        const addressedUtxos = modernUtxosToCardanoAddressedUtxos(modernUtxos)
-
-        return yoroiUnsignedTx({
-          unsignedTx: legacyUnsignedTx as unknown as CardanoTypes.UnsignedTx,
-          networkManager: this.networkManager,
-          addressedUtxos,
-          entries,
-          primaryTokenId,
-          keyDeposit,
-        })
+        return {cbor: unsignedTx.cbor}
       } catch (e) {
         if (
           e instanceof NotEnoughMoneyToSendError ||

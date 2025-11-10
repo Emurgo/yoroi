@@ -91,10 +91,10 @@ export const getResolvedName = (
   // The response contains the original resolve value (the alias)
   // and the resolved address
   // We can return the alias as the "name"
-  if (response.address) {
+  if ((response as any).address) {
     // For now, return the original resolve value as the name
     // This could be enhanced to extract a more user-friendly name
-    return response.address
+    return (response as any).address
   }
 
   return null
