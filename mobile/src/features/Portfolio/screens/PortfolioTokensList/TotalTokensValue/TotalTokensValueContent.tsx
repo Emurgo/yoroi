@@ -79,9 +79,7 @@ export const TotalTokensValueContent = ({amount, headerCard}: Props) => {
             isPrimaryTokenActive={isPrimaryTokenActive}
           />
 
-          <Tooltip
-            title={strings.portfolio.totalWalletValueTooltip}
-          >
+          <Tooltip title={strings.portfolio.totalWalletValueTooltip}>
             <View style={[a.flex_row, a.gap_xs, a.align_stretch]}>
               {isLoading ? (
                 <SkeletonQuantityChange />

@@ -1,4 +1,5 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {TransactionOutput} from '@yoroi/tx'
 import {Portfolio} from '@yoroi/types'
 
 import {useMutation} from '@tanstack/react-query'
@@ -36,7 +37,6 @@ import {useCollateralInfo} from '~/wallets/cardano/utxoManager/useCollateralInfo
 import {useSetCollateralId} from '~/wallets/cardano/utxoManager/useSetCollateralId'
 import {collateralConfig, utxosMaker} from '~/wallets/cardano/utxoManager/utxos'
 import {RawUtxo} from '~/wallets/types/other'
-import {TransactionOutput} from '@yoroi/tx'
 import {YoroiSignedTx} from '~/wallets/types/yoroi'
 import {Amounts, Quantities, asQuantity} from '~/wallets/utils/utils'
 

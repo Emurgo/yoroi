@@ -1,5 +1,5 @@
-import {Transfer} from '@yoroi/types'
 import {TransactionOutput} from '@yoroi/tx'
+import {Transfer} from '@yoroi/types'
 
 import {asQuantity} from '~/wallets/utils/utils'
 

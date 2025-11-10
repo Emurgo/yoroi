@@ -38,4 +38,3 @@ export type RemoteAccountState = {
 export type AccountStates = {
   [key: string]: null | RemoteAccountState
 }
-

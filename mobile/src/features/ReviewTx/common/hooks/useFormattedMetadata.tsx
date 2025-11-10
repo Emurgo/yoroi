@@ -21,7 +21,7 @@ export const formatMetadata = (
     unsignedTx.unsignedTx.auxiliaryData &&
     hash != null
   ) {
-    CardanoMobileWrapped.cslScope((csl) => {
+    CardanoMobileWrapped.cslScope((wasm) => {
       const generalTransactionMetadata =
         unsignedTx.unsignedTx.auxiliaryData?.metadata()
       if (generalTransactionMetadata) {
@@ -39,7 +39,7 @@ export const formatMetadata = (
       }
     })
   } else if (cbor != null && hash != null) {
-    CardanoMobileWrapped.cslScope((csl) => {
+    CardanoMobileWrapped.cslScope((wasm) => {
       const tx = csl.Transaction.fromHex(cbor)
       const auxiliaryData = tx.auxiliaryData()
       const txMetadata = auxiliaryData?.metadata()

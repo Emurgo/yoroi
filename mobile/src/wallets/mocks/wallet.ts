@@ -5,6 +5,7 @@ import {
   protocolParamsPlaceholder,
 } from '@yoroi/blockchains'
 import {createPrimaryTokenInfo} from '@yoroi/portfolio'
+import {StakePoolInfosAndHistories} from '@yoroi/staking'
 import {Balance, Portfolio, Wallet} from '@yoroi/types'
 
 import BigNumber from 'bignumber.js'
@@ -17,7 +18,6 @@ import {logger} from '~/kernel/logger/logger'
 import {toTokenInfo, utf8ToHex} from '../cardano/api/utils'
 import {CardanoTypes, YoroiWallet} from '../cardano/types'
 import {TransactionInfo} from '../types/other'
-import {StakePoolInfosAndHistories} from '@yoroi/staking'
 import {
   RemotePoolMetaSuccess,
   StakingInfo,

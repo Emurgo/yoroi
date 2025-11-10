@@ -112,9 +112,7 @@ export const makeUtxoStorage = (storage: App.Storage) => {
   const setUtxoDiffToBestBlock = (utxoDiffToBestBlock: UtxoDiffToBestBlock[]) =>
     storage.setItem(diffPath, utxoDiffToBestBlock)
 
-  const getUtxoAtSafePoint = async (): Promise<
-    UtxoAtSafePoint | undefined
-  > => {
+  const getUtxoAtSafePoint = async (): Promise<UtxoAtSafePoint | undefined> => {
     const safePoint = await storage.getItem(safePointPath, parseSafePoint)
     if (!safePoint) return undefined
     return safePoint

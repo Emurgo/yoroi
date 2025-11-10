@@ -13,7 +13,7 @@ const addrContainsAccountKey = (
   targetAccountKey: CardanoTypes.StakeCredential,
   acceptTypeMismatch: boolean,
 ) => {
-  return CardanoMobileWrapped.cslScope((csl) => {
+  return CardanoMobileWrapped.cslScope((wasm) => {
     const wasmAddr = normalizeToAddress(csl, address)
 
     if (wasmAddr == null) {
@@ -104,7 +104,7 @@ export const normalizeToPoolHash = (poolIdOrHash: string): string => {
 }
 
 const getPoolHash = (poolId: string): string => {
-  return CardanoMobileWrapped.cslScope((csl) => {
+  return CardanoMobileWrapped.cslScope((wasm) => {
     const hash = csl.Ed25519KeyHash.fromBech32(poolId)
     return hash.toHex()
   })
@@ -121,7 +121,7 @@ const isValidPoolId = (poolId: string): boolean => {
 }
 
 export const getPoolBech32Id = (poolId: string) => {
-  return CardanoMobileWrapped.cslScope((csl) => {
+  return CardanoMobileWrapped.cslScope((wasm) => {
     const keyHash = csl.Ed25519KeyHash.fromHex(poolId)
     return keyHash.toBech32('pool')
   })
@@ -129,7 +129,7 @@ export const getPoolBech32Id = (poolId: string) => {
 
 const isValidPoolHash = (poolHash: string): boolean => {
   if (poolHash.length === 0) return false
-  return CardanoMobileWrapped.cslScope((csl) => {
+  return CardanoMobileWrapped.cslScope((wasm) => {
     try {
       csl.Ed25519KeyHash.fromBytes(Buffer.from(poolHash, 'hex'))
       return true

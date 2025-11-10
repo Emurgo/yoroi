@@ -1,8 +1,8 @@
+import {TransactionOutput} from '@yoroi/tx'
 import {Balance} from '@yoroi/types'
 
 import BigNumber from 'bignumber.js'
 
-import {TransactionOutput} from '@yoroi/tx'
 import {RawUtxo} from '../types/other'
 import {
   Amounts,

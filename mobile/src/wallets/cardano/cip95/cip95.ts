@@ -42,7 +42,7 @@ class CIP95Extension {
   }
 
   async getPubDRepKey(): Promise<string> {
-    return CardanoMobileWrapped.cslScope((csl) => {
+    return CardanoMobileWrapped.cslScope((wasm) => {
       const walletImplementation = this.meta.implementation
       if (!supportsCIP95(walletImplementation))
         throw new Error('CIP95Extension: Unsupported wallet implementation')

@@ -1,4 +1,9 @@
 import {
+  AccountStates,
+  StakePoolInfoRequest,
+  StakePoolInfosAndHistories,
+} from '@yoroi/staking'
+import {
   Addressing as AddressingType,
   CardanoAddressedUtxo as CardanoAddressedUtxoType,
   MultiTokenValue as MultiTokenValueType,
@@ -8,6 +13,7 @@ import {
   TxMetadata as TxMetadataType,
   UnsignedTx as UnsignedTxType,
 } from '@yoroi/tx'
+import {TransactionOutput} from '@yoroi/tx'
 import {Api, App, HW, Network, Portfolio, Wallet} from '@yoroi/types'
 
 import {WalletChecksum as WalletChecksumType} from '@emurgo/cip4-js'
@@ -23,13 +29,7 @@ import {
   TxStatusResponse,
   WalletState,
 } from '../types/other'
-import {
-  AccountStates,
-  StakePoolInfoRequest,
-  StakePoolInfosAndHistories,
-} from '@yoroi/staking'
 import {StakingInfo, StakingStatus} from '../types/staking'
-import {TransactionOutput} from '@yoroi/tx'
 import {YoroiSignedTx, YoroiUnsignedTx} from '../types/yoroi'
 import type {Addresses} from './account-manager/account-manager'
 

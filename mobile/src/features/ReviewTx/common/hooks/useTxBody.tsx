@@ -23,7 +23,7 @@ export const useTxBody = ({
   }, [cbor, unsignedTx])
 }
 const getCborTxBody = (cbor: string) => {
-  return CardanoMobileWrapped.cslScope((csl) => {
+  return CardanoMobileWrapped.cslScope((wasm) => {
     const tx = csl.Transaction.fromHex(cbor)
     const jsonString = tx.toJson()
     return JSON.parse(jsonString).body

@@ -2,13 +2,9 @@
 // Cardano-specific address normalization and manipulation functions
 import {isHex} from '@yoroi/common'
 
-import {
-  Address,
-  Bip32PublicKey,
-  Credential,
-  WasmModuleProxy,
-} from '@emurgo/cross-csl-core'
+import {Address, Bip32PublicKey, Credential} from '@emurgo/cross-csl-core'
 
+import {CardanoMobileWrapped} from '../../../src/wallets/cardano/wrappedCsl'
 import {Addressing} from '../types'
 
 /**
@@ -16,89 +12,90 @@ import {Addressing} from '../types'
  * Supports base16 (hex), bech32, and base58 (Byron) formats
  */
 export async function normalizeToAddress(
-  wasm: WasmModuleProxy,
   addr: string,
 ): Promise<Address | undefined> {
-  // in Shelley, addresses can be base16, bech32 or base58
-  // this function, we try parsing in all encodings possible
+  return CardanoMobileWrapped.cslScope((wasm) => {
+    // in Shelley, addresses can be base16, bech32 or base58
+    // this function, we try parsing in all encodings possible
 
-  // 1) Try converting from base58
-  if (await wasm.ByronAddress.isValid(addr)) {
-    const byronAddr = await wasm.ByronAddress.fromBase58(addr)
-    return await byronAddr.toAddress()
-  }
-  const address = await (isHex(addr)
-    ? wasm.Address.fromHex(addr)
-    : wasm.Address.fromBech32(addr))
-  // Return undefined when malformed for backward compatibility
-  return (await address.isMalformed()) ? undefined : address
+    // 1) Try converting from base58
+    if (wasm.ByronAddress.isValid(addr)) {
+      const byronAddr = wasm.ByronAddress.fromBase58(addr)
+      return byronAddr.toAddress()
+    }
+    const address = isHex(addr)
+      ? wasm.Address.fromHex(addr)
+      : wasm.Address.fromBech32(addr)
+    // Return undefined when malformed for backward compatibility
+    return address.isMalformed() ? undefined : address
+  })
 }
 
 /**
  * Convert WASM Address to hex or base58 string
  */
-export async function toHexOrBase58(
-  wasm: WasmModuleProxy,
-  address: Address,
-): Promise<string> {
-  const asByron = await wasm.ByronAddress.fromAddress(address)
-  if (asByron === null || !asByron) {
-    return Buffer.from(await address.toBytes()).toString('hex')
-  }
-  return await asByron.toBase58()
+export function toHexOrBase58(address: Address): string {
+  return CardanoMobileWrapped.cslScope((wasm) => {
+    const asByron = wasm.ByronAddress.fromAddress(address)
+    if (asByron === null || !asByron) {
+      return Buffer.from(address.toBytes()).toString('hex')
+    }
+    return asByron.toBase58()
+  })
 }
 
 /**
  * Filter addresses by staking key
  */
 export async function filterAddressesByStakingKey<T extends {receiver: string}>(
-  wasm: WasmModuleProxy,
   stakingKey: Credential,
   utxos: ReadonlyArray<T>,
   acceptTypeMismatch: boolean,
 ): Promise<ReadonlyArray<T>> {
-  const result: T[] = []
-  for (const utxo of utxos) {
-    if (
-      await addrContainsAccountKey(
-        wasm,
-        utxo.receiver,
-        stakingKey,
-        acceptTypeMismatch,
-      )
-    ) {
-      result.push(utxo)
+  return CardanoMobileWrapped.cslScope(async (wasm) => {
+    const result: T[] = []
+    for (const utxo of utxos) {
+      if (
+        await addrContainsAccountKey(
+          wasm,
+          utxo.receiver,
+          stakingKey,
+          acceptTypeMismatch,
+        )
+      ) {
+        result.push(utxo)
+      }
     }
-  }
-  return result
+    return result
+  })
 }
 
 /**
  * Check if address contains account key
  */
 export async function addrContainsAccountKey(
-  wasm: WasmModuleProxy,
+  wasm,
   address: string,
   targetAccountKey: Credential,
   acceptTypeMismatch: boolean,
 ): Promise<boolean> {
-  const wasmAddr = await normalizeToAddress(wasm, address)
+  const wasmAddr = await normalizeToAddress(address)
   if (wasmAddr == null)
     throw new Error(`addrContainsAccountKey invalid address ${address}`)
 
-  const accountKeyString = Buffer.from(
-    await targetAccountKey.toBytes(),
-  ).toString('hex')
+  const accountKeyString = Buffer.from(targetAccountKey.toBytes()).toString(
+    'hex',
+  )
 
-  const baseAddress = await wasm.BaseAddress.fromAddress(wasmAddr)
+  const baseAddress = wasm.BaseAddress.fromAddress(wasmAddr)
   if (!baseAddress) throw new Error('addrContainsAccountKey: baseAddress null')
-  const stakeCredBytes = await baseAddress.stakeCred().then((x) => x.toBytes())
+  const stakeCredBytes = baseAddress.stakeCred().toBytes()
   if (baseAddress != null) {
     if (Buffer.from(stakeCredBytes).toString('hex') === accountKeyString) {
       return true
     }
   }
-  const asPointer = await wasm.PointerAddress.fromAddress(wasmAddr)
+  const asPointer = wasm.PointerAddress.fromAddress(wasmAddr)
   if (asPointer != null) {
     // TODO: Implement pointer address checking
   }
@@ -108,13 +105,13 @@ export async function addrContainsAccountKey(
 /**
  * Derive public key by addressing
  */
-export const derivePublicByAddressing = async (
+export const derivePublicByAddressing = (
   addressing: Addressing,
   startingFrom: {
     key: Bip32PublicKey
     level: number
   },
-): Promise<Bip32PublicKey> => {
+): Bip32PublicKey => {
   if (startingFrom.level + 1 < addressing.startLevel) {
     throw new Error('derivePublicByAddressing: keyLevel < startLevel')
   }
@@ -126,7 +123,11 @@ export const derivePublicByAddressing = async (
     i < addressing.path.length;
     i++
   ) {
-    derivedKey = await derivedKey.derive(addressing.path[i])
+    const pathIndex = addressing.path[i]
+    if (pathIndex === undefined) {
+      throw new Error('Invalid addressing path')
+    }
+    derivedKey = derivedKey.derive(pathIndex)
   }
 
   return derivedKey

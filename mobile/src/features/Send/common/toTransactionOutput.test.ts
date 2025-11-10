@@ -1,6 +1,6 @@
 import {tokenBalanceMocks} from '@yoroi/portfolio'
-import {Transfer} from '@yoroi/types'
 import {TransactionOutput} from '@yoroi/tx'
+import {Transfer} from '@yoroi/types'
 
 import {toTransactionOutput} from './toTransactionOutput'
 

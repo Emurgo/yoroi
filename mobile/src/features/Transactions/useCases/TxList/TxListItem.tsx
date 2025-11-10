@@ -54,7 +54,8 @@ export const TxListItem = ({transaction}: Props) => {
     : ''
 
   const amountQuantity = isDefault
-    ? Amounts.getAmount(transaction.amount, wallet.portfolioPrimaryTokenInfo.id).quantity
+    ? Amounts.getAmount(transaction.amount, wallet.portfolioPrimaryTokenInfo.id)
+        .quantity
     : Amounts.getAmount(transaction.amount, tokenInfo.id).quantity
   const amount = new BigNumber(amountQuantity)
 

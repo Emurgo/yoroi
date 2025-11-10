@@ -119,7 +119,7 @@ const transformUtxo = (utxo: RawUtxo): Utxo => {
 }
 
 function toTransactionUnspentOutputHex(this: Utxo): string {
-  return CardanoMobileWrapped.cslScope((csl) =>
+  return CardanoMobileWrapped.cslScope((wasm) =>
     utxoToTransactionUnspentOutput({
       csl,
       utxo: this,

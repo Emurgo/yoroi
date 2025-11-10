@@ -5,8 +5,8 @@ import {
   TransactionSigningMode,
   TxAuxiliaryData,
 } from '@cardano-foundation/ledgerjs-hw-app-cardano'
-import {WasmModuleProxy} from '@emurgo/cross-csl-core'
 
+import {CardanoMobileWrapped} from '../../../src/wallets/cardano/wrappedCsl'
 import {LedgerUnsignedTx} from './transform'
 import {
   assertTagsState,
@@ -44,82 +44,91 @@ export async function buildVotingLedgerPayloadV5(
   byronNetworkMagic: number,
   stakingDerivationPath?: number[],
 ): Promise<SignTransactionRequest> {
-  const wasm = unsignedTx.txBuilder as unknown as WasmModuleProxy
-  const builtTx = await unsignedTx.txBuilder.build()
-  await assertTagsState(wasm, await builtTx.toHex())
-  const ledgerInputs = await transformToLedgerInputs(unsignedTx)
-  const ledgerOutputs = await transformToLedgerOutputs(wasm, {
-    networkId: networkId,
-    txOutputs: await unsignedTx.txBody.outputs(),
-    stakingDerivationPath: stakingDerivationPath,
-    changeAddrs: [...unsignedTx.change],
-  })
+  return CardanoMobileWrapped.cslScope(async (wasm) => {
+    const builtTx = unsignedTx.txBuilder.build()
+    assertTagsState(wasm, builtTx.toHex())
+    const ledgerInputs = transformToLedgerInputs(unsignedTx)
+    const ledgerOutputs = await transformToLedgerOutputs(wasm, {
+      networkId: networkId,
+      txOutputs: unsignedTx.txBody.outputs(),
+      stakingDerivationPath: stakingDerivationPath,
+      changeAddrs: [...unsignedTx.change],
+    })
 
-  const withdrawals = unsignedTx.withdrawals
-  const ledgerWithdrawal: Array<
-    import('@cardano-foundation/ledgerjs-hw-app-cardano').Withdrawal
-  > = []
-  if (
-    withdrawals != null &&
-    (await withdrawals.hasValue()) &&
-    (await withdrawals.len()) > 0
-  ) {
-    if (!stakingDerivationPath)
-      throw new Error('stakingDerivationPath should have value for withdrawals')
-    const withs = await formatLedgerWithdrawals(withdrawals, stakingDerivationPath)
-    ledgerWithdrawal.push(...withs)
-  }
+    const withdrawals = unsignedTx.withdrawals
+    const ledgerWithdrawal: Array<
+      import('@cardano-foundation/ledgerjs-hw-app-cardano').Withdrawal
+    > = []
+    if (
+      withdrawals != null &&
+      withdrawals.hasValue() &&
+      withdrawals.len() > 0
+    ) {
+      if (!stakingDerivationPath)
+        throw new Error(
+          'stakingDerivationPath should have value for withdrawals',
+        )
+      const withs = formatLedgerWithdrawals(withdrawals, stakingDerivationPath)
+      ledgerWithdrawal.push(...withs)
+    }
 
-  const certificates = unsignedTx.certificates
+    const certificates = unsignedTx.certificates
 
-  const ledgerCertificates: Array<
-    import('@cardano-foundation/ledgerjs-hw-app-cardano').Certificate
-  > = []
-  if (
-    certificates != null &&
-    (await certificates.hasValue()) &&
-    (await certificates.len()) > 0
-  ) {
-    if (!stakingDerivationPath)
-      throw new Error(
-        'stakingDerivationPath should have value for certificates',
+    const ledgerCertificates: Array<
+      import('@cardano-foundation/ledgerjs-hw-app-cardano').Certificate
+    > = []
+    if (
+      certificates != null &&
+      certificates.hasValue() &&
+      certificates.len() > 0
+    ) {
+      if (!stakingDerivationPath)
+        throw new Error(
+          'stakingDerivationPath should have value for certificates',
+        )
+      const certs = formatLedgerCertificates(
+        certificates,
+        stakingDerivationPath,
       )
-    const certs = await formatLedgerCertificates(certificates, stakingDerivationPath)
-    ledgerCertificates.push(...certs)
-  }
+      ledgerCertificates.push(...certs)
+    }
 
-  const ttl = unsignedTx.ttl
+    const ttl = unsignedTx.ttl
 
-  let auxiliaryData: TxAuxiliaryData | null = null
+    let auxiliaryData: TxAuxiliaryData | null = null
 
-  if (unsignedTx.catalystRegistrationData) {
-    auxiliaryData = buildLedgerCIP15Payload(unsignedTx.catalystRegistrationData)
-  }
+    if (unsignedTx.catalystRegistrationData) {
+      auxiliaryData = buildLedgerCIP15Payload(
+        unsignedTx.catalystRegistrationData,
+      )
+    }
 
-  return {
-    signingMode: TransactionSigningMode.ORDINARY_TRANSACTION,
-    tx: {
-      inputs: ledgerInputs,
-      outputs: ledgerOutputs,
-      ttl: ttl === undefined ? ttl : ttl.toString(),
-      fee: await (await unsignedTx.txBody.fee()).toStr(),
-      network: {
-        networkId: networkId,
-        protocolMagic: byronNetworkMagic,
+    return {
+      signingMode: TransactionSigningMode.ORDINARY_TRANSACTION,
+      tx: {
+        inputs: ledgerInputs,
+        outputs: ledgerOutputs,
+        ttl: ttl === undefined ? ttl : ttl.toString(),
+        fee: unsignedTx.txBody.fee().toStr(),
+        network: {
+          networkId: networkId,
+          protocolMagic: byronNetworkMagic,
+        },
+        withdrawals: ledgerWithdrawal.length === 0 ? null : ledgerWithdrawal,
+        certificates:
+          ledgerCertificates.length === 0 ? null : ledgerCertificates,
+        auxiliaryData,
+        validityIntervalStart: undefined,
       },
-      withdrawals: ledgerWithdrawal.length === 0 ? null : ledgerWithdrawal,
-      certificates: ledgerCertificates.length === 0 ? null : ledgerCertificates,
-      auxiliaryData,
-      validityIntervalStart: undefined,
-    },
-    additionalWitnessPaths: [],
-    options: {
-      tagCborSets: await doAllSetsHaveTag(
-        wasm,
-        await (await unsignedTx.txBuilder.build()).toHex(),
-      ),
-    },
-  }
+      additionalWitnessPaths: [],
+      options: {
+        tagCborSets: doAllSetsHaveTag(
+          wasm,
+          unsignedTx.txBuilder.build().toHex(),
+        ),
+      },
+    }
+  })
 }
 
 /**
@@ -131,92 +140,101 @@ export async function buildLedgerPayload(
   byronNetworkMagic: number,
   stakingDerivationPath?: number[],
 ): Promise<SignTransactionRequest> {
-  const wasm = unsignedTx.txBuilder as unknown as WasmModuleProxy
-  const builtTx = await unsignedTx.txBuilder.build()
-  await assertTagsState(wasm, await builtTx.toHex())
+  return CardanoMobileWrapped.cslScope(async (wasm) => {
+    const builtTx = unsignedTx.txBuilder.build()
+    assertTagsState(wasm, builtTx.toHex())
 
-  const ledgerInputs = await transformToLedgerInputs(unsignedTx)
-  const ledgerOutputs = await transformToLedgerOutputs(wasm, {
-    networkId: networkId,
-    txOutputs: await unsignedTx.txBody.outputs(),
-    stakingDerivationPath: stakingDerivationPath,
-    changeAddrs: [...unsignedTx.change],
-  })
+    const ledgerInputs = transformToLedgerInputs(unsignedTx)
+    const ledgerOutputs = await transformToLedgerOutputs(wasm, {
+      networkId: networkId,
+      txOutputs: unsignedTx.txBody.outputs(),
+      stakingDerivationPath: stakingDerivationPath,
+      changeAddrs: [...unsignedTx.change],
+    })
 
-  const withdrawals = unsignedTx.withdrawals
-  const ledgerWithdrawal: Array<
-    import('@cardano-foundation/ledgerjs-hw-app-cardano').Withdrawal
-  > = []
-  if (
-    withdrawals != null &&
-    (await withdrawals.hasValue()) &&
-    (await withdrawals.len()) > 0
-  ) {
-    if (!stakingDerivationPath)
-      throw new Error('stakingDerivationPath should have value for withdrawals')
-    const withs = await formatLedgerWithdrawals(withdrawals, stakingDerivationPath)
-    ledgerWithdrawal.push(...withs)
-  }
+    const withdrawals = unsignedTx.withdrawals
+    const ledgerWithdrawal: Array<
+      import('@cardano-foundation/ledgerjs-hw-app-cardano').Withdrawal
+    > = []
+    if (
+      withdrawals != null &&
+      withdrawals.hasValue() &&
+      withdrawals.len() > 0
+    ) {
+      if (!stakingDerivationPath)
+        throw new Error(
+          'stakingDerivationPath should have value for withdrawals',
+        )
+      const withs = formatLedgerWithdrawals(withdrawals, stakingDerivationPath)
+      ledgerWithdrawal.push(...withs)
+    }
 
-  const certificates = unsignedTx.certificates
+    const certificates = unsignedTx.certificates
 
-  const ledgerCertificates: Array<
-    import('@cardano-foundation/ledgerjs-hw-app-cardano').Certificate
-  > = []
-  if (
-    certificates != null &&
-    (await certificates.hasValue()) &&
-    (await certificates.len()) > 0
-  ) {
-    if (!stakingDerivationPath)
-      throw new Error(
-        'stakingDerivationPath should have value for certificates',
+    const ledgerCertificates: Array<
+      import('@cardano-foundation/ledgerjs-hw-app-cardano').Certificate
+    > = []
+    if (
+      certificates != null &&
+      certificates.hasValue() &&
+      certificates.len() > 0
+    ) {
+      if (!stakingDerivationPath)
+        throw new Error(
+          'stakingDerivationPath should have value for certificates',
+        )
+      const certs = formatLedgerCertificates(
+        certificates,
+        stakingDerivationPath,
       )
-    const certs = await formatLedgerCertificates(certificates, stakingDerivationPath)
-    ledgerCertificates.push(...certs)
-  }
+      ledgerCertificates.push(...certs)
+    }
 
-  const ttl = unsignedTx.ttl
+    const ttl = unsignedTx.ttl
 
-  let auxiliaryData: TxAuxiliaryData | null = null
+    let auxiliaryData: TxAuxiliaryData | null = null
 
-  if (unsignedTx.catalystRegistrationData) {
-    auxiliaryData = buildLedgerCIP36Payload(unsignedTx.catalystRegistrationData)
-  } else if (
-    unsignedTx.auxiliaryData &&
-    (await unsignedTx.auxiliaryData.hasValue())
-  ) {
-    // TODO: Implement blake2b hash for auxiliary data
-    // const auxiliaryDataHash = await blake2b(
-    //   await unsignedTx.auxiliaryData.toBytes(),
-    //   256
-    // )
-    // For now, we'll need to implement this when we have the blake2b utility
-    throw new Error('Auxiliary data hash calculation not yet implemented')
-  }
+    if (unsignedTx.catalystRegistrationData) {
+      auxiliaryData = buildLedgerCIP36Payload(
+        unsignedTx.catalystRegistrationData,
+      )
+    } else if (
+      unsignedTx.auxiliaryData &&
+      unsignedTx.auxiliaryData.hasValue()
+    ) {
+      // TODO: Implement blake2b hash for auxiliary data
+      // const auxiliaryDataHash = blake2b(
+      //   unsignedTx.auxiliaryData.toBytes(),
+      //   256
+      // )
+      // For now, we'll need to implement this when we have the blake2b utility
+      throw new Error('Auxiliary data hash calculation not yet implemented')
+    }
 
-  return {
-    signingMode: TransactionSigningMode.ORDINARY_TRANSACTION,
-    tx: {
-      inputs: ledgerInputs,
-      outputs: ledgerOutputs,
-      ttl: ttl === undefined ? ttl : ttl.toString(),
-      fee: await (await unsignedTx.txBody.fee()).toStr(),
-      network: {
-        networkId: networkId,
-        protocolMagic: byronNetworkMagic,
+    return {
+      signingMode: TransactionSigningMode.ORDINARY_TRANSACTION,
+      tx: {
+        inputs: ledgerInputs,
+        outputs: ledgerOutputs,
+        ttl: ttl === undefined ? ttl : ttl.toString(),
+        fee: unsignedTx.txBody.fee().toStr(),
+        network: {
+          networkId: networkId,
+          protocolMagic: byronNetworkMagic,
+        },
+        withdrawals: ledgerWithdrawal.length === 0 ? null : ledgerWithdrawal,
+        certificates:
+          ledgerCertificates.length === 0 ? null : ledgerCertificates,
+        auxiliaryData,
+        validityIntervalStart: undefined,
+        scriptDataHashHex: unsignedTx.scriptDataHash,
       },
-      withdrawals: ledgerWithdrawal.length === 0 ? null : ledgerWithdrawal,
-      certificates: ledgerCertificates.length === 0 ? null : ledgerCertificates,
-      auxiliaryData,
-      validityIntervalStart: undefined,
-      scriptDataHashHex: unsignedTx.scriptDataHash,
-    },
-    options: {
-      tagCborSets: await doAllSetsHaveTag(
-        wasm,
-        await (await unsignedTx.txBuilder.build()).toHex(),
-      ),
-    },
-  } as SignTransactionRequest
+      options: {
+        tagCborSets: doAllSetsHaveTag(
+          wasm,
+          unsignedTx.txBuilder.build().toHex(),
+        ),
+      },
+    } as SignTransactionRequest
+  })
 }

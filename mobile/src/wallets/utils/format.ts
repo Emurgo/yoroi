@@ -43,15 +43,11 @@ const getSymbol = (token: Balance.TokenInfo | Portfolio.Token.Info) => {
   return ticker
 }
 
-const getName = (
-  token: Balance.TokenInfo | Portfolio.Token.Info,
-) => {
+const getName = (token: Balance.TokenInfo | Portfolio.Token.Info) => {
   return token.name || token.ticker || token.fingerprint || ''
 }
 
-const getDecimals = (
-  token: Balance.TokenInfo | Portfolio.Token.Info,
-) => {
+const getDecimals = (token: Balance.TokenInfo | Portfolio.Token.Info) => {
   if ('kind' in token && token.kind === 'nft')
     return token.kind === 'nft' ? 0 : token.decimals
 

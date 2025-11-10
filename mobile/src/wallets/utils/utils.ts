@@ -1,9 +1,9 @@
 import {parseNumberFromText} from '@yoroi/common'
+import {TransactionOutput} from '@yoroi/tx'
 import {Balance, Numbers} from '@yoroi/types'
 
 import BigNumber from 'bignumber.js'
 
-import {TransactionOutput} from '@yoroi/tx'
 import {RawUtxo} from '../types/other'
 import {TokenId} from '../types/yoroi'
 

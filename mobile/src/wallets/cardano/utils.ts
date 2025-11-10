@@ -1,12 +1,11 @@
 import {invalid} from '@yoroi/common'
-import {SendToken, normalizeToAddress} from '@yoroi/tx'
+import {SendToken, TransactionOutput, normalizeToAddress} from '@yoroi/tx'
 import {Balance, Chain, Portfolio, Wallet} from '@yoroi/types'
 
 import {WasmModuleProxy} from '@emurgo/cross-csl-core'
 import {BigNumber} from 'bignumber.js'
 import {Buffer} from 'buffer'
 
-import {TransactionOutput} from '@yoroi/tx'
 import {BaseAsset, RawUtxo} from '../types/other'
 import {Amounts} from '../utils/utils'
 import {MultiToken} from './MultiToken'
@@ -21,7 +20,7 @@ export const deriveRewardAddressHex = (
   role: number,
   index: number,
 ): string => {
-  return CardanoMobileWrapped.cslScope((csl) => {
+  return CardanoMobileWrapped.cslScope((wasm) => {
     const accountPubKeyPtr = csl.Bip32PublicKey.fromBytes(
       Buffer.from(accountPubKeyHex, 'hex'),
     )
@@ -39,7 +38,7 @@ export const deriveRewardAddressFromAddress = (
   address: string,
   chainId: number,
 ): string => {
-  return CardanoMobileWrapped.cslScope((csl) => {
+  return CardanoMobileWrapped.cslScope((wasm) => {
     const result = csl.RewardAddress.new(
       chainId,
       csl.BaseAddress.fromAddress(
@@ -175,7 +174,7 @@ export const isTokenInfo = (
 }
 
 export const generateCIP30UtxoCbor = (utxo: RawUtxo) => {
-  return CardanoMobileWrapped.cslScope((csl) => {
+  return CardanoMobileWrapped.cslScope((wasm) => {
     const txHash = csl.TransactionHash.fromBytes(
       Buffer.from(utxo.tx_hash, 'hex'),
     )

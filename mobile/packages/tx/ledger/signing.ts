@@ -9,9 +9,9 @@ import {
   BootstrapWitness,
   PrivateKey,
   Vkeywitness,
-  WasmModuleProxy,
 } from '@emurgo/cross-csl-core'
 
+import {CardanoMobileWrapped} from '../../../src/wallets/cardano/wrappedCsl'
 import {Addressing} from '../types'
 import {hashTransaction} from '../utils/transactions'
 import {verifyFromBip44Root} from './transform'
@@ -19,13 +19,13 @@ import {verifyFromBip44Root} from './transform'
 /**
  * Derive public key by addressing
  */
-async function derivePublicByAddressing(
+function derivePublicByAddressing(
   addressing: Addressing,
   startingFrom: {
     key: Bip32PublicKey
     level: number
   },
-): Promise<Bip32PublicKey> {
+): Bip32PublicKey {
   if (startingFrom.level + 1 < addressing.startLevel) {
     throw new Error('derivePublicByAddressing: keyLevel < startLevel')
   }
@@ -41,7 +41,7 @@ async function derivePublicByAddressing(
     if (pathIndex === undefined) {
       throw new Error('Invalid addressing path')
     }
-    derivedKey = await derivedKey.derive(pathIndex)
+    derivedKey = derivedKey.derive(pathIndex)
   }
 
   return derivedKey
@@ -51,18 +51,17 @@ async function derivePublicByAddressing(
  * Build signed transaction from Ledger signature response
  */
 export async function buildLedgerSignedTx(
-  wasm: WasmModuleProxy,
   unsignedTx: {
     senderUtxos: Array<{
       receiver: string
       addressing: Addressing
     }>
     txBuilder: {
-      build(): Promise<unknown>
-      setAuxiliaryData(data: unknown): Promise<void>
+      build(): unknown
+      setAuxiliaryData(data: unknown): void
     }
     auxiliaryData?: {
-      hasValue(): Promise<boolean>
+      hasValue(): boolean
     } | null
     catalystRegistrationData?: {
       votingPublicKeyHex: string
@@ -80,104 +79,74 @@ export async function buildLedgerSignedTx(
   id: string
   encodedTx: Uint8Array
 }> {
-  const key = await wasm.Bip32PublicKey.fromBytes(
-    Buffer.from(publicKeyHex, 'hex'),
-  )
-  const addressing: Addressing = {
-    path: [
-      purpose,
-      2147485463, // CARDANO
-      2147483648,
-    ],
-    startLevel: 1,
-  }
-  const isSameArray = (array1: Array<number>, array2: Array<number>) =>
-    array1.length === array2.length &&
-    array1.every((value, index) => value === array2[index])
-
-  const findWitness = (path: Array<number>): string => {
-    for (const witness of signedLedgerTx.witnesses) {
-      if (isSameArray(witness.path, path)) {
-        return witness.witnessSignatureHex
-      }
-    }
-
-    throw new Error(
-      `buildSignedTransaction no witness for ${JSON.stringify(path)}`,
-    )
-  }
-  const keyLevel = addressing.startLevel + addressing.path.length - 1
-  const witSet = await wasm.TransactionWitnessSet.new()
-  const bootstrapWitnesses: Array<BootstrapWitness> = []
-  const vkeys: Array<Vkeywitness> = []
-  const plutusDataWits = await wasm.PlutusList.new()
-
-  // Note: Ledger removes duplicate witnesses
-  // but there may be a one-to-many relationship
-  // ex: same witness is used in both a bootstrap witness and a vkey witness
-  const seenVKeyWit = new Set<string>()
-  const seenBootstrapWit = new Set<string>()
-  for (const utxo of unsignedTx.senderUtxos) {
-    verifyFromBip44Root(utxo.addressing)
-    const witness = findWitness(utxo.addressing.path)
-    const addressKey = await derivePublicByAddressing(utxo.addressing, {
-      level: keyLevel,
-      key,
-    })
-
-    if (await wasm.ByronAddress.isValid(utxo.receiver)) {
-      const byronAddr = await wasm.ByronAddress.fromBase58(utxo.receiver)
-      const bootstrapWit = await wasm.BootstrapWitness.new(
-        await wasm.Vkey.new(await addressKey.toRawKey()),
-        await wasm.Ed25519Signature.fromBytes(Buffer.from(witness, 'hex')),
-        await addressKey.chaincode(),
-        await byronAddr.attributes(),
-      )
-      const asString = Buffer.from(await bootstrapWit.toBytes()).toString('hex')
-
-      if (seenBootstrapWit.has(asString)) {
-        continue
-      }
-
-      seenBootstrapWit.add(asString)
-      bootstrapWitnesses.push(bootstrapWit)
-      continue
-    }
-
-    const vkeyWit = await wasm.Vkeywitness.new(
-      await wasm.Vkey.new(await addressKey.toRawKey()),
-      await wasm.Ed25519Signature.fromBytes(Buffer.from(witness, 'hex')),
-    )
-    const asString = Buffer.from(await vkeyWit.toBytes()).toString('hex')
-
-    if (seenVKeyWit.has(asString)) {
-      continue
-    }
-
-    seenVKeyWit.add(asString)
-    vkeys.push(vkeyWit)
-  }
-
-  // add any staking key needed
-  for (const witness of signedLedgerTx.witnesses) {
+  return CardanoMobileWrapped.cslScope(async (wasm) => {
+    const key = wasm.Bip32PublicKey.fromBytes(Buffer.from(publicKeyHex, 'hex'))
     const addressing: Addressing = {
-      path: witness.path,
+      path: [
+        purpose,
+        2147485463, // CARDANO
+        2147483648,
+      ],
       startLevel: 1,
     }
-    verifyFromBip44Root(addressing)
+    const isSameArray = (array1: Array<number>, array2: Array<number>) =>
+      array1.length === array2.length &&
+      array1.every((value, index) => value === array2[index])
 
-    if (witness.path[3] === 2) {
-      const stakingKey = await derivePublicByAddressing(addressing, {
+    const findWitness = (path: Array<number>): string => {
+      for (const witness of signedLedgerTx.witnesses) {
+        if (isSameArray(witness.path, path)) {
+          return witness.witnessSignatureHex
+        }
+      }
+
+      throw new Error(
+        `buildSignedTransaction no witness for ${JSON.stringify(path)}`,
+      )
+    }
+    const keyLevel = addressing.startLevel + addressing.path.length - 1
+    const witSet = wasm.TransactionWitnessSet.new()
+    const bootstrapWitnesses: Array<BootstrapWitness> = []
+    const vkeys: Array<Vkeywitness> = []
+    const plutusDataWits = wasm.PlutusList.new()
+
+    // Note: Ledger removes duplicate witnesses
+    // but there may be a one-to-many relationship
+    // ex: same witness is used in both a bootstrap witness and a vkey witness
+    const seenVKeyWit = new Set<string>()
+    const seenBootstrapWit = new Set<string>()
+    for (const utxo of unsignedTx.senderUtxos) {
+      verifyFromBip44Root(utxo.addressing)
+      const witness = findWitness(utxo.addressing.path)
+      const addressKey = derivePublicByAddressing(utxo.addressing, {
         level: keyLevel,
         key,
       })
-      const vkeyWit = await wasm.Vkeywitness.new(
-        await wasm.Vkey.new(await stakingKey.toRawKey()),
-        await wasm.Ed25519Signature.fromBytes(
-          Buffer.from(witness.witnessSignatureHex, 'hex'),
-        ),
+
+      if (wasm.ByronAddress.isValid(utxo.receiver)) {
+        const byronAddr = wasm.ByronAddress.fromBase58(utxo.receiver)
+        const bootstrapWit = wasm.BootstrapWitness.new(
+          wasm.Vkey.new(addressKey.toRawKey()),
+          wasm.Ed25519Signature.fromBytes(Buffer.from(witness, 'hex')),
+          addressKey.chaincode(),
+          byronAddr.attributes(),
+        )
+        const asString = Buffer.from(bootstrapWit.toBytes()).toString('hex')
+
+        if (seenBootstrapWit.has(asString)) {
+          continue
+        }
+
+        seenBootstrapWit.add(asString)
+        bootstrapWitnesses.push(bootstrapWit)
+        continue
+      }
+
+      const vkeyWit = wasm.Vkeywitness.new(
+        wasm.Vkey.new(addressKey.toRawKey()),
+        wasm.Ed25519Signature.fromBytes(Buffer.from(witness, 'hex')),
       )
-      const asString = Buffer.from(await vkeyWit.toBytes()).toString('hex')
+      const asString = Buffer.from(vkeyWit.toBytes()).toString('hex')
 
       if (seenVKeyWit.has(asString)) {
         continue
@@ -186,150 +155,179 @@ export async function buildLedgerSignedTx(
       seenVKeyWit.add(asString)
       vkeys.push(vkeyWit)
     }
-  }
 
-  if (bootstrapWitnesses.length > 0) {
-    const bootstrapWitWasm = await wasm.BootstrapWitnesses.new()
+    // add any staking key needed
+    for (const witness of signedLedgerTx.witnesses) {
+      const addressing: Addressing = {
+        path: witness.path,
+        startLevel: 1,
+      }
+      verifyFromBip44Root(addressing)
 
-    for (const bootstrapWit of bootstrapWitnesses) {
-      await bootstrapWitWasm.add(bootstrapWit)
-    }
+      if (witness.path[3] === 2) {
+        const stakingKey = derivePublicByAddressing(addressing, {
+          level: keyLevel,
+          key,
+        })
+        const vkeyWit = wasm.Vkeywitness.new(
+          wasm.Vkey.new(stakingKey.toRawKey()),
+          wasm.Ed25519Signature.fromBytes(
+            Buffer.from(witness.witnessSignatureHex, 'hex'),
+          ),
+        )
+        const asString = Buffer.from(vkeyWit.toBytes()).toString('hex')
 
-    await witSet.setBootstraps(bootstrapWitWasm)
-  }
+        if (seenVKeyWit.has(asString)) {
+          continue
+        }
 
-  if (vkeys.length > 0) {
-    const vkeyWitWasm = await wasm.Vkeywitnesses.new()
-
-    for (const vkey of vkeys) {
-      await vkeyWitWasm.add(vkey)
-    }
-
-    await witSet.setVkeys(vkeyWitWasm)
-  }
-
-  // TODO: Handle auxiliary data and catalyst registration
-  // This will need to be implemented when we migrate those utilities
-  // let auxData = unsignedTx.auxiliaryData
-  // if (unsignedTx.catalystRegistrationData) {
-  //   auxData = await generateRegistrationMetadata(...)
-  // }
-
-  // if (auxData) {
-  //   await unsignedTx.txBuilder.setAuxiliaryData(auxData)
-  // }
-
-  if (plutusData) {
-    for (const datum of plutusData) {
-      if (datum.data) {
-        const plutusDatum = await wasm.PlutusData.fromHex(datum.data)
-        await plutusDataWits.add(plutusDatum)
+        seenVKeyWit.add(asString)
+        vkeys.push(vkeyWit)
       }
     }
-  }
 
-  if ((await plutusDataWits.len()) > 0)
-    await witSet.setPlutusData(plutusDataWits)
+    if (bootstrapWitnesses.length > 0) {
+      const bootstrapWitWasm = wasm.BootstrapWitnesses.new()
 
-  // TODO: handle script witnesses
-  const txBody = await unsignedTx.txBuilder.build()
-  const signedTx = await wasm.Transaction.new(
-    txBody as any,
-    witSet,
-    undefined, // auxData - TODO: implement
-  )
-  const encodedTx = await signedTx.toBytes()
+      for (const bootstrapWit of bootstrapWitnesses) {
+        bootstrapWitWasm.add(bootstrapWit)
+      }
 
-  // Calculate transaction hash
-  const txHash = await hashTransaction(wasm, encodedTx)
-  const id = await txHash.toHex()
-  const ledgerTxHashHex = signedLedgerTx.txHashHex
+      witSet.setBootstraps(bootstrapWitWasm)
+    }
 
-  if (id !== ledgerTxHashHex) {
-    throw new Error(
-      `buildLedgerSignedTx: TxId mismatch. Ledger: ${ledgerTxHashHex} Reconstructed: ${id}`,
+    if (vkeys.length > 0) {
+      const vkeyWitWasm = wasm.Vkeywitnesses.new()
+
+      for (const vkey of vkeys) {
+        vkeyWitWasm.add(vkey)
+      }
+
+      witSet.setVkeys(vkeyWitWasm)
+    }
+
+    // TODO: Handle auxiliary data and catalyst registration
+    // This will need to be implemented when we migrate those utilities
+    // let auxData = unsignedTx.auxiliaryData
+    // if (unsignedTx.catalystRegistrationData) {
+    //   auxData = generateRegistrationMetadata(...)
+    // }
+
+    // if (auxData) {
+    //   unsignedTx.txBuilder.setAuxiliaryData(auxData)
+    // }
+
+    if (plutusData) {
+      for (const datum of plutusData) {
+        if (datum.data) {
+          const plutusDatum = wasm.PlutusData.fromHex(datum.data)
+          plutusDataWits.add(plutusDatum)
+        }
+      }
+    }
+
+    if (plutusDataWits.len() > 0) witSet.setPlutusData(plutusDataWits)
+
+    // TODO: handle script witnesses
+    const txBody = unsignedTx.txBuilder.build()
+    const signedTx = wasm.Transaction.new(
+      txBody as any,
+      witSet,
+      undefined, // auxData - TODO: implement
     )
-  }
+    const encodedTx = signedTx.toBytes()
 
-  return {
-    id,
-    encodedTx,
-  }
+    // Calculate transaction hash
+    const txHash = await hashTransaction(wasm, encodedTx)
+    const id = txHash.toHex()
+    const ledgerTxHashHex = signedLedgerTx.txHashHex
+
+    if (id !== ledgerTxHashHex) {
+      throw new Error(
+        `buildLedgerSignedTx: TxId mismatch. Ledger: ${ledgerTxHashHex} Reconstructed: ${id}`,
+      )
+    }
+
+    return {
+      id,
+      encodedTx,
+    }
+  })
 }
 
 /**
  * Create signed transaction from CBOR and Ledger signature data
  */
 export async function createSignedLedgerTxFromCbor(
-  wasm: WasmModuleProxy,
   cbor: string,
   signedData: SignedTransactionData,
   purpose: number,
   publicKeyHex: string,
 ): Promise<Uint8Array> {
-  const fixedTx = await wasm.FixedTransaction.fromHex(cbor)
-  if (!fixedTx) throw new Error('invalid tx hex')
+  return CardanoMobileWrapped.cslScope((wasm) => {
+    const fixedTx = wasm.FixedTransaction.fromHex(cbor)
+    if (!fixedTx) throw new Error('invalid tx hex')
 
-  const addressing: Addressing = {
-    path: [
-      purpose,
-      2147485463, // CARDANO
-      2147483648,
-    ],
-    startLevel: 1,
-  }
+    const addressing: Addressing = {
+      path: [
+        purpose,
+        2147485463, // CARDANO
+        2147483648,
+      ],
+      startLevel: 1,
+    }
 
-  const key = await wasm.Bip32PublicKey.fromBytes(
-    Buffer.from(publicKeyHex, 'hex'),
-  )
-  const keyLevel = addressing.startLevel + addressing.path.length - 1
+    const key = wasm.Bip32PublicKey.fromBytes(Buffer.from(publicKeyHex, 'hex'))
+    const keyLevel = addressing.startLevel + addressing.path.length - 1
 
-  for (let i = 0; i < signedData.witnesses.length; i++) {
-    const witnessData = signedData.witnesses[i]
-    if (!witnessData) continue
+    for (let i = 0; i < signedData.witnesses.length; i++) {
+      const witnessData = signedData.witnesses[i]
+      if (!witnessData) continue
 
-    const addressKey = await derivePublicByAddressing(
-      {startLevel: 1, path: witnessData.path},
-      {level: keyLevel, key},
-    )
-    const witness = await wasm.Vkeywitness.new(
-      await wasm.Vkey.new(await addressKey.toRawKey()),
-      await wasm.Ed25519Signature.fromBytes(
-        Buffer.from(witnessData.witnessSignatureHex, 'hex'),
-      ),
-    )
-    if (!witness)
-      throw new Error('invalid tx hex, could not generate vkey witness')
-    await fixedTx.addVkeyWitness(witness)
-  }
+      const addressKey = derivePublicByAddressing(
+        {startLevel: 1, path: witnessData.path},
+        {level: keyLevel, key},
+      )
+      const witness = wasm.Vkeywitness.new(
+        wasm.Vkey.new(addressKey.toRawKey()),
+        wasm.Ed25519Signature.fromBytes(
+          Buffer.from(witnessData.witnessSignatureHex, 'hex'),
+        ),
+      )
+      if (!witness)
+        throw new Error('invalid tx hex, could not generate vkey witness')
+      fixedTx.addVkeyWitness(witness)
+    }
 
-  const txHashHex = await (await fixedTx.transactionHash()).toHex()
+    const txHashHex = fixedTx.transactionHash().toHex()
 
-  if (txHashHex !== signedData.txHashHex) {
-    throw new Error(
-      `createSignedLedgerTxFromCbor: TxId mismatch. Ledger: ${signedData.txHashHex} Reconstructed: ${txHashHex}`,
-    )
-  }
+    if (txHashHex !== signedData.txHashHex) {
+      throw new Error(
+        `createSignedLedgerTxFromCbor: TxId mismatch. Ledger: ${signedData.txHashHex} Reconstructed: ${txHashHex}`,
+      )
+    }
 
-  return fixedTx.toBytes()
+    return fixedTx.toBytes()
+  })
 }
 
 /**
  * Sign raw transaction with private keys
  */
 export async function signRawTransaction(
-  wasm: WasmModuleProxy,
   cbor: string,
   pKeys: PrivateKey[],
 ): Promise<Uint8Array> {
-  const fixedTx = await wasm.FixedTransaction.fromHex(cbor)
-  if (!fixedTx) throw new Error('invalid tx hex')
+  return CardanoMobileWrapped.cslScope((wasm) => {
+    const fixedTx = wasm.FixedTransaction.fromHex(cbor)
+    if (!fixedTx) throw new Error('invalid tx hex')
 
-  for (let i = 0; i < pKeys.length; i++) {
-    const pKey = pKeys[i]
-    if (!pKey) continue
-    await fixedTx.signAndAddVkeySignature(pKey)
-  }
+    for (let i = 0; i < pKeys.length; i++) {
+      const pKey = pKeys[i]
+      if (!pKey) continue
+      fixedTx.signAndAddVkeySignature(pKey)
+    }
 
-  return fixedTx.toBytes()
+    return fixedTx.toBytes()
+  })
 }

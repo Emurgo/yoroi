@@ -6,7 +6,9 @@ import {
   TxInput,
   TxRequiredSignerType,
 } from '@cardano-foundation/ledgerjs-hw-app-cardano'
-import {Ed25519KeyHash, WasmModuleProxy} from '@emurgo/cross-csl-core'
+import {Ed25519KeyHash} from '@emurgo/cross-csl-core'
+
+import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
 
 import {Addressing, AddressingAddress} from '../types'
 import {
@@ -16,7 +18,6 @@ import {
 } from './transform'
 
 type CreateLedgerPlutusPayloadParams = {
-  wasm: WasmModuleProxy
   cbor: string
   addresses: Array<AddressingAddress>
   networkId: number
@@ -35,7 +36,6 @@ export const createLedgerPlutusPayload = async (
   params: CreateLedgerPlutusPayloadParams,
 ): Promise<SignTransactionRequest> => {
   const {
-    wasm,
     cbor,
     addresses,
     networkId,
@@ -44,113 +44,112 @@ export const createLedgerPlutusPayload = async (
     getAddressAddressing,
     stakeVKHash,
   } = params
-  const tx = await wasm.Transaction.fromHex(cbor)
-  const body = await tx.body()
 
-  await assertTagsState(wasm, cbor)
+  return CardanoMobileWrapped.cslScope(async (wasm) => {
+    const tx = wasm.Transaction.fromHex(cbor)
+    const body = tx.body()
 
-  const ttl = await body.ttl().then((n) => n?.toString())
+    assertTagsState(wasm, cbor)
 
-  const fee = await body.fee().then((n) => n.toStr())
+    const ttl = body.ttl()?.toString()
 
-  const scriptDataHashHex = await body.scriptDataHash().then((h) => h?.toHex())
-  const changeAddrs = addresses
+    const fee = body.fee().toStr()
 
-  const getAddressingPath = (txId: string, index: number) => {
-    return getUtxoAddressing(txId, index)?.path ?? null
-  }
+    const scriptDataHashHex = body.scriptDataHash()?.toHex()
+    const changeAddrs = addresses
 
-  const outputs = await transformToLedgerOutputs(wasm, {
-    networkId,
-    txOutputs: await body.outputs(),
-    changeAddrs,
-  })
+    const getAddressingPath = (txId: string, index: number) => {
+      return getUtxoAddressing(txId, index)?.path ?? null
+    }
 
-  const originalRequiredSigners = await getRequiredSigners(body)
+    const outputs = await transformToLedgerOutputs(wasm, {
+      networkId,
+      txOutputs: body.outputs(),
+      changeAddrs,
+    })
 
-  const requiredSigners = await Promise.all(
-    originalRequiredSigners.map(async (s) => {
-      const paymentStakeCredential = await wasm.Credential.fromKeyhash(s)
-      const stakeCredential = await wasm.Credential.fromKeyhash(stakeVKHash)
-      const baseAddress = await wasm.BaseAddress.new(
+    const originalRequiredSigners = getRequiredSigners(body)
+
+    const requiredSigners = originalRequiredSigners.map((s) => {
+      const paymentStakeCredential = wasm.Credential.fromKeyhash(s)
+      const stakeCredential = wasm.Credential.fromKeyhash(stakeVKHash)
+      const baseAddress = wasm.BaseAddress.new(
         networkId,
         paymentStakeCredential,
         stakeCredential,
       )
       const addressing = getAddressAddressing(
-        await baseAddress.toAddress().then((a) => a.toBech32(undefined)),
+        baseAddress.toAddress().toBech32(undefined),
       )
       if (!addressing)
         throw new Error(
-          `Could not find addressing for required signer: ${await s.toHex()}`,
+          `Could not find addressing for required signer: ${s.toHex()}`,
         )
       const path = addressing.path
       return {type: TxRequiredSignerType.PATH as const, path}
-    }),
-  )
+    })
 
-  return {
-    signingMode: TransactionSigningMode.PLUTUS_TRANSACTION,
-    tx: {
-      fee,
-      inputs: await body.inputs().then(async (inputs) => {
-        const inputsArray: TxInput[] = []
-        for (let i = 0; i < (await inputs.len()); i++) {
-          const input = await inputs.get(i)
-          const txId = await input.transactionId().then((t) => t.toHex())
-          const txIndex = await input.index()
-          const path = getAddressingPath(txId, txIndex)
-          if (!path) {
-            console.warn(
-              'Could not find path for TX input: ' + txId + ':' + txIndex,
-            )
-          }
-          inputsArray.push({txHashHex: txId, outputIndex: txIndex, path})
-        }
-        return inputsArray
-      }),
-      collateralInputs: await body.collateral().then(async (collateral) => {
-        const collateralArray: TxInput[] = []
-        if (!collateral) return collateralArray
-        for (let i = 0; i < (await collateral.len()); i++) {
-          const input = await collateral.get(i)
-          const txId = await input.transactionId().then((t) => t.toHex())
-          const txIndex = await input.index()
-          collateralArray.push({
-            txHashHex: txId,
-            outputIndex: txIndex,
-            path: getAddressingPath(txId, txIndex),
-          })
-        }
-        return collateralArray
-      }),
-      ...(ttl ? {ttl} : {}),
-      requiredSigners,
-      outputs,
-      network: {
-        networkId,
-        protocolMagic,
+    const inputs = body.inputs()
+    const inputsArray: TxInput[] = []
+    for (let i = 0; i < inputs.len(); i++) {
+      const input = inputs.get(i)
+      const txId = input.transactionId().toHex()
+      const txIndex = input.index()
+      const path = getAddressingPath(txId, txIndex)
+      if (!path) {
+        console.warn(
+          'Could not find path for TX input: ' + txId + ':' + txIndex,
+        )
+      }
+      inputsArray.push({txHashHex: txId, outputIndex: txIndex, path})
+    }
+
+    const collateral = body.collateral()
+    const collateralArray: TxInput[] = []
+    if (collateral) {
+      for (let i = 0; i < collateral.len(); i++) {
+        const input = collateral.get(i)
+        const txId = input.transactionId().toHex()
+        const txIndex = input.index()
+        collateralArray.push({
+          txHashHex: txId,
+          outputIndex: txIndex,
+          path: getAddressingPath(txId, txIndex),
+        })
+      }
+    }
+
+    return {
+      signingMode: TransactionSigningMode.PLUTUS_TRANSACTION,
+      tx: {
+        fee,
+        inputs: inputsArray,
+        collateralInputs: collateralArray,
+        ...(ttl ? {ttl} : {}),
+        requiredSigners,
+        outputs,
+        network: {
+          networkId,
+          protocolMagic,
+        },
+        scriptDataHashHex,
       },
-      scriptDataHashHex,
-    },
-    additionalWitnessPaths: [],
-    options: {
-      tagCborSets: await doAllSetsHaveTag(wasm, cbor),
-    },
-  }
+      additionalWitnessPaths: [],
+      options: {
+        tagCborSets: await doAllSetsHaveTag(wasm, cbor),
+      },
+    }
+  })
 }
 
-const getRequiredSigners = async (body: {
-  requiredSigners(): Promise<{
-    len(): Promise<number>
-    get(index: number): Promise<Ed25519KeyHash>
-  } | null>
-}): Promise<Array<Ed25519KeyHash>> => {
-  const signers = await body.requiredSigners()
+const getRequiredSigners = (
+  body: import('@emurgo/cross-csl-core').TransactionBody,
+): Array<Ed25519KeyHash> => {
+  const signers = body.requiredSigners()
   const signersArray: Array<Ed25519KeyHash> = []
   if (signers) {
-    for (let i = 0; i < (await signers.len()); i++) {
-      const signer = await signers.get(i)
+    for (let i = 0; i < signers.len(); i++) {
+      const signer = signers.get(i)
       signersArray.push(signer)
     }
   }

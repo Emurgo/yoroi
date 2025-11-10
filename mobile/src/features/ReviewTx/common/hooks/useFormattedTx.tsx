@@ -309,7 +309,7 @@ const deriveAddress = (address: string, chainId: number) => {
 }
 
 const getAddressKind = (addressBech32: string): CredKind | null => {
-  return CardanoMobileWrapped.cslScope((csl) => {
+  return CardanoMobileWrapped.cslScope((wasm) => {
     try {
       const address = csl.Address.fromBech32(addressBech32)
       const addressKind = address.paymentCred()?.kind()

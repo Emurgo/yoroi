@@ -1,6 +1,5 @@
 // Adapter functions for backward compatibility during migration
 // These convert between ModernUtxo and legacy CardanoAddressedUtxo types
-
 import {CardanoAddressedUtxo} from '../types'
 import {ModernUtxo} from '../utxo/models'
 

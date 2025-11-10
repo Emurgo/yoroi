@@ -1,4 +1,5 @@
 import {PromiseAllLimited, isArray, parseSafe} from '@yoroi/common'
+import {RemoteCertificateMeta} from '@yoroi/staking'
 import {App} from '@yoroi/types'
 
 import {fromPairs, mapValues, max} from 'lodash'
@@ -10,11 +11,10 @@ import {
   CERTIFICATE_KIND,
   RawTransaction,
   TRANSACTION_STATUS,
-  WalletTransaction,
   Transactions,
   TxHistoryRequest,
+  WalletTransaction,
 } from '~/wallets/types/other'
-import {RemoteCertificateMeta} from '@yoroi/staking'
 import {Version, versionCompare} from '~/wallets/utils/versioning'
 
 import * as yoroiApi from '../api/api'
@@ -571,7 +571,9 @@ const parseTxids = (data: string | null | undefined) => {
   return isTxids(txids) ? txids : []
 }
 
-const parseTx = (data: string | null | undefined): WalletTransaction | undefined => {
+const parseTx = (
+  data: string | null | undefined,
+): WalletTransaction | undefined => {
   if (!data) return
 
   const isTx = (data: unknown): data is WalletTransaction => {

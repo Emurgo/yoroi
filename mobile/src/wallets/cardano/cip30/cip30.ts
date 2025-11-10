@@ -54,7 +54,7 @@ class CIP30Extension {
   ) {}
 
   getBalance(tokenId = '*'): CSL.Value {
-    return CardanoMobileWrapped.cslScope((csl) => {
+    return CardanoMobileWrapped.cslScope((wasm) => {
       const value = _getBalance(
         tokenId,
         this.wallet.utxos,
@@ -66,7 +66,7 @@ class CIP30Extension {
   }
 
   getUnusedAddresses(): CSL.Address[] {
-    return CardanoMobileWrapped.cslScope((csl) => {
+    return CardanoMobileWrapped.cslScope((wasm) => {
       const bech32Addresses = this.wallet.receiveAddresses.filter(
         (address) => !this.wallet.isUsedAddressIndex[address],
       )
@@ -78,7 +78,7 @@ class CIP30Extension {
   }
 
   getUsedAddresses(pagination?: Pagination): CSL.Address[] {
-    return CardanoMobileWrapped.cslScope((csl) => {
+    return CardanoMobileWrapped.cslScope((wasm) => {
       const allAddresses = this.wallet.externalAddresses
       const selectedAddresses = paginate(allAddresses, pagination)
       const addresses = selectedAddresses.map((addr) =>
@@ -89,7 +89,7 @@ class CIP30Extension {
   }
 
   getChangeAddress(): CSL.Address {
-    return CardanoMobileWrapped.cslScope((csl) => {
+    return CardanoMobileWrapped.cslScope((wasm) => {
       const changeAddr = this.wallet.getChangeAddress(this.meta.addressMode)
       const address = csl.Address.fromBech32(changeAddr)
       return copyFromCSL(CardanoMobile.Address, address)
@@ -97,7 +97,7 @@ class CIP30Extension {
   }
 
   getRewardAddresses(): CSL.Address[] {
-    return CardanoMobileWrapped.cslScope((csl) => {
+    return CardanoMobileWrapped.cslScope((wasm) => {
       const address = csl.Address.fromHex(this.wallet.rewardAddressHex)
       return [copyFromCSL(CardanoMobile.Address, address)]
     })
@@ -227,7 +227,7 @@ class CIP30Extension {
     cbor: string,
     partial = false,
   ): CSL.TransactionWitnessSet {
-    return CardanoMobileWrapped.cslScope((csl) => {
+    return CardanoMobileWrapped.cslScope((wasm) => {
       const signers = getTransactionSigners(
         cbor,
         this.wallet,
@@ -263,7 +263,7 @@ class CIP30Extension {
     })
     const txBody = yoroiUnsignedTx.unsignedTx.txBuilder.build()
 
-    return CardanoMobileWrapped.cslScope((csl) => {
+    return CardanoMobileWrapped.cslScope((wasm) => {
       const emptyWitnessSet = csl.TransactionWitnessSet.new()
       const tx = csl.Transaction.new(txBody, emptyWitnessSet, undefined)
       return tx.toHex()

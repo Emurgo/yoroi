@@ -5,6 +5,7 @@ import {
   protocolParamsPlaceholder,
 } from '@yoroi/blockchains'
 import {isNonNullable} from '@yoroi/common'
+import {StakePoolInfoRequest, StakePoolInfosAndHistories} from '@yoroi/staking'
 import type {CardanoHaskellConfig, Datum, ModernUtxo} from '@yoroi/tx'
 import {
   adaptUnsignedTransaction,
@@ -31,6 +32,7 @@ import {
   signRawTransaction,
   signTransaction,
 } from '@yoroi/tx'
+import {TransactionOutput} from '@yoroi/tx'
 import {Api, App, Balance, HW, Network, Portfolio, Wallet} from '@yoroi/types'
 
 import {walletChecksum} from '@emurgo/cip4-js'
@@ -63,9 +65,7 @@ import type {
   TxStatusRequest,
   TxStatusResponse,
 } from '../types/other'
-import {StakePoolInfoRequest, StakePoolInfosAndHistories} from '@yoroi/staking'
 import {StakingInfo} from '../types/staking'
-import {TransactionOutput} from '@yoroi/tx'
 import {YoroiSignedTx, YoroiUnsignedTx} from '../types/yoroi'
 import {Quantities} from '../utils/utils'
 import {CardanoMobile} from '../wallets'

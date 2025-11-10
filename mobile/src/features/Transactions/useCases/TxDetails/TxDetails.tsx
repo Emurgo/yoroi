@@ -76,9 +76,19 @@ export const TxDetails = () => {
   )
   const txFee =
     transaction.fee != null
-      ? new BigNumber(Amounts.getAmount(transaction.fee, wallet.portfolioPrimaryTokenInfo.id).quantity)
+      ? new BigNumber(
+          Amounts.getAmount(
+            transaction.fee,
+            wallet.portfolioPrimaryTokenInfo.id,
+          ).quantity,
+        )
       : null
-  const amount = new BigNumber(Amounts.getAmount(transaction.amount, wallet.portfolioPrimaryTokenInfo.id).quantity)
+  const amount = new BigNumber(
+    Amounts.getAmount(
+      transaction.amount,
+      wallet.portfolioPrimaryTokenInfo.id,
+    ).quantity,
+  )
 
   const toggleExpandIn = (itemId: ItemId) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)

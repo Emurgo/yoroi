@@ -20,18 +20,18 @@ import {
 import {
   Address,
   Certificates as CSLCertificates,
+  Withdrawals as CSLWithdrawals,
   MultiAsset,
   TransactionOutputs,
   WasmModuleProxy,
-  Withdrawals as CSLWithdrawals,
 } from '@emurgo/cross-csl-core'
-import * as bech32 from 'bech32'
-
-import {Addressing, AddressingAddress, Bip44DerivationLevels} from '../types'
-
 // Note: This will need to be updated when we migrate UnsignedTx type
 // For now, we'll use a minimal interface that matches what Ledger functions need
 import type {TransactionBody} from '@emurgo/cross-csl-core'
+import * as bech32 from 'bech32'
+
+import {CardanoMobileWrapped} from '../../../src/wallets/cardano/wrappedCsl'
+import {Addressing, AddressingAddress, Bip44DerivationLevels} from '../types'
 
 export interface LedgerUnsignedTx {
   senderUtxos: Array<{
@@ -40,19 +40,19 @@ export interface LedgerUnsignedTx {
     addressing: Addressing
   }>
   txBuilder: {
-    build(): Promise<TransactionBody>
+    build(): TransactionBody
   }
   txBody: {
-    outputs(): Promise<TransactionOutputs>
-    fee(): Promise<{toStr(): Promise<string>}>
+    outputs(): TransactionOutputs
+    fee(): {toStr(): string}
   }
   change: Array<AddressingAddress>
-      withdrawals?: CSLWithdrawals | null
-      certificates?: CSLCertificates | null
+  withdrawals?: CSLWithdrawals | null
+  certificates?: CSLCertificates | null
   ttl?: number
   auxiliaryData?: {
-    hasValue(): Promise<boolean>
-    toBytes(): Promise<Uint8Array>
+    hasValue(): boolean
+    toBytes(): Uint8Array
   } | null
   catalystRegistrationData?: unknown
   scriptDataHash?: string
@@ -61,9 +61,9 @@ export interface LedgerUnsignedTx {
 /**
  * Transform transaction inputs to Ledger format
  */
-export const transformToLedgerInputs = async (
+export const transformToLedgerInputs = (
   unsignedTx: LedgerUnsignedTx,
-): Promise<Array<LedgerTxInput>> => {
+): Array<LedgerTxInput> => {
   const senderUtxos = unsignedTx.senderUtxos
   for (const input of senderUtxos) {
     verifyFromBip44Root(input.addressing)
@@ -74,16 +74,14 @@ export const transformToLedgerInputs = async (
     path: input.addressing.path,
   }))
 
-  const correctOrderInputs = await (await unsignedTx.txBuilder.build()).inputs()
+  const correctOrderInputs = unsignedTx.txBuilder.build().inputs()
   const ordered: LedgerTxInput[] = []
-  const inputsLength = await correctOrderInputs.len()
+  const inputsLength = correctOrderInputs.len()
 
   for (let i = 0; i < inputsLength; i++) {
-    const input = await correctOrderInputs.get(i)
-    const txId = Buffer.from(
-      await (await input.transactionId()).toBytes(),
-    ).toString('hex')
-    const index = await input.index()
+    const input = correctOrderInputs.get(i)
+    const txId = Buffer.from(input.transactionId().toBytes()).toString('hex')
+    const index = input.index()
     const matchingInput = formatted.find(
       (input) => input.txHashHex === txId && input.outputIndex === index,
     )
@@ -98,21 +96,19 @@ export const transformToLedgerInputs = async (
   return ordered
 }
 
-const areAddressesTheSame = async (
+const areAddressesTheSame = (
   wasm: WasmModuleProxy,
   addr1: string,
   addr2: string,
-): Promise<boolean> => {
-  const addrToHex = async (addr: string): Promise<string> => {
+): boolean => {
+  const addrToHex = (addr: string): string => {
     const addrBech32 = bech32.decodeUnsafe(addr, addr.length)
     let hex: string
     if (addrBech32) {
       hex = Buffer.from(bech32.fromWords(addrBech32.words)).toString('hex')
-    } else if (await wasm.ByronAddress.isValid(addr)) {
+    } else if (wasm.ByronAddress.isValid(addr)) {
       hex = Buffer.from(
-        await wasm.ByronAddress.fromBase58(addr)
-          .then((b) => b.toAddress())
-          .then((a) => a.toBytes()),
+        wasm.ByronAddress.fromBase58(addr).toAddress().toBytes(),
       ).toString('hex')
     } else if (isHex(addr)) {
       hex = addr
@@ -124,8 +120,8 @@ const areAddressesTheSame = async (
     return hex.toLowerCase()
   }
 
-  const addr1Hex = await addrToHex(addr1)
-  const addr2Hex = await addrToHex(addr2)
+  const addr1Hex = addrToHex(addr1)
+  const addr2Hex = addrToHex(addr2)
   return addr1Hex === addr2Hex
 }
 
@@ -133,7 +129,7 @@ const areAddressesTheSame = async (
  * Transform transaction outputs to Ledger format
  */
 export const transformToLedgerOutputs = async (
-  wasm: WasmModuleProxy,
+  _wasm: WasmModuleProxy,
   request: {
     networkId: number
     txOutputs: TransactionOutputs
@@ -141,67 +137,61 @@ export const transformToLedgerOutputs = async (
     stakingDerivationPath?: number[]
   },
 ): Promise<Array<LedgerTxOutput>> => {
-  const result: LedgerTxOutput[] = []
-  for (let i = 0; i < (await request.txOutputs.len()); i++) {
-    const output = await request.txOutputs.get(i)
-    const address = await output.address()
-    const jsAddr = await toHexOrBase58(wasm, address)
+  return CardanoMobileWrapped.cslScope((csl) => {
+    const result: LedgerTxOutput[] = []
+    for (let i = 0; i < request.txOutputs.len(); i++) {
+      const output = request.txOutputs.get(i)
+      const address = output.address()
+      const jsAddr = toHexOrBase58(csl, address)
 
-    let changeAddr: AddressingAddress | null = null
-    for (const change of request.changeAddrs) {
-      if (await areAddressesTheSame(wasm, jsAddr, change.address)) {
-        changeAddr = change
-        break
+      let changeAddr: AddressingAddress | null = null
+      for (const change of request.changeAddrs) {
+        if (areAddressesTheSame(csl, jsAddr, change.address)) {
+          changeAddr = change
+          break
+        }
       }
-    }
 
-    const dataHash = (await output.hasDataHash())
-      ? ((await output.dataHash().then((x) => x?.toHex())) ?? '')
-      : undefined
+      const dataHash = output.hasDataHash()
+        ? (output.dataHash()?.toHex() ?? '')
+        : undefined
 
-    if (changeAddr != null && changeAddr.addressing) {
-      verifyFromBip44Root(changeAddr.addressing)
-      const addressParams = await toLedgerAddressParameters(wasm, {
-        networkId: request.networkId,
-        address,
-        path: changeAddr.addressing.path,
-        stakingDerivationPath: request.stakingDerivationPath,
-      })
-      const outputAmount = await output.amount()
-      const ledgerOutput: LedgerTxOutput = {
-        amount: await output
-          .amount()
-          .then((x) => x.coin())
-          .then((x) => x.toStr()),
-        tokenBundle: await toLedgerTokenBundle(await outputAmount.multiasset()),
-        datumHashHex: dataHash,
-        destination: {
-          type: TxOutputDestinationType.DEVICE_OWNED,
-          params: addressParams,
-        },
-      }
-      result.push(ledgerOutput)
-    } else {
-      const ledgerOutput: LedgerTxOutput = {
-        amount: await output
-          .amount()
-          .then((x) => x.coin())
-          .then((x) => x.toStr()),
-        tokenBundle: await toLedgerTokenBundle(
-          await output.amount().then((x) => x.multiasset()),
-        ),
-        datumHashHex: dataHash,
-        destination: {
-          type: TxOutputDestinationType.THIRD_PARTY,
-          params: {
-            addressHex: Buffer.from(await address.toBytes()).toString('hex'),
+      if (changeAddr != null && changeAddr.addressing) {
+        verifyFromBip44Root(changeAddr.addressing)
+        const addressParams = toLedgerAddressParameters(csl, {
+          networkId: request.networkId,
+          address,
+          path: changeAddr.addressing.path,
+          stakingDerivationPath: request.stakingDerivationPath,
+        })
+        const outputAmount = output.amount()
+        const ledgerOutput: LedgerTxOutput = {
+          amount: output.amount().coin().toStr(),
+          tokenBundle: toLedgerTokenBundle(outputAmount.multiasset()),
+          datumHashHex: dataHash,
+          destination: {
+            type: TxOutputDestinationType.DEVICE_OWNED,
+            params: addressParams,
           },
-        },
+        }
+        result.push(ledgerOutput)
+      } else {
+        const ledgerOutput: LedgerTxOutput = {
+          amount: output.amount().coin().toStr(),
+          tokenBundle: toLedgerTokenBundle(output.amount().multiasset()),
+          datumHashHex: dataHash,
+          destination: {
+            type: TxOutputDestinationType.THIRD_PARTY,
+            params: {
+              addressHex: Buffer.from(address.toBytes()).toString('hex'),
+            },
+          },
+        }
+        result.push(ledgerOutput)
       }
-      result.push(ledgerOutput)
     }
-  }
-  return result
+    return result
+  })
 }
 
 /**
@@ -221,7 +211,7 @@ export const verifyFromBip44Root = (addressing: Addressing): void => {
 /**
  * Convert address to Ledger address parameters
  */
-export const toLedgerAddressParameters = async (
+export const toLedgerAddressParameters = (
   wasm: WasmModuleProxy,
   request: {
     networkId: number
@@ -229,9 +219,9 @@ export const toLedgerAddressParameters = async (
     path: Array<number>
     stakingDerivationPath?: number[]
   },
-): Promise<LedgerDeviceOwnedAddress> => {
+): LedgerDeviceOwnedAddress => {
   {
-    const byronAddr = await wasm.ByronAddress.fromAddress(request.address)
+    const byronAddr = wasm.ByronAddress.fromAddress(request.address)
     if (byronAddr) {
       return {
         type: LedgerAddressType.BYRON,
@@ -242,18 +232,15 @@ export const toLedgerAddressParameters = async (
     }
   }
   {
-    const baseAddr = await wasm.BaseAddress.fromAddress(request.address)
+    const baseAddr = wasm.BaseAddress.fromAddress(request.address)
     if (baseAddr) {
       if (!request.stakingDerivationPath) {
-        const stakeCred = await baseAddr.stakeCred()
-        const wasmHash =
-          (await stakeCred.toKeyhash()) ?? (await stakeCred.toScripthash())
+        const stakeCred = baseAddr.stakeCred()
+        const wasmHash = stakeCred.toKeyhash() ?? stakeCred.toScripthash()
         if (!wasmHash) {
           throw new Error(`toLedgerAddressParameters unknown hash type`)
         }
-        const hashInAddress = Buffer.from(await wasmHash.toBytes()).toString(
-          'hex',
-        )
+        const hashInAddress = Buffer.from(wasmHash.toBytes()).toString('hex')
 
         return {
           // can't always know staking key path since address may not belong to the wallet
@@ -275,26 +262,24 @@ export const toLedgerAddressParameters = async (
     }
   }
   {
-    const ptrAddr = await wasm.PointerAddress.fromAddress(request.address)
+    const ptrAddr = wasm.PointerAddress.fromAddress(request.address)
     if (ptrAddr) {
-      const pointer = await ptrAddr.stakePointer()
+      const pointer = ptrAddr.stakePointer()
       return {
         type: LedgerAddressType.POINTER_KEY,
         params: {
           spendingPath: request.path,
           stakingBlockchainPointer: {
-            blockIndex: await pointer.slot(),
-            txIndex: await pointer.txIndex(),
-            certificateIndex: await pointer.certIndex(),
+            blockIndex: pointer.slot(),
+            txIndex: pointer.txIndex(),
+            certificateIndex: pointer.certIndex(),
           },
         },
       }
     }
   }
   {
-    const enterpriseAddr = await wasm.EnterpriseAddress.fromAddress(
-      request.address,
-    )
+    const enterpriseAddr = wasm.EnterpriseAddress.fromAddress(request.address)
     if (enterpriseAddr) {
       return {
         type: LedgerAddressType.ENTERPRISE_KEY,
@@ -305,7 +290,7 @@ export const toLedgerAddressParameters = async (
     }
   }
   {
-    const rewardAddr = await wasm.RewardAddress.fromAddress(request.address)
+    const rewardAddr = wasm.RewardAddress.fromAddress(request.address)
     if (rewardAddr) {
       return {
         type: LedgerAddressType.REWARD_KEY,
@@ -321,28 +306,28 @@ export const toLedgerAddressParameters = async (
 /**
  * Convert MultiAsset to Ledger token bundle format
  */
-export const toLedgerTokenBundle = async (
+export const toLedgerTokenBundle = (
   assets: MultiAsset | undefined | null,
-): Promise<Array<LedgerAssetGroup> | null> => {
+): Array<LedgerAssetGroup> | null => {
   if (assets === null || !assets) return null
   const assetGroup: Array<LedgerAssetGroup> = []
 
-  const policyHashes = await assets.keys()
-  for (let i = 0; i < (await policyHashes.len()); i++) {
-    const policyId = await policyHashes.get(i)
-    const assetsForPolicy = await assets.get(policyId)
+  const policyHashes = assets.keys()
+  for (let i = 0; i < policyHashes.len(); i++) {
+    const policyId = policyHashes.get(i)
+    const assetsForPolicy = assets.get(policyId)
     if (!assetsForPolicy) continue
 
     const tokens: Array<LedgerToken> = []
-    const assetNames = await assetsForPolicy.keys()
-    for (let j = 0; j < (await assetNames.len()); j++) {
-      const assetName = await assetNames.get(j)
-      const amount = await assetsForPolicy.get(assetName)
+    const assetNames = assetsForPolicy.keys()
+    for (let j = 0; j < assetNames.len(); j++) {
+      const assetName = assetNames.get(j)
+      const amount = assetsForPolicy.get(assetName)
       if (!amount) continue
 
       tokens.push({
-        amount: await amount.toStr(),
-        assetNameHex: Buffer.from(await assetName.name()).toString('hex'),
+        amount: amount.toStr(),
+        assetNameHex: Buffer.from(assetName.name()).toString('hex'),
       })
     }
     // sort by asset name to the order specified by rfc7049
@@ -350,7 +335,7 @@ export const toLedgerTokenBundle = async (
       compareCborKey(token1.assetNameHex, token2.assetNameHex),
     )
     assetGroup.push({
-      policyIdHex: Buffer.from(await policyId.toBytes()).toString('hex'),
+      policyIdHex: Buffer.from(policyId.toBytes()).toString('hex'),
       tokens,
     })
   }
@@ -383,16 +368,16 @@ export const compareCborKey = (hex1: string, hex2: string): number => {
 /**
  * Format certificates for Ledger
  */
-export const formatLedgerCertificates = async (
+export const formatLedgerCertificates = (
   certificates: CSLCertificates,
   stakingDerivationPath: number[],
-): Promise<Array<LedgerCertificate>> => {
+): Array<LedgerCertificate> => {
   const result: Array<LedgerCertificate> = []
-  for (let i = 0; i < (await certificates.len()); i++) {
-    const cert = await certificates.get(i)
+  for (let i = 0; i < certificates.len(); i++) {
+    const cert = certificates.get(i)
 
-    const registrationCert = await cert.asStakeRegistration()
-    if (registrationCert != null && (await registrationCert).hasValue()) {
+    const registrationCert = cert.asStakeRegistration()
+    if (registrationCert != null && registrationCert.hasValue()) {
       result.push({
         type: LedgerCertificateType.STAKE_REGISTRATION,
         params: {
@@ -404,7 +389,7 @@ export const formatLedgerCertificates = async (
       })
       continue
     }
-    const deregistrationCert = await cert.asStakeDeregistration()
+    const deregistrationCert = cert.asStakeDeregistration()
     if (deregistrationCert != null && deregistrationCert.hasValue()) {
       result.push({
         type: LedgerCertificateType.STAKE_DEREGISTRATION,
@@ -417,7 +402,7 @@ export const formatLedgerCertificates = async (
       })
       continue
     }
-    const delegationCert = await cert.asStakeDelegation()
+    const delegationCert = cert.asStakeDelegation()
     if (delegationCert != null && delegationCert.hasValue()) {
       result.push({
         type: LedgerCertificateType.STAKE_DELEGATION,
@@ -427,15 +412,15 @@ export const formatLedgerCertificates = async (
             keyPath: stakingDerivationPath,
           },
           poolKeyHashHex: Buffer.from(
-            await delegationCert.poolKeyhash().then((x) => x.toBytes()),
+            delegationCert.poolKeyhash().toBytes(),
           ).toString('hex'),
         },
       })
       continue
     }
-    const voteDelegationCert = await cert.asVoteDelegation()
+    const voteDelegationCert = cert.asVoteDelegation()
     if (voteDelegationCert != null) {
-      const drepParams = await mapDrepParams(voteDelegationCert)
+      const drepParams = mapDrepParams(voteDelegationCert)
       if (drepParams) {
         result.push({
           type: LedgerCertificateType.VOTE_DELEGATION,
@@ -458,15 +443,11 @@ export const formatLedgerCertificates = async (
   return result
 }
 
-const mapDrepParams = async (certificate: {
-  drep(): Promise<{
-    kind(): Promise<number>
-    toKeyHash(): Promise<{toBytes(): Promise<Uint8Array>} | null> | null
-    toScriptHash(): Promise<{toBytes(): Promise<Uint8Array>} | null> | null
-  }>
-}): Promise<LedgerDRepParams | undefined> => {
-  const drep = await certificate.drep()
-  const drepKind = await drep.kind()
+const mapDrepParams = (
+  certificate: import('@emurgo/cross-csl-core').VoteDelegation,
+): LedgerDRepParams | undefined => {
+  const drep = certificate.drep()
+  const drepKind = drep.kind()
 
   // DRepKind enum values from @emurgo/cross-csl-core
   const DRepKind = {
@@ -477,8 +458,8 @@ const mapDrepParams = async (certificate: {
   }
 
   if (drepKind === DRepKind.KeyHash) {
-    const keyHash = await drep.toKeyHash()
-    const keyHashBytes = await keyHash?.toBytes()
+    const keyHash = drep.toKeyHash()
+    const keyHashBytes = keyHash?.toBytes()
 
     if (keyHashBytes)
       return {
@@ -490,8 +471,8 @@ const mapDrepParams = async (certificate: {
   }
 
   if (drepKind === DRepKind.ScriptHash) {
-    const scriptHash = await drep.toScriptHash()
-    const scriptHashBytes = await scriptHash?.toBytes()
+    const scriptHash = drep.toScriptHash()
+    const scriptHashBytes = scriptHash?.toBytes()
 
     if (scriptHashBytes)
       return {
@@ -520,22 +501,22 @@ const mapDrepParams = async (certificate: {
 /**
  * Format withdrawals for Ledger
  */
-export const formatLedgerWithdrawals = async (
+export const formatLedgerWithdrawals = (
   withdrawals: CSLWithdrawals,
   stakingDerivationPath: number[],
-): Promise<Array<LedgerWithdrawal>> => {
+): Array<LedgerWithdrawal> => {
   const result: Array<LedgerWithdrawal> = []
 
-  const withdrawalKeys = await withdrawals.keys()
-  for (let i = 0; i < (await withdrawalKeys.len()); i++) {
-    const rewardAddress = await withdrawalKeys.get(i)
-    const withdrawalAmount = await withdrawals.get(rewardAddress)
+  const withdrawalKeys = withdrawals.keys()
+  for (let i = 0; i < withdrawalKeys.len(); i++) {
+    const rewardAddress = withdrawalKeys.get(i)
+    const withdrawalAmount = withdrawals.get(rewardAddress)
     if (withdrawalAmount === null || !withdrawalAmount) {
       throw new Error(`formatLedgerWithdrawals should never happen`)
     }
 
     result.push({
-      amount: await withdrawalAmount.toStr(),
+      amount: withdrawalAmount.toStr(),
       stakeCredential: {
         type: LedgerCredentialParamsType.KEY_PATH,
         keyPath: stakingDerivationPath,
@@ -548,25 +529,19 @@ export const formatLedgerWithdrawals = async (
 /**
  * Helper to convert address to hex or base58
  */
-async function toHexOrBase58(
-  wasm: WasmModuleProxy,
-  address: Address,
-): Promise<string> {
-  const asByron = await wasm.ByronAddress.fromAddress(address)
+function toHexOrBase58(wasm: WasmModuleProxy, address: Address): string {
+  const asByron = wasm.ByronAddress.fromAddress(address)
   if (asByron === null || !asByron) {
-    return Buffer.from(await address.toBytes()).toString('hex')
+    return Buffer.from(address.toBytes()).toString('hex')
   }
-  return await asByron.toBase58()
+  return asByron.toBase58()
 }
 
 /**
  * Assert that transaction sets have proper tag state for Ledger signing
  */
-export const assertTagsState = async (
-  wasm: WasmModuleProxy,
-  txHex: string,
-): Promise<void> => {
-  const tagsState = await wasm.hasTransactionSetTag(Buffer.from(txHex, 'hex'))
+export const assertTagsState = (wasm: WasmModuleProxy, txHex: string): void => {
+  const tagsState = wasm.hasTransactionSetTag(Buffer.from(txHex, 'hex'))
 
   if (tagsState === wasm.TransactionSetsState.MixedSets) {
     throw new Error('Transaction with mixed sets cannot be signed by Ledger')
@@ -576,10 +551,10 @@ export const assertTagsState = async (
 /**
  * Check if all transaction sets have tags
  */
-export const doAllSetsHaveTag = async (
+export const doAllSetsHaveTag = (
   wasm: WasmModuleProxy,
   txHex: string,
-): Promise<boolean> => {
-  const tagsState = await wasm.hasTransactionSetTag(Buffer.from(txHex, 'hex'))
+): boolean => {
+  const tagsState = wasm.hasTransactionSetTag(Buffer.from(txHex, 'hex'))
   return tagsState === wasm.TransactionSetsState.AllSetsHaveTag
 }

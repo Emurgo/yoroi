@@ -1,3 +1,5 @@
+import {StakePoolInfoRequest, StakePoolInfosAndHistories} from '@yoroi/staking'
+
 import _ from 'lodash'
 
 import {
@@ -10,7 +12,6 @@ import {
   TxStatusRequest,
   TxStatusResponse,
 } from '~/wallets/types/other'
-import {StakePoolInfoRequest, StakePoolInfosAndHistories} from '@yoroi/staking'
 
 import {ServerStatus} from '../types'
 import {handleError} from './errors'

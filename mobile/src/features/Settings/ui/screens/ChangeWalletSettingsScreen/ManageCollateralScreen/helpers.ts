@@ -1,5 +1,5 @@
-import {App} from '@yoroi/types'
 import {TransactionOutput} from '@yoroi/tx'
+import {App} from '@yoroi/types'
 
 import {YoroiWallet} from '~/wallets/cardano/types'
 import {collateralConfig} from '~/wallets/cardano/utxoManager/utxos'
@@ -10,7 +10,9 @@ const getCollateralAddress = (wallet: YoroiWallet) => {
   return address
 }
 
-export const createCollateralEntry = (wallet: YoroiWallet): TransactionOutput => {
+export const createCollateralEntry = (
+  wallet: YoroiWallet,
+): TransactionOutput => {
   return {
     address: getCollateralAddress(wallet),
     amounts: {

@@ -9,7 +9,7 @@ describe('makeKeys', () => {
       'slide assault bus',
     ].join(' ')
 
-    const keys = CardanoMobileWrapped.cslScope((csl) =>
+    const keys = CardanoMobileWrapped.cslScope((wasm) =>
       keyManager('cardano-cip1852')({csl, mnemonic}),
     )
 
@@ -28,7 +28,7 @@ describe('makeKeys', () => {
       'slide assault bus',
     ].join(' ')
 
-    const keys = CardanoMobileWrapped.cslScope((csl) =>
+    const keys = CardanoMobileWrapped.cslScope((wasm) =>
       keyManager('cardano-bip44')({csl, mnemonic}),
     )
 

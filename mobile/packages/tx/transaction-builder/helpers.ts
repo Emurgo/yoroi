@@ -1,9 +1,7 @@
 // Helper functions for TransactionBuilder
 // Utilities for creating certificates, filtering UTXOs, and handling metadata
-
 import type {
   Certificate,
-  Credential,
   PublicKey,
   WasmModuleProxy,
 } from '@emurgo/cross-csl-core'
@@ -66,23 +64,21 @@ export function createVoteDelegationCertificate(
   const stakingCredential = wasm.Credential.fromKeyhash(stakingKey.hash())
 
   // Parse DRep ID (can be hex or bech32)
-  let drepCredential: Credential
+  let drep: import('@emurgo/cross-csl-core').DRep
   if (drepId.startsWith('drep')) {
     // Bech32 format - need to decode
     // For now, assume hex format
     throw new Error('Bech32 DRep ID format not yet supported in helper')
   } else {
-    // Hex format
+    // Hex format - assume it's a key hash
     const drepKeyHashBytes = Buffer.from(drepId, 'hex')
-    drepCredential = wasm.Credential.fromKeyhash(
-      wasm.Ed25519KeyHash.fromBytes(new Uint8Array(drepKeyHashBytes)),
+    const keyHash = wasm.Ed25519KeyHash.fromBytes(
+      new Uint8Array(drepKeyHashBytes),
     )
+    drep = wasm.DRep.newKeyHash(keyHash)
   }
 
-  const votingDelegation = wasm.VotingDelegation.new(
-    stakingCredential,
-    drepCredential,
-  )
+  const votingDelegation = wasm.VoteDelegation.new(stakingCredential, drep)
 
   if (isCIP105) {
     // CIP-105 format (legacy)
@@ -244,4 +240,3 @@ export function createCIP36VotingMetadata(
     data: metadata,
   }
 }
-

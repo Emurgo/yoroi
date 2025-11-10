@@ -30,7 +30,7 @@ export const generateWalletRootKey = (
 }
 
 export const getMasterKeyFromMnemonic = (mnemonic: string) => {
-  return CardanoMobileWrapped.cslScope((csl) => {
+  return CardanoMobileWrapped.cslScope((wasm) => {
     const rootKeyPtr = generateWalletRootKey(mnemonic, csl)
     return rootKeyPtr.asBytes()
   })

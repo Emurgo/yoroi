@@ -2,29 +2,29 @@
 // Functions for determining required signers for transactions
 import {Ed25519KeyHash, WasmModuleProxy} from '@emurgo/cross-csl-core'
 
+import {CardanoMobileWrapped} from '../../../src/wallets/cardano/wrappedCsl'
 import {Addressing, CardanoAddressedUtxo} from '../types'
 
 type GetAllSignersOptions = {
-  wasm: WasmModuleProxy
   body: {
-    requiredSigners(): Promise<{
-      len(): Promise<number>
-      get(index: number): Promise<Ed25519KeyHash>
-    } | null>
-    inputs(): Promise<{
-      len(): Promise<number>
-      get(index: number): Promise<{
-        transactionId(): Promise<{toHex(): Promise<string>}>
-        index(): Promise<number>
-      }>
-    }>
-    collateral(): Promise<{
-      len(): Promise<number>
-      get(index: number): Promise<{
-        transactionId(): Promise<{toHex(): Promise<string>}>
-        index(): Promise<number>
-      }>
-    } | null>
+    requiredSigners(): {
+      len(): number
+      get(index: number): Ed25519KeyHash
+    } | null
+    inputs(): {
+      len(): number
+      get(index: number): {
+        transactionId(): {toHex(): string}
+        index(): number
+      }
+    }
+    collateral(): {
+      len(): number
+      get(index: number): {
+        transactionId(): {toHex(): string}
+        index(): number
+      }
+    } | null
   }
   networkId: number
   stakeVKHash: Ed25519KeyHash
@@ -39,7 +39,6 @@ type GetAllSignersOptions = {
  * Returns addressing information for all inputs, collateral, and required signers
  */
 export const getAllSigners = async ({
-  wasm,
   body,
   networkId,
   stakeVKHash,
@@ -48,41 +47,39 @@ export const getAllSigners = async ({
   utxos,
   getAddressAddressing,
 }: GetAllSignersOptions): Promise<Addressing[]> => {
-  const requiredSignersAddressing = await getRequiredSignersAddressing({
-    wasm,
-    body,
-    networkId,
-    stakeVKHash,
-    getAddressAddressing,
-    partial,
-    stakingKeyPath,
+  return CardanoMobileWrapped.cslScope(async (wasm) => {
+    const requiredSignersAddressing = await getRequiredSignersAddressing({
+      wasm,
+      body,
+      networkId,
+      stakeVKHash,
+      getAddressAddressing,
+      partial,
+      stakingKeyPath,
+    })
+    const inputsAddressing = getInputsAddressing(body, utxos, partial)
+    const collateralAddressing = getCollateralAddressing(body, utxos, partial)
+    return [
+      ...requiredSignersAddressing,
+      ...inputsAddressing,
+      ...collateralAddressing,
+    ]
   })
-  const inputsAddressing = await getInputsAddressing(body, utxos, partial)
-  const collateralAddressing = await getCollateralAddressing(
-    body,
-    utxos,
-    partial,
-  )
-  return [
-    ...requiredSignersAddressing,
-    ...inputsAddressing,
-    ...collateralAddressing,
-  ]
 }
 
-const getInputsAddressing = async (
+const getInputsAddressing = (
   body: GetAllSignersOptions['body'],
   utxos: Array<CardanoAddressedUtxo>,
   partial = true,
-): Promise<Addressing[]> => {
-  const inputs = await body.inputs()
+): Addressing[] => {
+  const inputs = body.inputs()
 
   const inputUtxos: CardanoAddressedUtxo[] = []
 
-  for (let i = 0; i < (await inputs.len()); i++) {
-    const input = await inputs.get(i)
-    const txId = await input.transactionId().then((t) => t.toHex())
-    const txIndex = await input.index()
+  for (let i = 0; i < inputs.len(); i++) {
+    const input = inputs.get(i)
+    const txId = input.transactionId().toHex()
+    const txIndex = input.index()
     const matchingUtxo = utxos.find(
       (utxo) => utxo.txHash === txId && utxo.txIndex === txIndex,
     )
@@ -97,21 +94,21 @@ const getInputsAddressing = async (
   return inputUtxos.map((u) => u.addressing)
 }
 
-const getCollateralAddressing = async (
+const getCollateralAddressing = (
   body: GetAllSignersOptions['body'],
   utxos: Array<CardanoAddressedUtxo>,
   partial = true,
-): Promise<Addressing[]> => {
-  const collateral = await body.collateral()
+): Addressing[] => {
+  const collateral = body.collateral()
 
   if (!collateral) return []
 
   const collateralUtxos: CardanoAddressedUtxo[] = []
 
-  for (let i = 0; i < (await collateral.len()); i++) {
-    const input = await collateral.get(i)
-    const txId = await input.transactionId().then((t) => t.toHex())
-    const txIndex = await input.index()
+  for (let i = 0; i < collateral.len(); i++) {
+    const input = collateral.get(i)
+    const txId = input.transactionId().toHex()
+    const txIndex = input.index()
     const matchingUtxo = utxos.find(
       (utxo) => utxo.txHash === txId && utxo.txIndex === txIndex,
     )
@@ -145,12 +142,12 @@ const getRequiredSignersAddressing = async ({
   partial = true,
   stakingKeyPath,
 }: GetRequiredSignersAddressing): Promise<Addressing[]> => {
-  const requiredSigners = await body.requiredSigners()
+  const requiredSigners = body.requiredSigners()
   if (!requiredSigners) return []
 
   const signersArray: Array<Ed25519KeyHash> = []
-  for (let i = 0; i < (await requiredSigners.len()); i++) {
-    const signer = await requiredSigners.get(i)
+  for (let i = 0; i < requiredSigners.len(); i++) {
+    const signer = requiredSigners.get(i)
     signersArray.push(signer)
   }
 
@@ -165,21 +162,19 @@ const getRequiredSignersAddressing = async ({
       continue
     }
 
-    const paymentStakeCredential = await wasm.Credential.fromKeyhash(signer)
-    const stakeCredential = await wasm.Credential.fromKeyhash(stakeVKHash)
-    const baseAddress = await wasm.BaseAddress.new(
+    const paymentStakeCredential = wasm.Credential.fromKeyhash(signer)
+    const stakeCredential = wasm.Credential.fromKeyhash(stakeVKHash)
+    const baseAddress = wasm.BaseAddress.new(
       networkId,
       paymentStakeCredential,
       stakeCredential,
     )
-    const bech32Address = await baseAddress
-      .toAddress()
-      .then((a) => a.toBech32(undefined))
+    const bech32Address = baseAddress.toAddress().toBech32(undefined)
     const addressing = getAddressAddressing(bech32Address)
     if (!addressing) {
       if (!partial) {
         throw new Error(
-          `Could not find addressing for required signer: ${await signer.toHex()}`,
+          `Could not find addressing for required signer: ${signer.toHex()}`,
         )
       }
       continue
