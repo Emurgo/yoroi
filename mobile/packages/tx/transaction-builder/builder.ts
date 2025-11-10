@@ -360,18 +360,18 @@ function calculateTotalOutputValue(
  * Convert Balance.Amounts to CSL Value
  */
 function amountsToValue(
-  wasm: import('@emurgo/cross-csl-core').WasmModuleProxy,
+  csl,
   amounts: Balance.Amounts,
   primaryTokenId: string = '',
 ): Value {
   const adaAmount = amounts[primaryTokenId] || '0'
-  const value = wasm.Value.new(wasm.BigNum.fromStr(adaAmount))
+  const value = csl.Value.new(csl.BigNum.fromStr(adaAmount))
 
   // Get all asset IDs except primary token
   const assetIds = Object.keys(amounts).filter((id) => id !== primaryTokenId)
 
   if (assetIds.length > 0) {
-    const multiAsset = wasm.MultiAsset.new()
+    const multiAsset = csl.MultiAsset.new()
 
     // Group assets by policy ID
     const groupedByPolicyId = assetIds.reduce(
@@ -389,17 +389,17 @@ function amountsToValue(
       const assetGroup = groupedByPolicyId[policyIdStr]
       if (!assetGroup) continue
 
-      const policyId = wasm.ScriptHash.fromBytes(
+      const policyId = csl.ScriptHash.fromBytes(
         new Uint8Array(Buffer.from(policyIdStr, 'hex')),
       )
-      const assets = wasm.Assets.new()
+      const assets = csl.Assets.new()
 
       for (const assetId of assetGroup) {
         const assetNameHex = assetId.substring(56) // Asset name is after policy ID
-        const name = wasm.AssetName.new(
+        const name = csl.AssetName.new(
           new Uint8Array(Buffer.from(assetNameHex, 'hex')),
         )
-        const amount = wasm.BigNum.fromStr(amounts[assetId] ?? '0')
+        const amount = csl.BigNum.fromStr(amounts[assetId] ?? '0')
         assets.insert(name, amount)
       }
 
@@ -416,15 +416,15 @@ function amountsToValue(
  * Convert TransactionOutput to CSL TransactionOutput
  */
 function outputToCSL(
-  wasm: import('@emurgo/cross-csl-core').WasmModuleProxy,
+  csl,
   output: TransactionOutput,
   primaryTokenId: string = '',
 ): CSLTransactionOutput {
-  const address = wasm.Address.fromBech32(output.address)
+  const address = csl.Address.fromBech32(output.address)
   if (!address) throw new Error(`Invalid address: ${output.address}`)
 
-  const value = amountsToValue(wasm, output.amounts, primaryTokenId)
-  const cslOutput = wasm.TransactionOutput.new(address, value)
+  const value = amountsToValue(csl, output.amounts, primaryTokenId)
+  const cslOutput = csl.TransactionOutput.new(address, value)
 
   // Add datum if present
   if (output.datum) {
@@ -439,34 +439,34 @@ function outputToCSL(
  * Create CSL TransactionBuilder with config
  */
 function createCSLTransactionBuilder(
-  wasm: import('@emurgo/cross-csl-core').WasmModuleProxy,
+  csl,
   params: CardanoHaskellConfig,
 ): CSLTransactionBuilder {
   // Create LinearFee
-  const linearFee = wasm.LinearFee.new(
-    wasm.BigNum.fromStr(params.linearFee.coefficient),
-    wasm.BigNum.fromStr(params.linearFee.constant),
+  const linearFee = csl.LinearFee.new(
+    csl.BigNum.fromStr(params.linearFee.coefficient),
+    csl.BigNum.fromStr(params.linearFee.constant),
   )
 
   // Create other protocol params
-  const poolDeposit = wasm.BigNum.fromStr(params.poolDeposit)
-  const keyDeposit = wasm.BigNum.fromStr(params.keyDeposit)
-  const coinsPerUtxoByte = wasm.BigNum.fromStr(params.coinsPerUtxoByte)
+  const poolDeposit = csl.BigNum.fromStr(params.poolDeposit)
+  const keyDeposit = csl.BigNum.fromStr(params.keyDeposit)
+  const coinsPerUtxoByte = csl.BigNum.fromStr(params.coinsPerUtxoByte)
 
   // Create ExUnitPrices (for Plutus)
-  const unitPrice = wasm.ExUnitPrices.new(
-    wasm.UnitInterval.new(
-      wasm.BigNum.fromStr('577'),
-      wasm.BigNum.fromStr('10000'),
+  const unitPrice = csl.ExUnitPrices.new(
+    csl.UnitInterval.new(
+      csl.BigNum.fromStr('577'),
+      csl.BigNum.fromStr('10000'),
     ),
-    wasm.UnitInterval.new(
-      wasm.BigNum.fromStr('721'),
-      wasm.BigNum.fromStr('10000000'),
+    csl.UnitInterval.new(
+      csl.BigNum.fromStr('721'),
+      csl.BigNum.fromStr('10000000'),
     ),
   )
 
   // Build config - chain builder methods
-  let configBuilder = wasm.TransactionBuilderConfigBuilder.new()
+  let configBuilder = csl.TransactionBuilderConfigBuilder.new()
   configBuilder = configBuilder.feeAlgo(linearFee)
   configBuilder = configBuilder.poolDeposit(poolDeposit)
   configBuilder = configBuilder.keyDeposit(keyDeposit)
@@ -477,7 +477,7 @@ function createCSLTransactionBuilder(
   configBuilder = configBuilder.preferPureChange(true)
 
   const config = configBuilder.build()
-  return wasm.TransactionBuilder.new(config)
+  return csl.TransactionBuilder.new(config)
 }
 
 /**
@@ -488,7 +488,7 @@ export async function buildTransaction(
   protocolParams: CardanoHaskellConfig,
   primaryTokenId: string = '',
 ): Promise<UnsignedTransaction> {
-  return CardanoMobileWrapped.cslScope((wasm) => {
+  return CardanoMobileWrapped.cslScope((csl) => {
     // Validate inputs
     validateInputs(state)
 
@@ -498,17 +498,17 @@ export async function buildTransaction(
     }
 
     // Create CSL TransactionBuilder
-    const cslTxBuilder = createCSLTransactionBuilder(wasm, protocolParams)
+    const cslTxBuilder = createCSLTransactionBuilder(csl, protocolParams)
 
     // Add outputs first (CSL builder needs outputs to calculate fees)
     for (const output of state.outputs) {
-      const cslOutput = outputToCSL(wasm, output, primaryTokenId)
+      const cslOutput = outputToCSL(csl, output, primaryTokenId)
       cslTxBuilder.addOutput(cslOutput)
     }
 
     // Add certificates
     if (state.certificates.length > 0) {
-      const certs = wasm.Certificates.new()
+      const certs = csl.Certificates.new()
       for (const cert of state.certificates) {
         certs.add(cert.cert)
       }
@@ -517,15 +517,15 @@ export async function buildTransaction(
 
     // Add withdrawals
     if (state.withdrawals.length > 0) {
-      const withdrawals = wasm.Withdrawals.new()
+      const withdrawals = csl.Withdrawals.new()
       for (const withdrawal of state.withdrawals) {
-        const rewardAddr = wasm.RewardAddress.fromAddress(
-          wasm.Address.fromBech32(withdrawal.rewardAddress),
+        const rewardAddr = csl.RewardAddress.fromAddress(
+          csl.Address.fromBech32(withdrawal.rewardAddress),
         )
         if (!rewardAddr) {
           throw new Error(`Invalid reward address: ${withdrawal.rewardAddress}`)
         }
-        const amount = wasm.BigNum.fromStr(withdrawal.amount)
+        const amount = csl.BigNum.fromStr(withdrawal.amount)
         withdrawals.insert(rewardAddr, amount)
       }
       cslTxBuilder.setWithdrawals(withdrawals)
@@ -539,36 +539,36 @@ export async function buildTransaction(
     // Add inputs (UTXOs) - CSL TransactionBuilder uses addRegularInput
     for (const input of state.inputs) {
       const utxo = input.utxo
-      const wasmAddr = wasm.Address.fromBech32(utxo.receiver)
-      if (!wasmAddr) {
+      const cslAddr = csl.Address.fromBech32(utxo.receiver)
+      if (!cslAddr) {
         throw new Error(`Invalid address: ${utxo.receiver}`)
       }
-      const txInput = wasm.TransactionInput.new(
-        wasm.TransactionHash.fromHex(utxo.txHash),
+      const txInput = csl.TransactionInput.new(
+        csl.TransactionHash.fromHex(utxo.txHash),
         utxo.txIndex,
       )
-      const wasmAmount = amountsToValue(wasm, utxo.balance, primaryTokenId)
-      cslTxBuilder.addRegularInput(wasmAddr, txInput, wasmAmount)
+      const cslAmount = amountsToValue(csl, utxo.balance, primaryTokenId)
+      cslTxBuilder.addRegularInput(cslAddr, txInput, cslAmount)
     }
 
     // Handle manual fee
     if (state.options.manualFee) {
       const feeAmount = state.options.manualFee[primaryTokenId] || '0'
-      const feeBigNum = wasm.BigNum.fromStr(feeAmount)
+      const feeBigNum = csl.BigNum.fromStr(feeAmount)
       cslTxBuilder.setFee(feeBigNum)
     }
 
     // Handle change output
     if (state.options.manualChangeOutput) {
       const cslChangeOutput = outputToCSL(
-        wasm,
+        csl,
         state.options.manualChangeOutput,
         primaryTokenId,
       )
       cslTxBuilder.addOutput(cslChangeOutput)
     } else if (state.options.changeAddress && !state.options.manualFee) {
       // Use CSL's automatic change handling
-      const changeAddr = wasm.Address.fromBech32(state.options.changeAddress)
+      const changeAddr = csl.Address.fromBech32(state.options.changeAddress)
       if (!changeAddr) {
         throw new Error(
           `Invalid change address: ${state.options.changeAddress}`,
@@ -579,17 +579,17 @@ export async function buildTransaction(
 
     // Add metadata
     if (state.metadata.length > 0) {
-      const auxData = wasm.AuxiliaryData.new()
-      const metadataMap = wasm.GeneralTransactionMetadata.new()
+      const auxData = csl.AuxiliaryData.new()
+      const metadataMap = csl.GeneralTransactionMetadata.new()
 
       for (const meta of state.metadata) {
         const label =
           typeof meta.label === 'string' ? parseInt(meta.label, 10) : meta.label
-        const metadata = wasm.encodeJsonStrToMetadatum(
+        const metadata = csl.encodeJsonStrToMetadatum(
           JSON.stringify(meta.data),
           1, // MetadataJsonSchema.BasicConversions
         )
-        metadataMap.insert(wasm.BigNum.fromStr(label.toString()), metadata)
+        metadataMap.insert(csl.BigNum.fromStr(label.toString()), metadata)
       }
 
       auxData.setMetadata(metadataMap)

@@ -49,8 +49,8 @@ export async function adaptToLedgerUnsignedTx(
     )
   }
 
-  return CardanoMobileWrapped.cslScope((wasm) => {
-    const txBody = wasm.TransactionBody.fromHex(unsignedTx.cbor!)
+  return CardanoMobileWrapped.cslScope((csl) => {
+    const txBody = csl.TransactionBody.fromHex(unsignedTx.cbor!)
 
     // Extract sender UTXOs with addressing
     const senderUtxos = unsignedTx.inputs.map((input) => ({
@@ -78,15 +78,15 @@ export async function adaptToLedgerUnsignedTx(
     // Extract withdrawals
     let withdrawals: Withdrawals | null = null
     if (unsignedTx.withdrawals.length > 0) {
-      withdrawals = wasm.Withdrawals.new()
+      withdrawals = csl.Withdrawals.new()
       for (const withdrawal of unsignedTx.withdrawals) {
-        const rewardAddr = wasm.RewardAddress.fromAddress(
-          wasm.Address.fromBech32(withdrawal.rewardAddress),
+        const rewardAddr = csl.RewardAddress.fromAddress(
+          csl.Address.fromBech32(withdrawal.rewardAddress),
         )
         if (!rewardAddr) {
           throw new Error(`Invalid reward address: ${withdrawal.rewardAddress}`)
         }
-        const amount = wasm.BigNum.fromStr(withdrawal.amount)
+        const amount = csl.BigNum.fromStr(withdrawal.amount)
         if (withdrawals) {
           withdrawals.insert(rewardAddr, amount)
         }
@@ -96,7 +96,7 @@ export async function adaptToLedgerUnsignedTx(
     // Extract certificates
     let certificates: Certificates | null = null
     if (unsignedTx.certificates.length > 0) {
-      certificates = wasm.Certificates.new()
+      certificates = csl.Certificates.new()
       for (const certWrapper of unsignedTx.certificates) {
         if (certificates) {
           certificates.add(certWrapper.cert)
@@ -115,17 +115,17 @@ export async function adaptToLedgerUnsignedTx(
 
     if (unsignedTx.metadata && unsignedTx.metadata.length > 0) {
       // Create auxiliary data from metadata
-      const auxData = wasm.AuxiliaryData.new()
-      const metadataMap = wasm.GeneralTransactionMetadata.new()
+      const auxData = csl.AuxiliaryData.new()
+      const metadataMap = csl.GeneralTransactionMetadata.new()
 
       for (const meta of unsignedTx.metadata) {
         const label =
           typeof meta.label === 'string' ? parseInt(meta.label, 10) : meta.label
-        const metadata = wasm.encodeJsonStrToMetadatum(
+        const metadata = csl.encodeJsonStrToMetadatum(
           JSON.stringify(meta.data),
           1, // MetadataJsonSchema.BasicConversions
         )
-        metadataMap.insert(wasm.BigNum.fromStr(label.toString()), metadata)
+        metadataMap.insert(csl.BigNum.fromStr(label.toString()), metadata)
       }
 
       auxData.setMetadata(metadataMap)

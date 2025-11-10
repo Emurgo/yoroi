@@ -53,7 +53,7 @@ export async function adaptUnsignedTransaction(
   unsignedTx: UnsignedTransaction,
   defaultToken: Token,
 ): Promise<LegacyUnsignedTx> {
-  return CardanoMobileWrapped.cslScope((wasm) => {
+  return CardanoMobileWrapped.cslScope((csl) => {
     // Convert fee from Balance.Amounts to MultiToken
     const feeMultiToken = new MultiToken([], defaultToken)
     for (const [tokenId, quantity] of Object.entries(
@@ -127,7 +127,7 @@ export async function adaptUnsignedTransaction(
       withdrawals = wasm.Withdrawals.new()
       for (const withdrawal of unsignedTx.withdrawals) {
         const rewardAddr = wasm.RewardAddress.fromAddress(
-          wasm.Address.fromBech32(withdrawal.rewardAddress),
+          csl.Address.fromBech32(withdrawal.rewardAddress),
         )
         if (!rewardAddr) {
           throw new Error(`Invalid reward address: ${withdrawal.rewardAddress}`)

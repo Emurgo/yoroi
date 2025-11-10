@@ -47,9 +47,9 @@ export const getAllSigners = async ({
   utxos,
   getAddressAddressing,
 }: GetAllSignersOptions): Promise<Addressing[]> => {
-  return CardanoMobileWrapped.cslScope(async (wasm) => {
+  return CardanoMobileWrapped.cslScope(async (csl) => {
     const requiredSignersAddressing = await getRequiredSignersAddressing({
-      wasm,
+      wasm: csl,
       body,
       networkId,
       stakeVKHash,

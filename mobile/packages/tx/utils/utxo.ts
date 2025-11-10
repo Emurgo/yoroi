@@ -101,15 +101,15 @@ function toTransactionUnspentOutputHex(this: ModernUtxo): string {
 function toTransactionUnspentOutput(
   this: ModernUtxo,
 ): TransactionUnspentOutput {
-  return CardanoMobileWrapped.cslScope((wasm) => {
-    const input = wasm.TransactionInput.new(
-      wasm.TransactionHash.fromHex(this.txHash),
+  return CardanoMobileWrapped.cslScope((csl) => {
+    const input = csl.TransactionInput.new(
+      csl.TransactionHash.fromHex(this.txHash),
       this.txIndex,
     )
 
     const primaryTokenId = ''
     const adaAmount = this.balance[primaryTokenId] ?? '0'
-    const value = wasm.Value.new(wasm.BigNum.fromStr(adaAmount))
+    const value = csl.Value.new(csl.BigNum.fromStr(adaAmount))
 
     // Get all asset IDs except primary token
     const assetIds = Object.keys(this.balance).filter(
@@ -117,7 +117,7 @@ function toTransactionUnspentOutput(
     )
 
     if (assetIds.length > 0) {
-      const multiAsset = wasm.MultiAsset.new()
+      const multiAsset = csl.MultiAsset.new()
 
       // Group assets by policy ID
       const groupedByPolicyId = assetIds.reduce(
@@ -135,17 +135,17 @@ function toTransactionUnspentOutput(
         const assetGroup = groupedByPolicyId[policyIdStr]
         if (!assetGroup) continue
 
-        const policyId = wasm.ScriptHash.fromBytes(
+        const policyId = csl.ScriptHash.fromBytes(
           new Uint8Array(Buffer.from(policyIdStr, 'hex')),
         )
-        const assets = wasm.Assets.new()
+        const assets = csl.Assets.new()
 
         for (const assetId of assetGroup) {
           const assetNameHex = toAssetNameHex(assetId)
-          const name = wasm.AssetName.new(
+          const name = csl.AssetName.new(
             new Uint8Array(Buffer.from(assetNameHex, 'hex')),
           )
-          const amount = wasm.BigNum.fromStr(this.balance[assetId] ?? '0')
+          const amount = csl.BigNum.fromStr(this.balance[assetId] ?? '0')
           assets.insert(name, amount)
         }
 
@@ -155,10 +155,10 @@ function toTransactionUnspentOutput(
       value.setMultiasset(multiAsset)
     }
 
-    const receiver = wasm.Address.fromBech32(this.receiver)
+    const receiver = csl.Address.fromBech32(this.receiver)
     if (!receiver) throw new Error('Invalid receiver address')
-    const output = wasm.TransactionOutput.new(receiver, value)
+    const output = csl.TransactionOutput.new(receiver, value)
 
-    return wasm.TransactionUnspentOutput.new(input, output)
+    return csl.TransactionUnspentOutput.new(input, output)
   })
 }

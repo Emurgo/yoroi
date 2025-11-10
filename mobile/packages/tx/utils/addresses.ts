@@ -14,18 +14,18 @@ import {Addressing} from '../types'
 export async function normalizeToAddress(
   addr: string,
 ): Promise<Address | undefined> {
-  return CardanoMobileWrapped.cslScope((wasm) => {
+  return CardanoMobileWrapped.cslScope((csl) => {
     // in Shelley, addresses can be base16, bech32 or base58
     // this function, we try parsing in all encodings possible
 
     // 1) Try converting from base58
-    if (wasm.ByronAddress.isValid(addr)) {
-      const byronAddr = wasm.ByronAddress.fromBase58(addr)
+    if (csl.ByronAddress.isValid(addr)) {
+      const byronAddr = csl.ByronAddress.fromBase58(addr)
       return byronAddr.toAddress()
     }
     const address = isHex(addr)
-      ? wasm.Address.fromHex(addr)
-      : wasm.Address.fromBech32(addr)
+      ? csl.Address.fromHex(addr)
+      : csl.Address.fromBech32(addr)
     // Return undefined when malformed for backward compatibility
     return address.isMalformed() ? undefined : address
   })
@@ -35,8 +35,8 @@ export async function normalizeToAddress(
  * Convert WASM Address to hex or base58 string
  */
 export function toHexOrBase58(address: Address): string {
-  return CardanoMobileWrapped.cslScope((wasm) => {
-    const asByron = wasm.ByronAddress.fromAddress(address)
+  return CardanoMobileWrapped.cslScope((csl) => {
+    const asByron = csl.ByronAddress.fromAddress(address)
     if (asByron === null || !asByron) {
       return Buffer.from(address.toBytes()).toString('hex')
     }
@@ -52,12 +52,12 @@ export async function filterAddressesByStakingKey<T extends {receiver: string}>(
   utxos: ReadonlyArray<T>,
   acceptTypeMismatch: boolean,
 ): Promise<ReadonlyArray<T>> {
-  return CardanoMobileWrapped.cslScope(async (wasm) => {
+  return CardanoMobileWrapped.cslScope(async (csl) => {
     const result: T[] = []
     for (const utxo of utxos) {
       if (
         await addrContainsAccountKey(
-          wasm,
+          csl,
           utxo.receiver,
           stakingKey,
           acceptTypeMismatch,
@@ -74,7 +74,7 @@ export async function filterAddressesByStakingKey<T extends {receiver: string}>(
  * Check if address contains account key
  */
 export async function addrContainsAccountKey(
-  wasm: import('@emurgo/cross-csl-core').WasmModuleProxy,
+  csl,
   address: string,
   targetAccountKey: Credential,
   acceptTypeMismatch: boolean,
@@ -87,7 +87,7 @@ export async function addrContainsAccountKey(
     'hex',
   )
 
-  const baseAddress = wasm.BaseAddress.fromAddress(wasmAddr)
+  const baseAddress = csl.BaseAddress.fromAddress(wasmAddr)
   if (!baseAddress) throw new Error('addrContainsAccountKey: baseAddress null')
   const stakeCredBytes = baseAddress.stakeCred().toBytes()
   if (baseAddress != null) {
@@ -95,7 +95,7 @@ export async function addrContainsAccountKey(
       return true
     }
   }
-  const asPointer = wasm.PointerAddress.fromAddress(wasmAddr)
+  const asPointer = csl.PointerAddress.fromAddress(wasmAddr)
   if (asPointer != null) {
     // TODO: Implement pointer address checking
   }

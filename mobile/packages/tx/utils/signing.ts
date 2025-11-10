@@ -18,20 +18,20 @@ export async function signTransaction(
     throw new Error('UnsignedTransaction must have CBOR to sign')
   }
 
-  return CardanoMobileWrapped.cslScope((wasm) => {
-    const fixedTx = wasm.FixedTransaction.fromHex(unsignedTx.cbor!)
+  return CardanoMobileWrapped.cslScope((csl) => {
+    const fixedTx = csl.FixedTransaction.fromHex(unsignedTx.cbor!)
     if (!fixedTx) {
       throw new Error('Invalid transaction CBOR')
     }
 
     // Sign with account key
-    const accountPrivateKey = wasm.PrivateKey.fromHex(accountPrivateKeyHex)
+    const accountPrivateKey = csl.PrivateKey.fromHex(accountPrivateKeyHex)
     fixedTx.signAndAddVkeySignature(accountPrivateKey)
 
     // Sign with staking keys if provided
     if (stakingPrivateKeys && stakingPrivateKeys.length > 0) {
       for (const stakingKey of stakingPrivateKeys) {
-        const stakingPrivateKey = wasm.PrivateKey.fromHex(stakingKey.keyHex)
+        const stakingPrivateKey = csl.PrivateKey.fromHex(stakingKey.keyHex)
         fixedTx.signAndAddVkeySignature(stakingPrivateKey)
       }
     }
@@ -45,6 +45,6 @@ export async function signTransaction(
 
     // Convert FixedTransaction to Transaction
     const signedBytes = fixedTx.toBytes()
-    return wasm.Transaction.fromBytes(signedBytes)
+    return csl.Transaction.fromBytes(signedBytes)
   })
 }

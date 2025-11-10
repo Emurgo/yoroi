@@ -96,19 +96,15 @@ export const transformToLedgerInputs = (
   return ordered
 }
 
-const areAddressesTheSame = (
-  wasm: WasmModuleProxy,
-  addr1: string,
-  addr2: string,
-): boolean => {
+const areAddressesTheSame = (csl, addr1: string, addr2: string): boolean => {
   const addrToHex = (addr: string): string => {
     const addrBech32 = bech32.decodeUnsafe(addr, addr.length)
     let hex: string
     if (addrBech32) {
       hex = Buffer.from(bech32.fromWords(addrBech32.words)).toString('hex')
-    } else if (wasm.ByronAddress.isValid(addr)) {
+    } else if (csl.ByronAddress.isValid(addr)) {
       hex = Buffer.from(
-        wasm.ByronAddress.fromBase58(addr).toAddress().toBytes(),
+        csl.ByronAddress.fromBase58(addr).toAddress().toBytes(),
       ).toString('hex')
     } else if (isHex(addr)) {
       hex = addr
@@ -129,7 +125,7 @@ const areAddressesTheSame = (
  * Transform transaction outputs to Ledger format
  */
 export const transformToLedgerOutputs = async (
-  _wasm: WasmModuleProxy,
+  _csl,
   request: {
     networkId: number
     txOutputs: TransactionOutputs
@@ -212,7 +208,7 @@ export const verifyFromBip44Root = (addressing: Addressing): void => {
  * Convert address to Ledger address parameters
  */
 export const toLedgerAddressParameters = (
-  wasm: WasmModuleProxy,
+  csl,
   request: {
     networkId: number
     address: Address
@@ -221,7 +217,7 @@ export const toLedgerAddressParameters = (
   },
 ): LedgerDeviceOwnedAddress => {
   {
-    const byronAddr = wasm.ByronAddress.fromAddress(request.address)
+    const byronAddr = csl.ByronAddress.fromAddress(request.address)
     if (byronAddr) {
       return {
         type: LedgerAddressType.BYRON,
@@ -232,15 +228,15 @@ export const toLedgerAddressParameters = (
     }
   }
   {
-    const baseAddr = wasm.BaseAddress.fromAddress(request.address)
+    const baseAddr = csl.BaseAddress.fromAddress(request.address)
     if (baseAddr) {
       if (!request.stakingDerivationPath) {
         const stakeCred = baseAddr.stakeCred()
-        const wasmHash = stakeCred.toKeyhash() ?? stakeCred.toScripthash()
-        if (!wasmHash) {
+        const cslHash = stakeCred.toKeyhash() ?? stakeCred.toScripthash()
+        if (!cslHash) {
           throw new Error(`toLedgerAddressParameters unknown hash type`)
         }
-        const hashInAddress = Buffer.from(wasmHash.toBytes()).toString('hex')
+        const hashInAddress = Buffer.from(cslHash.toBytes()).toString('hex')
 
         return {
           // can't always know staking key path since address may not belong to the wallet
@@ -262,7 +258,7 @@ export const toLedgerAddressParameters = (
     }
   }
   {
-    const ptrAddr = wasm.PointerAddress.fromAddress(request.address)
+    const ptrAddr = csl.PointerAddress.fromAddress(request.address)
     if (ptrAddr) {
       const pointer = ptrAddr.stakePointer()
       return {
@@ -279,7 +275,7 @@ export const toLedgerAddressParameters = (
     }
   }
   {
-    const enterpriseAddr = wasm.EnterpriseAddress.fromAddress(request.address)
+    const enterpriseAddr = csl.EnterpriseAddress.fromAddress(request.address)
     if (enterpriseAddr) {
       return {
         type: LedgerAddressType.ENTERPRISE_KEY,
@@ -290,7 +286,7 @@ export const toLedgerAddressParameters = (
     }
   }
   {
-    const rewardAddr = wasm.RewardAddress.fromAddress(request.address)
+    const rewardAddr = csl.RewardAddress.fromAddress(request.address)
     if (rewardAddr) {
       return {
         type: LedgerAddressType.REWARD_KEY,
@@ -529,8 +525,8 @@ export const formatLedgerWithdrawals = (
 /**
  * Helper to convert address to hex or base58
  */
-function toHexOrBase58(wasm: WasmModuleProxy, address: Address): string {
-  const asByron = wasm.ByronAddress.fromAddress(address)
+function toHexOrBase58(csl, address: Address): string {
+  const asByron = csl.ByronAddress.fromAddress(address)
   if (asByron === null || !asByron) {
     return Buffer.from(address.toBytes()).toString('hex')
   }
@@ -540,10 +536,10 @@ function toHexOrBase58(wasm: WasmModuleProxy, address: Address): string {
 /**
  * Assert that transaction sets have proper tag state for Ledger signing
  */
-export const assertTagsState = (wasm: WasmModuleProxy, txHex: string): void => {
-  const tagsState = wasm.hasTransactionSetTag(Buffer.from(txHex, 'hex'))
+export const assertTagsState = (csl, txHex: string): void => {
+  const tagsState = csl.hasTransactionSetTag(Buffer.from(txHex, 'hex'))
 
-  if (tagsState === wasm.TransactionSetsState.MixedSets) {
+  if (tagsState === csl.TransactionSetsState.MixedSets) {
     throw new Error('Transaction with mixed sets cannot be signed by Ledger')
   }
 }
@@ -552,9 +548,9 @@ export const assertTagsState = (wasm: WasmModuleProxy, txHex: string): void => {
  * Check if all transaction sets have tags
  */
 export const doAllSetsHaveTag = (
-  wasm: WasmModuleProxy,
+  csl,
   txHex: string,
 ): boolean => {
-  const tagsState = wasm.hasTransactionSetTag(Buffer.from(txHex, 'hex'))
-  return tagsState === wasm.TransactionSetsState.AllSetsHaveTag
+  const tagsState = csl.hasTransactionSetTag(Buffer.from(txHex, 'hex'))
+  return tagsState === csl.TransactionSetsState.AllSetsHaveTag
 }

@@ -44,11 +44,11 @@ export async function buildVotingLedgerPayloadV5(
   byronNetworkMagic: number,
   stakingDerivationPath?: number[],
 ): Promise<SignTransactionRequest> {
-  return CardanoMobileWrapped.cslScope(async (wasm) => {
+  return CardanoMobileWrapped.cslScope(async (csl) => {
     const builtTx = unsignedTx.txBuilder.build()
-    assertTagsState(wasm, builtTx.toHex())
+    assertTagsState(csl, builtTx.toHex())
     const ledgerInputs = transformToLedgerInputs(unsignedTx)
-    const ledgerOutputs = await transformToLedgerOutputs(wasm, {
+    const ledgerOutputs = await transformToLedgerOutputs(csl, {
       networkId: networkId,
       txOutputs: unsignedTx.txBody.outputs(),
       stakingDerivationPath: stakingDerivationPath,
@@ -123,7 +123,7 @@ export async function buildVotingLedgerPayloadV5(
       additionalWitnessPaths: [],
       options: {
         tagCborSets: doAllSetsHaveTag(
-          wasm,
+          csl,
           unsignedTx.txBuilder.build().toHex(),
         ),
       },
@@ -140,12 +140,12 @@ export async function buildLedgerPayload(
   byronNetworkMagic: number,
   stakingDerivationPath?: number[],
 ): Promise<SignTransactionRequest> {
-  return CardanoMobileWrapped.cslScope(async (wasm) => {
+  return CardanoMobileWrapped.cslScope(async (csl) => {
     const builtTx = unsignedTx.txBuilder.build()
-    assertTagsState(wasm, builtTx.toHex())
+    assertTagsState(csl, builtTx.toHex())
 
     const ledgerInputs = transformToLedgerInputs(unsignedTx)
-    const ledgerOutputs = await transformToLedgerOutputs(wasm, {
+    const ledgerOutputs = await transformToLedgerOutputs(csl, {
       networkId: networkId,
       txOutputs: unsignedTx.txBody.outputs(),
       stakingDerivationPath: stakingDerivationPath,
@@ -231,7 +231,7 @@ export async function buildLedgerPayload(
       },
       options: {
         tagCborSets: doAllSetsHaveTag(
-          wasm,
+          csl,
           unsignedTx.txBuilder.build().toHex(),
         ),
       },

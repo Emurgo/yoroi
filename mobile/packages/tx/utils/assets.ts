@@ -13,22 +13,22 @@ import {MultiToken} from '../types/multi-token'
 export async function cardanoValueFromMultiToken(
   tokens: MultiToken,
 ): Promise<Value> {
-  return CardanoMobileWrapped.cslScope((wasm) => {
-    const value = wasm.Value.new(
-      wasm.BigNum.fromStr(tokens.getDefaultEntry().amount.toString()),
+  return CardanoMobileWrapped.cslScope((csl) => {
+    const value = csl.Value.new(
+      csl.BigNum.fromStr(tokens.getDefaultEntry().amount.toString()),
     )
     // recall: primary asset counts towards size
     if (tokens.size() === 1) return value
 
-    const assets = wasm.MultiAsset.new()
+    const assets = csl.MultiAsset.new()
     for (const entry of tokens.nonDefaultEntries()) {
-      const {policyId, name} = identifierToCardanoAsset(wasm, entry.identifier)
+      const {policyId, name} = identifierToCardanoAsset(csl, entry.identifier)
 
       const asset = assets.get(policyId)
 
-      const policyContent = asset ?? wasm.Assets.new()
+      const policyContent = asset ?? csl.Assets.new()
 
-      policyContent.insert(name, wasm.BigNum.fromStr(entry.amount.toString()))
+      policyContent.insert(name, csl.BigNum.fromStr(entry.amount.toString()))
       // recall: we always have to insert since WASM returns copies of objects
       assets.insert(policyId, policyContent)
     }
@@ -46,7 +46,7 @@ export async function multiTokenFromCardanoValue(
   value: Value,
   defaults: Token,
 ): Promise<MultiToken> {
-  return CardanoMobileWrapped.cslScope((wasm) => {
+  return CardanoMobileWrapped.cslScope((csl) => {
     const multiToken = new MultiToken([], defaults)
     const coin = value.coin()
     multiToken.add({
@@ -56,7 +56,7 @@ export async function multiTokenFromCardanoValue(
 
     const ma = value.multiasset()
     if (ma) {
-      for (const token of parseTokenList(wasm, ma)) {
+      for (const token of parseTokenList(csl, ma)) {
         multiToken.add({
           amount: new BigNumber(token.amount),
           identifier: token.assetId,
@@ -82,7 +82,7 @@ export function cardanoAssetToIdentifier(
  * Convert identifier string to Cardano asset
  */
 export function identifierToCardanoAsset(
-  wasm: import('@emurgo/cross-csl-core').WasmModuleProxy,
+  csl,
   identifier: string,
 ): {
   policyId: ScriptHash
@@ -92,8 +92,8 @@ export function identifierToCardanoAsset(
   const policyIdHex = parts[0]!
   const assetNameHex = parts[1]!
   // Use fromHex for hex strings (preferred method in CSL)
-  const policyId = wasm.ScriptHash.fromHex(policyIdHex)
-  const name = wasm.AssetName.fromHex(assetNameHex)
+  const policyId = csl.ScriptHash.fromHex(policyIdHex)
+  const name = csl.AssetName.fromHex(assetNameHex)
   return {policyId, name}
 }
 
@@ -162,7 +162,7 @@ export function multiTokenFromRemote(
  * Parse token list from MultiAsset
  */
 export function parseTokenList(
-  _wasm: import('@emurgo/cross-csl-core').WasmModuleProxy,
+  _csl,
   assets: MultiAsset,
 ): Array<{assetId: string; amount: string}> {
   const result: Array<{assetId: string; amount: string}> = []

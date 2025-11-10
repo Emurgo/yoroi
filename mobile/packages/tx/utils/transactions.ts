@@ -11,10 +11,10 @@ import {CardanoMobileWrapped} from '../../../src/wallets/cardano/wrappedCsl'
  * Hash a transaction to get its transaction hash
  */
 export async function hashTransaction(
-  wasm: import('@emurgo/cross-csl-core').WasmModuleProxy,
+  csl,
   transactionBytes: Uint8Array,
 ): Promise<TransactionHash> {
-  const fixed = wasm.FixedTransaction.fromBytes(transactionBytes)
+  const fixed = csl.FixedTransaction.fromBytes(transactionBytes)
   return fixed.transactionHash()
 }
 
@@ -25,9 +25,9 @@ export async function calculateTxId(
   encodedTx: string,
   encoding: 'base64' | 'hex',
 ): Promise<string> {
-  return CardanoMobileWrapped.cslScope(async (wasm) => {
+  return CardanoMobileWrapped.cslScope(async (csl) => {
     const txBuffer = Buffer.from(encodedTx, encoding)
-    const hash = await hashTransaction(wasm, txBuffer)
+    const hash = await hashTransaction(csl, txBuffer)
     return hash.toHex()
   })
 }
@@ -38,7 +38,7 @@ export async function calculateTxId(
 export async function getBalanceForStakingCredentials(
   utxos: Array<{receiver: string; amount: string}>,
 ): Promise<Record<string, string>> {
-  return CardanoMobileWrapped.cslScope(async (wasm) => {
+  return CardanoMobileWrapped.cslScope(async (csl) => {
     const balances = await utxos.reduce(
       async (prevPromise, curr) => {
         const prev = await prevPromise
@@ -50,8 +50,8 @@ export async function getBalanceForStakingCredentials(
         if (!hex.match(/^[0-3]/)) return prev
 
         try {
-          const baseAddress = wasm.BaseAddress.fromAddress(
-            wasm.Address.fromBytes(Buffer.from(hex, 'hex')),
+          const baseAddress = csl.BaseAddress.fromAddress(
+            csl.Address.fromBytes(Buffer.from(hex, 'hex')),
           )
           if (!baseAddress) {
             throw new Error('getBalanceForStakingCredentials: invalid address')

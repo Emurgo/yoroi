@@ -45,11 +45,11 @@ export const createLedgerPlutusPayload = async (
     stakeVKHash,
   } = params
 
-  return CardanoMobileWrapped.cslScope(async (wasm) => {
-    const tx = wasm.Transaction.fromHex(cbor)
+  return CardanoMobileWrapped.cslScope(async (csl) => {
+    const tx = csl.Transaction.fromHex(cbor)
     const body = tx.body()
 
-    assertTagsState(wasm, cbor)
+    assertTagsState(csl, cbor)
 
     const ttl = body.ttl()?.toString()
 
@@ -62,7 +62,7 @@ export const createLedgerPlutusPayload = async (
       return getUtxoAddressing(txId, index)?.path ?? null
     }
 
-    const outputs = await transformToLedgerOutputs(wasm, {
+    const outputs = await transformToLedgerOutputs(csl, {
       networkId,
       txOutputs: body.outputs(),
       changeAddrs,
@@ -71,9 +71,9 @@ export const createLedgerPlutusPayload = async (
     const originalRequiredSigners = getRequiredSigners(body)
 
     const requiredSigners = originalRequiredSigners.map((s) => {
-      const paymentStakeCredential = wasm.Credential.fromKeyhash(s)
-      const stakeCredential = wasm.Credential.fromKeyhash(stakeVKHash)
-      const baseAddress = wasm.BaseAddress.new(
+      const paymentStakeCredential = csl.Credential.fromKeyhash(s)
+      const stakeCredential = csl.Credential.fromKeyhash(stakeVKHash)
+      const baseAddress = csl.BaseAddress.new(
         networkId,
         paymentStakeCredential,
         stakeCredential,
@@ -136,7 +136,7 @@ export const createLedgerPlutusPayload = async (
       },
       additionalWitnessPaths: [],
       options: {
-        tagCborSets: await doAllSetsHaveTag(wasm, cbor),
+        tagCborSets: await doAllSetsHaveTag(csl, cbor),
       },
     }
   })

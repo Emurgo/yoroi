@@ -79,7 +79,7 @@ export async function buildLedgerSignedTx(
   id: string
   encodedTx: Uint8Array
 }> {
-  return CardanoMobileWrapped.cslScope(async (wasm) => {
+  return CardanoMobileWrapped.cslScope(async (csl) => {
     const key = wasm.Bip32PublicKey.fromBytes(Buffer.from(publicKeyHex, 'hex'))
     const addressing: Addressing = {
       path: [
@@ -126,8 +126,8 @@ export async function buildLedgerSignedTx(
       if (wasm.ByronAddress.isValid(utxo.receiver)) {
         const byronAddr = wasm.ByronAddress.fromBase58(utxo.receiver)
         const bootstrapWit = wasm.BootstrapWitness.new(
-          wasm.Vkey.new(addressKey.toRawKey()),
-          wasm.Ed25519Signature.fromBytes(Buffer.from(witness, 'hex')),
+          csl.Vkey.new(addressKey.toRawKey()),
+          csl.Ed25519Signature.fromBytes(Buffer.from(witness, 'hex')),
           addressKey.chaincode(),
           byronAddr.attributes(),
         )
@@ -143,8 +143,8 @@ export async function buildLedgerSignedTx(
       }
 
       const vkeyWit = wasm.Vkeywitness.new(
-        wasm.Vkey.new(addressKey.toRawKey()),
-        wasm.Ed25519Signature.fromBytes(Buffer.from(witness, 'hex')),
+        csl.Vkey.new(addressKey.toRawKey()),
+        csl.Ed25519Signature.fromBytes(Buffer.from(witness, 'hex')),
       )
       const asString = Buffer.from(vkeyWit.toBytes()).toString('hex')
 
@@ -170,8 +170,8 @@ export async function buildLedgerSignedTx(
           key,
         })
         const vkeyWit = wasm.Vkeywitness.new(
-          wasm.Vkey.new(stakingKey.toRawKey()),
-          wasm.Ed25519Signature.fromBytes(
+          csl.Vkey.new(stakingKey.toRawKey()),
+          csl.Ed25519Signature.fromBytes(
             Buffer.from(witness.witnessSignatureHex, 'hex'),
           ),
         )
@@ -289,8 +289,8 @@ export async function createSignedLedgerTxFromCbor(
         {level: keyLevel, key},
       )
       const witness = wasm.Vkeywitness.new(
-        wasm.Vkey.new(addressKey.toRawKey()),
-        wasm.Ed25519Signature.fromBytes(
+        csl.Vkey.new(addressKey.toRawKey()),
+        csl.Ed25519Signature.fromBytes(
           Buffer.from(witnessData.witnessSignatureHex, 'hex'),
         ),
       )
