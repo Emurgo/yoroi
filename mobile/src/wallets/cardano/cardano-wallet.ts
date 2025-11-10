@@ -518,8 +518,8 @@ export const makeCardanoWallet = (
           const txOptions = {}
           const nonce = absSlotNumber.toNumber()
 
-        const modernUtxos = this.getAddressedUtxos()
-        const addressedUtxos = modernUtxosToCardanoAddressedUtxos(modernUtxos)
+          const modernUtxos = this.getAddressedUtxos()
+          const addressedUtxos = modernUtxosToCardanoAddressedUtxos(modernUtxos)
 
           const baseAddr = this.getFirstPaymentAddress()
 
