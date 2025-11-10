@@ -82,19 +82,19 @@ export function cardanoAssetToIdentifier(
  * Convert identifier string to Cardano asset
  */
 export function identifierToCardanoAsset(
-  wasm,
+  wasm: import('@emurgo/cross-csl-core').WasmModuleProxy,
   identifier: string,
 ): {
   policyId: ScriptHash
   name: AssetName
 } {
   const parts = identifier.split('.')
-  const policyIdBytes = new Uint8Array(Buffer.from(parts[0], 'hex'))
-  const assetNameBytes = new Uint8Array(Buffer.from(parts[1], 'hex'))
-  return {
-    policyId: wasm.ScriptHash.fromBytes(policyIdBytes),
-    name: wasm.AssetName.new(assetNameBytes),
-  }
+  const policyIdHex = parts[0]!
+  const assetNameHex = parts[1]!
+  // Use fromHex for hex strings (preferred method in CSL)
+  const policyId = wasm.ScriptHash.fromHex(policyIdHex)
+  const name = wasm.AssetName.fromHex(assetNameHex)
+  return {policyId, name}
 }
 
 /**
@@ -162,7 +162,7 @@ export function multiTokenFromRemote(
  * Parse token list from MultiAsset
  */
 export function parseTokenList(
-  _wasm,
+  _wasm: import('@emurgo/cross-csl-core').WasmModuleProxy,
   assets: MultiAsset,
 ): Array<{assetId: string; amount: string}> {
   const result: Array<{assetId: string; amount: string}> = []

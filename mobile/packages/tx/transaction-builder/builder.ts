@@ -360,7 +360,7 @@ function calculateTotalOutputValue(
  * Convert Balance.Amounts to CSL Value
  */
 function amountsToValue(
-  wasm,
+  wasm: import('@emurgo/cross-csl-core').WasmModuleProxy,
   amounts: Balance.Amounts,
   primaryTokenId: string = '',
 ): Value {
@@ -416,7 +416,7 @@ function amountsToValue(
  * Convert TransactionOutput to CSL TransactionOutput
  */
 function outputToCSL(
-  wasm,
+  wasm: import('@emurgo/cross-csl-core').WasmModuleProxy,
   output: TransactionOutput,
   primaryTokenId: string = '',
 ): CSLTransactionOutput {
@@ -439,7 +439,7 @@ function outputToCSL(
  * Create CSL TransactionBuilder with config
  */
 function createCSLTransactionBuilder(
-  wasm,
+  wasm: import('@emurgo/cross-csl-core').WasmModuleProxy,
   params: CardanoHaskellConfig,
 ): CSLTransactionBuilder {
   // Create LinearFee

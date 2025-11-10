@@ -104,9 +104,13 @@ export class MultiToken {
   }
 
   getDefaultEntry(): TokenEntry {
-    return this.values.filter(
+    const entry = this.values.find(
       (value) => value.identifier === this.defaults.identifier,
-    )[0]
+    )
+    if (!entry) {
+      throw new Error('Default entry not found in MultiToken')
+    }
+    return entry
   }
 
   nonDefaultEntries(): Array<TokenEntry> {

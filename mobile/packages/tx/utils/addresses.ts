@@ -74,7 +74,7 @@ export async function filterAddressesByStakingKey<T extends {receiver: string}>(
  * Check if address contains account key
  */
 export async function addrContainsAccountKey(
-  wasm,
+  wasm: import('@emurgo/cross-csl-core').WasmModuleProxy,
   address: string,
   targetAccountKey: Credential,
   acceptTypeMismatch: boolean,

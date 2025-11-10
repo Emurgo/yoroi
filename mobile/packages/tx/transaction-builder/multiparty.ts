@@ -1,7 +1,14 @@
 // Functional multiparty transaction utilities
-import type {WasmModuleProxy, Witness} from '@emurgo/cross-csl-core'
+import type {
+  BootstrapWitness,
+  Vkeywitness,
+  WasmModuleProxy,
+} from '@emurgo/cross-csl-core'
 
 import {UnsignedTransaction} from './types'
+
+// Witness can be either Vkeywitness or BootstrapWitness
+export type Witness = Vkeywitness | BootstrapWitness
 
 export type WitnessInfo = {
   witness: Witness

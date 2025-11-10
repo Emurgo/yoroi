@@ -142,11 +142,11 @@ export type CardanoHaskellConfig = {
 
 // Legacy types for backward compatibility
 // These are WASM types from CSL that were previously exported from yoroi-lib
-import type {Transaction, TransactionBody} from '@emurgo/cross-csl-core'
+import type {Transaction as CSLTransaction, TransactionBody} from '@emurgo/cross-csl-core'
 
 // Export legacy types
 export type UnsignedTx = TransactionBody
-export type SignedTx = Transaction
+export type SignedTx = CSLTransaction
 
 export type LinearFee = {
   coefficient: string
