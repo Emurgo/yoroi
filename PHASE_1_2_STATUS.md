@@ -152,7 +152,8 @@
    - ✅ Updated all error imports (NotEnoughMoneyToSendError, NoOutputsError)
    - ✅ **DONE**: `createLedgerPlutusPayload` - Migrated to `@yoroi/tx/ledger/plutus.ts`
    - ✅ **DONE**: `getAllSigners` - Migrated to `@yoroi/tx/ledger/signers.ts`
-   - ⚠️ **LEGACY**: `createYoroiLib` - **See LEGACY_AND_BACKWARD_COMPATIBILITY.md** - Legacy wrapper, kept for backward compatibility
+   - ✅ **DONE**: `createYoroiLib` wrapper - **REMOVED** from `wallets.ts` - All `Cardano.*` calls replaced with direct `@yoroi/tx` imports
+   - ⚠️ **TEMPORARY**: Legacy transaction methods in `@yoroi/tx/legacy` - Still import from yoroi-lib, will be removed in Phase 2
 5. **Remove unused features** from yoroi-lib (or mark as deprecated)
 
 ### Short-term (Phase 2 Completion)

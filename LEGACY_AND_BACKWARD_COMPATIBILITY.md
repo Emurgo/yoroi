@@ -86,8 +86,15 @@ const UtxoModels = {
 - ✅ `PoolInfoApi` - Fully migrated to `@yoroi/staking`
 - ✅ Error types - Fully migrated (`NotEnoughMoneyToSendError`, `NoOutputsError`)
 
-### Pending Migration
-- ⚠️ `createYoroiLib()` - **LEGACY**: Legacy wrapper kept for backward compatibility. New code should use `@yoroi/tx` directly instead of `Cardano.*` wrapper.
+### Removed from Mobile App
+- ✅ `createYoroiLib()` - **REMOVED**: The wrapper has been completely removed from `wallets.ts`. All `Cardano.*` method calls have been replaced with direct `@yoroi/tx` imports.
+- ✅ `Cardano.Wasm.*` - **REPLACED**: Now using `CardanoMobile.*` directly for WASM access.
+
+### Legacy Wrapper (Temporary)
+- ⚠️ `@yoroi/tx/legacy` - **TEMPORARY**: Contains deprecated transaction building methods that still import from `@emurgo/yoroi-lib`. This is intentional and will be removed in Phase 2 when `TransactionBuilder` is complete.
+  - Only used internally by old transaction building code
+  - Will be completely removed once all code migrates to `TransactionBuilder`
+  - The `@emurgo/yoroi-lib` dependency in `package.json` can be removed once this wrapper is gone
 
 ## 📝 Notes for Developers
 
