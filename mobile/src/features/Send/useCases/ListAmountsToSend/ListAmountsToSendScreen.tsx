@@ -1,6 +1,7 @@
 import {isNft} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
+import {TransactionOutput} from '@yoroi/tx'
 import {Portfolio} from '@yoroi/types'
 
 import {useNavigation} from '@react-navigation/native'
@@ -11,7 +12,7 @@ import {FlatList} from 'react-native-gesture-handler'
 import {useReviewTx} from '~/features/ReviewTx/common/ReviewTxProvider'
 import {useSearch} from '~/features/Search/SearchContext'
 import {useNavigateTo} from '~/features/Send/common/navigation'
-import {toYoroiEntry} from '~/features/Send/common/toYoroiEntry'
+import {toTransactionOutput} from '~/features/Send/common/toTransactionOutput'
 import {useSaveMemo} from '~/features/Transactions/hooks/useSaveMemo'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {usePromise} from '~/hooks/usePromise'
@@ -24,7 +25,7 @@ import {Icon} from '~/ui/Icon'
 import {RemoveAmountButton} from '~/ui/RemoveAmountButton/RemoveAmountButton'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {TokenAmountItem} from '~/ui/TokenAmountItem/TokenAmountItem'
-import {YoroiEntry, YoroiSignedTx, YoroiUnsignedTx} from '~/wallets/types/yoroi'
+import {YoroiSignedTx, YoroiUnsignedTx} from '~/wallets/types/yoroi'
 
 export const ListAmountsToSendScreen = () => {
   const navigateTo = useNavigateTo()
@@ -79,11 +80,12 @@ export const ListAmountsToSendScreen = () => {
 
   const handleOnSuccess = React.useCallback(
     (signedTx?: YoroiSignedTx) => {
-      if (signedTx?.signedTx?.id == null)
+      const txId = (signedTx?.signedTx as any)?.id
+      if (txId == null)
         throw new Error('ListAmountsToSendScreen:: invalid state')
 
       if (memo.length > 0) {
-        saveMemo({txId: signedTx.signedTx.id, memo: memo.trim()})
+        saveMemo({txId, memo: memo.trim()})
       }
 
       reset()
@@ -97,7 +99,8 @@ export const ListAmountsToSendScreen = () => {
   }
 
   const createUnsignedTxPromise = React.useCallback(
-    (entries: YoroiEntry[]) => wallet.createUnsignedTx({entries, addressMode}),
+    (entries: TransactionOutput[]) =>
+      wallet.createUnsignedTx({entries, addressMode}),
     [wallet, addressMode],
   )
 
@@ -119,7 +122,7 @@ export const ListAmountsToSendScreen = () => {
 
   const handleOnNext = () => {
     if (!selectedTarget) return
-    createUnsignedTx([toYoroiEntry(selectedTarget.entry)])
+    createUnsignedTx([toTransactionOutput(selectedTarget.entry)])
   }
   return (
     <SafeArea>

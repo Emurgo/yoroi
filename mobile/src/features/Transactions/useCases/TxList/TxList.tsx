@@ -9,6 +9,7 @@ import {useTransactionInfos} from '~/features/Transactions/hooks/useTransactionI
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {Space} from '~/ui/Space/Space'
 import {TransactionInfo} from '~/wallets/types/other'
+import {Amounts, Quantities} from '~/wallets/utils/utils'
 
 import {useTxFilter} from './TxFilterProvider'
 import {TxListItem} from './TxListItem'
@@ -75,15 +76,13 @@ const filterTransactions = (
     .filter((t) => {
       const {tokenId} = filter
       if (tokenId === undefined) return true
-      if (tokenId === '.')
-        return Boolean(
-          t.delta.find(({amount, isDefault}) => amount !== '0' && isDefault),
-        )
-      return Boolean(
-        t.delta.find(
-          ({amount, identifier}) => amount !== '0' && identifier === tokenId,
-        ),
-      )
+      if (tokenId === '.') {
+        const primaryTokenId = '.'
+        const deltaAmount = Amounts.getAmount(t.delta, primaryTokenId)
+        return !Quantities.isZero(deltaAmount.quantity)
+      }
+      const deltaAmount = Amounts.getAmount(t.delta, tokenId)
+      return !Quantities.isZero(deltaAmount.quantity)
     })
     .sortBy((t) => t.submittedAt)
     .reverse()

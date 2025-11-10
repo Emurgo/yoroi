@@ -29,7 +29,8 @@ import {
   StakePoolInfosAndHistories,
 } from '@yoroi/staking'
 import {StakingInfo, StakingStatus} from '../types/staking'
-import {YoroiEntry, YoroiSignedTx, YoroiUnsignedTx} from '../types/yoroi'
+import {TransactionOutput} from '@yoroi/tx'
+import {YoroiSignedTx, YoroiUnsignedTx} from '../types/yoroi'
 import type {Addresses} from './account-manager/account-manager'
 
 export type WalletEvent =
@@ -107,7 +108,7 @@ export interface YoroiWallet {
 
   // Sending
   createUnsignedTx(params: {
-    entries: YoroiEntry[]
+    entries: TransactionOutput[]
     metadata?: Array<CardanoTypes.TxMetadata>
     addressMode: Wallet.AddressMode
   }): Promise<YoroiUnsignedTx>

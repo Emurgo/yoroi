@@ -2,7 +2,8 @@ import {Balance} from '@yoroi/types'
 
 import BigNumber from 'bignumber.js'
 
-import {YoroiEntry, YoroiMetadata} from '~/wallets/types/yoroi'
+import {TransactionOutput} from '@yoroi/tx'
+import {YoroiMetadata} from '~/wallets/types/yoroi'
 
 import {CardanoTypes} from '../types'
 import {
@@ -43,7 +44,7 @@ describe('YoroiUnsignedTx', () => {
     } as YoroiMetadata)
   })
 
-  it('toEntries converts change/outputs to YoroiEntry[]', async () => {
+  it('toEntries converts change/outputs to TransactionOutput[]', async () => {
     const defaults = {identifier: '.', networkId: 1, isDefault: true}
     const addressedValues = [
       {
@@ -68,7 +69,7 @@ describe('YoroiUnsignedTx', () => {
       },
     ]
 
-    const expectedEntries: YoroiEntry[] = [
+    const expectedEntries: TransactionOutput[] = [
       {address: 'address1', amounts: {'.': '1', 'token123': '2'}},
       {address: 'address2', amounts: {'.': '1', 'token123': '2'}},
     ]

@@ -1,13 +1,12 @@
 import {tokenBalanceMocks} from '@yoroi/portfolio'
 import {Transfer} from '@yoroi/types'
+import {TransactionOutput} from '@yoroi/tx'
 
-import {YoroiEntry} from '~/wallets/types/yoroi'
+import {toTransactionOutput} from './toTransactionOutput'
 
-import {toYoroiEntry} from './toYoroiEntry'
-
-describe('toYoroiEntry', () => {
-  it('should convert Transfer.Entry to YoroiEntry correctly', () => {
-    const entry: YoroiEntry = {
+describe('toTransactionOutput', () => {
+  it('should convert Transfer.Entry to TransactionOutput correctly', () => {
+    const entry: TransactionOutput = {
       address: 'exampleAddress',
       datum: {
         hash: 'exampleHash',
@@ -35,7 +34,7 @@ describe('toYoroiEntry', () => {
       },
     }
 
-    const result = toYoroiEntry(transferEntry)
+    const result = toTransactionOutput(transferEntry)
 
     expect(result).toEqual(entry)
   })

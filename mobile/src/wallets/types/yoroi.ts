@@ -40,9 +40,6 @@ export type YoroiVoting = {
 export type Address = string
 export type TokenId = string
 
-// Re-export TransactionOutput as YoroiEntry for backward compatibility during migration
-export type YoroiEntry = TransactionOutput
-
 export type YoroiMetadata = {
   [label: string]: string
 }

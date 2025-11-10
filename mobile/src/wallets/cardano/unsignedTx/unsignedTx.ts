@@ -4,12 +4,12 @@ import {
   Change,
   Datum,
   MultiTokenValue,
+  TransactionOutput,
   getBalanceForStakingCredentials,
 } from '@yoroi/tx'
 import {CardanoMobile} from '~/wallets/wallets'
 
 import {
-  YoroiEntry,
   YoroiMetadata,
   YoroiUnsignedTx,
   YoroiVoting,
@@ -32,7 +32,7 @@ export const yoroiUnsignedTx = ({
   networkManager: Network.Manager
   votingRegistration?: VotingRegistration
   addressedUtxos: CardanoTypes.CardanoAddressedUtxo[]
-  entries?: YoroiEntry[]
+  entries?: TransactionOutput[]
   primaryTokenId: string
   governance?: boolean
   keyDeposit: string
@@ -121,7 +121,7 @@ export const toMetadata = (metadata: ReadonlyArray<CardanoTypes.TxMetadata>) =>
     {} as YoroiMetadata,
   )
 
-const toEntriesFromChange = (changes: ReadonlyArray<Change>): YoroiEntry[] => {
+const toEntriesFromChange = (changes: ReadonlyArray<Change>): TransactionOutput[] => {
   return changes.map((change) => ({
     address: toDisplayAddress(change.address),
     amounts: toAmounts(change.values.values),
@@ -134,7 +134,7 @@ export const toEntriesFromOutputs = (
     value: MultiTokenValue
     datum?: Datum
   }>,
-): YoroiEntry[] => {
+): TransactionOutput[] => {
   return outputs.map((output) => ({
     address: toDisplayAddress(output.address),
     amounts: toAmounts(output.value.values),
@@ -146,10 +146,10 @@ const Staking = {
   toWithdrawals: (
     withdrawals: CardanoTypes.UnsignedTx['withdrawals'],
     primaryTokenId: string,
-  ): YoroiEntry[] => {
+  ): TransactionOutput[] => {
     if (!withdrawals?.hasValue()) return [] // no withdrawals
 
-    const result: YoroiEntry[] = []
+    const result: TransactionOutput[] = []
     const length = withdrawals.len()
     const rewardAddresses = withdrawals.keys()
 
@@ -180,7 +180,7 @@ const Staking = {
     networkManager: Network.Manager
     primaryTokenId: string
     keyDeposit: string
-  }): YoroiEntry[] =>
+  }): TransactionOutput[] =>
     deregistrations.map((deregistration) => {
       const address = Buffer.from(
         CardanoMobile.RewardAddress.new(
@@ -203,7 +203,7 @@ const Staking = {
     networkManager: Network.Manager
     primaryTokenId: string
     keyDeposit: string
-  }): YoroiEntry[] => {
+  }): TransactionOutput[] => {
     return registrations.map((registration) => {
       const address: string = Buffer.from(
         CardanoMobile.RewardAddress.new(
@@ -226,7 +226,7 @@ const Staking = {
     balances: CardanoTypes.StakingKeyBalances
     fee: YoroiUnsignedTx['fee']
     primaryTokenId: string
-  }): YoroiEntry[] =>
+  }): TransactionOutput[] =>
     Object.entries(balances).map(([poolId, quantity]) => ({
       address: poolId,
       amounts: Amounts.diff({[primaryTokenId]: asQuantity(quantity)}, fee),

@@ -1,10 +1,10 @@
 import {Transfer} from '@yoroi/types'
+import {TransactionOutput} from '@yoroi/tx'
 
-import {YoroiEntry} from '~/wallets/types/yoroi'
 import {asQuantity} from '~/wallets/utils/utils'
 
-export function toYoroiEntry(entry: Transfer.Entry): YoroiEntry {
-  const yoroiEntry: YoroiEntry = {
+export function toTransactionOutput(entry: Transfer.Entry): TransactionOutput {
+  return {
     address: entry.address,
     datum: entry.datum,
     amounts: Object.fromEntries(
@@ -14,6 +14,4 @@ export function toYoroiEntry(entry: Transfer.Entry): YoroiEntry {
       ]),
     ),
   }
-
-  return yoroiEntry
 }

@@ -28,12 +28,11 @@ import {useModal} from '~/ui/Modal/context/ModalContext'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {ScrollView} from '~/ui/ScrollView/ScrollView'
 import {useScrollView} from '~/ui/ScrollView/hooks/useScrollView'
-import {MultiToken} from '~/wallets/cardano/MultiToken'
 import {CardanoTypes} from '~/wallets/cardano/types'
 import {TransactionInfo} from '~/wallets/types/other'
 import {formatDateAndTime, formatTokenWithSymbol} from '~/wallets/utils/format'
 import {isEmptyString} from '~/wallets/utils/string'
-import {asQuantity} from '~/wallets/utils/utils'
+import {Amounts, asQuantity} from '~/wallets/utils/utils'
 
 import AddressModal from './AddressModal/AddressModal'
 import {AssetList} from './AssetList'
@@ -77,10 +76,9 @@ export const TxDetails = () => {
   )
   const txFee =
     transaction.fee != null
-      ? MultiToken.fromArray(transaction.fee).getDefault()
+      ? new BigNumber(Amounts.getAmount(transaction.fee, wallet.portfolioPrimaryTokenInfo.id).quantity)
       : null
-  const amountAsMT = MultiToken.fromArray(transaction.amount)
-  const amount = amountAsMT.getDefault()
+  const amount = new BigNumber(Amounts.getAmount(transaction.amount, wallet.portfolioPrimaryTokenInfo.id).quantity)
 
   const toggleExpandIn = (itemId: ItemId) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)

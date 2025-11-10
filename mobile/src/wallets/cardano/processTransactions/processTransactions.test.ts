@@ -1,8 +1,8 @@
 import {primaryTokenInfoMainnet} from '@yoroi/blockchains'
 
 import {RawTransaction, TRANSACTION_DIRECTION} from '~/wallets/types/other'
+import {Amounts} from '~/wallets/utils/utils'
 
-import {MultiToken} from '../MultiToken'
 import {toCachedTx} from '../transactionManager/transactionManager'
 import {processTxHistoryData} from './processTransactions'
 
@@ -304,10 +304,12 @@ describe('processTxHistoryData', () => {
       primaryTokenInfoMainnet,
     )
 
-    const delta = MultiToken.fromArray(tx.delta)
-    const netBalance = delta.getDefault()
-    expect(netBalance.toString()).toBe('50000000000')
-    expect(delta.nonDefaultEntries().length).toBe(0)
+    const deltaAmount = Amounts.getAmount(tx.delta, primaryTokenInfoMainnet.id)
+    expect(deltaAmount.quantity).toBe('50000000000')
+    const nonDefaultEntries = Amounts.toArray(tx.delta).filter(
+      ({tokenId}) => tokenId !== primaryTokenInfoMainnet.id,
+    )
+    expect(nonDefaultEntries.length).toBe(0)
     expect(tx.direction).toBe(TRANSACTION_DIRECTION.RECEIVED)
   })
 
@@ -320,10 +322,12 @@ describe('processTxHistoryData', () => {
       primaryTokenInfoMainnet,
     )
 
-    const delta = MultiToken.fromArray(tx.delta)
-    const netBalance = delta.getDefault()
-    expect(netBalance.toString()).toBe((-1000000000 - 168449).toString())
-    expect(delta.nonDefaultEntries().length).toBe(0)
+    const deltaAmount = Amounts.getAmount(tx.delta, primaryTokenInfoMainnet.id)
+    expect(deltaAmount.quantity).toBe((-1000000000 - 168449).toString())
+    const nonDefaultEntries = Amounts.toArray(tx.delta).filter(
+      ({tokenId}) => tokenId !== primaryTokenInfoMainnet.id,
+    )
+    expect(nonDefaultEntries.length).toBe(0)
     expect(tx.direction).toBe(TRANSACTION_DIRECTION.SENT)
   })
 
@@ -336,15 +340,16 @@ describe('processTxHistoryData', () => {
       primaryTokenInfoMainnet,
     )
 
-    const delta = MultiToken.fromArray(tx.delta)
-    const netBalance = delta.getDefault()
-    expect(netBalance.toString()).toBe('1407406')
+    const deltaAmount = Amounts.getAmount(tx.delta, primaryTokenInfoMainnet.id)
+    expect(deltaAmount.quantity).toBe('1407406')
 
-    const netTokenBalance = delta.nonDefaultEntries()
+    const netTokenBalance = Amounts.toArray(tx.delta).filter(
+      ({tokenId}) => tokenId !== primaryTokenInfoMainnet.id,
+    )
 
     expect(netTokenBalance.length).toBe(1)
-    expect(netTokenBalance[0]!.amount.toString()).toBe('2')
-    expect(netTokenBalance[0]!.identifier).toBe(
+    expect(netTokenBalance[0]!.quantity).toBe('2')
+    expect(netTokenBalance[0]!.tokenId).toBe(
       '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
     )
     expect(tx.direction).toBe(TRANSACTION_DIRECTION.RECEIVED)
@@ -359,15 +364,16 @@ describe('processTxHistoryData', () => {
       primaryTokenInfoMainnet,
     )
 
-    const delta = MultiToken.fromArray(tx.delta)
-    const netBalance = delta.getDefault()
-    expect(netBalance.toString()).toBe('-177557')
+    const deltaAmount = Amounts.getAmount(tx.delta, primaryTokenInfoMainnet.id)
+    expect(deltaAmount.quantity).toBe('-177557')
 
-    const netTokenBalance = delta.nonDefaultEntries()
+    const netTokenBalance = Amounts.toArray(tx.delta).filter(
+      ({tokenId}) => tokenId !== primaryTokenInfoMainnet.id,
+    )
 
     expect(netTokenBalance.length).toBe(1)
-    expect(netTokenBalance[0]!.amount.toString()).toBe('0')
-    expect(netTokenBalance[0]!.identifier).toBe(
+    expect(netTokenBalance[0]!.quantity).toBe('0')
+    expect(netTokenBalance[0]!.tokenId).toBe(
       '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
     )
     expect(tx.direction).toBe(TRANSACTION_DIRECTION.SELF)

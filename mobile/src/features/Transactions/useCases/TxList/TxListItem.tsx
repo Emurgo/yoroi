@@ -18,7 +18,6 @@ import {Boundary, ResetError} from '~/ui/Boundary/Boundary'
 import {Icon} from '~/ui/Icon'
 import {styleMap} from '~/ui/Icon/Direction'
 import {BalanceError} from '~/ui/PairedBalance/PairedBalance'
-import {MultiToken} from '~/wallets/cardano/MultiToken'
 import {YoroiWallet} from '~/wallets/cardano/types'
 import {TransactionInfo} from '~/wallets/types/other'
 import {
@@ -27,7 +26,7 @@ import {
   formatTokenFractional,
   formatTokenInteger,
 } from '~/wallets/utils/format'
-import {asQuantity} from '~/wallets/utils/utils'
+import {Amounts, Quantities, asQuantity} from '~/wallets/utils/utils'
 
 import {useTxFilter} from './TxFilterProvider'
 
@@ -54,13 +53,13 @@ export const TxListItem = ({transaction}: Props) => {
     ? `${formatDateRelative(transaction.submittedAt, intl, {today: strings.global.today, yesterday: strings.global.yesterday}) + ', ' + formatTime(transaction.submittedAt, intl)}`
     : ''
 
-  const amountAsMT = MultiToken.fromArray(transaction.amount)
-  const amount: BigNumber = isDefault
-    ? amountAsMT.getDefault()
-    : (amountAsMT.get(tokenInfo.id) ?? new BigNumber(0))
+  const amountQuantity = isDefault
+    ? Amounts.getAmount(transaction.amount, wallet.portfolioPrimaryTokenInfo.id).quantity
+    : Amounts.getAmount(transaction.amount, tokenInfo.id).quantity
+  const amount = new BigNumber(amountQuantity)
 
-  const assetLength = transaction.delta.filter(
-    ({amount}) => amount !== '0',
+  const assetLength = Amounts.toArray(transaction.delta).filter(
+    ({quantity}) => !Quantities.isZero(quantity),
   ).length
   return (
     <TouchableOpacity
@@ -96,7 +95,7 @@ export const TxListItem = ({transaction}: Props) => {
       </Middle>
 
       <Right>
-        {transaction.amount.length > 0 ? (
+        {Object.keys(transaction.amount).length > 0 ? (
           <Amount amount={amount} tokenInfo={tokenInfo} />
         ) : (
           <Text style={[{color: p.gray_900}, a.body_2_md_medium]}>- -</Text>

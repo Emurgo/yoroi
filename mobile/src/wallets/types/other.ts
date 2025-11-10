@@ -1,6 +1,7 @@
-import {TokenEntryPlain} from '../cardano/MultiToken'
-import {CardanoTypes} from '../cardano/types'
 import {RemoteAccountState, RemoteCertificateMeta} from '@yoroi/staking'
+import {Balance} from '@yoroi/types'
+
+import {CardanoTypes} from '../cardano/types'
 import {TransactionToken} from './tokens'
 
 // note(v-almonacid): this
@@ -175,9 +176,9 @@ export type TransactionInfo = {
   id: string
   inputs: Array<IOData>
   outputs: Array<IOData>
-  amount: Array<TokenEntryPlain>
-  fee: Array<TokenEntryPlain> | null | undefined
-  delta: Array<TokenEntryPlain>
+  amount: Balance.Amounts
+  fee: Balance.Amounts | null | undefined
+  delta: Balance.Amounts
   direction: TransactionDirection
   confirmations: number
   submittedAt: string | null | undefined

@@ -36,7 +36,8 @@ import {useCollateralInfo} from '~/wallets/cardano/utxoManager/useCollateralInfo
 import {useSetCollateralId} from '~/wallets/cardano/utxoManager/useSetCollateralId'
 import {collateralConfig, utxosMaker} from '~/wallets/cardano/utxoManager/utxos'
 import {RawUtxo} from '~/wallets/types/other'
-import {YoroiEntry, YoroiSignedTx} from '~/wallets/types/yoroi'
+import {TransactionOutput} from '@yoroi/tx'
+import {YoroiSignedTx} from '~/wallets/types/yoroi'
 import {Amounts, Quantities, asQuantity} from '~/wallets/utils/utils'
 
 import {CollateralInfoModal} from './CollateralInfoModal'
@@ -65,7 +66,7 @@ export const ManageCollateralScreen = () => {
   const params = useUnsafeParams<SettingsStackRoutes['manage-collateral']>()
 
   const {mutate: createUnsignedTx, isPending: isLoadingTx} = useMutation({
-    mutationFn: (entries: YoroiEntry[]) =>
+    mutationFn: (entries: TransactionOutput[]) =>
       wallet.createUnsignedTx({entries, addressMode: meta.addressMode}),
     retry: false,
   })

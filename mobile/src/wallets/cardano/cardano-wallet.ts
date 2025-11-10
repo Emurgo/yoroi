@@ -65,7 +65,8 @@ import type {
 } from '../types/other'
 import {StakePoolInfoRequest, StakePoolInfosAndHistories} from '@yoroi/staking'
 import {StakingInfo} from '../types/staking'
-import {YoroiEntry, YoroiSignedTx, YoroiUnsignedTx} from '../types/yoroi'
+import {TransactionOutput} from '@yoroi/tx'
+import {YoroiSignedTx, YoroiUnsignedTx} from '../types/yoroi'
 import {Quantities} from '../utils/utils'
 import {CardanoMobile} from '../wallets'
 import {
@@ -981,7 +982,7 @@ export const makeCardanoWallet = (
       addressMode,
       metadata,
     }: {
-      entries: YoroiEntry[]
+      entries: TransactionOutput[]
       addressMode: Wallet.AddressMode
       metadata?: Array<CardanoTypes.TxMetadata>
     }) {
@@ -1116,7 +1117,7 @@ export const makeCardanoWallet = (
         needsStakingKey && stakingPrivateKey ? [stakingPrivateKey] : undefined
 
       const datumDatas = unsignedTx.entries
-        .map((entry: YoroiEntry) => entry.datum)
+        .map((entry: TransactionOutput) => entry.datum)
         .filter(isNonNullable)
         .filter(
           (datum: Datum): datum is Exclude<Datum, {hash: string}> =>
@@ -1305,7 +1306,7 @@ export const makeCardanoWallet = (
       )
 
       const datumDatas = unsignedTx.entries
-        .map((entry: YoroiEntry) => entry.datum)
+        .map((entry: TransactionOutput) => entry.datum)
         .filter(isNonNullable)
         .filter(
           (datum: Datum): datum is Exclude<Datum, {hash: string}> =>

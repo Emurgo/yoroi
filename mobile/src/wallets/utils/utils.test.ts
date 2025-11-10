@@ -2,8 +2,8 @@ import {Balance} from '@yoroi/types'
 
 import BigNumber from 'bignumber.js'
 
+import {TransactionOutput} from '@yoroi/tx'
 import {RawUtxo} from '../types/other'
-import {YoroiEntry} from '../types/yoroi'
 import {
   Amounts,
   Entries,
@@ -369,7 +369,7 @@ describe('Amounts', () => {
 
 describe('Entries', () => {
   it('first gets the first entry from YoroiEnrties', () => {
-    const entries: YoroiEntry[] = [
+    const entries: TransactionOutput[] = [
       {
         address: 'address1',
         amounts: {'.': '1', 'token123': '2', 'token567': '-2'},
@@ -383,11 +383,11 @@ describe('Entries', () => {
         'token123': '2',
         'token567': '-2',
       },
-    } as YoroiEntry)
+    } as TransactionOutput)
   })
 
   it('first returns first item multiple entries', () => {
-    const entries: YoroiEntry[] = [
+    const entries: TransactionOutput[] = [
       {
         address: 'address1',
         amounts: {'.': '1', 'token123': '2', 'token567': '-2'},
@@ -405,7 +405,7 @@ describe('Entries', () => {
   })
 
   it('remove', () => {
-    const entries: YoroiEntry[] = [
+    const entries: TransactionOutput[] = [
       {
         address: 'address1',
         amounts: {'.': '1', 'token123': '2', 'token567': '-2'},
@@ -420,7 +420,7 @@ describe('Entries', () => {
       },
     ]
 
-    const expectedEntries: YoroiEntry[] = [
+    const expectedEntries: TransactionOutput[] = [
       {
         address: 'address1',
         amounts: {'.': '1', 'token123': '2', 'token567': '-2'},
@@ -435,7 +435,7 @@ describe('Entries', () => {
   })
 
   it('toAddresses', () => {
-    const entries: YoroiEntry[] = [
+    const entries: TransactionOutput[] = [
       {
         address: 'address1',
         amounts: {'.': '1', 'token123': '2', 'token567': '-2'},
@@ -458,7 +458,7 @@ describe('Entries', () => {
   })
 
   it('toAmounts', () => {
-    const entries: YoroiEntry[] = [
+    const entries: TransactionOutput[] = [
       {
         address: 'address1',
         amounts: {'.': '1', 'token123': '2', 'token567': '-2'},

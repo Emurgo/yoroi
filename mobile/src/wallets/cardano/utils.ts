@@ -6,8 +6,8 @@ import {WasmModuleProxy} from '@emurgo/cross-csl-core'
 import {BigNumber} from 'bignumber.js'
 import {Buffer} from 'buffer'
 
+import {TransactionOutput} from '@yoroi/tx'
 import {BaseAsset, RawUtxo} from '../types/other'
-import {YoroiEntry} from '../types/yoroi'
 import {Amounts} from '../utils/utils'
 import {MultiToken} from './MultiToken'
 import {identifierToCardanoAsset} from './assetHelpers'
@@ -122,7 +122,7 @@ export const toSendTokenList = (
 }
 
 export const toRecipients = async (
-  entries: YoroiEntry[],
+  entries: TransactionOutput[],
   primaryTokenInfo: Portfolio.Token.Info,
   protocolParams: Chain.Cardano.ProtocolParams,
 ) => {
