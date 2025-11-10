@@ -1,6 +1,15 @@
 import {Balance} from '@yoroi/types'
 
-import type {Certificate, WasmModuleProxy} from '@emurgo/cross-csl-core'
+import type {
+  Certificate,
+  TransactionBody,
+  TransactionInput as CSLTransactionInput,
+  TransactionOutput as CSLTransactionOutput,
+  TransactionUnspentOutput,
+  Value,
+  WasmModuleProxy,
+} from '@emurgo/cross-csl-core'
+import {Buffer} from 'buffer'
 
 import {CardanoHaskellConfig, Datum} from '../types'
 import {NoOutputsError, NotEnoughMoneyToSendError} from '../errors'
@@ -242,12 +251,109 @@ export class TransactionBuilder {
   }
 
   /**
-   * Build the transaction (will be implemented with WASM)
-   * For now, returns the structured transaction
+   * Convert Balance.Amounts to CSL Value
+   */
+  private async amountsToValue(
+    wasm: WasmModuleProxy,
+    amounts: Balance.Amounts,
+    primaryTokenId: string = '',
+  ): Promise<Value> {
+    const adaAmount = amounts[primaryTokenId] || '0'
+    const value = wasm.Value.new(wasm.BigNum.fromStr(adaAmount))
+
+    // Get all asset IDs except primary token
+    const assetIds = Object.keys(amounts).filter((id) => id !== primaryTokenId)
+
+    if (assetIds.length > 0) {
+      const multiAsset = wasm.MultiAsset.new()
+
+      // Group assets by policy ID
+      const groupedByPolicyId = assetIds.reduce(
+        (acc, assetId) => {
+          const policyId = assetId.substring(0, 56) // Policy ID is first 56 hex chars
+          acc[policyId] = acc[policyId] ?? []
+          acc[policyId]!.push(assetId)
+          return acc
+        },
+        {} as Record<string, Array<string>>,
+      )
+
+      // Create MultiAsset structure
+      for (const policyIdStr of Object.keys(groupedByPolicyId)) {
+        const assetGroup = groupedByPolicyId[policyIdStr]
+        if (!assetGroup) continue
+
+        const policyId = wasm.ScriptHash.fromBytes(
+          new Uint8Array(Buffer.from(policyIdStr, 'hex')),
+        )
+        const assets = wasm.Assets.new()
+
+        for (const assetId of assetGroup) {
+          const assetNameHex = assetId.substring(56) // Asset name is after policy ID
+          const name = wasm.AssetName.new(
+            new Uint8Array(Buffer.from(assetNameHex, 'hex')),
+          )
+          const amount = wasm.BigNum.fromStr(amounts[assetId] ?? '0')
+          assets.insert(name, amount)
+        }
+
+        multiAsset.insert(policyId, assets)
+      }
+
+      value.setMultiasset(multiAsset)
+    }
+
+    return value
+  }
+
+  /**
+   * Convert TransactionOutput to CSL TransactionOutput
+   */
+  private async outputToCSL(
+    wasm: WasmModuleProxy,
+    output: TransactionOutput,
+    primaryTokenId: string = '',
+  ): Promise<CSLTransactionOutput> {
+    const address = wasm.Address.fromBech32(output.address)
+    if (!address) throw new Error(`Invalid address: ${output.address}`)
+
+    const value = await this.amountsToValue(wasm, output.amounts, primaryTokenId)
+
+    const cslOutput = wasm.TransactionOutput.new(address, value)
+
+    // Add datum if present
+    if (output.datum) {
+      // TODO: Handle datum properly (inline datum vs datum hash)
+      // For now, we'll skip datum handling as it requires more complex logic
+    }
+
+    return cslOutput
+  }
+
+  /**
+   * Calculate transaction fee using linear fee formula
+   */
+  private async calculateFee(
+    wasm: WasmModuleProxy,
+    txBody: TransactionBody,
+    params: CardanoHaskellConfig,
+  ): Promise<string> {
+    // Fee = a * size + b
+    // where a = linearFee.coefficient, b = linearFee.constant
+    const txSize = Buffer.from(await txBody.toBytes()).length
+    const coefficient = BigInt(params.linearFee.coefficient)
+    const constant = BigInt(params.linearFee.constant)
+    const fee = coefficient * BigInt(txSize) + constant
+    return fee.toString()
+  }
+
+  /**
+   * Build the transaction with WASM
    */
   async build(
-    _wasm: WasmModuleProxy,
+    wasm: WasmModuleProxy,
     protocolParams?: CardanoHaskellConfig,
+    primaryTokenId: string = '',
   ): Promise<UnsignedTransaction> {
     // Use provided protocol params or stored ones
     const params = protocolParams || this.protocolParams
@@ -260,33 +366,204 @@ export class TransactionBuilder {
       throw new NoOutputsError()
     }
 
-    // Validate sufficient funds if protocol params provided
+    // Build transaction body
+    const txBody = wasm.TransactionBody.new()
+
+    // Add inputs
+    const txInputs = wasm.TransactionInputs.new()
+    for (const input of this.inputs) {
+      const txInput = wasm.TransactionInput.new(
+        wasm.TransactionHash.fromHex(input.utxo.txHash),
+        input.utxo.txIndex,
+      )
+      txInputs.add(txInput)
+    }
+    txBody.setInputs(txInputs)
+
+    // Add outputs
+    const txOutputs = wasm.TransactionOutputs.new()
+    for (const output of this.outputs) {
+      const cslOutput = await this.outputToCSL(wasm, output, primaryTokenId)
+      txOutputs.add(cslOutput)
+    }
+    txBody.setOutputs(txOutputs)
+
+    // Add certificates if any
+    if (this.certificates.length > 0) {
+      const certs = wasm.Certificates.new()
+      for (const cert of this.certificates) {
+        certs.add(cert.cert)
+      }
+      txBody.setCerts(certs)
+    }
+
+    // Add withdrawals if any
+    if (this.withdrawals.length > 0) {
+      const withdrawals = wasm.Withdrawals.new()
+      for (const withdrawal of this.withdrawals) {
+        const rewardAddr = wasm.RewardAddress.fromAddress(
+          wasm.Address.fromBech32(withdrawal.rewardAddress),
+        )
+        if (!rewardAddr) {
+          throw new Error(`Invalid reward address: ${withdrawal.rewardAddress}`)
+        }
+        const amount = wasm.BigNum.fromStr(withdrawal.amount)
+        withdrawals.insert(rewardAddr, amount)
+      }
+      txBody.setWithdrawals(withdrawals)
+    }
+
+    // Add reference inputs if any
+    if (this.referenceInputs.length > 0) {
+      const refInputs = wasm.TransactionInputs.new()
+      for (const refInput of this.referenceInputs) {
+        const txInput = wasm.TransactionInput.new(
+          wasm.TransactionHash.fromHex(refInput.utxo.txHash),
+          refInput.utxo.txIndex,
+        )
+        refInputs.add(txInput)
+      }
+      txBody.setReferenceInputs(refInputs)
+    }
+
+    // Add collateral inputs if any
+    if (this.collateralInputs.length > 0) {
+      const collateralInputs = wasm.TransactionInputs.new()
+      for (const collateral of this.collateralInputs) {
+        const txInput = wasm.TransactionInput.new(
+          wasm.TransactionHash.fromHex(collateral.utxo.txHash),
+          collateral.utxo.txIndex,
+        )
+        collateralInputs.add(txInput)
+      }
+      txBody.setCollateral(collateralInputs)
+    }
+
+    // Set TTL if provided
+    if (this.options.ttl) {
+      txBody.setTtl(this.options.ttl)
+    }
+
+    // Set validity interval if provided
+    if (this.options.validityInterval) {
+      const validityInterval = wasm.TransactionValidityInterval.new()
+      if (this.options.validityInterval.start) {
+        validityInterval.setInvalidBefore(
+          wasm.BigNum.fromStr(this.options.validityInterval.start.toString()),
+        )
+      }
+      if (this.options.validityInterval.end) {
+        validityInterval.setInvalidHereafter(
+          wasm.BigNum.fromStr(this.options.validityInterval.end.toString()),
+        )
+      }
+      txBody.setValidityStartInterval(validityInterval)
+    }
+
+    // Calculate fee if not manual
+    let fee: Balance.Amounts = this.options.manualFee || {}
+    if (!this.options.manualFee && params) {
+      // Initial fee calculation (will be refined after adding change)
+      const initialFee = await this.calculateFee(wasm, txBody, params)
+      fee = {[primaryTokenId]: initialFee}
+    }
+
+    // Add manual change output if set
+    if (this.options.manualChangeOutput) {
+      const cslChangeOutput = await this.outputToCSL(
+        wasm,
+        this.options.manualChangeOutput,
+        primaryTokenId,
+      )
+      txOutputs.add(cslChangeOutput)
+      txBody.setOutputs(txOutputs)
+    }
+
+    // Calculate change if not manual
+    if (!this.options.manualChangeOutput && params && this.options.changeAddress) {
+      // Iterate to converge on correct fee and change
+      let iterations = 0
+      const maxIterations = 10
+      let currentFee = fee[primaryTokenId] || '0'
+
+      while (iterations < maxIterations) {
+        const totalInput = this.calculateTotalInputValue()
+        const totalOutput = this.calculateTotalOutputValue()
+        const feeAda = BigInt(currentFee)
+
+        const inputAda = BigInt(totalInput[primaryTokenId] || '0')
+        const outputAda = BigInt(totalOutput[primaryTokenId] || '0')
+        const changeAda = inputAda - outputAda - feeAda
+
+        // Only add change if it's above minimum UTXO value
+        const minUtxo = BigInt(params.minimumUtxoVal)
+        if (changeAda <= minUtxo) {
+          // No change output needed
+          break
+        }
+
+        // Add/update change output
+        const changeOutput: TransactionOutput = {
+          address: this.options.changeAddress,
+          amounts: {[primaryTokenId]: changeAda.toString()},
+        }
+
+        // Rebuild outputs with change
+        const updatedOutputs = wasm.TransactionOutputs.new()
+        for (const output of this.outputs) {
+          const cslOutput = await this.outputToCSL(wasm, output, primaryTokenId)
+          updatedOutputs.add(cslOutput)
+        }
+        const cslChangeOutput = await this.outputToCSL(
+          wasm,
+          changeOutput,
+          primaryTokenId,
+        )
+        updatedOutputs.add(cslChangeOutput)
+        txBody.setOutputs(updatedOutputs)
+
+        // Recalculate fee with change output included
+        if (!this.options.manualFee) {
+          const recalculatedFee = await this.calculateFee(wasm, txBody, params)
+          const newFeeAda = BigInt(recalculatedFee)
+
+          // Check if fee converged
+          if (newFeeAda === feeAda) {
+            fee = {[primaryTokenId]: recalculatedFee}
+            break
+          }
+
+          currentFee = recalculatedFee
+          fee = {[primaryTokenId]: recalculatedFee}
+        } else {
+          break
+        }
+
+        iterations++
+      }
+    }
+
+    // Set fee
+    const feeValue = await this.amountsToValue(wasm, fee, primaryTokenId)
+    const feeCoin = await feeValue.coin()
+    txBody.setFee(feeCoin)
+
+    // Validate sufficient funds
     if (params) {
       const totalInput = this.calculateTotalInputValue()
       const totalOutput = this.calculateTotalOutputValue()
-      const fee = this.options.manualFee || {}
+      const feeAda = BigInt(fee[primaryTokenId] || '0')
 
-      // Check if we have enough ADA for outputs + fees
-      const inputAda = BigInt(totalInput[''] || '0')
-      const outputAda = BigInt(totalOutput[''] || '0')
-      const feeAda = BigInt(fee[''] || '0')
+      const inputAda = BigInt(totalInput[primaryTokenId] || '0')
+      const outputAda = BigInt(totalOutput[primaryTokenId] || '0')
 
       if (inputAda < outputAda + feeAda) {
         throw new NotEnoughMoneyToSendError()
       }
     }
 
-    // TODO: Implement full transaction building with WASM
-    // This will include:
-    // - Converting inputs/outputs to WASM types
-    // - Adding certificates
-    // - Adding withdrawals
-    // - Adding reference inputs
-    // - Adding collateral inputs
-    // - Calculating fees (if not manual)
-    // - Adding change outputs (if not manual)
-    // - Building the transaction body
-    // - Validating sufficient funds (if protocol params provided)
+    // Build CBOR for the transaction body
+    const cbor = Buffer.from(await txBody.toBytes()).toString('hex')
 
     return {
       inputs: this.inputs,
@@ -297,6 +574,7 @@ export class TransactionBuilder {
       collateralInputs: this.collateralInputs,
       metadata: this.metadata.length > 0 ? this.metadata : undefined,
       options: this.options,
+      cbor,
     }
   }
 
@@ -306,17 +584,13 @@ export class TransactionBuilder {
   async buildCBOR(
     wasm: WasmModuleProxy,
     protocolParams?: CardanoHaskellConfig,
+    primaryTokenId: string = '',
   ): Promise<string> {
-    const unsignedTx = await this.build(wasm, protocolParams)
-    // TODO: Serialize to CBOR using WASM
-    // This will:
-    // 1. Build the transaction body
-    // 2. Serialize to CBOR hex
-    // 3. Return the hex string
+    const unsignedTx = await this.build(wasm, protocolParams, primaryTokenId)
     if (unsignedTx.cbor) {
       return unsignedTx.cbor
     }
-    throw new Error('CBOR serialization not yet implemented')
+    throw new Error('Failed to build transaction CBOR')
   }
 
   /**
