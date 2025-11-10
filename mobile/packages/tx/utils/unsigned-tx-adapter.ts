@@ -124,15 +124,15 @@ export async function adaptUnsignedTransaction(
     // Convert withdrawals
     let withdrawals: Withdrawals | null = null
     if (unsignedTx.withdrawals.length > 0) {
-      withdrawals = wasm.Withdrawals.new()
+      withdrawals = csl.Withdrawals.new()
       for (const withdrawal of unsignedTx.withdrawals) {
-        const rewardAddr = wasm.RewardAddress.fromAddress(
+        const rewardAddr = csl.RewardAddress.fromAddress(
           csl.Address.fromBech32(withdrawal.rewardAddress),
         )
         if (!rewardAddr) {
           throw new Error(`Invalid reward address: ${withdrawal.rewardAddress}`)
         }
-        const amount = wasm.BigNum.fromStr(withdrawal.amount)
+        const amount = csl.BigNum.fromStr(withdrawal.amount)
         withdrawals.insert(rewardAddr, amount)
       }
     }

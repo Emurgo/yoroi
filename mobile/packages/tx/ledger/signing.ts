@@ -238,7 +238,7 @@ export async function buildLedgerSignedTx(
     const encodedTx = signedTx.toBytes()
 
     // Calculate transaction hash
-    const txHash = await hashTransaction(wasm, encodedTx)
+    const txHash = await hashTransaction(csl, encodedTx)
     const id = txHash.toHex()
     const ledgerTxHashHex = signedLedgerTx.txHashHex
 
@@ -264,7 +264,7 @@ export async function createSignedLedgerTxFromCbor(
   purpose: number,
   publicKeyHex: string,
 ): Promise<Uint8Array> {
-  return CardanoMobileWrapped.cslScope((wasm) => {
+  return CardanoMobileWrapped.cslScope((csl) => {
     const fixedTx = csl.FixedTransaction.fromHex(cbor)
     if (!fixedTx) throw new Error('invalid tx hex')
 
@@ -318,7 +318,7 @@ export async function signRawTransaction(
   cbor: string,
   pKeys: PrivateKey[],
 ): Promise<Uint8Array> {
-  return CardanoMobileWrapped.cslScope((wasm) => {
+  return CardanoMobileWrapped.cslScope((csl) => {
     const fixedTx = csl.FixedTransaction.fromHex(cbor)
     if (!fixedTx) throw new Error('invalid tx hex')
 
