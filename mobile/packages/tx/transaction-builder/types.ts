@@ -1,0 +1,55 @@
+import {Balance} from '@yoroi/types'
+import {ModernUtxo} from '../utxo/models'
+import {Datum} from '../types'
+import type {Certificate} from '@emurgo/cross-csl-core'
+
+export type TransactionOutput = {
+  address: string
+  amounts: Balance.Amounts
+  datum?: Datum
+}
+
+export type TransactionInput = {
+  utxo: ModernUtxo
+}
+
+export type TransactionCertificate = {
+  cert: Certificate
+  // Additional metadata can be added here
+}
+
+export type TransactionWithdrawal = {
+  rewardAddress: string
+  amount: string
+}
+
+export type TransactionReferenceInput = {
+  utxo: ModernUtxo
+}
+
+export type TransactionMetadata = {
+  label: string
+  data: any
+}
+
+export type TransactionOptions = {
+  changeAddress?: string
+  ttl?: number
+  validityInterval?: {
+    start: number
+    end: number
+  }
+  metadata?: TransactionMetadata[]
+}
+
+export type UnsignedTransaction = {
+  inputs: TransactionInput[]
+  outputs: TransactionOutput[]
+  certificates: TransactionCertificate[]
+  withdrawals: TransactionWithdrawal[]
+  referenceInputs: TransactionReferenceInput[]
+  metadata?: TransactionMetadata[]
+  options: TransactionOptions
+  cbor?: string // CBOR hex string
+}
+

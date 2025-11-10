@@ -99,6 +99,9 @@
       ],
       "@yoroi/p2p-communication": [
         "./packages/p2p-communication"
+      ],
+      "@yoroi/tx": [
+        "./packages/tx"
       ]
     }
   }

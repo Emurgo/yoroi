@@ -34,7 +34,7 @@ LEVEL_1=("common")
 LEVEL_2=("theme" "api" "explorers" "portfolio" "notifications" "links" "dapp-connector" "p2p-communication")
 
 # Level 3: Depends on Level 2
-LEVEL_3=("exchange" "resolver" "claim" "setup-wallet")
+LEVEL_3=("exchange" "resolver" "claim" "setup-wallet" "tx")
 
 # Level 4: Depends on Level 2 & 3
 LEVEL_4=("staking" "swap")

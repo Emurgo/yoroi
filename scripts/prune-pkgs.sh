@@ -22,6 +22,7 @@ PACKAGES=(
   "swap"
   "blockchains"
   "transfer"
+  "tx"
 )
 
 echo "🧹 Removing node_modules from all packages..."

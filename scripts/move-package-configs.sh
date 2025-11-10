@@ -21,6 +21,7 @@ PACKAGES=(
   "swap"
   "theme"
   "transfer"
+  "tx"
   "types"
 )
 

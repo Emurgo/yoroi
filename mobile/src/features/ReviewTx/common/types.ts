@@ -23,6 +23,12 @@ export type FormattedInput = {
   ownAddress: boolean | null
   txIndex: number
   txHash: string
+  resolvedName?: string | null // Resolved alias (AdaHandle, CNS, etc.)
+  contractInfo?: {
+    name?: string
+    purpose?: string
+    description?: string
+  } | null // Smart contract information
 }
 
 export type FormattedInputs = Array<FormattedInput>
@@ -36,6 +42,12 @@ export type FormattedOutput = {
   addressKind: CredKind | null
   rewardAddress: string | null
   ownAddress: boolean
+  resolvedName?: string | null // Resolved alias (AdaHandle, CNS, etc.)
+  contractInfo?: {
+    name?: string
+    purpose?: string
+    description?: string
+  } | null // Smart contract information
 }
 
 export type FormattedOutputs = Array<FormattedOutput>
