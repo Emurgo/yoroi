@@ -13,7 +13,6 @@ import {logger} from '~/kernel/logger/logger'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 
 import {pushNotificationsManager} from './notification-manager'
-import {parseNotificationId} from './notifications'
 import {usePrimaryTokenPriceChangedNotification} from './primary-token-price-changed-notification'
 import {useRewardsUpdatedNotifications} from './rewards-updated-notification'
 import {triggerNotificationAction} from './tools'
@@ -108,19 +107,68 @@ const initPushNotifications = (
     },
   )
 
-  const responseListener =
-    Notifications.addNotificationResponseReceivedListener((_response) => {
-      const id = parseNotificationId(Date.now().toString())
-      triggerNotificationAction({
+  const processOpenData = async (
+    data: Record<string, unknown> | undefined,
+    title?: string,
+    body?: string,
+  ) => {
+    if (!data) return
+    if (typeof data === 'object' && data !== null) {
+      logger.info('Notification opened with data', {data, title, body})
+      const id = Date.now()
+      const pushEvent = createPushNotification({
+        id,
+        title: title ?? 'Notification',
+        description: body ?? '',
+        data: data as Record<string, unknown>,
+      })
+      await pushNotificationsManager.events.push(pushEvent)
+
+      await triggerNotificationAction({
         manager: pushNotificationsManager,
         id,
         walletNavigation,
         source: 'os',
       })
+    }
+  }
+
+  const responseListener =
+    Notifications.addNotificationResponseReceivedListener((response) => {
+      const data =
+        (response?.notification?.request?.content?.data as
+          | Record<string, unknown>
+          | undefined) ?? undefined
+      const title = response?.notification?.request?.content?.title ?? undefined
+      const body = response?.notification?.request?.content?.body ?? undefined
+      processOpenData(data, title, body)
+    })
+
+  const firebaseOpenUnsubscribe = messaging().onNotificationOpenedApp(
+    async (remoteMessage) => {
+      logger.info('FCM onNotificationOpenedApp fired', {remoteMessage})
+      const data = remoteMessage?.data as Record<string, unknown> | undefined
+      const title = remoteMessage?.notification?.title
+      const body = remoteMessage?.notification?.body
+      await processOpenData(data, title ?? undefined, body ?? undefined)
+    },
+  )
+
+  messaging()
+    .getInitialNotification()
+    .then((remoteMessage) => {
+      if (remoteMessage) {
+        logger.info('FCM getInitialNotification found message', {remoteMessage})
+        const data = remoteMessage?.data as Record<string, unknown> | undefined
+        const title = remoteMessage?.notification?.title
+        const body = remoteMessage?.notification?.body
+        processOpenData(data, title ?? undefined, body ?? undefined)
+      }
     })
 
   return () => {
     firebaseForegroundUnsubscribe()
+    firebaseOpenUnsubscribe()
     responseListener?.remove()
   }
 }
