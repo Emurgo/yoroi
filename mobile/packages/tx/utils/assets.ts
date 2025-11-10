@@ -82,7 +82,7 @@ export function cardanoAssetToIdentifier(
  * Convert identifier string to Cardano asset
  */
 export function identifierToCardanoAsset(
-  csl,
+  csl: import('@emurgo/cross-csl-core').WasmModuleProxy,
   identifier: string,
 ): {
   policyId: ScriptHash
@@ -162,7 +162,7 @@ export function multiTokenFromRemote(
  * Parse token list from MultiAsset
  */
 export function parseTokenList(
-  _csl,
+  _csl: import('@emurgo/cross-csl-core').WasmModuleProxy,
   assets: MultiAsset,
 ): Array<{assetId: string; amount: string}> {
   const result: Array<{assetId: string; amount: string}> = []

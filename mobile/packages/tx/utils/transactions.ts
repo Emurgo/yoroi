@@ -11,7 +11,7 @@ import {CardanoMobileWrapped} from '../../../src/wallets/cardano/wrappedCsl'
  * Hash a transaction to get its transaction hash
  */
 export async function hashTransaction(
-  csl,
+  csl: import('@emurgo/cross-csl-core').WasmModuleProxy,
   transactionBytes: Uint8Array,
 ): Promise<TransactionHash> {
   const fixed = csl.FixedTransaction.fromBytes(transactionBytes)

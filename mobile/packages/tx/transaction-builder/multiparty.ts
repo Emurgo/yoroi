@@ -115,7 +115,7 @@ export function getRequiredSigners(state: WitnessState): string[] {
  */
 export async function getRequiredSignersFromTransaction(
   unsignedTx: UnsignedTransaction,
-  _wasm: WasmModuleProxy,
+  _csl: WasmModuleProxy,
 ): Promise<string[]> {
   // TODO: Implement extraction of required signers from transaction
   // This will analyze:
