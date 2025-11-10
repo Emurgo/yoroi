@@ -150,7 +150,8 @@
    - ✅ Updated all Ledger function imports (createSignedLedgerTxFromCbor, signRawTransaction)
    - ✅ Updated all PoolInfoApi imports to `@yoroi/staking`
    - ✅ Updated all error imports (NotEnoughMoneyToSendError, NoOutputsError)
-   - ⚠️ **TODO**: `createLedgerPlutusPayload`, `getAllSigners` - **See LEGACY_AND_BACKWARD_COMPATIBILITY.md** - Need migration from yoroi-lib
+   - ✅ **DONE**: `createLedgerPlutusPayload` - Migrated to `@yoroi/tx/ledger/plutus.ts`
+   - ✅ **DONE**: `getAllSigners` - Migrated to `@yoroi/tx/ledger/signers.ts`
    - ⚠️ **LEGACY**: `createYoroiLib` - **See LEGACY_AND_BACKWARD_COMPATIBILITY.md** - Legacy wrapper, kept for backward compatibility
 5. **Remove unused features** from yoroi-lib (or mark as deprecated)
 

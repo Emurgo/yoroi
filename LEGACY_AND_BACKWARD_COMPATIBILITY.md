@@ -81,13 +81,13 @@ const UtxoModels = {
 - ✅ `AssetNameUtils` - Fully migrated, no legacy code
 - ✅ `createSignedLedgerTxFromCbor()` - Fully migrated
 - ✅ `signRawTransaction()` - Fully migrated
+- ✅ `createLedgerPlutusPayload()` - Fully migrated to `@yoroi/tx/ledger/plutus.ts`
+- ✅ `getAllSigners()` - Fully migrated to `@yoroi/tx/ledger/signers.ts`
 - ✅ `PoolInfoApi` - Fully migrated to `@yoroi/staking`
 - ✅ Error types - Fully migrated (`NotEnoughMoneyToSendError`, `NoOutputsError`)
 
 ### Pending Migration
-- ⚠️ `createLedgerPlutusPayload()` - **TODO**: Needs migration from yoroi-lib
-- ⚠️ `getAllSigners()` - **TODO**: Needs migration from yoroi-lib
-- ⚠️ `createYoroiLib()` - **TODO**: May need to keep as legacy wrapper or create replacement
+- ⚠️ `createYoroiLib()` - **LEGACY**: Legacy wrapper kept for backward compatibility. New code should use `@yoroi/tx` directly instead of `Cardano.*` wrapper.
 
 ## 📝 Notes for Developers
 
