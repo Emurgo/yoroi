@@ -5,16 +5,19 @@ import {
   protocolParamsPlaceholder,
 } from '@yoroi/blockchains'
 import {isNonNullable} from '@yoroi/common'
-import type {Datum, ModernUtxo} from '@yoroi/tx'
+import type {CardanoHaskellConfig, Datum, ModernUtxo} from '@yoroi/tx'
 import {
+  TransactionBuilder,
+  adaptUnsignedTransaction,
   buildLedgerPayload,
   buildLedgerSignedTx,
   buildVotingLedgerPayloadV5,
+  createCIP15VotingMetadata,
+  createCIP36VotingMetadata,
   createSignedLedgerTxFromCbor,
-  createUnsignedDelegationTx,
-  createUnsignedTx,
-  createUnsignedVotingTx,
-  createUnsignedWithdrawalTx,
+  createStakeDelegationCertificate,
+  createStakeDeregistrationCertificate,
+  createStakeRegistrationCertificate,
   modernUtxosToCardanoAddressedUtxos,
   rawUtxoToModernUtxo,
   signRawTransaction,
@@ -93,7 +96,6 @@ import {
   deriveRewardAddressHex,
   getAddressedUtxos,
   getHexAddressingMap,
-  toRecipients,
 } from './utils'
 import {UtxoManager, makeUtxoManager} from './utxoManager/utxoManager'
 import {utxosMaker} from './utxoManager/utxos'
@@ -417,7 +419,7 @@ export const makeCardanoWallet = (
 
     async createDelegationTx({
       poolId,
-      delegatedAmount,
+      delegatedAmount: _delegatedAmount,
       addressMode,
     }: {
       poolId: string | undefined
@@ -436,44 +438,79 @@ export const makeCardanoWallet = (
         const delegationType = registrationStatus
           ? RegistrationStatus.DelegateOnly
           : RegistrationStatus.RegisterAndDelegate
-        const delegatedAmountMT = {
-          values: [
-            {
-              identifier: this.portfolioPrimaryTokenInfo.id,
-              amount: delegatedAmount,
-              networkId: this.networkManager.chainId,
-            },
-          ],
-          defaults: toLibToken(this.portfolioPrimaryTokenInfo),
-        }
-
         const {coinsPerUtxoByte, keyDeposit, linearFee, poolDeposit} =
           this.protocolParams
 
-        const unsignedTx = await createUnsignedDelegationTx(
+        const protocolParams: CardanoHaskellConfig = {
+          keyDeposit,
+          linearFee,
+          minimumUtxoVal: cardanoConfig.params.minUtxoValue.toString(),
+          coinsPerUtxoByte,
+          poolDeposit,
+          networkId: this.networkManager.chainId,
+        }
+
+        // Build transaction using TransactionBuilder
+        const builder = new TransactionBuilder()
+
+        // Add all UTXOs as inputs
+        for (const utxo of modernUtxos) {
+          builder.addInput(utxo)
+        }
+
+        // Add certificates based on delegation type
+        if (delegationType === RegistrationStatus.RegisterAndDelegate) {
+          // Register staking key first
+          const regCert = createStakeRegistrationCertificate(
+            CardanoMobile,
+            stakingKey,
+          )
+          builder.addCertificate(regCert)
+        }
+
+        if (poolId) {
+          // Delegate to pool
+          const delegCert = createStakeDelegationCertificate(
+            CardanoMobile,
+            stakingKey,
+            poolId,
+          )
+          builder.addCertificate(delegCert)
+        } else {
+          // Deregister (no pool means deregistration)
+          const deregCert = createStakeDeregistrationCertificate(
+            CardanoMobile,
+            stakingKey,
+          )
+          builder.addCertificate(deregCert)
+        }
+
+        // Set change address
+        builder.setChangeAddress(changeAddr.address)
+
+        // Set TTL
+        builder.setTTL(absSlotNumber.toNumber())
+
+        // Set protocol parameters
+        builder.setProtocolParams(protocolParams)
+
+        // Build the transaction
+        const unsignedTx = await builder.build(
           CardanoMobile,
-          absSlotNumber,
-          addressedUtxos,
-          stakingKey,
-          delegationType,
-          poolId || null, // empty pool means deregistration
-          changeAddr,
-          delegatedAmountMT,
+          protocolParams,
+          primaryTokenId,
+        )
+
+        // Convert to legacy format for yoroiUnsignedTx
+        const legacyUnsignedTx = await adaptUnsignedTransaction(
+          CardanoMobile,
+          unsignedTx,
           toLibToken(this.portfolioPrimaryTokenInfo),
-          {},
-          {
-            keyDeposit,
-            linearFee,
-            minimumUtxoVal: cardanoConfig.params.minUtxoValue.toString(),
-            coinsPerUtxoByte,
-            poolDeposit,
-            networkId: this.networkManager.chainId,
-          },
         )
 
         return yoroiUnsignedTx({
-          unsignedTx,
-          networkManager,
+          unsignedTx: legacyUnsignedTx as unknown as CardanoTypes.UnsignedTx,
+          networkManager: this.networkManager,
           addressedUtxos,
           primaryTokenId,
           keyDeposit,
@@ -507,7 +544,7 @@ export const makeCardanoWallet = (
           const {coinsPerUtxoByte, keyDeposit, linearFee, poolDeposit} =
             this.protocolParams
 
-          const config = {
+          const protocolParams: CardanoHaskellConfig = {
             keyDeposit,
             linearFee,
             minimumUtxoVal: cardanoConfig.params.minUtxoValue.toString(),
@@ -515,40 +552,66 @@ export const makeCardanoWallet = (
             poolDeposit,
             networkId: this.networkManager.chainId,
           }
-          const txOptions = {}
+
           const nonce = absSlotNumber.toNumber()
 
           const modernUtxos = this.getAddressedUtxos()
           const addressedUtxos = modernUtxosToCardanoAddressedUtxos(modernUtxos)
 
           const baseAddr = this.getFirstPaymentAddress()
-
-          const paymentAddressCIP36 = Buffer.from(
-            baseAddr.toAddress().toBytes(),
-          ).toString('hex')
-
-          const addressingCIP36 = this.getAddressing(
-            baseAddr.toAddress().toBech32(undefined),
-          )
-
-          const unsignedTx = await createUnsignedVotingTx(
-            CardanoMobile,
-            absSlotNumber,
-            toLibToken(this.portfolioPrimaryTokenInfo),
-            votingPublicKey,
-            Array.from(implementationConfig.features.staking.addressing),
-            stakingPublicKey,
-            addressedUtxos,
-            changeAddr,
-            config,
-            txOptions,
-            nonce,
-            paymentAddressCIP36,
-            addressingCIP36.path,
-            supportsCIP36,
-          )
+          const paymentAddressCIP36 = baseAddr.toAddress().toBech32(undefined)
 
           const rewardAddress = this.getRewardAddress().toBech32(undefined)
+
+          // Build transaction using TransactionBuilder
+          const builder = new TransactionBuilder()
+
+          // Add all UTXOs as inputs
+          for (const utxo of modernUtxos) {
+            builder.addInput(utxo)
+          }
+
+          // Create and add voting metadata
+          const votingMetadata = supportsCIP36
+            ? createCIP36VotingMetadata(
+                votingPublicKey.toBech32(),
+                stakingPublicKey.toBech32(),
+                rewardAddress,
+                nonce,
+                paymentAddressCIP36,
+              )
+            : createCIP15VotingMetadata(
+                votingPublicKey.toBech32(),
+                stakingPublicKey.toBech32(),
+                rewardAddress,
+                nonce,
+              )
+
+          builder.addMetadata(String(votingMetadata.label), votingMetadata.data)
+
+          // Set change address
+          builder.setChangeAddress(changeAddr.address)
+
+          // Set TTL
+          builder.setTTL(absSlotNumber.toNumber())
+
+          // Set protocol parameters
+          builder.setProtocolParams(protocolParams)
+
+          // Build the transaction
+          const unsignedTx = await builder.build(
+            CardanoMobile,
+            protocolParams,
+            primaryTokenId,
+          )
+
+          // Convert to legacy format for yoroiUnsignedTx
+          const legacyUnsignedTx = await adaptUnsignedTransaction(
+            CardanoMobile,
+            unsignedTx,
+            toLibToken(this.portfolioPrimaryTokenInfo),
+          )
+
           const votingRegistration: {
             votingPublicKey: string
             stakingPublicKey: string
@@ -563,7 +626,8 @@ export const makeCardanoWallet = (
 
           return {
             votingRegTx: yoroiUnsignedTx({
-              unsignedTx,
+              unsignedTx:
+                legacyUnsignedTx as unknown as CardanoTypes.UnsignedTx,
               networkManager: this.networkManager,
               votingRegistration,
               addressedUtxos,
@@ -602,38 +666,67 @@ export const makeCardanoWallet = (
         const {coinsPerUtxoByte, keyDeposit, linearFee, poolDeposit} =
           this.protocolParams
 
-        const withdrawalTx = await createUnsignedWithdrawalTx(
+        const protocolParams: CardanoHaskellConfig = {
+          keyDeposit,
+          linearFee,
+          minimumUtxoVal: cardanoConfig.params.minUtxoValue.toString(),
+          coinsPerUtxoByte,
+          poolDeposit,
+          networkId: this.networkManager.chainId,
+        }
+
+        // Get withdrawal amount from account state
+        const rewardAddress = this.rewardAddressHex
+        const rewards = accountState[rewardAddress]?.rewards || '0'
+
+        // Build transaction using TransactionBuilder
+        const builder = new TransactionBuilder()
+
+        // Add all UTXOs as inputs
+        for (const utxo of modernUtxos) {
+          builder.addInput(utxo)
+        }
+
+        // Add withdrawal
+        if (BigInt(rewards) > 0n) {
+          builder.addWithdrawal(rewardAddress, rewards)
+        }
+
+        // Add deregistration certificate if needed
+        if (shouldDeregister) {
+          const stakingKey = this.getStakingKey()
+          const deregCert = createStakeDeregistrationCertificate(
+            CardanoMobile,
+            stakingKey,
+          )
+          builder.addCertificate(deregCert)
+        }
+
+        // Set change address
+        builder.setChangeAddress(changeAddr.address)
+
+        // Set TTL
+        builder.setTTL(absSlotNumber.toNumber())
+
+        // Set protocol parameters
+        builder.setProtocolParams(protocolParams)
+
+        // Build the transaction
+        const unsignedTx = await builder.build(
           CardanoMobile,
-          accountState,
+          protocolParams,
+          primaryTokenId,
+        )
+
+        // Convert to legacy format for yoroiUnsignedTx
+        const legacyUnsignedTx = await adaptUnsignedTransaction(
+          CardanoMobile,
+          unsignedTx,
           toLibToken(this.portfolioPrimaryTokenInfo),
-          absSlotNumber,
-          addressedUtxos,
-          [
-            {
-              addressing: {
-                path: Array.from(
-                  implementationConfig.features.staking.addressing,
-                ),
-                startLevel: derivationConfig.keyLevel.purpose,
-              },
-              rewardAddress: this.rewardAddressHex,
-              shouldDeregister,
-            },
-          ],
-          changeAddr,
-          {
-            linearFee,
-            minimumUtxoVal: cardanoConfig.params.minUtxoValue.toString(),
-            coinsPerUtxoByte,
-            poolDeposit,
-            keyDeposit,
-            networkId: this.networkManager.chainId,
-          },
-          {metadata: undefined},
         )
 
         return yoroiUnsignedTx({
-          unsignedTx: withdrawalTx,
+          unsignedTx: legacyUnsignedTx as unknown as CardanoTypes.UnsignedTx,
           networkManager: this.networkManager,
           addressedUtxos,
           primaryTokenId,
@@ -660,28 +753,54 @@ export const makeCardanoWallet = (
       const {coinsPerUtxoByte, keyDeposit, linearFee, poolDeposit} =
         this.protocolParams
 
+      const protocolParams: CardanoHaskellConfig = {
+        keyDeposit,
+        linearFee,
+        minimumUtxoVal: cardanoConfig.params.minUtxoValue.toString(),
+        coinsPerUtxoByte,
+        poolDeposit,
+        networkId: this.networkManager.chainId,
+      }
+
       try {
-        const unsignedTx = await createUnsignedTx(
+        // Build transaction using TransactionBuilder
+        const builder = new TransactionBuilder()
+
+        // Add all UTXOs as inputs
+        for (const utxo of modernUtxos) {
+          builder.addInput(utxo)
+        }
+
+        // Add voting certificates
+        for (const cert of votingCertificates) {
+          builder.addCertificate(cert)
+        }
+
+        // Set change address
+        builder.setChangeAddress(changeAddr.address)
+
+        // Set TTL
+        builder.setTTL(absSlotNumber.toNumber())
+
+        // Set protocol parameters
+        builder.setProtocolParams(protocolParams)
+
+        // Build the transaction
+        const unsignedTx = await builder.build(
           CardanoMobile,
-          absSlotNumber,
-          addressedUtxos,
-          [],
-          changeAddr,
-          {
-            keyDeposit,
-            linearFee,
-            minimumUtxoVal: cardanoConfig.params.minUtxoValue.toString(),
-            coinsPerUtxoByte,
-            poolDeposit,
-            networkId: this.networkManager.chainId,
-          },
+          protocolParams,
+          primaryTokenId,
+        )
+
+        // Convert to legacy format for yoroiUnsignedTx
+        const legacyUnsignedTx = await adaptUnsignedTransaction(
+          CardanoMobile,
+          unsignedTx,
           toLibToken(this.portfolioPrimaryTokenInfo),
-          {},
-          votingCertificates,
         )
 
         return yoroiUnsignedTx({
-          unsignedTx,
+          unsignedTx: legacyUnsignedTx as unknown as CardanoTypes.UnsignedTx,
           networkManager: this.networkManager,
           addressedUtxos,
           entries: [],
@@ -874,15 +993,6 @@ export const makeCardanoWallet = (
 
       const changeAddr = this.getAddressedChangeAddress(addressMode)
       const modernUtxos = this.getAddressedUtxos()
-      const addressedUtxos = modernUtxosToCardanoAddressedUtxos(modernUtxos)
-
-      const recipients = await toRecipients(
-        entries,
-        this.portfolioPrimaryTokenInfo,
-        this.protocolParams,
-      )
-
-      const containsDatum = recipients.some((recipient) => recipient.datum)
 
       const {
         coinsPerUtxoByte,
@@ -891,32 +1001,68 @@ export const makeCardanoWallet = (
         poolDeposit,
       } = this.protocolParams
 
+      const protocolParams: CardanoHaskellConfig = {
+        keyDeposit,
+        linearFee: {
+          coefficient,
+          constant,
+        },
+        minimumUtxoVal: cardanoConfig.params.minUtxoValue.toString(),
+        coinsPerUtxoByte,
+        poolDeposit,
+        networkId: this.networkManager.chainId,
+      }
+
       try {
-        const unsignedTx = await createUnsignedTx(
+        // Build transaction using TransactionBuilder
+        const builder = new TransactionBuilder()
+
+        // Add all UTXOs as inputs (TransactionBuilder will handle selection)
+        // For now, we add all UTXOs - in the future, we can add smart selection
+        for (const utxo of modernUtxos) {
+          builder.addInput(utxo)
+        }
+
+        // Add outputs from entries
+        for (const entry of entries) {
+          builder.addOutput(entry.address, entry.amounts, entry.datum)
+        }
+
+        // Set change address
+        builder.setChangeAddress(changeAddr.address)
+
+        // Set TTL
+        builder.setTTL(absSlotNumber.toNumber())
+
+        // Add metadata if present
+        if (metadata && metadata.length > 0) {
+          for (const meta of metadata) {
+            const label = String(meta.label)
+            builder.addMetadata(label, meta.data)
+          }
+        }
+
+        // Set protocol parameters
+        builder.setProtocolParams(protocolParams)
+
+        // Build the transaction
+        const unsignedTx = await builder.build(
           CardanoMobile,
-          absSlotNumber,
-          addressedUtxos,
-          recipients,
-          changeAddr,
-          {
-            keyDeposit,
-            linearFee: {
-              coefficient,
-              constant: containsDatum
-                ? String(BigInt(constant) * 2n)
-                : constant,
-            },
-            minimumUtxoVal: cardanoConfig.params.minUtxoValue.toString(),
-            coinsPerUtxoByte,
-            poolDeposit,
-            networkId: this.networkManager.chainId,
-          },
-          toLibToken(this.portfolioPrimaryTokenInfo),
-          {metadata},
+          protocolParams,
+          primaryTokenId,
         )
 
-        return yoroiUnsignedTx({
+        // Convert to legacy format for yoroiUnsignedTx
+        const legacyUnsignedTx = await adaptUnsignedTransaction(
+          CardanoMobile,
           unsignedTx,
+          toLibToken(this.portfolioPrimaryTokenInfo),
+        )
+
+        const addressedUtxos = modernUtxosToCardanoAddressedUtxos(modernUtxos)
+
+        return yoroiUnsignedTx({
+          unsignedTx: legacyUnsignedTx as unknown as CardanoTypes.UnsignedTx,
           networkManager: this.networkManager,
           addressedUtxos,
           entries,
