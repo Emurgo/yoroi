@@ -6,14 +6,9 @@ export * from './errors'
 export * from './ledger'
 export * from './utils'
 
-// ⚠️ LEGACY: Deprecated transaction building methods (will be removed in Phase 2)
-// Use TransactionBuilder instead for new code
-export {
-  createUnsignedTx,
-  createUnsignedDelegationTx,
-  createUnsignedWithdrawalTx,
-  createUnsignedVotingTx,
-} from './legacy'
+// ⚠️ LEGACY: Deprecated transaction building methods - REMOVED
+// All transaction building now uses TransactionBuilder
+// The legacy wrapper has been removed as all calls have been migrated
 
 // Export main classes
 export {TransactionBuilder} from './transaction-builder'
