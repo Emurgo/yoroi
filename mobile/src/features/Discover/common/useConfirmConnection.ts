@@ -42,17 +42,17 @@ export const useConfirmConnection = () => {
         }
 
         if (!selectedDapp) {
-          let shouldOpenMainModal = false
+          const shouldOpenMainModalRef = {current: false}
           openUnverifiedDappModal({
             onClose: () => {
-              if (shouldOpenMainModal) {
+              if (shouldOpenMainModalRef.current) {
                 openMainModal()
               } else {
                 resolve(false)
               }
             },
             onConfirm: () => {
-              shouldOpenMainModal = true
+              shouldOpenMainModalRef.current = true
             },
           })
           return
