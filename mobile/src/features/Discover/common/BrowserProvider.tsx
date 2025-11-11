@@ -6,6 +6,8 @@ import WebView from 'react-native-webview'
 
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 
+import {WalletNameOverrideProvider} from './WalletNameOverrideContext'
+
 const defaultActions: BrowserActions = {
   addTab: () => invalid('missing init'),
   addTabAndSetActive: () => invalid('missing init'),
@@ -152,9 +154,11 @@ export const BrowserProvider = ({
   )
 
   return (
-    <BrowserContext.Provider value={context}>
-      {children}
-    </BrowserContext.Provider>
+    <WalletNameOverrideProvider>
+      <BrowserContext.Provider value={context}>
+        {children}
+      </BrowserContext.Provider>
+    </WalletNameOverrideProvider>
   )
 }
 

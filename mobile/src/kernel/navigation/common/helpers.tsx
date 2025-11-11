@@ -20,14 +20,8 @@ import {
 } from 'react-native'
 
 import {Icon} from '~/ui/Icon'
-import {compareArrays} from '~/wallets/utils/utils'
 
-import {
-  AppRoutes,
-  TxHistoryRoutes,
-  WalletStackRoutes,
-  WalletTabRoutes,
-} from '../types'
+import {AppRoutes, WalletStackRoutes, WalletTabRoutes} from '../types'
 
 export const defaultStackNavigationOptions = (
   palette: ThemedPalette,
@@ -151,19 +145,8 @@ export const isTxHistoryRoute = (
   state: Partial<NavigationState> | NavigationState['routes'][0]['state'],
 ) => {
   const routes = getFocusedRouteName(state)
-  type RoutePath =
-    | keyof AppRoutes
-    | keyof WalletStackRoutes
-    | keyof WalletTabRoutes
-    | keyof TxHistoryRoutes
-  const fullRoutePath: RoutePath[] = [
-    'manage-wallets',
-    'main-wallet-routes',
-    'history',
-    'history-list',
-  ]
-  const pathToCompare = fullRoutePath.slice(0, routes.length)
-  return routes.length > 1 && compareArrays(pathToCompare, routes)
+  const focusedRoute = routes[routes.length - 1]
+  return focusedRoute === 'history-list'
 }
 
 export const BackButton = (props: TouchableOpacityProps & {color?: string}) => {
