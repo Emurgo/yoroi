@@ -33,7 +33,9 @@ export async function cardanoValueFromAmounts(
     // Group assets by policy ID
     const groupedByPolicyId = assetIds.reduce(
       (acc, assetId) => {
-        const policyId = assetId.substring(0, 56) // Policy ID is first 56 hex chars
+        // assetId is in format "policyId.assetNameHex" (Portfolio.Token.Id format)
+        const [policyId] = assetId.split('.')
+        if (!policyId) return acc
         acc[policyId] = acc[policyId] ?? []
         acc[policyId]!.push(assetId)
         return acc
@@ -52,7 +54,8 @@ export async function cardanoValueFromAmounts(
       const assets = csl.Assets.new()
 
       for (const assetId of assetGroup) {
-        const assetNameHex = assetId.substring(56) // Asset name is after policy ID
+        const [, assetNameHex] = assetId.split('.')
+        if (!assetNameHex) continue
         const name = csl.AssetName.new(
           new Uint8Array(Buffer.from(assetNameHex, 'hex')),
         )

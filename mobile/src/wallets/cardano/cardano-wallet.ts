@@ -1011,7 +1011,22 @@ export const makeCardanoWallet = (
       try {
         // Calculate required amounts from outputs
         const requiredAmounts: Record<string, string> = {}
+        const minUtxoValue = BigInt(protocolParams.minimumUtxoVal || '1000000') // Default to 1 ADA if not set
+
         for (const entry of entries) {
+          const hasTokens = Object.keys(entry.amounts).some(
+            (tokenId) => tokenId !== primaryTokenId,
+          )
+          const adaAmount = BigInt(entry.amounts[primaryTokenId] || '0')
+
+          // If output has tokens but insufficient ADA, we need to add minimum UTXO value
+          if (hasTokens && adaAmount < minUtxoValue) {
+            const currentAda = BigInt(requiredAmounts[primaryTokenId] || '0')
+            requiredAmounts[primaryTokenId] = (
+              currentAda + minUtxoValue
+            ).toString()
+          }
+
           for (const [tokenId, quantity] of Object.entries(entry.amounts)) {
             const current = BigInt(requiredAmounts[tokenId] || '0')
             const needed = BigInt(quantity)
@@ -1042,11 +1057,24 @@ export const makeCardanoWallet = (
         builderState = addInputs(builderState, selectedUtxos)
 
         // Add outputs from entries
+        // Ensure outputs with tokens have minimum UTXO value in ADA
         for (const entry of entries) {
+          const hasTokens = Object.keys(entry.amounts).some(
+            (tokenId) => tokenId !== primaryTokenId,
+          )
+          const adaAmount = BigInt(entry.amounts[primaryTokenId] || '0')
+
+          // If output has tokens but insufficient ADA, add minimum UTXO value
+          const adjustedAmounts = {...entry.amounts}
+          if (hasTokens && adaAmount < minUtxoValue) {
+            adjustedAmounts[primaryTokenId] =
+              minUtxoValue.toString() as Balance.Quantity
+          }
+
           builderState = addOutput(
             builderState,
             entry.address,
-            entry.amounts,
+            adjustedAmounts,
             entry.datum,
           )
         }

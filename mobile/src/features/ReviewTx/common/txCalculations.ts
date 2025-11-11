@@ -11,6 +11,7 @@ type TokenAmount = {
 
 /**
  * Groups assets from inputs or outputs by token ID and sums their quantities
+ * Prefers real tokenInfo (not unknown) over unknown tokenInfo when multiple exist
  */
 export const groupAssetsByToken = (
   items: Array<{
@@ -23,8 +24,14 @@ export const groupAssetsByToken = (
     item.assets.forEach((asset) => {
       const existing = grouped.get(asset.tokenInfo.id)
       if (existing) {
+        // Prefer real tokenInfo over unknown tokenInfo
+        const preferredTokenInfo =
+          asset.tokenInfo.status !== Portfolio.Token.Status.Unknown
+            ? asset.tokenInfo
+            : existing.tokenInfo
+
         grouped.set(asset.tokenInfo.id, {
-          tokenInfo: asset.tokenInfo,
+          tokenInfo: preferredTokenInfo,
           quantity: Quantities.sum([existing.quantity, asset.quantity]),
         })
       } else {
@@ -89,6 +96,7 @@ export const calculateSendsAndReceives = (
   // 1. Tokens that appear in both inputs and outputs: add (output - input) if positive
   // 2. Tokens that only appear in outputs: add full output quantity (since inputQty will be zero)
   // Use a Map to ensure each token only appears once
+  // Prefer tokenInfo from inputs (more likely to have real tokenInfo) over outputs (might have unknown tokenInfo)
   const receivesByToken = new Map<Portfolio.Token.Id, TokenAmount>()
 
   outputsByToken.forEach((outputAsset, tokenId) => {
@@ -97,8 +105,16 @@ export const calculateSendsAndReceives = (
     const diff = Quantities.diff(outputAsset.quantity, inputQty)
 
     if (Quantities.isGreaterThan(diff, Quantities.zero)) {
+      // Prefer input tokenInfo if available (more likely to have real tokenInfo with correct decimals)
+      // Otherwise fall back to output tokenInfo
+      const preferredTokenInfo =
+        inputAsset &&
+        inputAsset.tokenInfo.status !== Portfolio.Token.Status.Unknown
+          ? inputAsset.tokenInfo
+          : outputAsset.tokenInfo
+
       receivesByToken.set(tokenId, {
-        tokenInfo: outputAsset.tokenInfo,
+        tokenInfo: preferredTokenInfo,
         quantity: diff,
       })
     }

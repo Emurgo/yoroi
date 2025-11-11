@@ -19,8 +19,9 @@ export function modernUtxoToCardanoAddressedUtxo(
     .filter(([tokenId]) => tokenId !== '') // Exclude ADA
     .map(([assetId, amount]) => {
       // Extract policyId and name from assetId
-      const policyId = assetId.substring(0, 56)
-      const nameHex = assetId.substring(56)
+      // assetId is in format "policyId.assetNameHex" (Portfolio.Token.Id format)
+      const [policyId, nameHex] = assetId.split('.')
+      if (!policyId || !nameHex) return null
       return {
         amount,
         assetId,
@@ -28,6 +29,7 @@ export function modernUtxoToCardanoAddressedUtxo(
         name: nameHex,
       }
     })
+    .filter((asset): asset is NonNullable<typeof asset> => asset !== null)
 
   return {
     addressing: modernUtxo.addressing || {

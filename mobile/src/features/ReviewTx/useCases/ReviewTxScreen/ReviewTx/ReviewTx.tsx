@@ -40,9 +40,9 @@ const TabWrapper = ({
           {children}
         </ScrollView>
         {!readOnly && onConfirm && (
-          <SafeArea.Footer>
-            <Button title={strings.txReview.confirm} onPress={onConfirm} />
-          </SafeArea.Footer>
+        <SafeArea.Footer>
+          <Button title={strings.txReview.confirm} onPress={onConfirm} />
+        </SafeArea.Footer>
         )}
       </SafeArea>
     </ScrollViewProvider>

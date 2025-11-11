@@ -1,5 +1,5 @@
 // Functional Transaction Builder using CSL TransactionBuilder directly
-import {Balance} from '@yoroi/types'
+import {Balance, Portfolio} from '@yoroi/types'
 
 import type {
   TransactionBuilder as CSLTransactionBuilder,
@@ -9,6 +9,7 @@ import type {
 } from '@emurgo/cross-csl-core'
 import {Buffer} from 'buffer'
 
+import {getTokenIdParts} from '../../../src/features/Portfolio/common/helpers/get-token-id-parts'
 import {CardanoMobileWrapped} from '../../../src/wallets/cardano/wrappedCsl'
 import {NoOutputsError, NotEnoughMoneyToSendError} from '../errors'
 import {CardanoHaskellConfig, Datum} from '../types'
@@ -362,44 +363,52 @@ function calculateTotalOutputValue(
 function amountsToValue(
   csl: import('@emurgo/cross-csl-core').WasmModuleProxy,
   amounts: Balance.Amounts,
-  primaryTokenId: string = '',
+  primaryTokenId: Portfolio.Token.Id = '.',
 ): Value {
   const adaAmount = amounts[primaryTokenId] || '0'
   const value = csl.Value.new(csl.BigNum.fromStr(adaAmount))
 
-  // Get all asset IDs except primary token
-  const assetIds = Object.keys(amounts).filter((id) => id !== primaryTokenId)
+  // Get all token IDs except primary token
+  const tokenIds = Object.keys(amounts).filter((id) => id !== primaryTokenId)
 
-  if (assetIds.length > 0) {
+  if (tokenIds.length > 0) {
     const multiAsset = csl.MultiAsset.new()
 
-    // Group assets by policy ID
-    const groupedByPolicyId = assetIds.reduce(
-      (acc, assetId) => {
-        const policyId = assetId.substring(0, 56) // Policy ID is first 56 hex chars
+    // Group tokens by policy ID
+    // tokenId is in format "policyId.assetNameHex" (Portfolio.Token.Id format)
+    const groupedByPolicyId = tokenIds.reduce(
+      (acc, tokenIdStr) => {
+        const tokenId = tokenIdStr as Portfolio.Token.Id
+        const {policyId, assetName: assetNameHex} = getTokenIdParts(tokenId)
+        if (!policyId || !assetNameHex) {
+          // Invalid format, skip
+          return acc
+        }
         acc[policyId] = acc[policyId] ?? []
-        acc[policyId]!.push(assetId)
+        acc[policyId]!.push({tokenId, assetNameHex})
         return acc
       },
-      {} as Record<string, Array<string>>,
+      {} as Record<
+        string,
+        Array<{tokenId: Portfolio.Token.Id; assetNameHex: string}>
+      >,
     )
 
     // Create MultiAsset structure
     for (const policyIdStr of Object.keys(groupedByPolicyId)) {
-      const assetGroup = groupedByPolicyId[policyIdStr]
-      if (!assetGroup) continue
+      const tokenGroup = groupedByPolicyId[policyIdStr]
+      if (!tokenGroup) continue
 
       const policyId = csl.ScriptHash.fromBytes(
         new Uint8Array(Buffer.from(policyIdStr, 'hex')),
       )
       const assets = csl.Assets.new()
 
-      for (const assetId of assetGroup) {
-        const assetNameHex = assetId.substring(56) // Asset name is after policy ID
+      for (const {tokenId, assetNameHex} of tokenGroup) {
         const name = csl.AssetName.new(
           new Uint8Array(Buffer.from(assetNameHex, 'hex')),
         )
-        const amount = csl.BigNum.fromStr(amounts[assetId] ?? '0')
+        const amount = csl.BigNum.fromStr(amounts[tokenId] ?? '0')
         assets.insert(name, amount)
       }
 
@@ -418,7 +427,7 @@ function amountsToValue(
 function outputToCSL(
   csl: import('@emurgo/cross-csl-core').WasmModuleProxy,
   output: TransactionOutput,
-  primaryTokenId: string = '',
+  primaryTokenId: Portfolio.Token.Id = '.',
 ): CSLTransactionOutput {
   const address = csl.Address.fromBech32(output.address)
   if (!address) throw new Error(`Invalid address: ${output.address}`)
@@ -494,7 +503,7 @@ function createCSLTransactionBuilder(
 export async function buildTransaction(
   state: TransactionBuilderState,
   protocolParams: CardanoHaskellConfig,
-  primaryTokenId: string = '',
+  primaryTokenId: Portfolio.Token.Id = '.',
 ): Promise<UnsignedTransaction> {
   return CardanoMobileWrapped.cslScope((csl) => {
     // Validate inputs
@@ -671,7 +680,7 @@ export async function buildTransaction(
 export async function buildTransactionCBOR(
   state: TransactionBuilderState,
   protocolParams: CardanoHaskellConfig,
-  primaryTokenId: string = '',
+  primaryTokenId: Portfolio.Token.Id = '.',
 ): Promise<string> {
   const unsignedTx = await buildTransaction(
     state,

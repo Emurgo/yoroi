@@ -5,6 +5,7 @@ import type {
   PublicKey,
   WasmModuleProxy,
 } from '@emurgo/cross-csl-core'
+import {Portfolio} from '@yoroi/types'
 
 import {ModernUtxo} from '../utxo/models'
 
@@ -192,8 +193,8 @@ export function selectUtxosForAmount(
  */
 export function selectUtxosForAmounts(
   utxos: ModernUtxo[],
-  requiredAmounts: Record<string, string>, // tokenId -> quantity
-  primaryTokenId: string = '',
+  requiredAmounts: Record<Portfolio.Token.Id, string>, // tokenId -> quantity
+  primaryTokenId: Portfolio.Token.Id = '' as Portfolio.Token.Id,
   estimatedFee: string = '200000', // Default 0.2 ADA fee estimate
 ): ModernUtxo[] {
   // Calculate total required ADA (outputs + fee)
@@ -228,7 +229,7 @@ export function selectUtxosForAmounts(
 
   // Calculate what we have from UTXOs with tokens
   const selected: ModernUtxo[] = [...utxosWithTokens]
-  const selectedAmounts: Record<string, bigint> = {}
+  const selectedAmounts: Record<Portfolio.Token.Id, bigint> = {}
   let selectedAda = BigInt(0)
 
   for (const utxo of selected) {
@@ -241,7 +242,7 @@ export function selectUtxosForAmounts(
 
   // Check if we have enough of each token
   let needsMoreAda = selectedAda < requiredAda
-  const needsMoreTokens: string[] = []
+  const needsMoreTokens: Portfolio.Token.Id[] = []
 
   for (const tokenId of requiredTokenIds) {
     const required = BigInt(requiredAmounts[tokenId] || '0')
