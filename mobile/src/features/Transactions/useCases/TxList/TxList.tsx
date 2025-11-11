@@ -5,24 +5,24 @@ import _ from 'lodash'
 import * as React from 'react'
 import {View} from 'react-native'
 
-import {useTransactionInfos} from '~/features/Transactions/hooks/useTransactionInfos'
+import {TransactionSummary} from '~/features/Transactions/common/types'
+import {useTransactionSummaries} from '~/features/Transactions/hooks/useTransactionSummaries'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {Space} from '~/ui/Space/Space'
-import {TransactionInfo} from '~/wallets/types/other'
 import {Amounts, Quantities} from '~/wallets/utils/utils'
 
 import {useTxFilter} from './TxFilterProvider'
 import {TxListItem} from './TxListItem'
 
-type Props = Partial<FlashListProps<TransactionInfo>>
+type Props = Partial<FlashListProps<TransactionSummary>>
 export const TxList = (props: Props) => {
   const {wallet} = useSelectedWallet()
 
   const filter = useTxFilter()
-  const transactionInfos = useTransactionInfos({wallet})
+  const transactionSummaries = useTransactionSummaries({wallet})
   const filteredTransactions = React.useMemo(
-    () => filterTransactions(transactionInfos, filter),
-    [transactionInfos, filter],
+    () => filterTransactions(transactionSummaries, filter),
+    [transactionSummaries, filter],
   )
 
   const [loadedTxs, setLoadedTxs] = React.useState(
@@ -34,7 +34,7 @@ export const TxList = (props: Props) => {
     setLoadedTxs(filteredTransactions.slice(0, currentIndex + batchSize))
     setCurrentIndex(currentIndex + batchSize)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [transactionInfos]) // must be transactionInfos
+  }, [transactionSummaries]) // must be transactionSummaries
 
   const handleOnEndReached = React.useCallback(() => {
     if (currentIndex >= filteredTransactions.length) return
@@ -69,7 +69,7 @@ export const TxList = (props: Props) => {
 const batchSize = 50
 
 const filterTransactions = (
-  transactions: Record<string, TransactionInfo>,
+  transactions: Record<string, TransactionSummary>,
   filter: ReturnType<typeof useTxFilter>,
 ) =>
   _(transactions)

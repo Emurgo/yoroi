@@ -1,82 +1,16 @@
-/**
- * @deprecated This file is deprecated. Use useFormattedTxFromWalletTransaction hook from ReviewTx instead.
- * This file will be removed in a future version.
- *
- * Legacy transaction processing logic. Kept temporarily for backward compatibility.
- */
-import {isArray, isString} from '@yoroi/common'
 import {Balance, Portfolio} from '@yoroi/types'
-
-import BigNumber from 'bignumber.js'
 
 import {
   BaseAsset,
   CERTIFICATE_KIND,
   TRANSACTION_DIRECTION,
-  TRANSACTION_STATUS,
   TRANSACTION_TYPE,
-  TransactionInfo,
+  TransactionDirection,
   WalletTransaction,
 } from '~/wallets/types/other'
-import {TransactionToken} from '~/wallets/types/tokens'
 import {Amounts, Quantities, asQuantity} from '~/wallets/utils/utils'
 
-const ASSURANCE_LEVELS = {
-  LOW: 3,
-  MEDIUM: 9,
-} as const
-
-type TransactionAssurance = 'PENDING' | 'FAILED' | 'LOW' | 'MEDIUM' | 'HIGH'
-
-/**
- * Calculate transaction assurance level based on status and confirmations
- */
-const getTransactionAssurance = (
-  status: (typeof TRANSACTION_STATUS)[keyof typeof TRANSACTION_STATUS],
-  confirmations: number,
-): TransactionAssurance => {
-  if (status === TRANSACTION_STATUS.PENDING) return 'PENDING'
-  if (status === TRANSACTION_STATUS.FAILED) return 'FAILED'
-
-  if (status !== TRANSACTION_STATUS.SUCCESSFUL) {
-    throw new Error('Internal error - unknown transaction status')
-  }
-
-  if (confirmations < ASSURANCE_LEVELS.LOW) return 'LOW'
-  if (confirmations < ASSURANCE_LEVELS.MEDIUM) return 'MEDIUM'
-  return 'HIGH'
-}
-
-/**
- * Extract unique tokens from transaction inputs and outputs
- */
-const extractTransactionTokens = (
-  tx: WalletTransaction,
-): Record<string, TransactionToken> => {
-  const tokens: Record<string, TransactionToken> = {}
-  const allAssets: BaseAsset[] = []
-
-  // Collect all assets from inputs and outputs
-  tx.inputs.forEach((input) => allAssets.push(...input.assets))
-  tx.outputs.forEach((output) => allAssets.push(...output.assets))
-
-  // Create TransactionToken for each unique asset
-  for (const asset of allAssets) {
-    if (tokens[asset.tokenId] == null) {
-      tokens[asset.tokenId] = {
-        isDefault: false,
-        identifier: asset.tokenId,
-        policyId: asset.policyId,
-        assetName: asset.name,
-        numberOfDecimals: 0,
-        ticker: null,
-        longName: null,
-      }
-    }
-  }
-
-  return tokens
-}
+import {TransactionSummary} from './types'
 
 /**
  * Convert remote asset format to Balance.Amounts
@@ -88,11 +22,7 @@ const remoteAssetsToAmounts = (
   const amounts: Balance.Amounts = {}
 
   for (const asset of assets) {
-    // For primary token, tokenId might be empty, use primaryTokenId instead
-    const tokenId =
-      !asset.tokenId || asset.tokenId === ('' as Portfolio.Token.Id)
-        ? primaryTokenId
-        : asset.tokenId
+    const tokenId = asset.assetId === '' ? primaryTokenId : asset.assetId
     const existing = amounts[tokenId]
     amounts[tokenId] = existing
       ? Quantities.sum([existing, asQuantity(asset.amount)])
@@ -115,43 +45,12 @@ const remoteDataToAmounts = (
 ): Balance.Amounts => {
   return data.reduce<Balance.Amounts>((acc, item) => {
     const primaryAmount = remoteAssetsToAmounts(
-      [
-        {
-          tokenId: '' as Portfolio.Token.Id,
-          amount: item.amount,
-          policyId: '',
-          name: '',
-        },
-      ],
+      [{assetId: '', amount: item.amount, policyId: '', name: ''}],
       primaryTokenId,
     )
     const assetAmounts = remoteAssetsToAmounts(item.assets, primaryTokenId)
     return Amounts.sum([acc, primaryAmount, assetAmounts])
   }, {} as Balance.Amounts)
-}
-
-/**
- * Process transaction metadata from remote format
- */
-const processMetadata = (
-  metadata: WalletTransaction['metadata'],
-): TransactionInfo['metadata'] => {
-  if (!metadata) return undefined
-
-  const result: Record<string, string> = {}
-
-  for (const item of metadata) {
-    if (!item?.label) continue
-
-    const msg = item.map_json?.msg
-    if (isArray(msg)) {
-      result[item.label] = msg.join('')
-    } else if (isString(msg)) {
-      result[item.label] = msg
-    }
-  }
-
-  return Object.keys(result).length > 0 ? result : undefined
 }
 
 /**
@@ -196,7 +95,7 @@ const determineTransactionDirection = (
   hasOnlyOwnOutputs: boolean,
   hasOwnInputs: boolean,
   isInvalidScriptExecution: boolean,
-): (typeof TRANSACTION_DIRECTION)[keyof typeof TRANSACTION_DIRECTION] => {
+): TransactionDirection => {
   if (isInvalidScriptExecution) {
     return TRANSACTION_DIRECTION.SELF
   }
@@ -217,22 +116,15 @@ const determineTransactionDirection = (
 }
 
 /**
- * @deprecated This function is deprecated. Use useFormattedTxFromWalletTransaction hook instead.
- * This function will be removed in a future version.
- *
- * Process transaction history data into TransactionInfo format
+ * Convert WalletTransaction to TransactionSummary for list display
+ * Reuses logic from processTransactions but returns a simpler summary format
  */
-export const processTxHistoryData = (
+export const walletTransactionToSummary = (
   tx: WalletTransaction,
   ownAddresses: string[],
-  confirmations: number,
-  memo: string | null,
   primaryTokenInfo: Portfolio.Token.Info,
-): TransactionInfo => {
+): TransactionSummary => {
   const primaryTokenId = primaryTokenInfo.id
-
-  // Process metadata
-  const metadata = processMetadata(tx.metadata)
 
   // Handle script execution failures
   const collateral = tx.collateralInputs || []
@@ -328,64 +220,26 @@ export const processTxHistoryData = (
   )
 
   let amount: Balance.Amounts
-  let fee: Balance.Amounts | null
-
-  const remoteFee = tx.fee
-    ? Amounts.negated({[primaryTokenId]: asQuantity(tx.fee)} as Balance.Amounts)
-    : null
 
   if (isInvalidScriptExecution) {
     amount = brutto
-    fee = null // Collateral is the fee when execution fails
   } else if (isIntraWallet) {
     amount = {} as Balance.Amounts
-    fee = remoteFee ?? totalFee
   } else if (isMultiParty) {
     amount = brutto
-    fee = null
   } else if (hasOnlyOwnInputs) {
     amount = Amounts.diff(brutto, totalFee)
-    fee = remoteFee ?? totalFee
   } else {
     amount = brutto
-    fee = null
   }
-
-  // Get assurance level and tokens
-  const assurance = getTransactionAssurance(tx.status, confirmations)
-  const tokens = extractTransactionTokens(tx)
-
-  // Convert BaseAsset to CardanoTypes.TokenEntry format (for IOData)
-  const assetToTokenEntry = (asset: BaseAsset) => ({
-    identifier: asset.tokenId,
-    amount: new BigNumber(asset.amount),
-  })
 
   return {
     id: tx.id,
-    inputs: tx.inputs.map((input) => ({
-      address: input.address,
-      amount: input.amount,
-      assets: input.assets.map(assetToTokenEntry),
-      id: input.id,
-    })),
-    outputs: tx.outputs.map((output) => ({
-      address: output.address,
-      amount: output.amount,
-      assets: output.assets.map(assetToTokenEntry),
-    })),
-    amount, // Balance.Amounts directly
-    fee, // Balance.Amounts | null directly
-    delta, // Balance.Amounts directly
-    confirmations,
     direction,
+    amount,
+    delta,
     submittedAt: tx.submittedAt,
     lastUpdatedAt: tx.lastUpdatedAt,
     status: tx.status,
-    assurance,
-    tokens,
-    blockNumber: tx.blockNum ?? 0,
-    memo,
-    metadata,
   }
 }

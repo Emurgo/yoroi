@@ -56,12 +56,7 @@ export const useFormattedTx = (
       (utxo: RawUtxo) =>
         utxo?.tx_hash === i.transaction_id && utxo?.tx_index === i.index,
     )
-    return (
-      utxo?.assets.map(
-        (a: {policyId: string; assetId: string}) =>
-          `${a.policyId}.${a.assetId}` as Portfolio.Token.Id,
-      ) ?? []
-    )
+    return utxo?.assets.map((a) => a.tokenId) ?? []
   })
 
   const referenceInputTokenIds = referenceInputs.flatMap((i) => {
@@ -69,12 +64,7 @@ export const useFormattedTx = (
       (utxo: RawUtxo) =>
         utxo?.tx_hash === i.transaction_id && utxo?.tx_index === i.index,
     )
-    return (
-      utxo?.assets.map(
-        (a: {policyId: string; assetId: string}) =>
-          `${a.policyId}.${a.assetId}` as Portfolio.Token.Id,
-      ) ?? []
-    )
+    return utxo?.assets.map((a) => a.tokenId) ?? []
   })
 
   // Extract token IDs from CSL objects if CBOR is available, otherwise fall back to JSON
@@ -216,9 +206,9 @@ const formatInputs = (
 
     const multiAssets =
       utxo?.assets
-        .map((a: {assetId: string; amount: string}) => {
+        .map((a) => {
           if (a == null) return null
-          const tokenInfo = tokenInfos?.get(a.assetId as Portfolio.Token.Id)
+          const tokenInfo = tokenInfos?.get(a.tokenId)
           if (!tokenInfo) return null
           const quantity = asQuantity(a.amount)
 
@@ -537,13 +527,20 @@ const getUtxo = async (
   )
 
   if (!internalUtxo) {
-    const externalUtxo = await getUtxoData({txHash, txIndex})
+    try {
+      const externalUtxo = await getUtxoData({txHash, txIndex})
 
-    if (externalUtxo == null) throw new Error('useUtxos: utxo not found')
+      if (externalUtxo == null) {
+        throw new Error(`useUtxos: utxo not found for ${txHash}:${txIndex}`)
+      }
 
-    const rawUtxo = toRawUtxo(externalUtxo, txHash, txIndex)
-    return rawUtxo
+      const rawUtxo = toRawUtxo(externalUtxo, txHash, txIndex)
+      return rawUtxo
+    } catch (error) {
+      throw error
+    }
   }
+
   return internalUtxo
 }
 
@@ -551,12 +548,14 @@ function toRawUtxo(
   utxosData: Api.Cardano.UtxoData,
   txHash: string,
   txIndex: number,
-) {
+): RawUtxo {
   const {address, amount, assets} = utxosData.output
 
+  // Convert backend response (with assetId) to internal format (with tokenId)
+  // assetId from backend is already the full token ID in format policyId.assetNameHex
   const mappedAssets = assets.map((asset) => ({
     amount: asset.amount,
-    assetId: asset.assetId,
+    tokenId: asset.assetId as Portfolio.Token.Id,
     policyId: asset.policyId,
     name: asset.name,
   }))

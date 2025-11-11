@@ -90,7 +90,14 @@ type Transformed<T> = {
   }
 }[keyof UnionToIntersection<T>]
 
-export type FormattedCertificate = Transformed<CertificateJSON>
+// Minimal certificate with just type (for historical transactions)
+type MinimalCertificate = {
+  type: CertificateType
+  value: Partial<Record<string, unknown>>
+}
+
+// FormattedCertificate can be either a full certificate or a minimal one
+export type FormattedCertificate = Transformed<CertificateJSON> | MinimalCertificate
 
 export const CertificateType = {
   StakeRegistration: 'StakeRegistration', //

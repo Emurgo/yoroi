@@ -124,19 +124,19 @@ export const cardanoValueFromRemoteFormat = (
 
   for (const remoteAsset of utxo.assets) {
     // Validate asset data
-    if (!remoteAsset.assetId || !remoteAsset.amount) {
+    if (!remoteAsset.tokenId || !remoteAsset.amount) {
       logger.warn('cardanoValueFromRemoteFormat: Skipping invalid asset', {
-        assetId: remoteAsset.assetId,
+        tokenId: remoteAsset.tokenId,
         amount: remoteAsset.amount,
       })
       continue
     }
 
     try {
-      const {policyId, name} = identifierToCardanoAsset(remoteAsset.assetId)
+      const {policyId, name} = identifierToCardanoAsset(remoteAsset.tokenId)
       if (!policyId || !name) {
         logger.warn('cardanoValueFromRemoteFormat: Invalid asset identifier', {
-          assetId: remoteAsset.assetId,
+          tokenId: remoteAsset.tokenId,
         })
         continue
       }
@@ -149,7 +149,7 @@ export const cardanoValueFromRemoteFormat = (
       // Validate asset amount
       if (!remoteAsset.amount || typeof remoteAsset.amount !== 'string') {
         logger.warn('cardanoValueFromRemoteFormat: Invalid asset amount', {
-          assetId: remoteAsset.assetId,
+          tokenId: remoteAsset.tokenId,
           amount: remoteAsset.amount,
         })
         continue
@@ -160,7 +160,7 @@ export const cardanoValueFromRemoteFormat = (
         logger.warn(
           'cardanoValueFromRemoteFormat: Failed to create BigNum for asset amount',
           {
-            assetId: remoteAsset.assetId,
+            tokenId: remoteAsset.tokenId,
             amount: remoteAsset.amount,
           },
         )
@@ -171,7 +171,7 @@ export const cardanoValueFromRemoteFormat = (
       assets.insert(policyId, policyContent)
     } catch (error) {
       logger.warn('cardanoValueFromRemoteFormat: Error processing asset', {
-        assetId: remoteAsset.assetId,
+        tokenId: remoteAsset.tokenId,
         error: error instanceof Error ? error.message : String(error),
       })
       // Continue processing other assets
@@ -201,7 +201,7 @@ export const amountsFromRemote = (
   // Add other assets
   if (remoteValue.assets != null) {
     for (const token of remoteValue.assets) {
-      amounts[token.assetId] = token.amount as Balance.Quantity
+      amounts[token.tokenId] = token.amount as Balance.Quantity
     }
   }
 

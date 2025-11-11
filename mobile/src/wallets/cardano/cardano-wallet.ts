@@ -70,6 +70,7 @@ import type {
   RawUtxo,
   TxStatusRequest,
   TxStatusResponse,
+  WalletTransaction,
 } from '../types/other'
 import {StakingInfo} from '../types/staking'
 import {Quantities} from '../utils/utils'
@@ -953,8 +954,10 @@ export const makeCardanoWallet = (
       return this.utxos.map((utxo: RawUtxo): ModernUtxo => {
         const addressing = this.getAddressing(utxo.receiver)
 
+        // Type assertion to help TypeScript understand the compatible types
+        // Both RawUtxo types have the same structure (tokenId), just from different modules
         return rawUtxoToModernUtxo(
-          utxo,
+          utxo as unknown as Parameters<typeof rawUtxoToModernUtxo>[0],
           addressing,
           undefined, // derivationPath - can be added later if needed for display
           primaryTokenId,
@@ -1567,6 +1570,14 @@ export const makeCardanoWallet = (
 
     get confirmationCounts() {
       return this.transactionManager.confirmationCounts
+    }
+
+    getRawTransaction(txId: string): WalletTransaction | undefined {
+      return this.transactionManager.transactions[txId]
+    }
+
+    getRawTransactions(): Record<string, WalletTransaction> {
+      return this.transactionManager.transactions
     }
 
     // =================== subscriptions =================== //

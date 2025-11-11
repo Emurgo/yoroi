@@ -371,7 +371,7 @@ export function toCachedTx(tx: RawTransaction): WalletTransaction {
       amount: input.amount,
       assets: (input.assets ?? []).map((asset) => ({
         amount: asset.amount,
-        assetId: asset.assetId,
+        tokenId: asset.tokenId,
         policyId: asset.policyId,
         name: asset.name,
       })),
@@ -381,7 +381,7 @@ export function toCachedTx(tx: RawTransaction): WalletTransaction {
       amount: output.amount,
       assets: (output.assets ?? []).map((asset) => ({
         amount: asset.amount,
-        assetId: asset.assetId,
+        tokenId: asset.tokenId,
         policyId: asset.policyId,
         name: asset.name,
       })),
@@ -403,7 +403,7 @@ export function toCachedTx(tx: RawTransaction): WalletTransaction {
       amount: input.amount,
       assets: (input.assets ?? []).map((asset) => ({
         amount: asset.amount,
-        assetId: asset.assetId,
+        tokenId: asset.tokenId,
         policyId: asset.policyId,
         name: asset.name,
       })),

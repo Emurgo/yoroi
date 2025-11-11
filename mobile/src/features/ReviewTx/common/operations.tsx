@@ -579,6 +579,7 @@ export const useOperations = (certificates: FormattedTx['certificates']) => {
 
         case CertificateType.VoteDelegation: {
           const drep = certificate.value.drep
+          if (drep == null) return acc
 
           if (drep === 'AlwaysAbstain')
             return {

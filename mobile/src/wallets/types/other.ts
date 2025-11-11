@@ -1,5 +1,5 @@
 import {RemoteAccountState, RemoteCertificateMeta} from '@yoroi/staking'
-import {Balance} from '@yoroi/types'
+import {Balance, Portfolio} from '@yoroi/types'
 
 import {CardanoTypes} from '../cardano/types'
 import {TransactionToken} from './tokens'
@@ -17,7 +17,7 @@ export type WalletState = {
  */
 type RemoteAsset = {
   readonly amount: string
-  readonly assetId: string
+  readonly tokenId: Portfolio.Token.Id
   readonly policyId: string
   readonly name: string
 }
@@ -162,7 +162,7 @@ export const TRANSACTION_STATUS = {
   PENDING: 'Pending',
   FAILED: 'Failed',
 }
-type TransactionStatus =
+export type TransactionStatus =
   (typeof TRANSACTION_STATUS)[keyof typeof TRANSACTION_STATUS]
 
 type TxMetadata = Array<{
@@ -172,6 +172,11 @@ type TxMetadata = Array<{
 }>
 export type TxMetadataInfo = Record<string, any>
 
+/**
+ * @deprecated Use FormattedTx from ReviewTx instead. This type will be removed in a future version.
+ * For transaction details, use useFormattedTxFromWalletTransaction hook.
+ * For transaction lists, TransactionInfo is still used temporarily but will be migrated.
+ */
 export type TransactionInfo = {
   id: string
   inputs: Array<IOData>

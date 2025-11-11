@@ -12,6 +12,7 @@ import {Text, TouchableOpacity, View, ViewProps} from 'react-native'
 // import {TxHistoryRouteNavigation} from '~/kernel/navigation/navigation'
 import {useCurrencyPairing} from '~/features/Settings/context/CurrencyProvider'
 import {usePrivacyMode} from '~/features/Settings/hooks/usePrivacyMode'
+import {TransactionSummary} from '~/features/Transactions/common/types'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Boundary, ResetError} from '~/ui/Boundary/Boundary'
@@ -19,7 +20,6 @@ import {Icon} from '~/ui/Icon'
 import {styleMap} from '~/ui/Icon/Direction'
 import {BalanceError} from '~/ui/PairedBalance/PairedBalance'
 import {YoroiWallet} from '~/wallets/cardano/types'
-import {TransactionInfo} from '~/wallets/types/other'
 import {
   formatDateRelative,
   formatTime,
@@ -31,7 +31,7 @@ import {Amounts, Quantities, asQuantity} from '~/wallets/utils/utils'
 import {useTxFilter} from './TxFilterProvider'
 
 type Props = {
-  transaction: TransactionInfo
+  transaction: TransactionSummary
 }
 
 export const TxListItem = ({transaction}: Props) => {

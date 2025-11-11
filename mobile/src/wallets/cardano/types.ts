@@ -185,6 +185,8 @@ export interface YoroiWallet {
   // Balances, TxDetails
   saveMemo(txId: string, memo: string): Promise<void>
   get transactions(): Record<string, TransactionInfo>
+  getRawTransaction(txId: string): WalletTransaction | undefined
+  getRawTransactions(): Record<string, WalletTransaction>
   get confirmationCounts(): Record<string, null | number>
   fetchTxStatus(request: TxStatusRequest): Promise<TxStatusResponse>
 

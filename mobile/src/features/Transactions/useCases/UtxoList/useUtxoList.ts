@@ -102,7 +102,7 @@ const transformUtxo = (utxo: RawUtxo): Utxo => {
     balance[primaryTokenId] = utxo.amount as Balance.Quantity
 
   utxo.assets.forEach((asset) => {
-    balance[asset.assetId] = asset.amount as Balance.Quantity
+    balance[asset.tokenId] = asset.amount as Balance.Quantity
   })
 
   const transformedUtxo = {

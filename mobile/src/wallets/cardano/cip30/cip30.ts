@@ -1,13 +1,12 @@
 import {cardanoConfig} from '@yoroi/blockchains'
 import {
   RemoteUnspentOutput,
-  UtxoAsset,
   calculateTxId,
   normalizeToAddress,
   parseTokenList,
   signRawTransaction,
 } from '@yoroi/tx'
-import {App, Balance, Wallet} from '@yoroi/types'
+import {App, Balance, Portfolio, Wallet} from '@yoroi/types'
 
 import * as CSL from '@emurgo/cross-csl-core'
 import {WasmModuleProxy} from '@emurgo/cross-csl-core'
@@ -16,7 +15,7 @@ import {Buffer} from 'buffer'
 import * as _ from 'lodash'
 
 import {logger} from '~/kernel/logger/logger'
-import {RawUtxo} from '~/wallets/types/other'
+import {BaseAsset, RawUtxo} from '~/wallets/types/other'
 import {Utxos, asQuantity} from '~/wallets/utils/utils'
 import {CardanoMobile} from '~/wallets/wallets'
 
@@ -290,15 +289,15 @@ class CIP30Extension {
 }
 
 const remoteAssetToMultiasset = (
-  remoteAssets: UtxoAsset[],
+  remoteAssets: BaseAsset[],
   csl: WasmModuleProxy,
 ): CSL.MultiAsset => {
   const groupedAssets = remoteAssets.reduce(
     (res, a) => {
-      ;(res[toPolicyId(a.assetId)] = res[toPolicyId(a.assetId)] || []).push(a)
+      ;(res[toPolicyId(a.tokenId)] = res[toPolicyId(a.tokenId)] || []).push(a)
       return res
     },
-    {} as Record<string, UtxoAsset[]>,
+    {} as Record<string, BaseAsset[]>,
   )
   const multiasset = csl.MultiAsset.new()
   for (const policyHex of Object.keys(groupedAssets)) {
@@ -311,7 +310,7 @@ const remoteAssetToMultiasset = (
     for (const asset of assetGroup) {
       assets.insert(
         csl.AssetName.new(
-          new Uint8Array(Buffer.from(toAssetNameHex(asset.assetId), 'hex')),
+          new Uint8Array(Buffer.from(toAssetNameHex(asset.tokenId), 'hex')),
         ),
         csl.BigNum.fromStr(asset.amount),
       )
@@ -330,7 +329,15 @@ const cardanoUtxoFromRemoteFormat = (
   )
   const value = csl.Value.new(csl.BigNum.fromStr(u.amount))
   if ((u.assets || []).length > 0) {
-    value.setMultiasset(remoteAssetToMultiasset([...u.assets], csl))
+    // Convert UtxoAsset[] (with assetId) to BaseAsset[] (with tokenId)
+    // assetId is already in the format policyId.assetNameHex, so we can use it directly as tokenId
+    const baseAssets: BaseAsset[] = u.assets.map((asset) => ({
+      tokenId: asset.assetId as Portfolio.Token.Id,
+      amount: asset.amount,
+      policyId: '', // Not needed for multiasset construction
+      name: '', // Not needed for multiasset construction
+    }))
+    value.setMultiasset(remoteAssetToMultiasset(baseAssets, csl))
   }
   const receiver = csl.Address.fromBech32(u.receiver)
   if (!receiver) throw new Error('Invalid receiver')
@@ -467,7 +474,12 @@ const rawUtxoToRemoteUnspentOutput = (utxo: RawUtxo): RemoteUnspentOutput => {
     txIndex: utxo.tx_index,
     receiver: utxo.receiver,
     amount: utxo.amount,
-    assets: utxo.assets,
+    // Convert RemoteAsset[] (with tokenId) to UtxoAsset[] (with assetId)
+    // tokenId is already in the format policyId.assetNameHex, so we can use it directly as assetId
+    assets: utxo.assets.map((asset) => ({
+      assetId: asset.tokenId,
+      amount: asset.amount,
+    })),
     utxoId: utxo.utxo_id,
   }
 }
