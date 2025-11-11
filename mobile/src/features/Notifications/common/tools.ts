@@ -3,8 +3,9 @@ import {Portfolio, Notifications as YoroiNotifications} from '@yoroi/types'
 
 import messaging from '@react-native-firebase/messaging'
 import * as Notifications from 'expo-notifications'
-import {Linking, PermissionsAndroid, Platform} from 'react-native'
+import {Linking, PermissionsAndroid} from 'react-native'
 
+import {isAndroid} from '~/kernel/constants'
 import {logger} from '~/kernel/logger/logger'
 import {WalletNavigation} from '~/kernel/navigation/types'
 
@@ -23,7 +24,7 @@ export const triggerNotificationsPermissionModal = async () => {
     finalStatus = result.status
   }
 
-  if (Platform.OS === 'android' && finalStatus === 'granted') {
+  if (isAndroid && finalStatus === 'granted') {
     const androidPermissionResult = await PermissionsAndroid.request(
       PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
     )
@@ -51,7 +52,7 @@ export const getNotificationsAuthorizationStatus = async () => {
     (await uiStorage.getItem(permissionModalStorageKey)) !== true
 
   if (status === 'granted') {
-    if (Platform.OS === 'android') {
+    if (isAndroid) {
       const androidPermissionStatus = await PermissionsAndroid.check(
         PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
       )
