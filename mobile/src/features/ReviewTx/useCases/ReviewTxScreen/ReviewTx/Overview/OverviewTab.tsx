@@ -6,7 +6,7 @@ import {
 } from '@yoroi/common'
 import {Blockies} from '@yoroi/identicon'
 import {atoms as a, useTheme} from '@yoroi/theme'
-import {Balance, Portfolio} from '@yoroi/types'
+import {Balance} from '@yoroi/types'
 
 import {CredKind} from '@emurgo/cross-csl-core'
 import {useQuery} from '@tanstack/react-query'
@@ -23,6 +23,11 @@ import {
 import {TokenItem} from '~/features/ReviewTx/common/TokenItem'
 import {WalletBalance} from '~/features/ReviewTx/common/WalletBalance'
 import {Operations, useOperations} from '~/features/ReviewTx/common/operations'
+import {
+  calculateSendsAndReceives,
+  groupAssetsByToken,
+  groupOutputsByAddress,
+} from '~/features/ReviewTx/common/txCalculations'
 import {
   FormattedOutput,
   FormattedOutputs,
@@ -41,7 +46,6 @@ import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {Space} from '~/ui/Space/Space'
 import {WarningBanner} from '~/ui/WarningBanner/WarningBanner'
 import {formatTokenWithText} from '~/wallets/utils/format'
-import {Quantities} from '~/wallets/utils/utils'
 
 import {Accordion} from '../../../../common/Accordion'
 import {OperationsNoticeIcon} from '../../../../illustrations/OperationsNoticeIcon'
@@ -79,6 +83,52 @@ export const OverviewTab = ({
     [operations.components],
   )
 
+  const externalPartiesSection = React.useMemo(() => {
+    const groupedOutputs = groupOutputsByAddress(notOwnedOutputs)
+    const uniqueAddresses = Array.from(groupedOutputs.keys())
+
+    if (uniqueAddresses.length === 1) {
+      const addressKey = uniqueAddresses[0]!
+      const outputsForAddress = groupedOutputs.get(addressKey)!
+      // Combine all outputs for this address into a single "virtual" output
+      const combinedOutput: FormattedOutput = {
+        ...outputsForAddress[0]!,
+        assets: Array.from(groupAssetsByToken(outputsForAddress).values()),
+      }
+
+      return (
+        <>
+          <Divider verticalSpace="lg" />
+          <Accordion
+            label={strings.txReview.overview.multiExternalPartiesSectionLabel}
+          >
+            <Space.Height.lg />
+            <OneExternalPartySection
+              tx={tx}
+              receiverCustomTitle={receiverCustomTitle}
+              output={combinedOutput}
+            />
+          </Accordion>
+        </>
+      )
+    }
+
+    if (uniqueAddresses.length > 1) {
+      // Create combined outputs for each unique address
+      const combinedOutputs = uniqueAddresses.map((addressKey) => {
+        const outputsForAddress = groupedOutputs.get(addressKey)!
+        return {
+          ...outputsForAddress[0]!,
+          assets: Array.from(groupAssetsByToken(outputsForAddress).values()),
+        }
+      })
+
+      return <MultiExternalPartiesSection tx={tx} outputs={combinedOutputs} />
+    }
+
+    return null
+  }, [notOwnedOutputs, tx, receiverCustomTitle, strings])
+
   return (
     <View style={[a.flex_1, a.px_lg, ta.bg_color_max]}>
       <Space.Height.lg />
@@ -100,22 +150,12 @@ export const OverviewTab = ({
 
       <MyWalletSection
         tx={tx}
-        notOwnedOutputs={notOwnedOutputs}
         ownedOutputs={ownedOutputs}
         receiverCustomTitle={receiverCustomTitle}
         operationsFee={operations.totalFee}
       />
 
-      {notOwnedOutputs.length === 1 && (
-        <OneExternalPartySection
-          receiverCustomTitle={receiverCustomTitle}
-          output={notOwnedOutputs[0]!}
-        />
-      )}
-
-      {notOwnedOutputs.length > 1 && (
-        <MultiExternalPartiesSection outputs={notOwnedOutputs} />
-      )}
+      {externalPartiesSection}
 
       <OperationsSection
         operations={operations}
@@ -220,12 +260,10 @@ const FeeInfoItem = ({fee}: {fee: string}) => {
 
 const MyWalletSection = ({
   tx,
-  notOwnedOutputs,
   ownedOutputs,
   operationsFee,
 }: {
   tx: FormattedTx
-  notOwnedOutputs: FormattedOutputs
   ownedOutputs: FormattedOutputs
   receiverCustomTitle?: React.ReactNode
   operationsFee: Balance.Quantity
@@ -259,120 +297,155 @@ const MyWalletSection = ({
 
       <Space.Height.sm />
 
-      <MyWalletTokens
-        tx={tx}
-        notOwnedOutputs={notOwnedOutputs}
-        operationsFee={operationsFee}
-      />
+      <MyWalletTokens tx={tx} operationsFee={operationsFee} />
     </Accordion>
   )
 }
 
 const MyWalletTokens = ({
   tx,
-  notOwnedOutputs,
   operationsFee,
 }: {
   tx: FormattedTx
-  notOwnedOutputs: FormattedOutputs
   operationsFee: Balance.Quantity
 }) => {
   const {wallet} = useSelectedWallet()
 
-  const totalPrimaryTokenSent = React.useMemo(
-    () =>
-      notOwnedOutputs
-        .flatMap((output) =>
-          output.assets.filter(
-            (asset) =>
-              asset.tokenInfo.nature === Portfolio.Token.Nature.Primary,
-          ),
-        )
-        .reduce(
-          (previous, current) => Quantities.sum([previous, current.quantity]),
-          Quantities.zero,
-        ),
-    [notOwnedOutputs],
-  )
-  const totalPrimaryTokenSpent = React.useMemo(
-    () =>
-      Quantities.sum([totalPrimaryTokenSent, tx.fee.quantity, operationsFee]),
-    [totalPrimaryTokenSent, tx.fee.quantity, operationsFee],
-  )
-  const totalPrimaryTokenSpentLabel = formatTokenWithText(
-    totalPrimaryTokenSpent,
-    wallet.portfolioPrimaryTokenInfo,
-  )
+  // Calculate wallet's own inputs and outputs grouped by token
+  const {sends, receives} = React.useMemo(() => {
+    const ownInputs = tx.inputs.filter((input) => input.ownAddress === true)
+    const ownOutputs = tx.outputs.filter((output) => output.ownAddress === true)
 
-  const notPrimaryTokenSent = React.useMemo(
-    () =>
-      notOwnedOutputs.flatMap((output) =>
-        output.assets.filter(
-          (asset) => asset.tokenInfo.nature !== Portfolio.Token.Nature.Primary,
-        ),
-      ),
-    [notOwnedOutputs],
-  )
+    const ownInputsByToken = groupAssetsByToken(ownInputs)
+    const ownOutputsByToken = groupAssetsByToken(ownOutputs)
+
+    return calculateSendsAndReceives(ownInputsByToken, ownOutputsByToken, {
+      primaryTokenId: wallet.portfolioPrimaryTokenInfo.id,
+      fee: tx.fee.quantity,
+      operationsFee,
+    })
+  }, [tx.inputs, tx.outputs, tx.fee.quantity, operationsFee, wallet])
 
   return (
-    <View style={[a.flex_row, a.justify_between]}>
-      <View
-        style={[a.flex_wrap, a.flex_row, a.justify_end, a.flex_1, a.gap_sm]}
-      >
-        <MyWalletSectionLabel />
+    <View style={[a.gap_sm]}>
+      {sends.length > 0 && (
+        <View style={[a.flex_row, a.justify_between]}>
+          <View
+            style={[a.flex_wrap, a.flex_row, a.justify_end, a.flex_1, a.gap_sm]}
+          >
+            <MyWalletSectionLabel isSend={true} />
 
-        <Space.Height._2xs fill />
+            <Space.Height._2xs fill />
 
-        <TokenItem
-          tokenInfo={wallet.portfolioPrimaryTokenInfo}
-          label={`-${totalPrimaryTokenSpentLabel}`}
-        />
+            {sends.map((send, index) => (
+              <TokenItem
+                key={`send-${send.tokenInfo.id}-${index}`}
+                tokenInfo={send.tokenInfo}
+                label={`-${formatTokenWithText(send.quantity, send.tokenInfo)}`}
+                isPrimaryToken={
+                  send.tokenInfo.id === wallet.portfolioPrimaryTokenInfo.id
+                }
+              />
+            ))}
+          </View>
+        </View>
+      )}
 
-        {notPrimaryTokenSent.map((token, index) => (
-          <TokenItem
-            key={index}
-            tokenInfo={token.tokenInfo}
-            label={formatTokenWithText(token.quantity, token.tokenInfo)}
-            isPrimaryToken={false}
-          />
-        ))}
-      </View>
+      {receives.length > 0 && (
+        <View style={[a.flex_row, a.justify_between]}>
+          <View
+            style={[a.flex_wrap, a.flex_row, a.justify_end, a.flex_1, a.gap_sm]}
+          >
+            <MyWalletSectionLabel isSend={false} />
+
+            <Space.Height._2xs fill />
+
+            {receives.map((receive, index) => (
+              <TokenItem
+                key={`receive-${receive.tokenInfo.id}-${index}`}
+                tokenInfo={receive.tokenInfo}
+                label={formatTokenWithText(receive.quantity, receive.tokenInfo)}
+                isPrimaryToken={
+                  receive.tokenInfo.id === wallet.portfolioPrimaryTokenInfo.id
+                }
+                isSent={false}
+              />
+            ))}
+          </View>
+        </View>
+      )}
     </View>
   )
 }
 
-const MyWalletSectionLabel = () => {
-  const {atoms: ta} = useTheme()
+const MyWalletSectionLabel = ({isSend}: {isSend: boolean}) => {
+  const {atoms: ta, palette: p} = useTheme()
   const strings = useStrings()
 
   return (
     <View style={[a.flex_row, a.align_center]}>
-      <Icon.Send size={30} color={ta.el_primary_medium.color} />
+      {isSend ? (
+        <Icon.Send size={30} color={ta.el_primary_medium.color} />
+      ) : (
+        <Icon.Received size={30} color={p.green_static} />
+      )}
 
       <Space.Width._2xs />
 
       <Text style={[a.body_1_lg_medium, ta.text_gray_medium]}>
-        {strings.txReview.overview.sendLabel}
+        {isSend
+          ? strings.txReview.overview.sendLabel
+          : strings.txReview.receiveLabel}
       </Text>
     </View>
   )
 }
 
 const OneExternalPartySection = ({
+  tx,
   output,
   receiverCustomTitle,
 }: {
+  tx: FormattedTx
   output: FormattedOutput
   receiverCustomTitle?: React.ReactNode
 }) => {
   const address = output?.rewardAddress ?? output?.address ?? '-'
   const {atoms: ta} = useTheme()
+  const {wallet} = useSelectedWallet()
   const strings = useStrings()
+
+  const {sends, receives} = React.useMemo(() => {
+    // Find ALL inputs for this party's address
+    // For smart contracts, we need to match by the exact address (not rewardAddress)
+    // since script addresses don't have reward addresses
+    const partyInputs = tx.inputs.filter(
+      (input) =>
+        input.address === output.address ||
+        (output.rewardAddress != null &&
+          (input.address === output.rewardAddress ||
+            input.rewardAddress === output.rewardAddress)),
+    )
+
+    // For smart contracts, also find ALL outputs to this address (not just the one we're displaying)
+    // This ensures we account for all UTXOs being created at the contract
+    const allOutputsToAddress = tx.outputs.filter(
+      (out) =>
+        out.address === output.address ||
+        (output.rewardAddress != null &&
+          (out.address === output.rewardAddress ||
+            out.rewardAddress === output.rewardAddress)),
+    )
+
+    const partyInputsByToken = groupAssetsByToken(partyInputs)
+    // Use all outputs to this address, not just the single output
+    const partyOutputsByToken = groupAssetsByToken(allOutputsToAddress)
+
+    return calculateSendsAndReceives(partyInputsByToken, partyOutputsByToken)
+  }, [tx.inputs, tx.outputs, output])
 
   return (
     <>
-      <Space.Height.sm />
-
       <View style={[a.flex_row, a.align_center, a.flex_row, a.justify_between]}>
         <Text style={[a.body_2_md_medium, ta.text_gray_medium]}>
           {strings.txReview.overview.receiveToLabel}:
@@ -403,85 +476,215 @@ const OneExternalPartySection = ({
           </Copiable>
         )}
       </View>
+
+      <Space.Height.sm />
+
+      <View style={[a.gap_sm]}>
+        {sends.length > 0 && (
+          <View style={[a.flex_row, a.justify_between]}>
+            <View
+              style={[
+                a.flex_wrap,
+                a.flex_row,
+                a.justify_end,
+                a.flex_1,
+                a.gap_sm,
+              ]}
+            >
+              <ExternalPartiesSectionLabel isSend={true} />
+
+              <Space.Height._2xs fill />
+
+              {sends.map((send, index) => (
+                <TokenItem
+                  key={`send-${send.tokenInfo.id}-${index}`}
+                  tokenInfo={send.tokenInfo}
+                  label={`-${formatTokenWithText(send.quantity, send.tokenInfo)}`}
+                  isPrimaryToken={
+                    send.tokenInfo.id === wallet.portfolioPrimaryTokenInfo.id
+                  }
+                />
+              ))}
+            </View>
+          </View>
+        )}
+
+        {receives.length > 0 && (
+          <View style={[a.flex_row, a.justify_between]}>
+            <View
+              style={[
+                a.flex_wrap,
+                a.flex_row,
+                a.justify_end,
+                a.flex_1,
+                a.gap_sm,
+              ]}
+            >
+              <ExternalPartiesSectionLabel isSend={false} />
+
+              <Space.Height._2xs fill />
+
+              {receives.map((receive, index) => (
+                <TokenItem
+                  key={`receive-${receive.tokenInfo.id}-${index}`}
+                  tokenInfo={receive.tokenInfo}
+                  label={formatTokenWithText(
+                    receive.quantity,
+                    receive.tokenInfo,
+                  )}
+                  isPrimaryToken={
+                    receive.tokenInfo.id === wallet.portfolioPrimaryTokenInfo.id
+                  }
+                  isSent={false}
+                />
+              ))}
+            </View>
+          </View>
+        )}
+      </View>
     </>
   )
 }
 
-const MultiExternalPartiesSection = ({
-  outputs,
+const ExternalPartyItem = ({
+  tx,
+  output,
 }: {
-  outputs: FormattedOutputs
+  tx: FormattedTx
+  output: FormattedOutput
 }) => {
   const {palette: p} = useTheme()
   const {wallet} = useSelectedWallet()
-  const strings = useStrings()
+  const address = output?.rewardAddress ?? output?.address ?? '-'
 
-  const receivers = outputs.map((output, index) => {
-    const totalPrimaryToken =
-      output.assets.filter(
-        (asset) => asset.tokenInfo.nature === Portfolio.Token.Nature.Primary,
-      )[0]?.quantity ?? Quantities.zero
-    const totalPrimaryTokenLabel = formatTokenWithText(
-      totalPrimaryToken,
-      wallet.portfolioPrimaryTokenInfo,
+  const {sends, receives} = React.useMemo(() => {
+    // Find ALL inputs for this party's address
+    // For smart contracts, we need to match by the exact address (not rewardAddress)
+    // since script addresses don't have reward addresses
+    const partyInputs = tx.inputs.filter(
+      (input) =>
+        input.address === output.address ||
+        (output.rewardAddress != null &&
+          (input.address === output.rewardAddress ||
+            input.rewardAddress === output.rewardAddress)),
     )
-    const notPrimaryToken = output.assets.filter(
-      (asset) => asset.tokenInfo.nature !== Portfolio.Token.Nature.Primary,
+
+    // For smart contracts, also find ALL outputs to this address (not just the one we're displaying)
+    // This ensures we account for all UTXOs being created at the contract
+    const allOutputsToAddress = tx.outputs.filter(
+      (out) =>
+        out.address === output.address ||
+        (output.rewardAddress != null &&
+          (out.address === output.rewardAddress ||
+            out.rewardAddress === output.rewardAddress)),
     )
-    const address = output?.rewardAddress ?? output?.address ?? '-'
 
-    return (
-      <View key={index}>
-        <Space.Height.lg />
+    const partyInputsByToken = groupAssetsByToken(partyInputs)
+    // Use all outputs to this address, not just the single output
+    const partyOutputsByToken = groupAssetsByToken(allOutputsToAddress)
 
-        <Copiable text={address}>
-          <Text
-            style={[a.flex_1, a.body_2_md_regular, {color: p.text_gray_medium}]}
-            numberOfLines={1}
-            ellipsizeMode="middle"
-          >
-            {address}
-          </Text>
+    return calculateSendsAndReceives(partyInputsByToken, partyOutputsByToken)
+  }, [tx.inputs, tx.outputs, output])
 
-          {output?.addressKind === CredKind.Script && (
-            <>
-              <Space.Width.xs />
+  return (
+    <View>
+      <Space.Height.lg />
 
-              <Icon.DigitalAsset size={24} color={p.el_gray_medium} />
-            </>
-          )}
-        </Copiable>
+      <Copiable text={address}>
+        <Text
+          style={[a.flex_1, a.body_2_md_regular, {color: p.text_gray_medium}]}
+          numberOfLines={1}
+          ellipsizeMode="middle"
+        >
+          {address}
+        </Text>
 
-        <Space.Height.sm />
+        {output?.addressKind === CredKind.Script && (
+          <>
+            <Space.Width.xs />
 
-        <View style={[a.flex_row, a.justify_between]}>
-          <View
-            style={[a.flex_wrap, a.flex_row, a.justify_end, a.flex_1, a.gap_sm]}
-          >
-            <ExternalPartiesSectionLabel />
+            <Icon.DigitalAsset size={24} color={p.el_gray_medium} />
+          </>
+        )}
+      </Copiable>
 
-            <Space.Height._2xs fill />
+      <Space.Height.sm />
 
-            <TokenItem
-              tokenInfo={wallet.portfolioPrimaryTokenInfo}
-              label={totalPrimaryTokenLabel}
-              isSent={false}
-            />
+      <View style={[a.gap_sm]}>
+        {sends.length > 0 && (
+          <View style={[a.flex_row, a.justify_between]}>
+            <View
+              style={[
+                a.flex_wrap,
+                a.flex_row,
+                a.justify_end,
+                a.flex_1,
+                a.gap_sm,
+              ]}
+            >
+              <ExternalPartiesSectionLabel isSend={true} />
 
-            {notPrimaryToken.map((token, index) => (
-              <TokenItem
-                key={index}
-                tokenInfo={token.tokenInfo}
-                label={formatTokenWithText(token.quantity, token.tokenInfo)}
-                isPrimaryToken={false}
-                isSent={false}
-              />
-            ))}
+              <Space.Height._2xs fill />
+
+              {sends.map((send, sendIndex) => (
+                <TokenItem
+                  key={`send-${send.tokenInfo.id}-${sendIndex}`}
+                  tokenInfo={send.tokenInfo}
+                  label={`-${formatTokenWithText(send.quantity, send.tokenInfo)}`}
+                  isPrimaryToken={
+                    send.tokenInfo.id === wallet.portfolioPrimaryTokenInfo.id
+                  }
+                />
+              ))}
+            </View>
           </View>
-        </View>
+        )}
+
+        {receives.length > 0 && (
+          <View style={[a.flex_row, a.justify_between]}>
+            <View
+              style={[
+                a.flex_wrap,
+                a.flex_row,
+                a.justify_end,
+                a.flex_1,
+                a.gap_sm,
+              ]}
+            >
+              <ExternalPartiesSectionLabel isSend={false} />
+
+              <Space.Height._2xs fill />
+
+              {receives.map((receive, receiveIndex) => (
+                <TokenItem
+                  key={`receive-${receive.tokenInfo.id}-${receiveIndex}`}
+                  tokenInfo={receive.tokenInfo}
+                  label={formatTokenWithText(
+                    receive.quantity,
+                    receive.tokenInfo,
+                  )}
+                  isPrimaryToken={
+                    receive.tokenInfo.id === wallet.portfolioPrimaryTokenInfo.id
+                  }
+                  isSent={false}
+                />
+              ))}
+            </View>
+          </View>
+        )}
       </View>
-    )
-  })
+    </View>
+  )
+}
+
+const MultiExternalPartiesSection = ({
+  tx,
+  outputs,
+}: {
+  tx: FormattedTx
+  outputs: FormattedOutputs
+}) => {
+  const strings = useStrings()
 
   return (
     <View>
@@ -496,24 +699,32 @@ const MultiExternalPartiesSection = ({
           content={strings.txReview.overview.multiExternalPartiesSectionNotice}
         />
 
-        {receivers}
+        {outputs.map((output, index) => (
+          <ExternalPartyItem key={index} tx={tx} output={output} />
+        ))}
       </Accordion>
     </View>
   )
 }
 
-const ExternalPartiesSectionLabel = () => {
-  const {palette: p} = useTheme()
+const ExternalPartiesSectionLabel = ({isSend}: {isSend: boolean}) => {
+  const {palette: p, atoms: ta} = useTheme()
   const strings = useStrings()
 
   return (
     <View style={[a.flex_row, a.align_center]}>
-      <Icon.Received size={30} color={p.green_static} />
+      {isSend ? (
+        <Icon.Send size={30} color={ta.el_primary_medium.color} />
+      ) : (
+        <Icon.Received size={30} color={p.green_static} />
+      )}
 
       <Space.Width._2xs />
 
       <Text style={[a.body_1_lg_medium, {color: p.text_gray_medium}]}>
-        {strings.txReview.receiveLabel}
+        {isSend
+          ? strings.txReview.overview.sendLabel
+          : strings.txReview.receiveLabel}
       </Text>
     </View>
   )
