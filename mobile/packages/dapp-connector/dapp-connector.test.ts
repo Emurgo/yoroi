@@ -961,7 +961,6 @@ describe('DappConnector', () => {
       )
     })
   })
-
 })
 
 const initDappConnectorWithConnection = async (wallet?: ResolverWallet) => {
