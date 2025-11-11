@@ -7,6 +7,7 @@ import * as React from 'react'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
+import {removeRouteFromNavigationState} from '~/kernel/navigation/common/helpers'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {cip30LedgerExtensionMaker} from '~/wallets/cardano/cip30/cip30-ledger'
 import {YoroiWallet} from '~/wallets/cardano/types'
@@ -25,7 +26,7 @@ import {useShowCollateralNotFoundAlert} from './common/useShowCollateralNotFound
 
 export const useDappConnectorManager = () => {
   const appStorage = useAsyncStorage()
-  const {navigateToDiscoverBrowserDapp} = useWalletNavigation()
+  const {navigateToDiscoverBrowserDapp, navigation} = useWalletNavigation()
   const {wallet, meta} = useSelectedWallet()
   const {navigateToTxReview} = useWalletNavigation()
   const {tabs, tabActiveIndex} = useBrowser()
@@ -100,6 +101,8 @@ export const useDappConnectorManager = () => {
               }
 
               resolve(args?.rootKey)
+              // Remove review-tx screen from stack without animation
+              removeRouteFromNavigationState(navigation, 'review-tx-routes')
               navigateToDiscoverBrowserDapp()
             },
             onCancel: () => {
@@ -127,6 +130,7 @@ export const useDappConnectorManager = () => {
       navigateToTxReview,
       dappCollateralRequestUtils,
       navigateToDiscoverBrowserDapp,
+      navigation,
     ],
   )
 
@@ -169,6 +173,8 @@ export const useDappConnectorManager = () => {
                 return
               }
               resolve(args?.tx)
+              // Remove review-tx screen from stack without animation
+              removeRouteFromNavigationState(navigation, 'review-tx-routes')
               navigateToDiscoverBrowserDapp()
             },
             onErrorWithoutFeedback: (error) => {
@@ -192,7 +198,12 @@ export const useDappConnectorManager = () => {
         })
       })
     },
-    [activeTabOrigin, navigateToTxReview, navigateToDiscoverBrowserDapp],
+    [
+      activeTabOrigin,
+      navigateToTxReview,
+      navigateToDiscoverBrowserDapp,
+      navigation,
+    ],
   )
 
   const handleSendReorganisationTx = React.useCallback(
