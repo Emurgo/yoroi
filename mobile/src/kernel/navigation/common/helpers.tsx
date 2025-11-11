@@ -300,14 +300,28 @@ export const removeRouteFromNavigationState = (
 
   // Only reset if we actually removed a route
   if (filteredRoutes.length < state.routes.length) {
-    // Calculate the new index (ensure it's valid)
-    const newIndex = Math.min(
-      filteredRoutes.length - 1,
-      Math.max(
-        0,
-        (state.index ?? 0) - (state.routes.length - filteredRoutes.length),
-      ),
+    // Find the index of the route to remove in the original routes array
+    const removedRouteIndex = state.routes.findIndex(
+      (route) => route.name === routeName,
     )
+
+    // Calculate the new index based on where the route was removed
+    const currentIndex = state.index ?? 0
+    let newIndex: number
+
+    if (removedRouteIndex === -1) {
+      // Route not found (shouldn't happen, but handle gracefully)
+      newIndex = currentIndex
+    } else if (removedRouteIndex <= currentIndex) {
+      // Route was removed at or before current index, adjust index
+      newIndex = Math.max(0, currentIndex - 1)
+    } else {
+      // Route was removed after current index, keep index the same
+      newIndex = currentIndex
+    }
+
+    // Ensure the new index is valid for the filtered routes
+    newIndex = Math.min(filteredRoutes.length - 1, Math.max(0, newIndex))
 
     navigation.reset({
       ...state,
