@@ -2,20 +2,15 @@ import {Chain} from '@yoroi/types'
 
 import {init} from '@emurgo/cross-csl-nodejs'
 
-import {Api, dappConnectorApiMaker} from './adapters/api'
 import {connectionStorageMaker} from './adapters/async-storage'
 import {dappConnectorMaker} from './dapp-connector'
-import {mockedDAppList} from './manager.mocks'
 import {mockedData} from './mocks'
 import {ResolverWallet} from './resolver'
 import {storageMock} from './storage.mocks'
 
 const getDappConnector = (wallet = mockWallet) => {
   const storage = connectionStorageMaker({storage: storageMock})
-  const api: Api = {
-    getDApps: async () => mockedDAppList,
-  }
-  return dappConnectorMaker(storage, wallet, api)
+  return dappConnectorMaker(storage, wallet)
 }
 
 describe('DappConnector', () => {
@@ -40,8 +35,7 @@ describe('DappConnector', () => {
   describe('connection management', () => {
     it('should init with default storage', async () => {
       const storage = connectionStorageMaker()
-      const api = dappConnectorApiMaker()
-      const connector = dappConnectorMaker(storage, mockWallet, api)
+      const connector = dappConnectorMaker(storage, mockWallet)
       expect(connector).toBeDefined()
     })
 
@@ -968,12 +962,6 @@ describe('DappConnector', () => {
     })
   })
 
-  describe('getDAppList', () => {
-    it('should return list of dapps and filters', async () => {
-      const dappConnector = getDappConnector()
-      expect(await dappConnector.getDAppList()).toEqual(mockedDAppList)
-    })
-  })
 })
 
 const initDappConnectorWithConnection = async (wallet?: ResolverWallet) => {

@@ -2,13 +2,11 @@ import {Chain} from '@yoroi/types'
 
 import {freeze} from 'immer'
 
-import {Api, DappListResponse} from './adapters/api'
 import {DappConnection, Storage} from './adapters/async-storage'
 import {connectWallet} from './connector'
 import {ResolverWallet, resolverHandleEvent} from './resolver'
 
 export type DappConnectorManager = {
-  getDAppList(): Promise<DappListResponse>
   listAllConnections(): Promise<DappConnection[]>
   removeConnection(options: {
     walletId?: string
@@ -36,9 +34,8 @@ export type DappConnectorManager = {
 export const dappConnectorMaker = (
   storage: Storage,
   wallet: ResolverWallet,
-  api: Api,
 ): DappConnector => {
-  return new DappConnector(storage, wallet, api)
+  return new DappConnector(storage, wallet)
 }
 
 export class DappConnector implements DappConnectorManager {
@@ -47,14 +44,9 @@ export class DappConnector implements DappConnectorManager {
   constructor(
     private storage: Storage,
     private wallet: ResolverWallet,
-    private api: Api,
   ) {
     this.network = wallet.network
     this.walletId = wallet.id
-  }
-
-  async getDAppList() {
-    return this.api.getDApps({network: this.wallet.network})
   }
 
   async listAllConnections() {
