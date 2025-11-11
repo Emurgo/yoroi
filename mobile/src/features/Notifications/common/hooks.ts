@@ -117,7 +117,11 @@ const initPushNotifications = (
 
   const attachResponseListener = () =>
     Notifications.addNotificationResponseReceivedListener((_response) => {
-      const id = parseNotificationId(Date.now().toString())
+      const data = _response.notification.request.content.data as Record<
+        string,
+        unknown
+      >
+      const id = parseNotificationId(String(data?.id ?? ''))
       triggerNotificationAction({
         manager: pushNotificationsManager,
         id,
