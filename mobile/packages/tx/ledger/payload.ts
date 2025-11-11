@@ -8,7 +8,6 @@ import {
   CIP36VoteRegistrationFormat,
   CIP36VoteDelegationType,
   TxOutputDestinationType,
-  LedgerAddressType,
 } from '@cardano-foundation/ledgerjs-hw-app-cardano'
 import {blake2b as blake2bHash} from '@noble/hashes/blake2b'
 

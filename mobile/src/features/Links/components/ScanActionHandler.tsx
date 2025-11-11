@@ -4,6 +4,10 @@
  * Handles scan actions from web+cardano:// deep links.
  * Consumes pendingScanAction from useDeepLinkWatcher and triggers
  * the appropriate action using useTriggerScanAction.
+ *
+ * This component doesn't require a wallet to be selected - it navigates to
+ * the appropriate screens, which are wrapped in WithWalletOpened and will
+ * handle wallet selection if needed.
  */
 import * as React from 'react'
 

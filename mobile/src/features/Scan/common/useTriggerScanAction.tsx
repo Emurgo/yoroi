@@ -1,7 +1,8 @@
 import {useClaim, useClaimTokens} from '@yoroi/claim'
 import {toBigInt} from '@yoroi/common'
+import {createPrimaryTokenInfo} from '@yoroi/portfolio'
 import {useTransfer} from '@yoroi/transfer'
-import {Scan} from '@yoroi/types'
+import {Portfolio, Scan} from '@yoroi/types'
 
 import * as Linking from 'expo-linking'
 import * as React from 'react'
@@ -10,7 +11,7 @@ import * as uuid from 'uuid'
 import {useClaimErrorResolver} from '~/features/Claim/common/useClaimErrorResolver'
 import {AskConfirmationModal} from '~/features/Claim/ui/modals/AskConfirmationModal'
 import {useBrowser} from '~/features/Discover/common/BrowserProvider'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {useModal} from '~/ui/Modal/context/ModalContext'
@@ -20,24 +21,39 @@ import {useInfoModal} from './modals/InfoModal'
 import {useTransactionNotFoundModal} from './modals/TransactionNotFoundModal'
 import {useNavigateTo} from './useNavigateTo'
 
+// Create a minimal primary token info for Cardano (ADA always has 6 decimals)
+const getDefaultPrimaryTokenInfo = (): Portfolio.Token.Info =>
+  createPrimaryTokenInfo({
+    decimals: 6,
+    name: 'ADA',
+    ticker: 'ADA',
+    symbol: '₳',
+    reference: '',
+    tag: '',
+    website: 'https://www.cardano.org/',
+    originalImage: '',
+    description: 'Cardano',
+  })
+
 export const useTriggerScanAction = ({
   insideFeature,
 }: {
   insideFeature: Scan.Feature
 }) => {
-  const {
-    wallet: {portfolioPrimaryTokenInfo},
-    wallet,
-  } = useSelectedWallet()
+  // Get wallet manager to check if wallet is selected (but don't require it)
+  const {selected} = useWalletManager()
+  const wallet = selected.wallet
+  const defaultPrimaryTokenInfo = React.useMemo(
+    () => getDefaultPrimaryTokenInfo(),
+    [],
+  )
   const {openModal, closeModal, setLoading: startLoading} = useModal()
   const {addTabAndSetActive} = useBrowser()
   const walletNavigation = useWalletNavigation()
   const {openInfoModal} = useInfoModal()
   const {openTransactionNotFoundModal} = useTransactionNotFoundModal()
-
   const navigateTo = useNavigateTo()
   const timeoutRef = React.useRef<NodeJS.Timeout | null>(null)
-
   const {
     receiverResolveChanged,
     amountChanged,
@@ -45,7 +61,6 @@ export const useTriggerScanAction = ({
     reset: resetTransferState,
     memoChanged,
   } = useTransfer()
-
   const {
     reset: resetClaimState,
     scanActionClaimChanged,
@@ -72,6 +87,15 @@ export const useTriggerScanAction = ({
   })
   const strings = useStrings()
 
+  // Cleanup effect
+  React.useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current)
+      }
+    }
+  }, [])
+
   const trigger = (scanAction: Scan.Action) => {
     switch (scanAction.action) {
       case 'launch-url': {
@@ -86,12 +110,12 @@ export const useTriggerScanAction = ({
 
         if (scanAction.params) {
           if ('amount' in scanAction.params) {
-            tokenSelectedChanged(portfolioPrimaryTokenInfo.id)
+            tokenSelectedChanged(defaultPrimaryTokenInfo.id)
             amountChanged({
-              info: portfolioPrimaryTokenInfo,
+              info: defaultPrimaryTokenInfo,
               quantity: toBigInt(
                 pastedFormatter(scanAction.params?.amount?.toString() ?? ''),
-                portfolioPrimaryTokenInfo.decimals,
+                defaultPrimaryTokenInfo.decimals,
               ),
             })
           }
@@ -156,12 +180,12 @@ export const useTriggerScanAction = ({
         receiverResolveChanged(scanAction.address)
 
         if (scanAction.amount) {
-          tokenSelectedChanged(portfolioPrimaryTokenInfo.id)
+          tokenSelectedChanged(defaultPrimaryTokenInfo.id)
           amountChanged({
-            info: portfolioPrimaryTokenInfo,
+            info: defaultPrimaryTokenInfo,
             quantity: toBigInt(
               pastedFormatter(scanAction.amount),
-              portfolioPrimaryTokenInfo.decimals,
+              defaultPrimaryTokenInfo.decimals,
             ),
           })
         }
@@ -186,19 +210,31 @@ export const useTriggerScanAction = ({
 
       case 'view-transaction': {
         // CIP-107: View transaction details
-        // Find transaction by hash (transaction.id is the hash)
-        const transaction = Object.values(wallet.transactions).find(
-          (tx) => tx.id === scanAction.hash,
-        )
-        if (transaction) {
-          walletNavigation.navigateToTxDetails(transaction.id)
+        // This action requires a wallet, so navigate to wallet selection if needed
+        // The target screen (wrapped in WithWalletOpened) will handle wallet selection
+        if (wallet) {
+          const transactions = wallet.transactions
+          const transaction = transactions
+            ? Object.values(transactions).find(
+                (tx) => tx.id === scanAction.hash,
+              )
+            : undefined
+          if (transaction) {
+            walletNavigation.navigateToTxDetails(transaction.id)
+          } else {
+            // Transaction not found in wallet history, show explorer link
+            const explorers = wallet.networkManager?.explorers
+            if (explorers?.cardanoscan) {
+              openTransactionNotFoundModal({
+                hash: scanAction.hash,
+                explorerUrl: explorers.cardanoscan.tx(scanAction.hash),
+              })
+            }
+          }
         } else {
-          // Transaction not found in wallet history, show explorer link
-          const explorers = wallet.networkManager.explorers
-          openTransactionNotFoundModal({
-            hash: scanAction.hash,
-            explorerUrl: explorers.cardanoscan.tx(scanAction.hash),
-          })
+          // No wallet selected - navigate to wallet selection
+          // The target screen will be wrapped in WithWalletOpened and handle wallet selection
+          walletNavigation.navigateToTxDetails(scanAction.hash)
         }
         break
       }
@@ -234,14 +270,6 @@ export const useTriggerScanAction = ({
       }
     }
   }
-
-  React.useEffect(() => {
-    return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current)
-      }
-    }
-  }, [])
 
   return trigger
 }

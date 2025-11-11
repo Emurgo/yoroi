@@ -129,7 +129,14 @@ const isValidPoolId = (poolId: string): boolean => {
 export const getPoolBech32Id = (poolId: string) => {
   return CardanoMobileWrapped.cslScope((csl) => {
     const keyHash = csl.Ed25519KeyHash.fromHex(poolId)
-    return keyHash.toBech32('pool')
+    if (!keyHash) {
+      throw new Error(`getPoolBech32Id: Failed to create key hash from poolId: ${poolId}`)
+    }
+    const bech32 = keyHash.toBech32('pool')
+    if (!bech32) {
+      throw new Error(`getPoolBech32Id: Failed to convert key hash to bech32 for poolId: ${poolId}`)
+    }
+    return bech32
   })
 }
 

@@ -5,7 +5,6 @@ import type {
   WasmModuleProxy,
 } from '@emurgo/cross-csl-core'
 
-import {CardanoMobileWrapped} from '../../../src/wallets/cardano/wrappedCsl'
 import {normalizeToAddress} from '../utils/addresses'
 import {UnsignedTransaction} from './types'
 

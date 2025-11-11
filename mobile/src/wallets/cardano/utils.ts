@@ -6,6 +6,8 @@ import {WasmModuleProxy} from '@emurgo/cross-csl-core'
 import {BigNumber} from 'bignumber.js'
 import {Buffer} from 'buffer'
 
+import {logger} from '~/kernel/logger/logger'
+
 import {BaseAsset, RawUtxo} from '../types/other'
 import {Amounts} from '../utils/utils'
 import {identifierToCardanoAsset} from './assetHelpers'
@@ -38,17 +40,35 @@ export const deriveRewardAddressFromAddress = (
   chainId: number,
 ): string => {
   return CardanoMobileWrapped.cslScope((csl) => {
-    const result = csl.RewardAddress.new(
-      chainId,
-      csl.BaseAddress.fromAddress(
-        csl.Address.fromBech32(address),
-      )?.stakeCred() ?? invalid('invalid base address'),
-    )
-      .toAddress()
-      .toBech32(undefined)
+    const wasmAddress = csl.Address.fromBech32(address)
+    if (!wasmAddress) {
+      throw new Error(`deriveRewardAddressFromAddress: Invalid address format: ${address}`)
+    }
 
-    if (typeof result !== 'string')
+    const baseAddress = csl.BaseAddress.fromAddress(wasmAddress)
+    if (!baseAddress) {
+      throw new Error(`deriveRewardAddressFromAddress: Address is not a base address: ${address}`)
+    }
+
+    const stakeCred = baseAddress.stakeCred()
+    if (!stakeCred) {
+      throw new Error(`deriveRewardAddressFromAddress: Failed to get stake credential from address: ${address}`)
+    }
+
+    const rewardAddress = csl.RewardAddress.new(chainId, stakeCred)
+    if (!rewardAddress) {
+      throw new Error(`deriveRewardAddressFromAddress: Failed to create reward address`)
+    }
+
+    const rewardAddressObj = rewardAddress.toAddress()
+    if (!rewardAddressObj) {
+      throw new Error(`deriveRewardAddressFromAddress: Failed to convert reward address to Address`)
+    }
+
+    const result = rewardAddressObj.toBech32(undefined)
+    if (typeof result !== 'string') {
       throw new Error('Its not possible to derive reward address')
+    }
     return result
   })
 }
@@ -61,16 +81,79 @@ export const cardanoValueFromRemoteFormat = (
   utxo: RawUtxo,
   csl: WasmModuleProxy,
 ) => {
-  const value = csl.Value.new(csl.BigNum.fromStr(utxo.amount))
+  // Validate amount
+  if (!utxo.amount || typeof utxo.amount !== 'string' || utxo.amount.trim() === '') {
+    throw new Error(
+      `cardanoValueFromRemoteFormat: Invalid amount for UTXO. Expected non-empty string, got: ${utxo.amount}`,
+    )
+  }
+
+  const amountBigNum = csl.BigNum.fromStr(utxo.amount)
+  if (!amountBigNum) {
+    throw new Error(
+      `cardanoValueFromRemoteFormat: Failed to create BigNum from amount: ${utxo.amount}`,
+    )
+  }
+
+  const value = csl.Value.new(amountBigNum)
+  if (!value) {
+    throw new Error(
+      `cardanoValueFromRemoteFormat: Failed to create Value from amount: ${utxo.amount}`,
+    )
+  }
+
   if (utxo.assets.length === 0) return value
   const assets = csl.MultiAsset.new()
 
   for (const remoteAsset of utxo.assets) {
-    const {policyId, name} = identifierToCardanoAsset(remoteAsset.assetId)
-    let policyContent = assets.get(policyId)
-    policyContent = policyContent?.hasValue() ? policyContent : csl.Assets.new()
-    policyContent.insert(name, csl.BigNum.fromStr(remoteAsset.amount))
-    assets.insert(policyId, policyContent)
+    // Validate asset data
+    if (!remoteAsset.assetId || !remoteAsset.amount) {
+      logger.warn('cardanoValueFromRemoteFormat: Skipping invalid asset', {
+        assetId: remoteAsset.assetId,
+        amount: remoteAsset.amount,
+      })
+      continue
+    }
+
+    try {
+      const {policyId, name} = identifierToCardanoAsset(remoteAsset.assetId)
+      if (!policyId || !name) {
+        logger.warn('cardanoValueFromRemoteFormat: Invalid asset identifier', {
+          assetId: remoteAsset.assetId,
+        })
+        continue
+      }
+
+      let policyContent = assets.get(policyId)
+      policyContent = policyContent?.hasValue() ? policyContent : csl.Assets.new()
+      
+      // Validate asset amount
+      if (!remoteAsset.amount || typeof remoteAsset.amount !== 'string') {
+        logger.warn('cardanoValueFromRemoteFormat: Invalid asset amount', {
+          assetId: remoteAsset.assetId,
+          amount: remoteAsset.amount,
+        })
+        continue
+      }
+
+      const assetAmountBigNum = csl.BigNum.fromStr(remoteAsset.amount)
+      if (!assetAmountBigNum) {
+        logger.warn('cardanoValueFromRemoteFormat: Failed to create BigNum for asset amount', {
+          assetId: remoteAsset.assetId,
+          amount: remoteAsset.amount,
+        })
+        continue
+      }
+
+      policyContent.insert(name, assetAmountBigNum)
+      assets.insert(policyId, policyContent)
+    } catch (error) {
+      logger.warn('cardanoValueFromRemoteFormat: Error processing asset', {
+        assetId: remoteAsset.assetId,
+        error: error instanceof Error ? error.message : String(error),
+      })
+      // Continue processing other assets
+    }
   }
 
   if (assets.len() > 0) {
@@ -89,12 +172,12 @@ export const amountsFromRemote = (remoteValue: RemoteValue): Balance.Amounts => 
   const amounts: Balance.Amounts = {} as Balance.Amounts
 
   // Add primary token (ADA)
-  amounts['.'] = remoteValue.amount
+  amounts['.'] = remoteValue.amount as Balance.Quantity
 
   // Add other assets
   if (remoteValue.assets != null) {
     for (const token of remoteValue.assets) {
-      amounts[token.assetId] = token.amount
+      amounts[token.assetId] = token.amount as Balance.Quantity
     }
   }
 

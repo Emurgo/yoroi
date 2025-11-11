@@ -1,8 +1,6 @@
 import {normalizeToAddress} from '@yoroi/tx'
 import {Balance, Chain, Portfolio} from '@yoroi/types'
 
-import BigNumber from 'bignumber.js'
-
 import {Address} from '../types/yoroi'
 import {Amounts, Quantities, asQuantity} from '../utils/utils'
 import {cardanoValueFromAmounts} from './cardanoValueFromAmounts'

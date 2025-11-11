@@ -5,7 +5,7 @@ import {BigNumber} from 'bignumber.js'
 import {Balance} from '@yoroi/types'
 
 import {CardanoMobileWrapped} from '../../../src/wallets/cardano/wrappedCsl'
-import {RemoteUnspentOutput, SendToken, Token} from '../types'
+import {RemoteUnspentOutput, SendToken} from '../types'
 
 /**
  * Convert Balance.Amounts to Cardano Value
@@ -77,13 +77,13 @@ export async function amountsFromCardanoValue(
 
     // Add primary token (ADA)
     const coin = value.coin()
-    amounts[primaryTokenId] = coin.toStr()
+    amounts[primaryTokenId] = coin.toStr() as Balance.Quantity
 
     // Add other assets
     const ma = value.multiasset()
     if (ma) {
       for (const token of parseTokenList(csl, ma)) {
-        amounts[token.assetId] = token.amount
+        amounts[token.assetId] = token.amount as Balance.Quantity
       }
     }
 
@@ -125,7 +125,7 @@ export function identifierToCardanoAsset(
  * Build send token list from tokens and UTXOs
  */
 export function buildSendTokenList(
-  primaryTokenId: string,
+  _primaryTokenId: string,
   tokens: SendToken[],
   utxos: Array<Balance.Amounts>,
 ): Balance.Amounts {
@@ -139,7 +139,7 @@ export function buildSendTokenList(
       const newAmount = new BigNumber(currentAmount)
         .plus(token.amount)
         .toString()
-      amounts[tokenId] = newAmount
+      amounts[tokenId] = newAmount as Balance.Quantity
     } else if (token.shouldSendAll) {
       // if we want to send all of a specific token, sum it from all utxos
       const tokenId = token.token.identifier
@@ -151,7 +151,7 @@ export function buildSendTokenList(
         return sum
       }, new BigNumber(0))
 
-      amounts[tokenId] = total.toString()
+      amounts[tokenId] = total.toString() as Balance.Quantity
     }
   }
 
@@ -168,11 +168,11 @@ export function amountsFromRemote(
   const amounts: Balance.Amounts = {} as Balance.Amounts
 
   // Add primary token (ADA)
-  amounts[primaryTokenId] = utxo.amount
+  amounts[primaryTokenId] = utxo.amount as Balance.Quantity
 
   // Add other assets
   for (const asset of utxo.assets) {
-    amounts[asset.assetId] = asset.amount
+    amounts[asset.assetId] = asset.amount as Balance.Quantity
   }
 
   return amounts
@@ -202,7 +202,7 @@ export function parseTokenList(
       const assetId = cardanoAssetToIdentifier(policyId, assetName)
       result.push({
         assetId,
-        amount: amount.toStr(),
+        amount: amount.toStr() as Balance.Quantity,
       })
     }
   }

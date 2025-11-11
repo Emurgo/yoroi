@@ -529,10 +529,20 @@ export const makeCardanoWallet = (
 
         try {
           const absSlotNumber = await this.getAbsoluteSlotNumber()
-          const votingPublicKey = CardanoMobile.PrivateKey.fromExtendedBytes(
+          const votingPrivateKey = CardanoMobile.PrivateKey.fromExtendedBytes(
             new Uint8Array(Buffer.from(catalystKeyHex, 'hex')),
-          ).toPublic()
+          )
+          if (!votingPrivateKey) {
+            throw new Error('Failed to create voting private key from catalystKeyHex')
+          }
+          const votingPublicKey = votingPrivateKey.toPublic()
+          if (!votingPublicKey) {
+            throw new Error('Failed to get public key from voting private key')
+          }
           const stakingPublicKey = this.getStakingKey()
+          if (!stakingPublicKey) {
+            throw new Error('Failed to get staking public key')
+          }
           const changeAddr = this.getAddressedChangeAddress(addressMode)
 
           const {coinsPerUtxoByte, keyDeposit, linearFee, poolDeposit} =
@@ -552,9 +562,26 @@ export const makeCardanoWallet = (
           const modernUtxos = this.getAddressedUtxos()
 
           const baseAddr = this.getFirstPaymentAddress()
-          const paymentAddressCIP36 = baseAddr.toAddress().toBech32(undefined)
+          if (!baseAddr) {
+            throw new Error('getFirstPaymentAddress returned null')
+          }
+          const baseAddrObj = baseAddr.toAddress()
+          if (!baseAddrObj) {
+            throw new Error('Failed to convert base address to Address')
+          }
+          const paymentAddressCIP36 = baseAddrObj.toBech32(undefined)
+          if (!paymentAddressCIP36) {
+            throw new Error('Failed to convert payment address to bech32')
+          }
 
-          const rewardAddress = this.getRewardAddress().toBech32(undefined)
+          const rewardAddr = this.getRewardAddress()
+          if (!rewardAddr) {
+            throw new Error('getRewardAddress returned null')
+          }
+          const rewardAddress = rewardAddr.toBech32(undefined)
+          if (!rewardAddress) {
+            throw new Error('Failed to convert reward address to bech32')
+          }
 
           // Build transaction using functional TransactionBuilder
           let builderState = createTransactionBuilder()
@@ -563,17 +590,25 @@ export const makeCardanoWallet = (
           builderState = addInputs(builderState, modernUtxos)
 
           // Create and add voting metadata
+          const votingPublicKeyBech32 = votingPublicKey.toBech32()
+          if (!votingPublicKeyBech32) {
+            throw new Error('Failed to convert voting public key to bech32')
+          }
+          const stakingPublicKeyBech32 = stakingPublicKey.toBech32()
+          if (!stakingPublicKeyBech32) {
+            throw new Error('Failed to convert staking public key to bech32')
+          }
           const votingMetadata = supportsCIP36
             ? createCIP36VotingMetadata(
-                votingPublicKey.toBech32(),
-                stakingPublicKey.toBech32(),
+                votingPublicKeyBech32,
+                stakingPublicKeyBech32,
                 rewardAddress,
                 nonce,
                 paymentAddressCIP36,
               )
             : createCIP15VotingMetadata(
-                votingPublicKey.toBech32(),
-                stakingPublicKey.toBech32(),
+                votingPublicKeyBech32,
+                stakingPublicKeyBech32,
                 rewardAddress,
                 nonce,
               )

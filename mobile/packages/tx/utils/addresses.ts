@@ -88,22 +88,23 @@ export async function addrContainsAccountKey(
   )
 
   const baseAddress = csl.BaseAddress.fromAddress(wasmAddr)
-  if (!baseAddress) throw new Error('addrContainsAccountKey: baseAddress null')
-  const stakeCredBytes = baseAddress.stakeCred().toBytes()
   if (baseAddress != null) {
+    const stakeCredBytes = baseAddress.stakeCred().toBytes()
     if (Buffer.from(stakeCredBytes).toString('hex') === accountKeyString) {
       return true
     }
   }
+  
+  // Pointer addresses don't contain stake credentials directly
+  // They reference stake credentials by pointer (slot, txIndex, certIndex)
+  // We can't extract the credential from a pointer address, so we skip this check
   const asPointer = csl.PointerAddress.fromAddress(wasmAddr)
   if (asPointer != null) {
-    // Extract stake credential from pointer address and compare
-    const stakeCred = asPointer.stakeCred()
-    const stakeCredBytes = stakeCred.toBytes()
-    if (Buffer.from(stakeCredBytes).toString('hex') === accountKeyString) {
-      return true
-    }
+    // Pointer addresses can't be matched by stake credential directly
+    // Return false or accept type mismatch based on flag
+    return acceptTypeMismatch
   }
+  
   return acceptTypeMismatch
 }
 

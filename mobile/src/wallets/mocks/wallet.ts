@@ -721,7 +721,6 @@ const poolInfoAndHistory: RemotePoolMetaSuccess = {
       cert_ordinal: 0,
       payload: {
         kind: 'PoolRegistration',
-        certIndex: 123,
         poolParams: {},
       },
     },
@@ -820,4 +819,6 @@ export const mocks = {
   signTx,
   signTxWithLedger,
   submitTransaction,
+  unsignedTransaction,
+  signedTransaction,
 }

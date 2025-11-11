@@ -69,6 +69,7 @@ export async function buildLedgerSignedTx(
     }
     auxiliaryData?: {
       hasValue(): boolean
+      toBytes(): Uint8Array
     } | null
     catalystRegistrationData?: {
       votingPublicKeyHex: string

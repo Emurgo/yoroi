@@ -28,18 +28,38 @@ export async function calcLockedDeposit({
   const result = new BigNumber(0)
   try {
     const normalizedAddress = await normalizeToAddress(address)
-    if (normalizedAddress === undefined)
+    if (normalizedAddress === undefined || normalizedAddress === null) {
       throw new Error('calcLockedDeposit::Error not a valid address')
+    }
 
     const utxosWithAssets = rawUtxos.filter((u) => u.assets.length > 0)
     const coinsPerUtxoByte = csl.BigNum.fromStr(coinsPerUtxoByteStr)
     const dataCost = csl.DataCost.newCoinsPerByte(coinsPerUtxoByte)
 
-    const results = utxosWithAssets.map((u) => {
-      const value = cardanoValueFromRemoteFormat(u, csl)
-      const txOutput = csl.TransactionOutput.new(normalizedAddress, value)
-      const minAda = csl.minAdaForOutput(txOutput, dataCost)
-      return minAda.toStr()
+    const results = utxosWithAssets.map((u, index) => {
+      try {
+        const value = cardanoValueFromRemoteFormat(u, csl)
+        if (!value) {
+          throw new Error('cardanoValueFromRemoteFormat returned null value')
+        }
+        const txOutput = csl.TransactionOutput.new(normalizedAddress, value)
+        if (!txOutput) {
+          throw new Error('TransactionOutput.new returned null')
+        }
+        const minAda = csl.minAdaForOutput(txOutput, dataCost)
+        return minAda.toStr()
+      } catch (error) {
+        logger.error(error as Error, {
+          utxoIndex: index,
+          utxoAmount: u.amount,
+          utxoAssetsCount: u.assets.length,
+          utxoReceiver: u.receiver,
+          txHash: u.txHash,
+          txIndex: u.txIndex,
+        })
+        // Return '0' for this UTXO to continue processing others
+        return '0'
+      }
     })
 
     const totalLocked = results.reduce((acc, v) => acc.plus(v), result)

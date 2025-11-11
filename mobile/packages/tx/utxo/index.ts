@@ -103,7 +103,7 @@ async function getUtxoSafePoint(
 }
 
 async function mergeDiffsIntoSafeUtxoSet(
-  api: UtxoApiContract,
+  _api: UtxoApiContract,
   utxoStorage: UtxoStorage,
   safeUtxos: Utxo[],
   localDiff: UtxoDiffToBestBlock[],

@@ -23,7 +23,6 @@ import {
 import {LegalAgreement} from '~/features/Legal/common/types'
 import {useLegalAgreement} from '~/features/Legal/hooks/useLegalAgreement'
 import {ScanActionHandler} from '~/features/Links/components/ScanActionHandler'
-import {useDeepLinkWatcher} from '~/features/Links/hooks/useDeepLinkWatcher'
 import {useLinksRequestAction} from '~/features/Links/hooks/useLinksRequestAction'
 import {useInitNotifications} from '~/features/Notifications/common/hooks'
 import {NotificationUIHandler} from '~/features/Notifications/useCases/NotificationUIHandler'
@@ -46,9 +45,6 @@ export const AppNavigator = () => {
   const firstAction = useFirstAction()
   const afterLoginAction = useAfterLoginAction()
   const strings = useStrings()
-
-  // Enable deep link watching
-  useDeepLinkWatcher() // Returns {pendingScanAction, clearPendingScanAction} - to be used by ScanActionHandler component
 
   // Enable deep link action handling with modal support (only when logged in)
   useLinksRequestAction()
