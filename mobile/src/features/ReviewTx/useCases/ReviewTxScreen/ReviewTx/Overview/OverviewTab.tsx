@@ -651,12 +651,17 @@ const Details = ({details}: {details?: ReviewDetailsProps}) => {
 export const CreatedByInfoItem = ({
   logo,
   url,
+  name,
 }: {
   logo?: string
   url: string
+  name?: string
 }) => {
   const {atoms: ta} = useTheme()
   const strings = useStrings()
+
+  const displayText =
+    name ?? url.replace(/^https?:\/\//, '').replace(/\/+$/, '')
 
   return (
     <View style={[a.flex_row, a.justify_between]}>
@@ -673,7 +678,7 @@ export const CreatedByInfoItem = ({
 
         <TouchableOpacity onPress={() => Linking.openURL(url)}>
           <Text style={[ta.text_primary_medium, a.body_2_md_medium]}>
-            {url.replace(/^https?:\/\//, '').replace(/\/+$/, '')}
+            {displayText}
           </Text>
         </TouchableOpacity>
       </View>
