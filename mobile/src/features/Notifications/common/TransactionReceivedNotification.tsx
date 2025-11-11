@@ -196,12 +196,16 @@ const getTransactionInfoDetails = (
   const ptReceived = sumPtFromOutputs(info.outputs)
   const ptSent = sumPtFromOutputs(info.inputs)
 
+  // Assets array only contains non-primary tokens (ADA is tracked separately via amount field)
+  // So we can directly use the assets arrays
   const assetsReceived = info.outputs.flatMap((o) => o.assets)
   const assetsSent = info.inputs.flatMap((i) => i.assets)
 
+  // Multiple assets means more than 1 token
   const hasReceivedMultipleAssets = assetsReceived.length > 1
   const hasSentMultipleAssets = assetsSent.length > 1
 
+  // Prioritize non-primary tokens for display (the actual token received)
   const firstAssetIdReceived =
     assetsReceived.length > 0
       ? assetsReceived[0]!.identifier
