@@ -7,6 +7,7 @@ import {View} from 'react-native'
 import {useTransactionInfos} from '~/features/Transactions/hooks/useTransactionInfos'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
+import {logger} from '~/kernel/logger/logger'
 import {Icon} from '~/ui/Icon'
 import {NotificationItem} from '~/ui/NotificationItem/NotificationItem'
 import {YoroiWallet} from '~/wallets/cardano/types'
@@ -41,6 +42,15 @@ export const getTransactionReceivedNotificationTitle = (
       tx,
       wallet.portfolioPrimaryTokenInfo,
     )
+
+    logger.info('Notification RECEIVED details', {
+      hasMultiple: details.hasReceivedMultipleAssets,
+      assetName: details.firstReceivedAsset.name,
+      amount: Quantities.format(
+        details.firstAssetAmountReceived,
+        details.firstReceivedAsset.denomination,
+      ),
+    })
 
     return details.hasReceivedMultipleAssets
       ? strings.notifications.multipleAssetsReceived
@@ -197,11 +207,29 @@ const getTransactionInfoDetails = (
   const ptSent = sumPtFromOutputs(info.inputs)
 
   // Assets array only contains non-primary tokens (ADA is tracked separately via amount field)
-  // So we can directly use the assets arrays
-  const assetsReceived = info.outputs.flatMap((o) => o.assets)
-  const assetsSent = info.inputs.flatMap((i) => i.assets)
+  const allAssetsReceived = info.outputs.flatMap((o) => o.assets)
+  const allAssetsSent = info.inputs.flatMap((i) => i.assets)
 
-  // Multiple assets means more than 1 token
+  // Deduplicate by identifier - same token can appear in multiple outputs
+  const uniqueReceivedIds = [
+    ...new Set(allAssetsReceived.map((a) => a.identifier)),
+  ]
+  const uniqueSentIds = [...new Set(allAssetsSent.map((a) => a.identifier))]
+
+  const assetsReceived = uniqueReceivedIds
+    .map((id) => allAssetsReceived.find((a) => a.identifier === id))
+    .filter((a) => a != null)
+  const assetsSent = uniqueSentIds
+    .map((id) => allAssetsSent.find((a) => a.identifier === id))
+    .filter((a) => a != null)
+
+  logger.info('Notification assets DEBUG', {
+    allReceivedCount: allAssetsReceived.length,
+    uniqueReceivedCount: assetsReceived.length,
+    receivedIds: assetsReceived.map((a) => a.identifier).join(', '),
+  })
+
+  // Multiple assets means more than 1 unique token
   const hasReceivedMultipleAssets = assetsReceived.length > 1
   const hasSentMultipleAssets = assetsSent.length > 1
 
