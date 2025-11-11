@@ -15,7 +15,7 @@ import {logger} from '~/kernel/logger/logger'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 
 import {pushNotificationsManager} from './notification-manager'
-import {parseNotificationId} from './notifications'
+import {generateNotificationId, parseNotificationId} from './notifications'
 import {usePrimaryTokenPriceChangedNotification} from './primary-token-price-changed-notification'
 import {useRewardsUpdatedNotifications} from './rewards-updated-notification'
 import {triggerNotificationAction} from './tools'
@@ -44,21 +44,28 @@ const createPushNotification = (options: {
 const initPushNotifications = (
   walletNavigation: ReturnType<typeof useWalletNavigation>,
 ) => {
+  let firebaseForegroundUnsubscribe: (() => void) | undefined
+  let responseListener: Notifications.Subscription | undefined
+  let isSubscribedToTopic = false
+  let isUnmounted = false
+
   const registerFirebaseIfPermissionsGranted = async () => {
     try {
+      if (isUnmounted) return
+
       const {status} = await Notifications.getPermissionsAsync()
       if (status === 'granted') {
+        if (isUnmounted) return
+
         await messaging().registerDeviceForRemoteMessages()
         await messaging().requestPermission()
         await messaging().subscribeToTopic('yoroi_campaigns')
+        isSubscribedToTopic = true
       }
     } catch (error) {
       logger.error('Push registration failed', {error})
     }
   }
-
-  let firebaseForegroundUnsubscribe: (() => void) | undefined
-  let responseListener: Notifications.Subscription | undefined
 
   const createDefaultChannel = () =>
     Notifications.setNotificationChannelAsync('default', {
@@ -90,9 +97,10 @@ const initPushNotifications = (
     const title = remoteMessage.notification?.title
     const body = remoteMessage.notification?.body
     const data = remoteMessage.data
+
     if (isString(title) && isString(body)) {
       const pushNotification = createPushNotification({
-        id: Date.now(),
+        id: generateNotificationId(),
         title,
         description: body,
         data: data as Record<string, unknown>,
@@ -121,7 +129,9 @@ const initPushNotifications = (
         string,
         unknown
       >
-      const id = parseNotificationId(String(data?.id ?? ''))
+      const maybeId = parseNotificationId(String(data?.id ?? ''))
+      const id = Number.isNaN(maybeId) ? Date.now() : maybeId
+
       triggerNotificationAction({
         manager: pushNotificationsManager,
         id,
@@ -130,23 +140,30 @@ const initPushNotifications = (
       })
     })
 
-  const configureAfterChannel = async () => {
-    setupNotificationHandler()
-    await registerFirebaseIfPermissionsGranted()
-    firebaseForegroundUnsubscribe = attachForegroundListener()
-    responseListener = attachResponseListener()
+  const init = async () => {
+    try {
+      await createDefaultChannel()
+      await registerFirebaseIfPermissionsGranted()
+      setupNotificationHandler()
+
+      if (isUnmounted) return
+
+      firebaseForegroundUnsubscribe = attachForegroundListener()
+      responseListener = attachResponseListener()
+    } catch (error) {
+      logger.error('Push notifications init failed', {error})
+    }
   }
 
-  createDefaultChannel()
-    .then(configureAfterChannel)
-    .catch((error) => {
-      logger.error('Push notifications init failed', {error})
-    })
+  init()
 
   return () => {
+    isUnmounted = true
     firebaseForegroundUnsubscribe?.()
     responseListener?.remove()
-    messaging().unsubscribeFromTopic('yoroi_campaigns')
+    if (isSubscribedToTopic) {
+      messaging().unsubscribeFromTopic('yoroi_campaigns')
+    }
   }
 }
 
@@ -174,7 +191,7 @@ export const useInitNotifications = ({
   )
   React.useEffect(
     () => (pushEnabled ? initPushNotifications(walletNavigation) : undefined),
-    [walletNavigation, pushEnabled, manager],
+    [walletNavigation, pushEnabled],
   )
   useTransactionReceivedNotifications({enabled: localEnabled})
   usePrimaryTokenPriceChangedNotification({enabled: false}) // Temporarily disabled until requested by product team
