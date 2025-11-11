@@ -1,5 +1,6 @@
 import {isNonNullable} from '@yoroi/common'
-import {Api, Network, Portfolio} from '@yoroi/types'
+import {parseTokenList} from '@yoroi/tx'
+import {Api, Balance, Network, Portfolio} from '@yoroi/types'
 
 import {CredKind} from '@emurgo/cross-csl-core'
 import * as _ from 'lodash'
@@ -27,6 +28,7 @@ import {
 
 export const useFormattedTx = (
   data: TransactionBody,
+  cbor?: string | null,
 ): {
   formattedTx: FormattedTx | null
   isLoading: boolean
@@ -35,9 +37,12 @@ export const useFormattedTx = (
 } => {
   const {wallet} = useSelectedWallet()
 
-  const inputs = data?.inputs ?? []
-  const outputs = data?.outputs ?? []
-  const referenceInputs = data?.reference_inputs ?? []
+  const inputs = React.useMemo(() => data?.inputs ?? [], [data?.inputs])
+  const outputs = React.useMemo(() => data?.outputs ?? [], [data?.outputs])
+  const referenceInputs = React.useMemo(
+    () => data?.reference_inputs ?? [],
+    [data?.reference_inputs],
+  )
 
   const inputUtxosResult = useUtxos(inputs, wallet)
   const referenceInputUtxosResult = useUtxos(referenceInputs, wallet)
@@ -72,23 +77,53 @@ export const useFormattedTx = (
     )
   })
 
-  const outputTokenIds = outputs.flatMap((o) => {
-    if (!o.amount.multiasset) return []
-    const policyIds = Object.keys(o.amount.multiasset)
-    const tokenIds = policyIds.flatMap((policyId) => {
-      const assetIds = Object.keys(o.amount.multiasset?.[policyId] ?? {})
-      return assetIds.map(
-        (assetId) => `${policyId}.${assetId}` as Portfolio.Token.Id,
-      )
-    })
-    return tokenIds
-  })
+  // Extract token IDs from CSL objects if CBOR is available, otherwise fall back to JSON
+  const outputTokenIds = React.useMemo(() => {
+    if (cbor) {
+      // Extract from CSL objects using parseTokenList for correct token ID format
+      return CardanoMobileWrapped.cslScope((csl) => {
+        const tx = csl.Transaction.fromHex(cbor)
+        const txBody = tx.body()
+        const txOutputs = txBody.outputs()
+        const tokenIds: Portfolio.Token.Id[] = []
 
-  const mintTokenIds =
-    data.mint?.map(
-      ([policyId, asset]) =>
-        `${policyId}.${Object.keys(asset)[0] ?? ''}` as Portfolio.Token.Id,
-    ) ?? []
+        for (let i = 0; i < txOutputs.len(); i++) {
+          const output = txOutputs.get(i)
+          const value = output.amount()
+          const multiasset = value.multiasset()
+          if (multiasset) {
+            const tokens = parseTokenList(csl, multiasset)
+            tokenIds.push(...tokens.map((t) => t.assetId as Portfolio.Token.Id))
+          }
+        }
+
+        return tokenIds
+      })
+    }
+
+    // Fall back to JSON parsing
+    return outputs.flatMap((o) => {
+      if (!o.amount.multiasset) return []
+      const policyIds = Object.keys(o.amount.multiasset)
+      return policyIds.flatMap((policyId) => {
+        const assetIds = Object.keys(o.amount.multiasset?.[policyId] ?? {})
+        return assetIds.map((assetId) => {
+          // Use the asset name hex directly from JSON (CSL serializes it correctly)
+          return `${policyId}.${assetId}` as Portfolio.Token.Id
+        })
+      })
+    })
+  }, [cbor, outputs])
+
+  const mintTokenIds = React.useMemo(() => {
+    // Use JSON parsing for mint (mint.keys() doesn't exist on MintsAssets type)
+    return (
+      data.mint?.map(([policyId, asset]) => {
+        const assetNameHex = Object.keys(asset)[0] ?? ''
+        return `${policyId}.${assetNameHex}` as Portfolio.Token.Id
+      }) ?? []
+    )
+  }, [data.mint])
 
   const tokenIds = _.uniq<Portfolio.Token.Id>([
     ...inputTokenIds,
@@ -133,6 +168,7 @@ export const useFormattedTx = (
     wallet,
     outputs,
     tokenInfos,
+    cbor,
   )
   const formattedFee = formatFee(wallet, data)
   const formattedCertificates = formatCertificates(data.certs)
@@ -209,7 +245,72 @@ const formatOutputs = (
   wallet: YoroiWallet,
   outputs: TransactionOutputs,
   tokenInfos: Map<Portfolio.Token.Id, Portfolio.Token.Info> | undefined,
+  cbor?: string | null,
 ): FormattedOutputs => {
+  // If CBOR is available, extract token info from CSL objects for accuracy
+  if (cbor) {
+    return CardanoMobileWrapped.cslScope((csl) => {
+      const tx = csl.Transaction.fromHex(cbor)
+      const txBody = tx.body()
+      const txOutputs = txBody.outputs()
+
+      return outputs.map((output, index) => {
+        const address = output.address
+        const coin = asQuantity(output.amount.coin)
+
+        const addressKind = getAddressKind(address)
+        const rewardAddress =
+          addressKind === CredKind.Key
+            ? deriveAddress(address, wallet.networkManager.chainId)
+            : null
+
+        const primaryAssets = [
+          {
+            tokenInfo: wallet.portfolioPrimaryTokenInfo,
+            quantity: coin,
+          },
+        ]
+
+        // Extract tokens from CSL object using parseTokenList
+        const cslOutput = txOutputs.get(index)
+        const multiAssets: Array<{
+          tokenInfo: Portfolio.Token.Info
+          quantity: Balance.Quantity
+        }> = []
+
+        if (cslOutput) {
+          const value = cslOutput.amount()
+          const multiasset = value.multiasset()
+          if (multiasset) {
+            const tokens = parseTokenList(csl, multiasset)
+            for (const token of tokens) {
+              const tokenInfo = tokenInfos?.get(
+                token.assetId as Portfolio.Token.Id,
+              )
+              if (tokenInfo) {
+                multiAssets.push({
+                  tokenInfo,
+                  quantity: asQuantity(token.amount),
+                })
+              }
+            }
+          }
+        }
+
+        const assets = [...primaryAssets, ...multiAssets].filter(isNonNullable)
+
+        return {
+          assets,
+          address,
+          addressKind,
+          rewardAddress,
+          ownAddress: isOwnedAddress(wallet, address),
+        }
+      })
+    })
+  }
+
+  // Fall back to JSON parsing
   return outputs.map((output) => {
     const address = output.address
     const coin = asQuantity(output.amount.coin)
@@ -232,7 +333,9 @@ const formatOutputs = (
           ([policyId, assets]) => {
             return Object.entries(assets as Record<string, string>).map(
               ([assetId, amount]) => {
-                const tokenInfo = tokenInfos?.get(`${policyId}.${assetId}`)
+                // Use asset name hex directly from JSON (CSL serializes it correctly)
+                const tokenId = `${policyId}.${assetId}` as Portfolio.Token.Id
+                const tokenInfo = tokenInfos?.get(tokenId)
                 if (tokenInfo == null) return null
                 const quantity = asQuantity(amount)
 
@@ -292,10 +395,11 @@ const formatMintData = (
   if (mintData == null) return null
   return (mintData?.flatMap(([policyId, tokens]) =>
     Object.entries(tokens)
-      .map(([assetNameHex, count]) => [
-        tokenInfos?.get(`${policyId}.${assetNameHex}`),
-        count,
-      ])
+      .map(([assetNameHex, count]) => {
+        // Use asset name hex directly from JSON (CSL serializes it correctly)
+        const tokenId = `${policyId}.${assetNameHex}` as Portfolio.Token.Id
+        return [tokenInfos?.get(tokenId), count] as const
+      })
       .filter(([tokenInfo]) => tokenInfo != null),
   ) ?? []) as Array<[Portfolio.Token.Info, string]>
 }

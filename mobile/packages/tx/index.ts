@@ -74,7 +74,9 @@ export {getAllSigners} from './ledger/signers'
 // Export utility functions
 export {
   normalizeToAddress,
+  validateAndExtractAddressInfo,
   derivePublicByAddressing,
+  type AddressInfo,
 } from './utils/addresses'
 export {
   cardanoValueFromAmounts,

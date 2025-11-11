@@ -1,5 +1,8 @@
-import {invalid} from '@yoroi/common'
-import {SendToken, TransactionOutput, normalizeToAddress} from '@yoroi/tx'
+import {
+  SendToken,
+  TransactionOutput,
+  validateAndExtractAddressInfo,
+} from '@yoroi/tx'
 import {Balance, Chain, Portfolio, Wallet} from '@yoroi/types'
 
 import {WasmModuleProxy} from '@emurgo/cross-csl-core'
@@ -42,27 +45,37 @@ export const deriveRewardAddressFromAddress = (
   return CardanoMobileWrapped.cslScope((csl) => {
     const wasmAddress = csl.Address.fromBech32(address)
     if (!wasmAddress) {
-      throw new Error(`deriveRewardAddressFromAddress: Invalid address format: ${address}`)
+      throw new Error(
+        `deriveRewardAddressFromAddress: Invalid address format: ${address}`,
+      )
     }
 
     const baseAddress = csl.BaseAddress.fromAddress(wasmAddress)
     if (!baseAddress) {
-      throw new Error(`deriveRewardAddressFromAddress: Address is not a base address: ${address}`)
+      throw new Error(
+        `deriveRewardAddressFromAddress: Address is not a base address: ${address}`,
+      )
     }
 
     const stakeCred = baseAddress.stakeCred()
     if (!stakeCred) {
-      throw new Error(`deriveRewardAddressFromAddress: Failed to get stake credential from address: ${address}`)
+      throw new Error(
+        `deriveRewardAddressFromAddress: Failed to get stake credential from address: ${address}`,
+      )
     }
 
     const rewardAddress = csl.RewardAddress.new(chainId, stakeCred)
     if (!rewardAddress) {
-      throw new Error(`deriveRewardAddressFromAddress: Failed to create reward address`)
+      throw new Error(
+        `deriveRewardAddressFromAddress: Failed to create reward address`,
+      )
     }
 
     const rewardAddressObj = rewardAddress.toAddress()
     if (!rewardAddressObj) {
-      throw new Error(`deriveRewardAddressFromAddress: Failed to convert reward address to Address`)
+      throw new Error(
+        `deriveRewardAddressFromAddress: Failed to convert reward address to Address`,
+      )
     }
 
     const result = rewardAddressObj.toBech32(undefined)
@@ -82,7 +95,11 @@ export const cardanoValueFromRemoteFormat = (
   csl: WasmModuleProxy,
 ) => {
   // Validate amount
-  if (!utxo.amount || typeof utxo.amount !== 'string' || utxo.amount.trim() === '') {
+  if (
+    !utxo.amount ||
+    typeof utxo.amount !== 'string' ||
+    utxo.amount.trim() === ''
+  ) {
     throw new Error(
       `cardanoValueFromRemoteFormat: Invalid amount for UTXO. Expected non-empty string, got: ${utxo.amount}`,
     )
@@ -125,8 +142,10 @@ export const cardanoValueFromRemoteFormat = (
       }
 
       let policyContent = assets.get(policyId)
-      policyContent = policyContent?.hasValue() ? policyContent : csl.Assets.new()
-      
+      policyContent = policyContent?.hasValue()
+        ? policyContent
+        : csl.Assets.new()
+
       // Validate asset amount
       if (!remoteAsset.amount || typeof remoteAsset.amount !== 'string') {
         logger.warn('cardanoValueFromRemoteFormat: Invalid asset amount', {
@@ -138,10 +157,13 @@ export const cardanoValueFromRemoteFormat = (
 
       const assetAmountBigNum = csl.BigNum.fromStr(remoteAsset.amount)
       if (!assetAmountBigNum) {
-        logger.warn('cardanoValueFromRemoteFormat: Failed to create BigNum for asset amount', {
-          assetId: remoteAsset.assetId,
-          amount: remoteAsset.amount,
-        })
+        logger.warn(
+          'cardanoValueFromRemoteFormat: Failed to create BigNum for asset amount',
+          {
+            assetId: remoteAsset.assetId,
+            amount: remoteAsset.amount,
+          },
+        )
         continue
       }
 
@@ -168,7 +190,9 @@ type RemoteValue = {
   readonly assets?: ReadonlyArray<BaseAsset>
 }
 
-export const amountsFromRemote = (remoteValue: RemoteValue): Balance.Amounts => {
+export const amountsFromRemote = (
+  remoteValue: RemoteValue,
+): Balance.Amounts => {
   const amounts: Balance.Amounts = {} as Balance.Amounts
 
   // Add primary token (ADA)
@@ -316,8 +340,9 @@ export const getHexAddressingMap = async (wallet: YoroiWallet) => {
   const addressedUtxos = await Promise.all(
     wallet.utxos.map(async (utxo: RawUtxo) => {
       const addressing = wallet.getAddressing(utxo.receiver)
-      const normalizedAddress = await normalizeToAddress(utxo.receiver)
-      const hexAddress = normalizedAddress?.toHex()
+      // Use validateAndExtractAddressInfo to safely extract hex without WASM pointer issues
+      const addressInfo = await validateAndExtractAddressInfo(utxo.receiver)
+      const hexAddress = addressInfo?.hex
 
       return {addressing, hexAddress}
     }),

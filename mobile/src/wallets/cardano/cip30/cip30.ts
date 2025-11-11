@@ -180,8 +180,22 @@ class CIP30Extension {
   ): Promise<{signature: string; key: string}> {
     return CardanoMobileWrapped.cslScope(async (csl) => {
       const payloadInBytes = Buffer.from(payload, 'hex')
-      const normalisedAddress = await normalizeToAddress(address)
-      if (!normalisedAddress) throw new Error('Invalid address')
+      // Parse address within this scope to avoid WASM pointer issues
+      let normalisedAddress: any
+      if (csl.ByronAddress.isValid(address)) {
+        const byronAddr = csl.ByronAddress.fromBase58(address)
+        normalisedAddress = byronAddr.toAddress()
+      } else {
+        const isHexAddr = /^[0-9a-fA-F]+$/.test(address)
+        normalisedAddress = isHexAddr
+          ? csl.Address.fromHex(address)
+          : csl.Address.fromBech32(address)
+      }
+
+      if (!normalisedAddress || normalisedAddress.isMalformed()) {
+        throw new Error('Invalid address')
+      }
+
       const bech32Address = normalisedAddress.toBech32(undefined)
       if (!bech32Address) throw new Error('Invalid address')
 

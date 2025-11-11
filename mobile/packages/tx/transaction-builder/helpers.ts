@@ -185,6 +185,93 @@ export function selectUtxosForAmount(
 }
 
 /**
+ * Select UTXOs to cover required amounts including tokens
+ * This function selects the minimum set of UTXOs needed to cover:
+ * - All required token amounts
+ * - Required ADA amounts (outputs + estimated fee)
+ */
+export function selectUtxosForAmounts(
+  utxos: ModernUtxo[],
+  requiredAmounts: Record<string, string>, // tokenId -> quantity
+  primaryTokenId: string = '',
+  estimatedFee: string = '200000', // Default 0.2 ADA fee estimate
+): ModernUtxo[] {
+  // Calculate total required ADA (outputs + fee)
+  const requiredAda =
+    Object.entries(requiredAmounts).reduce((sum, [tokenId, quantity]) => {
+      if (tokenId === primaryTokenId) {
+        return sum + BigInt(quantity)
+      }
+      return sum
+    }, BigInt(0)) + BigInt(estimatedFee)
+
+  // Get all required token IDs (excluding primary token)
+  const requiredTokenIds = new Set(
+    Object.keys(requiredAmounts).filter((id) => id !== primaryTokenId),
+  )
+
+  // First, find UTXOs that contain required tokens (must include these)
+  const utxosWithTokens: ModernUtxo[] = []
+  const utxosWithoutTokens: ModernUtxo[] = []
+
+  for (const utxo of utxos) {
+    const hasRequiredToken =
+      requiredTokenIds.size > 0 &&
+      Object.keys(utxo.balance).some((tokenId) => requiredTokenIds.has(tokenId))
+
+    if (hasRequiredToken) {
+      utxosWithTokens.push(utxo)
+    } else {
+      utxosWithoutTokens.push(utxo)
+    }
+  }
+
+  // Calculate what we have from UTXOs with tokens
+  const selected: ModernUtxo[] = [...utxosWithTokens]
+  const selectedAmounts: Record<string, bigint> = {}
+  let selectedAda = BigInt(0)
+
+  for (const utxo of selected) {
+    selectedAda += BigInt(utxo.balance[primaryTokenId] || '0')
+    for (const [tokenId, quantity] of Object.entries(utxo.balance)) {
+      selectedAmounts[tokenId] =
+        (selectedAmounts[tokenId] || BigInt(0)) + BigInt(quantity)
+    }
+  }
+
+  // Check if we have enough of each token
+  let needsMoreAda = selectedAda < requiredAda
+  const needsMoreTokens: string[] = []
+
+  for (const tokenId of requiredTokenIds) {
+    const required = BigInt(requiredAmounts[tokenId] || '0')
+    const have = selectedAmounts[tokenId] || BigInt(0)
+    if (have < required) {
+      needsMoreTokens.push(tokenId)
+    }
+  }
+
+  // If we need more tokens, we can't proceed (tokens must come from UTXOs that have them)
+  if (needsMoreTokens.length > 0) {
+    // This shouldn't happen if UTXOs are selected correctly, but return what we have
+    return selected
+  }
+
+  // If we need more ADA, select from remaining UTXOs
+  if (needsMoreAda) {
+    const sortedRemaining = sortUtxosByAda(utxosWithoutTokens, primaryTokenId)
+
+    for (const utxo of sortedRemaining) {
+      if (selectedAda >= requiredAda) break
+      selected.push(utxo)
+      selectedAda += BigInt(utxo.balance[primaryTokenId] || '0')
+    }
+  }
+
+  return selected
+}
+
+/**
  * Create metadata entry from label and data
  */
 export function createMetadataEntry(

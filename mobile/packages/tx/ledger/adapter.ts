@@ -71,22 +71,26 @@ export async function adaptToLedgerUnsignedTx(
       },
     }))
 
-    // Create txBuilder that can build the transaction and set auxiliary data
+    // Extract all needed values before scope exits to avoid WASM pointer issues
+    const feeStr = txBody.fee().toStr()
+    // Store CBOR hex for rebuilding transaction body in new scopes
+    const cborHex = unsignedTx.cbor!
+
+    // Create txBuilder that rebuilds transaction body from CBOR when called
     const txBuilder = {
       build(): TransactionBody {
-        return txBody
+        // This method must be called within a cslScope
+        // Rebuild transaction from CBOR to get body in current scope
+        return CardanoMobileWrapped.cslScope((csl) => {
+          const rebuiltTx = csl.Transaction.fromHex(cborHex)
+          return rebuiltTx.body()
+        })
       },
       setAuxiliaryData(_data: TransactionBody): void {
         // Auxiliary data is already in the transaction body from CBOR
         // This method is provided for interface compatibility
       },
     }
-
-    // Extract outputs
-    const outputs = txBody.outputs()
-
-    // Extract fee
-    const fee = txBody.fee()
 
     // Extract withdrawals
     let withdrawals: Withdrawals | null = null
@@ -121,10 +125,8 @@ export async function adaptToLedgerUnsignedTx(
     const ttl = unsignedTx.options.ttl
 
     // Extract auxiliary data from metadata
-    let auxiliaryData: {
-      hasValue(): boolean
-      toBytes(): Uint8Array
-    } | null = null
+    let auxiliaryDataBytes: Uint8Array | null = null
+    let hasAuxiliaryData = false
 
     if (unsignedTx.metadata && unsignedTx.metadata.length > 0) {
       // Create auxiliary data from metadata
@@ -142,26 +144,39 @@ export async function adaptToLedgerUnsignedTx(
       }
 
       auxData.setMetadata(metadataMap)
-      auxiliaryData = {
-        hasValue: () => true,
-        toBytes: () => auxData.toBytes(),
-      }
+      auxiliaryDataBytes = auxData.toBytes()
+      hasAuxiliaryData = true
     }
 
     return {
       senderUtxos,
       txBuilder,
       txBody: {
-        outputs: () => outputs,
+        outputs: () => {
+          // This method must be called within a cslScope
+          // Rebuild transaction from CBOR to get outputs in current scope
+          return CardanoMobileWrapped.cslScope((csl) => {
+            const rebuiltTx = csl.Transaction.fromHex(cborHex)
+            return rebuiltTx.body().outputs()
+          })
+        },
         fee: () => ({
-          toStr: () => fee.toStr(),
+          toStr: () => feeStr,
         }),
       },
       change: changeAddresses,
       withdrawals,
       certificates,
       ttl,
-      auxiliaryData,
+      auxiliaryData: {
+        hasValue: () => hasAuxiliaryData,
+        toBytes: () => {
+          if (!auxiliaryDataBytes) {
+            throw new Error('No auxiliary data')
+          }
+          return auxiliaryDataBytes
+        },
+      },
     }
   })
 }

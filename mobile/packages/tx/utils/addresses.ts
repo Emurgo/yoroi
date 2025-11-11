@@ -8,8 +8,64 @@ import {CardanoMobileWrapped} from '../../../src/wallets/cardano/wrappedCsl'
 import {Addressing} from '../types'
 
 /**
+ * Address information extracted from WASM objects (safe to use outside cslScope)
+ */
+export type AddressInfo = {
+  networkId: number
+  hex: string
+  bech32: string | null
+  isValid: boolean
+}
+
+/**
+ * Validate address and extract all needed information in one scope
+ * This is the preferred way to validate addresses as it extracts primitive values
+ * before the WASM objects are freed
+ */
+export async function validateAndExtractAddressInfo(
+  addr: string,
+): Promise<AddressInfo | undefined> {
+  return CardanoMobileWrapped.cslScope((csl) => {
+    let address: any
+
+    // 1) Try converting from base58
+    if (csl.ByronAddress.isValid(addr)) {
+      const byronAddr = csl.ByronAddress.fromBase58(addr)
+      address = byronAddr.toAddress()
+    } else {
+      const isHexAddr = isHex(addr)
+      address = isHexAddr
+        ? csl.Address.fromHex(addr)
+        : csl.Address.fromBech32(addr)
+    }
+
+    if (address.isMalformed()) {
+      return undefined
+    }
+
+    // Extract all needed values before scope exits
+    const networkId = address.networkId()
+    const hex = address.toHex()
+    const bech32 = address.toBech32(undefined) ?? null
+
+    return {
+      networkId,
+      hex,
+      bech32,
+      isValid: true,
+    }
+  })
+}
+
+/**
  * Normalize address to WASM Address type
  * Supports base16 (hex), bech32, and base58 (Byron) formats
+ *
+ * WARNING: The returned Address object is a WASM object that will be freed when
+ * the cslScope exits. Do NOT use it outside the scope where it was created.
+ *
+ * For safe usage, use validateAndExtractAddressInfo() instead, which extracts
+ * primitive values (networkId, hex, bech32) before the scope exits.
  */
 export async function normalizeToAddress(
   addr: string,
@@ -21,21 +77,30 @@ export async function normalizeToAddress(
     // 1) Try converting from base58
     if (csl.ByronAddress.isValid(addr)) {
       const byronAddr = csl.ByronAddress.fromBase58(addr)
-      return byronAddr.toAddress()
+      const address = byronAddr.toAddress()
+      return address.isMalformed() ? undefined : address
     }
-    const address = isHex(addr)
+
+    const isHexAddr = isHex(addr)
+    const address = isHexAddr
       ? csl.Address.fromHex(addr)
       : csl.Address.fromBech32(addr)
+    const isMalformed = address.isMalformed()
     // Return undefined when malformed for backward compatibility
-    return address.isMalformed() ? undefined : address
+    return isMalformed ? undefined : address
   })
 }
 
 /**
  * Convert WASM Address to hex or base58 string
+ * WARNING: This function takes an Address parameter that must be from the same cslScope.
+ * For safe usage, use validateAndExtractAddressInfo() and use the hex/bech32 from there.
+ *
+ * @deprecated Use validateAndExtractAddressInfo() instead for safer address handling
  */
 export function toHexOrBase58(address: Address): string {
   return CardanoMobileWrapped.cslScope((csl) => {
+    // Try to use the address - if it's from a different scope, this will fail
     const asByron = csl.ByronAddress.fromAddress(address)
     if (asByron === null || !asByron) {
       return Buffer.from(address.toBytes()).toString('hex')
@@ -72,6 +137,8 @@ export async function filterAddressesByStakingKey<T extends {receiver: string}>(
 
 /**
  * Check if address contains account key
+ * NOTE: This function expects to be called within a cslScope, and will parse
+ * the address within that same scope to avoid WASM pointer issues
  */
 export async function addrContainsAccountKey(
   csl: import('@emurgo/cross-csl-core').WasmModuleProxy,
@@ -79,8 +146,18 @@ export async function addrContainsAccountKey(
   targetAccountKey: Credential,
   acceptTypeMismatch: boolean,
 ): Promise<boolean> {
-  const wasmAddr = await normalizeToAddress(address)
-  if (wasmAddr == null)
+  // Parse address within the provided csl scope to avoid pointer issues
+  let wasmAddr: any
+  if (csl.ByronAddress.isValid(address)) {
+    const byronAddr = csl.ByronAddress.fromBase58(address)
+    wasmAddr = byronAddr.toAddress()
+  } else {
+    wasmAddr = isHex(address)
+      ? csl.Address.fromHex(address)
+      : csl.Address.fromBech32(address)
+  }
+
+  if (wasmAddr == null || wasmAddr.isMalformed())
     throw new Error(`addrContainsAccountKey invalid address ${address}`)
 
   const accountKeyString = Buffer.from(targetAccountKey.toBytes()).toString(
@@ -94,7 +171,7 @@ export async function addrContainsAccountKey(
       return true
     }
   }
-  
+
   // Pointer addresses don't contain stake credentials directly
   // They reference stake credentials by pointer (slot, txIndex, certIndex)
   // We can't extract the credential from a pointer address, so we skip this check
@@ -104,7 +181,7 @@ export async function addrContainsAccountKey(
     // Return false or accept type mismatch based on flag
     return acceptTypeMismatch
   }
-  
+
   return acceptTypeMismatch
 }
 

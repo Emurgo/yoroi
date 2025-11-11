@@ -1,14 +1,19 @@
 // Cardano asset utilities
 // Functions for working with Cardano assets and tokens
+import {Balance} from '@yoroi/types'
+
 import {AssetName, MultiAsset, ScriptHash, Value} from '@emurgo/cross-csl-core'
 import {BigNumber} from 'bignumber.js'
-import {Balance} from '@yoroi/types'
 
 import {CardanoMobileWrapped} from '../../../src/wallets/cardano/wrappedCsl'
 import {RemoteUnspentOutput, SendToken} from '../types'
 
 /**
  * Convert Balance.Amounts to Cardano Value
+ *
+ * WARNING: Returns a WASM Value object that will be freed when the cslScope exits.
+ * Only use the returned Value within the same scope where it was created, or extract
+ * primitive values before the scope exits.
  */
 export async function cardanoValueFromAmounts(
   amounts: Balance.Amounts,

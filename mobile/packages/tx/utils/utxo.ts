@@ -97,6 +97,10 @@ function toTransactionUnspentOutputHex(this: ModernUtxo): string {
 
 /**
  * Convert ModernUtxo to TransactionUnspentOutput using WASM
+ *
+ * WARNING: Returns a WASM TransactionUnspentOutput object that will be freed when
+ * the cslScope exits. Only use the returned object within the same scope where
+ * it was created, or extract primitive values before the scope exits.
  */
 function toTransactionUnspentOutput(
   this: ModernUtxo,

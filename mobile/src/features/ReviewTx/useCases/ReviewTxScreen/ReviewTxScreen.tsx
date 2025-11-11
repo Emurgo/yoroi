@@ -64,6 +64,7 @@ export const ReviewTxScreen = () => {
       fee: {coin: '0'},
       reference_inputs: [],
     }) as TransactionBody,
+    params?.cbor ?? null,
   )
   const formattedMetadata = useFormattedMetadata({
     txBody,

@@ -586,8 +586,9 @@ export async function buildTransaction(
     }
 
     // Add metadata
+    let auxData: any
     if (state.metadata.length > 0) {
-      const auxData = csl.AuxiliaryData.new()
+      auxData = csl.AuxiliaryData.new()
       const metadataMap = csl.GeneralTransactionMetadata.new()
 
       for (const meta of state.metadata) {
@@ -638,8 +639,17 @@ export async function buildTransaction(
       throw new NotEnoughMoneyToSendError()
     }
 
-    // Serialize to CBOR
-    const cbor = Buffer.from(txBody.toBytes()).toString('hex')
+    // Create full transaction with empty witness set for CBOR serialization
+    // A full transaction is [body, witness_set, auxiliary_data?]
+    // We need to create a Transaction object, not just the body
+    const emptyWitnessSet = csl.TransactionWitnessSet.new()
+
+    // Create full transaction: [body, witness_set, auxiliary_data?]
+    // auxData was already created above if metadata exists
+    const fullTx = csl.Transaction.new(txBody, emptyWitnessSet, auxData)
+
+    // Serialize full transaction to CBOR (not just the body)
+    const cbor = Buffer.from(fullTx.toBytes()).toString('hex')
 
     return {
       inputs: state.inputs,

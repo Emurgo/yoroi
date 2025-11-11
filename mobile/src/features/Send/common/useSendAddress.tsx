@@ -1,5 +1,5 @@
 import {useTransfer} from '@yoroi/transfer'
-import {normalizeToAddress} from '@yoroi/tx'
+import {validateAndExtractAddressInfo} from '@yoroi/tx'
 
 import * as React from 'react'
 
@@ -61,11 +61,15 @@ export const useSendAddress = () => {
 // NOTE: should be a wallet function from address manager
 const validateAddress = async (address: string, chainId: number) => {
   try {
-    const chainAddress = await normalizeToAddress(address)
-    if (!chainAddress) throw new AddressErrorInvalid()
+    const addressInfo = await validateAndExtractAddressInfo(address)
 
-    const chainAddressChainId = chainAddress.networkId()
-    if (chainAddressChainId !== chainId) throw new AddressErrorWrongNetwork()
+    if (!addressInfo) {
+      throw new AddressErrorInvalid()
+    }
+
+    if (addressInfo.networkId !== chainId) {
+      throw new AddressErrorWrongNetwork()
+    }
 
     return true
   } catch (error) {

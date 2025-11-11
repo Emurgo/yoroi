@@ -13,6 +13,7 @@ import type {
   UnsignedTransaction,
 } from '@yoroi/tx'
 import {
+  TransactionOutput,
   adaptToLedgerUnsignedTx,
   addCertificate,
   addInputs,
@@ -32,12 +33,12 @@ import {
   createTransactionBuilder,
   modernUtxosToCardanoAddressedUtxos,
   rawUtxoToModernUtxo,
+  selectUtxosForAmounts,
   setChangeAddress,
   setTTL,
   signRawTransaction,
   signTransaction,
 } from '@yoroi/tx'
-import {TransactionOutput} from '@yoroi/tx'
 import {Api, App, Balance, HW, Network, Portfolio, Wallet} from '@yoroi/types'
 
 import {walletChecksum} from '@emurgo/cip4-js'
@@ -533,7 +534,9 @@ export const makeCardanoWallet = (
             new Uint8Array(Buffer.from(catalystKeyHex, 'hex')),
           )
           if (!votingPrivateKey) {
-            throw new Error('Failed to create voting private key from catalystKeyHex')
+            throw new Error(
+              'Failed to create voting private key from catalystKeyHex',
+            )
           }
           const votingPublicKey = votingPrivateKey.toPublic()
           if (!votingPublicKey) {
@@ -1003,12 +1006,37 @@ export const makeCardanoWallet = (
       }
 
       try {
+        // Calculate required amounts from outputs
+        const requiredAmounts: Record<string, string> = {}
+        for (const entry of entries) {
+          for (const [tokenId, quantity] of Object.entries(entry.amounts)) {
+            const current = BigInt(requiredAmounts[tokenId] || '0')
+            const needed = BigInt(quantity)
+            requiredAmounts[tokenId] = (current + needed).toString()
+          }
+        }
+
+        // Estimate fee (rough estimate: base fee + per-byte fee for a typical transaction)
+        // This is conservative - actual fee will be calculated by CSL
+        const estimatedFee = (
+          BigInt(constant) +
+          BigInt(coefficient) * BigInt(500)
+        ) // Rough estimate: 500 bytes
+          .toString()
+
+        // Select only necessary UTXOs
+        const selectedUtxos = selectUtxosForAmounts(
+          modernUtxos,
+          requiredAmounts,
+          primaryTokenId,
+          estimatedFee,
+        )
+
         // Build transaction using functional TransactionBuilder
         let builderState = createTransactionBuilder()
 
-        // Add all UTXOs as inputs (TransactionBuilder will handle selection)
-        // For now, we add all UTXOs - in the future, we can add smart selection
-        builderState = addInputs(builderState, modernUtxos)
+        // Add only selected UTXOs as inputs
+        builderState = addInputs(builderState, selectedUtxos)
 
         // Add outputs from entries
         for (const entry of entries) {
