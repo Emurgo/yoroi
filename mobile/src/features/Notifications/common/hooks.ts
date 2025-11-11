@@ -42,6 +42,10 @@ const createPushNotification = (options: {
 const initPushNotifications = (
   walletNavigation: ReturnType<typeof useWalletNavigation>,
 ) => {
+  Notifications.setNotificationChannelAsync('default', {
+    name: 'Default',
+    importance: Notifications.AndroidImportance.HIGH,
+  })
   Notifications.setNotificationHandler({
     handleNotification: async () => ({
       shouldShowAlert: true,
@@ -58,9 +62,10 @@ const initPushNotifications = (
       if (status === 'granted') {
         await messaging().registerDeviceForRemoteMessages()
         await messaging().requestPermission()
+        await messaging().subscribeToTopic('yoroi_campaigns')
       }
     } catch (error) {
-      logger.error('Firebase registration failed', {error})
+      logger.error('Push registration failed', {error})
     }
   }
 
@@ -71,11 +76,11 @@ const initPushNotifications = (
       const {status} = await Notifications.getPermissionsAsync()
 
       if (status !== 'granted') {
-        logger.info('Firebase message received but notifications are disabled')
+        logger.info('Message received but notifications are disabled')
         return
       }
 
-      logger.info('Firebase message received in foreground: ', {remoteMessage})
+      logger.info('Message received in foreground', {remoteMessage})
 
       const title = remoteMessage.notification?.title
       const body = remoteMessage.notification?.body
@@ -90,17 +95,14 @@ const initPushNotifications = (
         })
         await pushNotificationsManager.events.push(pushNotification)
 
-        logger.info(
-          'Firebase campaign notification added to Yoroi notifications: ',
-          {
-            title,
-            body,
-            data,
-            messageId: remoteMessage.messageId,
-          },
-        )
+        logger.info('Campaign notification added to app notifications', {
+          title,
+          body,
+          data,
+          messageId: remoteMessage.messageId,
+        })
       } else if (data) {
-        logger.info('Firebase data-only message received: ', {
+        logger.info('Data-only message received', {
           data,
           messageId: remoteMessage.messageId,
         })
