@@ -6,16 +6,18 @@ import {InteractionManager} from 'react-native'
 import {useOpenConfirmConnectionModal} from './ConfirmConnectionModal'
 import {useOpenUnverifiedDappModal} from './UnverifiedDappModal'
 import {useInvalidateConnectedDapps} from './useDAppsConnected'
+import {useDappList} from './useDappList'
 
 export const useConfirmConnection = () => {
   const {openConfirmConnectionModal} = useOpenConfirmConnectionModal()
   const {openUnverifiedDappModal} = useOpenUnverifiedDappModal()
   const invalidateConnectedDapps = useInvalidateConnectedDapps()
+  const {data: dappList} = useDappList()
 
   return React.useCallback(
-    async (origin: string, manager: DappConnector) => {
-      const recommendedDApps = await manager.getDAppList()
-      const selectedDapp = recommendedDApps.dapps.find((dapp) =>
+    async (origin: string, _manager: DappConnector) => {
+      const recommendedDApps = dappList?.dapps || []
+      const selectedDapp = recommendedDApps.find((dapp) =>
         dapp.origins.includes(origin),
       )
 
@@ -65,6 +67,7 @@ export const useConfirmConnection = () => {
       openConfirmConnectionModal,
       openUnverifiedDappModal,
       invalidateConnectedDapps,
+      dappList?.dapps,
     ],
   )
 }
