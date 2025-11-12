@@ -38,8 +38,9 @@ export const triggerNotificationsPermissionModal = async () => {
     try {
       await messaging().registerDeviceForRemoteMessages()
       await messaging().requestPermission()
+      await messaging().subscribeToTopic('yoroi_campaigns')
     } catch (error) {
-      logger.error('Firebase registration failed', {error})
+      logger.error('Push registration failed', {error})
     }
   }
 
