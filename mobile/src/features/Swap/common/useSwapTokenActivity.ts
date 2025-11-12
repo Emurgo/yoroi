@@ -7,7 +7,7 @@ import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetw
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {logger} from '~/kernel/logger/logger'
 
-export const useSwapTokenActivity = (tokenIds: string[]) => {
+export const useSwapTokenActivity = (tokenIds: Portfolio.Token.Id[]) => {
   const {wallet} = useSelectedWallet()
   const {
     networkManager: {tokenManager, network},
@@ -38,4 +38,3 @@ export const useSwapTokenActivity = (tokenIds: string[]) => {
     },
   })
 }
-
