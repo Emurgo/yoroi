@@ -1,19 +1,16 @@
-import {atomicToDecimal, parseNumberFromText, time} from '@yoroi/common'
+import {atomicToDecimal, parseNumberFromText} from '@yoroi/common'
 import {isPrimaryToken, isPrimaryTokenInfo} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
-import {Portfolio} from '@yoroi/types'
 
-import {useQuery} from '@tanstack/react-query'
 import * as React from 'react'
 import {Platform, Pressable, Text, TextInput, View} from 'react-native'
 
 import {usePortfolioBalances} from '~/features/Portfolio/common/hooks/usePortfolioBalances'
 import {useNavigateTo} from '~/features/Swap/common/navigation'
 import {useSwap} from '~/features/Swap/common/useSwap'
-import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
+import {useSwapTokenActivity} from '~/features/Swap/common/useSwapTokenActivity'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {logger} from '~/kernel/logger/logger'
 import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {PairedBalance} from '~/ui/PairedBalance/PairedBalance'
@@ -27,9 +24,6 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
   const navigateTo = useNavigateTo()
   const {wallet} = useSelectedWallet()
   const balances = usePortfolioBalances({wallet})
-  const {
-    networkManager: {tokenManager, network},
-  } = useSelectedNetwork()
 
   const amount =
     direction === 'in' ? swapForm.tokenInInput : swapForm.tokenOutInput
@@ -47,30 +41,7 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
     return [info.id]
   }, [info])
 
-  const {data: tokenActivity = {}} = useQuery({
-    enabled: tokenIds.length > 0 && wallet.isMainnet,
-    staleTime: time.fiveMinutes,
-    gcTime: time.minutes(10),
-    retryDelay: time.oneSecond,
-    refetchInterval: time.fiveMinutes,
-    queryKey: ['useSwapTokenActivity', network, tokenIds],
-    queryFn: async () => {
-      if (tokenIds.length === 0) return {}
-
-      const response = await tokenManager.api.tokenActivity(
-        tokenIds,
-        Portfolio.Token.ActivityWindow.OneDay,
-      )
-
-      if (response.tag === 'left') {
-        logger.error(
-          JSON.stringify({endpoint: 'swapTokenActivity', ...response.error}),
-        )
-        return {}
-      }
-      return response.value.data
-    },
-  })
+  const {data: tokenActivity = {}} = useSwapTokenActivity(tokenIds)
 
   // Only show errors for input direction (insufficient balance, etc.)
   const error = direction === 'in' ? amount.error : null
