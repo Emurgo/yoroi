@@ -106,7 +106,7 @@ export const PortfolioTokenActivityProvider = ({
         ) as Portfolio.Token.Id[],
       )
 
-      queryClient.invalidateQueries({queryKey: [queryKey]})
+      queryClient.invalidateQueries({queryKey})
     })
 
     return () => subscription.unsubscribe()
@@ -118,7 +118,7 @@ export const PortfolioTokenActivityProvider = ({
     gcTime: time.fiveMinutes,
     retryDelay: time.oneSecond,
     refetchInterval: time.oneMinute,
-    queryKey,
+    queryKey: [...queryKey, state.activityWindow, state.secondaryTokenIds],
     queryFn: async () => {
       if (
         state.secondaryTokenIds == null ||

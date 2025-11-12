@@ -1,11 +1,15 @@
-import {atomicToDecimal, parseNumberFromText} from '@yoroi/common'
-import {isPrimaryTokenInfo} from '@yoroi/portfolio'
+import {atomicToDecimal, isNonNullable, parseNumberFromText, time} from '@yoroi/common'
+import {isPrimaryToken, isPrimaryTokenInfo} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {Portfolio} from '@yoroi/types'
 
+import {useQuery} from '@tanstack/react-query'
 import * as React from 'react'
 import {Platform, Pressable, Text, TextInput, View} from 'react-native'
 
 import {usePortfolioBalances} from '~/features/Portfolio/common/hooks/usePortfolioBalances'
+import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
+import {logger} from '~/kernel/logger/logger'
 import {useNavigateTo} from '~/features/Swap/common/navigation'
 import {useSwap} from '~/features/Swap/common/useSwap'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
@@ -23,6 +27,9 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
   const navigateTo = useNavigateTo()
   const {wallet} = useSelectedWallet()
   const balances = usePortfolioBalances({wallet})
+  const {
+    networkManager: {tokenManager, network},
+  } = useSelectedNetwork()
 
   const amount =
     direction === 'in' ? swapForm.tokenInInput : swapForm.tokenOutInput
@@ -33,6 +40,37 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
     text: amount.value,
     denomination: info?.decimals ?? 0,
   }).quantity
+
+  // Fetch price for this token if it's not a primary token
+  const tokenIds = React.useMemo(() => {
+    if (!info || isPrimaryToken(info)) return []
+    return [info.id]
+  }, [info])
+
+  const {data: tokenActivity = {}} = useQuery({
+    enabled: tokenIds.length > 0 && wallet.isMainnet,
+    staleTime: time.fiveMinutes,
+    gcTime: time.minutes(10),
+    retryDelay: time.oneSecond,
+    refetchInterval: time.fiveMinutes,
+    queryKey: ['useSwapTokenActivity', network, tokenIds],
+    queryFn: async () => {
+      if (tokenIds.length === 0) return {}
+
+      const response = await tokenManager.api.tokenActivity(
+        tokenIds,
+        Portfolio.Token.ActivityWindow.OneDay,
+      )
+
+      if (response.tag === 'left') {
+        logger.error(
+          JSON.stringify({endpoint: 'swapTokenActivity', ...response.error}),
+        )
+        return {}
+      }
+      return response.value.data
+    },
+  })
 
   // Only show errors for input direction (insufficient balance, etc.)
   const error = direction === 'in' ? amount.error : null
@@ -189,6 +227,7 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
                 quantity: BigInt(quantity || '0'),
               }}
               textStyle={a.body_2_md_regular}
+              tokenActivity={tokenActivity}
             />
           )}
         </View>
