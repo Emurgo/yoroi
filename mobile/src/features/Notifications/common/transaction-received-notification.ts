@@ -7,6 +7,7 @@ import {Subject} from 'rxjs'
 import {SyncWalletInfo} from '~/features/WalletManager/common/types'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {walletManager} from '~/features/WalletManager/wallet-manager'
+import {logger} from '~/kernel/logger/logger'
 import {YoroiWallet} from '~/wallets/cardano/types'
 import {TRANSACTION_DIRECTION} from '~/wallets/types/other'
 
@@ -40,6 +41,13 @@ const buildNotifications = async ({
     const processed = await storage.getValues()
     const allTxIds = getTxIds(wallet)
 
+    logger.info('TxNotif: processed vs all tx ids', {
+      walletId,
+      processedCount: processed.length,
+      allTxCount: allTxIds.length,
+      sinceDate: sinceDate.toISOString(),
+    })
+
     if (processed.length === 0) {
       await storage.addValues(allTxIds)
       continue
@@ -48,8 +56,14 @@ const buildNotifications = async ({
     const newTxIds = allTxIds.filter((txId) => !processed.includes(txId))
 
     if (newTxIds.length === 0) {
+      logger.info('TxNotif: no new transactions', {walletId})
       continue
     }
+
+    logger.info('TxNotif: new transactions detected', {
+      walletId,
+      newTxCount: newTxIds.length,
+    })
 
     await storage.addValues(newTxIds)
 
@@ -68,6 +82,12 @@ const buildNotifications = async ({
             previousTxsCounter: processed.length,
             walletId,
           }
+        logger.info('TxNotif: enqueue notification', {
+          walletId,
+          txId: id,
+          txDate,
+          direction: tx.direction,
+        })
         notifications.push(
           createTransactionReceivedNotification(metadata, new Date(txDate)),
         )
@@ -109,7 +129,13 @@ export const useTransactionReceivedNotifications = ({
   const walletId = walletManager.selectedWalledId
 
   React.useEffect(() => {
-    if (!enabled || !walletId) return
+    if (!enabled || !walletId) {
+      logger.info('TxNotif: notifications disabled or no wallet selected', {
+        enabled,
+        walletId: walletId ?? 'null',
+      })
+      return
+    }
     const subscriptionBeginDate = new Date()
     let latestStatuses: Map<string, SyncWalletInfo> = new Map()
     const subscription = walletManager.syncWalletInfos$.subscribe(
@@ -122,10 +148,20 @@ export const useTransactionReceivedNotifications = ({
           selectedWalletOldStatus?.status !== 'done' &&
           selectedWalletCurrentStatus?.status === 'done'
         ) {
+          logger.info(
+            'TxNotif: wallet sync completed, building notifications',
+            {
+              walletId,
+            },
+          )
           const notifications = await buildNotifications({
             appStorage: asyncStorage,
             sinceDate: subscriptionBeginDate,
             walletIds: [walletId],
+          })
+          logger.info('TxNotif: built notifications', {
+            walletId,
+            count: notifications.length,
           })
           notifications.forEach((notification) =>
             transactionReceivedSubject.next(notification),
