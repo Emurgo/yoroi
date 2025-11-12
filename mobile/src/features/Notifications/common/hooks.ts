@@ -15,7 +15,7 @@ import {logger} from '~/kernel/logger/logger'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 
 import {pushNotificationsManager} from './notification-manager'
-import {generateNotificationId, parseNotificationId} from './notifications'
+import {generateNotificationId} from './notifications'
 import {usePrimaryTokenPriceChangedNotification} from './primary-token-price-changed-notification'
 import {useRewardsUpdatedNotifications} from './rewards-updated-notification'
 import {triggerNotificationAction} from './tools'
@@ -107,12 +107,6 @@ const initPushNotifications = (
         data: data as Record<string, unknown>,
       })
       await pushNotificationsManager.events.push(pushNotification)
-      logger.info('Campaign notification added to app notifications', {
-        title,
-        body,
-        data,
-        messageId: remoteMessage.messageId,
-      })
     } else if (data) {
       logger.info('Data-only message received', {
         data,
@@ -131,7 +125,6 @@ const initPushNotifications = (
   ) => {
     if (!data) return
     if (typeof data === 'object' && data !== null) {
-      logger.info('Notification opened with data', {data, title, body})
       const id = Date.now()
       const pushEvent = createPushNotification({
         id,
@@ -163,7 +156,6 @@ const initPushNotifications = (
 
   const attachFirebaseOpenListener = () =>
     messaging().onNotificationOpenedApp(async (remoteMessage) => {
-      logger.info('FCM onNotificationOpenedApp fired', {remoteMessage})
       const data = remoteMessage?.data as Record<string, unknown> | undefined
       const title = remoteMessage?.notification?.title
       const body = remoteMessage?.notification?.body
@@ -175,9 +167,6 @@ const initPushNotifications = (
       .getInitialNotification()
       .then((remoteMessage) => {
         if (remoteMessage) {
-          logger.info('FCM getInitialNotification found message', {
-            remoteMessage,
-          })
           const data = remoteMessage?.data as
             | Record<string, unknown>
             | undefined
