@@ -2,7 +2,6 @@ import {
   DappConnector,
   ResolverWallet,
   connectionStorageMaker,
-  dappConnectorApiMaker,
   dappConnectorMaker,
 } from '@yoroi/dapp-connector'
 import {App, Wallet} from '@yoroi/types'
@@ -78,7 +77,6 @@ type CreateDappConnectorOptions = {
   signTxWithHW: (options: {
     cbor: string
     partial?: boolean
-    manager: DappConnector
   }) => Promise<Transaction>
   signDataWithHW: (
     address: string,
@@ -90,7 +88,6 @@ type CreateDappConnectorOptions = {
 export const createDappConnector = (options: CreateDappConnectorOptions) => {
   const {wallet, meta, appStorage, confirmConnection, signTx, signData} =
     options
-  const api = dappConnectorApiMaker()
   const cip30 = cip30ExtensionMaker(wallet, meta)
   const cip95 = supportsCIP95(meta.implementation)
     ? cip95ExtensionMaker(wallet, meta)
@@ -136,7 +133,7 @@ export const createDappConnector = (options: CreateDappConnectorOptions) => {
     },
     signTx: async (cbor: string, partial?: boolean) => {
       if (meta.isHW) {
-        const tx = await options.signTxWithHW({cbor, partial, manager})
+        const tx = await options.signTxWithHW({cbor, partial})
         return tx.witnessSet()
       }
 
@@ -160,7 +157,7 @@ export const createDappConnector = (options: CreateDappConnectorOptions) => {
   const storage = connectionStorageMaker({
     storage: appStorage.join('dapp-connections/'),
   })
-  const manager = dappConnectorMaker(storage, handlerWallet, api)
+  const manager = dappConnectorMaker(storage, handlerWallet)
   return manager
 }
 
