@@ -91,7 +91,13 @@ export const ReviewTxScreen = () => {
       params?.aggregator,
     )
     trackEvent(AnalyticsEventEnum.TransactionReviewModalViewed, properties)
-  }, [trackEvent, formattedTx, areTokenInfosLoaded, params?.context, params?.aggregator])
+  }, [
+    trackEvent,
+    formattedTx,
+    areTokenInfosLoaded,
+    params?.context,
+    params?.aggregator,
+  ])
 
   React.useEffect(() => {
     return () => {
