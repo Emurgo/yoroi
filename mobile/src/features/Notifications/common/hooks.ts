@@ -149,7 +149,7 @@ const initPushNotifications = (
       const body = remoteMessage?.notification?.body
 
       if (data && typeof data === 'object') {
-        const id = Date.now()
+        const id = generateNotificationId()
         const pushEvent = createPushNotification({
           id,
           title: title ?? 'Notification',

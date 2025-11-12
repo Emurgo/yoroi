@@ -190,6 +190,9 @@ const handleInternalNavigation = (
         case 'governance':
           walletNavigation.navigateToGovernanceCentre()
           break
+        case 'discover':
+          walletNavigation.navigateToDiscoverBrowserDapp()
+          break
       }
     } catch (error) {
       logger.error('Navigation failed for notification', {screen, error})
