@@ -6,13 +6,13 @@ import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 import {Linking, Text, TouchableOpacity} from 'react-native'
 
+import {useAuth} from '~/features/Auth/context/AuthProvider'
 import {useLinksRequestWallet} from '~/features/Links/hooks/useLinksRequestWallet'
 import {pushNotificationsManager} from '~/features/Notifications/common/notification-manager'
 import {
   handleNotificationInternalNavigationAction,
   shouldHandleNotificationInternalNavigationAction,
 } from '~/features/Notifications/common/tools'
-import {isDev} from '~/kernel/constants'
 import {features} from '~/kernel/features'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
@@ -46,6 +46,7 @@ export const SelectWalletFromList = () => {
   const walletMetas = useWalletMetas()
   const {walletManager} = useWalletManager()
   const walletNavigation = useWalletNavigation()
+  const {isAuthDev} = useAuth()
 
   const handleOnSelect = React.useCallback(
     async (walletMeta: Wallet.Meta) => {
@@ -94,7 +95,7 @@ export const SelectWalletFromList = () => {
 
         <AddWalletButton />
 
-        {isDev && <OnlyDevButton />}
+        {isAuthDev && <OnlyDevButton />}
       </SafeArea.Footer>
     </SafeArea>
   )
