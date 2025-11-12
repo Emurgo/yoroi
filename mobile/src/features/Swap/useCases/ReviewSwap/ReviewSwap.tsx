@@ -43,6 +43,7 @@ export const ReviewSwap = () => {
       onSuccess: onSwapTxSuccess,
       cbor: swapForm.createTx?.cbor,
       context: 'swap',
+      aggregator: swapForm.createTx?.splits[0]?.aggregatorDexKey,
       receiverCustomTitle:
         protocol !== undefined ? (
           <ProtocolAvatar
