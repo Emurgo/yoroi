@@ -5,7 +5,9 @@ import {
   Notifications as YoroiNotifications,
 } from '@yoroi/types'
 
-import messaging from '@react-native-firebase/messaging'
+import messaging, {
+  FirebaseMessagingTypes,
+} from '@react-native-firebase/messaging'
 import * as Notifications from 'expo-notifications'
 import * as React from 'react'
 
@@ -13,7 +15,7 @@ import {logger} from '~/kernel/logger/logger'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 
 import {pushNotificationsManager} from './notification-manager'
-import {parseNotificationId} from './notifications'
+import {generateNotificationId, parseNotificationId} from './notifications'
 import {usePrimaryTokenPriceChangedNotification} from './primary-token-price-changed-notification'
 import {useRewardsUpdatedNotifications} from './rewards-updated-notification'
 import {triggerNotificationAction} from './tools'
@@ -42,75 +44,94 @@ const createPushNotification = (options: {
 const initPushNotifications = (
   walletNavigation: ReturnType<typeof useWalletNavigation>,
 ) => {
-  Notifications.setNotificationHandler({
-    handleNotification: async () => ({
-      shouldShowAlert: true,
-      shouldPlaySound: true,
-      shouldSetBadge: false,
-      shouldShowBanner: true,
-      shouldShowList: true,
-    }),
-  })
+  let firebaseForegroundUnsubscribe: (() => void) | undefined
+  let responseListener: Notifications.Subscription | undefined
+  let isSubscribedToTopic = false
+  let isUnmounted = false
 
   const registerFirebaseIfPermissionsGranted = async () => {
     try {
+      if (isUnmounted) return
+
       const {status} = await Notifications.getPermissionsAsync()
       if (status === 'granted') {
+        if (isUnmounted) return
+
         await messaging().registerDeviceForRemoteMessages()
         await messaging().requestPermission()
+        await messaging().subscribeToTopic('yoroi_campaigns')
+        isSubscribedToTopic = true
       }
     } catch (error) {
-      logger.error('Firebase registration failed', {error})
+      logger.error('Push registration failed', {error})
     }
   }
 
-  registerFirebaseIfPermissionsGranted()
+  const createDefaultChannel = () =>
+    Notifications.setNotificationChannelAsync('default', {
+      name: 'Default',
+      importance: Notifications.AndroidImportance.HIGH,
+    })
 
-  const firebaseForegroundUnsubscribe = messaging().onMessage(
-    async (remoteMessage) => {
-      const {status} = await Notifications.getPermissionsAsync()
+  const setupNotificationHandler = () => {
+    Notifications.setNotificationHandler({
+      handleNotification: async () => ({
+        shouldShowAlert: true,
+        shouldPlaySound: true,
+        shouldSetBadge: false,
+        shouldShowBanner: true,
+        shouldShowList: true,
+      }),
+    })
+  }
 
-      if (status !== 'granted') {
-        logger.info('Firebase message received but notifications are disabled')
-        return
-      }
+  const handleForegroundMessage = async (
+    remoteMessage: FirebaseMessagingTypes.RemoteMessage,
+  ) => {
+    const {status} = await Notifications.getPermissionsAsync()
+    if (status !== 'granted') {
+      logger.info('Message received but notifications are disabled')
+      return
+    }
+    logger.info('Message received in foreground', {remoteMessage})
+    const title = remoteMessage.notification?.title
+    const body = remoteMessage.notification?.body
+    const data = remoteMessage.data
 
-      logger.info('Firebase message received in foreground: ', {remoteMessage})
+    if (isString(title) && isString(body)) {
+      const pushNotification = createPushNotification({
+        id: generateNotificationId(),
+        title,
+        description: body,
+        data: data as Record<string, unknown>,
+      })
+      await pushNotificationsManager.events.push(pushNotification)
+      logger.info('Campaign notification added to app notifications', {
+        title,
+        body,
+        data,
+        messageId: remoteMessage.messageId,
+      })
+    } else if (data) {
+      logger.info('Data-only message received', {
+        data,
+        messageId: remoteMessage.messageId,
+      })
+    }
+  }
 
-      const title = remoteMessage.notification?.title
-      const body = remoteMessage.notification?.body
-      const data = remoteMessage.data
+  const attachForegroundListener = () =>
+    messaging().onMessage(handleForegroundMessage)
 
-      if (isString(title) && isString(body)) {
-        const pushNotification = createPushNotification({
-          id: Date.now(),
-          title,
-          description: body,
-          data: data as Record<string, unknown>,
-        })
-        await pushNotificationsManager.events.push(pushNotification)
-
-        logger.info(
-          'Firebase campaign notification added to Yoroi notifications: ',
-          {
-            title,
-            body,
-            data,
-            messageId: remoteMessage.messageId,
-          },
-        )
-      } else if (data) {
-        logger.info('Firebase data-only message received: ', {
-          data,
-          messageId: remoteMessage.messageId,
-        })
-      }
-    },
-  )
-
-  const responseListener =
+  const attachResponseListener = () =>
     Notifications.addNotificationResponseReceivedListener((_response) => {
-      const id = parseNotificationId(Date.now().toString())
+      const data = _response.notification.request.content.data as Record<
+        string,
+        unknown
+      >
+      const maybeId = parseNotificationId(String(data?.id ?? ''))
+      const id = Number.isNaN(maybeId) ? Date.now() : maybeId
+
       triggerNotificationAction({
         manager: pushNotificationsManager,
         id,
@@ -119,9 +140,30 @@ const initPushNotifications = (
       })
     })
 
+  const init = async () => {
+    try {
+      await createDefaultChannel()
+      await registerFirebaseIfPermissionsGranted()
+      setupNotificationHandler()
+
+      if (isUnmounted) return
+
+      firebaseForegroundUnsubscribe = attachForegroundListener()
+      responseListener = attachResponseListener()
+    } catch (error) {
+      logger.error('Push notifications init failed', {error})
+    }
+  }
+
+  init()
+
   return () => {
-    firebaseForegroundUnsubscribe()
+    isUnmounted = true
+    firebaseForegroundUnsubscribe?.()
     responseListener?.remove()
+    if (isSubscribedToTopic) {
+      messaging().unsubscribeFromTopic('yoroi_campaigns')
+    }
   }
 }
 
@@ -149,7 +191,7 @@ export const useInitNotifications = ({
   )
   React.useEffect(
     () => (pushEnabled ? initPushNotifications(walletNavigation) : undefined),
-    [walletNavigation, pushEnabled, manager],
+    [walletNavigation, pushEnabled],
   )
   useTransactionReceivedNotifications({enabled: localEnabled})
   usePrimaryTokenPriceChangedNotification({enabled: false}) // Temporarily disabled until requested by product team
