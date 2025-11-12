@@ -15,9 +15,10 @@ import {logger} from '~/kernel/logger/logger'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 
 import {pushNotificationsManager} from './notification-manager'
-import {generateNotificationId} from './notifications'
+import {generateNotificationId, parseNotificationId} from './notifications'
 import {usePrimaryTokenPriceChangedNotification} from './primary-token-price-changed-notification'
 import {useRewardsUpdatedNotifications} from './rewards-updated-notification'
+import {uiStorage} from './storage'
 import {triggerNotificationAction} from './tools'
 import {useTransactionReceivedNotifications} from './transaction-received-notification'
 
@@ -107,6 +108,12 @@ const initPushNotifications = (
         data: data as Record<string, unknown>,
       })
       await pushNotificationsManager.events.push(pushNotification)
+      logger.info('Campaign notification added to app notifications', {
+        title,
+        body,
+        data,
+        messageId: remoteMessage.messageId,
+      })
     } else if (data) {
       logger.info('Data-only message received', {
         data,
@@ -118,40 +125,21 @@ const initPushNotifications = (
   const attachForegroundListener = () =>
     messaging().onMessage(handleForegroundMessage)
 
-  const processOpenData = async (
-    data: Record<string, unknown> | undefined,
-    title?: string,
-    body?: string,
-  ) => {
-    if (!data) return
-    if (typeof data === 'object' && data !== null) {
-      const id = Date.now()
-      const pushEvent = createPushNotification({
-        id,
-        title: title ?? 'Notification',
-        description: body ?? '',
-        data: data as Record<string, unknown>,
-      })
-      await pushNotificationsManager.events.push(pushEvent)
+  const attachResponseListener = () =>
+    Notifications.addNotificationResponseReceivedListener((response) => {
+      const data = response.notification.request.content.data as Record<
+        string,
+        unknown
+      >
+      const maybeId = parseNotificationId(String(data?.id ?? ''))
+      const id = Number.isNaN(maybeId) ? Date.now() : maybeId
 
-      await triggerNotificationAction({
+      triggerNotificationAction({
         manager: pushNotificationsManager,
         id,
         walletNavigation,
         source: 'os',
       })
-    }
-  }
-
-  const attachResponseListener = () =>
-    Notifications.addNotificationResponseReceivedListener((response) => {
-      const data =
-        (response?.notification?.request?.content?.data as
-          | Record<string, unknown>
-          | undefined) ?? undefined
-      const title = response?.notification?.request?.content?.title ?? undefined
-      const body = response?.notification?.request?.content?.body ?? undefined
-      processOpenData(data, title, body)
     })
 
   const attachFirebaseOpenListener = () =>
@@ -159,20 +147,56 @@ const initPushNotifications = (
       const data = remoteMessage?.data as Record<string, unknown> | undefined
       const title = remoteMessage?.notification?.title
       const body = remoteMessage?.notification?.body
-      await processOpenData(data, title ?? undefined, body ?? undefined)
+
+      if (data && typeof data === 'object') {
+        const id = Date.now()
+        const pushEvent = createPushNotification({
+          id,
+          title: title ?? 'Notification',
+          description: body ?? '',
+          data: data as Record<string, unknown>,
+        })
+        await pushNotificationsManager.events.push(pushEvent)
+
+        // Only save the pending action, don't trigger navigation yet
+        if (isString(data.action) && data.action === 'open_screen') {
+          await uiStorage.setItem(
+            'triggerNotificationInternalNavigationAction',
+            id,
+          )
+        }
+      }
     })
 
   const handleInitialNotification = () => {
     messaging()
       .getInitialNotification()
-      .then((remoteMessage) => {
+      .then(async (remoteMessage) => {
         if (remoteMessage) {
           const data = remoteMessage?.data as
             | Record<string, unknown>
             | undefined
           const title = remoteMessage?.notification?.title
           const body = remoteMessage?.notification?.body
-          processOpenData(data, title ?? undefined, body ?? undefined)
+
+          if (data && typeof data === 'object') {
+            const id = Date.now()
+            const pushEvent = createPushNotification({
+              id,
+              title: title ?? 'Notification',
+              description: body ?? '',
+              data: data as Record<string, unknown>,
+            })
+            await pushNotificationsManager.events.push(pushEvent)
+
+            // Only save the pending action, don't trigger navigation yet
+            if (isString(data.action) && data.action === 'open_screen') {
+              await uiStorage.setItem(
+                'triggerNotificationInternalNavigationAction',
+                id,
+              )
+            }
+          }
         }
       })
   }

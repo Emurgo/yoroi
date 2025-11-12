@@ -148,10 +148,6 @@ export const handleNotificationInternalNavigationAction = async (
   const id = await uiStorage.getItem(
     'triggerNotificationInternalNavigationAction',
   )
-  logger.info('handleNotificationInternalNavigationAction called', {
-    id,
-    isNumber: isNumber(id),
-  })
   if (!isNumber(id)) return
   await clearNotificationInternalNavigationAction()
   const allEvents = await manager.events.read()
@@ -178,7 +174,7 @@ const handleInternalNavigation = (
   ) {
     const {screen} = data
 
-    setTimeout(() => {
+    try {
       switch (screen) {
         case 'wallet':
           walletNavigation.resetToTxHistory()
@@ -195,6 +191,8 @@ const handleInternalNavigation = (
           walletNavigation.navigateToGovernanceCentre()
           break
       }
-    }, 100)
+    } catch (error) {
+      logger.error('Navigation failed for notification', {screen, error})
+    }
   }
 }
