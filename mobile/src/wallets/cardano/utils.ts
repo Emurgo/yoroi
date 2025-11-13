@@ -371,7 +371,10 @@ export const getAddressedUtxos = (wallet: YoroiWallet) => {
         amount: utxo.amount,
         receiver: utxo.receiver,
         utxoId: utxo.utxo_id,
-        assets: utxo.assets,
+        assets: utxo.assets.map((asset) => ({
+          assetId: asset.tokenId,
+          amount: asset.amount,
+        })),
       }
     },
   )

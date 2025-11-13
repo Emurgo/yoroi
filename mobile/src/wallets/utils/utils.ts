@@ -222,10 +222,10 @@ export const Utxos = {
             (previousAmountsWithAssets, currentAsset) => {
               return {
                 ...previousAmountsWithAssets,
-                [currentAsset.assetId]: Quantities.sum([
+                [currentAsset.tokenId]: Quantities.sum([
                   Amounts.getAmount(
                     previousAmountsWithAssets,
-                    currentAsset.assetId,
+                    currentAsset.tokenId,
                   ).quantity,
                   currentAsset.amount as Balance.Quantity,
                 ]),

@@ -18,7 +18,7 @@ import {buildPortfolioTokenManagers} from '~/features/Portfolio/common/helpers/b
 import {logger} from '~/kernel/logger/logger'
 
 import {toTokenInfo, utf8ToHex} from '../cardano/api/utils'
-import {CardanoTypes, YoroiWallet} from '../cardano/types'
+import {CardanoTypes, WalletSubscription, YoroiWallet} from '../cardano/types'
 import {TransactionInfo} from '../types/other'
 import {
   RemotePoolMetaSuccess,
@@ -102,7 +102,7 @@ const wallet: YoroiWallet = {
   portfolioPrimaryTokenInfo: primaryTokenInfoMainnet,
 
   balanceManager: {
-    hydrate: noop,
+    hydrate: noop as unknown as () => void,
     refresh: noop,
     updatePrimaryStated: noop,
     updatePrimaryDerived: noop,
@@ -129,7 +129,7 @@ const wallet: YoroiWallet = {
     getIsEmpty: () => true,
     destroy: noop,
     clear: noop,
-  } as Portfolio.Manager.Balance,
+  } as unknown as YoroiWallet['balanceManager'],
 
   getStakingInfo: async () => {
     throw new Error('not implemented: getStakingInfo')
@@ -171,12 +171,6 @@ const wallet: YoroiWallet = {
   createUnsignedTx: () => {
     throw new Error('not implemented: createUnsignedTx')
   },
-  createDelegationTx: () => {
-    throw new Error('not implemented: createDelegationTx')
-  },
-  createWithdrawalTx: () => {
-    throw new Error('not implemented: createWithdrawalTx')
-  },
   getStakingKey: () => {
     const pubKeyHex =
       '8e4e2f11b6ac2a269913286e26339779ab8767579d18d173cdd324929d94e2c43e3ec212cc8a36ed9860579dfe1e3ef4d6de778c5dbdd981623b48727cd96247'
@@ -201,7 +195,7 @@ const wallet: YoroiWallet = {
   fetchPoolInfo: (..._args: never[]) => {
     return Promise.resolve({
       [stakePoolId]: poolInfoAndHistory,
-    } as StakePoolInfosAndHistories)
+    } as unknown as StakePoolInfosAndHistories)
   },
   getDelegationStatus: (..._args: never[]) => {
     return {isRegistered: false, poolKeyHash: null}
@@ -241,11 +235,10 @@ const wallet: YoroiWallet = {
   getFirstPaymentAddress: () => {
     throw new Error('Not implemented: getFirstPaymentAddress')
   },
-  createVotingRegTx: () => {
-    throw new Error('Not implemented: createVotingRegTx')
-  },
-  subscribe: (..._args: never[]) => {
-    return (..._args: never[]) => {}
+  subscribe: (_subscription: WalletSubscription) => {
+    return () => {
+      // unsubscribe function
+    }
   },
   internalAddresses: [],
   externalAddresses: [],
@@ -268,12 +261,11 @@ const wallet: YoroiWallet = {
   fetchFundInfo: () => {
     throw new Error('not implemented: fetchFundInfo')
   },
-  createUnsignedGovernanceTx: () => {
-    throw new Error('not implemented: createUnsignedGovernanceTx')
-  },
   getChangeAddress(): string {
     return 'addr1qxy9yjhvxh700xeluhvdpwlauuvnzav42edveyggy8fusqvg2f9wcd0u77dnlewc6zalmecex96e24j6ejgssgwneqqs762af9'
   },
+  getRawTransaction: () => undefined,
+  getRawTransactions: () => ({}),
 }
 
 const metaHw: Wallet.Meta = {
@@ -364,7 +356,7 @@ const fetchNftModerationStatus = {
     return Promise.reject(new Error('Mock error'))
   },
   loading: async (..._args: never[]) => {
-    return new Promise() < YoroiNftModerationStatus
+    return new Promise<YoroiNftModerationStatus>(() => {})
   },
 }
 
@@ -401,7 +393,7 @@ const getStakingInfo = {
     return Promise.reject(new Error('Mock error'))
   },
   loading: async (..._args: never[]) => {
-    return new Promise() < StakingInfo
+    return new Promise<StakingInfo>(() => {})
   },
 }
 
@@ -599,7 +591,6 @@ const tokenInfos: Record<string, Balance.TokenInfo> = {
       ticker: '',
       longName: '',
       numberOfDecimals: 0,
-      maxSupply: null,
     },
   }),
   '08d91ec4e6c743a92de97d2fde5ca0d81493555c535894a3097061f7.c8b0': toTokenInfo({
@@ -611,7 +602,6 @@ const tokenInfos: Record<string, Balance.TokenInfo> = {
       ticker: '',
       longName: '',
       numberOfDecimals: 0,
-      maxSupply: null,
     },
   }),
   '648823ffdad1610b4162f4dbc87bd47f6f9cf45d772ddef661eff198.7755534443': {

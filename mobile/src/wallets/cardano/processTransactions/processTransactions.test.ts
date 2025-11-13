@@ -161,7 +161,7 @@ const txs: Array<RawTransaction> = [
           '3393cf9c82f674db5d45a72c3c054dc3c0012bb7de13283add23002194327d45',
         assets: [
           {
-            assetId:
+            tokenId:
               '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
             policyId:
               '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
@@ -178,7 +178,7 @@ const txs: Array<RawTransaction> = [
         amount: '1407406',
         assets: [
           {
-            assetId:
+            tokenId:
               '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
             policyId:
               '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
@@ -193,7 +193,7 @@ const txs: Array<RawTransaction> = [
         amount: '479460117',
         assets: [
           {
-            assetId:
+            tokenId:
               '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
             policyId:
               '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
@@ -230,7 +230,7 @@ const txs: Array<RawTransaction> = [
           '33ae3456581ab8dc0a9ddb265c53d08e4df0c7d16786f5932ed525c092894a8f',
         assets: [
           {
-            assetId:
+            tokenId:
               '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
             policyId:
               '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
@@ -249,7 +249,7 @@ const txs: Array<RawTransaction> = [
           '5152eaa7bf59c5d4b6af44ffa14ad2616b90bb9304c311e6137072f54306fac4',
         assets: [
           {
-            assetId:
+            tokenId:
               '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
             policyId:
               '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
@@ -266,7 +266,7 @@ const txs: Array<RawTransaction> = [
         amount: '1407406',
         assets: [
           {
-            assetId:
+            tokenId:
               '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
             policyId:
               '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
@@ -281,7 +281,7 @@ const txs: Array<RawTransaction> = [
         amount: '48499139539',
         assets: [
           {
-            assetId:
+            tokenId:
               '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
             policyId:
               '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',

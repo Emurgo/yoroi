@@ -174,7 +174,7 @@ const wallet: YoroiWallet = {
   fetchPoolInfo: (..._args: unknown[]) => {
     return Promise.resolve({
       [stakePoolId]: poolInfoAndHistory,
-    } as StakePoolInfosAndHistories)
+    } as unknown as StakePoolInfosAndHistories)
   },
   getDelegationStatus: (..._args: unknown[]) => {
     return {isRegistered: false, poolKeyHash: null}
@@ -249,6 +249,8 @@ const wallet: YoroiWallet = {
   getChangeAddress(): string {
     return 'addr1qxy9yjhvxh700xeluhvdpwlauuvnzav42edveyggy8fusqvg2f9wcd0u77dnlewc6zalmecex96e24j6ejgssgwneqqs762af9'
   },
+  getRawTransaction: () => undefined,
+  getRawTransactions: () => ({}),
 }
 
 export const walletMocks = {

@@ -1,5 +1,6 @@
-import {Portfolio} from '@yoroi/types'
 import {ModernUtxo, rawUtxoToModernUtxo} from '@yoroi/tx'
+import {Portfolio} from '@yoroi/types'
+
 import type {RawUtxo} from '~/wallets/types/other'
 
 /**
@@ -21,4 +22,3 @@ export function convertRawUtxosToModernUtxos(
     )
   })
 }
-

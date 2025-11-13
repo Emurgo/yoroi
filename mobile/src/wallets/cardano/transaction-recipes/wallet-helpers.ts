@@ -1,4 +1,5 @@
 import {Network, Wallet} from '@yoroi/types'
+
 import {BigNumber} from 'bignumber.js'
 
 import * as legacyApi from '~/wallets/cardano/api/api'
@@ -19,7 +20,8 @@ import {
 async function getAbsoluteSlotNumberFromWallet(
   wallet: YoroiWallet,
 ): Promise<BigNumber> {
-  const time = await wallet.checkServerStatus()
+  const time = await wallet
+    .checkServerStatus()
     .then(({serverTime}) => serverTime || Date.now())
     .catch(() => Date.now())
   return new BigNumber(
@@ -168,4 +170,3 @@ export async function createUnsignedGovernanceTxFromWallet(
     addressMode: params.addressMode,
   })
 }
-

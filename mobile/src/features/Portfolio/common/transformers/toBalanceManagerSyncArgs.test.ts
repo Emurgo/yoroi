@@ -13,9 +13,9 @@ describe('toBalanceManagerSyncArgs', () => {
         tx_index: 0,
         utxo_id: '',
         assets: [
-          {assetId: `${policyId}.DEAD`, amount: '50', policyId, name: 'DEAD'},
+          {tokenId: `${policyId}.DEAD`, amount: '50', policyId, name: 'DEAD'},
           {
-            assetId: `${policyId}.DEADFEED`,
+            tokenId: `${policyId}.DEADFEED`,
             amount: '30',
             policyId,
             name: 'DEADFEED',
@@ -29,8 +29,8 @@ describe('toBalanceManagerSyncArgs', () => {
         utxo_id: '',
         amount: '200',
         assets: [
-          {assetId: `${policyId}.DEAD`, amount: '70', policyId, name: 'DEAD'},
-          {assetId: `${policyId}.3031`, amount: '80', policyId, name: '3031'},
+          {tokenId: `${policyId}.DEAD`, amount: '70', policyId, name: 'DEAD'},
+          {tokenId: `${policyId}.3031`, amount: '80', policyId, name: '3031'},
         ],
       },
     ]

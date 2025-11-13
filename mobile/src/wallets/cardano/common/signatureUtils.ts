@@ -10,7 +10,7 @@ import {uniqWith} from 'lodash'
 import {throwLoggedError} from '~/kernel/logger/helpers/throw-logged-error'
 import {CardanoMobile} from '~/wallets/wallets'
 
-import {YoroiWallet} from '../types'
+import {CardanoTypes, YoroiWallet} from '../types'
 
 export const createSwapCancellationLedgerPayload = async (
   cbor: string,
@@ -74,18 +74,22 @@ const getRequiredSigners = async (
 
   const startLevel = derivationConfig.keyLevel.purpose
 
-  const addressedUtxos = wallet.allUtxos.map((utxo) => ({
-    txHash: utxo.tx_hash,
-    txIndex: utxo.tx_index,
-    amount: utxo.amount,
-    receiver: utxo.receiver,
-    utxoId: utxo.utxo_id,
-    assets: utxo.assets,
-    addressing: {
-      path: getDerivationPathForAddress(utxo.receiver, wallet, meta, partial),
-      startLevel,
-    },
-  }))
+  const addressedUtxos: CardanoTypes.CardanoAddressedUtxo[] =
+    wallet.allUtxos.map((utxo) => ({
+      txHash: utxo.tx_hash,
+      txIndex: utxo.tx_index,
+      amount: utxo.amount,
+      receiver: utxo.receiver,
+      utxoId: utxo.utxo_id,
+      assets: utxo.assets.map((asset) => ({
+        assetId: asset.tokenId,
+        amount: asset.amount,
+      })),
+      addressing: {
+        path: getDerivationPathForAddress(utxo.receiver, wallet, meta, partial),
+        startLevel,
+      },
+    }))
 
   const getAddressAddressing = (bech32Address: string) => {
     const path = getDerivationPathForAddress(

@@ -22,7 +22,10 @@ const remoteAssetsToAmounts = (
   const amounts: Balance.Amounts = {}
 
   for (const asset of assets) {
-    const tokenId = asset.assetId === '' ? primaryTokenId : asset.assetId
+    // Handle empty tokenId or primary token - use primaryTokenId
+    // tokenId is Portfolio.Token.Id which is `${string}.${string}`, so empty string check is not needed
+    const tokenId =
+      asset.tokenId === primaryTokenId ? primaryTokenId : asset.tokenId
     const existing = amounts[tokenId]
     amounts[tokenId] = existing
       ? Quantities.sum([existing, asQuantity(asset.amount)])
@@ -45,7 +48,14 @@ const remoteDataToAmounts = (
 ): Balance.Amounts => {
   return data.reduce<Balance.Amounts>((acc, item) => {
     const primaryAmount = remoteAssetsToAmounts(
-      [{assetId: '', amount: item.amount, policyId: '', name: ''}],
+      [
+        {
+          tokenId: primaryTokenId as Portfolio.Token.Id,
+          amount: item.amount,
+          policyId: '',
+          name: '',
+        },
+      ],
       primaryTokenId,
     )
     const assetAmounts = remoteAssetsToAmounts(item.assets, primaryTokenId)

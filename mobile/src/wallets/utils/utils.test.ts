@@ -1,5 +1,5 @@
 import {TransactionOutput} from '@yoroi/tx'
-import {Balance} from '@yoroi/types'
+import {Balance, Portfolio} from '@yoroi/types'
 
 import BigNumber from 'bignumber.js'
 
@@ -540,8 +540,18 @@ describe('Utxos', () => {
         {
           amount: '1024',
           assets: [
-            {assetId: 'token123', amount: '10', policyId: '', name: ''},
-            {assetId: 'token567', amount: '6', policyId: '', name: ''},
+            {
+              tokenId: 'policy123.token123' as Portfolio.Token.Id,
+              amount: '10',
+              policyId: 'policy123',
+              name: 'token123',
+            },
+            {
+              tokenId: 'policy567.token567' as Portfolio.Token.Id,
+              amount: '6',
+              policyId: 'policy567',
+              name: 'token567',
+            },
           ],
           receiver: '',
           tx_hash: '',
@@ -550,7 +560,14 @@ describe('Utxos', () => {
         },
         {
           amount: '62314',
-          assets: [{assetId: 'token123', amount: '5', policyId: '', name: ''}],
+          assets: [
+            {
+              tokenId: 'policy123.token123' as Portfolio.Token.Id,
+              amount: '5',
+              policyId: 'policy123',
+              name: 'token123',
+            },
+          ],
           receiver: '',
           tx_hash: '',
           tx_index: 13,
@@ -558,7 +575,14 @@ describe('Utxos', () => {
         },
         {
           amount: '332',
-          assets: [{assetId: 'token567', amount: '2', policyId: '', name: ''}],
+          assets: [
+            {
+              tokenId: 'policy567.token567' as Portfolio.Token.Id,
+              amount: '2',
+              policyId: 'policy567',
+              name: 'token567',
+            },
+          ],
           receiver: '',
           tx_hash: '',
           tx_index: 15,

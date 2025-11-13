@@ -54,8 +54,8 @@ export async function calcLockedDeposit({
           utxoAmount: u.amount,
           utxoAssetsCount: u.assets.length,
           utxoReceiver: u.receiver,
-          txHash: u.txHash,
-          txIndex: u.txIndex,
+          txHash: u.tx_hash,
+          txIndex: u.tx_index,
         })
         // Return '0' for this UTXO to continue processing others
         return '0'
