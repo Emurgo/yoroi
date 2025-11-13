@@ -2,7 +2,7 @@ import {isNonNullable} from '@yoroi/common'
 import {parseTokenList} from '@yoroi/tx'
 import {Api, Balance, Network, Portfolio} from '@yoroi/types'
 
-import {CredKind} from '@emurgo/cross-csl-core'
+import {CredKind, WasmModuleProxy} from '@emurgo/cross-csl-core'
 import * as _ from 'lodash'
 import * as React from 'react'
 
@@ -71,6 +71,7 @@ export const useFormattedTx = (
   const outputTokenIds = React.useMemo(() => {
     if (cbor) {
       // Extract from CSL objects using parseTokenList for correct token ID format
+      // Note: This creates a separate scope, but it's fine since we're just extracting IDs (primitives)
       return CardanoMobileWrapped.cslScope((csl) => {
         const tx = csl.Transaction.fromHex(cbor)
         const txBody = tx.body()
@@ -144,6 +145,13 @@ export const useFormattedTx = (
     }
   }
 
+  // Create a single scope for all CSL operations if CBOR is available
+  const formattedOutputs: FormattedOutputs = cbor
+    ? CardanoMobileWrapped.cslScope((csl) => {
+        return formatOutputs(csl, wallet, outputs, tokenInfos, cbor)
+      })
+    : formatOutputs(undefined, wallet, outputs, tokenInfos, cbor)
+
   const formattedInputs: FormattedInputs = formatInputs(
     wallet,
     tokenInfos,
@@ -153,12 +161,6 @@ export const useFormattedTx = (
     wallet,
     tokenInfos,
     referenceInputUtxosResult.data,
-  )
-  const formattedOutputs: FormattedOutputs = formatOutputs(
-    wallet,
-    outputs,
-    tokenInfos,
-    cbor,
   )
   const formattedFee = formatFee(wallet, data)
   const formattedCertificates = formatCertificates(data.certs)
@@ -232,71 +234,70 @@ const formatInputs = (
 }
 
 const formatOutputs = (
+  csl: WasmModuleProxy | undefined,
   wallet: YoroiWallet,
   outputs: TransactionOutputs,
   tokenInfos: Map<Portfolio.Token.Id, Portfolio.Token.Info> | undefined,
   cbor?: string | null,
 ): FormattedOutputs => {
   // If CBOR is available, extract token info from CSL objects for accuracy
-  if (cbor) {
-    return CardanoMobileWrapped.cslScope((csl) => {
-      const tx = csl.Transaction.fromHex(cbor)
-      const txBody = tx.body()
-      const txOutputs = txBody.outputs()
+  if (cbor && csl) {
+    const tx = csl.Transaction.fromHex(cbor)
+    const txBody = tx.body()
+    const txOutputs = txBody.outputs()
 
-      return outputs.map((output, index) => {
-        const address = output.address
-        const coin = asQuantity(output.amount.coin)
+    return outputs.map((output, index) => {
+      const address = output.address
+      const coin = asQuantity(output.amount.coin)
 
-        const addressKind = getAddressKind(address)
-        const rewardAddress =
-          addressKind === CredKind.Key
-            ? deriveAddress(address, wallet.networkManager.chainId)
-            : null
+      const addressKind = getAddressKind(address)
+      const rewardAddress =
+        addressKind === CredKind.Key
+          ? deriveAddress(address, wallet.networkManager.chainId)
+          : null
 
-        const primaryAssets = [
-          {
-            tokenInfo: wallet.portfolioPrimaryTokenInfo,
-            quantity: coin,
-          },
-        ]
+      const primaryAssets = [
+        {
+          tokenInfo: wallet.portfolioPrimaryTokenInfo,
+          quantity: coin,
+        },
+      ]
 
-        // Extract tokens from CSL object using parseTokenList
-        const cslOutput = txOutputs.get(index)
-        const multiAssets: Array<{
-          tokenInfo: Portfolio.Token.Info
-          quantity: Balance.Quantity
-        }> = []
+      // Extract tokens from CSL object using parseTokenList
+      const cslOutput = txOutputs.get(index)
+      const multiAssets: Array<{
+        tokenInfo: Portfolio.Token.Info
+        quantity: Balance.Quantity
+      }> = []
 
-        if (cslOutput) {
-          const value = cslOutput.amount()
-          const multiasset = value.multiasset()
-          if (multiasset) {
-            const tokens = parseTokenList(csl, multiasset)
-            for (const token of tokens) {
-              const tokenInfo = tokenInfos?.get(
-                token.assetId as Portfolio.Token.Id,
-              )
-              if (tokenInfo) {
-                multiAssets.push({
-                  tokenInfo,
-                  quantity: asQuantity(token.amount),
-                })
-              }
+      if (cslOutput) {
+        const value = cslOutput.amount()
+        const multiasset = value.multiasset()
+        if (multiasset) {
+          const tokens = parseTokenList(csl, multiasset)
+          for (const token of tokens) {
+            const tokenInfo = tokenInfos?.get(
+              token.assetId as Portfolio.Token.Id,
+            )
+            if (tokenInfo) {
+              multiAssets.push({
+                tokenInfo,
+                quantity: asQuantity(token.amount),
+              })
             }
           }
         }
+      }
 
-        const assets = [...primaryAssets, ...multiAssets].filter(isNonNullable)
+      const assets = [...primaryAssets, ...multiAssets].filter(isNonNullable)
 
-        return {
-          assets,
-          address,
-          addressKind,
-          rewardAddress,
-          ownAddress: isOwnedAddress(wallet, address),
-        }
-      })
+      return {
+        assets,
+        address,
+        addressKind,
+        rewardAddress,
+        ownAddress: isOwnedAddress(wallet, address),
+      }
     })
   }
 

@@ -236,8 +236,9 @@ export function selectUtxosForAmounts(
   for (const utxo of selected) {
     selectedAda += BigInt(utxo.balance[primaryTokenId] || '0')
     for (const [tokenId, quantity] of Object.entries(utxo.balance)) {
-      selectedAmounts[tokenId] =
-        (selectedAmounts[tokenId] || BigInt(0)) + BigInt(quantity)
+      const typedTokenId = tokenId as Portfolio.Token.Id
+      selectedAmounts[typedTokenId] =
+        (selectedAmounts[typedTokenId] || BigInt(0)) + BigInt(quantity)
     }
   }
 
@@ -246,10 +247,11 @@ export function selectUtxosForAmounts(
   const needsMoreTokens: Portfolio.Token.Id[] = []
 
   for (const tokenId of requiredTokenIds) {
-    const required = BigInt(requiredAmounts[tokenId] || '0')
-    const have = selectedAmounts[tokenId] || BigInt(0)
+    const typedTokenId = tokenId as Portfolio.Token.Id
+    const required = BigInt(requiredAmounts[typedTokenId] || '0')
+    const have = selectedAmounts[typedTokenId] || BigInt(0)
     if (have < required) {
-      needsMoreTokens.push(tokenId)
+      needsMoreTokens.push(typedTokenId)
     }
   }
 

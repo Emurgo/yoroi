@@ -5,6 +5,7 @@ import * as CSL from '@emurgo/cross-csl-core'
 import {UseMutationOptions} from '@tanstack/react-query'
 
 import {YoroiWallet} from '~/wallets/cardano/types'
+import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
 import {TxSubmissionStatus} from '~/wallets/types/other'
 import {delay} from '~/wallets/utils/timeUtils'
 
@@ -20,10 +21,13 @@ export const useSubmitTx = (
       await wallet.submitTransaction(base64)
 
       if (serverStatus.isQueueOnline) {
-        const txId = await calculateTxId(
-          Buffer.from(txBytes).toString('hex'),
-          'hex',
-        )
+        const txId = await CardanoMobileWrapped.cslScope(async (csl) => {
+          return await calculateTxId(
+            csl,
+            Buffer.from(txBytes).toString('hex'),
+            'hex',
+          )
+        })
         return fetchTxStatus(wallet, txId, false)
       }
 

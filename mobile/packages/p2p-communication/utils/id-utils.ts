@@ -1,3 +1,4 @@
+/* eslint-disable no-bitwise */
 import {BaseStorage} from '@yoroi/types'
 
 import {STORAGE_KEYS} from '../constants'

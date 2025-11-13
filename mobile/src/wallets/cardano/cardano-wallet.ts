@@ -947,16 +947,19 @@ export const makeCardanoWallet = (
           : undefined
 
       // Sign the transaction using the new signing function
-      const signedTx = await signTransaction(
-        unsignedTx,
-        accountPrivateKeyHex,
-        stakingKeysForSigning,
-        datumDatas.length > 0
-          ? datumDatas.map((d) => ({data: d.data}))
-          : undefined,
-      )
+      return CardanoMobileWrapped.cslScope((csl) => {
+        const signedTx = signTransaction(
+          csl,
+          unsignedTx,
+          accountPrivateKeyHex,
+          stakingKeysForSigning,
+          datumDatas.length > 0
+            ? datumDatas.map((d) => ({data: d.data}))
+            : undefined,
+        )
 
-      return signedTx
+        return signedTx
+      })
     }
 
     async ledgerSupportsCIP36(
@@ -1053,6 +1056,8 @@ export const makeCardanoWallet = (
             {appAdaVersion},
           )
 
+          const stakingConfig = implementationConfig.features.staking
+
           // Get change address from UnsignedTransaction options or use default
           const changeAddress =
             unsignedTx.options.changeAddress ||
@@ -1061,41 +1066,45 @@ export const makeCardanoWallet = (
           const changeAddr = {address: changeAddress, addressing}
 
           // Convert UnsignedTransaction to LedgerUnsignedTx format
-          const ledgerUnsignedTx = await adaptToLedgerUnsignedTx(unsignedTx, [
-            changeAddr,
-          ])
+          return CardanoMobileWrapped.cslScope(async (csl) => {
+            const ledgerUnsignedTx = adaptToLedgerUnsignedTx(csl, unsignedTx, [
+              changeAddr,
+            ])
 
-          const ledgerPayload = await buildVotingLedgerPayloadV5(
-            ledgerUnsignedTx,
-            this.networkManager.chainId,
-            this.networkManager.protocolMagic,
-            Array.from(implementationConfig.features.staking.addressing),
-          )
+            const ledgerPayload = await buildVotingLedgerPayloadV5(
+              csl,
+              ledgerUnsignedTx,
+              this.networkManager.chainId,
+              this.networkManager.protocolMagic,
+              Array.from(stakingConfig.addressing),
+            )
 
-          const signedLedgerTx = await signTxWithLedger(
-            ledgerPayload,
-            hwDeviceInfo,
-            useUSB,
-          )
+            const signedLedgerTx = await signTxWithLedger(
+              ledgerPayload,
+              hwDeviceInfo,
+              useUSB,
+            )
 
-          const signedTxResult = await buildLedgerSignedTx(
-            {
-              senderUtxos: ledgerUnsignedTx.senderUtxos,
-              txBuilder: ledgerUnsignedTx.txBuilder,
-              auxiliaryData: ledgerUnsignedTx.auxiliaryData,
-            },
-            signedLedgerTx,
-            implementationConfig.derivations.base.harden.purpose,
-            this.publicKeyHex,
-            false,
-          )
+            const signedTxResult = await buildLedgerSignedTx(
+              csl,
+              {
+                senderUtxos: ledgerUnsignedTx.senderUtxos,
+                txBuilder: ledgerUnsignedTx.txBuilder,
+                auxiliaryData: ledgerUnsignedTx.auxiliaryData,
+              },
+              signedLedgerTx,
+              implementationConfig.derivations.base.harden.purpose,
+              this.publicKeyHex,
+              false,
+            )
 
-          // Convert signed transaction bytes to Transaction object
-          const signedTx = await CardanoMobile.Transaction.fromBytes(
-            signedTxResult.encodedTx,
-          )
+            // Convert signed transaction bytes to Transaction object
+            const signedTx = await CardanoMobile.Transaction.fromBytes(
+              signedTxResult.encodedTx,
+            )
 
-          return signedTx
+            return signedTx
+          })
         }
 
         throwLoggedError(
@@ -1115,58 +1124,62 @@ export const makeCardanoWallet = (
       const changeAddr = {address: changeAddress, addressing}
 
       // Convert UnsignedTransaction to LedgerUnsignedTx format
-      const ledgerUnsignedTx = await adaptToLedgerUnsignedTx(unsignedTx, [
-        changeAddr,
-      ])
+      return CardanoMobileWrapped.cslScope(async (csl) => {
+        const ledgerUnsignedTx = adaptToLedgerUnsignedTx(csl, unsignedTx, [
+          changeAddr,
+        ])
 
-      let stakingAddressing
-      if (implementationConfig.features.staking) {
-        stakingAddressing = Array.from(
-          implementationConfig.features.staking.addressing,
-        )
-      }
+        let stakingAddressing
+        if (implementationConfig.features.staking) {
+          stakingAddressing = Array.from(
+            implementationConfig.features.staking.addressing,
+          )
+        }
 
-      const ledgerPayload = await buildLedgerPayload(
-        ledgerUnsignedTx,
-        this.networkManager.chainId,
-        this.networkManager.protocolMagic,
-        stakingAddressing,
-      )
-
-      const signedLedgerTx = await signTxWithLedger(
-        ledgerPayload,
-        hwDeviceInfo,
-        useUSB,
-      )
-
-      // Extract datum data from outputs
-      const datumDatas = unsignedTx.outputs
-        .map((output) => output.datum)
-        .filter(isNonNullable)
-        .filter(
-          (datum: Datum): datum is Exclude<Datum, {hash: string}> =>
-            'data' in datum,
+        const ledgerPayload = await buildLedgerPayload(
+          csl,
+          ledgerUnsignedTx,
+          this.networkManager.chainId,
+          this.networkManager.protocolMagic,
+          stakingAddressing,
         )
 
-      const signedTxResult = await buildLedgerSignedTx(
-        {
-          senderUtxos: ledgerUnsignedTx.senderUtxos,
-          txBuilder: ledgerUnsignedTx.txBuilder,
-          auxiliaryData: ledgerUnsignedTx.auxiliaryData,
-        },
-        signedLedgerTx,
-        implementationConfig.derivations.base.harden.purpose,
-        this.publicKeyHex,
-        true,
-        datumDatas.length > 0 ? datumDatas : undefined,
-      )
+        const signedLedgerTx = await signTxWithLedger(
+          ledgerPayload,
+          hwDeviceInfo,
+          useUSB,
+        )
 
-      // Convert signed transaction bytes to Transaction object
-      const signedTx = await CardanoMobile.Transaction.fromBytes(
-        signedTxResult.encodedTx,
-      )
+        // Extract datum data from outputs
+        const datumDatas = unsignedTx.outputs
+          .map((output) => output.datum)
+          .filter(isNonNullable)
+          .filter(
+            (datum: Datum): datum is Exclude<Datum, {hash: string}> =>
+              'data' in datum,
+          )
 
-      return signedTx
+        const signedTxResult = await buildLedgerSignedTx(
+          csl,
+          {
+            senderUtxos: ledgerUnsignedTx.senderUtxos,
+            txBuilder: ledgerUnsignedTx.txBuilder,
+            auxiliaryData: ledgerUnsignedTx.auxiliaryData,
+          },
+          signedLedgerTx,
+          implementationConfig.derivations.base.harden.purpose,
+          this.publicKeyHex,
+          true,
+          datumDatas.length > 0 ? datumDatas : undefined,
+        )
+
+        // Convert signed transaction bytes to Transaction object
+        const signedTx = await CardanoMobile.Transaction.fromBytes(
+          signedTxResult.encodedTx,
+        )
+
+        return signedTx
+      })
     }
 
     // =================== backend API =================== //

@@ -2,7 +2,12 @@
 // Cardano-specific address normalization and manipulation functions
 import {isHex} from '@yoroi/common'
 
-import {Address, Bip32PublicKey, Credential} from '@emurgo/cross-csl-core'
+import {
+  Address,
+  Bip32PublicKey,
+  Credential,
+  WasmModuleProxy,
+} from '@emurgo/cross-csl-core'
 
 import {CardanoMobileWrapped} from '../../../src/wallets/cardano/wrappedCsl'
 import {Addressing} from '../types'
@@ -141,7 +146,7 @@ export async function filterAddressesByStakingKey<T extends {receiver: string}>(
  * the address within that same scope to avoid WASM pointer issues
  */
 export async function addrContainsAccountKey(
-  csl: import('@emurgo/cross-csl-core').WasmModuleProxy,
+  csl: WasmModuleProxy,
   address: string,
   targetAccountKey: Credential,
   acceptTypeMismatch: boolean,

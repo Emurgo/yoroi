@@ -45,9 +45,9 @@ export const getMinAmounts = async (
     const amountsWithPrimary = withPrimaryToken(amounts, primaryTokenInfo)
 
     const value = cardanoValueFromAmounts(
+      csl,
       amountsWithPrimary,
       primaryTokenInfo.id,
-      csl,
     )
     const coinsPerUtxoByte = csl.BigNum.fromStr(protocolParams.coinsPerUtxoByte)
 

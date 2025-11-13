@@ -9,6 +9,7 @@ import {
   TxAuxiliaryDataType,
   TxOutputDestinationType,
 } from '@cardano-foundation/ledgerjs-hw-app-cardano'
+import {WasmModuleProxy} from '@emurgo/cross-csl-core'
 import {blake2b as blake2bHash} from '@noble/hashes/blake2b'
 
 import {CardanoMobileWrapped} from '../../../src/wallets/cardano/wrappedCsl'
@@ -90,220 +91,201 @@ function buildLedgerCIP36Payload(
 
 /**
  * Build Ledger payload for voting transactions (Legacy v5)
+ *
+ * NOTE: This function expects to be called within a cslScope.
+ * The unsignedTx parameter must contain CSL objects valid within that same scope.
  */
 export async function buildVotingLedgerPayloadV5(
+  csl: WasmModuleProxy,
   unsignedTx: LedgerUnsignedTx,
   networkId: number,
   byronNetworkMagic: number,
   stakingDerivationPath?: number[],
 ): Promise<SignTransactionRequest> {
-  return CardanoMobileWrapped.cslScope(async (csl) => {
-    const builtTx = unsignedTx.txBuilder.build()
-    assertTagsState(csl, builtTx.toHex())
-    const ledgerInputs = transformToLedgerInputs(unsignedTx)
-    const ledgerOutputs = await transformToLedgerOutputs(csl, {
-      networkId: networkId,
-      txOutputs: unsignedTx.txBody.outputs(),
-      stakingDerivationPath: stakingDerivationPath,
-      changeAddrs: [...unsignedTx.change],
-    })
-
-    const withdrawals = unsignedTx.withdrawals
-    const ledgerWithdrawal: Array<
-      import('@cardano-foundation/ledgerjs-hw-app-cardano').Withdrawal
-    > = []
-    if (
-      withdrawals != null &&
-      withdrawals.hasValue() &&
-      withdrawals.len() > 0
-    ) {
-      if (!stakingDerivationPath)
-        throw new Error(
-          'stakingDerivationPath should have value for withdrawals',
-        )
-      const withs = formatLedgerWithdrawals(withdrawals, stakingDerivationPath)
-      ledgerWithdrawal.push(...withs)
-    }
-
-    const certificates = unsignedTx.certificates
-
-    const ledgerCertificates: Array<
-      import('@cardano-foundation/ledgerjs-hw-app-cardano').Certificate
-    > = []
-    if (
-      certificates != null &&
-      certificates.hasValue() &&
-      certificates.len() > 0
-    ) {
-      if (!stakingDerivationPath)
-        throw new Error(
-          'stakingDerivationPath should have value for certificates',
-        )
-      const certs = formatLedgerCertificates(
-        certificates,
-        stakingDerivationPath,
-      )
-      ledgerCertificates.push(...certs)
-    }
-
-    const ttl = unsignedTx.ttl
-
-    let auxiliaryData: TxAuxiliaryData | null = null
-
-    if (unsignedTx.catalystRegistrationData) {
-      if (!stakingDerivationPath) {
-        throw new Error(
-          'stakingDerivationPath is required for catalyst registration',
-        )
-      }
-      auxiliaryData = buildLedgerCIP15Payload(
-        unsignedTx.catalystRegistrationData,
-        stakingDerivationPath,
-      )
-    }
-
-    return {
-      signingMode: TransactionSigningMode.ORDINARY_TRANSACTION,
-      tx: {
-        inputs: ledgerInputs,
-        outputs: ledgerOutputs,
-        ttl: ttl === undefined ? ttl : ttl.toString(),
-        fee: unsignedTx.txBody.fee().toStr(),
-        network: {
-          networkId: networkId,
-          protocolMagic: byronNetworkMagic,
-        },
-        withdrawals: ledgerWithdrawal.length === 0 ? null : ledgerWithdrawal,
-        certificates:
-          ledgerCertificates.length === 0 ? null : ledgerCertificates,
-        auxiliaryData,
-        validityIntervalStart: undefined,
-      },
-      additionalWitnessPaths: [],
-      options: {
-        tagCborSets: doAllSetsHaveTag(
-          csl,
-          Buffer.from(unsignedTx.txBuilder.build().toBytes()).toString('hex'),
-        ),
-      },
-    }
+  const builtTx = unsignedTx.txBuilder.build()
+  assertTagsState(csl, builtTx.toHex())
+  const ledgerInputs = transformToLedgerInputs(unsignedTx)
+  const ledgerOutputs = await transformToLedgerOutputs(csl, {
+    networkId: networkId,
+    txOutputs: unsignedTx.txBody.outputs(),
+    stakingDerivationPath: stakingDerivationPath,
+    changeAddrs: [...unsignedTx.change],
   })
+
+  const withdrawals = unsignedTx.withdrawals
+  const ledgerWithdrawal: Array<
+    import('@cardano-foundation/ledgerjs-hw-app-cardano').Withdrawal
+  > = []
+  if (withdrawals != null && withdrawals.hasValue() && withdrawals.len() > 0) {
+    if (!stakingDerivationPath)
+      throw new Error('stakingDerivationPath should have value for withdrawals')
+    const withs = formatLedgerWithdrawals(withdrawals, stakingDerivationPath)
+    ledgerWithdrawal.push(...withs)
+  }
+
+  const certificates = unsignedTx.certificates
+
+  const ledgerCertificates: Array<
+    import('@cardano-foundation/ledgerjs-hw-app-cardano').Certificate
+  > = []
+  if (
+    certificates != null &&
+    certificates.hasValue() &&
+    certificates.len() > 0
+  ) {
+    if (!stakingDerivationPath)
+      throw new Error(
+        'stakingDerivationPath should have value for certificates',
+      )
+    const certs = formatLedgerCertificates(certificates, stakingDerivationPath)
+    ledgerCertificates.push(...certs)
+  }
+
+  const ttl = unsignedTx.ttl
+
+  let auxiliaryData: TxAuxiliaryData | null = null
+
+  if (unsignedTx.catalystRegistrationData) {
+    if (!stakingDerivationPath) {
+      throw new Error(
+        'stakingDerivationPath is required for catalyst registration',
+      )
+    }
+    auxiliaryData = buildLedgerCIP15Payload(
+      unsignedTx.catalystRegistrationData,
+      stakingDerivationPath,
+    )
+  }
+
+  return {
+    signingMode: TransactionSigningMode.ORDINARY_TRANSACTION,
+    tx: {
+      inputs: ledgerInputs,
+      outputs: ledgerOutputs,
+      ttl: ttl === undefined ? ttl : ttl.toString(),
+      fee: unsignedTx.txBody.fee().toStr(),
+      network: {
+        networkId: networkId,
+        protocolMagic: byronNetworkMagic,
+      },
+      withdrawals: ledgerWithdrawal.length === 0 ? null : ledgerWithdrawal,
+      certificates: ledgerCertificates.length === 0 ? null : ledgerCertificates,
+      auxiliaryData,
+      validityIntervalStart: undefined,
+    },
+    additionalWitnessPaths: [],
+    options: {
+      tagCborSets: doAllSetsHaveTag(
+        csl,
+        Buffer.from(unsignedTx.txBuilder.build().toBytes()).toString('hex'),
+      ),
+    },
+  }
 }
 
 /**
  * Build Ledger payload for standard transactions
+ *
+ * NOTE: This function expects to be called within a cslScope.
+ * The unsignedTx parameter must contain CSL objects valid within that same scope.
  */
 export async function buildLedgerPayload(
+  csl: WasmModuleProxy,
   unsignedTx: LedgerUnsignedTx,
   networkId: number,
   byronNetworkMagic: number,
   stakingDerivationPath?: number[],
 ): Promise<SignTransactionRequest> {
-  return CardanoMobileWrapped.cslScope(async (csl) => {
-    const builtTx = unsignedTx.txBuilder.build()
-    assertTagsState(csl, builtTx.toHex())
+  const builtTx = unsignedTx.txBuilder.build()
+  assertTagsState(csl, builtTx.toHex())
 
-    const ledgerInputs = transformToLedgerInputs(unsignedTx)
-    const ledgerOutputs = await transformToLedgerOutputs(csl, {
-      networkId: networkId,
-      txOutputs: unsignedTx.txBody.outputs(),
-      stakingDerivationPath: stakingDerivationPath,
-      changeAddrs: [...unsignedTx.change],
-    })
-
-    const withdrawals = unsignedTx.withdrawals
-    const ledgerWithdrawal: Array<
-      import('@cardano-foundation/ledgerjs-hw-app-cardano').Withdrawal
-    > = []
-    if (
-      withdrawals != null &&
-      withdrawals.hasValue() &&
-      withdrawals.len() > 0
-    ) {
-      if (!stakingDerivationPath)
-        throw new Error(
-          'stakingDerivationPath should have value for withdrawals',
-        )
-      const withs = formatLedgerWithdrawals(withdrawals, stakingDerivationPath)
-      ledgerWithdrawal.push(...withs)
-    }
-
-    const certificates = unsignedTx.certificates
-
-    const ledgerCertificates: Array<
-      import('@cardano-foundation/ledgerjs-hw-app-cardano').Certificate
-    > = []
-    if (
-      certificates != null &&
-      certificates.hasValue() &&
-      certificates.len() > 0
-    ) {
-      if (!stakingDerivationPath)
-        throw new Error(
-          'stakingDerivationPath should have value for certificates',
-        )
-      const certs = formatLedgerCertificates(
-        certificates,
-        stakingDerivationPath,
-      )
-      ledgerCertificates.push(...certs)
-    }
-
-    const ttl = unsignedTx.ttl
-
-    let auxiliaryData: TxAuxiliaryData | null = null
-
-    if (unsignedTx.catalystRegistrationData) {
-      if (!stakingDerivationPath) {
-        throw new Error(
-          'stakingDerivationPath is required for catalyst registration',
-        )
-      }
-      auxiliaryData = buildLedgerCIP36Payload(
-        unsignedTx.catalystRegistrationData,
-        stakingDerivationPath,
-      )
-    } else if (
-      unsignedTx.auxiliaryData &&
-      unsignedTx.auxiliaryData.hasValue()
-    ) {
-      // Calculate blake2b hash for auxiliary data (256 bits = 32 bytes)
-      const auxiliaryDataBytes = unsignedTx.auxiliaryData.toBytes()
-      const auxiliaryDataHash = Buffer.from(
-        blake2bHash(auxiliaryDataBytes, {dkLen: 32}),
-      ).toString('hex')
-      auxiliaryData = {
-        type: TxAuxiliaryDataType.ARBITRARY_HASH,
-        params: {
-          hashHex: auxiliaryDataHash,
-        },
-      }
-    }
-
-    return {
-      signingMode: TransactionSigningMode.ORDINARY_TRANSACTION,
-      tx: {
-        inputs: ledgerInputs,
-        outputs: ledgerOutputs,
-        ttl: ttl === undefined ? ttl : ttl.toString(),
-        fee: unsignedTx.txBody.fee().toStr(),
-        network: {
-          networkId: networkId,
-          protocolMagic: byronNetworkMagic,
-        },
-        withdrawals: ledgerWithdrawal.length === 0 ? null : ledgerWithdrawal,
-        certificates:
-          ledgerCertificates.length === 0 ? null : ledgerCertificates,
-        auxiliaryData,
-        validityIntervalStart: undefined,
-        scriptDataHashHex: unsignedTx.scriptDataHash,
-      },
-      options: {
-        tagCborSets: doAllSetsHaveTag(
-          csl,
-          Buffer.from(unsignedTx.txBuilder.build().toBytes()).toString('hex'),
-        ),
-      },
-    } as SignTransactionRequest
+  const ledgerInputs = transformToLedgerInputs(unsignedTx)
+  const ledgerOutputs = await transformToLedgerOutputs(csl, {
+    networkId: networkId,
+    txOutputs: unsignedTx.txBody.outputs(),
+    stakingDerivationPath: stakingDerivationPath,
+    changeAddrs: [...unsignedTx.change],
   })
+
+  const withdrawals = unsignedTx.withdrawals
+  const ledgerWithdrawal: Array<
+    import('@cardano-foundation/ledgerjs-hw-app-cardano').Withdrawal
+  > = []
+  if (withdrawals != null && withdrawals.hasValue() && withdrawals.len() > 0) {
+    if (!stakingDerivationPath)
+      throw new Error('stakingDerivationPath should have value for withdrawals')
+    const withs = formatLedgerWithdrawals(withdrawals, stakingDerivationPath)
+    ledgerWithdrawal.push(...withs)
+  }
+
+  const certificates = unsignedTx.certificates
+
+  const ledgerCertificates: Array<
+    import('@cardano-foundation/ledgerjs-hw-app-cardano').Certificate
+  > = []
+  if (
+    certificates != null &&
+    certificates.hasValue() &&
+    certificates.len() > 0
+  ) {
+    if (!stakingDerivationPath)
+      throw new Error(
+        'stakingDerivationPath should have value for certificates',
+      )
+    const certs = formatLedgerCertificates(certificates, stakingDerivationPath)
+    ledgerCertificates.push(...certs)
+  }
+
+  const ttl = unsignedTx.ttl
+
+  let auxiliaryData: TxAuxiliaryData | null = null
+
+  if (unsignedTx.catalystRegistrationData) {
+    if (!stakingDerivationPath) {
+      throw new Error(
+        'stakingDerivationPath is required for catalyst registration',
+      )
+    }
+    auxiliaryData = buildLedgerCIP36Payload(
+      unsignedTx.catalystRegistrationData,
+      stakingDerivationPath,
+    )
+  } else if (unsignedTx.auxiliaryData && unsignedTx.auxiliaryData.hasValue()) {
+    // Calculate blake2b hash for auxiliary data (256 bits = 32 bytes)
+    const auxiliaryDataBytes = unsignedTx.auxiliaryData.toBytes()
+    const auxiliaryDataHash = Buffer.from(
+      blake2bHash(auxiliaryDataBytes, {dkLen: 32}),
+    ).toString('hex')
+    auxiliaryData = {
+      type: TxAuxiliaryDataType.ARBITRARY_HASH,
+      params: {
+        hashHex: auxiliaryDataHash,
+      },
+    }
+  }
+
+  return {
+    signingMode: TransactionSigningMode.ORDINARY_TRANSACTION,
+    tx: {
+      inputs: ledgerInputs,
+      outputs: ledgerOutputs,
+      ttl: ttl === undefined ? ttl : ttl.toString(),
+      fee: unsignedTx.txBody.fee().toStr(),
+      network: {
+        networkId: networkId,
+        protocolMagic: byronNetworkMagic,
+      },
+      withdrawals: ledgerWithdrawal.length === 0 ? null : ledgerWithdrawal,
+      certificates: ledgerCertificates.length === 0 ? null : ledgerCertificates,
+      auxiliaryData,
+      validityIntervalStart: undefined,
+      scriptDataHashHex: unsignedTx.scriptDataHash,
+    },
+    options: {
+      tagCborSets: doAllSetsHaveTag(
+        csl,
+        Buffer.from(unsignedTx.txBuilder.build().toBytes()).toString('hex'),
+      ),
+    },
+  } as SignTransactionRequest
 }

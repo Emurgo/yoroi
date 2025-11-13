@@ -36,6 +36,7 @@ import {TokenAmountItem} from '~/ui/TokenAmountItem/TokenAmountItem'
 import {useCollateralInfo} from '~/wallets/cardano/utxoManager/useCollateralInfo'
 import {useSetCollateralId} from '~/wallets/cardano/utxoManager/useSetCollateralId'
 import {collateralConfig, utxosMaker} from '~/wallets/cardano/utxoManager/utxos'
+import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
 import {RawUtxo} from '~/wallets/types/other'
 import {Amounts, Quantities, asQuantity} from '~/wallets/utils/utils'
 
@@ -83,10 +84,13 @@ export const ManageCollateralScreen = () => {
   const handleOnSuccess = async (signedTx?: CSL.Transaction) => {
     if (!signedTx) throw new Error('ManageCollateralScreen:: invalid state')
     const txBytes = signedTx.toBytes()
-    const txId = await calculateTxId(
-      Buffer.from(txBytes).toString('hex'),
-      'hex',
-    )
+    const txId = await CardanoMobileWrapped.cslScope(async (csl) => {
+      return await calculateTxId(
+        csl,
+        Buffer.from(txBytes).toString('hex'),
+        'hex',
+      )
+    })
     const collateralId = `${txId}:0`
     setCollateralId(collateralId)
     resetToTxHistory()

@@ -2,101 +2,106 @@
 // Functions for working with Cardano assets and tokens
 import {Balance} from '@yoroi/types'
 
-import {AssetName, MultiAsset, ScriptHash, Value} from '@emurgo/cross-csl-core'
+import {
+  AssetName,
+  MultiAsset,
+  ScriptHash,
+  Value,
+  WasmModuleProxy,
+} from '@emurgo/cross-csl-core'
 import {BigNumber} from 'bignumber.js'
 
-import {CardanoMobileWrapped} from '../../../src/wallets/cardano/wrappedCsl'
 import {RemoteUnspentOutput, SendToken} from '../types'
 
 /**
  * Convert Balance.Amounts to Cardano Value
  *
- * WARNING: Returns a WASM Value object that will be freed when the cslScope exits.
- * Only use the returned Value within the same scope where it was created, or extract
- * primitive values before the scope exits.
+ * NOTE: This function expects to be called within a cslScope.
+ * The returned Value object will be valid within that same scope.
  */
-export async function cardanoValueFromAmounts(
+export function cardanoValueFromAmounts(
+  csl: WasmModuleProxy,
   amounts: Balance.Amounts,
   primaryTokenId: string,
-): Promise<Value> {
-  return CardanoMobileWrapped.cslScope((csl) => {
-    const adaAmount = amounts[primaryTokenId] || '0'
-    const value = csl.Value.new(csl.BigNum.fromStr(adaAmount))
+): Value {
+  const adaAmount = amounts[primaryTokenId] || '0'
+  const value = csl.Value.new(csl.BigNum.fromStr(adaAmount))
 
-    // Get all asset IDs except primary token
-    const assetIds = Object.keys(amounts).filter((id) => id !== primaryTokenId)
+  // Get all asset IDs except primary token
+  const assetIds = Object.keys(amounts).filter((id) => id !== primaryTokenId)
 
-    if (assetIds.length === 0) return value
+  if (assetIds.length === 0) return value
 
-    const multiAsset = csl.MultiAsset.new()
+  const multiAsset = csl.MultiAsset.new()
 
-    // Group assets by policy ID
-    const groupedByPolicyId = assetIds.reduce(
-      (acc, assetId) => {
-        // assetId is in format "policyId.assetNameHex" (Portfolio.Token.Id format)
-        const [policyId] = assetId.split('.')
-        if (!policyId) return acc
-        acc[policyId] = acc[policyId] ?? []
-        acc[policyId]!.push(assetId)
-        return acc
-      },
-      {} as Record<string, Array<string>>,
+  // Group assets by policy ID
+  const groupedByPolicyId = assetIds.reduce(
+    (acc, assetId) => {
+      // assetId is in format "policyId.assetNameHex" (Portfolio.Token.Id format)
+      const [policyId] = assetId.split('.')
+      if (!policyId) return acc
+      acc[policyId] = acc[policyId] ?? []
+      acc[policyId]!.push(assetId)
+      return acc
+    },
+    {} as Record<string, Array<string>>,
+  )
+
+  // Create MultiAsset structure
+  for (const policyIdStr of Object.keys(groupedByPolicyId)) {
+    const assetGroup = groupedByPolicyId[policyIdStr]
+    if (!assetGroup) continue
+
+    const policyId = csl.ScriptHash.fromBytes(
+      new Uint8Array(Buffer.from(policyIdStr, 'hex')),
     )
+    const assets = csl.Assets.new()
 
-    // Create MultiAsset structure
-    for (const policyIdStr of Object.keys(groupedByPolicyId)) {
-      const assetGroup = groupedByPolicyId[policyIdStr]
-      if (!assetGroup) continue
-
-      const policyId = csl.ScriptHash.fromBytes(
-        new Uint8Array(Buffer.from(policyIdStr, 'hex')),
+    for (const assetId of assetGroup) {
+      const [, assetNameHex] = assetId.split('.')
+      if (!assetNameHex) continue
+      const name = csl.AssetName.new(
+        new Uint8Array(Buffer.from(assetNameHex, 'hex')),
       )
-      const assets = csl.Assets.new()
-
-      for (const assetId of assetGroup) {
-        const [, assetNameHex] = assetId.split('.')
-        if (!assetNameHex) continue
-        const name = csl.AssetName.new(
-          new Uint8Array(Buffer.from(assetNameHex, 'hex')),
-        )
-        const amount = csl.BigNum.fromStr(amounts[assetId] ?? '0')
-        assets.insert(name, amount)
-      }
-
-      multiAsset.insert(policyId, assets)
+      const amount = csl.BigNum.fromStr(amounts[assetId] ?? '0')
+      assets.insert(name, amount)
     }
 
-    if (multiAsset.len() > 0) {
-      value.setMultiasset(multiAsset)
-    }
-    return value
-  })
+    multiAsset.insert(policyId, assets)
+  }
+
+  if (multiAsset.len() > 0) {
+    value.setMultiasset(multiAsset)
+  }
+  return value
 }
 
 /**
  * Convert Cardano Value to Balance.Amounts
+ *
+ * NOTE: This function expects to be called within a cslScope.
+ * The value parameter must be valid within that same scope.
  */
-export async function amountsFromCardanoValue(
+export function amountsFromCardanoValue(
+  csl: WasmModuleProxy,
   value: Value,
   primaryTokenId: string,
-): Promise<Balance.Amounts> {
-  return CardanoMobileWrapped.cslScope((csl) => {
-    const amounts: Balance.Amounts = {} as Balance.Amounts
+): Balance.Amounts {
+  const amounts: Balance.Amounts = {} as Balance.Amounts
 
-    // Add primary token (ADA)
-    const coin = value.coin()
-    amounts[primaryTokenId] = coin.toStr() as Balance.Quantity
+  // Add primary token (ADA)
+  const coin = value.coin()
+  amounts[primaryTokenId] = coin.toStr() as Balance.Quantity
 
-    // Add other assets
-    const ma = value.multiasset()
-    if (ma) {
-      for (const token of parseTokenList(csl, ma)) {
-        amounts[token.assetId] = token.amount as Balance.Quantity
-      }
+  // Add other assets
+  const ma = value.multiasset()
+  if (ma) {
+    for (const token of parseTokenList(csl, ma)) {
+      amounts[token.assetId] = token.amount as Balance.Quantity
     }
+  }
 
-    return amounts
-  })
+  return amounts
 }
 
 /**
@@ -114,7 +119,7 @@ export function cardanoAssetToIdentifier(
  * Convert identifier string to Cardano asset
  */
 export function identifierToCardanoAsset(
-  csl: import('@emurgo/cross-csl-core').WasmModuleProxy,
+  csl: WasmModuleProxy,
   identifier: string,
 ): {
   policyId: ScriptHash
@@ -190,7 +195,7 @@ export function amountsFromRemote(
  * Parse token list from MultiAsset
  */
 export function parseTokenList(
-  _csl: import('@emurgo/cross-csl-core').WasmModuleProxy,
+  _csl: WasmModuleProxy,
   assets: MultiAsset,
 ): Array<{assetId: string; amount: string}> {
   const result: Array<{assetId: string; amount: string}> = []

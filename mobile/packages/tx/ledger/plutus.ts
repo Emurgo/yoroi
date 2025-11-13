@@ -6,7 +6,7 @@ import {
   TxInput,
   TxRequiredSignerType,
 } from '@cardano-foundation/ledgerjs-hw-app-cardano'
-import {Ed25519KeyHash} from '@emurgo/cross-csl-core'
+import {Ed25519KeyHash, TransactionBody} from '@emurgo/cross-csl-core'
 
 import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
 
@@ -142,9 +142,7 @@ export const createLedgerPlutusPayload = async (
   })
 }
 
-const getRequiredSigners = (
-  body: import('@emurgo/cross-csl-core').TransactionBody,
-): Array<Ed25519KeyHash> => {
+const getRequiredSigners = (body: TransactionBody): Array<Ed25519KeyHash> => {
   const signers = body.requiredSigners()
   const signersArray: Array<Ed25519KeyHash> = []
   if (signers) {

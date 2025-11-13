@@ -167,7 +167,9 @@ class CIP30Extension {
 
   async submitTx(cbor: string): Promise<string> {
     const base64 = Buffer.from(cbor, 'hex').toString('base64')
-    const txId = await calculateTxId(base64, 'base64')
+    const txId = await CardanoMobileWrapped.cslScope(async (csl) => {
+      return await calculateTxId(csl, base64, 'base64')
+    })
     await this.wallet.submitTransaction(base64)
     return txId
   }

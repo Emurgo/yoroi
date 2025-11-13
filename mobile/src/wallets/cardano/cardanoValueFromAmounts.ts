@@ -5,9 +5,9 @@ import {WasmModuleProxy} from '@emurgo/cross-csl-core'
 import {identifierToCardanoAsset} from './assetHelpers'
 
 export const cardanoValueFromAmounts = (
+  csl: WasmModuleProxy,
   amounts: Balance.Amounts,
   primaryTokenId: string,
-  csl: WasmModuleProxy,
 ) => {
   const adaAmount = amounts[primaryTokenId] || '0'
   const value = csl.Value.new(csl.BigNum.fromStr(adaAmount))

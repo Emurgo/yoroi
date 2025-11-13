@@ -25,6 +25,7 @@ import {Icon} from '~/ui/Icon'
 import {RemoveAmountButton} from '~/ui/RemoveAmountButton/RemoveAmountButton'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {TokenAmountItem} from '~/ui/TokenAmountItem/TokenAmountItem'
+import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
 
 export const ListAmountsToSendScreen = () => {
   const navigateTo = useNavigateTo()
@@ -80,10 +81,13 @@ export const ListAmountsToSendScreen = () => {
     async (signedTx?: CSL.Transaction) => {
       if (!signedTx) throw new Error('ListAmountsToSendScreen:: invalid state')
       const txBytes = signedTx.toBytes()
-      const txId = await calculateTxId(
-        Buffer.from(txBytes).toString('hex'),
-        'hex',
-      )
+      const txId = await CardanoMobileWrapped.cslScope(async (csl) => {
+        return await calculateTxId(
+          csl,
+          Buffer.from(txBytes).toString('hex'),
+          'hex',
+        )
+      })
 
       if (memo.length > 0) {
         saveMemo({txId, memo: memo.trim()})

@@ -18,6 +18,7 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {InfoBanner} from '~/ui/InfoBanner/InfoBanner'
+import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
 import {CardanoMobile} from '~/wallets/wallets'
 
 import {GovernanceVote} from '../types'
@@ -118,10 +119,13 @@ export const useGovernanceActions = () => {
         if (!args?.signedTx)
           throw new Error('useGovernanceActions:: invalid state')
         const txBytes = args.signedTx.toBytes()
-        const txID = await calculateTxId(
-          Buffer.from(txBytes).toString('hex'),
-          'hex',
-        )
+        const txID = await CardanoMobileWrapped.cslScope(async (csl) => {
+          return await calculateTxId(
+            csl,
+            Buffer.from(txBytes).toString('hex'),
+            'hex',
+          )
+        })
         updateLatestGovernanceAction({
           kind: 'delegate-to-drep',
           hash,
@@ -152,10 +156,13 @@ export const useGovernanceActions = () => {
         if (!args?.signedTx)
           throw new Error('useGovernanceActions:: invalid state')
         const txBytes = args.signedTx.toBytes()
-        const txID = await calculateTxId(
-          Buffer.from(txBytes).toString('hex'),
-          'hex',
-        )
+        const txID = await CardanoMobileWrapped.cslScope(async (csl) => {
+          return await calculateTxId(
+            csl,
+            Buffer.from(txBytes).toString('hex'),
+            'hex',
+          )
+        })
         updateLatestGovernanceAction({
           kind: 'vote',
           vote: 'abstain',
@@ -178,10 +185,13 @@ export const useGovernanceActions = () => {
         if (!args?.signedTx)
           throw new Error('useGovernanceActions:: invalid state')
         const txBytes = args.signedTx.toBytes()
-        const txID = await calculateTxId(
-          Buffer.from(txBytes).toString('hex'),
-          'hex',
-        )
+        const txID = await CardanoMobileWrapped.cslScope(async (csl) => {
+          return await calculateTxId(
+            csl,
+            Buffer.from(txBytes).toString('hex'),
+            'hex',
+          )
+        })
         updateLatestGovernanceAction({
           kind: 'vote',
           vote: 'no-confidence',
