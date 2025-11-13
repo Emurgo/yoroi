@@ -1,4 +1,4 @@
-import {Portfolio} from '@yoroi/types'
+import {Portfolio, Swap} from '@yoroi/types'
 
 import {transformersMaker} from './transformers'
 import {Dex} from './types'
@@ -77,18 +77,18 @@ describe('transformersMaker', () => {
       const mockRequest = {
         amountIn: 10,
         blockedProtocols: [
-          'minswap-v1' as any,
-          'minswap-stable' as any,
-          'muesliswap' as any,
-          'splash-v1' as any,
-          'sundaeswap-v3' as any,
-          'sundaeswap-v1' as any,
-          'vyfi-v1' as any,
-          'cswap' as any,
-          'wingriders-v2' as any,
-          'wingriders-v1' as any,
-          'wingriders-stable' as any,
-          'spectrum-v1' as any,
+          Swap.Protocol.Minswap_v1,
+          Swap.Protocol.Minswap_stable,
+          Swap.Protocol.Muesliswap,
+          Swap.Protocol.Splash_v1,
+          Swap.Protocol.Sundaeswap_v3,
+          Swap.Protocol.Sundaeswap_v1,
+          Swap.Protocol.Vyfi_v1,
+          Swap.Protocol.Cswap,
+          Swap.Protocol.Wingriders_v2,
+          Swap.Protocol.Wingriders_v1,
+          Swap.Protocol.Wingriders_stable,
+          Swap.Protocol.Spectrum_v1,
         ],
         slippage: 1,
         tokenIn: '.' as const,
@@ -126,10 +126,10 @@ describe('transformersMaker', () => {
     })
 
     it('should handle splash-stable protocol mapping', () => {
-      // Test the splash-stable protocol mapping (line 50)
+      // Test the splash protocol mapping
       const mockRequest = {
         amountIn: 10,
-        blockedProtocols: ['splash-v1' as any], // Use valid splash-v1 protocol
+        blockedProtocols: [Swap.Protocol.Splash_v1],
         slippage: 1,
         tokenIn: '.' as const,
         tokenOut: 'test-token.' as const,
@@ -496,7 +496,7 @@ describe('transformersMaker', () => {
         {dex: Dex.Minswap, expected: 'minswap-v1'},
         {dex: Dex.MinswapStable, expected: 'minswap-stable'},
         {dex: Dex.MuesliSwap, expected: 'muesliswap'},
-        {dex: Dex.Splash, expected: 'splash-v1'},
+        {dex: Dex.Splash, expected: 'splash'},
         {dex: Dex.SundaeSwapV3, expected: 'sundaeswap-v3'},
         {dex: Dex.SundaeSwap, expected: 'sundaeswap-v1'},
         {dex: Dex.VyFinance, expected: 'vyfi-v1'},
@@ -505,7 +505,7 @@ describe('transformersMaker', () => {
         {dex: Dex.WingRiders, expected: 'wingriders-v1'},
         {dex: Dex.WingRidersStableV2, expected: 'wingriders-stable'},
         {dex: Dex.Spectrum, expected: 'spectrum-v1'},
-        {dex: Dex.SplashStable, expected: 'splash-v1'},
+        {dex: Dex.SplashStable, expected: 'splash'},
       ]
 
       testCases.forEach(({dex, expected}) => {

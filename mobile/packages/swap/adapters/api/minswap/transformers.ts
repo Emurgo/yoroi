@@ -46,8 +46,6 @@ const mapProtocolToDex = (protocol: Swap.Protocol): Dex => {
       return Dex.WingRidersStableV2
     case Swap.Protocol.Spectrum_v1:
       return Dex.Spectrum
-    case Swap.Protocol.Splash_v1:
-      return Dex.SplashStable
     default:
       return Dex.Unsupported
   }

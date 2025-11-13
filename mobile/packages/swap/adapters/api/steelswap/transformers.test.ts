@@ -1,4 +1,4 @@
-import {Portfolio, Swap} from '@yoroi/types'
+import {Chain, Portfolio, Swap} from '@yoroi/types'
 
 import {transformersMaker} from './transformers'
 import {
@@ -11,6 +11,7 @@ import {
 
 const mockConfig = {
   address: 'addr1test',
+  network: Chain.Network.Mainnet as Chain.SupportedNetworks,
   primaryTokenInfo: {
     id: '.' as const,
     name: 'Cardano',
@@ -39,7 +40,8 @@ const mockConfig = {
   isPrimaryToken: (token: string | null | undefined) => token === '.',
   partner: 'yoroi-aggregator',
   getTokenDecimals: (tokenId: Portfolio.Token.Id) => {
-    if (tokenId === '.' || tokenId === 'lovelace') return 6
+    if (tokenId === '.' || tokenId === ('lovelace' as Portfolio.Token.Id))
+      return 6
     if (
       tokenId ===
       'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441'
@@ -135,6 +137,8 @@ describe('transformersMaker', () => {
             ],
           },
         ],
+        page: 1,
+        lastPage: 1,
       }
 
       const result = transformers.orders.response(mockResponse)
@@ -192,6 +196,8 @@ describe('transformersMaker', () => {
               ],
             },
           ],
+          page: 1,
+          lastPage: 1,
         }
 
         const result = transformers.orders.response(mockResponse)
@@ -420,7 +426,7 @@ describe('transformersMaker', () => {
       const request = transformers.cancel.request({
         order: {
           aggregator: Swap.Aggregator.Steelswap,
-          protocol: Swap.Protocol.Minswap,
+          protocol: Swap.Protocol.Minswap_v1,
           status: 'open',
           tokenIn: '.' as const,
           tokenOut:
@@ -478,7 +484,7 @@ describe('transformersMaker', () => {
         'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441'
 
       const request = transformers.estimate.request({
-        tokenIn: expectedPortfolioId as const,
+        tokenIn: expectedPortfolioId as Portfolio.Token.Id,
         tokenOut: '.' as const,
         amountIn: 1000000,
         slippage: 0.5,
