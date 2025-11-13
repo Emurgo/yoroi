@@ -13,13 +13,13 @@ import {
 } from '@emurgo/cross-csl-core'
 
 import {CardanoMobileWrapped} from '../../../src/wallets/cardano/wrappedCsl'
-import {Addressing} from '../types'
-import {hashTransaction} from '../utils/transactions'
-import {verifyFromBip44Root} from './transform'
 import {
   createCIP15VotingMetadata,
   createCIP36VotingMetadata,
 } from '../transaction-builder/helpers'
+import {Addressing} from '../types'
+import {hashTransaction} from '../utils/transactions'
+import {verifyFromBip44Root} from './transform'
 
 /**
  * Derive public key by addressing
@@ -215,8 +215,7 @@ export async function buildLedgerSignedTx(
     }
 
     // Handle auxiliary data and catalyst registration
-    let auxData: import('@emurgo/cross-csl-core').AuxiliaryData | undefined =
-      undefined
+    let auxData: import('@emurgo/cross-csl-core').AuxiliaryData | undefined
 
     if (unsignedTx.catalystRegistrationData) {
       // Create voting metadata based on CIP version
@@ -248,7 +247,10 @@ export async function buildLedgerSignedTx(
       )
       auxDataObj.setMetadata(metadataMap)
       auxData = auxDataObj
-    } else if (unsignedTx.auxiliaryData && unsignedTx.auxiliaryData.hasValue()) {
+    } else if (
+      unsignedTx.auxiliaryData &&
+      unsignedTx.auxiliaryData.hasValue()
+    ) {
       // Use existing auxiliary data
       // Convert the auxiliary data bytes to AuxiliaryData object
       const auxDataBytes = unsignedTx.auxiliaryData.toBytes()

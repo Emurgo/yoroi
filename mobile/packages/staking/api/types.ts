@@ -1,5 +1,11 @@
 // API-related types for staking
 
+export type DRepValue =
+  | 'AlwaysAbstain'
+  | 'AlwaysNoConfidence'
+  | {KeyHash: string}
+  | {ScriptHash: string}
+
 export type RemoteCertificateMeta =
   | {
       kind: 'StakeRegistration'
@@ -26,6 +32,57 @@ export type RemoteCertificateMeta =
       kind: 'MoveInstantaneousRewardsCert'
       rewards: Record<string, string>
       pot: 0 | 1
+    }
+  | {
+      kind: 'GenesisKeyDelegation'
+      rewardAddress?: string // hex
+    }
+  | {
+      kind: 'CommitteeHotAuth'
+      rewardAddress?: string // hex
+    }
+  | {
+      kind: 'CommitteeColdResign'
+      rewardAddress?: string // hex
+    }
+  | {
+      kind: 'DRepDeregistration'
+      rewardAddress?: string // hex
+    }
+  | {
+      kind: 'DRepRegistration'
+      rewardAddress?: string // hex
+    }
+  | {
+      kind: 'DRepUpdate'
+      rewardAddress?: string // hex
+    }
+  | {
+      kind: 'VoteDelegation'
+      rewardAddress?: string // hex
+      drep?: DRepValue | null
+    }
+  | {
+      kind: 'StakeAndVoteDelegation'
+      rewardAddress?: string // hex
+      poolKeyHash?: string // hex
+      drep?: DRepValue | null
+    }
+  | {
+      kind: 'StakeRegistrationAndDelegation'
+      rewardAddress?: string // hex
+      poolKeyHash?: string // hex
+    }
+  | {
+      kind: 'StakeVoteRegistrationAndDelegation'
+      rewardAddress?: string // hex
+      poolKeyHash?: string // hex
+      drep?: DRepValue | null
+    }
+  | {
+      kind: 'VoteRegistrationAndDelegation'
+      rewardAddress?: string // hex
+      drep?: DRepValue | null
     }
 
 export type RemoteAccountState = {

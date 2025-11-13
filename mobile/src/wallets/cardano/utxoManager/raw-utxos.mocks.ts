@@ -17,14 +17,14 @@ export const mockRawUtxos: ReadonlyArray<RawUtxo> = [
     tx_hash: 'hash2',
     tx_index: 1,
     utxo_id: 'id2#2',
-      assets: [
-        {
-          amount: '100',
-          tokenId: 'policy1.asset1' as Portfolio.Token.Id,
-          name: 'asset1',
-          policyId: 'policy1',
-        },
-      ],
+    assets: [
+      {
+        amount: '100',
+        tokenId: 'policy1.asset1' as Portfolio.Token.Id,
+        name: 'asset1',
+        policyId: 'policy1',
+      },
+    ],
   },
   {
     amount: '200',

@@ -1,11 +1,12 @@
 // Helper functions for TransactionBuilder
 // Utilities for creating certificates, filtering UTXOs, and handling metadata
+import {Portfolio} from '@yoroi/types'
+
 import type {
   Certificate,
   PublicKey,
   WasmModuleProxy,
 } from '@emurgo/cross-csl-core'
-import {Portfolio} from '@yoroi/types'
 
 import {ModernUtxo} from '../utxo/models'
 

@@ -1,12 +1,12 @@
 // Ledger payload building functions
 // Builds transaction payloads for Ledger hardware wallet signing
 import {
+  CIP36VoteDelegationType,
+  CIP36VoteRegistrationFormat,
   SignTransactionRequest,
   TransactionSigningMode,
   TxAuxiliaryData,
   TxAuxiliaryDataType,
-  CIP36VoteRegistrationFormat,
-  CIP36VoteDelegationType,
   TxOutputDestinationType,
 } from '@cardano-foundation/ledgerjs-hw-app-cardano'
 import {blake2b as blake2bHash} from '@noble/hashes/blake2b'

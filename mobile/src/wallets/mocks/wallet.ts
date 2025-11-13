@@ -6,8 +6,10 @@ import {
 } from '@yoroi/blockchains'
 import {createPrimaryTokenInfo} from '@yoroi/portfolio'
 import {StakePoolInfosAndHistories} from '@yoroi/staking'
+import {UnsignedTransaction} from '@yoroi/tx'
 import {Balance, Portfolio, Wallet} from '@yoroi/types'
 
+import * as CSL from '@emurgo/cross-csl-core'
 import BigNumber from 'bignumber.js'
 import {noop} from 'lodash'
 import {Observable} from 'rxjs'
@@ -23,9 +25,6 @@ import {
   StakingInfo,
   StakingStatus,
 } from '../types/staking'
-import * as CSL from '@emurgo/cross-csl-core'
-import {UnsignedTransaction} from '@yoroi/tx'
-
 import {YoroiNftModerationStatus} from '../types/yoroi'
 import {getTokenFingerprint} from '../utils/format'
 import {CardanoMobile} from '../wallets'
@@ -333,9 +332,7 @@ const fetchPoolInfo = {
 
 const fetchNftModerationStatus = {
   success: {
-    approved: async (
-      ..._args: never[]
-    ): Promise<YoroiNftModerationStatus> => {
+    approved: async (..._args: never[]): Promise<YoroiNftModerationStatus> => {
       return 'approved'
     },
     consent: async (..._args: never[]): Promise<YoroiNftModerationStatus> => {
@@ -367,7 +364,7 @@ const fetchNftModerationStatus = {
     return Promise.reject(new Error('Mock error'))
   },
   loading: async (..._args: never[]) => {
-    return new Promise< YoroiNftModerationStatus
+    return new Promise() < YoroiNftModerationStatus
   },
 }
 
@@ -404,7 +401,7 @@ const getStakingInfo = {
     return Promise.reject(new Error('Mock error'))
   },
   loading: async (..._args: never[]) => {
-    return new Promise< StakingInfo
+    return new Promise() < StakingInfo
   },
 }
 
@@ -757,8 +754,8 @@ const unsignedTransaction: UnsignedTransaction & {mock: true} = {
 const signedTransaction = {
   toBytes: () => new Uint8Array([1, 2, 3]),
   toHex: () => 'mock-tx-hex',
-  body: () => ({} as CSL.TransactionBody),
-  witnessSet: () => ({} as CSL.TransactionWitnessSet),
+  body: () => ({}) as CSL.TransactionBody,
+  witnessSet: () => ({}) as CSL.TransactionWitnessSet,
   auxiliaryData: () => undefined,
 } as CSL.Transaction
 

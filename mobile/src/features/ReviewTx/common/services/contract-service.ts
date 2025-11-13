@@ -3,7 +3,6 @@
  *
  * Queries a service to get information about smart contract addresses
  */
-
 import {CredKind} from '@emurgo/cross-csl-core'
 
 import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'

@@ -142,7 +142,9 @@ export const createBatchedEmurgoUtxoApi = (
               addresses: addresses,
             }),
         )
-        const values = (await Promise.all(promises)).map((x) => x.value as Utxo[])
+        const values = (await Promise.all(promises)).map(
+          (x) => x.value as Utxo[],
+        )
         return {
           result: UtxoApiResult.SUCCESS,
           value: flatten(values),
@@ -288,12 +290,22 @@ export const createEmurgoUtxoApi = (
         let page = 1
 
         let allUtxos: UtxoAtPointItemResponse[] = []
-        let utxosAtPointPage = await getUtxoAtPointPage(apiUrl, pageSize, req, page)
+        let utxosAtPointPage = await getUtxoAtPointPage(
+          apiUrl,
+          pageSize,
+          req,
+          page,
+        )
         allUtxos = allUtxos.concat(utxosAtPointPage)
 
         while (utxosAtPointPage.length === pageSize) {
           page++
-          utxosAtPointPage = await getUtxoAtPointPage(apiUrl, pageSize, req, page)
+          utxosAtPointPage = await getUtxoAtPointPage(
+            apiUrl,
+            pageSize,
+            req,
+            page,
+          )
           allUtxos = allUtxos.concat(utxosAtPointPage)
         }
 

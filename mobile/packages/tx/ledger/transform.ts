@@ -20,9 +20,9 @@ import {
 import {
   Address,
   Certificates as CSLCertificates,
-  TransactionBody,
   Withdrawals as CSLWithdrawals,
   MultiAsset,
+  TransactionBody,
   TransactionOutputs,
 } from '@emurgo/cross-csl-core'
 // Note: This will need to be updated when we migrate UnsignedTx type
