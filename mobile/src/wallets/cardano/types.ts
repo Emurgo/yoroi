@@ -159,6 +159,9 @@ export interface YoroiWallet {
     shouldDeregister: boolean
     addressMode: Wallet.AddressMode
   }): Promise<{cbor: string}>
+  createUtxoConsolidationTx(params: {
+    addressMode: Wallet.AddressMode
+  }): Promise<{cbor: string}>
   getDelegationStatus(): StakingStatus
   getAllUtxosForKey(): Array<CardanoTypes.CardanoAddressedUtxo>
   getStakingInfo: () => Promise<StakingInfo>

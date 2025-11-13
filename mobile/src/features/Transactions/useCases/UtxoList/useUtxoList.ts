@@ -81,7 +81,7 @@ const getUtxoList = ({
     {} as Record<string, Array<Utxo>>,
   )
 
-  return Object.keys(items).map((address) => {
+  const result = Object.keys(items).map((address) => {
     const externalIndex = externalAddresses.findIndex((v) => v === address)
     const internalIndex = internalAddresses.findIndex((v) => v === address)
     const index = externalIndex >= 0 ? externalIndex : internalIndex
@@ -91,8 +91,44 @@ const getUtxoList = ({
       address,
       path: getDerivationPath({account, role, index}),
       utxos: items[address] ?? [],
+      externalIndex,
+      internalIndex,
+      role,
+      index,
     }
   })
+
+  // Sort: first external address first, then other external addresses in order, then internal addresses in order
+  result.sort((a, b) => {
+    // First external address (index 0) always comes first
+    if (a.externalIndex === 0) return -1
+    if (b.externalIndex === 0) return 1
+
+    // External addresses come before internal addresses
+    if (a.externalIndex >= 0 && b.externalIndex >= 0) {
+      return a.externalIndex - b.externalIndex
+    }
+    if (a.externalIndex >= 0) return -1
+    if (b.externalIndex >= 0) return 1
+
+    // Both are internal addresses, sort by index
+    if (a.internalIndex >= 0 && b.internalIndex >= 0) {
+      return a.internalIndex - b.internalIndex
+    }
+
+    return 0
+  })
+
+  // Remove sorting metadata before returning
+  return result.map(
+    ({
+      externalIndex: _externalIndex,
+      internalIndex: _internalIndex,
+      role: _role,
+      index: _index,
+      ...item
+    }) => item,
+  )
 }
 
 const transformUtxo = (utxo: RawUtxo): Utxo => {

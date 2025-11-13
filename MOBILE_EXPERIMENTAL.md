@@ -280,7 +280,74 @@ This branch represents a comprehensive modernization and refactoring of the Yoro
 
 ---
 
-### 10. Documentation Files
+### 10. UTXO Consolidation Feature
+
+**Summary**: Implement UTXO consolidation feature that consolidates all UTXOs NOT in the first address and sends them to the first address.
+
+**Technical Details**:
+- Created `createUtxoConsolidationTx` method in wallet class
+- Filters UTXOs that are NOT in the first address (`externalAddresses[0]`)
+- Sums all amounts (ADA + tokens) from filtered UTXOs
+- Builds transaction using `@yoroi/tx` transaction builder
+- Creates output sending all consolidated amounts to first address
+- Navigates to review screen for user confirmation
+
+**Rationale**:
+- Improve wallet performance by reducing UTXO count
+- Consolidate UTXOs from multiple addresses into single address
+- Better UX for users with fragmented UTXO sets
+
+**Files Changed**:
+- `mobile/src/wallets/cardano/cardano-wallet.ts` - Added `createUtxoConsolidationTx` method
+- `mobile/src/wallets/cardano/types.ts` - Added method signature to interface
+- `mobile/src/features/Transactions/useCases/UtxoConsolidation/UtxoConsolidation/useUtxoConsolidation.ts` - New hook
+- `mobile/src/features/Transactions/useCases/UtxoConsolidation/UtxoConsolidation/UtxoConsolidation.tsx` - Updated component
+
+**Status**: ✅ Complete - Basic implementation done, chained transactions pending
+
+---
+
+### 11. Chained Transactions (Planned)
+
+**Summary**: Implement sequential transaction submission for UTXO consolidation when UTXOs exceed single transaction limits.
+
+**Technical Details**:
+- Cardano's EUTXO model supports chained transactions where multiple transactions can be submitted sequentially
+- Each transaction uses outputs from the previous transaction as inputs
+- Implement transaction queue system for sequential submission
+- Handle transaction dependencies and timing
+- Error handling and retry logic for failed transactions
+- Progress tracking for multi-transaction operations
+
+**Rationale**:
+- Handle large UTXO sets that don't fit in a single transaction
+- Optimize UTXO consolidation for wallets with many UTXOs
+- Leverage Cardano's native support for sequential transactions
+- Improve user experience for consolidation operations
+
+**Implementation Plan**:
+1. Create `TransactionChain` type to represent sequence of transactions
+2. Implement `createUtxoConsolidationTxChain` method that splits UTXOs into batches
+3. Create transaction queue manager for sequential submission
+4. Add progress tracking UI for multi-transaction operations
+5. Implement error recovery and rollback logic
+6. Add tests for chained transaction flows
+
+**Files to Create/Modify**:
+- `mobile/src/wallets/cardano/cardano-wallet.ts` - Add chained transaction methods
+- `mobile/src/features/Transactions/useCases/UtxoConsolidation/UtxoConsolidation/useUtxoConsolidationChain.ts` - New hook for chained transactions
+- `mobile/src/features/Transactions/common/TransactionChainManager.ts` - Transaction queue manager
+- `mobile/src/features/Transactions/useCases/UtxoConsolidation/UtxoConsolidation/UtxoConsolidationProgress.tsx` - Progress UI component
+
+**Status**: ⚠️ Planned - Not yet implemented
+
+**References**:
+- [Cardano Forum: Chained Transactions](https://forum.cardano.org/t/is-it-possible-to-create-chained-transactions/65180)
+- Cardano EUTXO model documentation
+
+---
+
+### 12. Documentation Files
 
 **Summary**: Comprehensive documentation of migration and refactoring.
 
@@ -476,6 +543,7 @@ type UnsignedTransaction = {
 - Fix remaining type errors (especially in transaction builder helpers)
 - Complete testing and validation
 - Performance optimization
+- **UTXO Consolidation with Chained Transactions**: Implement sequential transaction submission for large UTXO sets
 
 **Low Priority**:
 - Interactive transaction crafting UI (not yet implemented)
@@ -487,8 +555,56 @@ type UnsignedTransaction = {
 1. **QA Testing**: Complete functional, integration, and regression testing
 2. **Type Error Fixes**: Address remaining type errors (especially non-critical ones)
 3. **Performance Testing**: Test with large UTXO sets and complex transactions
-4. **Documentation**: Update API documentation for new TransactionBuilder
-5. **Cleanup**: Remove legacy code and unused dependencies
+4. **Chained Transactions**: Implement sequential transaction submission for UTXO consolidation
+5. **Documentation**: Update API documentation for new TransactionBuilder
+6. **Cleanup**: Remove legacy code and unused dependencies
+
+### Todo Tasks
+
+#### UTXO Consolidation Chained Transactions
+
+- [ ] **Research and Design** (1-2 days)
+  - [ ] Verify Cardano network transaction size limits and UTXO input limits
+  - [ ] Design transaction chain data structure
+  - [ ] Design transaction queue manager architecture
+  - [ ] Design error recovery and rollback strategy
+  - [ ] Document chained transaction flow
+
+- [ ] **Core Implementation** (3-5 days)
+  - [ ] Create `TransactionChain` type definition
+  - [ ] Implement `createUtxoConsolidationTxChain` method in wallet class
+  - [ ] Add UTXO batching logic to split large UTXO sets
+  - [ ] Create `TransactionChainManager` class for sequential submission
+  - [ ] Implement transaction dependency tracking
+  - [ ] Add transaction status tracking (pending, submitted, confirmed, failed)
+
+- [ ] **Error Handling** (2-3 days)
+  - [ ] Implement error detection for failed transactions
+  - [ ] Add retry logic with exponential backoff
+  - [ ] Implement rollback mechanism for partial failures
+  - [ ] Add user notification for transaction failures
+  - [ ] Handle network errors and timeouts
+
+- [ ] **UI Components** (2-3 days)
+  - [ ] Create `UtxoConsolidationProgress` component
+  - [ ] Add progress indicator showing current transaction number
+  - [ ] Display transaction status for each transaction in chain
+  - [ ] Add cancel/retry buttons for failed transactions
+  - [ ] Update `UtxoConsolidation` component to use chained transactions
+
+- [ ] **Testing** (2-3 days)
+  - [ ] Unit tests for transaction chain creation
+  - [ ] Unit tests for transaction queue manager
+  - [ ] Integration tests for sequential submission
+  - [ ] Test with various UTXO set sizes (small, medium, large)
+  - [ ] Test error scenarios (network failures, transaction failures)
+  - [ ] Test rollback and recovery scenarios
+
+- [ ] **Documentation** (1 day)
+  - [ ] Document chained transaction API
+  - [ ] Add usage examples
+  - [ ] Document error handling and recovery
+  - [ ] Update experimental plan with implementation details
 
 ---
 
