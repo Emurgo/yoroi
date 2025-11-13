@@ -151,7 +151,7 @@ describe('transformersMaker', () => {
         outputIndex: 0,
         tokenIn: '.',
         tokenOut:
-          'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae45655534441',
+          'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441',
         amountIn: 13.2, // Converted from 13200000 lovelace / 10^6
         expectedAmountOut: 15, // Converted from 15000000 base units / 10^6
         actualAmountOut: 15, // Converted from 15000000 base units / 10^6
