@@ -1,5 +1,5 @@
 import {useTheme} from '@yoroi/theme'
-import {Balance, Wallet} from '@yoroi/types'
+import {Wallet} from '@yoroi/types'
 
 import {
   UseQueryOptions,
@@ -7,16 +7,15 @@ import {
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query'
-import BigNumber from 'bignumber.js'
 import * as React from 'react'
 import {ActivityIndicator, View} from 'react-native'
 
 import {useStakingInfo} from '~/features/Staking/hooks/useStakingInfo'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {ButtonProps} from '~/ui/Button/Button'
+import {createDelegationTxFromWallet} from '~/wallets/cardano/transaction-recipes'
 import {YoroiWallet} from '~/wallets/cardano/types'
 import {StakingInfo} from '~/wallets/types/staking'
-import {Quantities} from '~/wallets/utils/utils'
 
 import {StakePoolInfo} from './StakePoolInfo'
 
@@ -92,15 +91,8 @@ export const useStakingTx = (
       const accountState = accountStates[wallet.rewardAddressHex]
       if (!accountState) throw new Error('Account state not found')
 
-      const stakingUtxos = await wallet.getAllUtxosForKey()
-      const amountToDelegate = Quantities.sum([
-        ...stakingUtxos.map((utxo) => utxo.amount as Balance.Quantity),
-        accountState.remainingAmount as Balance.Quantity,
-      ])
-
-      return wallet.createDelegationTx({
+      return createDelegationTxFromWallet(wallet, {
         poolId,
-        delegatedAmount: new BigNumber(amountToDelegate),
         addressMode: meta.addressMode,
       })
     },

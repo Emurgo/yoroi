@@ -14,6 +14,7 @@ import {BACKSPACE, NumericKeyboard} from '~/ui/NumericKeyboard'
 import {Space} from '~/ui/Space/Space'
 import {generatePrivateKeyForCatalyst} from '~/wallets/cardano/catalyst'
 import {encryptWithPassword} from '~/wallets/cardano/catalyst/catalystCipher'
+import {createVotingRegTxFromWallet} from '~/wallets/cardano/transaction-recipes'
 
 import {useNavigateTo} from '../../CatalystNavigator'
 import {
@@ -37,21 +38,21 @@ export const ConfirmPin = () => {
     onSuccess: async ({catalystKeyHex, votingKeyEncrypted}) => {
       votingKeyEncryptedChanged(votingKeyEncrypted)
 
-      let votingRegTx = await wallet.createVotingRegTx({
-        catalystKeyHex,
-        supportsCIP36: true,
-        addressMode: meta.addressMode,
-      })
+      const createVotingRegTxHelper = async (supportsCIP36: boolean) => {
+        return await createVotingRegTxFromWallet(wallet, {
+          catalystKeyHex,
+          supportsCIP36,
+          addressMode: meta.addressMode,
+        })
+      }
+
+      let votingRegTx = await createVotingRegTxHelper(true)
 
       navigateToTxReview({
         cbor: votingRegTx.votingRegTx.cbor,
         context: 'delegate vote',
         onCIP36SupportChange: async (supportsCIP36: boolean) => {
-          votingRegTx = await wallet.createVotingRegTx({
-            catalystKeyHex,
-            supportsCIP36,
-            addressMode: meta.addressMode,
-          })
+          votingRegTx = await createVotingRegTxHelper(supportsCIP36)
         },
         onSuccessWithoutFeedback: navigateTo.qrCode,
       })

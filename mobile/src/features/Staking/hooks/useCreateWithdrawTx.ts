@@ -1,7 +1,9 @@
 import * as React from 'react'
 
+import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {UsePromiseOptionsWithoutPromise, usePromise} from '~/hooks/usePromise'
+import {createWithdrawalTxFromWallet} from '~/wallets/cardano/transaction-recipes'
 import {Quantities} from '~/wallets/utils/utils'
 
 import {useStakingInfo} from './useStakingInfo'
@@ -13,6 +15,7 @@ export const useCreateWithdrawTx = (
   >,
 ) => {
   const {wallet, meta} = useSelectedWallet()
+  const {networkManager} = useSelectedNetwork()
   const {stakingInfo} = useStakingInfo(wallet)
 
   const hasRewards =
@@ -21,12 +24,13 @@ export const useCreateWithdrawTx = (
 
   const createWithdrawalTxPromise = React.useCallback(
     async ({shouldDeregister}: {shouldDeregister: boolean}) => {
-      return await wallet.createWithdrawalTx({
+      return createWithdrawalTxFromWallet(wallet, {
         shouldDeregister,
         addressMode: meta.addressMode,
+        networkManager,
       })
     },
-    [wallet, meta.addressMode],
+    [wallet, meta.addressMode, networkManager],
   )
 
   const withdrawalTxPromise = usePromise({

@@ -4,6 +4,7 @@ import {Certificate} from '@emurgo/cross-csl-core'
 import * as React from 'react'
 
 import {UsePromiseOptions, usePromise} from '~/hooks/usePromise'
+import {createUnsignedGovernanceTxFromWallet} from '~/wallets/cardano/transaction-recipes'
 import {YoroiWallet} from '~/wallets/cardano/types'
 
 export const useCreateGovernanceTx = (
@@ -24,7 +25,7 @@ export const useCreateGovernanceTx = (
       certificates: Certificate[]
       addressMode: Wallet.AddressMode
     }) => {
-      return await wallet.createUnsignedGovernanceTx({
+      return createUnsignedGovernanceTxFromWallet(wallet, {
         votingCertificates: certificates,
         addressMode,
       })

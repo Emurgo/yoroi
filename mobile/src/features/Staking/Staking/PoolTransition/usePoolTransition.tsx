@@ -3,7 +3,6 @@ import {Wallet} from '@yoroi/types'
 
 import {init} from '@emurgo/cross-csl-mobile'
 import {useQuery} from '@tanstack/react-query'
-import BigNumber from 'bignumber.js'
 import * as React from 'react'
 
 import {useStakingInfo} from '~/features/Staking/hooks/useStakingInfo'
@@ -11,10 +10,10 @@ import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetw
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {features} from '~/kernel/features'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
+import {createDelegationTxFromWallet} from '~/wallets/cardano/transaction-recipes'
 import {YoroiWallet} from '~/wallets/cardano/types'
-import {Quantities, asQuantity} from '~/wallets/utils/utils'
 
-const createDelegationTx = async (
+const createDelegationTxHelper = async (
   wallet: YoroiWallet,
   poolId: string,
   meta: Wallet.Meta,
@@ -23,15 +22,8 @@ const createDelegationTx = async (
   const accountState = accountStates[wallet.rewardAddressHex]
   if (!accountState) throw new Error('Account state not found')
 
-  const stakingUtxos = await wallet.getAllUtxosForKey()
-  const amountToDelegate = Quantities.sum([
-    ...stakingUtxos.map((utxo) => asQuantity(utxo.amount)),
-    asQuantity(accountState.remainingAmount),
-  ])
-
-  return wallet.createDelegationTx({
+  return createDelegationTxFromWallet(wallet, {
     poolId,
-    delegatedAmount: new BigNumber(amountToDelegate),
     addressMode: meta.addressMode,
   })
 }
@@ -65,7 +57,7 @@ export const usePoolTransition = () => {
   const poolId = poolTransition?.suggested.hash ?? ''
 
   const navigateToUpdate = React.useCallback(async () => {
-    const result = await createDelegationTx(wallet, poolId, meta)
+    const result = await createDelegationTxHelper(wallet, poolId, meta)
     navigateToTxReview({cbor: result.cbor, context: 'delegate'})
   }, [wallet, poolId, meta, navigateToTxReview])
 

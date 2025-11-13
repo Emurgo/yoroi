@@ -4,6 +4,7 @@ import {Alert} from 'react-native'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
+import {createUtxoConsolidationTxFromWallet} from '~/wallets/cardano/transaction-recipes'
 
 export const useUtxoConsolidation = () => {
   const {wallet, meta} = useSelectedWallet()
@@ -15,7 +16,7 @@ export const useUtxoConsolidation = () => {
         throw new Error('Wallet not available')
       }
 
-      return await wallet.createUtxoConsolidationTx({
+      return await createUtxoConsolidationTxFromWallet(wallet, {
         addressMode: meta.addressMode,
       })
     },
@@ -23,10 +24,7 @@ export const useUtxoConsolidation = () => {
       logger.error('UTXO consolidation failed', {error})
       const errorMessage =
         error instanceof Error ? error.message : String(error)
-      Alert.alert(
-        strings.global.error,
-        errorMessage || strings.global.errorUnknown,
-      )
+      Alert.alert(strings.global.error, errorMessage || strings.global.error)
     },
   })
 

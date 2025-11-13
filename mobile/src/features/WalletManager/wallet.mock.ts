@@ -150,12 +150,6 @@ const wallet: YoroiWallet = {
   createUnsignedTx: () => {
     throw new Error('not implemented: createUnsignedTx')
   },
-  createDelegationTx: () => {
-    throw new Error('not implemented: createDelegationTx')
-  },
-  createWithdrawalTx: () => {
-    throw new Error('not implemented: createWithdrawalTx')
-  },
   getStakingKey: () => {
     const pubKeyHex =
       '8e4e2f11b6ac2a269913286e26339779ab8767579d18d173cdd324929d94e2c43e3ec212cc8a36ed9860579dfe1e3ef4d6de778c5dbdd981623b48727cd96247'
@@ -220,9 +214,6 @@ const wallet: YoroiWallet = {
   getFirstPaymentAddress: () => {
     throw new Error('Not implemented: getFirstPaymentAddress')
   },
-  createVotingRegTx: () => {
-    throw new Error('Not implemented: createVotingRegTx')
-  },
   subscribe: (..._args: unknown[]) => {
     throw new Error('not implemented: subscribe')
   },
@@ -254,9 +245,6 @@ const wallet: YoroiWallet = {
   },
   fetchFundInfo: () => {
     throw new Error('not implemented: fetchFundInfo')
-  },
-  createUnsignedGovernanceTx: () => {
-    throw new Error('not implemented: createUnsignedGovernanceTx')
   },
   getChangeAddress(): string {
     return 'addr1qxy9yjhvxh700xeluhvdpwlauuvnzav42edveyggy8fusqvg2f9wcd0u77dnlewc6zalmecex96e24j6ejgssgwneqqs762af9'

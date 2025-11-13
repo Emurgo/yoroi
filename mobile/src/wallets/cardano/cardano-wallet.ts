@@ -15,21 +15,14 @@ import type {
 import {
   TransactionOutput,
   adaptToLedgerUnsignedTx,
-  addCertificate,
   addInputs,
   addMetadata,
   addOutput,
-  addWithdrawal,
   buildLedgerPayload,
   buildLedgerSignedTx,
   buildTransaction,
   buildVotingLedgerPayloadV5,
-  createCIP15VotingMetadata,
-  createCIP36VotingMetadata,
   createSignedLedgerTxFromCbor,
-  createStakeDelegationCertificate,
-  createStakeDeregistrationCertificate,
-  createStakeRegistrationCertificate,
   createTransactionBuilder,
   modernUtxosToCardanoAddressedUtxos,
   rawUtxoToModernUtxo,
@@ -91,12 +84,18 @@ import {
 } from './hw/hw'
 import {keyManager} from './key-manager/key-manager'
 import {processTxHistoryData} from './processTransactions/processTransactions'
+import {
+  createDelegationTx,
+  createUnsignedGovernanceTx,
+  createUtxoConsolidationTx,
+  createVotingRegTx,
+  createWithdrawalTx,
+} from './transaction-recipes'
 import {TransactionManager} from './transactionManager/transactionManager'
 import {
   CardanoTypes,
   NoOutputsError,
   NotEnoughMoneyToSendError,
-  RegistrationStatus,
   WalletEvent,
   WalletSubscription,
   YoroiWallet,
@@ -418,16 +417,6 @@ export const makeCardanoWallet = (
       throwLoggedError('getStakingKey staking not supported')
     }
 
-    private getRewardAddress() {
-      if (implementationConfig.features.staking) {
-        const baseAddr = this.getFirstPaymentAddress()
-        if (!baseAddr) throwLoggedError('getRewardAddress invalid address')
-        return baseAddr.toAddress()
-      }
-
-      throwLoggedError('getRewardAddress staking not supported')
-    }
-
     async createDelegationTx({
       poolId,
       delegatedAmount: _delegatedAmount,
@@ -438,79 +427,19 @@ export const makeCardanoWallet = (
       addressMode: Wallet.AddressMode
     }): Promise<{cbor: string}> {
       if (implementationConfig.features.staking) {
-        const primaryTokenId = this.portfolioPrimaryTokenInfo.id
-
-        const absSlotNumber = await this.getAbsoluteSlotNumber()
-        const changeAddr = this.getAddressedChangeAddress(addressMode)
-        const modernUtxos = this.getAddressedUtxos()
-        const registrationStatus = this.getDelegationStatus().isRegistered
-        const stakingKey = this.getStakingKey()
-        const delegationType = registrationStatus
-          ? RegistrationStatus.DelegateOnly
-          : RegistrationStatus.RegisterAndDelegate
-        const {coinsPerUtxoByte, keyDeposit, linearFee, poolDeposit} =
-          this.protocolParams
-
-        const protocolParams: CardanoHaskellConfig = {
-          keyDeposit,
-          linearFee,
-          minimumUtxoVal: cardanoConfig.params.minUtxoValue.toString(),
-          coinsPerUtxoByte,
-          poolDeposit,
+        return createDelegationTx({
+          utxos: this.getAddressedUtxos(),
+          primaryTokenId: this.portfolioPrimaryTokenInfo.id,
+          protocolParams: this.protocolParams,
           networkId: this.networkManager.chainId,
-        }
-
-        // Build transaction using functional TransactionBuilder
-        let builderState = createTransactionBuilder()
-
-        // Add all UTXOs as inputs
-        builderState = addInputs(builderState, modernUtxos)
-
-        // Add certificates based on delegation type
-        if (delegationType === RegistrationStatus.RegisterAndDelegate) {
-          // Register staking key first
-          const regCert = createStakeRegistrationCertificate(
-            CardanoMobile,
-            stakingKey,
-          )
-          builderState = addCertificate(builderState, regCert)
-        }
-
-        if (poolId) {
-          // Delegate to pool
-          const delegCert = createStakeDelegationCertificate(
-            CardanoMobile,
-            stakingKey,
-            poolId,
-          )
-          builderState = addCertificate(builderState, delegCert)
-        } else {
-          // Deregister (no pool means deregistration)
-          const deregCert = createStakeDeregistrationCertificate(
-            CardanoMobile,
-            stakingKey,
-          )
-          builderState = addCertificate(builderState, deregCert)
-        }
-
-        // Set change address
-        builderState = setChangeAddress(builderState, changeAddr.address)
-
-        // Set TTL
-        builderState = setTTL(builderState, absSlotNumber.toNumber())
-
-        // Build the transaction
-        const unsignedTx = await buildTransaction(
-          builderState,
-          protocolParams,
-          primaryTokenId,
-        )
-
-        if (!unsignedTx.cbor) {
-          throw new Error('Transaction CBOR not available')
-        }
-
-        return {cbor: unsignedTx.cbor}
+          getAbsoluteSlotNumber: () => this.getAbsoluteSlotNumber(),
+          getChangeAddress: (mode: Wallet.AddressMode) =>
+            this.getChangeAddress(mode),
+          getStakingKey: () => this.getStakingKey(),
+          getDelegationStatus: () => this.getDelegationStatus(),
+          poolId,
+          addressMode,
+        })
       }
 
       throwLoggedError('createDelegationTx staking not supported')
@@ -527,122 +456,20 @@ export const makeCardanoWallet = (
       catalystKeyHex: string
     }) {
       if (implementationConfig.features.staking) {
-        const primaryTokenId = this.portfolioPrimaryTokenInfo.id
-
         try {
-          const absSlotNumber = await this.getAbsoluteSlotNumber()
-          const votingPrivateKey = CardanoMobile.PrivateKey.fromExtendedBytes(
-            new Uint8Array(Buffer.from(catalystKeyHex, 'hex')),
-          )
-          if (!votingPrivateKey) {
-            throw new Error(
-              'Failed to create voting private key from catalystKeyHex',
-            )
-          }
-          const votingPublicKey = votingPrivateKey.toPublic()
-          if (!votingPublicKey) {
-            throw new Error('Failed to get public key from voting private key')
-          }
-          const stakingPublicKey = this.getStakingKey()
-          if (!stakingPublicKey) {
-            throw new Error('Failed to get staking public key')
-          }
-          const changeAddr = this.getAddressedChangeAddress(addressMode)
-
-          const {coinsPerUtxoByte, keyDeposit, linearFee, poolDeposit} =
-            this.protocolParams
-
-          const protocolParams: CardanoHaskellConfig = {
-            keyDeposit,
-            linearFee,
-            minimumUtxoVal: cardanoConfig.params.minUtxoValue.toString(),
-            coinsPerUtxoByte,
-            poolDeposit,
+          return await createVotingRegTx({
+            utxos: this.getAddressedUtxos(),
+            primaryTokenId: this.portfolioPrimaryTokenInfo.id,
+            protocolParams: this.protocolParams,
             networkId: this.networkManager.chainId,
-          }
-
-          const nonce = absSlotNumber.toNumber()
-
-          const modernUtxos = this.getAddressedUtxos()
-
-          const baseAddr = this.getFirstPaymentAddress()
-          if (!baseAddr) {
-            throw new Error('getFirstPaymentAddress returned null')
-          }
-          const baseAddrObj = baseAddr.toAddress()
-          if (!baseAddrObj) {
-            throw new Error('Failed to convert base address to Address')
-          }
-          const paymentAddressCIP36 = baseAddrObj.toBech32(undefined)
-          if (!paymentAddressCIP36) {
-            throw new Error('Failed to convert payment address to bech32')
-          }
-
-          const rewardAddr = this.getRewardAddress()
-          if (!rewardAddr) {
-            throw new Error('getRewardAddress returned null')
-          }
-          const rewardAddress = rewardAddr.toBech32(undefined)
-          if (!rewardAddress) {
-            throw new Error('Failed to convert reward address to bech32')
-          }
-
-          // Build transaction using functional TransactionBuilder
-          let builderState = createTransactionBuilder()
-
-          // Add all UTXOs as inputs
-          builderState = addInputs(builderState, modernUtxos)
-
-          // Create and add voting metadata
-          const votingPublicKeyBech32 = votingPublicKey.toBech32()
-          if (!votingPublicKeyBech32) {
-            throw new Error('Failed to convert voting public key to bech32')
-          }
-          const stakingPublicKeyBech32 = stakingPublicKey.toBech32()
-          if (!stakingPublicKeyBech32) {
-            throw new Error('Failed to convert staking public key to bech32')
-          }
-          const votingMetadata = supportsCIP36
-            ? createCIP36VotingMetadata(
-                votingPublicKeyBech32,
-                stakingPublicKeyBech32,
-                rewardAddress,
-                nonce,
-                paymentAddressCIP36,
-              )
-            : createCIP15VotingMetadata(
-                votingPublicKeyBech32,
-                stakingPublicKeyBech32,
-                rewardAddress,
-                nonce,
-              )
-
-          builderState = addMetadata(
-            builderState,
-            String(votingMetadata.label),
-            votingMetadata.data,
-          )
-
-          // Set change address
-          builderState = setChangeAddress(builderState, changeAddr.address)
-
-          // Set TTL
-          builderState = setTTL(builderState, absSlotNumber.toNumber())
-
-          // Build the transaction
-          const unsignedTx = await buildTransaction(
-            builderState,
-            protocolParams,
-            primaryTokenId,
-          )
-
-          if (!unsignedTx.cbor) {
-            throw new Error('Transaction CBOR not available')
-          }
-
-          return {
-            votingRegTx: {cbor: unsignedTx.cbor},
-          }
+            getAbsoluteSlotNumber: () => this.getAbsoluteSlotNumber(),
+            getChangeAddress: (mode) => this.getChangeAddress(mode),
+            getStakingKey: () => this.getStakingKey(),
+            getFirstPaymentAddress: () => this.getFirstPaymentAddress(),
+            supportsCIP36,
+            catalystKeyHex,
+            addressMode,
+          })
         } catch (e) {
           if (e instanceof LocalizableError || e instanceof Error) throw e
           throw new App.Errors.LibraryError((e as Error).message)
@@ -660,71 +487,24 @@ export const makeCardanoWallet = (
       addressMode: Wallet.AddressMode
     }): Promise<{cbor: string}> {
       if (implementationConfig.features.staking) {
-        const primaryTokenId = this.portfolioPrimaryTokenInfo.id
-
-        const absSlotNumber = await this.getAbsoluteSlotNumber()
-        const changeAddr = this.getAddressedChangeAddress(addressMode)
-        const modernUtxos = this.getAddressedUtxos()
-        const accountState = await legacyApi.getAccountState(
-          {addresses: [this.rewardAddressHex]},
-          networkManager.legacyApiBaseUrl,
-        )
-
-        const {coinsPerUtxoByte, keyDeposit, linearFee, poolDeposit} =
-          this.protocolParams
-
-        const protocolParams: CardanoHaskellConfig = {
-          keyDeposit,
-          linearFee,
-          minimumUtxoVal: cardanoConfig.params.minUtxoValue.toString(),
-          coinsPerUtxoByte,
-          poolDeposit,
+        return createWithdrawalTx({
+          utxos: this.getAddressedUtxos(),
+          rewardAddressHex: this.rewardAddressHex,
+          primaryTokenId: this.portfolioPrimaryTokenInfo.id,
+          protocolParams: this.protocolParams,
           networkId: this.networkManager.chainId,
-        }
-
-        // Get withdrawal amount from account state
-        const rewardAddress = this.rewardAddressHex
-        const rewards = accountState[rewardAddress]?.rewards || '0'
-
-        // Build transaction using functional TransactionBuilder
-        let builderState = createTransactionBuilder()
-
-        // Add all UTXOs as inputs
-        builderState = addInputs(builderState, modernUtxos)
-
-        // Add withdrawal
-        if (BigInt(rewards) > 0n) {
-          builderState = addWithdrawal(builderState, rewardAddress, rewards)
-        }
-
-        // Add deregistration certificate if needed
-        if (shouldDeregister) {
-          const stakingKey = this.getStakingKey()
-          const deregCert = createStakeDeregistrationCertificate(
-            CardanoMobile,
-            stakingKey,
-          )
-          builderState = addCertificate(builderState, deregCert)
-        }
-
-        // Set change address
-        builderState = setChangeAddress(builderState, changeAddr.address)
-
-        // Set TTL
-        builderState = setTTL(builderState, absSlotNumber.toNumber())
-
-        // Build the transaction
-        const unsignedTx = await buildTransaction(
-          builderState,
-          protocolParams,
-          primaryTokenId,
-        )
-
-        if (!unsignedTx.cbor) {
-          throw new Error('Transaction CBOR not available')
-        }
-
-        return {cbor: unsignedTx.cbor}
+          getAbsoluteSlotNumber: () => this.getAbsoluteSlotNumber(),
+          getChangeAddress: (mode: Wallet.AddressMode) =>
+            this.getChangeAddress(mode),
+          getStakingKey: () => this.getStakingKey(),
+          getAccountState: (addresses: string[]) =>
+            legacyApi.getAccountState(
+              {addresses},
+              networkManager.legacyApiBaseUrl,
+            ),
+          shouldDeregister,
+          addressMode,
+        })
       }
 
       throwLoggedError('createWithdrawalTx staking not supported')
@@ -735,176 +515,16 @@ export const makeCardanoWallet = (
     }: {
       addressMode: Wallet.AddressMode
     }): Promise<{cbor: string}> {
-      const primaryTokenId = this.portfolioPrimaryTokenInfo.id
-      const absSlotNumber = await this.getAbsoluteSlotNumber()
-      const changeAddr = this.getAddressedChangeAddress(addressMode)
-      const modernUtxos = this.getAddressedUtxos()
-
-      if (this.externalAddresses.length === 0) {
-        throw new Error('No external addresses available')
-      }
-
-      const firstAddress = this.externalAddresses[0]
-      if (!firstAddress) {
-        throw new Error('First address is undefined')
-      }
-
-      // Filter UTXOs that are NOT in the first address
-      const utxosToConsolidate = modernUtxos.filter(
-        (utxo) => utxo.receiver !== firstAddress,
-      )
-
-      if (utxosToConsolidate.length === 0) {
-        throw new Error('No UTXOs to consolidate')
-      }
-
-      // Sum all amounts from UTXOs to consolidate
-      // We'll send all tokens and most ADA, leaving room for fees
-      const consolidatedAmounts: Balance.Amounts = {}
-      let totalAda = BigInt(0)
-
-      for (const utxo of utxosToConsolidate) {
-        for (const [tokenId, quantity] of Object.entries(utxo.balance)) {
-          if (tokenId === primaryTokenId) {
-            // Sum ADA separately
-            totalAda += BigInt(quantity)
-          } else {
-            // Send all non-ADA tokens
-            const current = BigInt(consolidatedAmounts[tokenId] || '0')
-            const toAdd = BigInt(quantity)
-            consolidatedAmounts[tokenId] = (
-              current + toAdd
-            ).toString() as Balance.Quantity
-          }
-        }
-      }
-
-      const {
-        coinsPerUtxoByte,
-        keyDeposit,
-        linearFee: linearFeeParams,
-        poolDeposit,
-      } = this.protocolParams
-
-      const protocolParams: CardanoHaskellConfig = {
-        keyDeposit,
-        linearFee: linearFeeParams,
-        minimumUtxoVal: cardanoConfig.params.minUtxoValue.toString(),
-        coinsPerUtxoByte,
-        poolDeposit,
+      return createUtxoConsolidationTx({
+        utxos: this.getAddressedUtxos(),
+        externalAddresses: this.externalAddresses,
+        primaryTokenId: this.portfolioPrimaryTokenInfo.id,
+        protocolParams: this.protocolParams,
         networkId: this.networkManager.chainId,
-      }
-
-      const minUtxoValue = BigInt(cardanoConfig.params.minUtxoValue.toString())
-      const hasTokens = Object.keys(consolidatedAmounts).length > 0
-
-      // Estimate fee conservatively - actual fee will be calculated by builder
-      // Use a larger estimate to ensure we have enough room
-      // Fee = constant + (coefficient * tx_size_in_bytes)
-      // For consolidation with multiple UTXOs, estimate larger size
-      const estimatedTxSize = 1000 // bytes - conservative estimate for multiple UTXOs
-      const estimatedFee =
-        BigInt(linearFeeParams.constant) +
-        BigInt(linearFeeParams.coefficient) * BigInt(estimatedTxSize)
-
-      // Add safety margin - reserve extra ADA to account for fee estimation errors
-      // The actual fee might be higher than estimated, so we'll be conservative
-      const safetyMargin = BigInt(50000) // 0.05 ADA safety margin
-      const reservedAda = estimatedFee + safetyMargin
-
-      // Calculate ADA to send: total ADA minus reserved amount
-      // The remaining ADA will go back as change to the first address
-      let adaToSend = totalAda - reservedAda
-
-      // If we have tokens, we need at least minimum UTXO value in output
-      if (hasTokens) {
-        if (adaToSend < minUtxoValue) {
-          // If we don't have enough ADA after fees, we can't consolidate
-          if (totalAda < reservedAda + minUtxoValue) {
-            logger.error('UTXO consolidation: Insufficient ADA', {
-              totalAda: totalAda.toString(),
-              reservedAda: reservedAda.toString(),
-              minUtxoValue: minUtxoValue.toString(),
-              required: (reservedAda + minUtxoValue).toString(),
-            })
-            throw new Error(
-              'Insufficient ADA to cover fees and minimum UTXO value',
-            )
-          }
-          adaToSend = minUtxoValue
-        }
-        consolidatedAmounts[primaryTokenId] =
-          adaToSend.toString() as Balance.Quantity
-      } else {
-        // No tokens - just ADA UTXOs
-        // Send all ADA minus reserved amount (change will handle the rest)
-        if (adaToSend > 0n) {
-          consolidatedAmounts[primaryTokenId] =
-            adaToSend.toString() as Balance.Quantity
-        } else if (totalAda > reservedAda) {
-          // If we have more ADA than reserved, send at least some
-          // Use a smaller amount to ensure we have enough for fees
-          const minAdaToSend = BigInt(1000000) // 1 ADA minimum
-          if (totalAda > reservedAda + minAdaToSend) {
-            consolidatedAmounts[primaryTokenId] = (
-              totalAda - reservedAda
-            ).toString() as Balance.Quantity
-          } else {
-            // Very tight situation - send minimum and hope builder adjusts
-            consolidatedAmounts[primaryTokenId] =
-              minAdaToSend.toString() as Balance.Quantity
-          }
-        } else {
-          logger.error('UTXO consolidation: Cannot create output', {
-            totalAda: totalAda.toString(),
-            reservedAda: reservedAda.toString(),
-          })
-          throw new Error(
-            'Insufficient ADA to cover fees - cannot consolidate UTXOs',
-          )
-        }
-      }
-
-      try {
-        // Build transaction using functional TransactionBuilder
-        let builderState = createTransactionBuilder()
-
-        // Add all UTXOs to consolidate as inputs
-        builderState = addInputs(builderState, utxosToConsolidate)
-
-        // Add output - remaining ADA will go back as change to first address
-        builderState = addOutput(
-          builderState,
-          firstAddress,
-          consolidatedAmounts,
-        )
-
-        // Set change address
-        builderState = setChangeAddress(builderState, changeAddr.address)
-
-        // Set TTL
-        builderState = setTTL(builderState, absSlotNumber.toNumber())
-
-        // Build the transaction
-        const unsignedTx = await buildTransaction(
-          builderState,
-          protocolParams,
-          primaryTokenId,
-        )
-
-        if (!unsignedTx.cbor) {
-          throw new Error('Transaction CBOR not available')
-        }
-
-        return {cbor: unsignedTx.cbor}
-      } catch (e) {
-        if (
-          e instanceof NotEnoughMoneyToSendError ||
-          e instanceof NoOutputsError
-        )
-          throw e
-        throw new App.Errors.LibraryError((e as Error).message)
-      }
+        getAbsoluteSlotNumber: () => this.getAbsoluteSlotNumber(),
+        getChangeAddress: (mode) => this.getChangeAddress(mode),
+        addressMode,
+      })
     }
 
     async createUnsignedGovernanceTx({
@@ -914,61 +534,16 @@ export const makeCardanoWallet = (
       votingCertificates: CardanoTypes.Certificate[]
       addressMode: Wallet.AddressMode
     }): Promise<{cbor: string}> {
-      const primaryTokenId = this.portfolioPrimaryTokenInfo.id
-      const absSlotNumber = await this.getAbsoluteSlotNumber()
-      const changeAddr = this.getAddressedChangeAddress(addressMode)
-      const modernUtxos = this.getAddressedUtxos()
-
-      const {coinsPerUtxoByte, keyDeposit, linearFee, poolDeposit} =
-        this.protocolParams
-
-      const protocolParams: CardanoHaskellConfig = {
-        keyDeposit,
-        linearFee,
-        minimumUtxoVal: cardanoConfig.params.minUtxoValue.toString(),
-        coinsPerUtxoByte,
-        poolDeposit,
+      return createUnsignedGovernanceTx({
+        utxos: this.getAddressedUtxos(),
+        primaryTokenId: this.portfolioPrimaryTokenInfo.id,
+        protocolParams: this.protocolParams,
         networkId: this.networkManager.chainId,
-      }
-
-      try {
-        // Build transaction using functional TransactionBuilder
-        let builderState = createTransactionBuilder()
-
-        // Add all UTXOs as inputs
-        builderState = addInputs(builderState, modernUtxos)
-
-        // Add voting certificates
-        for (const cert of votingCertificates) {
-          builderState = addCertificate(builderState, cert)
-        }
-
-        // Set change address
-        builderState = setChangeAddress(builderState, changeAddr.address)
-
-        // Set TTL
-        builderState = setTTL(builderState, absSlotNumber.toNumber())
-
-        // Build the transaction
-        const unsignedTx = await buildTransaction(
-          builderState,
-          protocolParams,
-          primaryTokenId,
-        )
-
-        if (!unsignedTx.cbor) {
-          throw new Error('Transaction CBOR not available')
-        }
-
-        return {cbor: unsignedTx.cbor}
-      } catch (e) {
-        if (
-          e instanceof NotEnoughMoneyToSendError ||
-          e instanceof NoOutputsError
-        )
-          throw e
-        throw new App.Errors.LibraryError((e as Error).message)
-      }
+        getAbsoluteSlotNumber: () => this.getAbsoluteSlotNumber(),
+        getChangeAddress: (mode) => this.getChangeAddress(mode),
+        votingCertificates,
+        addressMode,
+      })
     }
 
     getAllUtxosForKey(): Array<CardanoTypes.CardanoAddressedUtxo> {
