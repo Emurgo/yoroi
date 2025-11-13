@@ -19,6 +19,7 @@ type Props = {
   ignorePrivacy?: boolean
   textStyle?: TextStyle
   hidePrimaryPair?: boolean
+  tokenActivity?: Portfolio.Api.TokenActivityResponse
 }
 
 export const PairedBalance = React.forwardRef<ResetErrorRef, Props>(
@@ -41,7 +42,13 @@ export const PairedBalance = React.forwardRef<ResetErrorRef, Props>(
   },
 )
 
-const Price = ({amount, ignorePrivacy, hidePrimaryPair, textStyle}: Props) => {
+const Price = ({
+  amount,
+  ignorePrivacy,
+  hidePrimaryPair,
+  textStyle,
+  tokenActivity: providedTokenActivity,
+}: Props) => {
   const {isPrivacyModeEnabled, privacyPlaceholder} = usePrivacyMode()
   const {isPrimaryTokenActive} = usePortfolio()
   const {
@@ -55,7 +62,10 @@ const Price = ({amount, ignorePrivacy, hidePrimaryPair, textStyle}: Props) => {
     config,
     ptActivity: {close: ptPrice},
   } = useCurrencyPairing()
-  const {tokenActivity} = usePortfolioTokenActivity()
+  const {tokenActivity: portfolioTokenActivity} = usePortfolioTokenActivity()
+
+  // Use provided token activity (from swap) or fall back to portfolio token activity
+  const tokenActivity = providedTokenActivity ?? portfolioTokenActivity
 
   const price = React.useMemo(() => {
     const tokenPrice = tokenActivity[amount.info.id]?.price.close
