@@ -1,6 +1,10 @@
 import {Balance} from '@yoroi/types'
 
-import {TransactionDirection, TransactionStatus} from '~/wallets/types/other'
+import {
+  TransactionDirection,
+  TransactionStatus,
+  WalletTransaction,
+} from '~/wallets/types/other'
 
 /**
  * Summary information for a transaction, used in transaction lists
@@ -14,4 +18,6 @@ export type TransactionSummary = {
   submittedAt: string | null | undefined
   lastUpdatedAt: string
   status: TransactionStatus
+  certificates: WalletTransaction['certificates']
+  withdrawals: WalletTransaction['withdrawals']
 }

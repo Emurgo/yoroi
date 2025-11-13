@@ -20,6 +20,7 @@ import {Icon} from '~/ui/Icon'
 import {styleMap} from '~/ui/Icon/Direction'
 import {BalanceError} from '~/ui/PairedBalance/PairedBalance'
 import {YoroiWallet} from '~/wallets/cardano/types'
+import {WalletTransaction} from '~/wallets/types/other'
 import {
   formatDateRelative,
   formatTime,
@@ -28,6 +29,7 @@ import {
 } from '~/wallets/utils/format'
 import {Amounts, Quantities, asQuantity} from '~/wallets/utils/utils'
 
+import {getOperationDisplayText} from '../../common/operationDisplay'
 import {useTxFilter} from './TxFilterProvider'
 
 type Props = {
@@ -47,6 +49,24 @@ export const TxListItem = ({transaction}: Props) => {
 
   const intl = useIntl()
 
+  // Get operation display text if available (using certificates from summary)
+  const operationText = React.useMemo(() => {
+    if (transaction.direction !== 'SELF') {
+      return null
+    }
+    // Create a minimal WalletTransaction-like object with just the fields we need
+    const walletTransactionLike = {
+      certificates: transaction.certificates,
+      withdrawals: transaction.withdrawals,
+    } as WalletTransaction | undefined
+    return getOperationDisplayText(walletTransactionLike, strings)
+  }, [
+    transaction.direction,
+    transaction.certificates,
+    transaction.withdrawals,
+    strings,
+  ])
+
   const showDetails = () =>
     navigation.navigate('tx-details', {id: transaction.id})
   const submittedAt = isNonNullable(transaction.submittedAt)
@@ -62,6 +82,11 @@ export const TxListItem = ({transaction}: Props) => {
   const assetLength = Amounts.toArray(transaction.delta).filter(
     ({quantity}) => !Quantities.isZero(quantity),
   ).length
+
+  // Determine display text: use operation text if available, otherwise use direction
+  const displayText =
+    operationText ??
+    strings.transactions.direction(transaction.direction as any)
   return (
     <TouchableOpacity
       onPress={showDetails}
@@ -84,7 +109,7 @@ export const TxListItem = ({transaction}: Props) => {
           ]}
           testID="transactionDirection"
         >
-          {strings.transactions.direction(transaction.direction as any)}
+          {displayText}
         </Text>
 
         <Text

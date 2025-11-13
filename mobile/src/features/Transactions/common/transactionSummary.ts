@@ -241,5 +241,7 @@ export const walletTransactionToSummary = (
     submittedAt: tx.submittedAt,
     lastUpdatedAt: tx.lastUpdatedAt,
     status: tx.status,
+    certificates: tx.certificates,
+    withdrawals: tx.withdrawals,
   }
 }

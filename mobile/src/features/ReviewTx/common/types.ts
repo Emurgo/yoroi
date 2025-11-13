@@ -97,7 +97,9 @@ type MinimalCertificate = {
 }
 
 // FormattedCertificate can be either a full certificate or a minimal one
-export type FormattedCertificate = Transformed<CertificateJSON> | MinimalCertificate
+export type FormattedCertificate =
+  | Transformed<CertificateJSON>
+  | MinimalCertificate
 
 export const CertificateType = {
   StakeRegistration: 'StakeRegistration', //

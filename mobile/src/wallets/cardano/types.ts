@@ -30,6 +30,7 @@ import {
   TxStatusRequest,
   TxStatusResponse,
   WalletState,
+  WalletTransaction,
 } from '../types/other'
 import {StakingInfo, StakingStatus} from '../types/staking'
 import type {Addresses} from './account-manager/account-manager'

@@ -12,7 +12,7 @@ export const MetadataTab = ({metadata, hash}: FormattedMetadata) => {
   const {palette: p} = useTheme()
   const strings = useStrings()
 
-  if (hash == null || metadata == null) return null
+  if (metadata == null) return null
 
   const metadataFormatted = JSON.stringify(metadata, null, 2)
 
@@ -20,28 +20,32 @@ export const MetadataTab = ({metadata, hash}: FormattedMetadata) => {
     <View style={[a.flex_1, a.px_lg, {backgroundColor: p.bg_color_max}]}>
       <Space.Height.lg />
 
-      <View style={[a.flex_row, a.justify_between]}>
-        <Text style={[a.body_2_md_regular, {color: p.text_gray_low}]}>
-          {strings.txReview.metadata.metadataHash}
-        </Text>
+      {hash != null && (
+        <>
+          <View style={[a.flex_row, a.justify_between]}>
+            <Text style={[a.body_2_md_regular, {color: p.text_gray_low}]}>
+              {strings.txReview.metadata.metadataHash}
+            </Text>
 
-        <Space.Width.lg />
+            <Space.Width.lg />
 
-        <Copiable style={a.flex_1} text={hash}>
-          <Text
-            style={[
-              a.text_right,
-              a.flex_1,
-              a.body_2_md_regular,
-              {color: p.text_gray_medium},
-            ]}
-          >
-            {hash}
-          </Text>
-        </Copiable>
-      </View>
+            <Copiable style={a.flex_1} text={hash}>
+              <Text
+                style={[
+                  a.text_right,
+                  a.flex_1,
+                  a.body_2_md_regular,
+                  {color: p.text_gray_medium},
+                ]}
+              >
+                {hash}
+              </Text>
+            </Copiable>
+          </View>
 
-      <Space.Height.lg />
+          <Space.Height.lg />
+        </>
+      )}
 
       <View style={[{backgroundColor: p.bg_color_min}, a.rounded_sm, a.p_lg]}>
         <View style={[a.flex_row, a.justify_between]}>

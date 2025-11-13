@@ -1512,6 +1512,45 @@ export const useStrings = () => {
           }
           return f(directionMap[direction as keyof typeof directionMap])
         },
+        operation: {
+          stakeRegistration: f(transactionsMessages.operationStakeRegistration),
+          stakeDeregistration: f(
+            transactionsMessages.operationStakeDeregistration,
+          ),
+          stakeDelegation: f(transactionsMessages.operationStakeDelegation),
+          stakingDelegated: f(transactionsMessages.operationStakingDelegated),
+          stakeUndelegation: f(transactionsMessages.operationStakeUndelegation),
+          poolRegistration: f(transactionsMessages.operationPoolRegistration),
+          poolRetirement: f(transactionsMessages.operationPoolRetirement),
+          genesisKeyDelegation: f(
+            transactionsMessages.operationGenesisKeyDelegation,
+          ),
+          moveInstantaneousRewards: f(
+            transactionsMessages.operationMoveInstantaneousRewards,
+          ),
+          committeeHotAuth: f(transactionsMessages.operationCommitteeHotAuth),
+          committeeColdResign: f(
+            transactionsMessages.operationCommitteeColdResign,
+          ),
+          drepDeregistration: f(
+            transactionsMessages.operationDrepDeregistration,
+          ),
+          drepRegistration: f(transactionsMessages.operationDrepRegistration),
+          drepUpdate: f(transactionsMessages.operationDrepUpdate),
+          stakeAndVoteDelegation: f(
+            transactionsMessages.operationStakeAndVoteDelegation,
+          ),
+          stakeRegistrationAndDelegation: f(
+            transactionsMessages.operationStakeRegistrationAndDelegation,
+          ),
+          stakeVoteRegistrationAndDelegation: f(
+            transactionsMessages.operationStakeVoteRegistrationAndDelegation,
+          ),
+          voteDelegation: f(transactionsMessages.operationVoteDelegation),
+          voteRegistrationAndDelegation: f(
+            transactionsMessages.operationVoteRegistrationAndDelegation,
+          ),
+        },
         unknownAssetName: f(transactionsMessages.unknownAssetName),
         walletAddress: f(transactionsMessages.walletAddress),
         BIP32path: f(transactionsMessages.BIP32path),

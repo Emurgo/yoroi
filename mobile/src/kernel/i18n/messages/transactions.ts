@@ -295,4 +295,80 @@ export const transactionsMessages = defineMessages({
     id: 'components.transactions.address',
     defaultMessage: '!!!Address',
   },
+  operationStakeRegistration: {
+    id: 'components.transactions.operation.stakeRegistration',
+    defaultMessage: '!!!Stake Registration',
+  },
+  operationStakeDeregistration: {
+    id: 'components.transactions.operation.stakeDeregistration',
+    defaultMessage: '!!!Stake Deregistration',
+  },
+  operationStakeDelegation: {
+    id: 'components.transactions.operation.stakeDelegation',
+    defaultMessage: '!!!Stake Delegation',
+  },
+  operationStakingDelegated: {
+    id: 'components.transactions.operation.stakingDelegated',
+    defaultMessage: '!!!Staking Delegated',
+  },
+  operationStakeUndelegation: {
+    id: 'components.transactions.operation.stakeUndelegation',
+    defaultMessage: '!!!Stake Undelegation',
+  },
+  operationPoolRegistration: {
+    id: 'components.transactions.operation.poolRegistration',
+    defaultMessage: '!!!Pool Registration',
+  },
+  operationPoolRetirement: {
+    id: 'components.transactions.operation.poolRetirement',
+    defaultMessage: '!!!Pool Retirement',
+  },
+  operationGenesisKeyDelegation: {
+    id: 'components.transactions.operation.genesisKeyDelegation',
+    defaultMessage: '!!!Genesis Key Delegation',
+  },
+  operationMoveInstantaneousRewards: {
+    id: 'components.transactions.operation.moveInstantaneousRewards',
+    defaultMessage: '!!!Move Instantaneous Rewards',
+  },
+  operationCommitteeHotAuth: {
+    id: 'components.transactions.operation.committeeHotAuth',
+    defaultMessage: '!!!Committee Hot Auth',
+  },
+  operationCommitteeColdResign: {
+    id: 'components.transactions.operation.committeeColdResign',
+    defaultMessage: '!!!Committee Cold Resign',
+  },
+  operationDrepDeregistration: {
+    id: 'components.transactions.operation.drepDeregistration',
+    defaultMessage: '!!!DRep Deregistration',
+  },
+  operationDrepRegistration: {
+    id: 'components.transactions.operation.drepRegistration',
+    defaultMessage: '!!!DRep Registration',
+  },
+  operationDrepUpdate: {
+    id: 'components.transactions.operation.drepUpdate',
+    defaultMessage: '!!!DRep Update',
+  },
+  operationStakeAndVoteDelegation: {
+    id: 'components.transactions.operation.stakeAndVoteDelegation',
+    defaultMessage: '!!!Stake And Vote Delegation',
+  },
+  operationStakeRegistrationAndDelegation: {
+    id: 'components.transactions.operation.stakeRegistrationAndDelegation',
+    defaultMessage: '!!!Stake Registration And Delegation',
+  },
+  operationStakeVoteRegistrationAndDelegation: {
+    id: 'components.transactions.operation.stakeVoteRegistrationAndDelegation',
+    defaultMessage: '!!!Stake Vote Registration And Delegation',
+  },
+  operationVoteDelegation: {
+    id: 'components.transactions.operation.voteDelegation',
+    defaultMessage: '!!!Vote Delegation',
+  },
+  operationVoteRegistrationAndDelegation: {
+    id: 'components.transactions.operation.voteRegistrationAndDelegation',
+    defaultMessage: '!!!Vote Registration And Delegation',
+  },
 })
