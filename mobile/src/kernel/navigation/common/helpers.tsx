@@ -277,3 +277,56 @@ const isHex = (color: Color) =>
   )
 
 type Color = `#${string}` | `rgba(${number},${number},${number},${number})`
+
+/**
+ * Removes a specific route from the navigation state without animation
+ * @param navigation - The navigation object (must have getState and reset methods)
+ * @param routeName - The name of the route to remove
+ */
+export const removeRouteFromNavigationState = (
+  navigation: {
+    getState: () => NavigationState | undefined
+    reset: (state: NavigationState | any) => void
+  },
+  routeName: string,
+): void => {
+  const state = navigation.getState()
+  if (!state) return
+
+  // Filter out the route with the specified name
+  const filteredRoutes = state.routes.filter(
+    (route) => route.name !== routeName,
+  )
+
+  // Only reset if we actually removed a route
+  if (filteredRoutes.length < state.routes.length) {
+    // Find the index of the route to remove in the original routes array
+    const removedRouteIndex = state.routes.findIndex(
+      (route) => route.name === routeName,
+    )
+
+    // Calculate the new index based on where the route was removed
+    const currentIndex = state.index ?? 0
+    let newIndex: number
+
+    if (removedRouteIndex === -1) {
+      // Route not found (shouldn't happen, but handle gracefully)
+      newIndex = currentIndex
+    } else if (removedRouteIndex <= currentIndex) {
+      // Route was removed at or before current index, adjust index
+      newIndex = Math.max(0, currentIndex - 1)
+    } else {
+      // Route was removed after current index, keep index the same
+      newIndex = currentIndex
+    }
+
+    // Ensure the new index is valid for the filtered routes
+    newIndex = Math.min(filteredRoutes.length - 1, Math.max(0, newIndex))
+
+    navigation.reset({
+      ...state,
+      index: newIndex,
+      routes: filteredRoutes,
+    })
+  }
+}
