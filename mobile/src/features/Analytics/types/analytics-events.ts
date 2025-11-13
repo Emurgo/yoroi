@@ -19,6 +19,7 @@ export type TransactionReviewProperties = {
     type: string
     asset_count: number
     asset_list: string
+    aggregator: string
   }
   [AnalyticsEventEnum.TransactionReviewSubmitModalViewed]: undefined
   [AnalyticsEventEnum.TransactionResultsPopupViewed]: {
