@@ -161,36 +161,41 @@ export const handleNotificationInternalNavigationAction = async (
 const handleInternalNavigation = (
   event: YoroiNotifications.PushEvent,
   walletNavigation: WalletNavigation,
-  pushNotificationHistory: boolean,
+  _pushNotificationHistory: boolean,
 ) => {
-  if (!isRecord(event.metadata.data)) return
+  const {metadata} = event
+  if (!isRecord(metadata.data)) return
 
-  const {data} = event.metadata
+  const {data} = metadata
   if (
     isString(data.action) &&
     data.action === 'open_screen' &&
     isString(data.screen)
   ) {
     const {screen} = data
-    switch (screen) {
-      case 'wallet':
-        walletNavigation.resetToTxHistory()
-        break
-      case 'staking_center':
-        walletNavigation.navigateToStakingDashboard()
-        break
-      case 'swap':
-        walletNavigation.navigateToSwap(
-          (data.tokenOutId as Portfolio.Token.Id) || undefined,
-        )
-        break
-      case 'governance':
-        walletNavigation.navigateToGovernanceCentre()
-        break
-      case 'discover':
-        if (pushNotificationHistory) walletNavigation.navigateToNotifications()
-        walletNavigation.navigateToDiscoverBrowserDapp()
-        break
+
+    try {
+      switch (screen) {
+        case 'wallet':
+          walletNavigation.resetToTxHistory()
+          break
+        case 'staking_center':
+          walletNavigation.navigateToStakingDashboard()
+          break
+        case 'swap':
+          walletNavigation.navigateToSwap(
+            (data.tokenOutId as Portfolio.Token.Id) || undefined,
+          )
+          break
+        case 'governance':
+          walletNavigation.navigateToGovernanceCentre()
+          break
+        case 'discover':
+          walletNavigation.navigateToDiscoverBrowserDapp()
+          break
+      }
+    } catch (error) {
+      logger.error('Navigation failed for notification', {screen, error})
     }
   }
 }

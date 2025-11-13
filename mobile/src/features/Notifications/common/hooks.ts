@@ -18,6 +18,7 @@ import {pushNotificationsManager} from './notification-manager'
 import {generateNotificationId, parseNotificationId} from './notifications'
 import {usePrimaryTokenPriceChangedNotification} from './primary-token-price-changed-notification'
 import {useRewardsUpdatedNotifications} from './rewards-updated-notification'
+import {uiStorage} from './storage'
 import {triggerNotificationAction} from './tools'
 import {useTransactionReceivedNotifications} from './transaction-received-notification'
 
@@ -45,6 +46,7 @@ const initPushNotifications = (
   walletNavigation: ReturnType<typeof useWalletNavigation>,
 ) => {
   let firebaseForegroundUnsubscribe: (() => void) | undefined
+  let firebaseOpenUnsubscribe: (() => void) | undefined
   let responseListener: Notifications.Subscription | undefined
   let isSubscribedToTopic = false
   let isUnmounted = false
@@ -124,8 +126,8 @@ const initPushNotifications = (
     messaging().onMessage(handleForegroundMessage)
 
   const attachResponseListener = () =>
-    Notifications.addNotificationResponseReceivedListener((_response) => {
-      const data = _response.notification.request.content.data as Record<
+    Notifications.addNotificationResponseReceivedListener((response) => {
+      const data = response.notification.request.content.data as Record<
         string,
         unknown
       >
@@ -140,6 +142,65 @@ const initPushNotifications = (
       })
     })
 
+  const attachFirebaseOpenListener = () =>
+    messaging().onNotificationOpenedApp(async (remoteMessage) => {
+      const data = remoteMessage?.data as Record<string, unknown> | undefined
+      const title = remoteMessage?.notification?.title
+      const body = remoteMessage?.notification?.body
+
+      if (data && typeof data === 'object') {
+        const id = generateNotificationId()
+        const pushEvent = createPushNotification({
+          id,
+          title: title ?? 'Notification',
+          description: body ?? '',
+          data: data as Record<string, unknown>,
+        })
+        await pushNotificationsManager.events.push(pushEvent)
+
+        // Only save the pending action, don't trigger navigation yet
+        if (isString(data.action) && data.action === 'open_screen') {
+          await uiStorage.setItem(
+            'triggerNotificationInternalNavigationAction',
+            id,
+          )
+        }
+      }
+    })
+
+  const handleInitialNotification = () => {
+    messaging()
+      .getInitialNotification()
+      .then(async (remoteMessage) => {
+        if (remoteMessage) {
+          const data = remoteMessage?.data as
+            | Record<string, unknown>
+            | undefined
+          const title = remoteMessage?.notification?.title
+          const body = remoteMessage?.notification?.body
+
+          if (data && typeof data === 'object') {
+            const id = Date.now()
+            const pushEvent = createPushNotification({
+              id,
+              title: title ?? 'Notification',
+              description: body ?? '',
+              data: data as Record<string, unknown>,
+            })
+            await pushNotificationsManager.events.push(pushEvent)
+
+            // Only save the pending action, don't trigger navigation yet
+            if (isString(data.action) && data.action === 'open_screen') {
+              await uiStorage.setItem(
+                'triggerNotificationInternalNavigationAction',
+                id,
+              )
+            }
+          }
+        }
+      })
+  }
+
   const init = async () => {
     try {
       await createDefaultChannel()
@@ -150,6 +211,8 @@ const initPushNotifications = (
 
       firebaseForegroundUnsubscribe = attachForegroundListener()
       responseListener = attachResponseListener()
+      firebaseOpenUnsubscribe = attachFirebaseOpenListener()
+      handleInitialNotification()
     } catch (error) {
       logger.error('Push notifications init failed', {error})
     }
@@ -160,6 +223,7 @@ const initPushNotifications = (
   return () => {
     isUnmounted = true
     firebaseForegroundUnsubscribe?.()
+    firebaseOpenUnsubscribe?.()
     responseListener?.remove()
     if (isSubscribedToTopic) {
       messaging().unsubscribeFromTopic('yoroi_campaigns')

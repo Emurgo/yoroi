@@ -15,6 +15,7 @@ import {ReviewTx} from './ReviewTx/ReviewTx'
 const getTransactionAnalyticsProperties = (
   formattedTx: FormattedTx,
   context?: NonNullable<ReviewTxRoutes['review-tx']>['context'],
+  aggregator?: string,
 ) => {
   const notOwnedOutputs = formattedTx.outputs.filter(
     (output) => !output.ownAddress,
@@ -37,6 +38,7 @@ const getTransactionAnalyticsProperties = (
     type: context ?? '',
     asset_count: uniqueAssets.size,
     asset_list: JSON.stringify(Array.from(uniqueAssets.values())),
+    aggregator: aggregator ?? '',
   }
 }
 
@@ -81,9 +83,16 @@ export const ReviewTxScreen = () => {
     const properties = getTransactionAnalyticsProperties(
       formattedTx,
       params?.context,
+      params?.aggregator,
     )
     trackEvent(AnalyticsEventEnum.TransactionReviewModalViewed, properties)
-  }, [trackEvent, formattedTx, areTokenInfosLoaded, params?.context])
+  }, [
+    trackEvent,
+    formattedTx,
+    areTokenInfosLoaded,
+    params?.context,
+    params?.aggregator,
+  ])
 
   React.useEffect(() => {
     return () => {

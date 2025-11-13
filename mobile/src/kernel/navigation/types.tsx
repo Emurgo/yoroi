@@ -266,6 +266,7 @@ export type ReviewTxRoutes = {
     details?: ReviewDetailsProps
     createdBy?: React.ReactNode
     context?: ReviewContext
+    aggregator?: string
     onConfirm?: () => void
     onCancel?: OnConfirm['onCancel']
     onSuccess?: OnConfirm['onSuccess']
