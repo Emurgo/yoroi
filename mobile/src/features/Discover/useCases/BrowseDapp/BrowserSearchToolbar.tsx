@@ -9,7 +9,6 @@ import {
 } from 'react-native'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Icon} from '~/ui/Icon'
 
 type Props = {
@@ -26,23 +25,6 @@ export const BrowserSearchToolbar = ({
 }: Props) => {
   const {atoms: ta, palette: p, isDark} = useTheme()
   const strings = useStrings()
-  const {track} = useMetrics()
-
-  React.useEffect(() => {
-    let timeout: ReturnType<typeof setTimeout> | undefined
-
-    const sendMetrics = () => {
-      clearTimeout(timeout)
-
-      timeout = setTimeout(() => {
-        track.discoverWebViewToolbarSearchActivated({search_term: searchValue})
-      }, 500) // 0.5s requirement
-    }
-
-    if (searchValue.length > 0) sendMetrics()
-
-    return () => clearTimeout(timeout)
-  }, [searchValue, track])
 
   return (
     <View style={[a.px_md]}>

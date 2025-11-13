@@ -184,7 +184,7 @@ const Order = ({order}: {order: Swap.Order}) => {
     order.actualAmountOut === 0
       ? order.expectedAmountOut
       : order.actualAmountOut
-  const priceCalc = amountOut === 0 ? 0 : order.amountIn / amountOut
+  const priceCalc = order.amountIn === 0 ? 0 : amountOut / order.amountIn
 
   const roundedPrice = parseNumberFromText({
     text: String(priceCalc),
@@ -349,6 +349,7 @@ const OrderCancellation = ({
       } else {
         navigateToTxReview({
           cbor: response.value.data.cbor,
+          context: 'swap',
           details: {
             title: strings.swap.swapCancellationDetailsTitle,
             component: (
@@ -388,18 +389,20 @@ const OrderCancellation = ({
         </Modal.Footer>
       ) : (
         <Modal.Footer>
-          <Button
-            type={ButtonType.Secondary}
-            title={strings.swap.listOrdersSheetBack}
-            onPress={closeModal}
-          />
+          <View style={[a.flex_row, a.gap_md]}>
+            <Button
+              type={ButtonType.Secondary}
+              title={strings.swap.listOrdersSheetBack}
+              onPress={closeModal}
+            />
 
-          <Button
-            type={ButtonType.Critical}
-            title={strings.swap.cancel}
-            onPress={onOrderCancelConfirm}
-            disabled={response.value.data.cbor === undefined}
-          />
+            <Button
+              type={ButtonType.Critical}
+              title={strings.swap.cancel}
+              onPress={onOrderCancelConfirm}
+              disabled={response.value.data.cbor === undefined}
+            />
+          </View>
         </Modal.Footer>
       ),
       height: 400,

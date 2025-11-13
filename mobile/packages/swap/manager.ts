@@ -340,13 +340,42 @@ const apiManagerMaker = (
       },
 
       async cancel(body: Swap.CancelRequest) {
-        if (body.order.aggregator === Swap.Aggregator.Muesliswap) {
-          return adapters.muesliswap.cancel(body)
+        // Helper function to check if response has valid CBOR
+        const hasValidCbor = (
+          response: Api.Response<Swap.CancelResponse>,
+        ): boolean => {
+          return isRight(response) && response.value.data.cbor.trim() !== ''
         }
-        if (body.order.aggregator === Swap.Aggregator.Minswap) {
-          return adapters.minswap.cancel(body)
+
+        // First, try the appropriate adapter based on aggregator
+        const initialAdapter =
+          body.order.aggregator === Swap.Aggregator.Muesliswap
+            ? adapters.muesliswap
+            : body.order.aggregator === Swap.Aggregator.Minswap
+              ? adapters.minswap
+              : adapters.dexhunter
+
+        const initialResponse = await initialAdapter.cancel(body)
+
+        // If we got a valid CBOR, return it
+        if (hasValidCbor(initialResponse)) {
+          return initialResponse
         }
-        return adapters.dexhunter.cancel(body)
+
+        // If not, try all other adapters in parallel
+        const otherAggregators = Object.entries(adapters).filter(
+          ([_, adapter]) => adapter !== initialAdapter,
+        )
+
+        const alternativeResponses = await Promise.all(
+          otherAggregators.map(([_, adapter]) => adapter.cancel(body)),
+        )
+
+        // Find the first response with valid CBOR
+        const validResponse = alternativeResponses.find(hasValidCbor)
+
+        // If found, return it; otherwise return the initial response
+        return validResponse ?? initialResponse
       },
     },
     true,

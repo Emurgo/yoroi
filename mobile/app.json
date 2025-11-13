@@ -3,7 +3,7 @@
     "name": "Yoroi",
     "slug": "yoroi",
     "owner": "emurgo",
-    "version": "6.1.1",
+    "version": "6.1.2",
     "orientation": "portrait",
     "icon": "./assets/yoroi/icon.png",
     "userInterfaceStyle": "automatic",
@@ -102,7 +102,6 @@
       "favicon": "./assets/yoroi/favicon.png"
     },
     "plugins": [
-      "expo-android-keyboard-fix",
       "react-native-ble-plx",
       [
         "react-native-edge-to-edge",

@@ -4,7 +4,6 @@ import * as React from 'react'
 import {Text, View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Icon} from '~/ui/Icon'
 
 import {getDomainFromUrl} from '../../common/helpers'
@@ -16,12 +15,9 @@ type Props = {
 export const BrowserToolbar = ({uri}: Props) => {
   const {palette: p} = useTheme()
   const navigateTo = useNavigateTo()
-  const {track} = useMetrics()
-
   const {isSecure, domainName} = getDomainFromUrl(uri)
 
   const handleCloseBrowser = () => {
-    track.discoverWebViewCloseClicked()
     navigateTo.selectDappFromList()
   }
 

@@ -4,7 +4,7 @@ import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Api, Wallet} from '@yoroi/types'
 
-import {useFocusEffect, useNavigation} from '@react-navigation/native'
+import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 import {
   InteractionManager,
@@ -16,6 +16,8 @@ import {
   useWindowDimensions,
 } from 'react-native'
 
+import {useAnalyticsTracking} from '~/features/Analytics/hooks/useAnalyticsTracking'
+import {AnalyticsEventEnum} from '~/features/Analytics/types/analytics-event-enum'
 import {YoroiHelpLink} from '~/features/SetupWallet/common/constants'
 import {Info as InfoIcon} from '~/features/SetupWallet/illustrations/Info'
 import {parseWalletMeta} from '~/features/WalletManager/common/validators/wallet-meta'
@@ -27,7 +29,6 @@ import {debugWalletInfo, features} from '~/kernel/features'
 import {errorMessages} from '~/kernel/i18n/messages/global'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {SetupWalletRouteNavigation} from '~/kernel/navigation/types'
 import {Button} from '~/ui/Button/Button'
 import {CardAboutPhrase} from '~/ui/CardAboutPhrase/CardAboutPhrase'
@@ -49,7 +50,6 @@ export const SaveNanoXScreen = () => {
   const {atoms: ta} = useTheme()
   const storage = useAsyncStorage()
   const navigation = useNavigation<SetupWalletRouteNavigation>()
-  const {track} = useMetrics()
   const {openModal, closeModal} = useModal()
   const bold = useBold({style: a.body_1_lg_medium})
   const {walletManager} = useWalletManager()
@@ -58,15 +58,10 @@ export const SaveNanoXScreen = () => {
     features.prefillWalletInfo ? debugWalletInfo.WALLET_NAME : '',
   )
 
+  const {trackEvent} = useAnalyticsTracking()
+
   const {walletImplementation, hwDeviceInfo, accountVisual, walletIdChanged} =
     useSetupWallet()
-
-  useFocusEffect(
-    React.useCallback(() => {
-      track.connectWalletDetailsPageViewed()
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []),
-  )
 
   if (!hwDeviceInfo) throw new Error('no hwDeviceInfo')
   const {plate, seed} = walletManager.checksum(hwDeviceInfo.bip44AccountPublic)
@@ -85,8 +80,9 @@ export const SaveNanoXScreen = () => {
         throw error
       }
 
-      track.restoreWalletDetailsSettled()
-      track.connectWalletDetailsSubmitted()
+      trackEvent(AnalyticsEventEnum.ConnectWalletDetailsSubmitted, {
+        hardware_wallet: 'Ledger',
+      })
 
       navigation.navigate('setup-wallet-preparing-wallet')
     },

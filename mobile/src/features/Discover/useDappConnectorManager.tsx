@@ -7,7 +7,6 @@ import * as React from 'react'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {cip30LedgerExtensionMaker} from '~/wallets/cardano/cip30/cip30-ledger'
 import {YoroiWallet} from '~/wallets/cardano/types'
@@ -30,7 +29,6 @@ export const useDappConnectorManager = () => {
   const {wallet, meta} = useSelectedWallet()
   const {navigateToTxReview} = useWalletNavigation()
   const {tabs, tabActiveIndex} = useBrowser()
-  const {track} = useMetrics()
   const dappCollateralRequestUtils = useDappCollateralRequestUtils(wallet)
 
   const activeTab = tabs[tabActiveIndex]
@@ -80,10 +78,10 @@ export const useDappConnectorManager = () => {
               ? dapps.find((dapp) => dapp.origins.includes(activeTabOrigin))
               : null
 
-          track.dappPopupSignTransactionPageViewed()
           navigateToTxReview({
             cbor,
             preventSubmit: true,
+            context: 'dapp',
             createdBy: matchingDapp != null && (
               <CreatedByInfoItem
                 logo={matchingDapp.logo}
@@ -126,7 +124,6 @@ export const useDappConnectorManager = () => {
     },
     [
       activeTabOrigin,
-      track,
       navigateToTxReview,
       dappCollateralRequestUtils,
       navigateToDiscoverBrowserDapp,
@@ -143,7 +140,6 @@ export const useDappConnectorManager = () => {
       partial?: boolean
       manager: DappConnector
     }) => {
-      track.dappPopupSignTransactionPageViewed()
       return new Promise<Transaction>((resolve, reject) => {
         let shouldResolve = true
         return manager.getDAppList().then(({dapps}) => {
@@ -155,13 +151,14 @@ export const useDappConnectorManager = () => {
             cbor,
             partial,
             preventSubmit: true,
+            context: 'dapp',
             createdBy: matchingDapp != null && (
               <CreatedByInfoItem
                 logo={matchingDapp.logo}
                 url={matchingDapp.uri}
               />
             ),
-            onSuccess: (args) => {
+            onSuccessWithoutFeedback: (args) => {
               shouldResolve = false
               if (!args?.tx) {
                 reject(
@@ -174,7 +171,7 @@ export const useDappConnectorManager = () => {
               resolve(args?.tx)
               navigateToDiscoverBrowserDapp()
             },
-            onError: (error) => {
+            onErrorWithoutFeedback: (error) => {
               shouldResolve = false
               logger.error('useDappConnectorManager::handleSignTxWithHW', {
                 error,
@@ -195,7 +192,7 @@ export const useDappConnectorManager = () => {
         })
       })
     },
-    [track, activeTabOrigin, navigateToTxReview, navigateToDiscoverBrowserDapp],
+    [activeTabOrigin, navigateToTxReview, navigateToDiscoverBrowserDapp],
   )
 
   const handleSendReorganisationTx = React.useCallback(

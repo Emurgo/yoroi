@@ -1143,18 +1143,67 @@ describe('swapManagerMaker', () => {
   })
 
   describe('cancel()', () => {
+    beforeEach(() => {
+      // Set up default mocks for cancel with valid CBOR
+      // Override any existing mocks from outer beforeEach
+      mockDexhunterApi.cancel.mockResolvedValue({
+        tag: 'right',
+        value: {
+          status: Api.HttpStatusCode.Ok,
+          data: {
+            cbor: 'valid-dexhunter-cbor',
+            additionalCancellationFee: undefined,
+          },
+        },
+      })
+      mockMuesliswapApi.cancel.mockResolvedValue({
+        tag: 'right',
+        value: {
+          status: Api.HttpStatusCode.Ok,
+          data: {
+            cbor: 'valid-muesliswap-cbor',
+            additionalCancellationFee: undefined,
+          },
+        },
+      })
+      mockMinswapApi.cancel.mockResolvedValue({
+        tag: 'right',
+        value: {
+          status: Api.HttpStatusCode.Ok,
+          data: {
+            cbor: 'valid-minswap-cbor',
+            additionalCancellationFee: undefined,
+          },
+        },
+      })
+    })
+
     it('delegates to the aggregator specified in the order 1', async () => {
       const manager = swapManagerMaker(baseConfig)
-      await manager.api.cancel(dhApiMocks.inputs.cancel)
+      const result = await manager.api.cancel(dhApiMocks.inputs.cancel)
+
       expect(mockDexhunterApi.cancel).toHaveBeenCalled()
       expect(mockMuesliswapApi.cancel).not.toHaveBeenCalled()
+      expect(mockMinswapApi.cancel).not.toHaveBeenCalled()
+
+      expect(result.tag).toBe('right')
+      if (result.tag === 'right') {
+        expect(result.value.data.cbor).toBe('valid-dexhunter-cbor')
+      }
     })
 
     it('delegates to the aggregator specified in the order 2', async () => {
       const manager = swapManagerMaker(baseConfig)
-      await manager.api.cancel(msApiMocks.inputs.cancel[0]!)
+      const result = await manager.api.cancel(msApiMocks.inputs.cancel[0]!)
+
       expect(mockMuesliswapApi.cancel).toHaveBeenCalled()
       expect(mockDexhunterApi.cancel).not.toHaveBeenCalled()
+      expect(mockMinswapApi.cancel).not.toHaveBeenCalled()
+
+      expect(result.tag).toBe('right')
+      if (result.tag === 'right') {
+        expect(result.value.data.cbor).toBe('valid-muesliswap-cbor')
+      }
     })
 
     it('delegates to minswap for minswap orders', async () => {
@@ -1168,10 +1217,121 @@ describe('swapManagerMaker', () => {
         },
       } as Swap.CancelRequest
 
-      await manager.api.cancel(minswapCancelRequest)
+      const result = await manager.api.cancel(minswapCancelRequest)
+
       expect(mockMinswapApi.cancel).toHaveBeenCalled()
       expect(mockDexhunterApi.cancel).not.toHaveBeenCalled()
       expect(mockMuesliswapApi.cancel).not.toHaveBeenCalled()
+
+      expect(result.tag).toBe('right')
+      if (result.tag === 'right') {
+        expect(result.value.data.cbor).toBe('valid-minswap-cbor')
+      }
+    })
+
+    it('tries other adapters when initial adapter returns empty CBOR', async () => {
+      const manager = swapManagerMaker(baseConfig)
+
+      // Mock dexhunter to return empty CBOR
+      mockDexhunterApi.cancel.mockResolvedValue({
+        tag: 'right',
+        value: {
+          status: Api.HttpStatusCode.Ok,
+          data: {
+            cbor: '',
+            additionalCancellationFee: undefined,
+          },
+        },
+      })
+
+      const result = await manager.api.cancel(dhApiMocks.inputs.cancel)
+
+      // Should call all adapters
+      expect(mockDexhunterApi.cancel).toHaveBeenCalled()
+      expect(mockMuesliswapApi.cancel).toHaveBeenCalled()
+      expect(mockMinswapApi.cancel).toHaveBeenCalled()
+
+      // Should return a valid CBOR from one of the other adapters
+      expect(result.tag).toBe('right')
+      if (result.tag === 'right') {
+        expect(result.value.data.cbor).toBe('valid-muesliswap-cbor')
+      }
+    })
+
+    it('tries other adapters when initial adapter returns left error', async () => {
+      const manager = swapManagerMaker(baseConfig)
+
+      // Mock dexhunter to return an error
+      mockDexhunterApi.cancel.mockResolvedValue({
+        tag: 'left',
+        error: {
+          status: 500,
+          message: 'Dexhunter error',
+          responseData: {},
+        },
+      })
+
+      const result = await manager.api.cancel(dhApiMocks.inputs.cancel)
+
+      // Should call all adapters
+      expect(mockDexhunterApi.cancel).toHaveBeenCalled()
+      expect(mockMuesliswapApi.cancel).toHaveBeenCalled()
+      expect(mockMinswapApi.cancel).toHaveBeenCalled()
+
+      // Should return a valid CBOR from one of the other adapters
+      expect(result.tag).toBe('right')
+      if (result.tag === 'right') {
+        expect(result.value.data.cbor).toBe('valid-muesliswap-cbor')
+      }
+    })
+
+    it('returns initial response when no valid CBOR is found', async () => {
+      const manager = swapManagerMaker(baseConfig)
+
+      // Mock all adapters to return empty CBOR
+      mockDexhunterApi.cancel.mockResolvedValue({
+        tag: 'right',
+        value: {
+          status: Api.HttpStatusCode.Ok,
+          data: {
+            cbor: '',
+            additionalCancellationFee: undefined,
+          },
+        },
+      })
+      mockMuesliswapApi.cancel.mockResolvedValue({
+        tag: 'right',
+        value: {
+          status: Api.HttpStatusCode.Ok,
+          data: {
+            cbor: '',
+            additionalCancellationFee: undefined,
+          },
+        },
+      })
+      mockMinswapApi.cancel.mockResolvedValue({
+        tag: 'right',
+        value: {
+          status: Api.HttpStatusCode.Ok,
+          data: {
+            cbor: '',
+            additionalCancellationFee: undefined,
+          },
+        },
+      })
+
+      const result = await manager.api.cancel(dhApiMocks.inputs.cancel)
+
+      // Should call all adapters
+      expect(mockDexhunterApi.cancel).toHaveBeenCalled()
+      expect(mockMuesliswapApi.cancel).toHaveBeenCalled()
+      expect(mockMinswapApi.cancel).toHaveBeenCalled()
+
+      // Should return the initial (dexhunter) response even if it has empty CBOR
+      expect(result.tag).toBe('right')
+      if (result.tag === 'right') {
+        expect(result.value.data.cbor).toBe('')
+      }
     })
   })
 })

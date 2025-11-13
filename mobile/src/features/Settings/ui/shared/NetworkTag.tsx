@@ -15,7 +15,6 @@ import {
 import {availableNetworks} from '~/features/WalletManager/common/constants'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/context/ModalContext'
@@ -43,7 +42,6 @@ export const NetworkTag = ({
   const {atoms: ta} = useTheme()
   const {openModal, closeModal} = useModal()
   const strings = useStrings()
-  const {track} = useMetrics()
   const width = useWindowDimensions().width - 120
 
   const Tag = selectedNetwork === Chain.Network.Preprod ? PreprodTag : null
@@ -58,10 +56,6 @@ export const NetworkTag = ({
 
       if (nextNetwork === Chain.Network.Mainnet) {
         const onConfirm = () => {
-          track.networkSelected({
-            to_network: nextNetwork,
-            from_network: selectedNetwork,
-          })
           walletManager.setSelectedNetwork(nextNetwork)
           closeModal()
         }
@@ -98,10 +92,6 @@ export const NetworkTag = ({
         return
       }
 
-      track.networkSelected({
-        to_network: nextNetwork!,
-        from_network: selectedNetwork,
-      })
       walletManager.setSelectedNetwork(nextNetwork!)
       return
     }

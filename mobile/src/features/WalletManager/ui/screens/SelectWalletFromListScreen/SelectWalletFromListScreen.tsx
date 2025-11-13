@@ -2,7 +2,7 @@ import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Wallet} from '@yoroi/types'
 
-import {useFocusEffect, useNavigation} from '@react-navigation/native'
+import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 import {Linking, Text, TouchableOpacity} from 'react-native'
 
@@ -15,7 +15,6 @@ import {
 import {isDev} from '~/kernel/constants'
 import {features} from '~/kernel/features'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Button} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/context/ModalContext'
@@ -44,16 +43,9 @@ export const SelectWalletFromList = () => {
   useLinksRequestWallet(modalFunctions)
   const {scrollViewRef} = useScrollView()
   const navigation = useNavigation()
-  const {track} = useMetrics()
   const walletMetas = useWalletMetas()
   const {walletManager} = useWalletManager()
   const walletNavigation = useWalletNavigation()
-
-  useFocusEffect(
-    React.useCallback(() => {
-      track.allWalletsPageViewed()
-    }, [track]),
-  )
 
   const handleOnSelect = React.useCallback(
     async (walletMeta: Wallet.Meta) => {

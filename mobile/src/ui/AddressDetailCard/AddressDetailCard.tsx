@@ -7,7 +7,6 @@ import Animated, {Layout} from 'react-native-reanimated'
 import {useCopy} from '~/features/Copy/context/CopyProvider'
 import {useReceive} from '~/features/Receive/common/ReceiveProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {Space} from '~/ui/Space/Space'
 import {
   getSpendingKey,
@@ -39,7 +38,6 @@ type CardItem = {
 
 export const AddressDetailCard = ({title}: AddressDetailCardProps) => {
   const {copy} = useCopy()
-  const {track} = useMetrics()
   const strings = useStrings()
   const {palette: p} = useTheme()
 
@@ -93,7 +91,6 @@ export const AddressDetailCard = ({title}: AddressDetailCardProps) => {
               })
             }
             testID="receive:address-detail-card"
-            onShare={() => track.receiveShareAddressClicked()}
             shareLabel={strings.receive.shareLabel}
           />
         )

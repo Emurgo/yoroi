@@ -10,7 +10,6 @@ import Animated, {
 } from 'react-native-reanimated'
 
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {useMetrics} from '~/kernel/metrics/metricsManager'
 import {useParams} from '~/kernel/navigation/hooks/useParams'
 import {NftRoutes} from '~/kernel/navigation/types'
 import {FadeIn} from '~/ui/FadeIn/FadeIn'
@@ -31,11 +30,6 @@ export const ZoomMediaImageScreen = () => {
 
   // reading from the getter, there is no need to subscribe to changes
   const [amount] = React.useState(wallet.balances.records.get(id))
-
-  const {track} = useMetrics()
-  React.useEffect(() => {
-    track.nftGalleryDetailsImageViewed()
-  }, [track, id])
 
   // Shared values for animations
   const scale = useSharedValue(1)
