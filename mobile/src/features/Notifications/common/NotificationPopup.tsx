@@ -16,6 +16,8 @@ import {NotificationItem} from '~/ui/NotificationItem/NotificationItem'
 import {SwipeOutWrapper} from '~/ui/SwipeOutWrapper/SwipeOutWrapper'
 
 import {BannerIds} from './banners'
+import {pushNotificationsManager} from './notification-manager'
+import {triggerNotificationAction} from './tools'
 
 type Props = {
   event: Notifications.Event
@@ -61,6 +63,15 @@ export const NotificationPopup = ({
       if (event.id === BannerIds.UtxoConsolidation) {
         navigation.navigateToUtxoConsolidation()
       }
+    }
+
+    if (event.trigger === Notifications.Trigger.Push) {
+      triggerNotificationAction({
+        manager: pushNotificationsManager,
+        id: event.id,
+        walletNavigation: navigation,
+        source: 'app',
+      })
     }
   }
 

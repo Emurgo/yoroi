@@ -2,7 +2,7 @@ import {isNonNullable} from '@yoroi/common'
 import {Api, Network, Portfolio} from '@yoroi/types'
 
 import {CredKind} from '@emurgo/cross-csl-core'
-import _ from 'lodash'
+import * as _ from 'lodash'
 import * as React from 'react'
 
 import {usePortfolioTokenInfos} from '~/features/Portfolio/common/hooks/usePortfolioTokenInfos'
@@ -10,9 +10,9 @@ import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetw
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {YoroiWallet} from '~/wallets/cardano/types'
 import {deriveRewardAddressFromAddress} from '~/wallets/cardano/utils'
+import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
 import {RawUtxo} from '~/wallets/types/other'
 import {asQuantity} from '~/wallets/utils/utils'
-import {CardanoMobile} from '~/wallets/wallets'
 
 import {
   FormattedCertificate,
@@ -309,13 +309,15 @@ const deriveAddress = (address: string, chainId: number) => {
 }
 
 const getAddressKind = (addressBech32: string): CredKind | null => {
-  try {
-    const address = CardanoMobile.Address.fromBech32(addressBech32)
-    const addressKind = address.paymentCred()?.kind()
-    return addressKind ?? null
-  } catch (e) {
-    return null
-  }
+  return CardanoMobileWrapped.cslScope((csl) => {
+    try {
+      const address = csl.Address.fromBech32(addressBech32)
+      const addressKind = address.paymentCred()?.kind()
+      return addressKind ?? null
+    } catch (e) {
+      return null
+    }
+  })
 }
 
 export const useUtxos = (inputs: TransactionInputs, wallet: YoroiWallet) => {

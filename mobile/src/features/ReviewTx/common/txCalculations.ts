@@ -1,0 +1,137 @@
+import {Balance, Portfolio} from '@yoroi/types'
+
+import {Quantities} from '~/wallets/utils/utils'
+
+import {FormattedOutput, FormattedOutputs} from './types'
+
+type TokenAmount = {
+  tokenInfo: Portfolio.Token.Info
+  quantity: Balance.Quantity
+}
+
+/**
+ * Groups assets from inputs or outputs by token ID and sums their quantities
+ */
+export const groupAssetsByToken = (
+  items: Array<{
+    assets: Array<{tokenInfo: Portfolio.Token.Info; quantity: Balance.Quantity}>
+  }>,
+): Map<Portfolio.Token.Id, TokenAmount> => {
+  const grouped = new Map<Portfolio.Token.Id, TokenAmount>()
+
+  items.forEach((item) => {
+    item.assets.forEach((asset) => {
+      const existing = grouped.get(asset.tokenInfo.id)
+      if (existing) {
+        grouped.set(asset.tokenInfo.id, {
+          tokenInfo: asset.tokenInfo,
+          quantity: Quantities.sum([existing.quantity, asset.quantity]),
+        })
+      } else {
+        grouped.set(asset.tokenInfo.id, {
+          tokenInfo: asset.tokenInfo,
+          quantity: asset.quantity,
+        })
+      }
+    })
+  })
+
+  return grouped
+}
+/**
+ * Calculates sends and receives by comparing inputs and outputs
+ */
+export const calculateSendsAndReceives = (
+  inputsByToken: Map<Portfolio.Token.Id, TokenAmount>,
+  outputsByToken: Map<Portfolio.Token.Id, TokenAmount>,
+  options?: {
+    primaryTokenId?: Portfolio.Token.Id
+    fee?: Balance.Quantity
+    operationsFee?: Balance.Quantity
+  },
+): {
+  sends: Array<TokenAmount>
+  receives: Array<TokenAmount>
+} => {
+  const sends: Array<TokenAmount> = []
+
+  // Calculate sends: (input - output) if positive
+  // The diff already includes the fee (inputs - outputs = net sent including fee)
+  inputsByToken.forEach((inputAsset, tokenId) => {
+    const outputAsset = outputsByToken.get(tokenId)
+    const outputQty = outputAsset?.quantity ?? Quantities.zero
+    const diff = Quantities.diff(inputAsset.quantity, outputQty)
+
+    if (Quantities.isGreaterThan(diff, Quantities.zero)) {
+      // For primary token, we need to ensure operationsFee is included if it exists
+      // But the base fee is already in the diff
+      let totalSent = diff
+      if (
+        options?.primaryTokenId &&
+        inputAsset.tokenInfo.id === options.primaryTokenId &&
+        options.operationsFee
+      ) {
+        // Only add operationsFee if it's separate from the base fee
+        totalSent = Quantities.sum([diff, options.operationsFee])
+      }
+
+      if (Quantities.isGreaterThan(totalSent, Quantities.zero)) {
+        sends.push({
+          tokenInfo: inputAsset.tokenInfo,
+          quantity: totalSent,
+        })
+      }
+    }
+  })
+
+  // Calculate receives: (output - input) if positive
+  // This handles both cases:
+  // 1. Tokens that appear in both inputs and outputs: add (output - input) if positive
+  // 2. Tokens that only appear in outputs: add full output quantity (since inputQty will be zero)
+  // Use a Map to ensure each token only appears once
+  const receivesByToken = new Map<Portfolio.Token.Id, TokenAmount>()
+
+  outputsByToken.forEach((outputAsset, tokenId) => {
+    const inputAsset = inputsByToken.get(tokenId)
+    const inputQty = inputAsset?.quantity ?? Quantities.zero
+    const diff = Quantities.diff(outputAsset.quantity, inputQty)
+
+    if (Quantities.isGreaterThan(diff, Quantities.zero)) {
+      receivesByToken.set(tokenId, {
+        tokenInfo: outputAsset.tokenInfo,
+        quantity: diff,
+      })
+    }
+  })
+
+  return {sends, receives: Array.from(receivesByToken.values())}
+}
+
+/**
+ * Gets a unique address identifier for grouping outputs by address
+ */
+const getAddressKey = (output: FormattedOutput): string => {
+  // Use rewardAddress if available, otherwise use address
+  return output.rewardAddress ?? output.address
+}
+
+/**
+ * Groups outputs by address (using rewardAddress or address as the key)
+ */
+export const groupOutputsByAddress = (
+  outputs: FormattedOutputs,
+): Map<string, FormattedOutputs> => {
+  const grouped = new Map<string, FormattedOutputs>()
+
+  outputs.forEach((output) => {
+    const addressKey = getAddressKey(output)
+    const existing = grouped.get(addressKey)
+    if (existing) {
+      grouped.set(addressKey, [...existing, output])
+    } else {
+      grouped.set(addressKey, [output])
+    }
+  })
+
+  return grouped
+}

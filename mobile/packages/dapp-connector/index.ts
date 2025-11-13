@@ -1,14 +1,12 @@
 export {
   connectionStorageMaker,
-  type Storage,
   type DappConnection,
+  type Storage,
 } from './adapters/async-storage'
 export {
-  type DappConnector,
   dappConnectorMaker,
+  type DappConnector,
   type DappConnectorManager,
 } from './dapp-connector'
-export * from './translators/reactjs/DappConnectorProvider'
-export {useDappList} from './translators/reactjs/useDappList'
-export {type DappListResponse, dappConnectorApiMaker} from './adapters/api'
 export {ResolverWallet} from './resolver'
+export * from './translators/reactjs/DappConnectorProvider'

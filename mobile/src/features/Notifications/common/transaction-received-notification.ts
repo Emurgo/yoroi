@@ -68,6 +68,7 @@ const buildNotifications = async ({
             previousTxsCounter: processed.length,
             walletId,
           }
+
         notifications.push(
           createTransactionReceivedNotification(metadata, new Date(txDate)),
         )
@@ -109,7 +110,9 @@ export const useTransactionReceivedNotifications = ({
   const walletId = walletManager.selectedWalledId
 
   React.useEffect(() => {
-    if (!enabled || !walletId) return
+    if (!enabled || !walletId) {
+      return
+    }
     const subscriptionBeginDate = new Date()
     let latestStatuses: Map<string, SyncWalletInfo> = new Map()
     const subscription = walletManager.syncWalletInfos$.subscribe(
@@ -127,6 +130,7 @@ export const useTransactionReceivedNotifications = ({
             sinceDate: subscriptionBeginDate,
             walletIds: [walletId],
           })
+
           notifications.forEach((notification) =>
             transactionReceivedSubject.next(notification),
           )
