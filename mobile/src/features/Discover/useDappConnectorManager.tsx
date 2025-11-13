@@ -26,9 +26,9 @@ import {useShowCollateralNotFoundAlert} from './common/useShowCollateralNotFound
 
 export const useDappConnectorManager = () => {
   const appStorage = useAsyncStorage()
-  const {navigateToDiscoverBrowserDapp} = useWalletNavigation()
+  const {navigateToDiscoverBrowserDapp, navigateToTxReview} =
+    useWalletNavigation()
   const {wallet, meta} = useSelectedWallet()
-  const {navigateToTxReview} = useWalletNavigation()
   const {tabs, tabActiveIndex} = useBrowser()
   const dappCollateralRequestUtils = useDappCollateralRequestUtils(wallet)
 
@@ -103,6 +103,7 @@ export const useDappConnectorManager = () => {
               return
             }
 
+            // Silenced debug logs - too spammy
             resolve(args?.rootKey)
             navigateToDiscoverBrowserDapp()
           },
