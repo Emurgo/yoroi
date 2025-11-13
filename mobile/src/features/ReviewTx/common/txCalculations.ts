@@ -51,7 +51,7 @@ export const groupAssetsByToken = (
 export const calculateSendsAndReceives = (
   inputsByToken: Map<Portfolio.Token.Id, TokenAmount>,
   outputsByToken: Map<Portfolio.Token.Id, TokenAmount>,
-  options?: {
+  _options?: {
     primaryTokenId?: Portfolio.Token.Id
     fee?: Balance.Quantity
     operationsFee?: Balance.Quantity
@@ -63,31 +63,21 @@ export const calculateSendsAndReceives = (
   const sends: Array<TokenAmount> = []
 
   // Calculate sends: (input - output) if positive
-  // The diff already includes the fee (inputs - outputs = net sent including fee)
+  // The diff already includes:
+  // - The transaction fee (burned, so outputs are less than inputs)
+  // - Operation deposits (keyDeposit, poolDeposit) are included in outputs as UTXOs,
+  //   so they're already accounted for in the diff
+  // Therefore, we should NOT add operationsFee again as it would double-count deposits
   inputsByToken.forEach((inputAsset, tokenId) => {
     const outputAsset = outputsByToken.get(tokenId)
     const outputQty = outputAsset?.quantity ?? Quantities.zero
     const diff = Quantities.diff(inputAsset.quantity, outputQty)
 
     if (Quantities.isGreaterThan(diff, Quantities.zero)) {
-      // For primary token, we need to ensure operationsFee is included if it exists
-      // But the base fee is already in the diff
-      let totalSent = diff
-      if (
-        options?.primaryTokenId &&
-        inputAsset.tokenInfo.id === options.primaryTokenId &&
-        options.operationsFee
-      ) {
-        // Only add operationsFee if it's separate from the base fee
-        totalSent = Quantities.sum([diff, options.operationsFee])
-      }
-
-      if (Quantities.isGreaterThan(totalSent, Quantities.zero)) {
-        sends.push({
-          tokenInfo: inputAsset.tokenInfo,
-          quantity: totalSent,
-        })
-      }
+      sends.push({
+        tokenInfo: inputAsset.tokenInfo,
+        quantity: diff,
+      })
     }
   })
 

@@ -417,6 +417,27 @@ const formatCertificatesFromWalletTransaction = (
         value.pool_keyhash = cert.poolKeyHash
       }
 
+      // Handle VoteDelegation and combined vote delegation certificates
+      // Extract drep field if available (may be null for historical transactions)
+      if (
+        kind === 'VoteDelegation' ||
+        kind === 'VoteRegistrationAndDelegation' ||
+        kind === 'StakeAndVoteDelegation' ||
+        kind === 'StakeVoteRegistrationAndDelegation'
+      ) {
+        // drep may be present in the cert, or may be null/undefined
+        if ('drep' in cert) {
+          value.drep = (cert as any).drep
+        }
+        // If drep is not present, value.drep will remain undefined
+        // Operations will handle this by showing generic VoteDelegation
+      }
+
+      // Handle StakeRegistrationAndDelegation - extract poolKeyHash if available
+      if (kind === 'StakeRegistrationAndDelegation' && 'poolKeyHash' in cert) {
+        value.pool_keyhash = (cert as any).poolKeyHash
+      }
+
       // For other certificate types, we just include the type
       // Operations that only need the type (StakeRegistration, StakeDeregistration, etc.)
       // will work fine. Operations that need additional fields may show limited info.

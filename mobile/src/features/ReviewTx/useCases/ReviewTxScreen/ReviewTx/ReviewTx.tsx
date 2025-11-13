@@ -10,7 +10,6 @@ import {Button} from '~/ui/Button/Button'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {ScrollView} from '~/ui/ScrollView/ScrollView'
 import {ScrollViewProvider} from '~/ui/ScrollView/context/ScrollViewContext'
-import {isEmptyString} from '~/wallets/utils/string'
 
 import {MetadataTab} from '../ReviewTx/Metadata/MetadataTab'
 import {OverviewTab, ReviewDetailsProps} from '../ReviewTx/Overview/OverviewTab'
@@ -40,9 +39,9 @@ const TabWrapper = ({
           {children}
         </ScrollView>
         {!readOnly && onConfirm && (
-        <SafeArea.Footer>
-          <Button title={strings.txReview.confirm} onPress={onConfirm} />
-        </SafeArea.Footer>
+          <SafeArea.Footer>
+            <Button title={strings.txReview.confirm} onPress={onConfirm} />
+          </SafeArea.Footer>
         )}
       </SafeArea>
     </ScrollViewProvider>
@@ -73,9 +72,8 @@ export const ReviewTx = ({
   const strings = useStrings()
   const {atoms: ta, palette: p} = useTheme()
 
-  const showMetadataTab =
-    !isEmptyString(formattedMetadata?.hash) &&
-    formattedMetadata?.metadata != null
+  // Show metadata tab if metadata exists, even without hash (for historical transactions)
+  const showMetadataTab = formattedMetadata?.metadata != null
   const showMintTab = !!formattedTx.mint
   const showReferenceInoutsTab = formattedTx.referenceInputs.length > 0
 
