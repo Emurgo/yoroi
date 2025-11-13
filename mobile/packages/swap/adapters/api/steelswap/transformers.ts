@@ -26,16 +26,13 @@ export const transformersMaker = ({
     if (tokenId === 'lovelace' || tokenId === 'ADA') {
       return primaryTokenInfo.id
     }
-    // Steelswap uses hex-encoded format: policyId + hexName (no separator)
-    if (tokenId.length === 120) {
-      return `${tokenId.slice(0, 56)}.${tokenId.slice(56)}`
-    }
     // If already in format policyId.hexName, return as is
     if (tokenId.includes('.')) {
       return tokenId as Portfolio.Token.Id
     }
-    // Fallback
-    return tokenId as Portfolio.Token.Id
+    // Steelswap uses hex-encoded format: policyId + hexName (no separator)
+    // PolicyId is always 56 characters, rest is hexName
+    return `${tokenId.slice(0, 56)}.${tokenId.slice(56)}`
   }
 
   const toTokenId = (tokenId: Portfolio.Token.Id): string => {
@@ -50,16 +47,13 @@ export const transformersMaker = ({
     if (tokenId === 'lovelace' || tokenId === 'ADA') {
       return primaryTokenInfo.id
     }
-    // Steelswap format: policyId + hexName (no separator, typically 120 chars)
-    if (tokenId.length === 120) {
-      return `${tokenId.slice(0, 56)}.${tokenId.slice(56)}` as Portfolio.Token.Id
-    }
     // If already has dot, return as is
     if (tokenId.includes('.')) {
       return tokenId as Portfolio.Token.Id
     }
-    // Fallback: assume it's already in portfolio format
-    return tokenId as Portfolio.Token.Id
+    // Steelswap format: policyId + hexName (no separator)
+    // PolicyId is always 56 characters, rest is hexName
+    return `${tokenId.slice(0, 56)}.${tokenId.slice(56)}` as Portfolio.Token.Id
   }
 
   const parseAssets = (
