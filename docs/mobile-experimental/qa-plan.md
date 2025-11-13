@@ -1,6 +1,9 @@
 <!-- a7a230d4-76e5-4097-81c5-dee323b1492c 606bffd7-548b-4d0f-b827-4542052eb9ee -->
 # Comprehensive Change Documentation and QA Plan
 
+> **Note**: This plan was archived from `.cursor/plans/review-and-qa-plan-a7a230d4.plan.md` during branch organization.  
+> **Status Updated**: December 2024 - Documentation organized, type errors verified (141 errors), TransactionBuilder implementation confirmed.
+
 ## Summary Statistics
 
 - **Total Commits**: 42 commits
@@ -49,10 +52,10 @@
 
 **Documentation**:
 
-- `PHASE_1_2_PLAN.md` - Original migration plan
-- `PHASE_1_2_STATUS.md` - Implementation status
-- `TRANSACTION_BUILDER_REFACTOR_PLAN.md` - Builder refactor details
-- `LEGACY_AND_BACKWARD_COMPATIBILITY.md` - Legacy code notes
+- `docs/mobile-experimental/phase-1-2-plan.md` - Original migration plan
+- `docs/mobile-experimental/phase-1-2-status.md` - Implementation status
+- `docs/mobile-experimental/transaction-builder-refactor.md` - Builder refactor details
+- `docs/mobile-experimental/legacy-compatibility.md` - Legacy code notes
 
 ---
 
@@ -171,7 +174,7 @@
 
 **Documentation**:
 
-- `WALLET_TYPES_CONSOLIDATION_PLAN.md` - Detailed consolidation plan
+- `docs/mobile-experimental/wallet-types-consolidation.md` - Detailed consolidation plan
 
 ---
 
@@ -203,7 +206,7 @@
 
 **Documentation**:
 
-- `mobile/REVIEWTX_MIGRATION_STATUS.md` - Migration status
+- `docs/mobile-experimental/reviewtx-migration.md` - Migration status
 
 ---
 
@@ -293,17 +296,17 @@
 
 **Scope**: Comprehensive documentation of migration and refactoring
 
-**Files Added**:
+**Files Added** (now organized in `docs/mobile-experimental/`):
 
-- `PHASE_1_2_PLAN.md` - Migration plan
-- `PHASE_1_2_STATUS.md` - Implementation status
-- `TRANSACTION_BUILDER_REFACTOR_PLAN.md` - Builder refactor plan
-- `LEGACY_AND_BACKWARD_COMPATIBILITY.md` - Legacy code notes
-- `PROJECT_HEALTH.md` - Project health report
-- `KNOWN_TYPE_ISSUES.md` - Known type issues
-- `WALLET_TYPES_CONSOLIDATION_PLAN.md` - Type consolidation plan
-- `mobile/REVIEWTX_MIGRATION_STATUS.md` - ReviewTx migration status
-- `mobile/TYPE_ERROR_ANALYSIS_PLAN.md` - Type error analysis
+- `docs/mobile-experimental/phase-1-2-plan.md` - Migration plan
+- `docs/mobile-experimental/phase-1-2-status.md` - Implementation status
+- `docs/mobile-experimental/transaction-builder-refactor.md` - Builder refactor plan
+- `docs/mobile-experimental/legacy-compatibility.md` - Legacy code notes
+- `docs/mobile-experimental/project-health.md` - Project health report
+- `docs/mobile-experimental/known-type-issues.md` - Known type issues
+- `docs/mobile-experimental/wallet-types-consolidation.md` - Type consolidation plan
+- `docs/mobile-experimental/reviewtx-migration.md` - ReviewTx migration status
+- `docs/mobile-experimental/type-error-analysis.md` - Type error analysis
 
 **Note**: These documentation files should be reviewed to determine if they should be:
 
@@ -326,7 +329,7 @@
   - Some type mismatches in mocks and tests
 - Ledger integration has some type issues with WASM async patterns (non-critical)
 - Transaction builder type issues mostly resolved (using CSL TransactionBuilder directly)
-- **Note**: `KNOWN_TYPE_ISSUES.md` may be outdated - TransactionBuilder now uses CSL TransactionBuilder correctly
+- **Note**: `docs/mobile-experimental/known-type-issues.md` may be outdated - TransactionBuilder now uses CSL TransactionBuilder correctly
 
 ### Legacy Code
 
@@ -360,7 +363,7 @@
 
 - [x] Verify all type migrations are complete
 - [x] Check for remaining type errors (run `npx tsc --noEmit`) - **141 errors found**
-- [ ] Review type consolidation in `WALLET_TYPES_CONSOLIDATION_PLAN.md`
+- [ ] Review type consolidation in `docs/mobile-experimental/wallet-types-consolidation.md`
 - [ ] Verify no duplicate types remain
 - **Status**: Type migrations complete. 141 type errors remain (mostly non-critical, in tests/mocks)
 

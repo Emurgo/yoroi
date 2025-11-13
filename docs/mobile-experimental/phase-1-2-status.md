@@ -11,7 +11,7 @@
 - ✅ Updated build script to include `tx` package
 
 **1.2 Migrate Core Transaction Building** ⚠️ PARTIAL
-- ⚠️ **LEGACY/DEPRECATED**: Old transaction building methods (`createUnsignedTx`, etc.) - **See LEGACY_AND_BACKWARD_COMPATIBILITY.md** - These are kept for backward compatibility but will be replaced in Phase 2
+- ⚠️ **LEGACY/DEPRECATED**: Old transaction building methods (`createUnsignedTx`, etc.) - **See [legacy-compatibility.md](./legacy-compatibility.md)** - These are kept for backward compatibility but will be replaced in Phase 2
 - ✅ **DONE**: Ledger integration functions - Migrated to `@yoroi/tx/ledger/`
   - ✅ `buildLedgerPayload()` - Standard transaction payload
   - ✅ `buildVotingLedgerPayloadV5()` - Legacy voting payload
@@ -32,7 +32,7 @@
 - ✅ Moved `UtxoService` class to `@yoroi/tx/utxo/`
 - ✅ Moved `UtxoStorage` interface
 - ✅ Moved `initUtxo()` factory function
-- ✅ Migrated UTXO models (legacy types maintained for backward compatibility - **See LEGACY_AND_BACKWARD_COMPATIBILITY.md**)
+- ✅ Migrated UTXO models (legacy types maintained for backward compatibility - **See [legacy-compatibility.md](./legacy-compatibility.md)**)
 
 **1.4 Move PoolInfoApi to Staking Package** ✅
 - ✅ PoolInfoApi moved to `@yoroi/staking/pools/`
