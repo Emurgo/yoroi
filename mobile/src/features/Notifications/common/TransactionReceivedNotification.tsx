@@ -236,7 +236,7 @@ const resolveTokenInfo = (
     ) ?? identifier
   const name = pick(token?.metadata?.ticker, token?.metadata?.longName)
   const denomination =
-    token?.metadata.numberOfDecimals ?? primaryTokenInfo.decimals ?? 0
+    token?.metadata?.numberOfDecimals ?? primaryTokenInfo.decimals ?? 0
   return {name, denomination}
 }
 
