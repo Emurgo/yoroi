@@ -157,11 +157,11 @@ export const transformersMaker = ({
               tokenIn,
               tokenOut,
               updateTxHash: swap.executeTxHash ?? swap.submitTxHash,
-              placedAt: swap.submitTime ? swap.submitTime * 1000 : undefined,
+              placedAt: swap.submitTime ? swap.submitTime : undefined,
               lastUpdate: swap.executeTime
-                ? swap.executeTime * 1000
+                ? swap.executeTime
                 : swap.submitTime
-                  ? swap.submitTime * 1000
+                  ? swap.submitTime
                   : undefined,
               amountIn,
               actualAmountOut,
