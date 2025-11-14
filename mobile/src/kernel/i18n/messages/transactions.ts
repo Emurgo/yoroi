@@ -371,4 +371,28 @@ export const transactionsMessages = defineMessages({
     id: 'components.transactions.operation.voteRegistrationAndDelegation',
     defaultMessage: '!!!Vote Registration And Delegation',
   },
+  operationWithdrawal: {
+    id: 'components.transactions.operation.withdrawal',
+    defaultMessage: '!!!Withdrawal',
+  },
+  operationSwap: {
+    id: 'components.transactions.operation.swap',
+    defaultMessage: '!!!Swap',
+  },
+  operationSwapCreated: {
+    id: 'components.transactions.operation.swapCreated',
+    defaultMessage: '!!!Swap Created',
+  },
+  operationSwapResolved: {
+    id: 'components.transactions.operation.swapResolved',
+    defaultMessage: '!!!Swap Resolved',
+  },
+  operationSwapCancel: {
+    id: 'components.transactions.operation.swapCancel',
+    defaultMessage: '!!!Swap Cancel',
+  },
+  operationSmartContract: {
+    id: 'components.transactions.operation.smartContract',
+    defaultMessage: '!!!Smart Contract',
+  },
 })

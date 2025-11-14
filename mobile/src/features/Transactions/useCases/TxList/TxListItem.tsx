@@ -51,19 +51,33 @@ export const TxListItem = ({transaction}: Props) => {
 
   // Get operation display text if available (using certificates from summary)
   const operationText = React.useMemo(() => {
-    if (transaction.direction !== 'SELF') {
-      return null
-    }
     // Create a minimal WalletTransaction-like object with just the fields we need
     const walletTransactionLike = {
       certificates: transaction.certificates,
       withdrawals: transaction.withdrawals,
+      metadata: transaction.metadata,
+      inputs: transaction.inputs,
+      outputs: transaction.outputs,
     } as WalletTransaction | undefined
-    return getOperationDisplayText(walletTransactionLike, strings)
+    return getOperationDisplayText(
+      walletTransactionLike,
+      strings,
+      transaction.direction,
+      transaction.amount,
+      transaction.metadata,
+      transaction.inputs,
+      transaction.outputs,
+      transaction.delta,
+    )
   }, [
     transaction.direction,
     transaction.certificates,
     transaction.withdrawals,
+    transaction.amount,
+    transaction.metadata,
+    transaction.inputs,
+    transaction.outputs,
+    transaction.delta,
     strings,
   ])
 

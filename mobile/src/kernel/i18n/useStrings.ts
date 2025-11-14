@@ -1550,6 +1550,12 @@ export const useStrings = () => {
           voteRegistrationAndDelegation: f(
             transactionsMessages.operationVoteRegistrationAndDelegation,
           ),
+          withdrawal: f(transactionsMessages.operationWithdrawal),
+          swap: f(transactionsMessages.operationSwap),
+          swapCreated: f(transactionsMessages.operationSwapCreated),
+          swapResolved: f(transactionsMessages.operationSwapResolved),
+          swapCancel: f(transactionsMessages.operationSwapCancel),
+          smartContract: f(transactionsMessages.operationSmartContract),
         },
         unknownAssetName: f(transactionsMessages.unknownAssetName),
         walletAddress: f(transactionsMessages.walletAddress),

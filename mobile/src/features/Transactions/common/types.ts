@@ -20,4 +20,7 @@ export type TransactionSummary = {
   status: TransactionStatus
   certificates: WalletTransaction['certificates']
   withdrawals: WalletTransaction['withdrawals']
+  metadata?: WalletTransaction['metadata']
+  inputs?: WalletTransaction['inputs']
+  outputs?: WalletTransaction['outputs']
 }
