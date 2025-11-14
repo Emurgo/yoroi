@@ -97,10 +97,83 @@ export const TxListItem = ({transaction}: Props) => {
     ({quantity}) => !Quantities.isZero(quantity),
   ).length
 
+  // Check if transaction has multiple assets (more than just primary token)
+  const hasMultipleAssets = React.useMemo(() => {
+    const amountArray = Amounts.toArray(transaction.amount).filter(
+      ({quantity}) => !Quantities.isZero(quantity),
+    )
+    return amountArray.length > 1
+  }, [transaction.amount])
+
   // Determine display text: use operation text if available, otherwise use direction
   const displayText =
     operationText ??
     strings.transactions.direction(transaction.direction as any)
+
+  // Determine icon key for styling (matches icon selection logic)
+  const getIconKeyForStyle = (
+    direction: 'SENT' | 'RECEIVED' | 'SELF' | 'MULTI',
+    operation: string | null | undefined,
+  ):
+    | 'SENT'
+    | 'RECEIVED'
+    | 'SELF'
+    | 'MULTI'
+    | 'WITHDRAWAL'
+    | 'SWAP'
+    | 'SMART_CONTRACT'
+    | 'STAKE_REGISTRATION'
+    | 'STAKE_DEREGISTRATION'
+    | 'STAKE_DELEGATION'
+    | 'STAKE_UNDELEGATION'
+    | 'VOTE_DELEGATION' => {
+    if (!operation) {
+      return direction
+    }
+
+    const opLower = operation.toLowerCase()
+
+    if (opLower.includes('withdrawal')) {
+      return 'WITHDRAWAL'
+    }
+    if (
+      opLower.includes('swap') ||
+      opLower.includes('swap created') ||
+      opLower.includes('swap resolved') ||
+      opLower.includes('swap cancel')
+    ) {
+      return 'SWAP'
+    }
+    if (opLower.includes('smart contract')) {
+      return 'SMART_CONTRACT'
+    }
+    if (opLower.includes('stake undelegation')) {
+      return 'STAKE_UNDELEGATION'
+    }
+    if (opLower.includes('staking delegated')) {
+      return 'STAKE_DELEGATION'
+    }
+    if (opLower.includes('stake deregistration')) {
+      return 'STAKE_DEREGISTRATION'
+    }
+    if (opLower.includes('stake delegation')) {
+      return 'STAKE_DELEGATION'
+    }
+    if (opLower.includes('stake registration')) {
+      return 'STAKE_REGISTRATION'
+    }
+    if (opLower.includes('vote delegation')) {
+      return 'VOTE_DELEGATION'
+    }
+
+    return direction
+  }
+
+  const iconKeyForStyle = getIconKeyForStyle(
+    transaction.direction,
+    operationText,
+  )
+
   return (
     <TouchableOpacity
       onPress={showDetails}
@@ -112,6 +185,7 @@ export const TxListItem = ({transaction}: Props) => {
         <Icon.Direction
           size={25}
           transactionDirection={transaction.direction}
+          operation={operationText}
         />
       </Left>
 
@@ -119,7 +193,7 @@ export const TxListItem = ({transaction}: Props) => {
         <Text
           style={[
             a.body_2_md_medium,
-            {color: styleMap(p)[transaction.direction].text},
+            {color: styleMap(p)[iconKeyForStyle].text},
           ]}
           testID="transactionDirection"
         >
@@ -136,7 +210,14 @@ export const TxListItem = ({transaction}: Props) => {
 
       <Right>
         {Object.keys(transaction.amount).length > 0 ? (
-          <Amount amount={amount} tokenInfo={tokenInfo} />
+          <View style={[a.flex_row, a.align_center, a.gap_xs, {flexShrink: 1}]}>
+            {hasMultipleAssets && isDefault && (
+              <Icon.TabPortfolio size={16} color={p.gray_900} />
+            )}
+            <View style={{flexShrink: 1}}>
+              <Amount amount={amount} tokenInfo={tokenInfo} />
+            </View>
+          </View>
         ) : (
           <Text style={[{color: p.gray_900}, a.body_2_md_medium]}>- -</Text>
         )}
@@ -175,7 +256,10 @@ const Middle = ({style, ...props}: ViewProps) => (
   />
 )
 const Right = ({style, ...props}: ViewProps) => (
-  <View style={[style, {padding: 4}]} {...props} />
+  <View
+    style={[style, {padding: 4, alignItems: 'flex-end', minWidth: 0}]}
+    {...props}
+  />
 )
 const Amount = ({
   amount,
@@ -188,13 +272,13 @@ const Amount = ({
   const {isPrivacyModeEnabled, privacyPlaceholder} = usePrivacyMode()
 
   return (
-    <View style={[a.flex_1, a.flex_row]} testID="transactionAmount">
-      <Text style={[{color: p.gray_900}, a.body_2_md_medium]}>
+    <View style={[a.flex_row, {flexShrink: 1}]} testID="transactionAmount">
+      <Text style={[{color: p.gray_900}, a.body_2_md_medium]} numberOfLines={1}>
         {!isPrivacyModeEnabled &&
           formatTokenInteger(asQuantity(amount), tokenInfo, true)}
       </Text>
 
-      <Text style={[{color: p.gray_900}, a.body_2_md_medium]}>
+      <Text style={[{color: p.gray_900}, a.body_2_md_medium]} numberOfLines={1}>
         {!isPrivacyModeEnabled
           ? formatTokenFractional(asQuantity(amount), tokenInfo)
           : privacyPlaceholder}
@@ -202,6 +286,7 @@ const Amount = ({
 
       <Text
         style={[{color: p.gray_900}, a.body_2_md_medium]}
+        numberOfLines={1}
       >{` ${infoExtractName(tokenInfo) ?? ''}`}</Text>
     </View>
   )

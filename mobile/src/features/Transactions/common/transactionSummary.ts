@@ -238,8 +238,11 @@ export const walletTransactionToSummary = (
   } else if (isMultiParty) {
     amount = brutto
   } else if (hasOnlyOwnInputs) {
-    amount = Amounts.diff(brutto, totalFee)
+    // For SENT: show total amount that left wallet (brutto + fees)
+    // brutto is negative, totalFee is negative, so we negate the sum
+    amount = Amounts.negated(Amounts.sum([brutto, totalFee]))
   } else {
+    // For RECEIVED: show amount received (fees were paid by sender)
     amount = brutto
   }
 
@@ -248,6 +251,7 @@ export const walletTransactionToSummary = (
     direction,
     amount,
     delta,
+    fee: totalFee,
     submittedAt: tx.submittedAt,
     lastUpdatedAt: tx.lastUpdatedAt,
     status: tx.status,

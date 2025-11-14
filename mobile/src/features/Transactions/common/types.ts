@@ -15,6 +15,7 @@ export type TransactionSummary = {
   direction: TransactionDirection
   amount: Balance.Amounts
   delta: Balance.Amounts
+  fee: Balance.Amounts
   submittedAt: string | null | undefined
   lastUpdatedAt: string
   status: TransactionStatus
