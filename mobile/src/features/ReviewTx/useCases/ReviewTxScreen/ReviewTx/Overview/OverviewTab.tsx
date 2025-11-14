@@ -22,6 +22,7 @@ import {
 
 import {TokenItem} from '~/features/ReviewTx/common/TokenItem'
 import {WalletBalance} from '~/features/ReviewTx/common/WalletBalance'
+import {useReviewTxMemo} from '~/features/ReviewTx/common/context/ReviewTxMemoContext'
 import {Operations, useOperations} from '~/features/ReviewTx/common/operations'
 import {
   calculateSendsAndReceives,
@@ -33,6 +34,7 @@ import {
   FormattedOutputs,
   FormattedTx,
 } from '~/features/ReviewTx/common/types'
+import {memoMaxLenght} from '~/features/Send/common/constants'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
@@ -44,9 +46,12 @@ import {InfoBanner} from '~/ui/InfoBanner/InfoBanner'
 import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {Space} from '~/ui/Space/Space'
+import {TextInput} from '~/ui/TextInput/TextInput'
 import {WarningBanner} from '~/ui/WarningBanner/WarningBanner'
 import {formatTokenWithText} from '~/wallets/utils/format'
 
+import {ShowMemoErrorTooLong} from '../../../../../Send/useCases/StartMultiTokenTx/InputMemo/ShowMemoErrorTooLong'
+import {ShowMemoInstructions} from '../../../../../Send/useCases/StartMultiTokenTx/InputMemo/ShowMemoInstructions'
 import {Accordion} from '../../../../common/Accordion'
 import {OperationsNoticeIcon} from '../../../../illustrations/OperationsNoticeIcon'
 
@@ -57,6 +62,7 @@ export const OverviewTab = ({
   receiverCustomTitle,
   details,
   createdBy,
+  readOnly = false,
 }: {
   tx: FormattedTx
   extraOperations?: Array<React.ReactNode>
@@ -64,6 +70,7 @@ export const OverviewTab = ({
   receiverCustomTitle?: React.ReactNode
   details?: {title: string; component: React.ReactNode}
   createdBy?: React.ReactNode
+  readOnly?: boolean
 }) => {
   const {atoms: ta} = useTheme()
   const operations = useOperations(tx.certificates)
@@ -164,6 +171,8 @@ export const OverviewTab = ({
       />
 
       <Details details={details} />
+
+      {!readOnly && <MemoInput />}
     </View>
   )
 }
@@ -255,6 +264,37 @@ const FeeInfoItem = ({fee}: {fee: string}) => {
 
       <Text style={[ta.text_gray_max, a.body_2_md_regular]}>{`-${fee}`}</Text>
     </View>
+  )
+}
+
+const MemoInput = () => {
+  const {memo, setMemo} = useReviewTxMemo()
+  const strings = useStrings()
+  const hasMemoError = memo.length > memoMaxLenght
+
+  return (
+    <>
+      <Space.Height.lg />
+      <Divider verticalSpace="lg" />
+      <TextInput
+        value={memo}
+        onChangeText={setMemo}
+        label={strings.send.memoLabel}
+        autoComplete="off"
+        testID="memoFieldInput"
+        error={hasMemoError ? true : undefined}
+        renderComponentStyle={{maxHeight: 80}}
+        multiline
+        focusable
+        helper={
+          hasMemoError ? (
+            <ShowMemoErrorTooLong memo={memo} />
+          ) : (
+            <ShowMemoInstructions memo={memo} />
+          )
+        }
+      />
+    </>
   )
 }
 

@@ -1,7 +1,5 @@
-import {cardanoConfig} from '@yoroi/blockchains'
 import {isHex} from '@yoroi/common'
 import {
-  CardanoHaskellConfig,
   ModernUtxo,
   NoOutputsError,
   NotEnoughMoneyToSendError,
@@ -9,11 +7,12 @@ import {
   addInputs,
   addMetadata,
   addOutput,
-  buildTransaction,
+  buildRecipeTransaction,
+  createCardanoHaskellConfig,
   createTransactionBuilder,
   selectUtxosForAmounts,
   setChangeAddress,
-  setTTL,
+  setTTLWithBuffer,
 } from '@yoroi/tx'
 import {Balance, Portfolio, Wallet} from '@yoroi/types'
 
@@ -50,34 +49,13 @@ export async function createSendTx({
   addressMode,
   metadata,
 }: CreateSendTxParams): Promise<{cbor: string}> {
-  logger.info('createSendTx: Starting transaction creation', {
-    entriesCount: entries.length,
-    addressMode,
-    hasMetadata: !!metadata && metadata.length > 0,
-    metadataCount: metadata?.length ?? 0,
-  })
-
   const absSlotNumber = await getAbsoluteSlotNumber()
   const changeAddress = getChangeAddress(addressMode)
 
-  const protocolParamsConfig: CardanoHaskellConfig = {
-    keyDeposit: protocolParams.keyDeposit,
-    linearFee: protocolParams.linearFee,
-    minimumUtxoVal: cardanoConfig.params.minUtxoValue.toString(),
-    coinsPerUtxoByte: protocolParams.coinsPerUtxoByte,
-    poolDeposit: protocolParams.poolDeposit,
+  const protocolParamsConfig = createCardanoHaskellConfig(
+    protocolParams,
     networkId,
-  }
-
-  logger.info('createSendTx: Protocol parameters', {
-    keyDeposit: protocolParams.keyDeposit,
-    linearFeeCoefficient: protocolParams.linearFee.coefficient,
-    linearFeeConstant: protocolParams.linearFee.constant,
-    minimumUtxoVal: protocolParamsConfig.minimumUtxoVal,
-    coinsPerUtxoByte: protocolParams.coinsPerUtxoByte,
-    poolDeposit: protocolParams.poolDeposit,
-    networkId: protocolParamsConfig.networkId,
-  })
+  )
 
   try {
     // Calculate required amounts from outputs
@@ -87,11 +65,6 @@ export async function createSendTx({
     ) // Default to 1 ADA if not set
     // Store calculated minAda for each entry index
     const entryMinAda: Map<number, bigint> = new Map()
-
-    logger.info('createSendTx: Processing entries', {
-      entriesCount: entries.length,
-      minUtxoValue: minUtxoValue.toString(),
-    })
 
     // Calculate actual minimum ADA for each output that has tokens
     for (let i = 0; i < entries.length; i++) {
@@ -136,15 +109,6 @@ export async function createSendTx({
               ...entry.amounts,
               [primaryTokenId]: '0',
             }
-            logger.info('createSendTx: Creating Value for minAda calculation', {
-              address: entry.address,
-              entryIndex: i,
-              tempAmounts: Object.keys(tempAmounts).map((tokenId) => ({
-                tokenId,
-                quantity: tempAmounts[tokenId],
-              })),
-              primaryTokenId,
-            })
 
             let value
             try {
@@ -175,18 +139,6 @@ export async function createSendTx({
               )
               throw error
             }
-
-            const valueCoin = value.coin()
-            const multiasset = value.multiasset()
-            logger.info(
-              'createSendTx: Value created, creating TransactionOutput',
-              {
-                address: entry.address,
-                entryIndex: i,
-                valueCoin: valueCoin ? valueCoin.toStr() : '0',
-                hasMultiasset: multiasset ? multiasset.len() > 0 : false,
-              },
-            )
 
             const txOutput = csl.TransactionOutput.new(normalizedAddress, value)
             if (!txOutput) {
@@ -247,15 +199,6 @@ export async function createSendTx({
         const minAdaToUse =
           actualMinAda > minUtxoValue ? actualMinAda : minUtxoValue
         requiredAmounts[primaryTokenId] = (currentAda + minAdaToUse).toString()
-
-        logger.info('createSendTx: Calculated actual minAda for token output', {
-          address: entry.address,
-          entryIndex: i,
-          adaAmount: adaAmount.toString(),
-          calculatedMinAda: actualMinAda.toString(),
-          minUtxoValue: minUtxoValue.toString(),
-          minAdaToUse: minAdaToUse.toString(),
-        })
       }
 
       for (const [tokenId, quantity] of Object.entries(entry.amounts)) {
@@ -265,13 +208,6 @@ export async function createSendTx({
       }
     }
 
-    logger.info('createSendTx: Calculated required amounts', {
-      requiredAmounts: Object.keys(requiredAmounts).map((tokenId) => ({
-        tokenId,
-        quantity: requiredAmounts[tokenId],
-      })),
-    })
-
     // Estimate fee (rough estimate: base fee + per-byte fee for a typical transaction)
     // This is conservative - actual fee will be calculated by CSL
     const estimatedFee = (
@@ -280,23 +216,7 @@ export async function createSendTx({
     ) // Rough estimate: 500 bytes
       .toString()
 
-    logger.info('createSendTx: Fee estimation', {
-      estimatedFee,
-      constant: protocolParams.linearFee.constant,
-      coefficient: protocolParams.linearFee.coefficient,
-      estimatedBytes: 500,
-    })
-
     // Select only necessary UTXOs
-    logger.info('createSendTx: Selecting UTXOs', {
-      availableUtxos: utxos.length,
-      requiredAmounts: Object.keys(requiredAmounts).map((tokenId) => ({
-        tokenId,
-        quantity: requiredAmounts[tokenId],
-      })),
-      estimatedFee,
-    })
-
     const selectedUtxos = selectUtxosForAmounts(
       utxos,
       requiredAmounts,
@@ -304,43 +224,14 @@ export async function createSendTx({
       estimatedFee,
     )
 
-    const selectedUtxosTotalAda = selectedUtxos.reduce(
-      (sum, utxo) => sum + BigInt(utxo.balance[primaryTokenId] || '0'),
-      BigInt(0),
-    )
-    const selectedUtxosTokenCounts = selectedUtxos.reduce(
-      (acc, utxo) => {
-        Object.keys(utxo.balance).forEach((tokenId) => {
-          if (tokenId !== primaryTokenId) {
-            acc[tokenId] = (acc[tokenId] || 0) + 1
-          }
-        })
-        return acc
-      },
-      {} as Record<string, number>,
-    )
-
-    logger.info('createSendTx: UTXO selection results', {
-      selectedCount: selectedUtxos.length,
-      totalAda: selectedUtxosTotalAda.toString(),
-      tokenCounts: selectedUtxosTokenCounts,
-    })
-
     // Build transaction using functional TransactionBuilder
-    logger.info('createSendTx: Creating transaction builder state')
     let builderState = createTransactionBuilder()
 
     // Add only selected UTXOs as inputs
-    logger.info('createSendTx: Adding inputs', {
-      inputsCount: selectedUtxos.length,
-    })
     builderState = addInputs(builderState, selectedUtxos)
 
     // Add outputs from entries
     // Ensure outputs with tokens have minimum UTXO value in ADA
-    logger.info('createSendTx: Adding outputs', {
-      outputsCount: entries.length,
-    })
     for (let i = 0; i < entries.length; i++) {
       const entry = entries[i]
       if (!entry) continue
@@ -362,15 +253,6 @@ export async function createSendTx({
 
         adjustedAmounts[primaryTokenId] =
           minAdaToUse.toString() as Balance.Quantity
-
-        logger.info('createSendTx: Adjusted output amounts for minUtxo', {
-          address: entry.address,
-          entryIndex: i,
-          originalAda: adaAmount.toString(),
-          adjustedAda: adjustedAmounts[primaryTokenId],
-          calculatedMinAda: calculatedMinAda?.toString(),
-          minUtxoValue: minUtxoValue.toString(),
-        })
       }
 
       builderState = addOutput(
@@ -382,59 +264,27 @@ export async function createSendTx({
     }
 
     // Set change address
-    logger.info('createSendTx: Setting change address', {
-      changeAddress,
-    })
     builderState = setChangeAddress(builderState, changeAddress)
 
-    // Set TTL
-    logger.info('createSendTx: Setting TTL', {
-      ttl: absSlotNumber.toNumber(),
-    })
-    builderState = setTTL(builderState, absSlotNumber.toNumber())
+    // Set TTL with buffer to prevent expiration
+    builderState = setTTLWithBuffer(builderState, absSlotNumber.toNumber())
 
     // Add metadata if present
     if (metadata && metadata.length > 0) {
-      logger.info('createSendTx: Adding metadata', {
-        metadataCount: metadata.length,
-      })
       for (const meta of metadata) {
         const label = String(meta.label)
         builderState = addMetadata(builderState, label, meta.data)
       }
     }
 
-    logger.info('createSendTx: Builder state prepared', {
-      inputsCount: builderState.inputs.length,
-      outputsCount: builderState.outputs.length,
-      certificatesCount: builderState.certificates.length,
-      withdrawalsCount: builderState.withdrawals.length,
-      metadataCount: builderState.metadata.length,
-    })
-
     // Build the transaction
-    logger.info('createSendTx: Calling buildTransaction')
-    const unsignedTx = await buildTransaction(
+    const result = await buildRecipeTransaction(
       builderState,
       protocolParamsConfig,
       primaryTokenId,
     )
 
-    logger.info('createSendTx: Transaction built successfully', {
-      cborLength: unsignedTx.cbor?.length ?? 0,
-      inputsCount: unsignedTx.inputs.length,
-      outputsCount: unsignedTx.outputs.length,
-    })
-
-    if (!unsignedTx.cbor) {
-      logger.error('createSendTx: Transaction CBOR not available')
-      throw new Error('Transaction CBOR not available')
-    }
-
-    logger.info('createSendTx: Transaction creation completed successfully', {
-      cborLength: unsignedTx.cbor.length,
-    })
-    return {cbor: unsignedTx.cbor}
+    return result
   } catch (e) {
     if (e instanceof NotEnoughMoneyToSendError || e instanceof NoOutputsError) {
       logger.error('createSendTx: Transaction creation failed', {

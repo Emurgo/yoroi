@@ -2,11 +2,16 @@ import * as React from 'react'
 
 import {useAnalyticsTracking} from '~/features/Analytics/hooks/useAnalyticsTracking'
 import {AnalyticsEventEnum} from '~/features/Analytics/types/analytics-event-enum'
+import {ReviewTxMemoProvider} from '~/features/ReviewTx/common/context/ReviewTxMemoContext'
 import {useFormattedMetadata} from '~/features/ReviewTx/common/hooks/useFormattedMetadata'
 import {useFormattedTx} from '~/features/ReviewTx/common/hooks/useFormattedTx'
 import {useOnConfirm} from '~/features/ReviewTx/common/hooks/useOnConfirm'
 import {useTxBody} from '~/features/ReviewTx/common/hooks/useTxBody'
-import {FormattedTx, TransactionBody} from '~/features/ReviewTx/common/types'
+import {
+  FormattedMetadata,
+  FormattedTx,
+  TransactionBody,
+} from '~/features/ReviewTx/common/types'
 import {useUnsafeParams} from '~/kernel/navigation/hooks/useUnsafeParams'
 import {ReviewTxRoutes} from '~/kernel/navigation/types'
 
@@ -42,10 +47,17 @@ const getTransactionAnalyticsProperties = (
   }
 }
 
-export const ReviewTxScreen = () => {
-  const params = useUnsafeParams<NonNullable<ReviewTxRoutes['review-tx']>>()
-  const {trackEvent} = useAnalyticsTracking()
-
+const ReviewTxContent = ({
+  params,
+  formattedTx,
+  formattedMetadata,
+  trackEvent,
+}: {
+  params: NonNullable<ReviewTxRoutes['review-tx']>
+  formattedTx: FormattedTx
+  formattedMetadata?: FormattedMetadata
+  trackEvent: ReturnType<typeof useAnalyticsTracking>['trackEvent']
+}) => {
   const {onConfirm} = useOnConfirm({
     cbor: params?.cbor,
     partial: params?.partial,
@@ -57,6 +69,38 @@ export const ReviewTxScreen = () => {
     onCancel: params?.onCancel,
     onClose: params?.onClose,
   })
+
+  const handleOnConfirm = () => {
+    if (params?.onConfirm) {
+      params?.onConfirm()
+      return
+    }
+    if (params?.cbor != null) {
+      trackEvent(AnalyticsEventEnum.TransactionReviewSubmitModalViewed)
+      onConfirm()
+      return
+    }
+
+    throw new Error('ReviewTxScreen: invalid state - cbor is required')
+  }
+
+  return (
+    <ReviewTx
+      formattedTx={formattedTx}
+      formattedMetadata={formattedMetadata}
+      operations={params?.operations}
+      operationsNotice={params?.operationsNotice}
+      details={params?.details}
+      receiverCustomTitle={params?.receiverCustomTitle}
+      createdBy={params?.createdBy}
+      onConfirm={handleOnConfirm}
+    />
+  )
+}
+
+export const ReviewTxScreen = () => {
+  const params = useUnsafeParams<NonNullable<ReviewTxRoutes['review-tx']>>()
+  const {trackEvent} = useAnalyticsTracking()
 
   const txBody = useTxBody({cbor: params?.cbor})
   const {formattedTx, isLoading, areTokenInfosLoaded} = useFormattedTx(
@@ -101,34 +145,18 @@ export const ReviewTxScreen = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const handleOnConfirm = () => {
-    if (params?.onConfirm) {
-      params?.onConfirm()
-      return
-    }
-    if (params?.cbor != null) {
-      trackEvent(AnalyticsEventEnum.TransactionReviewSubmitModalViewed)
-      onConfirm()
-      return
-    }
-
-    throw new Error('ReviewTxScreen: invalid state - cbor is required')
-  }
-
-  if (isLoading || !formattedTx) {
+  if (isLoading || !formattedTx || !params) {
     return null
   }
 
   return (
-    <ReviewTx
-      formattedTx={formattedTx}
-      formattedMetadata={formattedMetadata}
-      operations={params?.operations}
-      operationsNotice={params?.operationsNotice}
-      details={params?.details}
-      receiverCustomTitle={params?.receiverCustomTitle}
-      createdBy={params?.createdBy}
-      onConfirm={handleOnConfirm}
-    />
+    <ReviewTxMemoProvider>
+      <ReviewTxContent
+        params={params}
+        formattedTx={formattedTx}
+        formattedMetadata={formattedMetadata}
+        trackEvent={trackEvent}
+      />
+    </ReviewTxMemoProvider>
   )
 }

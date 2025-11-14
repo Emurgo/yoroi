@@ -81,7 +81,7 @@ export const ConfirmWithSpendingPassword = ({
         testID="swapButton"
         title={strings.swap.sign}
         onPress={() => onSubmit?.(spendingPassword)}
-        disabled={spendingPassword.length === 0}
+        disabled={spendingPassword.length === 0 || isLoading}
       />
 
       {isLoading && (

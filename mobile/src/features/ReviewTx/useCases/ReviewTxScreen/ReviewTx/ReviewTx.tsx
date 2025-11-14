@@ -104,6 +104,7 @@ export const ReviewTx = ({
               details={details}
               createdBy={createdBy}
               receiverCustomTitle={receiverCustomTitle}
+              readOnly={readOnly}
             />
           </TabWrapper>
         )}

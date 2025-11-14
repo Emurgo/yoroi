@@ -46,7 +46,7 @@ export const transactionsMessages = defineMessages({
     defaultMessage: '!!!Total',
   },
   date: {
-    id: 'components.governance.delegateVotingToDRepDeprecatedFormatNotice',
+    id: 'swap.listOrders.timeCreated',
     defaultMessage: '!!!Date',
   },
   time: {

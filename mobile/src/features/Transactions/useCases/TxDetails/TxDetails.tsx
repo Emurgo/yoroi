@@ -4,6 +4,7 @@ import {App} from '@yoroi/types'
 
 import {useRoute} from '@react-navigation/native'
 import * as React from 'react'
+import {useIntl} from 'react-intl'
 import {Linking, Text, View} from 'react-native'
 
 import {useFormattedTxFromWalletTransaction} from '~/features/ReviewTx/common/hooks/useFormattedTxFromWalletTransaction'
@@ -15,9 +16,11 @@ import {Button} from '~/ui/Button/Button'
 import {Copiable} from '~/ui/Copiable/Copiable'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
+import {formatDateRelative, formatTime} from '~/wallets/utils/format'
 
 export const TxDetails = () => {
   const strings = useStrings()
+  const intl = useIntl()
   const {palette: p} = useTheme()
   const route = useRoute()
   const params = route.params as Params | undefined
@@ -35,6 +38,28 @@ export const TxDetails = () => {
   const walletTransaction = React.useMemo(() => {
     return wallet.getRawTransaction(id)
   }, [wallet, id])
+
+  // Get memo from processed transactions (which include memo)
+  const memo = React.useMemo(() => {
+    const processedTx = wallet.transactions[id]
+    return processedTx?.memo ?? null
+  }, [wallet.transactions, id])
+
+  // Format transaction date
+  const formattedDate = React.useMemo(() => {
+    if (!walletTransaction?.submittedAt) return null
+    const dateStr = formatDateRelative(walletTransaction.submittedAt, intl, {
+      today: strings.global.today,
+      yesterday: strings.global.yesterday,
+    })
+    const timeStr = formatTime(walletTransaction.submittedAt, intl)
+    return `${dateStr}, ${timeStr}`
+  }, [
+    walletTransaction?.submittedAt,
+    intl,
+    strings.global.today,
+    strings.global.yesterday,
+  ])
 
   // Convert to FormattedTx
   const {formattedTx, isLoading, error} =
@@ -90,6 +115,26 @@ export const TxDetails = () => {
       />
       <SafeArea.Footer>
         <View style={[a.flex_col, a.gap_sm]}>
+          {memo && (
+            <View style={[a.flex_col, a.gap_xs]}>
+              <Text style={[a.body_2_md_regular, {color: p.text_gray_low}]}>
+                {strings.transactions.memo}
+              </Text>
+              <Text style={[a.body_2_md_regular, {color: p.text_gray_medium}]}>
+                {memo}
+              </Text>
+            </View>
+          )}
+          {formattedDate && (
+            <View style={[a.flex_row, a.gap_sm]}>
+              <Text style={[a.body_2_md_regular, {color: p.text_gray_low}]}>
+                {strings.transactions.date}
+              </Text>
+              <Text style={[a.body_2_md_regular, {color: p.text_gray_medium}]}>
+                {formattedDate}
+              </Text>
+            </View>
+          )}
           <View style={[a.flex_row, a.align_center, a.gap_sm]}>
             <Text style={[a.body_2_md_regular, {color: p.text_gray_low}]}>
               {strings.transactions.transactionId}

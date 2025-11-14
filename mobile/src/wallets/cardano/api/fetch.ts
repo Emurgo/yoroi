@@ -23,6 +23,12 @@ const _checkResponse: ResponseChecker<Record<string, any>> = async (
   try {
     responseBody = await rawResponse.json()
   } catch (_e) {
+    logger.error('fetchDefault: Failed to parse response as JSON', {
+      origin: 'fetchDefault',
+      type: 'http',
+      status: rawResponse.status,
+      statusText: rawResponse.statusText,
+    })
     throw new ApiError('unexpected server response')
   }
 
@@ -30,6 +36,16 @@ const _checkResponse: ResponseChecker<Record<string, any>> = async (
 
   if (status !== 200) {
     const resp = (responseBody as any).error?.response
+
+    // Log the actual backend response for debugging
+    logger.error('fetchDefault: Backend returned error response', {
+      origin: 'fetchDefault',
+      type: 'http',
+      status,
+      statusText: rawResponse.statusText,
+      responseBody,
+      errorResponse: resp,
+    })
 
     if (Object.values(ApiHistoryError.errors).includes(resp)) {
       throw new ApiHistoryError((responseBody as any).error.response)
@@ -61,7 +77,7 @@ const checkedFetch = (request: FetchRequest<any>) => {
   ] as const
 
   return fetch(...args) // Fetch throws only for network/dns/related errors, not http statuses
-    .catch((error) => {
+    .catch(async (error) => {
       logger.error(`API call ${endpoint} failed`, {error, type: 'http'})
 
       // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
@@ -72,8 +88,42 @@ const checkedFetch = (request: FetchRequest<any>) => {
       throw error
     })
     .then(async (r) => {
-      const response = await checkResponse(r, payload)
-      return response
+      // Clone response to read it for logging without consuming the stream
+      const responseClone = r.clone()
+
+      try {
+        const response = await checkResponse(r, payload)
+        return response
+      } catch (checkError) {
+        // If checkResponse throws, try to log the actual response body
+        try {
+          const responseBody = await responseClone.json()
+          logger.error('fetchDefault: Response check failed', {
+            origin: 'fetchDefault',
+            type: 'http',
+            endpoint,
+            status: responseClone.status,
+            statusText: responseClone.statusText,
+            responseBody,
+            checkError,
+          })
+        } catch (parseError) {
+          // If we can't parse JSON, log what we can
+          logger.error(
+            'fetchDefault: Response check failed (could not parse response)',
+            {
+              origin: 'fetchDefault',
+              type: 'http',
+              endpoint,
+              status: responseClone.status,
+              statusText: responseClone.statusText,
+              checkError,
+              parseError,
+            },
+          )
+        }
+        throw checkError
+      }
     })
 }
 

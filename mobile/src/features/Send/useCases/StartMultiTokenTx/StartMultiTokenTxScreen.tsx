@@ -5,7 +5,6 @@ import {useIsFocused} from '@react-navigation/native'
 import * as React from 'react'
 import {TextInput} from 'react-native'
 
-import {memoMaxLenght} from '~/features/Send/common/constants'
 import {AddressErrorWrongNetwork} from '~/features/Send/common/errors'
 import {useNextTick} from '~/features/Send/common/hooks/useNextTick'
 import {useNavigateTo} from '~/features/Send/common/navigation'
@@ -18,9 +17,7 @@ import {Button} from '~/ui/Button/Button'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {ScrollView} from '~/ui/ScrollView/ScrollView'
 import {useScrollView} from '~/ui/ScrollView/hooks/useScrollView'
-import {Space} from '~/ui/Space/Space'
 
-import {InputMemo} from './InputMemo/InputMemo'
 import {InputReceiver} from './InputReceiver/InputReceiver'
 import {NotifySupportedNameServers} from './NotifySupportedNameServers/NotifySupportedNameServers'
 import {SelectNameServer} from './SelectNameServer/SelectNameServer'
@@ -34,13 +31,7 @@ export const StartMultiTokenTxScreen = () => {
 
   const hasPendingTx = useHasPendingTx({wallet})
 
-  const {
-    targets,
-    selectedTargetIndex,
-    memo,
-    memoChanged,
-    receiverResolveChanged,
-  } = useTransfer()
+  const {targets, selectedTargetIndex, receiverResolveChanged} = useTransfer()
 
   const {scrollViewRef} = useScrollView()
 
@@ -64,8 +55,7 @@ export const StartMultiTokenTxScreen = () => {
   })
 
   const isValidAddress = addressValidated && !hasReceiverError
-  const hasMemoError = memo.length > memoMaxLenght
-  const canGoNext = !hasPendingTx && isValidAddress && !hasMemoError
+  const canGoNext = !hasPendingTx && isValidAddress
 
   const target = targets[selectedTargetIndex]
 
@@ -82,7 +72,6 @@ export const StartMultiTokenTxScreen = () => {
     if (!isFocused) return // prevent automatic calls when the screen is not focused. RN TextInput bug
     receiverResolveChanged(text)
   }
-  const handleOnChangeMemo = (text: string) => memoChanged(text)
 
   const inputRef = React.useRef<TextInput>(null)
   const focusOnReceiver = React.useCallback(() => inputRef.current?.focus(), [])
@@ -111,14 +100,6 @@ export const StartMultiTokenTxScreen = () => {
         />
 
         <SelectNameServer />
-
-        <Space.Height.lg />
-
-        <InputMemo
-          value={memo}
-          onChangeText={handleOnChangeMemo}
-          isValid={!hasMemoError}
-        />
       </ScrollView>
 
       <SafeArea.Footer>

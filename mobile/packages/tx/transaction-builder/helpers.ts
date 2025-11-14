@@ -1,6 +1,7 @@
 // Helper functions for TransactionBuilder
 // Utilities for creating certificates, filtering UTXOs, and handling metadata
-import {Portfolio} from '@yoroi/types'
+import {cardanoConfig} from '@yoroi/blockchains'
+import {Chain, Portfolio, Wallet} from '@yoroi/types'
 
 import type {
   Certificate,
@@ -8,7 +9,9 @@ import type {
   WasmModuleProxy,
 } from '@emurgo/cross-csl-core'
 
+import {CardanoHaskellConfig} from '../types'
 import {ModernUtxo} from '../utxo/models'
+import {TransactionBuilderState, buildTransaction} from './builder'
 
 /**
  * Create a stake registration certificate
@@ -201,16 +204,6 @@ export function selectUtxosForAmounts(
   // Import logger dynamically to avoid circular dependencies
   const logger = require('../../../src/kernel/logger/logger').logger
 
-  logger.info('selectUtxosForAmounts: Starting UTXO selection', {
-    availableUtxos: utxos.length,
-    requiredAmounts: Object.keys(requiredAmounts).map((tokenId) => ({
-      tokenId,
-      quantity: requiredAmounts[tokenId as Portfolio.Token.Id],
-    })),
-    primaryTokenId,
-    estimatedFee,
-  })
-
   // Calculate total required ADA (outputs + fee)
   const requiredAda =
     (Object.keys(requiredAmounts) as Array<Portfolio.Token.Id>).reduce(
@@ -224,20 +217,10 @@ export function selectUtxosForAmounts(
       BigInt(0),
     ) + BigInt(estimatedFee)
 
-  logger.info('selectUtxosForAmounts: Calculated required ADA', {
-    requiredAda: requiredAda.toString(),
-    estimatedFee,
-  })
-
   // Get all required token IDs (excluding primary token)
   const requiredTokenIds = new Set(
     Object.keys(requiredAmounts).filter((id) => id !== primaryTokenId),
   )
-
-  logger.info('selectUtxosForAmounts: Required token IDs', {
-    requiredTokenIds: Array.from(requiredTokenIds),
-    primaryTokenId,
-  })
 
   // First, find UTXOs that contain required tokens (must include these)
   const utxosWithTokens: ModernUtxo[] = []
@@ -254,11 +237,6 @@ export function selectUtxosForAmounts(
       utxosWithoutTokens.push(utxo)
     }
   }
-
-  logger.info('selectUtxosForAmounts: UTXO categorization', {
-    utxosWithTokens: utxosWithTokens.length,
-    utxosWithoutTokens: utxosWithoutTokens.length,
-  })
 
   // Calculate what we have from UTXOs with tokens
   const selected: ModernUtxo[] = [...utxosWithTokens]
@@ -305,14 +283,6 @@ export function selectUtxosForAmounts(
 
   // If we need more ADA, select from remaining UTXOs
   if (needsMoreAda) {
-    logger.info(
-      'selectUtxosForAmounts: Need more ADA, selecting additional UTXOs',
-      {
-        currentAda: selectedAda.toString(),
-        requiredAda: requiredAda.toString(),
-        remainingUtxos: utxosWithoutTokens.length,
-      },
-    )
     const sortedRemaining = sortUtxosByAda(utxosWithoutTokens, primaryTokenId)
 
     for (const utxo of sortedRemaining) {
@@ -321,18 +291,6 @@ export function selectUtxosForAmounts(
       selectedAda += BigInt(utxo.balance[primaryTokenId] || '0')
     }
   }
-
-  const finalSelectedAda = selected.reduce(
-    (sum, utxo) => sum + BigInt(utxo.balance[primaryTokenId] || '0'),
-    BigInt(0),
-  )
-
-  logger.info('selectUtxosForAmounts: UTXO selection completed', {
-    selectedCount: selected.length,
-    finalAda: finalSelectedAda.toString(),
-    requiredAda: requiredAda.toString(),
-    hasSufficientAda: finalSelectedAda >= requiredAda,
-  })
 
   return selected
 }
@@ -392,4 +350,81 @@ export function createCIP36VotingMetadata(
     label: 61284, // CIP-36 DATA label
     data: metadata,
   }
+}
+
+/**
+ * Convert protocol parameters to CardanoHaskellConfig
+ * This is a common pattern used across all transaction recipes
+ */
+export function createCardanoHaskellConfig(
+  protocolParams: Pick<
+    Chain.Cardano.ProtocolParams,
+    'keyDeposit' | 'linearFee' | 'coinsPerUtxoByte' | 'poolDeposit'
+  >,
+  networkId: number,
+): CardanoHaskellConfig {
+  return {
+    keyDeposit: protocolParams.keyDeposit,
+    linearFee: protocolParams.linearFee,
+    minimumUtxoVal: cardanoConfig.params.minUtxoValue.toString(),
+    coinsPerUtxoByte: protocolParams.coinsPerUtxoByte,
+    poolDeposit: protocolParams.poolDeposit,
+    networkId,
+  }
+}
+
+/**
+ * Recipe context containing common setup values
+ */
+export type RecipeContext = {
+  absSlotNumber: BigNumber
+  changeAddress: string
+  protocolConfig: CardanoHaskellConfig
+}
+
+/**
+ * Create recipe context with common setup values
+ * Handles async slot number fetching and protocol params conversion
+ */
+export async function createRecipeContext(params: {
+  getAbsoluteSlotNumber: () => Promise<BigNumber>
+  getChangeAddress: (addressMode: Wallet.AddressMode) => string
+  protocolParams: Chain.Cardano.ProtocolParams
+  networkId: number
+  addressMode: Wallet.AddressMode
+}): Promise<RecipeContext> {
+  const absSlotNumber = await params.getAbsoluteSlotNumber()
+  const changeAddress = params.getChangeAddress(params.addressMode)
+  const protocolConfig = createCardanoHaskellConfig(
+    params.protocolParams,
+    params.networkId,
+  )
+
+  return {
+    absSlotNumber,
+    changeAddress,
+    protocolConfig,
+  }
+}
+
+/**
+ * Build recipe transaction with consistent error handling
+ * Wraps buildTransaction with proper error checking and CBOR validation
+ */
+export async function buildRecipeTransaction(
+  builderState: TransactionBuilderState,
+  protocolConfig: CardanoHaskellConfig,
+  primaryTokenId: Portfolio.Token.Id,
+): Promise<{cbor: string}> {
+  const unsignedTx = await buildTransaction(
+    builderState,
+    protocolConfig,
+    primaryTokenId,
+  )
+
+  if (!unsignedTx.cbor) {
+    throw new Error('Transaction CBOR not available')
+  }
+
+  return {cbor: unsignedTx.cbor}
 }

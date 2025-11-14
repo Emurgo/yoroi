@@ -1568,6 +1568,7 @@ export const useStrings = () => {
         fromAddresses: f(transactionsMessages.fromAddresses),
         toAddresses: f(transactionsMessages.toAddresses),
         memo: f(transactionsMessages.memo),
+        date: f(transactionsMessages.date),
         transactionId: f(transactionsMessages.transactionId),
         txAssuranceLevel: f(transactionsMessages.txAssuranceLevel),
         confirmations: (cnt: number) =>

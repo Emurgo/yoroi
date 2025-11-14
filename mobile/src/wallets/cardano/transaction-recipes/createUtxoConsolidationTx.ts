@@ -1,15 +1,15 @@
 import {cardanoConfig} from '@yoroi/blockchains'
 import {
-  CardanoHaskellConfig,
   ModernUtxo,
   NoOutputsError,
   NotEnoughMoneyToSendError,
   addInputs,
   addOutput,
-  buildTransaction,
+  buildRecipeTransaction,
+  createCardanoHaskellConfig,
   createTransactionBuilder,
   setChangeAddress,
-  setTTL,
+  setTTLWithBuffer,
 } from '@yoroi/tx'
 import {App, Balance, Portfolio, Wallet} from '@yoroi/types'
 
@@ -83,14 +83,10 @@ export async function createUtxoConsolidationTx({
     }
   }
 
-  const protocolParamsConfig: CardanoHaskellConfig = {
-    keyDeposit: protocolParams.keyDeposit,
-    linearFee: protocolParams.linearFee,
-    minimumUtxoVal: cardanoConfig.params.minUtxoValue.toString(),
-    coinsPerUtxoByte: protocolParams.coinsPerUtxoByte,
-    poolDeposit: protocolParams.poolDeposit,
+  const protocolParamsConfig = createCardanoHaskellConfig(
+    protocolParams,
     networkId,
-  }
+  )
 
   const minUtxoValue = BigInt(cardanoConfig.params.minUtxoValue.toString())
   const hasTokens = Object.keys(consolidatedAmounts).length > 0
@@ -173,21 +169,15 @@ export async function createUtxoConsolidationTx({
     // Set change address
     builderState = setChangeAddress(builderState, changeAddress)
 
-    // Set TTL
-    builderState = setTTL(builderState, absSlotNumber.toNumber())
+    // Set TTL with buffer
+    builderState = setTTLWithBuffer(builderState, absSlotNumber.toNumber())
 
     // Build the transaction
-    const unsignedTx = await buildTransaction(
+    return await buildRecipeTransaction(
       builderState,
       protocolParamsConfig,
       primaryTokenId,
     )
-
-    if (!unsignedTx.cbor) {
-      throw new Error('Transaction CBOR not available')
-    }
-
-    return {cbor: unsignedTx.cbor}
   } catch (e) {
     if (e instanceof NotEnoughMoneyToSendError || e instanceof NoOutputsError)
       throw e

@@ -279,6 +279,19 @@ export function setTTL(
   }
 }
 
+/**
+ * Set TTL with a buffer to account for signing and submission delays
+ * Default buffer is 7200 slots (2 hours on mainnet, ~1 slot/second)
+ * This ensures transactions don't expire before they can be submitted
+ */
+export function setTTLWithBuffer(
+  state: TransactionBuilderState,
+  slotNumber: number,
+  bufferSlots: number = 7200,
+): TransactionBuilderState {
+  return setTTL(state, slotNumber + bufferSlots)
+}
+
 export function setValidityInterval(
   state: TransactionBuilderState,
   start: number,
@@ -370,12 +383,6 @@ function amountsToValue(
   const logger = require('../../../src/kernel/logger/logger').logger
 
   const adaAmount = amounts[primaryTokenId] || '0'
-  logger.info('amountsToValue: Creating value', {
-    adaAmount,
-    primaryTokenId,
-    tokenCount: Object.keys(amounts).filter((id) => id !== primaryTokenId)
-      .length,
-  })
 
   const adaBigNum = csl.BigNum.fromStr(adaAmount)
   if (!adaBigNum) {
@@ -397,9 +404,6 @@ function amountsToValue(
   const tokenIds = Object.keys(amounts).filter((id) => id !== primaryTokenId)
 
   if (tokenIds.length > 0) {
-    logger.info('amountsToValue: Processing multi-asset', {
-      assetCount: tokenIds.length,
-    })
     const multiAsset = csl.MultiAsset.new()
     if (!multiAsset) {
       logger.error('amountsToValue: Failed to create MultiAsset')
@@ -425,10 +429,6 @@ function amountsToValue(
         Array<{tokenId: Portfolio.Token.Id; assetNameHex: string}>
       >,
     )
-
-    logger.info('amountsToValue: Grouped assets by policy', {
-      policyCount: Object.keys(groupedByPolicyId).length,
-    })
 
     // Create MultiAsset structure
     for (const policyIdStr of Object.keys(groupedByPolicyId)) {
@@ -486,10 +486,6 @@ function amountsToValue(
         }
 
         multiAsset.insert(policyId, assets)
-        logger.info('amountsToValue: Policy assets added', {
-          policyIdStr,
-          assetCount: tokenGroup.length,
-        })
       } catch (error) {
         logger.error('amountsToValue: Error processing policy assets', {
           policyIdStr,
@@ -500,10 +496,8 @@ function amountsToValue(
     }
 
     value.setMultiasset(multiAsset)
-    logger.info('amountsToValue: MultiAsset set successfully')
   }
 
-  logger.info('amountsToValue: Value creation completed')
   return value
 }
 
@@ -518,12 +512,6 @@ function outputToCSL(
   // Import logger dynamically to avoid circular dependencies
   const logger = require('../../../src/kernel/logger/logger').logger
 
-  logger.info('outputToCSL: Converting output to CSL', {
-    address: output.address,
-    amountsCount: Object.keys(output.amounts).length,
-    primaryTokenId,
-  })
-
   const address = csl.Address.fromBech32(output.address)
   if (!address) {
     logger.error('outputToCSL: Invalid address', {
@@ -531,7 +519,6 @@ function outputToCSL(
     })
     throw new Error(`Invalid address: ${output.address}`)
   }
-  logger.info('outputToCSL: Address parsed successfully')
 
   const value = amountsToValue(csl, output.amounts, primaryTokenId)
   if (!value) {
@@ -541,7 +528,6 @@ function outputToCSL(
     })
     throw new Error(`Failed to create Value for address ${output.address}`)
   }
-  logger.info('outputToCSL: Value created successfully')
 
   const cslOutput = csl.TransactionOutput.new(address, value)
   if (!cslOutput) {
@@ -552,7 +538,6 @@ function outputToCSL(
       `Failed to create TransactionOutput for address ${output.address}`,
     )
   }
-  logger.info('outputToCSL: TransactionOutput created successfully')
 
   // Add datum if present
   if (output.datum) {
@@ -627,24 +612,9 @@ export async function buildTransaction(
   // Import logger dynamically to avoid circular dependencies
   const logger = require('../../../src/kernel/logger/logger').logger
 
-  logger.info('buildTransaction: Starting transaction build', {
-    inputsCount: state.inputs.length,
-    outputsCount: state.outputs.length,
-    certificatesCount: state.certificates.length,
-    withdrawalsCount: state.withdrawals.length,
-    metadataCount: state.metadata.length,
-    primaryTokenId,
-    hasChangeAddress: !!state.options.changeAddress,
-    hasManualFee: !!state.options.manualFee,
-    ttl: state.options.ttl,
-  })
-
   return CardanoMobileWrapped.cslScope((csl) => {
-    logger.info('buildTransaction: CSL scope entered')
-
     // Validate inputs
     validateInputs(state)
-    logger.info('buildTransaction: Input validation passed')
 
     // Basic validation
     if (state.outputs.length === 0) {
@@ -653,30 +623,17 @@ export async function buildTransaction(
     }
 
     // Create CSL TransactionBuilder
-    logger.info('buildTransaction: Creating CSL TransactionBuilder', {
-      networkId: protocolParams.networkId,
-      minimumUtxoVal: protocolParams.minimumUtxoVal,
-    })
     const cslTxBuilder = createCSLTransactionBuilder(csl, protocolParams)
     if (!cslTxBuilder) {
       logger.error('buildTransaction: Failed to create CSL TransactionBuilder')
       throw new Error('Failed to create CSL TransactionBuilder')
     }
-    logger.info('buildTransaction: CSL TransactionBuilder created successfully')
 
     // Add outputs first (CSL builder needs outputs to calculate fees)
-    logger.info('buildTransaction: Adding outputs', {
-      outputsCount: state.outputs.length,
-    })
     for (let i = 0; i < state.outputs.length; i++) {
       const output = state.outputs[i]
       if (!output) continue
       try {
-        logger.info('buildTransaction: Converting output to CSL', {
-          outputIndex: i,
-          address: output.address,
-          amountsCount: Object.keys(output.amounts).length,
-        })
         const cslOutput = outputToCSL(csl, output, primaryTokenId)
         if (!cslOutput) {
           logger.error('buildTransaction: Failed to create CSL output', {
@@ -686,9 +643,6 @@ export async function buildTransaction(
           throw new Error(`Failed to create CSL output for output ${i}`)
         }
         cslTxBuilder.addOutput(cslOutput)
-        logger.info('buildTransaction: Output added successfully', {
-          outputIndex: i,
-        })
       } catch (error) {
         logger.error('buildTransaction: Error adding output', {
           outputIndex: i,
@@ -701,9 +655,6 @@ export async function buildTransaction(
 
     // Add certificates
     if (state.certificates.length > 0) {
-      logger.info('buildTransaction: Adding certificates', {
-        certificatesCount: state.certificates.length,
-      })
       const certs = csl.Certificates.new()
       if (!certs) {
         logger.error('buildTransaction: Failed to create Certificates')
@@ -713,14 +664,10 @@ export async function buildTransaction(
         certs.add(cert.cert)
       }
       cslTxBuilder.setCerts(certs)
-      logger.info('buildTransaction: Certificates added successfully')
     }
 
     // Add withdrawals
     if (state.withdrawals.length > 0) {
-      logger.info('buildTransaction: Adding withdrawals', {
-        withdrawalsCount: state.withdrawals.length,
-      })
       const withdrawals = csl.Withdrawals.new()
       if (!withdrawals) {
         logger.error('buildTransaction: Failed to create Withdrawals')
@@ -772,33 +719,19 @@ export async function buildTransaction(
         }
       }
       cslTxBuilder.setWithdrawals(withdrawals)
-      logger.info('buildTransaction: Withdrawals added successfully')
     }
 
     // Set TTL
     if (state.options.ttl) {
-      logger.info('buildTransaction: Setting TTL', {
-        ttl: state.options.ttl,
-      })
       cslTxBuilder.setTtl(state.options.ttl)
     }
 
     // Add inputs (UTXOs) - CSL TransactionBuilder uses addRegularInput
-    logger.info('buildTransaction: Adding inputs', {
-      inputsCount: state.inputs.length,
-    })
     for (let i = 0; i < state.inputs.length; i++) {
       const input = state.inputs[i]
       if (!input) continue
       const utxo = input.utxo
       try {
-        logger.info('buildTransaction: Processing input', {
-          inputIndex: i,
-          txHash: utxo.txHash,
-          txIndex: utxo.txIndex,
-          receiver: utxo.receiver,
-        })
-
         const cslAddr = csl.Address.fromBech32(utxo.receiver)
         if (!cslAddr) {
           logger.error('buildTransaction: Invalid address for input', {
@@ -839,9 +772,6 @@ export async function buildTransaction(
         }
 
         cslTxBuilder.addRegularInput(cslAddr, txInput, cslAmount)
-        logger.info('buildTransaction: Input added successfully', {
-          inputIndex: i,
-        })
       } catch (error) {
         logger.error('buildTransaction: Error adding input', {
           inputIndex: i,
@@ -856,9 +786,6 @@ export async function buildTransaction(
     // Handle manual fee
     if (state.options.manualFee) {
       const feeAmount = state.options.manualFee[primaryTokenId] || '0'
-      logger.info('buildTransaction: Setting manual fee', {
-        feeAmount,
-      })
       const feeBigNum = csl.BigNum.fromStr(feeAmount)
       if (!feeBigNum) {
         logger.error(
@@ -874,7 +801,6 @@ export async function buildTransaction(
 
     // Handle change output
     if (state.options.manualChangeOutput) {
-      logger.info('buildTransaction: Adding manual change output')
       const cslChangeOutput = outputToCSL(
         csl,
         state.options.manualChangeOutput,
@@ -887,12 +813,6 @@ export async function buildTransaction(
       cslTxBuilder.addOutput(cslChangeOutput)
     } else if (state.options.changeAddress && !state.options.manualFee) {
       // Use CSL's automatic change handling
-      logger.info(
-        'buildTransaction: Adding change address for automatic change',
-        {
-          changeAddress: state.options.changeAddress,
-        },
-      )
       const changeAddr = csl.Address.fromBech32(state.options.changeAddress)
       if (!changeAddr) {
         logger.error('buildTransaction: Invalid change address', {
@@ -903,15 +823,11 @@ export async function buildTransaction(
         )
       }
       cslTxBuilder.addChangeIfNeeded(changeAddr)
-      logger.info('buildTransaction: Change address added successfully')
     }
 
     // Add metadata
     let auxData: any
     if (state.metadata.length > 0) {
-      logger.info('buildTransaction: Adding metadata', {
-        metadataCount: state.metadata.length,
-      })
       auxData = csl.AuxiliaryData.new()
       if (!auxData) {
         logger.error('buildTransaction: Failed to create AuxiliaryData')
@@ -968,17 +884,14 @@ export async function buildTransaction(
 
       auxData.setMetadata(metadataMap)
       cslTxBuilder.setAuxiliaryData(auxData)
-      logger.info('buildTransaction: Metadata added successfully')
     }
 
     // Build the transaction body
-    logger.info('buildTransaction: Building transaction body')
     const txBody = cslTxBuilder.build()
     if (!txBody) {
       logger.error('buildTransaction: Failed to build transaction body')
       throw new Error('Failed to build transaction body')
     }
-    logger.info('buildTransaction: Transaction body built successfully')
 
     // Handle reference inputs and collateral inputs
     // CSL TransactionBuilder doesn't support these directly
@@ -997,12 +910,6 @@ export async function buildTransaction(
       ? ({[primaryTokenId]: feeStr} as Balance.Amounts)
       : state.options.manualFee || {}
 
-    logger.info('buildTransaction: Fee calculation', {
-      fee: feeStr,
-      hasFee: !!feeBigNum,
-      manualFee: !!state.options.manualFee,
-    })
-
     // Validate sufficient funds
     const totalInput = calculateTotalInputValue(state.inputs)
     const totalOutput = calculateTotalOutputValue(
@@ -1012,14 +919,6 @@ export async function buildTransaction(
     const feeAda = BigInt(fee[primaryTokenId] || '0')
     const inputAda = BigInt(totalInput[primaryTokenId] || '0')
     const outputAda = BigInt(totalOutput[primaryTokenId] || '0')
-
-    logger.info('buildTransaction: Fund validation', {
-      inputAda: inputAda.toString(),
-      outputAda: outputAda.toString(),
-      feeAda: feeAda.toString(),
-      totalRequired: (outputAda + feeAda).toString(),
-      hasSufficientFunds: inputAda >= outputAda + feeAda,
-    })
 
     if (inputAda < outputAda + feeAda) {
       logger.error('buildTransaction: Insufficient funds', {
@@ -1034,7 +933,6 @@ export async function buildTransaction(
     // Create full transaction with empty witness set for CBOR serialization
     // A full transaction is [body, witness_set, auxiliary_data?]
     // We need to create a Transaction object, not just the body
-    logger.info('buildTransaction: Creating witness set')
     const emptyWitnessSet = csl.TransactionWitnessSet.new()
     if (!emptyWitnessSet) {
       logger.error('buildTransaction: Failed to create TransactionWitnessSet')
@@ -1043,9 +941,6 @@ export async function buildTransaction(
 
     // Create full transaction: [body, witness_set, auxiliary_data?]
     // auxData was already created above if metadata exists
-    logger.info('buildTransaction: Creating full transaction', {
-      hasAuxData: !!auxData,
-    })
     const fullTx = csl.Transaction.new(txBody, emptyWitnessSet, auxData)
     if (!fullTx) {
       logger.error('buildTransaction: Failed to create Transaction')
@@ -1053,18 +948,12 @@ export async function buildTransaction(
     }
 
     // Serialize full transaction to CBOR (not just the body)
-    logger.info('buildTransaction: Serializing transaction to CBOR')
     const txBytes = fullTx.toBytes()
     if (!txBytes || txBytes.length === 0) {
       logger.error('buildTransaction: Failed to serialize transaction to bytes')
       throw new Error('Failed to serialize transaction to bytes')
     }
     const cbor = Buffer.from(txBytes).toString('hex')
-
-    logger.info('buildTransaction: Transaction build completed successfully', {
-      cborLength: cbor.length,
-      cborLengthBytes: txBytes.length,
-    })
 
     return {
       inputs: state.inputs,

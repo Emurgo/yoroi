@@ -1,7 +1,7 @@
 import {isNft} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
-import {TransactionOutput, calculateTxId} from '@yoroi/tx'
+import {TransactionOutput} from '@yoroi/tx'
 import {Portfolio} from '@yoroi/types'
 
 import * as CSL from '@emurgo/cross-csl-core'
@@ -13,7 +13,6 @@ import {FlatList} from 'react-native-gesture-handler'
 import {useSearch} from '~/features/Search/SearchContext'
 import {useNavigateTo} from '~/features/Send/common/navigation'
 import {toTransactionOutput} from '~/features/Send/common/toTransactionOutput'
-import {useSaveMemo} from '~/features/Transactions/hooks/useSaveMemo'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {usePromise} from '~/hooks/usePromise'
 import {useStrings} from '~/kernel/i18n/useStrings'
@@ -27,7 +26,6 @@ import {RemoveAmountButton} from '~/ui/RemoveAmountButton/RemoveAmountButton'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {TokenAmountItem} from '~/ui/TokenAmountItem/TokenAmountItem'
 import {createSendTxFromWallet} from '~/wallets/cardano/transaction-recipes'
-import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
 
 export const ListAmountsToSendScreen = () => {
   const navigateTo = useNavigateTo()
@@ -37,14 +35,12 @@ export const ListAmountsToSendScreen = () => {
   const navigation = useNavigation()
   const {wallet} = useSelectedWallet()
   const {
-    memo,
     targets,
     selectedTargetIndex,
     tokenSelectedChanged,
     amountRemoved,
     reset,
   } = useTransfer()
-  const {saveMemo} = useSaveMemo({wallet})
 
   const selectedTarget = targets[selectedTargetIndex]
   const amounts = React.useMemo(() => {
@@ -80,24 +76,10 @@ export const ListAmountsToSendScreen = () => {
   }
 
   const handleOnSuccess = React.useCallback(
-    async (signedTx?: CSL.Transaction) => {
-      if (!signedTx) throw new Error('ListAmountsToSendScreen:: invalid state')
-      const txBytes = signedTx.toBytes()
-      const txId = await CardanoMobileWrapped.cslScope(async (csl) => {
-        return await calculateTxId(
-          csl,
-          Buffer.from(txBytes).toString('hex'),
-          'hex',
-        )
-      })
-
-      if (memo.length > 0) {
-        saveMemo({txId, memo: memo.trim()})
-      }
-
+    async (_signedTx?: CSL.Transaction) => {
       reset()
     },
-    [memo, saveMemo, reset],
+    [reset],
   )
 
   const handleOnAdd = () => {
@@ -108,16 +90,9 @@ export const ListAmountsToSendScreen = () => {
   const createUnsignedTxPromise = React.useCallback(
     async (entries: TransactionOutput[]) => {
       try {
-        logger.info('Send: Calling createSendTxFromWallet', {
-          entriesCount: entries.length,
-          addressMode,
-        })
         const result = await createSendTxFromWallet(wallet, {
           entries,
           addressMode,
-        })
-        logger.info('Send: createSendTxFromWallet succeeded', {
-          cborLength: result.cbor.length,
         })
         return result
       } catch (error) {
@@ -134,9 +109,6 @@ export const ListAmountsToSendScreen = () => {
 
   const handleCreateUnsignedTxSuccess = React.useCallback(
     (result: {cbor: string}) => {
-      logger.info('Send: Navigating to transaction review', {
-        cborLength: result.cbor.length,
-      })
       navigateToTxReview({
         cbor: result.cbor,
         onSuccess: (args) => handleOnSuccess(args?.signedTx),
@@ -155,15 +127,6 @@ export const ListAmountsToSendScreen = () => {
     if (!selectedTarget) return
 
     const transactionOutput = toTransactionOutput(selectedTarget.entry)
-    logger.info('Send: Creating unsigned transaction', {
-      outputAddress: transactionOutput.address,
-      outputAmounts: Object.keys(transactionOutput.amounts).map((tokenId) => ({
-        tokenId,
-        quantity: transactionOutput.amounts[tokenId],
-      })),
-      addressMode,
-    })
-
     createUnsignedTx([transactionOutput])
   }
   return (

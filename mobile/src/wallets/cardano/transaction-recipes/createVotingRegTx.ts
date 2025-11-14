@@ -1,15 +1,14 @@
-import {cardanoConfig} from '@yoroi/blockchains'
 import {
-  CardanoHaskellConfig,
   ModernUtxo,
   addInputs,
   addMetadata,
-  buildTransaction,
+  buildRecipeTransaction,
   createCIP15VotingMetadata,
   createCIP36VotingMetadata,
+  createCardanoHaskellConfig,
   createTransactionBuilder,
   setChangeAddress,
-  setTTL,
+  setTTLWithBuffer,
 } from '@yoroi/tx'
 import {Portfolio, Wallet} from '@yoroi/types'
 
@@ -67,14 +66,10 @@ export async function createVotingRegTx({
   }
   const changeAddress = getChangeAddress(addressMode)
 
-  const protocolParamsConfig: CardanoHaskellConfig = {
-    keyDeposit: protocolParams.keyDeposit,
-    linearFee: protocolParams.linearFee,
-    minimumUtxoVal: cardanoConfig.params.minUtxoValue.toString(),
-    coinsPerUtxoByte: protocolParams.coinsPerUtxoByte,
-    poolDeposit: protocolParams.poolDeposit,
+  const protocolParamsConfig = createCardanoHaskellConfig(
+    protocolParams,
     networkId,
-  }
+  )
 
   const nonce = absSlotNumber.toNumber()
 
@@ -137,21 +132,17 @@ export async function createVotingRegTx({
   // Set change address
   builderState = setChangeAddress(builderState, changeAddress)
 
-  // Set TTL
-  builderState = setTTL(builderState, absSlotNumber.toNumber())
+  // Set TTL with buffer
+  builderState = setTTLWithBuffer(builderState, absSlotNumber.toNumber())
 
   // Build the transaction
-  const unsignedTx = await buildTransaction(
+  const result = await buildRecipeTransaction(
     builderState,
     protocolParamsConfig,
     primaryTokenId,
   )
 
-  if (!unsignedTx.cbor) {
-    throw new Error('Transaction CBOR not available')
-  }
-
   return {
-    votingRegTx: {cbor: unsignedTx.cbor},
+    votingRegTx: {cbor: result.cbor},
   }
 }

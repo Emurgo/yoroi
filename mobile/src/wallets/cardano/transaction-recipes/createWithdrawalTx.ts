@@ -1,15 +1,14 @@
-import {cardanoConfig} from '@yoroi/blockchains'
 import {
-  CardanoHaskellConfig,
   ModernUtxo,
   addCertificate,
   addInputs,
   addWithdrawal,
-  buildTransaction,
+  buildRecipeTransaction,
+  createCardanoHaskellConfig,
   createStakeDeregistrationCertificate,
   createTransactionBuilder,
   setChangeAddress,
-  setTTL,
+  setTTLWithBuffer,
 } from '@yoroi/tx'
 import {Portfolio, Wallet} from '@yoroi/types'
 
@@ -54,14 +53,10 @@ export async function createWithdrawalTx({
   const changeAddress = getChangeAddress(addressMode)
   const accountState = await getAccountState([rewardAddressHex])
 
-  const protocolParamsConfig: CardanoHaskellConfig = {
-    keyDeposit: protocolParams.keyDeposit,
-    linearFee: protocolParams.linearFee,
-    minimumUtxoVal: cardanoConfig.params.minUtxoValue.toString(),
-    coinsPerUtxoByte: protocolParams.coinsPerUtxoByte,
-    poolDeposit: protocolParams.poolDeposit,
+  const protocolParamsConfig = createCardanoHaskellConfig(
+    protocolParams,
     networkId,
-  }
+  )
 
   // Get withdrawal amount from account state
   const rewards = accountState[rewardAddressHex]?.rewards || '0'
@@ -90,19 +85,13 @@ export async function createWithdrawalTx({
   // Set change address
   builderState = setChangeAddress(builderState, changeAddress)
 
-  // Set TTL
-  builderState = setTTL(builderState, absSlotNumber.toNumber())
+  // Set TTL with buffer
+  builderState = setTTLWithBuffer(builderState, absSlotNumber.toNumber())
 
   // Build the transaction
-  const unsignedTx = await buildTransaction(
+  return await buildRecipeTransaction(
     builderState,
     protocolParamsConfig,
     primaryTokenId,
   )
-
-  if (!unsignedTx.cbor) {
-    throw new Error('Transaction CBOR not available')
-  }
-
-  return {cbor: unsignedTx.cbor}
 }

@@ -26,6 +26,7 @@ export {
   setChangeOutput,
   setFee,
   setTTL,
+  setTTLWithBuffer,
   setValidityInterval,
   buildTransaction,
   buildTransactionCBOR,

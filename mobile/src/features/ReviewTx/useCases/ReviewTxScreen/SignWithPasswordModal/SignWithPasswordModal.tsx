@@ -101,7 +101,7 @@ export const SignWithPasswordModal = ({
           testID="confirmButton"
           title={strings.staking.sign}
           onPress={() => onSubmit?.(spendingPassword)}
-          disabled={spendingPassword.length === 0}
+          disabled={spendingPassword.length === 0 || isLoading}
         />
       </View>
 

@@ -35,6 +35,7 @@ export {
   setChangeOutput,
   setFee,
   setTTL,
+  setTTLWithBuffer,
   setValidityInterval,
   isTransactionReady,
   getTransactionState,
@@ -88,4 +89,12 @@ export {
 } from './utils/assets'
 export {calculateTxId, hashTransaction, getBalanceForStakingCredentials} from './utils/transactions'
 export {signTransaction} from './utils/signing'
+
+// Export recipe helpers
+export {
+  createCardanoHaskellConfig,
+  createRecipeContext,
+  buildRecipeTransaction,
+  type RecipeContext,
+} from './transaction-builder/helpers'
 
