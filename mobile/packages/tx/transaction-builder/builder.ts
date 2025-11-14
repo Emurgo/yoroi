@@ -617,7 +617,9 @@ export async function buildTransaction(
     validateInputs(state)
 
     // Basic validation
-    if (state.outputs.length === 0) {
+    // Allow transactions with no explicit outputs if they have a change address
+    // (CSL will create change outputs automatically)
+    if (state.outputs.length === 0 && !state.options.changeAddress) {
       logger.error('buildTransaction: No outputs in transaction')
       throw new NoOutputsError()
     }

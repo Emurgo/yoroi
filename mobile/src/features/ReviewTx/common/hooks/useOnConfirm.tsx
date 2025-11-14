@@ -198,8 +198,12 @@ export const useOnConfirm = ({
             const result = await submitTx(cbor, rootKey, wallet, meta)
             if (!result)
               throw new Error('useOnConfirm:: not possible to sign tx')
-            // txId is already calculated in submitTx
-            handleOnSuccess({rootKey, txId: result.txId})
+            // txId and signedTx are already calculated in submitTx
+            handleOnSuccess({
+              rootKey,
+              signedTx: result.signedTx,
+              txId: result.txId,
+            })
             return
           } catch (e) {
             handleOnError(e)
@@ -226,7 +230,7 @@ const submitTx = async (
   rootKey: string,
   wallet: YoroiWallet,
   meta: Wallet.Meta,
-): Promise<{signedTxBytes: Uint8Array; txId: string} | null> => {
+): Promise<{signedTx: Transaction; txId: string} | null> => {
   return CardanoMobileWrapped.cslScope(async (csl) => {
     const signers = await getTransactionSigners(cbor, wallet, meta)
     const keys = signers.map((signer) =>
@@ -234,6 +238,10 @@ const submitTx = async (
     )
     const signedTxBytes = await wallet.signRawTx(cbor, keys)
     if (!signedTxBytes) return null
+
+    // Create Transaction object from signed bytes
+    const signedTx = csl.Transaction.fromBytes(signedTxBytes)
+    if (!signedTx) return null
 
     // Calculate transaction ID from signed bytes (before submitting)
     const txId = await calculateTxId(
@@ -246,6 +254,6 @@ const submitTx = async (
     const hexBase64 = Buffer.from(signedTxBytes).toString('base64')
     await wallet.submitTransaction(hexBase64)
 
-    return {signedTxBytes, txId}
+    return {signedTx, txId}
   })
 }

@@ -7,6 +7,7 @@ import {
   createCardanoHaskellConfig,
   createStakeDeregistrationCertificate,
   createTransactionBuilder,
+  selectUtxosForAmount,
   setChangeAddress,
   setTTLWithBuffer,
 } from '@yoroi/tx'
@@ -61,11 +62,27 @@ export async function createWithdrawalTx({
   // Get withdrawal amount from account state
   const rewards = accountState[rewardAddressHex]?.rewards || '0'
 
+  // Estimate fee for withdrawal transaction
+  // Withdrawal transactions are typically small (~300-500 bytes)
+  const estimatedTxSize = 500 // bytes - conservative estimate
+  const estimatedFee =
+    BigInt(protocolParams.linearFee.constant) +
+    BigInt(protocolParams.linearFee.coefficient) * BigInt(estimatedTxSize)
+
+  // If deregistering, we need deposit + fee (deposit is returned as change)
+  // Otherwise, we just need fee
+  const requiredAda = shouldDeregister
+    ? (BigInt(protocolParams.keyDeposit) + estimatedFee).toString()
+    : estimatedFee.toString()
+
+  // Select only necessary UTXOs to cover fees (and deposit if deregistering)
+  const selectedUtxos = selectUtxosForAmount(utxos, requiredAda, primaryTokenId)
+
   // Build transaction using functional TransactionBuilder
   let builderState = createTransactionBuilder()
 
-  // Add all UTXOs as inputs
-  builderState = addInputs(builderState, utxos)
+  // Add only selected UTXOs as inputs
+  builderState = addInputs(builderState, selectedUtxos)
 
   // Add withdrawal
   if (BigInt(rewards) > 0n) {

@@ -9,6 +9,7 @@ import {
   createStakeDeregistrationCertificate,
   createStakeRegistrationCertificate,
   createTransactionBuilder,
+  selectUtxosForAmount,
   setChangeAddress,
   setTTLWithBuffer,
 } from '@yoroi/tx'
@@ -61,11 +62,28 @@ export async function createDelegationTx({
     networkId,
   )
 
+  // Estimate fee for delegation transaction
+  // Delegation transactions are typically small (~300-400 bytes)
+  // Fee = constant + (coefficient * tx_size_in_bytes)
+  const estimatedTxSize = 400 // bytes - conservative estimate
+  const estimatedFee =
+    BigInt(protocolParams.linearFee.constant) +
+    BigInt(protocolParams.linearFee.coefficient) * BigInt(estimatedTxSize)
+
+  // If registering, we need deposit + fee (deposit is returned as change)
+  // If delegating only, we just need fee
+  const requiredAda = registrationStatus
+    ? estimatedFee.toString() // Delegate only: just fee
+    : (BigInt(protocolParams.keyDeposit) + estimatedFee).toString() // Register + delegate: deposit + fee
+
+  // Select only necessary UTXOs to cover fees (and deposit if registering)
+  const selectedUtxos = selectUtxosForAmount(utxos, requiredAda, primaryTokenId)
+
   // Build transaction using functional TransactionBuilder
   let builderState = createTransactionBuilder()
 
-  // Add all UTXOs as inputs
-  builderState = addInputs(builderState, utxos)
+  // Add only selected UTXOs as inputs
+  builderState = addInputs(builderState, selectedUtxos)
 
   // Add certificates based on delegation type
   if (delegationType === RegistrationStatus.RegisterAndDelegate) {

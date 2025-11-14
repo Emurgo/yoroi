@@ -116,16 +116,23 @@ export const useGovernanceActions = () => {
     navigateToTxReview({
       cbor: unsignedTx.cbor,
       onSuccess: async (args) => {
-        if (!args?.signedTx)
-          throw new Error('useGovernanceActions:: invalid state')
-        const txBytes = args.signedTx.toBytes()
-        const txID = await CardanoMobileWrapped.cslScope(async (csl) => {
-          return await calculateTxId(
-            csl,
-            Buffer.from(txBytes).toString('hex'),
-            'hex',
-          )
-        })
+        // Calculate txId from signedTx if available, otherwise from unsigned CBOR
+        let txID: string
+        if (args?.signedTx) {
+          const txBytes = args.signedTx.toBytes()
+          txID = await CardanoMobileWrapped.cslScope(async (csl) => {
+            return await calculateTxId(
+              csl,
+              Buffer.from(txBytes).toString('hex'),
+              'hex',
+            )
+          })
+        } else {
+          // Calculate from unsigned CBOR (transaction body hash is the same)
+          txID = await CardanoMobileWrapped.cslScope(async (csl) => {
+            return await calculateTxId(csl, unsignedTx.cbor, 'hex')
+          })
+        }
         updateLatestGovernanceAction({
           kind: 'delegate-to-drep',
           hash,
@@ -153,16 +160,23 @@ export const useGovernanceActions = () => {
     navigateToTxReview({
       cbor: unsignedTx.cbor,
       onSuccess: async (args) => {
-        if (!args?.signedTx)
-          throw new Error('useGovernanceActions:: invalid state')
-        const txBytes = args.signedTx.toBytes()
-        const txID = await CardanoMobileWrapped.cslScope(async (csl) => {
-          return await calculateTxId(
-            csl,
-            Buffer.from(txBytes).toString('hex'),
-            'hex',
-          )
-        })
+        // Calculate txId from signedTx if available, otherwise from unsigned CBOR
+        let txID: string
+        if (args?.signedTx) {
+          const txBytes = args.signedTx.toBytes()
+          txID = await CardanoMobileWrapped.cslScope(async (csl) => {
+            return await calculateTxId(
+              csl,
+              Buffer.from(txBytes).toString('hex'),
+              'hex',
+            )
+          })
+        } else {
+          // Calculate from unsigned CBOR (transaction body hash is the same)
+          txID = await CardanoMobileWrapped.cslScope(async (csl) => {
+            return await calculateTxId(csl, unsignedTx.cbor, 'hex')
+          })
+        }
         updateLatestGovernanceAction({
           kind: 'vote',
           vote: 'abstain',
@@ -182,16 +196,23 @@ export const useGovernanceActions = () => {
     navigateToTxReview({
       cbor: unsignedTx.cbor,
       onSuccess: async (args) => {
-        if (!args?.signedTx)
-          throw new Error('useGovernanceActions:: invalid state')
-        const txBytes = args.signedTx.toBytes()
-        const txID = await CardanoMobileWrapped.cslScope(async (csl) => {
-          return await calculateTxId(
-            csl,
-            Buffer.from(txBytes).toString('hex'),
-            'hex',
-          )
-        })
+        // Calculate txId from signedTx if available, otherwise from unsigned CBOR
+        let txID: string
+        if (args?.signedTx) {
+          const txBytes = args.signedTx.toBytes()
+          txID = await CardanoMobileWrapped.cslScope(async (csl) => {
+            return await calculateTxId(
+              csl,
+              Buffer.from(txBytes).toString('hex'),
+              'hex',
+            )
+          })
+        } else {
+          // Calculate from unsigned CBOR (transaction body hash is the same)
+          txID = await CardanoMobileWrapped.cslScope(async (csl) => {
+            return await calculateTxId(csl, unsignedTx.cbor, 'hex')
+          })
+        }
         updateLatestGovernanceAction({
           kind: 'vote',
           vote: 'no-confidence',

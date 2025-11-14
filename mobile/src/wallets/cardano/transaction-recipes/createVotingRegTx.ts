@@ -7,6 +7,7 @@ import {
   createCIP36VotingMetadata,
   createCardanoHaskellConfig,
   createTransactionBuilder,
+  selectUtxosForAmount,
   setChangeAddress,
   setTTLWithBuffer,
 } from '@yoroi/tx'
@@ -93,11 +94,24 @@ export async function createVotingRegTx({
     throw new Error('Failed to convert reward address to bech32')
   }
 
+  // Estimate fee for voting registration transaction
+  // Voting registration transactions are typically small (~400-600 bytes)
+  const estimatedTxSize = 600 // bytes - conservative estimate
+  const estimatedFee =
+    BigInt(protocolParams.linearFee.constant) +
+    BigInt(protocolParams.linearFee.coefficient) * BigInt(estimatedTxSize)
+
+  // Voting registration doesn't require deposit, just fees
+  const requiredAda = estimatedFee.toString()
+
+  // Select only necessary UTXOs to cover fees
+  const selectedUtxos = selectUtxosForAmount(utxos, requiredAda, primaryTokenId)
+
   // Build transaction using functional TransactionBuilder
   let builderState = createTransactionBuilder()
 
-  // Add all UTXOs as inputs
-  builderState = addInputs(builderState, utxos)
+  // Add only selected UTXOs as inputs
+  builderState = addInputs(builderState, selectedUtxos)
 
   // Create and add voting metadata
   const votingPublicKeyBech32 = votingPublicKey.toBech32()

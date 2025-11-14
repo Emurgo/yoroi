@@ -7,6 +7,7 @@ import {
   buildRecipeTransaction,
   createCardanoHaskellConfig,
   createTransactionBuilder,
+  selectUtxosForAmount,
   setChangeAddress,
   setTTLWithBuffer,
 } from '@yoroi/tx'
@@ -48,12 +49,25 @@ export async function createUnsignedGovernanceTx({
     networkId,
   )
 
+  // Estimate fee for governance transaction
+  // Governance transactions are typically small (~400-600 bytes)
+  const estimatedTxSize = 600 // bytes - conservative estimate
+  const estimatedFee =
+    BigInt(protocolParams.linearFee.constant) +
+    BigInt(protocolParams.linearFee.coefficient) * BigInt(estimatedTxSize)
+
+  // Governance transactions don't require deposit, just fees
+  const requiredAda = estimatedFee.toString()
+
+  // Select only necessary UTXOs to cover fees
+  const selectedUtxos = selectUtxosForAmount(utxos, requiredAda, primaryTokenId)
+
   try {
     // Build transaction using functional TransactionBuilder
     let builderState = createTransactionBuilder()
 
-    // Add all UTXOs as inputs
-    builderState = addInputs(builderState, utxos)
+    // Add only selected UTXOs as inputs
+    builderState = addInputs(builderState, selectedUtxos)
 
     // Add voting certificates
     for (const cert of votingCertificates) {
