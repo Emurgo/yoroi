@@ -132,11 +132,24 @@ class CIP30Extension {
         currentCollateral.utxo && valueNum.lte(currentCollateral.utxo.amount)
 
       if (canUseCurrentCollateral && currentCollateral.utxo) {
-        const utxo = cardanoUtxoFromRemoteFormat(
-          csl,
-          rawUtxoToRemoteUnspentOutput(currentCollateral.utxo),
-        )
-        return [recreateTransactionUnspentOutput(utxo)]
+        try {
+          const utxo = cardanoUtxoFromRemoteFormat(
+            csl,
+            rawUtxoToRemoteUnspentOutput(currentCollateral.utxo),
+          )
+          return [recreateTransactionUnspentOutput(utxo)]
+        } catch (error) {
+          logger.error('Error converting collateral UTXO to CSL format', {
+            error: error instanceof Error ? error.message : String(error),
+            utxoIndex: currentCollateral.utxo.tx_index,
+            utxoAmount: currentCollateral.utxo.amount,
+            utxoAssetsCount: currentCollateral.utxo.assets?.length ?? 0,
+            utxoReceiver: currentCollateral.utxo.receiver,
+            txHash: currentCollateral.utxo.tx_hash,
+            txIndex: currentCollateral.utxo.tx_index,
+          })
+          throw error
+        }
       }
 
       const oneUtxoCollateral = _drawCollateralInOneUtxo(
@@ -325,11 +338,42 @@ const cardanoUtxoFromRemoteFormat = (
   csl: WasmModuleProxy,
   u: RemoteUnspentOutput,
 ): CSL.TransactionUnspentOutput => {
-  const input = csl.TransactionInput.new(
-    csl.TransactionHash.fromHex(u.txHash),
-    u.txIndex,
-  )
-  const value = csl.Value.new(csl.BigNum.fromStr(u.amount))
+  // Validate input data
+  if (!u.txHash || typeof u.txHash !== 'string') {
+    throw new Error(`Invalid txHash: ${u.txHash}`)
+  }
+  if (typeof u.txIndex !== 'number') {
+    throw new Error(`Invalid txIndex: ${u.txIndex}`)
+  }
+  if (!u.amount || typeof u.amount !== 'string') {
+    throw new Error(`Invalid amount: ${u.amount}`)
+  }
+  if (!u.receiver || typeof u.receiver !== 'string') {
+    throw new Error(`Invalid receiver: ${u.receiver}`)
+  }
+
+  const txHash = csl.TransactionHash.fromHex(u.txHash)
+  if (!txHash) {
+    throw new Error(`Failed to create TransactionHash from: ${u.txHash}`)
+  }
+
+  const input = csl.TransactionInput.new(txHash, u.txIndex)
+  if (!input) {
+    throw new Error(
+      `Failed to create TransactionInput for ${u.txHash}:${u.txIndex}`,
+    )
+  }
+
+  const amountBigNum = csl.BigNum.fromStr(u.amount)
+  if (!amountBigNum) {
+    throw new Error(`Failed to create BigNum from amount: ${u.amount}`)
+  }
+
+  const value = csl.Value.new(amountBigNum)
+  if (!value) {
+    throw new Error(`Failed to create Value from amount: ${u.amount}`)
+  }
+
   if ((u.assets || []).length > 0) {
     // Convert UtxoAsset[] (with assetId) to BaseAsset[] (with tokenId)
     // assetId is already in the format policyId.assetNameHex, so we can use it directly as tokenId
@@ -339,12 +383,33 @@ const cardanoUtxoFromRemoteFormat = (
       policyId: '', // Not needed for multiasset construction
       name: '', // Not needed for multiasset construction
     }))
-    value.setMultiasset(remoteAssetToMultiasset(baseAssets, csl))
+    const multiasset = remoteAssetToMultiasset(baseAssets, csl)
+    if (!multiasset) {
+      throw new Error('Failed to create MultiAsset')
+    }
+    value.setMultiasset(multiasset)
   }
+
   const receiver = csl.Address.fromBech32(u.receiver)
-  if (!receiver) throw new Error('Invalid receiver')
+  if (!receiver) {
+    throw new Error(`Invalid receiver address: ${u.receiver}`)
+  }
+
   const output = csl.TransactionOutput.new(receiver, value)
-  return csl.TransactionUnspentOutput.new(input, output)
+  if (!output) {
+    throw new Error(
+      `Failed to create TransactionOutput: Pointer is NULL for utxo ${u.txHash}:${u.txIndex}`,
+    )
+  }
+
+  const unspentOutput = csl.TransactionUnspentOutput.new(input, output)
+  if (!unspentOutput) {
+    throw new Error(
+      `Failed to create TransactionUnspentOutput for utxo ${u.txHash}:${u.txIndex}`,
+    )
+  }
+
+  return unspentOutput
 }
 
 const _getBalance = (
@@ -404,9 +469,22 @@ const _getUtxos = async (
   const valueStr = value?.trim() ?? ''
 
   if (valueStr.length === 0) {
-    const validUtxos = wallet.utxos.map((o) =>
-      cardanoUtxoFromRemoteFormat(csl, rawUtxoToRemoteUnspentOutput(o)),
-    )
+    const validUtxos = wallet.utxos.map((o) => {
+      try {
+        return cardanoUtxoFromRemoteFormat(csl, rawUtxoToRemoteUnspentOutput(o))
+      } catch (error) {
+        logger.error('Error converting UTXO to CSL format', {
+          error: error instanceof Error ? error.message : String(error),
+          utxoIndex: o.tx_index,
+          utxoAmount: o.amount,
+          utxoAssetsCount: o.assets?.length ?? 0,
+          utxoReceiver: o.receiver,
+          txHash: o.tx_hash,
+          txIndex: o.tx_index,
+        })
+        throw error
+      }
+    })
     return paginate(validUtxos, pagination)
   }
 
@@ -464,7 +542,22 @@ export const _getRequiredUtxos = async (
       unsignedTx,
       remoteUnspentOutputs,
     )
-    return requiredUtxos.map((o) => cardanoUtxoFromRemoteFormat(csl, o))
+    return requiredUtxos.map((o) => {
+      try {
+        return cardanoUtxoFromRemoteFormat(csl, o)
+      } catch (error) {
+        logger.error('Error converting UTXO to CSL format', {
+          error: error instanceof Error ? error.message : String(error),
+          utxoIndex: o.txIndex,
+          utxoAmount: o.amount,
+          utxoAssetsCount: o.assets?.length ?? 0,
+          utxoReceiver: o.receiver,
+          txHash: o.txHash,
+          txIndex: o.txIndex,
+        })
+        throw error
+      }
+    })
   } catch (e) {
     return null
   }
@@ -535,10 +628,23 @@ const _drawCollateralInOneUtxo = (
   if (!possibleCollateralId) return null
   const collateralUtxo = utxos.findById(possibleCollateralId)
   if (!collateralUtxo) return null
-  return cardanoUtxoFromRemoteFormat(
-    csl,
-    rawUtxoToRemoteUnspentOutput(collateralUtxo),
-  )
+  try {
+    return cardanoUtxoFromRemoteFormat(
+      csl,
+      rawUtxoToRemoteUnspentOutput(collateralUtxo),
+    )
+  } catch (error) {
+    logger.error('Error converting collateral UTXO to CSL format', {
+      error: error instanceof Error ? error.message : String(error),
+      utxoIndex: collateralUtxo.tx_index,
+      utxoAmount: collateralUtxo.amount,
+      utxoAssetsCount: collateralUtxo.assets?.length ?? 0,
+      utxoReceiver: collateralUtxo.receiver,
+      txHash: collateralUtxo.tx_hash,
+      txIndex: collateralUtxo.tx_index,
+    })
+    throw error
+  }
 }
 
 const _drawCollateralInMultipleUtxos = async (
