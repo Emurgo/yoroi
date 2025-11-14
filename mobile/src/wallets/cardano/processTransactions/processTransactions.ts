@@ -5,13 +5,13 @@
  * Legacy transaction processing logic. Kept temporarily for backward compatibility.
  */
 import {isArray, isString} from '@yoroi/common'
+import {CertificateKind} from '@yoroi/tx'
 import {Balance, Portfolio} from '@yoroi/types'
 
 import BigNumber from 'bignumber.js'
 
 import {
   BaseAsset,
-  CERTIFICATE_KIND,
   TRANSACTION_DIRECTION,
   TRANSACTION_STATUS,
   TRANSACTION_TYPE,
@@ -169,7 +169,7 @@ const calculateImplicitOutput = (
   let totalRewards = Quantities.zero
 
   for (const cert of tx.certificates) {
-    if (cert.kind !== CERTIFICATE_KIND.MOVE_INSTANTANEOUS_REWARDS) {
+    if (cert.kind !== CertificateKind.MoveInstantaneousRewardsCert) {
       continue
     }
 

@@ -166,52 +166,15 @@ export async function getRequiredSignersFromTransaction(
     }
   }
 
-  // Extract from certificates - get stake key hash from certificate
-  for (const certWrapper of unsignedTx.certificates) {
-    const cert = certWrapper.cert
-
-    // Check for stake registration
-    const stakeReg = cert.asStakeRegistration()
-    if (stakeReg && stakeReg.hasValue()) {
-      const stakeCred = stakeReg.stakeCredential()
-      const keyHash = stakeCred.toKeyhash()
-      if (keyHash) {
-        addKeyHash(keyHash.toHex())
-      }
-      continue
-    }
-
-    // Check for stake deregistration
-    const stakeDereg = cert.asStakeDeregistration()
-    if (stakeDereg && stakeDereg.hasValue()) {
-      const stakeCred = stakeDereg.stakeCredential()
-      const keyHash = stakeCred.toKeyhash()
-      if (keyHash) {
-        addKeyHash(keyHash.toHex())
-      }
-      continue
-    }
-
-    // Check for stake delegation
-    const stakeDeleg = cert.asStakeDelegation()
-    if (stakeDeleg && stakeDeleg.hasValue()) {
-      const stakeCred = stakeDeleg.stakeCredential()
-      const keyHash = stakeCred.toKeyhash()
-      if (keyHash) {
-        addKeyHash(keyHash.toHex())
-      }
-      continue
-    }
-
-    // Check for vote delegation (CIP-1694)
-    const voteDeleg = cert.asVoteDelegation()
-    if (voteDeleg) {
-      const stakeCred = voteDeleg.stakeCredential()
-      const keyHash = stakeCred.toKeyhash()
-      if (keyHash) {
-        addKeyHash(keyHash.toHex())
-      }
-      continue
+  // Extract from certificates - get stake key hash from certificate data
+  for (const certData of unsignedTx.certificates) {
+    // Certificate data contains the stake credential key hash (if applicable)
+    const stakeKeyHashHex =
+      'stakeCredentialKeyHashHex' in certData
+        ? certData.stakeCredentialKeyHashHex
+        : undefined
+    if (stakeKeyHashHex) {
+      addKeyHash(stakeKeyHashHex)
     }
   }
 

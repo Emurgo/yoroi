@@ -472,6 +472,7 @@ export const makeCardanoWallet = (
               {addresses},
               networkManager.legacyApiBaseUrl,
             ),
+          getDelegationStatus: () => this.getDelegationStatus(),
           shouldDeregister,
           addressMode,
         })
@@ -732,13 +733,14 @@ export const makeCardanoWallet = (
       }
 
       // Check for governance-related certificates (vote delegation, etc.)
-      for (const certWrapper of unsignedTx.certificates) {
-        const cert = certWrapper.cert
-        const voteDeleg = cert.asVoteDelegation()
-        const stakeVoteDeleg = cert.asStakeAndVoteDelegation()
+      // Certificates are now data objects, not CSL objects
+      for (const certData of unsignedTx.certificates) {
+        const certKind = 'kind' in certData ? certData.kind : 'unknown'
         if (
-          (voteDeleg != null && voteDeleg.hasValue()) ||
-          (stakeVoteDeleg != null && stakeVoteDeleg.hasValue())
+          certKind === 'VoteDelegation' ||
+          certKind === 'StakeAndVoteDelegation' ||
+          certKind === 'StakeVoteRegistrationAndDelegation' ||
+          certKind === 'VoteRegistrationAndDelegation'
         ) {
           needsStakingKey = true
           break

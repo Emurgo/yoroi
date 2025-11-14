@@ -1,11 +1,12 @@
+import {isHex} from '@yoroi/common'
 import {
+  CertificateKind,
   ModernUtxo,
   addCertificate,
   addInputs,
   addWithdrawal,
   buildRecipeTransaction,
   createCardanoHaskellConfig,
-  createStakeDeregistrationCertificate,
   createTransactionBuilder,
   selectUtxosForAmount,
   setChangeAddress,
@@ -15,8 +16,8 @@ import {Portfolio, Wallet} from '@yoroi/types'
 
 import type {PublicKey} from '@emurgo/cross-csl-core'
 
+import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
 import type {AccountStateResponse} from '~/wallets/types/other'
-import {CardanoMobile} from '~/wallets/wallets'
 
 export type CreateWithdrawalTxParams = {
   utxos: ModernUtxo[]
@@ -69,9 +70,11 @@ export async function createWithdrawalTx({
     BigInt(protocolParams.linearFee.constant) +
     BigInt(protocolParams.linearFee.coefficient) * BigInt(estimatedTxSize)
 
-  // If deregistering, we need deposit + fee (deposit is returned as change)
-  // Otherwise, we just need fee
-  const requiredAda = shouldDeregister
+  // In Conway era, withdrawals require a certificate that affects the rewards account
+  // If explicitly deregistering, we need deposit + fee (deposit is returned as change)
+  // Otherwise, we just need fee (certificate doesn't require deposit if not deregistering)
+  const requiresDeregistration = shouldDeregister
+  const requiredAda = requiresDeregistration
     ? (BigInt(protocolParams.keyDeposit) + estimatedFee).toString()
     : estimatedFee.toString()
 
@@ -84,19 +87,93 @@ export async function createWithdrawalTx({
   // Add only selected UTXOs as inputs
   builderState = addInputs(builderState, selectedUtxos)
 
-  // Add withdrawal
+  // Extract stake credential key hash - needed for certificate (Conway requirement)
+  // If we have rewards, extract from reward address; if deregistering without rewards, extract from staking key
+  let stakeCredentialKeyHashHex: string | undefined
+  let rewardAddressBech32: string | undefined
+
   if (BigInt(rewards) > 0n) {
-    builderState = addWithdrawal(builderState, rewardAddressHex, rewards)
+    // Convert reward address to bech32 and extract stake credential
+    const result = CardanoMobileWrapped.cslScope((csl) => {
+      let address
+      if (csl.ByronAddress.isValid(rewardAddressHex)) {
+        const byronAddr = csl.ByronAddress.fromBase58(rewardAddressHex)
+        address = byronAddr.toAddress()
+      } else {
+        const isHexAddr = isHex(rewardAddressHex)
+        address = isHexAddr
+          ? csl.Address.fromHex(rewardAddressHex)
+          : csl.Address.fromBech32(rewardAddressHex)
+      }
+      if (!address || address.isMalformed()) {
+        throw new Error(`Invalid reward address: ${rewardAddressHex}`)
+      }
+
+      const rewardAddr = csl.RewardAddress.fromAddress(address)
+      if (!rewardAddr) {
+        throw new Error(
+          `Failed to create RewardAddress from address: ${rewardAddressHex}`,
+        )
+      }
+      const stakeCred = rewardAddr.paymentCred()
+      if (!stakeCred) {
+        throw new Error(
+          `Failed to extract stake credential from reward address: ${rewardAddressHex}`,
+        )
+      }
+
+      const bech32 = address.toBech32(undefined)
+      if (!bech32) {
+        throw new Error(
+          `Failed to convert reward address to bech32: ${rewardAddressHex}`,
+        )
+      }
+
+      const keyHash = stakeCred.toKeyhash()
+      if (!keyHash) {
+        throw new Error(
+          `Reward address stake credential is not a key hash: ${rewardAddressHex}`,
+        )
+      }
+
+      return {
+        rewardAddressBech32: bech32,
+        stakeCredentialKeyHashHex: keyHash.toHex(),
+      }
+    })
+    rewardAddressBech32 = result.rewardAddressBech32
+    stakeCredentialKeyHashHex = result.stakeCredentialKeyHashHex
+  } else if (shouldDeregister) {
+    // No rewards but deregistering - extract from staking key
+    stakeCredentialKeyHashHex = CardanoMobileWrapped.cslScope(() => {
+      const keyHash = getStakingKey().hash()
+      return keyHash.toHex()
+    })
   }
 
-  // Add deregistration certificate if needed
-  if (shouldDeregister) {
-    const stakingKey = getStakingKey()
-    const deregCert = createStakeDeregistrationCertificate(
-      CardanoMobile,
-      stakingKey,
-    )
-    builderState = addCertificate(builderState, deregCert)
+  // Add withdrawal if we have rewards
+  if (rewardAddressBech32) {
+    builderState = addWithdrawal(builderState, rewardAddressBech32, rewards)
+
+    // Only add certificate when explicitly deregistering (matches yoroi-lib behavior)
+    // Normal withdrawals don't require certificates
+    if (shouldDeregister) {
+      if (!stakeCredentialKeyHashHex) {
+        throw new Error(
+          'Cannot create withdrawal transaction: failed to extract stake credential from reward address',
+        )
+      }
+      builderState = addCertificate(builderState, {
+        kind: CertificateKind.StakeDeregistration,
+        stakeCredentialKeyHashHex,
+      })
+    }
+  } else if (shouldDeregister && stakeCredentialKeyHashHex) {
+    // No rewards but deregistering - add deregistration certificate
+    builderState = addCertificate(builderState, {
+      kind: CertificateKind.StakeDeregistration,
+      stakeCredentialKeyHashHex,
+    })
   }
 
   // Set change address

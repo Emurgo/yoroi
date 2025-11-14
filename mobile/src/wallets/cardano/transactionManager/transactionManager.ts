@@ -1,5 +1,6 @@
 import {PromiseAllLimited, isArray, parseSafe} from '@yoroi/common'
 import {RemoteCertificateMeta} from '@yoroi/staking'
+import {CertificateKind} from '@yoroi/tx'
 import {App} from '@yoroi/types'
 
 import {fromPairs, mapValues, max} from 'lodash'
@@ -8,7 +9,6 @@ import {defaultMemoize} from 'reselect'
 
 import {logger} from '~/kernel/logger/logger'
 import {
-  CERTIFICATE_KIND,
   RawTransaction,
   TRANSACTION_STATUS,
   Transactions,
@@ -430,7 +430,7 @@ const perAddressTxsSelector = (state: TransactionManagerState) => {
     addressToTxs[addr] = [...cleared, txId]
   }
 
-  Object.values(transactions).forEach((tx) => {
+  Object.values(transactions).forEach((tx: WalletTransaction) => {
     tx.inputs.forEach(({address}) => addTxTo(tx.id, address))
     tx.outputs.forEach(({address}) => addTxTo(tx.id, address))
   })
@@ -474,12 +474,12 @@ const perAddressCertificatesSelector = (
     }
   }
 
-  Object.values(transactions).forEach((tx) => {
+  Object.values(transactions).forEach((tx: WalletTransaction) => {
     tx.certificates.forEach((cert) => {
       if (
-        cert.kind === CERTIFICATE_KIND.STAKE_REGISTRATION ||
-        cert.kind === CERTIFICATE_KIND.STAKE_DEREGISTRATION ||
-        cert.kind === CERTIFICATE_KIND.STAKE_DELEGATION
+        cert.kind === CertificateKind.StakeRegistration ||
+        cert.kind === CertificateKind.StakeDeregistration ||
+        cert.kind === CertificateKind.StakeDelegation
       ) {
         const {rewardAddress} = cert as any
         addTxTo(tx.id, tx.certificates, tx.submittedAt, tx.epoch, rewardAddress)

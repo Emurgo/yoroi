@@ -30,25 +30,6 @@ export type RawUtxo = {
   readonly utxo_id: string
   readonly assets: ReadonlyArray<RemoteAsset>
 }
-export const CERTIFICATE_KIND = {
-  STAKE_REGISTRATION: 'StakeRegistration',
-  STAKE_DEREGISTRATION: 'StakeDeregistration',
-  STAKE_DELEGATION: 'StakeDelegation',
-  POOL_REGISTRATION: 'PoolRegistration',
-  POOL_RETIREMENT: 'PoolRetirement',
-  GENESIS_KEY_DELEGATION: 'GenesisKeyDelegation',
-  MOVE_INSTANTANEOUS_REWARDS: 'MoveInstantaneousRewardsCert',
-  COMMITTEE_HOT_AUTH: 'CommitteeHotAuth',
-  COMMITTEE_COLD_RESIGN: 'CommitteeColdResign',
-  DREP_DEREGISTRATION: 'DRepDeregistration',
-  DREP_REGISTRATION: 'DRepRegistration',
-  DREP_UPDATE: 'DRepUpdate',
-  STAKE_AND_VOTE_DELEGATION: 'StakeAndVoteDelegation',
-  STAKE_REGISTRATION_AND_DELEGATION: 'StakeRegistrationAndDelegation',
-  STAKE_VOTE_REGISTRATION_AND_DELEGATION: 'StakeVoteRegistrationAndDelegation',
-  VOTE_DELEGATION: 'VoteDelegation',
-  VOTE_REGISTRATION_AND_DELEGATION: 'VoteRegistrationAndDelegation',
-} as const
 // getAccountState
 export type AccountStateRequest = {
   addresses: Array<string>

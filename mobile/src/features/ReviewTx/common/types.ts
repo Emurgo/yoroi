@@ -1,3 +1,4 @@
+import {CertificateKind} from '@yoroi/tx'
 import {Balance, Portfolio} from '@yoroi/types'
 
 import {
@@ -101,28 +102,9 @@ export type FormattedCertificate =
   | Transformed<CertificateJSON>
   | MinimalCertificate
 
-export const CertificateType = {
-  StakeRegistration: 'StakeRegistration', //
-  StakeDeregistration: 'StakeDeregistration', //
-  StakeDelegation: 'StakeDelegation', //
-  PoolRegistration: 'PoolRegistration', //
-  PoolRetirement: 'PoolRetirement', //
-  GenesisKeyDelegation: 'GenesisKeyDelegation', //
-  MoveInstantaneousRewardsCert: 'MoveInstantaneousRewardsCert', //
-  CommitteeHotAuth: 'CommitteeHotAuth', //
-  CommitteeColdResign: 'CommitteeColdResign', //
-  DRepDeregistration: 'DRepDeregistration', //
-  DRepRegistration: 'DRepRegistration', //
-  DRepUpdate: 'DRepUpdate', //
-  VoteDelegation: 'VoteDelegation', //
-  StakeAndVoteDelegation: 'StakeAndVoteDelegation', // NO
-  StakeRegistrationAndDelegation: 'StakeRegistrationAndDelegation', // NO
-  StakeVoteRegistrationAndDelegation: 'StakeVoteRegistrationAndDelegation', // NO
-  VoteRegistrationAndDelegation: 'VoteRegistrationAndDelegation', // NO
-} as const
-
-export type CertificateType =
-  (typeof CertificateType)[keyof typeof CertificateType]
+// Re-export CertificateKind from @yoroi/tx as CertificateType for backward compatibility
+export const CertificateType = CertificateKind
+export type CertificateType = CertificateKind
 
 // Makes sure CertificateType lists all the certificates in CertificateJSON
 export type AssertAllImplementedCertTypes = AssertEqual<

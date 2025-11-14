@@ -8,6 +8,7 @@ import type {
   Withdrawals,
 } from '@emurgo/cross-csl-core'
 
+import {createCertificateFromData} from '../transaction-builder/helpers'
 import {UnsignedTransaction} from '../transaction-builder/types'
 import {Addressing, AddressingAddress} from '../types'
 
@@ -103,12 +104,16 @@ export function adaptToLedgerUnsignedTx(
     }
   }
 
-  // Extract certificates
+  // Extract certificates - create CSL Certificate objects from certificate data within this CSL scope
+  // NOTE: This duplicates the logic from builder.ts to avoid CSL instance mixing
+  // Both functions create certificates within their own CSL scopes
   let certificates: Certificates | null = null
   if (unsignedTx.certificates.length > 0) {
     certificates = csl.Certificates.new()
-    for (const certWrapper of unsignedTx.certificates) {
-      certificates.add(certWrapper.cert)
+    for (const certData of unsignedTx.certificates) {
+      // Create certificate using shared helper
+      const cslCert = createCertificateFromData(csl, certData)
+      certificates.add(cslCert)
     }
   }
 

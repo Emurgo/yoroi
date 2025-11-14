@@ -1,86 +1,84 @@
 // API-related types for staking
+import {CertificateKind, DRepValue} from '@yoroi/tx'
 
-export type DRepValue =
-  | 'AlwaysAbstain'
-  | 'AlwaysNoConfidence'
-  | {KeyHash: string}
-  | {ScriptHash: string}
+// Re-export DRepValue from @yoroi/tx
+export type {DRepValue}
 
 export type RemoteCertificateMeta =
   | {
-      kind: 'StakeRegistration'
+      kind: typeof CertificateKind.StakeRegistration
       rewardAddress: string // hex
     }
   | {
-      kind: 'StakeDeregistration'
+      kind: typeof CertificateKind.StakeDeregistration
       rewardAddress: string // hex
     }
   | {
-      kind: 'StakeDelegation'
+      kind: typeof CertificateKind.StakeDelegation
       rewardAddress: string // hex
       poolKeyHash: string // hex
     }
   | {
-      kind: 'PoolRegistration'
-      poolParams: Record<string, unknown> // we don't care about this for now
+      kind: typeof CertificateKind.PoolRegistration
+      poolParams: Record<string, unknown>
     }
   | {
-      kind: 'PoolRetirement'
+      kind: typeof CertificateKind.PoolRetirement
       poolKeyHash: string // hex
     }
   | {
-      kind: 'MoveInstantaneousRewardsCert'
+      kind: typeof CertificateKind.MoveInstantaneousRewardsCert
       rewards: Record<string, string>
       pot: 0 | 1
     }
   | {
-      kind: 'GenesisKeyDelegation'
+      kind: typeof CertificateKind.GenesisKeyDelegation
       rewardAddress?: string // hex
     }
   | {
-      kind: 'CommitteeHotAuth'
+      kind: typeof CertificateKind.CommitteeHotAuth
       rewardAddress?: string // hex
     }
   | {
-      kind: 'CommitteeColdResign'
+      kind: typeof CertificateKind.CommitteeColdResign
       rewardAddress?: string // hex
     }
   | {
-      kind: 'DRepDeregistration'
+      kind: typeof CertificateKind.DRepDeregistration
       rewardAddress?: string // hex
     }
   | {
-      kind: 'DRepRegistration'
+      kind: typeof CertificateKind.DRepRegistration
       rewardAddress?: string // hex
     }
   | {
-      kind: 'DRepUpdate'
+      kind: typeof CertificateKind.DRepUpdate
       rewardAddress?: string // hex
     }
   | {
-      kind: 'VoteDelegation'
+      kind: typeof CertificateKind.VoteDelegation
       rewardAddress?: string // hex
       drep?: DRepValue | null
     }
   | {
-      kind: 'StakeAndVoteDelegation'
+      kind: typeof CertificateKind.StakeAndVoteDelegation
       rewardAddress?: string // hex
       poolKeyHash?: string // hex
       drep?: DRepValue | null
     }
   | {
-      kind: 'StakeRegistrationAndDelegation'
+      kind: typeof CertificateKind.StakeRegistrationAndDelegation
       rewardAddress?: string // hex
       poolKeyHash?: string // hex
     }
   | {
-      kind: 'StakeVoteRegistrationAndDelegation'
+      kind: typeof CertificateKind.StakeVoteRegistrationAndDelegation
       rewardAddress?: string // hex
       poolKeyHash?: string // hex
       drep?: DRepValue | null
     }
   | {
-      kind: 'VoteRegistrationAndDelegation'
+      kind: typeof CertificateKind.VoteRegistrationAndDelegation
       rewardAddress?: string // hex
       drep?: DRepValue | null
     }

@@ -12,6 +12,7 @@ import {
   FormattedTx,
   TransactionBody,
 } from '~/features/ReviewTx/common/types'
+import {logger} from '~/kernel/logger/logger'
 import {useUnsafeParams} from '~/kernel/navigation/hooks/useUnsafeParams'
 import {ReviewTxRoutes} from '~/kernel/navigation/types'
 
@@ -116,6 +117,51 @@ export const ReviewTxScreen = () => {
     txBody,
     cbor: params?.cbor ?? null,
   })
+
+  // Log certificates and withdrawals for debugging (especially for withdrawal transactions)
+  React.useEffect(() => {
+    if (!txBody || isLoading) return
+
+    const certs = txBody.certs ?? []
+    const withdrawals = txBody.withdrawals ?? {}
+
+    logger.info('ReviewTx: Transaction details', {
+      context: params?.context,
+      certificates: {
+        count: certs.length,
+        types: certs.map((cert) => {
+          const entry = Object.entries(cert)[0]
+          return entry ? entry[0] : 'unknown'
+        }),
+        details: certs.map((cert) => {
+          const entry = Object.entries(cert)[0]
+          if (!entry) return null
+          const [type, certificate] = entry
+          return {
+            type,
+            // Extract relevant fields based on certificate type
+            stakeCredential:
+              'stake_credential' in certificate
+                ? certificate.stake_credential
+                : undefined,
+            poolKeyHash:
+              'pool_keyhash' in certificate
+                ? certificate.pool_keyhash
+                : undefined,
+            drep: 'drep' in certificate ? certificate.drep : undefined,
+          }
+        }),
+      },
+      withdrawals: {
+        count: Object.keys(withdrawals).length,
+        addresses: Object.keys(withdrawals),
+        amounts: Object.entries(withdrawals).map(([addr, amount]) => ({
+          address: addr,
+          amount: amount,
+        })),
+      },
+    })
+  }, [txBody, isLoading, params?.context])
 
   const hasTrackedReviewViewRef = React.useRef(false)
 

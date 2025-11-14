@@ -4,7 +4,6 @@ import {Balance, Portfolio} from '@yoroi/types'
 import type {
   TransactionBuilder as CSLTransactionBuilder,
   TransactionOutput as CSLTransactionOutput,
-  Certificate,
   Value,
   WasmModuleProxy,
 } from '@emurgo/cross-csl-core'
@@ -15,7 +14,8 @@ import {CardanoMobileWrapped} from '../../../src/wallets/cardano/wrappedCsl'
 import {NoOutputsError, NotEnoughMoneyToSendError} from '../errors'
 import {CardanoHaskellConfig, Datum} from '../types'
 import {ModernUtxo} from '../utxo/models'
-import {
+import {createCertificateFromData} from './helpers'
+import type {
   TransactionCertificate,
   TransactionInput,
   TransactionMetadata,
@@ -129,17 +129,17 @@ export function addOutputs(
 // Certificate operations
 export function addCertificate(
   state: TransactionBuilderState,
-  cert: Certificate,
+  cert: TransactionCertificate,
 ): TransactionBuilderState {
   return {
     ...state,
-    certificates: [...state.certificates, {cert}],
+    certificates: [...state.certificates, cert],
   }
 }
 
 export function addCertificates(
   state: TransactionBuilderState,
-  certs: Certificate[],
+  certs: TransactionCertificate[],
 ): TransactionBuilderState {
   return certs.reduce((acc, cert) => addCertificate(acc, cert), state)
 }
@@ -656,19 +656,38 @@ export async function buildTransaction(
     }
 
     // Add certificates
+    // NOTE: In Conway era, withdrawals require certificates that match the reward account credential
+    // Certificates must be added BEFORE withdrawals to satisfy this requirement
+    // Create CSL Certificate objects from certificate data within this CSL scope
     if (state.certificates.length > 0) {
       const certs = csl.Certificates.new()
       if (!certs) {
         logger.error('buildTransaction: Failed to create Certificates')
         throw new Error('Failed to create Certificates')
       }
-      for (const cert of state.certificates) {
-        certs.add(cert.cert)
+      for (let i = 0; i < state.certificates.length; i++) {
+        const certData = state.certificates[i]
+        if (!certData) continue
+        try {
+          // Create certificate using shared helper
+          const cslCert = createCertificateFromData(csl, certData)
+          certs.add(cslCert)
+        } catch (error) {
+          const certKind = 'kind' in certData ? certData.kind : 'unknown'
+          logger.error('buildTransaction: Error adding certificate', {
+            certificateIndex: i,
+            certificateKind: certKind,
+            error: error instanceof Error ? error.message : String(error),
+          })
+          throw error
+        }
       }
       cslTxBuilder.setCerts(certs)
     }
 
     // Add withdrawals
+    // NOTE: Certificates are only required when explicitly deregistering (matches yoroi-lib behavior)
+    // Normal withdrawals don't require certificates
     if (state.withdrawals.length > 0) {
       const withdrawals = csl.Withdrawals.new()
       if (!withdrawals) {
@@ -699,6 +718,67 @@ export async function buildTransaction(
               `Invalid reward address: ${withdrawal.rewardAddress}`,
             )
           }
+          // If certificates are present (e.g., when deregistering), validate they match the withdrawal
+          // Normal withdrawals don't require certificates, so we only validate if certificates exist
+          if (state.certificates.length > 0) {
+            const withdrawalStakeCred = rewardAddr.paymentCred()
+            const withdrawalKeyHash = withdrawalStakeCred?.toKeyhash()
+            const withdrawalKeyHashHex = withdrawalKeyHash?.toHex()
+
+            if (!withdrawalKeyHashHex) {
+              logger.error(
+                'buildTransaction: Failed to extract stake credential from withdrawal',
+                {
+                  withdrawalIndex: i,
+                  rewardAddress: withdrawal.rewardAddress,
+                },
+              )
+              throw new Error(
+                `Failed to extract stake credential from withdrawal reward address: ${withdrawal.rewardAddress}`,
+              )
+            }
+
+            // Verify that at least one certificate matches this withdrawal's stake credential
+            let hasMatchingCert = false
+            for (const certData of state.certificates) {
+              const certStakeKeyHashHex =
+                'stakeCredentialKeyHashHex' in certData
+                  ? certData.stakeCredentialKeyHashHex
+                  : undefined
+              if (certStakeKeyHashHex === withdrawalKeyHashHex) {
+                hasMatchingCert = true
+                break
+              }
+            }
+
+            if (!hasMatchingCert) {
+              logger.error(
+                'buildTransaction: No matching certificate for withdrawal',
+                {
+                  withdrawalIndex: i,
+                  rewardAddress: withdrawal.rewardAddress,
+                  withdrawalKeyHashHex,
+                  certificateCount: state.certificates.length,
+                  certificateKinds: state.certificates.map((c) =>
+                    'kind' in c ? c.kind : 'unknown',
+                  ),
+                  certificateStakeKeyHashes: state.certificates
+                    .map((c) =>
+                      'stakeCredentialKeyHashHex' in c
+                        ? c.stakeCredentialKeyHashHex
+                        : undefined,
+                    )
+                    .filter((h): h is string => h !== undefined),
+                },
+              )
+              throw new Error(
+                `No matching certificate for withdrawal reward address: ${withdrawal.rewardAddress}. ` +
+                  `Withdrawal requires a certificate with stake credential matching key hash: ${withdrawalKeyHashHex}. ` +
+                  `Found ${state.certificates.length} certificate(s) but none match.`,
+              )
+            }
+          }
+
           const amount = csl.BigNum.fromStr(withdrawal.amount)
           if (!amount) {
             logger.error(

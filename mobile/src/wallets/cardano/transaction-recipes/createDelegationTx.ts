@@ -1,13 +1,11 @@
 import {
+  CertificateKind,
   ModernUtxo,
   RegistrationStatus,
   addCertificate,
   addInputs,
   buildRecipeTransaction,
   createCardanoHaskellConfig,
-  createStakeDelegationCertificate,
-  createStakeDeregistrationCertificate,
-  createStakeRegistrationCertificate,
   createTransactionBuilder,
   selectUtxosForAmount,
   setChangeAddress,
@@ -17,7 +15,7 @@ import {Portfolio, Wallet} from '@yoroi/types'
 
 import type {PublicKey} from '@emurgo/cross-csl-core'
 
-import {CardanoMobile} from '~/wallets/wallets'
+import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
 
 export type CreateDelegationTxParams = {
   utxos: ModernUtxo[]
@@ -85,31 +83,34 @@ export async function createDelegationTx({
   // Add only selected UTXOs as inputs
   builderState = addInputs(builderState, selectedUtxos)
 
-  // Add certificates based on delegation type
+  // Extract stake credential key hash from staking key (store as data, not CSL object)
+  const stakeKeyHashHex = CardanoMobileWrapped.cslScope(() => {
+    const keyHash = stakingKey.hash()
+    return keyHash.toHex()
+  })
+
+  // Add certificates based on delegation type (store as data, not CSL objects)
   if (delegationType === RegistrationStatus.RegisterAndDelegate) {
     // Register staking key first
-    const regCert = createStakeRegistrationCertificate(
-      CardanoMobile,
-      stakingKey,
-    )
-    builderState = addCertificate(builderState, regCert)
+    builderState = addCertificate(builderState, {
+      kind: CertificateKind.StakeRegistration,
+      stakeCredentialKeyHashHex: stakeKeyHashHex,
+    })
   }
 
   if (poolId) {
     // Delegate to pool
-    const delegCert = createStakeDelegationCertificate(
-      CardanoMobile,
-      stakingKey,
-      poolId,
-    )
-    builderState = addCertificate(builderState, delegCert)
+    builderState = addCertificate(builderState, {
+      kind: CertificateKind.StakeDelegation,
+      stakeCredentialKeyHashHex: stakeKeyHashHex,
+      poolKeyHash: poolId,
+    })
   } else {
     // Deregister (no pool means deregistration)
-    const deregCert = createStakeDeregistrationCertificate(
-      CardanoMobile,
-      stakingKey,
-    )
-    builderState = addCertificate(builderState, deregCert)
+    builderState = addCertificate(builderState, {
+      kind: CertificateKind.StakeDeregistration,
+      stakeCredentialKeyHashHex: stakeKeyHashHex,
+    })
   }
 
   // Set change address

@@ -1,8 +1,8 @@
+import {CertificateKind} from '@yoroi/tx'
 import {Balance, Portfolio} from '@yoroi/types'
 
 import {
   BaseAsset,
-  CERTIFICATE_KIND,
   TRANSACTION_DIRECTION,
   TRANSACTION_TYPE,
   TransactionDirection,
@@ -78,7 +78,7 @@ const calculateImplicitOutput = (
   let totalRewards = Quantities.zero
 
   for (const cert of tx.certificates) {
-    if (cert.kind !== CERTIFICATE_KIND.MOVE_INSTANTANEOUS_REWARDS) {
+    if (cert.kind !== CertificateKind.MoveInstantaneousRewardsCert) {
       continue
     }
 
