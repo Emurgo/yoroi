@@ -152,15 +152,6 @@ export const walletTransactionToSummary = (
     ? collateral.filter((input) => ownAddresses.includes(input.address))
     : []
 
-  // Convert withdrawals to input format for accounting
-  const accountingInputs = isInvalidScriptExecution
-    ? []
-    : tx.withdrawals.map((withdrawal) => ({
-        address: withdrawal.address,
-        amount: withdrawal.amount,
-        assets: [],
-      }))
-
   // Filter own addresses
   const ownUtxoInputs = utxoInputs.filter((input) =>
     ownAddresses.includes(input.address),
@@ -177,21 +168,6 @@ export const walletTransactionToSummary = (
     primaryTokenId,
   )
 
-  // Combine all inputs and outputs
-  const unifiedInputs = [
-    ...utxoInputs,
-    ...accountingInputs,
-    ...ownUtxoCollateralInputs,
-  ]
-  const unifiedOutputs = [...utxoOutputs]
-
-  const ownInputs = unifiedInputs.filter((input) =>
-    ownAddresses.includes(input.address),
-  )
-  const ownOutputs = unifiedOutputs.filter((output) =>
-    ownAddresses.includes(output.address),
-  )
-
   // ============================================================================
   // CALCULATE NET BALANCE CHANGE FROM SCRATCH
   // ============================================================================
@@ -201,22 +177,38 @@ export const walletTransactionToSummary = (
   // Step 1: Sum all ADA from inputs that belong to me
   // This includes:
   // - UTXO inputs from my addresses
-  // - Withdrawals (treated as inputs)
   // - Collateral inputs (if script execution failed)
   // - Implicit inputs (rewards, etc.)
   const ownInputAmounts = Amounts.sum([
-    remoteDataToAmounts(ownInputs, primaryTokenId),
+    remoteDataToAmounts(ownUtxoInputs, primaryTokenId),
+    remoteDataToAmounts(ownUtxoCollateralInputs, primaryTokenId),
     ownImplicitInput,
   ])
 
   // Step 2: Sum all ADA from outputs that belong to me
   // This includes:
-  // - UTXO outputs to my addresses
+  // - UTXO outputs to my addresses (withdrawals are already included here!)
   // - Implicit outputs (rewards from certificates)
+  // NOTE: Withdrawals are NOT added separately because they are already
+  // included in the UTXO outputs. When you withdraw rewards, they are added
+  // to a UTXO output in the transaction, so counting them separately would
+  // double-count them.
   const ownOutputAmounts = Amounts.sum([
-    remoteDataToAmounts(ownOutputs, primaryTokenId),
+    remoteDataToAmounts(ownUtxoOutputs, primaryTokenId),
     ownImplicitOutput,
   ])
+
+  // For fee calculation: need total inputs/outputs
+  // Withdrawals are already in utxoOutputs, so don't add them separately
+  const unifiedInputs = [...utxoInputs, ...ownUtxoCollateralInputs]
+  const unifiedOutputs = [...utxoOutputs]
+
+  const ownInputs = unifiedInputs.filter((input) =>
+    ownAddresses.includes(input.address),
+  )
+  const ownOutputs = unifiedOutputs.filter((output) =>
+    ownAddresses.includes(output.address),
+  )
 
   // Step 3: Calculate net balance change
   // Net change = outputs - inputs
