@@ -198,19 +198,46 @@ export function selectUtxosForAmounts(
   primaryTokenId: Portfolio.Token.Id = '' as Portfolio.Token.Id,
   estimatedFee: string = '200000', // Default 0.2 ADA fee estimate
 ): ModernUtxo[] {
+  // Import logger dynamically to avoid circular dependencies
+  const logger = require('../../../src/kernel/logger/logger').logger
+
+  logger.info('selectUtxosForAmounts: Starting UTXO selection', {
+    availableUtxos: utxos.length,
+    requiredAmounts: Object.keys(requiredAmounts).map((tokenId) => ({
+      tokenId,
+      quantity: requiredAmounts[tokenId as Portfolio.Token.Id],
+    })),
+    primaryTokenId,
+    estimatedFee,
+  })
+
   // Calculate total required ADA (outputs + fee)
   const requiredAda =
-    Object.entries(requiredAmounts).reduce((sum, [tokenId, quantity]) => {
-      if (tokenId === primaryTokenId) {
-        return sum + BigInt(quantity)
-      }
-      return sum
-    }, BigInt(0)) + BigInt(estimatedFee)
+    (Object.keys(requiredAmounts) as Array<Portfolio.Token.Id>).reduce(
+      (sum, tokenId) => {
+        if (tokenId === primaryTokenId) {
+          const quantity = requiredAmounts[tokenId]
+          return sum + BigInt(quantity || '0')
+        }
+        return sum
+      },
+      BigInt(0),
+    ) + BigInt(estimatedFee)
+
+  logger.info('selectUtxosForAmounts: Calculated required ADA', {
+    requiredAda: requiredAda.toString(),
+    estimatedFee,
+  })
 
   // Get all required token IDs (excluding primary token)
   const requiredTokenIds = new Set(
     Object.keys(requiredAmounts).filter((id) => id !== primaryTokenId),
   )
+
+  logger.info('selectUtxosForAmounts: Required token IDs', {
+    requiredTokenIds: Array.from(requiredTokenIds),
+    primaryTokenId,
+  })
 
   // First, find UTXOs that contain required tokens (must include these)
   const utxosWithTokens: ModernUtxo[] = []
@@ -227,6 +254,11 @@ export function selectUtxosForAmounts(
       utxosWithoutTokens.push(utxo)
     }
   }
+
+  logger.info('selectUtxosForAmounts: UTXO categorization', {
+    utxosWithTokens: utxosWithTokens.length,
+    utxosWithoutTokens: utxosWithoutTokens.length,
+  })
 
   // Calculate what we have from UTXOs with tokens
   const selected: ModernUtxo[] = [...utxosWithTokens]
@@ -252,17 +284,35 @@ export function selectUtxosForAmounts(
     const have = selectedAmounts[typedTokenId] || BigInt(0)
     if (have < required) {
       needsMoreTokens.push(typedTokenId)
+      logger.warn('selectUtxosForAmounts: Insufficient tokens', {
+        tokenId: typedTokenId,
+        required: required.toString(),
+        have: have.toString(),
+      })
     }
   }
 
   // If we need more tokens, we can't proceed (tokens must come from UTXOs that have them)
   if (needsMoreTokens.length > 0) {
+    logger.error('selectUtxosForAmounts: Insufficient tokens detected', {
+      needsMoreTokens,
+      selectedCount: selected.length,
+      selectedAda: selectedAda.toString(),
+    })
     // This shouldn't happen if UTXOs are selected correctly, but return what we have
     return selected
   }
 
   // If we need more ADA, select from remaining UTXOs
   if (needsMoreAda) {
+    logger.info(
+      'selectUtxosForAmounts: Need more ADA, selecting additional UTXOs',
+      {
+        currentAda: selectedAda.toString(),
+        requiredAda: requiredAda.toString(),
+        remainingUtxos: utxosWithoutTokens.length,
+      },
+    )
     const sortedRemaining = sortUtxosByAda(utxosWithoutTokens, primaryTokenId)
 
     for (const utxo of sortedRemaining) {
@@ -271,6 +321,18 @@ export function selectUtxosForAmounts(
       selectedAda += BigInt(utxo.balance[primaryTokenId] || '0')
     }
   }
+
+  const finalSelectedAda = selected.reduce(
+    (sum, utxo) => sum + BigInt(utxo.balance[primaryTokenId] || '0'),
+    BigInt(0),
+  )
+
+  logger.info('selectUtxosForAmounts: UTXO selection completed', {
+    selectedCount: selected.length,
+    finalAda: finalSelectedAda.toString(),
+    requiredAda: requiredAda.toString(),
+    hasSufficientAda: finalSelectedAda >= requiredAda,
+  })
 
   return selected
 }

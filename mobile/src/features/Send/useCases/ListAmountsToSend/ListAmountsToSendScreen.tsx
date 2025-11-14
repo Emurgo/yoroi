@@ -17,6 +17,7 @@ import {useSaveMemo} from '~/features/Transactions/hooks/useSaveMemo'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {usePromise} from '~/hooks/usePromise'
 import {useStrings} from '~/kernel/i18n/useStrings'
+import {logger} from '~/kernel/logger/logger'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {AddTokenButton} from '~/ui/AddTokenButton/AddTokenButton'
 import {Boundary} from '~/ui/Boundary/Boundary'
@@ -25,6 +26,7 @@ import {Icon} from '~/ui/Icon'
 import {RemoveAmountButton} from '~/ui/RemoveAmountButton/RemoveAmountButton'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {TokenAmountItem} from '~/ui/TokenAmountItem/TokenAmountItem'
+import {createSendTxFromWallet} from '~/wallets/cardano/transaction-recipes'
 import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
 
 export const ListAmountsToSendScreen = () => {
@@ -104,13 +106,37 @@ export const ListAmountsToSendScreen = () => {
   }
 
   const createUnsignedTxPromise = React.useCallback(
-    (entries: TransactionOutput[]) =>
-      wallet.createUnsignedTx({entries, addressMode}),
+    async (entries: TransactionOutput[]) => {
+      try {
+        logger.info('Send: Calling createSendTxFromWallet', {
+          entriesCount: entries.length,
+          addressMode,
+        })
+        const result = await createSendTxFromWallet(wallet, {
+          entries,
+          addressMode,
+        })
+        logger.info('Send: createSendTxFromWallet succeeded', {
+          cborLength: result.cbor.length,
+        })
+        return result
+      } catch (error) {
+        logger.error('Send: createSendTxFromWallet failed', {
+          error: error instanceof Error ? error.message : String(error),
+          entriesCount: entries.length,
+          addressMode,
+        })
+        throw error
+      }
+    },
     [wallet, addressMode],
   )
 
   const handleCreateUnsignedTxSuccess = React.useCallback(
     (result: {cbor: string}) => {
+      logger.info('Send: Navigating to transaction review', {
+        cborLength: result.cbor.length,
+      })
       navigateToTxReview({
         cbor: result.cbor,
         onSuccess: (args) => handleOnSuccess(args?.signedTx),
@@ -127,7 +153,18 @@ export const ListAmountsToSendScreen = () => {
 
   const handleOnNext = () => {
     if (!selectedTarget) return
-    createUnsignedTx([toTransactionOutput(selectedTarget.entry)])
+
+    const transactionOutput = toTransactionOutput(selectedTarget.entry)
+    logger.info('Send: Creating unsigned transaction', {
+      outputAddress: transactionOutput.address,
+      outputAmounts: Object.keys(transactionOutput.amounts).map((tokenId) => ({
+        tokenId,
+        quantity: transactionOutput.amounts[tokenId],
+      })),
+      addressMode,
+    })
+
+    createUnsignedTx([transactionOutput])
   }
   return (
     <SafeArea>

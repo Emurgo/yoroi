@@ -2,6 +2,7 @@ import {normalizeToAddress} from '@yoroi/tx'
 
 import {Buffer} from 'buffer'
 
+import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
 import {CardanoMobile} from '~/wallets/wallets'
 
 import {harden} from '../common/signatureUtils'
@@ -20,7 +21,9 @@ describe('CIP8', () => {
     const signingKey = createRawTxSigningKey(rootKeyHex, path, CardanoMobile)
 
     const payloadInBytes = Buffer.from(payload, 'hex')
-    const normalisedAddress = await normalizeToAddress(bech32)
+    const normalisedAddress = CardanoMobileWrapped.cslScope((csl) =>
+      normalizeToAddress(csl, bech32),
+    )
     if (normalisedAddress != null) {
       const coseSign1 = await cip8.sign(
         Buffer.from(normalisedAddress.toHex(), 'hex'),

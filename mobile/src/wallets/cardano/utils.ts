@@ -133,7 +133,10 @@ export const cardanoValueFromRemoteFormat = (
     }
 
     try {
-      const {policyId, name} = identifierToCardanoAsset(remoteAsset.tokenId)
+      const {policyId, name} = identifierToCardanoAsset(
+        csl,
+        remoteAsset.tokenId,
+      )
       if (!policyId || !name) {
         logger.warn('cardanoValueFromRemoteFormat: Invalid asset identifier', {
           tokenId: remoteAsset.tokenId,

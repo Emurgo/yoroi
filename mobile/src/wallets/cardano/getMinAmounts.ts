@@ -1,4 +1,4 @@
-import {normalizeToAddress} from '@yoroi/tx'
+import {isHex} from '@yoroi/common'
 import {Balance, Chain, Portfolio} from '@yoroi/types'
 
 import {Address} from '../types/yoroi'
@@ -35,12 +35,22 @@ export const getMinAmounts = async (
   primaryTokenInfo: Portfolio.Token.Info,
   protocolParams: Chain.Cardano.ProtocolParams,
 ) => {
-  const normalizedAddress = await normalizeToAddress(address)
-
-  if (normalizedAddress === undefined)
-    throw new Error('getMinAmounts::Error not a valid address')
-
   return CardanoMobileWrapped.cslScope((csl) => {
+    // Create address within this cslScope to avoid pointer issues
+    let normalizedAddress: any
+    if (csl.ByronAddress.isValid(address)) {
+      const byronAddr = csl.ByronAddress.fromBase58(address)
+      normalizedAddress = byronAddr.toAddress()
+    } else {
+      const isHexAddr = isHex(address)
+      normalizedAddress = isHexAddr
+        ? csl.Address.fromHex(address)
+        : csl.Address.fromBech32(address)
+    }
+
+    if (!normalizedAddress || normalizedAddress.isMalformed())
+      throw new Error('getMinAmounts::Error not a valid address')
+
     // Ensure primary token is included (with 0 if not present)
     const amountsWithPrimary = withPrimaryToken(amounts, primaryTokenInfo)
 

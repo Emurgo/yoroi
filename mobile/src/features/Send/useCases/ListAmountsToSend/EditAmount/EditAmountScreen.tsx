@@ -195,6 +195,8 @@ export const EditAmountScreen = () => {
               title={strings.send.max.toLocaleUpperCase()}
               onPress={handleOnMaxBalance}
               type={ButtonType.Text}
+              size="M"
+              style={{minHeight: 44, minWidth: 88}}
             />
           )}
 

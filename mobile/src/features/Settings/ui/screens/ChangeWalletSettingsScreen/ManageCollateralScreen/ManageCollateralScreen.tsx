@@ -33,6 +33,7 @@ import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
 import {TokenAmountItem} from '~/ui/TokenAmountItem/TokenAmountItem'
+import {createSendTxFromWallet} from '~/wallets/cardano/transaction-recipes'
 import {useCollateralInfo} from '~/wallets/cardano/utxoManager/useCollateralInfo'
 import {useSetCollateralId} from '~/wallets/cardano/utxoManager/useSetCollateralId'
 import {collateralConfig, utxosMaker} from '~/wallets/cardano/utxoManager/utxos'
@@ -66,7 +67,7 @@ export const ManageCollateralScreen = () => {
 
   const {mutate: createUnsignedTx, isPending: isLoadingTx} = useMutation({
     mutationFn: (entries: TransactionOutput[]) =>
-      wallet.createUnsignedTx({entries, addressMode: meta.addressMode}),
+      createSendTxFromWallet(wallet, {entries, addressMode: meta.addressMode}),
     retry: false,
   })
 

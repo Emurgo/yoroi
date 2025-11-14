@@ -1,4 +1,5 @@
-import {CardanoAddressedUtxo, normalizeToAddress} from '@yoroi/tx'
+import {isHex} from '@yoroi/common'
+import {CardanoAddressedUtxo} from '@yoroi/tx'
 
 import {sortBy} from 'lodash'
 
@@ -13,13 +14,23 @@ const addrContainsAccountKey = async (
   targetAccountKey: CardanoTypes.StakeCredential,
   acceptTypeMismatch: boolean,
 ) => {
-  const wasmAddr = await normalizeToAddress(address)
-
-  if (wasmAddr == null) {
-    throw new Error(`addrContainsAccountKey: invalid address ${address}`)
-  }
-
   return CardanoMobileWrapped.cslScope((csl) => {
+    // Create address within this cslScope to avoid pointer issues
+    let wasmAddr: any
+    if (csl.ByronAddress.isValid(address)) {
+      const byronAddr = csl.ByronAddress.fromBase58(address)
+      wasmAddr = byronAddr.toAddress()
+    } else {
+      const isHexAddr = isHex(address)
+      wasmAddr = isHexAddr
+        ? csl.Address.fromHex(address)
+        : csl.Address.fromBech32(address)
+    }
+
+    if (wasmAddr == null || wasmAddr.isMalformed()) {
+      throw new Error(`addrContainsAccountKey: invalid address ${address}`)
+    }
+
     const accountKeyString = Buffer.from(targetAccountKey.toBytes()).toString(
       'hex',
     )

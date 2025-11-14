@@ -1,8 +1,8 @@
 import {cardanoConfig} from '@yoroi/blockchains'
+import {isHex} from '@yoroi/common'
 import {
   RemoteUnspentOutput,
   calculateTxId,
-  normalizeToAddress,
   parseTokenList,
   signRawTransaction,
 } from '@yoroi/tx'
@@ -26,6 +26,7 @@ import {
   getDerivationPathForAddress,
   getTransactionSigners,
 } from '../common/signatureUtils'
+import {createSendTxFromWallet} from '../transaction-recipes'
 import {Pagination, YoroiWallet} from '../types'
 import {copyFromCSL, copyMultipleFromCSL, createRawTxSigningKey} from '../utils'
 import {
@@ -288,7 +289,7 @@ class CIP30Extension {
     const amounts = {
       [this.wallet.portfolioPrimaryTokenInfo.id]: asQuantity(valueStr),
     }
-    const yoroiUnsignedTx = await this.wallet.createUnsignedTx({
+    const yoroiUnsignedTx = await createSendTxFromWallet(this.wallet, {
       entries: [{address: bech32Address, amounts}],
       addressMode: this.meta.addressMode,
     })
@@ -431,7 +432,7 @@ const _getBalance = (
     .map((tokenId) => {
       if (tokenId === '.' || tokenId === '' || tokenId === primaryTokenId)
         return null
-      const {policyId, name} = identifierToCardanoAsset(tokenId)
+      const {policyId, name} = identifierToCardanoAsset(csl, tokenId)
       const amount = amounts[tokenId]
       return {policyIdHex: policyId.toHex(), nameHex: name.toHex(), amount}
     })
@@ -526,15 +527,25 @@ export const _getRequiredUtxos = async (
   const remoteUnspentOutputs: RemoteUnspentOutput[] = allUtxos.map((utxo) =>
     rawUtxoToRemoteUnspentOutput(utxo),
   )
-  const normalisedRewardAddress = await normalizeToAddress(
-    wallet.rewardAddressHex,
-  )
-  if (!normalisedRewardAddress) throw new Error('Invalid wallet state')
+  // Create address within the provided csl scope to avoid pointer issues
+  let normalisedRewardAddress: any
+  if (csl.ByronAddress.isValid(wallet.rewardAddressHex)) {
+    const byronAddr = csl.ByronAddress.fromBase58(wallet.rewardAddressHex)
+    normalisedRewardAddress = byronAddr.toAddress()
+  } else {
+    const isHexAddr = isHex(wallet.rewardAddressHex)
+    normalisedRewardAddress = isHexAddr
+      ? csl.Address.fromHex(wallet.rewardAddressHex)
+      : csl.Address.fromBech32(wallet.rewardAddressHex)
+  }
+  if (!normalisedRewardAddress || normalisedRewardAddress.isMalformed()) {
+    throw new Error('Invalid wallet state')
+  }
   const rewardAddress = normalisedRewardAddress.toBech32(undefined)
   if (!rewardAddress) throw new Error('Invalid wallet state')
 
   try {
-    const unsignedTx = await wallet.createUnsignedTx({
+    const unsignedTx = await createSendTxFromWallet(wallet, {
       entries: [{address: rewardAddress, amounts}],
       addressMode: meta.addressMode,
     })

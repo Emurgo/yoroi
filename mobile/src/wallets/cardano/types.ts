@@ -10,7 +10,6 @@ import {
   SignedTx as SignedTxType,
   StakingKeyBalances as StakingKeyBalancesType,
   TokenEntry as TokenEntryType,
-  TransactionOutput,
   TxMetadata as TxMetadataType,
   UnsignedTransaction,
   UnsignedTx as UnsignedTxType,
@@ -109,11 +108,6 @@ export interface YoroiWallet {
   getAddressing(address: string): {path: number[]; startLevel: number}
 
   // Sending
-  createUnsignedTx(params: {
-    entries: TransactionOutput[]
-    metadata?: Array<CardanoTypes.TxMetadata>
-    addressMode: Wallet.AddressMode
-  }): Promise<{cbor: string}>
   signTx(
     signRequest: UnsignedTransaction,
     rootKey: string,
@@ -213,7 +207,6 @@ const yoroiWalletKeys: Array<keyof YoroiWallet> = [
   'primaryBreakdown',
 
   // Sending
-  'createUnsignedTx',
   'signTxWithLedger',
   'signTx',
   'submitTransaction',

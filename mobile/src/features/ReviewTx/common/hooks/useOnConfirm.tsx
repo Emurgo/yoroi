@@ -64,13 +64,24 @@ export const useOnConfirm = ({
     rootKey?: string
     signedTx?: Transaction
   }) => {
+    // Use signedTx if available, otherwise fall back to tx
+    const signedTx = args?.signedTx ?? args?.tx
+
     if (onSuccessWithoutFeedback) {
-      onSuccessWithoutFeedback({rootKey: args?.rootKey, tx: args?.tx})
+      onSuccessWithoutFeedback({
+        rootKey: args?.rootKey,
+        tx: args?.tx,
+        signedTx,
+      })
       return
     }
 
     if (onSuccess) {
-      onSuccess({rootKey: args?.rootKey, tx: args?.tx})
+      onSuccess({
+        rootKey: args?.rootKey,
+        tx: args?.tx,
+        signedTx,
+      })
     }
 
     navigateTo.showSubmittedTxScreen()

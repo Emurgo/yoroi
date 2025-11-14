@@ -1,5 +1,6 @@
 import {cardanoConfig} from '@yoroi/blockchains'
-import {createSignedLedgerTxFromCbor, normalizeToAddress} from '@yoroi/tx'
+import {isHex} from '@yoroi/common'
+import {createSignedLedgerTxFromCbor} from '@yoroi/tx'
 import {HW, Wallet} from '@yoroi/types'
 
 import {
@@ -38,8 +39,22 @@ class CIP30LedgerExtension {
     useUSB: boolean,
   ): Promise<{signature: string; key: string}> {
     return CardanoMobileWrapped.cslScope(async (csl) => {
-      const normalizedAddress = await normalizeToAddress(address)
-      if (!normalizedAddress) throw new Error('Invalid address')
+      // Create address within this cslScope to avoid pointer issues
+      let normalizedAddress: any
+      if (csl.ByronAddress.isValid(address)) {
+        const byronAddr = csl.ByronAddress.fromBase58(address)
+        normalizedAddress = byronAddr.toAddress()
+      } else {
+        const isHexAddr = isHex(address)
+        normalizedAddress = isHexAddr
+          ? csl.Address.fromHex(address)
+          : csl.Address.fromBech32(address)
+      }
+
+      if (!normalizedAddress || normalizedAddress.isMalformed()) {
+        throw new Error('Invalid address')
+      }
+
       const rewardAddress = csl.RewardAddress.fromAddress(normalizedAddress)
       const rewardAddressHex = rewardAddress?.toAddress().toHex()
 

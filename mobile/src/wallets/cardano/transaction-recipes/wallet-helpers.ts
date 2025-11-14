@@ -1,3 +1,4 @@
+import {TransactionOutput} from '@yoroi/tx'
 import {Network, Wallet} from '@yoroi/types'
 
 import {BigNumber} from 'bignumber.js'
@@ -8,6 +9,7 @@ import {CardanoTypes, YoroiWallet} from '~/wallets/cardano/types'
 import {
   convertRawUtxosToModernUtxos,
   createDelegationTx,
+  createSendTx,
   createUnsignedGovernanceTx,
   createUtxoConsolidationTx,
   createVotingRegTx,
@@ -168,5 +170,34 @@ export async function createUnsignedGovernanceTxFromWallet(
     getChangeAddress: (mode) => wallet.getChangeAddress(mode),
     votingCertificates: params.votingCertificates as CardanoTypes.Certificate[],
     addressMode: params.addressMode,
+  })
+}
+
+/**
+ * Create send transaction from wallet
+ */
+export async function createSendTxFromWallet(
+  wallet: YoroiWallet,
+  params: {
+    entries: TransactionOutput[]
+    addressMode: Wallet.AddressMode
+    metadata?: Array<CardanoTypes.TxMetadata>
+  },
+): Promise<{cbor: string}> {
+  const modernUtxos = getModernUtxosFromWallet(wallet)
+
+  return createSendTx({
+    utxos: modernUtxos,
+    entries: params.entries,
+    primaryTokenId: wallet.portfolioPrimaryTokenInfo.id,
+    protocolParams: wallet.protocolParams,
+    networkId: wallet.networkManager.chainId,
+    getAbsoluteSlotNumber: () => getAbsoluteSlotNumberFromWallet(wallet),
+    getChangeAddress: (mode) => wallet.getChangeAddress(mode),
+    addressMode: params.addressMode,
+    metadata: params.metadata?.map((meta) => ({
+      label: String(meta.label),
+      data: meta.data,
+    })),
   })
 }

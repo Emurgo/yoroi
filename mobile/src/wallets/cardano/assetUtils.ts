@@ -1,4 +1,4 @@
-import {normalizeToAddress} from '@yoroi/tx'
+import {isHex} from '@yoroi/common'
 
 import BigNumber from 'bignumber.js'
 
@@ -27,8 +27,23 @@ export async function calcLockedDeposit({
   const csl = cslLocal.csl
   const result = new BigNumber(0)
   try {
-    const normalizedAddress = await normalizeToAddress(address)
-    if (normalizedAddress === undefined || normalizedAddress === null) {
+    // Create address within this csl scope to avoid pointer issues
+    let normalizedAddress: any
+    if (csl.ByronAddress.isValid(address)) {
+      const byronAddr = csl.ByronAddress.fromBase58(address)
+      normalizedAddress = byronAddr.toAddress()
+    } else {
+      const isHexAddr = isHex(address)
+      normalizedAddress = isHexAddr
+        ? csl.Address.fromHex(address)
+        : csl.Address.fromBech32(address)
+    }
+
+    if (
+      normalizedAddress === undefined ||
+      normalizedAddress === null ||
+      normalizedAddress.isMalformed()
+    ) {
       throw new Error('calcLockedDeposit::Error not a valid address')
     }
 

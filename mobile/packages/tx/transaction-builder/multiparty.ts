@@ -131,7 +131,7 @@ export async function getRequiredSignersFromTransaction(
 
   // Extract from inputs - get payment key hash from each input address
   for (const input of unsignedTx.inputs) {
-    const address = await normalizeToAddress(input.utxo.receiver)
+    const address = normalizeToAddress(csl, input.utxo.receiver)
     if (!address) continue
 
     // Try different address types to extract payment key hash
@@ -217,7 +217,7 @@ export async function getRequiredSignersFromTransaction(
 
   // Extract from withdrawals - get stake key hash from reward address
   for (const withdrawal of unsignedTx.withdrawals) {
-    const address = await normalizeToAddress(withdrawal.rewardAddress)
+    const address = normalizeToAddress(csl, withdrawal.rewardAddress)
     if (!address) continue
 
     const rewardAddr = csl.RewardAddress.fromAddress(address)

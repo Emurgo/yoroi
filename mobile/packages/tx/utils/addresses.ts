@@ -66,78 +66,63 @@ export async function validateAndExtractAddressInfo(
  * Normalize address to WASM Address type
  * Supports base16 (hex), bech32, and base58 (Byron) formats
  *
+ * NOTE: This function must use the same csl instance as the caller to avoid
+ * NULL pointer errors. All CSL objects must be created from the same instance.
+ *
  * WARNING: The returned Address object is a WASM object that will be freed when
  * the cslScope exits. Do NOT use it outside the scope where it was created.
  *
  * For safe usage, use validateAndExtractAddressInfo() instead, which extracts
  * primitive values (networkId, hex, bech32) before the scope exits.
  */
-export async function normalizeToAddress(
+export function normalizeToAddress(
+  csl: WasmModuleProxy,
   addr: string,
-): Promise<Address | undefined> {
-  return CardanoMobileWrapped.cslScope((csl) => {
-    // in Shelley, addresses can be base16, bech32 or base58
-    // this function, we try parsing in all encodings possible
+): Address | undefined {
+  // in Shelley, addresses can be base16, bech32 or base58
+  // this function, we try parsing in all encodings possible
 
-    // 1) Try converting from base58
-    if (csl.ByronAddress.isValid(addr)) {
-      const byronAddr = csl.ByronAddress.fromBase58(addr)
-      const address = byronAddr.toAddress()
-      return address.isMalformed() ? undefined : address
-    }
+  // 1) Try converting from base58
+  if (csl.ByronAddress.isValid(addr)) {
+    const byronAddr = csl.ByronAddress.fromBase58(addr)
+    const address = byronAddr.toAddress()
+    return address.isMalformed() ? undefined : address
+  }
 
-    const isHexAddr = isHex(addr)
-    const address = isHexAddr
-      ? csl.Address.fromHex(addr)
-      : csl.Address.fromBech32(addr)
-    const isMalformed = address.isMalformed()
-    // Return undefined when malformed for backward compatibility
-    return isMalformed ? undefined : address
-  })
-}
-
-/**
- * Convert WASM Address to hex or base58 string
- * WARNING: This function takes an Address parameter that must be from the same cslScope.
- * For safe usage, use validateAndExtractAddressInfo() and use the hex/bech32 from there.
- *
- * @deprecated Use validateAndExtractAddressInfo() instead for safer address handling
- */
-export function toHexOrBase58(address: Address): string {
-  return CardanoMobileWrapped.cslScope((csl) => {
-    // Try to use the address - if it's from a different scope, this will fail
-    const asByron = csl.ByronAddress.fromAddress(address)
-    if (asByron === null || !asByron) {
-      return Buffer.from(address.toBytes()).toString('hex')
-    }
-    return asByron.toBase58()
-  })
+  const isHexAddr = isHex(addr)
+  const address = isHexAddr
+    ? csl.Address.fromHex(addr)
+    : csl.Address.fromBech32(addr)
+  const isMalformed = address.isMalformed()
+  // Return undefined when malformed for backward compatibility
+  return isMalformed ? undefined : address
 }
 
 /**
  * Filter addresses by staking key
+ * NOTE: This function must use the same csl instance as the caller to avoid
+ * NULL pointer errors. All CSL objects must be created from the same instance.
  */
 export async function filterAddressesByStakingKey<T extends {receiver: string}>(
+  csl: WasmModuleProxy,
   stakingKey: Credential,
   utxos: ReadonlyArray<T>,
   acceptTypeMismatch: boolean,
 ): Promise<ReadonlyArray<T>> {
-  return CardanoMobileWrapped.cslScope(async (csl) => {
-    const result: T[] = []
-    for (const utxo of utxos) {
-      if (
-        await addrContainsAccountKey(
-          csl,
-          utxo.receiver,
-          stakingKey,
-          acceptTypeMismatch,
-        )
-      ) {
-        result.push(utxo)
-      }
+  const result: T[] = []
+  for (const utxo of utxos) {
+    if (
+      await addrContainsAccountKey(
+        csl,
+        utxo.receiver,
+        stakingKey,
+        acceptTypeMismatch,
+      )
+    ) {
+      result.push(utxo)
     }
-    return result
-  })
+  }
+  return result
 }
 
 /**

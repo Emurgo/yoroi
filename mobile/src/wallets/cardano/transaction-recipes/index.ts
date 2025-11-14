@@ -13,11 +13,15 @@ export type {CreateVotingRegTxParams} from './createVotingRegTx'
 export {createUnsignedGovernanceTx} from './createUnsignedGovernanceTx'
 export type {CreateUnsignedGovernanceTxParams} from './createUnsignedGovernanceTx'
 
+export {createSendTx} from './createSendTx'
+export type {CreateSendTxParams} from './createSendTx'
+
 export {convertRawUtxosToModernUtxos} from './helpers'
 
 // Wallet helper functions - simplified API for features
 export {
   createDelegationTxFromWallet,
+  createSendTxFromWallet,
   createUnsignedGovernanceTxFromWallet,
   createUtxoConsolidationTxFromWallet,
   createVotingRegTxFromWallet,

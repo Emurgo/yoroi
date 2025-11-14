@@ -145,10 +145,7 @@ const wallet: YoroiWallet = {
     throw new Error('not implemented: signRawTxWithLedger')
   },
   setCollateralId: () => {
-    throw new Error('not implemented: createUnsignedTx')
-  },
-  createUnsignedTx: () => {
-    throw new Error('not implemented: createUnsignedTx')
+    throw new Error('not implemented: setCollateralId')
   },
   getStakingKey: () => {
     const pubKeyHex =

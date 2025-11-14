@@ -6,29 +6,15 @@ import {
 } from '@yoroi/blockchains'
 import {isNonNullable} from '@yoroi/common'
 import {StakePoolInfoRequest} from '@yoroi/staking'
-import type {
-  CardanoHaskellConfig,
-  Datum,
-  ModernUtxo,
-  UnsignedTransaction,
-} from '@yoroi/tx'
+import type {Datum, ModernUtxo, UnsignedTransaction} from '@yoroi/tx'
 import {
-  TransactionOutput,
   adaptToLedgerUnsignedTx,
-  addInputs,
-  addMetadata,
-  addOutput,
   buildLedgerPayload,
   buildLedgerSignedTx,
-  buildTransaction,
   buildVotingLedgerPayloadV5,
   createSignedLedgerTxFromCbor,
-  createTransactionBuilder,
   modernUtxosToCardanoAddressedUtxos,
   rawUtxoToModernUtxo,
-  selectUtxosForAmounts,
-  setChangeAddress,
-  setTTL,
   signRawTransaction,
   signTransaction,
 } from '@yoroi/tx'
@@ -94,8 +80,6 @@ import {
 import {TransactionManager} from './transactionManager/transactionManager'
 import {
   CardanoTypes,
-  NoOutputsError,
-  NotEnoughMoneyToSendError,
   WalletEvent,
   WalletSubscription,
   YoroiWallet,
@@ -312,20 +296,6 @@ export const makeCardanoWallet = (
           'CardanoWallet: getChangeAddress unable to resolve change address',
         )
       return changeAddress
-    }
-
-    private getAddressedChangeAddress(addressMode: Wallet.AddressMode): {
-      address: string
-      addressing: CardanoTypes.Addressing
-    } {
-      const changeAddr = this.getChangeAddress(addressMode)
-      const addressing = this.getAddressing(changeAddr)
-      const result = {
-        address: changeAddr,
-        addressing,
-      }
-
-      return result
     }
 
     // -- account -- legacy
@@ -724,147 +694,6 @@ export const makeCardanoWallet = (
       return new BigNumber(
         this.networkManager.epoch.progress(new Date(time)).absoluteSlot,
       )
-    }
-
-    async createUnsignedTx({
-      entries,
-      addressMode,
-      metadata,
-    }: {
-      entries: TransactionOutput[]
-      addressMode: Wallet.AddressMode
-      metadata?: Array<CardanoTypes.TxMetadata>
-    }): Promise<{cbor: string}> {
-      const primaryTokenId = this.portfolioPrimaryTokenInfo.id
-      const absSlotNumber = await this.getAbsoluteSlotNumber()
-
-      const changeAddr = this.getAddressedChangeAddress(addressMode)
-      const modernUtxos = this.getAddressedUtxos()
-
-      const {
-        coinsPerUtxoByte,
-        keyDeposit,
-        linearFee: {coefficient, constant},
-        poolDeposit,
-      } = this.protocolParams
-
-      const protocolParams: CardanoHaskellConfig = {
-        keyDeposit,
-        linearFee: {
-          coefficient,
-          constant,
-        },
-        minimumUtxoVal: cardanoConfig.params.minUtxoValue.toString(),
-        coinsPerUtxoByte,
-        poolDeposit,
-        networkId: this.networkManager.chainId,
-      }
-
-      try {
-        // Calculate required amounts from outputs
-        const requiredAmounts: Record<string, string> = {}
-        const minUtxoValue = BigInt(protocolParams.minimumUtxoVal || '1000000') // Default to 1 ADA if not set
-
-        for (const entry of entries) {
-          const hasTokens = Object.keys(entry.amounts).some(
-            (tokenId) => tokenId !== primaryTokenId,
-          )
-          const adaAmount = BigInt(entry.amounts[primaryTokenId] || '0')
-
-          // If output has tokens but insufficient ADA, we need to add minimum UTXO value
-          if (hasTokens && adaAmount < minUtxoValue) {
-            const currentAda = BigInt(requiredAmounts[primaryTokenId] || '0')
-            requiredAmounts[primaryTokenId] = (
-              currentAda + minUtxoValue
-            ).toString()
-          }
-
-          for (const [tokenId, quantity] of Object.entries(entry.amounts)) {
-            const current = BigInt(requiredAmounts[tokenId] || '0')
-            const needed = BigInt(quantity)
-            requiredAmounts[tokenId] = (current + needed).toString()
-          }
-        }
-
-        // Estimate fee (rough estimate: base fee + per-byte fee for a typical transaction)
-        // This is conservative - actual fee will be calculated by CSL
-        const estimatedFee = (
-          BigInt(constant) +
-          BigInt(coefficient) * BigInt(500)
-        ) // Rough estimate: 500 bytes
-          .toString()
-
-        // Select only necessary UTXOs
-        const selectedUtxos = selectUtxosForAmounts(
-          modernUtxos,
-          requiredAmounts,
-          primaryTokenId,
-          estimatedFee,
-        )
-
-        // Build transaction using functional TransactionBuilder
-        let builderState = createTransactionBuilder()
-
-        // Add only selected UTXOs as inputs
-        builderState = addInputs(builderState, selectedUtxos)
-
-        // Add outputs from entries
-        // Ensure outputs with tokens have minimum UTXO value in ADA
-        for (const entry of entries) {
-          const hasTokens = Object.keys(entry.amounts).some(
-            (tokenId) => tokenId !== primaryTokenId,
-          )
-          const adaAmount = BigInt(entry.amounts[primaryTokenId] || '0')
-
-          // If output has tokens but insufficient ADA, add minimum UTXO value
-          const adjustedAmounts = {...entry.amounts}
-          if (hasTokens && adaAmount < minUtxoValue) {
-            adjustedAmounts[primaryTokenId] =
-              minUtxoValue.toString() as Balance.Quantity
-          }
-
-          builderState = addOutput(
-            builderState,
-            entry.address,
-            adjustedAmounts,
-            entry.datum,
-          )
-        }
-
-        // Set change address
-        builderState = setChangeAddress(builderState, changeAddr.address)
-
-        // Set TTL
-        builderState = setTTL(builderState, absSlotNumber.toNumber())
-
-        // Add metadata if present
-        if (metadata && metadata.length > 0) {
-          for (const meta of metadata) {
-            const label = String(meta.label)
-            builderState = addMetadata(builderState, label, meta.data)
-          }
-        }
-
-        // Build the transaction
-        const unsignedTx = await buildTransaction(
-          builderState,
-          protocolParams,
-          primaryTokenId,
-        )
-
-        if (!unsignedTx.cbor) {
-          throw new Error('Transaction CBOR not available')
-        }
-
-        return {cbor: unsignedTx.cbor}
-      } catch (e) {
-        if (
-          e instanceof NotEnoughMoneyToSendError ||
-          e instanceof NoOutputsError
-        )
-          throw e
-        throwLoggedError(new App.Errors.LibraryError((e as Error).message))
-      }
     }
 
     async signTx(unsignedTx: UnsignedTransaction, decryptedMasterKey: string) {
