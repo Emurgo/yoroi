@@ -192,36 +192,50 @@ export const walletTransactionToSummary = (
     ownAddresses.includes(output.address),
   )
 
-  // Calculate totals using modern Balance.Amounts
-  const totalIn = remoteDataToAmounts(unifiedInputs, primaryTokenId)
-  const totalOut = remoteDataToAmounts(unifiedOutputs, primaryTokenId)
-  const ownIn = Amounts.sum([
+  // ============================================================================
+  // CALCULATE NET BALANCE CHANGE FROM SCRATCH
+  // ============================================================================
+  // Net balance change = (what I received) - (what I spent)
+  // This already includes fees because fees reduce the outputs
+
+  // Step 1: Sum all ADA from inputs that belong to me
+  // This includes:
+  // - UTXO inputs from my addresses
+  // - Withdrawals (treated as inputs)
+  // - Collateral inputs (if script execution failed)
+  // - Implicit inputs (rewards, etc.)
+  const ownInputAmounts = Amounts.sum([
     remoteDataToAmounts(ownInputs, primaryTokenId),
     ownImplicitInput,
   ])
-  const ownOut = Amounts.sum([
+
+  // Step 2: Sum all ADA from outputs that belong to me
+  // This includes:
+  // - UTXO outputs to my addresses
+  // - Implicit outputs (rewards from certificates)
+  const ownOutputAmounts = Amounts.sum([
     remoteDataToAmounts(ownOutputs, primaryTokenId),
     ownImplicitOutput,
   ])
 
-  // Determine transaction characteristics
+  // Step 3: Calculate net balance change
+  // Net change = outputs - inputs
+  // - Positive = I received more than I spent (net gain)
+  // - Negative = I spent more than I received (net loss, includes fees)
+  // - Zero = break even (rare, only if fees exactly match received amount)
+  const netBalanceChange = Amounts.diff(ownOutputAmounts, ownInputAmounts)
+
+  // Step 4: Calculate total fee (for reference, not used in amount calculation)
+  // Fee = total outputs - total inputs (negative because fees reduce outputs)
+  const totalIn = remoteDataToAmounts(unifiedInputs, primaryTokenId)
+  const totalOut = remoteDataToAmounts(unifiedOutputs, primaryTokenId)
+  const totalFee = Amounts.diff(totalOut, totalIn)
+
+  // Step 5: Determine transaction characteristics for direction
   const hasOnlyOwnInputs = ownInputs.length === unifiedInputs.length
   const hasOnlyOwnOutputs = ownOutputs.length === unifiedOutputs.length
-  const isIntraWallet = hasOnlyOwnInputs && hasOnlyOwnOutputs
-  const isMultiParty =
-    ownInputs.length > 0 && ownInputs.length !== unifiedInputs.length
 
-  // Calculate brutto (net change) and total fee
-  const brutto = Amounts.diff(ownOut, ownIn)
-  const totalFee = Amounts.diff(totalOut, totalIn) // Should be negative
-
-  // Calculate delta (for balance computation)
-  const delta = Amounts.diff(
-    remoteDataToAmounts(ownUtxoOutputs, primaryTokenId),
-    remoteDataToAmounts(ownUtxoInputs, primaryTokenId),
-  )
-
-  // Determine direction, amount, and fee based on transaction type
+  // Step 6: Determine direction
   const direction = determineTransactionDirection(
     hasOnlyOwnInputs,
     hasOnlyOwnOutputs,
@@ -229,22 +243,15 @@ export const walletTransactionToSummary = (
     isInvalidScriptExecution,
   )
 
-  let amount: Balance.Amounts
+  // Step 7: Calculate delta (for balance computation - UTXO change only)
+  const delta = Amounts.diff(
+    remoteDataToAmounts(ownUtxoOutputs, primaryTokenId),
+    remoteDataToAmounts(ownUtxoInputs, primaryTokenId),
+  )
 
-  if (isInvalidScriptExecution) {
-    amount = brutto
-  } else if (isIntraWallet) {
-    amount = {} as Balance.Amounts
-  } else if (isMultiParty) {
-    amount = brutto
-  } else if (hasOnlyOwnInputs) {
-    // For SENT: show total amount that left wallet (brutto + fees)
-    // brutto is negative, totalFee is negative, so we negate the sum
-    amount = Amounts.negated(Amounts.sum([brutto, totalFee]))
-  } else {
-    // For RECEIVED: show amount received (fees were paid by sender)
-    amount = brutto
-  }
+  // Step 8: Set amount to net balance change
+  // This is the actual change to the wallet balance, including fees
+  const amount = netBalanceChange
 
   return {
     id: tx.id,
