@@ -12,7 +12,6 @@ import {
   FormattedTx,
   TransactionBody,
 } from '~/features/ReviewTx/common/types'
-import {logger} from '~/kernel/logger/logger'
 import {useUnsafeParams} from '~/kernel/navigation/hooks/useUnsafeParams'
 import {ReviewTxRoutes} from '~/kernel/navigation/types'
 
@@ -117,66 +116,6 @@ export const ReviewTxScreen = () => {
     txBody,
     cbor: params?.cbor ?? null,
   })
-
-  // Log transaction details and CBOR for comparison with develop branch
-  React.useEffect(() => {
-    if (!txBody || isLoading) return
-
-    const certs = txBody.certs ?? []
-    const withdrawals = txBody.withdrawals ?? {}
-
-    // Log full CBOR separately for easy comparison
-    if (params?.cbor) {
-      logger.info('ReviewTx (mobile-experimental): Full CBOR', {
-        context: params?.context,
-        cbor: params.cbor,
-        cborLength: params.cbor.length,
-      })
-    }
-
-    logger.info('ReviewTx (mobile-experimental): Transaction details', {
-      context: params?.context,
-      cborPreview: params?.cbor ? `${params.cbor.substring(0, 100)}...` : null,
-      cborLength: params?.cbor?.length ?? 0,
-      txBody: {
-        inputs: txBody.inputs?.length ?? 0,
-        outputs: txBody.outputs?.length ?? 0,
-        fee: txBody.fee,
-        certificates: {
-          count: certs.length,
-          types: certs.map((cert) => {
-            const entry = Object.entries(cert)[0]
-            return entry ? entry[0] : 'unknown'
-          }),
-          details: certs.map((cert) => {
-            const entry = Object.entries(cert)[0]
-            if (!entry) return null
-            const [type, certificate] = entry
-            return {
-              type,
-              stakeCredential:
-                'stake_credential' in certificate
-                  ? certificate.stake_credential
-                  : undefined,
-              poolKeyHash:
-                'pool_keyhash' in certificate
-                  ? certificate.pool_keyhash
-                  : undefined,
-              drep: 'drep' in certificate ? certificate.drep : undefined,
-            }
-          }),
-        },
-        withdrawals: {
-          count: Object.keys(withdrawals).length,
-          addresses: Object.keys(withdrawals),
-          amounts: Object.entries(withdrawals).map(([addr, amount]) => ({
-            address: addr,
-            amount: amount,
-          })),
-        },
-      },
-    })
-  }, [txBody, isLoading, params?.context, params?.cbor])
 
   const hasTrackedReviewViewRef = React.useRef(false)
 

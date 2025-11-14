@@ -61,7 +61,17 @@ export async function createWithdrawalTx({
   )
 
   // Get withdrawal amount from account state
-  const rewards = accountState[rewardAddressHex]?.rewards || '0'
+  // The API might return the address in a different format (bech32 vs hex),
+  // so we iterate over all keys to find the matching account state
+  // Use remainingAmount (available rewards) instead of rewards (total ever earned)
+  let rewards = '0'
+  for (const address in accountState) {
+    const state = accountState[address]
+    if (state) {
+      rewards = state.remainingAmount || '0'
+      break // Use first non-null account state (we only requested one address)
+    }
+  }
 
   // Estimate fee for withdrawal transaction
   // Withdrawal transactions are typically small (~300-500 bytes)
