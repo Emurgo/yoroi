@@ -1,5 +1,6 @@
 import {Balance} from '@yoroi/types'
 
+import type {MintAction} from '../minting/types'
 import {Datum} from '../types'
 import {ModernUtxo} from '../utxo/models'
 
@@ -158,6 +159,7 @@ export type TransactionOptions = {
   metadata?: TransactionMetadata[]
   manualChangeOutput?: TransactionOutput
   manualFee?: Balance.Amounts
+  mints?: MintAction[] // Minting actions
 }
 
 export type UnsignedTransaction = {

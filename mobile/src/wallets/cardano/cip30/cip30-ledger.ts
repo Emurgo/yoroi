@@ -1,13 +1,17 @@
 import {cardanoConfig} from '@yoroi/blockchains'
 import {isHex} from '@yoroi/common'
-import {createSignedLedgerTxFromCbor} from '@yoroi/tx'
+import {
+  CIP30TransactionError,
+  createSignedLedgerTxFromCbor,
+  validateTransactionCbor,
+} from '@yoroi/tx'
 import {HW, Wallet} from '@yoroi/types'
 
 import {
   MessageAddressFieldType,
   MessageData,
 } from '@cardano-foundation/ledgerjs-hw-app-cardano'
-import {Transaction} from '@emurgo/cross-csl-core'
+import {Address, Transaction} from '@emurgo/cross-csl-core'
 
 import {toLedgerSignRequest} from '~/features/Discover/common/ledger'
 import {CardanoMobile} from '~/wallets/wallets'
@@ -40,7 +44,7 @@ class CIP30LedgerExtension {
   ): Promise<{signature: string; key: string}> {
     return CardanoMobileWrapped.cslScope(async (csl) => {
       // Create address within this cslScope to avoid pointer issues
-      let normalizedAddress: any
+      let normalizedAddress: Address | null = null
       if (csl.ByronAddress.isValid(address)) {
         const byronAddr = csl.ByronAddress.fromBase58(address)
         normalizedAddress = byronAddr.toAddress()
@@ -100,6 +104,15 @@ class CIP30LedgerExtension {
     useUSB: boolean,
   ): Promise<Transaction> {
     return CardanoMobileWrapped.cslScope(async (csl) => {
+      // Validate transaction CBOR before signing
+      const validation = validateTransactionCbor(csl, cbor)
+      if (!validation.valid) {
+        throw new CIP30TransactionError(
+          `Transaction validation failed: ${validation.errors.join(', ')}`,
+          validation,
+        )
+      }
+
       if (!partial) await assertHasAllSigners(cbor, this.wallet, this.meta)
 
       const stakingSigningPath =

@@ -1,15 +1,17 @@
 import {cardanoConfig} from '@yoroi/blockchains'
 import {isHex} from '@yoroi/common'
 import {
+  CIP30TransactionError,
   RemoteUnspentOutput,
   calculateTxId,
   parseTokenList,
   signRawTransaction,
+  validateTransactionCbor,
 } from '@yoroi/tx'
 import {App, Balance, Portfolio, Wallet} from '@yoroi/types'
 
 import * as CSL from '@emurgo/cross-csl-core'
-import {WasmModuleProxy} from '@emurgo/cross-csl-core'
+import {Address, WasmModuleProxy} from '@emurgo/cross-csl-core'
 import {BigNumber} from 'bignumber.js'
 import {Buffer} from 'buffer'
 import * as _ from 'lodash'
@@ -196,7 +198,7 @@ class CIP30Extension {
     return CardanoMobileWrapped.cslScope(async (csl) => {
       const payloadInBytes = Buffer.from(payload, 'hex')
       // Parse address within this scope to avoid WASM pointer issues
-      let normalisedAddress: any
+      let normalisedAddress: Address | null = null
       if (csl.ByronAddress.isValid(address)) {
         const byronAddr = csl.ByronAddress.fromBase58(address)
         normalisedAddress = byronAddr.toAddress()
@@ -258,6 +260,22 @@ class CIP30Extension {
     // Note: cslScope handles Promises correctly, but we need to return synchronously
     // This is a workaround - the function should ideally be async
     return CardanoMobileWrapped.cslScope((csl) => {
+      // Validate transaction CBOR before signing
+      const validation = validateTransactionCbor(csl, cbor)
+      if (!validation.valid) {
+        throw new CIP30TransactionError(
+          `Transaction validation failed: ${validation.errors.join(', ')}`,
+          validation,
+        )
+      }
+
+      // Log warnings if any
+      if (validation.warnings.length > 0) {
+        logger.warn('CIP-30 transaction validation warnings', {
+          warnings: validation.warnings,
+        })
+      }
+
       // We can't use await here, so we need to use synchronous operations
       // For now, we'll use a type assertion to work around the async requirement
       // TODO: Make this function async in the interface
@@ -528,7 +546,7 @@ export const _getRequiredUtxos = async (
     rawUtxoToRemoteUnspentOutput(utxo),
   )
   // Create address within the provided csl scope to avoid pointer issues
-  let normalisedRewardAddress: any
+  let normalisedRewardAddress: Address | null = null
   if (csl.ByronAddress.isValid(wallet.rewardAddressHex)) {
     const byronAddr = csl.ByronAddress.fromBase58(wallet.rewardAddressHex)
     normalisedRewardAddress = byronAddr.toAddress()

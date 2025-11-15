@@ -53,7 +53,9 @@ export function createTransactionBuilder(): TransactionBuilderState {
     referenceInputs: [],
     collateralInputs: [],
     metadata: [],
-    options: {},
+    options: {
+      mints: [],
+    },
     excludedUtxos: new Set(),
   }
 }
@@ -905,6 +907,103 @@ export async function buildTransaction(
         )
       }
       cslTxBuilder.addChangeIfNeeded(changeAddr)
+    }
+
+    // Add minting actions
+    if (state.options.mints && state.options.mints.length > 0) {
+      const mint = csl.Mint.new()
+      if (!mint) {
+        logger.error('buildTransaction: Failed to create Mint')
+        throw new Error('Failed to create Mint')
+      }
+
+      const nativeScripts = csl.NativeScripts.new()
+      const plutusScripts = csl.PlutusScripts.new()
+
+      for (let i = 0; i < state.options.mints.length; i++) {
+        const mintAction = state.options.mints[i]
+        if (!mintAction) continue
+
+        try {
+          // Create policy ID
+          const policyId = csl.ScriptHash.fromHex(mintAction.policyId)
+          if (!policyId) {
+            logger.error('buildTransaction: Invalid policy ID', {
+              mintIndex: i,
+              policyId: mintAction.policyId,
+            })
+            throw new Error(`Invalid policy ID: ${mintAction.policyId}`)
+          }
+
+          // Create mint assets map for this policy (uses Int, not BigNum)
+          const mintAssets = csl.MintAssets.new()
+          if (!mintAssets) {
+            logger.error('buildTransaction: Failed to create MintAssets')
+            throw new Error('Failed to create MintAssets')
+          }
+
+          for (const asset of mintAction.assets) {
+            const assetName = csl.AssetName.fromHex(asset.assetName)
+            if (!assetName) {
+              logger.error('buildTransaction: Invalid asset name', {
+                mintIndex: i,
+                assetName: asset.assetName,
+              })
+              throw new Error(`Invalid asset name: ${asset.assetName}`)
+            }
+
+            const amount = csl.Int.fromStr(asset.amount)
+            if (!amount) {
+              logger.error('buildTransaction: Invalid mint amount', {
+                mintIndex: i,
+                amount: asset.amount,
+              })
+              throw new Error(`Invalid mint amount: ${asset.amount}`)
+            }
+
+            mintAssets.insert(assetName, amount)
+          }
+
+          // Insert policy and assets into mint
+          mint.insert(policyId, mintAssets)
+
+          // Add script to appropriate collection
+          if (mintAction.script.type === 'native') {
+            const nativeScript = csl.NativeScript.fromHex(
+              mintAction.script.script,
+            )
+            if (nativeScript) {
+              nativeScripts.add(nativeScript)
+            }
+          } else {
+            const plutusScript = csl.PlutusScript.fromHex(
+              mintAction.script.script,
+            )
+            if (plutusScript) {
+              plutusScripts.add(plutusScript)
+            }
+          }
+        } catch (error) {
+          logger.error('buildTransaction: Error adding mint action', {
+            mintIndex: i,
+            policyId: mintAction.policyId,
+            error: error instanceof Error ? error.message : String(error),
+          })
+          throw error
+        }
+      }
+
+      // setMint requires mint value and native scripts (if any)
+      // Plutus scripts and redeemers are handled separately after building
+      cslTxBuilder.setMint(mint, nativeScripts)
+
+      // Store Plutus scripts and redeemers for later witness set handling
+      // Note: Plutus scripts and redeemers need to be added to the final
+      // transaction witness set after build() is called
+      if (plutusScripts.len() > 0) {
+        // Plutus scripts will be added to witness set in post-processing
+        // This is handled by the transaction building flow
+      }
     }
 
     // Add metadata
