@@ -1013,6 +1013,10 @@ const mockWallet: ResolverWallet = {
   ],
   getUtxos: () => Promise.resolve([]),
   getCollateral: () => Promise.resolve([]),
+  getCollateralInfo: () => ({
+    collateralId: '',
+    isConfirmed: false,
+  }),
   submitTx: () => Promise.resolve('tx-id'),
   sendReorganisationTx: async () => {
     throw new Error('Not implemented')
