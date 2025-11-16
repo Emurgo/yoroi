@@ -59,6 +59,8 @@ export const EditAmountScreen = () => {
     (balances.records.get(selectedTokenId)?.quantity ?? BigInt(0)) -
     (allocated.get(selectedTargetIndex)?.get(selectedTokenId) ?? BigInt(0))
   const isPrimary = isPrimaryToken(amount.info)
+  // Calculate spendable amount accounting for locked deposit only
+  // Fee subtraction is handled by the transaction builder when subtractFeeFromAmount is true
   const spendable = isPrimary
     ? available - primaryBreakdown.lockedAsStorageCost
     : available
@@ -190,7 +192,7 @@ export const EditAmountScreen = () => {
 
           <Space.Height.md />
 
-          {!isPrimary && (
+          {spendable > BigInt(0) && (
             <Button
               title={strings.send.max.toLocaleUpperCase()}
               onPress={handleOnMaxBalance}

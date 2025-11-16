@@ -1,5 +1,6 @@
-import {isHex} from '@yoroi/common'
+import {normalizeToAddress} from '@yoroi/tx'
 
+import {Address} from '@emurgo/cross-csl-core'
 import BigNumber from 'bignumber.js'
 
 import {logger} from '~/kernel/logger/logger'
@@ -11,48 +12,52 @@ import {wrappedCsl} from './wrappedCsl'
 // Re-export from assetHelpers to maintain backward compatibility
 export {identifierToCardanoAsset} from './assetHelpers'
 
-const addressPlaceholder =
-  'addr1qx8nuj8a7gy8kes4pedpfdscrlxr6p8gkzyzmhdmsf4209xssydveuc8xyx4zh27fwcmr62mraeezjwf24hzkyejwfmqmpfpy5'
-
+/**
+ * Calculates the total locked deposit (minimum ADA) required for UTXOs containing assets.
+ *
+ * According to Cardano protocol (CIP-1852, Cardano Ledger specifications):
+ * - Minimum ADA = UTxO Size in Bytes × coinsPerUtxoByte
+ * - The UTxO size includes the address, so we must use the actual receiver address
+ *   from each UTXO, not a placeholder, as different address types have different sizes.
+ *
+ * This matches the Cardano standard implementation used in yoroi-lib and other Cardano tools.
+ */
 export async function calcLockedDeposit({
   rawUtxos,
-  address = addressPlaceholder,
   coinsPerUtxoByteStr,
 }: {
   rawUtxos: RawUtxo[]
-  address?: string
   coinsPerUtxoByteStr: string
 }) {
   const cslLocal = wrappedCsl()
   const csl = cslLocal.csl
   const result = new BigNumber(0)
   try {
-    // Create address within this csl scope to avoid pointer issues
-    let normalizedAddress: any
-    if (csl.ByronAddress.isValid(address)) {
-      const byronAddr = csl.ByronAddress.fromBase58(address)
-      normalizedAddress = byronAddr.toAddress()
-    } else {
-      const isHexAddr = isHex(address)
-      normalizedAddress = isHexAddr
-        ? csl.Address.fromHex(address)
-        : csl.Address.fromBech32(address)
-    }
-
-    if (
-      normalizedAddress === undefined ||
-      normalizedAddress === null ||
-      normalizedAddress.isMalformed()
-    ) {
-      throw new Error('calcLockedDeposit::Error not a valid address')
-    }
-
     const utxosWithAssets = rawUtxos.filter((u) => u.assets.length > 0)
     const coinsPerUtxoByte = csl.BigNum.fromStr(coinsPerUtxoByteStr)
     const dataCost = csl.DataCost.newCoinsPerByte(coinsPerUtxoByte)
 
     const results = utxosWithAssets.map((u, index) => {
       try {
+        // Use the actual receiver address from each UTXO, not a placeholder
+        // This is critical because address size affects UTxO size calculation
+        const receiverAddress = u.receiver
+        if (!receiverAddress) {
+          throw new Error('UTXO missing receiver address')
+        }
+
+        // Normalize address using tx package utility (supports Byron, hex, and bech32)
+        const normalizedAddress: Address | undefined = normalizeToAddress(
+          csl,
+          receiverAddress,
+        )
+
+        if (!normalizedAddress || normalizedAddress.isMalformed()) {
+          throw new Error(
+            `calcLockedDeposit::Invalid receiver address: ${receiverAddress}`,
+          )
+        }
+
         const value = cardanoValueFromRemoteFormat(u, csl)
         if (!value) {
           throw new Error('cardanoValueFromRemoteFormat returned null value')

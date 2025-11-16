@@ -182,6 +182,12 @@ export async function createSendTxFromWallet(
     entries: TransactionOutput[]
     addressMode: Wallet.AddressMode
     metadata?: Array<CardanoTypes.TxMetadata>
+    /**
+     * If true, subtract transaction fee from the primary token amount in the first output.
+     * This is useful when sending MAX amount - the output will be automatically adjusted
+     * to account for fees, ensuring the transaction can be built successfully.
+     */
+    subtractFeeFromAmount?: boolean
   },
 ): Promise<{cbor: string}> {
   const modernUtxos = getModernUtxosFromWallet(wallet)
@@ -199,5 +205,6 @@ export async function createSendTxFromWallet(
       label: String(meta.label),
       data: meta.data,
     })),
+    subtractFeeFromAmount: params.subtractFeeFromAmount,
   })
 }

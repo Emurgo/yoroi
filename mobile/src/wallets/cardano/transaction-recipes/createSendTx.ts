@@ -7,7 +7,7 @@ import {
   addInputs,
   addMetadata,
   addOutput,
-  buildRecipeTransaction,
+  buildTransaction,
   createCardanoHaskellConfig,
   createTransactionBuilder,
   selectUtxosForAmounts,
@@ -36,6 +36,12 @@ export type CreateSendTxParams = {
   getChangeAddress: (addressMode: Wallet.AddressMode) => string
   addressMode: Wallet.AddressMode
   metadata?: Array<{label: string; data: any}>
+  /**
+   * If true, subtract transaction fee from the primary token amount in the first output.
+   * This is useful when sending MAX amount - the output will be automatically adjusted
+   * to account for fees, ensuring the transaction can be built successfully.
+   */
+  subtractFeeFromAmount?: boolean
 }
 
 export async function createSendTx({
@@ -48,6 +54,7 @@ export async function createSendTx({
   getChangeAddress,
   addressMode,
   metadata,
+  subtractFeeFromAmount = false,
 }: CreateSendTxParams): Promise<{cbor: string}> {
   const absSlotNumber = await getAbsoluteSlotNumber()
   const changeAddress = getChangeAddress(addressMode)
@@ -224,67 +231,361 @@ export async function createSendTx({
       estimatedFee,
     )
 
-    // Build transaction using functional TransactionBuilder
-    let builderState = createTransactionBuilder()
+    // Helper function to build transaction with given entries
+    const buildTxWithEntries = async (
+      txEntries: TransactionOutput[],
+    ): Promise<{cbor: string; fee: bigint}> => {
+      // Build transaction using functional TransactionBuilder
+      let builderState = createTransactionBuilder()
 
-    // Add only selected UTXOs as inputs
-    builderState = addInputs(builderState, selectedUtxos)
+      // Add only selected UTXOs as inputs
+      builderState = addInputs(builderState, selectedUtxos)
 
-    // Add outputs from entries
-    // Ensure outputs with tokens have minimum UTXO value in ADA
-    for (let i = 0; i < entries.length; i++) {
-      const entry = entries[i]
-      if (!entry) continue
+      // Add outputs from entries
+      // Ensure outputs with tokens have minimum UTXO value in ADA
+      for (let i = 0; i < txEntries.length; i++) {
+        const entry = txEntries[i]
+        if (!entry) continue
 
-      const hasTokens = Object.keys(entry.amounts).some(
-        (tokenId) => tokenId !== primaryTokenId,
-      )
-      const adaAmount = BigInt(entry.amounts[primaryTokenId] || '0')
+        const hasTokens = Object.keys(entry.amounts).some(
+          (tokenId) => tokenId !== primaryTokenId,
+        )
+        const adaAmount = BigInt(entry.amounts[primaryTokenId] || '0')
 
-      // If output has tokens but insufficient ADA, use calculated minAda or fallback
-      const adjustedAmounts = {...entry.amounts}
-      if (hasTokens && adaAmount < minUtxoValue) {
-        // Use the calculated minAda if available, otherwise use the fallback
-        const calculatedMinAda = entryMinAda.get(i)
-        const minAdaToUse =
-          calculatedMinAda && calculatedMinAda > minUtxoValue
-            ? calculatedMinAda
-            : minUtxoValue
+        // If output has tokens but insufficient ADA, use calculated minAda or fallback
+        const adjustedAmounts = {...entry.amounts}
+        if (hasTokens && adaAmount < minUtxoValue) {
+          // Use the calculated minAda if available, otherwise use the fallback
+          const calculatedMinAda = entryMinAda.get(i)
+          const minAdaToUse =
+            calculatedMinAda && calculatedMinAda > minUtxoValue
+              ? calculatedMinAda
+              : minUtxoValue
 
-        adjustedAmounts[primaryTokenId] =
-          minAdaToUse.toString() as Balance.Quantity
+          adjustedAmounts[primaryTokenId] =
+            minAdaToUse.toString() as Balance.Quantity
+        }
+
+        builderState = addOutput(
+          builderState,
+          entry.address,
+          adjustedAmounts,
+          entry.datum,
+        )
       }
 
-      builderState = addOutput(
+      // Set change address
+      builderState = setChangeAddress(builderState, changeAddress)
+
+      // Set TTL with buffer to prevent expiration
+      builderState = setTTLWithBuffer(builderState, absSlotNumber.toNumber())
+
+      // Add metadata if present
+      if (metadata && metadata.length > 0) {
+        for (const meta of metadata) {
+          const label = String(meta.label)
+          builderState = addMetadata(builderState, label, meta.data)
+        }
+      }
+
+      // Build the transaction and get fee
+      const unsignedTx = await buildTransaction(
         builderState,
-        entry.address,
-        adjustedAmounts,
-        entry.datum,
+        protocolParamsConfig,
+        primaryTokenId,
       )
+
+      // Extract fee from transaction CBOR
+      const fee = await CardanoMobileWrapped.cslScope(async (csl) => {
+        if (!unsignedTx.cbor) {
+          throw new Error('Transaction CBOR not available')
+        }
+        const tx = csl.Transaction.fromHex(unsignedTx.cbor)
+        if (!tx) {
+          throw new Error('Failed to parse transaction from CBOR')
+        }
+        const body = tx.body()
+        const feeBigNum = body.fee()
+        return BigInt(feeBigNum.toStr())
+      })
+
+      return {cbor: unsignedTx.cbor || '', fee}
     }
 
-    // Set change address
-    builderState = setChangeAddress(builderState, changeAddress)
+    // Build transaction first to get actual fee
+    // If subtractFeeFromAmount is true and initial build fails with "Not enough ADA",
+    // we'll catch it and retry with reduced amount
+    let result: {cbor: string; fee: bigint} | undefined
+    let initialBuildFailed = false
 
-    // Set TTL with buffer to prevent expiration
-    builderState = setTTLWithBuffer(builderState, absSlotNumber.toNumber())
+    try {
+      result = await buildTxWithEntries(entries)
+      logger.info('createSendTx: Initial build completed', {
+        subtractFeeFromAmount,
+        fee: result.fee.toString(),
+        entriesCount: entries.length,
+      })
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : String(error)
+      const isNotEnoughAdaError =
+        errorMessage.includes('Not enough ADA leftover') ||
+        errorMessage.includes('Not enough ADA')
 
-    // Add metadata if present
-    if (metadata && metadata.length > 0) {
-      for (const meta of metadata) {
-        const label = String(meta.label)
-        builderState = addMetadata(builderState, label, meta.data)
+      // If subtractFeeFromAmount is true and we got "Not enough ADA" error,
+      // we'll handle it by reducing the amount and retrying
+      if (subtractFeeFromAmount && isNotEnoughAdaError && entries.length > 0) {
+        initialBuildFailed = true
+        logger.info(
+          'createSendTx: Initial build failed with Not enough ADA, will retry with reduced amount',
+          {
+            errorMessage,
+          },
+        )
+      } else {
+        // Re-throw if it's not the error we're handling or subtractFeeFromAmount is false
+        throw error
       }
     }
 
-    // Build the transaction
-    const result = await buildRecipeTransaction(
-      builderState,
-      protocolParamsConfig,
-      primaryTokenId,
-    )
+    // If subtractFeeFromAmount is true, adjust the first output and rebuild
+    // This ensures that when sending MAX, the fee is automatically subtracted
+    // from the output amount, preventing "Not enough ADA leftover" errors
+    if (subtractFeeFromAmount && entries.length > 0) {
+      const firstEntry = entries[0]
+      if (firstEntry) {
+        // Check if selected UTXOs have non-ADA assets that will go to change
+        const totalInputAda = selectedUtxos.reduce(
+          (sum, utxo) => sum + BigInt(utxo.balance[primaryTokenId] || '0'),
+          BigInt(0),
+        )
 
-    return result
+        // Calculate total output ADA (excluding change)
+        const totalOutputAda = entries.reduce(
+          (sum, entry) => sum + BigInt(entry.amounts[primaryTokenId] || '0'),
+          BigInt(0),
+        )
+
+        // Calculate total input amounts for each token
+        const totalInputAmounts: Record<string, bigint> = {}
+        for (const utxo of selectedUtxos) {
+          for (const [tokenId, quantity] of Object.entries(utxo.balance)) {
+            totalInputAmounts[tokenId] =
+              (totalInputAmounts[tokenId] || BigInt(0)) + BigInt(quantity)
+          }
+        }
+
+        // Calculate total output amounts for each token
+        const totalOutputAmounts: Record<string, bigint> = {}
+        for (const entry of entries) {
+          for (const [tokenId, quantity] of Object.entries(entry.amounts)) {
+            totalOutputAmounts[tokenId] =
+              (totalOutputAmounts[tokenId] || BigInt(0)) + BigInt(quantity)
+          }
+        }
+
+        // Check if there are non-ADA assets that will remain in change
+        let hasNonAdaAssetsInChange = false
+        for (const [tokenId, inputAmount] of Object.entries(
+          totalInputAmounts,
+        )) {
+          if (tokenId === primaryTokenId) continue
+          const outputAmount = totalOutputAmounts[tokenId] || BigInt(0)
+          if (inputAmount > outputAmount) {
+            hasNonAdaAssetsInChange = true
+            break
+          }
+        }
+
+        const currentAdaAmount = BigInt(
+          firstEntry.amounts[primaryTokenId] || '0',
+        )
+        const minAdaForEntry = entryMinAda.get(0) || minUtxoValue
+
+        // If initial build failed, use iterative approach to find the right amount
+        // If initial build succeeded, we can do a single adjustment with actual fee
+        if (initialBuildFailed) {
+          // Iterative approach: keep reducing until transaction builds successfully
+          const estimatedFee =
+            BigInt(protocolParams.linearFee.constant) +
+            BigInt(protocolParams.linearFee.coefficient) * BigInt(500) // Estimate: 500 bytes
+
+          // Calculate minimum ADA for change output if needed
+          // Use a conservative estimate: 1.5x minUtxoValue for safety margin
+          let minAdaForChange = BigInt(0)
+          if (hasNonAdaAssetsInChange) {
+            // Use 1.5x as a safety margin since actual minAda depends on asset count/size
+            minAdaForChange = (minUtxoValue * BigInt(3)) / BigInt(2) // 1.5x
+          }
+
+          // Start with initial reduction
+          let attemptAdaAmount =
+            currentAdaAmount - estimatedFee - minAdaForChange
+          let lastSuccessfulAmount: bigint | undefined
+          const maxAttempts = 10
+          let attempt = 0
+
+          logger.info('createSendTx: Starting iterative fee adjustment', {
+            initialBuildFailed,
+            totalInputAda: totalInputAda.toString(),
+            totalOutputAda: totalOutputAda.toString(),
+            estimatedFee: estimatedFee.toString(),
+            hasNonAdaAssetsInChange,
+            minAdaForChange: minAdaForChange.toString(),
+            currentAdaAmount: currentAdaAmount.toString(),
+            initialAttemptAmount: attemptAdaAmount.toString(),
+          })
+
+          while (attempt < maxAttempts) {
+            attempt++
+            // Ensure we don't go below minimum UTXO value for this output
+            const finalAdaAmount =
+              attemptAdaAmount > minAdaForEntry
+                ? attemptAdaAmount
+                : minAdaForEntry
+
+            // Check if we've gone too low
+            if (
+              finalAdaAmount <= minAdaForEntry &&
+              attemptAdaAmount <= minAdaForEntry
+            ) {
+              logger.error(
+                'createSendTx: Cannot reduce amount further - hit minimum',
+                {
+                  attempt,
+                  finalAdaAmount: finalAdaAmount.toString(),
+                  minAdaForEntry: minAdaForEntry.toString(),
+                },
+              )
+              throw new Error(
+                'Cannot send MAX amount: insufficient ADA after accounting for fees and minimum change requirements',
+              )
+            }
+
+            // Create adjusted entries with reduced ADA amount
+            const adjustedEntries: TransactionOutput[] = [
+              {
+                ...firstEntry,
+                amounts: {
+                  ...firstEntry.amounts,
+                  [primaryTokenId]:
+                    finalAdaAmount.toString() as Balance.Quantity,
+                },
+              },
+              ...entries.slice(1),
+            ]
+
+            try {
+              result = await buildTxWithEntries(adjustedEntries)
+              lastSuccessfulAmount = finalAdaAmount
+              logger.info(
+                'createSendTx: Build successful after fee adjustment',
+                {
+                  attempt,
+                  newFee: result.fee.toString(),
+                  finalAdaAmount: finalAdaAmount.toString(),
+                  initialBuildFailed,
+                },
+              )
+              break // Success!
+            } catch (error) {
+              const errorMessage =
+                error instanceof Error ? error.message : String(error)
+              const isNotEnoughAdaError =
+                errorMessage.includes('Not enough ADA leftover') ||
+                errorMessage.includes('Not enough ADA')
+
+              if (isNotEnoughAdaError && attempt < maxAttempts) {
+                // Reduce amount further - subtract additional safety margin
+                // Use a percentage-based reduction: reduce by 5% each attempt
+                const reductionAmount =
+                  (attemptAdaAmount * BigInt(5)) / BigInt(100)
+                attemptAdaAmount = attemptAdaAmount - reductionAmount
+
+                logger.info(
+                  'createSendTx: Build failed, reducing amount further',
+                  {
+                    attempt,
+                    errorMessage,
+                    newAttemptAmount: attemptAdaAmount.toString(),
+                    reductionAmount: reductionAmount.toString(),
+                  },
+                )
+              } else {
+                // Not a "Not enough ADA" error, or max attempts reached
+                logger.error(
+                  'createSendTx: Build failed after fee adjustment',
+                  {
+                    attempt,
+                    error: errorMessage,
+                    finalAdaAmount: finalAdaAmount.toString(),
+                    minAdaForChange: minAdaForChange.toString(),
+                    estimatedFee: estimatedFee.toString(),
+                    initialBuildFailed,
+                  },
+                )
+                throw error
+              }
+            }
+          }
+
+          if (!result || !lastSuccessfulAmount) {
+            throw new Error(
+              'Failed to build transaction after multiple reduction attempts',
+            )
+          }
+        } else {
+          // Initial build succeeded - do a single adjustment with actual fee
+          // Calculate minimum ADA for change output if needed
+          let minAdaForChange = BigInt(0)
+          if (hasNonAdaAssetsInChange) {
+            minAdaForChange = minUtxoValue
+          }
+
+          const adjustedAdaAmount =
+            currentAdaAmount - result!.fee - minAdaForChange
+          const finalAdaAmount =
+            adjustedAdaAmount > minAdaForEntry
+              ? adjustedAdaAmount
+              : minAdaForEntry
+
+          logger.info(
+            'createSendTx: Single fee adjustment (initial build succeeded)',
+            {
+              totalInputAda: totalInputAda.toString(),
+              totalOutputAda: totalOutputAda.toString(),
+              fee: result!.fee.toString(),
+              hasNonAdaAssetsInChange,
+              minAdaForChange: minAdaForChange.toString(),
+              currentAdaAmount: currentAdaAmount.toString(),
+              adjustedAdaAmount: adjustedAdaAmount.toString(),
+              finalAdaAmount: finalAdaAmount.toString(),
+            },
+          )
+
+          const adjustedEntries: TransactionOutput[] = [
+            {
+              ...firstEntry,
+              amounts: {
+                ...firstEntry.amounts,
+                [primaryTokenId]: finalAdaAmount.toString() as Balance.Quantity,
+              },
+            },
+            ...entries.slice(1),
+          ]
+
+          result = await buildTxWithEntries(adjustedEntries)
+          logger.info('createSendTx: Rebuild successful after fee adjustment', {
+            newFee: result.fee.toString(),
+          })
+        }
+      }
+    }
+
+    if (!result) {
+      throw new Error('Transaction build failed: result is undefined')
+    }
+    return {cbor: result.cbor}
   } catch (e) {
     if (e instanceof NotEnoughMoneyToSendError || e instanceof NoOutputsError) {
       logger.error('createSendTx: Transaction creation failed', {

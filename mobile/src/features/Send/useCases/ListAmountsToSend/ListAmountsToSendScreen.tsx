@@ -1,4 +1,4 @@
-import {isNft} from '@yoroi/portfolio'
+import {isNft, isPrimaryToken} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
 import {TransactionOutput} from '@yoroi/tx'
@@ -10,6 +10,8 @@ import * as React from 'react'
 import {TouchableOpacity, View} from 'react-native'
 import {FlatList} from 'react-native-gesture-handler'
 
+import {usePortfolioBalances} from '~/features/Portfolio/common/hooks/usePortfolioBalances'
+import {usePortfolioPrimaryBreakdown} from '~/features/Portfolio/common/hooks/usePortfolioPrimaryBreakdown'
 import {useSearch} from '~/features/Search/SearchContext'
 import {useNavigateTo} from '~/features/Send/common/navigation'
 import {toTransactionOutput} from '~/features/Send/common/toTransactionOutput'
@@ -40,6 +42,7 @@ export const ListAmountsToSendScreen = () => {
     tokenSelectedChanged,
     amountRemoved,
     reset,
+    allocated,
   } = useTransfer()
 
   const selectedTarget = targets[selectedTargetIndex]
@@ -53,6 +56,40 @@ export const ListAmountsToSendScreen = () => {
   const {
     meta: {addressMode},
   } = useSelectedWallet()
+
+  // Check if MAX amount is being sent for primary token
+  const balances = usePortfolioBalances({wallet})
+  const primaryBreakdown = usePortfolioPrimaryBreakdown({wallet})
+  const primaryTokenId = wallet.portfolioPrimaryTokenInfo.id
+  const primaryAmount = amounts[primaryTokenId]
+  const isSendingMaxAda = React.useMemo(() => {
+    if (!primaryAmount || !isPrimaryToken(primaryAmount.info)) return false
+
+    const available =
+      (balances.records.get(primaryTokenId)?.quantity ?? BigInt(0)) -
+      (allocated.get(selectedTargetIndex)?.get(primaryTokenId) ?? BigInt(0))
+    const spendable = available - primaryBreakdown.lockedAsStorageCost
+
+    // Check if the amount equals spendable (MAX was used)
+    const isMax = primaryAmount.quantity === spendable && spendable > BigInt(0)
+
+    logger.info('ListAmountsToSendScreen: MAX detection', {
+      primaryAmount: primaryAmount.quantity.toString(),
+      available: available.toString(),
+      lockedAsStorageCost: primaryBreakdown.lockedAsStorageCost.toString(),
+      spendable: spendable.toString(),
+      isSendingMaxAda: isMax,
+    })
+
+    return isMax
+  }, [
+    primaryAmount,
+    balances,
+    primaryBreakdown.lockedAsStorageCost,
+    primaryTokenId,
+    selectedTargetIndex,
+    allocated,
+  ])
 
   React.useLayoutEffect(() => {
     navigation.setOptions({headerLeft: () => <ListAmountsNavigateBackButton />})
@@ -90,9 +127,18 @@ export const ListAmountsToSendScreen = () => {
   const createUnsignedTxPromise = React.useCallback(
     async (entries: TransactionOutput[]) => {
       try {
+        logger.info('ListAmountsToSendScreen: Creating transaction', {
+          subtractFeeFromAmount: isSendingMaxAda,
+          entriesCount: entries.length,
+          addressMode,
+          firstEntryAdaAmount:
+            entries[0]?.amounts[wallet.portfolioPrimaryTokenInfo.id] || '0',
+        })
         const result = await createSendTxFromWallet(wallet, {
           entries,
           addressMode,
+          // Subtract fee from amount when sending MAX ADA
+          subtractFeeFromAmount: isSendingMaxAda,
         })
         return result
       } catch (error) {
@@ -100,11 +146,12 @@ export const ListAmountsToSendScreen = () => {
           error: error instanceof Error ? error.message : String(error),
           entriesCount: entries.length,
           addressMode,
+          subtractFeeFromAmount: isSendingMaxAda,
         })
         throw error
       }
     },
-    [wallet, addressMode],
+    [wallet, addressMode, isSendingMaxAda],
   )
 
   const handleCreateUnsignedTxSuccess = React.useCallback(
