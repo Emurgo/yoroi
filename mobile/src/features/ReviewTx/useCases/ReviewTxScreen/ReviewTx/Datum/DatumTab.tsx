@@ -178,21 +178,31 @@ const DatumOutput = ({
         {datum.data && (
           <>
             <Space.Height.md />
-            <Text style={[a.body_2_md_medium, {color: p.text_gray_medium}]}>
-              {strings.txReview.datum.rawDataLabel}:
-            </Text>
+            <View style={[a.flex_row, a.justify_between]}>
+              <Text style={[a.body_2_md_medium, {color: p.text_gray_medium}]}>
+                {strings.txReview.datum.rawDataLabel}:
+              </Text>
+              <Copiable text={datum.data} />
+            </View>
             <Space.Height.sm />
-            <Copiable text={datum.data}>
+            <View
+              style={[
+                {
+                  backgroundColor: p.bg_color_min,
+                  padding: 12,
+                  borderRadius: 8,
+                },
+              ]}
+            >
               <Text
                 style={[
                   a.body_2_md_regular,
                   {color: p.text_gray_medium, fontFamily: 'monospace'},
                 ]}
-                numberOfLines={3}
               >
                 {datum.data}
               </Text>
-            </Copiable>
+            </View>
           </>
         )}
 

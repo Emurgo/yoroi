@@ -37,6 +37,8 @@ export const MetadataTab = ({metadata, hash}: FormattedMetadata) => {
                   a.body_2_md_regular,
                   {color: p.text_gray_medium},
                 ]}
+                numberOfLines={1}
+                ellipsizeMode="middle"
               >
                 {hash}
               </Text>
@@ -47,17 +49,16 @@ export const MetadataTab = ({metadata, hash}: FormattedMetadata) => {
         </>
       )}
 
+      <View style={[a.flex_row, a.justify_between]}>
+        <Text style={[a.body_1_lg_medium, {color: p.text_gray_medium}]}>
+          {strings.txReview.metadata.metadataJsonLabel}
+        </Text>
+        <Copiable text={metadataFormatted} />
+      </View>
+
+      <Space.Height.sm />
+
       <View style={[{backgroundColor: p.bg_color_min}, a.rounded_sm, a.p_lg]}>
-        <View style={[a.flex_row, a.justify_between]}>
-          <Copiable text={metadataFormatted}>
-            <Text style={[a.body_1_lg_medium, {color: p.text_gray_medium}]}>
-              {strings.txReview.metadata.metadataJsonLabel}
-            </Text>
-          </Copiable>
-        </View>
-
-        <Space.Height.lg />
-
         <Text style={[a.body_2_md_regular, {color: p.text_gray_medium}]}>
           {metadataFormatted}
         </Text>
