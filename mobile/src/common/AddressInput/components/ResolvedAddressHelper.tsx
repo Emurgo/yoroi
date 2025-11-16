@@ -1,6 +1,6 @@
 import {nameServerName} from '@yoroi/resolver'
 import {atoms as a, useTheme} from '@yoroi/theme'
-import {useTransfer} from '@yoroi/transfer'
+import {Resolver} from '@yoroi/types'
 
 import * as React from 'react'
 import {Text, View} from 'react-native'
@@ -8,18 +8,31 @@ import {Text, View} from 'react-native'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Space} from '~/ui/Space/Space'
 
-export const ShowResolvedAddressSelected = () => {
+const shortenString = (text: string) => {
+  if (text.length > 16) {
+    return text.substring(0, 8) + '...' + text.substring(text.length - 8)
+  }
+  return text
+}
+
+type ResolvedAddressHelperProps = {
+  resolvedAddress: string | null
+  selectedNameServer: Resolver.NameServer | null
+}
+
+export const ResolvedAddressHelper = ({
+  resolvedAddress,
+  selectedNameServer,
+}: ResolvedAddressHelperProps) => {
   const strings = useStrings()
   const {atoms: ta} = useTheme()
-  const {targets, selectedTargetIndex} = useTransfer()
-  const selectedTarget = targets[selectedTargetIndex]
-  const selectedNameServer = selectedTarget?.receiver.selectedNameServer
-  const address = selectedTarget?.entry.address ?? ''
 
-  const hide = address.length === 0 || selectedNameServer == null
+  const hide = resolvedAddress == null || selectedNameServer == null
 
-  const serverName = hide ? null : nameServerName[selectedNameServer]
-  const shortenAddress = hide ? '' : shortenString(address)
+  const serverName = hide
+    ? null
+    : nameServerName[selectedNameServer as keyof typeof nameServerName]
+  const shortenAddress = hide ? '' : shortenString(resolvedAddress ?? '')
   const resolvedAddressInfo = hide
     ? ''
     : `${strings.send.resolvedAddress}: ${shortenAddress}`
@@ -44,11 +57,4 @@ export const ShowResolvedAddressSelected = () => {
       </View>
     </View>
   )
-}
-
-const shortenString = (text: string) => {
-  if (text.length > 16) {
-    return text.substring(0, 8) + '...' + text.substring(text.length - 8)
-  }
-  return text
 }

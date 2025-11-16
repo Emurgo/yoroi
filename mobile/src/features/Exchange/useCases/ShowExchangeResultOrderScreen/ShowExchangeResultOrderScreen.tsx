@@ -140,8 +140,7 @@ export const ShowExchangeResultOrderScreen = () => {
                   <Space.Width.xs />
 
                   <Text style={[a.body_1_lg_regular, ta.text_gray_max]}>
-                    {' '}
-                    {name}{' '}
+                    {name}
                   </Text>
                 </View>
               </ContentResult>
@@ -150,8 +149,7 @@ export const ShowExchangeResultOrderScreen = () => {
         </View>
 
         <View style={a.px_lg}>
-          {' '}
-          <Button onPress={handleOnClose} title={strings.global.close} />{' '}
+          <Button onPress={handleOnClose} title={strings.global.close} />
         </View>
       </SafeAreaView>
     </ExchangeProvider>

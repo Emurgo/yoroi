@@ -28,6 +28,9 @@
       "~/features/*": [
         "./src/features/*"
       ],
+      "~/common/*": [
+        "./src/common/*"
+      ],
       "~/hooks/*": [
         "./src/hooks/*"
       ],

@@ -20,6 +20,9 @@ import {WalletDetailsScreen} from './useCases/CreateWallet/WalletDetailsScreen'
 import {CheckNanoXScreen} from './useCases/RestoreHwWallet/CheckNanoXScreen'
 import {ConnectNanoXScreen} from './useCases/RestoreHwWallet/ConnectNanoXScreen'
 import {SaveNanoXScreen} from './useCases/RestoreHwWallet/SaveNanoXScreen'
+import {RestoreReadOnlyWalletChooseTypeScreen} from './useCases/RestoreReadOnlyWallet/RestoreReadOnlyWalletChooseTypeScreen'
+import {RestoreReadOnlyWalletFromAddressesScreen} from './useCases/RestoreReadOnlyWallet/RestoreReadOnlyWalletFromAddressesScreen'
+import {RestoreReadOnlyWalletFromKeyScreen} from './useCases/RestoreReadOnlyWallet/RestoreReadOnlyWalletFromKeyScreen'
 import {RestoreWalletDetailsScreen} from './useCases/RestoreWallet/RestoreWalletDetailsScreen'
 import {RestoreWalletScreen} from './useCases/RestoreWallet/RestoreWalletScreen'
 import {RestoreWalletFromLinkScreen} from './useCases/RestoreWalletFromLink/RestoreWalletFromLinkScreen'
@@ -145,6 +148,24 @@ export const SetupWalletNavigator = () => {
         name="setup-wallet-restore-from-link"
         getComponent={() => RestoreWalletFromLinkScreen}
         options={{title: strings.setupWallet.restoreWalletTitle}}
+      />
+
+      <Stack.Screen
+        name="setup-wallet-restore-read-only-choose-type"
+        getComponent={() => RestoreReadOnlyWalletChooseTypeScreen}
+        options={{title: 'Restore Read-Only Wallet'}}
+      />
+
+      <Stack.Screen
+        name="setup-wallet-restore-read-only-from-key"
+        getComponent={() => RestoreReadOnlyWalletFromKeyScreen}
+        options={{title: 'Restore Read-Only Wallet'}}
+      />
+
+      <Stack.Screen
+        name="setup-wallet-restore-read-only-from-addresses"
+        getComponent={() => RestoreReadOnlyWalletFromAddressesScreen}
+        options={{title: 'Restore Read-Only Wallet'}}
       />
     </Stack.Navigator>
   )

@@ -34,20 +34,17 @@ export const Counter = ({
       ]}
     >
       <Text style={[a.body_2_md_regular, {color: p.primary_600}]}>
-        {' '}
         {openingText}
       </Text>
 
       <Text>
         <Text style={[a.body_2_md_medium, {color: p.primary_600}]}>
-          {' '}
-          {counter}{' '}
+          {counter}
         </Text>
 
         {unitsText !== undefined && (
           <Text style={[a.body_2_md_medium, {color: p.primary_600}]}>
-            {' '}
-            {unitsText ?? ''}{' '}
+            {unitsText ?? ''}
           </Text>
         )}
 

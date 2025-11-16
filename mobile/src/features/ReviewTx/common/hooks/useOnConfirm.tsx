@@ -131,6 +131,12 @@ export const useOnConfirm = ({
   const onConfirm = () => {
     if (cbor == null) throw new Error('useOnConfirm:: invalid state')
 
+    // Block read-only wallets from signing transactions
+    if (meta.isReadOnly) {
+      handleOnError(new Error('Read-only wallets cannot sign transactions'))
+      return
+    }
+
     if (meta.isHW) {
       if (preventSubmit) {
         sign({

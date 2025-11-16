@@ -1,18 +1,16 @@
-import {useTransfer} from '@yoroi/transfer'
 import {validateAndExtractAddressInfo} from '@yoroi/tx'
 
 import * as React from 'react'
 
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {
+  AddressErrorInvalid,
+  AddressErrorWrongNetwork,
+} from '~/features/Send/common/errors'
+import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 
-import {AddressErrorInvalid, AddressErrorWrongNetwork} from './errors'
-
-export const useSendAddress = () => {
-  const {wallet} = useSelectedWallet()
-  const {chainId} = wallet.networkManager
-
-  const {targets, selectedTargetIndex} = useTransfer()
-  const target = targets[selectedTargetIndex]
+export const useRestoreAddress = (address: string) => {
+  const {selected} = useWalletManager()
+  const {chainId} = selected.networkManager
 
   const [addressValidated, setAddressValidated] = React.useState<
     boolean | undefined
@@ -23,13 +21,6 @@ export const useSendAddress = () => {
   const [isValidatingAddress, setIsValidatingAddress] = React.useState(false)
 
   React.useEffect(() => {
-    if (!target) {
-      setAddressValidated(undefined)
-      setAddressError(undefined)
-      return
-    }
-
-    const {address} = target.entry
     if (address.length === 0) {
       setAddressValidated(undefined)
       setAddressError(undefined)
@@ -49,7 +40,7 @@ export const useSendAddress = () => {
       .finally(() => {
         setIsValidatingAddress(false)
       })
-  }, [target, chainId])
+  }, [address, chainId])
 
   return {
     addressValidated,

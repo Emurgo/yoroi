@@ -13,13 +13,11 @@ const address =
   'addr1q9qhyvkm5fytm5ckgshny0zz08a3urhhh7ckdqxcm27av40eafn3v5lr2w2n2er9uj7c743mt42gpe8tgek6394z9t7qn4yjzl'
 const addressHex = 'stake1u9qh50svpn80sk9ftv80l5m57840q3jecluvmjyvz5um46qaa79q4'
 const network = Chain.Network.Mainnet
-const stakingKey = 'stake1u8'
 const transformers = transformersMaker({
   primaryTokenInfo,
   address,
   addressHex,
   network,
-  stakingKey,
   isPrimaryToken,
   partner: 'somePartnerId',
 })

@@ -3,6 +3,7 @@ import {Blockies} from '@yoroi/identicon'
 import {App, Chain, HW, Network, Wallet} from '@yoroi/types'
 
 import {walletChecksum} from '@emurgo/cip4-js'
+import {Buffer} from 'buffer'
 import {freeze} from 'immer'
 import {
   BehaviorSubject,
@@ -606,27 +607,84 @@ export class WalletManager {
 
     const walletFactory = getWalletFactory({network, implementation})
 
-    const encryptedStorage = makeWalletEncryptedStorage(id)
-    const accountPubKeyHex = await encryptedStorage.xpub.read(accountVisual)
+    // Check if this is a read-only wallet
+    const meta = this.#walletMetas$.value.get(id)
+    const isReadOnly = meta?.isReadOnly ?? false
 
     logger.debug('WalletManager: loadWallet loading wallet', {
       id,
       accountVisual,
       implementation,
       isForced,
-    })
-    if (!accountPubKeyHex)
-      throwLoggedError('WalletManager: loadWallet accountPubKeyHex not found')
-
-    const wallet = await walletFactory.build({
-      id,
-      accountPubKeyHex,
-      accountVisual,
+      isReadOnly,
     })
 
-    wallet.subscribe((event) => this._notify(event))
+    if (isReadOnly) {
+      // Load read-only wallet from addresses
+      const networkManager = networkManagers[network]
+      const addressStorage = networkManager.legacyRootStorage.join(
+        `${id}/addresses/`,
+      )
+      const readOnlyData = await addressStorage.getItem('readOnly', (data) => {
+        const parsed = parseSafe(data)
+        if (
+          parsed &&
+          typeof parsed === 'object' &&
+          ('knownAddress' in parsed ||
+            'internal' in parsed ||
+            'external' in parsed)
+        ) {
+          return parsed as {
+            knownAddress?: string
+            internal?: string[]
+            external?: string[]
+            rewardAddressHex?: string
+            enableDiscovery?: boolean
+            accountVisual?: number
+          }
+        }
+        return undefined
+      })
 
-    return wallet
+      if (!readOnlyData) {
+        throwLoggedError(
+          'WalletManager: loadWallet read-only address data not found',
+        )
+      }
+
+      const wallet = await walletFactory.build({
+        id,
+        accountVisual: readOnlyData.accountVisual ?? accountVisual,
+        readOnlyAddresses: {
+          knownAddress: readOnlyData.knownAddress,
+          internal: readOnlyData.internal,
+          external: readOnlyData.external,
+          rewardAddressHex: readOnlyData.rewardAddressHex,
+          enableDiscovery: readOnlyData.enableDiscovery ?? false,
+        },
+      })
+
+      wallet.subscribe((event) => this._notify(event))
+
+      return wallet
+    } else {
+      // Load full wallet from accountPubKeyHex
+      const encryptedStorage = makeWalletEncryptedStorage(id)
+      const accountPubKeyHex = await encryptedStorage.xpub.read(accountVisual)
+
+      if (!accountPubKeyHex)
+        throwLoggedError('WalletManager: loadWallet accountPubKeyHex not found')
+
+      const wallet = await walletFactory.build({
+        id,
+        accountPubKeyHex,
+        accountVisual,
+      })
+
+      wallet.subscribe((event) => this._notify(event))
+
+      return wallet
+    }
   }
 
   /**
@@ -754,6 +812,150 @@ export class WalletManager {
       isEasyConfirmationEnabled: false,
       isHW: hwDeviceInfo !== null,
       hwDeviceInfo,
+    }
+    await this.#walletsRootStorage.setItem(id, meta)
+    await this.hydrate()
+    return meta
+  }
+
+  /**
+   * Validates if a string looks like a valid Cardano address
+   */
+  private isValidCardanoAddress(address: string): boolean {
+    if (!address || typeof address !== 'string') return false
+    const trimmed = address.trim()
+    return (
+      trimmed.startsWith('addr') ||
+      trimmed.startsWith('stake') ||
+      trimmed.startsWith('Ae2') ||
+      trimmed.startsWith('DdzFF') ||
+      /^[0-9a-fA-F]{64,}$/.test(trimmed) // Hex address (at least 32 bytes)
+    )
+  }
+
+  /**
+   * Creates a read-only wallet from addresses (without accountPubKeyHex)
+   * This allows creating a partial read-only view of a wallet using only known addresses
+   */
+  async createReadOnlyWalletFromAddresses({
+    name,
+    knownAddress,
+    internalAddresses = [],
+    externalAddresses = [],
+    rewardAddressHex,
+    implementation,
+    addressMode,
+    accountVisual,
+    enableDiscovery = false,
+  }: {
+    name: string
+    knownAddress?: string
+    internalAddresses?: string[]
+    externalAddresses?: string[]
+    rewardAddressHex?: string
+    implementation: Wallet.Implementation
+    addressMode: Wallet.AddressMode
+    accountVisual: number
+    enableDiscovery?: boolean
+  }) {
+    const network = this.selectedNetwork
+    const walletFactory = getWalletFactory({network, implementation})
+    const id = v4()
+
+    // Filter out invalid addresses
+    const validKnownAddress =
+      knownAddress && this.isValidCardanoAddress(knownAddress)
+        ? knownAddress
+        : undefined
+    const validInternalAddresses = internalAddresses.filter((addr) =>
+      this.isValidCardanoAddress(addr),
+    )
+    const validExternalAddresses = externalAddresses.filter((addr) =>
+      this.isValidCardanoAddress(addr),
+    )
+
+    // Validate we have at least one valid address
+    if (
+      !validKnownAddress &&
+      validInternalAddresses.length === 0 &&
+      validExternalAddresses.length === 0
+    ) {
+      throw new Error(
+        'Read-only wallet requires at least one valid Cardano address',
+      )
+    }
+
+    // Derive reward address if not provided and we have a base address
+    let finalRewardAddressHex = rewardAddressHex
+    if (!finalRewardAddressHex) {
+      const addressToUse =
+        validExternalAddresses[0] ||
+        validInternalAddresses[0] ||
+        validKnownAddress
+      if (addressToUse && this.isValidCardanoAddress(addressToUse)) {
+        try {
+          const chainId = networkManagers[network].chainId
+          const rewardAddressBech32 = CardanoMobileWrapped.cslScope((csl) => {
+            const addr = csl.Address.fromBech32(addressToUse)
+            const baseAddr = csl.BaseAddress.fromAddress(addr)
+            if (!baseAddr) {
+              throw new Error('Address is not a base address')
+            }
+            const stakeCred = baseAddr.stakeCred()
+            const rewardAddr = csl.RewardAddress.new(chainId, stakeCred)
+            return rewardAddr.toAddress().toBech32(undefined)
+          })
+
+          if (typeof rewardAddressBech32 === 'string') {
+            finalRewardAddressHex = CardanoMobileWrapped.cslScope((csl) => {
+              const addr = csl.Address.fromBech32(rewardAddressBech32)
+              return Buffer.from(addr.toBytes()).toString('hex')
+            })
+          }
+        } catch (error) {
+          logger.warn('Failed to derive reward address', {error})
+          finalRewardAddressHex = ''
+        }
+      }
+    }
+
+    // Generate checksum from reward address or first address for avatar/plate
+    const checksumSource = finalRewardAddressHex
+      ? Buffer.from(finalRewardAddressHex, 'hex').toString('hex')
+      : validExternalAddresses[0] ||
+        validInternalAddresses[0] ||
+        validKnownAddress ||
+        ''
+
+    const {ImagePart: seed, TextPart: plate} =
+      walletFactory.calcChecksum(checksumSource)
+    const avatar = new Blockies({seed}).asBase64()
+
+    // Store addresses for persistence (not in encrypted storage since no private keys)
+    const addressStorage = networkManagers[network].legacyRootStorage.join(
+      `${id}/addresses/`,
+    )
+    await addressStorage.setItem('readOnly', {
+      knownAddress: validKnownAddress,
+      internal: validInternalAddresses,
+      external: validExternalAddresses,
+      rewardAddressHex: finalRewardAddressHex,
+      enableDiscovery,
+      accountVisual,
+    })
+
+    const meta: Wallet.Meta = {
+      version: WalletManager.version,
+      id,
+      name,
+      avatar,
+      plate,
+      implementation,
+      addressMode,
+      isReadOnly: true,
+      isEasyConfirmationEnabled: false,
+      isHW: false,
+      hwDeviceInfo: null,
     }
     await this.#walletsRootStorage.setItem(id, meta)
     await this.hydrate()

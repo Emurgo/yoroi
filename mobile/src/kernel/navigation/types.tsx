@@ -58,6 +58,9 @@ export type WalletInitRoutes = {
   'setup-wallet-restore-from-link': {
     action: Scan.ActionRestoreWallet
   }
+  'setup-wallet-restore-read-only-choose-type': undefined
+  'setup-wallet-restore-read-only-from-key': undefined
+  'setup-wallet-restore-read-only-from-addresses': undefined
 }
 
 export type SetupWalletRouteNavigation = StackNavigationProp<WalletInitRoutes>

@@ -14,6 +14,7 @@ import {
   FormattedTx,
   TransactionBody,
 } from '~/features/ReviewTx/common/types'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useUnsafeParams} from '~/kernel/navigation/hooks/useUnsafeParams'
 import {ReviewTxRoutes} from '~/kernel/navigation/types'
 import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
@@ -63,6 +64,7 @@ const ReviewTxContent = ({
   validationResult?: {valid: boolean; errors: string[]; warnings: string[]}
   trackEvent: ReturnType<typeof useAnalyticsTracking>['trackEvent']
 }) => {
+  const {meta} = useSelectedWallet()
   const {onConfirm} = useOnConfirm({
     cbor: params?.cbor,
     partial: params?.partial,
@@ -100,7 +102,8 @@ const ReviewTxContent = ({
       receiverCustomTitle={params?.receiverCustomTitle}
       createdBy={params?.createdBy}
       validationResult={validationResult}
-      onConfirm={handleOnConfirm}
+      onConfirm={meta.isReadOnly ? undefined : handleOnConfirm}
+      readOnly={meta.isReadOnly}
     />
   )
 }

@@ -15,7 +15,6 @@ export const swapManagerMaker: Swap.ManagerMaker = ({
   network,
   primaryTokenInfo,
   isPrimaryToken,
-  stakingKey,
   storage,
   partners,
 }) => {
@@ -31,7 +30,6 @@ export const swapManagerMaker: Swap.ManagerMaker = ({
     addressHex,
     network,
     primaryTokenInfo,
-    stakingKey,
     isPrimaryToken,
     partner: partners?.[Swap.Aggregator.Muesliswap],
   })

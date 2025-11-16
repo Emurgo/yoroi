@@ -6,6 +6,7 @@ import * as React from 'react'
 import {Alert, Animated, Text, TouchableOpacity, View} from 'react-native'
 import {Swipeable} from 'react-native-gesture-handler'
 
+import {useAuth} from '~/features/Auth/context/AuthProvider'
 import {
   ChevronRightDarkIllustration,
   ChevronRightGrayIllustration,
@@ -27,6 +28,7 @@ type Props = {
 
 export const WalletListItem = ({walletMeta, onPress}: Props) => {
   const {palette: p, atoms: ta} = useTheme()
+  const {isAuthDev} = useAuth()
 
   const [isButtonPressed, setIsButtonPressed] = React.useState(false)
   const implementationName = React.useMemo(
@@ -68,11 +70,10 @@ export const WalletListItem = ({walletMeta, onPress}: Props) => {
     ]),
   )
 
-  // NOTE: dev only - temporary to show Product
   const handleOnDeleteWallet = () => {
     Alert.alert(
       'Delete Wallet',
-      'Are you sure you want to delete this wallet?',
+      `Are you sure you want to delete "${walletMeta.name}"? This action cannot be undone.`,
       [
         {
           text: 'Cancel',
@@ -126,7 +127,7 @@ export const WalletListItem = ({walletMeta, onPress}: Props) => {
   return (
     <Swipeable
       renderRightActions={(progress) => renderRightActions(progress)}
-      enabled={features.walletListSwipeableActions}
+      enabled={isAuthDev}
     >
       <View
         style={[a.flex_row, a.justify_between, a.align_center, a.flex_wrap]}

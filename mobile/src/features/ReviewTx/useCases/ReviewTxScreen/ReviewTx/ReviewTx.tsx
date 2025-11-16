@@ -10,6 +10,7 @@ import {memoMaxLenght} from '~/features/Send/common/constants'
 import {ShowMemoErrorTooLong} from '~/features/Send/useCases/StartMultiTokenTx/InputMemo/ShowMemoErrorTooLong'
 import {ShowMemoInstructions} from '~/features/Send/useCases/StartMultiTokenTx/InputMemo/ShowMemoInstructions'
 import {useStrings} from '~/kernel/i18n/useStrings'
+import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Button} from '~/ui/Button/Button'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {ScrollView} from '~/ui/ScrollView/ScrollView'
@@ -68,6 +69,7 @@ const TabWrapper = ({
   const {atoms: ta} = useTheme()
   const strings = useStrings()
   const scrollViewRef = React.useRef<RNScrollView | null>(null)
+  const {resetToTxHistory} = useWalletNavigation()
 
   return (
     <ScrollViewProvider>
@@ -75,17 +77,26 @@ const TabWrapper = ({
         <ScrollView ref={scrollViewRef} style={[a.flex_1, ta.bg_color_max]}>
           {children}
         </ScrollView>
-        {!readOnly && onConfirm && (
+        {readOnly ? (
           <SafeArea.Footer>
-            {showMemo && (
-              <>
-                <Space.Height.lg />
-                <MemoInput />
-                <Space.Height.lg />
-              </>
-            )}
-            <Button title={strings.txReview.confirm} onPress={onConfirm} />
+            <Button
+              title={strings.txReview.submittedTxButton}
+              onPress={resetToTxHistory}
+            />
           </SafeArea.Footer>
+        ) : (
+          onConfirm && (
+            <SafeArea.Footer>
+              {showMemo && (
+                <>
+                  <Space.Height.lg />
+                  <MemoInput />
+                  <Space.Height.lg />
+                </>
+              )}
+              <Button title={strings.txReview.confirm} onPress={onConfirm} />
+            </SafeArea.Footer>
+          )
         )}
       </SafeArea>
     </ScrollViewProvider>

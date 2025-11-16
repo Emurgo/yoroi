@@ -34,7 +34,6 @@ export const UtxoAddressGroup = ({item}: {item: UtxoList[number]}) => {
               </Text>
 
               <Text style={[a.body_2_md_medium, ta.text_primary_medium]}>
-                {' '}
                 {item.address.slice(-6)}
               </Text>
             </Text>

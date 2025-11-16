@@ -59,6 +59,10 @@ import {
   Addresses,
   accountManagerMaker,
 } from './account-manager/account-manager'
+import {
+  ReadOnlyAccountManager,
+  readOnlyAccountManagerMaker,
+} from './account-manager/read-only-account-manager'
 import * as legacyApi from './api/api'
 import {calcLockedDeposit} from './assetUtils'
 import {getDelegationStatus} from './delegationUtils'
@@ -86,6 +90,7 @@ import {
   isYoroiWallet,
 } from './types'
 import {
+  deriveRewardAddressFromAddress,
   deriveRewardAddressHex,
   getAddressedUtxos,
   getHexAddressingMap,
@@ -111,7 +116,7 @@ export const makeCardanoWallet = (
 
     readonly publicKeyHex: string
     readonly rewardAddressHex: string
-    readonly accountManager: AccountManager
+    readonly accountManager: AccountManager | ReadOnlyAccountManager
     readonly accountVisual: number
     private readonly utxoManager: UtxoManager
     private _utxos: RawUtxo[]
@@ -138,10 +143,21 @@ export const makeCardanoWallet = (
       id,
       accountPubKeyHex,
       accountVisual,
+      // New optional parameters for read-only wallets
+      readOnlyAddresses,
+      rewardAddressHex,
     }: {
       id: YoroiWallet['id']
-      accountPubKeyHex: string
+      accountPubKeyHex?: string
       accountVisual: number
+      readOnlyAddresses?: {
+        knownAddress?: string
+        internal?: string[]
+        external?: string[]
+        rewardAddressHex?: string
+        enableDiscovery?: boolean
+      }
+      rewardAddressHex?: string
     }) => {
       const {
         rootStorage: networkRootStorage,
@@ -156,15 +172,107 @@ export const makeCardanoWallet = (
         `accounts/${accountVisual}/`,
       )
 
-      // TODO: revisit it should be part of staking manager (when staking is supported/desired)
-      const rewardAddressHex = implementationConfig.features.staking
-        ? deriveRewardAddressHex(
-            accountPubKeyHex,
-            chainId,
-            implementationConfig.features.staking.derivation.role,
-            implementationConfig.features.staking.derivation.index,
+      // Determine which manager to use
+      let accountManager: AccountManager | ReadOnlyAccountManager
+      let finalRewardAddressHex: string
+
+      if (readOnlyAddresses) {
+        // Read-only mode
+        if (
+          !readOnlyAddresses.knownAddress &&
+          (!readOnlyAddresses.internal ||
+            readOnlyAddresses.internal.length === 0) &&
+          (!readOnlyAddresses.external ||
+            readOnlyAddresses.external.length === 0)
+        ) {
+          throw new Error(
+            'Read-only wallet requires at least one known address or address list',
           )
-        : ''
+        }
+
+        accountManager = await readOnlyAccountManagerMaker({
+          chainId,
+          knownAddress: readOnlyAddresses.knownAddress,
+          internalAddresses: readOnlyAddresses.internal || [],
+          externalAddresses: readOnlyAddresses.external || [],
+          rewardAddressHex:
+            readOnlyAddresses.rewardAddressHex || rewardAddressHex,
+          storage: accountStorage,
+          baseApiUrl: legacyApiBaseUrl,
+          enableDiscovery: readOnlyAddresses.enableDiscovery ?? false,
+        })
+
+        // Get reward address from manager or derive it
+        if (readOnlyAddresses.rewardAddressHex) {
+          finalRewardAddressHex = readOnlyAddresses.rewardAddressHex
+        } else if (
+          readOnlyAddresses.external &&
+          readOnlyAddresses.external.length > 0 &&
+          readOnlyAddresses.external[0]
+        ) {
+          try {
+            const rewardAddressBech32 = deriveRewardAddressFromAddress(
+              readOnlyAddresses.external[0]!,
+              chainId,
+            )
+            finalRewardAddressHex = CardanoMobileWrapped.cslScope((csl) => {
+              const addr = csl.Address.fromBech32(rewardAddressBech32)
+              return Buffer.from(addr.toBytes()).toString('hex')
+            })
+          } catch (error) {
+            logger.warn(
+              'Failed to derive reward address for read-only wallet',
+              {
+                error,
+              },
+            )
+            finalRewardAddressHex = ''
+          }
+        } else if (readOnlyAddresses.knownAddress) {
+          try {
+            const rewardAddressBech32 = deriveRewardAddressFromAddress(
+              readOnlyAddresses.knownAddress,
+              chainId,
+            )
+            finalRewardAddressHex = CardanoMobileWrapped.cslScope((csl) => {
+              const addr = csl.Address.fromBech32(rewardAddressBech32)
+              return Buffer.from(addr.toBytes()).toString('hex')
+            })
+          } catch (error) {
+            logger.warn(
+              'Failed to derive reward address for read-only wallet',
+              {
+                error,
+              },
+            )
+            finalRewardAddressHex = ''
+          }
+        } else {
+          finalRewardAddressHex = ''
+        }
+      } else {
+        // Full wallet mode (existing logic)
+        if (!accountPubKeyHex) {
+          throw new Error('accountPubKeyHex required for full wallet')
+        }
+
+        accountManager = await accountManagerMaker({
+          storage: accountStorage,
+          accountPubKeyHex,
+          chainId,
+          implementation,
+          baseApiUrl: legacyApiBaseUrl,
+        })
+
+        finalRewardAddressHex = implementationConfig.features.staking
+          ? deriveRewardAddressHex(
+              accountPubKeyHex,
+              chainId,
+              implementationConfig.features.staking.derivation.role,
+              implementationConfig.features.staking.derivation.index,
+            )
+          : ''
+      }
 
       const utxoManager = await makeUtxoManager({
         storage: accountStorage.join('utxos/'),
@@ -181,21 +289,14 @@ export const makeCardanoWallet = (
         tokenManager,
         networkRootStorage,
       })(id)
-      const accountManager = await accountManagerMaker({
-        storage: accountStorage,
-        accountPubKeyHex,
-        chainId,
-        implementation,
-        baseApiUrl: legacyApiBaseUrl,
-      })
       // TODO: protocolParams needs update when epoch changes, this also should trigger
       // the calculation of locked deposit, since the cost can change
       const protocolParams = await networkManager.api.protocolParams()
 
       const wallet = new CardanoWallet({
         id,
-        accountPubKeyHex,
-        rewardAddressHex,
+        accountPubKeyHex: accountPubKeyHex || '', // Empty for read-only wallets
+        rewardAddressHex: finalRewardAddressHex,
         accountManager,
         utxoManager,
         transactionManager,
@@ -238,7 +339,7 @@ export const makeCardanoWallet = (
       transactionManager: TransactionManager
       memosManager: MemosManager
       balanceManager: Readonly<Portfolio.Manager.Balance>
-      accountManager: AccountManager
+      accountManager: AccountManager | ReadOnlyAccountManager
 
       portfolioPrimaryTokenInfo: Readonly<Portfolio.Token.Info>
       protocolParams: Api.Cardano.ProtocolParams
@@ -302,18 +403,43 @@ export const makeCardanoWallet = (
     generateNewReceiveAddress() {
       const {canIncrease} = this.receiveAddressInfo
       if (!canIncrease) return false
-      this.externalChain.increaseVisualIndex()
-      this.accountManager.save()
 
-      this.notify({type: 'addresses', addresses: this.receiveAddresses})
+      // Read-only wallets can't generate new addresses
+      if (!this.publicKeyHex || this.publicKeyHex === '') {
+        return false
+      }
 
-      return true
+      // Type guard: only AddressChain has increaseVisualIndex
+      if ('increaseVisualIndex' in this.externalChain) {
+        this.externalChain.increaseVisualIndex()
+        this.accountManager.save()
+
+        this.notify({type: 'addresses', addresses: this.receiveAddresses})
+
+        return true
+      }
+
+      return false
     }
 
     getAddressing(address: string) {
       const startLevel = derivationConfig.keyLevel.purpose
 
+      // Check if this is a read-only wallet (no accountPubKeyHex means read-only)
+      const isReadOnly = !this.publicKeyHex || this.publicKeyHex === ''
+
       if (this.internalChain.isMyAddress(address)) {
+        if (isReadOnly) {
+          // For read-only wallets, return minimal addressing info
+          return {
+            path: [], // Empty path - we don't know the derivation
+            startLevel,
+            isReadOnly: true,
+            chain: 'internal' as const,
+            index: this.internalChain.getIndexOfAddress(address),
+          }
+        }
+
         const path = [
           implementationConfig.derivations.base.harden.purpose,
           implementationConfig.derivations.base.harden.coinType,
@@ -328,6 +454,17 @@ export const makeCardanoWallet = (
       }
 
       if (this.externalChain.isMyAddress(address)) {
+        if (isReadOnly) {
+          // For read-only wallets, return minimal addressing info
+          return {
+            path: [], // Empty path - we don't know the derivation
+            startLevel,
+            isReadOnly: true,
+            chain: 'external' as const,
+            index: this.externalChain.getIndexOfAddress(address),
+          }
+        }
+
         const path = [
           implementationConfig.derivations.base.harden.purpose,
           implementationConfig.derivations.base.harden.coinType,
@@ -371,6 +508,44 @@ export const makeCardanoWallet = (
     // staking
     public getStakingKey() {
       if (implementationConfig.features.staking) {
+        // For read-only wallets, extract staking key hash from addresses
+        // since we don't have publicKeyHex to derive it
+        if (!this.publicKeyHex || this.publicKeyHex === '') {
+          // Try to extract staking key hash from one of the wallet's addresses
+          const addresses = [
+            ...this.externalAddresses,
+            ...this.internalAddresses,
+          ]
+
+          for (const address of addresses) {
+            try {
+              const wasmAddress = CardanoMobile.Address.fromBech32(address)
+              const baseAddr =
+                CardanoMobile.BaseAddress.fromAddress(wasmAddress)
+              if (baseAddr?.hasValue()) {
+                const stakeCred = baseAddr.stakeCred()
+                const keyHash = stakeCred.toKeyhash()
+                if (keyHash?.hasValue()) {
+                  // Create a wrapper PublicKey-like object that returns the key hash
+                  // This allows read-only wallets to work with code that expects getStakingKey().hash()
+                  return {
+                    hash: () => keyHash,
+                  } as CardanoTypes.PublicKey
+                }
+              }
+            } catch {
+              // Continue to next address
+              continue
+            }
+          }
+
+          // If we couldn't extract from addresses, throw an error
+          throwLoggedError(
+            'getStakingKey: Could not extract staking key from addresses for read-only wallet',
+          )
+        }
+
+        // For full wallets, derive from publicKeyHex as before
         const derivation = implementationConfig.features.staking.derivation
 
         const accountPubKey = CardanoMobile.Bip32PublicKey.fromBytes(

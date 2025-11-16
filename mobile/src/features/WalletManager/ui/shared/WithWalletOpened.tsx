@@ -4,17 +4,10 @@ import {
   exchangeApiMaker,
   exchangeManagerMaker,
 } from '@yoroi/exchange'
-import {
-  ResolverProvider,
-  resolverApiMaker,
-  resolverManagerMaker,
-  resolverStorageMaker,
-} from '@yoroi/resolver'
-import {App, Resolver} from '@yoroi/types'
+import {App} from '@yoroi/types'
 
 import * as React from 'react'
 
-import {unstoppableApiKey} from '~/kernel/constants'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 
 import {useWalletManager} from '../../context/WalletManagerProvider'
@@ -85,25 +78,6 @@ const NetworkWrapper = ({children}: React.PropsWithChildren) => {
   const {
     networkManager: {isMainnet},
   } = useSelectedNetwork()
-  const resolverStorage = React.useMemo(() => {
-    return resolverStorageMaker()
-  }, [])
-
-  const resolverApi = React.useMemo(() => {
-    return resolverApiMaker({
-      apiConfig: {
-        [Resolver.NameServer.Unstoppable]: {
-          apiKey: unstoppableApiKey,
-        },
-      },
-      cslFactory: () => require('@emurgo/cross-csl-core'),
-      isMainnet,
-    })
-  }, [isMainnet])
-
-  const resolverManager = React.useMemo(() => {
-    return resolverManagerMaker(resolverStorage, resolverApi)
-  }, [resolverStorage, resolverApi])
 
   const exchangeManager = React.useMemo(() => {
     const api = exchangeApiMaker({
@@ -114,14 +88,12 @@ const NetworkWrapper = ({children}: React.PropsWithChildren) => {
   }, [isMainnet])
 
   return (
-    <ResolverProvider resolverManager={resolverManager}>
-      <ExchangeProvider
-        manager={exchangeManager}
-        initialState={initialExchangeState}
-      >
-        {children}
-      </ExchangeProvider>
-    </ResolverProvider>
+    <ExchangeProvider
+      manager={exchangeManager}
+      initialState={initialExchangeState}
+    >
+      {children}
+    </ExchangeProvider>
   )
 }
 

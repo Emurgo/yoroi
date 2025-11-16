@@ -1,36 +1,26 @@
 import {
   isDomain,
-  isNameServer,
   isResolvableDomain,
   useResolverCryptoAddresses,
 } from '@yoroi/resolver'
-import {useTransfer} from '@yoroi/transfer'
 import {Resolver} from '@yoroi/types'
 
 import {useQueryClient} from '@tanstack/react-query'
 import * as React from 'react'
 
-export const useSendReceiver = () => {
+export const useRestoreReceiver = (value: string) => {
   const queryClient = useQueryClient()
 
-  const {
-    targets,
-    selectedTargetIndex,
-    receiverResolveChanged,
-    addressRecordsFetched,
-  } = useTransfer()
-  const target = targets[selectedTargetIndex]
-  const receiver = target?.receiver ?? {resolve: '', as: 'address'}
-  const isUnsupportedDomain =
-    !isResolvableDomain(receiver.resolve) && isDomain(receiver.resolve)
+  const isUnsupportedDomain = !isResolvableDomain(value) && isDomain(value)
+
+  const isDomainInput = isResolvableDomain(value)
 
   const {
     error: receiverError,
     cryptoAddresses,
     refetch,
     isLoading: isResolvingAddressess,
-    isSuccess,
-  } = useResolverCryptoAddresses({resolve: receiver.resolve})
+  } = useResolverCryptoAddresses({resolve: value})
 
   const isNotResolvedDomain = React.useMemo(
     () =>
@@ -61,44 +51,30 @@ export const useSendReceiver = () => {
   )
 
   React.useEffect(() => {
-    if (receiver.as === 'domain')
+    if (isDomainInput && value.trim().length > 0) {
       cancelPendingRequests().then(() => debouncedRefetch.call())
-    if (receiver.as === 'address') cancelPendingRequests()
-    return () => debouncedRefetch.clear()
-  }, [
-    receiver.as,
-    refetch,
-    receiver.resolve,
-    debouncedRefetch,
-    queryClient,
-    cancelPendingRequests,
-    receiverResolveChanged,
-  ])
-
-  React.useEffect(() => {
-    if (isSuccess && cryptoAddresses !== undefined) {
-      const records = cryptoAddresses.reduce(
-        (
-          addressRecords: Resolver.Receiver['addressRecords'],
-          {address, nameServer},
-        ) => {
-          if (
-            address !== null &&
-            nameServer !== null &&
-            isNameServer(nameServer) === true
-          )
-            if (addressRecords !== undefined) {
-              return {...addressRecords, [nameServer]: address}
-            } else {
-              return {[nameServer]: address}
-            }
-          return addressRecords
-        },
-        undefined,
-      )
-      addressRecordsFetched(records)
+    } else {
+      cancelPendingRequests()
     }
-  }, [addressRecordsFetched, cryptoAddresses, isSuccess])
+    return () => debouncedRefetch.clear()
+  }, [isDomainInput, value, debouncedRefetch, cancelPendingRequests])
+
+  // Get resolved address from cryptoAddresses
+  const resolvedAddress = React.useMemo(() => {
+    if (cryptoAddresses.length === 0) return null
+    const successful = cryptoAddresses.find(
+      ({address, error}) => address !== null && error === null,
+    )
+    return successful?.address ?? null
+  }, [cryptoAddresses])
+
+  const selectedNameServer = React.useMemo(() => {
+    if (cryptoAddresses.length === 0) return null
+    const successful = cryptoAddresses.find(
+      ({address, error}) => address !== null && error === null,
+    )
+    return successful?.nameServer ?? null
+  }, [cryptoAddresses])
 
   return {
     isWrongBlockchainError,
@@ -106,9 +82,11 @@ export const useSendReceiver = () => {
     isResolvingAddressess,
     isUnsupportedDomain,
     receiverError,
+    resolvedAddress,
+    selectedNameServer,
+    isDomainInput,
   }
 }
-
 const debounceMaker = <T extends (...args: never[]) => unknown>(
   callback: T,
   delay: number,
