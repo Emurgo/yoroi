@@ -53,6 +53,7 @@ export const TxListItem = ({transaction}: Props) => {
   const operationText = React.useMemo(() => {
     // Create a minimal WalletTransaction-like object with just the fields we need
     const walletTransactionLike = {
+      id: transaction.id,
       certificates: transaction.certificates,
       withdrawals: transaction.withdrawals,
       metadata: transaction.metadata,
@@ -70,6 +71,7 @@ export const TxListItem = ({transaction}: Props) => {
       transaction.delta,
     )
   }, [
+    transaction.id,
     transaction.direction,
     transaction.certificates,
     transaction.withdrawals,
@@ -126,13 +128,17 @@ export const TxListItem = ({transaction}: Props) => {
     | 'STAKE_DEREGISTRATION'
     | 'STAKE_DELEGATION'
     | 'STAKE_UNDELEGATION'
-    | 'VOTE_DELEGATION' => {
+    | 'VOTE_DELEGATION'
+    | 'COLLATERAL_CREATION' => {
     if (!operation) {
       return direction
     }
 
     const opLower = operation.toLowerCase()
 
+    if (opLower.includes('collateral creation')) {
+      return 'COLLATERAL_CREATION'
+    }
     if (opLower.includes('withdrawal')) {
       return 'WITHDRAWAL'
     }

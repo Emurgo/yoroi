@@ -617,6 +617,7 @@
   "components.transactions.operation.swapResolved": "Swap Resolved",
   "components.transactions.operation.swapCancel": "Swap Cancel",
   "components.transactions.operation.smartContract": "Smart Contract",
+  "components.transactions.operation.collateralCreation": "Collateral Creation",
   "components.txhistory.txnavigationbuttons.receiveButton": "Receive",
   "components.txhistory.txnavigationbuttons.sendButton": "Send",
   "components.uikit.offlinebanner.offline": "You are offline. Please check settings on your device.",

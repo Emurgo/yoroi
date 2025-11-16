@@ -2,10 +2,13 @@ import {isArray, isString} from '@yoroi/common'
 import {CertificateKind} from '@yoroi/tx'
 import {Balance, Swap} from '@yoroi/types'
 
+import BigNumber from 'bignumber.js'
+
 import {ContractService} from '~/features/ReviewTx/common/services/contract-service'
 import {useStrings} from '~/kernel/i18n/useStrings'
+import {collateralConfig} from '~/wallets/cardano/utxoManager/utxos'
 import {TransactionDirection, WalletTransaction} from '~/wallets/types/other'
-import {Amounts} from '~/wallets/utils/utils'
+import {Amounts, asQuantity} from '~/wallets/utils/utils'
 
 /**
  * Extract metadata messages from transaction metadata
@@ -123,6 +126,37 @@ export const getOperationDisplayText = (
     // If delta is positive OR amount is empty (intra-wallet with withdrawals), it's a withdrawal
     if (hasPositiveDelta || isEmptyAmount) {
       return strings.transactions.operation.withdrawal
+    }
+  }
+
+  // 1.5. Check for collateral creation (intrawallet tx with pure 5 ADA to a new UTXO)
+  // Criteria:
+  // - Intrawallet transaction (SELF direction)
+  // - No certificates, no withdrawals
+  // - At least one output has exactly 5 ADA (collateralConfig.minLovelace) and no other tokens
+  // Note: We check for exactly 5 ADA output regardless of address reuse, as any output creates a new UTXO
+  if (
+    certificates.length === 0 &&
+    withdrawals.length === 0 &&
+    direction === 'SELF' &&
+    inputs &&
+    outputs &&
+    outputs.length > 0
+  ) {
+    const collateralAmount = new BigNumber(collateralConfig.minLovelace)
+
+    // Find outputs with exactly 5 ADA and no other tokens
+    const collateralOutputs = outputs.filter((output) => {
+      const outputAmount = new BigNumber(asQuantity(output.amount))
+      const hasExactCollateralAmount = outputAmount.isEqualTo(collateralAmount)
+      const hasNoOtherTokens = !output.assets || output.assets.length === 0
+
+      return hasExactCollateralAmount && hasNoOtherTokens
+    })
+
+    // If we found at least one collateral output, it's a collateral creation transaction
+    if (collateralOutputs.length > 0) {
+      return strings.transactions.operation.collateralCreation
     }
   }
 

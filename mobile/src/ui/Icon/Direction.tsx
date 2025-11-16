@@ -5,6 +5,7 @@ import {View, ViewStyle} from 'react-native'
 
 import {DigitalAsset} from '~/ui/Icon/DigitalAsset'
 import {Governance} from '~/ui/Icon/Governance'
+import {Lock} from '~/ui/Icon/Lock'
 import {Received} from '~/ui/Icon/Received'
 import {RewardWithdrawn} from '~/ui/Icon/RewardWithdrawn'
 import {Send} from '~/ui/Icon/Send'
@@ -80,7 +81,8 @@ const getIconKey = (
   | 'STAKE_DEREGISTRATION'
   | 'STAKE_DELEGATION'
   | 'STAKE_UNDELEGATION'
-  | 'VOTE_DELEGATION' => {
+  | 'VOTE_DELEGATION'
+  | 'COLLATERAL_CREATION' => {
   if (!operation) {
     return direction
   }
@@ -88,6 +90,9 @@ const getIconKey = (
   const opLower = operation.toLowerCase()
 
   // Map operation strings to icon keys
+  if (opLower.includes('collateral creation')) {
+    return 'COLLATERAL_CREATION'
+  }
   if (opLower.includes('withdrawal')) {
     return 'WITHDRAWAL'
   }
@@ -139,7 +144,8 @@ const iconMap: Record<
   | 'STAKE_DEREGISTRATION'
   | 'STAKE_DELEGATION'
   | 'STAKE_UNDELEGATION'
-  | 'VOTE_DELEGATION',
+  | 'VOTE_DELEGATION'
+  | 'COLLATERAL_CREATION',
   ({size, color}: {size: number; color: string}) => React.ReactNode
 > = {
   SENT: Send,
@@ -154,6 +160,7 @@ const iconMap: Record<
   STAKE_DELEGATION: Staking,
   STAKE_UNDELEGATION: StakingKeyDeregistered,
   VOTE_DELEGATION: Governance,
+  COLLATERAL_CREATION: Lock,
 }
 
 export const styleMap: (
@@ -163,6 +170,11 @@ export const styleMap: (
   {background: string; icon: string; text: string; size?: number}
 > = (color) => ({
   SELF: {
+    text: color.gray_900,
+    background: color.gray_100,
+    icon: color.gray_900,
+  },
+  COLLATERAL_CREATION: {
     text: color.gray_900,
     background: color.gray_100,
     icon: color.gray_900,
@@ -238,3 +250,4 @@ type ThemeStatus =
   | 'STAKE_DELEGATION'
   | 'STAKE_UNDELEGATION'
   | 'VOTE_DELEGATION'
+  | 'COLLATERAL_CREATION'

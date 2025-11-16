@@ -1629,6 +1629,9 @@ export const useStrings = () => {
           swapResolved: f(transactionsMessages.operationSwapResolved),
           swapCancel: f(transactionsMessages.operationSwapCancel),
           smartContract: f(transactionsMessages.operationSmartContract),
+          collateralCreation: f(
+            transactionsMessages.operationCollateralCreation,
+          ),
         },
         unknownAssetName: f(transactionsMessages.unknownAssetName),
         walletAddress: f(transactionsMessages.walletAddress),
