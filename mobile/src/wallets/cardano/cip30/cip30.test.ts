@@ -84,8 +84,10 @@ describe('cip30ExtensionMaker', () => {
     const cip30 = cip30ExtensionMaker(mocks.wallet, mocks.walletMeta)
     const rootKey = getMasterKeyFromMnemonic(mnemonic)
     const rootKeyHex = Buffer.from(rootKey).toString('hex')
-    const result = cip30.signTx(rootKeyHex, txCbor, true)
+    const result = await cip30.signTx(rootKeyHex, txCbor, true)
     expect(result).toBeDefined()
+    expect(typeof result).toBe('string')
+    expect(result.length).toBeGreaterThan(0)
   })
 
   it('should support signData', async () => {

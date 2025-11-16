@@ -252,14 +252,12 @@ class CIP30Extension {
     })
   }
 
-  signTx(
+  async signTx(
     rootKey: string,
     cbor: string,
     partial = false,
-  ): CSL.TransactionWitnessSet {
-    // Note: cslScope handles Promises correctly, but we need to return synchronously
-    // This is a workaround - the function should ideally be async
-    return CardanoMobileWrapped.cslScope((csl) => {
+  ): Promise<string> {
+    return CardanoMobileWrapped.cslScope(async (csl) => {
       // Validate transaction CBOR before signing
       const validation = validateTransactionCbor(csl, cbor)
       if (!validation.valid) {
@@ -276,23 +274,22 @@ class CIP30Extension {
         })
       }
 
-      // We can't use await here, so we need to use synchronous operations
-      // For now, we'll use a type assertion to work around the async requirement
-      // TODO: Make this function async in the interface
-      return getTransactionSigners(cbor, this.wallet, this.meta, partial).then(
-        (signers) => {
-          const keys = signers.map((signer) =>
-            createRawTxSigningKey(rootKey, signer, csl),
-          )
-          return signRawTransaction(cbor, keys).then((signedTxBytes) => {
-            const signedTx = csl.Transaction.fromBytes(signedTxBytes)
-            return copyFromCSL(
-              CardanoMobile.TransactionWitnessSet,
-              signedTx.witnessSet(),
-            )
-          })
-        },
-      ) as any as CSL.TransactionWitnessSet
+      // Get transaction signers
+      const signers = await getTransactionSigners(
+        cbor,
+        this.wallet,
+        this.meta,
+        partial,
+      )
+      const keys = signers.map((signer) =>
+        createRawTxSigningKey(rootKey, signer, csl),
+      )
+
+      // Sign the transaction
+      const signedTxBytes = await signRawTransaction(cbor, keys)
+
+      // Return signed transaction CBOR hex string (CIP-30 spec requirement)
+      return Buffer.from(signedTxBytes).toString('hex')
     })
   }
 

@@ -1,9 +1,11 @@
 import {useAsyncStorage} from '@yoroi/common'
 import {DappConnection, DappConnector} from '@yoroi/dapp-connector'
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {calculateTxId} from '@yoroi/tx'
 
 import {Transaction} from '@emurgo/cross-csl-core'
 import {useNavigation} from '@react-navigation/native'
+import {Buffer} from 'buffer'
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
@@ -17,6 +19,7 @@ import {cip30ExtensionMaker} from '~/wallets/cardano/cip30/cip30'
 import {cip30LedgerExtensionMaker} from '~/wallets/cardano/cip30/cip30-ledger'
 import {YoroiWallet} from '~/wallets/cardano/types'
 import {collateralConfig} from '~/wallets/cardano/utxoManager/utxos'
+import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
 import {BaseLedgerError} from '~/wallets/hw/hw'
 import {isEmptyString} from '~/wallets/utils/string'
 
@@ -289,9 +292,44 @@ export const useDappConnectorManager = () => {
                 component: <CollateralCreationDetails />,
               },
               generalNotice: <CollateralCreationNotice />,
-              onSuccessWithoutFeedback: () => {
+              onSuccessWithoutFeedback: async (args) => {
                 // Transaction was submitted successfully
-                // The collateral UTXO will be created after confirmation
+                // Set collateral ID immediately to prevent duplicate reorganization transactions
+                // The collateral UTXO will be at index 0 (first output of the reorganization transaction)
+                const signedTx = args?.signedTx ?? args?.tx
+                if (signedTx) {
+                  try {
+                    const txBytes = signedTx.toBytes()
+                    const txId = await CardanoMobileWrapped.cslScope(
+                      async (csl) => {
+                        return await calculateTxId(
+                          csl,
+                          Buffer.from(txBytes).toString('hex'),
+                          'hex',
+                        )
+                      },
+                    )
+                    // Set collateral ID to txId:0 (assuming collateral UTXO is at output index 0)
+                    // This prevents duplicate reorganization transactions while waiting for confirmation
+                    const collateralId = `${txId}:0`
+                    wallet.setCollateralId(collateralId)
+                    logger.info(
+                      'useDappConnectorManager::handleSendReorganisationTx - collateral ID set',
+                      {txId, collateralId},
+                    )
+                  } catch (error) {
+                    logger.error(
+                      'useDappConnectorManager::handleSendReorganisationTx - failed to set collateral ID',
+                      {
+                        error:
+                          error instanceof Error
+                            ? error.message
+                            : String(error),
+                      },
+                    )
+                    // Don't block the flow if setting collateral ID fails
+                  }
+                }
                 resolve()
                 navigateToDiscoverBrowserDapp()
                 // Remove review-tx-routes from navigation stack

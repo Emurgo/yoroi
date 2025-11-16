@@ -993,7 +993,7 @@ const walletId = 'b5d94758-26c5-48b0-af2b-6e68c3ef2dbf'
 
 const CSL = init('test')
 const mockWallet: ResolverWallet = {
-  signTx: () => Promise.resolve(CSL.TransactionWitnessSet.new()),
+  signTx: () => Promise.resolve('mock-signed-tx-hex'),
   signData: () => Promise.resolve({key: '', signature: ''}),
   id: walletId,
   network: Chain.Network.Mainnet,

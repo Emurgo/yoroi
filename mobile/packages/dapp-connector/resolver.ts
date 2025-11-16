@@ -6,15 +6,11 @@ import {
 } from '@yoroi/common'
 import {Chain} from '@yoroi/types'
 
-import {
-  Address,
-  TransactionUnspentOutput,
-  TransactionWitnessSet,
-  Value,
-} from '@emurgo/cross-csl-core'
+import {Address, TransactionUnspentOutput, Value} from '@emurgo/cross-csl-core'
 import BigNumber from 'bignumber.js'
 import {z} from 'zod'
 
+import {collateralConfig} from '../../src/wallets/cardano/utxoManager/utxos'
 import {Storage} from './adapters/async-storage'
 
 type Context = {
@@ -114,7 +110,7 @@ export const resolver: Resolver = {
           : undefined
       if (tx === undefined) throw new Error('Invalid params')
       const result = await context.wallet.signTx(tx, partialSign ?? false)
-      return result.toHex()
+      return result
     },
     signData: async (params: unknown, context: Context) => {
       assertOriginsMatch(context)
@@ -154,7 +150,7 @@ export const resolver: Resolver = {
       assertOriginsMatch(context)
       await assertWalletAcceptedConnection(context)
 
-      const defaultCollateral = '1000000'
+      const defaultCollateral = collateralConfig.minLovelace.toString()
       const value =
         isRecord(params) &&
         Array.isArray(params.args) &&
@@ -164,10 +160,17 @@ export const resolver: Resolver = {
       const result = await context.wallet.getCollateral(value)
 
       if (result === null || result.length === 0) {
-        const balance = await context.wallet.getBalance('*')
-        const coin = new BigNumber(await (await balance.coin()).toStr())
-        if (coin.isGreaterThan(new BigNumber(value))) {
-          await context.wallet.sendReorganisationTx(value)
+        // Check if there's a pending collateral transaction to avoid creating duplicates
+        const collateralInfo = context.wallet.getCollateralInfo()
+        const hasPendingCollateral =
+          collateralInfo.collateralId.length > 0 && !collateralInfo.isConfirmed
+
+        if (!hasPendingCollateral) {
+          const balance = await context.wallet.getBalance('*')
+          const coin = new BigNumber(await (await balance.coin()).toStr())
+          if (coin.isGreaterThan(new BigNumber(value))) {
+            await context.wallet.sendReorganisationTx(value)
+          }
         }
 
         return null
@@ -439,11 +442,12 @@ export type ResolverWallet = {
     pagination?: Pagination,
   ) => Promise<TransactionUnspentOutput[] | null>
   getCollateral: (value?: string) => Promise<TransactionUnspentOutput[] | null>
+  getCollateralInfo: () => {
+    collateralId: string
+    isConfirmed: boolean
+  }
   submitTx: (cbor: string) => Promise<string>
-  signTx: (
-    txHex: string,
-    partialSign?: boolean,
-  ) => Promise<TransactionWitnessSet>
+  signTx: (txHex: string, partialSign?: boolean) => Promise<string>
   signData: (
     address: string,
     payload: string,
