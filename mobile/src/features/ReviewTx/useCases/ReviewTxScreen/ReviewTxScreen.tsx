@@ -1,3 +1,5 @@
+import {validateTransactionCbor} from '@yoroi/tx'
+
 import * as React from 'react'
 
 import {useAnalyticsTracking} from '~/features/Analytics/hooks/useAnalyticsTracking'
@@ -14,6 +16,7 @@ import {
 } from '~/features/ReviewTx/common/types'
 import {useUnsafeParams} from '~/kernel/navigation/hooks/useUnsafeParams'
 import {ReviewTxRoutes} from '~/kernel/navigation/types'
+import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
 
 import {ReviewTx} from './ReviewTx/ReviewTx'
 
@@ -51,11 +54,13 @@ const ReviewTxContent = ({
   params,
   formattedTx,
   formattedMetadata,
+  validationResult,
   trackEvent,
 }: {
   params: NonNullable<ReviewTxRoutes['review-tx']>
   formattedTx: FormattedTx
   formattedMetadata?: FormattedMetadata
+  validationResult?: {valid: boolean; errors: string[]; warnings: string[]}
   trackEvent: ReturnType<typeof useAnalyticsTracking>['trackEvent']
 }) => {
   const {onConfirm} = useOnConfirm({
@@ -93,6 +98,7 @@ const ReviewTxContent = ({
       details={params?.details}
       receiverCustomTitle={params?.receiverCustomTitle}
       createdBy={params?.createdBy}
+      validationResult={validationResult}
       onConfirm={handleOnConfirm}
     />
   )
@@ -116,6 +122,19 @@ export const ReviewTxScreen = () => {
     txBody,
     cbor: params?.cbor ?? null,
   })
+
+  // Validate transaction CBOR if available
+  const validationResult = React.useMemo(() => {
+    if (!params?.cbor) return undefined
+
+    try {
+      return CardanoMobileWrapped.cslScope((csl) => {
+        return validateTransactionCbor(csl, params.cbor!)
+      })
+    } catch {
+      return undefined
+    }
+  }, [params?.cbor])
 
   const hasTrackedReviewViewRef = React.useRef(false)
 
@@ -155,6 +174,7 @@ export const ReviewTxScreen = () => {
         params={params}
         formattedTx={formattedTx}
         formattedMetadata={formattedMetadata}
+        validationResult={validationResult}
         trackEvent={trackEvent}
       />
     </ReviewTxMemoProvider>

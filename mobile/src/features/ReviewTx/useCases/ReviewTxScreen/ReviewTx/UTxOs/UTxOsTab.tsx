@@ -133,6 +133,7 @@ const Outputs = ({outputs}: {outputs: FormattedOutputs}) => {
 
 const Output = ({output}: {output: FormattedOutput}) => {
   const {palette: p} = useTheme()
+  const strings = useStrings()
 
   return (
     <View>
@@ -150,6 +151,36 @@ const Output = ({output}: {output: FormattedOutput}) => {
             {output.address ?? '-'}
           </Text>
         </Copiable>
+
+        {output.datum && (
+          <>
+            <Space.Height.sm />
+            <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+              <Text style={[a.body_2_md_medium, {color: p.el_primary_medium}]}>
+                {strings.txReview.datum.typeLabel}:
+              </Text>
+              <Text style={[a.body_2_md_regular, {color: p.el_primary_medium}]}>
+                {output.datum.type}
+              </Text>
+              {output.datum.hash && (
+                <>
+                  <Text
+                    style={[a.body_2_md_medium, {color: p.el_primary_medium}]}
+                  >
+                    •
+                  </Text>
+                  <Text
+                    style={[a.body_2_md_regular, {color: p.el_primary_medium}]}
+                    numberOfLines={1}
+                    ellipsizeMode="middle"
+                  >
+                    {output.datum.hash.slice(0, 8)}...
+                  </Text>
+                </>
+              )}
+            </View>
+          </>
+        )}
       </View>
 
       <Space.Height.sm />

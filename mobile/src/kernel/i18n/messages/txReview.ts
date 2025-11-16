@@ -34,6 +34,14 @@ export const txReviewMessages = defineMessages({
     id: 'txReview.tabLabel.metadataTab',
     defaultMessage: '!!!Metadata',
   },
+  tabLabelDatum: {
+    id: 'txReview.tabLabel.datum',
+    defaultMessage: '!!!Datum',
+  },
+  tabLabelGovernance: {
+    id: 'txReview.tabLabel.governance',
+    defaultMessage: '!!!Governance',
+  },
   metadataMetadataHash: {
     id: 'txReview.metadata.metadataHash',
     defaultMessage: '!!!Metadata hash',
@@ -319,6 +327,14 @@ export const txReviewMessages = defineMessages({
     id: 'txReview.policyIdLabel',
     defaultMessage: '!!!Policy ID',
   },
+  mintMintLabel: {
+    id: 'txReview.mint.mintLabel',
+    defaultMessage: '!!!Mint',
+  },
+  mintBurnLabel: {
+    id: 'txReview.mint.burnLabel',
+    defaultMessage: '!!!Burn',
+  },
   createdBy: {
     id: 'txReview.createdBy',
     defaultMessage: '!!!Created by',
@@ -335,5 +351,159 @@ export const txReviewMessages = defineMessages({
   overviewOperationsNoticeTitle: {
     id: 'txReview.overview.operationsNoticeTitle',
     defaultMessage: '!!!What are operations?',
+  },
+  overviewValidationErrorsTitle: {
+    id: 'txReview.overview.validationErrorsTitle',
+    defaultMessage: '!!!Transaction Validation Errors',
+  },
+  overviewValidationWarningsTitle: {
+    id: 'txReview.overview.validationWarningsTitle',
+    defaultMessage: '!!!Transaction Validation Warnings',
+  },
+  overviewChainInfoTitle: {
+    id: 'txReview.overview.chainInfoTitle',
+    defaultMessage: '!!!Transaction Chain',
+  },
+  overviewChainInfoDescription: {
+    id: 'txReview.overview.chainInfoDescription',
+    defaultMessage:
+      '!!!This transaction is part of a chain and must be submitted in the correct order.',
+  },
+  overviewChainOrderLabel: {
+    id: 'txReview.overview.chainOrderLabel',
+    defaultMessage: '!!!Chain Order',
+  },
+  overviewContractInteractionsTitle: {
+    id: 'txReview.overview.contractInteractionsTitle',
+    defaultMessage: '!!!Smart Contract Interactions',
+  },
+  overviewContractInteractionDatum: {
+    id: 'txReview.overview.contractInteractionDatum',
+    defaultMessage:
+      '!!!{count, plural, one {# output with datum} other {# outputs with datums}}',
+  },
+  overviewContractInteractionScript: {
+    id: 'txReview.overview.contractInteractionScript',
+    defaultMessage:
+      '!!!{count, plural, one {# output with reference script} other {# outputs with reference scripts}}',
+  },
+  // Datum strings
+  datumNoDatums: {
+    id: 'txReview.datum.noDatums',
+    defaultMessage: '!!!No datums found in this transaction',
+  },
+  datumOutputLabel: {
+    id: 'txReview.datum.outputLabel',
+    defaultMessage: '!!!Output',
+  },
+  datumAddressLabel: {
+    id: 'txReview.datum.addressLabel',
+    defaultMessage: '!!!Address',
+  },
+  datumTypeLabel: {
+    id: 'txReview.datum.typeLabel',
+    defaultMessage: '!!!Type',
+  },
+  datumHashLabel: {
+    id: 'txReview.datum.hashLabel',
+    defaultMessage: '!!!Hash',
+  },
+  datumDecodedLabel: {
+    id: 'txReview.datum.decodedLabel',
+    defaultMessage: '!!!Decoded',
+  },
+  datumJsonLabel: {
+    id: 'txReview.datum.jsonLabel',
+    defaultMessage: '!!!JSON',
+  },
+  datumRawDataLabel: {
+    id: 'txReview.datum.rawDataLabel',
+    defaultMessage: '!!!Raw Data',
+  },
+  // Governance strings
+  governanceNoGovernanceActions: {
+    id: 'txReview.governance.noGovernanceActions',
+    defaultMessage: '!!!No governance actions found in this transaction',
+  },
+  governanceProposalsLabel: {
+    id: 'txReview.governance.proposalsLabel',
+    defaultMessage: '!!!Proposals',
+  },
+  governanceVotesLabel: {
+    id: 'txReview.governance.votesLabel',
+    defaultMessage: '!!!Votes',
+  },
+  governanceProposalLabel: {
+    id: 'txReview.governance.proposalLabel',
+    defaultMessage: '!!!Proposal',
+  },
+  governanceVoteLabel: {
+    id: 'txReview.governance.voteLabel',
+    defaultMessage: '!!!Vote',
+  },
+  governanceActionTypeLabel: {
+    id: 'txReview.governance.actionTypeLabel',
+    defaultMessage: '!!!Action Type',
+  },
+  governanceActionIdLabel: {
+    id: 'txReview.governance.actionIdLabel',
+    defaultMessage: '!!!Action ID',
+  },
+  governanceAnchorUrlLabel: {
+    id: 'txReview.governance.anchorUrlLabel',
+    defaultMessage: '!!!Anchor URL',
+  },
+  governanceAnchorHashLabel: {
+    id: 'txReview.governance.anchorHashLabel',
+    defaultMessage: '!!!Anchor Hash',
+  },
+  governanceDepositLabel: {
+    id: 'txReview.governance.depositLabel',
+    defaultMessage: '!!!Deposit',
+  },
+  governanceRewardAccountLabel: {
+    id: 'txReview.governance.rewardAccountLabel',
+    defaultMessage: '!!!Reward Account',
+  },
+  governanceParametersLabel: {
+    id: 'txReview.governance.parametersLabel',
+    defaultMessage: '!!!Parameters',
+  },
+  governanceVoterTypeLabel: {
+    id: 'txReview.governance.voterTypeLabel',
+    defaultMessage: '!!!Voter Type',
+  },
+  governanceVoterCredentialLabel: {
+    id: 'txReview.governance.voterCredentialLabel',
+    defaultMessage: '!!!Voter Credential',
+  },
+  governanceVoteChoiceLabel: {
+    id: 'txReview.governance.voteChoiceLabel',
+    defaultMessage: '!!!Vote Choice',
+  },
+  // Reference inputs strings
+  referenceInputsScriptsLabel: {
+    id: 'txReview.referenceInputs.scriptsLabel',
+    defaultMessage: '!!!Reference Scripts',
+  },
+  referenceInputsScriptLabel: {
+    id: 'txReview.referenceInputs.scriptLabel',
+    defaultMessage: '!!!Script',
+  },
+  referenceInputsScriptTypeLabel: {
+    id: 'txReview.referenceInputs.scriptTypeLabel',
+    defaultMessage: '!!!Script Type',
+  },
+  referenceInputsScriptHashLabel: {
+    id: 'txReview.referenceInputs.scriptHashLabel',
+    defaultMessage: '!!!Script Hash',
+  },
+  referenceInputsScriptSizeLabel: {
+    id: 'txReview.referenceInputs.scriptSizeLabel',
+    defaultMessage: '!!!Script Size',
+  },
+  referenceInputsUtxoLabel: {
+    id: 'txReview.referenceInputs.utxoLabel',
+    defaultMessage: '!!!UTXO',
   },
 })

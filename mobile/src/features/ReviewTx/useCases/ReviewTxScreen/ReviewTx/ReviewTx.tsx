@@ -14,6 +14,8 @@ import {ScrollViewProvider} from '~/ui/ScrollView/context/ScrollViewContext'
 import {MetadataTab} from '../ReviewTx/Metadata/MetadataTab'
 import {OverviewTab, ReviewDetailsProps} from '../ReviewTx/Overview/OverviewTab'
 import {UTxOsTab} from '../ReviewTx/UTxOs/UTxOsTab'
+import {DatumTab} from './Datum/DatumTab'
+import {GovernanceTab} from './Governance/GovernanceTab'
 import {MintTab} from './Mint/MintTab'
 import {ReferenceInputsTab} from './ReferenceInputs/ReferenceInputs'
 
@@ -56,6 +58,7 @@ export const ReviewTx = ({
   details,
   receiverCustomTitle,
   createdBy,
+  validationResult,
   onConfirm,
   readOnly = false,
 }: {
@@ -66,6 +69,7 @@ export const ReviewTx = ({
   details?: ReviewDetailsProps
   receiverCustomTitle?: React.ReactNode
   createdBy?: React.ReactNode
+  validationResult?: {valid: boolean; errors: string[]; warnings: string[]}
   onConfirm?: () => void
   readOnly?: boolean
 }) => {
@@ -76,6 +80,10 @@ export const ReviewTx = ({
   const showMetadataTab = formattedMetadata?.metadata != null
   const showMintTab = !!formattedTx.mint
   const showReferenceInoutsTab = formattedTx.referenceInputs.length > 0
+  const showDatumTab = formattedTx.outputs.some(
+    (output) => output.datum != null,
+  )
+  const showGovernanceTab = !!formattedTx.governance
 
   return (
     <MaterialTab.Navigator
@@ -104,6 +112,7 @@ export const ReviewTx = ({
               details={details}
               createdBy={createdBy}
               receiverCustomTitle={receiverCustomTitle}
+              validationResult={validationResult}
               readOnly={readOnly}
             />
           </TabWrapper>
@@ -152,6 +161,28 @@ export const ReviewTx = ({
               <ReferenceInputsTab
                 referenceInputs={formattedTx.referenceInputs}
               />
+            </TabWrapper>
+          )}
+        />
+      )}
+
+      {showDatumTab && (
+        <MaterialTab.Screen
+          name={strings.txReview.tabLabel.datum}
+          children={() => (
+            <TabWrapper onConfirm={onConfirm} readOnly={readOnly}>
+              <DatumTab outputs={formattedTx.outputs} />
+            </TabWrapper>
+          )}
+        />
+      )}
+
+      {showGovernanceTab && (
+        <MaterialTab.Screen
+          name={strings.txReview.tabLabel.governance}
+          children={() => (
+            <TabWrapper onConfirm={onConfirm} readOnly={readOnly}>
+              <GovernanceTab tx={formattedTx} />
             </TabWrapper>
           )}
         />

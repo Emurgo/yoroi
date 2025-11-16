@@ -1,4 +1,11 @@
-import {CertificateKind} from '@yoroi/tx'
+import {
+  CertificateKind,
+  type ChainValidationResult,
+  type DecodedDatum,
+  type Proposal,
+  type ReferenceScript,
+  type Vote,
+} from '@yoroi/tx'
 import {Balance, Portfolio} from '@yoroi/types'
 
 import {
@@ -30,6 +37,7 @@ export type FormattedInput = {
     purpose?: string
     description?: string
   } | null // Smart contract information
+  referenceScript?: ReferenceScript | null // Reference script if present
 }
 
 export type FormattedInputs = Array<FormattedInput>
@@ -49,6 +57,14 @@ export type FormattedOutput = {
     purpose?: string
     description?: string
   } | null // Smart contract information
+  datum?: {
+    type: 'hash' | 'inline' | 'embedded'
+    hash: string
+    data?: string // PlutusData hex (if available)
+    decoded?: DecodedDatum | null // Decoded datum for display
+    json?: unknown | null // JSON representation if available
+  } | null // Datum information
+  referenceScript?: ReferenceScript | null // Reference script if present
 }
 
 export type FormattedOutputs = Array<FormattedOutput>
@@ -65,6 +81,15 @@ export type FormattedTx = {
   certificates: FormattedCertificate[] | null
   mint: Array<[Portfolio.Token.Info, string]> | null
   referenceInputs: FormattedInputs
+  governance?: {
+    proposals: Proposal[]
+    votes: Vote[]
+  } | null // Governance actions (proposals and votes)
+  chainInfo?: {
+    isChained: boolean
+    chainOrder?: number
+    validationResult?: ChainValidationResult
+  } | null // Transaction chaining information
 }
 
 export type FormattedMetadata = {

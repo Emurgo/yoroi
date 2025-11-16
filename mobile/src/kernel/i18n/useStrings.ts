@@ -1345,6 +1345,8 @@ export const useStrings = () => {
           mint: f(txReviewMessages.tabLabelMint),
           referenceInputs: f(txReviewMessages.tabLabelReferenceInputs),
           metadataTab: f(txReviewMessages.tabLabelMetadataTab),
+          datum: f(txReviewMessages.tabLabelDatum),
+          governance: f(txReviewMessages.tabLabelGovernance),
         },
         metadata: {
           metadataHash: f(txReviewMessages.metadataMetadataHash),
@@ -1373,8 +1375,69 @@ export const useStrings = () => {
           operationsNoticeTitle: f(
             txReviewMessages.overviewOperationsNoticeTitle,
           ),
+          validationErrorsTitle: f(
+            txReviewMessages.overviewValidationErrorsTitle,
+          ),
+          validationWarningsTitle: f(
+            txReviewMessages.overviewValidationWarningsTitle,
+          ),
+          chainInfoTitle: f(txReviewMessages.overviewChainInfoTitle),
+          chainInfoDescription: f(
+            txReviewMessages.overviewChainInfoDescription,
+          ),
+          chainOrderLabel: f(txReviewMessages.overviewChainOrderLabel),
+          contractInteractionsTitle: f(
+            txReviewMessages.overviewContractInteractionsTitle,
+          ),
+          contractInteractionDatum: (count: number) =>
+            f(txReviewMessages.overviewContractInteractionDatum, {count}),
+          contractInteractionScript: (count: number) =>
+            f(txReviewMessages.overviewContractInteractionScript, {count}),
         },
         fee: f(txReviewMessages.fee),
+        mint: {
+          mintLabel: f(txReviewMessages.mintMintLabel),
+          burnLabel: f(txReviewMessages.mintBurnLabel),
+        },
+        datum: {
+          noDatums: f(txReviewMessages.datumNoDatums),
+          outputLabel: f(txReviewMessages.datumOutputLabel),
+          addressLabel: f(txReviewMessages.datumAddressLabel),
+          typeLabel: f(txReviewMessages.datumTypeLabel),
+          hashLabel: f(txReviewMessages.datumHashLabel),
+          decodedLabel: f(txReviewMessages.datumDecodedLabel),
+          jsonLabel: f(txReviewMessages.datumJsonLabel),
+          rawDataLabel: f(txReviewMessages.datumRawDataLabel),
+        },
+        governance: {
+          noGovernanceActions: f(
+            txReviewMessages.governanceNoGovernanceActions,
+          ),
+          proposalsLabel: f(txReviewMessages.governanceProposalsLabel),
+          votesLabel: f(txReviewMessages.governanceVotesLabel),
+          proposalLabel: f(txReviewMessages.governanceProposalLabel),
+          voteLabel: f(txReviewMessages.governanceVoteLabel),
+          actionTypeLabel: f(txReviewMessages.governanceActionTypeLabel),
+          actionIdLabel: f(txReviewMessages.governanceActionIdLabel),
+          anchorUrlLabel: f(txReviewMessages.governanceAnchorUrlLabel),
+          anchorHashLabel: f(txReviewMessages.governanceAnchorHashLabel),
+          depositLabel: f(txReviewMessages.governanceDepositLabel),
+          rewardAccountLabel: f(txReviewMessages.governanceRewardAccountLabel),
+          parametersLabel: f(txReviewMessages.governanceParametersLabel),
+          voterTypeLabel: f(txReviewMessages.governanceVoterTypeLabel),
+          voterCredentialLabel: f(
+            txReviewMessages.governanceVoterCredentialLabel,
+          ),
+          voteChoiceLabel: f(txReviewMessages.governanceVoteChoiceLabel),
+        },
+        referenceInputs: {
+          scriptsLabel: f(txReviewMessages.referenceInputsScriptsLabel),
+          scriptLabel: f(txReviewMessages.referenceInputsScriptLabel),
+          scriptTypeLabel: f(txReviewMessages.referenceInputsScriptTypeLabel),
+          scriptHashLabel: f(txReviewMessages.referenceInputsScriptHashLabel),
+          scriptSizeLabel: f(txReviewMessages.referenceInputsScriptSizeLabel),
+          utxoLabel: f(txReviewMessages.referenceInputsUtxoLabel),
+        },
         utxos: {
           utxosInputsLabel: f(txReviewMessages.utxosUtxosInputsLabel),
           utxosOutputsLabel: f(txReviewMessages.utxosUtxosOutputsLabel),

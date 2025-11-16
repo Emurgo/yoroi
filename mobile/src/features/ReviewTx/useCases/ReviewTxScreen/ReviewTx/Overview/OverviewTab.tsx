@@ -62,6 +62,7 @@ export const OverviewTab = ({
   receiverCustomTitle,
   details,
   createdBy,
+  validationResult,
   readOnly = false,
 }: {
   tx: FormattedTx
@@ -70,6 +71,7 @@ export const OverviewTab = ({
   receiverCustomTitle?: React.ReactNode
   details?: {title: string; component: React.ReactNode}
   createdBy?: React.ReactNode
+  validationResult?: {valid: boolean; errors: string[]; warnings: string[]}
   readOnly?: boolean
 }) => {
   const {atoms: ta} = useTheme()
@@ -136,9 +138,100 @@ export const OverviewTab = ({
     return null
   }, [notOwnedOutputs, tx, receiverCustomTitle, strings])
 
+  // Detect smart contract interactions
+  const contractInteractions = React.useMemo(() => {
+    const interactions: string[] = []
+    const outputsWithDatums = tx.outputs.filter((o) => o.datum != null)
+    const outputsWithScripts = tx.outputs.filter(
+      (o) => o.referenceScript != null,
+    )
+
+    if (outputsWithDatums.length > 0) {
+      interactions.push(
+        strings.txReview.overview.contractInteractionDatum(
+          outputsWithDatums.length,
+        ),
+      )
+    }
+
+    if (outputsWithScripts.length > 0) {
+      interactions.push(
+        strings.txReview.overview.contractInteractionScript(
+          outputsWithScripts.length,
+        ),
+      )
+    }
+
+    return interactions
+  }, [tx.outputs, strings])
+
   return (
     <View style={[a.flex_1, a.px_lg, ta.bg_color_max]}>
       <Space.Height.lg />
+
+      {/* Validation Errors */}
+      {validationResult &&
+        !validationResult.valid &&
+        validationResult.errors.length > 0 && (
+          <>
+            <WarningBanner
+              title={strings.txReview.overview.validationErrorsTitle}
+              content={
+                <View>
+                  {validationResult.errors.map((error, index) => (
+                    <Text
+                      key={index}
+                      style={[
+                        a.body_2_md_regular,
+                        {color: ta.text_gray_max.color},
+                      ]}
+                    >
+                      • {error}
+                    </Text>
+                  ))}
+                </View>
+              }
+            />
+            <Space.Height.lg />
+          </>
+        )}
+
+      {/* Validation Warnings */}
+      {validationResult && validationResult.warnings.length > 0 && (
+        <>
+          <InfoBanner
+            title={strings.txReview.overview.validationWarningsTitle}
+            content={validationResult.warnings.map((w) => `• ${w}`).join('\n')}
+          />
+          <Space.Height.lg />
+        </>
+      )}
+
+      {/* Transaction Chaining Info */}
+      {tx.chainInfo?.isChained && (
+        <>
+          <InfoBanner
+            title={strings.txReview.overview.chainInfoTitle}
+            content={
+              tx.chainInfo.chainOrder != null
+                ? `${strings.txReview.overview.chainInfoDescription}\n${strings.txReview.overview.chainOrderLabel}: ${tx.chainInfo.chainOrder + 1}`
+                : strings.txReview.overview.chainInfoDescription
+            }
+          />
+          <Space.Height.lg />
+        </>
+      )}
+
+      {/* Smart Contract Interactions */}
+      {contractInteractions.length > 0 && (
+        <>
+          <InfoBanner
+            title={strings.txReview.overview.contractInteractionsTitle}
+            content={contractInteractions.map((i) => `• ${i}`).join('\n')}
+          />
+          <Space.Height.lg />
+        </>
+      )}
 
       {operationsComponentsDuplicated && (
         <>
