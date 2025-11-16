@@ -964,6 +964,16 @@ export const useStrings = () => {
         ),
         collateralTxPendingTitle: f(discoverMessages.collateralTxPendingTitle),
         collateralTxPendingText: f(discoverMessages.collateralTxPendingText),
+        collateralCreationTitle: f(discoverMessages.collateralCreationTitle),
+        collateralCreationDescription: f(
+          discoverMessages.collateralCreationDescription,
+        ),
+        collateralCreationInfoTitle: f(
+          discoverMessages.collateralCreationInfoTitle,
+        ),
+        collateralCreationInfoText: f(
+          discoverMessages.collateralCreationInfoText,
+        ),
       },
 
       // Swap strings

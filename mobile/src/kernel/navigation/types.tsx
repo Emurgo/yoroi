@@ -263,11 +263,13 @@ export type ReviewTxRoutes = {
     preventSubmit?: boolean
     operations?: Array<React.ReactNode>
     operationsNotice?: React.ReactNode
+    generalNotice?: React.ReactNode
     receiverCustomTitle?: React.ReactNode
     details?: ReviewDetailsProps
     createdBy?: React.ReactNode
     context?: ReviewContext
     aggregator?: string
+    memo?: string
     onConfirm?: () => void
     onCancel?: OnConfirm['onCancel']
     onSuccess?: OnConfirm['onSuccess']

@@ -7,10 +7,12 @@ const ReviewTxMemoContext = React.createContext<{
 
 export const ReviewTxMemoProvider = ({
   children,
+  initialMemo = '',
 }: {
   children: React.ReactNode
+  initialMemo?: string
 }) => {
-  const [memo, setMemo] = React.useState('')
+  const [memo, setMemo] = React.useState(initialMemo)
 
   return (
     <ReviewTxMemoContext.Provider value={{memo, setMemo}}>

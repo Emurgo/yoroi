@@ -4,12 +4,18 @@ import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs
 import * as React from 'react'
 import {ScrollView as RNScrollView} from 'react-native'
 
+import {useReviewTxMemo} from '~/features/ReviewTx/common/context/ReviewTxMemoContext'
 import {FormattedMetadata, FormattedTx} from '~/features/ReviewTx/common/types'
+import {memoMaxLenght} from '~/features/Send/common/constants'
+import {ShowMemoErrorTooLong} from '~/features/Send/useCases/StartMultiTokenTx/InputMemo/ShowMemoErrorTooLong'
+import {ShowMemoInstructions} from '~/features/Send/useCases/StartMultiTokenTx/InputMemo/ShowMemoInstructions'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {ScrollView} from '~/ui/ScrollView/ScrollView'
 import {ScrollViewProvider} from '~/ui/ScrollView/context/ScrollViewContext'
+import {Space} from '~/ui/Space/Space'
+import {TextInput} from '~/ui/TextInput/TextInput'
 
 import {MetadataTab} from '../ReviewTx/Metadata/MetadataTab'
 import {OverviewTab, ReviewDetailsProps} from '../ReviewTx/Overview/OverviewTab'
@@ -21,14 +27,43 @@ import {ReferenceInputsTab} from './ReferenceInputs/ReferenceInputs'
 
 const MaterialTab = createMaterialTopTabNavigator()
 
+const MemoInput = () => {
+  const {memo, setMemo} = useReviewTxMemo()
+  const strings = useStrings()
+  const hasMemoError = memo.length > memoMaxLenght
+
+  return (
+    <TextInput
+      value={memo}
+      onChangeText={setMemo}
+      label={strings.send.memoLabel}
+      autoComplete="off"
+      testID="memoFieldInput"
+      error={hasMemoError ? true : undefined}
+      renderComponentStyle={{maxHeight: 80}}
+      multiline
+      focusable
+      helper={
+        hasMemoError ? (
+          <ShowMemoErrorTooLong memo={memo} />
+        ) : (
+          <ShowMemoInstructions memo={memo} />
+        )
+      }
+    />
+  )
+}
+
 const TabWrapper = ({
   children,
   onConfirm,
   readOnly,
+  showMemo = false,
 }: {
   children: React.ReactNode
   onConfirm?: () => void
   readOnly?: boolean
+  showMemo?: boolean
 }) => {
   const {atoms: ta} = useTheme()
   const strings = useStrings()
@@ -42,6 +77,13 @@ const TabWrapper = ({
         </ScrollView>
         {!readOnly && onConfirm && (
           <SafeArea.Footer>
+            {showMemo && (
+              <>
+                <Space.Height.lg />
+                <MemoInput />
+                <Space.Height.lg />
+              </>
+            )}
             <Button title={strings.txReview.confirm} onPress={onConfirm} />
           </SafeArea.Footer>
         )}
@@ -55,6 +97,7 @@ export const ReviewTx = ({
   formattedMetadata,
   operations,
   operationsNotice,
+  generalNotice,
   details,
   receiverCustomTitle,
   createdBy,
@@ -66,6 +109,7 @@ export const ReviewTx = ({
   formattedMetadata?: FormattedMetadata
   operations?: Array<React.ReactNode>
   operationsNotice?: React.ReactNode
+  generalNotice?: React.ReactNode
   details?: ReviewDetailsProps
   receiverCustomTitle?: React.ReactNode
   createdBy?: React.ReactNode
@@ -104,11 +148,16 @@ export const ReviewTx = ({
       <MaterialTab.Screen
         name={strings.txReview.tabLabel.overview}
         children={() => (
-          <TabWrapper onConfirm={onConfirm} readOnly={readOnly}>
+          <TabWrapper
+            onConfirm={onConfirm}
+            readOnly={readOnly}
+            showMemo={!readOnly}
+          >
             <OverviewTab
               tx={formattedTx}
               extraOperations={operations}
               operationsNotice={operationsNotice}
+              generalNotice={generalNotice}
               details={details}
               createdBy={createdBy}
               receiverCustomTitle={receiverCustomTitle}

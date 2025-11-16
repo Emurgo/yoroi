@@ -82,7 +82,13 @@ type CreateDappConnectorOptions = {
     address: string,
     payload: string,
   ) => Promise<{signature: string; key: string}>
-  sendReorganisationTx: ({manager}: {manager: DappConnector}) => Promise<void>
+  sendReorganisationTx: ({
+    manager,
+    value,
+  }: {
+    manager: DappConnector
+    value?: string
+  }) => Promise<void>
 }
 
 export const createDappConnector = (options: CreateDappConnectorOptions) => {
@@ -150,7 +156,7 @@ export const createDappConnector = (options: CreateDappConnectorOptions) => {
         return Promise.reject(new Error('Collateral value is too high'))
       }
 
-      return options.sendReorganisationTx({manager})
+      return options.sendReorganisationTx({manager, value})
     },
     cip95: cip95handler,
   }

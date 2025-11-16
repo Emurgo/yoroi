@@ -95,6 +95,7 @@ const ReviewTxContent = ({
       formattedMetadata={formattedMetadata}
       operations={params?.operations}
       operationsNotice={params?.operationsNotice}
+      generalNotice={params?.generalNotice}
       details={params?.details}
       receiverCustomTitle={params?.receiverCustomTitle}
       createdBy={params?.createdBy}
@@ -169,7 +170,7 @@ export const ReviewTxScreen = () => {
   }
 
   return (
-    <ReviewTxMemoProvider>
+    <ReviewTxMemoProvider initialMemo={params?.memo ?? ''}>
       <ReviewTxContent
         params={params}
         formattedTx={formattedTx}

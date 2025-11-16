@@ -8,7 +8,7 @@ import {asQuantity} from '~/wallets/utils/utils'
 import {CollateralConfig} from './types'
 
 export const collateralConfig: CollateralConfig = {
-  minLovelace: asQuantity(2_000_000),
+  minLovelace: asQuantity(5_000_000),
   maxLovelace: asQuantity(5_000_000),
   maxUTxOs: 3,
 }
