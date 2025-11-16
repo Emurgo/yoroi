@@ -1,14 +1,13 @@
 import {useAsyncStorage} from '@yoroi/common'
 import {DappConnection, DappConnector} from '@yoroi/dapp-connector'
-import {atoms as a, useTheme} from '@yoroi/theme'
 import {calculateTxId} from '@yoroi/tx'
 
 import {Transaction} from '@emurgo/cross-csl-core'
 import {useNavigation} from '@react-navigation/native'
 import {Buffer} from 'buffer'
 import * as React from 'react'
-import {Text, View} from 'react-native'
 
+import {CollateralInfoModal} from '~/features/Settings/ui/screens/ChangeWalletSettingsScreen/ManageCollateralScreen/CollateralInfoModal'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
@@ -41,19 +40,6 @@ const CollateralCreationNotice = () => {
       title={strings.discover.collateralCreationTitle}
       content={strings.discover.collateralCreationDescription}
     />
-  )
-}
-
-// Collateral creation details component for details section
-const CollateralCreationDetails = () => {
-  const strings = useStrings()
-  const {atoms: ta} = useTheme()
-  return (
-    <View style={[a.p_lg]}>
-      <Text style={[a.body_1_lg_regular, ta.text_gray_medium]}>
-        {strings.discover.collateralCreationInfoText}
-      </Text>
-    </View>
   )
 }
 
@@ -288,8 +274,8 @@ export const useDappConnectorManager = () => {
                 />
               ),
               details: {
-                title: strings.discover.collateralCreationInfoTitle,
-                component: <CollateralCreationDetails />,
+                title: strings.manageCollateral.collateralInfoModalLabel,
+                component: <CollateralInfoModal />,
               },
               generalNotice: <CollateralCreationNotice />,
               onSuccessWithoutFeedback: async (args) => {

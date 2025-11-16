@@ -1,17 +1,12 @@
 import {addressVisualDerivationPathMaker} from '@yoroi/blockchains'
 import {primaryTokenId} from '@yoroi/portfolio'
-import {Balance} from '@yoroi/types'
+import type {ModernUtxo} from '@yoroi/tx'
+import {rawUtxoToModernUtxo} from '@yoroi/tx'
 
-import type {
-  TransactionUnspentOutput,
-  WasmModuleProxy,
-} from '@emurgo/cross-csl-core'
 import {useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useWalletEvent} from '~/features/WalletManager/hooks/useWalletEvent'
-import {toAssetNameHex, toPolicyId} from '~/wallets/cardano/api/utils'
-import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
 import {RawUtxo} from '~/wallets/types/other'
 
 export const useUtxoList = () => {
@@ -19,7 +14,7 @@ export const useUtxoList = () => {
     wallet,
     meta: {implementation},
   } = useSelectedWallet()
-  const {id: walletId, utxos, externalAddresses, internalAddresses} = wallet
+  const {id: walletId, allUtxos, externalAddresses, internalAddresses} = wallet
   const getDerivationPath = addressVisualDerivationPathMaker(implementation)
   const queryClient = useQueryClient()
 
@@ -32,7 +27,7 @@ export const useUtxoList = () => {
     queryKey,
     queryFn: () =>
       getUtxoList({
-        utxos,
+        utxos: allUtxos,
         externalAddresses,
         internalAddresses,
         getDerivationPath,
@@ -50,18 +45,10 @@ type UtxoListProps = {
   getDerivationPath: ReturnType<typeof addressVisualDerivationPathMaker>
 }
 
-type Utxo = {
-  receiver: string
-  txHash: string
-  txIndex: number
-  balance: Balance.Amounts
-  toTransactionUnspentOutputHex: () => string
-}
-
 export type UtxoList = Array<{
   address: string
   path: string
-  utxos: Array<Utxo>
+  utxos: Array<ModernUtxo>
 }>
 
 const getUtxoList = ({
@@ -75,10 +62,10 @@ const getUtxoList = ({
     (acc, cur) => {
       const address = cur.receiver
       acc[address] = acc[address] ?? []
-      acc[address]!.push(transformUtxo(cur))
+      acc[address]!.push(cur)
       return acc
     },
-    {} as Record<string, Array<Utxo>>,
+    {} as Record<string, Array<RawUtxo>>,
   )
 
   const result = Object.keys(items).map((address) => {
@@ -86,11 +73,22 @@ const getUtxoList = ({
     const internalIndex = internalAddresses.findIndex((v) => v === address)
     const index = externalIndex >= 0 ? externalIndex : internalIndex
     const role = externalIndex >= 0 ? 0 : 1
+    const path = getDerivationPath({account, role, index})
+
+    // Transform UTXOs
+    const transformedUtxos = items[address]!.map((utxo) =>
+      rawUtxoToModernUtxo(
+        utxo,
+        undefined, // addressing - not needed for display
+        undefined, // derivationPath - not needed for display
+        primaryTokenId,
+      ),
+    )
 
     return {
       address,
-      path: getDerivationPath({account, role, index}),
-      utxos: items[address] ?? [],
+      path,
+      utxos: transformedUtxos,
       externalIndex,
       internalIndex,
       role,
@@ -129,94 +127,4 @@ const getUtxoList = ({
       ...item
     }) => item,
   )
-}
-
-const transformUtxo = (utxo: RawUtxo): Utxo => {
-  const balance: Balance.Amounts = {}
-
-  if (Number(utxo.amount) > 0)
-    balance[primaryTokenId] = utxo.amount as Balance.Quantity
-
-  utxo.assets.forEach((asset) => {
-    balance[asset.tokenId] = asset.amount as Balance.Quantity
-  })
-
-  const transformedUtxo = {
-    receiver: utxo.receiver,
-    txHash: utxo.tx_hash,
-    txIndex: utxo.tx_index,
-    balance,
-    toTransactionUnspentOutputHex,
-  }
-  transformedUtxo.toTransactionUnspentOutputHex =
-    toTransactionUnspentOutputHex.bind(transformedUtxo)
-
-  return transformedUtxo
-}
-
-function toTransactionUnspentOutputHex(this: Utxo): string {
-  return CardanoMobileWrapped.cslScope((csl) =>
-    utxoToTransactionUnspentOutput({
-      csl,
-      utxo: this,
-    }).toHex(),
-  )
-}
-
-type UtxoToCsl = {
-  csl: WasmModuleProxy
-  utxo: Utxo
-}
-
-export const utxoToTransactionUnspentOutput = ({
-  csl,
-  utxo,
-}: UtxoToCsl): TransactionUnspentOutput => {
-  const input = csl.TransactionInput.new(
-    csl.TransactionHash.fromHex(utxo.txHash),
-    utxo.txIndex,
-  )
-  const value = csl.Value.new(
-    csl.BigNum.fromStr(utxo.balance[primaryTokenId] ?? '0'),
-  )
-
-  const assetIds = Object.keys(utxo.balance).filter((v) => v !== primaryTokenId)
-
-  if (assetIds.length > 0) {
-    const multiAsset = csl.MultiAsset.new()
-
-    const groupedByPolicyId = assetIds.reduce(
-      (acc, cur) => {
-        const policyId = toPolicyId(cur)
-        acc[policyId] = acc[policyId] ?? []
-        acc[policyId]!.push(cur)
-        return acc
-      },
-      {} as Record<string, Array<string>>,
-    )
-
-    for (const policyIdStr of Object.keys(groupedByPolicyId)) {
-      const assetGroup = groupedByPolicyId[policyIdStr]
-      if (!assetGroup) continue
-
-      const policyId = csl.ScriptHash.fromBytes(
-        new Uint8Array(Buffer.from(policyIdStr, 'hex')),
-      )
-      const assets = csl.Assets.new()
-      for (const asset of assetGroup) {
-        const name = csl.AssetName.new(
-          new Uint8Array(Buffer.from(toAssetNameHex(asset), 'hex')),
-        )
-        const amount = csl.BigNum.fromStr(utxo.balance[asset] ?? '0')
-        assets.insert(name, amount)
-      }
-      multiAsset.insert(policyId, assets)
-    }
-
-    value.setMultiasset(multiAsset)
-  }
-  const receiver = csl.Address.fromBech32(utxo.receiver)
-  if (!receiver) throw new Error('Invalid receiver')
-  const output = csl.TransactionOutput.new(receiver, value)
-  return csl.TransactionUnspentOutput.new(input, output)
 }

@@ -33,10 +33,11 @@ async function getAbsoluteSlotNumberFromWallet(
 
 /**
  * Helper to get modern UTXOs from wallet
+ * Excludes collateral UTXO to prevent it from being used in regular transactions
  */
 function getModernUtxosFromWallet(wallet: YoroiWallet) {
   return convertRawUtxosToModernUtxos(
-    wallet.allUtxos,
+    wallet.utxos, // Use wallet.utxos instead of allUtxos to exclude collateral
     (address) => wallet.getAddressing(address),
     wallet.portfolioPrimaryTokenInfo.id,
   )

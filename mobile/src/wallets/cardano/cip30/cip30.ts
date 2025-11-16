@@ -8,7 +8,7 @@ import {
   signRawTransaction,
   validateTransactionCbor,
 } from '@yoroi/tx'
-import {App, Balance, Portfolio, Wallet} from '@yoroi/types'
+import {Balance, Portfolio, Wallet} from '@yoroi/types'
 
 import * as CSL from '@emurgo/cross-csl-core'
 import {Address, WasmModuleProxy} from '@emurgo/cross-csl-core'
@@ -16,6 +16,7 @@ import {BigNumber} from 'bignumber.js'
 import {Buffer} from 'buffer'
 import * as _ from 'lodash'
 
+import {createCollateralEntry} from '~/features/Settings/ui/screens/ChangeWalletSettingsScreen/ManageCollateralScreen/helpers'
 import {logger} from '~/kernel/logger/logger'
 import {BaseAsset, RawUtxo} from '~/wallets/types/other'
 import {Utxos, asQuantity} from '~/wallets/utils/utils'
@@ -299,13 +300,9 @@ class CIP30Extension {
 
     assertCollateralValue(valueNum)
 
-    const bech32Address = this.wallet.externalAddresses[0]
-    if (!bech32Address) throw new App.Errors.InvalidState('No external address')
-    const amounts = {
-      [this.wallet.portfolioPrimaryTokenInfo.id]: asQuantity(valueStr),
-    }
+    const entry = createCollateralEntry(this.wallet, valueStr)
     const yoroiUnsignedTx = await createSendTxFromWallet(this.wallet, {
-      entries: [{address: bech32Address, amounts}],
+      entries: [entry],
       addressMode: this.meta.addressMode,
     })
 

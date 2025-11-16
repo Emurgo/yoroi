@@ -27,7 +27,6 @@ import {Button, ButtonType} from '~/ui/Button/Button'
 import {Copiable} from '~/ui/Copiable/Copiable'
 import {ErrorPanel} from '~/ui/ErrorPanel/ErrorPanel'
 import {Icon} from '~/ui/Icon'
-import {Info} from '~/ui/Icon/Info'
 import {useModal} from '~/ui/Modal/context/ModalContext'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
@@ -101,11 +100,27 @@ export const ManageCollateralScreen = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
 
     createUnsignedTx([createCollateralEntry(wallet)], {
-      onSuccess: (result) => {
+      onSuccess: async (result) => {
+        // Set collateral ID immediately after transaction creation (even if not yet onchain)
+        // This prevents the UTXO from being used in other transactions
+        // The collateral UTXO will be at index 0 (first output of the transaction)
+        try {
+          const txId = await CardanoMobileWrapped.cslScope(async (csl) => {
+            return await calculateTxId(csl, result.cbor, 'hex')
+          })
+          const collateralId = `${txId}:0`
+          setCollateralId(collateralId)
+        } catch (error) {
+          // Don't block the flow if setting collateral ID fails
+        }
+
         navigateToTxReview({
           cbor: result.cbor,
           onSuccessWithoutFeedback: (args) => handleOnSuccess(args?.signedTx),
-          operations: [<Operation key="0" />],
+          details: {
+            title: strings.manageCollateral.collateralInfoModalLabel,
+            component: <CollateralInfoModal />,
+          },
           context: 'send',
         })
       },
@@ -177,16 +192,13 @@ export const ManageCollateralScreen = () => {
         <Text style={[a.self_center, ta.text_gray_max]}>
           {strings.manageCollateral.lockedAsCollateral}
         </Text>
-
         <Space.Height.sm />
-
         <ActionableAmount
           amount={amount}
           onRemove={handleRemoveCollateral}
           collateralId={collateralId}
           disabled={isLoading}
         />
-
         {hasCollateral && (
           <>
             <Space.Height.lg />
@@ -211,9 +223,7 @@ export const ManageCollateralScreen = () => {
             <Text>{strings.manageCollateral.removeCollateral}</Text>
           </>
         )}
-
         <Space.Height.lg fill />
-
         {didSpend && (
           <>
             <ErrorPanel>
@@ -298,42 +308,5 @@ const RemoveAmountButton = ({disabled, ...props}: TouchableOpacityProps) => {
     >
       <Icon.CrossCircle size={26} color={p.gray_900} />
     </TouchableOpacity>
-  )
-}
-
-const Operation = () => {
-  const {atoms: ta, palette: p} = useTheme()
-  const strings = useStrings()
-  const screenHeight = useWindowDimensions().height
-  const {openModal, closeModal} = useModal()
-
-  const handleOnPressInfo = () => {
-    openModal({
-      title: strings.manageCollateral.collateralInfoModalTitle,
-      content: <CollateralInfoModal />,
-      footer: (
-        <View style={[a.flex_row, a.gap_md]}>
-          <Button
-            title={strings.manageCollateral.collateralInfoModalLabel}
-            onPress={closeModal}
-          />
-        </View>
-      ),
-      height: Math.min(screenHeight * 0.9, 650),
-    })
-  }
-
-  return (
-    <View style={[a.flex_row, a.align_center]}>
-      <Text style={[a.body_2_md_regular, ta.text_gray_medium]}>
-        {strings.manageCollateral.collateralInfoModalLabel}
-      </Text>
-
-      <Space.Width.xs />
-
-      <TouchableOpacity onPress={handleOnPressInfo}>
-        <Info size={24} color={p.gray_900} />
-      </TouchableOpacity>
-    </View>
   )
 }

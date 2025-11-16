@@ -472,7 +472,6 @@ export const makeCardanoWallet = (
               {addresses},
               networkManager.legacyApiBaseUrl,
             ),
-          getDelegationStatus: () => this.getDelegationStatus(),
           shouldDeregister,
           addressMode,
         })
@@ -1035,12 +1034,22 @@ export const makeCardanoWallet = (
       // NOTE: wallet is not aware of utxos state
       // if it crashes, the utxo manager will be out of sync with wallet
       if (this.didUtxosUpdate(this._utxos, newUtxos) || isForced) {
+        // Exclude collateral UTXO from locked deposit calculation
+        // Collateral is not a storage cost, it's locked for DApp transactions
+        const spendableUtxos =
+          this._collateralId.length > 0
+            ? newUtxos.filter((utxo) => utxo.utxo_id !== this._collateralId)
+            : newUtxos
+
         // NOTE: recalc locked deposit should happen also when epoch changes after conway
+        // Only calculate locked deposit for spendable UTXOs (exclude collateral)
         const lockedAsStorageCost = await calcLockedDeposit({
-          rawUtxos: newUtxos,
+          rawUtxos: spendableUtxos,
           coinsPerUtxoByteStr: this.protocolParams.coinsPerUtxoByte,
         })
 
+        // Include all UTXOs (including collateral) in total balance
+        // Collateral is owned by the wallet and should appear in total balance
         const balancesToSync = toBalanceManagerSyncArgs(
           newUtxos,
           BigInt(lockedAsStorageCost.toString()),

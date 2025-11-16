@@ -363,7 +363,9 @@ export const getHexAddressingMap = async (wallet: YoroiWallet) => {
 }
 
 export const getAddressedUtxos = (wallet: YoroiWallet) => {
-  return wallet.allUtxos.map(
+  // Use wallet.utxos to exclude collateral UTXO from transaction operations
+  // Collateral should not be used in regular transactions
+  return wallet.utxos.map(
     (utxo: RawUtxo): CardanoTypes.CardanoAddressedUtxo => {
       const addressing = wallet.getAddressing(utxo.receiver)
 

@@ -3,6 +3,7 @@ import {App} from '@yoroi/types'
 
 import {YoroiWallet} from '~/wallets/cardano/types'
 import {collateralConfig} from '~/wallets/cardano/utxoManager/utxos'
+import {asQuantity} from '~/wallets/utils/utils'
 
 const getCollateralAddress = (wallet: YoroiWallet) => {
   const address = wallet.externalAddresses[0]
@@ -12,11 +13,15 @@ const getCollateralAddress = (wallet: YoroiWallet) => {
 
 export const createCollateralEntry = (
   wallet: YoroiWallet,
+  amount?: string,
 ): TransactionOutput => {
+  const collateralAmount = amount
+    ? asQuantity(amount)
+    : collateralConfig.minLovelace
   return {
     address: getCollateralAddress(wallet),
     amounts: {
-      [wallet.portfolioPrimaryTokenInfo.id]: collateralConfig.minLovelace,
+      [wallet.portfolioPrimaryTokenInfo.id]: collateralAmount,
     },
   }
 }

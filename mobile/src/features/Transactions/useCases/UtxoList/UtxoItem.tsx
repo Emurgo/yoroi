@@ -1,4 +1,5 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+import type {ModernUtxo} from '@yoroi/tx'
 import {Portfolio} from '@yoroi/types'
 
 import {FlashList} from '@shopify/flash-list'
@@ -11,9 +12,7 @@ import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWalle
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Space} from '~/ui/Space/Space'
 
-import {UtxoList} from './useUtxoList'
-
-export const UtxoItem = ({item}: {item: UtxoList[number]['utxos'][number]}) => {
+export const UtxoItem = ({item}: {item: ModernUtxo}) => {
   const {atoms: ta, palette: p} = useTheme()
   const {wallet} = useSelectedWallet()
   const {navigateToTxDetails} = useWalletNavigation()
@@ -31,9 +30,11 @@ export const UtxoItem = ({item}: {item: UtxoList[number]['utxos'][number]}) => {
 
   return (
     <View style={[a.flex, a.flex_1, a.p_sm]}>
-      <TouchableOpacity onPress={() => navigateToTxDetails(item.txHash)}>
-        <Text style={[ta.text_gray_max, a.body_2_md_regular]}>{utxoId}</Text>
-      </TouchableOpacity>
+      <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+        <TouchableOpacity onPress={() => navigateToTxDetails(item.txHash)}>
+          <Text style={[ta.text_gray_max, a.body_2_md_regular]}>{utxoId}</Text>
+        </TouchableOpacity>
+      </View>
 
       <FlashList
         data={Object.entries(item.balance)}
