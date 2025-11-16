@@ -2,10 +2,12 @@
 // Functions for converting between RawUtxo and ModernUtxo
 import {Balance, Portfolio} from '@yoroi/types'
 
-import type {TransactionUnspentOutput} from '@emurgo/cross-csl-core'
+import type {
+  TransactionUnspentOutput,
+  WasmModuleProxy,
+} from '@emurgo/cross-csl-core'
 import {Buffer} from 'buffer'
 
-import {CardanoMobileWrapped} from '../../../src/wallets/cardano/wrappedCsl'
 import {Addressing} from '../types'
 import {ModernUtxo} from '../utxo/models'
 
@@ -110,71 +112,72 @@ function toTransactionUnspentOutputHex(this: ModernUtxo): string {
 /**
  * Convert ModernUtxo to TransactionUnspentOutput using WASM
  *
+ * @param csl - WasmModuleProxy instance. Must be provided from the calling scope.
+ *
  * WARNING: Returns a WASM TransactionUnspentOutput object that will be freed when
  * the cslScope exits. Only use the returned object within the same scope where
  * it was created, or extract primitive values before the scope exits.
  */
 function toTransactionUnspentOutput(
   this: ModernUtxo,
+  csl: WasmModuleProxy,
 ): TransactionUnspentOutput {
-  return CardanoMobileWrapped.cslScope((csl) => {
-    const input = csl.TransactionInput.new(
-      csl.TransactionHash.fromHex(this.txHash),
-      this.txIndex,
+  const input = csl.TransactionInput.new(
+    csl.TransactionHash.fromHex(this.txHash),
+    this.txIndex,
+  )
+
+  const primaryTokenId = '.'
+  const adaAmount = this.balance[primaryTokenId] ?? '0'
+  const value = csl.Value.new(csl.BigNum.fromStr(adaAmount))
+
+  // Get all token IDs except primary token
+  const tokenIds = Object.keys(this.balance).filter(
+    (id) => id !== primaryTokenId,
+  ) as Portfolio.Token.Id[]
+
+  if (tokenIds.length > 0) {
+    const multiAsset = csl.MultiAsset.new()
+
+    // Group tokens by policy ID
+    const groupedByPolicyId = tokenIds.reduce(
+      (acc, tokenId) => {
+        const policyId = toPolicyId(tokenId)
+        acc[policyId] = acc[policyId] ?? []
+        acc[policyId]!.push(tokenId)
+        return acc
+      },
+      {} as Record<string, Array<Portfolio.Token.Id>>,
     )
 
-    const primaryTokenId = ''
-    const adaAmount = this.balance[primaryTokenId] ?? '0'
-    const value = csl.Value.new(csl.BigNum.fromStr(adaAmount))
+    // Create MultiAsset structure
+    for (const policyIdStr of Object.keys(groupedByPolicyId)) {
+      const tokenGroup = groupedByPolicyId[policyIdStr]
+      if (!tokenGroup) continue
 
-    // Get all token IDs except primary token
-    const tokenIds = Object.keys(this.balance).filter(
-      (id) => id !== primaryTokenId,
-    ) as Portfolio.Token.Id[]
-
-    if (tokenIds.length > 0) {
-      const multiAsset = csl.MultiAsset.new()
-
-      // Group tokens by policy ID
-      const groupedByPolicyId = tokenIds.reduce(
-        (acc, tokenId) => {
-          const policyId = toPolicyId(tokenId)
-          acc[policyId] = acc[policyId] ?? []
-          acc[policyId]!.push(tokenId)
-          return acc
-        },
-        {} as Record<string, Array<Portfolio.Token.Id>>,
+      const policyId = csl.ScriptHash.fromBytes(
+        new Uint8Array(Buffer.from(policyIdStr, 'hex')),
       )
+      const assets = csl.Assets.new()
 
-      // Create MultiAsset structure
-      for (const policyIdStr of Object.keys(groupedByPolicyId)) {
-        const tokenGroup = groupedByPolicyId[policyIdStr]
-        if (!tokenGroup) continue
-
-        const policyId = csl.ScriptHash.fromBytes(
-          new Uint8Array(Buffer.from(policyIdStr, 'hex')),
+      for (const tokenId of tokenGroup) {
+        const assetNameHex = toAssetNameHex(tokenId)
+        const name = csl.AssetName.new(
+          new Uint8Array(Buffer.from(assetNameHex, 'hex')),
         )
-        const assets = csl.Assets.new()
-
-        for (const tokenId of tokenGroup) {
-          const assetNameHex = toAssetNameHex(tokenId)
-          const name = csl.AssetName.new(
-            new Uint8Array(Buffer.from(assetNameHex, 'hex')),
-          )
-          const amount = csl.BigNum.fromStr(this.balance[tokenId] ?? '0')
-          assets.insert(name, amount)
-        }
-
-        multiAsset.insert(policyId, assets)
+        const amount = csl.BigNum.fromStr(this.balance[tokenId] ?? '0')
+        assets.insert(name, amount)
       }
 
-      value.setMultiasset(multiAsset)
+      multiAsset.insert(policyId, assets)
     }
 
-    const receiver = csl.Address.fromBech32(this.receiver)
-    if (!receiver) throw new Error('Invalid receiver address')
-    const output = csl.TransactionOutput.new(receiver, value)
+    value.setMultiasset(multiAsset)
+  }
 
-    return csl.TransactionUnspentOutput.new(input, output)
-  })
+  const receiver = csl.Address.fromBech32(this.receiver)
+  if (!receiver) throw new Error('Invalid receiver address')
+  const output = csl.TransactionOutput.new(receiver, value)
+
+  return csl.TransactionUnspentOutput.new(input, output)
 }
