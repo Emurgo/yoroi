@@ -14,6 +14,9 @@ export * from './translators/reactjs/provider/ResolverProvider'
 export * from './utils/isResolvableDomain'
 export * from './utils/isDomain'
 export * from './utils/isNameServer'
+export * from './adapters/cns/api'
+export * from './adapters/handle/api'
+export * from './adapters/unstoppable/api'
 
 export const mocksResolver = {
   storage: mockStorageMaker,

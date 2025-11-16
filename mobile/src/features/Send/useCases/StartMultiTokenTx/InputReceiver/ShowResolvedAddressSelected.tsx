@@ -18,19 +18,21 @@ export const ShowResolvedAddressSelected = () => {
 
   const hide = address.length === 0 || selectedNameServer == null
 
-  if (hide) return null
+  const serverName = hide ? null : nameServerName[selectedNameServer]
+  const shortenAddress = hide ? '' : shortenString(address)
+  const resolvedAddressInfo = hide
+    ? ''
+    : `${strings.send.resolvedAddress}: ${shortenAddress}`
 
-  const serverName = nameServerName[selectedNameServer]
-  const shortenAddress = shortenString(address)
-  const resolvedAddressInfo = `${strings.send.resolvedAddress}: ${shortenAddress}`
-
+  // Always render container with fixed height to prevent layout shifts
+  // Height = Space._2xs (2px) + text lineHeight (18px) ≈ 20px, using 22px for safety
   return (
-    <View>
+    <View style={{minHeight: 22}}>
       <Space.Height._2xs />
 
       <View style={[a.flex_row, a.justify_between]}>
         <Text style={[a.body_3_sm_regular, ta.text_gray_max]} numberOfLines={1}>
-          {serverName}
+          {serverName || ''}
         </Text>
 
         <Text

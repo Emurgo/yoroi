@@ -173,7 +173,7 @@ export const TextInput = React.forwardRef(
           {...restProps}
         />
 
-        {!noHelper && helperToShow}
+        {!noHelper && <View style={{minHeight: 22}}>{helperToShow}</View>}
       </View>
     )
   },

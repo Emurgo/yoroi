@@ -780,6 +780,7 @@ export const useStrings = () => {
         failedTxButton: f(sendMessages.failedTxButton),
         failedTxText: f(sendMessages.failedTxText),
         failedTxTitle: f(sendMessages.failedTxTitle),
+        favoriteContacts: f(sendMessages.favoriteContacts),
         feeLabel: f(sendMessages.feeLabel),
         feeNotAvailable: f(sendMessages.feeNotAvailable),
         found: f(sendMessages.found),

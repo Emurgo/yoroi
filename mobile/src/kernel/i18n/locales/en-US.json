@@ -364,6 +364,8 @@
   "components.send.sendscreen.failedTxButton": "Try again",
   "components.send.sendscreen.failedTxText": "Your transaction has not been processed properly due to technical issues.",
   "components.send.sendscreen.failedTxTitle": "Transaction failed",
+  "components.send.sendscreen.favoriteContacts": "Favorite Contacts",
+  "components.send.sendscreen.addToFavorites": "Add to Favorites",
   "components.send.sendscreen.feeLabel": "Fee",
   "components.send.sendscreen.feeNotAvailable": "-",
   "components.send.sendscreen.receiver": "Receiver",
