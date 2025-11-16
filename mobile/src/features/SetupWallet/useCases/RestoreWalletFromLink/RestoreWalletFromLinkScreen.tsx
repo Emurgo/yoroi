@@ -31,13 +31,41 @@ import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {Space} from '~/ui/Space/Space'
 import {TextInput} from '~/ui/TextInput/TextInput'
 import {isEmptyString} from '~/wallets/utils/string'
-import {validatePassword} from '~/wallets/utils/validators'
-import {getWalletNameError} from '~/wallets/utils/validators'
+import {getWalletNameError, validatePassword} from '~/wallets/utils/validators'
 
 // Default values when not provided in link
 const DEFAULT_IMPLEMENTATION: Wallet.Implementation = 'cardano-cip1852'
 const DEFAULT_ADDRESS_MODE: Wallet.AddressMode = 'single'
 const DEFAULT_ACCOUNT_VISUAL = 0
+
+// Generate a unique wallet name by appending a number suffix if needed
+const generateUniqueWalletName = (
+  baseName: string,
+  walletManager: ReturnType<typeof useWalletManager>['walletManager'],
+): string => {
+  let candidateName = baseName
+  let counter = 1
+
+  // Check if the base name is already taken
+  const nameErrors = walletManager.validateWalletName(candidateName)
+  if (!nameErrors.nameAlreadyTaken) {
+    return candidateName
+  }
+
+  // Try appending numbers until we find a unique name
+  while (counter < 1000) {
+    // Limit to prevent infinite loops
+    candidateName = `${baseName} ${counter}`
+    const errors = walletManager.validateWalletName(candidateName)
+    if (!errors.nameAlreadyTaken) {
+      return candidateName
+    }
+    counter++
+  }
+
+  // Fallback: append timestamp if we can't find a unique name
+  return `${baseName} ${Date.now()}`
+}
 
 export const RestoreWalletFromLinkScreen = () => {
   const navigation = useNavigation<any>()
@@ -53,7 +81,10 @@ export const RestoreWalletFromLinkScreen = () => {
   }>()
 
   const [showSecurityWarning, setShowSecurityWarning] = React.useState(true)
-  const [name, setName] = React.useState(action.name ?? '')
+  const [name, setName] = React.useState(() => {
+    const baseName = action.name ?? 'Restored Wallet'
+    return generateUniqueWalletName(baseName, walletManager)
+  })
   const [password, setPassword] = React.useState('')
   const [passwordConfirmation, setPasswordConfirmation] = React.useState('')
   const passwordRef = React.useRef<RNTextInput>(null)

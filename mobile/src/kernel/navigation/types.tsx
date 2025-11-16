@@ -209,6 +209,7 @@ export type SettingsStackRoutes = {
     screen: keyof ManageNotificationsRoutes
   }
   'settings-preparing-wallet': undefined
+  'share-wallet': undefined
 }
 
 export type ManageNotificationsRoutes = {

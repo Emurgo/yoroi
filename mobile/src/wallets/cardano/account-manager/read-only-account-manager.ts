@@ -258,7 +258,7 @@ export const readOnlyAccountManagerMaker = async ({
     externalAddresses.length === 0
   ) {
     try {
-      logger.info('Discovering addresses by staking credential', {
+      logger.debug('Discovering addresses by staking credential', {
         knownAddress,
       })
       const discovered = await discoverUsedAddressesByStakingCredential({
@@ -271,7 +271,7 @@ export const readOnlyAccountManagerMaker = async ({
       finalExternalAddresses = discovered.externalAddresses
       finalRewardAddressHex = discovered.rewardAddressHex
 
-      logger.info('Address discovery completed', {
+      logger.debug('Address discovery completed', {
         internalCount: finalInternalAddresses.length,
         externalCount: finalExternalAddresses.length,
       })

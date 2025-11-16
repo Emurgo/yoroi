@@ -13,7 +13,6 @@ import {useAuthSetting} from '~/features/Auth/hooks/useAuthSetting'
 import {useAddressMode} from '~/features/WalletManager/hooks/useAddressMode'
 import {useDisableEasyConfirmation} from '~/features/WalletManager/hooks/useDisableEasyConfirmation'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {GenerateWalletLinkModal} from '~/features/WalletManager/ui/components/GenerateWalletLinkModal'
 import {DIALOG_BUTTONS, showConfirmationDialog} from '~/kernel/dialogs'
 import {confirmationMessages} from '~/kernel/i18n/messages/global'
 import {useStrings} from '~/kernel/i18n/useStrings'
@@ -21,7 +20,6 @@ import {logger} from '~/kernel/logger/logger'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {SettingsRouteNavigation} from '~/kernel/navigation/types'
 import {Icon} from '~/ui/Icon'
-import {useModal} from '~/ui/Modal/context/ModalContext'
 import {SettingsSwitch} from '~/ui/SettingsSwitch/SettingsSwitch'
 
 import {useNavigateTo} from '../../../hooks/useNavigateTo'
@@ -67,7 +65,6 @@ export const ChangeWalletSettingsScreen = () => {
   const navigateTo = useNavigateTo()
   const walletType = useWalletType(implementation)
   const {disableEasyConfirmation} = useDisableEasyConfirmation()
-  const {openModal} = useModal()
 
   const handleOnToggleEasyConfirmation = () => {
     if (isEasyConfirmationEnabled) {
@@ -134,19 +131,15 @@ export const ChangeWalletSettingsScreen = () => {
           </SettingsItem>
         </SettingsSection>
 
-        <SettingsSection title={strings.settings.walletSettings.actions}>
+        <SettingsSection title={strings.settings.walletSettings.shareWallet}>
           <NavigatedSettingsItem
-            icon={<Icon.Qr {...iconProps} />}
-            label="Generate Wallet Link"
-            onNavigate={() => {
-              openModal({
-                title: 'Generate Wallet Link',
-                content: <GenerateWalletLinkModal />,
-                height: 600,
-              })
-            }}
+            icon={<Icon.Share {...iconProps} />}
+            label={strings.settings.walletSettings.shareWallet}
+            onNavigate={() => navigateTo.shareWallet()}
           />
+        </SettingsSection>
 
+        <SettingsSection title={strings.settings.walletSettings.actions}>
           <NavigatedSettingsItem
             icon={<Icon.CrossCircle {...iconProps} />}
             label={strings.settings.walletSettings.removeWallet}

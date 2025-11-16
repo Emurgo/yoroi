@@ -36,6 +36,7 @@ import {EnableEasyConfirmationScreen} from '../screens/ChangeWalletSettingsScree
 import {ManageCollateralScreen} from '../screens/ChangeWalletSettingsScreen/ManageCollateralScreen/ManageCollateralScreen'
 import {RemoveWalletScreen} from '../screens/ChangeWalletSettingsScreen/RemoveWallet/RemoveWalletScreen'
 import {RenameWalletScreen} from '../screens/ChangeWalletSettingsScreen/RenameWalletScreen/RenameWalletScreen'
+import {ShareWalletScreen} from '../screens/ShareWalletScreen/ShareWalletScreen'
 import {NetworkTag} from '../shared/NetworkTag'
 import {ManageNotificationsNavigator} from './ManageNotificationsNavigator'
 
@@ -198,6 +199,12 @@ export const SettingsScreenNavigator = () => {
         name="settings-preparing-wallet"
         getComponent={() => PreparingWalletScreen}
         options={{headerShown: false}}
+      />
+
+      <Stack.Screen //
+        name="share-wallet"
+        getComponent={() => ShareWalletScreen}
+        options={{title: strings.settings.shareWallet.title}}
       />
 
       <Stack.Screen
