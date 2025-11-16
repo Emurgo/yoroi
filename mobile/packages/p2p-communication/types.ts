@@ -1,4 +1,4 @@
-import {App, BaseStorage} from '@yoroi/types'
+import {BaseStorage} from '@yoroi/types'
 
 /**
  * P2P Communication Types
@@ -71,7 +71,6 @@ export type ConnectionManagerConfig = {
   readonly webrtcAdapter: WebRTCAdapter
   readonly peerConfig?: PeerConnectionConfig
   readonly isWallet?: boolean // Whether this is a wallet (true) or dApp (false/undefined)
-  readonly logger?: App.Logger.Manager // Optional logger for debugging
 }
 
 export type EventCallback<T = unknown> = (data?: T) => void

@@ -1,4 +1,5 @@
-import {App, BaseStorage} from '@yoroi/types'
+import {getLogger} from '@yoroi/common'
+import {BaseStorage} from '@yoroi/types'
 
 import {freeze} from 'immer'
 
@@ -11,7 +12,6 @@ import {
   WebRTCAdapter,
 } from '../types'
 import {getPersistentDappId, getPersistentWalletId} from '../utils/id-utils'
-import {getLogger} from '../utils/logger'
 import {
   type SignalingClient,
   type SignalingMessage,
@@ -57,7 +57,6 @@ type PeerConnectionDeps = {
   readonly webrtcAdapter: WebRTCAdapter
   readonly config?: PeerConnectionConfig
   readonly isWallet?: boolean
-  readonly logger?: App.Logger.Manager
 }
 
 const createInitialState = (peerId: string): PeerConnectionState =>
@@ -88,7 +87,7 @@ export const peerConnectionMaker = (
   deps: PeerConnectionDeps,
 ): PeerConnection => {
   let state = createInitialState('')
-  const logger = getLogger(deps.logger)
+  const logger = getLogger()
 
   const updateState = (updates: Partial<PeerConnectionState>): void => {
     state = freeze({...state, ...updates} as const)

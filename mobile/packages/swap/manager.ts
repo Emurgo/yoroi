@@ -1,4 +1,4 @@
-import {isLeft, isRight} from '@yoroi/common'
+import {getLogger, isLeft, isRight} from '@yoroi/common'
 import {Api, Portfolio, Swap} from '@yoroi/types'
 
 import {freeze} from 'immer'
@@ -112,7 +112,11 @@ const apiManagerMaker = (
         })
 
         if (errors.length > 0) {
-          console.warn('Some aggregators failed:', errors)
+          const logger = getLogger()
+          logger.warn('Some aggregators failed', {
+            origin: 'swap',
+            errors,
+          })
         }
 
         warnAllLeft(...responses)
@@ -259,7 +263,11 @@ const apiManagerMaker = (
         })
 
         if (errors.length > 0) {
-          console.warn('Some aggregators failed during estimate:', errors)
+          const logger = getLogger()
+          logger.warn('Some aggregators failed during estimate', {
+            origin: 'swap',
+            errors,
+          })
         }
 
         warnAllLeft(...responses)
@@ -403,11 +411,13 @@ const invalid: Api.Response<any> = freeze(
 )
 
 const warnAllLeft = (...responses: Array<Api.Response<any>>) => {
-  if (responses.every(isLeft))
-    console.warn(
-      'Swap Manager all left >> ',
-      responses.map((response) => response.error.message),
-    )
+  if (responses.every(isLeft)) {
+    const logger = getLogger()
+    logger.warn('Swap Manager all left', {
+      origin: 'swap',
+      errors: responses.map((response) => response.error.message),
+    })
+  }
 }
 
 export const standarizeError = <T>(input: Api.Response<T>): Api.Response<T> => {

@@ -1,3 +1,5 @@
+import {getLogger} from '@yoroi/common'
+
 import {useCallback, useEffect, useRef, useState} from 'react'
 
 import {PeerConnection} from '../core/peer-connection'
@@ -14,6 +16,7 @@ type UsePeerConnectionResult = {
 export const usePeerConnection = (
   peerConnection: PeerConnection | null,
 ): UsePeerConnectionResult => {
+  const logger = getLogger()
   const [peerId, setPeerId] = useState('')
   const [status, setStatus] = useState<ConnectionStatus>('initializing')
   const [isReady, setIsReady] = useState(false)
@@ -26,14 +29,18 @@ export const usePeerConnection = (
     }
 
     if (isReady) {
-      console.log('Peer connection already connected')
+      logger.debug('Peer connection already connected', {
+        origin: 'p2p-communication',
+      })
       return
     }
 
-    console.log('Attempting to reconnect peer connection...')
+    logger.log('Attempting to reconnect peer connection...', {
+      origin: 'p2p-communication',
+    })
     setStatus('initializing')
     peerConnection.reconnect()
-  }, [isReady, peerConnection])
+  }, [isReady, peerConnection, logger])
 
   useEffect(() => {
     if (!peerConnection) {
@@ -41,24 +48,32 @@ export const usePeerConnection = (
     }
 
     if (listenerSetupRef.current) {
-      console.log(
+      logger.debug(
         'Peer connection listeners already set up, skipping duplicate setup',
+        {origin: 'p2p-communication'},
       )
       return
     }
 
-    console.log('Setting up peer connection event listeners')
+    logger.log('Setting up peer connection event listeners', {
+      origin: 'p2p-communication',
+    })
     listenerSetupRef.current = true
 
     if (peerConnection.isReady()) {
-      console.log('Peer connection already connected, syncing state')
+      logger.debug('Peer connection already connected, syncing state', {
+        origin: 'p2p-communication',
+      })
       setPeerId(peerConnection.getPeerId())
       setStatus(peerConnection.getStatus())
       setIsReady(true)
     }
 
     const onOpen = (id: string): void => {
-      console.log('Peer connection open event - ready for connections:', id)
+      logger.log('Peer connection open event - ready for connections', {
+        origin: 'p2p-communication',
+        peerId: id,
+      })
       setPeerId(id)
       setStatus('ready')
       setIsReady(true)
@@ -66,20 +81,25 @@ export const usePeerConnection = (
     }
 
     const onError = (err: Error): void => {
-      console.error('Peer connection error in hook:', err)
+      logger.error(err, {
+        origin: 'p2p-communication',
+        operation: 'usePeerConnection',
+      })
       setError(err)
       setStatus('error')
       setIsReady(false)
     }
 
     const onDisconnected = (): void => {
-      console.log('Peer connection disconnected from server')
+      logger.log('Peer connection disconnected from server', {
+        origin: 'p2p-communication',
+      })
       setStatus('disconnected')
       setIsReady(false)
     }
 
     const onClose = (): void => {
-      console.log('Peer connection closed')
+      logger.log('Peer connection closed', {origin: 'p2p-communication'})
       setStatus('closed')
       setIsReady(false)
     }
@@ -93,7 +113,9 @@ export const usePeerConnection = (
     peerConnection.on('close', onClose as any)
 
     return () => {
-      console.log('Cleaning up peer connection event listeners')
+      logger.debug('Cleaning up peer connection event listeners', {
+        origin: 'p2p-communication',
+      })
 
       peerConnection.off('open', onOpen as any)
 
@@ -105,7 +127,7 @@ export const usePeerConnection = (
 
       listenerSetupRef.current = false
     }
-  }, [peerConnection])
+  }, [peerConnection, logger])
 
   useEffect(() => {
     if (typeof document === 'undefined') {
@@ -114,7 +136,9 @@ export const usePeerConnection = (
 
     const handleVisibilityChange = (): void => {
       if (document.visibilityState === 'visible' && status === 'disconnected') {
-        console.log('Tab became visible, attempting reconnect')
+        logger.log('Tab became visible, attempting reconnect', {
+          origin: 'p2p-communication',
+        })
         handleReconnect()
       }
     }
@@ -130,7 +154,7 @@ export const usePeerConnection = (
       document.removeEventListener('visibilitychange', handleVisibilityChange)
       window.removeEventListener('focus', handleFocus)
     }
-  }, [status, handleReconnect])
+  }, [status, handleReconnect, logger])
 
   return {
     peerId,

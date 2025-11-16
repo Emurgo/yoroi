@@ -1,11 +1,12 @@
 import {CardanoApi} from '@yoroi/api'
 import {
+  getLogger,
   mountAsyncStorage,
   mountMMKVStorage,
   observableStorageMaker,
 } from '@yoroi/common'
 import {explorerManager} from '@yoroi/explorers'
-import {Api, App, Chain, Network} from '@yoroi/types'
+import {Api, Chain, Network} from '@yoroi/types'
 
 import {freeze} from 'immer'
 
@@ -15,13 +16,12 @@ import {networkConfigs} from './network-configs'
 
 export function buildNetworkManagers({
   tokenManagers,
-  logger,
   apiMaker = CardanoApi.cardanoApiMaker,
 }: {
   tokenManagers: TokenManagerByNetwork
-  logger: App.Logger.Manager
   apiMaker?: ({network}: {network: Chain.SupportedNetworks}) => Api.Cardano.Api
 }): Readonly<Record<Chain.SupportedNetworks, Network.Manager>> {
+  const logger = getLogger()
   const managers = Object.entries(networkConfigs).reduce<
     Record<Chain.SupportedNetworks, Network.Manager>
   >(

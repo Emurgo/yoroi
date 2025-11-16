@@ -1,4 +1,4 @@
-import {App, BaseStorage} from '@yoroi/types'
+import {BaseStorage} from '@yoroi/types'
 
 import {freeze} from 'immer'
 
@@ -35,7 +35,6 @@ export const multiConnectionManagerMaker = (
   storage: BaseStorage,
   webrtcAdapter: WebRTCAdapter,
   peerConfig?: PeerConnectionConfig,
-  logger?: App.Logger.Manager,
 ): MultiConnectionManager => {
   let state: MultiConnectionManagerState = freeze({
     myPeerId: '',
@@ -58,7 +57,6 @@ export const multiConnectionManagerMaker = (
       webrtcAdapter,
       config: peerConfig,
       isWallet: true, // Assume wallet for multi-wallet scenario
-      logger,
     })
 
     const peerId = await baseConnection.init()
@@ -96,7 +94,6 @@ export const multiConnectionManagerMaker = (
         targetPeerId,
       },
       isWallet: true,
-      logger,
     })
 
     await connection.init()

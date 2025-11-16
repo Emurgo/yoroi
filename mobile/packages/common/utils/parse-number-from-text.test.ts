@@ -1,6 +1,6 @@
 import {Numbers} from '@yoroi/types'
 
-import {parseNumberFromText} from './parse-number-from-text'
+import {asQuantity, parseNumberFromText} from './parse-number-from-text'
 
 describe('parseNumberFromText', () => {
   const englishFormat: Numbers.Locale = {
@@ -206,7 +206,6 @@ describe('parseNumberFromText', () => {
   it('should throw error for invalid quantity in asQuantity', () => {
     // This test covers the error case in asQuantity function
     // We need to test the asQuantity function directly since sanitization prevents invalid input
-    const {asQuantity} = require('./parse-number-from-text')
     expect(() => {
       asQuantity('invalid')
     }).toThrow('Invalid quantity')

@@ -1,10 +1,9 @@
-import {App} from '@yoroi/types'
+import {getLogger} from '@yoroi/common'
 
 import {freeze} from 'immer'
 
 import {CONNECTION_CONSTANTS} from '../constants'
 import {EventCallback, HeartbeatMessage, WalletMessage} from '../types'
-import {getLogger} from '../utils/logger'
 import {createWalletRequest, isHeartbeatMessage} from '../utils/message-utils'
 import {PeerConnection} from './peer-connection'
 
@@ -45,7 +44,6 @@ export type WalletCommunication = {
 
 type WalletCommunicationDeps = {
   readonly peerConnection: PeerConnection
-  readonly logger?: App.Logger.Manager
 }
 
 const createInitialState = (): WalletCommunicationState =>
@@ -66,7 +64,7 @@ export const walletCommunicationMaker = (
   deps: WalletCommunicationDeps,
 ): WalletCommunication => {
   let state = createInitialState()
-  const logger = getLogger(deps.logger)
+  const logger = getLogger()
 
   const updateState = (updates: Partial<WalletCommunicationState>): void => {
     state = freeze({...state, ...updates} as const)

@@ -29,6 +29,7 @@ export * from './utils/records'
 export * from './utils/strings'
 export * from './utils/urls'
 
+export * from './logger/logger'
 export * from './logger/throw-logged-error'
 export * from './logger/to-logger-metadata'
 

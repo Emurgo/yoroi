@@ -1,3 +1,5 @@
+import {getLogger} from '@yoroi/common'
+
 import {useCallback, useEffect, useState} from 'react'
 
 import {WalletCommunication} from '../core/wallet-communication'
@@ -21,6 +23,7 @@ export const useWalletConnection = (
   peerConnection: PeerConnectionState,
   walletCommunication: WalletCommunication | null,
 ): UseWalletConnectionResult => {
+  const logger = getLogger()
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const {peerId: _peerId, isReady: _isReady} = peerConnection
 
@@ -38,19 +41,24 @@ export const useWalletConnection = (
       return
     }
 
-    console.log(
-      'Initializing wallet connection, current status:',
-      walletCommunication.isConnected() ? 'connected' : 'disconnected',
-    )
+    logger.log('Initializing wallet connection', {
+      origin: 'p2p-communication',
+      status: walletCommunication.isConnected() ? 'connected' : 'disconnected',
+    })
 
     if (walletCommunication.isConnected()) {
-      console.log('Wallet is already connected!')
+      logger.debug('Wallet is already connected!', {
+        origin: 'p2p-communication',
+      })
       setConnected(true)
       setStatus('connected')
     }
 
     const onConnect = (id: string): void => {
-      console.log('Wallet connection established in hook')
+      logger.log('Wallet connection established in hook', {
+        origin: 'p2p-communication',
+        walletId: id,
+      })
       setConnected(true)
       setStatus('connected')
       setWalletId(id)
@@ -58,13 +66,16 @@ export const useWalletConnection = (
     }
 
     const onDisconnect = (): void => {
-      console.log('Wallet disconnected')
+      logger.log('Wallet disconnected', {origin: 'p2p-communication'})
       setConnected(false)
       setStatus('disconnected')
     }
 
     const onError = (err: Error): void => {
-      console.error('Wallet connection error:', err)
+      logger.error(err, {
+        origin: 'p2p-communication',
+        operation: 'useWalletConnection',
+      })
       setError(err)
       setStatus('error')
     }
@@ -82,14 +93,14 @@ export const useWalletConnection = (
 
       walletCommunication.off('error', onError as any)
     }
-  }, [walletCommunication])
+  }, [walletCommunication, logger])
 
   const disconnectWallet = useCallback(() => {
     if (!walletCommunication) {
       return
     }
 
-    console.log('Disconnecting from wallet...')
+    logger.log('Disconnecting from wallet...', {origin: 'p2p-communication'})
     if (walletCommunication.isConnected()) {
       try {
         walletCommunication.disconnect()
@@ -102,7 +113,7 @@ export const useWalletConnection = (
         setStatus('error')
       }
     }
-  }, [walletCommunication])
+  }, [walletCommunication, logger])
 
   return {
     walletId,

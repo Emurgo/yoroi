@@ -1,3 +1,4 @@
+import {getLogger} from '@yoroi/common'
 import {createTokenManagerMock} from '@yoroi/portfolio'
 import {App, Chain} from '@yoroi/types'
 
@@ -5,12 +6,9 @@ import {protocolParamsPlaceholder} from '../cardano/constants'
 import {networkConfigs} from './network-configs'
 import {buildNetworkManagers} from './network-manager'
 
-describe('buildNetworkManagers', () => {
-  const mockTokenManagers = {
-    [Chain.Network.Mainnet]: createTokenManagerMock(),
-    [Chain.Network.Preprod]: createTokenManagerMock(),
-    [Chain.Network.Preview]: createTokenManagerMock(),
-  }
+// Mock the shared logger
+jest.mock('@yoroi/common', () => {
+  const actual = jest.requireActual('@yoroi/common')
   const mockLogger = {
     error: jest.fn(),
     level: App.Logger.Level.Debug,
@@ -22,6 +20,19 @@ describe('buildNetworkManagers', () => {
     disable: jest.fn(),
     addTransport: jest.fn(),
   }
+  return {
+    ...actual,
+    getLogger: jest.fn(() => mockLogger),
+  }
+})
+
+describe('buildNetworkManagers', () => {
+  const mockTokenManagers = {
+    [Chain.Network.Mainnet]: createTokenManagerMock(),
+    [Chain.Network.Preprod]: createTokenManagerMock(),
+    [Chain.Network.Preview]: createTokenManagerMock(),
+  }
+  const mockLogger = getLogger()
   const mockApiMaker = jest.fn().mockReturnValue({
     getProtocolParams: jest.fn().mockResolvedValue({}),
     getBestBlock: jest.fn().mockResolvedValue({}),
@@ -31,7 +42,6 @@ describe('buildNetworkManagers', () => {
   it('should build network managers correctly', async () => {
     const managers = buildNetworkManagers({
       tokenManagers: mockTokenManagers,
-      logger: mockLogger,
       apiMaker: mockApiMaker,
     })
 
@@ -55,7 +65,6 @@ describe('buildNetworkManagers', () => {
 
     const managers = buildNetworkManagers({
       tokenManagers: mockTokenManagers,
-      logger: mockLogger,
       apiMaker: mockApiMaker,
     })
 
@@ -68,7 +77,6 @@ describe('buildNetworkManagers', () => {
   it('coverage only - should use default cardanoApiMaker', () => {
     const managers = buildNetworkManagers({
       tokenManagers: mockTokenManagers,
-      logger: mockLogger,
     })
     expect(managers).toBeDefined()
   })

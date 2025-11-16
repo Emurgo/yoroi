@@ -1,9 +1,10 @@
+import {getLogger} from '@yoroi/common'
+
 import {useCallback, useEffect, useState} from 'react'
 
 import {WALLET_METHODS} from '../constants'
 import {WalletCommunication} from '../core/wallet-communication'
-import {WalletMessage, WalletResponse} from '../types'
-import {ConnectionStatus} from '../types'
+import {ConnectionStatus, WalletMessage, WalletResponse} from '../types'
 
 type Message = {
   readonly from: string
@@ -25,6 +26,7 @@ export const useWalletMessages = (
   setStatus: (status: ConnectionStatus) => void,
   walletCommunication: WalletCommunication | null,
 ): UseWalletMessagesResult => {
+  const logger = getLogger()
   const [messages, setMessages] = useState<ReadonlyArray<Message>>([])
 
   const addMessage = useCallback((from: string, text: string): void => {
@@ -133,23 +135,29 @@ export const useWalletMessages = (
   const signTransaction = useCallback(
     (txData: unknown = null): boolean => {
       if (!connected || !walletCommunication) {
-        console.log('Cannot sign tx: Not connected to wallet')
+        logger.debug('Cannot sign tx: Not connected to wallet', {
+          origin: 'p2p-communication',
+        })
         return false
       }
 
-      console.log('Sending sign transaction request')
+      logger.log('Sending sign transaction request', {
+        origin: 'p2p-communication',
+      })
       const success = walletCommunication.signTransaction(txData)
 
       if (success) {
         addMessage('dApp', 'Requesting transaction signature...')
         setStatus('initializing')
       } else {
-        console.error('Failed to send transaction signing request')
+        logger.error('Failed to send transaction signing request', {
+          origin: 'p2p-communication',
+        })
       }
 
       return success
     },
-    [connected, walletCommunication, addMessage, setStatus],
+    [connected, walletCommunication, addMessage, setStatus, logger],
   )
 
   return {

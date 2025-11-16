@@ -1,4 +1,5 @@
 // Functional Transaction Builder using CSL TransactionBuilder directly
+import {getLogger} from '@yoroi/common'
 import {Balance, Portfolio} from '@yoroi/types'
 
 import type {
@@ -381,8 +382,7 @@ function amountsToValue(
   amounts: Balance.Amounts,
   primaryTokenId: Portfolio.Token.Id = '.',
 ): Value {
-  // Import logger dynamically to avoid circular dependencies
-  const logger = require('../../../src/kernel/logger/logger').logger
+  const logger = getLogger()
 
   const adaAmount = amounts[primaryTokenId] || '0'
 
@@ -511,8 +511,7 @@ function outputToCSL(
   output: TransactionOutput,
   primaryTokenId: Portfolio.Token.Id = '.',
 ): CSLTransactionOutput {
-  // Import logger dynamically to avoid circular dependencies
-  const logger = require('../../../src/kernel/logger/logger').logger
+  const logger = getLogger()
 
   const address = csl.Address.fromBech32(output.address)
   if (!address) {
@@ -611,8 +610,7 @@ export async function buildTransaction(
   protocolParams: CardanoHaskellConfig,
   primaryTokenId: Portfolio.Token.Id = '.',
 ): Promise<UnsignedTransaction> {
-  // Import logger dynamically to avoid circular dependencies
-  const logger = require('../../../src/kernel/logger/logger').logger
+  const logger = getLogger()
 
   return CardanoMobileWrapped.cslScope((csl) => {
     // Validate inputs

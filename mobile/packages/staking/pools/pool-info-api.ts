@@ -2,6 +2,7 @@
 // This file contains the PoolInfoApi class for fetching stake pool information
 import {
   chunk,
+  getLogger,
   isHex,
   joinUrl,
   mergeRecords,
@@ -345,7 +346,11 @@ export class PoolInfoApi {
         return response.data
       }
     } catch (e) {
-      console.error('Failed to resolve remote pool transition info', e)
+      const logger = getLogger()
+      logger.error(e instanceof Error ? e : new Error(String(e)), {
+        origin: 'staking',
+        operation: 'getPoolTransitionInfo',
+      })
     }
     return null
   }
@@ -370,8 +375,10 @@ export class PoolInfoApi {
       transitionData.saturationThreshold ??
       DEFAULT_SATURATION_THRESHOLD
     if (saturationThreshold < 0 || saturationThreshold > 1) {
-      console.warn(
+      const logger = getLogger()
+      logger.warn(
         `Incorrect saturation threshold value "${saturationThreshold}", expected between 0 and 1. Using default "${DEFAULT_SATURATION_THRESHOLD}"`,
+        {origin: 'staking', operation: 'getTransition'},
       )
       saturationThreshold = DEFAULT_SATURATION_THRESHOLD
     }

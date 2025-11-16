@@ -1,3 +1,4 @@
+import {getLogger} from '@yoroi/common'
 import {HW, Wallet} from '@yoroi/types'
 
 import {freeze, produce} from 'immer'
@@ -240,5 +241,8 @@ export const setupWalletInitialContext: SetupWalletContext = freeze(
 
 /* istanbul ignore next */
 function missingInit() {
-  console.error('[SetupWallet] missing initialization')
+  const logger = getLogger()
+  logger.error('[SetupWallet] missing initialization', {
+    origin: 'setup-wallet',
+  })
 }

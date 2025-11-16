@@ -5,7 +5,6 @@ import {freeze} from 'immer'
 
 import {tokenManagers} from '~/features/Portfolio/common/constants'
 import {isDev} from '~/kernel/constants'
-import {logger} from '~/kernel/logger/logger'
 
 export const addressModes: ReadonlyArray<Wallet.AddressMode> = freeze([
   'single',
@@ -16,7 +15,7 @@ export const implementations: ReadonlyArray<Wallet.Implementation> = freeze([
   'cardano-bip44',
 ] as const)
 
-export const networkManagers = buildNetworkManagers({tokenManagers, logger})
+export const networkManagers = buildNetworkManagers({tokenManagers})
 
 // NOTE: needs update, SupportedNetworks is a client thing
 const supportedNetworksDev: Array<Chain.SupportedNetworks> = freeze([

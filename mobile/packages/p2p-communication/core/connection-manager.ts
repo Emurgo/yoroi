@@ -1,7 +1,8 @@
+import {getLogger} from '@yoroi/common'
+
 import {freeze} from 'immer'
 
 import {ConnectionManagerConfig} from '../types'
-import {getLogger} from '../utils/logger'
 import {PeerConnection, peerConnectionMaker} from './peer-connection'
 import {
   WalletCommunication,
@@ -41,7 +42,7 @@ export const connectionManagerMaker = (
   config: ConnectionManagerConfig,
 ): ConnectionManager => {
   let state = createInitialState()
-  const logger = getLogger(config.logger)
+  const logger = getLogger()
 
   const updateState = (updates: Partial<ConnectionManagerState>): void => {
     state = freeze({...state, ...updates} as const)
@@ -73,14 +74,12 @@ export const connectionManagerMaker = (
           webrtcAdapter: config.webrtcAdapter,
           config: config.peerConfig,
           isWallet: config.isWallet,
-          logger: config.logger,
         })
 
         await peerConnection.init()
 
         const walletCommunication = walletCommunicationMaker({
           peerConnection,
-          logger: config.logger,
         })
 
         updateState({

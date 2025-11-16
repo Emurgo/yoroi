@@ -1,3 +1,5 @@
+import {setLogger} from '@yoroi/common'
+
 import {
   distribution,
   environment,
@@ -59,3 +61,6 @@ Sentry.init({
 })
 
 logger.addTransport(sentryAdapter().transporter)
+
+// Initialize shared logger for packages
+setLogger(logger)

@@ -15,7 +15,6 @@ import {useStakingKey} from '~/features/Staking/hooks/useStakingKey'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useWalletEvent} from '~/features/WalletManager/hooks/useWalletEvent'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {logger} from '~/kernel/logger/logger'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {InfoBanner} from '~/ui/InfoBanner/InfoBanner'
 import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
@@ -87,7 +86,6 @@ export const useGovernanceManagerMaker = () => {
         api: governanceApiMaker({network}),
         cardano: CardanoMobile,
         storage: governanceStorage,
-        logger,
       }),
     [governanceStorage, network, walletId],
   )

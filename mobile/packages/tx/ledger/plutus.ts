@@ -1,5 +1,7 @@
 // Ledger Plutus transaction payload building
 // Functions for building Ledger payloads for Plutus (smart contract) transactions
+import {getLogger} from '@yoroi/common'
+
 import {
   SignTransactionRequest,
   TransactionSigningMode,
@@ -89,6 +91,8 @@ export const createLedgerPlutusPayload = async (
       return {type: TxRequiredSignerType.PATH as const, path}
     })
 
+    const logger = getLogger()
+
     const inputs = body.inputs()
     const inputsArray: TxInput[] = []
     for (let i = 0; i < inputs.len(); i++) {
@@ -97,8 +101,14 @@ export const createLedgerPlutusPayload = async (
       const txIndex = input.index()
       const path = getAddressingPath(txId, txIndex)
       if (!path) {
-        console.warn(
-          'Could not find path for TX input: ' + txId + ':' + txIndex,
+        logger.warn(
+          'createLedgerPlutusPayload: Could not find addressing path for transaction input',
+          {
+            txId,
+            txIndex,
+            inputIndex: i,
+            function: 'createLedgerPlutusPayload',
+          },
         )
       }
       inputsArray.push({txHashHex: txId, outputIndex: txIndex, path})

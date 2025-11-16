@@ -1,4 +1,9 @@
-import {createTypeGuardFromSchema, isKeyOf, isRecord} from '@yoroi/common'
+import {
+  createTypeGuardFromSchema,
+  getLogger,
+  isKeyOf,
+  isRecord,
+} from '@yoroi/common'
 import {Chain} from '@yoroi/types'
 
 import {
@@ -49,13 +54,26 @@ type Resolver = {
 }
 
 export const resolver: Resolver = {
-  logMessage: async (params) => {
+  logMessage: async (params, context) => {
     if (
       isRecord(params) &&
       isKeyOf('args', params) &&
       Array.isArray(params.args)
     ) {
-      console.log('Log From Dapp Connector:', ...params.args)
+      const message = params.args
+        .map((arg) => {
+          if (typeof arg === 'string') return arg
+          if (typeof arg === 'object' && arg !== null) {
+            return JSON.stringify(arg)
+          }
+          return String(arg)
+        })
+        .join(' ')
+      getLogger().debug('Log From Dapp Connector', {
+        origin: context.browserOrigin,
+        message,
+        args: params.args,
+      })
     }
   },
   enable: async (_params: unknown, context: Context) => {

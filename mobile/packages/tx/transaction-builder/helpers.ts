@@ -1,6 +1,7 @@
 // Helper functions for TransactionBuilder
 // Utilities for creating certificates, filtering UTXOs, and handling metadata
 import {cardanoConfig} from '@yoroi/blockchains'
+import {getLogger} from '@yoroi/common'
 import {Chain, Portfolio, Wallet} from '@yoroi/types'
 
 import type {
@@ -302,8 +303,7 @@ export function selectUtxosForAmounts(
   primaryTokenId: Portfolio.Token.Id = '' as Portfolio.Token.Id,
   estimatedFee: string = '200000', // Default 0.2 ADA fee estimate
 ): ModernUtxo[] {
-  // Import logger dynamically to avoid circular dependencies
-  const logger = require('../../../src/kernel/logger/logger').logger
+  const logger = getLogger()
 
   // Calculate total required ADA (outputs + fee)
   const requiredAda =

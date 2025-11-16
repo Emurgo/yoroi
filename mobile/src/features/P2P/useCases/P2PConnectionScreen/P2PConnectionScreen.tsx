@@ -124,7 +124,6 @@ export const P2PConnectionScreen = () => {
         targetPeerId,
       },
       isWallet: true,
-      logger,
     })
 
     setConnectionManager(manager)

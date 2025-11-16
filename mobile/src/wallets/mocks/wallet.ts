@@ -15,7 +15,6 @@ import {noop} from 'lodash'
 import {Observable} from 'rxjs'
 
 import {buildPortfolioTokenManagers} from '~/features/Portfolio/common/helpers/build-token-managers'
-import {logger} from '~/kernel/logger/logger'
 
 import {toTokenInfo, utf8ToHex} from '../cardano/api/utils'
 import {CardanoTypes, WalletSubscription, YoroiWallet} from '../cardano/types'
@@ -61,7 +60,7 @@ const walletMeta: Wallet.Meta = {
 
 // TODO: should be mocked
 const {tokenManagers} = buildPortfolioTokenManagers()
-const networkManagers = buildNetworkManagers({tokenManagers, logger})
+const networkManagers = buildNetworkManagers({tokenManagers})
 
 const wallet: YoroiWallet = {
   getAddressing(_address: string): {path: number[]; startLevel: number} {
