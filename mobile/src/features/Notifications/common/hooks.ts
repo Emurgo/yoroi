@@ -5,8 +5,15 @@ import {
   Notifications as YoroiNotifications,
 } from '@yoroi/types'
 
-import messaging, {
+import {
   FirebaseMessagingTypes,
+  getInitialNotification,
+  getMessaging,
+  onMessage,
+  onNotificationOpenedApp,
+  requestPermission,
+  subscribeToTopic,
+  unsubscribeFromTopic,
 } from '@react-native-firebase/messaging'
 import * as Notifications from 'expo-notifications'
 import * as React from 'react'
@@ -46,7 +53,7 @@ const createPushNotification = (options: {
 const initPushNotifications = (
   walletNavigation: ReturnType<typeof useWalletNavigation>,
 ) => {
-  const messagingInstance = messaging()
+  const messagingInstance = getMessaging()
   let firebaseForegroundUnsubscribe: (() => void) | undefined
   let firebaseOpenUnsubscribe: (() => void) | undefined
   let responseListener: Notifications.Subscription | undefined
@@ -61,9 +68,8 @@ const initPushNotifications = (
       if (status === 'granted') {
         if (isUnmounted) return
 
-        await messagingInstance.registerDeviceForRemoteMessages()
-        await messagingInstance.requestPermission()
-        await messagingInstance.subscribeToTopic('yoroi_campaigns')
+        await requestPermission(messagingInstance)
+        await subscribeToTopic(messagingInstance, 'yoroi_campaigns')
         isSubscribedToTopic = true
       }
     } catch (error) {
@@ -80,7 +86,6 @@ const initPushNotifications = (
   const setupNotificationHandler = () => {
     Notifications.setNotificationHandler({
       handleNotification: async () => ({
-        shouldShowAlert: true,
         shouldPlaySound: true,
         shouldSetBadge: false,
         shouldShowBanner: true,
@@ -125,7 +130,7 @@ const initPushNotifications = (
   }
 
   const attachForegroundListener = () =>
-    messagingInstance.onMessage(handleForegroundMessage)
+    onMessage(messagingInstance, handleForegroundMessage)
 
   const attachResponseListener = () =>
     Notifications.addNotificationResponseReceivedListener((response) => {
@@ -149,7 +154,7 @@ const initPushNotifications = (
     })
 
   const attachFirebaseOpenListener = () =>
-    messagingInstance.onNotificationOpenedApp(async (remoteMessage) => {
+    onNotificationOpenedApp(messagingInstance, async (remoteMessage) => {
       const data = remoteMessage?.data as Record<string, unknown> | undefined
       const title = remoteMessage?.notification?.title
       const body = remoteMessage?.notification?.body
@@ -175,7 +180,7 @@ const initPushNotifications = (
     })
 
   const handleInitialNotification = () => {
-    messagingInstance.getInitialNotification().then(async (remoteMessage) => {
+    getInitialNotification(messagingInstance).then(async (remoteMessage) => {
       if (remoteMessage) {
         const data = remoteMessage?.data as Record<string, unknown> | undefined
         const title = remoteMessage?.notification?.title
@@ -228,7 +233,7 @@ const initPushNotifications = (
     firebaseOpenUnsubscribe?.()
     responseListener?.remove()
     if (isSubscribedToTopic) {
-      messagingInstance.unsubscribeFromTopic('yoroi_campaigns')
+      unsubscribeFromTopic(messagingInstance, 'yoroi_campaigns')
     }
   }
 }

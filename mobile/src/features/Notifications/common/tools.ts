@@ -1,7 +1,11 @@
 import {isNumber, isRecord, isString} from '@yoroi/common'
 import {Portfolio, Notifications as YoroiNotifications} from '@yoroi/types'
 
-import messaging from '@react-native-firebase/messaging'
+import {
+  getMessaging,
+  requestPermission,
+  subscribeToTopic,
+} from '@react-native-firebase/messaging'
 import * as Notifications from 'expo-notifications'
 import {Linking, PermissionsAndroid} from 'react-native'
 
@@ -36,9 +40,9 @@ export const triggerNotificationsPermissionModal = async () => {
 
   if (finalStatus === 'granted') {
     try {
-      await messaging().registerDeviceForRemoteMessages()
-      await messaging().requestPermission()
-      await messaging().subscribeToTopic('yoroi_campaigns')
+      const messaging = getMessaging()
+      await requestPermission(messaging)
+      await subscribeToTopic(messaging, 'yoroi_campaigns')
     } catch (error) {
       logger.error('Push registration failed', {error})
     }
