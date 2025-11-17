@@ -30,9 +30,11 @@ import {useWalletManager} from '../context/WalletManagerProvider'
 export function useLaunchWalletAfterSyncing({
   isGlobalSyncPaused = false,
   walletId,
+  shouldNavigateAfterSync = true,
 }: {
   isGlobalSyncPaused: boolean
   walletId: YoroiWallet['id'] | null
+  shouldNavigateAfterSync?: boolean
 }) {
   const walletNavigation = useWalletNavigation()
   const {walletManager} = useWalletManager()
@@ -54,7 +56,9 @@ export function useLaunchWalletAfterSyncing({
             'useLaunchWalletAfterSyncing: New wallet meta has not been found, reached an invalid state',
           )
           logger.error(error)
-          walletNavigation.resetToWalletSelection()
+          if (shouldNavigateAfterSync) {
+            walletNavigation.resetToWalletSelection()
+          }
           return
         }
 
@@ -82,32 +86,44 @@ export function useLaunchWalletAfterSyncing({
             'useLaunchWalletAfterSyncing: Wallet could not be loaded after setting selected wallet ID',
           )
           logger.error(error, {walletId, meta})
-          walletNavigation.resetToWalletSelection()
+          if (shouldNavigateAfterSync) {
+            walletNavigation.resetToWalletSelection()
+          }
           return
         }
 
         await wallet.sync({isForced: true})
 
-        try {
-          walletNavigation.resetToTxHistory()
-        } catch (error) {
-          logger.error(
-            'useLaunchWalletAfterSyncing: Error navigating to tx history, trying wallet selection instead',
-            {error, walletId},
-          )
-          // If navigation fails (e.g., user not logged in), fall back to wallet selection
-          walletNavigation.resetToWalletSelection()
+        if (shouldNavigateAfterSync) {
+          try {
+            walletNavigation.resetToTxHistory()
+          } catch (error) {
+            logger.error(
+              'useLaunchWalletAfterSyncing: Error navigating to tx history, trying wallet selection instead',
+              {error, walletId},
+            )
+            // If navigation fails (e.g., user not logged in), fall back to wallet selection
+            walletNavigation.resetToWalletSelection()
+          }
         }
       } catch (error) {
         logger.error(
           'useLaunchWalletAfterSyncing: Error during wallet launch',
           {error, walletId},
         )
-        walletNavigation.resetToWalletSelection()
+        if (shouldNavigateAfterSync) {
+          walletNavigation.resetToWalletSelection()
+        }
       }
     }
 
     const timer = setTimeout(() => process(), time.oneSecond)
     return () => clearTimeout(timer)
-  }, [isGlobalSyncPaused, walletId, walletNavigation, walletManager])
+  }, [
+    isGlobalSyncPaused,
+    walletId,
+    walletNavigation,
+    walletManager,
+    shouldNavigateAfterSync,
+  ])
 }

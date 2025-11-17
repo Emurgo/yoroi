@@ -1,33 +1,29 @@
 import {Blockies} from '@yoroi/identicon'
-import {App, Chain, HW, Network, Wallet} from '@yoroi/types'
+import {Chain, HW, Wallet} from '@yoroi/types'
+
 import {v4} from 'uuid'
 
 import {logger} from '~/kernel/logger/logger'
 import {makeWalletEncryptedStorage} from '~/kernel/storage/EncryptedStorage'
+import {deriveAccountFromRootKey} from '~/wallets/cardano/key-manager/key-manager'
 import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
-import {
-  deriveAccountFromRootKey,
-  keyManager,
-} from '~/wallets/cardano/key-manager/key-manager'
 
+import {createWalletMeta} from '../lifecycle/wallet-lifecycle'
 import {getWalletFactory} from '../network-manager/get-wallet-factory'
-import {createWalletMeta, saveWalletMeta} from '../lifecycle/wallet-lifecycle'
 
 /**
  * Create wallet from mnemonic
  */
-export const createWalletFromMnemonic = async (
-  params: {
-    name: string
-    mnemonic: string
-    password: string
-    implementation: Wallet.Implementation
-    addressMode: Wallet.AddressMode
-    accountVisual: number
-    network: Chain.SupportedNetworks
-    version: number
-  },
-): Promise<Wallet.Meta> => {
+export const createWalletFromMnemonic = async (params: {
+  name: string
+  mnemonic: string
+  password: string
+  implementation: Wallet.Implementation
+  addressMode: Wallet.AddressMode
+  accountVisual: number
+  network: Chain.SupportedNetworks
+  version: number
+}): Promise<Wallet.Meta> => {
   const {
     name,
     mnemonic,
@@ -78,19 +74,17 @@ export const createWalletFromMnemonic = async (
 /**
  * Create wallet from xpub (hardware wallet or read-only)
  */
-export const createWalletFromXPub = async (
-  params: {
-    name: string
-    accountPubKeyHex: string
-    implementation: Wallet.Implementation
-    hwDeviceInfo: null | HW.DeviceInfo
-    isReadOnly: boolean
-    addressMode: Wallet.AddressMode
-    accountVisual: number
-    network: Chain.SupportedNetworks
-    version: number
-  },
-): Promise<Wallet.Meta> => {
+export const createWalletFromXPub = async (params: {
+  name: string
+  accountPubKeyHex: string
+  implementation: Wallet.Implementation
+  hwDeviceInfo: null | HW.DeviceInfo
+  isReadOnly: boolean
+  addressMode: Wallet.AddressMode
+  accountVisual: number
+  network: Chain.SupportedNetworks
+  version: number
+}): Promise<Wallet.Meta> => {
   const {
     name,
     accountPubKeyHex,
@@ -136,18 +130,16 @@ export const createWalletFromXPub = async (
 /**
  * Create wallet from root key hex (for restoration from links)
  */
-export const createWalletFromRootKey = async (
-  params: {
-    name: string
-    rootKeyHex: string
-    password: string
-    implementation: Wallet.Implementation
-    addressMode: Wallet.AddressMode
-    accountVisual: number
-    network: Chain.SupportedNetworks
-    version: number
-  },
-): Promise<Wallet.Meta> => {
+export const createWalletFromRootKey = async (params: {
+  name: string
+  rootKeyHex: string
+  password: string
+  implementation: Wallet.Implementation
+  addressMode: Wallet.AddressMode
+  accountVisual: number
+  network: Chain.SupportedNetworks
+  version: number
+}): Promise<Wallet.Meta> => {
   const {
     name,
     rootKeyHex,
@@ -196,14 +188,12 @@ export const createWalletFromRootKey = async (
 /**
  * Derive and store account for a wallet
  */
-export const deriveAndStoreAccount = async (
-  params: {
-    id: string
-    accountVisual: number
-    password: string
-    implementation: Wallet.Implementation
-  },
-): Promise<string> => {
+export const deriveAndStoreAccount = async (params: {
+  id: string
+  accountVisual: number
+  password: string
+  implementation: Wallet.Implementation
+}): Promise<string> => {
   const {id, accountVisual, password, implementation} = params
 
   const encryptedStorage = makeWalletEncryptedStorage(id)
@@ -222,4 +212,3 @@ export const deriveAndStoreAccount = async (
 
   return accountPubKeyHex
 }
-

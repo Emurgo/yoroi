@@ -1,11 +1,11 @@
 import {Chain} from '@yoroi/types'
 
-import {BehaviorSubject, of} from 'rxjs'
+import {BehaviorSubject} from 'rxjs'
 
 import {YoroiWallet} from '~/wallets/cardano/types'
 
-import {makeSyncManager} from './sync-manager'
 import {defaultSyncConfig} from './sync-config'
+import {makeSyncManager} from './sync-manager'
 
 describe('SyncManager', () => {
   let mockWallets: YoroiWallet[]
@@ -137,4 +137,3 @@ describe('SyncManager', () => {
     })
   })
 })
-

@@ -14,8 +14,8 @@ import {useClaimErrorResolver} from '~/features/Claim/common/useClaimErrorResolv
 import {AskConfirmationModal} from '~/features/Claim/ui/modals/AskConfirmationModal'
 import {useBrowser} from '~/features/Discover/common/BrowserProvider'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
-import {logger} from '~/kernel/logger/logger'
 import {useStrings} from '~/kernel/i18n/useStrings'
+import {logger} from '~/kernel/logger/logger'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {useModal} from '~/ui/Modal/context/ModalContext'
 import {pastedFormatter} from '~/wallets/utils/amountUtils'
@@ -107,7 +107,7 @@ export const useTriggerScanAction = ({
       scanAction,
       isLoggedIn,
     })
-    
+
     switch (scanAction.action) {
       case 'launch-url': {
         Linking.openURL(scanAction.url)
@@ -282,27 +282,36 @@ export const useTriggerScanAction = ({
           isLoggedIn,
           scanAction,
         })
-        
+
         if (isLoggedIn) {
-          logger.info('useTriggerScanAction: navigating via walletNavigation (logged in)', {
-            scanAction,
-          })
+          logger.info(
+            'useTriggerScanAction: navigating via walletNavigation (logged in)',
+            {
+              scanAction,
+            },
+          )
           walletNavigation.navigateToRestoreWalletFromLink(scanAction)
         } else {
-          logger.info('useTriggerScanAction: navigating directly to setup-wallet (not logged in)', {
-            scanAction,
-          })
+          logger.info(
+            'useTriggerScanAction: navigating directly to setup-wallet (not logged in)',
+            {
+              scanAction,
+            },
+          )
           // Navigate directly to setup-wallet screen when not logged in
           try {
             ;(rootNavigation as any).navigate('setup-wallet', {
               screen: 'setup-wallet-restore-from-link',
               params: {action: scanAction},
             })
-            logger.info('useTriggerScanAction: navigation to setup-wallet completed')
+            logger.info(
+              'useTriggerScanAction: navigation to setup-wallet completed',
+            )
           } catch (error) {
             logger.info('useTriggerScanAction: navigation error', {
               error,
-              errorMessage: error instanceof Error ? error.message : String(error),
+              errorMessage:
+                error instanceof Error ? error.message : String(error),
               errorStack: error instanceof Error ? error.stack : undefined,
             })
           }

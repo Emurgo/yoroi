@@ -313,17 +313,29 @@ export async function createSendTx({
     }
 
     // Build transaction first to get actual fee
-    // If subtractFeeFromAmount is true and initial build fails with "Not enough ADA",
+    // If subtractFeeFromAmount is true and initial build fails with "Not enough ADA" or "Insufficient input",
     // we'll catch it and retry with reduced amount
     let result: {cbor: string; fee: bigint} | undefined
     let initialBuildFailed = false
 
     try {
       result = await buildTxWithEntries(entries)
-      logger.info('createSendTx: Initial build completed', {
+      logger.debug('createSendTx: Initial build completed', {
         subtractFeeFromAmount,
         fee: result.fee.toString(),
         entriesCount: entries.length,
+        totalInputAda: selectedUtxos
+          .reduce(
+            (sum, utxo) => sum + BigInt(utxo.balance[primaryTokenId] || '0'),
+            BigInt(0),
+          )
+          .toString(),
+        totalOutputAda: entries
+          .reduce(
+            (sum, entry) => sum + BigInt(entry.amounts[primaryTokenId] || '0'),
+            BigInt(0),
+          )
+          .toString(),
       })
     } catch (error) {
       const errorMessage =
@@ -331,15 +343,45 @@ export async function createSendTx({
       const isNotEnoughAdaError =
         errorMessage.includes('Not enough ADA leftover') ||
         errorMessage.includes('Not enough ADA')
+      const isInsufficientInputError =
+        errorMessage.includes('Insufficient input') ||
+        errorMessage.includes('shortage')
 
-      // If subtractFeeFromAmount is true and we got "Not enough ADA" error,
+      logger.debug('createSendTx: Initial build failed', {
+        subtractFeeFromAmount,
+        errorMessage,
+        isNotEnoughAdaError,
+        isInsufficientInputError,
+        entriesCount: entries.length,
+        totalInputAda: selectedUtxos
+          .reduce(
+            (sum, utxo) => sum + BigInt(utxo.balance[primaryTokenId] || '0'),
+            BigInt(0),
+          )
+          .toString(),
+        totalOutputAda: entries
+          .reduce(
+            (sum, entry) => sum + BigInt(entry.amounts[primaryTokenId] || '0'),
+            BigInt(0),
+          )
+          .toString(),
+      })
+
+      // If subtractFeeFromAmount is true and we got "Not enough ADA" or "Insufficient input" error,
       // we'll handle it by reducing the amount and retrying
-      if (subtractFeeFromAmount && isNotEnoughAdaError && entries.length > 0) {
+      if (
+        subtractFeeFromAmount &&
+        (isNotEnoughAdaError || isInsufficientInputError) &&
+        entries.length > 0
+      ) {
         initialBuildFailed = true
-        logger.info(
-          'createSendTx: Initial build failed with Not enough ADA, will retry with reduced amount',
+        logger.debug(
+          'createSendTx: Initial build failed, will retry with reduced amount',
           {
             errorMessage,
+            errorType: isNotEnoughAdaError
+              ? 'NotEnoughAda'
+              : 'InsufficientInput',
           },
         )
       } else {
@@ -350,7 +392,7 @@ export async function createSendTx({
 
     // If subtractFeeFromAmount is true, adjust the first output and rebuild
     // This ensures that when sending MAX, the fee is automatically subtracted
-    // from the output amount, preventing "Not enough ADA leftover" errors
+    // from the output amount, preventing "Not enough ADA leftover" or "Insufficient input" errors
     if (subtractFeeFromAmount && entries.length > 0) {
       const firstEntry = entries[0]
       if (firstEntry) {
@@ -365,6 +407,15 @@ export async function createSendTx({
           (sum, entry) => sum + BigInt(entry.amounts[primaryTokenId] || '0'),
           BigInt(0),
         )
+
+        logger.debug('createSendTx: Preparing fee adjustment', {
+          subtractFeeFromAmount,
+          initialBuildFailed,
+          totalInputAda: totalInputAda.toString(),
+          totalOutputAda: totalOutputAda.toString(),
+          fee: result?.fee.toString() || 'unknown',
+          firstEntryAdaAmount: firstEntry.amounts[primaryTokenId] || '0',
+        })
 
         // Calculate total input amounts for each token
         const totalInputAmounts: Record<string, bigint> = {}
@@ -425,7 +476,7 @@ export async function createSendTx({
           const maxAttempts = 10
           let attempt = 0
 
-          logger.info('createSendTx: Starting iterative fee adjustment', {
+          logger.debug('createSendTx: Starting iterative fee adjustment', {
             initialBuildFailed,
             totalInputAda: totalInputAda.toString(),
             totalOutputAda: totalOutputAda.toString(),
@@ -478,7 +529,7 @@ export async function createSendTx({
             try {
               result = await buildTxWithEntries(adjustedEntries)
               lastSuccessfulAmount = finalAdaAmount
-              logger.info(
+              logger.debug(
                 'createSendTx: Build successful after fee adjustment',
                 {
                   attempt,
@@ -494,30 +545,42 @@ export async function createSendTx({
               const isNotEnoughAdaError =
                 errorMessage.includes('Not enough ADA leftover') ||
                 errorMessage.includes('Not enough ADA')
+              const isInsufficientInputError =
+                errorMessage.includes('Insufficient input') ||
+                errorMessage.includes('shortage')
 
-              if (isNotEnoughAdaError && attempt < maxAttempts) {
+              if (
+                (isNotEnoughAdaError || isInsufficientInputError) &&
+                attempt < maxAttempts
+              ) {
                 // Reduce amount further - subtract additional safety margin
                 // Use a percentage-based reduction: reduce by 5% each attempt
                 const reductionAmount =
                   (attemptAdaAmount * BigInt(5)) / BigInt(100)
                 attemptAdaAmount = attemptAdaAmount - reductionAmount
 
-                logger.info(
+                logger.debug(
                   'createSendTx: Build failed, reducing amount further',
                   {
                     attempt,
                     errorMessage,
+                    errorType: isNotEnoughAdaError
+                      ? 'NotEnoughAda'
+                      : 'InsufficientInput',
                     newAttemptAmount: attemptAdaAmount.toString(),
                     reductionAmount: reductionAmount.toString(),
+                    finalAdaAmount: finalAdaAmount.toString(),
                   },
                 )
               } else {
-                // Not a "Not enough ADA" error, or max attempts reached
+                // Not a "Not enough ADA" or "Insufficient input" error, or max attempts reached
                 logger.error(
                   'createSendTx: Build failed after fee adjustment',
                   {
                     attempt,
                     error: errorMessage,
+                    isNotEnoughAdaError,
+                    isInsufficientInputError,
                     finalAdaAmount: finalAdaAmount.toString(),
                     minAdaForChange: minAdaForChange.toString(),
                     estimatedFee: estimatedFee.toString(),
@@ -535,13 +598,16 @@ export async function createSendTx({
             )
           }
         } else {
-          // Initial build succeeded - do a single adjustment with actual fee
+          // Initial build succeeded - but we still need to subtract fee when subtractFeeFromAmount is true
+          // This handles cases where the build succeeds but would fail during change calculation
           // Calculate minimum ADA for change output if needed
           let minAdaForChange = BigInt(0)
           if (hasNonAdaAssetsInChange) {
             minAdaForChange = minUtxoValue
           }
 
+          // Always subtract fee when subtractFeeFromAmount is true, even if initial build succeeded
+          // The initial build might succeed but fail later during change calculation
           const adjustedAdaAmount =
             currentAdaAmount - result!.fee - minAdaForChange
           const finalAdaAmount =
@@ -549,8 +615,8 @@ export async function createSendTx({
               ? adjustedAdaAmount
               : minAdaForEntry
 
-          logger.info(
-            'createSendTx: Single fee adjustment (initial build succeeded)',
+          logger.debug(
+            'createSendTx: Single fee adjustment (subtracting fee from amount)',
             {
               totalInputAda: totalInputAda.toString(),
               totalOutputAda: totalOutputAda.toString(),
@@ -560,24 +626,44 @@ export async function createSendTx({
               currentAdaAmount: currentAdaAmount.toString(),
               adjustedAdaAmount: adjustedAdaAmount.toString(),
               finalAdaAmount: finalAdaAmount.toString(),
+              minAdaForEntry: minAdaForEntry.toString(),
             },
           )
 
-          const adjustedEntries: TransactionOutput[] = [
-            {
-              ...firstEntry,
-              amounts: {
-                ...firstEntry.amounts,
-                [primaryTokenId]: finalAdaAmount.toString() as Balance.Quantity,
+          // Only rebuild if the amount actually changed
+          if (finalAdaAmount < currentAdaAmount) {
+            const adjustedEntries: TransactionOutput[] = [
+              {
+                ...firstEntry,
+                amounts: {
+                  ...firstEntry.amounts,
+                  [primaryTokenId]:
+                    finalAdaAmount.toString() as Balance.Quantity,
+                },
               },
-            },
-            ...entries.slice(1),
-          ]
+              ...entries.slice(1),
+            ]
 
-          result = await buildTxWithEntries(adjustedEntries)
-          logger.info('createSendTx: Rebuild successful after fee adjustment', {
-            newFee: result.fee.toString(),
-          })
+            result = await buildTxWithEntries(adjustedEntries)
+            logger.debug(
+              'createSendTx: Rebuild successful after fee adjustment',
+              {
+                newFee: result.fee.toString(),
+                originalAmount: currentAdaAmount.toString(),
+                adjustedAmount: finalAdaAmount.toString(),
+                feeSubtracted: (currentAdaAmount - finalAdaAmount).toString(),
+              },
+            )
+          } else {
+            logger.debug(
+              'createSendTx: No adjustment needed - amount already sufficient',
+              {
+                currentAdaAmount: currentAdaAmount.toString(),
+                finalAdaAmount: finalAdaAmount.toString(),
+                fee: result!.fee.toString(),
+              },
+            )
+          }
         }
       }
     }

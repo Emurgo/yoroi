@@ -5,7 +5,10 @@ import * as React from 'react'
 
 import {buildPortfolioTokenManagers} from '../../features/Portfolio/common/helpers/build-token-managers'
 import {WalletManagerProvider} from '../../features/WalletManager/context/WalletManagerProvider'
-import {makeWalletManager, type WalletManager} from '../../features/WalletManager/wallet-manager'
+import {
+  type WalletManager,
+  makeWalletManager,
+} from '../../features/WalletManager/wallet-manager'
 import {walletMocks} from '../../features/WalletManager/wallet.mock'
 import {rootStorage} from '../../kernel/storage/storages'
 import {YoroiWallet} from '../cardano/types'

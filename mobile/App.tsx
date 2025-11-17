@@ -114,7 +114,9 @@ function BusinessShell({children}: React.PropsWithChildren) {
                               <YoroiNotificationManager>
                                 <CurrencyProvider>
                                   <CatalystProvider manager={catalystManager}>
-                                    <ReceiveProvider>{children}</ReceiveProvider>
+                                    <ReceiveProvider>
+                                      {children}
+                                    </ReceiveProvider>
                                   </CatalystProvider>
                                 </CurrencyProvider>
                               </YoroiNotificationManager>

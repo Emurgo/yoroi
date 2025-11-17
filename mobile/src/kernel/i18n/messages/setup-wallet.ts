@@ -250,6 +250,10 @@ export const setupWalletMessages = defineMessages({
     id: 'components.walletinit.restorewallet.restorewalletscreen.preparingWallet',
     defaultMessage: '!!!Preparing wallet',
   },
+  continueInBackground: {
+    id: 'components.walletinit.restorewallet.restorewalletscreen.continueInBackground',
+    defaultMessage: '!!!Continue in background',
+  },
   wordNotFound: {
     id: 'components.walletinit.restorewallet.restorewalletscreen.wordNotFound',
     defaultMessage: '!!!Word not found',

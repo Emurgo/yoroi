@@ -4,7 +4,6 @@ import {
   generateNewReceiveAddress,
   getAddressing,
   getChangeAddress,
-  getFirstPaymentAddress,
 } from './address-operations'
 
 describe('address-operations', () => {
@@ -111,4 +110,3 @@ describe('address-operations', () => {
     })
   })
 })
-

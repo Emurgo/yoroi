@@ -16,8 +16,7 @@ describe('backoff', () => {
       const expectedMinDelay =
         defaultSyncConfig.errorBackoffBaseDelay * Math.pow(2, errorCount - 1)
       const expectedMaxDelay =
-        expectedMinDelay +
-        defaultSyncConfig.jitterFactor * expectedMinDelay
+        expectedMinDelay + defaultSyncConfig.jitterFactor * expectedMinDelay
 
       expect(delay).toBeGreaterThanOrEqual(expectedMinDelay)
       expect(delay).toBeLessThanOrEqual(expectedMaxDelay)
@@ -45,4 +44,3 @@ describe('backoff', () => {
     })
   })
 })
-

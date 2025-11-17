@@ -2016,6 +2016,7 @@ export const useStrings = () => {
         ),
         clearAll: f(setupWalletMessages.clearAll),
         preparingWallet: f(setupWalletMessages.preparingWallet),
+        continueInBackground: f(setupWalletMessages.continueInBackground),
         restoreDuplicatedWalletModalText: f(
           setupWalletMessages.restoreDuplicatedWalletModalText,
         ),

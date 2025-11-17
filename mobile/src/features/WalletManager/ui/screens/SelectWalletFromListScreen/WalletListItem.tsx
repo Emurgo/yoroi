@@ -16,6 +16,7 @@ import {useWalletManager} from '~/features/WalletManager/context/WalletManagerPr
 import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
 import {useSyncWalletInfo} from '~/features/WalletManager/hooks/useSyncWalletInfo'
 import {features} from '~/kernel/features'
+import {logger} from '~/kernel/logger/logger'
 import {Icon} from '~/ui/Icon'
 import {Loading} from '~/ui/Loading/Loading'
 import {Space} from '~/ui/Space/Space'
@@ -48,7 +49,34 @@ export const WalletListItem = ({walletMeta, onPress}: Props) => {
 
   const {network} = useSelectedNetwork()
   const syncWalletInfo = useSyncWalletInfo(walletMeta.id)
-  const hasSyncedLastSelectedNetwork = network === syncWalletInfo?.network
+  // If syncWalletInfo is null, wallet is not actively syncing - assume it's synced (show full opacity)
+  // Only show reduced opacity if syncWalletInfo exists and indicates not synced
+  const hasSyncedLastSelectedNetwork =
+    !syncWalletInfo || // No sync info = wallet not in sync queue = assume synced
+    (syncWalletInfo.status === 'done' && syncWalletInfo.network === network) // Explicitly synced on current network
+
+  React.useEffect(() => {
+    logger.debug('WalletListItem: syncWalletInfo changed', {
+      walletId: walletMeta.id,
+      walletName: walletMeta.name,
+      syncWalletInfo: syncWalletInfo
+        ? {
+            status: syncWalletInfo.status,
+            network: syncWalletInfo.network,
+            updatedAt: syncWalletInfo.updatedAt,
+          }
+        : null,
+      currentNetwork: network,
+      hasSyncedLastSelectedNetwork,
+      willShowReducedOpacity: !hasSyncedLastSelectedNetwork,
+    })
+  }, [
+    walletMeta.id,
+    walletMeta.name,
+    syncWalletInfo,
+    network,
+    hasSyncedLastSelectedNetwork,
+  ])
 
   useFocusEffect(
     React.useCallback(() => {
@@ -151,7 +179,7 @@ export const WalletListItem = ({walletMeta, onPress}: Props) => {
           <View style={[a.justify_between, a.flex_1]}>
             <View style={[a.flex_row, a.align_center, a.gap_xs]}>
               <Text
-                style={[a.flex_1, a.body_1_lg_medium, ta.text_gray_medium]}
+                style={[a.flex_1, a.body_1_lg_medium, ta.text_gray_max]}
                 numberOfLines={1}
               >
                 {walletMeta.name}

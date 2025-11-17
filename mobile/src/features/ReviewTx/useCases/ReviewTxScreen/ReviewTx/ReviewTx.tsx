@@ -7,8 +7,6 @@ import {ScrollView as RNScrollView} from 'react-native'
 import {useReviewTxMemo} from '~/features/ReviewTx/common/context/ReviewTxMemoContext'
 import {FormattedMetadata, FormattedTx} from '~/features/ReviewTx/common/types'
 import {memoMaxLenght} from '~/features/Send/common/constants'
-import {ShowMemoErrorTooLong} from '~/features/Send/useCases/StartMultiTokenTx/InputMemo/ShowMemoErrorTooLong'
-import {ShowMemoInstructions} from '~/features/Send/useCases/StartMultiTokenTx/InputMemo/ShowMemoInstructions'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Button} from '~/ui/Button/Button'
@@ -26,6 +24,8 @@ import {DatumTab} from './Datum/DatumTab'
 import {GovernanceTab} from './Governance/GovernanceTab'
 import {MintTab} from './Mint/MintTab'
 import {ReferenceInputsTab} from './ReferenceInputs/ReferenceInputs'
+import {ShowMemoErrorTooLong} from './ShowMemoErrorTooLong'
+import {ShowMemoInstructions} from './ShowMemoInstructions'
 
 const MaterialTab = createMaterialTopTabNavigator()
 

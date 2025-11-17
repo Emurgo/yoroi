@@ -1,12 +1,12 @@
 import {Portfolio} from '@yoroi/types'
 
+import type {RawUtxo} from '~/wallets/types/other'
+
 import {
   didUtxosUpdate,
   getAddressedUtxos,
   getSpendableUtxos,
 } from './utxo-operations'
-
-import type {RawUtxo} from '~/wallets/types/other'
 
 describe('utxo-operations', () => {
   const mockRawUtxos: RawUtxo[] = [
@@ -93,4 +93,3 @@ describe('utxo-operations', () => {
     })
   })
 })
-

@@ -1,5 +1,5 @@
-import {Scan} from '@yoroi/types'
 import {invalid} from '@yoroi/common'
+import {Scan} from '@yoroi/types'
 
 import * as React from 'react'
 
@@ -14,15 +14,18 @@ type PendingScanActionActions = {
   clearPendingScanAction: () => void
 }
 
-type PendingScanActionContext = PendingScanActionState & PendingScanActionActions
+type PendingScanActionContext = PendingScanActionState &
+  PendingScanActionActions
 
 const defaultState: PendingScanActionState = {
   pendingScanAction: null,
 }
 
 const defaultActions: PendingScanActionActions = {
-  setPendingScanAction: () => invalid('PendingScanActionProvider not initialized'),
-  clearPendingScanAction: () => invalid('PendingScanActionProvider not initialized'),
+  setPendingScanAction: () =>
+    invalid('PendingScanActionProvider not initialized'),
+  clearPendingScanAction: () =>
+    invalid('PendingScanActionProvider not initialized'),
 }
 
 const Context = React.createContext<PendingScanActionContext>({
@@ -30,9 +33,9 @@ const Context = React.createContext<PendingScanActionContext>({
   ...defaultActions,
 })
 
-export const PendingScanActionProvider: React.FC<
-  React.PropsWithChildren
-> = ({children}) => {
+export const PendingScanActionProvider: React.FC<React.PropsWithChildren> = ({
+  children,
+}) => {
   const [pendingScanAction, setPendingScanAction] =
     React.useState<Scan.Action | null>(null)
 
@@ -58,7 +61,11 @@ export const PendingScanActionProvider: React.FC<
       setPendingScanAction: setPendingScanActionWithLogging,
       clearPendingScanAction,
     }),
-    [pendingScanAction, setPendingScanActionWithLogging, clearPendingScanAction],
+    [
+      pendingScanAction,
+      setPendingScanActionWithLogging,
+      clearPendingScanAction,
+    ],
   )
 
   React.useEffect(() => {
@@ -74,4 +81,3 @@ export const PendingScanActionProvider: React.FC<
 export const usePendingScanAction = () =>
   React.useContext(Context) ??
   invalid('usePendingScanAction must be used within PendingScanActionProvider')
-

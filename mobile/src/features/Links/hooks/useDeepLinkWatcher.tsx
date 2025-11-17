@@ -12,15 +12,12 @@ import {logger} from '~/kernel/logger/logger'
 export const useDeepLinkWatcher = () => {
   const {actionStarted} = useLinks()
   const {isLoggedIn} = useAuth()
-  const {
-    pendingScanAction,
-    setPendingScanAction,
-  } = usePendingScanAction()
+  const {pendingScanAction, setPendingScanAction} = usePendingScanAction()
 
   const processLink = React.useCallback(
     (url: string) => {
       logger.debug('useDeepLinkWatcher: processLink called', {url})
-      
+
       // Try Yoroi links first (yoroi://)
       const parsedAction = linksYoroiParser(url)
       if (parsedAction != null) {
@@ -39,16 +36,19 @@ export const useDeepLinkWatcher = () => {
         url,
         isWebCardano,
       })
-      
+
       if (isWebCardano) {
         try {
           logger.debug('useDeepLinkWatcher: parsing web+cardano link', {url})
           const scanAction = parseScanAction(url)
-          logger.debug('useDeepLinkWatcher: parsed web+cardano link successfully', {
-            action: scanAction.action,
-            scanAction,
-          })
-          
+          logger.debug(
+            'useDeepLinkWatcher: parsed web+cardano link successfully',
+            {
+              action: scanAction.action,
+              scanAction,
+            },
+          )
+
           // Security: If user is not logged in, store action in context to process after PIN
           if (!isLoggedIn) {
             logger.debug(
@@ -59,16 +59,20 @@ export const useDeepLinkWatcher = () => {
             setPendingScanAction(scanAction)
             return
           }
-          
+
           // User is logged in, process immediately
-          logger.debug('useDeepLinkWatcher: user logged in, setting pending action', {
-            action: scanAction.action,
-          })
+          logger.debug(
+            'useDeepLinkWatcher: user logged in, setting pending action',
+            {
+              action: scanAction.action,
+            },
+          )
           setPendingScanAction(scanAction)
         } catch (error) {
           logger.debug('useDeepLinkWatcher: web+cardano link parsing failed', {
             error,
-            errorMessage: error instanceof Error ? error.message : String(error),
+            errorMessage:
+              error instanceof Error ? error.message : String(error),
             errorStack: error instanceof Error ? error.stack : undefined,
             url,
           })
@@ -134,13 +138,18 @@ export const useDeepLinkWatcher = () => {
     // If context already has a pending action, ScanActionHandler will process it
     // Otherwise, check getInitialURL for app restart scenarios
     if (pendingScanAction) {
-      logger.debug('useDeepLinkWatcher: pending action already in context, ScanActionHandler will process it', {
-        action: pendingScanAction.action,
-      })
+      logger.debug(
+        'useDeepLinkWatcher: pending action already in context, ScanActionHandler will process it',
+        {
+          action: pendingScanAction.action,
+        },
+      )
       return
     }
 
-    logger.debug('useDeepLinkWatcher: user logged in, checking getInitialURL for pending URL')
+    logger.debug(
+      'useDeepLinkWatcher: user logged in, checking getInitialURL for pending URL',
+    )
     const checkInitialUrlAfterLogin = async () => {
       const url = await Linking.getInitialURL()
       logger.debug('useDeepLinkWatcher: initial URL after login', {
@@ -148,7 +157,7 @@ export const useDeepLinkWatcher = () => {
         hasUrl: !!url,
         isWebCardano: url ? isWebCardanoLink(url) : false,
       })
-      
+
       if (url !== null && isWebCardanoLink(url)) {
         logger.debug(
           'useDeepLinkWatcher: found web+cardano URL after login, processing',
@@ -160,21 +169,23 @@ export const useDeepLinkWatcher = () => {
             'useDeepLinkWatcher: parsed web+cardano link after login successfully',
             {action: scanAction.action, scanAction},
           )
-          logger.debug('useDeepLinkWatcher: setting pending scan action from initial URL')
+          logger.debug(
+            'useDeepLinkWatcher: setting pending scan action from initial URL',
+          )
           setPendingScanAction(scanAction)
         } catch (error) {
-          logger.debug(
-            'useDeepLinkWatcher: error parsing URL after login',
-            {
-              error,
-              errorMessage: error instanceof Error ? error.message : String(error),
-              errorStack: error instanceof Error ? error.stack : undefined,
-              url,
-            },
-          )
+          logger.debug('useDeepLinkWatcher: error parsing URL after login', {
+            error,
+            errorMessage:
+              error instanceof Error ? error.message : String(error),
+            errorStack: error instanceof Error ? error.stack : undefined,
+            url,
+          })
         }
       } else {
-        logger.debug('useDeepLinkWatcher: no valid initial URL found after login')
+        logger.debug(
+          'useDeepLinkWatcher: no valid initial URL found after login',
+        )
       }
     }
     checkInitialUrlAfterLogin()

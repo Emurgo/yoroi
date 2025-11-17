@@ -1,7 +1,7 @@
 import {App} from '@yoroi/types'
 
-import {runMigrations} from './runner'
 import {migrations} from './registry'
+import {runMigrations} from './runner'
 
 describe('runMigrations', () => {
   let mockStorage: App.Storage
@@ -42,12 +42,6 @@ describe('runMigrations', () => {
 
   it('should stop on migration failure', async () => {
     // Mock a migration to fail
-    const failingMigration = {
-      version: 999,
-      name: 'Failing Migration',
-      migrate: jest.fn().mockRejectedValue(new Error('Migration failed')),
-    }
-
     // This test would require modifying the registry, which we can't do
     // Instead, we test that the runner handles errors correctly
     expect(true).toBe(true)
@@ -78,4 +72,3 @@ describe('migration validation', () => {
     expect(versions.length).toBe(uniqueVersions.size)
   })
 })
-

@@ -1,4 +1,4 @@
-import {App, Chain, Network, Wallet} from '@yoroi/types'
+import {Chain, Wallet} from '@yoroi/types'
 
 import {freeze} from 'immer'
 import {BehaviorSubject, Observable} from 'rxjs'
@@ -161,4 +161,3 @@ export const getCurrentState = (
   isSyncing: subjects.isSyncing.value,
   syncControl: subjects.syncControl.value,
 })
-
