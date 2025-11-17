@@ -154,8 +154,18 @@ export async function syncTxs({
   // so the last will become the tip and not the last tx submitted which would be faster
   const lastTx = getLatestYoroiTransaction(Object.values(transactions))
 
+  // Filter out empty chunks to avoid API errors
+  const validChunks = addressesByChunks.filter((addrs) => addrs.length > 0)
+
+  if (validChunks.length === 0) {
+    logger.debug('syncTxs: No valid address chunks to sync', {
+      totalChunks: addressesByChunks.length,
+    })
+    return
+  }
+
   // the way the addresses are arranged are make it slower (getting the same tx twice)
-  const tasks = addressesByChunks.map((addrs) => {
+  const tasks = validChunks.map((addrs) => {
     const promise = async () => {
       const taskResult: Array<Array<RawTransaction>> = []
       let bestTx: TimeForTx | undefined
