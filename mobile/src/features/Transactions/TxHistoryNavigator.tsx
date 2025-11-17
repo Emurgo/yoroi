@@ -33,6 +33,8 @@ import {TxHistoryRoutes} from '~/kernel/navigation/types'
 
 import {AddressDetails} from '../Transactions/useCases/AddressDetails/AddressDetails'
 import {BlockDetails} from '../Transactions/useCases/BlockDetails/BlockDetails'
+import {MessageSigningResultScreen} from '../Transactions/useCases/MessageSigning/MessageSigningResultScreen'
+import {MessageSigningScreen} from '../Transactions/useCases/MessageSigning/MessageSigningScreen'
 import {UtxoConsolidation} from '../Transactions/useCases/UtxoConsolidation/UtxoConsolidation/UtxoConsolidation'
 import {UtxoList} from '../Transactions/useCases/UtxoList/UtxoList'
 import {HeaderRightHistory} from './common/HeaderRightHistory'
@@ -127,6 +129,23 @@ export const TxHistoryNavigator = () => {
             title: strings.transactions.utxo.utxoConsolidationTitle,
           }}
           getComponent={() => UtxoConsolidation}
+        />
+
+        <Stack.Screen
+          name="message-signing"
+          options={{
+            title: strings.transactions.messageSigning.messageSigningTitle,
+          }}
+          getComponent={() => MessageSigningScreen}
+        />
+
+        <Stack.Screen
+          name="message-signing-result"
+          options={{
+            title:
+              strings.transactions.messageSigning.messageSigningResultTitle,
+          }}
+          getComponent={() => MessageSigningResultScreen}
         />
 
         {/* Send Screens */}

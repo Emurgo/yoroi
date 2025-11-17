@@ -466,6 +466,7 @@ export const useStrings = () => {
         releases: f(menuMessages.releases),
         governanceCentre: f(menuMessages.governanceCentre),
         utxoList: f(transactionsMessages.utxoListTitle),
+        messageSigning: f(menuMessages.messageSigning),
       },
 
       // Dashboard strings
@@ -1711,6 +1712,43 @@ export const useStrings = () => {
             transactionsMessages.utxoConsolidationWarning,
           ),
           organizeWalletButton: f(transactionsMessages.organizeWalletButton),
+        },
+        messageSigning: {
+          messageSigningTitle: f(transactionsMessages.messageSigningTitle),
+          messageSigningInputLabel: f(
+            transactionsMessages.messageSigningInputLabel,
+          ),
+          messageSigningPlaceholder: f(
+            transactionsMessages.messageSigningPlaceholder,
+          ),
+          messageSigningSignButton: f(
+            transactionsMessages.messageSigningSignButton,
+          ),
+          messageSigningMaxLengthError: f(
+            transactionsMessages.messageSigningMaxLengthError,
+          ),
+          messageSigningLengthInfo: (current: string, max: string) =>
+            intl.formatMessage(transactionsMessages.messageSigningLengthInfo, {
+              current,
+              max,
+            }),
+          messageSigningResultTitle: f(
+            transactionsMessages.messageSigningResultTitle,
+          ),
+          messageSigningSignatureLabel: f(
+            transactionsMessages.messageSigningSignatureLabel,
+          ),
+          messageSigningKeyLabel: f(
+            transactionsMessages.messageSigningKeyLabel,
+          ),
+          messageSigningCopied: f(transactionsMessages.messageSigningCopied),
+          messageSigningSignatureDescription: f(
+            transactionsMessages.messageSigningSignatureDescription,
+          ),
+          messageSigningKeyDescription: f(
+            transactionsMessages.messageSigningKeyDescription,
+          ),
+          error: f(transactionsMessages.messageSigningError),
         },
         submitted: {
           submittedTxTitle: f(transactionsMessages.submittedTxTitle),

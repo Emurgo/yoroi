@@ -109,6 +109,60 @@ export const transactionsMessages = defineMessages({
     id: 'components.utxoConsolidationWarning',
     defaultMessage: '!!!Consolidate your UTxOs to improve wallet performance',
   },
+  messageSigningTitle: {
+    id: 'components.messageSigning.title',
+    defaultMessage: '!!!Message Signing',
+  },
+  messageSigningInputLabel: {
+    id: 'components.messageSigning.inputLabel',
+    defaultMessage: '!!!Message',
+  },
+  messageSigningPlaceholder: {
+    id: 'components.messageSigning.placeholder',
+    defaultMessage: '!!!Paste or type your message here...',
+  },
+  messageSigningSignButton: {
+    id: 'components.messageSigning.signButton',
+    defaultMessage: '!!!Sign',
+  },
+  messageSigningMaxLengthError: {
+    id: 'components.messageSigning.maxLengthError',
+    defaultMessage: '!!!Message exceeds maximum length (64 bytes)',
+  },
+  messageSigningLengthInfo: {
+    id: 'components.messageSigning.lengthInfo',
+    defaultMessage: '!!!Current: {current} bytes / Max: {max} bytes',
+  },
+  messageSigningResultTitle: {
+    id: 'components.messageSigning.resultTitle',
+    defaultMessage: '!!!Signed Message',
+  },
+  messageSigningSignatureLabel: {
+    id: 'components.messageSigning.signatureLabel',
+    defaultMessage: '!!!Signature',
+  },
+  messageSigningKeyLabel: {
+    id: 'components.messageSigning.keyLabel',
+    defaultMessage: '!!!Key',
+  },
+  messageSigningCopied: {
+    id: 'components.messageSigning.copied',
+    defaultMessage: '!!!Copied',
+  },
+  messageSigningError: {
+    id: 'components.messageSigning.error',
+    defaultMessage: '!!!An error occurred while signing the message',
+  },
+  messageSigningSignatureDescription: {
+    id: 'components.messageSigning.signatureDescription',
+    defaultMessage:
+      '!!!The cryptographic signature (COSE_Sign1) proving the message was signed by your wallet. This can be verified using the public key.',
+  },
+  messageSigningKeyDescription: {
+    id: 'components.messageSigning.keyDescription',
+    defaultMessage:
+      '!!!The public key (COSE key format) used to verify the signature. Together with the signature, this proves ownership of the wallet address.',
+  },
   noTransactions: {
     id: 'components.txhistory.txhistory.noTransactions',
     defaultMessage: '!!!No transactions',

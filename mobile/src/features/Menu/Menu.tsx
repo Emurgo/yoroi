@@ -87,6 +87,12 @@ export const Menu = () => {
           />
         )}
 
+        <MessageSigning
+          label={strings.menu.messageSigning}
+          onPress={navigateTo.messageSigning}
+          left={<Icon.Message size={24} color={p.gray_600} />}
+        />
+
         <Governance
           label={strings.menu.governanceCentre}
           onPress={navigateTo.governanceCentre}
@@ -189,6 +195,7 @@ const Item = ({
 
 const Staking = Item
 const UtxoList = Item
+const MessageSigning = Item
 const Governance = Item
 const AppSettings = Item
 const KnowledgeBase = Item
@@ -248,6 +255,7 @@ const useNavigateTo = () => {
     navigateToStakingDashboard,
     navigateToCatalystVotingDashboard,
     navigateToUtxoList,
+    navigateToMessageSigning,
   } = useWalletNavigation()
   const {wallet} = useSelectedWallet()
 
@@ -262,6 +270,7 @@ const useNavigateTo = () => {
       navigateToStakingDashboard()
     },
     utxoList: () => navigateToUtxoList(),
+    messageSigning: () => navigateToMessageSigning(),
     settings: () => navigateToSettings(),
     support: () => Linking.openURL(SUPPORT_TICKET_LINK),
     knowledgeBase: () => Linking.openURL(KNOWLEDGE_BASE_LINK),

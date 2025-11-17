@@ -392,6 +392,26 @@ export const useWalletNavigation = () => {
       })
     },
 
+    navigateToMessageSigning: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'main-wallet-routes',
+        params: {screen: 'history', params: {screen: 'message-signing'}},
+      })
+    },
+
+    navigateToMessageSigningResult: (signature: string, key: string) => {
+      navigation.navigate('manage-wallets', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'history',
+          params: {
+            screen: 'message-signing-result',
+            params: {signature, key},
+          },
+        },
+      })
+    },
+
     navigateToUtxoConsolidation: () => {
       navigation.navigate('manage-wallets', {
         screen: 'main-wallet-routes',

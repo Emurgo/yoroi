@@ -83,6 +83,11 @@ export type TxHistoryRoutes = {
   }
   'utxo-list': undefined
   'utxo-consolidation': undefined
+  'message-signing': undefined
+  'message-signing-result': {
+    signature: string
+    key: string
+  }
   'receive-single': undefined
   'receive-specific-amount': undefined
   'receive-multiple': undefined
@@ -397,6 +402,8 @@ export type WalletNavigation = {
   navigateToExchange: () => void
   navigateToUtxoList: () => void
   navigateToUtxoConsolidation: () => void
+  navigateToMessageSigning: () => void
+  navigateToMessageSigningResult: (signature: string, key: string) => void
   navigateToTxDetails: (id: string) => void
 }
 
