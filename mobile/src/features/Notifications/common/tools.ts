@@ -79,57 +79,70 @@ export const getNotificationsAuthorizationStatus = async () => {
   return 'denied'
 }
 
-export const triggerNotificationAction = async (options: {
+export const handleBannerAction = async (options: {
   manager: YoroiNotifications.Manager
   id: number
-  walletNavigation: any
-  source: 'os' | 'app'
+  walletNavigation: WalletNavigation
 }) => {
-  const {manager, id, walletNavigation, source} = options
+  const {manager, id, walletNavigation} = options
+
   const allEvents = await manager.events.read()
   const event = allEvents.find((e) => e.id === id)
   if (!event) return
 
   await manager.events.markAsRead(id)
 
-  if (event.trigger === YoroiNotifications.Trigger.Banner) {
-    switch (event.id) {
-      case BannerIds.BuyCrypto:
-      case BannerIds.TestAda:
-        walletNavigation.navigateToExchange()
-        break
-      case BannerIds.GovernanceParticipation:
-        walletNavigation.navigateToGovernanceCentre()
-        break
-      case BannerIds.UtxoConsolidation:
-        walletNavigation.navigateToUtxoConsolidation()
-        break
-      default:
-    }
+  if (event.trigger !== YoroiNotifications.Trigger.Banner) return
+
+  switch (event.id) {
+    case BannerIds.BuyCrypto:
+    case BannerIds.TestAda:
+      walletNavigation.navigateToExchange()
+      break
+    case BannerIds.GovernanceParticipation:
+      walletNavigation.navigateToGovernanceCentre()
+      break
+    case BannerIds.UtxoConsolidation:
+      walletNavigation.navigateToUtxoConsolidation()
+      break
+    default:
+  }
+}
+
+export const handlePushAction = async (options: {
+  manager: YoroiNotifications.Manager
+  id: number
+  walletNavigation: WalletNavigation
+  source: 'os' | 'app'
+}) => {
+  const {manager, id, walletNavigation, source} = options
+
+  const allEvents = await manager.events.read()
+  const event = allEvents.find((e) => e.id === id)
+  if (!event) return
+
+  await manager.events.markAsRead(id)
+
+  if (event.trigger !== YoroiNotifications.Trigger.Push) return
+  if (!isRecord(event.metadata.data)) return
+
+  const {data} = event.metadata
+  if (
+    isString(data.action) &&
+    data.action === 'open_url' &&
+    isString(data.url)
+  ) {
+    await Linking.openURL(data.url)
   }
 
-  if (
-    event.trigger === YoroiNotifications.Trigger.Push &&
-    isRecord(event.metadata.data)
-  ) {
-    const {data} = event.metadata
-    if (
-      isString(data.action) &&
-      data.action === 'open_url' &&
-      isString(data.url)
-    ) {
-      await Linking.openURL(data.url)
-    }
-
-    if (isString(data.action) && data.action === 'open_screen') {
-      if (source === 'os') {
-        await uiStorage.setItem(
-          'triggerNotificationInternalNavigationAction',
-          event.id,
-        )
-      } else {
-        handleInternalNavigation(event, walletNavigation, false)
-      }
+  if (isString(data.action) && data.action === 'open_screen') {
+    if (source === 'os') {
+      await uiStorage.setItem(
+        'triggerNotificationInternalNavigationAction',
+        event.id,
+      )
+    } else {
+      handleInternalNavigation(event, walletNavigation, false)
     }
   }
 }

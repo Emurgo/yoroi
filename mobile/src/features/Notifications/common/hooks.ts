@@ -26,7 +26,7 @@ import {generateNotificationId, parseNotificationId} from './notifications'
 import {usePrimaryTokenPriceChangedNotification} from './primary-token-price-changed-notification'
 import {useRewardsUpdatedNotifications} from './rewards-updated-notification'
 import {uiStorage} from './storage'
-import {triggerNotificationAction} from './tools'
+import {handleBannerAction, handlePushAction} from './tools'
 import {useTransactionReceivedNotifications} from './transaction-received-notification'
 
 const createPushNotification = (options: {
@@ -133,7 +133,7 @@ const initPushNotifications = (
     onMessage(messagingInstance, handleForegroundMessage)
 
   const attachResponseListener = () =>
-    Notifications.addNotificationResponseReceivedListener((response) => {
+    Notifications.addNotificationResponseReceivedListener(async (response) => {
       const data = response.notification.request.content.data as Record<
         string,
         unknown
@@ -145,7 +145,13 @@ const initPushNotifications = (
         return
       }
 
-      triggerNotificationAction({
+      await handleBannerAction({
+        manager: pushNotificationsManager,
+        id,
+        walletNavigation,
+      })
+
+      await handlePushAction({
         manager: pushNotificationsManager,
         id,
         walletNavigation,
