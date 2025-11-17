@@ -154,85 +154,77 @@ export const RestoreReadOnlyWalletFromAddressesScreen = () => {
     <SafeArea>
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={[a.px_lg, a.pb_lg, {flexGrow: 1}]}
+        contentContainerStyle={[a.px_lg, a.pb_lg]}
         style={[a.flex_1]}
       >
-        <View style={[{flexGrow: 1, justifyContent: 'space-between'}]}>
-          <View>
-            <Space.Height.lg />
+        <Space.Height.lg />
 
-            <Text style={[a.body_1_lg_regular, ta.text_gray_low]}>
-              Enter a known address to restore a partial read-only wallet.
-              Enable discovery to automatically find other addresses used by
-              this wallet.
+        <Text style={[a.body_1_lg_regular, ta.text_gray_low]}>
+          Enter a known address to restore a partial read-only wallet. Enable
+          discovery to automatically find other addresses used by this wallet.
+        </Text>
+
+        <Space.Height.xl />
+
+        <TextInput
+          ref={nameRef}
+          label={strings.setupWallet.walletDetailsNameInput}
+          value={name}
+          onChangeText={setName}
+          errorText={walletNameErrorText || undefined}
+          autoFocus
+          testID="walletNameInput"
+        />
+
+        <Space.Height.lg />
+
+        <Text style={[a.body_3_sm_regular, ta.text_gray_low]}>
+          Enter a Cardano address, ADA handle (e.g., $handle), or domain. If
+          discovery is enabled, other addresses will be found automatically.
+        </Text>
+
+        <Space.Height.xs />
+
+        <AddressInput
+          value={knownAddress}
+          onChangeText={setKnownAddress}
+          onResolved={handleResolved}
+          onValidationChange={handleValidationChange}
+          label="Known Address"
+          placeholder="addr1... or $handle or domain.crypto"
+          ref={addressInputRef}
+          testID="knownAddressInput"
+        />
+
+        <Space.Height.xl />
+
+        <View style={[a.flex_row, a.align_center, a.justify_between, a.py_md]}>
+          <View style={[a.flex_1]}>
+            <Text style={[a.body_1_lg_medium, ta.text_gray_medium]}>
+              Enable Address Discovery
             </Text>
-
-            <Space.Height.xl />
-
-            <TextInput
-              ref={nameRef}
-              label={strings.setupWallet.walletDetailsNameInput}
-              value={name}
-              onChangeText={setName}
-              errorText={walletNameErrorText || undefined}
-              autoFocus
-              testID="walletNameInput"
-            />
-
-            <Space.Height.lg />
-
-            <Text style={[a.body_3_sm_regular, ta.text_gray_low]}>
-              Enter a Cardano address, ADA handle (e.g., $handle), or domain. If
-              discovery is enabled, other addresses will be found automatically.
-            </Text>
-
             <Space.Height.xs />
-
-            <AddressInput
-              value={knownAddress}
-              onChangeText={setKnownAddress}
-              onResolved={handleResolved}
-              onValidationChange={handleValidationChange}
-              label="Known Address"
-              placeholder="addr1... or $handle or domain.crypto"
-              ref={addressInputRef}
-              testID="knownAddressInput"
-            />
-
-            <Space.Height.xl />
-
-            <View
-              style={[a.flex_row, a.align_center, a.justify_between, a.py_md]}
-            >
-              <View style={[a.flex_1]}>
-                <Text style={[a.body_1_lg_medium, ta.text_gray_medium]}>
-                  Enable Address Discovery
-                </Text>
-                <Space.Height.xs />
-                <Text style={[a.body_2_md_regular, ta.text_gray_low]}>
-                  Automatically discover other addresses used by this wallet by
-                  analyzing transaction history
-                </Text>
-              </View>
-              <Switch
-                value={enableDiscovery}
-                onValueChange={setEnableDiscovery}
-                testID="enableDiscoverySwitch"
-              />
-            </View>
+            <Text style={[a.body_2_md_regular, ta.text_gray_low]}>
+              Automatically discover other addresses used by this wallet by
+              analyzing transaction history
+            </Text>
           </View>
-
-          <View>
-            <Space.Height.xl />
-            <Button
-              onPress={handleRestore}
-              title="Restore Wallet"
-              disabled={!canRestore || isPending}
-              testID="restoreReadOnlyWalletFromAddressesButton"
-            />
-          </View>
+          <Switch
+            value={enableDiscovery}
+            onValueChange={setEnableDiscovery}
+            testID="enableDiscoverySwitch"
+          />
         </View>
       </ScrollView>
+
+      <SafeArea.Footer>
+        <Button
+          onPress={handleRestore}
+          title="Restore Wallet"
+          disabled={!canRestore || isPending}
+          testID="restoreReadOnlyWalletFromAddressesButton"
+        />
+      </SafeArea.Footer>
     </SafeArea>
   )
 }

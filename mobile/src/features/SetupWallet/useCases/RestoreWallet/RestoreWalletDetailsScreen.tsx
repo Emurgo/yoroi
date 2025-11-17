@@ -338,7 +338,7 @@ export const RestoreWalletDetailsScreen = () => {
         </View>
       </ScrollView>
 
-      <View style={[a.px_lg, a.pt_lg]}>
+      <SafeArea.Footer>
         <Button
           title={strings.setupWallet.next}
           onPress={() =>
@@ -354,7 +354,7 @@ export const RestoreWalletDetailsScreen = () => {
           testID="setup-restore-step2-next-button"
           disabled={disabled}
         />
-      </View>
+      </SafeArea.Footer>
     </SafeArea>
   )
 }

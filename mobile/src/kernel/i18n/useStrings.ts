@@ -2016,6 +2016,15 @@ export const useStrings = () => {
         walletPasswordModalCardSecondItem: f(
           setupWalletMessages.walletPasswordModalCardSecondItem,
         ),
+        restoreWalletFromLinkSecurityWarningTitle: f(
+          setupWalletMessages.restoreWalletFromLinkSecurityWarningTitle,
+        ),
+        restoreWalletFromLinkSecurityWarningDescription: f(
+          setupWalletMessages.restoreWalletFromLinkSecurityWarningDescription,
+        ),
+        restoreWalletFromLinkContinueButton: f(
+          setupWalletMessages.restoreWalletFromLinkContinueButton,
+        ),
       },
 
       // Mapped strings for dynamic category mapping

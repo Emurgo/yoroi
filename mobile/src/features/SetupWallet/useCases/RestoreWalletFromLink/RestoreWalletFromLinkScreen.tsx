@@ -12,7 +12,6 @@ import {
   Text,
   View,
 } from 'react-native'
-import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {parseWalletMeta} from '~/features/WalletManager/common/validators/wallet-meta'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
@@ -25,9 +24,10 @@ import {errorMessages} from '~/kernel/i18n/messages/global'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 import {useUnsafeParams} from '~/kernel/navigation/hooks/useUnsafeParams'
-import {Button, ButtonType} from '~/ui/Button/Button'
+import {Button} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
+import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
 import {TextInput} from '~/ui/TextInput/TextInput'
 import {isEmptyString} from '~/wallets/utils/string'
@@ -98,15 +98,6 @@ export const RestoreWalletFromLinkScreen = () => {
     ? strings.setupWallet.repeatPasswordInputError
     : undefined
 
-  const nameErrors = walletManager.validateWalletName(name)
-  const walletNameErrorText = getWalletNameError(
-    {
-      tooLong: strings.setupWallet.tooLong,
-      nameAlreadyTaken: strings.setupWallet.nameAlreadyTaken,
-    },
-    nameErrors,
-  )
-
   // Parse optional parameters with defaults
   const implementation: Wallet.Implementation =
     (action.implementation as Wallet.Implementation) || DEFAULT_IMPLEMENTATION
@@ -120,36 +111,21 @@ export const RestoreWalletFromLinkScreen = () => {
   React.useEffect(() => {
     if (showSecurityWarning) {
       openModal({
-        title: 'Security Warning',
+        title: strings.setupWallet.restoreWalletFromLinkSecurityWarningTitle,
         content: (
           <Modal.Content>
-            <Text style={[a.body_1_lg_regular, ta.text_primary_max]}>
-              You are about to restore a wallet from a link or QR code.
-            </Text>
-            <Space.Height.md />
-            <Text style={[a.body_1_lg_regular, ta.text_primary_max]}>
-              ⚠️ Security Risks:
-            </Text>
-            <Space.Height.xs />
-            <Text style={[a.body_1_lg_regular, ta.text_primary_max]}>
-              • Phishing: Verify the source of this link/QR code
-            </Text>
-            <Text style={[a.body_1_lg_regular, ta.text_primary_max]}>
-              • Malicious links could steal your funds
-            </Text>
-            <Text style={[a.body_1_lg_regular, ta.text_primary_max]}>
-              • Only restore from trusted sources
-            </Text>
-            <Space.Height.md />
-            <Text style={[a.body_1_lg_regular, ta.text_primary_max]}>
-              By continuing, you acknowledge these risks.
+            <Text style={[a.body_2_md_regular, ta.text_gray_max]}>
+              {
+                strings.setupWallet
+                  .restoreWalletFromLinkSecurityWarningDescription
+              }
             </Text>
           </Modal.Content>
         ),
         footer: (
           <Modal.Footer>
             <Button
-              title="I Understand, Continue"
+              title={strings.setupWallet.restoreWalletFromLinkContinueButton}
               onPress={() => {
                 closeModal()
                 setShowSecurityWarning(false)
@@ -161,7 +137,16 @@ export const RestoreWalletFromLinkScreen = () => {
         canDiscard: false, // Non-dismissible - user must acknowledge
       })
     }
-  }, [showSecurityWarning, openModal, closeModal, ta])
+  }, [
+    showSecurityWarning,
+    openModal,
+    closeModal,
+    strings.setupWallet.restoreWalletFromLinkSecurityWarningTitle,
+    strings.setupWallet.restoreWalletFromLinkSecurityWarningDescription,
+    strings.setupWallet.restoreWalletFromLinkContinueButton,
+    strings.global.disclaimer,
+    ta.text_gray_max,
+  ])
 
   // Full wallet restoration (from mnemonic)
   const {createWallet: createWalletFromMnemonic, isPending: isPendingMnemonic} =
@@ -261,6 +246,17 @@ export const RestoreWalletFromLinkScreen = () => {
 
   const isPending = isPendingMnemonic || isPendingRootKey || isPendingReadOnly
 
+  // Skip validation while pending to avoid race condition where validation runs
+  // during async operation and shows error flash
+  const nameErrors = !isPending ? walletManager.validateWalletName(name) : null
+  const walletNameErrorText = getWalletNameError(
+    {
+      tooLong: strings.setupWallet.tooLong,
+      nameAlreadyTaken: strings.setupWallet.nameAlreadyTaken,
+    },
+    nameErrors,
+  )
+
   const handleRestore = () => {
     if (action.type === 'full') {
       if (action.mnemonic) {
@@ -329,16 +325,13 @@ export const RestoreWalletFromLinkScreen = () => {
   }
 
   return (
-    <SafeAreaView
-      edges={['left', 'right', 'bottom']}
-      style={[a.flex_1, a.px_lg, ta.bg_color_max]}
-    >
-      <ScrollView style={a.flex_1} contentContainerStyle={[a.gap_lg, a.pb_lg]}>
+    <SafeArea>
+      <ScrollView
+        style={a.flex_1}
+        contentContainerStyle={[a.gap_lg, a.p_lg]}
+        keyboardShouldPersistTaps="always"
+      >
         <View>
-          <Text style={[a.heading_3_medium, ta.text_primary_max]}>
-            Restore Wallet from Link
-          </Text>
-          <Space.Height.sm />
           <Text style={[a.body_1_lg_regular, ta.text_gray_max]}>
             Wallet Type: {action.type === 'full' ? 'Full Wallet' : 'Read-Only'}
           </Text>
@@ -420,14 +413,15 @@ export const RestoreWalletFromLinkScreen = () => {
             </Text>
           </View>
         )}
+      </ScrollView>
 
+      <SafeArea.Footer>
         <Button
           title="Restore Wallet"
           onPress={handleRestore}
           disabled={!canRestore || isPending}
-          type={ButtonType.Primary}
         />
-      </ScrollView>
-    </SafeAreaView>
+      </SafeArea.Footer>
+    </SafeArea>
   )
 }

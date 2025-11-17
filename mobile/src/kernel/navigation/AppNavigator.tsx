@@ -23,6 +23,7 @@ import {
 import {LegalAgreement} from '~/features/Legal/common/types'
 import {useLegalAgreement} from '~/features/Legal/hooks/useLegalAgreement'
 import {ScanActionHandler} from '~/features/Links/components/ScanActionHandler'
+import {useDeepLinkWatcher} from '~/features/Links/hooks/useDeepLinkWatcher'
 import {useLinksRequestAction} from '~/features/Links/hooks/useLinksRequestAction'
 import {useInitNotifications} from '~/features/Notifications/common/hooks'
 import {NotificationUIHandler} from '~/features/Notifications/useCases/NotificationUIHandler'
@@ -33,6 +34,7 @@ import {useHasWallets} from '~/features/WalletManager/hooks/useHasWallets'
 import {agreementDate} from '../constants'
 import {features} from '../features'
 import {useStrings} from '../i18n/useStrings'
+import {logger} from '../logger/logger'
 import {WalletNavigator} from './WalletNavigator'
 import {defaultStackNavigationOptions} from './common/helpers'
 import {FirstAction} from './types'
@@ -49,6 +51,9 @@ export const AppNavigator = () => {
   // Enable deep link action handling with modal support (only when logged in)
   useLinksRequestAction()
 
+  // Watch for web+cardano:// deep links (works when logged in or out)
+  useDeepLinkWatcher()
+
   const screenOptions = React.useMemo(
     () => ({...defaultStackNavigationOptions(p), headerShown: false}),
     [p],
@@ -60,10 +65,17 @@ export const AppNavigator = () => {
     pushEnabled: features.pushNotifications,
   })
 
+  React.useEffect(() => {
+    logger.debug('AppNavigator: rendering ScanActionHandler', {
+      isLoggedIn,
+      isLoggedOut,
+    })
+  }, [isLoggedIn, isLoggedOut])
+
   return (
     <>
-      {/* Handle web+cardano:// deep links */}
-      {isLoggedIn && <ScanActionHandler />}
+      {/* Handle web+cardano:// deep links - render unconditionally to support wallet restoration */}
+      <ScanActionHandler />
       <Stack.Navigator screenOptions={screenOptions}>
         {/* Not Authenticated */}
         {isLoggedOut && (
@@ -104,6 +116,13 @@ export const AppNavigator = () => {
                 options={{title: strings.auth.pinInputTitle}}
               />
             )}
+
+            {/* Setup wallet screen available when not logged in for wallet restoration from links */}
+            <Stack.Screen
+              name="setup-wallet"
+              options={{headerShown: false}}
+              getComponent={() => SetupWalletNavigator}
+            />
           </Stack.Group>
         )}
 

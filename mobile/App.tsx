@@ -21,6 +21,7 @@ import * as Updates from 'expo-updates'
 import * as React from 'react'
 
 import {BrowserProvider} from '~/features/Discover/common/BrowserProvider'
+import {PendingScanActionProvider} from '~/features/Links/context/PendingScanActionContext'
 import {PortfolioTokenActivityProvider} from '~/features/Portfolio/context/PortfolioTokenActivityProvider'
 import {ReceiveProvider} from '~/features/Receive/common/ReceiveProvider'
 import {isDev} from '~/kernel/constants'
@@ -109,13 +110,15 @@ function BusinessShell({children}: React.PropsWithChildren) {
                       <SetupWalletProvider>
                         <BrowserProvider>
                           <LinksProvider>
-                            <YoroiNotificationManager>
-                              <CurrencyProvider>
-                                <CatalystProvider manager={catalystManager}>
-                                  <ReceiveProvider>{children}</ReceiveProvider>
-                                </CatalystProvider>
-                              </CurrencyProvider>
-                            </YoroiNotificationManager>
+                            <PendingScanActionProvider>
+                              <YoroiNotificationManager>
+                                <CurrencyProvider>
+                                  <CatalystProvider manager={catalystManager}>
+                                    <ReceiveProvider>{children}</ReceiveProvider>
+                                  </CatalystProvider>
+                                </CurrencyProvider>
+                              </YoroiNotificationManager>
+                            </PendingScanActionProvider>
                           </LinksProvider>
                         </BrowserProvider>
                       </SetupWalletProvider>

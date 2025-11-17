@@ -43,25 +43,68 @@ export function useLaunchWalletAfterSyncing({
 
     const process = async () => {
       started = true
-      // hydrate force manager to add wallets to the sync queue
-      // it's ok if the wallet is already loaded by manager
-      const {metas} = await walletManager.hydrate()
+      try {
+        // hydrate force manager to add wallets to the sync queue
+        // it's ok if the wallet is already loaded by manager
+        const {metas} = await walletManager.hydrate()
 
-      const wallet = walletManager.getWalletById(walletId)
-      const meta = metas.find(({id}) => id === walletId)
-      if (!wallet || !meta) {
-        const error = new Error(
-          'useLaunchWalletAfterSyncing: New wallet/meta has not been found, reached an invalid state',
+        const meta = metas.find(({id}) => id === walletId)
+        if (!meta) {
+          const error = new Error(
+            'useLaunchWalletAfterSyncing: New wallet meta has not been found, reached an invalid state',
+          )
+          logger.error(error)
+          walletNavigation.resetToWalletSelection()
+          return
+        }
+
+        // Set selected wallet ID first - this will trigger wallet loading
+        walletManager.setSelectedWalletId(walletId)
+
+        // Wait a bit for the wallet to be loaded
+        // The wallet will be loaded asynchronously when setSelectedWalletId is called
+        await new Promise((resolve) => setTimeout(resolve, 500))
+
+        // Try to get the wallet - it should be loaded now
+        let wallet = walletManager.getWalletById(walletId)
+        if (!wallet) {
+          // If still not loaded, wait a bit more and try again
+          logger.debug(
+            'useLaunchWalletAfterSyncing: wallet not loaded yet, waiting...',
+            {walletId},
+          )
+          await new Promise((resolve) => setTimeout(resolve, 1000))
+          wallet = walletManager.getWalletById(walletId)
+        }
+
+        if (!wallet) {
+          const error = new Error(
+            'useLaunchWalletAfterSyncing: Wallet could not be loaded after setting selected wallet ID',
+          )
+          logger.error(error, {walletId, meta})
+          walletNavigation.resetToWalletSelection()
+          return
+        }
+
+        await wallet.sync({isForced: true})
+
+        try {
+          walletNavigation.resetToTxHistory()
+        } catch (error) {
+          logger.error(
+            'useLaunchWalletAfterSyncing: Error navigating to tx history, trying wallet selection instead',
+            {error, walletId},
+          )
+          // If navigation fails (e.g., user not logged in), fall back to wallet selection
+          walletNavigation.resetToWalletSelection()
+        }
+      } catch (error) {
+        logger.error(
+          'useLaunchWalletAfterSyncing: Error during wallet launch',
+          {error, walletId},
         )
-        logger.error(error)
         walletNavigation.resetToWalletSelection()
-        return
       }
-
-      walletManager.setSelectedWalletId(walletId)
-      await wallet.sync({isForced: true})
-
-      walletNavigation.resetToTxHistory()
     }
 
     const timer = setTimeout(() => process(), time.oneSecond)

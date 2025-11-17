@@ -144,16 +144,16 @@ export const RestoreReadOnlyWalletFromKeyScreen = () => {
           numberOfLines={4}
           testID="accountPubKeyHexInput"
         />
+      </ScrollView>
 
-        <Space.Height.xl />
-
+      <SafeArea.Footer>
         <Button
           onPress={handleRestore}
           title="Restore Wallet"
           disabled={!canRestore || isPending}
           testID="restoreReadOnlyWalletButton"
         />
-      </ScrollView>
+      </SafeArea.Footer>
     </SafeArea>
   )
 }

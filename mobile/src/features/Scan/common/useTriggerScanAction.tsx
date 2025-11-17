@@ -4,14 +4,17 @@ import {createPrimaryTokenInfo} from '@yoroi/portfolio'
 import {useTransfer} from '@yoroi/transfer'
 import {Portfolio, Scan} from '@yoroi/types'
 
+import {useNavigation} from '@react-navigation/native'
 import * as Linking from 'expo-linking'
 import * as React from 'react'
 import * as uuid from 'uuid'
 
+import {useAuth} from '~/features/Auth/context/AuthProvider'
 import {useClaimErrorResolver} from '~/features/Claim/common/useClaimErrorResolver'
 import {AskConfirmationModal} from '~/features/Claim/ui/modals/AskConfirmationModal'
 import {useBrowser} from '~/features/Discover/common/BrowserProvider'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
+import {logger} from '~/kernel/logger/logger'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {useModal} from '~/ui/Modal/context/ModalContext'
@@ -43,6 +46,8 @@ export const useTriggerScanAction = ({
   // Get wallet manager to check if wallet is selected (but don't require it)
   const {selected} = useWalletManager()
   const wallet = selected.wallet
+  const {isLoggedIn} = useAuth()
+  const rootNavigation = useNavigation()
   const defaultPrimaryTokenInfo = React.useMemo(
     () => getDefaultPrimaryTokenInfo(),
     [],
@@ -97,6 +102,12 @@ export const useTriggerScanAction = ({
   }, [])
 
   const trigger = (scanAction: Scan.Action) => {
+    logger.info('useTriggerScanAction: trigger called', {
+      action: scanAction.action,
+      scanAction,
+      isLoggedIn,
+    })
+    
     switch (scanAction.action) {
       case 'launch-url': {
         Linking.openURL(scanAction.url)
@@ -265,7 +276,37 @@ export const useTriggerScanAction = ({
 
       case 'restore-wallet': {
         // Wallet restoration: Navigate to restore wallet from link screen
-        walletNavigation.navigateToRestoreWalletFromLink(scanAction)
+        // When not logged in, navigate directly to setup-wallet screen
+        // When logged in, use walletNavigation which navigates through manage-wallets
+        logger.info('useTriggerScanAction: restore-wallet action', {
+          isLoggedIn,
+          scanAction,
+        })
+        
+        if (isLoggedIn) {
+          logger.info('useTriggerScanAction: navigating via walletNavigation (logged in)', {
+            scanAction,
+          })
+          walletNavigation.navigateToRestoreWalletFromLink(scanAction)
+        } else {
+          logger.info('useTriggerScanAction: navigating directly to setup-wallet (not logged in)', {
+            scanAction,
+          })
+          // Navigate directly to setup-wallet screen when not logged in
+          try {
+            rootNavigation.navigate('setup-wallet' as never, {
+              screen: 'setup-wallet-restore-from-link',
+              params: {action: scanAction},
+            } as never)
+            logger.info('useTriggerScanAction: navigation to setup-wallet completed')
+          } catch (error) {
+            logger.info('useTriggerScanAction: navigation error', {
+              error,
+              errorMessage: error instanceof Error ? error.message : String(error),
+              errorStack: error instanceof Error ? error.stack : undefined,
+            })
+          }
+        }
         break
       }
     }

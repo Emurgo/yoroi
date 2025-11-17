@@ -647,6 +647,28 @@ export class WalletManager {
       })
 
       if (!readOnlyData) {
+        // Fallback: Check if we have accountPubKeyHex stored (for read-only wallets restored from links)
+        const encryptedStorage = makeWalletEncryptedStorage(id)
+        const accountPubKeyHex = await encryptedStorage.xpub.read(accountVisual)
+
+        if (accountPubKeyHex) {
+          // Load as regular wallet (can derive all addresses from accountPubKeyHex)
+          // It's still functionally read-only since there's no private key stored
+          logger.debug(
+            'WalletManager: loadWallet read-only wallet with accountPubKeyHex, loading as regular wallet',
+            {id, accountVisual},
+          )
+          const wallet = await walletFactory.build({
+            id,
+            accountPubKeyHex,
+            accountVisual,
+          })
+
+          wallet.subscribe((event) => this._notify(event))
+
+          return wallet
+        }
+
         throwLoggedError(
           'WalletManager: loadWallet read-only address data not found',
         )
