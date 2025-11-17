@@ -21,6 +21,7 @@ import {TextInput} from '~/ui/TextInput/TextInput'
 import {MetadataTab} from '../ReviewTx/Metadata/MetadataTab'
 import {OverviewTab, ReviewDetailsProps} from '../ReviewTx/Overview/OverviewTab'
 import {UTxOsTab} from '../ReviewTx/UTxOs/UTxOsTab'
+import {CborTab} from './Cbor/CborTab'
 import {DatumTab} from './Datum/DatumTab'
 import {GovernanceTab} from './Governance/GovernanceTab'
 import {MintTab} from './Mint/MintTab'
@@ -58,7 +59,7 @@ const MemoInput = () => {
 const TabWrapper = ({
   children,
   onConfirm,
-  readOnly,
+  readOnly: _readOnly,
   showMemo = false,
   showGoToTransactionsButton = false,
 }: {
@@ -115,6 +116,7 @@ export const ReviewTx = ({
   receiverCustomTitle,
   createdBy,
   validationResult,
+  cbor,
   onConfirm,
   readOnly = false,
   isReviewFlow = false,
@@ -128,6 +130,7 @@ export const ReviewTx = ({
   receiverCustomTitle?: React.ReactNode
   createdBy?: React.ReactNode
   validationResult?: {valid: boolean; errors: string[]; warnings: string[]}
+  cbor?: string | null
   onConfirm?: () => void
   readOnly?: boolean
   isReviewFlow?: boolean
@@ -143,6 +146,7 @@ export const ReviewTx = ({
     (output) => output.datum != null,
   )
   const showGovernanceTab = !!formattedTx.governance
+  const showCborTab = cbor != null
 
   return (
     <MaterialTab.Navigator
@@ -204,7 +208,9 @@ export const ReviewTx = ({
             <TabWrapper
               onConfirm={onConfirm}
               readOnly={readOnly}
-              showGoToTransactionsButton={readOnly && isReviewFlow && !onConfirm}
+              showGoToTransactionsButton={
+                readOnly && isReviewFlow && !onConfirm
+              }
             >
               <MetadataTab
                 hash={formattedMetadata?.hash ?? null}
@@ -222,7 +228,9 @@ export const ReviewTx = ({
             <TabWrapper
               onConfirm={onConfirm}
               readOnly={readOnly}
-              showGoToTransactionsButton={readOnly && isReviewFlow && !onConfirm}
+              showGoToTransactionsButton={
+                readOnly && isReviewFlow && !onConfirm
+              }
             >
               <MintTab mintData={formattedTx.mint} />
             </TabWrapper>
@@ -237,7 +245,9 @@ export const ReviewTx = ({
             <TabWrapper
               onConfirm={onConfirm}
               readOnly={readOnly}
-              showGoToTransactionsButton={readOnly && isReviewFlow && !onConfirm}
+              showGoToTransactionsButton={
+                readOnly && isReviewFlow && !onConfirm
+              }
             >
               <ReferenceInputsTab
                 referenceInputs={formattedTx.referenceInputs}
@@ -254,7 +264,9 @@ export const ReviewTx = ({
             <TabWrapper
               onConfirm={onConfirm}
               readOnly={readOnly}
-              showGoToTransactionsButton={readOnly && isReviewFlow && !onConfirm}
+              showGoToTransactionsButton={
+                readOnly && isReviewFlow && !onConfirm
+              }
             >
               <DatumTab outputs={formattedTx.outputs} />
             </TabWrapper>
@@ -269,9 +281,28 @@ export const ReviewTx = ({
             <TabWrapper
               onConfirm={onConfirm}
               readOnly={readOnly}
-              showGoToTransactionsButton={readOnly && isReviewFlow && !onConfirm}
+              showGoToTransactionsButton={
+                readOnly && isReviewFlow && !onConfirm
+              }
             >
               <GovernanceTab tx={formattedTx} />
+            </TabWrapper>
+          )}
+        />
+      )}
+
+      {showCborTab && (
+        <MaterialTab.Screen
+          name="CBOR"
+          children={() => (
+            <TabWrapper
+              onConfirm={onConfirm}
+              readOnly={readOnly}
+              showGoToTransactionsButton={
+                readOnly && isReviewFlow && !onConfirm
+              }
+            >
+              <CborTab cbor={cbor!} />
             </TabWrapper>
           )}
         />
