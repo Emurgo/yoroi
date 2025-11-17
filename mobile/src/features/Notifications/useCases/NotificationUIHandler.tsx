@@ -76,7 +76,12 @@ const useCollectNewNotifications = ({enabled}: {enabled: boolean}) => {
       },
     )
 
-    if (!enabled || !isString(selectedWalletId) || isWalletSelectionScreen || isAuthScreen) {
+    if (
+      !enabled ||
+      !isString(selectedWalletId) ||
+      isWalletSelectionScreen ||
+      isAuthScreen
+    ) {
       return () => {
         pushSubscription.unsubscribe()
       }
