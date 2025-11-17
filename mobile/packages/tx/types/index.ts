@@ -1,7 +1,7 @@
 import {Balance} from '@yoroi/types'
 
-// Legacy types for backward compatibility
-// These are WASM types from CSL that were previously exported from yoroi-lib
+// Transaction types
+// These are WASM types from CSL
 import type {
   AuxiliaryData,
   Transaction as CSLTransaction,
@@ -95,15 +95,16 @@ export type Datum =
       data: string
     }
 
+// Modern UTXO format using Balance.Amounts
 export type RemoteUnspentOutput = {
-  amount: string
   receiver: string
   txHash: string
   txIndex: number
   utxoId: string
-  assets: ReadonlyArray<UtxoAsset>
+  balance: Balance.Amounts // Record<TokenId, Quantity> - modern format
 }
 
+// @deprecated Use RemoteUnspentOutput.balance instead
 export type UtxoAsset = {
   assetId: string
   amount: string
@@ -125,9 +126,6 @@ export type TokenEntry = {
   identifier: string
 }
 
-// @deprecated Use Balance.Amounts instead
-export type MultiTokenValue = Balance.Amounts
-
 export type TxOptions = {
   metadata?: ReadonlyArray<TxMetadata>
 }
@@ -146,14 +144,11 @@ export type CardanoHaskellConfig = {
   networkId: number
 }
 
-// Legacy UnsignedTx type that matches the runtime structure from yoroi-lib
-// The actual runtime object from yoroi-lib has txBody and auxiliaryData as properties
-// Note: This is NOT the same as TransactionBody - it's a wrapper object that contains a TransactionBody
-// The type is kept as TransactionBody for backward compatibility, but runtime objects have additional properties
+// UnsignedTx type - matches TransactionBody structure
 export type UnsignedTx = TransactionBody
 export type SignedTx = CSLTransaction
 
-// Extended type for runtime objects that have the additional properties from yoroi-lib
+// Extended type for runtime objects that have additional properties
 // This is used internally where we know the object has these properties
 export type UnsignedTxWithProperties = TransactionBody & {
   readonly txBody: TransactionBody

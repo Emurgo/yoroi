@@ -1,6 +1,6 @@
 import {cardanoConfig, derivationConfig} from '@yoroi/blockchains'
 import {Addressing, createLedgerPlutusPayload, getAllSigners} from '@yoroi/tx'
-import {Wallet} from '@yoroi/types'
+import {Balance, Wallet} from '@yoroi/types'
 
 import {SignTransactionRequest} from '@cardano-foundation/ledgerjs-hw-app-cardano'
 import * as CSL_TYPES from '@emurgo/cross-csl-core'
@@ -73,23 +73,35 @@ const getRequiredSigners = async (
       : undefined
 
   const startLevel = derivationConfig.keyLevel.purpose
+  const primaryTokenId = wallet.portfolioPrimaryTokenInfo.id
 
   const addressedUtxos: CardanoTypes.CardanoAddressedUtxo[] =
-    wallet.allUtxos.map((utxo) => ({
-      txHash: utxo.tx_hash,
-      txIndex: utxo.tx_index,
-      amount: utxo.amount,
-      receiver: utxo.receiver,
-      utxoId: utxo.utxo_id,
-      assets: utxo.assets.map((asset) => ({
-        assetId: asset.tokenId,
-        amount: asset.amount,
-      })),
-      addressing: {
-        path: getDerivationPathForAddress(utxo.receiver, wallet, meta, partial),
-        startLevel,
-      },
-    }))
+    wallet.allUtxos.map((utxo) => {
+      // Convert to modern Balance.Amounts format
+      const balance: Balance.Amounts = {
+        [primaryTokenId]: utxo.amount as Balance.Quantity,
+      }
+      for (const asset of utxo.assets) {
+        balance[asset.tokenId] = asset.amount as Balance.Quantity
+      }
+
+      return {
+        txHash: utxo.tx_hash,
+        txIndex: utxo.tx_index,
+        receiver: utxo.receiver,
+        utxoId: utxo.utxo_id,
+        balance,
+        addressing: {
+          path: getDerivationPathForAddress(
+            utxo.receiver,
+            wallet,
+            meta,
+            partial,
+          ),
+          startLevel,
+        },
+      }
+    })
 
   const getAddressAddressing = (bech32Address: string) => {
     const path = getDerivationPathForAddress(

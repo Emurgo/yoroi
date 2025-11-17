@@ -19,12 +19,8 @@ export * from './utils/transactions'
 export * from './utils/utxo'
 export * from './utxo'
 
-// Export legacy types for backward compatibility
+// Export transaction types
 export type {SignedTx, UnsignedTx} from './types'
-
-// ⚠️ LEGACY: Deprecated transaction building methods - REMOVED
-// All transaction building now uses TransactionBuilder
-// The legacy wrapper has been removed as all calls have been migrated
 
 // Export functional transaction builder API
 export {

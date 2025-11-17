@@ -436,8 +436,12 @@ export class WalletManager {
     await Promise.all(
       deletedWalletsIds.map(async (id) => {
         const encryptedStorage = makeWalletEncryptedStorage(id)
-        for (const networkManager of Object.values(this.#networkManagers)) {
-          await networkManager.legacyRootStorage.removeItem(id)
+        // Remove wallet data from legacy storage paths for each network
+        for (const network of Object.keys(
+          this.#networkManagers,
+        ) as Chain.SupportedNetworks[]) {
+          const legacyStorage = this.#rootStorage.join(`legacy/${network}/v1/`)
+          await legacyStorage.removeItem(id)
         }
 
         await this.#walletsRootStorage.removeItem(id) // remove wallet meta
@@ -621,9 +625,8 @@ export class WalletManager {
 
     if (isReadOnly) {
       // Load read-only wallet from addresses
-      const networkManager = networkManagers[network]
-      const addressStorage = networkManager.legacyRootStorage.join(
-        `${id}/addresses/`,
+      const addressStorage = rootStorage.join(
+        `legacy/${network}/v1/${id}/addresses/`,
       )
       const readOnlyData = await addressStorage.getItem('readOnly', (data) => {
         const parsed = parseSafe(data)
@@ -954,8 +957,8 @@ export class WalletManager {
     const avatar = new Blockies({seed}).asBase64()
 
     // Store addresses for persistence (not in encrypted storage since no private keys)
-    const addressStorage = networkManagers[network].legacyRootStorage.join(
-      `${id}/addresses/`,
+    const addressStorage = rootStorage.join(
+      `legacy/${network}/v1/${id}/addresses/`,
     )
     await addressStorage.setItem('readOnly', {
       knownAddress: validKnownAddress,

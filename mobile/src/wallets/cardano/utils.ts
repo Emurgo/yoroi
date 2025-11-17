@@ -365,21 +365,26 @@ export const getHexAddressingMap = async (wallet: YoroiWallet) => {
 export const getAddressedUtxos = (wallet: YoroiWallet) => {
   // Use wallet.utxos to exclude collateral UTXO from transaction operations
   // Collateral should not be used in regular transactions
+  const primaryTokenId = wallet.portfolioPrimaryTokenInfo.id
   return wallet.utxos.map(
     (utxo: RawUtxo): CardanoTypes.CardanoAddressedUtxo => {
       const addressing = wallet.getAddressing(utxo.receiver)
+
+      // Convert to modern Balance.Amounts format
+      const balance: Balance.Amounts = {
+        [primaryTokenId]: utxo.amount as Balance.Quantity,
+      }
+      for (const asset of utxo.assets) {
+        balance[asset.tokenId] = asset.amount as Balance.Quantity
+      }
 
       return {
         addressing,
         txIndex: utxo.tx_index,
         txHash: utxo.tx_hash,
-        amount: utxo.amount,
         receiver: utxo.receiver,
         utxoId: utxo.utxo_id,
-        assets: utxo.assets.map((asset) => ({
-          assetId: asset.tokenId,
-          amount: asset.amount,
-        })),
+        balance,
       }
     },
   )

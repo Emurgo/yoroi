@@ -4,7 +4,6 @@ import type {
   TransactionUnspentOutput,
   WasmModuleProxy,
 } from '@emurgo/cross-csl-core'
-// Legacy types (for backward compatibility during migration)
 import BigNumber from 'bignumber.js'
 
 import {Addressing} from '../types'
@@ -54,7 +53,7 @@ export type Asset = {
   amount: string
 }
 
-// Legacy Utxo type (uses BigNumber)
+// Utxo type for storage/API (uses BigNumber for amounts)
 export type Utxo = {
   utxoId: string
   txHash: string

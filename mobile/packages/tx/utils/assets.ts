@@ -173,22 +173,13 @@ export function buildSendTokenList(
 
 /**
  * Convert remote UTXO format to Balance.Amounts
+ * Now simply returns the balance field directly since RemoteUnspentOutput uses Balance.Amounts
  */
 export function amountsFromRemote(
   utxo: RemoteUnspentOutput,
-  primaryTokenId: string,
+  _primaryTokenId: string, // Kept for backward compatibility but not used
 ): Balance.Amounts {
-  const amounts: Balance.Amounts = {} as Balance.Amounts
-
-  // Add primary token (ADA)
-  amounts[primaryTokenId] = utxo.amount as Balance.Quantity
-
-  // Add other assets
-  for (const asset of utxo.assets) {
-    amounts[asset.assetId] = asset.amount as Balance.Quantity
-  }
-
-  return amounts
+  return utxo.balance
 }
 
 /**

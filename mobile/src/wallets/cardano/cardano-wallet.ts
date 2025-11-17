@@ -42,6 +42,7 @@ import {
   WalletEncryptedStorage,
   makeWalletEncryptedStorage,
 } from '~/kernel/storage/EncryptedStorage'
+import {rootStorage} from '~/kernel/storage/storages'
 
 import type {
   AccountStateResponse,
@@ -163,11 +164,13 @@ export const makeCardanoWallet = (
         rootStorage: networkRootStorage,
         primaryTokenInfo,
         chainId,
-        legacyRootStorage,
         legacyApiBaseUrl,
         tokenManager,
       } = networkManager
-      const walletRootStorage = legacyRootStorage.join(`${id}/`)
+      // Use global rootStorage instead of legacyRootStorage from networkManager
+      // Path matches legacy storage structure: /legacy/${network}/v1/${id}/
+      const {network} = networkManager
+      const walletRootStorage = rootStorage.join(`legacy/${network}/v1/${id}/`)
       const accountStorage = walletRootStorage.join(
         `accounts/${accountVisual}/`,
       )
@@ -740,8 +743,11 @@ export const makeCardanoWallet = (
         if (!accountState) throw new Error('Account state not found')
 
         const stakingUtxos = this.getAllUtxosForKey()
+        const primaryTokenId = this.portfolioPrimaryTokenInfo.id
         const amount = Quantities.sum([
-          ...stakingUtxos.map((utxo) => utxo.amount as Balance.Quantity),
+          ...stakingUtxos.map(
+            (utxo) => (utxo.balance[primaryTokenId] || '0') as Balance.Quantity,
+          ),
           accountState.remainingAmount as Balance.Quantity,
         ])
 

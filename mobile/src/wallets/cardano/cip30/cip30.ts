@@ -139,7 +139,11 @@ class CIP30Extension {
         try {
           const utxo = cardanoUtxoFromRemoteFormat(
             csl,
-            rawUtxoToRemoteUnspentOutput(currentCollateral.utxo),
+            rawUtxoToRemoteUnspentOutput(
+              currentCollateral.utxo,
+              this.wallet.portfolioPrimaryTokenInfo.id,
+            ),
+            this.wallet.portfolioPrimaryTokenInfo.id,
           )
           return [recreateTransactionUnspentOutput(utxo)]
         } catch (error) {
@@ -350,6 +354,7 @@ const remoteAssetToMultiasset = (
 const cardanoUtxoFromRemoteFormat = (
   csl: WasmModuleProxy,
   u: RemoteUnspentOutput,
+  primaryTokenId: Portfolio.Token.Id,
 ): CSL.TransactionUnspentOutput => {
   // Validate input data
   if (!u.txHash || typeof u.txHash !== 'string') {
@@ -358,8 +363,8 @@ const cardanoUtxoFromRemoteFormat = (
   if (typeof u.txIndex !== 'number') {
     throw new Error(`Invalid txIndex: ${u.txIndex}`)
   }
-  if (!u.amount || typeof u.amount !== 'string') {
-    throw new Error(`Invalid amount: ${u.amount}`)
+  if (!u.balance || typeof u.balance !== 'object') {
+    throw new Error(`Invalid balance: ${u.balance}`)
   }
   if (!u.receiver || typeof u.receiver !== 'string') {
     throw new Error(`Invalid receiver: ${u.receiver}`)
@@ -377,25 +382,30 @@ const cardanoUtxoFromRemoteFormat = (
     )
   }
 
-  const amountBigNum = csl.BigNum.fromStr(u.amount)
+  // Get primary token amount (ADA)
+  const primaryAmount = u.balance[primaryTokenId] || '0'
+  const amountBigNum = csl.BigNum.fromStr(primaryAmount)
   if (!amountBigNum) {
-    throw new Error(`Failed to create BigNum from amount: ${u.amount}`)
+    throw new Error(`Failed to create BigNum from amount: ${primaryAmount}`)
   }
 
   const value = csl.Value.new(amountBigNum)
   if (!value) {
-    throw new Error(`Failed to create Value from amount: ${u.amount}`)
+    throw new Error(`Failed to create Value from amount: ${primaryAmount}`)
   }
 
-  if ((u.assets || []).length > 0) {
-    // Convert UtxoAsset[] (with assetId) to BaseAsset[] (with tokenId)
-    // assetId is already in the format policyId.assetNameHex, so we can use it directly as tokenId
-    const baseAssets: BaseAsset[] = u.assets.map((asset) => ({
-      tokenId: asset.assetId as Portfolio.Token.Id,
-      amount: asset.amount,
+  // Convert Balance.Amounts to multiasset
+  const assets = Object.entries(u.balance)
+    .filter(([tokenId]) => tokenId !== primaryTokenId)
+    .map(([tokenId, amount]) => ({
+      tokenId: tokenId as Portfolio.Token.Id,
+      amount: amount as string,
       policyId: '', // Not needed for multiasset construction
       name: '', // Not needed for multiasset construction
     }))
+
+  if (assets.length > 0) {
+    const baseAssets: BaseAsset[] = assets
     const multiasset = remoteAssetToMultiasset(baseAssets, csl)
     if (!multiasset) {
       throw new Error('Failed to create MultiAsset')
@@ -482,9 +492,14 @@ const _getUtxos = async (
   const valueStr = value?.trim() ?? ''
 
   if (valueStr.length === 0) {
+    const primaryTokenId = wallet.portfolioPrimaryTokenInfo.id
     const validUtxos = wallet.utxos.map((o) => {
       try {
-        return cardanoUtxoFromRemoteFormat(csl, rawUtxoToRemoteUnspentOutput(o))
+        return cardanoUtxoFromRemoteFormat(
+          csl,
+          rawUtxoToRemoteUnspentOutput(o, primaryTokenId),
+          primaryTokenId,
+        )
       } catch (error) {
         logger.error('Error converting UTXO to CSL format', {
           error: error instanceof Error ? error.message : String(error),
@@ -536,8 +551,9 @@ export const _getRequiredUtxos = async (
   meta: Wallet.Meta,
   csl: WasmModuleProxy,
 ): Promise<CSL.TransactionUnspentOutput[] | null> => {
+  const primaryTokenId = wallet.portfolioPrimaryTokenInfo.id
   const remoteUnspentOutputs: RemoteUnspentOutput[] = allUtxos.map((utxo) =>
-    rawUtxoToRemoteUnspentOutput(utxo),
+    rawUtxoToRemoteUnspentOutput(utxo, primaryTokenId),
   )
   // Create address within the provided csl scope to avoid pointer issues
   let normalisedRewardAddress: Address | null = null
@@ -565,15 +581,15 @@ export const _getRequiredUtxos = async (
       unsignedTx,
       remoteUnspentOutputs,
     )
+    const primaryTokenId = wallet.portfolioPrimaryTokenInfo.id
     return requiredUtxos.map((o) => {
       try {
-        return cardanoUtxoFromRemoteFormat(csl, o)
+        return cardanoUtxoFromRemoteFormat(csl, o, primaryTokenId)
       } catch (error) {
         logger.error('Error converting UTXO to CSL format', {
           error: error instanceof Error ? error.message : String(error),
           utxoIndex: o.txIndex,
-          utxoAmount: o.amount,
-          utxoAssetsCount: o.assets?.length ?? 0,
+          utxoBalance: o.balance,
           utxoReceiver: o.receiver,
           txHash: o.txHash,
           txIndex: o.txIndex,
@@ -586,19 +602,26 @@ export const _getRequiredUtxos = async (
   }
 }
 
-const rawUtxoToRemoteUnspentOutput = (utxo: RawUtxo): RemoteUnspentOutput => {
+const rawUtxoToRemoteUnspentOutput = (
+  utxo: RawUtxo,
+  primaryTokenId: Portfolio.Token.Id,
+): RemoteUnspentOutput => {
+  // Convert to modern Balance.Amounts format
+  const balance: Balance.Amounts = {
+    [primaryTokenId]: utxo.amount as Balance.Quantity,
+  }
+
+  // Add other assets
+  for (const asset of utxo.assets) {
+    balance[asset.tokenId] = asset.amount as Balance.Quantity
+  }
+
   return {
     txHash: utxo.tx_hash,
     txIndex: utxo.tx_index,
     receiver: utxo.receiver,
-    amount: utxo.amount,
-    // Convert RemoteAsset[] (with tokenId) to UtxoAsset[] (with assetId)
-    // tokenId is already in the format policyId.assetNameHex, so we can use it directly as assetId
-    assets: utxo.assets.map((asset) => ({
-      assetId: asset.tokenId,
-      amount: asset.amount,
-    })),
     utxoId: utxo.utxo_id,
+    balance,
   }
 }
 
@@ -651,10 +674,12 @@ const _drawCollateralInOneUtxo = (
   if (!possibleCollateralId) return null
   const collateralUtxo = utxos.findById(possibleCollateralId)
   if (!collateralUtxo) return null
+  const primaryTokenId = wallet.portfolioPrimaryTokenInfo.id
   try {
     return cardanoUtxoFromRemoteFormat(
       csl,
-      rawUtxoToRemoteUnspentOutput(collateralUtxo),
+      rawUtxoToRemoteUnspentOutput(collateralUtxo, primaryTokenId),
+      primaryTokenId,
     )
   } catch (error) {
     logger.error('Error converting collateral UTXO to CSL format', {

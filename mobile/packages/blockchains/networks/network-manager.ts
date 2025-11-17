@@ -1,7 +1,6 @@
 import {CardanoApi} from '@yoroi/api'
 import {
   getLogger,
-  mountAsyncStorage,
   mountMMKVStorage,
   observableStorageMaker,
 } from '@yoroi/common'
@@ -32,9 +31,6 @@ export function buildNetworkManagers({
         id: `${network}.manager.v1`,
       })
       const rootStorage = observableStorageMaker(networkRootStorage)
-      const legacyRootStorage = observableStorageMaker(
-        mountAsyncStorage({path: `/legacy/${network}/v1/`}),
-      )
       const {getProtocolParams, getBestBlock, getUtxoData} = apiMaker({
         network: config.network,
       })
@@ -58,9 +54,6 @@ export function buildNetworkManagers({
         tokenManager,
 
         explorers: explorerManager[network as Chain.SupportedNetworks],
-
-        // NOTE: it can't use the new rootStorage cuz all modules are async now 🥹
-        legacyRootStorage,
       }
       networkManagers[network as Chain.SupportedNetworks] = networkManager
 

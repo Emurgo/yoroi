@@ -46,8 +46,6 @@ export type WalletInitRoutes = {
   'setup-wallet-details-form': undefined
   'setup-wallet-restore-form': undefined
   'setup-wallet-restore-details': undefined
-  'setup-wallet-import-read-only': undefined
-  'setup-wallet-save-read-only': undefined
   'setup-wallet-check-nano-x': undefined
   'setup-wallet-connect-nano-x': undefined
   'setup-wallet-save-nano-x': undefined

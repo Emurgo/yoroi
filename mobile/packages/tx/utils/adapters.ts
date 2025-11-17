@@ -1,36 +1,13 @@
-// Adapter functions for backward compatibility during migration
-// These convert between ModernUtxo and legacy CardanoAddressedUtxo types
+// Adapter functions for converting between ModernUtxo and CardanoAddressedUtxo types
 import {CardanoAddressedUtxo} from '../types'
 import {ModernUtxo} from '../utxo/models'
 
 /**
- * Convert ModernUtxo to legacy CardanoAddressedUtxo format
- * This is a temporary adapter for backward compatibility with legacy functions
- * @deprecated This will be removed once all legacy functions are migrated
+ * Convert ModernUtxo to CardanoAddressedUtxo format
  */
 export function modernUtxoToCardanoAddressedUtxo(
   modernUtxo: ModernUtxo,
 ): CardanoAddressedUtxo {
-  // Extract ADA amount from balance
-  const adaAmount = modernUtxo.balance[''] || '0'
-
-  // Convert assets array from balance
-  const assets = Object.entries(modernUtxo.balance)
-    .filter(([tokenId]) => tokenId !== '') // Exclude ADA
-    .map(([assetId, amount]) => {
-      // Extract policyId and name from assetId
-      // assetId is in format "policyId.assetNameHex" (Portfolio.Token.Id format)
-      const [policyId, nameHex] = assetId.split('.')
-      if (!policyId || !nameHex) return null
-      return {
-        amount,
-        assetId,
-        policyId,
-        name: nameHex,
-      }
-    })
-    .filter((asset): asset is NonNullable<typeof asset> => asset !== null)
-
   return {
     addressing: modernUtxo.addressing || {
       path: [],
@@ -38,16 +15,14 @@ export function modernUtxoToCardanoAddressedUtxo(
     },
     txIndex: modernUtxo.txIndex,
     txHash: modernUtxo.txHash,
-    amount: adaAmount,
     receiver: modernUtxo.receiver,
     utxoId: `${modernUtxo.txHash}:${modernUtxo.txIndex}`,
-    assets,
+    balance: modernUtxo.balance, // Use Balance.Amounts directly
   }
 }
 
 /**
- * Convert array of ModernUtxo to legacy CardanoAddressedUtxo[] format
- * @deprecated This will be removed once all legacy functions are migrated
+ * Convert array of ModernUtxo to CardanoAddressedUtxo[] format
  */
 export function modernUtxosToCardanoAddressedUtxos(
   modernUtxos: ModernUtxo[],

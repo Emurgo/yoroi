@@ -9,8 +9,6 @@ import {WalletInitRoutes} from '~/kernel/navigation/types'
 
 import {NetworkTag} from '../Settings/ui/shared/NetworkTag'
 import {PreparingWalletScreen} from './common/PreparingWalletScreen/PreparingWalletScreen'
-import {ImportReadOnlyWalletScreen} from './legacy/ImportReadOnlyWallet/ImportReadOnlyWalletScreen'
-import {SaveReadOnlyWalletScreen} from './legacy/SaveReadOnlyWallet/SaveReadOnlyWalletScreen'
 import {ChooseMnemonicTypeScreen} from './useCases/ChooseMnemonicType/ChooseMnemonicTypeScreen'
 import {ChooseSetupTypeScreen} from './useCases/ChooseSetupType/ChooseSetupTypeScreen'
 import {AboutRecoveryPhraseScreen} from './useCases/CreateWallet/AboutRecoveryPhraseScreen'
@@ -83,21 +81,6 @@ export const SetupWalletNavigator = () => {
         name="setup-wallet-restore-details"
         getComponent={() => RestoreWalletDetailsScreen}
         options={{title: strings.setupWallet.restoreWalletTitle}}
-      />
-
-      <Stack.Screen
-        name="setup-wallet-import-read-only"
-        getComponent={() => ImportReadOnlyWalletScreen}
-        options={{
-          title: strings.setupWallet.importReadOnlyTitle,
-          headerTransparent: true,
-        }}
-      />
-
-      <Stack.Screen
-        name="setup-wallet-save-read-only"
-        getComponent={() => SaveReadOnlyWalletScreen}
-        options={{title: strings.setupWallet.saveReadOnlyWalletTitle}}
       />
 
       <Stack.Screen //

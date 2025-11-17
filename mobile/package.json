@@ -43,7 +43,6 @@
     "@emurgo/cross-msl-mobile": "2.0.0",
     "@emurgo/csl-mobile-bridge-jsi": "1.0.0-alpha.7",
     "@emurgo/msl-mobile-bridge-jsi": "1.0.0-alpha.7",
-    "@emurgo/yoroi-lib": "3.0.0-beta.1",
     "@formatjs/intl-datetimeformat": "6.18.0",
     "@formatjs/intl-getcanonicallocales": "2.5.5",
     "@formatjs/intl-locale": "4.2.11",
