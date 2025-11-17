@@ -294,10 +294,10 @@ export const useTriggerScanAction = ({
           })
           // Navigate directly to setup-wallet screen when not logged in
           try {
-            rootNavigation.navigate('setup-wallet' as never, {
+            ;(rootNavigation as any).navigate('setup-wallet', {
               screen: 'setup-wallet-restore-from-link',
               params: {action: scanAction},
-            } as never)
+            })
             logger.info('useTriggerScanAction: navigation to setup-wallet completed')
           } catch (error) {
             logger.info('useTriggerScanAction: navigation error', {

@@ -1,5 +1,4 @@
 import {linksYoroiParser, useLinks} from '@yoroi/links'
-import {Scan} from '@yoroi/types'
 
 import * as Linking from 'expo-linking'
 import * as React from 'react'
@@ -16,7 +15,6 @@ export const useDeepLinkWatcher = () => {
   const {
     pendingScanAction,
     setPendingScanAction,
-    clearPendingScanAction,
   } = usePendingScanAction()
 
   const processLink = React.useCallback(
