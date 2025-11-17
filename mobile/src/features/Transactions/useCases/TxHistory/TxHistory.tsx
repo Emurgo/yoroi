@@ -2,11 +2,12 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 
 import {LinearGradient} from 'expo-linear-gradient'
 import * as React from 'react'
-import {LayoutAnimation, Text, View} from 'react-native'
+import {LayoutAnimation, Text, TouchableOpacity, View} from 'react-native'
 
 import infoIcon from '~/assets/img/icon/info-light-green.png'
 import {useBuyCryptoBanner} from '~/features/Exchange/common/useBuyCryptoBanner'
 import {useGetImportantAlertsModal} from '~/features/Notifications/common/GetImportantAlertsModal'
+import {useEarnRewardsBanner} from '~/features/Staking/Governance/useCases/EarnRewardsBanner/useEarnRewardsBanner'
 import {useGovernanceBanner} from '~/features/Staking/Governance/useCases/useGovernanceBanner'
 import {usePoolTransitionModal} from '~/features/Staking/Staking/PoolTransition/usePoolTransitionModal'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
@@ -28,6 +29,8 @@ export const TxHistory = () => {
   useGovernanceBanner()
   useBuyCryptoBanner()
   useUtxoConsolidationBanner()
+  const {renderBanner: renderEarnRewardsBanner, toggleForceShow} =
+    useEarnRewardsBanner()
 
   const strings = useStrings()
   const {atoms: ta, palette: p, isDark} = useTheme()
@@ -50,6 +53,9 @@ export const TxHistory = () => {
   })
 
   const handleOnRefresh = () => sync()
+
+  // DEV: Show test button in development mode
+  const showTestButton = __DEV__
 
   return (
     <LinearGradient
@@ -95,9 +101,38 @@ export const TxHistory = () => {
 
         <Space.Height.xl />
 
+        {showTestButton && (
+          <>
+            <View style={[a.px_lg]}>
+              <TouchableOpacity
+                onPress={toggleForceShow}
+                style={[
+                  a.py_sm,
+                  a.px_md,
+                  a.items_center,
+                  {
+                    backgroundColor: p.primary_600,
+                    borderRadius: 8,
+                  },
+                ]}
+              >
+                <Text style={[a.body_2_md_medium, {color: p.white_static}]}>
+                  🧪 Test Earn Rewards Banner
+                </Text>
+              </TouchableOpacity>
+            </View>
+
+            <Space.Height.md />
+          </>
+        )}
+
         <LockedDeposit />
 
         <Space.Height.md />
+
+        {renderEarnRewardsBanner()}
+
+        {renderEarnRewardsBanner() != null && <Space.Height.md />}
 
         {meta.implementation === 'cardano-bip44' && showWarning && (
           <WarningBanner
