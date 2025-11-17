@@ -517,15 +517,53 @@ export async function buildRecipeTransaction(
   protocolConfig: CardanoHaskellConfig,
   primaryTokenId: Portfolio.Token.Id,
 ): Promise<{cbor: string}> {
-  const unsignedTx = await buildTransaction(
-    builderState,
-    protocolConfig,
+  const logger = getLogger()
+  
+  logger.info('buildRecipeTransaction: Starting transaction build', {
+    inputsCount: builderState.inputs.length,
+    outputsCount: builderState.outputs.length,
+    withdrawalsCount: builderState.withdrawals.length,
+    certificatesCount: builderState.certificates.length,
     primaryTokenId,
-  )
+  })
 
-  if (!unsignedTx.cbor) {
-    throw new Error('Transaction CBOR not available')
+  try {
+    const unsignedTx = await buildTransaction(
+      builderState,
+      protocolConfig,
+      primaryTokenId,
+    )
+
+    if (!unsignedTx.cbor) {
+      logger.error('buildRecipeTransaction: Transaction CBOR not available', {
+        unsignedTx: {
+          inputsCount: unsignedTx.inputs.length,
+          outputsCount: unsignedTx.outputs.length,
+          withdrawalsCount: unsignedTx.withdrawals.length,
+          certificatesCount: unsignedTx.certificates.length,
+        },
+      })
+      throw new Error('Transaction CBOR not available')
+    }
+
+    logger.info('buildRecipeTransaction: Transaction built successfully', {
+      cborLength: unsignedTx.cbor.length,
+    })
+
+    return {cbor: unsignedTx.cbor}
+  } catch (error) {
+    logger.error('buildRecipeTransaction: Failed to build transaction', {
+      error: error instanceof Error ? error.message : String(error),
+      errorStack: error instanceof Error ? error.stack : undefined,
+      builderState: {
+        inputsCount: builderState.inputs.length,
+        outputsCount: builderState.outputs.length,
+        withdrawalsCount: builderState.withdrawals.length,
+        certificatesCount: builderState.certificates.length,
+        withdrawals: builderState.withdrawals,
+        certificates: builderState.certificates,
+      },
+    })
+    throw error
   }
-
-  return {cbor: unsignedTx.cbor}
 }

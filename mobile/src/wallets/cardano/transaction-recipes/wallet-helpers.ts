@@ -1,3 +1,4 @@
+import {getLogger} from '@yoroi/common'
 import {TransactionOutput} from '@yoroi/tx'
 import {Network, Wallet} from '@yoroi/types'
 
@@ -101,25 +102,62 @@ export async function createWithdrawalTxFromWallet(
     networkManager: Network.Manager
   },
 ): Promise<{cbor: string}> {
-  const modernUtxos = getModernUtxosFromWallet(wallet)
+  const logger = getLogger()
 
-  return createWithdrawalTx({
-    utxos: modernUtxos,
-    rewardAddressHex: wallet.rewardAddressHex,
-    primaryTokenId: wallet.portfolioPrimaryTokenInfo.id,
-    protocolParams: wallet.protocolParams,
-    networkId: wallet.networkManager.chainId,
-    getAbsoluteSlotNumber: () => getAbsoluteSlotNumberFromWallet(wallet),
-    getChangeAddress: (mode) => wallet.getChangeAddress(mode),
-    getStakingKey: () => wallet.getStakingKey(),
-    getAccountState: (addresses) =>
-      legacyApi.getAccountState(
-        {addresses},
-        params.networkManager.legacyApiBaseUrl,
-      ),
-    shouldDeregister: params.shouldDeregister,
-    addressMode: params.addressMode,
+  logger.info(
+    'createWithdrawalTxFromWallet: Starting withdrawal transaction creation',
+    {
+      shouldDeregister: params.shouldDeregister,
+      addressMode: params.addressMode,
+      rewardAddressHex: wallet.rewardAddressHex,
+      networkId: wallet.networkManager.chainId,
+    },
+  )
+
+  const modernUtxos = getModernUtxosFromWallet(wallet)
+  logger.info('createWithdrawalTxFromWallet: Got modern UTXOs', {
+    utxosCount: modernUtxos.length,
   })
+
+  try {
+    const result = await createWithdrawalTx({
+      utxos: modernUtxos,
+      rewardAddressHex: wallet.rewardAddressHex,
+      primaryTokenId: wallet.portfolioPrimaryTokenInfo.id,
+      protocolParams: wallet.protocolParams,
+      networkId: wallet.networkManager.chainId,
+      getAbsoluteSlotNumber: () => getAbsoluteSlotNumberFromWallet(wallet),
+      getChangeAddress: (mode) => wallet.getChangeAddress(mode),
+      getStakingKey: () => wallet.getStakingKey(),
+      getAccountState: (addresses) =>
+        legacyApi.getAccountState(
+          {addresses},
+          params.networkManager.legacyApiBaseUrl,
+        ),
+      shouldDeregister: params.shouldDeregister,
+      addressMode: params.addressMode,
+    })
+
+    logger.info(
+      'createWithdrawalTxFromWallet: Transaction created successfully',
+      {
+        cborLength: result.cbor.length,
+      },
+    )
+
+    return result
+  } catch (error) {
+    logger.error(
+      'createWithdrawalTxFromWallet: Failed to create withdrawal transaction',
+      {
+        error: error instanceof Error ? error.message : String(error),
+        errorStack: error instanceof Error ? error.stack : undefined,
+        rewardAddressHex: wallet.rewardAddressHex,
+        shouldDeregister: params.shouldDeregister,
+      },
+    )
+    throw error
+  }
 }
 
 /**

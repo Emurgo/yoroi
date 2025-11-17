@@ -660,6 +660,17 @@ export async function buildTransaction(
     // Certificates must be added BEFORE withdrawals to satisfy this requirement
     // Create CSL Certificate objects from certificate data within this CSL scope
     if (state.certificates.length > 0) {
+      logger.info('buildTransaction: Processing certificates', {
+        certificatesCount: state.certificates.length,
+        certificates: state.certificates.map((c) => ({
+          kind: 'kind' in c ? c.kind : 'unknown',
+          stakeCredentialKeyHashHex:
+            'stakeCredentialKeyHashHex' in c
+              ? c.stakeCredentialKeyHashHex
+              : undefined,
+        })),
+      })
+      
       const certs = csl.Certificates.new()
       if (!certs) {
         logger.error('buildTransaction: Failed to create Certificates')
@@ -668,12 +679,22 @@ export async function buildTransaction(
       for (let i = 0; i < state.certificates.length; i++) {
         const certData = state.certificates[i]
         if (!certData) continue
+        
+        const certKind = 'kind' in certData ? certData.kind : 'unknown'
+        logger.info('buildTransaction: Processing certificate', {
+          certificateIndex: i,
+          certificateKind: certKind,
+        })
+        
         try {
           // Create certificate using shared helper
           const cslCert = createCertificateFromData(csl, certData)
           certs.add(cslCert)
+          logger.info('buildTransaction: Successfully added certificate', {
+            certificateIndex: i,
+            certificateKind: certKind,
+          })
         } catch (error) {
-          const certKind = 'kind' in certData ? certData.kind : 'unknown'
           logger.error('buildTransaction: Error adding certificate', {
             certificateIndex: i,
             certificateKind: certKind,
@@ -683,12 +704,21 @@ export async function buildTransaction(
         }
       }
       cslTxBuilder.setCerts(certs)
+      logger.info('buildTransaction: Set certificates on transaction builder', {
+        certificatesCount: state.certificates.length,
+      })
     }
 
     // Add withdrawals
     // NOTE: Certificates are only required when explicitly deregistering (matches yoroi-lib behavior)
     // Normal withdrawals don't require certificates
     if (state.withdrawals.length > 0) {
+      logger.info('buildTransaction: Processing withdrawals', {
+        withdrawalsCount: state.withdrawals.length,
+        withdrawals: state.withdrawals,
+        certificatesCount: state.certificates.length,
+      })
+      
       const withdrawals = csl.Withdrawals.new()
       if (!withdrawals) {
         logger.error('buildTransaction: Failed to create Withdrawals')
@@ -697,6 +727,13 @@ export async function buildTransaction(
       for (let i = 0; i < state.withdrawals.length; i++) {
         const withdrawal = state.withdrawals[i]
         if (!withdrawal) continue
+        
+        logger.info('buildTransaction: Processing withdrawal', {
+          withdrawalIndex: i,
+          rewardAddress: withdrawal.rewardAddress,
+          amount: withdrawal.amount,
+        })
+        
         try {
           const address = csl.Address.fromBech32(withdrawal.rewardAddress)
           if (!address) {
@@ -791,6 +828,11 @@ export async function buildTransaction(
             throw new Error(`Invalid withdrawal amount: ${withdrawal.amount}`)
           }
           withdrawals.insert(rewardAddr, amount)
+          logger.info('buildTransaction: Successfully added withdrawal', {
+            withdrawalIndex: i,
+            rewardAddress: withdrawal.rewardAddress,
+            amount: withdrawal.amount,
+          })
         } catch (error) {
           logger.error('buildTransaction: Error adding withdrawal', {
             withdrawalIndex: i,
@@ -801,6 +843,9 @@ export async function buildTransaction(
         }
       }
       cslTxBuilder.setWithdrawals(withdrawals)
+      logger.info('buildTransaction: Set withdrawals on transaction builder', {
+        withdrawalsCount: state.withdrawals.length,
+      })
     }
 
     // Set TTL
@@ -904,7 +949,99 @@ export async function buildTransaction(
           `Invalid change address: ${state.options.changeAddress}`,
         )
       }
-      cslTxBuilder.addChangeIfNeeded(changeAddr)
+      
+      // Calculate totals before adding change to help debug issues
+      const totalInput = calculateTotalInputValue(state.inputs)
+      const totalOutput = calculateTotalOutputValue(
+        state.outputs,
+        state.options.manualChangeOutput,
+      )
+      
+      // Calculate total withdrawals
+      const totalWithdrawals: Balance.Amounts = {} as Balance.Amounts
+      for (const withdrawal of state.withdrawals) {
+        const current = BigInt(totalWithdrawals[primaryTokenId] || '0')
+        const added = BigInt(withdrawal.amount)
+        totalWithdrawals[primaryTokenId] = (current + added).toString() as Balance.Quantity
+      }
+      
+      // Check for non-ADA tokens in inputs
+      const inputTokenIds = Object.keys(totalInput).filter(
+        (id) => id !== primaryTokenId,
+      )
+      const hasTokens = inputTokenIds.length > 0
+      
+      // Calculate expected remaining ADA (before fee is calculated)
+      // Withdrawals ADD to available ADA, outputs SUBTRACT
+      const inputAda = BigInt(totalInput[primaryTokenId] || '0')
+      const outputAda = BigInt(totalOutput[primaryTokenId] || '0')
+      const withdrawalsAda = BigInt(totalWithdrawals[primaryTokenId] || '0')
+      // Available ADA = input + withdrawals - outputs (fee will be subtracted by CSL)
+      const availableAdaBeforeFee = inputAda + withdrawalsAda - outputAda
+      
+      // Get min UTXO value from protocol params
+      const minUtxoValue = BigInt(protocolParams.minimumUtxoVal || '1000000') // Default 1 ADA
+      
+      // Estimate fee (CSL will calculate actual fee, but this gives us an idea)
+      // Fee calculation happens inside addChangeIfNeeded, but we can estimate
+      const estimatedTxSize = 500 // Rough estimate
+      const estimatedFee =
+        BigInt(protocolParams.linearFee.constant) +
+        BigInt(protocolParams.linearFee.coefficient) * BigInt(estimatedTxSize)
+      
+      const expectedRemainingAda = availableAdaBeforeFee - estimatedFee
+      
+      logger.info('buildTransaction: About to add change if needed', {
+        totalInputAda: totalInput[primaryTokenId] || '0',
+        totalInputTokens: inputTokenIds.length,
+        inputTokenIds: inputTokenIds.slice(0, 10), // Limit to first 10
+        totalOutputAda: totalOutput[primaryTokenId] || '0',
+        totalOutputTokens: Object.keys(totalOutput).filter(
+          (id) => id !== primaryTokenId,
+        ).length,
+        totalWithdrawalsAda: totalWithdrawals[primaryTokenId] || '0',
+        withdrawalsCount: state.withdrawals.length,
+        inputsCount: state.inputs.length,
+        inputs: state.inputs.map((input) => ({
+          txId: input.utxo.txId,
+          index: input.utxo.index,
+          adaAmount: input.utxo.balance[primaryTokenId] || '0',
+          tokenCount: Object.keys(input.utxo.balance).filter(
+            (id) => id !== primaryTokenId,
+          ).length,
+          tokenIds: Object.keys(input.utxo.balance)
+            .filter((id) => id !== primaryTokenId)
+            .slice(0, 5), // Limit to first 5 tokens per UTXO
+        })),
+        hasTokens,
+        changeAddress: state.options.changeAddress,
+        // Financial calculations
+        availableAdaBeforeFee: availableAdaBeforeFee.toString(),
+        estimatedFee: estimatedFee.toString(),
+        expectedRemainingAda: expectedRemainingAda.toString(),
+        minUtxoValue: minUtxoValue.toString(),
+        hasEnoughAdaForMinUtxo: expectedRemainingAda >= minUtxoValue,
+        // Warning if tokens present but not enough ADA
+        warning: hasTokens && expectedRemainingAda < minUtxoValue
+          ? `UTXO has ${inputTokenIds.length} tokens but expected remaining ADA (${expectedRemainingAda.toString()}) is less than min UTXO (${minUtxoValue.toString()}). CSL will calculate actual fee which may be different.`
+          : undefined,
+      })
+      
+      try {
+        cslTxBuilder.addChangeIfNeeded(changeAddr)
+        logger.info('buildTransaction: Successfully added change if needed')
+      } catch (error) {
+        logger.error('buildTransaction: Failed to add change if needed', {
+          error: error instanceof Error ? error.message : String(error),
+          errorStack: error instanceof Error ? error.stack : undefined,
+          totalInputAda: totalInput[primaryTokenId] || '0',
+          totalOutputAda: totalOutput[primaryTokenId] || '0',
+          totalWithdrawalsAda: totalWithdrawals[primaryTokenId] || '0',
+          hasTokens,
+          inputTokenIds,
+        })
+        throw error
+      }
     }
 
     // Add minting actions

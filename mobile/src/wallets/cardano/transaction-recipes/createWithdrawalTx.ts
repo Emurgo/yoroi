@@ -1,4 +1,4 @@
-import {isHex} from '@yoroi/common'
+import {getLogger, isHex} from '@yoroi/common'
 import {
   CertificateKind,
   ModernUtxo,
@@ -8,6 +8,7 @@ import {
   buildRecipeTransaction,
   createCardanoHaskellConfig,
   createTransactionBuilder,
+  filterPureAdaUtxos,
   selectUtxosForAmount,
   setChangeAddress,
   setTTLWithBuffer,
@@ -15,6 +16,7 @@ import {
 import {Portfolio, Wallet} from '@yoroi/types'
 
 import type {PublicKey} from '@emurgo/cross-csl-core'
+import BigNumber from 'bignumber.js'
 
 import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
 import type {AccountStateResponse} from '~/wallets/types/other'
@@ -51,6 +53,8 @@ export async function createWithdrawalTx({
   shouldDeregister,
   addressMode,
 }: CreateWithdrawalTxParams): Promise<{cbor: string}> {
+  const logger = getLogger()
+
   const absSlotNumber = await getAbsoluteSlotNumber()
   const changeAddress = getChangeAddress(addressMode)
   const accountState = await getAccountState([rewardAddressHex])
@@ -73,32 +77,9 @@ export async function createWithdrawalTx({
     }
   }
 
-  // Estimate fee for withdrawal transaction
-  // Withdrawal transactions are typically small (~300-500 bytes)
-  const estimatedTxSize = 500 // bytes - conservative estimate
-  const estimatedFee =
-    BigInt(protocolParams.linearFee.constant) +
-    BigInt(protocolParams.linearFee.coefficient) * BigInt(estimatedTxSize)
-
-  // In Conway era, withdrawals require a certificate that affects the rewards account
-  // If explicitly deregistering, we need deposit + fee (deposit is returned as change)
-  // Otherwise, we just need fee (certificate doesn't require deposit if not deregistering)
-  const requiresDeregistration = shouldDeregister
-  const requiredAda = requiresDeregistration
-    ? (BigInt(protocolParams.keyDeposit) + estimatedFee).toString()
-    : estimatedFee.toString()
-
-  // Select only necessary UTXOs to cover fees (and deposit if deregistering)
-  const selectedUtxos = selectUtxosForAmount(utxos, requiredAda, primaryTokenId)
-
-  // Build transaction using functional TransactionBuilder
-  let builderState = createTransactionBuilder()
-
-  // Add only selected UTXOs as inputs
-  builderState = addInputs(builderState, selectedUtxos)
-
   // Extract stake credential key hash - needed for certificate (Conway requirement)
   // If we have rewards, extract from reward address; if deregistering without rewards, extract from staking key
+  // This is done once outside the retry loop since it doesn't depend on UTXO selection
   let stakeCredentialKeyHashHex: string | undefined
   let rewardAddressBech32: string | undefined
 
@@ -161,41 +142,166 @@ export async function createWithdrawalTx({
     })
   }
 
-  // Add withdrawal if we have rewards
-  if (rewardAddressBech32) {
-    builderState = addWithdrawal(builderState, rewardAddressBech32, rewards)
-
-    // Only add certificate when explicitly deregistering (matches yoroi-lib behavior)
-    // Normal withdrawals don't require certificates
-    if (shouldDeregister) {
-      if (!stakeCredentialKeyHashHex) {
-        throw new Error(
-          'Cannot create withdrawal transaction: failed to extract stake credential from reward address',
-        )
-      }
-      builderState = addCertificate(builderState, {
-        kind: CertificateKind.StakeDeregistration,
-        stakeCredentialKeyHashHex,
-      })
-    }
-  } else if (shouldDeregister && stakeCredentialKeyHashHex) {
-    // No rewards but deregistering - add deregistration certificate
-    builderState = addCertificate(builderState, {
-      kind: CertificateKind.StakeDeregistration,
-      stakeCredentialKeyHashHex,
-    })
+  // Helper function to calculate required ADA based on fee estimate
+  const calculateRequiredAda = (feeEstimate: bigint): string => {
+    const requiresDeregistration = shouldDeregister
+    return requiresDeregistration
+      ? (BigInt(protocolParams.keyDeposit) + feeEstimate).toString()
+      : feeEstimate.toString()
   }
 
-  // Set change address
-  builderState = setChangeAddress(builderState, changeAddress)
+  // Helper function to select UTXOs preferring pure ADA, smallest first
+  const selectUtxosWithStrategy = (requiredAdaAmount: string): ModernUtxo[] => {
+    // Use filterPureAdaUtxos from tx package
+    const pureAdaUtxos = filterPureAdaUtxos(utxos, primaryTokenId)
+    const utxosWithTokens = utxos.filter((utxo) => !pureAdaUtxos.includes(utxo))
 
-  // Set TTL with buffer
-  builderState = setTTLWithBuffer(builderState, absSlotNumber.toNumber())
+    // For pure ADA UTXOs, use smallest-first to minimize change
+    // Sort smallest first (ascending)
+    const sortedPureAda = [...pureAdaUtxos].sort((a, b) => {
+      const aAda = BigInt(a.balance[primaryTokenId] || '0')
+      const bAda = BigInt(b.balance[primaryTokenId] || '0')
+      if (aAda < bAda) return -1
+      if (aAda > bAda) return 1
+      return 0
+    })
 
-  // Build the transaction
-  return await buildRecipeTransaction(
-    builderState,
-    protocolParamsConfig,
-    primaryTokenId,
+    const requiredAdaBigInt = BigInt(requiredAdaAmount)
+    const selected: ModernUtxo[] = []
+    let selectedAda = BigInt(0)
+
+    // First, try to select from pure ADA UTXOs (smallest first)
+    for (const utxo of sortedPureAda) {
+      if (selectedAda >= requiredAdaBigInt) break
+      selected.push(utxo)
+      selectedAda += BigInt(utxo.balance[primaryTokenId] || '0')
+    }
+
+    // If we don't have enough from pure ADA UTXOs, add UTXOs with tokens
+    // But account for min UTXO requirement for change outputs with tokens
+    if (selectedAda < requiredAdaBigInt) {
+      // When selecting UTXOs with tokens, we need to ensure:
+      // 1. We have enough ADA for fees (actual fee will be higher due to tokens)
+      // 2. We have enough ADA left for min UTXO in change output
+      const minUtxoValueForTokens = BigInt('1000000') // 1 ADA
+      const feeBuffer = BigInt('100000') // 0.1 ADA buffer for token-related fee increase
+      const requiredWithBuffer =
+        requiredAdaBigInt + minUtxoValueForTokens + feeBuffer
+
+      // Use largest-first for UTXOs with tokens (to minimize number of UTXOs)
+      const additionalUtxos = selectUtxosForAmount(
+        utxosWithTokens,
+        requiredWithBuffer.toString(),
+        primaryTokenId,
+      )
+
+      selected.push(...additionalUtxos)
+    }
+
+    return selected
+  }
+
+  // Retry logic: start with conservative fee estimate, retry with higher estimates if needed
+  const maxRetries = 3
+  const feeMultipliers: number[] = [1.0, 1.5, 2.0] // Progressive fee increases
+  let lastError: Error | undefined
+
+  for (let attempt = 0; attempt < maxRetries; attempt++) {
+    try {
+      // Estimate fee for withdrawal transaction
+      // Withdrawal transactions are typically small (~300-500 bytes)
+      // But with tokens, can be much larger
+      const baseTxSize = 500 // bytes - base estimate
+      const txSizeMultiplier = feeMultipliers[attempt] ?? 2.0
+      const estimatedTxSize = Math.floor(baseTxSize * txSizeMultiplier)
+      const estimatedFee =
+        BigInt(protocolParams.linearFee.constant) +
+        BigInt(protocolParams.linearFee.coefficient) * BigInt(estimatedTxSize)
+
+      const requiredAda = calculateRequiredAda(estimatedFee)
+
+      // Select UTXOs using strategy (prefer pure ADA, smallest first)
+      const selectedUtxos = selectUtxosWithStrategy(requiredAda)
+
+      // Build transaction using functional TransactionBuilder
+      let builderState = createTransactionBuilder()
+
+      // Add only selected UTXOs as inputs
+      builderState = addInputs(builderState, selectedUtxos)
+
+      // Add withdrawal if we have rewards
+      if (rewardAddressBech32) {
+        builderState = addWithdrawal(builderState, rewardAddressBech32, rewards)
+
+        // Only add certificate when explicitly deregistering (matches yoroi-lib behavior)
+        // Normal withdrawals don't require certificates
+        if (shouldDeregister) {
+          if (!stakeCredentialKeyHashHex) {
+            throw new Error(
+              'Cannot create withdrawal transaction: failed to extract stake credential from reward address',
+            )
+          }
+          builderState = addCertificate(builderState, {
+            kind: CertificateKind.StakeDeregistration,
+            stakeCredentialKeyHashHex,
+          })
+        }
+      } else if (shouldDeregister && stakeCredentialKeyHashHex) {
+        // No rewards but deregistering - add deregistration certificate
+        builderState = addCertificate(builderState, {
+          kind: CertificateKind.StakeDeregistration,
+          stakeCredentialKeyHashHex,
+        })
+      }
+
+      // Set change address and TTL
+      builderState = setChangeAddress(builderState, changeAddress)
+      builderState = setTTLWithBuffer(builderState, absSlotNumber.toNumber())
+
+      const result = await buildRecipeTransaction(
+        builderState,
+        protocolParamsConfig,
+        primaryTokenId,
+      )
+      return result
+    } catch (error) {
+      lastError = error instanceof Error ? error : new Error(String(error))
+      const errorMessage = lastError.message
+
+      // Check if this is the "Not enough ADA leftover" error that we can retry
+      const isRetryableError =
+        errorMessage.includes('Not enough ADA leftover') ||
+        errorMessage.includes('add_change_if_needed')
+
+      if (isRetryableError && attempt < maxRetries - 1) {
+        logger.warn(
+          'createWithdrawalTx: Retryable error, will retry with higher fee',
+          {
+            attempt: attempt + 1,
+            maxRetries,
+            error: errorMessage,
+            nextFeeMultiplier: feeMultipliers[attempt + 1] ?? 2.0,
+          },
+        )
+        // Continue to next iteration
+        continue
+      } else {
+        // Not retryable or last attempt - log and throw
+        logger.error('createWithdrawalTx: Failed to build transaction', {
+          attempt: attempt + 1,
+          maxRetries,
+          error: errorMessage,
+          errorStack: lastError.stack,
+          isRetryableError,
+          willRetry: isRetryableError && attempt < maxRetries - 1,
+        })
+        throw lastError
+      }
+    }
+  }
+  // If we get here, all retries failed
+  throw (
+    lastError ||
+    new Error('Failed to build withdrawal transaction after all retries')
   )
 }

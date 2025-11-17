@@ -1,5 +1,6 @@
 import * as React from 'react'
 
+import {getLogger} from '@yoroi/common'
 import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {UsePromiseOptionsWithoutPromise, usePromise} from '~/hooks/usePromise'
@@ -24,13 +25,39 @@ export const useCreateWithdrawTx = (
 
   const createWithdrawalTxPromise = React.useCallback(
     async ({shouldDeregister}: {shouldDeregister: boolean}) => {
-      return createWithdrawalTxFromWallet(wallet, {
+      const logger = getLogger()
+      
+      logger.info('useCreateWithdrawTx: Creating withdrawal transaction', {
         shouldDeregister,
         addressMode: meta.addressMode,
-        networkManager,
+        rewardAddressHex: wallet.rewardAddressHex,
+        hasRewards,
+        stakingInfoStatus: stakingInfo?.status,
+        stakingInfoRewards: stakingInfo?.rewards,
       })
+      
+      try {
+        const result = await createWithdrawalTxFromWallet(wallet, {
+          shouldDeregister,
+          addressMode: meta.addressMode,
+          networkManager,
+        })
+        
+        logger.info('useCreateWithdrawTx: Withdrawal transaction created successfully', {
+          cborLength: result.cbor.length,
+        })
+        
+        return result
+      } catch (error) {
+        logger.error('useCreateWithdrawTx: Failed to create withdrawal transaction', {
+          error: error instanceof Error ? error.message : String(error),
+          errorStack: error instanceof Error ? error.stack : undefined,
+          shouldDeregister,
+        })
+        throw error
+      }
     },
-    [wallet, meta.addressMode, networkManager],
+    [wallet, meta.addressMode, networkManager, hasRewards, stakingInfo],
   )
 
   const withdrawalTxPromise = usePromise({
