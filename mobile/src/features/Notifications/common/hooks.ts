@@ -27,12 +27,13 @@ const createPushNotification = (options: {
   description: string
   id: number
   data?: Record<string, unknown>
+  isRead?: boolean
 }): NotificationTypes.PushEvent => {
-  const {title, description, data, id} = options
+  const {title, description, data, id, isRead = false} = options
   return {
     id,
     date: new Date().toISOString(),
-    isRead: false,
+    isRead,
     trigger: NotificationTypes.Trigger.Push,
     metadata: {
       title,
@@ -45,6 +46,7 @@ const createPushNotification = (options: {
 const initPushNotifications = (
   walletNavigation: ReturnType<typeof useWalletNavigation>,
 ) => {
+  const messagingInstance = messaging()
   let firebaseForegroundUnsubscribe: (() => void) | undefined
   let firebaseOpenUnsubscribe: (() => void) | undefined
   let responseListener: Notifications.Subscription | undefined
@@ -59,9 +61,9 @@ const initPushNotifications = (
       if (status === 'granted') {
         if (isUnmounted) return
 
-        await messaging().registerDeviceForRemoteMessages()
-        await messaging().requestPermission()
-        await messaging().subscribeToTopic('yoroi_campaigns')
+        await messagingInstance.registerDeviceForRemoteMessages()
+        await messagingInstance.requestPermission()
+        await messagingInstance.subscribeToTopic('yoroi_campaigns')
         isSubscribedToTopic = true
       }
     } catch (error) {
@@ -123,7 +125,7 @@ const initPushNotifications = (
   }
 
   const attachForegroundListener = () =>
-    messaging().onMessage(handleForegroundMessage)
+    messagingInstance.onMessage(handleForegroundMessage)
 
   const attachResponseListener = () =>
     Notifications.addNotificationResponseReceivedListener((response) => {
@@ -134,6 +136,10 @@ const initPushNotifications = (
       const maybeId = parseNotificationId(String(data?.id ?? ''))
       const id = Number.isNaN(maybeId) ? Date.now() : maybeId
 
+      if (!data || Object.keys(data).length === 0) {
+        return
+      }
+
       triggerNotificationAction({
         manager: pushNotificationsManager,
         id,
@@ -143,7 +149,7 @@ const initPushNotifications = (
     })
 
   const attachFirebaseOpenListener = () =>
-    messaging().onNotificationOpenedApp(async (remoteMessage) => {
+    messagingInstance.onNotificationOpenedApp(async (remoteMessage) => {
       const data = remoteMessage?.data as Record<string, unknown> | undefined
       const title = remoteMessage?.notification?.title
       const body = remoteMessage?.notification?.body
@@ -154,11 +160,11 @@ const initPushNotifications = (
           id,
           title: title ?? 'Notification',
           description: body ?? '',
-          data: data as Record<string, unknown>,
+          data,
+          isRead: true,
         })
         await pushNotificationsManager.events.push(pushEvent)
 
-        // Only save the pending action, don't trigger navigation yet
         if (isString(data.action) && data.action === 'open_screen') {
           await uiStorage.setItem(
             'triggerNotificationInternalNavigationAction',
@@ -169,36 +175,32 @@ const initPushNotifications = (
     })
 
   const handleInitialNotification = () => {
-    messaging()
-      .getInitialNotification()
-      .then(async (remoteMessage) => {
-        if (remoteMessage) {
-          const data = remoteMessage?.data as
-            | Record<string, unknown>
-            | undefined
-          const title = remoteMessage?.notification?.title
-          const body = remoteMessage?.notification?.body
+    messagingInstance.getInitialNotification().then(async (remoteMessage) => {
+      if (remoteMessage) {
+        const data = remoteMessage?.data as Record<string, unknown> | undefined
+        const title = remoteMessage?.notification?.title
+        const body = remoteMessage?.notification?.body
 
-          if (data && typeof data === 'object') {
-            const id = Date.now()
-            const pushEvent = createPushNotification({
+        if (data && typeof data === 'object') {
+          const id = Date.now()
+          const pushEvent = createPushNotification({
+            id,
+            title: title ?? 'Notification',
+            description: body ?? '',
+            data,
+            isRead: true,
+          })
+          await pushNotificationsManager.events.push(pushEvent)
+
+          if (isString(data.action) && data.action === 'open_screen') {
+            await uiStorage.setItem(
+              'triggerNotificationInternalNavigationAction',
               id,
-              title: title ?? 'Notification',
-              description: body ?? '',
-              data: data as Record<string, unknown>,
-            })
-            await pushNotificationsManager.events.push(pushEvent)
-
-            // Only save the pending action, don't trigger navigation yet
-            if (isString(data.action) && data.action === 'open_screen') {
-              await uiStorage.setItem(
-                'triggerNotificationInternalNavigationAction',
-                id,
-              )
-            }
+            )
           }
         }
-      })
+      }
+    })
   }
 
   const init = async () => {
@@ -226,7 +228,7 @@ const initPushNotifications = (
     firebaseOpenUnsubscribe?.()
     responseListener?.remove()
     if (isSubscribedToTopic) {
-      messaging().unsubscribeFromTopic('yoroi_campaigns')
+      messagingInstance.unsubscribeFromTopic('yoroi_campaigns')
     }
   }
 }

@@ -8,6 +8,7 @@ import {ShowDisclaimer} from '~/features/Legal/ui/shared/Disclaimer/ShowDisclaim
 import {AmountCard} from '~/features/Swap/common/AmountCard/AmountCard'
 import {EstimateSummary} from '~/features/Swap/common/EstimateSummary/EstimateSummary'
 import {undefinedToken} from '~/features/Swap/common/constants'
+import {usePendingSwapToken} from '~/features/Swap/common/usePendingSwapToken'
 import {useSwap} from '~/features/Swap/common/useSwap'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button, ButtonType} from '~/ui/Button/Button'
@@ -36,6 +37,10 @@ export const SwapMainScreen = () => {
   const swapForm = useSwap()
   const {openModal, closeModal} = useModal()
   const navigateTo = useNavigateTo()
+
+  usePendingSwapToken(
+    swapForm.tokenInfos ? Array.from(swapForm.tokenInfos.keys()) : [],
+  )
 
   const tokenInInfo = swapForm.tokenInfos?.get?.(
     swapForm.tokenInInput.tokenId ?? undefinedToken,

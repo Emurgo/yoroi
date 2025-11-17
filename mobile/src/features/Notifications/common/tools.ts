@@ -134,6 +134,20 @@ export const clearNotificationInternalNavigationAction = async () => {
   await uiStorage.removeItem('triggerNotificationInternalNavigationAction')
 }
 
+export const setPendingSwapToken = async (tokenOutId: Portfolio.Token.Id) => {
+  await uiStorage.setItem('pendingSwapTokenOutId', tokenOutId)
+}
+
+export const getPendingSwapToken =
+  async (): Promise<Portfolio.Token.Id | null> => {
+    const tokenId = await uiStorage.getItem('pendingSwapTokenOutId')
+    return isString(tokenId) ? (tokenId as Portfolio.Token.Id) : null
+  }
+
+export const clearPendingSwapToken = async () => {
+  await uiStorage.removeItem('pendingSwapTokenOutId')
+}
+
 export const shouldHandleNotificationInternalNavigationAction = async () => {
   const id = await uiStorage.getItem(
     'triggerNotificationInternalNavigationAction',
@@ -182,11 +196,13 @@ const handleInternalNavigation = (
         case 'staking_center':
           walletNavigation.navigateToStakingDashboard()
           break
-        case 'swap':
-          walletNavigation.navigateToSwap(
-            (data.tokenOutId as Portfolio.Token.Id) || undefined,
-          )
+        case 'swap': {
+          const tokenOutId = isString(data.tokenOutId)
+            ? (data.tokenOutId as Portfolio.Token.Id)
+            : undefined
+          walletNavigation.resetToSwapWithToken(tokenOutId)
           break
+        }
         case 'governance':
           walletNavigation.navigateToGovernanceCentre()
           break
