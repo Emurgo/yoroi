@@ -41,6 +41,16 @@ export const NotificationPopup = ({
     onCancel()
   }
 
+  const handlePushNotificationAction = () => {
+    onPress()
+    triggerNotificationAction({
+      manager: pushNotificationsManager,
+      id: event.id,
+      walletNavigation: navigation,
+      source: 'app',
+    })
+  }
+
   const handleOnPress = () => {
     onPress()
 
@@ -63,15 +73,6 @@ export const NotificationPopup = ({
       if (event.id === BannerIds.UtxoConsolidation) {
         navigation.navigateToUtxoConsolidation()
       }
-    }
-
-    if (event.trigger === Notifications.Trigger.Push) {
-      triggerNotificationAction({
-        manager: pushNotificationsManager,
-        id: event.id,
-        walletNavigation: navigation,
-        source: 'app',
-      })
     }
   }
 
@@ -125,10 +126,10 @@ export const NotificationPopup = ({
       <SwipeOutWrapper
         onSwipeOut={handleOnSwipeOut}
         onExpired={onExpired}
-        onPress={handleOnPress}
+        onPress={handlePushNotificationAction}
       >
         <NotificationItem
-          onPress={handleOnPress}
+          onPress={handlePushNotificationAction}
           icon={<PushNotificationIcon />}
           title={event.metadata.title}
           description={event.metadata.body}

@@ -112,7 +112,7 @@ const initPushNotifications = (
         id: generateNotificationId(),
         title,
         description: body,
-        data: data as Record<string, unknown>,
+        data,
       })
       await pushNotificationsManager.events.push(pushNotification)
       logger.info('Campaign notification added to app notifications', {
@@ -155,7 +155,7 @@ const initPushNotifications = (
 
   const attachFirebaseOpenListener = () =>
     onNotificationOpenedApp(messagingInstance, async (remoteMessage) => {
-      const data = remoteMessage?.data as Record<string, unknown> | undefined
+      const data = remoteMessage?.data
       const title = remoteMessage?.notification?.title
       const body = remoteMessage?.notification?.body
 
@@ -182,12 +182,12 @@ const initPushNotifications = (
   const handleInitialNotification = () => {
     getInitialNotification(messagingInstance).then(async (remoteMessage) => {
       if (remoteMessage) {
-        const data = remoteMessage?.data as Record<string, unknown> | undefined
+        const data = remoteMessage?.data
         const title = remoteMessage?.notification?.title
         const body = remoteMessage?.notification?.body
 
         if (data && typeof data === 'object') {
-          const id = Date.now()
+          const id = generateNotificationId()
           const pushEvent = createPushNotification({
             id,
             title: title ?? 'Notification',
