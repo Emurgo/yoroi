@@ -271,6 +271,6 @@ export const useInitNotifications = ({
     [walletNavigation, pushEnabled],
   )
   useTransactionReceivedNotifications({enabled: localEnabled})
-  usePrimaryTokenPriceChangedNotification({enabled: false}) // Temporarily disabled until requested by product team
+  usePrimaryTokenPriceChangedNotification({enabled: false})
   useRewardsUpdatedNotifications({enabled: localEnabled})
 }

@@ -149,6 +149,21 @@ export const isTxHistoryRoute = (
   return focusedRoute === 'history-list'
 }
 
+export const isAuthRoute = (
+  state: Partial<NavigationState> | NavigationState['routes'][0]['state'],
+) => {
+  const routes = getFocusedRouteName(state)
+  const authRoutes: (keyof AppRoutes)[] = [
+    'first-run',
+    'agreement-changed-notice',
+    'custom-pin-auth',
+    'bio-auth-initial',
+    'enable-login-with-pin',
+  ]
+
+  return routes.some((route) => authRoutes.includes(route as keyof AppRoutes))
+}
+
 export const BackButton = (props: TouchableOpacityProps & {color?: string}) => {
   const {palette: p} = useTheme()
 
