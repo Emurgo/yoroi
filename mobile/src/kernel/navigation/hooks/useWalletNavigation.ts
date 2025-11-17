@@ -15,358 +15,396 @@ export const useWalletNavigation = () => {
   const selectedNetworkHook = useSelectedNetwork()
   const swapForm = useSwap()
 
-  return React.useMemo(
-    () =>
-      ({
-        navigation,
+  const selectedNetworkRef = React.useRef(selectedNetworkHook)
+  selectedNetworkRef.current = selectedNetworkHook
+  const swapFormRef = React.useRef(swapForm)
+  swapFormRef.current = swapForm
 
-        resetToTxHistory: () => {
-          navigation.reset({
-            index: 0,
-            routes: [
-              {
-                name: 'manage-wallets',
-                state: {
-                  routes: [
-                    {name: 'wallet-selection'},
-                    {
-                      name: 'main-wallet-routes',
-                      state: {
-                        routes: [
-                          {
-                            name: 'history',
-                            state: {
-                              routes: [{name: 'history-list'}],
-                            },
-                          },
-                        ],
-                      },
-                    },
-                  ],
-                },
-              },
-            ],
-          })
-        },
+  const walletNavigation = React.useRef({
+    navigation,
 
-        resetToStartTransfer: () => {
-          navigation.reset({
-            index: 0,
-            routes: [
-              {
-                name: 'manage-wallets',
-                state: {
-                  routes: [
-                    {name: 'wallet-selection'},
-                    {
-                      name: 'main-wallet-routes',
-                      state: {
-                        routes: [
-                          {
-                            name: 'history',
-                            state: {
-                              routes: [{name: 'send-start-tx'}],
-                            },
-                          },
-                        ],
-                      },
-                    },
-                  ],
-                },
-              },
-            ],
-          })
-        },
-
-        navigateToStartTransfer: () => {
-          navigation.navigate('manage-wallets', {
-            screen: 'main-wallet-routes',
-            params: {
-              screen: 'history',
-              params: {
-                screen: 'send-start-tx',
-              },
-            },
-          })
-        },
-
-        navigateToTxReview: (params?: ReviewTxRoutes['review-tx']) => {
-          navigation.navigate('manage-wallets', {
-            screen: 'review-tx-routes',
-            params: {
-              screen: 'review-tx',
-              params,
-            },
-          })
-        },
-
-        resetToWalletSetupInit: () => {
-          navigation.reset({
-            index: 0,
-            routes: [
-              {
-                name: 'setup-wallet',
-                state: {
-                  routes: [{name: 'setup-wallet-choose-setup-type-init'}],
-                },
-              },
-            ],
-          })
-        },
-
-        resetToWalletSetup: () => {
-          navigation.reset({
-            index: 0,
-            routes: [
-              {
-                name: 'manage-wallets',
-                state: {
-                  routes: [
-                    {name: 'wallet-selection'},
-                    {
-                      name: 'setup-wallet',
-                      state: {
-                        routes: [{name: 'setup-wallet-choose-setup-type'}],
-                      },
-                    },
-                  ],
-                },
-              },
-            ],
-          })
-        },
-
-        resetToWalletSelection: () => {
-          navigation.reset({
-            index: 0,
-            routes: [
-              {
-                name: 'manage-wallets',
-                state: {
-                  routes: [{name: 'wallet-selection'}],
-                },
-              },
-            ],
-          })
-        },
-
-        navigateToStakingDashboard: () => {
-          navigation.navigate('manage-wallets', {
-            screen: 'staking-dashboard',
-            params: {
-              screen: 'staking-dashboard-main',
-            },
-          })
-        },
-
-        navigateToMenu: () => {
-          navigation.navigate('manage-wallets', {
-            screen: 'main-wallet-routes',
-            params: {
-              screen: 'menu',
-              params: {
-                screen: '_menu',
-              },
-            },
-          })
-        },
-
-        navigateToSettings: () => {
-          navigation.navigate('manage-wallets', {
-            screen: 'settings',
-            params: {
-              screen: 'main-settings',
-            },
-          })
-        },
-
-        navigateToChangeNetwork: () => {
-          navigation.navigate('manage-wallets', {
-            screen: 'settings',
-            params: {
-              screen: 'change-network',
-            },
-          })
-        },
-
-        navigateToTxHistory: () => {
-          navigation.navigate('manage-wallets', {
-            screen: 'main-wallet-routes',
-            params: {
-              screen: 'history',
-              params: {
-                screen: 'history-list',
-              },
-            },
-          })
-        },
-
-        navigateToReceiveSingle: () => {
-          navigation.navigate('manage-wallets', {
-            screen: 'main-wallet-routes',
-            params: {
-              screen: 'history',
-              params: {
-                screen: 'receive-single',
-              },
-            },
-          })
-        },
-
-        navigateToReceiveMultiple: () => {
-          navigation.navigate('manage-wallets', {
-            screen: 'main-wallet-routes',
-            params: {
-              screen: 'history',
-              params: {
-                screen: 'receive-multiple',
-              },
-            },
-          })
-        },
-
-        navigateToAppSettings: () => {
-          navigation.navigate('manage-wallets', {
-            screen: 'settings',
-            params: {
-              screen: 'app-settings',
-            },
-          })
-        },
-
-        navigateToCollateralSettings: (
-          params?: SettingsStackRoutes['manage-collateral'],
-        ) => {
-          navigation.navigate('manage-wallets', {
-            screen: 'settings',
-            params: {
-              screen: 'manage-collateral',
-              params,
-            },
-          })
-        },
-
-        navigateToNotificationDisplayDuration: () => {
-          navigation.navigate('manage-wallets', {
-            screen: 'settings',
-            params: {
-              screen: 'manage-notifications',
-              params: {
-                screen: 'manage-notification-display-duration',
-              },
-            },
-          })
-        },
-
-        navigateToNotificationSettings: () => {
-          navigation.navigate('manage-wallets', {
-            screen: 'settings',
-            params: {
-              screen: 'manage-notifications',
-            },
-          })
-        },
-
-        navigateToNotifications: () => {
-          navigation.navigate('notifications')
-        },
-
-        navigateToGovernanceCentre: () => {
-          navigation.navigate('manage-wallets', {
-            screen: 'governance',
-            params: {
-              screen: 'staking-gov-home',
-            },
-          })
-        },
-
-        navigateToDiscoverBrowserDapp: () => {
-          navigation.navigate('manage-wallets', {
-            screen: 'main-wallet-routes',
-            params: {
-              screen: 'discover',
-              params: {
-                screen: 'discover-browser',
-                params: {
-                  screen: 'discover-browse-dapp',
-                },
-              },
-            },
-          })
-        },
-
-        navigateToSwap: (tokenOutId?: Portfolio.Token.Id) => {
-          const currentNetwork = selectedNetworkHook.network
-
-          if (currentNetwork === Chain.Network.Preprod) {
-            navigation.navigate('manage-wallets', {
-              screen: 'main-wallet-routes',
-              params: {
-                screen: 'history',
-                params: {
-                  screen: 'swap',
-                  params: {
-                    screen: 'preprod-notice',
-                  },
-                },
-              },
-            })
-            return
-          }
-
-          navigation.navigate('manage-wallets', {
-            screen: 'main-wallet-routes',
-            params: {
-              screen: 'history',
-              params: {
-                screen: 'swap',
-                params: {
-                  screen: 'main',
-                },
-              },
-            },
-          })
-
-          if (tokenOutId !== undefined) {
-            setTimeout(() => {
-              swapForm.action({type: 'TokenOutIdChanged', value: tokenOutId})
-              swapForm.action({type: 'TokenOutInputTouched'})
-            }, 500)
-          }
-        },
-
-        resetToSwapWithToken: async (tokenOutId?: Portfolio.Token.Id) => {
-          const currentNetwork = selectedNetworkHook.network
-
-          if (tokenOutId !== undefined) {
-            await setPendingSwapToken(tokenOutId)
-          }
-
-          if (currentNetwork === Chain.Network.Preprod) {
-            navigation.reset({
-              index: 0,
+    resetToTxHistory: () => {
+      navigation.reset({
+        index: 0,
+        routes: [
+          {
+            name: 'manage-wallets',
+            state: {
               routes: [
+                {name: 'wallet-selection'},
                 {
-                  name: 'manage-wallets',
+                  name: 'main-wallet-routes',
                   state: {
                     routes: [
-                      {name: 'wallet-selection'},
                       {
-                        name: 'main-wallet-routes',
+                        name: 'history',
+                        state: {
+                          routes: [{name: 'history-list'}],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      })
+    },
+
+    resetToStartTransfer: () => {
+      navigation.reset({
+        index: 0,
+        routes: [
+          {
+            name: 'manage-wallets',
+            state: {
+              routes: [
+                {name: 'wallet-selection'},
+                {
+                  name: 'main-wallet-routes',
+                  state: {
+                    routes: [
+                      {
+                        name: 'history',
+                        state: {
+                          routes: [{name: 'send-start-tx'}],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      })
+    },
+
+    navigateToStartTransfer: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'history',
+          params: {
+            screen: 'send-start-tx',
+          },
+        },
+      })
+    },
+
+    navigateToTxReview: (params?: ReviewTxRoutes['review-tx']) => {
+      navigation.navigate('manage-wallets', {
+        screen: 'review-tx-routes',
+        params: {
+          screen: 'review-tx',
+          params,
+        },
+      })
+    },
+
+    resetToWalletSetupInit: () => {
+      navigation.reset({
+        index: 0,
+        routes: [
+          {
+            name: 'setup-wallet',
+            state: {
+              routes: [{name: 'setup-wallet-choose-setup-type-init'}],
+            },
+          },
+        ],
+      })
+    },
+
+    resetToWalletSetup: () => {
+      navigation.reset({
+        index: 0,
+        routes: [
+          {
+            name: 'manage-wallets',
+            state: {
+              routes: [
+                {name: 'wallet-selection'},
+                {
+                  name: 'setup-wallet',
+                  state: {
+                    routes: [{name: 'setup-wallet-choose-setup-type'}],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      })
+    },
+
+    resetToWalletSelection: () => {
+      navigation.reset({
+        index: 0,
+        routes: [
+          {
+            name: 'manage-wallets',
+            state: {
+              routes: [{name: 'wallet-selection'}],
+            },
+          },
+        ],
+      })
+    },
+
+    navigateToStakingDashboard: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'staking-dashboard',
+        params: {
+          screen: 'staking-dashboard-main',
+        },
+      })
+    },
+
+    navigateToMenu: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'menu',
+          params: {
+            screen: '_menu',
+          },
+        },
+      })
+    },
+
+    navigateToSettings: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'settings',
+        params: {
+          screen: 'main-settings',
+        },
+      })
+    },
+
+    navigateToChangeNetwork: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'settings',
+        params: {
+          screen: 'change-network',
+        },
+      })
+    },
+
+    navigateToTxHistory: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'history',
+          params: {
+            screen: 'history-list',
+          },
+        },
+      })
+    },
+
+    navigateToReceiveSingle: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'history',
+          params: {
+            screen: 'receive-single',
+          },
+        },
+      })
+    },
+
+    navigateToReceiveMultiple: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'history',
+          params: {
+            screen: 'receive-multiple',
+          },
+        },
+      })
+    },
+
+    navigateToAppSettings: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'settings',
+        params: {
+          screen: 'app-settings',
+        },
+      })
+    },
+
+    navigateToCollateralSettings: (
+      params?: SettingsStackRoutes['manage-collateral'],
+    ) => {
+      navigation.navigate('manage-wallets', {
+        screen: 'settings',
+        params: {
+          screen: 'manage-collateral',
+          params,
+        },
+      })
+    },
+
+    navigateToNotificationDisplayDuration: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'settings',
+        params: {
+          screen: 'manage-notifications',
+          params: {
+            screen: 'manage-notification-display-duration',
+          },
+        },
+      })
+    },
+
+    navigateToNotificationSettings: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'settings',
+        params: {
+          screen: 'manage-notifications',
+        },
+      })
+    },
+
+    navigateToNotifications: () => {
+      navigation.navigate('notifications')
+    },
+
+    navigateToGovernanceCentre: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'governance',
+        params: {
+          screen: 'staking-gov-home',
+        },
+      })
+    },
+
+    navigateToDiscoverBrowserDapp: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'discover',
+          params: {
+            screen: 'discover-browser',
+            params: {
+              screen: 'discover-browse-dapp',
+            },
+          },
+        },
+      })
+    },
+
+    navigateToSwap: (tokenOutId?: Portfolio.Token.Id) => {
+      const currentNetwork = selectedNetworkRef.current.network
+
+      if (currentNetwork === Chain.Network.Preprod) {
+        navigation.navigate('manage-wallets', {
+          screen: 'main-wallet-routes',
+          params: {
+            screen: 'history',
+            params: {
+              screen: 'swap',
+              params: {
+                screen: 'preprod-notice',
+              },
+            },
+          },
+        })
+        return
+      }
+
+      navigation.navigate('manage-wallets', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'history',
+          params: {
+            screen: 'swap',
+            params: {
+              screen: 'main',
+            },
+          },
+        },
+      })
+
+      if (tokenOutId !== undefined) {
+        setTimeout(() => {
+          const currentSwapForm = swapFormRef.current
+          currentSwapForm.action({type: 'TokenOutIdChanged', value: tokenOutId})
+          currentSwapForm.action({type: 'TokenOutInputTouched'})
+        }, 500)
+      }
+    },
+
+    resetToSwapWithToken: async (tokenOutId?: Portfolio.Token.Id) => {
+      const currentNetwork = selectedNetworkRef.current.network
+
+      if (tokenOutId !== undefined) {
+        await setPendingSwapToken(tokenOutId)
+      }
+
+      if (currentNetwork === Chain.Network.Preprod) {
+        navigation.reset({
+          index: 0,
+          routes: [
+            {
+              name: 'manage-wallets',
+              state: {
+                routes: [
+                  {name: 'wallet-selection'},
+                  {
+                    name: 'main-wallet-routes',
+                    state: {
+                      routes: [
+                        {
+                          name: 'history',
+                          state: {
+                            routes: [
+                              {name: 'history-list'},
+                              {
+                                name: 'swap',
+                                state: {
+                                  routes: [{name: 'preprod-notice'}],
+                                },
+                              },
+                            ],
+                          },
+                        },
+                      ],
+                    },
+                  },
+                ],
+              },
+            },
+          ],
+        })
+        return
+      }
+
+      navigation.reset({
+        index: 0,
+        routes: [
+          {
+            name: 'manage-wallets',
+            state: {
+              routes: [
+                {name: 'wallet-selection'},
+                {
+                  name: 'main-wallet-routes',
+                  state: {
+                    routes: [
+                      {
+                        name: 'history',
                         state: {
                           routes: [
+                            {name: 'history-list'},
                             {
-                              name: 'history',
+                              name: 'swap',
                               state: {
-                                routes: [
-                                  {name: 'history-list'},
-                                  {
-                                    name: 'swap',
-                                    state: {
-                                      routes: [{name: 'preprod-notice'}],
-                                    },
-                                  },
-                                ],
+                                routes: [{name: 'main'}],
                               },
                             },
                           ],
@@ -376,246 +414,211 @@ export const useWalletNavigation = () => {
                   },
                 },
               ],
-            })
-            return
-          }
-
-          navigation.reset({
-            index: 0,
-            routes: [
-              {
-                name: 'manage-wallets',
-                state: {
-                  routes: [
-                    {name: 'wallet-selection'},
-                    {
-                      name: 'main-wallet-routes',
-                      state: {
-                        routes: [
-                          {
-                            name: 'history',
-                            state: {
-                              routes: [
-                                {name: 'history-list'},
-                                {
-                                  name: 'swap',
-                                  state: {
-                                    routes: [{name: 'main'}],
-                                  },
-                                },
-                              ],
-                            },
-                          },
-                        ],
-                      },
-                    },
-                  ],
-                },
-              },
-            ],
-          })
-        },
-
-        navigateToSwapPreprodNotice: () => {
-          navigation.navigate('manage-wallets', {
-            screen: 'main-wallet-routes',
-            params: {
-              screen: 'history',
-              params: {
-                screen: 'swap',
-                params: {
-                  screen: 'preprod-notice',
-                },
-              },
             },
-          })
-        },
+          },
+        ],
+      })
+    },
 
-        resetTabAndSwap: () => {
-          navigation.reset({
-            index: 0,
-            routes: [
-              {name: 'manage-wallets', params: {screen: 'main-wallet-routes'}},
-            ],
-          })
-          navigation.navigate('manage-wallets', {
-            screen: 'main-wallet-routes',
+    navigateToSwapPreprodNotice: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'history',
+          params: {
+            screen: 'swap',
             params: {
-              screen: 'history',
-              params: {
-                screen: 'swap',
-                params: {
-                  screen: 'main',
-                },
-              },
+              screen: 'preprod-notice',
             },
-          })
+          },
         },
+      })
+    },
 
-        navigateToExchange: () => {
-          const currentNetwork = selectedNetworkHook.network
-          if (currentNetwork === Chain.Network.Preprod) {
-            Linking.openURL(
-              'https://docs.cardano.org/cardano-testnets/tools/faucet/',
-            )
-            return
-          }
-
-          navigation.navigate('manage-wallets', {
-            screen: 'main-wallet-routes',
+    resetTabAndSwap: () => {
+      navigation.reset({
+        index: 0,
+        routes: [
+          {name: 'manage-wallets', params: {screen: 'main-wallet-routes'}},
+        ],
+      })
+      navigation.navigate('manage-wallets', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'history',
+          params: {
+            screen: 'swap',
             params: {
-              screen: 'history',
-              params: {
-                screen: 'exchange-create-order',
-              },
+              screen: 'main',
             },
-          })
+          },
         },
+      })
+    },
 
-        navigateToUtxoList: () => {
-          navigation.navigate('manage-wallets', {
-            screen: 'main-wallet-routes',
-            params: {screen: 'history', params: {screen: 'utxo-list'}},
-          })
-        },
+    navigateToExchange: () => {
+      const currentNetwork = selectedNetworkRef.current.network
+      if (currentNetwork === Chain.Network.Preprod) {
+        Linking.openURL(
+          'https://docs.cardano.org/cardano-testnets/tools/faucet/',
+        )
+        return
+      }
 
-        navigateToUtxoConsolidation: () => {
-          navigation.navigate('manage-wallets', {
-            screen: 'main-wallet-routes',
-            params: {screen: 'history', params: {screen: 'utxo-consolidation'}},
-          })
+      navigation.navigate('manage-wallets', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'history',
+          params: {
+            screen: 'exchange-create-order',
+          },
         },
+      })
+    },
 
-        navigateToTxDetails: (id: string) => {
-          navigation.navigate('manage-wallets', {
-            screen: 'main-wallet-routes',
-            params: {
-              screen: 'history',
-              params: {screen: 'tx-details', params: {id}},
-            },
-          })
-        },
+    navigateToUtxoList: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'main-wallet-routes',
+        params: {screen: 'history', params: {screen: 'utxo-list'}},
+      })
+    },
 
-        // Send Navigation Functions
-        navigateToSendStartTx: () => {
-          navigation.navigate('manage-wallets', {
-            screen: 'main-wallet-routes',
-            params: {screen: 'history', params: {screen: 'send-start-tx'}},
-          })
-        },
+    navigateToUtxoConsolidation: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'main-wallet-routes',
+        params: {screen: 'history', params: {screen: 'utxo-consolidation'}},
+      })
+    },
 
-        navigateToSendListAmounts: () => {
-          navigation.navigate('manage-wallets', {
-            screen: 'main-wallet-routes',
-            params: {
-              screen: 'history',
-              params: {screen: 'send-list-amounts-to-send'},
-            },
-          })
+    navigateToTxDetails: (id: string) => {
+      navigation.navigate('manage-wallets', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'history',
+          params: {screen: 'tx-details', params: {id}},
         },
+      })
+    },
 
-        navigateToSendEditAmount: (amount: Portfolio.Token.Amount) => {
-          navigation.navigate('manage-wallets', {
-            screen: 'main-wallet-routes',
-            params: {
-              screen: 'history',
-              params: {screen: 'send-edit-amount', params: {amount}},
-            },
-          })
-        },
+    navigateToSendStartTx: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'main-wallet-routes',
+        params: {screen: 'history', params: {screen: 'send-start-tx'}},
+      })
+    },
 
-        navigateToSendSelectToken: () => {
-          navigation.navigate('manage-wallets', {
-            screen: 'main-wallet-routes',
-            params: {
-              screen: 'history',
-              params: {screen: 'send-select-token-from-list'},
-            },
-          })
+    navigateToSendListAmounts: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'history',
+          params: {screen: 'send-list-amounts-to-send'},
         },
+      })
+    },
 
-        navigateToSendSubmittedTx: () => {
-          navigation.navigate('manage-wallets', {
-            screen: 'main-wallet-routes',
-            params: {
-              screen: 'history',
-              params: {screen: 'send-submitted-tx'},
-            },
-          })
+    navigateToSendEditAmount: (amount: Portfolio.Token.Amount) => {
+      navigation.navigate('manage-wallets', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'history',
+          params: {screen: 'send-edit-amount', params: {amount}},
         },
+      })
+    },
 
-        navigateToSendFailedTx: () => {
-          navigation.navigate('manage-wallets', {
-            screen: 'main-wallet-routes',
-            params: {
-              screen: 'history',
-              params: {screen: 'send-failed-tx'},
-            },
-          })
+    navigateToSendSelectToken: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'history',
+          params: {screen: 'send-select-token-from-list'},
         },
+      })
+    },
 
-        navigateToReceiveSpecificAmount: () => {
-          navigation.navigate('manage-wallets', {
-            screen: 'main-wallet-routes',
-            params: {
-              screen: 'history',
-              params: {screen: 'receive-specific-amount'},
-            },
-          })
+    navigateToSendSubmittedTx: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'history',
+          params: {screen: 'send-submitted-tx'},
         },
+      })
+    },
 
-        navigateToCatalystVotingDashboard: () => {
-          navigation.navigate('manage-wallets', {
-            screen: 'voting-registration',
-            params: {
-              screen: 'download-catalyst',
-            },
-          })
+    navigateToSendFailedTx: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'history',
+          params: {screen: 'send-failed-tx'},
         },
+      })
+    },
 
-        navigateToCatalystDisplayPin: () => {
-          navigation.navigate('manage-wallets', {
-            screen: 'voting-registration',
-            params: {
-              screen: 'display-pin',
-            },
-          })
+    navigateToReceiveSpecificAmount: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'history',
+          params: {screen: 'receive-specific-amount'},
         },
+      })
+    },
 
-        navigateToCatalystConfirmPin: () => {
-          navigation.navigate('manage-wallets', {
-            screen: 'voting-registration',
-            params: {
-              screen: 'confirm-pin',
-            },
-          })
+    navigateToCatalystVotingDashboard: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'voting-registration',
+        params: {
+          screen: 'download-catalyst',
         },
+      })
+    },
 
-        navigateToCatalystCreateTx: () => {
-          navigation.navigate('manage-wallets', {
-            screen: 'voting-registration',
-            params: {
-              screen: 'create-tx',
-            },
-          })
+    navigateToCatalystDisplayPin: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'voting-registration',
+        params: {
+          screen: 'display-pin',
         },
+      })
+    },
 
-        navigateToCatalystQrCode: () => {
-          navigation.navigate('manage-wallets', {
-            screen: 'voting-registration',
-            params: {
-              screen: 'qr-code',
-            },
-          })
+    navigateToCatalystConfirmPin: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'voting-registration',
+        params: {
+          screen: 'confirm-pin',
         },
+      })
+    },
 
-        navigateToAnalyticsSettings: () => {
-          navigation.navigate('manage-wallets', {
-            screen: 'settings',
-            params: {screen: 'analytics'},
-          })
+    navigateToCatalystCreateTx: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'voting-registration',
+        params: {
+          screen: 'create-tx',
         },
-      }) as const,
-    [navigation, selectedNetworkHook, swapForm],
-  )
+      })
+    },
+
+    navigateToCatalystQrCode: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'voting-registration',
+        params: {
+          screen: 'qr-code',
+        },
+      })
+    },
+
+    navigateToAnalyticsSettings: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'settings',
+        params: {screen: 'analytics'},
+      })
+    },
+  } as const)
+
+  return walletNavigation.current
 }
