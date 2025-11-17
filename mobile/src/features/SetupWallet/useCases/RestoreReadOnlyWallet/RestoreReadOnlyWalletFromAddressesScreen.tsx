@@ -108,6 +108,19 @@ export const RestoreReadOnlyWalletFromAddressesScreen = () => {
     nameErrors,
   )
 
+  // Helper: Validate Cardano address (same as in wallet-manager.ts)
+  const isValidCardanoAddress = (address: string): boolean => {
+    if (!address || typeof address !== 'string') return false
+    const trimmed = address.trim()
+    return (
+      trimmed.startsWith('addr') ||
+      trimmed.startsWith('stake') ||
+      trimmed.startsWith('Ae2') ||
+      trimmed.startsWith('DdzFF') ||
+      /^[0-9a-fA-F]{64,}$/.test(trimmed)
+    )
+  }
+
   const handleRestore = () => {
     // Use resolved address if available, otherwise use the input
     const finalKnownAddress =
@@ -120,12 +133,8 @@ export const RestoreReadOnlyWalletFromAddressesScreen = () => {
       return
     }
 
-    // Validate that finalKnownAddress is a valid Cardano address format
-    // It should start with 'addr' for mainnet or 'addr_test' for testnet
-    if (
-      !finalKnownAddress.startsWith('addr') &&
-      !finalKnownAddress.startsWith('addr_test')
-    ) {
+    // Validate that finalKnownAddress is a valid Cardano address
+    if (!isValidCardanoAddress(finalKnownAddress)) {
       showErrorDialog(errorMessages.generalError, undefined, {
         message: `Invalid address format: ${finalKnownAddress.substring(0, 50)}...`,
       })

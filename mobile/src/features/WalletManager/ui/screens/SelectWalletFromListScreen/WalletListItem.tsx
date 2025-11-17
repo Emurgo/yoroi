@@ -134,12 +134,12 @@ export const WalletListItem = ({walletMeta, onPress}: Props) => {
       >
         <TouchableOpacity
           activeOpacity={1}
-          disabled={!hasSyncedLastSelectedNetwork}
           onPress={() => onPress(walletMeta)}
           style={[
             a.flex_row,
             a.align_center,
-            !hasSyncedLastSelectedNetwork && {opacity: 0.5},
+            // Show reduced opacity if not synced yet, but still allow interaction
+            !hasSyncedLastSelectedNetwork && {opacity: 0.7},
           ]}
           onPressIn={() => setIsButtonPressed(true)}
           onPressOut={() => setIsButtonPressed(false)}
@@ -149,12 +149,14 @@ export const WalletListItem = ({walletMeta, onPress}: Props) => {
           <Space.Width.md />
 
           <View style={[a.justify_between, a.flex_1]}>
-            <Text
-              style={[a.flex_1, a.body_1_lg_medium, ta.text_gray_medium]}
-              numberOfLines={1}
-            >
-              {walletMeta.name}
-            </Text>
+            <View style={[a.flex_row, a.align_center, a.gap_xs]}>
+              <Text
+                style={[a.flex_1, a.body_1_lg_medium, ta.text_gray_medium]}
+                numberOfLines={1}
+              >
+                {walletMeta.name}
+              </Text>
+            </View>
 
             <Text
               style={[ta.text_gray_low, {opacity: isButtonPressed ? 1 : 0.5}]}
@@ -162,6 +164,13 @@ export const WalletListItem = ({walletMeta, onPress}: Props) => {
               {`${walletMeta.plate} | ${implementationName}`}
             </Text>
           </View>
+
+          {walletMeta.isReadOnly && (
+            <>
+              <Icon.EyeOn size={24} color={p.el_gray_min} />
+              <Space.Width.md />
+            </>
+          )}
 
           {features.walletListFeedback && (
             <>

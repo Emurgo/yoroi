@@ -60,11 +60,13 @@ const TabWrapper = ({
   onConfirm,
   readOnly,
   showMemo = false,
+  showGoToTransactionsButton = false,
 }: {
   children: React.ReactNode
   onConfirm?: () => void
   readOnly?: boolean
   showMemo?: boolean
+  showGoToTransactionsButton?: boolean
 }) => {
   const {atoms: ta} = useTheme()
   const strings = useStrings()
@@ -77,7 +79,7 @@ const TabWrapper = ({
         <ScrollView ref={scrollViewRef} style={[a.flex_1, ta.bg_color_max]}>
           {children}
         </ScrollView>
-        {readOnly ? (
+        {showGoToTransactionsButton ? (
           <SafeArea.Footer>
             <Button
               title={strings.txReview.submittedTxButton}
@@ -115,6 +117,7 @@ export const ReviewTx = ({
   validationResult,
   onConfirm,
   readOnly = false,
+  isReviewFlow = false,
 }: {
   formattedTx: FormattedTx
   formattedMetadata?: FormattedMetadata
@@ -127,6 +130,7 @@ export const ReviewTx = ({
   validationResult?: {valid: boolean; errors: string[]; warnings: string[]}
   onConfirm?: () => void
   readOnly?: boolean
+  isReviewFlow?: boolean
 }) => {
   const strings = useStrings()
   const {atoms: ta, palette: p} = useTheme()
@@ -163,6 +167,7 @@ export const ReviewTx = ({
             onConfirm={onConfirm}
             readOnly={readOnly}
             showMemo={!readOnly}
+            showGoToTransactionsButton={readOnly && isReviewFlow && !onConfirm}
           >
             <OverviewTab
               tx={formattedTx}
@@ -182,7 +187,11 @@ export const ReviewTx = ({
       <MaterialTab.Screen
         name={strings.txReview.tabLabel.utxos}
         children={() => (
-          <TabWrapper onConfirm={onConfirm} readOnly={readOnly}>
+          <TabWrapper
+            onConfirm={onConfirm}
+            readOnly={readOnly}
+            showGoToTransactionsButton={readOnly && isReviewFlow && !onConfirm}
+          >
             <UTxOsTab tx={formattedTx} />
           </TabWrapper>
         )}
@@ -192,7 +201,11 @@ export const ReviewTx = ({
         <MaterialTab.Screen
           name={strings.txReview.tabLabel.metadataTab}
           children={() => (
-            <TabWrapper onConfirm={onConfirm} readOnly={readOnly}>
+            <TabWrapper
+              onConfirm={onConfirm}
+              readOnly={readOnly}
+              showGoToTransactionsButton={readOnly && isReviewFlow && !onConfirm}
+            >
               <MetadataTab
                 hash={formattedMetadata?.hash ?? null}
                 metadata={formattedMetadata?.metadata ?? null}
@@ -206,7 +219,11 @@ export const ReviewTx = ({
         <MaterialTab.Screen
           name={strings.txReview.tabLabel.mint}
           children={() => (
-            <TabWrapper onConfirm={onConfirm} readOnly={readOnly}>
+            <TabWrapper
+              onConfirm={onConfirm}
+              readOnly={readOnly}
+              showGoToTransactionsButton={readOnly && isReviewFlow && !onConfirm}
+            >
               <MintTab mintData={formattedTx.mint} />
             </TabWrapper>
           )}
@@ -217,7 +234,11 @@ export const ReviewTx = ({
         <MaterialTab.Screen
           name={strings.txReview.tabLabel.referenceInputs}
           children={() => (
-            <TabWrapper onConfirm={onConfirm} readOnly={readOnly}>
+            <TabWrapper
+              onConfirm={onConfirm}
+              readOnly={readOnly}
+              showGoToTransactionsButton={readOnly && isReviewFlow && !onConfirm}
+            >
               <ReferenceInputsTab
                 referenceInputs={formattedTx.referenceInputs}
               />
@@ -230,7 +251,11 @@ export const ReviewTx = ({
         <MaterialTab.Screen
           name={strings.txReview.tabLabel.datum}
           children={() => (
-            <TabWrapper onConfirm={onConfirm} readOnly={readOnly}>
+            <TabWrapper
+              onConfirm={onConfirm}
+              readOnly={readOnly}
+              showGoToTransactionsButton={readOnly && isReviewFlow && !onConfirm}
+            >
               <DatumTab outputs={formattedTx.outputs} />
             </TabWrapper>
           )}
@@ -241,7 +266,11 @@ export const ReviewTx = ({
         <MaterialTab.Screen
           name={strings.txReview.tabLabel.governance}
           children={() => (
-            <TabWrapper onConfirm={onConfirm} readOnly={readOnly}>
+            <TabWrapper
+              onConfirm={onConfirm}
+              readOnly={readOnly}
+              showGoToTransactionsButton={readOnly && isReviewFlow && !onConfirm}
+            >
               <GovernanceTab tx={formattedTx} />
             </TabWrapper>
           )}

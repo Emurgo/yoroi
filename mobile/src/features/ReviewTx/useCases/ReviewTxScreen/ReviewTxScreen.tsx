@@ -104,6 +104,7 @@ const ReviewTxContent = ({
       validationResult={validationResult}
       onConfirm={meta.isReadOnly ? undefined : handleOnConfirm}
       readOnly={meta.isReadOnly}
+      isReviewFlow={true}
     />
   )
 }

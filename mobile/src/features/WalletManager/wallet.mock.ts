@@ -5,7 +5,7 @@ import {StakePoolInfosAndHistories} from '@yoroi/staking'
 import {Portfolio, Wallet} from '@yoroi/types'
 
 import {noop} from 'lodash'
-import {Observable} from 'rxjs'
+import {Observable, Subscription} from 'rxjs'
 
 import {YoroiWallet} from '../../wallets/cardano/types'
 import {mockEncryptedStorage} from '../../wallets/mocks/storage'
@@ -103,12 +103,36 @@ const wallet: YoroiWallet = {
   portfolioPrimaryTokenInfo: primaryTokenInfoMainnet,
 
   balanceManager: {
+    hydrate: noop,
+    refresh: noop,
+    updatePrimaryStated: noop,
+    updatePrimaryDerived: noop,
+    syncBalances: noop,
+    subscribe: () => {
+      return {unsubscribe: noop} as Subscription
+    },
+    unsubscribe: noop,
+    observable$: new Observable<Portfolio.Event.BalanceManager>(),
+    getPrimaryBreakdown: () => ({
+      availableRewards: 0n,
+      lockedAsStorageCost: 0n,
+      totalFromTxs: 0n,
+    }),
+    getPrimaryBalance: () => ({
+      quantity: 0n,
+      info: primaryTokenInfoMainnet,
+    }),
+    getHasOnlyPrimary: () => false,
+    getBalances: () => ({
+      records: new Map(),
+      all: [],
+      fts: [],
+      nfts: [],
+    }),
+    getIsEmpty: () => false,
+    destroy: noop,
     clear: noop,
-    sync: noop,
-    resync: noop,
-    startSync: noop,
-    stopSync: noop,
-  } as any,
+  } as Portfolio.Manager.Balance,
 
   getStakingInfo: async () => {
     throw new Error('not implemented: getStakingInfo')

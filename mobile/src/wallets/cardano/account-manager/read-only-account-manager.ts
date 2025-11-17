@@ -1,3 +1,4 @@
+import {time} from '@yoroi/common'
 import {App} from '@yoroi/types'
 
 import {Buffer} from 'buffer'
@@ -289,6 +290,10 @@ export const readOnlyAccountManagerMaker = async ({
   ) {
     // Derive reward address if not provided
     try {
+      logger.debug('Deriving reward address from known address', {
+        knownAddress,
+        chainId,
+      })
       const rewardAddressBech32 = deriveRewardAddressFromAddress(
         knownAddress,
         chainId,
@@ -297,8 +302,16 @@ export const readOnlyAccountManagerMaker = async ({
         const addr = csl.Address.fromBech32(rewardAddressBech32)
         return Buffer.from(addr.toBytes()).toString('hex')
       })
+      logger.debug('Successfully derived reward address', {
+        rewardAddressHex: finalRewardAddressHex.substring(0, 20) + '...',
+      })
     } catch (error) {
-      logger.warn('Failed to derive reward address', {error})
+      logger.warn('Failed to derive reward address', {
+        error,
+        knownAddress,
+        chainId,
+        addressLength: knownAddress.length,
+      })
       finalRewardAddressHex = ''
     }
   }
@@ -316,11 +329,56 @@ export const readOnlyAccountManagerMaker = async ({
   const internalChain = new ReadOnlyAddressChain(finalInternalAddresses)
   const externalChain = new ReadOnlyAddressChain(finalExternalAddresses)
 
+  // Throttle address discovery to at most once per hour for read-only wallets
+  const DISCOVERY_THROTTLE_INTERVAL = time.hours(1)
+  const discoveryStorageKey = 'lastDiscoveryTime'
+
   const discoverAddresses = async () => {
     // No-op: we can't discover new addresses without accountPubKeyHex
     // But we could potentially re-run discovery if enableDiscovery is true
     if (enableDiscovery && knownAddress) {
+      // Validate address before attempting discovery
+      if (!isValidCardanoAddress(knownAddress)) {
+        logger.warn('Address re-discovery skipped: invalid address', {
+          address: knownAddress,
+          addressLength: knownAddress.length,
+        })
+        return
+      }
+
+      // Check if discovery was run recently (within the last hour)
+      const lastDiscoveryTime = await storage
+        .getItem(discoveryStorageKey)
+        .then((data) => {
+          if (typeof data === 'number' && data > 0) {
+            return data as number
+          }
+          return 0
+        })
+        .catch(() => 0)
+
+      const now = Date.now()
+      const timeSinceLastDiscovery = now - lastDiscoveryTime
+
+      if (timeSinceLastDiscovery < DISCOVERY_THROTTLE_INTERVAL) {
+        const remainingMinutes = Math.ceil(
+          (DISCOVERY_THROTTLE_INTERVAL - timeSinceLastDiscovery) /
+            time.minutes(1),
+        )
+        logger.debug('Address re-discovery skipped: throttled', {
+          knownAddress: knownAddress.substring(0, 20) + '...',
+          timeSinceLastDiscovery,
+          remainingMinutes,
+        })
+        return
+      }
+
       try {
+        logger.debug('Starting address re-discovery', {
+          knownAddress: knownAddress.substring(0, 20) + '...',
+          chainId,
+          timeSinceLastDiscovery,
+        })
         const discovered = await discoverUsedAddressesByStakingCredential({
           knownBaseAddress: knownAddress,
           chainId,
@@ -329,8 +387,21 @@ export const readOnlyAccountManagerMaker = async ({
         // Add newly discovered addresses
         internalChain.addAddresses(discovered.internalAddresses)
         externalChain.addAddresses(discovered.externalAddresses)
+
+        // Update last discovery time
+        await storage.setItem(discoveryStorageKey, now)
+
+        logger.debug('Address re-discovery completed', {
+          internalCount: discovered.internalAddresses.length,
+          externalCount: discovered.externalAddresses.length,
+        })
       } catch (error) {
-        logger.warn('Address re-discovery failed', {error})
+        logger.warn('Address re-discovery failed', {
+          error,
+          knownAddress: knownAddress.substring(0, 20) + '...',
+          chainId,
+        })
+        // Don't update timestamp on failure - allow retry sooner
       }
     }
   }
@@ -357,6 +428,7 @@ export const readOnlyAccountManagerMaker = async ({
 
   const clear = async () => {
     await storage.removeItem('readOnlyAddresses')
+    await storage.removeItem(discoveryStorageKey)
   }
 
   return {

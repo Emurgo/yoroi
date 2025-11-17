@@ -1,9 +1,5 @@
 import {AppApi} from '@yoroi/api'
-import {
-  cardanoConfig,
-  derivationConfig,
-  protocolParamsPlaceholder,
-} from '@yoroi/blockchains'
+import {cardanoConfig, protocolParamsPlaceholder} from '@yoroi/blockchains'
 import {isNonNullable} from '@yoroi/common'
 import {StakePoolInfoRequest} from '@yoroi/staking'
 import type {Datum, ModernUtxo, UnsignedTransaction} from '@yoroi/tx'
@@ -14,15 +10,12 @@ import {
   buildVotingLedgerPayloadV5,
   createSignedLedgerTxFromCbor,
   modernUtxosToCardanoAddressedUtxos,
-  rawUtxoToModernUtxo,
   signRawTransaction,
-  signTransaction,
 } from '@yoroi/tx'
-import {Api, App, Balance, HW, Network, Portfolio, Wallet} from '@yoroi/types'
+import {Api, App, HW, Network, Portfolio, Wallet} from '@yoroi/types'
 
 import {walletChecksum} from '@emurgo/cip4-js'
 import * as CSL from '@emurgo/cross-csl-core'
-import {BigNumber} from 'bignumber.js'
 import {Buffer} from 'buffer'
 import {freeze} from 'immer'
 import {defaultMemoize} from 'reselect'
@@ -53,7 +46,6 @@ import type {
   WalletTransaction,
 } from '../types/other'
 import {StakingInfo} from '../types/staking'
-import {Quantities} from '../utils/utils'
 import {CardanoMobile} from '../wallets'
 import {
   AccountManager,
@@ -66,7 +58,6 @@ import {
 } from './account-manager/read-only-account-manager'
 import * as legacyApi from './api/api'
 import {calcLockedDeposit} from './assetUtils'
-import {getDelegationStatus} from './delegationUtils'
 import {
   doesCardanoAppVersionSupportCIP36,
   doesCardanoAppVersionSupportCIP1694,
@@ -74,14 +65,31 @@ import {
   signTxWithLedger,
 } from './hw/hw'
 import {keyManager} from './key-manager/key-manager'
+import {
+  generateNewReceiveAddress as generateNewReceiveAddressOp,
+  getAddressing as getAddressingOp,
+  getChangeAddress as getChangeAddressOp,
+  getFirstPaymentAddress as getFirstPaymentAddressOp,
+} from './operations/address-operations'
+import {signWalletTransaction as signWalletTransactionOp} from './operations/signing-operations'
+import {
+  getStakingKey as getStakingKeyOp,
+  getWalletDelegationStatus as getWalletDelegationStatusOp,
+  getWalletStakingInfo as getWalletStakingInfoOp,
+} from './operations/staking-operations'
+import {
+  didUtxosUpdate as didUtxosUpdateOp,
+  getAddressedUtxos as getAddressedUtxosOp,
+  getSpendableUtxos as getSpendableUtxosOp,
+} from './operations/utxo-operations'
 import {processTxHistoryData} from './processTransactions/processTransactions'
 import {
-  createDelegationTx,
-  createUnsignedGovernanceTx,
-  createUtxoConsolidationTx,
-  createVotingRegTx,
-  createWithdrawalTx,
-} from './transaction-recipes'
+  createDelegationTxFromWallet,
+  createUnsignedGovernanceTxFromWallet,
+  createUtxoConsolidationTxFromWallet,
+  createVotingRegTxFromWallet,
+  createWithdrawalTxFromWallet,
+} from './transaction-recipes/wallet-helpers'
 import {TransactionManager} from './transactionManager/transactionManager'
 import {
   CardanoTypes,
@@ -93,7 +101,6 @@ import {
 import {
   deriveRewardAddressFromAddress,
   deriveRewardAddressHex,
-  getAddressedUtxos,
   getHexAddressingMap,
 } from './utils'
 import {UtxoManager, makeUtxoManager} from './utxoManager/utxoManager'
@@ -205,6 +212,19 @@ export const makeCardanoWallet = (
           enableDiscovery: readOnlyAddresses.enableDiscovery ?? false,
         })
 
+        // Helper: Validate Cardano address
+        const isValidCardanoAddress = (address: string): boolean => {
+          if (!address || typeof address !== 'string') return false
+          const trimmed = address.trim()
+          return (
+            trimmed.startsWith('addr') ||
+            trimmed.startsWith('stake') ||
+            trimmed.startsWith('Ae2') ||
+            trimmed.startsWith('DdzFF') ||
+            /^[0-9a-fA-F]{64,}$/.test(trimmed)
+          )
+        }
+
         // Get reward address from manager or derive it
         if (readOnlyAddresses.rewardAddressHex) {
           finalRewardAddressHex = readOnlyAddresses.rewardAddressHex
@@ -213,42 +233,80 @@ export const makeCardanoWallet = (
           readOnlyAddresses.external.length > 0 &&
           readOnlyAddresses.external[0]
         ) {
-          try {
-            const rewardAddressBech32 = deriveRewardAddressFromAddress(
-              readOnlyAddresses.external[0]!,
-              chainId,
-            )
-            finalRewardAddressHex = CardanoMobileWrapped.cslScope((csl) => {
-              const addr = csl.Address.fromBech32(rewardAddressBech32)
-              return Buffer.from(addr.toBytes()).toString('hex')
-            })
-          } catch (error) {
+          const externalAddr = readOnlyAddresses.external[0]!
+          // Validate address before attempting derivation
+          if (!isValidCardanoAddress(externalAddr)) {
             logger.warn(
-              'Failed to derive reward address for read-only wallet',
+              'Skipping reward address derivation: invalid external address',
               {
-                error,
+                address: externalAddr,
+                addressLength: externalAddr.length,
               },
             )
             finalRewardAddressHex = ''
+          } else {
+            try {
+              logger.debug('Deriving reward address from external address', {
+                externalAddress: externalAddr.substring(0, 20) + '...',
+                chainId,
+              })
+              const rewardAddressBech32 = deriveRewardAddressFromAddress(
+                externalAddr,
+                chainId,
+              )
+              finalRewardAddressHex = CardanoMobileWrapped.cslScope((csl) => {
+                const addr = csl.Address.fromBech32(rewardAddressBech32)
+                return Buffer.from(addr.toBytes()).toString('hex')
+              })
+            } catch (error) {
+              logger.warn(
+                'Failed to derive reward address for read-only wallet',
+                {
+                  error,
+                  externalAddress: externalAddr,
+                  chainId,
+                },
+              )
+              finalRewardAddressHex = ''
+            }
           }
         } else if (readOnlyAddresses.knownAddress) {
-          try {
-            const rewardAddressBech32 = deriveRewardAddressFromAddress(
-              readOnlyAddresses.knownAddress,
-              chainId,
-            )
-            finalRewardAddressHex = CardanoMobileWrapped.cslScope((csl) => {
-              const addr = csl.Address.fromBech32(rewardAddressBech32)
-              return Buffer.from(addr.toBytes()).toString('hex')
-            })
-          } catch (error) {
+          const knownAddr = readOnlyAddresses.knownAddress
+          // Validate address before attempting derivation
+          if (!isValidCardanoAddress(knownAddr)) {
             logger.warn(
-              'Failed to derive reward address for read-only wallet',
+              'Skipping reward address derivation: invalid known address',
               {
-                error,
+                address: knownAddr,
+                addressLength: knownAddr.length,
               },
             )
             finalRewardAddressHex = ''
+          } else {
+            try {
+              logger.debug('Deriving reward address from known address', {
+                knownAddress: knownAddr.substring(0, 20) + '...',
+                chainId,
+              })
+              const rewardAddressBech32 = deriveRewardAddressFromAddress(
+                knownAddr,
+                chainId,
+              )
+              finalRewardAddressHex = CardanoMobileWrapped.cslScope((csl) => {
+                const addr = csl.Address.fromBech32(rewardAddressBech32)
+                return Buffer.from(addr.toBytes()).toString('hex')
+              })
+            } catch (error) {
+              logger.warn(
+                'Failed to derive reward address for read-only wallet',
+                {
+                  error,
+                  knownAddress: knownAddr,
+                  chainId,
+                },
+              )
+              finalRewardAddressHex = ''
+            }
           }
         } else {
           finalRewardAddressHex = ''
@@ -383,120 +441,43 @@ export const makeCardanoWallet = (
     }
 
     getChangeAddress(addressMode: Wallet.AddressMode): string {
-      const externalAddress = this.externalChain.addresses[0]
-      if (!externalAddress)
-        throw new App.Errors.InvalidState('No External Address')
-
-      // SA mode uses only externalChain index 0
-      if (addressMode === 'single') return externalAddress
-
-      const candidateAddresses = this.internalChain.addresses
-      const unseen = candidateAddresses.filter(
-        (addr) => !this.isUsedAddress(addr),
+      return getChangeAddressOp(
+        {
+          externalChain: this.externalChain,
+          internalChain: this.internalChain,
+          isUsedAddress: (addr) => this.isUsedAddress(addr),
+        },
+        addressMode,
       )
-      const [changeAddress] = unseen
-      if (!changeAddress)
-        throwLoggedError(
-          'CardanoWallet: getChangeAddress unable to resolve change address',
-        )
-      return changeAddress
     }
 
     // -- account -- legacy
     generateNewReceiveAddress() {
-      const {canIncrease} = this.receiveAddressInfo
-      if (!canIncrease) return false
-
-      // Read-only wallets can't generate new addresses
-      if (!this.publicKeyHex || this.publicKeyHex === '') {
-        return false
-      }
-
-      // Type guard: only AddressChain has increaseVisualIndex
-      if ('increaseVisualIndex' in this.externalChain) {
-        this.externalChain.increaseVisualIndex()
-        this.accountManager.save()
-
-        this.notify({type: 'addresses', addresses: this.receiveAddresses})
-
-        return true
-      }
-
-      return false
+      return generateNewReceiveAddressOp({
+        publicKeyHex: this.publicKeyHex,
+        externalChain: this.externalChain,
+        receiveAddressInfo: this.receiveAddressInfo,
+        accountManager: this.accountManager,
+        notify: (event) => this.notify(event),
+        receiveAddresses: this.receiveAddresses,
+      })
     }
 
     getAddressing(address: string) {
-      const startLevel = derivationConfig.keyLevel.purpose
-
-      // Check if this is a read-only wallet (no accountPubKeyHex means read-only)
-      const isReadOnly = !this.publicKeyHex || this.publicKeyHex === ''
-
-      if (this.internalChain.isMyAddress(address)) {
-        if (isReadOnly) {
-          // For read-only wallets, return minimal addressing info
-          return {
-            path: [], // Empty path - we don't know the derivation
-            startLevel,
-            isReadOnly: true,
-            chain: 'internal' as const,
-            index: this.internalChain.getIndexOfAddress(address),
-          }
-        }
-
-        const path = [
-          implementationConfig.derivations.base.harden.purpose,
-          implementationConfig.derivations.base.harden.coinType,
-          this.accountVisual + derivationConfig.hardStart,
-          implementationConfig.derivations.base.roles.internal,
-          this.internalChain.getIndexOfAddress(address),
-        ]
-        return {
-          path,
-          startLevel,
-        }
-      }
-
-      if (this.externalChain.isMyAddress(address)) {
-        if (isReadOnly) {
-          // For read-only wallets, return minimal addressing info
-          return {
-            path: [], // Empty path - we don't know the derivation
-            startLevel,
-            isReadOnly: true,
-            chain: 'external' as const,
-            index: this.externalChain.getIndexOfAddress(address),
-          }
-        }
-
-        const path = [
-          implementationConfig.derivations.base.harden.purpose,
-          implementationConfig.derivations.base.harden.coinType,
-          this.accountVisual + derivationConfig.hardStart,
-          implementationConfig.derivations.base.roles.external,
-          this.externalChain.getIndexOfAddress(address),
-        ]
-        return {
-          path,
-          startLevel,
-        }
-      }
-
-      throwLoggedError(
-        `ShelleyWallet: getAddressing missing address info for: ${address} `,
+      return getAddressingOp(
+        address,
+        {
+          publicKeyHex: this.publicKeyHex,
+          accountVisual: this.accountVisual,
+          internalChain: this.internalChain,
+          externalChain: this.externalChain,
+        },
+        implementation,
       )
     }
 
     getFirstPaymentAddress() {
-      const externalAddress = this.externalAddresses[0]
-      if (!externalAddress)
-        throw new App.Errors.InvalidState('No External Address')
-      const addr = CardanoMobile.Address.fromBech32(externalAddress)
-      const address = CardanoMobile.BaseAddress.fromAddress(addr)
-      if (!address)
-        throwLoggedError(
-          'ShelleyWallet: getFirstPaymentAddress invalid address',
-        )
-      return address
+      return getFirstPaymentAddressOp(this.externalAddresses)
     }
 
     get receiveAddresses(): Addresses {
@@ -510,59 +491,16 @@ export const makeCardanoWallet = (
 
     // staking
     public getStakingKey() {
-      if (implementationConfig.features.staking) {
-        // For read-only wallets, extract staking key hash from addresses
-        // since we don't have publicKeyHex to derive it
-        if (!this.publicKeyHex || this.publicKeyHex === '') {
-          // Try to extract staking key hash from one of the wallet's addresses
-          const addresses = [
-            ...this.externalAddresses,
-            ...this.internalAddresses,
-          ]
-
-          for (const address of addresses) {
-            try {
-              const wasmAddress = CardanoMobile.Address.fromBech32(address)
-              const baseAddr =
-                CardanoMobile.BaseAddress.fromAddress(wasmAddress)
-              if (baseAddr?.hasValue()) {
-                const stakeCred = baseAddr.stakeCred()
-                const keyHash = stakeCred.toKeyhash()
-                if (keyHash?.hasValue()) {
-                  // Create a wrapper PublicKey-like object that returns the key hash
-                  // This allows read-only wallets to work with code that expects getStakingKey().hash()
-                  return {
-                    hash: () => keyHash,
-                  } as CardanoTypes.PublicKey
-                }
-              }
-            } catch {
-              // Continue to next address
-              continue
-            }
-          }
-
-          // If we couldn't extract from addresses, throw an error
-          throwLoggedError(
-            'getStakingKey: Could not extract staking key from addresses for read-only wallet',
-          )
-        }
-
-        // For full wallets, derive from publicKeyHex as before
-        const derivation = implementationConfig.features.staking.derivation
-
-        const accountPubKey = CardanoMobile.Bip32PublicKey.fromBytes(
-          new Uint8Array(Buffer.from(this.publicKeyHex, 'hex')),
-        )
-        const stakingKey = accountPubKey
-          .derive(derivation.role)
-          .derive(derivation.index)
-          .toRawKey()
-
-        return stakingKey
-      }
-
-      throwLoggedError('getStakingKey staking not supported')
+      return getStakingKeyOp(
+        {
+          publicKeyHex: this.publicKeyHex,
+          accountVisual: this.accountVisual,
+          externalAddresses: this.externalAddresses,
+          internalAddresses: this.internalAddresses,
+        },
+        implementation,
+        networkManager.chainId,
+      )
     }
 
     async createDelegationTx({
@@ -575,16 +513,7 @@ export const makeCardanoWallet = (
       addressMode: Wallet.AddressMode
     }): Promise<{cbor: string}> {
       if (implementationConfig.features.staking) {
-        return createDelegationTx({
-          utxos: this.getAddressedUtxos(),
-          primaryTokenId: this.portfolioPrimaryTokenInfo.id,
-          protocolParams: this.protocolParams,
-          networkId: this.networkManager.chainId,
-          getAbsoluteSlotNumber: () => this.getAbsoluteSlotNumber(),
-          getChangeAddress: (mode: Wallet.AddressMode) =>
-            this.getChangeAddress(mode),
-          getStakingKey: () => this.getStakingKey(),
-          getDelegationStatus: () => this.getDelegationStatus(),
+        return createDelegationTxFromWallet(this, {
           poolId,
           addressMode,
         })
@@ -605,15 +534,7 @@ export const makeCardanoWallet = (
     }) {
       if (implementationConfig.features.staking) {
         try {
-          return await createVotingRegTx({
-            utxos: this.getAddressedUtxos(),
-            primaryTokenId: this.portfolioPrimaryTokenInfo.id,
-            protocolParams: this.protocolParams,
-            networkId: this.networkManager.chainId,
-            getAbsoluteSlotNumber: () => this.getAbsoluteSlotNumber(),
-            getChangeAddress: (mode) => this.getChangeAddress(mode),
-            getStakingKey: () => this.getStakingKey(),
-            getFirstPaymentAddress: () => this.getFirstPaymentAddress(),
+          return await createVotingRegTxFromWallet(this, {
             supportsCIP36,
             catalystKeyHex,
             addressMode,
@@ -635,23 +556,10 @@ export const makeCardanoWallet = (
       addressMode: Wallet.AddressMode
     }): Promise<{cbor: string}> {
       if (implementationConfig.features.staking) {
-        return createWithdrawalTx({
-          utxos: this.getAddressedUtxos(),
-          rewardAddressHex: this.rewardAddressHex,
-          primaryTokenId: this.portfolioPrimaryTokenInfo.id,
-          protocolParams: this.protocolParams,
-          networkId: this.networkManager.chainId,
-          getAbsoluteSlotNumber: () => this.getAbsoluteSlotNumber(),
-          getChangeAddress: (mode: Wallet.AddressMode) =>
-            this.getChangeAddress(mode),
-          getStakingKey: () => this.getStakingKey(),
-          getAccountState: (addresses: string[]) =>
-            legacyApi.getAccountState(
-              {addresses},
-              networkManager.legacyApiBaseUrl,
-            ),
+        return createWithdrawalTxFromWallet(this, {
           shouldDeregister,
           addressMode,
+          networkManager: this.networkManager,
         })
       }
 
@@ -663,14 +571,7 @@ export const makeCardanoWallet = (
     }: {
       addressMode: Wallet.AddressMode
     }): Promise<{cbor: string}> {
-      return createUtxoConsolidationTx({
-        utxos: this.getAddressedUtxos(),
-        externalAddresses: this.externalAddresses,
-        primaryTokenId: this.portfolioPrimaryTokenInfo.id,
-        protocolParams: this.protocolParams,
-        networkId: this.networkManager.chainId,
-        getAbsoluteSlotNumber: () => this.getAbsoluteSlotNumber(),
-        getChangeAddress: (mode) => this.getChangeAddress(mode),
+      return createUtxoConsolidationTxFromWallet(this, {
         addressMode,
       })
     }
@@ -682,13 +583,7 @@ export const makeCardanoWallet = (
       votingCertificates: CardanoTypes.Certificate[]
       addressMode: Wallet.AddressMode
     }): Promise<{cbor: string}> {
-      return createUnsignedGovernanceTx({
-        utxos: this.getAddressedUtxos(),
-        primaryTokenId: this.portfolioPrimaryTokenInfo.id,
-        protocolParams: this.protocolParams,
-        networkId: this.networkManager.chainId,
-        getAbsoluteSlotNumber: () => this.getAbsoluteSlotNumber(),
-        getChangeAddress: (mode) => this.getChangeAddress(mode),
+      return createUnsignedGovernanceTxFromWallet(this, {
         votingCertificates,
         addressMode,
       })
@@ -722,11 +617,10 @@ export const makeCardanoWallet = (
 
     getDelegationStatus() {
       if (implementationConfig.features.staking) {
-        const certsForKey =
-          this.transactionManager.perRewardAddressCertificates[
-            this.rewardAddressHex
-          ]
-        return getDelegationStatus(this.rewardAddressHex, certsForKey)
+        return getWalletDelegationStatusOp(
+          this.rewardAddressHex,
+          this.transactionManager.perRewardAddressCertificates,
+        )
       }
 
       throwLoggedError('getDelegationStatus staking not supported')
@@ -734,33 +628,14 @@ export const makeCardanoWallet = (
 
     async getStakingInfo(): Promise<StakingInfo> {
       if (implementationConfig.features.staking) {
-        const stakingStatus = this.getDelegationStatus()
-        if (!stakingStatus.isRegistered) return {status: 'not-registered'}
-        if (!('poolKeyHash' in stakingStatus)) return {status: 'registered'}
-
-        const accountStates = await this.fetchAccountState()
-        const accountState = accountStates[this.rewardAddressHex]
-        if (!accountState) throw new Error('Account state not found')
-
-        const stakingUtxos = this.getAllUtxosForKey()
-        const primaryTokenId = this.portfolioPrimaryTokenInfo.id
-        const amount = Quantities.sum([
-          ...stakingUtxos.map(
-            (utxo) => (utxo.balance[primaryTokenId] || '0') as Balance.Quantity,
-          ),
-          accountState.remainingAmount as Balance.Quantity,
-        ])
-
-        this.balanceManager.updatePrimaryDerived({
-          availableRewards: BigInt(accountState.remainingAmount),
+        return getWalletStakingInfoOp({
+          rewardAddressHex: this.rewardAddressHex,
+          getAllUtxosForKey: () => this.getAllUtxosForKey(),
+          fetchAccountState: () => this.fetchAccountState(),
+          balanceManager: this.balanceManager,
+          portfolioPrimaryTokenInfo: this.portfolioPrimaryTokenInfo,
+          getDelegationStatus: () => this.getDelegationStatus(),
         })
-
-        return {
-          status: 'staked',
-          poolId: stakingStatus.poolKeyHash,
-          amount,
-          rewards: accountState.remainingAmount as Balance.Quantity,
-        }
       }
 
       throwLoggedError('getStakingInfo staking not supported')
@@ -852,125 +727,27 @@ export const makeCardanoWallet = (
     }
 
     private getAddressedUtxos(): ModernUtxo[] {
-      const primaryTokenId = this.portfolioPrimaryTokenInfo.id
-
-      return this.utxos.map((utxo: RawUtxo): ModernUtxo => {
-        const addressing = this.getAddressing(utxo.receiver)
-
-        // Type assertion to help TypeScript understand the compatible types
-        // Both RawUtxo types have the same structure (tokenId), just from different modules
-        return rawUtxoToModernUtxo(
-          utxo as unknown as Parameters<typeof rawUtxoToModernUtxo>[0],
-          addressing,
-          undefined, // derivationPath - can be added later if needed for display
-          primaryTokenId,
-        )
-      })
-    }
-
-    private async getAbsoluteSlotNumber() {
-      const time = await this.checkServerStatus()
-        .then(({serverTime}) => serverTime || Date.now())
-        .catch(() => Date.now())
-      return new BigNumber(
-        this.networkManager.epoch.progress(new Date(time)).absoluteSlot,
+      return getAddressedUtxosOp(
+        this.utxos,
+        {
+          publicKeyHex: this.publicKeyHex,
+          accountVisual: this.accountVisual,
+          internalChain: this.internalChain,
+          externalChain: this.externalChain,
+          getAddressing: (address) => this.getAddressing(address),
+        },
+        this.portfolioPrimaryTokenInfo.id,
+        implementation,
       )
     }
 
     async signTx(unsignedTx: UnsignedTransaction, decryptedMasterKey: string) {
-      if (!unsignedTx.cbor) {
-        throw new Error('UnsignedTransaction must have CBOR to sign')
-      }
-
-      const masterKey = CardanoMobile.Bip32PrivateKey.fromBytes(
-        new Uint8Array(Buffer.from(decryptedMasterKey, 'hex')),
+      return signWalletTransactionOp(
+        unsignedTx,
+        decryptedMasterKey,
+        this.accountVisual,
+        implementation,
       )
-      const accountPrivateKey = masterKey
-        .derive(implementationConfig.derivations.base.harden.purpose)
-        .derive(implementationConfig.derivations.base.harden.coinType)
-        .derive(this.accountVisual + derivationConfig.hardStart)
-
-      const accountPrivateKeyHex = Buffer.from(
-        accountPrivateKey.asBytes(),
-      ).toString('hex')
-
-      let stakingPrivateKey
-      if (implementationConfig.features.staking) {
-        const derivation = implementationConfig.features.staking.derivation
-        stakingPrivateKey = accountPrivateKey
-          .derive(derivation.role)
-          .derive(derivation.index)
-          .toRawKey()
-      }
-
-      // Derive staking key requirements from certificates and withdrawals
-      let needsStakingKey = false
-      if (
-        unsignedTx.certificates.length > 0 ||
-        unsignedTx.withdrawals.length > 0
-      ) {
-        needsStakingKey = true
-      }
-
-      // Check for governance-related certificates (vote delegation, etc.)
-      // Certificates are now data objects, not CSL objects
-      for (const certData of unsignedTx.certificates) {
-        const certKind = 'kind' in certData ? certData.kind : 'unknown'
-        if (
-          certKind === 'VoteDelegation' ||
-          certKind === 'StakeAndVoteDelegation' ||
-          certKind === 'StakeVoteRegistrationAndDelegation' ||
-          certKind === 'VoteRegistrationAndDelegation'
-        ) {
-          needsStakingKey = true
-          break
-        }
-      }
-
-      if (needsStakingKey && !stakingPrivateKey) {
-        throwLoggedError(
-          'CardanoWallet: signTx required staking key but not supported',
-        )
-      }
-
-      const stakingKeys =
-        needsStakingKey && stakingPrivateKey ? [stakingPrivateKey] : undefined
-
-      // Extract datum data from outputs
-      const datumDatas = unsignedTx.outputs
-        .map((output) => output.datum)
-        .filter(isNonNullable)
-        .filter(
-          (datum: Datum): datum is Exclude<Datum, {hash: string}> =>
-            'data' in datum,
-        )
-
-      // Prepare staking keys for signing
-      const stakingKeysForSigning =
-        stakingKeys && stakingPrivateKey
-          ? [
-              {
-                keyHex: Buffer.from(stakingPrivateKey.asBytes()).toString(
-                  'hex',
-                ),
-              },
-            ]
-          : undefined
-
-      // Sign the transaction using the new signing function
-      return CardanoMobileWrapped.cslScope((csl) => {
-        const signedTx = signTransaction(
-          csl,
-          unsignedTx,
-          accountPrivateKeyHex,
-          stakingKeysForSigning,
-          datumDatas.length > 0
-            ? datumDatas.map((d) => ({data: d.data}))
-            : undefined,
-        )
-
-        return signedTx
-      })
     }
 
     async ledgerSupportsCIP36(
@@ -1013,7 +790,7 @@ export const makeCardanoWallet = (
         this.networkManager.protocolMagic,
         addressingMap,
         addressingMap,
-        getAddressedUtxos(this),
+        modernUtxosToCardanoAddressedUtxos(this.getAddressedUtxos()),
         [],
         stakingAddressing,
       )
@@ -1217,10 +994,7 @@ export const makeCardanoWallet = (
       if (this.didUtxosUpdate(this._utxos, newUtxos) || isForced) {
         // Exclude collateral UTXO from locked deposit calculation
         // Collateral is not a storage cost, it's locked for DApp transactions
-        const spendableUtxos =
-          this._collateralId.length > 0
-            ? newUtxos.filter((utxo) => utxo.utxo_id !== this._collateralId)
-            : newUtxos
+        const spendableUtxos = getSpendableUtxosOp(newUtxos, this._collateralId)
 
         // NOTE: recalc locked deposit should happen also when epoch changes after conway
         // Only calculate locked deposit for spendable UTXOs (exclude collateral)
@@ -1293,19 +1067,7 @@ export const makeCardanoWallet = (
     }
 
     private didUtxosUpdate(oldUtxos: RawUtxo[], newUtxos: RawUtxo[]): boolean {
-      if (oldUtxos.length !== newUtxos.length) {
-        return true
-      }
-
-      const oldUtxoIds = new Set(oldUtxos.map((utxo) => utxo.utxo_id))
-
-      for (const newUtxo of newUtxos) {
-        if (!oldUtxoIds.has(newUtxo.utxo_id)) {
-          return true
-        }
-      }
-
-      return false
+      return didUtxosUpdateOp(oldUtxos, newUtxos)
     }
 
     async fetchAccountState(): Promise<AccountStateResponse> {

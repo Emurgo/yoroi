@@ -1,33 +1,19 @@
-import {difference, parseSafe, time} from '@yoroi/common'
+import {parseSafe} from '@yoroi/common'
 import {Blockies} from '@yoroi/identicon'
-import {App, Chain, HW, Network, Wallet} from '@yoroi/types'
+import {Chain, HW, Network, Portfolio, Wallet} from '@yoroi/types'
 
 import {walletChecksum} from '@emurgo/cip4-js'
 import {Buffer} from 'buffer'
 import {freeze} from 'immer'
-import {
-  BehaviorSubject,
-  Subscription,
-  catchError,
-  concatMap,
-  finalize,
-  from,
-  interval,
-  of,
-  startWith,
-  switchMap,
-} from 'rxjs'
+import {BehaviorSubject, Observable, Subscription} from 'rxjs'
 import {v4} from 'uuid'
 
 import {throwLoggedError} from '~/kernel/logger/helpers/throw-logged-error'
 import {logger} from '~/kernel/logger/logger'
 import {makeWalletEncryptedStorage} from '~/kernel/storage/EncryptedStorage'
-import {Keychain, KeychainManager} from '~/kernel/storage/Keychain'
+import {Keychain} from '~/kernel/storage/Keychain'
 import {rootStorage} from '~/kernel/storage/storages'
-import {
-  deriveAccountFromRootKey,
-  keyManager,
-} from '~/wallets/cardano/key-manager/key-manager'
+import {keyManager} from '~/wallets/cardano/key-manager/key-manager'
 import {WalletEvent, YoroiWallet} from '~/wallets/cardano/types'
 import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
 import {validatePassword, validateWalletName} from '~/wallets/utils/validators'
@@ -35,76 +21,194 @@ import {validatePassword, validateWalletName} from '~/wallets/utils/validators'
 import {networkManagers} from './common/constants'
 import {
   SyncWalletInfo,
-  SyncWalletInfos,
   WalletManagerEvent,
   WalletManagerOptions,
   WalletManagerSubscription,
 } from './common/types'
 import {isWalletMeta, parseWalletMeta} from './common/validators/wallet-meta'
+import {
+  createWalletFromMnemonic,
+  createWalletFromRootKey,
+  createWalletFromXPub as createWalletFromXPubFn,
+  deriveAndStoreAccount,
+} from './creation/wallet-creation'
 import {getWalletFactory} from './network-manager/get-wallet-factory'
+import {
+  createWalletManagerStateSubjects,
+  setSelectedNetwork,
+  setSelectedWalletId,
+  setSyncControl,
+  updateSyncWalletInfos,
+  updateWalletMetas,
+} from './state/wallet-manager-state'
+import type {SyncManager} from './sync/sync-manager'
+import {makeSyncManager} from './sync/sync-manager'
 
-export class WalletManager {
-  // keep it in sync with storage version
-  static readonly version = 3
-  readonly #wallets: Map<YoroiWallet['id'], YoroiWallet> = new Map()
-  readonly #walletMetas$ = new BehaviorSubject<
-    Map<YoroiWallet['id'], Wallet.Meta>
-  >(new Map())
-  readonly #syncWalletInfos$ = new BehaviorSubject<SyncWalletInfos>(
-    freeze(new Map()),
-  )
-  readonly #selectedWalletId$ = new BehaviorSubject<YoroiWallet['id'] | null>(
-    null,
-  )
-  readonly #selectedNetwork$ = new BehaviorSubject<Chain.SupportedNetworks>(
-    Chain.Network.Mainnet,
-  )
-  readonly #isSyncing$ = new BehaviorSubject<boolean>(false)
-  readonly #syncControl$ = new BehaviorSubject<boolean>(true)
+/**
+ * Wallet Manager version
+ * Keep it in sync with storage version
+ */
+export const WALLET_MANAGER_VERSION = 3
 
-  #syncSubscription: Subscription | null = null
-  #syncInterval = time.seconds(35)
+/**
+ * Wallet Manager type
+ * Functional API for wallet management
+ */
+export type WalletManager = {
+  readonly version: number
+  readonly selectedWalledId: YoroiWallet['id'] | null
+  readonly selectedWalletId$: Observable<YoroiWallet['id'] | null>
+  readonly selectedNetwork: Chain.SupportedNetworks
+  readonly selectedNetwork$: Observable<Chain.SupportedNetworks>
+  readonly walletMetas$: Observable<Map<YoroiWallet['id'], Wallet.Meta>>
+  readonly hasWallets: boolean
+  readonly walletMetas: Map<YoroiWallet['id'], Wallet.Meta>
+  readonly selectedNetworkManager: Network.Manager
+  readonly syncWalletInfos$: Observable<Map<YoroiWallet['id'], SyncWalletInfo>>
+  readonly syncing$: Observable<boolean>
+  readonly isSyncing: boolean
+  readonly syncActive$: Observable<boolean>
+  readonly isSyncActive: boolean
+  setSelectedWalletId(id: YoroiWallet['id']): void
+  setSelectedNetwork(network: Chain.SupportedNetworks): void
+  pauseSyncing(): void
+  resumeSyncing(): void
+  startSyncing(): void
+  stopSyncing(): void
+  restartSyncing(): void
+  hydrate(params?: {
+    isForced?: boolean
+    network?: Chain.SupportedNetworks
+  }): Promise<{wallets: YoroiWallet[]; metas: Wallet.Meta[]}>
+  walletIdsMarkedForDeletion(): Promise<string[]>
+  removeWalletsMarkedForDeletion(): Promise<void>
+  removeWallet(id: string): Promise<void>
+  notifyTransactionSubmitted(walletId: YoroiWallet['id'], txId: string): void
+  createWalletMnemonic(params: {
+    name: string
+    mnemonic: string
+    password: string
+    implementation: Wallet.Implementation
+    addressMode: Wallet.AddressMode
+    accountVisual: number
+  }): Promise<Wallet.Meta>
+  createWalletXPub(params: {
+    name: string
+    accountPubKeyHex: string
+    implementation: Wallet.Implementation
+    hwDeviceInfo: null | HW.DeviceInfo
+    isReadOnly: boolean
+    addressMode: Wallet.AddressMode
+    accountVisual: number
+  }): Promise<Wallet.Meta>
+  createReadOnlyWalletFromAddresses(params: {
+    name: string
+    knownAddress?: string
+    internalAddresses?: string[]
+    externalAddresses?: string[]
+    rewardAddressHex?: string
+    implementation: Wallet.Implementation
+    addressMode: Wallet.AddressMode
+    accountVisual: number
+    enableDiscovery?: boolean
+  }): Promise<Wallet.Meta>
+  deriveAndStoreAccount(params: {
+    id: string
+    accountVisual: number
+    password: string
+  }): Promise<string>
+  createWalletFromRootKey(params: {
+    name: string
+    rootKeyHex: string
+    password: string
+    implementation: Wallet.Implementation
+    addressMode: Wallet.AddressMode
+    accountVisual: number
+  }): Promise<Wallet.Meta>
+  getNetworkManager(network: Chain.SupportedNetworks): Network.Manager
+  getTokenManager(network: Chain.SupportedNetworks): Portfolio.Manager.Token
+  getWalletsByNetwork(): Map<Chain.SupportedNetworks, Set<YoroiWallet['id']>>
+  getWalletById(id: YoroiWallet['id']): YoroiWallet | undefined
+  getWalletMetaById(id: YoroiWallet['id']): Wallet.Meta | undefined
+  checksum(publicKeyHex: string): {plate: string; seed: string}
+  isWalletAccountDuplicated(publicKeyHex: string): boolean
+  findWalletMetadataByPublicKeyHex(
+    publicKeyHex: string,
+  ): Wallet.Meta | undefined
+  validateWalletName(
+    newName: string,
+    oldName?: string | null,
+  ): {mustBeFilled?: boolean; tooLong?: boolean; nameAlreadyTaken?: boolean}
+  generateWalletKeys(
+    walletImplementation: Wallet.Implementation,
+    mnemonic: string,
+    accountVisual?: number,
+  ): {rootKey: string; accountPubKeyHex: string}
+  subscribe(
+    subscription: (event: WalletManagerEvent | WalletEvent) => void,
+  ): () => void
+  disableEasyConfirmation(id: YoroiWallet['id']): Promise<void>
+  enableEasyConfirmation(wallet: YoroiWallet, password: string): Promise<void>
+  renameWallet(id: YoroiWallet['id'], name: string): void
+  changeWalletAddressMode(
+    id: YoroiWallet['id'],
+    addressMode: Wallet.AddressMode,
+  ): void
+  updateWalletHWDeviceInfo(
+    id: YoroiWallet['id'],
+    hwDeviceInfo: HW.DeviceInfo,
+  ): void
+  changeWalletPassword(params: {
+    id: YoroiWallet['id']
+    oldPassword: string
+    newPassword: string
+  }): Promise<void>
+}
 
-  // injected (constructor)
-  readonly #keychainManager?: KeychainManager
-  readonly #rootStorage: App.Storage
-  readonly #networkManagers: Readonly<
-    Record<Chain.SupportedNetworks, Network.Manager>
-  >
+/**
+ * Create a functional wallet manager
+ */
+export const makeWalletManager = (
+  options: WalletManagerOptions,
+): WalletManager => {
+  const {keychainManager, rootStorage, networkManagers} = options
 
-  // @deprecated legacy to be replaced by networkManager.rootStorage
-  readonly #walletsRootStorage: App.Storage
+  // State management
+  const stateSubjects = createWalletManagerStateSubjects()
 
-  // @deprecated should consume one of the streams
-  #subscriptions: Array<WalletManagerSubscription> = []
+  // Internal state
+  const wallets = new Map<YoroiWallet['id'], YoroiWallet>()
+  const walletsRootStorage = rootStorage.join('wallet/')
+  const subscriptions: Array<WalletManagerSubscription> = []
 
-  constructor({
-    keychainManager,
-    rootStorage,
-    networkManagers,
-  }: WalletManagerOptions) {
-    this.#networkManagers = networkManagers
-    this.#keychainManager = keychainManager
-    this.#rootStorage = rootStorage
+  // Sync management
+  let syncSubscription: Subscription | null = null
+  let syncManager: SyncManager | null = null
+  let syncManagerSubscription: Subscription | null = null
 
-    this.#walletsRootStorage = rootStorage.join('wallet/')
+  // Initialize sync manager
+  const initializeSyncManager = () => {
+    const wallets$ = new BehaviorSubject<YoroiWallet[]>([])
+    const selectedWalletId$ = stateSubjects.selectedWalletId.asObservable()
+    const selectedNetwork$ = stateSubjects.selectedNetwork.asObservable()
+
+    syncManager = makeSyncManager(
+      wallets$.asObservable(),
+      selectedWalletId$,
+      selectedNetwork$,
+    )
+
+    syncManagerSubscription = syncManager.syncWalletInfos$.subscribe(
+      (syncInfos) => {
+        updateSyncWalletInfos(stateSubjects, syncInfos)
+      },
+    )
   }
 
-  setSelectedWalletId(id: YoroiWallet['id']) {
-    logger.debug('WalletManager: setSelectedWalletId new wallet selected', {id})
-    this.#selectedWalletId$.next(id)
-  }
+  initializeSyncManager()
 
-  /**
-   * It updates the wallet meta and persists it to the storage
-   * **ATENTION** it expects the wallet meta to be already loaded
-   * otherwise it will throw an error
-   *
-   * @param {WalletMeta['id']} id
-   * @param {Partial<Pick<WalletMeta, 'addressMode' | 'isEasyConfirmationEnabled' | 'name'>} meta
-   * @throws {Error} if the wallet meta is not loaded/found
-   */
-  private updateMeta(
+  // Helper: Update wallet meta
+  const updateMeta = (
     id: Wallet.Meta['id'],
     meta: Partial<
       Pick<
@@ -112,507 +216,102 @@ export class WalletManager {
         'addressMode' | 'isEasyConfirmationEnabled' | 'name' | 'hwDeviceInfo'
       >
     >,
-  ) {
-    const walletMeta = this.#walletMetas$.value.get(id)
+  ): void => {
+    const walletMeta = stateSubjects.walletMetas.value.get(id)
     if (!walletMeta)
       throwLoggedError('WalletManager: updateMeta meta not found')
 
-    // optmistic update
     const newMeta: Wallet.Meta = {...walletMeta, ...meta}
-    const newMetas = new Map(this.#walletMetas$.value)
+    const newMetas = new Map(stateSubjects.walletMetas.value)
     newMetas.set(id, newMeta)
-    this.#walletMetas$.next(freeze(newMetas))
+    updateWalletMetas(stateSubjects, newMetas)
     logger.info('WalletManager: update meta', {from: walletMeta, to: newMeta})
 
-    this.#walletsRootStorage.setItem(id, newMeta).catch((error) => {
+    walletsRootStorage.setItem(id, newMeta).catch((error) => {
       logger.error(error, {id})
     })
   }
 
-  get selectedWalledId() {
-    return this.#selectedWalletId$.value
+  // Helper: Notify subscribers
+  const notify = (event: WalletManagerEvent | WalletEvent) => {
+    subscriptions.forEach((handler) => handler(event))
   }
 
-  get selectedWalletId$() {
-    return this.#selectedWalletId$.asObservable()
+  // Helper: Validate Cardano address
+  const isValidCardanoAddress = (address: string): boolean => {
+    if (!address || typeof address !== 'string') return false
+    const trimmed = address.trim()
+    return (
+      trimmed.startsWith('addr') ||
+      trimmed.startsWith('stake') ||
+      trimmed.startsWith('Ae2') ||
+      trimmed.startsWith('DdzFF') ||
+      /^[0-9a-fA-F]{64,}$/.test(trimmed)
+    )
   }
 
-  setSelectedNetwork(network: Chain.SupportedNetworks) {
-    logger.debug('WalletManager: setSelectedNetwork new network selected', {
-      network,
-    })
-    this.hydrate({isForced: true, network}).then(() => {
-      this.#selectedNetwork$.next(network)
-      this.restartSyncing()
-    })
-  }
-
-  get selectedNetwork() {
-    return this.#selectedNetwork$.value
-  }
-
-  get selectedNetwork$() {
-    return this.#selectedNetwork$.asObservable()
-  }
-
-  get walletMetas$() {
-    return this.#walletMetas$.asObservable()
-  }
-
-  get hasWallets() {
-    // always based on metas
-    return this.#walletMetas$.value.size > 0
-  }
-
-  get walletMetas() {
-    return this.#walletMetas$.value
-  }
-
-  get selectedNetworkManager() {
-    return this.#networkManagers[this.selectedNetwork]
-  }
-
-  getNetworkManager(network: Chain.SupportedNetworks) {
-    return this.#networkManagers[network]
-  }
-
-  getWalletsByNetwork = () => {
-    const openedWalletsByNetwork = new Map<
-      Chain.SupportedNetworks,
-      Set<YoroiWallet['id']>
-    >()
-
-    this.#wallets.forEach(({id, networkManager: {network}}) => {
-      if (!openedWalletsByNetwork.has(network))
-        openedWalletsByNetwork.set(network, new Set())
-
-      openedWalletsByNetwork.get(network)?.add(id)
-    })
-
-    return openedWalletsByNetwork
-  }
-
-  getWalletById = (id: YoroiWallet['id']) => {
-    return this.#wallets.get(id)
-  }
-
-  getWalletMetaById = (id: YoroiWallet['id']) => {
-    return this.#walletMetas$.value.get(id)
-  }
-
-  getTokenManager(network: Chain.SupportedNetworks) {
-    return this.#networkManagers[network].tokenManager
-  }
-
-  get syncWalletInfos$() {
-    return this.#syncWalletInfos$.asObservable()
-  }
-
-  get syncing$() {
-    return this.#isSyncing$.asObservable()
-  }
-
-  get isSyncing() {
-    return this.#isSyncing$.value
-  }
-
-  get syncActive$() {
-    return this.#syncControl$.asObservable()
-  }
-
-  get isSyncActive() {
-    return this.#syncControl$.value
-  }
-
-  pauseSyncing() {
-    logger.debug('WalletManager: pauseSyncing requested')
-    this.#syncControl$.next(false)
-  }
-
-  resumeSyncing() {
-    logger.debug('WalletManager: resumeSyncing requested')
-    this.#syncControl$.next(true)
-  }
-
-  private resetSyncWalletInfos(wallets: ReadonlyArray<YoroiWallet>) {
-    const infos = new Map(this.#syncWalletInfos$.value)
-    for (const wallet of wallets) {
-      const syncWalletInfo: SyncWalletInfo = {
-        status: 'waiting',
-        updatedAt: Date.now(),
-        id: wallet.id,
-        network: infos.get(wallet.id)?.network ?? null,
-      }
-      infos.set(wallet.id, syncWalletInfo)
-    }
-
-    // drop wallets that are not returned by the list (deleted wallets)
-    // can't delete on removeWallet cuz a wallet can be marked to be deleted while it's syncing
-    difference(
-      wallets.map(({id}) => id),
-      Array.from(infos.keys()),
-    ).forEach((id) => {
-      logger.debug(
-        'WalletManager: resetSyncWalletInfos deleting wallet from sync list',
-        {id},
+  // Helper: Parse deleted wallet IDs
+  const parseDeletedWalletIds = (data: unknown) => {
+    const isWalletIds = (data: unknown): data is Array<string> => {
+      return (
+        !!data &&
+        Array.isArray(data) &&
+        data.every((item) => typeof item === 'string')
       )
-      infos.delete(id)
-    })
-
-    this.#syncWalletInfos$.next(freeze(new Map(infos)))
-  }
-
-  startSyncing() {
-    const syncWallets = () => {
-      if (this.#isSyncing$.value) return
-
-      this.#isSyncing$.next(true)
-
-      from(this.hydrate())
-        .pipe(
-          concatMap(({wallets}) => {
-            this.resetSyncWalletInfos(wallets)
-            return from(wallets)
-          }),
-          concatMap((wallet) => {
-            logger.debug('syncWallets: started', {
-              walletId: wallet.id,
-              origin: 'WalletManager',
-            })
-            const info = this.#syncWalletInfos$.value.get(wallet.id)
-            const syncWalletInfo: SyncWalletInfo = {
-              status: 'syncing',
-              updatedAt: Date.now(),
-              id: wallet.id,
-              network: info?.network ?? null,
-            }
-            const infos = new Map(this.#syncWalletInfos$.value)
-            infos.set(wallet.id, syncWalletInfo)
-            this.#syncWalletInfos$.next(freeze(infos))
-            return from(wallet.sync({isForced: false})).pipe(
-              catchError((error) => {
-                logger.error('syncWallets: error', {
-                  error,
-                  walletId: wallet.id,
-                  origin: 'WalletManager',
-                })
-                const syncWalletInfo: SyncWalletInfo = {
-                  status: 'error',
-                  error,
-                  updatedAt: Date.now(),
-                  id: wallet.id,
-                  network: this.selectedNetwork,
-                }
-                const infos = new Map(this.#syncWalletInfos$.value)
-                infos.set(wallet.id, syncWalletInfo)
-                this.#syncWalletInfos$.next(freeze(infos))
-                return of()
-              }),
-              finalize(() => {
-                if (
-                  this.#syncWalletInfos$.value.get(wallet.id)?.status !==
-                  'error'
-                ) {
-                  logger.debug('syncWallets: done', {
-                    walletId: wallet.id,
-                    origin: 'WalletManager',
-                  })
-                  const syncWalletInfo: SyncWalletInfo = {
-                    status: 'done',
-                    updatedAt: Date.now(),
-                    id: wallet.id,
-                    network: this.selectedNetwork,
-                  }
-                  const infos = new Map(this.#syncWalletInfos$.value)
-                  infos.set(wallet.id, syncWalletInfo)
-                  this.#syncWalletInfos$.next(freeze(infos))
-                }
-              }),
-            )
-          }),
-          finalize(() => {
-            this.#isSyncing$.next(false)
-          }),
-        )
-        .subscribe()
     }
-
-    if (!this.#syncSubscription) {
-      this.#syncSubscription = this.#syncControl$
-        .pipe(
-          switchMap((isActive) =>
-            isActive ? interval(this.#syncInterval).pipe(startWith(0)) : of(),
-          ),
-          concatMap(() => of(syncWallets())),
-        )
-        .subscribe()
-    }
+    const parsed = parseSafe(data)
+    return isWalletIds(parsed) ? parsed : []
   }
 
-  /**
-   * It destroys the stream, while pause is just a temporary stop in the emitter
-   */
-  stopSyncing() {
-    this.#syncSubscription?.unsubscribe()
-    this.#syncSubscription = null
-  }
-
-  restartSyncing() {
-    this.stopSyncing()
-    this.startSyncing()
-  }
-
-  /**
-   * It populates the wallet manager with the wallets stored in the storage
-   * and ensures that after a wallet is loaded that instance is returned on subsequent calls
-   * A wallet should be instantianted only here, otherwise the stream mechanism wont work
-   *
-   * @returns {Promise<{wallets: YoroiWallet[]; metas: WalletMeta[]}>}
-   */
-  async hydrate({
-    isForced = false,
-    network = this.selectedNetwork,
-  }: {isForced?: boolean; network?: Chain.SupportedNetworks} = {}) {
-    const deletedWalletIds = await this.walletIdsMarkedForDeletion()
-    const walletIds = await this.#walletsRootStorage
-      .getAllKeys()
-      .then((ids) => ids.filter((id) => !deletedWalletIds.includes(id)))
-    const walletMetas = await this.#walletsRootStorage
-      .multiGet(walletIds, parseWalletMeta)
-      .then((tuples) => tuples.map(([_, walletMeta]) => walletMeta))
-      .then((walletMetas) => walletMetas.filter(isWalletMeta)) // filter corrupted wallet metas
-
-    // Update walletMetas$ immediately with all metadata from storage
-    // This ensures hasWallets is accurate before wallets are fully loaded
-    // (which may involve slow network calls)
-    const allMetas = new Map(this.#walletMetas$.value)
-    for (const meta of walletMetas) {
-      if (!allMetas.has(meta.id) || isForced) {
-        allMetas.set(meta.id, meta)
+  // Helper: Load wallets with error handling - skips corrupted wallets
+  const loadWalletsSafely = async (
+    metasToLoad: Array<{
+      id: YoroiWallet['id']
+      implementation: Wallet.Implementation
+    }>,
+    options: {isForced?: boolean; network?: Chain.SupportedNetworks} = {},
+  ): Promise<YoroiWallet[]> => {
+    const walletResults = await Promise.allSettled(
+      metasToLoad.map(({id, implementation}) =>
+        loadWallet({
+          id,
+          implementation,
+          isForced: options.isForced ?? false,
+          network: options.network ?? stateSubjects.selectedNetwork.value,
+        }),
+      ),
+    )
+    const loadedWallets: YoroiWallet[] = []
+    for (const result of walletResults) {
+      if (result.status === 'fulfilled') {
+        loadedWallets.push(result.value)
+      } else {
+        logger.warn('WalletManager: Failed to load wallet', {
+          error: result.reason,
+        })
       }
     }
-    if (allMetas.size !== this.#walletMetas$.value.size || isForced) {
-      this.#walletMetas$.next(freeze(allMetas))
-    }
-
-    const metasToLoad = walletMetas.filter(
-      (meta) => !this.#wallets.has(meta.id) || isForced,
-    )
-
-    // metas dictates wallets to be loaded
-    if (metasToLoad.length > 0) {
-      const loadedWallets = await Promise.all(
-        metasToLoad.map(({id, implementation}) =>
-          this.loadWallet({
-            id,
-            implementation,
-            isForced,
-            network,
-          }),
-        ),
-      )
-      for (const wallet of loadedWallets) this.#wallets.set(wallet.id, wallet)
-    }
-
-    return {
-      wallets: Array.from(this.#wallets.values()),
-      metas: Array.from(this.#walletMetas$.value.values()),
-    }
+    return loadedWallets
   }
 
-  async walletIdsMarkedForDeletion() {
-    const ids = await this.#rootStorage.getItem(
-      'deletedWalletIds',
-      parseDeletedWalletIds,
-    )
-
-    return ids ?? []
-  }
-
-  async removeWalletsMarkedForDeletion() {
-    const deletedWalletsIds = await this.walletIdsMarkedForDeletion()
-    if (!deletedWalletsIds) return
-
-    await Promise.all(
-      deletedWalletsIds.map(async (id) => {
-        const encryptedStorage = makeWalletEncryptedStorage(id)
-        // Remove wallet data from legacy storage paths for each network
-        for (const network of Object.keys(
-          this.#networkManagers,
-        ) as Chain.SupportedNetworks[]) {
-          const legacyStorage = this.#rootStorage.join(`legacy/${network}/v1/`)
-          await legacyStorage.removeItem(id)
-        }
-
-        await this.#walletsRootStorage.removeItem(id) // remove wallet meta
-        await encryptedStorage.xpriv.remove() // remove auth with password
-        // Note: Currently removes account 0. If multi-account support is added,
-        // this should iterate through all accounts and remove them:
-        // for (let accountIndex = 0; accountIndex < maxAccounts; accountIndex++) {
-        //   await encryptedStorage.xpub.remove(accountIndex)
-        // }
-        await encryptedStorage.xpub.remove(0) // remove account 0
-
-        await this.#keychainManager?.removeWalletKey(id) // remove auth with os
-      }),
-    )
-
-    await this.#rootStorage.setItem('deletedWalletIds', [])
-  }
-
-  checksum(publicKeyHex: string) {
-    const {TextPart, ImagePart} = walletChecksum(publicKeyHex)
-
-    return {
-      plate: TextPart,
-      seed: ImagePart,
-    }
-  }
-
-  isWalletAccountDuplicated(publicKeyHex: string) {
-    const {plate} = this.checksum(publicKeyHex)
-
-    return Array.from(this.walletMetas.values()).some(
-      (walletMeta) => walletMeta.plate === plate,
-    )
-  }
-
-  findWalletMetadataByPublicKeyHex(publicKeyHex: string) {
-    const {plate} = this.checksum(publicKeyHex)
-
-    return Array.from(this.walletMetas.values()).find(
-      (walletMeta) => walletMeta.plate === plate,
-    )
-  }
-
-  validateWalletName(newName: string, oldName: string | null = null) {
-    const walletNames = Array.from(this.walletMetas.values()).map(
-      ({name}) => name,
-    )
-    const nameErrors = validateWalletName(newName, oldName, walletNames)
-
-    return nameErrors
-  }
-
-  generateWalletKeys(
-    walletImplementation: Wallet.Implementation,
-    mnemonic: string,
-    accountVisual?: number,
-  ) {
-    return CardanoMobileWrapped.cslScope((csl) =>
-      keyManager(walletImplementation)({
-        csl,
-        mnemonic,
-        accountVisual,
-      }),
-    )
-  }
-
-  _notify = (event: WalletManagerEvent | WalletEvent) => {
-    this.#subscriptions.forEach((handler) => handler(event))
-  }
-
-  subscribe(subscription: (event: WalletManagerEvent | WalletEvent) => void) {
-    this.#subscriptions.push(subscription)
-
-    return () => {
-      this.#subscriptions = this.#subscriptions.filter(
-        (sub) => sub !== subscription,
-      )
-    }
-  }
-
-  async disableEasyConfirmation(id: YoroiWallet['id']) {
-    if (!this.#keychainManager)
-      throwLoggedError(
-        'WalletManager: disableEasyConfirmation KeychainManager not available',
-      )
-
-    await this.#keychainManager.removeWalletKey(id)
-
-    this.updateMeta(id, {
-      isEasyConfirmationEnabled: false,
-    })
-  }
-
-  async enableEasyConfirmation(wallet: YoroiWallet, password: string) {
-    if (!this.#keychainManager)
-      throwLoggedError(
-        'WalletManager: enableEasyConfirmation KeychainManager not available',
-      )
-
-    const rootKey = await wallet.encryptedStorage.xpriv.read(password)
-    this.#keychainManager.setWalletKey(wallet.id, rootKey.value)
-
-    this.updateMeta(wallet.id, {
-      isEasyConfirmationEnabled: true,
-    })
-  }
-
-  renameWallet(id: YoroiWallet['id'], name: string) {
-    this.updateMeta(id, {name})
-  }
-
-  changeWalletAddressMode(
-    id: YoroiWallet['id'],
-    addressMode: Wallet.AddressMode,
-  ) {
-    this.updateMeta(id, {addressMode})
-  }
-
-  updateWalletHWDeviceInfo(id: YoroiWallet['id'], hwDeviceInfo: HW.DeviceInfo) {
-    this.updateMeta(id, {hwDeviceInfo})
-  }
-
-  async changeWalletPassword({
-    id,
-    oldPassword,
-    newPassword,
-  }: {
-    id: YoroiWallet['id']
-    oldPassword: string
-    newPassword: string
-  }) {
-    const validationResult = validatePassword(newPassword, newPassword)
-    if (Object.keys(validationResult).length > 0) {
-      logger.error(
-        'WalletManager: changeWalletPassword new password is not valid',
-        {id},
-      )
-      throw new Error('New password is not valid')
-    }
-
-    const encryptedStorage = makeWalletEncryptedStorage(id)
-    const rootKey = await encryptedStorage.xpriv.read(oldPassword)
-    return encryptedStorage.xpriv.write(rootKey.value, newPassword)
-  }
-
-  /**
-   * It loads the wallet only if it's not already loaded
-   * if it's already loaded it returns the instance
-   *
-   * @param {Wallet.Meta} walletMeta
-   * @returns {Promise<YoroiWallet>} wallet
-   */
-  private async loadWallet({
+  // Helper: Load wallet
+  const loadWallet = async ({
     id,
     implementation,
     accountVisual = 0,
     isForced = false,
-    network = this.selectedNetwork,
+    network = stateSubjects.selectedNetwork.value,
   }: {
     id: YoroiWallet['id']
     implementation: Wallet.Implementation
     accountVisual?: number
     isForced?: boolean
     network?: Chain.SupportedNetworks
-  }): Promise<YoroiWallet> {
-    if (this.#wallets.has(id) && !isForced) return this.#wallets.get(id)!
+  }): Promise<YoroiWallet> => {
+    if (wallets.has(id) && !isForced) return wallets.get(id)!
 
     const walletFactory = getWalletFactory({network, implementation})
-
-    // Check if this is a read-only wallet
-    const meta = this.#walletMetas$.value.get(id)
+    const meta = stateSubjects.walletMetas.value.get(id)
     const isReadOnly = meta?.isReadOnly ?? false
 
     logger.debug('WalletManager: loadWallet loading wallet', {
@@ -624,7 +323,6 @@ export class WalletManager {
     })
 
     if (isReadOnly) {
-      // Load read-only wallet from addresses
       const addressStorage = rootStorage.join(
         `legacy/${network}/v1/${id}/addresses/`,
       )
@@ -637,7 +335,7 @@ export class WalletManager {
             'internal' in parsed ||
             'external' in parsed)
         ) {
-          return parsed as {
+          const rawData = parsed as {
             knownAddress?: string
             internal?: string[]
             external?: string[]
@@ -645,18 +343,78 @@ export class WalletManager {
             enableDiscovery?: boolean
             accountVisual?: number
           }
+
+          // Filter out invalid addresses when loading from storage
+          const validKnownAddress =
+            rawData.knownAddress && isValidCardanoAddress(rawData.knownAddress)
+              ? rawData.knownAddress
+              : undefined
+
+          const validInternal =
+            rawData.internal?.filter((addr) => isValidCardanoAddress(addr)) ??
+            []
+          const validExternal =
+            rawData.external?.filter((addr) => isValidCardanoAddress(addr)) ??
+            []
+
+          // Log if we filtered out invalid addresses
+          if (
+            rawData.knownAddress &&
+            rawData.knownAddress !== validKnownAddress
+          ) {
+            logger.warn(
+              'WalletManager: loadWallet filtered invalid knownAddress from storage',
+              {
+                walletId: id,
+                invalidAddress: rawData.knownAddress,
+                addressLength: rawData.knownAddress.length,
+              },
+            )
+          }
+
+          if (
+            rawData.internal &&
+            rawData.internal.length !== validInternal.length
+          ) {
+            logger.debug(
+              'WalletManager: loadWallet filtered invalid internal addresses',
+              {
+                walletId: id,
+                originalCount: rawData.internal.length,
+                validCount: validInternal.length,
+              },
+            )
+          }
+
+          if (
+            rawData.external &&
+            rawData.external.length !== validExternal.length
+          ) {
+            logger.debug(
+              'WalletManager: loadWallet filtered invalid external addresses',
+              {
+                walletId: id,
+                originalCount: rawData.external.length,
+                validCount: validExternal.length,
+              },
+            )
+          }
+
+          return {
+            ...rawData,
+            knownAddress: validKnownAddress,
+            internal: validInternal,
+            external: validExternal,
+          }
         }
         return undefined
       })
 
       if (!readOnlyData) {
-        // Fallback: Check if we have accountPubKeyHex stored (for read-only wallets restored from links)
         const encryptedStorage = makeWalletEncryptedStorage(id)
         const accountPubKeyHex = await encryptedStorage.xpub.read(accountVisual)
 
         if (accountPubKeyHex) {
-          // Load as regular wallet (can derive all addresses from accountPubKeyHex)
-          // It's still functionally read-only since there's no private key stored
           logger.debug(
             'WalletManager: loadWallet read-only wallet with accountPubKeyHex, loading as regular wallet',
             {id, accountVisual},
@@ -667,13 +425,71 @@ export class WalletManager {
             accountVisual,
           })
 
-          wallet.subscribe((event) => this._notify(event))
-
+          wallet.subscribe((event) => notify(event))
           return wallet
         }
 
         throwLoggedError(
           'WalletManager: loadWallet read-only address data not found',
+        )
+      }
+
+      // Check if we have at least one valid address after filtering
+      const hasValidAddresses =
+        (readOnlyData.knownAddress && readOnlyData.knownAddress.length > 0) ||
+        (readOnlyData.internal && readOnlyData.internal.length > 0) ||
+        (readOnlyData.external && readOnlyData.external.length > 0)
+
+      if (!hasValidAddresses) {
+        logger.error(
+          'WalletManager: loadWallet read-only wallet has no valid addresses after filtering - removing corrupted wallet',
+          {
+            walletId: id,
+            originalKnownAddress: readOnlyData.knownAddress,
+            originalInternalCount: readOnlyData.internal?.length ?? 0,
+            originalExternalCount: readOnlyData.external?.length ?? 0,
+          },
+        )
+        // Automatically remove corrupted wallet
+        try {
+          // Remove wallet metadata
+          await walletsRootStorage.removeItem(id)
+
+          // Remove wallet storage folder
+          const addressStorage = rootStorage.join(
+            `legacy/${network}/v1/${id}/addresses/`,
+          )
+          await addressStorage.removeItem('readOnly')
+
+          // Remove encrypted storage
+          const encryptedStorage = makeWalletEncryptedStorage(id)
+          await encryptedStorage.xpriv.remove()
+          await encryptedStorage.xpub.remove(0)
+          await keychainManager?.removeWalletKey(id)
+
+          // Remove from wallet metas if present
+          const metas = new Map(stateSubjects.walletMetas.value)
+          if (metas.has(id)) {
+            metas.delete(id)
+            updateWalletMetas(stateSubjects, freeze(metas))
+          }
+
+          // Remove from wallets map if present
+          wallets.delete(id)
+
+          logger.info(
+            'WalletManager: loadWallet removed corrupted read-only wallet',
+            {walletId: id},
+          )
+        } catch (error) {
+          logger.error(
+            'WalletManager: loadWallet failed to remove corrupted wallet',
+            {walletId: id, error},
+          )
+        }
+        // Throw error to skip loading this wallet
+        throw new Error(
+          `Read-only wallet ${id} is corrupted - no valid addresses found`,
         )
       }
 
@@ -689,11 +505,9 @@ export class WalletManager {
         },
       })
 
-      wallet.subscribe((event) => this._notify(event))
-
+      wallet.subscribe((event) => notify(event))
       return wallet
     } else {
-      // Load full wallet from accountPubKeyHex
       const encryptedStorage = makeWalletEncryptedStorage(id)
       const accountPubKeyHex = await encryptedStorage.xpub.read(accountVisual)
 
@@ -706,398 +520,1001 @@ export class WalletManager {
         accountVisual,
       })
 
-      wallet.subscribe((event) => this._notify(event))
-
+      wallet.subscribe((event) => notify(event))
       return wallet
     }
   }
 
-  /**
-   * It doesn't remove the wallet from the storage right away
-   * it marks it for deletion and removes it on the next call to removeWalletsMarkedForDeletion
-   * which usually happens on the next app start
-   *
-   * The reason for that is that while unmounting a wallet it might be in the middle of syncing
-   * and it wasn't properly handled in the past, leaving UI and storage in an inconsistent state
-   *
-   * @param {YoroiWallet['id']} id
-   */
-  async removeWallet(id: string) {
-    const deletedWalletIds = await this.walletIdsMarkedForDeletion()
-    await this.#rootStorage.setItem('deletedWalletIds', [
-      ...deletedWalletIds,
-      id,
-    ])
+  // Public API
+  return {
+    version: WALLET_MANAGER_VERSION,
 
-    // If the removed wallet is the currently selected one, clear the selection
-    if (this.#selectedWalletId$.value === id) {
-      this.#selectedWalletId$.next(null)
-    }
+    // State getters
+    get selectedWalledId() {
+      return stateSubjects.selectedWalletId.value
+    },
+    get selectedWalletId$() {
+      return stateSubjects.selectedWalletId.asObservable()
+    },
+    get selectedNetwork() {
+      return stateSubjects.selectedNetwork.value
+    },
+    get selectedNetwork$() {
+      return stateSubjects.selectedNetwork.asObservable()
+    },
+    get walletMetas$() {
+      return stateSubjects.walletMetas.asObservable()
+    },
+    get hasWallets() {
+      return stateSubjects.walletMetas.value.size > 0
+    },
+    get walletMetas() {
+      return stateSubjects.walletMetas.value
+    },
+    get selectedNetworkManager() {
+      return networkManagers[stateSubjects.selectedNetwork.value]
+    },
+    get syncWalletInfos$() {
+      return stateSubjects.syncWalletInfos.asObservable()
+    },
+    get syncing$() {
+      return stateSubjects.isSyncing.asObservable()
+    },
+    get isSyncing() {
+      return stateSubjects.isSyncing.value
+    },
+    get syncActive$() {
+      return stateSubjects.syncControl.asObservable()
+    },
+    get isSyncActive() {
+      return stateSubjects.syncControl.value
+    },
 
-    // can't update the walletInfo here cuz it might be in the middle of wallet syncing
-    this.#wallets.delete(id)
-    const metas = new Map(this.#walletMetas$.value)
-    metas.delete(id)
-    this.#walletMetas$.next(freeze(metas))
-  }
+    // State setters
+    setSelectedWalletId(id: YoroiWallet['id']) {
+      logger.debug('WalletManager: setSelectedWalletId new wallet selected', {
+        id,
+      })
+      setSelectedWalletId(stateSubjects, id)
+    },
 
-  async createWalletMnemonic({
-    name,
-    mnemonic,
-    password,
-    implementation,
-    addressMode,
-    accountVisual,
-  }: {
-    name: string
-    mnemonic: string
-    password: string
-    implementation: Wallet.Implementation
-    addressMode: Wallet.AddressMode
-    accountVisual: number
-  }) {
-    const network = this.selectedNetwork
+    setSelectedNetwork(network: Chain.SupportedNetworks) {
+      logger.debug('WalletManager: setSelectedNetwork new network selected', {
+        network,
+      })
+      // Use hydrate logic directly (same as hydrate method below)
+      const hydrateFn = async () => {
+        const deletedWalletIds = await parseDeletedWalletIds(
+          await rootStorage.getItem('deletedWalletIds'),
+        )
+        const walletIds = await walletsRootStorage
+          .getAllKeys()
+          .then((ids) => ids.filter((id) => !deletedWalletIds.includes(id)))
+        const walletMetas = await walletsRootStorage
+          .multiGet(walletIds, parseWalletMeta)
+          .then((tuples) => tuples.map(([_, walletMeta]) => walletMeta))
+          .then((walletMetas) => walletMetas.filter(isWalletMeta))
 
-    const walletFactory = getWalletFactory({network, implementation})
-    const id = v4()
-
-    const {rootKey, accountPubKeyHex} = CardanoMobileWrapped.cslScope((csl) =>
-      walletFactory.makeKeys({
-        mnemonic,
-        csl,
-      }),
-    )
-
-    const encryptedStorage = makeWalletEncryptedStorage(id)
-    await encryptedStorage.xpriv.write(rootKey, password)
-    await encryptedStorage.xpub.write(accountVisual, accountPubKeyHex)
-
-    const {ImagePart: seed, TextPart: plate} =
-      walletFactory.calcChecksum(accountPubKeyHex)
-    const avatar = new Blockies({seed}).asBase64()
-
-    const meta: Wallet.Meta = {
-      version: WalletManager.version,
-      id,
-      name,
-      avatar,
-      plate,
-      implementation,
-
-      addressMode,
-      isReadOnly: false,
-      isEasyConfirmationEnabled: false,
-      isHW: false,
-      hwDeviceInfo: null,
-    }
-    await this.#walletsRootStorage.setItem(id, meta)
-    await this.hydrate()
-    return meta
-  }
-
-  async createWalletXPub({
-    name,
-    accountPubKeyHex,
-    implementation,
-    hwDeviceInfo,
-    isReadOnly,
-    addressMode,
-    accountVisual,
-  }: {
-    name: string
-    accountPubKeyHex: string
-    implementation: Wallet.Implementation
-    hwDeviceInfo: null | HW.DeviceInfo
-    isReadOnly: boolean
-    addressMode: Wallet.AddressMode
-    accountVisual: number
-  }) {
-    const network = this.selectedNetwork
-
-    const walletFactory = getWalletFactory({network, implementation})
-    const id = v4()
-
-    const {ImagePart: seed, TextPart: plate} =
-      walletFactory.calcChecksum(accountPubKeyHex)
-    const avatar = new Blockies({seed}).asBase64()
-
-    const encryptedStorage = makeWalletEncryptedStorage(id)
-    await encryptedStorage.xpub.write(accountVisual, accountPubKeyHex)
-
-    const meta: Wallet.Meta = {
-      version: WalletManager.version,
-      id,
-      name,
-      avatar,
-      plate,
-      implementation,
-
-      addressMode,
-      isReadOnly,
-      isEasyConfirmationEnabled: false,
-      isHW: hwDeviceInfo !== null,
-      hwDeviceInfo,
-    }
-    await this.#walletsRootStorage.setItem(id, meta)
-    await this.hydrate()
-    return meta
-  }
-
-  /**
-   * Validates if a string looks like a valid Cardano address
-   */
-  private isValidCardanoAddress(address: string): boolean {
-    if (!address || typeof address !== 'string') return false
-    const trimmed = address.trim()
-    return (
-      trimmed.startsWith('addr') ||
-      trimmed.startsWith('stake') ||
-      trimmed.startsWith('Ae2') ||
-      trimmed.startsWith('DdzFF') ||
-      /^[0-9a-fA-F]{64,}$/.test(trimmed) // Hex address (at least 32 bytes)
-    )
-  }
-
-  /**
-   * Creates a read-only wallet from addresses (without accountPubKeyHex)
-   * This allows creating a partial read-only view of a wallet using only known addresses
-   */
-  async createReadOnlyWalletFromAddresses({
-    name,
-    knownAddress,
-    internalAddresses = [],
-    externalAddresses = [],
-    rewardAddressHex,
-    implementation,
-    addressMode,
-    accountVisual,
-    enableDiscovery = false,
-  }: {
-    name: string
-    knownAddress?: string
-    internalAddresses?: string[]
-    externalAddresses?: string[]
-    rewardAddressHex?: string
-    implementation: Wallet.Implementation
-    addressMode: Wallet.AddressMode
-    accountVisual: number
-    enableDiscovery?: boolean
-  }) {
-    const network = this.selectedNetwork
-    const walletFactory = getWalletFactory({network, implementation})
-    const id = v4()
-
-    // Filter out invalid addresses
-    const validKnownAddress =
-      knownAddress && this.isValidCardanoAddress(knownAddress)
-        ? knownAddress
-        : undefined
-    const validInternalAddresses = internalAddresses.filter((addr) =>
-      this.isValidCardanoAddress(addr),
-    )
-    const validExternalAddresses = externalAddresses.filter((addr) =>
-      this.isValidCardanoAddress(addr),
-    )
-
-    // Validate we have at least one valid address
-    if (
-      !validKnownAddress &&
-      validInternalAddresses.length === 0 &&
-      validExternalAddresses.length === 0
-    ) {
-      throw new Error(
-        'Read-only wallet requires at least one valid Cardano address',
-      )
-    }
-
-    // Derive reward address if not provided and we have a base address
-    let finalRewardAddressHex = rewardAddressHex
-    if (!finalRewardAddressHex) {
-      const addressToUse =
-        validExternalAddresses[0] ||
-        validInternalAddresses[0] ||
-        validKnownAddress
-      if (addressToUse && this.isValidCardanoAddress(addressToUse)) {
-        try {
-          const chainId = networkManagers[network].chainId
-          const rewardAddressBech32 = CardanoMobileWrapped.cslScope((csl) => {
-            const addr = csl.Address.fromBech32(addressToUse)
-            const baseAddr = csl.BaseAddress.fromAddress(addr)
-            if (!baseAddr) {
-              throw new Error('Address is not a base address')
-            }
-            const stakeCred = baseAddr.stakeCred()
-            const rewardAddr = csl.RewardAddress.new(chainId, stakeCred)
-            return rewardAddr.toAddress().toBech32(undefined)
-          })
-
-          if (typeof rewardAddressBech32 === 'string') {
-            finalRewardAddressHex = CardanoMobileWrapped.cslScope((csl) => {
-              const addr = csl.Address.fromBech32(rewardAddressBech32)
-              return Buffer.from(addr.toBytes()).toString('hex')
-            })
+        const allMetas = new Map(stateSubjects.walletMetas.value)
+        for (const meta of walletMetas) {
+          if (!allMetas.has(meta.id)) {
+            allMetas.set(meta.id, meta)
           }
-        } catch (error) {
-          logger.warn('Failed to derive reward address', {error})
-          finalRewardAddressHex = ''
+        }
+        if (allMetas.size !== stateSubjects.walletMetas.value.size) {
+          updateWalletMetas(stateSubjects, freeze(allMetas))
+        }
+
+        const metasToLoad = walletMetas.filter((meta) => !wallets.has(meta.id))
+
+        if (metasToLoad.length > 0) {
+          const loadedWallets = await loadWalletsSafely(metasToLoad, {
+            isForced: true,
+            network,
+          })
+          for (const wallet of loadedWallets) wallets.set(wallet.id, wallet)
+
+          if (syncManager) {
+            syncManager.updateWallets(Array.from(wallets.values()))
+          }
+        }
+
+        return {
+          wallets: Array.from(wallets.values()),
+          metas: Array.from(stateSubjects.walletMetas.value.values()),
         }
       }
-    }
 
-    // Generate checksum from reward address or first address for avatar/plate
-    const checksumSource = finalRewardAddressHex
-      ? Buffer.from(finalRewardAddressHex, 'hex').toString('hex')
-      : validExternalAddresses[0] ||
-        validInternalAddresses[0] ||
-        validKnownAddress ||
-        ''
+      hydrateFn().then(() => {
+        setSelectedNetwork(stateSubjects, network)
+        syncManager?.updateNetwork(network)
+        // Restart syncing after network change
+        if (syncManager) {
+          syncManager.stop()
+          syncManager.start()
+        }
+      })
+    },
 
-    const {ImagePart: seed, TextPart: plate} =
-      walletFactory.calcChecksum(checksumSource)
-    const avatar = new Blockies({seed}).asBase64()
+    pauseSyncing() {
+      logger.debug('WalletManager: pauseSyncing requested')
+      setSyncControl(stateSubjects, false)
+    },
 
-    // Store addresses for persistence (not in encrypted storage since no private keys)
-    const addressStorage = rootStorage.join(
-      `legacy/${network}/v1/${id}/addresses/`,
-    )
-    await addressStorage.setItem('readOnly', {
-      knownAddress: validKnownAddress,
-      internal: validInternalAddresses,
-      external: validExternalAddresses,
-      rewardAddressHex: finalRewardAddressHex,
-      enableDiscovery,
+    resumeSyncing() {
+      logger.debug('WalletManager: resumeSyncing requested')
+      setSyncControl(stateSubjects, true)
+    },
+
+    startSyncing() {
+      if (syncManager) {
+        // Create a reference to hydrate method
+        const hydrateFn = async () => {
+          const deletedWalletIds = await parseDeletedWalletIds(
+            await rootStorage.getItem('deletedWalletIds'),
+          )
+          const walletIds = await walletsRootStorage
+            .getAllKeys()
+            .then((ids) => ids.filter((id) => !deletedWalletIds.includes(id)))
+          const walletMetas = await walletsRootStorage
+            .multiGet(walletIds, parseWalletMeta)
+            .then((tuples) => tuples.map(([_, walletMeta]) => walletMeta))
+            .then((walletMetas) => walletMetas.filter(isWalletMeta))
+
+          const allMetas = new Map(stateSubjects.walletMetas.value)
+          for (const meta of walletMetas) {
+            if (!allMetas.has(meta.id)) {
+              allMetas.set(meta.id, meta)
+            }
+          }
+          if (allMetas.size !== stateSubjects.walletMetas.value.size) {
+            updateWalletMetas(stateSubjects, freeze(allMetas))
+          }
+
+          const metasToLoad = walletMetas.filter(
+            (meta) => !wallets.has(meta.id),
+          )
+
+          if (metasToLoad.length > 0) {
+            const loadedWallets = await loadWalletsSafely(metasToLoad, {
+              isForced: false,
+              network: stateSubjects.selectedNetwork.value,
+            })
+            for (const wallet of loadedWallets) wallets.set(wallet.id, wallet)
+          }
+
+          return {
+            wallets: Array.from(wallets.values()),
+            metas: Array.from(stateSubjects.walletMetas.value.values()),
+          }
+        }
+
+        hydrateFn()
+          .then(() => {
+            syncManager?.updateWallets(Array.from(wallets.values()))
+            syncManager?.updateNetwork(stateSubjects.selectedNetwork.value)
+            syncManager?.start()
+          })
+          .catch((error) => {
+            logger.error('WalletManager: Error hydrating wallets for sync', {
+              error,
+            })
+          })
+
+        if (!syncSubscription) {
+          syncSubscription = stateSubjects.syncControl.subscribe((isActive) => {
+            if (isActive) {
+              syncManager?.resume()
+            } else {
+              syncManager?.pause()
+            }
+          })
+        }
+      }
+    },
+
+    stopSyncing() {
+      if (syncManager) {
+        syncManager.stop()
+      }
+      syncManagerSubscription?.unsubscribe()
+      syncManagerSubscription = null
+      syncSubscription?.unsubscribe()
+      syncSubscription = null
+    },
+
+    restartSyncing() {
+      if (syncManager) {
+        syncManager.stop()
+      }
+      syncManagerSubscription?.unsubscribe()
+      syncManagerSubscription = null
+      syncSubscription?.unsubscribe()
+      syncSubscription = null
+      // Re-initialize sync manager
+      initializeSyncManager()
+      // Start syncing again
+      const hydrateFn = async () => {
+        const deletedWalletIds = await parseDeletedWalletIds(
+          await rootStorage.getItem('deletedWalletIds'),
+        )
+        const walletIds = await walletsRootStorage
+          .getAllKeys()
+          .then((ids) => ids.filter((id) => !deletedWalletIds.includes(id)))
+        const walletMetas = await walletsRootStorage
+          .multiGet(walletIds, parseWalletMeta)
+          .then((tuples) => tuples.map(([_, walletMeta]) => walletMeta))
+          .then((walletMetas) => walletMetas.filter(isWalletMeta))
+
+        const allMetas = new Map(stateSubjects.walletMetas.value)
+        for (const meta of walletMetas) {
+          if (!allMetas.has(meta.id)) {
+            allMetas.set(meta.id, meta)
+          }
+        }
+        if (allMetas.size !== stateSubjects.walletMetas.value.size) {
+          updateWalletMetas(stateSubjects, freeze(allMetas))
+        }
+
+        const metasToLoad = walletMetas.filter((meta) => !wallets.has(meta.id))
+
+        if (metasToLoad.length > 0) {
+          const loadedWallets = await loadWalletsSafely(metasToLoad, {
+            isForced: false,
+            network: stateSubjects.selectedNetwork.value,
+          })
+          for (const wallet of loadedWallets) wallets.set(wallet.id, wallet)
+        }
+
+        return {
+          wallets: Array.from(wallets.values()),
+          metas: Array.from(stateSubjects.walletMetas.value.values()),
+        }
+      }
+
+      hydrateFn().then(() => {
+        if (syncManager) {
+          syncManager.updateWallets(Array.from(wallets.values()))
+          syncManager.updateNetwork(stateSubjects.selectedNetwork.value)
+          syncManager.start()
+        }
+
+        if (!syncSubscription) {
+          syncSubscription = stateSubjects.syncControl.subscribe((isActive) => {
+            if (isActive) {
+              syncManager?.resume()
+            } else {
+              syncManager?.pause()
+            }
+          })
+        }
+      })
+    },
+
+    async hydrate({
+      isForced = false,
+      network = stateSubjects.selectedNetwork.value,
+    }: {isForced?: boolean; network?: Chain.SupportedNetworks} = {}) {
+      // Clean up any wallets that were marked for deletion before the refactor
+      // (now removeWallet deletes immediately, but we need to clean up old marked wallets)
+      await this.removeWalletsMarkedForDeletion()
+
+      const deletedWalletIds = await parseDeletedWalletIds(
+        await rootStorage.getItem('deletedWalletIds'),
+      )
+      const walletIds = await walletsRootStorage
+        .getAllKeys()
+        .then((ids) => ids.filter((id) => !deletedWalletIds.includes(id)))
+      const walletMetas = await walletsRootStorage
+        .multiGet(walletIds, parseWalletMeta)
+        .then((tuples) => tuples.map(([_, walletMeta]) => walletMeta))
+        .then((walletMetas) => walletMetas.filter(isWalletMeta))
+
+      const allMetas = new Map(stateSubjects.walletMetas.value)
+      for (const meta of walletMetas) {
+        if (!allMetas.has(meta.id) || isForced) {
+          allMetas.set(meta.id, meta)
+        }
+      }
+      if (allMetas.size !== stateSubjects.walletMetas.value.size || isForced) {
+        updateWalletMetas(stateSubjects, freeze(allMetas))
+      }
+
+      const metasToLoad = walletMetas.filter(
+        (meta) => !wallets.has(meta.id) || isForced,
+      )
+
+      if (metasToLoad.length > 0) {
+        const loadedWallets = await loadWalletsSafely(metasToLoad, {
+          isForced,
+          network,
+        })
+        for (const wallet of loadedWallets) wallets.set(wallet.id, wallet)
+
+        if (syncManager) {
+          syncManager.updateWallets(Array.from(wallets.values()))
+        }
+      }
+
+      return {
+        wallets: Array.from(wallets.values()),
+        metas: Array.from(stateSubjects.walletMetas.value.values()),
+      }
+    },
+
+    async walletIdsMarkedForDeletion() {
+      const ids = await rootStorage.getItem('deletedWalletIds')
+      return parseDeletedWalletIds(ids)
+    },
+
+    async removeWalletsMarkedForDeletion() {
+      const deletedWalletsIds = await parseDeletedWalletIds(
+        await rootStorage.getItem('deletedWalletIds'),
+      )
+      if (!deletedWalletsIds || deletedWalletsIds.length === 0) return
+
+      await Promise.all(
+        deletedWalletsIds.map(async (id) => {
+          const encryptedStorage = makeWalletEncryptedStorage(id)
+          for (const network of Object.keys(
+            networkManagers,
+          ) as Chain.SupportedNetworks[]) {
+            const legacyStorage = rootStorage.join(`legacy/${network}/v1/`)
+            await legacyStorage.removeItem(id)
+          }
+
+          await walletsRootStorage.removeItem(id)
+          await encryptedStorage.xpriv.remove()
+          await encryptedStorage.xpub.remove(0)
+          await keychainManager?.removeWalletKey(id)
+        }),
+      )
+
+      await rootStorage.setItem('deletedWalletIds', [])
+    },
+
+    async removeWallet(id: string) {
+      logger.debug('WalletManager: removeWallet deleting wallet', {
+        walletId: id,
+      })
+
+      // Remove from in-memory state first
+      if (stateSubjects.selectedWalletId.value === id) {
+        setSelectedWalletId(stateSubjects, null)
+      }
+
+      wallets.delete(id)
+      const metas = new Map(stateSubjects.walletMetas.value)
+      metas.delete(id)
+      updateWalletMetas(stateSubjects, freeze(metas))
+
+      if (syncManager) {
+        syncManager.updateWallets(Array.from(wallets.values()))
+      }
+
+      // Actually delete wallet files from storage
+      try {
+        const encryptedStorage = makeWalletEncryptedStorage(id)
+
+        // Remove wallet metadata
+        await walletsRootStorage.removeItem(id)
+
+        // Remove wallet storage for all networks
+        for (const network of Object.keys(
+          networkManagers,
+        ) as Chain.SupportedNetworks[]) {
+          const legacyStorage = rootStorage.join(`legacy/${network}/v1/`)
+          await legacyStorage.removeItem(id)
+
+          // Also remove address storage for read-only wallets
+          const addressStorage = rootStorage.join(
+            `legacy/${network}/v1/${id}/addresses/`,
+          )
+          await addressStorage.removeItem('readOnly').catch(() => {
+            // Ignore if doesn't exist
+          })
+        }
+
+        // Remove encrypted storage
+        await encryptedStorage.xpriv.remove().catch(() => {
+          // Ignore if doesn't exist
+        })
+        await encryptedStorage.xpub.remove(0).catch(() => {
+          // Ignore if doesn't exist
+        })
+
+        // Remove keychain entry
+        await keychainManager?.removeWalletKey(id).catch(() => {
+          // Ignore if doesn't exist
+        })
+
+        logger.info('WalletManager: removeWallet successfully deleted wallet', {
+          walletId: id,
+        })
+      } catch (error) {
+        logger.error(
+          'WalletManager: removeWallet failed to delete wallet files',
+          {
+            walletId: id,
+            error,
+          },
+        )
+        // Still remove from deletedWalletIds list if it was there
+        const deletedWalletIds = await parseDeletedWalletIds(
+          await rootStorage.getItem('deletedWalletIds'),
+        )
+        if (deletedWalletIds.includes(id)) {
+          await rootStorage.setItem(
+            'deletedWalletIds',
+            deletedWalletIds.filter((deletedId) => deletedId !== id),
+          )
+        }
+        throw error
+      }
+    },
+
+    notifyTransactionSubmitted(walletId: YoroiWallet['id'], txId: string) {
+      if (syncManager) {
+        syncManager.notifyTransactionSubmitted({
+          walletId,
+          txId,
+          timestamp: Date.now(),
+        })
+      }
+    },
+
+    async createWalletMnemonic({
+      name,
+      mnemonic,
+      password,
+      implementation,
+      addressMode,
       accountVisual,
-    })
-
-    const meta: Wallet.Meta = {
-      version: WalletManager.version,
-      id,
-      name,
-      avatar,
-      plate,
-      implementation,
-      addressMode,
-      isReadOnly: true,
-      isEasyConfirmationEnabled: false,
-      isHW: false,
-      hwDeviceInfo: null,
-    }
-    await this.#walletsRootStorage.setItem(id, meta)
-    await this.hydrate()
-    return meta
-  }
-
-  /**
-   * Derives and stores accountPubKeyHex for any accountVisual from an existing wallet's root key
-   * This allows deriving multiple accounts from a single root key
-   */
-  async deriveAndStoreAccount({
-    id,
-    accountVisual,
-    password,
-  }: {
-    id: string
-    accountVisual: number
-    password: string
-  }): Promise<string> {
-    // Read root key
-    const encryptedStorage = makeWalletEncryptedStorage(id)
-    const rootKeyResult = await encryptedStorage.xpriv.read(password)
-    const rootKeyHex = rootKeyResult.value
-
-    // Get wallet meta to determine implementation
-    const meta = await this.#walletsRootStorage.getItem(id, parseWalletMeta)
-    if (!meta) {
-      throwLoggedError('WalletManager: deriveAndStoreAccount wallet not found')
-    }
-
-    // Derive accountPubKeyHex for the specified accountVisual
-    const accountPubKeyHex = CardanoMobileWrapped.cslScope((csl) =>
-      deriveAccountFromRootKey(
-        rootKeyHex,
+    }: {
+      name: string
+      mnemonic: string
+      password: string
+      implementation: Wallet.Implementation
+      addressMode: Wallet.AddressMode
+      accountVisual: number
+    }) {
+      const meta = await createWalletFromMnemonic({
+        name,
+        mnemonic,
+        password,
+        implementation,
+        addressMode,
         accountVisual,
-        meta.implementation,
-        csl,
-      ),
-    )
+        network: stateSubjects.selectedNetwork.value,
+        version: WALLET_MANAGER_VERSION,
+      })
 
-    // Store it
-    await encryptedStorage.xpub.write(accountVisual, accountPubKeyHex)
+      await walletsRootStorage.setItem(meta.id, meta)
+      // Hydrate to load the new wallet
+      const deletedWalletIds = await parseDeletedWalletIds(
+        await rootStorage.getItem('deletedWalletIds'),
+      )
+      const walletIds = await walletsRootStorage
+        .getAllKeys()
+        .then((ids) => ids.filter((id) => !deletedWalletIds.includes(id)))
+      const walletMetas = await walletsRootStorage
+        .multiGet(walletIds, parseWalletMeta)
+        .then((tuples) => tuples.map(([_, walletMeta]) => walletMeta))
+        .then((walletMetas) => walletMetas.filter(isWalletMeta))
 
-    return accountPubKeyHex
-  }
+      const allMetas = new Map(stateSubjects.walletMetas.value)
+      for (const m of walletMetas) {
+        if (!allMetas.has(m.id)) {
+          allMetas.set(m.id, m)
+        }
+      }
+      if (allMetas.size !== stateSubjects.walletMetas.value.size) {
+        updateWalletMetas(stateSubjects, freeze(allMetas))
+      }
 
-  /**
-   * Creates a wallet from a root key hex (for restoration from links)
-   */
-  async createWalletFromRootKey({
-    name,
-    rootKeyHex,
-    password,
-    implementation,
-    addressMode,
-    accountVisual,
-  }: {
-    name: string
-    rootKeyHex: string
-    password: string
-    implementation: Wallet.Implementation
-    addressMode: Wallet.AddressMode
-    accountVisual: number
-  }) {
-    const network = this.selectedNetwork
+      const metasToLoad = walletMetas.filter((m) => !wallets.has(m.id))
+      if (metasToLoad.length > 0) {
+        const loadedWallets = await Promise.all(
+          metasToLoad.map(({id, implementation}) =>
+            loadWallet({
+              id,
+              implementation,
+              isForced: false,
+              network: stateSubjects.selectedNetwork.value,
+            }),
+          ),
+        )
+        for (const wallet of loadedWallets) wallets.set(wallet.id, wallet)
+        if (syncManager) {
+          syncManager.updateWallets(Array.from(wallets.values()))
+        }
+      }
+      return meta
+    },
 
-    const walletFactory = getWalletFactory({network, implementation})
-    const id = v4()
-
-    // Derive accountPubKeyHex from rootKeyHex
-    const accountPubKeyHex = CardanoMobileWrapped.cslScope((csl) =>
-      deriveAccountFromRootKey(rootKeyHex, accountVisual, implementation, csl),
-    )
-
-    const encryptedStorage = makeWalletEncryptedStorage(id)
-    await encryptedStorage.xpriv.write(rootKeyHex, password)
-    await encryptedStorage.xpub.write(accountVisual, accountPubKeyHex)
-
-    const {ImagePart: seed, TextPart: plate} =
-      walletFactory.calcChecksum(accountPubKeyHex)
-    const avatar = new Blockies({seed}).asBase64()
-
-    const meta: Wallet.Meta = {
-      version: WalletManager.version,
-      id,
+    async createWalletXPub({
       name,
-      avatar,
-      plate,
+      accountPubKeyHex,
       implementation,
-
+      hwDeviceInfo,
+      isReadOnly,
       addressMode,
-      isReadOnly: false,
-      isEasyConfirmationEnabled: false,
-      isHW: false,
-      hwDeviceInfo: null,
-    }
-    await this.#walletsRootStorage.setItem(id, meta)
-    await this.hydrate()
-    return meta
+      accountVisual,
+    }: {
+      name: string
+      accountPubKeyHex: string
+      implementation: Wallet.Implementation
+      hwDeviceInfo: null | HW.DeviceInfo
+      isReadOnly: boolean
+      addressMode: Wallet.AddressMode
+      accountVisual: number
+    }) {
+      const meta = await createWalletFromXPubFn({
+        name,
+        accountPubKeyHex,
+        implementation,
+        hwDeviceInfo,
+        isReadOnly,
+        addressMode,
+        accountVisual,
+        network: stateSubjects.selectedNetwork.value,
+        version: WALLET_MANAGER_VERSION,
+      })
+
+      await walletsRootStorage.setItem(meta.id, meta)
+      // Hydrate to load the new wallet (same pattern as createWalletMnemonic)
+      const deletedWalletIds = await parseDeletedWalletIds(
+        await rootStorage.getItem('deletedWalletIds'),
+      )
+      const walletIds = await walletsRootStorage
+        .getAllKeys()
+        .then((ids) => ids.filter((id) => !deletedWalletIds.includes(id)))
+      const walletMetas = await walletsRootStorage
+        .multiGet(walletIds, parseWalletMeta)
+        .then((tuples) => tuples.map(([_, walletMeta]) => walletMeta))
+        .then((walletMetas) => walletMetas.filter(isWalletMeta))
+
+      const allMetas = new Map(stateSubjects.walletMetas.value)
+      for (const m of walletMetas) {
+        if (!allMetas.has(m.id)) {
+          allMetas.set(m.id, m)
+        }
+      }
+      if (allMetas.size !== stateSubjects.walletMetas.value.size) {
+        updateWalletMetas(stateSubjects, freeze(allMetas))
+      }
+
+      const metasToLoad = walletMetas.filter((m) => !wallets.has(m.id))
+      if (metasToLoad.length > 0) {
+        const loadedWallets = await Promise.all(
+          metasToLoad.map(({id, implementation}) =>
+            loadWallet({
+              id,
+              implementation,
+              isForced: false,
+              network: stateSubjects.selectedNetwork.value,
+            }),
+          ),
+        )
+        for (const wallet of loadedWallets) wallets.set(wallet.id, wallet)
+        if (syncManager) {
+          syncManager.updateWallets(Array.from(wallets.values()))
+        }
+      }
+      return meta
+    },
+
+    async createReadOnlyWalletFromAddresses({
+      name,
+      knownAddress,
+      internalAddresses = [],
+      externalAddresses = [],
+      rewardAddressHex,
+      implementation,
+      addressMode,
+      accountVisual,
+      enableDiscovery = false,
+    }: {
+      name: string
+      knownAddress?: string
+      internalAddresses?: string[]
+      externalAddresses?: string[]
+      rewardAddressHex?: string
+      implementation: Wallet.Implementation
+      addressMode: Wallet.AddressMode
+      accountVisual: number
+      enableDiscovery?: boolean
+    }) {
+      const network = stateSubjects.selectedNetwork.value
+      const walletFactory = getWalletFactory({network, implementation})
+      const id = v4()
+
+      const validKnownAddress =
+        knownAddress && isValidCardanoAddress(knownAddress)
+          ? knownAddress
+          : undefined
+      const validInternalAddresses = internalAddresses.filter((addr) =>
+        isValidCardanoAddress(addr),
+      )
+      const validExternalAddresses = externalAddresses.filter((addr) =>
+        isValidCardanoAddress(addr),
+      )
+
+      if (
+        !validKnownAddress &&
+        validInternalAddresses.length === 0 &&
+        validExternalAddresses.length === 0
+      ) {
+        throw new Error(
+          'Read-only wallet requires at least one valid Cardano address',
+        )
+      }
+
+      let finalRewardAddressHex = rewardAddressHex
+      if (!finalRewardAddressHex) {
+        const addressToUse =
+          validExternalAddresses[0] ||
+          validInternalAddresses[0] ||
+          validKnownAddress
+        if (addressToUse && isValidCardanoAddress(addressToUse)) {
+          try {
+            const chainId = networkManagers[network].chainId
+            const rewardAddressBech32 = CardanoMobileWrapped.cslScope((csl) => {
+              const addr = csl.Address.fromBech32(addressToUse)
+              const baseAddr = csl.BaseAddress.fromAddress(addr)
+              if (!baseAddr) {
+                throw new Error('Address is not a base address')
+              }
+              const stakeCred = baseAddr.stakeCred()
+              const rewardAddr = csl.RewardAddress.new(chainId, stakeCred)
+              return rewardAddr.toAddress().toBech32(undefined)
+            })
+
+            if (typeof rewardAddressBech32 === 'string') {
+              finalRewardAddressHex = CardanoMobileWrapped.cslScope((csl) => {
+                const addr = csl.Address.fromBech32(rewardAddressBech32)
+                return Buffer.from(addr.toBytes()).toString('hex')
+              })
+            }
+          } catch (error) {
+            logger.warn('Failed to derive reward address', {error})
+            finalRewardAddressHex = ''
+          }
+        }
+      }
+
+      const checksumSource = finalRewardAddressHex
+        ? Buffer.from(finalRewardAddressHex, 'hex').toString('hex')
+        : validExternalAddresses[0] ||
+          validInternalAddresses[0] ||
+          validKnownAddress ||
+          ''
+
+      const {ImagePart: seed, TextPart: plate} =
+        walletFactory.calcChecksum(checksumSource)
+      const avatar = new Blockies({seed}).asBase64()
+
+      const addressStorage = rootStorage.join(
+        `legacy/${network}/v1/${id}/addresses/`,
+      )
+      await addressStorage.setItem('readOnly', {
+        knownAddress: validKnownAddress,
+        internal: validInternalAddresses,
+        external: validExternalAddresses,
+        rewardAddressHex: finalRewardAddressHex,
+        enableDiscovery,
+        accountVisual,
+      })
+
+      const meta: Wallet.Meta = {
+        version: WALLET_MANAGER_VERSION,
+        id,
+        name,
+        avatar,
+        plate,
+        implementation,
+        addressMode,
+        isReadOnly: true,
+        isEasyConfirmationEnabled: false,
+        isHW: false,
+        hwDeviceInfo: null,
+      }
+      await walletsRootStorage.setItem(id, meta)
+      // Hydrate to load the new wallet (same pattern as createWalletMnemonic)
+      const deletedWalletIds = await parseDeletedWalletIds(
+        await rootStorage.getItem('deletedWalletIds'),
+      )
+      const walletIds = await walletsRootStorage
+        .getAllKeys()
+        .then((ids) => ids.filter((id) => !deletedWalletIds.includes(id)))
+      const walletMetas = await walletsRootStorage
+        .multiGet(walletIds, parseWalletMeta)
+        .then((tuples) => tuples.map(([_, walletMeta]) => walletMeta))
+        .then((walletMetas) => walletMetas.filter(isWalletMeta))
+
+      const allMetas = new Map(stateSubjects.walletMetas.value)
+      for (const m of walletMetas) {
+        if (!allMetas.has(m.id)) {
+          allMetas.set(m.id, m)
+        }
+      }
+      if (allMetas.size !== stateSubjects.walletMetas.value.size) {
+        updateWalletMetas(stateSubjects, freeze(allMetas))
+      }
+
+      const metasToLoad = walletMetas.filter((m) => !wallets.has(m.id))
+      if (metasToLoad.length > 0) {
+        const loadedWallets = await Promise.all(
+          metasToLoad.map(({id, implementation}) =>
+            loadWallet({
+              id,
+              implementation,
+              isForced: false,
+              network: stateSubjects.selectedNetwork.value,
+            }),
+          ),
+        )
+        for (const wallet of loadedWallets) wallets.set(wallet.id, wallet)
+        if (syncManager) {
+          syncManager.updateWallets(Array.from(wallets.values()))
+        }
+      }
+      return meta
+    },
+
+    async deriveAndStoreAccount({
+      id,
+      accountVisual,
+      password,
+    }: {
+      id: string
+      accountVisual: number
+      password: string
+    }): Promise<string> {
+      const meta = await walletsRootStorage.getItem(id, parseWalletMeta)
+      if (!meta) {
+        throwLoggedError(
+          'WalletManager: deriveAndStoreAccount wallet not found',
+        )
+      }
+
+      const encryptedStorage = makeWalletEncryptedStorage(id)
+      const rootKeyResult = await encryptedStorage.xpriv.read(password)
+      const rootKeyHex = rootKeyResult.value
+
+      return deriveAndStoreAccount({
+        id,
+        accountVisual,
+        password: rootKeyHex,
+        implementation: meta.implementation,
+      })
+    },
+
+    async createWalletFromRootKey({
+      name,
+      rootKeyHex,
+      password,
+      implementation,
+      addressMode,
+      accountVisual,
+    }: {
+      name: string
+      rootKeyHex: string
+      password: string
+      implementation: Wallet.Implementation
+      addressMode: Wallet.AddressMode
+      accountVisual: number
+    }) {
+      const meta = await createWalletFromRootKey({
+        name,
+        rootKeyHex,
+        password,
+        implementation,
+        addressMode,
+        accountVisual,
+        network: stateSubjects.selectedNetwork.value,
+        version: WALLET_MANAGER_VERSION,
+      })
+
+      await walletsRootStorage.setItem(meta.id, meta)
+      // Hydrate to load the new wallet (same pattern as createWalletMnemonic)
+      const deletedWalletIds = await parseDeletedWalletIds(
+        await rootStorage.getItem('deletedWalletIds'),
+      )
+      const walletIds = await walletsRootStorage
+        .getAllKeys()
+        .then((ids) => ids.filter((id) => !deletedWalletIds.includes(id)))
+      const walletMetas = await walletsRootStorage
+        .multiGet(walletIds, parseWalletMeta)
+        .then((tuples) => tuples.map(([_, walletMeta]) => walletMeta))
+        .then((walletMetas) => walletMetas.filter(isWalletMeta))
+
+      const allMetas = new Map(stateSubjects.walletMetas.value)
+      for (const m of walletMetas) {
+        if (!allMetas.has(m.id)) {
+          allMetas.set(m.id, m)
+        }
+      }
+      if (allMetas.size !== stateSubjects.walletMetas.value.size) {
+        updateWalletMetas(stateSubjects, freeze(allMetas))
+      }
+
+      const metasToLoad = walletMetas.filter((m) => !wallets.has(m.id))
+      if (metasToLoad.length > 0) {
+        const loadedWallets = await Promise.all(
+          metasToLoad.map(({id, implementation}) =>
+            loadWallet({
+              id,
+              implementation,
+              isForced: false,
+              network: stateSubjects.selectedNetwork.value,
+            }),
+          ),
+        )
+        for (const wallet of loadedWallets) wallets.set(wallet.id, wallet)
+        if (syncManager) {
+          syncManager.updateWallets(Array.from(wallets.values()))
+        }
+      }
+      return meta
+    },
+
+    getNetworkManager(network: Chain.SupportedNetworks) {
+      return networkManagers[network]
+    },
+
+    getTokenManager(network: Chain.SupportedNetworks) {
+      return networkManagers[network].tokenManager
+    },
+
+    getWalletsByNetwork() {
+      const openedWalletsByNetwork = new Map<
+        Chain.SupportedNetworks,
+        Set<YoroiWallet['id']>
+      >()
+
+      wallets.forEach((wallet: YoroiWallet) => {
+        const {id, networkManager} = wallet
+        const network = networkManager.network
+        if (!openedWalletsByNetwork.has(network))
+          openedWalletsByNetwork.set(network, new Set())
+
+        openedWalletsByNetwork.get(network)?.add(id)
+      })
+
+      return openedWalletsByNetwork
+    },
+
+    getWalletById(id: YoroiWallet['id']) {
+      return wallets.get(id)
+    },
+
+    getWalletMetaById(id: YoroiWallet['id']) {
+      return stateSubjects.walletMetas.value.get(id)
+    },
+
+    checksum(publicKeyHex: string) {
+      const {TextPart, ImagePart} = walletChecksum(publicKeyHex)
+      return {
+        plate: TextPart,
+        seed: ImagePart,
+      }
+    },
+
+    isWalletAccountDuplicated(publicKeyHex: string) {
+      const {TextPart: plate} = walletChecksum(publicKeyHex)
+      return Array.from(stateSubjects.walletMetas.value.values()).some(
+        (walletMeta: Wallet.Meta) => walletMeta.plate === plate,
+      )
+    },
+
+    findWalletMetadataByPublicKeyHex(publicKeyHex: string) {
+      const {TextPart: plate} = walletChecksum(publicKeyHex)
+      return Array.from(stateSubjects.walletMetas.value.values()).find(
+        (walletMeta: Wallet.Meta) => walletMeta.plate === plate,
+      )
+    },
+
+    validateWalletName(newName: string, oldName: string | null = null) {
+      const walletNames = Array.from(
+        stateSubjects.walletMetas.value.values(),
+      ).map((walletMeta: Wallet.Meta) => walletMeta.name)
+      return validateWalletName(newName, oldName, walletNames)
+    },
+
+    generateWalletKeys(
+      walletImplementation: Wallet.Implementation,
+      mnemonic: string,
+      accountVisual?: number,
+    ) {
+      return CardanoMobileWrapped.cslScope((csl) =>
+        keyManager(walletImplementation)({
+          csl,
+          mnemonic,
+          accountVisual,
+        }),
+      )
+    },
+
+    subscribe(subscription: (event: WalletManagerEvent | WalletEvent) => void) {
+      subscriptions.push(subscription)
+      return () => {
+        const index = subscriptions.indexOf(subscription)
+        if (index > -1) subscriptions.splice(index, 1)
+      }
+    },
+
+    async disableEasyConfirmation(id: YoroiWallet['id']) {
+      if (!keychainManager)
+        throwLoggedError(
+          'WalletManager: disableEasyConfirmation KeychainManager not available',
+        )
+
+      await keychainManager.removeWalletKey(id)
+      updateMeta(id, {
+        isEasyConfirmationEnabled: false,
+      })
+    },
+
+    async enableEasyConfirmation(wallet: YoroiWallet, password: string) {
+      if (!keychainManager)
+        throwLoggedError(
+          'WalletManager: enableEasyConfirmation KeychainManager not available',
+        )
+
+      const rootKey = await wallet.encryptedStorage.xpriv.read(password)
+      keychainManager.setWalletKey(wallet.id, rootKey.value)
+
+      updateMeta(wallet.id, {
+        isEasyConfirmationEnabled: true,
+      })
+    },
+
+    renameWallet(id: YoroiWallet['id'], name: string) {
+      updateMeta(id, {name})
+    },
+
+    changeWalletAddressMode(
+      id: YoroiWallet['id'],
+      addressMode: Wallet.AddressMode,
+    ) {
+      updateMeta(id, {addressMode})
+    },
+
+    updateWalletHWDeviceInfo(
+      id: YoroiWallet['id'],
+      hwDeviceInfo: HW.DeviceInfo,
+    ) {
+      updateMeta(id, {hwDeviceInfo})
+    },
+
+    async changeWalletPassword({
+      id,
+      oldPassword,
+      newPassword,
+    }: {
+      id: YoroiWallet['id']
+      oldPassword: string
+      newPassword: string
+    }) {
+      const validationResult = validatePassword(newPassword, newPassword)
+      if (Object.keys(validationResult).length > 0) {
+        logger.error(
+          'WalletManager: changeWalletPassword new password is not valid',
+          {id},
+        )
+        throw new Error('New password is not valid')
+      }
+
+      const encryptedStorage = makeWalletEncryptedStorage(id)
+      const rootKey = await encryptedStorage.xpriv.read(oldPassword)
+      return encryptedStorage.xpriv.write(rootKey.value, newPassword)
+    },
   }
 }
 
-export const walletManager = new WalletManager({
+export const walletManager = makeWalletManager({
   networkManagers,
   rootStorage,
   keychainManager: Keychain,
 })
-
-const parseDeletedWalletIds = (data: unknown) => {
-  const isWalletIds = (data: unknown): data is Array<string> => {
-    return (
-      !!data &&
-      Array.isArray(data) &&
-      data.every((item) => typeof item === 'string')
-    )
-  }
-  const parsed = parseSafe(data)
-
-  return isWalletIds(parsed) ? parsed : undefined
-}

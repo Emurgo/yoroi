@@ -4,6 +4,7 @@ import {calculateTxId} from '@yoroi/tx'
 import * as CSL from '@emurgo/cross-csl-core'
 import {UseMutationOptions} from '@tanstack/react-query'
 
+import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {YoroiWallet} from '~/wallets/cardano/types'
 import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
 import {TxSubmissionStatus} from '~/wallets/types/other'
@@ -13,6 +14,8 @@ export const useSubmitTx = (
   {wallet}: {wallet: YoroiWallet},
   options: UseMutationOptions<TxSubmissionStatus, Error, CSL.Transaction> = {},
 ) => {
+  const {walletManager} = useWalletManager()
+
   const mutation = useMutationWithInvalidations({
     mutationFn: async (signedTx) => {
       const serverStatus = await wallet.checkServerStatus()
@@ -20,15 +23,40 @@ export const useSubmitTx = (
       const base64 = Buffer.from(txBytes).toString('base64')
       await wallet.submitTransaction(base64)
 
+      let txId: string | undefined
+
       if (serverStatus.isQueueOnline) {
-        const txId = await CardanoMobileWrapped.cslScope(async (csl) => {
+        txId = await CardanoMobileWrapped.cslScope(async (csl) => {
           return await calculateTxId(
             csl,
             Buffer.from(txBytes).toString('hex'),
             'hex',
           )
         })
+
+        // Notify sync manager about transaction submission for fast polling
+        if (txId) {
+          walletManager.notifyTransactionSubmitted(wallet.id, txId)
+        }
+
         return fetchTxStatus(wallet, txId, false)
+      }
+
+      // Even if queue is offline, calculate txId and notify sync manager
+      // This ensures fast polling when queue comes back online
+      try {
+        txId = await CardanoMobileWrapped.cslScope(async (csl) => {
+          return await calculateTxId(
+            csl,
+            Buffer.from(txBytes).toString('hex'),
+            'hex',
+          )
+        })
+        if (txId) {
+          walletManager.notifyTransactionSubmitted(wallet.id, txId)
+        }
+      } catch (error) {
+        // Ignore errors calculating txId - sync will still work
       }
 
       return {
