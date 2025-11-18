@@ -17,7 +17,7 @@ export const useFCMToken = () => {
   }, [])
 
   const {data: FCMToken} = useQuery({
-    queryKey: ['fcmToken'],
+    queryKey: ['fcmToken', isAuthDev],
     queryFn: () => getToken(getMessaging()),
     enabled: (isNightly || isAuthDev) && hasPermission,
   })
