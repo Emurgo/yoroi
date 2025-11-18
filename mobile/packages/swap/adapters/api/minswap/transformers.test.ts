@@ -449,6 +449,37 @@ describe('transformersMaker', () => {
       expect(result.include_protocols).toEqual([Dex.MinswapV2])
     })
 
+    it('should not include include_protocols when protocol maps to Unsupported', () => {
+      const mockRequest = {
+        amountIn: 10,
+        blockedProtocols: [],
+        slippage: 1,
+        tokenIn: '.' as const,
+        tokenOut: 'test-token.' as const,
+        protocol: 'unsupported' as any,
+      }
+
+      const result = transformers.estimate.request(mockRequest)
+
+      expect(result).not.toHaveProperty('include_protocols')
+    })
+
+    it('should not include include_protocols when protocol is not supported by minswap', () => {
+      // Test with protocols that map to Unsupported (e.g., Teddy_v1, Cerra, Genius, etc.)
+      const mockRequest = {
+        amountIn: 10,
+        blockedProtocols: [],
+        slippage: 1,
+        tokenIn: '.' as const,
+        tokenOut: 'test-token.' as const,
+        protocol: 'teddy-v1' as any,
+      }
+
+      const result = transformers.estimate.request(mockRequest)
+
+      expect(result).not.toHaveProperty('include_protocols')
+    })
+
     it('should handle unknown Dex protocol in response', () => {
       // Test the default case in mapDexToProtocol by providing an invalid protocol
       const mockResponse = {

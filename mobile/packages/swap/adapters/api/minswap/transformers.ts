@@ -230,6 +230,8 @@ export const transformersMaker = (config: MinswapApiConfig) => {
           tokenOut,
           protocol,
         }: Swap.EstimateRequest): EstimateRequest => {
+          const mappedProtocol =
+            protocol !== undefined ? mapProtocolToDex(protocol) : undefined
           const request: EstimateRequest = {
             token_in: toTokenId(tokenIn),
             token_out: toTokenId(tokenOut),
@@ -238,9 +240,10 @@ export const transformersMaker = (config: MinswapApiConfig) => {
             exclude_protocols: blockedProtocols?.map((p) =>
               mapProtocolToDex(p),
             ),
-            ...(protocol !== undefined && {
-              include_protocols: [mapProtocolToDex(protocol)],
-            }),
+            ...(mappedProtocol !== undefined &&
+              mappedProtocol !== Dex.Unsupported && {
+                include_protocols: [mappedProtocol],
+              }),
             amount_in_decimal: true, // Tell API that amounts are in decimal format
             ...(partner !== undefined && {partner}),
           }
@@ -283,6 +286,8 @@ export const transformersMaker = (config: MinswapApiConfig) => {
           protocol,
           inputs,
         }: Swap.CreateRequest): CreateRequest => {
+          const mappedProtocol =
+            protocol !== undefined ? mapProtocolToDex(protocol) : undefined
           const request = {
             sender: address,
             min_amount_out: '0', // Will be calculated by the API
@@ -294,9 +299,10 @@ export const transformersMaker = (config: MinswapApiConfig) => {
               exclude_protocols: blockedProtocols?.map((p) =>
                 mapProtocolToDex(p),
               ),
-              ...(protocol !== undefined && {
-                include_protocols: [mapProtocolToDex(protocol)],
-              }),
+              ...(mappedProtocol !== undefined &&
+                mappedProtocol !== Dex.Unsupported && {
+                  include_protocols: [mappedProtocol],
+                }),
               ...(partner !== undefined && {partner}),
             },
             amount_in_decimal: true, // Also set at the top level for build-tx
