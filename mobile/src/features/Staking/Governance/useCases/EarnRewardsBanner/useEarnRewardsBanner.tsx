@@ -11,6 +11,7 @@ import {Space} from '~/ui/Space/Space'
 
 import {EarnRewardsBanner} from './EarnRewardsBanner'
 import {useEarnRewardsDelegation} from './useEarnRewardsDelegation'
+import {useTopStakePool} from './useTopStakePool'
 
 /**
  * Hook to manage the earn rewards banner display and interactions
@@ -30,6 +31,7 @@ export const useEarnRewardsBanner = () => {
   const {unsignedTxChanged} = useReviewTx()
   const {navigateToTxReview} = useWalletNavigation()
   const {createEarnRewardsTx} = useEarnRewardsDelegation(wallet)
+  const {poolId: topPoolId, isLoading: isLoadingTopPool} = useTopStakePool()
 
   const [showBanner, setShowBanner] = React.useState(false)
   const [isDismissed, setIsDismissed] = React.useState(false)
@@ -38,17 +40,21 @@ export const useEarnRewardsBanner = () => {
     return (
       !isLoadingStaking &&
       !isLoadingGovernance &&
+      !isLoadingTopPool &&
       wallet.isMainnet &&
       stakingInfo?.status !== 'staked' &&
       !isParticipatingInGovernance &&
+      topPoolId != null && // Only show if we have a pool to delegate to
       !isDismissed
     )
   }, [
     isLoadingStaking,
     isLoadingGovernance,
+    isLoadingTopPool,
     wallet.isMainnet,
     stakingInfo?.status,
     isParticipatingInGovernance,
+    topPoolId,
     isDismissed,
   ])
 
@@ -61,7 +67,15 @@ export const useEarnRewardsBanner = () => {
 
   const handleCtaPress = React.useCallback(async () => {
     try {
-      const unsignedTx = await createEarnRewardsTx(meta.addressMode)
+      if (!topPoolId) {
+        logger.error('Earn rewards banner: No pool ID available')
+        return
+      }
+
+      // Create pool delegation transaction
+      // NOTE: This delegates to stakepool only. DRep delegation happens separately.
+      // TODO: Combine both when wallet API supports it.
+      const unsignedTx = await createEarnRewardsTx(meta.addressMode, topPoolId)
       unsignedTxChanged(unsignedTx)
       navigateToTxReview({
         context: 'delegate',
@@ -73,6 +87,7 @@ export const useEarnRewardsBanner = () => {
   }, [
     createEarnRewardsTx,
     meta.addressMode,
+    topPoolId,
     unsignedTxChanged,
     navigateToTxReview,
   ])
