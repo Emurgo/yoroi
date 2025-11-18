@@ -3,10 +3,12 @@ import {useQuery} from '@tanstack/react-query'
 import * as Notifications from 'expo-notifications'
 import * as React from 'react'
 
-import {isDev, isNightly} from '~/kernel/constants'
+import {useAuth} from '~/features/Auth/context/AuthProvider'
+import {isNightly} from '~/kernel/constants'
 
 export const useFCMToken = () => {
   const [hasPermission, setHasPermission] = React.useState(false)
+  const {isAuthDev} = useAuth()
 
   React.useEffect(() => {
     Notifications.getPermissionsAsync().then(({status}) => {
@@ -17,7 +19,7 @@ export const useFCMToken = () => {
   const {data: FCMToken} = useQuery({
     queryKey: ['fcmToken'],
     queryFn: () => getToken(getMessaging()),
-    enabled: (isNightly || isDev) && hasPermission,
+    enabled: (isNightly || isAuthDev) && hasPermission,
   })
 
   return FCMToken
