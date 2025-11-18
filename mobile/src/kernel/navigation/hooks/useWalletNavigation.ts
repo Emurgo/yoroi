@@ -11,10 +11,15 @@ import {ReviewTxRoutes, SettingsStackRoutes} from '../types'
 
 export const useWalletNavigation = () => {
   const navigation = useNavigation()
-  const {network} = useSelectedNetwork()
+  const selectedNetworkHook = useSelectedNetwork()
   const swapForm = useSwap()
 
-  return React.useRef({
+  const selectedNetworkRef = React.useRef(selectedNetworkHook)
+  selectedNetworkRef.current = selectedNetworkHook
+  const swapFormRef = React.useRef(swapForm)
+  swapFormRef.current = swapForm
+
+  const walletNavigation = React.useRef({
     navigation,
 
     resetToTxHistory: () => {
@@ -292,8 +297,10 @@ export const useWalletNavigation = () => {
       })
     },
 
-    navigateToSwap: (tokenOutId?: Portfolio.Token.Id) => {
-      if (network === Chain.Network.Preprod) {
+    navigateToSwap: () => {
+      const currentNetwork = selectedNetworkRef.current.network
+
+      if (currentNetwork === Chain.Network.Preprod) {
         navigation.navigate('manage-wallets', {
           screen: 'main-wallet-routes',
           params: {
@@ -309,13 +316,6 @@ export const useWalletNavigation = () => {
         return
       }
 
-      swapForm.action({type: 'ResetForm'})
-
-      if (tokenOutId !== undefined) {
-        swapForm.action({type: 'TokenOutIdChanged', value: tokenOutId})
-        swapForm.action({type: 'TokenOutInputTouched'})
-      }
-
       navigation.navigate('manage-wallets', {
         screen: 'main-wallet-routes',
         params: {
@@ -327,6 +327,83 @@ export const useWalletNavigation = () => {
             },
           },
         },
+      })
+    },
+
+    resetToSwapWithToken: () => {
+      const currentNetwork = selectedNetworkRef.current.network
+
+      if (currentNetwork === Chain.Network.Preprod) {
+        navigation.reset({
+          index: 0,
+          routes: [
+            {
+              name: 'manage-wallets',
+              state: {
+                routes: [
+                  {name: 'wallet-selection'},
+                  {
+                    name: 'main-wallet-routes',
+                    state: {
+                      routes: [
+                        {
+                          name: 'history',
+                          state: {
+                            routes: [
+                              {name: 'history-list'},
+                              {
+                                name: 'swap',
+                                state: {
+                                  routes: [{name: 'preprod-notice'}],
+                                },
+                              },
+                            ],
+                          },
+                        },
+                      ],
+                    },
+                  },
+                ],
+              },
+            },
+          ],
+        })
+        return
+      }
+
+      navigation.reset({
+        index: 0,
+        routes: [
+          {
+            name: 'manage-wallets',
+            state: {
+              routes: [
+                {name: 'wallet-selection'},
+                {
+                  name: 'main-wallet-routes',
+                  state: {
+                    routes: [
+                      {
+                        name: 'history',
+                        state: {
+                          routes: [
+                            {name: 'history-list'},
+                            {
+                              name: 'swap',
+                              state: {
+                                routes: [{name: 'main'}],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
       })
     },
 
@@ -367,7 +444,8 @@ export const useWalletNavigation = () => {
     },
 
     navigateToExchange: () => {
-      if (network === Chain.Network.Preprod) {
+      const currentNetwork = selectedNetworkRef.current.network
+      if (currentNetwork === Chain.Network.Preprod) {
         Linking.openURL(
           'https://docs.cardano.org/cardano-testnets/tools/faucet/',
         )
@@ -606,5 +684,7 @@ export const useWalletNavigation = () => {
         params: {screen: 'analytics'},
       })
     },
-  } as const).current
+  } as const)
+
+  return walletNavigation.current
 }

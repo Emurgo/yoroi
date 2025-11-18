@@ -1,4 +1,4 @@
-import messaging from '@react-native-firebase/messaging'
+import {getMessaging, getToken} from '@react-native-firebase/messaging'
 import {useQuery} from '@tanstack/react-query'
 import * as Notifications from 'expo-notifications'
 import * as React from 'react'
@@ -16,7 +16,7 @@ export const useFCMToken = () => {
 
   const {data: FCMToken} = useQuery({
     queryKey: ['fcmToken'],
-    queryFn: () => messaging().getToken(),
+    queryFn: () => getToken(getMessaging()),
     enabled: (isNightly || isDev) && hasPermission,
   })
 

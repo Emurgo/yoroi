@@ -177,8 +177,14 @@ export const SwapProvider = ({children}: React.PropsWithChildren) => {
         const tokenIds = response.value.data
           .map(({id}) => id)
           .filter((id) => excludedTokens.indexOf(id) === -1)
-        if (!tokenIds.includes(state.tokenOutInput.tokenId ?? undefinedToken))
+        const currentTokenId = state.tokenOutInput.tokenId ?? undefinedToken
+        if (
+          currentTokenId !== undefinedToken &&
+          !state.tokenOutInput.isTouched &&
+          !tokenIds.includes(currentTokenId)
+        ) {
           action({type: 'ResetForm'})
+        }
         return tokenIds
       }
       return []
