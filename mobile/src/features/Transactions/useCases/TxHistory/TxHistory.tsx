@@ -53,6 +53,8 @@ export const TxHistory = () => {
 
   const handleOnRefresh = () => sync()
 
+  const earnRewardsBanner = renderEarnRewardsBanner()
+
   return (
     <LinearGradient
       colors={
@@ -99,11 +101,7 @@ export const TxHistory = () => {
 
         <LockedDeposit />
 
-        <Space.Height.md />
-
-        {renderEarnRewardsBanner()}
-
-        {renderEarnRewardsBanner() != null && <Space.Height.md />}
+        {earnRewardsBanner}
 
         {meta.implementation === 'cardano-bip44' && showWarning && (
           <WarningBanner

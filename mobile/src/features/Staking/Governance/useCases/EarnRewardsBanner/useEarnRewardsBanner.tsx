@@ -1,3 +1,4 @@
+import {logger} from '@sentry/react'
 import * as React from 'react'
 import {LayoutAnimation} from 'react-native'
 
@@ -5,9 +6,8 @@ import {useReviewTx} from '~/features/ReviewTx/common/ReviewTxProvider'
 import {useGovernanceParticipation} from '~/features/Staking/Governance/common/helpers'
 import {useStakingInfo} from '~/features/Staking/hooks/useStakingInfo'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {useWalletEvent} from '~/features/WalletManager/hooks/useWalletEvent'
-import {logger} from '~/kernel/logger/logger'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
+import {Space} from '~/ui/Space/Space'
 
 import {EarnRewardsBanner} from './EarnRewardsBanner'
 import {useEarnRewardsDelegation} from './useEarnRewardsDelegation'
@@ -34,20 +34,20 @@ export const useEarnRewardsBanner = () => {
   const [showBanner, setShowBanner] = React.useState(false)
   const [isDismissed, setIsDismissed] = React.useState(false)
 
-  const isParticipatingInStaking = stakingInfo?.status === 'staked'
-
   const shouldShowBanner = React.useMemo(() => {
-    if (isLoadingStaking || isLoadingGovernance) return false
-    if (!wallet.isMainnet) return false
-    if (isParticipatingInStaking) return false
-    if (isParticipatingInGovernance) return false
-    if (isDismissed) return false
-    return true
+    return (
+      !isLoadingStaking &&
+      !isLoadingGovernance &&
+      wallet.isMainnet &&
+      stakingInfo?.status !== 'staked' &&
+      !isParticipatingInGovernance &&
+      !isDismissed
+    )
   }, [
     isLoadingStaking,
     isLoadingGovernance,
     wallet.isMainnet,
-    isParticipatingInStaking,
+    stakingInfo?.status,
     isParticipatingInGovernance,
     isDismissed,
   ])
@@ -59,22 +59,12 @@ export const useEarnRewardsBanner = () => {
     }
   }, [shouldShowBanner, showBanner])
 
-  useWalletEvent(wallet, 'utxos', () => {
-    logger.info('Earn rewards banner: UTXOs changed, rechecking conditions')
-  })
-
   const handleCtaPress = React.useCallback(async () => {
     try {
-      logger.info(
-        'Earn rewards banner: Creating combined delegation transaction',
-      )
       const unsignedTx = await createEarnRewardsTx(meta.addressMode)
       unsignedTxChanged(unsignedTx)
       navigateToTxReview({
         context: 'delegate',
-        onSuccess: () => {
-          logger.info('Earn rewards banner: Transaction submitted successfully')
-        },
       })
     } catch (error) {
       logger.error('Earn rewards banner: Error creating transaction', {error})
@@ -88,7 +78,6 @@ export const useEarnRewardsBanner = () => {
   ])
 
   const handleDismiss = React.useCallback(() => {
-    logger.info('Earn rewards banner: Dismissed by user')
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     setIsDismissed(true)
     setShowBanner(false)
@@ -97,7 +86,10 @@ export const useEarnRewardsBanner = () => {
   const renderBanner = React.useCallback(() => {
     if (!showBanner) return null
     return (
-      <EarnRewardsBanner onPress={handleCtaPress} onDismiss={handleDismiss} />
+      <>
+        <Space.Height.md />
+        <EarnRewardsBanner onPress={handleCtaPress} onDismiss={handleDismiss} />
+      </>
     )
   }, [showBanner, handleCtaPress, handleDismiss])
 

@@ -7,6 +7,7 @@ import {Image, Pressable, StyleSheet, Text, View} from 'react-native'
 import GovernanceIllustration from '~/assets/img/governance-banner.png'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Icon} from '~/ui/Icon'
+import {Space} from '~/ui/Space/Space'
 
 type Props = {
   onPress: () => void
@@ -18,12 +19,12 @@ export const EarnRewardsBanner = ({onPress, onDismiss}: Props) => {
   const {palette: p} = useTheme()
 
   return (
-    <View style={[a.p_lg, styles.container]}>
+    <View style={[a.p_lg, a.relative, a.overflow_hidden, styles.container]}>
       <LinearGradient
         colors={['#E4E8F7', '#C6F7ED']}
         start={{x: 0, y: 0}}
         end={{x: 1, y: 1}}
-        style={styles.gradientBackground}
+        style={StyleSheet.absoluteFillObject}
       />
 
       <Pressable
@@ -38,15 +39,12 @@ export const EarnRewardsBanner = ({onPress, onDismiss}: Props) => {
       <View style={styles.content}>
         <View style={styles.textContainer}>
           <Text
-            style={[
-              a.body_1_lg_medium,
-              a.font_semibold,
-              {color: p.gray_900},
-              styles.title,
-            ]}
+            style={[a.body_1_lg_medium, a.font_semibold, {color: p.gray_900}]}
           >
             {strings.staking.earnRewardsBannerTitle}
           </Text>
+
+          <Space.Height.sm />
 
           <Text
             style={[
@@ -57,6 +55,8 @@ export const EarnRewardsBanner = ({onPress, onDismiss}: Props) => {
           >
             {strings.staking.earnRewardsBannerDescription}
           </Text>
+
+          <Space.Height.md />
 
           <Pressable
             onPress={onPress}
@@ -98,16 +98,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginHorizontal: 16,
     paddingRight: 48,
-    position: 'relative',
     minHeight: 182,
-    overflow: 'hidden',
-  },
-  gradientBackground: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    bottom: 0,
-    left: 0,
   },
   closeButton: {
     position: 'absolute',
@@ -126,16 +117,8 @@ const styles = StyleSheet.create({
     paddingRight: 0,
     paddingTop: 0,
   },
-  title: {
-    marginBottom: 8,
-    fontSize: 17,
-    lineHeight: 24,
-  },
   description: {
-    marginBottom: 16,
     width: '90%',
-    lineHeight: 22,
-    fontSize: 14,
   },
   ctaButton: {
     paddingVertical: 10,
