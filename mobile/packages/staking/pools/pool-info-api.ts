@@ -13,8 +13,6 @@ import {
 import type {Ed25519KeyHash, WasmModuleProxy} from '@emurgo/cross-csl-core'
 import axios from 'axios'
 
-const explorerApi = 'https://a.cexplorer.io/yoroi-api/'
-
 type PoolIdentity = {
   id: string
   hash: string
@@ -22,22 +20,30 @@ type PoolIdentity = {
 
 // note: only include types for required fields.
 type ExplorerPoolInfoApiRes = {
-  pools?: Record<
-    string,
-    {
-      id: string
-      id_bech: string
-      db_ticker: string
-      db_name: string
-      pool_pic: string | boolean
-      total_stake: string
-      total_size: number
-      tax_fix: string
-      tax_ratio: string
+  data?: {
+    data?: Array<{
+      pool_id: string // bech32 identifier
+      pool_id_hash_raw: string // HEX key-hash
+      pool_name: {
+        ticker: string
+        name: string
+      }
+      pool_update: {
+        active: {
+          fixed_cost: number
+          margin: number
+        }
+      }
+      stats: {
+        lifetime: {
+          roa: number
+        }
+      }
+      live_stake: number
       roa: string
       saturation: number
-    }
-  >
+    }>
+  }
 }
 
 export type ExplorerPoolInfo = {
@@ -46,8 +52,8 @@ export type ExplorerPoolInfo = {
   ticker: string // db_ticker
   name: string // db_name
   pic: string | null // pool_pic
-  stake: string // total_stake
-  share: string // total_size
+  stake: string // total_stake / live_stake
+  share?: string // total_size (deprecated, not available in new API)
   roa: string // roa
   saturation: string // saturation
   taxFix: string
@@ -191,11 +197,13 @@ export type FullPoolInfoMap = Record<string, FullPoolInfo | null>
 
 export class PoolInfoApi {
   private readonly apiUrl: string
+  private readonly zeroApiUrl: string
   private readonly requestSize = 50
   private transitionSaturationThreshold: number | null = null
 
-  constructor(apiUrl: string) {
+  constructor(apiUrl: string, zeroApiUrl: string) {
     this.apiUrl = apiUrl
+    this.zeroApiUrl = zeroApiUrl
   }
 
   /**
@@ -265,11 +273,15 @@ export class PoolInfoApi {
   public async getManyExplorerPoolInfo(
     hashes: string[],
   ): Promise<ExplorerPoolInfoMap> {
-    const hashInfoTuples: Array<[string, ExplorerPoolInfo | null]> = []
-    for (const hash of hashes) {
-      const info = await this.getSingleExplorerPoolInfo(hash)
-      hashInfoTuples.push([hash, info])
-    }
+    const hashInfoTuples = await Promise.all(
+      hashes.map(
+        async (hash) =>
+          [hash, await this.getSingleExplorerPoolInfo(hash)] as [
+            string,
+            ExplorerPoolInfo | null,
+          ],
+      ),
+    )
     return tuplesIntoRecord(hashInfoTuples) as ExplorerPoolInfoMap
   }
 
@@ -289,35 +301,30 @@ export class PoolInfoApi {
   public async getSingleExplorerPoolInfo(
     hash: string,
   ): Promise<ExplorerPoolInfo | null> {
-    const params = new URLSearchParams({search: hash})
-
-    const {data} = await axios.post<ExplorerPoolInfoApiRes>(
-      explorerApi,
-      params.toString(),
-      {
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-      },
-    )
-
-    if (!data.pools) return null
-    const pools = Object.values(data.pools)
-    const pool = pools[0]
+    const params = new URLSearchParams({
+      limit: '1',
+      order: 'ranking',
+      poolId: hash,
+    })
+    // Construct URL properly: joinUrl doesn't handle query strings, so build it manually
+    const baseUrl = joinUrl(this.zeroApiUrl, '/cexplorer-pool-list')
+    const zeroApiPoolsUrl = `${baseUrl}?${params.toString()}`
+    const response = await axios.get<ExplorerPoolInfoApiRes>(zeroApiPoolsUrl)
+    const poolsData: ExplorerPoolInfoApiRes = response.data
+    if (!poolsData.data?.data?.length) return null
+    const [pool] = poolsData.data.data
     if (!pool) return null
-
     return {
-      id: pool.id_bech,
-      hash: pool.id,
-      ticker: pool.db_ticker,
-      name: pool.db_name,
-      pic: typeof pool.pool_pic !== 'boolean' ? pool.pool_pic : null,
-      stake: pool.total_stake,
-      share: pool.total_size.toString(),
-      roa: pool.roa,
-      saturation: pool.saturation.toString(),
-      taxFix: pool.tax_fix,
-      taxRatio: pool.tax_ratio,
+      id: pool.pool_id,
+      hash: pool.pool_id_hash_raw,
+      ticker: pool.pool_name.ticker,
+      name: pool.pool_name.name,
+      pic: `https://ix.cexplorer.io/${pool.pool_id}`,
+      stake: String(pool.live_stake),
+      roa: String(pool.stats.lifetime.roa),
+      taxFix: String(pool.pool_update.active.fixed_cost),
+      taxRatio: String(pool.pool_update.active.margin),
+      saturation: String(pool.saturation),
     }
   }
 

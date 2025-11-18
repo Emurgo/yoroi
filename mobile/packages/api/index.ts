@@ -18,6 +18,7 @@ import {getUtxoData} from './cardano/api/utxo-data'
 import {getTokenIdentity} from './cardano/translators/helpers/getTokenIdentity'
 import {asFingerprint} from './cardano/translators/transformers/asFingerprint'
 import {asSubject} from './cardano/translators/transformers/asSubject'
+import {API_ENDPOINTS} from './cardano/api/config'
 
 export const CardanoTokenId = {
   // transformers
@@ -49,3 +50,5 @@ export const CardanoApi = {
   cardanoApiMaker,
   mockCardanoApi,
 } as const
+
+export {API_ENDPOINTS}

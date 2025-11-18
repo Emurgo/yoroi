@@ -102,8 +102,15 @@ export async function buildVotingLedgerPayloadV5(
   byronNetworkMagic: number,
   stakingDerivationPath?: number[],
 ): Promise<SignTransactionRequest> {
-  const builtTx = unsignedTx.txBuilder.build()
-  assertTagsState(csl, builtTx.toHex())
+  const builtTxBody = unsignedTx.txBuilder.build()
+  // Build full transaction hex for tag checking (body + empty witness set + auxiliary data)
+  const emptyWitnessSet = csl.TransactionWitnessSet.new()
+  const auxData = unsignedTx.auxiliaryData?.hasValue()
+    ? csl.AuxiliaryData.fromBytes(unsignedTx.auxiliaryData.toBytes())
+    : undefined
+  const fullTx = csl.Transaction.new(builtTxBody, emptyWitnessSet, auxData)
+  const fullTxHex = Buffer.from(fullTx.toBytes()).toString('hex')
+  assertTagsState(csl, fullTxHex)
   const ledgerInputs = transformToLedgerInputs(unsignedTx)
   const ledgerOutputs = await transformToLedgerOutputs(csl, {
     networkId: networkId,
@@ -175,10 +182,7 @@ export async function buildVotingLedgerPayloadV5(
     },
     additionalWitnessPaths: [],
     options: {
-      tagCborSets: doAllSetsHaveTag(
-        csl,
-        Buffer.from(unsignedTx.txBuilder.build().toBytes()).toString('hex'),
-      ),
+      tagCborSets: doAllSetsHaveTag(csl, fullTxHex),
     },
   }
 }
@@ -196,8 +200,15 @@ export async function buildLedgerPayload(
   byronNetworkMagic: number,
   stakingDerivationPath?: number[],
 ): Promise<SignTransactionRequest> {
-  const builtTx = unsignedTx.txBuilder.build()
-  assertTagsState(csl, builtTx.toHex())
+  const builtTxBody = unsignedTx.txBuilder.build()
+  // Build full transaction hex for tag checking (body + empty witness set + auxiliary data)
+  const emptyWitnessSet = csl.TransactionWitnessSet.new()
+  const auxData = unsignedTx.auxiliaryData?.hasValue()
+    ? csl.AuxiliaryData.fromBytes(unsignedTx.auxiliaryData.toBytes())
+    : undefined
+  const fullTx = csl.Transaction.new(builtTxBody, emptyWitnessSet, auxData)
+  const fullTxHex = Buffer.from(fullTx.toBytes()).toString('hex')
+  assertTagsState(csl, fullTxHex)
 
   const ledgerInputs = transformToLedgerInputs(unsignedTx)
   const ledgerOutputs = await transformToLedgerOutputs(csl, {
@@ -282,10 +293,7 @@ export async function buildLedgerPayload(
       scriptDataHashHex: unsignedTx.scriptDataHash,
     },
     options: {
-      tagCborSets: doAllSetsHaveTag(
-        csl,
-        Buffer.from(unsignedTx.txBuilder.build().toBytes()).toString('hex'),
-      ),
+      tagCborSets: doAllSetsHaveTag(csl, fullTxHex),
     },
   } as SignTransactionRequest
 }

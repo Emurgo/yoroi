@@ -1,5 +1,5 @@
-import {PoolInfoApi} from '@yoroi/staking'
-import {StakePoolInfoAndHistory} from '@yoroi/staking'
+import {API_ENDPOINTS} from '@yoroi/api'
+import {PoolInfoApi, StakePoolInfoAndHistory} from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import {UseQueryOptions, useQuery} from '@tanstack/react-query'
@@ -98,8 +98,12 @@ export const useStakePoolInfoAndHistory = (
 ) => {
   const {networkManager} = useSelectedNetwork()
   const poolInfoApi = React.useMemo(
-    () => new PoolInfoApi(networkManager.legacyApiBaseUrl),
-    [networkManager.legacyApiBaseUrl],
+    () =>
+      new PoolInfoApi(
+        networkManager.legacyApiBaseUrl,
+        API_ENDPOINTS[networkManager.network].root,
+      ),
+    [networkManager.legacyApiBaseUrl, networkManager.network],
   )
   const query = useQuery({
     ...options,

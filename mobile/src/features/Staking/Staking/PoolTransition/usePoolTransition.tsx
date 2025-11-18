@@ -1,3 +1,4 @@
+import {API_ENDPOINTS} from '@yoroi/api'
 import {PoolInfoApi} from '@yoroi/staking'
 import {Wallet} from '@yoroi/types'
 
@@ -35,8 +36,11 @@ export const usePoolTransition = () => {
   const {stakingInfo, isLoading} = useStakingInfo(wallet)
 
   const poolInfoApi = React.useMemo(() => {
-    return new PoolInfoApi(networkManager.legacyApiBaseUrl)
-  }, [networkManager.legacyApiBaseUrl])
+    return new PoolInfoApi(
+      networkManager.legacyApiBaseUrl,
+      API_ENDPOINTS[networkManager.network].root,
+    )
+  }, [networkManager.legacyApiBaseUrl, networkManager.network])
 
   const isStaked = stakingInfo?.status === 'staked'
   const currentPoolId = isStaked ? stakingInfo?.poolId : ''

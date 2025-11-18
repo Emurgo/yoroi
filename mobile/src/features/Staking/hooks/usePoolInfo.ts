@@ -1,3 +1,4 @@
+import {API_ENDPOINTS} from '@yoroi/api'
 import {FullPoolInfo, PoolInfoApi} from '@yoroi/staking'
 
 import {useQuery} from '@tanstack/react-query'
@@ -8,8 +9,12 @@ import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetw
 export const usePoolInfo = ({poolId}: {poolId: string}): FullPoolInfo => {
   const {networkManager} = useSelectedNetwork()
   const poolInfoApi = React.useMemo(
-    () => new PoolInfoApi(networkManager.legacyApiBaseUrl),
-    [networkManager.legacyApiBaseUrl],
+    () =>
+      new PoolInfoApi(
+        networkManager.legacyApiBaseUrl,
+        API_ENDPOINTS[networkManager.network].root,
+      ),
+    [networkManager.legacyApiBaseUrl, networkManager.network],
   )
   const poolInfo = useQuery({
     queryKey: ['usePoolInfo', poolId],
