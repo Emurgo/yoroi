@@ -42,6 +42,22 @@ export const txReviewMessages = defineMessages({
     id: 'txReview.tabLabel.governance',
     defaultMessage: '!!!Governance',
   },
+  tabLabelOperations: {
+    id: 'txReview.tabLabel.operations',
+    defaultMessage: '!!!Operations',
+  },
+  tabLabelSmartContracts: {
+    id: 'txReview.tabLabel.smartContracts',
+    defaultMessage: '!!!Smart Contracts',
+  },
+  tabLabelSignatures: {
+    id: 'txReview.tabLabel.signatures',
+    defaultMessage: '!!!Signatures',
+  },
+  tabLabelDetails: {
+    id: 'txReview.tabLabel.details',
+    defaultMessage: '!!!Details',
+  },
   metadataMetadataHash: {
     id: 'txReview.metadata.metadataHash',
     defaultMessage: '!!!Metadata hash',
@@ -505,5 +521,173 @@ export const txReviewMessages = defineMessages({
   referenceInputsUtxoLabel: {
     id: 'txReview.referenceInputs.utxoLabel',
     defaultMessage: '!!!UTXO',
+  },
+  // Withdrawals strings
+  withdrawalsLabel: {
+    id: 'txReview.withdrawals.label',
+    defaultMessage: '!!!Withdrawals',
+  },
+  withdrawalAddress: {
+    id: 'txReview.withdrawal.address',
+    defaultMessage: '!!!Address',
+  },
+  withdrawalAmount: {
+    id: 'txReview.withdrawal.amount',
+    defaultMessage: '!!!Amount',
+  },
+  // Collateral strings
+  collateralLabel: {
+    id: 'txReview.collateral.label',
+    defaultMessage: '!!!Collateral',
+  },
+  collateralInputs: {
+    id: 'txReview.collateral.inputs',
+    defaultMessage: '!!!Collateral Inputs',
+  },
+  collateralReturn: {
+    id: 'txReview.collateral.return',
+    defaultMessage: '!!!Collateral Return',
+  },
+  collateralTotal: {
+    id: 'txReview.collateral.total',
+    defaultMessage: '!!!Total Collateral',
+  },
+  // Scripts strings
+  scriptsLabel: {
+    id: 'txReview.scripts.label',
+    defaultMessage: '!!!Scripts',
+  },
+  scriptsDataHash: {
+    id: 'txReview.scripts.dataHash',
+    defaultMessage: '!!!Script Data Hash',
+  },
+  scriptsPlutusScripts: {
+    id: 'txReview.scripts.plutusScripts',
+    defaultMessage: '!!!Plutus Scripts',
+  },
+  scriptsNativeScripts: {
+    id: 'txReview.scripts.nativeScripts',
+    defaultMessage: '!!!Native Scripts',
+  },
+  scriptsSize: {
+    id: 'txReview.scripts.size',
+    defaultMessage: '!!!Size',
+  },
+  smartContractsNoSmartContractInteractions: {
+    id: 'txReview.smartContracts.noSmartContractInteractions',
+    defaultMessage: '!!!No smart contract interactions found in this transaction',
+  },
+  // Redeemers strings
+  redeemersLabel: {
+    id: 'txReview.redeemers.label',
+    defaultMessage: '!!!Redeemers',
+  },
+  redeemersRedeemer: {
+    id: 'txReview.redeemers.redeemer',
+    defaultMessage: '!!!Redeemer',
+  },
+  // Signatures strings
+  signaturesRequiredSigners: {
+    id: 'txReview.signatures.requiredSigners',
+    defaultMessage: '!!!Required Signers',
+  },
+  signaturesWitnesses: {
+    id: 'txReview.signatures.witnesses',
+    defaultMessage: '!!!Witnesses',
+  },
+  signaturesSigner: {
+    id: 'txReview.signatures.signer',
+    defaultMessage: '!!!Signer',
+  },
+  signaturesVkeyWitnesses: {
+    id: 'txReview.signatures.vkeyWitnesses',
+    defaultMessage: '!!!VKey Witnesses',
+  },
+  signaturesPublicKey: {
+    id: 'txReview.signatures.publicKey',
+    defaultMessage: '!!!Public Key',
+  },
+  signaturesSignature: {
+    id: 'txReview.signatures.signature',
+    defaultMessage: '!!!Signature',
+  },
+  signaturesBootstrapWitnesses: {
+    id: 'txReview.signatures.bootstrapWitnesses',
+    defaultMessage: '!!!Bootstrap Witnesses',
+  },
+  signaturesNativeScriptWitnesses: {
+    id: 'txReview.signatures.nativeScriptWitnesses',
+    defaultMessage: '!!!Native Script Witnesses',
+  },
+  signaturesNoSignaturesInfo: {
+    id: 'txReview.signatures.noSignaturesInfo',
+    defaultMessage: '!!!No signature information available for this transaction',
+  },
+  // Details strings
+  detailsTiming: {
+    id: 'txReview.details.timing',
+    defaultMessage: '!!!Timing',
+  },
+  detailsNetwork: {
+    id: 'txReview.details.network',
+    defaultMessage: '!!!Network',
+  },
+  detailsTtl: {
+    id: 'txReview.details.ttl',
+    defaultMessage: '!!!TTL',
+  },
+  detailsValidityIntervalStart: {
+    id: 'txReview.details.validityIntervalStart',
+    defaultMessage: '!!!Validity Interval Start',
+  },
+  detailsNetworkId: {
+    id: 'txReview.details.networkId',
+    defaultMessage: '!!!Network ID',
+  },
+  detailsNoDetailsAvailable: {
+    id: 'txReview.details.noDetailsAvailable',
+    defaultMessage: '!!!No details available for this transaction',
+  },
+  // Metadata strings
+  metadataAllMetadataLabels: {
+    id: 'txReview.metadata.allMetadataLabels',
+    defaultMessage: '!!!All Metadata Labels',
+  },
+  metadataScripts: {
+    id: 'txReview.metadata.scripts',
+    defaultMessage: '!!!Scripts',
+  },
+  metadataScriptHash: {
+    id: 'txReview.metadata.scriptHash',
+    defaultMessage: '!!!Script Hash',
+  },
+  metadataScriptBytes: {
+    id: 'txReview.metadata.scriptBytes',
+    defaultMessage: '!!!Script Bytes',
+  },
+  // Overview strings
+  overviewCollateralSummary: {
+    id: 'txReview.overview.collateralSummary',
+    defaultMessage: '!!!Collateral Summary',
+  },
+  overviewCollateralAtRisk: {
+    id: 'txReview.overview.collateralAtRisk',
+    defaultMessage: '!!!Collateral at Risk',
+  },
+  overviewSignaturesSummary: {
+    id: 'txReview.overview.signaturesSummary',
+    defaultMessage: '!!!Signatures Summary',
+  },
+  overviewWithdrawalsSummary: {
+    id: 'txReview.overview.withdrawalsSummary',
+    defaultMessage: '!!!Withdrawals Summary',
+  },
+  overviewWithdrawingRewards: {
+    id: 'txReview.overview.withdrawingRewards',
+    defaultMessage: '!!!Withdrawing Rewards',
+  },
+  overviewNotices: {
+    id: 'txReview.overview.notices',
+    defaultMessage: '!!!Notices',
   },
 })

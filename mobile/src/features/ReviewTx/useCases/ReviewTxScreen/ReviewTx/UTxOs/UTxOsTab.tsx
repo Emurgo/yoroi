@@ -24,8 +24,15 @@ export const UTxOsTab = ({tx}: {tx: FormattedTx}) => {
   const {palette: p} = useTheme()
   const strings = useStrings()
   const {wallet} = useSelectedWallet()
+
   const [inputsExpanded, setInputsExpanded] = React.useState(true)
   const [outputsExpanded, setOutputsExpanded] = React.useState(true)
+  const [referenceInputsExpanded, setReferenceInputsExpanded] =
+    React.useState(true)
+  const [mintExpanded, setMintExpanded] = React.useState(true)
+
+  const hasReferenceInputs = tx.referenceInputs.length > 0
+  const hasMint = tx.mint != null && tx.mint.length > 0
 
   return (
     <View style={[a.flex_1, a.px_lg, {backgroundColor: p.bg_color_max}]}>
@@ -54,8 +61,102 @@ export const UTxOsTab = ({tx}: {tx: FormattedTx}) => {
         <Outputs outputs={tx.outputs} />
       </Accordion>
 
+      {hasReferenceInputs && (
+        <>
+          <Space.Height.lg />
+          <Divider verticalSpace="md" />
+          <Accordion
+            label={`${strings.txReview.tabLabel.referenceInputs} (${tx.referenceInputs.length})`}
+            expanded={referenceInputsExpanded}
+            onChange={setReferenceInputsExpanded}
+          >
+            <Inputs inputs={tx.referenceInputs} />
+          </Accordion>
+        </>
+      )}
+
+      {hasMint && (
+        <>
+          <Space.Height.lg />
+          <Divider verticalSpace="md" />
+          <Accordion
+            label={`${strings.txReview.tabLabel.mint} (${tx.mint!.length})`}
+            expanded={mintExpanded}
+            onChange={setMintExpanded}
+          >
+            <MintContent mintData={tx.mint!} />
+          </Accordion>
+        </>
+      )}
+
       <Space.Height.lg />
     </View>
+  )
+}
+
+const MintContent = ({
+  mintData,
+}: {
+  mintData: NonNullable<FormattedTx['mint']>
+}) => {
+  const {atoms: ta, palette: p} = useTheme()
+  const strings = useStrings()
+
+  return (
+    <>
+      {mintData.map(([info, count], index) => {
+        const [policyId] = info.id.split('.')
+        const countNum = BigInt(count)
+        const isBurn = countNum < 0n
+        const actionType = isBurn
+          ? strings.txReview.mint.burnLabel
+          : strings.txReview.mint.mintLabel
+        const displayCount = isBurn ? count.slice(1) : count
+
+        return (
+          <View key={index}>
+            <Space.Height.lg />
+
+            <View style={[a.flex_row, a.justify_between, a.align_center]}>
+              <Text
+                style={[
+                  a.body_2_md_medium,
+                  {color: isBurn ? p.red_static : p.green_static},
+                ]}
+              >
+                {actionType}
+              </Text>
+              <Text
+                style={[a.body_2_md_regular, ta.text_gray_medium]}
+              >{`${strings.txReview.policyIdLabel}:`}</Text>
+            </View>
+
+            <Space.Height.sm />
+
+            <View style={[a.flex_1, a.flex_row, a.justify_between]}>
+              <Copiable text={policyId!} style={a.flex_1}>
+                <Text
+                  style={[a.flex_1, a.body_2_md_regular, ta.text_gray_medium]}
+                  numberOfLines={1}
+                  ellipsizeMode="middle"
+                >
+                  {policyId}
+                </Text>
+              </Copiable>
+            </View>
+
+            <View style={[a.flex_1, a.flex_row, a.justify_end]}>
+              <TokenItem
+                key={index}
+                tokenInfo={info}
+                label={`${isBurn ? '-' : '+'}${displayCount} ${info.name}`}
+                isPrimaryToken={false}
+              />
+            </View>
+          </View>
+        )
+      })}
+    </>
   )
 }
 

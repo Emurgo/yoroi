@@ -74,6 +74,37 @@ export type FormattedFee = {
   quantity: Balance.Quantity
 }
 
+export type FormattedWithdrawal = {
+  address: string
+  amount: Balance.Quantity
+  tokenInfo: Portfolio.Token.Info
+}
+
+export type FormattedWithdrawals = Array<FormattedWithdrawal>
+
+export type FormattedWitness = {
+  type: 'vkey' | 'bootstrap' | 'nativeScript' | 'plutusScript'
+  publicKey?: string // For vkey and bootstrap
+  signature?: string // For vkey and bootstrap
+  scriptHash?: string // For native and plutus scripts
+  scriptBytes?: string // For plutus scripts
+  chaincode?: string // For bootstrap
+  attributes?: string // For bootstrap
+}
+
+export type FormattedWitnessSet = {
+  vkeys: Array<{publicKey: string; signature: string}>
+  bootstraps: Array<{
+    publicKey: string
+    signature: string
+    chaincode: string
+    attributes: string
+  }>
+  nativeScripts: Array<{scriptHash: string}>
+  plutusScripts: Array<{scriptHash: string; scriptBytes: string}>
+  plutusData: Array<{data: string; decoded?: unknown}>
+}
+
 export type FormattedTx = {
   inputs: FormattedInputs
   outputs: FormattedOutputs
@@ -81,6 +112,16 @@ export type FormattedTx = {
   certificates: FormattedCertificate[] | null
   mint: Array<[Portfolio.Token.Info, string]> | null
   referenceInputs: FormattedInputs
+  withdrawals: FormattedWithdrawals | null
+  collateral: FormattedInputs | null
+  collateralReturn: FormattedOutput | null
+  totalCollateral: FormattedFee | null
+  requiredSigners: string[] | null // Ed25519 key hashes
+  scriptDataHash: string | null
+  ttl: number | null
+  validityIntervalStart: number | null
+  networkId: number | null
+  witnessSet: FormattedWitnessSet | null
   governance?: {
     proposals: Proposal[]
     votes: Vote[]
@@ -95,6 +136,8 @@ export type FormattedTx = {
 export type FormattedMetadata = {
   hash: string | null
   metadata: {msg: Array<string>} | null
+  allLabels: Record<string, unknown> | null // All metadata labels, not just 674
+  scripts: Array<{scriptHash: string; scriptBytes: string}> | null // Scripts in auxiliary data
 }
 
 type AssertEqual<T, Expected> = T extends Expected

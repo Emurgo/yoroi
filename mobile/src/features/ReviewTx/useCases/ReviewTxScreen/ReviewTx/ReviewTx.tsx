@@ -16,16 +16,14 @@ import {ScrollViewProvider} from '~/ui/ScrollView/context/ScrollViewContext'
 import {Space} from '~/ui/Space/Space'
 import {TextInput} from '~/ui/TextInput/TextInput'
 
-import {MetadataTab} from '../ReviewTx/Metadata/MetadataTab'
 import {OverviewTab, ReviewDetailsProps} from '../ReviewTx/Overview/OverviewTab'
 import {UTxOsTab} from '../ReviewTx/UTxOs/UTxOsTab'
-import {CborTab} from './Cbor/CborTab'
-import {DatumTab} from './Datum/DatumTab'
-import {GovernanceTab} from './Governance/GovernanceTab'
-import {MintTab} from './Mint/MintTab'
-import {ReferenceInputsTab} from './ReferenceInputs/ReferenceInputs'
+import {DetailsTab} from './Details/DetailsTab'
+import {OperationsTab} from './Operations/OperationsTab'
 import {ShowMemoErrorTooLong} from './ShowMemoErrorTooLong'
 import {ShowMemoInstructions} from './ShowMemoInstructions'
+import {SignaturesTab} from './Signatures/SignaturesTab'
+import {SmartContractsTab} from './SmartContracts/SmartContractsTab'
 
 const MaterialTab = createMaterialTopTabNavigator()
 
@@ -138,15 +136,34 @@ export const ReviewTx = ({
   const strings = useStrings()
   const {atoms: ta, palette: p} = useTheme()
 
-  // Show metadata tab if metadata exists, even without hash (for historical transactions)
-  const showMetadataTab = formattedMetadata?.metadata != null
-  const showMintTab = !!formattedTx.mint
-  const showReferenceInoutsTab = formattedTx.referenceInputs.length > 0
-  const showDatumTab = formattedTx.outputs.some(
-    (output) => output.datum != null,
-  )
-  const showGovernanceTab = !!formattedTx.governance
-  const showCborTab = cbor != null
+  // Tab visibility logic according to proposal
+  const showOperationsTab =
+    (formattedTx.certificates != null && formattedTx.certificates.length > 0) ||
+    (formattedTx.withdrawals != null && formattedTx.withdrawals.length > 0) ||
+    formattedTx.governance != null
+
+  const showSmartContractsTab =
+    formattedTx.collateral != null ||
+    formattedTx.collateralReturn != null ||
+    formattedTx.totalCollateral != null ||
+    formattedTx.scriptDataHash != null ||
+    formattedTx.outputs.some((output) => output.datum != null) ||
+    (formattedTx.witnessSet?.plutusScripts.length ?? 0) > 0 ||
+    (formattedTx.witnessSet?.plutusData.length ?? 0) > 0
+
+  const showSignaturesTab =
+    (formattedTx.requiredSigners != null &&
+      formattedTx.requiredSigners.length > 0) ||
+    (formattedTx.witnessSet?.vkeys.length ?? 0) > 0 ||
+    (formattedTx.witnessSet?.bootstraps.length ?? 0) > 0 ||
+    (formattedTx.witnessSet?.nativeScripts.length ?? 0) > 0
+
+  const showDetailsTab =
+    formattedTx.ttl != null ||
+    formattedTx.validityIntervalStart != null ||
+    formattedTx.networkId != null ||
+    formattedMetadata != null ||
+    cbor != null
 
   return (
     <MaterialTab.Navigator
@@ -201,9 +218,9 @@ export const ReviewTx = ({
         )}
       />
 
-      {showMetadataTab && (
+      {showOperationsTab && (
         <MaterialTab.Screen
-          name={strings.txReview.tabLabel.metadataTab}
+          name={strings.txReview.tabLabel.operations}
           children={() => (
             <TabWrapper
               onConfirm={onConfirm}
@@ -212,18 +229,19 @@ export const ReviewTx = ({
                 readOnly && isReviewFlow && !onConfirm
               }
             >
-              <MetadataTab
-                hash={formattedMetadata?.hash ?? null}
-                metadata={formattedMetadata?.metadata ?? null}
+              <OperationsTab
+                tx={formattedTx}
+                operations={undefined}
+                operationsNotice={operationsNotice}
               />
             </TabWrapper>
           )}
         />
       )}
 
-      {showMintTab && (
+      {showSmartContractsTab && (
         <MaterialTab.Screen
-          name={strings.txReview.tabLabel.mint}
+          name={strings.txReview.tabLabel.smartContracts}
           children={() => (
             <TabWrapper
               onConfirm={onConfirm}
@@ -232,15 +250,15 @@ export const ReviewTx = ({
                 readOnly && isReviewFlow && !onConfirm
               }
             >
-              <MintTab mintData={formattedTx.mint} />
+              <SmartContractsTab tx={formattedTx} />
             </TabWrapper>
           )}
         />
       )}
 
-      {showReferenceInoutsTab && (
+      {showSignaturesTab && (
         <MaterialTab.Screen
-          name={strings.txReview.tabLabel.referenceInputs}
+          name={strings.txReview.tabLabel.signatures}
           children={() => (
             <TabWrapper
               onConfirm={onConfirm}
@@ -249,60 +267,28 @@ export const ReviewTx = ({
                 readOnly && isReviewFlow && !onConfirm
               }
             >
-              <ReferenceInputsTab
-                referenceInputs={formattedTx.referenceInputs}
+              <SignaturesTab tx={formattedTx} />
+            </TabWrapper>
+          )}
+        />
+      )}
+
+      {showDetailsTab && (
+        <MaterialTab.Screen
+          name={strings.txReview.tabLabel.details}
+          children={() => (
+            <TabWrapper
+              onConfirm={onConfirm}
+              readOnly={readOnly}
+              showGoToTransactionsButton={
+                readOnly && isReviewFlow && !onConfirm
+              }
+            >
+              <DetailsTab
+                tx={formattedTx}
+                formattedMetadata={formattedMetadata}
+                cbor={cbor}
               />
-            </TabWrapper>
-          )}
-        />
-      )}
-
-      {showDatumTab && (
-        <MaterialTab.Screen
-          name={strings.txReview.tabLabel.datum}
-          children={() => (
-            <TabWrapper
-              onConfirm={onConfirm}
-              readOnly={readOnly}
-              showGoToTransactionsButton={
-                readOnly && isReviewFlow && !onConfirm
-              }
-            >
-              <DatumTab outputs={formattedTx.outputs} />
-            </TabWrapper>
-          )}
-        />
-      )}
-
-      {showGovernanceTab && (
-        <MaterialTab.Screen
-          name={strings.txReview.tabLabel.governance}
-          children={() => (
-            <TabWrapper
-              onConfirm={onConfirm}
-              readOnly={readOnly}
-              showGoToTransactionsButton={
-                readOnly && isReviewFlow && !onConfirm
-              }
-            >
-              <GovernanceTab tx={formattedTx} />
-            </TabWrapper>
-          )}
-        />
-      )}
-
-      {showCborTab && (
-        <MaterialTab.Screen
-          name="CBOR"
-          children={() => (
-            <TabWrapper
-              onConfirm={onConfirm}
-              readOnly={readOnly}
-              showGoToTransactionsButton={
-                readOnly && isReviewFlow && !onConfirm
-              }
-            >
-              <CborTab cbor={cbor!} />
             </TabWrapper>
           )}
         />

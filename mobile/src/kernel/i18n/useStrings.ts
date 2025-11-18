@@ -1381,10 +1381,18 @@ export const useStrings = () => {
           metadataTab: f(txReviewMessages.tabLabelMetadataTab),
           datum: f(txReviewMessages.tabLabelDatum),
           governance: f(txReviewMessages.tabLabelGovernance),
+          operations: f(txReviewMessages.tabLabelOperations),
+          smartContracts: f(txReviewMessages.tabLabelSmartContracts),
+          signatures: f(txReviewMessages.tabLabelSignatures),
+          details: f(txReviewMessages.tabLabelDetails),
         },
         metadata: {
           metadataHash: f(txReviewMessages.metadataMetadataHash),
           metadataJsonLabel: f(txReviewMessages.metadataMetadataJsonLabel),
+          allMetadataLabels: f(txReviewMessages.metadataAllMetadataLabels),
+          scripts: f(txReviewMessages.metadataScripts),
+          scriptHash: f(txReviewMessages.metadataScriptHash),
+          scriptBytes: f(txReviewMessages.metadataScriptBytes),
         },
         overview: {
           wallet: f(txReviewMessages.overviewWallet),
@@ -1427,6 +1435,12 @@ export const useStrings = () => {
             f(txReviewMessages.overviewContractInteractionDatum, {count}),
           contractInteractionScript: (count: number) =>
             f(txReviewMessages.overviewContractInteractionScript, {count}),
+          collateralSummary: f(txReviewMessages.overviewCollateralSummary),
+          collateralAtRisk: f(txReviewMessages.overviewCollateralAtRisk),
+          signaturesSummary: f(txReviewMessages.overviewSignaturesSummary),
+          withdrawalsSummary: f(txReviewMessages.overviewWithdrawalsSummary),
+          withdrawingRewards: f(txReviewMessages.overviewWithdrawingRewards),
+          notices: f(txReviewMessages.overviewNotices),
         },
         fee: f(txReviewMessages.fee),
         mint: {
@@ -1471,6 +1485,56 @@ export const useStrings = () => {
           scriptHashLabel: f(txReviewMessages.referenceInputsScriptHashLabel),
           scriptSizeLabel: f(txReviewMessages.referenceInputsScriptSizeLabel),
           utxoLabel: f(txReviewMessages.referenceInputsUtxoLabel),
+        },
+        withdrawals: {
+          label: f(txReviewMessages.withdrawalsLabel),
+        },
+        withdrawal: {
+          address: f(txReviewMessages.withdrawalAddress),
+          amount: f(txReviewMessages.withdrawalAmount),
+        },
+        collateral: {
+          label: f(txReviewMessages.collateralLabel),
+          inputs: f(txReviewMessages.collateralInputs),
+          return: f(txReviewMessages.collateralReturn),
+          total: f(txReviewMessages.collateralTotal),
+        },
+        scripts: {
+          label: f(txReviewMessages.scriptsLabel),
+          dataHash: f(txReviewMessages.scriptsDataHash),
+          plutusScripts: f(txReviewMessages.scriptsPlutusScripts),
+          nativeScripts: f(txReviewMessages.scriptsNativeScripts),
+          size: f(txReviewMessages.scriptsSize),
+        },
+        smartContracts: {
+          noSmartContractInteractions: f(
+            txReviewMessages.smartContractsNoSmartContractInteractions,
+          ),
+        },
+        redeemers: {
+          label: f(txReviewMessages.redeemersLabel),
+          redeemer: f(txReviewMessages.redeemersRedeemer),
+        },
+        signatures: {
+          requiredSigners: f(txReviewMessages.signaturesRequiredSigners),
+          witnesses: f(txReviewMessages.signaturesWitnesses),
+          signer: f(txReviewMessages.signaturesSigner),
+          vkeyWitnesses: f(txReviewMessages.signaturesVkeyWitnesses),
+          publicKey: f(txReviewMessages.signaturesPublicKey),
+          signature: f(txReviewMessages.signaturesSignature),
+          bootstrapWitnesses: f(txReviewMessages.signaturesBootstrapWitnesses),
+          nativeScriptWitnesses: f(
+            txReviewMessages.signaturesNativeScriptWitnesses,
+          ),
+          noSignaturesInfo: f(txReviewMessages.signaturesNoSignaturesInfo),
+        },
+        details: {
+          timing: f(txReviewMessages.detailsTiming),
+          network: f(txReviewMessages.detailsNetwork),
+          ttl: f(txReviewMessages.detailsTtl),
+          validityIntervalStart: f(txReviewMessages.detailsValidityIntervalStart),
+          networkId: f(txReviewMessages.detailsNetworkId),
+          noDetailsAvailable: f(txReviewMessages.detailsNoDetailsAvailable),
         },
         utxos: {
           utxosInputsLabel: f(txReviewMessages.utxosUtxosInputsLabel),

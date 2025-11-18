@@ -30,6 +30,8 @@ import {
   FormattedInputs,
   FormattedOutputs,
   FormattedTx,
+  FormattedWithdrawals,
+  FormattedWitnessSet,
   TransactionBody,
   TransactionInputs,
   TransactionOutputs,
@@ -175,6 +177,67 @@ export const useFormattedTx = (
   const formattedCertificates = formatCertificates(data.certs)
   const formattedMintData = formatMintData(data.mint, tokenInfos)
 
+  // Extract all missing transaction body fields
+  const formattedWithdrawals = cbor
+    ? CardanoMobileWrapped.cslScope((csl) => {
+        return formatWithdrawals(csl, wallet, cbor)
+      })
+    : null
+
+  const formattedCollateral = cbor
+    ? CardanoMobileWrapped.cslScope((csl) => {
+        return formatCollateral(csl, wallet, tokenInfos, cbor)
+      })
+    : null
+
+  const formattedCollateralReturn = cbor
+    ? CardanoMobileWrapped.cslScope((csl) => {
+        return formatCollateralReturn(csl, wallet, tokenInfos, cbor)
+      })
+    : null
+
+  const formattedTotalCollateral = cbor
+    ? CardanoMobileWrapped.cslScope((csl) => {
+        return formatTotalCollateral(csl, wallet, cbor)
+      })
+    : null
+
+  const formattedRequiredSigners = cbor
+    ? CardanoMobileWrapped.cslScope((csl) => {
+        return formatRequiredSigners(csl, cbor)
+      })
+    : null
+
+  const formattedScriptDataHash = cbor
+    ? CardanoMobileWrapped.cslScope((csl) => {
+        return formatScriptDataHash(csl, cbor)
+      })
+    : null
+
+  const formattedTtl = cbor
+    ? CardanoMobileWrapped.cslScope((csl) => {
+        return formatTtl(csl, cbor)
+      })
+    : null
+
+  const formattedValidityIntervalStart = cbor
+    ? CardanoMobileWrapped.cslScope((csl) => {
+        return formatValidityIntervalStart(csl, cbor)
+      })
+    : null
+
+  const formattedNetworkId = cbor
+    ? CardanoMobileWrapped.cslScope((csl) => {
+        return formatNetworkId(csl, cbor)
+      })
+    : null
+
+  const formattedWitnessSet = cbor
+    ? CardanoMobileWrapped.cslScope((csl) => {
+        return formatWitnessSet(csl, cbor)
+      })
+    : null
+
   // Parse governance certificates and metadata
   const governance = cbor
     ? CardanoMobileWrapped.cslScope((csl) => {
@@ -197,6 +260,16 @@ export const useFormattedTx = (
       certificates: formattedCertificates,
       mint: formattedMintData,
       referenceInputs: formattedReferenceInputs,
+      withdrawals: formattedWithdrawals,
+      collateral: formattedCollateral,
+      collateralReturn: formattedCollateralReturn,
+      totalCollateral: formattedTotalCollateral,
+      requiredSigners: formattedRequiredSigners,
+      scriptDataHash: formattedScriptDataHash,
+      ttl: formattedTtl,
+      validityIntervalStart: formattedValidityIntervalStart,
+      networkId: formattedNetworkId,
+      witnessSet: formattedWitnessSet,
       governance,
       chainInfo,
     },
@@ -677,6 +750,423 @@ const isOwnedAddress = (wallet: YoroiWallet, bech32Address: string) => {
     wallet.internalAddresses.includes(bech32Address) ||
     wallet.externalAddresses.includes(bech32Address)
   )
+}
+
+/**
+ * Format withdrawals from transaction body
+ */
+const formatWithdrawals = (
+  csl: WasmModuleProxy,
+  wallet: YoroiWallet,
+  cbor: string,
+): FormattedWithdrawals | null => {
+  try {
+    const tx = csl.Transaction.fromHex(cbor)
+    const txBody = tx.body()
+    const withdrawals = txBody.withdrawals()
+
+    if (!withdrawals || withdrawals.len() === 0) {
+      return null
+    }
+
+    const formatted: FormattedWithdrawals = []
+
+    // Withdrawals is a map of RewardAddress -> Coin
+    const keys = withdrawals.keys()
+    for (let i = 0; i < keys.len(); i++) {
+      const rewardAddress = keys.get(i)
+      if (!rewardAddress) continue
+
+      const amount = withdrawals.get(rewardAddress)
+      if (!amount) continue
+
+      // Convert RewardAddress to Address then to bech32
+      const address = rewardAddress.toAddress()
+      const bech32Address = address.toBech32(undefined)
+
+      formatted.push({
+        address: bech32Address,
+        amount: asQuantity(amount.toStr()),
+        tokenInfo: wallet.portfolioPrimaryTokenInfo,
+      })
+    }
+
+    return formatted.length > 0 ? formatted : null
+  } catch {
+    return null
+  }
+}
+
+/**
+ * Format collateral inputs from transaction body
+ */
+const formatCollateral = (
+  csl: WasmModuleProxy,
+  wallet: YoroiWallet,
+  tokenInfos: Map<Portfolio.Token.Id, Portfolio.Token.Info> | undefined,
+  cbor: string,
+): FormattedInputs | null => {
+  try {
+    const tx = csl.Transaction.fromHex(cbor)
+    const txBody = tx.body()
+    const collateral = txBody.collateral()
+
+    if (!collateral || collateral.len() === 0) {
+      return null
+    }
+
+    // Convert collateral inputs to TransactionInputs format
+    const collateralInputs: TransactionInputs = []
+    for (let i = 0; i < collateral.len(); i++) {
+      const input = collateral.get(i)
+      if (!input) continue
+
+      collateralInputs.push({
+        transaction_id: input.transactionId().toHex(),
+        index: input.index(),
+      })
+    }
+
+    // Fetch UTXOs for collateral inputs
+    const collateralUtxos = collateralInputs
+      .map((input) => {
+        const utxo = wallet.utxos.find(
+          (u) =>
+            u.tx_hash === input.transaction_id && u.tx_index === input.index,
+        )
+        return utxo
+      })
+      .filter(isNonNullable) as RawUtxo[]
+
+    return formatInputs(wallet, tokenInfos, collateralUtxos)
+  } catch {
+    return null
+  }
+}
+
+/**
+ * Format collateral return output from transaction body
+ */
+const formatCollateralReturn = (
+  csl: WasmModuleProxy,
+  wallet: YoroiWallet,
+  tokenInfos: Map<Portfolio.Token.Id, Portfolio.Token.Info> | undefined,
+  cbor: string,
+): FormattedOutputs[0] | null => {
+  try {
+    const tx = csl.Transaction.fromHex(cbor)
+    const txBody = tx.body()
+    const collateralReturn = txBody.collateralReturn()
+
+    if (!collateralReturn) {
+      return null
+    }
+
+    const address = collateralReturn.address().toBech32(undefined)
+    const coin = asQuantity(collateralReturn.amount().coin().toStr())
+
+    const addressKind = getAddressKind(address)
+    const rewardAddress =
+      addressKind === CredKind.Key
+        ? deriveAddress(address, wallet.networkManager.chainId)
+        : null
+
+    const primaryAssets = [
+      {
+        tokenInfo: wallet.portfolioPrimaryTokenInfo,
+        quantity: coin,
+      },
+    ]
+
+    const value = collateralReturn.amount()
+    const multiasset = value.multiasset()
+    const multiAssets: Array<{
+      tokenInfo: Portfolio.Token.Info
+      quantity: Balance.Quantity
+    }> = []
+
+    if (multiasset) {
+      const tokens = parseTokenList(csl, multiasset)
+      for (const token of tokens) {
+        const tokenInfo = tokenInfos?.get(token.assetId as Portfolio.Token.Id)
+        if (tokenInfo) {
+          multiAssets.push({
+            tokenInfo,
+            quantity: asQuantity(token.amount),
+          })
+        }
+      }
+    }
+
+    const assets = [...primaryAssets, ...multiAssets].filter(isNonNullable)
+
+    return {
+      assets,
+      address,
+      addressKind,
+      rewardAddress,
+      ownAddress: isOwnedAddress(wallet, address),
+    }
+  } catch {
+    return null
+  }
+}
+
+/**
+ * Format total collateral from transaction body
+ */
+const formatTotalCollateral = (
+  csl: WasmModuleProxy,
+  wallet: YoroiWallet,
+  cbor: string,
+): FormattedFee | null => {
+  try {
+    const tx = csl.Transaction.fromHex(cbor)
+    const txBody = tx.body()
+    const totalCollateral = txBody.totalCollateral()
+
+    if (!totalCollateral) {
+      return null
+    }
+
+    return {
+      tokenInfo: wallet.portfolioPrimaryTokenInfo,
+      quantity: asQuantity(totalCollateral.toStr()),
+    }
+  } catch {
+    return null
+  }
+}
+
+/**
+ * Format required signers from transaction body
+ */
+const formatRequiredSigners = (
+  csl: WasmModuleProxy,
+  cbor: string,
+): string[] | null => {
+  try {
+    const tx = csl.Transaction.fromHex(cbor)
+    const txBody = tx.body()
+    const requiredSigners = txBody.requiredSigners()
+
+    if (!requiredSigners || requiredSigners.len() === 0) {
+      return null
+    }
+
+    const signers: string[] = []
+    for (let i = 0; i < requiredSigners.len(); i++) {
+      const signer = requiredSigners.get(i)
+      if (signer) {
+        signers.push(signer.toHex())
+      }
+    }
+
+    return signers.length > 0 ? signers : null
+  } catch {
+    return null
+  }
+}
+
+/**
+ * Format script data hash from transaction body
+ */
+const formatScriptDataHash = (
+  csl: WasmModuleProxy,
+  cbor: string,
+): string | null => {
+  try {
+    const tx = csl.Transaction.fromHex(cbor)
+    const txBody = tx.body()
+    const scriptDataHash = txBody.scriptDataHash()
+
+    if (!scriptDataHash) {
+      return null
+    }
+
+    return scriptDataHash.toHex()
+  } catch {
+    return null
+  }
+}
+
+/**
+ * Format TTL from transaction body
+ */
+const formatTtl = (csl: WasmModuleProxy, cbor: string): number | null => {
+  try {
+    const tx = csl.Transaction.fromHex(cbor)
+    const txBody = tx.body()
+    const ttl = txBody.ttl()
+
+    return ttl ?? null
+  } catch {
+    return null
+  }
+}
+
+/**
+ * Format validity interval start from transaction body
+ */
+const formatValidityIntervalStart = (
+  csl: WasmModuleProxy,
+  cbor: string,
+): number | null => {
+  try {
+    const tx = csl.Transaction.fromHex(cbor)
+    const txBody = tx.body()
+    const validityStart = txBody.validityStartIntervalBignum()
+
+    if (!validityStart) {
+      return null
+    }
+
+    return parseInt(validityStart.toStr(), 10)
+  } catch {
+    return null
+  }
+}
+
+/**
+ * Format network ID from transaction body
+ */
+const formatNetworkId = (csl: WasmModuleProxy, cbor: string): number | null => {
+  try {
+    const tx = csl.Transaction.fromHex(cbor)
+    const txBody = tx.body()
+    const networkId = txBody.networkId()
+
+    if (networkId == null) {
+      return null
+    }
+
+    // NetworkId is an enum: 0 = Testnet, 1 = Mainnet
+    return networkId.kind()
+  } catch {
+    return null
+  }
+}
+
+/**
+ * Format witness set from transaction
+ */
+const formatWitnessSet = (
+  csl: WasmModuleProxy,
+  cbor: string,
+): FormattedWitnessSet | null => {
+  try {
+    const tx = csl.Transaction.fromHex(cbor)
+    const witnessSet = tx.witnessSet()
+
+    if (!witnessSet) {
+      return null
+    }
+
+    const formatted: FormattedWitnessSet = {
+      vkeys: [],
+      bootstraps: [],
+      nativeScripts: [],
+      plutusScripts: [],
+      plutusData: [],
+    }
+
+    // Extract VKey witnesses
+    const vkeys = witnessSet.vkeys()
+    if (vkeys) {
+      for (let i = 0; i < vkeys.len(); i++) {
+        const vkey = vkeys.get(i)
+        if (!vkey) continue
+
+        const publicKey = vkey.vkey().toBytes()
+        const signature = vkey.signature().toBytes()
+
+        formatted.vkeys.push({
+          publicKey: Buffer.from(publicKey).toString('hex'),
+          signature: Buffer.from(signature).toString('hex'),
+        })
+      }
+    }
+
+    // Extract bootstrap witnesses
+    const bootstraps = witnessSet.bootstraps()
+    if (bootstraps) {
+      for (let i = 0; i < bootstraps.len(); i++) {
+        const bootstrap = bootstraps.get(i)
+        if (!bootstrap) continue
+
+        const publicKey = bootstrap.vkey().toBytes()
+        const signature = bootstrap.signature().toBytes()
+        const chaincode = bootstrap.chainCode()
+        const attributes = bootstrap.attributes()
+
+        formatted.bootstraps.push({
+          publicKey: Buffer.from(publicKey).toString('hex'),
+          signature: Buffer.from(signature).toString('hex'),
+          chaincode: Buffer.from(chaincode).toString('hex'),
+          attributes: Buffer.from(attributes).toString('hex'),
+        })
+      }
+    }
+
+    // Extract native script witnesses
+    const nativeScripts = witnessSet.nativeScripts()
+    if (nativeScripts) {
+      for (let i = 0; i < nativeScripts.len(); i++) {
+        const script = nativeScripts.get(i)
+        if (!script) continue
+
+        formatted.nativeScripts.push({
+          scriptHash: script.hash().toHex(),
+        })
+      }
+    }
+
+    // Extract Plutus script witnesses
+    const plutusScripts = witnessSet.plutusScripts()
+    if (plutusScripts) {
+      for (let i = 0; i < plutusScripts.len(); i++) {
+        const script = plutusScripts.get(i)
+        if (!script) continue
+
+        const scriptBytes = script.toBytes()
+
+        formatted.plutusScripts.push({
+          scriptHash: script.hash().toHex(),
+          scriptBytes: Buffer.from(scriptBytes).toString('hex'),
+        })
+      }
+    }
+
+    // Extract Plutus data (redeemers)
+    const plutusData = witnessSet.plutusData()
+    if (plutusData) {
+      for (let i = 0; i < plutusData.len(); i++) {
+        const datum = plutusData.get(i)
+        if (!datum) continue
+
+        const dataBytes = datum.toBytes()
+
+        formatted.plutusData.push({
+          data: Buffer.from(dataBytes).toString('hex'),
+        })
+      }
+    }
+
+    // Return null if all arrays are empty
+    if (
+      formatted.vkeys.length === 0 &&
+      formatted.bootstraps.length === 0 &&
+      formatted.nativeScripts.length === 0 &&
+      formatted.plutusScripts.length === 0 &&
+      formatted.plutusData.length === 0
+    ) {
+      return null
+    }
+
+    return formatted
+  } catch {
+    return null
+  }
 }
 
 /**

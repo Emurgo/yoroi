@@ -4,61 +4,149 @@ import {type Proposal, type Vote} from '@yoroi/tx'
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
+import {Operations, useOperations} from '~/features/ReviewTx/common/operations'
 import {FormattedTx} from '~/features/ReviewTx/common/types'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Accordion} from '~/ui/Accordion/Accordion'
 import {Copiable} from '~/ui/Copiable/Copiable'
+import {Divider} from '~/ui/Divider/Divider'
 import {Space} from '~/ui/Space/Space'
+import {formatTokenWithText} from '~/wallets/utils/format'
 
-export const GovernanceTab = ({tx}: {tx: FormattedTx}) => {
+export const OperationsTab = ({
+  tx,
+  operations: providedOperations,
+  operationsNotice,
+}: {
+  tx: FormattedTx
+  operations?: Operations
+  operationsNotice?: React.ReactNode
+}) => {
   const {palette: p} = useTheme()
   const strings = useStrings()
+  const defaultOperations = useOperations(tx.certificates)
+  const ops = providedOperations ?? defaultOperations
 
-  if (!tx.governance) {
-    return (
-      <View style={[a.flex_1, a.px_lg, {backgroundColor: p.bg_color_max}]}>
-        <Space.Height.lg />
-        <Text style={[a.body_1_lg_medium, {color: p.text_gray_medium}]}>
-          {strings.txReview.governance.noGovernanceActions}
-        </Text>
-      </View>
-    )
+  const hasCertificates = tx.certificates != null && tx.certificates.length > 0
+  const hasWithdrawals = tx.withdrawals != null && tx.withdrawals.length > 0
+  const hasGovernance = tx.governance != null
+
+  if (!hasCertificates && !hasWithdrawals && !hasGovernance) {
+    return null
   }
-
-  const {proposals, votes} = tx.governance
 
   return (
     <View style={[a.flex_1, a.px_lg, {backgroundColor: p.bg_color_max}]}>
       <Space.Height.lg />
 
-      {proposals.length > 0 && (
+      {hasCertificates && (
         <>
+          <Text style={[a.body_1_lg_medium, {color: p.text_gray_medium}]}>
+            {strings.txReview.operationsLabel}
+          </Text>
+          <Space.Height.md />
+
+          {operationsNotice != null && (
+            <>
+              {operationsNotice}
+              <Space.Height.lg />
+            </>
+          )}
+
+          {ops.components
+            .filter((component) => !component.duplicated)
+            .map(({component}, index) => (
+              <React.Fragment key={index}>
+                {index > 0 && <Space.Height.sm />}
+                {component}
+              </React.Fragment>
+            ))}
+          {(hasWithdrawals || hasGovernance) && (
+            <>
+              <Space.Height.lg />
+              <Divider verticalSpace="md" />
+            </>
+          )}
+        </>
+      )}
+
+      {hasWithdrawals && (
+        <>
+          <Text style={[a.body_1_lg_medium, {color: p.text_gray_medium}]}>
+            {strings.txReview.withdrawals.label} ({tx.withdrawals!.length})
+          </Text>
+          <Space.Height.md />
+          <Withdrawals withdrawals={tx.withdrawals!} />
+          {hasGovernance && (
+            <>
+              <Space.Height.lg />
+              <Divider verticalSpace="md" />
+            </>
+          )}
+        </>
+      )}
+
+      {hasGovernance && (
+        <>
+          <Text style={[a.body_1_lg_medium, {color: p.text_gray_medium}]}>
+            {strings.txReview.tabLabel.governance}
+          </Text>
+          <Space.Height.md />
+          <GovernanceContent tx={tx} />
+        </>
+      )}
+
+      <Space.Height.lg />
+    </View>
+  )
+}
+
+const GovernanceContent = ({tx}: {tx: FormattedTx}) => {
+  const {palette: p} = useTheme()
+  const strings = useStrings()
+
+  if (!tx.governance) {
+    return null
+  }
+
+  const {proposals, votes} = tx.governance
+
+  return (
+    <View>
+      {proposals.length > 0 && (
+        <View>
           <Text style={[a.body_1_lg_medium, {color: p.text_gray_medium}]}>
             {strings.txReview.governance.proposalsLabel} ({proposals.length})
           </Text>
           <Space.Height.md />
           {proposals.map((proposal, index) => (
-            <ProposalItem
-              key={`proposal-${index}`}
-              proposal={proposal}
-              index={index}
-            />
+            <View key={`proposal-${index}`}>
+              {index > 0 && <Space.Height.md />}
+              <ProposalItem proposal={proposal} index={index} />
+            </View>
           ))}
-          <Space.Height.lg />
-        </>
+        </View>
       )}
 
       {votes.length > 0 && (
-        <>
+        <View>
+          {proposals.length > 0 && (
+            <>
+              <Space.Height.lg />
+              <Divider verticalSpace="md" />
+            </>
+          )}
           <Text style={[a.body_1_lg_medium, {color: p.text_gray_medium}]}>
             {strings.txReview.governance.votesLabel} ({votes.length})
           </Text>
           <Space.Height.md />
           {votes.map((vote, index) => (
-            <VoteItem key={`vote-${index}`} vote={vote} index={index} />
+            <View key={`vote-${index}`}>
+              {index > 0 && <Space.Height.md />}
+              <VoteItem vote={vote} index={index} />
+            </View>
           ))}
-          <Space.Height.lg />
-        </>
+        </View>
       )}
     </View>
   )
@@ -83,7 +171,7 @@ const ProposalItem = ({
     >
       <Space.Height.md />
 
-      <View style={[a.flex_row, a.justify_between]}>
+      <View style={[a.flex_row, a.justify_between, a.align_center]}>
         <Text style={[a.body_2_md_medium, {color: p.text_gray_medium}]}>
           {strings.txReview.governance.actionTypeLabel}:
         </Text>
@@ -95,7 +183,7 @@ const ProposalItem = ({
       {proposal.governanceAction.actionId && (
         <>
           <Space.Height.md />
-          <View style={[a.flex_row, a.justify_between]}>
+          <View style={[a.flex_row, a.justify_between, a.align_center]}>
             <Text style={[a.body_2_md_medium, {color: p.text_gray_medium}]}>
               {strings.txReview.governance.actionIdLabel}:
             </Text>
@@ -123,13 +211,19 @@ const ProposalItem = ({
 
       <Space.Height.md />
 
-      <View style={[a.flex_row, a.justify_between]}>
+      <View style={[a.flex_row, a.justify_between, a.align_center]}>
         <Text style={[a.body_2_md_medium, {color: p.text_gray_medium}]}>
           {strings.txReview.governance.anchorUrlLabel}:
         </Text>
         <Text
-          style={[a.body_2_md_regular, {color: p.text_gray_medium}]}
+          style={[
+            a.flex_1,
+            a.body_2_md_regular,
+            {color: p.text_gray_medium},
+            a.text_right,
+          ]}
           numberOfLines={1}
+          ellipsizeMode="middle"
         >
           {proposal.anchor.url}
         </Text>
@@ -137,7 +231,7 @@ const ProposalItem = ({
 
       <Space.Height.md />
 
-      <View style={[a.flex_row, a.justify_between]}>
+      <View style={[a.flex_row, a.justify_between, a.align_center]}>
         <Text style={[a.body_2_md_medium, {color: p.text_gray_medium}]}>
           {strings.txReview.governance.anchorHashLabel}:
         </Text>
@@ -159,7 +253,7 @@ const ProposalItem = ({
 
       <Space.Height.md />
 
-      <View style={[a.flex_row, a.justify_between]}>
+      <View style={[a.flex_row, a.justify_between, a.align_center]}>
         <Text style={[a.body_2_md_medium, {color: p.text_gray_medium}]}>
           {strings.txReview.governance.depositLabel}:
         </Text>
@@ -170,7 +264,7 @@ const ProposalItem = ({
 
       <Space.Height.md />
 
-      <View style={[a.flex_row, a.justify_between]}>
+      <View style={[a.flex_row, a.justify_between, a.align_center]}>
         <Text style={[a.body_2_md_medium, {color: p.text_gray_medium}]}>
           {strings.txReview.governance.rewardAccountLabel}:
         </Text>
@@ -198,13 +292,7 @@ const ProposalItem = ({
           </Text>
           <Space.Height.sm />
           <View
-            style={[
-              {
-                backgroundColor: p.bg_color_min,
-                padding: 12,
-                borderRadius: 8,
-              },
-            ]}
+            style={[{backgroundColor: p.bg_color_min}, a.rounded_sm, a.p_md]}
           >
             <Text
               style={[
@@ -236,7 +324,7 @@ const VoteItem = ({vote, index}: {vote: Vote; index: number}) => {
     >
       <Space.Height.md />
 
-      <View style={[a.flex_row, a.justify_between]}>
+      <View style={[a.flex_row, a.justify_between, a.align_center]}>
         <Text style={[a.body_2_md_medium, {color: p.text_gray_medium}]}>
           {strings.txReview.governance.voterTypeLabel}:
         </Text>
@@ -247,7 +335,7 @@ const VoteItem = ({vote, index}: {vote: Vote; index: number}) => {
 
       <Space.Height.md />
 
-      <View style={[a.flex_row, a.justify_between]}>
+      <View style={[a.flex_row, a.justify_between, a.align_center]}>
         <Text style={[a.body_2_md_medium, {color: p.text_gray_medium}]}>
           {strings.txReview.governance.voterCredentialLabel}:
         </Text>
@@ -269,7 +357,7 @@ const VoteItem = ({vote, index}: {vote: Vote; index: number}) => {
 
       <Space.Height.md />
 
-      <View style={[a.flex_row, a.justify_between]}>
+      <View style={[a.flex_row, a.justify_between, a.align_center]}>
         <Text style={[a.body_2_md_medium, {color: p.text_gray_medium}]}>
           {strings.txReview.governance.voteChoiceLabel}:
         </Text>
@@ -280,7 +368,7 @@ const VoteItem = ({vote, index}: {vote: Vote; index: number}) => {
 
       <Space.Height.md />
 
-      <View style={[a.flex_row, a.justify_between]}>
+      <View style={[a.flex_row, a.justify_between, a.align_center]}>
         <Text style={[a.body_2_md_medium, {color: p.text_gray_medium}]}>
           {strings.txReview.governance.actionIdLabel}:
         </Text>
@@ -306,13 +394,19 @@ const VoteItem = ({vote, index}: {vote: Vote; index: number}) => {
       {vote.votingProcedure.anchor && (
         <>
           <Space.Height.md />
-          <View style={[a.flex_row, a.justify_between]}>
+          <View style={[a.flex_row, a.justify_between, a.align_center]}>
             <Text style={[a.body_2_md_medium, {color: p.text_gray_medium}]}>
               {strings.txReview.governance.anchorUrlLabel}:
             </Text>
             <Text
-              style={[a.body_2_md_regular, {color: p.text_gray_medium}]}
+              style={[
+                a.flex_1,
+                a.body_2_md_regular,
+                {color: p.text_gray_medium},
+                a.text_right,
+              ]}
               numberOfLines={1}
+              ellipsizeMode="middle"
             >
               {vote.votingProcedure.anchor.url}
             </Text>
@@ -320,7 +414,7 @@ const VoteItem = ({vote, index}: {vote: Vote; index: number}) => {
 
           <Space.Height.md />
 
-          <View style={[a.flex_row, a.justify_between]}>
+          <View style={[a.flex_row, a.justify_between, a.align_center]}>
             <Text style={[a.body_2_md_medium, {color: p.text_gray_medium}]}>
               {strings.txReview.governance.anchorHashLabel}:
             </Text>
@@ -344,5 +438,65 @@ const VoteItem = ({vote, index}: {vote: Vote; index: number}) => {
 
       <Space.Height.lg />
     </Accordion>
+  )
+}
+
+const Withdrawals = ({
+  withdrawals,
+}: {
+  withdrawals: FormattedTx['withdrawals']
+}) => {
+  const {palette: p} = useTheme()
+  const strings = useStrings()
+
+  if (!withdrawals || withdrawals.length === 0) {
+    return null
+  }
+
+  return (
+    <View>
+      {withdrawals.map((withdrawal, index) => (
+        <React.Fragment key={index}>
+          {index > 0 && (
+            <>
+              <Space.Height.lg />
+              <Divider verticalSpace="md" />
+            </>
+          )}
+
+          <View style={[a.flex_col, a.gap_md]}>
+            <View style={[a.flex_col, a.gap_sm]}>
+              <Text style={[a.body_2_md_medium, {color: p.text_gray_medium}]}>
+                {strings.txReview.withdrawal.address}
+              </Text>
+              <View style={[a.flex_row, a.align_center]}>
+                <Copiable text={withdrawal.address} style={a.flex_1}>
+                  <Text
+                    style={[
+                      a.flex_1,
+                      a.body_2_md_regular,
+                      {color: p.text_gray_medium},
+                    ]}
+                    numberOfLines={1}
+                    ellipsizeMode="middle"
+                  >
+                    {withdrawal.address}
+                  </Text>
+                </Copiable>
+              </View>
+            </View>
+
+            <View style={[a.flex_row, a.justify_between, a.align_center]}>
+              <Text style={[a.body_2_md_medium, {color: p.text_gray_medium}]}>
+                {strings.txReview.withdrawal.amount}
+              </Text>
+              <Text style={[a.body_2_md_regular, {color: p.text_gray_medium}]}>
+                {formatTokenWithText(withdrawal.amount, withdrawal.tokenInfo)}
+              </Text>
+            </View>
+          </View>
+        </React.Fragment>
+      ))}
+    </View>
   )
 }
