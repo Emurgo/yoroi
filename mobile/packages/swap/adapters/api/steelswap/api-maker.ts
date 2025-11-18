@@ -336,32 +336,31 @@ type ErrorResponse = {
   detail: string | Array<ValidationError>
 }
 
-export const parseSteelswapError = ({tag, error}: Left<Api.ResponseError>) =>
-  freeze<Left<Api.ResponseError>>(
+export const parseSteelswapError = ({tag, error}: Left<Api.ResponseError>) => {
+  const responseData = error.responseData as ErrorResponse | null
+  let message = 'Steelswap API error'
+
+  if (responseData) {
+    if (typeof responseData.detail === 'string') {
+      message = responseData.detail
+    } else if (Array.isArray(responseData.detail)) {
+      message = responseData.detail
+        .map((err) => `${err.loc.join('.')}: ${err.msg}`)
+        .join('; ')
+    }
+  }
+
+  return freeze<Left<Api.ResponseError>>(
     {
       tag,
       error: {
         ...error,
-        message: (() => {
-          const responseData = error.responseData as ErrorResponse | null
-          if (!responseData) return 'Steelswap API error'
-
-          if (typeof responseData.detail === 'string') {
-            return responseData.detail
-          }
-
-          if (Array.isArray(responseData.detail)) {
-            return responseData.detail
-              .map((err) => `${err.loc.join('.')}: ${err.msg}`)
-              .join('; ')
-          }
-
-          return 'Steelswap API error'
-        })(),
+        message,
       },
     },
     true,
   )
+}
 
 const baseUrls = freeze({
   [Chain.Network.Mainnet]: 'https://yoroi.steelswap.io',

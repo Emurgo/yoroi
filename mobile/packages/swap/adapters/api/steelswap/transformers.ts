@@ -19,7 +19,7 @@ export const transformersMaker = ({
   primaryTokenInfo,
   address,
   isPrimaryToken,
-  partner = 'yoroi-aggregator',
+  partner,
   getTokenDecimals = () => 6, // Default to 6 decimals if not provided
 }: SteelswapTransformersConfig) => {
   const fromTokenId = (tokenId: string): Portfolio.Token.Id => {
@@ -208,7 +208,7 @@ export const transformersMaker = ({
             blockedProtocols.length > 0 && {
               ignoreDexes: blockedProtocols.map(fromSwapProtocol),
             }),
-          partner,
+          ...(partner !== undefined && {partner}),
         }
       },
       response: (data: EstimateResponse): Swap.EstimateResponse => {
@@ -321,7 +321,7 @@ export const transformersMaker = ({
             blockedProtocols.length > 0 && {
               ignoreDexes: blockedProtocols.map(fromSwapProtocol),
             }),
-          partner,
+          ...(partner !== undefined && {partner}),
           address,
           utxos: inputs ?? [],
           slippage: slippage ? Math.round(slippage * 100) : 0, // Convert percentage to basis points
@@ -355,7 +355,7 @@ export const transformersMaker = ({
           },
         ],
         ttl: 900,
-        partner,
+        ...(partner !== undefined && {partner}),
       }),
       response: (txHex: CancelResponse): Swap.CancelResponse => ({
         cbor: txHex,
