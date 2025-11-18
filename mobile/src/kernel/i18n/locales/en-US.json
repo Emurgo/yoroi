@@ -206,7 +206,7 @@
   "components.governance.yoroiRecord": "See Yoroi's voting record",
   "components.governance.newToGovernance.title": "New to governance? Start here",
   "components.governance.newToGovernance.text": "Your ADA can make a difference. Delegate to a DRep to represent your vote and participate in Cardano Governance",
-  "components.governance.earnRewardsBanner.title": "Consider delegating to Yoroi DRep?",
+  "components.governance.earnRewardsBanner.title": "Delegate with Yoroi DRep",
   "components.governance.earnRewardsBanner.description": "Delegate to our DRep and help Cardano evolve in a way that benefits your wallet experience.",
   "components.governance.earnRewardsBanner.cta": "DELEGATE NOW",
   "components.initialization.acepttermsofservicescreen.aggreeClause": "I agree with the Terms of Service",
