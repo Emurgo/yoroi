@@ -142,7 +142,7 @@ export const handlePushAction = async (options: {
         event.id,
       )
     } else {
-      handleInternalNavigation(event, walletNavigation, false)
+      await handleInternalNavigation(event, walletNavigation, false)
     }
   }
 }
@@ -186,10 +186,10 @@ export const handleNotificationInternalNavigationAction = async (
   if (!event) return
 
   if (event.trigger !== YoroiNotifications.Trigger.Push) return
-  handleInternalNavigation(event, walletNavigation, true)
+  await handleInternalNavigation(event, walletNavigation, true)
 }
 
-const handleInternalNavigation = (
+const handleInternalNavigation = async (
   event: YoroiNotifications.PushEvent,
   walletNavigation: WalletNavigation,
   _pushNotificationHistory: boolean,
@@ -217,6 +217,9 @@ const handleInternalNavigation = (
           const tokenOutId = isString(data.tokenOutId)
             ? (data.tokenOutId as Portfolio.Token.Id)
             : undefined
+          if (tokenOutId !== undefined) {
+            await setPendingSwapToken(tokenOutId)
+          }
           walletNavigation.resetToSwapWithToken(tokenOutId)
           break
         }

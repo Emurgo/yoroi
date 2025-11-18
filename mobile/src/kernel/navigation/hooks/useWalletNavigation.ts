@@ -4,7 +4,6 @@ import {useNavigation} from '@react-navigation/native'
 import * as Linking from 'expo-linking'
 import * as React from 'react'
 
-import {setPendingSwapToken} from '~/features/Notifications/common/tools'
 import {useSwap} from '~/features/Swap/common/useSwap'
 import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
 
@@ -298,7 +297,7 @@ export const useWalletNavigation = () => {
       })
     },
 
-    navigateToSwap: (tokenOutId?: Portfolio.Token.Id) => {
+    navigateToSwap: () => {
       const currentNetwork = selectedNetworkRef.current.network
 
       if (currentNetwork === Chain.Network.Preprod) {
@@ -329,22 +328,10 @@ export const useWalletNavigation = () => {
           },
         },
       })
-
-      if (tokenOutId !== undefined) {
-        setTimeout(() => {
-          const currentSwapForm = swapFormRef.current
-          currentSwapForm.action({type: 'TokenOutIdChanged', value: tokenOutId})
-          currentSwapForm.action({type: 'TokenOutInputTouched'})
-        }, 500)
-      }
     },
 
-    resetToSwapWithToken: async (tokenOutId?: Portfolio.Token.Id) => {
+    resetToSwapWithToken: () => {
       const currentNetwork = selectedNetworkRef.current.network
-
-      if (tokenOutId !== undefined) {
-        await setPendingSwapToken(tokenOutId)
-      }
 
       if (currentNetwork === Chain.Network.Preprod) {
         navigation.reset({
