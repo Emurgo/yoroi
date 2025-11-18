@@ -670,7 +670,7 @@ export async function buildTransaction(
               : undefined,
         })),
       })
-      
+
       const certs = csl.Certificates.new()
       if (!certs) {
         logger.error('buildTransaction: Failed to create Certificates')
@@ -679,13 +679,13 @@ export async function buildTransaction(
       for (let i = 0; i < state.certificates.length; i++) {
         const certData = state.certificates[i]
         if (!certData) continue
-        
+
         const certKind = 'kind' in certData ? certData.kind : 'unknown'
         logger.info('buildTransaction: Processing certificate', {
           certificateIndex: i,
           certificateKind: certKind,
         })
-        
+
         try {
           // Create certificate using shared helper
           const cslCert = createCertificateFromData(csl, certData)
@@ -718,7 +718,7 @@ export async function buildTransaction(
         withdrawals: state.withdrawals,
         certificatesCount: state.certificates.length,
       })
-      
+
       const withdrawals = csl.Withdrawals.new()
       if (!withdrawals) {
         logger.error('buildTransaction: Failed to create Withdrawals')
@@ -727,13 +727,13 @@ export async function buildTransaction(
       for (let i = 0; i < state.withdrawals.length; i++) {
         const withdrawal = state.withdrawals[i]
         if (!withdrawal) continue
-        
+
         logger.info('buildTransaction: Processing withdrawal', {
           withdrawalIndex: i,
           rewardAddress: withdrawal.rewardAddress,
           amount: withdrawal.amount,
         })
-        
+
         try {
           const address = csl.Address.fromBech32(withdrawal.rewardAddress)
           if (!address) {
@@ -949,28 +949,30 @@ export async function buildTransaction(
           `Invalid change address: ${state.options.changeAddress}`,
         )
       }
-      
+
       // Calculate totals before adding change to help debug issues
       const totalInput = calculateTotalInputValue(state.inputs)
       const totalOutput = calculateTotalOutputValue(
         state.outputs,
         state.options.manualChangeOutput,
       )
-      
+
       // Calculate total withdrawals
       const totalWithdrawals: Balance.Amounts = {} as Balance.Amounts
       for (const withdrawal of state.withdrawals) {
         const current = BigInt(totalWithdrawals[primaryTokenId] || '0')
         const added = BigInt(withdrawal.amount)
-        totalWithdrawals[primaryTokenId] = (current + added).toString() as Balance.Quantity
+        totalWithdrawals[primaryTokenId] = (
+          current + added
+        ).toString() as Balance.Quantity
       }
-      
+
       // Check for non-ADA tokens in inputs
       const inputTokenIds = Object.keys(totalInput).filter(
         (id) => id !== primaryTokenId,
       )
       const hasTokens = inputTokenIds.length > 0
-      
+
       // Calculate expected remaining ADA (before fee is calculated)
       // Withdrawals ADD to available ADA, outputs SUBTRACT
       const inputAda = BigInt(totalInput[primaryTokenId] || '0')
@@ -978,19 +980,19 @@ export async function buildTransaction(
       const withdrawalsAda = BigInt(totalWithdrawals[primaryTokenId] || '0')
       // Available ADA = input + withdrawals - outputs (fee will be subtracted by CSL)
       const availableAdaBeforeFee = inputAda + withdrawalsAda - outputAda
-      
+
       // Get min UTXO value from protocol params
       const minUtxoValue = BigInt(protocolParams.minimumUtxoVal || '1000000') // Default 1 ADA
-      
+
       // Estimate fee (CSL will calculate actual fee, but this gives us an idea)
       // Fee calculation happens inside addChangeIfNeeded, but we can estimate
       const estimatedTxSize = 500 // Rough estimate
       const estimatedFee =
         BigInt(protocolParams.linearFee.constant) +
         BigInt(protocolParams.linearFee.coefficient) * BigInt(estimatedTxSize)
-      
+
       const expectedRemainingAda = availableAdaBeforeFee - estimatedFee
-      
+
       logger.info('buildTransaction: About to add change if needed', {
         totalInputAda: totalInput[primaryTokenId] || '0',
         totalInputTokens: inputTokenIds.length,
@@ -1022,11 +1024,12 @@ export async function buildTransaction(
         minUtxoValue: minUtxoValue.toString(),
         hasEnoughAdaForMinUtxo: expectedRemainingAda >= minUtxoValue,
         // Warning if tokens present but not enough ADA
-        warning: hasTokens && expectedRemainingAda < minUtxoValue
-          ? `UTXO has ${inputTokenIds.length} tokens but expected remaining ADA (${expectedRemainingAda.toString()}) is less than min UTXO (${minUtxoValue.toString()}). CSL will calculate actual fee which may be different.`
-          : undefined,
+        warning:
+          hasTokens && expectedRemainingAda < minUtxoValue
+            ? `UTXO has ${inputTokenIds.length} tokens but expected remaining ADA (${expectedRemainingAda.toString()}) is less than min UTXO (${minUtxoValue.toString()}). CSL will calculate actual fee which may be different.`
+            : undefined,
       })
-      
+
       try {
         cslTxBuilder.addChangeIfNeeded(changeAddr)
         logger.info('buildTransaction: Successfully added change if needed')

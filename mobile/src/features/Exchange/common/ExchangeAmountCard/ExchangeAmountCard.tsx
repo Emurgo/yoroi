@@ -10,7 +10,7 @@ import {Space} from '~/ui/Space/Space'
 import {TokenInfoIcon} from '~/ui/TokenInfoIcon/TokenInfoIcon'
 import {isEmptyString} from '~/wallets/utils/string'
 
-type AmountCardProps = {
+type ExchangeAmountCardProps = {
   error?: string
   label?: string
   inputRef?: React.RefObject<TextInput>
@@ -22,7 +22,7 @@ type AmountCardProps = {
   testID?: string
 }
 
-export const AmountCard: React.FC<AmountCardProps> = ({
+export const ExchangeAmountCard: React.FC<ExchangeAmountCardProps> = ({
   error,
   label,
   inputRef,
@@ -32,7 +32,7 @@ export const AmountCard: React.FC<AmountCardProps> = ({
   touched,
   amount,
   testID,
-}: AmountCardProps) => {
+}: ExchangeAmountCardProps) => {
   const [isFocused, setIsFocused] = React.useState(false)
 
   const formattedAmount = amountFormatter()(amount)

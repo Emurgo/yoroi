@@ -4,7 +4,7 @@ import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
-import {TokenItem} from '~/features/ReviewTx/common/TokenItem'
+import {TokenItem} from '~/common/TokenItem/TokenItem'
 import {
   FormattedInput,
   FormattedInputs,

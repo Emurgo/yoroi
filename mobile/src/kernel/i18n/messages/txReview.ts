@@ -575,7 +575,8 @@ export const txReviewMessages = defineMessages({
   },
   smartContractsNoSmartContractInteractions: {
     id: 'txReview.smartContracts.noSmartContractInteractions',
-    defaultMessage: '!!!No smart contract interactions found in this transaction',
+    defaultMessage:
+      '!!!No smart contract interactions found in this transaction',
   },
   // Redeemers strings
   redeemersLabel: {
@@ -621,7 +622,8 @@ export const txReviewMessages = defineMessages({
   },
   signaturesNoSignaturesInfo: {
     id: 'txReview.signatures.noSignaturesInfo',
-    defaultMessage: '!!!No signature information available for this transaction',
+    defaultMessage:
+      '!!!No signature information available for this transaction',
   },
   // Details strings
   detailsTiming: {

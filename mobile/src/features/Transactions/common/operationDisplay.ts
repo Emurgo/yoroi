@@ -115,12 +115,9 @@ export const getOperationDisplayText = (
   ) {
     // Check delta (UTXO outputs - UTXO inputs) - should be positive for withdrawals
     // Or check if amount is empty (intra-wallet) which means it's a withdrawal
+    const primaryTokenDelta = delta ? Amounts.getAmount(delta, '.') : null
     const hasPositiveDelta =
-      delta &&
-      (() => {
-        const primaryTokenDelta = Amounts.getAmount(delta, '.')
-        return primaryTokenDelta && Number(primaryTokenDelta.quantity) > 0
-      })()
+      primaryTokenDelta !== null && Number(primaryTokenDelta.quantity) > 0
     const isEmptyAmount = !amount || Object.keys(amount).length === 0
 
     // If delta is positive OR amount is empty (intra-wallet with withdrawals), it's a withdrawal

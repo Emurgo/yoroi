@@ -20,8 +20,8 @@ import {
   useWindowDimensions,
 } from 'react-native'
 
-import {TokenItem} from '~/features/ReviewTx/common/TokenItem'
-import {WalletBalance} from '~/features/ReviewTx/common/WalletBalance'
+import {TokenItem} from '~/common/TokenItem/TokenItem'
+import {WalletBalance} from '~/common/WalletBalance/WalletBalance'
 import {Operations, useOperations} from '~/features/ReviewTx/common/operations'
 import {
   calculateSendsAndReceives,

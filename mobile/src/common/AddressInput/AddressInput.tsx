@@ -4,7 +4,7 @@ import {Resolver} from '@yoroi/types'
 import * as React from 'react'
 import {ActivityIndicator, TextInput as RNTextInput, Text} from 'react-native'
 
-import {ScannerButton} from '~/features/Send/common/ScannerButton'
+import {ScannerButton} from '~/common/ScannerButton/ScannerButton'
 import {useNavigateTo} from '~/features/Send/common/navigation'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Icon} from '~/ui/Icon'

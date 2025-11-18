@@ -18,21 +18,34 @@ type ResponseChecker<T> = (
 const _checkResponse: ResponseChecker<Record<string, any>> = async (
   rawResponse,
 ) => {
+  const status = rawResponse.status
+  const contentType = rawResponse.headers.get('content-type') || ''
+
   let responseBody = {}
 
+  // Try to parse as JSON
   try {
     responseBody = await rawResponse.json()
-  } catch (_e) {
+  } catch (parseError) {
+    // If it's not JSON, log what we can and throw appropriate error
     logger.error('fetchDefault: Failed to parse response as JSON', {
       origin: 'fetchDefault',
       type: 'http',
-      status: rawResponse.status,
+      status,
       statusText: rawResponse.statusText,
+      contentType,
+      parseError:
+        parseError instanceof Error ? parseError.message : String(parseError),
     })
+
+    // For server errors (5xx), provide more descriptive error messages
+    if (status >= 500 && status < 600) {
+      const errorMessage = rawResponse.statusText || 'Bad Gateway'
+      throw new ApiError(`Server error (${status}): ${errorMessage}`)
+    }
+
     throw new ApiError('unexpected server response')
   }
-
-  const status = rawResponse.status
 
   if (status !== 200) {
     const resp = (responseBody as any).error?.response
@@ -108,19 +121,48 @@ const checkedFetch = (request: FetchRequest<any>) => {
             checkError,
           })
         } catch (parseError) {
-          // If we can't parse JSON, log what we can
-          logger.error(
-            'fetchDefault: Response check failed (could not parse response)',
-            {
-              origin: 'fetchDefault',
-              type: 'http',
-              endpoint,
-              status: responseClone.status,
-              statusText: responseClone.statusText,
-              checkError,
-              parseError,
-            },
-          )
+          // If we can't parse JSON, try to read as text for better error info
+          try {
+            const textResponse = await responseClone.text()
+            logger.error(
+              'fetchDefault: Response check failed (could not parse response)',
+              {
+                origin: 'fetchDefault',
+                type: 'http',
+                endpoint,
+                status: responseClone.status,
+                statusText: responseClone.statusText,
+                contentType: responseClone.headers.get('content-type') || '',
+                responsePreview: textResponse.substring(0, 200), // First 200 chars
+                checkError,
+                parseError:
+                  parseError instanceof Error
+                    ? parseError.message
+                    : String(parseError),
+              },
+            )
+          } catch (textError) {
+            // If even text reading fails, log what we can
+            logger.error(
+              'fetchDefault: Response check failed (could not read response)',
+              {
+                origin: 'fetchDefault',
+                type: 'http',
+                endpoint,
+                status: responseClone.status,
+                statusText: responseClone.statusText,
+                checkError,
+                parseError:
+                  parseError instanceof Error
+                    ? parseError.message
+                    : String(parseError),
+                textError:
+                  textError instanceof Error
+                    ? textError.message
+                    : String(textError),
+              },
+            )
+          }
         }
         throw checkError
       }

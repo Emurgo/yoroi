@@ -518,7 +518,7 @@ export async function buildRecipeTransaction(
   primaryTokenId: Portfolio.Token.Id,
 ): Promise<{cbor: string}> {
   const logger = getLogger()
-  
+
   logger.info('buildRecipeTransaction: Starting transaction build', {
     inputsCount: builderState.inputs.length,
     outputsCount: builderState.outputs.length,

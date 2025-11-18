@@ -67,7 +67,7 @@ export const connectionManagerMaker = (
       origin: 'p2p-communication',
     })
 
-    const initPromise = (async (): Promise<void> => {
+    const performInit = async (): Promise<void> => {
       try {
         const peerConnection = peerConnectionMaker({
           storage: config.storage,
@@ -99,8 +99,9 @@ export const connectionManagerMaker = (
         updateState({initPromise: null})
         throw error
       }
-    })()
+    }
 
+    const initPromise = performInit()
     updateState({initPromise})
     return initPromise
   }

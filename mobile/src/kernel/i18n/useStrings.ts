@@ -1532,7 +1532,9 @@ export const useStrings = () => {
           timing: f(txReviewMessages.detailsTiming),
           network: f(txReviewMessages.detailsNetwork),
           ttl: f(txReviewMessages.detailsTtl),
-          validityIntervalStart: f(txReviewMessages.detailsValidityIntervalStart),
+          validityIntervalStart: f(
+            txReviewMessages.detailsValidityIntervalStart,
+          ),
           networkId: f(txReviewMessages.detailsNetworkId),
           noDetailsAvailable: f(txReviewMessages.detailsNoDetailsAvailable),
         },

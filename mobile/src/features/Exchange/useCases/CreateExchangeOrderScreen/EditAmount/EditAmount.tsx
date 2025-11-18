@@ -4,7 +4,7 @@ import {Chain} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 import * as React from 'react'
 
-import {AmountCard} from '~/features/Exchange/common/AmountCard/AmountCard'
+import {ExchangeAmountCard} from '~/features/Exchange/common/ExchangeAmountCard/ExchangeAmountCard'
 import {usePortfolioPrimaryBalance} from '~/features/Portfolio/common/hooks/usePortfolioPrimaryBalance'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
@@ -90,13 +90,13 @@ export const EditAmount = ({disabled}: {disabled?: boolean}) => {
     <>
       <Space.Height.xl />
 
-      <AmountCard
+      <ExchangeAmountCard
         label={strings.exchange.amountTitle}
         onChange={onChangeAmountQuantity}
         value={amount.displayValue}
         touched={true}
         amount={balance}
-        error={amount.error ?? ''}
+        error={amount.error ?? undefined}
         inputEditable={!disabled}
       />
     </>

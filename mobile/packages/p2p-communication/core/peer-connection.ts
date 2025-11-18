@@ -175,7 +175,7 @@ export const peerConnectionMaker = (
 
     updateState({isInitializing: true, status: 'initializing'})
 
-    const initPromise = (async (): Promise<string> => {
+    const performInit = async (): Promise<string> => {
       try {
         // Clean up existing connection
         if (state.peer) {
@@ -282,8 +282,9 @@ export const peerConnectionMaker = (
         notifyListeners('error', error as Error)
         throw error
       }
-    })()
+    }
 
+    const initPromise = performInit()
     updateState({initPromise})
     return initPromise
   }
