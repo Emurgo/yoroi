@@ -99,6 +99,8 @@ export const TxHistory = () => {
 
     return unsubscribe
   }, [navigation, walletNavigation])
+
+  const earnRewardsBanner = renderEarnRewardsBanner()
   return (
     <LinearGradient
       colors={
@@ -147,9 +149,9 @@ export const TxHistory = () => {
 
         <Space.Height.md />
 
-        {renderEarnRewardsBanner()}
+        {earnRewardsBanner}
 
-        {renderEarnRewardsBanner() != null && <Space.Height.md />}
+        {earnRewardsBanner != null && <Space.Height.md />}
 
         {meta.implementation === 'cardano-bip44' && showWarning && (
           <WarningBanner
