@@ -1,5 +1,42 @@
 # Backend-Zero Integration Plan
 
+## Feature Flag: `useBackendZero`
+
+A feature flag has been implemented to allow switching between backend-zero and legacy API implementations.
+
+**Location**: `mobile/src/kernel/features.ts`  
+**Default**: `useBackendZero: true`
+
+### Behavior
+
+- **When `useBackendZero: true`** (default):
+  - Uses backend-zero endpoints when available
+  - Falls back to legacy API (`legacy-api/fallback.ts`) if backend-zero fails or wallet context unavailable
+  - This is the current production behavior
+
+- **When `useBackendZero: false`**:
+  - Bypasses backend-zero entirely
+  - Uses complete legacy implementations from `legacy-api-preserved/api.ts`
+  - No fallback logic needed (direct legacy calls)
+  - Useful for rollback if backend-zero endpoints are untested or failing
+
+### Implementation
+
+All migrated API methods in `mobile/src/wallets/cardano/api/api.ts` check the feature flag at the start:
+- If flag is `false`, route directly to `legacy-api-preserved/api.ts`
+- If flag is `true`, use backend-zero with fallback to `legacy-api/fallback.ts`
+
+### Rollback Procedure
+
+To rollback to legacy API:
+1. Set `useBackendZero: false` in `mobile/src/kernel/features.ts`
+2. Restart the app
+3. All API calls will use legacy endpoints directly
+
+---
+
+# Backend-Zero Integration Plan
+
 ## 1. Memory Cache for Wallet Registration
 
 ### Current Problem

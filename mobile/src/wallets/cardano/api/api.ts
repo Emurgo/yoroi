@@ -7,6 +7,7 @@ import {Portfolio} from '@yoroi/types'
 
 import _ from 'lodash'
 
+import {features} from '~/kernel/features'
 import {
   AccountStateRequest,
   AccountStateResponse,
@@ -21,6 +22,7 @@ import {
 import {handleError} from './errors'
 import {fetchDefault} from './fetch'
 import * as legacyOnly from './legacy-api'
+import * as legacyApiPreserved from './legacy-api-preserved/api'
 import * as legacyFallback from './legacy-api/fallback'
 import {getBackendZeroUrl} from './wallet-registration'
 
@@ -37,12 +39,18 @@ export const checkServerStatus = legacyOnly.checkServerStatus
 /**
  * ✅ MIGRATED TO BACKEND-ZERO: GET /bestblock
  *
- * Uses backend-zero endpoint. Maps response to legacy TipStatusResponse format.
- * No fallback to legacy API - backend-zero is the only source.
+ * Uses backend-zero endpoint when feature flag is enabled.
+ * Falls back to legacy API when feature flag is disabled.
  */
 export const getTipStatus = async (
   baseApiUrl: string,
 ): Promise<TipStatusResponse> => {
+  // Feature flag: if false, use ONLY legacy (skip backend-zero entirely)
+  if (!features.useBackendZero) {
+    return legacyApiPreserved.getTipStatus(baseApiUrl)
+  }
+
+  // When flag is true: use backend-zero
   const backendZeroUrl = getBackendZeroUrl(baseApiUrl)
   const bestBlock = await fetchDefault<{
     hash: string
@@ -70,8 +78,9 @@ export const getTipStatus = async (
 /**
  * ✅ MIGRATED TO BACKEND-ZERO: GET /wallets/{id}/transactions
  *
- * Uses backend-zero when wallet context is provided.
+ * Uses backend-zero when feature flag is enabled and wallet context is provided.
  * ⚠️ FALLBACK: Falls back to legacy API (POST /v2/txs/history) if:
+ *   - Feature flag is disabled
  *   - Wallet context not provided
  *   - Backend-zero request fails
  *
@@ -88,6 +97,12 @@ export const fetchNewTxHistory = async (
     rewardAddresses: string[]
   },
 ): Promise<{isLast: boolean; transactions: Array<RawTransaction>}> => {
+  // Feature flag: if false, use ONLY legacy (skip backend-zero entirely)
+  if (!features.useBackendZero) {
+    return legacyApiPreserved.fetchNewTxHistory(request, baseApiUrl)
+  }
+
+  // When flag is true: use backend-zero with fallback
   // If wallet context provided, use backend-zero
   if (walletContext) {
     const backendZeroUrl = getBackendZeroUrl(baseApiUrl)
@@ -255,8 +270,9 @@ export const fetchNewTxHistory = async (
 /**
  * ✅ MIGRATED TO BACKEND-ZERO: GET /wallets/{id}/paymentkeyhashes?used=true
  *
- * Uses backend-zero when wallet context is provided.
+ * Uses backend-zero when feature flag is enabled and wallet context is provided.
  * ⚠️ FALLBACK: Falls back to legacy API (POST /v2/addresses/filterUsed) if:
+ *   - Feature flag is disabled
  *   - Wallet context not provided
  *   - Backend-zero request fails
  *
@@ -273,6 +289,12 @@ export const filterUsedAddresses = async (
     rewardAddresses: string[]
   },
 ): Promise<Addresses> => {
+  // Feature flag: if false, use ONLY legacy (skip backend-zero entirely)
+  if (!features.useBackendZero) {
+    return legacyApiPreserved.filterUsedAddresses(addresses, baseApiUrl)
+  }
+
+  // When flag is true: use backend-zero with fallback
   // If wallet context provided, use backend-zero
   if (walletContext) {
     const backendZeroUrl = getBackendZeroUrl(baseApiUrl)
@@ -336,14 +358,19 @@ export const filterUsedAddresses = async (
 /**
  * ✅ MIGRATED TO BACKEND-ZERO: POST /tx
  *
- * Uses backend-zero endpoint. Sends transaction CBOR hex as JSON string body.
- * Backend-zero returns transaction hash (discarded to match legacy interface).
- * No fallback to legacy API - backend-zero is the only source.
+ * Uses backend-zero endpoint when feature flag is enabled.
+ * Falls back to legacy API when feature flag is disabled.
  */
 export const submitTransaction = async (
   signedTx: string,
   baseApiUrl: string,
 ): Promise<void> => {
+  // Feature flag: if false, use ONLY legacy (skip backend-zero entirely)
+  if (!features.useBackendZero) {
+    return legacyApiPreserved.submitTransaction(signedTx, baseApiUrl)
+  }
+
+  // When flag is true: use backend-zero
   try {
     const backendZeroUrl = getBackendZeroUrl(baseApiUrl)
     // Backend-zero expects JSON string (CBOR hex) as body
@@ -370,8 +397,9 @@ export const submitTransaction = async (
 /**
  * ✅ MIGRATED TO BACKEND-ZERO: GET /wallets/{id}/rewards
  *
- * Uses backend-zero when wallet context is provided.
+ * Uses backend-zero when feature flag is enabled and wallet context is provided.
  * ⚠️ FALLBACK: Falls back to legacy API (POST /account/state) if:
+ *   - Feature flag is disabled
  *   - Wallet context not provided
  *   - Backend-zero request fails
  *
@@ -388,6 +416,12 @@ export const getAccountState = async (
     rewardAddresses: string[]
   },
 ): Promise<AccountStateResponse> => {
+  // Feature flag: if false, use ONLY legacy (skip backend-zero entirely)
+  if (!features.useBackendZero) {
+    return legacyApiPreserved.getAccountState(request, baseApiUrl)
+  }
+
+  // When flag is true: use backend-zero with fallback
   // If wallet context provided, use backend-zero
   if (walletContext) {
     const backendZeroUrl = getBackendZeroUrl(baseApiUrl)
@@ -477,6 +511,12 @@ export const bulkGetAccountState = async (
     rewardAddresses: string[]
   },
 ): Promise<AccountStateResponse> => {
+  // Feature flag: if false, use ONLY legacy (skip backend-zero entirely)
+  if (!features.useBackendZero) {
+    return legacyApiPreserved.bulkGetAccountState(addresses, baseApiUrl)
+  }
+
+  // When flag is true: use backend-zero with fallback
   // If wallet context provided, use backend-zero (handles all addresses at once)
   if (walletContext) {
     return getAccountState({addresses}, baseApiUrl, walletContext)
@@ -493,14 +533,19 @@ export const bulkGetAccountState = async (
 /**
  * ✅ MIGRATED TO BACKEND-ZERO: GET /cexplorer-pool-list
  *
- * Uses backend-zero cexplorer proxy for pool info queries.
- * Note: History is not available from cexplorer, returns empty history.
- * No fallback to legacy API - backend-zero is the only source.
+ * Uses backend-zero cexplorer proxy when feature flag is enabled.
+ * Falls back to legacy API when feature flag is disabled.
  */
 export const getPoolInfo = async (
   request: StakePoolInfoRequest,
   baseApiUrl: string,
 ): Promise<StakePoolInfosAndHistories> => {
+  // Feature flag: if false, use ONLY legacy (skip backend-zero entirely)
+  if (!features.useBackendZero) {
+    return legacyApiPreserved.getPoolInfo(request, baseApiUrl)
+  }
+
+  // When flag is true: use backend-zero
   const backendZeroUrl = getBackendZeroUrl(baseApiUrl)
   const result: StakePoolInfosAndHistories = {}
 
@@ -587,18 +632,19 @@ export const getFundInfo = legacyOnly.getFundInfo
 /**
  * ✅ MIGRATED TO BACKEND-ZERO: GET /transactions/{hash}
  *
- * Uses backend-zero endpoint. Infers transaction status from transaction query:
- * - If transaction exists with block hash → SUCCESS (confirmed)
- * - If 404 → WAITING (pending or not found)
- * - Other errors → FAILED
- *
- * Note: Depth calculation requires additional block query (not implemented yet).
- * No fallback to legacy API - backend-zero is the only source.
+ * Uses backend-zero endpoint when feature flag is enabled.
+ * Falls back to legacy API when feature flag is disabled.
  */
 export const fetchTxStatus = async (
   request: TxStatusRequest,
   baseApiUrl: string,
 ): Promise<TxStatusResponse> => {
+  // Feature flag: if false, use ONLY legacy (skip backend-zero entirely)
+  if (!features.useBackendZero) {
+    return legacyApiPreserved.fetchTxStatus(request, baseApiUrl)
+  }
+
+  // When flag is true: use backend-zero
   const backendZeroUrl = getBackendZeroUrl(baseApiUrl)
   const submissionStatus: Record<string, TxSubmissionStatus> = {}
 

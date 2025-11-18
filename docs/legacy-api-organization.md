@@ -6,10 +6,12 @@ This document explains how legacy API code is organized and marked for future re
 
 ```
 mobile/src/wallets/cardano/api/
-├── api.ts                    # Main API file (exports all methods)
+├── api.ts                    # Main API file (exports all methods, routes based on feature flag)
 ├── legacy-api/
 │   ├── index.ts             # Legacy-only methods (no backend-zero equivalent)
 │   └── fallback.ts          # Fallback implementations (used when backend-zero fails)
+├── legacy-api-preserved/
+│   └── api.ts               # Complete legacy implementations (used when feature flag is disabled)
 ├── wallet-registration.ts   # Backend-zero wallet registration
 ├── fetch.ts                 # HTTP fetch utility (used by both)
 └── ...
@@ -105,11 +107,31 @@ When backend-zero adds equivalents:
 2. Remove legacy API URL references
 3. Update documentation
 
+## 🚩 Feature Flag: `useBackendZero`
+
+A feature flag (`features.useBackendZero`) controls which API implementation is used:
+
+### When `useBackendZero: true` (default)
+- Uses backend-zero endpoints when available
+- Falls back to `legacy-api/fallback.ts` if backend-zero fails or wallet context unavailable
+- This is the current production behavior
+
+### When `useBackendZero: false`
+- Bypasses backend-zero entirely
+- Uses complete legacy implementations from `legacy-api-preserved/api.ts`
+- No fallback logic needed (direct legacy calls)
+- Useful for rollback if backend-zero endpoints are untested or failing
+
+**Location**: `mobile/src/kernel/features.ts`
+
+**Usage**: Set `useBackendZero: false` to rollback to legacy API completely.
+
 ## 📝 Notes
 
 - **Fallback methods should NOT be called directly** - They're only used internally by main API methods
 - **Legacy-only methods can be called directly** - They're the only way to access those endpoints
 - **All methods are exported from `api.ts`** - Import from there, not from `legacy-api/` directly
+- **Feature flag controls routing** - When disabled, uses `legacy-api-preserved/api.ts` instead of backend-zero
 
 ## 🔗 Related Documents
 
