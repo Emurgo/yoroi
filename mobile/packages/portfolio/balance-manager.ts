@@ -372,7 +372,7 @@ const isNotTriggeredBySelf =
     dtoEvent.sourceId !== sourceId
 
 const hasStaleTokenInfo =
-  (secondaries: Readonly<Map<`${string}.${string}`, Portfolio.Token.Amount>>) =>
+  (secondaries: Readonly<Map<Portfolio.Token.Id, Portfolio.Token.Amount>>) =>
   (dtoEvent: Portfolio.Event.TokenManagerSync) =>
     dtoEvent.ids.some((id) => secondaries.has(id))
 

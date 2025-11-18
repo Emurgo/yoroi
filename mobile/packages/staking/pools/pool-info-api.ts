@@ -255,16 +255,62 @@ export class PoolInfoApi {
     return mergeRecords(responses) as ChainPoolInfoMap
   }
 
+  /**
+   * Migrated to backend-zero: Uses GET /v0/cexplorer-pool-list
+   * Note: History is not available from cexplorer, returns empty history arrays
+   */
   private async getManyChainPoolInfoBatch(
     hashes: string[],
   ): Promise<ChainPoolInfoMap> {
-    const url = joinUrl(this.apiUrl, '/pool/info')
+    // Query each pool individually using cexplorer proxy
+    const poolInfoPromises = hashes.map(async (hash) => {
+      try {
+        const params = new URLSearchParams({
+          limit: '1',
+          order: 'ranking',
+          poolId: hash,
+        })
+        const baseUrl = joinUrl(this.zeroApiUrl, '/cexplorer-pool-list')
+        const zeroApiPoolsUrl = `${baseUrl}?${params.toString()}`
+        const response =
+          await axios.get<ExplorerPoolInfoApiRes>(zeroApiPoolsUrl)
+        const poolsData: ExplorerPoolInfoApiRes = response.data
 
-    const {data} = await axios.post<ChainPoolInfoMap>(url, {
-      poolIds: hashes,
+        if (!poolsData.data?.data?.length) {
+          return [hash, null] as [string, FullChainPoolInfo | null]
+        }
+
+        const [pool] = poolsData.data.data
+        if (!pool) {
+          return [hash, null] as [string, FullChainPoolInfo | null]
+        }
+
+        // Map cexplorer response to ChainPoolInfo format
+        // Note: History is not available from cexplorer, so we return empty array
+        const chainInfo: FullChainPoolInfo = {
+          info: {
+            name: pool.pool_name.name || undefined,
+            ticker: pool.pool_name.ticker || undefined,
+            description: undefined, // Not available from cexplorer
+            homepage: undefined, // Not available from cexplorer
+          },
+          history: [], // History not available from cexplorer
+        }
+
+        return [hash, chainInfo] as [string, FullChainPoolInfo | null]
+      } catch (e) {
+        const logger = getLogger()
+        logger.error(e instanceof Error ? e : new Error(String(e)), {
+          origin: 'staking',
+          operation: 'getManyChainPoolInfoBatch',
+          hash,
+        })
+        return [hash, null] as [string, FullChainPoolInfo | null]
+      }
     })
 
-    return valueIntoRecord(hashes, (h) => data[h] ?? null) as ChainPoolInfoMap
+    const results = await Promise.all(poolInfoPromises)
+    return tuplesIntoRecord(results) as ChainPoolInfoMap
   }
 
   /**

@@ -116,7 +116,17 @@ export class TransactionManager {
     return this.#confirmationCountsSelector(this.#state)
   }
 
-  async doSync(addressesByChunks: Array<Array<string>>, baseApiUrl: string) {
+  async doSync(
+    addressesByChunks: Array<Array<string>>,
+    baseApiUrl: string,
+    walletContext?: {
+      walletId: string
+      publicKeyHex?: string
+      accountPubKeyHex?: string
+      paymentKeyHashes: string[]
+      rewardAddresses: string[]
+    },
+  ) {
     // Store initial state to restore if sync fails
     const initialState = {
       transactions: {...this.#state.transactions},
@@ -143,6 +153,7 @@ export class TransactionManager {
         transactions: this.#state.transactions,
         api: yoroiApi,
         onBatchProcessed,
+        walletContext,
       })
 
       if (txUpdate) {
@@ -179,6 +190,13 @@ export class TransactionManager {
   async doQuickSync(
     addressesByChunks: Array<Array<string>>,
     baseApiUrl: string,
+    walletContext?: {
+      walletId: string
+      publicKeyHex?: string
+      accountPubKeyHex?: string
+      paymentKeyHashes: string[]
+      rewardAddresses: string[]
+    },
   ) {
     // Store initial state to restore if sync fails
     const initialState = {
@@ -207,6 +225,7 @@ export class TransactionManager {
         api: yoroiApi,
         onBatchProcessed,
         maxPagesPerChunk: 1, // Only fetch first page for quick sync
+        walletContext,
       })
 
       if (txUpdate) {
@@ -244,6 +263,7 @@ export async function syncTxs({
   api,
   onBatchProcessed,
   maxPagesPerChunk,
+  walletContext,
 }: Readonly<{
   addressesByChunks: Array<Array<string>>
   baseApiUrl: string
@@ -251,6 +271,13 @@ export async function syncTxs({
   api: Pick<typeof yoroiApi, 'getTipStatus' | 'fetchNewTxHistory'>
   onBatchProcessed?: (batchTxs: Record<string, WalletTransaction>) => void
   maxPagesPerChunk?: number // Limit pagination for quick sync
+  walletContext?: {
+    walletId: string
+    publicKeyHex?: string
+    accountPubKeyHex?: string
+    paymentKeyHashes: string[]
+    rewardAddresses: string[]
+  }
 }>): Promise<Record<string, WalletTransaction> | undefined> {
   const {bestBlock} = await api.getTipStatus(baseApiUrl)
   if (!bestBlock.hash) return
@@ -293,7 +320,11 @@ export async function syncTxs({
 
       let pageCount = 0
       do {
-        const response = await api.fetchNewTxHistory(historyPayload, baseApiUrl)
+        const response = await api.fetchNewTxHistory(
+          historyPayload,
+          baseApiUrl,
+          walletContext,
+        )
         taskResult.push(response.transactions)
         pageCount++
 

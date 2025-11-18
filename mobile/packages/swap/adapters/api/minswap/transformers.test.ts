@@ -186,7 +186,7 @@ describe('transformersMaker', () => {
 
       expect(result).toHaveLength(2)
       expect(result[0]).toEqual({
-        id: '.' as `${string}.${string}`,
+        id: '.' as Portfolio.Token.Id,
         name: 'Cardano',
         ticker: 'ADA',
         decimals: 6,

@@ -1,4 +1,4 @@
-import {AppApi, AppFrontendFeeTier, AppFrontendFeesResponse} from './api/app'
+import {AppApi} from './api/app'
 import {
   ApiRequestRecordWithCache,
   ApiResponseRecordWithCache,
@@ -355,9 +355,6 @@ export namespace App {
     extends AppCacheRow<T, K> {}
 
   export interface Api extends AppApi {}
-
-  export type FrontendFeeTier = AppFrontendFeeTier
-  export type FrontendFeesResponse = AppFrontendFeesResponse
 
   export namespace Logger {
     export type Level = AppLoggerLevel

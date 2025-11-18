@@ -57,6 +57,7 @@ import {
   readOnlyAccountManagerMaker,
 } from './account-manager/read-only-account-manager'
 import * as legacyApi from './api/api'
+import {getWalletRegistrationData} from './api/wallet-registration'
 import {calcLockedDeposit} from './assetUtils'
 import {
   doesCardanoAppVersionSupportCIP36,
@@ -701,13 +702,15 @@ export const makeCardanoWallet = (
         return Promise.resolve()
       }
 
-      await this.accountManager.discoverAddresses()
+      const walletContext = this.getWalletContext()
+      await this.accountManager.discoverAddresses(walletContext)
 
       await Promise.all([
         this.syncUtxos({isForced}),
         this.transactionManager.doSync(
           this.addressesInBlocks,
           this.networkManager.legacyApiBaseUrl,
+          walletContext,
         ),
       ])
     }
@@ -725,13 +728,15 @@ export const makeCardanoWallet = (
         return Promise.resolve()
       }
 
-      await this.accountManager.discoverAddresses()
+      const walletContext = this.getWalletContext()
+      await this.accountManager.discoverAddresses(walletContext)
 
       await Promise.all([
         this.syncUtxos({isForced}),
         this.transactionManager.doQuickSync(
           this.addressesInBlocks,
           this.networkManager.legacyApiBaseUrl,
+          walletContext,
         ),
       ])
     }
@@ -1094,10 +1099,62 @@ export const makeCardanoWallet = (
       return didUtxosUpdateOp(oldUtxos, newUtxos)
     }
 
+    /**
+     * Get wallet context for backend-zero registration
+     * Returns undefined if wallet cannot be registered
+     * Public method to allow transaction recipes to pass context to API calls
+     */
+    getWalletContext():
+      | {
+          walletId: string
+          publicKeyHex?: string
+          accountPubKeyHex?: string
+          paymentKeyHashes: string[]
+          rewardAddresses: string[]
+        }
+      | undefined {
+      const registrationData = getWalletRegistrationData({
+        id: this.id,
+        publicKeyHex: this.publicKeyHex,
+        accountPubKeyHex: this.publicKeyHex, // accountPubKeyHex is same as publicKeyHex for CardanoWallet
+        externalAddresses: this.externalAddresses,
+        internalAddresses: this.internalAddresses,
+        rewardAddressHex: this.rewardAddressHex,
+      })
+
+      if (!registrationData) return undefined
+
+      return {
+        walletId: registrationData.id,
+        publicKeyHex: this.publicKeyHex,
+        accountPubKeyHex: this.publicKeyHex, // accountPubKeyHex is same as publicKeyHex for CardanoWallet
+        paymentKeyHashes: registrationData.paymentKeyHashes,
+        rewardAddresses: registrationData.rewardAddresses,
+      }
+    }
+
     async fetchAccountState(): Promise<AccountStateResponse> {
+      // Extract payment key hashes from wallet addresses for wallet registration
+      const {extractPaymentKeyHashes} = await import(
+        './api/wallet-registration'
+      )
+      const allAddresses = [
+        ...this.externalAddresses,
+        ...this.internalAddresses,
+      ]
+      const paymentKeyHashes = extractPaymentKeyHashes(allAddresses)
+      const rewardAddresses = [this.rewardAddressHex]
+
       return legacyApi.bulkGetAccountState(
         [this.rewardAddressHex],
         this.networkManager.legacyApiBaseUrl,
+        {
+          walletId: this.id,
+          publicKeyHex: this.publicKeyHex,
+          accountPubKeyHex: this.publicKeyHex, // accountPubKeyHex is same as publicKeyHex for CardanoWallet
+          paymentKeyHashes,
+          rewardAddresses,
+        },
       )
     }
 

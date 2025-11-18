@@ -67,7 +67,13 @@ export class ReadOnlyAddressChain {
 export type ReadOnlyAccountManager = {
   internalChain: ReadOnlyAddressChain
   externalChain: ReadOnlyAddressChain
-  discoverAddresses: () => Promise<void>
+  discoverAddresses: (walletContext?: {
+    walletId: string
+    publicKeyHex?: string
+    accountPubKeyHex?: string
+    paymentKeyHashes: string[]
+    rewardAddresses: string[]
+  }) => Promise<void>
   getAddressesInBlocks: (rewardAddressHex: string) => string[][]
   save: () => Promise<void>
   clear: () => Promise<void>
@@ -95,10 +101,18 @@ async function discoverUsedAddressesByStakingCredential({
   knownBaseAddress,
   chainId,
   baseApiUrl,
+  walletContext,
 }: {
   knownBaseAddress: string
   chainId: number
   baseApiUrl: string
+  walletContext?: {
+    walletId: string
+    publicKeyHex?: string
+    accountPubKeyHex?: string
+    paymentKeyHashes: string[]
+    rewardAddresses: string[]
+  }
 }): Promise<{
   internalAddresses: string[]
   externalAddresses: string[]
@@ -153,7 +167,11 @@ async function discoverUsedAddressesByStakingCredential({
   do {
     const payload = after ? {...txHistoryPayload, after} : txHistoryPayload
 
-    const response = await legacyApi.fetchNewTxHistory(payload, baseApiUrl)
+    const response = await legacyApi.fetchNewTxHistory(
+      payload,
+      baseApiUrl,
+      walletContext,
+    )
     allTransactions.push(...response.transactions)
     isLast = response.isLast
 
@@ -236,6 +254,7 @@ export const readOnlyAccountManagerMaker = async ({
   storage,
   baseApiUrl,
   enableDiscovery = false,
+  walletContext,
 }: {
   chainId: number
   knownAddress?: string
@@ -245,6 +264,13 @@ export const readOnlyAccountManagerMaker = async ({
   storage: App.Storage
   baseApiUrl: string
   enableDiscovery?: boolean
+  walletContext?: {
+    walletId: string
+    publicKeyHex?: string
+    accountPubKeyHex?: string
+    paymentKeyHashes: string[]
+    rewardAddresses: string[]
+  }
 }): Promise<ReadOnlyAccountManager> => {
   let finalInternalAddresses = internalAddresses
   let finalExternalAddresses = externalAddresses
@@ -333,7 +359,15 @@ export const readOnlyAccountManagerMaker = async ({
   const DISCOVERY_THROTTLE_INTERVAL = time.hours(1)
   const discoveryStorageKey = 'lastDiscoveryTime'
 
-  const discoverAddresses = async () => {
+  const discoverAddresses = async (context?: {
+    walletId: string
+    publicKeyHex?: string
+    accountPubKeyHex?: string
+    paymentKeyHashes: string[]
+    rewardAddresses: string[]
+  }) => {
+    // Use provided context or fall back to the one from construction
+    const effectiveContext = context || walletContext
     // No-op: we can't discover new addresses without accountPubKeyHex
     // But we could potentially re-run discovery if enableDiscovery is true
     if (enableDiscovery && knownAddress) {
@@ -383,6 +417,7 @@ export const readOnlyAccountManagerMaker = async ({
           knownBaseAddress: knownAddress,
           chainId,
           baseApiUrl,
+          walletContext: effectiveContext,
         })
         // Add newly discovered addresses
         internalChain.addAddresses(discovered.internalAddresses)

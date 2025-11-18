@@ -1,7 +1,5 @@
 import {appApiMaker} from './app/api/app-api-maker'
 import {mockAppApi} from './app/api/app-api-maker.mocks'
-import {getFrontendFees} from './app/api/frontend-fees'
-import {mockGetFrontendFees} from './app/api/frontend-fees.mocks'
 import {cardanoApiMaker} from './cardano/api/cardano-api-maker'
 import {mockCardanoApi} from './cardano/api/cardano-api-maker.mocks'
 import {API_ENDPOINTS} from './cardano/api/config'
@@ -30,9 +28,6 @@ export const CardanoTokenId = {
 } as const
 
 export const AppApi = {
-  getFrontendFees,
-  mockGetFrontendFees,
-
   appApiMaker,
   mockAppApi,
 } as const

@@ -23,7 +23,7 @@ const remoteAssetsToAmounts = (
 
   for (const asset of assets) {
     // Handle empty tokenId or primary token - use primaryTokenId
-    // tokenId is Portfolio.Token.Id which is `${string}.${string}`, so empty string check is not needed
+    // tokenId is Portfolio.Token.Id, so empty string check is not needed
     const tokenId =
       asset.tokenId === primaryTokenId ? primaryTokenId : asset.tokenId
     const existing = amounts[tokenId]

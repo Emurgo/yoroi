@@ -186,6 +186,17 @@ export interface YoroiWallet {
 
   // CIP36 Payment Address
   getFirstPaymentAddress(): CoreTypes.BaseAddress
+
+  // Backend-zero wallet registration
+  getWalletContext?():
+    | {
+        walletId: string
+        publicKeyHex?: string
+        accountPubKeyHex?: string
+        paymentKeyHashes: string[]
+        rewardAddresses: string[]
+      }
+    | undefined
 }
 
 export const isYoroiWallet = (wallet: unknown): wallet is YoroiWallet => {

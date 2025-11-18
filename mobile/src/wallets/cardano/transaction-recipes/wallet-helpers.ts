@@ -129,11 +129,15 @@ export async function createWithdrawalTxFromWallet(
       getAbsoluteSlotNumber: () => getAbsoluteSlotNumberFromWallet(wallet),
       getChangeAddress: (mode) => wallet.getChangeAddress(mode),
       getStakingKey: () => wallet.getStakingKey(),
-      getAccountState: (addresses) =>
-        legacyApi.getAccountState(
+      getAccountState: (addresses) => {
+        // Get wallet context for backend-zero registration
+        const walletContext = wallet.getWalletContext?.()
+        return legacyApi.getAccountState(
           {addresses},
           params.networkManager.legacyApiBaseUrl,
-        ),
+          walletContext,
+        )
+      },
       shouldDeregister: params.shouldDeregister,
       addressMode: params.addressMode,
     })
