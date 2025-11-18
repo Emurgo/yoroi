@@ -3,6 +3,7 @@ import {Chain} from '@yoroi/types'
 
 import {logger} from '~/kernel/logger/logger'
 import {YoroiWallet} from '~/wallets/cardano/types'
+import {TipStatusResponse} from '~/wallets/types/other'
 
 import {SyncWalletInfo} from '../common/types'
 import {shouldRetrySync} from './backoff'
@@ -15,6 +16,7 @@ import type {SyncManagerState} from './sync-state'
 export const syncWallet = async (
   wallet: YoroiWallet,
   isForced: boolean = false,
+  tipStatus?: TipStatusResponse | null,
 ): Promise<SyncWalletInfo> => {
   const startTime = Date.now()
 
@@ -22,10 +24,11 @@ export const syncWallet = async (
     logger.debug('syncWallet: Starting', {
       walletId: wallet.id,
       isForced,
+      hasTipStatus: !!tipStatus,
       origin: 'SyncManager',
     })
 
-    await wallet.sync({isForced})
+    await wallet.sync({isForced, tipStatus})
 
     const syncInfo: SyncWalletInfo = {
       id: wallet.id,
@@ -60,13 +63,14 @@ export const syncWallet = async (
 }
 
 /**
- * Sync multiple wallets in parallel with concurrency limit
+ * Sync multiple wallets in parallel with concurrency limit and optional staggering
  */
 export const syncWalletsParallel = async (
   wallets: YoroiWallet[],
   config: SyncConfig,
   state: SyncManagerState,
   isForced: boolean = false,
+  tipStatus?: TipStatusResponse | null,
 ): Promise<Map<YoroiWallet['id'], SyncWalletInfo>> => {
   // Filter wallets that should be synced (respecting backoff)
   const walletsToSync = wallets.filter((wallet) => {
@@ -98,12 +102,28 @@ export const syncWalletsParallel = async (
     totalWallets: wallets.length,
     walletsToSync: walletsToSync.length,
     concurrencyLimit: config.concurrencyLimit,
+    staggerSyncs: config.staggerSyncs,
+    staggerDelay: config.staggerDelay,
     origin: 'SyncManager',
   })
 
-  // Create sync tasks
-  const syncTasks = walletsToSync.map((wallet) => async () => {
-    return syncWallet(wallet, isForced)
+  // Create sync tasks with optional staggering
+  const syncTasks = walletsToSync.map((wallet, index) => {
+    return async () => {
+      // Stagger syncs: add delay based on wallet index
+      if (config.staggerSyncs && index > 0) {
+        const delay = index * config.staggerDelay
+        logger.debug('syncWalletsParallel: Staggering sync', {
+          walletId: wallet.id,
+          delay,
+          index,
+          origin: 'SyncManager',
+        })
+        await new Promise<void>((resolve) => setTimeout(resolve, delay))
+      }
+
+      return syncWallet(wallet, isForced, tipStatus)
+    }
   })
 
   // Execute with concurrency limit
@@ -117,6 +137,7 @@ export const syncWalletsParallel = async (
 
   logger.debug('syncWalletsParallel: Completed', {
     synced: syncInfos.size,
+    staggerSyncs: config.staggerSyncs,
     origin: 'SyncManager',
   })
 

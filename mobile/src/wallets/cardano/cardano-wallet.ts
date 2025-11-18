@@ -41,6 +41,7 @@ import type {
   AccountStateResponse,
   FundInfoResponse,
   RawUtxo,
+  TipStatusResponse,
   TxStatusRequest,
   TxStatusResponse,
   WalletTransaction,
@@ -694,7 +695,13 @@ export const makeCardanoWallet = (
     }
 
     // sync
-    async sync({isForced = false}: {isForced?: boolean} = {}) {
+    async sync({
+      isForced = false,
+      tipStatus,
+    }: {
+      isForced?: boolean
+      tipStatus?: TipStatusResponse | null
+    } = {}) {
       if (!this.isInitialized) {
         logger.error('ShelleyWallet: sync wallet not initialized', {
           id: this.id,
@@ -711,6 +718,7 @@ export const makeCardanoWallet = (
           this.addressesInBlocks,
           this.networkManager.legacyApiBaseUrl,
           walletContext,
+          tipStatus,
         ),
       ])
     }
@@ -720,7 +728,13 @@ export const makeCardanoWallet = (
      * Used during wallet preparation to make the wallet usable quickly.
      * Full sync will continue in the background.
      */
-    async quickSync({isForced = false}: {isForced?: boolean} = {}) {
+    async quickSync({
+      isForced = false,
+      tipStatus,
+    }: {
+      isForced?: boolean
+      tipStatus?: TipStatusResponse | null
+    } = {}) {
       if (!this.isInitialized) {
         logger.error('ShelleyWallet: quickSync wallet not initialized', {
           id: this.id,
@@ -737,6 +751,7 @@ export const makeCardanoWallet = (
           this.addressesInBlocks,
           this.networkManager.legacyApiBaseUrl,
           walletContext,
+          tipStatus,
         ),
       ])
     }

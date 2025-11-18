@@ -11,6 +11,7 @@ import {logger} from '~/kernel/logger/logger'
 import {
   RawTransaction,
   TRANSACTION_STATUS,
+  TipStatusResponse,
   Transactions,
   TxHistoryRequest,
   WalletTransaction,
@@ -126,6 +127,7 @@ export class TransactionManager {
       paymentKeyHashes: string[]
       rewardAddresses: string[]
     },
+    tipStatus?: TipStatusResponse | null,
   ) {
     // Store initial state to restore if sync fails
     const initialState = {
@@ -154,6 +156,7 @@ export class TransactionManager {
         api: yoroiApi,
         onBatchProcessed,
         walletContext,
+        tipStatus,
       })
 
       if (txUpdate) {
@@ -197,6 +200,7 @@ export class TransactionManager {
       paymentKeyHashes: string[]
       rewardAddresses: string[]
     },
+    tipStatus?: TipStatusResponse | null,
   ) {
     // Store initial state to restore if sync fails
     const initialState = {
@@ -226,6 +230,7 @@ export class TransactionManager {
         onBatchProcessed,
         maxPagesPerChunk: 1, // Only fetch first page for quick sync
         walletContext,
+        tipStatus,
       })
 
       if (txUpdate) {
@@ -264,6 +269,7 @@ export async function syncTxs({
   onBatchProcessed,
   maxPagesPerChunk,
   walletContext,
+  tipStatus,
 }: Readonly<{
   addressesByChunks: Array<Array<string>>
   baseApiUrl: string
@@ -278,8 +284,16 @@ export async function syncTxs({
     paymentKeyHashes: string[]
     rewardAddresses: string[]
   }
+  tipStatus?: TipStatusResponse | null
 }>): Promise<Record<string, WalletTransaction> | undefined> {
-  const {bestBlock} = await api.getTipStatus(baseApiUrl)
+  // Use provided tip status or fetch if not provided (backward compatibility)
+  let bestBlock
+  if (tipStatus) {
+    bestBlock = tipStatus.bestBlock
+  } else {
+    const tipStatusResponse = await api.getTipStatus(baseApiUrl)
+    bestBlock = tipStatusResponse.bestBlock
+  }
   if (!bestBlock.hash) return
 
   // this should change when backend stop throwing when no tx_hash is passed

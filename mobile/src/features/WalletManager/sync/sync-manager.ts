@@ -17,7 +17,9 @@ import {
 } from 'rxjs'
 
 import {logger} from '~/kernel/logger/logger'
+import {getTipStatusService} from '~/wallets/cardano/api/tip-status-service'
 import {YoroiWallet} from '~/wallets/cardano/types'
+import {TipStatusResponse} from '~/wallets/types/other'
 
 import {SyncWalletInfo} from '../common/types'
 import {getNextRetryTime} from './backoff'
@@ -169,6 +171,15 @@ export const makeSyncManager = (
     syncWalletInfos$.next(newInfos)
   }
 
+  // Get tip status from network-level service
+  const getTipStatusForNetwork = async (
+    network: Chain.SupportedNetworks,
+    baseApiUrl: string,
+  ): Promise<TipStatusResponse | null> => {
+    const service = getTipStatusService(network, baseApiUrl)
+    return service.fetchTipStatus(false)
+  }
+
   // Perform sync
   const performSync = async (isForced: boolean = false) => {
     const state = syncState$.value
@@ -184,6 +195,22 @@ export const makeSyncManager = (
     )
 
     if (networkWallets.length === 0) {
+      return
+    }
+
+    // Fetch tip status once for the network (shared across all wallets)
+    // Get baseApiUrl from first wallet (all wallets on same network share same API URL)
+    const baseApiUrl = networkWallets[0]?.networkManager.legacyApiBaseUrl || ''
+    const tipStatus = await getTipStatusForNetwork(
+      state.currentNetwork,
+      baseApiUrl,
+    )
+
+    if (!tipStatus) {
+      logger.warn('syncManager: No tip status available, skipping sync', {
+        network: state.currentNetwork,
+        origin: 'SyncManager',
+      })
       return
     }
 
@@ -213,12 +240,13 @@ export const makeSyncManager = (
       }
     }
 
-    // Sync wallets in parallel
+    // Sync wallets in parallel (pass shared tip status)
     const syncInfos = await syncWalletsParallel(
       prioritizedWallets,
       config,
       state,
       isForced,
+      tipStatus,
     )
 
     // Get current state after sync (may have been updated to store UTXO count)
@@ -360,103 +388,118 @@ export const makeSyncManager = (
 
           // Trigger immediate sync for the wallet that submitted transaction
           const wallet = currentWallets.find((w) => w.id === event.walletId)
-          if (wallet) {
-            // Store UTXO count before sync
-            const utxoCountBeforeSync = wallet.utxos.length
-
-            // Update state to enable fast polling
-            updateSyncState((state) => ({
-              ...state,
-              lastTxSubmissionTime: event.timestamp,
-              lastTxSubmissionWalletId: event.walletId,
-              lastUtxoCountBeforeSync: utxoCountBeforeSync,
-              isFastPolling: true,
-            }))
-
-            return from(
-              syncWalletsParallel([wallet], config, syncState$.value, false),
-            ).pipe(
-              switchMap((syncInfos) => {
-                // Get current state after sync
-                const currentStateAfterSync = syncState$.value
-
-                // Re-find wallet from current wallets to ensure we have latest reference
-                const walletAfterSync = currentWallets.find(
-                  (w) => w.id === event.walletId,
-                )
-
-                // Check for UTXO changes
-                let utxoChanged = false
-                if (
-                  walletAfterSync &&
-                  currentStateAfterSync.lastUtxoCountBeforeSync !== undefined
-                ) {
-                  const currentUtxoCount = walletAfterSync.utxos.length
-                  if (
-                    currentUtxoCount !==
-                    currentStateAfterSync.lastUtxoCountBeforeSync
-                  ) {
-                    utxoChanged = true
-                    logger.debug(
-                      'syncManager: UTXO change detected after immediate sync, switching to normal polling',
-                      {
-                        walletId: event.walletId,
-                        oldCount: currentStateAfterSync.lastUtxoCountBeforeSync,
-                        newCount: currentUtxoCount,
-                      },
-                    )
-                  }
-                }
-
-                // Update state with sync results
-                updateSyncState((currentState) => {
-                  const newWallets = new Map(currentState.wallets)
-                  for (const [walletId, syncInfo] of syncInfos.entries()) {
-                    const walletState = newWallets.get(walletId)
-                    if (walletState) {
-                      newWallets.set(walletId, {
-                        ...walletState,
-                        info: syncInfo,
-                        lastSyncTime: Date.now(),
-                        errorCount:
-                          syncInfo.status === 'error'
-                            ? walletState.errorCount + 1
-                            : 0,
-                      })
-                    }
-                  }
-                  return {
-                    ...currentState,
-                    wallets: newWallets,
-                    lastSyncTime: Date.now(),
-                    // Disable fast polling if UTXO changed
-                    ...(utxoChanged
-                      ? {
-                          isFastPolling: false,
-                          lastUtxoCountBeforeSync: undefined,
-                        }
-                      : {}),
-                  }
-                })
-
-                updateSyncWalletInfos((infos) => {
-                  const newInfos = new Map(infos)
-                  for (const [walletId, syncInfo] of syncInfos.entries()) {
-                    newInfos.set(walletId, syncInfo)
-                  }
-                  return newInfos
-                })
-
-                return of(null)
-              }),
-              catchError((error) => {
-                logger.error('syncManager: Transaction sync error', {error})
-                return of(null)
-              }),
-            )
+          if (!wallet) {
+            return of(null)
           }
 
-          return of(null)
+          // Store UTXO count before sync
+          const utxoCountBeforeSync = wallet.utxos.length
+
+          // Update state to enable fast polling
+          updateSyncState((state) => ({
+            ...state,
+            lastTxSubmissionTime: event.timestamp,
+            lastTxSubmissionWalletId: event.walletId,
+            lastUtxoCountBeforeSync: utxoCountBeforeSync,
+            isFastPolling: true,
+          }))
+
+          // Get tip status for immediate sync (use cache if available)
+          const currentState = syncState$.value
+          const baseApiUrl = wallet.networkManager.legacyApiBaseUrl
+
+          return from(
+            getTipStatusForNetwork(currentState.currentNetwork, baseApiUrl),
+          ).pipe(
+            switchMap((tipStatus) =>
+              from(
+                syncWalletsParallel(
+                  [wallet],
+                  config,
+                  syncState$.value,
+                  false,
+                  tipStatus,
+                ),
+              ),
+            ),
+            switchMap((syncInfos) => {
+              // Get current state after sync
+              const currentStateAfterSync = syncState$.value
+
+              // Re-find wallet from current wallets to ensure we have latest reference
+              const walletAfterSync = currentWallets.find(
+                (w) => w.id === event.walletId,
+              )
+
+              // Check for UTXO changes
+              let utxoChanged = false
+              if (
+                walletAfterSync &&
+                currentStateAfterSync.lastUtxoCountBeforeSync !== undefined
+              ) {
+                const currentUtxoCount = walletAfterSync.utxos.length
+                if (
+                  currentUtxoCount !==
+                  currentStateAfterSync.lastUtxoCountBeforeSync
+                ) {
+                  utxoChanged = true
+                  logger.debug(
+                    'syncManager: UTXO change detected after immediate sync, switching to normal polling',
+                    {
+                      walletId: event.walletId,
+                      oldCount: currentStateAfterSync.lastUtxoCountBeforeSync,
+                      newCount: currentUtxoCount,
+                    },
+                  )
+                }
+              }
+
+              // Update state with sync results
+              updateSyncState((currentState) => {
+                const newWallets = new Map(currentState.wallets)
+                for (const [walletId, syncInfo] of syncInfos.entries()) {
+                  const walletState = newWallets.get(walletId)
+                  if (walletState) {
+                    newWallets.set(walletId, {
+                      ...walletState,
+                      info: syncInfo,
+                      lastSyncTime: Date.now(),
+                      errorCount:
+                        syncInfo.status === 'error'
+                          ? walletState.errorCount + 1
+                          : 0,
+                    })
+                  }
+                }
+                return {
+                  ...currentState,
+                  wallets: newWallets,
+                  lastSyncTime: Date.now(),
+                  // Disable fast polling if UTXO changed
+                  ...(utxoChanged
+                    ? {
+                        isFastPolling: false,
+                        lastUtxoCountBeforeSync: undefined,
+                      }
+                    : {}),
+                }
+              })
+
+              updateSyncWalletInfos((infos) => {
+                const newInfos = new Map(infos)
+                for (const [walletId, syncInfo] of syncInfos.entries()) {
+                  newInfos.set(walletId, syncInfo)
+                }
+                return newInfos
+              })
+
+              return of(null)
+            }),
+            catchError((error) => {
+              logger.error('syncManager: Transaction sync error', {error})
+              return of(null)
+            }),
+          )
         }),
       ),
     )
@@ -497,14 +540,22 @@ export const makeSyncManager = (
   }
 
   // Trigger immediate sync for specific wallet
-  const triggerSync = (walletId: YoroiWallet['id']) => {
+  const triggerSync = async (walletId: YoroiWallet['id']) => {
     const wallet = currentWallets.find((w) => w.id === walletId)
     if (!wallet) {
       logger.warn('syncManager: Wallet not found for sync trigger', {walletId})
       return
     }
 
-    syncWalletsParallel([wallet], config, syncState$.value, true)
+    // Get tip status for triggered sync
+    const currentState = syncState$.value
+    const baseApiUrl = wallet.networkManager.legacyApiBaseUrl
+    const tipStatus = await getTipStatusForNetwork(
+      currentState.currentNetwork,
+      baseApiUrl,
+    )
+
+    syncWalletsParallel([wallet], config, syncState$.value, true, tipStatus)
       .then((syncInfos) => {
         updateSyncState((currentState) => {
           const newWallets = new Map(currentState.wallets)

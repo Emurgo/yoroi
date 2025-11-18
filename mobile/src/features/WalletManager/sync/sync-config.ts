@@ -18,6 +18,10 @@ export type SyncConfig = {
   maxBackoffDelay: number
   /** Concurrency limit for parallel sync */
   concurrencyLimit: number
+  /** Whether to stagger wallet syncs across the interval */
+  staggerSyncs: boolean
+  /** Minimum delay between staggered syncs (milliseconds) */
+  staggerDelay: number
 }
 
 /**
@@ -31,4 +35,6 @@ export const defaultSyncConfig: SyncConfig = {
   backoffMultiplier: 2,
   maxBackoffDelay: time.seconds(60),
   concurrencyLimit: 3,
+  staggerSyncs: true,
+  staggerDelay: time.seconds(2), // 2 seconds between each wallet sync
 }

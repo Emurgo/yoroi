@@ -24,6 +24,7 @@ import {WalletEncryptedStorage} from '~/kernel/storage/EncryptedStorage'
 import {
   FundInfoResponse,
   RawUtxo,
+  TipStatusResponse,
   TransactionInfo,
   TxStatusRequest,
   TxStatusResponse,
@@ -87,8 +88,14 @@ export interface YoroiWallet {
   // sync
   resync(): Promise<void>
   clear(): Promise<void>
-  sync(params: {isForced?: boolean}): Promise<void>
-  quickSync(params: {isForced?: boolean}): Promise<void>
+  sync(params: {
+    isForced?: boolean
+    tipStatus?: TipStatusResponse | null
+  }): Promise<void>
+  quickSync(params: {
+    isForced?: boolean
+    tipStatus?: TipStatusResponse | null
+  }): Promise<void>
   // ---------------------------------------------------------------------------------------
 
   get receiveAddressInfo(): Readonly<{
