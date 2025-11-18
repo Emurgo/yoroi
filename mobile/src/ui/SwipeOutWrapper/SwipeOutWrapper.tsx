@@ -50,24 +50,34 @@ export const SwipeOutWrapper = ({
     (notificationConfig?.displayDuration ??
       defaultNotificationDisplayDurationInSeconds) * 1000
 
-  React.useLayoutEffect(() => {
-    requestAnimationFrame(() => {
+  React.useEffect(() => {
+    const timeoutRefs = {
+      expired: null as NodeJS.Timeout | null,
+      fadeOut: null as NodeJS.Timeout | null,
+    }
+
+    const rafId = requestAnimationFrame(() => {
       fadeIn()
 
-      const expiredTimeout = setTimeout(
+      timeoutRefs.expired = setTimeout(
         () => onExpiredRef.current(),
         displayDuration,
       )
-      const fadeOutTimeout = setTimeout(
+      timeoutRefs.fadeOut = setTimeout(
         () => fadeOutRef.current(),
         displayDuration - fadeInTime - fadeOutPaddingTime,
       )
-
-      return () => {
-        clearTimeout(expiredTimeout)
-        clearTimeout(fadeOutTimeout)
-      }
     })
+
+    return () => {
+      cancelAnimationFrame(rafId)
+      if (timeoutRefs.expired) {
+        clearTimeout(timeoutRefs.expired)
+      }
+      if (timeoutRefs.fadeOut) {
+        clearTimeout(timeoutRefs.fadeOut)
+      }
+    }
   }, [fadeIn, displayDuration])
 
   return (
