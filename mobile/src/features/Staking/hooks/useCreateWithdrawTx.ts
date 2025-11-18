@@ -34,7 +34,8 @@ export const useCreateWithdrawTx = (
         rewardAddressHex: wallet.rewardAddressHex,
         hasRewards,
         stakingInfoStatus: stakingInfo?.status,
-        stakingInfoRewards: stakingInfo?.rewards,
+        stakingInfoRewards:
+          stakingInfo?.status === 'staked' ? stakingInfo.rewards : undefined,
       })
 
       try {

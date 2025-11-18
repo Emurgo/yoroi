@@ -1005,8 +1005,8 @@ export async function buildTransaction(
         withdrawalsCount: state.withdrawals.length,
         inputsCount: state.inputs.length,
         inputs: state.inputs.map((input) => ({
-          txId: input.utxo.txId,
-          index: input.utxo.index,
+          txId: input.utxo.txHash,
+          index: input.utxo.txIndex,
           adaAmount: input.utxo.balance[primaryTokenId] || '0',
           tokenCount: Object.keys(input.utxo.balance).filter(
             (id) => id !== primaryTokenId,

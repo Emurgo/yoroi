@@ -68,7 +68,7 @@ export const TxDetails = () => {
   // Format metadata from WalletTransaction
   const formattedMetadata: FormattedMetadata = React.useMemo(() => {
     if (!walletTransaction?.metadata) {
-      return {hash: null, metadata: null}
+      return {hash: null, metadata: null, allLabels: null, scripts: null}
     }
 
     // Try to extract metadata similar to processMetadata
@@ -91,6 +91,8 @@ export const TxDetails = () => {
     return {
       hash: null,
       metadata: metadataItems.length > 0 ? {msg: metadataItems} : null,
+      allLabels: null,
+      scripts: null,
     }
   }, [walletTransaction?.metadata])
 

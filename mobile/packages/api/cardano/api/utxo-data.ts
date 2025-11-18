@@ -4,7 +4,7 @@ import {Api} from '@yoroi/types'
 import {z} from 'zod'
 
 /**
- * Migrated to backend-zero: GET /v0/transactions/{hash}
+ * Migrated to backend-zero: GET /transactions/{hash}
  * Extracts output at specified index from transaction response
  */
 export const getUtxoData =
@@ -55,20 +55,27 @@ export const getUtxoData =
     }
 
     // Map to legacy format
-    const lovelaces = output.amount.$lovelaces || '0'
-    const assets: Api.Cardano.UtxoDataAsset[] = Object.entries(
-      output.amount,
-    )
+    const lovelaces = String(output.amount.$lovelaces || '0')
+    const assets: Api.Cardano.UtxoDataAsset[] = Object.entries(output.amount)
       .filter(([key]) => key !== '$lovelaces')
       .map(([assetId, amount]) => {
         const parts = assetId.split('.')
         const policyId = parts[0] || ''
         const nameHex = parts[1] || ''
+        // Ensure amount is a valid string - handle undefined/null/numbers
+        const amountStr =
+          amount == null
+            ? '0'
+            : typeof amount === 'string'
+              ? amount
+              : typeof amount === 'number' || typeof amount === 'bigint'
+                ? String(amount)
+                : '0'
         return {
           assetId,
           policyId,
           name: nameHex,
-          amount: amount.toString(),
+          amount: amountStr,
         }
       })
 

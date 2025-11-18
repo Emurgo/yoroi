@@ -344,14 +344,20 @@ export async function syncTxs({
           (maxPagesPerChunk === undefined || pageCount < maxPagesPerChunk)
         if (isPaginating) {
           bestTx = getLatestApiTransaction(response.transactions)
-          // Only use bestTx if it has valid blockHash and txHash
-          // This prevents sending invalid pagination references
-          if (!bestTx?.blockHash || !bestTx?.txHash) {
+          // For backend-zero, we only need blockHash and txHash for pagination
+          // blockNum and txOrdinal are optional (not provided by backend-zero)
+          if (!bestTx || !bestTx.blockHash || !bestTx.txHash) {
             logger.warn(
               'syncTxs: Cannot paginate - bestTx missing blockHash or txHash',
               {
                 bestTx,
                 txCount: response.transactions.length,
+                sampleTx: response.transactions[0]
+                  ? {
+                      hash: response.transactions[0]?.hash,
+                      block_hash: response.transactions[0]?.block_hash,
+                    }
+                  : null,
               },
             )
             // Stop pagination if we can't get a valid reference
@@ -516,16 +522,23 @@ function getLatestApiTransaction(
   const blockInfo: Array<TimeForTx> = []
 
   for (const tx of txs) {
+    // For backend-zero transactions, we only need block_hash and hash
+    // block_num and tx_ordinal are optional (not provided by backend-zero API)
+    // Check for both null/undefined AND empty strings
+    const blockHash = tx.block_hash
+    const txHash = tx.hash
     if (
-      tx.block_hash != null &&
-      tx.tx_ordinal != null &&
-      tx.block_num != null
+      blockHash != null &&
+      blockHash !== '' &&
+      txHash != null &&
+      txHash !== ''
     ) {
       blockInfo.push({
-        blockHash: tx.block_hash,
-        txHash: tx.hash,
-        txOrdinal: tx.tx_ordinal,
-        blockNum: tx.block_num,
+        blockHash,
+        txHash,
+        // Use provided values or defaults for sorting
+        txOrdinal: tx.tx_ordinal ?? 0,
+        blockNum: tx.block_num ?? 0,
       })
     }
   }
@@ -534,23 +547,35 @@ function getLatestApiTransaction(
     return undefined
   }
 
-  let best = blockInfo[0]
+  // If we have block_num and tx_ordinal, use them for proper sorting
+  // Otherwise, just return the last transaction (backend-zero returns them in order)
+  const hasFullInfo = blockInfo.some(
+    (info) => info.blockNum > 0 || info.txOrdinal > 0,
+  )
 
-  for (let i = 1; i < blockInfo.length; i++) {
-    if (blockInfo[i]!.blockNum > best!.blockNum) {
-      best = blockInfo[i]
-      continue
-    }
+  if (hasFullInfo) {
+    let best = blockInfo[0]
 
-    if (blockInfo[i]!.blockNum === best!.blockNum) {
-      if (blockInfo[i]!.txOrdinal > best!.txOrdinal) {
+    for (let i = 1; i < blockInfo.length; i++) {
+      if (blockInfo[i]!.blockNum > best!.blockNum) {
         best = blockInfo[i]
         continue
       }
+
+      if (blockInfo[i]!.blockNum === best!.blockNum) {
+        if (blockInfo[i]!.txOrdinal > best!.txOrdinal) {
+          best = blockInfo[i]
+          continue
+        }
+      }
     }
+
+    return best
   }
 
-  return best
+  // For backend-zero (no block_num/tx_ordinal), return the last transaction
+  // Backend-zero returns transactions in chronological order
+  return blockInfo[blockInfo.length - 1]
 }
 
 export function toCachedTx(tx: RawTransaction): WalletTransaction {

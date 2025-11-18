@@ -13,12 +13,15 @@ describe('backoff', () => {
 
       // Should have exponential delay
       const delay = nextRetryTime - now
-      const expectedMinDelay =
-        defaultSyncConfig.errorBackoffBaseDelay * Math.pow(2, errorCount - 1)
-      const expectedMaxDelay =
-        expectedMinDelay + defaultSyncConfig.jitterFactor * expectedMinDelay
+      const expectedDelay =
+        defaultSyncConfig.fastInterval *
+        Math.pow(defaultSyncConfig.backoffMultiplier, errorCount)
+      const expectedMaxDelay = Math.min(
+        expectedDelay,
+        defaultSyncConfig.maxBackoffDelay,
+      )
 
-      expect(delay).toBeGreaterThanOrEqual(expectedMinDelay)
+      expect(delay).toBeGreaterThanOrEqual(expectedDelay)
       expect(delay).toBeLessThanOrEqual(expectedMaxDelay)
     })
 

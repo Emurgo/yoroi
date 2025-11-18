@@ -12,7 +12,7 @@ describe('wallet-creation', () => {
     implementation: 'cardano-cip1852' as Wallet.Implementation,
     addressMode: 'multiple' as Wallet.AddressMode,
     accountVisual: 0,
-    network: Chain.Network.Mainnet,
+    network: Chain.Network.Mainnet as Chain.SupportedNetworks,
     version: 3,
     walletsRootStorage: {
       setItem: jest.fn().mockResolvedValue(undefined),

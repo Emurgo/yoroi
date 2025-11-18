@@ -197,7 +197,8 @@ export const deriveAndStoreAccount = async (params: {
   const {id, accountVisual, password, implementation} = params
 
   const encryptedStorage = makeWalletEncryptedStorage(id)
-  const rootKeyHex = await encryptedStorage.xpriv.read(password)
+  const rootKeyResult = await encryptedStorage.xpriv.read(password)
+  const rootKeyHex = rootKeyResult.value
 
   const accountPubKeyHex = CardanoMobileWrapped.cslScope((csl) =>
     deriveAccountFromRootKey(rootKeyHex, accountVisual, implementation, csl),

@@ -256,7 +256,7 @@ export class PoolInfoApi {
   }
 
   /**
-   * Migrated to backend-zero: Uses GET /v0/cexplorer-pool-list
+   * Migrated to backend-zero: Uses GET /cexplorer-pool-list
    * Note: History is not available from cexplorer, returns empty history arrays
    */
   private async getManyChainPoolInfoBatch(

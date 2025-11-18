@@ -34,7 +34,11 @@ describe('runMigrations', () => {
   })
 
   it('should skip migrations if already at current version', async () => {
-    storageVersion = migrations[migrations.length - 1].version
+    const lastMigration = migrations[migrations.length - 1]
+    if (!lastMigration) {
+      throw new Error('No migrations found')
+    }
+    storageVersion = lastMigration.version
     const results = await runMigrations(mockStorage)
 
     expect(results).toHaveLength(0)

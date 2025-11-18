@@ -116,7 +116,9 @@ describe('SyncManager', () => {
   describe('updateNetwork', () => {
     it('should update the network filter', () => {
       syncManager.start()
-      syncManager.updateNetwork(Chain.Network.Testnet)
+      syncManager.updateNetwork(
+        Chain.Network.Preview as Chain.SupportedNetworks,
+      )
 
       // Should filter wallets by new network
       expect(true).toBe(true)

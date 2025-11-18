@@ -1,6 +1,9 @@
 import {API_ENDPOINTS} from '@yoroi/api'
 import {Chain} from '@yoroi/types'
 
+// @ts-ignore
+import QuickCrypto from 'react-native-quick-crypto'
+
 import {getSpendingKey} from '../addressInfo/addressInfo'
 
 /**
@@ -11,6 +14,30 @@ export type WalletRegistrationData = {
   paymentKeyHashes: string[]
   rewardAddresses: string[]
   publicKey: string
+}
+
+/**
+ * Convert wallet ID (UUID or any string) to Ed25519KeyHash format (56 hex characters)
+ * Uses SHA256 hash and takes first 56 hex characters (28 bytes)
+ * If accountPubKeyHex is provided, uses that as the source for more deterministic IDs
+ */
+export const convertWalletIdToEd25519KeyHash = (
+  walletId: string,
+  accountPubKeyHex?: string,
+): string => {
+  // Prefer accountPubKeyHex if available for deterministic wallet IDs
+  const source = accountPubKeyHex || walletId
+
+  // If source is already hex (like accountPubKeyHex), use it directly
+  // Otherwise, treat it as UTF-8 string (like UUID)
+  const isHex = /^[0-9a-fA-F]+$/.test(source.replace(/-/g, ''))
+  const normalizedSource = source.replace(/-/g, '')
+
+  // Hash using SHA256 and take first 56 hex characters (28 bytes)
+  const hash = QuickCrypto.createHash('sha256')
+    .update(normalizedSource, isHex ? 'hex' : 'utf8')
+    .digest('hex')
+  return hash.slice(0, 56)
 }
 
 /**
@@ -110,8 +137,14 @@ export const getWalletRegistrationData = (wallet: {
   // For read-only wallets without a proper public key, we use wallet ID.
   const publicKey = wallet.publicKeyHex || wallet.accountPubKeyHex || wallet.id
 
+  // Convert wallet ID to Ed25519KeyHash format (56 hex characters) as required by backend
+  const backendWalletId = convertWalletIdToEd25519KeyHash(
+    wallet.id,
+    wallet.accountPubKeyHex,
+  )
+
   return {
-    id: wallet.id,
+    id: backendWalletId,
     paymentKeyHashes,
     rewardAddresses,
     publicKey,
@@ -140,8 +173,14 @@ export const getWalletRegistrationDataFromContext = (context: {
   const publicKey =
     context.publicKeyHex || context.accountPubKeyHex || context.walletId
 
+  // Convert wallet ID to Ed25519KeyHash format (56 hex characters) as required by backend
+  const backendWalletId = convertWalletIdToEd25519KeyHash(
+    context.walletId,
+    context.accountPubKeyHex,
+  )
+
   return {
-    id: context.walletId,
+    id: backendWalletId,
     paymentKeyHashes: context.paymentKeyHashes,
     rewardAddresses: context.rewardAddresses,
     publicKey,
@@ -170,7 +209,7 @@ export const registerWallet = async (
   }
 
   try {
-    const response = await fetch(`${backendZeroUrl}/v0/wallets`, {
+    const response = await fetch(`${backendZeroUrl}/wallets`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -210,18 +249,28 @@ export const clearRegistrationCache = (walletId: string): void => {
 
 /**
  * Check if wallet is registered (by attempting to get it)
+ * Note: walletId should be in Ed25519KeyHash format (56 hex characters)
  */
 export const isWalletRegistered = async (
   walletId: string,
   backendZeroUrl: string,
+  accountPubKeyHex?: string,
 ): Promise<boolean> => {
   try {
-    const response = await fetch(`${backendZeroUrl}/v0/wallets/${walletId}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
+    // Convert to Ed25519KeyHash format if needed
+    const backendWalletId = convertWalletIdToEd25519KeyHash(
+      walletId,
+      accountPubKeyHex,
+    )
+    const response = await fetch(
+      `${backendZeroUrl}/wallets/${backendWalletId}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
       },
-    })
+    )
 
     return response.status === 200
   } catch {

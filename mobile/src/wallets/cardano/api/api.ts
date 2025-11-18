@@ -35,7 +35,7 @@ const limitApiRecords = 50
 export const checkServerStatus = legacyOnly.checkServerStatus
 
 /**
- * ✅ MIGRATED TO BACKEND-ZERO: GET /v0/bestblock
+ * ✅ MIGRATED TO BACKEND-ZERO: GET /bestblock
  *
  * Uses backend-zero endpoint. Maps response to legacy TipStatusResponse format.
  * No fallback to legacy API - backend-zero is the only source.
@@ -68,7 +68,7 @@ export const getTipStatus = async (
 }
 
 /**
- * ✅ MIGRATED TO BACKEND-ZERO: GET /v0/wallets/{id}/transactions
+ * ✅ MIGRATED TO BACKEND-ZERO: GET /wallets/{id}/transactions
  *
  * Uses backend-zero when wallet context is provided.
  * ⚠️ FALLBACK: Falls back to legacy API (POST /v2/txs/history) if:
@@ -93,9 +93,11 @@ export const fetchNewTxHistory = async (
     const backendZeroUrl = getBackendZeroUrl(baseApiUrl)
 
     // Ensure wallet is registered
-    const {registerWallet, getWalletRegistrationDataFromContext} = await import(
-      './wallet-registration'
-    )
+    const {
+      registerWallet,
+      getWalletRegistrationDataFromContext,
+      convertWalletIdToEd25519KeyHash,
+    } = await import('./wallet-registration')
     const registrationData = getWalletRegistrationDataFromContext({
       walletId: walletContext.walletId,
       publicKeyHex: walletContext.publicKeyHex,
@@ -108,14 +110,22 @@ export const fetchNewTxHistory = async (
       await registerWallet(registrationData, backendZeroUrl)
     }
 
-    // Build cursor query parameter
-    let url = `${backendZeroUrl}/wallets/${walletContext.walletId}/transactions`
+    // Always use converted wallet ID (Ed25519KeyHash format) for API calls
+    const backendWalletId =
+      registrationData?.id ||
+      convertWalletIdToEd25519KeyHash(
+        walletContext.walletId,
+        walletContext.accountPubKeyHex,
+      )
+
+    // Build cursor query parameters
+    let url = `${backendZeroUrl}/wallets/${backendWalletId}/transactions`
     if (request.after) {
-      const cursor = JSON.stringify({
+      const params = new URLSearchParams({
         block: request.after.block,
         tx: request.after.tx,
       })
-      url += `?cursor=${encodeURIComponent(cursor)}`
+      url += `?${params.toString()}`
     }
 
     const response = await fetch(url, {
@@ -156,8 +166,9 @@ export const fetchNewTxHistory = async (
     // Map backend-zero Tx format to RawTransaction format (simplified)
     const transactions: RawTransaction[] = backendTxs.map((tx) => ({
       type: 'shelley' as const, // Backend-zero transactions are all shelley-era
-      hash: tx.hash,
-      block_hash: tx.block,
+      hash: tx.hash || '',
+      // Ensure block_hash is undefined if block is missing/empty (for pending txs)
+      block_hash: tx.block && tx.block.trim() ? tx.block : undefined,
       block_num: undefined, // Not available in backend-zero response
       time: new Date(tx.when).toISOString(),
       tx_state: tx.block ? 'Successful' : 'Pending',
@@ -165,16 +176,25 @@ export const fetchNewTxHistory = async (
       tx_ordinal: undefined, // Not available
       inputs: tx.inputs.map((input) => ({
         address: input.source.address,
-        amount: input.source.amount.$lovelaces || '0',
+        amount: String(input.source.amount.$lovelaces || '0'),
         assets: Object.entries(input.source.amount)
           .filter(([key]) => key !== '$lovelaces')
           .map(([assetId, amount]) => {
             const [policyId = '', nameHex = ''] = assetId.split('.')
+            // Ensure amount is a valid string - handle undefined/null/numbers
+            const amountStr =
+              amount == null
+                ? '0'
+                : typeof amount === 'string'
+                  ? amount
+                  : typeof amount === 'number' || typeof amount === 'bigint'
+                    ? String(amount)
+                    : '0'
             return {
               tokenId: assetId as Portfolio.Token.Id,
               policyId,
               name: nameHex,
-              amount: amount.toString(),
+              amount: amountStr,
             }
           }),
         id: `${input.txHash}${input.index}`,
@@ -183,22 +203,42 @@ export const fetchNewTxHistory = async (
       })),
       outputs: tx.outputs.map((output) => ({
         address: output.address,
-        amount: output.amount.$lovelaces || '0',
+        amount: String(output.amount.$lovelaces || '0'),
         assets: Object.entries(output.amount)
           .filter(([key]) => key !== '$lovelaces')
           .map(([assetId, amount]) => {
             const [policyId = '', nameHex = ''] = assetId.split('.')
+            // Ensure amount is a valid string - handle undefined/null/numbers
+            const amountStr =
+              amount == null
+                ? '0'
+                : typeof amount === 'string'
+                  ? amount
+                  : typeof amount === 'number' || typeof amount === 'bigint'
+                    ? String(amount)
+                    : '0'
             return {
               tokenId: assetId as Portfolio.Token.Id,
               policyId,
               name: nameHex,
-              amount: amount.toString(),
+              amount: amountStr,
             }
           }),
       })),
-      fee: tx.fee.$lovelaces || '0',
+      fee: String(tx.fee.$lovelaces || '0'),
       certificates: tx.certificates as Array<RemoteCertificateMeta>,
-      withdrawals: tx.withdrawals as Array<{address: string; amount: string}>,
+      withdrawals: (tx.withdrawals || []).map((w: any) => ({
+        address: w.address || '',
+        // Backend-zero withdrawals have amount as { $lovelaces: string }
+        amount:
+          typeof w.amount === 'object' && w.amount?.$lovelaces != null
+            ? String(w.amount.$lovelaces)
+            : typeof w.amount === 'string'
+              ? w.amount
+              : typeof w.amount === 'number' || typeof w.amount === 'bigint'
+                ? String(w.amount)
+                : '0',
+      })),
     }))
 
     // Determine isLast: if response length < limitApiRecords, it's the last page
@@ -213,7 +253,7 @@ export const fetchNewTxHistory = async (
 }
 
 /**
- * ✅ MIGRATED TO BACKEND-ZERO: GET /v0/wallets/{id}/paymentkeyhashes?used=true
+ * ✅ MIGRATED TO BACKEND-ZERO: GET /wallets/{id}/paymentkeyhashes?used=true
  *
  * Uses backend-zero when wallet context is provided.
  * ⚠️ FALLBACK: Falls back to legacy API (POST /v2/addresses/filterUsed) if:
@@ -238,9 +278,11 @@ export const filterUsedAddresses = async (
     const backendZeroUrl = getBackendZeroUrl(baseApiUrl)
 
     // Ensure wallet is registered
-    const {registerWallet, getWalletRegistrationDataFromContext} = await import(
-      './wallet-registration'
-    )
+    const {
+      registerWallet,
+      getWalletRegistrationDataFromContext,
+      convertWalletIdToEd25519KeyHash,
+    } = await import('./wallet-registration')
     const registrationData = getWalletRegistrationDataFromContext({
       walletId: walletContext.walletId,
       publicKeyHex: walletContext.publicKeyHex,
@@ -253,9 +295,17 @@ export const filterUsedAddresses = async (
       await registerWallet(registrationData, backendZeroUrl)
     }
 
+    // Always use converted wallet ID (Ed25519KeyHash format) for API calls
+    const backendWalletId =
+      registrationData?.id ||
+      convertWalletIdToEd25519KeyHash(
+        walletContext.walletId,
+        walletContext.accountPubKeyHex,
+      )
+
     // Get used payment key hashes
     const response = await fetch(
-      `${backendZeroUrl}/wallets/${walletContext.walletId}/paymentkeyhashes?used=true`,
+      `${backendZeroUrl}/wallets/${backendWalletId}/paymentkeyhashes?used=true`,
       {
         method: 'GET',
         headers: {'Content-Type': 'application/json'},
@@ -284,7 +334,7 @@ export const filterUsedAddresses = async (
 }
 
 /**
- * ✅ MIGRATED TO BACKEND-ZERO: POST /v0/tx
+ * ✅ MIGRATED TO BACKEND-ZERO: POST /tx
  *
  * Uses backend-zero endpoint. Sends transaction CBOR hex as JSON string body.
  * Backend-zero returns transaction hash (discarded to match legacy interface).
@@ -318,7 +368,7 @@ export const submitTransaction = async (
 }
 
 /**
- * ✅ MIGRATED TO BACKEND-ZERO: GET /v0/wallets/{id}/rewards
+ * ✅ MIGRATED TO BACKEND-ZERO: GET /wallets/{id}/rewards
  *
  * Uses backend-zero when wallet context is provided.
  * ⚠️ FALLBACK: Falls back to legacy API (POST /account/state) if:
@@ -343,9 +393,11 @@ export const getAccountState = async (
     const backendZeroUrl = getBackendZeroUrl(baseApiUrl)
 
     // Ensure wallet is registered
-    const {registerWallet, getWalletRegistrationDataFromContext} = await import(
-      './wallet-registration'
-    )
+    const {
+      registerWallet,
+      getWalletRegistrationDataFromContext,
+      convertWalletIdToEd25519KeyHash,
+    } = await import('./wallet-registration')
     const registrationData = getWalletRegistrationDataFromContext({
       walletId: walletContext.walletId,
       publicKeyHex: walletContext.publicKeyHex,
@@ -358,9 +410,17 @@ export const getAccountState = async (
       await registerWallet(registrationData, backendZeroUrl)
     }
 
+    // Always use converted wallet ID (Ed25519KeyHash format) for API calls
+    const backendWalletId =
+      registrationData?.id ||
+      convertWalletIdToEd25519KeyHash(
+        walletContext.walletId,
+        walletContext.accountPubKeyHex,
+      )
+
     // Get rewards from wallet endpoint
     const rewardsResponse = await fetch(
-      `${backendZeroUrl}/wallets/${walletContext.walletId}/rewards`,
+      `${backendZeroUrl}/wallets/${backendWalletId}/rewards`,
       {
         method: 'GET',
         headers: {'Content-Type': 'application/json'},
@@ -431,7 +491,7 @@ export const bulkGetAccountState = async (
 }
 
 /**
- * ✅ MIGRATED TO BACKEND-ZERO: GET /v0/cexplorer-pool-list
+ * ✅ MIGRATED TO BACKEND-ZERO: GET /cexplorer-pool-list
  *
  * Uses backend-zero cexplorer proxy for pool info queries.
  * Note: History is not available from cexplorer, returns empty history.
@@ -525,7 +585,7 @@ export const getPoolInfo = async (
 export const getFundInfo = legacyOnly.getFundInfo
 
 /**
- * ✅ MIGRATED TO BACKEND-ZERO: GET /v0/transactions/{hash}
+ * ✅ MIGRATED TO BACKEND-ZERO: GET /transactions/{hash}
  *
  * Uses backend-zero endpoint. Infers transaction status from transaction query:
  * - If transaction exists with block hash → SUCCESS (confirmed)
