@@ -88,6 +88,7 @@ export interface YoroiWallet {
   resync(): Promise<void>
   clear(): Promise<void>
   sync(params: {isForced?: boolean}): Promise<void>
+  quickSync(params: {isForced?: boolean}): Promise<void>
   // ---------------------------------------------------------------------------------------
 
   get receiveAddressInfo(): Readonly<{

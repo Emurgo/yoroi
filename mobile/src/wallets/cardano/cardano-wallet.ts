@@ -712,6 +712,30 @@ export const makeCardanoWallet = (
       ])
     }
 
+    /**
+     * Quick sync that only fetches the first page of transactions.
+     * Used during wallet preparation to make the wallet usable quickly.
+     * Full sync will continue in the background.
+     */
+    async quickSync({isForced = false}: {isForced?: boolean} = {}) {
+      if (!this.isInitialized) {
+        logger.error('ShelleyWallet: quickSync wallet not initialized', {
+          id: this.id,
+        })
+        return Promise.resolve()
+      }
+
+      await this.accountManager.discoverAddresses()
+
+      await Promise.all([
+        this.syncUtxos({isForced}),
+        this.transactionManager.doQuickSync(
+          this.addressesInBlocks,
+          this.networkManager.legacyApiBaseUrl,
+        ),
+      ])
+    }
+
     async resync() {
       logger.info('resync', {
         walletId: this.id,

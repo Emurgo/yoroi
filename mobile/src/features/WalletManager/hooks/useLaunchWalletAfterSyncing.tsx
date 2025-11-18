@@ -92,8 +92,10 @@ export function useLaunchWalletAfterSyncing({
           return
         }
 
-        await wallet.sync({isForced: true})
+        // Do quick sync first to make wallet usable immediately
+        await wallet.quickSync({isForced: true})
 
+        // Navigate immediately after quick sync
         if (shouldNavigateAfterSync) {
           try {
             walletNavigation.resetToTxHistory()
@@ -106,6 +108,14 @@ export function useLaunchWalletAfterSyncing({
             walletNavigation.resetToWalletSelection()
           }
         }
+
+        // Start full sync in the background without waiting
+        wallet.sync({isForced: true}).catch((error) => {
+          logger.error(
+            'useLaunchWalletAfterSyncing: Error during background full sync',
+            {error, walletId},
+          )
+        })
       } catch (error) {
         logger.error(
           'useLaunchWalletAfterSyncing: Error during wallet launch',

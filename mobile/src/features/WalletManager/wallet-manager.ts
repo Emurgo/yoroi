@@ -860,7 +860,17 @@ export const makeWalletManager = (
             networkManagers,
           ) as Chain.SupportedNetworks[]) {
             const legacyStorage = rootStorage.join(`legacy/${network}/v1/`)
-            await legacyStorage.removeItem(id)
+            // Use removeFolder to recursively delete the entire wallet folder
+            await legacyStorage.removeFolder(`${id}/`).catch((error) => {
+              logger.warn(
+                'WalletManager: removeWalletsMarkedForDeletion failed to remove wallet folder',
+                {
+                  walletId: id,
+                  network,
+                  error,
+                },
+              )
+            })
           }
 
           await walletsRootStorage.removeItem(id)
@@ -900,18 +910,20 @@ export const makeWalletManager = (
         await walletsRootStorage.removeItem(id)
 
         // Remove wallet storage for all networks
+        // Use removeFolder to recursively delete the entire wallet folder (txs, utxos, memos, addresses, etc.)
         for (const network of Object.keys(
           networkManagers,
         ) as Chain.SupportedNetworks[]) {
           const legacyStorage = rootStorage.join(`legacy/${network}/v1/`)
-          await legacyStorage.removeItem(id)
-
-          // Also remove address storage for read-only wallets
-          const addressStorage = rootStorage.join(
-            `legacy/${network}/v1/${id}/addresses/`,
-          )
-          await addressStorage.removeItem('readOnly').catch(() => {
-            // Ignore if doesn't exist
+          await legacyStorage.removeFolder(`${id}/`).catch((error) => {
+            logger.warn(
+              'WalletManager: removeWallet failed to remove wallet folder',
+              {
+                walletId: id,
+                network,
+                error,
+              },
+            )
           })
         }
 

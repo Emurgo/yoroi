@@ -74,7 +74,9 @@ export class TransactionManager {
     }
   }
 
-  subscribe(handler: () => any) {
+  subscribe(
+    handler: (transactions: Record<string, WalletTransaction>) => void,
+  ) {
     this.#subscriptions.push(handler)
   }
 
@@ -115,24 +117,123 @@ export class TransactionManager {
   }
 
   async doSync(addressesByChunks: Array<Array<string>>, baseApiUrl: string) {
-    const txUpdate = await syncTxs({
-      addressesByChunks,
-      baseApiUrl,
-      transactions: this.#state.transactions,
-      api: yoroiApi,
-    })
-
-    if (txUpdate) {
-      this.updateState({
-        transactions: txUpdate,
-        // @deprecated
-        bestBlockNum: this.#state.bestBlockNum,
-        // @deprecated
-        perAddressSyncMetadata: this.#state.perAddressSyncMetadata,
-      })
-      return true
+    // Store initial state to restore if sync fails
+    const initialState = {
+      transactions: {...this.#state.transactions},
     }
-    return false
+
+    // Callback to update state incrementally as transactions are fetched
+    // This updates in-memory state for UI, but we won't save to storage until sync succeeds
+    const onBatchProcessed = (batchTxs: Record<string, WalletTransaction>) => {
+      const updatedTxs = {...this.#state.transactions, ...batchTxs}
+      this.#state = {
+        ...this.#state,
+        transactions: updatedTxs,
+      }
+      // Notify subscribers immediately so UI updates
+      this.#subscriptions.forEach((handler) =>
+        handler(this.#state.transactions),
+      )
+    }
+
+    try {
+      const txUpdate = await syncTxs({
+        addressesByChunks,
+        baseApiUrl,
+        transactions: this.#state.transactions,
+        api: yoroiApi,
+        onBatchProcessed,
+      })
+
+      if (txUpdate) {
+        // Sync succeeded - save the updated state to storage
+        this.updateState({
+          transactions: this.#state.transactions,
+          // @deprecated
+          bestBlockNum: this.#state.bestBlockNum,
+          // @deprecated
+          perAddressSyncMetadata: this.#state.perAddressSyncMetadata,
+        })
+        return true
+      }
+      // Sync returned undefined (no updates) - state is still valid
+      return false
+    } catch (error) {
+      // Sync failed - restore initial state to avoid saving partial/corrupt data
+      this.#state = {
+        ...this.#state,
+        transactions: initialState.transactions,
+      }
+      // Notify subscribers of restored state
+      this.#subscriptions.forEach((handler) =>
+        handler(this.#state.transactions),
+      )
+      throw error
+    }
+  }
+
+  /**
+   * Quick sync that only fetches the first page of transactions for each address chunk.
+   * Used during wallet preparation to make the wallet usable quickly.
+   */
+  async doQuickSync(
+    addressesByChunks: Array<Array<string>>,
+    baseApiUrl: string,
+  ) {
+    // Store initial state to restore if sync fails
+    const initialState = {
+      transactions: {...this.#state.transactions},
+    }
+
+    // Callback to update state incrementally as transactions are fetched
+    // This updates in-memory state for UI, but we won't save to storage until sync succeeds
+    const onBatchProcessed = (batchTxs: Record<string, WalletTransaction>) => {
+      const updatedTxs = {...this.#state.transactions, ...batchTxs}
+      this.#state = {
+        ...this.#state,
+        transactions: updatedTxs,
+      }
+      // Notify subscribers immediately so UI updates
+      this.#subscriptions.forEach((handler) =>
+        handler(this.#state.transactions),
+      )
+    }
+
+    try {
+      const txUpdate = await syncTxs({
+        addressesByChunks,
+        baseApiUrl,
+        transactions: this.#state.transactions,
+        api: yoroiApi,
+        onBatchProcessed,
+        maxPagesPerChunk: 1, // Only fetch first page for quick sync
+      })
+
+      if (txUpdate) {
+        // Sync succeeded - save the updated state to storage
+        this.updateState({
+          transactions: this.#state.transactions,
+          // @deprecated
+          bestBlockNum: this.#state.bestBlockNum,
+          // @deprecated
+          perAddressSyncMetadata: this.#state.perAddressSyncMetadata,
+        })
+        return true
+      }
+      // Sync returned undefined (no updates) - state is still valid
+      return false
+    } catch (error) {
+      // Sync failed - restore initial state to avoid saving partial/corrupt data
+      this.#state = {
+        ...this.#state,
+        transactions: initialState.transactions,
+      }
+      // Notify subscribers of restored state
+      this.#subscriptions.forEach((handler) =>
+        handler(this.#state.transactions),
+      )
+      throw error
+    }
   }
 }
 
@@ -141,11 +242,15 @@ export async function syncTxs({
   baseApiUrl,
   transactions,
   api,
+  onBatchProcessed,
+  maxPagesPerChunk,
 }: Readonly<{
   addressesByChunks: Array<Array<string>>
   baseApiUrl: string
   transactions: Record<string, WalletTransaction>
   api: Pick<typeof yoroiApi, 'getTipStatus' | 'fetchNewTxHistory'>
+  onBatchProcessed?: (batchTxs: Record<string, WalletTransaction>) => void
+  maxPagesPerChunk?: number // Limit pagination for quick sync
 }>): Promise<Record<string, WalletTransaction> | undefined> {
   const {bestBlock} = await api.getTipStatus(baseApiUrl)
   if (!bestBlock.hash) return
@@ -153,6 +258,10 @@ export async function syncTxs({
   // this should change when backend stop throwing when no tx_hash is passed
   // so the last will become the tip and not the last tx submitted which would be faster
   const lastTx = getLatestYoroiTransaction(Object.values(transactions))
+
+  // Validate lastTx has required fields before using it for pagination
+  // This prevents sending invalid payloads that cause 500 errors
+  const validLastTx = lastTx?.blockHash && lastTx?.txHash ? lastTx : undefined
 
   // Filter out empty chunks to avoid API errors
   const validChunks = addressesByChunks.filter((addrs) => addrs.length > 0)
@@ -175,32 +284,60 @@ export async function syncTxs({
         {
           // tip
           bestBlockNum: bestBlock.height,
-          // current - from state txs saved
-          bestBlockHash: lastTx?.blockHash,
-          bestTxHash: lastTx?.txHash,
+          // current - from state txs saved (only if valid)
+          bestBlockHash: validLastTx?.blockHash,
+          bestTxHash: validLastTx?.txHash,
         },
         bestBlock.hash!,
       )
 
+      let pageCount = 0
       do {
         const response = await api.fetchNewTxHistory(historyPayload, baseApiUrl)
         taskResult.push(response.transactions)
+        pageCount++
+
+        // Process transactions immediately as they're fetched so UI can update
+        if (onBatchProcessed && response.transactions.length > 0) {
+          const batchTxs: Record<string, WalletTransaction> = {}
+          for (const tx of response.transactions) {
+            batchTxs[tx.hash] = toCachedTx(tx)
+          }
+          onBatchProcessed(batchTxs)
+        }
 
         // next payload
-        isPaginating = !response.isLast
+        // Stop pagination if maxPagesPerChunk is set and we've reached the limit
+        isPaginating =
+          !response.isLast &&
+          (maxPagesPerChunk === undefined || pageCount < maxPagesPerChunk)
         if (isPaginating) {
           bestTx = getLatestApiTransaction(response.transactions)
-          historyPayload = txHistoryPayloadFactory(
-            addrs,
-            {
-              // tip
-              bestBlockNum: bestBlock.height,
-              // current - from api txs just received
-              bestBlockHash: bestTx?.blockHash,
-              bestTxHash: bestTx?.txHash,
-            },
-            bestBlock.hash!,
-          )
+          // Only use bestTx if it has valid blockHash and txHash
+          // This prevents sending invalid pagination references
+          if (!bestTx?.blockHash || !bestTx?.txHash) {
+            logger.warn(
+              'syncTxs: Cannot paginate - bestTx missing blockHash or txHash',
+              {
+                bestTx,
+                txCount: response.transactions.length,
+              },
+            )
+            // Stop pagination if we can't get a valid reference
+            isPaginating = false
+          } else {
+            historyPayload = txHistoryPayloadFactory(
+              addrs,
+              {
+                // tip
+                bestBlockNum: bestBlock.height,
+                // current - from api txs just received
+                bestBlockHash: bestTx.blockHash,
+                bestTxHash: bestTx.txHash,
+              },
+              bestBlock.hash!,
+            )
+          }
         }
       } while (isPaginating)
 
@@ -232,20 +369,36 @@ export async function syncTxs({
         // it will cascade back till success
         case ApiHistoryError.errors.REFERENCE_BLOCK_MISMATCH:
         case ApiHistoryError.errors.REFERENCE_TX_NOT_FOUND:
-          if (lastTx) {
+          if (validLastTx) {
+            // Remove transactions that reference the invalid block/tx
+            // Keep only transactions from blocks before the invalid reference
             const newTxs = fromPairs(
               Object.values(transactions)
-                .filter((t) => t.blockNum && t.blockNum < lastTx?.blockNum)
+                .filter(
+                  (t) =>
+                    t.blockNum != null && t.blockNum < validLastTx.blockNum,
+                )
                 .map((t) => [t.id, t]),
+            )
+            logger.warn(
+              'syncTxs: Reference error - cleaning invalid transactions',
+              {
+                originalCount: Object.keys(transactions).length,
+                cleanedCount: Object.keys(newTxs).length,
+                invalidReference: validLastTx,
+              },
             )
             return newTxs
           } else {
-            logger.error(`API returned an unexpected error response`, {
-              type: 'http',
-              error: e,
-            })
+            // No valid lastTx to reference - return empty to start fresh
+            logger.warn(
+              'syncTxs: Reference error but no valid lastTx - returning empty state',
+              {
+                error: e,
+              },
+            )
+            return {}
           }
-          break
 
         // UNKNOWN
         default:
@@ -510,13 +663,13 @@ const confirmationCountsSelector = (state: TransactionManagerState) => {
     const getBlockNum = ({address}: {address: string}) =>
       perAddressSyncMetadata[address]?.bestBlockNum ?? 0
 
-    const bestBlockNum: any = max([
+    const bestBlockNum = max([
       state.bestBlockNum || 0,
       ...tx.inputs.map(getBlockNum),
       ...tx.outputs.map(getBlockNum),
     ])
 
-    return bestBlockNum - (tx as any).blockNum
+    return (bestBlockNum ?? 0) - (tx.blockNum ?? 0)
   })
 }
 
