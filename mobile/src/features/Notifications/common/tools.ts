@@ -220,7 +220,7 @@ const handleInternalNavigation = async (
           if (tokenOutId !== undefined) {
             await setPendingSwapToken(tokenOutId)
           }
-          walletNavigation.resetToSwapWithToken(tokenOutId)
+          walletNavigation.resetToSwapWithToken()
           break
         }
         case 'governance':
