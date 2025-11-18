@@ -560,7 +560,7 @@ export const stakingMessages = defineMessages({
   },
   earnRewardsBannerTitle: {
     id: 'components.governance.earnRewardsBanner.title',
-    defaultMessage: '!!!Consider delegating to Yoroi DRep?',
+    defaultMessage: '!!!Delegate with Yoroi DRep',
   },
   earnRewardsBannerDescription: {
     id: 'components.governance.earnRewardsBanner.description',
