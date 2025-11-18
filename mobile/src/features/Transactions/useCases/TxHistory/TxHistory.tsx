@@ -3,7 +3,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import {useNavigation} from '@react-navigation/native'
 import {LinearGradient} from 'expo-linear-gradient'
 import * as React from 'react'
-import {BackHandler, LayoutAnimation, Platform, Text, TouchableOpacity, View} from 'react-native'
+import {BackHandler, LayoutAnimation, Platform, Text, View} from 'react-native'
 
 import infoIcon from '~/assets/img/icon/info-light-green.png'
 import {useBuyCryptoBanner} from '~/features/Exchange/common/useBuyCryptoBanner'
@@ -31,8 +31,7 @@ export const TxHistory = () => {
   useGovernanceBanner()
   useBuyCryptoBanner()
   useUtxoConsolidationBanner()
-  const {renderBanner: renderEarnRewardsBanner, toggleForceShow} =
-    useEarnRewardsBanner()
+  const {renderBanner: renderEarnRewardsBanner} = useEarnRewardsBanner()
 
   const strings = useStrings()
   const {atoms: ta, palette: p, isDark} = useTheme()
@@ -100,10 +99,6 @@ export const TxHistory = () => {
 
     return unsubscribe
   }, [navigation, walletNavigation])
-
-  // DEV: Show test button in development mode
-  const showTestButton = __DEV__
-
   return (
     <LinearGradient
       colors={
@@ -147,31 +142,6 @@ export const TxHistory = () => {
         </Text>
 
         <Space.Height.xl />
-
-        {showTestButton && (
-          <>
-            <View style={[a.px_lg]}>
-              <TouchableOpacity
-                onPress={toggleForceShow}
-                style={[
-                  a.py_sm,
-                  a.px_md,
-                  a.items_center,
-                  {
-                    backgroundColor: p.primary_600,
-                    borderRadius: 8,
-                  },
-                ]}
-              >
-                <Text style={[a.body_2_md_medium, {color: p.white_static}]}>
-                  🧪 Test Earn Rewards Banner
-                </Text>
-              </TouchableOpacity>
-            </View>
-
-            <Space.Height.md />
-          </>
-        )}
 
         <LockedDeposit />
 
