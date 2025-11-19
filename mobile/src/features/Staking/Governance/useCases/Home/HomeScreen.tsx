@@ -308,8 +308,8 @@ const NeverParticipatedInGovernanceVariant = () => {
   }
 
   const handleDelegate = () => {
+    if (isCreatingTx) return
     openDRepIdModal(async (options) => {
-      if (isCreatingTx) return
       const stakingKey = wallet.getStakingKey()
 
       setDelegatePending(options)
