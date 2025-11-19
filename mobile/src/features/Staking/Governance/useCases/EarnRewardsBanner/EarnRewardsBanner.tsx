@@ -1,3 +1,4 @@
+import type {Gradient} from '@yoroi/theme'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import {LinearGradient} from 'expo-linear-gradient'
@@ -16,12 +17,16 @@ type Props = {
 
 export const EarnRewardsBanner = ({onPress, onDismiss}: Props) => {
   const strings = useStrings()
-  const {palette: p} = useTheme()
+  const {palette: p, isDark} = useTheme()
+
+  const gradientColors: Gradient = isDark
+    ? [p.secondary_100, p.primary_200]
+    : p.bg_gradient_1
 
   return (
     <View style={[a.p_lg, a.relative, a.overflow_hidden, styles.container]}>
       <LinearGradient
-        colors={['#E4E8F7', '#C6F7ED']}
+        colors={gradientColors}
         start={{x: 0, y: 0}}
         end={{x: 1, y: 1}}
         style={StyleSheet.absoluteFillObject}
