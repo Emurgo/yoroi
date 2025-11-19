@@ -17,7 +17,10 @@ import {usePrefetchStakingInfo} from '~/features/Dashboard/ui/shared/StakePoolIn
 import {useCanVote} from '~/features/RegisterCatalyst/common/hooks'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
+import {
+  BackButton,
+  defaultStackNavigationOptions,
+} from '~/kernel/navigation/common/helpers'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {MenuRoutes} from '~/kernel/navigation/types'
 import {Icon} from '~/ui/Icon'
@@ -25,6 +28,7 @@ import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
 
+import {AirdropScreen} from '../Airdrop/ui/AirdropScreen'
 import {InsufficientFundsModal} from '../RegisterCatalyst/common/InsufficientFundsModal'
 import {NetworkTag} from '../Settings/ui/shared/NetworkTag'
 import {usePoolTransition} from '../Staking/Staking/PoolTransition/usePoolTransition'
@@ -47,6 +51,14 @@ export const MenuNavigator = () => {
         name="_menu"
         component={Menu}
         options={{title: strings.menu.menu}}
+      />
+      <MenuStack.Screen
+        name="airdrop"
+        component={AirdropScreen}
+        options={{
+          title: strings.menu.airdrop,
+          headerLeft: (props) => <BackButton {...props} />,
+        }}
       />
     </MenuStack.Navigator>
   )
@@ -97,6 +109,11 @@ export const Menu = () => {
           label={strings.menu.catalystVoting}
           onPress={navigateTo.catalystVoting}
           left={<Icon.Catalyst size={24} color={p.gray_600} />}
+        />
+        <Airdrop
+          label={strings.menu.airdrop}
+          onPress={navigateTo.airdrop}
+          left={<Icon.Coins2 size={24} color={p.gray_600} />}
         />
         <KnowledgeBase //
           label={strings.menu.knowledgeBase}
@@ -192,6 +209,7 @@ const UtxoList = Item
 const Governance = Item
 const AppSettings = Item
 const KnowledgeBase = Item
+const Airdrop = Item
 const Catalyst = ({
   label,
   left,
@@ -248,6 +266,7 @@ const useNavigateTo = () => {
     navigateToStakingDashboard,
     navigateToCatalystVotingDashboard,
     navigateToUtxoList,
+    navigateToAirdrop,
   } = useWalletNavigation()
   const {wallet} = useSelectedWallet()
 
@@ -266,5 +285,6 @@ const useNavigateTo = () => {
     support: () => Linking.openURL(SUPPORT_TICKET_LINK),
     knowledgeBase: () => Linking.openURL(KNOWLEDGE_BASE_LINK),
     governanceCentre: () => navigateToGovernanceCentre(),
+    airdrop: () => navigateToAirdrop(),
   }
 }

@@ -5,6 +5,7 @@ import * as React from 'react'
 import {LayoutAnimation, Text, View} from 'react-native'
 
 import infoIcon from '~/assets/img/icon/info-light-green.png'
+import {useAirdropBanner} from '~/features/Airdrop/common/useAirdropBanner'
 import {useBuyCryptoBanner} from '~/features/Exchange/common/useBuyCryptoBanner'
 import {useGetImportantAlertsModal} from '~/features/Notifications/common/GetImportantAlertsModal'
 import {useGovernanceBanner} from '~/features/Staking/Governance/useCases/useGovernanceBanner'
@@ -28,6 +29,7 @@ export const TxHistory = () => {
   useGovernanceBanner()
   useBuyCryptoBanner()
   useUtxoConsolidationBanner()
+  useAirdropBanner()
 
   const strings = useStrings()
   const {atoms: ta, palette: p, isDark} = useTheme()

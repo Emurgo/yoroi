@@ -326,6 +326,7 @@ export type NftRouteNavigation = StackNavigationProp<NftRoutes>
 export type MenuRoutes = {
   '_menu': undefined
   'voting-registration': undefined
+  'airdrop': undefined
 }
 
 export type AppRoutes = {

@@ -398,17 +398,44 @@ export class WalletManager {
 
     // metas dictates wallets to be loaded
     if (metasToLoad.length > 0) {
-      const loadedWallets = await Promise.all(
-        metasToLoad.map(({id, implementation}) =>
-          this.loadWallet({
-            id,
-            implementation,
-            isForced,
-            network,
-          }),
-        ),
+      const loadedWallets = await Promise.allSettled(
+        metasToLoad.map(async ({id, implementation}) => {
+          try {
+            return await this.loadWallet({
+              id,
+              implementation,
+              isForced,
+              network,
+            })
+          } catch (error) {
+            // Return error with wallet ID for better logging
+            throw {error, walletId: id, implementation}
+          }
+        }),
       )
-      for (const wallet of loadedWallets) this.#wallets.set(wallet.id, wallet)
+      
+      // Filter out failed wallet loads
+      for (let i = 0; i < loadedWallets.length; i++) {
+        const result = loadedWallets[i]
+        const meta = metasToLoad[i]
+        
+        if (result.status === 'fulfilled') {
+          this.#wallets.set(result.value.id, result.value)
+        } else {
+          const errorInfo = result.reason as {error: unknown; walletId: string; implementation: Wallet.Implementation} | unknown
+          const errorMessage = errorInfo && typeof errorInfo === 'object' && 'error' in errorInfo
+            ? (errorInfo.error instanceof Error ? errorInfo.error.message : String(errorInfo.error))
+            : String(result.reason)
+            
+          logger.debug('WalletManager: hydrate skipped wallet (missing accountPubKeyHex)', {
+            walletId: meta?.id,
+            implementation: meta?.implementation,
+            isReadOnly: meta?.isReadOnly,
+            network,
+            error: errorMessage,
+          })
+        }
+      }
     }
 
     return {
@@ -608,9 +635,14 @@ export class WalletManager {
       accountVisual,
       implementation,
       isForced,
+      hasAccountPubKeyHex: !!accountPubKeyHex,
     })
-    if (!accountPubKeyHex)
-      throwLoggedError('WalletManager: loadWallet accountPubKeyHex not found')
+
+    if (!accountPubKeyHex) {
+      // Don't log as error - this is expected for readonly wallets without accountPubKeyHex
+      // The error will be caught and handled gracefully in hydrate()
+      throw new Error('WalletManager: loadWallet accountPubKeyHex not found')
+    }
 
     const wallet = await walletFactory.build({
       id,

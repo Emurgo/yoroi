@@ -605,6 +605,18 @@ export const useWalletNavigation = () => {
         params: {screen: 'analytics'},
       })
     },
+
+    navigateToAirdrop: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'menu',
+          params: {
+            screen: 'airdrop',
+          },
+        },
+      })
+    },
   } as const)
 
   return walletNavigation.current

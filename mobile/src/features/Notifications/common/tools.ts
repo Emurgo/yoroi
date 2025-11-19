@@ -105,6 +105,9 @@ export const handleBannerAction = async (options: {
     case BannerIds.UtxoConsolidation:
       walletNavigation.navigateToUtxoConsolidation()
       break
+    case BannerIds.Airdrop:
+      walletNavigation.navigateToAirdrop()
+      break
     default:
   }
 }

@@ -37,4 +37,8 @@ export const menuMessages = defineMessages({
     id: 'menu.governanceCentre',
     defaultMessage: '!!!Governance Centre',
   },
+  airdrop: {
+    id: 'menu.airdrop',
+    defaultMessage: '!!!Airdrop',
+  },
 })
