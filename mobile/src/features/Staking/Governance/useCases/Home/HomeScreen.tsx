@@ -314,7 +314,7 @@ const NeverParticipatedInGovernanceVariant = () => {
 
       setDelegatePending(options)
 
-      const certificate = createDelegationCertificate({
+      const certificate = await createDelegationCertificate({
         hash: options.hash,
         type: options.type,
         stakingKey,
@@ -329,7 +329,7 @@ const NeverParticipatedInGovernanceVariant = () => {
     })
   }
 
-  const handleDelegateToYoroi = () => {
+  const handleDelegateToYoroi = async () => {
     if (isCreatingTx) return
     const stakingKey = wallet.getStakingKey()
 
@@ -339,7 +339,7 @@ const NeverParticipatedInGovernanceVariant = () => {
       CIP105: false,
     })
 
-    const certificate = createDelegationCertificate({
+    const certificate = await createDelegationCertificate({
       hash: GOVERNANCE_YOROI_DREP_ID_HEX,
       type: 'key',
       stakingKey,
@@ -352,12 +352,12 @@ const NeverParticipatedInGovernanceVariant = () => {
     submit(certs)
   }
 
-  const handleAbstain = () => {
+  const handleAbstain = async () => {
     if (isCreatingTx) return
     const stakingKey = wallet.getStakingKey()
     setAbstainPending()
 
-    const certificate = createVotingCertificate({
+    const certificate = await createVotingCertificate({
       vote: 'abstain',
       stakingKey,
     })
@@ -369,12 +369,12 @@ const NeverParticipatedInGovernanceVariant = () => {
     submit(certs)
   }
 
-  const handleNoConfidence = () => {
+  const handleNoConfidence = async () => {
     if (isCreatingTx) return
     const stakingKey = wallet.getStakingKey()
     setNoConfidencePending()
 
-    const certificate = createVotingCertificate({
+    const certificate = await createVotingCertificate({
       vote: 'no-confidence',
       stakingKey,
     })

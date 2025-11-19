@@ -69,6 +69,7 @@ export const useGovernanceVoteFlow = ({
         governanceActions.handleNoConfidenceAction({
           unsignedTx,
         })
+        return
       }
 
       optionsOnSuccess?.(unsignedTx)
