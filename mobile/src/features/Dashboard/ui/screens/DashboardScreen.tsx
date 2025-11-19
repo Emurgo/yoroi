@@ -1,6 +1,6 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 
-import {useNavigation} from '@react-navigation/native'
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {StackNavigationProp} from '@react-navigation/stack'
 import BigNumber from 'bignumber.js'
 import * as React from 'react'
@@ -16,6 +16,7 @@ import {useBalances} from '~/features/Portfolio/common/hooks/useBalances'
 import {StakeRewardsWithdrawalOperation} from '~/features/ReviewTx/common/operations'
 import {useGovernanceParticipation} from '~/features/Staking/Governance/common/helpers'
 import {WithdrawGovernanceWarningModal} from '~/features/Staking/Governance/useCases/WithdrawGovernanceWarningModal/WithdrawGovernanceWarningModal'
+import {usePrefetchPoolList} from '~/features/Staking/Staking/PoolList/usePoolList'
 import {PoolTransitionNotice} from '~/features/Staking/Staking/PoolTransition/PoolTransitionNotice'
 import {usePoolTransition} from '~/features/Staking/Staking/PoolTransition/usePoolTransition'
 import {useCreateWithdrawTx} from '~/features/Staking/hooks/useCreateWithdrawTx'
@@ -46,6 +47,14 @@ export const DashboardScreen = () => {
   const strings = useStrings()
   const navigateTo = useNavigateTo()
   const {isPoolRetiring} = usePoolTransition()
+  const prefetchPoolList = usePrefetchPoolList()
+
+  // Prefetch pool list when screen is focused
+  useFocusEffect(
+    React.useCallback(() => {
+      prefetchPoolList()
+    }, [prefetchPoolList]),
+  )
   const {
     isPending: isWithdrawLoading,
     hasRewards,

@@ -1356,6 +1356,7 @@ export const useStrings = () => {
           title: f(stakingMessages.noPoolDataDialogTitle),
           message: f(stakingMessages.noPoolDataDialogMessage),
         },
+        searchPools: f(stakingMessages.searchPools),
         confirmDelegation: {
           title: f(stakingMessages.confirmDelegationTitle),
           message: f(stakingMessages.confirmDelegationMessage),

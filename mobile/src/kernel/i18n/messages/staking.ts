@@ -38,7 +38,7 @@ export const stakingMessages = defineMessages({
     defaultMessage: '!!!Stake Pools',
   },
   searchPools: {
-    id: 'nft.navigation.search',
+    id: 'components.staking.searchPools',
     defaultMessage: '!!!Search Pools',
   },
   noPoolsFound: {

@@ -1,19 +1,12 @@
 import {useTheme} from '@yoroi/theme'
-import {Wallet} from '@yoroi/types'
 
-import {
-  UseQueryOptions,
-  UseSuspenseQueryOptions,
-  useQuery,
-  useQueryClient,
-} from '@tanstack/react-query'
+import {UseSuspenseQueryOptions, useQueryClient} from '@tanstack/react-query'
 import * as React from 'react'
 import {ActivityIndicator, View} from 'react-native'
 
 import {useStakingInfo} from '~/features/Staking/hooks/useStakingInfo'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {ButtonProps} from '~/ui/Button/Button'
-import {createDelegationTxFromWallet} from '~/wallets/cardano/transaction-recipes'
 import {YoroiWallet} from '~/wallets/cardano/types'
 import {StakingInfo} from '~/wallets/types/staking'
 
@@ -65,42 +58,5 @@ const useStakePoolIds = (
   return {
     ...query,
     stakePoolIds: stakingInfo?.status === 'staked' ? [stakingInfo.poolId] : [],
-  }
-}
-
-export const useStakingTx = (
-  {
-    wallet,
-    meta,
-    poolId,
-  }: {wallet: YoroiWallet; poolId?: string; meta: Wallet.Meta},
-  options: UseQueryOptions<
-    {cbor: string},
-    Error,
-    {cbor: string},
-    [string, 'stakingTx']
-  >,
-) => {
-  const query = useQuery({
-    ...options,
-    retry: false,
-    queryKey: [wallet.id, 'stakingTx'],
-    queryFn: async () => {
-      if (poolId == null) throw new Error('invalid state')
-      const accountStates = await wallet.fetchAccountState()
-      const accountState = accountStates[wallet.rewardAddressHex]
-      if (!accountState) throw new Error('Account state not found')
-
-      return createDelegationTxFromWallet(wallet, {
-        poolId,
-        addressMode: meta.addressMode,
-      })
-    },
-    enabled: poolId != null,
-  })
-
-  return {
-    ...query,
-    stakingTx: query.data,
   }
 }

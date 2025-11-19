@@ -6,6 +6,7 @@ import {Image} from 'expo-image'
 import * as React from 'react'
 import {ActivityIndicator, Text, TouchableOpacity, View} from 'react-native'
 
+import {useSearch} from '~/features/Search/SearchContext'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {Space} from '~/ui/Space/Space'
 import {formatTokenWithText} from '~/wallets/utils/format'
@@ -19,7 +20,63 @@ type PoolListProps = {
 
 export const PoolList = ({onPoolSelect}: PoolListProps) => {
   const {atoms: ta, palette: p} = useTheme()
-  const {pools, isLoading, error, loadMore, hasMore} = usePoolList()
+  const {search, setLoading} = useSearch()
+
+  // Simple debounce - update debouncedSearch when search changes
+  const [debouncedSearch, setDebouncedSearch] = React.useState(search)
+
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(search)
+    }, 200)
+
+    return () => clearTimeout(timer)
+  }, [search])
+
+  // Compute search query from debounced search
+  const searchQuery = debouncedSearch.trim() || undefined
+
+  const {pools, isLoading, error, loadMore, hasMore, isFetchingMore} =
+    usePoolList(searchQuery)
+
+  // Sync loading state with search context
+  React.useEffect(() => {
+    // Only show loading spinner when actively searching (not initial load)
+    const isSearching = searchQuery !== undefined && searchQuery.length > 0
+    setLoading(isSearching && isLoading)
+  }, [isLoading, searchQuery, setLoading])
+
+  // Prefetch next page when we're 70% through the list
+  const handleEndReached = React.useCallback(() => {
+    if (hasMore && !isFetchingMore) {
+      loadMore()
+    }
+  }, [hasMore, isFetchingMore, loadMore])
+
+  // Memoize renderItem to prevent recreating on every render
+  const renderItem = React.useCallback(
+    ({item}: {item: ExplorerPoolInfo}) => (
+      <PoolCard pool={item} onPress={() => onPoolSelect(item.hash)} />
+    ),
+    [onPoolSelect],
+  )
+
+  // Memoize keyExtractor
+  const keyExtractor = React.useCallback(
+    (item: ExplorerPoolInfo) => item.hash,
+    [],
+  )
+
+  // Memoize footer component (must be before early returns)
+  const footerComponent = React.useMemo(
+    () =>
+      isFetchingMore ? (
+        <View style={[a.p_lg, a.align_center]}>
+          <ActivityIndicator size="small" color={p.el_primary_medium} />
+        </View>
+      ) : null,
+    [isFetchingMore, p.el_primary_medium],
+  )
 
   if (isLoading && pools.length === 0) {
     return (
@@ -43,39 +100,62 @@ export const PoolList = ({onPoolSelect}: PoolListProps) => {
     <View style={[a.flex_1]}>
       <FlashList
         data={pools}
-        renderItem={({item}) => (
-          <PoolCard pool={item} onPress={() => onPoolSelect(item.hash)} />
-        )}
-        ItemSeparatorComponent={() => <Space.Height.md />}
-        keyExtractor={(item) => item.hash}
+        renderItem={renderItem}
+        ItemSeparatorComponent={ItemSeparator}
+        keyExtractor={keyExtractor}
         contentContainerStyle={a.p_lg}
         estimatedItemSize={120}
-        onEndReached={hasMore ? loadMore : undefined}
-        onEndReachedThreshold={0.5}
-        ListFooterComponent={
-          isLoading && pools.length > 0 ? (
-            <View style={[a.p_lg, a.align_center]}>
-              <ActivityIndicator size="small" color={p.el_primary_medium} />
-            </View>
-          ) : null
-        }
+        onEndReached={handleEndReached}
+        onEndReachedThreshold={0.7}
+        drawDistance={500}
+        removeClippedSubviews={true}
+        ListFooterComponent={footerComponent}
       />
     </View>
   )
 }
+
+const ItemSeparator = React.memo(() => <Space.Height.md />)
+ItemSeparator.displayName = 'ItemSeparator'
 
 type PoolCardProps = {
   pool: ExplorerPoolInfo
   onPress: () => void
 }
 
-const PoolCard = ({pool, onPress}: PoolCardProps) => {
+const PoolCard = React.memo(({pool, onPress}: PoolCardProps) => {
   const {wallet} = useSelectedWallet()
   const {atoms: ta, palette: p} = useTheme()
-  const poolName =
-    pool.name && pool.ticker
-      ? `${pool.name} [${pool.ticker}]`
-      : pool.name || pool.ticker || 'Unknown Pool'
+
+  // Memoize pool name calculation
+  const poolName = React.useMemo(
+    () =>
+      pool.name && pool.ticker
+        ? `${pool.name} [${pool.ticker}]`
+        : pool.name || pool.ticker || 'Unknown Pool',
+    [pool.name, pool.ticker],
+  )
+
+  // Memoize formatted stake value
+  const formattedStake = React.useMemo(() => {
+    if (!pool.stake) return null
+
+    try {
+      // Validate that stake is a valid number string before calling asQuantity
+      const stakeNum = Number(pool.stake)
+      if (isNaN(stakeNum) || !isFinite(stakeNum) || stakeNum <= 0) {
+        return null
+      }
+
+      return formatTokenWithText(
+        asQuantity(pool.stake),
+        wallet.portfolioPrimaryTokenInfo,
+      )
+    } catch {
+      // If asQuantity throws, return null to gracefully handle invalid values
+      return null
+    }
+  }, [pool.stake, wallet.portfolioPrimaryTokenInfo])
 
   return (
     <TouchableOpacity
@@ -95,6 +175,8 @@ const PoolCard = ({pool, onPress}: PoolCardProps) => {
           <Image
             source={{uri: pool.pic}}
             style={[{width: 48, height: 48, borderRadius: 24}]}
+            cachePolicy="memory-disk"
+            contentFit="cover"
           />
         )}
 
@@ -118,21 +200,16 @@ const PoolCard = ({pool, onPress}: PoolCardProps) => {
               />
             )}
 
-            {pool.stake && (
-              <PoolStat
-                label="Stake"
-                value={formatTokenWithText(
-                  asQuantity(pool.stake),
-                  wallet.portfolioPrimaryTokenInfo,
-                )}
-              />
+            {formattedStake && (
+              <PoolStat label="Stake" value={formattedStake} />
             )}
           </View>
         </View>
       </View>
     </TouchableOpacity>
   )
-}
+})
+PoolCard.displayName = 'PoolCard'
 
 type PoolStatProps = {
   label: string

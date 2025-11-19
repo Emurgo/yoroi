@@ -1047,6 +1047,7 @@
   "nft.gallery.noNftsInWallet": "No collectibles added to your wallet yet",
   "nft.gallery.reloadApp": "Try to restart the app.",
   "nft.navigation.search": "Search",
+  "components.staking.searchPools": "Search Pools",
   "nft.navigation.title": "Gallery",
   "scan.cameraPermissionDenied.help": "It looks the app doesn't have access to your device camera, if you are no longer asked to grant camera permission, please go to your device settings, search for Yoroi and allow access to the camera",
   "scan.cameraPermissionDenied.title": "The app needs access to your camera",
