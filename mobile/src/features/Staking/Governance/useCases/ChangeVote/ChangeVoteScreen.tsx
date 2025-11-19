@@ -40,11 +40,6 @@ export const ChangeVoteScreen = () => {
     : null
   const {openModal} = useModal()
   const {manager} = useGovernance()
-  const [, setPendingDelegateOptions] = React.useState<{
-    hash: string
-    type: 'key' | 'script'
-    CIP105: boolean
-  } | null>(null)
 
   const createDelegationCertificate = useDelegationCertificate()
   const createVotingCertificate = useVotingCertificate()
@@ -91,12 +86,6 @@ export const ChangeVoteScreen = () => {
         hash: options.hash,
         type: options.type,
         stakingKey,
-      })
-
-      setPendingDelegateOptions({
-        hash: options.hash,
-        type: options.type,
-        CIP105: options.CIP105,
       })
 
       submit([certificate])
