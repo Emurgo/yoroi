@@ -113,7 +113,7 @@ export const Menu = () => {
         <Airdrop
           label={strings.menu.airdrop}
           onPress={navigateTo.airdrop}
-          left={<Icon.Coins2 size={24} color={p.gray_600} />}
+          left={<Icon.Airdrop size={24} color={p.gray_600} />}
         />
         <KnowledgeBase //
           label={strings.menu.knowledgeBase}
