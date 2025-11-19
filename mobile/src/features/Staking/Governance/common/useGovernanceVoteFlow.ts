@@ -3,8 +3,8 @@ import {Wallet} from '@yoroi/types'
 import {Certificate} from '@emurgo/cross-csl-core'
 import * as React from 'react'
 
-import {UsePromiseOptionsWithoutPromise} from '~/hooks/usePromise'
 import {useCreateGovernanceTx} from '~/features/Staking/hooks/useCreateGovernanceTx'
+import {UsePromiseOptionsWithoutPromise} from '~/hooks/usePromise'
 import {YoroiWallet} from '~/wallets/cardano/types'
 import {YoroiUnsignedTx} from '~/wallets/types/yoroi'
 
@@ -17,6 +17,12 @@ type DelegateOptions = {
   type: 'key' | 'script'
   CIP105: boolean
 }
+
+type PendingAction =
+  | {type: 'delegate'; options: DelegateOptions}
+  | {type: 'abstain'}
+  | {type: 'no-confidence'}
+  | null
 
 type UseGovernanceVoteFlowOptions = UsePromiseOptionsWithoutPromise<
   YoroiUnsignedTx,
@@ -35,14 +41,14 @@ export const useGovernanceVoteFlow = ({
   const governanceActions = useGovernanceActions()
 
   const [pendingVote, setPendingVote] = React.useState<PendingVote>(null)
-  const pendingVoteRef = React.useRef<PendingVote>(null)
-  const delegateOptionsRef = React.useRef<DelegateOptions | null>(null)
+  const pendingActionRef = React.useRef<PendingAction>(null)
+  const {onSuccess: optionsOnSuccess, ...rest} = options ?? {}
 
   const createGovernanceTxMutation = useCreateGovernanceTx(wallet, {
-    ...options,
+    ...rest,
     onSuccess: (unsignedTx) => {
-      if (pendingVoteRef.current === 'delegate' && delegateOptionsRef.current) {
-        const {hash, type, CIP105} = delegateOptionsRef.current
+      if (pendingActionRef.current?.type === 'delegate') {
+        const {hash, type, CIP105} = pendingActionRef.current.options
         governanceActions.handleDelegateAction({
           unsignedTx,
           hash,
@@ -52,35 +58,36 @@ export const useGovernanceVoteFlow = ({
         return
       }
 
-      if (pendingVoteRef.current === 'abstain') {
+      if (pendingActionRef.current?.type === 'abstain') {
         governanceActions.handleAbstainAction({
           unsignedTx,
         })
         return
       }
 
-      if (pendingVoteRef.current === 'no-confidence') {
+      if (pendingActionRef.current?.type === 'no-confidence') {
         governanceActions.handleNoConfidenceAction({
           unsignedTx,
         })
       }
+
+      optionsOnSuccess?.(unsignedTx)
     },
   })
 
   const setDelegatePending = (options: DelegateOptions) => {
     setPendingVote('delegate')
-    pendingVoteRef.current = 'delegate'
-    delegateOptionsRef.current = options
+    pendingActionRef.current = {type: 'delegate', options}
   }
 
   const setAbstainPending = () => {
     setPendingVote('abstain')
-    pendingVoteRef.current = 'abstain'
+    pendingActionRef.current = {type: 'abstain'}
   }
 
   const setNoConfidencePending = () => {
     setPendingVote('no-confidence')
-    pendingVoteRef.current = 'no-confidence'
+    pendingActionRef.current = {type: 'no-confidence'}
   }
 
   const submit = (certificates: Certificate[]) => {
@@ -99,5 +106,3 @@ export const useGovernanceVoteFlow = ({
     submit,
   } as const
 }
-
-

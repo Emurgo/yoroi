@@ -309,6 +309,7 @@ const NeverParticipatedInGovernanceVariant = () => {
 
   const handleDelegate = () => {
     openDRepIdModal(async (options) => {
+      if (isCreatingTx) return
       const stakingKey = wallet.getStakingKey()
 
       setDelegatePending(options)
@@ -329,6 +330,7 @@ const NeverParticipatedInGovernanceVariant = () => {
   }
 
   const handleDelegateToYoroi = () => {
+    if (isCreatingTx) return
     const stakingKey = wallet.getStakingKey()
 
     setDelegatePending({
@@ -351,6 +353,7 @@ const NeverParticipatedInGovernanceVariant = () => {
   }
 
   const handleAbstain = () => {
+    if (isCreatingTx) return
     const stakingKey = wallet.getStakingKey()
     setAbstainPending()
 
@@ -367,6 +370,7 @@ const NeverParticipatedInGovernanceVariant = () => {
   }
 
   const handleNoConfidence = () => {
+    if (isCreatingTx) return
     const stakingKey = wallet.getStakingKey()
     setNoConfidencePending()
 

@@ -78,6 +78,7 @@ export const ChangeVoteScreen = () => {
 
   const handleDelegate = () => {
     openDRepIdModal(async (options) => {
+      if (isCreatingTx) return
       const stakingKey = wallet.getStakingKey()
 
       setDelegatePending(options)
@@ -93,6 +94,7 @@ export const ChangeVoteScreen = () => {
   }
 
   const handleDelegateToYoroi = async () => {
+    if (isCreatingTx) return
     const stakingKey = wallet.getStakingKey()
 
     setDelegatePending({
@@ -111,6 +113,7 @@ export const ChangeVoteScreen = () => {
   }
 
   const handleAbstain = async () => {
+    if (isCreatingTx) return
     const stakingKey = wallet.getStakingKey()
     setAbstainPending()
 
@@ -123,6 +126,7 @@ export const ChangeVoteScreen = () => {
   }
 
   const handleNoConfidence = async () => {
+    if (isCreatingTx) return
     const stakingKey = wallet.getStakingKey()
     setNoConfidencePending()
 
