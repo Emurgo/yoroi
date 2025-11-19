@@ -67,15 +67,10 @@ export const useEarnRewardsBanner = () => {
 
   const handleCtaPress = React.useCallback(async () => {
     try {
-      if (!topPoolId) {
-        logger.error('Earn rewards banner: No pool ID available')
-        return
-      }
-
-      // Create pool delegation transaction
-      // NOTE: This delegates to stakepool only. DRep delegation happens separately.
-      // TODO: Combine both when wallet API supports it.
-      const unsignedTx = await createEarnRewardsTx(meta.addressMode, topPoolId)
+      const unsignedTx = await createEarnRewardsTx(
+        meta.addressMode,
+        topPoolId ?? undefined,
+      )
       unsignedTxChanged(unsignedTx)
       navigateToTxReview({
         context: 'delegate',
