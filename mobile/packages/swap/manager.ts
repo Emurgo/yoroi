@@ -66,13 +66,23 @@ export const swapManagerMaker: Swap.ManagerMaker = ({
 
   storage.settings.read().then(assignSettings)
 
+  // Only include adapters that have a partner code in the partners object
+  const adapters: Partial<Record<Swap.Aggregator, Swap.Api>> = {}
+  if (partners?.[Swap.Aggregator.Dexhunter]) {
+    adapters[Swap.Aggregator.Dexhunter] = dexhunterApi
+  }
+  if (partners?.[Swap.Aggregator.Muesliswap]) {
+    adapters[Swap.Aggregator.Muesliswap] = muesliswapApi
+  }
+  if (partners?.[Swap.Aggregator.Minswap]) {
+    adapters[Swap.Aggregator.Minswap] = minswapApi
+  }
+  if (partners?.[Swap.Aggregator.Steelswap]) {
+    adapters[Swap.Aggregator.Steelswap] = steelswapApi
+  }
+
   const api = apiManagerMaker(
-    {
-      [Swap.Aggregator.Dexhunter]: dexhunterApi,
-      [Swap.Aggregator.Muesliswap]: muesliswapApi,
-      [Swap.Aggregator.Minswap]: minswapApi,
-      [Swap.Aggregator.Steelswap]: steelswapApi,
-    },
+    adapters as Record<Swap.Aggregator, Swap.Api>,
     settings,
     getPtPrice(primaryTokenInfo, dexhunterApi),
   )
@@ -86,7 +96,7 @@ export const swapManagerMaker: Swap.ManagerMaker = ({
 }
 
 const apiManagerMaker = (
-  adapters: Record<Swap.Aggregator, Swap.Api>,
+  adapters: Partial<Record<Swap.Aggregator, Swap.Api>>,
   settings: Swap.ManagerSettings,
   getPrice: (id: Portfolio.Token.Id) => Promise<number>,
 ): Swap.Api => {
@@ -95,7 +105,10 @@ const apiManagerMaker = (
     if (settings.routingPreference === 'auto') {
       return Object.keys(adapters) as Swap.Aggregator[]
     }
-    return settings.routingPreference
+    // Filter to only include aggregators that exist in adapters
+    return settings.routingPreference.filter(
+      (agg) => adapters[agg] !== undefined,
+    )
   }
 
   return freeze(
@@ -104,7 +117,9 @@ const apiManagerMaker = (
         const enabledAggregators = getEnabledAggregators()
 
         const settledResults = await Promise.allSettled(
-          enabledAggregators.map((aggregator) => adapters[aggregator].tokens()),
+          enabledAggregators.map((aggregator) =>
+            adapters[aggregator]!.tokens(),
+          ),
         )
 
         const responses: Array<Api.Response<Portfolio.Token.Info[]>> = []
@@ -149,10 +164,14 @@ const apiManagerMaker = (
       },
 
       async orders() {
-        const enabledAggregators = Object.keys(adapters) as Swap.Aggregator[]
+        const enabledAggregators = Object.keys(adapters).filter(
+          (agg) => adapters[agg as Swap.Aggregator] !== undefined,
+        ) as Swap.Aggregator[]
 
         const responses: Array<Api.Response<Swap.Order[]>> = await Promise.all(
-          enabledAggregators.map((aggregator) => adapters[aggregator].orders()),
+          enabledAggregators.map((aggregator) =>
+            adapters[aggregator]!.orders(),
+          ),
         )
 
         warnAllLeft(...responses)
@@ -200,7 +219,7 @@ const apiManagerMaker = (
         const responses: Array<Api.Response<Swap.LimitOptionsResponse>> =
           await Promise.all(
             enabledAggregators.map((aggregator) =>
-              adapters[aggregator].limitOptions(body),
+              adapters[aggregator]!.limitOptions(body),
             ),
           )
 
@@ -249,7 +268,7 @@ const apiManagerMaker = (
         const settledResults = await Promise.allSettled(
           enabledAggregators.map(async (aggregator) => {
             // If amountOut is provided and adapter supports reverse estimate, rely on adapter implementation.
-            const response = await adapters[aggregator].estimate(body)
+            const response = await adapters[aggregator]!.estimate(body)
             return response
           }),
         )
@@ -324,7 +343,7 @@ const apiManagerMaker = (
         const responses: Array<Api.Response<Swap.CreateResponse>> =
           await Promise.all(
             enabledAggregators.map((aggregator) =>
-              adapters[aggregator].create(body),
+              adapters[aggregator]!.create(body),
             ),
           )
 
@@ -367,12 +386,14 @@ const apiManagerMaker = (
         // First, try the appropriate adapter based on aggregator
         const initialAdapter =
           body.order.aggregator === Swap.Aggregator.Muesliswap
-            ? adapters.muesliswap
+            ? adapters[Swap.Aggregator.Muesliswap]
             : body.order.aggregator === Swap.Aggregator.Minswap
-              ? adapters.minswap
+              ? adapters[Swap.Aggregator.Minswap]
               : body.order.aggregator === Swap.Aggregator.Steelswap
-                ? adapters.steelswap
-                : adapters.dexhunter
+                ? adapters[Swap.Aggregator.Steelswap]
+                : adapters[Swap.Aggregator.Dexhunter]
+
+        if (!initialAdapter) return invalid
 
         const initialResponse = await initialAdapter.cancel(body)
 

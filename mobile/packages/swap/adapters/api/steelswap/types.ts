@@ -96,6 +96,7 @@ export type SwapEstimateRequest = {
   partner?: Partners | null
   hop?: boolean
   da?: Array<Record<string, number | string>> | string | null
+  isFloat?: boolean
 }
 
 export type BuildSwapRequest = {
@@ -116,6 +117,7 @@ export type BuildSwapRequest = {
   pAddress?: string | null
   feeAdust?: boolean
   ttl?: number
+  isFloat?: boolean
 }
 
 export type BuildSwapResponse = {
@@ -159,6 +161,7 @@ export type SwapHistoryRequest = {
   txType?: string[]
   page?: number
   pageSize?: number
+  isFloat?: boolean
 }
 
 export type TxRef = {
@@ -184,11 +187,7 @@ export type SteelswapApiConfig = {
   isPrimaryToken: (token: string | null | undefined) => boolean
   network: Chain.SupportedNetworks
   request?: FetchData
-  // External: Token ID in Portfolio format (policyId.hexName with dot)
-  getTokenDecimals?: (tokenId: Portfolio.Token.Id) => number
 }
 
-// Internal config for transformers: receives Portfolio format (with dot)
-export type SteelswapTransformersConfig = SteelswapApiConfig & {
-  getTokenDecimals: (tokenId: Portfolio.Token.Id) => number
-}
+// Internal config for transformers
+export type SteelswapTransformersConfig = SteelswapApiConfig

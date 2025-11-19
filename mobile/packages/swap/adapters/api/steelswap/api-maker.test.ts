@@ -183,16 +183,13 @@ describe('steelswapApiMaker', () => {
         lastPage: 0,
       }
 
-      mockConfig.request = jest
-        .fn()
-        .mockResolvedValueOnce(mockTokensApiResponse)
-        .mockResolvedValueOnce({
-          tag: 'right' as const,
-          value: {
-            status: 200,
-            data: mockResponse,
-          },
-        })
+      mockConfig.request = jest.fn().mockResolvedValue({
+        tag: 'right' as const,
+        value: {
+          status: 200,
+          data: mockResponse,
+        },
+      })
 
       const api = steelswapApiMaker(mockConfig)
       const result = await api.orders()
@@ -213,11 +210,11 @@ describe('steelswapApiMaker', () => {
     it('should handle estimate request successfully', async () => {
       const mockResponse: EstimateResponse = {
         tokenA: 'lovelace',
-        quantityA: 2000000,
+        quantityA: 2000000, // Already in decimal format (isFloat=true)
         tokenB:
           'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae45655534441',
-        quantityB: 1089627,
-        totalFee: 100000,
+        quantityB: 1089627, // Already in decimal format (isFloat=true)
+        totalFee: 0.1, // Already in ADA (isFloat=true)
         totalDeposit: 0,
         steelswapFee: 0,
         bonusOut: 0,
@@ -226,11 +223,11 @@ describe('steelswapApiMaker', () => {
           [
             {
               tokenA: 'lovelace',
-              quantityA: 2000000,
+              quantityA: 2000000, // Already in decimal format (isFloat=true)
               tokenB:
                 'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae45655534441',
-              quantityB: 1089627,
-              totalFee: 100000,
+              quantityB: 1089627, // Already in decimal format (isFloat=true)
+              totalFee: 0.1, // Already in ADA (isFloat=true)
               totalDeposit: 0,
               steelswapFee: 0,
               bonusOut: 0,
@@ -239,11 +236,11 @@ describe('steelswapApiMaker', () => {
                 {
                   dex: 'Splash',
                   poolId: 'test-pool-id',
-                  quantityA: 2000000,
-                  quantityB: 1089627,
-                  batcherFee: 100000,
+                  quantityA: 2000000, // Already in decimal format (isFloat=true)
+                  quantityB: 1089627, // Already in decimal format (isFloat=true)
+                  batcherFee: 0.1, // Already in ADA (isFloat=true)
                   deposit: 0,
-                  volumeFee: 1000,
+                  volumeFee: 1000, // Still in lovelace, will be converted
                 },
               ],
             },
@@ -251,16 +248,13 @@ describe('steelswapApiMaker', () => {
         ],
       }
 
-      mockConfig.request = jest
-        .fn()
-        .mockResolvedValueOnce(mockTokensApiResponse)
-        .mockResolvedValueOnce({
-          tag: 'right' as const,
-          value: {
-            status: 200,
-            data: mockResponse,
-          },
-        })
+      mockConfig.request = jest.fn().mockResolvedValue({
+        tag: 'right' as const,
+        value: {
+          status: 200,
+          data: mockResponse,
+        },
+      })
 
       const api = steelswapApiMaker(mockConfig)
       const result = await api.estimate({
@@ -273,8 +267,8 @@ describe('steelswapApiMaker', () => {
 
       expect(isRight(result)).toBe(true)
       if (isRight(result)) {
-        expect(result.value.data.totalInput).toBe(2) // 2000000 lovelace = 2 ADA
-        expect(result.value.data.totalOutput).toBe(1.089627) // 1089627 base units / 10^6
+        expect(result.value.data.totalInput).toBe(2000000) // Already in decimal format (isFloat=true)
+        expect(result.value.data.totalOutput).toBe(1089627) // Already in decimal format (isFloat=true)
       }
     })
 
@@ -364,11 +358,11 @@ describe('steelswapApiMaker', () => {
 
       const estimateResponse: EstimateResponse = {
         tokenA: 'lovelace',
-        quantityA: 2000000,
+        quantityA: 2000000, // Already in decimal format (isFloat=true)
         tokenB:
           'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae45655534441',
-        quantityB: 1089627,
-        totalFee: 100000,
+        quantityB: 1089627, // Already in decimal format (isFloat=true)
+        totalFee: 0.1, // Already in ADA (isFloat=true)
         totalDeposit: 0,
         steelswapFee: 0,
         bonusOut: 0,
@@ -377,11 +371,11 @@ describe('steelswapApiMaker', () => {
           [
             {
               tokenA: 'lovelace',
-              quantityA: 2000000,
+              quantityA: 2000000, // Already in decimal format (isFloat=true)
               tokenB:
                 'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae45655534441',
-              quantityB: 1089627,
-              totalFee: 100000,
+              quantityB: 1089627, // Already in decimal format (isFloat=true)
+              totalFee: 0.1, // Already in ADA (isFloat=true)
               totalDeposit: 0,
               steelswapFee: 0,
               bonusOut: 0,
@@ -390,11 +384,11 @@ describe('steelswapApiMaker', () => {
                 {
                   dex: 'Splash',
                   poolId: 'test-pool-id',
-                  quantityA: 2000000,
-                  quantityB: 1089627,
-                  batcherFee: 100000,
+                  quantityA: 2000000, // Already in decimal format (isFloat=true)
+                  quantityB: 1089627, // Already in decimal format (isFloat=true)
+                  batcherFee: 0.1, // Already in ADA (isFloat=true)
                   deposit: 0,
-                  volumeFee: 1000,
+                  volumeFee: 1000, // Still in lovelace, will be converted
                 },
               ],
             },
@@ -402,10 +396,9 @@ describe('steelswapApiMaker', () => {
         ],
       }
 
-      // Mock build request
+      // Mock build request and estimate request (called internally)
       mockConfig.request = jest
         .fn()
-        .mockResolvedValueOnce(mockTokensApiResponse)
         .mockResolvedValueOnce({
           tag: 'right' as const,
           value: {
@@ -413,7 +406,6 @@ describe('steelswapApiMaker', () => {
             data: buildResponse,
           },
         })
-        // Mock estimate request (called internally - cache is already populated so no tokens call)
         .mockResolvedValueOnce({
           tag: 'right' as const,
           value: {
@@ -435,9 +427,9 @@ describe('steelswapApiMaker', () => {
       expect(isRight(result)).toBe(true)
       if (isRight(result)) {
         expect(result.value.data.cbor).toBe('test-cbor-hex')
-        expect(result.value.data.totalInput).toBe(2) // 2000000 lovelace = 2 ADA
-        expect(result.value.data.totalOutput).toBe(1.089627) // 1089627 base units / 10^6
-        expect(result.value.data.totalFee).toBe(0.101) // 100000 (batcher) + 1000 (volume) + 0 (aggregator) = 101000 lovelace = 0.101 ADA
+        expect(result.value.data.totalInput).toBe(2000000) // Already in decimal format (isFloat=true)
+        expect(result.value.data.totalOutput).toBe(1089627) // Already in decimal format (isFloat=true)
+        expect(result.value.data.totalFee).toBe(0.1) // 0.1 (batcher) + 0 (steelswap) = 0.1 ADA (already converted)
       }
     })
 
@@ -449,7 +441,6 @@ describe('steelswapApiMaker', () => {
 
       mockConfig.request = jest
         .fn()
-        .mockResolvedValueOnce(mockTokensApiResponse)
         .mockResolvedValueOnce({
           tag: 'right' as const,
           value: {
@@ -457,7 +448,6 @@ describe('steelswapApiMaker', () => {
             data: buildResponse,
           },
         })
-        // Mock estimate request failure (cache is already populated so no tokens call)
         .mockResolvedValueOnce({
           tag: 'left' as const,
           error: {

@@ -1,5 +1,5 @@
 import {fetchData, isLeft} from '@yoroi/common'
-import {Api, Chain, Left, Portfolio, Swap} from '@yoroi/types'
+import {Api, Chain, Left, Swap} from '@yoroi/types'
 
 import {freeze} from 'immer'
 
@@ -50,30 +50,8 @@ export const steelswapApiMaker = (
 
   const baseUrl = baseUrls[network]
 
-  // Cache for token decimals: Portfolio token ID (policyId.hexName format) -> decimals
-  const tokenDecimalsCache = new Map<Portfolio.Token.Id, number>()
-
-  // Initialize cache with primary token (ADA/lovelace)
-  tokenDecimalsCache.set(
-    config.primaryTokenInfo.id,
-    config.primaryTokenInfo.decimals,
-  )
-
-  // Use external getTokenDecimals if provided, otherwise use cache
-  const getTokenDecimalsImpl = config.getTokenDecimals
-    ? config.getTokenDecimals
-    : (tokenId: Portfolio.Token.Id) => {
-        // Return cached decimals or default to 6 (most Cardano tokens use 6)
-        return tokenDecimalsCache.get(tokenId) ?? 6
-      }
-
-  // Check if cache is populated (has more than just the primary token)
-  const isCachePopulated = () =>
-    config.getTokenDecimals !== undefined || tokenDecimalsCache.size > 1
-
   const transformers = transformersMaker({
     ...config,
-    getTokenDecimals: getTokenDecimalsImpl,
   })
 
   const api = freeze(
@@ -86,15 +64,6 @@ export const steelswapApiMaker = (
         })
 
         if (isLeft(response)) return parseSteelswapError(response)
-
-        // Cache token decimals for conversion (using Portfolio format with dot)
-        for (const token of response.value.data) {
-          const portfolioId: Portfolio.Token.Id =
-            token.policyId === 'lovelace'
-              ? config.primaryTokenInfo.id
-              : (`${token.policyId}.${token.policyName || ''}` as Portfolio.Token.Id)
-          tokenDecimalsCache.set(portfolioId, token.decimals)
-        }
 
         return freeze(
           {
@@ -109,16 +78,12 @@ export const steelswapApiMaker = (
       },
 
       async orders() {
-        // Ensure cache is populated before using getTokenDecimals
-        if (!isCachePopulated()) {
-          await api.tokens()
-        }
-
         const requestBody: SwapHistoryRequest = {
           addresses: [address],
           txType: ['swap'],
           page: 0,
           pageSize: 100,
+          isFloat: true,
         }
 
         const response = await request<OrderStatusResponse>({
@@ -190,11 +155,6 @@ export const steelswapApiMaker = (
           })
         }
 
-        // Ensure cache is populated before using getTokenDecimals
-        if (!isCachePopulated()) {
-          await api.tokens()
-        }
-
         const requestBody = transformers.estimate.request(body)
 
         const response = await request<EstimateResponse>({
@@ -233,11 +193,6 @@ export const steelswapApiMaker = (
       },
 
       async create(body: Swap.CreateRequest) {
-        // Ensure cache is populated before using getTokenDecimals
-        if (!isCachePopulated()) {
-          await api.tokens()
-        }
-
         const requestBody = transformers.create.request(body)
 
         const response = await request<BuildSwapResponse>({

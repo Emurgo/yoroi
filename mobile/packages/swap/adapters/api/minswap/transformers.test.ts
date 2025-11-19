@@ -1,4 +1,4 @@
-import {Portfolio, Swap} from '@yoroi/types'
+import {Portfolio} from '@yoroi/types'
 
 import {transformersMaker} from './transformers'
 import {Dex} from './types'
@@ -72,78 +72,33 @@ describe('transformersMaker', () => {
       })
     })
 
-    it('should handle all protocol mappings in mapProtocolToDex', () => {
-      // Test various protocol mappings by using them in blocked protocols
+    it('should not include exclude_protocols when blockedProtocols is removed', () => {
       const mockRequest = {
         amountIn: 10,
-        blockedProtocols: [
-          Swap.Protocol.Minswap_v1,
-          Swap.Protocol.Minswap_stable,
-          Swap.Protocol.Muesliswap,
-          Swap.Protocol.Splash_v1,
-          Swap.Protocol.Sundaeswap_v3,
-          Swap.Protocol.Sundaeswap_v1,
-          Swap.Protocol.Vyfi_v1,
-          Swap.Protocol.Cswap,
-          Swap.Protocol.Wingriders_v2,
-          Swap.Protocol.Wingriders_v1,
-          Swap.Protocol.Wingriders_stable,
-          Swap.Protocol.Spectrum_v1,
-        ],
         slippage: 1,
         tokenIn: '.' as const,
         tokenOut: 'test-token.' as const,
       }
 
       const result = transformers.estimate.request(mockRequest)
-      expect(result.exclude_protocols).toHaveLength(12)
-      expect(result.exclude_protocols).toContain(Dex.Minswap)
-      expect(result.exclude_protocols).toContain(Dex.MinswapStable)
-      expect(result.exclude_protocols).toContain(Dex.MuesliSwap)
-      expect(result.exclude_protocols).toContain(Dex.Splash)
-      expect(result.exclude_protocols).toContain(Dex.SundaeSwapV3)
-      expect(result.exclude_protocols).toContain(Dex.SundaeSwap)
-      expect(result.exclude_protocols).toContain(Dex.VyFinance)
-      expect(result.exclude_protocols).toContain(Dex.CswapV1)
-      expect(result.exclude_protocols).toContain(Dex.WingRidersV2)
-      expect(result.exclude_protocols).toContain(Dex.WingRiders)
-      expect(result.exclude_protocols).toContain(Dex.WingRidersStableV2)
-      expect(result.exclude_protocols).toContain(Dex.Spectrum)
+      expect(result.exclude_protocols).toBeUndefined()
     })
 
-    it('should handle unknown protocol in mapProtocolToDex default case', () => {
-      // Test the default case in mapProtocolToDex by using an unknown protocol
+    it('should not include exclude_protocols when blockedProtocols is removed', () => {
       const mockRequest = {
         amountIn: 10,
-        blockedProtocols: ['unknown-protocol' as any],
         slippage: 1,
         tokenIn: '.' as const,
         tokenOut: 'test-token.' as const,
       }
 
       const result = transformers.estimate.request(mockRequest)
-      expect(result.exclude_protocols).toContain(Dex.Unsupported)
+      expect(result.exclude_protocols).toBeUndefined()
     })
 
-    it('should handle splash-stable protocol mapping', () => {
-      // Test the splash protocol mapping
+    it('should not include exclude_protocols when blockedProtocols is removed', () => {
       const mockRequest = {
         amountIn: 10,
-        blockedProtocols: [Swap.Protocol.Splash_v1],
-        slippage: 1,
-        tokenIn: '.' as const,
-        tokenOut: 'test-token.' as const,
-      }
-
-      const result = transformers.estimate.request(mockRequest)
-      expect(result.exclude_protocols).toContain(Dex.Splash)
-    })
-
-    it('should handle blocked protocols mapping with undefined', () => {
-      // Test the blocked protocols mapping when blockedProtocols is undefined (line 286)
-      const mockRequest = {
-        amountIn: 10,
-        blockedProtocols: undefined,
         slippage: 1,
         tokenIn: '.' as const,
         tokenOut: 'test-token.' as const,
@@ -307,7 +262,6 @@ describe('transformersMaker', () => {
           'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae45655534441',
         amount: '10',
         slippage: 1,
-        exclude_protocols: [],
         amount_in_decimal: true,
       })
     })
@@ -408,7 +362,6 @@ describe('transformersMaker', () => {
     it('should handle estimate request with blocked protocols', () => {
       const mockRequest = {
         amountIn: 10,
-        blockedProtocols: ['minswap-v2' as any],
         slippage: 1,
         tokenIn: '.' as const,
         tokenOut: 'test-token.' as const,
@@ -416,7 +369,7 @@ describe('transformersMaker', () => {
 
       const result = transformers.estimate.request(mockRequest)
 
-      expect(result.exclude_protocols).toEqual([Dex.MinswapV2])
+      expect(result.exclude_protocols).toBeUndefined()
     })
 
     it('should handle unknown Dex protocol in response', () => {
@@ -599,7 +552,6 @@ describe('transformersMaker', () => {
           token_out:
             'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae45655534441',
           slippage: 1,
-          exclude_protocols: [],
         },
         amount_in_decimal: true,
       })

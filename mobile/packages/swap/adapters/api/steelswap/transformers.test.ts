@@ -39,16 +39,6 @@ const mockConfig = {
   } as Portfolio.Token.Info,
   isPrimaryToken: (token: string | null | undefined) => token === '.',
   partner: 'yoroi-aggregator',
-  getTokenDecimals: (tokenId: Portfolio.Token.Id) => {
-    if (tokenId === '.' || tokenId === ('lovelace' as Portfolio.Token.Id))
-      return 6
-    if (
-      tokenId ===
-      'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441'
-    )
-      return 6
-    return 6 // Default for tests
-  },
 }
 
 describe('transformersMaker', () => {
@@ -152,9 +142,9 @@ describe('transformersMaker', () => {
         tokenIn: '.',
         tokenOut:
           'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441',
-        amountIn: 13.2, // Converted from 13200000 lovelace / 10^6
-        expectedAmountOut: 15, // Converted from 15000000 base units / 10^6
-        actualAmountOut: 15, // Converted from 15000000 base units / 10^6
+        amountIn: 13200000, // Already in decimal format (isFloat=true)
+        expectedAmountOut: 15000000, // Already in decimal format (isFloat=true)
+        actualAmountOut: 15000000, // Already in decimal format (isFloat=true)
         aggregator: Swap.Aggregator.Steelswap,
         protocol: Swap.Protocol.Minswap_v2,
       })
@@ -221,10 +211,10 @@ describe('transformersMaker', () => {
         tokenA: 'lovelace',
         tokenB:
           'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae45655534441',
-        quantity: 2000000,
+        quantity: 2, // Already in decimal format (isFloat=true)
         predictFromOutputAmount: false,
-        ignoreDexes: ['Minswap'],
         partner: 'yoroi-aggregator',
+        isFloat: true,
       })
     })
 
@@ -238,19 +228,20 @@ describe('transformersMaker', () => {
       })
 
       expect(request).toMatchObject({
-        quantity: 1000000, // 1 token * 10^6 = 1000000 base units
+        quantity: 1, // Already in decimal format (isFloat=true)
         predictFromOutputAmount: true,
+        isFloat: true,
       })
     })
 
     it('should transform estimate response correctly (SplitOutput)', () => {
       const mockResponse: SplitOutput = {
         tokenA: 'lovelace',
-        quantityA: 2000000,
+        quantityA: 2000000, // Already in decimal format (isFloat=true)
         tokenB:
           'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae45655534441',
-        quantityB: 1089627,
-        totalFee: 100000,
+        quantityB: 1089627, // Already in decimal format (isFloat=true)
+        totalFee: 0.1, // Already in ADA (isFloat=true)
         totalDeposit: 0,
         steelswapFee: 0,
         bonusOut: 0,
@@ -259,11 +250,11 @@ describe('transformersMaker', () => {
           {
             dex: 'Splash',
             poolId: 'test-pool-id',
-            quantityA: 2000000,
-            quantityB: 1089627,
-            batcherFee: 100000,
+            quantityA: 2000000, // Already in decimal format (isFloat=true)
+            quantityB: 1089627, // Already in decimal format (isFloat=true)
+            batcherFee: 0.1, // Already in ADA (isFloat=true)
             deposit: 0,
-            volumeFee: 1000,
+            volumeFee: 1000, // Still in lovelace, will be converted
           },
         ],
       }
@@ -271,10 +262,10 @@ describe('transformersMaker', () => {
       const result = transformers.estimate.response(mockResponse)
 
       expect(result).toMatchObject({
-        totalInput: 2, // 2000000 lovelace = 2 ADA
-        totalOutput: 1.089627, // 1089627 base units / 10^6
-        totalFee: 0.101, // 100000 (batcher) + 1000 (volume) + 0 (aggregator) = 101000 lovelace = 0.101 ADA
-        batcherFee: 0.1, // 100000 lovelace = 0.1 ADA
+        totalInput: 2000000, // Already in decimal format (isFloat=true)
+        totalOutput: 1089627, // Already in decimal format (isFloat=true)
+        totalFee: 0.1, // 100000 (batcher) + 0 (steelswap) = 0.1 ADA (already converted)
+        batcherFee: 0.1, // Already in ADA (isFloat=true)
         deposits: 0,
         aggregatorFee: 0,
         frontendFee: 0,
@@ -282,12 +273,12 @@ describe('transformersMaker', () => {
         priceImpact: 0,
         splits: [
           {
-            amountIn: 2, // 2000000 lovelace = 2 ADA
-            expectedOutput: 1.089627, // 1089627 base units / 10^6
-            batcherFee: 0.1, // 100000 lovelace = 0.1 ADA
+            amountIn: 2000000, // Already in decimal format (isFloat=true)
+            expectedOutput: 1089627, // Already in decimal format (isFloat=true)
+            batcherFee: 0.1, // Already in ADA (isFloat=true)
             deposits: 0,
-            fee: 0.001, // 1000 lovelace = 0.001 ADA
-            poolFee: 0.001, // 1000 lovelace = 0.001 ADA
+            fee: 0.001, // 1000 lovelace converted to ADA (1000 / 10^6)
+            poolFee: 0.001, // 1000 lovelace converted to ADA (1000 / 10^6)
             protocol: Swap.Protocol.Splash_v1,
             aggregator: Swap.Aggregator.Steelswap,
             aggregatorDexKey: 'Splash',
@@ -300,11 +291,11 @@ describe('transformersMaker', () => {
     it('should transform estimate response correctly (HopSplitOutput)', () => {
       const mockResponse = {
         tokenA: 'lovelace',
-        quantityA: 2000000,
+        quantityA: 2000000, // Already in decimal format (isFloat=true)
         tokenB:
           'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae45655534441',
-        quantityB: 1089627,
-        totalFee: 100000,
+        quantityB: 1089627, // Already in decimal format (isFloat=true)
+        totalFee: 0.1, // Already in ADA (isFloat=true)
         totalDeposit: 0,
         steelswapFee: 0,
         bonusOut: 0,
@@ -313,11 +304,11 @@ describe('transformersMaker', () => {
           [
             {
               tokenA: 'lovelace',
-              quantityA: 2000000,
+              quantityA: 2000000, // Already in decimal format (isFloat=true)
               tokenB:
                 'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae45655534441',
-              quantityB: 1089627,
-              totalFee: 100000,
+              quantityB: 1089627, // Already in decimal format (isFloat=true)
+              totalFee: 0.1, // Already in ADA (isFloat=true)
               totalDeposit: 0,
               steelswapFee: 0,
               bonusOut: 0,
@@ -326,11 +317,11 @@ describe('transformersMaker', () => {
                 {
                   dex: 'Splash',
                   poolId: 'test-pool-id',
-                  quantityA: 2000000,
-                  quantityB: 1089627,
-                  batcherFee: 100000,
+                  quantityA: 2000000, // Already in decimal format (isFloat=true)
+                  quantityB: 1089627, // Already in decimal format (isFloat=true)
+                  batcherFee: 0.1, // Already in ADA (isFloat=true)
                   deposit: 0,
-                  volumeFee: 1000,
+                  volumeFee: 1000, // Still in lovelace, will be converted
                 },
               ],
             },
@@ -341,9 +332,9 @@ describe('transformersMaker', () => {
       const result = transformers.estimate.response(mockResponse)
 
       expect(result).toMatchObject({
-        totalInput: 2, // 2000000 lovelace = 2 ADA
-        totalOutput: 1.089627, // 1089627 base units / 10^6
-        totalFee: 0.101, // 100000 (batcher) + 1000 (volume) + 0 (aggregator) = 101000 lovelace = 0.101 ADA
+        totalInput: 2000000, // Already in decimal format (isFloat=true)
+        totalOutput: 1089627, // Already in decimal format (isFloat=true)
+        totalFee: 0.1, // 100000 (batcher) + 0 (steelswap) = 0.1 ADA (already converted)
       })
     })
 
@@ -374,12 +365,12 @@ describe('transformersMaker', () => {
         tokenA: 'lovelace',
         tokenB:
           'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae45655534441',
-        quantity: 2000000, // 2 ADA * 10^6 = 2000000 lovelace
+        quantity: 2, // Already in decimal format (isFloat=true)
         address: 'addr1test',
         utxos: ['test-utxo-1', 'test-utxo-2'],
         slippage: 50, // 0.5% = 50 basis points
-        ignoreDexes: ['Minswap'],
         partner: 'yoroi-aggregator',
+        isFloat: true,
       })
     })
 
@@ -469,7 +460,7 @@ describe('transformersMaker', () => {
       const request = transformers.estimate.request({
         tokenIn: '.' as const,
         tokenOut: '.' as const,
-        amountIn: 1000000,
+        amountIn: 1, // Already in decimal format (isFloat=true)
         slippage: 0.5,
       })
 
@@ -486,7 +477,7 @@ describe('transformersMaker', () => {
       const request = transformers.estimate.request({
         tokenIn: expectedPortfolioId as Portfolio.Token.Id,
         tokenOut: '.' as const,
-        amountIn: 1000000,
+        amountIn: 1, // Already in decimal format (isFloat=true)
         slippage: 0.5,
       })
 

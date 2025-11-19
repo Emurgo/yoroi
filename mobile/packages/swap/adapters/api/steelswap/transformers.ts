@@ -20,7 +20,6 @@ export const transformersMaker = ({
   address,
   isPrimaryToken,
   partner,
-  getTokenDecimals = () => 6, // Default to 6 decimals if not provided
 }: SteelswapTransformersConfig) => {
   const fromTokenId = (tokenId: string): Portfolio.Token.Id => {
     if (tokenId === 'lovelace' || tokenId === 'ADA') {
@@ -42,33 +41,16 @@ export const transformersMaker = ({
     return tokenId.replace('.', '')
   }
 
-  // Convert Steelswap token ID (no dot) to Portfolio format (with dot) for cache lookup
-  const steelswapToPortfolioId = (tokenId: string): Portfolio.Token.Id => {
-    if (tokenId === 'lovelace' || tokenId === 'ADA') {
-      return primaryTokenInfo.id
-    }
-    // If already has dot, return as is
-    if (tokenId.includes('.')) {
-      return tokenId as Portfolio.Token.Id
-    }
-    // Steelswap format: policyId + hexName (no separator)
-    // PolicyId is always 56 characters, rest is hexName
-    return `${tokenId.slice(0, 56)}.${tokenId.slice(56)}` as Portfolio.Token.Id
-  }
-
   const parseAssets = (
     assets: Array<Record<string, number>>,
   ): {token: string; amount: number}[] => {
     const result: {token: string; amount: number}[] = []
     for (const asset of assets) {
       for (const [token, amount] of Object.entries(asset)) {
-        // Token from API is in Steelswap format (no dot), convert to Portfolio format
-        const portfolioId = steelswapToPortfolioId(token)
-        const decimals = getTokenDecimals(portfolioId)
-        // Convert from base units to decimal (divide by 10^decimals)
+        // Amounts are already in decimal format (isFloat=true)
         result.push({
           token,
-          amount: amount / 10 ** decimals,
+          amount,
         })
       }
     }
@@ -184,31 +166,20 @@ export const transformersMaker = ({
         amountIn,
         amountOut,
         slippage: _slippage,
-        protocol: _protocol,
-        blockedProtocols,
       }: Swap.EstimateRequest): SwapEstimateRequest => {
         const tokenAId = toTokenId(tokenIn)
         const tokenBId = toTokenId(tokenOut)
-        const tokenADecimals = getTokenDecimals(tokenIn)
-        const tokenBDecimals = getTokenDecimals(tokenOut)
 
-        // Convert from decimal to base units (multiply by 10^decimals)
-        const quantity = amountIn
-          ? amountIn * 10 ** tokenADecimals
-          : amountOut
-            ? amountOut * 10 ** tokenBDecimals
-            : 0
+        // Amounts are already in decimal format adjusted by token decimals (isFloat=true)
+        const quantity = amountIn ?? amountOut ?? 0
 
         return {
           tokenA: tokenAId,
           tokenB: tokenBId,
           quantity: Math.round(quantity),
           predictFromOutputAmount: amountOut !== undefined,
-          ...(blockedProtocols !== undefined &&
-            blockedProtocols.length > 0 && {
-              ignoreDexes: blockedProtocols.map(fromSwapProtocol),
-            }),
           ...(partner !== undefined && {partner}),
+          isFloat: true,
         }
       },
       response: (data: EstimateResponse): Swap.EstimateResponse => {
@@ -228,28 +199,28 @@ export const transformersMaker = ({
           )
         }
 
-        // Token IDs from API are in Steelswap format (no dot), convert to Portfolio format
-        const tokenADecimals = getTokenDecimals(
-          steelswapToPortfolioId(splitOutput.tokenA),
-        )
-        const tokenBDecimals = getTokenDecimals(
-          steelswapToPortfolioId(splitOutput.tokenB),
-        )
-        const lovelaceDecimals = getTokenDecimals(primaryTokenInfo.id) // Fees are always in lovelace
-
-        // Convert from base units to decimal (divide by 10^decimals)
+        // API returns top-level values already converted to decimal format (isFloat=true)
+        // Top-level fees are in ADA (already converted from lovelace)
+        // Pool-level volumeFee may still be in lovelace, so we convert it
+        const ADA_DECIMALS = 6
         const splits = splitOutput.pools.map((pool) => ({
-          amountIn: pool.quantityA / 10 ** tokenADecimals,
-          batcherFee: pool.batcherFee / 10 ** lovelaceDecimals, // Fees in lovelace
-          deposits: pool.deposit / 10 ** lovelaceDecimals, // Fees in lovelace
+          amountIn: pool.quantityA,
+          batcherFee: pool.batcherFee, // Already in ADA
+          deposits: pool.deposit, // Already in ADA
           protocol: toSwapProtocol(pool.dex as Dex),
-          expectedOutput: pool.quantityB / 10 ** tokenBDecimals,
-          expectedOutputWithoutSlippage: pool.quantityB / 10 ** tokenBDecimals,
-          fee: pool.volumeFee / 10 ** lovelaceDecimals, // Fees in lovelace
+          expectedOutput: pool.quantityB,
+          expectedOutputWithoutSlippage: pool.quantityB,
+          fee:
+            pool.volumeFee > 1
+              ? pool.volumeFee / 10 ** ADA_DECIMALS
+              : pool.volumeFee, // Convert if still in lovelace
           initialPrice:
             pool.quantityA > 0 ? pool.quantityB / pool.quantityA : 0,
           finalPrice: pool.quantityA > 0 ? pool.quantityB / pool.quantityA : 0,
-          poolFee: pool.volumeFee / 10 ** lovelaceDecimals, // Fees in lovelace
+          poolFee:
+            pool.volumeFee > 1
+              ? pool.volumeFee / 10 ** ADA_DECIMALS
+              : pool.volumeFee, // Convert if still in lovelace
           poolId: pool.poolId,
           priceDistortion: 0,
           priceImpact: 0,
@@ -258,26 +229,14 @@ export const transformersMaker = ({
           aggregatorPoolId: pool.poolId,
         }))
 
-        const totalInput = splitOutput.quantityA / 10 ** tokenADecimals
-        const totalOutput = splitOutput.quantityB / 10 ** tokenBDecimals
-        const deposits = splitOutput.totalDeposit / 10 ** lovelaceDecimals // Sum of deposits
+        const totalInput = splitOutput.quantityA
+        const totalOutput = splitOutput.quantityB
+        const deposits = splitOutput.totalDeposit // Already in ADA
+        // Use top-level totalFee which is already in ADA
+        const totalFee = splitOutput.totalFee + splitOutput.steelswapFee
+        const batcherFee = splitOutput.totalFee // Already in ADA
+        const aggregatorFee = splitOutput.steelswapFee // Already in ADA
 
-        // Add all fees in base units first to avoid precision issues, then convert once
-        const totalVolumeFeeInBase = splitOutput.pools.reduce(
-          (sum, pool) => sum + pool.volumeFee,
-          0,
-        )
-        const totalFeeInBase =
-          splitOutput.totalFee + splitOutput.steelswapFee + totalVolumeFeeInBase
-        // Convert total fee to decimal once
-        const totalFee = totalFeeInBase / 10 ** lovelaceDecimals
-
-        // Individual fees for backwards compatibility (convert after calculation)
-        const batcherFee = splitOutput.totalFee / 10 ** lovelaceDecimals // Sum of batcher fees
-        const aggregatorFee = splitOutput.steelswapFee / 10 ** lovelaceDecimals // Aggregator fee
-
-        // Price from API is inverted (input/output instead of output/input)
-        // Calculate correct price: output per input (same as Minswap)
         const netPrice = totalInput > 0 ? totalOutput / totalInput : 0
 
         return {
@@ -291,8 +250,7 @@ export const transformersMaker = ({
           totalFee,
           totalInput,
           totalOutput,
-          totalOutputWithoutSlippage:
-            totalOutput + splitOutput.bonusOut / 10 ** tokenBDecimals,
+          totalOutputWithoutSlippage: totalOutput + splitOutput.bonusOut,
         }
       },
     },
@@ -303,28 +261,22 @@ export const transformersMaker = ({
         tokenOut,
         amountIn,
         slippage,
-        protocol: _protocol,
-        blockedProtocols,
         inputs,
       }: Swap.CreateRequest): BuildSwapRequest => {
         const tokenAId = toTokenId(tokenIn)
-        const tokenADecimals = getTokenDecimals(tokenIn)
 
-        // Convert from decimal to base units (multiply by 10^decimals)
-        const quantity = amountIn * 10 ** tokenADecimals
+        // AmountIn is already in decimal format adjusted by token decimals (isFloat=true)
+        const quantity = amountIn
 
         return {
           tokenA: tokenAId,
           tokenB: toTokenId(tokenOut),
           quantity: Math.round(quantity),
-          ...(blockedProtocols !== undefined &&
-            blockedProtocols.length > 0 && {
-              ignoreDexes: blockedProtocols.map(fromSwapProtocol),
-            }),
           ...(partner !== undefined && {partner}),
           address,
           utxos: inputs ?? [],
           slippage: slippage ? Math.round(slippage * 100) : 0, // Convert percentage to basis points
+          isFloat: true,
         }
       },
       response: ({tx, p: _p}: BuildSwapResponse): Swap.CreateResponse => {
