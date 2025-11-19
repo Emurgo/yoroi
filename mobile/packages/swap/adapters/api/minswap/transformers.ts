@@ -210,7 +210,9 @@ export const transformersMaker = (config: MinswapApiConfig) => {
           const deposits = Number(data.deposits ?? '0')
           const aggregatorFee = Number(data.aggregator_fee ?? '0')
           const dexFee = Number(data.total_dex_fee ?? '0')
-          const totalFee = dexFee + aggregatorFee
+          // Convert to lovelace (integers) to avoid floating point precision issues
+          const totalFee =
+            (Math.round(aggregatorFee * 1e6) + Math.round(dexFee * 1e6)) / 1e6
 
           return freeze(
             {
