@@ -185,6 +185,10 @@ export const transformersMaker = ({
       response: (data: EstimateResponse): Swap.EstimateResponse => {
         // Handle both SplitOutput and HopSplitOutput
         const isHopSplit = 'splitGroup' in data
+
+        // When isFloat=true, use top-level values for totals (they're in decimal format)
+        // But extract pools from splitGroup if it's a HopSplitOutput
+        const topLevelData = data as HopSplitOutput | SplitOutput
         const splitOutput = isHopSplit
           ? (data as HopSplitOutput).splitGroup?.[0]?.[0]
           : (data as SplitOutput)
@@ -199,28 +203,19 @@ export const transformersMaker = ({
           )
         }
 
-        // API returns top-level values already converted to decimal format (isFloat=true)
-        // Top-level fees are in ADA (already converted from lovelace)
-        // Pool-level volumeFee may still be in lovelace, so we convert it
-        const ADA_DECIMALS = 6
+        // When isFloat=true, all values are already in decimal format
         const splits = splitOutput.pools.map((pool) => ({
-          amountIn: pool.quantityA,
+          amountIn: pool.quantityA, // Already in decimal format
           batcherFee: pool.batcherFee, // Already in ADA
           deposits: pool.deposit, // Already in ADA
           protocol: toSwapProtocol(pool.dex as Dex),
-          expectedOutput: pool.quantityB,
-          expectedOutputWithoutSlippage: pool.quantityB,
-          fee:
-            pool.volumeFee > 1
-              ? pool.volumeFee / 10 ** ADA_DECIMALS
-              : pool.volumeFee, // Convert if still in lovelace
+          expectedOutput: pool.quantityB, // Already in decimal format
+          expectedOutputWithoutSlippage: pool.quantityB, // Already in decimal format
+          fee: pool.volumeFee, // Already in decimal format (ADA)
           initialPrice:
             pool.quantityA > 0 ? pool.quantityB / pool.quantityA : 0,
           finalPrice: pool.quantityA > 0 ? pool.quantityB / pool.quantityA : 0,
-          poolFee:
-            pool.volumeFee > 1
-              ? pool.volumeFee / 10 ** ADA_DECIMALS
-              : pool.volumeFee, // Convert if still in lovelace
+          poolFee: pool.volumeFee, // Already in decimal format (ADA)
           poolId: pool.poolId,
           priceDistortion: 0,
           priceImpact: 0,
@@ -229,13 +224,13 @@ export const transformersMaker = ({
           aggregatorPoolId: pool.poolId,
         }))
 
-        const totalInput = splitOutput.quantityA
-        const totalOutput = splitOutput.quantityB
-        const deposits = splitOutput.totalDeposit // Already in ADA
-        // Use top-level totalFee which is already in ADA
-        const totalFee = splitOutput.totalFee + splitOutput.steelswapFee
-        const batcherFee = splitOutput.totalFee // Already in ADA
-        const aggregatorFee = splitOutput.steelswapFee // Already in ADA
+        // Use top-level values for totals (they're in decimal format when isFloat=true)
+        const totalInput = topLevelData.quantityA
+        const totalOutput = topLevelData.quantityB
+        const deposits = topLevelData.totalDeposit // Already in ADA
+        const totalFee = topLevelData.totalFee + topLevelData.steelswapFee
+        const batcherFee = topLevelData.totalFee // Already in ADA
+        const aggregatorFee = topLevelData.steelswapFee // Already in ADA
 
         const netPrice = totalInput > 0 ? totalOutput / totalInput : 0
 
@@ -250,7 +245,7 @@ export const transformersMaker = ({
           totalFee,
           totalInput,
           totalOutput,
-          totalOutputWithoutSlippage: totalOutput + splitOutput.bonusOut,
+          totalOutputWithoutSlippage: totalOutput + topLevelData.bonusOut,
         }
       },
     },

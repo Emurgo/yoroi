@@ -209,12 +209,13 @@ export const transformersMaker = (config: MinswapApiConfig) => {
           const totalOutputWithoutSlippage = Number(data.amount_out)
           const deposits = Number(data.deposits ?? '0')
           const aggregatorFee = Number(data.aggregator_fee ?? '0')
-          const totalFee = Number(data.total_dex_fee ?? '0')
+          const dexFee = Number(data.total_dex_fee ?? '0')
+          const totalFee = dexFee + aggregatorFee
 
           return freeze(
             {
               splits: transformPathsToSplits(data.paths),
-              batcherFee: totalFee,
+              batcherFee: dexFee,
               deposits,
               aggregatorFee,
               frontendFee: 0,
