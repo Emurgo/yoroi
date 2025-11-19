@@ -3,11 +3,13 @@ import * as React from 'react'
 import {WalletEvent, YoroiWallet} from '~/wallets/cardano/types'
 
 export const useWalletEvent = (
-  wallet: YoroiWallet,
+  wallet: YoroiWallet | null,
   event: WalletEvent['type'],
   callback: () => void,
 ) => {
   React.useEffect(() => {
+    if (!wallet) return
+
     const unsubWallet = wallet.subscribe((subscriptionEvent) => {
       if (subscriptionEvent.type !== event) return
       callback()

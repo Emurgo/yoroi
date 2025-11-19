@@ -1,15 +1,16 @@
-import {Balance, Wallet} from '@yoroi/types'
+import {Balance} from '@yoroi/types'
+
+import {signRawTransaction} from '@emurgo/yoroi-lib'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 import {Buffer} from 'buffer'
-import {signRawTransaction} from '@emurgo/yoroi-lib'
 
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {logger} from '~/kernel/logger/logger'
-import {CardanoMobile} from '~/wallets/wallets'
-import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
 import {_getRequiredUtxos} from '~/wallets/cardano/cip30/cip30'
 import {getTransactionSigners} from '~/wallets/cardano/common/signatureUtils'
-import {createRawTxSigningKey, copyFromCSL} from '~/wallets/cardano/utils'
+import {copyFromCSL, createRawTxSigningKey} from '~/wallets/cardano/utils'
+import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
+import {CardanoMobile} from '~/wallets/wallets'
 
 import {redemptionApi} from '../api/redemptionApi'
 import type {BuildTransactionRequest} from '../types'
@@ -54,10 +55,8 @@ export const useRedeemThaw = () => {
         throw new Error('Cannot redeem tokens from a readonly wallet')
       }
 
-      // Check if wallet is properly initialized
-      if (!wallet.isInitialized) {
-        throw new Error('Wallet is not initialized')
-      }
+      // Wallet is considered ready if we can access its properties
+      // The try-catch below will handle cases where wallet is not ready
 
       // Mock mode - return fake transaction ID
       if (USE_MOCK_DATA) {
@@ -73,28 +72,30 @@ export const useRedeemThaw = () => {
         [wallet.portfolioPrimaryTokenInfo.id]: '5000000', // 5 ADA in lovelace
       }
 
-      const fundingUtxosHex = await CardanoMobileWrapped.cslScope(async (csl) => {
-        const fundingUtxos = await _getRequiredUtxos(
-          wallet,
-          feeAmount,
-          wallet.utxos,
-          meta,
-          csl,
-        )
+      const fundingUtxosHex = await CardanoMobileWrapped.cslScope(
+        async (csl) => {
+          const fundingUtxos = await _getRequiredUtxos(
+            wallet,
+            feeAmount,
+            wallet.utxos,
+            meta,
+            csl,
+          )
 
-        if (!fundingUtxos || fundingUtxos.length === 0) {
-          throw new Error('No UTXOs available with sufficient funds')
-        }
+          if (!fundingUtxos || fundingUtxos.length === 0) {
+            throw new Error('No UTXOs available with sufficient funds')
+          }
 
-        // Convert CSL TransactionUnspentOutput to hex strings
-        const utxoHexStrings = await Promise.all(
-          fundingUtxos.map(async (utxo) => {
-            return Buffer.from(await utxo.toBytes()).toString('hex')
-          }),
-        )
+          // Convert CSL TransactionUnspentOutput to hex strings
+          const utxoHexStrings = await Promise.all(
+            fundingUtxos.map(async (utxo) => {
+              return Buffer.from(await utxo.toBytes()).toString('hex')
+            }),
+          )
 
-        return utxoHexStrings
-      })
+          return utxoHexStrings
+        },
+      )
 
       // Get change address
       const changeAddress = wallet.getChangeAddress('multiple')
@@ -117,12 +118,12 @@ export const useRedeemThaw = () => {
       const signedTxBytes = await CardanoMobileWrapped.cslScope(async (csl) => {
         // Get required signers for this transaction
         const signers = getTransactionSigners(unsignedTxHex, wallet, meta)
-        
+
         // Create private keys for each signer
         const keys = signers.map((signer) =>
           createRawTxSigningKey(rootKey, signer, csl),
         )
-        
+
         // Sign the transaction
         return signRawTransaction(csl, unsignedTxHex, keys)
       })
@@ -169,4 +170,3 @@ export const useRedeemThaw = () => {
     isSuccess: mutation.isSuccess,
   }
 }
-

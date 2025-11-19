@@ -1,12 +1,11 @@
 import {time} from '@yoroi/common'
 import {useNotificationManager} from '@yoroi/notifications'
-import {Chain, Notifications} from '@yoroi/types'
+import {Notifications} from '@yoroi/types'
 
 import {useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {BannerIds, showBanner} from '~/features/Notifications/common/banners'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useWalletEvent} from '~/features/WalletManager/hooks/useWalletEvent'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
@@ -19,31 +18,27 @@ export const useAirdropBanner = () => {
   const {
     selected: {network, wallet},
   } = walletManager
-  
-  const {allocations, totalRedeemableAmount, isLoading} = useAirdropEligibility()
+
+  const {allocations, totalRedeemableAmount, isLoading} =
+    useAirdropEligibility()
   const strings = useStrings()
   const queryClient = useQueryClient()
 
   const queryKey = ['airdropBanner', wallet?.id, network] as const
 
-  if (wallet) {
-    useWalletEvent(wallet, 'utxos', () =>
-      queryClient.invalidateQueries({queryKey}),
-    )
-  }
+  useWalletEvent(wallet ?? null, 'utxos', () => {
+    if (wallet) {
+      queryClient.invalidateQueries({queryKey})
+    }
+  })
 
   useQuery({
     queryKey: [...queryKey, totalRedeemableAmount],
-    enabled: !isLoading && wallet?.isMainnet === true && wallet?.isInitialized === true,
+    enabled: !isLoading && wallet?.isMainnet === true && !!wallet,
     staleTime: time.fiveMinutes,
     queryFn: async () => {
       const onMainnet = wallet?.isMainnet === true
-      if (!onMainnet) return false
-
-      // Skip if wallet is not initialized
-      if (!wallet?.isInitialized) {
-        return false
-      }
+      if (!onMainnet || !wallet) return false
 
       // Only show banner if there are eligible addresses with redeemable tokens
       if (allocations.length === 0 || totalRedeemableAmount === 0) {
@@ -71,10 +66,7 @@ export const useAirdropBanner = () => {
         maximumFractionDigits: 2,
       })
 
-      if (
-        !last ||
-        new Date(last.date).getTime() + time.oneWeek < Date.now()
-      ) {
+      if (!last || new Date(last.date).getTime() + time.oneWeek < Date.now()) {
         showBanner({
           id: BannerIds.Airdrop,
           title: strings.airdrop.bannerTitle,
@@ -86,4 +78,3 @@ export const useAirdropBanner = () => {
     },
   })
 }
-

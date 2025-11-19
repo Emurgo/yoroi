@@ -1,4 +1,5 @@
 import {time} from '@yoroi/common'
+
 import {useQuery} from '@tanstack/react-query'
 
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
@@ -6,8 +7,8 @@ import {useWalletEvent} from '~/features/WalletManager/hooks/useWalletEvent'
 import {logger} from '~/kernel/logger/logger'
 
 import {redemptionApi} from '../api/redemptionApi'
-import {MOCK_ADDRESS_ALLOCATIONS} from './mockData'
 import type {AddressAllocation} from '../types'
+import {MOCK_ADDRESS_ALLOCATIONS} from './mockData'
 
 // Set to true to use mock data instead of API calls (for UI testing)
 const USE_MOCK_DATA = true
@@ -15,15 +16,12 @@ const USE_MOCK_DATA = true
 export const useAirdropEligibility = () => {
   const walletManager = useWalletManager()
   const wallet = walletManager.selected.wallet
-  const meta = walletManager.selected.meta
 
   const queryKey = ['airdropEligibility', wallet?.id] as const
 
-  if (wallet) {
-    useWalletEvent(wallet, 'addresses', () => {
-      // Invalidate when addresses change
-    })
-  }
+  useWalletEvent(wallet ?? null, 'addresses', () => {
+    // Invalidate when addresses change
+  })
 
   const query = useQuery({
     queryKey,
@@ -40,13 +38,8 @@ export const useAirdropEligibility = () => {
         return []
       }
 
-      // Check if wallet is properly initialized
-      if (!wallet.isInitialized) {
-        logger.warn('useAirdropEligibility: Wallet not initialized, skipping airdrop eligibility check', {
-          walletId: wallet.id,
-        })
-        return []
-      }
+      // Check if wallet is properly initialized by checking if addresses are available
+      // If wallet is not initialized, receiveAddresses will be empty or throw
 
       // Get all receive addresses (external addresses)
       // Handle gracefully if addresses are not available
@@ -102,7 +95,9 @@ export const useAirdropEligibility = () => {
           // Skip addresses without allocations (404) or network errors
           if (error.message !== 'ADDRESS_NOT_FOUND') {
             // Only log non-network errors (network errors are expected when offline)
-            const isNetworkError = error.message?.includes('Network') || error.message?.includes('no response')
+            const isNetworkError =
+              error.message?.includes('Network') ||
+              error.message?.includes('no response')
             if (!isNetworkError) {
               logger.error('Failed to check address eligibility', {
                 address,
@@ -123,10 +118,7 @@ export const useAirdropEligibility = () => {
     isError: query.isError,
     error: query.error,
     hasEligibleAddresses: (query.data?.length ?? 0) > 0,
-    totalRedeemableAmount: query.data?.reduce(
-      (sum, alloc) => sum + alloc.redeemableAmount,
-      0,
-    ) ?? 0,
+    totalRedeemableAmount:
+      query.data?.reduce((sum, alloc) => sum + alloc.redeemableAmount, 0) ?? 0,
   }
 }
-

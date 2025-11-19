@@ -99,11 +99,12 @@ export const AirdropScreen = () => {
         try {
           await redeemAsync({destAddress: address, rootKey})
           // Success - the eligibility hook will refetch
-        } catch (error) {
-          // Error handling is done by the mutation
-          logger.error('Failed to redeem', {error})
-        } finally {
+          // Modal will be closed automatically after async operation completes
           setRedeemingAddress(null)
+        } catch (error) {
+          // Re-throw error so usePromptRootKey can handle it
+          setRedeemingAddress(null)
+          throw error
         }
       },
       onError: (error) => {
@@ -114,7 +115,7 @@ export const AirdropScreen = () => {
         setRedeemingAddress(null)
       },
       title: strings.airdrop.redeem,
-      summary: strings.airdrop.redeemSuccess,
+      summary: strings.airdrop.enterPassword,
     })
   }
 

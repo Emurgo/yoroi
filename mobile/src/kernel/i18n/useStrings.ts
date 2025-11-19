@@ -8,6 +8,7 @@ import {useIntl} from 'react-intl'
 
 import {
   actionMessages,
+  airdropMessages,
   authMessages,
   claimMessages,
   confirmationMessages,
@@ -25,7 +26,6 @@ import {
   manageCollateralMessages,
   manageNotificationsMessages,
   menuMessages,
-  airdropMessages,
   notificationsMessages,
   portfolioMessages,
   receiveMessages,
@@ -285,11 +285,14 @@ export const useStrings = () => {
         currentThaw: f(airdropMessages.currentThaw),
         endsIn: f(airdropMessages.endsIn),
         thawInfo: f(airdropMessages.thawInfo),
-        numberOfClaimedAllocations: f(airdropMessages.numberOfClaimedAllocations),
+        numberOfClaimedAllocations: f(
+          airdropMessages.numberOfClaimedAllocations,
+        ),
         redeem: f(airdropMessages.redeem),
         redeeming: f(airdropMessages.redeeming),
         viewTransactions: f(airdropMessages.viewTransactions),
         details: f(airdropMessages.details),
+        enterPassword: f(airdropMessages.enterPassword),
         redeemSuccess: f(airdropMessages.redeemSuccess),
         redeemError: f(airdropMessages.redeemError),
         insufficientFunds: f(airdropMessages.insufficientFunds),

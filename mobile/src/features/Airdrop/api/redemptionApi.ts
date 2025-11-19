@@ -49,7 +49,9 @@ export const redemptionApi = {
         throw new Error('ADDRESS_NOT_FOUND')
       }
       // Network errors (DNS resolution failures, no response) are expected if API is not deployed yet
-      const isNetworkError = response.error.status === -1 || response.error.message?.includes('Network')
+      const isNetworkError =
+        response.error.status === -1 ||
+        response.error.message?.includes('Network')
       if (isNetworkError) {
         throw new Error('ADDRESS_NOT_FOUND') // Treat as no allocations to avoid error spam
       }
@@ -68,7 +70,10 @@ export const redemptionApi = {
     destAddress: string,
     request: BuildTransactionRequest,
   ): Promise<BuildTransactionResponse> => {
-    const response = await fetchData<BuildTransactionResponse, BuildTransactionRequest>({
+    const response = await fetchData<
+      BuildTransactionResponse,
+      BuildTransactionRequest
+    >({
       url: getApiUrl(
         `/thaws/${encodeURIComponent(destAddress)}/transactions/build`,
       ),
@@ -92,7 +97,10 @@ export const redemptionApi = {
     destAddress: string,
     request: ThawTransactionRequest,
   ): Promise<ThawTransactionResponse> => {
-    const response = await fetchData<ThawTransactionResponse, ThawTransactionRequest>({
+    const response = await fetchData<
+      ThawTransactionResponse,
+      ThawTransactionRequest
+    >({
       url: getApiUrl(`/thaws/${encodeURIComponent(destAddress)}/transactions`),
       method: 'post',
       data: request,
@@ -130,4 +138,3 @@ export const redemptionApi = {
     return response.value.data
   },
 }
-

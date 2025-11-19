@@ -77,4 +77,3 @@ export interface AddressAllocation {
   redeemedSoFar: number
   totalLeftToRedeem: number
 }
-

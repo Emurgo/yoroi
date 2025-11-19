@@ -8,7 +8,7 @@ import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 
 type PromptRootKeyOptions = {
-  onSuccess: (rootKey: string) => void
+  onSuccess: (rootKey: string) => void | Promise<void>
   onError?: (error: unknown) => void
   onClose?: () => void
   title?: string
@@ -23,10 +23,20 @@ export const usePromptRootKey = () => {
 
   const promptRootKey = React.useCallback(
     ({onSuccess, onError, onClose, title, summary}: PromptRootKeyOptions) => {
-      const handleOnConfirm = (rootKey: string) => {
-        const result = onSuccess(rootKey)
-        closeModal()
-        return result
+      const handleOnConfirm = async (rootKey: string) => {
+        try {
+          const result = onSuccess(rootKey)
+          // If onSuccess returns a Promise, wait for it to complete before closing
+          if (result instanceof Promise) {
+            await result
+          }
+          closeModal()
+        } catch (error) {
+          // If there's an error, don't close the modal - let the error handler deal with it
+          if (onError) {
+            onError(error)
+          }
+        }
       }
 
       if (meta.isEasyConfirmationEnabled) {

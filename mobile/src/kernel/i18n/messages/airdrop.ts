@@ -85,6 +85,10 @@ export const airdropMessages = defineMessages({
     id: 'airdrop.details',
     defaultMessage: '!!!Details',
   },
+  enterPassword: {
+    id: 'airdrop.enterPassword',
+    defaultMessage: '!!!Enter your password to sign the redemption transaction',
+  },
   redeemSuccess: {
     id: 'airdrop.redeemSuccess',
     defaultMessage: '!!!Redemption transaction submitted successfully',
