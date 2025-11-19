@@ -42,7 +42,16 @@ export const useGovernanceVoteFlow = ({
 
   const [pendingVote, setPendingVote] = React.useState<PendingVote>(null)
   const pendingActionRef = React.useRef<PendingAction>(null)
-  const {onSuccess: optionsOnSuccess, ...rest} = options ?? {}
+  const {
+    onSuccess: optionsOnSuccess,
+    onError: optionsOnError,
+    ...rest
+  } = options ?? {}
+
+  const resetPendingState = () => {
+    setPendingVote(null)
+    pendingActionRef.current = null
+  }
 
   const createGovernanceTxMutation = useCreateGovernanceTx(wallet, {
     ...rest,
@@ -55,6 +64,8 @@ export const useGovernanceVoteFlow = ({
           type,
           CIP105,
         })
+        resetPendingState()
+        optionsOnSuccess?.(unsignedTx)
         return
       }
 
@@ -62,6 +73,8 @@ export const useGovernanceVoteFlow = ({
         governanceActions.handleAbstainAction({
           unsignedTx,
         })
+        resetPendingState()
+        optionsOnSuccess?.(unsignedTx)
         return
       }
 
@@ -69,10 +82,17 @@ export const useGovernanceVoteFlow = ({
         governanceActions.handleNoConfidenceAction({
           unsignedTx,
         })
+        resetPendingState()
+        optionsOnSuccess?.(unsignedTx)
         return
       }
 
+      resetPendingState()
       optionsOnSuccess?.(unsignedTx)
+    },
+    onError: (error) => {
+      resetPendingState()
+      optionsOnError?.(error)
     },
   })
 
