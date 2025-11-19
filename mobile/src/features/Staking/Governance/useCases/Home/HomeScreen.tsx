@@ -270,10 +270,9 @@ const NeverParticipatedInGovernanceVariant = () => {
   const {
     pendingVote,
     isCreatingTx,
-    setDelegatePending,
-    setAbstainPending,
-    setNoConfidencePending,
-    submit,
+    submitDelegate,
+    submitAbstain,
+    submitNoConfidence,
   } = useGovernanceVoteFlow({
     wallet,
     addressMode: meta.addressMode,
@@ -288,6 +287,8 @@ const NeverParticipatedInGovernanceVariant = () => {
       },
     },
   })
+
+  const isPending = isCreatingTx || pendingVote !== null
 
   const openDRepIdModal = (
     onSubmit: (options: {
@@ -308,11 +309,9 @@ const NeverParticipatedInGovernanceVariant = () => {
   }
 
   const handleDelegate = () => {
-    if (isCreatingTx) return
+    if (isPending) return
     openDRepIdModal(async (options) => {
       const stakingKey = wallet.getStakingKey()
-
-      setDelegatePending(options)
 
       const certificate = await createDelegationCertificate({
         hash: options.hash,
@@ -325,19 +324,19 @@ const NeverParticipatedInGovernanceVariant = () => {
       const certs =
         stakeCert !== null ? [stakeCert, certificate] : [certificate]
 
-      submit(certs)
+      submitDelegate(certs, options)
     })
   }
 
   const handleDelegateToYoroi = async () => {
-    if (isCreatingTx) return
+    if (isPending) return
     const stakingKey = wallet.getStakingKey()
 
-    setDelegatePending({
+    const options = {
       hash: GOVERNANCE_YOROI_DREP_ID_HEX,
-      type: 'key',
+      type: 'key' as const,
       CIP105: false,
-    })
+    }
 
     const certificate = await createDelegationCertificate({
       hash: GOVERNANCE_YOROI_DREP_ID_HEX,
@@ -349,13 +348,12 @@ const NeverParticipatedInGovernanceVariant = () => {
       : null
     const certs = stakeCert !== null ? [stakeCert, certificate] : [certificate]
 
-    submit(certs)
+    submitDelegate(certs, options)
   }
 
   const handleAbstain = async () => {
-    if (isCreatingTx) return
+    if (isPending) return
     const stakingKey = wallet.getStakingKey()
-    setAbstainPending()
 
     const certificate = await createVotingCertificate({
       vote: 'abstain',
@@ -366,13 +364,12 @@ const NeverParticipatedInGovernanceVariant = () => {
       : null
     const certs = stakeCert !== null ? [stakeCert, certificate] : [certificate]
 
-    submit(certs)
+    submitAbstain(certs)
   }
 
   const handleNoConfidence = async () => {
-    if (isCreatingTx) return
+    if (isPending) return
     const stakingKey = wallet.getStakingKey()
-    setNoConfidencePending()
 
     const certificate = await createVotingCertificate({
       vote: 'no-confidence',
@@ -383,7 +380,7 @@ const NeverParticipatedInGovernanceVariant = () => {
       : null
     const certs = stakeCert !== null ? [stakeCert, certificate] : [certificate]
 
-    submit(certs)
+    submitNoConfidence(certs)
   }
 
   return (

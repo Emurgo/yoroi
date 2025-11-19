@@ -111,7 +111,27 @@ export const useGovernanceVoteFlow = ({
     pendingActionRef.current = {type: 'no-confidence'}
   }
 
-  const submit = (certificates: Certificate[]) => {
+  const submitDelegate = (
+    certificates: Certificate[],
+    options: DelegateOptions,
+  ) => {
+    setDelegatePending(options)
+    createGovernanceTxMutation.resolve({
+      certificates,
+      addressMode,
+    })
+  }
+
+  const submitAbstain = (certificates: Certificate[]) => {
+    setAbstainPending()
+    createGovernanceTxMutation.resolve({
+      certificates,
+      addressMode,
+    })
+  }
+
+  const submitNoConfidence = (certificates: Certificate[]) => {
+    setNoConfidencePending()
     createGovernanceTxMutation.resolve({
       certificates,
       addressMode,
@@ -121,9 +141,8 @@ export const useGovernanceVoteFlow = ({
   return {
     pendingVote,
     isCreatingTx: createGovernanceTxMutation.isPending,
-    setDelegatePending,
-    setAbstainPending,
-    setNoConfidencePending,
-    submit,
+    submitDelegate,
+    submitAbstain,
+    submitNoConfidence,
   } as const
 }
