@@ -1,6 +1,8 @@
-// Note: redeem.prod.gd.midnighttge.io may not be deployed yet
+// Note: Using sm.midnight.gd as the assumed API endpoint
+// This will be rechecked once it's been deployed publicly
+// Previous API URL: 'https://redeem.prod.gd.midnighttge.io'
 // If DNS resolution fails, the API calls will handle it gracefully
-export const REDEMPTION_API_BASE_URL = 'https://redeem.prod.gd.midnighttge.io'
+export const REDEMPTION_API_BASE_URL = 'https://sm.midnight.gd'
 
 export type ThawStatus =
   | 'upcoming'
