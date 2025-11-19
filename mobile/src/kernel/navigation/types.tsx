@@ -252,6 +252,7 @@ export type ReviewTxRoutes = {
     details?: ReviewDetailsProps
     createdBy?: React.ReactNode
     context?: ReviewContext
+    aggregator?: string
     onConfirm?: () => void
     onCancel?: OnConfirm['onCancel']
     onSuccess?: OnConfirm['onSuccess']
@@ -371,7 +372,8 @@ export type WalletNavigation = {
   navigateToAnalyticsSettings: () => void
   navigateToGovernanceCentre: () => void
   navigateToDiscoverBrowserDapp: () => void
-  navigateToSwap: (tokenOutId?: Portfolio.Token.Id) => void
+  navigateToSwap: () => void
+  resetToSwapWithToken: () => void
   navigateToExchange: () => void
   navigateToUtxoList: () => void
   navigateToUtxoConsolidation: () => void

@@ -12,10 +12,10 @@ import {
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {useAuth} from '~/features/Auth/context/AuthProvider'
 import {usePrefetchStakingInfo} from '~/features/Dashboard/ui/shared/StakePoolInfos'
 import {useCanVote} from '~/features/RegisterCatalyst/common/hooks'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {features} from '~/kernel/features'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
@@ -34,7 +34,6 @@ const MenuStack = createStackNavigator<MenuRoutes>()
 export const MenuNavigator = () => {
   const strings = useStrings()
   const {palette: p} = useTheme()
-
   return (
     <MenuStack.Navigator
       initialRouteName="_menu"
@@ -58,6 +57,7 @@ export const Menu = () => {
   const {atoms: ta, palette: p} = useTheme()
   const navigateTo = useNavigateTo()
   const {isPoolRetiring} = usePoolTransition()
+  const {isAuthDev} = useAuth()
 
   return (
     <SafeAreaView edges={['left', 'right']} style={[ta.bg_color_max, a.flex_1]}>
@@ -79,7 +79,7 @@ export const Menu = () => {
           }
         />
 
-        {features.utxoList && (
+        {isAuthDev && (
           <UtxoList
             label={strings.menu.utxoList}
             onPress={navigateTo.utxoList}

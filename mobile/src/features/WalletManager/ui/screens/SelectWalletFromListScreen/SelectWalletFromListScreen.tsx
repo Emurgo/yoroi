@@ -2,17 +2,17 @@ import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Wallet} from '@yoroi/types'
 
-import {useNavigation} from '@react-navigation/native'
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 import {Linking, Text, TouchableOpacity} from 'react-native'
 
+import {useAuth} from '~/features/Auth/context/AuthProvider'
 import {useLinksRequestWallet} from '~/features/Links/hooks/useLinksRequestWallet'
 import {pushNotificationsManager} from '~/features/Notifications/common/notification-manager'
 import {
   handleNotificationInternalNavigationAction,
   shouldHandleNotificationInternalNavigationAction,
 } from '~/features/Notifications/common/tools'
-import {isDev} from '~/kernel/constants'
 import {features} from '~/kernel/features'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
@@ -44,13 +44,32 @@ export const SelectWalletFromList = () => {
   const {scrollViewRef} = useScrollView()
   const navigation = useNavigation()
   const walletMetas = useWalletMetas()
-  const {walletManager} = useWalletManager()
+  const {walletManager, selected} = useWalletManager()
   const walletNavigation = useWalletNavigation()
+  const {isAuthDev} = useAuth()
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const checkPendingNavigation = async () => {
+        const shouldHandle =
+          await shouldHandleNotificationInternalNavigationAction()
+        if (shouldHandle && selected.wallet?.id) {
+          await handleNotificationInternalNavigationAction(
+            pushNotificationsManager,
+            walletNavigation,
+          )
+        }
+      }
+      setTimeout(() => checkPendingNavigation(), 300)
+    }, [selected.wallet?.id, walletNavigation]),
+  )
 
   const handleOnSelect = React.useCallback(
     async (walletMeta: Wallet.Meta) => {
       walletManager.setSelectedWalletId(walletMeta.id)
-      if (await shouldHandleNotificationInternalNavigationAction()) {
+      const shouldHandle =
+        await shouldHandleNotificationInternalNavigationAction()
+      if (shouldHandle) {
         await handleNotificationInternalNavigationAction(
           pushNotificationsManager,
           walletNavigation,
@@ -94,7 +113,7 @@ export const SelectWalletFromList = () => {
 
         <AddWalletButton />
 
-        {isDev && <OnlyDevButton />}
+        {isAuthDev && <OnlyDevButton />}
       </SafeArea.Footer>
     </SafeArea>
   )

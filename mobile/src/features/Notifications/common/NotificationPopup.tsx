@@ -16,6 +16,8 @@ import {NotificationItem} from '~/ui/NotificationItem/NotificationItem'
 import {SwipeOutWrapper} from '~/ui/SwipeOutWrapper/SwipeOutWrapper'
 
 import {BannerIds} from './banners'
+import {pushNotificationsManager} from './notification-manager'
+import {handleBannerAction, handlePushAction} from './tools'
 
 type Props = {
   event: Notifications.Event
@@ -39,6 +41,32 @@ export const NotificationPopup = ({
     onCancel()
   }
 
+  const handlePushNotificationAction = async () => {
+    onPress()
+    if (event.trigger === Notifications.Trigger.Push) {
+      await handlePushAction({
+        manager: pushNotificationsManager,
+        id: event.id,
+        walletNavigation: navigation,
+        source: 'app',
+      })
+    }
+  }
+
+  const handleBannerPress = async () => {
+    onPress()
+    if (event.trigger === Notifications.Trigger.Banner) {
+      if (event.id === BannerIds.BuyCrypto || event.id === BannerIds.TestAda) {
+        trackEvent(AnalyticsEventEnum.WalletPageBuyBannerClicked)
+      }
+      await handleBannerAction({
+        manager: pushNotificationsManager,
+        id: event.id,
+        walletNavigation: navigation,
+      })
+    }
+  }
+
   const handleOnPress = () => {
     onPress()
 
@@ -48,19 +76,6 @@ export const NotificationPopup = ({
 
     if (event.trigger === Notifications.Trigger.RewardsUpdated) {
       navigation.navigateToStakingDashboard()
-    }
-
-    if (event.trigger === Notifications.Trigger.Banner) {
-      if (event.id === BannerIds.BuyCrypto || event.id === BannerIds.TestAda) {
-        trackEvent(AnalyticsEventEnum.WalletPageBuyBannerClicked)
-        navigation.navigateToExchange()
-      }
-      if (event.id === BannerIds.GovernanceParticipation) {
-        navigation.navigateToGovernanceCentre()
-      }
-      if (event.id === BannerIds.UtxoConsolidation) {
-        navigation.navigateToUtxoConsolidation()
-      }
     }
   }
 
@@ -97,10 +112,10 @@ export const NotificationPopup = ({
       <SwipeOutWrapper
         onSwipeOut={handleOnSwipeOut}
         onExpired={onExpired}
-        onPress={handleOnPress}
+        onPress={handleBannerPress}
       >
         <NotificationItem
-          onPress={handleOnPress}
+          onPress={handleBannerPress}
           icon={<ColoredIcon icon={Icon.Exchange} />}
           title={event.metadata.title}
           description={event.metadata.body}
@@ -114,10 +129,10 @@ export const NotificationPopup = ({
       <SwipeOutWrapper
         onSwipeOut={handleOnSwipeOut}
         onExpired={onExpired}
-        onPress={handleOnPress}
+        onPress={handlePushNotificationAction}
       >
         <NotificationItem
-          onPress={handleOnPress}
+          onPress={handlePushNotificationAction}
           icon={<PushNotificationIcon />}
           title={event.metadata.title}
           description={event.metadata.body}

@@ -13,7 +13,10 @@ import {
   getTransactionReceivedNotificationIcon,
   getTransactionReceivedNotificationTitle,
 } from '~/features/Notifications/common/TransactionReceivedNotification'
-import {triggerNotificationAction} from '~/features/Notifications/common/tools'
+import {
+  handleBannerAction,
+  handlePushAction,
+} from '~/features/Notifications/common/tools'
 import {useWalletNotifications} from '~/features/Notifications/common/useWalletNotifications'
 import {useTransactionInfos} from '~/features/Transactions/hooks/useTransactionInfos'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
@@ -39,12 +42,19 @@ export const ViewNotificationHistoryScreen = () => {
   }
 
   const handlePressNotification = async (id: number) => {
-    await triggerNotificationAction({
+    await handleBannerAction({
+      manager,
+      id,
+      walletNavigation,
+    })
+
+    await handlePushAction({
       manager,
       id,
       walletNavigation,
       source: 'app',
     })
+
     refetch()
   }
 

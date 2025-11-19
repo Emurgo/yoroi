@@ -3,8 +3,8 @@ import {isString} from '@yoroi/common'
 import {MetadataJsonSchema} from '@emurgo/cross-csl-core'
 import * as React from 'react'
 
+import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
 import {YoroiUnsignedTx} from '~/wallets/types/yoroi'
-import {CardanoMobile} from '~/wallets/wallets'
 
 import {FormattedMetadata, TransactionBody} from '../types'
 
@@ -15,30 +15,47 @@ export const formatMetadata = (
 ): FormattedMetadata => {
   const hash = txBody.auxiliary_data_hash ?? null
   let metadata = null
-  let generalTransactionMetadata = null
 
   if (
     unsignedTx != null &&
     unsignedTx.unsignedTx.auxiliaryData &&
     hash != null
   ) {
-    generalTransactionMetadata = unsignedTx.unsignedTx.auxiliaryData?.metadata()
+    CardanoMobileWrapped.cslScope((csl) => {
+      const generalTransactionMetadata =
+        unsignedTx.unsignedTx.auxiliaryData?.metadata()
+      if (generalTransactionMetadata) {
+        const metadata674 = generalTransactionMetadata.get(
+          csl.BigNum.fromStr('674'),
+        )
+        if (metadata674) {
+          const decodedMetadata = csl.decodeMetadatumToJsonStr(
+            metadata674,
+            MetadataJsonSchema.BasicConversions,
+          )
+          const msg = [parseMsg(JSON.parse(decodedMetadata)?.msg ?? [''])]
+          metadata = {msg}
+        }
+      }
+    })
   } else if (cbor != null && hash != null) {
-    const tx = CardanoMobile.Transaction.fromHex(cbor)
-    const auxiliaryData = tx.auxiliaryData()
-    generalTransactionMetadata = auxiliaryData?.metadata()
-  }
+    CardanoMobileWrapped.cslScope((csl) => {
+      const tx = csl.Transaction.fromHex(cbor)
+      const auxiliaryData = tx.auxiliaryData()
+      const txMetadata = auxiliaryData?.metadata()
 
-  const metadata674 = generalTransactionMetadata?.get(
-    CardanoMobile.BigNum.fromStr('674'),
-  )
-  if (metadata674) {
-    const decodedMetadata = CardanoMobile.decodeMetadatumToJsonStr(
-      metadata674,
-      MetadataJsonSchema.BasicConversions,
-    )
-    const msg = [parseMsg(JSON.parse(decodedMetadata)?.msg ?? [''])]
-    metadata = {msg}
+      if (txMetadata) {
+        const metadata674 = txMetadata.get(csl.BigNum.fromStr('674'))
+        if (metadata674) {
+          const decodedMetadata = csl.decodeMetadatumToJsonStr(
+            metadata674,
+            MetadataJsonSchema.BasicConversions,
+          )
+          const msg = [parseMsg(JSON.parse(decodedMetadata)?.msg ?? [''])]
+          metadata = {msg}
+        }
+      }
+    })
   }
 
   return {

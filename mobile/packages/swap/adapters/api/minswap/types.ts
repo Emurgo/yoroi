@@ -157,6 +157,7 @@ export type CreateRequest = {
     partner?: string
   }
   amount_in_decimal?: boolean
+  inputs_to_choose?: string[]
 }
 
 export type CreateResponse = {
