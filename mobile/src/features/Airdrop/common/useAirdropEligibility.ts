@@ -2,6 +2,7 @@ import {time} from '@yoroi/common'
 
 import {useQuery} from '@tanstack/react-query'
 
+import {useRemoteConfig} from '~/features/RemoteConfig/hooks/useRemoteConfig'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useWalletEvent} from '~/features/WalletManager/hooks/useWalletEvent'
 import {logger} from '~/kernel/logger/logger'
@@ -16,6 +17,8 @@ const USE_MOCK_DATA = true
 export const useAirdropEligibility = () => {
   const walletManager = useWalletManager()
   const wallet = walletManager.selected.wallet
+  const {config} = useRemoteConfig()
+  const isAirdropEnabled = config?.features?.midnightAirdrop?.enabled ?? false
 
   const queryKey = ['airdropEligibility', wallet?.id] as const
 
@@ -25,7 +28,9 @@ export const useAirdropEligibility = () => {
 
   const query = useQuery({
     queryKey,
-    enabled: USE_MOCK_DATA || (wallet?.isMainnet === true && !!wallet),
+    enabled:
+      isAirdropEnabled &&
+      (USE_MOCK_DATA || (wallet?.isMainnet === true && !!wallet)),
     staleTime: time.fiveMinutes,
     queryFn: async (): Promise<AddressAllocation[]> => {
       // Use mock data for UI testing (works even without wallet)
