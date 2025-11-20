@@ -5,6 +5,7 @@ import {Notifications} from '@yoroi/types'
 import {useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {BannerIds, showBanner} from '~/features/Notifications/common/banners'
+import {useRemoteConfig} from '~/features/RemoteConfig/hooks/useRemoteConfig'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useWalletEvent} from '~/features/WalletManager/hooks/useWalletEvent'
 import {useStrings} from '~/kernel/i18n/useStrings'
@@ -15,6 +16,8 @@ import {useAirdropEligibility} from './useAirdropEligibility'
 export const useAirdropBanner = () => {
   const walletManager = useWalletManager()
   const manager = useNotificationManager()
+  const {config} = useRemoteConfig()
+  const isAirdropEnabled = config?.features?.midnightAirdrop?.enabled ?? false
   const {
     selected: {network, wallet},
   } = walletManager
@@ -34,11 +37,19 @@ export const useAirdropBanner = () => {
 
   useQuery({
     queryKey: [...queryKey, totalRedeemableAmount],
-    enabled: !isLoading && wallet?.isMainnet === true && !!wallet,
+    enabled:
+      !isLoading && wallet?.isMainnet === true && !!wallet && isAirdropEnabled,
     staleTime: time.fiveMinutes,
     queryFn: async () => {
       const onMainnet = wallet?.isMainnet === true
-      if (!onMainnet || !wallet) return false
+      if (!onMainnet || !wallet || !isAirdropEnabled) {
+        // Remove banner if flag is disabled
+        await manager.events.remove(BannerIds.Airdrop)
+        queryClient.invalidateQueries({
+          queryKey: ['receivedNotificationEvents'],
+        })
+        return false
+      }
 
       // Only show banner if there are eligible addresses with redeemable tokens
       if (allocations.length === 0 || totalRedeemableAmount === 0) {
