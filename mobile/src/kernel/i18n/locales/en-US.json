@@ -965,7 +965,7 @@
   "menu": "Menu",
   "airdrop.bannerTitle": "NIGHT Tokens Available",
   "airdrop.bannerBody": "You have {amount} redeemable NIGHT tokens",
-  "airdrop.title": "Lost and Found NIGHT",
+  "airdrop.title": "Redeem NIGHT",
   "airdrop.noAllocations": "No allocations found",
   "airdrop.noAllocationsDescription": "This wallet doesn't have any NIGHT token allocations.",
   "airdrop.loading": "Loading allocations...",

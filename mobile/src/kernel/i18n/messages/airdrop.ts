@@ -11,7 +11,7 @@ export const airdropMessages = defineMessages({
   },
   title: {
     id: 'airdrop.title',
-    defaultMessage: '!!!Lost and Found NIGHT',
+    defaultMessage: '!!!Redeem NIGHT',
   },
   noAllocations: {
     id: 'airdrop.noAllocations',
