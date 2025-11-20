@@ -12,7 +12,7 @@ import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {Space} from '~/ui/Space/Space'
 import {TextInput} from '~/ui/TextInput/TextInput'
-import {CardanoMobile} from '~/wallets/wallets'
+import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
 
 export type Props = {
   onSubmit?: (options: {
@@ -51,7 +51,6 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
   // Use the resolved DRep ID or the direct input
   const resolvedDrepId = React.useMemo(() => {
     if (isHandle && drepInfo?.hex) {
-      console.log('Resolved DRep from handle:', drepInfo)
       return drepInfo.hex
     }
     return trimmedDrepId
@@ -71,7 +70,9 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
         hash = drepInfo.hex
         type = drepInfo.cred === 'key' ? 'key' : 'script'
       } else {
-        const parsed = parseDrepId(resolvedDrepId, CardanoMobile)
+        const parsed = CardanoMobileWrapped.cslScope((csl) =>
+          parseDrepId(resolvedDrepId, csl),
+        )
         hash = parsed.hash
         type = parsed.type
       }
