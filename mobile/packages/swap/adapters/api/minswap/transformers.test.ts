@@ -83,30 +83,6 @@ describe('transformersMaker', () => {
       const result = transformers.estimate.request(mockRequest)
       expect(result.exclude_protocols).toBeUndefined()
     })
-
-    it('should not include exclude_protocols when blockedProtocols is removed', () => {
-      const mockRequest = {
-        amountIn: 10,
-        slippage: 1,
-        tokenIn: '.' as const,
-        tokenOut: 'test-token.' as const,
-      }
-
-      const result = transformers.estimate.request(mockRequest)
-      expect(result.exclude_protocols).toBeUndefined()
-    })
-
-    it('should not include exclude_protocols when blockedProtocols is removed', () => {
-      const mockRequest = {
-        amountIn: 10,
-        slippage: 1,
-        tokenIn: '.' as const,
-        tokenOut: 'test-token.' as const,
-      }
-
-      const result = transformers.estimate.request(mockRequest)
-      expect(result.exclude_protocols).toBeUndefined()
-    })
   })
 
   describe('tokens', () => {

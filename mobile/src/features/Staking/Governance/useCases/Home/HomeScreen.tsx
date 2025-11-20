@@ -11,7 +11,7 @@ import {
 import {ThemedPalette, atoms as a, useTheme} from '@yoroi/theme'
 import {NotEnoughMoneyToSendError} from '@yoroi/tx'
 
-import React, {type ReactNode} from 'react'
+import React from 'react'
 import {Text, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
