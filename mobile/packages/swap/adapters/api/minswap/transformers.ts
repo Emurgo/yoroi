@@ -18,41 +18,6 @@ import {
   TokensResponse,
 } from './types'
 
-const mapProtocolToDex = (protocol: Swap.Protocol): Dex => {
-  switch (protocol) {
-    case Swap.Protocol.Minswap_v2:
-      return Dex.MinswapV2
-    case Swap.Protocol.Minswap_v1:
-      return Dex.Minswap
-    case Swap.Protocol.Minswap_stable:
-      return Dex.MinswapStable
-    case Swap.Protocol.Muesliswap:
-      return Dex.MuesliSwap
-    case Swap.Protocol.Splash_v1:
-      return Dex.Splash
-    case Swap.Protocol.Sundaeswap_v3:
-      return Dex.SundaeSwapV3
-    case Swap.Protocol.Sundaeswap_v1:
-      return Dex.SundaeSwap
-    case Swap.Protocol.Vyfi_v1:
-      return Dex.VyFinance
-    case Swap.Protocol.Cswap:
-      return Dex.CswapV1
-    case Swap.Protocol.Wingriders_v2:
-      return Dex.WingRidersV2
-    case Swap.Protocol.Wingriders_v1:
-      return Dex.WingRiders
-    case Swap.Protocol.Wingriders_stable:
-      return Dex.WingRidersStableV2
-    case Swap.Protocol.Spectrum_v1:
-      return Dex.Spectrum
-    case Swap.Protocol.Splash_v1:
-      return Dex.SplashStable
-    default:
-      return Dex.Unsupported
-  }
-}
-
 export const transformersMaker = (config: MinswapApiConfig) => {
   const {isPrimaryToken, primaryTokenInfo, address, partner} = config
 
@@ -224,22 +189,15 @@ export const transformersMaker = (config: MinswapApiConfig) => {
       estimate: {
         request: ({
           amountIn,
-          blockedProtocols,
           slippage,
           tokenIn,
           tokenOut,
-          protocol,
         }: Swap.EstimateRequest): EstimateRequest => {
           const request: EstimateRequest = {
             token_in: toTokenId(tokenIn),
             token_out: toTokenId(tokenOut),
             amount: amountIn?.toString() ?? '0',
             slippage: slippage ?? 0,
-            exclude_protocols: blockedProtocols?.map((p) =>
-              mapProtocolToDex(p),
-            ),
-            include_protocols:
-              protocol !== undefined ? [mapProtocolToDex(protocol)] : undefined,
             amount_in_decimal: true, // Tell API that amounts are in decimal format
             ...(partner !== undefined && {partner}),
           }
@@ -251,12 +209,15 @@ export const transformersMaker = (config: MinswapApiConfig) => {
           const totalOutputWithoutSlippage = Number(data.amount_out)
           const deposits = Number(data.deposits ?? '0')
           const aggregatorFee = Number(data.aggregator_fee ?? '0')
-          const totalFee = Number(data.total_dex_fee ?? '0')
+          const dexFee = Number(data.total_dex_fee ?? '0')
+          // Convert to lovelace (integers) to avoid floating point precision issues
+          const totalFee =
+            (Math.round(aggregatorFee * 1e6) + Math.round(dexFee * 1e6)) / 1e6
 
           return freeze(
             {
               splits: transformPathsToSplits(data.paths),
-              batcherFee: totalFee,
+              batcherFee: dexFee,
               deposits,
               aggregatorFee,
               frontendFee: 0,
@@ -275,11 +236,9 @@ export const transformersMaker = (config: MinswapApiConfig) => {
       create: {
         request: ({
           amountIn,
-          blockedProtocols,
           slippage,
           tokenIn,
           tokenOut,
-          protocol,
           inputs,
         }: Swap.CreateRequest): CreateRequest => {
           const request = {
@@ -290,13 +249,6 @@ export const transformersMaker = (config: MinswapApiConfig) => {
               token_in: toTokenId(tokenIn),
               token_out: toTokenId(tokenOut),
               slippage: slippage || 1,
-              exclude_protocols: blockedProtocols?.map((p) =>
-                mapProtocolToDex(p),
-              ),
-              include_protocols:
-                protocol !== undefined
-                  ? [mapProtocolToDex(protocol)]
-                  : undefined,
               ...(partner !== undefined && {partner}),
             },
             amount_in_decimal: true, // Also set at the top level for build-tx
