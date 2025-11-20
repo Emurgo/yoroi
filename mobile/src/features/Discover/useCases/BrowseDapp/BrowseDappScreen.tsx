@@ -36,6 +36,7 @@ export const BrowseDappScreen = () => {
 
       return () => {
         if (tabNav) {
+          // Restore the full style with theme values (without display property)
           tabNav.setOptions({
             tabBarStyle: {
               ...ta.bg_color_max,
