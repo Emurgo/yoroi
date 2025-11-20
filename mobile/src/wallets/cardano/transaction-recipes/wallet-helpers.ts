@@ -9,6 +9,7 @@ import {CardanoTypes, YoroiWallet} from '~/wallets/cardano/types'
 
 import {
   convertRawUtxosToModernUtxos,
+  createCombinedDelegationTx,
   createDelegationTx,
   createSendTx,
   createUnsignedGovernanceTx,
@@ -87,6 +88,34 @@ export async function createDelegationTxFromWallet(
     getStakingKey: () => wallet.getStakingKey(),
     getDelegationStatus: () => wallet.getDelegationStatus(),
     poolId: params.poolId,
+    addressMode: params.addressMode,
+  })
+}
+
+/**
+ * Create combined delegation transaction from wallet (stake pool + DRep vote)
+ */
+export async function createCombinedDelegationTxFromWallet(
+  wallet: YoroiWallet,
+  params: {
+    poolId?: string
+    drepValue?: import('@yoroi/tx').DRepValue
+    addressMode: Wallet.AddressMode
+  },
+): Promise<{cbor: string}> {
+  const modernUtxos = getModernUtxosFromWallet(wallet)
+
+  return createCombinedDelegationTx({
+    utxos: modernUtxos,
+    primaryTokenId: wallet.portfolioPrimaryTokenInfo.id,
+    protocolParams: wallet.protocolParams,
+    networkId: wallet.networkManager.chainId,
+    getAbsoluteSlotNumber: () => getAbsoluteSlotNumberFromWallet(wallet),
+    getChangeAddress: (mode) => wallet.getChangeAddress(mode),
+    getStakingKey: () => wallet.getStakingKey(),
+    getDelegationStatus: () => wallet.getDelegationStatus(),
+    poolId: params.poolId,
+    drepValue: params.drepValue,
     addressMode: params.addressMode,
   })
 }
