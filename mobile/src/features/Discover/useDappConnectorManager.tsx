@@ -2,11 +2,13 @@ import {useAsyncStorage} from '@yoroi/common'
 import {DappConnection, DappConnector} from '@yoroi/dapp-connector'
 
 import {Transaction} from '@emurgo/cross-csl-core'
+import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
+import {removeRouteFromNavigationState} from '~/kernel/navigation/common/helpers'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {cip30LedgerExtensionMaker} from '~/wallets/cardano/cip30/cip30-ledger'
 import {YoroiWallet} from '~/wallets/cardano/types'
@@ -26,9 +28,10 @@ import {useShowCollateralNotFoundAlert} from './common/useShowCollateralNotFound
 
 export const useDappConnectorManager = () => {
   const appStorage = useAsyncStorage()
-  const {navigateToDiscoverBrowserDapp} = useWalletNavigation()
+  const navigation = useNavigation()
+  const {navigateToDiscoverBrowserDapp, navigateToTxReview} =
+    useWalletNavigation()
   const {wallet, meta} = useSelectedWallet()
-  const {navigateToTxReview} = useWalletNavigation()
   const {tabs, tabActiveIndex} = useBrowser()
   const dappCollateralRequestUtils = useDappCollateralRequestUtils(wallet)
 
@@ -105,6 +108,14 @@ export const useDappConnectorManager = () => {
 
             resolve(args?.rootKey)
             navigateToDiscoverBrowserDapp()
+            // Remove review-tx-routes from navigation stack after navigating back to browser
+            // Use setTimeout to ensure navigation completes before removing the route
+            // Increase maxDepth to ensure we traverse up to WalletNavigator where review-tx-routes is located
+            setTimeout(() => {
+              removeRouteFromNavigationState(navigation, 'review-tx-routes', {
+                maxDepth: 5,
+              })
+            }, 100)
           },
           onCancel: () => {
             if (!shouldResolve) return
@@ -131,6 +142,7 @@ export const useDappConnectorManager = () => {
       dappCollateralRequestUtils,
       navigateToDiscoverBrowserDapp,
       dappList?.dapps,
+      navigation,
     ],
   )
 
@@ -167,6 +179,14 @@ export const useDappConnectorManager = () => {
             }
             resolve(args?.tx)
             navigateToDiscoverBrowserDapp()
+            // Remove review-tx-routes from navigation stack after navigating back to browser
+            // Use setTimeout to ensure navigation completes before removing the route
+            // Increase maxDepth to ensure we traverse up to WalletNavigator where review-tx-routes is located
+            setTimeout(() => {
+              removeRouteFromNavigationState(navigation, 'review-tx-routes', {
+                maxDepth: 5,
+              })
+            }, 100)
           },
           onErrorWithoutFeedback: (error) => {
             shouldResolve = false
@@ -193,6 +213,7 @@ export const useDappConnectorManager = () => {
       navigateToTxReview,
       navigateToDiscoverBrowserDapp,
       dappList?.dapps,
+      navigation,
     ],
   )
 
