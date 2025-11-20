@@ -81,53 +81,58 @@ export const ConfirmPin = () => {
   const onKeyDown = React.useCallback(
     (key: string) => {
       if (key === BACKSPACE && currentActivePin > 0) {
-        setCurrentActivePin(currentActivePin - 1)
+        React.startTransition(() => {
+          setCurrentActivePin(currentActivePin - 1)
+        })
         return
       }
 
-      switch (currentActivePin) {
-        case 1:
-          setPin1Value(key)
-          setCurrentActivePin(2)
+      // Batch state updates for better performance
+      React.startTransition(() => {
+        switch (currentActivePin) {
+          case 1:
+            setPin1Value(key)
+            setCurrentActivePin(2)
 
-          if (!pin1Touched) setPin1Touched(true)
-          if (key !== pin1) setPin1Error(true)
-          else if (pin1Error) setPin1Error(false)
+            if (!pin1Touched) setPin1Touched(true)
+            if (key !== pin1) setPin1Error(true)
+            else if (pin1Error) setPin1Error(false)
 
-          break
+            break
 
-        case 2:
-          setPin2Value(key)
-          setCurrentActivePin(3)
+          case 2:
+            setPin2Value(key)
+            setCurrentActivePin(3)
 
-          if (!pin2Touched) setPin2Touched(true)
-          if (key !== pin2) setPin2Error(true)
-          else if (pin2Error) setPin2Error(false)
+            if (!pin2Touched) setPin2Touched(true)
+            if (key !== pin2) setPin2Error(true)
+            else if (pin2Error) setPin2Error(false)
 
-          break
+            break
 
-        case 3:
-          setPin3Value(key)
-          setCurrentActivePin(4)
+          case 3:
+            setPin3Value(key)
+            setCurrentActivePin(4)
 
-          if (!pin3Touched) setPin3Touched(true)
-          if (key !== pin3) setPin3Error(true)
-          else if (pin3Error) setPin3Error(false)
+            if (!pin3Touched) setPin3Touched(true)
+            if (key !== pin3) setPin3Error(true)
+            else if (pin3Error) setPin3Error(false)
 
-          break
+            break
 
-        case 4:
-          setPin4Value(key)
+          case 4:
+            setPin4Value(key)
 
-          if (!pin4Touched) setPin4Touched(true)
-          if (key !== pin4) setPin4Error(true)
-          else if (pin4Error) setPin4Error(false)
+            if (!pin4Touched) setPin4Touched(true)
+            if (key !== pin4) setPin4Error(true)
+            else if (pin4Error) setPin4Error(false)
 
-          break
+            break
 
-        default:
-          break
-      }
+          default:
+            break
+        }
+      })
     },
     [
       currentActivePin,
@@ -186,27 +191,47 @@ export const ConfirmPin = () => {
 
   const handleOnPress = React.useCallback(
     (pinSelected: number) => {
-      setCurrentActivePin(pinSelected)
+      React.startTransition(() => {
+        setCurrentActivePin(pinSelected)
 
-      switch (pinSelected) {
-        case 1:
-          if (!pin1Touched) setPin1Touched(true)
-          break
-        case 2:
-          if (!pin2Touched) setPin2Touched(true)
-          break
-        case 3:
-          if (!pin3Touched) setPin3Touched(true)
-          break
-        case 4:
-          if (!pin4Touched) setPin4Touched(true)
-          break
+        switch (pinSelected) {
+          case 1:
+            if (!pin1Touched) setPin1Touched(true)
+            break
+          case 2:
+            if (!pin2Touched) setPin2Touched(true)
+            break
+          case 3:
+            if (!pin3Touched) setPin3Touched(true)
+            break
+          case 4:
+            if (!pin4Touched) setPin4Touched(true)
+            break
 
-        default:
-          break
-      }
+          default:
+            break
+        }
+      })
     },
     [pin1Touched, pin2Touched, pin3Touched, pin4Touched],
+  )
+
+  // Memoize individual PinBox callbacks to prevent unnecessary re-renders
+  const handlePin1Press = React.useCallback(
+    () => handleOnPress(1),
+    [handleOnPress],
+  )
+  const handlePin2Press = React.useCallback(
+    () => handleOnPress(2),
+    [handleOnPress],
+  )
+  const handlePin3Press = React.useCallback(
+    () => handleOnPress(3),
+    [handleOnPress],
+  )
+  const handlePin4Press = React.useCallback(
+    () => handleOnPress(4),
+    [handleOnPress],
   )
 
   return (
@@ -229,7 +254,7 @@ export const ConfirmPin = () => {
 
         <Row style={[{justifyContent: 'center'}]}>
           <PinBox
-            onPress={() => handleOnPress(1)}
+            onPress={handlePin1Press}
             done={done}
             error={pin1Error}
             selected={currentActivePin === 1}
@@ -240,7 +265,7 @@ export const ConfirmPin = () => {
           <Space.Width.lg />
 
           <PinBox
-            onPress={() => handleOnPress(2)}
+            onPress={handlePin2Press}
             done={done}
             error={pin2Error}
             selected={currentActivePin === 2}
@@ -251,7 +276,7 @@ export const ConfirmPin = () => {
           <Space.Width.md />
 
           <PinBox
-            onPress={() => handleOnPress(3)}
+            onPress={handlePin3Press}
             done={done}
             error={pin3Error}
             selected={currentActivePin === 3}
@@ -262,7 +287,7 @@ export const ConfirmPin = () => {
           <Space.Width.md />
 
           <PinBox
-            onPress={() => handleOnPress(4)}
+            onPress={handlePin4Press}
             done={done}
             error={pin4Error}
             selected={currentActivePin === 4}

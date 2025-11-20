@@ -37,22 +37,34 @@ export const PinInput = React.forwardRef<PinInputRef, Props>((props, ref) => {
     },
   }))
 
-  const onKeyDown = (value: string) => {
-    if (!enabled) return
-    if (value === BACKSPACE) {
-      if (pin.length === 0) onGoBack?.()
-      setPin(pin.substring(0, pin.length - 1))
-      return
-    }
+  const onKeyDown = React.useCallback(
+    (value: string) => {
+      if (!enabled) return
 
-    if (pin.length === pinMaxLength) {
-      return
-    }
+      if (value === BACKSPACE) {
+        setPin((prevPin) => {
+          if (prevPin.length === 0) {
+            onGoBack?.()
+            return prevPin
+          }
+          return prevPin.slice(0, -1)
+        })
+        return
+      }
 
-    const newPin = pin.concat(value)
-    setPin(newPin)
-    if (newPin.length === pinMaxLength) onDone(newPin)
-  }
+      setPin((prevPin) => {
+        if (prevPin.length === pinMaxLength) {
+          return prevPin
+        }
+        const newPin = `${prevPin}${value}`
+        if (newPin.length === pinMaxLength) {
+          onDone(newPin)
+        }
+        return newPin
+      })
+    },
+    [enabled, pinMaxLength, onDone, onGoBack],
+  )
 
   return (
     <View style={[a.flex_1, ta.bg_color_max]}>
@@ -90,9 +102,15 @@ export const PinInput = React.forwardRef<PinInputRef, Props>((props, ref) => {
         <Space.Height._2xl />
 
         <View style={[a.flex_row, a.gap_sm]}>
-          {Array.from({length: pinMaxLength}, (_, index) => (
-            <PinPlaceholder key={index} isActive={index < pin.length} />
-          ))}
+          {React.useMemo(
+            () =>
+              Array.from({length: pinMaxLength}, (_, index) => index).map(
+                (index) => (
+                  <PinPlaceholder key={index} isActive={index < pin.length} />
+                ),
+              ),
+            [pinMaxLength, pin.length],
+          )}
         </View>
       </View>
 
@@ -101,7 +119,7 @@ export const PinInput = React.forwardRef<PinInputRef, Props>((props, ref) => {
   )
 })
 
-const PinPlaceholder = ({isActive}: {isActive: boolean}) => {
+const PinPlaceholder = React.memo(({isActive}: {isActive: boolean}) => {
   const {palette: p} = useTheme()
   return (
     <View style={[a.px_sm]}>
@@ -116,4 +134,4 @@ const PinPlaceholder = ({isActive}: {isActive: boolean}) => {
       />
     </View>
   )
-}
+})
