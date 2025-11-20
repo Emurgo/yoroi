@@ -16,7 +16,12 @@ describe('runMigrations', () => {
         }
         return Promise.resolve(null)
       }),
-      setItem: jest.fn().mockResolvedValue(undefined),
+      setItem: jest.fn().mockImplementation((key, value) => {
+        if (key === 'storageVersion' && typeof value === 'number') {
+          storageVersion = value
+        }
+        return Promise.resolve(undefined)
+      }),
       removeItem: jest.fn().mockResolvedValue(undefined),
       getAllKeys: jest.fn().mockResolvedValue([]),
       multiGet: jest.fn().mockResolvedValue([]),

@@ -536,7 +536,7 @@ describe('DappConnector', () => {
         trustedUrl,
         sendMessage,
       )
-      expect(sendMessage).toHaveBeenCalledWith('1', 'a0')
+      expect(sendMessage).toHaveBeenCalledWith('1', 'mock-signed-tx-hex')
     })
 
     it('should resolve signTx with mocked data if partial sign is known', async () => {
@@ -547,7 +547,7 @@ describe('DappConnector', () => {
         trustedUrl,
         sendMessage,
       )
-      expect(sendMessage).toHaveBeenCalledWith('1', 'a0')
+      expect(sendMessage).toHaveBeenCalledWith('1', 'mock-signed-tx-hex')
     })
 
     it('should throw in signTx with when incorrect arguments are presented', async () => {

@@ -264,6 +264,9 @@ const wallet: YoroiWallet = {
   resync: async (..._args: unknown[]) => {
     throw new Error('not implemented: resync')
   },
+  quickSync: async (..._args: unknown[]) => {
+    throw new Error('not implemented: quickSync')
+  },
   fetchFundInfo: () => {
     throw new Error('not implemented: fetchFundInfo')
   },
