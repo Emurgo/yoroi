@@ -59,66 +59,71 @@ export type YoroiNftModerationStatus =
   | 'manual_review'
 
 export type YoroiConfig = Readonly<{
-  pushLinkKeys: Readonly<{
-    internal: Readonly<{
-      catalystRegistration: Readonly<{
-        mobile: string
-        extension: string
+  pushLinkKeys?: Readonly<{
+    internal?: Readonly<{
+      catalystRegistration?: Readonly<{
+        mobile?: string
+        extension?: string
       }>
     }>
-    external: Readonly<{
-      yoroiWebsite: string
+    external?: Readonly<{
+      yoroiWebsite?: string
     }>
   }>
-  banners: Readonly<{
-    midnightAnnouncement: Readonly<{
-      display: boolean
+  banners?: Readonly<{
+    midnightAnnouncement?: Readonly<{
+      display?: boolean
     }>
-    yoroiDrep: Readonly<{
-      display: boolean
+    midnightPhase2Announcement?: Readonly<{
+      display?: boolean
     }>
-  }>
-  popups: Readonly<{
-    midnightDistribution: Readonly<{
-      display: boolean
-    }>
-    generalFeaturesAnnouncement: Readonly<{
-      display: boolean
-    }>
-    poolTransitionDialog: Readonly<{
-      display: boolean
-    }>
-    cardanoCardAnnouncement: Readonly<{
-      display: boolean
+    yoroiDrep?: Readonly<{
+      display?: boolean
     }>
   }>
-  features: Readonly<{
-    airdrop: Readonly<{
-      enabled: boolean
+  popups?: Readonly<{
+    midnightDistribution?: Readonly<{
+      display?: boolean
+    }>
+    generalFeaturesAnnouncement?: Readonly<{
+      display?: boolean
+    }>
+    poolTransitionDialog?: Readonly<{
+      display?: boolean
+    }>
+    cardanoCardAnnouncement?: Readonly<{
+      display?: boolean
+    }>
+    firefoxSupportAnnouncement?: Readonly<{
+      display?: boolean
     }>
   }>
-  dapps: Readonly<{
-    banned: ReadonlyArray<string>
-    recommended: ReadonlyArray<YoroiConfigRecommendedDapp>
-    filters: Readonly<{
-      Media: ReadonlyArray<string>
-      Investment: ReadonlyArray<string>
-      Trading: ReadonlyArray<string>
-      Community: ReadonlyArray<string>
+  features?: Readonly<Record<string, unknown>>
+  dapps?: Readonly<{
+    banned?: ReadonlyArray<string>
+    recommended?: ReadonlyArray<YoroiConfigRecommendedDapp>
+    filters?: Readonly<{
+      Media?: ReadonlyArray<string>
+      Investment?: ReadonlyArray<string>
+      Trading?: ReadonlyArray<string>
+      Community?: ReadonlyArray<string>
     }>
   }>
-  swap: Readonly<{
-    initialPair: Readonly<{
-      tokenIn: Portfolio.Token.Id
-      tokenOut: Portfolio.Token.Id
+  swap?: Readonly<{
+    initialPair?: Readonly<{
+      tokenIn?: Portfolio.Token.Id
+      tokenOut?: Portfolio.Token.Id
     }>
-    excludedTokens: ReadonlyArray<Portfolio.Token.Id>
-    verifiedTokens: ReadonlyArray<Portfolio.Token.Id>
-    partners: Readonly<{
-      dexhunter: string
-      muesliswap: string
+    excludedTokens?: ReadonlyArray<Portfolio.Token.Id>
+    verifiedTokens?: ReadonlyArray<Portfolio.Token.Id>
+    partners?: Readonly<{
+      dexhunter?: string
+      muesliswap?: string
+      minswap?: string
+      steelswap?: string
     }>
   }>
+  enableTrezorAirdrop?: boolean
 }>
 
 export type YoroiConfigRecommendedDapp = {

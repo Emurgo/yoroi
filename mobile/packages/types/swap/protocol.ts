@@ -16,7 +16,7 @@ export const SwapProtocol = Object.freeze({
   Wingriders_v1: 'wingriders-v1',
   Wingriders_v2: 'wingriders-v2',
   Wingriders_stable: 'wingriders-stable',
-  Splash_v1: 'splash-v1',
+  Splash_v1: 'splash',
   Splash_v4: 'splash-v4',
   Splash_v5: 'splash-v5',
   Splash_v6: 'splash-v6',
