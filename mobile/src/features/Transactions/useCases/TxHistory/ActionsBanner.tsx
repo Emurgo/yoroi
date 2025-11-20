@@ -25,7 +25,7 @@ import {Text} from '~/ui/Text/Text'
 export const ActionsBanner = (props: {disabled: boolean}) => {
   const strings = useStrings()
   const {config, isLoading} = useRemoteConfig()
-  const tokenOutId = config?.swap?.initialPair.tokenOut
+  const tokenOutId = config?.swap?.initialPair?.tokenOut
   const disabled = props.disabled || isLoading
   const navigateTo = useWalletNavigation()
   const {atoms: ta} = useTheme()

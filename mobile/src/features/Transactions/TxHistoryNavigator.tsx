@@ -28,7 +28,11 @@ import {SwapNavigator} from '~/features/Swap/navigator'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {WithWalletOpened} from '~/features/WalletManager/ui/shared/WithWalletOpened'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
+import {
+  BackButton,
+  defaultStackNavigationOptions,
+} from '~/kernel/navigation/common/helpers'
+import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {TxHistoryRoutes} from '~/kernel/navigation/types'
 
 import {AddressDetails} from '../Transactions/useCases/AddressDetails/AddressDetails'
@@ -47,6 +51,7 @@ export const TxHistoryNavigator = () => {
   const strings = useStrings()
   const {palette: p, atoms: ta} = useTheme()
   const {meta} = useSelectedWallet()
+  const walletNavigation = useWalletNavigation()
 
   const screenOptions: StackNavigationOptions = React.useMemo(
     () => ({
@@ -60,6 +65,12 @@ export const TxHistoryNavigator = () => {
     () => ({
       title: meta.name,
       headerRight: () => <HeaderRightHistory />,
+      headerLeft: () => (
+        <BackButton
+          onPress={() => walletNavigation.resetToWalletSelection()}
+          color={ta.text_gray_max.color}
+        />
+      ),
       headerTransparent: true,
       headerStyle: {
         ...a.bg_transparent,
@@ -71,7 +82,7 @@ export const TxHistoryNavigator = () => {
       },
       headerTintColor: ta.text_gray_max.color,
     }),
-    [meta.name, ta.text_gray_max.color],
+    [meta.name, ta.text_gray_max.color, walletNavigation],
   )
 
   return (

@@ -2,6 +2,7 @@ import {parseNumberFromText} from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Swap} from '@yoroi/types'
 
+import _ from 'lodash'
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
@@ -41,6 +42,7 @@ export const EstimateSummary = () => {
 
   const protocol = swapForm.estimate?.splits[0]?.protocol
   const fallbackImageUrl = swapForm.estimate?.splits[0]?.aggregatorImageUrl
+  const aggregator = swapForm.estimate?.splits[0]?.aggregator
   const nameOverride =
     protocol === Swap.Protocol.Unsupported
       ? swapForm.estimate?.splits[0]?.aggregatorDexKey
@@ -62,6 +64,16 @@ export const EstimateSummary = () => {
       ),
     })
 
+  // Build append text: show aggregator if available, or "..." for multiple splits
+  const appendText =
+    aggregator != null
+      ? ` ${strings.swap.via} ${_.upperFirst(aggregator)}${
+          (swapForm.estimate?.splits.length ?? 0) > 1 ? '...' : ''
+        }`
+      : (swapForm.estimate?.splits.length ?? 0) > 1
+        ? '...'
+        : undefined
+
   return (
     <View style={a.p_lg}>
       <Row
@@ -79,9 +91,7 @@ export const EstimateSummary = () => {
                     ? navigateTo.selectProtocol
                     : expand
                 }
-                {...((swapForm.estimate?.splits.length ?? 0) > 1 && {
-                  append: '...',
-                })}
+                {...(appendText && {append: appendText})}
               />
             </View>
           )
