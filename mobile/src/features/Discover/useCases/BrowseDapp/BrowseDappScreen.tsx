@@ -39,7 +39,7 @@ export const BrowseDappScreen = () => {
           })
         }
       }
-    }, [navigation, p, ta, tabs.length]),
+    }, [navigation, p, ta]),
   )
 
   return (
