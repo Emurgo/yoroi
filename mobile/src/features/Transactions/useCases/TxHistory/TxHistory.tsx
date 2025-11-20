@@ -1,8 +1,9 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 
+import {useNavigation} from '@react-navigation/native'
 import {LinearGradient} from 'expo-linear-gradient'
 import * as React from 'react'
-import {LayoutAnimation, Text, View} from 'react-native'
+import {BackHandler, LayoutAnimation, Platform, Text, View} from 'react-native'
 
 import infoIcon from '~/assets/img/icon/info-light-green.png'
 import {useBuyCryptoBanner} from '~/features/Exchange/common/useBuyCryptoBanner'
@@ -13,6 +14,7 @@ import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWalle
 import {useSync} from '~/features/WalletManager/hooks/useSync'
 import {features} from '~/kernel/features'
 import {useStrings} from '~/kernel/i18n/useStrings'
+import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Space, SpaceHeight} from '~/ui/Space/Space'
 
 import {TxList} from '../TxList/TxList'
@@ -31,6 +33,8 @@ export const TxHistory = () => {
 
   const strings = useStrings()
   const {atoms: ta, palette: p, isDark} = useTheme()
+  const navigation = useNavigation()
+  const walletNavigation = useWalletNavigation()
 
   useGetImportantAlertsModal({enabled: features.pushNotifications})
 
@@ -50,6 +54,49 @@ export const TxHistory = () => {
   })
 
   const handleOnRefresh = () => sync()
+
+  // Handle back navigation - always reset to wallet selection when on history-list
+  React.useEffect(() => {
+    // Handle OS back button (Android) - only when on history-list screen
+    if (Platform.OS === 'android') {
+      const backHandler = BackHandler.addEventListener(
+        'hardwareBackPress',
+        () => {
+          // Check if we can go back in the current stack
+          // If not, we're at the root (history-list) and should reset to wallet selection
+          if (!navigation.canGoBack()) {
+            walletNavigation.resetToWalletSelection()
+            return true // Prevent default back behavior
+          }
+          // Otherwise, let normal navigation handle it (go back to previous screen in stack)
+          return false
+        },
+      )
+
+      return () => backHandler.remove()
+    }
+    return undefined
+  }, [navigation, walletNavigation])
+
+  // Handle navigation back button (header button and gesture)
+  // This only fires when trying to remove history-list from the stack
+  // Only intercept user-initiated back navigation (GO_BACK), not programmatic navigation
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener('beforeRemove', (e) => {
+      // Only intercept user-initiated back navigation
+      // Allow programmatic navigation (RESET, NAVIGATE, etc.) to proceed normally
+      if (e.data.action.type === 'GO_BACK') {
+        // Prevent default behavior
+        e.preventDefault()
+
+        // Reset to wallet selection
+        walletNavigation.resetToWalletSelection()
+      }
+      // For other action types (RESET, NAVIGATE, etc.), let them proceed normally
+    })
+
+    return unsubscribe
+  }, [navigation, walletNavigation])
 
   return (
     <LinearGradient

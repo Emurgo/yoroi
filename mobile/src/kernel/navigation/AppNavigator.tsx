@@ -57,7 +57,6 @@ export const AppNavigator = () => {
     [p],
   )
 
-  // Enable notifications inside navigation context
   useInitNotifications({
     localEnabled: true,
     pushEnabled: features.pushNotifications,
