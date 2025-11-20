@@ -211,11 +211,11 @@ export const transformersMaker = ({
           protocol: toSwapProtocol(pool.dex as Dex),
           expectedOutput: pool.quantityB, // Already in decimal format
           expectedOutputWithoutSlippage: pool.quantityB, // Already in decimal format
-          fee: pool.volumeFee, // Already in decimal format (ADA)
+          fee: pool.volumeFee, // Already in decimal format (isFloat=true)
           initialPrice:
             pool.quantityA > 0 ? pool.quantityB / pool.quantityA : 0,
           finalPrice: pool.quantityA > 0 ? pool.quantityB / pool.quantityA : 0,
-          poolFee: pool.volumeFee, // Already in decimal format (ADA)
+          poolFee: pool.volumeFee, // Already in decimal format (isFloat=true)
           poolId: pool.poolId,
           priceDistortion: 0,
           priceImpact: 0,

@@ -254,7 +254,7 @@ describe('transformersMaker', () => {
             quantityB: 1089627, // Already in decimal format (isFloat=true)
             batcherFee: 0.1, // Already in ADA (isFloat=true)
             deposit: 0,
-            volumeFee: 1000, // Still in lovelace, will be converted
+            volumeFee: 1000, // Already in decimal format (isFloat=true)
           },
         ],
       }
@@ -277,8 +277,8 @@ describe('transformersMaker', () => {
             expectedOutput: 1089627, // Already in decimal format (isFloat=true)
             batcherFee: 0.1, // Already in ADA (isFloat=true)
             deposits: 0,
-            fee: 0.001, // 1000 lovelace converted to ADA (1000 / 10^6)
-            poolFee: 0.001, // 1000 lovelace converted to ADA (1000 / 10^6)
+            fee: 1000, // Already in decimal format (isFloat=true)
+            poolFee: 1000, // Already in decimal format (isFloat=true)
             protocol: Swap.Protocol.Splash_v1,
             aggregator: Swap.Aggregator.Steelswap,
             aggregatorDexKey: 'Splash',
@@ -321,7 +321,7 @@ describe('transformersMaker', () => {
                   quantityB: 1089627, // Already in decimal format (isFloat=true)
                   batcherFee: 0.1, // Already in ADA (isFloat=true)
                   deposit: 0,
-                  volumeFee: 1000, // Still in lovelace, will be converted
+                  volumeFee: 1000, // Already in decimal format (isFloat=true)
                 },
               ],
             },
