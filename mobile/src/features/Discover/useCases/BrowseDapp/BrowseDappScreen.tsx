@@ -5,6 +5,7 @@ import * as React from 'react'
 import {FlatList, View} from 'react-native'
 
 import {useBrowser} from '~/features/Discover/common/BrowserProvider'
+import {useNavigateTo} from '~/features/Discover/common/useNavigateTo'
 import {Space} from '~/ui/Space/Space'
 
 import {BrowserTabsBar} from './BrowserTabsBar'
@@ -15,9 +16,15 @@ export const BrowseDappScreen = () => {
   const flatListRef = React.useRef<FlatList>(null)
   const {tabs, tabsOpen} = useBrowser()
   const navigation = useNavigation()
+  const navigateTo = useNavigateTo()
 
   useFocusEffect(
     React.useCallback(() => {
+      if (tabs.length === 0) {
+        navigateTo.selectDappFromList()
+        return
+      }
+
       const tabNav = navigation.getParent()?.getParent()
       if (tabNav) {
         tabNav.setOptions({
@@ -29,7 +36,6 @@ export const BrowseDappScreen = () => {
 
       return () => {
         if (tabNav) {
-          // Restore the full style with theme values (without display property)
           tabNav.setOptions({
             tabBarStyle: {
               ...ta.bg_color_max,
@@ -39,7 +45,7 @@ export const BrowseDappScreen = () => {
           })
         }
       }
-    }, [navigation, p, ta]),
+    }, [navigation, navigateTo, p, ta, tabs.length]),
   )
 
   return (
