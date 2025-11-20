@@ -73,7 +73,7 @@ export const ChangeVoteScreen = () => {
           <EnterDrepIdModal onSubmit={onSubmit} />
         </GovernanceProvider>
       ),
-      height: 360,
+      height: 400,
     })
   }
 

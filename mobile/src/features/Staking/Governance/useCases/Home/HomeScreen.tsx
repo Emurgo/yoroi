@@ -32,6 +32,7 @@ import {TransactionInfo} from '~/wallets/types/other'
 import {Action} from '../../common/Action/Action'
 import {mapStakingKeyStateToGovernanceAction} from '../../common/helpers'
 import {useNavigateTo} from '../../common/navigation'
+import {isInsufficientBalanceError} from '../../common/transactionErrorHandling'
 import {useGovernanceVoteFlow} from '../../common/useGovernanceVoteFlow'
 import {GovernanceVote} from '../../types'
 import {EnterDrepIdModal} from '../EnterDrepIdModal/EnterDrepIdModal'
@@ -279,7 +280,11 @@ const NeverParticipatedInGovernanceVariant = () => {
     options: {
       shouldThrow: false,
       onError: (error) => {
-        if (error instanceof NotEnoughMoneyToSendError) {
+        // Check for insufficient balance errors (both error class and string-based errors)
+        if (
+          error instanceof NotEnoughMoneyToSendError ||
+          isInsufficientBalanceError(error)
+        ) {
           navigateTo.noFunds()
           return
         }
@@ -304,7 +309,7 @@ const NeverParticipatedInGovernanceVariant = () => {
           <EnterDrepIdModal onSubmit={onSubmit} />
         </GovernanceProvider>
       ),
-      height: 360,
+      height: 400,
     })
   }
 

@@ -101,6 +101,30 @@ export const getPoolInfo = (
   return fetchDefault('pool/info', request, baseApiUrl)
 }
 
+/**
+ * LEGACY ONLY: GET /v2.1/pools/poolTransitionInfo
+ *
+ * Pool transition configuration endpoint.
+ * Returns configuration about retiring pools and their replacement pools.
+ * No backend-zero equivalent exists.
+ *
+ * Usage: Used by pool transition feature to suggest replacement pools when current pool is retiring.
+ * Migration: Keep using legacy API until backend-zero adds pool transition endpoint.
+ */
+export const getPoolTransitionInfo = (
+  baseApiUrl: string,
+): Promise<{
+  new: {[groupName: string]: Array<string>}
+  old: {[groupName: string]: Array<[string, number, boolean]>}
+  saturationThreshold?: number
+} | null> => {
+  return fetchDefault('v2.1/pools/poolTransitionInfo', null, baseApiUrl, 'GET')
+    .catch(() => {
+      // Return null on error to match PoolInfoApi behavior
+      return null
+    })
+}
+
 export const fetchTxStatus = (
   request: TxStatusRequest,
   baseApiUrl: string,

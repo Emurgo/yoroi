@@ -7,6 +7,9 @@ export type {CreateWithdrawalTxParams} from './createWithdrawalTx'
 export {createDelegationTx} from './createDelegationTx'
 export type {CreateDelegationTxParams} from './createDelegationTx'
 
+export {createCombinedDelegationTx} from './createCombinedDelegationTx'
+export type {CreateCombinedDelegationTxParams} from './createCombinedDelegationTx'
+
 export {createVotingRegTx} from './createVotingRegTx'
 export type {CreateVotingRegTxParams} from './createVotingRegTx'
 
@@ -20,6 +23,7 @@ export {convertRawUtxosToModernUtxos} from './helpers'
 
 // Wallet helper functions - simplified API for features
 export {
+  createCombinedDelegationTxFromWallet,
   createDelegationTxFromWallet,
   createSendTxFromWallet,
   createUnsignedGovernanceTxFromWallet,

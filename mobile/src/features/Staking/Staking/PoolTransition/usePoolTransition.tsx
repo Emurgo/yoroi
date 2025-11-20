@@ -1,11 +1,13 @@
 import {API_ENDPOINTS} from '@yoroi/api'
-import {PoolInfoApi} from '@yoroi/staking'
+import {poolInfoApiMaker} from '@yoroi/staking'
 import {Wallet} from '@yoroi/types'
 
 import {init} from '@emurgo/cross-csl-mobile'
 import {useQuery} from '@tanstack/react-query'
 import * as React from 'react'
 
+import {useNavigateTo} from '~/features/Staking/Governance/common/navigation'
+import {isInsufficientBalanceError} from '~/features/Staking/Governance/common/transactionErrorHandling'
 import {useStakingInfo} from '~/features/Staking/hooks/useStakingInfo'
 import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
@@ -33,13 +35,14 @@ export const usePoolTransition = () => {
   const {wallet, meta} = useSelectedWallet()
   const {networkManager} = useSelectedNetwork()
   const {navigateToTxReview} = useWalletNavigation()
+  const navigateTo = useNavigateTo()
   const {stakingInfo, isLoading} = useStakingInfo(wallet)
 
   const poolInfoApi = React.useMemo(() => {
-    return new PoolInfoApi(
-      networkManager.legacyApiBaseUrl,
-      API_ENDPOINTS[networkManager.network].root,
-    )
+    return poolInfoApiMaker({
+      legacyApiBaseUrl: networkManager.legacyApiBaseUrl,
+      zeroApiUrl: API_ENDPOINTS[networkManager.network].root,
+    })
   }, [networkManager.legacyApiBaseUrl, networkManager.network])
 
   const isStaked = stakingInfo?.status === 'staked'
@@ -61,9 +64,18 @@ export const usePoolTransition = () => {
   const poolId = poolTransition?.suggested.hash ?? ''
 
   const navigateToUpdate = React.useCallback(async () => {
-    const result = await createDelegationTxHelper(wallet, poolId, meta)
-    navigateToTxReview({cbor: result.cbor, context: 'delegate'})
-  }, [wallet, poolId, meta, navigateToTxReview])
+    try {
+      const result = await createDelegationTxHelper(wallet, poolId, meta)
+      navigateToTxReview({cbor: result.cbor, context: 'delegate'})
+    } catch (error) {
+      // Check if error is due to insufficient balance and navigate to noFunds screen
+      if (isInsufficientBalanceError(error)) {
+        navigateTo.noFunds()
+        return
+      }
+      throw error
+    }
+  }, [wallet, poolId, meta, navigateToTxReview, navigateTo])
 
   if (isLoading) {
     return {

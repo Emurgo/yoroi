@@ -1,5 +1,5 @@
 import {API_ENDPOINTS} from '@yoroi/api'
-import {FullPoolInfo, PoolInfoApi} from '@yoroi/staking'
+import {FullPoolInfo, poolInfoApiMaker} from '@yoroi/staking'
 
 import {useQuery} from '@tanstack/react-query'
 import * as React from 'react'
@@ -10,10 +10,10 @@ export const usePoolInfo = ({poolId}: {poolId: string}): FullPoolInfo => {
   const {networkManager} = useSelectedNetwork()
   const poolInfoApi = React.useMemo(
     () =>
-      new PoolInfoApi(
-        networkManager.legacyApiBaseUrl,
-        API_ENDPOINTS[networkManager.network].root,
-      ),
+      poolInfoApiMaker({
+        legacyApiBaseUrl: networkManager.legacyApiBaseUrl,
+        zeroApiUrl: API_ENDPOINTS[networkManager.network].root,
+      }),
     [networkManager.legacyApiBaseUrl, networkManager.network],
   )
   const poolInfo = useQuery({

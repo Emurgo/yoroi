@@ -8,6 +8,7 @@ import {BackHandler, LayoutAnimation, Platform, Text, View} from 'react-native'
 import infoIcon from '~/assets/img/icon/info-light-green.png'
 import {useBuyCryptoBanner} from '~/features/Exchange/common/useBuyCryptoBanner'
 import {useGetImportantAlertsModal} from '~/features/Notifications/common/GetImportantAlertsModal'
+import {useEarnRewardsBanner} from '~/features/Staking/Governance/useCases/EarnRewardsBanner/useEarnRewardsBanner'
 import {useGovernanceBanner} from '~/features/Staking/Governance/useCases/useGovernanceBanner'
 import {usePoolTransitionModal} from '~/features/Staking/Staking/PoolTransition/usePoolTransitionModal'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
@@ -30,6 +31,7 @@ export const TxHistory = () => {
   useGovernanceBanner()
   useBuyCryptoBanner()
   useUtxoConsolidationBanner()
+  const {renderBanner: renderEarnRewardsBanner} = useEarnRewardsBanner()
 
   const strings = useStrings()
   const {atoms: ta, palette: p, isDark} = useTheme()
@@ -98,6 +100,7 @@ export const TxHistory = () => {
     return unsubscribe
   }, [navigation, walletNavigation])
 
+  const earnRewardsBanner = renderEarnRewardsBanner()
   return (
     <LinearGradient
       colors={
@@ -145,6 +148,10 @@ export const TxHistory = () => {
         <LockedDeposit />
 
         <Space.Height.md />
+
+        {earnRewardsBanner}
+
+        {earnRewardsBanner != null && <Space.Height.md />}
 
         {meta.implementation === 'cardano-bip44' && showWarning && (
           <WarningBanner
