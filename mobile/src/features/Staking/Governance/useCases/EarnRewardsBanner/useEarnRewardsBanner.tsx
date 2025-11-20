@@ -10,7 +10,7 @@ import {Space} from '~/ui/Space/Space'
 
 import {EarnRewardsBanner} from './EarnRewardsBanner'
 import {useEarnRewardsDelegation} from './useEarnRewardsDelegation'
-import {useTopStakePool} from './useTopStakePool'
+import {useYoroiStakePool} from './useYoroiStakePool'
 
 /**
  * Hook to manage the earn rewards banner display and interactions
@@ -29,7 +29,7 @@ export const useEarnRewardsBanner = () => {
   } = useGovernanceParticipation()
   const {navigateToTxReview} = useWalletNavigation()
   const {createEarnRewardsTx} = useEarnRewardsDelegation(wallet)
-  const {poolId: topPoolId, isLoading: isLoadingTopPool} = useTopStakePool()
+  const {poolId: yoroiPoolId, isLoading: isLoadingYoroiPool} = useYoroiStakePool()
 
   const [showBanner, setShowBanner] = React.useState(false)
   const [isDismissed, setIsDismissed] = React.useState(false)
@@ -38,21 +38,21 @@ export const useEarnRewardsBanner = () => {
     return (
       !isLoadingStaking &&
       !isLoadingGovernance &&
-      !isLoadingTopPool &&
+      !isLoadingYoroiPool &&
       wallet.isMainnet &&
       stakingInfo?.status !== 'staked' &&
       !isParticipatingInGovernance &&
-      topPoolId != null && // Only show if we have a pool to delegate to
+      yoroiPoolId != null && // Only show if we have a pool to delegate to
       !isDismissed
     )
   }, [
     isLoadingStaking,
     isLoadingGovernance,
-    isLoadingTopPool,
+    isLoadingYoroiPool,
     wallet.isMainnet,
     stakingInfo?.status,
     isParticipatingInGovernance,
-    topPoolId,
+    yoroiPoolId,
     isDismissed,
   ])
 
@@ -67,7 +67,7 @@ export const useEarnRewardsBanner = () => {
     try {
       const unsignedTx = await createEarnRewardsTx(
         meta.addressMode,
-        topPoolId ?? undefined,
+        yoroiPoolId ?? undefined,
       )
       navigateToTxReview({
         cbor: unsignedTx.cbor,
@@ -80,7 +80,7 @@ export const useEarnRewardsBanner = () => {
   }, [
     createEarnRewardsTx,
     meta.addressMode,
-    topPoolId,
+    yoroiPoolId,
     navigateToTxReview,
   ])
 

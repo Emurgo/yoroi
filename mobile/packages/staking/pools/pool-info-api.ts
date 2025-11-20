@@ -1,49 +1,12 @@
-// PoolInfoApi migrated from @emurgo/yoroi-lib
-// This file contains the PoolInfoApi class for fetching stake pool information
-import {
-  chunk,
-  getLogger,
-  isHex,
-  joinUrl,
-  mergeRecords,
-  tuplesIntoRecord,
-  valueIntoRecord,
-} from '@yoroi/common'
+// PoolInfoApi types and utilities migrated from @emurgo/yoroi-lib
+// This file contains types, constants, and utility functions for pool information
+import {isHex} from '@yoroi/common'
 
 import type {Ed25519KeyHash, WasmModuleProxy} from '@emurgo/cross-csl-core'
-import axios from 'axios'
 
 type PoolIdentity = {
   id: string
   hash: string
-}
-
-// note: only include types for required fields.
-type ExplorerPoolInfoApiRes = {
-  data?: {
-    data?: Array<{
-      pool_id: string // bech32 identifier
-      pool_id_hash_raw: string // HEX key-hash
-      pool_name: {
-        ticker: string
-        name: string
-      }
-      pool_update: {
-        active: {
-          fixed_cost: number
-          margin: number
-        }
-      }
-      stats: {
-        lifetime: {
-          roa: number
-        }
-      }
-      live_stake: number
-      roa: string
-      saturation: number
-    }>
-  }
 }
 
 export type ExplorerPoolInfo = {
@@ -66,12 +29,12 @@ export type PoolTransition = {
   deadlineMilliseconds: number
 }
 
-type PoolTransitionOldEntry = [string, number, boolean] // id, deadline, isEnabled
-type PoolTransitionOldGroups = {
+export type PoolTransitionOldEntry = [string, number, boolean] // id, deadline, isEnabled
+export type PoolTransitionOldGroups = {
   [name: string]: Array<PoolTransitionOldEntry>
 }
-type PoolTransitionNewGroups = {[name: string]: Array<string>}
-type TransitionData = {
+export type PoolTransitionNewGroups = {[name: string]: Array<string>}
+export type TransitionData = {
   new: PoolTransitionNewGroups
   old: PoolTransitionOldGroups
   saturationThreshold?: number
@@ -150,7 +113,7 @@ export function getMaybeNewEntriesByPool(
   return null
 }
 
-type WasmFactory = (scope: string) => WasmModuleProxy
+export type WasmFactory = (scope: string) => WasmModuleProxy
 
 export async function normalisePoolIdentifierOrKey(
   poolIdOrHash: string,
@@ -194,259 +157,3 @@ export type FullPoolInfo = {
 }
 
 export type FullPoolInfoMap = Record<string, FullPoolInfo | null>
-
-export class PoolInfoApi {
-  private readonly apiUrl: string
-  private readonly zeroApiUrl: string
-  private readonly requestSize = 50
-  private transitionSaturationThreshold: number | null = null
-
-  constructor(apiUrl: string, zeroApiUrl: string) {
-    this.apiUrl = apiUrl
-    this.zeroApiUrl = zeroApiUrl
-  }
-
-  /**
-   * @param hash HEX key-hash
-   */
-  public async getSingleFullPoolInfo(
-    hash: string,
-  ): Promise<FullPoolInfo | null> {
-    const result = (await this.getManyFullPoolInfo([hash]))[hash]
-    return result ?? null
-  }
-
-  /**
-   * @param hashes - an array of HEX pool key hashes
-   */
-  public async getManyFullPoolInfo(hashes: string[]): Promise<FullPoolInfoMap> {
-    const [chainInfos, explorerInfos] = await Promise.all([
-      this.getManyChainPoolInfo(hashes),
-      this.getManyExplorerPoolInfo(hashes),
-    ])
-    return valueIntoRecord(hashes, (hash) => {
-      const chain = chainInfos[hash]
-      const explorer = explorerInfos[hash]
-      return chain || explorer ? {chain, explorer} : null
-    }) as FullPoolInfoMap
-  }
-
-  /**
-   * @param hash HEX key-hash
-   */
-  public async getSingleChainPoolInfo(
-    hash: string,
-  ): Promise<FullChainPoolInfo | null> {
-    const result = (await this.getManyChainPoolInfo([hash]))[hash]
-    return result ?? null
-  }
-
-  /**
-   * @param hashes - an array of HEX pool key hashes
-   */
-  public async getManyChainPoolInfo(
-    hashes: string[],
-  ): Promise<ChainPoolInfoMap> {
-    const responses: Array<ChainPoolInfoMap> = await Promise.all(
-      chunk(hashes, this.requestSize).map((batch) =>
-        this.getManyChainPoolInfoBatch(batch),
-      ),
-    )
-    return mergeRecords(responses) as ChainPoolInfoMap
-  }
-
-  /**
-   * Migrated to backend-zero: Uses GET /cexplorer-pool-list
-   * Note: History is not available from cexplorer, returns empty history arrays
-   */
-  private async getManyChainPoolInfoBatch(
-    hashes: string[],
-  ): Promise<ChainPoolInfoMap> {
-    // Query each pool individually using cexplorer proxy
-    const poolInfoPromises = hashes.map(async (hash) => {
-      try {
-        const params = new URLSearchParams({
-          limit: '1',
-          order: 'ranking',
-          poolId: hash,
-        })
-        const baseUrl = joinUrl(this.zeroApiUrl, '/cexplorer-pool-list')
-        const zeroApiPoolsUrl = `${baseUrl}?${params.toString()}`
-        const response =
-          await axios.get<ExplorerPoolInfoApiRes>(zeroApiPoolsUrl)
-        const poolsData: ExplorerPoolInfoApiRes = response.data
-
-        if (!poolsData.data?.data?.length) {
-          return [hash, null] as [string, FullChainPoolInfo | null]
-        }
-
-        const [pool] = poolsData.data.data
-        if (!pool) {
-          return [hash, null] as [string, FullChainPoolInfo | null]
-        }
-
-        // Map cexplorer response to ChainPoolInfo format
-        // Note: History is not available from cexplorer, so we return empty array
-        const chainInfo: FullChainPoolInfo = {
-          info: {
-            name: pool.pool_name.name || undefined,
-            ticker: pool.pool_name.ticker || undefined,
-            description: undefined, // Not available from cexplorer
-            homepage: undefined, // Not available from cexplorer
-          },
-          history: [], // History not available from cexplorer
-        }
-
-        return [hash, chainInfo] as [string, FullChainPoolInfo | null]
-      } catch (e) {
-        const logger = getLogger()
-        logger.error(e instanceof Error ? e : new Error(String(e)), {
-          origin: 'staking',
-          operation: 'getManyChainPoolInfoBatch',
-          hash,
-        })
-        return [hash, null] as [string, FullChainPoolInfo | null]
-      }
-    })
-
-    const results = await Promise.all(poolInfoPromises)
-    return tuplesIntoRecord(results) as ChainPoolInfoMap
-  }
-
-  /**
-   * @param hashes - an array of HEX pool key hashes
-   */
-  public async getManyExplorerPoolInfo(
-    hashes: string[],
-  ): Promise<ExplorerPoolInfoMap> {
-    const hashInfoTuples = await Promise.all(
-      hashes.map(
-        async (hash) =>
-          [hash, await this.getSingleExplorerPoolInfo(hash)] as [
-            string,
-            ExplorerPoolInfo | null,
-          ],
-      ),
-    )
-    return tuplesIntoRecord(hashInfoTuples) as ExplorerPoolInfoMap
-  }
-
-  /**
-   * !! DEPRECATED !!
-   *
-   * @deprecated use `.getSingleExplorerPoolInfo(hash)`
-   * @param hash - HEX pool key hash
-   */
-  public async getPool(hash: string): Promise<ExplorerPoolInfo | null> {
-    return this.getSingleExplorerPoolInfo(hash)
-  }
-
-  /**
-   * @param hash HEX key-hash
-   */
-  public async getSingleExplorerPoolInfo(
-    hash: string,
-  ): Promise<ExplorerPoolInfo | null> {
-    const params = new URLSearchParams({
-      limit: '1',
-      order: 'ranking',
-      poolId: hash,
-    })
-    // Construct URL properly: joinUrl doesn't handle query strings, so build it manually
-    const baseUrl = joinUrl(this.zeroApiUrl, '/cexplorer-pool-list')
-    const zeroApiPoolsUrl = `${baseUrl}?${params.toString()}`
-    const response = await axios.get<ExplorerPoolInfoApiRes>(zeroApiPoolsUrl)
-    const poolsData: ExplorerPoolInfoApiRes = response.data
-    if (!poolsData.data?.data?.length) return null
-    const [pool] = poolsData.data.data
-    if (!pool) return null
-    return {
-      id: pool.pool_id,
-      hash: pool.pool_id_hash_raw,
-      ticker: pool.pool_name.ticker,
-      name: pool.pool_name.name,
-      pic: `https://ix.cexplorer.io/${pool.pool_id}`,
-      stake: String(pool.live_stake),
-      roa: String(pool.stats.lifetime.roa),
-      taxFix: String(pool.pool_update.active.fixed_cost),
-      taxRatio: String(pool.pool_update.active.margin),
-      saturation: String(pool.saturation),
-    }
-  }
-
-  private async getFirstUnsaturatedPool(
-    poolIds: Array<string>,
-    threshold: number,
-  ): Promise<ExplorerPoolInfo | null> {
-    let pool = null
-    for (const suggestedId of poolIds) {
-      pool = await this.getPool(suggestedId)
-      if (pool === null) continue
-      const saturation = Number(pool.saturation)
-      if (saturation <= threshold) return pool
-    }
-    // pick the last pool in case all pools are saturated (> 80%)
-    return pool
-  }
-
-  private async getPoolTransitionInfo(): Promise<TransitionData | null> {
-    try {
-      const response = await axios.get<TransitionData>(
-        '/v2.1/pools/poolTransitionInfo',
-        {baseURL: this.apiUrl},
-      )
-      if (response.status === 200) {
-        return response.data
-      }
-    } catch (e) {
-      const logger = getLogger()
-      logger.error(e instanceof Error ? e : new Error(String(e)), {
-        origin: 'staking',
-        operation: 'getPoolTransitionInfo',
-      })
-    }
-    return null
-  }
-
-  /**
-   * @param hash HEX key-hash
-   * @param wasmFactory
-   */
-  public async getTransition(
-    hash: string,
-    wasmFactory: WasmFactory,
-  ): Promise<PoolTransition | null> {
-    const transitionData = await this.getPoolTransitionInfo()
-    if (transitionData == null) return null
-
-    const poolId = await normalisePoolIdentifierOrKey(hash, wasmFactory)
-    const suggestion = getMaybeNewEntriesByPool(poolId.id, transitionData)
-    if (suggestion == null) return null
-
-    let saturationThreshold =
-      this.transitionSaturationThreshold ??
-      transitionData.saturationThreshold ??
-      DEFAULT_SATURATION_THRESHOLD
-    if (saturationThreshold < 0 || saturationThreshold > 1) {
-      const logger = getLogger()
-      logger.warn(
-        `Incorrect saturation threshold value "${saturationThreshold}", expected between 0 and 1. Using default "${DEFAULT_SATURATION_THRESHOLD}"`,
-        {origin: 'staking', operation: 'getTransition'},
-      )
-      saturationThreshold = DEFAULT_SATURATION_THRESHOLD
-    }
-
-    const [current, suggested] = await Promise.all([
-      this.getPool(hash),
-      this.getFirstUnsaturatedPool(suggestion.newEntries, saturationThreshold),
-    ])
-
-    if (!current || !suggested) return null
-
-    return {
-      current,
-      suggested,
-      deadlineMilliseconds: suggestion.deadline,
-    }
-  }
-}

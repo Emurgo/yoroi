@@ -1,5 +1,5 @@
 import {API_ENDPOINTS} from '@yoroi/api'
-import {PoolInfoApi} from '@yoroi/staking'
+import {poolInfoApiMaker} from '@yoroi/staking'
 import {Wallet} from '@yoroi/types'
 
 import {init} from '@emurgo/cross-csl-mobile'
@@ -36,10 +36,10 @@ export const usePoolTransition = () => {
   const {stakingInfo, isLoading} = useStakingInfo(wallet)
 
   const poolInfoApi = React.useMemo(() => {
-    return new PoolInfoApi(
-      networkManager.legacyApiBaseUrl,
-      API_ENDPOINTS[networkManager.network].root,
-    )
+    return poolInfoApiMaker({
+      legacyApiBaseUrl: networkManager.legacyApiBaseUrl,
+      zeroApiUrl: API_ENDPOINTS[networkManager.network].root,
+    })
   }, [networkManager.legacyApiBaseUrl, networkManager.network])
 
   const isStaked = stakingInfo?.status === 'staked'
