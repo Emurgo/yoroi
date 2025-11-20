@@ -3,6 +3,8 @@ import {Wallet} from '@yoroi/types'
 import {Certificate} from '@emurgo/cross-csl-core'
 import * as React from 'react'
 
+import {useNavigateTo} from '~/features/Staking/Governance/common/navigation'
+import {isInsufficientBalanceError} from '~/features/Staking/Governance/common/transactionErrorHandling'
 import {UsePromiseOptions, usePromise} from '~/hooks/usePromise'
 import {createUnsignedGovernanceTxFromWallet} from '~/wallets/cardano/transaction-recipes'
 import {YoroiWallet} from '~/wallets/cardano/types'
@@ -17,6 +19,9 @@ export const useCreateGovernanceTx = (
     'promise'
   >,
 ) => {
+  const navigateTo = useNavigateTo()
+  const {onError: optionsOnError, ...restOptions} = options ?? {}
+
   const create = React.useCallback(
     async ({
       certificates,
@@ -33,9 +38,24 @@ export const useCreateGovernanceTx = (
     [wallet],
   )
 
+  const handleError = React.useCallback(
+    (error: Error) => {
+      // Check for insufficient balance errors and navigate to noFunds screen
+      if (isInsufficientBalanceError(error)) {
+        navigateTo.noFunds()
+        return
+      }
+
+      // Call original error handler if provided
+      optionsOnError?.(error)
+    },
+    [navigateTo, optionsOnError],
+  )
+
   const promise = usePromise({
     promise: create,
-    ...options,
+    ...restOptions,
+    onError: handleError,
   })
 
   return {

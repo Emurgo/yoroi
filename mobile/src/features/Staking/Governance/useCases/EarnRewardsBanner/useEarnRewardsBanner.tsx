@@ -3,6 +3,8 @@ import * as React from 'react'
 import {LayoutAnimation} from 'react-native'
 
 import {useGovernanceParticipation} from '~/features/Staking/Governance/common/helpers'
+import {useNavigateTo} from '~/features/Staking/Governance/common/navigation'
+import {isInsufficientBalanceError} from '~/features/Staking/Governance/common/transactionErrorHandling'
 import {useStakingInfo} from '~/features/Staking/hooks/useStakingInfo'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {minAdaForGovernanceBanner} from '~/kernel/constants'
@@ -29,8 +31,10 @@ export const useEarnRewardsBanner = () => {
     isLoading: isLoadingGovernance,
   } = useGovernanceParticipation()
   const {navigateToTxReview} = useWalletNavigation()
+  const navigateTo = useNavigateTo()
   const {createEarnRewardsTx} = useEarnRewardsDelegation(wallet)
-  const {poolId: yoroiPoolId, isLoading: isLoadingYoroiPool} = useYoroiStakePool()
+  const {poolId: yoroiPoolId, isLoading: isLoadingYoroiPool} =
+    useYoroiStakePool()
 
   const [showBanner, setShowBanner] = React.useState(false)
   const [isDismissed, setIsDismissed] = React.useState(false)
@@ -85,6 +89,13 @@ export const useEarnRewardsBanner = () => {
       })
     } catch (error) {
       logger.error('Earn rewards banner: Error creating transaction', {error})
+
+      // Check if error is due to insufficient balance and navigate to noFunds screen
+      if (isInsufficientBalanceError(error)) {
+        navigateTo.noFunds()
+        return
+      }
+
       throw error
     }
   }, [
@@ -92,6 +103,7 @@ export const useEarnRewardsBanner = () => {
     meta.addressMode,
     yoroiPoolId,
     navigateToTxReview,
+    navigateTo,
   ])
 
   const handleDismiss = React.useCallback(() => {

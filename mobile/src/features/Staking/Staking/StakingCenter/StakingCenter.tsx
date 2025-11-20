@@ -7,6 +7,8 @@ import {Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useSearch, useSearchOnNavBar} from '~/features/Search/SearchContext'
+import {useNavigateTo} from '~/features/Staking/Governance/common/navigation'
+import {isInsufficientBalanceError} from '~/features/Staking/Governance/common/transactionErrorHandling'
 import {PoolDetailScreen} from '~/features/Staking/Staking/PoolDetails/PoolDetailScreen'
 import {PoolList} from '~/features/Staking/Staking/PoolList/PoolList'
 import {usePrefetchPoolList} from '~/features/Staking/Staking/PoolList/usePoolList'
@@ -24,6 +26,7 @@ export const StakingCenter = () => {
 
   const {wallet, meta} = useSelectedWallet()
   const {navigateToTxReview} = useWalletNavigation()
+  const navigateTo = useNavigateTo()
   const prefetchPoolList = usePrefetchPoolList()
 
   // Add search to navigation header
@@ -106,6 +109,15 @@ export const StakingCenter = () => {
 
         const err = error instanceof Error ? error : new Error(String(error))
         logger.error(err, {origin: 'staking', operation: 'buildDelegationTx'})
+
+        // Check if error is due to insufficient balance and navigate to noFunds screen
+        if (isInsufficientBalanceError(error)) {
+          navigateTo.noFunds()
+          setIsBuildingTx(false)
+          setSelectedPoolId(null)
+          return
+        }
+
         setBuildError(err)
         setIsBuildingTx(false)
         setSelectedPoolId(null)
@@ -117,7 +129,15 @@ export const StakingCenter = () => {
     return () => {
       cancelled = true
     }
-  }, [selectedPoolId, wallet, meta, navigateToTxReview, onSuccess, onError])
+  }, [
+    selectedPoolId,
+    wallet,
+    meta,
+    navigateToTxReview,
+    navigateTo,
+    onSuccess,
+    onError,
+  ])
 
   const handlePoolSelect = async (poolHash: string) => {
     logger.debug('selected pool from native list', {poolHash})
