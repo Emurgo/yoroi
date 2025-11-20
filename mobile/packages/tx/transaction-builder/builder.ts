@@ -1034,15 +1034,39 @@ export async function buildTransaction(
         cslTxBuilder.addChangeIfNeeded(changeAddr)
         logger.info('buildTransaction: Successfully added change if needed')
       } catch (error) {
+        const errorMessage =
+          error instanceof Error ? error.message : String(error)
+        const isInsufficientAdaError =
+          errorMessage.includes('Not enough ADA leftover') ||
+          errorMessage.includes('add_change_if_needed')
+
         logger.error('buildTransaction: Failed to add change if needed', {
-          error: error instanceof Error ? error.message : String(error),
+          error: errorMessage,
           errorStack: error instanceof Error ? error.stack : undefined,
           totalInputAda: totalInput[primaryTokenId] || '0',
           totalOutputAda: totalOutput[primaryTokenId] || '0',
           totalWithdrawalsAda: totalWithdrawals[primaryTokenId] || '0',
           hasTokens,
           inputTokenIds,
+          inputTokenCount: inputTokenIds.length,
+          expectedRemainingAda: expectedRemainingAda.toString(),
+          minUtxoValue: minUtxoValue.toString(),
+          isInsufficientAdaError,
         })
+
+        // Provide a more helpful error message when tokens are present
+        if (isInsufficientAdaError && hasTokens) {
+          const enhancedError = new Error(
+            `Not enough ADA to create change output with ${inputTokenIds.length} tokens. ` +
+              `The change output requires more ADA than the base minimum UTXO value (${minUtxoValue.toString()} lovelace) ` +
+              `due to the tokens it contains. ` +
+              `Expected remaining ADA: ${expectedRemainingAda.toString()} lovelace. ` +
+              `Consider selecting UTXOs with more ADA or using pure ADA UTXOs when possible.`,
+          )
+          enhancedError.stack = error instanceof Error ? error.stack : undefined
+          throw enhancedError
+        }
+
         throw error
       }
     }

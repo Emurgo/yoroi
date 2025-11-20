@@ -1450,7 +1450,7 @@
   "txReview.operations.selectAbstain": "Select abstain",
   "txReview.operations.selectNoConfidence": "Select no confidence",
   "txReview.operations.delegateVotingToDRep": "Delegate voting to",
-  "txReview.operations.delegateVotingToDRepSpecified": "Specified as",
+  "txReview.operations.delegateVotingToDRepSpecified": "Legacy id",
   "txReview.operations.delegateStake": "Stake entire wallet balance to",
   "txReview.operations.log.title": "Operations log",
   "txReview.operations.warning.title": "Unusual operations detected",
