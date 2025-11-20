@@ -75,7 +75,12 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
         type = parsed.type
       }
 
-      onSubmit?.({hash, type, CIP105: !error && resolvedDrepId.length === 56})
+      // CIP105 flag indicates if user entered deprecated CIP-105 format (58-char hex starting with 22/23)
+      // For handles, this should be false since user didn't enter CIP-105 format directly
+      const isCIP105Format =
+        !isHandle && !error && /^(22|23)[0-9a-fA-F]{56}$/.test(trimmedDrepId)
+
+      onSubmit?.({hash, type, CIP105: isCIP105Format})
       closeModal()
     } catch (e) {
       Alert.alert(strings.global.error, strings.staking.invalidDRepId)
