@@ -144,7 +144,7 @@ export async function createUnsignedGovernanceTx({
           AlwaysNoConfidence: 3,
         }
         for (const cert of votingCertificates) {
-          // Extract stake credential and certificate kind
+          // Handle VoteDelegation certificates
           const voteDeleg = cert.asVoteDelegation()
           if (voteDeleg) {
             const stakeCred = voteDeleg.stakeCredential()
@@ -192,11 +192,45 @@ export async function createUnsignedGovernanceTx({
               stakeCredentialKeyHashHex: keyHash.toHex(),
               drep: drepValue,
             })
-          } else {
-            throw new Error(
-              `Unsupported certificate type in governance transaction: ${cert}`,
-            )
+            continue
           }
+
+          // Handle StakeRegistration certificates (needed when registering staking key)
+          const stakeReg = cert.asStakeRegistration()
+          if (stakeReg) {
+            const stakeCred = stakeReg.stakeCredential()
+            const keyHash = stakeCred.toKeyhash()
+            if (!keyHash) {
+              throw new Error('Stake registration certificate has no key hash')
+            }
+            result.push({
+              kind: CertificateKind.StakeRegistration,
+              stakeCredentialKeyHashHex: keyHash.toHex(),
+            })
+            continue
+          }
+
+          // Handle StakeDeregistration certificates (if needed)
+          const stakeDereg = cert.asStakeDeregistration()
+          if (stakeDereg) {
+            const stakeCred = stakeDereg.stakeCredential()
+            const keyHash = stakeCred.toKeyhash()
+            if (!keyHash) {
+              throw new Error(
+                'Stake deregistration certificate has no key hash',
+              )
+            }
+            result.push({
+              kind: CertificateKind.StakeDeregistration,
+              stakeCredentialKeyHashHex: keyHash.toHex(),
+            })
+            continue
+          }
+
+          // If none of the supported certificate types match, throw an error
+          throw new Error(
+            `Unsupported certificate type in governance transaction: ${cert}`,
+          )
         }
         return result
       })
