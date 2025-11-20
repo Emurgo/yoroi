@@ -19,6 +19,7 @@ export * from './fixtures/SuspenseBoundary'
 
 export * from './utils/arrays'
 export * from './utils/bech32'
+export * from './utils/debounce'
 export * from './utils/hex'
 export * from './utils/monads'
 export * from './utils/parse-number-from-text'
@@ -55,6 +56,8 @@ export * from './storage/translators/sync-storage-reactjs'
 
 export * from './time/time'
 
+export * from './translators/reactjs/hooks/useDebouncedCallback'
+export * from './translators/reactjs/hooks/useDebouncedValue'
 export * from './translators/reactjs/hooks/useMutationWithInvalidations'
 export * from './translators/reactjs/hooks/useObservableValue'
 export * from './translators/reactjs/hooks/useSyncStorageToState'

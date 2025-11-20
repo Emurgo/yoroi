@@ -8,6 +8,8 @@ import {Resolver} from '@yoroi/types'
 import {useQueryClient} from '@tanstack/react-query'
 import * as React from 'react'
 
+import {debounce} from '@yoroi/common'
+
 export const useRestoreReceiver = (value: string) => {
   const queryClient = useQueryClient()
 
@@ -41,7 +43,7 @@ export const useRestoreReceiver = (value: string) => {
   )
 
   const debouncedRefetch = React.useMemo(
-    () => debounceMaker(refetch, 300),
+    () => debounce(refetch, 300),
     [refetch],
   )
 
@@ -86,29 +88,4 @@ export const useRestoreReceiver = (value: string) => {
     selectedNameServer,
     isDomainInput,
   }
-}
-const debounceMaker = <T extends (...args: never[]) => unknown>(
-  callback: T,
-  delay: number,
-) => {
-  let timeoutId: ReturnType<typeof setTimeout> | null = null
-
-  const clear = () => {
-    if (timeoutId !== null) {
-      clearTimeout(timeoutId)
-    }
-  }
-
-  const call = (...args: Parameters<T>) => {
-    clear()
-
-    timeoutId = setTimeout(() => {
-      callback(...args)
-    }, delay)
-  }
-
-  return {
-    clear,
-    call,
-  } as const
 }

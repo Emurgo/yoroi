@@ -15,6 +15,7 @@ import {
   TextInput as RNPTextInput,
 } from 'react-native-paper'
 
+import {useDebouncedCallback} from '@yoroi/common'
 import {Icon} from '~/ui/Icon'
 import {isEmptyString} from '~/wallets/utils/string'
 
@@ -33,19 +34,6 @@ export type TextInputProps = RNTextInputProps &
     showErrorOnBlur?: boolean
     selectTextOnAutoFocus?: boolean
   }
-
-const useDebounced = (callback: VoidFunction, value: unknown, delay = 1000) => {
-  const first = React.useRef(true)
-  React.useEffect(() => {
-    if (first.current) {
-      first.current = false
-    }
-
-    const handler = setTimeout(() => callback(), delay)
-
-    return () => clearTimeout(handler)
-  }, [callback, delay, value])
-}
 
 export const TextInput = React.forwardRef(
   (props: TextInputProps, ref: React.ForwardedRef<RNTextInput>) => {
@@ -74,10 +62,10 @@ export const TextInput = React.forwardRef(
     const [showPassword, setShowPassword] = React.useState(false)
     const [errorTextEnabled, setErrorTextEnabled] = React.useState(errorOnMount)
     const {palette: p, isDark} = useTheme()
-    useDebounced(
+    useDebouncedCallback(
       React.useCallback(() => setErrorTextEnabled(true), []),
       value,
-      errorDelay,
+      errorDelay || 1000,
     )
     const showError = errorTextEnabled && !isEmptyString(errorText)
     const showHelperComponent = helper != null && !isString(helper)

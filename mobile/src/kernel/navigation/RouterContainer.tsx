@@ -1,3 +1,4 @@
+import {useDebouncedCallback} from '@yoroi/common'
 import {supportedPrefixes} from '@yoroi/links'
 import {useTheme} from '@yoroi/theme'
 
@@ -20,7 +21,6 @@ type Props = React.PropsWithChildren<{
 
 export function RouterContainer({children, onRouteChange}: Props) {
   const {palette, isDark} = useTheme()
-  const debounceTimerRef = React.useRef<NodeJS.Timeout | null>(null)
   const paletteRef = React.useRef(palette)
   const isDarkRef = React.useRef(isDark)
 
@@ -30,31 +30,30 @@ export function RouterContainer({children, onRouteChange}: Props) {
     isDarkRef.current = isDark
   }, [palette, isDark])
 
+  // Debounce navigation state changes to prevent rapid-fire status bar updates
+  const stateChangeRef = React.useRef(0)
+
+  const handleStateChangeDebounced = React.useCallback(() => {
+    const routeName = navRef.current?.getCurrentRoute()?.name
+    // Use refs to avoid dependency on palette/isDark in callback
+    applyStatusBarForRoute(routeName, paletteRef.current, isDarkRef.current)
+    if (onRouteChange) onRouteChange(routeName)
+  }, [onRouteChange])
+
   const handleStateChange = React.useCallback(
     (_state: NavigationState | undefined) => {
-      // Clear existing timer
-      if (debounceTimerRef.current) {
-        clearTimeout(debounceTimerRef.current)
-      }
-
-      // Debounce status bar updates to prevent rapid-fire updates
-      debounceTimerRef.current = setTimeout(() => {
-        const routeName = navRef.current?.getCurrentRoute()?.name
-        // Use refs to avoid dependency on palette/isDark in callback
-        applyStatusBarForRoute(routeName, paletteRef.current, isDarkRef.current)
-        if (onRouteChange) onRouteChange(routeName)
-      }, 100)
+      // Increment ref to trigger debounced callback
+      stateChangeRef.current += 1
     },
-    [onRouteChange],
+    [],
   )
 
-  React.useEffect(() => {
-    return () => {
-      if (debounceTimerRef.current) {
-        clearTimeout(debounceTimerRef.current)
-      }
-    }
-  }, [])
+  useDebouncedCallback(
+    handleStateChangeDebounced,
+    stateChangeRef.current,
+    100,
+    false, // Don't skip first render - we want initial route to be processed
+  )
 
   return (
     <NavigationContainer

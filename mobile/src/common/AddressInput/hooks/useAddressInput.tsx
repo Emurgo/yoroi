@@ -15,6 +15,7 @@ import {
 } from '~/features/Send/common/errors'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {logger} from '~/kernel/logger/logger'
+import {debounce} from '@yoroi/common'
 
 /**
  * Check if a string looks like a valid Cardano address format
@@ -158,7 +159,7 @@ export const useAddressInput = (
 
   // Debounced refetch logic
   const debouncedRefetch = React.useMemo(
-    () => debounceMaker(refetch, debounceDelay),
+    () => debounce(refetch, debounceDelay),
     [refetch, debounceDelay],
   )
 
@@ -415,32 +416,6 @@ export const useAddressInput = (
     hasError,
     errorMessage,
   }
-}
-
-const debounceMaker = <T extends (...args: never[]) => unknown>(
-  callback: T,
-  delay: number,
-) => {
-  let timeoutId: ReturnType<typeof setTimeout> | null = null
-
-  const clear = () => {
-    if (timeoutId !== null) {
-      clearTimeout(timeoutId)
-    }
-  }
-
-  const call = (...args: Parameters<T>) => {
-    clear()
-
-    timeoutId = setTimeout(() => {
-      callback(...args)
-    }, delay)
-  }
-
-  return {
-    clear,
-    call,
-  } as const
 }
 
 // NOTE: should be a wallet function from address manager

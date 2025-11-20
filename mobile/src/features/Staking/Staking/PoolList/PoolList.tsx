@@ -6,6 +6,7 @@ import {Image} from 'expo-image'
 import * as React from 'react'
 import {ActivityIndicator, Text, TouchableOpacity, View} from 'react-native'
 
+import {useDebouncedValue} from '@yoroi/common'
 import {useSearch} from '~/features/Search/SearchContext'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {Space} from '~/ui/Space/Space'
@@ -22,16 +23,8 @@ export const PoolList = ({onPoolSelect}: PoolListProps) => {
   const {atoms: ta, palette: p} = useTheme()
   const {search, setLoading} = useSearch()
 
-  // Simple debounce - update debouncedSearch when search changes
-  const [debouncedSearch, setDebouncedSearch] = React.useState(search)
-
-  React.useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebouncedSearch(search)
-    }, 200)
-
-    return () => clearTimeout(timer)
-  }, [search])
+  // Debounce search input to avoid excessive API calls
+  const debouncedSearch = useDebouncedValue(search, 200)
 
   // Compute search query from debounced search
   const searchQuery = debouncedSearch.trim() || undefined
