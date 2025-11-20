@@ -80,13 +80,19 @@ export const TxHistory = () => {
 
   // Handle navigation back button (header button and gesture)
   // This only fires when trying to remove history-list from the stack
+  // Only intercept user-initiated back navigation (GO_BACK), not programmatic navigation
   React.useEffect(() => {
     const unsubscribe = navigation.addListener('beforeRemove', (e) => {
-      // Prevent default behavior
-      e.preventDefault()
+      // Only intercept user-initiated back navigation
+      // Allow programmatic navigation (RESET, NAVIGATE, etc.) to proceed normally
+      if (e.data.action.type === 'GO_BACK') {
+        // Prevent default behavior
+        e.preventDefault()
 
-      // Reset to wallet selection
-      walletNavigation.resetToWalletSelection()
+        // Reset to wallet selection
+        walletNavigation.resetToWalletSelection()
+      }
+      // For other action types (RESET, NAVIGATE, etc.), let them proceed normally
     })
 
     return unsubscribe
