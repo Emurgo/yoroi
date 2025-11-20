@@ -15,6 +15,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {useAuth} from '~/features/Auth/context/AuthProvider'
 import {usePrefetchStakingInfo} from '~/features/Dashboard/ui/shared/StakePoolInfos'
 import {useCanVote} from '~/features/RegisterCatalyst/common/hooks'
+import {useRemoteConfig} from '~/features/RemoteConfig/hooks/useRemoteConfig'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {
@@ -38,6 +39,9 @@ const MenuStack = createStackNavigator<MenuRoutes>()
 export const MenuNavigator = () => {
   const strings = useStrings()
   const {palette: p} = useTheme()
+  const {config} = useRemoteConfig()
+  const isAirdropEnabled = config?.features?.midnightAirdrop?.enabled ?? false
+
   return (
     <MenuStack.Navigator
       initialRouteName="_menu"
@@ -52,14 +56,16 @@ export const MenuNavigator = () => {
         component={Menu}
         options={{title: strings.menu.menu}}
       />
-      <MenuStack.Screen
-        name="airdrop"
-        component={AirdropScreen}
-        options={{
-          title: strings.menu.airdrop,
-          headerLeft: (props) => <BackButton {...props} />,
-        }}
-      />
+      {isAirdropEnabled && (
+        <MenuStack.Screen
+          name="airdrop"
+          component={AirdropScreen}
+          options={{
+            title: strings.menu.airdrop,
+            headerLeft: (props) => <BackButton {...props} />,
+          }}
+        />
+      )}
     </MenuStack.Navigator>
   )
 }
@@ -70,6 +76,8 @@ export const Menu = () => {
   const navigateTo = useNavigateTo()
   const {isPoolRetiring} = usePoolTransition()
   const {isAuthDev} = useAuth()
+  const {config} = useRemoteConfig()
+  const isAirdropEnabled = config?.features?.midnightAirdrop?.enabled ?? false
 
   return (
     <SafeAreaView edges={['left', 'right']} style={[ta.bg_color_max, a.flex_1]}>
@@ -110,11 +118,13 @@ export const Menu = () => {
           onPress={navigateTo.catalystVoting}
           left={<Icon.Catalyst size={24} color={p.gray_600} />}
         />
-        <Airdrop
-          label={strings.menu.airdrop}
-          onPress={navigateTo.airdrop}
-          left={<Icon.Airdrop size={24} color={p.gray_600} />}
-        />
+        {isAirdropEnabled && (
+          <Airdrop
+            label={strings.menu.airdrop}
+            onPress={navigateTo.airdrop}
+            left={<Icon.Airdrop size={24} color={p.gray_600} />}
+          />
+        )}
         <KnowledgeBase //
           label={strings.menu.knowledgeBase}
           onPress={navigateTo.knowledgeBase}

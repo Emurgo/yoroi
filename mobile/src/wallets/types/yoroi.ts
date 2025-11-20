@@ -93,7 +93,7 @@ export type YoroiConfig = Readonly<{
     }>
   }>
   features: Readonly<{
-    airdrop: Readonly<{
+    midnightAirdrop: Readonly<{
       enabled: boolean
     }>
   }>
