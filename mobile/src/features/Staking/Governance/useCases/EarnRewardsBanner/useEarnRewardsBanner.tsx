@@ -2,7 +2,6 @@ import {logger} from '@sentry/react'
 import * as React from 'react'
 import {LayoutAnimation} from 'react-native'
 
-import {useReviewTx} from '~/features/ReviewTx/common/ReviewTxProvider'
 import {useGovernanceParticipation} from '~/features/Staking/Governance/common/helpers'
 import {useStakingInfo} from '~/features/Staking/hooks/useStakingInfo'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
@@ -28,7 +27,6 @@ export const useEarnRewardsBanner = () => {
     isParticipating: isParticipatingInGovernance,
     isLoading: isLoadingGovernance,
   } = useGovernanceParticipation()
-  const {unsignedTxChanged} = useReviewTx()
   const {navigateToTxReview} = useWalletNavigation()
   const {createEarnRewardsTx} = useEarnRewardsDelegation(wallet)
   const {poolId: topPoolId, isLoading: isLoadingTopPool} = useTopStakePool()
@@ -71,8 +69,8 @@ export const useEarnRewardsBanner = () => {
         meta.addressMode,
         topPoolId ?? undefined,
       )
-      unsignedTxChanged(unsignedTx)
       navigateToTxReview({
+        cbor: unsignedTx.cbor,
         context: 'delegate',
       })
     } catch (error) {
@@ -83,7 +81,6 @@ export const useEarnRewardsBanner = () => {
     createEarnRewardsTx,
     meta.addressMode,
     topPoolId,
-    unsignedTxChanged,
     navigateToTxReview,
   ])
 

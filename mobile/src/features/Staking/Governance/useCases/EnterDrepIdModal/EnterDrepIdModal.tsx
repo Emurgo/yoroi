@@ -12,7 +12,7 @@ import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {Space} from '~/ui/Space/Space'
 import {TextInput} from '~/ui/TextInput/TextInput'
-import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
+import {CardanoMobile} from '~/wallets/wallets'
 
 export type Props = {
   onSubmit?: (options: {
@@ -70,9 +70,7 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
         hash = drepInfo.hex
         type = drepInfo.cred === 'key' ? 'key' : 'script'
       } else {
-        const parsed = CardanoMobileWrapped.cslScope((csl) =>
-          parseDrepId(resolvedDrepId, csl),
-        )
+        const parsed = parseDrepId(resolvedDrepId, CardanoMobile)
         hash = parsed.hash
         type = parsed.type
       }

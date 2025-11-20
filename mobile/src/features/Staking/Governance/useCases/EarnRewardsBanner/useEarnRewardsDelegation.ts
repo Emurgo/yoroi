@@ -5,7 +5,6 @@ import BigNumber from 'bignumber.js'
 import * as React from 'react'
 
 import {YoroiWallet} from '~/wallets/cardano/types'
-import {YoroiUnsignedTx} from '~/wallets/types/yoroi'
 import {Quantities} from '~/wallets/utils/utils'
 
 /**
@@ -22,7 +21,7 @@ export const useEarnRewardsDelegation = (wallet: YoroiWallet) => {
     async (
       addressMode: Wallet.AddressMode,
       poolId?: string,
-    ): Promise<YoroiUnsignedTx> => {
+    ): Promise<{cbor: string}> => {
       const stakingInfo = await wallet.getStakingInfo()
       const needsRegistration = stakingInfo.status === 'not-registered'
       const stakingKey = wallet.getStakingKey()
