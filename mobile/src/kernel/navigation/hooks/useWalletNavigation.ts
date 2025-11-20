@@ -349,6 +349,7 @@ export const useWalletNavigation = () => {
                         {
                           name: 'history',
                           state: {
+                            index: 1,
                             routes: [
                               {name: 'history-list'},
                               {
@@ -386,6 +387,7 @@ export const useWalletNavigation = () => {
                       {
                         name: 'history',
                         state: {
+                          index: 1,
                           routes: [
                             {name: 'history-list'},
                             {
