@@ -1,8 +1,10 @@
-// Note: Using sm.midnight.gd as the assumed API endpoint
-// This will be rechecked once it's been deployed publicly
-// Previous API URL: 'https://redeem.prod.gd.midnighttge.io'
+// Using preprod.gd.midnighttge.io for testing/development
+// Previous API URLs:
+// - 'https://sm.midnight.gd' (Phase 2 - Scavenger Mine, ended)
+// - 'https://redeem.prod.gd.midnighttge.io' (deprecated, no longer exists)
+// Production endpoint: 'https://redeem.midnight.gd' (Phase 3 - requires SSO auth)
 // If DNS resolution fails, the API calls will handle it gracefully
-export const REDEMPTION_API_BASE_URL = 'https://sm.midnight.gd'
+export const REDEMPTION_API_BASE_URL = 'https://preprod.gd.midnighttge.io'
 
 export type ThawStatus =
   | 'upcoming'

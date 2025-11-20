@@ -44,7 +44,15 @@ export const redemptionApi = {
     })
 
     if (response.tag === 'left') {
-      if (response.error.status === 404) {
+      // Handle 404 or 400 with "no_redeemable_thaws" as "no allocations"
+      if (
+        response.error.status === 404 ||
+        (response.error.status === 400 &&
+          response.error.responseData &&
+          typeof response.error.responseData === 'object' &&
+          'type' in response.error.responseData &&
+          response.error.responseData.type === 'no_redeemable_thaws')
+      ) {
         // Address not found - no allocations
         throw new Error('ADDRESS_NOT_FOUND')
       }
