@@ -36,7 +36,7 @@ type Props = {
   transaction: TransactionSummary
 }
 
-export const TxListItem = ({transaction}: Props) => {
+const TxListItemComponent = ({transaction}: Props) => {
   const strings = useStrings()
   const navigation = useNavigation<any>()
   const {palette: p} = useTheme()
@@ -245,6 +245,20 @@ export const TxListItem = ({transaction}: Props) => {
     </TouchableOpacity>
   )
 }
+
+export const TxListItem = React.memo(
+  TxListItemComponent,
+  (prevProps, nextProps) => {
+    // Custom comparison: only re-render if transaction ID or key properties change
+    return (
+      prevProps.transaction.id === nextProps.transaction.id &&
+      prevProps.transaction.direction === nextProps.transaction.direction &&
+      JSON.stringify(prevProps.transaction.amount) ===
+        JSON.stringify(nextProps.transaction.amount) &&
+      prevProps.transaction.submittedAt === nextProps.transaction.submittedAt
+    )
+  },
+)
 
 const Row = ({style, ...props}: ViewProps) => (
   <View

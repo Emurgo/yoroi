@@ -46,14 +46,26 @@ export const TxList = (props: Props) => {
     setCurrentIndex(currentIndex + batchSize)
   }, [currentIndex, filteredTransactions, loadedTxs])
 
+  const renderItem = React.useCallback(
+    ({item}: {item: TransactionSummary}) => <TxListItem transaction={item} />,
+    [],
+  )
+
+  const ItemSeparator = React.useCallback(() => <Space.Height.lg />, [])
+
+  const keyExtractor = React.useCallback(
+    (_: TransactionSummary, index: number) => index.toString(),
+    [],
+  )
+
   return (
     <View style={a.flex_1}>
       <FlashList
         data={loadedTxs}
         contentContainerStyle={a.p_lg}
-        renderItem={({item}) => <TxListItem transaction={item} />}
-        ItemSeparatorComponent={() => <Space.Height.lg />}
-        keyExtractor={(_, index) => index.toString()}
+        renderItem={renderItem}
+        ItemSeparatorComponent={ItemSeparator}
+        keyExtractor={keyExtractor}
         nestedScrollEnabled={true}
         testID="txHistoryList"
         onEndReached={handleOnEndReached}

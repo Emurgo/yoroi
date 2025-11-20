@@ -273,7 +273,7 @@ export type ReviewTxRoutes = {
     generalNotice?: React.ReactNode
     receiverCustomTitle?: React.ReactNode
     details?: ReviewDetailsProps
-    createdBy?: React.ReactNode
+    createdBy?: {logo?: string; url: string; name?: string}
     context?: ReviewContext
     aggregator?: string
     memo?: string

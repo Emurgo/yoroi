@@ -10,7 +10,7 @@ import {Space} from '~/ui/Space/Space'
 import {UtxoItem} from './UtxoItem'
 import {UtxoList} from './useUtxoList'
 
-export const UtxoAddressGroup = ({item}: {item: UtxoList[number]}) => {
+const UtxoAddressGroupComponent = ({item}: {item: UtxoList[number]}) => {
   const {atoms: ta, palette: p} = useTheme()
 
   return (
@@ -53,3 +53,15 @@ export const UtxoAddressGroup = ({item}: {item: UtxoList[number]}) => {
     </View>
   )
 }
+
+export const UtxoAddressGroup = React.memo(
+  UtxoAddressGroupComponent,
+  (prevProps, nextProps) => {
+    // Only re-render if path or address changes
+    return (
+      prevProps.item.path === nextProps.item.path &&
+      prevProps.item.address === nextProps.item.address &&
+      prevProps.item.utxos.length === nextProps.item.utxos.length
+    )
+  },
+)

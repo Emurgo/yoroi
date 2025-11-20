@@ -20,15 +20,41 @@ type Props = React.PropsWithChildren<{
 
 export function RouterContainer({children, onRouteChange}: Props) {
   const {palette, isDark} = useTheme()
+  const debounceTimerRef = React.useRef<NodeJS.Timeout | null>(null)
+  const paletteRef = React.useRef(palette)
+  const isDarkRef = React.useRef(isDark)
+
+  // Keep refs in sync with theme values
+  React.useEffect(() => {
+    paletteRef.current = palette
+    isDarkRef.current = isDark
+  }, [palette, isDark])
 
   const handleStateChange = React.useCallback(
     (_state: NavigationState | undefined) => {
-      const routeName = navRef.current?.getCurrentRoute()?.name
-      applyStatusBarForRoute(routeName, palette, isDark)
-      if (onRouteChange) onRouteChange(routeName)
+      // Clear existing timer
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current)
+      }
+
+      // Debounce status bar updates to prevent rapid-fire updates
+      debounceTimerRef.current = setTimeout(() => {
+        const routeName = navRef.current?.getCurrentRoute()?.name
+        // Use refs to avoid dependency on palette/isDark in callback
+        applyStatusBarForRoute(routeName, paletteRef.current, isDarkRef.current)
+        if (onRouteChange) onRouteChange(routeName)
+      }, 100)
     },
-    [onRouteChange, palette, isDark],
+    [onRouteChange],
   )
+
+  React.useEffect(() => {
+    return () => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current)
+      }
+    }
+  }, [])
 
   return (
     <NavigationContainer

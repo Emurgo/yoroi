@@ -12,7 +12,7 @@ import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWalle
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Space} from '~/ui/Space/Space'
 
-export const UtxoItem = ({item}: {item: ModernUtxo}) => {
+const UtxoItemComponent = ({item}: {item: ModernUtxo}) => {
   const {atoms: ta, palette: p} = useTheme()
   const {wallet} = useSelectedWallet()
   const {navigateToTxDetails} = useWalletNavigation()
@@ -54,3 +54,14 @@ export const UtxoItem = ({item}: {item: ModernUtxo}) => {
     </View>
   )
 }
+
+export const UtxoItem = React.memo(
+  UtxoItemComponent,
+  (prevProps, nextProps) => {
+    // Only re-render if UTXO identifier changes
+    return (
+      `${prevProps.item.txHash}#${prevProps.item.txIndex}` ===
+      `${nextProps.item.txHash}#${nextProps.item.txIndex}`
+    )
+  },
+)

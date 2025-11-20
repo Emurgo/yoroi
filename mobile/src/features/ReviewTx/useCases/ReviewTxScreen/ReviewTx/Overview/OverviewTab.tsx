@@ -67,7 +67,7 @@ export const OverviewTab = ({
   generalNotice?: React.ReactNode
   receiverCustomTitle?: React.ReactNode
   details?: {title: string; component: React.ReactNode}
-  createdBy?: React.ReactNode
+  createdBy?: {logo?: string; url: string; name?: string}
   validationResult?: {valid: boolean; errors: string[]; warnings: string[]}
   readOnly?: boolean
 }) => {
@@ -416,7 +416,7 @@ const WalletInfoSection = ({
   createdBy,
 }: {
   tx: FormattedTx
-  createdBy?: React.ReactNode
+  createdBy?: {logo?: string; url: string; name?: string}
 }) => {
   const {palette: p, atoms: ta} = useTheme()
   const strings = useStrings()
@@ -468,9 +468,13 @@ const WalletInfoSection = ({
 
       <Space.Height.sm />
 
-      {createdBy != null && (
+      {createdBy != null && createdBy.url && (
         <>
-          {createdBy}
+          <CreatedByInfoItem
+            logo={createdBy.logo}
+            url={createdBy.url}
+            name={createdBy.name}
+          />
 
           <Space.Height.sm />
         </>
@@ -1130,6 +1134,10 @@ export const CreatedByInfoItem = ({
 }) => {
   const {atoms: ta} = useTheme()
   const strings = useStrings()
+
+  if (!url) {
+    return null
+  }
 
   const displayText =
     name ?? url.replace(/^https?:\/\//, '').replace(/\/+$/, '')

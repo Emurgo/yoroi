@@ -5,7 +5,7 @@ import {Portfolio} from '@yoroi/types'
 import {useQuery, useQueryClient} from '@tanstack/react-query'
 import {freeze, produce} from 'immer'
 import * as React from 'react'
-import {merge, switchMap} from 'rxjs'
+import {merge, switchMap, throttleTime} from 'rxjs'
 
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
@@ -72,6 +72,8 @@ export const PortfolioTokenActivityProvider = ({
      * Subscription when:
      * 1. balance inside any wallet changes
      * 2. wallets change (new wallet, wallet removed)
+     *
+     * Throttled to 400ms to prevent excessive re-renders during rapid balance updates
      */
     const subscription = merge(
       walletManager.walletMetas$.pipe(
@@ -84,30 +86,34 @@ export const PortfolioTokenActivityProvider = ({
         }),
       ),
       walletManager.walletMetas$,
-    ).subscribe(() => {
-      const aggregatedBalances = Array.from(walletManager.walletMetas.values())
-        .map((meta) => walletManager.getWalletById(meta.id))
-        .filter(isNonNullable)
-        .reduce((amounts: Portfolio.Token.AmountRecords, wallet) => {
-          for (const balance of wallet.balances.records.values()) {
-            if (amounts[balance.info.id]) {
-              amounts[balance.info.id]!.quantity += balance.quantity
-            } else {
-              amounts[balance.info.id] = {...balance}
+    )
+      .pipe(throttleTime(400))
+      .subscribe(() => {
+        const aggregatedBalances = Array.from(
+          walletManager.walletMetas.values(),
+        )
+          .map((meta) => walletManager.getWalletById(meta.id))
+          .filter(isNonNullable)
+          .reduce((amounts: Portfolio.Token.AmountRecords, wallet) => {
+            for (const balance of wallet.balances.records.values()) {
+              if (amounts[balance.info.id]) {
+                amounts[balance.info.id]!.quantity += balance.quantity
+              } else {
+                amounts[balance.info.id] = {...balance}
+              }
             }
-          }
-          return amounts
-        }, {})
+            return amounts
+          }, {})
 
-      actions.aggregatedBalancesChanged(aggregatedBalances)
-      actions.secondaryTokenIdsChanged(
-        Object.keys(aggregatedBalances).filter(
-          (id) => !isPrimaryToken(id),
-        ) as Portfolio.Token.Id[],
-      )
+        actions.aggregatedBalancesChanged(aggregatedBalances)
+        actions.secondaryTokenIdsChanged(
+          Object.keys(aggregatedBalances).filter(
+            (id) => !isPrimaryToken(id),
+          ) as Portfolio.Token.Id[],
+        )
 
-      queryClient.invalidateQueries({queryKey: [...queryKey, network]})
-    })
+        queryClient.invalidateQueries({queryKey: [...queryKey, network]})
+      })
 
     return () => subscription.unsubscribe()
   }, [actions, queryClient, walletManager, network])

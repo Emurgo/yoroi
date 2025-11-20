@@ -23,7 +23,6 @@ import {BaseLedgerError} from '~/wallets/hw/hw'
 import {isEmptyString} from '~/wallets/utils/string'
 
 import {usePromptRootKey} from '../ReviewTx/common/hooks/usePromptRootKey'
-import {CreatedByInfoItem} from '../ReviewTx/useCases/ReviewTxScreen/ReviewTx/Overview/OverviewTab'
 import {useBrowser} from './common/BrowserProvider'
 import {useConfirmHWConnectionModal} from './common/ConfirmHWConnectionModal'
 import {userRejectedError} from './common/errors'
@@ -106,13 +105,14 @@ export const useDappConnectorManager = () => {
           cbor,
           preventSubmit: true,
           context: 'dapp',
-          createdBy: matchingDapp != null && (
-            <CreatedByInfoItem
-              logo={matchingDapp.logo}
-              url={matchingDapp.uri}
-              name={matchingDapp.name}
-            />
-          ),
+          createdBy:
+            matchingDapp != null
+              ? {
+                  logo: matchingDapp.logo,
+                  url: matchingDapp.uri,
+                  name: matchingDapp.name,
+                }
+              : undefined,
           onSuccessWithoutFeedback: (args) => {
             shouldResolve = false
             if (isEmptyString(args?.rootKey) || args?.rootKey == null) {
@@ -178,13 +178,14 @@ export const useDappConnectorManager = () => {
           partial,
           preventSubmit: true,
           context: 'dapp',
-          createdBy: matchingDapp != null && (
-            <CreatedByInfoItem
-              logo={matchingDapp.logo}
-              url={matchingDapp.uri}
-              name={matchingDapp.name}
-            />
-          ),
+          createdBy:
+            matchingDapp != null
+              ? {
+                  logo: matchingDapp.logo,
+                  url: matchingDapp.uri,
+                  name: matchingDapp.name,
+                }
+              : undefined,
           onSuccessWithoutFeedback: (args) => {
             shouldResolve = false
             if (!args?.tx) {
@@ -266,13 +267,14 @@ export const useDappConnectorManager = () => {
               cbor,
               context: 'dapp',
               memo: strings.discover.collateralCreationTitle,
-              createdBy: (
-                <CreatedByInfoItem
-                  logo={undefined}
-                  url={activeTabUrl}
-                  name={matchingDappConnection.dappOrigin}
-                />
-              ),
+              createdBy:
+                activeTabUrl && matchingDappConnection.dappOrigin
+                  ? {
+                      logo: undefined,
+                      url: activeTabUrl,
+                      name: matchingDappConnection.dappOrigin,
+                    }
+                  : undefined,
               details: {
                 title: strings.manageCollateral.collateralInfoModalLabel,
                 component: <CollateralInfoModal />,

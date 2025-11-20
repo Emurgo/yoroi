@@ -1,7 +1,7 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
-import {Text, TouchableHighlight, View, ViewProps} from 'react-native'
+import {Pressable, Text, View, ViewProps} from 'react-native'
 
 import {Backspace} from './Icon/Backspace'
 
@@ -49,8 +49,8 @@ type KeyboardKeyProps = {
 const Key = ({value, onPress}: KeyboardKeyProps) => {
   const {palette: p, atoms: ta} = useTheme()
   return (
-    <TouchableHighlight
-      style={[
+    <Pressable
+      style={({pressed}) => [
         a.flex_1,
         a.align_center,
         a.justify_center,
@@ -59,9 +59,9 @@ const Key = ({value, onPress}: KeyboardKeyProps) => {
         a.border_r,
         ta.bg_color_max,
         {borderColor: p.el_gray_min},
+        pressed && {backgroundColor: p.bg_color_min},
       ]}
       onPress={() => onPress(value)}
-      underlayColor={p.bg_color_min}
       testID={`pinKey${value}`}
     >
       <Text
@@ -73,7 +73,7 @@ const Key = ({value, onPress}: KeyboardKeyProps) => {
       >
         {value}
       </Text>
-    </TouchableHighlight>
+    </Pressable>
   )
 }
 
@@ -100,8 +100,8 @@ const EmptyKey = () => {
 const BackspaceKey = ({onPress}: {onPress: (value: string) => void}) => {
   const {palette: p, atoms: ta} = useTheme()
   return (
-    <TouchableHighlight
-      style={[
+    <Pressable
+      style={({pressed}) => [
         a.flex_1,
         a.align_center,
         a.justify_center,
@@ -111,13 +111,13 @@ const BackspaceKey = ({onPress}: {onPress: (value: string) => void}) => {
         ta.bg_color_max,
         {borderColor: p.el_gray_min},
         {backgroundColor: p.gray_300},
+        pressed && {backgroundColor: p.bg_color_min},
       ]}
       onPress={() => onPress('BACKSPACE')}
-      underlayColor={p.bg_color_min}
       testID="pinKeyBACKSPACE"
     >
       <Backspace color={p.gray_max} />
-    </TouchableHighlight>
+    </Pressable>
   )
 }
 

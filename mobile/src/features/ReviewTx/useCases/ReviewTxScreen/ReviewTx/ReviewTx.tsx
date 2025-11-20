@@ -126,7 +126,7 @@ export const ReviewTx = ({
   generalNotice?: React.ReactNode
   details?: ReviewDetailsProps
   receiverCustomTitle?: React.ReactNode
-  createdBy?: React.ReactNode
+  createdBy?: {logo?: string; url: string; name?: string}
   validationResult?: {valid: boolean; errors: string[]; warnings: string[]}
   cbor?: string | null
   onConfirm?: () => void
