@@ -83,6 +83,19 @@ export async function createCombinedDelegationTx({
     return keyHash.toHex()
   })
 
+  // Convert poolId from bech32 to hex if needed (transaction builder expects hex)
+  const poolKeyHashHex = poolId
+    ? CardanoMobileWrapped.cslScope((csl) => {
+        // Check if poolId is bech32 format (starts with 'pool')
+        if (poolId.startsWith('pool')) {
+          const keyHash = csl.Ed25519KeyHash.fromBech32(poolId)
+          return keyHash.toHex()
+        }
+        // Assume it's already hex format
+        return poolId
+      })
+    : undefined
+
   // Validate that at least one delegation type is provided
   if (!poolId && !drepValue) {
     throw new Error(
@@ -188,11 +201,11 @@ export async function createCombinedDelegationTx({
       }
 
       // 2. Add stake pool delegation if poolId provided
-      if (poolId) {
+      if (poolKeyHashHex) {
         certificates.push({
           kind: CertificateKind.StakeDelegation,
           stakeCredentialKeyHashHex: stakeKeyHashHex,
-          poolKeyHash: poolId,
+          poolKeyHash: poolKeyHashHex,
         })
       }
 

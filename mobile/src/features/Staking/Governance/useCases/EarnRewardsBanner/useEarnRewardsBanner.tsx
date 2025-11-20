@@ -5,6 +5,7 @@ import {LayoutAnimation} from 'react-native'
 import {useGovernanceParticipation} from '~/features/Staking/Governance/common/helpers'
 import {useStakingInfo} from '~/features/Staking/hooks/useStakingInfo'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {minAdaForGovernanceBanner} from '~/kernel/constants'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Space} from '~/ui/Space/Space'
 
@@ -34,6 +35,13 @@ export const useEarnRewardsBanner = () => {
   const [showBanner, setShowBanner] = React.useState(false)
   const [isDismissed, setIsDismissed] = React.useState(false)
 
+  // Check if wallet has enough ADA (at least 5 ADA for transaction fees + stake key deposit if needed)
+  const hasEnoughAda = React.useMemo(() => {
+    const balance = wallet.balanceManager.getPrimaryBalance()
+    const adaLovelace = BigInt(balance?.quantity ?? '0')
+    return adaLovelace >= minAdaForGovernanceBanner
+  }, [wallet])
+
   const shouldShowBanner = React.useMemo(() => {
     return (
       !isLoadingStaking &&
@@ -43,6 +51,7 @@ export const useEarnRewardsBanner = () => {
       stakingInfo?.status !== 'staked' &&
       !isParticipatingInGovernance &&
       yoroiPoolId != null && // Only show if we have a pool to delegate to
+      hasEnoughAda && // Need at least 5 ADA to create transaction
       !isDismissed
     )
   }, [
@@ -53,6 +62,7 @@ export const useEarnRewardsBanner = () => {
     stakingInfo?.status,
     isParticipatingInGovernance,
     yoroiPoolId,
+    hasEnoughAda,
     isDismissed,
   ])
 
