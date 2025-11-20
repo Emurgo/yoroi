@@ -15,7 +15,7 @@ import {CardanoMobileWrapped} from '../../../src/wallets/cardano/wrappedCsl'
 import {NoOutputsError, NotEnoughMoneyToSendError} from '../errors'
 import {CardanoHaskellConfig, Datum} from '../types'
 import {ModernUtxo} from '../utxo/models'
-import {createCertificateFromData} from './helpers'
+import {createCertificateFromData} from './certificates'
 import type {
   TransactionCertificate,
   TransactionInput,

@@ -4,7 +4,6 @@ import {useNavigation} from '@react-navigation/native'
 import * as Linking from 'expo-linking'
 import * as React from 'react'
 
-import {useSwap} from '~/features/Swap/common/useSwap'
 import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
 
 import {ReviewTxRoutes, SettingsStackRoutes} from '../types'
@@ -12,12 +11,9 @@ import {ReviewTxRoutes, SettingsStackRoutes} from '../types'
 export const useWalletNavigation = () => {
   const navigation = useNavigation()
   const selectedNetworkHook = useSelectedNetwork()
-  const swapForm = useSwap()
 
   const selectedNetworkRef = React.useRef(selectedNetworkHook)
   selectedNetworkRef.current = selectedNetworkHook
-  const swapFormRef = React.useRef(swapForm)
-  swapFormRef.current = swapForm
 
   const walletNavigation = React.useRef({
     navigation,

@@ -16,7 +16,6 @@ import {generatePrivateKeyForCatalyst} from '~/wallets/cardano/catalyst'
 import {encryptWithPassword} from '~/wallets/cardano/catalyst/catalystCipher'
 import {createVotingRegTxFromWallet} from '~/wallets/cardano/transaction-recipes'
 
-import {useNavigateTo} from '../../CatalystNavigator'
 import {
   Actions,
   Description,
@@ -24,6 +23,7 @@ import {
   Row,
   Stepper,
 } from '../../common/components'
+import {useNavigateTo} from '../../common/navigation'
 
 export const ConfirmPin = () => {
   const strings = useStrings()

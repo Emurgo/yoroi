@@ -7,16 +7,14 @@ import {BigNumber} from 'bignumber.js'
 import * as legacyApi from '~/wallets/cardano/api/api'
 import {CardanoTypes, YoroiWallet} from '~/wallets/cardano/types'
 
-import {
-  convertRawUtxosToModernUtxos,
-  createCombinedDelegationTx,
-  createDelegationTx,
-  createSendTx,
-  createUnsignedGovernanceTx,
-  createUtxoConsolidationTx,
-  createVotingRegTx,
-  createWithdrawalTx,
-} from './index'
+import {createCombinedDelegationTx} from './createCombinedDelegationTx'
+import {createDelegationTx} from './createDelegationTx'
+import {createSendTx} from './createSendTx'
+import {createUnsignedGovernanceTx} from './createUnsignedGovernanceTx'
+import {createUtxoConsolidationTx} from './createUtxoConsolidationTx'
+import {createVotingRegTx} from './createVotingRegTx'
+import {createWithdrawalTx} from './createWithdrawalTx'
+import {convertRawUtxosToModernUtxos} from './helpers'
 
 /**
  * Helper to get absolute slot number from wallet

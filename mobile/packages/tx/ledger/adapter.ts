@@ -8,7 +8,7 @@ import type {
   Withdrawals,
 } from '@emurgo/cross-csl-core'
 
-import {createCertificateFromData} from '../transaction-builder/helpers'
+import {createCertificateFromData} from '../transaction-builder/certificates'
 import {UnsignedTransaction} from '../transaction-builder/types'
 import {Addressing, AddressingAddress} from '../types'
 

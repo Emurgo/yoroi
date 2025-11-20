@@ -1,3 +1,4 @@
+import {isNumber} from '@yoroi/common'
 import {App} from '@yoroi/types'
 
 import {logger} from '~/kernel/logger/logger'
@@ -13,7 +14,37 @@ import {
   validateMigrationDependencies,
 } from './registry'
 import type {MigrationResult} from './types'
-import {storageVersionMaker} from './useMigrations'
+
+const keyStorageVersion = 'storageVersion'
+
+/**
+ * Storage version manager
+ */
+const storageVersionMaker = (storage: App.Storage) => {
+  return {
+    save(storageVersion: number) {
+      // should save the last version always after migration, can't be higher than currentVersion
+      if (storageVersion > storageCurrentVersion)
+        throw new ErrorMigrationVersion()
+      return storage.setItem(keyStorageVersion, storageVersion)
+    },
+    async read() {
+      return storage
+        .getItem(keyStorageVersion)
+        .then((version) =>
+          isNumber(version) ? version : storageCurrentVersion,
+        )
+    },
+    async newInstallation() {
+      return storage.setItem(keyStorageVersion, storageCurrentVersion)
+    },
+    async remove() {
+      return storage.removeItem(keyStorageVersion)
+    },
+    key: keyStorageVersion,
+    current: storageCurrentVersion,
+  }
+}
 
 /**
  * Run all pending migrations
