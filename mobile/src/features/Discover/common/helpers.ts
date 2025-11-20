@@ -50,6 +50,74 @@ export interface DAppItem {
 }
 
 const googleDappId = 'google_search'
+const directUrlId = 'direct_url'
+
+/**
+ * Checks if a string looks like a URL
+ * Matches patterns like:
+ * - example.com
+ * - www.example.com
+ * - http://example.com
+ * - https://example.com
+ * - example.com/path
+ */
+export const looksLikeUrl = (str: string): boolean => {
+  if (!str || str.trim() === '') return false
+
+  const trimmed = str.trim()
+
+  // Check if it already has a protocol
+  if (hasProtocol(trimmed)) {
+    try {
+      const url = new URL(trimmed)
+      return !!url
+    } catch {
+      return false
+    }
+  }
+
+  // Check for domain-like patterns (contains a dot and looks like a domain)
+  // Matches: example.com, www.example.com, subdomain.example.com
+  // But not: just words, single word, or strings without dots
+  const domainPattern =
+    /^([a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}(\/.*)?$/
+
+  // Also check for localhost patterns
+  const localhostPattern = /^localhost(:\d+)?(\/.*)?$/i
+
+  return domainPattern.test(trimmed) || localhostPattern.test(trimmed)
+}
+
+export const getDirectUrlItem = (url: string): DAppItem => {
+  const normalizedUrl = urlWithProtocol(url)
+  try {
+    const parsedUrl = new URL(normalizedUrl)
+    const domainName = parsedUrl.hostname.replace(/^www\./, '')
+
+    return {
+      id: directUrlId,
+      name: domainName,
+      description: 'Navigate to URL',
+      category: 'url',
+      logo: '',
+      uri: normalizedUrl,
+      origins: [parsedUrl.origin],
+      isSingleAddress: false,
+    }
+  } catch {
+    // Fallback if URL parsing fails
+    return {
+      id: directUrlId,
+      name: url,
+      description: 'Navigate to URL',
+      category: 'url',
+      logo: '',
+      uri: normalizedUrl,
+      origins: [],
+      isSingleAddress: false,
+    }
+  }
+}
 
 export const getGoogleSearchItem = (searchQuery: string): DAppItem => ({
   id: googleDappId,
@@ -63,6 +131,7 @@ export const getGoogleSearchItem = (searchQuery: string): DAppItem => ({
 })
 
 export const isGoogleSearchItem = (dApp: DAppItem) => dApp.id === googleDappId
+export const isDirectUrlItem = (dApp: DAppItem) => dApp.id === directUrlId
 
 type CreateDappConnectorOptions = {
   appStorage: App.Storage

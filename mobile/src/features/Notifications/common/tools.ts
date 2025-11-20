@@ -230,7 +230,7 @@ const handleInternalNavigation = async (
           walletNavigation.navigateToGovernanceCentre()
           break
         case 'discover':
-          walletNavigation.navigateToDiscoverBrowserDapp()
+          walletNavigation.navigateToDiscoverDappSelection()
           break
       }
     } catch (error) {

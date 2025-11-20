@@ -7,7 +7,12 @@ import {v4} from 'uuid'
 
 import {useBrowser} from '~/features/Discover/common/BrowserProvider'
 
-import {getGoogleSearchItem, urlWithProtocol} from '../../common/helpers'
+import {
+  getDirectUrlItem,
+  getGoogleSearchItem,
+  looksLikeUrl,
+  urlWithProtocol,
+} from '../../common/helpers'
 import {useNavigateTo} from '../../common/useNavigateTo'
 import {BrowserSearchToolbar} from '../BrowseDapp/BrowserSearchToolbar'
 import {DAppListItem} from '../SelectDappFromList/DAppListItem/DAppListItem'
@@ -27,6 +32,8 @@ export const SearchDappInBrowserScreen = () => {
   const tabActive = tabs[tabActiveIndex]
   const [searchValue, setSearchValue] = React.useState('')
   const isFocused = useIsFocused()
+  const isUrl = looksLikeUrl(searchValue)
+  const directUrlItem = isUrl ? getDirectUrlItem(searchValue) : null
   const googleItem = getGoogleSearchItem(searchValue)
 
   const handleGoBack = () => {
@@ -79,12 +86,22 @@ export const SearchDappInBrowserScreen = () => {
 
       <ScrollView style={[a.p_lg]}>
         {searchValue !== '' && (
-          <DAppListItem
-            key={googleItem.id}
-            dApp={googleItem}
-            connected={false}
-            onPress={() => handleSubmit(true)}
-          />
+          <>
+            {isUrl && directUrlItem && (
+              <DAppListItem
+                key={directUrlItem.id}
+                dApp={directUrlItem}
+                connected={false}
+                onPress={() => handleSubmit(false)}
+              />
+            )}
+            <DAppListItem
+              key={googleItem.id}
+              dApp={googleItem}
+              connected={false}
+              onPress={() => handleSubmit(true)}
+            />
+          </>
         )}
       </ScrollView>
     </View>
