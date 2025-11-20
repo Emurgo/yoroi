@@ -413,27 +413,41 @@ export class WalletManager {
           }
         }),
       )
-      
+
       // Filter out failed wallet loads
       for (let i = 0; i < loadedWallets.length; i++) {
         const result = loadedWallets[i]
         const meta = metasToLoad[i]
-        
+
+        if (!result) continue
+
         if (result.status === 'fulfilled') {
           this.#wallets.set(result.value.id, result.value)
         } else {
-          const errorInfo = result.reason as {error: unknown; walletId: string; implementation: Wallet.Implementation} | unknown
-          const errorMessage = errorInfo && typeof errorInfo === 'object' && 'error' in errorInfo
-            ? (errorInfo.error instanceof Error ? errorInfo.error.message : String(errorInfo.error))
-            : String(result.reason)
-            
-          logger.debug('WalletManager: hydrate skipped wallet (missing accountPubKeyHex)', {
-            walletId: meta?.id,
-            implementation: meta?.implementation,
-            isReadOnly: meta?.isReadOnly,
-            network,
-            error: errorMessage,
-          })
+          const errorInfo = result.reason as
+            | {
+                error: unknown
+                walletId: string
+                implementation: Wallet.Implementation
+              }
+            | unknown
+          const errorMessage =
+            errorInfo && typeof errorInfo === 'object' && 'error' in errorInfo
+              ? errorInfo.error instanceof Error
+                ? errorInfo.error.message
+                : String(errorInfo.error)
+              : String(result.reason)
+
+          logger.debug(
+            'WalletManager: hydrate skipped wallet (missing accountPubKeyHex)',
+            {
+              walletId: meta?.id,
+              implementation: meta?.implementation,
+              isReadOnly: meta?.isReadOnly,
+              network,
+              error: errorMessage,
+            },
+          )
         }
       }
     }

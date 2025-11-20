@@ -380,6 +380,7 @@ export type WalletNavigation = {
   navigateToUtxoList: () => void
   navigateToUtxoConsolidation: () => void
   navigateToTxDetails: (id: string) => void
+  navigateToAirdrop: () => void
 }
 
 declare global {
