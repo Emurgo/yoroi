@@ -1,5 +1,5 @@
 export {governanceApiMaker, type GovernanceApi} from './api'
-export {GOVERNANCE_YOROI_DREP_ID_HEX} from './config'
+export {GOVERNANCE_YOROI_DREP_ID_HEX, YOROI_TOP_STAKE_POOL_ID} from './config'
 export {
   convertDrepHashToCIP105Format,
   convertDrepHashToCIP129Format,

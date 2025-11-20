@@ -558,4 +558,17 @@ export const stakingMessages = defineMessages({
     id: 'global.cancel',
     defaultMessage: '!!!Cancel',
   },
+  earnRewardsBannerTitle: {
+    id: 'components.governance.earnRewardsBanner.title',
+    defaultMessage: '!!!Consider delegating to Yoroi DRep?',
+  },
+  earnRewardsBannerDescription: {
+    id: 'components.governance.earnRewardsBanner.description',
+    defaultMessage:
+      '!!!Delegate to our DRep and help Cardano evolve in a way that benefits your wallet experience.',
+  },
+  earnRewardsBannerCta: {
+    id: 'components.governance.earnRewardsBanner.cta',
+    defaultMessage: '!!!DELEGATE NOW',
+  },
 })

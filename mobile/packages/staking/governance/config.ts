@@ -33,3 +33,8 @@ export const GOVERNANCE_ENDPOINTS: Readonly<
 // CIP-129 HEX: 220655f3a1c76788d839212adc459b188b84e680f30ae944c593fa18ae
 export const GOVERNANCE_YOROI_DREP_ID_HEX =
   '0655f3a1c76788d839212adc459b188b84e680f30ae944c593fa18ae'
+
+// NOTE: Top Yoroi stake pool ID for mainnet
+// This should be configured based on the current top-performing Yoroi pool
+export const YOROI_TOP_STAKE_POOL_ID =
+  'pool1pux7lyzvx89q5dz4dv2kkjdpjdzysf30plmk0vc60x4w0hq8j5p' // TODO: Update with actual Yoroi pool ID
