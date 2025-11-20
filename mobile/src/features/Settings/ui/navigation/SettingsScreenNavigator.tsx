@@ -223,16 +223,22 @@ const SettingsTabNavigator = () => {
   const strings = useStrings()
   const {atoms: ta, palette: p} = useTheme()
 
+  // Memoize screenOptions to prevent recreation on every render
+  const screenOptions = React.useCallback(
+    ({route}: {route: {name: string}}) => ({
+      ...defaultMaterialTopTabNavigationOptions(p),
+      tabBarLabel:
+        route.name === 'wallet-settings'
+          ? strings.settings.walletTabTitle
+          : strings.settings.appTabTitle,
+    }),
+    [p, strings.settings.walletTabTitle, strings.settings.appTabTitle],
+  )
+
   return (
     <Tab.Navigator
       style={ta.bg_color_max}
-      screenOptions={({route}) => ({
-        ...defaultMaterialTopTabNavigationOptions(p),
-        tabBarLabel:
-          route.name === 'wallet-settings'
-            ? strings.settings.walletTabTitle
-            : strings.settings.appTabTitle,
-      })}
+      screenOptions={screenOptions}
     >
       <Tab.Screen
         name="wallet-settings"

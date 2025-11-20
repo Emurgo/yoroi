@@ -53,24 +53,39 @@ export const TxHistoryNavigator = () => {
   const {meta} = useSelectedWallet()
   const walletNavigation = useWalletNavigation()
 
+  // Memoize headerTitle component to prevent recreation on every render
+  const headerTitle = React.useCallback(
+    ({children}: {children: React.ReactNode}) => (
+      <NetworkTag>{children}</NetworkTag>
+    ),
+    [],
+  )
+
   const screenOptions: StackNavigationOptions = React.useMemo(
     () => ({
       ...defaultStackNavigationOptions(p),
-      headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
+      headerTitle,
     }),
-    [p],
+    [p, headerTitle],
+  )
+
+  // Memoize header components to prevent recreation on every render
+  const headerRight = React.useCallback(() => <HeaderRightHistory />, [])
+  const headerLeft = React.useCallback(
+    () => (
+      <BackButton
+        onPress={() => walletNavigation.resetToWalletSelection()}
+        color={ta.text_gray_max.color}
+      />
+    ),
+    [walletNavigation, ta.text_gray_max.color],
   )
 
   const stackOptions: StackNavigationOptions = React.useMemo(
     () => ({
       title: meta.name,
-      headerRight: () => <HeaderRightHistory />,
-      headerLeft: () => (
-        <BackButton
-          onPress={() => walletNavigation.resetToWalletSelection()}
-          color={ta.text_gray_max.color}
-        />
-      ),
+      headerRight,
+      headerLeft,
       headerTransparent: true,
       headerStyle: {
         ...a.bg_transparent,
@@ -82,7 +97,7 @@ export const TxHistoryNavigator = () => {
       },
       headerTintColor: ta.text_gray_max.color,
     }),
-    [meta.name, ta.text_gray_max.color, walletNavigation],
+    [meta.name, headerRight, headerLeft, ta.text_gray_max.color],
   )
 
   return (

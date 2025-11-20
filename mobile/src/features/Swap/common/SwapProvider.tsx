@@ -126,10 +126,20 @@ export const SwapProvider = ({children}: React.PropsWithChildren) => {
   const network = wallet.networkManager.network
   const balances = usePortfolioBalances({wallet})
 
-  const {config} = useRemoteConfig()
+  const {config, isLoading: configLoading} = useRemoteConfig()
   const [isLoading, setIsLoading] = React.useState(false)
 
+  // Check if partners are ready and have at least one entry
+  const partnersReady = React.useMemo(() => {
+    if (configLoading || !config?.swap?.partners) return false
+    const partners = config.swap.partners
+    return Object.keys(partners).length > 0
+  }, [configLoading, config?.swap?.partners])
+
   const swapManager = React.useMemo(() => {
+    // Don't create swapManager until config is loaded and partners are ready
+    if (!partnersReady || !config?.swap?.partners) return null
+
     const address = wallet.externalAddresses[0]
     if (!address) throw new App.Errors.InvalidState('No External Address')
 
@@ -142,12 +152,13 @@ export const SwapProvider = ({children}: React.PropsWithChildren) => {
       addressHex,
       primaryTokenInfo: wallet.portfolioPrimaryTokenInfo,
       isPrimaryToken,
-      partners: config?.swap?.partners ?? {},
+      partners: config.swap.partners,
     })
   }, [
     network,
     wallet.externalAddresses,
     wallet.portfolioPrimaryTokenInfo,
+    partnersReady,
     config?.swap?.partners,
   ])
 
@@ -530,7 +541,17 @@ export const SwapProvider = ({children}: React.PropsWithChildren) => {
       orders,
       action,
       create,
-      cancel: swapManager?.api.cancel ?? (() => Promise.resolve()),
+      cancel:
+        swapManager?.api.cancel ??
+        (() =>
+          Promise.resolve({
+            tag: 'left' as const,
+            error: {
+              status: -3,
+              message: 'Swap manager not initialized',
+              responseData: {},
+            },
+          })),
       managerSettings: swapManager?.settings ?? {
         routingPreference: 'auto',
         slippage: 1,

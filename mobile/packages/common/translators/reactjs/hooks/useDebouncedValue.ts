@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import {time} from '../../time/time'
+import {time} from '../../../time/time'
 
 const initialDelay = time.seconds(0.5)
 
@@ -38,4 +38,3 @@ export const useDebouncedValue = <T>(value: T, delay = initialDelay): T => {
 
   return debouncedValue
 }
-

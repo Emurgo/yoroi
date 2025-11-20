@@ -54,55 +54,57 @@ const MemoInput = () => {
   )
 }
 
-const TabWrapper = ({
-  children,
-  onConfirm,
-  readOnly: _readOnly,
-  showMemo = false,
-  showGoToTransactionsButton = false,
-}: {
-  children: React.ReactNode
-  onConfirm?: () => void
-  readOnly?: boolean
-  showMemo?: boolean
-  showGoToTransactionsButton?: boolean
-}) => {
-  const {atoms: ta} = useTheme()
-  const strings = useStrings()
-  const scrollViewRef = React.useRef<RNScrollView | null>(null)
-  const {resetToTxHistory} = useWalletNavigation()
+const TabWrapper = React.memo(
+  ({
+    children,
+    onConfirm,
+    readOnly: _readOnly,
+    showMemo = false,
+    showGoToTransactionsButton = false,
+  }: {
+    children: React.ReactNode
+    onConfirm?: () => void
+    readOnly?: boolean
+    showMemo?: boolean
+    showGoToTransactionsButton?: boolean
+  }) => {
+    const {atoms: ta} = useTheme()
+    const strings = useStrings()
+    const scrollViewRef = React.useRef<RNScrollView | null>(null)
+    const {resetToTxHistory} = useWalletNavigation()
 
-  return (
-    <ScrollViewProvider>
-      <SafeArea>
-        <ScrollView ref={scrollViewRef} style={[a.flex_1, ta.bg_color_max]}>
-          {children}
-        </ScrollView>
-        {showGoToTransactionsButton ? (
-          <SafeArea.Footer>
-            <Button
-              title={strings.txReview.submittedTxButton}
-              onPress={resetToTxHistory}
-            />
-          </SafeArea.Footer>
-        ) : (
-          onConfirm && (
+    return (
+      <ScrollViewProvider>
+        <SafeArea>
+          <ScrollView ref={scrollViewRef} style={[a.flex_1, ta.bg_color_max]}>
+            {children}
+          </ScrollView>
+          {showGoToTransactionsButton ? (
             <SafeArea.Footer>
-              {showMemo && (
-                <>
-                  <Space.Height.lg />
-                  <MemoInput />
-                  <Space.Height.lg />
-                </>
-              )}
-              <Button title={strings.txReview.confirm} onPress={onConfirm} />
+              <Button
+                title={strings.txReview.submittedTxButton}
+                onPress={resetToTxHistory}
+              />
             </SafeArea.Footer>
-          )
-        )}
-      </SafeArea>
-    </ScrollViewProvider>
-  )
-}
+          ) : (
+            onConfirm && (
+              <SafeArea.Footer>
+                {showMemo && (
+                  <>
+                    <Space.Height.lg />
+                    <MemoInput />
+                    <Space.Height.lg />
+                  </>
+                )}
+                <Button title={strings.txReview.confirm} onPress={onConfirm} />
+              </SafeArea.Footer>
+            )
+          )}
+        </SafeArea>
+      </ScrollViewProvider>
+    )
+  },
+)
 
 export const ReviewTx = ({
   formattedTx,
@@ -165,6 +167,116 @@ export const ReviewTx = ({
     formattedMetadata != null ||
     cbor != null
 
+  // Memoize tab children to prevent recreation on every render
+  const overviewTabChildren = React.useMemo(
+    () => (
+      <TabWrapper
+        onConfirm={onConfirm}
+        readOnly={readOnly}
+        showMemo={!readOnly}
+        showGoToTransactionsButton={readOnly && isReviewFlow && !onConfirm}
+      >
+        <OverviewTab
+          tx={formattedTx}
+          extraOperations={operations}
+          operationsNotice={operationsNotice}
+          generalNotice={generalNotice}
+          details={details}
+          createdBy={createdBy}
+          receiverCustomTitle={receiverCustomTitle}
+          validationResult={validationResult}
+          readOnly={readOnly}
+        />
+      </TabWrapper>
+    ),
+    [
+      onConfirm,
+      readOnly,
+      isReviewFlow,
+      formattedTx,
+      operations,
+      operationsNotice,
+      generalNotice,
+      details,
+      createdBy,
+      receiverCustomTitle,
+      validationResult,
+    ],
+  )
+
+  const utxosTabChildren = React.useMemo(
+    () => (
+      <TabWrapper
+        onConfirm={onConfirm}
+        readOnly={readOnly}
+        showGoToTransactionsButton={readOnly && isReviewFlow && !onConfirm}
+      >
+        <UTxOsTab tx={formattedTx} />
+      </TabWrapper>
+    ),
+    [onConfirm, readOnly, isReviewFlow, formattedTx],
+  )
+
+  const operationsTabChildren = React.useMemo(
+    () => (
+      <TabWrapper
+        onConfirm={onConfirm}
+        readOnly={readOnly}
+        showGoToTransactionsButton={readOnly && isReviewFlow && !onConfirm}
+      >
+        <OperationsTab
+          tx={formattedTx}
+          operations={undefined}
+          operationsNotice={operationsNotice}
+        />
+      </TabWrapper>
+    ),
+    [onConfirm, readOnly, isReviewFlow, formattedTx, operationsNotice],
+  )
+
+  const smartContractsTabChildren = React.useMemo(
+    () => (
+      <TabWrapper
+        onConfirm={onConfirm}
+        readOnly={readOnly}
+        showGoToTransactionsButton={readOnly && isReviewFlow && !onConfirm}
+      >
+        <SmartContractsTab tx={formattedTx} />
+      </TabWrapper>
+    ),
+    [onConfirm, readOnly, isReviewFlow, formattedTx],
+  )
+
+  const signaturesTabChildren = React.useMemo(
+    () => (
+      <TabWrapper
+        onConfirm={onConfirm}
+        readOnly={readOnly}
+        showGoToTransactionsButton={readOnly && isReviewFlow && !onConfirm}
+      >
+        <SignaturesTab tx={formattedTx} />
+      </TabWrapper>
+    ),
+    [onConfirm, readOnly, isReviewFlow, formattedTx],
+  )
+
+  const detailsTabChildren = React.useMemo(
+    () => (
+      <TabWrapper
+        onConfirm={onConfirm}
+        readOnly={readOnly}
+        showGoToTransactionsButton={readOnly && isReviewFlow && !onConfirm}
+      >
+        <DetailsTab
+          tx={formattedTx}
+          formattedMetadata={formattedMetadata}
+          cbor={cbor}
+        />
+      </TabWrapper>
+    ),
+    [onConfirm, readOnly, isReviewFlow, formattedTx, formattedMetadata, cbor],
+  )
+
   return (
     <MaterialTab.Navigator
       screenOptions={{
@@ -183,114 +295,39 @@ export const ReviewTx = ({
     >
       <MaterialTab.Screen
         name={strings.txReview.tabLabel.overview}
-        children={() => (
-          <TabWrapper
-            onConfirm={onConfirm}
-            readOnly={readOnly}
-            showMemo={!readOnly}
-            showGoToTransactionsButton={readOnly && isReviewFlow && !onConfirm}
-          >
-            <OverviewTab
-              tx={formattedTx}
-              extraOperations={operations}
-              operationsNotice={operationsNotice}
-              generalNotice={generalNotice}
-              details={details}
-              createdBy={createdBy}
-              receiverCustomTitle={receiverCustomTitle}
-              validationResult={validationResult}
-              readOnly={readOnly}
-            />
-          </TabWrapper>
-        )}
+        children={() => overviewTabChildren}
       />
 
       <MaterialTab.Screen
         name={strings.txReview.tabLabel.utxos}
-        children={() => (
-          <TabWrapper
-            onConfirm={onConfirm}
-            readOnly={readOnly}
-            showGoToTransactionsButton={readOnly && isReviewFlow && !onConfirm}
-          >
-            <UTxOsTab tx={formattedTx} />
-          </TabWrapper>
-        )}
+        children={() => utxosTabChildren}
       />
 
       {showOperationsTab && (
         <MaterialTab.Screen
           name={strings.txReview.tabLabel.operations}
-          children={() => (
-            <TabWrapper
-              onConfirm={onConfirm}
-              readOnly={readOnly}
-              showGoToTransactionsButton={
-                readOnly && isReviewFlow && !onConfirm
-              }
-            >
-              <OperationsTab
-                tx={formattedTx}
-                operations={undefined}
-                operationsNotice={operationsNotice}
-              />
-            </TabWrapper>
-          )}
+          children={() => operationsTabChildren}
         />
       )}
 
       {showSmartContractsTab && (
         <MaterialTab.Screen
           name={strings.txReview.tabLabel.smartContracts}
-          children={() => (
-            <TabWrapper
-              onConfirm={onConfirm}
-              readOnly={readOnly}
-              showGoToTransactionsButton={
-                readOnly && isReviewFlow && !onConfirm
-              }
-            >
-              <SmartContractsTab tx={formattedTx} />
-            </TabWrapper>
-          )}
+          children={() => smartContractsTabChildren}
         />
       )}
 
       {showSignaturesTab && (
         <MaterialTab.Screen
           name={strings.txReview.tabLabel.signatures}
-          children={() => (
-            <TabWrapper
-              onConfirm={onConfirm}
-              readOnly={readOnly}
-              showGoToTransactionsButton={
-                readOnly && isReviewFlow && !onConfirm
-              }
-            >
-              <SignaturesTab tx={formattedTx} />
-            </TabWrapper>
-          )}
+          children={() => signaturesTabChildren}
         />
       )}
 
       {showDetailsTab && (
         <MaterialTab.Screen
           name={strings.txReview.tabLabel.details}
-          children={() => (
-            <TabWrapper
-              onConfirm={onConfirm}
-              readOnly={readOnly}
-              showGoToTransactionsButton={
-                readOnly && isReviewFlow && !onConfirm
-              }
-            >
-              <DetailsTab
-                tx={formattedTx}
-                formattedMetadata={formattedMetadata}
-                cbor={cbor}
-              />
-            </TabWrapper>
-          )}
+          children={() => detailsTabChildren}
         />
       )}
     </MaterialTab.Navigator>

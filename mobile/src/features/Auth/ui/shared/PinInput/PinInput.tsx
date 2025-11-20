@@ -37,6 +37,16 @@ export const PinInput = React.forwardRef<PinInputRef, Props>((props, ref) => {
     },
   }))
 
+  // Call onDone when PIN reaches max length (deferred to avoid state update during render)
+  React.useEffect(() => {
+    if (pin.length === pinMaxLength) {
+      // Use startTransition to defer the callback and avoid state update during render
+      React.startTransition(() => {
+        onDone(pin)
+      })
+    }
+  }, [pin, pinMaxLength, onDone])
+
   const onKeyDown = React.useCallback(
     (value: string) => {
       if (!enabled) return
@@ -44,7 +54,10 @@ export const PinInput = React.forwardRef<PinInputRef, Props>((props, ref) => {
       if (value === BACKSPACE) {
         setPin((prevPin) => {
           if (prevPin.length === 0) {
-            onGoBack?.()
+            // Defer onGoBack to avoid state update during render
+            React.startTransition(() => {
+              onGoBack?.()
+            })
             return prevPin
           }
           return prevPin.slice(0, -1)
@@ -56,14 +69,10 @@ export const PinInput = React.forwardRef<PinInputRef, Props>((props, ref) => {
         if (prevPin.length === pinMaxLength) {
           return prevPin
         }
-        const newPin = `${prevPin}${value}`
-        if (newPin.length === pinMaxLength) {
-          onDone(newPin)
-        }
-        return newPin
+        return `${prevPin}${value}`
       })
     },
-    [enabled, pinMaxLength, onDone, onGoBack],
+    [enabled, pinMaxLength, onGoBack],
   )
 
   return (

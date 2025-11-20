@@ -1,7 +1,7 @@
 import {isNonNullable} from '@yoroi/common'
 import {infoExtractName, isPrimaryToken} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
-import {Portfolio} from '@yoroi/types'
+import {Balance, Portfolio} from '@yoroi/types'
 
 import {useNavigation} from '@react-navigation/native'
 import {BigNumber} from 'bignumber.js'
@@ -246,15 +246,35 @@ const TxListItemComponent = ({transaction}: Props) => {
   )
 }
 
+// Helper function to compare amounts without expensive JSON.stringify
+const areAmountsEqual = (
+  amounts1: Balance.Amounts,
+  amounts2: Balance.Amounts,
+): boolean => {
+  const keys1 = Object.keys(amounts1)
+  const keys2 = Object.keys(amounts2)
+
+  if (keys1.length !== keys2.length) return false
+
+  for (const key of keys1) {
+    if (amounts1[key] !== amounts2[key]) return false
+  }
+
+  return true
+}
+
 export const TxListItem = React.memo(
   TxListItemComponent,
   (prevProps, nextProps) => {
     // Custom comparison: only re-render if transaction ID or key properties change
+    // Optimized: replaced JSON.stringify with efficient amount comparison
     return (
       prevProps.transaction.id === nextProps.transaction.id &&
       prevProps.transaction.direction === nextProps.transaction.direction &&
-      JSON.stringify(prevProps.transaction.amount) ===
-        JSON.stringify(nextProps.transaction.amount) &&
+      areAmountsEqual(
+        prevProps.transaction.amount,
+        nextProps.transaction.amount,
+      ) &&
       prevProps.transaction.submittedAt === nextProps.transaction.submittedAt
     )
   },

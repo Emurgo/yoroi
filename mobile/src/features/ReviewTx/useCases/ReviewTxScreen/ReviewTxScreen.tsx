@@ -131,17 +131,32 @@ export const ReviewTxScreen = () => {
     cbor: params?.cbor ?? null,
   })
 
-  // Validate transaction CBOR if available
-  const validationResult = React.useMemo(() => {
-    if (!params?.cbor) return undefined
+  // Validate transaction CBOR if available - deferred to useEffect to avoid blocking render
+  const [validationResult, setValidationResult] = React.useState<{
+    valid: boolean
+    errors: string[]
+    warnings: string[]
+  } | undefined>(undefined)
 
-    try {
-      return CardanoMobileWrapped.cslScope((csl) => {
-        return validateTransactionCbor(csl, params.cbor!)
-      })
-    } catch {
-      return undefined
+  React.useEffect(() => {
+    if (!params?.cbor) {
+      setValidationResult(undefined)
+      return
     }
+
+    // Defer validation to avoid blocking initial render
+    const timeoutId = setTimeout(() => {
+      try {
+        const result = CardanoMobileWrapped.cslScope((csl) => {
+          return validateTransactionCbor(csl, params.cbor!)
+        })
+        setValidationResult(result)
+      } catch {
+        setValidationResult(undefined)
+      }
+    }, 0)
+
+    return () => clearTimeout(timeoutId)
   }, [params?.cbor])
 
   const hasTrackedReviewViewRef = React.useRef(false)
