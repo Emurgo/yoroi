@@ -372,6 +372,7 @@ export type WalletNavigation = {
   navigateToAnalyticsSettings: () => void
   navigateToGovernanceCentre: () => void
   navigateToDiscoverBrowserDapp: () => void
+  navigateToDiscoverDappSelection: () => void
   navigateToSwap: () => void
   resetToSwapWithToken: () => void
   navigateToExchange: () => void

@@ -297,6 +297,18 @@ export const useWalletNavigation = () => {
       })
     },
 
+    navigateToDiscoverDappSelection: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'discover',
+          params: {
+            screen: 'discover-select-dapp-from-list',
+          },
+        },
+      })
+    },
+
     navigateToSwap: () => {
       const currentNetwork = selectedNetworkRef.current.network
 
