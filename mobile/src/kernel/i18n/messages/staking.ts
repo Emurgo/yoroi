@@ -558,4 +558,21 @@ export const stakingMessages = defineMessages({
     id: 'global.cancel',
     defaultMessage: '!!!Cancel',
   },
+  governanceRequiredTitle: {
+    id: 'components.stakingcenter.governanceRequired.title',
+    defaultMessage: '!!!Governance updates',
+  },
+  governanceRequiredDescription: {
+    id: 'components.stakingcenter.governanceRequired.description',
+    defaultMessage:
+      '!!!To withdraw rewards from your stake delegation, you must also delegate your voting power. Save time and fees by delegating to our Yoroi DRep now, alongside your stake pool delegation.',
+  },
+  delegateToYoroiDRep: {
+    id: 'components.stakingcenter.governanceRequired.delegateToYoroiDRep',
+    defaultMessage: '!!!Delegate to Yoroi DRep',
+  },
+  delegateStakeOnly: {
+    id: 'components.stakingcenter.governanceRequired.delegateStakeOnly',
+    defaultMessage: '!!!Delegate stake only',
+  },
 })

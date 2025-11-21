@@ -10,6 +10,7 @@ import {WebView, WebViewMessageEvent} from 'react-native-webview'
 
 import {useStakingTx} from '~/features/Dashboard/ui/shared/StakePoolInfos'
 import {useReviewTx} from '~/features/ReviewTx/common/ReviewTxProvider'
+import {useGovernanceParticipation} from '~/features/Staking/Governance/common/helpers'
 import {PoolDetailScreen} from '~/features/Staking/Staking/PoolDetails/PoolDetailScreen'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
@@ -18,7 +19,12 @@ import {useLanguage} from '~/kernel/i18n/LanguageProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
+import {
+  GovernanceRequiredModal,
+  governanceRequiredModalHeight,
+} from '~/ui/GovernanceRequiredModal/GovernanceRequiredModal'
 import {LoadingOverlay} from '~/ui/LoadingOverlay/LoadingOverlay'
+import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Space} from '~/ui/Space/Space'
 
 export const StakingCenter = () => {
@@ -40,6 +46,12 @@ export const StakingCenter = () => {
   const [isContentLoaded, setIsContentLoaded] = React.useState(false)
   const [url, setUrl] = React.useState<null | string>(null)
   const [showLoadingModal, setShowLoadingModal] = React.useState(false)
+  const [hasShownGovernanceModal, setHasShownGovernanceModal] =
+    React.useState(false)
+
+  const {openModal, closeModal} = useModal()
+  const {isParticipating: isParticipatingInGovernance} =
+    useGovernanceParticipation()
 
   useFocusEffect(
     React.useCallback(() => {
@@ -47,6 +59,7 @@ export const StakingCenter = () => {
       return () => {
         setUrl(null) // force rerender, so the list's CTAs are reset
         setSelectedPoolId(null) // any pool can be reselected once go back from signing
+        setHasShownGovernanceModal(false) // reset for next session
       }
     }, [languageCode, plate]),
   )
@@ -123,8 +136,38 @@ export const StakingCenter = () => {
       intl,
     )
     if (confirmed === 'Yes') {
-      setShowLoadingModal(true)
-      setSelectedPoolId(selectedPoolHashes[0])
+      const poolId = selectedPoolHashes[0]
+
+      // Check if user is participating in governance
+      if (!isParticipatingInGovernance && !hasShownGovernanceModal) {
+        // Show governance required modal
+        setHasShownGovernanceModal(true)
+
+        openModal({
+          title: strings.staking.governanceRequiredTitle,
+          content: <GovernanceRequiredModal.Content />,
+          footer: (
+            <GovernanceRequiredModal.Footer
+              onDelegateToYoroiDRep={() => {
+                closeModal()
+                // TODO: Create combined transaction with both stake and governance delegation
+                // For now, proceed with stake delegation only
+                setShowLoadingModal(true)
+                setSelectedPoolId(poolId)
+              }}
+              onDelegateStakeOnly={() => {
+                closeModal()
+                setShowLoadingModal(true)
+                setSelectedPoolId(poolId)
+              }}
+            />
+          ),
+          height: governanceRequiredModalHeight,
+        })
+      } else {
+        setShowLoadingModal(true)
+        setSelectedPoolId(poolId)
+      }
     }
   }
 

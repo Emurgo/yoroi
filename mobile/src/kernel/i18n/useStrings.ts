@@ -1325,6 +1325,12 @@ export const useStrings = () => {
             stakingMessages.confirmDelegationCancelButtonLabel,
           ),
         },
+        governanceRequiredTitle: f(stakingMessages.governanceRequiredTitle),
+        governanceRequiredDescription: f(
+          stakingMessages.governanceRequiredDescription,
+        ),
+        delegateToYoroiDRep: f(stakingMessages.delegateToYoroiDRep),
+        delegateStakeOnly: f(stakingMessages.delegateStakeOnly),
       },
 
       // ReviewTx strings
