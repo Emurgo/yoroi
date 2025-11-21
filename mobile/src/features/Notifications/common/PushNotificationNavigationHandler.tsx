@@ -11,6 +11,20 @@ import {
   shouldHandleNotificationInternalNavigationAction,
 } from './tools'
 
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
+
+const runAfterInteractions = (callback: () => Promise<void>): Promise<void> => {
+  return new Promise<void>((resolve) => {
+    InteractionManager.runAfterInteractions(async () => {
+      try {
+        await callback()
+      } finally {
+        resolve()
+      }
+    })
+  })
+}
+
 export const PushNotificationNavigationHandler = () => {
   const walletNavigation = useWalletNavigation()
   const {selected} = useWalletManager()
@@ -23,23 +37,22 @@ export const PushNotificationNavigationHandler = () => {
       isCheckingRef.current = true
 
       try {
-        const delay = isAndroid ? 3000 : 500
-        await new Promise((resolve) => setTimeout(resolve, delay))
+        const initialDelay = isAndroid ? 3000 : 500
+        await delay(initialDelay)
 
         const shouldHandle =
           await shouldHandleNotificationInternalNavigationAction()
 
-        if (shouldHandle && selected.wallet?.id) {
-          await new Promise((resolve) =>
-            setTimeout(resolve, isAndroid ? 300 : 0),
+        if (!shouldHandle || !selected.wallet?.id) return
+
+        if (isAndroid) await delay(300)
+
+        await runAfterInteractions(async () => {
+          await handleNotificationInternalNavigationAction(
+            pushNotificationsManager,
+            walletNavigation,
           )
-          InteractionManager.runAfterInteractions(async () => {
-            await handleNotificationInternalNavigationAction(
-              pushNotificationsManager,
-              walletNavigation,
-            )
-          })
-        }
+        })
       } finally {
         isCheckingRef.current = false
       }
