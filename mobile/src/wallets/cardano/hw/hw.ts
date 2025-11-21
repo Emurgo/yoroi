@@ -173,6 +173,77 @@ export const checkDeviceVersion = (
   }
 }
 
+/**
+ * Wait for USB transport to be ready by attempting the first APDU command with retries.
+ * Some devices need more time to initialize after TransportHID.open() resolves.
+ * Uses exponential backoff to accommodate devices with varying initialization times.
+ *
+ * @param appAda - The AppAda instance to test readiness with
+ * @param useUSB - Whether this is a USB connection (only USB needs retry logic)
+ * @param maxRetries - Maximum number of retry attempts (default: 3)
+ * @param initialDelay - Initial delay in milliseconds before first attempt (default: 50ms)
+ * @returns The version response from the device
+ */
+const waitForTransportReady = async (
+  appAda: AppAda,
+  useUSB: boolean,
+  maxRetries = 3,
+  initialDelay = 50,
+): Promise<GetVersionResponse> => {
+  // Only apply retry logic for USB connections
+  // BLE connections don't typically need this delay
+  if (!useUSB) {
+    return await appAda.getVersion()
+  }
+
+  let lastError: Error | unknown
+  let delay = initialDelay
+
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      // Always wait before attempting (including first attempt) for USB connections
+      // This ensures backward compatibility with the original 50ms delay fix
+      if (attempt === 0) {
+        await new Promise((resolve) => setTimeout(resolve, delay))
+      } else {
+        logger.debug('connectionHandler: Waiting for USB transport to settle', {
+          attempt,
+          delayMs: delay,
+        })
+        await new Promise((resolve) => setTimeout(resolve, delay))
+        // Exponential backoff: 50ms (first), then 100ms, 200ms, 400ms
+        delay = Math.min(delay * 2, 400)
+      }
+
+      const versionResp = await appAda.getVersion()
+      if (attempt > 0) {
+        logger.debug('connectionHandler: USB transport ready after retry', {
+          attempt,
+        })
+      }
+      return versionResp
+    } catch (e) {
+      lastError = e
+      // Check if this is a connection/initialization error that might be resolved by retrying
+      const isRetryableError =
+        e instanceof Error &&
+        (e.message.includes('was disconnected') ||
+          e.message.includes('DisconnectedDevice') ||
+          e.message.includes('not found') ||
+          e.message.includes('timeout') ||
+          e.message.includes('TIMEOUT'))
+
+      // Only retry on connection-related errors, not user errors or app errors
+      if (!isRetryableError || attempt === maxRetries) {
+        throw e
+      }
+    }
+  }
+
+  // Should never reach here, but TypeScript needs it
+  throw lastError
+}
+
 const connectionHandler = async (
   deviceId: string | null | undefined,
   deviceObj: HW.DeviceObj | null | undefined,
@@ -196,9 +267,11 @@ const connectionHandler = async (
     }
 
     const appAda = new AppAda(transport)
-    // Ensure transport is settled before first APDU
-    await new Promise((resolve) => setTimeout(resolve, 50))
-    const versionResp: GetVersionResponse = await appAda.getVersion()
+    // Wait for transport to be ready with retry logic (USB only)
+    const versionResp: GetVersionResponse = await waitForTransportReady(
+      appAda,
+      useUSB,
+    )
 
     logger.debug('connectionHandler: AppAda version', {versionResp})
     checkDeviceVersion(versionResp)
