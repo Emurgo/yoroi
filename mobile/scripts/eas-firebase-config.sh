@@ -25,15 +25,21 @@ cd "${PROJECT_ROOT}"
 
 # Check if secrets are available (these are set as environment variables from EAS secrets)
 if [[ -z "${FIREBASE_GOOGLE_SERVICES_PROD:-}" ]]; then
-  echo "WARNING: FIREBASE_GOOGLE_SERVICES_PROD secret not found"
-  echo "Production Firebase config will not be injected. Using dev configs from repository."
-  exit 0
+  echo "ERROR: FIREBASE_GOOGLE_SERVICES_PROD secret not found"
+  echo "Production builds require Firebase config secrets to be set in EAS."
+  echo "Please create the secret via:"
+  echo "  eas env:create production --scope project --name FIREBASE_GOOGLE_SERVICES_PROD --type string --visibility secret"
+  echo "Or via Expo Dashboard: https://expo.dev → Your Project → Secrets"
+  exit 1
 fi
 
 if [[ -z "${FIREBASE_GOOGLE_SERVICES_IOS_PROD:-}" ]]; then
-  echo "WARNING: FIREBASE_GOOGLE_SERVICES_IOS_PROD secret not found"
-  echo "Production Firebase config will not be injected. Using dev configs from repository."
-  exit 0
+  echo "ERROR: FIREBASE_GOOGLE_SERVICES_IOS_PROD secret not found"
+  echo "Production builds require Firebase config secrets to be set in EAS."
+  echo "Please create the secret via:"
+  echo "  eas env:create production --scope project --name FIREBASE_GOOGLE_SERVICES_IOS_PROD --type string --visibility secret"
+  echo "Or via Expo Dashboard: https://expo.dev → Your Project → Secrets"
+  exit 1
 fi
 
 # Decode and write Android Firebase config

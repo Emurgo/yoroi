@@ -5,7 +5,9 @@ set -euo pipefail
 if [[ "${EAS_BUILD_PROFILE:-}" == "production" ]]; then
   echo "Running Firebase config injection for production build..."
   bash ./scripts/eas-firebase-config.sh || {
-    echo "WARNING: Firebase config injection failed, continuing with dev configs"
+    echo "ERROR: Firebase config injection failed"
+    echo "Production builds require Firebase config secrets. Build cannot continue."
+    exit 1
   }
 fi
 
