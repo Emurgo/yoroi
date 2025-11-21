@@ -1,3 +1,4 @@
+import {GOVERNANCE_YOROI_DREP_ID_HEX} from '@yoroi/staking'
 import {Wallet} from '@yoroi/types'
 
 import {Certificate} from '@emurgo/cross-csl-core'
@@ -9,7 +10,12 @@ import {YoroiWallet} from '~/wallets/cardano/types'
 
 import {useGovernanceActions} from './helpers'
 
-type PendingVote = 'abstain' | 'no-confidence' | 'delegate' | null
+type PendingVote =
+  | 'abstain'
+  | 'no-confidence'
+  | 'delegate-yoroi'
+  | 'delegate-other'
+  | null
 
 type DelegateOptions = {
   hash: string
@@ -96,7 +102,11 @@ export const useGovernanceVoteFlow = ({
   })
 
   const setDelegatePending = (options: DelegateOptions) => {
-    setPendingVote('delegate')
+    const pendingVoteValue =
+      options.hash === GOVERNANCE_YOROI_DREP_ID_HEX
+        ? 'delegate-yoroi'
+        : 'delegate-other'
+    setPendingVote(pendingVoteValue)
     pendingActionRef.current = {type: 'delegate', options}
   }
 
