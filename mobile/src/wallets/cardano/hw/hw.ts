@@ -206,13 +206,13 @@ const waitForTransportReady = async (
       if (attempt === 0) {
         await new Promise((resolve) => setTimeout(resolve, delay))
       } else {
+        // Exponential backoff: 50ms (first), then 100ms, 200ms, 400ms
+        delay = Math.min(delay * 2, 400)
         logger.debug('connectionHandler: Waiting for USB transport to settle', {
           attempt,
           delayMs: delay,
         })
         await new Promise((resolve) => setTimeout(resolve, delay))
-        // Exponential backoff: 50ms (first), then 100ms, 200ms, 400ms
-        delay = Math.min(delay * 2, 400)
       }
 
       const versionResp = await appAda.getVersion()
