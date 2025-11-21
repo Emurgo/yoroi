@@ -196,6 +196,8 @@ const connectionHandler = async (
     }
 
     const appAda = new AppAda(transport)
+    // Ensure transport is settled before first APDU
+    await new Promise((resolve) => setTimeout(resolve, 50))
     const versionResp: GetVersionResponse = await appAda.getVersion()
 
     logger.debug('connectionHandler: AppAda version', {versionResp})
