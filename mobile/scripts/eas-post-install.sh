@@ -1,6 +1,16 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Inject Firebase production configs if this is a production build
+if [[ "${EAS_BUILD_PROFILE:-}" == "production" ]]; then
+  echo "Running Firebase config injection for production build..."
+  bash ./scripts/eas-firebase-config.sh || {
+    echo "ERROR: Firebase config injection failed"
+    echo "Production builds require Firebase config secrets. Build cannot continue."
+    exit 1
+  }
+fi
+
 echo "EAS post-install: Android Rust setup/build"
 
 # Only run on Android builds
