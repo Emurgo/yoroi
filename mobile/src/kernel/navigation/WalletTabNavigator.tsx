@@ -7,7 +7,7 @@ import {
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs'
 import * as React from 'react'
-import {AppState} from 'react-native'
+import {AppState, InteractionManager} from 'react-native'
 
 import {DiscoverNavigator} from '~/features/Discover/DiscoverNavigator'
 import {MenuNavigator} from '~/features/Menu/Menu'
@@ -47,10 +47,12 @@ export const WalletTabNavigator = () => {
         const shouldHandle =
           await shouldHandleNotificationInternalNavigationAction()
         if (shouldHandle) {
-          await handleNotificationInternalNavigationAction(
-            pushNotificationsManager,
-            walletNavigation,
-          )
+          InteractionManager.runAfterInteractions(async () => {
+            await handleNotificationInternalNavigationAction(
+              pushNotificationsManager,
+              walletNavigation,
+            )
+          })
         }
       }
     }
