@@ -158,7 +158,7 @@ export const ChangeVoteScreen = () => {
               title={strings.staking.delegateToAYoroiDrep}
               description={strings.staking.delegateToAYoroiDRepDescription}
               onPress={handleDelegateToYoroi}
-              pending={isCreatingTx && pendingVote === 'delegate'}
+              pending={isCreatingTx && pendingVote === 'delegate-yoroi'}
               showGradient
             >
               <YoroiRecordLink />
@@ -170,7 +170,7 @@ export const ChangeVoteScreen = () => {
             title={strings.staking.actionDelegateToADRepTitle}
             description={strings.staking.actionDelegateToADRepDescription}
             onPress={handleDelegate}
-            pending={isCreatingTx && pendingVote === 'delegate'}
+            pending={isCreatingTx && pendingVote === 'delegate-other'}
           />
         )}
 
@@ -179,7 +179,7 @@ export const ChangeVoteScreen = () => {
             title={strings.staking.changeDRep}
             description={strings.staking.actionDelegateToADRepDescription}
             onPress={handleDelegate}
-            pending={isCreatingTx && pendingVote === 'delegate'}
+            pending={isCreatingTx && pendingVote === 'delegate-other'}
           />
         )}
 
