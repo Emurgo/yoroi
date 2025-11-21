@@ -32,7 +32,6 @@ Before you begin, ensure you have the following installed:
 
   **Note**: Use asdf to install all dependencies from .tool-versions:\*\*
 
-
 ### Platform-Specific Requirements
 
 #### For iOS Development
@@ -264,6 +263,46 @@ The project uses Expo Application Services (EAS) for cloud builds:
 - EAS CLI: `npm install -g eas-cli`
 - EAS account: `eas login`
 
+#### Firebase Production Configuration
+
+**Important**: Production builds require Firebase configuration files to be set up as EAS secrets. Development and preview builds use Firebase configs from the repository.
+
+**Before your first production build:**
+
+1. **Place production Firebase configs** in `firebase/production/`:
+
+   - `google-services-production.json` (Android)
+   - `GoogleService-Info-production.plist` (iOS)
+
+2. **Encode the configs** using the provided script:
+
+   ```bash
+   ./scripts/encode-firebase-configs.sh
+   ```
+
+   This will output base64-encoded strings ready to copy.
+
+3. **Create EAS secrets** via Expo Dashboard:
+
+   - Go to https://expo.dev → Your Project → Secrets
+   - Create `FIREBASE_GOOGLE_SERVICES_PROD` with the Android base64 string
+   - Create `FIREBASE_GOOGLE_SERVICES_IOS_PROD` with the iOS base64 string
+   - Set scope to **Project**
+
+   Or use EAS CLI:
+
+   ```bash
+   cat firebase/production/google-services-production.b64 | \
+     eas secret:create --scope project --name FIREBASE_GOOGLE_SERVICES_PROD --value-file -
+
+   cat firebase/production/GoogleService-Info-production.b64 | \
+     eas secret:create --scope project --name FIREBASE_GOOGLE_SERVICES_IOS_PROD --value-file -
+   ```
+
+4. **Verify setup**: Production builds will automatically inject Firebase configs from secrets during the build process.
+
+For detailed instructions, see [Firebase Production Setup Guide](docs/firebase-production-setup.md).
+
 #### Build Commands
 
 ```bash
@@ -275,7 +314,7 @@ eas build --platform android --profile development
 eas build --platform ios --profile preview
 eas build --platform android --profile preview
 
-# Production build
+# Production build (requires Firebase secrets configured)
 eas build --platform ios --profile production
 eas build --platform android --profile production
 
@@ -285,9 +324,28 @@ eas build --platform all --profile production
 
 #### Build Profiles
 
-- **development** - Development client with debugging
-- **preview** - Internal testing build
-- **production** - App Store/Play Store ready build
+- **development** - Development client with debugging (uses repo Firebase configs)
+- **preview** - Internal testing build (uses repo Firebase configs)
+- **production** - App Store/Play Store ready build (uses Firebase configs from EAS secrets)
+
+#### Automated Production Deployments
+
+Production builds are automatically triggered via GitHub Actions when PRs are merged to the `production` branch:
+
+- **Workflow**: `.github/workflows/production-eas-build.yml`
+- **Process**:
+  1. Creates production builds for iOS and Android using EAS
+  2. Automatically submits iOS build to TestFlight
+  3. Automatically submits Android build to Google Play Store
+
+**Prerequisites for CI/CD:**
+
+- EAS secrets must be configured in Expo Dashboard (including Firebase production configs)
+- GitHub secrets must be configured:
+  - `EXPO_TOKEN` - EAS authentication token
+- App Store Connect API key and Google Play service account must be configured in EAS
+
+The Firebase production configs are automatically injected during CI builds via the pre-build hook script (`scripts/eas-firebase-config.sh`).
 
 ### Local Builds
 
