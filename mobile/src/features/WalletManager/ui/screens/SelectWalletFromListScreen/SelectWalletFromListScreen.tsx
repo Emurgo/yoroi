@@ -44,25 +44,9 @@ export const SelectWalletFromList = () => {
   const {scrollViewRef} = useScrollView()
   const navigation = useNavigation()
   const walletMetas = useWalletMetas()
-  const {walletManager, selected} = useWalletManager()
+  const {walletManager} = useWalletManager()
   const walletNavigation = useWalletNavigation()
   const {isAuthDev} = useAuth()
-
-  useFocusEffect(
-    React.useCallback(() => {
-      const checkPendingNavigation = async () => {
-        const shouldHandle =
-          await shouldHandleNotificationInternalNavigationAction()
-        if (shouldHandle && selected.wallet?.id) {
-          await handleNotificationInternalNavigationAction(
-            pushNotificationsManager,
-            walletNavigation,
-          )
-        }
-      }
-      setTimeout(() => checkPendingNavigation(), 300)
-    }, [selected.wallet?.id, walletNavigation]),
-  )
 
   const handleOnSelect = React.useCallback(
     async (walletMeta: Wallet.Meta) => {
