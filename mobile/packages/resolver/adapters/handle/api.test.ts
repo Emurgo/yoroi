@@ -2,6 +2,7 @@ import {Api, Left, Resolver, Right} from '@yoroi/types'
 
 import {
   HandleApiGetCryptoAddressResponse,
+  getHandleApiError,
   handleApiConfig,
   handleApiGetCryptoAddress,
   handleApiGetDRepId,
@@ -319,5 +320,15 @@ describe('handleApiGetDRepId', () => {
     const getDRepId = handleApiGetDRepId({request: mockFetchData})
 
     await expect(() => getDRepId(domain)).rejects.toThrow()
+  })
+})
+
+describe('getHandleApiError', () => {
+  it('should return error as-is when not NotFound and no zod error', () => {
+    const customError = new Error('Custom error')
+
+    const result = getHandleApiError(customError)
+
+    expect(result).toBe(customError)
   })
 })

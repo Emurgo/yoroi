@@ -1,4 +1,7 @@
 import {QueryClient} from '@tanstack/react-query'
+import {render} from '@testing-library/react-native'
+import * as React from 'react'
+import {Text} from 'react-native'
 
 import {wrapper} from './wrapper'
 
@@ -31,5 +34,23 @@ describe('notifications wrapper', () => {
     const Wrapper = wrapper({queryClient})
     expect(Wrapper).toBeDefined()
     expect(typeof Wrapper).toBe('function')
+  })
+
+  it('should wrap children when called', () => {
+    const queryClient = new QueryClient({
+      defaultOptions: {
+        queries: {retry: false},
+        mutations: {retry: false},
+      },
+    })
+
+    const Wrapper = wrapper({queryClient})
+    const {getByText} = render(
+      <Wrapper>
+        <Text>Wrapped Content</Text>
+      </Wrapper>,
+    )
+
+    expect(getByText('Wrapped Content')).toBeDefined()
   })
 })

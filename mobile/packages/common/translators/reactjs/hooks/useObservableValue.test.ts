@@ -116,4 +116,22 @@ describe('useObservableValue', () => {
     expect(result.current).toBe(100)
     expect(getter).toHaveBeenCalled()
   })
+
+  it('should handle getSnapshot being called multiple times', () => {
+    const observable$ = new BehaviorSubject<number>(5)
+    const getter = jest.fn(() => observable$.value)
+
+    const {result} = renderHook(() =>
+      useObservableValue({
+        observable$,
+        getter,
+      }),
+    )
+
+    // getSnapshot may be called multiple times by React
+    const value1 = result.current
+    const value2 = result.current
+    expect(value1).toBe(value2)
+    expect(value1).toBe(5)
+  })
 })
