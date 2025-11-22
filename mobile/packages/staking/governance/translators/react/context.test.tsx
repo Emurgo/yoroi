@@ -28,11 +28,9 @@ describe('GovernanceProvider', () => {
   })
 
   it('should throw error when useGovernance is used outside provider', () => {
-    const {result} = renderHook(() => useGovernance())
-
-    expect(result.error).toEqual(
-      new Error('useGovernance must be used within a GovernanceProvider'),
-    )
+    expect(() => {
+      renderHook(() => useGovernance())
+    }).toThrow('useGovernance must be used within a GovernanceProvider')
   })
 })
 
