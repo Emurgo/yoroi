@@ -58,7 +58,48 @@ describe('useResolverDRepId', () => {
       {wrapper: createWrapper()},
     )
 
-    // Initially åshould start fetching or be pending
+    // Initially should start fetching or be pending
     expect(result.current.isPending || result.current.isLoading).toBe(true)
+  })
+
+  it('should be disabled when resolve is empty string', () => {
+    const {result} = renderHook(
+      () =>
+        useResolverDRepId({
+          resolve: '',
+          isMainnet: true,
+          enabled: true,
+        }),
+      {wrapper: createWrapper()},
+    )
+
+    // Query should be disabled when resolve is empty
+    expect(result.current.isFetching).toBe(false)
+  })
+
+  it('should use isMainnet parameter', () => {
+    const {result: resultMainnet} = renderHook(
+      () =>
+        useResolverDRepId({
+          resolve: '$testhandle',
+          isMainnet: true,
+          enabled: false,
+        }),
+      {wrapper: createWrapper()},
+    )
+
+    const {result: resultPreprod} = renderHook(
+      () =>
+        useResolverDRepId({
+          resolve: '$testhandle',
+          isMainnet: false,
+          enabled: false,
+        }),
+      {wrapper: createWrapper()},
+    )
+
+    // Both should be defined but disabled
+    expect(resultMainnet.current.drepInfo).toBeNull()
+    expect(resultPreprod.current.drepInfo).toBeNull()
   })
 })

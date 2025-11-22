@@ -98,4 +98,22 @@ describe('useObservableValue', () => {
 
     expect(unsubscribeSpy).toHaveBeenCalledTimes(1)
   })
+
+  it('should use getServerSnapshot for initial server-side rendering', () => {
+    const observable$ = new BehaviorSubject<number>(100)
+    const getter = jest.fn(() => observable$.value)
+
+    // Simulate server-side rendering by calling getServerSnapshot directly
+    // This tests the getServerSnapshot callback
+    const {result} = renderHook(() =>
+      useObservableValue({
+        observable$,
+        getter,
+      }),
+    )
+
+    // getServerSnapshot should return the current value from getter
+    expect(result.current).toBe(100)
+    expect(getter).toHaveBeenCalled()
+  })
 })

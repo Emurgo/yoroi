@@ -35,4 +35,16 @@ describe('toBigInt', () => {
   it('should handle zero', () => {
     expect(toBigInt('0', 6)).toBe(0n)
   })
+
+  it('should handle empty string as zero', () => {
+    expect(toBigInt('', 6)).toBe(0n)
+  })
+
+  it('should handle absolute with positive value', () => {
+    expect(toBigInt('1', 18, true)).toBe(1000000000000000000n)
+  })
+
+  it('should handle absolute with zero', () => {
+    expect(toBigInt('0', 18, true)).toBe(0n)
+  })
 })

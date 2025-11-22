@@ -50,5 +50,23 @@ describe('promises utilities', () => {
       ]
       await expect(PromiseAllLimited(tasks, 2)).rejects.toThrow('test')
     })
+
+    it('should handle error in runTasks', async () => {
+      const tasks = [
+        () => Promise.resolve(1),
+        () => Promise.reject(new Error('test error')),
+      ]
+      const results: number[] = []
+      let errorThrown = false
+      try {
+        for await (const result of runTasks(tasks.values(), 2)) {
+          results.push(result)
+        }
+      } catch (error) {
+        errorThrown = true
+        expect(error).toBeInstanceOf(Error)
+      }
+      expect(errorThrown).toBe(true)
+    })
   })
 })

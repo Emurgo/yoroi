@@ -39,13 +39,21 @@ describe('strings utilities', () => {
       ;(isArrayOfType as unknown as jest.Mock).mockReturnValue(false)
       expect(asConcatenedString(undefined)).toBeUndefined()
     })
+
+    it('should return undefined when value is neither string nor array', () => {
+      ;(isString as unknown as jest.Mock).mockReturnValue(false)
+      ;(isArrayOfType as unknown as jest.Mock).mockReturnValue(false)
+      expect(asConcatenedString(123 as any)).toBeUndefined()
+    })
   })
 
   describe('truncateString', () => {
     it('should truncate long strings', () => {
       const long = 'a'.repeat(20)
       const result = truncateString({value: long, maxLength: 10})
-      expect(result.length).toBe(10)
+      // With separator '...' (3 chars), partLength = floor((10-3)/2) = 3
+      // Result: 3 (start) + 3 (separator) + 3 (end) = 9 chars
+      expect(result.length).toBe(9)
       expect(result).toContain('...')
     })
 

@@ -27,7 +27,11 @@ describe('logger', () => {
         noOpLogger.info('test')
         noOpLogger.warn('test')
         noOpLogger.error(new Error('test'))
-        noOpLogger.addTransport({} as App.Logger.Transporter)
+        const removeTransport = noOpLogger.addTransport(
+          {} as App.Logger.Transporter,
+        )
+        expect(typeof removeTransport).toBe('function')
+        removeTransport()
         noOpLogger.disable()
         noOpLogger.enable()
       }).not.toThrow()

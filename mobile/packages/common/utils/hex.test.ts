@@ -13,6 +13,10 @@ describe('hex utilities', () => {
       expect(() => hex('invalid')).toThrow('Invalid hex string')
     })
 
+    it('should throw error for empty string', () => {
+      expect(() => hex('')).toThrow('Invalid hex string')
+    })
+
     it('should convert value to lowercase', () => {
       const h = hex('ABCDEF')
       expect(h.value).toBe('abcdef')
@@ -21,7 +25,7 @@ describe('hex utilities', () => {
     it('should compare hex values', () => {
       const h1 = hex('abcd')
       const h2 = hex('abcd')
-      const h3 = hex('efgh')
+      const h3 = hex('ef12')
       expect(h1.equals(h2)).toBe(true)
       expect(h1.equals(h3)).toBe(false)
     })
@@ -32,7 +36,7 @@ describe('hex utilities', () => {
       expect(hex.isHexString('abcd1234')).toBe(true)
       expect(hex.isHexString('ABCDEF')).toBe(true)
       expect(hex.isHexString('invalid')).toBe(false)
-      expect(hex.isHexString('')).toBe(true)
+      expect(hex.isHexString('')).toBe(false) // Empty string is not valid hex
     })
   })
 
@@ -56,7 +60,7 @@ describe('hex utilities', () => {
       expect(isHex('abcd1234')).toBe(true)
       expect(isHex('ABCDEF')).toBe(true)
       expect(isHex('invalid')).toBe(false)
-      expect(isHex('')).toBe(true)
+      expect(isHex('')).toBe(false) // Empty string is not valid hex
     })
   })
 

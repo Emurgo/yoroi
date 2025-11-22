@@ -13,59 +13,65 @@ describe('getUtxoData', () => {
   const txHash = 'abcd1234'
   const txIndex = 0
 
-  const validUtxoData: Api.Cardano.UtxoData = {
-    output: {
-      address: 'addr1qxyz',
-      amount: '1000000',
-      dataHash: null,
-      assets: [
-        {assetId: '1', policyId: 'policy1', name: 'asset1', amount: '50'},
-        {assetId: '2', policyId: 'policy2', name: 'asset2', amount: '100'},
-      ],
-    },
-    spendingTxHash: null,
-  }
-
-  const invalidUtxoData = {
-    output: {
-      address: 'addr1qxyz',
-      amount: '1000000',
-      dataHash: null,
-      assets: [{assetId: '1', policyId: 'policy1', name: 'asset1'}],
-    },
-    spendingTxHash: null,
-  }
-
   afterEach(() => {
     jest.clearAllMocks()
   })
 
   it('fetches and returns valid UTXO data', async () => {
-    mockFetcher.mockResolvedValue(validUtxoData)
+    const mockTxResponse = {
+      hash: txHash,
+      block: 'block123',
+      inputs: [],
+      outputs: [
+        {
+          address: 'addr1qxyz',
+          amount: {'$lovelaces': '1000000', 'policy1.asset1': '50'},
+          index: 0,
+        },
+      ],
+      fee: {},
+      certificates: [],
+      withdrawals: [],
+      when: '2023-01-01T00:00:00Z',
+    }
+    mockFetcher.mockResolvedValue(mockTxResponse)
 
     const fetchUtxo = getUtxoData(baseUrl, mockFetcher)
     const result = await fetchUtxo({txHash, txIndex})
 
     expect(mockFetcher).toHaveBeenCalledWith({
-      url: `${baseUrl}/api/txs/io/${txHash}/o/${txIndex}`,
+      url: `${baseUrl}/transactions/${txHash}`,
       data: undefined,
       method: 'GET',
       headers: {'Content-Type': 'application/json'},
     })
 
-    expect(result).toEqual(validUtxoData)
+    expect(result.output.address).toBe('addr1qxyz')
+    expect(result.output.amount).toBe('1000000')
+    expect(result.output.assets).toHaveLength(1)
+    expect(result.output.assets[0]?.assetId).toBe('policy1.asset1')
   })
 
-  it('rejects if UTXO data is invalid', async () => {
-    mockFetcher.mockResolvedValue(invalidUtxoData)
+  it('rejects if output index is out of bounds', async () => {
+    const mockTxResponse = {
+      hash: txHash,
+      block: 'block123',
+      inputs: [],
+      outputs: [],
+      fee: {},
+      certificates: [],
+      withdrawals: [],
+      when: '2023-01-01T00:00:00Z',
+    }
+    mockFetcher.mockResolvedValue(mockTxResponse)
 
     const fetchUtxo = getUtxoData(baseUrl, mockFetcher)
 
-    await expect(fetchUtxo({txHash, txIndex})).rejects.toThrow(
-      'Invalid utxo data response',
+    await expect(fetchUtxo({txHash, txIndex: 999})).rejects.toThrow(
+      'Output at index 999 not found',
     )
-    expect(mockFetcher).toHaveBeenCalled()
   })
+
 
   it('handles fetcher errors gracefully', async () => {
     mockFetcher.mockRejectedValue(new Error('Network error'))
@@ -74,6 +80,79 @@ describe('getUtxoData', () => {
 
     await expect(fetchUtxo({txHash, txIndex})).rejects.toThrow('Network error')
     expect(mockFetcher).toHaveBeenCalled()
+  })
+
+  it('handles asset amounts with different types', async () => {
+    const mockTxResponse = {
+      hash: txHash,
+      block: 'block123',
+      inputs: [],
+      outputs: [
+        {
+          address: 'addr1qxyz',
+          amount: {
+            '$lovelaces': '1000000',
+            'policy1.asset1': '50', // string
+            'policy2.asset2': 100, // number
+            'policy3.asset3': 200n, // bigint
+            'policy4.asset4': null, // null
+            'policy5.asset5': undefined, // undefined
+          },
+          index: 0,
+        },
+      ],
+      fee: {},
+      certificates: [],
+      withdrawals: [],
+      when: '2023-01-01T00:00:00Z',
+    }
+    mockFetcher.mockResolvedValue(mockTxResponse)
+
+    const fetchUtxo = getUtxoData(baseUrl, mockFetcher)
+    const result = await fetchUtxo({txHash, txIndex})
+
+    expect(result.output.assets).toHaveLength(5)
+    expect(
+      result.output.assets.find((a) => a.assetId === 'policy1.asset1')?.amount,
+    ).toBe('50')
+    expect(
+      result.output.assets.find((a) => a.assetId === 'policy2.asset2')?.amount,
+    ).toBe('100')
+    expect(
+      result.output.assets.find((a) => a.assetId === 'policy3.asset3')?.amount,
+    ).toBe('200')
+    expect(
+      result.output.assets.find((a) => a.assetId === 'policy4.asset4')?.amount,
+    ).toBe('0')
+    expect(
+      result.output.assets.find((a) => a.assetId === 'policy5.asset5')?.amount,
+    ).toBe('0')
+  })
+
+  it('handles output with datumHash', async () => {
+    const mockTxResponse = {
+      hash: txHash,
+      block: 'block123',
+      inputs: [],
+      outputs: [
+        {
+          address: 'addr1qxyz',
+          amount: {$lovelaces: '1000000'},
+          index: 0,
+          datumHash: 'datum123',
+        },
+      ],
+      fee: {},
+      certificates: [],
+      withdrawals: [],
+      when: '2023-01-01T00:00:00Z',
+    }
+    mockFetcher.mockResolvedValue(mockTxResponse)
+
+    const fetchUtxo = getUtxoData(baseUrl, mockFetcher)
+    const result = await fetchUtxo({txHash, txIndex})
+
+    expect(result.output.dataHash).toBe('datum123')
   })
 })
 
