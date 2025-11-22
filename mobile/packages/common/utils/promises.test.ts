@@ -68,5 +68,34 @@ describe('promises utilities', () => {
       }
       expect(errorThrown).toBe(true)
     })
+
+    it('should handle iterator completion (done = true)', async () => {
+      const tasks = [() => Promise.resolve(1), () => Promise.resolve(2)]
+      const results: number[] = []
+      for await (const result of runTasks(tasks.values(), 2)) {
+        results.push(result)
+      }
+      // After all tasks complete, iterators should be done and removed
+      expect(results).toHaveLength(2)
+      expect(results.sort()).toEqual([1, 2])
+    })
+
+    it('should handle tasks completing in different order', async () => {
+      // Create tasks that resolve at different times naturally
+      const tasks = [
+        () =>
+          new Promise<number>((resolve) => setTimeout(() => resolve(1), 10)),
+        () => new Promise<number>((resolve) => setTimeout(() => resolve(2), 5)),
+        () =>
+          new Promise<number>((resolve) => setTimeout(() => resolve(3), 15)),
+      ]
+      const results: number[] = []
+      for await (const result of runTasks(tasks.values(), 2)) {
+        results.push(result)
+      }
+      // All tasks should complete
+      expect(results).toHaveLength(3)
+      expect(results.sort()).toEqual([1, 2, 3])
+    })
   })
 })

@@ -85,4 +85,26 @@ describe('useDebouncedValue', () => {
     // Should not throw
     expect(result.current).toBe('initial')
   })
+
+  it('should handle cleanup when timeoutRef.current is null in cleanup', () => {
+    const {result, rerender} = renderHook(
+      ({value}) => useDebouncedValue(value, 1000),
+      {initialProps: {value: 'initial'}},
+    )
+
+    // Change value to trigger effect
+    rerender({value: 'updated'})
+
+    // Immediately change again to trigger cleanup with null timeoutRef
+    act(() => {
+      jest.advanceTimersByTime(0)
+    })
+    rerender({value: 'updated2'})
+
+    act(() => {
+      jest.advanceTimersByTime(1000)
+    })
+
+    expect(result.current).toBe('updated2')
+  })
 })
