@@ -34,11 +34,7 @@ describe('records utilities', () => {
 
   describe('mergeRecords', () => {
     it('should merge multiple records', () => {
-      const records: Array<Record<string, number>> = [
-        {a: 1},
-        {b: 2},
-        {c: 3},
-      ]
+      const records: Array<Record<string, number>> = [{a: 1}, {b: 2}, {c: 3}]
       const result = mergeRecords(records)
       expect(result).toEqual({a: 1, b: 2, c: 3})
     })
