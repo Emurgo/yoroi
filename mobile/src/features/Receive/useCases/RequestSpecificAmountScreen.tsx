@@ -1,3 +1,4 @@
+import {parseNumberFromText} from '@yoroi/common'
 import {
   configCardanoPayV1,
   linksCardanoModuleMaker,
@@ -15,6 +16,7 @@ import {
 
 import {useCopy} from '~/features/Copy/context/CopyProvider'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useLanguage} from '~/kernel/i18n/LanguageProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
@@ -26,7 +28,6 @@ import {useScrollView} from '~/ui/ScrollView/hooks/useScrollView'
 import {ShareQRCodeCard} from '~/ui/ShareQRCodeCard/ShareQRCodeCard'
 import {SkeletonAdressDetail} from '~/ui/SkeletonAddressDetail/SkeletonAddressDetail'
 import {TextInput} from '~/ui/TextInput/TextInput'
-import {editedFormatter} from '~/wallets/utils/amountUtils'
 import {isEmptyString} from '~/wallets/utils/string'
 
 import {useReceive} from '../common/ReceiveProvider'
@@ -34,6 +35,7 @@ import {useReceive} from '../common/ReceiveProvider'
 export const RequestSpecificAmountScreen = () => {
   const strings = useStrings()
   const {atoms: ta} = useTheme()
+  const {numberLocale} = useLanguage()
   const [amount, setAmount] = React.useState('')
   const {wallet} = useSelectedWallet()
 
@@ -61,14 +63,22 @@ export const RequestSpecificAmountScreen = () => {
     modalHeight,
   ])
 
-  const handleOnChangeAmount = (amount: string) => {
-    const edited = editedFormatter(amount)
-    const numberOfDecimals = (edited.split('.')[1] ?? []).length
+  const handleOnChangeAmount = (text: string) => {
+    const result = parseNumberFromText({
+      text,
+      denomination: wallet.portfolioPrimaryTokenInfo.decimals,
+      format: numberLocale,
+      precision: wallet.portfolioPrimaryTokenInfo.decimals,
+    })
+
+    // Validate the numeric value is within safe integer range
     if (
-      Number(edited) <= Number.MAX_SAFE_INTEGER &&
-      numberOfDecimals <= wallet.portfolioPrimaryTokenInfo.decimals
+      result.numericValue <= Number.MAX_SAFE_INTEGER &&
+      result.formattedValue !== undefined
     ) {
-      setAmount(edited)
+      setAmount(result.formattedValue)
+    } else if (text === '') {
+      setAmount('')
     }
   }
 
@@ -120,12 +130,22 @@ export const RequestSpecificAmountScreen = () => {
 const ModalContent = ({amount, address}: {amount: string; address: string}) => {
   const strings = useStrings()
   const {copy} = useCopy()
+  const {numberLocale} = useLanguage()
+  const {wallet} = useSelectedWallet()
   const cardanoLinks = linksCardanoModuleMaker()
+  
+  // Parse amount to get numeric value for link creation
+  const parsedAmount = parseNumberFromText({
+    text: amount,
+    denomination: wallet.portfolioPrimaryTokenInfo.decimals,
+    format: numberLocale,
+  })
+  
   const cardanoRequestLink = cardanoLinks.create({
     config: configCardanoPayV1,
     params: {
       address: address,
-      amount: Number(amount),
+      amount: parsedAmount.numericValue,
     },
   })
   const yoroiLinks = linksYoroiModuleMaker('yoroi')
@@ -179,13 +199,23 @@ const ModalContent = ({amount, address}: {amount: string; address: string}) => {
 const ModalFooter = ({amount, address}: {amount: string; address: string}) => {
   const strings = useStrings()
   const {copy} = useCopy()
+  const {numberLocale} = useLanguage()
+  const {wallet} = useSelectedWallet()
 
   const cardanoLinks = linksCardanoModuleMaker()
+  
+  // Parse amount to get numeric value for link creation
+  const parsedAmount = parseNumberFromText({
+    text: amount,
+    denomination: wallet.portfolioPrimaryTokenInfo.decimals,
+    format: numberLocale,
+  })
+  
   const cardanoRequestLink = cardanoLinks.create({
     config: configCardanoPayV1,
     params: {
       address: address,
-      amount: Number(amount),
+      amount: parsedAmount.numericValue,
     },
   })
   const yoroiLinks = linksYoroiModuleMaker('yoroi')
