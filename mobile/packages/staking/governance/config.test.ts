@@ -1,0 +1,49 @@
+import {Chain} from '@yoroi/types'
+
+import {
+  GOVERNANCE_ENDPOINTS,
+  GOVERNANCE_YOROI_DREP_ID_HEX,
+  YOROI_TOP_STAKE_POOL_ID,
+} from './config'
+
+describe('governance config', () => {
+  it('should have correct GOVERNANCE_ENDPOINTS for Mainnet', () => {
+    expect(GOVERNANCE_ENDPOINTS[Chain.Network.Mainnet]).toEqual({
+      getStakeKeyState:
+        'https://zero.yoroiwallet.com/stakekeys/{{STAKE_KEY_HASH}}/state',
+      getDRepById: 'https://zero.yoroiwallet.com/dreps/{{DREP_ID}}/state',
+    })
+  })
+
+  it('should have correct GOVERNANCE_ENDPOINTS for Preprod', () => {
+    expect(GOVERNANCE_ENDPOINTS[Chain.Network.Preprod]).toEqual({
+      getStakeKeyState:
+        'https://yoroi-backend-zero-preprod-prod.emurgornd.com/stakekeys/{{STAKE_KEY_HASH}}/state',
+      getDRepById:
+        'https://yoroi-backend-zero-preprod-prod.emurgornd.com/dreps/{{DREP_ID}}/state',
+    })
+  })
+
+  it('should have correct GOVERNANCE_ENDPOINTS for Preview', () => {
+    expect(GOVERNANCE_ENDPOINTS[Chain.Network.Preview]).toEqual({
+      getStakeKeyState:
+        'https://yoroi-backend-zero-preview.emurgornd.com/stakekeys/{{STAKE_KEY_HASH}}/state',
+      getDRepById:
+        'https://yoroi-backend-zero-preview.emurgornd.com/dreps/{{DREP_ID}}/state',
+    })
+  })
+
+
+  it('should have correct GOVERNANCE_YOROI_DREP_ID_HEX', () => {
+    expect(GOVERNANCE_YOROI_DREP_ID_HEX).toBe(
+      '0655f3a1c76788d839212adc459b188b84e680f30ae944c593fa18ae',
+    )
+  })
+
+  it('should have correct YOROI_TOP_STAKE_POOL_ID', () => {
+    expect(YOROI_TOP_STAKE_POOL_ID).toBe(
+      'pool1pux7lyzvx89q5dz4dv2kkjdpjdzysf30plmk0vc60x4w0hq8j5p',
+    )
+  })
+})
+
