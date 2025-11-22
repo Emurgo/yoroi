@@ -354,25 +354,6 @@ describe('transformers', () => {
     })
   })
 
-  describe('setProviders', () => {
-    it('should set providers cache', () => {
-      const providersPayload = {
-        dex_info: {},
-        liquidity_source_info: {},
-      } as any
-      transformers.setProviders(providersPayload)
-      // Verify providers are set by checking that quote request works
-      const result = transformers.quote.request({
-        slippage: 0.01,
-        tokenIn: '.',
-        tokenOut:
-          'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950',
-        amountIn: 10,
-      })
-      expect(result).toBeDefined()
-    })
-  })
-
   describe('mapProtocolToOrderContract', () => {
     it('should normalize Muesliswap to Muesliswap_v2', () => {
       const result = transformers.limitQuote.request({

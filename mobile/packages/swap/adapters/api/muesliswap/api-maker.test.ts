@@ -1,5 +1,5 @@
 import {fetchData} from '@yoroi/common'
-import {Api, Chain, Left, Swap} from '@yoroi/types'
+import {Api, Chain, Left} from '@yoroi/types'
 
 import {muesliswapApiMaker, parseMuesliError} from './api-maker'
 import {api} from './api.mocks'
