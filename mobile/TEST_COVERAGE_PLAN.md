@@ -1,268 +1,201 @@
 # Test Coverage Plan for Mobile Packages
 
-## Current Status
+## Current Status (Based on Actual Coverage Metrics)
 
-- **Total implementation files**: 393
-- **Total test files**: 233
-- **Coverage gap**: ~160 files need tests
-- **Current test suites**: 330 (305 passing, 25 failing)
+**Overall Coverage:**
+- Statements: 25.23% (7,464/29,577)
+- Branches: 20.89% (3,173/15,186)
+- Functions: 25.63% (1,900/7,411)
+- Lines: 25.17% (7,108/28,229)
 
-## Package-by-Package Analysis
+**Target:** 100% coverage for all metrics
 
-### ✅ `tx` Package (HIGH PRIORITY - COMPLETED)
-- **Status**: Comprehensive test coverage added
-- **Coverage**: ~95%+ for core functionality
-- **Remaining**: Some integration tests may be needed for complex CSL interactions
+## Package Coverage Analysis (Sorted by Priority)
 
-### 🔴 `common` Package (HIGH PRIORITY)
-- **Implementation files**: 52
-- **Test files**: 51
-- **Status**: Nearly complete, but needs review
-- **Priority**: HIGH - Core utilities used across all packages
-- **Focus areas**:
-  - Logger utilities (already tested)
-  - API utilities (already tested)
-  - Number utilities (already tested)
-  - React hooks (already tested)
-  - Observer/Queue patterns (already tested)
-  - Remaining edge cases
+### 🔴 CRITICAL PRIORITY (< 50% Coverage)
 
-### 🟡 `portfolio` Package (MEDIUM-HIGH PRIORITY)
-- **Implementation files**: 50
-- **Test files**: 37
-- **Status**: ~74% coverage
-- **Priority**: MEDIUM-HIGH - Core portfolio management
-- **Focus areas**:
-  - Token management
-  - Balance calculations
-  - Portfolio aggregation
-  - Token metadata handling
+#### 1. `p2p-communication` Package
+- **Statements**: 22.4% (165/736)
+- **Branches**: 12.7% (42/332)
+- **Functions**: 23.5% (32/136)
+- **Lines**: 22.1% (160/724)
+- **Priority**: CRITICAL - Very low coverage
+- **Focus**: WebRTC handling, message routing, connection management
 
-### 🟡 `api` Package (MEDIUM PRIORITY)
-- **Implementation files**: 20
-- **Test files**: 15
-- **Status**: ~75% coverage
-- **Priority**: MEDIUM - API integration layer
-- **Focus areas**:
-  - Cardano API endpoints
-  - Error handling
-  - Response parsing
-  - Rate limiting
+#### 2. `tx` Package
+- **Statements**: 39.8% (847/2,127)
+- **Branches**: 34.7% (393/1,132)
+- **Functions**: 60.3% (190/315)
+- **Lines**: 40.3% (823/2,043)
+- **Priority**: CRITICAL - Core transaction functionality
+- **Status**: Recently added comprehensive tests, but still needs more
+- **Focus**: Remaining untested functions, edge cases, integration tests
 
-### 🟡 `staking` Package (MEDIUM PRIORITY)
-- **Implementation files**: 18
-- **Test files**: 8
-- **Status**: ~44% coverage
-- **Priority**: MEDIUM - Staking functionality
-- **Focus areas**:
-  - Pool selection
-  - Delegation logic
-  - Reward calculations
-  - Certificate handling
+#### 3. `staking` Package
+- **Statements**: 47.6% (182/382)
+- **Branches**: 48.2% (81/168)
+- **Functions**: 45.8% (49/107)
+- **Lines**: 48.7% (181/372)
+- **Priority**: CRITICAL - Core staking functionality
+- **Focus**: Pool operations, delegation logic, certificate handling, reward calculations
 
-### 🟡 `swap` Package (MEDIUM PRIORITY)
-- **Implementation files**: 21
-- **Test files**: 16
-- **Status**: ~76% coverage
-- **Priority**: MEDIUM - Token swapping
-- **Focus areas**:
-  - Swap calculations
-  - Price calculations
-  - Order management
+### 🟡 HIGH PRIORITY (50-90% Coverage)
 
-### 🟡 `exchange` Package (MEDIUM PRIORITY)
-- **Implementation files**: 17
-- **Test files**: 12
-- **Status**: ~71% coverage
-- **Priority**: MEDIUM - Exchange integration
-- **Focus areas**:
-  - Exchange API integration
-  - Rate fetching
-  - Order execution
+#### 4. `links` Package
+- **Statements**: 62.5% (339/542)
+- **Branches**: 42.7% (177/415)
+- **Functions**: 85.9% (61/71)
+- **Lines**: 64.7% (326/504)
+- **Priority**: HIGH - Branch coverage needs improvement
+- **Focus**: QR code generation, link parsing, address sharing edge cases
 
-### 🟡 `resolver` Package (MEDIUM PRIORITY)
-- **Implementation files**: 23
-- **Test files**: 16
-- **Status**: ~70% coverage
-- **Priority**: MEDIUM - Domain name resolution
-- **Focus areas**:
-  - CNS resolution
-  - ADAHandle resolution
-  - Unstoppable Domains resolution
+#### 5. `theme` Package
+- **Statements**: 72.3% (60/83)
+- **Branches**: 55.6% (15/27)
+- **Functions**: 66.7% (16/24)
+- **Lines**: 70.9% (56/79)
+- **Priority**: MEDIUM - Theming system (usually doesn't need extensive tests)
+- **Focus**: Theme validation, palette generation
 
-### 🟢 `blockchains` Package (LOW-MEDIUM PRIORITY)
-- **Implementation files**: 8
-- **Test files**: 8
-- **Status**: ~100% coverage
-- **Priority**: LOW - Already well tested
+#### 6. `swap` Package
+- **Statements**: 84.3% (619/734)
+- **Branches**: 80.1% (577/720)
+- **Functions**: 87.1% (183/210)
+- **Lines**: 86.1% (590/685)
+- **Priority**: HIGH - Close to 100%, needs final push
+- **Focus**: Remaining edge cases, error handling
 
-### 🟢 `claim` Package (LOW-MEDIUM PRIORITY)
-- **Implementation files**: 9
-- **Test files**: 6
-- **Status**: ~67% coverage
-- **Priority**: LOW-MEDIUM - Claim functionality
-- **Focus areas**:
-  - Claim validation
-  - Claim API integration
+### 🟢 MEDIUM PRIORITY (90-99% Coverage)
 
-### 🟢 `dapp-connector` Package (LOW-MEDIUM PRIORITY)
-- **Implementation files**: 6
-- **Test files**: 1
-- **Status**: ~17% coverage
-- **Priority**: LOW-MEDIUM - dApp connectivity
-- **Focus areas**:
-  - CIP-30 connector
-  - Message handling
-  - Security validation
+#### 7. `api` Package
+- **Statements**: 93.2% (206/221)
+- **Branches**: 86.8% (131/151)
+- **Functions**: 95.7% (44/46)
+- **Lines**: 92.6% (188/203)
+- **Priority**: MEDIUM - Branch coverage needs improvement
+- **Focus**: Error handling branches, edge cases
 
-### 🟢 `links` Package (LOW PRIORITY)
-- **Implementation files**: 15
-- **Test files**: 6
-- **Status**: ~40% coverage
-- **Priority**: LOW - Link generation/sharing
-- **Focus areas**:
-  - QR code generation
-  - Link parsing
-  - Address sharing
+#### 8. `blockchains` Package
+- **Statements**: 97.3% (72/74)
+- **Branches**: 100.0% (19/19) ✅
+- **Functions**: 92.9% (13/14)
+- **Lines**: 97.3% (72/74)
+- **Priority**: LOW - Nearly complete
+- **Focus**: One function needs coverage
 
-### 🟢 `p2p-communication` Package (LOW PRIORITY)
-- **Implementation files**: 12
-- **Test files**: 5
-- **Status**: ~42% coverage
-- **Priority**: LOW - P2P communication
-- **Focus areas**:
-  - WebRTC handling
-  - Message routing
-  - Connection management
+#### 9. `notifications` Package
+- **Statements**: 97.8% (133/136)
+- **Branches**: 100.0% (20/20) ✅
+- **Functions**: 96.2% (50/52)
+- **Lines**: 97.7% (125/128)
+- **Priority**: LOW - Nearly complete
+- **Focus**: Two functions need coverage
 
-### 🟢 `notifications` Package (LOW PRIORITY)
-- **Implementation files**: 7
-- **Test files**: 2
-- **Status**: ~29% coverage
-- **Priority**: LOW - Push notifications
-- **Focus areas**:
-  - Notification handling
-  - Permission management
+#### 10. `common` Package
+- **Statements**: 98.4% (738/750)
+- **Branches**: 95.0% (285/300)
+- **Functions**: 95.4% (267/280)
+- **Lines**: 98.5% (675/685)
+- **Priority**: MEDIUM - Branch coverage needs improvement
+- **Focus**: Remaining branches, edge cases
 
-### 🟢 `identicon` Package (LOW PRIORITY)
-- **Implementation files**: 5
-- **Test files**: 3
-- **Status**: ~60% coverage
-- **Priority**: LOW - Visual identification
-- **Focus areas**:
-  - Icon generation
-  - Color mapping
+#### 11. `resolver` Package
+- **Statements**: 98.5% (336/341)
+- **Branches**: 92.5% (124/134)
+- **Functions**: 98.6% (68/69)
+- **Lines**: 98.7% (307/311)
+- **Priority**: LOW - Nearly complete
+- **Focus**: Branch coverage, one function
 
-### 🟢 `explorers` Package (LOW PRIORITY)
-- **Implementation files**: 2
-- **Test files**: 1
-- **Status**: ~50% coverage
-- **Priority**: LOW - Blockchain explorers
-- **Focus areas**:
-  - Explorer API integration
+#### 12. `dapp-connector` Package
+- **Statements**: 99.1% (233/235)
+- **Branches**: 97.0% (161/166)
+- **Functions**: 100.0% (54/54) ✅
+- **Lines**: 99.5% (210/211)
+- **Priority**: LOW - Nearly complete
+- **Focus**: Branch coverage, 2 statements
 
-### 🟢 `theme` Package (LOW PRIORITY)
-- **Implementation files**: 12
-- **Test files**: 0
-- **Status**: ~0% coverage
-- **Priority**: LOW - Theming system
-- **Note**: Theme packages often don't need extensive tests
+### ✅ COMPLETE (100% Coverage)
 
-### 🟢 `setup-wallet` Package (LOW PRIORITY)
-- **Implementation files**: 1
-- **Test files**: 1
-- **Status**: ~100% coverage
-- **Priority**: LOW - Already tested
-
-### 🟢 `transfer` Package (LOW PRIORITY)
-- **Implementation files**: Unknown
-- **Test files**: Unknown
-- **Status**: Unknown
-- **Priority**: LOW - Transfer functionality
+- **claim** - 100% coverage ✅
+- **exchange** - 100% coverage ✅
+- **explorers** - 100% coverage ✅
+- **identicon** - 100% coverage ✅
+- **portfolio** - 100% coverage ✅
+- **setup-wallet** - 100% coverage ✅
+- **transfer** - 100% coverage ✅
 
 ## Recommended Testing Strategy
 
-### Phase 1: Critical Path (Weeks 1-2)
-1. **`common` package** - Complete remaining tests
-   - Review existing tests for gaps
-   - Add edge case tests
-   - Ensure 100% coverage
+### Phase 1: Critical Path (Weeks 1-3)
+**Goal**: Get critical packages to >80% coverage
 
-2. **`portfolio` package** - Add missing tests
-   - Token management functions
-   - Balance aggregation
-   - Portfolio calculations
+1. **`tx` Package** (39.8% → 100%)
+   - Focus on remaining untested functions
+   - Add integration tests for complex CSL interactions
+   - Test edge cases and error paths
+   - **Estimated effort**: 1-2 weeks
 
-### Phase 2: Core Features (Weeks 3-4)
-3. **`api` package** - Complete API tests
-   - All endpoint handlers
-   - Error scenarios
-   - Response validation
-
-4. **`staking` package** - Add comprehensive tests
+2. **`staking` Package** (47.6% → 100%)
    - Pool operations
    - Delegation logic
    - Certificate handling
+   - Reward calculations
+   - **Estimated effort**: 1 week
 
-### Phase 3: Integration Features (Weeks 5-6)
-5. **`swap` package** - Complete swap tests
-   - Price calculations
-   - Order execution
-   - Error handling
+3. **`p2p-communication` Package** (22.4% → 100%)
+   - WebRTC handling
+   - Message routing
+   - Connection management
+   - **Estimated effort**: 1 week
 
-6. **`exchange` package** - Complete exchange tests
-   - API integration
-   - Rate handling
-   - Order management
+### Phase 2: High Priority (Weeks 4-5)
+**Goal**: Complete high-priority packages
 
-7. **`resolver` Package** - Complete resolver tests
-   - Domain resolution
-   - Address parsing
-   - Error handling
+4. **`links` Package** (62.5% → 100%)
+   - Focus on branch coverage (42.7% → 100%)
+   - QR generation edge cases
+   - Link parsing error handling
+   - **Estimated effort**: 3-4 days
 
-### Phase 4: Supporting Features (Weeks 7-8)
-8. **`dapp-connector` package** - Add tests
-   - CIP-30 connector
-   - Security validation
+5. **`swap` Package** (84.3% → 100%)
+   - Remaining edge cases
+   - Error handling branches
+   - **Estimated effort**: 2-3 days
 
-9. **`claim` package** - Complete tests
-   - Claim validation
-   - API integration
+### Phase 3: Polish (Weeks 6-7)
+**Goal**: Complete remaining packages to 100%
 
-10. **`links` package** - Add tests
-    - QR generation
-    - Link parsing
+6. **`api` Package** (93.2% → 100%)
+   - Branch coverage (86.8% → 100%)
+   - Error handling paths
+   - **Estimated effort**: 1-2 days
 
-11. **`p2p-communication` package** - Add tests
-    - WebRTC handling
-    - Message routing
+7. **`common` Package** (98.4% → 100%)
+   - Branch coverage (95.0% → 100%)
+   - Remaining edge cases
+   - **Estimated effort**: 1-2 days
 
-12. **`notifications` package** - Add tests
-    - Notification handling
-    - Permissions
-
-13. **`identicon` package** - Complete tests
-    - Icon generation
-
-14. **`explorers` package** - Complete tests
-    - Explorer integration
-
-### Phase 5: Low Priority (As needed)
-15. **`theme` package** - Consider if needed
-    - Usually doesn't need extensive tests
+8. **Remaining packages** (97%+ → 100%)
+   - `blockchains` - 1 function
+   - `notifications` - 2 functions
+   - `resolver` - branches + 1 function
+   - `dapp-connector` - branches + 2 statements
+   - `theme` - if needed
+   - **Estimated effort**: 2-3 days
 
 ## Testing Best Practices
 
-1. **Test Structure**:
-   - One test file per implementation file
-   - Use descriptive test names
-   - Group related tests with `describe` blocks
+1. **Focus on Coverage Metrics, Not File Count**
+   - One test file can cover multiple implementation files
+   - Integration tests can cover multiple units
+   - Focus on actual coverage percentages
 
-2. **Coverage Goals**:
-   - Aim for 100% line coverage
-   - 100% branch coverage
-   - 100% function coverage
-   - 100% statement coverage
+2. **Priority Order**:
+   - Statements coverage (most important)
+   - Branches coverage (error paths, conditionals)
+   - Functions coverage (all functions called)
+   - Lines coverage (all lines executed)
 
 3. **Test Types**:
    - Unit tests for pure functions
@@ -275,33 +208,28 @@
    - Test error cases and edge cases
    - Test both success and failure paths
 
-5. **File Naming**:
-   - Test files: `*.test.ts`
-   - Place next to implementation files
-   - Or in `__tests__` directories
-
-## Estimated Timeline
-
-- **Phase 1**: 2 weeks (Critical path)
-- **Phase 2**: 2 weeks (Core features)
-- **Phase 3**: 2 weeks (Integration features)
-- **Phase 4**: 2 weeks (Supporting features)
-- **Phase 5**: As needed (Low priority)
-
-**Total**: ~8-10 weeks for comprehensive coverage
-
 ## Success Metrics
 
-- ✅ All packages have >90% test coverage
+- ✅ All packages have 100% statement coverage
+- ✅ All packages have 100% branch coverage
+- ✅ All packages have 100% function coverage
+- ✅ All packages have 100% line coverage
 - ✅ All tests pass consistently
 - ✅ No linting errors
 - ✅ No TypeScript errors
 - ✅ CI/CD pipeline passes
 
+## Estimated Timeline
+
+- **Phase 1**: 3 weeks (Critical packages)
+- **Phase 2**: 2 weeks (High priority)
+- **Phase 3**: 2 weeks (Polish)
+- **Total**: ~7 weeks for comprehensive coverage
+
 ## Notes
 
+- Coverage metrics are based on actual test runs, not file counts
 - Some packages may have files that don't need tests (pure type definitions, re-exports)
 - Focus on testing business logic, not implementation details
 - Prioritize tests that catch bugs and prevent regressions
-- Consider integration tests for complex workflows
-
+- Integration tests can provide coverage for multiple units
