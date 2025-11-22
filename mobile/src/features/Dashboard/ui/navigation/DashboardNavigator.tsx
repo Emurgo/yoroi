@@ -4,8 +4,6 @@ import {useTheme} from '@yoroi/theme'
 import {createStackNavigator} from '@react-navigation/stack'
 import * as React from 'react'
 
-import {FailedTxScreen} from '~/features/ReviewTx/useCases/ShowFailedTxScreen/FailedTxScreen'
-import {SubmittedTxScreen} from '~/features/ReviewTx/useCases/ShowSubmittedTxScreen/SubmittedTxScreen'
 import {NetworkTag} from '~/features/Settings/ui/shared/NetworkTag'
 import {useGovernanceManagerMaker} from '~/features/Staking/Governance/common/helpers'
 import {StakingCenter} from '~/features/Staking/Staking/StakingCenter/StakingCenter'
@@ -46,21 +44,6 @@ export const DashboardNavigator = () => {
           getComponent={() => StakingCenter}
         />
 
-        <Stack.Screen //
-          name="staking-submitted-tx"
-          getComponent={() => SubmittedTxScreen}
-          options={{
-            headerShown: false,
-          }}
-        />
-
-        <Stack.Screen //
-          name="staking-failed-tx"
-          getComponent={() => FailedTxScreen}
-          options={{
-            headerShown: false,
-          }}
-        />
       </Stack.Navigator>
     </GovernanceProvider>
   )

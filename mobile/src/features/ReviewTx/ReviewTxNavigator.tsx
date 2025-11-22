@@ -7,11 +7,10 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
 import {ReviewTxRoutes} from '~/kernel/navigation/types'
 import {Boundary} from '~/ui/Boundary/Boundary'
+import {ResultScreen} from '~/ui/ResultScreen/ResultScreen'
 
 import {ReviewTxScreen} from './useCases/ReviewTxScreen/ReviewTxScreen'
-import {FailedTxScreen} from './useCases/ShowFailedTxScreen/FailedTxScreen'
 import {InfraestructureIssueScreen} from './useCases/ShowInfraestructureIssueScreen/InfraestructureIssueScreen'
-import {SubmittedTxScreen} from './useCases/ShowSubmittedTxScreen/SubmittedTxScreen'
 
 export const Stack = createStackNavigator<ReviewTxRoutes>()
 
@@ -34,14 +33,8 @@ export const ReviewTxNavigator = () => {
       />
 
       <Stack.Screen
-        name="review-tx-submitted-tx"
-        getComponent={() => SubmittedTxScreen}
-        options={{headerShown: false}}
-      />
-
-      <Stack.Screen
-        name="review-tx-failed-tx"
-        getComponent={() => FailedTxScreen}
+        name="result-screen"
+        getComponent={() => ResultScreen}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

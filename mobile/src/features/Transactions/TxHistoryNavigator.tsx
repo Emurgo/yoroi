@@ -15,8 +15,6 @@ import {P2PConnectionScreen} from '~/features/P2P/useCases/P2PConnectionScreen/P
 import {DescribeSelectedAddressScreen} from '~/features/Receive/useCases/DescribeSelectedAddressScreen'
 import {ListMultipleAddressesScreen} from '~/features/Receive/useCases/ListMultipleAddressesScreen'
 import {RequestSpecificAmountScreen} from '~/features/Receive/useCases/RequestSpecificAmountScreen'
-import {FailedTxScreen as SendFailedTxScreen} from '~/features/ReviewTx/useCases/ShowFailedTxScreen/FailedTxScreen'
-import {SubmittedTxScreen as SendSubmittedTxScreen} from '~/features/ReviewTx/useCases/ShowSubmittedTxScreen/SubmittedTxScreen'
 import {ScanCodeScreen} from '~/features/Scan/useCases/ScanCodeScreen'
 import {ShowCameraPermissionDeniedScreen} from '~/features/Scan/useCases/ShowCameraPermissionDeniedScreen/ShowCameraPermissionDeniedScreen'
 import {SelectTokenFromListScreen} from '~/features/Send/useCases/ListAmountsToSend/AddToken/SelectTokenFromListScreen'
@@ -207,21 +205,6 @@ export const TxHistoryNavigator = () => {
           getComponent={() => SelectTokenFromListScreen}
         />
 
-        <Stack.Screen
-          name="send-submitted-tx"
-          options={{
-            headerShown: false,
-          }}
-          getComponent={() => SendSubmittedTxScreen}
-        />
-
-        <Stack.Screen
-          name="send-failed-tx"
-          options={{
-            headerShown: false,
-          }}
-          getComponent={() => SendFailedTxScreen}
-        />
 
         {/* Receive Screens */}
         <Stack.Screen

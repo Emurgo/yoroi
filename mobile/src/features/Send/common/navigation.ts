@@ -4,6 +4,8 @@ import {useNavigation} from '@react-navigation/native'
 import {useRef} from 'react'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
+import {useResultNavigation} from '~/kernel/navigation/hooks/useResultNavigation'
+import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {
   AppRouteNavigation,
   TxHistoryRouteNavigation,
@@ -14,6 +16,8 @@ export const useNavigateTo = () => {
     TxHistoryRouteNavigation & AppRouteNavigation
   >()
   const strings = useStrings()
+  const resultNavigation = useResultNavigation()
+  const walletNavigation = useWalletNavigation()
 
   return useRef({
     selectedTokens: () => navigation.navigate('send-list-amounts-to-send'),
@@ -30,16 +34,26 @@ export const useNavigateTo = () => {
       navigation.navigate('send-edit-amount', {amount}),
     reader: () => navigation.navigate('scan-start', {insideFeature: 'send'}),
     submittedTx: () =>
-      navigation.navigate('send-submitted-tx', {
+      resultNavigation.showResultScreen({
+        type: 'success',
+        context: 'send',
         title: strings.send.submittedTxTitle,
         message: strings.send.submittedTxText,
-        buttonTitle: strings.send.submittedTxButton,
+        primaryAction: {
+          title: strings.send.submittedTxButton,
+          onPress: walletNavigation.resetToTxHistory,
+        },
       }),
     failedTx: () =>
-      navigation.navigate('send-failed-tx', {
+      resultNavigation.showResultScreen({
+        type: 'error',
+        context: 'send',
         title: strings.send.failedTxTitle,
         message: strings.send.failedTxText,
-        buttonTitle: strings.send.failedTxButton,
+        primaryAction: {
+          title: strings.send.failedTxButton,
+          onPress: walletNavigation.resetToStartTransfer,
+        },
       }),
     startTxAfterReset: () =>
       navigation.reset({

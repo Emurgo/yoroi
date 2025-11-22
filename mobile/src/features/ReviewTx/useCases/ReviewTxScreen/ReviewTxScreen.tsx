@@ -18,9 +18,33 @@ import {
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useUnsafeParams} from '~/kernel/navigation/hooks/useUnsafeParams'
 import {ReviewTxRoutes} from '~/kernel/navigation/types'
+import {ReviewContext} from '~/kernel/navigation/types'
+import {OperationContext} from '~/ui/ResultScreen/types'
 import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
 
 import {ReviewTx} from './ReviewTx/ReviewTx'
+
+const mapReviewContextToOperationContext = (
+  context?: ReviewContext,
+): OperationContext => {
+  switch (context) {
+    case 'send':
+      return 'send'
+    case 'swap':
+      return 'swap'
+    case 'delegate':
+    case 'undelegate':
+      return 'delegate'
+    case 'delegate vote':
+      return 'governance'
+    case 'withdraw rewards':
+      return 'withdraw'
+    case 'utxo-consolidation':
+      return 'utxo-consolidation'
+    default:
+      return 'default'
+  }
+}
 
 const getTransactionAnalyticsProperties = (
   formattedTx: FormattedTx,
@@ -71,6 +95,7 @@ const ReviewTxContent = ({
     cbor: params?.cbor,
     partial: params?.partial,
     preventSubmit: params?.preventSubmit,
+    context: mapReviewContextToOperationContext(params?.context),
     onSuccess: params?.onSuccess,
     onSuccessWithoutFeedback: params?.onSuccessWithoutFeedback,
     onError: params?.onError,

@@ -13,6 +13,7 @@ import {logger} from '~/kernel/logger/logger'
 import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {ModalError} from '~/ui/ModalError/ModalError'
+import {OperationContext} from '~/ui/ResultScreen/types'
 import {getTransactionSigners} from '~/wallets/cardano/common/signatureUtils'
 import {YoroiWallet} from '~/wallets/cardano/types'
 import {createRawTxSigningKey} from '~/wallets/cardano/utils'
@@ -27,6 +28,7 @@ export type OnConfirm = {
   cbor?: string | null
   preventSubmit?: boolean
   partial?: boolean
+  context?: OperationContext
   onSuccess?: (args?: {
     tx?: Transaction
     rootKey?: string
@@ -49,6 +51,7 @@ export const useOnConfirm = ({
   cbor,
   partial,
   preventSubmit = false,
+  context,
   onSuccess,
   onSuccessWithoutFeedback,
   onError,
@@ -109,7 +112,7 @@ export const useOnConfirm = ({
       })
     }
 
-    navigateTo.showSubmittedTxScreen()
+    navigateTo.showSubmittedTxScreen(context)
   }
 
   const handleOnError = (error: unknown) => {
@@ -124,7 +127,7 @@ export const useOnConfirm = ({
       onError(error)
     }
 
-    navigateTo.showFailedTxScreen()
+    navigateTo.showFailedTxScreen(context)
   }
 
   // TODO: Make it homogenic

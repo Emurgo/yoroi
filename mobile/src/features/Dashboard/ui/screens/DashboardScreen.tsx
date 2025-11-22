@@ -25,6 +25,7 @@ import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetw
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useSync} from '~/features/WalletManager/hooks/useSync'
 import {useStrings} from '~/kernel/i18n/useStrings'
+import {useResultNavigation} from '~/kernel/navigation/hooks/useResultNavigation'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {DashboardRoutes} from '~/kernel/navigation/types'
 import {Banner} from '~/ui/Banner/Banner'
@@ -216,21 +217,33 @@ export const DashboardScreen = () => {
 export const useNavigateTo = () => {
   const navigation = useNavigation<StackNavigationProp<DashboardRoutes>>()
   const strings = useStrings()
+  const resultNavigation = useResultNavigation()
+  const walletNavigation = useWalletNavigation()
 
   return {
     stakingCenter: () =>
       navigation.navigate('staking-center', {screen: 'staking-center-main'}),
     submittedTx: () =>
-      navigation.navigate('staking-submitted-tx', {
+      resultNavigation.showResultScreen({
+        type: 'success',
+        context: 'delegate',
         title: strings.staking.submittedTxTitle,
         message: strings.staking.submittedTxText,
-        buttonTitle: strings.staking.submittedTxButton,
+        primaryAction: {
+          title: strings.staking.submittedTxButton,
+          onPress: walletNavigation.resetToTxHistory,
+        },
       }),
     failedTx: () =>
-      navigation.navigate('staking-failed-tx', {
+      resultNavigation.showResultScreen({
+        type: 'error',
+        context: 'delegate',
         title: strings.staking.failedTxTitle,
         message: strings.staking.failedTxText,
-        buttonTitle: strings.staking.failedTxButton,
+        primaryAction: {
+          title: strings.staking.failedTxButton,
+          onPress: walletNavigation.resetToTxHistory,
+        },
       }),
   }
 }
