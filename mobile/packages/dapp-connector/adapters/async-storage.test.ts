@@ -2,11 +2,7 @@ import {Chain} from '@yoroi/types'
 
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-import {
-  connectionStorageMaker,
-  DappConnection,
-  Storage,
-} from './async-storage'
+import {DappConnection, Storage, connectionStorageMaker} from './async-storage'
 
 jest.mock('@react-native-async-storage/async-storage', () => {
   const storage: Record<string, string> = {}
@@ -233,4 +229,3 @@ describe('connectionStorageMaker', () => {
     })
   })
 })
-

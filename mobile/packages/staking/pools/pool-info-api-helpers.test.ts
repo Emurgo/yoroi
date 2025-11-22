@@ -1,13 +1,11 @@
-import {isRight} from '@yoroi/common'
-
 import {poolTransitionGetInfo} from './adapters/api/pool-transition-api'
+import {TRANSITION_DATA_STUB} from './pool-info-api'
 import {
   getManyChainPoolInfoBatch,
   getManyExplorerPoolInfo,
   getPoolTransitionInfo,
   getSingleExplorerPoolInfo,
 } from './pool-info-api-helpers'
-import {TRANSITION_DATA_STUB} from './pool-info-api'
 
 jest.mock('./adapters/api/pool-transition-api')
 
@@ -67,7 +65,10 @@ describe('pool-info-api-helpers', () => {
     })
 
     it('should return null when API call fails', async () => {
-      mockFetchData.mockResolvedValue({tag: 'left', value: new Error('API Error')})
+      mockFetchData.mockResolvedValue({
+        tag: 'left',
+        value: new Error('API Error'),
+      })
 
       const result = await getSingleExplorerPoolInfo({
         hash: 'hash123',
@@ -135,7 +136,7 @@ describe('pool-info-api-helpers', () => {
       })
 
       expect(result).toHaveProperty('hash123')
-      expect(result['hash123']).toEqual({
+      expect(result.hash123).toEqual({
         info: {
           name: 'Pool Name',
           ticker: 'TICK',
@@ -156,7 +157,7 @@ describe('pool-info-api-helpers', () => {
         requestSize: 50,
       })
 
-      expect(result['hash123']).toBeNull()
+      expect(result.hash123).toBeNull()
     })
 
     it('should return null for hashes with no pool data', async () => {
@@ -179,7 +180,7 @@ describe('pool-info-api-helpers', () => {
         requestSize: 50,
       })
 
-      expect(result['hash123']).toBeNull()
+      expect(result.hash123).toBeNull()
     })
   })
 
@@ -207,8 +208,8 @@ describe('pool-info-api-helpers', () => {
       })
 
       expect(result).toHaveProperty('hash123')
-      expect(result['hash123']).not.toBeNull()
-      expect(result['hash456']).toBeNull()
+      expect(result.hash123).not.toBeNull()
+      expect(result.hash456).toBeNull()
       expect(mockGetSingle).toHaveBeenCalledTimes(2)
     })
   })
@@ -220,12 +221,10 @@ describe('pool-info-api-helpers', () => {
         old: {emurgo: [['pool1', 1234567890, true]]},
         saturationThreshold: 0.8,
       }
-      const mockGetPoolTransitionInfoFn = jest
-        .fn()
-        .mockResolvedValue({
-          tag: 'right',
-          value: {status: 200, data: mockTransitionData},
-        })
+      const mockGetPoolTransitionInfoFn = jest.fn().mockResolvedValue({
+        tag: 'right',
+        value: {status: 200, data: mockTransitionData},
+      })
       ;(poolTransitionGetInfo as jest.Mock).mockReturnValue(
         mockGetPoolTransitionInfoFn,
       )
@@ -276,4 +275,3 @@ describe('pool-info-api-helpers', () => {
     })
   })
 })
-

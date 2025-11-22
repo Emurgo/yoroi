@@ -26,12 +26,12 @@ describe('CatalystProvider', () => {
     expect(result.current).toHaveProperty('votingKeyEncrypted')
   })
 
-  it('should work without provider (has default context)', () => {
+  it('should work without provider (has default context)', async () => {
     // The context has a default value, so it doesn't throw
     const {result} = renderHook(() => useCatalyst())
 
     // The default manager has uninitialized methods that reject
-    expect(result.current.getFundInfo()).rejects.toThrow(
+    await expect(result.current.getFundInfo()).rejects.toThrow(
       'Catalyst manager not yet initialized',
     )
   })
@@ -80,4 +80,3 @@ describe('CatalystProvider', () => {
     expect(result.current.pin).toBe('5678')
   })
 })
-

@@ -2,9 +2,9 @@ import {init} from '@emurgo/cross-csl-nodejs'
 
 import {
   DEFAULT_SATURATION_THRESHOLD,
+  TRANSITION_DATA_STUB,
   getMaybeNewEntriesByPool,
   normalisePoolIdentifierOrKey,
-  TRANSITION_DATA_STUB,
 } from './pool-info-api'
 
 const mockWasmFactory = (scope: string) => init(scope)
@@ -122,13 +122,17 @@ describe('pool-info-api utilities', () => {
 
   describe('normalisePoolIdentifierOrKey', () => {
     it('should normalize bech32 pool ID to pool identity', async () => {
-      const bech32Id = 'pool1pmm654jfx088td54ekkkd0j28x6r5gnjdhnutzggursrxjnpk2y'
+      const bech32Id =
+        'pool1pmm654jfx088td54ekkkd0j28x6r5gnjdhnutzggursrxjnpk2y'
       const wasm = await mockWasmFactory('pool-normalize')
       const key = await wasm.Ed25519KeyHash.fromBech32(bech32Id)
       const expectedId = await key.toBech32('pool')
       const expectedHash = await key.toHex()
 
-      const result = await normalisePoolIdentifierOrKey(bech32Id, mockWasmFactory)
+      const result = await normalisePoolIdentifierOrKey(
+        bech32Id,
+        mockWasmFactory,
+      )
 
       expect(result.id).toBe(expectedId)
       expect(result.hash).toBe(expectedHash.toLowerCase())
@@ -136,26 +140,34 @@ describe('pool-info-api utilities', () => {
 
     it('should normalize hex hash to pool identity', async () => {
       // First get a valid hex hash from a bech32 pool ID
-      const bech32Id = 'pool1pmm654jfx088td54ekkkd0j28x6r5gnjdhnutzggursrxjnpk2y'
+      const bech32Id =
+        'pool1pmm654jfx088td54ekkkd0j28x6r5gnjdhnutzggursrxjnpk2y'
       const wasm = await mockWasmFactory('pool-normalize')
       const key = await wasm.Ed25519KeyHash.fromBech32(bech32Id)
       const hexHash = await key.toHex()
 
-      const result = await normalisePoolIdentifierOrKey(hexHash, mockWasmFactory)
+      const result = await normalisePoolIdentifierOrKey(
+        hexHash,
+        mockWasmFactory,
+      )
 
       expect(result.id).toBe(bech32Id)
       expect(result.hash.toLowerCase()).toBe(hexHash.toLowerCase())
     })
 
     it('should handle different wasm scopes', async () => {
-      const bech32Id = 'pool1pmm654jfx088td54ekkkd0j28x6r5gnjdhnutzggursrxjnpk2y'
+      const bech32Id =
+        'pool1pmm654jfx088td54ekkkd0j28x6r5gnjdhnutzggursrxjnpk2y'
       const customScope = 'custom-scope'
       const wasm = await mockWasmFactory(customScope)
       const key = await wasm.Ed25519KeyHash.fromBech32(bech32Id)
       const expectedId = await key.toBech32('pool')
       const expectedHash = await key.toHex()
 
-      const result = await normalisePoolIdentifierOrKey(bech32Id, mockWasmFactory)
+      const result = await normalisePoolIdentifierOrKey(
+        bech32Id,
+        mockWasmFactory,
+      )
 
       expect(result.id).toBe(expectedId)
       expect(result.hash.toLowerCase()).toBe(expectedHash.toLowerCase())
@@ -174,4 +186,3 @@ describe('pool-info-api utilities', () => {
     })
   })
 })
-

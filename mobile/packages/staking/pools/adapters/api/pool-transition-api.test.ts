@@ -1,7 +1,4 @@
-import {isRight} from '@yoroi/common'
-
 import {poolTransitionGetInfo} from './pool-transition-api'
-import {TRANSITION_DATA_STUB} from '../../pool-info-api'
 
 const mockFetchData = jest.fn()
 const mockBaseApiUrl = 'https://api.example.com'
@@ -82,4 +79,3 @@ describe('poolTransitionGetInfo', () => {
     expect(Object.isFrozen(result)).toBe(true)
   })
 })
-

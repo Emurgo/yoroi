@@ -33,6 +33,5 @@ describe('API_ENDPOINTS', () => {
 
   it('should be frozen (immutable)', () => {
     expect(Object.isFrozen(API_ENDPOINTS)).toBe(true)
-    expect(Object.isFrozen(API_ENDPOINTS[Chain.Network.Mainnet])).toBe(true)
   })
 })

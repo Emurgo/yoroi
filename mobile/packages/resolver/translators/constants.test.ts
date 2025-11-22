@@ -10,6 +10,4 @@ describe('constants', () => {
     )
     expect(nameServerName[Resolver.NameServer.Handle]).toBe('ADA Handle')
   })
-
 })
-

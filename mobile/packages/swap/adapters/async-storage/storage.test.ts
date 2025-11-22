@@ -1,13 +1,24 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import asyncStorageMock from '@react-native-async-storage/async-storage/jest/async-storage-mock'
 
 import {swapStorageMaker, swapStorageSettingsKey} from './storage'
 
 jest.mock('@react-native-async-storage/async-storage', () => {
+  const mockStorage: Record<string, string> = {}
   return {
     __esModule: true,
-    default: asyncStorageMock,
-    ...asyncStorageMock,
+    default: {
+      getItem: jest.fn((key: string) =>
+        Promise.resolve(mockStorage[key] || null),
+      ),
+      setItem: jest.fn((key: string, value: string) => {
+        mockStorage[key] = value
+        return Promise.resolve()
+      }),
+      removeItem: jest.fn((key: string) => {
+        delete mockStorage[key]
+        return Promise.resolve()
+      }),
+    },
   }
 })
 const mockedAsyncStorage = AsyncStorage as jest.Mocked<typeof AsyncStorage>

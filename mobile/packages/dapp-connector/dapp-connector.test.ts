@@ -733,7 +733,9 @@ describe('DappConnector', () => {
         sendMessage,
       )
       expect(sendMessage).toHaveBeenCalledWith('1', null)
-      expect(walletWithPendingCollateral.sendReorganisationTx).not.toHaveBeenCalled()
+      expect(
+        walletWithPendingCollateral.sendReorganisationTx,
+      ).not.toHaveBeenCalled()
     })
 
     it('should not send reorganisation tx when balance is not greater than value', async () => {
@@ -814,25 +816,6 @@ describe('DappConnector', () => {
         sendMessage,
       )
       expect(sendMessage).toHaveBeenCalledWith('1', [{cip: 30}, {cip: 95}])
-    })
-
-    it('should filter CIP95 from extensions when wallet does not support it', async () => {
-      const walletWithoutCIP95 = {
-        ...mockWallet,
-        cip95: undefined,
-      }
-      const dappConnector = getDappConnector(walletWithoutCIP95)
-      const sendMessage = jest.fn()
-      await dappConnector.addConnection({
-        walletId,
-        dappOrigin: 'https://yoroi-wallet.com',
-      })
-      await dappConnector.handleEvent(
-        createEvent('api.getExtensions'),
-        trustedUrl,
-        sendMessage,
-      )
-      expect(sendMessage).toHaveBeenCalledWith('1', [{cip: 30}])
     })
 
     it('should filter CIP95 from extensions when wallet does not support it', async () => {

@@ -33,4 +33,3 @@ describe('GovernanceProvider', () => {
     }).toThrow('useGovernance must be used within a GovernanceProvider')
   })
 })
-

@@ -33,7 +33,6 @@ describe('governance config', () => {
     })
   })
 
-
   it('should have correct GOVERNANCE_YOROI_DREP_ID_HEX', () => {
     expect(GOVERNANCE_YOROI_DREP_ID_HEX).toBe(
       '0655f3a1c76788d839212adc459b188b84e680f30ae944c593fa18ae',
@@ -46,4 +45,3 @@ describe('governance config', () => {
     )
   })
 })
-

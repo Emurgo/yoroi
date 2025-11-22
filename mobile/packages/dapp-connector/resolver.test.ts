@@ -2,14 +2,16 @@ import {Chain} from '@yoroi/types'
 
 import {init} from '@emurgo/cross-csl-nodejs'
 
-import {connectionStorageMaker, Storage} from './adapters/async-storage'
-import {resolverHandleEvent, ResolverWallet} from './resolver'
+import {Storage, connectionStorageMaker} from './adapters/async-storage'
+import {ResolverWallet, resolverHandleEvent} from './resolver'
 import {storageMock} from './storage.mocks'
 
 const CSL = init('test')
 const walletId = 'test-wallet-id'
 
-const createMockWallet = (overrides?: Partial<ResolverWallet>): ResolverWallet => {
+const createMockWallet = (
+  overrides?: Partial<ResolverWallet>,
+): ResolverWallet => {
   return {
     id: walletId,
     networkId: 1,
@@ -18,11 +20,13 @@ const createMockWallet = (overrides?: Partial<ResolverWallet>): ResolverWallet =
     getBalance: jest.fn().mockResolvedValue(CSL.Value.fromHex('1a062ea8a0')),
     getUnusedAddresses: jest.fn().mockReturnValue([]),
     getUsedAddresses: jest.fn().mockReturnValue([]),
-    getChangeAddress: jest.fn().mockReturnValue(
-      CSL.Address.fromHex(
-        '017ef00ee3672330155382a2857573868af466b88aa8c4081f45583e1784d958399bcce03402fd853d43a4e7366f2018932e5aff4eea904693',
+    getChangeAddress: jest
+      .fn()
+      .mockReturnValue(
+        CSL.Address.fromHex(
+          '017ef00ee3672330155382a2857573868af466b88aa8c4081f45583e1784d958399bcce03402fd853d43a4e7366f2018932e5aff4eea904693',
+        ),
       ),
-    ),
     getRewardAddresses: jest.fn().mockReturnValue([]),
     getUtxos: jest.fn().mockResolvedValue([]),
     getCollateral: jest.fn().mockResolvedValue([]),
@@ -295,4 +299,3 @@ describe('resolver', () => {
     })
   })
 })
-

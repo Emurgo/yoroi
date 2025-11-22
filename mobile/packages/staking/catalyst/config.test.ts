@@ -47,4 +47,3 @@ describe('catalyst config', () => {
     expect(Object.isFrozen(catalystConfig)).toBe(true)
   })
 })
-

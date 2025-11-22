@@ -1,17 +1,16 @@
 import {init} from '@emurgo/cross-csl-nodejs'
 
+import {poolInfoApiMaker} from './api-maker'
+import {
+  getMaybeNewEntriesByPool,
+  normalisePoolIdentifierOrKey,
+} from './pool-info-api'
 import {
   getManyChainPoolInfoBatch,
   getManyExplorerPoolInfo,
   getPoolTransitionInfo,
   getSingleExplorerPoolInfo,
 } from './pool-info-api-helpers'
-import {
-  DEFAULT_SATURATION_THRESHOLD,
-  getMaybeNewEntriesByPool,
-  normalisePoolIdentifierOrKey,
-} from './pool-info-api'
-import {poolInfoApiMaker} from './api-maker'
 
 jest.mock('./pool-info-api-helpers')
 jest.mock('./pool-info-api', () => {
@@ -54,7 +53,9 @@ const mockChainPoolInfo = {
 describe('poolInfoApiMaker', () => {
   beforeEach(() => {
     jest.clearAllMocks()
-    ;(getSingleExplorerPoolInfo as jest.Mock).mockResolvedValue(mockExplorerPoolInfo)
+    ;(getSingleExplorerPoolInfo as jest.Mock).mockResolvedValue(
+      mockExplorerPoolInfo,
+    )
     ;(getManyChainPoolInfoBatch as jest.Mock).mockResolvedValue({
       hash123: mockChainPoolInfo,
     })
@@ -271,7 +272,7 @@ describe('poolInfoApiMaker', () => {
       const result = await api.getManyFullPoolInfo(['hash123'])
 
       expect(result).toHaveProperty('hash123')
-      expect(result['hash123']).toEqual({
+      expect(result.hash123).toEqual({
         chain: mockChainPoolInfo,
         explorer: mockExplorerPoolInfo,
       })
@@ -472,4 +473,3 @@ describe('poolInfoApiMaker', () => {
     })
   })
 })
-

@@ -38,4 +38,3 @@ describe('queryClientFixture', () => {
     expect(options.mutations?.gcTime).toBe(0)
   })
 })
-
