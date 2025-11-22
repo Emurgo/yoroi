@@ -1,4 +1,3 @@
-import {CardanoBackend} from '../types'
 import {
   BACKEND_ZERO_REQUIRES_CONTEXT,
   ENDPOINT_AVAILABILITY,
@@ -20,9 +19,10 @@ describe('ENDPOINT_AVAILABILITY', () => {
     ]
 
     endpoints.forEach((endpoint) => {
-      expect(ENDPOINT_AVAILABILITY[endpoint]).toBeDefined()
-      expect(Array.isArray(ENDPOINT_AVAILABILITY[endpoint])).toBe(true)
-      expect(ENDPOINT_AVAILABILITY[endpoint].length).toBeGreaterThan(0)
+      const availability = ENDPOINT_AVAILABILITY[endpoint]
+      expect(availability).toBeDefined()
+      expect(Array.isArray(availability)).toBe(true)
+      expect(availability?.length).toBeGreaterThan(0)
     })
   })
 
@@ -98,4 +98,3 @@ describe('BACKEND_ZERO_REQUIRES_CONTEXT', () => {
     })
   })
 })
-

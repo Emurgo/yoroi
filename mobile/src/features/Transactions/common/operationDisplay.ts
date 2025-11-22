@@ -1,13 +1,13 @@
 import {isArray, isString} from '@yoroi/common'
 import {CertificateKind} from '@yoroi/tx'
 import {Balance, Swap} from '@yoroi/types'
+import {TransactionDirection, WalletTransaction} from '@yoroi/types'
 
 import BigNumber from 'bignumber.js'
 
 import {ContractService} from '~/features/ReviewTx/common/services/contract-service'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {collateralConfig} from '~/wallets/cardano/utxoManager/utxos'
-import {TransactionDirection, WalletTransaction} from '@yoroi/types'
 import {Amounts, asQuantity} from '~/wallets/utils/utils'
 
 /**

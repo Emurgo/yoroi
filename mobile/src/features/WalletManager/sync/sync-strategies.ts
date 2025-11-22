@@ -1,9 +1,9 @@
+import {TipStatusResponse} from '@yoroi/api'
 import {PromiseAllLimited} from '@yoroi/common'
 import {Chain} from '@yoroi/types'
 
 import {logger} from '~/kernel/logger/logger'
 import {YoroiWallet} from '~/wallets/cardano/types'
-import {TipStatusResponse} from '@yoroi/api'
 
 import {SyncWalletInfo} from '../common/types'
 import {shouldRetrySync} from './backoff'

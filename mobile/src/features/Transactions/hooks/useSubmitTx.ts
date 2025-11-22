@@ -1,3 +1,4 @@
+import {TxSubmissionStatus} from '@yoroi/api'
 import {useMutationWithInvalidations} from '@yoroi/common'
 import {calculateTxId} from '@yoroi/tx'
 
@@ -7,7 +8,6 @@ import {UseMutationOptions} from '@tanstack/react-query'
 import {useWalletManagerSelector} from '~/features/WalletManager/context/WalletManagerProvider'
 import {YoroiWallet} from '~/wallets/cardano/types'
 import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
-import {TxSubmissionStatus} from '@yoroi/api'
 import {delay} from '~/wallets/utils/timeUtils'
 
 export const useSubmitTx = (

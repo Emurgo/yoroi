@@ -205,7 +205,6 @@ export const TxHistoryNavigator = () => {
           getComponent={() => SelectTokenFromListScreen}
         />
 
-
         {/* Receive Screens */}
         <Stack.Screen
           name="receive-single"

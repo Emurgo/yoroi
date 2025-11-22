@@ -1,3 +1,4 @@
+import {RawUtxo} from '@yoroi/api'
 import {addressVisualDerivationPathMaker} from '@yoroi/blockchains'
 import {primaryTokenId} from '@yoroi/portfolio'
 import type {ModernUtxo} from '@yoroi/tx'
@@ -8,7 +9,6 @@ import {useQuery, useQueryClient} from '@tanstack/react-query'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useWalletEvent} from '~/features/WalletManager/hooks/useWalletEvent'
 import {utxoQueryKeys} from '~/queries'
-import {RawUtxo} from '@yoroi/api'
 
 export const useUtxoList = () => {
   const {

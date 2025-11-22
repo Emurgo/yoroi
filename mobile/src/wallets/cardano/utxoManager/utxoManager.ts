@@ -1,3 +1,4 @@
+import {RawUtxo} from '@yoroi/api'
 import {isString, parseSafe} from '@yoroi/common'
 import {
   Utxo,
@@ -9,8 +10,6 @@ import {
 import {App, Portfolio} from '@yoroi/types'
 
 import {parseInt} from 'lodash'
-
-import {RawUtxo} from '@yoroi/api'
 
 export const makeUtxoManager = async ({
   storage,

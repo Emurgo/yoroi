@@ -10,6 +10,7 @@ import {
 } from '@yoroi/staking'
 import {ThemedPalette, atoms as a, useTheme} from '@yoroi/theme'
 import {NotEnoughMoneyToSendError} from '@yoroi/tx'
+import {TransactionInfo} from '@yoroi/types'
 
 import React from 'react'
 import {Text, View} from 'react-native'
@@ -27,7 +28,6 @@ import {useWalletEvent} from '~/features/WalletManager/hooks/useWalletEvent'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Space} from '~/ui/Space/Space'
-import {TransactionInfo} from '@yoroi/types'
 
 import {Action} from '../../common/Action/Action'
 import {mapStakingKeyStateToGovernanceAction} from '../../common/helpers'

@@ -1,3 +1,4 @@
+import {TipStatusResponse} from '@yoroi/api'
 import {Chain} from '@yoroi/types'
 
 import {freeze} from 'immer'
@@ -19,7 +20,6 @@ import {
 import {logger} from '~/kernel/logger/logger'
 import {getTipStatusService} from '~/wallets/cardano/api/tip-status-service'
 import {YoroiWallet} from '~/wallets/cardano/types'
-import {TipStatusResponse} from '@yoroi/api'
 
 import {SyncWalletInfo} from '../common/types'
 import {getNextRetryTime} from './backoff'

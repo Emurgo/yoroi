@@ -1,7 +1,3 @@
-import {Chain} from '@yoroi/types'
-
-import {API_ENDPOINTS} from '../../../../packages/api/cardano/api/config'
-
 // @ts-ignore
 import QuickCrypto from 'react-native-quick-crypto'
 

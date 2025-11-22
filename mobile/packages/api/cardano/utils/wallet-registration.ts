@@ -39,7 +39,8 @@ export const convertWalletIdToEd25519KeyHash = (
   const normalizedSource = source.replace(/-/g, '')
 
   // Hash using SHA256 and take first 56 hex characters (28 bytes)
-  const hash = crypto.createHash('sha256')
+  const hash = crypto
+    .createHash('sha256')
     .update(normalizedSource, isHex ? 'hex' : 'utf8')
     .digest('hex')
   return hash.slice(0, 56)
@@ -139,4 +140,3 @@ export const registerWallet = async (
     return false
   }
 }
-

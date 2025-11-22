@@ -1,3 +1,5 @@
+import {StakePoolInfoRequest, StakePoolInfosAndHistories} from '@yoroi/staking'
+
 import {
   AccountStateRequest,
   AccountStateResponse,
@@ -7,7 +9,6 @@ import {
   TxStatusRequest,
   TxStatusResponse,
 } from './api-types'
-import {StakePoolInfoRequest, StakePoolInfosAndHistories} from '@yoroi/staking'
 
 export type CardanoBackend = 'backend-zero' | 'legacy'
 
@@ -63,9 +64,7 @@ export interface CardanoApiAdapter {
     request: StakePoolInfoRequest,
   ): Promise<StakePoolInfosAndHistories>
 
-  fetchTxStatus(
-    request: TxStatusRequest,
-  ): Promise<TxStatusResponse>
+  fetchTxStatus(request: TxStatusRequest): Promise<TxStatusResponse>
 
   checkServerStatus?(): Promise<{
     isServerOk: boolean
@@ -152,4 +151,3 @@ export interface ManagedCardanoApi {
     } | null
   }>
 }
-

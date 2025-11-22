@@ -1,6 +1,8 @@
+import {RawUtxo} from '@yoroi/api'
 import {isNonNullable} from '@yoroi/common'
 import {createUnknownTokenInfo} from '@yoroi/portfolio'
 import {Portfolio} from '@yoroi/types'
+import {WalletTransaction} from '@yoroi/types'
 
 import {CredKind} from '@emurgo/cross-csl-core'
 import * as React from 'react'
@@ -10,8 +12,6 @@ import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWalle
 import {YoroiWallet} from '~/wallets/cardano/types'
 import {deriveRewardAddressFromAddress} from '~/wallets/cardano/utils'
 import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
-import {RawUtxo} from '@yoroi/api'
-import {WalletTransaction} from '@yoroi/types'
 import {asQuantity} from '~/wallets/utils/utils'
 
 import {

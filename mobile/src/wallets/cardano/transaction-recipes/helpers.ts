@@ -1,7 +1,6 @@
+import type {RawUtxo} from '@yoroi/api'
 import {ModernUtxo, rawUtxoToModernUtxo} from '@yoroi/tx'
 import {Portfolio} from '@yoroi/types'
-
-import type {RawUtxo} from '@yoroi/api'
 
 /**
  * Convert RawUtxo[] to ModernUtxo[] using wallet's getAddressing function

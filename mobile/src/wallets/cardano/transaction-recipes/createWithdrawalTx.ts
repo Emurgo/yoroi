@@ -1,3 +1,4 @@
+import type {AccountStateResponse} from '@yoroi/api'
 import {getLogger, isHex} from '@yoroi/common'
 import {
   CertificateKind,
@@ -19,7 +20,6 @@ import type {PublicKey} from '@emurgo/cross-csl-core'
 import BigNumber from 'bignumber.js'
 
 import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
-import type {AccountStateResponse} from '@yoroi/api'
 
 export type CreateWithdrawalTxParams = {
   utxos: ModernUtxo[]

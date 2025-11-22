@@ -1,6 +1,5 @@
-import {Portfolio} from '@yoroi/types'
-
 import {RawUtxo} from '@yoroi/api'
+import {Portfolio} from '@yoroi/types'
 
 export const mockRawUtxos: ReadonlyArray<RawUtxo> = [
   {

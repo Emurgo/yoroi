@@ -1,4 +1,5 @@
 import {StakePoolInfoRequest, StakePoolInfosAndHistories} from '@yoroi/staking'
+
 import {freeze} from 'immer'
 import _ from 'lodash'
 
@@ -11,13 +12,9 @@ import {
   TxStatusRequest,
   TxStatusResponse,
 } from '../../api-types'
-import {
-  CardanoApiAdapter,
-  WalletContext,
-  Addresses,
-} from '../../types'
-import {fetchDefault} from '../../utils/fetch'
 import {handleError} from '../../errors'
+import {Addresses, CardanoApiAdapter} from '../../types'
+import {fetchDefault} from '../../utils/fetch'
 
 const limitApiRecords = 50
 
@@ -86,9 +83,7 @@ export const legacyApiMaker = ({
       return fetchDefault('pool/info', request, baseApiUrl)
     },
 
-    async fetchTxStatus(
-      request: TxStatusRequest,
-    ): Promise<TxStatusResponse> {
+    async fetchTxStatus(request: TxStatusRequest): Promise<TxStatusResponse> {
       return fetchDefault('tx/status', request, baseApiUrl)
     },
 
@@ -118,10 +113,17 @@ export const legacyApiMaker = ({
       } | null
     }> {
       // Note: isMainnet needs to be passed, but we'll determine from baseApiUrl
-      const isMainnet = !baseApiUrl.includes('testnet') && !baseApiUrl.includes('preprod') && !baseApiUrl.includes('preview')
+      const isMainnet =
+        !baseApiUrl.includes('testnet') &&
+        !baseApiUrl.includes('preprod') &&
+        !baseApiUrl.includes('preview')
       const prefix = isMainnet ? '' : 'api/'
-      return fetchDefault(`${prefix}v0/catalyst/fundInfo/`, null, baseApiUrl, 'GET')
+      return fetchDefault(
+        `${prefix}v0/catalyst/fundInfo/`,
+        null,
+        baseApiUrl,
+        'GET',
+      )
     },
   } as CardanoApiAdapter)
 }
-

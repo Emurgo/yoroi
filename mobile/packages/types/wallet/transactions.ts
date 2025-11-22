@@ -1,5 +1,5 @@
-import {Balance} from '@yoroi/types'
 import {RemoteCertificateMeta} from '@yoroi/staking'
+import {Balance} from '@yoroi/types'
 
 import {CardanoTypes} from '~/wallets/cardano/types'
 import {TransactionToken} from '~/wallets/types/tokens'
@@ -46,7 +46,12 @@ export type TransactionType =
 /**
  * Transaction assurance level
  */
-export type TransactionAssurance = 'PENDING' | 'FAILED' | 'LOW' | 'MEDIUM' | 'HIGH'
+export type TransactionAssurance =
+  | 'PENDING'
+  | 'FAILED'
+  | 'LOW'
+  | 'MEDIUM'
+  | 'HIGH'
 
 /**
  * Transaction metadata
@@ -155,4 +160,3 @@ export type WalletTransaction = {
  * Collection of wallet transactions
  */
 export type Transactions = {[txid: string]: WalletTransaction}
-

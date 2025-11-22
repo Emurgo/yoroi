@@ -1,14 +1,5 @@
 import {RemoteAccountState, RemoteCertificateMeta} from '@yoroi/staking'
-import {Balance, Portfolio} from '@yoroi/types'
-import {
-  TransactionStatus,
-  TransactionDirection,
-  TransactionType,
-  WalletTransaction,
-} from '@yoroi/types'
-
-import {CardanoTypes} from '../cardano/types'
-import {TransactionToken} from './tokens'
+import {Portfolio} from '@yoroi/types'
 
 // note(v-almonacid): this
 /**

@@ -1,17 +1,18 @@
+import {StakePoolInfoRequest, StakePoolInfosAndHistories} from '@yoroi/staking'
+
 import {
   AccountStateResponse,
   RawTransaction,
   TipStatusResponse,
   TxStatusResponse,
-} from '../api-types'
-
+} from './api-types'
+import {cardanoApiManagerMaker} from './manager'
 import {
   CardanoApiAdapter,
   CardanoBackend,
   EndpointPreference,
   WalletContext,
 } from './types'
-import {cardanoApiManagerMaker} from './manager'
 
 describe('cardanoApiManagerMaker', () => {
   const mockWalletContext: WalletContext = {
@@ -25,8 +26,20 @@ describe('cardanoApiManagerMaker', () => {
   const createMockAdapter = (name: string): CardanoApiAdapter => ({
     async getTipStatus(): Promise<TipStatusResponse> {
       return {
-        bestBlock: {hash: `${name}-tip`, height: 100},
-        safeBlock: {hash: `${name}-safe`, height: 99},
+        bestBlock: {
+          hash: `${name}-tip`,
+          height: 100,
+          epoch: null,
+          slot: null,
+          globalSlot: null,
+        },
+        safeBlock: {
+          hash: `${name}-safe`,
+          height: 99,
+          epoch: null,
+          slot: null,
+          globalSlot: null,
+        },
       }
     },
 
@@ -56,8 +69,10 @@ describe('cardanoApiManagerMaker', () => {
       return {[`${name}-bulk-addr`]: null}
     },
 
-    async getPoolInfo(): Promise<unknown> {
-      return {[`${name}-pool`]: null}
+    async getPoolInfo(
+      _request: StakePoolInfoRequest,
+    ): Promise<StakePoolInfosAndHistories> {
+      return {[`${name}-pool`]: null} as StakePoolInfosAndHistories
     },
 
     async fetchTxStatus(): Promise<TxStatusResponse> {
@@ -158,20 +173,22 @@ describe('cardanoApiManagerMaker', () => {
 
       // Should throw when context is missing for endpoints that require it
       await expect(
-        api.fetchNewTxHistory({addresses: []}),
-      ).rejects.toThrow('Backend-zero endpoint fetchNewTxHistory requires wallet context')
+        api.fetchNewTxHistory({addresses: [], untilBlock: 'block-hash'}),
+      ).rejects.toThrow(
+        'Backend-zero endpoint fetchNewTxHistory requires wallet context',
+      )
 
-      await expect(
-        api.filterUsedAddresses(['addr1']),
-      ).rejects.toThrow('Backend-zero endpoint filterUsedAddresses requires wallet context')
+      await expect(api.filterUsedAddresses(['addr1'])).rejects.toThrow(
+        'Backend-zero endpoint filterUsedAddresses requires wallet context',
+      )
 
-      await expect(
-        api.getAccountState({addresses: ['addr1']}),
-      ).rejects.toThrow('Backend-zero endpoint getAccountState requires wallet context')
+      await expect(api.getAccountState({addresses: ['addr1']})).rejects.toThrow(
+        'Backend-zero endpoint getAccountState requires wallet context',
+      )
 
-      await expect(
-        api.bulkGetAccountState(['addr1']),
-      ).rejects.toThrow('Backend-zero endpoint bulkGetAccountState requires wallet context')
+      await expect(api.bulkGetAccountState(['addr1'])).rejects.toThrow(
+        'Backend-zero endpoint bulkGetAccountState requires wallet context',
+      )
     })
 
     it('should not require wallet context for endpoints that do not need it', async () => {
@@ -230,7 +247,10 @@ describe('cardanoApiManagerMaker', () => {
       })
 
       await expect(
-        api.fetchNewTxHistory({addresses: []}, mockWalletContext),
+        api.fetchNewTxHistory(
+          {addresses: [], untilBlock: 'block-hash'},
+          mockWalletContext,
+        ),
       ).resolves.toBeDefined()
 
       await expect(
@@ -271,6 +291,9 @@ describe('cardanoApiManagerMaker', () => {
         preferences,
       })
 
+      if (!api.checkServerStatus) {
+        throw new Error('checkServerStatus should not be available')
+      }
       return expect(api.checkServerStatus()).rejects.toThrow(
         'Backend backend-zero does not support endpoint checkServerStatus',
       )
@@ -367,4 +390,3 @@ describe('cardanoApiManagerMaker', () => {
     })
   })
 })
-

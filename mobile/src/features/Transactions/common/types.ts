@@ -1,5 +1,4 @@
 import {Balance} from '@yoroi/types'
-
 import {
   TransactionDirection,
   TransactionStatus,

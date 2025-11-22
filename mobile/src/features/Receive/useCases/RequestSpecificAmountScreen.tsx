@@ -133,14 +133,14 @@ const ModalContent = ({amount, address}: {amount: string; address: string}) => {
   const {numberLocale} = useLanguage()
   const {wallet} = useSelectedWallet()
   const cardanoLinks = linksCardanoModuleMaker()
-  
+
   // Parse amount to get numeric value for link creation
   const parsedAmount = parseNumberFromText({
     text: amount,
     denomination: wallet.portfolioPrimaryTokenInfo.decimals,
     format: numberLocale,
   })
-  
+
   const cardanoRequestLink = cardanoLinks.create({
     config: configCardanoPayV1,
     params: {
@@ -203,14 +203,14 @@ const ModalFooter = ({amount, address}: {amount: string; address: string}) => {
   const {wallet} = useSelectedWallet()
 
   const cardanoLinks = linksCardanoModuleMaker()
-  
+
   // Parse amount to get numeric value for link creation
   const parsedAmount = parseNumberFromText({
     text: amount,
     denomination: wallet.portfolioPrimaryTokenInfo.decimals,
     format: numberLocale,
   })
-  
+
   const cardanoRequestLink = cardanoLinks.create({
     config: configCardanoPayV1,
     params: {

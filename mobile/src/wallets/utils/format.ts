@@ -150,7 +150,6 @@ export const formatTokenFractional = (
     .replace(/[.|,]?0+$/, '')
 }
 
-
 // TODO(multi-asset): consider removing these
 
 const formatAda = (

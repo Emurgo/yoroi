@@ -1,5 +1,6 @@
-import {YoroiWallet} from '~/wallets/cardano/types'
 import {TRANSACTION_DIRECTION, TRANSACTION_STATUS} from '@yoroi/types'
+
+import {YoroiWallet} from '~/wallets/cardano/types'
 
 import {useTransactionSummaries} from './useTransactionSummaries'
 

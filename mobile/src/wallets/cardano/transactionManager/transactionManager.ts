@@ -1,27 +1,23 @@
+import {RawTransaction, TipStatusResponse, TxHistoryRequest} from '@yoroi/api'
 import {PromiseAllLimited, isArray, parseSafe} from '@yoroi/common'
 import {RemoteCertificateMeta} from '@yoroi/staking'
 import {CertificateKind} from '@yoroi/tx'
-import {App} from '@yoroi/types'
+import {
+  App,
+  TRANSACTION_STATUS,
+  TransactionStatus,
+  Transactions,
+  WalletTransaction,
+} from '@yoroi/types'
 
 import {fromPairs, mapValues, max} from 'lodash'
 import DeviceInfo from 'react-native-device-info'
 import {defaultMemoize} from 'reselect'
 
 import {logger} from '~/kernel/logger/logger'
-import {
-  TRANSACTION_STATUS,
-  Transactions,
-  WalletTransaction,
-} from '@yoroi/types'
-import {
-  RawTransaction,
-  TipStatusResponse,
-  TxHistoryRequest,
-} from '@yoroi/api'
 import {Version, versionCompare} from '~/wallets/utils/versioning'
 
 import * as yoroiApi from '../api/api'
-import {CardanoBackend} from '../../../../packages/api/cardano/types'
 import {ApiHistoryError} from '../errors'
 
 type TransactionManagerState = {
@@ -600,7 +596,7 @@ export function toCachedTx(tx: RawTransaction): WalletTransaction {
     id: tx.hash,
     type: tx.type,
     fee: tx.fee ?? undefined,
-    status: tx.tx_state,
+    status: tx.tx_state as TransactionStatus,
     inputs: tx.inputs.map((input) => ({
       id: input.id,
       address: input.address,

@@ -1,7 +1,6 @@
+import type {RawUtxo} from '@yoroi/api'
 import {type ModernUtxo, rawUtxoToModernUtxo} from '@yoroi/tx'
 import {Portfolio, Wallet} from '@yoroi/types'
-
-import type {RawUtxo} from '@yoroi/api'
 
 import {getAddressing} from './address-operations'
 

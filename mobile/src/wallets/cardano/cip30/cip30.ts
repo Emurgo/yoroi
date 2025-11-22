@@ -1,3 +1,4 @@
+import {RawUtxo} from '@yoroi/api'
 import {cardanoConfig} from '@yoroi/blockchains'
 import {isHex} from '@yoroi/common'
 import {
@@ -9,6 +10,7 @@ import {
   validateTransactionCbor,
 } from '@yoroi/tx'
 import {Balance, Portfolio, Wallet} from '@yoroi/types'
+import {BaseAsset} from '@yoroi/types'
 
 import * as CSL from '@emurgo/cross-csl-core'
 import {Address, WasmModuleProxy} from '@emurgo/cross-csl-core'
@@ -18,8 +20,6 @@ import * as _ from 'lodash'
 
 import {createCollateralEntry} from '~/features/Settings/ui/screens/ChangeWalletSettingsScreen/ManageCollateralScreen/helpers'
 import {logger} from '~/kernel/logger/logger'
-import {RawUtxo} from '@yoroi/api'
-import {BaseAsset} from '@yoroi/types'
 import {Utxos, asQuantity} from '~/wallets/utils/utils'
 import {CardanoMobile} from '~/wallets/wallets'
 

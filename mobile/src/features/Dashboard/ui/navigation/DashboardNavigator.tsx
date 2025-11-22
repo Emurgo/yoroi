@@ -43,7 +43,6 @@ export const DashboardNavigator = () => {
           name="staking-center"
           getComponent={() => StakingCenter}
         />
-
       </Stack.Navigator>
     </GovernanceProvider>
   )

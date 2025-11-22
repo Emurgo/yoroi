@@ -26,4 +26,3 @@ export const BACKEND_ZERO_REQUIRES_CONTEXT: Set<string> = new Set([
   'getAccountState',
   'bulkGetAccountState',
 ])
-

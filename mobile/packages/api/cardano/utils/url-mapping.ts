@@ -18,4 +18,3 @@ export const getBackendZeroUrl = (legacyApiUrl: string): string => {
   // Default to mainnet if can't determine
   return API_ENDPOINTS[Chain.Network.Mainnet].root
 }
-

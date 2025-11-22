@@ -1,6 +1,5 @@
 import {CertificateKind} from '@yoroi/tx'
 import {Balance, Portfolio} from '@yoroi/types'
-
 import {
   BaseAsset,
   TRANSACTION_DIRECTION,
@@ -8,6 +7,7 @@ import {
   TransactionDirection,
   WalletTransaction,
 } from '@yoroi/types'
+
 import {Amounts, Quantities, asQuantity} from '~/wallets/utils/utils'
 
 import {TransactionSummary} from './types'

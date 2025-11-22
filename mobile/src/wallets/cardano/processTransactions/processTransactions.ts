@@ -7,9 +7,6 @@
 import {isArray, isString} from '@yoroi/common'
 import {CertificateKind} from '@yoroi/tx'
 import {Balance, Portfolio} from '@yoroi/types'
-
-import BigNumber from 'bignumber.js'
-
 import {
   BaseAsset,
   TRANSACTION_DIRECTION,
@@ -18,6 +15,9 @@ import {
   TransactionInfo,
   WalletTransaction,
 } from '@yoroi/types'
+
+import BigNumber from 'bignumber.js'
+
 import {TransactionToken} from '~/wallets/types/tokens'
 import {Amounts, Quantities, asQuantity} from '~/wallets/utils/utils'
 

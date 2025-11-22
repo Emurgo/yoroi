@@ -1,6 +1,5 @@
-import {Portfolio} from '@yoroi/types'
-
 import type {RawUtxo} from '@yoroi/api'
+import {Portfolio} from '@yoroi/types'
 
 import {
   didUtxosUpdate,

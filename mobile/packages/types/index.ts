@@ -302,7 +302,6 @@ import {SwapStorage} from './swap/storage'
 import {TransferEntry, TransferTarget, TransferTargets} from './transfer/state'
 import {WalletMeta} from './wallet/meta'
 import {
-  BaseAsset,
   TransactionAssurance,
   TransactionDirection,
   TransactionInfo,

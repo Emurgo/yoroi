@@ -1,4 +1,5 @@
 import {RemoteAccountState} from '@yoroi/staking'
+import {RemoteCertificateMeta} from '@yoroi/staking'
 import {Portfolio} from '@yoroi/types'
 
 /**
@@ -103,8 +104,6 @@ type RemoteTxBlockMeta = {
   readonly slot: number
 }
 
-import {RemoteCertificateMeta} from '@yoroi/staking'
-
 type RemoteTxInfo = {
   readonly type: 'byron' | 'shelley'
   readonly fee?: string
@@ -196,4 +195,3 @@ export type FundInfoResponse = {
   readonly currentFund: FundInfo | null | undefined
   readonly nextFund: FundInfo | null | undefined
 }
-

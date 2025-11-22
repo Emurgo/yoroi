@@ -102,9 +102,7 @@ export const getWalletDelegationStatus = (
 export const getWalletStakingInfo = async (wallet: {
   rewardAddressHex: string
   getAllUtxosForKey: () => Array<CardanoTypes.CardanoAddressedUtxo>
-  fetchAccountState: () => Promise<
-    import('@yoroi/api').AccountStateResponse
-  >
+  fetchAccountState: () => Promise<import('@yoroi/api').AccountStateResponse>
   balanceManager: YoroiWallet['balanceManager']
   portfolioPrimaryTokenInfo: Portfolio.Token.Info
   getDelegationStatus: () => ReturnType<typeof getDelegationStatus>

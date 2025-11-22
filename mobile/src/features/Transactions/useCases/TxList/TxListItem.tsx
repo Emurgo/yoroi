@@ -2,6 +2,7 @@ import {isNonNullable} from '@yoroi/common'
 import {infoExtractName, isPrimaryToken} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Balance, Portfolio} from '@yoroi/types'
+import {WalletTransaction} from '@yoroi/types'
 
 import {useNavigation} from '@react-navigation/native'
 import {BigNumber} from 'bignumber.js'
@@ -20,7 +21,6 @@ import {Icon} from '~/ui/Icon'
 import {styleMap} from '~/ui/Icon/Direction'
 import {BalanceError} from '~/ui/PairedBalance/PairedBalance'
 import {YoroiWallet} from '~/wallets/cardano/types'
-import {WalletTransaction} from '@yoroi/types'
 import {
   formatDateRelative,
   formatTime,

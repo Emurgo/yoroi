@@ -1,12 +1,9 @@
-import {Chain} from '@yoroi/types'
-
 import {backendZeroApiMaker} from './adapters/backend-zero/api-maker'
 import {legacyApiMaker} from './adapters/legacy/api-maker'
-import {cardanoApiManagerMaker} from './manager'
-import {getBackendZeroUrl} from './utils/url-mapping'
-
 import {cardanoWalletApiMaker} from './api-maker'
 import {ENDPOINT_AVAILABILITY} from './config/endpoint-availability'
+import {cardanoApiManagerMaker} from './manager'
+import {getBackendZeroUrl} from './utils/url-mapping'
 
 // Mock the adapters and manager
 jest.mock('../adapters/backend-zero/api-maker')
@@ -33,7 +30,10 @@ describe('cardanoWalletApiMaker', () => {
 
   it('should create API instance with correct baseApiUrl', () => {
     const baseApiUrl = 'https://api.yoroiwallet.com/api'
-    const api = cardanoWalletApiMaker({baseApiUrl, getSpendingKey: mockGetSpendingKey})
+    const api = cardanoWalletApiMaker({
+      baseApiUrl,
+      getSpendingKey: mockGetSpendingKey,
+    })
 
     expect(api).toBeDefined()
   })
@@ -92,14 +92,17 @@ describe('cardanoWalletApiMaker', () => {
 
   it('should have preferences that match endpoint availability', () => {
     const baseApiUrl = 'https://api.yoroiwallet.com/api'
-    const api = cardanoWalletApiMaker({baseApiUrl, getSpendingKey: mockGetSpendingKey})
+    cardanoWalletApiMaker({
+      baseApiUrl,
+      getSpendingKey: mockGetSpendingKey,
+    })
 
     // Verify that preferences only use backends that are available for each endpoint
     Object.keys(ENDPOINT_AVAILABILITY).forEach((endpoint) => {
       const availableBackends = ENDPOINT_AVAILABILITY[endpoint]
       // This is a type check - preferences should match availability
-      expect(availableBackends.length).toBeGreaterThan(0)
+      expect(availableBackends).toBeDefined()
+      expect(availableBackends?.length).toBeGreaterThan(0)
     })
   })
 })
-

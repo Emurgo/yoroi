@@ -1017,9 +1017,7 @@ export const makeCardanoWallet = (
     // =================== backend API =================== //
 
     async checkServerStatus() {
-      return legacyApi.checkServerStatus(
-        this.networkManager.legacyApiBaseUrl,
-      )
+      return legacyApi.checkServerStatus(this.networkManager.legacyApiBaseUrl)
     }
 
     async submitTransaction(base64SignedTx: string) {

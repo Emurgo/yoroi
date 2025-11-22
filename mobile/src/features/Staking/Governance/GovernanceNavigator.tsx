@@ -57,7 +57,6 @@ export const GovernanceNavigator = () => {
             component={NoFundsScreen}
             options={{title: strings.staking.governanceCentreTitle}}
           />
-
         </Stack.Navigator>
       </SafeArea>
     </GovernanceProvider>

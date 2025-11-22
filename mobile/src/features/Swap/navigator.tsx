@@ -92,7 +92,6 @@ export const SwapNavigator = () => {
         }}
         getComponent={() => ShowPreprodNoticeScreen}
       />
-
     </Stack.Navigator>
   )
 }
