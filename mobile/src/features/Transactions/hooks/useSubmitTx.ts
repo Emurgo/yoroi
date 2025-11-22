@@ -4,7 +4,7 @@ import {calculateTxId} from '@yoroi/tx'
 import * as CSL from '@emurgo/cross-csl-core'
 import {UseMutationOptions} from '@tanstack/react-query'
 
-import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
+import {useWalletManagerSelector} from '~/features/WalletManager/context/WalletManagerProvider'
 import {YoroiWallet} from '~/wallets/cardano/types'
 import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
 import {TxSubmissionStatus} from '~/wallets/types/other'
@@ -14,7 +14,8 @@ export const useSubmitTx = (
   {wallet}: {wallet: YoroiWallet},
   options: UseMutationOptions<TxSubmissionStatus, Error, CSL.Transaction> = {},
 ) => {
-  const {walletManager} = useWalletManager()
+  // Use selector to prevent re-renders when selected wallet changes
+  const walletManager = useWalletManagerSelector((ctx) => ctx.walletManager)
 
   const mutation = useMutationWithInvalidations({
     mutationFn: async (signedTx) => {
@@ -35,7 +36,7 @@ export const useSubmitTx = (
         })
 
         // Notify sync manager about transaction submission for fast polling
-        if (txId) {
+        if (txId && walletManager) {
           walletManager.notifyTransactionSubmitted(wallet.id, txId)
         }
 
@@ -52,7 +53,7 @@ export const useSubmitTx = (
             'hex',
           )
         })
-        if (txId) {
+        if (txId && walletManager) {
           walletManager.notifyTransactionSubmitted(wallet.id, txId)
         }
       } catch (error) {

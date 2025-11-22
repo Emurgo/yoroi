@@ -1,3 +1,4 @@
+import {debounce} from '@yoroi/common'
 import {
   isDomain,
   isResolvableDomain,
@@ -7,8 +8,6 @@ import {Resolver} from '@yoroi/types'
 
 import {useQueryClient} from '@tanstack/react-query'
 import * as React from 'react'
-
-import {debounce} from '@yoroi/common'
 
 export type AddressResolutionState = {
   isResolving: boolean

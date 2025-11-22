@@ -1,3 +1,4 @@
+import {debounce} from '@yoroi/common'
 import {
   isDomain,
   isResolvableDomain,
@@ -15,7 +16,6 @@ import {
 } from '~/features/Send/common/errors'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {logger} from '~/kernel/logger/logger'
-import {debounce} from '@yoroi/common'
 
 /**
  * Check if a string looks like a valid Cardano address format

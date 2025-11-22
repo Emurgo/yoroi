@@ -3,8 +3,8 @@ import {Wallet} from '@yoroi/types'
 
 import * as React from 'react'
 
-import {YoroiWallet} from '~/wallets/cardano/types'
 import {createCombinedDelegationTxFromWallet} from '~/wallets/cardano/transaction-recipes/wallet-helpers'
+import {YoroiWallet} from '~/wallets/cardano/types'
 
 /**
  * Creates combined delegation transactions to earn rewards:

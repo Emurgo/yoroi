@@ -13,7 +13,7 @@ import {useAuth} from '~/features/Auth/context/AuthProvider'
 import {useClaimErrorResolver} from '~/features/Claim/common/useClaimErrorResolver'
 import {AskConfirmationModal} from '~/features/Claim/ui/modals/AskConfirmationModal'
 import {useBrowser} from '~/features/Discover/common/BrowserProvider'
-import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
+import {useWalletManagerSelector} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
@@ -43,9 +43,8 @@ export const useTriggerScanAction = ({
 }: {
   insideFeature: Scan.Feature
 }) => {
-  // Get wallet manager to check if wallet is selected (but don't require it)
-  const {selected} = useWalletManager()
-  const wallet = selected.wallet
+  // Use selector to only re-render when wallet changes, not when network changes
+  const wallet = useWalletManagerSelector((ctx) => ctx.selected.wallet)
   const {isLoggedIn} = useAuth()
   const rootNavigation = useNavigation()
   const defaultPrimaryTokenInfo = React.useMemo(

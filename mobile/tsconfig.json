@@ -40,6 +40,12 @@
       "~/wallets/*": [
         "./src/wallets/*"
       ],
+      "~/queries": [
+        "./src/queries"
+      ],
+      "~/utils/*": [
+        "./src/utils/*"
+      ],
       "~/components/*": [
         "./src/ui/*"
       ],

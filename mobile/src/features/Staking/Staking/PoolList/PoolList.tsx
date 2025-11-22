@@ -1,3 +1,4 @@
+import {useDebouncedValue} from '@yoroi/common'
 import {ExplorerPoolInfo} from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
@@ -6,7 +7,6 @@ import {Image} from 'expo-image'
 import * as React from 'react'
 import {ActivityIndicator, Text, TouchableOpacity, View} from 'react-native'
 
-import {useDebouncedValue} from '@yoroi/common'
 import {useSearch} from '~/features/Search/SearchContext'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {Space} from '~/ui/Space/Space'

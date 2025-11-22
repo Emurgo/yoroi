@@ -4,6 +4,7 @@ import {
   DRepValue,
   ModernUtxo,
   RegistrationStatus,
+  TransactionCertificate,
   addCertificate,
   addInputs,
   buildRecipeTransaction,
@@ -13,7 +14,6 @@ import {
   selectUtxosForAmount,
   setChangeAddress,
   setTTLWithBuffer,
-  TransactionCertificate,
 } from '@yoroi/tx'
 import {Portfolio, Wallet} from '@yoroi/types'
 
@@ -225,7 +225,8 @@ export async function createCombinedDelegationTx({
 
       logger.info('createCombinedDelegationTx: Added certificates', {
         certificatesCount: certificates.length,
-        hasRegistration: delegationType === RegistrationStatus.RegisterAndDelegate,
+        hasRegistration:
+          delegationType === RegistrationStatus.RegisterAndDelegate,
         hasPoolDelegation: !!poolId,
         hasVoteDelegation: !!drepValue,
       })
@@ -266,14 +267,17 @@ export async function createCombinedDelegationTx({
         continue
       } else {
         // Not retryable or last attempt - log and throw
-        logger.error('createCombinedDelegationTx: Failed to build transaction', {
-          attempt: attempt + 1,
-          maxRetries,
-          error: errorMessage,
-          errorStack: lastError.stack,
-          isRetryableError,
-          willRetry: isRetryableError && attempt < maxRetries - 1,
-        })
+        logger.error(
+          'createCombinedDelegationTx: Failed to build transaction',
+          {
+            attempt: attempt + 1,
+            maxRetries,
+            error: errorMessage,
+            errorStack: lastError.stack,
+            isRetryableError,
+            willRetry: isRetryableError && attempt < maxRetries - 1,
+          },
+        )
         throw lastError
       }
     }
@@ -281,7 +285,8 @@ export async function createCombinedDelegationTx({
   // If we get here, all retries failed
   throw (
     lastError ||
-    new Error('Failed to build combined delegation transaction after all retries')
+    new Error(
+      'Failed to build combined delegation transaction after all retries',
+    )
   )
 }
-

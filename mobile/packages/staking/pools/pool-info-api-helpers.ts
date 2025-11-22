@@ -6,15 +6,15 @@ import {
   tuplesIntoRecord,
 } from '@yoroi/common'
 
+import {poolTransitionGetInfo} from './adapters/api/pool-transition-api'
 import {
   ChainPoolInfoMap,
   ExplorerPoolInfo,
   ExplorerPoolInfoMap,
   FullChainPoolInfo,
-  TransitionData,
   TRANSITION_DATA_STUB,
+  TransitionData,
 } from './pool-info-api'
-import {poolTransitionGetInfo} from './adapters/api/pool-transition-api'
 
 type ExplorerPoolInfoApiRes = {
   data?: {
@@ -47,7 +47,7 @@ export async function getManyChainPoolInfoBatch({
   hashes,
   request,
   zeroApiUrl,
-  requestSize,
+  requestSize: _requestSize,
 }: {
   hashes: string[]
   request: FetchData
@@ -192,4 +192,3 @@ export async function getPoolTransitionInfo({
   }
   return TRANSITION_DATA_STUB
 }
-

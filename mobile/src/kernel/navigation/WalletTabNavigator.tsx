@@ -56,7 +56,15 @@ export const WalletTabNavigator = () => {
 
   // Memoize tab bar icons to prevent recreation on every render
   const historyTabBarIcon = React.useCallback(
-    ({focused, color, size}: {focused: boolean; color: string; size: number}) =>
+    ({
+      focused,
+      color,
+      size,
+    }: {
+      focused: boolean
+      color: string
+      size: number
+    }) =>
       focused ? (
         <Icon.TabWalletActive size={size} color={color} />
       ) : (
@@ -66,7 +74,15 @@ export const WalletTabNavigator = () => {
   )
 
   const portfolioTabBarIcon = React.useCallback(
-    ({focused, color, size}: {focused: boolean; color: string; size: number}) =>
+    ({
+      focused,
+      color,
+      size,
+    }: {
+      focused: boolean
+      color: string
+      size: number
+    }) =>
       focused ? (
         <Icon.TabPortfolioActive size={size} color={color} />
       ) : (
@@ -76,7 +92,15 @@ export const WalletTabNavigator = () => {
   )
 
   const discoverTabBarIcon = React.useCallback(
-    ({focused, color, size}: {focused: boolean; color: string; size: number}) =>
+    ({
+      focused,
+      color,
+      size,
+    }: {
+      focused: boolean
+      color: string
+      size: number
+    }) =>
       focused ? (
         <Icon.TabDiscoverActive size={size} color={color} />
       ) : (
@@ -86,7 +110,15 @@ export const WalletTabNavigator = () => {
   )
 
   const menuTabBarIcon = React.useCallback(
-    ({focused, color, size}: {focused: boolean; color: string; size: number}) =>
+    ({
+      focused,
+      color,
+      size,
+    }: {
+      focused: boolean
+      color: string
+      size: number
+    }) =>
       focused ? (
         <Icon.TabMenuActive size={size} color={color} />
       ) : (

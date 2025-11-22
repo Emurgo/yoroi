@@ -10,14 +10,14 @@ import * as React from 'react'
 
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 
-import {useWalletManager} from '../../context/WalletManagerProvider'
+import {useWalletManagerSelector} from '../../context/WalletManagerProvider'
 import {useSelectedNetwork} from '../../hooks/useSelectedNetwork'
 import {useSelectWalletModal} from '../modals/SelectWalletModal'
 
 export const WithWalletOpened = ({children}: React.PropsWithChildren) => {
-  const {
-    selected: {wallet, meta},
-  } = useWalletManager()
+  // Use selector to prevent re-renders when network changes
+  const wallet = useWalletManagerSelector((ctx) => ctx.selected.wallet)
+  const meta = useWalletManagerSelector((ctx) => ctx.selected.meta)
   const {openSelectWalletModal} = useSelectWalletModal()
   const walletNavigation = useWalletNavigation()
   const [hasShownModal, setHasShownModal] = React.useState(false)

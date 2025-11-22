@@ -1,5 +1,5 @@
 import {API_ENDPOINTS} from '@yoroi/api'
-import {poolInfoApiMaker, StakePoolInfoAndHistory} from '@yoroi/staking'
+import {StakePoolInfoAndHistory, poolInfoApiMaker} from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import {UseQueryOptions, useQuery} from '@tanstack/react-query'

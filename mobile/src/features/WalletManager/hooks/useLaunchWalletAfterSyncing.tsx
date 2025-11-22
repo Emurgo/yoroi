@@ -6,7 +6,7 @@ import {logger} from '~/kernel/logger/logger'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {YoroiWallet} from '~/wallets/cardano/types'
 
-import {useWalletManager} from '../context/WalletManagerProvider'
+import {useWalletManagerSelector} from '../context/WalletManagerProvider'
 
 /**
  * Custom hook to launch a new wallet first time or when a previous sync is required, it will follow these steps:
@@ -37,11 +37,13 @@ export function useLaunchWalletAfterSyncing({
   shouldNavigateAfterSync?: boolean
 }) {
   const walletNavigation = useWalletNavigation()
-  const {walletManager} = useWalletManager()
+  // Use selector to prevent re-renders when selected wallet changes
+  const walletManager = useWalletManagerSelector((ctx) => ctx.walletManager)
 
   React.useEffect(() => {
     let started = false
-    if (!isGlobalSyncPaused || started || walletId == null) return
+    if (!isGlobalSyncPaused || started || walletId == null || !walletManager)
+      return
 
     const process = async () => {
       started = true

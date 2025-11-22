@@ -5,13 +5,15 @@ import {Portfolio} from '@yoroi/types'
 import {useQuery, useQueryClient} from '@tanstack/react-query'
 import {freeze, produce} from 'immer'
 import * as React from 'react'
-import {merge, switchMap, throttleTime} from 'rxjs'
+import {merge, switchMap} from 'rxjs'
 
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
 import {logger} from '~/kernel/logger/logger'
+import {portfolioQueryKeys} from '~/queries'
+import {throttle} from '~/utils/rxjs-operators'
 
-const queryKey = ['usePortfolioTokenActivity']
+const queryKey = portfolioQueryKeys.tokenActivityBase()
 const defaultPortfolioTokenActivityState: PortfolioTokenActivityState = freeze(
   {
     secondaryTokenIds: [],
@@ -87,7 +89,7 @@ export const PortfolioTokenActivityProvider = ({
       ),
       walletManager.walletMetas$,
     )
-      .pipe(throttleTime(400))
+      .pipe(throttle(400))
       .subscribe(() => {
         const aggregatedBalances = Array.from(
           walletManager.walletMetas.values(),

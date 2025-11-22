@@ -2,7 +2,7 @@ import {Wallet} from '@yoroi/types'
 
 import {UseMutationOptions, useMutation} from '@tanstack/react-query'
 
-import {useWalletManager} from '../context/WalletManagerProvider'
+import {useWalletManagerSelector} from '../context/WalletManagerProvider'
 
 type CreateReadOnlyWalletFromAddresses = {
   name: string
@@ -23,7 +23,8 @@ export const useCreateReadOnlyWalletFromAddresses = (
     CreateReadOnlyWalletFromAddresses
   >,
 ) => {
-  const {walletManager} = useWalletManager()
+  // Use selector to prevent re-renders when selected wallet changes
+  const walletManager = useWalletManagerSelector((ctx) => ctx.walletManager)
   const mutation = useMutation({
     mutationFn: ({
       name,
@@ -35,8 +36,11 @@ export const useCreateReadOnlyWalletFromAddresses = (
       addressMode,
       accountVisual,
       enableDiscovery,
-    }) =>
-      walletManager.createReadOnlyWalletFromAddresses({
+    }) => {
+      if (!walletManager) {
+        throw new Error('WalletManager not available')
+      }
+      return walletManager.createReadOnlyWalletFromAddresses({
         name,
         knownAddress,
         internalAddresses,
@@ -46,7 +50,8 @@ export const useCreateReadOnlyWalletFromAddresses = (
         addressMode,
         accountVisual,
         enableDiscovery,
-      }),
+      })
+    },
     ...options,
   })
 

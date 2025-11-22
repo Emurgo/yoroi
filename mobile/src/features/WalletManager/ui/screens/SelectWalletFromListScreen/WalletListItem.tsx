@@ -12,7 +12,7 @@ import {
   ChevronRightGrayIllustration,
 } from '~/features/SetupWallet/illustrations/ChevronRight'
 import {useAutomaticWalletOpener} from '~/features/WalletManager/context/AutomaticWalletOpeningProvider'
-import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
+import {useWalletManagerSelector} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
 import {useSyncWalletInfo} from '~/features/WalletManager/hooks/useSyncWalletInfo'
 import {features} from '~/kernel/features'
@@ -36,10 +36,9 @@ export const WalletListItem = ({walletMeta, onPress}: Props) => {
     () => getImplementationName(walletMeta),
     [walletMeta],
   )
-  const {
-    selected: {meta},
-    walletManager,
-  } = useWalletManager()
+  // Use selectors to prevent re-renders when unrelated context values change
+  const meta = useWalletManagerSelector((ctx) => ctx.selected.meta)
+  const walletManager = useWalletManagerSelector((ctx) => ctx.walletManager)
   const {
     shouldOpen: shouldAutomaticWalletOpen,
     setShouldOpen: setShouldAutomaticWalletOpen,
@@ -111,6 +110,9 @@ export const WalletListItem = ({walletMeta, onPress}: Props) => {
           text: 'Delete',
           style: 'destructive',
           onPress: () => {
+            if (!walletManager) {
+              throw new Error('WalletManager not available')
+            }
             walletManager.removeWallet(walletMeta.id)
           },
         },

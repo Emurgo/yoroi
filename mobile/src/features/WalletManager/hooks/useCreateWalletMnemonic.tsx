@@ -2,7 +2,7 @@ import {Wallet} from '@yoroi/types'
 
 import {UseMutationOptions, useMutation} from '@tanstack/react-query'
 
-import {useWalletManager} from '../context/WalletManagerProvider'
+import {useWalletManagerSelector} from '../context/WalletManagerProvider'
 
 type CreateWalletMnemonic = {
   name: string
@@ -16,7 +16,8 @@ type CreateWalletMnemonic = {
 export const useCreateWalletMnemonic = (
   options?: UseMutationOptions<Wallet.Meta, Error, CreateWalletMnemonic>,
 ) => {
-  const {walletManager} = useWalletManager()
+  // Use selector to prevent re-renders when selected wallet changes
+  const walletManager = useWalletManagerSelector((ctx) => ctx.walletManager)
   const mutation = useMutation({
     mutationFn: ({
       name,
@@ -25,15 +26,19 @@ export const useCreateWalletMnemonic = (
       implementation,
       addressMode,
       accountVisual,
-    }) =>
-      walletManager.createWalletMnemonic({
+    }) => {
+      if (!walletManager) {
+        throw new Error('WalletManager not available')
+      }
+      return walletManager.createWalletMnemonic({
         name,
         mnemonic: mnemonicPhrase,
         password,
         implementation,
         addressMode,
         accountVisual,
-      }),
+      })
+    },
     ...options,
   })
 

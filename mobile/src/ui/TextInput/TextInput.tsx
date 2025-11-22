@@ -1,4 +1,5 @@
 import {isString} from '@yoroi/common'
+import {useDebouncedCallback} from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
@@ -15,7 +16,6 @@ import {
   TextInput as RNPTextInput,
 } from 'react-native-paper'
 
-import {useDebouncedCallback} from '@yoroi/common'
 import {Icon} from '~/ui/Icon'
 import {isEmptyString} from '~/wallets/utils/string'
 

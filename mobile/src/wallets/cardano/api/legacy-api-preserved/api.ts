@@ -118,11 +118,15 @@ export const getPoolTransitionInfo = (
   old: {[groupName: string]: Array<[string, number, boolean]>}
   saturationThreshold?: number
 } | null> => {
-  return fetchDefault('v2.1/pools/poolTransitionInfo', null, baseApiUrl, 'GET')
-    .catch(() => {
-      // Return null on error to match PoolInfoApi behavior
-      return null
-    })
+  return fetchDefault(
+    'v2.1/pools/poolTransitionInfo',
+    null,
+    baseApiUrl,
+    'GET',
+  ).catch(() => {
+    // Return null on error to match PoolInfoApi behavior
+    return null
+  })
 }
 
 export const fetchTxStatus = (

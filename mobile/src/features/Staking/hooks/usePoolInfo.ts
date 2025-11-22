@@ -5,6 +5,7 @@ import {useQuery} from '@tanstack/react-query'
 import * as React from 'react'
 
 import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
+import {poolQueryKeys} from '~/queries'
 
 export const usePoolInfo = ({poolId}: {poolId: string}): FullPoolInfo => {
   const {networkManager} = useSelectedNetwork()
@@ -17,7 +18,7 @@ export const usePoolInfo = ({poolId}: {poolId: string}): FullPoolInfo => {
     [networkManager.legacyApiBaseUrl, networkManager.network],
   )
   const poolInfo = useQuery({
-    queryKey: ['usePoolInfo', poolId],
+    queryKey: poolQueryKeys.info(poolId),
     queryFn: async () => {
       return poolInfoApi.getSingleFullPoolInfo(poolId)
     },

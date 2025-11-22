@@ -7,12 +7,14 @@ import {
 
 import {useSuspenseQuery} from '@tanstack/react-query'
 
+import {legalQueryKeys} from '~/queries'
+
 import {Disclaimer} from '../../../common/types'
 
 export const useDisclaimerState = (name: Disclaimer, key = 'accepted') => {
   const storage = useAsyncStorage()
   const walletStorage = storage.join(`disclaimer/${name}/`)
-  const queryKey = ['disclaimer', name]
+  const queryKey = legalQueryKeys.disclaimer(name)
 
   const mutation = useMutationWithInvalidations({
     mutationFn: (value: boolean) => walletStorage.setItem(key, value),

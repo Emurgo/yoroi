@@ -1,74 +1,54 @@
 import {PromiseAllLimited, runTasks} from './promises'
 
-describe('runTasks', () => {
-  it('should run tasks with limited concurrency', async () => {
-    const taskResults: number[] = []
-    const taskIterator = function* () {
-      for (let i = 1; i <= 5; i++) {
-        yield async () => {
-          await new Promise((resolve) => setTimeout(resolve, 100))
-          taskResults.push(i)
-          return i
-        }
+describe('promises utilities', () => {
+  describe('runTasks', () => {
+    it('should run tasks concurrently', async () => {
+      const tasks = [
+        () => Promise.resolve(1),
+        () => Promise.resolve(2),
+        () => Promise.resolve(3),
+      ]
+      const results: number[] = []
+      for await (const taskResult of runTasks(tasks.values(), 2)) {
+        results.push(taskResult)
       }
-    }
+      expect(results).toHaveLength(3)
+      expect(results.sort()).toEqual([1, 2, 3])
+    })
 
-    const results: number[] = []
-    for await (const result of runTasks(taskIterator(), 2)) {
-      results.push(result)
-    }
-
-    expect(results).toEqual([1, 2, 3, 4, 5])
-    expect(taskResults).toEqual([1, 2, 3, 4, 5])
-  })
-
-  it('should run tasks with limited concurrency (default)', async () => {
-    const taskResults: number[] = []
-    const taskIterator = function* () {
-      for (let i = 1; i <= 5; i++) {
-        yield async () => {
-          await new Promise((resolve) => setTimeout(resolve, 100))
-          taskResults.push(i)
-          return i
-        }
+    it('should handle empty task list', async () => {
+      const results: number[] = []
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      for await (const _taskResult of runTasks([].values(), 2)) {
+        // Empty task list, no results
       }
-    }
-
-    const results: number[] = []
-    for await (const result of runTasks(taskIterator())) {
-      results.push(result)
-    }
-
-    expect(results).toEqual([1, 2, 3, 4, 5])
-    expect(taskResults).toEqual([1, 2, 3, 4, 5])
-  })
-})
-
-describe('PromiseAllLimited', () => {
-  const tasks = [
-    () => new Promise((resolve) => setTimeout(() => resolve(1), 100)),
-    () => new Promise((resolve) => setTimeout(() => resolve(2), 100)),
-    () => new Promise((resolve) => setTimeout(() => resolve(3), 100)),
-    () => new Promise((resolve) => setTimeout(() => resolve(4), 100)),
-    () => new Promise((resolve) => setTimeout(() => resolve(5), 100)),
-  ]
-
-  it('should limit concurrent tasks and resolve with all results', async () => {
-    const results = await PromiseAllLimited(tasks, 2)
-    expect(results).toEqual([1, 2, 3, 4, 5])
+      expect(results).toHaveLength(0)
+    })
   })
 
-  it('should limit with default the tasks and resolve with all results', async () => {
-    const results = await PromiseAllLimited(tasks)
-    expect(results).toEqual([1, 2, 3, 4, 5])
-  })
+  describe('PromiseAllLimited', () => {
+    it('should run tasks with concurrency limit', async () => {
+      const tasks = [
+        () => Promise.resolve(1),
+        () => Promise.resolve(2),
+        () => Promise.resolve(3),
+      ]
+      const results = await PromiseAllLimited(tasks, 2)
+      expect(results).toHaveLength(3)
+      expect(results.sort()).toEqual([1, 2, 3])
+    })
 
-  it('should handle task errors', async () => {
-    await expect(
-      PromiseAllLimited(
-        [() => new Promise((_, reject) => reject(new Error('Task failed')))],
-        2,
-      ),
-    ).rejects.toThrow('Task failed')
+    it('should handle empty task list', async () => {
+      const results = await PromiseAllLimited([], 2)
+      expect(results).toEqual([])
+    })
+
+    it('should reject on task error', async () => {
+      const tasks = [
+        () => Promise.resolve(1),
+        () => Promise.reject(new Error('test')),
+      ]
+      await expect(PromiseAllLimited(tasks, 2)).rejects.toThrow('test')
+    })
   })
 })

@@ -1,17 +1,17 @@
 import {freeze} from 'immer'
-import * as React from 'react'
 
-import {useWalletManager} from '../context/WalletManagerProvider'
+import {useWalletManagerSelector} from '../context/WalletManagerProvider'
 
+/**
+ * Hook to get the selected network and network manager.
+ * Uses selector to prevent unnecessary re-renders when other context values change.
+ */
 export const useSelectedNetwork = () => {
-  const {
-    selected: {network, networkManager},
-  } = useWalletManager()
-
-  return React.useMemo(() => {
+  return useWalletManagerSelector((ctx) => {
+    const {network, networkManager} = ctx.selected
     return freeze({
       network,
       networkManager,
     })
-  }, [network, networkManager])
+  })
 }

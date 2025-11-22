@@ -12,16 +12,19 @@ module.exports = {
     'packages/**/*.{ts,tsx}',
     '!packages/**/*.test.{ts,tsx}',
     '!packages/**/*.d.ts',
+    '!packages/types/**/*.ts', // Type definitions only
+    '!packages/**/*.mocks.ts',
+    '!packages/**/*.mock.ts',
     'src/**/*.{ts,tsx}',
     '!src/**/*.test.{ts,tsx}',
     '!src/**/*.d.ts',
   ],
   coverageThreshold: {
     global: {
-      branches: 20,
-      functions: 20,
-      lines: 20,
-      statements: 20,
+      branches: 100,
+      functions: 100,
+      lines: 100,
+      statements: 100,
     },
   },
   coverageReporters: ['lcov', 'html', 'text-summary'],

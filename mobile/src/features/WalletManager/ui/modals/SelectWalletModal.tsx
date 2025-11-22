@@ -9,7 +9,7 @@ import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {Space} from '~/ui/Space/Space'
 
-import {useWalletManager} from '../../context/WalletManagerProvider'
+import {useWalletManagerSelector} from '../../context/WalletManagerProvider'
 import {useWalletMetas} from '../../hooks/useWalletMetas'
 import {WalletListItem} from '../screens/SelectWalletFromListScreen/WalletListItem'
 
@@ -41,7 +41,8 @@ export const SelectWalletModal = ({onSelect, onCancel: _onCancel}: Props) => {
 
 export const useSelectWalletModal = () => {
   const {openModal, closeModal} = useModal()
-  const {walletManager} = useWalletManager()
+  // Use selector to prevent re-renders when selected wallet changes
+  const walletManager = useWalletManagerSelector((ctx) => ctx.walletManager)
   const strings = useStrings()
   const {height: windowHeight} = useWindowDimensions()
 
@@ -53,6 +54,9 @@ export const useSelectWalletModal = () => {
       onSelect: (walletMeta: Wallet.Meta) => void
       onCancel?: () => void
     }) => {
+      if (!walletManager) {
+        throw new Error('WalletManager not available')
+      }
       const handleSelect = (walletMeta: Wallet.Meta) => {
         walletManager.setSelectedWalletId(walletMeta.id)
         closeModal()

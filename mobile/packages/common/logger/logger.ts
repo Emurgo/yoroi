@@ -35,12 +35,3 @@ export const setLogger = (logger: App.Logger.Manager): void => {
  * Returns the shared logger (initialized by app) or noOpLogger
  */
 export const getLogger = (): App.Logger.Manager => sharedLogger
-
-/**
- * Get logger or return provided logger if given
- * Useful for edge cases where you might want to override the shared logger temporarily
- * @deprecated Prefer using getLogger() directly. This function is kept for backward compatibility.
- */
-export const getLoggerOrDefault = (
-  logger?: App.Logger.Manager,
-): App.Logger.Manager => logger ?? sharedLogger

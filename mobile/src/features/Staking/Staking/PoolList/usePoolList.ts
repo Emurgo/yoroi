@@ -7,6 +7,7 @@ import axios from 'axios'
 import * as React from 'react'
 
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {poolQueryKeys} from '~/queries'
 
 type ExplorerPoolInfoApiRes = {
   data?: {
@@ -100,12 +101,12 @@ export const usePoolList = (searchQuery?: string) => {
 
   // Create query key - React Query will refetch when this changes
   const queryKey = React.useMemo(
-    () => [
-      'poolList',
-      wallet.id,
-      wallet.networkManager.network,
-      normalizedSearch ?? '',
-    ],
+    () =>
+      poolQueryKeys.list(
+        wallet.id,
+        wallet.networkManager.network,
+        normalizedSearch,
+      ),
     [wallet.id, wallet.networkManager.network, normalizedSearch],
   )
 

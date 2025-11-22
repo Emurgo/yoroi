@@ -132,11 +132,14 @@ export const ReviewTxScreen = () => {
   })
 
   // Validate transaction CBOR if available - deferred to useEffect to avoid blocking render
-  const [validationResult, setValidationResult] = React.useState<{
-    valid: boolean
-    errors: string[]
-    warnings: string[]
-  } | undefined>(undefined)
+  const [validationResult, setValidationResult] = React.useState<
+    | {
+        valid: boolean
+        errors: string[]
+        warnings: string[]
+      }
+    | undefined
+  >(undefined)
 
   React.useEffect(() => {
     if (!params?.cbor) {

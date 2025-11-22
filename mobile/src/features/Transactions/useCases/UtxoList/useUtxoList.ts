@@ -7,6 +7,7 @@ import {useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useWalletEvent} from '~/features/WalletManager/hooks/useWalletEvent'
+import {utxoQueryKeys} from '~/queries'
 import {RawUtxo} from '~/wallets/types/other'
 
 export const useUtxoList = () => {
@@ -18,7 +19,7 @@ export const useUtxoList = () => {
   const getDerivationPath = addressVisualDerivationPathMaker(implementation)
   const queryClient = useQueryClient()
 
-  const queryKey = ['utxoList', walletId]
+  const queryKey = utxoQueryKeys.list(walletId)
   useWalletEvent(wallet, 'utxos', () =>
     queryClient.invalidateQueries({queryKey}),
   )

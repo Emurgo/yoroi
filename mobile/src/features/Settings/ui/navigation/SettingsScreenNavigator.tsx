@@ -236,10 +236,7 @@ const SettingsTabNavigator = () => {
   )
 
   return (
-    <Tab.Navigator
-      style={ta.bg_color_max}
-      screenOptions={screenOptions}
-    >
+    <Tab.Navigator style={ta.bg_color_max} screenOptions={screenOptions}>
       <Tab.Screen
         name="wallet-settings"
         getComponent={() => ChangeWalletSettingsScreen}

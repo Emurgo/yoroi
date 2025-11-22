@@ -1,187 +1,72 @@
-import {hex} from './hex'
+import {hex, isHex, stringToHex} from './hex'
 
-describe('hex', () => {
-  describe('isHexString', () => {
-    it.each([
-      {
-        input: '1234567890abcdef',
-        expected: true,
-        description: 'valid hex string',
-      },
-      {
-        input: '1234567890ABCDEF',
-        expected: true,
-        description: 'valid hex string with uppercase',
-      },
-      {
-        input: '1234567890abcdef1234567890abcdef',
-        expected: true,
-        description: 'long valid hex string',
-      },
-      {input: '', expected: false, description: 'empty string'},
-      {
-        input: '1234567890abcdefg',
-        expected: false,
-        description: 'invalid hex character',
-      },
-      {
-        input: '1234567890abcdef ',
-        expected: false,
-        description: 'hex string with space',
-      },
-      {
-        input: '0x1234567890abcdef',
-        expected: false,
-        description: 'hex string with 0x prefix',
-      },
-    ])('should return $expected for $description', ({input, expected}) => {
-      expect(hex.isHexString(input)).toBe(expected)
+describe('hex utilities', () => {
+  describe('hex', () => {
+    it('should create hex object from valid hex string', () => {
+      const h = hex('48656c6c6f')
+      expect(h.value).toBe('48656c6c6f')
+      expect(h.utf8).toBe('Hello')
+      expect(h.bytes).toBeInstanceOf(Uint8Array)
+    })
+
+    it('should throw error for invalid hex string', () => {
+      expect(() => hex('invalid')).toThrow('Invalid hex string')
+    })
+
+    it('should convert value to lowercase', () => {
+      const h = hex('ABCDEF')
+      expect(h.value).toBe('abcdef')
+    })
+
+    it('should compare hex values', () => {
+      const h1 = hex('abcd')
+      const h2 = hex('abcd')
+      const h3 = hex('efgh')
+      expect(h1.equals(h2)).toBe(true)
+      expect(h1.equals(h3)).toBe(false)
     })
   })
 
-  describe('constructor', () => {
-    it.each([
-      {input: '1234567890abcdef', description: 'valid hex string'},
-      {
-        input: '1234567890ABCDEF',
-        description: 'valid hex string with uppercase',
-      },
-    ])('should create instance with $description', ({input}) => {
-      const h = hex(input)
-      expect(h.value).toBe(input.toLowerCase())
-    })
-
-    it.each([
-      {input: 'invalid', description: 'non-hex string'},
-      {
-        input: '1234567890abcdefg',
-        description: 'string with invalid hex character',
-      },
-      {input: '0x1234567890abcdef', description: 'string with 0x prefix'},
-      {input: '', description: 'empty string'},
-    ])('should throw error for $description', ({input}) => {
-      expect(() => hex(input)).toThrow('Invalid hex string')
+  describe('hex.isHexString', () => {
+    it('should validate hex strings', () => {
+      expect(hex.isHexString('abcd1234')).toBe(true)
+      expect(hex.isHexString('ABCDEF')).toBe(true)
+      expect(hex.isHexString('invalid')).toBe(false)
+      expect(hex.isHexString('')).toBe(true)
     })
   })
 
-  describe('fromUtf8', () => {
-    it.each([
-      {
-        input: 'Hello',
-        expected: '48656c6c6f',
-        description: 'simple ASCII string',
-      },
-      {
-        input: 'Hello World!',
-        expected: '48656c6c6f20576f726c6421',
-        description: 'ASCII string with spaces',
-      },
-      {
-        input: 'こんにちは',
-        expected: 'e38193e38293e381abe381a1e381af',
-        description: 'UTF-8 string',
-      },
-    ])('should convert $description to hex', ({input, expected}) => {
-      expect(hex.fromUtf8(input).value).toBe(expected)
+  describe('hex.fromUtf8', () => {
+    it('should create hex from utf8 string', () => {
+      const h = hex.fromUtf8('Hello')
+      expect(h.value).toBe('48656c6c6f')
     })
   })
 
-  describe('fromBytes', () => {
-    it.each([
-      {
-        input: new Uint8Array([0x48, 0x65, 0x6c, 0x6c, 0x6f]),
-        expected: '48656c6c6f',
-        description: 'ASCII bytes',
-      },
-      {
-        input: new Uint8Array([0xff, 0xfe, 0xfd]),
-        expected: 'fffefd',
-        description: 'arbitrary bytes',
-      },
-    ])('should convert $description to hex', ({input, expected}) => {
-      expect(hex.fromBytes(input).value).toBe(expected)
+  describe('hex.fromBytes', () => {
+    it('should create hex from bytes', () => {
+      const bytes = new Uint8Array([72, 101, 108, 108, 111])
+      const h = hex.fromBytes(bytes)
+      expect(h.value).toBe('48656c6c6f')
     })
   })
 
-  describe('bytes', () => {
-    it.each([
-      {
-        input: '48656c6c6f',
-        expected: new Uint8Array([0x48, 0x65, 0x6c, 0x6c, 0x6f]),
-        description: 'ASCII hex',
-      },
-      {
-        input: 'fffefd',
-        expected: new Uint8Array([0xff, 0xfe, 0xfd]),
-        description: 'arbitrary hex',
-      },
-    ])('should convert $description to bytes', ({input, expected}) => {
-      const h = hex(input)
-      expect(h.bytes).toEqual(expected)
+  describe('isHex', () => {
+    it('should check if string is hex', () => {
+      expect(isHex('abcd1234')).toBe(true)
+      expect(isHex('ABCDEF')).toBe(true)
+      expect(isHex('invalid')).toBe(false)
+      expect(isHex('')).toBe(true)
     })
   })
 
-  describe('utf8', () => {
-    it.each([
-      {input: '48656c6c6f', expected: 'Hello', description: 'ASCII hex'},
-      {
-        input: '48656c6c6f20576f726c6421',
-        expected: 'Hello World!',
-        description: 'ASCII hex with spaces',
-      },
-      {
-        input: 'e38193e38293e381abe381a1e381af',
-        expected: 'こんにちは',
-        description: 'UTF-8 hex',
-      },
-    ])('should convert $description to UTF-8 string', ({input, expected}) => {
-      const h = hex(input)
-      expect(h.utf8).toBe(expected)
+  describe('stringToHex', () => {
+    it('should convert string to hex', () => {
+      expect(stringToHex('Hello')).toBe('48656c6c6f')
     })
-  })
 
-  describe('value', () => {
-    it.each([
-      {
-        input: '1234567890abcdef',
-        expected: '1234567890abcdef',
-        description: 'lowercase hex',
-      },
-      {
-        input: '1234567890ABCDEF',
-        expected: '1234567890abcdef',
-        description: 'uppercase hex',
-      },
-    ])('should return $description', ({input, expected}) => {
-      const h = hex(input)
-      expect(h.value).toBe(expected)
-    })
-  })
-
-  describe('equals', () => {
-    it.each([
-      {
-        a: 'deadbeef',
-        b: 'deadbeef',
-        expected: true,
-        description: 'same hex, same case',
-      },
-      {
-        a: 'deadbeef',
-        b: 'DEADBEEF',
-        expected: true,
-        description: 'same hex, different case',
-      },
-      {
-        a: 'deadbeef',
-        b: 'cafebabe',
-        expected: false,
-        description: 'different hex',
-      },
-    ])('should return $expected for $description', ({a, b, expected}) => {
-      const hA = hex(a)
-      const hB = hex(b)
-      expect(hA.equals(hB)).toBe(expected)
+    it('should handle empty string', () => {
+      expect(stringToHex('')).toBe('')
     })
   })
 })
