@@ -47,3 +47,23 @@ export const CardanoApi = {
 } as const
 
 export {API_ENDPOINTS}
+
+// Cardano wallet API types and makers
+export {CardanoBackend, WalletContext, ManagedCardanoApi} from './cardano/types'
+export {cardanoWalletApiMaker} from './cardano/api-maker'
+
+// Re-export API types for convenience
+export type {
+  AccountStateRequest,
+  AccountStateResponse,
+  BackendConfig,
+  FundInfoResponse,
+  RawTransaction,
+  RawUtxo,
+  TipStatusResponse,
+  TxHistoryRequest,
+  TxStatusRequest,
+  TxStatusResponse,
+  TxSubmissionStatus,
+  TxMetadata,
+} from './cardano/api-types'

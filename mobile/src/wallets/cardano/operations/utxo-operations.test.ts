@@ -1,6 +1,6 @@
 import {Portfolio} from '@yoroi/types'
 
-import type {RawUtxo} from '~/wallets/types/other'
+import type {RawUtxo} from '@yoroi/api'
 
 import {
   didUtxosUpdate,

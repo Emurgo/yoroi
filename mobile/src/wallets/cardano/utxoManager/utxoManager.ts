@@ -10,7 +10,7 @@ import {App, Portfolio} from '@yoroi/types'
 
 import {parseInt} from 'lodash'
 
-import {RawUtxo} from '~/wallets/types/other'
+import {RawUtxo} from '@yoroi/api'
 
 export const makeUtxoManager = async ({
   storage,

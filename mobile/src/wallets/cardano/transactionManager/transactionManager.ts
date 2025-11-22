@@ -9,16 +9,19 @@ import {defaultMemoize} from 'reselect'
 
 import {logger} from '~/kernel/logger/logger'
 import {
-  RawTransaction,
   TRANSACTION_STATUS,
-  TipStatusResponse,
   Transactions,
-  TxHistoryRequest,
   WalletTransaction,
-} from '~/wallets/types/other'
+} from '@yoroi/types'
+import {
+  RawTransaction,
+  TipStatusResponse,
+  TxHistoryRequest,
+} from '@yoroi/api'
 import {Version, versionCompare} from '~/wallets/utils/versioning'
 
 import * as yoroiApi from '../api/api'
+import {CardanoBackend} from '../../../../packages/api/cardano/types'
 import {ApiHistoryError} from '../errors'
 
 type TransactionManagerState = {

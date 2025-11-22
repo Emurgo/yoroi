@@ -27,7 +27,7 @@ import {useWalletEvent} from '~/features/WalletManager/hooks/useWalletEvent'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Space} from '~/ui/Space/Space'
-import {TransactionInfo} from '~/wallets/types/other'
+import {TransactionInfo} from '@yoroi/types'
 
 import {Action} from '../../common/Action/Action'
 import {mapStakingKeyStateToGovernanceAction} from '../../common/helpers'

@@ -1,6 +1,6 @@
 import {Portfolio} from '@yoroi/types'
 
-import {RawUtxo} from '~/wallets/types/other'
+import {RawUtxo} from '@yoroi/api'
 
 export function toBalanceManagerSyncArgs(
   rawUtxos: RawUtxo[],

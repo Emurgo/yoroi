@@ -1,6 +1,7 @@
 import {primaryTokenInfoMainnet} from '@yoroi/blockchains'
 
-import {RawTransaction, TRANSACTION_DIRECTION} from '~/wallets/types/other'
+import {TRANSACTION_DIRECTION} from '@yoroi/types'
+import {RawTransaction} from '@yoroi/api'
 import {Amounts} from '~/wallets/utils/utils'
 
 import {toCachedTx} from '../transactionManager/transactionManager'

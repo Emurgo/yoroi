@@ -15,7 +15,7 @@ import {Chain} from '@yoroi/types'
 import {BehaviorSubject, Observable, Subscription, interval} from 'rxjs'
 
 import {logger} from '~/kernel/logger/logger'
-import {TipStatusResponse} from '~/wallets/types/other'
+import {TipStatusResponse} from '@yoroi/api'
 
 import * as yoroiApi from './api'
 

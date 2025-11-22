@@ -20,7 +20,7 @@ import {Icon} from '~/ui/Icon'
 import {styleMap} from '~/ui/Icon/Direction'
 import {BalanceError} from '~/ui/PairedBalance/PairedBalance'
 import {YoroiWallet} from '~/wallets/cardano/types'
-import {WalletTransaction} from '~/wallets/types/other'
+import {WalletTransaction} from '@yoroi/types'
 import {
   formatDateRelative,
   formatTime,

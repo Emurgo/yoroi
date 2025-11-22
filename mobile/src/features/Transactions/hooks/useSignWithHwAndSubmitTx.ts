@@ -5,7 +5,7 @@ import {UseMutationOptions} from '@tanstack/react-query'
 
 import {useSubmitTx} from '~/features/Transactions/hooks/useSubmitTx'
 import {YoroiWallet} from '~/wallets/cardano/types'
-import {TxSubmissionStatus} from '~/wallets/types/other'
+import {TxSubmissionStatus} from '@yoroi/api'
 
 import {useSignTxWithHW} from './useSignTxWithHW'
 

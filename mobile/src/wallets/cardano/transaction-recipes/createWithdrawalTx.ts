@@ -19,7 +19,7 @@ import type {PublicKey} from '@emurgo/cross-csl-core'
 import BigNumber from 'bignumber.js'
 
 import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
-import type {AccountStateResponse} from '~/wallets/types/other'
+import type {AccountStateResponse} from '@yoroi/api'
 
 export type CreateWithdrawalTxParams = {
   utxos: ModernUtxo[]

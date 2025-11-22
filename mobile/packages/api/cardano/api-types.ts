@@ -1,33 +1,21 @@
-import {RemoteAccountState, RemoteCertificateMeta} from '@yoroi/staking'
-import {Balance, Portfolio} from '@yoroi/types'
-import {
-  TransactionStatus,
-  TransactionDirection,
-  TransactionType,
-  WalletTransaction,
-} from '@yoroi/types'
-
-import {CardanoTypes} from '../cardano/types'
-import {TransactionToken} from './tokens'
-
-// note(v-almonacid): this
-/**
- * wallet types
- */
-export type WalletState = {
-  lastGeneratedAddressIndex: number
-}
+import {RemoteAccountState} from '@yoroi/staking'
+import {Portfolio} from '@yoroi/types'
 
 /**
- * API-related types
+ * API-related types for Cardano backend communication
  */
+
 type RemoteAsset = {
   readonly amount: string
   readonly tokenId: Portfolio.Token.Id
   readonly policyId: string
   readonly name: string
 }
-// this is equivalent to yoroi-frontend's `RemoteUnspentOutput`
+
+/**
+ * Raw UTXO from backend
+ * Equivalent to yoroi-frontend's `RemoteUnspentOutput`
+ */
 export type RawUtxo = {
   readonly amount: string
   readonly receiver: string
@@ -36,13 +24,22 @@ export type RawUtxo = {
   readonly utxo_id: string
   readonly assets: ReadonlyArray<RemoteAsset>
 }
-// getAccountState
+
+/**
+ * Account state request
+ */
 export type AccountStateRequest = {
   addresses: Array<string>
 }
+
+/**
+ * Account state response
+ */
 export type AccountStateResponse = Record<string, null | RemoteAccountState>
 
-// bestblock
+/**
+ * Best block response
+ */
 type BestblockResponse = {
   height: number
   epoch: number | null | undefined
@@ -50,12 +47,18 @@ type BestblockResponse = {
   hash: string | null | undefined
   globalSlot: number | null | undefined
 }
-// tip status
+
+/**
+ * Tip status response
+ */
 export type TipStatusResponse = {
   safeBlock: BestblockResponse
   bestBlock: BestblockResponse
 }
-// tx history
+
+/**
+ * Transaction history request
+ */
 export type TxHistoryRequest = {
   addresses: Array<string>
   untilBlock: string
@@ -64,20 +67,23 @@ export type TxHistoryRequest = {
     tx: string
   }
 }
+
 type RemoteTransactionInputBase = {
   readonly address: string
   readonly amount: string
   readonly assets: Array<RemoteAsset>
 }
+
 type RemoteTransactionUtxoInput = {
   readonly id: string
   // concatenation of txHash || index
   readonly index: number
   readonly txHash: string
 }
-// not considering account txs for now
+
 type RemoteTransactionInput = RemoteTransactionInputBase &
   RemoteTransactionUtxoInput
+
 type RemoteTransactionOutput = {
   readonly address: string
   readonly amount: string
@@ -85,7 +91,7 @@ type RemoteTransactionOutput = {
 }
 
 /**
- * only present if TX is in a block
+ * Block metadata (only present if TX is in a block)
  */
 type RemoteTxBlockMeta = {
   readonly block_num: number
@@ -97,6 +103,8 @@ type RemoteTxBlockMeta = {
   readonly slot: number
 }
 
+import {RemoteCertificateMeta} from '@yoroi/staking'
+
 type RemoteTxInfo = {
   readonly type: 'byron' | 'shelley'
   readonly fee?: string
@@ -104,7 +112,7 @@ type RemoteTxInfo = {
   readonly hash: string
   readonly last_update: string
   // timestamp with timezone
-  readonly tx_state: TransactionStatus
+  readonly tx_state: string
   readonly inputs: Array<RemoteTransactionInput>
   readonly outputs: Array<RemoteTransactionOutput>
   readonly withdrawals: Array<{
@@ -118,33 +126,47 @@ type RemoteTxInfo = {
   readonly collateral_inputs?: Array<RemoteTransactionInput>
   readonly metadata?: TxMetadata
 }
+
+/**
+ * Raw transaction from backend
+ */
 export type RawTransaction = Partial<RemoteTxBlockMeta> & RemoteTxInfo
 
-// Catalyst
-type FundInfo = {
-  readonly id: number
-  readonly registrationStart: string
-  readonly registrationEnd: string
-  readonly votingStart?: string
-  readonly votingEnd?: string
-  readonly votingPowerThreshold: string // in ada
-}
-export type FundInfoResponse = {
-  readonly currentFund: FundInfo | null | undefined
-  readonly nextFund: FundInfo | null | undefined
-}
+/**
+ * Transaction metadata
+ */
+export type TxMetadata = Array<{
+  label: string
+  map_json?: Record<string, unknown> | Array<unknown>
+  text_scalar?: string | null
+}>
+
+/**
+ * Transaction submission status
+ */
 export type TxSubmissionStatus = {
   readonly status: 'WAITING' | 'FAILED' | 'MAX_RETRY_REACHED' | 'SUCCESS'
   readonly reason?: string
 }
+
+/**
+ * Transaction status request
+ */
 export type TxStatusRequest = {
   txHashes: Array<string>
 }
+
+/**
+ * Transaction status response
+ */
 export type TxStatusResponse = {
   readonly depth?: Record<string, number>
   readonly submissionStatus?: Record<string, TxSubmissionStatus>
 }
 
+/**
+ * Backend configuration
+ */
 export type BackendConfig = {
   API_ROOT: string
   TOKEN_INFO_SERVICE?: string
@@ -155,25 +177,23 @@ export type BackendConfig = {
   TX_HISTORY_RESPONSE_LIMIT: number
 }
 
-// Re-export transaction types from @yoroi/types
-export {
-  TRANSACTION_STATUS,
-  TRANSACTION_DIRECTION,
-  TRANSACTION_TYPE,
-  type TransactionStatus,
-  type TransactionDirection,
-  type TransactionType,
-  type TransactionAssurance,
-  type TransactionInfo,
-  type WalletTransaction,
-  type Transactions,
-  type TxMetadata,
-  type TxMetadataInfo,
-} from '@yoroi/types'
+/**
+ * Catalyst fund info
+ */
+type FundInfo = {
+  readonly id: number
+  readonly registrationStart: string
+  readonly registrationEnd: string
+  readonly votingStart?: string
+  readonly votingEnd?: string
+  readonly votingPowerThreshold: string // in ada
+}
 
-// TransactionInfo is now exported from @yoroi/types
-// Re-export for backward compatibility
-export type {TransactionInfo} from '@yoroi/types'
+/**
+ * Catalyst fund info response
+ */
+export type FundInfoResponse = {
+  readonly currentFund: FundInfo | null | undefined
+  readonly nextFund: FundInfo | null | undefined
+}
 
-// Re-export BaseAsset from @yoroi/types
-export type {BaseAsset} from '@yoroi/types'

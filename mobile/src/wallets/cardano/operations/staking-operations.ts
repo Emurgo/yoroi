@@ -103,7 +103,7 @@ export const getWalletStakingInfo = async (wallet: {
   rewardAddressHex: string
   getAllUtxosForKey: () => Array<CardanoTypes.CardanoAddressedUtxo>
   fetchAccountState: () => Promise<
-    import('~/wallets/types/other').AccountStateResponse
+    import('@yoroi/api').AccountStateResponse
   >
   balanceManager: YoroiWallet['balanceManager']
   portfolioPrimaryTokenInfo: Portfolio.Token.Info

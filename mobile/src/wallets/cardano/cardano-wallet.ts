@@ -1017,7 +1017,9 @@ export const makeCardanoWallet = (
     // =================== backend API =================== //
 
     async checkServerStatus() {
-      return legacyApi.checkServerStatus(this.networkManager.legacyApiBaseUrl)
+      return legacyApi.checkServerStatus(
+        this.networkManager.legacyApiBaseUrl,
+      )
     }
 
     async submitTransaction(base64SignedTx: string) {
@@ -1181,10 +1183,7 @@ export const makeCardanoWallet = (
     }
 
     async fetchFundInfo(): Promise<FundInfoResponse> {
-      return legacyApi.getFundInfo(
-        this.networkManager.legacyApiBaseUrl,
-        this.isMainnet,
-      )
+      return legacyApi.getFundInfo(this.networkManager.legacyApiBaseUrl)
     }
 
     async fetchTxStatus(request: TxStatusRequest): Promise<TxStatusResponse> {

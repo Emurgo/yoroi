@@ -7,7 +7,7 @@ import {
   TRANSACTION_TYPE,
   TransactionDirection,
   WalletTransaction,
-} from '~/wallets/types/other'
+} from '@yoroi/types'
 import {Amounts, Quantities, asQuantity} from '~/wallets/utils/utils'
 
 import {TransactionSummary} from './types'

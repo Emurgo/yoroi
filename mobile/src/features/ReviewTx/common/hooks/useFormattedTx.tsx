@@ -21,7 +21,7 @@ import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWalle
 import {YoroiWallet} from '~/wallets/cardano/types'
 import {deriveRewardAddressFromAddress} from '~/wallets/cardano/utils'
 import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
-import {RawUtxo} from '~/wallets/types/other'
+import {RawUtxo} from '@yoroi/api'
 import {asQuantity} from '~/wallets/utils/utils'
 
 import {

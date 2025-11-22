@@ -301,6 +301,21 @@ import {SwapProtocol} from './swap/protocol'
 import {SwapStorage} from './swap/storage'
 import {TransferEntry, TransferTarget, TransferTargets} from './transfer/state'
 import {WalletMeta} from './wallet/meta'
+import {
+  BaseAsset,
+  TransactionAssurance,
+  TransactionDirection,
+  TransactionInfo,
+  TransactionStatus,
+  TransactionType,
+  Transactions,
+  TRANSACTION_DIRECTION,
+  TRANSACTION_STATUS,
+  TRANSACTION_TYPE,
+  TxMetadata,
+  TxMetadataInfo,
+  WalletTransaction,
+} from './wallet/transactions'
 import {WalletAddressMode, WalletImplementation} from './wallet/wallet'
 
 export namespace App {
@@ -672,6 +687,42 @@ export namespace Wallet {
   export type Implementation = WalletImplementation
   export type AddressMode = WalletAddressMode
   export type Meta = WalletMeta
+
+  // Transaction types
+  export const TransactionStatus = TRANSACTION_STATUS
+  export type TransactionStatus = TransactionStatus
+  export const TransactionDirection = TRANSACTION_DIRECTION
+  export type TransactionDirection = TransactionDirection
+  export const TransactionType = TRANSACTION_TYPE
+  export type TransactionType = TransactionType
+  export type TransactionAssurance = TransactionAssurance
+  export type TransactionInfo = TransactionInfo
+  export type WalletTransaction = WalletTransaction
+  export type Transactions = Transactions
+  export type TxMetadata = TxMetadata
+  export type TxMetadataInfo = TxMetadataInfo
+  export type BaseAsset = BaseAsset
+}
+
+// Re-export BaseAsset at top level
+export type {BaseAsset} from './wallet/transactions'
+
+// Re-export transaction types at top level for convenience
+export type {
+  TransactionAssurance,
+  TransactionDirection,
+  TransactionInfo,
+  TransactionStatus,
+  TransactionType,
+  Transactions,
+  TxMetadata,
+  TxMetadataInfo,
+  WalletTransaction,
+}
+export {
+  TRANSACTION_DIRECTION,
+  TRANSACTION_STATUS,
+  TRANSACTION_TYPE,
 }
 
 export namespace Exchange {

@@ -15,7 +15,6 @@ export const features = {
   swapTokenLinks: true,
   utxoConsolidation: isDev,
   pushNotifications: true,
-  useBackendZero: true,
 }
 
 export const debugWalletInfo = {

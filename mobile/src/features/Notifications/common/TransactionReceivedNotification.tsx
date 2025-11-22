@@ -10,7 +10,7 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {Icon} from '~/ui/Icon'
 import {NotificationItem} from '~/ui/NotificationItem/NotificationItem'
 import {YoroiWallet} from '~/wallets/cardano/types'
-import {TransactionInfo} from '~/wallets/types/other'
+import {TransactionInfo} from '@yoroi/types'
 import {Amounts, Quantities} from '~/wallets/utils/utils'
 
 export const getTransactionReceivedNotificationTitle = (

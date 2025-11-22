@@ -4,7 +4,7 @@ import {
   TransactionDirection,
   TransactionStatus,
   WalletTransaction,
-} from '~/wallets/types/other'
+} from '@yoroi/types'
 
 /**
  * Summary information for a transaction, used in transaction lists

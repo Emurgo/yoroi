@@ -37,7 +37,7 @@ import {useCollateralInfo} from '~/wallets/cardano/utxoManager/useCollateralInfo
 import {useSetCollateralId} from '~/wallets/cardano/utxoManager/useSetCollateralId'
 import {collateralConfig, utxosMaker} from '~/wallets/cardano/utxoManager/utxos'
 import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
-import {RawUtxo} from '~/wallets/types/other'
+import {RawUtxo} from '@yoroi/api'
 import {Amounts, Quantities, asQuantity} from '~/wallets/utils/utils'
 
 import {CollateralInfoModal} from './CollateralInfoModal'

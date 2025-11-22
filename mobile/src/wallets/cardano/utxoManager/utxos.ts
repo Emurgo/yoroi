@@ -2,7 +2,7 @@ import {first} from '@yoroi/common'
 
 import BigNumber from 'bignumber.js'
 
-import {RawUtxo} from '~/wallets/types/other'
+import {RawUtxo} from '@yoroi/api'
 import {asQuantity} from '~/wallets/utils/utils'
 
 import {CollateralConfig} from './types'

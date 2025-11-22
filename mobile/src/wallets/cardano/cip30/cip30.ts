@@ -18,7 +18,8 @@ import * as _ from 'lodash'
 
 import {createCollateralEntry} from '~/features/Settings/ui/screens/ChangeWalletSettingsScreen/ManageCollateralScreen/helpers'
 import {logger} from '~/kernel/logger/logger'
-import {BaseAsset, RawUtxo} from '~/wallets/types/other'
+import {RawUtxo} from '@yoroi/api'
+import {BaseAsset} from '@yoroi/types'
 import {Utxos, asQuantity} from '~/wallets/utils/utils'
 import {CardanoMobile} from '~/wallets/wallets'
 

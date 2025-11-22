@@ -8,7 +8,7 @@ import {SyncWalletInfo} from '~/features/WalletManager/common/types'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {walletManager} from '~/features/WalletManager/wallet-manager'
 import {YoroiWallet} from '~/wallets/cardano/types'
-import {TRANSACTION_DIRECTION} from '~/wallets/types/other'
+import {TRANSACTION_DIRECTION} from '@yoroi/types'
 
 import {generateNotificationId} from './notifications'
 import {buildProcessedNotificationsStorage} from './processed-notifications-storage'

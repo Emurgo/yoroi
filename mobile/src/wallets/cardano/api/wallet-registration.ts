@@ -1,5 +1,6 @@
-import {API_ENDPOINTS} from '@yoroi/api'
 import {Chain} from '@yoroi/types'
+
+import {API_ENDPOINTS} from '../../../../packages/api/cardano/api/config'
 
 // @ts-ignore
 import QuickCrypto from 'react-native-quick-crypto'
@@ -63,20 +64,10 @@ export const extractPaymentKeyHashes = (addresses: string[]): string[] => {
 
 /**
  * Get backend-zero base URL from legacy API URL
+ * @deprecated Use getBackendZeroUrl from '@yoroi/api/cardano/utils/url-mapping' instead
+ * Re-exported from package to maintain backward compatibility
  */
-export const getBackendZeroUrl = (legacyApiUrl: string): string => {
-  if (legacyApiUrl.includes('api.yoroiwallet.com')) {
-    return API_ENDPOINTS[Chain.Network.Mainnet].root
-  }
-  if (legacyApiUrl.includes('preprod-backend.yoroiwallet.com')) {
-    return API_ENDPOINTS[Chain.Network.Preprod].root
-  }
-  if (legacyApiUrl.includes('preview-backend.emurgornd.com')) {
-    return API_ENDPOINTS[Chain.Network.Preview].root
-  }
-  // Default to mainnet if can't determine
-  return API_ENDPOINTS[Chain.Network.Mainnet].root
-}
+export {getBackendZeroUrl} from '../../../../packages/api/cardano/utils/url-mapping'
 
 /**
  * In-memory cache for wallet registrations (per session)
