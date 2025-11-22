@@ -1,7 +1,7 @@
 import {backendZeroApiMaker} from './adapters/backend-zero/api-maker'
 import {legacyApiMaker} from './adapters/legacy/api-maker'
 import {cardanoApiManagerMaker} from './manager'
-import {CardanoBackend, EndpointPreference, ManagedCardanoApi} from './types'
+import {EndpointPreference, ManagedCardanoApi} from './types'
 import {getBackendZeroUrl} from './utils/url-mapping'
 
 export const cardanoWalletApiMaker = ({
@@ -19,16 +19,17 @@ export const cardanoWalletApiMaker = ({
   })
   const legacyAdapter = legacyApiMaker({baseApiUrl})
 
-  // Default preferences (all backend-zero where available, otherwise legacy)
+  // Default preferences matching develop branch usage
+  // All endpoints use legacyApiBaseUrl in develop branch
   const defaultPreferences: EndpointPreference = {
-    getTipStatus: 'backend-zero',
-    fetchNewTxHistory: 'backend-zero',
-    filterUsedAddresses: 'backend-zero',
-    submitTransaction: 'backend-zero',
-    getAccountState: 'backend-zero',
-    bulkGetAccountState: 'backend-zero',
-    getPoolInfo: 'backend-zero',
-    fetchTxStatus: 'backend-zero',
+    getTipStatus: 'legacy', // Uses legacyApiBaseUrl in develop (via syncTxs)
+    fetchNewTxHistory: 'legacy', // Uses legacyApiBaseUrl in develop (via syncTxs)
+    filterUsedAddresses: 'legacy', // Uses legacyApiBaseUrl in develop
+    submitTransaction: 'legacy', // Uses legacyApiBaseUrl in develop
+    getAccountState: 'legacy', // Uses legacyApiBaseUrl in develop
+    bulkGetAccountState: 'legacy', // Uses legacyApiBaseUrl in develop
+    getPoolInfo: 'legacy', // Uses legacyApiBaseUrl in develop
+    fetchTxStatus: 'legacy', // Uses legacyApiBaseUrl in develop
     checkServerStatus: 'legacy', // Legacy only
     getFundInfo: 'legacy', // Legacy only
   } as const
@@ -39,4 +40,3 @@ export const cardanoWalletApiMaker = ({
     preferences: defaultPreferences,
   })
 }
-
