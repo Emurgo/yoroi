@@ -111,7 +111,9 @@ describe('asyncBehavior', () => {
         emptyRepresentation: null,
       })
 
-      const result = await (behavior.success as unknown as () => Promise<string>)()
+      const result = await (
+        behavior.success as unknown as () => Promise<string>
+      )()
       expect(result).toBe('test-data')
     })
 
@@ -121,7 +123,9 @@ describe('asyncBehavior', () => {
         emptyRepresentation: [] as string[],
       })
 
-      const result = await (behavior.empty as unknown as () => Promise<string[]>)()
+      const result = await (
+        behavior.empty as unknown as () => Promise<string[]>
+      )()
       expect(result).toEqual([])
     })
 
