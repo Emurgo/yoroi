@@ -1,3 +1,4 @@
+import {atomicToDecimal, truncateString} from '@yoroi/common'
 import {isTokenInfo as isPortfolioTokenInfo} from '@yoroi/portfolio'
 import {Balance, Portfolio} from '@yoroi/types'
 
@@ -51,10 +52,10 @@ const normalizeTokenAmount = (
   token: Balance.TokenInfo | Portfolio.Token.Info,
 ): BigNumber => {
   const decimals = getDecimals(token) ?? 0
-  const normalizationFactor = Math.pow(10, decimals)
-  return new BigNumber(quantity.toString())
-    .dividedBy(normalizationFactor)
-    .decimalPlaces(decimals)
+  return atomicToDecimal({
+    value: quantity,
+    decimals,
+  })
 }
 
 export const formatTokenAmount = (
@@ -98,13 +99,16 @@ export const formatTokenWithText = (
     ('kind' in token && token.kind === 'nft') ||
     ('type' in token && token.type === 'nft')
   ) {
-    return `${formatTokenAmount(quantity, token)} ${truncateWithEllipsis(token.name || token.fingerprint, maxLength)}`
+    return `${formatTokenAmount(quantity, token)} ${truncateString({
+      value: token.name || token.fingerprint,
+      maxLength,
+    })}`
   }
 
-  return `${formatTokenAmount(quantity, token)} ${truncateWithEllipsis(
-    token.ticker || token.name || token.fingerprint,
+  return `${formatTokenAmount(quantity, token)} ${truncateString({
+    value: token.ticker || token.name || token.fingerprint,
     maxLength,
-  )}`
+  })}`
 }
 
 export const formatTokenInteger = (
@@ -146,13 +150,6 @@ export const formatTokenFractional = (
     .replace(/[.|,]?0+$/, '')
 }
 
-const truncateWithEllipsis = (s: string, n: number) => {
-  if (s.length > n) {
-    return `${s.substr(0, Math.floor(n / 2))}...${s.substr(s.length - Math.floor(n / 2))}`
-  }
-
-  return s
-}
 
 // TODO(multi-asset): consider removing these
 
@@ -160,8 +157,10 @@ const formatAda = (
   quantity: Balance.Quantity,
   primaryTokenInfo: Portfolio.Token.Info,
 ) => {
-  const normalizationFactor = Math.pow(10, primaryTokenInfo.decimals)
-  const num = new BigNumber(quantity).dividedBy(normalizationFactor)
+  const num = atomicToDecimal({
+    value: quantity,
+    decimals: primaryTokenInfo.decimals,
+  })
   return num.toFormat(primaryTokenInfo.decimals)
 }
 

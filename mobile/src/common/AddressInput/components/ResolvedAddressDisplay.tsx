@@ -1,3 +1,4 @@
+import {truncateString} from '@yoroi/common'
 import {nameServerName} from '@yoroi/resolver'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Resolver} from '@yoroi/types'
@@ -29,7 +30,9 @@ export const ResolvedAddressDisplay = ({
     hide || selectedNameServer == null
       ? null
       : nameServerName[selectedNameServer]
-  const shortenAddress = hide ? '' : shortenString(resolvedAddress ?? '')
+  const shortenAddress = hide
+    ? ''
+    : truncateString({value: resolvedAddress ?? '', maxLength: 16})
   const resolvedAddressInfo = hide
     ? ''
     : `${strings.send.resolvedAddress}: ${shortenAddress}`
@@ -56,9 +59,3 @@ export const ResolvedAddressDisplay = ({
   )
 }
 
-const shortenString = (text: string) => {
-  if (text.length > 16) {
-    return text.substring(0, 8) + '...' + text.substring(text.length - 8)
-  }
-  return text
-}
