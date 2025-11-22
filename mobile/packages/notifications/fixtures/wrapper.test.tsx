@@ -1,5 +1,4 @@
 import {QueryClient} from '@tanstack/react-query'
-import * as React from 'react'
 
 import {wrapper} from './wrapper'
 

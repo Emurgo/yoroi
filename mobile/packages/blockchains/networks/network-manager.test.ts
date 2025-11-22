@@ -1,6 +1,6 @@
 import {getLogger} from '@yoroi/common'
 import {createTokenManagerMock} from '@yoroi/portfolio'
-import {App, Chain} from '@yoroi/types'
+import {Chain} from '@yoroi/types'
 
 import {protocolParamsPlaceholder} from '../cardano/constants'
 import {networkConfigs} from './network-configs'
