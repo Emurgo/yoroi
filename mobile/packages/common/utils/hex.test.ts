@@ -72,5 +72,15 @@ describe('hex utilities', () => {
     it('should handle empty string', () => {
       expect(stringToHex('')).toBe('')
     })
+
+    it('should handle special characters', () => {
+      expect(stringToHex('!@#$%')).toBe('2140232425')
+    })
+
+    it('should handle unicode characters', () => {
+      const result = stringToHex('🚀')
+      expect(result).toBeTruthy()
+      expect(typeof result).toBe('string')
+    })
   })
 })

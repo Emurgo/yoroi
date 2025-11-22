@@ -91,4 +91,28 @@ describe('useDebouncedCallback', () => {
 
     expect(callback).toHaveBeenCalledTimes(1)
   })
+
+  it('should call callback on second render when skipFirst is true', () => {
+    const callback = jest.fn()
+
+    const {rerender} = renderHook(
+      ({value}) => {
+        useDebouncedCallback(callback, value, 1000, true)
+      },
+      {initialProps: {value: 'value1'}},
+    )
+
+    // First render - should skip
+    act(() => {
+      jest.advanceTimersByTime(1000)
+    })
+    expect(callback).not.toHaveBeenCalled()
+
+    // Second render - should call
+    rerender({value: 'value2'})
+    act(() => {
+      jest.advanceTimersByTime(1000)
+    })
+    expect(callback).toHaveBeenCalledTimes(1)
+  })
 })

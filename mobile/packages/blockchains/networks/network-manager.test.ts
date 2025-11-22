@@ -11,7 +11,7 @@ jest.mock('@yoroi/common', () => {
   const actual = jest.requireActual('@yoroi/common')
   const mockLogger = {
     error: jest.fn(),
-    level: App.Logger.Level.Debug,
+    level: 'Debug' as const,
     debug: jest.fn(),
     log: jest.fn(),
     info: jest.fn(),
@@ -79,5 +79,15 @@ describe('buildNetworkManagers', () => {
       tokenManagers: mockTokenManagers,
     })
     expect(managers).toBeDefined()
+  })
+
+  it('should return frozen managers object', () => {
+    const managers = buildNetworkManagers({
+      tokenManagers: mockTokenManagers,
+      apiMaker: mockApiMaker,
+    })
+
+    // Verify managers are frozen (readonly) - Object.freeze prevents modifications
+    expect(Object.isFrozen(managers)).toBe(true)
   })
 })

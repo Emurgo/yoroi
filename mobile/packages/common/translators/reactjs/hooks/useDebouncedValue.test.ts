@@ -72,4 +72,17 @@ describe('useDebouncedValue', () => {
 
     expect(result.current).toBe('updated')
   })
+
+  it('should handle cleanup when timeoutRef is null', () => {
+    const {result, unmount} = renderHook(
+      ({value}) => useDebouncedValue(value, 1000),
+      {initialProps: {value: 'initial'}},
+    )
+
+    // Unmount before timeout fires
+    unmount()
+
+    // Should not throw
+    expect(result.current).toBe('initial')
+  })
 })

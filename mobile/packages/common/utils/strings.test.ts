@@ -81,6 +81,10 @@ describe('strings utilities', () => {
       expect(hexToAscii('')).toBe('')
       expect(hexToAscii('123')).toBe('') // odd length
     })
+
+    it('should handle hex with non-hex characters', () => {
+      expect(hexToAscii('48g56c6c6f')).toBe('') // contains 'g'
+    })
   })
 
   describe('asciiToHex', () => {

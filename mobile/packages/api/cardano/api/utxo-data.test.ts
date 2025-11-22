@@ -72,7 +72,6 @@ describe('getUtxoData', () => {
     )
   })
 
-
   it('handles fetcher errors gracefully', async () => {
     mockFetcher.mockRejectedValue(new Error('Network error'))
 
@@ -153,6 +152,83 @@ describe('getUtxoData', () => {
     const result = await fetchUtxo({txHash, txIndex})
 
     expect(result.output.dataHash).toBe('datum123')
+  })
+
+  it('handles output without $lovelaces', async () => {
+    const mockTxResponse = {
+      hash: txHash,
+      block: 'block123',
+      inputs: [],
+      outputs: [
+        {
+          address: 'addr1qxyz',
+          amount: {'policy1.asset1': '50'},
+          index: 0,
+        },
+      ],
+      fee: {},
+      certificates: [],
+      withdrawals: [],
+      when: '2023-01-01T00:00:00Z',
+    }
+    mockFetcher.mockResolvedValue(mockTxResponse)
+
+    const fetchUtxo = getUtxoData(baseUrl, mockFetcher)
+    const result = await fetchUtxo({txHash, txIndex})
+
+    expect(result.output.amount).toBe('0')
+  })
+
+  it('handles assetId without dot separator', async () => {
+    const mockTxResponse = {
+      hash: txHash,
+      block: 'block123',
+      inputs: [],
+      outputs: [
+        {
+          address: 'addr1qxyz',
+          amount: {$lovelaces: '1000000', policyonly: '100'},
+          index: 0,
+        },
+      ],
+      fee: {},
+      certificates: [],
+      withdrawals: [],
+      when: '2023-01-01T00:00:00Z',
+    }
+    mockFetcher.mockResolvedValue(mockTxResponse)
+
+    const fetchUtxo = getUtxoData(baseUrl, mockFetcher)
+    const result = await fetchUtxo({txHash, txIndex})
+
+    expect(result.output.assets).toHaveLength(1)
+    expect(result.output.assets[0]?.policyId).toBe('policyonly')
+    expect(result.output.assets[0]?.name).toBe('')
+  })
+
+  it('handles output without datumHash', async () => {
+    const mockTxResponse = {
+      hash: txHash,
+      block: 'block123',
+      inputs: [],
+      outputs: [
+        {
+          address: 'addr1qxyz',
+          amount: {$lovelaces: '1000000'},
+          index: 0,
+        },
+      ],
+      fee: {},
+      certificates: [],
+      withdrawals: [],
+      when: '2023-01-01T00:00:00Z',
+    }
+    mockFetcher.mockResolvedValue(mockTxResponse)
+
+    const fetchUtxo = getUtxoData(baseUrl, mockFetcher)
+    const result = await fetchUtxo({txHash, txIndex})
+
+    expect(result.output.dataHash).toBeNull()
   })
 })
 
