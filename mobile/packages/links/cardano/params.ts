@@ -234,7 +234,10 @@ export const getParamValidator =
         )
       }
       case 'height': {
+        // Height can be a string or number (converted during parsing)
         if (isString(value) && isValidBlockHeight(value)) break
+        if (typeof value === 'number' && value >= 0 && Number.isInteger(value))
+          break
         throw new Links.Errors.ParamsValidationFailed(
           `The param ${key} on ${config.scheme} ${config.authority} ${config.version} must be a valid block height (non-negative integer)`,
         )

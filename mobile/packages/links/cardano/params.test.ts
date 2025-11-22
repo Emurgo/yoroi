@@ -1,7 +1,6 @@
 import {Links} from '@yoroi/types'
 
 import {
-  configCardanoAddressV1,
   configCardanoBlockV1,
   configCardanoBrowseV1,
   configCardanoClaimV1,
@@ -205,7 +204,7 @@ describe('params', () => {
       it('should reject invalid addresses', () => {
         const validator = getParamValidator(config)
         expect(() => validator({key: 'address', value: 'invalid'})).toThrow()
-        expect(() => validator({key: 'address', value: 123})).toThrow()
+        expect(() => validator({key: 'address', value: 123 as any})).toThrow()
       })
     })
 
@@ -218,7 +217,7 @@ describe('params', () => {
 
       it('should reject non-string values', () => {
         const validator = getParamValidator(configCardanoClaimV1)
-        expect(() => validator({key: 'code', value: 123})).toThrow()
+        expect(() => validator({key: 'code', value: 123 as any})).toThrow()
       })
     })
 
@@ -370,7 +369,7 @@ describe('params', () => {
         expect(() =>
           validator({
             key: 'message',
-            value: ['msg1', 'msg2', 'a'.repeat(64)],
+            value: ['msg1', 'msg2', 'a'.repeat(64)] as any,
           }),
         ).not.toThrow()
       })
@@ -386,7 +385,7 @@ describe('params', () => {
         expect(() =>
           validator({
             key: 'message',
-            value: ['msg1', 'a'.repeat(65)],
+            value: ['msg1', 'a'.repeat(65)] as any,
           }),
         ).toThrow()
       })
