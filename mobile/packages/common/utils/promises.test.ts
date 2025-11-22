@@ -97,5 +97,14 @@ describe('promises utilities', () => {
       expect(results).toHaveLength(3)
       expect(results.sort()).toEqual([1, 2, 3])
     })
+
+    it('should handle empty asyncIterators array', async () => {
+      const results: number[] = []
+      // Empty array means promises.size starts at 0, so while loop never executes
+      for await (const result of runTasks<number>([].values(), 2)) {
+        results.push(result)
+      }
+      expect(results).toHaveLength(0)
+    })
   })
 })

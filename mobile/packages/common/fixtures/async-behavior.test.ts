@@ -94,14 +94,14 @@ describe('asyncBehavior', () => {
     })
 
     it('should include custom error handlers', () => {
-      const customError = () => Promise.reject(new Error('Custom'))
+      const customError = () => Promise.reject<string>(new Error('Custom'))
       const behavior = asyncBehavior.maker({
         data: 'test',
         emptyRepresentation: null,
-        otherErrors: {custom: customError},
+        otherErrors: {custom: customError as any},
       })
 
-      expect(behavior.error.custom).toBe(customError)
+      expect((behavior.error as any).custom).toBe(customError)
       expect(behavior.error.unknown).toBeDefined()
     })
 
@@ -111,17 +111,17 @@ describe('asyncBehavior', () => {
         emptyRepresentation: null,
       })
 
-      const result = await behavior.success()
+      const result = await (behavior.success as unknown as () => Promise<string>)()
       expect(result).toBe('test-data')
     })
 
     it('should call empty with representation', async () => {
       const behavior = asyncBehavior.maker({
         data: 'test',
-        emptyRepresentation: [],
+        emptyRepresentation: [] as string[],
       })
 
-      const result = await behavior.empty()
+      const result = await (behavior.empty as unknown as () => Promise<string[]>)()
       expect(result).toEqual([])
     })
 
@@ -132,7 +132,7 @@ describe('asyncBehavior', () => {
         emptyRepresentation: null,
       })
 
-      const promise = behavior.delayed()
+      const promise = (behavior.delayed as unknown as () => Promise<string>)()
       jest.advanceTimersByTime(1500)
       await expect(promise).resolves.toBe('delayed')
     })

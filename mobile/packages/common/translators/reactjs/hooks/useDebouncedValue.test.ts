@@ -107,4 +107,19 @@ describe('useDebouncedValue', () => {
 
     expect(result.current).toBe('updated2')
   })
+
+  it('should update when delay changes', () => {
+    const {result, rerender} = renderHook(
+      ({value, delay}) => useDebouncedValue(value, delay),
+      {initialProps: {value: 'initial', delay: 1000}},
+    )
+
+    rerender({value: 'updated', delay: 500})
+
+    act(() => {
+      jest.advanceTimersByTime(500)
+    })
+
+    expect(result.current).toBe('updated')
+  })
 })

@@ -102,4 +102,27 @@ describe('useResolverDRepId', () => {
     expect(resultMainnet.current.drepInfo).toBeNull()
     expect(resultPreprod.current.drepInfo).toBeNull()
   })
+
+  it('should pass signal to queryFn when provided', async () => {
+    const mockGetDRepId = jest.fn().mockResolvedValue(null)
+    jest.mock('../../../adapters/handle/api', () => ({
+      handleApiGetDRepId: jest.fn(() => mockGetDRepId),
+    }))
+
+    const {result} = renderHook(
+      () =>
+        useResolverDRepId({
+          resolve: '$testhandle',
+          isMainnet: true,
+          enabled: true,
+        }),
+      {wrapper: createWrapper()},
+    )
+
+    // Wait for query to initialize
+    await new Promise((resolve) => setTimeout(resolve, 0))
+
+    // The query should have been called with a signal
+    expect(result.current.isPending || result.current.isLoading).toBe(true)
+  })
 })

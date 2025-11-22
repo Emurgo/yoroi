@@ -51,4 +51,8 @@ describe('toBigInt', () => {
   it('should return negative value when absolute is false', () => {
     expect(toBigInt('-5', 0, false)).toBe(-5n)
   })
+
+  it('should handle absolute with negative value', () => {
+    expect(toBigInt('-5', 0, true)).toBe(5n)
+  })
 })

@@ -115,4 +115,54 @@ describe('useDebouncedCallback', () => {
     })
     expect(callback).toHaveBeenCalledTimes(1)
   })
+
+  it('should update when callback changes', () => {
+    const callback1 = jest.fn()
+    const callback2 = jest.fn()
+
+    const {rerender} = renderHook(
+      ({callback}) => {
+        useDebouncedCallback(callback, 'value', 1000, false)
+      },
+      {initialProps: {callback: callback1}},
+    )
+
+    act(() => {
+      jest.advanceTimersByTime(1000)
+    })
+
+    expect(callback1).toHaveBeenCalledTimes(1)
+    expect(callback2).not.toHaveBeenCalled()
+
+    rerender({callback: callback2})
+
+    act(() => {
+      jest.advanceTimersByTime(1000)
+    })
+
+    expect(callback2).toHaveBeenCalledTimes(1)
+  })
+
+  it('should update when delay changes', () => {
+    const callback = jest.fn()
+
+    const {rerender} = renderHook(
+      ({delay}) => {
+        useDebouncedCallback(callback, 'value', delay, false)
+      },
+      {initialProps: {delay: 1000}},
+    )
+
+    act(() => {
+      jest.advanceTimersByTime(500)
+    })
+
+    rerender({delay: 500})
+
+    act(() => {
+      jest.advanceTimersByTime(500)
+    })
+
+    expect(callback).toHaveBeenCalledTimes(1)
+  })
 })

@@ -230,6 +230,68 @@ describe('getUtxoData', () => {
 
     expect(result.output.dataHash).toBeNull()
   })
+
+  it('handles asset amount with unexpected type (object)', async () => {
+    const mockTxResponse = {
+      hash: txHash,
+      block: 'block123',
+      inputs: [],
+      outputs: [
+        {
+          address: 'addr1qxyz',
+          amount: {
+            '$lovelaces': '1000000',
+            'policy1.asset1': {unexpected: 'type'} as any, // object type
+          },
+          index: 0,
+        },
+      ],
+      fee: {},
+      certificates: [],
+      withdrawals: [],
+      when: '2023-01-01T00:00:00Z',
+    }
+    mockFetcher.mockResolvedValue(mockTxResponse)
+
+    const fetchUtxo = getUtxoData(baseUrl, mockFetcher)
+    const result = await fetchUtxo({txHash, txIndex})
+
+    expect(result.output.assets).toHaveLength(1)
+    expect(
+      result.output.assets.find((a) => a.assetId === 'policy1.asset1')?.amount,
+    ).toBe('0')
+  })
+
+  it('handles asset amount with boolean type', async () => {
+    const mockTxResponse = {
+      hash: txHash,
+      block: 'block123',
+      inputs: [],
+      outputs: [
+        {
+          address: 'addr1qxyz',
+          amount: {
+            '$lovelaces': '1000000',
+            'policy1.asset1': true as any, // boolean type
+          },
+          index: 0,
+        },
+      ],
+      fee: {},
+      certificates: [],
+      withdrawals: [],
+      when: '2023-01-01T00:00:00Z',
+    }
+    mockFetcher.mockResolvedValue(mockTxResponse)
+
+    const fetchUtxo = getUtxoData(baseUrl, mockFetcher)
+    const result = await fetchUtxo({txHash, txIndex})
+
+    expect(result.output.assets).toHaveLength(1)
+    expect(
+      result.output.assets.find((a) => a.assetId === 'policy1.asset1')?.amount,
+    ).toBe('0')
+  })
 })
 
 describe('parseUtxoDataResponse', () => {
