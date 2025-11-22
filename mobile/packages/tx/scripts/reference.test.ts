@@ -206,9 +206,10 @@ describe('reference scripts', () => {
     it('should use fallback when protocol params not provided', () => {
       const result = estimateReferenceScriptFee({}, 1000)
 
-      // Fallback: scriptSize * 0.000044
+      // Fallback: scriptSize * 0.000044 = 1000 * 0.000044 = 0.044
       expect(parseFloat(result)).toBeCloseTo(0.044, 3)
-      expect(parseInt(result, 10)).toBeGreaterThan(0)
+      // Result is a string representation, so check it's not empty
+      expect(result).toBeTruthy()
     })
   })
 

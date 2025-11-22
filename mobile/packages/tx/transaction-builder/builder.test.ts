@@ -1,5 +1,6 @@
-import {Balance} from '@yoroi/types'
+import {Balance, Chain} from '@yoroi/types'
 
+import {NoOutputsError} from '../errors'
 import {ModernUtxo} from '../utxo/models'
 import {
   addCertificate,
@@ -13,6 +14,8 @@ import {
   addOutputs,
   addReferenceInput,
   addWithdrawal,
+  buildTransaction,
+  buildTransactionCBOR,
   createTransactionBuilder,
   excludeUtxo,
   excludeUtxos,
@@ -27,6 +30,7 @@ import {
   setTTLWithBuffer,
   setValidityInterval,
 } from './builder'
+import {createCardanoHaskellConfig} from './helpers'
 import type {
   TransactionCertificate,
   TransactionOutput,
@@ -339,6 +343,145 @@ describe('transaction builder', () => {
         amounts,
       )
       expect(isTransactionReady(stateWithBoth)).toBe(true)
+    })
+  })
+
+  describe('buildTransaction', () => {
+    const protocolParams: Pick<
+      Chain.Cardano.ProtocolParams,
+      | 'keyDeposit'
+      | 'linearFee'
+      | 'coinsPerUtxoByte'
+      | 'poolDeposit'
+      | 'epoch'
+      | 'maxBlockBodySize'
+      | 'maxBlockHeaderSize'
+      | 'maxTxSize'
+      | 'maxReferenceScriptsSize'
+      | 'stakePoolPledgeInfluence'
+      | 'monetaryExpansion'
+      | 'treasuryExpansion'
+      | 'minPoolCost'
+      | 'maxExecutionUnits'
+      | 'minFeeReferenceScript'
+    > = {
+      linearFee: {coefficient: '44', constant: '155381'},
+      poolDeposit: '500000000',
+      keyDeposit: '2000000',
+      coinsPerUtxoByte: '4310',
+      epoch: 0,
+      maxBlockBodySize: '90112',
+      maxBlockHeaderSize: '1100',
+      maxTxSize: '16384',
+      maxReferenceScriptsSize: '204800',
+      stakePoolPledgeInfluence: {numerator: '3', denominator: '10'},
+      monetaryExpansion: {numerator: '3', denominator: '1000'},
+      treasuryExpansion: {numerator: '1', denominator: '5'},
+      minPoolCost: '340000000',
+      maxExecutionUnits: {
+        perTransaction: {memory: '14000000', cpu: '10000000000'},
+        perBlock: {memory: '62000000', cpu: '20000000000'},
+      },
+      minFeeReferenceScript: {
+        coinsPerByte: {numerator: '15', denominator: '1'},
+        tierStepBytes: '25600',
+        multiplier: '1.2',
+      },
+    }
+    const protocolConfig = createCardanoHaskellConfig(protocolParams, 0)
+
+    it('should throw NoOutputsError when no outputs and no change address', async () => {
+      const state = createTransactionBuilder()
+      const utxo = createMockUtxo('hash1', 0, {'.': '1000000'})
+      const stateWithInput = addInput(state, utxo)
+
+      await expect(
+        buildTransaction(stateWithInput, protocolConfig),
+      ).rejects.toThrow(NoOutputsError)
+    })
+
+    it('should throw error when excluded UTXO is used as input', async () => {
+      const state = createTransactionBuilder()
+      const utxo = createMockUtxo('hash1', 0, {'.': '1000000'})
+      const stateWithInput = addInput(state, utxo)
+      const stateWithExclusion = excludeUtxo(stateWithInput, 'hash1', 0)
+      const stateWithOutput = addOutput(stateWithExclusion, 'addr_test1', {
+        '.': '500000',
+      })
+
+      await expect(
+        buildTransaction(stateWithOutput, protocolConfig),
+      ).rejects.toThrow('excluded but used as input')
+    })
+
+    it('should throw error when excluded UTXO is used as collateral', async () => {
+      const state = createTransactionBuilder()
+      const utxo = createMockUtxo('hash1', 0, {'.': '1000000'})
+      const stateWithCollateral = addCollateralInput(state, utxo)
+      const stateWithExclusion = excludeUtxo(stateWithCollateral, 'hash1', 0)
+      const stateWithOutput = addOutput(stateWithExclusion, 'addr_test1', {
+        '.': '500000',
+      })
+      const stateWithInput = addInput(stateWithOutput, utxo)
+
+      await expect(
+        buildTransaction(stateWithInput, protocolConfig),
+      ).rejects.toThrow('excluded but used as collateral')
+    })
+  })
+
+  describe('buildTransactionCBOR', () => {
+    const protocolParams: Pick<
+      Chain.Cardano.ProtocolParams,
+      | 'keyDeposit'
+      | 'linearFee'
+      | 'coinsPerUtxoByte'
+      | 'poolDeposit'
+      | 'epoch'
+      | 'maxBlockBodySize'
+      | 'maxBlockHeaderSize'
+      | 'maxTxSize'
+      | 'maxReferenceScriptsSize'
+      | 'stakePoolPledgeInfluence'
+      | 'monetaryExpansion'
+      | 'treasuryExpansion'
+      | 'minPoolCost'
+      | 'maxExecutionUnits'
+      | 'minFeeReferenceScript'
+    > = {
+      linearFee: {coefficient: '44', constant: '155381'},
+      poolDeposit: '500000000',
+      keyDeposit: '2000000',
+      coinsPerUtxoByte: '4310',
+      epoch: 0,
+      maxBlockBodySize: '90112',
+      maxBlockHeaderSize: '1100',
+      maxTxSize: '16384',
+      maxReferenceScriptsSize: '204800',
+      stakePoolPledgeInfluence: {numerator: '3', denominator: '10'},
+      monetaryExpansion: {numerator: '3', denominator: '1000'},
+      treasuryExpansion: {numerator: '1', denominator: '5'},
+      minPoolCost: '340000000',
+      maxExecutionUnits: {
+        perTransaction: {memory: '14000000', cpu: '10000000000'},
+        perBlock: {memory: '62000000', cpu: '20000000000'},
+      },
+      minFeeReferenceScript: {
+        coinsPerByte: {numerator: '15', denominator: '1'},
+        tierStepBytes: '25600',
+        multiplier: '1.2',
+      },
+    }
+    const protocolConfig = createCardanoHaskellConfig(protocolParams, 0)
+
+    it('should throw NoOutputsError when no outputs and no change address', async () => {
+      const state = createTransactionBuilder()
+      const utxo = createMockUtxo('hash1', 0, {'.': '1000000'})
+      const stateWithInput = addInput(state, utxo)
+
+      await expect(
+        buildTransactionCBOR(stateWithInput, protocolConfig),
+      ).rejects.toThrow(NoOutputsError)
     })
   })
 })
