@@ -1,11 +1,17 @@
 import {API_ENDPOINTS} from '@yoroi/api'
-import {ExplorerPoolInfo} from '@yoroi/staking'
+import {getLogger} from '@yoroi/common'
+import {
+  DEFAULT_SATURATION_THRESHOLD,
+  ExplorerPoolInfo,
+  poolInfoApiMaker,
+} from '@yoroi/staking'
 import {Chain} from '@yoroi/types'
 
-import {useInfiniteQuery, useQueryClient} from '@tanstack/react-query'
+import {useInfiniteQuery, useQuery, useQueryClient} from '@tanstack/react-query'
 import axios from 'axios'
 import * as React from 'react'
 
+import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {poolQueryKeys} from '~/queries'
 
@@ -146,7 +152,150 @@ export const usePoolList = (searchQuery?: string) => {
     enabled: true,
   })
 
-  const pools = React.useMemo(() => data?.pages.flat() ?? [], [data?.pages])
+  const {networkManager} = useSelectedNetwork()
+
+  // Fetch pool transition info to get preferred pools
+  const poolInfoApi = React.useMemo(
+    () =>
+      poolInfoApiMaker({
+        legacyApiBaseUrl: networkManager.legacyApiBaseUrl,
+        zeroApiUrl: apiUrl,
+      }),
+    [networkManager.legacyApiBaseUrl, apiUrl],
+  )
+
+  const transitionDataQuery = useQuery({
+    queryKey: ['poolTransitionInfo', wallet.networkManager.network],
+    queryFn: () => poolInfoApi.getPoolTransitionInfoPublic(),
+    enabled: wallet.isMainnet && !normalizedSearch, // Only fetch for mainnet and when not searching
+    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+    gcTime: 10 * 60 * 1000, // Keep in cache for 10 minutes
+    retry: 2,
+  })
+
+  // Extract preferred pool IDs from transition data
+  const preferredPoolIds = React.useMemo(() => {
+    const transitionData = transitionDataQuery.data
+    if (!transitionData?.new) {
+      return new Set<string>()
+    }
+
+    // Flatten all preferred pool IDs from all groups
+    const allPreferredIds = new Set<string>()
+    for (const groupName of Object.keys(transitionData.new)) {
+      const poolIds = transitionData.new[groupName]
+      if (Array.isArray(poolIds)) {
+        poolIds.forEach((id) => allPreferredIds.add(id))
+      }
+    }
+
+    return allPreferredIds
+  }, [transitionDataQuery.data])
+
+  // Memoize sorted array for query key to avoid recreating it
+  const preferredPoolIdsArray = React.useMemo(
+    () => Array.from(preferredPoolIds).sort(),
+    [preferredPoolIds],
+  )
+
+  // Get saturation threshold from transition data or use default
+  const saturationThreshold = React.useMemo(() => {
+    const transitionData = transitionDataQuery.data
+    const threshold =
+      transitionData?.saturationThreshold ?? DEFAULT_SATURATION_THRESHOLD
+    // Ensure threshold is between 0 and 1
+    if (threshold < 0 || threshold > 1) {
+      return DEFAULT_SATURATION_THRESHOLD
+    }
+    return threshold
+  }, [transitionDataQuery.data])
+
+  // Fetch preferred pools individually if they're not in the loaded pages
+  const preferredPoolsQuery = useQuery({
+    queryKey: [
+      'preferredPools',
+      wallet.networkManager.network,
+      preferredPoolIdsArray.join(','),
+    ],
+    queryFn: async () => {
+      if (preferredPoolIds.size === 0) return []
+
+      const logger = getLogger()
+      // Fetch all preferred pools in parallel
+      const poolPromises = preferredPoolIdsArray.map((poolId) =>
+        poolInfoApi.getPool(poolId).catch((error) => {
+          logger.warn('Failed to fetch preferred pool', {
+            origin: 'staking',
+            operation: 'usePoolList',
+            poolId,
+            error: error instanceof Error ? error.message : String(error),
+          })
+          return null
+        }),
+      )
+
+      const results = await Promise.all(poolPromises)
+      return results.filter((pool): pool is ExplorerPoolInfo => pool !== null)
+    },
+    enabled:
+      wallet.isMainnet &&
+      !normalizedSearch &&
+      preferredPoolIds.size > 0 &&
+      !!transitionDataQuery.data,
+    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+    retry: 2,
+  })
+
+  // Sort pools: preferred non-saturated pools first, then rest
+  const pools = React.useMemo(() => {
+    const allPools = data?.pages.flat() ?? []
+    const fetchedPreferredPools = preferredPoolsQuery.data ?? []
+
+    if (allPools.length === 0 && fetchedPreferredPools.length === 0) {
+      return []
+    }
+
+    // If no preferred pools, return original order
+    if (preferredPoolIds.size === 0) {
+      return allPools
+    }
+
+    // Merge fetched preferred pools with loaded pools, avoiding duplicates
+    // Use Set for O(1) lookup performance
+    const loadedPoolIds = new Set(allPools.map((p) => p.id))
+    const mergedPools = [
+      ...allPools,
+      ...fetchedPreferredPools.filter((p) => !loadedPoolIds.has(p.id)),
+    ]
+
+    // Separate pools into preferred non-saturated, preferred saturated, and others
+    const preferredNonSaturated: ExplorerPoolInfo[] = []
+    const preferredSaturated: ExplorerPoolInfo[] = []
+    const others: ExplorerPoolInfo[] = []
+
+    for (const pool of mergedPools) {
+      if (preferredPoolIds.has(pool.id)) {
+        const saturation = Number(pool.saturation)
+        const isSaturated =
+          isNaN(saturation) || saturation > saturationThreshold
+        if (!isSaturated) {
+          preferredNonSaturated.push(pool)
+        } else {
+          preferredSaturated.push(pool)
+        }
+      } else {
+        others.push(pool)
+      }
+    }
+
+    // Return: preferred non-saturated first, then preferred saturated, then others
+    return [...preferredNonSaturated, ...preferredSaturated, ...others]
+  }, [
+    data?.pages,
+    preferredPoolIds,
+    saturationThreshold,
+    preferredPoolsQuery.data,
+  ])
 
   // Prefetch next page automatically when current page finishes loading
   // But only prefetch ONE page ahead to avoid infinite loops
