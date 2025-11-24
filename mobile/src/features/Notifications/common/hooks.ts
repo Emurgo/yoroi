@@ -253,12 +253,10 @@ const initLocalNotifications = (manager: YoroiNotifications.Manager) => {
 
 type UseInitNotificationsProps = {
   localEnabled: boolean
-  pushEnabled?: boolean
 }
 
 export const useInitNotifications = ({
   localEnabled,
-  pushEnabled = true,
 }: UseInitNotificationsProps) => {
   const manager = useNotificationManager()
   const walletNavigation = useWalletNavigation()
@@ -267,8 +265,8 @@ export const useInitNotifications = ({
     [localEnabled, manager],
   )
   React.useEffect(
-    () => (pushEnabled ? initPushNotifications(walletNavigation) : undefined),
-    [walletNavigation, pushEnabled],
+    () => initPushNotifications(walletNavigation),
+    [walletNavigation],
   )
   useTransactionReceivedNotifications({enabled: localEnabled})
   usePrimaryTokenPriceChangedNotification({enabled: false})
