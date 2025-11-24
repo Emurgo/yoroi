@@ -26,6 +26,7 @@ import {useDeepLinkWatcher} from '~/features/Links/hooks/useDeepLinkWatcher'
 import {useLinksRequestAction} from '~/features/Links/hooks/useLinksRequestAction'
 import {PushNotificationNavigationHandler} from '~/features/Notifications/common/PushNotificationNavigationHandler'
 import {useInitNotifications} from '~/features/Notifications/common/hooks'
+import {usePushNotificationsEnabled} from '~/features/Notifications/common/usePushNotificationsEnabled'
 import {NotificationUIHandler} from '~/features/Notifications/useCases/NotificationUIHandler'
 import {NotificationsDevScreen} from '~/features/Notifications/useCases/NotificationsDevScreen'
 import {SetupWalletNavigator} from '~/features/SetupWallet/SetupWalletNavigator'
@@ -45,6 +46,7 @@ export const AppNavigator = () => {
   const firstAction = useFirstAction()
   const afterLoginAction = useAfterLoginAction()
   const strings = useStrings()
+  const pushNotificationsEnabled = usePushNotificationsEnabled()
 
   // Enable deep link watching
   useDeepLinkWatcher()
@@ -59,6 +61,7 @@ export const AppNavigator = () => {
 
   useInitNotifications({
     localEnabled: true,
+    pushEnabled: pushNotificationsEnabled,
   })
 
   return (
