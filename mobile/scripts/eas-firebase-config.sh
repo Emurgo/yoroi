@@ -51,7 +51,32 @@ if [[ ! -f "google-services.json" ]]; then
   echo "ERROR: Failed to create google-services.json"
   exit 1
 fi
-echo "✓ Created google-services.json"
+
+# Validate that this is actually a production config (not dev)
+PROJECT_ID=$(grep -o '"project_id": *"[^"]*"' google-services.json | head -1 | sed 's/.*"project_id": *"\([^"]*\)".*/\1/')
+if [[ -z "${PROJECT_ID}" ]]; then
+  echo "ERROR: Failed to extract project_id from google-services.json"
+  echo "The Firebase config file may be malformed or missing the project_id field."
+  exit 1
+fi
+if [[ "${PROJECT_ID}" == "yoroi-mobile-dev-1" ]]; then
+  echo "ERROR: Firebase config contains dev project ID 'yoroi-mobile-dev-1'"
+  echo "The EAS secret FIREBASE_GOOGLE_SERVICES_PROD appears to contain the development config."
+  echo "Please update the secret with the production Firebase config."
+  exit 1
+fi
+echo "✓ Created google-services.json (project: ${PROJECT_ID})"
+
+# Copy to android/app/ if it exists (from previous build or if prebuild already ran)
+# Expo prebuild will copy from project root to android/app/ automatically, but this ensures
+# it's in place if android/app/ already exists
+if [[ -d "android/app" ]]; then
+  echo "Copying google-services.json to android/app/..."
+  cp google-services.json android/app/google-services.json
+  echo "✓ Copied google-services.json to android/app/"
+else
+  echo "Note: android/app/ will be created by Expo prebuild, which will copy google-services.json automatically"
+fi
 
 # Decode and write iOS Firebase config
 echo "Creating GoogleService-Info.plist from secret..."
@@ -62,7 +87,32 @@ if [[ ! -f "GoogleService-Info.plist" ]]; then
   echo "ERROR: Failed to create GoogleService-Info.plist"
   exit 1
 fi
-echo "✓ Created GoogleService-Info.plist"
+
+# Validate that this is actually a production config (not dev)
+IOS_PROJECT_ID=$(grep -A 1 "PROJECT_ID" GoogleService-Info.plist | grep -o '<string>[^<]*</string>' | head -1 | sed 's/<string>\(.*\)<\/string>/\1/')
+if [[ -z "${IOS_PROJECT_ID}" ]]; then
+  echo "ERROR: Failed to extract PROJECT_ID from GoogleService-Info.plist"
+  echo "The Firebase config file may be malformed or missing the PROJECT_ID field."
+  exit 1
+fi
+if [[ "${IOS_PROJECT_ID}" == "yoroi-mobile-dev-1" ]]; then
+  echo "ERROR: Firebase iOS config contains dev project ID 'yoroi-mobile-dev-1'"
+  echo "The EAS secret FIREBASE_GOOGLE_SERVICES_IOS_PROD appears to contain the development config."
+  echo "Please update the secret with the production Firebase config."
+  exit 1
+fi
+echo "✓ Created GoogleService-Info.plist (project: ${IOS_PROJECT_ID})"
+
+# Copy to ios/ if it exists (from previous build or if prebuild already ran)
+# Expo prebuild will copy from project root to ios/ automatically, but this ensures
+# it's in place if ios/ already exists
+if [[ -d "ios" ]]; then
+  echo "Copying GoogleService-Info.plist to ios/..."
+  cp GoogleService-Info.plist ios/GoogleService-Info.plist
+  echo "✓ Copied GoogleService-Info.plist to ios/"
+else
+  echo "Note: ios/ will be created by Expo prebuild, which will copy GoogleService-Info.plist automatically"
+fi
 
 echo "EAS Firebase Config Injection: Complete"
 echo "Production Firebase configs are now in place for build"

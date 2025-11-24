@@ -238,6 +238,22 @@ export const legalQueryKeys = {
 }
 
 // ============================================================================
+// Settings/Firebase Queries
+// ============================================================================
+
+export const settingsQueryKeys = {
+  /**
+   * Query key for Firebase configuration
+   * @param isAuthDev - Whether auth dev mode is enabled
+   * @param hasPermission - Whether notification permission is granted
+   */
+  firebaseConfig: (
+    isAuthDev: boolean,
+    hasPermission: boolean,
+  ): QueryKey => ['useFirebaseConfig', isAuthDev, hasPermission],
+}
+
+// ============================================================================
 // Utility Functions
 // ============================================================================
 
