@@ -50,8 +50,10 @@ export const StakingCenter = () => {
     React.useState(false)
 
   const {openModal, closeModal} = useModal()
-  const {isParticipating: isParticipatingInGovernance} =
-    useGovernanceParticipation()
+  const {
+    isParticipating: isParticipatingInGovernance,
+    isLoading: isGovernanceLoading,
+  } = useGovernanceParticipation()
 
   useFocusEffect(
     React.useCallback(() => {
@@ -139,7 +141,11 @@ export const StakingCenter = () => {
       const poolId = selectedPoolHashes[0]
 
       // Check if user is participating in governance
-      if (!isParticipatingInGovernance && !hasShownGovernanceModal) {
+      if (
+        !isParticipatingInGovernance &&
+        !hasShownGovernanceModal &&
+        !isGovernanceLoading
+      ) {
         // Show governance required modal
         setHasShownGovernanceModal(true)
 
@@ -171,6 +177,53 @@ export const StakingCenter = () => {
     }
   }
 
+  const handlePoolDetailDelegate = React.useCallback(
+    (poolId: string) => {
+      // Debug logging
+
+      // Check if user is participating in governance
+      if (
+        !isParticipatingInGovernance &&
+        !hasShownGovernanceModal &&
+        !isGovernanceLoading
+      ) {
+        // Show governance required modal
+        setHasShownGovernanceModal(true)
+
+        openModal({
+          title: strings.staking.governanceRequiredTitle,
+          content: <GovernanceRequiredModal.Content />,
+          footer: (
+            <GovernanceRequiredModal.Footer
+              onDelegateToYoroiDRep={() => {
+                closeModal()
+                setShowLoadingModal(true)
+                setSelectedPoolId(poolId)
+              }}
+              onDelegateStakeOnly={() => {
+                closeModal()
+                setShowLoadingModal(true)
+                setSelectedPoolId(poolId)
+              }}
+            />
+          ),
+          height: governanceRequiredModalHeight,
+        })
+      } else {
+        setShowLoadingModal(true)
+        setSelectedPoolId(poolId)
+      }
+    },
+    [
+      isParticipatingInGovernance,
+      isGovernanceLoading,
+      hasShownGovernanceModal,
+      openModal,
+      closeModal,
+      strings,
+    ],
+  )
+
   const shouldDisplayPoolIDInput = !wallet.isMainnet
   const shouldDisplayPoolList = wallet.isMainnet && url != null
 
@@ -180,7 +233,7 @@ export const StakingCenter = () => {
       style={[a.flex_1, a.px_lg, ta.bg_color_max]}
     >
       {shouldDisplayPoolIDInput && (
-        <PoolDetailScreen onPressDelegate={setSelectedPoolId} />
+        <PoolDetailScreen onPressDelegate={handlePoolDetailDelegate} />
       )}
 
       {shouldDisplayPoolList && (
