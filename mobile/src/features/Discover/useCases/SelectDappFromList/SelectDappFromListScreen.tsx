@@ -191,7 +191,8 @@ const useFilteredDappList = (tab: TDAppTabs, categoriesSelected: string[]) => {
   }
 
   // Use config recommended dapps from remote config
-  const logoBaseUrl = 'https://daehx1qv45z7c.cloudfront.net'
+  const logoBaseUrl =
+    'https://raw.githubusercontent.com/Emurgo/yoroi-config/refs/heads/main/images'
   const dapps = React.useMemo((): DAppItem[] => {
     if (!config?.dapps?.recommended) return []
     return config.dapps.recommended.map((dapp) => ({
