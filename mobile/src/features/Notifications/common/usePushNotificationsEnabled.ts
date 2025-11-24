@@ -1,7 +1,10 @@
 import {useRemoteConfig} from '~/features/RemoteConfig/hooks/useRemoteConfig'
 
 export const usePushNotificationsEnabled = () => {
-  const {config} = useRemoteConfig()
+  const {config, isLoading, isError} = useRemoteConfig()
 
-  return config?.features?.pushNotifications ?? true
+  return isLoading || isError
+    ? false
+    : (config?.features?.pushNotifications ?? true)
 }
+cd
