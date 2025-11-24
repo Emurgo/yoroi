@@ -7,4 +7,3 @@ export const usePushNotificationsEnabled = () => {
     ? false
     : (config?.features?.pushNotifications ?? true)
 }
-cd
