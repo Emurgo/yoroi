@@ -253,12 +253,12 @@ const initLocalNotifications = (manager: YoroiNotifications.Manager) => {
 
 type UseInitNotificationsProps = {
   localEnabled: boolean
-  pushEnabled: boolean
+  pushEnabled?: boolean
 }
 
 export const useInitNotifications = ({
   localEnabled,
-  pushEnabled,
+  pushEnabled = true,
 }: UseInitNotificationsProps) => {
   const manager = useNotificationManager()
   const walletNavigation = useWalletNavigation()
