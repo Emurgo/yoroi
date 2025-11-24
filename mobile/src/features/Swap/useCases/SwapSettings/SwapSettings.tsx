@@ -7,6 +7,7 @@ import * as React from 'react'
 import {ScrollView, Text, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {useRemoteConfig} from '~/features/RemoteConfig/hooks/useRemoteConfig'
 import {useSwap} from '~/features/Swap/common/useSwap'
 import {useLanguage} from '~/kernel/i18n/LanguageProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
@@ -57,11 +58,24 @@ const toggleAggregator = (
   }
 }
 
+// Map aggregator keys to display names
+const getAggregatorDisplayName = (aggregator: Swap.Aggregator): string => {
+  const displayNames: Record<Swap.Aggregator, string> = {
+    [Swap.Aggregator.Dexhunter]: 'DexHunter',
+    [Swap.Aggregator.Muesliswap]: 'MuesliSwap',
+    [Swap.Aggregator.Minswap]: 'Minswap',
+    [Swap.Aggregator.Steelswap]: 'SteelSwap',
+  }
+  return displayNames[aggregator] ?? aggregator
+}
+
 export const SwapSettings = () => {
   const {numberLocale} = useLanguage()
   const {palette: p} = useTheme()
+  const {config} = useRemoteConfig()
 
   const swapForm = useSwap()
+  const partners = config?.swap?.partners ?? {}
   const [aggregator, setAggregator] = React.useState(
     swapForm.managerSettings.routingPreference,
   )
@@ -229,59 +243,47 @@ export const SwapSettings = () => {
 
               <SettingsSwitch
                 value={aggregator === 'auto'}
-                onValueChange={() =>
+                onValueChange={() => {
+                  // Build list of enabled aggregators based on partners keys
+                  const enabledAggregators = Object.keys(partners).filter(
+                    (key): key is Swap.Aggregator =>
+                      partners[key as Swap.Aggregator] !== undefined,
+                  ) as Swap.Aggregator[]
                   assignAggregator(
-                    aggregator === 'auto'
-                      ? ['muesliswap', 'dexhunter', 'minswap']
-                      : 'auto',
+                    aggregator === 'auto' ? enabledAggregators : 'auto',
                   )
-                }
+                }}
               />
             </View>
 
             {aggregator !== 'auto' && (
               <>
-                <View style={[a.flex_row, a.justify_between, a.align_center]}>
-                  <Text style={[a.body_1_lg_regular, {color: p.text_gray_max}]}>
-                    DexHunter
-                  </Text>
+                {Object.keys(partners).map((key) => {
+                  const aggregatorKey = key as Swap.Aggregator
+                  return (
+                    <View
+                      key={aggregatorKey}
+                      style={[a.flex_row, a.justify_between, a.align_center]}
+                    >
+                      <Text
+                        style={[a.body_1_lg_regular, {color: p.text_gray_max}]}
+                      >
+                        {getAggregatorDisplayName(aggregatorKey)}
+                      </Text>
 
-                  <SettingsSwitch
-                    value={aggregator.includes('dexhunter')}
-                    onValueChange={() => {
-                      const next = toggleAggregator(aggregator, 'dexhunter')
-                      assignAggregator(next.length === 0 ? 'auto' : next)
-                    }}
-                  />
-                </View>
-
-                <View style={[a.flex_row, a.justify_between, a.align_center]}>
-                  <Text style={[a.body_1_lg_regular, {color: p.text_gray_max}]}>
-                    MuesliSwap
-                  </Text>
-
-                  <SettingsSwitch
-                    value={aggregator.includes('muesliswap')}
-                    onValueChange={() => {
-                      const next = toggleAggregator(aggregator, 'muesliswap')
-                      assignAggregator(next.length === 0 ? 'auto' : next)
-                    }}
-                  />
-                </View>
-
-                <View style={[a.flex_row, a.justify_between, a.align_center]}>
-                  <Text style={[a.body_1_lg_regular, {color: p.text_gray_max}]}>
-                    Minswap
-                  </Text>
-
-                  <SettingsSwitch
-                    value={aggregator.includes('minswap')}
-                    onValueChange={() => {
-                      const next = toggleAggregator(aggregator, 'minswap')
-                      assignAggregator(next.length === 0 ? 'auto' : next)
-                    }}
-                  />
-                </View>
+                      <SettingsSwitch
+                        value={aggregator.includes(aggregatorKey)}
+                        onValueChange={() => {
+                          const next = toggleAggregator(
+                            aggregator,
+                            aggregatorKey,
+                          )
+                          assignAggregator(next.length === 0 ? 'auto' : next)
+                        }}
+                      />
+                    </View>
+                  )
+                })}
               </>
             )}
           </View>

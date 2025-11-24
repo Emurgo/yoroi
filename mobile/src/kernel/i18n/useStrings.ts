@@ -545,6 +545,7 @@ export const useStrings = () => {
           shelleyWallet: f(settingsMessages.aboutShelleyWallet),
           unknownWalletType: f(settingsMessages.aboutUnknownWalletType),
           fcmToken: f(settingsMessages.aboutFcmToken),
+          firebaseProjectId: f(settingsMessages.aboutFirebaseProjectId),
         },
         enableLoginWithOs: {
           error: f(globalMessages.error),

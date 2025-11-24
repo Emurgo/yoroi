@@ -22,7 +22,7 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {Copiable} from '~/ui/Copiable/Copiable'
 
 import {useNavigateTo} from '../../../../hooks/useNavigateTo'
-import {useFCMToken} from './useFCMToken'
+import {useFirebaseConfig} from './useFirebaseConfig'
 
 const TAP_COUNT_THRESHOLD = 5
 const TAP_TIMEOUT_MS = 2000
@@ -63,7 +63,7 @@ const DevModeFeedback = React.memo(({message}: {message: string}) => {
 export const AboutScreen = () => {
   const strings = useStrings()
   const {atoms: ta} = useTheme()
-  const FCMToken = useFCMToken()
+  const firebaseConfig = useFirebaseConfig()
   const navigation = useNavigateTo()
   const {isAuthDev, toggleDevMode} = useAuth()
   const [tapCount, setTapCount] = React.useState(0)
@@ -159,20 +159,36 @@ export const AboutScreen = () => {
           </Text>
         </View>
 
-        {FCMToken != null && (
+        {firebaseConfig?.fcmToken != null && (
           <View style={[a.flex_row, a.justify_between, a.align_center]}>
             <Text style={[a.body_1_lg_medium, ta.text_gray_medium]}>
               {strings.settings.about.fcmToken}
             </Text>
 
-            <Copiable text={FCMToken}>
+            <Copiable text={firebaseConfig.fcmToken}>
               <Text
                 style={[a.body_1_lg_regular, ta.text_gray_medium]}
                 numberOfLines={1}
               >
-                {`${FCMToken.slice(0, 8)}...${FCMToken.slice(-8)}`}
+                {`${firebaseConfig.fcmToken.slice(0, 8)}...${firebaseConfig.fcmToken.slice(-8)}`}
               </Text>
             </Copiable>
+          </View>
+        )}
+
+        {firebaseConfig?.projectId != null && (
+          <View style={[a.flex_row, a.justify_between, a.align_center]}>
+            <Text style={[a.body_1_lg_medium, ta.text_gray_medium]}>
+              {strings.settings.about.firebaseProjectId}
+            </Text>
+
+            <Text
+              style={[a.body_1_lg_regular, ta.text_gray_medium]}
+              numberOfLines={1}
+            >
+              {firebaseConfig.projectId}{' '}
+              {firebaseConfig.hasPermission ? '✅' : '❌'}
+            </Text>
           </View>
         )}
       </SafeAreaView>

@@ -108,7 +108,10 @@ export const settingsMessages = defineMessages({
     id: 'components.settings.walletsettingscreen.fcmToken',
     defaultMessage: '!!!FCM Token',
   },
-
+  aboutFirebaseProjectId: {
+    id: 'components.settings.walletsettingscreen.firebaseProjectId',
+    defaultMessage: '!!!Firebase Project',
+  },
   // Enable Login with OS
   enableLoginWithOsHeading: {
     id: 'components.settings.biometricslinkscreen.heading',
