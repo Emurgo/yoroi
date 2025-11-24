@@ -3,6 +3,17 @@ set -euo pipefail
 
 echo "EAS pre-install: Rust setup"
 
+# Inject Firebase production configs if this is a production build
+# This must happen BEFORE Expo prebuild runs, so the config is in place when prebuild copies files
+if [[ "${EAS_BUILD_PROFILE:-}" == "production" ]]; then
+  echo "Running Firebase config injection for production build..."
+  bash ./scripts/eas-firebase-config.sh || {
+    echo "ERROR: Firebase config injection failed"
+    echo "Production builds require Firebase config secrets. Build cannot continue."
+    exit 1
+  }
+fi
+
 # # Only run on iOS builds
 # if [[ "${EAS_BUILD_PLATFORM:-}" != "ios" ]]; then
 #   echo "Skipping Rust install (platform: ${EAS_BUILD_PLATFORM:-unknown})"
