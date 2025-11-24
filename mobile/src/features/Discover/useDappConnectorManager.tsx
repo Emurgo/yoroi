@@ -2,11 +2,13 @@ import {useAsyncStorage} from '@yoroi/common'
 import {DappConnection, DappConnector} from '@yoroi/dapp-connector'
 
 import {Transaction} from '@emurgo/cross-csl-core'
+import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
+import {removeRouteFromNavigationState} from '~/kernel/navigation/common/helpers'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {cip30LedgerExtensionMaker} from '~/wallets/cardano/cip30/cip30-ledger'
 import {YoroiWallet} from '~/wallets/cardano/types'
@@ -21,13 +23,15 @@ import {useConfirmHWConnectionModal} from './common/ConfirmHWConnectionModal'
 import {userRejectedError} from './common/errors'
 import {createDappConnector} from './common/helpers'
 import {useConfirmConnection} from './common/useConfirmConnection'
+import {useDappList} from './common/useDappList'
 import {useShowCollateralNotFoundAlert} from './common/useShowCollateralNotFoundAlert'
 
 export const useDappConnectorManager = () => {
   const appStorage = useAsyncStorage()
-  const {navigateToDiscoverBrowserDapp} = useWalletNavigation()
+  const navigation = useNavigation()
+  const {navigateToDiscoverBrowserDapp, navigateToTxReview} =
+    useWalletNavigation()
   const {wallet, meta} = useSelectedWallet()
-  const {navigateToTxReview} = useWalletNavigation()
   const {tabs, tabActiveIndex} = useBrowser()
   const dappCollateralRequestUtils = useDappCollateralRequestUtils(wallet)
 
@@ -41,84 +45,94 @@ export const useDappConnectorManager = () => {
   const signData = useSignData()
   const signDataWithHW = useSignDataWithHW()
 
+  const {data: dappList} = useDappList()
+
   const handleSignTx = React.useCallback(
     ({cbor, manager}: {cbor: string; manager: DappConnector}) => {
-      return new Promise<string>((resolve, reject) => {
+      return new Promise<string>(async (resolve, reject) => {
         let shouldResolve = true
-        return manager.getDAppList().then(async ({dapps}) => {
-          const dappsConnected = await manager.listAllConnections()
-          const matchingDappConnection =
-            activeTabOrigin != null
-              ? dappsConnected.find((dapp) =>
-                  dapp.dappOrigin.includes(activeTabOrigin),
-                )
-              : null
-
-          if (matchingDappConnection?.dappOrigin != null) {
-            const isDappRequestingCollateral =
-              dappCollateralRequestUtils.getIsDappRequestingCollateral(
-                matchingDappConnection.dappOrigin,
+        const dapps = dappList?.dapps || []
+        const dappsConnected = await manager.listAllConnections()
+        const matchingDappConnection =
+          activeTabOrigin != null
+            ? dappsConnected.find((dapp) =>
+                dapp.dappOrigin.includes(activeTabOrigin),
               )
+            : null
 
-            if (isDappRequestingCollateral) {
-              if (!dappCollateralRequestUtils.hasCollateral()) {
-                dappCollateralRequestUtils.showCollateralNotFoundAlert()
-                reject(new Error('handleSignTx:: collateral needed'))
-                return
-              }
+        if (matchingDappConnection?.dappOrigin != null) {
+          const isDappRequestingCollateral =
+            dappCollateralRequestUtils.getIsDappRequestingCollateral(
+              matchingDappConnection.dappOrigin,
+            )
 
-              dappCollateralRequestUtils.removeCollateralRequestedDappsId(
-                matchingDappConnection.dappOrigin,
-              )
+          if (isDappRequestingCollateral) {
+            if (!dappCollateralRequestUtils.hasCollateral()) {
+              dappCollateralRequestUtils.showCollateralNotFoundAlert()
+              reject(new Error('handleSignTx:: collateral needed'))
+              return
             }
+
+            dappCollateralRequestUtils.removeCollateralRequestedDappsId(
+              matchingDappConnection.dappOrigin,
+            )
           }
+        }
 
-          const matchingDapp =
-            activeTabOrigin != null
-              ? dapps.find((dapp) => dapp.origins.includes(activeTabOrigin))
-              : null
+        const matchingDapp =
+          activeTabOrigin != null
+            ? dapps.find((dapp) => dapp.origins.includes(activeTabOrigin))
+            : null
 
-          navigateToTxReview({
-            cbor,
-            preventSubmit: true,
-            context: 'dapp',
-            createdBy: matchingDapp != null && (
-              <CreatedByInfoItem
-                logo={matchingDapp.logo}
-                url={matchingDapp.uri}
-              />
-            ),
-            onSuccessWithoutFeedback: (args) => {
-              shouldResolve = false
-              if (isEmptyString(args?.rootKey) || args?.rootKey == null) {
-                reject(
-                  new Error(
-                    'useDappConnectorManager::handleSignTx: invalid state',
-                  ),
-                )
-                return
-              }
+        navigateToTxReview({
+          cbor,
+          preventSubmit: true,
+          context: 'dapp',
+          createdBy: matchingDapp != null && (
+            <CreatedByInfoItem
+              logo={matchingDapp.logo}
+              url={matchingDapp.uri}
+              name={matchingDapp.name}
+            />
+          ),
+          onSuccessWithoutFeedback: (args) => {
+            shouldResolve = false
+            if (isEmptyString(args?.rootKey) || args?.rootKey == null) {
+              reject(
+                new Error(
+                  'useDappConnectorManager::handleSignTx: invalid state',
+                ),
+              )
+              return
+            }
 
-              resolve(args?.rootKey)
-              navigateToDiscoverBrowserDapp()
-            },
-            onCancel: () => {
-              if (!shouldResolve) return
+            resolve(args?.rootKey)
+            navigateToDiscoverBrowserDapp()
+            // Remove review-tx-routes from navigation stack after navigating back to browser
+            // Use setTimeout to ensure navigation completes before removing the route
+            // Increase maxDepth to ensure we traverse up to WalletNavigator where review-tx-routes is located
+            setTimeout(() => {
+              removeRouteFromNavigationState(navigation, 'review-tx-routes', {
+                maxDepth: 5,
+              })
+            }, 100)
+          },
+          onCancel: () => {
+            if (!shouldResolve) return
+            shouldResolve = false
+            reject(userRejectedError())
+          },
+          onClose: () => {
+            if (shouldResolve) {
               shouldResolve = false
               reject(userRejectedError())
-            },
-            onClose: () => {
-              if (shouldResolve) {
-                shouldResolve = false
-                reject(userRejectedError())
-              }
-            },
-            onErrorWithoutFeedback: (error) => {
-              shouldResolve = false
-              logger.error('useDappConnectorManager::handleSignTx', {error})
-              reject(error)
-            },
-          })
+            }
+          },
+          onErrorWithoutFeedback: (error) => {
+            shouldResolve = false
+            logger.error('useDappConnectorManager::handleSignTx', {error})
+            reject(error)
+          },
         })
       })
     },
@@ -127,72 +141,80 @@ export const useDappConnectorManager = () => {
       navigateToTxReview,
       dappCollateralRequestUtils,
       navigateToDiscoverBrowserDapp,
+      dappList?.dapps,
+      navigation,
     ],
   )
 
   const handleSignTxWithHW = React.useCallback(
-    ({
-      cbor,
-      partial,
-      manager,
-    }: {
-      cbor: string
-      partial?: boolean
-      manager: DappConnector
-    }) => {
+    ({cbor, partial}: {cbor: string; partial?: boolean}) => {
       return new Promise<Transaction>((resolve, reject) => {
         let shouldResolve = true
-        return manager.getDAppList().then(({dapps}) => {
-          const matchingDapp =
-            activeTabOrigin != null
-              ? dapps.find((dapp) => dapp.origins.includes(activeTabOrigin))
-              : null
-          navigateToTxReview({
-            cbor,
-            partial,
-            preventSubmit: true,
-            context: 'dapp',
-            createdBy: matchingDapp != null && (
-              <CreatedByInfoItem
-                logo={matchingDapp.logo}
-                url={matchingDapp.uri}
-              />
-            ),
-            onSuccessWithoutFeedback: (args) => {
-              shouldResolve = false
-              if (!args?.tx) {
-                reject(
-                  new Error(
-                    'useDappConnectorManager::handleSignTxWithHW: invalid state',
-                  ),
-                )
-                return
-              }
-              resolve(args?.tx)
-              navigateToDiscoverBrowserDapp()
-            },
-            onErrorWithoutFeedback: (error) => {
-              shouldResolve = false
-              logger.error('useDappConnectorManager::handleSignTxWithHW', {
-                error,
+        const dapps = dappList?.dapps || []
+        const matchingDapp =
+          activeTabOrigin != null
+            ? dapps.find((dapp) => dapp.origins.includes(activeTabOrigin))
+            : null
+        navigateToTxReview({
+          cbor,
+          partial,
+          preventSubmit: true,
+          context: 'dapp',
+          createdBy: matchingDapp != null && (
+            <CreatedByInfoItem
+              logo={matchingDapp.logo}
+              url={matchingDapp.uri}
+              name={matchingDapp.name}
+            />
+          ),
+          onSuccessWithoutFeedback: (args) => {
+            shouldResolve = false
+            if (!args?.tx) {
+              reject(
+                new Error(
+                  'useDappConnectorManager::handleSignTxWithHW: invalid state',
+                ),
+              )
+              return
+            }
+            resolve(args?.tx)
+            navigateToDiscoverBrowserDapp()
+            // Remove review-tx-routes from navigation stack after navigating back to browser
+            // Use setTimeout to ensure navigation completes before removing the route
+            // Increase maxDepth to ensure we traverse up to WalletNavigator where review-tx-routes is located
+            setTimeout(() => {
+              removeRouteFromNavigationState(navigation, 'review-tx-routes', {
+                maxDepth: 5,
               })
-              reject(error)
-            },
-            onCancel: () => {
-              if (!shouldResolve) return
-              shouldResolve = false
-              reject(userRejectedError())
-            },
-            onClose: () => {
-              if (!shouldResolve) return
-              shouldResolve = false
-              reject(userRejectedError())
-            },
-          })
+            }, 100)
+          },
+          onErrorWithoutFeedback: (error) => {
+            shouldResolve = false
+            logger.error('useDappConnectorManager::handleSignTxWithHW', {
+              error,
+            })
+            reject(error)
+          },
+          onCancel: () => {
+            if (!shouldResolve) return
+            shouldResolve = false
+            reject(userRejectedError())
+          },
+          onClose: () => {
+            if (!shouldResolve) return
+            shouldResolve = false
+            reject(userRejectedError())
+          },
         })
       })
     },
-    [activeTabOrigin, navigateToTxReview, navigateToDiscoverBrowserDapp],
+    [
+      activeTabOrigin,
+      navigateToTxReview,
+      navigateToDiscoverBrowserDapp,
+      dappList?.dapps,
+      navigation,
+    ],
   )
 
   const handleSendReorganisationTx = React.useCallback(

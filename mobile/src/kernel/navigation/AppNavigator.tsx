@@ -24,13 +24,14 @@ import {LegalAgreement} from '~/features/Legal/common/types'
 import {useLegalAgreement} from '~/features/Legal/hooks/useLegalAgreement'
 import {useDeepLinkWatcher} from '~/features/Links/hooks/useDeepLinkWatcher'
 import {useLinksRequestAction} from '~/features/Links/hooks/useLinksRequestAction'
+import {PushNotificationNavigationHandler} from '~/features/Notifications/common/PushNotificationNavigationHandler'
 import {useInitNotifications} from '~/features/Notifications/common/hooks'
 import {NotificationUIHandler} from '~/features/Notifications/useCases/NotificationUIHandler'
 import {NotificationsDevScreen} from '~/features/Notifications/useCases/NotificationsDevScreen'
 import {SetupWalletNavigator} from '~/features/SetupWallet/SetupWalletNavigator'
 import {useHasWallets} from '~/features/WalletManager/hooks/useHasWallets'
 
-import {agreementDate, isDev} from '../constants'
+import {agreementDate} from '../constants'
 import {features} from '../features'
 import {useStrings} from '../i18n/useStrings'
 import {WalletNavigator} from './WalletNavigator'
@@ -40,9 +41,9 @@ import {FirstAction} from './types'
 const Stack = createStackNavigator()
 
 export const AppNavigator = () => {
+  const {isAuthDev, isLoggedOut, isLoggedIn} = useAuth()
   const {palette: p} = useTheme()
   const firstAction = useFirstAction()
-  const {isLoggedOut, isLoggedIn} = useAuth()
   const afterLoginAction = useAfterLoginAction()
   const strings = useStrings()
 
@@ -57,7 +58,6 @@ export const AppNavigator = () => {
     [p],
   )
 
-  // Enable notifications inside navigation context
   useInitNotifications({
     localEnabled: true,
     pushEnabled: features.pushNotifications,
@@ -153,7 +153,7 @@ export const AppNavigator = () => {
         )}
 
         {/* Development */}
-        {isDev && (
+        {isAuthDev && (
           <Stack.Group>
             <Stack.Screen
               name="developer"
@@ -173,6 +173,7 @@ export const AppNavigator = () => {
       </Stack.Navigator>
 
       <NotificationUIHandler />
+      {isLoggedIn && <PushNotificationNavigationHandler />}
     </>
   )
 }

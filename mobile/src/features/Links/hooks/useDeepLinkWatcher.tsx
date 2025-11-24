@@ -3,6 +3,7 @@ import {linksYoroiParser, useLinks} from '@yoroi/links'
 import * as Linking from 'expo-linking'
 import * as React from 'react'
 
+import {isDev} from '~/kernel/constants'
 import {logger} from '~/kernel/logger/logger'
 
 export const useDeepLinkWatcher = () => {
@@ -15,7 +16,7 @@ export const useDeepLinkWatcher = () => {
         logger.debug('useDeepLinkWatcher: link is malformated, ignored')
         return
       }
-      if (parsedAction.params?.isSandbox === true && __DEV__ === false) {
+      if (parsedAction.params?.isSandbox === true && isDev === false) {
         logger.debug('useDeepLinkWatcher: link is sandboxed, ignored')
         return
       }

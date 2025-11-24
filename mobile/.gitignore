@@ -48,3 +48,7 @@ yarn-error.*
 
 .env.local
 .pnpm-lock.yaml
+
+# Production Firebase configs (should be injected via EAS secrets)
+# Keep dev configs in repo, but ignore production ones
+firebase/production/

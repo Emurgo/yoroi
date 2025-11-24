@@ -8,6 +8,7 @@ import * as React from 'react'
 import {useNotificationDisplaySettings} from '~/features/Settings/hooks/useNotificationDisplaySettings'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {
+  isAuthRoute,
   isTxHistoryRoute,
   isWalletSelectionRoute,
 } from '~/kernel/navigation/common/helpers'
@@ -57,21 +58,34 @@ const useCollectNewNotifications = ({enabled}: {enabled: boolean}) => {
     () => isTxHistoryRoute(navigatorState),
     [navigatorState],
   )
+  const isAuthScreen = React.useMemo(
+    () => isAuthRoute(navigatorState),
+    [navigatorState],
+  )
 
   React.useEffect(() => {
-    if (!enabled || !isString(selectedWalletId) || isWalletSelectionScreen)
-      return
     const pushEvent = (event: Notifications.Event) => {
       setEvents((e) => [...e, event])
     }
 
     const pushSubscription = pushNotificationsManager.newEvents$.subscribe(
       (e) => {
-        if (e.trigger === Notifications.Trigger.Push) {
+        if (e.trigger === Notifications.Trigger.Push && !isAuthScreen) {
           pushEvent(e)
         }
       },
     )
+
+    if (
+      !enabled ||
+      !isString(selectedWalletId) ||
+      isWalletSelectionScreen ||
+      isAuthScreen
+    ) {
+      return () => {
+        pushSubscription.unsubscribe()
+      }
+    }
 
     const localSubscription = manager.newEvents$.subscribe((event) => {
       if (
@@ -105,6 +119,7 @@ const useCollectNewNotifications = ({enabled}: {enabled: boolean}) => {
     enabled,
     isWalletSelectionScreen,
     isTxHistoryScreen,
+    isAuthScreen,
     walletManager.selected.network,
   ])
 

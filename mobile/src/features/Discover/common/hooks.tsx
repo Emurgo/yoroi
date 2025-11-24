@@ -6,6 +6,7 @@ import {WebView, WebViewMessageEvent} from 'react-native-webview'
 import {logger} from '~/kernel/logger/logger'
 import {YoroiWallet} from '~/wallets/cardano/types'
 
+import {useWalletNameOverride} from './WalletNameOverrideContext'
 import {walletConfig} from './wallet-config'
 
 export const useConnectWalletToWebView = (
@@ -14,6 +15,7 @@ export const useConnectWalletToWebView = (
   fallbackUrl?: string,
 ) => {
   const {manager, sessionId} = useDappConnector()
+  const {walletNameOverride} = useWalletNameOverride()
   const [isWebViewReady, setIsWebViewReady] = React.useState(false)
 
   const sendMessageToWebView =
@@ -96,9 +98,9 @@ export const useConnectWalletToWebView = (
   }
 
   React.useEffect(() => {
-    const initScript = getInitScript(sessionId, manager)
+    const initScript = getInitScript(sessionId, manager, walletNameOverride)
     webViewRef.current?.injectJavaScript(initScript)
-  }, [wallet, webViewRef, sessionId, manager])
+  }, [wallet, webViewRef, sessionId, manager, walletNameOverride])
 
   const markWebViewReady = React.useCallback(() => {
     setIsWebViewReady(true)
@@ -114,7 +116,7 @@ export const useConnectWalletToWebView = (
 
   return {
     handleEvent: handleWebViewEvent,
-    initScript: getInitScript(sessionId, manager),
+    initScript: getInitScript(sessionId, manager, walletNameOverride),
     sessionId,
     markWebViewReady,
     sendDisconnectMessage,
@@ -129,11 +131,12 @@ const getInjectableMessage = (message: unknown) => {
 const getInitScript = (
   sessionId: string,
   dappConnector: DappConnectorManager,
+  walletNameOverride?: string | undefined,
 ) => {
   return dappConnector.getWalletConnectorScript({
     iconUrl: walletConfig.iconUrl,
     apiVersion: walletConfig.apiVersion,
-    walletName: walletConfig.name,
+    walletName: walletNameOverride ?? walletConfig.name,
     sessionId,
   })
 }

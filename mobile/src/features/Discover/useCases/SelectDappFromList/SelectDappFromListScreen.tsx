@@ -1,14 +1,14 @@
-import {useDappList} from '@yoroi/dapp-connector'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
 import {FlatList, View} from 'react-native'
 
 import {ChainDAppsWarning} from '~/features/Discover/common/ChainDAppsWarning'
-import {getGoogleSearchItem} from '~/features/Discover/common/helpers'
+import {DAppItem, getGoogleSearchItem} from '~/features/Discover/common/helpers'
 import {useDAppsConnected} from '~/features/Discover/common/useDAppsConnected'
 import {useShowWelcomeDApp} from '~/features/Discover/common/useShowWelcomeDApp'
 import {ShowDisclaimer} from '~/features/Legal/ui/shared/Disclaimer/ShowDisclaimer'
+import {useRemoteConfig} from '~/features/RemoteConfig/hooks/useRemoteConfig'
 import {useSearch, useSearchOnNavBar} from '~/features/Search/SearchContext'
 import {NetworkTag} from '~/features/Settings/ui/shared/NetworkTag'
 import {useStrings} from '~/kernel/i18n/useStrings'
@@ -129,8 +129,8 @@ const HeaderControl = ({
   const strings = useStrings()
   const {data: connectedOrigins = []} = useDAppsConnected()
   const hasConnectedDapps = connectedOrigins.length > 0
-  const {data: list} = useDappList()
-  const filters = Object.keys(list?.filters ?? {})
+  const {config} = useRemoteConfig()
+  const filters = Object.keys(config?.dapps?.filters ?? {})
 
   if (visible) return <Space.Height.md />
 
@@ -179,7 +179,7 @@ const HeaderControl = ({
 
 const useFilteredDappList = (tab: TDAppTabs, categoriesSelected: string[]) => {
   const {search, visible} = useSearch()
-  const {data: list} = useDappList()
+  const {config} = useRemoteConfig()
   const {data: connectedOrigins = []} = useDAppsConnected()
   const hasConnectedDapps = connectedOrigins.length > 0
   const isSearching = visible
@@ -190,9 +190,25 @@ const useFilteredDappList = (tab: TDAppTabs, categoriesSelected: string[]) => {
     )
   }
 
+  // Use config recommended dapps from remote config
+  const logoBaseUrl = 'https://daehx1qv45z7c.cloudfront.net'
+  const dapps = React.useMemo((): DAppItem[] => {
+    if (!config?.dapps?.recommended) return []
+    return config.dapps.recommended.map((dapp) => ({
+      id: dapp.id,
+      name: dapp.name,
+      description: dapp.description,
+      category: dapp.category,
+      logo: dapp.logo ? `${logoBaseUrl}/${dapp.logo}` : '',
+      uri: dapp.uri,
+      origins: [...dapp.origins],
+      isSingleAddress: dapp.isSingleAddress ?? false,
+    }))
+  }, [config?.dapps?.recommended])
+
   const dAppOriginsThatAreConnectedButNotInList = connectedOrigins.filter(
     (connectedOrigin) => {
-      return !list?.dapps.some((dapp) => dapp.origins.includes(connectedOrigin))
+      return !dapps.some((dapp) => dapp.origins.includes(connectedOrigin))
     },
   )
 
@@ -211,12 +227,10 @@ const useFilteredDappList = (tab: TDAppTabs, categoriesSelected: string[]) => {
     })
   }
 
-  if (!list?.dapps) return []
+  if (dapps.length === 0) return []
 
   const allDapps =
-    tab === 'connected'
-      ? [...list.dapps, ...getDAppsConnectedButNotInList()]
-      : list.dapps
+    tab === 'connected' ? [...dapps, ...getDAppsConnectedButNotInList()] : dapps
 
   if (isSearching) {
     if (search?.length > 0) {
@@ -242,10 +256,11 @@ const useFilteredDappList = (tab: TDAppTabs, categoriesSelected: string[]) => {
   }
 
   if (categoriesSelected.length > 0) {
+    const filters = (config?.dapps?.filters || {}) as Record<string, string[]>
     return allDapps
       .filter((dApp) =>
         categoriesSelected.some((filter) =>
-          list?.filters?.[filter]?.includes(dApp.category),
+          filters[filter]?.includes(dApp.category),
         ),
       )
       .sort((dAppFirst, dAppSecond) =>

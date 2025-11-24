@@ -20,14 +20,8 @@ import {
 } from 'react-native'
 
 import {Icon} from '~/ui/Icon'
-import {compareArrays} from '~/wallets/utils/utils'
 
-import {
-  AppRoutes,
-  TxHistoryRoutes,
-  WalletStackRoutes,
-  WalletTabRoutes,
-} from '../types'
+import {AppRoutes, WalletStackRoutes, WalletTabRoutes} from '../types'
 
 export const defaultStackNavigationOptions = (
   palette: ThemedPalette,
@@ -151,19 +145,23 @@ export const isTxHistoryRoute = (
   state: Partial<NavigationState> | NavigationState['routes'][0]['state'],
 ) => {
   const routes = getFocusedRouteName(state)
-  type RoutePath =
-    | keyof AppRoutes
-    | keyof WalletStackRoutes
-    | keyof WalletTabRoutes
-    | keyof TxHistoryRoutes
-  const fullRoutePath: RoutePath[] = [
-    'manage-wallets',
-    'main-wallet-routes',
-    'history',
-    'history-list',
+  const focusedRoute = routes[routes.length - 1]
+  return focusedRoute === 'history-list'
+}
+
+export const isAuthRoute = (
+  state: Partial<NavigationState> | NavigationState['routes'][0]['state'],
+) => {
+  const routes = getFocusedRouteName(state)
+  const authRoutes: (keyof AppRoutes)[] = [
+    'first-run',
+    'agreement-changed-notice',
+    'custom-pin-auth',
+    'bio-auth-initial',
+    'enable-login-with-pin',
   ]
-  const pathToCompare = fullRoutePath.slice(0, routes.length)
-  return routes.length > 1 && compareArrays(pathToCompare, routes)
+
+  return routes.some((route) => authRoutes.includes(route as keyof AppRoutes))
 }
 
 export const BackButton = (props: TouchableOpacityProps & {color?: string}) => {
@@ -294,3 +292,118 @@ const isHex = (color: Color) =>
   )
 
 type Color = `#${string}` | `rgba(${number},${number},${number},${number})`
+
+/**
+ * Removes a specific route from the navigation state without animation
+ * Supports traversing parent navigators to find the route at the correct level
+ * @param navigation - The navigation object (must have getState, reset, and getParent methods)
+ * @param routeName - The name of the route to remove
+ * @param options - Optional configuration
+ */
+export const removeRouteFromNavigationState = (
+  navigation: {
+    getState: () => NavigationState | undefined
+    reset: (state: NavigationState | any) => void
+    getParent?: () => any
+    dispatch?: (action: any) => void
+  },
+  routeName: string,
+  options?: {
+    /**
+     * Maximum depth to traverse up the navigator hierarchy (default: 3)
+     */
+    maxDepth?: number
+    /**
+     * Whether to traverse parent navigators to find the route (default: true)
+     */
+    traverseParents?: boolean
+  },
+): void => {
+  const maxDepth = options?.maxDepth ?? 3
+  const traverseParents = options?.traverseParents ?? true
+
+  // Try to find the route in the current navigator or parent navigators
+  let targetNavigation = navigation
+  let currentDepth = 0
+  let foundRoute = false
+
+  while (currentDepth < maxDepth && traverseParents) {
+    const state = targetNavigation.getState()
+    if (!state) {
+      break
+    }
+
+    const hasRoute = state.routes.some((route) => route.name === routeName)
+    if (hasRoute) {
+      foundRoute = true
+      break
+    }
+
+    // Try parent navigator
+    if (targetNavigation.getParent) {
+      const parent = targetNavigation.getParent()
+      if (parent) {
+        targetNavigation = parent
+        currentDepth++
+      } else {
+        break
+      }
+    } else {
+      break
+    }
+  }
+
+  if (!foundRoute && traverseParents) {
+    return
+  }
+
+  const state = targetNavigation.getState()
+  if (!state) {
+    return
+  }
+
+  // Filter out ALL routes with the specified name (handles duplicates)
+  const filteredRoutes = state.routes.filter(
+    (route) => route.name !== routeName,
+  )
+
+  // Bug fix 1: Handle empty routes case
+  if (filteredRoutes.length === 0) {
+    // Don't allow removing all routes - this would break navigation state
+    return
+  }
+
+  // Only reset if we actually removed a route
+  if (filteredRoutes.length < state.routes.length) {
+    // Bug fix 3: Count ALL removed routes before current index (handles duplicates)
+    const currentIndex = state.index ?? 0
+    let removedCountBeforeCurrent = 0
+
+    for (let i = 0; i < currentIndex; i++) {
+      if (state.routes[i]?.name === routeName) {
+        removedCountBeforeCurrent++
+      }
+    }
+
+    // Calculate the new index based on how many routes were removed before current
+    let newIndex: number
+    if (removedCountBeforeCurrent > 0) {
+      // Routes were removed before current index, adjust index
+      newIndex = Math.max(0, currentIndex - removedCountBeforeCurrent)
+    } else {
+      // No routes removed before current index, keep index the same
+      newIndex = currentIndex
+    }
+
+    // Ensure the new index is valid for the filtered routes
+    // Bug fix 1: This is now safe because we return early if filteredRoutes.length === 0
+    newIndex = Math.min(filteredRoutes.length - 1, Math.max(0, newIndex))
+
+    // Use reset method to update navigation state
+    targetNavigation.reset({
+      ...state,
+      index: newIndex,
+      routes: filteredRoutes,
+    })
+  }
+}

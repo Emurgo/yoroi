@@ -72,78 +72,33 @@ describe('transformersMaker', () => {
       })
     })
 
-    it('should handle all protocol mappings in mapProtocolToDex', () => {
-      // Test various protocol mappings by using them in blocked protocols
+    it('should not include exclude_protocols when blockedProtocols is removed', () => {
       const mockRequest = {
         amountIn: 10,
-        blockedProtocols: [
-          'minswap-v1' as any,
-          'minswap-stable' as any,
-          'muesliswap' as any,
-          'splash-v1' as any,
-          'sundaeswap-v3' as any,
-          'sundaeswap-v1' as any,
-          'vyfi-v1' as any,
-          'cswap' as any,
-          'wingriders-v2' as any,
-          'wingriders-v1' as any,
-          'wingriders-stable' as any,
-          'spectrum-v1' as any,
-        ],
         slippage: 1,
         tokenIn: '.' as const,
         tokenOut: 'test-token.' as const,
       }
 
       const result = transformers.estimate.request(mockRequest)
-      expect(result.exclude_protocols).toHaveLength(12)
-      expect(result.exclude_protocols).toContain(Dex.Minswap)
-      expect(result.exclude_protocols).toContain(Dex.MinswapStable)
-      expect(result.exclude_protocols).toContain(Dex.MuesliSwap)
-      expect(result.exclude_protocols).toContain(Dex.Splash)
-      expect(result.exclude_protocols).toContain(Dex.SundaeSwapV3)
-      expect(result.exclude_protocols).toContain(Dex.SundaeSwap)
-      expect(result.exclude_protocols).toContain(Dex.VyFinance)
-      expect(result.exclude_protocols).toContain(Dex.CswapV1)
-      expect(result.exclude_protocols).toContain(Dex.WingRidersV2)
-      expect(result.exclude_protocols).toContain(Dex.WingRiders)
-      expect(result.exclude_protocols).toContain(Dex.WingRidersStableV2)
-      expect(result.exclude_protocols).toContain(Dex.Spectrum)
+      expect(result.exclude_protocols).toBeUndefined()
     })
 
-    it('should handle unknown protocol in mapProtocolToDex default case', () => {
-      // Test the default case in mapProtocolToDex by using an unknown protocol
+    it('should not include exclude_protocols when blockedProtocols is removed', () => {
       const mockRequest = {
         amountIn: 10,
-        blockedProtocols: ['unknown-protocol' as any],
         slippage: 1,
         tokenIn: '.' as const,
         tokenOut: 'test-token.' as const,
       }
 
       const result = transformers.estimate.request(mockRequest)
-      expect(result.exclude_protocols).toContain(Dex.Unsupported)
+      expect(result.exclude_protocols).toBeUndefined()
     })
 
-    it('should handle splash-stable protocol mapping', () => {
-      // Test the splash-stable protocol mapping (line 50)
+    it('should not include exclude_protocols when blockedProtocols is removed', () => {
       const mockRequest = {
         amountIn: 10,
-        blockedProtocols: ['splash-v1' as any], // Use valid splash-v1 protocol
-        slippage: 1,
-        tokenIn: '.' as const,
-        tokenOut: 'test-token.' as const,
-      }
-
-      const result = transformers.estimate.request(mockRequest)
-      expect(result.exclude_protocols).toContain(Dex.Splash)
-    })
-
-    it('should handle blocked protocols mapping with undefined', () => {
-      // Test the blocked protocols mapping when blockedProtocols is undefined (line 286)
-      const mockRequest = {
-        amountIn: 10,
-        blockedProtocols: undefined,
         slippage: 1,
         tokenIn: '.' as const,
         tokenOut: 'test-token.' as const,
@@ -307,7 +262,6 @@ describe('transformersMaker', () => {
           'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae45655534441',
         amount: '10',
         slippage: 1,
-        exclude_protocols: [],
         amount_in_decimal: true,
       })
     })
@@ -408,7 +362,6 @@ describe('transformersMaker', () => {
     it('should handle estimate request with blocked protocols', () => {
       const mockRequest = {
         amountIn: 10,
-        blockedProtocols: ['minswap-v2' as any],
         slippage: 1,
         tokenIn: '.' as const,
         tokenOut: 'test-token.' as const,
@@ -416,7 +369,7 @@ describe('transformersMaker', () => {
 
       const result = transformers.estimate.request(mockRequest)
 
-      expect(result.exclude_protocols).toEqual([Dex.MinswapV2])
+      expect(result.exclude_protocols).toBeUndefined()
     })
 
     it('should handle unknown Dex protocol in response', () => {
@@ -496,7 +449,7 @@ describe('transformersMaker', () => {
         {dex: Dex.Minswap, expected: 'minswap-v1'},
         {dex: Dex.MinswapStable, expected: 'minswap-stable'},
         {dex: Dex.MuesliSwap, expected: 'muesliswap'},
-        {dex: Dex.Splash, expected: 'splash-v1'},
+        {dex: Dex.Splash, expected: 'splash'},
         {dex: Dex.SundaeSwapV3, expected: 'sundaeswap-v3'},
         {dex: Dex.SundaeSwap, expected: 'sundaeswap-v1'},
         {dex: Dex.VyFinance, expected: 'vyfi-v1'},
@@ -505,7 +458,7 @@ describe('transformersMaker', () => {
         {dex: Dex.WingRiders, expected: 'wingriders-v1'},
         {dex: Dex.WingRidersStableV2, expected: 'wingriders-stable'},
         {dex: Dex.Spectrum, expected: 'spectrum-v1'},
-        {dex: Dex.SplashStable, expected: 'splash-v1'},
+        {dex: Dex.SplashStable, expected: 'splash'},
       ]
 
       testCases.forEach(({dex, expected}) => {
@@ -599,7 +552,6 @@ describe('transformersMaker', () => {
           token_out:
             'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae45655534441',
           slippage: 1,
-          exclude_protocols: [],
         },
         amount_in_decimal: true,
       })
@@ -623,6 +575,38 @@ describe('transformersMaker', () => {
       const result = transformersWithPartner.create.request(mockRequest)
 
       expect(result.estimate.partner).toBe('test-partner')
+    })
+
+    it('should include inputs_to_choose when inputs are provided', () => {
+      const mockRequest = {
+        amountIn: 10,
+        blockedProtocols: [],
+        slippage: 1,
+        tokenIn: '.' as const,
+        tokenOut:
+          'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441' as const,
+        inputs: ['utxo1', 'utxo2'],
+      }
+
+      const result = transformers.create.request(mockRequest)
+
+      expect(result.inputs_to_choose).toEqual(['utxo1', 'utxo2'])
+    })
+
+    it('should not include inputs_to_choose when inputs are empty', () => {
+      const mockRequest = {
+        amountIn: 10,
+        blockedProtocols: [],
+        slippage: 1,
+        tokenIn: '.' as const,
+        tokenOut:
+          'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441' as const,
+        inputs: [],
+      }
+
+      const result = transformers.create.request(mockRequest)
+
+      expect(result.inputs_to_choose).toBeUndefined()
     })
 
     it('should transform create response correctly', () => {

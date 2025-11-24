@@ -32,7 +32,7 @@ export const PortfolioTokenActivityProvider = ({
 }: React.PropsWithChildren) => {
   const {walletManager} = useWalletManager()
   const {
-    networkManager: {tokenManager},
+    networkManager: {tokenManager, network},
   } = useSelectedNetwork()
   const queryClient = useQueryClient()
   const [state, dispatch] = React.useReducer(
@@ -106,11 +106,11 @@ export const PortfolioTokenActivityProvider = ({
         ) as Portfolio.Token.Id[],
       )
 
-      queryClient.invalidateQueries({queryKey: [queryKey]})
+      queryClient.invalidateQueries({queryKey: [...queryKey, network]})
     })
 
     return () => subscription.unsubscribe()
-  }, [actions, queryClient, walletManager])
+  }, [actions, queryClient, walletManager, network])
 
   const query = useQuery({
     enabled: state.secondaryTokenIds.length > 0,
@@ -118,7 +118,12 @@ export const PortfolioTokenActivityProvider = ({
     gcTime: time.fiveMinutes,
     retryDelay: time.oneSecond,
     refetchInterval: time.oneMinute,
-    queryKey,
+    queryKey: [
+      ...queryKey,
+      network,
+      state.activityWindow,
+      state.secondaryTokenIds,
+    ],
     queryFn: async () => {
       if (
         state.secondaryTokenIds == null ||

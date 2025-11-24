@@ -1,5 +1,5 @@
 import {atomicToDecimal, parseNumberFromText} from '@yoroi/common'
-import {isPrimaryTokenInfo} from '@yoroi/portfolio'
+import {isPrimaryToken, isPrimaryTokenInfo} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
@@ -8,6 +8,7 @@ import {Platform, Pressable, Text, TextInput, View} from 'react-native'
 import {usePortfolioBalances} from '~/features/Portfolio/common/hooks/usePortfolioBalances'
 import {useNavigateTo} from '~/features/Swap/common/navigation'
 import {useSwap} from '~/features/Swap/common/useSwap'
+import {useSwapTokenActivity} from '~/features/Swap/common/useSwapTokenActivity'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
@@ -33,6 +34,14 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
     text: amount.value,
     denomination: info?.decimals ?? 0,
   }).quantity
+
+  // Fetch price for this token if it's not a primary token
+  const tokenIds = React.useMemo(() => {
+    if (!info || isPrimaryToken(info)) return []
+    return [info.id]
+  }, [info])
+
+  const {data: tokenActivity = {}} = useSwapTokenActivity(tokenIds)
 
   // Only show errors for input direction (insufficient balance, etc.)
   const error = direction === 'in' ? amount.error : null
@@ -189,6 +198,7 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
                 quantity: BigInt(quantity || '0'),
               }}
               textStyle={a.body_2_md_regular}
+              tokenActivity={tokenActivity}
             />
           )}
         </View>

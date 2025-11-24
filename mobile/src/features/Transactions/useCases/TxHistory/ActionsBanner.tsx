@@ -8,6 +8,7 @@ import {GestureResponderEvent, View} from 'react-native'
 import {useAnalyticsTracking} from '~/features/Analytics/hooks/useAnalyticsTracking'
 import {AnalyticsEventEnum} from '~/features/Analytics/types/analytics-event-enum'
 import {useCopy} from '~/features/Copy/context/CopyProvider'
+import {setPendingSwapToken} from '~/features/Notifications/common/tools'
 import {useReceive} from '~/features/Receive/common/ReceiveProvider'
 import {useMultipleAddressesInfo} from '~/features/Receive/common/useMultipleAddressesInfo'
 import {useReceiveAddressesStatus} from '~/features/Receive/common/useReceiveAddressesStatus'
@@ -24,7 +25,7 @@ import {Text} from '~/ui/Text/Text'
 export const ActionsBanner = (props: {disabled: boolean}) => {
   const strings = useStrings()
   const {config, isLoading} = useRemoteConfig()
-  const tokenOutId = config?.swap?.initialPair.tokenOut
+  const tokenOutId = config?.swap?.initialPair?.tokenOut
   const disabled = props.disabled || isLoading
   const navigateTo = useWalletNavigation()
   const {atoms: ta} = useTheme()
@@ -40,14 +41,17 @@ export const ActionsBanner = (props: {disabled: boolean}) => {
   const {meta} = useSelectedWallet()
   const {network} = useSelectedNetwork()
 
-  const handleOnSwap = () => {
+  const handleOnSwap = async () => {
     if (network === Chain.Network.Preprod) {
       navigateTo.navigateToSwapPreprodNotice()
       return
     }
 
-    // Pass the tokenOutId to the navigation function which will handle setting it properly
-    navigateTo.navigateToSwap(tokenOutId)
+    if (tokenOutId) {
+      await setPendingSwapToken(tokenOutId)
+    }
+
+    navigateTo.navigateToSwap()
   }
 
   const handleOnExchange = () => {
