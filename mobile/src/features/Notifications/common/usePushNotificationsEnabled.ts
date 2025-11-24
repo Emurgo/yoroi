@@ -5,5 +5,3 @@ export const usePushNotificationsEnabled = () => {
 
   return config?.features?.pushNotifications === true
 }
-
-
