@@ -18,7 +18,8 @@ interface DappResponse {
   isSingleAddress: boolean
 }
 
-const LOGO_BASE_URL = 'https://daehx1qv45z7c.cloudfront.net'
+const LOGO_BASE_URL =
+  'https://raw.githubusercontent.com/Emurgo/yoroi-config/refs/heads/main/images'
 
 export const useDappList = () => {
   const {
