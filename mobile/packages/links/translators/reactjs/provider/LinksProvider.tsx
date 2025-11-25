@@ -96,7 +96,7 @@ export const LinksProvider = ({
           ? context.pendingAction.action.info.useCase
           : context.pendingAction?.action.action,
     })
-  }, [context, logger])
+  }, [context.pendingAction, logger])
 
   return (
     <LinksContext.Provider value={context}>{children}</LinksContext.Provider>

@@ -51,7 +51,10 @@ export const useActionExecutor = () => {
   const rootNavigation = useNavigation()
   const wallet = useWalletManagerSelector((ctx) => ctx.selected.wallet)
   const meta = useWalletManagerSelector((ctx) => ctx.selected.meta)
-  const selectedWalletData = wallet && meta ? {wallet, meta} : null
+  const selectedWalletData = React.useMemo(
+    () => (wallet && meta ? {wallet, meta} : null),
+    [wallet, meta],
+  )
   const defaultPrimaryTokenInfo = React.useMemo(
     () => getDefaultPrimaryTokenInfo(),
     [],
@@ -574,7 +577,6 @@ export const useActionExecutor = () => {
       scanActionClaimChanged,
       address,
       claimTokens,
-      claimErrorResolver,
       rootNavigation,
     ],
   )

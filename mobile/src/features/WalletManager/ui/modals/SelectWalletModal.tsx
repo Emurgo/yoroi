@@ -3,7 +3,9 @@ import {Wallet} from '@yoroi/types'
 
 import * as React from 'react'
 import {ScrollView, useWindowDimensions} from 'react-native'
+import {GestureHandlerRootView} from 'react-native-gesture-handler'
 
+import {PendingActionBanner} from '~/features/Links/components/PendingActionBanner'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
@@ -34,7 +36,10 @@ export const SelectWalletModal = ({onSelect, onCancel: _onCancel}: Props) => {
 
   return (
     <Modal.Content>
-      <ScrollView style={[a.px_lg]}>{walletList}</ScrollView>
+      <GestureHandlerRootView style={[a.flex_1]}>
+        <PendingActionBanner />
+        <ScrollView style={[a.px_lg]}>{walletList}</ScrollView>
+      </GestureHandlerRootView>
     </Modal.Content>
   )
 }

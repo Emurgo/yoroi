@@ -1,6 +1,7 @@
 import * as React from 'react'
 import {useIntl} from 'react-intl'
 
+import {PendingActionBanner} from '~/features/Links/components/PendingActionBanner'
 import {showErrorDialog} from '~/kernel/dialogs'
 import {errorMessages} from '~/kernel/i18n/messages/global'
 import {useStrings} from '~/kernel/i18n/useStrings'
@@ -26,6 +27,7 @@ export const LoginWithPinScreen = () => {
 
   return (
     <SafeArea>
+      <PendingActionBanner />
       <PinInput
         ref={pinInputRef}
         pinMaxLength={pinLength}

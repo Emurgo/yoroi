@@ -1,4 +1,5 @@
 import {useAsyncStorage} from '@yoroi/common'
+import {useLinks} from '@yoroi/links'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Api, Scan, Wallet} from '@yoroi/types'
@@ -13,7 +14,6 @@ import {
   View,
 } from 'react-native'
 
-import {useLinks} from '@yoroi/links'
 import {parseWalletMeta} from '~/features/WalletManager/common/validators/wallet-meta'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useCreateWalletFromRootKey} from '~/features/WalletManager/hooks/useCreateWalletFromRootKey'
