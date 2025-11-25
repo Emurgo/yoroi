@@ -41,6 +41,7 @@
     "development": {
       "extends": "base",
       "env": {
+        "EXPO_PUBLIC_BUILD_VARIANT": "DEV",
         "EXPO_PUBLIC_POSTHOG_KEY": "phc_zUcStVLHhwXBHajxusEvlwS77zBVAEQWhpZDx5Ef8oj",
         "EXPO_PUBLIC_POSTHOG_HOST": "https://eu.i.posthog.com"
       },
@@ -51,7 +52,6 @@
     "preview": {
       "extends": "base",
       "env": {
-        "EXPO_PUBLIC_SENTRY_DSN": "https://fb3745d47d994059917e358dae581466@o1138840.ingest.sentry.io/4505319746764800",
         "EXPO_PUBLIC_USE_TESTNET": "true",
         "EXPO_PUBLIC_WALLET_1_MNEMONIC": "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon address",
         "EXPO_PUBLIC_WALLET_1_NETWORK_ID": "300",
@@ -72,7 +72,6 @@
       "extends": "base",
       "env": {
         "EXPO_PUBLIC_BUILD_VARIANT": "PROD",
-        "EXPO_PUBLIC_SENTRY_DSN": "https://7f7c6cb60a6f429facd34f491dfc5133@o1138840.ingest.sentry.io/6783228",
         "EXPO_PUBLIC_FRONTEND_FEE_ADDRESS_MAINNET": "addr1q9ry6jfdgm0lcrtfpgwrgxg7qfahv80jlghhrthy6w8hmyjuw9ngccy937pm7yw0jjnxasm7hzxjrf8rzkqcj26788lqws5fke",
         "EXPO_PUBLIC_FRONTEND_FEE_ADDRESS_PREPROD": "addr_test1qrgpjmyy8zk9nuza24a0f4e7mgp9gd6h3uayp0rqnjnkl54v4dlyj0kwfs0x4e38a7047lymzp37tx0y42glslcdtzhqzp57km",
         "EXPO_PUBLIC_UNSTOPPABLE_API_KEY": "czsajliz-wxgu6tujd1zqq7hey_pclfqhdjsqolsxjfsurgh",
