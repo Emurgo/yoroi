@@ -47,8 +47,36 @@ const queryClient = new QueryClient({
   },
 })
 
+// Wrap AsyncStorage to ensure all methods always return promises
+const safeAsyncStorage = {
+  getItem: (key: string): Promise<string | null> => {
+    const result = AsyncStorage.getItem(key)
+    // Ensure we always return a promise
+    if (result && typeof result.then === 'function') {
+      return result.catch(() => null)
+    }
+    return Promise.resolve(null)
+  },
+  setItem: (key: string, value: string): Promise<void> => {
+    const result = AsyncStorage.setItem(key, value)
+    // Ensure we always return a promise
+    if (result && typeof result.then === 'function') {
+      return result.catch(() => undefined)
+    }
+    return Promise.resolve()
+  },
+  removeItem: (key: string): Promise<void> => {
+    const result = AsyncStorage.removeItem(key)
+    // Ensure we always return a promise
+    if (result && typeof result.then === 'function') {
+      return result.catch(() => undefined)
+    }
+    return Promise.resolve()
+  },
+}
+
 const persister = createAsyncStoragePersister({
-  storage: AsyncStorage,
+  storage: safeAsyncStorage,
   key: 'react-query-cache',
   serialize: JSON.stringify,
   deserialize: (value: string | null) => {

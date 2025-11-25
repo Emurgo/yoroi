@@ -21,28 +21,34 @@ export const CreatePinInput = ({onDone}: Props) => {
   const [pin, setPin] = React.useState('')
   const [step, setStep] = React.useState<'pin' | 'pinConfirmation'>('pin')
 
-  const handlePinInput = (inputPin: string) => {
-    setPin(inputPin)
-    setStep('pinConfirmation')
-  }
+  const handlePinInput = React.useCallback(
+    (inputPin: string) => {
+      setPin(inputPin)
+      setStep('pinConfirmation')
+    },
+    [],
+  )
 
-  const handlePinConfirmation = (pinConfirmation: string) => {
-    if (pinConfirmation !== pin) {
-      logger.debug('PIN mismatch', {origin: 'CreatePinInput', type: 'user'})
-      showErrorDialog(errorMessages.pinMismatch)
-      step === 'pin'
-        ? pinInputRef.current?.clear()
-        : pinConfirmationInputRef.current?.clear()
-      return
-    }
+  const handlePinConfirmation = React.useCallback(
+    (pinConfirmation: string) => {
+      if (pinConfirmation !== pin) {
+        logger.debug('PIN mismatch', {origin: 'CreatePinInput', type: 'user'})
+        showErrorDialog(errorMessages.pinMismatch)
+        step === 'pin'
+          ? pinInputRef.current?.clear()
+          : pinConfirmationInputRef.current?.clear()
+        return
+      }
 
-    logger.info('A new PIN was created', {
-      origin: 'CreatePinInput',
-      type: 'user',
-    })
-    createPin(pin)
-    onDone(pin)
-  }
+      logger.info('A new PIN was created', {
+        origin: 'CreatePinInput',
+        type: 'user',
+      })
+      createPin(pin)
+      onDone(pin)
+    },
+    [pin, step, createPin, onDone],
+  )
 
   return step === 'pin' ? (
     <PinInput
