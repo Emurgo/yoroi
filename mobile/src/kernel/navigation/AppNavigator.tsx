@@ -24,6 +24,7 @@ import {LegalAgreement} from '~/features/Legal/common/types'
 import {useLegalAgreement} from '~/features/Legal/hooks/useLegalAgreement'
 import {useDeepLinkWatcher} from '~/features/Links/hooks/useDeepLinkWatcher'
 import {useLinksRequestAction} from '~/features/Links/hooks/useLinksRequestAction'
+import {PushNotificationNavigationHandler} from '~/features/Notifications/common/PushNotificationNavigationHandler'
 import {useInitNotifications} from '~/features/Notifications/common/hooks'
 import {NotificationUIHandler} from '~/features/Notifications/useCases/NotificationUIHandler'
 import {NotificationsDevScreen} from '~/features/Notifications/useCases/NotificationsDevScreen'
@@ -172,6 +173,7 @@ export const AppNavigator = () => {
       </Stack.Navigator>
 
       <NotificationUIHandler />
+      {isLoggedIn && <PushNotificationNavigationHandler />}
     </>
   )
 }

@@ -7,15 +7,9 @@ import {
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs'
 import * as React from 'react'
-import {AppState} from 'react-native'
 
 import {DiscoverNavigator} from '~/features/Discover/DiscoverNavigator'
 import {MenuNavigator} from '~/features/Menu/Menu'
-import {pushNotificationsManager} from '~/features/Notifications/common/notification-manager'
-import {
-  handleNotificationInternalNavigationAction,
-  shouldHandleNotificationInternalNavigationAction,
-} from '~/features/Notifications/common/tools'
 import {PortfolioNavigator} from '~/features/Portfolio/PortfolioNavigator'
 import {useGovernanceManagerMaker} from '~/features/Staking/Governance/common/helpers'
 import {PoolTransitionProvider} from '~/features/Staking/Staking/PoolTransition/PoolTransitionProvider'
@@ -25,7 +19,6 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {Icon} from '~/ui/Icon'
 
 import {shouldShowTabBarForRoutes} from './common/helpers'
-import {useWalletNavigation} from './hooks/useWalletNavigation'
 import {WalletTabRoutes} from './types'
 
 const Tab = createBottomTabNavigator<WalletTabRoutes>()
@@ -39,29 +32,6 @@ export const WalletTabNavigator = () => {
   const {palette: p, atoms: ta} = useTheme()
   const strings = useStrings()
   const manager = useGovernanceManagerMaker()
-  const walletNavigation = useWalletNavigation()
-
-  React.useEffect(() => {
-    const handleAppStateChange = async (nextAppState: string) => {
-      if (nextAppState === 'active') {
-        const shouldHandle =
-          await shouldHandleNotificationInternalNavigationAction()
-        if (shouldHandle) {
-          await handleNotificationInternalNavigationAction(
-            pushNotificationsManager,
-            walletNavigation,
-          )
-        }
-      }
-    }
-
-    const subscription = AppState.addEventListener(
-      'change',
-      handleAppStateChange,
-    )
-
-    return () => subscription.remove()
-  }, [walletNavigation])
 
   return (
     <SwapProvider>

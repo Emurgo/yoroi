@@ -17,14 +17,16 @@ export const disableLogbox = Boolean(process.env.EXPO_PUBLIC_DISABLE_LOGBOX)
 
 // Runtime
 export const isNightly = buildVariant === 'NIGHTLY'
+export const isPreview = buildVariant === 'PREVIEW'
 export const isProduction = buildVariant === 'PROD'
 export const isDev = __DEV__
 
-export const environment = isNightly
-  ? 'nightly'
-  : isProduction
-    ? 'production'
-    : 'development'
+export const environment =
+  isNightly || isPreview
+    ? 'preview'
+    : isProduction
+      ? 'production'
+      : 'development'
 export const version = Device.osVersion ?? ''
 export const release = isProduction ? version : 'dev'
 export const build = Device.osBuildId ?? ''
