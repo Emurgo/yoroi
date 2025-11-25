@@ -22,6 +22,10 @@ export const DashboardNavigator = () => {
 
   const manager = useGovernanceManagerMaker()
 
+  if (!manager) {
+    return null
+  }
+
   return (
     <GovernanceProvider manager={manager}>
       <Stack.Navigator

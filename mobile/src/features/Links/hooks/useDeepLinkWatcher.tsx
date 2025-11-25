@@ -1,28 +1,31 @@
-import {linksYoroiParser, useLinks} from '@yoroi/links'
+import {PendingAction, linksYoroiParser, useLinks} from '@yoroi/links'
 
 import * as Linking from 'expo-linking'
 import * as React from 'react'
 
 import {useAuth} from '~/features/Auth/context/AuthProvider'
-import {usePendingScanAction} from '~/features/Links/context/PendingScanActionContext'
 import {parseScanAction} from '~/features/Scan/common/parsers'
 import {isWebCardanoLink} from '~/features/Scan/common/triggerScanActionHelper'
 import {logger} from '~/kernel/logger/logger'
 
 export const useDeepLinkWatcher = () => {
-  const {actionStarted} = useLinks()
   const {isLoggedIn} = useAuth()
-  const {pendingScanAction, setPendingScanAction} = usePendingScanAction()
+  const {pendingAction, setPendingAction} = useLinks()
 
   const processLink = React.useCallback(
     (url: string) => {
       // Try Yoroi links first (yoroi://)
-      const parsedAction = linksYoroiParser(url)
-      if (parsedAction != null) {
-        if (parsedAction.params?.isSandbox === true && __DEV__ === false) {
+      const parsedYoroiAction = linksYoroiParser(url)
+      if (parsedYoroiAction != null) {
+        if (parsedYoroiAction.params?.isSandbox === true && __DEV__ === false) {
           return
         }
-        actionStarted({info: parsedAction, isTrusted: false})
+        // Store Yoroi action in pending action context
+        const pendingAction: PendingAction = {
+          source: 'yoroi',
+          action: {info: parsedYoroiAction, isTrusted: false},
+        }
+        setPendingAction(pendingAction)
         return
       }
 
@@ -32,16 +35,12 @@ export const useDeepLinkWatcher = () => {
       if (isWebCardano) {
         try {
           const scanAction = parseScanAction(url)
-
-          // Security: If user is not logged in, store action in context to process after PIN
-          if (!isLoggedIn) {
-            // Store in context - will be processed by ScanActionHandler after login
-            setPendingScanAction(scanAction)
-            return
+          // Store Cardano action in pending action context
+          const pendingAction: PendingAction = {
+            source: 'cardano',
+            action: scanAction,
           }
-
-          // User is logged in, process immediately
-          setPendingScanAction(scanAction)
+          setPendingAction(pendingAction)
         } catch (error) {
           logger.error('useDeepLinkWatcher: web+cardano link parsing failed', {
             error,
@@ -53,7 +52,7 @@ export const useDeepLinkWatcher = () => {
         return
       }
     },
-    [actionStarted, isLoggedIn, setPendingScanAction],
+    [setPendingAction],
   )
 
   React.useEffect(() => {
@@ -84,29 +83,52 @@ export const useDeepLinkWatcher = () => {
       return
     }
 
-    // If context already has a pending action, ScanActionHandler will process it
+    // If context already has a pending action, ActionHandler will process it
     // Otherwise, check getInitialURL for app restart scenarios
-    if (pendingScanAction) {
+    if (pendingAction) {
       return
     }
 
     const checkInitialUrlAfterLogin = async () => {
       const url = await Linking.getInitialURL()
 
-      if (url !== null && isWebCardanoLink(url)) {
-        try {
-          const scanAction = parseScanAction(url)
-          setPendingScanAction(scanAction)
-        } catch (error) {
-          logger.error('useDeepLinkWatcher: error parsing URL after login', {
-            error,
-            errorMessage:
-              error instanceof Error ? error.message : String(error),
-            url,
-          })
+      if (url !== null) {
+        // Try both Yoroi and Cardano links
+        const parsedYoroiAction = linksYoroiParser(url)
+        if (parsedYoroiAction != null) {
+          if (
+            parsedYoroiAction.params?.isSandbox === true &&
+            __DEV__ === false
+          ) {
+            return
+          }
+          const pendingAction: PendingAction = {
+            source: 'yoroi',
+            action: {info: parsedYoroiAction, isTrusted: false},
+          }
+          setPendingAction(pendingAction)
+          return
+        }
+
+        if (isWebCardanoLink(url)) {
+          try {
+            const scanAction = parseScanAction(url)
+            const pendingAction: PendingAction = {
+              source: 'cardano',
+              action: scanAction,
+            }
+            setPendingAction(pendingAction)
+          } catch (error) {
+            logger.error('useDeepLinkWatcher: error parsing URL after login', {
+              error,
+              errorMessage:
+                error instanceof Error ? error.message : String(error),
+              url,
+            })
+          }
         }
       }
     }
     checkInitialUrlAfterLogin()
-  }, [isLoggedIn, pendingScanAction, setPendingScanAction])
+  }, [isLoggedIn, pendingAction, setPendingAction, processLink])
 }

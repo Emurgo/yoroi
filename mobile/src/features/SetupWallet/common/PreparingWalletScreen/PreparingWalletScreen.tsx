@@ -1,10 +1,12 @@
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
+import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 import {Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {useAuth} from '~/features/Auth/context/AuthProvider'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useLaunchWalletAfterSyncing} from '~/features/WalletManager/hooks/useLaunchWalletAfterSyncing'
 import {useSyncTemporarilyPaused} from '~/features/WalletManager/hooks/useSyncTemporarilyPaused'
@@ -25,16 +27,30 @@ export const PreparingWalletScreen = () => {
   const {atoms: ta} = useTheme()
   const {walletManager} = useWalletManager()
   const walletNavigation = useWalletNavigation()
+  const navigation = useNavigation()
+  const {isLoggedIn} = useAuth()
   const isGlobalSyncPaused = useSyncTemporarilyPaused()
   const [shouldNavigateAfterSync, setShouldNavigateAfterSync] =
     React.useState(true)
   const [showBackgroundButton, setShowBackgroundButton] = React.useState(false)
 
+  // Only start wallet sync if user is logged in
+  // Wallet restoration should not proceed until user is authenticated
   useLaunchWalletAfterSyncing({
-    isGlobalSyncPaused,
-    walletId,
+    isGlobalSyncPaused: isGlobalSyncPaused && isLoggedIn,
+    walletId: isLoggedIn ? walletId : null,
     shouldNavigateAfterSync,
   })
+
+  // If user is not logged in, show message and wait for login
+  React.useEffect(() => {
+    if (!isLoggedIn && walletId) {
+      logger.debug(
+        'PreparingWalletScreen: User not logged in, waiting for login before starting wallet restoration',
+        {walletId},
+      )
+    }
+  }, [isLoggedIn, walletId])
 
   React.useEffect(() => {
     const timer = setTimeout(() => {
@@ -59,6 +75,27 @@ export const PreparingWalletScreen = () => {
     )
     logger.error(error)
     throw error
+  }
+
+  // If user is not logged in, show message that login is required
+  if (!isLoggedIn) {
+    return (
+      <SafeAreaView
+        style={[a.flex_1, a.align_center, a.justify_center, ta.bg_color_max]}
+      >
+        <View style={[a.align_center, a.justify_center, a.px_lg]}>
+          <Text
+            style={[ta.text_primary_max, a.text_center, a.heading_2_medium]}
+          >
+            {strings.setupWallet.preparingWallet}
+          </Text>
+          <Space.Height.lg />
+          <Text style={[ta.text_gray_max, a.text_center, a.body_1_lg_regular]}>
+            Please log in to continue wallet restoration
+          </Text>
+        </View>
+      </SafeAreaView>
+    )
   }
 
   return (

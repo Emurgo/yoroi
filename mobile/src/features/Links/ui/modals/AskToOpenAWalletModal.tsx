@@ -25,10 +25,10 @@ const AskToOpenWalletModalContent = () => {
 const AskToOpenWalletModalFooter = () => {
   const strings = useStrings()
   const {closeModal} = useModal()
-  const {actionFinished} = useLinks()
+  const {markActionProcessed} = useLinks()
 
   const handleOnCancel = () => {
-    actionFinished()
+    markActionProcessed()
     closeModal()
   }
 

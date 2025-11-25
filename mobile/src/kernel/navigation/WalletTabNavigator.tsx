@@ -160,39 +160,47 @@ export const WalletTabNavigator = () => {
     [strings.menu.menu, menuTabBarIcon],
   )
 
+  const tabNavigator = (
+    <Tab.Navigator
+      tabBar={TabBarWithHiddenContent}
+      screenOptions={screenOptions}
+    >
+      <Tab.Screen
+        name="history"
+        getComponent={() => TxHistoryNavigator}
+        options={historyOptions}
+      />
+
+      <Tab.Screen
+        name="portfolio"
+        getComponent={() => PortfolioNavigator}
+        options={portfolioOptions}
+      />
+
+      <Tab.Screen
+        name="discover"
+        getComponent={() => DiscoverNavigator}
+        options={discoverOptions}
+      />
+
+      <Tab.Screen
+        name="menu"
+        getComponent={() => MenuNavigator}
+        options={menuOptions}
+      />
+    </Tab.Navigator>
+  )
+
   return (
     <SwapProvider>
       <PoolTransitionProvider>
-        <GovernanceProvider manager={manager}>
-          <Tab.Navigator
-            tabBar={TabBarWithHiddenContent}
-            screenOptions={screenOptions}
-          >
-            <Tab.Screen
-              name="history"
-              getComponent={() => TxHistoryNavigator}
-              options={historyOptions}
-            />
-
-            <Tab.Screen
-              name="portfolio"
-              getComponent={() => PortfolioNavigator}
-              options={portfolioOptions}
-            />
-
-            <Tab.Screen
-              name="discover"
-              getComponent={() => DiscoverNavigator}
-              options={discoverOptions}
-            />
-
-            <Tab.Screen
-              name="menu"
-              getComponent={() => MenuNavigator}
-              options={menuOptions}
-            />
-          </Tab.Navigator>
-        </GovernanceProvider>
+        {manager ? (
+          <GovernanceProvider manager={manager}>
+            {tabNavigator}
+          </GovernanceProvider>
+        ) : (
+          tabNavigator
+        )}
       </PoolTransitionProvider>
     </SwapProvider>
   )

@@ -13,11 +13,13 @@ import {useAuth} from '~/features/Auth/context/AuthProvider'
 import {useClaimErrorResolver} from '~/features/Claim/common/useClaimErrorResolver'
 import {AskConfirmationModal} from '~/features/Claim/ui/modals/AskConfirmationModal'
 import {useBrowser} from '~/features/Discover/common/BrowserProvider'
+import {isInsufficientBalanceError} from '~/features/Staking/Governance/common/transactionErrorHandling'
 import {useWalletManagerSelector} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {useModal} from '~/ui/Modal/context/ModalContext'
+import {createDelegationTxFromWallet} from '~/wallets/cardano/transaction-recipes'
 import {pastedFormatter} from '~/wallets/utils/amountUtils'
 
 import {useInfoModal} from './modals/InfoModal'
@@ -58,6 +60,9 @@ export const useTriggerScanAction = ({
   const {openTransactionNotFoundModal} = useTransactionNotFoundModal()
   const navigateTo = useNavigateTo()
   const timeoutRef = React.useRef<NodeJS.Timeout | null>(null)
+  // Get selected wallet and meta for delegation transactions
+  const meta = useWalletManagerSelector((ctx) => ctx.selected.meta)
+  const selectedWalletData = wallet && meta ? {wallet, meta} : null
   const {
     receiverResolveChanged,
     amountChanged,
@@ -177,6 +182,7 @@ export const useTriggerScanAction = ({
 
       case 'browse-dapp': {
         // CIP-158: Launch dApp in browser
+        if (!isLoggedIn) return
         const id = uuid.v4()
         addTabAndSetActive(scanAction.url, id)
         walletNavigation.navigateToDiscoverBrowserDapp()
@@ -208,13 +214,67 @@ export const useTriggerScanAction = ({
       }
 
       case 'stake-pool': {
-        // CIP-13: Navigate to staking center with pool
-        walletNavigation.navigateToStakingDashboard()
-        // TODO: Pass pool ID to staking center when UI supports it
-        openInfoModal({
-          title: strings.scan.stakePoolTitle,
-          message: `Pool ID: ${scanAction.pool}`,
-        })
+        // CIP-13: Create delegation transaction and navigate to review
+        if (!wallet || !selectedWalletData) {
+          logger.warn('useTriggerScanAction: stake-pool action requires wallet')
+          openInfoModal({
+            title: strings.scan.stakePoolTitle,
+            message: `Pool ID: ${scanAction.pool}`,
+          })
+          break
+        }
+
+        const {wallet: selectedWallet, meta} = selectedWalletData
+
+        // Create delegation transaction asynchronously
+        const createDelegationTx = async () => {
+          try {
+            logger.debug(
+              'useTriggerScanAction: creating delegation transaction',
+              {
+                poolId: scanAction.pool,
+              },
+            )
+
+            const stakingTx = await createDelegationTxFromWallet(
+              selectedWallet,
+              {
+                poolId: scanAction.pool,
+                addressMode: meta.addressMode,
+              },
+            )
+
+            walletNavigation.navigateToTxReview({
+              cbor: stakingTx.cbor,
+              context: 'delegate',
+            })
+          } catch (error) {
+            const err =
+              error instanceof Error ? error : new Error(String(error))
+            logger.error(
+              'useTriggerScanAction: error creating delegation transaction',
+              {
+                error: err,
+                poolId: scanAction.pool,
+              },
+            )
+
+            // Check if error is due to insufficient balance
+            if (isInsufficientBalanceError(error)) {
+              openInfoModal({
+                title: strings.scan.stakePoolTitle,
+                message: strings.staking.noFunds,
+              })
+            } else {
+              openInfoModal({
+                title: strings.scan.stakePoolTitle,
+                message: err.message,
+              })
+            }
+          }
+        }
+
+        createDelegationTx()
         break
       }
 
@@ -277,16 +337,29 @@ export const useTriggerScanAction = ({
         // Wallet restoration: Navigate to restore wallet from link screen
         // When not logged in, navigate directly to setup-wallet screen
         // When logged in, use walletNavigation which navigates through manage-wallets
+        // Sanitize sensitive data before logging
+        const sanitizedAction = {
+          action: scanAction.action,
+          type: scanAction.type,
+          encryption: scanAction.encryption,
+          name: scanAction.name,
+          implementation: scanAction.implementation,
+          addressMode: scanAction.addressMode,
+          accountVisual: scanAction.accountVisual,
+          hasMnemonic: !!scanAction.mnemonic,
+          hasRootKey: !!scanAction.rootKey,
+          hasAccountPubKey: !!scanAction.accountPubKey,
+        }
         logger.info('useTriggerScanAction: restore-wallet action', {
           isLoggedIn,
-          scanAction,
+          scanAction: sanitizedAction,
         })
 
         if (isLoggedIn) {
           logger.info(
             'useTriggerScanAction: navigating via walletNavigation (logged in)',
             {
-              scanAction,
+              scanAction: sanitizedAction,
             },
           )
           walletNavigation.navigateToRestoreWalletFromLink(scanAction)
@@ -294,7 +367,7 @@ export const useTriggerScanAction = ({
           logger.info(
             'useTriggerScanAction: navigating directly to setup-wallet (not logged in)',
             {
-              scanAction,
+              scanAction: sanitizedAction,
             },
           )
           // Navigate directly to setup-wallet screen when not logged in

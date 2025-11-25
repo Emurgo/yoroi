@@ -22,6 +22,10 @@ export const GovernanceNavigator = () => {
   const manager = useGovernanceManagerMaker()
   const {palette: p} = useTheme()
 
+  if (!manager) {
+    return null
+  }
+
   return (
     <GovernanceProvider manager={manager}>
       <SafeArea>

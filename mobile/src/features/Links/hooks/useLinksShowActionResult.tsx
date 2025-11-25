@@ -3,13 +3,16 @@ import {useLinks} from '@yoroi/links'
 import * as React from 'react'
 
 export const useLinksShowActionResult = () => {
-  const {action} = useLinks()
-  const initialRoute =
-    action?.info.useCase === 'order/show-create-result'
-      ? 'exchange-result'
-      : 'wallet-selection'
+  const {pendingAction} = useLinks()
+  const initialRoute = React.useMemo(() => {
+    if (
+      pendingAction?.source === 'yoroi' &&
+      pendingAction.action.info.useCase === 'order/show-create-result'
+    ) {
+      return 'exchange-result'
+    }
+    return 'wallet-selection'
+  }, [pendingAction])
 
-  return React.useMemo(() => {
-    return initialRoute
-  }, [initialRoute])
+  return initialRoute
 }

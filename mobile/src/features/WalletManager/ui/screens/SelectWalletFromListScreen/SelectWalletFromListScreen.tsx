@@ -7,7 +7,6 @@ import * as React from 'react'
 import {Linking, Text, TouchableOpacity} from 'react-native'
 
 import {useAuth} from '~/features/Auth/context/AuthProvider'
-import {useLinksRequestWallet} from '~/features/Links/hooks/useLinksRequestWallet'
 import {pushNotificationsManager} from '~/features/Notifications/common/notification-manager'
 import {
   handleNotificationInternalNavigationAction,
@@ -31,16 +30,6 @@ import {AggregatedBalance} from './AggregatedBalance'
 import {WalletListItem} from './WalletListItem'
 
 export const SelectWalletFromList = () => {
-  const {openModal, closeModal} = useModal()
-  const modalFunctions = React.useMemo(
-    () => ({
-      openModal,
-      closeModal,
-    }),
-    [openModal, closeModal],
-  )
-
-  useLinksRequestWallet(modalFunctions)
   const {scrollViewRef} = useScrollView()
   const navigation = useNavigation()
   const walletMetas = useWalletMetas()

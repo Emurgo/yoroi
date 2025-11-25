@@ -66,12 +66,14 @@ export const mapStakingKeyStateToGovernanceAction = (
 }
 
 export const useGovernanceManagerMaker = () => {
+  const selectedWallet = useSelectedWallet()
+
   const {
     wallet: {
       networkManager: {network},
       id: walletId,
     },
-  } = useSelectedWallet()
+  } = selectedWallet
 
   const storage = useAsyncStorage()
   const governanceStorage = storage.join(

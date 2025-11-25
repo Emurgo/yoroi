@@ -3,7 +3,6 @@ import {
   exchangeApiMaker,
   exchangeManagerMaker,
 } from '@yoroi/exchange'
-import {useLinks} from '@yoroi/links'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Links} from '@yoroi/types'
 
@@ -11,6 +10,7 @@ import * as React from 'react'
 import {TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {useLinks} from '@yoroi/links'
 import {DescribeActionModal} from '~/features/Exchange/common/DescribeActionModal/DescribeActionModal'
 import {BanxaLogo} from '~/features/Exchange/illustrations/BanxaLogo'
 import {EncryptusLogo} from '~/features/Exchange/illustrations/EncryptusLogo'
@@ -30,7 +30,14 @@ export const ShowExchangeResultOrderScreen = () => {
   const {atoms: ta} = useTheme()
   const {openModal} = useModal()
   const {resetToWalletSelection} = useWalletNavigation()
-  const {action, actionFinished} = useLinks()
+  const {pendingAction, markActionProcessed} = useLinks()
+
+  // Get Yoroi action from pending action context
+  const action =
+    pendingAction?.source === 'yoroi' &&
+    pendingAction.action.info.useCase === 'order/show-create-result'
+      ? pendingAction.action
+      : null
 
   // exchange
   const exchangeManager = React.useMemo(() => {
@@ -44,12 +51,11 @@ export const ShowExchangeResultOrderScreen = () => {
   }, [action?.info?.params?.isSandbox])
 
   // NOTE: should never happen, caller should handle it
-  if (action == null || action.info.useCase !== 'order/show-create-result')
-    return null
+  if (action == null) return null
   const params: Links.ExchangeShowCreateResultParams = action.info.params
 
   const handleOnClose = () => {
-    actionFinished()
+    markActionProcessed()
     resetToWalletSelection()
   }
 
