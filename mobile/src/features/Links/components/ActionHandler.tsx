@@ -43,6 +43,8 @@ export const ActionHandler = () => {
   const lastProcessedActionRef = React.useRef<string | null>(null)
   const isProcessingRef = React.useRef(false)
   const hasShownWalletModalRef = React.useRef(false)
+  // Track if we were waiting for wallet to allow reprocessing when wallet becomes available
+  const wasWaitingForWalletRef = React.useRef(false)
 
   // Store functions in refs to avoid stale closures
   const executeActionRef = React.useRef(executeAction)
@@ -98,6 +100,7 @@ export const ActionHandler = () => {
     if (!pendingAction) {
       lastProcessedActionRef.current = null
       isProcessingRef.current = false
+      wasWaitingForWalletRef.current = false
       return
     }
 
@@ -118,16 +121,49 @@ export const ActionHandler = () => {
 
     // If wallet is required but not selected, wait (modal is handled above)
     if (needsWallet && !wallet) {
+      wasWaitingForWalletRef.current = true
+      logger.debug('ActionHandler: waiting for wallet selection', {
+        action:
+          pendingAction.source === 'yoroi'
+            ? pendingAction.action.info.useCase
+            : pendingAction.action.action,
+        hasWallet: !!wallet,
+      })
       return
     }
 
-    // All prerequisites met, process action
+    // If wallet was just selected (we were waiting and now have wallet), reset processing state
+    if (wasWaitingForWalletRef.current && wallet) {
+      logger.debug(
+        'ActionHandler: wallet selected, resetting processing state',
+        {
+          action:
+            pendingAction.source === 'yoroi'
+              ? pendingAction.action.info.useCase
+              : pendingAction.action.action,
+          hasWallet: !!wallet,
+        },
+      )
+      lastProcessedActionRef.current = null
+      isProcessingRef.current = false
+      wasWaitingForWalletRef.current = false
+    }
+
     if (
       !isProcessingRef.current &&
       actionId !== lastProcessedActionRef.current
     ) {
       isProcessingRef.current = true
       lastProcessedActionRef.current = actionId
+
+      logger.debug('ActionHandler: processing action', {
+        action:
+          pendingAction.source === 'yoroi'
+            ? pendingAction.action.info.useCase
+            : pendingAction.action.action,
+        hasWallet: !!wallet,
+        isLoggedIn,
+      })
 
       InteractionManager.runAfterInteractions(() => {
         try {
@@ -153,6 +189,8 @@ export const ActionHandler = () => {
                 : pendingAction.action.action,
           })
           isProcessingRef.current = false
+          // Reset lastProcessedActionRef to allow retry on error
+          lastProcessedActionRef.current = null
           // Don't clear the action on error - let user retry
         }
       })

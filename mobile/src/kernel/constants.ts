@@ -56,7 +56,7 @@ export const sentryDsn = process.env.EXPO_PUBLIC_SENTRY_DSN
 const envLoggerFilter = process.env.EXPO_PUBLIC_LOGGER_FILTER
 export const loggerFilter = envLoggerFilter ? new RegExp(envLoggerFilter) : null
 export const loggerLevel: App.Logger.Level = isDev
-  ? App.Logger.Level.Log
+  ? App.Logger.Level.Debug
   : App.Logger.Level.Warn
 
 // Themes

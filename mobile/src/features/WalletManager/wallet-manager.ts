@@ -1126,7 +1126,7 @@ export const makeWalletManager = (
               'createWalletXPub: stored initial address for read-only wallet',
               {
                 walletId: meta.id,
-                address: firstAddress.substring(0, 20) + '...',
+                address: firstAddress?.substring(0, 20) + '...',
               },
             )
           }

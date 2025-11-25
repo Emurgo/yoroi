@@ -52,21 +52,11 @@ const createTipStatusService = (
 
     // Return cached if still valid and not forcing refresh
     if (!forceRefresh && cached && timeSinceLastFetch < CACHE_TTL) {
-      logger.debug('tipStatusService: Using cached tip status', {
-        network,
-        age: timeSinceLastFetch,
-        origin: 'TipStatusService',
-      })
       return cached
     }
 
     // Fetch fresh tip status
     try {
-      logger.debug('tipStatusService: Fetching fresh tip status', {
-        network,
-        forceRefresh,
-        origin: 'TipStatusService',
-      })
       const tipStatus = await yoroiApi.getTipStatus(baseApiUrl)
       tipStatus$.next(tipStatus)
       lastFetchTime = now
@@ -108,12 +98,6 @@ const createTipStatusService = (
         })
       })
     })
-
-    logger.debug('tipStatusService: Started automatic refresh', {
-      network,
-      refreshInterval: REFRESH_INTERVAL,
-      origin: 'TipStatusService',
-    })
   }
 
   const stop = (): void => {
@@ -124,11 +108,6 @@ const createTipStatusService = (
     isActive = false
     refreshSubscription?.unsubscribe()
     refreshSubscription = null
-
-    logger.debug('tipStatusService: Stopped automatic refresh', {
-      network,
-      origin: 'TipStatusService',
-    })
   }
 
   const destroy = (): void => {
