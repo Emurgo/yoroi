@@ -236,6 +236,7 @@ export const RestoreWalletScreen = () => {
           onError={onError}
           onClearError={onClearError}
           scrollViewRef={scrollViewRef}
+          focusedIndex={focusedIndex}
         />
       </ScrollView>
 
