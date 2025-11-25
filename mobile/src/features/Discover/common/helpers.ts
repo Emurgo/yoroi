@@ -38,6 +38,9 @@ export const getDomainFromUrl = (url: string) => {
   }
 }
 
+export const DAPP_LOGO_BASE_URL =
+  'https://raw.githubusercontent.com/Emurgo/yoroi-config/refs/heads/main/images'
+
 export interface DAppItem {
   id: string
   name: string
