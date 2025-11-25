@@ -1,13 +1,14 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
-import {Image, Text, View} from 'react-native'
+import {Text, View} from 'react-native'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 
-const governanceBannerImage = require('../../../assets/img/governance-banner.png')
+import GovernanceIllustration from '../GovernanceIllustration/GovernanceIllustration'
+
 export const governanceRequiredModalHeight = 600
 
 const GovernanceRequiredModalContent = () => {
@@ -16,12 +17,7 @@ const GovernanceRequiredModalContent = () => {
 
   return (
     <View style={[a.flex_1, a.align_center, a.justify_between, a.py_lg]}>
-      <Image
-        source={governanceBannerImage}
-        style={{width: 280, height: 280}}
-        resizeMode="contain"
-      />
-
+      <GovernanceIllustration height={280} width={280} />
       <Text
         style={[
           a.body_1_lg_regular,
