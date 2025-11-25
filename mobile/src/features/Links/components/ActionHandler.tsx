@@ -5,16 +5,30 @@
  * Watches pending action context and processes actions once prerequisites are met:
  * - User must be logged in (all actions require login for security)
  * - Wallet must be selected (except restore-wallet and view actions)
+ *
+ * Uses RxJS operators to manage state flow and avoid complex useEffect interdependencies.
  */
 import {PendingAction, requiresWallet, useLinks} from '@yoroi/links'
 
 import * as React from 'react'
 import {InteractionManager} from 'react-native'
+import {
+  BehaviorSubject,
+  Subscription,
+  combineLatest,
+  delayWhen,
+  distinctUntilChanged,
+  filter,
+  map,
+  timer,
+} from 'rxjs'
 
 import {useAuth} from '~/features/Auth/context/AuthProvider'
 import {useWalletManagerSelector} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useSelectWalletModal} from '~/features/WalletManager/ui/modals/SelectWalletModal'
 import {logger} from '~/kernel/logger/logger'
+import {isWalletSelectionRoute} from '~/kernel/navigation/common/helpers'
+import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 
 import {useActionExecutor} from '../hooks/useActionExecutor'
 
@@ -32,170 +46,330 @@ const showsModal = (pendingAction: PendingAction): boolean => {
   return false
 }
 
+/**
+ * Create a safe action ID without circular references
+ */
+const createActionId = (pendingAction: PendingAction | null): string | null => {
+  if (!pendingAction) return null
+
+  if (pendingAction.source === 'yoroi') {
+    const useCase = pendingAction.action.info.useCase
+    const params = pendingAction.action.info.params
+    const keyFields: string[] = []
+    if (params) {
+      if ('dappUrl' in params && params.dappUrl) {
+        keyFields.push(`dappUrl:${params.dappUrl}`)
+      }
+      if ('link' in params && params.link) {
+        keyFields.push(`link:${params.link}`)
+      }
+      if ('redirectTo' in params && params.redirectTo) {
+        keyFields.push(`redirectTo:${params.redirectTo}`)
+      }
+      if ('targets' in params && Array.isArray(params.targets)) {
+        const targetIds = params.targets
+          .map((t, i) => {
+            if (t?.receiver) return `target${i}:${t.receiver}`
+            return null
+          })
+          .filter((id): id is string => id !== null)
+        if (targetIds.length > 0) keyFields.push(...targetIds)
+      }
+    }
+    return `yoroi-${useCase}${keyFields.length > 0 ? `-${keyFields.join('-')}` : ''}`
+  } else {
+    const actionType = pendingAction.action.action
+    const action = pendingAction.action
+    const keyFields: string[] = []
+    if ('url' in action && action.url) {
+      keyFields.push(`url:${action.url}`)
+    }
+    if ('receiver' in action && action.receiver) {
+      keyFields.push(`receiver:${action.receiver}`)
+    }
+    if ('address' in action && action.address) {
+      keyFields.push(`address:${action.address}`)
+    }
+    if ('hash' in action && action.hash) {
+      keyFields.push(`hash:${action.hash}`)
+    }
+    if ('pool' in action && action.pool) {
+      keyFields.push(`pool:${action.pool}`)
+    }
+    return `cardano-${actionType}${keyFields.length > 0 ? `-${keyFields.join('-')}` : ''}`
+  }
+}
+
 export const ActionHandler = () => {
   const {isLoggedIn} = useAuth()
   const {pendingAction, markActionProcessed} = useLinks()
   const wallet = useWalletManagerSelector((ctx) => ctx.selected.wallet)
   const executeAction = useActionExecutor()
   const {openSelectWalletModal} = useSelectWalletModal()
+  const walletNavigation = useWalletNavigation()
 
-  // Track the last processed action to prevent infinite loops
-  const lastProcessedActionRef = React.useRef<string | null>(null)
+  // Create observables from React state (created once, updated via .next())
+  const pendingAction$Ref = React.useRef(
+    new BehaviorSubject<PendingAction | null>(pendingAction),
+  )
+  const isLoggedIn$Ref = React.useRef(new BehaviorSubject<boolean>(isLoggedIn))
+  const wallet$Ref = React.useRef(new BehaviorSubject<typeof wallet>(wallet))
+
+  // Update observables when React state changes
+  React.useEffect(() => {
+    if (pendingAction) {
+      const newActionId = createActionId(pendingAction)
+      // If this actionId was processed before, check if it's a new instance
+      if (newActionId && processedActionsRef.current.has(newActionId)) {
+        const previousAction = processedActionsRef.current.get(newActionId)
+        // If the action object reference is different, it's a new trigger
+        if (previousAction !== pendingAction) {
+          // Same actionId but new instance - clear to allow reprocessing
+          processedActionsRef.current.delete(newActionId)
+          isProcessingRef.current = false
+        }
+      }
+      currentActionIdRef.current = newActionId
+    } else {
+      currentActionIdRef.current = null
+    }
+    pendingAction$Ref.current.next(pendingAction)
+  }, [pendingAction])
+
+  React.useEffect(() => {
+    isLoggedIn$Ref.current.next(isLoggedIn)
+  }, [isLoggedIn])
+
+  React.useEffect(() => {
+    wallet$Ref.current.next(wallet)
+    // Update prevWalletRef after observable is updated
+    prevWalletRef.current = wallet
+  }, [wallet])
+
+  // Track processing state
+  // Map actionId -> pendingAction object reference to detect new triggers
+  const processedActionsRef = React.useRef<Map<string, PendingAction | null>>(
+    new Map(),
+  )
   const isProcessingRef = React.useRef(false)
-  const hasShownWalletModalRef = React.useRef(false)
-  // Track if we were waiting for wallet to allow reprocessing when wallet becomes available
-  const wasWaitingForWalletRef = React.useRef(false)
+  const hasShownModalRef = React.useRef(false)
+  const prevWalletRef = React.useRef<typeof wallet>(wallet)
+  const currentActionIdRef = React.useRef<string | null>(null)
 
-  // Store functions in refs to avoid stale closures
+  // Store functions in refs
   const executeActionRef = React.useRef(executeAction)
   const markActionProcessedRef = React.useRef(markActionProcessed)
+  const openSelectWalletModalRef = React.useRef(openSelectWalletModal)
+  const walletNavigationRef = React.useRef(walletNavigation)
+
+  // Wrap markActionProcessed to also clear the processed actionId
+  const markActionProcessedWrapper = React.useCallback(() => {
+    // Clear the current actionId from processed map when action is marked as processed
+    // This allows the same link to be triggered again
+    if (currentActionIdRef.current) {
+      processedActionsRef.current.delete(currentActionIdRef.current)
+    }
+    markActionProcessed()
+  }, [markActionProcessed])
 
   React.useEffect(() => {
     executeActionRef.current = executeAction
-    markActionProcessedRef.current = markActionProcessed
-  }, [executeAction, markActionProcessed])
+    markActionProcessedRef.current = markActionProcessedWrapper
+    openSelectWalletModalRef.current = openSelectWalletModal
+    walletNavigationRef.current = walletNavigation
+  }, [
+    executeAction,
+    markActionProcessedWrapper,
+    openSelectWalletModal,
+    walletNavigation,
+  ])
 
-  // Create unique identifier for action
-  const actionId = React.useMemo(() => {
-    if (!pendingAction) return null
-    const actionData =
-      pendingAction.source === 'yoroi'
-        ? pendingAction.action.info
-        : pendingAction.action
-    return `${pendingAction.source}-${JSON.stringify(actionData)}`
-  }, [pendingAction])
-
-  // Handle wallet selection modal
+  // Main RxJS stream: Handle wallet selection modal and action processing
   React.useEffect(() => {
-    if (!pendingAction || !isLoggedIn) {
-      hasShownWalletModalRef.current = false
-      return
-    }
+    const subscription = new Subscription()
 
-    // Check if action requires wallet
-    const needsWallet = requiresWallet(pendingAction)
+    // Stream for wallet modal logic
+    const walletModalStream$ = combineLatest([
+      pendingAction$Ref.current,
+      isLoggedIn$Ref.current,
+      wallet$Ref.current,
+    ]).pipe(
+      distinctUntilChanged(
+        (prev, curr) =>
+          prev[0] === curr[0] && prev[1] === curr[1] && prev[2] === curr[2],
+      ),
+    )
 
-    // If wallet is needed but not selected, show modal
-    if (needsWallet && !wallet && !hasShownWalletModalRef.current) {
-      hasShownWalletModalRef.current = true
-      openSelectWalletModal({
-        onSelect: () => {
-          hasShownWalletModalRef.current = false
-          // Wallet will be selected, component will re-render and process action
-        },
-        onCancel: () => {
-          hasShownWalletModalRef.current = false
-          // User cancelled, clear the action
-          markActionProcessedRef.current()
-        },
-      })
-    } else if (wallet) {
-      // Wallet is now selected, reset modal flag
-      hasShownWalletModalRef.current = false
-    }
-  }, [pendingAction, isLoggedIn, wallet, openSelectWalletModal])
-
-  // Process action when prerequisites are met
-  React.useEffect(() => {
-    if (!pendingAction) {
-      lastProcessedActionRef.current = null
-      isProcessingRef.current = false
-      wasWaitingForWalletRef.current = false
-      return
-    }
-
-    // All actions require login for security
-    // This includes restore-wallet - user must authenticate first
-    if (!isLoggedIn) {
-      logger.debug('ActionHandler: waiting for login', {
-        action:
-          pendingAction.source === 'yoroi'
-            ? pendingAction.action.info.useCase
-            : pendingAction.action.action,
-      })
-      return
-    }
-
-    // Check if wallet is required
-    const needsWallet = requiresWallet(pendingAction)
-
-    // If wallet is required but not selected, wait (modal is handled above)
-    if (needsWallet && !wallet) {
-      wasWaitingForWalletRef.current = true
-      logger.debug('ActionHandler: waiting for wallet selection', {
-        action:
-          pendingAction.source === 'yoroi'
-            ? pendingAction.action.info.useCase
-            : pendingAction.action.action,
-        hasWallet: !!wallet,
-      })
-      return
-    }
-
-    // If wallet was just selected (we were waiting and now have wallet), reset processing state
-    if (wasWaitingForWalletRef.current && wallet) {
-      logger.debug(
-        'ActionHandler: wallet selected, resetting processing state',
-        {
-          action:
-            pendingAction.source === 'yoroi'
-              ? pendingAction.action.info.useCase
-              : pendingAction.action.action,
-          hasWallet: !!wallet,
-        },
-      )
-      lastProcessedActionRef.current = null
-      isProcessingRef.current = false
-      wasWaitingForWalletRef.current = false
-    }
-
-    if (
-      !isProcessingRef.current &&
-      actionId !== lastProcessedActionRef.current
-    ) {
-      isProcessingRef.current = true
-      lastProcessedActionRef.current = actionId
-
-      logger.debug('ActionHandler: processing action', {
-        action:
-          pendingAction.source === 'yoroi'
-            ? pendingAction.action.info.useCase
-            : pendingAction.action.action,
-        hasWallet: !!wallet,
-        isLoggedIn,
-      })
-
-      InteractionManager.runAfterInteractions(() => {
-        try {
-          executeActionRef.current(pendingAction)
-          // Only clear actions that don't show modals
-          // Modals (request/ada-with-link, launch) will clear themselves
-          // Exchange result screen will clear when done
-          if (!showsModal(pendingAction)) {
-            markActionProcessedRef.current()
-          }
-          setTimeout(() => {
-            isProcessingRef.current = false
-          }, 1000)
-        } catch (error) {
-          logger.error('ActionHandler: error executing action', {
-            error,
-            errorMessage:
-              error instanceof Error ? error.message : String(error),
-            source: pendingAction.source,
-            actionType:
-              pendingAction.source === 'yoroi'
-                ? pendingAction.action.info.useCase
-                : pendingAction.action.action,
-          })
-          isProcessingRef.current = false
-          // Reset lastProcessedActionRef to allow retry on error
-          lastProcessedActionRef.current = null
-          // Don't clear the action on error - let user retry
+    subscription.add(
+      walletModalStream$.subscribe(([action, loggedIn, currentWallet]) => {
+        if (!action || !loggedIn) {
+          hasShownModalRef.current = false
+          return
         }
-      })
+
+        const needsWallet = requiresWallet(action)
+
+        if (needsWallet && !currentWallet && !hasShownModalRef.current) {
+          // Check if we're already on the wallet selection screen
+          const navState = walletNavigationRef.current.navigation.getState()
+          const isOnWalletSelectionScreen = navState
+            ? isWalletSelectionRoute(navState)
+            : false
+
+          if (isOnWalletSelectionScreen) {
+            // Already on wallet selection screen - don't show modal
+            // User can select wallet from the screen, PendingActionBanner will show context
+            return
+          }
+
+          // Not on wallet selection screen - show modal
+          hasShownModalRef.current = true
+          openSelectWalletModalRef.current({
+            onSelect: () => {
+              hasShownModalRef.current = false
+            },
+            onCancel: () => {
+              hasShownModalRef.current = false
+              markActionProcessedRef.current()
+            },
+          })
+        } else if (currentWallet) {
+          hasShownModalRef.current = false
+        }
+      }),
+    )
+
+    // Stream for action processing
+    // Add delay when wallet transitions from null to available to allow modal to close
+    const actionProcessingStream$ = combineLatest([
+      pendingAction$Ref.current,
+      isLoggedIn$Ref.current,
+      wallet$Ref.current,
+    ]).pipe(
+      distinctUntilChanged(
+        (prev, curr) =>
+          prev[0] === curr[0] && prev[1] === curr[1] && prev[2] === curr[2],
+      ),
+      filter(([action]) => action !== null),
+      // Delay when wallet transitions from null to available (modal closing)
+      delayWhen(([_action, _loggedIn, currentWallet]) => {
+        const prevWallet = prevWalletRef.current
+        const walletJustBecameAvailable = !prevWallet && currentWallet
+        // Add 300ms delay to allow wallet selection modal to close
+        return walletJustBecameAvailable ? timer(300) : timer(0)
+      }),
+      map(([action, loggedIn, currentWallet]) => ({
+        action: action!,
+        isLoggedIn: loggedIn,
+        wallet: currentWallet,
+        actionId: createActionId(action!),
+        // Include action object reference to detect new triggers
+        actionRef: action!,
+      })),
+      // Compare action object reference to allow same link to be triggered multiple times
+      // We rely on processedActionsRef for deduplication, not distinctUntilChanged
+      distinctUntilChanged(
+        (prev, curr) =>
+          prev.actionRef === curr.actionRef &&
+          prev.isLoggedIn === curr.isLoggedIn &&
+          prev.wallet === curr.wallet,
+      ),
+    )
+
+    subscription.add(
+      actionProcessingStream$.subscribe(
+        ({action, isLoggedIn: loggedIn, wallet: currentWallet, actionId}) => {
+          if (!loggedIn) {
+            return
+          }
+
+          const needsWallet = requiresWallet(action)
+
+          if (needsWallet && !currentWallet) {
+            // Clear processed state when waiting for wallet
+            if (actionId) {
+              processedActionsRef.current.delete(actionId)
+            }
+            return
+          }
+
+          // Check if we've already processed this exact action instance
+          if (actionId && processedActionsRef.current.has(actionId)) {
+            const processedAction = processedActionsRef.current.get(actionId)
+            // If it's the same action object reference, skip (already processing)
+            if (processedAction === action) {
+              return
+            }
+            // Different action object with same actionId - new trigger, allow it
+            processedActionsRef.current.delete(actionId)
+            isProcessingRef.current = false
+          }
+
+          if (!actionId) {
+            return
+          }
+
+          if (isProcessingRef.current) {
+            return
+          }
+
+          isProcessingRef.current = true
+          // Store action object reference, not just actionId
+          processedActionsRef.current.set(actionId, action)
+
+          InteractionManager.runAfterInteractions(() => {
+            try {
+              executeActionRef.current(action)
+              if (!showsModal(action)) {
+                // For non-modal actions, mark as processed immediately
+                markActionProcessedRef.current()
+                // Clear processing flag after a short delay to prevent rapid re-processing
+                setTimeout(() => {
+                  isProcessingRef.current = false
+                }, 100)
+              } else {
+                // For modal actions, clear processing flag after modal is shown
+                // The modal will call markActionProcessed when it closes
+                setTimeout(() => {
+                  isProcessingRef.current = false
+                }, 1000)
+              }
+            } catch (error) {
+              logger.error('ActionHandler: error executing action', {
+                error,
+                errorMessage:
+                  error instanceof Error ? error.message : String(error),
+                source: action.source,
+                actionType:
+                  action.source === 'yoroi'
+                    ? action.action.info.useCase
+                    : action.action.action,
+              })
+              isProcessingRef.current = false
+              // Remove from processed map to allow retry
+              if (actionId) {
+                processedActionsRef.current.delete(actionId)
+              }
+            }
+          })
+        },
+      ),
+    )
+
+    // Cleanup when pendingAction becomes null
+    subscription.add(
+      pendingAction$Ref.current
+        .pipe(filter((action) => action === null))
+        .subscribe(() => {
+          processedActionsRef.current.clear()
+          isProcessingRef.current = false
+        }),
+    )
+
+    return () => {
+      subscription.unsubscribe()
     }
-  }, [pendingAction, isLoggedIn, wallet, actionId])
+  }, [])
 
   return null
 }

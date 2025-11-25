@@ -15,6 +15,9 @@ export const isInsufficientBalanceError = (error: unknown): boolean => {
     errorMessage.includes('add_change_if_needed') ||
     errorMessage.includes('shortage:') ||
     errorMessage.includes('Not enough ADA') ||
-    errorMessage.includes('Insufficient input')
+    errorMessage.includes('Insufficient input') ||
+    errorMessage.includes('Not enough ADA to create change output') ||
+    errorMessage.includes('change output requires more ADA') ||
+    errorMessage.includes('Not enough balance for transaction')
   )
 }
