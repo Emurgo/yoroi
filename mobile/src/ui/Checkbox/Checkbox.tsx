@@ -15,11 +15,12 @@ import {Icon} from '~/ui/Icon'
 
 type Props = {
   checked: boolean
-  text: string
+  text?: string
   onChange: (checked: boolean) => void
   style?: ViewStyle
   testID?: string
   textStyle?: TextProps
+  children?: React.ReactNode
 }
 export const Checkbox = ({
   checked,
@@ -28,6 +29,7 @@ export const Checkbox = ({
   style,
   testID,
   textStyle,
+  children,
 }: Props) => {
   const {atoms: ta} = useTheme()
 
@@ -50,16 +52,20 @@ export const Checkbox = ({
         {checked ? <Icon.Checkbox /> : <Icon.EmptyCheckbox />}
       </View>
 
-      <Text
-        style={StyleSheet.flatten([
-          a.flex_1,
-          a.body_1_lg_regular,
-          ta.text_gray_max,
-          textStyle,
-        ])}
-      >
-        {text}
-      </Text>
+      {children ? (
+        <View style={a.flex_1}>{children}</View>
+      ) : (
+        <Text
+          style={StyleSheet.flatten([
+            a.flex_1,
+            a.body_1_lg_regular,
+            ta.text_gray_max,
+            textStyle,
+          ])}
+        >
+          {text}
+        </Text>
+      )}
     </Pressable>
   )
 }
