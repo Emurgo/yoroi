@@ -6,7 +6,6 @@ import * as React from 'react'
 import {AppState} from 'react-native'
 
 import {useAuth} from '~/features/Auth/context/AuthProvider'
-import {isNightly} from '~/kernel/constants'
 import {settingsQueryKeys} from '~/queries'
 
 export const useFirebaseConfig = () => {
@@ -73,7 +72,7 @@ export const useFirebaseConfig = () => {
         hasPermission,
       }
     },
-    enabled: isNightly || isAuthDev,
+    enabled: isAuthDev,
     staleTime: Infinity, // Config doesn't change during runtime
     retry: false,
   })
