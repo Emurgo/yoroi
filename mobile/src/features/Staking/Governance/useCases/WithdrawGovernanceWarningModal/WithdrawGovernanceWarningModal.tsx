@@ -1,7 +1,7 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
-import {Text, View} from 'react-native'
+import {Text} from 'react-native'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
@@ -10,14 +10,17 @@ import GovernanceIllustration from '~/ui/GovernanceIllustration/GovernanceIllust
 import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 
+export const withdrawGovernanceWarningModalHeight = 600
+
 const WithdrawGovernanceWarningModalContent = () => {
   const strings = useStrings()
   const {atoms: ta} = useTheme()
 
   return (
-    <View style={[a.flex_1, a.align_center, a.justify_between, a.py_lg]}>
-      <GovernanceIllustration width={280} height={280} />
-
+    <Modal.Content
+      style={[a.flex_1, a.align_center, a.justify_between, a.py_lg]}
+    >
+      <GovernanceIllustration height={200} width={200} />
       <Text
         style={[
           a.body_1_lg_regular,
@@ -28,7 +31,7 @@ const WithdrawGovernanceWarningModalContent = () => {
       >
         {strings.staking.withdrawWarningDescription}
       </Text>
-    </View>
+    </Modal.Content>
   )
 }
 
