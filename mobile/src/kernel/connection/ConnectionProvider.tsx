@@ -50,6 +50,22 @@ const queryClient = new QueryClient({
 const persister = createAsyncStoragePersister({
   storage: AsyncStorage,
   key: 'react-query-cache',
+  serialize: JSON.stringify,
+  deserialize: (value: string | null) => {
+    // Handle empty storage (first launch scenario)
+    if (value == null || value === '') {
+      return undefined
+    }
+    try {
+      return JSON.parse(value)
+    } catch (error) {
+      logger.error('Error deserializing persisted cache', {
+        error,
+        origin: 'ConnectionProvider',
+      })
+      return undefined
+    }
+  },
 })
 
 export const persistPrefixKeyword = 'persist'
