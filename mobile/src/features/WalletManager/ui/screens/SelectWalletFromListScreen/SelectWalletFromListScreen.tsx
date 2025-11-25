@@ -91,6 +91,7 @@ export const SelectWalletFromList = () => {
       <ScrollView
         ref={scrollViewRef}
         style={[a.px_lg, a.pt_2xl]}
+        contentContainerStyle={[a.pb_2xl]}
         bounces={true}
       >
         {walletList}

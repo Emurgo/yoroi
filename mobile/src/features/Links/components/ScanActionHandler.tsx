@@ -21,33 +21,64 @@ export const ScanActionHandler = () => {
   const {pendingScanAction, clearPendingScanAction} = usePendingScanAction()
   const triggerScanAction = useTriggerScanAction({insideFeature: 'scan'})
 
+  // Track the last processed action to prevent infinite loops
+  // Use a ref to store a unique identifier for the action
+  const lastProcessedActionRef = React.useRef<string | null>(null)
+  const isProcessingRef = React.useRef(false)
+
+  // Store functions in refs to avoid stale closures while preventing infinite loops
+  const triggerScanActionRef = React.useRef(triggerScanAction)
+  const clearPendingScanActionRef = React.useRef(clearPendingScanAction)
+
+  // Update refs when functions change
   React.useEffect(() => {
-    logger.debug('ScanActionHandler: component mounted/updated')
-  }, [])
+    triggerScanActionRef.current = triggerScanAction
+    clearPendingScanActionRef.current = clearPendingScanAction
+  }, [triggerScanAction, clearPendingScanAction])
 
   React.useEffect(() => {
-    logger.debug('ScanActionHandler: effect triggered', {
-      hasPendingScanAction: !!pendingScanAction,
-      isLoggedIn,
-      pendingScanAction,
-    })
+    // Create a unique identifier for this action
+    const actionId = pendingScanAction
+      ? `${pendingScanAction.action}-${JSON.stringify(pendingScanAction)}`
+      : null
 
     // Only process actions when user is logged in (security requirement)
-    if (pendingScanAction && isLoggedIn) {
-      logger.debug('ScanActionHandler: triggering scan action', {
-        action: pendingScanAction.action,
-        pendingScanAction,
-      })
-      triggerScanAction(pendingScanAction)
-      logger.debug('ScanActionHandler: scan action triggered, clearing pending')
-      clearPendingScanAction()
-    } else if (pendingScanAction && !isLoggedIn) {
-      logger.debug(
-        'ScanActionHandler: pending action waiting for authentication',
-        {action: pendingScanAction.action},
-      )
+    // Prevent processing if:
+    // 1. No pending action
+    // 2. User is not logged in
+    // 3. We're already processing an action
+    // 4. This is the same action we just processed
+    if (
+      pendingScanAction &&
+      isLoggedIn &&
+      !isProcessingRef.current &&
+      actionId !== lastProcessedActionRef.current
+    ) {
+      isProcessingRef.current = true
+      lastProcessedActionRef.current = actionId
+
+      try {
+        triggerScanActionRef.current(pendingScanAction)
+        clearPendingScanActionRef.current()
+        // Reset processing flag after a short delay to allow navigation to complete
+        setTimeout(() => {
+          isProcessingRef.current = false
+        }, 1000)
+      } catch (error) {
+        logger.error('ScanActionHandler: error triggering scan action', {
+          error,
+          errorMessage: error instanceof Error ? error.message : String(error),
+          action: pendingScanAction.action,
+        })
+        isProcessingRef.current = false
+        // Don't clear the action on error - let user retry
+      }
+    } else if (!pendingScanAction) {
+      // Reset tracking when there's no pending action
+      lastProcessedActionRef.current = null
+      isProcessingRef.current = false
     }
-  }, [pendingScanAction, isLoggedIn, triggerScanAction, clearPendingScanAction])
+  }, [pendingScanAction, isLoggedIn]) // Only depend on pendingScanAction and isLoggedIn
 
   return null
 }

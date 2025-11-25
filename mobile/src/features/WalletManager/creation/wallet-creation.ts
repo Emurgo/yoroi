@@ -101,7 +101,9 @@ export const createWalletFromXPub = async (params: {
   const id = v4()
 
   const encryptedStorage = makeWalletEncryptedStorage(id)
-  if (!isReadOnly && accountVisual === 0) {
+  // Store accountPubKeyHex for both read-only and full wallets
+  // This allows loadWallet to fall back to building a regular wallet if address data is missing
+  if (accountVisual === 0) {
     await encryptedStorage.xpub.write(accountVisual, accountPubKeyHex)
   }
 

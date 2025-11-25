@@ -13,6 +13,7 @@ import {
   View,
 } from 'react-native'
 
+import {usePendingScanAction} from '~/features/Links/context/PendingScanActionContext'
 import {parseWalletMeta} from '~/features/WalletManager/common/validators/wallet-meta'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useCreateWalletFromRootKey} from '~/features/WalletManager/hooks/useCreateWalletFromRootKey'
@@ -75,12 +76,23 @@ export const RestoreWalletFromLinkScreen = () => {
   const {walletManager} = useWalletManager()
   const storage = useAsyncStorage()
   const {walletIdChanged} = useSetupWallet()
+  const {clearPendingScanAction} = usePendingScanAction()
 
   const {action} = useUnsafeParams<{
     action: Scan.ActionRestoreWallet
   }>()
 
+  // Clear the pending scan action from context as soon as we mount this screen
+  // This prevents the action from being re-processed if the component remounts
+  // or if navigation happens multiple times
+  React.useEffect(() => {
+    clearPendingScanAction()
+  }, []) // Only run once on mount
+
+  // Track if we've already processed this action to prevent re-showing modal
+  const hasProcessedRef = React.useRef(false)
   const [showSecurityWarning, setShowSecurityWarning] = React.useState(true)
+
   const [name, setName] = React.useState(() => {
     const baseName = action.name ?? 'Restored Wallet'
     return generateUniqueWalletName(baseName, walletManager)
@@ -109,7 +121,8 @@ export const RestoreWalletFromLinkScreen = () => {
 
   // Security warning modal
   React.useEffect(() => {
-    if (showSecurityWarning) {
+    // Don't show modal if we've already processed this action
+    if (showSecurityWarning && !hasProcessedRef.current) {
       openModal({
         title: strings.setupWallet.restoreWalletFromLinkSecurityWarningTitle,
         content: (
@@ -129,6 +142,7 @@ export const RestoreWalletFromLinkScreen = () => {
               onPress={() => {
                 closeModal()
                 setShowSecurityWarning(false)
+                hasProcessedRef.current = true
               }}
             />
           </Modal.Footer>
@@ -152,6 +166,9 @@ export const RestoreWalletFromLinkScreen = () => {
   const {createWallet: createWalletFromMnemonic, isPending: isPendingMnemonic} =
     useCreateWalletMnemonic({
       onSuccess: async (wallet) => {
+        // Mark as processed to prevent re-showing modal if component remounts
+        hasProcessedRef.current = true
+
         walletIdChanged(wallet.id)
         const walletStorage = storage.join('wallet/')
         const walletMeta = await walletStorage.getItem(
@@ -167,7 +184,8 @@ export const RestoreWalletFromLinkScreen = () => {
           throw error
         }
 
-        navigation.navigate('setup-wallet-preparing-wallet')
+        // Use replace instead of navigate to prevent going back to restore screen
+        navigation.replace('setup-wallet-preparing-wallet')
       },
       onError: (error) => {
         InteractionManager.runAfterInteractions(() => {
@@ -184,6 +202,9 @@ export const RestoreWalletFromLinkScreen = () => {
   const {createWallet: createWalletFromRootKey, isPending: isPendingRootKey} =
     useCreateWalletFromRootKey({
       onSuccess: async (wallet) => {
+        // Mark as processed to prevent re-showing modal if component remounts
+        hasProcessedRef.current = true
+
         walletIdChanged(wallet.id)
         const walletStorage = storage.join('wallet/')
         const walletMeta = await walletStorage.getItem(
@@ -199,7 +220,8 @@ export const RestoreWalletFromLinkScreen = () => {
           throw error
         }
 
-        navigation.navigate('setup-wallet-preparing-wallet')
+        // Use replace instead of navigate to prevent going back to restore screen
+        navigation.replace('setup-wallet-preparing-wallet')
       },
       onError: (error) => {
         InteractionManager.runAfterInteractions(() => {
@@ -216,6 +238,9 @@ export const RestoreWalletFromLinkScreen = () => {
   const {createWallet: createReadOnlyWallet, isPending: isPendingReadOnly} =
     useCreateWalletXPub({
       onSuccess: async (wallet) => {
+        // Mark as processed to prevent re-showing modal if component remounts
+        hasProcessedRef.current = true
+
         walletIdChanged(wallet.id)
         const walletStorage = storage.join('wallet/')
         const walletMeta = await walletStorage.getItem(
@@ -231,7 +256,8 @@ export const RestoreWalletFromLinkScreen = () => {
           throw error
         }
 
-        navigation.navigate('setup-wallet-preparing-wallet')
+        // Use replace instead of navigate to prevent going back to restore screen
+        navigation.replace('setup-wallet-preparing-wallet')
       },
       onError: (error) => {
         InteractionManager.runAfterInteractions(() => {
@@ -320,7 +346,8 @@ export const RestoreWalletFromLinkScreen = () => {
         !passwordErrors.matchesConfirmation)) &&
     !showSecurityWarning
 
-  if (showSecurityWarning) {
+  // Don't show modal if we've already processed this action
+  if (showSecurityWarning && !hasProcessedRef.current) {
     return null // Modal is shown via useEffect
   }
 

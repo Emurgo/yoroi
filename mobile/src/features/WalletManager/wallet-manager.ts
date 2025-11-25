@@ -1,3 +1,4 @@
+import {cardanoConfig} from '@yoroi/blockchains'
 import {parseSafe} from '@yoroi/common'
 import {Blockies} from '@yoroi/identicon'
 import {Chain, HW, Network, Portfolio, Wallet} from '@yoroi/types'
@@ -13,8 +14,10 @@ import {logger} from '~/kernel/logger/logger'
 import {makeWalletEncryptedStorage} from '~/kernel/storage/EncryptedStorage'
 import {Keychain} from '~/kernel/storage/Keychain'
 import {rootStorage} from '~/kernel/storage/storages'
+import {deriveAddressFromXPub} from '~/wallets/cardano/account-manager/derive-address-from-xpub'
 import {keyManager} from '~/wallets/cardano/key-manager/key-manager'
 import {WalletEvent, YoroiWallet} from '~/wallets/cardano/types'
+import {deriveRewardAddressHex} from '~/wallets/cardano/utils'
 import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
 import {validatePassword, validateWalletName} from '~/wallets/utils/validators'
 
@@ -1061,6 +1064,7 @@ export const makeWalletManager = (
       addressMode: Wallet.AddressMode
       accountVisual: number
     }) {
+      const network = stateSubjects.selectedNetwork.value
       const meta = await createWalletFromXPubFn({
         name,
         accountPubKeyHex,
@@ -1069,9 +1073,76 @@ export const makeWalletManager = (
         isReadOnly,
         addressMode,
         accountVisual,
-        network: stateSubjects.selectedNetwork.value,
+        network,
         version: WALLET_MANAGER_VERSION,
       })
+
+      // For read-only wallets, derive and store at least one address
+      // This is required for loadWallet to work properly
+      if (isReadOnly) {
+        try {
+          const chainId = networkManagers[network].chainId
+          const implementationConfig =
+            cardanoConfig.implementations[implementation]
+          const externalRole =
+            implementationConfig.derivations.base.roles.external
+
+          // Derive the first external address (index 0)
+          const addresses = await deriveAddressFromXPub({
+            accountPubKeyHex,
+            chainId,
+            role: externalRole,
+            implementation,
+            count: 1,
+          })
+
+          if (addresses.length > 0) {
+            const firstAddress = addresses[0]
+            // Derive reward address if staking is supported
+            let rewardAddressHex = ''
+            if (implementationConfig.features.staking) {
+              rewardAddressHex = deriveRewardAddressHex(
+                accountPubKeyHex,
+                chainId,
+                implementationConfig.features.staking.derivation.role,
+                implementationConfig.features.staking.derivation.index,
+              )
+            }
+
+            // Store address data in address storage
+            const addressStorage = rootStorage.join(
+              `legacy/${network}/v1/${meta.id}/addresses/`,
+            )
+            await addressStorage.setItem('readOnly', {
+              knownAddress: firstAddress,
+              internal: [],
+              external: [firstAddress],
+              rewardAddressHex,
+              enableDiscovery: true, // Enable discovery to find more addresses
+              accountVisual,
+            })
+
+            logger.info(
+              'createWalletXPub: stored initial address for read-only wallet',
+              {
+                walletId: meta.id,
+                address: firstAddress.substring(0, 20) + '...',
+              },
+            )
+          }
+        } catch (error) {
+          logger.error(
+            'createWalletXPub: failed to derive address for read-only wallet',
+            {
+              error,
+              walletId: meta.id,
+              errorMessage:
+                error instanceof Error ? error.message : String(error),
+            },
+          )
+          // Don't throw - let loadWallet handle the fallback using accountPubKeyHex
+        }
+      }
 
       await walletsRootStorage.setItem(meta.id, meta)
       // Hydrate to load the new wallet (same pattern as createWalletMnemonic)

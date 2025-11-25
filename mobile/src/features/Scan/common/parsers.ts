@@ -3,6 +3,8 @@ import {Links, Scan} from '@yoroi/types'
 
 import {freeze} from 'immer'
 
+import {logger} from '~/kernel/logger/logger'
+
 export const parseScanAction = (codeContent: string): Scan.Action => {
   const isPossibleLink = codeContent.includes(':')
 
@@ -26,8 +28,12 @@ export const parseScanAction = (codeContent: string): Scan.Action => {
   const cardanoLinks = linksCardanoModuleMaker()
   const parsedCardanoLink = cardanoLinks.parse(codeContent)
 
-  if (parsedCardanoLink === undefined)
+  if (parsedCardanoLink === undefined) {
+    logger.error(
+      'parseScanAction: Cardano link parsing failed - scheme not implemented',
+    )
     throw new Links.Errors.SchemeNotImplemented()
+  }
 
   const {authority} = parsedCardanoLink.config
 
@@ -149,6 +155,7 @@ export const parseScanAction = (codeContent: string): Scan.Action => {
       addressMode,
       accountVisual,
     } = parsedCardanoLink.params
+
     return freeze({
       action: 'restore-wallet',
       type: type as 'full' | 'readonly',
