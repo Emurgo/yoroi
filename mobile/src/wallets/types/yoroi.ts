@@ -98,13 +98,7 @@ export type YoroiConfig = Readonly<{
       display?: boolean
     }>
   }>
-  features?: Readonly<
-    {
-      pushNotifications?: Readonly<{
-        mobile?: boolean
-      }>
-    } & Record<string, unknown>
-  >
+  features?: Readonly<Record<string, unknown>>
   dapps?: Readonly<{
     banned?: ReadonlyArray<string>
     recommended?: ReadonlyArray<YoroiConfigRecommendedDapp>
