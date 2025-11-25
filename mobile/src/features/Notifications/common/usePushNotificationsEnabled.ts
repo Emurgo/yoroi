@@ -1,7 +1,3 @@
-import {useRemoteConfig} from '~/features/RemoteConfig/hooks/useRemoteConfig'
+import {features} from '~/kernel/features'
 
-export const usePushNotificationsEnabled = () => {
-  const {config} = useRemoteConfig()
-
-  return config?.features?.pushNotifications?.mobile ?? false
-}
+export const usePushNotificationsEnabled = () => features.pushNotifications

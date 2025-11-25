@@ -9,11 +9,11 @@ import {
   getNotificationsAuthorizationStatus,
   triggerNotificationsPermissionModal,
 } from '~/features/Notifications/common/tools'
-import {usePushNotificationsEnabled} from '~/features/Notifications/common/usePushNotificationsEnabled'
 import {
   SettingsItem,
   SettingsSection,
 } from '~/features/Settings/ui/shared/SettingsItems'
+import {features} from '~/kernel/features'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Icon} from '~/ui/Icon'
@@ -27,7 +27,6 @@ export const ChangeNotificationSettingsScreen = () => {
   const strings = useStrings()
   const {navigateToNotificationDisplayDuration} = useWalletNavigation()
   const {atoms: ta, palette: p} = useTheme()
-  const pushNotificationsEnabled = usePushNotificationsEnabled()
 
   return (
     <SafeAreaView
@@ -39,7 +38,7 @@ export const ChangeNotificationSettingsScreen = () => {
         style={a.flex_1}
         contentContainerStyle={[a.gap_lg, a.px_lg]}
       >
-        {pushNotificationsEnabled && (
+        {features.pushNotifications && (
           <SettingsSection
             title={strings.manageNotifications.pushNotifications}
           >

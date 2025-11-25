@@ -8,11 +8,11 @@ import {BackHandler, LayoutAnimation, Platform, Text, View} from 'react-native'
 import infoIcon from '~/assets/img/icon/info-light-green.png'
 import {useBuyCryptoBanner} from '~/features/Exchange/common/useBuyCryptoBanner'
 import {useGetImportantAlertsModal} from '~/features/Notifications/common/GetImportantAlertsModal'
-import {usePushNotificationsEnabled} from '~/features/Notifications/common/usePushNotificationsEnabled'
 import {useGovernanceBanner} from '~/features/Staking/Governance/useCases/useGovernanceBanner'
 import {usePoolTransitionModal} from '~/features/Staking/Staking/PoolTransition/usePoolTransitionModal'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useSync} from '~/features/WalletManager/hooks/useSync'
+import {features} from '~/kernel/features'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Space, SpaceHeight} from '~/ui/Space/Space'
@@ -35,9 +35,8 @@ export const TxHistory = () => {
   const {atoms: ta, palette: p, isDark} = useTheme()
   const navigation = useNavigation()
   const walletNavigation = useWalletNavigation()
-  const pushNotificationsEnabled = usePushNotificationsEnabled()
 
-  useGetImportantAlertsModal({enabled: pushNotificationsEnabled})
+  useGetImportantAlertsModal({enabled: features.pushNotifications})
 
   const {wallet, meta} = useSelectedWallet()
   const [showWarning, setShowWarning] = React.useState(
