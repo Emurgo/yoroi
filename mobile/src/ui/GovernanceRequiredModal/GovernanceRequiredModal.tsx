@@ -1,7 +1,7 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
-import {Text, View} from 'react-native'
+import {Text} from 'react-native'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button, ButtonType} from '~/ui/Button/Button'
@@ -16,7 +16,9 @@ const GovernanceRequiredModalContent = () => {
   const {atoms: ta} = useTheme()
 
   return (
-    <View style={[a.flex_1, a.align_center, a.justify_between, a.py_lg]}>
+    <Modal.Content
+      style={[a.flex_1, a.align_center, a.justify_between, a.py_lg]}
+    >
       <GovernanceIllustration height={280} width={280} />
       <Text
         style={[
@@ -28,7 +30,7 @@ const GovernanceRequiredModalContent = () => {
       >
         {strings.staking.governanceRequiredDescription}
       </Text>
-    </View>
+    </Modal.Content>
   )
 }
 
