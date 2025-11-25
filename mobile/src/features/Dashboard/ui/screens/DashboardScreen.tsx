@@ -1,3 +1,8 @@
+import {
+  GOVERNANCE_YOROI_DREP_ID_HEX,
+  useDelegationCertificate,
+  useGovernance,
+} from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import {useNavigation} from '@react-navigation/native'
@@ -65,7 +70,7 @@ export const DashboardScreen = () => {
   const {wallet, meta} = useSelectedWallet()
   const {isPending: isSyncing, sync} = useSync(wallet)
   const isOnline = useIsOnline(wallet)
-  const {openModal} = useModal()
+  const {openModal, closeModal} = useModal()
 
   const balances = useBalances(wallet)
   const primaryAmount = Amounts.getAmount(
@@ -83,6 +88,12 @@ export const DashboardScreen = () => {
   const {isParticipating, isLoading: isGovernanceParticipationLoading} =
     useGovernanceParticipation()
 
+  const {manager} = useGovernance()
+  const createDelegationCertificate = useDelegationCertificate()
+
+  const hasStakingKeyRegistered = stakingInfo?.status !== 'not-registered'
+  const needsToRegisterStakingKey = !hasStakingKeyRegistered
+
   const createOnWithdraw =
     ({shouldDeregister}: {shouldDeregister: boolean}) =>
     () => {
@@ -91,10 +102,46 @@ export const DashboardScreen = () => {
         return
       }
       if (!isParticipating) {
+        const handleDelegateAndWithdraw = async () => {
+          const stakingKey = wallet.getStakingKey()
+          closeModal()
+
+          // Create governance delegation certificate
+          const delegationCert = createDelegationCertificate({
+            hash: GOVERNANCE_YOROI_DREP_ID_HEX,
+            type: 'key',
+            stakingKey,
+          })
+
+          // Combine certificates with stake registration if needed
+          const stakeCert = needsToRegisterStakingKey
+            ? manager.createStakeRegistrationCertificate(stakingKey)
+            : null
+          const certs = stakeCert !== null 
+            ? [stakeCert, delegationCert] 
+            : [delegationCert]
+
+          // Create combined tx with both governance delegation AND withdrawal
+          const unsignedTx = await wallet.createWithdrawalTx({
+            shouldDeregister,
+            addressMode: meta.addressMode,
+            governanceCertificates: certs,
+          })
+
+          // Navigate to tx review
+          unsignedTxChanged(unsignedTx)
+          walletNavigateTo.navigateToTxReview({
+            operations: [<StakeRewardsWithdrawalOperation key="0" />],
+            context: 'withdraw rewards and delegate governance',
+          })
+        }
+
         openModal({
           title: strings.staking.withdrawWarningTitle,
           content: React.createElement(WithdrawGovernanceWarningModal.Content),
-          footer: React.createElement(WithdrawGovernanceWarningModal.Footer),
+          footer: React.createElement(WithdrawGovernanceWarningModal.Footer, {
+            onDelegateAndWithdraw: handleDelegateAndWithdraw,
+          }),
         })
         return
       }

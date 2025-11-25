@@ -401,6 +401,14 @@ export const stakingMessages = defineMessages({
     id: 'components.governance.withdrawWarningButton',
     defaultMessage: '!!!Withdraw Warning Button',
   },
+  delegateAndWithdraw: {
+    id: 'components.governance.delegateAndWithdraw',
+    defaultMessage: '!!!Delegate and Withdraw',
+  },
+  goToGovernanceCenter: {
+    id: 'components.governance.goToGovernanceCenter',
+    defaultMessage: '!!!Go to Governance Center',
+  },
   enterDRepID: {
     id: 'components.governance.enterDRepID',
     defaultMessage: '!!!Enter DRep ID',

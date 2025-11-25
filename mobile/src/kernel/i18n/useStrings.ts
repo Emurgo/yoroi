@@ -1250,6 +1250,8 @@ export const useStrings = () => {
           stakingMessages.withdrawWarningDescription,
         ),
         withdrawWarningButton: f(stakingMessages.withdrawWarningButton),
+        delegateAndWithdraw: f(stakingMessages.delegateAndWithdraw),
+        goToGovernanceCenter: f(stakingMessages.goToGovernanceCenter),
         enterDRepID: f(stakingMessages.enterDRepID),
         signTransaction: f(txLabels.signingTx),
         password: f(txLabels.password),
