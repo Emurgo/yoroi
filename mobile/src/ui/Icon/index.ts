@@ -1,3 +1,4 @@
+import {Abstain} from './Abstain'
 import {Ada} from './Ada'
 import {Analytics} from './Analytics'
 import {AngleDown} from './AngleDown'
@@ -78,7 +79,9 @@ import {MuesliSwap} from './MuesliSwap'
 import {MultiParty} from './MultiParty'
 import {MultipleWallets} from './MultipleWallets'
 import {NftAsset} from './NftAsset'
+import {NoConfidence} from './NoConfidence'
 import {NoNfts} from './NoNfts'
+import {OtherDreps} from './OtherDreps'
 import {Pin} from './Pin'
 import {Placeholder} from './Placeholder'
 import {PlateNumber} from './PlateNumber'
@@ -143,12 +146,14 @@ import {Wallets} from './Wallets'
 import {Warning} from './Warning'
 import {WingRiders} from './WingRiders'
 import {YoroiApp} from './YoroiApp'
+import {YoroiLogo} from './YoroiLogo'
 import {YoroiNightly} from './YoroiNightly'
 import {YoroiWallet} from './YoroiWallet'
 
 export * from './type'
 
 export const Icon = {
+  Abstain,
   Ada,
   Exchange,
   Analytics,
@@ -210,7 +215,9 @@ export const Icon = {
   MultiParty,
   MultipleWallets,
   NftAsset,
+  NoConfidence,
   NoNfts,
+  OtherDreps,
   Pin,
   Placeholder,
   PlateNumber,
@@ -290,6 +297,7 @@ export const Icon = {
   Google,
   Connection,
   YoroiApp,
+  YoroiLogo,
   TabPortfolio,
   InfoCircle,
   AngleUp,
