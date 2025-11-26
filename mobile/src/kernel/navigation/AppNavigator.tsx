@@ -28,7 +28,6 @@ import {PushNotificationNavigationHandler} from '~/features/Notifications/common
 import {useInitNotifications} from '~/features/Notifications/common/hooks'
 import {NotificationUIHandler} from '~/features/Notifications/useCases/NotificationUIHandler'
 import {NotificationsDevScreen} from '~/features/Notifications/useCases/NotificationsDevScreen'
-import {P2PConnectionStatusBar} from '~/features/P2P/components/P2PConnectionStatusBar'
 import {SetupWalletNavigator} from '~/features/SetupWallet/SetupWalletNavigator'
 import {useHasWallets} from '~/features/WalletManager/hooks/useHasWallets'
 
