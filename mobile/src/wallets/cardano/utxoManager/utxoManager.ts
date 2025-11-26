@@ -1,15 +1,15 @@
+import {RawUtxo} from '@yoroi/api'
 import {isString, parseSafe} from '@yoroi/common'
-import {App} from '@yoroi/types'
-
-import {UtxoModels, UtxoStorage, initUtxo} from '@emurgo/yoroi-lib'
 import {
   Utxo,
   UtxoAtSafePoint,
   UtxoDiffToBestBlock,
-} from '@emurgo/yoroi-lib/dist/utxo/models'
-import {parseInt} from 'lodash'
+  UtxoStorage,
+  init as initUtxo,
+} from '@yoroi/tx'
+import {App, Portfolio} from '@yoroi/types'
 
-import {RawUtxo} from '~/wallets/types/other'
+import {parseInt} from 'lodash'
 
 export const makeUtxoManager = async ({
   storage,
@@ -91,13 +91,20 @@ export const makeUtxoManagerStorage = (storage: App.Storage) => {
   } as const
 }
 
-const serializer = (utxo: UtxoModels.Utxo): RawUtxo => ({
+const serializer = (utxo: Utxo): RawUtxo => ({
   utxo_id: utxo.utxoId,
   tx_hash: utxo.txHash,
   tx_index: utxo.txIndex,
   amount: utxo.amount.toString(),
   receiver: utxo.receiver,
-  assets: utxo.assets,
+  // Convert Asset[] (with assetId) to RemoteAsset[] (with tokenId)
+  // assetId from backend is already the full token ID in format policyId.assetNameHex
+  assets: utxo.assets.map((asset) => ({
+    amount: asset.amount,
+    tokenId: asset.assetId as Portfolio.Token.Id,
+    policyId: asset.policyId,
+    name: asset.name,
+  })),
 })
 
 export type UtxoManager = Awaited<ReturnType<typeof makeUtxoManager>>
@@ -111,9 +118,7 @@ export const makeUtxoStorage = (storage: App.Storage) => {
   const setUtxoDiffToBestBlock = (utxoDiffToBestBlock: UtxoDiffToBestBlock[]) =>
     storage.setItem(diffPath, utxoDiffToBestBlock)
 
-  const getUtxoAtSafePoint = async (): Promise<
-    UtxoModels.UtxoAtSafePoint | undefined
-  > => {
+  const getUtxoAtSafePoint = async (): Promise<UtxoAtSafePoint | undefined> => {
     const safePoint = await storage.getItem(safePointPath, parseSafePoint)
     if (!safePoint) return undefined
     return safePoint

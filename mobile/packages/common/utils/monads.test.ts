@@ -1,26 +1,28 @@
+import {Either} from '@yoroi/types'
+
 import {isLeft, isRight} from './monads'
 
-describe('Either helper functions', () => {
+describe('monads', () => {
   describe('isLeft', () => {
-    it('returns true if Either is Left', () => {
-      const left = {tag: 'left', error: new Error('Error')} as const
+    it('should return true for left either', () => {
+      const left: Either<string, number> = {tag: 'left', error: 'error'}
       expect(isLeft(left)).toBe(true)
     })
 
-    it('returns false if Either is Right', () => {
-      const right = {tag: 'right', value: 'Success'} as const
+    it('should return false for right either', () => {
+      const right: Either<string, number> = {tag: 'right', value: 1}
       expect(isLeft(right)).toBe(false)
     })
   })
 
   describe('isRight', () => {
-    it('returns true if Either is Right', () => {
-      const right = {tag: 'right', value: 'Success'} as const
+    it('should return true for right either', () => {
+      const right: Either<string, number> = {tag: 'right', value: 1}
       expect(isRight(right)).toBe(true)
     })
 
-    it('returns false if Either is Left', () => {
-      const left = {tag: 'left', error: new Error('Error')} as const
+    it('should return false for left either', () => {
+      const left: Either<string, number> = {tag: 'left', error: 'error'}
       expect(isRight(left)).toBe(false)
     })
   })

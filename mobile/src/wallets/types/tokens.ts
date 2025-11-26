@@ -2,7 +2,6 @@ type TokenCommonMetadata = {
   numberOfDecimals: number
   ticker: null | string
   longName: null | string
-  maxSupply: null | string
 }
 
 type TokenMetadata = TokenCommonMetadata & {
@@ -16,18 +15,20 @@ export type Token = {
   metadata: TokenMetadata
 }
 
-type DefaultAssetMetadata = TokenCommonMetadata & {
-  policyId: string
-  assetName: string
-  ticker: string
-}
-
-export type DefaultAsset = Token & {
-  metadata: DefaultAssetMetadata
-}
-
 export type LegacyToken = {
   isDefault: boolean
   identifier: string
   metadata: TokenMetadata
+}
+
+// Minimal token metadata for transaction processing
+export type TransactionToken = {
+  isDefault: boolean
+  identifier: string
+  // Minimal metadata for transaction display
+  policyId: string
+  assetName: string
+  numberOfDecimals: number
+  ticker: string | null
+  longName: string | null
 }

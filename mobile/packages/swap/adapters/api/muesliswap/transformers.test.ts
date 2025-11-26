@@ -1,5 +1,5 @@
 import {isPrimaryToken} from '@yoroi/portfolio'
-import {Chain, Swap} from '@yoroi/types'
+import {Chain, Portfolio, Swap} from '@yoroi/types'
 
 import {api, primaryTokenInfo} from './api.mocks'
 import {
@@ -7,19 +7,17 @@ import {
   toSwapProtocol,
   transformersMaker,
 } from './transformers'
-import {Dex, LimitOrderRequest} from './types'
+import {Dex, LimitOrderRequest, TokensResponse} from './types'
 
 const address =
   'addr1q9qhyvkm5fytm5ckgshny0zz08a3urhhh7ckdqxcm27av40eafn3v5lr2w2n2er9uj7c743mt42gpe8tgek6394z9t7qn4yjzl'
 const addressHex = 'stake1u9qh50svpn80sk9ftv80l5m57840q3jecluvmjyvz5um46qaa79q4'
 const network = Chain.Network.Mainnet
-const stakingKey = 'stake1u8'
 const transformers = transformersMaker({
   primaryTokenInfo,
   address,
   addressHex,
   network,
-  stakingKey,
   isPrimaryToken,
   partner: 'somePartnerId',
 })
@@ -276,6 +274,110 @@ describe('transformers', () => {
 
     it('should return Dex.Unsupported for Splash_v1 protocol', () => {
       expect(fromSwapProtocol(Swap.Protocol.Splash_v1)).toBe(Dex.Unsupported)
+    })
+  })
+
+  describe('setProviders', () => {
+    it('should set providers cache', () => {
+      const providersPayload = {
+        dex_info: {},
+        liquidity_source_info: {},
+      } as any
+      transformers.setProviders(providersPayload)
+      // Verify by checking that excluded_sources is computed when providers are set
+      const result = transformers.quote.request({
+        slippage: 0.01,
+        tokenIn: '.',
+        tokenOut:
+          'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950',
+        amountIn: 10,
+        protocol: Swap.Protocol.Minswap_v1,
+      })
+      // excluded_sources should be computed (even if undefined) when providers are set
+      expect(result).toBeDefined()
+    })
+  })
+
+  describe('tokens.response edge cases', () => {
+    it('should filter out tokens with null decimals', () => {
+      const tokensResponse: TokensResponse = [
+        {
+          ticker: 'TEST',
+          name: 'Test Token',
+          policyId: 'policy1',
+          hexName: 'hex1',
+          decimals: null,
+          verified: true,
+        },
+        {
+          ticker: 'VALID',
+          name: 'Valid Token',
+          policyId: 'policy2',
+          hexName: 'hex2',
+          decimals: 6,
+          verified: true,
+        },
+      ]
+      const result = transformers.tokens.response(tokensResponse)
+      expect(result).toHaveLength(1)
+      expect(result[0]?.id).toBe('policy2.hex2')
+    })
+
+    it('should set status to Invalid when verified is false', () => {
+      const tokensResponse: TokensResponse = [
+        {
+          ticker: 'UNVERIFIED',
+          name: 'Unverified Token',
+          policyId: 'policy1',
+          hexName: 'hex1',
+          decimals: 6,
+          verified: false,
+        },
+      ]
+      const result = transformers.tokens.response(tokensResponse)
+      expect(result[0]?.status).toBe(Portfolio.Token.Status.Invalid)
+    })
+
+    it('should return primary token info when id matches', () => {
+      const tokensResponse: TokensResponse = [
+        {
+          ticker: primaryTokenInfo.ticker,
+          name: primaryTokenInfo.name,
+          policyId: primaryTokenInfo.id.split('.')[0]!,
+          hexName: primaryTokenInfo.id.split('.')[1]!,
+          decimals: primaryTokenInfo.decimals,
+          verified: true,
+        },
+      ]
+      const result = transformers.tokens.response(tokensResponse)
+      expect(result[0]).toEqual(primaryTokenInfo)
+    })
+  })
+
+  describe('mapProtocolToOrderContract', () => {
+    it('should normalize Muesliswap to Muesliswap_v2', () => {
+      const result = transformers.limitQuote.request({
+        protocol: Swap.Protocol.Muesliswap,
+        tokenIn: '.',
+        tokenOut:
+          'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950',
+        amountIn: 10,
+        wantedPrice: 1,
+      })
+      expect(result.order_contract).toBe(Dex.Muesliswap_v2)
+    })
+
+    it('should use routeHint.orderContract when provided in createLimit', () => {
+      const result = transformers.createLimit.request({
+        protocol: Swap.Protocol.Minswap_v1,
+        tokenIn: '.',
+        tokenOut:
+          'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950',
+        amountIn: 10,
+        wantedPrice: 1,
+        routeHint: {orderContract: Dex.Muesliswap_v2} as any,
+      })
+      expect(result.order_contract).toBe(Dex.Muesliswap_v2)
     })
   })
 })

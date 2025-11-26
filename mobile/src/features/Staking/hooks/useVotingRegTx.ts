@@ -3,11 +3,11 @@ import {Wallet} from '@yoroi/types'
 import * as React from 'react'
 
 import {UsePromiseOptions, usePromise} from '~/hooks/usePromise'
+import {createVotingRegTxFromWallet} from '~/wallets/cardano/transaction-recipes'
 import {YoroiWallet} from '~/wallets/cardano/types'
-import {YoroiUnsignedTx} from '~/wallets/types/yoroi'
 
 type VotingRegTxAndEncryptedKey = {
-  votingRegTx: YoroiUnsignedTx
+  votingRegTx: {cbor: string}
 }
 
 export const useVotingRegTx = (
@@ -27,7 +27,7 @@ export const useVotingRegTx = (
     ]
   >,
 ) => {
-  const createVotingRegTx = React.useCallback(
+  const createVotingRegTxHelper = React.useCallback(
     async ({
       catalystKeyHex,
       supportsCIP36,
@@ -37,7 +37,7 @@ export const useVotingRegTx = (
       supportsCIP36: boolean
       addressMode: Wallet.AddressMode
     }) => {
-      return await wallet.createVotingRegTx({
+      return await createVotingRegTxFromWallet(wallet, {
         catalystKeyHex,
         supportsCIP36,
         addressMode,
@@ -49,7 +49,7 @@ export const useVotingRegTx = (
   const promise = usePromise({
     shouldThrow: true,
     ...options,
-    promise: createVotingRegTx,
+    promise: createVotingRegTxHelper,
   })
 
   return {

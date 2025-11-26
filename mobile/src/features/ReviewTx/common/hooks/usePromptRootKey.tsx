@@ -1,4 +1,5 @@
 import * as React from 'react'
+import {Keyboard} from 'react-native'
 
 import {ConfirmRawTxWithOs} from '~/features/Swap/common/ConfirmRawTx/ConfirmRawTxWithOs'
 import {ConfirmRawTxWithPassword} from '~/features/Swap/common/ConfirmRawTx/ConfirmRawTxWithPassword'
@@ -23,10 +24,23 @@ export const usePromptRootKey = () => {
 
   const promptRootKey = React.useCallback(
     ({onSuccess, onError, onClose, title, summary}: PromptRootKeyOptions) => {
-      const handleOnConfirm = (rootKey: string) => {
-        const result = onSuccess(rootKey)
+      const handleOnConfirm = async (rootKey: string) => {
+        Keyboard.dismiss()
         closeModal()
-        return result
+
+        try {
+          await onSuccess(rootKey)
+        } catch (error) {
+          Keyboard.dismiss()
+          closeModal()
+          onError?.(error)
+        }
+      }
+
+      const handleOnError = (error?: unknown) => {
+        Keyboard.dismiss()
+        closeModal()
+        onError?.(error)
       }
 
       if (meta.isEasyConfirmationEnabled) {
@@ -36,7 +50,7 @@ export const usePromptRootKey = () => {
             <Modal.Content>
               <ConfirmRawTxWithOs
                 onSuccess={handleOnConfirm}
-                onError={onError}
+                onError={handleOnError}
               />
             </Modal.Content>
           ),
@@ -53,6 +67,7 @@ export const usePromptRootKey = () => {
             <ConfirmRawTxWithPassword
               summary={summary}
               onConfirm={handleOnConfirm}
+              onError={handleOnError}
             />
           </Modal.Content>
         ),

@@ -36,6 +36,7 @@ import {EnableEasyConfirmationScreen} from '../screens/ChangeWalletSettingsScree
 import {ManageCollateralScreen} from '../screens/ChangeWalletSettingsScreen/ManageCollateralScreen/ManageCollateralScreen'
 import {RemoveWalletScreen} from '../screens/ChangeWalletSettingsScreen/RemoveWallet/RemoveWalletScreen'
 import {RenameWalletScreen} from '../screens/ChangeWalletSettingsScreen/RenameWalletScreen/RenameWalletScreen'
+import {ShareWalletScreen} from '../screens/ShareWalletScreen/ShareWalletScreen'
 import {NetworkTag} from '../shared/NetworkTag'
 import {ManageNotificationsNavigator} from './ManageNotificationsNavigator'
 
@@ -200,6 +201,12 @@ export const SettingsScreenNavigator = () => {
         options={{headerShown: false}}
       />
 
+      <Stack.Screen //
+        name="share-wallet"
+        getComponent={() => ShareWalletScreen}
+        options={{title: strings.settings.shareWallet.title}}
+      />
+
       <Stack.Screen
         name="analytics"
         getComponent={() => ToggleAnalyticsSettingsScreen}
@@ -216,17 +223,20 @@ const SettingsTabNavigator = () => {
   const strings = useStrings()
   const {atoms: ta, palette: p} = useTheme()
 
+  // Memoize screenOptions to prevent recreation on every render
+  const screenOptions = React.useCallback(
+    ({route}: {route: {name: string}}) => ({
+      ...defaultMaterialTopTabNavigationOptions(p),
+      tabBarLabel:
+        route.name === 'wallet-settings'
+          ? strings.settings.walletTabTitle
+          : strings.settings.appTabTitle,
+    }),
+    [p, strings.settings.walletTabTitle, strings.settings.appTabTitle],
+  )
+
   return (
-    <Tab.Navigator
-      style={ta.bg_color_max}
-      screenOptions={({route}) => ({
-        ...defaultMaterialTopTabNavigationOptions(p),
-        tabBarLabel:
-          route.name === 'wallet-settings'
-            ? strings.settings.walletTabTitle
-            : strings.settings.appTabTitle,
-      })}
-    >
+    <Tab.Navigator style={ta.bg_color_max} screenOptions={screenOptions}>
       <Tab.Screen
         name="wallet-settings"
         getComponent={() => ChangeWalletSettingsScreen}

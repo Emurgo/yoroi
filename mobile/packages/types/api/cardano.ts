@@ -1,3 +1,5 @@
+import {Portfolio} from '../index'
+
 export type ApiMetadataFile = {
   name?: string
   mediaType: string
@@ -37,7 +39,7 @@ export type ApiMetadataVersion = {
   version?: string
 }
 
-export type ApiTokenId = `${string}.${string}`
+export type ApiTokenId = Portfolio.Token.Id
 
 export type ApiFutureTokenRecords = {
   [tokenId: string]: ApiFutureToken

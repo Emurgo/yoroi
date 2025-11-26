@@ -1,4 +1,5 @@
 import React, {useState} from 'react'
+import {Keyboard} from 'react-native'
 
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 
@@ -36,27 +37,31 @@ const PasswordInput = ({
   onError,
   summary,
 }: {
-  onConfirm: (password: string) => void
+  onConfirm: (password: string) => void | Promise<void>
   onError?: () => void
   summary?: string
 }) => {
   const [error, setError] = useState<Error | null>(null)
   const [loading, setLoading] = useState(false)
 
-  const onConfirmPress = (password: string) => {
+  const onConfirmPress = async (password: string) => {
     setError(null)
     setLoading(true)
+    // Dismiss keyboard before submitting
+    Keyboard.dismiss()
     try {
-      onConfirm(password)
+      await onConfirm(password)
+      // Modal should close after onConfirm completes
+      // Reset loading state immediately to hide spinner
+      setLoading(false)
     } catch (e: unknown) {
+      setLoading(false)
       if (onError) {
-        setLoading(false)
         onError()
         return
       }
 
       if (e instanceof Error) {
-        setLoading(false)
         setError(e)
       }
     }

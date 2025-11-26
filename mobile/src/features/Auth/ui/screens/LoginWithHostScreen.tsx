@@ -4,6 +4,7 @@ import {atoms as a} from '@yoroi/theme'
 import * as React from 'react'
 import {View} from 'react-native'
 
+import {PendingActionBanner} from '~/features/Links/components/PendingActionBanner'
 import {useAppState} from '~/hooks/useAppState'
 import {usePromise} from '~/hooks/usePromise'
 import {useStrings} from '~/kernel/i18n/useStrings'
@@ -40,6 +41,7 @@ export const LoginWithHostScreen = () => {
 
   return (
     <SafeArea style={[a.justify_between]}>
+      <PendingActionBanner />
       <Center>
         <Logo />
       </Center>

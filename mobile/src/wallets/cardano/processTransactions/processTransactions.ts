@@ -1,32 +1,36 @@
+/**
+ * @deprecated This file is deprecated. Use useFormattedTxFromWalletTransaction hook from ReviewTx instead.
+ * This file will be removed in a future version.
+ *
+ * Legacy transaction processing logic. Kept temporarily for backward compatibility.
+ */
 import {isArray, isString} from '@yoroi/common'
-import {Portfolio} from '@yoroi/types'
-
-import {BigNumber} from 'bignumber.js'
-
+import {CertificateKind} from '@yoroi/tx'
+import {Balance, Portfolio} from '@yoroi/types'
 import {
   BaseAsset,
-  CERTIFICATE_KIND,
   TRANSACTION_DIRECTION,
   TRANSACTION_STATUS,
   TRANSACTION_TYPE,
-  Transaction,
   TransactionInfo,
-} from '~/wallets/types/other'
-import {Token} from '~/wallets/types/tokens'
+  WalletTransaction,
+} from '@yoroi/types'
 
-import {
-  MultiToken,
-  getDefaultNetworkTokenEntry,
-  strToDefaultMultiAsset,
-} from '../MultiToken'
-import {multiTokenFromRemote} from '../utils'
+import BigNumber from 'bignumber.js'
+
+import {TransactionToken} from '~/wallets/types/tokens'
+import {Amounts, Quantities, asQuantity} from '~/wallets/utils/utils'
 
 const ASSURANCE_LEVELS = {
   LOW: 3,
   MEDIUM: 9,
-}
+} as const
 
 type TransactionAssurance = 'PENDING' | 'FAILED' | 'LOW' | 'MEDIUM' | 'HIGH'
+
+/**
+ * Calculate transaction assurance level based on status and confirmations
+ */
 const getTransactionAssurance = (
   status: (typeof TRANSACTION_STATUS)[keyof typeof TRANSACTION_STATUS],
   confirmations: number,
@@ -38,261 +42,341 @@ const getTransactionAssurance = (
     throw new Error('Internal error - unknown transaction status')
   }
 
-  const assuranceLevelCutoffs = ASSURANCE_LEVELS
-  if (confirmations < assuranceLevelCutoffs.LOW) return 'LOW'
-  if (confirmations < assuranceLevelCutoffs.MEDIUM) return 'MEDIUM'
+  if (confirmations < ASSURANCE_LEVELS.LOW) return 'LOW'
+  if (confirmations < ASSURANCE_LEVELS.MEDIUM) return 'MEDIUM'
   return 'HIGH'
 }
 
-const getTxTokens = (tx: Transaction): Record<string, Token> => {
-  const tokens: Record<string, Token> = {}
-  const rawTokens: Array<BaseAsset> = []
-  tx.inputs.forEach((i) => rawTokens.push(...i.assets))
-  tx.outputs.forEach((o) => rawTokens.push(...o.assets))
-  rawTokens.forEach((t) => {
-    if (tokens[t.assetId] == null) {
-      tokens[t.assetId] = {
+/**
+ * Extract unique tokens from transaction inputs and outputs
+ */
+const extractTransactionTokens = (
+  tx: WalletTransaction,
+): Record<string, TransactionToken> => {
+  const tokens: Record<string, TransactionToken> = {}
+  const allAssets: BaseAsset[] = []
+
+  // Collect all assets from inputs and outputs
+  tx.inputs.forEach((input) => allAssets.push(...input.assets))
+  tx.outputs.forEach((output) => allAssets.push(...output.assets))
+
+  // Create TransactionToken for each unique asset
+  for (const asset of allAssets) {
+    if (tokens[asset.tokenId] == null) {
+      tokens[asset.tokenId] = {
         isDefault: false,
-        identifier: t.assetId,
-        metadata: {
-          policyId: t.policyId,
-          assetName: t.name,
-          numberOfDecimals: 0,
-          ticker: null,
-          longName: null,
-          maxSupply: null,
-        },
+        identifier: asset.tokenId,
+        policyId: asset.policyId,
+        assetName: asset.name,
+        numberOfDecimals: 0,
+        ticker: null,
+        longName: null,
       }
     }
-  })
+  }
+
   return tokens
 }
 
-const _sum = (
-  a: Array<{
+/**
+ * Convert remote asset format to Balance.Amounts
+ */
+const remoteAssetsToAmounts = (
+  assets: BaseAsset[],
+  primaryTokenId: string,
+): Balance.Amounts => {
+  const amounts: Balance.Amounts = {}
+
+  for (const asset of assets) {
+    // For primary token, tokenId might be empty, use primaryTokenId instead
+    const tokenId =
+      !asset.tokenId || asset.tokenId === ('' as Portfolio.Token.Id)
+        ? primaryTokenId
+        : asset.tokenId
+    const existing = amounts[tokenId]
+    amounts[tokenId] = existing
+      ? Quantities.sum([existing, asQuantity(asset.amount)])
+      : asQuantity(asset.amount)
+  }
+
+  return amounts
+}
+
+/**
+ * Convert remote transaction data to Balance.Amounts
+ */
+const remoteDataToAmounts = (
+  data: Array<{
     address: string
     amount: string
-    assets: Array<BaseAsset>
+    assets: BaseAsset[]
   }>,
-  primaryTokenInfo: Portfolio.Token.Info,
-): MultiToken =>
-  a.reduce(
-    (acc: MultiToken, x) => acc.joinAddMutable(multiTokenFromRemote(x)),
-    new MultiToken([], getDefaultNetworkTokenEntry(primaryTokenInfo)),
-  )
+  primaryTokenId: string,
+): Balance.Amounts => {
+  return data.reduce<Balance.Amounts>((acc, item) => {
+    const primaryAmount = remoteAssetsToAmounts(
+      [
+        {
+          tokenId: '' as Portfolio.Token.Id,
+          amount: item.amount,
+          policyId: '',
+          name: '',
+        },
+      ],
+      primaryTokenId,
+    )
+    const assetAmounts = remoteAssetsToAmounts(item.assets, primaryTokenId)
+    return Amounts.sum([acc, primaryAmount, assetAmounts])
+  }, {} as Balance.Amounts)
+}
 
-const _multiPartyWarningCache: Record<string, boolean> = {}
+/**
+ * Process transaction metadata from remote format
+ */
+const processMetadata = (
+  metadata: WalletTransaction['metadata'],
+): TransactionInfo['metadata'] => {
+  if (!metadata) return undefined
+
+  const result: Record<string, string> = {}
+
+  for (const item of metadata) {
+    if (!item?.label) continue
+
+    const msg = item.map_json?.msg
+    if (isArray(msg)) {
+      result[item.label] = msg.join('')
+    } else if (isString(msg)) {
+      result[item.label] = msg
+    }
+  }
+
+  return Object.keys(result).length > 0 ? result : undefined
+}
+
+/**
+ * Calculate implicit output from MoveInstantaneousRewards certificates
+ */
+const calculateImplicitOutput = (
+  tx: WalletTransaction,
+  ownAddresses: string[],
+  primaryTokenId: string,
+): Balance.Amounts => {
+  if (tx.type !== TRANSACTION_TYPE.SHELLEY) {
+    return {} as Balance.Amounts
+  }
+
+  let totalRewards = Quantities.zero
+
+  for (const cert of tx.certificates) {
+    if (cert.kind !== CertificateKind.MoveInstantaneousRewardsCert) {
+      continue
+    }
+
+    const rewards = (cert as {rewards?: Record<string, string>}).rewards
+    if (!rewards) continue
+
+    for (const [rewardAddr, amount] of Object.entries(rewards)) {
+      if (ownAddresses.includes(rewardAddr)) {
+        totalRewards = Quantities.sum([totalRewards, asQuantity(amount)])
+      }
+    }
+  }
+
+  return totalRewards !== Quantities.zero
+    ? ({[primaryTokenId]: totalRewards} as Balance.Amounts)
+    : ({} as Balance.Amounts)
+}
+
+/**
+ * Determine transaction direction based on ownership of inputs/outputs
+ */
+const determineTransactionDirection = (
+  hasOnlyOwnInputs: boolean,
+  hasOnlyOwnOutputs: boolean,
+  hasOwnInputs: boolean,
+  isInvalidScriptExecution: boolean,
+): (typeof TRANSACTION_DIRECTION)[keyof typeof TRANSACTION_DIRECTION] => {
+  if (isInvalidScriptExecution) {
+    return TRANSACTION_DIRECTION.SELF
+  }
+
+  if (hasOnlyOwnInputs && hasOnlyOwnOutputs) {
+    return TRANSACTION_DIRECTION.SELF
+  }
+
+  if (hasOwnInputs && !hasOnlyOwnInputs) {
+    return TRANSACTION_DIRECTION.MULTI
+  }
+
+  if (hasOnlyOwnInputs) {
+    return TRANSACTION_DIRECTION.SENT
+  }
+
+  return TRANSACTION_DIRECTION.RECEIVED
+}
+
+/**
+ * @deprecated This function is deprecated. Use useFormattedTxFromWalletTransaction hook instead.
+ * This function will be removed in a future version.
+ *
+ * Process transaction history data into TransactionInfo format
+ */
 export const processTxHistoryData = (
-  tx: Transaction,
-  ownAddresses: Array<string>,
+  tx: WalletTransaction,
+  ownAddresses: string[],
   confirmations: number,
   memo: string | null,
   primaryTokenInfo: Portfolio.Token.Info,
 ): TransactionInfo => {
-  const metadata = tx.metadata?.reduce<TransactionInfo['metadata']>(
-    (metadatas: TransactionInfo['metadata'], metadata) => {
-      if (metadata?.label && metadatas != null) {
-        if (isArray(metadata?.map_json?.msg)) {
-          metadatas[metadata.label] = metadata.map_json.msg.join('')
-        }
-        if (isString(metadata?.map_json?.msg)) {
-          metadatas[metadata.label] = metadata.map_json.msg
-        }
-      }
-      return metadatas
-    },
-    {},
-  )
+  const primaryTokenId = primaryTokenInfo.id
 
-  const _strToDefaultMultiAsset = (amount: string) =>
-    strToDefaultMultiAsset(amount, primaryTokenInfo)
-  // collateral
+  // Process metadata
+  const metadata = processMetadata(tx.metadata)
+
+  // Handle script execution failures
   const collateral = tx.collateralInputs || []
   const isNonNativeScriptExecution =
-    Number(tx.scriptSize) > 0 || collateral.length > 0
+    Number(tx.scriptSize || 0) > 0 || collateral.length > 0
   const isInvalidScriptExecution =
     isNonNativeScriptExecution && !tx.validContract
-  // TODO: check if is it possible to have not owned address in collateral inputs
-  // NOTE: only add the tx inputs to account it if the execution has failed
-  const ownUtxoCollateralInputs = isInvalidScriptExecution
-    ? collateral.filter(({address}) => ownAddresses.includes(address))
-    : []
-  // NOTE: will ignore the inputs and outputs if the tx script execution failed
+
+  // Filter inputs/outputs based on script execution status
   const utxoInputs = isInvalidScriptExecution ? [] : tx.inputs
   const utxoOutputs = isInvalidScriptExecution ? [] : tx.outputs
+
+  // Handle collateral inputs (only count if script execution failed)
+  const ownUtxoCollateralInputs = isInvalidScriptExecution
+    ? collateral.filter((input) => ownAddresses.includes(input.address))
+    : []
+
+  // Convert withdrawals to input format for accounting
   const accountingInputs = isInvalidScriptExecution
     ? []
-    : tx.withdrawals.map((w) => ({
-        address: w.address,
-        amount: w.amount,
+    : tx.withdrawals.map((withdrawal) => ({
+        address: withdrawal.address,
+        amount: withdrawal.amount,
         assets: [],
       }))
-  const ownUtxoInputs = utxoInputs.filter(({address}) =>
-    ownAddresses.includes(address),
+
+  // Filter own addresses
+  const ownUtxoInputs = utxoInputs.filter((input) =>
+    ownAddresses.includes(input.address),
   )
-  const ownUtxoOutputs = utxoOutputs.filter(({address}) =>
-    ownAddresses.includes(address),
+  const ownUtxoOutputs = utxoOutputs.filter((output) =>
+    ownAddresses.includes(output.address),
   )
 
-  const ownImplicitInput: MultiToken = _strToDefaultMultiAsset('0')
+  // Calculate implicit inputs/outputs
+  const ownImplicitInput: Balance.Amounts = {} as Balance.Amounts
+  const ownImplicitOutput = calculateImplicitOutput(
+    tx,
+    ownAddresses,
+    primaryTokenId,
+  )
 
-  const ownImplicitOutput: MultiToken = (() => {
-    if (tx.type === TRANSACTION_TYPE.SHELLEY) {
-      let implicitOutputSum = new BigNumber(0)
-
-      for (const cert of tx.certificates) {
-        if (cert.kind !== CERTIFICATE_KIND.MOVE_INSTANTANEOUS_REWARDS) {
-          continue
-        }
-
-        const {rewards} = cert as any
-        if (rewards == null) continue // shouldn't happen
-
-        for (const rewardAddr in rewards) {
-          if (ownAddresses.includes(rewardAddr)) {
-            implicitOutputSum = implicitOutputSum.plus(rewards[rewardAddr])
-          }
-        }
-      }
-
-      return _strToDefaultMultiAsset(implicitOutputSum.toString())
-    }
-
-    return _strToDefaultMultiAsset('0')
-  })()
-
+  // Combine all inputs and outputs
   const unifiedInputs = [
     ...utxoInputs,
     ...accountingInputs,
     ...ownUtxoCollateralInputs,
   ]
-  const unifiedOutputs = [
-    ...utxoOutputs, // ...accountingOutpus,
-  ]
-  const ownInputs = unifiedInputs.filter(({address}) =>
-    ownAddresses.includes(address),
+  const unifiedOutputs = [...utxoOutputs]
+
+  const ownInputs = unifiedInputs.filter((input) =>
+    ownAddresses.includes(input.address),
   )
-  const ownOutputs = unifiedOutputs.filter(({address}) =>
-    ownAddresses.includes(address),
+  const ownOutputs = unifiedOutputs.filter((output) =>
+    ownAddresses.includes(output.address),
   )
 
-  const totalIn = _sum(unifiedInputs, primaryTokenInfo)
-
-  const totalOut = _sum(unifiedOutputs, primaryTokenInfo)
-
-  const ownIn = _sum(ownInputs, primaryTokenInfo).joinAddMutable(
+  // Calculate totals using modern Balance.Amounts
+  const totalIn = remoteDataToAmounts(unifiedInputs, primaryTokenId)
+  const totalOut = remoteDataToAmounts(unifiedOutputs, primaryTokenId)
+  const ownIn = Amounts.sum([
+    remoteDataToAmounts(ownInputs, primaryTokenId),
     ownImplicitInput,
-  )
-
-  const ownOut = _sum(ownOutputs, primaryTokenInfo).joinAddMutable(
+  ])
+  const ownOut = Amounts.sum([
+    remoteDataToAmounts(ownOutputs, primaryTokenId),
     ownImplicitOutput,
-  )
+  ])
 
+  // Determine transaction characteristics
   const hasOnlyOwnInputs = ownInputs.length === unifiedInputs.length
   const hasOnlyOwnOutputs = ownOutputs.length === unifiedOutputs.length
   const isIntraWallet = hasOnlyOwnInputs && hasOnlyOwnOutputs
   const isMultiParty =
     ownInputs.length > 0 && ownInputs.length !== unifiedInputs.length
 
-  if (isMultiParty && !_multiPartyWarningCache[tx.id]) {
-    _multiPartyWarningCache[tx.id] = true
-  }
+  // Calculate brutto (net change) and total fee
+  const brutto = Amounts.diff(ownOut, ownIn)
+  const totalFee = Amounts.diff(totalOut, totalIn) // Should be negative
 
-  /*
-  Calculating costs and direction from just inputs and outputs is quite tricky.
-  Let's use the representation where amounts represent gain in our
-  wallet after the
-  transaction, i.e.:
-  * positive amounts = incoming, negative amounts = outgoing
-  * by the same logic, fees are represented by negative numbers
-   Then our main goal is to maintain the following two invariants:
-  * brutto amount = sum of our outputs - sum of our inputs
-  * brutto amount = netto (shown) amount + (our) fee  (Note the plus here)
-  * fee is either zero (no cost) or negative (transaction costed us something)
-   1) If all inputs and outputs are our addresses, this is clearly an intrawallet
-    transaction. There is no point in calculating the amount,
-    only the transaction
-    fee.
-   2) If we do not have our address in the inputs, this is clearly an incoming
-    transaction. Fee does not apply as we are just receiving money.
-   3) If all inputs are ours (and at least one output is not), this is an
-    outgoing transaction. Fee is the difference between total
-    inputs and total outputs.
-   4) if only some of the inputs are ours we are handling a special
-    multi-party transaction.
-    Such transactions could be constructed by hand but in reality it is probable
-    that our wallet just failed to discover one of its own addresses.
-    We will conservatively mark zero fee.
-  */
-  const brutto = ownOut.joinSubtractMutable(ownIn)
-  const totalFee = totalOut.joinSubtractMutable(totalIn) // should be negative
-
-  // note(v-almonacid): delta will be used to compute the wallet balance
-  // and is defined as
-  //    delta = own utxo outputs - own utxo inputs
-  // Then the balance is obtained as
-  //    balance = sum(delta)
-  // recall: if the tx has withdrawals or refunds to this wallet, they are
-  // included in own utxo outputs
-  const delta = _sum(ownUtxoOutputs, primaryTokenInfo).joinSubtractMutable(
-    _sum(ownUtxoInputs, primaryTokenInfo),
+  // Calculate delta (for balance computation)
+  const delta = Amounts.diff(
+    remoteDataToAmounts(ownUtxoOutputs, primaryTokenId),
+    remoteDataToAmounts(ownUtxoInputs, primaryTokenId),
   )
 
-  let amount
-  let fee
-  const remoteFee =
-    tx.fee != null
-      ? _strToDefaultMultiAsset(new BigNumber(tx.fee).times(-1).toString())
-      : null
-  let direction
+  // Determine direction, amount, and fee based on transaction type
+  const direction = determineTransactionDirection(
+    hasOnlyOwnInputs,
+    hasOnlyOwnOutputs,
+    ownInputs.length > 0,
+    isInvalidScriptExecution,
+  )
+
+  let amount: Balance.Amounts
+  let fee: Balance.Amounts | null
+
+  const remoteFee = tx.fee
+    ? Amounts.negated({[primaryTokenId]: asQuantity(tx.fee)} as Balance.Amounts)
+    : null
 
   if (isInvalidScriptExecution) {
-    direction = TRANSACTION_DIRECTION.SELF
     amount = brutto
-    // NOTE: the collateral is the fee when it has failed
-    fee = null
+    fee = null // Collateral is the fee when execution fails
   } else if (isIntraWallet) {
-    direction = TRANSACTION_DIRECTION.SELF
-    amount = _strToDefaultMultiAsset('0')
+    amount = {} as Balance.Amounts
     fee = remoteFee ?? totalFee
   } else if (isMultiParty) {
-    direction = TRANSACTION_DIRECTION.MULTI
     amount = brutto
     fee = null
   } else if (hasOnlyOwnInputs) {
-    direction = TRANSACTION_DIRECTION.SENT
-    amount = brutto.joinSubtractMutable(totalFee)
+    amount = Amounts.diff(brutto, totalFee)
     fee = remoteFee ?? totalFee
   } else {
-    direction = TRANSACTION_DIRECTION.RECEIVED
     amount = brutto
     fee = null
   }
 
+  // Get assurance level and tokens
   const assurance = getTransactionAssurance(tx.status, confirmations)
-  const tokens = getTxTokens(tx)
+  const tokens = extractTransactionTokens(tx)
 
-  const _remoteAssetAsTokenEntry = (asset: BaseAsset) => ({
-    identifier: asset.assetId,
+  // Convert BaseAsset to CardanoTypes.TokenEntry format (for IOData)
+  const assetToTokenEntry = (asset: BaseAsset) => ({
+    identifier: asset.tokenId,
     amount: new BigNumber(asset.amount),
   })
 
   return {
     id: tx.id,
-    inputs: tx.inputs.map(({address, assets, amount, id}) => ({
-      address,
-      amount,
-      assets: assets.map(_remoteAssetAsTokenEntry),
-      id,
+    inputs: tx.inputs.map((input) => ({
+      address: input.address,
+      amount: input.amount,
+      assets: input.assets.map(assetToTokenEntry),
+      id: input.id,
     })),
-    outputs: tx.outputs.map(({address, assets, amount}) => ({
-      address,
-      amount,
-      assets: assets.map(_remoteAssetAsTokenEntry),
+    outputs: tx.outputs.map((output) => ({
+      address: output.address,
+      amount: output.amount,
+      assets: output.assets.map(assetToTokenEntry),
     })),
-    amount: amount.asArray(),
-    fee: fee != null ? fee.asArray() : null,
-    delta: delta.asArray(),
+    amount, // Balance.Amounts directly
+    fee, // Balance.Amounts | null directly
+    delta, // Balance.Amounts directly
     confirmations,
     direction,
     submittedAt: tx.submittedAt,

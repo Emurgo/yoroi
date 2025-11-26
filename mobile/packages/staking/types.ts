@@ -1,17 +1,16 @@
-import {Api as AppApi} from '@yoroi/types'
-
-import {WalletChecksum as WalletChecksumType} from '@emurgo/cip4-js'
-import * as CoreTypes from '@emurgo/cross-csl-core'
 import {
   Addressing as AddressingType,
   CardanoAddressedUtxo as CardanoAddressedUtxoType,
-  MultiTokenValue as MultiTokenValueType,
   SignedTx as SignedTxType,
   StakingKeyBalances as StakingKeyBalancesType,
   TokenEntry as TokenEntryType,
   TxMetadata as TxMetadataType,
   UnsignedTx as UnsignedTxType,
-} from '@emurgo/yoroi-lib'
+} from '@yoroi/tx'
+import {Api as AppApi, Balance} from '@yoroi/types'
+
+import {WalletChecksum as WalletChecksumType} from '@emurgo/cip4-js'
+import * as CoreTypes from '@emurgo/cross-csl-core'
 import {AxiosRequestConfig} from 'axios'
 
 export namespace CardanoTypes {
@@ -19,7 +18,7 @@ export namespace CardanoTypes {
   export type CardanoAddressedUtxo = CardanoAddressedUtxoType
   export type SignedTx = SignedTxType
   export type UnsignedTx = UnsignedTxType
-  export type MultiTokenValue = MultiTokenValueType
+  export type MultiTokenValue = Balance.Amounts
   export type StakingKeyBalances = StakingKeyBalancesType
   export type WalletChecksum = WalletChecksumType
 

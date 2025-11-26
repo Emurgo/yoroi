@@ -1,11 +1,11 @@
 import {invalid} from '@yoroi/common'
-import {Claim, Scan} from '@yoroi/types'
+import {Claim, Links} from '@yoroi/types'
 
 import {castDraft, produce} from 'immer'
 
 export type ClaimActions = Readonly<{
   claimInfoChanged: (claimInfo: Claim.Info) => void
-  scanActionClaimChanged: (scanActionClaim: Scan.ActionClaim) => void
+  scanActionClaimChanged: (scanActionClaim: Links.CardanoActionClaim) => void
   reset: () => void
 }>
 
@@ -42,7 +42,7 @@ export const claimReducer = (
 
 export type ClaimState = Readonly<{
   claimInfo: Claim.Info | undefined
-  scanActionClaim: Scan.ActionClaim | undefined
+  scanActionClaim: Links.CardanoActionClaim | undefined
 }>
 
 export type ClaimActionInfoChanged = {
@@ -52,7 +52,7 @@ export type ClaimActionInfoChanged = {
 
 export type ClaimActionScanActionClaimChanged = {
   type: ClaimActionType.ScanActionClaimChanged
-  scanActionClaim: Scan.ActionClaim
+  scanActionClaim: Links.CardanoActionClaim
 }
 
 export type ClaimActionReset = {

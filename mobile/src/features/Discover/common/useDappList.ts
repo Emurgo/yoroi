@@ -2,6 +2,8 @@ import {useEffect, useState} from 'react'
 
 import {useRemoteConfig} from '~/features/RemoteConfig/hooks/useRemoteConfig'
 
+import {DAPP_LOGO_BASE_URL} from './helpers'
+
 export interface DappListResponse {
   dapps: DappResponse[]
   filters: Record<string, string[]>
@@ -17,8 +19,6 @@ interface DappResponse {
   origins: string[]
   isSingleAddress: boolean
 }
-
-const LOGO_BASE_URL = 'https://daehx1qv45z7c.cloudfront.net'
 
 export const useDappList = () => {
   const {
@@ -52,7 +52,7 @@ export const useDappList = () => {
           name: dapp.name,
           description: dapp.description,
           category: dapp.category,
-          logo: dapp.logo ? `${LOGO_BASE_URL}/${dapp.logo}` : '',
+          logo: dapp.logo ? `${DAPP_LOGO_BASE_URL}/${dapp.logo}` : '',
           uri: dapp.uri,
           origins: [...dapp.origins],
           isSingleAddress: dapp.isSingleAddress ?? false,

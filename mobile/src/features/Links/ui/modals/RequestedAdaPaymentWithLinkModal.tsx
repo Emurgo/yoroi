@@ -47,12 +47,18 @@ const RequestedAdaPaymentWithLinkModalFooter = ({
   onContinue: () => void
 }) => {
   const strings = useStrings()
-  const {actionFinished} = useLinks()
+  const {markActionProcessed} = useLinks()
   const {closeModal} = useModal()
 
   const handleOnCancel = () => {
-    actionFinished()
+    markActionProcessed()
     closeModal()
+  }
+
+  const handleOnContinue = () => {
+    onContinue()
+    // Clear action after navigation
+    markActionProcessed()
   }
 
   return (
@@ -64,7 +70,11 @@ const RequestedAdaPaymentWithLinkModalFooter = ({
         title={strings.global.cancel}
       />
 
-      <Button size="S" onPress={onContinue} title={strings.global.proceed} />
+      <Button
+        size="S"
+        onPress={handleOnContinue}
+        title={strings.global.proceed}
+      />
     </Modal.Footer>
   )
 }

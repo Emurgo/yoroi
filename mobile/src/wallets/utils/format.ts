@@ -1,3 +1,4 @@
+import {atomicToDecimal, truncateString} from '@yoroi/common'
 import {isTokenInfo as isPortfolioTokenInfo} from '@yoroi/portfolio'
 import {Balance, Portfolio} from '@yoroi/types'
 
@@ -6,7 +7,7 @@ import {BigNumber} from 'bignumber.js'
 import type {FormatDateOptions, IntlShape} from 'react-intl'
 
 import {isTokenInfo} from '../cardano/utils'
-import {DefaultAsset, Token} from '../types/tokens'
+import {TransactionToken} from '../types/tokens'
 
 export const getTokenFingerprint = ({
   policyId,
@@ -26,73 +27,40 @@ export const getAssetFingerprint = (policyId: string, assetNameHex: string) => {
   return getTokenFingerprint({policyId, assetNameHex})
 }
 
-const decodeHexAscii = (text: string) => {
-  const bytes = [...Buffer.from(text, 'hex')]
-  const isAscii = bytes.every((byte) => byte > 32 && byte < 127)
-  return isAscii ? String.fromCharCode(...bytes) : undefined
-}
-
-const getTicker = (token: Balance.TokenInfo | DefaultAsset) => {
+const getTicker = (token: Balance.TokenInfo | Portfolio.Token.Info) => {
   if (isTokenInfo(token)) {
     return token.kind === 'ft' ? token.ticker : undefined
   }
-  return token.metadata.ticker
+  return token.ticker
 }
-const getSymbol = (token: Balance.TokenInfo | DefaultAsset) => {
+const getSymbol = (token: Balance.TokenInfo | Portfolio.Token.Info) => {
   const ticker = getTicker(token)
   return ticker
 }
 
-const getName = (
-  token: Balance.TokenInfo | DefaultAsset | Portfolio.Token.Info,
-) => {
-  if ('kind' in token || 'type' in token) {
-    return token.name || token.ticker || token.fingerprint || ''
-  }
-
-  if ('metadata' in token && 'ticker' in token.metadata) {
-    return token.metadata.ticker
-  }
-
-  return (
-    token.metadata.longName ||
-    decodeHexAscii(token.metadata.assetName) ||
-    getTokenFingerprint({
-      policyId: token.metadata.policyId,
-      assetNameHex: token.metadata.assetName,
-    }) ||
-    ''
-  )
-}
-
-const getDecimals = (
-  token: Balance.TokenInfo | DefaultAsset | Portfolio.Token.Info,
-) => {
+const getDecimals = (token: Balance.TokenInfo | Portfolio.Token.Info) => {
   if ('kind' in token && token.kind === 'nft')
     return token.kind === 'nft' ? 0 : token.decimals
 
   if ('type' in token && 'decimals' in token) return token.decimals
-
-  if ('metadata' in token && 'numberOfDecimals' in token.metadata)
-    return token.metadata.numberOfDecimals
 
   return 0
 }
 
 const normalizeTokenAmount = (
   quantity: Balance.Quantity | bigint,
-  token: Balance.TokenInfo | DefaultAsset | Portfolio.Token.Info,
+  token: Balance.TokenInfo | Portfolio.Token.Info,
 ): BigNumber => {
   const decimals = getDecimals(token) ?? 0
-  const normalizationFactor = Math.pow(10, decimals)
-  return new BigNumber(quantity.toString())
-    .dividedBy(normalizationFactor)
-    .decimalPlaces(decimals)
+  return atomicToDecimal({
+    value: quantity,
+    decimals,
+  })
 }
 
 export const formatTokenAmount = (
   quantity: Balance.Quantity | bigint,
-  token: Balance.TokenInfo | DefaultAsset | Portfolio.Token.Info,
+  token: Balance.TokenInfo | Portfolio.Token.Info,
 ): string => {
   const decimals = getDecimals(token)
   const normalized = normalizeTokenAmount(quantity, token)
@@ -100,20 +68,18 @@ export const formatTokenAmount = (
 }
 
 const getTokenV2Fingerprint = (
-  token: Balance.TokenInfo | DefaultAsset,
+  token: Balance.TokenInfo | Portfolio.Token.Info,
 ): string => {
   if (isTokenInfo(token)) {
     return token.fingerprint
   }
-  return getTokenFingerprint({
-    policyId: token.metadata.policyId,
-    assetNameHex: token.metadata.assetName,
-  })
+  // For Portfolio.Token.Info, use fingerprint directly
+  return token.fingerprint
 }
 
 export const formatTokenWithSymbol = (
   quantity: Balance.Quantity,
-  token: Balance.TokenInfo | DefaultAsset | Portfolio.Token.Info,
+  token: Balance.TokenInfo | Portfolio.Token.Info,
 ): string => {
   if (isPortfolioTokenInfo(token)) {
     return `${formatTokenAmount(quantity, token)} ${token.ticker || token.fingerprint}`
@@ -126,37 +92,32 @@ export const formatTokenWithSymbol = (
 
 export const formatTokenWithText = (
   quantity: Balance.Quantity | bigint,
-  token: Balance.TokenInfo | Portfolio.Token.Info | DefaultAsset,
+  token: Balance.TokenInfo | Portfolio.Token.Info,
   maxLength = 128,
 ) => {
   if (
     ('kind' in token && token.kind === 'nft') ||
     ('type' in token && token.type === 'nft')
   ) {
-    return `${formatTokenAmount(quantity, token)} ${truncateWithEllipsis(token.name || token.fingerprint, maxLength)}`
-  }
-
-  if ('kind' in token || 'type' in token) {
-    return `${formatTokenAmount(quantity, token)} ${truncateWithEllipsis(
-      token.ticker || token.name || token.fingerprint,
+    return `${formatTokenAmount(quantity, token)} ${truncateString({
+      value: token.name || token.fingerprint,
       maxLength,
-    )}`
+    })}`
   }
 
-  if ('metadata' in token && 'ticker' in token.metadata) {
-    return `${formatTokenAmount(quantity, token)} ${truncateWithEllipsis(token.metadata.ticker, maxLength)}`
-  }
-
-  return `${formatTokenAmount(quantity, token)} ${truncateWithEllipsis(getName(token), maxLength)}`
+  return `${formatTokenAmount(quantity, token)} ${truncateString({
+    value: token.ticker || token.name || token.fingerprint,
+    maxLength,
+  })}`
 }
 
 export const formatTokenInteger = (
   amount: Balance.Quantity,
-  token: Token | DefaultAsset | Portfolio.Token.Info,
+  token: Balance.TokenInfo | Portfolio.Token.Info | TransactionToken,
   withPositiveSign = false,
 ) => {
   const decimals =
-    'metadata' in token ? token.metadata.numberOfDecimals : token.decimals
+    ('numberOfDecimals' in token ? token.numberOfDecimals : token.decimals) ?? 0
   const normalizationFactor = Math.pow(10, decimals)
   const bigNumber = new BigNumber(amount)
   const num = bigNumber.dividedToIntegerBy(normalizationFactor)
@@ -173,10 +134,10 @@ export const formatTokenInteger = (
 
 export const formatTokenFractional = (
   quantity: Balance.Quantity,
-  token: Token | DefaultAsset | Portfolio.Token.Info,
+  token: Balance.TokenInfo | Portfolio.Token.Info | TransactionToken,
 ) => {
   const decimals =
-    'metadata' in token ? token.metadata.numberOfDecimals : token.decimals
+    ('numberOfDecimals' in token ? token.numberOfDecimals : token.decimals) ?? 0
   const normalizationFactor = Math.pow(10, decimals)
   const fractional = new BigNumber(quantity)
     .abs()
@@ -189,22 +150,16 @@ export const formatTokenFractional = (
     .replace(/[.|,]?0+$/, '')
 }
 
-const truncateWithEllipsis = (s: string, n: number) => {
-  if (s.length > n) {
-    return `${s.substr(0, Math.floor(n / 2))}...${s.substr(s.length - Math.floor(n / 2))}`
-  }
-
-  return s
-}
-
 // TODO(multi-asset): consider removing these
 
 const formatAda = (
   quantity: Balance.Quantity,
   primaryTokenInfo: Portfolio.Token.Info,
 ) => {
-  const normalizationFactor = Math.pow(10, primaryTokenInfo.decimals)
-  const num = new BigNumber(quantity).dividedBy(normalizationFactor)
+  const num = atomicToDecimal({
+    value: quantity,
+    decimals: primaryTokenInfo.decimals,
+  })
   return num.toFormat(primaryTokenInfo.decimals)
 }
 

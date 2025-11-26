@@ -1,4 +1,5 @@
 import {Ada} from './Ada'
+import {AdaHandle} from './AdaHandle'
 import {Analytics} from './Analytics'
 import {AngleDown} from './AngleDown'
 import {AngleUp} from './AngleUp'
@@ -150,6 +151,7 @@ export * from './type'
 
 export const Icon = {
   Ada,
+  AdaHandle,
   Exchange,
   Analytics,
   Assets,

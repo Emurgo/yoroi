@@ -1,23 +1,28 @@
 import {useAsyncStorage} from '@yoroi/common'
 import {DappConnection, DappConnector} from '@yoroi/dapp-connector'
+import {calculateTxId} from '@yoroi/tx'
 
 import {Transaction} from '@emurgo/cross-csl-core'
 import {useNavigation} from '@react-navigation/native'
+import {Buffer} from 'buffer'
 import * as React from 'react'
 
+import {CollateralInfoModal} from '~/features/Settings/ui/screens/ChangeWalletSettingsScreen/ManageCollateralScreen/CollateralInfoModal'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 import {removeRouteFromNavigationState} from '~/kernel/navigation/common/helpers'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
+import {InfoBanner} from '~/ui/InfoBanner/InfoBanner'
+import {cip30ExtensionMaker} from '~/wallets/cardano/cip30/cip30'
 import {cip30LedgerExtensionMaker} from '~/wallets/cardano/cip30/cip30-ledger'
 import {YoroiWallet} from '~/wallets/cardano/types'
 import {collateralConfig} from '~/wallets/cardano/utxoManager/utxos'
+import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
 import {BaseLedgerError} from '~/wallets/hw/hw'
 import {isEmptyString} from '~/wallets/utils/string'
 
 import {usePromptRootKey} from '../ReviewTx/common/hooks/usePromptRootKey'
-import {CreatedByInfoItem} from '../ReviewTx/useCases/ReviewTxScreen/ReviewTx/Overview/OverviewTab'
 import {useBrowser} from './common/BrowserProvider'
 import {useConfirmHWConnectionModal} from './common/ConfirmHWConnectionModal'
 import {userRejectedError} from './common/errors'
@@ -25,6 +30,17 @@ import {createDappConnector} from './common/helpers'
 import {useConfirmConnection} from './common/useConfirmConnection'
 import {useDappList} from './common/useDappList'
 import {useShowCollateralNotFoundAlert} from './common/useShowCollateralNotFoundAlert'
+
+// Collateral creation notice component for operations section
+const CollateralCreationNotice = () => {
+  const strings = useStrings()
+  return (
+    <InfoBanner
+      title={strings.discover.collateralCreationTitle}
+      content={strings.discover.collateralCreationDescription}
+    />
+  )
+}
 
 export const useDappConnectorManager = () => {
   const appStorage = useAsyncStorage()
@@ -34,6 +50,7 @@ export const useDappConnectorManager = () => {
   const {wallet, meta} = useSelectedWallet()
   const {tabs, tabActiveIndex} = useBrowser()
   const dappCollateralRequestUtils = useDappCollateralRequestUtils(wallet)
+  const strings = useStrings()
 
   const activeTab = tabs[tabActiveIndex]
   const activeTabUrl = activeTab?.url ?? ''
@@ -88,13 +105,14 @@ export const useDappConnectorManager = () => {
           cbor,
           preventSubmit: true,
           context: 'dapp',
-          createdBy: matchingDapp != null && (
-            <CreatedByInfoItem
-              logo={matchingDapp.logo}
-              url={matchingDapp.uri}
-              name={matchingDapp.name}
-            />
-          ),
+          createdBy:
+            matchingDapp != null
+              ? {
+                  logo: matchingDapp.logo,
+                  url: matchingDapp.uri,
+                  name: matchingDapp.name,
+                }
+              : undefined,
           onSuccessWithoutFeedback: (args) => {
             shouldResolve = false
             if (isEmptyString(args?.rootKey) || args?.rootKey == null) {
@@ -160,13 +178,14 @@ export const useDappConnectorManager = () => {
           partial,
           preventSubmit: true,
           context: 'dapp',
-          createdBy: matchingDapp != null && (
-            <CreatedByInfoItem
-              logo={matchingDapp.logo}
-              url={matchingDapp.uri}
-              name={matchingDapp.name}
-            />
-          ),
+          createdBy:
+            matchingDapp != null
+              ? {
+                  logo: matchingDapp.logo,
+                  url: matchingDapp.uri,
+                  name: matchingDapp.name,
+                }
+              : undefined,
           onSuccessWithoutFeedback: (args) => {
             shouldResolve = false
             if (!args?.tx) {
@@ -218,7 +237,7 @@ export const useDappConnectorManager = () => {
   )
 
   const handleSendReorganisationTx = React.useCallback(
-    async ({manager}: {manager: DappConnector}) => {
+    async ({manager, value}: {manager: DappConnector; value?: string}) => {
       const dappsConnected = await manager.listAllConnections()
       const matchingDappConnection =
         activeTabOrigin != null
@@ -233,15 +252,122 @@ export const useDappConnectorManager = () => {
           return
         }
 
+        // Track that this dapp requested collateral
         dappCollateralRequestUtils.addCollateralRequestedDappsId(
           matchingDappConnection.dappOrigin,
         )
-        dappCollateralRequestUtils.showCollateralNotFoundAlert()
 
-        resolve()
+        // Build the reorganisation transaction
+        const cip30 = cip30ExtensionMaker(wallet, meta)
+        cip30
+          .buildReorganisationTx(value)
+          .then((cbor) => {
+            // Navigate to review screen for the collateral transaction
+            navigateToTxReview({
+              cbor,
+              context: 'dapp',
+              memo: strings.discover.collateralCreationTitle,
+              createdBy:
+                activeTabUrl && matchingDappConnection.dappOrigin
+                  ? {
+                      logo: undefined,
+                      url: activeTabUrl,
+                      name: matchingDappConnection.dappOrigin,
+                    }
+                  : undefined,
+              details: {
+                title: strings.manageCollateral.collateralInfoModalLabel,
+                component: <CollateralInfoModal />,
+              },
+              generalNotice: <CollateralCreationNotice />,
+              onSuccessWithoutFeedback: async (args) => {
+                // Transaction was submitted successfully
+                // Set collateral ID immediately to prevent duplicate reorganization transactions
+                // The collateral UTXO will be at index 0 (first output of the reorganization transaction)
+                const signedTx = args?.signedTx ?? args?.tx
+                if (signedTx) {
+                  try {
+                    const txBytes = signedTx.toBytes()
+                    const txId = await CardanoMobileWrapped.cslScope(
+                      async (csl) => {
+                        return await calculateTxId(
+                          csl,
+                          Buffer.from(txBytes).toString('hex'),
+                          'hex',
+                        )
+                      },
+                    )
+                    // Set collateral ID to txId:0 (assuming collateral UTXO is at output index 0)
+                    // This prevents duplicate reorganization transactions while waiting for confirmation
+                    const collateralId = `${txId}:0`
+                    wallet.setCollateralId(collateralId)
+                    logger.info(
+                      'useDappConnectorManager::handleSendReorganisationTx - collateral ID set',
+                      {txId, collateralId},
+                    )
+                  } catch (error) {
+                    logger.error(
+                      'useDappConnectorManager::handleSendReorganisationTx - failed to set collateral ID',
+                      {
+                        error:
+                          error instanceof Error
+                            ? error.message
+                            : String(error),
+                      },
+                    )
+                    // Don't block the flow if setting collateral ID fails
+                  }
+                }
+                resolve()
+                navigateToDiscoverBrowserDapp()
+                // Remove review-tx-routes from navigation stack
+                setTimeout(() => {
+                  removeRouteFromNavigationState(
+                    navigation,
+                    'review-tx-routes',
+                    {
+                      maxDepth: 5,
+                    },
+                  )
+                }, 100)
+              },
+              onCancel: () => {
+                reject(userRejectedError())
+              },
+              onClose: () => {
+                reject(userRejectedError())
+              },
+              onErrorWithoutFeedback: (error) => {
+                logger.error(
+                  'useDappConnectorManager::handleSendReorganisationTx',
+                  {
+                    error,
+                  },
+                )
+                reject(error)
+              },
+            })
+          })
+          .catch((error) => {
+            logger.error(
+              'useDappConnectorManager::handleSendReorganisationTx - failed to build transaction',
+              {error},
+            )
+            reject(error)
+          })
       })
     },
-    [activeTabOrigin, dappCollateralRequestUtils],
+    [
+      activeTabOrigin,
+      activeTabUrl,
+      dappCollateralRequestUtils,
+      navigateToTxReview,
+      navigateToDiscoverBrowserDapp,
+      navigation,
+      wallet,
+      meta,
+      strings,
+    ],
   )
 
   return React.useMemo(

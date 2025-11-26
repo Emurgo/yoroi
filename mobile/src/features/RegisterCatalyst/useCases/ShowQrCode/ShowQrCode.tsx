@@ -6,7 +6,7 @@ import {InteractionManager, ScrollView} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useCopy} from '~/features/Copy/context/CopyProvider'
-import {useNavigateTo} from '~/features/RegisterCatalyst/CatalystNavigator'
+import {useNavigateTo} from '~/features/RegisterCatalyst/common/navigation'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useBlockGoBack} from '~/kernel/navigation/hooks/useBlockGoBack'
 import {Button} from '~/ui/Button/Button'

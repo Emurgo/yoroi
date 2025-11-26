@@ -1,3 +1,4 @@
+import {getLogger} from '@yoroi/common'
 import {Exchange} from '@yoroi/types'
 
 import {freeze, produce} from 'immer'
@@ -124,5 +125,8 @@ export const exchangeInitialExchangeContext: ExchangeContext = freeze(
 
 /* istanbul ignore next */
 function missingInit() {
-  console.error('[ExchangeContext] missing initialization')
+  const logger = getLogger()
+  logger.error('[ExchangeContext] missing initialization', {
+    origin: 'exchange',
+  })
 }

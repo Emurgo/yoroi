@@ -11,6 +11,7 @@ type TokenAmount = {
 
 /**
  * Groups assets from inputs or outputs by token ID and sums their quantities
+ * Prefers real tokenInfo (not unknown) over unknown tokenInfo when multiple exist
  */
 export const groupAssetsByToken = (
   items: Array<{
@@ -23,8 +24,14 @@ export const groupAssetsByToken = (
     item.assets.forEach((asset) => {
       const existing = grouped.get(asset.tokenInfo.id)
       if (existing) {
+        // Prefer real tokenInfo over unknown tokenInfo
+        const preferredTokenInfo =
+          asset.tokenInfo.status !== Portfolio.Token.Status.Unknown
+            ? asset.tokenInfo
+            : existing.tokenInfo
+
         grouped.set(asset.tokenInfo.id, {
-          tokenInfo: asset.tokenInfo,
+          tokenInfo: preferredTokenInfo,
           quantity: Quantities.sum([existing.quantity, asset.quantity]),
         })
       } else {
@@ -44,7 +51,7 @@ export const groupAssetsByToken = (
 export const calculateSendsAndReceives = (
   inputsByToken: Map<Portfolio.Token.Id, TokenAmount>,
   outputsByToken: Map<Portfolio.Token.Id, TokenAmount>,
-  options?: {
+  _options?: {
     primaryTokenId?: Portfolio.Token.Id
     fee?: Balance.Quantity
     operationsFee?: Balance.Quantity
@@ -56,31 +63,21 @@ export const calculateSendsAndReceives = (
   const sends: Array<TokenAmount> = []
 
   // Calculate sends: (input - output) if positive
-  // The diff already includes the fee (inputs - outputs = net sent including fee)
+  // The diff already includes:
+  // - The transaction fee (burned, so outputs are less than inputs)
+  // - Operation deposits (keyDeposit, poolDeposit) are included in outputs as UTXOs,
+  //   so they're already accounted for in the diff
+  // Therefore, we should NOT add operationsFee again as it would double-count deposits
   inputsByToken.forEach((inputAsset, tokenId) => {
     const outputAsset = outputsByToken.get(tokenId)
     const outputQty = outputAsset?.quantity ?? Quantities.zero
     const diff = Quantities.diff(inputAsset.quantity, outputQty)
 
     if (Quantities.isGreaterThan(diff, Quantities.zero)) {
-      // For primary token, we need to ensure operationsFee is included if it exists
-      // But the base fee is already in the diff
-      let totalSent = diff
-      if (
-        options?.primaryTokenId &&
-        inputAsset.tokenInfo.id === options.primaryTokenId &&
-        options.operationsFee
-      ) {
-        // Only add operationsFee if it's separate from the base fee
-        totalSent = Quantities.sum([diff, options.operationsFee])
-      }
-
-      if (Quantities.isGreaterThan(totalSent, Quantities.zero)) {
-        sends.push({
-          tokenInfo: inputAsset.tokenInfo,
-          quantity: totalSent,
-        })
-      }
+      sends.push({
+        tokenInfo: inputAsset.tokenInfo,
+        quantity: diff,
+      })
     }
   })
 
@@ -89,6 +86,7 @@ export const calculateSendsAndReceives = (
   // 1. Tokens that appear in both inputs and outputs: add (output - input) if positive
   // 2. Tokens that only appear in outputs: add full output quantity (since inputQty will be zero)
   // Use a Map to ensure each token only appears once
+  // Prefer tokenInfo from inputs (more likely to have real tokenInfo) over outputs (might have unknown tokenInfo)
   const receivesByToken = new Map<Portfolio.Token.Id, TokenAmount>()
 
   outputsByToken.forEach((outputAsset, tokenId) => {
@@ -97,8 +95,16 @@ export const calculateSendsAndReceives = (
     const diff = Quantities.diff(outputAsset.quantity, inputQty)
 
     if (Quantities.isGreaterThan(diff, Quantities.zero)) {
+      // Prefer input tokenInfo if available (more likely to have real tokenInfo with correct decimals)
+      // Otherwise fall back to output tokenInfo
+      const preferredTokenInfo =
+        inputAsset &&
+        inputAsset.tokenInfo.status !== Portfolio.Token.Status.Unknown
+          ? inputAsset.tokenInfo
+          : outputAsset.tokenInfo
+
       receivesByToken.set(tokenId, {
-        tokenInfo: outputAsset.tokenInfo,
+        tokenInfo: preferredTokenInfo,
         quantity: diff,
       })
     }

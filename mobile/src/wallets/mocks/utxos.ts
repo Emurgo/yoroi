@@ -11,384 +11,384 @@ export const utxos: RawUtxo[] = [
     amount: '509596382',
     assets: [
       {
-        assetId:
+        tokenId:
           '2a0879034f23ea48ba28dc1c15b056bd63b8cf0cab9733da92add22f.414441524e',
         policyId: '2a0879034f23ea48ba28dc1c15b056bd63b8cf0cab9733da92add22f',
         name: '414441524e',
         amount: '86',
       },
       {
-        assetId:
+        tokenId:
           '4d99f2fcc2fd91aca97865516b8e77a8e6dc011a905b9960289833e8.563432',
         policyId: '4d99f2fcc2fd91aca97865516b8e77a8e6dc011a905b9960289833e8',
         name: '563432',
         amount: '1302',
       },
       {
-        assetId:
+        tokenId:
           '4d99f2fcc2fd91aca97865516b8e77a8e6dc011a905b9960289833e8.5634322f4e465423313530393435333738',
         policyId: '4d99f2fcc2fd91aca97865516b8e77a8e6dc011a905b9960289833e8',
         name: '5634322f4e465423313530393435333738',
         amount: '1',
       },
       {
-        assetId:
+        tokenId:
           '4d99f2fcc2fd91aca97865516b8e77a8e6dc011a905b9960289833e8.5634322f4e465423323439363735333032',
         policyId: '4d99f2fcc2fd91aca97865516b8e77a8e6dc011a905b9960289833e8',
         name: '5634322f4e465423323439363735333032',
         amount: '1',
       },
       {
-        assetId:
+        tokenId:
           '4d99f2fcc2fd91aca97865516b8e77a8e6dc011a905b9960289833e8.5634322f4e4654233237373137333030',
         policyId: '4d99f2fcc2fd91aca97865516b8e77a8e6dc011a905b9960289833e8',
         name: '5634322f4e4654233237373137333030',
         amount: '1',
       },
       {
-        assetId:
+        tokenId:
           '4d99f2fcc2fd91aca97865516b8e77a8e6dc011a905b9960289833e8.5634322f4e465423333037313631383136',
         policyId: '4d99f2fcc2fd91aca97865516b8e77a8e6dc011a905b9960289833e8',
         name: '5634322f4e465423333037313631383136',
         amount: '1',
       },
       {
-        assetId:
+        tokenId:
           '4d99f2fcc2fd91aca97865516b8e77a8e6dc011a905b9960289833e8.5634322f4e465423333132353133303737',
         policyId: '4d99f2fcc2fd91aca97865516b8e77a8e6dc011a905b9960289833e8',
         name: '5634322f4e465423333132353133303737',
         amount: '1',
       },
       {
-        assetId:
+        tokenId:
           '4d99f2fcc2fd91aca97865516b8e77a8e6dc011a905b9960289833e8.5634322f4e465423333138343530383132',
         policyId: '4d99f2fcc2fd91aca97865516b8e77a8e6dc011a905b9960289833e8',
         name: '5634322f4e465423333138343530383132',
         amount: '1',
       },
       {
-        assetId:
+        tokenId:
           '4d99f2fcc2fd91aca97865516b8e77a8e6dc011a905b9960289833e8.5634322f4e465423333431373335383633',
         policyId: '4d99f2fcc2fd91aca97865516b8e77a8e6dc011a905b9960289833e8',
         name: '5634322f4e465423333431373335383633',
         amount: '1',
       },
       {
-        assetId:
+        tokenId:
           '4d99f2fcc2fd91aca97865516b8e77a8e6dc011a905b9960289833e8.5634322f4e465423343437343434313132',
         policyId: '4d99f2fcc2fd91aca97865516b8e77a8e6dc011a905b9960289833e8',
         name: '5634322f4e465423343437343434313132',
         amount: '1',
       },
       {
-        assetId:
+        tokenId:
           '4d99f2fcc2fd91aca97865516b8e77a8e6dc011a905b9960289833e8.5634322f4e465423343537363231343833',
         policyId: '4d99f2fcc2fd91aca97865516b8e77a8e6dc011a905b9960289833e8',
         name: '5634322f4e465423343537363231343833',
         amount: '1',
       },
       {
-        assetId:
+        tokenId:
           '4d99f2fcc2fd91aca97865516b8e77a8e6dc011a905b9960289833e8.5634322f4e4654233437333830303438',
         policyId: '4d99f2fcc2fd91aca97865516b8e77a8e6dc011a905b9960289833e8',
         name: '5634322f4e4654233437333830303438',
         amount: '1',
       },
       {
-        assetId:
+        tokenId:
           '4d99f2fcc2fd91aca97865516b8e77a8e6dc011a905b9960289833e8.5634322f4e4654233438393933393138',
         policyId: '4d99f2fcc2fd91aca97865516b8e77a8e6dc011a905b9960289833e8',
         name: '5634322f4e4654233438393933393138',
         amount: '1',
       },
       {
-        assetId:
+        tokenId:
           '4d99f2fcc2fd91aca97865516b8e77a8e6dc011a905b9960289833e8.5634322f4e4654233439313432363836',
         policyId: '4d99f2fcc2fd91aca97865516b8e77a8e6dc011a905b9960289833e8',
         name: '5634322f4e4654233439313432363836',
         amount: '1',
       },
       {
-        assetId:
+        tokenId:
           '4d99f2fcc2fd91aca97865516b8e77a8e6dc011a905b9960289833e8.5634322f4e465423343934323038393131',
         policyId: '4d99f2fcc2fd91aca97865516b8e77a8e6dc011a905b9960289833e8',
         name: '5634322f4e465423343934323038393131',
         amount: '1',
       },
       {
-        assetId:
+        tokenId:
           '4d99f2fcc2fd91aca97865516b8e77a8e6dc011a905b9960289833e8.5634322f4e465423363030383837393731',
         policyId: '4d99f2fcc2fd91aca97865516b8e77a8e6dc011a905b9960289833e8',
         name: '5634322f4e465423363030383837393731',
         amount: '1',
       },
       {
-        assetId:
+        tokenId:
           '4d99f2fcc2fd91aca97865516b8e77a8e6dc011a905b9960289833e8.5634322f4e465423363130373233333232',
         policyId: '4d99f2fcc2fd91aca97865516b8e77a8e6dc011a905b9960289833e8',
         name: '5634322f4e465423363130373233333232',
         amount: '1',
       },
       {
-        assetId:
+        tokenId:
           '4d99f2fcc2fd91aca97865516b8e77a8e6dc011a905b9960289833e8.5634322f4e465423363731343234303237',
         policyId: '4d99f2fcc2fd91aca97865516b8e77a8e6dc011a905b9960289833e8',
         name: '5634322f4e465423363731343234303237',
         amount: '1',
       },
       {
-        assetId:
+        tokenId:
           '4d99f2fcc2fd91aca97865516b8e77a8e6dc011a905b9960289833e8.5634322f4e4654233637313934313335',
         policyId: '4d99f2fcc2fd91aca97865516b8e77a8e6dc011a905b9960289833e8',
         name: '5634322f4e4654233637313934313335',
         amount: '1',
       },
       {
-        assetId:
+        tokenId:
           '4d99f2fcc2fd91aca97865516b8e77a8e6dc011a905b9960289833e8.5634322f4e465423363932393638323635',
         policyId: '4d99f2fcc2fd91aca97865516b8e77a8e6dc011a905b9960289833e8',
         name: '5634322f4e465423363932393638323635',
         amount: '1',
       },
       {
-        assetId:
+        tokenId:
           '4d99f2fcc2fd91aca97865516b8e77a8e6dc011a905b9960289833e8.5634322f4e465423373234303037373735',
         policyId: '4d99f2fcc2fd91aca97865516b8e77a8e6dc011a905b9960289833e8',
         name: '5634322f4e465423373234303037373735',
         amount: '1',
       },
       {
-        assetId:
+        tokenId:
           '4d99f2fcc2fd91aca97865516b8e77a8e6dc011a905b9960289833e8.5634322f4e465423373339333333303239',
         policyId: '4d99f2fcc2fd91aca97865516b8e77a8e6dc011a905b9960289833e8',
         name: '5634322f4e465423373339333333303239',
         amount: '1',
       },
       {
-        assetId:
+        tokenId:
           '4d99f2fcc2fd91aca97865516b8e77a8e6dc011a905b9960289833e8.5634322f4e465423373436393933323738',
         policyId: '4d99f2fcc2fd91aca97865516b8e77a8e6dc011a905b9960289833e8',
         name: '5634322f4e465423373436393933323738',
         amount: '1',
       },
       {
-        assetId:
+        tokenId:
           '4d99f2fcc2fd91aca97865516b8e77a8e6dc011a905b9960289833e8.5634322f4e4654233739373536313837',
         policyId: '4d99f2fcc2fd91aca97865516b8e77a8e6dc011a905b9960289833e8',
         name: '5634322f4e4654233739373536313837',
         amount: '1',
       },
       {
-        assetId:
+        tokenId:
           '4d99f2fcc2fd91aca97865516b8e77a8e6dc011a905b9960289833e8.5634322f4e465423383137353339363331',
         policyId: '4d99f2fcc2fd91aca97865516b8e77a8e6dc011a905b9960289833e8',
         name: '5634322f4e465423383137353339363331',
         amount: '1',
       },
       {
-        assetId:
+        tokenId:
           '4d99f2fcc2fd91aca97865516b8e77a8e6dc011a905b9960289833e8.5634322f4e465423383634373434393433',
         policyId: '4d99f2fcc2fd91aca97865516b8e77a8e6dc011a905b9960289833e8',
         name: '5634322f4e465423383634373434393433',
         amount: '1',
       },
       {
-        assetId:
+        tokenId:
           '4d99f2fcc2fd91aca97865516b8e77a8e6dc011a905b9960289833e8.5634322f4e465423383838323538353138',
         policyId: '4d99f2fcc2fd91aca97865516b8e77a8e6dc011a905b9960289833e8',
         name: '5634322f4e465423383838323538353138',
         amount: '1',
       },
       {
-        assetId:
+        tokenId:
           '4d99f2fcc2fd91aca97865516b8e77a8e6dc011a905b9960289833e8.5634322f4e465423393733383432343935',
         policyId: '4d99f2fcc2fd91aca97865516b8e77a8e6dc011a905b9960289833e8',
         name: '5634322f4e465423393733383432343935',
         amount: '1',
       },
       {
-        assetId:
+        tokenId:
           '648823ffdad1610b4162f4dbc87bd47f6f9cf45d772ddef661eff198.7741564158',
         policyId: '648823ffdad1610b4162f4dbc87bd47f6f9cf45d772ddef661eff198',
         name: '7741564158',
         amount: '12411',
       },
       {
-        assetId:
+        tokenId:
           '648823ffdad1610b4162f4dbc87bd47f6f9cf45d772ddef661eff198.77424e42',
         policyId: '648823ffdad1610b4162f4dbc87bd47f6f9cf45d772ddef661eff198',
         name: '77424e42',
         amount: '88',
       },
       {
-        assetId:
+        tokenId:
           '648823ffdad1610b4162f4dbc87bd47f6f9cf45d772ddef661eff198.77425443',
         policyId: '648823ffdad1610b4162f4dbc87bd47f6f9cf45d772ddef661eff198',
         name: '77425443',
         amount: '10000',
       },
       {
-        assetId:
+        tokenId:
           '648823ffdad1610b4162f4dbc87bd47f6f9cf45d772ddef661eff198.77444f4745',
         policyId: '648823ffdad1610b4162f4dbc87bd47f6f9cf45d772ddef661eff198',
         name: '77444f4745',
         amount: '5016535',
       },
       {
-        assetId:
+        tokenId:
           '648823ffdad1610b4162f4dbc87bd47f6f9cf45d772ddef661eff198.77444f54',
         policyId: '648823ffdad1610b4162f4dbc87bd47f6f9cf45d772ddef661eff198',
         name: '77444f54',
         amount: '38609',
       },
       {
-        assetId:
+        tokenId:
           '648823ffdad1610b4162f4dbc87bd47f6f9cf45d772ddef661eff198.77455448',
         policyId: '648823ffdad1610b4162f4dbc87bd47f6f9cf45d772ddef661eff198',
         name: '77455448',
         amount: '11471',
       },
       {
-        assetId:
+        tokenId:
           '648823ffdad1610b4162f4dbc87bd47f6f9cf45d772ddef661eff198.774c554e41',
         policyId: '648823ffdad1610b4162f4dbc87bd47f6f9cf45d772ddef661eff198',
         name: '774c554e41',
         amount: '18000',
       },
       {
-        assetId:
+        tokenId:
           '648823ffdad1610b4162f4dbc87bd47f6f9cf45d772ddef661eff198.775348494241',
         policyId: '648823ffdad1610b4162f4dbc87bd47f6f9cf45d772ddef661eff198',
         name: '775348494241',
         amount: '999999',
       },
       {
-        assetId:
+        tokenId:
           '648823ffdad1610b4162f4dbc87bd47f6f9cf45d772ddef661eff198.7755534443',
         policyId: '648823ffdad1610b4162f4dbc87bd47f6f9cf45d772ddef661eff198',
         name: '7755534443',
         amount: '1000000',
       },
       {
-        assetId:
+        tokenId:
           '648823ffdad1610b4162f4dbc87bd47f6f9cf45d772ddef661eff198.7755534454',
         policyId: '648823ffdad1610b4162f4dbc87bd47f6f9cf45d772ddef661eff198',
         name: '7755534454',
         amount: '999999',
       },
       {
-        assetId:
+        tokenId:
           '648823ffdad1610b4162f4dbc87bd47f6f9cf45d772ddef661eff198.77585250',
         policyId: '648823ffdad1610b4162f4dbc87bd47f6f9cf45d772ddef661eff198',
         name: '77585250',
         amount: '2296120',
       },
       {
-        assetId:
+        tokenId:
           '6a870e1520454de3b2073e2835186095ad9ebaa4145a31c0482fefe8.416461',
         policyId: '6a870e1520454de3b2073e2835186095ad9ebaa4145a31c0482fefe8',
         name: '416461',
         amount: '1',
       },
       {
-        assetId: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
+        tokenId: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
         policyId: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
         name: '',
         amount: '1',
       },
       {
-        assetId:
+        tokenId:
           'a4b125936997e4d11a5ae7b775cc22ea8d41a426dab84f1d9794a9bf.4461727468',
         policyId: 'a4b125936997e4d11a5ae7b775cc22ea8d41a426dab84f1d9794a9bf',
         name: '4461727468',
         amount: '1',
       },
       {
-        assetId:
+        tokenId:
           'a8eb0d5a1126e6e60bbe532f13a3e4a2d5a7618dcae7946fcb74f4d0.563432',
         policyId: 'a8eb0d5a1126e6e60bbe532f13a3e4a2d5a7618dcae7946fcb74f4d0',
         name: '563432',
         amount: '462',
       },
       {
-        assetId:
+        tokenId:
           'a8eb0d5a1126e6e60bbe532f13a3e4a2d5a7618dcae7946fcb74f4d0.5634322f4e465423313632373936353938',
         policyId: 'a8eb0d5a1126e6e60bbe532f13a3e4a2d5a7618dcae7946fcb74f4d0',
         name: '5634322f4e465423313632373936353938',
         amount: '1',
       },
       {
-        assetId:
+        tokenId:
           'a8eb0d5a1126e6e60bbe532f13a3e4a2d5a7618dcae7946fcb74f4d0.5634322f4e465423323636323234353939',
         policyId: 'a8eb0d5a1126e6e60bbe532f13a3e4a2d5a7618dcae7946fcb74f4d0',
         name: '5634322f4e465423323636323234353939',
         amount: '1',
       },
       {
-        assetId:
+        tokenId:
           'b5ee36b296fb3b45984466112165003cbe47c1da85c649ee1434da0e.457965',
         policyId: 'b5ee36b296fb3b45984466112165003cbe47c1da85c649ee1434da0e',
         name: '457965',
         amount: '1',
       },
       {
-        assetId:
+        tokenId:
           'c7767778da94ffac420b5d5edf39fecbed7a38d238723a8be0ace5f9.436f6e6e656374696f6e',
         policyId: 'c7767778da94ffac420b5d5edf39fecbed7a38d238723a8be0ace5f9',
         name: '436f6e6e656374696f6e',
         amount: '1',
       },
       {
-        assetId:
+        tokenId:
           'c85f714f2187021c7bab53741f659d0c5b1a6e7529d32b7794ff051c.474f4c44',
         policyId: 'c85f714f2187021c7bab53741f659d0c5b1a6e7529d32b7794ff051c',
         name: '474f4c44',
         amount: '45000000',
       },
       {
-        assetId:
+        tokenId:
           'c868cdb63090661d815bac251aad5fcffaef94cf099e6cd81df33490.474f4c44',
         policyId: 'c868cdb63090661d815bac251aad5fcffaef94cf099e6cd81df33490',
         name: '474f4c44',
         amount: '1',
       },
       {
-        assetId:
+        tokenId:
           'ce089738e65d10e105a0f63163df80ed2542b050c51f054074dfe3bc.53637265656e73686f7431',
         policyId: 'ce089738e65d10e105a0f63163df80ed2542b050c51f054074dfe3bc',
         name: '53637265656e73686f7431',
         amount: '1',
       },
       {
-        assetId:
+        tokenId:
           'd16ccb791ed2dc5afc810ac4c4cd125ccbb9369506629dc05cfa76b6.737461636b636861696e',
         policyId: 'd16ccb791ed2dc5afc810ac4c4cd125ccbb9369506629dc05cfa76b6',
         name: '737461636b636861696e',
         amount: '1',
       },
       {
-        assetId:
+        tokenId:
           'd1fd2f6f2cb7ed15b3d535567ff3bd621b50550d261adedc2a48da62.524e43',
         policyId: 'd1fd2f6f2cb7ed15b3d535567ff3bd621b50550d261adedc2a48da62',
         name: '524e43',
         amount: '980000',
       },
       {
-        assetId:
+        tokenId:
           'd27197682d71905c087c5c3b61b10e6d746db0b9bef351014d75bb26.6e69636f696e',
         policyId: 'd27197682d71905c087c5c3b61b10e6d746db0b9bef351014d75bb26',
         name: '6e69636f696e',
         amount: '4500000000000',
       },
       {
-        assetId:
+        tokenId:
           'd6312282ee9db69267aa6cc1c1dda85266120f721d65513175db7870.625f30305f625f35',
         policyId: 'd6312282ee9db69267aa6cc1c1dda85266120f721d65513175db7870',
         name: '625f30305f625f35',
         amount: '1',
       },
       {
-        assetId:
+        tokenId:
           'e155e45fc57506872b85daad2827d99aba69e5bc96afb7cea925ef1e.4e65757472616c',
         policyId: 'e155e45fc57506872b85daad2827d99aba69e5bc96afb7cea925ef1e',
         name: '4e65757472616c',
@@ -427,7 +427,7 @@ export const utxos: RawUtxo[] = [
 
     assets: [
       {
-        assetId:
+        tokenId:
           'ec58bf7579485fb53ff4294d9c008bd8b948ed298df1478e232618b1.546573744e46545f3834323031',
         policyId: 'ec58bf7579485fb53ff4294d9c008bd8b948ed298df1478e232618b1',
         name: '546573744e46545f3834323031',
@@ -490,70 +490,70 @@ export const utxos: RawUtxo[] = [
 
     assets: [
       {
-        assetId:
+        tokenId:
           '16af70780a170994e8e5e575f4401b1d89bddf7d1a11d6264e0b0c85.74426967546f6b656e4e616d653132',
         policyId: '16af70780a170994e8e5e575f4401b1d89bddf7d1a11d6264e0b0c85',
         name: '74426967546f6b656e4e616d653132',
         amount: '140',
       },
       {
-        assetId:
+        tokenId:
           '52366a9f74840bb47d0509393c18343f376250de1a01e0a43619e471.74426967546f6b656e4e616d653038',
         policyId: '52366a9f74840bb47d0509393c18343f376250de1a01e0a43619e471',
         name: '74426967546f6b656e4e616d653038',
         amount: '140',
       },
       {
-        assetId:
+        tokenId:
           '540fc78fe3097c41590b696a23844f8d0c9cf2a46328bb7b77b1c7a6.74426967546f6b656e4e616d653031',
         policyId: '540fc78fe3097c41590b696a23844f8d0c9cf2a46328bb7b77b1c7a6',
         name: '74426967546f6b656e4e616d653031',
         amount: '140',
       },
       {
-        assetId:
+        tokenId:
           '6d01f1c6f5ced9070db252fbf1fbd517f67e9e8966326205d4f0e5ea.74426967546f6b656e4e616d653131',
         policyId: '6d01f1c6f5ced9070db252fbf1fbd517f67e9e8966326205d4f0e5ea',
         name: '74426967546f6b656e4e616d653131',
         amount: '140',
       },
       {
-        assetId:
+        tokenId:
           '819de34b4f37b6ae3743e37f16887cacf634a4e61f40d7f0b81e2017.74426967546f6b656e4e616d653039',
         policyId: '819de34b4f37b6ae3743e37f16887cacf634a4e61f40d7f0b81e2017',
         name: '74426967546f6b656e4e616d653039',
         amount: '140',
       },
       {
-        assetId:
+        tokenId:
           '8538fdebcdb68ecbf1fcfd8f2dcb478e04007e32a76047fdd86406da.74426967546f6b656e4e616d653137',
         policyId: '8538fdebcdb68ecbf1fcfd8f2dcb478e04007e32a76047fdd86406da',
         name: '74426967546f6b656e4e616d653137',
         amount: '140',
       },
       {
-        assetId:
+        tokenId:
           '9a7646844194fb7f71b72fe5310e26a0ae013b3916bb1a24e7066a5d.7441444f',
         policyId: '9a7646844194fb7f71b72fe5310e26a0ae013b3916bb1a24e7066a5d',
         name: '7441444f',
         amount: '1000005',
       },
       {
-        assetId:
+        tokenId:
           'bdbdd5dfd883c6c00765652910091a650a21dddb3758365831bb1771.74426967546f6b656e4e616d653138',
         policyId: 'bdbdd5dfd883c6c00765652910091a650a21dddb3758365831bb1771',
         name: '74426967546f6b656e4e616d653138',
         amount: '140',
       },
       {
-        assetId:
+        tokenId:
           'ca757ea0352f38978a0c3737ca85f885eae4b8051cea1434a3b07f5b.74426967546f6b656e4e616d653133',
         policyId: 'ca757ea0352f38978a0c3737ca85f885eae4b8051cea1434a3b07f5b',
         name: '74426967546f6b656e4e616d653133',
         amount: '140',
       },
       {
-        assetId:
+        tokenId:
           'd40ebd57f674645d5b1826bbbe3528280463cae8f82982586faa4592.74426967546f6b656e4e616d653130',
         policyId: 'd40ebd57f674645d5b1826bbbe3528280463cae8f82982586faa4592',
         name: '74426967546f6b656e4e616d653130',
@@ -572,70 +572,70 @@ export const utxos: RawUtxo[] = [
 
     assets: [
       {
-        assetId:
+        tokenId:
           '17eb5925c69a2b88cada90d7e07eb3fcf19c2f41b66697820fc77231.74426967546f6b656e4e616d653135',
         policyId: '17eb5925c69a2b88cada90d7e07eb3fcf19c2f41b66697820fc77231',
         name: '74426967546f6b656e4e616d653135',
         amount: '140',
       },
       {
-        assetId:
+        tokenId:
           '238c008ef8ead5ec20bab5733f765f897bb405c0ccb9f752d2194c0a.74426967546f6b656e4e616d653136',
         policyId: '238c008ef8ead5ec20bab5733f765f897bb405c0ccb9f752d2194c0a',
         name: '74426967546f6b656e4e616d653136',
         amount: '140',
       },
       {
-        assetId:
+        tokenId:
           '48664e8d76f2b15606677bd117a3eac9929c378ac547ed295518dfd5.74426967546f6b656e4e616d653032',
         policyId: '48664e8d76f2b15606677bd117a3eac9929c378ac547ed295518dfd5',
         name: '74426967546f6b656e4e616d653032',
         amount: '140',
       },
       {
-        assetId:
+        tokenId:
           '6090278d9171cd5762f24e0a63f85fabb3db950fe9944f396ffa51a1.74426967546f6b656e4e616d653230',
         policyId: '6090278d9171cd5762f24e0a63f85fabb3db950fe9944f396ffa51a1',
         name: '74426967546f6b656e4e616d653230',
         amount: '140',
       },
       {
-        assetId:
+        tokenId:
           '67ea41e56ef3f2c19765b8740c297a73048bc1615e5c537f0889d4a1.74426967546f6b656e4e616d653134',
         policyId: '67ea41e56ef3f2c19765b8740c297a73048bc1615e5c537f0889d4a1',
         name: '74426967546f6b656e4e616d653134',
         amount: '140',
       },
       {
-        assetId:
+        tokenId:
           '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950',
         policyId: '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d',
         name: '7444524950',
         amount: '1000000000',
       },
       {
-        assetId:
+        tokenId:
           '783c70029a88a1575459215b648ab11d182bb1acc7d709aaabc02756.74426967546f6b656e4e616d653139',
         policyId: '783c70029a88a1575459215b648ab11d182bb1acc7d709aaabc02756',
         name: '74426967546f6b656e4e616d653139',
         amount: '140',
       },
       {
-        assetId:
+        tokenId:
           'cfc398182e8197a6b39cf2db07a207866074dca9165c3c61c7972f5e.74426967546f6b656e4e616d653035',
         policyId: 'cfc398182e8197a6b39cf2db07a207866074dca9165c3c61c7972f5e',
         name: '74426967546f6b656e4e616d653035',
         amount: '140',
       },
       {
-        assetId:
+        tokenId:
           'd2e5d6dd927372b34b5da66cc7bee5dffd01351a49ac007efc9cea2d.74426967546f6b656e4e616d653034',
         policyId: 'd2e5d6dd927372b34b5da66cc7bee5dffd01351a49ac007efc9cea2d',
         name: '74426967546f6b656e4e616d653034',
         amount: '140',
       },
       {
-        assetId:
+        tokenId:
           'e64e887a5311dccc5a20438415fdbfe4071277a4c2ad6d3d08f13da0.74426967546f6b656e4e616d653033',
         policyId: 'e64e887a5311dccc5a20438415fdbfe4071277a4c2ad6d3d08f13da0',
         name: '74426967546f6b656e4e616d653033',
@@ -653,28 +653,28 @@ export const utxos: RawUtxo[] = [
     amount: '2034438',
     assets: [
       {
-        assetId:
+        tokenId:
           'a465391790543ecd0f9f769ea24afbfde07007baa782724735e085a8.74426967546f6b656e4e616d653036',
         policyId: 'a465391790543ecd0f9f769ea24afbfde07007baa782724735e085a8',
         name: '74426967546f6b656e4e616d653036',
         amount: '140',
       },
       {
-        assetId:
+        tokenId:
           'ab49c4983ea2cfd43dcc32279c5ef045bb39d331309f7f0e98da939a.7453554e444145',
         policyId: 'ab49c4983ea2cfd43dcc32279c5ef045bb39d331309f7f0e98da939a',
         name: '7453554e444145',
         amount: '1000000',
       },
       {
-        assetId:
+        tokenId:
           'cfdff341e1f47450c9f3a347c6d6be2f2029c891a289fc041e8f956e.74426967546f6b656e4e616d653037',
         policyId: 'cfdff341e1f47450c9f3a347c6d6be2f2029c891a289fc041e8f956e',
         name: '74426967546f6b656e4e616d653037',
         amount: '140',
       },
       {
-        assetId:
+        tokenId:
           'd311d3488cc4fef19d05634adce8534977a3bc6fc18136ad65df1d4f.6c71205301',
         policyId: 'd311d3488cc4fef19d05634adce8534977a3bc6fc18136ad65df1d4f',
         name: '6c71205301',
@@ -712,14 +712,14 @@ export const utxos: RawUtxo[] = [
     amount: '1517208',
     assets: [
       {
-        assetId:
+        tokenId:
           '4d99f2fcc2fd91aca97865516b8e77a8e6dc011a905b9960289833e8.5634322f4e465423313338363731313430',
         policyId: '4d99f2fcc2fd91aca97865516b8e77a8e6dc011a905b9960289833e8',
         name: '5634322f4e465423313338363731313430',
         amount: '1',
       },
       {
-        assetId:
+        tokenId:
           '4d99f2fcc2fd91aca97865516b8e77a8e6dc011a905b9960289833e8.5634322f4e465423323339363338333835',
         policyId: '4d99f2fcc2fd91aca97865516b8e77a8e6dc011a905b9960289833e8',
         name: '5634322f4e465423323339363338333835',
@@ -737,7 +737,7 @@ export const utxos: RawUtxo[] = [
     amount: '1344798',
     assets: [
       {
-        assetId:
+        tokenId:
           '2a0879034f23ea48ba28dc1c15b056bd63b8cf0cab9733da92add22f.414441524e',
         policyId: '2a0879034f23ea48ba28dc1c15b056bd63b8cf0cab9733da92add22f',
         name: '414441524e',
@@ -765,7 +765,7 @@ export const utxos: RawUtxo[] = [
     amount: '1379280',
     assets: [
       {
-        assetId:
+        tokenId:
           '0f49d5234bcdb3a8333d1292c979c4d309f2f1966b29362e95215272.486973746f7269616e',
         policyId: '0f49d5234bcdb3a8333d1292c979c4d309f2f1966b29362e95215272',
         name: '486973746f7269616e',
@@ -793,7 +793,7 @@ export const utxos: RawUtxo[] = [
     amount: '1693951',
     assets: [
       {
-        assetId:
+        tokenId:
           '84271a6dfcae6310d4d6ea921dc1fd93be02db39c13d4d1f40bdd3de.546865206d616e6f72616d61',
         policyId: '84271a6dfcae6310d4d6ea921dc1fd93be02db39c13d4d1f40bdd3de',
         name: '546865206d616e6f72616d61',

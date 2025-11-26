@@ -1,109 +1,179 @@
-import _ from 'lodash'
-
 import {
   AccountStateRequest,
   AccountStateResponse,
-  FundInfoResponse,
-  PoolInfoRequest,
   RawTransaction,
   TipStatusResponse,
   TxHistoryRequest,
   TxStatusRequest,
   TxStatusResponse,
-} from '~/wallets/types/other'
-import {StakePoolInfosAndHistories} from '~/wallets/types/staking'
+} from '@yoroi/api'
+import {StakePoolInfoRequest, StakePoolInfosAndHistories} from '@yoroi/staking'
 
-import {ServerStatus} from '../types'
-import {handleError} from './errors'
-import {fetchDefault} from './fetch'
+import {cardanoWalletApiMaker} from '../../../../packages/api/cardano/api-maker'
+import {WalletContext} from '../../../../packages/api/cardano/types'
+import {getSpendingKey} from '../addressInfo/addressInfo'
 
 type Addresses = Array<string>
 
-const limitApiRecords = 50
-export const checkServerStatus = (baseApiUrl: string): Promise<ServerStatus> =>
-  fetchDefault('status', null, baseApiUrl, 'GET')
+// Create API instances per baseApiUrl - preferences are set at initialization
+const apiInstances = new Map<string, ReturnType<typeof cardanoWalletApiMaker>>()
 
-export const getTipStatus = (baseApiUrl: string): Promise<TipStatusResponse> =>
-  fetchDefault('v2/tipStatus', null, baseApiUrl, 'GET')
+const getApi = (baseApiUrl: string) => {
+  if (!apiInstances.has(baseApiUrl)) {
+    apiInstances.set(
+      baseApiUrl,
+      cardanoWalletApiMaker({baseApiUrl, getSpendingKey}),
+    )
+  }
+  return apiInstances.get(baseApiUrl)!
+}
 
+/**
+ * Get tip status (best block information)
+ * @param baseApiUrl - Base API URL (used to create/get API instance)
+ */
+export const getTipStatus = async (
+  baseApiUrl: string,
+): Promise<TipStatusResponse> => {
+  return getApi(baseApiUrl).getTipStatus()
+}
+
+/**
+ * Fetch new transaction history
+ * @param request - Transaction history request
+ * @param baseApiUrl - Base API URL (used to create/get API instance)
+ * @param walletContext - Wallet context (required for backend-zero)
+ */
 export const fetchNewTxHistory = async (
   request: TxHistoryRequest,
   baseApiUrl: string,
+  walletContext?: WalletContext,
 ): Promise<{isLast: boolean; transactions: Array<RawTransaction>}> => {
-  const transactions = await fetchDefault<Array<RawTransaction>>(
-    'v2/txs/history',
-    request,
-    baseApiUrl,
-  )
-
-  return {
-    transactions,
-    isLast: transactions.length < limitApiRecords,
-  }
+  return getApi(baseApiUrl).fetchNewTxHistory(request, walletContext)
 }
 
+/**
+ * Filter used addresses
+ * @param addresses - Addresses to filter
+ * @param baseApiUrl - Base API URL (used to create/get API instance)
+ * @param walletContext - Wallet context (required for backend-zero)
+ */
 export const filterUsedAddresses = async (
   addresses: Addresses,
   baseApiUrl: string,
+  walletContext?: WalletContext,
 ): Promise<Addresses> => {
-  // Take a copy in case underlying data mutates during await
-  const copy = [...addresses]
-  const used = await fetchDefault<Addresses>(
-    'v2/addresses/filterUsed',
-    {addresses: copy},
-    baseApiUrl,
-  )
-  // We need to do this so that we keep original order of addresses
-  return copy.filter((addr) => used.includes(addr))
+  return getApi(baseApiUrl).filterUsedAddresses(addresses, walletContext)
 }
 
+/**
+ * Submit transaction
+ * @param signedTx - Signed transaction CBOR
+ * @param baseApiUrl - Base API URL (used to create/get API instance)
+ */
 export const submitTransaction = async (
   signedTx: string,
   baseApiUrl: string,
 ): Promise<void> => {
-  try {
-    await fetchDefault('txs/signed', {signedTx}, baseApiUrl)
-  } catch (e) {
-    throw e instanceof Error ? handleError(e) : e
-  }
+  return getApi(baseApiUrl).submitTransaction(signedTx)
 }
 
-export const getAccountState = (
+/**
+ * Get account state (rewards)
+ * @param request - Account state request
+ * @param baseApiUrl - Base API URL (used to create/get API instance)
+ * @param walletContext - Wallet context (required for backend-zero)
+ */
+export const getAccountState = async (
   request: AccountStateRequest,
   baseApiUrl: string,
+  walletContext?: WalletContext,
 ): Promise<AccountStateResponse> => {
-  return fetchDefault('account/state', request, baseApiUrl)
+  return getApi(baseApiUrl).getAccountState(request, walletContext)
 }
 
+/**
+ * Bulk get account state
+ * @param addresses - Addresses to query
+ * @param baseApiUrl - Base API URL (used to create/get API instance)
+ * @param walletContext - Wallet context (required for backend-zero)
+ */
 export const bulkGetAccountState = async (
   addresses: Addresses,
   baseApiUrl: string,
+  walletContext?: WalletContext,
 ): Promise<AccountStateResponse> => {
-  const chunks = _.chunk(addresses, limitApiRecords)
-  const responses = await Promise.all(
-    chunks.map((addrs) => getAccountState({addresses: addrs}, baseApiUrl)),
-  )
-  return Object.assign({}, ...responses)
+  return getApi(baseApiUrl).bulkGetAccountState(addresses, walletContext)
 }
 
-export const getPoolInfo = (
-  request: PoolInfoRequest,
+/**
+ * Get pool info
+ * @param request - Pool info request
+ * @param baseApiUrl - Base API URL (used to create/get API instance)
+ */
+export const getPoolInfo = async (
+  request: StakePoolInfoRequest,
   baseApiUrl: string,
 ): Promise<StakePoolInfosAndHistories> => {
-  return fetchDefault('pool/info', request, baseApiUrl)
+  return getApi(baseApiUrl).getPoolInfo(request)
 }
 
-export const getFundInfo = (
-  baseApiUrl: string,
-  isMainnet: boolean,
-): Promise<FundInfoResponse> => {
-  const prefix = isMainnet ? '' : 'api/'
-  return fetchDefault(`${prefix}v0/catalyst/fundInfo/`, null, baseApiUrl, 'GET')
-}
-
-export const fetchTxStatus = (
+/**
+ * Fetch transaction status
+ * @param request - Transaction status request
+ * @param baseApiUrl - Base API URL (used to create/get API instance)
+ */
+export const fetchTxStatus = async (
   request: TxStatusRequest,
   baseApiUrl: string,
 ): Promise<TxStatusResponse> => {
-  return fetchDefault('tx/status', request, baseApiUrl)
+  return getApi(baseApiUrl).fetchTxStatus(request)
+}
+
+/**
+ * Check server status (legacy only)
+ * @param baseApiUrl - Base API URL (used to create/get API instance)
+ */
+export const checkServerStatus = async (
+  baseApiUrl: string,
+): Promise<{
+  isServerOk: boolean
+  serverTime: number
+}> => {
+  const api = getApi(baseApiUrl)
+  if (!api.checkServerStatus) {
+    throw new Error('checkServerStatus not available')
+  }
+  return api.checkServerStatus()
+}
+
+/**
+ * Get fund info (legacy only)
+ * @param baseApiUrl - Base API URL (used to create/get API instance)
+ */
+export const getFundInfo = async (
+  baseApiUrl: string,
+): Promise<{
+  currentFund: {
+    id: number
+    registrationStart: string
+    registrationEnd: string
+    votingStart?: string
+    votingEnd?: string
+    votingPowerThreshold: string
+  } | null
+  nextFund: {
+    id: number
+    registrationStart: string
+    registrationEnd: string
+    votingStart?: string
+    votingEnd?: string
+    votingPowerThreshold: string
+  } | null
+}> => {
+  const api = getApi(baseApiUrl)
+  if (!api.getFundInfo) {
+    throw new Error('getFundInfo not available')
+  }
+  return api.getFundInfo()
 }

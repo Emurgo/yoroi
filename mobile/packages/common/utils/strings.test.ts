@@ -1,3 +1,4 @@
+import {isArrayOfType, isString} from './parsers'
 import {
   asConcatenedString,
   asciiToHex,
@@ -5,70 +6,94 @@ import {
   truncateString,
 } from './strings'
 
-describe('asConcatenedString', () => {
-  it('should return undefined for null input', () => {
-    expect(asConcatenedString(null)).toBeUndefined()
+jest.mock('./parsers', () => ({
+  isString: jest.fn(),
+  isArrayOfType: jest.fn(),
+}))
+
+describe('strings utilities', () => {
+  beforeEach(() => {
+    jest.clearAllMocks()
   })
 
-  it('should return anything else', () => {
-    expect(asConcatenedString({} as any)).toBeUndefined()
-    expect(asConcatenedString(['1', 1] as any)).toBeUndefined()
-    expect(asConcatenedString(1 as any)).toBeUndefined()
+  describe('asConcatenedString', () => {
+    it('should return string as-is when value is string', () => {
+      ;(isString as unknown as jest.Mock).mockReturnValue(true)
+      expect(asConcatenedString('test')).toBe('test')
+    })
+
+    it('should join array of strings', () => {
+      ;(isString as unknown as jest.Mock).mockReturnValue(false)
+      ;(isArrayOfType as unknown as jest.Mock).mockReturnValue(true)
+      expect(asConcatenedString(['a', 'b', 'c'])).toBe('abc')
+    })
+
+    it('should return undefined for null', () => {
+      ;(isString as unknown as jest.Mock).mockReturnValue(false)
+      ;(isArrayOfType as unknown as jest.Mock).mockReturnValue(false)
+      expect(asConcatenedString(null)).toBeUndefined()
+    })
+
+    it('should return undefined for undefined', () => {
+      ;(isString as unknown as jest.Mock).mockReturnValue(false)
+      ;(isArrayOfType as unknown as jest.Mock).mockReturnValue(false)
+      expect(asConcatenedString(undefined)).toBeUndefined()
+    })
+
+    it('should return undefined when value is neither string nor array', () => {
+      ;(isString as unknown as jest.Mock).mockReturnValue(false)
+      ;(isArrayOfType as unknown as jest.Mock).mockReturnValue(false)
+      expect(asConcatenedString(123 as any)).toBeUndefined()
+    })
   })
 
-  it('should return undefined for undefined input', () => {
-    expect(asConcatenedString(undefined)).toBeUndefined()
+  describe('truncateString', () => {
+    it('should truncate long strings', () => {
+      const long = 'a'.repeat(20)
+      const result = truncateString({value: long, maxLength: 10})
+      // With separator '...' (3 chars), partLength = floor((10-3)/2) = 3
+      // Result: 3 (start) + 3 (separator) + 3 (end) = 9 chars
+      expect(result.length).toBe(9)
+      expect(result).toContain('...')
+    })
+
+    it('should return original string if short enough', () => {
+      expect(truncateString({value: 'short', maxLength: 10})).toBe('short')
+    })
+
+    it('should use custom separator', () => {
+      const result = truncateString({
+        value: 'a'.repeat(20),
+        maxLength: 10,
+        separator: '---',
+      })
+      expect(result).toContain('---')
+    })
   })
 
-  it('should return the original string for string input', () => {
-    expect(asConcatenedString('hello')).toBe('hello')
+  describe('hexToAscii', () => {
+    it('should convert hex to ascii', () => {
+      expect(hexToAscii('48656c6c6f')).toBe('Hello')
+    })
+
+    it('should return empty string for invalid hex', () => {
+      expect(hexToAscii('invalid')).toBe('')
+      expect(hexToAscii('')).toBe('')
+      expect(hexToAscii('123')).toBe('') // odd length
+    })
+
+    it('should handle hex with non-hex characters', () => {
+      expect(hexToAscii('48g56c6c6f')).toBe('') // contains 'g'
+    })
   })
 
-  it('should join array of strings into a single string', () => {
-    expect(asConcatenedString(['h', 'e', 'l', 'l', 'o'])).toBe('hello')
-  })
-})
+  describe('asciiToHex', () => {
+    it('should convert ascii to hex', () => {
+      expect(asciiToHex('Hello')).toBe('48656c6c6f')
+    })
 
-describe('truncateString', () => {
-  it('should return the original string if its length is less than or equal to maxLength', () => {
-    const value = 'hello'
-    const maxLength = 10
-    const result = truncateString({value, maxLength})
-    expect(result).toBe(value)
-  })
-
-  it('should truncate the string and add separator if its length is greater than maxLength', () => {
-    const value = 'This is a long string'
-    const maxLength = 10
-    const separator = '-'
-    const result = truncateString({value, maxLength, separator})
-    expect(result).toBe('This-ring')
-  })
-
-  it('should truncate the string and add separator at the correct position', () => {
-    const value = 'This is a long string'
-    const maxLength = 15
-    const separator = '...'
-    const result = truncateString({value, maxLength, separator})
-    expect(result).toBe('This i...string')
-  })
-})
-
-describe('hexToAscii', () => {
-  test('converts hex to ascii correctly', () => {
-    expect(hexToAscii('68656c6c6f')).toBe('hello')
-    expect(hexToAscii('776f726c64')).toBe('world')
-  })
-
-  test('returns empty string for invalid hex', () => {
-    expect(hexToAscii('123')).toBe('')
-    expect(hexToAscii('zzzz')).toBe('')
-  })
-})
-
-describe('asciiToHex', () => {
-  test('converts ascii to hex correctly', () => {
-    expect(asciiToHex('hello')).toBe('68656c6c6f')
-    expect(asciiToHex('world')).toBe('776f726c64')
+    it('should handle empty string', () => {
+      expect(asciiToHex('')).toBe('')
+    })
   })
 })

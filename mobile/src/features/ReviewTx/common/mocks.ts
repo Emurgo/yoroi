@@ -156,6 +156,16 @@ export const onlyAdaOneReceiver: FormattedTx = {
   certificates: null,
   mint: null,
   referenceInputs: [],
+  withdrawals: null,
+  collateral: null,
+  collateralReturn: null,
+  totalCollateral: null,
+  requiredSigners: null,
+  scriptDataHash: null,
+  ttl: null,
+  validityIntervalStart: null,
+  networkId: null,
+  witnessSet: null,
 }
 
 export const onlyAdaOneReceiverReferenceInputs: FormattedTx = {
@@ -346,6 +356,16 @@ export const onlyAdaOneReceiverReferenceInputs: FormattedTx = {
         '968c8b93fa086cb09fca400d2fe11b52e3b551a0527840c2dbb02796379467ca',
     },
   ],
+  withdrawals: null,
+  collateral: null,
+  collateralReturn: null,
+  totalCollateral: null,
+  requiredSigners: null,
+  scriptDataHash: null,
+  ttl: null,
+  validityIntervalStart: null,
+  networkId: null,
+  witnessSet: null,
 }
 
 export const onlyAdaOneReceiverMint: FormattedTx = {
@@ -545,6 +565,16 @@ export const onlyAdaOneReceiverMint: FormattedTx = {
     ],
   ],
   referenceInputs: [],
+  withdrawals: null,
+  collateral: null,
+  collateralReturn: null,
+  totalCollateral: null,
+  requiredSigners: null,
+  scriptDataHash: null,
+  ttl: null,
+  validityIntervalStart: null,
+  networkId: null,
+  witnessSet: null,
 }
 
 export const multiAssetOneReceiver: FormattedTx = {
@@ -839,6 +869,16 @@ export const multiAssetOneReceiver: FormattedTx = {
   certificates: null,
   mint: null,
   referenceInputs: [],
+  withdrawals: null,
+  collateral: null,
+  collateralReturn: null,
+  totalCollateral: null,
+  requiredSigners: null,
+  scriptDataHash: null,
+  ttl: null,
+  validityIntervalStart: null,
+  networkId: null,
+  witnessSet: null,
 }
 
 const onlyAdaMultiReceiver: FormattedTx = {
@@ -1046,6 +1086,16 @@ const onlyAdaMultiReceiver: FormattedTx = {
   certificates: null,
   mint: null,
   referenceInputs: [],
+  withdrawals: null,
+  collateral: null,
+  collateralReturn: null,
+  totalCollateral: null,
+  requiredSigners: null,
+  scriptDataHash: null,
+  ttl: null,
+  validityIntervalStart: null,
+  networkId: null,
+  witnessSet: null,
 }
 
 const multiAssetMultiReceiver: FormattedTx = {
@@ -1274,6 +1324,16 @@ const multiAssetMultiReceiver: FormattedTx = {
   certificates: null,
   mint: null,
   referenceInputs: [],
+  withdrawals: null,
+  collateral: null,
+  collateralReturn: null,
+  totalCollateral: null,
+  requiredSigners: null,
+  scriptDataHash: null,
+  ttl: null,
+  validityIntervalStart: null,
+  networkId: null,
+  witnessSet: null,
 }
 
 const operationsWarning: FormattedTx = {
@@ -1507,6 +1567,16 @@ const operationsWarning: FormattedTx = {
         '1a2070bd83bbbe8b8d5146a06d5eeb00631ed236bb79f5f54451d1e0e777943a',
     },
   ],
+  withdrawals: null,
+  collateral: null,
+  collateralReturn: null,
+  totalCollateral: null,
+  requiredSigners: null,
+  scriptDataHash: null,
+  ttl: null,
+  validityIntervalStart: null,
+  networkId: null,
+  witnessSet: null,
 }
 
 export const mocks = {

@@ -1,14 +1,16 @@
+import {UnsignedTransaction} from '@yoroi/tx'
+
+import * as CSL from '@emurgo/cross-csl-core'
 import {UseMutationOptions, useMutation} from '@tanstack/react-query'
 
 import {YoroiWallet} from '~/wallets/cardano/types'
-import {YoroiSignedTx, YoroiUnsignedTx} from '~/wallets/types/yoroi'
 
 export const useSignTx = (
   {wallet}: {wallet: YoroiWallet},
   options: UseMutationOptions<
-    YoroiSignedTx,
+    CSL.Transaction,
     Error,
-    {unsignedTx: YoroiUnsignedTx; rootKey: string}
+    {unsignedTx: UnsignedTransaction; rootKey: string}
   > = {},
 ) => {
   const mutation = useMutation({

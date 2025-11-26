@@ -1,21 +1,22 @@
+import {API_ENDPOINTS} from '@yoroi/api'
+import {poolInfoApiMaker} from '@yoroi/staking'
 import {Wallet} from '@yoroi/types'
 
 import {init} from '@emurgo/cross-csl-mobile'
-import {PoolInfoApi} from '@emurgo/yoroi-lib'
 import {useQuery} from '@tanstack/react-query'
-import BigNumber from 'bignumber.js'
 import * as React from 'react'
 
-import {useReviewTx} from '~/features/ReviewTx/common/ReviewTxProvider'
+import {useNavigateTo} from '~/features/Staking/Governance/common/navigation'
+import {isInsufficientBalanceError} from '~/features/Staking/Governance/common/transactionErrorHandling'
 import {useStakingInfo} from '~/features/Staking/hooks/useStakingInfo'
 import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {features} from '~/kernel/features'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
+import {createDelegationTxFromWallet} from '~/wallets/cardano/transaction-recipes'
 import {YoroiWallet} from '~/wallets/cardano/types'
-import {Quantities, asQuantity} from '~/wallets/utils/utils'
 
-const createDelegationTx = async (
+const createDelegationTxHelper = async (
   wallet: YoroiWallet,
   poolId: string,
   meta: Wallet.Meta,
@@ -24,15 +25,8 @@ const createDelegationTx = async (
   const accountState = accountStates[wallet.rewardAddressHex]
   if (!accountState) throw new Error('Account state not found')
 
-  const stakingUtxos = await wallet.getAllUtxosForKey()
-  const amountToDelegate = Quantities.sum([
-    ...stakingUtxos.map((utxo) => asQuantity(utxo.amount)),
-    asQuantity(accountState.remainingAmount),
-  ])
-
-  return wallet.createDelegationTx({
+  return createDelegationTxFromWallet(wallet, {
     poolId,
-    delegatedAmount: new BigNumber(amountToDelegate),
     addressMode: meta.addressMode,
   })
 }
@@ -41,12 +35,15 @@ export const usePoolTransition = () => {
   const {wallet, meta} = useSelectedWallet()
   const {networkManager} = useSelectedNetwork()
   const {navigateToTxReview} = useWalletNavigation()
-  const {unsignedTxChanged} = useReviewTx()
+  const navigateTo = useNavigateTo()
   const {stakingInfo, isLoading} = useStakingInfo(wallet)
 
   const poolInfoApi = React.useMemo(() => {
-    return new PoolInfoApi(networkManager.legacyApiBaseUrl)
-  }, [networkManager.legacyApiBaseUrl])
+    return poolInfoApiMaker({
+      legacyApiBaseUrl: networkManager.legacyApiBaseUrl,
+      zeroApiUrl: API_ENDPOINTS[networkManager.network].root,
+    })
+  }, [networkManager.legacyApiBaseUrl, networkManager.network])
 
   const isStaked = stakingInfo?.status === 'staked'
   const currentPoolId = isStaked ? stakingInfo?.poolId : ''
@@ -67,10 +64,18 @@ export const usePoolTransition = () => {
   const poolId = poolTransition?.suggested.hash ?? ''
 
   const navigateToUpdate = React.useCallback(async () => {
-    const yoroiUnsignedTx = await createDelegationTx(wallet, poolId, meta)
-    unsignedTxChanged(yoroiUnsignedTx)
-    navigateToTxReview({context: 'delegate'})
-  }, [wallet, poolId, meta, unsignedTxChanged, navigateToTxReview])
+    try {
+      const result = await createDelegationTxHelper(wallet, poolId, meta)
+      navigateToTxReview({cbor: result.cbor, context: 'delegate'})
+    } catch (error) {
+      // Check if error is due to insufficient balance and navigate to noFunds screen
+      if (isInsufficientBalanceError(error)) {
+        navigateTo.noFunds()
+        return
+      }
+      throw error
+    }
+  }, [wallet, poolId, meta, navigateToTxReview, navigateTo])
 
   if (isLoading) {
     return {

@@ -1,10 +1,9 @@
-import {Chain, Portfolio} from '@yoroi/types'
+import {Chain, Links, Portfolio} from '@yoroi/types'
 
 import {useNavigation} from '@react-navigation/native'
 import * as Linking from 'expo-linking'
 import * as React from 'react'
 
-import {useSwap} from '~/features/Swap/common/useSwap'
 import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
 
 import {ReviewTxRoutes, SettingsStackRoutes} from '../types'
@@ -12,12 +11,9 @@ import {ReviewTxRoutes, SettingsStackRoutes} from '../types'
 export const useWalletNavigation = () => {
   const navigation = useNavigation()
   const selectedNetworkHook = useSelectedNetwork()
-  const swapForm = useSwap()
 
   const selectedNetworkRef = React.useRef(selectedNetworkHook)
   selectedNetworkRef.current = selectedNetworkHook
-  const swapFormRef = React.useRef(swapForm)
-  swapFormRef.current = swapForm
 
   const walletNavigation = React.useRef({
     navigation,
@@ -297,6 +293,18 @@ export const useWalletNavigation = () => {
       })
     },
 
+    navigateToDiscoverDappSelection: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'discover',
+          params: {
+            screen: 'discover-select-dapp-from-list',
+          },
+        },
+      })
+    },
+
     navigateToSwap: () => {
       const currentNetwork = selectedNetworkRef.current.network
 
@@ -349,6 +357,7 @@ export const useWalletNavigation = () => {
                         {
                           name: 'history',
                           state: {
+                            index: 1,
                             routes: [
                               {name: 'history-list'},
                               {
@@ -386,6 +395,7 @@ export const useWalletNavigation = () => {
                       {
                         name: 'history',
                         state: {
+                          index: 1,
                           routes: [
                             {name: 'history-list'},
                             {
@@ -470,6 +480,26 @@ export const useWalletNavigation = () => {
       })
     },
 
+    navigateToMessageSigning: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'main-wallet-routes',
+        params: {screen: 'history', params: {screen: 'message-signing'}},
+      })
+    },
+
+    navigateToMessageSigningResult: (signature: string, key: string) => {
+      navigation.navigate('manage-wallets', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'history',
+          params: {
+            screen: 'message-signing-result',
+            params: {signature, key},
+          },
+        },
+      })
+    },
+
     navigateToUtxoConsolidation: () => {
       navigation.navigate('manage-wallets', {
         screen: 'main-wallet-routes',
@@ -487,6 +517,67 @@ export const useWalletNavigation = () => {
       })
     },
 
+    navigateToAddressDetails: (address: string) => {
+      navigation.navigate('manage-wallets', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'history',
+          params: {screen: 'address-details', params: {address}},
+        },
+      })
+    },
+
+    navigateToBlockDetails: ({
+      hash,
+      height,
+    }: {
+      hash?: string
+      height?: string
+    }) => {
+      navigation.navigate('manage-wallets', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'history',
+          params: {
+            screen: 'block-details',
+            params: {hash, height},
+          },
+        },
+      })
+    },
+
+    navigateToP2PConnection: ({
+      peerId,
+      signalingUrl,
+    }: {
+      peerId: string
+      signalingUrl?: string
+    }) => {
+      navigation.navigate('manage-wallets', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'history',
+          params: {
+            screen: 'p2p-connection',
+            params: {peerId, signalingUrl},
+          },
+        },
+      })
+    },
+
+    navigateToRestoreWalletFromLink: (
+      action: Links.CardanoActionRestoreWallet,
+    ) => {
+      navigation.navigate('manage-wallets', {
+        screen: 'setup-wallet',
+        params: {
+          screen: 'setup-wallet-restore-from-link',
+          params: {action},
+        },
+      } as any)
+    },
+
+    // Send Navigation Functions
     navigateToSendStartTx: () => {
       navigation.navigate('manage-wallets', {
         screen: 'main-wallet-routes',
@@ -520,26 +611,6 @@ export const useWalletNavigation = () => {
         params: {
           screen: 'history',
           params: {screen: 'send-select-token-from-list'},
-        },
-      })
-    },
-
-    navigateToSendSubmittedTx: () => {
-      navigation.navigate('manage-wallets', {
-        screen: 'main-wallet-routes',
-        params: {
-          screen: 'history',
-          params: {screen: 'send-submitted-tx'},
-        },
-      })
-    },
-
-    navigateToSendFailedTx: () => {
-      navigation.navigate('manage-wallets', {
-        screen: 'main-wallet-routes',
-        params: {
-          screen: 'history',
-          params: {screen: 'send-failed-tx'},
         },
       })
     },

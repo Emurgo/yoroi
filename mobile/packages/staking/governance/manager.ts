@@ -1,4 +1,4 @@
-import {isLeft} from '@yoroi/common'
+import {getLogger, isLeft} from '@yoroi/common'
 import {App, Chain} from '@yoroi/types'
 
 import {CardanoTypes} from '../types'
@@ -12,7 +12,6 @@ export type Config = {
   cardano: CardanoTypes.Wasm
   storage: App.Storage
   api: GovernanceApi
-  logger?: App.Logger.Manager
 }
 
 export type VoteKind = 'abstain' | 'no-confidence'
@@ -78,11 +77,12 @@ class Manager implements GovernanceManager {
   }
 
   async getStakingKeyState(stakeKeyHash: string): Promise<StakingKeyState> {
-    const {api, logger} = this.config
+    const {api} = this.config
+    const logger = getLogger()
     const response = await api.getStakingKeyState(stakeKeyHash)
 
     if (isLeft(response)) {
-      logger?.error('Failed to fetch staking key state', {
+      logger.error('Failed to fetch staking key state', {
         stakeKeyHash,
         error: response.error,
       })
@@ -163,7 +163,7 @@ class Manager implements GovernanceManager {
     const response = await this.config.api.getDRepById(hash)
 
     if (isLeft(response)) {
-      this.config.logger?.error('DRep validation failed', {
+      getLogger().error('DRep validation failed', {
         drepId,
         error: response.error,
       })

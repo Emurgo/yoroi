@@ -1,11 +1,11 @@
 import {CardanoApi} from '@yoroi/api'
 import {
-  mountAsyncStorage,
+  getLogger,
   mountMMKVStorage,
   observableStorageMaker,
 } from '@yoroi/common'
 import {explorerManager} from '@yoroi/explorers'
-import {Api, App, Chain, Network} from '@yoroi/types'
+import {Api, Chain, Network} from '@yoroi/types'
 
 import {freeze} from 'immer'
 
@@ -15,13 +15,12 @@ import {networkConfigs} from './network-configs'
 
 export function buildNetworkManagers({
   tokenManagers,
-  logger,
   apiMaker = CardanoApi.cardanoApiMaker,
 }: {
   tokenManagers: TokenManagerByNetwork
-  logger: App.Logger.Manager
   apiMaker?: ({network}: {network: Chain.SupportedNetworks}) => Api.Cardano.Api
 }): Readonly<Record<Chain.SupportedNetworks, Network.Manager>> {
+  const logger = getLogger()
   const managers = Object.entries(networkConfigs).reduce<
     Record<Chain.SupportedNetworks, Network.Manager>
   >(
@@ -32,9 +31,6 @@ export function buildNetworkManagers({
         id: `${network}.manager.v1`,
       })
       const rootStorage = observableStorageMaker(networkRootStorage)
-      const legacyRootStorage = observableStorageMaker(
-        mountAsyncStorage({path: `/legacy/${network}/v1/`}),
-      )
       const {getProtocolParams, getBestBlock, getUtxoData} = apiMaker({
         network: config.network,
       })
@@ -58,9 +54,6 @@ export function buildNetworkManagers({
         tokenManager,
 
         explorers: explorerManager[network as Chain.SupportedNetworks],
-
-        // NOTE: it can't use the new rootStorage cuz all modules are async now 🥹
-        legacyRootStorage,
       }
       networkManagers[network as Chain.SupportedNetworks] = networkManager
 

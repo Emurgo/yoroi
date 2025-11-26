@@ -73,7 +73,6 @@ const swapManager = swapManagerMaker({
     // ... other token info
   },
   isPrimaryToken: (tokenId) => tokenId === 'ADA',
-  stakingKey: 'stake1uxck...', // Optional staking key
   storage,
   partners: {
     // Optional partner configurations

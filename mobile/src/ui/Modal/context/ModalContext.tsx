@@ -321,12 +321,17 @@ const modalReducer = (state: ModalState, action: ModalAction) => {
       }
 
     case 'closeAndProcessQueue':
+      // Defer onClose callback to avoid updating other components during render
       if (state.onClose) {
-        try {
-          state.onClose()
-        } catch (error) {
-          console.error('[ModalReducer] Error calling onClose:', error)
-        }
+        // Use setTimeout to defer callback execution until after render completes
+        const onCloseCallback = state.onClose
+        setTimeout(() => {
+          try {
+            onCloseCallback()
+          } catch (error) {
+            console.error('[ModalReducer] Error calling onClose:', error)
+          }
+        }, 0)
       }
 
       if (state.queue.length > 0) {

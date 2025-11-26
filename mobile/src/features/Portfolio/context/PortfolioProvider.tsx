@@ -4,7 +4,6 @@ import {produce} from 'immer'
 import * as React from 'react'
 
 export const PortfolioDetailsTab = {
-  Performance: 'Performance',
   Overview: 'Overview',
   Transactions: 'Transactions',
 } as const
@@ -13,25 +12,14 @@ export type PortfolioDetailsTab =
 
 export const PortfolioListTab = {
   Wallet: 'Wallet',
-  Dapps: 'Dapps',
 } as const
 export type PortfolioListTab =
   (typeof PortfolioListTab)[keyof typeof PortfolioListTab]
-
-export const PortfolioDappsTab = {
-  LiquidityPool: 'LiquidityPool',
-  OpenOrders: 'OpenOrders',
-  LendAndBorrow: 'LendAndBorrow',
-} as const
-
-export type PortfolioDappsTab =
-  (typeof PortfolioDappsTab)[keyof typeof PortfolioDappsTab]
 
 const defaultActions: PortfolioActions = {
   setIsPrimaryTokenActive: () => invalid('missing init'),
   setDetailsTab: () => invalid('missing init'),
   setListTab: () => invalid('missing init'),
-  setDappsTab: () => invalid('missing init'),
   resetTabs: () => invalid('missing init'),
 } as const
 
@@ -39,14 +27,12 @@ const defaultState: PortfolioState = {
   isPrimaryTokenActive: false,
   detailsTab: PortfolioDetailsTab.Overview,
   listTab: PortfolioListTab.Wallet,
-  dappsTab: PortfolioDappsTab.LiquidityPool,
 } as const
 
 type PortfolioState = {
   isPrimaryTokenActive: boolean
   detailsTab: PortfolioDetailsTab
   listTab: PortfolioListTab
-  dappsTab: PortfolioDappsTab
 }
 
 const PortfolioContext = React.createContext<PortfolioState & PortfolioActions>(
@@ -78,9 +64,6 @@ export const PortfolioProvider = ({
     setListTab: (tab) => {
       dispatch({type: PortfolioActionType.SetListTab, payload: {tab}})
     },
-    setDappsTab: (tab) => {
-      dispatch({type: PortfolioActionType.SetDappsTab, payload: {tab}})
-    },
     resetTabs: () => dispatch({type: PortfolioActionType.ResetTabs}),
   }).current
 
@@ -106,7 +89,6 @@ const PortfolioActionType = {
   SetIsPrimaryTokenActive: 'SetIsPrimaryTokenActive',
   SetDetailsTab: 'SetDetailsTab',
   SetListTab: 'SetListTab',
-  SetDappsTab: 'SetDappsTab',
   ResetTabs: 'ResetTabs',
 } as const
 type PortfolioActionType =
@@ -116,7 +98,6 @@ type PortfolioContextAction =
   | SetIsPrimaryTokenActiveAction
   | SetDetailsTabAction
   | SetListTabAction
-  | SetDappsTabAction
   | ResetTabsAction
 
 type SetIsPrimaryTokenActiveAction = {
@@ -134,11 +115,6 @@ type SetListTabAction = {
   payload: {tab: PortfolioListTab}
 }
 
-type SetDappsTabAction = {
-  type: typeof PortfolioActionType.SetDappsTab
-  payload: {tab: PortfolioDappsTab}
-}
-
 type ResetTabsAction = {
   type: typeof PortfolioActionType.ResetTabs
 }
@@ -147,7 +123,6 @@ type PortfolioActions = Readonly<{
   setIsPrimaryTokenActive: (isActive: boolean) => void
   setDetailsTab: (tab: PortfolioDetailsTab) => void
   setListTab: (tab: PortfolioListTab) => void
-  setDappsTab: (tab: PortfolioDappsTab) => void
   resetTabs: () => void
 }>
 
@@ -166,13 +141,9 @@ const portfolioReducer = (
       case PortfolioActionType.SetListTab:
         draft.listTab = action.payload.tab
         break
-      case PortfolioActionType.SetDappsTab:
-        draft.dappsTab = action.payload.tab
-        break
       case PortfolioActionType.ResetTabs:
         draft.detailsTab = defaultState.detailsTab
         draft.listTab = defaultState.listTab
-        draft.dappsTab = defaultState.dappsTab
         break
     }
   })

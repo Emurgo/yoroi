@@ -1,5 +1,6 @@
-import {CardanoAddressedUtxo} from '@emurgo/yoroi-lib'
-import {normalizeToAddress} from '@emurgo/yoroi-lib/dist/internals/utils/addresses'
+import {isHex} from '@yoroi/common'
+import {CardanoAddressedUtxo} from '@yoroi/tx'
+
 import {sortBy} from 'lodash'
 
 import {StakingStatus} from '~/wallets/types/staking'
@@ -8,15 +9,25 @@ import type {TimestampedCertMeta} from './transactionManager/transactionManager'
 import {CardanoTypes} from './types'
 import {CardanoMobileWrapped} from './wrappedCsl'
 
-const addrContainsAccountKey = (
+const addrContainsAccountKey = async (
   address: string,
   targetAccountKey: CardanoTypes.StakeCredential,
   acceptTypeMismatch: boolean,
 ) => {
   return CardanoMobileWrapped.cslScope((csl) => {
-    const wasmAddr = normalizeToAddress(csl, address)
+    // Create address within this cslScope to avoid pointer issues
+    let wasmAddr: any
+    if (csl.ByronAddress.isValid(address)) {
+      const byronAddr = csl.ByronAddress.fromBase58(address)
+      wasmAddr = byronAddr.toAddress()
+    } else {
+      const isHexAddr = isHex(address)
+      wasmAddr = isHexAddr
+        ? csl.Address.fromHex(address)
+        : csl.Address.fromBech32(address)
+    }
 
-    if (wasmAddr == null) {
+    if (wasmAddr == null || wasmAddr.isMalformed()) {
       throw new Error(`addrContainsAccountKey: invalid address ${address}`)
     }
 
@@ -38,7 +49,7 @@ const addrContainsAccountKey = (
   })
 }
 
-export const filterAddressesByStakingKey = (
+export const filterAddressesByStakingKey = async (
   stakingKey: CardanoTypes.StakeCredential,
   utxos: ReadonlyArray<CardanoAddressedUtxo>,
   acceptTypeMismatch: boolean,
@@ -46,7 +57,13 @@ export const filterAddressesByStakingKey = (
   const result: Array<CardanoAddressedUtxo> = []
 
   for (const utxo of utxos) {
-    if (addrContainsAccountKey(utxo.receiver, stakingKey, acceptTypeMismatch)) {
+    if (
+      await addrContainsAccountKey(
+        utxo.receiver,
+        stakingKey,
+        acceptTypeMismatch,
+      )
+    ) {
       result.push(utxo)
     }
   }
@@ -123,7 +140,18 @@ const isValidPoolId = (poolId: string): boolean => {
 export const getPoolBech32Id = (poolId: string) => {
   return CardanoMobileWrapped.cslScope((csl) => {
     const keyHash = csl.Ed25519KeyHash.fromHex(poolId)
-    return keyHash.toBech32('pool')
+    if (!keyHash) {
+      throw new Error(
+        `getPoolBech32Id: Failed to create key hash from poolId: ${poolId}`,
+      )
+    }
+    const bech32 = keyHash.toBech32('pool')
+    if (!bech32) {
+      throw new Error(
+        `getPoolBech32Id: Failed to convert key hash to bech32 for poolId: ${poolId}`,
+      )
+    }
+    return bech32
   })
 }
 

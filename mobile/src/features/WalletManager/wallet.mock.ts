@@ -1,19 +1,17 @@
 import {AppApi} from '@yoroi/api'
 import {cardanoConfig, protocolParamsPlaceholder} from '@yoroi/blockchains'
 import {createPrimaryTokenInfo} from '@yoroi/portfolio'
+import {StakePoolInfosAndHistories} from '@yoroi/staking'
 import {Portfolio, Wallet} from '@yoroi/types'
 
 import {noop} from 'lodash'
-import {Observable} from 'rxjs'
+import {Observable, Subscription} from 'rxjs'
 
 import {YoroiWallet} from '../../wallets/cardano/types'
 import {mockEncryptedStorage} from '../../wallets/mocks/storage'
 import {mockTransactionInfos} from '../../wallets/mocks/transaction'
 import {utxos} from '../../wallets/mocks/utxos'
-import {
-  RemotePoolMetaSuccess,
-  StakePoolInfosAndHistories,
-} from '../../wallets/types/staking'
+import {RemotePoolMetaSuccess} from '../../wallets/types/staking'
 import {CardanoMobile} from '../../wallets/wallets'
 import {networkManagers} from './common/constants'
 
@@ -34,7 +32,6 @@ const poolInfoAndHistory: RemotePoolMetaSuccess = {
       cert_ordinal: 0,
       payload: {
         kind: 'PoolRegistration',
-        certIndex: 123,
         poolParams: {},
       },
     },
@@ -106,12 +103,36 @@ const wallet: YoroiWallet = {
   portfolioPrimaryTokenInfo: primaryTokenInfoMainnet,
 
   balanceManager: {
+    hydrate: noop,
+    refresh: noop,
+    updatePrimaryStated: noop,
+    updatePrimaryDerived: noop,
+    syncBalances: noop,
+    subscribe: () => {
+      return {unsubscribe: noop} as Subscription
+    },
+    unsubscribe: noop,
+    observable$: new Observable<Portfolio.Event.BalanceManager>(),
+    getPrimaryBreakdown: () => ({
+      availableRewards: 0n,
+      lockedAsStorageCost: 0n,
+      totalFromTxs: 0n,
+    }),
+    getPrimaryBalance: () => ({
+      quantity: 0n,
+      info: primaryTokenInfoMainnet,
+    }),
+    getHasOnlyPrimary: () => false,
+    getBalances: () => ({
+      records: new Map(),
+      all: [],
+      fts: [],
+      nfts: [],
+    }),
+    getIsEmpty: () => false,
+    destroy: noop,
     clear: noop,
-    sync: noop,
-    resync: noop,
-    startSync: noop,
-    stopSync: noop,
-  } as any,
+  } as Portfolio.Manager.Balance,
 
   getStakingInfo: async () => {
     throw new Error('not implemented: getStakingInfo')
@@ -148,16 +169,7 @@ const wallet: YoroiWallet = {
     throw new Error('not implemented: signRawTxWithLedger')
   },
   setCollateralId: () => {
-    throw new Error('not implemented: createUnsignedTx')
-  },
-  createUnsignedTx: () => {
-    throw new Error('not implemented: createUnsignedTx')
-  },
-  createDelegationTx: () => {
-    throw new Error('not implemented: createDelegationTx')
-  },
-  createWithdrawalTx: () => {
-    throw new Error('not implemented: createWithdrawalTx')
+    throw new Error('not implemented: setCollateralId')
   },
   getStakingKey: () => {
     const pubKeyHex =
@@ -183,7 +195,7 @@ const wallet: YoroiWallet = {
   fetchPoolInfo: (..._args: unknown[]) => {
     return Promise.resolve({
       [stakePoolId]: poolInfoAndHistory,
-    } as StakePoolInfosAndHistories)
+    } as unknown as StakePoolInfosAndHistories)
   },
   getDelegationStatus: (..._args: unknown[]) => {
     return {isRegistered: false, poolKeyHash: null}
@@ -223,9 +235,6 @@ const wallet: YoroiWallet = {
   getFirstPaymentAddress: () => {
     throw new Error('Not implemented: getFirstPaymentAddress')
   },
-  createVotingRegTx: () => {
-    throw new Error('Not implemented: createVotingRegTx')
-  },
   subscribe: (..._args: unknown[]) => {
     throw new Error('not implemented: subscribe')
   },
@@ -255,15 +264,17 @@ const wallet: YoroiWallet = {
   resync: async (..._args: unknown[]) => {
     throw new Error('not implemented: resync')
   },
+  quickSync: async (..._args: unknown[]) => {
+    throw new Error('not implemented: quickSync')
+  },
   fetchFundInfo: () => {
     throw new Error('not implemented: fetchFundInfo')
-  },
-  createUnsignedGovernanceTx: () => {
-    throw new Error('not implemented: createUnsignedGovernanceTx')
   },
   getChangeAddress(): string {
     return 'addr1qxy9yjhvxh700xeluhvdpwlauuvnzav42edveyggy8fusqvg2f9wcd0u77dnlewc6zalmecex96e24j6ejgssgwneqqs762af9'
   },
+  getRawTransaction: () => undefined,
+  getRawTransactions: () => ({}),
 }
 
 export const walletMocks = {

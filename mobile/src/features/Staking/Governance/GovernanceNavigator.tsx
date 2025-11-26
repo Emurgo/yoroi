@@ -3,8 +3,6 @@ import {ThemedPalette, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
 
-import {FailedTxScreen} from '~/features/ReviewTx/useCases/ShowFailedTxScreen/FailedTxScreen'
-import {SubmittedTxScreen} from '~/features/ReviewTx/useCases/ShowSubmittedTxScreen/SubmittedTxScreen'
 import {NetworkTag} from '~/features/Settings/ui/shared/NetworkTag'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
@@ -14,7 +12,6 @@ import {useGovernanceManagerMaker} from './common/helpers'
 import {NavigationStack} from './common/navigation'
 import {ChangeVoteScreen} from './useCases/ChangeVote/ChangeVoteScreen'
 import {HomeScreen} from './useCases/Home/HomeScreen'
-import {NoFundsScreen} from './useCases/NoFunds/NoFundsScreen'
 import {NotSupportedCardanoAppVersion} from './useCases/NotSupportedCardanoAppVersion/NotSupportedCardanoAppVersion'
 
 const Stack = NavigationStack
@@ -23,6 +20,10 @@ export const GovernanceNavigator = () => {
   const strings = useStrings()
   const manager = useGovernanceManagerMaker()
   const {palette: p} = useTheme()
+
+  if (!manager) {
+    return null
+  }
 
   return (
     <GovernanceProvider manager={manager}>
@@ -52,24 +53,6 @@ export const GovernanceNavigator = () => {
             name="staking-gov-not-supported-version"
             component={NotSupportedCardanoAppVersion}
             options={txStatusOptions}
-          />
-
-          <Stack.Screen
-            name="staking-gov-no-funds"
-            component={NoFundsScreen}
-            options={{title: strings.staking.governanceCentreTitle}}
-          />
-
-          <Stack.Screen
-            name="staking-gov-submitted-tx"
-            component={SubmittedTxScreen}
-            options={{headerShown: false}}
-          />
-
-          <Stack.Screen
-            name="staking-gov-failed-tx"
-            component={FailedTxScreen}
-            options={{headerShown: false}}
           />
         </Stack.Navigator>
       </SafeArea>

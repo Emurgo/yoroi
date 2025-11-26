@@ -13,6 +13,7 @@ PACKAGES=(
   "identicon"
   "links"
   "notifications"
+  "p2p-communication"
   "portfolio"
   "resolver"
   "setup-wallet"
@@ -20,6 +21,7 @@ PACKAGES=(
   "swap"
   "theme"
   "transfer"
+  "tx"
   "types"
 )
 

@@ -2,7 +2,7 @@ import {
   Datum,
   SignedTx as SignedTxType,
   UnsignedTx as UnsignedTxType,
-} from '@emurgo/yoroi-lib'
+} from '@yoroi/tx'
 
 import {BalanceAmounts} from '../balance/token'
 import {NumbersRatio} from '../numbers/ratio'

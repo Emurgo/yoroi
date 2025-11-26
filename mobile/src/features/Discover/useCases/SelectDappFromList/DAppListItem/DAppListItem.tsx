@@ -30,6 +30,7 @@ import {WarningBanner} from '~/ui/WarningBanner/WarningBanner'
 import {
   type DAppItem,
   getDappFallbackLogo,
+  isDirectUrlItem,
   isGoogleSearchItem,
 } from '../../../common/helpers'
 
@@ -40,7 +41,7 @@ type Props = {
   connected: boolean
   onPress?: () => void
 }
-export const DAppListItem = ({dApp, connected, onPress}: Props) => {
+const DAppListItemComponent = ({dApp, connected, onPress}: Props) => {
   const {palette: p, atoms: ta} = useTheme()
   const {addTabAndSetActive} = useBrowser()
   const navigateTo = useNavigateTo()
@@ -97,7 +98,7 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
   const handlePress = () => {
     if (onPress) return onPress()
 
-    if (!connected || isGoogleSearchItem(dApp)) {
+    if (!connected || isGoogleSearchItem(dApp) || isDirectUrlItem(dApp)) {
       return handleOpenDApp()
     }
 
@@ -167,6 +168,8 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
       <View style={[{flexDirection: 'row', gap: 12}]}>
         {isGoogleSearchItem(dApp) ? (
           <Icon.Google />
+        ) : isDirectUrlItem(dApp) ? (
+          <Icon.Globe />
         ) : (
           <Image
             source={{uri: logo}}
@@ -202,7 +205,7 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
 
             {dApp.isSingleAddress && <LabelSingleAddress />}
 
-            {!isGoogleSearchItem(dApp) && (
+            {!isGoogleSearchItem(dApp) && !isDirectUrlItem(dApp) && (
               <LabelCategoryDApp category={dApp.category} />
             )}
           </View>
@@ -211,6 +214,18 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
     </TouchableWithoutFeedback>
   )
 }
+
+export const DAppListItem = React.memo(
+  DAppListItemComponent,
+  (prevProps, nextProps) => {
+    // Only re-render if dApp ID, connected status, or onPress callback changes
+    return (
+      prevProps.dApp.id === nextProps.dApp.id &&
+      prevProps.connected === nextProps.connected &&
+      prevProps.onPress === nextProps.onPress
+    )
+  },
+)
 
 const walletsCompatibilityLink = 'https://help.yoroi-wallet.com/en/'
 

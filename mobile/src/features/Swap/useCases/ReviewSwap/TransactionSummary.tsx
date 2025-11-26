@@ -211,7 +211,6 @@ export const TransactionSummary = ({
               </Text>
 
               <Text style={[a.body_2_md_regular, {color: p.gray_900}]}>
-                {' '}
                 {strings.swap.priceImpactDescription(priceImpactRisk)}
               </Text>
             </Text>

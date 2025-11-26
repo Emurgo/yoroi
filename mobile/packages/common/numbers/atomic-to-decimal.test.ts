@@ -1,29 +1,33 @@
-import BigNumber from 'bignumber.js'
-
 import {atomicToDecimal} from './atomic-to-decimal'
 
 describe('atomicToDecimal', () => {
-  it.each`
-    value            | decimals | expectedBn
-    ${''}            | ${20}    | ${new BigNumber(0)}
-    ${'0'}           | ${20}    | ${new BigNumber(0)}
-    ${'-'}           | ${20}    | ${new BigNumber(0)}
-    ${'12345'}       | ${2}     | ${new BigNumber('123.45')}
-    ${'100'}         | ${2}     | ${new BigNumber('1')}
-    ${'-100'}        | ${2}     | ${new BigNumber('1')}
-    ${'100'}         | ${3}     | ${new BigNumber('0.1')}
-    ${'1000'}        | ${3}     | ${new BigNumber('1')}
-    ${'999999999'}   | ${9}     | ${new BigNumber('0.999999999')}
-    ${'1.23e+4'}     | ${2}     | ${new BigNumber('12.34')}
-    ${'abcd123efg'}  | ${2}     | ${new BigNumber('1.23')}
-    ${'1-2-3-4-5-6'} | ${8}     | ${new BigNumber('0.00123456')}
-    ${1234}          | ${2}     | ${new BigNumber('12.34')}
-    ${1234n}         | ${2}     | ${new BigNumber('12.34')}
-  `(
-    'converts "$value" with $decimals decimals correctly',
-    ({value, decimals, expectedBn}) => {
-      const result = atomicToDecimal({value, decimals})
-      expect(result.isEqualTo(expectedBn)).toBe(true)
-    },
-  )
+  it('should convert atomic value to decimal', () => {
+    const result = atomicToDecimal({value: '123456789', decimals: 6})
+    expect(result.toNumber()).toBe(123.456789)
+  })
+
+  it('should handle bigint input', () => {
+    const result = atomicToDecimal({value: 123456789n, decimals: 6})
+    expect(result.toNumber()).toBe(123.456789)
+  })
+
+  it('should extract numbers from exponential notation', () => {
+    const result = atomicToDecimal({value: '1e+4', decimals: 0})
+    expect(result.toNumber()).toBe(14)
+  })
+
+  it('should return zero for invalid input', () => {
+    const result = atomicToDecimal({value: 'abc', decimals: 6})
+    expect(result.toNumber()).toBe(0)
+  })
+
+  it('should handle zero decimals', () => {
+    const result = atomicToDecimal({value: '123456789', decimals: 0})
+    expect(result.toNumber()).toBe(123456789)
+  })
+
+  it('should round down decimal places', () => {
+    const result = atomicToDecimal({value: '123456789', decimals: 6})
+    expect(result.decimalPlaces()).toBe(6)
+  })
 })

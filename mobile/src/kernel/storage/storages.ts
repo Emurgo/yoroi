@@ -81,8 +81,11 @@ export const themeStorageKeyManager = settingsStorageKeyMaker<ThemeConfig>({
 
 // Settings - Auth
 export const authStorageKey = 'auth'
-export const isAuthSetting = (data: any): data is 'os' | 'pin' | undefined =>
-  ['os', 'pin', undefined].includes(data)
+export const isAuthSetting = (
+  data: unknown,
+): data is 'os' | 'pin' | undefined => {
+  return data === 'os' || data === 'pin' || data === undefined
+}
 export const parseAuthSetting = (data: unknown) => {
   const parsed = parseSafe(data)
   return isAuthSetting(parsed) ? parsed : null

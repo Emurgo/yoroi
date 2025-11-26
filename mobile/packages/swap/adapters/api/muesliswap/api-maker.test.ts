@@ -8,6 +8,8 @@ import {MuesliswapApiConfig} from './types'
 jest.mock('@yoroi/common', () => ({
   fetchData: jest.fn(),
   isLeft: jest.requireActual('@yoroi/common').isLeft,
+  isRight: jest.requireActual('@yoroi/common').isRight,
+  isNonNullable: jest.requireActual('@yoroi/common').isNonNullable,
   difference: jest.requireActual('@yoroi/common').difference,
 }))
 
@@ -19,7 +21,6 @@ describe('muesliswapApiMaker', () => {
     address: 'someAddress',
     primaryTokenInfo: {} as any,
     isPrimaryToken: () => false,
-    stakingKey: 'someStakingKey',
     network: Chain.Network.Mainnet,
     partner: 'somePartnerId',
   }
@@ -433,6 +434,132 @@ describe('muesliswapApiMaker', () => {
       if (result.tag !== 'left') fail()
       expect(result.tag).toBe('left')
       expect(result.error.message).toContain('could not cancel')
+    })
+  })
+
+  describe('limitOptions()', () => {
+    it('should return limit options successfully', async () => {
+      // Mock all estimate calls (first call + all protocol calls)
+      // All calls return the same structure
+      mockFetchData.mockResolvedValue({
+        tag: 'right',
+        value: {
+          status: Api.HttpStatusCode.Ok,
+          data: api.responses.quote,
+        },
+      })
+
+      const muesliApi = muesliswapApiMaker(config)
+      const result = await muesliApi.limitOptions({
+        tokenIn: '.',
+        tokenOut:
+          'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950',
+      })
+
+      expect(result.tag).toBe('right')
+      if (result.tag === 'right') {
+        expect(result.value.data).toHaveProperty('defaultProtocol')
+        expect(result.value.data).toHaveProperty('wantedPrice')
+        expect(result.value.data).toHaveProperty('options')
+      }
+    })
+
+    it('should return error when estimate fails', async () => {
+      mockFetchData.mockResolvedValueOnce({
+        tag: 'left',
+        error: {
+          status: 500,
+          message: 'Estimate error',
+          responseData: null,
+        },
+      })
+
+      const muesliApi = muesliswapApiMaker(config)
+      const result = await muesliApi.limitOptions({
+        tokenIn: '.',
+        tokenOut:
+          'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950',
+      })
+
+      expect(result.tag).toBe('left')
+    })
+
+    it('should return error when no default protocol', async () => {
+      // Mock estimate call with empty splits
+      mockFetchData.mockResolvedValueOnce({
+        tag: 'right',
+        value: {
+          status: Api.HttpStatusCode.Ok,
+          data: {
+            ...api.responses.quote,
+            splits: [],
+          },
+        },
+      })
+
+      const muesliApi = muesliswapApiMaker(config)
+      const result = await muesliApi.limitOptions({
+        tokenIn: '.',
+        tokenOut:
+          'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950',
+      })
+
+      expect(result.tag).toBe('left')
+      if (result.tag === 'left') {
+        expect(result.error.message).toContain('Invalid state')
+      }
+    })
+  })
+
+  describe('estimate() with wantedPrice', () => {
+    it('should call limitQuote when wantedPrice is provided', async () => {
+      mockFetchData.mockResolvedValueOnce({
+        tag: 'right',
+        value: {
+          status: Api.HttpStatusCode.Ok,
+          data: api.responses.quote, // limitQuote uses same structure as quote
+        },
+      })
+
+      const muesliApi = muesliswapApiMaker(config)
+      const result = await muesliApi.estimate({
+        ...api.inputs.quote,
+        wantedPrice: 1.5,
+      })
+
+      expect(mockFetchData).toHaveBeenCalledWith(
+        expect.objectContaining({
+          url: 'https://aggregator-v2.muesliswap.com/limit_order_quote',
+          method: 'post',
+        }),
+      )
+      expect(result.tag).toBe('right')
+    })
+  })
+
+  describe('create() with wantedPrice', () => {
+    it('should call createLimit when wantedPrice is provided', async () => {
+      mockFetchData.mockResolvedValueOnce({
+        tag: 'right',
+        value: {
+          status: Api.HttpStatusCode.Ok,
+          data: api.responses.createLimit,
+        },
+      })
+
+      const muesliApi = muesliswapApiMaker(config)
+      const result = await muesliApi.create({
+        ...api.inputs.createLimit[0]!,
+        wantedPrice: 1.5,
+      })
+
+      expect(mockFetchData).toHaveBeenCalledWith(
+        expect.objectContaining({
+          url: 'https://aggregator-v2.muesliswap.com/limit_order',
+          method: 'post',
+        }),
+      )
+      expect(result.tag).toBe('right')
     })
   })
 })

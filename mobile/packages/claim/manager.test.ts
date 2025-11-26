@@ -4,7 +4,7 @@ import {
   tokenInfoMocks,
   tokenMocks,
 } from '@yoroi/portfolio'
-import {Api, Portfolio, Scan} from '@yoroi/types'
+import {Api, Links, Portfolio} from '@yoroi/types'
 
 import {claimFaucetResponses} from './api-faucet.mocks'
 import {claimManagerMaker} from './manager'
@@ -58,7 +58,7 @@ describe('claimManagerMaker - postClaimTokens', () => {
     tokenManager: tokenManagerMock,
   }
 
-  const claimAction: Scan.ActionClaim = {
+  const claimAction: Links.CardanoActionClaim = {
     action: 'claim',
     code: 'claim_code',
     params: {someParam: 'value'},

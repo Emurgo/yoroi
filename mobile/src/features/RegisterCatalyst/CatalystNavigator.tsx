@@ -1,17 +1,12 @@
 import {useTheme} from '@yoroi/theme'
 
-import {useNavigation} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import * as React from 'react'
 
 import {ConfirmPin} from '~/features/RegisterCatalyst/useCases/ConfirmPin/ConfirmPin'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
-import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
-import {
-  VotingRegistrationRouteNavigation,
-  VotingRegistrationRoutes,
-} from '~/kernel/navigation/types'
+import {VotingRegistrationRoutes} from '~/kernel/navigation/types'
 import {Boundary} from '~/ui/Boundary/Boundary'
 
 import {NetworkTag} from '../Settings/ui/shared/NetworkTag'
@@ -62,16 +57,4 @@ export const CatalystNavigator = () => {
       </Stack.Group>
     </Stack.Navigator>
   )
-}
-
-export const useNavigateTo = () => {
-  const navigation = useNavigation<VotingRegistrationRouteNavigation>()
-  const {resetToTxHistory} = useWalletNavigation()
-
-  return {
-    displayPin: () => navigation.navigate('display-pin'),
-    confirmPin: () => navigation.navigate('confirm-pin'),
-    qrCode: () => navigation.navigate('qr-code'),
-    txHistory: () => resetToTxHistory(),
-  }
 }

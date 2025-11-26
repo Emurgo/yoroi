@@ -1,3 +1,5 @@
+import {useObservableValue} from '@yoroi/common'
+
 import * as React from 'react'
 
 import {YoroiWallet} from '~/wallets/cardano/types'
@@ -5,18 +7,44 @@ import {YoroiWallet} from '~/wallets/cardano/types'
 import {SyncWalletInfo} from '../common/types'
 import {useWalletManager} from '../context/WalletManagerProvider'
 
-export const useSyncWalletInfo = (walledId: YoroiWallet['id']) => {
+/**
+ * Hook to get sync info for a specific wallet.
+ * Uses useObservableValue for optimal performance (no double renders).
+ *
+ * @param walletId - The wallet ID to get sync info for
+ * @returns The sync info for the wallet, or undefined if not available
+ */
+export const useSyncWalletInfo = (walletId: YoroiWallet['id']) => {
   const {walletManager} = useWalletManager()
-  const [syncWalletInfo, setSyncWalletInfo] = React.useState<
-    SyncWalletInfo | undefined
-  >()
 
+  const observable$ = React.useMemo(
+    () => walletManager.syncWalletInfos$,
+    [walletManager],
+  )
+
+  // Cache the last emitted value
+  const lastValueRef = React.useRef<Map<YoroiWallet['id'], SyncWalletInfo>>(
+    new Map(),
+  )
+
+  // Subscribe once to cache the latest value
   React.useEffect(() => {
-    const sub = walletManager.syncWalletInfos$.subscribe((syncWalletInfos) => {
-      setSyncWalletInfo(() => syncWalletInfos.get(walledId))
+    const subscription = walletManager.syncWalletInfos$.subscribe((value) => {
+      lastValueRef.current = value
     })
-    return () => sub.unsubscribe()
-  }, [syncWalletInfo, walledId, walletManager.syncWalletInfos$])
+    return () => subscription.unsubscribe()
+  }, [walletManager])
 
-  return syncWalletInfo
+  const getter = React.useCallback(() => {
+    const syncWalletInfos = lastValueRef.current
+    if (!syncWalletInfos || syncWalletInfos.size === 0) {
+      return undefined
+    }
+    return syncWalletInfos.get(walletId)
+  }, [walletId])
+
+  return useObservableValue({
+    observable$,
+    getter,
+  })
 }

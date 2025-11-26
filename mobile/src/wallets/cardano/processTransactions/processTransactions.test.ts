@@ -1,8 +1,9 @@
+import {RawTransaction} from '@yoroi/api'
 import {primaryTokenInfoMainnet} from '@yoroi/blockchains'
+import {TRANSACTION_DIRECTION} from '@yoroi/types'
 
-import {RawTransaction, TRANSACTION_DIRECTION} from '~/wallets/types/other'
+import {Amounts} from '~/wallets/utils/utils'
 
-import {MultiToken} from '../MultiToken'
 import {toCachedTx} from '../transactionManager/transactionManager'
 import {processTxHistoryData} from './processTransactions'
 
@@ -161,7 +162,7 @@ const txs: Array<RawTransaction> = [
           '3393cf9c82f674db5d45a72c3c054dc3c0012bb7de13283add23002194327d45',
         assets: [
           {
-            assetId:
+            tokenId:
               '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
             policyId:
               '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
@@ -178,7 +179,7 @@ const txs: Array<RawTransaction> = [
         amount: '1407406',
         assets: [
           {
-            assetId:
+            tokenId:
               '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
             policyId:
               '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
@@ -193,7 +194,7 @@ const txs: Array<RawTransaction> = [
         amount: '479460117',
         assets: [
           {
-            assetId:
+            tokenId:
               '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
             policyId:
               '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
@@ -230,7 +231,7 @@ const txs: Array<RawTransaction> = [
           '33ae3456581ab8dc0a9ddb265c53d08e4df0c7d16786f5932ed525c092894a8f',
         assets: [
           {
-            assetId:
+            tokenId:
               '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
             policyId:
               '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
@@ -249,7 +250,7 @@ const txs: Array<RawTransaction> = [
           '5152eaa7bf59c5d4b6af44ffa14ad2616b90bb9304c311e6137072f54306fac4',
         assets: [
           {
-            assetId:
+            tokenId:
               '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
             policyId:
               '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
@@ -266,7 +267,7 @@ const txs: Array<RawTransaction> = [
         amount: '1407406',
         assets: [
           {
-            assetId:
+            tokenId:
               '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
             policyId:
               '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
@@ -281,7 +282,7 @@ const txs: Array<RawTransaction> = [
         amount: '48499139539',
         assets: [
           {
-            assetId:
+            tokenId:
               '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
             policyId:
               '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
@@ -304,10 +305,12 @@ describe('processTxHistoryData', () => {
       primaryTokenInfoMainnet,
     )
 
-    const delta = MultiToken.fromArray(tx.delta)
-    const netBalance = delta.getDefault()
-    expect(netBalance.toString()).toBe('50000000000')
-    expect(delta.nonDefaultEntries().length).toBe(0)
+    const deltaAmount = Amounts.getAmount(tx.delta, primaryTokenInfoMainnet.id)
+    expect(deltaAmount.quantity).toBe('50000000000')
+    const nonDefaultEntries = Amounts.toArray(tx.delta).filter(
+      ({tokenId}) => tokenId !== primaryTokenInfoMainnet.id,
+    )
+    expect(nonDefaultEntries.length).toBe(0)
     expect(tx.direction).toBe(TRANSACTION_DIRECTION.RECEIVED)
   })
 
@@ -320,10 +323,12 @@ describe('processTxHistoryData', () => {
       primaryTokenInfoMainnet,
     )
 
-    const delta = MultiToken.fromArray(tx.delta)
-    const netBalance = delta.getDefault()
-    expect(netBalance.toString()).toBe((-1000000000 - 168449).toString())
-    expect(delta.nonDefaultEntries().length).toBe(0)
+    const deltaAmount = Amounts.getAmount(tx.delta, primaryTokenInfoMainnet.id)
+    expect(deltaAmount.quantity).toBe((-1000000000 - 168449).toString())
+    const nonDefaultEntries = Amounts.toArray(tx.delta).filter(
+      ({tokenId}) => tokenId !== primaryTokenInfoMainnet.id,
+    )
+    expect(nonDefaultEntries.length).toBe(0)
     expect(tx.direction).toBe(TRANSACTION_DIRECTION.SENT)
   })
 
@@ -336,15 +341,16 @@ describe('processTxHistoryData', () => {
       primaryTokenInfoMainnet,
     )
 
-    const delta = MultiToken.fromArray(tx.delta)
-    const netBalance = delta.getDefault()
-    expect(netBalance.toString()).toBe('1407406')
+    const deltaAmount = Amounts.getAmount(tx.delta, primaryTokenInfoMainnet.id)
+    expect(deltaAmount.quantity).toBe('1407406')
 
-    const netTokenBalance = delta.nonDefaultEntries()
+    const netTokenBalance = Amounts.toArray(tx.delta).filter(
+      ({tokenId}) => tokenId !== primaryTokenInfoMainnet.id,
+    )
 
     expect(netTokenBalance.length).toBe(1)
-    expect(netTokenBalance[0]!.amount.toString()).toBe('2')
-    expect(netTokenBalance[0]!.identifier).toBe(
+    expect(netTokenBalance[0]!.quantity).toBe('2')
+    expect(netTokenBalance[0]!.tokenId).toBe(
       '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
     )
     expect(tx.direction).toBe(TRANSACTION_DIRECTION.RECEIVED)
@@ -359,15 +365,16 @@ describe('processTxHistoryData', () => {
       primaryTokenInfoMainnet,
     )
 
-    const delta = MultiToken.fromArray(tx.delta)
-    const netBalance = delta.getDefault()
-    expect(netBalance.toString()).toBe('-177557')
+    const deltaAmount = Amounts.getAmount(tx.delta, primaryTokenInfoMainnet.id)
+    expect(deltaAmount.quantity).toBe('-177557')
 
-    const netTokenBalance = delta.nonDefaultEntries()
+    const netTokenBalance = Amounts.toArray(tx.delta).filter(
+      ({tokenId}) => tokenId !== primaryTokenInfoMainnet.id,
+    )
 
     expect(netTokenBalance.length).toBe(1)
-    expect(netTokenBalance[0]!.amount.toString()).toBe('0')
-    expect(netTokenBalance[0]!.identifier).toBe(
+    expect(netTokenBalance[0]!.quantity).toBe('0')
+    expect(netTokenBalance[0]!.tokenId).toBe(
       '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
     )
     expect(tx.direction).toBe(TRANSACTION_DIRECTION.SELF)

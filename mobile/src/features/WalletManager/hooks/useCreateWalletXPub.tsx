@@ -2,7 +2,7 @@ import {HW, Wallet} from '@yoroi/types'
 
 import {UseMutationOptions, useMutation} from '@tanstack/react-query'
 
-import {useWalletManager} from '../context/WalletManagerProvider'
+import {useWalletManagerSelector} from '../context/WalletManagerProvider'
 
 type CreateWalletXPub = {
   name: string
@@ -17,7 +17,8 @@ type CreateWalletXPub = {
 export const useCreateWalletXPub = (
   options?: UseMutationOptions<Wallet.Meta, Error, CreateWalletXPub>,
 ) => {
-  const {walletManager} = useWalletManager()
+  // Use selector to prevent re-renders when selected wallet changes
+  const walletManager = useWalletManagerSelector((ctx) => ctx.walletManager)
   const mutation = useMutation({
     mutationFn: ({
       name,
@@ -27,8 +28,11 @@ export const useCreateWalletXPub = (
       readOnly,
       addressMode,
       accountVisual,
-    }) =>
-      walletManager.createWalletXPub({
+    }) => {
+      if (!walletManager) {
+        throw new Error('WalletManager not available')
+      }
+      return walletManager.createWalletXPub({
         name,
         accountPubKeyHex: bip44AccountPublic,
         implementation,
@@ -36,7 +40,8 @@ export const useCreateWalletXPub = (
         isReadOnly: readOnly,
         addressMode,
         accountVisual,
-      }),
+      })
+    },
     ...options,
   })
 

@@ -6,16 +6,15 @@ import {
 } from '@react-navigation/stack'
 import * as React from 'react'
 
+import {ClaimScreen} from '~/features/Claim/useCases/ClaimScreen'
 import {ShowSuccessScreen} from '~/features/Claim/useCases/ShowSuccessScreen'
 import {CreateExchangeOrderScreen} from '~/features/Exchange/useCases/CreateExchangeOrderScreen/CreateExchangeOrderScreen'
 import {SelectProviderFromListScreen} from '~/features/Exchange/useCases/SelectProviderFromListScreen/SelectProviderFromListScreen'
-import {ShowExchangeResultOrderScreen} from '~/features/Exchange/useCases/ShowExchangeResultOrderScreen/ShowExchangeResultOrderScreen'
 import {ViewNotificationHistoryScreen} from '~/features/Notifications/useCases/ViewNotificationHistory/ViewNotificationHistoryScreen'
+import {P2PConnectionScreen} from '~/features/P2P/useCases/P2PConnectionScreen/P2PConnectionScreen'
 import {DescribeSelectedAddressScreen} from '~/features/Receive/useCases/DescribeSelectedAddressScreen'
 import {ListMultipleAddressesScreen} from '~/features/Receive/useCases/ListMultipleAddressesScreen'
 import {RequestSpecificAmountScreen} from '~/features/Receive/useCases/RequestSpecificAmountScreen'
-import {FailedTxScreen as SendFailedTxScreen} from '~/features/ReviewTx/useCases/ShowFailedTxScreen/FailedTxScreen'
-import {SubmittedTxScreen as SendSubmittedTxScreen} from '~/features/ReviewTx/useCases/ShowSubmittedTxScreen/SubmittedTxScreen'
 import {ScanCodeScreen} from '~/features/Scan/useCases/ScanCodeScreen'
 import {ShowCameraPermissionDeniedScreen} from '~/features/Scan/useCases/ShowCameraPermissionDeniedScreen/ShowCameraPermissionDeniedScreen'
 import {SelectTokenFromListScreen} from '~/features/Send/useCases/ListAmountsToSend/AddToken/SelectTokenFromListScreen'
@@ -27,9 +26,17 @@ import {SwapNavigator} from '~/features/Swap/navigator'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {WithWalletOpened} from '~/features/WalletManager/ui/shared/WithWalletOpened'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
+import {
+  BackButton,
+  defaultStackNavigationOptions,
+} from '~/kernel/navigation/common/helpers'
+import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {TxHistoryRoutes} from '~/kernel/navigation/types'
 
+import {AddressDetailsScreen} from '../Transactions/useCases/AddressDetails/AddressDetailsScreen'
+import {BlockDetails} from '../Transactions/useCases/BlockDetails/BlockDetails'
+import {MessageSigningResultScreen} from '../Transactions/useCases/MessageSigning/MessageSigningResultScreen'
+import {MessageSigningScreen} from '../Transactions/useCases/MessageSigning/MessageSigningScreen'
 import {UtxoConsolidation} from '../Transactions/useCases/UtxoConsolidation/UtxoConsolidation/UtxoConsolidation'
 import {UtxoList} from '../Transactions/useCases/UtxoList/UtxoList'
 import {HeaderRightHistory} from './common/HeaderRightHistory'
@@ -42,19 +49,41 @@ export const TxHistoryNavigator = () => {
   const strings = useStrings()
   const {palette: p, atoms: ta} = useTheme()
   const {meta} = useSelectedWallet()
+  const walletNavigation = useWalletNavigation()
+
+  // Memoize headerTitle component to prevent recreation on every render
+  const headerTitle = React.useCallback(
+    ({children}: {children: React.ReactNode}) => (
+      <NetworkTag>{children}</NetworkTag>
+    ),
+    [],
+  )
 
   const screenOptions: StackNavigationOptions = React.useMemo(
     () => ({
       ...defaultStackNavigationOptions(p),
-      headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
+      headerTitle,
     }),
-    [p],
+    [p, headerTitle],
+  )
+
+  // Memoize header components to prevent recreation on every render
+  const headerRight = React.useCallback(() => <HeaderRightHistory />, [])
+  const headerLeft = React.useCallback(
+    () => (
+      <BackButton
+        onPress={() => walletNavigation.resetToWalletSelection()}
+        color={ta.text_gray_max.color}
+      />
+    ),
+    [walletNavigation, ta.text_gray_max.color],
   )
 
   const stackOptions: StackNavigationOptions = React.useMemo(
     () => ({
       title: meta.name,
-      headerRight: () => <HeaderRightHistory />,
+      headerRight,
+      headerLeft,
       headerTransparent: true,
       headerStyle: {
         ...a.bg_transparent,
@@ -66,7 +95,7 @@ export const TxHistoryNavigator = () => {
       },
       headerTintColor: ta.text_gray_max.color,
     }),
-    [meta.name, ta.text_gray_max.color],
+    [meta.name, headerRight, headerLeft, ta.text_gray_max.color],
   )
 
   return (
@@ -87,6 +116,30 @@ export const TxHistoryNavigator = () => {
         />
 
         <Stack.Screen
+          name="address-details"
+          options={{
+            title: strings.transactions.addressDetailsTitle,
+          }}
+          getComponent={() => AddressDetailsScreen}
+        />
+
+        <Stack.Screen
+          name="block-details"
+          options={{
+            title: strings.transactions.blockDetailsTitle,
+          }}
+          getComponent={() => BlockDetails}
+        />
+
+        <Stack.Screen
+          name="p2p-connection"
+          options={{
+            title: strings.scan.p2pConnectionTitle,
+          }}
+          getComponent={() => P2PConnectionScreen}
+        />
+
+        <Stack.Screen
           name="utxo-list"
           options={{
             title: strings.transactions.utxo.utxoListTitle,
@@ -100,6 +153,23 @@ export const TxHistoryNavigator = () => {
             title: strings.transactions.utxo.utxoConsolidationTitle,
           }}
           getComponent={() => UtxoConsolidation}
+        />
+
+        <Stack.Screen
+          name="message-signing"
+          options={{
+            title: strings.transactions.messageSigning.messageSigningTitle,
+          }}
+          getComponent={() => MessageSigningScreen}
+        />
+
+        <Stack.Screen
+          name="message-signing-result"
+          options={{
+            title:
+              strings.transactions.messageSigning.messageSigningResultTitle,
+          }}
+          getComponent={() => MessageSigningResultScreen}
         />
 
         {/* Send Screens */}
@@ -133,22 +203,6 @@ export const TxHistoryNavigator = () => {
             title: strings.send.selectTokenTitle,
           }}
           getComponent={() => SelectTokenFromListScreen}
-        />
-
-        <Stack.Screen
-          name="send-submitted-tx"
-          options={{
-            headerShown: false,
-          }}
-          getComponent={() => SendSubmittedTxScreen}
-        />
-
-        <Stack.Screen
-          name="send-failed-tx"
-          options={{
-            headerShown: false,
-          }}
-          getComponent={() => SendFailedTxScreen}
         />
 
         {/* Receive Screens */}
@@ -212,6 +266,13 @@ export const TxHistoryNavigator = () => {
 
         {/* Claim Screens */}
         <Stack.Screen
+          name="claim"
+          options={{
+            title: strings.claim.askConfirmationTitle,
+          }}
+          getComponent={() => ClaimScreen}
+        />
+        <Stack.Screen
           name="claim-show-success"
           options={{
             title: strings.claim.showSuccessTitle,
@@ -226,14 +287,6 @@ export const TxHistoryNavigator = () => {
             title: strings.exchange.title,
           }}
           getComponent={() => CreateExchangeOrderScreen}
-        />
-
-        <Stack.Screen
-          name="exchange-result"
-          options={{
-            title: strings.exchange.title,
-          }}
-          getComponent={() => ShowExchangeResultOrderScreen}
         />
 
         <Stack.Screen

@@ -1,3 +1,4 @@
+import {useDebouncedValue} from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import {useNavigation} from '@react-navigation/native'
@@ -7,7 +8,6 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {useDebouncedValue} from '~/hooks/useDebouncedValue'
 import {usePromise} from '~/hooks/usePromise'
 import {requiredPasswordLength} from '~/kernel/constants'
 import {useStrings} from '~/kernel/i18n/useStrings'

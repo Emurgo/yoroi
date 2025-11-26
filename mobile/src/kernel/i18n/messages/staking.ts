@@ -38,7 +38,7 @@ export const stakingMessages = defineMessages({
     defaultMessage: '!!!Stake Pools',
   },
   searchPools: {
-    id: 'nft.navigation.search',
+    id: 'components.staking.searchPools',
     defaultMessage: '!!!Search Pools',
   },
   noPoolsFound: {
@@ -558,21 +558,17 @@ export const stakingMessages = defineMessages({
     id: 'global.cancel',
     defaultMessage: '!!!Cancel',
   },
-  governanceRequiredTitle: {
-    id: 'components.stakingcenter.governanceRequired.title',
-    defaultMessage: '!!!Governance updates',
+  earnRewardsBannerTitle: {
+    id: 'components.governance.earnRewardsBanner.title',
+    defaultMessage: '!!!Delegate with Yoroi DRep',
   },
-  governanceRequiredDescription: {
-    id: 'components.stakingcenter.governanceRequired.description',
+  earnRewardsBannerDescription: {
+    id: 'components.governance.earnRewardsBanner.description',
     defaultMessage:
-      '!!!To withdraw rewards from your stake delegation, you must also delegate your voting power. Save time and fees by delegating to our Yoroi DRep now, alongside your stake pool delegation.',
+      '!!!Delegate to our DRep and help Cardano evolve in a way that benefits your wallet experience.',
   },
-  delegateToYoroiDRep: {
-    id: 'components.stakingcenter.governanceRequired.delegateToYoroiDRep',
-    defaultMessage: '!!!Delegate to Yoroi DRep',
-  },
-  delegateStakeOnly: {
-    id: 'components.stakingcenter.governanceRequired.delegateStakeOnly',
-    defaultMessage: '!!!Delegate stake only',
+  earnRewardsBannerCta: {
+    id: 'components.governance.earnRewardsBanner.cta',
+    defaultMessage: '!!!DELEGATE NOW',
   },
 })

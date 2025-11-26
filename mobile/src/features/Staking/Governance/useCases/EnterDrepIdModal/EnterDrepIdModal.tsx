@@ -1,10 +1,11 @@
-import {isNonNullable} from '@yoroi/common'
+import {isAdaHandleDomain, useResolverDRepId} from '@yoroi/resolver'
 import {parseDrepId, useIsValidDRepID} from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
-import {Alert, Linking, Text} from 'react-native'
+import {Alert, Linking, Text, View} from 'react-native'
 
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/context/ModalContext'
@@ -19,26 +20,75 @@ export type Props = {
     hash: string
     CIP105: boolean
   }) => void
+  initialDrepId?: string
 }
 
 const FIND_DREPS_LINK = ''
 
-export const EnterDrepIdModal = ({onSubmit}: Props) => {
+export const EnterDrepIdModal = ({onSubmit, initialDrepId}: Props) => {
   const strings = useStrings()
   const {atoms: ta, palette: p} = useTheme()
-  const [drepId, setDrepId] = React.useState('')
-  const {closeModal} = useModal()
+  const {wallet} = useSelectedWallet()
+  const [drepId, setDrepId] = React.useState(initialDrepId ?? '')
 
-  const {error, isFetched, isFetching} = useIsValidDRepID(drepId, {
+  // Update drepId when initialDrepId changes
+  React.useEffect(() => {
+    if (initialDrepId !== undefined && initialDrepId !== null) {
+      setDrepId(initialDrepId)
+    }
+  }, [initialDrepId])
+
+  // Trim whitespace from input, ensure drepId is always a string
+  const trimmedDrepId = (drepId ?? '').trim()
+
+  // Check if input is an ADA handle
+  const isHandle = isAdaHandleDomain(trimmedDrepId)
+
+  // Resolve ADA handle to DRep ID
+  const {
+    drepInfo,
+    isLoading: isResolvingHandle,
+    error: handleResolutionError,
+  } = useResolverDRepId({
+    resolve: trimmedDrepId,
+    isMainnet: wallet.isMainnet,
+    enabled: isHandle,
+  })
+
+  // Use the resolved DRep ID or the direct input
+  const resolvedDrepId = React.useMemo(() => {
+    if (isHandle && drepInfo?.hex) {
+      return drepInfo.hex
+    }
+    return trimmedDrepId
+  }, [isHandle, drepInfo, trimmedDrepId])
+
+  const {error, isFetched, isFetching} = useIsValidDRepID(resolvedDrepId, {
     retry: false,
-    enabled: drepId.length > 0,
+    enabled: resolvedDrepId.length > 0 && !isResolvingHandle,
   })
 
   const handleOnPress = () => {
     try {
-      const {hash, type} = parseDrepId(drepId, CardanoMobile)
-      onSubmit?.({hash, type, CIP105: !error && drepId.length === 56})
-      closeModal()
+      let hash: string
+      let type: 'key' | 'script'
+
+      if (isHandle && drepInfo) {
+        hash = drepInfo.hex
+        type = drepInfo.cred === 'key' ? 'key' : 'script'
+      } else {
+        const parsed = parseDrepId(resolvedDrepId, CardanoMobile)
+        hash = parsed.hash
+        type = parsed.type
+      }
+
+      // CIP105 flag indicates if user entered deprecated CIP-105 format (58-char hex starting with 22/23)
+      // For handles, this should be false since user didn't enter CIP-105 format directly
+      const isCIP105Format =
+        !isHandle && !error && /^(22|23)[0-9a-fA-F]{56}$/.test(trimmedDrepId)
+
+      // Modal will be closed by the parent component after async operations
+      onSubmit?.({hash, type, CIP105: isCIP105Format})
     } catch (e) {
       Alert.alert(strings.global.error, strings.staking.invalidDRepId)
     }
@@ -47,6 +97,21 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
   const handleOnLinkPress = () => {
     Linking.openURL(FIND_DREPS_LINK)
   }
+
+  const noDrepForHandle =
+    isHandle &&
+    !isResolvingHandle &&
+    drepInfo === null &&
+    !handleResolutionError
+  const displayError = noDrepForHandle
+    ? 'This ADA handle does not have a DRep associated with it'
+    : handleResolutionError?.message || error?.message
+  const isLoading = isResolvingHandle || isFetching
+  const canSubmit =
+    drepId.length > 0 &&
+    !isLoading &&
+    !displayError &&
+    (isHandle ? drepInfo !== null : isFetched)
 
   return (
     <Modal.Content>
@@ -80,7 +145,7 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
         onChangeText={(text) => setDrepId(text)}
         multiline
         errorDelay={1000}
-        errorText={error?.message}
+        errorText={displayError}
         label={strings.staking.drepID}
         numberOfLines={2}
         focusable
@@ -95,18 +160,39 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
         }}
       />
 
+      {isHandle && drepInfo && (
+        <>
+          <Space.Height.sm />
+
+          <View style={[a.flex_row, a.justify_between, a.px_lg]}>
+            <Text style={[a.body_3_sm_regular, ta.text_gray_max]}>
+              Resolved DRep ID:
+            </Text>
+
+            <Text
+              style={[a.body_3_sm_regular, ta.text_gray_medium]}
+              numberOfLines={1}
+            >
+              {shortenDRepId(drepInfo.cip_129)}
+            </Text>
+          </View>
+        </>
+      )}
+
       <Space.Height.sm fill />
 
       <Button
         title={strings.staking.confirm}
-        disabled={
-          isNonNullable(error) ||
-          drepId.length === 0 ||
-          !isFetched ||
-          isFetching
-        }
+        disabled={!canSubmit}
         onPress={handleOnPress}
       />
     </Modal.Content>
   )
+}
+
+const shortenDRepId = (id: string) => {
+  if (id.length > 20) {
+    return id.substring(0, 10) + '...' + id.substring(id.length - 10)
+  }
+  return id
 }

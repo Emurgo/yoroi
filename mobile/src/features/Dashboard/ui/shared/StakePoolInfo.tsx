@@ -1,6 +1,7 @@
+import {API_ENDPOINTS} from '@yoroi/api'
+import {StakePoolInfoAndHistory, poolInfoApiMaker} from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
-import {PoolInfoApi} from '@emurgo/yoroi-lib'
 import {UseQueryOptions, useQuery} from '@tanstack/react-query'
 import * as React from 'react'
 import {ActivityIndicator, Linking, View} from 'react-native'
@@ -13,7 +14,6 @@ import {Copiable} from '~/ui/Copiable/Copiable'
 import {Text} from '~/ui/Text/Text'
 import {TitledCard} from '~/ui/TitledCard/TitledCard'
 import {YoroiWallet} from '~/wallets/cardano/types'
-import {StakePoolInfoAndHistory} from '~/wallets/types/staking'
 import {isEmptyString} from '~/wallets/utils/string'
 
 type StakePoolInfoProps = {
@@ -98,8 +98,12 @@ export const useStakePoolInfoAndHistory = (
 ) => {
   const {networkManager} = useSelectedNetwork()
   const poolInfoApi = React.useMemo(
-    () => new PoolInfoApi(networkManager.legacyApiBaseUrl),
-    [networkManager.legacyApiBaseUrl],
+    () =>
+      poolInfoApiMaker({
+        legacyApiBaseUrl: networkManager.legacyApiBaseUrl,
+        zeroApiUrl: API_ENDPOINTS[networkManager.network].root,
+      }),
+    [networkManager.legacyApiBaseUrl, networkManager.network],
   )
   const query = useQuery({
     ...options,

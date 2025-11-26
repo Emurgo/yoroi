@@ -1,17 +1,18 @@
-import {invalid} from '@yoroi/common'
+import {
+  SendToken,
+  TransactionOutput,
+  validateAndExtractAddressInfo,
+} from '@yoroi/tx'
 import {Balance, Chain, Portfolio, Wallet} from '@yoroi/types'
 
 import {WasmModuleProxy} from '@emurgo/cross-csl-core'
-import {SendToken} from '@emurgo/yoroi-lib'
-import {normalizeToAddress} from '@emurgo/yoroi-lib/dist/internals/utils/addresses'
 import {BigNumber} from 'bignumber.js'
 import {Buffer} from 'buffer'
 
+import {logger} from '~/kernel/logger/logger'
+
 import {BaseAsset, RawUtxo} from '../types/other'
-import {DefaultAsset} from '../types/tokens'
-import {YoroiEntry} from '../types/yoroi'
 import {Amounts} from '../utils/utils'
-import {MultiToken} from './MultiToken'
 import {identifierToCardanoAsset} from './assetHelpers'
 import {withMinAmounts} from './getMinAmounts'
 import {CardanoTypes, YoroiWallet} from './types'
@@ -42,17 +43,45 @@ export const deriveRewardAddressFromAddress = (
   chainId: number,
 ): string => {
   return CardanoMobileWrapped.cslScope((csl) => {
-    const result = csl.RewardAddress.new(
-      chainId,
-      csl.BaseAddress.fromAddress(
-        csl.Address.fromBech32(address),
-      )?.stakeCred() ?? invalid('invalid base address'),
-    )
-      .toAddress()
-      .toBech32(undefined)
+    const wasmAddress = csl.Address.fromBech32(address)
+    if (!wasmAddress) {
+      throw new Error(
+        `deriveRewardAddressFromAddress: Invalid address format: ${address}`,
+      )
+    }
 
-    if (typeof result !== 'string')
+    const baseAddress = csl.BaseAddress.fromAddress(wasmAddress)
+    if (!baseAddress) {
+      throw new Error(
+        `deriveRewardAddressFromAddress: Address is not a base address: ${address}`,
+      )
+    }
+
+    const stakeCred = baseAddress.stakeCred()
+    if (!stakeCred) {
+      throw new Error(
+        `deriveRewardAddressFromAddress: Failed to get stake credential from address: ${address}`,
+      )
+    }
+
+    const rewardAddress = csl.RewardAddress.new(chainId, stakeCred)
+    if (!rewardAddress) {
+      throw new Error(
+        `deriveRewardAddressFromAddress: Failed to create reward address`,
+      )
+    }
+
+    const rewardAddressObj = rewardAddress.toAddress()
+    if (!rewardAddressObj) {
+      throw new Error(
+        `deriveRewardAddressFromAddress: Failed to convert reward address to Address`,
+      )
+    }
+
+    const result = rewardAddressObj.toBech32(undefined)
+    if (typeof result !== 'string') {
       throw new Error('Its not possible to derive reward address')
+    }
     return result
   })
 }
@@ -65,16 +94,91 @@ export const cardanoValueFromRemoteFormat = (
   utxo: RawUtxo,
   csl: WasmModuleProxy,
 ) => {
-  const value = csl.Value.new(csl.BigNum.fromStr(utxo.amount))
+  // Validate amount
+  if (
+    !utxo.amount ||
+    typeof utxo.amount !== 'string' ||
+    utxo.amount.trim() === ''
+  ) {
+    throw new Error(
+      `cardanoValueFromRemoteFormat: Invalid amount for UTXO. Expected non-empty string, got: ${utxo.amount}`,
+    )
+  }
+
+  const amountBigNum = csl.BigNum.fromStr(utxo.amount)
+  if (!amountBigNum) {
+    throw new Error(
+      `cardanoValueFromRemoteFormat: Failed to create BigNum from amount: ${utxo.amount}`,
+    )
+  }
+
+  const value = csl.Value.new(amountBigNum)
+  if (!value) {
+    throw new Error(
+      `cardanoValueFromRemoteFormat: Failed to create Value from amount: ${utxo.amount}`,
+    )
+  }
+
   if (utxo.assets.length === 0) return value
   const assets = csl.MultiAsset.new()
 
   for (const remoteAsset of utxo.assets) {
-    const {policyId, name} = identifierToCardanoAsset(remoteAsset.assetId)
-    let policyContent = assets.get(policyId)
-    policyContent = policyContent?.hasValue() ? policyContent : csl.Assets.new()
-    policyContent.insert(name, csl.BigNum.fromStr(remoteAsset.amount))
-    assets.insert(policyId, policyContent)
+    // Validate asset data
+    if (!remoteAsset.tokenId || !remoteAsset.amount) {
+      logger.warn('cardanoValueFromRemoteFormat: Skipping invalid asset', {
+        tokenId: remoteAsset.tokenId,
+        amount: remoteAsset.amount,
+      })
+      continue
+    }
+
+    try {
+      const {policyId, name} = identifierToCardanoAsset(
+        csl,
+        remoteAsset.tokenId,
+      )
+      if (!policyId || !name) {
+        logger.warn('cardanoValueFromRemoteFormat: Invalid asset identifier', {
+          tokenId: remoteAsset.tokenId,
+        })
+        continue
+      }
+
+      let policyContent = assets.get(policyId)
+      policyContent = policyContent?.hasValue()
+        ? policyContent
+        : csl.Assets.new()
+
+      // Validate asset amount
+      if (!remoteAsset.amount || typeof remoteAsset.amount !== 'string') {
+        logger.warn('cardanoValueFromRemoteFormat: Invalid asset amount', {
+          tokenId: remoteAsset.tokenId,
+          amount: remoteAsset.amount,
+        })
+        continue
+      }
+
+      const assetAmountBigNum = csl.BigNum.fromStr(remoteAsset.amount)
+      if (!assetAmountBigNum) {
+        logger.warn(
+          'cardanoValueFromRemoteFormat: Failed to create BigNum for asset amount',
+          {
+            tokenId: remoteAsset.tokenId,
+            amount: remoteAsset.amount,
+          },
+        )
+        continue
+      }
+
+      policyContent.insert(name, assetAmountBigNum)
+      assets.insert(policyId, policyContent)
+    } catch (error) {
+      logger.warn('cardanoValueFromRemoteFormat: Error processing asset', {
+        tokenId: remoteAsset.tokenId,
+        error: error instanceof Error ? error.message : String(error),
+      })
+      // Continue processing other assets
+    }
   }
 
   if (assets.len() > 0) {
@@ -89,25 +193,22 @@ type RemoteValue = {
   readonly assets?: ReadonlyArray<BaseAsset>
 }
 
-export const multiTokenFromRemote = (remoteValue: RemoteValue) => {
-  const result = new MultiToken([], {
-    defaultIdentifier: '.',
-  })
-  result.add({
-    identifier: '.',
-    amount: new BigNumber(remoteValue.amount),
-  })
+export const amountsFromRemote = (
+  remoteValue: RemoteValue,
+): Balance.Amounts => {
+  const amounts: Balance.Amounts = {} as Balance.Amounts
 
+  // Add primary token (ADA)
+  amounts['.'] = remoteValue.amount as Balance.Quantity
+
+  // Add other assets
   if (remoteValue.assets != null) {
     for (const token of remoteValue.assets) {
-      result.add({
-        identifier: token.assetId,
-        amount: new BigNumber(token.amount),
-      })
+      amounts[token.tokenId] = token.amount as Balance.Quantity
     }
   }
 
-  return result
+  return amounts
 }
 
 export const isByron = (implementation: Wallet.Implementation) =>
@@ -124,7 +225,7 @@ export const toSendTokenList = (
 }
 
 export const toRecipients = async (
-  entries: YoroiEntry[],
+  entries: TransactionOutput[],
   primaryTokenInfo: Portfolio.Token.Info,
   protocolParams: Chain.Cardano.ProtocolParams,
 ) => {
@@ -171,7 +272,7 @@ export const toSendToken =
   }
 
 export const isTokenInfo = (
-  token: Balance.TokenInfo | DefaultAsset,
+  token: Balance.TokenInfo | Portfolio.Token.Info,
 ): token is Balance.TokenInfo => {
   return !!(token as Balance.TokenInfo).kind
 }
@@ -238,16 +339,17 @@ export const copyMultipleFromCSL = <T extends {toHex: () => string}>(
   return items.map((item) => copyFromCSL(creator, item))
 }
 
-export const getHexAddressingMap = (
-  csl: WasmModuleProxy,
-  wallet: YoroiWallet,
-) => {
-  const addressedUtxos = wallet.utxos.map((utxo: RawUtxo) => {
-    const addressing = wallet.getAddressing(utxo.receiver)
-    const hexAddress = normalizeToAddress(csl, utxo.receiver)?.toHex()
+export const getHexAddressingMap = async (wallet: YoroiWallet) => {
+  const addressedUtxos = await Promise.all(
+    wallet.utxos.map(async (utxo: RawUtxo) => {
+      const addressing = wallet.getAddressing(utxo.receiver)
+      // Use validateAndExtractAddressInfo to safely extract hex without WASM pointer issues
+      const addressInfo = await validateAndExtractAddressInfo(utxo.receiver)
+      const hexAddress = addressInfo?.hex
 
-    return {addressing, hexAddress}
-  })
+      return {addressing, hexAddress}
+    }),
+  )
 
   const addressing = addressedUtxos
   return addressing.reduce<{[addressHex: string]: Array<number>}>(
@@ -261,18 +363,28 @@ export const getHexAddressingMap = (
 }
 
 export const getAddressedUtxos = (wallet: YoroiWallet) => {
-  return wallet.allUtxos.map(
+  // Use wallet.utxos to exclude collateral UTXO from transaction operations
+  // Collateral should not be used in regular transactions
+  const primaryTokenId = wallet.portfolioPrimaryTokenInfo.id
+  return wallet.utxos.map(
     (utxo: RawUtxo): CardanoTypes.CardanoAddressedUtxo => {
       const addressing = wallet.getAddressing(utxo.receiver)
+
+      // Convert to modern Balance.Amounts format
+      const balance: Balance.Amounts = {
+        [primaryTokenId]: utxo.amount as Balance.Quantity,
+      }
+      for (const asset of utxo.assets) {
+        balance[asset.tokenId] = asset.amount as Balance.Quantity
+      }
 
       return {
         addressing,
         txIndex: utxo.tx_index,
         txHash: utxo.tx_hash,
-        amount: utxo.amount,
         receiver: utxo.receiver,
         utxoId: utxo.utxo_id,
-        assets: utxo.assets,
+        balance,
       }
     },
   )

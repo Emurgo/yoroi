@@ -46,12 +46,18 @@ const RequestedBrowserLaunchDappUrlModalFooter = ({
   onContinue: () => void
 }) => {
   const strings = useStrings()
-  const {actionFinished} = useLinks()
+  const {markActionProcessed} = useLinks()
   const {closeModal} = useModal()
 
   const handleOnCancel = () => {
-    actionFinished()
+    markActionProcessed()
     closeModal()
+  }
+
+  const handleOnContinue = () => {
+    onContinue()
+    // Clear action after navigation
+    markActionProcessed()
   }
 
   return (
@@ -66,7 +72,7 @@ const RequestedBrowserLaunchDappUrlModalFooter = ({
       <Button
         size="S"
         type={ButtonType.Primary}
-        onPress={onContinue}
+        onPress={handleOnContinue}
         title={strings.global.proceed}
       />
     </Modal.Footer>

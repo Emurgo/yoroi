@@ -180,6 +180,14 @@ export const useStrings = () => {
         ),
         continue: f(scanMessages.continue),
         openAppSettings: f(scanMessages.openAppSettings),
+        transactionTitle: f(scanMessages.transactionTitle),
+        transactionNotFound: f(scanMessages.transactionNotFound),
+        blockTitle: f(scanMessages.blockTitle),
+        addressTitle: f(scanMessages.addressTitle),
+        stakePoolTitle: f(scanMessages.stakePoolTitle),
+        p2pConnectTitle: f(scanMessages.p2pConnectTitle),
+        p2pConnectionTitle: f(scanMessages.p2pConnectionTitle),
+        cancel: f(scanMessages.cancel),
       },
 
       // Wallet Manager strings
@@ -459,6 +467,7 @@ export const useStrings = () => {
         releases: f(menuMessages.releases),
         governanceCentre: f(menuMessages.governanceCentre),
         utxoList: f(transactionsMessages.utxoListTitle),
+        messageSigning: f(menuMessages.messageSigning),
       },
 
       // Dashboard strings
@@ -545,6 +554,7 @@ export const useStrings = () => {
           shelleyWallet: f(settingsMessages.aboutShelleyWallet),
           unknownWalletType: f(settingsMessages.aboutUnknownWalletType),
           fcmToken: f(settingsMessages.aboutFcmToken),
+          firebaseProjectId: f(settingsMessages.aboutFirebaseProjectId),
         },
         enableLoginWithOs: {
           error: f(globalMessages.error),
@@ -662,6 +672,28 @@ export const useStrings = () => {
           ),
           displayDuration: f(settingsMessages.walletSettingsDisplayDuration),
           notifications: f(settingsMessages.walletSettingsNotifications),
+          shareWallet: f(settingsMessages.walletSettingsShareWallet),
+        },
+        shareWallet: {
+          title: f(settingsMessages.shareWalletTitle),
+          description: f(settingsMessages.shareWalletDescription),
+          fullWallet: f(settingsMessages.shareWalletFullWallet),
+          readOnlyWallet: f(settingsMessages.shareWalletReadOnlyWallet),
+          enterPassword: f(settingsMessages.shareWalletEnterPassword),
+          password: f(settingsMessages.shareWalletPassword),
+          confirm: f(settingsMessages.shareWalletConfirm),
+          wrongPassword: f(settingsMessages.shareWalletWrongPassword),
+          error: f(settingsMessages.shareWalletError),
+          walletLinkGenerated: f(
+            settingsMessages.shareWalletWalletLinkGenerated,
+          ),
+          walletLink: f(settingsMessages.shareWalletWalletLink),
+          copyLink: f(settingsMessages.shareWalletCopyLink),
+          linkCopied: f(settingsMessages.shareWalletLinkCopied),
+          close: f(settingsMessages.shareWalletClose),
+          shareQRCode: f(settingsMessages.shareWalletShareQRCode),
+          fullWalletLink: f(settingsMessages.shareWalletFullWalletLink),
+          readOnlyWalletLink: f(settingsMessages.shareWalletReadOnlyWalletLink),
         },
         applicationSettings: {
           general: f(settingsMessages.applicationSettingsGeneral),
@@ -773,6 +805,7 @@ export const useStrings = () => {
         failedTxButton: f(sendMessages.failedTxButton),
         failedTxText: f(sendMessages.failedTxText),
         failedTxTitle: f(sendMessages.failedTxTitle),
+        favoriteContacts: f(sendMessages.favoriteContacts),
         feeLabel: f(sendMessages.feeLabel),
         feeNotAvailable: f(sendMessages.feeNotAvailable),
         found: f(sendMessages.found),
@@ -957,6 +990,16 @@ export const useStrings = () => {
         ),
         collateralTxPendingTitle: f(discoverMessages.collateralTxPendingTitle),
         collateralTxPendingText: f(discoverMessages.collateralTxPendingText),
+        collateralCreationTitle: f(discoverMessages.collateralCreationTitle),
+        collateralCreationDescription: f(
+          discoverMessages.collateralCreationDescription,
+        ),
+        collateralCreationInfoTitle: f(
+          discoverMessages.collateralCreationInfoTitle,
+        ),
+        collateralCreationInfoText: f(
+          discoverMessages.collateralCreationInfoText,
+        ),
       },
 
       // Swap strings
@@ -1170,6 +1213,11 @@ export const useStrings = () => {
 
       // Staking/PoolTransition strings
       staking: {
+        earnRewardsBannerTitle: f(stakingMessages.earnRewardsBannerTitle),
+        earnRewardsBannerDescription: f(
+          stakingMessages.earnRewardsBannerDescription,
+        ),
+        earnRewardsBannerCta: f(stakingMessages.earnRewardsBannerCta),
         title: f(stakingMessages.title),
         warning: f(stakingMessages.warning),
         finalWarning: f(stakingMessages.finalWarning),
@@ -1315,6 +1363,7 @@ export const useStrings = () => {
           title: f(stakingMessages.noPoolDataDialogTitle),
           message: f(stakingMessages.noPoolDataDialogMessage),
         },
+        searchPools: f(stakingMessages.searchPools),
         confirmDelegation: {
           title: f(stakingMessages.confirmDelegationTitle),
           message: f(stakingMessages.confirmDelegationMessage),
@@ -1344,10 +1393,20 @@ export const useStrings = () => {
           mint: f(txReviewMessages.tabLabelMint),
           referenceInputs: f(txReviewMessages.tabLabelReferenceInputs),
           metadataTab: f(txReviewMessages.tabLabelMetadataTab),
+          datum: f(txReviewMessages.tabLabelDatum),
+          governance: f(txReviewMessages.tabLabelGovernance),
+          operations: f(txReviewMessages.tabLabelOperations),
+          smartContracts: f(txReviewMessages.tabLabelSmartContracts),
+          signatures: f(txReviewMessages.tabLabelSignatures),
+          details: f(txReviewMessages.tabLabelDetails),
         },
         metadata: {
           metadataHash: f(txReviewMessages.metadataMetadataHash),
           metadataJsonLabel: f(txReviewMessages.metadataMetadataJsonLabel),
+          allMetadataLabels: f(txReviewMessages.metadataAllMetadataLabels),
+          scripts: f(txReviewMessages.metadataScripts),
+          scriptHash: f(txReviewMessages.metadataScriptHash),
+          scriptBytes: f(txReviewMessages.metadataScriptBytes),
         },
         overview: {
           wallet: f(txReviewMessages.overviewWallet),
@@ -1372,8 +1431,127 @@ export const useStrings = () => {
           operationsNoticeTitle: f(
             txReviewMessages.overviewOperationsNoticeTitle,
           ),
+          validationErrorsTitle: f(
+            txReviewMessages.overviewValidationErrorsTitle,
+          ),
+          validationWarningsTitle: f(
+            txReviewMessages.overviewValidationWarningsTitle,
+          ),
+          chainInfoTitle: f(txReviewMessages.overviewChainInfoTitle),
+          chainInfoDescription: f(
+            txReviewMessages.overviewChainInfoDescription,
+          ),
+          chainOrderLabel: f(txReviewMessages.overviewChainOrderLabel),
+          contractInteractionsTitle: f(
+            txReviewMessages.overviewContractInteractionsTitle,
+          ),
+          contractInteractionDatum: (count: number) =>
+            f(txReviewMessages.overviewContractInteractionDatum, {count}),
+          contractInteractionScript: (count: number) =>
+            f(txReviewMessages.overviewContractInteractionScript, {count}),
+          collateralSummary: f(txReviewMessages.overviewCollateralSummary),
+          collateralAtRisk: f(txReviewMessages.overviewCollateralAtRisk),
+          signaturesSummary: f(txReviewMessages.overviewSignaturesSummary),
+          withdrawalsSummary: f(txReviewMessages.overviewWithdrawalsSummary),
+          withdrawingRewards: f(txReviewMessages.overviewWithdrawingRewards),
+          notices: f(txReviewMessages.overviewNotices),
         },
         fee: f(txReviewMessages.fee),
+        mint: {
+          mintLabel: f(txReviewMessages.mintMintLabel),
+          burnLabel: f(txReviewMessages.mintBurnLabel),
+        },
+        datum: {
+          noDatums: f(txReviewMessages.datumNoDatums),
+          outputLabel: f(txReviewMessages.datumOutputLabel),
+          addressLabel: f(txReviewMessages.datumAddressLabel),
+          typeLabel: f(txReviewMessages.datumTypeLabel),
+          hashLabel: f(txReviewMessages.datumHashLabel),
+          decodedLabel: f(txReviewMessages.datumDecodedLabel),
+          jsonLabel: f(txReviewMessages.datumJsonLabel),
+          rawDataLabel: f(txReviewMessages.datumRawDataLabel),
+        },
+        governance: {
+          noGovernanceActions: f(
+            txReviewMessages.governanceNoGovernanceActions,
+          ),
+          proposalsLabel: f(txReviewMessages.governanceProposalsLabel),
+          votesLabel: f(txReviewMessages.governanceVotesLabel),
+          proposalLabel: f(txReviewMessages.governanceProposalLabel),
+          voteLabel: f(txReviewMessages.governanceVoteLabel),
+          actionTypeLabel: f(txReviewMessages.governanceActionTypeLabel),
+          actionIdLabel: f(txReviewMessages.governanceActionIdLabel),
+          anchorUrlLabel: f(txReviewMessages.governanceAnchorUrlLabel),
+          anchorHashLabel: f(txReviewMessages.governanceAnchorHashLabel),
+          depositLabel: f(txReviewMessages.governanceDepositLabel),
+          rewardAccountLabel: f(txReviewMessages.governanceRewardAccountLabel),
+          parametersLabel: f(txReviewMessages.governanceParametersLabel),
+          voterTypeLabel: f(txReviewMessages.governanceVoterTypeLabel),
+          voterCredentialLabel: f(
+            txReviewMessages.governanceVoterCredentialLabel,
+          ),
+          voteChoiceLabel: f(txReviewMessages.governanceVoteChoiceLabel),
+        },
+        referenceInputs: {
+          scriptsLabel: f(txReviewMessages.referenceInputsScriptsLabel),
+          scriptLabel: f(txReviewMessages.referenceInputsScriptLabel),
+          scriptTypeLabel: f(txReviewMessages.referenceInputsScriptTypeLabel),
+          scriptHashLabel: f(txReviewMessages.referenceInputsScriptHashLabel),
+          scriptSizeLabel: f(txReviewMessages.referenceInputsScriptSizeLabel),
+          utxoLabel: f(txReviewMessages.referenceInputsUtxoLabel),
+        },
+        withdrawals: {
+          label: f(txReviewMessages.withdrawalsLabel),
+        },
+        withdrawal: {
+          address: f(txReviewMessages.withdrawalAddress),
+          amount: f(txReviewMessages.withdrawalAmount),
+        },
+        collateral: {
+          label: f(txReviewMessages.collateralLabel),
+          inputs: f(txReviewMessages.collateralInputs),
+          return: f(txReviewMessages.collateralReturn),
+          total: f(txReviewMessages.collateralTotal),
+        },
+        scripts: {
+          label: f(txReviewMessages.scriptsLabel),
+          dataHash: f(txReviewMessages.scriptsDataHash),
+          plutusScripts: f(txReviewMessages.scriptsPlutusScripts),
+          nativeScripts: f(txReviewMessages.scriptsNativeScripts),
+          size: f(txReviewMessages.scriptsSize),
+        },
+        smartContracts: {
+          noSmartContractInteractions: f(
+            txReviewMessages.smartContractsNoSmartContractInteractions,
+          ),
+        },
+        redeemers: {
+          label: f(txReviewMessages.redeemersLabel),
+          redeemer: f(txReviewMessages.redeemersRedeemer),
+        },
+        signatures: {
+          requiredSigners: f(txReviewMessages.signaturesRequiredSigners),
+          witnesses: f(txReviewMessages.signaturesWitnesses),
+          signer: f(txReviewMessages.signaturesSigner),
+          vkeyWitnesses: f(txReviewMessages.signaturesVkeyWitnesses),
+          publicKey: f(txReviewMessages.signaturesPublicKey),
+          signature: f(txReviewMessages.signaturesSignature),
+          bootstrapWitnesses: f(txReviewMessages.signaturesBootstrapWitnesses),
+          nativeScriptWitnesses: f(
+            txReviewMessages.signaturesNativeScriptWitnesses,
+          ),
+          noSignaturesInfo: f(txReviewMessages.signaturesNoSignaturesInfo),
+        },
+        details: {
+          timing: f(txReviewMessages.detailsTiming),
+          network: f(txReviewMessages.detailsNetwork),
+          ttl: f(txReviewMessages.detailsTtl),
+          validityIntervalStart: f(
+            txReviewMessages.detailsValidityIntervalStart,
+          ),
+          networkId: f(txReviewMessages.detailsNetworkId),
+          noDetailsAvailable: f(txReviewMessages.detailsNoDetailsAvailable),
+        },
         utxos: {
           utxosInputsLabel: f(txReviewMessages.utxosUtxosInputsLabel),
           utxosOutputsLabel: f(txReviewMessages.utxosUtxosOutputsLabel),
@@ -1511,6 +1689,54 @@ export const useStrings = () => {
           }
           return f(directionMap[direction as keyof typeof directionMap])
         },
+        operation: {
+          stakeRegistration: f(transactionsMessages.operationStakeRegistration),
+          stakeDeregistration: f(
+            transactionsMessages.operationStakeDeregistration,
+          ),
+          stakeDelegation: f(transactionsMessages.operationStakeDelegation),
+          stakingDelegated: f(transactionsMessages.operationStakingDelegated),
+          stakeUndelegation: f(transactionsMessages.operationStakeUndelegation),
+          poolRegistration: f(transactionsMessages.operationPoolRegistration),
+          poolRetirement: f(transactionsMessages.operationPoolRetirement),
+          genesisKeyDelegation: f(
+            transactionsMessages.operationGenesisKeyDelegation,
+          ),
+          moveInstantaneousRewards: f(
+            transactionsMessages.operationMoveInstantaneousRewards,
+          ),
+          committeeHotAuth: f(transactionsMessages.operationCommitteeHotAuth),
+          committeeColdResign: f(
+            transactionsMessages.operationCommitteeColdResign,
+          ),
+          drepDeregistration: f(
+            transactionsMessages.operationDrepDeregistration,
+          ),
+          drepRegistration: f(transactionsMessages.operationDrepRegistration),
+          drepUpdate: f(transactionsMessages.operationDrepUpdate),
+          stakeAndVoteDelegation: f(
+            transactionsMessages.operationStakeAndVoteDelegation,
+          ),
+          stakeRegistrationAndDelegation: f(
+            transactionsMessages.operationStakeRegistrationAndDelegation,
+          ),
+          stakeVoteRegistrationAndDelegation: f(
+            transactionsMessages.operationStakeVoteRegistrationAndDelegation,
+          ),
+          voteDelegation: f(transactionsMessages.operationVoteDelegation),
+          voteRegistrationAndDelegation: f(
+            transactionsMessages.operationVoteRegistrationAndDelegation,
+          ),
+          withdrawal: f(transactionsMessages.operationWithdrawal),
+          swap: f(transactionsMessages.operationSwap),
+          swapCreated: f(transactionsMessages.operationSwapCreated),
+          swapResolved: f(transactionsMessages.operationSwapResolved),
+          swapCancel: f(transactionsMessages.operationSwapCancel),
+          smartContract: f(transactionsMessages.operationSmartContract),
+          collateralCreation: f(
+            transactionsMessages.operationCollateralCreation,
+          ),
+        },
         unknownAssetName: f(transactionsMessages.unknownAssetName),
         walletAddress: f(transactionsMessages.walletAddress),
         BIP32path: f(transactionsMessages.BIP32path),
@@ -1528,6 +1754,7 @@ export const useStrings = () => {
         fromAddresses: f(transactionsMessages.fromAddresses),
         toAddresses: f(transactionsMessages.toAddresses),
         memo: f(transactionsMessages.memo),
+        date: f(transactionsMessages.date),
         transactionId: f(transactionsMessages.transactionId),
         txAssuranceLevel: f(transactionsMessages.txAssuranceLevel),
         confirmations: (cnt: number) =>
@@ -1553,6 +1780,9 @@ export const useStrings = () => {
           historyTitle: f(transactionsMessages.historyTitle),
           txDetailsTitle: f(transactionsMessages.txDetailsTitle),
         },
+        addressDetailsTitle: f(transactionsMessages.addressDetailsTitle),
+        blockDetailsTitle: f(transactionsMessages.blockDetailsTitle),
+        address: f(transactionsMessages.address),
         utxo: {
           utxoListTitle: f(transactionsMessages.utxoListTitle),
           utxoConsolidationTitle: f(
@@ -1562,6 +1792,43 @@ export const useStrings = () => {
             transactionsMessages.utxoConsolidationWarning,
           ),
           organizeWalletButton: f(transactionsMessages.organizeWalletButton),
+        },
+        messageSigning: {
+          messageSigningTitle: f(transactionsMessages.messageSigningTitle),
+          messageSigningInputLabel: f(
+            transactionsMessages.messageSigningInputLabel,
+          ),
+          messageSigningPlaceholder: f(
+            transactionsMessages.messageSigningPlaceholder,
+          ),
+          messageSigningSignButton: f(
+            transactionsMessages.messageSigningSignButton,
+          ),
+          messageSigningMaxLengthError: f(
+            transactionsMessages.messageSigningMaxLengthError,
+          ),
+          messageSigningLengthInfo: (current: string, max: string) =>
+            intl.formatMessage(transactionsMessages.messageSigningLengthInfo, {
+              current,
+              max,
+            }),
+          messageSigningResultTitle: f(
+            transactionsMessages.messageSigningResultTitle,
+          ),
+          messageSigningSignatureLabel: f(
+            transactionsMessages.messageSigningSignatureLabel,
+          ),
+          messageSigningKeyLabel: f(
+            transactionsMessages.messageSigningKeyLabel,
+          ),
+          messageSigningCopied: f(transactionsMessages.messageSigningCopied),
+          messageSigningSignatureDescription: f(
+            transactionsMessages.messageSigningSignatureDescription,
+          ),
+          messageSigningKeyDescription: f(
+            transactionsMessages.messageSigningKeyDescription,
+          ),
+          error: f(transactionsMessages.messageSigningError),
         },
         submitted: {
           submittedTxTitle: f(transactionsMessages.submittedTxTitle),
@@ -1829,6 +2096,7 @@ export const useStrings = () => {
         ),
         clearAll: f(setupWalletMessages.clearAll),
         preparingWallet: f(setupWalletMessages.preparingWallet),
+        continueInBackground: f(setupWalletMessages.continueInBackground),
         restoreDuplicatedWalletModalText: f(
           setupWalletMessages.restoreDuplicatedWalletModalText,
         ),
@@ -1866,6 +2134,15 @@ export const useStrings = () => {
         ),
         walletPasswordModalCardSecondItem: f(
           setupWalletMessages.walletPasswordModalCardSecondItem,
+        ),
+        restoreWalletFromLinkSecurityWarningTitle: f(
+          setupWalletMessages.restoreWalletFromLinkSecurityWarningTitle,
+        ),
+        restoreWalletFromLinkSecurityWarningDescription: f(
+          setupWalletMessages.restoreWalletFromLinkSecurityWarningDescription,
+        ),
+        restoreWalletFromLinkContinueButton: f(
+          setupWalletMessages.restoreWalletFromLinkContinueButton,
         ),
       },
 

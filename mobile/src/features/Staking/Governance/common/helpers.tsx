@@ -6,18 +6,18 @@ import {
   useStakingKeyState,
   useUpdateLatestGovernanceAction,
 } from '@yoroi/staking'
+import {calculateTxId} from '@yoroi/tx'
 
+import {Buffer} from 'buffer'
 import * as React from 'react'
 
-import {useReviewTx} from '~/features/ReviewTx/common/ReviewTxProvider'
 import {useStakingKey} from '~/features/Staking/hooks/useStakingKey'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useWalletEvent} from '~/features/WalletManager/hooks/useWalletEvent'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {logger} from '~/kernel/logger/logger'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {InfoBanner} from '~/ui/InfoBanner/InfoBanner'
-import {YoroiUnsignedTx} from '~/wallets/types/yoroi'
+import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
 import {CardanoMobile} from '~/wallets/wallets'
 
 import {GovernanceVote} from '../types'
@@ -66,12 +66,14 @@ export const mapStakingKeyStateToGovernanceAction = (
 }
 
 export const useGovernanceManagerMaker = () => {
+  const selectedWallet = useSelectedWallet()
+
   const {
     wallet: {
       networkManager: {network},
       id: walletId,
     },
-  } = useSelectedWallet()
+  } = selectedWallet
 
   const storage = useAsyncStorage()
   const governanceStorage = storage.join(
@@ -86,7 +88,6 @@ export const useGovernanceManagerMaker = () => {
         api: governanceApiMaker({network}),
         cardano: CardanoMobile,
         storage: governanceStorage,
-        logger,
       }),
     [governanceStorage, network, walletId],
   )
@@ -95,7 +96,6 @@ export const useGovernanceManagerMaker = () => {
 export const useGovernanceActions = () => {
   const {wallet} = useSelectedWallet()
   const navigateTo = useNavigateTo()
-  const {unsignedTxChanged} = useReviewTx()
   const {updateLatestGovernanceAction} = useUpdateLatestGovernanceAction(
     wallet.id,
   )
@@ -110,20 +110,34 @@ export const useGovernanceActions = () => {
   }: {
     hash: string
     type: 'key' | 'script'
-    unsignedTx: YoroiUnsignedTx
+    unsignedTx: {cbor: string}
     CIP105: boolean
   }) => {
-    unsignedTxChanged(unsignedTx)
-
     navigateToTxReview({
-      onSuccess: (args) => {
-        if (args?.signedTx?.signedTx?.id == null)
-          throw new Error('useGovernanceActions:: invalid state')
+      cbor: unsignedTx.cbor,
+      onSuccess: async (args) => {
+        // Calculate txId from signedTx if available, otherwise from unsigned CBOR
+        let txID: string
+        if (args?.signedTx) {
+          const txBytes = args.signedTx.toBytes()
+          txID = await CardanoMobileWrapped.cslScope(async (csl) => {
+            return await calculateTxId(
+              csl,
+              Buffer.from(txBytes).toString('hex'),
+              'hex',
+            )
+          })
+        } else {
+          // Calculate from unsigned CBOR (transaction body hash is the same)
+          txID = await CardanoMobileWrapped.cslScope(async (csl) => {
+            return await calculateTxId(csl, unsignedTx.cbor, 'hex')
+          })
+        }
         updateLatestGovernanceAction({
           kind: 'delegate-to-drep',
           hash,
           type,
-          txID: args.signedTx.signedTx.id,
+          txID,
         })
       },
       onNotSupportedCIP1694: navigateTo.notSupportedVersion,
@@ -142,17 +156,31 @@ export const useGovernanceActions = () => {
     })
   }
 
-  const handleAbstainAction = ({unsignedTx}: {unsignedTx: YoroiUnsignedTx}) => {
-    unsignedTxChanged(unsignedTx)
-
+  const handleAbstainAction = ({unsignedTx}: {unsignedTx: {cbor: string}}) => {
     navigateToTxReview({
-      onSuccess: (args) => {
-        if (args?.signedTx?.signedTx?.id == null)
-          throw new Error('useGovernanceActions:: invalid state')
+      cbor: unsignedTx.cbor,
+      onSuccess: async (args) => {
+        // Calculate txId from signedTx if available, otherwise from unsigned CBOR
+        let txID: string
+        if (args?.signedTx) {
+          const txBytes = args.signedTx.toBytes()
+          txID = await CardanoMobileWrapped.cslScope(async (csl) => {
+            return await calculateTxId(
+              csl,
+              Buffer.from(txBytes).toString('hex'),
+              'hex',
+            )
+          })
+        } else {
+          // Calculate from unsigned CBOR (transaction body hash is the same)
+          txID = await CardanoMobileWrapped.cslScope(async (csl) => {
+            return await calculateTxId(csl, unsignedTx.cbor, 'hex')
+          })
+        }
         updateLatestGovernanceAction({
           kind: 'vote',
           vote: 'abstain',
-          txID: args?.signedTx.signedTx.id,
+          txID,
         })
       },
       onNotSupportedCIP1694: navigateTo.notSupportedVersion,
@@ -163,18 +191,32 @@ export const useGovernanceActions = () => {
   const handleNoConfidenceAction = ({
     unsignedTx,
   }: {
-    unsignedTx: YoroiUnsignedTx
+    unsignedTx: {cbor: string}
   }) => {
-    unsignedTxChanged(unsignedTx)
-
     navigateToTxReview({
-      onSuccess: (args) => {
-        if (args?.signedTx?.signedTx?.id == null)
-          throw new Error('useGovernanceActions:: invalid state')
+      cbor: unsignedTx.cbor,
+      onSuccess: async (args) => {
+        // Calculate txId from signedTx if available, otherwise from unsigned CBOR
+        let txID: string
+        if (args?.signedTx) {
+          const txBytes = args.signedTx.toBytes()
+          txID = await CardanoMobileWrapped.cslScope(async (csl) => {
+            return await calculateTxId(
+              csl,
+              Buffer.from(txBytes).toString('hex'),
+              'hex',
+            )
+          })
+        } else {
+          // Calculate from unsigned CBOR (transaction body hash is the same)
+          txID = await CardanoMobileWrapped.cslScope(async (csl) => {
+            return await calculateTxId(csl, unsignedTx.cbor, 'hex')
+          })
+        }
         updateLatestGovernanceAction({
           kind: 'vote',
           vote: 'no-confidence',
-          txID: args?.signedTx.signedTx.id,
+          txID,
         })
       },
       onNotSupportedCIP1694: navigateTo.notSupportedVersion,

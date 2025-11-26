@@ -1,7 +1,6 @@
 import {primaryTokenInfoMainnet} from '@yoroi/blockchains'
+import {SendToken} from '@yoroi/tx'
 import {Balance} from '@yoroi/types'
-
-import {SendToken} from '@emurgo/yoroi-lib'
 
 import {Token} from '../types/tokens'
 import {toSendToken, toSendTokenList} from './utils'
@@ -41,6 +40,5 @@ const secondaryToken: Token = {
     ticker: '2',
     numberOfDecimals: 0,
     longName: null,
-    maxSupply: null,
   },
 }

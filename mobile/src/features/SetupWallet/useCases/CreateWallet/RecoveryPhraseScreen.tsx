@@ -126,7 +126,7 @@ export const RecoveryPhraseScreen = () => {
 
               <Text style={[a.body_1_lg_regular, {color: p.primary_600}]}>
                 <Text style={[a.body_1_lg_regular, {color: p.primary_600}]}>
-                  {index + 1}.{' '}
+                  {index + 1}.
                 </Text>
 
                 {word}

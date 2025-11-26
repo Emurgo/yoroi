@@ -1,4 +1,7 @@
+import {useObservableValue} from '@yoroi/common'
+
 import * as React from 'react'
+import {merge} from 'rxjs'
 
 import {useWalletManager} from '../context/WalletManagerProvider'
 
@@ -13,27 +16,27 @@ import {useWalletManager} from '../context/WalletManagerProvider'
  */
 export function useSyncTemporarilyPaused() {
   const {walletManager} = useWalletManager()
-  const [isSyncTemporarilyPaused, setIsSyncTemporarilyPaused] = React.useState(
-    !walletManager.isSyncActive && !walletManager.isSyncing,
+
+  // Merge both observables to trigger updates when either changes
+  const observable$ = React.useMemo(
+    () => merge(walletManager.syncActive$, walletManager.syncing$),
+    [walletManager],
   )
 
+  const getter = React.useCallback(() => {
+    return !walletManager.isSyncActive && !walletManager.isSyncing
+  }, [walletManager])
+
+  // Side effects: pause on mount, resume on unmount
   React.useEffect(() => {
     walletManager.pauseSyncing()
-
-    const subSyncActivity = walletManager.syncActive$.subscribe((isActive) => {
-      setIsSyncTemporarilyPaused(() => !isActive && !walletManager.isSyncing)
-    })
-    const subIsSyncing = walletManager.syncing$.subscribe((isSyncing) => {
-      setIsSyncTemporarilyPaused(() => !isSyncing)
-    })
-
     return () => {
-      subSyncActivity.unsubscribe()
-      subIsSyncing.unsubscribe()
-
       walletManager.resumeSyncing()
     }
   }, [walletManager])
 
-  return isSyncTemporarilyPaused
+  return useObservableValue({
+    observable$,
+    getter,
+  })
 }

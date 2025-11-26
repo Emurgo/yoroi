@@ -48,9 +48,7 @@ export function PlatformShell({children}: React.PropsWithChildren) {
         <TrackedRouterContainer>
           <ModalProvider>
             <BackgroundTimerProvider active={isAndroid}>
-              <KeyboardProvider statusBarTranslucent>
-                {children}
-              </KeyboardProvider>
+              <KeyboardProvider>{children}</KeyboardProvider>
             </BackgroundTimerProvider>
           </ModalProvider>
         </TrackedRouterContainer>

@@ -1,0 +1,168 @@
+import {act, renderHook} from '@testing-library/react'
+
+import {useDebouncedCallback} from './useDebouncedCallback'
+
+describe('useDebouncedCallback', () => {
+  beforeEach(() => {
+    jest.useFakeTimers()
+  })
+
+  afterEach(() => {
+    jest.runOnlyPendingTimers()
+    jest.useRealTimers()
+  })
+
+  it('should skip first render by default', () => {
+    const callback = jest.fn()
+
+    renderHook(() => {
+      useDebouncedCallback(callback, 'value', 1000)
+    })
+
+    act(() => {
+      jest.advanceTimersByTime(1000)
+    })
+
+    expect(callback).not.toHaveBeenCalled()
+  })
+
+  it('should call callback after delay when skipFirst is false', () => {
+    const callback = jest.fn()
+
+    renderHook(() => {
+      useDebouncedCallback(callback, 'value', 1000, false)
+    })
+
+    act(() => {
+      jest.advanceTimersByTime(1000)
+    })
+
+    expect(callback).toHaveBeenCalledTimes(1)
+  })
+
+  it('should debounce callback on value change', () => {
+    const callback = jest.fn()
+
+    const {rerender} = renderHook(
+      ({value}) => {
+        useDebouncedCallback(callback, value, 1000, false)
+      },
+      {initialProps: {value: 'initial'}},
+    )
+
+    act(() => {
+      jest.advanceTimersByTime(500)
+    })
+
+    rerender({value: 'updated'})
+
+    act(() => {
+      jest.advanceTimersByTime(1000)
+    })
+
+    expect(callback).toHaveBeenCalledTimes(1)
+  })
+
+  it('should cancel previous callback on rapid changes', () => {
+    const callback = jest.fn()
+
+    const {rerender} = renderHook(
+      ({value}) => {
+        useDebouncedCallback(callback, value, 1000, false)
+      },
+      {initialProps: {value: 'value1'}},
+    )
+
+    act(() => {
+      jest.advanceTimersByTime(500)
+    })
+
+    rerender({value: 'value2'})
+
+    act(() => {
+      jest.advanceTimersByTime(500)
+    })
+
+    rerender({value: 'value3'})
+
+    act(() => {
+      jest.advanceTimersByTime(1000)
+    })
+
+    expect(callback).toHaveBeenCalledTimes(1)
+  })
+
+  it('should call callback on second render when skipFirst is true', () => {
+    const callback = jest.fn()
+
+    const {rerender} = renderHook(
+      ({value}) => {
+        useDebouncedCallback(callback, value, 1000, true)
+      },
+      {initialProps: {value: 'value1'}},
+    )
+
+    // First render - should skip
+    act(() => {
+      jest.advanceTimersByTime(1000)
+    })
+    expect(callback).not.toHaveBeenCalled()
+
+    // Second render - should call
+    rerender({value: 'value2'})
+    act(() => {
+      jest.advanceTimersByTime(1000)
+    })
+    expect(callback).toHaveBeenCalledTimes(1)
+  })
+
+  it('should update when callback changes', () => {
+    const callback1 = jest.fn()
+    const callback2 = jest.fn()
+
+    const {rerender} = renderHook(
+      ({callback}) => {
+        useDebouncedCallback(callback, 'value', 1000, false)
+      },
+      {initialProps: {callback: callback1}},
+    )
+
+    act(() => {
+      jest.advanceTimersByTime(1000)
+    })
+
+    expect(callback1).toHaveBeenCalledTimes(1)
+    expect(callback2).not.toHaveBeenCalled()
+
+    rerender({callback: callback2})
+
+    act(() => {
+      jest.advanceTimersByTime(1000)
+    })
+
+    expect(callback2).toHaveBeenCalledTimes(1)
+  })
+
+  it('should update when delay changes', () => {
+    const callback = jest.fn()
+
+    const {rerender} = renderHook(
+      ({delay}) => {
+        useDebouncedCallback(callback, 'value', delay, false)
+      },
+      {initialProps: {delay: 1000}},
+    )
+
+    act(() => {
+      jest.advanceTimersByTime(500)
+    })
+
+    rerender({delay: 500})
+
+    act(() => {
+      jest.advanceTimersByTime(500)
+    })
+
+    expect(callback).toHaveBeenCalledTimes(1)
+  })
+})
