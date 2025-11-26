@@ -6,15 +6,17 @@ import * as React from 'react'
 import {Alert, Animated, Text, TouchableOpacity, View} from 'react-native'
 import {Swipeable} from 'react-native-gesture-handler'
 
+import {useAuth} from '~/features/Auth/context/AuthProvider'
 import {
   ChevronRightDarkIllustration,
   ChevronRightGrayIllustration,
 } from '~/features/SetupWallet/illustrations/ChevronRight'
 import {useAutomaticWalletOpener} from '~/features/WalletManager/context/AutomaticWalletOpeningProvider'
-import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
+import {useWalletManagerSelector} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
 import {useSyncWalletInfo} from '~/features/WalletManager/hooks/useSyncWalletInfo'
 import {features} from '~/kernel/features'
+import {logger} from '~/kernel/logger/logger'
 import {Icon} from '~/ui/Icon'
 import {Loading} from '~/ui/Loading/Loading'
 import {Space} from '~/ui/Space/Space'
@@ -27,16 +29,16 @@ type Props = {
 
 export const WalletListItem = ({walletMeta, onPress}: Props) => {
   const {palette: p, atoms: ta} = useTheme()
+  const {isAuthDev} = useAuth()
 
   const [isButtonPressed, setIsButtonPressed] = React.useState(false)
   const implementationName = React.useMemo(
     () => getImplementationName(walletMeta),
     [walletMeta],
   )
-  const {
-    selected: {meta},
-    walletManager,
-  } = useWalletManager()
+  // Use selectors to prevent re-renders when unrelated context values change
+  const meta = useWalletManagerSelector((ctx) => ctx.selected.meta)
+  const walletManager = useWalletManagerSelector((ctx) => ctx.walletManager)
   const {
     shouldOpen: shouldAutomaticWalletOpen,
     setShouldOpen: setShouldAutomaticWalletOpen,
@@ -46,7 +48,34 @@ export const WalletListItem = ({walletMeta, onPress}: Props) => {
 
   const {network} = useSelectedNetwork()
   const syncWalletInfo = useSyncWalletInfo(walletMeta.id)
-  const hasSyncedLastSelectedNetwork = network === syncWalletInfo?.network
+  // If syncWalletInfo is null, wallet is not actively syncing - assume it's synced (show full opacity)
+  // Only show reduced opacity if syncWalletInfo exists and indicates not synced
+  const hasSyncedLastSelectedNetwork =
+    !syncWalletInfo || // No sync info = wallet not in sync queue = assume synced
+    (syncWalletInfo.status === 'done' && syncWalletInfo.network === network) // Explicitly synced on current network
+
+  React.useEffect(() => {
+    logger.debug('WalletListItem: syncWalletInfo changed', {
+      walletId: walletMeta.id,
+      walletName: walletMeta.name,
+      syncWalletInfo: syncWalletInfo
+        ? {
+            status: syncWalletInfo.status,
+            network: syncWalletInfo.network,
+            updatedAt: syncWalletInfo.updatedAt,
+          }
+        : null,
+      currentNetwork: network,
+      hasSyncedLastSelectedNetwork,
+      willShowReducedOpacity: !hasSyncedLastSelectedNetwork,
+    })
+  }, [
+    walletMeta.id,
+    walletMeta.name,
+    syncWalletInfo,
+    network,
+    hasSyncedLastSelectedNetwork,
+  ])
 
   useFocusEffect(
     React.useCallback(() => {
@@ -68,11 +97,10 @@ export const WalletListItem = ({walletMeta, onPress}: Props) => {
     ]),
   )
 
-  // NOTE: dev only - temporary to show Product
   const handleOnDeleteWallet = () => {
     Alert.alert(
       'Delete Wallet',
-      'Are you sure you want to delete this wallet?',
+      `Are you sure you want to delete "${walletMeta.name}"? This action cannot be undone.`,
       [
         {
           text: 'Cancel',
@@ -82,6 +110,9 @@ export const WalletListItem = ({walletMeta, onPress}: Props) => {
           text: 'Delete',
           style: 'destructive',
           onPress: () => {
+            if (!walletManager) {
+              throw new Error('WalletManager not available')
+            }
             walletManager.removeWallet(walletMeta.id)
           },
         },
@@ -126,19 +157,19 @@ export const WalletListItem = ({walletMeta, onPress}: Props) => {
   return (
     <Swipeable
       renderRightActions={(progress) => renderRightActions(progress)}
-      enabled={features.walletListSwipeableActions}
+      enabled={isAuthDev}
     >
       <View
         style={[a.flex_row, a.justify_between, a.align_center, a.flex_wrap]}
       >
         <TouchableOpacity
           activeOpacity={1}
-          disabled={!hasSyncedLastSelectedNetwork}
           onPress={() => onPress(walletMeta)}
           style={[
             a.flex_row,
             a.align_center,
-            !hasSyncedLastSelectedNetwork && {opacity: 0.5},
+            // Show reduced opacity if not synced yet, but still allow interaction
+            !hasSyncedLastSelectedNetwork && {opacity: 0.7},
           ]}
           onPressIn={() => setIsButtonPressed(true)}
           onPressOut={() => setIsButtonPressed(false)}
@@ -148,12 +179,14 @@ export const WalletListItem = ({walletMeta, onPress}: Props) => {
           <Space.Width.md />
 
           <View style={[a.justify_between, a.flex_1]}>
-            <Text
-              style={[a.flex_1, a.body_1_lg_medium, ta.text_gray_medium]}
-              numberOfLines={1}
-            >
-              {walletMeta.name}
-            </Text>
+            <View style={[a.flex_row, a.align_center, a.gap_xs]}>
+              <Text
+                style={[a.flex_1, a.body_1_lg_medium, ta.text_gray_max]}
+                numberOfLines={1}
+              >
+                {walletMeta.name}
+              </Text>
+            </View>
 
             <Text
               style={[ta.text_gray_low, {opacity: isButtonPressed ? 1 : 0.5}]}
@@ -161,6 +194,13 @@ export const WalletListItem = ({walletMeta, onPress}: Props) => {
               {`${walletMeta.plate} | ${implementationName}`}
             </Text>
           </View>
+
+          {walletMeta.isReadOnly && (
+            <>
+              <Icon.EyeOn size={24} color={p.el_gray_min} />
+              <Space.Width.md />
+            </>
+          )}
 
           {features.walletListFeedback && (
             <>

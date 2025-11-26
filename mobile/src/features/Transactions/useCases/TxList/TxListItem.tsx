@@ -1,7 +1,8 @@
 import {isNonNullable} from '@yoroi/common'
 import {infoExtractName, isPrimaryToken} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
-import {Portfolio} from '@yoroi/types'
+import {Balance, Portfolio} from '@yoroi/types'
+import {WalletTransaction} from '@yoroi/types'
 
 import {useNavigation} from '@react-navigation/native'
 import {BigNumber} from 'bignumber.js'
@@ -12,30 +13,30 @@ import {Text, TouchableOpacity, View, ViewProps} from 'react-native'
 // import {TxHistoryRouteNavigation} from '~/kernel/navigation/navigation'
 import {useCurrencyPairing} from '~/features/Settings/context/CurrencyProvider'
 import {usePrivacyMode} from '~/features/Settings/hooks/usePrivacyMode'
+import {TransactionSummary} from '~/features/Transactions/common/types'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Boundary, ResetError} from '~/ui/Boundary/Boundary'
 import {Icon} from '~/ui/Icon'
 import {styleMap} from '~/ui/Icon/Direction'
 import {BalanceError} from '~/ui/PairedBalance/PairedBalance'
-import {MultiToken} from '~/wallets/cardano/MultiToken'
 import {YoroiWallet} from '~/wallets/cardano/types'
-import {TransactionInfo} from '~/wallets/types/other'
 import {
   formatDateRelative,
   formatTime,
   formatTokenFractional,
   formatTokenInteger,
 } from '~/wallets/utils/format'
-import {asQuantity} from '~/wallets/utils/utils'
+import {Amounts, Quantities, asQuantity} from '~/wallets/utils/utils'
 
+import {getOperationDisplayText} from '../../common/operationDisplay'
 import {useTxFilter} from './TxFilterProvider'
 
 type Props = {
-  transaction: TransactionInfo
+  transaction: TransactionSummary
 }
 
-export const TxListItem = ({transaction}: Props) => {
+const TxListItemComponent = ({transaction}: Props) => {
   const strings = useStrings()
   const navigation = useNavigation<any>()
   const {palette: p} = useTheme()
@@ -48,20 +49,137 @@ export const TxListItem = ({transaction}: Props) => {
 
   const intl = useIntl()
 
+  // Get operation display text if available (using certificates from summary)
+  const operationText = React.useMemo(() => {
+    // Create a minimal WalletTransaction-like object with just the fields we need
+    const walletTransactionLike = {
+      id: transaction.id,
+      certificates: transaction.certificates,
+      withdrawals: transaction.withdrawals,
+      metadata: transaction.metadata,
+      inputs: transaction.inputs,
+      outputs: transaction.outputs,
+    } as WalletTransaction | undefined
+    return getOperationDisplayText(
+      walletTransactionLike,
+      strings,
+      transaction.direction,
+      transaction.amount,
+      transaction.metadata,
+      transaction.inputs,
+      transaction.outputs,
+      transaction.delta,
+    )
+  }, [
+    transaction.id,
+    transaction.direction,
+    transaction.certificates,
+    transaction.withdrawals,
+    transaction.amount,
+    transaction.metadata,
+    transaction.inputs,
+    transaction.outputs,
+    transaction.delta,
+    strings,
+  ])
+
   const showDetails = () =>
     navigation.navigate('tx-details', {id: transaction.id})
   const submittedAt = isNonNullable(transaction.submittedAt)
     ? `${formatDateRelative(transaction.submittedAt, intl, {today: strings.global.today, yesterday: strings.global.yesterday}) + ', ' + formatTime(transaction.submittedAt, intl)}`
     : ''
 
-  const amountAsMT = MultiToken.fromArray(transaction.amount)
-  const amount: BigNumber = isDefault
-    ? amountAsMT.getDefault()
-    : (amountAsMT.get(tokenInfo.id) ?? new BigNumber(0))
+  const amountQuantity = isDefault
+    ? Amounts.getAmount(transaction.amount, wallet.portfolioPrimaryTokenInfo.id)
+        .quantity
+    : Amounts.getAmount(transaction.amount, tokenInfo.id).quantity
+  const amount = new BigNumber(amountQuantity)
 
-  const assetLength = transaction.delta.filter(
-    ({amount}) => amount !== '0',
+  const assetLength = Amounts.toArray(transaction.delta).filter(
+    ({quantity}) => !Quantities.isZero(quantity),
   ).length
+
+  // Check if transaction has multiple assets (more than just primary token)
+  const hasMultipleAssets = React.useMemo(() => {
+    const amountArray = Amounts.toArray(transaction.amount).filter(
+      ({quantity}) => !Quantities.isZero(quantity),
+    )
+    return amountArray.length > 1
+  }, [transaction.amount])
+
+  // Determine display text: use operation text if available, otherwise use direction
+  const displayText =
+    operationText ??
+    strings.transactions.direction(transaction.direction as any)
+
+  // Determine icon key for styling (matches icon selection logic)
+  const getIconKeyForStyle = (
+    direction: 'SENT' | 'RECEIVED' | 'SELF' | 'MULTI',
+    operation: string | null | undefined,
+  ):
+    | 'SENT'
+    | 'RECEIVED'
+    | 'SELF'
+    | 'MULTI'
+    | 'WITHDRAWAL'
+    | 'SWAP'
+    | 'SMART_CONTRACT'
+    | 'STAKE_REGISTRATION'
+    | 'STAKE_DEREGISTRATION'
+    | 'STAKE_DELEGATION'
+    | 'STAKE_UNDELEGATION'
+    | 'VOTE_DELEGATION'
+    | 'COLLATERAL_CREATION' => {
+    if (!operation) {
+      return direction
+    }
+
+    const opLower = operation.toLowerCase()
+
+    if (opLower.includes('collateral creation')) {
+      return 'COLLATERAL_CREATION'
+    }
+    if (opLower.includes('withdrawal')) {
+      return 'WITHDRAWAL'
+    }
+    if (
+      opLower.includes('swap') ||
+      opLower.includes('swap created') ||
+      opLower.includes('swap resolved') ||
+      opLower.includes('swap cancel')
+    ) {
+      return 'SWAP'
+    }
+    if (opLower.includes('smart contract')) {
+      return 'SMART_CONTRACT'
+    }
+    if (opLower.includes('stake undelegation')) {
+      return 'STAKE_UNDELEGATION'
+    }
+    if (opLower.includes('staking delegated')) {
+      return 'STAKE_DELEGATION'
+    }
+    if (opLower.includes('stake deregistration')) {
+      return 'STAKE_DEREGISTRATION'
+    }
+    if (opLower.includes('stake delegation')) {
+      return 'STAKE_DELEGATION'
+    }
+    if (opLower.includes('stake registration')) {
+      return 'STAKE_REGISTRATION'
+    }
+    if (opLower.includes('vote delegation')) {
+      return 'VOTE_DELEGATION'
+    }
+
+    return direction
+  }
+
+  const iconKeyForStyle = getIconKeyForStyle(
+    transaction.direction,
+    operationText,
+  )
+
   return (
     <TouchableOpacity
       onPress={showDetails}
@@ -73,6 +191,7 @@ export const TxListItem = ({transaction}: Props) => {
         <Icon.Direction
           size={25}
           transactionDirection={transaction.direction}
+          operation={operationText}
         />
       </Left>
 
@@ -80,11 +199,11 @@ export const TxListItem = ({transaction}: Props) => {
         <Text
           style={[
             a.body_2_md_medium,
-            {color: styleMap(p)[transaction.direction].text},
+            {color: styleMap(p)[iconKeyForStyle].text},
           ]}
           testID="transactionDirection"
         >
-          {strings.transactions.direction(transaction.direction as any)}
+          {displayText}
         </Text>
 
         <Text
@@ -96,8 +215,15 @@ export const TxListItem = ({transaction}: Props) => {
       </Middle>
 
       <Right>
-        {transaction.amount.length > 0 ? (
-          <Amount amount={amount} tokenInfo={tokenInfo} />
+        {Object.keys(transaction.amount).length > 0 ? (
+          <View style={[a.flex_row, a.align_center, a.gap_xs, {flexShrink: 1}]}>
+            {hasMultipleAssets && isDefault && (
+              <Icon.TabPortfolio size={16} color={p.gray_900} />
+            )}
+            <View style={{flexShrink: 1}}>
+              <Amount amount={amount} tokenInfo={tokenInfo} />
+            </View>
+          </View>
         ) : (
           <Text style={[{color: p.gray_900}, a.body_2_md_medium]}>- -</Text>
         )}
@@ -120,6 +246,40 @@ export const TxListItem = ({transaction}: Props) => {
   )
 }
 
+// Helper function to compare amounts without expensive JSON.stringify
+const areAmountsEqual = (
+  amounts1: Balance.Amounts,
+  amounts2: Balance.Amounts,
+): boolean => {
+  const keys1 = Object.keys(amounts1)
+  const keys2 = Object.keys(amounts2)
+
+  if (keys1.length !== keys2.length) return false
+
+  for (const key of keys1) {
+    if (amounts1[key] !== amounts2[key]) return false
+  }
+
+  return true
+}
+
+export const TxListItem = React.memo(
+  TxListItemComponent,
+  (prevProps, nextProps) => {
+    // Custom comparison: only re-render if transaction ID or key properties change
+    // Optimized: replaced JSON.stringify with efficient amount comparison
+    return (
+      prevProps.transaction.id === nextProps.transaction.id &&
+      prevProps.transaction.direction === nextProps.transaction.direction &&
+      areAmountsEqual(
+        prevProps.transaction.amount,
+        nextProps.transaction.amount,
+      ) &&
+      prevProps.transaction.submittedAt === nextProps.transaction.submittedAt
+    )
+  },
+)
+
 const Row = ({style, ...props}: ViewProps) => (
   <View
     style={[style, {flexDirection: 'row', justifyContent: 'flex-end'}]}
@@ -136,7 +296,10 @@ const Middle = ({style, ...props}: ViewProps) => (
   />
 )
 const Right = ({style, ...props}: ViewProps) => (
-  <View style={[style, {padding: 4}]} {...props} />
+  <View
+    style={[style, {padding: 4, alignItems: 'flex-end', minWidth: 0}]}
+    {...props}
+  />
 )
 const Amount = ({
   amount,
@@ -149,13 +312,13 @@ const Amount = ({
   const {isPrivacyModeEnabled, privacyPlaceholder} = usePrivacyMode()
 
   return (
-    <View style={[a.flex_1, a.flex_row]} testID="transactionAmount">
-      <Text style={[{color: p.gray_900}, a.body_2_md_medium]}>
+    <View style={[a.flex_row, {flexShrink: 1}]} testID="transactionAmount">
+      <Text style={[{color: p.gray_900}, a.body_2_md_medium]} numberOfLines={1}>
         {!isPrivacyModeEnabled &&
           formatTokenInteger(asQuantity(amount), tokenInfo, true)}
       </Text>
 
-      <Text style={[{color: p.gray_900}, a.body_2_md_medium]}>
+      <Text style={[{color: p.gray_900}, a.body_2_md_medium]} numberOfLines={1}>
         {!isPrivacyModeEnabled
           ? formatTokenFractional(asQuantity(amount), tokenInfo)
           : privacyPlaceholder}
@@ -163,6 +326,7 @@ const Amount = ({
 
       <Text
         style={[{color: p.gray_900}, a.body_2_md_medium]}
+        numberOfLines={1}
       >{` ${infoExtractName(tokenInfo) ?? ''}`}</Text>
     </View>
   )

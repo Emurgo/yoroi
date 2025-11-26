@@ -6,7 +6,7 @@ import {logger} from '~/kernel/logger/logger'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {YoroiWallet} from '~/wallets/cardano/types'
 
-import {useWalletManager} from '../context/WalletManagerProvider'
+import {useWalletManagerSelector} from '../context/WalletManagerProvider'
 
 /**
  * Custom hook to launch a new wallet first time or when a previous sync is required, it will follow these steps:
@@ -30,41 +30,112 @@ import {useWalletManager} from '../context/WalletManagerProvider'
 export function useLaunchWalletAfterSyncing({
   isGlobalSyncPaused = false,
   walletId,
+  shouldNavigateAfterSync = true,
 }: {
   isGlobalSyncPaused: boolean
   walletId: YoroiWallet['id'] | null
+  shouldNavigateAfterSync?: boolean
 }) {
   const walletNavigation = useWalletNavigation()
-  const {walletManager} = useWalletManager()
+  // Use selector to prevent re-renders when selected wallet changes
+  const walletManager = useWalletManagerSelector((ctx) => ctx.walletManager)
 
   React.useEffect(() => {
     let started = false
-    if (!isGlobalSyncPaused || started || walletId == null) return
+    if (!isGlobalSyncPaused || started || walletId == null || !walletManager)
+      return
 
     const process = async () => {
       started = true
-      // hydrate force manager to add wallets to the sync queue
-      // it's ok if the wallet is already loaded by manager
-      const {metas} = await walletManager.hydrate()
+      try {
+        // hydrate force manager to add wallets to the sync queue
+        // it's ok if the wallet is already loaded by manager
+        const {metas} = await walletManager.hydrate()
 
-      const wallet = walletManager.getWalletById(walletId)
-      const meta = metas.find(({id}) => id === walletId)
-      if (!wallet || !meta) {
-        const error = new Error(
-          'useLaunchWalletAfterSyncing: New wallet/meta has not been found, reached an invalid state',
+        const meta = metas.find(({id}) => id === walletId)
+        if (!meta) {
+          const error = new Error(
+            'useLaunchWalletAfterSyncing: New wallet meta has not been found, reached an invalid state',
+          )
+          logger.error(error)
+          if (shouldNavigateAfterSync) {
+            walletNavigation.resetToWalletSelection()
+          }
+          return
+        }
+
+        // Set selected wallet ID first - this will trigger wallet loading
+        walletManager.setSelectedWalletId(walletId)
+
+        // Wait a bit for the wallet to be loaded
+        // The wallet will be loaded asynchronously when setSelectedWalletId is called
+        await new Promise((resolve) => setTimeout(resolve, 500))
+
+        // Try to get the wallet - it should be loaded now
+        let wallet = walletManager.getWalletById(walletId)
+        if (!wallet) {
+          // If still not loaded, wait a bit more and try again
+          logger.debug(
+            'useLaunchWalletAfterSyncing: wallet not loaded yet, waiting...',
+            {walletId},
+          )
+          await new Promise((resolve) => setTimeout(resolve, 1000))
+          wallet = walletManager.getWalletById(walletId)
+        }
+
+        if (!wallet) {
+          const error = new Error(
+            'useLaunchWalletAfterSyncing: Wallet could not be loaded after setting selected wallet ID',
+          )
+          logger.error(error, {walletId, meta})
+          if (shouldNavigateAfterSync) {
+            walletNavigation.resetToWalletSelection()
+          }
+          return
+        }
+
+        // Do quick sync first to make wallet usable immediately
+        await wallet.quickSync({isForced: true})
+
+        // Navigate immediately after quick sync
+        if (shouldNavigateAfterSync) {
+          try {
+            walletNavigation.resetToTxHistory()
+          } catch (error) {
+            logger.error(
+              'useLaunchWalletAfterSyncing: Error navigating to tx history, trying wallet selection instead',
+              {error, walletId},
+            )
+            // If navigation fails (e.g., user not logged in), fall back to wallet selection
+            walletNavigation.resetToWalletSelection()
+          }
+        }
+
+        // Start full sync in the background without waiting
+        wallet.sync({isForced: true}).catch((error) => {
+          logger.error(
+            'useLaunchWalletAfterSyncing: Error during background full sync',
+            {error, walletId},
+          )
+        })
+      } catch (error) {
+        logger.error(
+          'useLaunchWalletAfterSyncing: Error during wallet launch',
+          {error, walletId},
         )
-        logger.error(error)
-        walletNavigation.resetToWalletSelection()
-        return
+        if (shouldNavigateAfterSync) {
+          walletNavigation.resetToWalletSelection()
+        }
       }
-
-      walletManager.setSelectedWalletId(walletId)
-      await wallet.sync({isForced: true})
-
-      walletNavigation.resetToTxHistory()
     }
 
     const timer = setTimeout(() => process(), time.oneSecond)
     return () => clearTimeout(timer)
-  }, [isGlobalSyncPaused, walletId, walletNavigation, walletManager])
+  }, [
+    isGlobalSyncPaused,
+    walletId,
+    walletNavigation,
+    walletManager,
+    shouldNavigateAfterSync,
+  ])
 }

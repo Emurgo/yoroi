@@ -1,24 +1,63 @@
+import {TxSubmissionStatus} from '@yoroi/api'
 import {useMutationWithInvalidations} from '@yoroi/common'
+import {calculateTxId} from '@yoroi/tx'
 
+import * as CSL from '@emurgo/cross-csl-core'
 import {UseMutationOptions} from '@tanstack/react-query'
 
+import {useWalletManagerSelector} from '~/features/WalletManager/context/WalletManagerProvider'
 import {YoroiWallet} from '~/wallets/cardano/types'
-import {TxSubmissionStatus} from '~/wallets/types/other'
-import {YoroiSignedTx} from '~/wallets/types/yoroi'
+import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
 import {delay} from '~/wallets/utils/timeUtils'
 
 export const useSubmitTx = (
   {wallet}: {wallet: YoroiWallet},
-  options: UseMutationOptions<TxSubmissionStatus, Error, YoroiSignedTx> = {},
+  options: UseMutationOptions<TxSubmissionStatus, Error, CSL.Transaction> = {},
 ) => {
+  // Use selector to prevent re-renders when selected wallet changes
+  const walletManager = useWalletManagerSelector((ctx) => ctx.walletManager)
+
   const mutation = useMutationWithInvalidations({
     mutationFn: async (signedTx) => {
       const serverStatus = await wallet.checkServerStatus()
-      const base64 = Buffer.from(signedTx.signedTx.encodedTx).toString('base64')
+      const txBytes = signedTx.toBytes()
+      const base64 = Buffer.from(txBytes).toString('base64')
       await wallet.submitTransaction(base64)
 
+      let txId: string | undefined
+
       if (serverStatus.isQueueOnline) {
-        return fetchTxStatus(wallet, signedTx.signedTx.id, false)
+        txId = await CardanoMobileWrapped.cslScope(async (csl) => {
+          return await calculateTxId(
+            csl,
+            Buffer.from(txBytes).toString('hex'),
+            'hex',
+          )
+        })
+
+        // Notify sync manager about transaction submission for fast polling
+        if (txId && walletManager) {
+          walletManager.notifyTransactionSubmitted(wallet.id, txId)
+        }
+
+        return fetchTxStatus(wallet, txId, false)
+      }
+
+      // Even if queue is offline, calculate txId and notify sync manager
+      // This ensures fast polling when queue comes back online
+      try {
+        txId = await CardanoMobileWrapped.cslScope(async (csl) => {
+          return await calculateTxId(
+            csl,
+            Buffer.from(txBytes).toString('hex'),
+            'hex',
+          )
+        })
+        if (txId && walletManager) {
+          walletManager.notifyTransactionSubmitted(wallet.id, txId)
+        }
+      } catch (error) {
+        // Ignore errors calculating txId - sync will still work
       }
 
       return {
@@ -48,7 +87,8 @@ const fetchTxStatus = async (
     })
 
     const confirmations = txStatus.depth?.[txHash] || 0
-    const submission: any = txStatus.submissionStatus?.[txHash]
+    const submission: TxSubmissionStatus | undefined =
+      txStatus.submissionStatus?.[txHash]
 
     // processed
     if (confirmations > 0) {

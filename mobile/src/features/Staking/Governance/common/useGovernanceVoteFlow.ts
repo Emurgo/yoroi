@@ -7,7 +7,6 @@ import * as React from 'react'
 import {useCreateGovernanceTx} from '~/features/Staking/hooks/useCreateGovernanceTx'
 import {UsePromiseOptionsWithoutPromise} from '~/hooks/usePromise'
 import {YoroiWallet} from '~/wallets/cardano/types'
-import {YoroiUnsignedTx} from '~/wallets/types/yoroi'
 
 import {useGovernanceActions} from './helpers'
 
@@ -31,7 +30,7 @@ type PendingAction =
   | null
 
 type UseGovernanceVoteFlowOptions = UsePromiseOptionsWithoutPromise<
-  YoroiUnsignedTx,
+  {cbor: string},
   [{certificates: Certificate[]; addressMode: Wallet.AddressMode}]
 >
 

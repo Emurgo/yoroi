@@ -327,6 +327,81 @@ export const settingsMessages = defineMessages({
     id: 'components.txhistory.notifications.title',
     defaultMessage: '!!!Notifications',
   },
+  walletSettingsShareWallet: {
+    id: 'components.settings.walletsettingscreen.shareWallet',
+    defaultMessage: '!!!Share Wallet',
+  },
+
+  // Share Wallet
+  shareWalletTitle: {
+    id: 'components.settings.sharewallet.title',
+    defaultMessage: '!!!Share Wallet',
+  },
+  shareWalletDescription: {
+    id: 'components.settings.sharewallet.description',
+    defaultMessage:
+      '!!!Generate a shareable link or QR code to restore this wallet on another device.',
+  },
+  shareWalletFullWallet: {
+    id: 'components.settings.sharewallet.fullWallet',
+    defaultMessage: '!!!Share Full Wallet',
+  },
+  shareWalletReadOnlyWallet: {
+    id: 'components.settings.sharewallet.readOnlyWallet',
+    defaultMessage: '!!!Share Read-Only Wallet',
+  },
+  shareWalletEnterPassword: {
+    id: 'components.settings.sharewallet.enterPassword',
+    defaultMessage: '!!!Enter Password',
+  },
+  shareWalletPassword: {
+    id: 'components.settings.sharewallet.password',
+    defaultMessage: '!!!Password',
+  },
+  shareWalletConfirm: {
+    id: 'components.settings.sharewallet.confirm',
+    defaultMessage: '!!!Confirm',
+  },
+  shareWalletWrongPassword: {
+    id: 'components.settings.sharewallet.wrongPassword',
+    defaultMessage: '!!!Wrong password',
+  },
+  shareWalletError: {
+    id: 'components.settings.sharewallet.error',
+    defaultMessage: '!!!An error occurred',
+  },
+  shareWalletWalletLinkGenerated: {
+    id: 'components.settings.sharewallet.walletLinkGenerated',
+    defaultMessage: '!!!Wallet Link Generated',
+  },
+  shareWalletWalletLink: {
+    id: 'components.settings.sharewallet.walletLink',
+    defaultMessage: '!!!Wallet Link',
+  },
+  shareWalletCopyLink: {
+    id: 'components.settings.sharewallet.copyLink',
+    defaultMessage: '!!!Copy Link',
+  },
+  shareWalletLinkCopied: {
+    id: 'components.settings.sharewallet.linkCopied',
+    defaultMessage: '!!!Link Copied',
+  },
+  shareWalletClose: {
+    id: 'components.settings.sharewallet.close',
+    defaultMessage: '!!!Close',
+  },
+  shareWalletShareQRCode: {
+    id: 'components.settings.sharewallet.shareQRCode',
+    defaultMessage: '!!!Share QR Code',
+  },
+  shareWalletFullWalletLink: {
+    id: 'components.settings.sharewallet.fullWalletLink',
+    defaultMessage: '!!!Full Wallet Link',
+  },
+  shareWalletReadOnlyWalletLink: {
+    id: 'components.settings.sharewallet.readOnlyWalletLink',
+    defaultMessage: '!!!Read-Only Wallet Link',
+  },
 
   // Application Settings
   applicationSettingsGeneral: {

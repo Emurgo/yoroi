@@ -38,6 +38,9 @@ export const getDomainFromUrl = (url: string) => {
   }
 }
 
+export const DAPP_LOGO_BASE_URL =
+  'https://raw.githubusercontent.com/Emurgo/yoroi-config/refs/heads/main/images'
+
 export interface DAppItem {
   id: string
   name: string
@@ -151,7 +154,13 @@ type CreateDappConnectorOptions = {
     address: string,
     payload: string,
   ) => Promise<{signature: string; key: string}>
-  sendReorganisationTx: ({manager}: {manager: DappConnector}) => Promise<void>
+  sendReorganisationTx: ({
+    manager,
+    value,
+  }: {
+    manager: DappConnector
+    value?: string
+  }) => Promise<void>
 }
 
 export const createDappConnector = (options: CreateDappConnectorOptions) => {
@@ -189,6 +198,13 @@ export const createDappConnector = (options: CreateDappConnectorOptions) => {
     getRewardAddresses: () => cip30.getRewardAddresses(),
     submitTx: async (cbor) => await cip30.submitTx(cbor),
     getCollateral: async (value) => await cip30.getCollateral(value),
+    getCollateralInfo: () => {
+      const collateralInfo = wallet.getCollateralInfo()
+      return {
+        collateralId: collateralInfo.collateralId,
+        isConfirmed: collateralInfo.isConfirmed,
+      }
+    },
     getUtxos: async (value, pagination) =>
       await cip30.getUtxos(value, pagination),
     confirmConnection: (origin: string) => confirmConnection(origin, manager),
@@ -203,11 +219,14 @@ export const createDappConnector = (options: CreateDappConnectorOptions) => {
     signTx: async (cbor: string, partial?: boolean) => {
       if (meta.isHW) {
         const tx = await options.signTxWithHW({cbor, partial})
-        return tx.witnessSet()
+        // Convert Transaction to signed transaction CBOR hex
+        // Transaction is already copied via copyFromCSL, so toBytes() can be called outside scope
+        return Buffer.from(tx.toBytes()).toString('hex')
       }
 
       const rootKey = await signTx({cbor, manager})
-      return cip30.signTx(rootKey, cbor, partial)
+      // Return signed transaction CBOR hex string (CIP-30 spec requirement)
+      return await cip30.signTx(rootKey, cbor, partial)
     },
     // NOTE: amount (value argument) is a CIP-30 requirement for getCollateral method
     // but in Yoroi collateral is generated with minimum amount at the moment
@@ -219,7 +238,7 @@ export const createDappConnector = (options: CreateDappConnectorOptions) => {
         return Promise.reject(new Error('Collateral value is too high'))
       }
 
-      return options.sendReorganisationTx({manager})
+      return options.sendReorganisationTx({manager, value})
     },
     cip95: cip95handler,
   }

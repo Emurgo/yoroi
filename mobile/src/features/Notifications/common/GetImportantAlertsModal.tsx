@@ -1,7 +1,7 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
-import {InteractionManager, View, useWindowDimensions} from 'react-native'
+import {AppState, View, useWindowDimensions} from 'react-native'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button, ButtonType} from '~/ui/Button/Button'
@@ -50,11 +50,51 @@ export const GetImportantAlertsModal = ({
 }: GetImportantAlertsModalProps) => {
   const strings = useStrings()
   const {palette: p} = useTheme()
+  const appStateRef = React.useRef(AppState.currentState)
+  const hasClosedRef = React.useRef(false)
+
+  // Listen for app state changes to detect when user returns from OS permission dialog
+  React.useEffect(() => {
+    const subscription = AppState.addEventListener('change', (nextAppState) => {
+      // When app comes back to foreground after permission dialog
+      if (
+        appStateRef.current.match(/inactive|background/) &&
+        nextAppState === 'active' &&
+        !hasClosedRef.current
+      ) {
+        // Close modal after a short delay to ensure OS dialog has fully closed
+        setTimeout(() => {
+          if (!hasClosedRef.current) {
+            hasClosedRef.current = true
+            onClose()
+          }
+        }, 300)
+      }
+      appStateRef.current = nextAppState
+    })
+
+    return () => {
+      subscription.remove()
+    }
+  }, [onClose])
 
   const handleTurnOnPress = async () => {
+    const initialAppState = AppState.currentState
+    appStateRef.current = initialAppState
+
     await triggerNotificationsPermissionModal()
 
-    InteractionManager.runAfterInteractions(() => onClose())
+    // Check if app state changed (OS dialog was shown)
+    const currentAppState = AppState.currentState
+    const osDialogWasShown = initialAppState !== currentAppState
+
+    if (!osDialogWasShown) {
+      // No OS dialog was shown (permission already granted or denied)
+      // Close modal immediately
+      hasClosedRef.current = true
+      onClose()
+    }
+    // If OS dialog was shown, the app state listener will handle closing
   }
 
   return (

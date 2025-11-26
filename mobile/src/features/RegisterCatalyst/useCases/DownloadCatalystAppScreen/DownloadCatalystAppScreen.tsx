@@ -31,7 +31,7 @@ import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {Space} from '~/ui/Space/Space'
 
-import {useNavigateTo} from '../../CatalystNavigator'
+import {useNavigateTo} from '../../common/navigation'
 
 export const DownloadCatalystAppScreen = () => {
   const strings = useStrings()

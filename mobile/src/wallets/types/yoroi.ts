@@ -1,21 +1,24 @@
+import {TransactionOutput} from '@yoroi/tx'
 import {Balance, Portfolio} from '@yoroi/types'
-
-import {Datum} from '@emurgo/yoroi-lib'
 
 import {CardanoTypes} from '../cardano/types'
 
+// Legacy types - deprecated, use UnsignedTransaction and Transaction (CSL) instead
+// @deprecated Use UnsignedTransaction from @yoroi/tx instead
 export type YoroiUnsignedTx = YoroiTxInfo & {
   unsignedTx: CardanoTypes.UnsignedTx
 }
 
+// @deprecated Use Transaction (CSL) instead
 export type YoroiSignedTx = YoroiTxInfo & {
   signedTx: CardanoTypes.SignedTx
 }
 
+// Utility type for UI - can be derived from UnsignedTransaction when needed
 export type YoroiTxInfo = {
-  entries: YoroiEntry[]
+  entries: TransactionOutput[]
   fee: Balance.Amounts
-  change: YoroiEntry[]
+  change: TransactionOutput[]
   metadata: YoroiMetadata
   staking: YoroiStaking
   voting: YoroiVoting
@@ -23,10 +26,10 @@ export type YoroiTxInfo = {
 }
 
 export type YoroiStaking = {
-  registrations?: YoroiEntry[]
-  deregistrations?: YoroiEntry[]
-  delegations?: YoroiEntry[]
-  withdrawals?: YoroiEntry[]
+  registrations?: TransactionOutput[]
+  deregistrations?: TransactionOutput[]
+  delegations?: TransactionOutput[]
+  withdrawals?: TransactionOutput[]
 }
 
 export type YoroiVoting = {
@@ -40,12 +43,6 @@ export type YoroiVoting = {
 
 export type Address = string
 export type TokenId = string
-
-export type YoroiEntry = {
-  address: Address
-  amounts: Balance.Amounts
-  datum?: Datum
-}
 
 export type YoroiMetadata = {
   [label: string]: string

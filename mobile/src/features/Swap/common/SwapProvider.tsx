@@ -12,7 +12,6 @@ import {TextInput} from 'react-native'
 import {usePortfolioBalances} from '~/features/Portfolio/common/hooks/usePortfolioBalances'
 import {usePortfolioTokenInfosSuspense} from '~/features/Portfolio/common/hooks/usePortfolioTokenInfos'
 import {useRemoteConfig} from '~/features/RemoteConfig/hooks/useRemoteConfig'
-import {useStakingKey} from '~/features/Staking/hooks/useStakingKey'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {convertBech32ToHex} from '~/wallets/cardano/common/signatureUtils'
@@ -126,11 +125,21 @@ export const SwapProvider = ({children}: React.PropsWithChildren) => {
   const {getInputs} = useGetInputs()
   const network = wallet.networkManager.network
   const balances = usePortfolioBalances({wallet})
-  const stakingKey = useStakingKey(wallet)
-  const {config} = useRemoteConfig()
+
+  const {config, isLoading: configLoading} = useRemoteConfig()
   const [isLoading, setIsLoading] = React.useState(false)
 
+  // Check if partners are ready and have at least one entry
+  const partnersReady = React.useMemo(() => {
+    if (configLoading || !config?.swap?.partners) return false
+    const partners = config.swap.partners
+    return Object.keys(partners).length > 0
+  }, [configLoading, config?.swap?.partners])
+
   const swapManager = React.useMemo(() => {
+    // Don't create swapManager until config is loaded and partners are ready
+    if (!partnersReady || !config?.swap?.partners) return null
+
     const address = wallet.externalAddresses[0]
     if (!address) throw new App.Errors.InvalidState('No External Address')
 
@@ -139,29 +148,29 @@ export const SwapProvider = ({children}: React.PropsWithChildren) => {
     return swapManagerMaker({
       storage,
       network,
-      stakingKey,
       address,
       addressHex,
       primaryTokenInfo: wallet.portfolioPrimaryTokenInfo,
       isPrimaryToken,
-      partners: config?.swap?.partners ?? {},
+      partners: config.swap.partners,
     })
   }, [
     network,
-    stakingKey,
     wallet.externalAddresses,
     wallet.portfolioPrimaryTokenInfo,
+    partnersReady,
     config?.swap?.partners,
   ])
 
   const {data: orders = [], refetch: refetchOrders} = useQuery({
-    queryKey: ['persist', 'useSwapOrders', network, stakingKey],
+    queryKey: ['persist', 'useSwapOrders', network, wallet.id],
     queryFn: async () => {
+      if (!swapManager) return []
       const res = await swapManager.api.orders()
       if (isRight(res)) return res.value.data
       return []
     },
-    enabled: wallet.isMainnet,
+    enabled: wallet.isMainnet && !!swapManager,
   })
 
   const {data: tokenIds = [], refetch: refetchTokens} = useQuery({
@@ -169,9 +178,10 @@ export const SwapProvider = ({children}: React.PropsWithChildren) => {
       'persist',
       'useSwapTokenIds',
       network,
-      swapManager.settings.routingPreference,
+      swapManager?.settings.routingPreference,
     ],
     queryFn: async () => {
+      if (!swapManager) return []
       const response = await swapManager.api.tokens()
       if (isRight(response)) {
         const excludedTokens = config?.swap?.excludedTokens ?? []
@@ -190,7 +200,7 @@ export const SwapProvider = ({children}: React.PropsWithChildren) => {
       }
       return []
     },
-    enabled: wallet.isMainnet,
+    enabled: wallet.isMainnet && !!swapManager,
   })
 
   const refetches = React.useCallback(() => {
@@ -229,19 +239,25 @@ export const SwapProvider = ({children}: React.PropsWithChildren) => {
   const [state, action] = React.useReducer(swapReducer, defaultState)
 
   React.useEffect(() => {
-    action({type: 'SlippageInputChanged', value: swapManager.settings.slippage})
-  }, [swapManager.settings.slippage])
+    if (swapManager) {
+      action({
+        type: 'SlippageInputChanged',
+        value: swapManager.settings.slippage,
+      })
+    }
+  }, [swapManager, action])
 
   const {data: limitOptions} = useQuery({
     queryKey: [
       'useSwapLimitOptions',
       network,
-      swapManager.settings.routingPreference,
+      swapManager?.settings.routingPreference,
       state.tokenInInput.tokenId,
       state.tokenOutInput.tokenId,
     ],
     queryFn: async () => {
       if (
+        !swapManager ||
         state.tokenInInput.tokenId === undefined ||
         state.tokenOutInput.tokenId === undefined
       )
@@ -256,6 +272,7 @@ export const SwapProvider = ({children}: React.PropsWithChildren) => {
       return null
     },
     enabled:
+      !!swapManager &&
       state.orderType === 'limit' &&
       state.tokenInInput.tokenId !== undefined &&
       state.tokenOutInput.tokenId !== undefined &&
@@ -340,6 +357,7 @@ export const SwapProvider = ({children}: React.PropsWithChildren) => {
 
   React.useEffect(() => {
     if (!state.needsNewEstimate) return
+    if (!swapManager) return
 
     if (
       state.tokenInInput.tokenId === undefined ||
@@ -412,13 +430,14 @@ export const SwapProvider = ({children}: React.PropsWithChildren) => {
     state.orderType,
     state.wantedPrice,
     state.selectedProtocol.value,
-    swapManager.api,
+    swapManager,
     action,
     wallet.isMainnet,
   ])
 
   const create = React.useCallback(async () => {
     if (!wallet.isMainnet) return
+    if (!swapManager) return
     if (
       state.tokenInInput.tokenId === undefined ||
       state.tokenOutInput.tokenId === undefined
@@ -504,7 +523,7 @@ export const SwapProvider = ({children}: React.PropsWithChildren) => {
     state.tokenInInput.value,
     state.tokenOutInput.tokenId,
     state.wantedPrice,
-    swapManager.api,
+    swapManager,
     tokenInfos,
     wallet.isMainnet,
   ])
@@ -522,12 +541,27 @@ export const SwapProvider = ({children}: React.PropsWithChildren) => {
       orders,
       action,
       create,
-      cancel: swapManager.api.cancel,
-      managerSettings: swapManager.settings,
-      assignManagerSettings: swapManager.assignSettings,
+      cancel:
+        swapManager?.api.cancel ??
+        (() =>
+          Promise.resolve({
+            tag: 'left' as const,
+            error: {
+              status: -3,
+              message: 'Swap manager not initialized',
+              responseData: {},
+            },
+          })),
+      managerSettings: swapManager?.settings ?? {
+        routingPreference: 'auto',
+        slippage: 1,
+      },
+      assignManagerSettings:
+        swapManager?.assignSettings ??
+        (() => ({routingPreference: 'auto', slippage: 1})),
       refetchOrders,
       // override canSwap if not on mainnet
-      canSwap: wallet.isMainnet ? state.canSwap : false,
+      canSwap: wallet.isMainnet && !!swapManager ? state.canSwap : false,
     }),
     [
       state,
@@ -537,9 +571,7 @@ export const SwapProvider = ({children}: React.PropsWithChildren) => {
       verifiedTokens,
       orders,
       create,
-      swapManager.api.cancel,
-      swapManager.settings,
-      swapManager.assignSettings,
+      swapManager,
       refetchOrders,
       wallet.isMainnet,
     ],

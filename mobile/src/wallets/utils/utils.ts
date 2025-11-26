@@ -1,26 +1,27 @@
 import {parseNumberFromText} from '@yoroi/common'
+import {TransactionOutput} from '@yoroi/tx'
 import {Balance, Numbers} from '@yoroi/types'
 
 import BigNumber from 'bignumber.js'
 
 import {RawUtxo} from '../types/other'
-import {TokenId, YoroiEntry} from '../types/yoroi'
+import {TokenId} from '../types/yoroi'
 
 export const Entries = {
-  first: (entries: YoroiEntry[]): YoroiEntry => {
+  first: (entries: TransactionOutput[]): TransactionOutput => {
     if (entries.length === 0) throw new Error('invalid entries')
     return entries[0]!
   },
   remove: (
-    entries: YoroiEntry[],
+    entries: TransactionOutput[],
     removeAddresses: Array<string>,
-  ): YoroiEntry[] => {
+  ): TransactionOutput[] => {
     return entries.filter((e) => !removeAddresses.includes(e.address))
   },
-  toAddresses: (entries: YoroiEntry[]): Array<string> => {
+  toAddresses: (entries: TransactionOutput[]): Array<string> => {
     return entries.map((e) => e.address)
   },
-  toAmounts: (entries: YoroiEntry[]): Balance.Amounts => {
+  toAmounts: (entries: TransactionOutput[]): Balance.Amounts => {
     const amounts = entries.map((e) => e.amounts)
     return Amounts.sum(amounts)
   },
@@ -74,11 +75,11 @@ export const Amounts = {
       quantity: amounts[tokenId] || Quantities.zero,
     }
   },
-  getAmountsFromEntries: (entries: YoroiEntry[]): Balance.Amounts => {
+  getAmountsFromEntries: (entries: TransactionOutput[]): Balance.Amounts => {
     return Amounts.sum(entries.map((e) => e.amounts))
   },
   getAmountFromEntries: (
-    entries: YoroiEntry[],
+    entries: TransactionOutput[],
     tokenId: string,
   ): Balance.Amount => {
     return Amounts.getAmount(Amounts.getAmountsFromEntries(entries), tokenId)
@@ -221,10 +222,10 @@ export const Utxos = {
             (previousAmountsWithAssets, currentAsset) => {
               return {
                 ...previousAmountsWithAssets,
-                [currentAsset.assetId]: Quantities.sum([
+                [currentAsset.tokenId]: Quantities.sum([
                   Amounts.getAmount(
                     previousAmountsWithAssets,
-                    currentAsset.assetId,
+                    currentAsset.tokenId,
                   ).quantity,
                   currentAsset.amount as Balance.Quantity,
                 ]),

@@ -1,8 +1,7 @@
+import {RawUtxo} from '@yoroi/api'
 import {useMutationWithInvalidations} from '@yoroi/common'
 
 import {UseMutationOptions} from '@tanstack/react-query'
-
-import {RawUtxo} from '~/wallets/types/other'
 
 import {YoroiWallet} from '../types'
 

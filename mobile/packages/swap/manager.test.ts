@@ -32,7 +32,6 @@ describe('swapManagerMaker', () => {
     network: 'mainnet' as Chain.SupportedNetworks,
     primaryTokenInfo,
     isPrimaryToken: () => false,
-    stakingKey: 'someStakingKey',
     storage: {
       clear: jest.fn(),
       settings: {

@@ -6,6 +6,8 @@ import {
 import {useRef} from 'react'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
+import {useResultNavigation} from '~/kernel/navigation/hooks/useResultNavigation'
+import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {WalletStackRoutes} from '~/kernel/navigation/types'
 
 export type Routes = {
@@ -13,16 +15,6 @@ export type Routes = {
   'staking-gov-change-vote': undefined
   'staking-gov-not-supported-version': undefined
   'staking-gov-no-funds': undefined
-  'staking-gov-submitted-tx': {
-    title?: string
-    message?: string
-    buttonTitle?: string
-  }
-  'staking-gov-failed-tx': {
-    title?: string
-    message?: string
-    buttonTitle?: string
-  }
 }
 
 export const NavigationStack = createStackNavigator<Routes>()
@@ -30,6 +22,8 @@ export const NavigationStack = createStackNavigator<Routes>()
 export const useNavigateTo = () => {
   const navigation = useNavigation<StackNavigationProp<WalletStackRoutes>>()
   const strings = useStrings()
+  const resultNavigation = useResultNavigation()
+  const walletNavigation = useWalletNavigation()
 
   return useRef({
     home: () => navigation.navigate('governance', {screen: 'staking-gov-home'}),
@@ -42,21 +36,25 @@ export const useNavigateTo = () => {
     noFunds: () =>
       navigation.navigate('governance', {screen: 'staking-gov-no-funds'}),
     submittedTx: () =>
-      navigation.navigate('governance', {
-        screen: 'staking-gov-submitted-tx',
-        params: {
-          title: strings.staking.submittedTxTitle,
-          message: strings.staking.submittedTxText,
-          buttonTitle: strings.staking.submittedTxButton,
+      resultNavigation.showResultScreen({
+        type: 'success',
+        context: 'governance',
+        title: strings.staking.submittedTxTitle,
+        message: strings.staking.submittedTxText,
+        primaryAction: {
+          title: strings.staking.submittedTxButton,
+          onPress: walletNavigation.resetToTxHistory,
         },
       }),
     failedTx: () =>
-      navigation.navigate('governance', {
-        screen: 'staking-gov-failed-tx',
-        params: {
-          title: strings.staking.failedTxTitle,
-          message: strings.staking.failedTxText,
-          buttonTitle: strings.staking.failedTxButton,
+      resultNavigation.showResultScreen({
+        type: 'error',
+        context: 'governance',
+        title: strings.staking.failedTxTitle,
+        message: strings.staking.failedTxText,
+        primaryAction: {
+          title: strings.staking.failedTxButton,
+          onPress: walletNavigation.resetToTxHistory,
         },
       }),
   }).current

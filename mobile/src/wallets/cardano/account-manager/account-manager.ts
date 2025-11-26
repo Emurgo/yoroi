@@ -322,6 +322,7 @@ export const accountManagerMaker = async ({
   accountPubKeyHex,
   storage,
   baseApiUrl,
+  walletContext,
 }: {
   chainId: number
   addressesPerRequest?: number
@@ -329,6 +330,13 @@ export const accountManagerMaker = async ({
   accountPubKeyHex: string
   storage: App.Storage
   baseApiUrl: string
+  walletContext?: {
+    walletId: string
+    publicKeyHex?: string
+    accountPubKeyHex?: string
+    paymentKeyHashes: string[]
+    rewardAddresses: string[]
+  }
 }): Promise<AccountManager> => {
   const config = cardanoConfig.implementations[implementation]
 
@@ -377,11 +385,19 @@ export const accountManagerMaker = async ({
   }
 
   // TODO: API should be injected
-  const discoverAddresses = async () => {
+  const discoverAddresses = async (context?: {
+    walletId: string
+    publicKeyHex?: string
+    accountPubKeyHex?: string
+    paymentKeyHashes: string[]
+    rewardAddresses: string[]
+  }) => {
     const addressesBeforeRequest =
       internalChain.addresses.length + externalChain.addresses.length
+    // Use provided context or fall back to the one from construction
+    const effectiveContext = context || walletContext
     const filterFn = (addrs: Addresses) =>
-      legacyApi.filterUsedAddresses(addrs, baseApiUrl)
+      legacyApi.filterUsedAddresses(addrs, baseApiUrl, effectiveContext)
     await Promise.all([
       internalChain.sync(filterFn),
       externalChain.sync(filterFn),
@@ -417,7 +433,13 @@ export const accountManagerMaker = async ({
 export type AccountManager = {
   internalChain: AddressChain
   externalChain: AddressChain
-  discoverAddresses: () => Promise<void>
+  discoverAddresses: (walletContext?: {
+    walletId: string
+    publicKeyHex?: string
+    accountPubKeyHex?: string
+    paymentKeyHashes: string[]
+    rewardAddresses: string[]
+  }) => Promise<void>
   getAddressesInBlocks: (rewardAddressHex: string) => string[][]
   save: () => Promise<void>
   clear: () => Promise<void>

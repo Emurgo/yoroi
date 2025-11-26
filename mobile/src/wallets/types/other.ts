@@ -1,7 +1,5 @@
-import {TokenEntryPlain} from '../cardano/MultiToken'
-import {CardanoTypes} from '../cardano/types'
-import {RemoteAccountState, RemoteCertificateMeta} from './staking'
-import {Token} from './tokens'
+import {RemoteAccountState, RemoteCertificateMeta} from '@yoroi/staking'
+import {Portfolio} from '@yoroi/types'
 
 // note(v-almonacid): this
 /**
@@ -16,7 +14,7 @@ export type WalletState = {
  */
 type RemoteAsset = {
   readonly amount: string
-  readonly assetId: string
+  readonly tokenId: Portfolio.Token.Id
   readonly policyId: string
   readonly name: string
 }
@@ -29,23 +27,11 @@ export type RawUtxo = {
   readonly utxo_id: string
   readonly assets: ReadonlyArray<RemoteAsset>
 }
-export const CERTIFICATE_KIND = {
-  STAKE_REGISTRATION: 'StakeRegistration',
-  STAKE_DEREGISTRATION: 'StakeDeregistration',
-  STAKE_DELEGATION: 'StakeDelegation',
-  POOL_REGISTRATION: 'PoolRegistration',
-  POOL_RETIREMENT: 'PoolRetirement',
-  MOVE_INSTANTANEOUS_REWARDS: 'MoveInstantaneousRewardsCert',
-}
 // getAccountState
 export type AccountStateRequest = {
   addresses: Array<string>
 }
 export type AccountStateResponse = Record<string, null | RemoteAccountState>
-
-export type PoolInfoRequest = {
-  poolIds: Array<string>
-}
 
 // bestblock
 type BestblockResponse = {
@@ -160,102 +146,25 @@ export type BackendConfig = {
   TX_HISTORY_RESPONSE_LIMIT: number
 }
 
-export const TRANSACTION_STATUS = {
-  SUCCESSFUL: 'Successful',
-  PENDING: 'Pending',
-  FAILED: 'Failed',
-}
-type TransactionStatus =
-  (typeof TRANSACTION_STATUS)[keyof typeof TRANSACTION_STATUS]
+// Re-export transaction types from @yoroi/types
+export {
+  TRANSACTION_STATUS,
+  TRANSACTION_DIRECTION,
+  TRANSACTION_TYPE,
+  type TransactionStatus,
+  type TransactionDirection,
+  type TransactionType,
+  type TransactionAssurance,
+  type TransactionInfo,
+  type WalletTransaction,
+  type Transactions,
+  type TxMetadata,
+  type TxMetadataInfo,
+} from '@yoroi/types'
 
-type TxMetadata = Array<{
-  label: string
-  map_json?: any
-  text_scalar?: string | null
-}>
-export type TxMetadataInfo = Record<string, any>
+// TransactionInfo is now exported from @yoroi/types
+// Re-export for backward compatibility
+export type {TransactionInfo} from '@yoroi/types'
 
-export type TransactionInfo = {
-  id: string
-  inputs: Array<IOData>
-  outputs: Array<IOData>
-  amount: Array<TokenEntryPlain>
-  fee: Array<TokenEntryPlain> | null | undefined
-  delta: Array<TokenEntryPlain>
-  direction: TransactionDirection
-  confirmations: number
-  submittedAt: string | null | undefined
-  lastUpdatedAt: string
-  status: TransactionStatus
-  assurance: TransactionAssurance
-  tokens: Record<string, Token>
-  blockNumber: number
-  memo: null | string
-  metadata: TxMetadataInfo | undefined
-}
-
-type IOData = {
-  address: string
-  assets: Array<CardanoTypes.TokenEntry>
-  amount: string
-  id?: string
-}
-
-type TransactionAssurance = 'PENDING' | 'FAILED' | 'LOW' | 'MEDIUM' | 'HIGH'
-
-export const TRANSACTION_DIRECTION = {
-  SENT: 'SENT',
-  RECEIVED: 'RECEIVED',
-  SELF: 'SELF',
-  // intra-wallet
-  MULTI: 'MULTI', // multi-party
-} as const
-export type TransactionDirection =
-  (typeof TRANSACTION_DIRECTION)[keyof typeof TRANSACTION_DIRECTION]
-
-export const TRANSACTION_TYPE = {
-  BYRON: 'byron',
-  SHELLEY: 'shelley',
-}
-type TransactionType = (typeof TRANSACTION_TYPE)[keyof typeof TRANSACTION_TYPE]
-export type BaseAsset = RemoteAsset
-export type Transactions = {[txid: string]: Transaction}
-export type Transaction = {
-  id: string
-  type?: TransactionType
-  fee?: string
-  status: TransactionStatus
-  inputs: Array<{
-    address: string
-    amount: string
-    assets: Array<BaseAsset>
-    id?: string
-  }>
-  outputs: Array<{
-    address: string
-    amount: string
-    assets: Array<BaseAsset>
-  }>
-  blockNum: number | null | undefined
-  blockHash: string | null | undefined
-  txOrdinal: number | null | undefined
-  submittedAt: string | null | undefined
-  lastUpdatedAt: string
-  epoch: number | null | undefined
-  slot: number | null | undefined
-  withdrawals: Array<{
-    address: string
-    // hex
-    amount: string
-  }>
-  certificates: Array<RemoteCertificateMeta>
-  readonly validContract?: boolean
-  readonly scriptSize?: number
-  readonly collateralInputs?: Array<{
-    address: string
-    amount: string
-    assets: Array<BaseAsset>
-  }>
-  memo: string | null
-  readonly metadata?: TxMetadata
-}
+// Re-export BaseAsset from @yoroi/types
+export type {BaseAsset} from '@yoroi/types'

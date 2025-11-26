@@ -13,6 +13,7 @@ PACKAGES=(
   "notifications"
   "links"
   "dapp-connector"
+  "p2p-communication"
   "exchange"
   "resolver"
   "claim"
@@ -21,6 +22,7 @@ PACKAGES=(
   "swap"
   "blockchains"
   "transfer"
+  "tx"
 )
 
 echo "🧹 Removing node_modules from all packages..."

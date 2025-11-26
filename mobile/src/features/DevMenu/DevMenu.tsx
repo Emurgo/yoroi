@@ -65,7 +65,7 @@ export function DevMenu() {
         contentContainerStyle={[a.gap_sm, a.flex_row, a.flex_wrap, a.p_lg]}
       >
         <Text style={[a.body_2_md_regular, ta.text_gray_max]}>
-          base: {basePalette} selectedTheme: {config} currency: {currency}{' '}
+          base: {basePalette} selectedTheme: {config} currency: {currency}
           ptActivity: {ptActivity.close}
         </Text>
 

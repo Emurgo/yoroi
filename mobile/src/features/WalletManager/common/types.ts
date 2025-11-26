@@ -39,10 +39,20 @@ export type WalletFactory = {
     id,
     accountPubKeyHex,
     accountVisual,
+    readOnlyAddresses,
+    rewardAddressHex,
   }: {
     id: string
-    accountPubKeyHex: string
+    accountPubKeyHex?: string
     accountVisual: number
+    readOnlyAddresses?: {
+      knownAddress?: string
+      internal?: string[]
+      external?: string[]
+      rewardAddressHex?: string
+      enableDiscovery?: boolean
+    }
+    rewardAddressHex?: string
   }): Promise<YoroiWallet>
 
   calcChecksum(pubKeyHex: string): CardanoTypes.WalletChecksum

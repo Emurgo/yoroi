@@ -1,3 +1,4 @@
+import {getLogger} from '@yoroi/common'
 import {isNameServer, isResolvableDomain} from '@yoroi/resolver'
 import {Chain, Links, Portfolio, Resolver, Transfer} from '@yoroi/types'
 
@@ -295,5 +296,8 @@ export enum TransferActionType {
 
 /* istanbul ignore next */
 function missingInit() {
-  console.error('[@yoroi/transfer] missing initialization')
+  const logger = getLogger()
+  logger.error('[@yoroi/transfer] missing initialization', {
+    origin: 'transfer',
+  })
 }

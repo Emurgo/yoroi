@@ -1,9 +1,9 @@
-import {Balance} from '@yoroi/types'
+import {TransactionOutput} from '@yoroi/tx'
+import {Balance, Portfolio} from '@yoroi/types'
 
 import BigNumber from 'bignumber.js'
 
 import {RawUtxo} from '../types/other'
-import {YoroiEntry} from '../types/yoroi'
 import {
   Amounts,
   Entries,
@@ -369,7 +369,7 @@ describe('Amounts', () => {
 
 describe('Entries', () => {
   it('first gets the first entry from YoroiEnrties', () => {
-    const entries: YoroiEntry[] = [
+    const entries: TransactionOutput[] = [
       {
         address: 'address1',
         amounts: {'.': '1', 'token123': '2', 'token567': '-2'},
@@ -383,11 +383,11 @@ describe('Entries', () => {
         'token123': '2',
         'token567': '-2',
       },
-    } as YoroiEntry)
+    } as TransactionOutput)
   })
 
   it('first returns first item multiple entries', () => {
-    const entries: YoroiEntry[] = [
+    const entries: TransactionOutput[] = [
       {
         address: 'address1',
         amounts: {'.': '1', 'token123': '2', 'token567': '-2'},
@@ -405,7 +405,7 @@ describe('Entries', () => {
   })
 
   it('remove', () => {
-    const entries: YoroiEntry[] = [
+    const entries: TransactionOutput[] = [
       {
         address: 'address1',
         amounts: {'.': '1', 'token123': '2', 'token567': '-2'},
@@ -420,7 +420,7 @@ describe('Entries', () => {
       },
     ]
 
-    const expectedEntries: YoroiEntry[] = [
+    const expectedEntries: TransactionOutput[] = [
       {
         address: 'address1',
         amounts: {'.': '1', 'token123': '2', 'token567': '-2'},
@@ -435,7 +435,7 @@ describe('Entries', () => {
   })
 
   it('toAddresses', () => {
-    const entries: YoroiEntry[] = [
+    const entries: TransactionOutput[] = [
       {
         address: 'address1',
         amounts: {'.': '1', 'token123': '2', 'token567': '-2'},
@@ -458,7 +458,7 @@ describe('Entries', () => {
   })
 
   it('toAmounts', () => {
-    const entries: YoroiEntry[] = [
+    const entries: TransactionOutput[] = [
       {
         address: 'address1',
         amounts: {'.': '1', 'token123': '2', 'token567': '-2'},
@@ -540,8 +540,18 @@ describe('Utxos', () => {
         {
           amount: '1024',
           assets: [
-            {assetId: 'token123', amount: '10', policyId: '', name: ''},
-            {assetId: 'token567', amount: '6', policyId: '', name: ''},
+            {
+              tokenId: 'policy123.token123' as Portfolio.Token.Id,
+              amount: '10',
+              policyId: 'policy123',
+              name: 'token123',
+            },
+            {
+              tokenId: 'policy567.token567' as Portfolio.Token.Id,
+              amount: '6',
+              policyId: 'policy567',
+              name: 'token567',
+            },
           ],
           receiver: '',
           tx_hash: '',
@@ -550,7 +560,14 @@ describe('Utxos', () => {
         },
         {
           amount: '62314',
-          assets: [{assetId: 'token123', amount: '5', policyId: '', name: ''}],
+          assets: [
+            {
+              tokenId: 'policy123.token123' as Portfolio.Token.Id,
+              amount: '5',
+              policyId: 'policy123',
+              name: 'token123',
+            },
+          ],
           receiver: '',
           tx_hash: '',
           tx_index: 13,
@@ -558,7 +575,14 @@ describe('Utxos', () => {
         },
         {
           amount: '332',
-          assets: [{assetId: 'token567', amount: '2', policyId: '', name: ''}],
+          assets: [
+            {
+              tokenId: 'policy567.token567' as Portfolio.Token.Id,
+              amount: '2',
+              policyId: 'policy567',
+              name: 'token567',
+            },
+          ],
           receiver: '',
           tx_hash: '',
           tx_index: 15,

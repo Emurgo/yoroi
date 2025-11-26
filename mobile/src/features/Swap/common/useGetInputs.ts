@@ -1,27 +1,46 @@
+import {
+  type SelectionStrategy,
+  rawUtxoToModernUtxo,
+  selectUtxos,
+} from '@yoroi/tx'
 import {Balance} from '@yoroi/types'
 
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {_getRequiredUtxos} from '~/wallets/cardano/cip30/cip30'
 import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
 
 // Returns empty array if not enough UTXOs are found
 export const useGetInputs = () => {
-  const {wallet, meta} = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
 
   return {
-    getInputs: async (amounts: Balance.Amounts) => {
+    getInputs: async (
+      amounts: Balance.Amounts,
+      strategy: SelectionStrategy = 'keepRelevant',
+    ) => {
       return CardanoMobileWrapped.cslScope(async (csl) => {
+        const primaryTokenId = wallet.portfolioPrimaryTokenInfo.id
+
+        // Convert RawUtxo[] to ModernUtxo[]
+        const modernUtxos = wallet.utxos.map((rawUtxo) => {
+          const addressing = wallet.getAddressing(rawUtxo.receiver)
+          return rawUtxoToModernUtxo(
+            rawUtxo as Parameters<typeof rawUtxoToModernUtxo>[0],
+            addressing,
+            undefined, // derivationPath
+            primaryTokenId,
+          )
+        })
+
+        // First, try to get UTXOs for the combined amount (requested + 5 ADA fee)
+        // If a single UTXO can cover both, we'll use just that one
         const adaAmount: Balance.Amount = {
-          tokenId: wallet.portfolioPrimaryTokenInfo.id,
+          tokenId: primaryTokenId,
           quantity: '5000000',
         }
         const adaAmounts: Balance.Amounts = {
           [adaAmount.tokenId]: adaAmount.quantity,
         }
 
-        // First, try to get UTXOs for the combined amount (requested + 5 ADA fee)
-        // If a single UTXO can cover both, we'll use just that one
-        const primaryTokenId = wallet.portfolioPrimaryTokenInfo.id
         const requestedAmount = amounts[primaryTokenId] || '0'
         const combinedAmount = (
           BigInt(requestedAmount) + BigInt(adaAmount.quantity)
@@ -31,72 +50,80 @@ export const useGetInputs = () => {
           [primaryTokenId]: combinedAmount,
         } as Balance.Amounts
 
-        const combinedUtxos = await _getRequiredUtxos(
-          wallet,
+        // Try combined selection first
+        const combinedSelection = selectUtxos(
           combinedAmounts,
-          wallet.utxos,
-          meta,
-          csl,
+          modernUtxos,
+          strategy,
+          primaryTokenId,
         )
 
-        if (combinedUtxos && combinedUtxos.length > 0) {
+        if (
+          combinedSelection.selected.length > 0 &&
+          Object.keys(combinedSelection.missingAmounts).length === 0
+        ) {
+          // Combined selection succeeded - convert to hex strings
           const combinedUtxoStrings = await Promise.all(
-            combinedUtxos.map(async (u) => {
-              return Buffer.from(await u.toBytes()).toString('hex')
+            combinedSelection.selected.map(async (utxo) => {
+              const cslUtxo = utxo.toTransactionUnspentOutput(csl)
+              return Buffer.from(cslUtxo.toBytes()).toString('hex')
             }),
           )
-
           return combinedUtxoStrings
         }
 
         // If combined approach didn't work, fall back to two-step approach
-        const originalUtxos = await _getRequiredUtxos(
-          wallet,
+        const originalSelection = selectUtxos(
           amounts,
-          wallet.utxos,
-          meta,
-          csl,
+          modernUtxos,
+          strategy,
+          primaryTokenId,
         )
 
         // If we can't get UTXOs for the original amounts, we can't proceed
-        if (!originalUtxos || originalUtxos.length === 0) {
+        if (
+          originalSelection.selected.length === 0 ||
+          Object.keys(originalSelection.missingAmounts).length > 0
+        ) {
           return []
         }
 
         // Extract selected UTXO identifiers to exclude them from the second call
-        // Match by both txHash and txIndex since utxo_id format may vary
         const selectedUtxoKeys = new Set<string>()
-        for (const utxo of originalUtxos) {
-          const input = utxo.input()
-          const txHash = input.transactionId().toHex()
-          const txIndex = input.index()
-          const key = `${txHash}:${txIndex}`
+        for (const utxo of originalSelection.selected) {
+          const key = `${utxo.txHash}:${utxo.txIndex}`
           selectedUtxoKeys.add(key)
         }
 
         // Filter out already selected UTXOs from the pool
-        // Match by txHash and txIndex to handle different utxo_id formats
-        const remainingUtxos = wallet.utxos.filter((utxo) => {
-          const key = `${utxo.tx_hash}:${utxo.tx_index}`
+        const remainingUtxos = modernUtxos.filter((utxo) => {
+          const key = `${utxo.txHash}:${utxo.txIndex}`
           return !selectedUtxoKeys.has(key)
         })
 
-        const adaUtxos = await _getRequiredUtxos(
-          wallet,
+        // Select ADA UTXOs from remaining pool
+        const adaSelection = selectUtxos(
           adaAmounts,
           remainingUtxos,
-          meta,
-          csl,
+          strategy,
+          primaryTokenId,
         )
 
-        const allUtxos = [...(originalUtxos || []), ...(adaUtxos || [])]
+        // Combine both selections
+        const allSelectedUtxos = [
+          ...originalSelection.selected,
+          ...adaSelection.selected,
+        ]
 
+        // Convert to hex strings
         const allUtxoStrings = await Promise.all(
-          allUtxos.map(async (u) => {
-            return Buffer.from(await u.toBytes()).toString('hex')
+          allSelectedUtxos.map(async (utxo) => {
+            const cslUtxo = utxo.toTransactionUnspentOutput(csl)
+            return Buffer.from(cslUtxo.toBytes()).toString('hex')
           }),
         )
 
+        // Remove duplicates
         const uniqueUtxoStrings = [...new Set(allUtxoStrings)]
 
         return uniqueUtxoStrings

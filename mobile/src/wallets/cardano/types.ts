@@ -1,36 +1,37 @@
-import {Api, App, HW, Network, Portfolio, Wallet} from '@yoroi/types'
-
-import {WalletChecksum as WalletChecksumType} from '@emurgo/cip4-js'
-import * as CoreTypes from '@emurgo/cross-csl-core'
+import {
+  AccountStates,
+  StakePoolInfoRequest,
+  StakePoolInfosAndHistories,
+} from '@yoroi/staking'
 import {
   Addressing as AddressingType,
   CardanoAddressedUtxo as CardanoAddressedUtxoType,
-  MultiTokenValue as MultiTokenValueType,
   SignedTx as SignedTxType,
   StakingKeyBalances as StakingKeyBalancesType,
   TokenEntry as TokenEntryType,
   TxMetadata as TxMetadataType,
+  UnsignedTransaction,
   UnsignedTx as UnsignedTxType,
-} from '@emurgo/yoroi-lib'
+} from '@yoroi/tx'
+import {Api, App, Balance, HW, Network, Portfolio, Wallet} from '@yoroi/types'
+
+import {WalletChecksum as WalletChecksumType} from '@emurgo/cip4-js'
+import * as CoreTypes from '@emurgo/cross-csl-core'
+import * as CSL from '@emurgo/cross-csl-core'
 
 import {WalletEncryptedStorage} from '~/kernel/storage/EncryptedStorage'
 
 import {
   FundInfoResponse,
   RawUtxo,
+  TipStatusResponse,
   TransactionInfo,
   TxStatusRequest,
   TxStatusResponse,
   WalletState,
+  WalletTransaction,
 } from '../types/other'
-import {
-  AccountStates,
-  StakePoolInfoRequest,
-  StakePoolInfosAndHistories,
-  StakingInfo,
-  StakingStatus,
-} from '../types/staking'
-import {YoroiEntry, YoroiSignedTx, YoroiUnsignedTx} from '../types/yoroi'
+import {StakingInfo, StakingStatus} from '../types/staking'
 import type {Addresses} from './account-manager/account-manager'
 
 export type WalletEvent =
@@ -87,7 +88,14 @@ export interface YoroiWallet {
   // sync
   resync(): Promise<void>
   clear(): Promise<void>
-  sync(params: {isForced?: boolean}): Promise<void>
+  sync(params: {
+    isForced?: boolean
+    tipStatus?: TipStatusResponse | null
+  }): Promise<void>
+  quickSync(params: {
+    isForced?: boolean
+    tipStatus?: TipStatusResponse | null
+  }): Promise<void>
   // ---------------------------------------------------------------------------------------
 
   get receiveAddressInfo(): Readonly<{
@@ -107,20 +115,18 @@ export interface YoroiWallet {
   getAddressing(address: string): {path: number[]; startLevel: number}
 
   // Sending
-  createUnsignedTx(params: {
-    entries: YoroiEntry[]
-    metadata?: Array<CardanoTypes.TxMetadata>
-    addressMode: Wallet.AddressMode
-  }): Promise<YoroiUnsignedTx>
-  signTx(signRequest: YoroiUnsignedTx, rootKey: string): Promise<YoroiSignedTx>
+  signTx(
+    signRequest: UnsignedTransaction,
+    rootKey: string,
+  ): Promise<CSL.Transaction>
   submitTransaction(signedTx: string): Promise<void>
 
   // Ledger
   signTxWithLedger(
-    request: YoroiUnsignedTx,
+    request: UnsignedTransaction,
     useUSB: boolean,
     hwDeviceInfo: HW.DeviceInfo,
-  ): Promise<YoroiSignedTx>
+  ): Promise<CSL.Transaction>
   ledgerSupportsCIP36(
     useUSB: boolean,
     hwDeviceInfo: HW.DeviceInfo,
@@ -136,24 +142,10 @@ export interface YoroiWallet {
   ): Promise<void>
 
   // Voting
-  createVotingRegTx(params: {
-    supportsCIP36: boolean
-    addressMode: Wallet.AddressMode
-    catalystKeyHex: string
-  }): Promise<{votingRegTx: YoroiUnsignedTx}>
   fetchFundInfo(): Promise<FundInfoResponse>
 
   // Staking
   rewardAddressHex: string
-  createDelegationTx(params: {
-    poolId: string
-    delegatedAmount: BigNumber
-    addressMode: Wallet.AddressMode
-  }): Promise<YoroiUnsignedTx>
-  createWithdrawalTx(params: {
-    shouldDeregister: boolean
-    addressMode: Wallet.AddressMode
-  }): Promise<YoroiUnsignedTx>
   getDelegationStatus(): StakingStatus
   getAllUtxosForKey(): Array<CardanoTypes.CardanoAddressedUtxo>
   getStakingInfo: () => Promise<StakingInfo>
@@ -162,10 +154,6 @@ export interface YoroiWallet {
     request: StakePoolInfoRequest,
   ): Promise<StakePoolInfosAndHistories>
   getStakingKey(): CardanoTypes.PublicKey
-  createUnsignedGovernanceTx(params: {
-    addressMode: Wallet.AddressMode
-    votingCertificates: CardanoTypes.Certificate[]
-  }): Promise<YoroiUnsignedTx>
 
   // Password
   encryptedStorage: WalletEncryptedStorage
@@ -181,6 +169,8 @@ export interface YoroiWallet {
   // Balances, TxDetails
   saveMemo(txId: string, memo: string): Promise<void>
   get transactions(): Record<string, TransactionInfo>
+  getRawTransaction(txId: string): WalletTransaction | undefined
+  getRawTransactions(): Record<string, WalletTransaction>
   get confirmationCounts(): Record<string, null | number>
   fetchTxStatus(request: TxStatusRequest): Promise<TxStatusResponse>
 
@@ -203,6 +193,17 @@ export interface YoroiWallet {
 
   // CIP36 Payment Address
   getFirstPaymentAddress(): CoreTypes.BaseAddress
+
+  // Backend-zero wallet registration
+  getWalletContext?():
+    | {
+        walletId: string
+        publicKeyHex?: string
+        accountPubKeyHex?: string
+        paymentKeyHashes: string[]
+        rewardAddresses: string[]
+      }
+    | undefined
 }
 
 export const isYoroiWallet = (wallet: unknown): wallet is YoroiWallet => {
@@ -224,19 +225,15 @@ const yoroiWalletKeys: Array<keyof YoroiWallet> = [
   'primaryBreakdown',
 
   // Sending
-  'createUnsignedTx',
   'signTxWithLedger',
   'signTx',
   'submitTransaction',
 
   // Voting
-  'createVotingRegTx',
   'fetchFundInfo',
 
   // Staking
   'rewardAddressHex',
-  'createDelegationTx',
-  'createWithdrawalTx',
   'getDelegationStatus',
   'getAllUtxosForKey',
   'getStakingInfo',
@@ -276,7 +273,7 @@ export namespace CardanoTypes {
   export type CardanoAddressedUtxo = CardanoAddressedUtxoType
   export type SignedTx = SignedTxType
   export type UnsignedTx = UnsignedTxType
-  export type MultiTokenValue = MultiTokenValueType
+  export type MultiTokenValue = Balance.Amounts // Use Balance.Amounts directly
   export type StakingKeyBalances = StakingKeyBalancesType
   export type WalletChecksum = WalletChecksumType
 
@@ -299,8 +296,8 @@ export namespace CardanoTypes {
   export type TokenEntry = TokenEntryType
 }
 
-export {RegistrationStatus} from '@emurgo/yoroi-lib'
 export {
   NoOutputsError,
   NotEnoughMoneyToSendError,
-} from '@emurgo/yoroi-lib/dist/errors'
+  RegistrationStatus,
+} from '@yoroi/tx'

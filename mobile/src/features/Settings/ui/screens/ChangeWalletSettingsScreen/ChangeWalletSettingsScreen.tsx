@@ -131,6 +131,14 @@ export const ChangeWalletSettingsScreen = () => {
           </SettingsItem>
         </SettingsSection>
 
+        <SettingsSection title={strings.settings.walletSettings.shareWallet}>
+          <NavigatedSettingsItem
+            icon={<Icon.Share {...iconProps} />}
+            label={strings.settings.walletSettings.shareWallet}
+            onNavigate={() => navigateTo.shareWallet()}
+          />
+        </SettingsSection>
+
         <SettingsSection title={strings.settings.walletSettings.actions}>
           <NavigatedSettingsItem
             icon={<Icon.CrossCircle {...iconProps} />}

@@ -18,6 +18,7 @@ export type ReviewContext =
   | 'undelegate'
   | 'withdraw rewards'
   | 'delegate vote'
+  | 'utxo-consolidation'
 
 export type WalletTabRoutes = {
   history: NavigatorScreenParams<TxHistoryRoutes>
@@ -45,8 +46,6 @@ export type WalletInitRoutes = {
   'setup-wallet-details-form': undefined
   'setup-wallet-restore-form': undefined
   'setup-wallet-restore-details': undefined
-  'setup-wallet-import-read-only': undefined
-  'setup-wallet-save-read-only': undefined
   'setup-wallet-check-nano-x': undefined
   'setup-wallet-connect-nano-x': undefined
   'setup-wallet-save-nano-x': undefined
@@ -54,6 +53,12 @@ export type WalletInitRoutes = {
   'setup-wallet-recovery-phrase-mnemonic': undefined
   'setup-wallet-verify-recovery-phrase-mnemonic': undefined
   'setup-wallet-preparing-wallet': undefined
+  'setup-wallet-restore-from-link': {
+    action: Scan.ActionRestoreWallet
+  }
+  'setup-wallet-restore-read-only-choose-type': undefined
+  'setup-wallet-restore-read-only-from-key': undefined
+  'setup-wallet-restore-read-only-from-addresses': undefined
 }
 
 export type SetupWalletRouteNavigation = StackNavigationProp<WalletInitRoutes>
@@ -63,8 +68,24 @@ export type TxHistoryRoutes = {
   'tx-details': {
     id: string
   }
+  'address-details': {
+    address: string
+  }
+  'block-details': {
+    hash?: string
+    height?: string
+  }
+  'p2p-connection': {
+    peerId: string
+    signalingUrl?: string
+  }
   'utxo-list': undefined
   'utxo-consolidation': undefined
+  'message-signing': undefined
+  'message-signing-result': {
+    signature: string
+    key: string
+  }
   'receive-single': undefined
   'receive-specific-amount': undefined
   'receive-multiple': undefined
@@ -73,20 +94,6 @@ export type TxHistoryRoutes = {
   'send-edit-amount': {
     amount: Portfolio.Token.Amount
   }
-  'send-submitted-tx':
-    | {
-        title?: string
-        message?: string
-        buttonTitle?: string
-      }
-    | undefined
-  'send-failed-tx':
-    | {
-        title?: string
-        message?: string
-        buttonTitle?: string
-      }
-    | undefined
   'send-select-token-from-list': undefined
   'swap': NavigatorScreenParams<SwapTokenRoutes>
 } & ScanRoutes &
@@ -122,16 +129,6 @@ export type SwapTokenRoutes = {
   'select-token': {direction: 'in' | 'out'}
   'select-protocol': undefined
   'preprod-notice': undefined
-  'submitted-tx': {
-    title?: string
-    message?: string
-    buttonTitle?: string
-  }
-  'failed-tx': {
-    title?: string
-    message?: string
-    buttonTitle?: string
-  }
 }
 
 export type SwapTokenRouteseNavigation = StackNavigationProp<SwapTokenRoutes>
@@ -191,6 +188,7 @@ export type SettingsStackRoutes = {
     screen: keyof ManageNotificationsRoutes
   }
   'settings-preparing-wallet': undefined
+  'share-wallet': undefined
 }
 
 export type ManageNotificationsRoutes = {
@@ -213,16 +211,6 @@ export type BrowserRoutes = {
 export type DashboardRoutes = {
   'staking-dashboard-main': undefined
   'staking-center': NavigatorScreenParams<StakingCenterRoutes>
-  'staking-submitted-tx': {
-    title?: string
-    message?: string
-    buttonTitle?: string
-  }
-  'staking-failed-tx': {
-    title?: string
-    message?: string
-    buttonTitle?: string
-  }
 }
 
 export type PortfolioRoutes = {
@@ -248,11 +236,13 @@ export type ReviewTxRoutes = {
     preventSubmit?: boolean
     operations?: Array<React.ReactNode>
     operationsNotice?: React.ReactNode
+    generalNotice?: React.ReactNode
     receiverCustomTitle?: React.ReactNode
     details?: ReviewDetailsProps
-    createdBy?: React.ReactNode
+    createdBy?: {logo?: string; url: string; name?: string}
     context?: ReviewContext
     aggregator?: string
+    memo?: string
     onConfirm?: () => void
     onCancel?: OnConfirm['onCancel']
     onSuccess?: OnConfirm['onSuccess']
@@ -263,16 +253,7 @@ export type ReviewTxRoutes = {
     onNotSupportedCIP1694?: () => void
     onCIP36SupportChange?: (supportsCIP36: boolean) => void
   }
-  'review-tx-submitted-tx': {
-    title?: string
-    message?: string
-    buttonTitle?: string
-  }
-  'review-tx-failed-tx': {
-    title?: string
-    message?: string
-    buttonTitle?: string
-  }
+  'result-screen': import('~/ui/ResultScreen/types').ResultScreenParams
 }
 
 export type VotingRegistrationRoutes = {
@@ -378,6 +359,8 @@ export type WalletNavigation = {
   navigateToExchange: () => void
   navigateToUtxoList: () => void
   navigateToUtxoConsolidation: () => void
+  navigateToMessageSigning: () => void
+  navigateToMessageSigningResult: (signature: string, key: string) => void
   navigateToTxDetails: (id: string) => void
 }
 

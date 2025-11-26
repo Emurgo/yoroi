@@ -10,11 +10,38 @@ import {Space} from '~/ui/Space/Space'
 
 import {UtxoAddressGroup} from './UtxoAddressGroup'
 import {WarningSingleAddress} from './WarningSingleAddress'
-import {useUtxoList} from './useUtxoList'
+import {UtxoList as UtxoListType, useUtxoList} from './useUtxoList'
 
 export const UtxoList = () => {
   const {utxoList} = useUtxoList()
   const {isSingle} = useAddressMode()
+
+  const renderItem = React.useCallback(
+    ({item}: {item: UtxoListType[number]}) => <UtxoAddressGroup item={item} />,
+    [],
+  )
+
+  const ItemSeparator = React.useCallback(() => <Space.Height.lg />, [])
+
+  const keyExtractor = React.useCallback(
+    (item: UtxoListType[number]) => item.path,
+    [],
+  )
+
+  const ListHeaderComponent = React.useMemo(
+    () =>
+      features.utxoConsolidation &&
+      utxoList &&
+      utxoList.length > 1 &&
+      isSingle ? (
+        <>
+          <WarningSingleAddress />
+
+          <Space.Height.lg />
+        </>
+      ) : null,
+    [utxoList, isSingle],
+  )
 
   if (utxoList === undefined || !Array.isArray(utxoList)) return null
 
@@ -22,18 +49,10 @@ export const UtxoList = () => {
     <View style={[a.flex, a.flex_1, a.p_lg]}>
       <FlashList
         data={utxoList}
-        ListHeaderComponent={
-          features.utxoConsolidation && utxoList.length > 1 && isSingle ? (
-            <>
-              <WarningSingleAddress />
-
-              <Space.Height.lg />
-            </>
-          ) : null
-        }
-        renderItem={({item}) => <UtxoAddressGroup item={item} />}
-        ItemSeparatorComponent={() => <Space.Height.lg />}
-        keyExtractor={(item) => item.path}
+        ListHeaderComponent={ListHeaderComponent}
+        renderItem={renderItem}
+        ItemSeparatorComponent={ItemSeparator}
+        keyExtractor={keyExtractor}
         nestedScrollEnabled={true}
         testID="utxoList"
         estimatedItemSize={200}

@@ -5,12 +5,13 @@ import {Notifications} from '@yoroi/types'
 import {useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {BannerIds, showBanner} from '~/features/Notifications/common/banners'
-import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
+import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useWalletEvent} from '~/features/WalletManager/hooks/useWalletEvent'
 import {minAdaForGovernanceBanner} from '~/kernel/constants'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
+import {governanceQueryKeys, notificationQueryKeys} from '~/queries'
 
 import {useGovernanceParticipation} from '../common/helpers'
 
@@ -18,12 +19,11 @@ export const useGovernanceBanner = () => {
   const strings = useStrings()
   const {wallet} = useSelectedWallet()
   const manager = useNotificationManager()
-  const {
-    selected: {network},
-  } = useWalletManager()
+  // Use selector hook instead of full context to prevent unnecessary re-renders
+  const {network} = useSelectedNetwork()
   const {isParticipating, isLoading} = useGovernanceParticipation()
 
-  const queryKey = ['governanceBanner', wallet?.id, network]
+  const queryKey = governanceQueryKeys.banner(wallet?.id, network)
   const queryClient = useQueryClient()
 
   useWalletEvent(wallet, 'utxos', () =>
@@ -38,7 +38,7 @@ export const useGovernanceBanner = () => {
       const balance = wallet?.balanceManager.getPrimaryBalance()
       const adaLovelace = BigInt(balance?.quantity ?? '0')
       const hasEnoughAda = adaLovelace > minAdaForGovernanceBanner
-      logger.info('Governance banner prerequisites ', {
+      logger.debug('Governance banner prerequisites ', {
         walletId: wallet?.id,
         isParticipating,
         balanceLovelace: adaLovelace.toString(),
@@ -50,7 +50,7 @@ export const useGovernanceBanner = () => {
       if (isParticipating) {
         await manager.events.remove(BannerIds.GovernanceParticipation)
         queryClient.invalidateQueries({
-          queryKey: ['receivedNotificationEvents'],
+          queryKey: notificationQueryKeys.events(),
         })
         return false
       }
@@ -58,7 +58,7 @@ export const useGovernanceBanner = () => {
       if (!hasEnoughAda) {
         await manager.events.remove(BannerIds.GovernanceParticipation)
         queryClient.invalidateQueries({
-          queryKey: ['receivedNotificationEvents'],
+          queryKey: notificationQueryKeys.events(),
         })
         return false
       }

@@ -1,18 +1,26 @@
+import {useObservableValue} from '@yoroi/common'
+
 import * as React from 'react'
 
 import {useWalletManager} from '../context/WalletManagerProvider'
 
+/**
+ * Hook to check if there are any wallets.
+ * Uses useObservableValue for optimal performance (no double renders).
+ */
 export const useHasWallets = () => {
   const {walletManager} = useWalletManager()
-  const [hasWallets, setHasWallets] = React.useState(walletManager.hasWallets)
+  const observable$ = React.useMemo(
+    () => walletManager.walletMetas$,
+    [walletManager],
+  )
+  const getter = React.useCallback(
+    () => walletManager.hasWallets,
+    [walletManager],
+  )
 
-  React.useEffect(() => {
-    const sub = walletManager.walletMetas$.subscribe(() => {
-      setHasWallets(() => walletManager.hasWallets)
-    })
-
-    return () => sub.unsubscribe()
+  return useObservableValue({
+    observable$,
+    getter,
   })
-
-  return hasWallets
 }

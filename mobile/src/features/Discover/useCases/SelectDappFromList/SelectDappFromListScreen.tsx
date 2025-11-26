@@ -6,9 +6,9 @@ import {FlatList, View} from 'react-native'
 import {ChainDAppsWarning} from '~/features/Discover/common/ChainDAppsWarning'
 import {DAppItem, getGoogleSearchItem} from '~/features/Discover/common/helpers'
 import {useDAppsConnected} from '~/features/Discover/common/useDAppsConnected'
+import {useDappList} from '~/features/Discover/common/useDappList'
 import {useShowWelcomeDApp} from '~/features/Discover/common/useShowWelcomeDApp'
 import {ShowDisclaimer} from '~/features/Legal/ui/shared/Disclaimer/ShowDisclaimer'
-import {useRemoteConfig} from '~/features/RemoteConfig/hooks/useRemoteConfig'
 import {useSearch, useSearchOnNavBar} from '~/features/Search/SearchContext'
 import {NetworkTag} from '~/features/Settings/ui/shared/NetworkTag'
 import {useStrings} from '~/kernel/i18n/useStrings'
@@ -91,13 +91,16 @@ export const SelectDappFromListScreen = () => {
           extraData={connectedOrigins}
           keyExtractor={(item) => item.id.toString()}
           ListHeaderComponent={
-            <HeaderControl
-              currentTab={currentTab}
-              onTabChange={handleChangeTab}
-              count={myDapps.length}
-              selectedCategories={categoriesSelected}
-              onCategoryToggle={handleToggleCategory}
-            />
+            <>
+              <HeaderControl
+                currentTab={currentTab}
+                onTabChange={handleChangeTab}
+                count={myDapps.length}
+                selectedCategories={categoriesSelected}
+                onCategoryToggle={handleToggleCategory}
+              />
+              <Space.Height.lg />
+            </>
           }
           renderItem={({item}) => (
             <DAppListItem
@@ -106,6 +109,7 @@ export const SelectDappFromListScreen = () => {
             />
           )}
           ItemSeparatorComponent={() => <Space.Height.md />}
+          ListFooterComponent={() => <Space.Height.lg />}
         />
       </View>
     </>
@@ -129,8 +133,8 @@ const HeaderControl = ({
   const strings = useStrings()
   const {data: connectedOrigins = []} = useDAppsConnected()
   const hasConnectedDapps = connectedOrigins.length > 0
-  const {config} = useRemoteConfig()
-  const filters = Object.keys(config?.dapps?.filters ?? {})
+  const {data: dappListData} = useDappList()
+  const filters = Object.keys(dappListData?.filters ?? {})
 
   if (visible) return <Space.Height.md />
 
@@ -179,7 +183,7 @@ const HeaderControl = ({
 
 const useFilteredDappList = (tab: TDAppTabs, categoriesSelected: string[]) => {
   const {search, visible} = useSearch()
-  const {config} = useRemoteConfig()
+  const {data: dappListData} = useDappList()
   const {data: connectedOrigins = []} = useDAppsConnected()
   const hasConnectedDapps = connectedOrigins.length > 0
   const isSearching = visible
@@ -190,21 +194,21 @@ const useFilteredDappList = (tab: TDAppTabs, categoriesSelected: string[]) => {
     )
   }
 
-  // Use config recommended dapps from remote config
-  const logoBaseUrl = 'https://daehx1qv45z7c.cloudfront.net'
+  // Use dapps from useDappList hook (already transformed with logo URLs)
   const dapps = React.useMemo((): DAppItem[] => {
-    if (!config?.dapps?.recommended) return []
-    return config.dapps.recommended.map((dapp) => ({
+    if (!dappListData?.dapps) return []
+    // Convert DappResponse to DAppItem (they have the same structure)
+    return dappListData.dapps.map((dapp) => ({
       id: dapp.id,
       name: dapp.name,
       description: dapp.description,
       category: dapp.category,
-      logo: dapp.logo ? `${logoBaseUrl}/${dapp.logo}` : '',
+      logo: dapp.logo,
       uri: dapp.uri,
       origins: [...dapp.origins],
-      isSingleAddress: dapp.isSingleAddress ?? false,
+      isSingleAddress: dapp.isSingleAddress,
     }))
-  }, [config?.dapps?.recommended])
+  }, [dappListData?.dapps])
 
   const dAppOriginsThatAreConnectedButNotInList = connectedOrigins.filter(
     (connectedOrigin) => {
@@ -256,7 +260,7 @@ const useFilteredDappList = (tab: TDAppTabs, categoriesSelected: string[]) => {
   }
 
   if (categoriesSelected.length > 0) {
-    const filters = (config?.dapps?.filters || {}) as Record<string, string[]>
+    const filters = (dappListData?.filters || {}) as Record<string, string[]>
     return allDapps
       .filter((dApp) =>
         categoriesSelected.some((filter) =>

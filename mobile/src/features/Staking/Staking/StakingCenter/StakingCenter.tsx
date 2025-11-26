@@ -3,52 +3,64 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import {useFocusEffect} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 import * as React from 'react'
-import {useIntl} from 'react-intl'
 import {Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {WebView, WebViewMessageEvent} from 'react-native-webview'
 
-import {useStakingTx} from '~/features/Dashboard/ui/shared/StakePoolInfos'
-import {useReviewTx} from '~/features/ReviewTx/common/ReviewTxProvider'
+import {useSearch, useSearchOnNavBar} from '~/features/Search/SearchContext'
+import {useNavigateTo} from '~/features/Staking/Governance/common/navigation'
+import {isInsufficientBalanceError} from '~/features/Staking/Governance/common/transactionErrorHandling'
 import {PoolDetailScreen} from '~/features/Staking/Staking/PoolDetails/PoolDetailScreen'
-import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
+import {PoolList} from '~/features/Staking/Staking/PoolList/PoolList'
+import {usePrefetchPoolList} from '~/features/Staking/Staking/PoolList/usePoolList'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {showConfirmationDialog, showErrorDialog} from '~/kernel/dialogs'
-import {useLanguage} from '~/kernel/i18n/LanguageProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {LoadingOverlay} from '~/ui/LoadingOverlay/LoadingOverlay'
-import {Space} from '~/ui/Space/Space'
+import {createDelegationTxFromWallet} from '~/wallets/cardano/transaction-recipes'
 
 export const StakingCenter = () => {
   const strings = useStrings()
-  const {isDark, atoms: ta} = useTheme()
+  const {atoms: ta} = useTheme()
   const queryClient = useQueryClient()
 
-  const {languageCode} = useLanguage()
   const {wallet, meta} = useSelectedWallet()
-  const {walletManager} = useWalletManager()
-  const intl = useIntl()
-  const {plate} = walletManager.checksum(wallet.publicKeyHex)
   const {navigateToTxReview} = useWalletNavigation()
-  const {unsignedTxChanged} = useReviewTx()
+  const navigateTo = useNavigateTo()
+  const prefetchPoolList = usePrefetchPoolList()
+
+  // Add search to navigation header
+  useSearchOnNavBar({
+    title: strings.dashboard.stakingCenterTitle,
+    placeholder: strings.staking.searchPools,
+  })
+
+  // Prefetch pool list (pages 1 and 2) when screen is focused
+  useFocusEffect(
+    React.useCallback(() => {
+      prefetchPoolList()
+    }, [prefetchPoolList]),
+  )
 
   const [selectedPoolId, setSelectedPoolId] = React.useState<string | null>(
     null,
   )
-  const [isContentLoaded, setIsContentLoaded] = React.useState(false)
-  const [url, setUrl] = React.useState<null | string>(null)
-  const [showLoadingModal, setShowLoadingModal] = React.useState(false)
+  const [isBuildingTx, setIsBuildingTx] = React.useState(false)
+  const [_buildError, setBuildError] = React.useState<Error | null>(null)
+
+  const {clearSearch, hideSearch} = useSearch()
 
   useFocusEffect(
     React.useCallback(() => {
-      setUrl(prepareStakingURL(languageCode, plate))
+      // Clear search when leaving the screen
       return () => {
-        setUrl(null) // force rerender, so the list's CTAs are reset
         setSelectedPoolId(null) // any pool can be reselected once go back from signing
+        setIsBuildingTx(false)
+        setBuildError(null)
+        clearSearch()
+        hideSearch()
       }
-    }, [languageCode, plate]),
+    }, [clearSearch, hideSearch]),
   )
 
   const onSuccess = React.useCallback(() => {
@@ -57,79 +69,83 @@ export const StakingCenter = () => {
 
   const onError = React.useCallback(() => {
     setSelectedPoolId(null)
+    setIsBuildingTx(false)
+    setBuildError(null)
     queryClient.resetQueries({queryKey: [wallet.id, 'stakingInfo']})
   }, [queryClient, wallet.id])
 
-  const {stakingTx} = useStakingTx(
-    {wallet, poolId: selectedPoolId ?? undefined, meta},
-    {queryKey: [wallet.id, 'stakingTx'], enabled: selectedPoolId != null},
-  )
-
+  // Build transaction when pool is selected
   React.useEffect(() => {
-    if (!stakingTx) return
-    if (selectedPoolId == null) return
-    unsignedTxChanged(stakingTx)
-    navigateToTxReview({onSuccess, onError, context: 'delegate'})
+    if (!selectedPoolId) return
+
+    let cancelled = false
+
+    const buildTransaction = async () => {
+      setIsBuildingTx(true)
+      setBuildError(null)
+
+      try {
+        logger.debug('building delegation transaction', {
+          poolId: selectedPoolId,
+        })
+
+        const stakingTx = await createDelegationTxFromWallet(wallet, {
+          poolId: selectedPoolId,
+          addressMode: meta.addressMode,
+        })
+
+        if (cancelled) return
+
+        setIsBuildingTx(false)
+
+        navigateToTxReview({
+          cbor: stakingTx.cbor,
+          onSuccess,
+          onError,
+          context: 'delegate',
+        })
+      } catch (error) {
+        if (cancelled) return
+
+        const err = error instanceof Error ? error : new Error(String(error))
+        logger.error(err, {origin: 'staking', operation: 'buildDelegationTx'})
+
+        // Check if error is due to insufficient balance and navigate to noFunds screen
+        if (isInsufficientBalanceError(error)) {
+          navigateTo.noFunds()
+          setIsBuildingTx(false)
+          setSelectedPoolId(null)
+          return
+        }
+
+        setBuildError(err)
+        setIsBuildingTx(false)
+        setSelectedPoolId(null)
+      }
+    }
+
+    buildTransaction()
+
+    return () => {
+      cancelled = true
+    }
   }, [
-    stakingTx,
     selectedPoolId,
-    unsignedTxChanged,
+    wallet,
+    meta,
     navigateToTxReview,
+    navigateTo,
     onSuccess,
     onError,
   ])
 
-  const handleOnMessage = async (event: WebViewMessageEvent) => {
-    const selectedPoolHashes = JSON.parse(decodeURI(event.nativeEvent.data))
-    if (!Array.isArray(selectedPoolHashes) || selectedPoolHashes.length < 1) {
-      await showErrorDialog(
-        // LEGACY
-        {
-          title: {
-            id: 'components.stakingcenter.noPoolDataDialog.title',
-            defaultMessage: strings.staking.noPoolDataDialog.title,
-          },
-          message: {
-            id: 'components.stakingcenter.noPoolDataDialog.message',
-            defaultMessage: strings.staking.noPoolDataDialog.message,
-          },
-        },
-        intl,
-      )
-      return
-    }
-    logger.debug('selected pools from explorer', {selectedPoolHashes})
-
-    // Show confirmation dialog before proceeding
-    const confirmed = await showConfirmationDialog(
-      {
-        title: {
-          id: 'components.stakingcenter.confirmDelegation.title',
-          defaultMessage: strings.staking.confirmDelegation.title,
-        },
-        message: {
-          id: 'components.stakingcenter.confirmDelegation.message',
-          defaultMessage: strings.staking.confirmDelegation.message,
-        },
-        btnYesLabel: {
-          id: 'components.stakingcenter.confirmDelegation.delegateButtonLabel',
-          defaultMessage: strings.staking.confirmDelegation.delegateButtonLabel,
-        },
-        btnNoLabel: {
-          id: 'global.cancel',
-          defaultMessage: strings.staking.confirmDelegation.cancelButtonLabel,
-        },
-      },
-      intl,
-    )
-    if (confirmed === 'Yes') {
-      setShowLoadingModal(true)
-      setSelectedPoolId(selectedPoolHashes[0])
-    }
+  const handlePoolSelect = async (poolHash: string) => {
+    logger.debug('selected pool from native list', {poolHash})
+    setSelectedPoolId(poolHash)
   }
 
   const shouldDisplayPoolIDInput = !wallet.isMainnet
-  const shouldDisplayPoolList = wallet.isMainnet && url != null
+  const shouldDisplayPoolList = wallet.isMainnet
 
   return (
     <SafeAreaView
@@ -140,32 +156,9 @@ export const StakingCenter = () => {
         <PoolDetailScreen onPressDelegate={setSelectedPoolId} />
       )}
 
-      {shouldDisplayPoolList && (
-        <View style={a.flex_1}>
-          <Space.Height.sm />
-          <WebView
-            style={{opacity: isContentLoaded ? 1 : 0}}
-            originWhitelist={['*']}
-            androidLayerType="software"
-            source={{uri: url}}
-            onMessage={(event) => handleOnMessage(event)}
-            onLoadEnd={() => setTimeout(() => setIsContentLoaded(true), 250)}
-            {...(isDark && {
-              injectedJavaScript: `
-              document.documentElement.style.overscrollBehavior = 'none'
-              document.body.style.backgroundColor = "#222"
-              document.body.style.filter = "invert(0.9) hue-rotate(180deg)"
-              document.body.style.caretColor = "#FFFFFF"
-              setTimeout(() =>
-                [...document.images].forEach(i => i.style = 'filter:invert(1) hue-rotate(180deg)')
-              , 1000)
-            `,
-            })}
-          />
-        </View>
-      )}
+      {shouldDisplayPoolList && <PoolList onPoolSelect={handlePoolSelect} />}
 
-      {showLoadingModal && (
+      {isBuildingTx && (
         <LoadingOverlay
           isLoading
           content={
@@ -181,16 +174,4 @@ export const StakingCenter = () => {
       )}
     </SafeAreaView>
   )
-}
-
-const prepareStakingURL = (locale: string, plate: string): string => {
-  // source=mobile is constant and already included
-  let finalURL = 'https://adapools.yoroiwallet.com/?source=mobile'
-
-  const lang = locale.slice(0, 2)
-  finalURL += `&lang=${lang}`
-
-  finalURL += `&bias=${plate}`
-
-  return finalURL
 }

@@ -44,7 +44,7 @@ export const DescribeActionModal = () => {
 
         <TouchableOpacity onPress={handleOnContactProvider}>
           <Text style={[a.link_1_lg_underline, ta.text_primary_max]}>
-            {name}{' '}
+            {name}
           </Text>
         </TouchableOpacity>
 

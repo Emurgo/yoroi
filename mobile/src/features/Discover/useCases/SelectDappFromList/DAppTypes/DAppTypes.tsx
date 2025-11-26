@@ -1,7 +1,7 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
-import {ScrollView, Text, TouchableWithoutFeedback, View} from 'react-native'
+import {FlatList, Text, TouchableWithoutFeedback, View} from 'react-native'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Icon} from '~/ui/Icon'
@@ -13,39 +13,44 @@ type Props = {
   selectedTypes: string[]
 }
 export const DAppTypes = ({types, onToggle, selectedTypes}: Props) => {
-  const scrollViewRef = React.useRef<ScrollView | null>(null)
+  const flatListRef = React.useRef<FlatList<string> | null>(null)
   const sorted = React.useMemo(
     () => sortTypes(types, selectedTypes),
     [types, selectedTypes],
   )
 
+  const renderItem = React.useCallback(
+    ({item: type}: {item: string}) => {
+      const isSelected = selectedTypes.includes(type)
+      return (
+        <TypeItem
+          isActive={isSelected}
+          name={type}
+          onToggle={() => {
+            flatListRef.current?.scrollToOffset({
+              offset: 0,
+              animated: true,
+            })
+            onToggle(type)
+          }}
+        />
+      )
+    },
+    [selectedTypes, onToggle],
+  )
+
   return (
-    <ScrollView
-      ref={scrollViewRef}
+    <FlatList
+      ref={flatListRef}
+      data={sorted}
       horizontal
+      nestedScrollEnabled
       showsHorizontalScrollIndicator={false}
       contentContainerStyle={[a.pb_lg]}
-    >
-      {sorted.map((type) => {
-        const isSelected = selectedTypes.includes(type)
-        return (
-          <TypeItem
-            key={type}
-            isActive={isSelected}
-            name={type}
-            onToggle={() => {
-              scrollViewRef.current?.scrollTo({
-                x: 0,
-                animated: true,
-              })
-              onToggle(type)
-            }}
-          />
-        )
-      })}
-
-      <Space.Width.sm />
-    </ScrollView>
+      renderItem={renderItem}
+      keyExtractor={(item) => item}
+      ListFooterComponent={() => <Space.Width.sm />}
+    />
   )
 }
 

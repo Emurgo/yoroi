@@ -29,5 +29,6 @@ export const useNavigateTo = () => {
     preparingNetworks: (selectedNetwork: Chain.SupportedNetworks) =>
       navigation.navigate('preparing-network', {selectedNetwork}),
     systemLog: () => navigation.navigate('settings-system-log'),
+    shareWallet: () => navigation.navigate('share-wallet'),
   }
 }

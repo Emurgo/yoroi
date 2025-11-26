@@ -243,7 +243,7 @@ export const Splits = ({data}: {data: Swap.Split[]}) => {
               {(
                 (100 * (split.expectedOutputWithoutSlippage ?? 0)) /
                 total
-              ).toFixed(2)}{' '}
+              ).toFixed(2)}
               %
             </Text>
           </View>

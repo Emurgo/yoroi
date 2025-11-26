@@ -1,8 +1,7 @@
+import {AssetNameUtils} from '@yoroi/tx'
 import {Balance} from '@yoroi/types'
 
 import AssetFingerprint from '@emurgo/cip14-js'
-// TODO: REVISIT check why is not exported from yoroi-lib
-import {AssetNameUtils} from '@emurgo/yoroi-lib/dist/internals/utils/assets'
 
 import {LegacyToken} from '~/wallets/types/tokens'
 
@@ -69,7 +68,7 @@ export const toPolicyId = (tokenIdentifier: string) => {
 export const toDisplayAssetName = (tokenIdentifier: string) => {
   const hexName = toAssetNameHex(tokenIdentifier)
   const properties = AssetNameUtils.resolveProperties(hexName)
-  const untaggedName = properties.asciiName ?? properties.hexName
+  const untaggedName = properties.asciiName ?? hexName
   return untaggedName
 }
 

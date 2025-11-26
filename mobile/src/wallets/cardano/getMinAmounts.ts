@@ -1,23 +1,19 @@
+import {isHex} from '@yoroi/common'
 import {Balance, Chain, Portfolio} from '@yoroi/types'
-
-// TODO: REVISIT this is not exported from yoroi-lib
-import {normalizeToAddress} from '@emurgo/yoroi-lib/dist/internals/utils/addresses'
-import BigNumber from 'bignumber.js'
 
 import {Address} from '../types/yoroi'
 import {Amounts, Quantities, asQuantity} from '../utils/utils'
-import {MultiToken} from './MultiToken'
-import {cardanoValueFromMultiToken} from './cardanoValueFromMultiToken'
+import {cardanoValueFromAmounts} from './cardanoValueFromAmounts'
 import {CardanoMobileWrapped} from './wrappedCsl'
 
-export const withMinAmounts = (
+export const withMinAmounts = async (
   address: Address,
   amounts: Balance.Amounts,
   primaryTokenInfo: Portfolio.Token.Info,
   protocolParams: Chain.Cardano.ProtocolParams,
-): Balance.Amounts => {
+): Promise<Balance.Amounts> => {
   const amountsWithPrimaryToken = withPrimaryToken(amounts, primaryTokenInfo)
-  const minAmounts = getMinAmounts(
+  const minAmounts = await getMinAmounts(
     address,
     amountsWithPrimaryToken,
     primaryTokenInfo,
@@ -33,31 +29,37 @@ export const withMinAmounts = (
   }))
 }
 
-export const getMinAmounts = (
+export const getMinAmounts = async (
   address: Address,
   amounts: Balance.Amounts,
   primaryTokenInfo: Portfolio.Token.Info,
   protocolParams: Chain.Cardano.ProtocolParams,
 ) => {
   return CardanoMobileWrapped.cslScope((csl) => {
-    const multiToken = new MultiToken(
-      [
-        {identifier: primaryTokenInfo.id, amount: new BigNumber('0')},
-        ...Amounts.toArray(amounts).map(({tokenId, quantity}) => ({
-          identifier: tokenId,
-          amount: new BigNumber(quantity),
-        })),
-      ],
-      {defaultIdentifier: primaryTokenInfo.id},
-    )
+    // Create address within this cslScope to avoid pointer issues
+    let normalizedAddress: any
+    if (csl.ByronAddress.isValid(address)) {
+      const byronAddr = csl.ByronAddress.fromBase58(address)
+      normalizedAddress = byronAddr.toAddress()
+    } else {
+      const isHexAddr = isHex(address)
+      normalizedAddress = isHexAddr
+        ? csl.Address.fromHex(address)
+        : csl.Address.fromBech32(address)
+    }
 
-    const value = cardanoValueFromMultiToken(multiToken, csl)
-    const coinsPerUtxoByte = csl.BigNum.fromStr(protocolParams.coinsPerUtxoByte)
-
-    const normalizedAddress = normalizeToAddress(csl, address)
-
-    if (normalizedAddress === undefined)
+    if (!normalizedAddress || normalizedAddress.isMalformed())
       throw new Error('getMinAmounts::Error not a valid address')
+
+    // Ensure primary token is included (with 0 if not present)
+    const amountsWithPrimary = withPrimaryToken(amounts, primaryTokenInfo)
+
+    const value = cardanoValueFromAmounts(
+      csl,
+      amountsWithPrimary,
+      primaryTokenInfo.id,
+    )
+    const coinsPerUtxoByte = csl.BigNum.fromStr(protocolParams.coinsPerUtxoByte)
 
     const txOutput = csl.TransactionOutput.new(normalizedAddress, value)
     const dataCost = csl.DataCost.newCoinsPerByte(coinsPerUtxoByte)

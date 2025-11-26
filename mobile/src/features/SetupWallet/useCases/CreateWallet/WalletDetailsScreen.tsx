@@ -16,7 +16,6 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native'
-import {ViewProps} from 'react-native-svg/lib/typescript/fabric/utils'
 
 import {useAnalyticsTracking} from '~/features/Analytics/hooks/useAnalyticsTracking'
 import {AnalyticsEventEnum} from '~/features/Analytics/types/analytics-event-enum'
@@ -375,7 +374,7 @@ export const WalletDetailsScreen = () => {
         </View>
       </ScrollView>
 
-      <Actions style={[a.px_lg]}>
+      <SafeArea.Footer>
         <Button
           title={strings.setupWallet.next}
           onPress={() => handleCreateWallet()}
@@ -386,7 +385,7 @@ export const WalletDetailsScreen = () => {
           }
           testID="walletFormContinueButton"
         />
-      </Actions>
+      </SafeArea.Footer>
     </SafeArea>
   )
 }
@@ -398,8 +397,4 @@ const Info = ({onPress}: {onPress: () => void}) => {
       <InfoIcon size={24} color={isDark ? p.white_static : p.black_static} />
     </TouchableOpacity>
   )
-}
-
-const Actions = ({style, ...props}: ViewProps) => {
-  return <View style={style} {...props} />
 }

@@ -72,12 +72,15 @@ export const WalletManagerProvider: React.FC<
     [actions, walletManager],
   )
 
+  // Sync manager lifecycle
   React.useEffect(() => {
     // sync, it doesn't wait for the login
     walletManager.startSyncing()
     return () => walletManager.stopSyncing()
   }, [walletManager])
 
+  // Optimized: Combine all observable subscriptions into a single effect
+  // This reduces the number of effects and subscription overhead
   React.useEffect(() => {
     // selected wallet: wallet id changed
     const subSelectedWalletId = walletManager.selectedWalletId$.subscribe(
@@ -85,30 +88,31 @@ export const WalletManagerProvider: React.FC<
         setWalletSelected(id)
       },
     )
-    return () => subSelectedWalletId.unsubscribe()
-  }, [actions, setWalletSelected, walletManager])
 
-  React.useEffect(() => {
-    // meta
+    // meta updates
     const subWalletMeta = walletManager.walletMetas$.subscribe((metas) => {
       actions.selectedMetaUpdated(metas)
     })
-    return () => subWalletMeta.unsubscribe()
-  }, [actions, walletManager])
 
-  React.useEffect(() => {
-    // selected network
+    // selected network changes
     const subSelectedNetwork = walletManager.selectedNetwork$.subscribe(
       (network) => {
         actions.networkSelected(network)
 
         // NOTE: when switching networks the wallets are recreated, therefore is needed to refresh from manager into state again
-        const selectedWalletId = state.selected.wallet?.id ?? null
+        // Get the current selected wallet ID from the manager's getter
+        const selectedWalletId = walletManager.selectedWalledId
         setWalletSelected(selectedWalletId)
       },
     )
-    return () => subSelectedNetwork.unsubscribe()
-  }, [actions, setWalletSelected, state.selected.wallet?.id, walletManager])
+
+    // Cleanup all subscriptions together
+    return () => {
+      subSelectedWalletId.unsubscribe()
+      subWalletMeta.unsubscribe()
+      subSelectedNetwork.unsubscribe()
+    }
+  }, [actions, setWalletSelected, walletManager])
 
   const context = React.useMemo(
     () => ({...state, walletManager}),
@@ -122,6 +126,12 @@ export const WalletManagerProvider: React.FC<
   )
 }
 
+/**
+ * Hook to access the wallet manager context.
+ * Returns the entire context - use selector hooks for better performance.
+ *
+ * @see useWalletManagerSelector - For selecting specific parts of the context
+ */
 export const useWalletManager = () => {
   const {selected, walletManager} = React.useContext(WalletManagerContext)
 
@@ -139,4 +149,33 @@ export const useWalletManager = () => {
       walletManager,
     }
   }, [selected, walletManager])
+}
+
+/**
+ * Hook to select a specific part of the wallet manager context.
+ * Prevents unnecessary re-renders when other parts of the context change.
+ *
+ * **Usage**:
+ * ```tsx
+ * const wallet = useWalletManagerSelector((ctx) => ctx.selected.wallet)
+ * const network = useWalletManagerSelector((ctx) => ctx.selected.network)
+ * ```
+ *
+ * @param selector - Function that selects the desired value from the context
+ * @returns The selected value
+ */
+export const useWalletManagerSelector = <T,>(
+  selector: (context: WalletManagerContextType) => T,
+): T => {
+  const context = React.useContext(WalletManagerContext)
+
+  if (context.walletManager == null) {
+    throwLoggedError(
+      new App.Errors.InvalidState(
+        'useWalletManagerSelector wallet manager is not set, invalid state reached',
+      ),
+    )
+  }
+
+  return React.useMemo(() => selector(context), [context, selector])
 }

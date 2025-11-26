@@ -3,8 +3,6 @@ import {ThemedPalette, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
 
-import {FailedTxScreen} from '~/features/ReviewTx/useCases/ShowFailedTxScreen/FailedTxScreen'
-import {SubmittedTxScreen} from '~/features/ReviewTx/useCases/ShowSubmittedTxScreen/SubmittedTxScreen'
 import {NetworkTag} from '~/features/Settings/ui/shared/NetworkTag'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
@@ -58,18 +56,6 @@ export const GovernanceNavigator = () => {
             name="staking-gov-no-funds"
             component={NoFundsScreen}
             options={{title: strings.staking.governanceCentreTitle}}
-          />
-
-          <Stack.Screen
-            name="staking-gov-submitted-tx"
-            component={SubmittedTxScreen}
-            options={{headerShown: false}}
-          />
-
-          <Stack.Screen
-            name="staking-gov-failed-tx"
-            component={FailedTxScreen}
-            options={{headerShown: false}}
           />
         </Stack.Navigator>
       </SafeArea>

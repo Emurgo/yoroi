@@ -5,16 +5,18 @@ import * as React from 'react'
 
 import {buildPortfolioTokenManagers} from '../../features/Portfolio/common/helpers/build-token-managers'
 import {WalletManagerProvider} from '../../features/WalletManager/context/WalletManagerProvider'
-import {WalletManager} from '../../features/WalletManager/wallet-manager'
+import {
+  type WalletManager,
+  makeWalletManager,
+} from '../../features/WalletManager/wallet-manager'
 import {walletMocks} from '../../features/WalletManager/wallet.mock'
-import {logger} from '../../kernel/logger/logger'
 import {rootStorage} from '../../kernel/storage/storages'
 import {YoroiWallet} from '../cardano/types'
 
 // TODO: should be mocked
 const {tokenManagers} = buildPortfolioTokenManagers()
-const networkManagers = buildNetworkManagers({tokenManagers, logger})
-export const walletManagerMock = new WalletManager({
+const networkManagers = buildNetworkManagers({tokenManagers})
+export const walletManagerMock = makeWalletManager({
   rootStorage,
   networkManagers,
 })

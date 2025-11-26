@@ -5,19 +5,44 @@ import {Image, Text, View} from 'react-native'
 
 import OrganizeWalletImage from '~/assets/img/organize-wallet-utxos.png'
 import {useStrings} from '~/kernel/i18n/useStrings'
+import {logger} from '~/kernel/logger/logger'
+import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {ScrollView} from '~/ui/ScrollView/ScrollView'
 import {useScrollView} from '~/ui/ScrollView/hooks/useScrollView'
 
+import {useUtxoConsolidation} from './useUtxoConsolidation'
+
 export const UtxoConsolidation = () => {
   const strings = useStrings()
   const {atoms: ta, palette: p} = useTheme()
   const {scrollViewRef} = useScrollView()
-  // TODO: Needs tx building with utxo selection
-  const shouldShowNotice = true
-  const handleOnPress = () => null
+  const {navigateToTxReview} = useWalletNavigation()
+  const {consolidateUtxos, isConsolidating, data, error} =
+    useUtxoConsolidation()
+  const [hasNavigated, setHasNavigated] = React.useState(false)
+
+  React.useEffect(() => {
+    if (data?.cbor && !hasNavigated) {
+      setHasNavigated(true)
+      navigateToTxReview({
+        cbor: data.cbor,
+        context: 'utxo-consolidation',
+      })
+    }
+  }, [data, navigateToTxReview, hasNavigated])
+
+  React.useEffect(() => {
+    if (error) {
+      logger.error('UTXO consolidation error in component', {error})
+    }
+  }, [error])
+
+  const handleOnPress = () => {
+    consolidateUtxos()
+  }
 
   return (
     <SafeArea>
@@ -28,11 +53,7 @@ export const UtxoConsolidation = () => {
             style={[a.w_full, {resizeMode: 'contain'}]}
           />
 
-          <Text style={[a.body_1_lg_regular, ta.text_primary_max]}>
-            {strings.transactions.utxo.utxoConsolidationTitle}
-          </Text>
-
-          {shouldShowNotice && (
+          {true && (
             <View
               style={[
                 a.p_lg,
@@ -48,6 +69,10 @@ export const UtxoConsolidation = () => {
               </Text>
             </View>
           )}
+
+          <Text style={[a.body_1_lg_regular, ta.text_gray_medium]}>
+            {strings.transactions.organizeWalletDescription}
+          </Text>
         </View>
       </ScrollView>
 
@@ -55,6 +80,8 @@ export const UtxoConsolidation = () => {
         <Button
           onPress={handleOnPress}
           title={strings.transactions.utxo.organizeWalletButton}
+          disabled={isConsolidating}
+          isLoading={isConsolidating}
         />
       </SafeArea.Footer>
     </SafeArea>

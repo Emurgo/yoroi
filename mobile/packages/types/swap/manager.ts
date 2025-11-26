@@ -20,7 +20,6 @@ export type SwapManagerMaker = (
   args: Readonly<{
     address: string
     addressHex: string
-    stakingKey: string
     primaryTokenInfo: PortfolioTokenInfo
     isPrimaryToken(token: string | null | undefined): boolean
     network: ChainSupportedNetworks

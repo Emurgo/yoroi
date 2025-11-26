@@ -1,4 +1,4 @@
-import {AppApi, AppFrontendFeeTier, AppFrontendFeesResponse} from './api/app'
+import {AppApi} from './api/app'
 import {
   ApiRequestRecordWithCache,
   ApiResponseRecordWithCache,
@@ -262,10 +262,18 @@ import {ResolverReceiver} from './resolver/receiver'
 import {ResolverStorage} from './resolver/storage'
 import {
   ScanAction,
+  ScanActionBrowseDapp,
   ScanActionClaim,
   ScanActionLaunchUrl,
+  ScanActionP2PConnect,
+  ScanActionPayRequest,
+  ScanActionRestoreWallet,
   ScanActionSendOnlyReceiver,
   ScanActionSendSinglePt,
+  ScanActionStakePool,
+  ScanActionViewAddress,
+  ScanActionViewBlock,
+  ScanActionViewTransaction,
   ScanFeature,
 } from './scan/actions'
 import {ScanErrorUnknown, ScanErrorUnknownContent} from './scan/errors'
@@ -293,6 +301,20 @@ import {SwapProtocol} from './swap/protocol'
 import {SwapStorage} from './swap/storage'
 import {TransferEntry, TransferTarget, TransferTargets} from './transfer/state'
 import {WalletMeta} from './wallet/meta'
+import {
+  TransactionAssurance,
+  TransactionDirection,
+  TransactionInfo,
+  TransactionStatus,
+  TransactionType,
+  Transactions,
+  TRANSACTION_DIRECTION,
+  TRANSACTION_STATUS,
+  TRANSACTION_TYPE,
+  TxMetadata,
+  TxMetadataInfo,
+  WalletTransaction,
+} from './wallet/transactions'
 import {WalletAddressMode, WalletImplementation} from './wallet/wallet'
 
 export namespace App {
@@ -347,9 +369,6 @@ export namespace App {
     extends AppCacheRow<T, K> {}
 
   export interface Api extends AppApi {}
-
-  export type FrontendFeeTier = AppFrontendFeeTier
-  export type FrontendFeesResponse = AppFrontendFeesResponse
 
   export namespace Logger {
     export type Level = AppLoggerLevel
@@ -667,6 +686,42 @@ export namespace Wallet {
   export type Implementation = WalletImplementation
   export type AddressMode = WalletAddressMode
   export type Meta = WalletMeta
+
+  // Transaction types
+  export const TransactionStatus = TRANSACTION_STATUS
+  export type TransactionStatus = TransactionStatus
+  export const TransactionDirection = TRANSACTION_DIRECTION
+  export type TransactionDirection = TransactionDirection
+  export const TransactionType = TRANSACTION_TYPE
+  export type TransactionType = TransactionType
+  export type TransactionAssurance = TransactionAssurance
+  export type TransactionInfo = TransactionInfo
+  export type WalletTransaction = WalletTransaction
+  export type Transactions = Transactions
+  export type TxMetadata = TxMetadata
+  export type TxMetadataInfo = TxMetadataInfo
+  export type BaseAsset = BaseAsset
+}
+
+// Re-export BaseAsset at top level
+export type {BaseAsset} from './wallet/transactions'
+
+// Re-export transaction types at top level for convenience
+export type {
+  TransactionAssurance,
+  TransactionDirection,
+  TransactionInfo,
+  TransactionStatus,
+  TransactionType,
+  Transactions,
+  TxMetadata,
+  TxMetadataInfo,
+  WalletTransaction,
+}
+export {
+  TRANSACTION_DIRECTION,
+  TRANSACTION_STATUS,
+  TRANSACTION_TYPE,
 }
 
 export namespace Exchange {
@@ -726,6 +781,14 @@ export namespace Scan {
   export type ActionSendOnlyReceiver = ScanActionSendOnlyReceiver
   export type ActionSendSinglePt = ScanActionSendSinglePt
   export type ActionScanLaunchUrl = ScanActionLaunchUrl
+  export type ActionBrowseDapp = ScanActionBrowseDapp
+  export type ActionPayRequest = ScanActionPayRequest
+  export type ActionStakePool = ScanActionStakePool
+  export type ActionViewTransaction = ScanActionViewTransaction
+  export type ActionViewBlock = ScanActionViewBlock
+  export type ActionViewAddress = ScanActionViewAddress
+  export type ActionP2PConnect = ScanActionP2PConnect
+  export type ActionRestoreWallet = ScanActionRestoreWallet
 }
 
 export namespace Claim {

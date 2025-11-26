@@ -1,7 +1,7 @@
 import {useTheme} from '@yoroi/theme'
 import {Notifications, Portfolio} from '@yoroi/types'
+import {TransactionInfo} from '@yoroi/types'
 
-import BigNumber from 'bignumber.js'
 import * as React from 'react'
 import {View} from 'react-native'
 
@@ -10,10 +10,8 @@ import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWalle
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Icon} from '~/ui/Icon'
 import {NotificationItem} from '~/ui/NotificationItem/NotificationItem'
-import {MultiToken} from '~/wallets/cardano/MultiToken'
 import {YoroiWallet} from '~/wallets/cardano/types'
-import {TransactionInfo} from '~/wallets/types/other'
-import {Quantities, asQuantity} from '~/wallets/utils/utils'
+import {Amounts, Quantities} from '~/wallets/utils/utils'
 
 export const getTransactionReceivedNotificationTitle = (
   event: Notifications.Event,
@@ -152,30 +150,40 @@ const getTransactionInfoDetails = (
   wallet: YoroiWallet,
 ) => {
   const primaryTokenInfo = wallet.portfolioPrimaryTokenInfo
-  const deltaMT = MultiToken.fromArray(info.delta)
   const defaultId = primaryTokenInfo.id
 
-  const nonDefaultEntries = deltaMT
-    .nonDefaultEntries()
-    .map((e) => ({id: e.identifier, amount: e.amount}))
+  // Convert delta to array of amounts and filter out zero amounts
+  const deltaAmounts = Amounts.toArray(info.delta).filter(
+    ({quantity}) => !Quantities.isZero(quantity),
+  )
 
-  const positiveIds = nonDefaultEntries
-    .filter(({amount}) => amount.gt(0))
-    .map(({id}) => id)
-  const negativeIds = nonDefaultEntries
-    .filter(({amount}) => amount.lt(0))
-    .map(({id}) => id)
+  // Separate positive (received) and negative (sent) amounts
+  const positiveAmounts = deltaAmounts.filter(({quantity}) =>
+    Quantities.isGreaterThan(quantity, Quantities.zero),
+  )
+  const negativeAmounts = deltaAmounts.filter(({quantity}) =>
+    Quantities.isGreaterThan(Quantities.zero, quantity),
+  )
 
-  const ptDelta = asQuantity(deltaMT.getDefault().toString(10))
+  // Get non-default token IDs (excluding primary token)
+  const positiveIds = positiveAmounts
+    .filter(({tokenId}) => tokenId !== defaultId)
+    .map(({tokenId}) => tokenId)
+  const negativeIds = negativeAmounts
+    .filter(({tokenId}) => tokenId !== defaultId)
+    .map(({tokenId}) => tokenId)
 
-  const hasReceivedMultipleAssets = positiveIds.length > 1
-  const hasSentMultipleAssets = negativeIds.length > 1
+  // Get primary token delta
+  const ptDelta = Amounts.getAmount(info.delta, defaultId).quantity
+
+  const hasReceivedMultipleAssets = positiveAmounts.length > 1
+  const hasSentMultipleAssets = negativeAmounts.length > 1
 
   // Received side: prefer an actually received non-primary token; fallback to primary if none
   const firstAssetIdReceived = positiveIds[0] ?? defaultId
   const firstAssetAmountReceived =
     positiveIds.length > 0
-      ? asQuantity(deltaMT.get(firstAssetIdReceived)!.toString(10))
+      ? Amounts.getAmount(info.delta, firstAssetIdReceived).quantity
       : ptDelta
   const firstReceivedAsset =
     positiveIds.length > 0
@@ -186,9 +194,11 @@ const getTransactionInfoDetails = (
   const firstAssetIdSent = negativeIds[0] ?? defaultId
   const firstAssetAmountSent =
     negativeIds.length > 0
-      ? asQuantity(deltaMT.get(firstAssetIdSent)!.abs().toString(10))
-      : // for primary, use absolute
-        asQuantity(new BigNumber(ptDelta).abs().toString(10))
+      ? Quantities.negated(
+          Amounts.getAmount(info.delta, firstAssetIdSent).quantity,
+        )
+      : Quantities.negated(ptDelta)
+
   const firstSentAsset =
     negativeIds.length > 0
       ? resolveTokenInfo(firstAssetIdSent, info, wallet, primaryTokenInfo)
@@ -234,9 +244,8 @@ const resolveTokenInfo = (
     vals.find(
       (v) => typeof v === 'string' && (v as string).trim().length > 0,
     ) ?? identifier
-  const name = pick(token?.metadata?.ticker, token?.metadata?.longName)
-  const denomination =
-    token?.metadata?.numberOfDecimals ?? primaryTokenInfo.decimals ?? 0
+  const name = pick(token?.ticker, token?.longName)
+  const denomination = token?.numberOfDecimals ?? primaryTokenInfo.decimals ?? 0
   return {name, denomination}
 }
 

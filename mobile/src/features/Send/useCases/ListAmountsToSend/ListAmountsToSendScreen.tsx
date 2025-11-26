@@ -1,21 +1,24 @@
-import {isNft} from '@yoroi/portfolio'
+import {isNft, isPrimaryToken} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
+import {TransactionOutput} from '@yoroi/tx'
 import {Portfolio} from '@yoroi/types'
 
+import * as CSL from '@emurgo/cross-csl-core'
 import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 import {TouchableOpacity, View} from 'react-native'
 import {FlatList} from 'react-native-gesture-handler'
 
-import {useReviewTx} from '~/features/ReviewTx/common/ReviewTxProvider'
+import {usePortfolioBalances} from '~/features/Portfolio/common/hooks/usePortfolioBalances'
+import {usePortfolioPrimaryBreakdown} from '~/features/Portfolio/common/hooks/usePortfolioPrimaryBreakdown'
 import {useSearch} from '~/features/Search/SearchContext'
 import {useNavigateTo} from '~/features/Send/common/navigation'
-import {toYoroiEntry} from '~/features/Send/common/toYoroiEntry'
-import {useSaveMemo} from '~/features/Transactions/hooks/useSaveMemo'
+import {toTransactionOutput} from '~/features/Send/common/toTransactionOutput'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {usePromise} from '~/hooks/usePromise'
 import {useStrings} from '~/kernel/i18n/useStrings'
+import {logger} from '~/kernel/logger/logger'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {AddTokenButton} from '~/ui/AddTokenButton/AddTokenButton'
 import {Boundary} from '~/ui/Boundary/Boundary'
@@ -24,7 +27,7 @@ import {Icon} from '~/ui/Icon'
 import {RemoveAmountButton} from '~/ui/RemoveAmountButton/RemoveAmountButton'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {TokenAmountItem} from '~/ui/TokenAmountItem/TokenAmountItem'
-import {YoroiEntry, YoroiSignedTx, YoroiUnsignedTx} from '~/wallets/types/yoroi'
+import {createSendTxFromWallet} from '~/wallets/cardano/transaction-recipes'
 
 export const ListAmountsToSendScreen = () => {
   const navigateTo = useNavigateTo()
@@ -33,16 +36,14 @@ export const ListAmountsToSendScreen = () => {
   const {clearSearch} = useSearch()
   const navigation = useNavigation()
   const {wallet} = useSelectedWallet()
-  const {unsignedTxChanged} = useReviewTx()
   const {
-    memo,
     targets,
     selectedTargetIndex,
     tokenSelectedChanged,
     amountRemoved,
     reset,
+    allocated,
   } = useTransfer()
-  const {saveMemo} = useSaveMemo({wallet})
 
   const selectedTarget = targets[selectedTargetIndex]
   const amounts = React.useMemo(() => {
@@ -55,6 +56,40 @@ export const ListAmountsToSendScreen = () => {
   const {
     meta: {addressMode},
   } = useSelectedWallet()
+
+  // Check if MAX amount is being sent for primary token
+  const balances = usePortfolioBalances({wallet})
+  const primaryBreakdown = usePortfolioPrimaryBreakdown({wallet})
+  const primaryTokenId = wallet.portfolioPrimaryTokenInfo.id
+  const primaryAmount = amounts[primaryTokenId]
+  const isSendingMaxAda = React.useMemo(() => {
+    if (!primaryAmount || !isPrimaryToken(primaryAmount.info)) return false
+
+    const available =
+      (balances.records.get(primaryTokenId)?.quantity ?? BigInt(0)) -
+      (allocated.get(selectedTargetIndex)?.get(primaryTokenId) ?? BigInt(0))
+    const spendable = available - primaryBreakdown.lockedAsStorageCost
+
+    // Check if the amount equals spendable (MAX was used)
+    const isMax = primaryAmount.quantity === spendable && spendable > BigInt(0)
+
+    logger.info('ListAmountsToSendScreen: MAX detection', {
+      primaryAmount: primaryAmount.quantity.toString(),
+      available: available.toString(),
+      lockedAsStorageCost: primaryBreakdown.lockedAsStorageCost.toString(),
+      spendable: spendable.toString(),
+      isSendingMaxAda: isMax,
+    })
+
+    return isMax
+  }, [
+    primaryAmount,
+    balances,
+    primaryBreakdown.lockedAsStorageCost,
+    primaryTokenId,
+    selectedTargetIndex,
+    allocated,
+  ])
 
   React.useLayoutEffect(() => {
     navigation.setOptions({headerLeft: () => <ListAmountsNavigateBackButton />})
@@ -78,17 +113,10 @@ export const ListAmountsToSendScreen = () => {
   }
 
   const handleOnSuccess = React.useCallback(
-    (signedTx?: YoroiSignedTx) => {
-      if (signedTx?.signedTx?.id == null)
-        throw new Error('ListAmountsToSendScreen:: invalid state')
-
-      if (memo.length > 0) {
-        saveMemo({txId: signedTx.signedTx.id, memo: memo.trim()})
-      }
-
+    async (_signedTx?: CSL.Transaction) => {
       reset()
     },
-    [memo, saveMemo, reset],
+    [reset],
   )
 
   const handleOnAdd = () => {
@@ -97,19 +125,44 @@ export const ListAmountsToSendScreen = () => {
   }
 
   const createUnsignedTxPromise = React.useCallback(
-    (entries: YoroiEntry[]) => wallet.createUnsignedTx({entries, addressMode}),
-    [wallet, addressMode],
+    async (entries: TransactionOutput[]) => {
+      try {
+        logger.info('ListAmountsToSendScreen: Creating transaction', {
+          subtractFeeFromAmount: isSendingMaxAda,
+          entriesCount: entries.length,
+          addressMode,
+          firstEntryAdaAmount:
+            entries[0]?.amounts[wallet.portfolioPrimaryTokenInfo.id] || '0',
+        })
+        const result = await createSendTxFromWallet(wallet, {
+          entries,
+          addressMode,
+          // Subtract fee from amount when sending MAX ADA
+          subtractFeeFromAmount: isSendingMaxAda,
+        })
+        return result
+      } catch (error) {
+        logger.error('Send: createSendTxFromWallet failed', {
+          error: error instanceof Error ? error.message : String(error),
+          entriesCount: entries.length,
+          addressMode,
+          subtractFeeFromAmount: isSendingMaxAda,
+        })
+        throw error
+      }
+    },
+    [wallet, addressMode, isSendingMaxAda],
   )
 
   const handleCreateUnsignedTxSuccess = React.useCallback(
-    (yoroiUnsignedTx: YoroiUnsignedTx) => {
-      unsignedTxChanged(yoroiUnsignedTx)
+    (result: {cbor: string}) => {
       navigateToTxReview({
+        cbor: result.cbor,
         onSuccess: (args) => handleOnSuccess(args?.signedTx),
         context: 'send',
       })
     },
-    [unsignedTxChanged, navigateToTxReview, handleOnSuccess],
+    [navigateToTxReview, handleOnSuccess],
   )
 
   const {resolve: createUnsignedTx, isPending} = usePromise({
@@ -119,7 +172,9 @@ export const ListAmountsToSendScreen = () => {
 
   const handleOnNext = () => {
     if (!selectedTarget) return
-    createUnsignedTx([toYoroiEntry(selectedTarget.entry)])
+
+    const transactionOutput = toTransactionOutput(selectedTarget.entry)
+    createUnsignedTx([transactionOutput])
   }
   return (
     <SafeArea>

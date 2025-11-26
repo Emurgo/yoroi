@@ -45,7 +45,6 @@ export type NetworkManager = Readonly<
   {
     tokenManager: PortfolioManagerToken
     rootStorage: AppObservableStorage<false>
-    legacyRootStorage: AppObservableStorage
     api: Readonly<NetworkApi>
     explorers: Readonly<Record<ExplorersExplorer, ExplorersManager>>
   } & Readonly<NetworkConfig>

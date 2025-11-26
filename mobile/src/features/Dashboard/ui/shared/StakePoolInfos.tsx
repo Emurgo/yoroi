@@ -1,13 +1,6 @@
 import {useTheme} from '@yoroi/theme'
-import {Balance, Wallet} from '@yoroi/types'
 
-import {
-  UseQueryOptions,
-  UseSuspenseQueryOptions,
-  useQuery,
-  useQueryClient,
-} from '@tanstack/react-query'
-import BigNumber from 'bignumber.js'
+import {UseSuspenseQueryOptions, useQueryClient} from '@tanstack/react-query'
 import * as React from 'react'
 import {ActivityIndicator, View} from 'react-native'
 
@@ -16,8 +9,6 @@ import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWalle
 import {ButtonProps} from '~/ui/Button/Button'
 import {YoroiWallet} from '~/wallets/cardano/types'
 import {StakingInfo} from '~/wallets/types/staking'
-import {YoroiUnsignedTx} from '~/wallets/types/yoroi'
-import {Quantities} from '~/wallets/utils/utils'
 
 import {StakePoolInfo} from './StakePoolInfo'
 
@@ -67,49 +58,5 @@ const useStakePoolIds = (
   return {
     ...query,
     stakePoolIds: stakingInfo?.status === 'staked' ? [stakingInfo.poolId] : [],
-  }
-}
-
-export const useStakingTx = (
-  {
-    wallet,
-    meta,
-    poolId,
-  }: {wallet: YoroiWallet; poolId?: string; meta: Wallet.Meta},
-  options: UseQueryOptions<
-    YoroiUnsignedTx,
-    Error,
-    YoroiUnsignedTx,
-    [string, 'stakingTx']
-  >,
-) => {
-  const query = useQuery({
-    ...options,
-    retry: false,
-    queryKey: [wallet.id, 'stakingTx'],
-    queryFn: async () => {
-      if (poolId == null) throw new Error('invalid state')
-      const accountStates = await wallet.fetchAccountState()
-      const accountState = accountStates[wallet.rewardAddressHex]
-      if (!accountState) throw new Error('Account state not found')
-
-      const stakingUtxos = await wallet.getAllUtxosForKey()
-      const amountToDelegate = Quantities.sum([
-        ...stakingUtxos.map((utxo) => utxo.amount as Balance.Quantity),
-        accountState.remainingAmount as Balance.Quantity,
-      ])
-
-      return wallet.createDelegationTx({
-        poolId,
-        delegatedAmount: new BigNumber(amountToDelegate),
-        addressMode: meta.addressMode,
-      })
-    },
-    enabled: poolId != null,
-  })
-
-  return {
-    ...query,
-    stakingTx: query.data,
   }
 }

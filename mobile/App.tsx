@@ -1,5 +1,11 @@
 import {AsyncStorageProvider} from '@yoroi/common'
 import {LinksProvider} from '@yoroi/links'
+import {
+  ResolverProvider,
+  resolverApiMaker,
+  resolverManagerMaker,
+  resolverStorageMaker,
+} from '@yoroi/resolver'
 import {SetupWalletProvider} from '@yoroi/setup-wallet'
 import {
   CatalystProvider,
@@ -8,15 +14,16 @@ import {
 } from '@yoroi/staking'
 import {ThemeProvider} from '@yoroi/theme'
 import {TransferProvider} from '@yoroi/transfer'
+import {Resolver} from '@yoroi/types'
 
 import * as Sentry from '@sentry/react-native'
 import * as Updates from 'expo-updates'
 import * as React from 'react'
 
 import {BrowserProvider} from '~/features/Discover/common/BrowserProvider'
+import {PendingScanActionProvider} from '~/features/Links/context/PendingScanActionContext'
 import {PortfolioTokenActivityProvider} from '~/features/Portfolio/context/PortfolioTokenActivityProvider'
 import {ReceiveProvider} from '~/features/Receive/common/ReceiveProvider'
-import {ReviewTxProvider} from '~/features/ReviewTx/common/ReviewTxProvider'
 import {isDev} from '~/kernel/constants'
 import {logger} from '~/kernel/logger/logger'
 import {AppNavigator} from '~/kernel/navigation/AppNavigator'
@@ -34,9 +41,11 @@ import {CurrencyProvider} from './src/features/Settings/context/CurrencyProvider
 import {AutomaticWalletOpenerProvider} from './src/features/WalletManager/context/AutomaticWalletOpeningProvider'
 import {WalletManagerHydrationWrapper} from './src/features/WalletManager/context/WalletManagerHydrationWrapper'
 import {WalletManagerProvider} from './src/features/WalletManager/context/WalletManagerProvider'
+import {useSelectedNetwork} from './src/features/WalletManager/hooks/useSelectedNetwork'
 import {walletManager} from './src/features/WalletManager/wallet-manager'
 import {useFonts} from './src/hooks/useFonts'
 import {ConnectionProvider} from './src/kernel/connection/ConnectionProvider'
+import {unstoppableApiKey} from './src/kernel/constants'
 import {LanguageProvider} from './src/kernel/i18n/LanguageProvider'
 import {useMigrations} from './src/kernel/storage/migrations/useMigrations'
 import {
@@ -94,32 +103,123 @@ function BusinessShell({children}: React.PropsWithChildren) {
         <PairingProvider currencyStorageKeyManager={currencyStorageKeyManager}>
           <WalletManagerHydrationWrapper walletManager={walletManager}>
             <WalletManagerProvider walletManager={walletManager}>
-              <PortfolioTokenActivityProvider>
-                <AutomaticWalletOpenerProvider>
-                  <TransferProvider>
-                    <ReviewTxProvider>
+              <ResolverProviderWrapper>
+                <PortfolioTokenActivityProvider>
+                  <AutomaticWalletOpenerProvider>
+                    <TransferProvider>
                       <SetupWalletProvider>
                         <BrowserProvider>
                           <LinksProvider>
-                            <YoroiNotificationManager>
-                              <CurrencyProvider>
-                                <CatalystProvider manager={catalystManager}>
-                                  <ReceiveProvider>{children}</ReceiveProvider>
-                                </CatalystProvider>
-                              </CurrencyProvider>
-                            </YoroiNotificationManager>
+                            <PendingScanActionProvider>
+                              <YoroiNotificationManager>
+                                <CurrencyProvider>
+                                  <CatalystProvider manager={catalystManager}>
+                                    <ReceiveProvider>
+                                      {children}
+                                    </ReceiveProvider>
+                                  </CatalystProvider>
+                                </CurrencyProvider>
+                              </YoroiNotificationManager>
+                            </PendingScanActionProvider>
                           </LinksProvider>
                         </BrowserProvider>
                       </SetupWalletProvider>
-                    </ReviewTxProvider>
-                  </TransferProvider>
-                </AutomaticWalletOpenerProvider>
-              </PortfolioTokenActivityProvider>
+                    </TransferProvider>
+                  </AutomaticWalletOpenerProvider>
+                </PortfolioTokenActivityProvider>
+              </ResolverProviderWrapper>
             </WalletManagerProvider>
           </WalletManagerHydrationWrapper>
         </PairingProvider>
       </SearchProvider>
     </AuthProvider>
+  )
+}
+
+// ResolverProvider wrapper that uses the selected network
+// This provides resolver functionality to both SetupWallet and Send flows
+const ResolverProviderWrapper = ({children}: React.PropsWithChildren) => {
+  const {networkManager} = useSelectedNetwork()
+  const isMainnet = networkManager.isMainnet
+
+  const resolverStorage = React.useMemo(() => {
+    return resolverStorageMaker()
+  }, [])
+
+  const resolverApi = React.useMemo(() => {
+    const api = resolverApiMaker({
+      apiConfig: {
+        [Resolver.NameServer.Unstoppable]: {
+          apiKey: unstoppableApiKey,
+        },
+      },
+      cslFactory: () => require('@emurgo/cross-csl-core'),
+      isMainnet,
+    })
+
+    // Wrap getCardanoAddresses to add logging
+    const originalGetCardanoAddresses = api.getCardanoAddresses.bind(api)
+    api.getCardanoAddresses = async (params, config) => {
+      logger.debug(
+        '[ResolverProviderWrapper] [RESTORE] Calling getCardanoAddresses',
+        {
+          resolve: params.resolve,
+          strategy: params.strategy,
+          isMainnet,
+          hasSignal: !!config?.signal,
+        },
+      )
+      try {
+        const result = await originalGetCardanoAddresses(params, config)
+        logger.debug(
+          '[ResolverProviderWrapper] [RESTORE] getCardanoAddresses succeeded',
+          {
+            resolve: params.resolve,
+            resultLength: result.length,
+            results: result.map((r, i) => ({
+              index: i,
+              hasAddress: r.address !== null,
+              hasError: r.error !== null,
+              hasNameServer: r.nameServer !== null,
+            })),
+          },
+        )
+        return result
+      } catch (error) {
+        logger.error(
+          '[ResolverProviderWrapper] [RESTORE] getCardanoAddresses failed',
+          {
+            resolve: params.resolve,
+            error: error instanceof Error ? error.message : String(error),
+            errorStack: error instanceof Error ? error.stack : undefined,
+          },
+        )
+        throw error
+      }
+    }
+
+    return api
+  }, [isMainnet])
+
+  const resolverManager = React.useMemo(() => {
+    return resolverManagerMaker(resolverStorage, resolverApi)
+  }, [resolverStorage, resolverApi])
+
+  React.useEffect(() => {
+    logger.debug(
+      '[ResolverProviderWrapper] [RESTORE] ResolverProvider created',
+      {
+        isMainnet,
+        hasResolverManager: !!resolverManager,
+        hasCrypto: !!resolverManager?.crypto,
+      },
+    )
+  }, [isMainnet, resolverManager])
+
+  return (
+    <ResolverProvider resolverManager={resolverManager}>
+      {children}
+    </ResolverProvider>
   )
 }
 

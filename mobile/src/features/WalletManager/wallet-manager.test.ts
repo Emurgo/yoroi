@@ -6,7 +6,7 @@ import {decryptData} from '~/kernel/crypto/decrypt-data'
 import {rootStorage} from '~/kernel/storage/storages'
 
 import {networkManagers} from './common/constants'
-import {WalletManager} from './wallet-manager'
+import {makeWalletManager} from './wallet-manager'
 
 // Mock the global networkManagers before any wallet factory code imports it
 // This prevents real network calls when wallets are created/loaded
@@ -38,7 +38,7 @@ describe('walletManager', () => {
   })
 
   it('creates a wallet', async () => {
-    const walletManager = new WalletManager({
+    const walletManager = makeWalletManager({
       rootStorage,
       networkManagers,
     })

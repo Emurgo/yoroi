@@ -29,7 +29,7 @@ export const useFonts = () => {
           'Rubik-Italic-Variable': require('../../assets/fonts/Rubik-Italic-VariableFont_wght.ttf'),
         }
 
-        logger.info('Loading fonts...', {
+        logger.debug('Loading fonts...', {
           origin: 'useFonts',
           fontCount: Object.keys(fontMappings).length,
           fontNames: Object.keys(fontMappings),
@@ -54,7 +54,7 @@ export const useFonts = () => {
           isLoaded: Font.isLoaded(font),
         }))
 
-        logger.info('Font loading completed', {
+        logger.debug('Font loading completed', {
           origin: 'useFonts',
           expectedFonts: Object.keys(fontMappings),
           keyFontStatus: fontStatus,
@@ -69,7 +69,7 @@ export const useFonts = () => {
             fontStatus,
           })
         } else {
-          logger.info('All key fonts loaded successfully', {
+          logger.debug('All key fonts loaded successfully', {
             origin: 'useFonts',
             fontStatus,
           })

@@ -111,71 +111,69 @@ export const ActionsBanner = (props: {disabled: boolean}) => {
         </Text>
       </View>
 
+      <View style={[a.align_center, a.justify_center]}>
+        <Button
+          type={ButtonType.Circle}
+          icon={Icon.Send}
+          onPress={handleOnPressTransfer}
+          testID="sendButton"
+          disabled={disabled}
+        />
+
+        <Text
+          style={[
+            a.pt_sm,
+            a.body_3_sm_medium,
+            ta.text_gray_medium,
+            disabled && ta.text_gray_low,
+          ]}
+        >
+          {strings.transactions.sendLabel}
+        </Text>
+      </View>
+
+      <View style={[a.align_center, a.justify_center]}>
+        <Button
+          type={ButtonType.Circle}
+          icon={Icon.Swap}
+          onPress={handleOnSwap}
+          testID="swapButton"
+          disabled={disabled}
+        />
+
+        <Text
+          style={[
+            a.pt_sm,
+            a.body_3_sm_medium,
+            ta.text_gray_medium,
+            disabled && ta.text_gray_low,
+          ]}
+        >
+          {strings.transactions.swapLabel}
+        </Text>
+      </View>
+
       {!meta.isReadOnly && (
-        <>
-          <View style={[a.align_center, a.justify_center]}>
-            <Button
-              type={ButtonType.Circle}
-              icon={Icon.Send}
-              onPress={handleOnPressTransfer}
-              testID="sendButton"
-              disabled={disabled}
-            />
+        <View style={[a.align_center, a.justify_center]}>
+          <Button
+            type={ButtonType.Circle}
+            icon={Icon.Exchange}
+            onPress={handleOnExchange}
+            testID="buyButton"
+            disabled={disabled}
+          />
 
-            <Text
-              style={[
-                a.pt_sm,
-                a.body_3_sm_medium,
-                ta.text_gray_medium,
-                disabled && ta.text_gray_low,
-              ]}
-            >
-              {strings.transactions.sendLabel}
-            </Text>
-          </View>
-
-          <View style={[a.align_center, a.justify_center]}>
-            <Button
-              type={ButtonType.Circle}
-              icon={Icon.Swap}
-              onPress={handleOnSwap}
-              testID="swapButton"
-              disabled={disabled}
-            />
-
-            <Text
-              style={[
-                a.pt_sm,
-                a.body_3_sm_medium,
-                ta.text_gray_medium,
-                disabled && ta.text_gray_low,
-              ]}
-            >
-              {strings.transactions.swapLabel}
-            </Text>
-          </View>
-
-          <View style={[a.align_center, a.justify_center]}>
-            <Button
-              type={ButtonType.Circle}
-              icon={Icon.Exchange}
-              onPress={handleOnExchange}
-              testID="buyButton"
-              disabled={disabled}
-            />
-
-            <Text
-              style={[
-                a.pt_sm,
-                a.body_3_sm_medium,
-                ta.text_gray_medium,
-                disabled && ta.text_gray_low,
-              ]}
-            >
-              {strings.transactions.exchange}
-            </Text>
-          </View>
-        </>
+          <Text
+            style={[
+              a.pt_sm,
+              a.body_3_sm_medium,
+              ta.text_gray_medium,
+              disabled && ta.text_gray_low,
+            ]}
+          >
+            {strings.transactions.exchange}
+          </Text>
+        </View>
       )}
     </View>
   )

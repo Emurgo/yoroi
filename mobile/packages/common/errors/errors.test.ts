@@ -1,9 +1,23 @@
-import {invalid} from './errors'
+import {ApiError, invalid} from './errors'
 
-describe('invalid', () => {
-  it('should throw an error with the given message', () => {
-    expect(() => invalid('This is an invalid function')).toThrowError(
-      'This is an invalid function',
-    )
+describe('errors', () => {
+  describe('invalid', () => {
+    it('should throw error with message', () => {
+      expect(() => invalid('Test error')).toThrow('Test error')
+    })
+  })
+
+  describe('ApiError', () => {
+    it('should be instance of Error', () => {
+      const error = new ApiError('Test')
+      expect(error).toBeInstanceOf(Error)
+      expect(error.message).toBe('Test')
+    })
+
+    it('should be throwable', () => {
+      expect(() => {
+        throw new ApiError('Test')
+      }).toThrow('Test')
+    })
   })
 })

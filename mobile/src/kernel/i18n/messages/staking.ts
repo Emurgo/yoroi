@@ -38,7 +38,7 @@ export const stakingMessages = defineMessages({
     defaultMessage: '!!!Stake Pools',
   },
   searchPools: {
-    id: 'nft.navigation.search',
+    id: 'components.staking.searchPools',
     defaultMessage: '!!!Search Pools',
   },
   noPoolsFound: {
@@ -565,5 +565,18 @@ export const stakingMessages = defineMessages({
   confirmDelegationCancelButtonLabel: {
     id: 'global.cancel',
     defaultMessage: '!!!Cancel',
+  },
+  earnRewardsBannerTitle: {
+    id: 'components.governance.earnRewardsBanner.title',
+    defaultMessage: '!!!Delegate with Yoroi DRep',
+  },
+  earnRewardsBannerDescription: {
+    id: 'components.governance.earnRewardsBanner.description',
+    defaultMessage:
+      '!!!Delegate to our DRep and help Cardano evolve in a way that benefits your wallet experience.',
+  },
+  earnRewardsBannerCta: {
+    id: 'components.governance.earnRewardsBanner.cta',
+    defaultMessage: '!!!DELEGATE NOW',
   },
 })

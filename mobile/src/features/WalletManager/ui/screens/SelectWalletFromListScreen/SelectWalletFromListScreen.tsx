@@ -24,7 +24,7 @@ import {useScrollView} from '~/ui/ScrollView/hooks/useScrollView'
 import {Space} from '~/ui/Space/Space'
 
 import {linkToSupportOpenTicket} from '../../../common/constants'
-import {useWalletManager} from '../../../context/WalletManagerProvider'
+import {useWalletManagerSelector} from '../../../context/WalletManagerProvider'
 import {useWalletMetas} from '../../../hooks/useWalletMetas'
 import {SupportIllustration} from '../../../ui/illustrations/SupportIllustration'
 import {AggregatedBalance} from './AggregatedBalance'
@@ -44,12 +44,16 @@ export const SelectWalletFromList = () => {
   const {scrollViewRef} = useScrollView()
   const navigation = useNavigation()
   const walletMetas = useWalletMetas()
-  const {walletManager} = useWalletManager()
+  // Use selector to prevent re-renders when selected wallet changes
+  const walletManager = useWalletManagerSelector((ctx) => ctx.walletManager)
   const walletNavigation = useWalletNavigation()
   const {isAuthDev} = useAuth()
 
   const handleOnSelect = React.useCallback(
     async (walletMeta: Wallet.Meta) => {
+      if (!walletManager) {
+        throw new Error('WalletManager not available')
+      }
       walletManager.setSelectedWalletId(walletMeta.id)
       const shouldHandle =
         await shouldHandleNotificationInternalNavigationAction()
@@ -87,6 +91,7 @@ export const SelectWalletFromList = () => {
       <ScrollView
         ref={scrollViewRef}
         style={[a.px_lg, a.pt_2xl]}
+        contentContainerStyle={[a.pb_2xl]}
         bounces={true}
       >
         {walletList}

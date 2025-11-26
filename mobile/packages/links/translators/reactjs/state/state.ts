@@ -1,3 +1,4 @@
+import {getLogger} from '@yoroi/common'
 import {Links} from '@yoroi/types'
 
 import {castDraft, freeze, produce} from 'immer'
@@ -73,5 +74,8 @@ export const linksReducer = (
 
 /* istanbul ignore next */
 function missingInit() {
-  console.error('[@yoroi/links] missing initialization')
+  const logger = getLogger()
+  logger.error('[@yoroi/links] missing initialization', {
+    origin: 'links',
+  })
 }

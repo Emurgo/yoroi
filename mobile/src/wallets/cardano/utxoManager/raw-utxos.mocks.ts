@@ -1,4 +1,5 @@
-import {RawUtxo} from '~/wallets/types/other'
+import {RawUtxo} from '@yoroi/api'
+import {Portfolio} from '@yoroi/types'
 
 export const mockRawUtxos: ReadonlyArray<RawUtxo> = [
   {
@@ -18,7 +19,7 @@ export const mockRawUtxos: ReadonlyArray<RawUtxo> = [
     assets: [
       {
         amount: '100',
-        assetId: 'asset1',
+        tokenId: 'policy1.asset1' as Portfolio.Token.Id,
         name: 'asset1',
         policyId: 'policy1',
       },
