@@ -26,6 +26,7 @@ type Props = {
   pending?: boolean
   isDelegating?: boolean
   truncateId?: boolean
+  variant?: 'gradient' | 'plain'
 }
 
 const truncateDrepId = (id: string) => {
@@ -38,6 +39,7 @@ export const YoroiDrepCard = ({
   pending,
   isDelegating,
   truncateId,
+  variant = 'gradient',
 }: Props) => {
   const strings = useStrings()
   const {atoms: ta, palette: p} = useTheme()
@@ -55,7 +57,7 @@ export const YoroiDrepCard = ({
   }
 
   const isPendingTarget = pending && isDelegating
-  const showGradient = !pending || isPendingTarget
+  const showGradient = variant === 'gradient' && (!pending || isPendingTarget)
 
   const gradientColors = isPendingTarget
     ? ([p.gray_100, p.gray_100] as const)

@@ -55,7 +55,7 @@ export const VotingOptionsScreen = () => {
           <EnterDrepIdModal onSubmit={onSubmit} />
         </GovernanceProvider>
       ),
-      height: 360,
+      height: 650,
     })
   }
 

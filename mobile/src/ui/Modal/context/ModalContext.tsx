@@ -58,6 +58,7 @@ type ModalActions = {
   setCanContinue: (canContinue: boolean) => void
   setHasExpanded: (hasExpanded: boolean) => void
   setCanExpand: (canExpand: boolean) => void
+  setHeight: (height: number) => void
   clearQueue: () => void
 }
 
@@ -224,6 +225,12 @@ export const ModalProvider = ({children, initialState}: Props) => {
           canExpand,
         })
       },
+      setHeight: (height: number) => {
+        dispatch({
+          type: 'setHeight',
+          height,
+        })
+      },
       clearQueue: () => {
         dispatch({
           type: 'clearQueue',
@@ -281,6 +288,7 @@ type ModalAction =
   | {type: 'setWithFeedback'; withFeedback: boolean}
   | {type: 'setHasExpanded'; hasExpanded: boolean}
   | {type: 'setCanExpand'; canExpand: boolean}
+  | {type: 'setHeight'; height: number}
 
 const modalReducer = (state: ModalState, action: ModalAction) => {
   switch (action.type) {
@@ -400,6 +408,12 @@ const modalReducer = (state: ModalState, action: ModalAction) => {
       return {
         ...state,
         canExpand: action.canExpand,
+      }
+
+    case 'setHeight':
+      return {
+        ...state,
+        height: action.height,
       }
 
     default:
