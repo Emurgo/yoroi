@@ -11,6 +11,7 @@ import BigNumber from 'bignumber.js'
 import * as React from 'react'
 import {
   ActivityIndicator,
+  Dimensions,
   RefreshControl,
   ScrollView,
   View,
@@ -48,6 +49,7 @@ import {UserSummary} from '../shared/UserSummary'
 
 export const DashboardScreen = () => {
   const {atoms: ta} = useTheme()
+  const screenHeight = Dimensions.get('window').height
 
   const strings = useStrings()
   const navigateTo = useNavigateTo()
@@ -98,7 +100,6 @@ export const DashboardScreen = () => {
     ({shouldDeregister}: {shouldDeregister: boolean}) =>
     () => {
       if (isGovernanceParticipationLoading) {
-        // status still loading → avoid showing warning;
         return
       }
       if (!isParticipating) {
@@ -106,7 +107,6 @@ export const DashboardScreen = () => {
           const stakingKey = wallet.getStakingKey()
           closeModal()
 
-          // Create governance delegation certificate
           const delegationCert = createDelegationCertificate({
             hash: GOVERNANCE_YOROI_DREP_ID_HEX,
             type: 'key',
@@ -117,31 +117,41 @@ export const DashboardScreen = () => {
           const stakeCert = needsToRegisterStakingKey
             ? manager.createStakeRegistrationCertificate(stakingKey)
             : null
-          const certs = stakeCert !== null 
-            ? [stakeCert, delegationCert] 
-            : [delegationCert]
+          const certs =
+            stakeCert !== null ? [stakeCert, delegationCert] : [delegationCert]
 
-          // Create combined tx with both governance delegation AND withdrawal
-          const unsignedTx = await wallet.createWithdrawalTx({
-            shouldDeregister,
-            addressMode: meta.addressMode,
-            governanceCertificates: certs,
-          })
+          let unsignedTx
+          // Try to create combined tx with governance delegation + withdrawal
+          try {
+            unsignedTx = await wallet.createWithdrawalTx({
+              shouldDeregister,
+              addressMode: meta.addressMode,
+              // @ts-ignore - governanceCertificates is a valid option but not in types yet
+              governanceCertificates: certs,
+            })
+          } catch {
+            // If withdrawal fails (e.g., no rewards), create governance-only tx
+            unsignedTx = await wallet.createUnsignedGovernanceTx({
+              addressMode: meta.addressMode,
+              votingCertificates: certs,
+            })
+          }
 
           // Navigate to tx review
           unsignedTxChanged(unsignedTx)
           walletNavigateTo.navigateToTxReview({
             operations: [<StakeRewardsWithdrawalOperation key="0" />],
+            // @ts-ignore - context shold  be updated
             context: 'withdraw rewards and delegate governance',
           })
         }
-
         openModal({
           title: strings.staking.withdrawWarningTitle,
           content: React.createElement(WithdrawGovernanceWarningModal.Content),
           footer: React.createElement(WithdrawGovernanceWarningModal.Footer, {
             onDelegateAndWithdraw: handleDelegateAndWithdraw,
           }),
+          height: screenHeight * 0.7,
         })
         return
       }

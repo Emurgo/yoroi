@@ -10,7 +10,7 @@ import GovernanceIllustration from '~/ui/GovernanceIllustration/GovernanceIllust
 import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 
-export const withdrawGovernanceWarningModalHeight = 600
+export const withdrawGovernanceWarningModalHeight = 1200
 
 const WithdrawGovernanceWarningModalContent = () => {
   const strings = useStrings()
@@ -20,7 +20,7 @@ const WithdrawGovernanceWarningModalContent = () => {
     <Modal.Content
       style={[a.flex_1, a.align_center, a.justify_between, a.py_lg]}
     >
-      <GovernanceIllustration height={200} width={200} />
+      <GovernanceIllustration height={240} width={280} />
       <Text
         style={[
           a.body_1_lg_regular,
