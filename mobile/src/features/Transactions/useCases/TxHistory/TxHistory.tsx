@@ -6,6 +6,7 @@ import * as React from 'react'
 import {BackHandler, LayoutAnimation, Platform, Text, View} from 'react-native'
 
 import infoIcon from '~/assets/img/icon/info-light-green.png'
+import {useAirdropBanner} from '~/features/Airdrop/common/useAirdropBanner'
 import {useBuyCryptoBanner} from '~/features/Exchange/common/useBuyCryptoBanner'
 import {useGetImportantAlertsModal} from '~/features/Notifications/common/GetImportantAlertsModal'
 import {useEarnRewardsBanner} from '~/features/Staking/Governance/useCases/EarnRewardsBanner/useEarnRewardsBanner'
@@ -32,6 +33,7 @@ export const TxHistory = () => {
   useBuyCryptoBanner()
   useUtxoConsolidationBanner()
   const {renderBanner: renderEarnRewardsBanner} = useEarnRewardsBanner()
+  useAirdropBanner()
 
   const strings = useStrings()
   const {atoms: ta, palette: p, isDark} = useTheme()
