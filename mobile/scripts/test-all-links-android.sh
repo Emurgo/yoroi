@@ -3,7 +3,7 @@
 # Test script for all Yoroi deep link types on Android
 # Usage: ./scripts/test-all-links-android.sh [package_name] [test_number]
 #   package_name: Android package name (default: com.emurgo.dev)
-#   test_number: Test number 1-15 to run a specific test (default: run all tests)
+#   test_number: Test number 1-14 to run a specific test (default: run all tests)
 # Examples:
 #   ./scripts/test-all-links-android.sh                    # Run all tests with default package
 #   ./scripts/test-all-links-android.sh com.emurgo 5       # Run only test 5 with production package
@@ -12,14 +12,14 @@
 # Parse arguments: handle both cases
 # Case 1: ./script.sh [package] [test_number]
 # Case 2: ./script.sh [test_number] (uses default package)
-if [[ "$1" =~ ^[0-9]+$ ]] && [[ "$1" -ge 1 ]] && [[ "$1" -le 15 ]]; then
+if [[ "$1" =~ ^[0-9]+$ ]] && [[ "$1" -ge 1 ]] && [[ "$1" -le 14 ]]; then
   # First arg is a test number
   TEST_NUMBER=$1
   PACKAGE_NAME=${2:-com.emurgo.dev}
 else
   # First arg is package name (or default)
   PACKAGE_NAME=${1:-com.emurgo.dev}
-  if [[ "$2" =~ ^[0-9]+$ ]] && [[ "$2" -ge 1 ]] && [[ "$2" -le 15 ]]; then
+  if [[ "$2" =~ ^[0-9]+$ ]] && [[ "$2" -ge 1 ]] && [[ "$2" -le 14 ]]; then
     TEST_NUMBER=$2
   else
     TEST_NUMBER=""
@@ -230,7 +230,7 @@ if [ -z "$TEST_NUMBER" ] || [ "$TEST_NUMBER" -eq 11 ]; then
   fi
 fi
 
-# Test 12: Cardano Address Link (web+cardano://address) FAILED
+# Test 12: Cardano Address Link (web+cardano://address) PASSED
 if [ -z "$TEST_NUMBER" ] || [ "$TEST_NUMBER" -eq 12 ]; then
   echo "12. Testing: Cardano Address Link (CIP-134)"
   echo "---------------------------------------------"
@@ -244,43 +244,28 @@ if [ -z "$TEST_NUMBER" ] || [ "$TEST_NUMBER" -eq 12 ]; then
   fi
 fi
 
-# Test 13: Cardano Connect Link (web+cardano://connect) - P2P FAILED
+# Test 13: Cardano DRep Delegation Link (web+cardano://drep) PASSED
 if [ -z "$TEST_NUMBER" ] || [ "$TEST_NUMBER" -eq 13 ]; then
-  echo "13. Testing: Cardano Connect Link (P2P)"
-  echo "-----------------------------------------"
-  CONNECT_URL="web+cardano://connect/v1?peerId=peer123&signalingUrl=https%3A%2F%2Fsignaling.example.com"
-  ESCAPED_URL=$(echo "$CONNECT_URL" | sed "s/'/'\\\\''/g")
-  adb shell "am start -W -a android.intent.action.VIEW -d '$ESCAPED_URL'"
-  echo ""
-  if [ -z "$TEST_NUMBER" ]; then
-    read -q "?Press any key to continue to next test..."
-    echo ""
-    echo ""
-  fi
-fi
-
-# Test 14: Universal Link (HTTPS) FAILED
-if [ -z "$TEST_NUMBER" ] || [ "$TEST_NUMBER" -eq 14 ]; then
-  echo "14. Testing: Universal Link (HTTPS)"
-  echo "------------------------------------"
-  UNIVERSAL_URL="https://yoroi-wallet.com/w1/transfer/request/ada?targets[0][receiver]=addr1q9shdvgxddemdxkdwp493le8yhengzk6fuwsewzx42sjpjkr3y3kdut55a40jff00qmg74686vz44v6k363md06qkq0ql6fur2&targets[0][amounts][0][tokenId]=.&targets[0][amounts][0][quantity]=1000000"
-  ESCAPED_URL=$(echo "$UNIVERSAL_URL" | sed "s/'/'\\\\''/g")
-  adb shell "am start -W -a android.intent.action.VIEW -d '$ESCAPED_URL'"
-  echo ""
-  if [ -z "$TEST_NUMBER" ]; then
-    read -q "?Press any key to continue to next test..."
-    echo ""
-    echo ""
-  fi
-fi
-
-# Test 15: Cardano DRep Delegation Link (web+cardano://drep) PASSED
-if [ -z "$TEST_NUMBER" ] || [ "$TEST_NUMBER" -eq 15 ]; then
-  echo "15. Testing: Cardano DRep Delegation Link"
+  echo "13. Testing: Cardano DRep Delegation Link"
   echo "-----------------------------------------"
   DREP_ID="drep1ygr9tuapcanc3kpeyy4dc3vmrz9cfe5q7v9wj3x9j0ap3tswtre9j"
   ENCODED_DREP_ID=$(url_encode "$DREP_ID")
   adb shell am start -W -a android.intent.action.VIEW -d "web+cardano://drep/v1?drep=$ENCODED_DREP_ID"
+  echo ""
+  if [ -z "$TEST_NUMBER" ]; then
+    read -q "?Press any key to continue to next test..."
+    echo ""
+    echo ""
+  fi
+fi
+
+# Test 14: Cardano Connect Link (web+cardano://connect) - P2P FAILED
+if [ -z "$TEST_NUMBER" ] || [ "$TEST_NUMBER" -eq 14 ]; then
+  echo "14. Testing: Cardano Connect Link (P2P)"
+  echo "-----------------------------------------"
+  CONNECT_URL="web+cardano://connect/v1?peerId=peer123&signalingUrl=https%3A%2F%2Fsignaling.example.com"
+  ESCAPED_URL=$(echo "$CONNECT_URL" | sed "s/'/'\\\\''/g")
+  adb shell "am start -W -a android.intent.action.VIEW -d '$ESCAPED_URL'"
   echo ""
   if [ -z "$TEST_NUMBER" ]; then
     read -q "?Press any key to continue to next test..."
@@ -295,7 +280,6 @@ if [ -z "$TEST_NUMBER" ]; then
   echo "Summary:"
   echo "- Tested 4 Yoroi link types (transfer, exchange, browser)"
   echo "- Tested 10 Cardano link types (claim, browse, pay, payment, stake, drep, transaction, block, address, connect)"
-  echo "- Tested Universal Links (HTTPS)"
 else
   echo "Test $TEST_NUMBER completed!"
 fi

@@ -28,13 +28,13 @@ import {PushNotificationNavigationHandler} from '~/features/Notifications/common
 import {useInitNotifications} from '~/features/Notifications/common/hooks'
 import {NotificationUIHandler} from '~/features/Notifications/useCases/NotificationUIHandler'
 import {NotificationsDevScreen} from '~/features/Notifications/useCases/NotificationsDevScreen'
+import {P2PConnectionStatusBar} from '~/features/P2P/components/P2PConnectionStatusBar'
 import {SetupWalletNavigator} from '~/features/SetupWallet/SetupWalletNavigator'
 import {useHasWallets} from '~/features/WalletManager/hooks/useHasWallets'
 
 import {agreementDate} from '../constants'
 import {features} from '../features'
 import {useStrings} from '../i18n/useStrings'
-import {logger} from '../logger/logger'
 import {WalletNavigator} from './WalletNavigator'
 import {defaultStackNavigationOptions} from './common/helpers'
 import {FirstAction} from './types'
@@ -181,6 +181,7 @@ export const AppNavigator = () => {
 
       <NotificationUIHandler />
       {isLoggedIn && <PushNotificationNavigationHandler />}
+      {isLoggedIn && <P2PConnectionStatusBar />}
     </>
   )
 }
