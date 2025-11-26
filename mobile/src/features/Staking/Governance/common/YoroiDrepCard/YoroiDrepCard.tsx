@@ -3,7 +3,14 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 
 import {LinearGradient} from 'expo-linear-gradient'
 import * as React from 'react'
-import {GestureResponderEvent, Text, TouchableOpacity, View} from 'react-native'
+import {
+  GestureResponderEvent,
+  StyleProp,
+  Text,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+} from 'react-native'
 
 import {useCopy} from '~/features/Copy/context/CopyProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
@@ -47,13 +54,24 @@ export const YoroiDrepCard = ({
     copy({text: drepId, event, feedback: strings.dashboard.copied})
   }
 
-  return (
-    <LinearGradient
-      start={{x: 1, y: 1}}
-      end={{x: 0, y: 0}}
-      colors={isDelegating ? p.bg_gradient_2 : p.bg_gradient_1}
-      style={[a.rounded_sm, a.p_lg, a.border, {borderColor: p.gray_200}]}
-    >
+  const isPendingTarget = pending && isDelegating
+  const showGradient = !pending || isPendingTarget
+
+  const gradientColors = isPendingTarget
+    ? ([p.gray_100, p.gray_100] as const)
+    : isDelegating
+      ? p.bg_gradient_2
+      : p.bg_gradient_1
+
+  const containerStyle: StyleProp<ViewStyle> = [
+    a.rounded_sm,
+    a.p_lg,
+    a.border,
+    {borderColor: p.gray_200, opacity: pending ? 0.5 : 1},
+  ]
+
+  const content = (
+    <>
       <View style={[a.flex_row, a.align_center, a.gap_sm]}>
         <View
           style={[
@@ -63,7 +81,7 @@ export const YoroiDrepCard = ({
             {
               width: 48,
               height: 48,
-              backgroundColor: p.primary_500,
+              backgroundColor: pending ? p.gray_200 : p.primary_500,
             },
           ]}
         >
@@ -89,7 +107,10 @@ export const YoroiDrepCard = ({
         </Text>
 
         <View style={[a.flex_1]}>
-          <Text style={[a.body_2_md_regular, ta.text_gray_medium]} selectable>
+          <Text
+            style={[a.body_2_md_regular, ta.text_gray_medium, a.text_right]}
+            selectable
+          >
             {displayId}
           </Text>
         </View>
@@ -103,30 +124,7 @@ export const YoroiDrepCard = ({
         </TouchableOpacity>
       </View>
 
-      <Space.Height.md />
-
-      <View style={[a.flex_row, a.align_center, a.justify_between]}>
-        <Text style={[a.body_2_md_regular, ta.text_gray_low]}>
-          {strings.staking.drepStatusLabel}
-        </Text>
-
-        <View
-          style={[
-            a.rounded_full,
-            {
-              paddingHorizontal: 12,
-              paddingVertical: 4,
-              backgroundColor: p.secondary_600,
-            },
-          ]}
-        >
-          <Text style={[a.body_2_md_regular, {color: p.gray_min}]}>
-            {strings.staking.drepStatusActive}
-          </Text>
-        </View>
-      </View>
-
-      {isDelegating && (
+      {isDelegating && !pending && (
         <>
           <Space.Height.md />
 
@@ -151,12 +149,26 @@ export const YoroiDrepCard = ({
             type={ButtonType.Primary}
             onPress={onDelegate}
             disabled={pending}
-            isLoading={pending}
           />
         </>
       )}
 
       <YoroiRecordLink />
-    </LinearGradient>
+    </>
   )
+
+  if (showGradient) {
+    return (
+      <LinearGradient
+        start={{x: 1, y: 1}}
+        end={{x: 0, y: 0}}
+        colors={gradientColors}
+        style={containerStyle}
+      >
+        {content}
+      </LinearGradient>
+    )
+  }
+
+  return <View style={containerStyle}>{content}</View>
 }

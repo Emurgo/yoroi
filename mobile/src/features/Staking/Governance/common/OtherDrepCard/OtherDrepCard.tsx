@@ -40,12 +40,23 @@ export const OtherDrepCard = ({
     copy({text: drepId, event, feedback: strings.dashboard.copied})
   }
 
+  const gradientColors = pending
+    ? ([p.gray_100, p.gray_100] as const)
+    : isDelegating
+      ? p.bg_gradient_2
+      : p.bg_gradient_1
+
   return (
     <LinearGradient
       start={{x: 1, y: 1}}
       end={{x: 0, y: 0}}
-      colors={isDelegating ? p.bg_gradient_2 : p.bg_gradient_1}
-      style={[a.rounded_sm, a.p_lg, a.border, {borderColor: p.gray_200}]}
+      colors={gradientColors}
+      style={[
+        a.rounded_sm,
+        a.p_lg,
+        a.border,
+        {borderColor: p.gray_200, opacity: pending ? 0.5 : 1},
+      ]}
     >
       <View style={[a.flex_row, a.align_center, a.gap_sm]}>
         <View
@@ -56,7 +67,11 @@ export const OtherDrepCard = ({
             {
               width: 48,
               height: 48,
-              backgroundColor: p.gray_100,
+              backgroundColor: pending
+                ? p.gray_200
+                : isDelegating
+                  ? p.secondary_200
+                  : p.bg_color_min,
             },
           ]}
         >
@@ -82,7 +97,10 @@ export const OtherDrepCard = ({
         </Text>
 
         <View style={[a.flex_1]}>
-          <Text style={[a.body_2_md_regular, ta.text_gray_medium]} selectable>
+          <Text
+            style={[a.body_2_md_regular, ta.text_gray_medium, a.text_right]}
+            selectable
+          >
             {displayId}
           </Text>
         </View>
@@ -96,6 +114,7 @@ export const OtherDrepCard = ({
         </TouchableOpacity>
       </View>
 
+      {/* TODO: API for drep status is not ready yet
       <Space.Height.md />
 
       <View style={[a.flex_row, a.align_center, a.justify_between]}>
@@ -118,6 +137,7 @@ export const OtherDrepCard = ({
           </Text>
         </View>
       </View>
+      */}
 
       {isDelegating && (
         <>
@@ -142,7 +162,6 @@ export const OtherDrepCard = ({
         type={ButtonType.Secondary}
         onPress={onDelegate}
         disabled={pending}
-        isLoading={pending}
       />
     </LinearGradient>
   )

@@ -47,13 +47,22 @@ export const GovernanceStatusCard = ({
 
   const handlePress = isDelegating ? onChangeToDrep : onDelegate
 
+  const gradientColors = pending
+    ? ([p.gray_100, p.gray_100] as const)
+    : p.bg_gradient_2
+
   if (isDelegating) {
     return (
       <LinearGradient
         start={{x: 1, y: 1}}
         end={{x: 0, y: 0}}
-        colors={p.bg_gradient_2}
-        style={[a.rounded_sm, a.p_lg, a.border, {borderColor: p.gray_200}]}
+        colors={gradientColors}
+        style={[
+          a.rounded_sm,
+          a.p_lg,
+          a.border,
+          {borderColor: p.gray_200, opacity: pending ? 0.5 : 1},
+        ]}
       >
         <View style={[a.flex_row, a.align_center, a.gap_sm]}>
           <View
@@ -64,7 +73,7 @@ export const GovernanceStatusCard = ({
               {
                 width: 48,
                 height: 48,
-                backgroundColor: p.gray_100,
+                backgroundColor: pending ? p.gray_200 : p.secondary_200,
               },
             ]}
           >
@@ -99,14 +108,20 @@ export const GovernanceStatusCard = ({
           type={ButtonType.Secondary}
           onPress={handlePress}
           disabled={pending}
-          isLoading={pending}
         />
       </LinearGradient>
     )
   }
 
   return (
-    <View style={[a.rounded_sm, a.p_lg, a.border, {borderColor: p.gray_200}]}>
+    <View
+      style={[
+        a.rounded_sm,
+        a.p_lg,
+        a.border,
+        {borderColor: p.gray_200, opacity: pending ? 0.5 : 1},
+      ]}
+    >
       <View style={[a.flex_row, a.align_center, a.gap_sm]}>
         <View
           style={[
@@ -116,7 +131,7 @@ export const GovernanceStatusCard = ({
             {
               width: 48,
               height: 48,
-              backgroundColor: p.gray_100,
+              backgroundColor: pending ? p.gray_200 : p.bg_color_min,
             },
           ]}
         >
@@ -139,7 +154,6 @@ export const GovernanceStatusCard = ({
         type={ButtonType.Secondary}
         onPress={handlePress}
         disabled={pending}
-        isLoading={pending}
       />
     </View>
   )
