@@ -181,7 +181,8 @@ export const AppNavigator = () => {
 
       <NotificationUIHandler />
       {isLoggedIn && <PushNotificationNavigationHandler />}
-      {isLoggedIn && <P2PConnectionStatusBar />}
+      {/* Temporarily disabled - P2P provider is now inside WithWalletOpened */}
+      {/* {isLoggedIn && <P2PConnectionStatusBar />} */}
     </>
   )
 }
