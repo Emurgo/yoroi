@@ -2,7 +2,7 @@ import {isNonNullable} from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import {LinearGradient} from 'expo-linear-gradient'
-import React, {ReactNode} from 'react'
+import * as React from 'react'
 import {ActivityIndicator, Pressable, View} from 'react-native'
 
 import {Icon} from '~/ui/Icon'
@@ -14,7 +14,7 @@ type Props = {
   description: string
   onPress?(): void
   pending?: boolean
-  children?: ReactNode
+  children?: React.ReactNode
   showRightArrow?: boolean
   showGradient?: boolean
 }
@@ -77,15 +77,11 @@ export const Action = ({
           )}
 
           <View style={[a.py_lg, a.px_lg, {minHeight: 134}]}>
-            <Text
-              style={[a.font_semibold, a.heading_4_medium, ta.text_gray_max]}
-            >
+            <Text style={[a.heading_4_medium, ta.text_gray_medium]}>
               {title}
             </Text>
 
-            <Text
-              style={[a.font_normal, a.body_1_lg_regular, ta.text_gray_max]}
-            >
+            <Text style={[a.body_2_md_regular, ta.text_gray_medium]}>
               {description}
             </Text>
 

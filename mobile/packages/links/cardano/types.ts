@@ -80,6 +80,19 @@ export interface LinksCardanoStakeV1 extends Links.WebCardanoUriConfig {
   }
 }
 
+// DRep Delegation (similar to CIP-13 Stake but for governance)
+export interface LinksCardanoDrepV1 extends Links.WebCardanoUriConfig {
+  readonly scheme: 'web+cardano'
+  readonly authority: 'drep'
+  readonly version: 'v1'
+  readonly rules: {
+    readonly requiredParams: Readonly<['drep']>
+    readonly optionalParams: Readonly<[]>
+    readonly forbiddenParams: Readonly<[]>
+    readonly extraParams: 'drop'
+  }
+}
+
 // CIP-107 Transaction
 export interface LinksCardanoTransactionV1 extends Links.WebCardanoUriConfig {
   readonly scheme: 'web+cardano'
@@ -165,6 +178,7 @@ export type LinksCardanoUriConfig =
   | LinksCardanoPayV1
   | LinksCardanoPaymentV1
   | LinksCardanoStakeV1
+  | LinksCardanoDrepV1
   | LinksCardanoTransactionV1
   | LinksCardanoBlockV1
   | LinksCardanoAddressV1

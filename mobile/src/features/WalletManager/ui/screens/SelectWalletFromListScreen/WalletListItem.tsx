@@ -16,7 +16,6 @@ import {useWalletManagerSelector} from '~/features/WalletManager/context/WalletM
 import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
 import {useSyncWalletInfo} from '~/features/WalletManager/hooks/useSyncWalletInfo'
 import {features} from '~/kernel/features'
-import {logger} from '~/kernel/logger/logger'
 import {Icon} from '~/ui/Icon'
 import {Loading} from '~/ui/Loading/Loading'
 import {Space} from '~/ui/Space/Space'
@@ -53,29 +52,6 @@ export const WalletListItem = ({walletMeta, onPress}: Props) => {
   const hasSyncedLastSelectedNetwork =
     !syncWalletInfo || // No sync info = wallet not in sync queue = assume synced
     (syncWalletInfo.status === 'done' && syncWalletInfo.network === network) // Explicitly synced on current network
-
-  React.useEffect(() => {
-    logger.debug('WalletListItem: syncWalletInfo changed', {
-      walletId: walletMeta.id,
-      walletName: walletMeta.name,
-      syncWalletInfo: syncWalletInfo
-        ? {
-            status: syncWalletInfo.status,
-            network: syncWalletInfo.network,
-            updatedAt: syncWalletInfo.updatedAt,
-          }
-        : null,
-      currentNetwork: network,
-      hasSyncedLastSelectedNetwork,
-      willShowReducedOpacity: !hasSyncedLastSelectedNetwork,
-    })
-  }, [
-    walletMeta.id,
-    walletMeta.name,
-    syncWalletInfo,
-    network,
-    hasSyncedLastSelectedNetwork,
-  ])
 
   useFocusEffect(
     React.useCallback(() => {

@@ -7,7 +7,7 @@ import * as React from 'react'
 import {Linking, Text, TouchableOpacity} from 'react-native'
 
 import {useAuth} from '~/features/Auth/context/AuthProvider'
-import {useLinksRequestWallet} from '~/features/Links/hooks/useLinksRequestWallet'
+import {PendingActionBanner} from '~/features/Links/components/PendingActionBanner'
 import {pushNotificationsManager} from '~/features/Notifications/common/notification-manager'
 import {
   handleNotificationInternalNavigationAction,
@@ -17,7 +17,6 @@ import {features} from '~/kernel/features'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Button} from '~/ui/Button/Button'
-import {useModal} from '~/ui/Modal/context/ModalContext'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {ScrollView} from '~/ui/ScrollView/ScrollView'
 import {useScrollView} from '~/ui/ScrollView/hooks/useScrollView'
@@ -31,16 +30,6 @@ import {AggregatedBalance} from './AggregatedBalance'
 import {WalletListItem} from './WalletListItem'
 
 export const SelectWalletFromList = () => {
-  const {openModal, closeModal} = useModal()
-  const modalFunctions = React.useMemo(
-    () => ({
-      openModal,
-      closeModal,
-    }),
-    [openModal, closeModal],
-  )
-
-  useLinksRequestWallet(modalFunctions)
   const {scrollViewRef} = useScrollView()
   const navigation = useNavigation()
   const walletMetas = useWalletMetas()
@@ -86,6 +75,7 @@ export const SelectWalletFromList = () => {
 
   return (
     <SafeArea style={[a.gap_md]}>
+      <PendingActionBanner />
       {features.walletListAggregatedBalance && <AggregatedBalance />}
 
       <ScrollView

@@ -18,7 +18,7 @@ export const YoroiRecordLink = () => {
     <TouchableOpacity onPress={onPress}>
       <Divider />
 
-      <View style={[a.pt_md, a.align_start]}>
+      <View style={[a.pt_md, a.align_center]}>
         <Button
           title={strings.staking.yoroiRecord}
           type={ButtonType.Link}

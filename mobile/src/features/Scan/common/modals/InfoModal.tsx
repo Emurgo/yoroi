@@ -8,14 +8,7 @@ import {Button} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 
-type Props = {
-  title: string
-  message: string
-  onClose: () => void
-}
-
-export const InfoModal = ({title: _title, message, onClose}: Props) => {
-  const strings = useStrings()
+const InfoModalContent = ({message}: {message: string}) => {
   const {atoms: ta} = useTheme()
 
   return (
@@ -23,11 +16,17 @@ export const InfoModal = ({title: _title, message, onClose}: Props) => {
       <View style={[a.gap_lg, a.px_lg]}>
         <Text style={[a.body_1_lg_regular, ta.text_gray_max]}>{message}</Text>
       </View>
-
-      <Modal.Footer>
-        <Button title={strings.global.ok} onPress={onClose} />
-      </Modal.Footer>
     </Modal.Content>
+  )
+}
+
+const InfoModalFooter = ({onClose}: {onClose: () => void}) => {
+  const strings = useStrings()
+
+  return (
+    <Modal.Footer>
+      <Button title={strings.global.ok} onPress={onClose} />
+    </Modal.Footer>
   )
 }
 
@@ -38,9 +37,8 @@ export const useInfoModal = () => {
     ({title, message}: {title: string; message: string}) => {
       openModal({
         title,
-        content: (
-          <InfoModal title={title} message={message} onClose={closeModal} />
-        ),
+        content: <InfoModalContent message={message} />,
+        footer: <InfoModalFooter onClose={closeModal} />,
         height: 250,
         onClose: closeModal,
       })

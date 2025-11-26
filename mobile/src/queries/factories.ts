@@ -247,10 +247,11 @@ export const settingsQueryKeys = {
    * @param isAuthDev - Whether auth dev mode is enabled
    * @param hasPermission - Whether notification permission is granted
    */
-  firebaseConfig: (
-    isAuthDev: boolean,
-    hasPermission: boolean,
-  ): QueryKey => ['useFirebaseConfig', isAuthDev, hasPermission],
+  firebaseConfig: (isAuthDev: boolean, hasPermission: boolean): QueryKey => [
+    'useFirebaseConfig',
+    isAuthDev,
+    hasPermission,
+  ],
 }
 
 // ============================================================================

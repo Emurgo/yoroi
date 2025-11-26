@@ -367,33 +367,47 @@ export async function createSendTx({
           .toString(),
       })
 
+      // Check if this is an error about insufficient ADA for change output with tokens
+      const isChangeOutputError =
+        errorMessage.includes('Not enough ADA to create change output') ||
+        errorMessage.includes('change output requires more ADA')
+
       // If subtractFeeFromAmount is true and we got "Not enough ADA" or "Insufficient input" error,
       // we'll handle it by reducing the amount and retrying
+      // Also handle change output errors even when subtractFeeFromAmount is false,
+      // as this is necessary to accommodate tokens in change output
       if (
-        subtractFeeFromAmount &&
-        (isNotEnoughAdaError || isInsufficientInputError) &&
+        (subtractFeeFromAmount || isChangeOutputError) &&
+        (isNotEnoughAdaError ||
+          isInsufficientInputError ||
+          isChangeOutputError) &&
         entries.length > 0
       ) {
         initialBuildFailed = true
         logger.debug(
           'createSendTx: Initial build failed, will retry with reduced amount',
           {
+            subtractFeeFromAmount,
+            isChangeOutputError,
             errorMessage,
-            errorType: isNotEnoughAdaError
-              ? 'NotEnoughAda'
-              : 'InsufficientInput',
+            errorType: isChangeOutputError
+              ? 'ChangeOutputInsufficientAda'
+              : isNotEnoughAdaError
+                ? 'NotEnoughAda'
+                : 'InsufficientInput',
           },
         )
       } else {
-        // Re-throw if it's not the error we're handling or subtractFeeFromAmount is false
+        // Re-throw if it's not the error we're handling
         throw error
       }
     }
 
-    // If subtractFeeFromAmount is true, adjust the first output and rebuild
+    // If subtractFeeFromAmount is true OR we had a change output error, adjust the first output and rebuild
     // This ensures that when sending MAX, the fee is automatically subtracted
     // from the output amount, preventing "Not enough ADA leftover" or "Insufficient input" errors
-    if (subtractFeeFromAmount && entries.length > 0) {
+    // Also handles cases where change output requires more ADA due to tokens
+    if ((subtractFeeFromAmount || initialBuildFailed) && entries.length > 0) {
       const firstEntry = entries[0]
       if (firstEntry) {
         // Check if selected UTXOs have non-ADA assets that will go to change
@@ -593,9 +607,17 @@ export async function createSendTx({
           }
 
           if (!result || !lastSuccessfulAmount) {
-            throw new Error(
-              'Failed to build transaction after multiple reduction attempts',
+            // After max attempts, throw NotEnoughMoneyToSendError so it can be properly handled by UI
+            logger.error(
+              'createSendTx: Failed to build transaction after max attempts',
+              {
+                maxAttempts,
+                finalAttemptAmount: attemptAdaAmount.toString(),
+                minAdaForChange: minAdaForChange.toString(),
+                hasNonAdaAssetsInChange,
+              },
             )
+            throw new NotEnoughMoneyToSendError()
           }
         } else {
           // Initial build succeeded - but we still need to subtract fee when subtractFeeFromAmount is true
@@ -669,6 +691,18 @@ export async function createSendTx({
     }
 
     if (!result) {
+      // If result is undefined and we had initial build failure, it means we couldn't build the transaction
+      // This typically indicates insufficient funds
+      if (initialBuildFailed) {
+        logger.error(
+          'createSendTx: Transaction build failed - result is undefined after retries',
+          {
+            subtractFeeFromAmount,
+            entriesCount: entries.length,
+          },
+        )
+        throw new NotEnoughMoneyToSendError()
+      }
       throw new Error('Transaction build failed: result is undefined')
     }
     return {cbor: result.cbor}

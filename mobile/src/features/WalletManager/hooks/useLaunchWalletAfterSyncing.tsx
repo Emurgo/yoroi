@@ -106,7 +106,7 @@ export function useLaunchWalletAfterSyncing({
               'useLaunchWalletAfterSyncing: Error navigating to tx history, trying wallet selection instead',
               {error, walletId},
             )
-            // If navigation fails (e.g., user not logged in), fall back to wallet selection
+            // If navigation fails, fall back to wallet selection
             walletNavigation.resetToWalletSelection()
           }
         }

@@ -6,10 +6,10 @@ import {
 } from '@react-navigation/stack'
 import * as React from 'react'
 
+import {ClaimScreen} from '~/features/Claim/useCases/ClaimScreen'
 import {ShowSuccessScreen} from '~/features/Claim/useCases/ShowSuccessScreen'
 import {CreateExchangeOrderScreen} from '~/features/Exchange/useCases/CreateExchangeOrderScreen/CreateExchangeOrderScreen'
 import {SelectProviderFromListScreen} from '~/features/Exchange/useCases/SelectProviderFromListScreen/SelectProviderFromListScreen'
-import {ShowExchangeResultOrderScreen} from '~/features/Exchange/useCases/ShowExchangeResultOrderScreen/ShowExchangeResultOrderScreen'
 import {ViewNotificationHistoryScreen} from '~/features/Notifications/useCases/ViewNotificationHistory/ViewNotificationHistoryScreen'
 import {P2PConnectionScreen} from '~/features/P2P/useCases/P2PConnectionScreen/P2PConnectionScreen'
 import {DescribeSelectedAddressScreen} from '~/features/Receive/useCases/DescribeSelectedAddressScreen'
@@ -33,7 +33,7 @@ import {
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {TxHistoryRoutes} from '~/kernel/navigation/types'
 
-import {AddressDetails} from '../Transactions/useCases/AddressDetails/AddressDetails'
+import {AddressDetailsScreen} from '../Transactions/useCases/AddressDetails/AddressDetailsScreen'
 import {BlockDetails} from '../Transactions/useCases/BlockDetails/BlockDetails'
 import {MessageSigningResultScreen} from '../Transactions/useCases/MessageSigning/MessageSigningResultScreen'
 import {MessageSigningScreen} from '../Transactions/useCases/MessageSigning/MessageSigningScreen'
@@ -120,7 +120,7 @@ export const TxHistoryNavigator = () => {
           options={{
             title: strings.transactions.addressDetailsTitle,
           }}
-          getComponent={() => AddressDetails}
+          getComponent={() => AddressDetailsScreen}
         />
 
         <Stack.Screen
@@ -266,6 +266,13 @@ export const TxHistoryNavigator = () => {
 
         {/* Claim Screens */}
         <Stack.Screen
+          name="claim"
+          options={{
+            title: strings.claim.askConfirmationTitle,
+          }}
+          getComponent={() => ClaimScreen}
+        />
+        <Stack.Screen
           name="claim-show-success"
           options={{
             title: strings.claim.showSuccessTitle,
@@ -280,14 +287,6 @@ export const TxHistoryNavigator = () => {
             title: strings.exchange.title,
           }}
           getComponent={() => CreateExchangeOrderScreen}
-        />
-
-        <Stack.Screen
-          name="exchange-result"
-          options={{
-            title: strings.exchange.title,
-          }}
-          getComponent={() => ShowExchangeResultOrderScreen}
         />
 
         <Stack.Screen

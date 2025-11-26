@@ -10,6 +10,8 @@ import * as React from 'react'
 
 import {DiscoverNavigator} from '~/features/Discover/DiscoverNavigator'
 import {MenuNavigator} from '~/features/Menu/Menu'
+import {P2PConnectionProviderWrapper} from '~/features/P2P/components/P2PConnectionProviderWrapper'
+import {P2PConnectionStatusBar} from '~/features/P2P/components/P2PConnectionStatusBar'
 import {PortfolioNavigator} from '~/features/Portfolio/PortfolioNavigator'
 import {useGovernanceManagerMaker} from '~/features/Staking/Governance/common/helpers'
 import {PoolTransitionProvider} from '~/features/Staking/Staking/PoolTransition/PoolTransitionProvider'
@@ -160,39 +162,50 @@ export const WalletTabNavigator = () => {
     [strings.menu.menu, menuTabBarIcon],
   )
 
+  const tabNavigator = (
+    <Tab.Navigator
+      tabBar={TabBarWithHiddenContent}
+      screenOptions={screenOptions}
+    >
+      <Tab.Screen
+        name="history"
+        getComponent={() => TxHistoryNavigator}
+        options={historyOptions}
+      />
+
+      <Tab.Screen
+        name="portfolio"
+        getComponent={() => PortfolioNavigator}
+        options={portfolioOptions}
+      />
+
+      <Tab.Screen
+        name="discover"
+        getComponent={() => DiscoverNavigator}
+        options={discoverOptions}
+      />
+
+      <Tab.Screen
+        name="menu"
+        getComponent={() => MenuNavigator}
+        options={menuOptions}
+      />
+    </Tab.Navigator>
+  )
+
   return (
     <SwapProvider>
       <PoolTransitionProvider>
-        <GovernanceProvider manager={manager}>
-          <Tab.Navigator
-            tabBar={TabBarWithHiddenContent}
-            screenOptions={screenOptions}
-          >
-            <Tab.Screen
-              name="history"
-              getComponent={() => TxHistoryNavigator}
-              options={historyOptions}
-            />
-
-            <Tab.Screen
-              name="portfolio"
-              getComponent={() => PortfolioNavigator}
-              options={portfolioOptions}
-            />
-
-            <Tab.Screen
-              name="discover"
-              getComponent={() => DiscoverNavigator}
-              options={discoverOptions}
-            />
-
-            <Tab.Screen
-              name="menu"
-              getComponent={() => MenuNavigator}
-              options={menuOptions}
-            />
-          </Tab.Navigator>
-        </GovernanceProvider>
+        <P2PConnectionProviderWrapper>
+          <P2PConnectionStatusBar />
+          {manager ? (
+            <GovernanceProvider manager={manager}>
+              {tabNavigator}
+            </GovernanceProvider>
+          ) : (
+            tabNavigator
+          )}
+        </P2PConnectionProviderWrapper>
       </PoolTransitionProvider>
     </SwapProvider>
   )

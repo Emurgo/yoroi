@@ -1,7 +1,7 @@
 import {isNft, isPrimaryToken} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
-import {TransactionOutput} from '@yoroi/tx'
+import {NotEnoughMoneyToSendError, TransactionOutput} from '@yoroi/tx'
 import {Portfolio} from '@yoroi/types'
 
 import * as CSL from '@emurgo/cross-csl-core'
@@ -15,10 +15,12 @@ import {usePortfolioPrimaryBreakdown} from '~/features/Portfolio/common/hooks/us
 import {useSearch} from '~/features/Search/SearchContext'
 import {useNavigateTo} from '~/features/Send/common/navigation'
 import {toTransactionOutput} from '~/features/Send/common/toTransactionOutput'
+import {isInsufficientBalanceError} from '~/features/Staking/Governance/common/transactionErrorHandling'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {usePromise} from '~/hooks/usePromise'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
+import {useResultNavigation} from '~/kernel/navigation/hooks/useResultNavigation'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {AddTokenButton} from '~/ui/AddTokenButton/AddTokenButton'
 import {Boundary} from '~/ui/Boundary/Boundary'
@@ -31,7 +33,8 @@ import {createSendTxFromWallet} from '~/wallets/cardano/transaction-recipes'
 
 export const ListAmountsToSendScreen = () => {
   const navigateTo = useNavigateTo()
-  const {navigateToTxReview} = useWalletNavigation()
+  const resultNavigation = useResultNavigation()
+  const {navigateToTxReview, resetToStartTransfer} = useWalletNavigation()
   const strings = useStrings()
   const {clearSearch} = useSearch()
   const navigation = useNavigation()
@@ -165,9 +168,39 @@ export const ListAmountsToSendScreen = () => {
     [navigateToTxReview, handleOnSuccess],
   )
 
+  const handleCreateUnsignedTxError = React.useCallback(
+    (error: Error) => {
+      // Check for insufficient balance errors and show error screen
+      if (
+        error instanceof NotEnoughMoneyToSendError ||
+        isInsufficientBalanceError(error)
+      ) {
+        logger.info('ListAmountsToSendScreen: Insufficient balance error', {
+          errorMessage: error.message,
+        })
+        // Use unified result screen with insufficient balance message
+        resultNavigation.showResultScreen({
+          type: 'error',
+          context: 'send',
+          title: strings.send.noBalance,
+          message: strings.send.failedTxText,
+          primaryAction: {
+            title: strings.send.failedTxButton,
+            onPress: resetToStartTransfer,
+          },
+        })
+        return
+      }
+      // Re-throw other errors to be handled by default error handling
+      throw error
+    },
+    [resultNavigation, strings, resetToStartTransfer],
+  )
+
   const {resolve: createUnsignedTx, isPending} = usePromise({
     promise: createUnsignedTxPromise,
     onSuccess: handleCreateUnsignedTxSuccess,
+    onError: handleCreateUnsignedTxError,
   })
 
   const handleOnNext = () => {

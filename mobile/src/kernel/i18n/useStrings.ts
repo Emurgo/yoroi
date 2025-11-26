@@ -181,6 +181,7 @@ export const useStrings = () => {
         continue: f(scanMessages.continue),
         openAppSettings: f(scanMessages.openAppSettings),
         transactionTitle: f(scanMessages.transactionTitle),
+        transactionNotFound: f(scanMessages.transactionNotFound),
         blockTitle: f(scanMessages.blockTitle),
         addressTitle: f(scanMessages.addressTitle),
         stakePoolTitle: f(scanMessages.stakePoolTitle),
@@ -1339,6 +1340,30 @@ export const useStrings = () => {
         yoroiRecord: f(stakingMessages.yoroiRecord),
         newToGovernanceTitle: f(stakingMessages.newToGovernanceTitle),
         newToGovernanceText: f(stakingMessages.newToGovernanceText),
+        votingOptionsTitle: f(stakingMessages.votingOptionsTitle),
+        votingOptionsDescription: f(stakingMessages.votingOptionsDescription),
+        exploreOtherGovernanceOptions: f(
+          stakingMessages.exploreOtherGovernanceOptions,
+        ),
+        exploreOtherGovernanceOptionsDescription: f(
+          stakingMessages.exploreOtherGovernanceOptionsDescription,
+        ),
+        otherDReps: f(stakingMessages.otherDReps),
+        id: f(stakingMessages.id),
+        drepStatusLabel: f(stakingMessages.drepStatusLabel),
+        drepStatusActive: f(stakingMessages.drepStatusActive),
+        yoroiDrep: f(stakingMessages.yoroiDrep),
+        delegationStatusLabel: f(stakingMessages.delegationStatusLabel),
+        delegationStatusDelegating: f(
+          stakingMessages.delegationStatusDelegating,
+        ),
+        otherGovernanceOptions: f(stakingMessages.otherGovernanceOptions),
+        delegateToOtherDrep: f(stakingMessages.delegateToOtherDrep),
+        changeToDrep: f(stakingMessages.changeToDrep),
+        dontHaveAnID: f(stakingMessages.dontHaveAnID),
+        orDelegateToYoroiDrepBelow: f(
+          stakingMessages.orDelegateToYoroiDrepBelow,
+        ),
         // Add missing strings
         delegationSuccess: f(stakingMessages.delegationSuccess),
         delegationFailed: f(stakingMessages.delegationFailed),
@@ -1375,6 +1400,12 @@ export const useStrings = () => {
             stakingMessages.confirmDelegationCancelButtonLabel,
           ),
         },
+        governanceRequiredTitle: f(stakingMessages.governanceRequiredTitle),
+        governanceRequiredDescription: f(
+          stakingMessages.governanceRequiredDescription,
+        ),
+        delegateToYoroiDRep: f(stakingMessages.delegateToYoroiDRep),
+        delegateStakeOnly: f(stakingMessages.delegateStakeOnly),
       },
 
       // ReviewTx strings

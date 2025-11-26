@@ -81,6 +81,7 @@ export const DashboardScreen = () => {
   const {isPending: isSyncing, sync} = useSync(wallet)
   const isOnline = useIsOnline(wallet)
   const {openModal, closeModal} = useModal()
+  const walletNavigateTo = useWalletNavigation()
 
   const balances = useBalances(wallet)
   const primaryAmount = Amounts.getAmount(
@@ -94,7 +95,6 @@ export const DashboardScreen = () => {
     isLoading: isStakingInfoLoading,
   } = useStakingInfo(wallet)
 
-  const walletNavigateTo = useWalletNavigation()
   const {isParticipating, isLoading: isGovernanceParticipationLoading} =
     useGovernanceParticipation()
 

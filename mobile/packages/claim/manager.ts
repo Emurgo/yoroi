@@ -1,5 +1,5 @@
 import {FetchData, fetchData, isLeft} from '@yoroi/common'
-import {Api, Claim, Portfolio, Scan} from '@yoroi/types'
+import {Api, Claim, Links, Portfolio} from '@yoroi/types'
 
 import {freeze} from 'immer'
 
@@ -33,7 +33,7 @@ const postClaimTokens =
     {address, primaryTokenInfo, tokenManager}: ClaimManagerMakerOptions,
     {request}: {request: FetchData},
   ) =>
-  async (claimAction: Scan.ActionClaim) => {
+  async (claimAction: Links.CardanoActionClaim) => {
     // builds the request from the action, overides address and code
     const {code, params, url} = claimAction
     const payload = {...params, address, code}

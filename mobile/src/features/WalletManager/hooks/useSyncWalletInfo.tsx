@@ -2,7 +2,6 @@ import {useObservableValue} from '@yoroi/common'
 
 import * as React from 'react'
 
-import {logger} from '~/kernel/logger/logger'
 import {YoroiWallet} from '~/wallets/cardano/types'
 
 import {SyncWalletInfo} from '../common/types'
@@ -39,22 +38,9 @@ export const useSyncWalletInfo = (walletId: YoroiWallet['id']) => {
   const getter = React.useCallback(() => {
     const syncWalletInfos = lastValueRef.current
     if (!syncWalletInfos || syncWalletInfos.size === 0) {
-      logger.debug('useSyncWalletInfo: syncWalletInfos is empty', {walletId})
       return undefined
     }
-    const info = syncWalletInfos.get(walletId)
-    logger.debug('useSyncWalletInfo: Getting sync info', {
-      walletId,
-      hasInfo: !!info,
-      info: info
-        ? {
-            status: info.status,
-            network: info.network,
-            updatedAt: info.updatedAt,
-          }
-        : null,
-    })
-    return info
+    return syncWalletInfos.get(walletId)
   }, [walletId])
 
   return useObservableValue({

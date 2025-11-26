@@ -101,8 +101,12 @@ export async function createVotingRegTx({
     BigInt(protocolParams.linearFee.constant) +
     BigInt(protocolParams.linearFee.coefficient) * BigInt(estimatedTxSize)
 
-  // Voting registration doesn't require deposit, just fees
-  const requiredAda = estimatedFee.toString()
+  // Voting registration doesn't require deposit, but we need:
+  // 1. Fee for the transaction
+  // 2. Minimum UTXO value for the change output (at least 1 ADA)
+  const minUtxoValue = BigInt(protocolParamsConfig.minimumUtxoVal || '1000000') // Base min UTXO (1 ADA)
+  const feeBuffer = BigInt('100000') // 0.1 ADA buffer for fee estimation variance
+  const requiredAda = (estimatedFee + minUtxoValue + feeBuffer).toString()
 
   // Select only necessary UTXOs to cover fees
   const selectedUtxos = selectUtxosForAmount(utxos, requiredAda, primaryTokenId)

@@ -268,14 +268,6 @@ export const makeSyncManager = (
           currentUtxoCount !== currentStateAfterSync.lastUtxoCountBeforeSync
         ) {
           utxoChanged = true
-          logger.debug(
-            'syncManager: UTXO change detected, switching to normal polling',
-            {
-              walletId: currentStateAfterSync.lastTxSubmissionWalletId,
-              oldCount: currentStateAfterSync.lastUtxoCountBeforeSync,
-              newCount: currentUtxoCount,
-            },
-          )
         }
       }
     }
@@ -318,12 +310,25 @@ export const makeSyncManager = (
     })
 
     // Update sync wallet infos observable
+    // Only update if syncInfo actually changed (status, network, or error)
     updateSyncWalletInfos((infos) => {
       const newInfos = new Map(infos)
+      let hasChanges = false
       for (const [walletId, syncInfo] of syncInfos.entries()) {
-        newInfos.set(walletId, syncInfo)
+        const existing = infos.get(walletId)
+        // Check if syncInfo actually changed
+        const hasChanged =
+          !existing ||
+          existing.status !== syncInfo.status ||
+          existing.network !== syncInfo.network ||
+          existing.error?.message !== syncInfo.error?.message
+        if (hasChanged) {
+          newInfos.set(walletId, syncInfo)
+          hasChanges = true
+        }
       }
-      return newInfos
+      // Only return new Map if there were actual changes
+      return hasChanges ? newInfos : infos
     })
   }
 
@@ -378,14 +383,6 @@ export const makeSyncManager = (
       // Immediate sync trigger after transaction submission
       txSubmitted$.pipe(
         switchMap((event) => {
-          logger.debug(
-            'syncManager: Transaction submitted, triggering fast sync',
-            {
-              walletId: event.walletId,
-              txId: event.txId,
-            },
-          )
-
           // Trigger immediate sync for the wallet that submitted transaction
           const wallet = currentWallets.find((w) => w.id === event.walletId)
           if (!wallet) {
@@ -443,14 +440,6 @@ export const makeSyncManager = (
                   currentStateAfterSync.lastUtxoCountBeforeSync
                 ) {
                   utxoChanged = true
-                  logger.debug(
-                    'syncManager: UTXO change detected after immediate sync, switching to normal polling',
-                    {
-                      walletId: event.walletId,
-                      oldCount: currentStateAfterSync.lastUtxoCountBeforeSync,
-                      newCount: currentUtxoCount,
-                    },
-                  )
                 }
               }
 
@@ -487,10 +476,22 @@ export const makeSyncManager = (
 
               updateSyncWalletInfos((infos) => {
                 const newInfos = new Map(infos)
+                let hasChanges = false
                 for (const [walletId, syncInfo] of syncInfos.entries()) {
-                  newInfos.set(walletId, syncInfo)
+                  const existing = infos.get(walletId)
+                  // Check if syncInfo actually changed
+                  const hasChanged =
+                    !existing ||
+                    existing.status !== syncInfo.status ||
+                    existing.network !== syncInfo.network ||
+                    existing.error?.message !== syncInfo.error?.message
+                  if (hasChanged) {
+                    newInfos.set(walletId, syncInfo)
+                    hasChanges = true
+                  }
                 }
-                return newInfos
+                // Only return new Map if there were actual changes
+                return hasChanges ? newInfos : infos
               })
 
               return of(null)
@@ -580,10 +581,22 @@ export const makeSyncManager = (
 
         updateSyncWalletInfos((infos) => {
           const newInfos = new Map(infos)
+          let hasChanges = false
           for (const [id, syncInfo] of syncInfos.entries()) {
-            newInfos.set(id, syncInfo)
+            const existing = infos.get(id)
+            // Check if syncInfo actually changed
+            const hasChanged =
+              !existing ||
+              existing.status !== syncInfo.status ||
+              existing.network !== syncInfo.network ||
+              existing.error?.message !== syncInfo.error?.message
+            if (hasChanged) {
+              newInfos.set(id, syncInfo)
+              hasChanges = true
+            }
           }
-          return newInfos
+          // Only return new Map if there were actual changes
+          return hasChanges ? newInfos : infos
         })
       })
       .catch((error) => {

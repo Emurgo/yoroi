@@ -12,8 +12,8 @@ import {useGovernanceManagerMaker} from './common/helpers'
 import {NavigationStack} from './common/navigation'
 import {ChangeVoteScreen} from './useCases/ChangeVote/ChangeVoteScreen'
 import {HomeScreen} from './useCases/Home/HomeScreen'
-import {NoFundsScreen} from './useCases/NoFunds/NoFundsScreen'
 import {NotSupportedCardanoAppVersion} from './useCases/NotSupportedCardanoAppVersion/NotSupportedCardanoAppVersion'
+import {VotingOptionsScreen} from './useCases/VotingOptions/VotingOptionsScreen'
 
 const Stack = NavigationStack
 
@@ -21,6 +21,10 @@ export const GovernanceNavigator = () => {
   const strings = useStrings()
   const manager = useGovernanceManagerMaker()
   const {palette: p} = useTheme()
+
+  if (!manager) {
+    return null
+  }
 
   return (
     <GovernanceProvider manager={manager}>
@@ -47,15 +51,15 @@ export const GovernanceNavigator = () => {
           />
 
           <Stack.Screen
-            name="staking-gov-not-supported-version"
-            component={NotSupportedCardanoAppVersion}
-            options={txStatusOptions}
+            name="staking-gov-voting-options"
+            component={VotingOptionsScreen}
+            options={{title: strings.staking.otherGovernanceOptions}}
           />
 
           <Stack.Screen
-            name="staking-gov-no-funds"
-            component={NoFundsScreen}
-            options={{title: strings.staking.governanceCentreTitle}}
+            name="staking-gov-not-supported-version"
+            component={NotSupportedCardanoAppVersion}
+            options={txStatusOptions}
           />
         </Stack.Navigator>
       </SafeArea>

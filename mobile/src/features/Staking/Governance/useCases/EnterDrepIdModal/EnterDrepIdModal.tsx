@@ -20,19 +20,26 @@ export type Props = {
     hash: string
     CIP105: boolean
   }) => void
+  initialDrepId?: string
 }
 
 const FIND_DREPS_LINK = ''
 
-export const EnterDrepIdModal = ({onSubmit}: Props) => {
+export const EnterDrepIdModal = ({onSubmit, initialDrepId}: Props) => {
   const strings = useStrings()
   const {atoms: ta, palette: p} = useTheme()
   const {wallet} = useSelectedWallet()
-  const [drepId, setDrepId] = React.useState('')
-  const {closeModal} = useModal()
+  const [drepId, setDrepId] = React.useState(initialDrepId ?? '')
 
-  // Trim whitespace from input
-  const trimmedDrepId = drepId.trim()
+  // Update drepId when initialDrepId changes
+  React.useEffect(() => {
+    if (initialDrepId !== undefined && initialDrepId !== null) {
+      setDrepId(initialDrepId)
+    }
+  }, [initialDrepId])
+
+  // Trim whitespace from input, ensure drepId is always a string
+  const trimmedDrepId = (drepId ?? '').trim()
 
   // Check if input is an ADA handle
   const isHandle = isAdaHandleDomain(trimmedDrepId)
@@ -80,8 +87,8 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
       const isCIP105Format =
         !isHandle && !error && /^(22|23)[0-9a-fA-F]{56}$/.test(trimmedDrepId)
 
+      // Modal will be closed by the parent component after async operations
       onSubmit?.({hash, type, CIP105: isCIP105Format})
-      closeModal()
     } catch (e) {
       Alert.alert(strings.global.error, strings.staking.invalidDRepId)
     }

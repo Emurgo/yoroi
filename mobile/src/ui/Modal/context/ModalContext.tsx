@@ -58,6 +58,7 @@ type ModalActions = {
   setCanContinue: (canContinue: boolean) => void
   setHasExpanded: (hasExpanded: boolean) => void
   setCanExpand: (canExpand: boolean) => void
+  setHeight: (height: number) => void
   clearQueue: () => void
 }
 
@@ -224,6 +225,12 @@ export const ModalProvider = ({children, initialState}: Props) => {
           canExpand,
         })
       },
+      setHeight: (height: number) => {
+        dispatch({
+          type: 'setHeight',
+          height,
+        })
+      },
       clearQueue: () => {
         dispatch({
           type: 'clearQueue',
@@ -281,6 +288,7 @@ type ModalAction =
   | {type: 'setWithFeedback'; withFeedback: boolean}
   | {type: 'setHasExpanded'; hasExpanded: boolean}
   | {type: 'setCanExpand'; canExpand: boolean}
+  | {type: 'setHeight'; height: number}
 
 const modalReducer = (state: ModalState, action: ModalAction) => {
   switch (action.type) {
@@ -321,12 +329,17 @@ const modalReducer = (state: ModalState, action: ModalAction) => {
       }
 
     case 'closeAndProcessQueue':
+      // Defer onClose callback to avoid updating other components during render
       if (state.onClose) {
-        try {
-          state.onClose()
-        } catch (error) {
-          console.error('[ModalReducer] Error calling onClose:', error)
-        }
+        // Use setTimeout to defer callback execution until after render completes
+        const onCloseCallback = state.onClose
+        setTimeout(() => {
+          try {
+            onCloseCallback()
+          } catch (error) {
+            console.error('[ModalReducer] Error calling onClose:', error)
+          }
+        }, 0)
       }
 
       if (state.queue.length > 0) {
@@ -400,6 +413,12 @@ const modalReducer = (state: ModalState, action: ModalAction) => {
       return {
         ...state,
         canExpand: action.canExpand,
+      }
+
+    case 'setHeight':
+      return {
+        ...state,
+        height: action.height,
       }
 
     default:

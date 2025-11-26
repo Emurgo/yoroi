@@ -1,4 +1,4 @@
-import {Chain, Portfolio, Scan} from '@yoroi/types'
+import {Chain, Links, Portfolio, Scan} from '@yoroi/types'
 
 import {NavigatorScreenParams, useNavigation} from '@react-navigation/native'
 import {StackNavigationProp} from '@react-navigation/stack'
@@ -30,7 +30,6 @@ export type WalletTabRoutes = {
 export type WalletStackRoutes = {
   'setup-wallet': undefined
   'wallet-selection': undefined
-  'exchange-result': undefined
   'main-wallet-routes': NavigatorScreenParams<WalletTabRoutes>
   'review-tx-routes': NavigatorScreenParams<ReviewTxRoutes>
   'settings': NavigatorScreenParams<SettingsStackRoutes>
@@ -54,7 +53,7 @@ export type WalletInitRoutes = {
   'setup-wallet-verify-recovery-phrase-mnemonic': undefined
   'setup-wallet-preparing-wallet': undefined
   'setup-wallet-restore-from-link': {
-    action: Scan.ActionRestoreWallet
+    action: Links.CardanoActionRestoreWallet
   }
   'setup-wallet-restore-read-only-choose-type': undefined
   'setup-wallet-restore-read-only-from-key': undefined
@@ -114,6 +113,7 @@ export type ScanRoutes = {
 }
 
 type ClaimRoutes = {
+  'claim': undefined
   'claim-show-success': undefined
 }
 
@@ -139,7 +139,6 @@ export type StakingCenterRoutes = {
 
 export type ExchangeRoutes = {
   'exchange-create-order': undefined
-  'exchange-result': undefined
   'exchange-select-buy-provider': undefined
   'exchange-select-sell-provider': undefined
 }
@@ -316,7 +315,6 @@ export type AppRoutes = {
   'playground': undefined
   'manage-wallets': NavigatorScreenParams<WalletStackRoutes>
   'custom-pin-auth': undefined
-  'exchange-result': undefined
   'bio-auth-initial': undefined
   'enable-login-with-pin': undefined
   'agreement-changed-notice': undefined

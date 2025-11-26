@@ -24,6 +24,7 @@ export interface LinksWebCardanoUriConfig extends LinksUriConfig {
     | 'pay'
     | 'payment'
     | 'stake'
+    | 'drep'
     | 'transaction'
     | 'block'
     | 'address'

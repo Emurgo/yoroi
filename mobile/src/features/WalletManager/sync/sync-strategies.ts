@@ -21,13 +21,6 @@ export const syncWallet = async (
   const startTime = Date.now()
 
   try {
-    logger.debug('syncWallet: Starting', {
-      walletId: wallet.id,
-      isForced,
-      hasTipStatus: !!tipStatus,
-      origin: 'SyncManager',
-    })
-
     await wallet.sync({isForced, tipStatus})
 
     const syncInfo: SyncWalletInfo = {
@@ -36,12 +29,6 @@ export const syncWallet = async (
       updatedAt: Date.now(),
       network: wallet.networkManager.network,
     }
-
-    logger.debug('syncWallet: Completed', {
-      walletId: wallet.id,
-      duration: Date.now() - startTime,
-      origin: 'SyncManager',
-    })
 
     return syncInfo
   } catch (error) {
@@ -91,21 +78,8 @@ export const syncWalletsParallel = async (
   })
 
   if (walletsToSync.length === 0) {
-    logger.debug('syncWalletsParallel: No wallets to sync', {
-      totalWallets: wallets.length,
-      origin: 'SyncManager',
-    })
     return new Map()
   }
-
-  logger.debug('syncWalletsParallel: Starting', {
-    totalWallets: wallets.length,
-    walletsToSync: walletsToSync.length,
-    concurrencyLimit: config.concurrencyLimit,
-    staggerSyncs: config.staggerSyncs,
-    staggerDelay: config.staggerDelay,
-    origin: 'SyncManager',
-  })
 
   // Create sync tasks with optional staggering
   const syncTasks = walletsToSync.map((wallet, index) => {
@@ -113,12 +87,6 @@ export const syncWalletsParallel = async (
       // Stagger syncs: add delay based on wallet index
       if (config.staggerSyncs && index > 0) {
         const delay = index * config.staggerDelay
-        logger.debug('syncWalletsParallel: Staggering sync', {
-          walletId: wallet.id,
-          delay,
-          index,
-          origin: 'SyncManager',
-        })
         await new Promise<void>((resolve) => setTimeout(resolve, delay))
       }
 
@@ -134,12 +102,6 @@ export const syncWalletsParallel = async (
   for (const result of results) {
     syncInfos.set(result.id, result)
   }
-
-  logger.debug('syncWalletsParallel: Completed', {
-    synced: syncInfos.size,
-    staggerSyncs: config.staggerSyncs,
-    origin: 'SyncManager',
-  })
 
   return syncInfos
 }

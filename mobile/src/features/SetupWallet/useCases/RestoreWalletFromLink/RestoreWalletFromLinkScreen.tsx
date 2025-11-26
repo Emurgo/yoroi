@@ -1,7 +1,8 @@
 import {useAsyncStorage} from '@yoroi/common'
+import {useLinks} from '@yoroi/links'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
-import {Api, Scan, Wallet} from '@yoroi/types'
+import {Api, Links, Wallet} from '@yoroi/types'
 
 import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
@@ -13,7 +14,6 @@ import {
   View,
 } from 'react-native'
 
-import {usePendingScanAction} from '~/features/Links/context/PendingScanActionContext'
 import {parseWalletMeta} from '~/features/WalletManager/common/validators/wallet-meta'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useCreateWalletFromRootKey} from '~/features/WalletManager/hooks/useCreateWalletFromRootKey'
@@ -76,18 +76,18 @@ export const RestoreWalletFromLinkScreen = () => {
   const {walletManager} = useWalletManager()
   const storage = useAsyncStorage()
   const {walletIdChanged} = useSetupWallet()
-  const {clearPendingScanAction} = usePendingScanAction()
+  const {markActionProcessed} = useLinks()
 
   const {action} = useUnsafeParams<{
-    action: Scan.ActionRestoreWallet
+    action: Links.CardanoActionRestoreWallet
   }>()
 
-  // Clear the pending scan action from context as soon as we mount this screen
+  // Clear the pending action from context as soon as we mount this screen
   // This prevents the action from being re-processed if the component remounts
   // or if navigation happens multiple times
   React.useEffect(() => {
-    clearPendingScanAction()
-  }, []) // Only run once on mount
+    markActionProcessed()
+  }, [markActionProcessed]) // Only run once on mount
 
   // Track if we've already processed this action to prevent re-showing modal
   const hasProcessedRef = React.useRef(false)

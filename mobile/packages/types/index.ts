@@ -136,6 +136,23 @@ import {
   LinksWebCardanoUriConfig,
 } from './links/cardano'
 import {
+  CardanoActionBrowseDapp as CardanoActionBrowseDappType,
+  CardanoActionClaim as CardanoActionClaimType,
+  CardanoActionDelegateDrep as CardanoActionDelegateDrepType,
+  CardanoActionLaunchUrl as CardanoActionLaunchUrlType,
+  CardanoActionP2PConnect as CardanoActionP2PConnectType,
+  CardanoActionPayRequest as CardanoActionPayRequestType,
+  CardanoActionRestoreWallet as CardanoActionRestoreWalletType,
+  CardanoActionSendOnlyReceiver as CardanoActionSendOnlyReceiverType,
+  CardanoActionSendSinglePt as CardanoActionSendSinglePtType,
+  CardanoActionStakePool as CardanoActionStakePoolType,
+  CardanoAction as CardanoActionType,
+  CardanoActionViewAddress as CardanoActionViewAddressType,
+  CardanoActionViewBlock as CardanoActionViewBlockType,
+  CardanoActionViewTransaction as CardanoActionViewTransactionType,
+  ScanFeature,
+} from './links/cardano-actions'
+import {
   LinksErrorExtraParamsDenied,
   LinksErrorForbiddenParamsProvided,
   LinksErrorParamsValidationFailed,
@@ -260,22 +277,6 @@ import {ResolverManager} from './resolver/manager'
 import {ResolverNameServer} from './resolver/name-server'
 import {ResolverReceiver} from './resolver/receiver'
 import {ResolverStorage} from './resolver/storage'
-import {
-  ScanAction,
-  ScanActionBrowseDapp,
-  ScanActionClaim,
-  ScanActionLaunchUrl,
-  ScanActionP2PConnect,
-  ScanActionPayRequest,
-  ScanActionRestoreWallet,
-  ScanActionSendOnlyReceiver,
-  ScanActionSendSinglePt,
-  ScanActionStakePool,
-  ScanActionViewAddress,
-  ScanActionViewBlock,
-  ScanActionViewTransaction,
-  ScanFeature,
-} from './scan/actions'
 import {ScanErrorUnknown, ScanErrorUnknownContent} from './scan/errors'
 import {SwapAggregator} from './swap/aggregator'
 import {
@@ -302,15 +303,15 @@ import {SwapStorage} from './swap/storage'
 import {TransferEntry, TransferTarget, TransferTargets} from './transfer/state'
 import {WalletMeta} from './wallet/meta'
 import {
+  TRANSACTION_DIRECTION,
+  TRANSACTION_STATUS,
+  TRANSACTION_TYPE,
   TransactionAssurance,
   TransactionDirection,
   TransactionInfo,
   TransactionStatus,
   TransactionType,
   Transactions,
-  TRANSACTION_DIRECTION,
-  TRANSACTION_STATUS,
-  TRANSACTION_TYPE,
   TxMetadata,
   TxMetadataInfo,
   WalletTransaction,
@@ -441,11 +442,44 @@ export namespace Links {
 
   export type Module<T extends LinksUriConfig> = LinksModule<T>
 
+  // Cardano link actions (multichain-ready: future BitcoinAction, EthereumAction, etc.)
+  export namespace CardanoAction {
+    export type Action = CardanoActionType
+    export type Claim = CardanoActionClaimType
+    export type SendOnlyReceiver = CardanoActionSendOnlyReceiverType
+    export type SendSinglePt = CardanoActionSendSinglePtType
+    export type LaunchUrl = CardanoActionLaunchUrlType
+    export type BrowseDapp = CardanoActionBrowseDappType
+    export type PayRequest = CardanoActionPayRequestType
+    export type StakePool = CardanoActionStakePoolType
+    export type DelegateDrep = CardanoActionDelegateDrepType
+    export type ViewTransaction = CardanoActionViewTransactionType
+    export type ViewBlock = CardanoActionViewBlockType
+    export type ViewAddress = CardanoActionViewAddressType
+    export type P2PConnect = CardanoActionP2PConnectType
+    export type RestoreWallet = CardanoActionRestoreWalletType
+  }
+  export type CardanoAction = CardanoActionType
+  export type CardanoActionClaim = CardanoActionClaimType
+  export type CardanoActionSendOnlyReceiver = CardanoActionSendOnlyReceiverType
+  export type CardanoActionSendSinglePt = CardanoActionSendSinglePtType
+  export type CardanoActionLaunchUrl = CardanoActionLaunchUrlType
+  export type CardanoActionBrowseDapp = CardanoActionBrowseDappType
+  export type CardanoActionPayRequest = CardanoActionPayRequestType
+  export type CardanoActionStakePool = CardanoActionStakePoolType
+  export type CardanoActionDelegateDrep = CardanoActionDelegateDrepType
+  export type CardanoActionViewTransaction = CardanoActionViewTransactionType
+  export type CardanoActionViewBlock = CardanoActionViewBlockType
+  export type CardanoActionViewAddress = CardanoActionViewAddressType
+  export type CardanoActionP2PConnect = CardanoActionP2PConnectType
+  export type CardanoActionRestoreWallet = CardanoActionRestoreWalletType
+
   export namespace Errors {
     export class ExtraParamsDenied extends LinksErrorExtraParamsDenied {}
     export class ForbiddenParamsProvided extends LinksErrorForbiddenParamsProvided {}
     export class RequiredParamsMissing extends LinksErrorRequiredParamsMissing {}
     export class ParamsValidationFailed extends LinksErrorParamsValidationFailed {}
+    export class UnknownContent extends ScanErrorUnknownContent {}
     export class UnsupportedAuthority extends LinksErrorUnsupportedAuthority {}
     export class UnsupportedVersion extends LinksErrorUnsupportedVersion {}
     export class SchemeNotImplemented extends LinksErrorSchemeNotImplemented {}
@@ -707,6 +741,7 @@ export namespace Wallet {
 export type {BaseAsset} from './wallet/transactions'
 
 // Re-export transaction types at top level for convenience
+export {TRANSACTION_DIRECTION, TRANSACTION_STATUS, TRANSACTION_TYPE}
 export type {
   TransactionAssurance,
   TransactionDirection,
@@ -717,11 +752,6 @@ export type {
   TxMetadata,
   TxMetadataInfo,
   WalletTransaction,
-}
-export {
-  TRANSACTION_DIRECTION,
-  TRANSACTION_STATUS,
-  TRANSACTION_TYPE,
 }
 
 export namespace Exchange {
@@ -771,24 +801,10 @@ export namespace Notifications {
 
 export namespace Scan {
   export namespace Errors {
-    export class UnknownContent extends ScanErrorUnknownContent {}
     export class Unknown extends ScanErrorUnknown {}
   }
 
   export type Feature = ScanFeature
-  export type Action = ScanAction
-  export type ActionClaim = ScanActionClaim
-  export type ActionSendOnlyReceiver = ScanActionSendOnlyReceiver
-  export type ActionSendSinglePt = ScanActionSendSinglePt
-  export type ActionScanLaunchUrl = ScanActionLaunchUrl
-  export type ActionBrowseDapp = ScanActionBrowseDapp
-  export type ActionPayRequest = ScanActionPayRequest
-  export type ActionStakePool = ScanActionStakePool
-  export type ActionViewTransaction = ScanActionViewTransaction
-  export type ActionViewBlock = ScanActionViewBlock
-  export type ActionViewAddress = ScanActionViewAddress
-  export type ActionP2PConnect = ScanActionP2PConnect
-  export type ActionRestoreWallet = ScanActionRestoreWallet
 }
 
 export namespace Claim {
@@ -811,6 +827,6 @@ export namespace Claim {
   export type Manager = ClaimManager
 }
 
-export * from './helpers/types'
-export * from './helpers/storage'
 export * from './api/cardano'
+export * from './helpers/storage'
+export * from './helpers/types'

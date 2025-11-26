@@ -53,6 +53,17 @@ export async function createUnsignedGovernanceTx({
     networkId,
   )
 
+  // Check if there's a StakeRegistration certificate (requires keyDeposit)
+  const hasStakeRegistration = CardanoMobileWrapped.cslScope(() => {
+    for (const cert of votingCertificates) {
+      const stakeReg = cert.asStakeRegistration()
+      if (stakeReg) {
+        return true
+      }
+    }
+    return false
+  })
+
   // Estimate fee for governance transaction
   // Governance transactions are typically small (~400-600 bytes)
   const estimatedTxSize = 600 // bytes - conservative estimate
@@ -60,8 +71,21 @@ export async function createUnsignedGovernanceTx({
     BigInt(protocolParams.linearFee.constant) +
     BigInt(protocolParams.linearFee.coefficient) * BigInt(estimatedTxSize)
 
-  // Governance transactions don't require deposit, just fees
-  const requiredAda = estimatedFee.toString()
+  // Calculate required ADA:
+  // 1. Fee for the transaction
+  // 2. Key deposit if registering staking key (StakeRegistration certificate)
+  // 3. Minimum UTXO value for the change output (at least 1 ADA)
+  const minUtxoValue = BigInt(protocolParamsConfig.minimumUtxoVal || '1000000') // Base min UTXO (1 ADA)
+  const feeBuffer = BigInt('100000') // 0.1 ADA buffer for fee estimation variance
+  const keyDeposit = hasStakeRegistration
+    ? BigInt(protocolParams.keyDeposit)
+    : BigInt(0)
+  const requiredAda = (
+    estimatedFee +
+    keyDeposit +
+    minUtxoValue +
+    feeBuffer
+  ).toString()
 
   // Select UTXOs preferring pure ADA first to avoid issues with change outputs containing tokens
   // This strategy minimizes the minimum ADA required for change outputs

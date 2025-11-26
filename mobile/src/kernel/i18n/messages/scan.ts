@@ -197,4 +197,8 @@ export const scanMessages = defineMessages({
     id: 'scan.cancel',
     defaultMessage: '!!!Cancel',
   },
+  transactionNotFound: {
+    id: 'scan.transactionNotFound',
+    defaultMessage: '!!!Transaction not found in wallet history.',
+  },
 })

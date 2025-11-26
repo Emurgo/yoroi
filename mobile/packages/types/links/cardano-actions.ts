@@ -1,9 +1,9 @@
-export type ScanActionSendOnlyReceiver = Readonly<{
+export type CardanoActionSendOnlyReceiver = Readonly<{
   action: 'send-only-receiver'
   receiver: string
 }>
 
-export type ScanActionSendSinglePt = Readonly<{
+export type CardanoActionSendSinglePt = Readonly<{
   action: 'send-single-pt'
   receiver: string
   params:
@@ -15,19 +15,19 @@ export type ScanActionSendSinglePt = Readonly<{
     | undefined
 }>
 
-export type ScanActionClaim = Readonly<{
+export type CardanoActionClaim = Readonly<{
   action: 'claim'
   url: string
   code: string
   params: Record<string, any> | undefined
 }>
 
-export type ScanActionLaunchUrl = Readonly<{
+export type CardanoActionLaunchUrl = Readonly<{
   action: 'launch-url'
   url: string
 }>
 
-export type ScanActionBrowseDapp = Readonly<{
+export type CardanoActionBrowseDapp = Readonly<{
   action: 'browse-dapp'
   scheme: string
   domain: string
@@ -36,7 +36,7 @@ export type ScanActionBrowseDapp = Readonly<{
   query?: string
 }>
 
-export type ScanActionPayRequest = Readonly<{
+export type CardanoActionPayRequest = Readonly<{
   action: 'pay-request'
   address: string
   amount?: string
@@ -44,34 +44,39 @@ export type ScanActionPayRequest = Readonly<{
   memo?: string
 }>
 
-export type ScanActionStakePool = Readonly<{
+export type CardanoActionStakePool = Readonly<{
   action: 'stake-pool'
   pool: string
 }>
 
-export type ScanActionViewTransaction = Readonly<{
+export type CardanoActionDelegateDrep = Readonly<{
+  action: 'delegate-drep'
+  drep: string
+}>
+
+export type CardanoActionViewTransaction = Readonly<{
   action: 'view-transaction'
   hash: string
 }>
 
-export type ScanActionViewBlock = Readonly<{
+export type CardanoActionViewBlock = Readonly<{
   action: 'view-block'
   hash?: string
   height?: string
 }>
 
-export type ScanActionViewAddress = Readonly<{
+export type CardanoActionViewAddress = Readonly<{
   action: 'view-address'
   address: string
 }>
 
-export type ScanActionP2PConnect = Readonly<{
+export type CardanoActionP2PConnect = Readonly<{
   action: 'p2p-connect'
   peerId: string
   signalingUrl?: string
 }>
 
-export type ScanActionRestoreWallet = Readonly<{
+export type CardanoActionRestoreWallet = Readonly<{
   action: 'restore-wallet'
   type: 'full' | 'readonly'
   mnemonic?: string
@@ -84,18 +89,19 @@ export type ScanActionRestoreWallet = Readonly<{
   accountVisual?: string
 }>
 
-export type ScanAction =
-  | ScanActionSendOnlyReceiver
-  | ScanActionSendSinglePt
-  | ScanActionClaim
-  | ScanActionLaunchUrl
-  | ScanActionBrowseDapp
-  | ScanActionPayRequest
-  | ScanActionStakePool
-  | ScanActionViewTransaction
-  | ScanActionViewBlock
-  | ScanActionViewAddress
-  | ScanActionP2PConnect
-  | ScanActionRestoreWallet
+export type CardanoAction =
+  | CardanoActionSendOnlyReceiver
+  | CardanoActionSendSinglePt
+  | CardanoActionClaim
+  | CardanoActionLaunchUrl
+  | CardanoActionBrowseDapp
+  | CardanoActionPayRequest
+  | CardanoActionStakePool
+  | CardanoActionDelegateDrep
+  | CardanoActionViewTransaction
+  | CardanoActionViewBlock
+  | CardanoActionViewAddress
+  | CardanoActionP2PConnect
+  | CardanoActionRestoreWallet
 
 export type ScanFeature = 'send' | 'scan'

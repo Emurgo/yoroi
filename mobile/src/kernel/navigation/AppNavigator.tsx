@@ -22,9 +22,8 @@ import {
 } from '~/features/Initialization/ui/screens/DarkThemeAnnouncementScreen'
 import {LegalAgreement} from '~/features/Legal/common/types'
 import {useLegalAgreement} from '~/features/Legal/hooks/useLegalAgreement'
-import {ScanActionHandler} from '~/features/Links/components/ScanActionHandler'
+import {ActionHandler} from '~/features/Links/components/ActionHandler'
 import {useDeepLinkWatcher} from '~/features/Links/hooks/useDeepLinkWatcher'
-import {useLinksRequestAction} from '~/features/Links/hooks/useLinksRequestAction'
 import {PushNotificationNavigationHandler} from '~/features/Notifications/common/PushNotificationNavigationHandler'
 import {useInitNotifications} from '~/features/Notifications/common/hooks'
 import {NotificationUIHandler} from '~/features/Notifications/useCases/NotificationUIHandler'
@@ -35,7 +34,6 @@ import {useHasWallets} from '~/features/WalletManager/hooks/useHasWallets'
 import {agreementDate} from '../constants'
 import {features} from '../features'
 import {useStrings} from '../i18n/useStrings'
-import {logger} from '../logger/logger'
 import {WalletNavigator} from './WalletNavigator'
 import {defaultStackNavigationOptions} from './common/helpers'
 import {FirstAction} from './types'
@@ -49,10 +47,7 @@ export const AppNavigator = () => {
   const afterLoginAction = useAfterLoginAction()
   const strings = useStrings()
 
-  // Enable deep link action handling with modal support (only when logged in)
-  useLinksRequestAction()
-
-  // Watch for web+cardano:// deep links (works when logged in or out)
+  // Watch for deep links (both Yoroi and Cardano)
   useDeepLinkWatcher()
 
   const screenOptions = React.useMemo(
@@ -65,17 +60,10 @@ export const AppNavigator = () => {
     pushEnabled: features.pushNotifications,
   })
 
-  React.useEffect(() => {
-    logger.debug('AppNavigator: rendering ScanActionHandler', {
-      isLoggedIn,
-      isLoggedOut,
-    })
-  }, [isLoggedIn, isLoggedOut])
-
   return (
     <>
-      {/* Handle web+cardano:// deep links - render unconditionally to support wallet restoration */}
-      <ScanActionHandler />
+      {/* Handle all link actions - render unconditionally to support wallet restoration */}
+      <ActionHandler />
       <Stack.Navigator screenOptions={screenOptions}>
         {/* Not Authenticated */}
         {isLoggedOut && (
@@ -192,6 +180,8 @@ export const AppNavigator = () => {
 
       <NotificationUIHandler />
       {isLoggedIn && <PushNotificationNavigationHandler />}
+      {/* Temporarily disabled - P2P provider is now inside WithWalletOpened */}
+      {/* {isLoggedIn && <P2PConnectionStatusBar />} */}
     </>
   )
 }

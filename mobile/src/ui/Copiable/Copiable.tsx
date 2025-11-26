@@ -13,6 +13,7 @@ type CopiableProps = {
   style?: ViewStyle
   feedback?: string
   onCopy?: () => void
+  onPress?: () => void
 }
 
 export const Copiable = ({
@@ -22,36 +23,40 @@ export const Copiable = ({
   title,
   feedback,
   onCopy,
+  onPress,
 }: CopiableProps) => {
   const {palette: p} = useTheme()
   const {isCopying, copy} = useCopy()
   const CopyIcon = isCopying ? Icon.CopySuccess : Icon.Copy
 
   return (
-    <View
-      style={[
-        {
-          ...a.flex_row,
-          ...a.justify_between,
-          ...a.gap_xs,
-        },
-        style,
-      ]}
-    >
+    <View style={[a.flex_row, a.justify_between, a.gap_xs, style]}>
       {title !== undefined && (
-        <View style={{...a.flex_1}}>
+        <View style={a.flex_1}>
           <Text
-            style={{
-              ...a.body_2_md_regular,
-              color: p.el_gray_max,
-            }}
+            style={[
+              a.body_2_md_regular,
+              {
+                color: p.el_gray_max,
+              },
+            ]}
           >
             {title}
           </Text>
         </View>
       )}
 
-      {children}
+      {onPress ? (
+        <TouchableOpacity
+          onPress={onPress}
+          activeOpacity={0.5}
+          style={[a.flex_1, a.flex_row, a.justify_center, a.gap_xs]}
+        >
+          {children}
+        </TouchableOpacity>
+      ) : (
+        children
+      )}
 
       <TouchableOpacity
         onPress={(event) => {
