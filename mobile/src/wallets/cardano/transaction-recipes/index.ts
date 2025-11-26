@@ -4,6 +4,9 @@ export type {CreateUtxoConsolidationTxParams} from './createUtxoConsolidationTx'
 export {createWithdrawalTx} from './createWithdrawalTx'
 export type {CreateWithdrawalTxParams} from './createWithdrawalTx'
 
+export {createWithdrawalWithGovernanceTx} from './createWithdrawalWithGovernanceTx'
+export type {CreateWithdrawalWithGovernanceTxParams} from './createWithdrawalWithGovernanceTx'
+
 export {createDelegationTx} from './createDelegationTx'
 export type {CreateDelegationTxParams} from './createDelegationTx'
 
@@ -30,5 +33,6 @@ export {
   createUtxoConsolidationTxFromWallet,
   createVotingRegTxFromWallet,
   createWithdrawalTxFromWallet,
+  createWithdrawalWithGovernanceTxFromWallet,
 } from './wallet-helpers'
 

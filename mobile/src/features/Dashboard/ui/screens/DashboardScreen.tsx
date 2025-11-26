@@ -1,8 +1,4 @@
-import {
-  GOVERNANCE_YOROI_DREP_ID_HEX,
-  useDelegationCertificate,
-  useGovernance,
-} from '@yoroi/staking'
+import {GOVERNANCE_YOROI_DREP_ID_HEX} from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
@@ -39,6 +35,7 @@ import {Button} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/context/ModalContext'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
+import {createWithdrawalWithGovernanceTxFromWallet} from '~/wallets/cardano/transaction-recipes'
 import {isEmptyString} from '~/wallets/utils/string'
 import {Amounts} from '~/wallets/utils/utils'
 
@@ -97,12 +94,9 @@ export const DashboardScreen = () => {
 
   const {isParticipating, isLoading: isGovernanceParticipationLoading} =
     useGovernanceParticipation()
+  const {networkManager} = useSelectedNetwork()
 
-  const {manager} = useGovernance()
-  const createDelegationCertificate = useDelegationCertificate()
-
-  const hasStakingKeyRegistered = stakingInfo?.status !== 'not-registered'
-  const needsToRegisterStakingKey = !hasStakingKeyRegistered
+  const [isBuildingCombinedTx, setIsBuildingCombinedTx] = React.useState(false)
 
   const createOnWithdraw =
     ({shouldDeregister}: {shouldDeregister: boolean}) =>
@@ -112,46 +106,35 @@ export const DashboardScreen = () => {
       }
       if (!isParticipating) {
         const handleDelegateAndWithdraw = async () => {
-          const stakingKey = wallet.getStakingKey()
           closeModal()
+          setIsBuildingCombinedTx(true)
 
-          const delegationCert = createDelegationCertificate({
-            hash: GOVERNANCE_YOROI_DREP_ID_HEX,
-            type: 'key',
-            stakingKey,
-          })
-
-          // Combine certificates with stake registration if needed
-          const stakeCert = needsToRegisterStakingKey
-            ? manager.createStakeRegistrationCertificate(stakingKey)
-            : null
-          const certs =
-            stakeCert !== null ? [stakeCert, delegationCert] : [delegationCert]
-
-          let unsignedTx
-          // Try to create combined tx with governance delegation + withdrawal
           try {
-            unsignedTx = await wallet.createWithdrawalTx({
-              shouldDeregister,
-              addressMode: meta.addressMode,
-              // @ts-ignore - governanceCertificates is a valid option but not in types yet
-              governanceCertificates: certs,
+            // Create combined transaction with withdrawal + DRep delegation
+            const drepValue: {KeyHash: string} = {
+              KeyHash: GOVERNANCE_YOROI_DREP_ID_HEX,
+            }
+            const result = await createWithdrawalWithGovernanceTxFromWallet(
+              wallet,
+              {
+                shouldDeregister,
+                addressMode: meta.addressMode,
+                networkManager,
+                drepValue,
+              },
+            )
+
+            // Navigate to tx review with combined operations
+            walletNavigateTo.navigateToTxReview({
+              cbor: result.cbor,
+              operations: [<StakeRewardsWithdrawalOperation key="0" />],
+              context: 'withdraw rewards',
             })
           } catch {
-            // If withdrawal fails (e.g., no rewards), create governance-only tx
-            unsignedTx = await wallet.createUnsignedGovernanceTx({
-              addressMode: meta.addressMode,
-              votingCertificates: certs,
-            })
+            navigateTo.failedTx()
+          } finally {
+            setIsBuildingCombinedTx(false)
           }
-
-          // Navigate to tx review
-          unsignedTxChanged(unsignedTx)
-          walletNavigateTo.navigateToTxReview({
-            operations: [<StakeRewardsWithdrawalOperation key="0" />],
-            // @ts-ignore - context shold  be updated
-            context: 'withdraw rewards and delegate governance',
-          })
         }
         openModal({
           title: strings.staking.withdrawWarningTitle,
@@ -166,6 +149,8 @@ export const DashboardScreen = () => {
 
       createWithdrawalTx({shouldDeregister})
     }
+
+  const isLoading = isWithdrawLoading || isBuildingCombinedTx
 
   return (
     <SafeArea
@@ -226,7 +211,7 @@ export const DashboardScreen = () => {
                 totalDelegated={new BigNumber(stakingInfo.amount)}
                 ctaProps={{
                   onPress: createOnWithdraw({shouldDeregister: false}),
-                  disabled: meta.isReadOnly || isWithdrawLoading || !hasRewards,
+                  disabled: meta.isReadOnly || isLoading || !hasRewards,
                 }}
               />
             ) : (
@@ -249,7 +234,7 @@ export const DashboardScreen = () => {
               <StakePoolInfos
                 ctaProps={{
                   onPress: createOnWithdraw({shouldDeregister: true}),
-                  disabled: meta.isReadOnly || isWithdrawLoading,
+                  disabled: meta.isReadOnly || isLoading,
                 }}
               />
 
