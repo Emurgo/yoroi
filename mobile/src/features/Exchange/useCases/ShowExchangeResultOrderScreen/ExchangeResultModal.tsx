@@ -3,19 +3,17 @@ import {
   exchangeApiMaker,
   exchangeManagerMaker,
 } from '@yoroi/exchange'
+import {useLinks} from '@yoroi/links'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Links} from '@yoroi/types'
 
 import * as React from 'react'
 import {TouchableOpacity, View} from 'react-native'
-import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useLinks} from '@yoroi/links'
 import {DescribeActionModal} from '~/features/Exchange/common/DescribeActionModal/DescribeActionModal'
 import {BanxaLogo} from '~/features/Exchange/illustrations/BanxaLogo'
 import {EncryptusLogo} from '~/features/Exchange/illustrations/EncryptusLogo'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {useModal} from '~/ui/Modal/context/ModalContext'
@@ -25,11 +23,10 @@ import {Text} from '~/ui/Text/Text'
 import {WalletAssetImage} from '../../illustrations/WalletAssetImage'
 import {ContentResult} from './ContentResult/ContentResult'
 
-export const ShowExchangeResultOrderScreen = () => {
+export const ExchangeResultModal = () => {
   const strings = useStrings()
   const {atoms: ta} = useTheme()
-  const {openModal} = useModal()
-  const {resetToWalletSelection} = useWalletNavigation()
+  const {openModal: openNestedModal, closeModal} = useModal()
   const {pendingAction, markActionProcessed} = useLinks()
 
   // Get Yoroi action from pending action context
@@ -56,11 +53,11 @@ export const ShowExchangeResultOrderScreen = () => {
 
   const handleOnClose = () => {
     markActionProcessed()
-    resetToWalletSelection()
+    closeModal()
   }
 
   const handleOnShowDetails = () => {
-    openModal({
+    openNestedModal({
       title: strings.exchange.buySellCrypto,
       content: <DescribeActionModal />,
     })
@@ -71,93 +68,90 @@ export const ShowExchangeResultOrderScreen = () => {
 
   return (
     <ExchangeProvider manager={exchangeManager}>
-      <SafeAreaView
-        edges={['bottom', 'left', 'right']}
-        style={[a.flex_1, ta.bg_color_max]}
+      <View
+        style={[
+          a.flex_1,
+          a.flex_col,
+          a.justify_center,
+          a.align_center,
+          a.px_lg,
+        ]}
       >
-        <View
+        <WalletAssetImage style={{width: 200, height: 228}} />
+
+        <Space.Height.lg />
+
+        <Text
           style={[
-            a.flex_1,
-            a.flex_col,
-            a.justify_center,
-            a.align_center,
-            a.px_lg,
+            a.heading_3_medium,
+            a.text_center,
+            ta.text_gray_medium,
+            {
+              fontWeight: '500',
+              textAlignVertical: 'center',
+            },
           ]}
         >
-          <WalletAssetImage style={{...a.flex_1, width: 200, height: 228}} />
-
-          <Space.Height.lg />
-
-          <Text
-            style={[
-              a.heading_3_medium,
-              a.text_center,
-              ta.text_gray_medium,
-              {
-                fontWeight: '500',
-                textAlignVertical: 'center',
-              },
-            ]}
-          >
-            {strings.exchange.congrats}
-
-            {showOrderDetails && (
-              <>
-                <Space.Width.xs />
-
-                <TouchableOpacity
-                  style={{transform: [{translateY: 3}]}}
-                  onPress={handleOnShowDetails}
-                >
-                  <Icon.Info size={26} />
-                </TouchableOpacity>
-              </>
-            )}
-          </Text>
-
-          <Space.Height.md />
+          {strings.exchange.congrats}
 
           {showOrderDetails && (
             <>
-              <ContentResult title={strings.exchange.cryptoAmountYouGet}>
-                <Text
-                  style={[a.body_1_lg_regular, ta.text_gray_max]}
-                >{`${params?.coinAmount ?? 0} ${params?.coin ?? ''}`}</Text>
-              </ContentResult>
+              <Space.Width.xs />
 
-              <Space.Height.md />
-
-              <ContentResult title={strings.exchange.fiatAmountYouGet}>
-                <Text
-                  style={[a.body_1_lg_regular, ta.text_gray_max]}
-                >{`${params?.fiatAmount ?? 0} ${params?.fiat ?? ''}`}</Text>
-              </ContentResult>
+              <TouchableOpacity
+                style={{transform: [{translateY: 3}]}}
+                onPress={handleOnShowDetails}
+              >
+                <Icon.Info size={26} />
+              </TouchableOpacity>
             </>
           )}
+        </Text>
 
-          {showProviderDetails && (
-            <>
-              <Space.Height.md />
+        <Space.Height.md />
 
-              <ContentResult title={strings.exchange.provider}>
-                <View style={[a.flex_row, a.align_center]}>
-                  <Logo size={24} />
+        {showOrderDetails && (
+          <>
+            <ContentResult title={strings.exchange.cryptoAmountYouGet}>
+              <Text
+                style={[a.body_1_lg_regular, ta.text_gray_max]}
+              >{`${params?.coinAmount ?? 0} ${params?.coin ?? ''}`}</Text>
+            </ContentResult>
 
-                  <Space.Width.xs />
+            <Space.Height.md />
 
-                  <Text style={[a.body_1_lg_regular, ta.text_gray_max]}>
-                    {name}
-                  </Text>
-                </View>
-              </ContentResult>
-            </>
-          )}
-        </View>
+            <ContentResult title={strings.exchange.fiatAmountYouGet}>
+              <Text
+                style={[a.body_1_lg_regular, ta.text_gray_max]}
+              >{`${params?.fiatAmount ?? 0} ${params?.fiat ?? ''}`}</Text>
+            </ContentResult>
+          </>
+        )}
 
-        <View style={a.px_lg}>
+        {showProviderDetails && (
+          <>
+            <Space.Height.md />
+
+            <ContentResult title={strings.exchange.provider}>
+              <View style={[a.flex_row, a.align_center]}>
+                <Logo size={24} />
+
+                <Space.Width.xs />
+
+                <Text style={[a.body_1_lg_regular, ta.text_gray_max]}>
+                  {name}
+                </Text>
+              </View>
+            </ContentResult>
+          </>
+        )}
+
+        <Space.Height.lg />
+
+        <View style={[a.w_full, a.px_lg]}>
           <Button onPress={handleOnClose} title={strings.global.close} />
         </View>
-      </SafeAreaView>
+      </View>
     </ExchangeProvider>
   )
 }

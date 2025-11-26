@@ -14,6 +14,7 @@ import {useAuth} from '~/features/Auth/context/AuthProvider'
 import {useClaimErrorResolver} from '~/features/Claim/common/useClaimErrorResolver'
 import {AskConfirmationModal} from '~/features/Claim/ui/modals/AskConfirmationModal'
 import {useBrowser} from '~/features/Discover/common/BrowserProvider'
+import {ExchangeResultModal} from '~/features/Exchange/useCases/ShowExchangeResultOrderScreen/ExchangeResultModal'
 import {useInfoModal} from '~/features/Scan/common/modals/InfoModal'
 import {useTransactionNotFoundModal} from '~/features/Scan/common/modals/TransactionNotFoundModal'
 import {useNavigateTo as useGovernanceNavigateTo} from '~/features/Staking/Governance/common/navigation'
@@ -269,14 +270,12 @@ export const useActionExecutor = () => {
           }
 
           case 'order/show-create-result': {
-            // Exchange order result
-            try {
-              ;(rootNavigation as any).navigate('manage-wallets', {
-                screen: 'exchange-result',
-              })
-            } catch (error) {
-              logger.error('Error navigating to exchange result', {error})
-            }
+            // Exchange order result - show as modal, doesn't require wallet
+            openModal({
+              title: strings.exchange.title,
+              content: <ExchangeResultModal />,
+              full: true,
+            })
             break
           }
 

@@ -9,7 +9,6 @@ import * as React from 'react'
 import {ShowSuccessScreen} from '~/features/Claim/useCases/ShowSuccessScreen'
 import {CreateExchangeOrderScreen} from '~/features/Exchange/useCases/CreateExchangeOrderScreen/CreateExchangeOrderScreen'
 import {SelectProviderFromListScreen} from '~/features/Exchange/useCases/SelectProviderFromListScreen/SelectProviderFromListScreen'
-import {ShowExchangeResultOrderScreen} from '~/features/Exchange/useCases/ShowExchangeResultOrderScreen/ShowExchangeResultOrderScreen'
 import {ViewNotificationHistoryScreen} from '~/features/Notifications/useCases/ViewNotificationHistory/ViewNotificationHistoryScreen'
 import {P2PConnectionScreen} from '~/features/P2P/useCases/P2PConnectionScreen/P2PConnectionScreen'
 import {DescribeSelectedAddressScreen} from '~/features/Receive/useCases/DescribeSelectedAddressScreen'
@@ -280,14 +279,6 @@ export const TxHistoryNavigator = () => {
             title: strings.exchange.title,
           }}
           getComponent={() => CreateExchangeOrderScreen}
-        />
-
-        <Stack.Screen
-          name="exchange-result"
-          options={{
-            title: strings.exchange.title,
-          }}
-          getComponent={() => ShowExchangeResultOrderScreen}
         />
 
         <Stack.Screen

@@ -39,8 +39,12 @@ import {useActionExecutor} from '../hooks/useActionExecutor'
 const showsModal = (pendingAction: PendingAction): boolean => {
   if (pendingAction.source === 'yoroi') {
     const useCase = pendingAction.action.info.useCase
-    // These show modals that handle their own cleanup
-    return useCase === 'request/ada-with-link' || useCase === 'launch'
+    // These show modals or screens that handle their own cleanup
+    return (
+      useCase === 'request/ada-with-link' ||
+      useCase === 'launch' ||
+      useCase === 'order/show-create-result'
+    )
   }
   // Cardano actions don't show modals (except claim which handles its own)
   return false

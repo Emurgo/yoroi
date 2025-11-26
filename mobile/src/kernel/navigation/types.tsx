@@ -30,7 +30,6 @@ export type WalletTabRoutes = {
 export type WalletStackRoutes = {
   'setup-wallet': undefined
   'wallet-selection': undefined
-  'exchange-result': undefined
   'main-wallet-routes': NavigatorScreenParams<WalletTabRoutes>
   'review-tx-routes': NavigatorScreenParams<ReviewTxRoutes>
   'settings': NavigatorScreenParams<SettingsStackRoutes>
@@ -139,7 +138,6 @@ export type StakingCenterRoutes = {
 
 export type ExchangeRoutes = {
   'exchange-create-order': undefined
-  'exchange-result': undefined
   'exchange-select-buy-provider': undefined
   'exchange-select-sell-provider': undefined
 }
@@ -316,7 +314,6 @@ export type AppRoutes = {
   'playground': undefined
   'manage-wallets': NavigatorScreenParams<WalletStackRoutes>
   'custom-pin-auth': undefined
-  'exchange-result': undefined
   'bio-auth-initial': undefined
   'enable-login-with-pin': undefined
   'agreement-changed-notice': undefined

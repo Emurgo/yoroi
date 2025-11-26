@@ -43,7 +43,9 @@ url_encode() {
 if [ -z "$TEST_NUMBER" ] || [ "$TEST_NUMBER" -eq 1 ]; then
   echo "1. Testing: Transfer Request ADA (direct params)"
   echo "-------------------------------------------------"
-  adb shell am start -W -a android.intent.action.VIEW -d "yoroi://yoroi-wallet.com/w1/transfer/request/ada?targets[0][receiver]=addr1q9shdvgxddemdxkdwp493le8yhengzk6fuwsewzx42sjpjkr3y3kdut55a40jff00qmg74686vz44v6k363md06qkq0ql6fur2&targets[0][amounts][0][tokenId]=.&targets[0][amounts][0][quantity]=1000000&memo=Test+transfer&appId=test-app&message=Testing+direct+ADA+transfer"
+  TRANSFER_URL="yoroi://yoroi-wallet.com/w1/transfer/request/ada?targets[0][receiver]=addr1q9shdvgxddemdxkdwp493le8yhengzk6fuwsewzx42sjpjkr3y3kdut55a40jff00qmg74686vz44v6k363md06qkq0ql6fur2&targets[0][amounts][0][tokenId]=.&targets[0][amounts][0][quantity]=1000000&memo=Test+transfer&appId=test-app&message=Testing+direct+ADA+transfer"
+  ESCAPED_URL=$(echo "$TRANSFER_URL" | sed "s/'/'\\\\''/g")
+  adb shell "am start -W -a android.intent.action.VIEW -d '$ESCAPED_URL'"
   echo ""
   if [ -z "$TEST_NUMBER" ]; then
     read -q "?Press any key to continue to next test..."
@@ -58,7 +60,9 @@ if [ -z "$TEST_NUMBER" ] || [ "$TEST_NUMBER" -eq 2 ]; then
   echo "-------------------------------------------"
   CARDANO_LINK="web+cardano:addr1q9shdvgxddemdxkdwp493le8yhengzk6fuwsewzx42sjpjkr3y3kdut55a40jff00qmg74686vz44v6k363md06qkq0ql6fur2?amount=10"
   ENCODED_LINK=$(url_encode "$CARDANO_LINK")
-  adb shell am start -W -a android.intent.action.VIEW -d "yoroi://yoroi-wallet.com/w1/transfer/request/ada-with-link?link=$ENCODED_LINK&isSandbox=true&isTestnet=false&appId=test-app&message=Testing+ADA+transfer+with+link&walletId=c4832ba5-c03e-4bd8-93ee-52536f1b1747&authorization=ac0692d3-bf34-44e2-b57d-53e4ce47666b&redirectTo=https%3A%2F%2Fyoroi-wallet.com"
+  TRANSFER_LINK_URL="yoroi://yoroi-wallet.com/w1/transfer/request/ada-with-link?link=$ENCODED_LINK&isSandbox=true&isTestnet=false&appId=test-app&message=Testing+ADA+transfer+with+link&walletId=c4832ba5-c03e-4bd8-93ee-52536f1b1747&authorization=ac0692d3-bf34-44e2-b57d-53e4ce47666b&redirectTo=https%3A%2F%2Fyoroi-wallet.com"
+  ESCAPED_URL=$(echo "$TRANSFER_LINK_URL" | sed "s/'/'\\\\''/g")
+  adb shell "am start -W -a android.intent.action.VIEW -d '$ESCAPED_URL'"
   echo ""
   if [ -z "$TEST_NUMBER" ]; then
     read -q "?Press any key to continue to next test..."
@@ -71,7 +75,12 @@ fi
 if [ -z "$TEST_NUMBER" ] || [ "$TEST_NUMBER" -eq 3 ]; then
   echo "3. Testing: Exchange Order Show Create Result"
   echo "-----------------------------------------------"
-  adb shell am start -W -a android.intent.action.VIEW -d "yoroi://yoroi-wallet.com/w1/exchange/order/show-create-result?provider=changelly&coinAmount=100&coin=ADA&fiatAmount=50&fiat=USD&status=success&orderType=buy&appId=test-app&message=Exchange+order+completed"
+  # Using values from state.mocks.ts
+  MESSAGE_ENCODED=$(url_encode "Your order number 131234 is under processing, bare with us.")
+  REDIRECT_TO_ENCODED=$(url_encode "https://yoroi-wallet.com/about")
+  EXCHANGE_URL="yoroi://yoroi-wallet.com/w1/exchange/order/show-create-result?provider=encryputs&coinAmount=1&coin=ADA&fiatAmount=1&fiat=USD&status=success&orderType=buy&appId=a386e806-92f4-4796-ad61-7a1485b6e745&authorization=fca6fc26-abc6-4cdc-bdce-5910cc3c0a01&isSandbox=true&message=$MESSAGE_ENCODED&redirectTo=$REDIRECT_TO_ENCODED"
+  ESCAPED_URL=$(echo "$EXCHANGE_URL" | sed "s/'/'\\\\''/g")
+  adb shell "am start -W -a android.intent.action.VIEW -d '$ESCAPED_URL'"
   echo ""
   if [ -z "$TEST_NUMBER" ]; then
     read -q "?Press any key to continue to next test..."
@@ -86,7 +95,9 @@ if [ -z "$TEST_NUMBER" ] || [ "$TEST_NUMBER" -eq 4 ]; then
   echo "-----------------------------------"
   DAPP_URL="https://steelswap.io/swap?input=&output=fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae45655534441"
   ENCODED_DAPP_URL=$(url_encode "$DAPP_URL")
-  adb shell am start -W -a android.intent.action.VIEW -d "yoroi://yoroi-wallet.com/w1/browser/launch?dappUrl=$ENCODED_DAPP_URL&appId=test-app&message=Launching+dApp&redirectTo=https%3A%2F%2Fyoroi-wallet.com"
+  BROWSER_URL="yoroi://yoroi-wallet.com/w1/browser/launch?dappUrl=$ENCODED_DAPP_URL&appId=test-app&message=Launching+dApp&redirectTo=https%3A%2F%2Fyoroi-wallet.com"
+  ESCAPED_URL=$(echo "$BROWSER_URL" | sed "s/'/'\\\\''/g")
+  adb shell "am start -W -a android.intent.action.VIEW -d '$ESCAPED_URL'"
   echo ""
   if [ -z "$TEST_NUMBER" ]; then
     read -q "?Press any key to continue to next test..."
@@ -103,7 +114,15 @@ if [ -z "$TEST_NUMBER" ] || [ "$TEST_NUMBER" -eq 5 ]; then
   # Note: Both code and faucet_url are required parameters
   # Keep & unencoded in URL structure, only encode parameter values
   FAUCET_URL_ENCODED=$(url_encode "https://faucet.com")
-  adb shell am start -W -a android.intent.action.VIEW -d "web+cardano://claim/v1?code=42&faucet_url=$FAUCET_URL_ENCODED"
+  # Construct the full URL - the & must remain unencoded as it's the query parameter separator
+  CLAIM_URL="web+cardano://claim/v1?code=42&faucet_url=$FAUCET_URL_ENCODED"
+  echo "Debug: Constructed URL = $CLAIM_URL"
+  # Properly escape the URL for ADB shell command
+  # Escape single quotes in URL, then wrap in single quotes for remote shell
+  # This prevents Android shell from interpreting &, spaces, etc.
+  ESCAPED_URL=$(echo "$CLAIM_URL" | sed "s/'/'\\\\''/g")
+  # Pass the escaped URL wrapped in single quotes to prevent shell interpretation
+  adb shell "am start -W -a android.intent.action.VIEW -d '$ESCAPED_URL'"
   echo ""
   if [ -z "$TEST_NUMBER" ]; then
     read -q "?Press any key to continue to next test..."
@@ -117,7 +136,9 @@ if [ -z "$TEST_NUMBER" ] || [ "$TEST_NUMBER" -eq 6 ]; then
   echo "6. Testing: Cardano Browse Link (CIP-158)"
   echo "------------------------------------------"
   # Browse uses path-based format: web+cardano://browse/v1/{scheme}/{namespaced_domain}/{app_path}?query
-  adb shell am start -W -a android.intent.action.VIEW -d "web+cardano://browse/v1/https/io.steelswap/swap?input=&output=fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae45655534441"
+  BROWSE_URL="web+cardano://browse/v1/https/io.steelswap/swap?input=&output=fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae45655534441"
+  ESCAPED_URL=$(echo "$BROWSE_URL" | sed "s/'/'\\\\''/g")
+  adb shell "am start -W -a android.intent.action.VIEW -d '$ESCAPED_URL'"
   echo ""
   if [ -z "$TEST_NUMBER" ]; then
     read -q "?Press any key to continue to next test..."
@@ -130,7 +151,9 @@ fi
 if [ -z "$TEST_NUMBER" ] || [ "$TEST_NUMBER" -eq 7 ]; then
   echo "7. Testing: Cardano Pay Link (CIP-PR843)"
   echo "-----------------------------------------"
-  adb shell am start -W -a android.intent.action.VIEW -d "web+cardano://pay/v1?address=addr1q9shdvgxddemdxkdwp493le8yhengzk6fuwsewzx42sjpjkr3y3kdut55a40jff00qmg74686vz44v6k363md06qkq0ql6fur2&amount=1000000&memo=Test+payment"
+  PAY_URL="web+cardano://pay/v1?address=addr1q9shdvgxddemdxkdwp493le8yhengzk6fuwsewzx42sjpjkr3y3kdut55a40jff00qmg74686vz44v6k363md06qkq0ql6fur2&amount=1000000&memo=Test+payment"
+  ESCAPED_URL=$(echo "$PAY_URL" | sed "s/'/'\\\\''/g")
+  adb shell "am start -W -a android.intent.action.VIEW -d '$ESCAPED_URL'"
   echo ""
   if [ -z "$TEST_NUMBER" ]; then
     read -q "?Press any key to continue to next test..."
@@ -144,7 +167,9 @@ if [ -z "$TEST_NUMBER" ] || [ "$TEST_NUMBER" -eq 8 ]; then
   echo "8. Testing: Cardano Legacy Payment Link (CIP-13)"
   echo "-------------------------------------------------"
   # Legacy format uses single colon: web+cardano:{address}?params
-  adb shell am start -W -a android.intent.action.VIEW -d "web+cardano:addr1q9shdvgxddemdxkdwp493le8yhengzk6fuwsewzx42sjpjkr3y3kdut55a40jff00qmg74686vz44v6k363md06qkq0ql6fur2?amount=1000000&memo=Legacy+payment+test"
+  LEGACY_PAYMENT_URL="web+cardano:addr1q9shdvgxddemdxkdwp493le8yhengzk6fuwsewzx42sjpjkr3y3kdut55a40jff00qmg74686vz44v6k363md06qkq0ql6fur2?amount=1000000&memo=Legacy+payment+test"
+  ESCAPED_URL=$(echo "$LEGACY_PAYMENT_URL" | sed "s/'/'\\\\''/g")
+  adb shell "am start -W -a android.intent.action.VIEW -d '$ESCAPED_URL'"
   echo ""
   if [ -z "$TEST_NUMBER" ]; then
     read -q "?Press any key to continue to next test..."
@@ -184,7 +209,9 @@ fi
 if [ -z "$TEST_NUMBER" ] || [ "$TEST_NUMBER" -eq 11 ]; then
   echo "11. Testing: Cardano Block Link (CIP-107)"
   echo "------------------------------------------"
-  adb shell am start -W -a android.intent.action.VIEW -d "web+cardano://block/v1?hash=f149785c881f9ae68e4e958d8ba2d9e84571a1d49d5a9daee12f693f87a27846&height=12345678"
+  BLOCK_URL="web+cardano://block/v1?hash=f149785c881f9ae68e4e958d8ba2d9e84571a1d49d5a9daee12f693f87a27846&height=12345678"
+  ESCAPED_URL=$(echo "$BLOCK_URL" | sed "s/'/'\\\\''/g")
+  adb shell "am start -W -a android.intent.action.VIEW -d '$ESCAPED_URL'"
   echo ""
   if [ -z "$TEST_NUMBER" ]; then
     read -q "?Press any key to continue to next test..."
@@ -211,7 +238,9 @@ fi
 if [ -z "$TEST_NUMBER" ] || [ "$TEST_NUMBER" -eq 13 ]; then
   echo "13. Testing: Cardano Connect Link (P2P)"
   echo "-----------------------------------------"
-  adb shell am start -W -a android.intent.action.VIEW -d "web+cardano://connect/v1?peerId=peer123&signalingUrl=https%3A%2F%2Fsignaling.example.com"
+  CONNECT_URL="web+cardano://connect/v1?peerId=peer123&signalingUrl=https%3A%2F%2Fsignaling.example.com"
+  ESCAPED_URL=$(echo "$CONNECT_URL" | sed "s/'/'\\\\''/g")
+  adb shell "am start -W -a android.intent.action.VIEW -d '$ESCAPED_URL'"
   echo ""
   if [ -z "$TEST_NUMBER" ]; then
     read -q "?Press any key to continue to next test..."
@@ -224,7 +253,9 @@ fi
 if [ -z "$TEST_NUMBER" ] || [ "$TEST_NUMBER" -eq 14 ]; then
   echo "14. Testing: Universal Link (HTTPS)"
   echo "------------------------------------"
-  adb shell am start -W -a android.intent.action.VIEW -d "https://yoroi-wallet.com/w1/transfer/request/ada?targets[0][receiver]=addr1q9shdvgxddemdxkdwp493le8yhengzk6fuwsewzx42sjpjkr3y3kdut55a40jff00qmg74686vz44v6k363md06qkq0ql6fur2&targets[0][amounts][0][tokenId]=.&targets[0][amounts][0][quantity]=1000000"
+  UNIVERSAL_URL="https://yoroi-wallet.com/w1/transfer/request/ada?targets[0][receiver]=addr1q9shdvgxddemdxkdwp493le8yhengzk6fuwsewzx42sjpjkr3y3kdut55a40jff00qmg74686vz44v6k363md06qkq0ql6fur2&targets[0][amounts][0][tokenId]=.&targets[0][amounts][0][quantity]=1000000"
+  ESCAPED_URL=$(echo "$UNIVERSAL_URL" | sed "s/'/'\\\\''/g")
+  adb shell "am start -W -a android.intent.action.VIEW -d '$ESCAPED_URL'"
   echo ""
   if [ -z "$TEST_NUMBER" ]; then
     read -q "?Press any key to continue to next test..."

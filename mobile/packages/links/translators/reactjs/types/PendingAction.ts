@@ -19,6 +19,14 @@ export const requiresWallet = (pendingAction: PendingAction): boolean => {
     return pendingAction.action.action !== 'restore-wallet'
   }
 
-  // All Yoroi actions require a wallet
+  // Exchange order result doesn't require a wallet - it just shows success info
+  if (pendingAction.source === 'yoroi') {
+    const useCase = pendingAction.action.info.useCase
+    if (useCase === 'order/show-create-result') {
+      return false
+    }
+  }
+
+  // All other Yoroi actions require a wallet
   return true
 }
