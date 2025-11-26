@@ -1,13 +1,14 @@
-import {Links, Scan} from '@yoroi/types'
+import {Links} from '@yoroi/types'
 
 /**
  * Pending action that can be from either Yoroi links or Cardano standard links.
  * Actions are stored in context regardless of login/wallet state and processed
  * once prerequisites are met.
+ * Multichain-ready: future sources can include 'bitcoin', 'ethereum', etc.
  */
 export type PendingAction =
   | {source: 'yoroi'; action: Links.YoroiAction}
-  | {source: 'cardano'; action: Scan.Action}
+  | {source: 'cardano'; action: Links.CardanoAction}
 
 /**
  * Check if an action requires a wallet to be selected.

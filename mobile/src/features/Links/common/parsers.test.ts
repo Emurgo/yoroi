@@ -1,31 +1,32 @@
-import {Links, Scan} from '@yoroi/types'
+import {Links} from '@yoroi/types'
 
-import {codeContent} from './mocks'
-import {parseScanAction} from './parsers'
+import {codeContent} from '~/features/Scan/common/mocks'
 
-describe('parseScanAction', () => {
+import {parseCardanoLink} from './parsers'
+
+describe('parseCardanoLink', () => {
   it('should correctly parse a non-link address', () => {
-    const result = parseScanAction(codeContent.noLink.success.address)
+    const result = parseCardanoLink(codeContent.noLink.success.address)
     expect(result).toEqual({
       action: 'send-only-receiver',
       receiver: codeContent.noLink.success.address,
     })
   })
 
-  it('should throw ScanErrorUnknownContent for invalid non-link content', () => {
-    expect(() => parseScanAction(codeContent.noLink.error.invalid)).toThrow(
-      Scan.Errors.UnknownContent,
+  it('should throw UnknownContent for invalid non-link content', () => {
+    expect(() => parseCardanoLink(codeContent.noLink.error.invalid)).toThrow(
+      Links.Errors.UnknownContent,
     )
   })
 
-  it('should throw SchemeNotImplemented for links not supporte like bitcoin', () => {
+  it('should throw SchemeNotImplemented for links not supported like bitcoin', () => {
     expect(() =>
-      parseScanAction(codeContent.links.error.schemeNotImplemented),
+      parseCardanoLink(codeContent.links.error.schemeNotImplemented),
     ).toThrow(Links.Errors.SchemeNotImplemented)
   })
 
   it('should correctly parse a Cardano link for claim v1', () => {
-    const result = parseScanAction(
+    const result = parseCardanoLink(
       codeContent.links.success.cardanoCip99ClaimV1,
     )
     expect(result).toEqual({
@@ -37,7 +38,7 @@ describe('parseScanAction', () => {
   })
 
   it('should correctly parse a Cardano link for legacy transfer', () => {
-    const result = parseScanAction(
+    const result = parseCardanoLink(
       codeContent.links.success.legacyCip13Transfer,
     )
     expect(result).toEqual({
@@ -48,7 +49,7 @@ describe('parseScanAction', () => {
   })
 
   it('should correctly parse a Yoroi link', () => {
-    const result = parseScanAction(
+    const result = parseCardanoLink(
       codeContent.links.success.yoroiPaymentRequestWithLink,
     )
     expect(result).toEqual({

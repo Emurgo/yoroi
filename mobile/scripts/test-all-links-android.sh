@@ -112,16 +112,14 @@ if [ -z "$TEST_NUMBER" ] || [ "$TEST_NUMBER" -eq 4 ]; then
   fi
 fi
 
-# Test 5: Cardano Claim Link (web+cardano://claim) FAILED
+# Test 5: Cardano Claim Link (web+cardano://claim) PASSED
 if [ -z "$TEST_NUMBER" ] || [ "$TEST_NUMBER" -eq 5 ]; then
   echo "5. Testing: Cardano Claim Link"
   echo "------------------------------"
-  # Using a realistic testnet faucet URL format (actual faucet may vary)
+  # Using HOSKY claim link: web+cardano://claim/v1?faucet_url=https%3A%2F%2Fclaim.hosky.io&code=consensus2023
   # Note: Both code and faucet_url are required parameters
-  # Keep & unencoded in URL structure, only encode parameter values
-  FAUCET_URL_ENCODED=$(url_encode "https://faucet.com")
-  # Construct the full URL - the & must remain unencoded as it's the query parameter separator
-  CLAIM_URL="web+cardano://claim/v1?code=42&faucet_url=$FAUCET_URL_ENCODED"
+  # The faucet_url is already URL-encoded (%3A = :, %2F = /)
+  CLAIM_URL="web+cardano://claim/v1?faucet_url=https%3A%2F%2Fclaim.hosky.io&code=consensus2023"
   echo "Debug: Constructed URL = $CLAIM_URL"
   # Properly escape the URL for ADB shell command
   # Escape single quotes in URL, then wrap in single quotes for remote shell
@@ -137,7 +135,7 @@ if [ -z "$TEST_NUMBER" ] || [ "$TEST_NUMBER" -eq 5 ]; then
   fi
 fi
 
-# Test 6: Cardano Browse Link (web+cardano://browse)
+# Test 6: Cardano Browse Link (web+cardano://browse) PASSED
 if [ -z "$TEST_NUMBER" ] || [ "$TEST_NUMBER" -eq 6 ]; then
   echo "6. Testing: Cardano Browse Link (CIP-158)"
   echo "------------------------------------------"
@@ -153,11 +151,13 @@ if [ -z "$TEST_NUMBER" ] || [ "$TEST_NUMBER" -eq 6 ]; then
   fi
 fi
 
-# Test 7: Cardano Pay Link (web+cardano://pay) FAILED
+# Test 7: Cardano Pay Link (web+cardano://pay) PASSED
 if [ -z "$TEST_NUMBER" ] || [ "$TEST_NUMBER" -eq 7 ]; then
   echo "7. Testing: Cardano Pay Link (CIP-PR843)"
   echo "-----------------------------------------"
-  PAY_URL="web+cardano://pay/v1?address=addr1q9shdvgxddemdxkdwp493le8yhengzk6fuwsewzx42sjpjkr3y3kdut55a40jff00qmg74686vz44v6k363md06qkq0ql6fur2&amount=1000000&memo=Test+payment"
+  # CIP-PR843 specifies amounts in decimal ADA (main unit), not lovelace
+  # amount=1 means 1 ADA (1,000,000 lovelace)
+  PAY_URL="web+cardano://pay/v1?address=addr1q9shdvgxddemdxkdwp493le8yhengzk6fuwsewzx42sjpjkr3y3kdut55a40jff00qmg74686vz44v6k363md06qkq0ql6fur2&amount=1&memo=Test+payment"
   ESCAPED_URL=$(echo "$PAY_URL" | sed "s/'/'\\\\''/g")
   adb shell "am start -W -a android.intent.action.VIEW -d '$ESCAPED_URL'"
   echo ""
@@ -168,12 +168,14 @@ if [ -z "$TEST_NUMBER" ] || [ "$TEST_NUMBER" -eq 7 ]; then
   fi
 fi
 
-# Test 8: Cardano Legacy Payment Link (web+cardano:) FAILED
+# Test 8: Cardano Legacy Payment Link (web+cardano:) PASSED
 if [ -z "$TEST_NUMBER" ] || [ "$TEST_NUMBER" -eq 8 ]; then
   echo "8. Testing: Cardano Legacy Payment Link (CIP-13)"
   echo "-------------------------------------------------"
   # Legacy format uses single colon: web+cardano:{address}?params
-  LEGACY_PAYMENT_URL="web+cardano:addr1q9shdvgxddemdxkdwp493le8yhengzk6fuwsewzx42sjpjkr3y3kdut55a40jff00qmg74686vz44v6k363md06qkq0ql6fur2?amount=1000000&memo=Legacy+payment+test"
+  # CIP-13 specifies amounts in decimal ADA (main unit), not lovelace
+  # amount=1 means 1 ADA (1,000,000 lovelace)
+  LEGACY_PAYMENT_URL="web+cardano:addr1q9shdvgxddemdxkdwp493le8yhengzk6fuwsewzx42sjpjkr3y3kdut55a40jff00qmg74686vz44v6k363md06qkq0ql6fur2?amount=1&memo=Legacy+payment+test"
   ESCAPED_URL=$(echo "$LEGACY_PAYMENT_URL" | sed "s/'/'\\\\''/g")
   adb shell "am start -W -a android.intent.action.VIEW -d '$ESCAPED_URL'"
   echo ""
@@ -184,7 +186,7 @@ if [ -z "$TEST_NUMBER" ] || [ "$TEST_NUMBER" -eq 8 ]; then
   fi
 fi
 
-# Test 9: Cardano Stake Pool Link (web+cardano://stake) FAILED
+# Test 9: Cardano Stake Pool Link (web+cardano://stake) PASSED
 if [ -z "$TEST_NUMBER" ] || [ "$TEST_NUMBER" -eq 9 ]; then
   echo "9. Testing: Cardano Stake Pool Link"
   echo "-----------------------------------"
@@ -197,7 +199,7 @@ if [ -z "$TEST_NUMBER" ] || [ "$TEST_NUMBER" -eq 9 ]; then
   fi
 fi
 
-# Test 10: Cardano Transaction Link (web+cardano://transaction) FAILED
+# Test 10: Cardano Transaction Link (web+cardano://transaction) PASSED
 if [ -z "$TEST_NUMBER" ] || [ "$TEST_NUMBER" -eq 10 ]; then
   echo "10. Testing: Cardano Transaction Link (CIP-107)"
   echo "-----------------------------------------------"
@@ -211,11 +213,13 @@ if [ -z "$TEST_NUMBER" ] || [ "$TEST_NUMBER" -eq 10 ]; then
   fi
 fi
 
-# Test 11: Cardano Block Link (web+cardano://block) FAILED
+# Test 11: Cardano Block Link (web+cardano://block) PASSED
 if [ -z "$TEST_NUMBER" ] || [ "$TEST_NUMBER" -eq 11 ]; then
   echo "11. Testing: Cardano Block Link (CIP-107)"
   echo "------------------------------------------"
-  BLOCK_URL="web+cardano://block/v1?hash=f149785c881f9ae68e4e958d8ba2d9e84571a1d49d5a9daee12f693f87a27846&height=12345678"
+  # Block link can use either hash or height, but not both
+  # Using hash as it's more specific
+  BLOCK_URL="web+cardano://block/v1?hash=f149785c881f9ae68e4e958d8ba2d9e84571a1d49d5a9daee12f693f87a27846"
   ESCAPED_URL=$(echo "$BLOCK_URL" | sed "s/'/'\\\\''/g")
   adb shell "am start -W -a android.intent.action.VIEW -d '$ESCAPED_URL'"
   echo ""
@@ -270,7 +274,7 @@ if [ -z "$TEST_NUMBER" ] || [ "$TEST_NUMBER" -eq 14 ]; then
   fi
 fi
 
-# Test 15: Cardano DRep Delegation Link (web+cardano://drep)
+# Test 15: Cardano DRep Delegation Link (web+cardano://drep) PASSED
 if [ -z "$TEST_NUMBER" ] || [ "$TEST_NUMBER" -eq 15 ]; then
   echo "15. Testing: Cardano DRep Delegation Link"
   echo "-----------------------------------------"

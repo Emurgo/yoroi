@@ -2,7 +2,7 @@ import {useAsyncStorage} from '@yoroi/common'
 import {useLinks} from '@yoroi/links'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
-import {Api, Scan, Wallet} from '@yoroi/types'
+import {Api, Links, Wallet} from '@yoroi/types'
 
 import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
@@ -79,7 +79,7 @@ export const RestoreWalletFromLinkScreen = () => {
   const {markActionProcessed} = useLinks()
 
   const {action} = useUnsafeParams<{
-    action: Scan.ActionRestoreWallet
+    action: Links.CardanoActionRestoreWallet
   }>()
 
   // Clear the pending action from context as soon as we mount this screen

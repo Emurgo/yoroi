@@ -1,17 +1,21 @@
 import {linksCardanoModuleMaker} from '@yoroi/links'
-import {Links, Scan} from '@yoroi/types'
+import {Links} from '@yoroi/types'
 
 import {freeze} from 'immer'
 
 import {logger} from '~/kernel/logger/logger'
 
-export const parseScanAction = (codeContent: string): Scan.Action => {
+/**
+ * Parse a Cardano link string into a CardanoAction.
+ * Handles web+cardano:// links and converts them to structured actions.
+ */
+export const parseCardanoLink = (codeContent: string): Links.CardanoAction => {
   const isPossibleLink = codeContent.includes(':')
 
   // NOTE: if it is a string < 256 with valid characters, it'd be consider a Yoroi Receiver (wallet address | domain name)
   if (!isPossibleLink) {
     if (codeContent.length > 255 || !nonProtocolRegex.test(codeContent))
-      throw new Scan.Errors.UnknownContent()
+      throw new Links.Errors.UnknownContent()
     return freeze({
       action: 'send-only-receiver',
       receiver: codeContent,
@@ -30,7 +34,7 @@ export const parseScanAction = (codeContent: string): Scan.Action => {
 
   if (parsedCardanoLink === undefined) {
     logger.error(
-      'parseScanAction: Cardano link parsing failed - scheme not implemented',
+      'parseCardanoLink: Cardano link parsing failed - scheme not implemented',
     )
     throw new Links.Errors.SchemeNotImplemented()
   }

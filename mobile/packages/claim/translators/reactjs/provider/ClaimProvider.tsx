@@ -1,4 +1,4 @@
-import {Claim, Scan} from '@yoroi/types'
+import {Claim, Links} from '@yoroi/types'
 
 import * as React from 'react'
 
@@ -42,7 +42,7 @@ export const ClaimProvider = ({
     claimInfoChanged: (claimInfo: Claim.Info) => {
       dispatch({type: ClaimActionType.ClaimInfoChanged, claimInfo})
     },
-    scanActionClaimChanged: (scanActionClaim: Scan.ActionClaim) => {
+    scanActionClaimChanged: (scanActionClaim: Links.CardanoActionClaim) => {
       dispatch({type: ClaimActionType.ScanActionClaimChanged, scanActionClaim})
     },
     reset: () => {

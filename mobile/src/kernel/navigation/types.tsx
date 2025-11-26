@@ -1,4 +1,4 @@
-import {Chain, Portfolio, Scan} from '@yoroi/types'
+import {Chain, Links, Portfolio, Scan} from '@yoroi/types'
 
 import {NavigatorScreenParams, useNavigation} from '@react-navigation/native'
 import {StackNavigationProp} from '@react-navigation/stack'
@@ -53,7 +53,7 @@ export type WalletInitRoutes = {
   'setup-wallet-verify-recovery-phrase-mnemonic': undefined
   'setup-wallet-preparing-wallet': undefined
   'setup-wallet-restore-from-link': {
-    action: Scan.ActionRestoreWallet
+    action: Links.CardanoActionRestoreWallet
   }
   'setup-wallet-restore-read-only-choose-type': undefined
   'setup-wallet-restore-read-only-from-key': undefined

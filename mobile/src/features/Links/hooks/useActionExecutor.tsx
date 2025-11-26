@@ -249,33 +249,33 @@ export const useActionExecutor = () => {
         }
       } else {
         // Cardano action
-        const scanAction = pendingAction.action
+        const cardanoAction = pendingAction.action
 
-        switch (scanAction.action) {
+        switch (cardanoAction.action) {
           case 'launch-url': {
-            Linking.openURL(scanAction.url)
+            Linking.openURL(cardanoAction.url)
             break
           }
 
           case 'send-single-pt': {
             resetTransferState()
-            receiverResolveChanged(scanAction.receiver)
+            receiverResolveChanged(cardanoAction.receiver)
 
-            if (scanAction.params) {
-              if ('amount' in scanAction.params) {
+            if (cardanoAction.params) {
+              if ('amount' in cardanoAction.params) {
                 tokenSelectedChanged(defaultPrimaryTokenInfo.id)
                 amountChanged({
                   info: defaultPrimaryTokenInfo,
                   quantity: toBigInt(
                     pastedFormatter(
-                      scanAction.params?.amount?.toString() ?? '',
+                      cardanoAction.params?.amount?.toString() ?? '',
                     ),
                     defaultPrimaryTokenInfo.decimals,
                   ),
                 })
               }
-              if ('memo' in scanAction.params)
-                memoChanged(scanAction.params?.memo ?? '')
+              if ('memo' in cardanoAction.params)
+                memoChanged(cardanoAction.params?.memo ?? '')
             }
 
             navigateTo.startTransfer()
@@ -284,7 +284,7 @@ export const useActionExecutor = () => {
 
           case 'send-only-receiver': {
             resetTransferState()
-            receiverResolveChanged(scanAction.receiver)
+            receiverResolveChanged(cardanoAction.receiver)
             navigateTo.startTransfer()
             break
           }
@@ -308,7 +308,7 @@ export const useActionExecutor = () => {
           case 'browse-dapp': {
             // CIP-158: Launch dApp in browser
             const id = uuid.v4()
-            addTabAndSetActive(scanAction.url, id)
+            addTabAndSetActive(cardanoAction.url, id)
             walletNavigation.navigateToDiscoverBrowserDapp()
             break
           }
@@ -316,20 +316,20 @@ export const useActionExecutor = () => {
           case 'pay-request': {
             // CIP-PR843 or CIP-13: Payment request
             resetTransferState()
-            receiverResolveChanged(scanAction.address)
+            receiverResolveChanged(cardanoAction.address)
 
-            if (scanAction.amount) {
+            if (cardanoAction.amount) {
               tokenSelectedChanged(defaultPrimaryTokenInfo.id)
               amountChanged({
                 info: defaultPrimaryTokenInfo,
                 quantity: toBigInt(
-                  pastedFormatter(scanAction.amount),
+                  pastedFormatter(cardanoAction.amount),
                   defaultPrimaryTokenInfo.decimals,
                 ),
               })
             }
-            if (scanAction.memo) {
-              memoChanged(scanAction.memo)
+            if (cardanoAction.memo) {
+              memoChanged(cardanoAction.memo)
             }
 
             navigateTo.startTransfer()
@@ -344,7 +344,7 @@ export const useActionExecutor = () => {
               )
               openInfoModal({
                 title: strings.scan.stakePoolTitle,
-                message: `Pool ID: ${scanAction.pool}`,
+                message: `Pool ID: ${cardanoAction.pool}`,
               })
               break
             }
@@ -356,14 +356,14 @@ export const useActionExecutor = () => {
                 logger.debug(
                   'useActionExecutor: creating delegation transaction',
                   {
-                    poolId: scanAction.pool,
+                    poolId: cardanoAction.pool,
                   },
                 )
 
                 const stakingTx = await createDelegationTxFromWallet(
                   selectedWallet,
                   {
-                    poolId: scanAction.pool,
+                    poolId: cardanoAction.pool,
                     addressMode: meta.addressMode,
                   },
                 )
@@ -379,7 +379,7 @@ export const useActionExecutor = () => {
                   'useActionExecutor: error creating delegation transaction',
                   {
                     error: err,
-                    poolId: scanAction.pool,
+                    poolId: cardanoAction.pool,
                   },
                 )
 
@@ -406,14 +406,14 @@ export const useActionExecutor = () => {
             logger.debug(
               'useActionExecutor: navigating to governance for DRep delegation',
               {
-                drepId: scanAction.drep,
+                drepId: cardanoAction.drep,
               },
             )
 
             // Navigate to home screen with DRep ID as param
             // Home screen handles both users who have voted and those who haven't
             // It will automatically open the DRep input modal with prefilled DRep ID
-            navigateToGovernance.home({drepId: scanAction.drep})
+            navigateToGovernance.home({drepId: cardanoAction.drep})
             break
           }
 
@@ -423,7 +423,7 @@ export const useActionExecutor = () => {
               const transactions = wallet.transactions
               const transaction = transactions
                 ? Object.values(transactions).find(
-                    (tx) => tx.id === scanAction.hash,
+                    (tx) => tx.id === cardanoAction.hash,
                   )
                 : undefined
               if (transaction) {
@@ -432,13 +432,13 @@ export const useActionExecutor = () => {
                 const explorers = wallet.networkManager?.explorers
                 if (explorers?.cardanoscan) {
                   openTransactionNotFoundModal({
-                    hash: scanAction.hash,
-                    explorerUrl: explorers.cardanoscan.tx(scanAction.hash),
+                    hash: cardanoAction.hash,
+                    explorerUrl: explorers.cardanoscan.tx(cardanoAction.hash),
                   })
                 }
               }
             } else {
-              walletNavigation.navigateToTxDetails(scanAction.hash)
+              walletNavigation.navigateToTxDetails(cardanoAction.hash)
             }
             break
           }
@@ -446,23 +446,23 @@ export const useActionExecutor = () => {
           case 'view-block': {
             // CIP-107: View block details
             walletNavigation.navigateToBlockDetails({
-              hash: scanAction.hash,
-              height: scanAction.height,
+              hash: cardanoAction.hash,
+              height: cardanoAction.height,
             })
             break
           }
 
           case 'view-address': {
             // CIP-134: View address details
-            walletNavigation.navigateToAddressDetails(scanAction.address)
+            walletNavigation.navigateToAddressDetails(cardanoAction.address)
             break
           }
 
           case 'p2p-connect': {
             // P2P connection
             walletNavigation.navigateToP2PConnection({
-              peerId: scanAction.peerId,
-              signalingUrl: scanAction.signalingUrl,
+              peerId: cardanoAction.peerId,
+              signalingUrl: cardanoAction.signalingUrl,
             })
             break
           }
@@ -471,29 +471,29 @@ export const useActionExecutor = () => {
             // Wallet restoration - works without selected wallet
             // Sanitize sensitive data before logging
             const sanitizedAction = {
-              action: scanAction.action,
-              type: scanAction.type,
-              encryption: scanAction.encryption,
-              name: scanAction.name,
-              implementation: scanAction.implementation,
-              addressMode: scanAction.addressMode,
-              accountVisual: scanAction.accountVisual,
-              hasMnemonic: !!scanAction.mnemonic,
-              hasRootKey: !!scanAction.rootKey,
-              hasAccountPubKey: !!scanAction.accountPubKey,
+              action: cardanoAction.action,
+              type: cardanoAction.type,
+              encryption: cardanoAction.encryption,
+              name: cardanoAction.name,
+              implementation: cardanoAction.implementation,
+              addressMode: cardanoAction.addressMode,
+              accountVisual: cardanoAction.accountVisual,
+              hasMnemonic: !!cardanoAction.mnemonic,
+              hasRootKey: !!cardanoAction.rootKey,
+              hasAccountPubKey: !!cardanoAction.accountPubKey,
             }
             logger.info('useActionExecutor: restore-wallet action', {
               isLoggedIn,
-              scanAction: sanitizedAction,
+              cardanoAction: sanitizedAction,
             })
 
             if (isLoggedIn) {
-              walletNavigation.navigateToRestoreWalletFromLink(scanAction)
+              walletNavigation.navigateToRestoreWalletFromLink(cardanoAction)
             } else {
               try {
                 ;(rootNavigation as any).navigate('setup-wallet', {
                   screen: 'setup-wallet-restore-from-link',
-                  params: {action: scanAction},
+                  params: {action: cardanoAction},
                 })
               } catch (error) {
                 logger.info('useActionExecutor: navigation error', {
@@ -509,7 +509,7 @@ export const useActionExecutor = () => {
           default:
             logger.error(
               new Error(
-                `useActionExecutor: unknown Cardano action: ${(scanAction as {action: string}).action}`,
+                `useActionExecutor: unknown Cardano action: ${(cardanoAction as {action: string}).action}`,
               ),
             )
             break

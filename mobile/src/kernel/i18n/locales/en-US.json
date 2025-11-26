@@ -1081,6 +1081,7 @@
   "scan.scanAgain": "Scan Again",
   "scan.title": "Scan the QR code",
   "scan.transactionTitle": "Transaction",
+  "scan.transactionNotFound": "Transaction not found in wallet history.",
   "scan.blockTitle": "Block",
   "scan.addressTitle": "Address",
   "scan.stakePoolTitle": "Stake Pool",

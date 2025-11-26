@@ -7,7 +7,7 @@
 import {useClaim, useClaimTokens} from '@yoroi/claim'
 import {useLinks} from '@yoroi/links'
 import {atoms as a, useTheme} from '@yoroi/theme'
-import {Scan} from '@yoroi/types'
+import {Links} from '@yoroi/types'
 
 import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
@@ -94,11 +94,11 @@ export const ClaimScreen = () => {
   })
 
   // Get claim action from pendingAction or scanActionClaim
-  const claimAction: Scan.ActionClaim | null =
+  const claimAction: Links.CardanoActionClaim | null =
     pendingAction &&
     pendingAction.source === 'cardano' &&
     pendingAction.action.action === 'claim'
-      ? (pendingAction.action as Scan.ActionClaim)
+      ? (pendingAction.action as Links.CardanoActionClaim)
       : scanActionClaim || null
 
   const domain = claimAction ? getDomain(claimAction.url) : ''

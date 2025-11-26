@@ -33,7 +33,7 @@ import {
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {TxHistoryRoutes} from '~/kernel/navigation/types'
 
-import {AddressDetails} from '../Transactions/useCases/AddressDetails/AddressDetails'
+import {AddressDetailsScreen} from '../Transactions/useCases/AddressDetails/AddressDetailsScreen'
 import {BlockDetails} from '../Transactions/useCases/BlockDetails/BlockDetails'
 import {MessageSigningResultScreen} from '../Transactions/useCases/MessageSigning/MessageSigningResultScreen'
 import {MessageSigningScreen} from '../Transactions/useCases/MessageSigning/MessageSigningScreen'
@@ -120,7 +120,7 @@ export const TxHistoryNavigator = () => {
           options={{
             title: strings.transactions.addressDetailsTitle,
           }}
-          getComponent={() => AddressDetails}
+          getComponent={() => AddressDetailsScreen}
         />
 
         <Stack.Screen

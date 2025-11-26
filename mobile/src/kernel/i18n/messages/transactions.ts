@@ -192,7 +192,7 @@ export const transactionsMessages = defineMessages({
     defaultMessage: '!!!Unknown Asset Name',
   },
   walletAddress: {
-    id: 'components.txhistory.txdetails.transactionId',
+    id: 'components.transactions.address',
     defaultMessage: '!!!Wallet Address',
   },
   BIP32path: {

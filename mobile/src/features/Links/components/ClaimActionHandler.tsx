@@ -8,7 +8,7 @@
  */
 import {useClaim} from '@yoroi/claim'
 import {useLinks} from '@yoroi/links'
-import {Scan} from '@yoroi/types'
+import {Links} from '@yoroi/types'
 
 import {useFocusEffect} from '@react-navigation/native'
 import * as React from 'react'
@@ -18,7 +18,7 @@ import {logger} from '~/kernel/logger/logger'
 export const ClaimActionHandler = () => {
   const {pendingAction} = useLinks()
   const {reset: resetClaimState, scanActionClaimChanged, address} = useClaim()
-  const processedActionRef = React.useRef<Scan.ActionClaim | null>(null)
+  const processedActionRef = React.useRef<Links.CardanoActionClaim | null>(null)
 
   // Handle claim action from pendingAction context
   // Use useFocusEffect to ensure we process when screen is focused
@@ -46,36 +46,36 @@ export const ClaimActionHandler = () => {
         pendingAction.source === 'cardano' &&
         pendingAction.action.action === 'claim'
       ) {
-        const scanAction = pendingAction.action as Scan.ActionClaim
+        const cardanoAction = pendingAction.action as Links.CardanoActionClaim
 
         // Check if we've already processed this action
         if (
           processedActionRef.current &&
-          processedActionRef.current.url === scanAction.url &&
-          processedActionRef.current.code === scanAction.code
+          processedActionRef.current.url === cardanoAction.url &&
+          processedActionRef.current.code === cardanoAction.code
         ) {
           logger.info(
             'ClaimActionHandler: action already processed, skipping',
             {
-              url: scanAction.url,
-              code: scanAction.code,
+              url: cardanoAction.url,
+              code: cardanoAction.code,
             },
           )
           return
         }
 
         logger.info('ClaimActionHandler: processing claim action', {
-          url: scanAction.url,
-          code: scanAction.code,
+          url: cardanoAction.url,
+          code: cardanoAction.code,
           address,
         })
 
-        // Reset claim state and set the scan action
+        // Reset claim state and set the cardano action
         resetClaimState()
-        scanActionClaimChanged(scanAction)
+        scanActionClaimChanged(cardanoAction)
 
         // Mark as processed to prevent re-processing if screen refocuses
-        processedActionRef.current = scanAction
+        processedActionRef.current = cardanoAction
       } else {
         logger.info('ClaimActionHandler: conditions not met', {
           hasPendingAction: !!pendingAction,

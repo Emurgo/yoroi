@@ -1,4 +1,4 @@
-import {Chain, Portfolio, Scan} from '@yoroi/types'
+import {Chain, Links, Portfolio} from '@yoroi/types'
 
 import {useNavigation} from '@react-navigation/native'
 import * as Linking from 'expo-linking'
@@ -565,7 +565,9 @@ export const useWalletNavigation = () => {
       })
     },
 
-    navigateToRestoreWalletFromLink: (action: Scan.ActionRestoreWallet) => {
+    navigateToRestoreWalletFromLink: (
+      action: Links.CardanoActionRestoreWallet,
+    ) => {
       navigation.navigate('manage-wallets', {
         screen: 'setup-wallet',
         params: {

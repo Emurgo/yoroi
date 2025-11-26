@@ -181,6 +181,7 @@ export const useStrings = () => {
         continue: f(scanMessages.continue),
         openAppSettings: f(scanMessages.openAppSettings),
         transactionTitle: f(scanMessages.transactionTitle),
+        transactionNotFound: f(scanMessages.transactionNotFound),
         blockTitle: f(scanMessages.blockTitle),
         addressTitle: f(scanMessages.addressTitle),
         stakePoolTitle: f(scanMessages.stakePoolTitle),

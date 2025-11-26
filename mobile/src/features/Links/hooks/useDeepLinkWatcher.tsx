@@ -4,8 +4,8 @@ import * as Linking from 'expo-linking'
 import * as React from 'react'
 
 import {useAuth} from '~/features/Auth/context/AuthProvider'
-import {parseScanAction} from '~/features/Scan/common/parsers'
-import {isWebCardanoLink} from '~/features/Scan/common/triggerScanActionHelper'
+import {isWebCardanoLink} from '~/features/Links/common/helpers'
+import {parseCardanoLink} from '~/features/Links/common/parsers'
 import {logger} from '~/kernel/logger/logger'
 
 export const useDeepLinkWatcher = () => {
@@ -34,11 +34,11 @@ export const useDeepLinkWatcher = () => {
 
       if (isWebCardano) {
         try {
-          const scanAction = parseScanAction(url)
+          const cardanoAction = parseCardanoLink(url)
           // Store Cardano action in pending action context
           const pendingAction: PendingAction = {
             source: 'cardano',
-            action: scanAction,
+            action: cardanoAction,
           }
           setPendingAction(pendingAction)
         } catch (error) {
@@ -112,10 +112,10 @@ export const useDeepLinkWatcher = () => {
 
         if (isWebCardanoLink(url)) {
           try {
-            const scanAction = parseScanAction(url)
+            const cardanoAction = parseCardanoLink(url)
             const pendingAction: PendingAction = {
               source: 'cardano',
-              action: scanAction,
+              action: cardanoAction,
             }
             setPendingAction(pendingAction)
           } catch (error) {
