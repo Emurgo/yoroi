@@ -306,6 +306,7 @@ export type NftRouteNavigation = StackNavigationProp<NftRoutes>
 export type MenuRoutes = {
   '_menu': undefined
   'voting-registration': undefined
+  'airdrop': undefined
 }
 
 export type AppRoutes = {
@@ -360,6 +361,7 @@ export type WalletNavigation = {
   navigateToMessageSigning: () => void
   navigateToMessageSigningResult: (signature: string, key: string) => void
   navigateToTxDetails: (id: string) => void
+  navigateToAirdrop: () => void
 }
 
 declare global {

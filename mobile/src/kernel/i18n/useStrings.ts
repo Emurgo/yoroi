@@ -8,6 +8,7 @@ import {useIntl} from 'react-intl'
 
 import {
   actionMessages,
+  airdropMessages,
   authMessages,
   claimMessages,
   confirmationMessages,
@@ -274,6 +275,47 @@ export const useStrings = () => {
         continue: f(claimMessages.continue),
       },
 
+      // Airdrop strings
+      airdrop: {
+        bannerTitle: f(airdropMessages.bannerTitle),
+        bannerBody: f(airdropMessages.bannerBody),
+        title: f(airdropMessages.title),
+        noAllocations: f(airdropMessages.noAllocations),
+        noAllocationsDescription: f(airdropMessages.noAllocationsDescription),
+        loading: f(airdropMessages.loading),
+        error: f(airdropMessages.error),
+        address: f(airdropMessages.address),
+        destinationAddress: f(airdropMessages.destinationAddress),
+        totalAllocation: f(airdropMessages.totalAllocation),
+        redeemedSoFar: f(airdropMessages.redeemedSoFar),
+        totalLeftToRedeem: f(airdropMessages.totalLeftToRedeem),
+        redeemableNow: f(airdropMessages.redeemableNow),
+        currentThaw: f(airdropMessages.currentThaw),
+        endsIn: f(airdropMessages.endsIn),
+        thawInfo: f(airdropMessages.thawInfo),
+        numberOfClaimedAllocations: f(
+          airdropMessages.numberOfClaimedAllocations,
+        ),
+        redeem: f(airdropMessages.redeem),
+        redeeming: f(airdropMessages.redeeming),
+        viewTransactions: f(airdropMessages.viewTransactions),
+        details: f(airdropMessages.details),
+        enterPassword: f(airdropMessages.enterPassword),
+        redeemSuccess: f(airdropMessages.redeemSuccess),
+        redeemError: f(airdropMessages.redeemError),
+        insufficientFunds: f(airdropMessages.insufficientFunds),
+        status: {
+          upcoming: f(airdropMessages.statusUpcoming),
+          redeemable: f(airdropMessages.statusRedeemable),
+          submitted: f(airdropMessages.statusSubmitted),
+          confirming: f(airdropMessages.statusConfirming),
+          confirmed: f(airdropMessages.statusConfirmed),
+          failed: f(airdropMessages.statusFailed),
+          queued: f(airdropMessages.statusQueued),
+          skipped: f(airdropMessages.statusSkipped),
+        },
+      },
+
       // Portfolio strings
       portfolio: {
         portfolio: f(portfolioMessages.portfolio),
@@ -468,6 +510,7 @@ export const useStrings = () => {
         governanceCentre: f(menuMessages.governanceCentre),
         utxoList: f(transactionsMessages.utxoListTitle),
         messageSigning: f(menuMessages.messageSigning),
+        airdrop: f(menuMessages.airdrop),
       },
 
       // Dashboard strings

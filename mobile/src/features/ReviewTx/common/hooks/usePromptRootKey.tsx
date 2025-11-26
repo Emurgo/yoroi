@@ -9,7 +9,7 @@ import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 
 type PromptRootKeyOptions = {
-  onSuccess: (rootKey: string) => void
+  onSuccess: (rootKey: string) => void | Promise<void>
   onError?: (error: unknown) => void
   onClose?: () => void
   title?: string
