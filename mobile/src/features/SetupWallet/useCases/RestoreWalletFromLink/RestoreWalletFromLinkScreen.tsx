@@ -385,6 +385,7 @@ export const RestoreWalletFromLinkScreen = () => {
           }}
           testID="walletNameInput"
           autoComplete="off"
+          textContentType="none"
           showErrorOnBlur
         />
 
@@ -404,7 +405,7 @@ export const RestoreWalletFromLinkScreen = () => {
               testID="walletPasswordInput"
               autoComplete="off"
               showErrorOnBlur
-              textContentType="oneTimeCode"
+              textContentType="none"
             />
 
             <TextInput
@@ -420,7 +421,7 @@ export const RestoreWalletFromLinkScreen = () => {
               testID="walletPasswordConfirmationInput"
               autoComplete="off"
               showErrorOnBlur
-              textContentType="oneTimeCode"
+              textContentType="none"
             />
           </>
         )}
