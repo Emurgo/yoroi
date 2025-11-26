@@ -22,6 +22,7 @@ import {NoFunds} from '../illustrations/NoFunds'
 export type Routes = {
   'staking-gov-home': {drepId?: string} | undefined
   'staking-gov-change-vote': {drepId?: string} | undefined
+  'staking-gov-voting-options': undefined
   'staking-gov-not-supported-version': undefined
 }
 
@@ -74,6 +75,10 @@ export const useNavigateTo = () => {
         navigation.navigate('governance', {
           screen: 'staking-gov-change-vote',
           params,
+        }),
+      votingOptions: () =>
+        navigation.navigate('governance', {
+          screen: 'staking-gov-voting-options',
         }),
       notSupportedVersion: () =>
         navigation.navigate('governance', {
