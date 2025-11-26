@@ -8,6 +8,7 @@ import {
   LinksCardanoBrowseV1,
   LinksCardanoClaimV1,
   LinksCardanoConnectV1,
+  LinksCardanoDrepV1,
   LinksCardanoLegacyTransfer,
   LinksCardanoPayV1,
   LinksCardanoPaymentV1,
@@ -103,6 +104,21 @@ export const configCardanoStakeV1: Readonly<LinksCardanoStakeV1> = freeze(
     version: 'v1',
     rules: {
       requiredParams: ['pool'],
+      optionalParams: [],
+      forbiddenParams: [],
+      extraParams: 'drop',
+    },
+  },
+  true,
+)
+
+export const configCardanoDrepV1: Readonly<LinksCardanoDrepV1> = freeze(
+  {
+    scheme: cardanoScheme,
+    authority: 'drep',
+    version: 'v1',
+    rules: {
+      requiredParams: ['drep'],
       optionalParams: [],
       forbiddenParams: [],
       extraParams: 'drop',

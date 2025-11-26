@@ -104,6 +104,15 @@ export const parseScanAction = (codeContent: string): Scan.Action => {
     } as const)
   }
 
+  // Handle drep authority (DRep delegation)
+  if (authority === 'drep') {
+    const {drep} = parsedCardanoLink.params
+    return freeze({
+      action: 'delegate-drep',
+      drep: drep as string,
+    } as const)
+  }
+
   // Handle transaction authority (CIP-107)
   if (authority === 'transaction') {
     const {hash} = parsedCardanoLink.params

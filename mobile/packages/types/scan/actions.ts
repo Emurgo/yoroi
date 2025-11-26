@@ -49,6 +49,11 @@ export type ScanActionStakePool = Readonly<{
   pool: string
 }>
 
+export type ScanActionDelegateDrep = Readonly<{
+  action: 'delegate-drep'
+  drep: string
+}>
+
 export type ScanActionViewTransaction = Readonly<{
   action: 'view-transaction'
   hash: string
@@ -92,6 +97,7 @@ export type ScanAction =
   | ScanActionBrowseDapp
   | ScanActionPayRequest
   | ScanActionStakePool
+  | ScanActionDelegateDrep
   | ScanActionViewTransaction
   | ScanActionViewBlock
   | ScanActionViewAddress

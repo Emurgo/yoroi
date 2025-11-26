@@ -3,7 +3,7 @@
 # Test script for all Yoroi deep link types on Android
 # Usage: ./scripts/test-all-links-android.sh [package_name] [test_number]
 #   package_name: Android package name (default: com.emurgo.dev)
-#   test_number: Test number 1-14 to run a specific test (default: run all tests)
+#   test_number: Test number 1-15 to run a specific test (default: run all tests)
 # Examples:
 #   ./scripts/test-all-links-android.sh                    # Run all tests with default package
 #   ./scripts/test-all-links-android.sh com.emurgo 5       # Run only test 5 with production package
@@ -12,14 +12,14 @@
 # Parse arguments: handle both cases
 # Case 1: ./script.sh [package] [test_number]
 # Case 2: ./script.sh [test_number] (uses default package)
-if [[ "$1" =~ ^[0-9]+$ ]] && [[ "$1" -ge 1 ]] && [[ "$1" -le 14 ]]; then
+if [[ "$1" =~ ^[0-9]+$ ]] && [[ "$1" -ge 1 ]] && [[ "$1" -le 15 ]]; then
   # First arg is a test number
   TEST_NUMBER=$1
   PACKAGE_NAME=${2:-com.emurgo.dev}
 else
   # First arg is package name (or default)
   PACKAGE_NAME=${1:-com.emurgo.dev}
-  if [[ "$2" =~ ^[0-9]+$ ]] && [[ "$2" -ge 1 ]] && [[ "$2" -le 14 ]]; then
+  if [[ "$2" =~ ^[0-9]+$ ]] && [[ "$2" -ge 1 ]] && [[ "$2" -le 15 ]]; then
     TEST_NUMBER=$2
   else
     TEST_NUMBER=""
@@ -233,12 +233,27 @@ if [ -z "$TEST_NUMBER" ] || [ "$TEST_NUMBER" -eq 14 ]; then
   fi
 fi
 
+# Test 15: Cardano DRep Delegation Link (web+cardano://drep)
+if [ -z "$TEST_NUMBER" ] || [ "$TEST_NUMBER" -eq 15 ]; then
+  echo "15. Testing: Cardano DRep Delegation Link"
+  echo "-----------------------------------------"
+  DREP_ID="drep1ygr9tuapcanc3kpeyy4dc3vmrz9cfe5q7v9wj3x9j0ap3tswtre9j"
+  ENCODED_DREP_ID=$(url_encode "$DREP_ID")
+  adb shell am start -W -a android.intent.action.VIEW -d "web+cardano://drep/v1?drep=$ENCODED_DREP_ID"
+  echo ""
+  if [ -z "$TEST_NUMBER" ]; then
+    read -q "?Press any key to continue to next test..."
+    echo ""
+    echo ""
+  fi
+fi
+
 if [ -z "$TEST_NUMBER" ]; then
   echo "All link tests completed!"
   echo ""
   echo "Summary:"
   echo "- Tested 4 Yoroi link types (transfer, exchange, browser)"
-  echo "- Tested 9 Cardano link types (claim, browse, pay, payment, stake, transaction, block, address, connect)"
+  echo "- Tested 10 Cardano link types (claim, browse, pay, payment, stake, drep, transaction, block, address, connect)"
   echo "- Tested Universal Links (HTTPS)"
 else
   echo "Test $TEST_NUMBER completed!"

@@ -1,7 +1,6 @@
 import {useClaim, useClaimTokens} from '@yoroi/claim'
 import {toBigInt} from '@yoroi/common'
-import {linksCardanoModuleMaker} from '@yoroi/links'
-import {PendingAction} from '@yoroi/links'
+import {PendingAction, linksCardanoModuleMaker} from '@yoroi/links'
 import {createPrimaryTokenInfo} from '@yoroi/portfolio'
 import {useTransfer} from '@yoroi/transfer'
 import {Links, Portfolio} from '@yoroi/types'
@@ -17,6 +16,7 @@ import {AskConfirmationModal} from '~/features/Claim/ui/modals/AskConfirmationMo
 import {useBrowser} from '~/features/Discover/common/BrowserProvider'
 import {useInfoModal} from '~/features/Scan/common/modals/InfoModal'
 import {useTransactionNotFoundModal} from '~/features/Scan/common/modals/TransactionNotFoundModal'
+import {useNavigateTo as useGovernanceNavigateTo} from '~/features/Staking/Governance/common/navigation'
 import {isInsufficientBalanceError} from '~/features/Staking/Governance/common/transactionErrorHandling'
 import {useWalletManagerSelector} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
@@ -65,6 +65,7 @@ export const useActionExecutor = () => {
   const {openInfoModal} = useInfoModal()
   const {openTransactionNotFoundModal} = useTransactionNotFoundModal()
   const navigateTo = useNavigateTo()
+  const navigateToGovernance = useGovernanceNavigateTo()
   const strings = useStrings()
   const timeoutRef = React.useRef<NodeJS.Timeout | null>(null)
 
@@ -454,6 +455,22 @@ export const useActionExecutor = () => {
             break
           }
 
+          case 'delegate-drep': {
+            // DRep delegation: Navigate to governance home screen to handle transaction building
+            logger.debug(
+              'useActionExecutor: navigating to governance for DRep delegation',
+              {
+                drepId: scanAction.drep,
+              },
+            )
+
+            // Navigate to home screen with DRep ID as param
+            // Home screen handles both users who have voted and those who haven't
+            // It will automatically open the DRep input modal with prefilled DRep ID
+            navigateToGovernance.home({drepId: scanAction.drep})
+            break
+          }
+
           case 'view-transaction': {
             // CIP-107: View transaction details
             if (wallet) {
@@ -566,6 +583,7 @@ export const useActionExecutor = () => {
       openInfoModal,
       openTransactionNotFoundModal,
       navigateTo,
+      navigateToGovernance,
       strings,
       resetTransferState,
       receiverResolveChanged,

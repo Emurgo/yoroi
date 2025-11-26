@@ -7,6 +7,7 @@ import {
   configCardanoBrowseV1,
   configCardanoClaimV1,
   configCardanoConnectV1,
+  configCardanoDrepV1,
   configCardanoPayV1,
   configCardanoPaymentV1,
   configCardanoStakeV1,
@@ -146,6 +147,14 @@ export const isCardanoPaymentV1 = (url: URL): boolean => {
 export const isCardanoStakeV1 = (url: URL): boolean => {
   if (url.hostname === configCardanoStakeV1.authority) {
     if (url.pathname === `/${configCardanoStakeV1.version}`) return true
+    throw new Links.Errors.UnsupportedVersion()
+  }
+  return false
+}
+
+export const isCardanoDrepV1 = (url: URL): boolean => {
+  if (url.hostname === configCardanoDrepV1.authority) {
+    if (url.pathname === `/${configCardanoDrepV1.version}`) return true
     throw new Links.Errors.UnsupportedVersion()
   }
   return false

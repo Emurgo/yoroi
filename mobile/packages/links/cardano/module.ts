@@ -10,6 +10,7 @@ import {
   configCardanoBrowseV1,
   configCardanoClaimV1,
   configCardanoConnectV1,
+  configCardanoDrepV1,
   configCardanoLegacyTransfer,
   configCardanoPayV1,
   configCardanoPaymentV1,
@@ -24,6 +25,7 @@ import {
   isCardanoBrowseV1,
   isCardanoClaimV1,
   isCardanoConnectV1,
+  isCardanoDrepV1,
   isCardanoPayV1,
   isCardanoPaymentV1,
   isCardanoStakeV1,
@@ -135,7 +137,7 @@ export const linksCardanoModuleMaker =
         addSearchParams(url, sanitizedParams)
         url.pathname = config.version
       } else {
-        // Query-based authorities (claim, pay, payment, stake, block, connect)
+        // Query-based authorities (claim, pay, payment, stake, drep, block, connect)
         url = new URL(config.scheme + '://' + config.authority + '/')
         addSearchParams(url, sanitizedParams)
         url.pathname = config.version
@@ -248,6 +250,8 @@ export const linksCardanoModuleMaker =
         config = configCardanoPaymentV1
       } else if (isCardanoStakeV1(url)) {
         config = configCardanoStakeV1
+      } else if (isCardanoDrepV1(url)) {
+        config = configCardanoDrepV1
       } else if (isCardanoBlockV1(url)) {
         // CIP-107 Block: validate either hash or height is present
         const hash = params.hash

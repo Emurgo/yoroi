@@ -7,6 +7,7 @@ import * as React from 'react'
 import {Linking, Text, TouchableOpacity} from 'react-native'
 
 import {useAuth} from '~/features/Auth/context/AuthProvider'
+import {PendingActionBanner} from '~/features/Links/components/PendingActionBanner'
 import {pushNotificationsManager} from '~/features/Notifications/common/notification-manager'
 import {
   handleNotificationInternalNavigationAction,
@@ -74,6 +75,7 @@ export const SelectWalletFromList = () => {
 
   return (
     <SafeArea style={[a.gap_md]}>
+      <PendingActionBanner />
       {features.walletListAggregatedBalance && <AggregatedBalance />}
 
       <ScrollView

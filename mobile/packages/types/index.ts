@@ -264,6 +264,7 @@ import {
   ScanAction,
   ScanActionBrowseDapp,
   ScanActionClaim,
+  ScanActionDelegateDrep,
   ScanActionLaunchUrl,
   ScanActionP2PConnect,
   ScanActionPayRequest,
@@ -784,6 +785,7 @@ export namespace Scan {
   export type ActionBrowseDapp = ScanActionBrowseDapp
   export type ActionPayRequest = ScanActionPayRequest
   export type ActionStakePool = ScanActionStakePool
+  export type ActionDelegateDrep = ScanActionDelegateDrep
   export type ActionViewTransaction = ScanActionViewTransaction
   export type ActionViewBlock = ScanActionViewBlock
   export type ActionViewAddress = ScanActionViewAddress

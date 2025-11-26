@@ -9,6 +9,7 @@ import {
 } from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
+import {useRoute} from '@react-navigation/native'
 import * as React from 'react'
 import {Text, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
@@ -33,6 +34,8 @@ export const ChangeVoteScreen = () => {
   const strings = useStrings()
   const {wallet, meta} = useSelectedWallet()
   const {atoms: ta} = useTheme()
+  const route = useRoute()
+  const routeParams = route.params as {drepId?: string} | undefined
   const stakingKeyHash = useStakingKey(wallet)
   const {data: stakingStatus} = useStakingKeyState(stakingKeyHash)
   const action = stakingStatus
@@ -59,38 +62,78 @@ export const ChangeVoteScreen = () => {
 
   const isPending = isCreatingTx || pendingVote !== null
 
-  const openDRepIdModal = (
-    onSubmit: (options: {
-      hash: string
-      type: 'script' | 'key'
-      CIP105: boolean
-    }) => void,
-  ) => {
-    openModal({
-      title: strings.staking.enterDRepID,
-      content: (
-        <GovernanceProvider manager={manager}>
-          <EnterDrepIdModal onSubmit={onSubmit} />
-        </GovernanceProvider>
-      ),
-      height: 400,
-    })
-  }
-
-  const handleDelegate = () => {
-    if (isPending) return
-    openDRepIdModal(async (options) => {
-      const stakingKey = wallet.getStakingKey()
-
-      const certificate = await createDelegationCertificate({
-        hash: options.hash,
-        type: options.type,
-        stakingKey,
+  const openDRepIdModal = React.useCallback(
+    (
+      onSubmit: (options: {
+        hash: string
+        type: 'script' | 'key'
+        CIP105: boolean
+      }) => void,
+      initialDrepId?: string,
+    ) => {
+      openModal({
+        title: strings.staking.enterDRepID,
+        content: (
+          <GovernanceProvider manager={manager}>
+            <EnterDrepIdModal
+              onSubmit={onSubmit}
+              initialDrepId={initialDrepId}
+            />
+          </GovernanceProvider>
+        ),
+        height: 400,
       })
+    },
+    [openModal, strings.staking.enterDRepID, manager],
+  )
 
-      submitDelegate([certificate], options)
-    })
-  }
+  const {closeModal} = useModal()
+
+  const handleDelegate = React.useCallback(
+    (initialDrepId?: string) => {
+      if (isPending) return
+      openDRepIdModal(async (options) => {
+        const stakingKey = wallet.getStakingKey()
+
+        const certificate = await createDelegationCertificate({
+          hash: options.hash,
+          type: options.type,
+          stakingKey,
+        })
+
+        submitDelegate([certificate], options)
+      }, initialDrepId)
+    },
+    [
+      isPending,
+      openDRepIdModal,
+      wallet,
+      createDelegationCertificate,
+      submitDelegate,
+    ],
+  )
+
+  // Close modal when transaction creation completes (success or error)
+  const prevIsCreatingTx = React.useRef(isCreatingTx)
+  React.useEffect(() => {
+    if (prevIsCreatingTx.current && !isCreatingTx) {
+      // Transaction creation finished (either success or error)
+      closeModal()
+    }
+    prevIsCreatingTx.current = isCreatingTx
+  }, [isCreatingTx, closeModal])
+
+  // Check if we have a drepId from route params and open modal automatically
+  React.useEffect(() => {
+    if (routeParams?.drepId && !isPending) {
+      // Small delay to ensure screen is mounted
+      const timer = setTimeout(() => {
+        handleDelegate(routeParams.drepId)
+      }, 100)
+      return () => clearTimeout(timer)
+    }
+    return undefined
+  }, [routeParams?.drepId, isPending, handleDelegate])
 
   const handleDelegateToYoroi = async () => {
     if (isPending) return

@@ -44,7 +44,6 @@ export const useGovernanceVoteFlow = ({
   options?: UseGovernanceVoteFlowOptions
 }) => {
   const governanceActions = useGovernanceActions()
-
   const [pendingVote, setPendingVote] = React.useState<PendingVote>(null)
   const pendingActionRef = React.useRef<PendingAction>(null)
   const {

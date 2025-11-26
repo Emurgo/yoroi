@@ -40,6 +40,8 @@ const getActionMessage = (
         return strings.links.trustedBrowserLaunchDappUrlTitle
       case 'stake-pool':
         return strings.scan.stakePoolTitle
+      case 'delegate-drep':
+        return strings.staking.delegateToADRep
       case 'view-transaction':
         return strings.scan.transactionTitle
       case 'view-block':
