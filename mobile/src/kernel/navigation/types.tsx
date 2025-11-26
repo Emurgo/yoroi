@@ -113,6 +113,7 @@ export type ScanRoutes = {
 }
 
 type ClaimRoutes = {
+  'claim': undefined
   'claim-show-success': undefined
 }
 

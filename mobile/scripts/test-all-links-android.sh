@@ -39,11 +39,17 @@ url_encode() {
   echo -n "$1" | python3 -c "import sys, urllib.parse; print(urllib.parse.quote(sys.stdin.read()))"
 }
 
-# Test 1: Transfer Request ADA (direct params) FAILED
+# Test 1: Transfer Request ADA (direct params) PASSED
 if [ -z "$TEST_NUMBER" ] || [ "$TEST_NUMBER" -eq 1 ]; then
   echo "1. Testing: Transfer Request ADA (direct params)"
   echo "-------------------------------------------------"
-  TRANSFER_URL="yoroi://yoroi-wallet.com/w1/transfer/request/ada?targets[0][receiver]=addr1q9shdvgxddemdxkdwp493le8yhengzk6fuwsewzx42sjpjkr3y3kdut55a40jff00qmg74686vz44v6k363md06qkq0ql6fur2&targets[0][amounts][0][tokenId]=.&targets[0][amounts][0][quantity]=1000000&memo=Test+transfer&appId=test-app&message=Testing+direct+ADA+transfer"
+  # The targets array must be JSON stringified - each targets[0] is a JSON object
+  # Format: targets[0]={"receiver":"...","amounts":[{"tokenId":".","quantity":"1000000"}]}
+  TARGET_JSON='{"receiver":"addr1q9shdvgxddemdxkdwp493le8yhengzk6fuwsewzx42sjpjkr3y3kdut55a40jff00qmg74686vz44v6k363md06qkq0ql6fur2","amounts":[{"tokenId":".","quantity":"1000000"}]}'
+  TARGET_ENCODED=$(url_encode "$TARGET_JSON")
+  MEMO_ENCODED=$(url_encode "Test transfer")
+  MESSAGE_ENCODED=$(url_encode "Testing direct ADA transfer")
+  TRANSFER_URL="yoroi://yoroi-wallet.com/w1/transfer/request/ada?targets[0]=$TARGET_ENCODED&memo=$MEMO_ENCODED&appId=test-app&message=$MESSAGE_ENCODED"
   ESCAPED_URL=$(echo "$TRANSFER_URL" | sed "s/'/'\\\\''/g")
   adb shell "am start -W -a android.intent.action.VIEW -d '$ESCAPED_URL'"
   echo ""
@@ -71,7 +77,7 @@ if [ -z "$TEST_NUMBER" ] || [ "$TEST_NUMBER" -eq 2 ]; then
   fi
 fi
 
-# Test 3: Exchange Order Show Create Result FAILED
+# Test 3: Exchange Order Show Create Result PASSED
 if [ -z "$TEST_NUMBER" ] || [ "$TEST_NUMBER" -eq 3 ]; then
   echo "3. Testing: Exchange Order Show Create Result"
   echo "-----------------------------------------------"

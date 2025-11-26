@@ -1,4 +1,3 @@
-import {useClaim, useClaimTokens} from '@yoroi/claim'
 import {toBigInt} from '@yoroi/common'
 import {PendingAction, linksCardanoModuleMaker} from '@yoroi/links'
 import {createPrimaryTokenInfo} from '@yoroi/portfolio'
@@ -11,8 +10,6 @@ import * as React from 'react'
 import * as uuid from 'uuid'
 
 import {useAuth} from '~/features/Auth/context/AuthProvider'
-import {useClaimErrorResolver} from '~/features/Claim/common/useClaimErrorResolver'
-import {AskConfirmationModal} from '~/features/Claim/ui/modals/AskConfirmationModal'
 import {useBrowser} from '~/features/Discover/common/BrowserProvider'
 import {ExchangeResultModal} from '~/features/Exchange/useCases/ShowExchangeResultOrderScreen/ExchangeResultModal'
 import {useInfoModal} from '~/features/Scan/common/modals/InfoModal'
@@ -60,7 +57,7 @@ export const useActionExecutor = () => {
     () => getDefaultPrimaryTokenInfo(),
     [],
   )
-  const {openModal, closeModal, setLoading: startLoading} = useModal()
+  const {openModal, closeModal} = useModal()
   const {addTabAndSetActive} = useBrowser()
   const walletNavigation = useWalletNavigation()
   const {openInfoModal} = useInfoModal()
@@ -68,8 +65,6 @@ export const useActionExecutor = () => {
   const navigateTo = useNavigateTo()
   const navigateToGovernance = useGovernanceNavigateTo()
   const strings = useStrings()
-  const timeoutRef = React.useRef<NodeJS.Timeout | null>(null)
-
   const {
     receiverResolveChanged,
     amountChanged,
@@ -78,41 +73,6 @@ export const useActionExecutor = () => {
     memoChanged,
     linkActionChanged,
   } = useTransfer()
-
-  const {
-    reset: resetClaimState,
-    scanActionClaimChanged,
-    address,
-    claimInfoChanged,
-  } = useClaim()
-
-  const claimErrorResolver = useClaimErrorResolver()
-  const {claimTokens} = useClaimTokens({
-    onSuccess: (claimInfo) => {
-      claimInfoChanged(claimInfo)
-      closeModal()
-      navigateTo.claimShowSuccess()
-    },
-    onError: (error) => {
-      startLoading(false)
-      const claimErrorDialog = claimErrorResolver(error)
-      if (claimErrorDialog) {
-        openInfoModal({
-          title: claimErrorDialog.title,
-          message: claimErrorDialog.message,
-        })
-      }
-    },
-  })
-
-  // Cleanup effect
-  React.useEffect(() => {
-    return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current)
-      }
-    }
-  }, [])
 
   const executeAction = React.useCallback(
     (pendingAction: PendingAction) => {
@@ -330,31 +290,18 @@ export const useActionExecutor = () => {
           }
 
           case 'claim': {
-            navigateTo.back()
-            resetClaimState()
-            scanActionClaimChanged(scanAction)
-
-            const handleOnContinue = () => {
-              startLoading(true)
-              claimTokens(scanAction)
-            }
-
-            timeoutRef.current = setTimeout(() => {
-              openModal({
-                title: strings.claim.askConfirmationTitle,
-                content: (
-                  <AskConfirmationModal.Content
-                    address={address}
-                    url={scanAction.url}
-                    code={scanAction.code}
-                  />
-                ),
-                footer: (
-                  <AskConfirmationModal.Footer onContinue={handleOnContinue} />
-                ),
-                height: 400,
-              })
-            }, 300)
+            // Navigate to dedicated claim screen
+            // ClaimActionHandler in that screen will process the action
+            // claim is nested: manage-wallets -> main-wallet-routes -> history -> claim
+            rootNavigation.navigate('manage-wallets', {
+              screen: 'main-wallet-routes',
+              params: {
+                screen: 'history',
+                params: {
+                  screen: 'claim',
+                },
+              },
+            })
             break
           }
 
@@ -576,7 +523,6 @@ export const useActionExecutor = () => {
       defaultPrimaryTokenInfo,
       openModal,
       closeModal,
-      startLoading,
       addTabAndSetActive,
       walletNavigation,
       openInfoModal,
@@ -590,10 +536,6 @@ export const useActionExecutor = () => {
       tokenSelectedChanged,
       memoChanged,
       linkActionChanged,
-      resetClaimState,
-      scanActionClaimChanged,
-      address,
-      claimTokens,
       rootNavigation,
     ],
   )

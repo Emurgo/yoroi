@@ -6,6 +6,7 @@ import {
 } from '@react-navigation/stack'
 import * as React from 'react'
 
+import {ClaimScreen} from '~/features/Claim/useCases/ClaimScreen'
 import {ShowSuccessScreen} from '~/features/Claim/useCases/ShowSuccessScreen'
 import {CreateExchangeOrderScreen} from '~/features/Exchange/useCases/CreateExchangeOrderScreen/CreateExchangeOrderScreen'
 import {SelectProviderFromListScreen} from '~/features/Exchange/useCases/SelectProviderFromListScreen/SelectProviderFromListScreen'
@@ -264,6 +265,13 @@ export const TxHistoryNavigator = () => {
         />
 
         {/* Claim Screens */}
+        <Stack.Screen
+          name="claim"
+          options={{
+            title: strings.claim.askConfirmationTitle,
+          }}
+          getComponent={() => ClaimScreen}
+        />
         <Stack.Screen
           name="claim-show-success"
           options={{

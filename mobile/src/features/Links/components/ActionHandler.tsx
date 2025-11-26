@@ -46,7 +46,10 @@ const showsModal = (pendingAction: PendingAction): boolean => {
       useCase === 'order/show-create-result'
     )
   }
-  // Cardano actions don't show modals (except claim which handles its own)
+  // Cardano actions: claim shows a modal that handles its own cleanup
+  if (pendingAction.source === 'cardano') {
+    return pendingAction.action.action === 'claim'
+  }
   return false
 }
 
