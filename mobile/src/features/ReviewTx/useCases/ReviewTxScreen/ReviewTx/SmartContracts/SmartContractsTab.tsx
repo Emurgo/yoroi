@@ -3,6 +3,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
+import {Address} from '~/common/Address/Address'
 import {FormattedOutputs, FormattedTx} from '~/features/ReviewTx/common/types'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
@@ -126,19 +127,11 @@ const CollateralSection = ({tx}: {tx: FormattedTx}) => {
           <Space.Height.md />
           <View style={[a.flex_col, a.gap_md]}>
             <View style={[a.flex_row, a.justify_between, a.align_center]}>
-              <Copiable text={tx.collateralReturn.address} style={a.flex_1}>
-                <Text
-                  style={[
-                    a.flex_1,
-                    a.body_2_md_regular,
-                    {color: p.text_gray_medium},
-                  ]}
-                  numberOfLines={1}
-                  ellipsizeMode="middle"
-                >
-                  {tx.collateralReturn.address}
-                </Text>
-              </Copiable>
+              <Address
+                address={tx.collateralReturn.address}
+                style={a.flex_1}
+                textStyle={[a.body_2_md_regular, {color: p.text_gray_medium}]}
+              />
             </View>
             <View style={[a.flex_row, a.justify_end, a.flex_wrap, a.gap_sm]}>
               {tx.collateralReturn.assets.map((asset, index) => (
@@ -405,20 +398,15 @@ const DatumOutputContent = ({
         <Text style={[a.body_2_md_medium, {color: p.text_gray_medium}]}>
           {strings.txReview.datum.addressLabel}:
         </Text>
-        <Copiable text={output.address} style={a.flex_1}>
-          <Text
-            style={[
-              a.flex_1,
-              a.body_2_md_regular,
-              {color: p.text_gray_medium},
-              a.text_right,
-            ]}
-            numberOfLines={1}
-            ellipsizeMode="middle"
-          >
-            {output.address}
-          </Text>
-        </Copiable>
+        <Address
+          address={output.address}
+          style={a.flex_1}
+          textStyle={[
+            a.body_2_md_regular,
+            {color: p.text_gray_medium},
+            a.text_right,
+          ]}
+        />
       </View>
 
       <Space.Height.md />

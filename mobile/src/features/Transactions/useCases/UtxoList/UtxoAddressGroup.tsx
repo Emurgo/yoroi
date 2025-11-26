@@ -4,7 +4,7 @@ import {FlashList} from '@shopify/flash-list'
 import * as React from 'react'
 import {Linking, Text, TouchableOpacity, View} from 'react-native'
 
-import {Copiable} from '~/ui/Copiable/Copiable'
+import {Address} from '~/common/Address/Address'
 import {Space} from '~/ui/Space/Space'
 
 import {UtxoItem} from './UtxoItem'
@@ -26,19 +26,9 @@ const UtxoAddressGroupComponent = ({item}: {item: UtxoList[number]}) => {
           </Text>
         </TouchableOpacity>
 
-        <Copiable text={item.address}>
-          <View style={{flex: 1}}>
-            <Text numberOfLines={1} ellipsizeMode="middle">
-              <Text style={[a.body_2_md_regular, ta.text_gray_medium]}>
-                {item.address.slice(0, -6)}
-              </Text>
+        <Space.Height.xs />
 
-              <Text style={[a.body_2_md_medium, ta.text_primary_medium]}>
-                {item.address.slice(-6)}
-              </Text>
-            </Text>
-          </View>
-        </Copiable>
+        <Address address={item.address} />
       </View>
 
       <FlashList

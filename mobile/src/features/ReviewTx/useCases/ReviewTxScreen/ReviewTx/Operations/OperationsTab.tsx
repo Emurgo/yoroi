@@ -4,6 +4,7 @@ import {type Proposal, type Vote} from '@yoroi/tx'
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
+import {Address} from '~/common/Address/Address'
 import {Operations, useOperations} from '~/features/ReviewTx/common/operations'
 import {FormattedTx} from '~/features/ReviewTx/common/types'
 import {useStrings} from '~/kernel/i18n/useStrings'
@@ -470,19 +471,11 @@ const Withdrawals = ({
                 {strings.txReview.withdrawal.address}
               </Text>
               <View style={[a.flex_row, a.align_center]}>
-                <Copiable text={withdrawal.address} style={a.flex_1}>
-                  <Text
-                    style={[
-                      a.flex_1,
-                      a.body_2_md_regular,
-                      {color: p.text_gray_medium},
-                    ]}
-                    numberOfLines={1}
-                    ellipsizeMode="middle"
-                  >
-                    {withdrawal.address}
-                  </Text>
-                </Copiable>
+                <Address
+                  address={withdrawal.address}
+                  style={a.flex_1}
+                  textStyle={[a.body_2_md_regular, {color: p.text_gray_medium}]}
+                />
               </View>
             </View>
 
