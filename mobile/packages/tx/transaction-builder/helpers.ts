@@ -195,7 +195,7 @@ export function selectUtxosForAmount(
  * Select UTXOs to cover required amounts including tokens
  * This function selects the minimum set of UTXOs needed to cover:
  * - All required token amounts
- * - Required ADA amounts (outputs + estimated fee)
+ * - Required ADA amounts (outputs + estimated fee + minimum UTXO for change output)
  */
 export function selectUtxosForAmounts(
   utxos: ModernUtxo[],
@@ -205,7 +205,10 @@ export function selectUtxosForAmounts(
 ): ModernUtxo[] {
   const logger = getLogger()
 
-  // Calculate total required ADA (outputs + fee)
+  // Calculate total required ADA (outputs + fee + minimum UTXO for change output)
+  // Minimum UTXO is needed because change output must meet minimum UTXO requirement
+  const minUtxoValue = BigInt('1000000') // Base min UTXO (1 ADA) - standard for Cardano
+  const feeBuffer = BigInt('100000') // 0.1 ADA buffer for fee estimation variance
   const requiredAda =
     (Object.keys(requiredAmounts) as Array<Portfolio.Token.Id>).reduce(
       (sum, tokenId) => {
@@ -216,7 +219,10 @@ export function selectUtxosForAmounts(
         return sum
       },
       BigInt(0),
-    ) + BigInt(estimatedFee)
+    ) +
+    BigInt(estimatedFee) +
+    minUtxoValue +
+    feeBuffer
 
   // Get all required token IDs (excluding primary token)
   const requiredTokenIds = new Set(

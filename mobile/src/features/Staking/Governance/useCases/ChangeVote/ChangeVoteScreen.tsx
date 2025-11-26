@@ -11,7 +11,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 
 import {useRoute} from '@react-navigation/native'
 import * as React from 'react'
-import {Text, View} from 'react-native'
+import {Keyboard, Text, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
 import {useRemoteConfig} from '~/features/RemoteConfig/hooks/useRemoteConfig'
@@ -41,7 +41,7 @@ export const ChangeVoteScreen = () => {
   const action = stakingStatus
     ? mapStakingKeyStateToGovernanceAction(stakingStatus)
     : null
-  const {openModal} = useModal()
+  const {openModal, closeModal: closeModalOriginal} = useModal()
   const {manager} = useGovernance()
 
   const createDelegationCertificate = useDelegationCertificate()
@@ -62,6 +62,55 @@ export const ChangeVoteScreen = () => {
 
   const isPending = isCreatingTx || pendingVote !== null
 
+  // Track if we've already opened the modal for this drepId to prevent reopening
+  const hasOpenedModalRef = React.useRef<string | undefined>(undefined)
+  const mountedDrepIdRef = React.useRef<string | undefined>(undefined)
+  const justClosedRef = React.useRef(false)
+  const resetJustClosedTimeoutRef = React.useRef<
+    ReturnType<typeof setTimeout> | undefined
+  >(undefined)
+
+  // Helper to mark modal as just closed and reset flag after delay
+  const markJustClosed = React.useCallback(() => {
+    justClosedRef.current = true
+    if (resetJustClosedTimeoutRef.current) {
+      clearTimeout(resetJustClosedTimeoutRef.current)
+    }
+    resetJustClosedTimeoutRef.current = setTimeout(() => {
+      justClosedRef.current = false
+      resetJustClosedTimeoutRef.current = undefined
+    }, 500)
+  }, [])
+
+  // Reset ref when component mounts with a new drepId (fresh navigation)
+  React.useEffect(() => {
+    const currentDrepId = routeParams?.drepId
+    if (currentDrepId && mountedDrepIdRef.current !== currentDrepId) {
+      hasOpenedModalRef.current = undefined
+      mountedDrepIdRef.current = currentDrepId
+      justClosedRef.current = false
+      if (resetJustClosedTimeoutRef.current) {
+        clearTimeout(resetJustClosedTimeoutRef.current)
+        resetJustClosedTimeoutRef.current = undefined
+      }
+    }
+  }, [routeParams?.drepId])
+
+  // Cleanup timeout on unmount
+  React.useEffect(() => {
+    return () => {
+      if (resetJustClosedTimeoutRef.current) {
+        clearTimeout(resetJustClosedTimeoutRef.current)
+      }
+    }
+  }, [])
+
+  // Wrap closeModal to prevent immediate reopening after closing
+  const closeModal = React.useCallback(() => {
+    markJustClosed()
+    closeModalOriginal()
+  }, [closeModalOriginal, markJustClosed])
+
   const openDRepIdModal = React.useCallback(
     (
       onSubmit: (options: {
@@ -71,6 +120,10 @@ export const ChangeVoteScreen = () => {
       }) => void,
       initialDrepId?: string,
     ) => {
+      // Set ref only when we actually open the modal, not before
+      if (initialDrepId) {
+        hasOpenedModalRef.current = initialDrepId
+      }
       openModal({
         title: strings.staking.enterDRepID,
         content: (
@@ -82,12 +135,12 @@ export const ChangeVoteScreen = () => {
           </GovernanceProvider>
         ),
         height: 400,
+        canDiscard: true,
+        onClose: markJustClosed,
       })
     },
-    [openModal, strings.staking.enterDRepID, manager],
+    [openModal, strings.staking.enterDRepID, manager, markJustClosed],
   )
-
-  const {closeModal} = useModal()
 
   const handleDelegate = React.useCallback(
     (initialDrepId?: string) => {
@@ -101,6 +154,9 @@ export const ChangeVoteScreen = () => {
           stakingKey,
         })
 
+        // Close modal immediately - dismiss keyboard first since closeModal returns early if keyboard is open
+        Keyboard.dismiss()
+        closeModal()
         submitDelegate([certificate], options)
       }, initialDrepId)
     },
@@ -110,6 +166,7 @@ export const ChangeVoteScreen = () => {
       wallet,
       createDelegationCertificate,
       submitDelegate,
+      closeModal,
     ],
   )
 
@@ -125,12 +182,20 @@ export const ChangeVoteScreen = () => {
 
   // Check if we have a drepId from route params and open modal automatically
   React.useEffect(() => {
-    if (routeParams?.drepId && !isPending) {
+    const drepId = routeParams?.drepId
+    if (
+      drepId &&
+      !isPending &&
+      hasOpenedModalRef.current !== drepId &&
+      !justClosedRef.current
+    ) {
       // Small delay to ensure screen is mounted
       const timer = setTimeout(() => {
-        handleDelegate(routeParams.drepId)
+        handleDelegate(drepId)
       }, 100)
-      return () => clearTimeout(timer)
+      return () => {
+        clearTimeout(timer)
+      }
     }
     return undefined
   }, [routeParams?.drepId, isPending, handleDelegate])

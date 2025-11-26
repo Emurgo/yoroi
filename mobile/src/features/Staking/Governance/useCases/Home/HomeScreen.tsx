@@ -1,11 +1,13 @@
-import {GovernanceProvider, useGovernance} from '@yoroi/staking'
+import {
+  GovernanceProvider,
+  useDelegationCertificate,
+  useGovernance,
+} from '@yoroi/staking'
 import {ThemedPalette, atoms as a, useTheme} from '@yoroi/theme'
-import {NotEnoughMoneyToSendError} from '@yoroi/tx'
-import {TransactionInfo} from '@yoroi/types'
 
 import {useRoute} from '@react-navigation/native'
 import * as React from 'react'
-import {Text, View} from 'react-native'
+import {Keyboard, Text, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
 import {useRemoteConfig} from '~/features/RemoteConfig/hooks/useRemoteConfig'
@@ -13,6 +15,8 @@ import {GovernanceStatusCard} from '~/features/Staking/Governance/common/Governa
 import {LearnMoreLink} from '~/features/Staking/Governance/common/LearnMoreLink/LearnMoreLink'
 import {OtherDrepCard} from '~/features/Staking/Governance/common/OtherDrepCard/OtherDrepCard'
 import {YoroiDrepCard} from '~/features/Staking/Governance/common/YoroiDrepCard/YoroiDrepCard'
+import {useStakingInfo} from '~/features/Staking/hooks/useStakingInfo'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Space} from '~/ui/Space/Space'
@@ -24,8 +28,7 @@ import {
   useParticipatingGovernance,
 } from '../../common/helpers'
 import {useNavigateTo} from '../../common/navigation'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {useStakingInfo} from '~/features/Staking/hooks/useStakingInfo'
+import {useGovernanceVoteFlow} from '../../common/useGovernanceVoteFlow'
 import {GovernanceVote} from '../../types'
 import {EnterDrepIdModal} from '../EnterDrepIdModal/EnterDrepIdModal'
 
@@ -52,7 +55,9 @@ export const HomeScreen = () => {
       const timer = setTimeout(() => {
         navigateTo.changeVote({drepId})
       }, 0)
-      return () => clearTimeout(timer)
+      return () => {
+        clearTimeout(timer)
+      }
     }
     return undefined
   }, [confirmedAction, routeParams?.drepId, navigateTo])
@@ -228,7 +233,7 @@ const NeverParticipatedInGovernanceVariant = ({
   const isYoroiDrepBannerEnabled = config?.banners?.yoroiDrep?.display ?? false
   const strings = useStrings()
   const {atoms: ta} = useTheme()
-  const {openModal} = useModal()
+  const {openModal, closeModal} = useModal()
   const {manager} = useGovernance()
   const {wallet, meta} = useSelectedWallet()
   const stakingInfo = useStakingInfo(wallet)
@@ -237,10 +242,65 @@ const NeverParticipatedInGovernanceVariant = ({
   const {isPending, handleDelegateToYoroi, handleExploreOtherOptions} =
     useNeverParticipatedGovernance(initialDrepId)
 
+  // Track if we've already opened the modal for this initialDrepId to prevent reopening
+  const hasOpenedModalRef = React.useRef<string | undefined>(undefined)
+  const mountedDrepIdRef = React.useRef<string | undefined>(undefined)
+  const justClosedRef = React.useRef(false)
+  const resetJustClosedTimeoutRef = React.useRef<
+    ReturnType<typeof setTimeout> | undefined
+  >(undefined)
+
+  // Helper to mark modal as just closed and reset flag after delay
+  const markJustClosed = React.useCallback(() => {
+    justClosedRef.current = true
+    if (resetJustClosedTimeoutRef.current) {
+      clearTimeout(resetJustClosedTimeoutRef.current)
+    }
+    resetJustClosedTimeoutRef.current = setTimeout(() => {
+      justClosedRef.current = false
+      resetJustClosedTimeoutRef.current = undefined
+    }, 500)
+  }, [])
+
+  // Reset ref when component mounts with a new drepId (fresh navigation)
+  React.useEffect(() => {
+    if (initialDrepId && mountedDrepIdRef.current !== initialDrepId) {
+      hasOpenedModalRef.current = undefined
+      mountedDrepIdRef.current = initialDrepId
+      justClosedRef.current = false
+      if (resetJustClosedTimeoutRef.current) {
+        clearTimeout(resetJustClosedTimeoutRef.current)
+        resetJustClosedTimeoutRef.current = undefined
+      }
+    }
+  }, [initialDrepId])
+
+  // Cleanup timeout on unmount
+  React.useEffect(() => {
+    return () => {
+      if (resetJustClosedTimeoutRef.current) {
+        clearTimeout(resetJustClosedTimeoutRef.current)
+      }
+    }
+  }, [])
+
+  // Wrap closeModal to prevent immediate reopening after closing
+  const closeModalWrapped = React.useCallback(() => {
+    markJustClosed()
+    closeModal()
+  }, [closeModal, markJustClosed])
+
   const createDelegationCertificate = useDelegationCertificate()
   const {submitDelegate} = useGovernanceVoteFlow({
     wallet,
     addressMode: meta.addressMode,
+    options: {
+      onError: () => {
+        // Error handling (including insufficient balance) is done by useCreateGovernanceTx
+        // This ensures the modal is closed if an error occurs
+        closeModalWrapped()
+      },
+    },
   })
 
   const openDRepIdModal = React.useCallback(
@@ -252,6 +312,10 @@ const NeverParticipatedInGovernanceVariant = ({
       }) => void,
       prefilledDrepId?: string,
     ) => {
+      // Set ref only when we actually open the modal, not before
+      if (prefilledDrepId) {
+        hasOpenedModalRef.current = prefilledDrepId
+      }
       openModal({
         title: strings.staking.enterDRepID,
         content: (
@@ -264,9 +328,11 @@ const NeverParticipatedInGovernanceVariant = ({
         ),
         // Height is managed dynamically by EnterDrepIdModal based on whether Yoroi card is shown
         height: prefilledDrepId ? 340 : 650,
+        canDiscard: true,
+        onClose: markJustClosed,
       })
     },
-    [openModal, strings.staking.enterDRepID, manager],
+    [openModal, strings.staking.enterDRepID, manager, markJustClosed],
   )
 
   const handleDelegate = React.useCallback(
@@ -286,6 +352,9 @@ const NeverParticipatedInGovernanceVariant = ({
         const certs =
           stakeCert !== null ? [stakeCert, certificate] : [certificate]
 
+        // Close modal immediately - dismiss keyboard first since closeModal returns early if keyboard is open
+        Keyboard.dismiss()
+        closeModalWrapped()
         submitDelegate(certs, options)
       }, prefilledDrepId)
     },
@@ -297,17 +366,26 @@ const NeverParticipatedInGovernanceVariant = ({
       needsToRegisterStakingKey,
       manager,
       submitDelegate,
+      closeModalWrapped,
     ],
   )
 
   // Check if we have a drepId from props and open modal automatically
   React.useEffect(() => {
-    if (initialDrepId && !isPending) {
+    if (
+      initialDrepId &&
+      !isPending &&
+      hasOpenedModalRef.current !== initialDrepId &&
+      !justClosedRef.current
+    ) {
+      // Don't set ref here - set it in openDRepIdModal when modal actually opens
       // Small delay to ensure screen is mounted
       const timer = setTimeout(() => {
         handleDelegate(initialDrepId)
       }, 100)
-      return () => clearTimeout(timer)
+      return () => {
+        clearTimeout(timer)
+      }
     }
     return undefined
   }, [initialDrepId, isPending, handleDelegate])

@@ -72,10 +72,16 @@ export async function createDelegationTx({
   })
 
   // Helper function to calculate required ADA based on fee estimate
+  // Must account for: fee (and deposit if registering) + minimum UTXO for change output
   const calculateRequiredAda = (feeEstimate: bigint): string => {
-    return registrationStatus
-      ? feeEstimate.toString() // Delegate only: just fee
-      : (BigInt(protocolParams.keyDeposit) + feeEstimate).toString() // Register + delegate: deposit + fee
+    const minUtxoValue = BigInt(
+      protocolParamsConfig.minimumUtxoVal || '1000000',
+    ) // Base min UTXO (1 ADA)
+    const feeBuffer = BigInt('100000') // 0.1 ADA buffer for fee estimation variance
+    const baseRequired = registrationStatus
+      ? feeEstimate // Delegate only: just fee
+      : BigInt(protocolParams.keyDeposit) + feeEstimate // Register + delegate: deposit + fee
+    return (baseRequired + minUtxoValue + feeBuffer).toString()
   }
 
   // Helper function to select UTXOs preferring pure ADA, smallest first

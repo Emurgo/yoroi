@@ -143,11 +143,17 @@ export async function createWithdrawalTx({
   }
 
   // Helper function to calculate required ADA based on fee estimate
+  // Must account for: fee (and deposit if deregistering) + minimum UTXO for change output
   const calculateRequiredAda = (feeEstimate: bigint): string => {
+    const minUtxoValue = BigInt(
+      protocolParamsConfig.minimumUtxoVal || '1000000',
+    ) // Base min UTXO (1 ADA)
+    const feeBuffer = BigInt('100000') // 0.1 ADA buffer for fee estimation variance
     const requiresDeregistration = shouldDeregister
-    return requiresDeregistration
-      ? (BigInt(protocolParams.keyDeposit) + feeEstimate).toString()
-      : feeEstimate.toString()
+    const baseRequired = requiresDeregistration
+      ? BigInt(protocolParams.keyDeposit) + feeEstimate
+      : feeEstimate
+    return (baseRequired + minUtxoValue + feeBuffer).toString()
   }
 
   // Helper function to select UTXOs preferring pure ADA, smallest first
