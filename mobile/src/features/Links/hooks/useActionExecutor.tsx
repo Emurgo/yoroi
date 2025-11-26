@@ -420,12 +420,7 @@ export const useActionExecutor = () => {
           case 'view-transaction': {
             // CIP-107: View transaction details
             if (wallet) {
-              const transactions = wallet.transactions
-              const transaction = transactions
-                ? Object.values(transactions).find(
-                    (tx) => tx.id === cardanoAction.hash,
-                  )
-                : undefined
+              const transaction = wallet.getRawTransaction(cardanoAction.hash)
               if (transaction) {
                 walletNavigation.navigateToTxDetails(transaction.id)
               } else {

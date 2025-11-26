@@ -25,7 +25,6 @@ import {
   FundInfoResponse,
   RawUtxo,
   TipStatusResponse,
-  TransactionInfo,
   TxStatusRequest,
   TxStatusResponse,
   WalletState,
@@ -36,7 +35,7 @@ import type {Addresses} from './account-manager/account-manager'
 
 export type WalletEvent =
   | {type: 'initialize'}
-  | {type: 'transactions'; transactions: Record<string, TransactionInfo>}
+  | {type: 'transactions'}
   | {type: 'addresses'; addresses: Addresses}
   | {type: 'state'; state: WalletState}
   | {type: 'utxos'; utxos: RawUtxo[]}
@@ -168,7 +167,6 @@ export interface YoroiWallet {
 
   // Balances, TxDetails
   saveMemo(txId: string, memo: string): Promise<void>
-  get transactions(): Record<string, TransactionInfo>
   getRawTransaction(txId: string): WalletTransaction | undefined
   getRawTransactions(): Record<string, WalletTransaction>
   get confirmationCounts(): Record<string, null | number>
@@ -257,7 +255,8 @@ const yoroiWalletKeys: Array<keyof YoroiWallet> = [
   'saveMemo',
 
   // Balances, TxDetails
-  'transactions',
+  'getRawTransaction',
+  'getRawTransactions',
   'confirmationCounts',
   'fetchTxStatus',
 

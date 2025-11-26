@@ -39,11 +39,11 @@ export const TxDetails = () => {
     return wallet.getRawTransaction(id)
   }, [wallet, id])
 
-  // Get memo from processed transactions (which include memo)
+  // Get memo from raw transaction
   const memo = React.useMemo(() => {
-    const processedTx = wallet.transactions[id]
-    return processedTx?.memo ?? null
-  }, [wallet.transactions, id])
+    const rawTx = wallet.getRawTransaction(id)
+    return rawTx?.memo ?? null
+  }, [wallet, id])
 
   // Format transaction date
   const formattedDate = React.useMemo(() => {

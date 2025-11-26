@@ -11,22 +11,20 @@ import {
   useUpdateLatestGovernanceAction,
   useVotingCertificate,
 } from '@yoroi/staking'
-import {calculateTxId} from '@yoroi/tx'
+import {NotEnoughMoneyToSendError, calculateTxId} from '@yoroi/tx'
 
-import {NotEnoughMoneyToSendError} from '@yoroi/tx'
 import {Buffer} from 'buffer'
 import * as React from 'react'
 
 import {useStakingInfo} from '~/features/Staking/hooks/useStakingInfo'
 import {useStakingKey} from '~/features/Staking/hooks/useStakingKey'
-import {useTransactionInfos} from '~/features/Transactions/hooks/useTransactionInfos'
+import {useWalletTransactions} from '~/features/Transactions/hooks/useWalletTransactions'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useWalletEvent} from '~/features/WalletManager/hooks/useWalletEvent'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {InfoBanner} from '~/ui/InfoBanner/InfoBanner'
 import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
-import {TransactionInfo} from '@yoroi/types'
 import {CardanoMobile} from '~/wallets/wallets'
 
 import {GovernanceVote} from '../types'
@@ -243,14 +241,14 @@ export const useGovernanceActions = () => {
 
 const isTxConfirmed = (
   txId: string,
-  txInfos: Record<string, TransactionInfo>,
+  transactions: ReturnType<typeof useWalletTransactions>,
 ) => {
-  return Object.values(txInfos).some((tx) => tx.id === txId)
+  return txId in transactions
 }
 
 export const useHomeScreen = () => {
   const {wallet} = useSelectedWallet()
-  const txInfos = useTransactionInfos({wallet})
+  const transactions = useWalletTransactions({wallet})
   const [
     isPendingRefetchAfterTxConfirmation,
     setIsPendingRefetchAfterTxConfirmation,
@@ -269,7 +267,7 @@ export const useHomeScreen = () => {
   const submittedTxId = lastSubmittedTx?.txID
 
   const isTxPending =
-    isString(submittedTxId) && !isTxConfirmed(submittedTxId, txInfos)
+    isString(submittedTxId) && !isTxConfirmed(submittedTxId, transactions)
 
   React.useEffect(() => {
     if (!isTxPending && submittedTxId !== undefined) {
@@ -471,13 +469,12 @@ export const useVotingOptions = () => {
   const stakingInfo = useStakingInfo(wallet)
   const stakingKeyHash = useStakingKey(wallet)
   const {data: stakingStatus} = useStakingKeyState(stakingKeyHash)
-  const txInfos = useTransactionInfos({wallet})
+  const transactions = useWalletTransactions({wallet})
 
   const {data: lastSubmittedTx} = useLatestGovernanceAction(wallet.id)
   const submittedTxId = lastSubmittedTx?.txID
   const isTxPendingConfirmation =
-    isString(submittedTxId) &&
-    !Object.values(txInfos).some((tx) => tx.id === submittedTxId)
+    isString(submittedTxId) && !isTxConfirmed(submittedTxId, transactions)
 
   const action = stakingStatus
     ? mapStakingKeyStateToGovernanceAction(stakingStatus)

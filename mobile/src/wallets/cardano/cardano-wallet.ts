@@ -84,7 +84,6 @@ import {
   getAddressedUtxos as getAddressedUtxosOp,
   getSpendableUtxos as getSpendableUtxosOp,
 } from './operations/utxo-operations'
-import {processTxHistoryData} from './processTransactions/processTransactions'
 import {
   createDelegationTxFromWallet,
   createUnsignedGovernanceTxFromWallet,
@@ -1093,8 +1092,7 @@ export const makeCardanoWallet = (
           : 0n
       const collateralTxId = collateralId ? collateralId.split(':')[0] : null
       const isConfirmed =
-        !!collateralTxId &&
-        Object.values(this.transactions).some((tx) => tx.id === collateralTxId)
+        !!collateralTxId && this.getRawTransaction(collateralTxId) !== undefined
 
       return freeze({
         utxo: collateralUtxo,
@@ -1223,20 +1221,6 @@ export const makeCardanoWallet = (
       )
     }
 
-    get transactions() {
-      const memos = this.memosManager.getMemos()
-
-      return parseTransactionsMemoized(
-        memos,
-        this.internalAddresses,
-        this.externalAddresses,
-        this.rewardAddressHex,
-        this.confirmationCounts,
-        this.transactionManager.transactions,
-        this.portfolioPrimaryTokenInfo,
-      )
-    }
-
     get confirmationCounts() {
       return this.transactionManager.confirmationCounts
     }
@@ -1282,7 +1266,7 @@ export const makeCardanoWallet = (
 
     private setupSubscriptions() {
       this.transactionManager.subscribe(() =>
-        this.notify({type: 'transactions', transactions: this.transactions}),
+        this.notify({type: 'transactions'}),
       )
       this.transactionManager.subscribe(this.notifyOnTxHistoryUpdate)
       this.internalChain.addSubscriberToNewAddresses(() =>
@@ -1300,33 +1284,3 @@ export const makeCardanoWallet = (
     }
   }
 }
-
-const parseTransactions = (
-  memos: Record<string, string>,
-  internalAddresses: string[],
-  externalAddresses: string[],
-  rewardAddressHex: string,
-  confirmationCounts: Record<string, number | null>,
-  transactions: TransactionManager['transactions'],
-  primaryTokenInfo: Portfolio.Token.Info,
-) => {
-  const addresses =
-    rewardAddressHex !== ''
-      ? [...internalAddresses, ...externalAddresses, rewardAddressHex]
-      : [...internalAddresses, ...externalAddresses]
-
-  return Object.fromEntries(
-    Object.entries(transactions).map(([txId, tx]) => [
-      txId,
-      processTxHistoryData(
-        tx,
-        addresses,
-        confirmationCounts[tx.id] || 0,
-        memos[tx.id] ?? null,
-        primaryTokenInfo,
-      ),
-    ]),
-  )
-}
-
-const parseTransactionsMemoized = defaultMemoize(parseTransactions)
