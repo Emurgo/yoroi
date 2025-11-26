@@ -20,6 +20,7 @@ import {useWalletManagerSelector} from '~/features/WalletManager/context/WalletM
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
+import {AppRouteNavigation} from '~/kernel/navigation/types'
 import {useModal} from '~/ui/Modal/context/ModalContext'
 import {createDelegationTxFromWallet} from '~/wallets/cardano/transaction-recipes'
 import {pastedFormatter} from '~/wallets/utils/amountUtils'
@@ -46,7 +47,7 @@ const heightBreakpoint = 467
 
 export const useActionExecutor = () => {
   const {isLoggedIn} = useAuth()
-  const rootNavigation = useNavigation()
+  const rootNavigation = useNavigation<AppRouteNavigation>()
   const wallet = useWalletManagerSelector((ctx) => ctx.selected.wallet)
   const meta = useWalletManagerSelector((ctx) => ctx.selected.meta)
   const selectedWalletData = React.useMemo(
@@ -486,9 +487,23 @@ export const useActionExecutor = () => {
               walletNavigation.navigateToRestoreWalletFromLink(cardanoAction)
             } else {
               try {
-                ;(rootNavigation as any).navigate('setup-wallet', {
-                  screen: 'setup-wallet-restore-from-link',
-                  params: {action: cardanoAction},
+                // Use reset to ensure clean navigation state when not logged in
+                // This prevents issues if user is already in setup-wallet flow
+                rootNavigation.reset({
+                  index: 0,
+                  routes: [
+                    {
+                      name: 'setup-wallet',
+                      state: {
+                        routes: [
+                          {
+                            name: 'setup-wallet-restore-from-link',
+                            params: {action: cardanoAction},
+                          },
+                        ],
+                      },
+                    },
+                  ],
                 })
               } catch (error) {
                 logger.info('useActionExecutor: navigation error', {

@@ -30,6 +30,10 @@ export const ChooseMnemonicTypeScreen = () => {
     navigation.navigate('setup-wallet-restore-form')
   }
 
+  const handleScanQrCode = () => {
+    navigation.navigate('setup-wallet-scan-qr-code')
+  }
+
   return (
     <SafeArea style={a.px_lg}>
       <Space.Height.lg />
@@ -51,6 +55,13 @@ export const ChooseMnemonicTypeScreen = () => {
           icon={<Mnemonic24Words style={[a.absolute, {right: 0}]} />}
           onPress={handle24Words}
           testID="mnemonic-24-word"
+        />
+
+        <ButtonCard
+          title={strings.setupWallet.scanQrCodeTitle}
+          icon={null}
+          onPress={handleScanQrCode}
+          testID="scan-qr-code-restore"
         />
       </View>
     </SafeArea>

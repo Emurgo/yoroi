@@ -49,6 +49,10 @@ export const setupWalletMessages = defineMessages({
     id: 'components.walletinit.walletinitmenu.restorewalletbutton.title',
     defaultMessage: '!!!Restore wallet',
   },
+  scanQrCodeTitle: {
+    id: 'components.walletinit.walletinitmenu.scanqrcodebutton.title',
+    defaultMessage: '!!!Scan QR code',
+  },
   connectHardwareWalletButtonCard: {
     id: 'components.walletinit.connectnanox.savenanoxscreen.title',
     defaultMessage: '!!!Connect hardware wallet',
