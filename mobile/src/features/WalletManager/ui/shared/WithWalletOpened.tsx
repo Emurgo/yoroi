@@ -8,7 +8,6 @@ import {App} from '@yoroi/types'
 
 import * as React from 'react'
 
-import {P2PConnectionProviderWrapper} from '~/features/P2P/components/P2PConnectionProviderWrapper'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 
 import {useWalletManagerSelector} from '../../context/WalletManagerProvider'
@@ -70,9 +69,7 @@ export const WithWalletOpened = ({children}: React.PropsWithChildren) => {
 
   return (
     <NetworkWrapper>
-      <ClaimProvider manager={claimManager}>
-        <P2PConnectionProviderWrapper>{children}</P2PConnectionProviderWrapper>
-      </ClaimProvider>
+      <ClaimProvider manager={claimManager}>{children}</ClaimProvider>
     </NetworkWrapper>
   )
 }

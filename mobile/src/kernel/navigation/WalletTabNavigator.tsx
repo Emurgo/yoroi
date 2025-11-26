@@ -10,6 +10,7 @@ import * as React from 'react'
 
 import {DiscoverNavigator} from '~/features/Discover/DiscoverNavigator'
 import {MenuNavigator} from '~/features/Menu/Menu'
+import {P2PConnectionProviderWrapper} from '~/features/P2P/components/P2PConnectionProviderWrapper'
 import {P2PConnectionStatusBar} from '~/features/P2P/components/P2PConnectionStatusBar'
 import {PortfolioNavigator} from '~/features/Portfolio/PortfolioNavigator'
 import {useGovernanceManagerMaker} from '~/features/Staking/Governance/common/helpers'
@@ -195,14 +196,16 @@ export const WalletTabNavigator = () => {
   return (
     <SwapProvider>
       <PoolTransitionProvider>
-        <P2PConnectionStatusBar />
-        {manager ? (
-          <GovernanceProvider manager={manager}>
-            {tabNavigator}
-          </GovernanceProvider>
-        ) : (
-          tabNavigator
-        )}
+        <P2PConnectionProviderWrapper>
+          <P2PConnectionStatusBar />
+          {manager ? (
+            <GovernanceProvider manager={manager}>
+              {tabNavigator}
+            </GovernanceProvider>
+          ) : (
+            tabNavigator
+          )}
+        </P2PConnectionProviderWrapper>
       </PoolTransitionProvider>
     </SwapProvider>
   )
