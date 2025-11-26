@@ -588,4 +588,60 @@ export const stakingMessages = defineMessages({
     id: 'components.stakingcenter.governanceRequired.delegateStakeOnly',
     defaultMessage: '!!!Delegate stake only',
   },
+  votingOptionsTitle: {
+    id: 'components.governance.votingOptionsTitle',
+    defaultMessage: '!!!Voting options',
+  },
+  votingOptionsDescription: {
+    id: 'components.governance.votingOptionsDescription',
+    defaultMessage: '!!!Voting Options Description',
+  },
+  exploreOtherGovernanceOptions: {
+    id: 'components.governance.exploreOtherGovernanceOptions',
+    defaultMessage: '!!!Explore other governance options',
+  },
+  exploreOtherGovernanceOptionsDescription: {
+    id: 'components.governance.exploreOtherGovernanceOptionsDescription',
+    defaultMessage: '!!!Explore other governance options description',
+  },
+  otherDReps: {
+    id: 'components.governance.otherDReps',
+    defaultMessage: '!!!Other DReps',
+  },
+  id: {
+    id: 'components.governance.id',
+    defaultMessage: '!!!ID',
+  },
+  drepStatusLabel: {
+    id: 'components.governance.drepStatusLabel',
+    defaultMessage: '!!!DRep Status',
+  },
+  drepStatusActive: {
+    id: 'components.governance.drepStatusActive',
+    defaultMessage: '!!!Active',
+  },
+  yoroiDrep: {
+    id: 'components.governance.yoroiDrep',
+    defaultMessage: '!!!Yoroi DRep',
+  },
+  delegationStatusLabel: {
+    id: 'components.governance.delegationStatusLabel',
+    defaultMessage: '!!!Delegation status',
+  },
+  delegationStatusDelegating: {
+    id: 'components.governance.delegationStatusDelegating',
+    defaultMessage: '!!!Delegating',
+  },
+  otherGovernanceOptions: {
+    id: 'components.governance.otherGovernanceOptions',
+    defaultMessage: '!!!Other Governance options',
+  },
+  delegateToOtherDrep: {
+    id: 'components.governance.delegateToOtherDrep',
+    defaultMessage: '!!!Delegate to other DRep',
+  },
+  changeToDrep: {
+    id: 'components.governance.changeToDrep',
+    defaultMessage: '!!!Change to DRep',
+  },
 })

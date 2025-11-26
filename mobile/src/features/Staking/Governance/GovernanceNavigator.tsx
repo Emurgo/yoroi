@@ -13,6 +13,7 @@ import {NavigationStack} from './common/navigation'
 import {ChangeVoteScreen} from './useCases/ChangeVote/ChangeVoteScreen'
 import {HomeScreen} from './useCases/Home/HomeScreen'
 import {NotSupportedCardanoAppVersion} from './useCases/NotSupportedCardanoAppVersion/NotSupportedCardanoAppVersion'
+import {VotingOptionsScreen} from './useCases/VotingOptions/VotingOptionsScreen'
 
 const Stack = NavigationStack
 
@@ -47,6 +48,12 @@ export const GovernanceNavigator = () => {
             name="staking-gov-change-vote"
             component={ChangeVoteScreen}
             options={{title: strings.staking.governanceCentreTitle}}
+          />
+
+          <Stack.Screen
+            name="staking-gov-voting-options"
+            component={VotingOptionsScreen}
+            options={{title: strings.staking.otherGovernanceOptions}}
           />
 
           <Stack.Screen

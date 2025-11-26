@@ -1338,6 +1338,26 @@ export const useStrings = () => {
         yoroiRecord: f(stakingMessages.yoroiRecord),
         newToGovernanceTitle: f(stakingMessages.newToGovernanceTitle),
         newToGovernanceText: f(stakingMessages.newToGovernanceText),
+        votingOptionsTitle: f(stakingMessages.votingOptionsTitle),
+        votingOptionsDescription: f(stakingMessages.votingOptionsDescription),
+        exploreOtherGovernanceOptions: f(
+          stakingMessages.exploreOtherGovernanceOptions,
+        ),
+        exploreOtherGovernanceOptionsDescription: f(
+          stakingMessages.exploreOtherGovernanceOptionsDescription,
+        ),
+        otherDReps: f(stakingMessages.otherDReps),
+        id: f(stakingMessages.id),
+        drepStatusLabel: f(stakingMessages.drepStatusLabel),
+        drepStatusActive: f(stakingMessages.drepStatusActive),
+        yoroiDrep: f(stakingMessages.yoroiDrep),
+        delegationStatusLabel: f(stakingMessages.delegationStatusLabel),
+        delegationStatusDelegating: f(
+          stakingMessages.delegationStatusDelegating,
+        ),
+        otherGovernanceOptions: f(stakingMessages.otherGovernanceOptions),
+        delegateToOtherDrep: f(stakingMessages.delegateToOtherDrep),
+        changeToDrep: f(stakingMessages.changeToDrep),
         // Add missing strings
         delegationSuccess: f(stakingMessages.delegationSuccess),
         delegationFailed: f(stakingMessages.delegationFailed),
