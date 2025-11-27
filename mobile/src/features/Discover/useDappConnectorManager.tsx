@@ -1,12 +1,11 @@
 import {useAsyncStorage} from '@yoroi/common'
 import {DappConnection, DappConnector} from '@yoroi/dapp-connector'
-import {calculateTxId} from '@yoroi/tx'
 
 import {Transaction} from '@emurgo/cross-csl-core'
 import {useNavigation} from '@react-navigation/native'
-import {Buffer} from 'buffer'
 import * as React from 'react'
 
+import {getTxIdFromArgs} from '~/features/ReviewTx/common/utils/getTxId'
 import {CollateralInfoModal} from '~/features/Settings/ui/screens/ChangeWalletSettingsScreen/ManageCollateralScreen/CollateralInfoModal'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
@@ -18,7 +17,6 @@ import {cip30ExtensionMaker} from '~/wallets/cardano/cip30/cip30'
 import {cip30LedgerExtensionMaker} from '~/wallets/cardano/cip30/cip30-ledger'
 import {YoroiWallet} from '~/wallets/cardano/types'
 import {collateralConfig} from '~/wallets/cardano/utxoManager/utxos'
-import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
 import {BaseLedgerError} from '~/wallets/hw/hw'
 import {isEmptyString} from '~/wallets/utils/string'
 
@@ -285,35 +283,9 @@ export const useDappConnectorManager = () => {
                 // Set collateral ID immediately to prevent duplicate reorganization transactions
                 // The collateral UTXO will be at index 0 (first output of the reorganization transaction)
                 try {
-                  // Prefer txId from args (already calculated), fallback to calculating from signedTx
-                  let txId: string | undefined = args?.txId
-
-                  if (!txId) {
-                    // If txId is not provided, try to calculate it from signedTx
-                    const signedTx = args?.signedTx ?? args?.tx
-                    if (signedTx) {
-                      // If signedTx is a function, call it with CSL to get Transaction, otherwise use directly
-                      const tx: Transaction | null =
-                        typeof signedTx === 'function'
-                          ? await CardanoMobileWrapped.cslScope((csl) =>
-                              signedTx(csl),
-                            )
-                          : signedTx
-
-                      if (tx) {
-                        const txBytes = tx.toBytes()
-                        txId = await CardanoMobileWrapped.cslScope(
-                          async (csl) => {
-                            return await calculateTxId(
-                              csl,
-                              Buffer.from(txBytes).toString('hex'),
-                              'hex',
-                            )
-                          },
-                        )
-                      }
-                    }
-                  }
+                  // Use utility function to safely extract txId
+                  // Pass unsigned CBOR as fallback (safe - body hash is same for signed/unsigned)
+                  const txId = await getTxIdFromArgs(args, cbor)
 
                   if (txId) {
                     // Set collateral ID to txId:0 (assuming collateral UTXO is at output index 0)
@@ -331,6 +303,7 @@ export const useDappConnectorManager = () => {
                         hasTxId: !!args?.txId,
                         hasSignedTx: !!args?.signedTx,
                         hasTx: !!args?.tx,
+                        hasCbor: !!cbor,
                       },
                     )
                   }
@@ -345,6 +318,7 @@ export const useDappConnectorManager = () => {
                       hasTxId: !!args?.txId,
                       hasSignedTx: !!args?.signedTx,
                       hasTx: !!args?.tx,
+                      hasCbor: !!cbor,
                     },
                   )
                   // Don't block the flow if setting collateral ID fails

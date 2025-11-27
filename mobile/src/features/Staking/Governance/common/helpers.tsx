@@ -11,10 +11,11 @@ import {
   useUpdateLatestGovernanceAction,
   useVotingCertificate,
 } from '@yoroi/staking'
-import {NotEnoughMoneyToSendError, calculateTxId} from '@yoroi/tx'
+import {NotEnoughMoneyToSendError} from '@yoroi/tx'
 
 import * as React from 'react'
 
+import {getTxIdFromArgs} from '~/features/ReviewTx/common/utils/getTxId'
 import {useStakingInfo} from '~/features/Staking/hooks/useStakingInfo'
 import {useStakingKey} from '~/features/Staking/hooks/useStakingKey'
 import {useWalletTransactions} from '~/features/Transactions/hooks/useWalletTransactions'
@@ -24,7 +25,6 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {InfoBanner} from '~/ui/InfoBanner/InfoBanner'
-import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
 import {CardanoMobile} from '~/wallets/wallets'
 
 import {GovernanceVote} from '../types'
@@ -124,13 +124,13 @@ export const useGovernanceActions = () => {
     navigateToTxReview({
       cbor: unsignedTx.cbor,
       onSuccess: async (args) => {
-        // Use txId if already calculated (from submitTx), otherwise calculate from unsigned CBOR
-        // Transaction body hash is the same for signed and unsigned transactions
-        const txID =
-          args?.txId ??
-          (await CardanoMobileWrapped.cslScope(async (csl) => {
-            return await calculateTxId(csl, unsignedTx.cbor, 'hex')
-          }))
+        // Use utility function to safely extract txId
+        // Pass unsigned CBOR as fallback (safe - body hash is same for signed/unsigned)
+        const txID = await getTxIdFromArgs(args, unsignedTx.cbor)
+        if (!txID) {
+          logger.error('handleDelegateAction: No txId available')
+          return
+        }
         try {
           updateLatestGovernanceAction(
             {
@@ -189,13 +189,13 @@ export const useGovernanceActions = () => {
     navigateToTxReview({
       cbor: unsignedTx.cbor,
       onSuccess: async (args) => {
-        // Use txId if already calculated (from submitTx), otherwise calculate from unsigned CBOR
-        // Transaction body hash is the same for signed and unsigned transactions
-        const txID =
-          args?.txId ??
-          (await CardanoMobileWrapped.cslScope(async (csl) => {
-            return await calculateTxId(csl, unsignedTx.cbor, 'hex')
-          }))
+        // Use utility function to safely extract txId
+        // Pass unsigned CBOR as fallback (safe - body hash is same for signed/unsigned)
+        const txID = await getTxIdFromArgs(args, unsignedTx.cbor)
+        if (!txID) {
+          logger.error('handleAbstainAction: No txId available')
+          return
+        }
         try {
           updateLatestGovernanceAction(
             {
@@ -242,13 +242,13 @@ export const useGovernanceActions = () => {
     navigateToTxReview({
       cbor: unsignedTx.cbor,
       onSuccess: async (args) => {
-        // Use txId if already calculated (from submitTx), otherwise calculate from unsigned CBOR
-        // Transaction body hash is the same for signed and unsigned transactions
-        const txID =
-          args?.txId ??
-          (await CardanoMobileWrapped.cslScope(async (csl) => {
-            return await calculateTxId(csl, unsignedTx.cbor, 'hex')
-          }))
+        // Use utility function to safely extract txId
+        // Pass unsigned CBOR as fallback (safe - body hash is same for signed/unsigned)
+        const txID = await getTxIdFromArgs(args, unsignedTx.cbor)
+        if (!txID) {
+          logger.error('handleNoConfidenceAction: No txId available')
+          return
+        }
         try {
           updateLatestGovernanceAction(
             {
