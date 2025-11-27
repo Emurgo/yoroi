@@ -14,6 +14,7 @@ import {Space} from '~/ui/Space/Space'
 import {ButtonCard} from '../../common/ButtonCard/ButtonCard'
 import {Mnemonic15Words} from '../../illustrations/Mnemonic15Words'
 import {Mnemonic24Words} from '../../illustrations/Mnemonic24Words'
+import QRsIllustration from '~/ui/QRsIllustration/QRsIllustration'
 
 export const ChooseMnemonicTypeScreen = () => {
   const strings = useStrings()
@@ -59,7 +60,7 @@ export const ChooseMnemonicTypeScreen = () => {
 
         <ButtonCard
           title={strings.setupWallet.scanQrCodeTitle}
-          icon={null}
+          icon={<QRsIllustration width={128} height={120} style={[a.absolute, {right: 0}]} />}
           onPress={handleScanQrCode}
           testID="scan-qr-code-restore"
         />
