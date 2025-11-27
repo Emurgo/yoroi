@@ -7,7 +7,7 @@ import {
 } from '@yoroi/staking'
 import {Chain} from '@yoroi/types'
 
-import {useInfiniteQuery, useQuery, useQueryClient} from '@tanstack/react-query'
+import {useQuery, useQueryClient} from '@tanstack/react-query'
 import axios from 'axios'
 import * as React from 'react'
 
@@ -42,15 +42,14 @@ type ExplorerPoolInfoApiRes = {
   }
 }
 
-const POOLS_PER_PAGE = 50
+const POOLS_LIMIT = 250
 
-const fetchPoolsPage = async (
+const fetchPools = async (
   apiUrl: string,
-  _page: number,
   searchQuery?: string,
 ): Promise<ExplorerPoolInfo[]> => {
   const params = new URLSearchParams({
-    limit: String(POOLS_PER_PAGE),
+    limit: String(POOLS_LIMIT),
     order: 'ranking',
   })
 
@@ -118,37 +117,21 @@ export const usePoolList = (searchQuery?: string) => {
 
   // Memoize queryFn to ensure it uses the latest normalizedSearch
   const queryFn = React.useCallback(
-    async ({pageParam = 0}: {pageParam?: number}) => {
-      return fetchPoolsPage(apiUrl, pageParam, normalizedSearch)
-    },
+    () => fetchPools(apiUrl, normalizedSearch),
     [apiUrl, normalizedSearch],
   )
 
   const {
-    data,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
+    data: poolsData,
     error,
     isLoading,
-  } = useInfiniteQuery({
+  } = useQuery({
     queryKey,
     queryFn,
-    getNextPageParam: (lastPage, allPages) => {
-      // If we got fewer pools than expected, we've reached the end
-      if (lastPage.length < POOLS_PER_PAGE) {
-        return undefined
-      }
-      return allPages.length
-    },
-    initialPageParam: 0,
     staleTime: normalizedSearch ? 0 : 5 * 60 * 1000, // No cache for search results, longer for regular list
     gcTime: 10 * 60 * 1000, // 10 minutes cache
     retry: normalizedSearch ? 1 : 2, // Fewer retries for search queries (they're fast)
-    // When queryKey changes, React Query automatically treats it as a new query and fetches immediately
-    // refetchOnMount is not needed - queryKey changes trigger new fetches automatically
     refetchOnWindowFocus: false, // Don't refetch on window focus
-    // Ensure query is enabled and fetches immediately
     enabled: true,
   })
 
@@ -248,14 +231,14 @@ export const usePoolList = (searchQuery?: string) => {
 
   // Sort pools: preferred non-saturated pools first, then rest
   const pools = React.useMemo(() => {
-    const allPools = data?.pages.flat() ?? []
+    const allPools = poolsData ?? []
     const fetchedPreferredPools = preferredPoolsQuery.data ?? []
 
     if (allPools.length === 0 && fetchedPreferredPools.length === 0) {
       return []
     }
 
-    // If no preferred pools, return original order
+    // If no preferred pools, return pools as-is
     if (preferredPoolIds.size === 0) {
       return allPools
     }
@@ -291,62 +274,11 @@ export const usePoolList = (searchQuery?: string) => {
     // Return: preferred non-saturated first, then preferred saturated, then others
     return [...preferredNonSaturated, ...preferredSaturated, ...others]
   }, [
-    data?.pages,
+    poolsData,
     preferredPoolIds,
     saturationThreshold,
     preferredPoolsQuery.data,
   ])
-
-  // Prefetch next page automatically when current page finishes loading
-  // But only prefetch ONE page ahead to avoid infinite loops
-  // Skip auto-prefetch when searching (let user control via scroll)
-  const prefetchTriggeredRef = React.useRef<number>(0)
-
-  // Reset prefetch ref when search changes
-  React.useEffect(() => {
-    prefetchTriggeredRef.current = 0
-  }, [normalizedSearch])
-
-  React.useEffect(() => {
-    const currentPageCount = data?.pages.length ?? 0
-
-    // Only prefetch if:
-    // - We have more pages available
-    // - We're not currently fetching
-    // - Initial load is done
-    // - We haven't already prefetched for this page count
-    // - We're not searching (search results should load on-demand)
-    // - We only have 1 page (so we prefetch page 2, but not beyond)
-    if (
-      hasNextPage &&
-      !isFetchingNextPage &&
-      !isLoading &&
-      currentPageCount === 1 && // Only prefetch when we have exactly 1 page
-      prefetchTriggeredRef.current < currentPageCount &&
-      !normalizedSearch // Don't auto-prefetch when searching
-    ) {
-      // Mark that we've triggered prefetch for this page count
-      prefetchTriggeredRef.current = currentPageCount
-
-      // Prefetch next page proactively (page 2)
-      // This will be ready when user scrolls, making it feel instant
-      // But we won't prefetch page 3 automatically - user scroll will trigger it
-      fetchNextPage()
-    }
-  }, [
-    hasNextPage,
-    isFetchingNextPage,
-    isLoading,
-    data?.pages.length,
-    fetchNextPage,
-    normalizedSearch,
-  ])
-
-  const loadMore = React.useCallback(() => {
-    if (hasNextPage && !isFetchingNextPage) {
-      fetchNextPage()
-    }
-  }, [hasNextPage, isFetchingNextPage, fetchNextPage])
 
   const errorResult: Error | null =
     error instanceof Error ? error : error ? new Error(String(error)) : null
@@ -355,9 +287,9 @@ export const usePoolList = (searchQuery?: string) => {
     pools,
     isLoading,
     error: errorResult,
-    loadMore,
-    hasMore: hasNextPage ?? false,
-    isFetchingMore: isFetchingNextPage,
+    loadMore: () => {}, // No-op since we fetch all pools at once
+    hasMore: false, // No pagination
+    isFetchingMore: false,
   }
 }
 
@@ -370,50 +302,15 @@ export const usePrefetchPoolList = () => {
     if (!wallet.isMainnet) return // Only prefetch for mainnet
 
     const apiUrl = API_ENDPOINTS[Chain.Network.Mainnet].root
-    const queryKey = ['poolList', wallet.id, wallet.networkManager.network, '']
+    const queryKey = poolQueryKeys.list(
+      wallet.id,
+      wallet.networkManager.network,
+      undefined,
+    )
 
-    // Prefetch first page
-    const prefetchPromise = queryClient.prefetchInfiniteQuery({
+    queryClient.prefetchQuery({
       queryKey,
-      queryFn: async ({pageParam = 0}) => {
-        return fetchPoolsPage(apiUrl, pageParam as number)
-      },
-      initialPageParam: 0,
+      queryFn: () => fetchPools(apiUrl),
     })
-
-    // Ensure we have a promise before calling .then()
-    if (prefetchPromise && typeof prefetchPromise.then === 'function') {
-      prefetchPromise
-        .then(() => {
-          // Prefetch second page immediately after first page completes
-          // We fetch it directly and it will be picked up by the infinite query
-          fetchPoolsPage(apiUrl, 1)
-            .then((page2Data) => {
-              // Manually set the query data for page 2
-              queryClient.setQueryData(queryKey, (oldData: unknown) => {
-                if (!oldData) return oldData
-                const infiniteData = oldData as {
-                  pages: ExplorerPoolInfo[][]
-                  pageParams: number[]
-                }
-                // Only add if not already present
-                if (infiniteData.pages.length < 2) {
-                  return {
-                    ...infiniteData,
-                    pages: [...infiniteData.pages, page2Data],
-                    pageParams: [...infiniteData.pageParams, 1],
-                  }
-                }
-                return oldData
-              })
-            })
-            .catch(() => {
-              // Silently fail - prefetch is best effort
-            })
-        })
-        .catch(() => {
-          // Silently fail - prefetch is best effort
-        })
-    }
   }, [wallet.id, wallet.isMainnet, wallet.networkManager.network, queryClient])
 }
