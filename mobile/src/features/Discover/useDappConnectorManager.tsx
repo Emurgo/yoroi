@@ -284,26 +284,38 @@ export const useDappConnectorManager = () => {
                 // Transaction was submitted successfully
                 // Set collateral ID immediately to prevent duplicate reorganization transactions
                 // The collateral UTXO will be at index 0 (first output of the reorganization transaction)
-                const signedTx = args?.signedTx ?? args?.tx
-                if (signedTx) {
-                  try {
-                    // If signedTx is a function, call it with CSL to get Transaction, otherwise use directly
-                    const tx =
-                      typeof signedTx === 'function'
-                        ? await CardanoMobileWrapped.cslScope((csl) =>
-                            signedTx(csl),
-                          )
-                        : signedTx
-                    const txBytes = tx.toBytes()
-                    const txId = await CardanoMobileWrapped.cslScope(
-                      async (csl) => {
-                        return await calculateTxId(
-                          csl,
-                          Buffer.from(txBytes).toString('hex'),
-                          'hex',
+                try {
+                  // Prefer txId from args (already calculated), fallback to calculating from signedTx
+                  let txId: string | undefined = args?.txId
+
+                  if (!txId) {
+                    // If txId is not provided, try to calculate it from signedTx
+                    const signedTx = args?.signedTx ?? args?.tx
+                    if (signedTx) {
+                      // If signedTx is a function, call it with CSL to get Transaction, otherwise use directly
+                      const tx: Transaction | null =
+                        typeof signedTx === 'function'
+                          ? await CardanoMobileWrapped.cslScope((csl) =>
+                              signedTx(csl),
+                            )
+                          : signedTx
+
+                      if (tx) {
+                        const txBytes = tx.toBytes()
+                        txId = await CardanoMobileWrapped.cslScope(
+                          async (csl) => {
+                            return await calculateTxId(
+                              csl,
+                              Buffer.from(txBytes).toString('hex'),
+                              'hex',
+                            )
+                          },
                         )
-                      },
-                    )
+                      }
+                    }
+                  }
+
+                  if (txId) {
                     // Set collateral ID to txId:0 (assuming collateral UTXO is at output index 0)
                     // This prevents duplicate reorganization transactions while waiting for confirmation
                     const collateralId = `${txId}:0`
@@ -312,18 +324,30 @@ export const useDappConnectorManager = () => {
                       'useDappConnectorManager::handleSendReorganisationTx - collateral ID set',
                       {txId, collateralId},
                     )
-                  } catch (error) {
-                    logger.error(
-                      'useDappConnectorManager::handleSendReorganisationTx - failed to set collateral ID',
+                  } else {
+                    logger.warn(
+                      'useDappConnectorManager::handleSendReorganisationTx - no txId available to set collateral ID',
                       {
-                        error:
-                          error instanceof Error
-                            ? error.message
-                            : String(error),
+                        hasTxId: !!args?.txId,
+                        hasSignedTx: !!args?.signedTx,
+                        hasTx: !!args?.tx,
                       },
                     )
-                    // Don't block the flow if setting collateral ID fails
                   }
+                } catch (error) {
+                  logger.error(
+                    'useDappConnectorManager::handleSendReorganisationTx - failed to set collateral ID',
+                    {
+                      error:
+                        error instanceof Error ? error.message : String(error),
+                      errorStack:
+                        error instanceof Error ? error.stack : undefined,
+                      hasTxId: !!args?.txId,
+                      hasSignedTx: !!args?.signedTx,
+                      hasTx: !!args?.tx,
+                    },
+                  )
+                  // Don't block the flow if setting collateral ID fails
                 }
                 resolve()
                 navigateToDiscoverBrowserDapp()

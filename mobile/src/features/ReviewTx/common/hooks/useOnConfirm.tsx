@@ -163,6 +163,16 @@ export const useOnConfirm = ({
   const handleOnError = (error: unknown) => {
     closeModal()
 
+    // Log error details for debugging
+    logger.error('useOnConfirm: Transaction failed', {
+      error: error instanceof Error ? error.message : String(error),
+      errorStack: error instanceof Error ? error.stack : undefined,
+      context,
+      cborLength: cbor?.length,
+      preventSubmit,
+      partial,
+    })
+
     if (onErrorWithoutFeedback) {
       onErrorWithoutFeedback(error)
       return
@@ -308,7 +318,22 @@ const submitTx = async (
 
     // Submit the transaction
     const hexBase64 = Buffer.from(signedTxBytes).toString('base64')
-    await wallet.submitTransaction(hexBase64)
+    try {
+      await wallet.submitTransaction(hexBase64)
+      logger.debug('submitTx: Transaction submitted successfully', {txId})
+    } catch (submitError) {
+      logger.error('submitTx: Failed to submit transaction', {
+        error:
+          submitError instanceof Error
+            ? submitError.message
+            : String(submitError),
+        errorStack:
+          submitError instanceof Error ? submitError.stack : undefined,
+        txId,
+        cborLength: cbor.length,
+      })
+      throw submitError
+    }
 
     return {signedTxBytes, txId}
   })

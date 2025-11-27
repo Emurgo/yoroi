@@ -6,6 +6,7 @@ import * as CSL from '@emurgo/cross-csl-core'
 import {UseMutationOptions} from '@tanstack/react-query'
 
 import {useWalletManagerSelector} from '~/features/WalletManager/context/WalletManagerProvider'
+import {logger} from '~/kernel/logger/logger'
 import {YoroiWallet} from '~/wallets/cardano/types'
 import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
 import {delay} from '~/wallets/utils/timeUtils'
@@ -22,11 +23,10 @@ export const useSubmitTx = (
       const serverStatus = await wallet.checkServerStatus()
       const txBytes = signedTx.toBytes()
       const base64 = Buffer.from(txBytes).toString('base64')
-      await wallet.submitTransaction(base64)
 
       let txId: string | undefined
-
-      if (serverStatus.isQueueOnline) {
+      try {
+        // Calculate txId before submission for better error tracking
         txId = await CardanoMobileWrapped.cslScope(async (csl) => {
           return await calculateTxId(
             csl,
@@ -34,6 +34,52 @@ export const useSubmitTx = (
             'hex',
           )
         })
+        logger.debug('useSubmitTx: Submitting transaction', {
+          txId,
+          walletId: wallet.id,
+          queueOnline: serverStatus.isQueueOnline,
+        })
+      } catch (error) {
+        logger.error(
+          'useSubmitTx: Failed to calculate txId before submission',
+          {
+            error: error instanceof Error ? error.message : String(error),
+          },
+        )
+        // Continue with submission even if txId calculation fails
+      }
+
+      try {
+        await wallet.submitTransaction(base64)
+        logger.debug('useSubmitTx: Transaction submitted successfully', {
+          txId,
+          walletId: wallet.id,
+        })
+      } catch (submitError) {
+        logger.error('useSubmitTx: Failed to submit transaction', {
+          error:
+            submitError instanceof Error
+              ? submitError.message
+              : String(submitError),
+          errorStack:
+            submitError instanceof Error ? submitError.stack : undefined,
+          txId,
+          walletId: wallet.id,
+          queueOnline: serverStatus.isQueueOnline,
+        })
+        throw submitError
+      }
+
+      if (serverStatus.isQueueOnline) {
+        if (!txId) {
+          txId = await CardanoMobileWrapped.cslScope(async (csl) => {
+            return await calculateTxId(
+              csl,
+              Buffer.from(txBytes).toString('hex'),
+              'hex',
+            )
+          })
+        }
 
         // Notify sync manager about transaction submission for fast polling
         if (txId && walletManager) {
@@ -45,19 +91,29 @@ export const useSubmitTx = (
 
       // Even if queue is offline, calculate txId and notify sync manager
       // This ensures fast polling when queue comes back online
-      try {
-        txId = await CardanoMobileWrapped.cslScope(async (csl) => {
-          return await calculateTxId(
-            csl,
-            Buffer.from(txBytes).toString('hex'),
-            'hex',
+      if (!txId) {
+        try {
+          txId = await CardanoMobileWrapped.cslScope(async (csl) => {
+            return await calculateTxId(
+              csl,
+              Buffer.from(txBytes).toString('hex'),
+              'hex',
+            )
+          })
+        } catch (error) {
+          logger.error(
+            'useSubmitTx: Failed to calculate txId after submission',
+            {
+              error: error instanceof Error ? error.message : String(error),
+              walletId: wallet.id,
+            },
           )
-        })
-        if (txId && walletManager) {
-          walletManager.notifyTransactionSubmitted(wallet.id, txId)
+          // Ignore errors calculating txId - sync will still work
         }
-      } catch (error) {
-        // Ignore errors calculating txId - sync will still work
+      }
+
+      if (txId && walletManager) {
+        walletManager.notifyTransactionSubmitted(wallet.id, txId)
       }
 
       return {

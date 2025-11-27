@@ -135,7 +135,9 @@ const getRequiredSigners = async (
       if (typeof (collateralOpt as any).hasValue === 'function') {
         const opt = collateralOpt as any
         if (!opt.hasValue()) return null
-        return opt.value()
+        // When Optional has a value, the Optional itself IS the TransactionInputs
+        // No need to call .value() - use it directly
+        return opt
       }
       // If it's already TransactionInputs, return it directly
       return collateralOpt as any
