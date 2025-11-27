@@ -153,10 +153,10 @@ export const generateNewReceiveAddress = (wallet: {
   externalChain:
     | AccountManager['externalChain']
     | ReadOnlyAccountManager['externalChain']
-  receiveAddressInfo: {canIncrease: boolean}
+  receiveAddressInfo: () => Readonly<{canIncrease: boolean}>
   accountManager: AccountManager | ReadOnlyAccountManager
   notify: (event: {type: 'addresses'; addresses: Addresses}) => void
-  receiveAddresses: Addresses
+  receiveAddresses: () => Addresses
 }): boolean => {
   const {canIncrease} = wallet.receiveAddressInfo()
   if (!canIncrease) return false

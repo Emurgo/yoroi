@@ -303,6 +303,7 @@ import {SwapStorage} from './swap/storage'
 import {TransferEntry, TransferTarget, TransferTargets} from './transfer/state'
 import {WalletMeta} from './wallet/meta'
 import {
+  BaseAsset,
   TRANSACTION_DIRECTION,
   TRANSACTION_STATUS,
   TRANSACTION_TYPE,
@@ -317,6 +318,15 @@ import {
   WalletTransaction,
 } from './wallet/transactions'
 import {WalletAddressMode, WalletImplementation} from './wallet/wallet'
+
+// Type aliases to reference imported transaction types (avoid circular references in namespace)
+type ImportedTransactionAssurance = TransactionAssurance
+type ImportedTransactionInfo = TransactionInfo
+type ImportedWalletTransaction = WalletTransaction
+type ImportedTransactions = Transactions
+type ImportedTxMetadata = TxMetadata
+type ImportedTxMetadataInfo = TxMetadataInfo
+type ImportedBaseAsset = BaseAsset
 
 export namespace App {
   export namespace Errors {
@@ -721,20 +731,24 @@ export namespace Wallet {
   export type AddressMode = WalletAddressMode
   export type Meta = WalletMeta
 
-  // Transaction types
+  // Transaction types - use imported types directly to avoid circular references
   export const TransactionStatus = TRANSACTION_STATUS
-  export type TransactionStatus = TransactionStatus
+  export type TransactionStatus =
+    (typeof TRANSACTION_STATUS)[keyof typeof TRANSACTION_STATUS]
   export const TransactionDirection = TRANSACTION_DIRECTION
-  export type TransactionDirection = TransactionDirection
+  export type TransactionDirection =
+    (typeof TRANSACTION_DIRECTION)[keyof typeof TRANSACTION_DIRECTION]
   export const TransactionType = TRANSACTION_TYPE
-  export type TransactionType = TransactionType
-  export type TransactionAssurance = TransactionAssurance
-  export type TransactionInfo = TransactionInfo
-  export type WalletTransaction = WalletTransaction
-  export type Transactions = Transactions
-  export type TxMetadata = TxMetadata
-  export type TxMetadataInfo = TxMetadataInfo
-  export type BaseAsset = BaseAsset
+  export type TransactionType =
+    (typeof TRANSACTION_TYPE)[keyof typeof TRANSACTION_TYPE]
+  // Reference imported types via intermediate aliases to avoid circular references
+  export type TransactionAssurance = ImportedTransactionAssurance
+  export type TransactionInfo = ImportedTransactionInfo
+  export type WalletTransaction = ImportedWalletTransaction
+  export type Transactions = ImportedTransactions
+  export type TxMetadata = ImportedTxMetadata
+  export type TxMetadataInfo = ImportedTxMetadataInfo
+  export type BaseAsset = ImportedBaseAsset
 }
 
 // Re-export BaseAsset at top level
@@ -802,6 +816,7 @@ export namespace Notifications {
 export namespace Scan {
   export namespace Errors {
     export class Unknown extends ScanErrorUnknown {}
+    export class UnknownContent extends ScanErrorUnknownContent {}
   }
 
   export type Feature = ScanFeature

@@ -3,6 +3,7 @@ import {init} from '@emurgo/cross-csl-nodejs'
 import {
   DEFAULT_SATURATION_THRESHOLD,
   TRANSITION_DATA_STUB,
+  TransitionData,
   getMaybeNewEntriesByPool,
   normalisePoolIdentifierOrKey,
 } from './pool-info-api'
@@ -12,7 +13,7 @@ const mockWasmFactory = (scope: string) => init(scope)
 describe('pool-info-api utilities', () => {
   describe('getMaybeNewEntriesByPool', () => {
     it('should return new entries and deadline when pool is found and enabled', () => {
-      const transitionData = {
+      const transitionData: TransitionData = {
         new: {
           emurgo: ['pool1', 'pool2'],
         },
@@ -30,7 +31,7 @@ describe('pool-info-api utilities', () => {
     })
 
     it('should return null when pool is found but disabled', () => {
-      const transitionData = {
+      const transitionData: TransitionData = {
         new: {
           emurgo: ['pool1', 'pool2'],
         },
@@ -45,7 +46,7 @@ describe('pool-info-api utilities', () => {
     })
 
     it('should return null when pool is not found', () => {
-      const transitionData = {
+      const transitionData: TransitionData = {
         new: {
           emurgo: ['pool1', 'pool2'],
         },
@@ -60,7 +61,7 @@ describe('pool-info-api utilities', () => {
     })
 
     it('should return null when new entries are missing', () => {
-      const transitionData = {
+      const transitionData: TransitionData = {
         new: {},
         old: {
           emurgo: [['pool123', 1234567890, true]],
@@ -73,7 +74,7 @@ describe('pool-info-api utilities', () => {
     })
 
     it('should search across multiple groups', () => {
-      const transitionData = {
+      const transitionData: TransitionData = {
         new: {
           yoroi: ['pool3', 'pool4'],
         },

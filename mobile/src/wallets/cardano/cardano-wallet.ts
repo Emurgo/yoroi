@@ -455,10 +455,10 @@ function createWalletObject(
     return generateNewReceiveAddressOp({
       publicKeyHex: state.publicKeyHex,
       externalChain: externalChain(),
-      receiveAddressInfo: receiveAddressInfo(),
+      receiveAddressInfo: receiveAddressInfo,
       accountManager: state.accountManager,
       notify: (event) => notify(event),
-      receiveAddresses: receiveAddresses(),
+      receiveAddresses: receiveAddresses,
     })
   }
 

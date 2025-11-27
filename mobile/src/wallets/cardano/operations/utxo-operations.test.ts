@@ -63,12 +63,15 @@ describe('utxo-operations', () => {
 
   describe('didUtxosUpdate', () => {
     it('should return true when UTXOs length changes', () => {
-      const newUtxos = [...mockRawUtxos, {...mockRawUtxos[0], utxo_id: 'tx3:0'}]
+      const newUtxos: RawUtxo[] = [
+        ...mockRawUtxos,
+        {...mockRawUtxos[0]!, utxo_id: 'tx3:0'},
+      ]
       expect(didUtxosUpdate(mockRawUtxos, newUtxos)).toBe(true)
     })
 
     it('should return true when UTXO IDs change', () => {
-      const newUtxos = [{...mockRawUtxos[0], utxo_id: 'tx3:0'}]
+      const newUtxos: RawUtxo[] = [{...mockRawUtxos[0]!, utxo_id: 'tx3:0'}]
       expect(didUtxosUpdate(mockRawUtxos, newUtxos)).toBe(true)
     })
 
@@ -83,7 +86,7 @@ describe('utxo-operations', () => {
       const spendable = getSpendableUtxos(mockRawUtxos, collateralId)
 
       expect(spendable).toHaveLength(1)
-      expect(spendable[0].utxo_id).toBe('tx2:1')
+      expect(spendable[0]?.utxo_id).toBe('tx2:1')
     })
 
     it('should return all UTXOs when no collateral', () => {

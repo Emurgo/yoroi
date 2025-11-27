@@ -1,19 +1,30 @@
 import {renderHook} from '@testing-library/react-native'
 
+import {Chain} from '@yoroi/types'
+
 import {governanceManagerMaker} from '../../manager'
 import {GovernanceProvider, useGovernance} from './context'
 
 const mockManager = governanceManagerMaker({
   api: {
-    getStakeKeyState: jest.fn(),
+    getStakingKeyState: jest.fn(),
     getDRepById: jest.fn(),
   },
   storage: {
-    read: jest.fn().mockResolvedValue({}),
-    save: jest.fn(),
-    remove: jest.fn(),
-    subscribe: jest.fn(),
+    getItem: jest.fn().mockResolvedValue(null),
+    setItem: jest.fn().mockResolvedValue(undefined),
+    removeItem: jest.fn().mockResolvedValue(undefined),
+    multiGet: jest.fn().mockResolvedValue([]),
+    multiSet: jest.fn().mockResolvedValue(undefined),
+    multiRemove: jest.fn().mockResolvedValue(undefined),
+    getAllKeys: jest.fn().mockResolvedValue([]),
+    join: jest.fn(),
+    removeFolder: jest.fn().mockResolvedValue(undefined),
+    clear: jest.fn().mockResolvedValue(undefined),
   },
+  network: Chain.Network.Mainnet,
+  walletId: 'test-wallet-id',
+  cardano: {} as never,
 })
 
 describe('GovernanceProvider', () => {

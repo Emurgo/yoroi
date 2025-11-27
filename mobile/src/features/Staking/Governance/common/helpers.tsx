@@ -666,11 +666,6 @@ export const useVotingOptions = () => {
     submitDelegate(certs, options)
   }
 
-  const yoroiDrepIdHex = React.useMemo(
-    () => getYoroiDrepIdHex(wallet.networkManager.network),
-    [wallet.networkManager.network],
-  )
-
   const handleDelegateToYoroi = async () => {
     if (isPending) return
     const stakingKey = wallet.getStakingKey()

@@ -1,5 +1,9 @@
 import {RemoteAccountState, RemoteCertificateMeta} from '@yoroi/staking'
-import {Portfolio} from '@yoroi/types'
+import {
+  Portfolio,
+  type TransactionStatus,
+  type TxMetadata,
+} from '@yoroi/types'
 
 // note(v-almonacid): this
 /**
@@ -161,10 +165,6 @@ export {
   type TxMetadata,
   type TxMetadataInfo,
 } from '@yoroi/types'
-
-// TransactionInfo is now exported from @yoroi/types
-// Re-export for backward compatibility
-export type {TransactionInfo} from '@yoroi/types'
 
 // Re-export BaseAsset from @yoroi/types
 export type {BaseAsset} from '@yoroi/types'

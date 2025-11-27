@@ -18,7 +18,7 @@ import {buildPortfolioTokenManagers} from '~/features/Portfolio/common/helpers/b
 
 import {toTokenInfo, utf8ToHex} from '../cardano/api/utils'
 import {CardanoTypes, WalletSubscription, YoroiWallet} from '../cardano/types'
-import {TransactionInfo} from '../types/other'
+import {TransactionInfo, WalletTransaction} from '../types/other'
 import {
   RemotePoolMetaSuccess,
   StakingInfo,
@@ -87,15 +87,15 @@ const wallet: YoroiWallet = {
     fts: [],
     nfts: [],
   }),
-  primaryBalance: {
+  primaryBalance: () => ({
     quantity: 0n,
     info: primaryTokenInfoMainnet,
-  },
-  primaryBreakdown: {
+  }),
+  primaryBreakdown: () => ({
     availableRewards: 0n,
     lockedAsStorageCost: 0n,
     totalFromTxs: 0n,
-  },
+  }),
 
   isMainnet: true,
   portfolioPrimaryTokenInfo: primaryTokenInfoMainnet,
@@ -236,17 +236,17 @@ const wallet: YoroiWallet = {
       // unsubscribe function
     }
   },
-  internalAddresses: [],
-  externalAddresses: [],
-  confirmationCounts: {},
-  transactions: mockTransactionInfos,
-  isUsedAddressIndex: {},
-  receiveAddresses: [],
-  receiveAddressInfo: {
+  internalAddresses: () => [],
+  externalAddresses: () => [],
+  confirmationCounts: () => ({}),
+  getRawTransactions: () => mockTransactionInfos as unknown as Record<string, WalletTransaction>,
+  isUsedAddressIndex: () => ({}),
+  receiveAddresses: () => [],
+  receiveAddressInfo: () => ({
     canIncrease: true,
     lastUsedIndex: 0,
     lastUsedIndexVisual: 0,
-  },
+  }),
   generateNewReceiveAddress: (..._args: never[]) => {
     return true
   },
@@ -262,7 +262,8 @@ const wallet: YoroiWallet = {
     return 'addr1qxy9yjhvxh700xeluhvdpwlauuvnzav42edveyggy8fusqvg2f9wcd0u77dnlewc6zalmecex96e24j6ejgssgwneqqs762af9'
   },
   getRawTransaction: () => undefined,
-  getRawTransactions: () => ({}),
+  externalChain: {} as YoroiWallet['externalChain'],
+  internalChain: {} as YoroiWallet['internalChain'],
 }
 
 const metaHw: Wallet.Meta = {

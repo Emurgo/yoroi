@@ -24,8 +24,8 @@ export const useSignWithPasswordAndSubmitTx = (
     {wallet},
     {
       ...options?.signTx,
-      onSuccess: (signedTx, args, context) => {
-        options?.signTx?.onSuccess?.(signedTx, args, context)
+      onSuccess: (signedTx, args, context, mutation) => {
+        options?.signTx?.onSuccess?.(signedTx, args, context, mutation)
         submitTx.mutate(signedTx)
       },
     },

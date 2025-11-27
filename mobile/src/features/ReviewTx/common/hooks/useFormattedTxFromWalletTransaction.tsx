@@ -2,7 +2,7 @@ import {RawUtxo} from '@yoroi/api'
 import {isNonNullable} from '@yoroi/common'
 import {createUnknownTokenInfo} from '@yoroi/portfolio'
 import {Portfolio} from '@yoroi/types'
-import {WalletTransaction} from '@yoroi/types'
+import {BaseAsset, WalletTransaction} from '@yoroi/types'
 
 import {CredKind} from '@emurgo/cross-csl-core'
 import * as React from 'react'
@@ -114,11 +114,13 @@ export const useFormattedTxFromWalletTransaction = (
     const tokenIds = walletTransaction.inputs.flatMap((input) => {
       return (
         input.assets
-          ?.map((a: {tokenId?: Portfolio.Token.Id; assetId?: string}) => {
+          ?.map((a) => {
             // Handle both tokenId (new) and assetId (legacy) field names
+            // BaseAsset has tokenId: string, but may also have assetId in legacy data
+            const asset = a as BaseAsset & {assetId?: string}
             const tokenId: Portfolio.Token.Id | null =
-              (a.tokenId as Portfolio.Token.Id) ||
-              (a.assetId as Portfolio.Token.Id | null)
+              (asset.tokenId as Portfolio.Token.Id) ||
+              (asset.assetId as Portfolio.Token.Id | null)
             return tokenId
           })
           .filter(isNonNullable) ?? []
@@ -265,20 +267,17 @@ const formatInputsFromWalletTransaction = (
 
     const multiAssets =
       input.assets
-        ?.map(
-          (a: {
-            tokenId?: Portfolio.Token.Id
-            assetId?: string // Legacy field name, still present in stored data
-            amount: string
-          }) => {
-            if (a == null) {
-              return null
-            }
+        ?.map((a) => {
+          if (a == null) {
+            return null
+          }
 
-            // Handle both tokenId (new) and assetId (legacy) field names
-            const tokenId: Portfolio.Token.Id | undefined =
-              (a.tokenId as Portfolio.Token.Id) ||
-              (a.assetId as Portfolio.Token.Id | undefined)
+          // Handle both tokenId (new) and assetId (legacy) field names
+          // BaseAsset has tokenId: string, but may also have assetId in legacy data
+          const asset = a as BaseAsset & {assetId?: string}
+          const tokenId: Portfolio.Token.Id | undefined =
+            (asset.tokenId as Portfolio.Token.Id) ||
+            (asset.assetId as Portfolio.Token.Id | undefined)
 
             if (!tokenId) {
               return null

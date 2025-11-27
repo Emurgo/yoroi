@@ -10,6 +10,7 @@ import {Observable, Subscription} from 'rxjs'
 import {YoroiWallet} from '../../wallets/cardano/types'
 import {mockEncryptedStorage} from '../../wallets/mocks/storage'
 import {mockTransactionInfos} from '../../wallets/mocks/transaction'
+import type {WalletTransaction} from '../../wallets/types/other'
 import {utxos} from '../../wallets/mocks/utxos'
 import {RemotePoolMetaSuccess} from '../../wallets/types/staking'
 import {CardanoMobile} from '../../wallets/wallets'
@@ -89,15 +90,15 @@ const wallet: YoroiWallet = {
     fts: [],
     nfts: [],
   }),
-  primaryBalance: {
+  primaryBalance: () => ({
     quantity: 0n,
     info: primaryTokenInfoMainnet,
-  },
-  primaryBreakdown: {
+  }),
+  primaryBreakdown: () => ({
     availableRewards: 0n,
     lockedAsStorageCost: 0n,
     totalFromTxs: 0n,
-  },
+  }),
 
   isMainnet: true,
   portfolioPrimaryTokenInfo: primaryTokenInfoMainnet,
@@ -238,17 +239,17 @@ const wallet: YoroiWallet = {
   subscribe: (..._args: unknown[]) => {
     throw new Error('not implemented: subscribe')
   },
-  internalAddresses: [],
-  externalAddresses: [],
-  confirmationCounts: {},
-  transactions: mockTransactionInfos,
-  isUsedAddressIndex: {},
-  receiveAddresses: [],
-  receiveAddressInfo: {
+  internalAddresses: () => [],
+  externalAddresses: () => [],
+  confirmationCounts: () => ({}),
+  getRawTransactions: () => mockTransactionInfos as unknown as Record<string, WalletTransaction>,
+  isUsedAddressIndex: () => ({}),
+  receiveAddresses: () => [],
+  receiveAddressInfo: () => ({
     canIncrease: true,
     lastUsedIndex: 0,
     lastUsedIndexVisual: 0,
-  },
+  }),
   generateNewReceiveAddress: (..._args: unknown[]) => {
     return true
   },
@@ -274,7 +275,8 @@ const wallet: YoroiWallet = {
     return 'addr1qxy9yjhvxh700xeluhvdpwlauuvnzav42edveyggy8fusqvg2f9wcd0u77dnlewc6zalmecex96e24j6ejgssgwneqqs762af9'
   },
   getRawTransaction: () => undefined,
-  getRawTransactions: () => ({}),
+  externalChain: {} as YoroiWallet['externalChain'],
+  internalChain: {} as YoroiWallet['internalChain'],
 }
 
 export const walletMocks = {

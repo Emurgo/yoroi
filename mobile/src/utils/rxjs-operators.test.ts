@@ -59,7 +59,7 @@ describe('rxjs-operators', () => {
       })
 
       source.pipe(retryWithBackoff(3, 10, 100)).subscribe({
-        next: (value) => {
+        next: (value: string) => {
           expect(value).toBe('Success')
           expect(attempts).toBe(3)
           done()
@@ -83,7 +83,7 @@ describe('rxjs-operators', () => {
       })
 
       source.pipe(retryWithDelay(2, 10)).subscribe({
-        next: (value) => {
+        next: (value: string) => {
           expect(value).toBe('Success')
           expect(attempts).toBe(2)
           done()
@@ -107,7 +107,7 @@ describe('rxjs-operators', () => {
       })
 
       source.pipe(simpleRetry(2)).subscribe({
-        next: (value) => {
+        next: (value: string) => {
           expect(value).toBe('Success')
           expect(attempts).toBe(2)
           done()

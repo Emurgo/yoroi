@@ -1,4 +1,5 @@
 import * as React from 'react'
+import {App} from '@yoroi/types'
 
 import {logger} from '~/kernel/logger/logger'
 

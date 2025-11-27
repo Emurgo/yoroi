@@ -64,7 +64,7 @@ export const mockTransactionInfos: Record<string, TransactionInfo> = {
     direction: 'RECEIVED',
     submittedAt: '2021-02-19T15:53:36.000Z',
     lastUpdatedAt: '2021-02-19T15:53:36.000Z',
-    status: 'SUCCESSFUL',
+    status: 'Successful',
     assurance: 'HIGH',
     tokens: {
       '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7': {
@@ -138,7 +138,7 @@ export const mockTransactionInfos: Record<string, TransactionInfo> = {
     direction: 'RECEIVED',
     submittedAt: '2022-03-20T10:22:12.000Z',
     lastUpdatedAt: '2022-03-20T10:22:12.000Z',
-    status: 'SUCCESSFUL',
+    status: 'Successful',
     assurance: 'HIGH',
     tokens: {
       '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7': {
@@ -212,7 +212,7 @@ export const mockTransactionInfos: Record<string, TransactionInfo> = {
     direction: 'RECEIVED',
     submittedAt: '2021-02-19T11:11:36.000Z',
     lastUpdatedAt: '2021-02-19T11:11:36.000Z',
-    status: 'SUCCESSFUL',
+    status: 'Successful',
     assurance: 'HIGH',
     tokens: {
       '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7': {
@@ -291,7 +291,7 @@ export const mockTransactionInfo = (
     direction: 'RECEIVED',
     submittedAt: '2021-02-19T15:53:36.000Z',
     lastUpdatedAt: '2021-02-19T15:53:36.000Z',
-    status: 'SUCCESSFUL',
+    status: 'Successful',
     assurance: 'HIGH',
     tokens: {
       '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7': {
