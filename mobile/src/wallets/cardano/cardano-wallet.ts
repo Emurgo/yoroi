@@ -122,9 +122,23 @@ type WalletState = {
 }
 
 const _getUtxos = defaultMemoize((utxos: RawUtxo[], collateralId: string) => {
-  return collateralId.length > 0
-    ? utxos.filter((utxo) => utxo.utxo_id !== collateralId)
-    : utxos
+  // If collateral ID is explicitly set, filter that UTXO out
+  if (collateralId.length > 0) {
+    return utxos.filter((utxo) => utxo.utxo_id !== collateralId)
+  }
+
+  // If no collateral ID is set, find the first UTXO matching collateral criteria
+  // and filter only that one out (protects potential collateral without blocking all 5 ADA UTXOs)
+  const utxosList = utxosMaker(utxos)
+  const potentialCollateralId = utxosList.drawnCollateral()
+
+  if (potentialCollateralId) {
+    // Filter out only the first matching collateral candidate
+    return utxos.filter((utxo) => utxo.utxo_id !== potentialCollateralId)
+  }
+
+  // No collateral candidate found, return all UTXOs
+  return utxos
 })
 
 const _isUsedAddressIndexSelector = defaultMemoize((perAddressTxs) =>
@@ -931,6 +945,21 @@ function createWalletObject(
 
     await state.utxoManager.sync(addresses)
     const newUtxos = await state.utxoManager.getCachedUtxos()
+
+    // Auto-detect and save collateral ID if not set but a matching UTXO exists
+    // This handles the case where a wallet is restored with an existing collateral UTXO
+    if (state.collateralId.length === 0) {
+      const utxosList = utxosMaker(newUtxos)
+      const potentialCollateralId = utxosList.drawnCollateral()
+      if (potentialCollateralId) {
+        await state.utxoManager.setCollateralId(potentialCollateralId)
+        state.collateralId = potentialCollateralId
+        notify({type: 'collateral-id', collateralId: state.collateralId})
+        logger.info('syncUtxos: Auto-detected and saved collateral ID', {
+          collateralId: potentialCollateralId,
+        })
+      }
+    }
 
     // NOTE: wallet is not aware of utxos state
     // if it crashes, the utxo manager will be out of sync with wallet
