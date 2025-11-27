@@ -17,10 +17,28 @@ import {ResultScreenParams} from './types'
 export const ResultScreen = (props?: ResultScreenParams) => {
   useBlockGoBack()
   const {palette: p, atoms: ta} = useTheme()
-  const navParams = useUnsafeParams<ResultScreenParams>()
+  const navParamsRaw = useUnsafeParams<
+    ResultScreenParams | {route?: {params?: ResultScreenParams}}
+  >()
+
+  // Extract actual params - handle both direct params and nested route.params structure
+  let navParams: ResultScreenParams | undefined
+  if (navParamsRaw) {
+    if ('route' in navParamsRaw && navParamsRaw.route?.params) {
+      // React Navigation sometimes wraps params in route object
+      navParams = navParamsRaw.route.params as ResultScreenParams
+    } else if ('type' in navParamsRaw) {
+      // Direct params object
+      navParams = navParamsRaw as ResultScreenParams
+    }
+  }
 
   // Use props if provided, otherwise use navigation params
-  const params = props ?? navParams
+  // But if props looks like a route object (has 'route' property), ignore it and use navParams
+  const params =
+    props && 'type' in props && !('route' in props) && !('navigation' in props)
+      ? props
+      : navParams
 
   if (!params) {
     throw new Error('ResultScreen: params are required')
@@ -52,27 +70,20 @@ export const ResultScreen = (props?: ResultScreenParams) => {
         a.justify_center,
       ]}
     >
-      {type === 'success' && <View style={{height: 144}} />}
-
-      {type === 'error' && <Space.Height._2xl />}
+      <View style={{height: 144}} />
 
       {defaultIcon}
 
-      {type === 'success' && <Space.Height.lg />}
-      {type === 'error' && <Space.Height._2xl />}
-      {type === 'error' && <Space.Height.lg />}
+      <Space.Height.lg />
 
       <Text
         style={[
+          a.heading_3_medium,
+          a.px_sm,
           {
             color: p.gray_max,
-            fontSize: type === 'error' ? 24 : undefined,
-            fontWeight: type === 'error' ? '600' : undefined,
-            paddingHorizontal: type === 'error' ? 8 : undefined,
             textAlign: 'center',
           },
-          type === 'success' ? a.heading_3_medium : undefined,
-          type === 'success' ? a.px_sm : undefined,
         ]}
       >
         {title}
@@ -80,15 +91,12 @@ export const ResultScreen = (props?: ResultScreenParams) => {
 
       <Text
         style={[
+          a.body_1_lg_regular,
           {
             color: p.gray_600,
-            maxWidth: type === 'success' ? 330 : undefined,
-            fontSize: type === 'error' ? 16 : undefined,
-            lineHeight: type === 'error' ? 24 : undefined,
-            fontWeight: type === 'error' ? '400' : undefined,
+            maxWidth: 330,
             textAlign: 'center',
           },
-          type === 'success' ? a.body_1_lg_regular : undefined,
         ]}
       >
         {message}
@@ -96,10 +104,9 @@ export const ResultScreen = (props?: ResultScreenParams) => {
 
       {params.customContent}
 
-      {type === 'success' && <Space.Height._2xs fill />}
-      {type === 'error' && <View style={{flex: 1}} />}
+      <Space.Height._2xs fill />
 
-      <Actions type={type}>
+      <Actions>
         {secondaryAction && (
           <>
             <Button
@@ -116,7 +123,7 @@ export const ResultScreen = (props?: ResultScreenParams) => {
           <Button
             onPress={primaryAction.onPress}
             title={primaryAction.title}
-            style={type === 'error' ? [{paddingHorizontal: 16}] : a.px_lg}
+            style={a.px_lg}
           />
         )}
       </Actions>
@@ -124,22 +131,12 @@ export const ResultScreen = (props?: ResultScreenParams) => {
   )
 }
 
-const Actions = ({
-  children,
-  type,
-}: {
-  children: React.ReactNode
-  type: ResultScreenParams['type']
-}) => {
+const Actions = ({children}: {children: React.ReactNode}) => {
   const {palette: p} = useTheme()
 
-  if (type === 'success') {
-    return (
-      <View style={[a.self_stretch, a.border_t, {borderTopColor: p.gray_200}]}>
-        {children}
-      </View>
-    )
-  }
-
-  return <View style={{alignSelf: 'stretch'}}>{children}</View>
+  return (
+    <View style={[a.self_stretch, a.border_t, {borderTopColor: p.gray_200}]}>
+      {children}
+    </View>
+  )
 }

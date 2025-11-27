@@ -287,7 +287,14 @@ export const useDappConnectorManager = () => {
                 const signedTx = args?.signedTx ?? args?.tx
                 if (signedTx) {
                   try {
-                    const txBytes = signedTx.toBytes()
+                    // If signedTx is a function, call it with CSL to get Transaction, otherwise use directly
+                    const tx =
+                      typeof signedTx === 'function'
+                        ? await CardanoMobileWrapped.cslScope((csl) =>
+                            signedTx(csl),
+                          )
+                        : signedTx
+                    const txBytes = tx.toBytes()
                     const txId = await CardanoMobileWrapped.cslScope(
                       async (csl) => {
                         return await calculateTxId(

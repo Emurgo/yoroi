@@ -21,16 +21,16 @@ export const createSwapCancellationLedgerPayload = async (
   stakeVKHash: CSL_TYPES.Ed25519KeyHash,
 ): Promise<SignTransactionRequest> => {
   const changeAddrs = [
-    ...wallet.internalAddresses,
-    ...wallet.internalAddresses,
+    ...wallet.internalAddresses(),
+    ...wallet.internalAddresses(),
   ].map((address) => ({
     addressing: getAddressing(address),
     address,
   }))
   const getAddressingByTxIdAndIndex = (txId: string, index: number) => {
-    const utxo = wallet.allUtxos.find(
-      (utxo) => utxo.tx_hash === txId && utxo.tx_index === index,
-    )
+    const utxo = wallet
+      .allUtxos()
+      .find((utxo) => utxo.tx_hash === txId && utxo.tx_index === index)
     return utxo ? getAddressing(utxo.receiver) : null
   }
   return await createLedgerPlutusPayload({
@@ -75,8 +75,9 @@ const getRequiredSigners = async (
   const startLevel = derivationConfig.keyLevel.purpose
   const primaryTokenId = wallet.portfolioPrimaryTokenInfo.id
 
-  const addressedUtxos: CardanoTypes.CardanoAddressedUtxo[] =
-    wallet.allUtxos.map((utxo) => {
+  const addressedUtxos: CardanoTypes.CardanoAddressedUtxo[] = wallet
+    .allUtxos()
+    .map((utxo) => {
       // Convert to modern Balance.Amounts format
       const balance: Balance.Amounts = {
         [primaryTokenId]: utxo.amount as Balance.Quantity,
@@ -171,8 +172,8 @@ export const getDerivationPathForAddress = (
   meta: Wallet.Meta,
   partial = false,
 ) => {
-  const internalIndex = wallet.internalAddresses.indexOf(address)
-  const externalIndex = wallet.externalAddresses.indexOf(address)
+  const internalIndex = wallet.internalAddresses().indexOf(address)
+  const externalIndex = wallet.externalAddresses().indexOf(address)
   const config = cardanoConfig.implementations[meta.implementation]
   const index = Math.max(internalIndex, externalIndex)
 

@@ -697,9 +697,9 @@ const getUtxo = async (
   txIndex: number,
   getUtxoData: Network.Api['utxoData'],
 ) => {
-  const internalUtxo = wallet.utxos.find(
-    (u) => u.tx_hash === txHash && u.tx_index === txIndex,
-  )
+  const internalUtxo = wallet
+    .utxos()
+    .find((u) => u.tx_hash === txHash && u.tx_index === txIndex)
 
   if (!internalUtxo) {
     try {
@@ -747,8 +747,8 @@ function toRawUtxo(
 
 const isOwnedAddress = (wallet: YoroiWallet, bech32Address: string) => {
   return (
-    wallet.internalAddresses.includes(bech32Address) ||
-    wallet.externalAddresses.includes(bech32Address)
+    wallet.internalAddresses().includes(bech32Address) ||
+    wallet.externalAddresses().includes(bech32Address)
   )
 }
 
@@ -830,10 +830,12 @@ const formatCollateral = (
     // Fetch UTXOs for collateral inputs
     const collateralUtxos = collateralInputs
       .map((input) => {
-        const utxo = wallet.utxos.find(
-          (u) =>
-            u.tx_hash === input.transaction_id && u.tx_index === input.index,
-        )
+        const utxo = wallet
+          .utxos()
+          .find(
+            (u) =>
+              u.tx_hash === input.transaction_id && u.tx_index === input.index,
+          )
         return utxo
       })
       .filter(isNonNullable) as RawUtxo[]

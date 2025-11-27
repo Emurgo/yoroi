@@ -8,7 +8,8 @@ export const useLastDateAddressUsed = (address: string) => {
   const intl = useIntl()
   return React.useMemo(() => {
     const rawTransactions = wallet.getRawTransactions()
-    if (!rawTransactions || Object.keys(rawTransactions).length === 0) return null
+    if (!rawTransactions || Object.keys(rawTransactions).length === 0)
+      return null
 
     const lastUsed = Object.values(rawTransactions).reduce(
       (currentLast, tx) => {

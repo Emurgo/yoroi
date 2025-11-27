@@ -29,7 +29,7 @@ export const ZoomMediaImageScreen = () => {
   const dimensions = useWindowDimensions()
 
   // reading from the getter, there is no need to subscribe to changes
-  const [amount] = React.useState(wallet.balances.records.get(id))
+  const [amount] = React.useState(wallet.balances().records.get(id))
 
   // Shared values for animations
   const scale = useSharedValue(1)

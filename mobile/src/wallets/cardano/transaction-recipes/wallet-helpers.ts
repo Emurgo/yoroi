@@ -37,7 +37,7 @@ async function getAbsoluteSlotNumberFromWallet(
  */
 function getModernUtxosFromWallet(wallet: YoroiWallet) {
   return convertRawUtxosToModernUtxos(
-    wallet.utxos, // Use wallet.utxos instead of allUtxos to exclude collateral
+    wallet.utxos(), // Use wallet.utxos instead of allUtxos to exclude collateral
     (address) => wallet.getAddressing(address),
     wallet.portfolioPrimaryTokenInfo.id,
   )
@@ -54,7 +54,7 @@ export async function createUtxoConsolidationTxFromWallet(
 
   return createUtxoConsolidationTx({
     utxos: modernUtxos,
-    externalAddresses: wallet.externalAddresses,
+    externalAddresses: wallet.externalAddresses(),
     primaryTokenId: wallet.portfolioPrimaryTokenInfo.id,
     protocolParams: wallet.protocolParams,
     networkId: wallet.networkManager.chainId,

@@ -16,7 +16,7 @@ export const usePortfolioPrimaryBreakdown = ({
     () => wallet.balance$.pipe(filter(isSyncEvent)),
     [wallet],
   )
-  const getter = React.useCallback(() => wallet.primaryBreakdown, [wallet])
+  const getter = React.useCallback(() => wallet.primaryBreakdown(), [wallet])
 
   return useObservableValue({
     observable$,

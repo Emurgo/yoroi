@@ -21,7 +21,7 @@ export const useGetInputs = () => {
         const primaryTokenId = wallet.portfolioPrimaryTokenInfo.id
 
         // Convert RawUtxo[] to ModernUtxo[]
-        const modernUtxos = wallet.utxos.map((rawUtxo) => {
+        const modernUtxos = wallet.utxos().map((rawUtxo) => {
           const addressing = wallet.getAddressing(rawUtxo.receiver)
           return rawUtxoToModernUtxo(
             rawUtxo as Parameters<typeof rawUtxoToModernUtxo>[0],

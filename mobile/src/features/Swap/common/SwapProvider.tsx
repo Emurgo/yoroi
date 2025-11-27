@@ -140,7 +140,7 @@ export const SwapProvider = ({children}: React.PropsWithChildren) => {
     // Don't create swapManager until config is loaded and partners are ready
     if (!partnersReady || !config?.swap?.partners) return null
 
-    const address = wallet.externalAddresses[0]
+    const address = wallet.externalAddresses()[0]
     if (!address) throw new App.Errors.InvalidState('No External Address')
 
     const addressHex = convertBech32ToHex(address)
@@ -154,13 +154,7 @@ export const SwapProvider = ({children}: React.PropsWithChildren) => {
       isPrimaryToken,
       partners: config.swap.partners,
     })
-  }, [
-    network,
-    wallet.externalAddresses,
-    wallet.portfolioPrimaryTokenInfo,
-    partnersReady,
-    config?.swap?.partners,
-  ])
+  }, [network, wallet, partnersReady, config?.swap?.partners])
 
   const {data: orders = [], refetch: refetchOrders} = useQuery({
     queryKey: ['persist', 'useSwapOrders', network, wallet.id],

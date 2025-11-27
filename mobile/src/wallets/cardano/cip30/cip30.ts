@@ -60,7 +60,7 @@ class CIP30Extension {
     return CardanoMobileWrapped.cslScope((csl) => {
       const value = _getBalance(
         tokenId,
-        this.wallet.utxos,
+        this.wallet.utxos(),
         this.wallet.portfolioPrimaryTokenInfo.id,
         csl,
       )
@@ -70,9 +70,9 @@ class CIP30Extension {
 
   getUnusedAddresses(): CSL.Address[] {
     return CardanoMobileWrapped.cslScope((csl) => {
-      const bech32Addresses = this.wallet.receiveAddresses.filter(
-        (address) => !this.wallet.isUsedAddressIndex[address],
-      )
+      const bech32Addresses = this.wallet
+        .receiveAddresses()
+        .filter((address) => !this.wallet.isUsedAddressIndex()[address])
       const addresses = bech32Addresses.map((addr) =>
         csl.Address.fromBech32(addr),
       )
@@ -82,7 +82,7 @@ class CIP30Extension {
 
   getUsedAddresses(pagination?: Pagination): CSL.Address[] {
     return CardanoMobileWrapped.cslScope((csl) => {
-      const allAddresses = this.wallet.externalAddresses
+      const allAddresses = this.wallet.externalAddresses()
       const selectedAddresses = paginate(allAddresses, pagination)
       const addresses = selectedAddresses.map((addr) =>
         csl.Address.fromBech32(addr),
@@ -494,7 +494,7 @@ const _getUtxos = async (
 
   if (valueStr.length === 0) {
     const primaryTokenId = wallet.portfolioPrimaryTokenInfo.id
-    const validUtxos = wallet.utxos.map((o) => {
+    const validUtxos = wallet.utxos().map((o) => {
       try {
         return cardanoUtxoFromRemoteFormat(
           csl,
@@ -537,7 +537,7 @@ const _getUtxos = async (
   const validUtxos = await _getRequiredUtxos(
     wallet,
     amounts,
-    wallet.utxos,
+    wallet.utxos(),
     meta,
     csl,
   )
@@ -665,7 +665,7 @@ const _drawCollateralInOneUtxo = (
   wallet: YoroiWallet,
   quantity: Balance.Quantity,
 ) => {
-  const utxos = utxosMaker(wallet.utxos, {
+  const utxos = utxosMaker(wallet.utxos(), {
     maxLovelace: collateralConfig.maxLovelace,
     minLovelace: quantity,
     maxUTxOs: collateralConfig.maxUTxOs,
@@ -702,7 +702,7 @@ const _drawCollateralInMultipleUtxos = async (
   quantity: Balance.Quantity,
   csl: WasmModuleProxy,
 ) => {
-  const possibleUtxos = findCollateralCandidates(wallet.utxos, {
+  const possibleUtxos = findCollateralCandidates(wallet.utxos(), {
     maxLovelace: collateralConfig.maxLovelace,
     minLovelace: asQuantity('0'),
     maxUTxOs: collateralConfig.maxUTxOs,

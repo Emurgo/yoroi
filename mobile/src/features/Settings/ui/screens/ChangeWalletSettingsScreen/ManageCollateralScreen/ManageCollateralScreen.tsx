@@ -59,7 +59,7 @@ export const ManageCollateralScreen = () => {
   const {navigateToTxReview, resetToTxHistory} = useWalletNavigation()
 
   const lockedAmount = asQuantity(
-    wallet.primaryBreakdown.lockedAsStorageCost.toString(),
+    wallet.primaryBreakdown().lockedAsStorageCost.toString(),
   )
   const hasCollateral = collateralId !== '' && utxo !== undefined
   const params = useUnsafeParams<SettingsStackRoutes['manage-collateral']>()
@@ -81,9 +81,18 @@ export const ManageCollateralScreen = () => {
     setCollateralId(collateralId)
   }
 
-  const handleOnSuccess = async (signedTx?: CSL.Transaction) => {
+  const handleOnSuccess = async (
+    signedTx?:
+      | CSL.Transaction
+      | ((csl: CSL.WasmModuleProxy) => CSL.Transaction),
+  ) => {
     if (!signedTx) throw new Error('ManageCollateralScreen:: invalid state')
-    const txBytes = signedTx.toBytes()
+    // If signedTx is a function, call it with CSL to get Transaction, otherwise use directly
+    const tx =
+      typeof signedTx === 'function'
+        ? await CardanoMobileWrapped.cslScope((csl) => signedTx(csl))
+        : signedTx
+    const txBytes = tx.toBytes()
     const txId = await CardanoMobileWrapped.cslScope(async (csl) => {
       return await calculateTxId(
         csl,
@@ -130,7 +139,7 @@ export const ManageCollateralScreen = () => {
   const isLoading = isLoadingTx || isLoadingCollateral
 
   const handleGenerateCollateral = () => {
-    const utxos = utxosMaker(wallet.utxos)
+    const utxos = utxosMaker(wallet.utxos())
     const possibleCollateralId = utxos.drawnCollateral()
 
     if (possibleCollateralId !== undefined) {

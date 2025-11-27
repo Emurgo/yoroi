@@ -20,10 +20,10 @@ export const AddressDetailsScreen = () => {
   const {wallet} = useSelectedWallet()
 
   const externalIndex: number | undefined = fromPairs(
-    wallet.externalAddresses.map((addr, i) => [addr, i]),
+    wallet.externalAddresses().map((addr, i) => [addr, i]),
   )[address]
   const internalIndex: number | undefined = fromPairs(
-    wallet.internalAddresses.map((addr, i) => [addr, i]),
+    wallet.internalAddresses().map((addr, i) => [addr, i]),
   )[address]
 
   const path =
