@@ -58,8 +58,8 @@ const buildNotifications = async ({
       const rawTx = wallet.getRawTransaction(id)
       if (rawTx) {
         const ownAddresses = [
-          ...wallet.internalAddresses,
-          ...wallet.externalAddresses,
+          ...wallet.internalAddresses(),
+          ...wallet.externalAddresses(),
         ]
         const summary = walletTransactionToSummary(
           rawTx,
@@ -90,7 +90,7 @@ const buildNotifications = async ({
 }
 
 const getTxIds = (wallet: YoroiWallet) => {
-  const ids = wallet.allUtxos.map((utxo) => utxo.tx_hash)
+  const ids = wallet.allUtxos().map((utxo) => utxo.tx_hash)
   return [...new Set(ids)]
 }
 

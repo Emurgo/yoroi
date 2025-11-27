@@ -35,8 +35,10 @@ export const PortfolioWalletTokenList = () => {
   const isZeroADABalance = useZeroBalance()
   const {resetTabs} = usePortfolio()
   const {
-    wallet: {balances, portfolioPrimaryTokenInfo},
+    wallet: {portfolioPrimaryTokenInfo},
+    wallet,
   } = useSelectedWallet()
+  const balances = wallet.balances()
   const {tokenActivity, isLoading} = usePortfolioTokenActivity()
 
   const amount = React.useMemo(

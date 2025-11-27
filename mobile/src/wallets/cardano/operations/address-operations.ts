@@ -158,7 +158,7 @@ export const generateNewReceiveAddress = (wallet: {
   notify: (event: {type: 'addresses'; addresses: Addresses}) => void
   receiveAddresses: Addresses
 }): boolean => {
-  const {canIncrease} = wallet.receiveAddressInfo
+  const {canIncrease} = wallet.receiveAddressInfo()
   if (!canIncrease) return false
 
   // Read-only wallets can't generate new addresses
@@ -171,7 +171,7 @@ export const generateNewReceiveAddress = (wallet: {
     wallet.externalChain.increaseVisualIndex()
     wallet.accountManager.save()
 
-    wallet.notify({type: 'addresses', addresses: wallet.receiveAddresses})
+    wallet.notify({type: 'addresses', addresses: wallet.receiveAddresses()})
 
     return true
   }

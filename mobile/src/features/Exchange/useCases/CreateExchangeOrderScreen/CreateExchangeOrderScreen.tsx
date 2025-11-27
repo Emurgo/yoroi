@@ -84,7 +84,7 @@ export const CreateExchangeOrderScreen = () => {
     }),
   )
   const walletAddress = wallet.isMainnet
-    ? wallet.externalAddresses[0]
+    ? wallet.externalAddresses()[0]
     : banxaTestWallet
 
   const urlOptions: Exchange.ReferralUrlQueryStringParams = {

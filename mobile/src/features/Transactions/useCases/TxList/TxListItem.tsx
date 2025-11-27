@@ -43,8 +43,10 @@ const TxListItemComponent = ({transaction}: Props) => {
   const {wallet} = useSelectedWallet()
   const {tokenId} = useTxFilter()
   const tokenInfo =
-    wallet.balances.records.get(tokenId ?? wallet.portfolioPrimaryTokenInfo.id)
-      ?.info ?? wallet.portfolioPrimaryTokenInfo
+    wallet
+      .balances()
+      .records.get(tokenId ?? wallet.portfolioPrimaryTokenInfo.id)?.info ??
+    wallet.portfolioPrimaryTokenInfo
   const isDefault = isPrimaryToken(tokenInfo)
 
   const intl = useIntl()

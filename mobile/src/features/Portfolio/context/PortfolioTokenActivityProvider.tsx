@@ -97,7 +97,7 @@ export const PortfolioTokenActivityProvider = ({
           .map((meta) => walletManager.getWalletById(meta.id))
           .filter(isNonNullable)
           .reduce((amounts: Portfolio.Token.AmountRecords, wallet) => {
-            for (const balance of wallet.balances.records.values()) {
+            for (const balance of wallet.balances().records.values()) {
               if (amounts[balance.info.id]) {
                 amounts[balance.info.id]!.quantity += balance.quantity
               } else {

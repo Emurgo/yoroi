@@ -24,7 +24,10 @@ export const getTransactionReceivedNotificationTitle = (
     return `Unknown transaction ${event.metadata.txId}`
   }
 
-  const ownAddresses = [...wallet.internalAddresses, ...wallet.externalAddresses]
+  const ownAddresses = [
+    ...wallet.internalAddresses(),
+    ...wallet.externalAddresses(),
+  ]
   const summary = walletTransactionToSummary(
     rawTx,
     ownAddresses,
@@ -79,7 +82,10 @@ export const getTransactionReceivedNotificationIcon = (
   const rawTx = wallet.getRawTransaction(event.metadata.txId)
   if (!rawTx) return null
 
-  const ownAddresses = [...wallet.internalAddresses, ...wallet.externalAddresses]
+  const ownAddresses = [
+    ...wallet.internalAddresses(),
+    ...wallet.externalAddresses(),
+  ]
   const summary = walletTransactionToSummary(
     rawTx,
     ownAddresses,
@@ -230,9 +236,9 @@ const resolveTokenInfo = (
       denomination: primaryTokenInfo.decimals,
     }
   }
-  const walletRecord = wallet.balances.records.get(
-    identifier as Portfolio.Token.Id,
-  )?.info
+  const walletRecord = wallet
+    .balances()
+    .records.get(identifier as Portfolio.Token.Id)?.info
   if (walletRecord != null) {
     const pick = (...vals: Array<string | undefined>) =>
       vals.find((v) => typeof v === 'string' && v.trim().length > 0) ??

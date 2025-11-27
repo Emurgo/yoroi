@@ -1,7 +1,6 @@
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
-import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 import {Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
@@ -27,7 +26,6 @@ export const PreparingWalletScreen = () => {
   const {atoms: ta} = useTheme()
   const {walletManager} = useWalletManager()
   const walletNavigation = useWalletNavigation()
-  const navigation = useNavigation()
   const {isLoggedIn} = useAuth()
   const isGlobalSyncPaused = useSyncTemporarilyPaused()
   const [shouldNavigateAfterSync, setShouldNavigateAfterSync] =

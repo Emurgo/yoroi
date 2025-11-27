@@ -69,26 +69,26 @@ const wallet: YoroiWallet = {
     throw new Error('Method not implemented.')
   },
   networkManager: networkManagers.mainnet,
-  isEmpty: false,
-  hasOnlyPrimary: false,
+  isEmpty: () => false,
+  hasOnlyPrimary: () => false,
   id: 'wallet-id',
   api: AppApi.mockAppApi,
   rewardAddressHex: 'reward-address-hex',
   publicKeyHex: 'publicKeyHex',
-  utxos,
-  allUtxos: utxos,
-  collateralId:
+  utxos: () => utxos,
+  allUtxos: () => utxos,
+  collateralId: () =>
     '22d391c7a97559cb4784bd975214919618acce75cde573a7150a176700e76181:2',
   accountVisual: 0,
   protocolParams: protocolParamsPlaceholder,
 
   balance$: new Observable<Portfolio.Event.BalanceManager>(),
-  balances: {
+  balances: () => ({
     records: new Map(),
     all: [],
     fts: [],
     nfts: [],
-  },
+  }),
   primaryBalance: {
     quantity: 0n,
     info: primaryTokenInfoMainnet,

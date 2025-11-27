@@ -75,7 +75,7 @@ export const useRedeemThaw = () => {
       const fundingUtxosHex = await CardanoMobileWrapped.cslScope(
         async (csl) => {
           // Convert RawUtxo[] to ModernUtxo[] using current pattern
-          const modernUtxos = wallet.utxos.map((rawUtxo) => {
+          const modernUtxos = wallet.utxos().map((rawUtxo) => {
             const addressing = wallet.getAddressing(rawUtxo.receiver)
             return rawUtxoToModernUtxo(
               rawUtxo as Parameters<typeof rawUtxoToModernUtxo>[0],

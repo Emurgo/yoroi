@@ -50,7 +50,7 @@ export const useAirdropEligibility = () => {
       // Handle gracefully if addresses are not available
       let addresses: string[] = []
       try {
-        addresses = wallet.receiveAddresses || []
+        addresses = wallet.receiveAddresses() || []
       } catch (error) {
         logger.warn('Failed to get receive addresses', {error})
         return []

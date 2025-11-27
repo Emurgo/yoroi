@@ -15,7 +15,10 @@ export const useUtxoList = () => {
     wallet,
     meta: {implementation},
   } = useSelectedWallet()
-  const {id: walletId, allUtxos, externalAddresses, internalAddresses} = wallet
+  const {id: walletId} = wallet
+  const allUtxos = wallet.allUtxos()
+  const externalAddresses = wallet.externalAddresses()
+  const internalAddresses = wallet.internalAddresses()
   const getDerivationPath = addressVisualDerivationPathMaker(implementation)
   const queryClient = useQueryClient()
 

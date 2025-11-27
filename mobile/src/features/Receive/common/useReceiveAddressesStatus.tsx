@@ -20,7 +20,7 @@ export const useReceiveAddressesStatus = (
 
   const addressesStatus = receiveAddresses.reduce(
     (addresses, address) => {
-      if (wallet.isUsedAddressIndex[address]) {
+      if (wallet.isUsedAddressIndex()[address]) {
         addresses.used = [...addresses.used, address]
       } else {
         addresses.unused = [...addresses.unused, address]
@@ -32,7 +32,7 @@ export const useReceiveAddressesStatus = (
       'next' | 'canIncrease'
     >,
   )
-  const info = wallet.receiveAddressInfo
+  const info = wallet.receiveAddressInfo()
   const limitUnused = addressesStatus.unused.slice(
     0,
     info.lastUsedIndexVisual + 1,

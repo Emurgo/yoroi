@@ -65,7 +65,7 @@ export function getOwnWalletAdaHandles(
   wallet: YoroiWallet,
 ): Array<{domain: string; isOwnWallet: true}> {
   const handles: Array<{domain: string; isOwnWallet: true}> = []
-  const balances = wallet.balances
+  const balances = wallet.balances()
 
   // Determine which policy ID to use based on network
   const handlePolicyId = wallet.isMainnet

@@ -167,7 +167,7 @@ export const useFormattedTxFromWalletTransaction = (
   })
 
   // Get all UTXOs to check script address ownership
-  const allUtxos = React.useMemo(() => wallet.allUtxos, [wallet.allUtxos])
+  const allUtxos = React.useMemo(() => wallet.allUtxos(), [wallet])
 
   const formattedInputs: FormattedInputs = React.useMemo(() => {
     if (!walletTransaction) return []
@@ -488,8 +488,8 @@ const isOwnedAddress = (
 ) => {
   // Check if it's a standard payment address (internal or external)
   if (
-    wallet.internalAddresses.includes(bech32Address) ||
-    wallet.externalAddresses.includes(bech32Address)
+    wallet.internalAddresses().includes(bech32Address) ||
+    wallet.externalAddresses().includes(bech32Address)
   ) {
     return true
   }
