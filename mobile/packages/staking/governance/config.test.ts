@@ -3,6 +3,9 @@ import {Chain} from '@yoroi/types'
 import {
   GOVERNANCE_ENDPOINTS,
   GOVERNANCE_YOROI_DREP_ID_HEX,
+  GOVERNANCE_YOROI_DREP_ID_HEX_MAINNET,
+  GOVERNANCE_YOROI_DREP_ID_HEX_PREPROD,
+  getYoroiDrepIdHex,
   YOROI_TOP_STAKE_POOL_ID,
 } from './config'
 
@@ -33,9 +36,39 @@ describe('governance config', () => {
     })
   })
 
-  it('should have correct GOVERNANCE_YOROI_DREP_ID_HEX', () => {
+  it('should have correct GOVERNANCE_YOROI_DREP_ID_HEX (legacy)', () => {
     expect(GOVERNANCE_YOROI_DREP_ID_HEX).toBe(
       '0655f3a1c76788d839212adc459b188b84e680f30ae944c593fa18ae',
+    )
+  })
+
+  it('should have correct GOVERNANCE_YOROI_DREP_ID_HEX_MAINNET', () => {
+    expect(GOVERNANCE_YOROI_DREP_ID_HEX_MAINNET).toBe(
+      '0655f3a1c76788d839212adc459b188b84e680f30ae944c593fa18ae',
+    )
+  })
+
+  it('should have correct GOVERNANCE_YOROI_DREP_ID_HEX_PREPROD', () => {
+    expect(GOVERNANCE_YOROI_DREP_ID_HEX_PREPROD).toBe(
+      'a33c54a7429f472d812e604810dddbe7edc390dd1be8d4c0f8aecb20',
+    )
+  })
+
+  it('should return correct DRep ID for Mainnet', () => {
+    expect(getYoroiDrepIdHex(Chain.Network.Mainnet)).toBe(
+      GOVERNANCE_YOROI_DREP_ID_HEX_MAINNET,
+    )
+  })
+
+  it('should return correct DRep ID for Preprod', () => {
+    expect(getYoroiDrepIdHex(Chain.Network.Preprod)).toBe(
+      GOVERNANCE_YOROI_DREP_ID_HEX_PREPROD,
+    )
+  })
+
+  it('should default to mainnet for Preview network', () => {
+    expect(getYoroiDrepIdHex(Chain.Network.Preview)).toBe(
+      GOVERNANCE_YOROI_DREP_ID_HEX_MAINNET,
     )
   })
 
