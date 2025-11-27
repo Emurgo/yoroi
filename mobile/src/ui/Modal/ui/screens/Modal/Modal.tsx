@@ -123,17 +123,16 @@ const Modal = () => {
         })
       }
     }
-  }, [
-    isOpen,
-    backdropOpacity,
-    modalTranslateY,
-    dragY,
-    modalHeight,
-    height,
-    hasExpandedEnabled,
-    isExpanded,
-    isFull,
-  ])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen])
+
+  React.useEffect(() => {
+    if (isOpen && !isFull) {
+      modalHeight.value = withTiming(height, {
+        duration: time.seconds(0.2),
+      })
+    }
+  }, [height, isOpen, isFull, modalHeight])
 
   React.useEffect(() => {
     isExpanded.value = hasExpandedEnabled

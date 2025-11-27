@@ -614,4 +614,12 @@ export const stakingMessages = defineMessages({
     id: 'components.governance.changeToDrep',
     defaultMessage: '!!!Change to DRep',
   },
+  dontHaveAnID: {
+    id: 'components.governance.dontHaveAnID',
+    defaultMessage: "!!!Don't have an ID?",
+  },
+  orDelegateToYoroiDrepBelow: {
+    id: 'components.governance.orDelegateToYoroiDrepBelow',
+    defaultMessage: '!!!or delegate to Yoroi DRep below',
+  },
 })

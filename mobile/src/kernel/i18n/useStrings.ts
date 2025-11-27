@@ -1311,6 +1311,10 @@ export const useStrings = () => {
         otherGovernanceOptions: f(stakingMessages.otherGovernanceOptions),
         delegateToOtherDrep: f(stakingMessages.delegateToOtherDrep),
         changeToDrep: f(stakingMessages.changeToDrep),
+        dontHaveAnID: f(stakingMessages.dontHaveAnID),
+        orDelegateToYoroiDrepBelow: f(
+          stakingMessages.orDelegateToYoroiDrepBelow,
+        ),
         // Add missing strings
         delegationSuccess: f(stakingMessages.delegationSuccess),
         delegationFailed: f(stakingMessages.delegationFailed),
