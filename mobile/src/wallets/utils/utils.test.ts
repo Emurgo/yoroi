@@ -1,9 +1,9 @@
+import {RawUtxo} from '@yoroi/api'
 import {TransactionOutput} from '@yoroi/tx'
 import {Balance, Portfolio} from '@yoroi/types'
 
 import BigNumber from 'bignumber.js'
 
-import {RawUtxo} from '../types/other'
 import {
   Amounts,
   Entries,
@@ -278,11 +278,11 @@ describe('Amounts', () => {
   it('remove', () => {
     const amounts: Balance.Amounts = {
       '.': '123',
-      'token123': '456',
-      'token567': '-789',
+      'policyId123.assetName123': '456',
+      'policyId567.assetName567': '-789',
     }
 
-    expect(Amounts.remove(amounts, ['token123'])).toEqual({
+    expect(Amounts.remove(amounts, ['policyId123.assetName123'])).toEqual({
       '.': '123',
       'token567': '-789',
     } as Balance.Amounts)
@@ -485,10 +485,10 @@ describe('Utxos', () => {
   describe('toAmounts', () => {
     it('Empty Utxos', () => {
       const utxos: RawUtxo[] = []
-      const primaryTokenId = 'primaryTokenId'
+      const primaryTokenId = 'policyId.assetName' as Portfolio.Token.Id
 
       expect(Utxos.toAmounts(utxos, primaryTokenId)).toEqual({
-        primaryTokenId: '0',
+        'policyId.assetName': '0',
       } as Balance.Amounts)
     })
 
@@ -528,10 +528,10 @@ describe('Utxos', () => {
         },
       ]
 
-      const primaryTokenId = 'primaryTokenId'
+      const primaryTokenId = 'policyId.assetName' as Portfolio.Token.Id
 
       expect(Utxos.toAmounts(utxos, primaryTokenId)).toEqual({
-        primaryTokenId: '627690',
+        'policyId.assetName': '627690',
       } as Balance.Amounts)
     })
 
@@ -598,12 +598,12 @@ describe('Utxos', () => {
         },
       ]
 
-      const primaryTokenId = 'primaryTokenId'
+      const primaryTokenId = 'policyId.assetName' as Portfolio.Token.Id
 
       expect(Utxos.toAmounts(utxos, primaryTokenId)).toEqual({
-        primaryTokenId: '67905',
-        token123: '15',
-        token567: '8',
+        'policyId.assetName': '67905',
+        'policyId123.assetName123': '15',
+        'policyId567.assetName567': '8',
       } as Balance.Amounts)
     })
   })

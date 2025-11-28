@@ -1,9 +1,9 @@
 import {cardanoConfig} from '@yoroi/blockchains'
+import type {StakingInfo} from '@yoroi/staking'
 import {Balance, Portfolio, Wallet} from '@yoroi/types'
 
 import {Buffer} from 'buffer'
 
-import type {StakingInfo} from '../../types/staking'
 import {Quantities} from '../../utils/utils'
 import {CardanoMobile} from '../../wallets'
 import {getDelegationStatus} from '../delegationUtils'

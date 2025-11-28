@@ -1,13 +1,12 @@
 import {isHex} from '@yoroi/common'
 import {Balance, Chain, Portfolio} from '@yoroi/types'
 
-import {Address} from '../types/yoroi'
 import {Amounts, Quantities, asQuantity} from '../utils/utils'
 import {cardanoValueFromAmounts} from './cardanoValueFromAmounts'
 import {CardanoMobileWrapped} from './wrappedCsl'
 
 export const withMinAmounts = async (
-  address: Address,
+  address: string,
   amounts: Balance.Amounts,
   primaryTokenInfo: Portfolio.Token.Info,
   protocolParams: Chain.Cardano.ProtocolParams,
@@ -30,7 +29,7 @@ export const withMinAmounts = async (
 }
 
 export const getMinAmounts = async (
-  address: Address,
+  address: string,
   amounts: Balance.Amounts,
   primaryTokenInfo: Portfolio.Token.Info,
   protocolParams: Chain.Cardano.ProtocolParams,

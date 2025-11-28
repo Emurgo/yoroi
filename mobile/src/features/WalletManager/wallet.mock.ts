@@ -1,8 +1,12 @@
 import {AppApi} from '@yoroi/api'
 import {cardanoConfig, protocolParamsPlaceholder} from '@yoroi/blockchains'
 import {createPrimaryTokenInfo} from '@yoroi/portfolio'
-import {StakePoolInfosAndHistories} from '@yoroi/staking'
+import {
+  StakePoolInfoAndHistory,
+  StakePoolInfosAndHistories,
+} from '@yoroi/staking'
 import {Portfolio, Wallet} from '@yoroi/types'
+import type {WalletTransaction} from '@yoroi/types'
 
 import {noop} from 'lodash'
 import {Observable, Subscription} from 'rxjs'
@@ -11,13 +15,11 @@ import {YoroiWallet} from '../../wallets/cardano/types'
 import {mockEncryptedStorage} from '../../wallets/mocks/storage'
 import {mockTransactionInfos} from '../../wallets/mocks/transaction'
 import {utxos} from '../../wallets/mocks/utxos'
-import type {WalletTransaction} from '../../wallets/types/other'
-import {RemotePoolMetaSuccess} from '../../wallets/types/staking'
 import {CardanoMobile} from '../../wallets/wallets'
 import {networkManagers} from './common/constants'
 
 const stakePoolId = 'af22f95915a19cd57adb14c558dcc4a175f60c6193dc23b8bd2d8beb'
-const poolInfoAndHistory: RemotePoolMetaSuccess = {
+const poolInfoAndHistory: StakePoolInfoAndHistory = {
   info: {
     ticker: 'EMUR1',
     name: 'Emurgo #1',
@@ -33,6 +35,7 @@ const poolInfoAndHistory: RemotePoolMetaSuccess = {
       cert_ordinal: 0,
       payload: {
         kind: 'PoolRegistration',
+        certIndex: 0,
         poolParams: {},
       },
     },

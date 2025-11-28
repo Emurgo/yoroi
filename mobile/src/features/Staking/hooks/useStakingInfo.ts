@@ -1,8 +1,9 @@
+import {StakingInfo} from '@yoroi/staking'
+
 import {UseQueryOptions, useQuery} from '@tanstack/react-query'
 import * as React from 'react'
 
 import {YoroiWallet} from '~/wallets/cardano/types'
-import {StakingInfo} from '~/wallets/types/staking'
 
 export const useStakingInfo = (
   wallet: YoroiWallet,

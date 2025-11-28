@@ -1,8 +1,16 @@
 import {
+  FundInfoResponse,
+  RawUtxo,
+  TipStatusResponse,
+  TxStatusRequest,
+  TxStatusResponse,
+} from '@yoroi/api'
+import {
   AccountStates,
   StakePoolInfoRequest,
   StakePoolInfosAndHistories,
 } from '@yoroi/staking'
+import {StakingInfo, StakingStatus} from '@yoroi/staking'
 import {
   Addressing as AddressingType,
   CardanoAddressedUtxo as CardanoAddressedUtxoType,
@@ -14,6 +22,7 @@ import {
   UnsignedTx as UnsignedTxType,
 } from '@yoroi/tx'
 import {Api, App, Balance, HW, Network, Portfolio, Wallet} from '@yoroi/types'
+import {WalletTransaction} from '@yoroi/types'
 
 import {WalletChecksum as WalletChecksumType} from '@emurgo/cip4-js'
 import * as CoreTypes from '@emurgo/cross-csl-core'
@@ -21,16 +30,6 @@ import * as CSL from '@emurgo/cross-csl-core'
 
 import {WalletEncryptedStorage} from '~/kernel/storage/EncryptedStorage'
 
-import {
-  FundInfoResponse,
-  RawUtxo,
-  TipStatusResponse,
-  TxStatusRequest,
-  TxStatusResponse,
-  WalletState,
-  WalletTransaction,
-} from '../types/other'
-import {StakingInfo, StakingStatus} from '../types/staking'
 import {AddressChain} from './account-manager/account-manager'
 import type {Addresses} from './account-manager/account-manager'
 import {ReadOnlyAddressChain} from './account-manager/read-only-account-manager'
@@ -39,7 +38,6 @@ export type WalletEvent =
   | {type: 'initialize'}
   | {type: 'transactions'}
   | {type: 'addresses'; addresses: Addresses}
-  | {type: 'state'; state: WalletState}
   | {type: 'utxos'; utxos: RawUtxo[]}
   | {type: 'collateral-id'; collateralId: RawUtxo['utxo_id']}
 

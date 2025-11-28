@@ -2,9 +2,23 @@ import {RemoteCertificateMeta} from '@yoroi/staking'
 import {Balance} from '@yoroi/types'
 
 import {CardanoTypes} from '~/wallets/cardano/types'
-import {TransactionToken} from '~/wallets/types/tokens'
 
-// Note: CardanoTypes and TransactionToken are still in src/ but will be moved in future refactoring
+// Note: CardanoTypes is still in src/ but will be moved in future refactoring
+
+/**
+ * Minimal token metadata for transaction processing
+ * Used in deprecated TransactionInfo type
+ */
+export type TransactionToken = {
+  isDefault: boolean
+  identifier: string
+  // Minimal metadata for transaction display
+  policyId: string
+  assetName: string
+  numberOfDecimals: number
+  ticker: string | null
+  longName: string | null
+}
 
 /**
  * Transaction status constants and type

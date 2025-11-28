@@ -1,7 +1,8 @@
+import {WalletTransaction} from '@yoroi/types'
+
 import * as React from 'react'
 
 import {YoroiWallet} from '~/wallets/cardano/types'
-import {WalletTransaction} from '~/wallets/types/other'
 
 /**
  * Modern replacement for useTransactionInfos.

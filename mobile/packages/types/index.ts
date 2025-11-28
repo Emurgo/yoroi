@@ -310,6 +310,7 @@ import {
   TransactionAssurance,
   TransactionDirection,
   TransactionStatus,
+  TransactionToken,
   TransactionType,
   Transactions,
   TxMetadata,
@@ -331,6 +332,96 @@ export namespace App {
     export class InvalidState extends AppErrorInvalidState {}
     export class WrongPassword extends AppErrorWrongPassword {}
     export class LibraryError extends AppErrorLibraryFailed {}
+  }
+
+  /**
+   * Remote configuration for Yoroi app
+   */
+  export type Config = Readonly<{
+    pushLinkKeys?: Readonly<{
+      internal?: Readonly<{
+        catalystRegistration?: Readonly<{
+          mobile?: string
+          extension?: string
+        }>
+      }>
+      external?: Readonly<{
+        yoroiWebsite?: string
+      }>
+    }>
+    banners?: Readonly<{
+      midnightAnnouncement?: Readonly<{
+        display?: boolean
+      }>
+      midnightPhase2Announcement?: Readonly<{
+        display?: boolean
+      }>
+      yoroiDrep?: Readonly<{
+        display?: boolean
+      }>
+    }>
+    popups?: Readonly<{
+      midnightDistribution?: Readonly<{
+        display?: boolean
+      }>
+      generalFeaturesAnnouncement?: Readonly<{
+        display?: boolean
+      }>
+      poolTransitionDialog?: Readonly<{
+        display?: boolean
+      }>
+      cardanoCardAnnouncement?: Readonly<{
+        display?: boolean
+      }>
+      firefoxSupportAnnouncement?: Readonly<{
+        display?: boolean
+      }>
+    }>
+    features?: Readonly<{
+      midnightAirdrop?: Readonly<{
+        enabled: boolean
+      }>
+      [key: string]: unknown
+    }>
+    dapps?: Readonly<{
+      banned?: ReadonlyArray<string>
+      recommended?: ReadonlyArray<App.ConfigRecommendedDapp>
+      filters?: Readonly<{
+        Media?: ReadonlyArray<string>
+        Investment?: ReadonlyArray<string>
+        Trading?: ReadonlyArray<string>
+        Community?: ReadonlyArray<string>
+      }>
+    }>
+    swap?: Readonly<{
+      initialPair?: Readonly<{
+        tokenIn?: Portfolio.Token.Id
+        tokenOut?: Portfolio.Token.Id
+      }>
+      excludedTokens?: ReadonlyArray<Portfolio.Token.Id>
+      verifiedTokens?: ReadonlyArray<Portfolio.Token.Id>
+      partners?: Readonly<{
+        dexhunter?: string
+        muesliswap?: string
+        minswap?: string
+        steelswap?: string
+      }>
+    }>
+    enableTrezorAirdrop?: boolean
+  }>
+
+  /**
+   * Recommended DApp configuration
+   */
+  export type ConfigRecommendedDapp = {
+    id: string
+    name: string
+    description: string
+    category: string
+    logo: string
+    uri: string
+    origins: ReadonlyArray<string>
+    isSingleAddress?: boolean
   }
 
   export interface Storage<
@@ -757,6 +848,7 @@ export type {
   TransactionAssurance,
   TransactionDirection,
   TransactionStatus,
+  TransactionToken,
   TransactionType,
   Transactions,
   TxMetadata,

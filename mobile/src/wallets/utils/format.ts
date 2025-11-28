@@ -1,13 +1,13 @@
 import {atomicToDecimal, truncateString} from '@yoroi/common'
 import {isTokenInfo as isPortfolioTokenInfo} from '@yoroi/portfolio'
 import {Balance, Portfolio} from '@yoroi/types'
+import {TransactionToken} from '@yoroi/types'
 
 import AssetFingerprint from '@emurgo/cip14-js'
 import {BigNumber} from 'bignumber.js'
 import type {FormatDateOptions, IntlShape} from 'react-intl'
 
 import {isTokenInfo} from '../cardano/utils'
-import {TransactionToken} from '../types/tokens'
 
 export const getTokenFingerprint = ({
   policyId,

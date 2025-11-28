@@ -1,4 +1,4 @@
-import {RawUtxo} from '@yoroi/api'
+import {RawUtxo, toAssetNameHex, toPolicyId} from '@yoroi/api'
 import {cardanoConfig} from '@yoroi/blockchains'
 import {isHex} from '@yoroi/common'
 import {
@@ -9,8 +9,7 @@ import {
   signRawTransaction,
   validateTransactionCbor,
 } from '@yoroi/tx'
-import {Balance, Portfolio, Wallet} from '@yoroi/types'
-import {BaseAsset} from '@yoroi/types'
+import {Balance, BaseAsset, Portfolio, Wallet} from '@yoroi/types'
 
 import * as CSL from '@emurgo/cross-csl-core'
 import {Address, WasmModuleProxy} from '@emurgo/cross-csl-core'
@@ -23,7 +22,6 @@ import {logger} from '~/kernel/logger/logger'
 import {Utxos, asQuantity} from '~/wallets/utils/utils'
 import {CardanoMobile} from '~/wallets/wallets'
 
-import {toAssetNameHex, toPolicyId} from '../api/utils'
 import {identifierToCardanoAsset} from '../assetUtils'
 import * as cip8 from '../cip8/cip8'
 import {
@@ -439,7 +437,7 @@ const cardanoUtxoFromRemoteFormat = (
 const _getBalance = (
   tokenId = '*',
   utxos: RawUtxo[],
-  primaryTokenId: string,
+  primaryTokenId: Portfolio.Token.Id,
   csl: WasmModuleProxy,
 ) => {
   if (tokenId === 'TADA' || tokenId === 'ADA') tokenId = '.'

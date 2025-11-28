@@ -1,9 +1,11 @@
+import {RawUtxo} from '@yoroi/api'
 import {
   SendToken,
   TransactionOutput,
   validateAndExtractAddressInfo,
 } from '@yoroi/tx'
 import {Balance, Chain, Portfolio, Wallet} from '@yoroi/types'
+import {BaseAsset} from '@yoroi/types'
 
 import {WasmModuleProxy} from '@emurgo/cross-csl-core'
 import {BigNumber} from 'bignumber.js'
@@ -11,7 +13,6 @@ import {Buffer} from 'buffer'
 
 import {logger} from '~/kernel/logger/logger'
 
-import {BaseAsset, RawUtxo} from '../types/other'
 import {Amounts} from '../utils/utils'
 import {identifierToCardanoAsset} from './assetHelpers'
 import {withMinAmounts} from './getMinAmounts'

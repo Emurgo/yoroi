@@ -17,6 +17,17 @@ import {getUtxoData} from './cardano/api/utxo-data'
 import {getTokenIdentity} from './cardano/translators/helpers/getTokenIdentity'
 import {asFingerprint} from './cardano/translators/transformers/asFingerprint'
 import {asSubject} from './cardano/translators/transformers/asSubject'
+import {
+  fallbackTokenInfo,
+  toAssetNameHex,
+  toDisplayAssetName,
+  toPolicyId,
+  toTokenFingerprint,
+  toTokenId,
+  toTokenSubject,
+  tokenInfo,
+  utf8ToHex,
+} from './cardano/utils/token-utils'
 
 export const CardanoTokenId = {
   // transformers
@@ -26,6 +37,31 @@ export const CardanoTokenId = {
   // helpers
   getTokenIdentity,
 } as const
+
+export const CardanoTokenUtils = {
+  tokenInfo,
+  fallbackTokenInfo,
+  toPolicyId,
+  toDisplayAssetName,
+  toAssetNameHex,
+  toTokenSubject,
+  toTokenId,
+  toTokenFingerprint,
+  utf8ToHex,
+} as const
+
+// Export token utilities directly for convenience
+export {
+  tokenInfo,
+  fallbackTokenInfo,
+  toPolicyId,
+  toDisplayAssetName,
+  toAssetNameHex,
+  toTokenSubject,
+  toTokenId,
+  toTokenFingerprint,
+  utf8ToHex,
+}
 
 export const AppApi = {
   appApiMaker,

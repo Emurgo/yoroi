@@ -1,9 +1,8 @@
+import {toAssetNameHex} from '@yoroi/api'
 import {Balance} from '@yoroi/types'
 
 import {WasmModuleProxy} from '@emurgo/cross-csl-core'
 import {Buffer} from 'buffer'
-
-import {toAssetNameHex} from './api/utils'
 
 export const cardanoValueFromAmounts = (
   csl: WasmModuleProxy,

@@ -1,7 +1,16 @@
 import {AppApi} from '@yoroi/api'
+import type {
+  AccountStateResponse,
+  FundInfoResponse,
+  RawUtxo,
+  TipStatusResponse,
+  TxStatusRequest,
+  TxStatusResponse,
+} from '@yoroi/api'
 import {cardanoConfig} from '@yoroi/blockchains'
 import {isNonNullable} from '@yoroi/common'
 import {StakePoolInfoRequest} from '@yoroi/staking'
+import {StakingInfo} from '@yoroi/staking'
 import type {Datum, ModernUtxo, UnsignedTransaction} from '@yoroi/tx'
 import {
   adaptToLedgerUnsignedTx,
@@ -13,6 +22,7 @@ import {
   signRawTransaction,
 } from '@yoroi/tx'
 import {Api, App, HW, Network, Portfolio, Wallet} from '@yoroi/types'
+import {WalletTransaction} from '@yoroi/types'
 
 import type {SignedTransactionData} from '@cardano-foundation/ledgerjs-hw-app-cardano'
 import {walletChecksum} from '@emurgo/cip4-js'
@@ -36,16 +46,6 @@ import {
 } from '~/kernel/storage/EncryptedStorage'
 import {rootStorage} from '~/kernel/storage/storages'
 
-import type {
-  AccountStateResponse,
-  FundInfoResponse,
-  RawUtxo,
-  TipStatusResponse,
-  TxStatusRequest,
-  TxStatusResponse,
-  WalletTransaction,
-} from '../types/other'
-import {StakingInfo} from '../types/staking'
 import {CardanoMobile} from '../wallets'
 import {
   AccountManager,

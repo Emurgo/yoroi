@@ -1,3 +1,4 @@
+import {RawUtxo} from '@yoroi/api'
 import {normalizeToAddress} from '@yoroi/tx'
 
 import {Address} from '@emurgo/cross-csl-core'
@@ -5,7 +6,6 @@ import BigNumber from 'bignumber.js'
 
 import {logger} from '~/kernel/logger/logger'
 
-import {RawUtxo} from '../types/other'
 import {cardanoValueFromRemoteFormat} from './utils'
 import {wrappedCsl} from './wrappedCsl'
 
