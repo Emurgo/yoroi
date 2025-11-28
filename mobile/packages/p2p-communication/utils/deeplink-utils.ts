@@ -54,8 +54,30 @@ export const buildSignalingUrl = (params: {
 }): string => {
   const protocol = params.secure !== false ? 'wss' : 'ws'
   const port = params.port ? `:${params.port}` : ''
-  const path = params.path || ''
+  // Use the provided path, or default to empty (PeerJS library handles path internally)
+  // For direct WebSocket connections, PeerJS servers typically use /peerjs
+  // But since we're building the URL ourselves, we'll use the provided path
+  let path = params.path || ''
+
+  // If path is '/' and it's a known PeerJS server, use /peerjs
+  // PeerJS cloud (0.peerjs.com) uses /peerjs path
+  if (path === '/' && isPeerJSServer(params.host)) {
+    path = '/peerjs'
+  }
+
   return `${protocol}://${params.host}${port}${path}`
+}
+
+/**
+ * Check if host is a PeerJS server
+ */
+const isPeerJSServer = (host: string): boolean => {
+  return (
+    host.includes('peerjs.com') ||
+    host.includes('peerjs') ||
+    host.includes('0.peerjs') ||
+    host.includes('ecosyseng') // Demo server
+  )
 }
 
 /**
@@ -88,7 +110,6 @@ export const generateP2PDeeplink = (params: P2PConnectionDeeplink): string => {
 /**
  * Parse a P2P connection deeplink
  * Supports both wallet://connect and web+cardano://connect formats
- * Supports both new format (dappPeer, host, port, path, secure) and legacy format (peerId, signalingUrl)
  *
  * @param deeplink Deep link URL string
  * @returns Parsed connection parameters or null if invalid
@@ -113,49 +134,23 @@ export const parseP2PDeeplink = (
       return null
     }
 
-    // Try new format first (dappPeer)
     const dappPeer = url.searchParams.get('dappPeer')
-    // Fallback to legacy format (peerId)
-    const peerId = dappPeer || url.searchParams.get('peerId')
-
-    if (!peerId) {
+    if (!dappPeer) {
       return null
     }
 
-    // Try new format parameters
     const host = url.searchParams.get('host') || undefined
     const port = url.searchParams.get('port') || undefined
     const path = url.searchParams.get('path') || undefined
     const secureParam = url.searchParams.get('secure')
     const secure = secureParam !== null ? secureParam === 'true' : undefined
 
-    // If new format is present, use it
-    if (host) {
-      return {
-        dappPeer: peerId,
-        host,
-        port,
-        path,
-        secure,
-      }
-    }
-
-    // Fallback to legacy format (signalingUrl)
-    const signalingUrl = url.searchParams.get('signalingUrl')
-    if (signalingUrl) {
-      const parsed = parseSignalingUrl(signalingUrl)
-      return {
-        dappPeer: peerId,
-        host: parsed.host,
-        port: parsed.port,
-        path: parsed.path,
-        secure: parsed.secure,
-      }
-    }
-
-    // No signaling server specified
     return {
-      dappPeer: peerId,
+      dappPeer,
+      host,
+      port,
+      path,
+      secure,
     }
   } catch (error) {
     return null

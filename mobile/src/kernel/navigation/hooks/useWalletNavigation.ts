@@ -547,11 +547,17 @@ export const useWalletNavigation = () => {
     },
 
     navigateToP2PConnection: ({
-      peerId,
-      signalingUrl,
+      dappPeer,
+      host,
+      port,
+      path,
+      secure,
     }: {
-      peerId: string
-      signalingUrl?: string
+      dappPeer?: string
+      host?: string
+      port?: string
+      path?: string
+      secure?: boolean
     }) => {
       navigation.navigate('manage-wallets', {
         screen: 'main-wallet-routes',
@@ -559,7 +565,7 @@ export const useWalletNavigation = () => {
           screen: 'history',
           params: {
             screen: 'p2p-connection',
-            params: {peerId, signalingUrl},
+            params: {dappPeer, host, port, path, secure},
           },
         },
       })

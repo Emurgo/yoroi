@@ -459,8 +459,11 @@ export const useActionExecutor = () => {
           case 'p2p-connect': {
             // P2P connection
             walletNavigation.navigateToP2PConnection({
-              peerId: cardanoAction.peerId,
-              signalingUrl: cardanoAction.signalingUrl,
+              dappPeer: cardanoAction.dappPeer,
+              host: cardanoAction.host,
+              port: cardanoAction.port,
+              path: cardanoAction.path,
+              secure: cardanoAction.secure,
             })
             break
           }

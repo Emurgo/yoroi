@@ -25,8 +25,7 @@ export const P2PConnectionStatusBar = () => {
     if (peerConnection) {
       const myPeerId = peerConnection.getPeerId()
       walletNavigation.navigateToP2PConnection({
-        peerId: myPeerId,
-        signalingUrl: undefined, // Could be stored in context if needed
+        dappPeer: myPeerId,
       })
     }
   }

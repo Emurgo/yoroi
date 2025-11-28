@@ -96,26 +96,6 @@ describe('deeplink-utils', () => {
       })
     })
 
-    it('should parse legacy wallet:// deeplink with peerId (backward compatibility)', () => {
-      const parsed = parseP2PDeeplink(
-        'wallet://connect?peerId=dapp-abc123-xyz789',
-      )
-      expect(parsed).toEqual({
-        dappPeer: 'dapp-abc123-xyz789',
-      })
-    })
-
-    it('should parse legacy wallet:// deeplink with peerId and signalingUrl (backward compatibility)', () => {
-      const parsed = parseP2PDeeplink(
-        'wallet://connect?peerId=dapp-abc123-xyz789&signalingUrl=wss%3A%2F%2Fsignaling-server.com',
-      )
-      expect(parsed).toEqual({
-        dappPeer: 'dapp-abc123-xyz789',
-        host: 'signaling-server.com',
-        secure: true,
-      })
-    })
-
     it('should parse web+cardano:// deeplink with v1 path', () => {
       const parsed = parseP2PDeeplink(
         'web+cardano://connect/v1?dappPeer=wallet-xyz&host=server.com&secure=true',
@@ -137,10 +117,8 @@ describe('deeplink-utils', () => {
       expect(parsed).toBeNull()
     })
 
-    it('should return null for missing dappPeer/peerId', () => {
-      const parsed = parseP2PDeeplink(
-        'wallet://connect?host=server.com',
-      )
+    it('should return null for missing dappPeer', () => {
+      const parsed = parseP2PDeeplink('wallet://connect?host=server.com')
       expect(parsed).toBeNull()
     })
 

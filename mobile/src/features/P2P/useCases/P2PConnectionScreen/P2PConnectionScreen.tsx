@@ -38,15 +38,11 @@ import {ShareQRCodeCard} from '~/ui/ShareQRCodeCard/ShareQRCodeCard'
 import {Tab, TabPanel, TabPanels, Tabs} from '~/ui/Tabs/Tabs'
 
 type Params = {
-  // New format
   dappPeer?: string
   host?: string
   port?: string
   path?: string
   secure?: boolean
-  // Legacy format (for backward compatibility)
-  peerId?: string
-  signalingUrl?: string
 }
 
 type ConnectionState = {
@@ -106,13 +102,13 @@ export const P2PConnectionScreen = () => {
   const {scrollViewRef} = useScrollView()
   const {registerConnection, unregisterConnection} = useP2PConnection()
 
-  // Extract and normalize parameters (support both new and legacy formats)
+  // Extract and normalize parameters
   const targetPeerId = React.useMemo(() => {
-    return params.dappPeer || params.peerId || ''
-  }, [params.dappPeer, params.peerId])
+    return params.dappPeer || ''
+  }, [params.dappPeer])
 
   const signalingUrl = React.useMemo(() => {
-    // New format: build from host/port/path/secure
+    // Build signaling URL from host/port/path/secure
     if (params.host) {
       return buildSignalingUrl({
         host: params.host,
@@ -121,15 +117,8 @@ export const P2PConnectionScreen = () => {
         secure: params.secure !== false, // Default to true if not specified
       })
     }
-    // Legacy format: use signalingUrl directly
-    return params.signalingUrl
-  }, [
-    params.host,
-    params.port,
-    params.path,
-    params.secure,
-    params.signalingUrl,
-  ])
+    return undefined
+  }, [params.host, params.port, params.path, params.secure])
 
   const [myPeerId, setMyPeerId] = React.useState<string>('')
   const [connectionState, setConnectionState] = React.useState<ConnectionState>(

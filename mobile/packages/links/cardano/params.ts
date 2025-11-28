@@ -50,22 +50,10 @@ export const preapareParams = ({
   const paramValidator = getParamValidator(config)
   const paramEntries = new Map(Object.entries(params))
 
-  // Special handling for connect authority: convert legacy peerId to dappPeer before dropping extra params
-  if (
-    config.authority === 'connect' &&
-    paramEntries.has('peerId') &&
-    !paramEntries.has('dappPeer')
-  ) {
-    const peerIdValue = paramEntries.get('peerId')
-    paramEntries.set('dappPeer', peerIdValue)
-  }
-
   const allParams = new Set<string>([
     ...forbiddenParams,
     ...requiredParams,
     ...optionalParams,
-    // Include peerId and signalingUrl for backward compatibility with connect authority
-    ...(config.authority === 'connect' ? ['peerId', 'signalingUrl'] : []),
   ])
 
   // drop extra params
@@ -87,21 +75,9 @@ export const preapareParams = ({
 
   for (const requiredParam of requiredParams) {
     if (!paramEntries.has(requiredParam)) {
-      // Special handling for connect authority: accept peerId (legacy) instead of dappPeer
-      if (
-        config.authority === 'connect' &&
-        requiredParam === 'dappPeer' &&
-        paramEntries.has('peerId')
-      ) {
-        // Convert legacy peerId to dappPeer for backward compatibility
-        const peerIdValue = paramEntries.get('peerId')
-        paramEntries.set('dappPeer', peerIdValue)
-        paramEntries.delete('peerId')
-      } else {
-        throw new Links.Errors.RequiredParamsMissing(
-          `Please include the param ${requiredParam} on ${config.scheme} ${config.authority} ${config.version}`,
-        )
-      }
+      throw new Links.Errors.RequiredParamsMissing(
+        `Please include the param ${requiredParam} on ${config.scheme} ${config.authority} ${config.version}`,
+      )
     }
     paramValidator({
       key: requiredParam,
@@ -202,13 +178,6 @@ export const getParamValidator =
           `The param ${key} on ${config.scheme} ${config.authority} ${config.version} must be a string`,
         )
       }
-      case 'peerId': {
-        // Legacy parameter, still supported for backward compatibility
-        if (isString(value) && value.length > 0) break
-        throw new Links.Errors.ParamsValidationFailed(
-          `The param ${key} on ${config.scheme} ${config.authority} ${config.version} must be a non-empty string`,
-        )
-      }
       case 'dappPeer': {
         if (isString(value) && value.length > 0) break
         throw new Links.Errors.ParamsValidationFailed(
@@ -237,13 +206,6 @@ export const getParamValidator =
         if (value === 'true' || value === 'false') break
         throw new Links.Errors.ParamsValidationFailed(
           `The param ${key} on ${config.scheme} ${config.authority} ${config.version} must be "true" or "false"`,
-        )
-      }
-      case 'signalingUrl': {
-        // Legacy parameter, still supported for backward compatibility
-        if (isUrl(value)) break
-        throw new Links.Errors.ParamsValidationFailed(
-          `The param ${key} on ${config.scheme} ${config.authority} ${config.version} must be a valid URL`,
         )
       }
       case 'scheme': {
