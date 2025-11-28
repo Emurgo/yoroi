@@ -139,8 +139,8 @@ export interface LinksCardanoConnectV1 extends Links.WebCardanoUriConfig {
   readonly authority: 'connect'
   readonly version: 'v1'
   readonly rules: {
-    readonly requiredParams: Readonly<['peerId']>
-    readonly optionalParams: Readonly<['signalingUrl']>
+    readonly requiredParams: Readonly<['dappPeer']>
+    readonly optionalParams: Readonly<['host', 'port', 'path', 'secure']>
     readonly forbiddenParams: Readonly<[]>
     readonly extraParams: 'drop'
   }

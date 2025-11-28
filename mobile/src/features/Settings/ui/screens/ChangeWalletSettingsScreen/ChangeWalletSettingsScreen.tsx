@@ -22,6 +22,7 @@ import {SettingsRouteNavigation} from '~/kernel/navigation/types'
 import {Icon} from '~/ui/Icon'
 import {SettingsSwitch} from '~/ui/SettingsSwitch/SettingsSwitch'
 
+import {useIsPartialReadOnlyWallet} from '../../../hooks/useIsPartialReadOnlyWallet'
 import {useNavigateTo} from '../../../hooks/useNavigateTo'
 import {SettingsCollateralItem} from '../../navigation/SettingsCollateralItem'
 import {
@@ -65,6 +66,7 @@ export const ChangeWalletSettingsScreen = () => {
   const navigateTo = useNavigateTo()
   const walletType = useWalletType(implementation)
   const {disableEasyConfirmation} = useDisableEasyConfirmation()
+  const isPartialReadOnly = useIsPartialReadOnlyWallet()
 
   const handleOnToggleEasyConfirmation = () => {
     if (isEasyConfirmationEnabled) {
@@ -131,13 +133,15 @@ export const ChangeWalletSettingsScreen = () => {
           </SettingsItem>
         </SettingsSection>
 
-        <SettingsSection title={strings.settings.walletSettings.shareWallet}>
-          <NavigatedSettingsItem
-            icon={<Icon.Share {...iconProps} />}
-            label={strings.settings.walletSettings.shareWallet}
-            onNavigate={() => navigateTo.shareWallet()}
-          />
-        </SettingsSection>
+        {!isPartialReadOnly && (
+          <SettingsSection title={strings.settings.walletSettings.shareWallet}>
+            <NavigatedSettingsItem
+              icon={<Icon.Share {...iconProps} />}
+              label={strings.settings.walletSettings.shareWallet}
+              onNavigate={() => navigateTo.shareWallet()}
+            />
+          </SettingsSection>
+        )}
 
         <SettingsSection title={strings.settings.walletSettings.actions}>
           <NavigatedSettingsItem

@@ -49,6 +49,7 @@ export const preapareParams = ({
     config.rules
   const paramValidator = getParamValidator(config)
   const paramEntries = new Map(Object.entries(params))
+
   const allParams = new Set<string>([
     ...forbiddenParams,
     ...requiredParams,
@@ -177,16 +178,34 @@ export const getParamValidator =
           `The param ${key} on ${config.scheme} ${config.authority} ${config.version} must be a string`,
         )
       }
-      case 'peerId': {
+      case 'dappPeer': {
         if (isString(value) && value.length > 0) break
         throw new Links.Errors.ParamsValidationFailed(
           `The param ${key} on ${config.scheme} ${config.authority} ${config.version} must be a non-empty string`,
         )
       }
-      case 'signalingUrl': {
-        if (isUrl(value)) break
+      case 'host': {
+        if (isString(value) && value.length > 0) break
         throw new Links.Errors.ParamsValidationFailed(
-          `The param ${key} on ${config.scheme} ${config.authority} ${config.version} must be a valid URL`,
+          `The param ${key} on ${config.scheme} ${config.authority} ${config.version} must be a non-empty string`,
+        )
+      }
+      case 'port': {
+        if (isString(value) && /^\d+$/.test(value)) break
+        throw new Links.Errors.ParamsValidationFailed(
+          `The param ${key} on ${config.scheme} ${config.authority} ${config.version} must be a numeric string`,
+        )
+      }
+      case 'path': {
+        if (isString(value)) break
+        throw new Links.Errors.ParamsValidationFailed(
+          `The param ${key} on ${config.scheme} ${config.authority} ${config.version} must be a string`,
+        )
+      }
+      case 'secure': {
+        if (value === 'true' || value === 'false') break
+        throw new Links.Errors.ParamsValidationFailed(
+          `The param ${key} on ${config.scheme} ${config.authority} ${config.version} must be "true" or "false"`,
         )
       }
       case 'scheme': {

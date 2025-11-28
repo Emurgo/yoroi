@@ -179,8 +179,8 @@ export const configCardanoConnectV1: Readonly<LinksCardanoConnectV1> = freeze(
     authority: 'connect',
     version: 'v1',
     rules: {
-      requiredParams: ['peerId'],
-      optionalParams: ['signalingUrl'],
+      requiredParams: ['dappPeer'],
+      optionalParams: ['host', 'port', 'path', 'secure'],
       forbiddenParams: [],
       extraParams: 'drop',
     },

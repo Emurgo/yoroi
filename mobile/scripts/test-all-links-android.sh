@@ -259,11 +259,12 @@ if [ -z "$TEST_NUMBER" ] || [ "$TEST_NUMBER" -eq 13 ]; then
   fi
 fi
 
-# Test 14: Cardano Connect Link (web+cardano://connect) - P2P FAILED
+# Test 14: Cardano Connect Link (web+cardano://connect) - P2P
 if [ -z "$TEST_NUMBER" ] || [ "$TEST_NUMBER" -eq 14 ]; then
   echo "14. Testing: Cardano Connect Link (P2P)"
   echo "-----------------------------------------"
-  CONNECT_URL="web+cardano://connect/v1?peerId=peer123&signalingUrl=https%3A%2F%2Fsignaling.example.com"
+  # New format: dappPeer with optional host, port, path, secure
+  CONNECT_URL="web+cardano://connect/v1?dappPeer=peer123&host=0.peerjs.com&port=443&path=/peerjs&secure=true"
   ESCAPED_URL=$(echo "$CONNECT_URL" | sed "s/'/'\\\\''/g")
   adb shell "am start -W -a android.intent.action.VIEW -d '$ESCAPED_URL'"
   echo ""

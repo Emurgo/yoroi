@@ -147,11 +147,15 @@ export const parseCardanoLink = (codeContent: string): Links.CardanoAction => {
 
   // Handle connect authority (P2P connections)
   if (authority === 'connect') {
-    const {peerId, signalingUrl} = parsedCardanoLink.params
+    const {dappPeer, host, port, path, secure} = parsedCardanoLink.params
+
     return freeze({
       action: 'p2p-connect',
-      peerId: peerId as string,
-      signalingUrl: signalingUrl as string | undefined,
+      dappPeer: dappPeer as string,
+      host: host as string | undefined,
+      port: port as string | undefined,
+      path: path as string | undefined,
+      secure: secure as boolean | undefined,
     } as const)
   }
 

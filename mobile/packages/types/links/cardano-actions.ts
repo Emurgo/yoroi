@@ -72,8 +72,11 @@ export type CardanoActionViewAddress = Readonly<{
 
 export type CardanoActionP2PConnect = Readonly<{
   action: 'p2p-connect'
-  peerId: string
-  signalingUrl?: string
+  dappPeer: string
+  host?: string
+  port?: string
+  path?: string
+  secure?: boolean
 }>
 
 export type CardanoActionRestoreWallet = Readonly<{

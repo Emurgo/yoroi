@@ -9,8 +9,10 @@ import {
   type ConnectionManager,
   type ConnectionStatus,
   type WebRTCAdapter,
+  buildSignalingUrl,
   connectionManagerMaker,
   generateCIP158P2PDeeplink,
+  parseSignalingUrl,
 } from '@yoroi/p2p-communication'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {type BaseStorage} from '@yoroi/types'
@@ -25,19 +27,22 @@ import {
 } from 'react-native-webrtc'
 
 import {useP2PConnection} from '~/features/P2P/context/P2PConnectionProvider'
-import {useInfoModal} from '~/features/Scan/common/modals/InfoModal'
 import {logger} from '~/kernel/logger/logger'
 import {rootStorage} from '~/kernel/storage/storages'
-import {Button, ButtonType} from '~/ui/Button/Button'
+import {Button} from '~/ui/Button/Button'
 import {Copiable} from '~/ui/Copiable/Copiable'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {ScrollView} from '~/ui/ScrollView/ScrollView'
 import {useScrollView} from '~/ui/ScrollView/hooks/useScrollView'
 import {ShareQRCodeCard} from '~/ui/ShareQRCodeCard/ShareQRCodeCard'
+import {Tab, TabPanel, TabPanels, Tabs} from '~/ui/Tabs/Tabs'
 
 type Params = {
-  peerId: string
-  signalingUrl?: string
+  dappPeer?: string
+  host?: string
+  port?: string
+  path?: string
+  secure?: boolean
 }
 
 type ConnectionState = {
@@ -93,10 +98,27 @@ const createStorageAdapter = (): BaseStorage => {
 
 export const P2PConnectionScreen = () => {
   const {atoms: ta} = useTheme()
-  const {peerId: targetPeerId, signalingUrl} = useRoute().params as Params
+  const params = useRoute().params as Params
   const {scrollViewRef} = useScrollView()
-  const {openInfoModal} = useInfoModal()
   const {registerConnection, unregisterConnection} = useP2PConnection()
+
+  // Extract and normalize parameters
+  const targetPeerId = React.useMemo(() => {
+    return params.dappPeer || ''
+  }, [params.dappPeer])
+
+  const signalingUrl = React.useMemo(() => {
+    // Build signaling URL from host/port/path/secure
+    if (params.host) {
+      return buildSignalingUrl({
+        host: params.host,
+        port: params.port,
+        path: params.path,
+        secure: params.secure !== false, // Default to true if not specified
+      })
+    }
+    return undefined
+  }, [params.host, params.port, params.path, params.secure])
 
   const [myPeerId, setMyPeerId] = React.useState<string>('')
   const [connectionState, setConnectionState] = React.useState<ConnectionState>(
@@ -114,6 +136,9 @@ export const P2PConnectionScreen = () => {
   const [isConnecting, setIsConnecting] = React.useState(false)
   const [connectionManager, setConnectionManager] =
     React.useState<ConnectionManager | null>(null)
+  const [activeTab, setActiveTab] = React.useState<'connection' | 'share'>(
+    'connection',
+  )
 
   const webrtcAdapter = React.useMemo(() => createWebRTCAdapter(), [])
   const storageAdapter = React.useMemo(() => createStorageAdapter(), [])
@@ -128,7 +153,7 @@ export const P2PConnectionScreen = () => {
         signalingUrl:
           signalingUrl ||
           process.env.EXPO_PUBLIC_P2P_SIGNALING_URL ||
-          'wss://signaling-server.example.com',
+          'wss://0.peerjs.com',
         targetPeerId,
       },
       isWallet: true,
@@ -317,7 +342,16 @@ export const P2PConnectionScreen = () => {
               signalingServerFailed: isSignalingError,
             })
             setIsConnecting(false)
-            logger.error(error, {origin: 'P2PConnectionScreen'})
+            // Log handled/recoverable errors as warnings
+            const isHandledError =
+              errorMessage.includes('Signaling not connected') ||
+              errorMessage.includes('WebSocket error') ||
+              isSignalingError
+            if (isHandledError) {
+              logger.warn(errorMessage, {origin: 'P2PConnectionScreen'})
+            } else {
+              logger.error(error, {origin: 'P2PConnectionScreen'})
+            }
           }
 
           const handleClose = () => {
@@ -383,11 +417,17 @@ export const P2PConnectionScreen = () => {
         }
       } catch (error) {
         const err = error instanceof Error ? error : new Error(String(error))
-        logger.error(err, {origin: 'P2PConnectionScreen'})
         const isSignalingError =
           err.message.includes('WebSocket') ||
           err.message.includes('signaling') ||
-          err.message.includes('Failed to create WebSocket')
+          err.message.includes('Failed to create WebSocket') ||
+          err.message.includes('Signaling not connected')
+        // Log handled/recoverable errors as warnings
+        if (isSignalingError) {
+          logger.warn(err.message, {origin: 'P2PConnectionScreen'})
+        } else {
+          logger.error(err, {origin: 'P2PConnectionScreen'})
+        }
         setConnectionState({
           status: 'error',
           error: err.message,
@@ -419,7 +459,6 @@ export const P2PConnectionScreen = () => {
     storageAdapter,
     targetPeerId,
     signalingUrl,
-    openInfoModal,
     registerConnection,
     unregisterConnection,
   ])
@@ -502,19 +541,6 @@ export const P2PConnectionScreen = () => {
     }
   }
 
-  const handleShareMyPeerId = () => {
-    if (!myPeerId) return
-
-    const deeplink = generateCIP158P2PDeeplink({
-      peerId: myPeerId,
-      signalingUrl: signalingUrl,
-    })
-    openInfoModal({
-      title: 'Share Peer ID',
-      message: `Deeplink: ${deeplink}`,
-    })
-  }
-
   const getStatusDisplayText = (): string => {
     const {status, error, isReconnecting} = connectionState
     if (isReconnecting) {
@@ -550,120 +576,166 @@ export const P2PConnectionScreen = () => {
 
   return (
     <SafeArea>
-      <ScrollView contentContainerStyle={a.px_lg} ref={scrollViewRef}>
-        <Label>Connection Parameters</Label>
-        <View style={[a.pb_md]}>
-          {signalingUrl && (
-            <>
-              <Text style={[ta.text_gray_medium, a.body_2_md_regular, a.pb_xs]}>
-                Signaling URL:
-              </Text>
-              <Copiable title={signalingUrl} text={signalingUrl} />
-            </>
-          )}
-          {targetPeerId && (
-            <>
-              <Text
-                style={[
-                  ta.text_gray_medium,
-                  a.body_2_md_regular,
-                  a.pt_md,
-                  a.pb_xs,
-                ]}
-              >
-                Target Peer ID:
-              </Text>
-              <Copiable title={targetPeerId} text={targetPeerId} />
-            </>
-          )}
-        </View>
+      <View style={[a.flex_1]}>
+        <Tabs style={[a.px_lg, a.pt_md]}>
+          <Tab
+            active={activeTab === 'connection'}
+            label="Connection"
+            onPress={() => setActiveTab('connection')}
+            testID="p2p:tab-connection"
+          />
+          <Tab
+            active={activeTab === 'share'}
+            label="Share Peer ID"
+            onPress={() => setActiveTab('share')}
+            testID="p2p:tab-share"
+          />
+        </Tabs>
 
-        <Label>My Peer ID</Label>
-        {myPeerId ? (
-          <>
-            <Copiable title={myPeerId} text={myPeerId} />
-            <View style={[a.pt_md]}>
-              <Button
-                onPress={handleShareMyPeerId}
-                title="Share My Peer ID"
-                type={ButtonType.Secondary}
-              />
-            </View>
-          </>
-        ) : (
-          <Text style={[ta.text_gray_medium]}>Initializing...</Text>
-        )}
+        <TabPanels>
+          <TabPanel active={activeTab === 'connection'}>
+            <ScrollView contentContainerStyle={a.px_lg} ref={scrollViewRef}>
+              <Label>Connection Parameters</Label>
+              <View style={[a.pb_md]}>
+                {signalingUrl && (
+                  <>
+                    <Text
+                      style={[
+                        ta.text_gray_medium,
+                        a.body_2_md_regular,
+                        a.pb_xs,
+                      ]}
+                    >
+                      Signaling URL:
+                    </Text>
+                    <Copiable title={signalingUrl} text={signalingUrl} />
+                  </>
+                )}
+                {targetPeerId && (
+                  <>
+                    <Text
+                      style={[
+                        ta.text_gray_medium,
+                        a.body_2_md_regular,
+                        a.pt_md,
+                        a.pb_xs,
+                      ]}
+                    >
+                      Target Peer ID:
+                    </Text>
+                    <Copiable title={targetPeerId} text={targetPeerId} />
+                  </>
+                )}
+              </View>
 
-        <Label>Connection Status</Label>
-        <View style={[a.pb_md]}>
-          <View
-            style={[
-              {
-                flexDirection: 'row',
-                alignItems: 'center',
-                marginBottom: 4,
-              },
-            ]}
-          >
-            <View
-              style={[
-                {
-                  width: 12,
-                  height: 12,
-                  borderRadius: 6,
-                  backgroundColor: getStatusColor(),
-                  marginRight: 8,
-                },
-              ]}
-            />
-            <Text style={[ta.text_gray_medium, a.body_2_md_regular]}>
-              {getStatusDisplayText()}
-            </Text>
-          </View>
-          {connectionState.lastStatusUpdate &&
-            !connectionState.signalingServerFailed && (
-              <Text
-                style={[ta.text_gray_low, a.body_3_sm_regular, {marginTop: 4}]}
-              >
-                Last update:{' '}
-                {new Intl.DateTimeFormat('en-US', {
-                  hour: '2-digit',
-                  minute: '2-digit',
-                  second: '2-digit',
-                  hour12: true,
-                }).format(new Date(connectionState.lastStatusUpdate))}
-              </Text>
-            )}
-        </View>
+              <Label>My Peer ID</Label>
+              {myPeerId ? (
+                <Copiable title={myPeerId} text={myPeerId} />
+              ) : (
+                <Text style={[ta.text_gray_medium]}>Initializing...</Text>
+              )}
 
-        {connectedPeerId && (
-          <>
-            <Label>Connected To</Label>
-            <Copiable title={connectedPeerId} text={connectedPeerId} />
-          </>
-        )}
+              <Label>Connection Status</Label>
+              <View style={[a.pb_md]}>
+                <View
+                  style={[
+                    {
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      marginBottom: 4,
+                    },
+                  ]}
+                >
+                  <View
+                    style={[
+                      {
+                        width: 12,
+                        height: 12,
+                        borderRadius: 6,
+                        backgroundColor: getStatusColor(),
+                        marginRight: 8,
+                      },
+                    ]}
+                  />
+                  <Text style={[ta.text_gray_medium, a.body_2_md_regular]}>
+                    {getStatusDisplayText()}
+                  </Text>
+                </View>
+                {connectionState.lastStatusUpdate &&
+                  !connectionState.signalingServerFailed && (
+                    <Text
+                      style={[
+                        ta.text_gray_low,
+                        a.body_3_sm_regular,
+                        {marginTop: 4},
+                      ]}
+                    >
+                      Last update:{' '}
+                      {new Intl.DateTimeFormat('en-US', {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit',
+                        hour12: true,
+                      }).format(new Date(connectionState.lastStatusUpdate))}
+                    </Text>
+                  )}
+              </View>
 
-        {myPeerId && (
-          <View style={[a.pt_lg]}>
-            <ShareQRCodeCard
-              title="Share Connection"
-              shareContent={generateCIP158P2PDeeplink({
-                peerId: myPeerId,
-                signalingUrl: signalingUrl,
-              })}
-              qrContent={generateCIP158P2PDeeplink({
-                peerId: myPeerId,
-                signalingUrl: signalingUrl,
-              })}
-              testID="p2p:share-peer-id"
-              shareLabel="Share Peer ID"
-              onLongPress={(_event: GestureResponderEvent) => {
-                // Handle long press if needed
-              }}
-            />
-          </View>
-        )}
-      </ScrollView>
+              {connectedPeerId && (
+                <>
+                  <Label>Connected To</Label>
+                  <Copiable title={connectedPeerId} text={connectedPeerId} />
+                </>
+              )}
+            </ScrollView>
+          </TabPanel>
+
+          <TabPanel active={activeTab === 'share'}>
+            <ScrollView contentContainerStyle={a.px_lg}>
+              <Label>My Peer ID</Label>
+              {myPeerId ? (
+                <>
+                  <Copiable title={myPeerId} text={myPeerId} />
+                  <View style={[a.pt_lg]}>
+                    <ShareQRCodeCard
+                      title="Share Connection"
+                      shareContent={generateCIP158P2PDeeplink({
+                        dappPeer: myPeerId,
+                        ...(signalingUrl
+                          ? parseSignalingUrl(signalingUrl)
+                          : {
+                              host: params.host,
+                              port: params.port,
+                              path: params.path,
+                              secure: params.secure !== false,
+                            }),
+                      })}
+                      qrContent={generateCIP158P2PDeeplink({
+                        dappPeer: myPeerId,
+                        ...(signalingUrl
+                          ? parseSignalingUrl(signalingUrl)
+                          : {
+                              host: params.host,
+                              port: params.port,
+                              path: params.path,
+                              secure: params.secure !== false,
+                            }),
+                      })}
+                      testID="p2p:share-peer-id"
+                      shareLabel="Share Peer ID"
+                      onLongPress={(_event: GestureResponderEvent) => {
+                        // Handle long press if needed
+                      }}
+                    />
+                  </View>
+                </>
+              ) : (
+                <Text style={[ta.text_gray_medium]}>Initializing...</Text>
+              )}
+            </ScrollView>
+          </TabPanel>
+        </TabPanels>
+      </View>
 
       <SafeArea.Footer>
         {connectedPeerId ? (

@@ -44,6 +44,8 @@ export {
   generateP2PDeeplink,
   parseP2PDeeplink,
   generateCIP158P2PDeeplink,
+  buildSignalingUrl,
+  parseSignalingUrl,
 } from './utils/deeplink-utils'
 export type {P2PConnectionDeeplink} from './utils/deeplink-utils'
 

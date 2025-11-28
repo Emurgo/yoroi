@@ -76,8 +76,11 @@ export type TxHistoryRoutes = {
     height?: string
   }
   'p2p-connection': {
-    peerId: string
-    signalingUrl?: string
+    dappPeer?: string
+    host?: string
+    port?: string
+    path?: string
+    secure?: boolean
   }
   'utxo-list': undefined
   'utxo-consolidation': undefined
