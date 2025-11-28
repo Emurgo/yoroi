@@ -127,7 +127,6 @@ export const StakingCenter = () => {
         const err = error instanceof Error ? error : new Error(String(error))
         logger.error(err, {origin: 'staking', operation: 'buildDelegationTx'})
 
-        // Check if error is due to insufficient balance and navigate to noFunds screen
         if (isInsufficientBalanceError(error)) {
           navigateTo.noFunds()
           setIsBuildingTx(false)

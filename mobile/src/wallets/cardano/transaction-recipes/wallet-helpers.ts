@@ -14,6 +14,7 @@ import {createUnsignedGovernanceTx} from './createUnsignedGovernanceTx'
 import {createUtxoConsolidationTx} from './createUtxoConsolidationTx'
 import {createVotingRegTx} from './createVotingRegTx'
 import {createWithdrawalTx} from './createWithdrawalTx'
+import {createWithdrawalWithGovernanceTx} from './createWithdrawalWithGovernanceTx'
 import {convertRawUtxosToModernUtxos} from './helpers'
 
 /**
@@ -277,4 +278,76 @@ export async function createSendTxFromWallet(
     })),
     subtractFeeFromAmount: params.subtractFeeFromAmount,
   })
+}
+
+/**
+ * Create withdrawal with governance transaction from wallet
+ * Combines rewards withdrawal with DRep vote delegation in a single transaction
+ */
+export async function createWithdrawalWithGovernanceTxFromWallet(
+  wallet: YoroiWallet,
+  params: {
+    shouldDeregister: boolean
+    addressMode: Wallet.AddressMode
+    networkManager: Network.Manager
+    drepValue: import('@yoroi/tx').DRepValue
+  },
+): Promise<{cbor: string}> {
+  const logger = getLogger()
+  const modernUtxos = getModernUtxosFromWallet(wallet)
+
+  logger.info(
+    'createWithdrawalWithGovernanceTxFromWallet: Starting combined tx creation',
+    {
+      shouldDeregister: params.shouldDeregister,
+      addressMode: params.addressMode,
+      rewardAddressHex: wallet.rewardAddressHex,
+      networkId: wallet.networkManager.chainId,
+      drepValue: params.drepValue,
+    },
+  )
+
+  try {
+    const result = await createWithdrawalWithGovernanceTx({
+      utxos: modernUtxos,
+      rewardAddressHex: wallet.rewardAddressHex,
+      primaryTokenId: wallet.portfolioPrimaryTokenInfo.id,
+      protocolParams: wallet.protocolParams,
+      networkId: wallet.networkManager.chainId,
+      getAbsoluteSlotNumber: () => getAbsoluteSlotNumberFromWallet(wallet),
+      getChangeAddress: (mode) => wallet.getChangeAddress(mode),
+      getStakingKey: () => wallet.getStakingKey(),
+      getAccountState: (addresses) => {
+        const walletContext = wallet.getWalletContext?.()
+        return legacyApi.getAccountState(
+          {addresses},
+          params.networkManager.legacyApiBaseUrl,
+          walletContext,
+        )
+      },
+      getDelegationStatus: () => wallet.getDelegationStatus(),
+      shouldDeregister: params.shouldDeregister,
+      addressMode: params.addressMode,
+      drepValue: params.drepValue,
+    })
+
+    logger.info(
+      'createWithdrawalWithGovernanceTxFromWallet: Transaction created successfully',
+      {
+        cborLength: result.cbor.length,
+      },
+    )
+
+    return result
+  } catch (error) {
+    logger.error(
+      'createWithdrawalWithGovernanceTxFromWallet: Failed to create transaction',
+      {
+        error: error instanceof Error ? error.message : String(error),
+        errorStack: error instanceof Error ? error.stack : undefined,
+        shouldDeregister: params.shouldDeregister,
+      },
+    )
+    throw error
+  }
 }

@@ -1,3 +1,4 @@
+import {getYoroiDrepIdHex} from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
@@ -6,6 +7,7 @@ import BigNumber from 'bignumber.js'
 import * as React from 'react'
 import {
   ActivityIndicator,
+  Dimensions,
   RefreshControl,
   ScrollView,
   View,
@@ -33,6 +35,7 @@ import {Button} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/context/ModalContext'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
+import {createWithdrawalWithGovernanceTxFromWallet} from '~/wallets/cardano/transaction-recipes'
 import {isEmptyString} from '~/wallets/utils/string'
 import {Amounts} from '~/wallets/utils/utils'
 
@@ -44,6 +47,7 @@ import {UserSummary} from '../shared/UserSummary'
 
 export const DashboardScreen = () => {
   const {atoms: ta} = useTheme()
+  const screenHeight = Dimensions.get('window').height
 
   const strings = useStrings()
   const navigateTo = useNavigateTo()
@@ -73,7 +77,7 @@ export const DashboardScreen = () => {
   const {wallet, meta} = useSelectedWallet()
   const {isPending: isSyncing, sync} = useSync(wallet)
   const isOnline = useIsOnline(wallet)
-  const {openModal} = useModal()
+  const {openModal, closeModal} = useModal()
   const walletNavigateTo = useWalletNavigation()
 
   const balances = useBalances(wallet)
@@ -90,25 +94,63 @@ export const DashboardScreen = () => {
 
   const {isParticipating, isLoading: isGovernanceParticipationLoading} =
     useGovernanceParticipation()
+  const {networkManager} = useSelectedNetwork()
+
+  const [isBuildingCombinedTx, setIsBuildingCombinedTx] = React.useState(false)
 
   const createOnWithdraw =
     ({shouldDeregister}: {shouldDeregister: boolean}) =>
     () => {
       if (isGovernanceParticipationLoading) {
-        // status still loading → avoid showing warning;
         return
       }
       if (!isParticipating) {
+        const handleDelegateAndWithdraw = async () => {
+          closeModal()
+          setIsBuildingCombinedTx(true)
+
+          try {
+            // Create combined transaction with withdrawal + DRep delegation
+            const drepValue: {KeyHash: string} = {
+              KeyHash: getYoroiDrepIdHex(wallet.networkManager.network),
+            }
+            const result = await createWithdrawalWithGovernanceTxFromWallet(
+              wallet,
+              {
+                shouldDeregister,
+                addressMode: meta.addressMode,
+                networkManager,
+                drepValue,
+              },
+            )
+
+            // Navigate to tx review with combined operations
+            walletNavigateTo.navigateToTxReview({
+              cbor: result.cbor,
+              operations: [<StakeRewardsWithdrawalOperation key="0" />],
+              context: 'withdraw rewards',
+            })
+          } catch {
+            navigateTo.failedTx()
+          } finally {
+            setIsBuildingCombinedTx(false)
+          }
+        }
         openModal({
           title: strings.staking.withdrawWarningTitle,
           content: React.createElement(WithdrawGovernanceWarningModal.Content),
-          footer: React.createElement(WithdrawGovernanceWarningModal.Footer),
+          footer: React.createElement(WithdrawGovernanceWarningModal.Footer, {
+            onDelegateAndWithdraw: handleDelegateAndWithdraw,
+          }),
+          height: screenHeight * 0.7,
         })
         return
       }
 
       createWithdrawalTx({shouldDeregister})
     }
+
+  const isLoading = isWithdrawLoading || isBuildingCombinedTx
 
   return (
     <SafeArea
@@ -169,7 +211,7 @@ export const DashboardScreen = () => {
                 totalDelegated={new BigNumber(stakingInfo.amount)}
                 ctaProps={{
                   onPress: createOnWithdraw({shouldDeregister: false}),
-                  disabled: meta.isReadOnly || isWithdrawLoading || !hasRewards,
+                  disabled: meta.isReadOnly || isLoading || !hasRewards,
                 }}
               />
             ) : (
@@ -192,7 +234,7 @@ export const DashboardScreen = () => {
               <StakePoolInfos
                 ctaProps={{
                   onPress: createOnWithdraw({shouldDeregister: true}),
-                  disabled: meta.isReadOnly || isWithdrawLoading,
+                  disabled: meta.isReadOnly || isLoading,
                 }}
               />
 
