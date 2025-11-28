@@ -147,11 +147,35 @@ export const parseCardanoLink = (codeContent: string): Links.CardanoAction => {
 
   // Handle connect authority (P2P connections)
   if (authority === 'connect') {
-    const {peerId, signalingUrl} = parsedCardanoLink.params
+    const {
+      dappPeer,
+      peerId, // Legacy support
+      host,
+      port,
+      path,
+      secure,
+      signalingUrl, // Legacy support
+    } = parsedCardanoLink.params
+
+    // Use new format if available, fallback to legacy
+    const peerIdValue = (dappPeer || peerId) as string
+    let signalingUrlValue: string | undefined
+
+    // Build signaling URL from new format if available
+    if (host) {
+      const protocol = secure === false ? 'ws' : 'wss'
+      const portStr = port ? `:${port}` : ''
+      const pathStr = path || ''
+      signalingUrlValue = `${protocol}://${host}${portStr}${pathStr}`
+    } else if (signalingUrl) {
+      // Legacy format
+      signalingUrlValue = signalingUrl as string | undefined
+    }
+
     return freeze({
       action: 'p2p-connect',
-      peerId: peerId as string,
-      signalingUrl: signalingUrl as string | undefined,
+      peerId: peerIdValue,
+      signalingUrl: signalingUrlValue,
     } as const)
   }
 
