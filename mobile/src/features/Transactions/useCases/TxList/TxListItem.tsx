@@ -131,7 +131,9 @@ const TxListItemComponent = ({transaction}: Props) => {
     | 'STAKE_DELEGATION'
     | 'STAKE_UNDELEGATION'
     | 'VOTE_DELEGATION'
-    | 'COLLATERAL_CREATION' => {
+    | 'COLLATERAL_CREATION'
+    | 'MINT'
+    | 'BURN' => {
     if (!operation) {
       return direction
     }
@@ -143,6 +145,12 @@ const TxListItemComponent = ({transaction}: Props) => {
     }
     if (opLower.includes('withdrawal')) {
       return 'WITHDRAWAL'
+    }
+    if (opLower.includes('burn')) {
+      return 'BURN'
+    }
+    if (opLower.includes('mint')) {
+      return 'MINT'
     }
     if (
       opLower.includes('swap') ||

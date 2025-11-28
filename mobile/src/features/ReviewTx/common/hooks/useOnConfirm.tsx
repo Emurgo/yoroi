@@ -4,6 +4,7 @@ import {Wallet} from '@yoroi/types'
 import {Transaction, WasmModuleProxy} from '@emurgo/cross-csl-core'
 import * as React from 'react'
 import {ErrorBoundary} from 'react-error-boundary'
+import {InteractionManager} from 'react-native'
 
 import {useReviewTxMemo} from '~/features/ReviewTx/common/context/ReviewTxMemoContext'
 import {useSaveMemo} from '~/features/Transactions/hooks/useSaveMemo'
@@ -99,45 +100,71 @@ export const useOnConfirm = ({
         }
       }
 
-      if (onSuccessWithoutFeedback) {
+      // Use InteractionManager to ensure navigation happens after modal closes
+      InteractionManager.runAfterInteractions(async () => {
         try {
-          await onSuccessWithoutFeedback({
-            rootKey: args?.rootKey,
-            tx: args?.tx,
-            signedTx,
-            txId: args?.txId,
-          })
-        } catch (error) {
-          logger.error(
-            'useOnConfirm: onSuccessWithoutFeedback callback failed',
-            {
-              error: error instanceof Error ? error.message : String(error),
-              txId: args?.txId,
-            },
-          )
-          // Don't block success flow - transaction was already submitted
-        }
-        return
-      }
+          if (onSuccessWithoutFeedback) {
+            try {
+              await onSuccessWithoutFeedback({
+                rootKey: args?.rootKey,
+                tx: args?.tx,
+                signedTx,
+                txId: args?.txId,
+              })
+            } catch (error) {
+              logger.error(
+                'useOnConfirm: onSuccessWithoutFeedback callback failed',
+                {
+                  error: error instanceof Error ? error.message : String(error),
+                  txId: args?.txId,
+                },
+              )
+              // Don't block success flow - transaction was already submitted
+            }
+            return
+          }
 
-      if (onSuccess) {
-        try {
-          await onSuccess({
-            rootKey: args?.rootKey,
-            tx: args?.tx,
-            signedTx,
-            txId: args?.txId,
-          })
+          if (onSuccess) {
+            try {
+              await onSuccess({
+                rootKey: args?.rootKey,
+                tx: args?.tx,
+                signedTx,
+                txId: args?.txId,
+              })
+            } catch (error) {
+              logger.error('useOnConfirm: onSuccess callback failed', {
+                error: error instanceof Error ? error.message : String(error),
+                txId: args?.txId,
+              })
+              // Don't block success flow - transaction was already submitted
+            }
+          }
+
+          navigateTo.showSubmittedTxScreen(context)
         } catch (error) {
-          logger.error('useOnConfirm: onSuccess callback failed', {
+          logger.error('useOnConfirm: Unexpected error in handleOnSuccess', {
             error: error instanceof Error ? error.message : String(error),
             txId: args?.txId,
+            context,
           })
-          // Don't block success flow - transaction was already submitted
+          // Even if there's an unexpected error, try to show success screen
+          // since transaction was already submitted
+          try {
+            navigateTo.showSubmittedTxScreen(context)
+          } catch (navError) {
+            logger.error(
+              'useOnConfirm: Failed to show success screen after error',
+              {
+                error:
+                  navError instanceof Error
+                    ? navError.message
+                    : String(navError),
+              },
+            )
+          }
         }
-      }
-
-      navigateTo.showSubmittedTxScreen(context)
+      })
     } catch (error) {
       logger.error('useOnConfirm: Unexpected error in handleOnSuccess', {
         error: error instanceof Error ? error.message : String(error),
@@ -146,17 +173,19 @@ export const useOnConfirm = ({
       })
       // Even if there's an unexpected error, try to show success screen
       // since transaction was already submitted
-      try {
-        navigateTo.showSubmittedTxScreen(context)
-      } catch (navError) {
-        logger.error(
-          'useOnConfirm: Failed to show success screen after error',
-          {
-            error:
-              navError instanceof Error ? navError.message : String(navError),
-          },
-        )
-      }
+      InteractionManager.runAfterInteractions(() => {
+        try {
+          navigateTo.showSubmittedTxScreen(context)
+        } catch (navError) {
+          logger.error(
+            'useOnConfirm: Failed to show success screen after error',
+            {
+              error:
+                navError instanceof Error ? navError.message : String(navError),
+            },
+          )
+        }
+      })
     }
   }
 
@@ -173,16 +202,38 @@ export const useOnConfirm = ({
       partial,
     })
 
-    if (onErrorWithoutFeedback) {
-      onErrorWithoutFeedback(error)
-      return
-    }
+    // Use InteractionManager to ensure navigation happens after modal closes
+    InteractionManager.runAfterInteractions(() => {
+      try {
+        if (onErrorWithoutFeedback) {
+          onErrorWithoutFeedback(error)
+          return
+        }
 
-    if (onError) {
-      onError(error)
-    }
+        if (onError) {
+          onError(error)
+        }
 
-    navigateTo.showFailedTxScreen(context)
+        navigateTo.showFailedTxScreen(context)
+      } catch (callbackError) {
+        logger.error('useOnConfirm: Error in handleOnError callbacks', {
+          error:
+            callbackError instanceof Error
+              ? callbackError.message
+              : String(callbackError),
+          originalError: error instanceof Error ? error.message : String(error),
+        })
+        // Ensure navigation happens even if callbacks fail
+        try {
+          navigateTo.showFailedTxScreen(context)
+        } catch (navError) {
+          logger.error('useOnConfirm: Failed to navigate to error screen', {
+            error:
+              navError instanceof Error ? navError.message : String(navError),
+          })
+        }
+      }
+    })
   }
 
   // TODO: Make it homogenic

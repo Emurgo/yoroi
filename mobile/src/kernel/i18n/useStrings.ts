@@ -26,6 +26,7 @@ import {
   manageCollateralMessages,
   manageNotificationsMessages,
   menuMessages,
+  mintBurnMessages,
   notificationsMessages,
   portfolioMessages,
   receiveMessages,
@@ -316,6 +317,57 @@ export const useStrings = () => {
         },
       },
 
+      // Mint/Burn strings
+      mintBurn: {
+        tabs: {
+          mint: f(mintBurnMessages.tabsMint),
+          myTokens: f(mintBurnMessages.tabsMyTokens),
+        },
+        mint: {
+          tokenType: f(mintBurnMessages.mintTokenType),
+          tokenTypeFt: f(mintBurnMessages.mintTokenTypeFt),
+          tokenTypeNft: f(mintBurnMessages.mintTokenTypeNft),
+          ft: {
+            tokenName: f(mintBurnMessages.mintFtTokenName),
+            tokenNamePlaceholder: f(mintBurnMessages.mintFtTokenNamePlaceholder),
+            quantity: f(mintBurnMessages.mintFtQuantity),
+            quantityPlaceholder: f(mintBurnMessages.mintFtQuantityPlaceholder),
+            decimals: f(mintBurnMessages.mintFtDecimals),
+            decimalsPlaceholder: f(mintBurnMessages.mintFtDecimalsPlaceholder),
+            image: f(mintBurnMessages.mintFtImage),
+            description: f(mintBurnMessages.mintFtDescription),
+            descriptionPlaceholder: f(mintBurnMessages.mintFtDescriptionPlaceholder),
+          },
+          nft: {
+            assetName: f(mintBurnMessages.mintNftAssetName),
+            assetNamePlaceholder: f(mintBurnMessages.mintNftAssetNamePlaceholder),
+            imageUrl: f(mintBurnMessages.mintNftImageUrl),
+            imageUrlPlaceholder: f(mintBurnMessages.mintNftImageUrlPlaceholder),
+            name: f(mintBurnMessages.mintNftName),
+            namePlaceholder: f(mintBurnMessages.mintNftNamePlaceholder),
+            description: f(mintBurnMessages.mintNftDescription),
+            descriptionPlaceholder: f(mintBurnMessages.mintNftDescriptionPlaceholder),
+          },
+          submit: f(mintBurnMessages.mintSubmit),
+          submitting: f(mintBurnMessages.mintSubmitting),
+        },
+        myTokens: {
+          noTokens: f(mintBurnMessages.myTokensNoTokens),
+          policyId: f(mintBurnMessages.myTokensPolicyId),
+          quantity: f(mintBurnMessages.myTokensQuantity),
+          burnQuantity: f(mintBurnMessages.myTokensBurnQuantity),
+          burn: f(mintBurnMessages.myTokensBurn),
+          burning: f(mintBurnMessages.myTokensBurning),
+        },
+        errors: {
+          invalidUrl: f(mintBurnMessages.errorsInvalidUrl),
+          invalidImage: f(mintBurnMessages.errorsInvalidImage),
+          invalidQuantity: f(mintBurnMessages.errorsInvalidQuantity),
+          invalidDecimals: f(mintBurnMessages.errorsInvalidDecimals),
+          missingFields: f(mintBurnMessages.errorsMissingFields),
+        },
+      },
+
       // Portfolio strings
       portfolio: {
         portfolio: f(portfolioMessages.portfolio),
@@ -511,6 +563,7 @@ export const useStrings = () => {
         utxoList: f(transactionsMessages.utxoListTitle),
         messageSigning: f(menuMessages.messageSigning),
         airdrop: f(menuMessages.airdrop),
+        mintBurn: f(menuMessages.mintBurn),
       },
 
       // Dashboard strings
@@ -1805,6 +1858,8 @@ export const useStrings = () => {
           collateralCreation: f(
             transactionsMessages.operationCollateralCreation,
           ),
+          mint: f(transactionsMessages.operationMint),
+          burn: f(transactionsMessages.operationBurn),
         },
         unknownAssetName: f(transactionsMessages.unknownAssetName),
         walletAddress: f(transactionsMessages.walletAddress),

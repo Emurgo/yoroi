@@ -453,4 +453,12 @@ export const transactionsMessages = defineMessages({
     id: 'components.transactions.operation.collateralCreation',
     defaultMessage: '!!!Collateral Creation',
   },
+  operationMint: {
+    id: 'components.transactions.operation.mint',
+    defaultMessage: '!!!Mint',
+  },
+  operationBurn: {
+    id: 'components.transactions.operation.burn',
+    defaultMessage: '!!!Burn',
+  },
 })

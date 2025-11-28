@@ -154,6 +154,51 @@ const getRequiredSigners = async (
     stakingKeyPath,
   })
 
+  // Extract key hashes from native scripts in witness set
+  // According to Cardano protocol, native scripts using ScriptPubkey ALWAYS require
+  // signatures from the key hash, regardless of context (minting, payment, staking, etc.)
+  // This is a fundamental protocol requirement, not specific to minting
+  const witnessSet = tx.witnessSet()
+  if (witnessSet) {
+    const nativeScripts = witnessSet.nativeScripts()
+    if (nativeScripts) {
+      for (let i = 0; i < nativeScripts.len(); i++) {
+        const nativeScript = nativeScripts.get(i)
+        if (!nativeScript) continue
+
+        try {
+          // Check if it's a ScriptPubkey (requires signature)
+          const scriptPubkey = nativeScript.asScriptPubkey()
+          if (scriptPubkey) {
+            const keyHash = scriptPubkey.addrKeyhash()
+            if (keyHash) {
+              // Check if this key hash corresponds to one of our addresses
+              const paymentCredential =
+                CardanoMobile.Credential.fromKeyhash(keyHash)
+              const stakeCredential =
+                CardanoMobile.Credential.fromKeyhash(stakeVKHash)
+              const baseAddress = CardanoMobile.BaseAddress.new(
+                wallet.networkManager.chainId,
+                paymentCredential,
+                stakeCredential,
+              )
+              const bech32Address = baseAddress.toAddress().toBech32(undefined)
+              const addressing = getAddressAddressing(bech32Address)
+              if (addressing) {
+                signers.push(addressing)
+              }
+            }
+          }
+          // Note: Other native script types (ScriptAll, ScriptAny, ScriptNOfK, TimelockStart, TimelockExpiry)
+          // don't require signatures directly, but their nested scripts might
+          // For now, we only handle ScriptPubkey which is the most common case
+        } catch {
+          // Ignore if script parsing fails
+        }
+      }
+    }
+  }
+
   return getUniquePaths(signers.map((s) => s.path))
 }
 

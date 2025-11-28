@@ -12,6 +12,7 @@ import {
   useWindowDimensions,
 } from 'react-native'
 
+import {useAuth} from '~/features/Auth/context/AuthProvider'
 import {availableNetworks} from '~/features/WalletManager/common/constants'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
@@ -42,18 +43,25 @@ export const NetworkTag = ({
   const {atoms: ta} = useTheme()
   const {openModal, closeModal} = useModal()
   const strings = useStrings()
+  const {isAuthDev} = useAuth()
   const width = useWindowDimensions().width - 120
 
-  const Tag = selectedNetwork === Chain.Network.Preprod ? PreprodTag : null
+  const Tag =
+    selectedNetwork === Chain.Network.Preprod
+      ? PreprodTag
+      : selectedNetwork === Chain.Network.Mainnet && isAuthDev
+        ? MainnetTag
+        : null
 
   const onPress = () => {
-    if (directChangeActive && selectedNetwork !== Chain.Network.Mainnet) {
+    if (directChangeActive) {
       const nextNetwork =
         availableNetworks[
           (availableNetworks.indexOf(selectedNetwork) + 1) %
             availableNetworks.length
         ]
 
+      // Show confirmation modal when switching to Mainnet
       if (nextNetwork === Chain.Network.Mainnet) {
         const onConfirm = () => {
           walletManager.setSelectedNetwork(nextNetwork)
@@ -92,6 +100,7 @@ export const NetworkTag = ({
         return
       }
 
+      // Direct switch for other networks (e.g., Mainnet -> Preprod in dev mode)
       walletManager.setSelectedNetwork(nextNetwork!)
       return
     }
@@ -128,15 +137,7 @@ export const NetworkTag = ({
 
       {Tag && (
         <View style={[a.pl_sm, {flexShrink: 0}]}>
-          <Tag
-            onPress={onPress}
-            disabled={
-              ((directChangeActive &&
-                selectedNetwork === Chain.Network.Mainnet) ||
-                disabled) ??
-              false
-            }
-          />
+          <Tag onPress={onPress} disabled={disabled ?? false} />
         </View>
       )}
     </View>
@@ -166,6 +167,33 @@ const PreprodTag = ({
       disabled={disabled}
     >
       <Text>{name}</Text>
+    </TouchableOpacity>
+  )
+}
+
+const MainnetTag = ({
+  onPress,
+  disabled,
+}: {
+  onPress: () => void
+  disabled?: boolean
+}) => {
+  const {palette: p} = useTheme()
+
+  const {name} = networkConfigs[Chain.Network.Mainnet]
+
+  return (
+    <TouchableOpacity
+      onPress={onPress}
+      style={[
+        {backgroundColor: p.primary_500},
+        a.rounded_full,
+        a.px_sm,
+        a.py_xs,
+      ]}
+      disabled={disabled}
+    >
+      <Text style={{color: p.white_static}}>{name}</Text>
     </TouchableOpacity>
   )
 }

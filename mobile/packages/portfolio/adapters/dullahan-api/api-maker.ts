@@ -46,45 +46,63 @@ export const portfolioApiMaker = ({
   return freeze(
     {
       async tokenDiscovery(id) {
-        const response = await request<DullahanApiTokenDiscoveryResponse>({
-          method: 'get',
-          url: `${config.tokenDiscovery}/${id}`,
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-          },
-        })
-        if (isRight(response)) {
-          const discovery: Portfolio.Token.Discovery | undefined =
-            parseTokenDiscovery(response.value.data)
+        try {
+          const response = await request<DullahanApiTokenDiscoveryResponse>({
+            method: 'get',
+            url: `${config.tokenDiscovery}/${id}`,
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+            },
+          })
+          if (isRight(response)) {
+            const discovery: Portfolio.Token.Discovery | undefined =
+              parseTokenDiscovery(response.value.data)
 
-          if (!discovery) {
+            if (!discovery) {
+              return freeze(
+                {
+                  tag: 'left',
+                  error: {
+                    status: -3,
+                    message: 'Failed to transform token discovery response',
+                    responseData: response.value.data,
+                  },
+                },
+                true,
+              )
+            }
+
             return freeze(
               {
-                tag: 'left',
-                error: {
-                  status: -3,
-                  message: 'Failed to transform token discovery response',
-                  responseData: response.value.data,
+                tag: 'right',
+                value: {
+                  status: response.value.status,
+                  data: discovery,
                 },
               },
               true,
             )
           }
 
+          return response
+        } catch (error) {
+          // Catch any unexpected errors and convert to left response
           return freeze(
             {
-              tag: 'right',
-              value: {
-                status: response.value.status,
-                data: discovery,
+              tag: 'left',
+              error: {
+                status: -4,
+                message:
+                  error instanceof Error
+                    ? error.message
+                    : 'Unexpected error in token discovery',
+                responseData: null,
               },
             },
             true,
           )
         }
-
-        return response
       },
 
       async tokenInfos(idsWithCache) {

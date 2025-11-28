@@ -33,6 +33,7 @@ import {AirdropScreen} from '../Airdrop/ui/AirdropScreen'
 import {InsufficientFundsModal} from '../RegisterCatalyst/common/InsufficientFundsModal'
 import {NetworkTag} from '../Settings/ui/shared/NetworkTag'
 import {usePoolTransition} from '../Staking/Staking/PoolTransition/usePoolTransition'
+import {MintBurnNavigator} from '../MintBurn/navigator'
 
 const MenuStack = createStackNavigator<MenuRoutes>()
 
@@ -40,6 +41,7 @@ export const MenuNavigator = () => {
   const strings = useStrings()
   const {palette: p} = useTheme()
   const {config} = useRemoteConfig()
+  const {isAuthDev} = useAuth()
   const isAirdropEnabled = config?.features?.midnightAirdrop?.enabled ?? false
 
   return (
@@ -62,6 +64,16 @@ export const MenuNavigator = () => {
           component={AirdropScreen}
           options={{
             title: strings.menu.airdrop,
+            headerLeft: (props) => <BackButton {...props} />,
+          }}
+        />
+      )}
+      {isAuthDev && (
+        <MenuStack.Screen
+          name="mint-burn"
+          getComponent={() => MintBurnNavigator}
+          options={{
+            title: strings.menu.mintBurn,
             headerLeft: (props) => <BackButton {...props} />,
           }}
         />
@@ -103,6 +115,14 @@ export const Menu = () => {
           <UtxoList
             label={strings.menu.utxoList}
             onPress={navigateTo.utxoList}
+            left={<Icon.Burger size={24} color={p.gray_600} />}
+          />
+        )}
+
+        {isAuthDev && (
+          <MintBurn
+            label={strings.menu.mintBurn}
+            onPress={navigateTo.mintBurn}
             left={<Icon.Burger size={24} color={p.gray_600} />}
           />
         )}
@@ -227,6 +247,7 @@ const Governance = Item
 const AppSettings = Item
 const KnowledgeBase = Item
 const Airdrop = Item
+const MintBurn = Item
 const Catalyst = ({
   label,
   left,
@@ -285,6 +306,7 @@ const useNavigateTo = () => {
     navigateToUtxoList,
     navigateToMessageSigning,
     navigateToAirdrop,
+    navigateToMintBurn,
   } = useWalletNavigation()
   const {wallet} = useSelectedWallet()
 
@@ -305,5 +327,6 @@ const useNavigateTo = () => {
     knowledgeBase: () => Linking.openURL(KNOWLEDGE_BASE_LINK),
     governanceCentre: () => navigateToGovernanceCentre(),
     airdrop: () => navigateToAirdrop(),
+    mintBurn: () => navigateToMintBurn(),
   }
 }

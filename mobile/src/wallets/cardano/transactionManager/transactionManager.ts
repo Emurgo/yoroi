@@ -708,17 +708,72 @@ export const makeTxManagerStorage = (
 
     const tuples = await storage.multiGet(txids, parseTx)
 
-    return tuples.reduce(
-      (result: TransactionManagerState['transactions'], [txid, tx]) => {
+    // Track corrupted transactions for batch logging and cleanup
+    const corruptedTxids: string[] = []
+    const batchSize = 1000 // Process in batches to avoid blocking
+
+    const result: TransactionManagerState['transactions'] = {}
+
+    // Process in batches to avoid blocking the main thread
+    for (let i = 0; i < tuples.length; i += batchSize) {
+      const batch = tuples.slice(i, i + batchSize)
+
+      for (const [txid, tx] of batch) {
         if (!tx) {
-          logger.warn('makeTxManagerStorage: corrupted transaction', {txid})
-          return result
+          corruptedTxids.push(txid)
+          continue
         }
 
-        return {...result, [tx.id]: tx}
-      },
-      {},
-    )
+        result[tx.id] = tx
+      }
+
+      // Yield to event loop every batch to avoid blocking
+      if (i + batchSize < tuples.length) {
+        await new Promise((resolve) => setTimeout(resolve, 0))
+      }
+    }
+
+    // Batch log corrupted transactions (limit details to avoid log spam)
+    if (corruptedTxids.length > 0) {
+      const sampleSize = Math.min(10, corruptedTxids.length)
+      const sample = corruptedTxids.slice(0, sampleSize)
+      const remaining = corruptedTxids.length - sampleSize
+
+      logger.warn('makeTxManagerStorage: corrupted transactions detected', {
+        totalCorrupted: corruptedTxids.length,
+        totalProcessed: tuples.length,
+        sampleCorruptedTxids: sample,
+        ...(remaining > 0 && {
+          message: `${remaining} more corrupted transactions (not logged individually)`,
+        }),
+        note: 'Corrupted transactions will be removed from txids list to prevent future loading',
+      })
+
+      // Clean up corrupted transaction IDs from the txids list
+      // This prevents them from being loaded again next time and blocking the app
+      const validTxids = txids.filter((id) => !corruptedTxids.includes(id))
+      if (validTxids.length !== txids.length) {
+        try {
+          await storage.setItem('txids', validTxids)
+          logger.info(
+            'makeTxManagerStorage: cleaned up corrupted transaction IDs',
+            {
+              removed: corruptedTxids.length,
+              remaining: validTxids.length,
+            },
+          )
+        } catch (error) {
+          logger.error(
+            'makeTxManagerStorage: failed to clean up corrupted transaction IDs',
+            {
+              error: error instanceof Error ? error.message : String(error),
+            },
+          )
+        }
+      }
+    }
+
+    return result
   },
 
   saveTxs: async (txs: TransactionManagerState['transactions']) => {

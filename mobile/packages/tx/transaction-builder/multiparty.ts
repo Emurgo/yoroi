@@ -194,5 +194,30 @@ export async function getRequiredSignersFromTransaction(
     }
   }
 
+  // Extract from mint actions - get key hash from native scripts
+  // Native scripts using ScriptPubkey require a signature from the key hash
+  for (const mintAction of unsignedTx.options.mints || []) {
+    if (mintAction.script.type === 'native') {
+      try {
+        const nativeScript = csl.NativeScript.fromHex(mintAction.script.script)
+        if (nativeScript) {
+          // Check if it's a ScriptPubkey (requires signature)
+          const scriptPubkey = nativeScript.asScriptPubkey()
+          if (scriptPubkey) {
+            const keyHash = scriptPubkey.addrKeyhash()
+            if (keyHash) {
+              addKeyHash(keyHash.toHex())
+            }
+          }
+          // Note: Other native script types (ScriptAll, ScriptAny, ScriptNOfK, TimelockStart, TimelockExpiry)
+          // don't require signatures directly, but their nested scripts might
+          // For now, we only handle ScriptPubkey which is the most common case
+        }
+      } catch {
+        // Ignore if script parsing fails
+      }
+    }
+  }
+
   return signers
 }

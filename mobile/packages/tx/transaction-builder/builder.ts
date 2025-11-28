@@ -926,152 +926,8 @@ export async function buildTransaction(
       cslTxBuilder.setFee(feeBigNum)
     }
 
-    // Handle change output
-    if (state.options.manualChangeOutput) {
-      const cslChangeOutput = outputToCSL(
-        csl,
-        state.options.manualChangeOutput,
-        primaryTokenId,
-      )
-      if (!cslChangeOutput) {
-        logger.error('buildTransaction: Failed to create manual change output')
-        throw new Error('Failed to create manual change output')
-      }
-      cslTxBuilder.addOutput(cslChangeOutput)
-    } else if (state.options.changeAddress && !state.options.manualFee) {
-      // Use CSL's automatic change handling
-      const changeAddr = csl.Address.fromBech32(state.options.changeAddress)
-      if (!changeAddr) {
-        logger.error('buildTransaction: Invalid change address', {
-          changeAddress: state.options.changeAddress,
-        })
-        throw new Error(
-          `Invalid change address: ${state.options.changeAddress}`,
-        )
-      }
-
-      // Calculate totals before adding change to help debug issues
-      const totalInput = calculateTotalInputValue(state.inputs)
-      const totalOutput = calculateTotalOutputValue(
-        state.outputs,
-        state.options.manualChangeOutput,
-      )
-
-      // Calculate total withdrawals
-      const totalWithdrawals: Balance.Amounts = {} as Balance.Amounts
-      for (const withdrawal of state.withdrawals) {
-        const current = BigInt(totalWithdrawals[primaryTokenId] || '0')
-        const added = BigInt(withdrawal.amount)
-        totalWithdrawals[primaryTokenId] = (
-          current + added
-        ).toString() as Balance.Quantity
-      }
-
-      // Check for non-ADA tokens in inputs
-      const inputTokenIds = Object.keys(totalInput).filter(
-        (id) => id !== primaryTokenId,
-      )
-      const hasTokens = inputTokenIds.length > 0
-
-      // Calculate expected remaining ADA (before fee is calculated)
-      // Withdrawals ADD to available ADA, outputs SUBTRACT
-      const inputAda = BigInt(totalInput[primaryTokenId] || '0')
-      const outputAda = BigInt(totalOutput[primaryTokenId] || '0')
-      const withdrawalsAda = BigInt(totalWithdrawals[primaryTokenId] || '0')
-      // Available ADA = input + withdrawals - outputs (fee will be subtracted by CSL)
-      const availableAdaBeforeFee = inputAda + withdrawalsAda - outputAda
-
-      // Get min UTXO value from protocol params
-      const minUtxoValue = BigInt(protocolParams.minimumUtxoVal || '1000000') // Default 1 ADA
-
-      // Estimate fee (CSL will calculate actual fee, but this gives us an idea)
-      // Fee calculation happens inside addChangeIfNeeded, but we can estimate
-      const estimatedTxSize = 500 // Rough estimate
-      const estimatedFee =
-        BigInt(protocolParams.linearFee.constant) +
-        BigInt(protocolParams.linearFee.coefficient) * BigInt(estimatedTxSize)
-
-      const expectedRemainingAda = availableAdaBeforeFee - estimatedFee
-
-      logger.info('buildTransaction: About to add change if needed', {
-        totalInputAda: totalInput[primaryTokenId] || '0',
-        totalInputTokens: inputTokenIds.length,
-        inputTokenIds: inputTokenIds.slice(0, 10), // Limit to first 10
-        totalOutputAda: totalOutput[primaryTokenId] || '0',
-        totalOutputTokens: Object.keys(totalOutput).filter(
-          (id) => id !== primaryTokenId,
-        ).length,
-        totalWithdrawalsAda: totalWithdrawals[primaryTokenId] || '0',
-        withdrawalsCount: state.withdrawals.length,
-        inputsCount: state.inputs.length,
-        inputs: state.inputs.map((input) => ({
-          txId: input.utxo.txHash,
-          index: input.utxo.txIndex,
-          adaAmount: input.utxo.balance[primaryTokenId] || '0',
-          tokenCount: Object.keys(input.utxo.balance).filter(
-            (id) => id !== primaryTokenId,
-          ).length,
-          tokenIds: Object.keys(input.utxo.balance)
-            .filter((id) => id !== primaryTokenId)
-            .slice(0, 5), // Limit to first 5 tokens per UTXO
-        })),
-        hasTokens,
-        changeAddress: state.options.changeAddress,
-        // Financial calculations
-        availableAdaBeforeFee: availableAdaBeforeFee.toString(),
-        estimatedFee: estimatedFee.toString(),
-        expectedRemainingAda: expectedRemainingAda.toString(),
-        minUtxoValue: minUtxoValue.toString(),
-        hasEnoughAdaForMinUtxo: expectedRemainingAda >= minUtxoValue,
-        // Warning if tokens present but not enough ADA
-        warning:
-          hasTokens && expectedRemainingAda < minUtxoValue
-            ? `UTXO has ${inputTokenIds.length} tokens but expected remaining ADA (${expectedRemainingAda.toString()}) is less than min UTXO (${minUtxoValue.toString()}). CSL will calculate actual fee which may be different.`
-            : undefined,
-      })
-
-      try {
-        cslTxBuilder.addChangeIfNeeded(changeAddr)
-        logger.info('buildTransaction: Successfully added change if needed')
-      } catch (error) {
-        const errorMessage =
-          error instanceof Error ? error.message : String(error)
-        const isInsufficientAdaError =
-          errorMessage.includes('Not enough ADA leftover') ||
-          errorMessage.includes('add_change_if_needed')
-
-        logger.error('buildTransaction: Failed to add change if needed', {
-          error: errorMessage,
-          errorStack: error instanceof Error ? error.stack : undefined,
-          totalInputAda: totalInput[primaryTokenId] || '0',
-          totalOutputAda: totalOutput[primaryTokenId] || '0',
-          totalWithdrawalsAda: totalWithdrawals[primaryTokenId] || '0',
-          hasTokens,
-          inputTokenIds,
-          inputTokenCount: inputTokenIds.length,
-          expectedRemainingAda: expectedRemainingAda.toString(),
-          minUtxoValue: minUtxoValue.toString(),
-          isInsufficientAdaError,
-        })
-
-        // Provide a more helpful error message when tokens are present
-        if (isInsufficientAdaError && hasTokens) {
-          const enhancedError = new Error(
-            `Not enough ADA to create change output with ${inputTokenIds.length} tokens. ` +
-              `The change output requires more ADA than the base minimum UTXO value (${minUtxoValue.toString()} lovelace) ` +
-              `due to the tokens it contains. ` +
-              `Expected remaining ADA: ${expectedRemainingAda.toString()} lovelace. ` +
-              `Consider selecting UTXOs with more ADA or using pure ADA UTXOs when possible.`,
-          )
-          enhancedError.stack = error instanceof Error ? error.stack : undefined
-          throw enhancedError
-        }
-
-        throw error
-      }
-    }
-
-    // Add minting actions
+    // Add minting actions BEFORE change output handling
+    // This ensures minted tokens are included in the change output
     if (state.options.mints && state.options.mints.length > 0) {
       const mint = csl.Mint.new()
       if (!mint) {
@@ -1165,6 +1021,312 @@ export async function buildTransaction(
       if (plutusScripts.len() > 0) {
         // Plutus scripts will be added to witness set in post-processing
         // This is handled by the transaction building flow
+      }
+    }
+
+    // Handle change output
+    if (state.options.manualChangeOutput) {
+      const cslChangeOutput = outputToCSL(
+        csl,
+        state.options.manualChangeOutput,
+        primaryTokenId,
+      )
+      if (!cslChangeOutput) {
+        logger.error('buildTransaction: Failed to create manual change output')
+        throw new Error('Failed to create manual change output')
+      }
+      cslTxBuilder.addOutput(cslChangeOutput)
+    } else if (state.options.changeAddress && !state.options.manualFee) {
+      // Use CSL's automatic change handling
+      const changeAddr = csl.Address.fromBech32(state.options.changeAddress)
+      if (!changeAddr) {
+        logger.error('buildTransaction: Invalid change address', {
+          changeAddress: state.options.changeAddress,
+        })
+        throw new Error(
+          `Invalid change address: ${state.options.changeAddress}`,
+        )
+      }
+
+      // Calculate totals before adding change to help debug issues
+      const totalInput = calculateTotalInputValue(state.inputs)
+      const totalOutput = calculateTotalOutputValue(
+        state.outputs,
+        state.options.manualChangeOutput,
+      )
+
+      // Calculate total withdrawals
+      const totalWithdrawals: Balance.Amounts = {} as Balance.Amounts
+      for (const withdrawal of state.withdrawals) {
+        const current = BigInt(totalWithdrawals[primaryTokenId] || '0')
+        const added = BigInt(withdrawal.amount)
+        totalWithdrawals[primaryTokenId] = (
+          current + added
+        ).toString() as Balance.Quantity
+      }
+
+      // Check for non-ADA tokens in inputs
+      const inputTokenIds = Object.keys(totalInput).filter(
+        (id) => id !== primaryTokenId,
+      )
+      const hasTokens = inputTokenIds.length > 0
+
+      // Calculate expected remaining ADA (before fee is calculated)
+      // Withdrawals ADD to available ADA, outputs SUBTRACT
+      const inputAda = BigInt(totalInput[primaryTokenId] || '0')
+      const outputAda = BigInt(totalOutput[primaryTokenId] || '0')
+      const withdrawalsAda = BigInt(totalWithdrawals[primaryTokenId] || '0')
+      // Available ADA = input + withdrawals - outputs (fee will be subtracted by CSL)
+      const availableAdaBeforeFee = inputAda + withdrawalsAda - outputAda
+
+      // Get min UTXO value from protocol params
+      const minUtxoValue = BigInt(protocolParams.minimumUtxoVal || '1000000') // Default 1 ADA
+
+      // Estimate fee (CSL will calculate actual fee, but this gives us an idea)
+      // Fee calculation happens inside addChangeIfNeeded, but we can estimate
+      // Account for native scripts in witness set if minting is present
+      let estimatedTxSize = 500 // Rough base estimate
+      let witnessSetFeeBuffer = BigInt(0)
+      if (state.options.mints && state.options.mints.length > 0) {
+        // Add buffer for native scripts in witness set
+        // Each native script adds ~100-150 bytes to the witness set
+        const nativeScriptCount = state.options.mints.filter(
+          (m) => m?.script.type === 'native',
+        ).length
+        if (nativeScriptCount > 0) {
+          // Estimate witness set size: ~150 bytes per native script (conservative)
+          const witnessSetSizeEstimate = nativeScriptCount * 150
+          // Add fee for witness set size: coefficient * size
+          witnessSetFeeBuffer =
+            BigInt(protocolParams.linearFee.coefficient) *
+            BigInt(witnessSetSizeEstimate)
+          estimatedTxSize += nativeScriptCount * 100 // Also add to size estimate for logging
+        }
+      }
+      const estimatedFee =
+        BigInt(protocolParams.linearFee.constant) +
+        BigInt(protocolParams.linearFee.coefficient) * BigInt(estimatedTxSize) +
+        witnessSetFeeBuffer
+
+      const expectedRemainingAda = availableAdaBeforeFee - estimatedFee
+
+      logger.info('buildTransaction: About to add change if needed', {
+        totalInputAda: totalInput[primaryTokenId] || '0',
+        totalInputTokens: inputTokenIds.length,
+        inputTokenIds: inputTokenIds.slice(0, 10), // Limit to first 10
+        totalOutputAda: totalOutput[primaryTokenId] || '0',
+        totalOutputTokens: Object.keys(totalOutput).filter(
+          (id) => id !== primaryTokenId,
+        ).length,
+        totalWithdrawalsAda: totalWithdrawals[primaryTokenId] || '0',
+        withdrawalsCount: state.withdrawals.length,
+        inputsCount: state.inputs.length,
+        inputs: state.inputs.map((input) => ({
+          txId: input.utxo.txHash,
+          index: input.utxo.txIndex,
+          adaAmount: input.utxo.balance[primaryTokenId] || '0',
+          tokenCount: Object.keys(input.utxo.balance).filter(
+            (id) => id !== primaryTokenId,
+          ).length,
+          tokenIds: Object.keys(input.utxo.balance)
+            .filter((id) => id !== primaryTokenId)
+            .slice(0, 5), // Limit to first 5 tokens per UTXO
+        })),
+        hasTokens,
+        changeAddress: state.options.changeAddress,
+        // Financial calculations
+        availableAdaBeforeFee: availableAdaBeforeFee.toString(),
+        estimatedFee: estimatedFee.toString(),
+        expectedRemainingAda: expectedRemainingAda.toString(),
+        minUtxoValue: minUtxoValue.toString(),
+        hasEnoughAdaForMinUtxo: expectedRemainingAda >= minUtxoValue,
+        // Warning if tokens present but not enough ADA
+        warning:
+          hasTokens && expectedRemainingAda < minUtxoValue
+            ? `UTXO has ${inputTokenIds.length} tokens but expected remaining ADA (${expectedRemainingAda.toString()}) is less than min UTXO (${minUtxoValue.toString()}). CSL will calculate actual fee which may be different.`
+            : undefined,
+      })
+
+      try {
+        // If minting with native scripts, calculate witness set size and estimate fee
+        // BEFORE calling addChangeIfNeeded, since CSL calculates fee based on body size only
+        // The witness set size increases total transaction size, which increases fee
+        if (
+          state.options.mints &&
+          state.options.mints.length > 0 &&
+          !state.options.manualFee
+        ) {
+          const nativeScriptCount = state.options.mints.filter(
+            (m) => m?.script.type === 'native',
+          ).length
+          if (nativeScriptCount > 0) {
+            // Calculate actual witness set size by serializing native scripts
+            let actualWitnessSetSize = 0
+            const tempWitnessSet = csl.TransactionWitnessSet.new()
+            if (tempWitnessSet) {
+              const tempNativeScripts = csl.NativeScripts.new()
+              for (let i = 0; i < state.options.mints.length; i++) {
+                const mintAction = state.options.mints[i]
+                if (!mintAction || mintAction.script.type !== 'native') continue
+                const nativeScript = csl.NativeScript.fromHex(
+                  mintAction.script.script,
+                )
+                if (nativeScript) {
+                  tempNativeScripts.add(nativeScript)
+                }
+              }
+              if (tempNativeScripts.len() > 0) {
+                tempWitnessSet.setNativeScripts(tempNativeScripts)
+                // Serialize witness set to get actual size
+                const witnessSetBytes = tempWitnessSet.toBytes()
+                actualWitnessSetSize = witnessSetBytes.length
+              }
+            }
+
+            if (actualWitnessSetSize > 0) {
+              // Estimate base transaction body size (inputs, outputs, certificates, etc.)
+              // We need to account for the change output that will be added by addChangeIfNeeded
+              const baseBodySizeEstimate = 1000 // More conservative base estimate
+
+              // Input size: ~60 bytes per input (tx hash + index + CBOR overhead)
+              const inputsSize = state.inputs.length * 80
+
+              // Output size: ~70 bytes base + address (~60 bytes) + value (~20 bytes) + tokens overhead
+              // For change output with minted tokens, add extra size for token bundle
+              let changeOutputSize = 0
+              if (!state.options.manualChangeOutput) {
+                // Base output size
+                changeOutputSize = 150
+                // Add size for minted tokens in change output
+                // Each minted asset adds ~40 bytes (policy ID + asset name + amount)
+                for (const mintAction of state.options.mints || []) {
+                  if (mintAction && mintAction.assets) {
+                    changeOutputSize +=
+                      Object.keys(mintAction.assets).length * 50
+                  }
+                }
+              }
+
+              const outputsSize = state.outputs.length * 150 + changeOutputSize
+
+              const certificatesSize = state.certificates.length * 120
+              const withdrawalsSize = state.withdrawals.length * 60
+
+              // Metadata size varies significantly - estimate conservatively
+              // Each metadata entry adds overhead, and large values (like base64 images) add more
+              let metadataSize = 0
+              if (state.metadata.length > 0) {
+                // Base overhead for metadata map
+                metadataSize = 100
+                // Add size for each metadata entry
+                for (const meta of state.metadata) {
+                  if (meta) {
+                    // Estimate based on JSON stringified size
+                    const metaStr = JSON.stringify(meta.data)
+                    metadataSize += Math.max(metaStr.length, 200) // At least 200 bytes per entry
+                  }
+                }
+              }
+
+              // Mint field: policy ID + asset name + amount for each asset
+              // Each mint adds ~60 bytes (policy ID ~56 bytes + asset name + amount)
+              let mintSize = 0
+              if (state.options.mints && state.options.mints.length > 0) {
+                mintSize = 100 // Base overhead
+                for (const mintAction of state.options.mints) {
+                  if (mintAction && mintAction.assets) {
+                    mintSize += Object.keys(mintAction.assets).length * 70
+                  }
+                }
+              }
+
+              const estimatedBodySize =
+                baseBodySizeEstimate +
+                inputsSize +
+                outputsSize +
+                certificatesSize +
+                withdrawalsSize +
+                metadataSize +
+                mintSize
+
+              // Apply a safety multiplier (2.5x) to account for CBOR encoding overhead,
+              // variable-length encoding, and other factors we can't predict accurately
+              // The actual body size is typically 2-3x larger than our estimate
+              const adjustedBodySize = Math.ceil(estimatedBodySize * 2.5)
+
+              // Estimate total transaction size including witness set
+              const totalTxSizeEstimate =
+                adjustedBodySize + actualWitnessSetSize
+
+              // Calculate total fee: constant + coefficient * total_size
+              const totalFee =
+                BigInt(protocolParams.linearFee.constant) +
+                BigInt(protocolParams.linearFee.coefficient) *
+                  BigInt(totalTxSizeEstimate)
+
+              // Set manual fee BEFORE calling addChangeIfNeeded
+              // CSL will use this fee instead of calculating its own
+              const feeBigNum = csl.BigNum.fromStr(totalFee.toString())
+              if (feeBigNum) {
+                cslTxBuilder.setFee(feeBigNum)
+                logger.info(
+                  'buildTransaction: Set manual fee accounting for native scripts',
+                  {
+                    estimatedBodySize,
+                    adjustedBodySize,
+                    actualWitnessSetSize,
+                    totalTxSizeEstimate,
+                    totalFee: totalFee.toString(),
+                    nativeScriptCount,
+                    inputsSize,
+                    outputsSize,
+                    changeOutputSize,
+                    metadataSize,
+                    mintSize,
+                  },
+                )
+              }
+            }
+          }
+        }
+
+        cslTxBuilder.addChangeIfNeeded(changeAddr)
+        logger.info('buildTransaction: Successfully added change if needed')
+      } catch (error) {
+        const errorMessage =
+          error instanceof Error ? error.message : String(error)
+        const isInsufficientAdaError =
+          errorMessage.includes('Not enough ADA leftover') ||
+          errorMessage.includes('add_change_if_needed')
+
+        logger.error('buildTransaction: Failed to add change if needed', {
+          error: errorMessage,
+          errorStack: error instanceof Error ? error.stack : undefined,
+          totalInputAda: totalInput[primaryTokenId] || '0',
+          totalOutputAda: totalOutput[primaryTokenId] || '0',
+          totalWithdrawalsAda: totalWithdrawals[primaryTokenId] || '0',
+          hasTokens,
+          inputTokenIds,
+          inputTokenCount: inputTokenIds.length,
+          expectedRemainingAda: expectedRemainingAda.toString(),
+          minUtxoValue: minUtxoValue.toString(),
+          isInsufficientAdaError,
+        })
+
+        // Provide a more helpful error message when tokens are present
+        if (isInsufficientAdaError && hasTokens) {
+          const enhancedError = new Error(
+            `Not enough ADA to create change output with ${inputTokenIds.length} tokens. ` +
+              `The change output requires more ADA than the base minimum UTXO value (${minUtxoValue.toString()} lovelace) ` +
+              `due to the tokens it contains. ` +
+              `Expected remaining ADA: ${expectedRemainingAda.toString()} lovelace. ` +
+              `Consider selecting UTXOs with more ADA or using pure ADA UTXOs when possible.`,
+          )
+          enhancedError.stack = error instanceof Error ? error.stack : undefined
+          throw enhancedError
+        }
+
+        throw error
       }
     }
 
@@ -1273,18 +1435,42 @@ export async function buildTransaction(
       throw new NotEnoughMoneyToSendError()
     }
 
-    // Create full transaction with empty witness set for CBOR serialization
-    // A full transaction is [body, witness_set, auxiliary_data?]
-    // We need to create a Transaction object, not just the body
-    const emptyWitnessSet = csl.TransactionWitnessSet.new()
-    if (!emptyWitnessSet) {
+    // Create witness set - include native scripts if minting is present
+    // Native scripts used in minting need to be in the witness set
+    const witnessSet = csl.TransactionWitnessSet.new()
+    if (!witnessSet) {
       logger.error('buildTransaction: Failed to create TransactionWitnessSet')
       throw new Error('Failed to create TransactionWitnessSet')
     }
 
+    // Add native scripts to witness set if minting is present
+    if (state.options.mints && state.options.mints.length > 0) {
+      const nativeScriptsForWitness = csl.NativeScripts.new()
+      for (let i = 0; i < state.options.mints.length; i++) {
+        const mintAction = state.options.mints[i]
+        if (!mintAction) continue
+
+        if (mintAction.script.type === 'native') {
+          const nativeScript = csl.NativeScript.fromHex(
+            mintAction.script.script,
+          )
+          if (nativeScript) {
+            nativeScriptsForWitness.add(nativeScript)
+          }
+        }
+      }
+
+      if (nativeScriptsForWitness.len() > 0) {
+        witnessSet.setNativeScripts(nativeScriptsForWitness)
+        logger.info('buildTransaction: Added native scripts to witness set', {
+          nativeScriptCount: nativeScriptsForWitness.len(),
+        })
+      }
+    }
+
     // Create full transaction: [body, witness_set, auxiliary_data?]
     // auxData was already created above if metadata exists
-    const fullTx = csl.Transaction.new(txBody, emptyWitnessSet, auxData)
+    const fullTx = csl.Transaction.new(txBody, witnessSet, auxData)
     if (!fullTx) {
       logger.error('buildTransaction: Failed to create Transaction')
       throw new Error('Failed to create Transaction')

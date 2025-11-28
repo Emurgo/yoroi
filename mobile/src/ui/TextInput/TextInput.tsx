@@ -1,5 +1,4 @@
-import {isString} from '@yoroi/common'
-import {useDebouncedCallback} from '@yoroi/common'
+import {isString, useDebouncedCallback} from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
@@ -88,7 +87,10 @@ export const TextInput = React.forwardRef(
           ref={ref}
           style={{textAlign}}
           value={value}
-          onChange={() => setErrorTextEnabled(false)}
+          onChange={() => {
+            setErrorTextEnabled(false)
+          }}
+          onChangeText={restProps.onChangeText}
           autoCorrect={false}
           autoComplete={autoComplete}
           autoCapitalize="none"

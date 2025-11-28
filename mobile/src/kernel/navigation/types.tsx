@@ -311,6 +311,7 @@ export type MenuRoutes = {
   '_menu': undefined
   'voting-registration': undefined
   'airdrop': undefined
+  'mint-burn': undefined
 }
 
 export type AppRoutes = {
@@ -366,6 +367,7 @@ export type WalletNavigation = {
   navigateToMessageSigningResult: (signature: string, key: string) => void
   navigateToTxDetails: (id: string) => void
   navigateToAirdrop: () => void
+  navigateToMintBurn: () => void
 }
 
 declare global {

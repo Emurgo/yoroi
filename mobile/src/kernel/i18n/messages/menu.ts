@@ -45,4 +45,8 @@ export const menuMessages = defineMessages({
     id: 'menu.airdrop',
     defaultMessage: '!!!Airdrop',
   },
+  mintBurn: {
+    id: 'menu.mintBurn',
+    defaultMessage: '!!!Mint & Burn',
+  },
 })

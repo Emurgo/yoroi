@@ -694,6 +694,18 @@ export const useWalletNavigation = () => {
         },
       })
     },
+
+    navigateToMintBurn: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'menu',
+          params: {
+            screen: 'mint-burn',
+          },
+        },
+      })
+    },
   } as const)
 
   return walletNavigation.current

@@ -82,7 +82,9 @@ const getIconKey = (
   | 'STAKE_DELEGATION'
   | 'STAKE_UNDELEGATION'
   | 'VOTE_DELEGATION'
-  | 'COLLATERAL_CREATION' => {
+  | 'COLLATERAL_CREATION'
+  | 'MINT'
+  | 'BURN' => {
   if (!operation) {
     return direction
   }
@@ -95,6 +97,12 @@ const getIconKey = (
   }
   if (opLower.includes('withdrawal')) {
     return 'WITHDRAWAL'
+  }
+  if (opLower.includes('burn')) {
+    return 'BURN'
+  }
+  if (opLower.includes('mint')) {
+    return 'MINT'
   }
   if (
     opLower.includes('swap') ||
@@ -145,7 +153,9 @@ const iconMap: Record<
   | 'STAKE_DELEGATION'
   | 'STAKE_UNDELEGATION'
   | 'VOTE_DELEGATION'
-  | 'COLLATERAL_CREATION',
+  | 'COLLATERAL_CREATION'
+  | 'MINT'
+  | 'BURN',
   ({size, color}: {size: number; color: string}) => React.ReactNode
 > = {
   SENT: Send,
@@ -161,6 +171,8 @@ const iconMap: Record<
   STAKE_UNDELEGATION: StakingKeyDeregistered,
   VOTE_DELEGATION: Governance,
   COLLATERAL_CREATION: Lock,
+  MINT: DigitalAsset,
+  BURN: Send,
 }
 
 export const styleMap: (
@@ -235,6 +247,16 @@ export const styleMap: (
     background: color.primary_100,
     icon: color.el_primary_medium,
   },
+  MINT: {
+    text: color.secondary_600,
+    background: color.secondary_100,
+    icon: color.secondary_600,
+  },
+  BURN: {
+    text: color.el_primary_medium,
+    background: color.primary_100,
+    icon: color.el_primary_medium,
+  },
 })
 
 type ThemeStatus =
@@ -251,3 +273,5 @@ type ThemeStatus =
   | 'STAKE_UNDELEGATION'
   | 'VOTE_DELEGATION'
   | 'COLLATERAL_CREATION'
+  | 'MINT'
+  | 'BURN'

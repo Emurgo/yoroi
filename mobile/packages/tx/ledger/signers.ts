@@ -143,12 +143,14 @@ const getRequiredSignersAddressing = async ({
   stakingKeyPath,
 }: GetRequiredSignersAddressing): Promise<Addressing[]> => {
   const requiredSigners = body.requiredSigners()
-  if (!requiredSigners) return []
-
   const signersArray: Array<Ed25519KeyHash> = []
-  for (let i = 0; i < requiredSigners.len(); i++) {
-    const signer = requiredSigners.get(i)
-    signersArray.push(signer)
+
+  // Add explicit required signers from transaction body
+  if (requiredSigners) {
+    for (let i = 0; i < requiredSigners.len(); i++) {
+      const signer = requiredSigners.get(i)
+      signersArray.push(signer)
+    }
   }
 
   const addressingArray: Addressing[] = []

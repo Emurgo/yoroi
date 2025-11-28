@@ -1,14 +1,19 @@
 import {isArray, isString} from '@yoroi/common'
+import {isPrimaryToken} from '@yoroi/portfolio'
 import {CertificateKind} from '@yoroi/tx'
-import {Balance, Swap} from '@yoroi/types'
-import {TransactionDirection, WalletTransaction} from '@yoroi/types'
+import {
+  Balance,
+  Swap,
+  TransactionDirection,
+  WalletTransaction,
+} from '@yoroi/types'
 
 import BigNumber from 'bignumber.js'
 
 import {ContractService} from '~/features/ReviewTx/common/services/contract-service'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {collateralConfig} from '~/wallets/cardano/utxoManager/utxos'
-import {Amounts, asQuantity} from '~/wallets/utils/utils'
+import {Amounts, Quantities, asQuantity} from '~/wallets/utils/utils'
 
 /**
  * Extract metadata messages from transaction metadata
@@ -249,7 +254,45 @@ export const getOperationDisplayText = (
     }
   }
 
-  // 3. Check for swap transactions (only if no certificate matched)
+  // 3. Check for mint/burn operations (only if no certificate matched)
+  // Mint/burn transactions have:
+  // - Metadata labels 721 (NFT) or 20 (FT) indicating minting metadata
+  // - Delta changes for non-primary tokens (positive for mint, negative for burn)
+  // We require both conditions to avoid false positives (e.g., TADA in preprod)
+  const txMetadata = metadata || walletTransaction.metadata
+  const hasMintingMetadata =
+    txMetadata?.some((item) => item?.label === '721' || item?.label === '20') ??
+    false
+
+  if (hasMintingMetadata && delta) {
+    const deltaArray = Amounts.toArray(delta)
+    let hasMint = false
+    let hasBurn = false
+
+    for (const {tokenId, quantity} of deltaArray) {
+      // Skip primary token (ADA) - we only care about minted/burned tokens
+      if (isPrimaryToken(tokenId)) {
+        continue
+      }
+
+      const qty = new BigNumber(quantity)
+      if (qty.isPositive() && !Quantities.isZero(quantity)) {
+        hasMint = true
+      } else if (qty.isNegative()) {
+        hasBurn = true
+      }
+    }
+
+    // If both mint and burn, prioritize burn (more destructive operation)
+    if (hasBurn) {
+      return strings.transactions.operation.burn
+    }
+    if (hasMint) {
+      return strings.transactions.operation.mint
+    }
+  }
+
+  // 4. Check for swap transactions (only if no certificate matched and no mint/burn)
   const swapInfo = isSwapTransaction(metadata || walletTransaction.metadata)
   if (swapInfo.isSwap) {
     if (swapInfo.isCancel) {
@@ -267,7 +310,7 @@ export const getOperationDisplayText = (
     }
   }
 
-  // 4. Check for smart contracts (only if no certificate matched and not a swap)
+  // 5. Check for smart contracts (only if no certificate matched, no mint/burn, and not a swap)
   if (
     !swapInfo.isSwap &&
     hasSmartContract(

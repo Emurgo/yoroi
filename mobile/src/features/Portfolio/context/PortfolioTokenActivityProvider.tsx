@@ -1,6 +1,6 @@
 import {isNonNullable, time} from '@yoroi/common'
 import {isPrimaryToken} from '@yoroi/portfolio'
-import {Portfolio} from '@yoroi/types'
+import {Chain, Portfolio} from '@yoroi/types'
 
 import {useQuery, useQueryClient} from '@tanstack/react-query'
 import {freeze, produce} from 'immer'
@@ -121,7 +121,8 @@ export const PortfolioTokenActivityProvider = ({
   }, [actions, queryClient, walletManager, network])
 
   const query = useQuery({
-    enabled: state.secondaryTokenIds.length > 0,
+    enabled:
+      state.secondaryTokenIds.length > 0 && network === Chain.Network.Mainnet,
     staleTime: time.oneMinute,
     gcTime: time.fiveMinutes,
     retryDelay: time.oneSecond,
