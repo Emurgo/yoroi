@@ -3,6 +3,7 @@ import {useTheme} from '@yoroi/theme'
 import {createStackNavigator} from '@react-navigation/stack'
 import * as React from 'react'
 
+import {ScanCodeScreen} from '~/features/Scan/useCases/ScanCodeScreen'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
 import {WalletInitRoutes} from '~/kernel/navigation/types'
@@ -149,6 +150,15 @@ export const SetupWalletNavigator = () => {
         name="setup-wallet-restore-read-only-from-addresses"
         getComponent={() => RestoreReadOnlyWalletFromAddressesScreen}
         options={{title: 'Restore Read-Only Wallet'}}
+      />
+
+      <Stack.Screen
+        name="setup-wallet-scan-qr-code"
+        getComponent={() => ScanCodeScreen}
+        options={{
+          title: strings.setupWallet.scanQrCodeTitle,
+          headerShown: true,
+        }}
       />
     </Stack.Navigator>
   )

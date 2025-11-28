@@ -1,9 +1,8 @@
 import {WasmModuleProxy} from '@emurgo/cross-csl-core'
 import {generateMnemonic, mnemonicToEntropy} from 'bip39'
+import {randomBytes} from 'react-native-randombytes'
 
 import {CardanoMobileWrapped} from '../wrappedCsl'
-
-const {randomBytes} = require('react-native-randombytes')
 
 const mnemonicStrengh = 160
 

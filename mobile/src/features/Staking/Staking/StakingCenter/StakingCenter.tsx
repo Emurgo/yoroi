@@ -1,4 +1,4 @@
-import {GOVERNANCE_YOROI_DREP_ID_HEX} from '@yoroi/staking'
+import {getYoroiDrepIdHex} from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import {useFocusEffect} from '@react-navigation/native'
@@ -96,8 +96,11 @@ export const StakingCenter = () => {
 
         if (includeGovernance) {
           // Create combined transaction with both stake pool and DRep delegation
+          const yoroiDrepIdHex = getYoroiDrepIdHex(
+            wallet.networkManager.network,
+          )
           const drepValue: {KeyHash: string} = {
-            KeyHash: GOVERNANCE_YOROI_DREP_ID_HEX,
+            KeyHash: yoroiDrepIdHex,
           }
           stakingTx = await createCombinedDelegationTxFromWallet(wallet, {
             poolId,

@@ -153,10 +153,10 @@ type ExternalProps = {
 export default (props: ExternalProps) => {
   const {wallet} = useSelectedWallet()
   const externalIndex: number | undefined = fromPairs(
-    wallet.externalAddresses.map((addr, i) => [addr, i]),
+    wallet.externalAddresses().map((addr, i) => [addr, i]),
   )[props.address]
   const internalIndex: number | undefined = fromPairs(
-    wallet.internalAddresses.map((addr, i) => [addr, i]),
+    wallet.internalAddresses().map((addr, i) => [addr, i]),
   )[props.address]
 
   if (externalIndex)

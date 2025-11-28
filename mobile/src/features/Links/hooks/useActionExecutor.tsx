@@ -17,9 +17,11 @@ import {useTransactionNotFoundModal} from '~/features/Scan/common/modals/Transac
 import {useNavigateTo as useGovernanceNavigateTo} from '~/features/Staking/Governance/common/navigation'
 import {isInsufficientBalanceError} from '~/features/Staking/Governance/common/transactionErrorHandling'
 import {useWalletManagerSelector} from '~/features/WalletManager/context/WalletManagerProvider'
+import {useHasWallets} from '~/features/WalletManager/hooks/useHasWallets'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
+import {AppRouteNavigation} from '~/kernel/navigation/types'
 import {useModal} from '~/ui/Modal/context/ModalContext'
 import {createDelegationTxFromWallet} from '~/wallets/cardano/transaction-recipes'
 import {pastedFormatter} from '~/wallets/utils/amountUtils'
@@ -46,7 +48,8 @@ const heightBreakpoint = 467
 
 export const useActionExecutor = () => {
   const {isLoggedIn} = useAuth()
-  const rootNavigation = useNavigation()
+  const hasWallets = useHasWallets()
+  const rootNavigation = useNavigation<AppRouteNavigation>()
   const wallet = useWalletManagerSelector((ctx) => ctx.selected.wallet)
   const meta = useWalletManagerSelector((ctx) => ctx.selected.meta)
   const selectedWalletData = React.useMemo(
@@ -420,12 +423,7 @@ export const useActionExecutor = () => {
           case 'view-transaction': {
             // CIP-107: View transaction details
             if (wallet) {
-              const transactions = wallet.transactions
-              const transaction = transactions
-                ? Object.values(transactions).find(
-                    (tx) => tx.id === cardanoAction.hash,
-                  )
-                : undefined
+              const transaction = wallet.getRawTransaction(cardanoAction.hash)
               if (transaction) {
                 walletNavigation.navigateToTxDetails(transaction.id)
               } else {
@@ -484,16 +482,64 @@ export const useActionExecutor = () => {
             }
             logger.info('useActionExecutor: restore-wallet action', {
               isLoggedIn,
+              hasWallets,
               cardanoAction: sanitizedAction,
             })
 
             if (isLoggedIn) {
-              walletNavigation.navigateToRestoreWalletFromLink(cardanoAction)
+              // When logged in but no wallets exist, navigate directly to setup-wallet
+              // because manage-wallets is not in the navigation stack yet
+              if (!hasWallets) {
+                try {
+                  rootNavigation.reset({
+                    index: 0,
+                    routes: [
+                      {
+                        name: 'setup-wallet',
+                        state: {
+                          routes: [
+                            {
+                              name: 'setup-wallet-restore-from-link',
+                              params: {action: cardanoAction},
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  })
+                } catch (error) {
+                  logger.error(
+                    'useActionExecutor: navigation error when logged in without wallets',
+                    {
+                      error,
+                      errorMessage:
+                        error instanceof Error ? error.message : String(error),
+                    },
+                  )
+                }
+              } else {
+                // When wallets exist, use the standard navigation through manage-wallets
+                walletNavigation.navigateToRestoreWalletFromLink(cardanoAction)
+              }
             } else {
               try {
-                ;(rootNavigation as any).navigate('setup-wallet', {
-                  screen: 'setup-wallet-restore-from-link',
-                  params: {action: cardanoAction},
+                // Use reset to ensure clean navigation state when not logged in
+                // This prevents issues if user is already in setup-wallet flow
+                rootNavigation.reset({
+                  index: 0,
+                  routes: [
+                    {
+                      name: 'setup-wallet',
+                      state: {
+                        routes: [
+                          {
+                            name: 'setup-wallet-restore-from-link',
+                            params: {action: cardanoAction},
+                          },
+                        ],
+                      },
+                    },
+                  ],
                 })
               } catch (error) {
                 logger.info('useActionExecutor: navigation error', {
@@ -518,6 +564,7 @@ export const useActionExecutor = () => {
     },
     [
       isLoggedIn,
+      hasWallets,
       wallet,
       selectedWalletData,
       defaultPrimaryTokenInfo,

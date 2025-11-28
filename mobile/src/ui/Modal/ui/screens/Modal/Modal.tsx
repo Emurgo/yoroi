@@ -132,7 +132,8 @@ const Modal = () => {
         duration: time.seconds(0.2),
       })
     }
-  }, [height, isOpen, isFull, modalHeight])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [height, isFull, modalHeight])
 
   React.useEffect(() => {
     isExpanded.value = hasExpandedEnabled

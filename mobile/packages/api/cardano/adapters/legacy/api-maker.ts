@@ -1,4 +1,5 @@
 import {StakePoolInfoRequest, StakePoolInfosAndHistories} from '@yoroi/staking'
+import {TransactionStatus, WalletTransaction} from '@yoroi/types'
 
 import {freeze} from 'immer'
 import _ from 'lodash'
@@ -6,7 +7,6 @@ import _ from 'lodash'
 import {
   AccountStateRequest,
   AccountStateResponse,
-  RawTransaction,
   TipStatusResponse,
   TxHistoryRequest,
   TxStatusRequest,
@@ -15,6 +15,127 @@ import {
 import {handleError} from '../../errors'
 import {Addresses, CardanoApiAdapter} from '../../types'
 import {fetchDefault} from '../../utils/fetch'
+
+/**
+ * Internal RawTransaction type - only used within API adapters
+ * This matches the format returned by legacy API
+ */
+type InternalRawTransaction = {
+  readonly type: 'byron' | 'shelley'
+  readonly fee?: string
+  readonly hash: string
+  readonly last_update: string
+  readonly tx_state: string
+  readonly inputs: Array<{
+    readonly address: string
+    readonly amount: string
+    readonly assets: Array<{
+      readonly tokenId: string
+      readonly policyId: string
+      readonly name: string
+      readonly amount: string
+    }>
+    readonly id?: string
+    readonly index?: number
+    readonly txHash?: string
+  }>
+  readonly outputs: Array<{
+    readonly address: string
+    readonly amount: string
+    readonly assets: Array<{
+      readonly tokenId: string
+      readonly policyId: string
+      readonly name: string
+      readonly amount: string
+    }>
+  }>
+  readonly withdrawals: Array<{
+    readonly address: string
+    readonly amount: string
+  }>
+  readonly certificates: Array<unknown>
+  readonly valid_contract?: boolean
+  readonly script_size?: number
+  readonly collateral_inputs?: Array<{
+    readonly address: string
+    readonly amount: string
+    readonly assets: Array<{
+      readonly tokenId: string
+      readonly policyId: string
+      readonly name: string
+      readonly amount: string
+    }>
+  }>
+  readonly metadata?: Array<{
+    label: string
+    map_json?: Record<string, unknown> | Array<unknown>
+    text_scalar?: string | null
+  }>
+  readonly block_num?: number
+  readonly block_hash?: string
+  readonly tx_ordinal?: number
+  readonly time?: string
+  readonly epoch?: number
+  readonly slot?: number
+}
+
+/**
+ * Transform internal RawTransaction to WalletTransaction
+ */
+function transformToWalletTransaction(
+  tx: InternalRawTransaction,
+): WalletTransaction {
+  return {
+    id: tx.hash,
+    type: tx.type,
+    fee: tx.fee ?? undefined,
+    status: tx.tx_state as TransactionStatus,
+    inputs: tx.inputs.map((input) => ({
+      id: input.id,
+      address: input.address,
+      amount: input.amount,
+      assets: (input.assets ?? []).map((asset) => ({
+        amount: asset.amount,
+        tokenId: asset.tokenId as any,
+        policyId: asset.policyId,
+        name: asset.name,
+      })),
+    })),
+    outputs: tx.outputs.map((output) => ({
+      address: output.address,
+      amount: output.amount,
+      assets: (output.assets ?? []).map((asset) => ({
+        amount: asset.amount,
+        tokenId: asset.tokenId as any,
+        policyId: asset.policyId,
+        name: asset.name,
+      })),
+    })),
+    lastUpdatedAt: tx.last_update,
+    submittedAt: tx.time ?? null,
+    blockNum: tx.block_num ?? null,
+    blockHash: tx.block_hash ?? null,
+    txOrdinal: tx.tx_ordinal ?? null,
+    epoch: tx.epoch ?? null,
+    slot: tx.slot ?? null,
+    withdrawals: tx.withdrawals,
+    certificates: tx.certificates as any,
+    validContract: tx.valid_contract,
+    scriptSize: tx.script_size,
+    collateralInputs: (tx.collateral_inputs ?? []).map((input) => ({
+      address: input.address,
+      amount: input.amount,
+      assets: (input.assets ?? []).map((asset) => ({
+        amount: asset.amount,
+        tokenId: asset.tokenId as any,
+        policyId: asset.policyId,
+        name: asset.name,
+      })),
+    })),
+    memo: null,
+    metadata: tx.metadata,
+  }
+}
 
 const limitApiRecords = 50
 
@@ -30,12 +151,14 @@ export const legacyApiMaker = ({
 
     async fetchNewTxHistory(
       request: TxHistoryRequest,
-    ): Promise<{isLast: boolean; transactions: Array<RawTransaction>}> {
-      const transactions = await fetchDefault<Array<RawTransaction>>(
+    ): Promise<{isLast: boolean; transactions: Array<WalletTransaction>}> {
+      const rawTransactions = await fetchDefault<Array<InternalRawTransaction>>(
         'v2/txs/history',
         request,
         baseApiUrl,
       )
+
+      const transactions = rawTransactions.map(transformToWalletTransaction)
 
       return {
         transactions,

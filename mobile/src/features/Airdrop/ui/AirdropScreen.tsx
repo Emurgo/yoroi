@@ -14,12 +14,12 @@ import {
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {Address} from '~/common/Address/Address'
 import {usePromptRootKey} from '~/features/ReviewTx/common/hooks/usePromptRootKey'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 import {Button} from '~/ui/Button/Button'
-import {Copiable} from '~/ui/Copiable/Copiable'
 import {Icon} from '~/ui/Icon'
 import {Space} from '~/ui/Space/Space'
 
@@ -234,23 +234,7 @@ export const AirdropScreen = () => {
                     {strings.airdrop.address}
                   </Text>
                   <Space.Height.xs />
-                  <Copiable text={allocation.address}>
-                    <View style={{flex: 1}}>
-                      <Text numberOfLines={1} ellipsizeMode="middle">
-                        <Text
-                          style={[a.body_2_md_regular, ta.text_gray_medium]}
-                        >
-                          {allocation.address.slice(0, -6)}
-                        </Text>
-                        <Text
-                          style={[a.body_2_md_medium, ta.el_primary_medium]}
-                        >
-                          {' '}
-                          {allocation.address.slice(-6)}
-                        </Text>
-                      </Text>
-                    </View>
-                  </Copiable>
+                  <Address address={allocation.address} />
                 </View>
               </View>
 

@@ -1,9 +1,8 @@
 import {isHex} from '@yoroi/common'
+import {StakingStatus} from '@yoroi/staking'
 import {CardanoAddressedUtxo} from '@yoroi/tx'
 
 import {sortBy} from 'lodash'
-
-import {StakingStatus} from '~/wallets/types/staking'
 
 import type {TimestampedCertMeta} from './transactionManager/transactionManager'
 import {CardanoTypes} from './types'

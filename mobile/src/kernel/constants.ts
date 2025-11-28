@@ -19,7 +19,9 @@ export const disableLogbox = Boolean(process.env.EXPO_PUBLIC_DISABLE_LOGBOX)
 export const isNightly = buildVariant === 'NIGHTLY'
 export const isPreview = buildVariant === 'PREVIEW'
 export const isProduction = buildVariant === 'PROD'
-export const isDev = __DEV__
+// isDev should be true if running in dev mode OR if buildVariant is DEV
+// This ensures standalone APKs with DEV variant are treated as dev builds
+export const isDev = __DEV__ || buildVariant === 'DEV'
 
 export const environment =
   isNightly || isPreview
@@ -58,7 +60,7 @@ export const sentryDsn = process.env.EXPO_PUBLIC_SENTRY_DSN
 const envLoggerFilter = process.env.EXPO_PUBLIC_LOGGER_FILTER
 export const loggerFilter = envLoggerFilter ? new RegExp(envLoggerFilter) : null
 export const loggerLevel: App.Logger.Level = isDev
-  ? App.Logger.Level.Debug
+  ? App.Logger.Level.Info
   : App.Logger.Level.Warn
 
 // Themes

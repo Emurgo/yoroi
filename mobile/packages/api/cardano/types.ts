@@ -1,9 +1,9 @@
 import {StakePoolInfoRequest, StakePoolInfosAndHistories} from '@yoroi/staking'
+import {WalletTransaction} from '@yoroi/types'
 
 import {
   AccountStateRequest,
   AccountStateResponse,
-  RawTransaction,
   TipStatusResponse,
   TxHistoryRequest,
   TxStatusRequest,
@@ -41,7 +41,7 @@ export interface CardanoApiAdapter {
   fetchNewTxHistory(
     request: TxHistoryRequest,
     walletContext?: WalletContext,
-  ): Promise<{isLast: boolean; transactions: Array<RawTransaction>}>
+  ): Promise<{isLast: boolean; transactions: Array<WalletTransaction>}>
 
   filterUsedAddresses(
     addresses: Addresses,
@@ -102,7 +102,7 @@ export interface ManagedCardanoApi {
   fetchNewTxHistory(
     request: TxHistoryRequest,
     walletContext?: WalletContext,
-  ): Promise<{isLast: boolean; transactions: Array<RawTransaction>}>
+  ): Promise<{isLast: boolean; transactions: Array<WalletTransaction>}>
 
   filterUsedAddresses(
     addresses: Addresses,

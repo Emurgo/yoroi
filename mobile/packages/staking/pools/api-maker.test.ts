@@ -25,7 +25,8 @@ jest.mock('./pool-info-api', () => {
 const mockFetchData = jest.fn()
 const mockZeroApiUrl = 'https://api.example.com'
 const mockLegacyApiBaseUrl = 'https://legacy.example.com'
-const mockWasmFactory = init('test')
+const mockWasmModule = init('test')
+const mockWasmFactory = (_scope: string) => mockWasmModule
 
 const mockExplorerPoolInfo = {
   id: 'pool123',

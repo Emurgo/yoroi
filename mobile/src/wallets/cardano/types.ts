@@ -1,8 +1,16 @@
 import {
+  FundInfoResponse,
+  RawUtxo,
+  TipStatusResponse,
+  TxStatusRequest,
+  TxStatusResponse,
+} from '@yoroi/api'
+import {
   AccountStates,
   StakePoolInfoRequest,
   StakePoolInfosAndHistories,
 } from '@yoroi/staking'
+import {StakingInfo, StakingStatus} from '@yoroi/staking'
 import {
   Addressing as AddressingType,
   CardanoAddressedUtxo as CardanoAddressedUtxoType,
@@ -14,6 +22,7 @@ import {
   UnsignedTx as UnsignedTxType,
 } from '@yoroi/tx'
 import {Api, App, Balance, HW, Network, Portfolio, Wallet} from '@yoroi/types'
+import {WalletTransaction} from '@yoroi/types'
 
 import {WalletChecksum as WalletChecksumType} from '@emurgo/cip4-js'
 import * as CoreTypes from '@emurgo/cross-csl-core'
@@ -21,24 +30,14 @@ import * as CSL from '@emurgo/cross-csl-core'
 
 import {WalletEncryptedStorage} from '~/kernel/storage/EncryptedStorage'
 
-import {
-  FundInfoResponse,
-  RawUtxo,
-  TipStatusResponse,
-  TransactionInfo,
-  TxStatusRequest,
-  TxStatusResponse,
-  WalletState,
-  WalletTransaction,
-} from '../types/other'
-import {StakingInfo, StakingStatus} from '../types/staking'
+import {AddressChain} from './account-manager/account-manager'
 import type {Addresses} from './account-manager/account-manager'
+import {ReadOnlyAddressChain} from './account-manager/read-only-account-manager'
 
 export type WalletEvent =
   | {type: 'initialize'}
-  | {type: 'transactions'; transactions: Record<string, TransactionInfo>}
+  | {type: 'transactions'}
   | {type: 'addresses'; addresses: Addresses}
-  | {type: 'state'; state: WalletState}
   | {type: 'utxos'; utxos: RawUtxo[]}
   | {type: 'collateral-id'; collateralId: RawUtxo['utxo_id']}
 
@@ -72,15 +71,13 @@ export interface YoroiWallet {
   // portfolio
   readonly balanceManager: Readonly<Portfolio.Manager.Balance>
   readonly balance$: Readonly<Portfolio.Manager.Balance['observable$']>
-  get balances(): ReturnType<Portfolio.Manager.Balance['getBalances']>
-  get primaryBalance(): ReturnType<
-    Portfolio.Manager.Balance['getPrimaryBalance']
-  >
-  get primaryBreakdown(): ReturnType<
+  balances(): ReturnType<Portfolio.Manager.Balance['getBalances']>
+  primaryBalance(): ReturnType<Portfolio.Manager.Balance['getPrimaryBalance']>
+  primaryBreakdown(): ReturnType<
     Portfolio.Manager.Balance['getPrimaryBreakdown']
   >
-  get isEmpty(): boolean
-  get hasOnlyPrimary(): boolean
+  isEmpty(): boolean
+  hasOnlyPrimary(): boolean
 
   // account
   readonly accountVisual: number
@@ -98,7 +95,7 @@ export interface YoroiWallet {
   }): Promise<void>
   // ---------------------------------------------------------------------------------------
 
-  get receiveAddressInfo(): Readonly<{
+  receiveAddressInfo(): Readonly<{
     lastUsedIndexVisual: number
     lastUsedIndex: number
     canIncrease: boolean
@@ -158,26 +155,29 @@ export interface YoroiWallet {
   // Password
   encryptedStorage: WalletEncryptedStorage
 
+  // Account -> Chains (exposed directly)
+  externalChain: AddressChain | ReadOnlyAddressChain
+  internalChain: AddressChain | ReadOnlyAddressChain
+
   // Account -> Addresses
-  get externalAddresses(): Addresses
-  get internalAddresses(): Addresses
-  get isUsedAddressIndex(): Record<string, boolean>
-  get receiveAddresses(): Addresses
+  externalAddresses(): Addresses
+  internalAddresses(): Addresses
+  isUsedAddressIndex(): Record<string, boolean>
+  receiveAddresses(): Addresses
   generateNewReceiveAddress(): boolean
   getChangeAddress(addressMode: Wallet.AddressMode): string
 
   // Balances, TxDetails
   saveMemo(txId: string, memo: string): Promise<void>
-  get transactions(): Record<string, TransactionInfo>
   getRawTransaction(txId: string): WalletTransaction | undefined
   getRawTransactions(): Record<string, WalletTransaction>
-  get confirmationCounts(): Record<string, null | number>
+  confirmationCounts(): Record<string, null | number>
   fetchTxStatus(request: TxStatusRequest): Promise<TxStatusResponse>
 
   // Utxos
-  utxos: Array<RawUtxo>
-  allUtxos: Array<RawUtxo>
-  get collateralId(): string
+  utxos(): Array<RawUtxo>
+  allUtxos(): Array<RawUtxo>
+  collateralId(): string
   getCollateralInfo(): {
     utxo: RawUtxo | undefined
     amount: Portfolio.Token.Amount
@@ -244,6 +244,8 @@ const yoroiWalletKeys: Array<keyof YoroiWallet> = [
   'encryptedStorage',
 
   // Addresses
+  'externalChain',
+  'internalChain',
   'externalAddresses',
   'internalAddresses',
   'isUsedAddressIndex',
@@ -257,7 +259,8 @@ const yoroiWalletKeys: Array<keyof YoroiWallet> = [
   'saveMemo',
 
   // Balances, TxDetails
-  'transactions',
+  'getRawTransaction',
+  'getRawTransactions',
   'confirmationCounts',
   'fetchTxStatus',
 

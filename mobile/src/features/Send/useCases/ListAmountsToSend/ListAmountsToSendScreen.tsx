@@ -161,7 +161,11 @@ export const ListAmountsToSendScreen = () => {
     (result: {cbor: string}) => {
       navigateToTxReview({
         cbor: result.cbor,
-        onSuccess: (args) => handleOnSuccess(args?.signedTx),
+        onSuccess: () => {
+          // signedTx can be Transaction or a function, but handleOnSuccess expects Transaction | undefined
+          // Since handleOnSuccess doesn't use the parameter, pass undefined
+          handleOnSuccess(undefined)
+        },
         context: 'send',
       })
     },

@@ -1,7 +1,7 @@
 import {calculateTxId} from '@yoroi/tx'
 import {Wallet} from '@yoroi/types'
 
-import {Transaction} from '@emurgo/cross-csl-core'
+import {Transaction, WasmModuleProxy} from '@emurgo/cross-csl-core'
 import * as React from 'react'
 import {ErrorBoundary} from 'react-error-boundary'
 
@@ -32,12 +32,14 @@ export type OnConfirm = {
   onSuccess?: (args?: {
     tx?: Transaction
     rootKey?: string
-    signedTx?: Transaction
+    signedTx?: Transaction | ((csl: WasmModuleProxy) => Transaction)
+    txId?: string
   }) => void
   onSuccessWithoutFeedback?: (args?: {
     tx?: Transaction
     rootKey?: string
-    signedTx?: Transaction
+    signedTx?: Transaction | ((csl: WasmModuleProxy) => Transaction)
+    txId?: string
   }) => void
   onError?: ((error: unknown) => void) | null
   onErrorWithoutFeedback?: ((error: unknown) => void) | null
@@ -71,52 +73,105 @@ export const useOnConfirm = ({
   const handleOnSuccess = async (args?: {
     tx?: Transaction
     rootKey?: string
-    signedTx?: Transaction
+    signedTx?: Transaction | ((csl: WasmModuleProxy) => Transaction)
     txId?: string
   }) => {
-    closeModal()
+    try {
+      closeModal()
 
-    // Use signedTx if available, otherwise fall back to tx
-    const signedTx = args?.signedTx ?? args?.tx
+      // Use signedTx if available, otherwise fall back to tx
+      // If signedTx is a function, it will be called within a CSL scope when needed
+      const signedTx = args?.signedTx ?? args?.tx
 
-    // Re-read memo from context at the time of saving (in case it changed)
-    const currentMemo = memoContext.memo
+      // Re-read memo from context at the time of saving (in case it changed)
+      const currentMemo = memoContext.memo
 
-    // Save memo if present - txId should always be provided by callers
-    if (currentMemo.trim().length > 0 && args?.txId) {
+      // Save memo if present - txId should always be provided by callers
+      if (currentMemo.trim().length > 0 && args?.txId) {
+        try {
+          await saveMemo({txId: args.txId, memo: currentMemo.trim()})
+        } catch (error) {
+          logger.error('useOnConfirm: Failed to save memo', {
+            txId: args.txId,
+            error: error instanceof Error ? error.message : String(error),
+          })
+          // Silently fail - don't block success flow
+        }
+      }
+
+      if (onSuccessWithoutFeedback) {
+        try {
+          await onSuccessWithoutFeedback({
+            rootKey: args?.rootKey,
+            tx: args?.tx,
+            signedTx,
+            txId: args?.txId,
+          })
+        } catch (error) {
+          logger.error(
+            'useOnConfirm: onSuccessWithoutFeedback callback failed',
+            {
+              error: error instanceof Error ? error.message : String(error),
+              txId: args?.txId,
+            },
+          )
+          // Don't block success flow - transaction was already submitted
+        }
+        return
+      }
+
+      if (onSuccess) {
+        try {
+          await onSuccess({
+            rootKey: args?.rootKey,
+            tx: args?.tx,
+            signedTx,
+            txId: args?.txId,
+          })
+        } catch (error) {
+          logger.error('useOnConfirm: onSuccess callback failed', {
+            error: error instanceof Error ? error.message : String(error),
+            txId: args?.txId,
+          })
+          // Don't block success flow - transaction was already submitted
+        }
+      }
+
+      navigateTo.showSubmittedTxScreen(context)
+    } catch (error) {
+      logger.error('useOnConfirm: Unexpected error in handleOnSuccess', {
+        error: error instanceof Error ? error.message : String(error),
+        txId: args?.txId,
+        context,
+      })
+      // Even if there's an unexpected error, try to show success screen
+      // since transaction was already submitted
       try {
-        await saveMemo({txId: args.txId, memo: currentMemo.trim()})
-      } catch (error) {
-        logger.error('useOnConfirm: Failed to save memo', {
-          txId: args.txId,
-          error: error instanceof Error ? error.message : String(error),
-        })
-        // Silently fail - don't block success flow
+        navigateTo.showSubmittedTxScreen(context)
+      } catch (navError) {
+        logger.error(
+          'useOnConfirm: Failed to show success screen after error',
+          {
+            error:
+              navError instanceof Error ? navError.message : String(navError),
+          },
+        )
       }
     }
-
-    if (onSuccessWithoutFeedback) {
-      onSuccessWithoutFeedback({
-        rootKey: args?.rootKey,
-        tx: args?.tx,
-        signedTx,
-      })
-      return
-    }
-
-    if (onSuccess) {
-      onSuccess({
-        rootKey: args?.rootKey,
-        tx: args?.tx,
-        signedTx,
-      })
-    }
-
-    navigateTo.showSubmittedTxScreen(context)
   }
 
   const handleOnError = (error: unknown) => {
     closeModal()
+
+    // Log error details for debugging
+    logger.error('useOnConfirm: Transaction failed', {
+      error: error instanceof Error ? error.message : String(error),
+      errorStack: error instanceof Error ? error.stack : undefined,
+      context,
+      cborLength: cbor?.length,
+      preventSubmit,
+      partial,
+    })
 
     if (onErrorWithoutFeedback) {
       onErrorWithoutFeedback(error)
@@ -239,18 +294,20 @@ const submitTx = async (
   rootKey: string,
   wallet: YoroiWallet,
   meta: Wallet.Meta,
-): Promise<{signedTx: Transaction; txId: string} | null> => {
-  return CardanoMobileWrapped.cslScope(async (csl) => {
+): Promise<{
+  signedTx: (csl: WasmModuleProxy) => Transaction
+  txId: string
+} | null> => {
+  const result = await CardanoMobileWrapped.cslScope(async (csl) => {
     const signers = await getTransactionSigners(cbor, wallet, meta)
     const keys = signers.map((signer) =>
       createRawTxSigningKey(rootKey, signer, csl),
     )
     const signedTxBytes = await wallet.signRawTx(cbor, keys)
-    if (!signedTxBytes) return null
-
-    // Create Transaction object from signed bytes
-    const signedTx = csl.Transaction.fromBytes(signedTxBytes)
-    if (!signedTx) return null
+    if (!signedTxBytes) {
+      logger.error('submitTx: Failed to sign transaction')
+      return null
+    }
 
     // Calculate transaction ID from signed bytes (before submitting)
     const txId = await calculateTxId(
@@ -261,8 +318,39 @@ const submitTx = async (
 
     // Submit the transaction
     const hexBase64 = Buffer.from(signedTxBytes).toString('base64')
-    await wallet.submitTransaction(hexBase64)
+    try {
+      await wallet.submitTransaction(hexBase64)
+      logger.debug('submitTx: Transaction submitted successfully', {txId})
+    } catch (submitError) {
+      logger.error('submitTx: Failed to submit transaction', {
+        error:
+          submitError instanceof Error
+            ? submitError.message
+            : String(submitError),
+        errorStack:
+          submitError instanceof Error ? submitError.stack : undefined,
+        txId,
+        cborLength: cbor.length,
+      })
+      throw submitError
+    }
 
-    return {signedTx, txId}
+    return {signedTxBytes, txId}
   })
+
+  if (!result) {
+    return null
+  }
+
+  // Return a function that recreates the Transaction from bytes when called with a CSL instance
+  // This allows callbacks to recreate the Transaction within their own CSL scope
+  const signedTx = (csl: WasmModuleProxy) => {
+    const tx = csl.Transaction.fromBytes(result.signedTxBytes)
+    if (!tx) {
+      throw new Error('Failed to recreate Transaction from bytes')
+    }
+    return tx
+  }
+
+  return {signedTx, txId: result.txId}
 }

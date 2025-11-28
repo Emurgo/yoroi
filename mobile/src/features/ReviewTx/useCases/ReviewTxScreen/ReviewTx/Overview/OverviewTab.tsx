@@ -20,6 +20,7 @@ import {
   useWindowDimensions,
 } from 'react-native'
 
+import {Address} from '~/common/Address/Address'
 import {TokenItem} from '~/common/TokenItem/TokenItem'
 import {WalletBalance} from '~/common/WalletBalance/WalletBalance'
 import {Operations, useOperations} from '~/features/ReviewTx/common/operations'
@@ -33,15 +34,11 @@ import {
   FormattedOutputs,
   FormattedTx,
 } from '~/features/ReviewTx/common/types'
-import AddressModal, {
-  AddressModalFooter,
-} from '~/features/Transactions/useCases/TxDetails/AddressModal/AddressModal'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Accordion} from '~/ui/Accordion/Accordion'
 import {Button} from '~/ui/Button/Button'
-import {Copiable} from '~/ui/Copiable/Copiable'
 import {Divider} from '~/ui/Divider/Divider'
 import {Icon} from '~/ui/Icon'
 import {InfoBanner} from '~/ui/InfoBanner/InfoBanner'
@@ -520,26 +517,9 @@ const MyWalletSection = ({
 }) => {
   const strings = useStrings()
   const {palette: p} = useTheme()
-  const {openModal} = useModal()
-  const screenHeight = useWindowDimensions().height
-  const modalHeight = Math.min(screenHeight * 0.8, 650)
   const [expanded, setExpanded] = React.useState(true)
   const address =
     ownedOutputs[0]?.rewardAddress ?? ownedOutputs[0]?.address ?? '-'
-
-  const handleOpenAddressModal = React.useCallback(() => {
-    openModal({
-      title: strings.transactions.addressDetailsTitle,
-      content: <AddressModal address={address} />,
-      footer: <AddressModalFooter address={address} />,
-      height: modalHeight,
-    })
-  }, [
-    address,
-    openModal,
-    strings.transactions.addressDetailsTitle,
-    modalHeight,
-  ])
 
   return (
     <Accordion
@@ -549,23 +529,15 @@ const MyWalletSection = ({
     >
       <Space.Height.lg />
 
-      <Copiable text={address} onPress={handleOpenAddressModal}>
-        <Text
-          style={[a.flex_1, a.body_2_md_regular, {color: p.text_gray_medium}]}
-          numberOfLines={1}
-          ellipsizeMode="middle"
-        >
-          {address}
-        </Text>
-
-        {ownedOutputs[0]?.addressKind === CredKind.Script && (
-          <>
-            <Space.Width.xs />
-
+      <Address
+        address={address}
+        textStyle={[a.body_2_md_regular, {color: p.text_gray_medium}]}
+        rightAdornment={
+          ownedOutputs[0]?.addressKind === CredKind.Script ? (
             <Icon.DigitalAsset size={24} color={p.el_gray_medium} />
-          </>
-        )}
-      </Copiable>
+          ) : undefined
+        }
+      />
 
       <Space.Height.sm />
 
@@ -686,23 +658,6 @@ const OneExternalPartySection = ({
   const {atoms: ta} = useTheme()
   const {wallet} = useSelectedWallet()
   const strings = useStrings()
-  const {openModal} = useModal()
-  const screenHeight = useWindowDimensions().height
-  const modalHeight = Math.min(screenHeight * 0.8, 650)
-
-  const handleOpenAddressModal = React.useCallback(() => {
-    openModal({
-      title: strings.transactions.addressDetailsTitle,
-      content: <AddressModal address={address} />,
-      footer: <AddressModalFooter address={address} />,
-      height: modalHeight,
-    })
-  }, [
-    address,
-    openModal,
-    strings.transactions.addressDetailsTitle,
-    modalHeight,
-  ])
 
   const {sends, receives} = React.useMemo(() => {
     // Find ALL inputs for this party's address
@@ -741,28 +696,16 @@ const OneExternalPartySection = ({
         </Text>
 
         {receiverCustomTitle ?? (
-          <Copiable text={address} onPress={handleOpenAddressModal}>
-            <Text
-              style={[
-                a.flex_1,
-                a.body_2_md_regular,
-                ta.text_gray_medium,
-                {maxWidth: 260},
-              ]}
-              numberOfLines={1}
-              ellipsizeMode="middle"
-            >
-              {address}
-            </Text>
-
-            {output?.addressKind === CredKind.Script && (
-              <>
-                <Space.Width.xs />
-
+          <Address
+            address={address}
+            style={{maxWidth: 260}}
+            textStyle={[a.body_2_md_regular, ta.text_gray_medium]}
+            rightAdornment={
+              output?.addressKind === CredKind.Script ? (
                 <Icon.DigitalAsset size={24} color={ta.el_gray_medium.color} />
-              </>
-            )}
-          </Copiable>
+              ) : undefined
+            }
+          />
         )}
       </View>
 
@@ -844,25 +787,7 @@ const ExternalPartyItem = ({
 }) => {
   const {palette: p} = useTheme()
   const {wallet} = useSelectedWallet()
-  const strings = useStrings()
-  const {openModal} = useModal()
-  const screenHeight = useWindowDimensions().height
-  const modalHeight = Math.min(screenHeight * 0.8, 650)
   const address = output?.rewardAddress ?? output?.address ?? '-'
-
-  const handleOpenAddressModal = React.useCallback(() => {
-    openModal({
-      title: strings.transactions.addressDetailsTitle,
-      content: <AddressModal address={address} />,
-      footer: <AddressModalFooter address={address} />,
-      height: modalHeight,
-    })
-  }, [
-    address,
-    openModal,
-    strings.transactions.addressDetailsTitle,
-    modalHeight,
-  ])
 
   const {sends, receives} = React.useMemo(() => {
     // Find ALL inputs for this party's address
@@ -897,23 +822,15 @@ const ExternalPartyItem = ({
     <View>
       <Space.Height.lg />
 
-      <Copiable text={address} onPress={handleOpenAddressModal}>
-        <Text
-          style={[a.flex_1, a.body_2_md_regular, {color: p.text_gray_medium}]}
-          numberOfLines={1}
-          ellipsizeMode="middle"
-        >
-          {address}
-        </Text>
-
-        {output?.addressKind === CredKind.Script && (
-          <>
-            <Space.Width.xs />
-
+      <Address
+        address={address}
+        textStyle={[a.body_2_md_regular, {color: p.text_gray_medium}]}
+        rightAdornment={
+          output?.addressKind === CredKind.Script ? (
             <Icon.DigitalAsset size={24} color={p.el_gray_medium} />
-          </>
-        )}
-      </Copiable>
+          ) : undefined
+        }
+      />
 
       <Space.Height.sm />
 

@@ -22,7 +22,7 @@ describe('cip30ExtensionMaker', () => {
   it('should support getUtxos', async () => {
     const cip30 = cip30ExtensionMaker(mocks.wallet, mocks.walletMeta)
     const result = await cip30.getUtxos(undefined, undefined)
-    expect(result).toHaveLength(mocks.wallet.utxos.length)
+    expect(result).toHaveLength(mocks.wallet.utxos().length)
   })
 
   it('should support getBalance', async () => {

@@ -286,7 +286,12 @@ export const ActionHandler = () => {
     subscription.add(
       actionProcessingStream$.subscribe(
         ({action, isLoggedIn: loggedIn, wallet: currentWallet, actionId}) => {
-          if (!loggedIn) {
+          // Allow restore-wallet actions even when not logged in
+          const isRestoreWalletAction =
+            action.source === 'cardano' &&
+            action.action.action === 'restore-wallet'
+
+          if (!loggedIn && !isRestoreWalletAction) {
             return
           }
 

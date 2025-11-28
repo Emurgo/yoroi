@@ -303,13 +303,14 @@ import {SwapStorage} from './swap/storage'
 import {TransferEntry, TransferTarget, TransferTargets} from './transfer/state'
 import {WalletMeta} from './wallet/meta'
 import {
+  BaseAsset,
   TRANSACTION_DIRECTION,
   TRANSACTION_STATUS,
   TRANSACTION_TYPE,
   TransactionAssurance,
   TransactionDirection,
-  TransactionInfo,
   TransactionStatus,
+  TransactionToken,
   TransactionType,
   Transactions,
   TxMetadata,
@@ -318,11 +319,109 @@ import {
 } from './wallet/transactions'
 import {WalletAddressMode, WalletImplementation} from './wallet/wallet'
 
+// Type aliases to reference imported transaction types (avoid circular references in namespace)
+type ImportedTransactionAssurance = TransactionAssurance
+type ImportedWalletTransaction = WalletTransaction
+type ImportedTransactions = Transactions
+type ImportedTxMetadata = TxMetadata
+type ImportedTxMetadataInfo = TxMetadataInfo
+type ImportedBaseAsset = BaseAsset
+
 export namespace App {
   export namespace Errors {
     export class InvalidState extends AppErrorInvalidState {}
     export class WrongPassword extends AppErrorWrongPassword {}
     export class LibraryError extends AppErrorLibraryFailed {}
+  }
+
+  /**
+   * Remote configuration for Yoroi app
+   */
+  export type Config = Readonly<{
+    pushLinkKeys?: Readonly<{
+      internal?: Readonly<{
+        catalystRegistration?: Readonly<{
+          mobile?: string
+          extension?: string
+        }>
+      }>
+      external?: Readonly<{
+        yoroiWebsite?: string
+      }>
+    }>
+    banners?: Readonly<{
+      midnightAnnouncement?: Readonly<{
+        display?: boolean
+      }>
+      midnightPhase2Announcement?: Readonly<{
+        display?: boolean
+      }>
+      yoroiDrep?: Readonly<{
+        display?: boolean
+      }>
+    }>
+    popups?: Readonly<{
+      midnightDistribution?: Readonly<{
+        display?: boolean
+      }>
+      generalFeaturesAnnouncement?: Readonly<{
+        display?: boolean
+      }>
+      poolTransitionDialog?: Readonly<{
+        display?: boolean
+      }>
+      cardanoCardAnnouncement?: Readonly<{
+        display?: boolean
+      }>
+      firefoxSupportAnnouncement?: Readonly<{
+        display?: boolean
+      }>
+    }>
+    features?: Readonly<{
+      midnightAirdrop?: Readonly<{
+        enabled: boolean
+      }>
+      [key: string]: unknown
+    }>
+    dapps?: Readonly<{
+      banned?: ReadonlyArray<string>
+      recommended?: ReadonlyArray<App.ConfigRecommendedDapp>
+      filters?: Readonly<{
+        Media?: ReadonlyArray<string>
+        Investment?: ReadonlyArray<string>
+        Trading?: ReadonlyArray<string>
+        Community?: ReadonlyArray<string>
+      }>
+    }>
+    swap?: Readonly<{
+      initialPair?: Readonly<{
+        tokenIn?: Portfolio.Token.Id
+        tokenOut?: Portfolio.Token.Id
+      }>
+      excludedTokens?: ReadonlyArray<Portfolio.Token.Id>
+      verifiedTokens?: ReadonlyArray<Portfolio.Token.Id>
+      partners?: Readonly<{
+        dexhunter?: string
+        muesliswap?: string
+        minswap?: string
+        steelswap?: string
+      }>
+    }>
+    enableTrezorAirdrop?: boolean
+  }>
+
+  /**
+   * Recommended DApp configuration
+   */
+  export type ConfigRecommendedDapp = {
+    id: string
+    name: string
+    description: string
+    category: string
+    logo: string
+    uri: string
+    origins: ReadonlyArray<string>
+    isSingleAddress?: boolean
   }
 
   export interface Storage<
@@ -721,20 +820,23 @@ export namespace Wallet {
   export type AddressMode = WalletAddressMode
   export type Meta = WalletMeta
 
-  // Transaction types
+  // Transaction types - use imported types directly to avoid circular references
   export const TransactionStatus = TRANSACTION_STATUS
-  export type TransactionStatus = TransactionStatus
+  export type TransactionStatus =
+    (typeof TRANSACTION_STATUS)[keyof typeof TRANSACTION_STATUS]
   export const TransactionDirection = TRANSACTION_DIRECTION
-  export type TransactionDirection = TransactionDirection
+  export type TransactionDirection =
+    (typeof TRANSACTION_DIRECTION)[keyof typeof TRANSACTION_DIRECTION]
   export const TransactionType = TRANSACTION_TYPE
-  export type TransactionType = TransactionType
-  export type TransactionAssurance = TransactionAssurance
-  export type TransactionInfo = TransactionInfo
-  export type WalletTransaction = WalletTransaction
-  export type Transactions = Transactions
-  export type TxMetadata = TxMetadata
-  export type TxMetadataInfo = TxMetadataInfo
-  export type BaseAsset = BaseAsset
+  export type TransactionType =
+    (typeof TRANSACTION_TYPE)[keyof typeof TRANSACTION_TYPE]
+  // Reference imported types via intermediate aliases to avoid circular references
+  export type TransactionAssurance = ImportedTransactionAssurance
+  export type WalletTransaction = ImportedWalletTransaction
+  export type Transactions = ImportedTransactions
+  export type TxMetadata = ImportedTxMetadata
+  export type TxMetadataInfo = ImportedTxMetadataInfo
+  export type BaseAsset = ImportedBaseAsset
 }
 
 // Re-export BaseAsset at top level
@@ -745,8 +847,8 @@ export {TRANSACTION_DIRECTION, TRANSACTION_STATUS, TRANSACTION_TYPE}
 export type {
   TransactionAssurance,
   TransactionDirection,
-  TransactionInfo,
   TransactionStatus,
+  TransactionToken,
   TransactionType,
   Transactions,
   TxMetadata,
@@ -802,6 +904,7 @@ export namespace Notifications {
 export namespace Scan {
   export namespace Errors {
     export class Unknown extends ScanErrorUnknown {}
+    export class UnknownContent extends ScanErrorUnknownContent {}
   }
 
   export type Feature = ScanFeature

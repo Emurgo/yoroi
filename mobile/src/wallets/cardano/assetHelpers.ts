@@ -1,7 +1,8 @@
+import {toAssetNameHex, toPolicyId} from '@yoroi/api'
+
 import {WasmModuleProxy} from '@emurgo/cross-csl-core'
 import {Buffer} from 'buffer'
 
-import {toAssetNameHex, toPolicyId} from './api/utils'
 import {CardanoTypes} from './types'
 
 /**

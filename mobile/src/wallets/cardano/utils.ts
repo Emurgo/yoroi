@@ -1,9 +1,11 @@
+import {RawUtxo} from '@yoroi/api'
 import {
   SendToken,
   TransactionOutput,
   validateAndExtractAddressInfo,
 } from '@yoroi/tx'
 import {Balance, Chain, Portfolio, Wallet} from '@yoroi/types'
+import {BaseAsset} from '@yoroi/types'
 
 import {WasmModuleProxy} from '@emurgo/cross-csl-core'
 import {BigNumber} from 'bignumber.js'
@@ -11,7 +13,6 @@ import {Buffer} from 'buffer'
 
 import {logger} from '~/kernel/logger/logger'
 
-import {BaseAsset, RawUtxo} from '../types/other'
 import {Amounts} from '../utils/utils'
 import {identifierToCardanoAsset} from './assetHelpers'
 import {withMinAmounts} from './getMinAmounts'
@@ -341,7 +342,7 @@ export const copyMultipleFromCSL = <T extends {toHex: () => string}>(
 
 export const getHexAddressingMap = async (wallet: YoroiWallet) => {
   const addressedUtxos = await Promise.all(
-    wallet.utxos.map(async (utxo: RawUtxo) => {
+    wallet.utxos().map(async (utxo: RawUtxo) => {
       const addressing = wallet.getAddressing(utxo.receiver)
       // Use validateAndExtractAddressInfo to safely extract hex without WASM pointer issues
       const addressInfo = await validateAndExtractAddressInfo(utxo.receiver)
@@ -366,8 +367,9 @@ export const getAddressedUtxos = (wallet: YoroiWallet) => {
   // Use wallet.utxos to exclude collateral UTXO from transaction operations
   // Collateral should not be used in regular transactions
   const primaryTokenId = wallet.portfolioPrimaryTokenInfo.id
-  return wallet.utxos.map(
-    (utxo: RawUtxo): CardanoTypes.CardanoAddressedUtxo => {
+  return wallet
+    .utxos()
+    .map((utxo: RawUtxo): CardanoTypes.CardanoAddressedUtxo => {
       const addressing = wallet.getAddressing(utxo.receiver)
 
       // Convert to modern Balance.Amounts format
@@ -386,8 +388,7 @@ export const getAddressedUtxos = (wallet: YoroiWallet) => {
         utxoId: utxo.utxo_id,
         balance,
       }
-    },
-  )
+    })
 }
 
 export const getPublicKeyHex = (wallet: YoroiWallet) => {

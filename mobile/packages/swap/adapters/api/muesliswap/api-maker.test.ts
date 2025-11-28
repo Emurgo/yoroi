@@ -1,5 +1,5 @@
 import {fetchData} from '@yoroi/common'
-import {Api, Chain, Left} from '@yoroi/types'
+import {Api, Chain, Left, Swap} from '@yoroi/types'
 
 import {muesliswapApiMaker, parseMuesliError} from './api-maker'
 import {api} from './api.mocks'
@@ -551,7 +551,7 @@ describe('muesliswapApiMaker', () => {
       const result = await muesliApi.create({
         ...api.inputs.createLimit[0]!,
         wantedPrice: 1.5,
-      })
+      } as Swap.CreateRequest)
 
       expect(mockFetchData).toHaveBeenCalledWith(
         expect.objectContaining({

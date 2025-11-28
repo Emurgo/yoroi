@@ -7,9 +7,11 @@ export const useLastDateAddressUsed = (address: string) => {
   const {wallet} = useSelectedWallet()
   const intl = useIntl()
   return React.useMemo(() => {
-    if (!wallet.transactions) return null
+    const rawTransactions = wallet.getRawTransactions()
+    if (!rawTransactions || Object.keys(rawTransactions).length === 0)
+      return null
 
-    const lastUsed = Object.values(wallet.transactions).reduce(
+    const lastUsed = Object.values(rawTransactions).reduce(
       (currentLast, tx) => {
         const {inputs, outputs} = tx
         const isRelevant =
@@ -35,5 +37,5 @@ export const useLastDateAddressUsed = (address: string) => {
           hour12: false,
         })
       : null
-  }, [address, intl, wallet.transactions])
+  }, [address, intl, wallet])
 }

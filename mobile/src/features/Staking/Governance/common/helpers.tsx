@@ -1,7 +1,7 @@
 import {isNonNullable, isString, useAsyncStorage} from '@yoroi/common'
 import {
-  GOVERNANCE_YOROI_DREP_ID_HEX,
   type StakingKeyState,
+  getYoroiDrepIdHex,
   governanceApiMaker,
   governanceManagerMaker,
   useDelegationCertificate,
@@ -11,22 +11,20 @@ import {
   useUpdateLatestGovernanceAction,
   useVotingCertificate,
 } from '@yoroi/staking'
-import {calculateTxId} from '@yoroi/tx'
-
 import {NotEnoughMoneyToSendError} from '@yoroi/tx'
-import {Buffer} from 'buffer'
+
 import * as React from 'react'
 
+import {getTxIdFromArgs} from '~/features/ReviewTx/common/utils/getTxId'
 import {useStakingInfo} from '~/features/Staking/hooks/useStakingInfo'
 import {useStakingKey} from '~/features/Staking/hooks/useStakingKey'
-import {useTransactionInfos} from '~/features/Transactions/hooks/useTransactionInfos'
+import {useWalletTransactions} from '~/features/Transactions/hooks/useWalletTransactions'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useWalletEvent} from '~/features/WalletManager/hooks/useWalletEvent'
 import {useStrings} from '~/kernel/i18n/useStrings'
+import {logger} from '~/kernel/logger/logger'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {InfoBanner} from '~/ui/InfoBanner/InfoBanner'
-import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
-import {TransactionInfo} from '@yoroi/types'
 import {CardanoMobile} from '~/wallets/wallets'
 
 import {GovernanceVote} from '../types'
@@ -126,29 +124,50 @@ export const useGovernanceActions = () => {
     navigateToTxReview({
       cbor: unsignedTx.cbor,
       onSuccess: async (args) => {
-        // Calculate txId from signedTx if available, otherwise from unsigned CBOR
-        let txID: string
-        if (args?.signedTx) {
-          const txBytes = args.signedTx.toBytes()
-          txID = await CardanoMobileWrapped.cslScope(async (csl) => {
-            return await calculateTxId(
-              csl,
-              Buffer.from(txBytes).toString('hex'),
-              'hex',
-            )
-          })
-        } else {
-          // Calculate from unsigned CBOR (transaction body hash is the same)
-          txID = await CardanoMobileWrapped.cslScope(async (csl) => {
-            return await calculateTxId(csl, unsignedTx.cbor, 'hex')
-          })
+        // Use utility function to safely extract txId
+        // Pass unsigned CBOR as fallback (safe - body hash is same for signed/unsigned)
+        const txID = await getTxIdFromArgs(args, unsignedTx.cbor)
+        if (!txID) {
+          logger.error('handleDelegateAction: No txId available')
+          return
         }
-        updateLatestGovernanceAction({
-          kind: 'delegate-to-drep',
-          hash,
-          type,
-          txID,
-        })
+        try {
+          updateLatestGovernanceAction(
+            {
+              kind: 'delegate-to-drep',
+              hash,
+              type,
+              txID,
+            },
+            {
+              onError: (error) => {
+                logger.error(
+                  'handleDelegateAction: Failed to update governance action',
+                  {
+                    error:
+                      error instanceof Error ? error.message : String(error),
+                    txID,
+                    hash,
+                    delegateType: type,
+                  },
+                )
+              },
+              onSuccess: () => {
+                // Governance action updated successfully
+              },
+            },
+          )
+        } catch (error) {
+          logger.error(
+            'handleDelegateAction: Error calling updateLatestGovernanceAction',
+            {
+              error: error instanceof Error ? error.message : String(error),
+              txID,
+              hash,
+              delegateType: type,
+            },
+          )
+        }
       },
       onNotSupportedCIP1694: navigateTo.notSupportedVersion,
       context: 'delegate vote',
@@ -170,28 +189,45 @@ export const useGovernanceActions = () => {
     navigateToTxReview({
       cbor: unsignedTx.cbor,
       onSuccess: async (args) => {
-        // Calculate txId from signedTx if available, otherwise from unsigned CBOR
-        let txID: string
-        if (args?.signedTx) {
-          const txBytes = args.signedTx.toBytes()
-          txID = await CardanoMobileWrapped.cslScope(async (csl) => {
-            return await calculateTxId(
-              csl,
-              Buffer.from(txBytes).toString('hex'),
-              'hex',
-            )
-          })
-        } else {
-          // Calculate from unsigned CBOR (transaction body hash is the same)
-          txID = await CardanoMobileWrapped.cslScope(async (csl) => {
-            return await calculateTxId(csl, unsignedTx.cbor, 'hex')
-          })
+        // Use utility function to safely extract txId
+        // Pass unsigned CBOR as fallback (safe - body hash is same for signed/unsigned)
+        const txID = await getTxIdFromArgs(args, unsignedTx.cbor)
+        if (!txID) {
+          logger.error('handleAbstainAction: No txId available')
+          return
         }
-        updateLatestGovernanceAction({
-          kind: 'vote',
-          vote: 'abstain',
-          txID,
-        })
+        try {
+          updateLatestGovernanceAction(
+            {
+              kind: 'vote',
+              vote: 'abstain',
+              txID,
+            },
+            {
+              onError: (error) => {
+                logger.error(
+                  'handleAbstainAction: Failed to update governance action',
+                  {
+                    error:
+                      error instanceof Error ? error.message : String(error),
+                    txID,
+                  },
+                )
+              },
+              onSuccess: () => {
+                // Governance action updated successfully
+              },
+            },
+          )
+        } catch (error) {
+          logger.error(
+            'handleAbstainAction: Error calling updateLatestGovernanceAction',
+            {
+              error: error instanceof Error ? error.message : String(error),
+              txID,
+            },
+          )
+        }
       },
       onNotSupportedCIP1694: navigateTo.notSupportedVersion,
       context: 'delegate vote',
@@ -206,28 +242,45 @@ export const useGovernanceActions = () => {
     navigateToTxReview({
       cbor: unsignedTx.cbor,
       onSuccess: async (args) => {
-        // Calculate txId from signedTx if available, otherwise from unsigned CBOR
-        let txID: string
-        if (args?.signedTx) {
-          const txBytes = args.signedTx.toBytes()
-          txID = await CardanoMobileWrapped.cslScope(async (csl) => {
-            return await calculateTxId(
-              csl,
-              Buffer.from(txBytes).toString('hex'),
-              'hex',
-            )
-          })
-        } else {
-          // Calculate from unsigned CBOR (transaction body hash is the same)
-          txID = await CardanoMobileWrapped.cslScope(async (csl) => {
-            return await calculateTxId(csl, unsignedTx.cbor, 'hex')
-          })
+        // Use utility function to safely extract txId
+        // Pass unsigned CBOR as fallback (safe - body hash is same for signed/unsigned)
+        const txID = await getTxIdFromArgs(args, unsignedTx.cbor)
+        if (!txID) {
+          logger.error('handleNoConfidenceAction: No txId available')
+          return
         }
-        updateLatestGovernanceAction({
-          kind: 'vote',
-          vote: 'no-confidence',
-          txID,
-        })
+        try {
+          updateLatestGovernanceAction(
+            {
+              kind: 'vote',
+              vote: 'no-confidence',
+              txID,
+            },
+            {
+              onError: (error) => {
+                logger.error(
+                  'handleNoConfidenceAction: Failed to update governance action',
+                  {
+                    error:
+                      error instanceof Error ? error.message : String(error),
+                    txID,
+                  },
+                )
+              },
+              onSuccess: () => {
+                // Governance action updated successfully
+              },
+            },
+          )
+        } catch (error) {
+          logger.error(
+            'handleNoConfidenceAction: Error calling updateLatestGovernanceAction',
+            {
+              error: error instanceof Error ? error.message : String(error),
+              txID,
+            },
+          )
+        }
       },
       onNotSupportedCIP1694: navigateTo.notSupportedVersion,
       context: 'delegate vote',
@@ -243,14 +296,14 @@ export const useGovernanceActions = () => {
 
 const isTxConfirmed = (
   txId: string,
-  txInfos: Record<string, TransactionInfo>,
+  transactions: ReturnType<typeof useWalletTransactions>,
 ) => {
-  return Object.values(txInfos).some((tx) => tx.id === txId)
+  return txId in transactions
 }
 
 export const useHomeScreen = () => {
   const {wallet} = useSelectedWallet()
-  const txInfos = useTransactionInfos({wallet})
+  const transactions = useWalletTransactions({wallet})
   const [
     isPendingRefetchAfterTxConfirmation,
     setIsPendingRefetchAfterTxConfirmation,
@@ -269,7 +322,7 @@ export const useHomeScreen = () => {
   const submittedTxId = lastSubmittedTx?.txID
 
   const isTxPending =
-    isString(submittedTxId) && !isTxConfirmed(submittedTxId, txInfos)
+    isString(submittedTxId) && !isTxConfirmed(submittedTxId, transactions)
 
   React.useEffect(() => {
     if (!isTxPending && submittedTxId !== undefined) {
@@ -355,14 +408,18 @@ export const useParticipatingGovernance = ({
 
   const isPending = isCreatingTx || pendingVote !== null || isTxPending
 
+  const yoroiDrepIdHex = React.useMemo(
+    () => getYoroiDrepIdHex(wallet.networkManager.network),
+    [wallet.networkManager.network],
+  )
   const displayedHash =
     action.kind === 'delegate'
       ? formatDrepHashToCIP129Format(action.hash, action.type)
       : null
   const isDelegatingToYoroiDrep =
-    action.kind === 'delegate' && action.hash === GOVERNANCE_YOROI_DREP_ID_HEX
+    action.kind === 'delegate' && action.hash === yoroiDrepIdHex
   const isDelegatingToDrep =
-    action.kind === 'delegate' && action.hash !== GOVERNANCE_YOROI_DREP_ID_HEX
+    action.kind === 'delegate' && action.hash !== yoroiDrepIdHex
 
   const handleDelegateToOtherDrep = async (options: {
     hash: string
@@ -429,18 +486,23 @@ export const useNeverParticipatedGovernance = (initialDrepId?: string) => {
 
   const isPending = isCreatingTx || pendingVote !== null
 
+  const yoroiDrepIdHex = React.useMemo(
+    () => getYoroiDrepIdHex(wallet.networkManager.network),
+    [wallet.networkManager.network],
+  )
+
   const handleDelegateToYoroi = async () => {
     if (isPending) return
     const stakingKey = wallet.getStakingKey()
 
     const options = {
-      hash: GOVERNANCE_YOROI_DREP_ID_HEX,
+      hash: yoroiDrepIdHex,
       type: 'key' as const,
       CIP105: false,
     }
 
     const certificate = await createDelegationCertificate({
-      hash: GOVERNANCE_YOROI_DREP_ID_HEX,
+      hash: yoroiDrepIdHex,
       type: 'key',
       stakingKey,
     })
@@ -471,13 +533,12 @@ export const useVotingOptions = () => {
   const stakingInfo = useStakingInfo(wallet)
   const stakingKeyHash = useStakingKey(wallet)
   const {data: stakingStatus} = useStakingKeyState(stakingKeyHash)
-  const txInfos = useTransactionInfos({wallet})
+  const transactions = useWalletTransactions({wallet})
 
   const {data: lastSubmittedTx} = useLatestGovernanceAction(wallet.id)
   const submittedTxId = lastSubmittedTx?.txID
   const isTxPendingConfirmation =
-    isString(submittedTxId) &&
-    !Object.values(txInfos).some((tx) => tx.id === submittedTxId)
+    isString(submittedTxId) && !isTxConfirmed(submittedTxId, transactions)
 
   const action = stakingStatus
     ? mapStakingKeyStateToGovernanceAction(stakingStatus)
@@ -522,6 +583,11 @@ export const useVotingOptions = () => {
       ? action.type
       : 'key'
 
+  const yoroiDrepIdHex = React.useMemo(
+    () => getYoroiDrepIdHex(wallet.networkManager.network),
+    [wallet.networkManager.network],
+  )
+
   const pendingTxHash =
     isTxPendingConfirmation && lastSubmittedTx?.kind === 'delegate-to-drep'
       ? lastSubmittedTx.hash
@@ -531,13 +597,12 @@ export const useVotingOptions = () => {
       ? lastSubmittedTx.type
       : 'key'
 
-  const isPendingDelegateToYoroi =
-    pendingTxHash === GOVERNANCE_YOROI_DREP_ID_HEX
+  const isPendingDelegateToYoroi = pendingTxHash === yoroiDrepIdHex
   const isPendingDelegateToOther = Boolean(
     pendingTxHash && !isPendingDelegateToYoroi,
   )
 
-  const confirmedDelegatingToYoroi = voteHash === GOVERNANCE_YOROI_DREP_ID_HEX
+  const confirmedDelegatingToYoroi = voteHash === yoroiDrepIdHex
   const confirmedDelegatingToOther = Boolean(
     voteKind === 'delegate' && voteHash && !confirmedDelegatingToYoroi,
   )
@@ -605,13 +670,13 @@ export const useVotingOptions = () => {
     const stakingKey = wallet.getStakingKey()
 
     const options = {
-      hash: GOVERNANCE_YOROI_DREP_ID_HEX,
+      hash: yoroiDrepIdHex,
       type: 'key' as const,
       CIP105: false,
     }
 
     const certificate = await createDelegationCertificate({
-      hash: GOVERNANCE_YOROI_DREP_ID_HEX,
+      hash: yoroiDrepIdHex,
       type: 'key',
       stakingKey,
     })

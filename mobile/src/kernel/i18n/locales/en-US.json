@@ -694,6 +694,7 @@
   "components.walletinit.walletinitmenu.logo.subtitle": "Light wallet for Cardano assets",
   "components.walletinit.walletinitmenu.createwalletbutton.title": "Create new wallet",
   "components.walletinit.walletinitmenu.restorewalletbutton.title": "Restore Yoroi existing wallet",
+  "components.walletinit.walletinitmenu.scanqrcodebutton.title": "Scan QR code",
   "components.walletinit.walletinitmenu.connectwalletbutton.title": "Connect hardware wallet device",
   "components.walletinit.walletinitmenu.cardanoMainnetbutton.title": "Cardano Mainnet",
   "components.walletinit.walletinitmenu.cardanoTestnetbutton.title": "Cardano Preprod Testnet",

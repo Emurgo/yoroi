@@ -22,9 +22,8 @@ export const Overview = () => {
   const strings = useStrings()
   const [expanded, setExpanded] = useState(true)
   const {id: tokenId} = usePortfolioTokenDetailParams()
-  const {
-    wallet: {balances},
-  } = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
+  const balances = wallet.balances()
   const tokenAmount = balances.records.get(tokenId)
   const tokenInfo = tokenAmount?.info
   if (!tokenInfo) return null

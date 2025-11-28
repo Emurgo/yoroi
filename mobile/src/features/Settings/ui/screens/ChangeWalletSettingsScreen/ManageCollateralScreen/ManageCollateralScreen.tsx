@@ -1,6 +1,6 @@
 import {RawUtxo} from '@yoroi/api'
 import {atoms as a, useTheme} from '@yoroi/theme'
-import {TransactionOutput, calculateTxId} from '@yoroi/tx'
+import {TransactionOutput} from '@yoroi/tx'
 import {Portfolio} from '@yoroi/types'
 
 import * as CSL from '@emurgo/cross-csl-core'
@@ -19,6 +19,7 @@ import {
 } from 'react-native'
 
 import {useBalances} from '~/features/Portfolio/common/hooks/useBalances'
+import {getTxIdFromArgs} from '~/features/ReviewTx/common/utils/getTxId'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useUnsafeParams} from '~/kernel/navigation/hooks/useUnsafeParams'
@@ -37,7 +38,6 @@ import {createSendTxFromWallet} from '~/wallets/cardano/transaction-recipes'
 import {useCollateralInfo} from '~/wallets/cardano/utxoManager/useCollateralInfo'
 import {useSetCollateralId} from '~/wallets/cardano/utxoManager/useSetCollateralId'
 import {collateralConfig, utxosMaker} from '~/wallets/cardano/utxoManager/utxos'
-import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
 import {Amounts, Quantities, asQuantity} from '~/wallets/utils/utils'
 
 import {CollateralInfoModal} from './CollateralInfoModal'
@@ -59,7 +59,7 @@ export const ManageCollateralScreen = () => {
   const {navigateToTxReview, resetToTxHistory} = useWalletNavigation()
 
   const lockedAmount = asQuantity(
-    wallet.primaryBreakdown.lockedAsStorageCost.toString(),
+    wallet.primaryBreakdown().lockedAsStorageCost.toString(),
   )
   const hasCollateral = collateralId !== '' && utxo !== undefined
   const params = useUnsafeParams<SettingsStackRoutes['manage-collateral']>()
@@ -81,16 +81,19 @@ export const ManageCollateralScreen = () => {
     setCollateralId(collateralId)
   }
 
-  const handleOnSuccess = async (signedTx?: CSL.Transaction) => {
-    if (!signedTx) throw new Error('ManageCollateralScreen:: invalid state')
-    const txBytes = signedTx.toBytes()
-    const txId = await CardanoMobileWrapped.cslScope(async (csl) => {
-      return await calculateTxId(
-        csl,
-        Buffer.from(txBytes).toString('hex'),
-        'hex',
-      )
-    })
+  const handleOnSuccess = async (args?: {
+    signedTx?: CSL.Transaction | ((csl: CSL.WasmModuleProxy) => CSL.Transaction)
+    txId?: string
+  }) => {
+    // Use utility function to safely extract txId
+    // The CBOR was already passed to navigateToTxReview, so we can't access it here
+    // But args?.txId should be available from useOnConfirm
+    const txId = await getTxIdFromArgs(args)
+
+    if (!txId) {
+      throw new Error('ManageCollateralScreen:: no txId available')
+    }
+
     const collateralId = `${txId}:0`
     setCollateralId(collateralId)
     resetToTxHistory()
@@ -105,18 +108,18 @@ export const ManageCollateralScreen = () => {
         // This prevents the UTXO from being used in other transactions
         // The collateral UTXO will be at index 0 (first output of the transaction)
         try {
-          const txId = await CardanoMobileWrapped.cslScope(async (csl) => {
-            return await calculateTxId(csl, result.cbor, 'hex')
-          })
-          const collateralId = `${txId}:0`
-          setCollateralId(collateralId)
+          const txId = await getTxIdFromArgs(undefined, result.cbor)
+          if (txId) {
+            const collateralId = `${txId}:0`
+            setCollateralId(collateralId)
+          }
         } catch (error) {
           // Don't block the flow if setting collateral ID fails
         }
 
         navigateToTxReview({
           cbor: result.cbor,
-          onSuccessWithoutFeedback: (args) => handleOnSuccess(args?.signedTx),
+          onSuccessWithoutFeedback: (args) => handleOnSuccess(args),
           details: {
             title: strings.manageCollateral.collateralInfoModalLabel,
             component: <CollateralInfoModal />,
@@ -130,7 +133,7 @@ export const ManageCollateralScreen = () => {
   const isLoading = isLoadingTx || isLoadingCollateral
 
   const handleGenerateCollateral = () => {
-    const utxos = utxosMaker(wallet.utxos)
+    const utxos = utxosMaker(wallet.utxos())
     const possibleCollateralId = utxos.drawnCollateral()
 
     if (possibleCollateralId !== undefined) {

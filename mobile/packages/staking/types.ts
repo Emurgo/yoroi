@@ -13,6 +13,30 @@ import {WalletChecksum as WalletChecksumType} from '@emurgo/cip4-js'
 import * as CoreTypes from '@emurgo/cross-csl-core'
 import {AxiosRequestConfig} from 'axios'
 
+/**
+ * Staking info (UI state)
+ */
+export type StakingInfo =
+  | {status: 'not-registered'}
+  | {status: 'registered'}
+  | {
+      status: 'staked'
+      poolId: string
+      amount: Balance.Quantity
+      rewards: Balance.Quantity
+    }
+
+/**
+ * Staking status (delegation state)
+ */
+export type StakingStatus =
+  | {isRegistered: false}
+  | {isRegistered: true}
+  | {
+      isRegistered: true
+      poolKeyHash: string
+    }
+
 export namespace CardanoTypes {
   export type TxMetadata = TxMetadataType
   export type CardanoAddressedUtxo = CardanoAddressedUtxoType

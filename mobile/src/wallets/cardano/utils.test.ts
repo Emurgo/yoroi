@@ -1,8 +1,8 @@
 import {primaryTokenInfoMainnet} from '@yoroi/blockchains'
+import {createUnknownTokenInfo} from '@yoroi/portfolio'
 import {SendToken} from '@yoroi/tx'
-import {Balance} from '@yoroi/types'
+import {Balance, Portfolio} from '@yoroi/types'
 
-import {Token} from '../types/tokens'
 import {toSendToken, toSendTokenList} from './utils'
 
 describe('toSendTokenList', () => {
@@ -11,7 +11,7 @@ describe('toSendTokenList', () => {
   it('converts amounts to send token list for tx (lib)', async () => {
     const amounts: Balance.Amounts = {
       [primaryTokenInfoMainnet.id]: '123',
-      [secondaryToken.identifier]: '456',
+      [secondaryToken.id]: '456',
     }
 
     const primaryAsToken = asSendToken({
@@ -19,7 +19,7 @@ describe('toSendTokenList', () => {
       quantity: '123',
     })
     const secondaryAsToken = asSendToken({
-      tokenId: secondaryToken.identifier,
+      tokenId: secondaryToken.id,
       quantity: '456',
     })
 
@@ -31,14 +31,7 @@ describe('toSendTokenList', () => {
   })
 })
 
-const secondaryToken: Token = {
-  identifier: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
-  isDefault: false,
-  metadata: {
-    policyId: '2',
-    assetName: '2',
-    ticker: '2',
-    numberOfDecimals: 0,
-    longName: null,
-  },
-}
+const secondaryToken = createUnknownTokenInfo({
+  id: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
+  name: 'Test Token',
+}) as Portfolio.Token.Info

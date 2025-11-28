@@ -12,7 +12,7 @@ export const usePortfolioPrimaryBalance = ({wallet}: {wallet: YoroiWallet}) => {
     () => wallet.balance$.pipe(filter(isSyncEvent)),
     [wallet],
   )
-  const getter = React.useCallback(() => wallet.primaryBalance, [wallet])
+  const getter = React.useCallback(() => wallet.primaryBalance(), [wallet])
 
   return useObservableValue({
     observable$,

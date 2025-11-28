@@ -232,7 +232,7 @@ export const makeSyncManager = (
         (w) => w.id === state.lastTxSubmissionWalletId,
       )
       if (walletWithPendingTx) {
-        utxoCountBeforeSync = walletWithPendingTx.utxos.length
+        utxoCountBeforeSync = walletWithPendingTx.utxos().length
         updateSyncState((s) => ({
           ...s,
           lastUtxoCountBeforeSync: utxoCountBeforeSync,
@@ -263,7 +263,7 @@ export const makeSyncManager = (
         (w) => w.id === currentStateAfterSync.lastTxSubmissionWalletId,
       )
       if (walletWithPendingTx) {
-        const currentUtxoCount = walletWithPendingTx.utxos.length
+        const currentUtxoCount = walletWithPendingTx.utxos().length
         if (
           currentUtxoCount !== currentStateAfterSync.lastUtxoCountBeforeSync
         ) {
@@ -390,7 +390,7 @@ export const makeSyncManager = (
           }
 
           // Store UTXO count before sync
-          const utxoCountBeforeSync = wallet.utxos.length
+          const utxoCountBeforeSync = wallet.utxos().length
 
           // Update state to enable fast polling
           updateSyncState((state) => ({
@@ -434,7 +434,7 @@ export const makeSyncManager = (
                 walletAfterSync &&
                 currentStateAfterSync.lastUtxoCountBeforeSync !== undefined
               ) {
-                const currentUtxoCount = walletAfterSync.utxos.length
+                const currentUtxoCount = walletAfterSync.utxos().length
                 if (
                   currentUtxoCount !==
                   currentStateAfterSync.lastUtxoCountBeforeSync

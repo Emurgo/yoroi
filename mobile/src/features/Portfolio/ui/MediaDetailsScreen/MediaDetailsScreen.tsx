@@ -41,8 +41,10 @@ export const MediaDetailsScreen = () => {
 
   const {id} = useRoute<RouteProp<NftRoutes, 'nft-details'>>().params
   const {
-    wallet: {networkManager, balances},
+    wallet: {networkManager},
+    wallet,
   } = useSelectedWallet()
+  const balances = wallet.balances()
 
   // reading from the getter, there is no need to subscribe to changes
   const amount = balances.records.get(id)

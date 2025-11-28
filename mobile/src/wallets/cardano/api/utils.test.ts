@@ -1,6 +1,3 @@
-import {Balance} from '@yoroi/types'
-
-import {TokenRegistryEntry} from './tokenRegistry'
 import {
   fallbackTokenInfo,
   toDisplayAssetName,
@@ -10,7 +7,8 @@ import {
   toTokenSubject,
   tokenInfo,
   utf8ToHex,
-} from './utils'
+} from '@yoroi/api'
+import {Api, Balance} from '@yoroi/types'
 
 describe('api utils', () => {
   it('toPolicyId, toDisplayAssetName', () => {
@@ -124,7 +122,7 @@ describe('api utils', () => {
 
   describe('tokenInfo', () => {
     it('tokenInfo', () => {
-      const entry: TokenRegistryEntry = {
+      const entry: Api.Cardano.TokenRegistryEntry = {
         subject:
           '1111111111111111111111111111111111111111111111111111111161737365744e616d65',
         name: {
@@ -185,7 +183,7 @@ describe('api utils', () => {
     })
 
     it('tokenInfo with optionals/defaults', () => {
-      const entry: TokenRegistryEntry = {
+      const entry: Api.Cardano.TokenRegistryEntry = {
         subject:
           '1111111111111111111111111111111111111111111111111111111161737365744e616d65',
         name: {

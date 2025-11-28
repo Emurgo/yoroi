@@ -48,7 +48,7 @@ export const WithWalletOpened = ({children}: React.PropsWithChildren) => {
       // Return a placeholder - won't be used since we return null below
       return null
     }
-    const address = wallet.externalAddresses[0]
+    const address = wallet.externalAddresses()[0]
     if (!address) throw new App.Errors.InvalidState('Missing external address')
 
     return claimManagerMaker({

@@ -1,4 +1,4 @@
-import {RawUtxo} from '@yoroi/api'
+import {RawUtxo, toAssetNameHex, toPolicyId} from '@yoroi/api'
 import {cardanoConfig} from '@yoroi/blockchains'
 import {isHex} from '@yoroi/common'
 import {
@@ -9,8 +9,7 @@ import {
   signRawTransaction,
   validateTransactionCbor,
 } from '@yoroi/tx'
-import {Balance, Portfolio, Wallet} from '@yoroi/types'
-import {BaseAsset} from '@yoroi/types'
+import {Balance, BaseAsset, Portfolio, Wallet} from '@yoroi/types'
 
 import * as CSL from '@emurgo/cross-csl-core'
 import {Address, WasmModuleProxy} from '@emurgo/cross-csl-core'
@@ -23,7 +22,6 @@ import {logger} from '~/kernel/logger/logger'
 import {Utxos, asQuantity} from '~/wallets/utils/utils'
 import {CardanoMobile} from '~/wallets/wallets'
 
-import {toAssetNameHex, toPolicyId} from '../api/utils'
 import {identifierToCardanoAsset} from '../assetUtils'
 import * as cip8 from '../cip8/cip8'
 import {
@@ -60,7 +58,7 @@ class CIP30Extension {
     return CardanoMobileWrapped.cslScope((csl) => {
       const value = _getBalance(
         tokenId,
-        this.wallet.utxos,
+        this.wallet.utxos(),
         this.wallet.portfolioPrimaryTokenInfo.id,
         csl,
       )
@@ -70,9 +68,9 @@ class CIP30Extension {
 
   getUnusedAddresses(): CSL.Address[] {
     return CardanoMobileWrapped.cslScope((csl) => {
-      const bech32Addresses = this.wallet.receiveAddresses.filter(
-        (address) => !this.wallet.isUsedAddressIndex[address],
-      )
+      const bech32Addresses = this.wallet
+        .receiveAddresses()
+        .filter((address) => !this.wallet.isUsedAddressIndex()[address])
       const addresses = bech32Addresses.map((addr) =>
         csl.Address.fromBech32(addr),
       )
@@ -82,7 +80,7 @@ class CIP30Extension {
 
   getUsedAddresses(pagination?: Pagination): CSL.Address[] {
     return CardanoMobileWrapped.cslScope((csl) => {
-      const allAddresses = this.wallet.externalAddresses
+      const allAddresses = this.wallet.externalAddresses()
       const selectedAddresses = paginate(allAddresses, pagination)
       const addresses = selectedAddresses.map((addr) =>
         csl.Address.fromBech32(addr),
@@ -439,7 +437,7 @@ const cardanoUtxoFromRemoteFormat = (
 const _getBalance = (
   tokenId = '*',
   utxos: RawUtxo[],
-  primaryTokenId: string,
+  primaryTokenId: Portfolio.Token.Id,
   csl: WasmModuleProxy,
 ) => {
   if (tokenId === 'TADA' || tokenId === 'ADA') tokenId = '.'
@@ -494,7 +492,7 @@ const _getUtxos = async (
 
   if (valueStr.length === 0) {
     const primaryTokenId = wallet.portfolioPrimaryTokenInfo.id
-    const validUtxos = wallet.utxos.map((o) => {
+    const validUtxos = wallet.utxos().map((o) => {
       try {
         return cardanoUtxoFromRemoteFormat(
           csl,
@@ -537,7 +535,7 @@ const _getUtxos = async (
   const validUtxos = await _getRequiredUtxos(
     wallet,
     amounts,
-    wallet.utxos,
+    wallet.utxos(),
     meta,
     csl,
   )
@@ -665,7 +663,7 @@ const _drawCollateralInOneUtxo = (
   wallet: YoroiWallet,
   quantity: Balance.Quantity,
 ) => {
-  const utxos = utxosMaker(wallet.utxos, {
+  const utxos = utxosMaker(wallet.utxos(), {
     maxLovelace: collateralConfig.maxLovelace,
     minLovelace: quantity,
     maxUTxOs: collateralConfig.maxUTxOs,
@@ -702,7 +700,7 @@ const _drawCollateralInMultipleUtxos = async (
   quantity: Balance.Quantity,
   csl: WasmModuleProxy,
 ) => {
-  const possibleUtxos = findCollateralCandidates(wallet.utxos, {
+  const possibleUtxos = findCollateralCandidates(wallet.utxos(), {
     maxLovelace: collateralConfig.maxLovelace,
     minLovelace: asQuantity('0'),
     maxUTxOs: collateralConfig.maxUTxOs,

@@ -3,14 +3,13 @@ import {
   StakePoolInfoRequest,
   StakePoolInfosAndHistories,
 } from '@yoroi/staking'
-import {Portfolio} from '@yoroi/types'
+import {Portfolio, TransactionStatus, WalletTransaction} from '@yoroi/types'
 
 import {freeze} from 'immer'
 
 import {
   AccountStateRequest,
   AccountStateResponse,
-  RawTransaction,
   TipStatusResponse,
   TxHistoryRequest,
   TxStatusRequest,
@@ -24,6 +23,127 @@ import {
   getWalletRegistrationDataFromContext,
   registerWallet,
 } from '../../utils/wallet-registration'
+
+/**
+ * Internal RawTransaction type - only used within API adapters
+ * This is the format returned by backend APIs before transformation
+ */
+type InternalRawTransaction = {
+  readonly type: 'byron' | 'shelley'
+  readonly fee?: string
+  readonly hash: string
+  readonly last_update: string
+  readonly tx_state: string
+  readonly inputs: Array<{
+    readonly address: string
+    readonly amount: string
+    readonly assets: Array<{
+      readonly tokenId: Portfolio.Token.Id
+      readonly policyId: string
+      readonly name: string
+      readonly amount: string
+    }>
+    readonly id?: string
+    readonly index?: number
+    readonly txHash?: string
+  }>
+  readonly outputs: Array<{
+    readonly address: string
+    readonly amount: string
+    readonly assets: Array<{
+      readonly tokenId: Portfolio.Token.Id
+      readonly policyId: string
+      readonly name: string
+      readonly amount: string
+    }>
+  }>
+  readonly withdrawals: Array<{
+    readonly address: string
+    readonly amount: string
+  }>
+  readonly certificates: Array<RemoteCertificateMeta>
+  readonly valid_contract?: boolean
+  readonly script_size?: number
+  readonly collateral_inputs?: Array<{
+    readonly address: string
+    readonly amount: string
+    readonly assets: Array<{
+      readonly tokenId: Portfolio.Token.Id
+      readonly policyId: string
+      readonly name: string
+      readonly amount: string
+    }>
+  }>
+  readonly metadata?: Array<{
+    label: string
+    map_json?: Record<string, unknown> | Array<unknown>
+    text_scalar?: string | null
+  }>
+  readonly block_num?: number
+  readonly block_hash?: string
+  readonly tx_ordinal?: number
+  readonly time?: string
+  readonly epoch?: number
+  readonly slot?: number
+}
+
+/**
+ * Transform internal RawTransaction to WalletTransaction
+ */
+function transformToWalletTransaction(
+  tx: InternalRawTransaction,
+): WalletTransaction {
+  return {
+    id: tx.hash,
+    type: tx.type,
+    fee: tx.fee ?? undefined,
+    status: tx.tx_state as TransactionStatus,
+    inputs: tx.inputs.map((input) => ({
+      id: input.id,
+      address: input.address,
+      amount: input.amount,
+      assets: (input.assets ?? []).map((asset) => ({
+        amount: asset.amount,
+        tokenId: asset.tokenId,
+        policyId: asset.policyId,
+        name: asset.name,
+      })),
+    })),
+    outputs: tx.outputs.map((output) => ({
+      address: output.address,
+      amount: output.amount,
+      assets: (output.assets ?? []).map((asset) => ({
+        amount: asset.amount,
+        tokenId: asset.tokenId,
+        policyId: asset.policyId,
+        name: asset.name,
+      })),
+    })),
+    lastUpdatedAt: tx.last_update,
+    submittedAt: tx.time ?? null,
+    blockNum: tx.block_num ?? null,
+    blockHash: tx.block_hash ?? null,
+    txOrdinal: tx.tx_ordinal ?? null,
+    epoch: tx.epoch ?? null,
+    slot: tx.slot ?? null,
+    withdrawals: tx.withdrawals,
+    certificates: tx.certificates,
+    validContract: tx.valid_contract,
+    scriptSize: tx.script_size,
+    collateralInputs: (tx.collateral_inputs ?? []).map((input) => ({
+      address: input.address,
+      amount: input.amount,
+      assets: (input.assets ?? []).map((asset) => ({
+        amount: asset.amount,
+        tokenId: asset.tokenId,
+        policyId: asset.policyId,
+        name: asset.name,
+      })),
+    })),
+    memo: null,
+    metadata: tx.metadata,
+  }
+}
 
 const limitApiRecords = 50
 
@@ -62,7 +182,7 @@ export const backendZeroApiMaker = ({
     async fetchNewTxHistory(
       request: TxHistoryRequest,
       walletContext?: WalletContext,
-    ): Promise<{isLast: boolean; transactions: Array<RawTransaction>}> {
+    ): Promise<{isLast: boolean; transactions: Array<WalletTransaction>}> {
       if (!walletContext) {
         throw new Error(
           'Backend-zero fetchNewTxHistory requires wallet context',
@@ -135,93 +255,96 @@ export const backendZeroApiMaker = ({
         when: string
       }>
 
-      // Map backend-zero Tx format to RawTransaction format
-      const transactions: RawTransaction[] = backendTxs.map((tx) => ({
-        type: 'shelley' as const,
-        hash: tx.hash || '',
-        block_hash: tx.block && tx.block.trim() ? tx.block : undefined,
-        block_num: undefined,
-        time: new Date(tx.when).toISOString(),
-        tx_state: tx.block ? 'Successful' : 'Pending',
-        last_update: new Date(tx.when).toISOString(),
-        tx_ordinal: undefined,
-        inputs: tx.inputs.map((input) => ({
-          address: input.source.address,
-          amount: String(input.source.amount.$lovelaces || '0'),
-          assets: Object.entries(input.source.amount)
-            .filter(([key]) => key !== '$lovelaces')
-            .map(([assetId, amount]) => {
-              const [policyId = '', nameHex = ''] = assetId.split('.')
-              const amountStr =
-                amount == null
-                  ? '0'
-                  : typeof amount === 'string'
-                    ? amount
-                    : typeof amount === 'number' || typeof amount === 'bigint'
-                      ? String(amount)
-                      : '0'
-              return {
-                tokenId: assetId as Portfolio.Token.Id,
-                policyId,
-                name: nameHex,
-                amount: amountStr,
-              }
-            }),
-          id: `${input.txHash}${input.index}`,
-          index: input.index,
-          txHash: input.txHash,
-        })),
-        outputs: tx.outputs.map((output) => ({
-          address: output.address,
-          amount: String(output.amount.$lovelaces || '0'),
-          assets: Object.entries(output.amount)
-            .filter(([key]) => key !== '$lovelaces')
-            .map(([assetId, amount]) => {
-              const [policyId = '', nameHex = ''] = assetId.split('.')
-              const amountStr =
-                amount == null
-                  ? '0'
-                  : typeof amount === 'string'
-                    ? amount
-                    : typeof amount === 'number' || typeof amount === 'bigint'
-                      ? String(amount)
-                      : '0'
-              return {
-                tokenId: assetId as Portfolio.Token.Id,
-                policyId,
-                name: nameHex,
-                amount: amountStr,
-              }
-            }),
-        })),
-        fee: String(tx.fee.$lovelaces || '0'),
-        certificates: tx.certificates as Array<RemoteCertificateMeta>,
-        withdrawals: (tx.withdrawals || []).map((w: unknown) => {
-          const withdrawal = w as {
-            address?: string
-            amount?:
-              | string
-              | number
-              | bigint
-              | {readonly $lovelaces?: string | number | bigint}
-          }
-          return {
-            address: withdrawal.address || '',
-            amount:
-              typeof withdrawal.amount === 'object' &&
-              withdrawal.amount?.$lovelaces != null
-                ? String(withdrawal.amount.$lovelaces)
-                : typeof withdrawal.amount === 'string'
-                  ? withdrawal.amount
-                  : typeof withdrawal.amount === 'number' ||
-                      typeof withdrawal.amount === 'bigint'
-                    ? String(withdrawal.amount)
-                    : '0',
-          }
-        }),
-        // ⚠️ METADATA MISSING: Backend-zero API doesn't return transaction metadata
-        metadata: undefined,
-      }))
+      // Map backend-zero Tx format to internal format, then transform to WalletTransaction
+      const transactions: WalletTransaction[] = backendTxs.map((tx) => {
+        const internalTx: InternalRawTransaction = {
+          type: 'shelley' as const,
+          hash: tx.hash || '',
+          block_hash: tx.block && tx.block.trim() ? tx.block : undefined,
+          block_num: undefined,
+          time: new Date(tx.when).toISOString(),
+          tx_state: tx.block ? 'Successful' : 'Pending',
+          last_update: new Date(tx.when).toISOString(),
+          tx_ordinal: undefined,
+          inputs: tx.inputs.map((input) => ({
+            address: input.source.address,
+            amount: String(input.source.amount.$lovelaces || '0'),
+            assets: Object.entries(input.source.amount)
+              .filter(([key]) => key !== '$lovelaces')
+              .map(([assetId, amount]) => {
+                const [policyId = '', nameHex = ''] = assetId.split('.')
+                const amountStr =
+                  amount == null
+                    ? '0'
+                    : typeof amount === 'string'
+                      ? amount
+                      : typeof amount === 'number' || typeof amount === 'bigint'
+                        ? String(amount)
+                        : '0'
+                return {
+                  tokenId: assetId as Portfolio.Token.Id,
+                  policyId,
+                  name: nameHex,
+                  amount: amountStr,
+                }
+              }),
+            id: `${input.txHash}${input.index}`,
+            index: input.index,
+            txHash: input.txHash,
+          })),
+          outputs: tx.outputs.map((output) => ({
+            address: output.address,
+            amount: String(output.amount.$lovelaces || '0'),
+            assets: Object.entries(output.amount)
+              .filter(([key]) => key !== '$lovelaces')
+              .map(([assetId, amount]) => {
+                const [policyId = '', nameHex = ''] = assetId.split('.')
+                const amountStr =
+                  amount == null
+                    ? '0'
+                    : typeof amount === 'string'
+                      ? amount
+                      : typeof amount === 'number' || typeof amount === 'bigint'
+                        ? String(amount)
+                        : '0'
+                return {
+                  tokenId: assetId as Portfolio.Token.Id,
+                  policyId,
+                  name: nameHex,
+                  amount: amountStr,
+                }
+              }),
+          })),
+          fee: String(tx.fee.$lovelaces || '0'),
+          certificates: tx.certificates as Array<RemoteCertificateMeta>,
+          withdrawals: (tx.withdrawals || []).map((w: unknown) => {
+            const withdrawal = w as {
+              address?: string
+              amount?:
+                | string
+                | number
+                | bigint
+                | {readonly $lovelaces?: string | number | bigint}
+            }
+            return {
+              address: withdrawal.address || '',
+              amount:
+                typeof withdrawal.amount === 'object' &&
+                withdrawal.amount?.$lovelaces != null
+                  ? String(withdrawal.amount.$lovelaces)
+                  : typeof withdrawal.amount === 'string'
+                    ? withdrawal.amount
+                    : typeof withdrawal.amount === 'number' ||
+                        typeof withdrawal.amount === 'bigint'
+                      ? String(withdrawal.amount)
+                      : '0',
+            }
+          }),
+          // ⚠️ METADATA MISSING: Backend-zero API doesn't return transaction metadata
+          metadata: undefined,
+        }
+        return transformToWalletTransaction(internalTx)
+      })
 
       return {
         transactions,

@@ -13,9 +13,8 @@ import {PortfolioTokenDetailBalanceSkeleton} from './PortfolioTokenDetailBalance
 
 export const PortfolioTokenBalance = () => {
   const {palette: p} = useTheme()
-  const {
-    wallet: {balances},
-  } = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
+  const balances = wallet.balances()
   const {id: tokenId} = usePortfolioTokenDetailParams()
   const tokenInfo = balances.records.get(tokenId)
   const tokenName = tokenInfo

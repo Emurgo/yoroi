@@ -1,13 +1,14 @@
 import {AssetNameUtils} from '@yoroi/tx'
-import {Balance} from '@yoroi/types'
+import {Api, Balance} from '@yoroi/types'
 
 import AssetFingerprint from '@emurgo/cip14-js'
 
-import {LegacyToken} from '~/wallets/types/tokens'
-
-import {TokenRegistryEntry} from './tokenRegistry'
-
-export const tokenInfo = (entry: TokenRegistryEntry): Balance.TokenInfo => {
+/**
+ * Converts a TokenRegistryEntry from the Cardano Token Registry to Balance.TokenInfo
+ */
+export const tokenInfo = (
+  entry: Api.Cardano.TokenRegistryEntry,
+): Balance.TokenInfo => {
   const policyId = toPolicyId(entry.subject)
   const assetName = toDisplayAssetName(entry.subject)
   const nameHex = toAssetNameHex(entry.subject)
@@ -40,6 +41,9 @@ export const tokenInfo = (entry: TokenRegistryEntry): Balance.TokenInfo => {
   }
 }
 
+/**
+ * Creates a fallback Balance.TokenInfo from a tokenId string
+ */
 export const fallbackTokenInfo = (tokenId: string): Balance.TokenInfo => {
   const policyId = toPolicyId(tokenId)
   const nameHex = toAssetNameHex(tokenId)
@@ -61,73 +65,65 @@ export const fallbackTokenInfo = (tokenId: string): Balance.TokenInfo => {
   }
 }
 
-export const toPolicyId = (tokenIdentifier: string) => {
+/**
+ * Extracts the policy ID from a token identifier (handles both policyId.assetName and policyIdassetName formats)
+ */
+export const toPolicyId = (tokenIdentifier: string): string => {
   const tokenSubject = toTokenSubject(tokenIdentifier)
   return tokenSubject.slice(0, 56)
 }
-export const toDisplayAssetName = (tokenIdentifier: string) => {
+
+/**
+ * Extracts and formats the display name from a token identifier
+ * Handles tagged asset names using AssetNameUtils
+ */
+export const toDisplayAssetName = (tokenIdentifier: string): string => {
   const hexName = toAssetNameHex(tokenIdentifier)
   const properties = AssetNameUtils.resolveProperties(hexName)
   const untaggedName = properties.asciiName ?? hexName
   return untaggedName
 }
 
-export const toAssetNameHex = (tokenIdentifier: string) => {
+/**
+ * Extracts the asset name hex from a token identifier
+ */
+export const toAssetNameHex = (tokenIdentifier: string): string => {
   const tokenSubject = toTokenSubject(tokenIdentifier)
   const maxAssetNameLengthInBytes = 32
   return tokenSubject.slice(56, 56 + maxAssetNameLengthInBytes * 2)
 }
 
-export const toTokenSubject = (tokenIdentifier: string) =>
+/**
+ * Converts a token identifier to subject format (removes dot separator)
+ * Handles both policyId.assetName and policyIdassetName formats
+ */
+export const toTokenSubject = (tokenIdentifier: string): string =>
   tokenIdentifier.replace('.', '')
 
-export const toTokenId = (tokenIdentifier: string) => {
+/**
+ * Converts a token identifier to standard tokenId format (policyId.assetName)
+ */
+export const toTokenId = (tokenIdentifier: string): Balance.TokenInfo['id'] => {
   const tokenSubject = toTokenSubject(tokenIdentifier)
-  return `${tokenSubject.slice(0, 56)}.${toAssetNameHex(tokenIdentifier)}`
+  return `${tokenSubject.slice(0, 56)}.${toAssetNameHex(tokenIdentifier)}` as Balance.TokenInfo['id']
 }
 
-export const utf8ToHex = (text: string) =>
+/**
+ * Converts UTF-8 text to hex string
+ */
+export const utf8ToHex = (text: string): string =>
   Buffer.from(text, 'utf-8').toString('hex')
 
-export const toTokenInfo = (token: LegacyToken): Balance.TokenInfo => {
-  const policyId = toPolicyId(token.identifier)
-  const assetName = toDisplayAssetName(token.identifier)
-
-  return {
-    kind: 'ft',
-    id: toTokenId(token.identifier),
-    name: assetName,
-    fingerprint: toTokenFingerprint({
-      policyId: token.metadata.policyId,
-      assetNameHex: token.metadata.assetName,
-    }),
-    description: token.metadata.longName ?? undefined,
-    ticker: token.metadata.ticker ?? assetName,
-    icon: undefined,
-    image: undefined,
-    group: policyId,
-    decimals: token.metadata.numberOfDecimals,
-    symbol: undefined,
-    metadatas: {
-      mintFt: {
-        icon: undefined,
-        description: token.metadata.longName ?? undefined,
-        ticker: token.metadata.ticker ?? undefined,
-        url: undefined,
-        version: '1',
-        decimals: token.metadata.numberOfDecimals,
-      },
-    },
-  }
-}
-
+/**
+ * Creates a CIP14 asset fingerprint from policyId and assetNameHex
+ */
 export const toTokenFingerprint = ({
   policyId,
   assetNameHex = '',
 }: {
   policyId: string
   assetNameHex: string | undefined
-}) => {
+}): string => {
   const assetFingerprint = AssetFingerprint.fromParts(
     Buffer.from(policyId, 'hex'),
     Buffer.from(assetNameHex, 'hex'),

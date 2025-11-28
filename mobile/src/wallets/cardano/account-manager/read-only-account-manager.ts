@@ -177,10 +177,10 @@ async function discoverUsedAddressesByStakingCredential({
 
     if (!isLast && response.transactions.length > 0) {
       const lastTx = response.transactions[response.transactions.length - 1]
-      if (lastTx?.block_hash && lastTx?.hash) {
+      if (lastTx?.blockHash && lastTx?.id) {
         after = {
-          block: lastTx.block_hash,
-          tx: lastTx.hash,
+          block: lastTx.blockHash,
+          tx: lastTx.id,
         }
       } else {
         isLast = true

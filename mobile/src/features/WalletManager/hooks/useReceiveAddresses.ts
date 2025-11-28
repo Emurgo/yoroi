@@ -6,5 +6,5 @@ export const useReceiveAddresses = (wallet: YoroiWallet) => {
   useWallet(wallet, 'addresses')
   useWallet(wallet, 'transactions')
 
-  return wallet.receiveAddresses
+  return wallet.receiveAddresses()
 }

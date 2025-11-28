@@ -22,11 +22,11 @@ export const useTransactionSummaries = ({
     const ownAddresses =
       wallet.rewardAddressHex !== ''
         ? [
-            ...wallet.internalAddresses,
-            ...wallet.externalAddresses,
+            ...wallet.internalAddresses(),
+            ...wallet.externalAddresses(),
             wallet.rewardAddressHex,
           ]
-        : [...wallet.internalAddresses, ...wallet.externalAddresses]
+        : [...wallet.internalAddresses(), ...wallet.externalAddresses()]
 
     // Convert to summaries
     const result: Record<string, TransactionSummary> = {}
@@ -49,11 +49,11 @@ export const useTransactionSummaries = ({
       const ownAddresses =
         wallet.rewardAddressHex !== ''
           ? [
-              ...wallet.internalAddresses,
-              ...wallet.externalAddresses,
+              ...wallet.internalAddresses(),
+              ...wallet.externalAddresses(),
               wallet.rewardAddressHex,
             ]
-          : [...wallet.internalAddresses, ...wallet.externalAddresses]
+          : [...wallet.internalAddresses(), ...wallet.externalAddresses()]
 
       // Convert to summaries
       const result: Record<string, TransactionSummary> = {}

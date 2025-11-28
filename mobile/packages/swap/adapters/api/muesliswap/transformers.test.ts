@@ -358,12 +358,12 @@ describe('transformers', () => {
     it('should normalize Muesliswap to Muesliswap_v2', () => {
       const result = transformers.limitQuote.request({
         protocol: Swap.Protocol.Muesliswap,
-        tokenIn: '.',
+        tokenIn: '.' as Swap.EstimateRequest['tokenIn'],
         tokenOut:
-          'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950',
+          'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950' as Swap.EstimateRequest['tokenOut'],
         amountIn: 10,
         wantedPrice: 1,
-      })
+      } as Swap.EstimateRequest)
       expect(result.order_contract).toBe(Dex.Muesliswap_v2)
     })
 

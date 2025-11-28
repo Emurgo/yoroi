@@ -1,3 +1,4 @@
+import {StakingInfo} from '@yoroi/staking'
 import {useTheme} from '@yoroi/theme'
 
 import {UseSuspenseQueryOptions, useQueryClient} from '@tanstack/react-query'
@@ -8,7 +9,6 @@ import {useStakingInfo} from '~/features/Staking/hooks/useStakingInfo'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {ButtonProps} from '~/ui/Button/Button'
 import {YoroiWallet} from '~/wallets/cardano/types'
-import {StakingInfo} from '~/wallets/types/staking'
 
 import {StakePoolInfo} from './StakePoolInfo'
 

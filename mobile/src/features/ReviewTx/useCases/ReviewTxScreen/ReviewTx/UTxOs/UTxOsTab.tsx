@@ -4,6 +4,7 @@ import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
+import {Address} from '~/common/Address/Address'
 import {TokenItem} from '~/common/TokenItem/TokenItem'
 import {
   FormattedInput,
@@ -178,13 +179,16 @@ const Input = ({input}: {input: FormattedInput}) => {
 
         <Space.Height.lg />
 
-        <Copiable text={input.address ?? '-'}>
-          <Text
-            style={[a.flex_1, a.body_2_md_regular, {color: p.text_gray_medium}]}
-          >
-            {input.address ?? '-'}
+        {input.address ? (
+          <Address
+            address={input.address}
+            textStyle={[a.body_2_md_regular, {color: p.text_gray_medium}]}
+          />
+        ) : (
+          <Text style={[a.body_2_md_regular, {color: p.text_gray_medium}]}>
+            -
           </Text>
-        </Copiable>
+        )}
 
         <Space.Height.sm />
 
@@ -245,13 +249,16 @@ const Output = ({output}: {output: FormattedOutput}) => {
 
         <Space.Height.lg />
 
-        <Copiable text={output.address ?? '-'}>
-          <Text
-            style={[a.flex_1, a.body_2_md_regular, {color: p.text_gray_medium}]}
-          >
-            {output.address ?? '-'}
+        {output.address ? (
+          <Address
+            address={output.address}
+            textStyle={[a.body_2_md_regular, {color: p.text_gray_medium}]}
+          />
+        ) : (
+          <Text style={[a.body_2_md_regular, {color: p.text_gray_medium}]}>
+            -
           </Text>
-        </Copiable>
+        )}
 
         {output.datum && (
           <>

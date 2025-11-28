@@ -1,11 +1,10 @@
-import {RawTransaction, TipStatusResponse, TxHistoryRequest} from '@yoroi/api'
+import {TipStatusResponse, TxHistoryRequest} from '@yoroi/api'
 import {PromiseAllLimited, isArray, parseSafe} from '@yoroi/common'
 import {RemoteCertificateMeta} from '@yoroi/staking'
 import {CertificateKind} from '@yoroi/tx'
 import {
   App,
   TRANSACTION_STATUS,
-  TransactionStatus,
   Transactions,
   WalletTransaction,
 } from '@yoroi/types'
@@ -316,7 +315,7 @@ export async function syncTxs({
   // the way the addresses are arranged are make it slower (getting the same tx twice)
   const tasks = validChunks.map((addrs) => {
     const promise = async () => {
-      const taskResult: Array<Array<RawTransaction>> = []
+      const taskResult: Array<Array<WalletTransaction>> = []
       let bestTx: TimeForTx | undefined
       let isPaginating = false
       let historyPayload = txHistoryPayloadFactory(
@@ -345,7 +344,7 @@ export async function syncTxs({
         if (onBatchProcessed && response.transactions.length > 0) {
           const batchTxs: Record<string, WalletTransaction> = {}
           for (const tx of response.transactions) {
-            batchTxs[tx.hash] = toCachedTx(tx)
+            batchTxs[tx.id] = tx
           }
           onBatchProcessed(batchTxs)
         }
@@ -367,8 +366,8 @@ export async function syncTxs({
                 txCount: response.transactions.length,
                 sampleTx: response.transactions[0]
                   ? {
-                      hash: response.transactions[0]?.hash,
-                      block_hash: response.transactions[0]?.block_hash,
+                      id: response.transactions[0]?.id,
+                      blockHash: response.transactions[0]?.blockHash,
                     }
                   : null,
               },
@@ -398,8 +397,7 @@ export async function syncTxs({
 
   try {
     const result = await PromiseAllLimited(tasks, 4)
-    const newTxs = result.flat(2).map((tx) => [tx.hash, toCachedTx(tx)])
-    // .map((tx) => processTxHistoryData(tx, addressesByChunks.flat(), 0, networkId))
+    const newTxs = result.flat(2).map((tx) => [tx.id, tx])
 
     if (newTxs.length > 0) {
       return {...transactions, ...fromPairs(newTxs)}
@@ -530,16 +528,16 @@ function getLatestYoroiTransaction(
 }
 
 function getLatestApiTransaction(
-  txs: Array<RawTransaction>,
+  txs: Array<WalletTransaction>,
 ): undefined | TimeForTx {
   const blockInfo: Array<TimeForTx> = []
 
   for (const tx of txs) {
-    // For backend-zero transactions, we only need block_hash and hash
-    // block_num and tx_ordinal are optional (not provided by backend-zero API)
+    // For backend-zero transactions, we only need blockHash and id
+    // blockNum and txOrdinal are optional (not provided by backend-zero API)
     // Check for both null/undefined AND empty strings
-    const blockHash = tx.block_hash
-    const txHash = tx.hash
+    const blockHash = tx.blockHash
+    const txHash = tx.id
     if (
       blockHash != null &&
       blockHash !== '' &&
@@ -550,8 +548,8 @@ function getLatestApiTransaction(
         blockHash,
         txHash,
         // Use provided values or defaults for sorting
-        txOrdinal: tx.tx_ordinal ?? 0,
-        blockNum: tx.block_num ?? 0,
+        txOrdinal: tx.txOrdinal ?? 0,
+        blockNum: tx.blockNum ?? 0,
       })
     }
   }
@@ -586,63 +584,9 @@ function getLatestApiTransaction(
     return best
   }
 
-  // For backend-zero (no block_num/tx_ordinal), return the last transaction
+  // For backend-zero (no blockNum/txOrdinal), return the last transaction
   // Backend-zero returns transactions in chronological order
   return blockInfo[blockInfo.length - 1]
-}
-
-export function toCachedTx(tx: RawTransaction): WalletTransaction {
-  return {
-    id: tx.hash,
-    type: tx.type,
-    fee: tx.fee ?? undefined,
-    status: tx.tx_state as TransactionStatus,
-    inputs: tx.inputs.map((input) => ({
-      id: input.id,
-      address: input.address,
-      amount: input.amount,
-      assets: (input.assets ?? []).map((asset) => ({
-        amount: asset.amount,
-        tokenId: asset.tokenId,
-        policyId: asset.policyId,
-        name: asset.name,
-      })),
-    })),
-    outputs: tx.outputs.map((output) => ({
-      address: output.address,
-      amount: output.amount,
-      assets: (output.assets ?? []).map((asset) => ({
-        amount: asset.amount,
-        tokenId: asset.tokenId,
-        policyId: asset.policyId,
-        name: asset.name,
-      })),
-    })),
-    lastUpdatedAt: tx.last_update,
-    // all of these can be null
-    submittedAt: tx.time,
-    blockNum: tx.block_num,
-    blockHash: tx.block_hash,
-    txOrdinal: tx.tx_ordinal,
-    epoch: tx.epoch,
-    slot: tx.slot,
-    withdrawals: tx.withdrawals,
-    certificates: tx.certificates,
-    validContract: tx.valid_contract,
-    scriptSize: tx.script_size,
-    collateralInputs: (tx.collateral_inputs ?? []).map((input) => ({
-      address: input.address,
-      amount: input.amount,
-      assets: (input.assets ?? []).map((asset) => ({
-        amount: asset.amount,
-        tokenId: asset.tokenId,
-        policyId: asset.policyId,
-        name: asset.name,
-      })),
-    })),
-    memo: null,
-    metadata: tx.metadata,
-  }
 }
 
 type TimeForTx = {

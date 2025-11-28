@@ -2,9 +2,23 @@ import {RemoteCertificateMeta} from '@yoroi/staking'
 import {Balance} from '@yoroi/types'
 
 import {CardanoTypes} from '~/wallets/cardano/types'
-import {TransactionToken} from '~/wallets/types/tokens'
 
-// Note: CardanoTypes and TransactionToken are still in src/ but will be moved in future refactoring
+// Note: CardanoTypes is still in src/ but will be moved in future refactoring
+
+/**
+ * Minimal token metadata for transaction processing
+ * Used in deprecated TransactionInfo type
+ */
+export type TransactionToken = {
+  isDefault: boolean
+  identifier: string
+  // Minimal metadata for transaction display
+  policyId: string
+  assetName: string
+  numberOfDecimals: number
+  ticker: string | null
+  longName: string | null
+}
 
 /**
  * Transaction status constants and type
@@ -90,9 +104,10 @@ type IOData = {
 }
 
 /**
- * @deprecated Use FormattedTx from ReviewTx instead. This type will be removed in a future version.
- * For transaction details, use useFormattedTxFromWalletTransaction hook.
- * For transaction lists, TransactionInfo is still used temporarily but will be migrated.
+ * @deprecated INTERNAL ONLY: TransactionInfo is kept internally for deprecated code.
+ * Do not use in new code. Use FormattedTx from ReviewTx for transaction details (via useFormattedTxFromWalletTransaction hook).
+ * Use TransactionSummary for transaction lists.
+ * This type will be removed when deprecated code is migrated.
  */
 export type TransactionInfo = {
   id: string

@@ -4,8 +4,9 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import {useNavigation} from '@react-navigation/native'
 import {validateMnemonic} from 'bip39'
 import * as React from 'react'
-import {Keyboard, Text, TouchableOpacity, View} from 'react-native'
+import {Keyboard, Platform, Text, TouchableOpacity, View} from 'react-native'
 import {FlatList, ScrollView} from 'react-native-gesture-handler'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
 import {WalletDuplicatedModal} from '~/features/SetupWallet/common/WalletDuplicatedModal/WalletDuplicatedModal'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
@@ -200,55 +201,77 @@ export const RestoreWalletScreen = () => {
   ])
 
   return (
-    <SafeArea>
-      <StepperProgress
-        style={[a.px_lg]}
-        currentStep={1}
-        currentStepTitle={strings.setupWallet.stepRestoreWalletScreen}
-        totalSteps={2}
-      />
-
-      <ScrollView
-        bounces={false}
-        keyboardShouldPersistTaps="always"
-        contentContainerStyle={a.p_lg}
-        style={a.flex_1}
-      >
-        <Text style={[a.body_1_lg_regular, ta.text_gray_max]}>
-          {strings.setupWallet.restoreWalletScreenTitle(bold)}
-        </Text>
-
-        <Space.Height.lg />
-
-        <MnemonicInput
-          isValidPhrase={isValidPhrase}
-          suggestedWords={suggestedWords}
-          setSuggestedWords={setSuggestedWords}
-          length={mnemonicType}
-          onDone={setMnemonic}
-          mnemonicSelectedWords={mnemonicSelectedWords}
-          setMnemonicSelectedWords={setMnemonicSelectedWords}
-          onSelect={onSelect}
-          onFocus={onFocus}
-          mnemonic={mnemonic}
-          mnenonicRefs={mnenonicRefs}
-          inputErrorsIndexes={inputErrorsIndexes}
-          onError={onError}
-          onClearError={onClearError}
-          scrollViewRef={scrollViewRef}
-          focusedIndex={focusedIndex}
+    <>
+      <SafeArea>
+        <StepperProgress
+          style={[a.px_lg]}
+          currentStep={1}
+          currentStepTitle={strings.setupWallet.stepRestoreWalletScreen}
+          totalSteps={2}
         />
-      </ScrollView>
 
-      {!isEmptyString(mnemonic) && isValidPhrase && (
-        <SafeArea.Footer>
-          <Button
-            title={strings.setupWallet.next}
-            onPress={handleOnNext}
-            testID="setup-restore-step1-next-button"
+        <ScrollView
+          bounces={false}
+          keyboardShouldPersistTaps="always"
+          contentContainerStyle={a.p_lg}
+          style={a.flex_1}
+        >
+          <Text style={[a.body_1_lg_regular, ta.text_gray_max]}>
+            {strings.setupWallet.restoreWalletScreenTitle(bold)}
+          </Text>
+
+          <Space.Height.lg />
+
+          <MnemonicInput
+            isValidPhrase={isValidPhrase}
+            suggestedWords={suggestedWords}
+            setSuggestedWords={setSuggestedWords}
+            length={mnemonicType}
+            onDone={setMnemonic}
+            mnemonicSelectedWords={mnemonicSelectedWords}
+            setMnemonicSelectedWords={setMnemonicSelectedWords}
+            onSelect={onSelect}
+            onFocus={onFocus}
+            mnemonic={mnemonic}
+            mnenonicRefs={mnenonicRefs}
+            inputErrorsIndexes={inputErrorsIndexes}
+            onError={onError}
+            onClearError={onClearError}
+            scrollViewRef={scrollViewRef}
+            focusedIndex={focusedIndex}
           />
-        </SafeArea.Footer>
-      )}
+        </ScrollView>
+
+        {!isEmptyString(mnemonic) && isValidPhrase && (
+          <SafeArea.Footer>
+            <Button
+              title={strings.setupWallet.next}
+              onPress={handleOnNext}
+              testID="setup-restore-step1-next-button"
+            />
+          </SafeArea.Footer>
+        )}
+
+        {suggestedWords.length === 0 && hasFocusedInputError && (
+          <View
+            style={[
+              ta.bg_color_max,
+              a.border_t,
+              a.py_sm,
+              a.align_center,
+              {
+                borderColor: p.gray_200,
+              },
+            ]}
+          >
+            <Text
+              style={[ta.text_gray_medium, a.body_1_lg_regular, a.text_center]}
+            >
+              {strings.setupWallet.wordNotFound}
+            </Text>
+          </View>
+        )}
+      </SafeArea>
 
       {suggestedWords.length > 0 && !hasFocusedInputError && (
         <WordSuggestionList
@@ -257,27 +280,7 @@ export const RestoreWalletScreen = () => {
           onSelect={onSelect}
         />
       )}
-
-      {suggestedWords.length === 0 && hasFocusedInputError && (
-        <View
-          style={[
-            ta.bg_color_max,
-            a.border_t,
-            a.py_sm,
-            a.align_center,
-            {
-              borderColor: p.gray_200,
-            },
-          ]}
-        >
-          <Text
-            style={[ta.text_gray_medium, a.body_1_lg_regular, a.text_center]}
-          >
-            {strings.setupWallet.wordNotFound}
-          </Text>
-        </View>
-      )}
-    </SafeArea>
+    </>
   )
 }
 
@@ -292,6 +295,27 @@ const WordSuggestionList = React.memo(
     onSelect: (index: number, word: string) => void
   }) => {
     const {palette: p, atoms: ta} = useTheme()
+    const insets = useSafeAreaInsets()
+    const [keyboardHeight, setKeyboardHeight] = React.useState(0)
+
+    React.useEffect(() => {
+      const showEvent =
+        Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow'
+      const hideEvent =
+        Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide'
+
+      const keyboardDidShowListener = Keyboard.addListener(showEvent, (e) => {
+        setKeyboardHeight(e.endCoordinates.height)
+      })
+      const keyboardDidHideListener = Keyboard.addListener(hideEvent, () => {
+        setKeyboardHeight(0)
+      })
+
+      return () => {
+        keyboardDidShowListener.remove()
+        keyboardDidHideListener.remove()
+      }
+    }, [])
 
     const renderItem = React.useCallback(
       ({item: word, index: wordIndex}: {item: string; index: number}) => (
@@ -321,6 +345,16 @@ const WordSuggestionList = React.memo(
           {
             borderColor: p.gray_200,
             ...android(a.pb_sm),
+            ...(keyboardHeight > 0 && {
+              position: 'absolute' as const,
+              bottom:
+                keyboardHeight +
+                60 -
+                (Platform.OS === 'android' ? insets.bottom : 0),
+              left: 0,
+              right: 0,
+              zIndex: 1000,
+            }),
           },
           a.flex_row,
           a.align_center,

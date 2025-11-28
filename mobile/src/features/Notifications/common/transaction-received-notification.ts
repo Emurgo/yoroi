@@ -5,6 +5,7 @@ import {TRANSACTION_DIRECTION} from '@yoroi/types'
 import * as React from 'react'
 import {Subject} from 'rxjs'
 
+import {walletTransactionToSummary} from '~/features/Transactions/common/transactionSummary'
 import {SyncWalletInfo} from '~/features/WalletManager/common/types'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {walletManager} from '~/features/WalletManager/wallet-manager'
@@ -54,16 +55,25 @@ const buildNotifications = async ({
     await storage.addValues(newTxIds)
 
     newTxIds.forEach((id) => {
-      const tx = wallet.transactions[id]
-      if (tx) {
-        const txDate = tx.submittedAt ?? new Date().toISOString()
+      const rawTx = wallet.getRawTransaction(id)
+      if (rawTx) {
+        const ownAddresses = [
+          ...wallet.internalAddresses(),
+          ...wallet.externalAddresses(),
+        ]
+        const summary = walletTransactionToSummary(
+          rawTx,
+          ownAddresses,
+          wallet.portfolioPrimaryTokenInfo,
+        )
+        const txDate = summary.submittedAt ?? new Date().toISOString()
         const isConfirmedAfterDeadline =
           new Date(txDate).getTime() > sinceDate.getTime()
         if (!isConfirmedAfterDeadline) return
         const metadata: NotificationTypes.TransactionReceivedEvent['metadata'] =
           {
             txId: id,
-            isSentByUser: tx.direction === TRANSACTION_DIRECTION.SENT,
+            isSentByUser: summary.direction === TRANSACTION_DIRECTION.SENT,
             nextTxsCounter: newTxIds.length + processed.length,
             previousTxsCounter: processed.length,
             walletId,
@@ -80,7 +90,7 @@ const buildNotifications = async ({
 }
 
 const getTxIds = (wallet: YoroiWallet) => {
-  const ids = wallet.allUtxos.map((utxo) => utxo.tx_hash)
+  const ids = wallet.allUtxos().map((utxo) => utxo.tx_hash)
   return [...new Set(ids)]
 }
 

@@ -1,13 +1,13 @@
 import {
   AccountStateRequest,
   AccountStateResponse,
-  RawTransaction,
   TipStatusResponse,
   TxHistoryRequest,
   TxStatusRequest,
   TxStatusResponse,
 } from '@yoroi/api'
 import {StakePoolInfoRequest, StakePoolInfosAndHistories} from '@yoroi/staking'
+import {WalletTransaction} from '@yoroi/types'
 
 import {cardanoWalletApiMaker} from '../../../../packages/api/cardano/api-maker'
 import {WalletContext} from '../../../../packages/api/cardano/types'
@@ -48,7 +48,7 @@ export const fetchNewTxHistory = async (
   request: TxHistoryRequest,
   baseApiUrl: string,
   walletContext?: WalletContext,
-): Promise<{isLast: boolean; transactions: Array<RawTransaction>}> => {
+): Promise<{isLast: boolean; transactions: Array<WalletTransaction>}> => {
   return getApi(baseApiUrl).fetchNewTxHistory(request, walletContext)
 }
 

@@ -1,3 +1,5 @@
+import {isRight} from '@yoroi/common'
+
 import {poolTransitionGetInfo} from './pool-transition-api'
 
 const mockFetchData = jest.fn()
@@ -30,8 +32,10 @@ describe('poolTransitionGetInfo', () => {
     const result = await getInfoFn()
 
     expect(result.tag).toBe('right')
-    expect(result.value.data).toEqual(mockTransitionData)
-    expect(result.value.status).toBe(200)
+    if (isRight(result)) {
+      expect(result.value.data).toEqual(mockTransitionData)
+      expect(result.value.status).toBe(200)
+    }
     expect(mockFetchData).toHaveBeenCalledWith({
       url: `${mockBaseApiUrl}/v2.1/pools/poolTransitionInfo`,
       method: 'get',
@@ -52,8 +56,10 @@ describe('poolTransitionGetInfo', () => {
     const result = await getInfoFn()
 
     expect(result.tag).toBe('right')
-    expect(result.value.data).toBeNull()
-    expect(result.value.status).toBe(200)
+    if (isRight(result)) {
+      expect(result.value.data).toBeNull()
+      expect(result.value.status).toBe(200)
+    }
   })
 
   it('should freeze the response', async () => {

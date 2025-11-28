@@ -1,7 +1,8 @@
 import {CertificateKind} from '@yoroi/tx'
-import {Balance, Portfolio} from '@yoroi/types'
 import {
+  Balance,
   BaseAsset,
+  Portfolio,
   TRANSACTION_DIRECTION,
   TRANSACTION_TYPE,
   TransactionDirection,
@@ -22,10 +23,25 @@ const remoteAssetsToAmounts = (
   const amounts: Balance.Amounts = {}
 
   for (const asset of assets) {
-    // Handle empty tokenId or primary token - use primaryTokenId
-    // tokenId is Portfolio.Token.Id, so empty string check is not needed
-    const tokenId =
-      asset.tokenId === primaryTokenId ? primaryTokenId : asset.tokenId
+    // Handle assets that may have tokenId missing but have policyId and name
+    // Construct tokenId from policyId.name if tokenId is missing
+    let tokenId: string = asset.tokenId || ''
+
+    if (!tokenId || tokenId === ('' as Portfolio.Token.Id)) {
+      // If tokenId is missing, try to construct it from policyId and name
+      if (asset.policyId && asset.name) {
+        tokenId = `${asset.policyId}.${asset.name}` as Portfolio.Token.Id
+      } else {
+        // If no policyId/name, treat as primary token
+        tokenId = primaryTokenId
+      }
+    }
+
+    // Normalize primary token
+    if (tokenId === primaryTokenId || (!tokenId && !asset.policyId)) {
+      tokenId = primaryTokenId
+    }
+
     const existing = amounts[tokenId]
     amounts[tokenId] = existing
       ? Quantities.sum([existing, asQuantity(asset.amount)])
@@ -127,7 +143,6 @@ const determineTransactionDirection = (
 
 /**
  * Convert WalletTransaction to TransactionSummary for list display
- * Reuses logic from processTransactions but returns a simpler summary format
  */
 export const walletTransactionToSummary = (
   tx: WalletTransaction,

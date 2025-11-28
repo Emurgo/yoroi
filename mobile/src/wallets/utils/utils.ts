@@ -1,11 +1,10 @@
+import {RawUtxo} from '@yoroi/api'
 import {parseNumberFromText} from '@yoroi/common'
 import {TransactionOutput} from '@yoroi/tx'
 import {Balance, Numbers} from '@yoroi/types'
+import {Portfolio} from '@yoroi/types'
 
 import BigNumber from 'bignumber.js'
-
-import {RawUtxo} from '../types/other'
-import {TokenId} from '../types/yoroi'
 
 export const Entries = {
   first: (entries: TransactionOutput[]): TransactionOutput => {
@@ -61,10 +60,10 @@ export const Amounts = {
   },
   remove: (
     amounts: Balance.Amounts,
-    removeTokenIds: Array<TokenId>,
+    removeTokenIds: Array<Portfolio.Token.Id>,
   ): Balance.Amounts => {
     const filteredEntries = Object.entries(amounts).filter(
-      ([tokenId]) => !removeTokenIds.includes(tokenId),
+      ([tokenId]) => !removeTokenIds.includes(tokenId as Portfolio.Token.Id),
     )
 
     return Object.fromEntries(filteredEntries)
@@ -206,7 +205,7 @@ export const asQuantity = (value: BigNumber | number | string) => {
 }
 
 export const Utxos = {
-  toAmounts: (utxos: RawUtxo[], primaryTokenId: TokenId) => {
+  toAmounts: (utxos: RawUtxo[], primaryTokenId: Portfolio.Token.Id) => {
     return utxos.reduce(
       (previousAmounts, currentUtxo) => {
         const amounts = {

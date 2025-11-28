@@ -95,9 +95,8 @@ export const useGetPortfolioTokenChart = (
 ) => {
   const {disableNonPrimaryToken = false, ...queryOptions} = options
   const {id: tokenId} = usePortfolioTokenDetailParams()
-  const {
-    wallet: {balances},
-  } = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
+  const balances = wallet.balances()
   const {
     networkManager: {tokenManager},
   } = useSelectedNetwork()

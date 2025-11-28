@@ -1,4 +1,4 @@
-import {GOVERNANCE_YOROI_DREP_ID_HEX} from '@yoroi/staking'
+import {getYoroiDrepIdHex} from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import {LinearGradient} from 'expo-linear-gradient'
@@ -13,6 +13,7 @@ import {
 } from 'react-native'
 
 import {useCopy} from '~/features/Copy/context/CopyProvider'
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
@@ -44,11 +45,14 @@ export const YoroiDrepCard = ({
   const strings = useStrings()
   const {atoms: ta, palette: p} = useTheme()
   const {copy, isCopying} = useCopy()
+  const {wallet} = useSelectedWallet()
 
-  const drepId = formatDrepHashToCIP129Format(
-    GOVERNANCE_YOROI_DREP_ID_HEX,
-    'key',
+  const yoroiDrepIdHex = React.useMemo(
+    () => getYoroiDrepIdHex(wallet.networkManager.network),
+    [wallet.networkManager.network],
   )
+
+  const drepId = formatDrepHashToCIP129Format(yoroiDrepIdHex, 'key')
 
   const displayId = truncateId ? truncateDrepId(drepId) : drepId
 

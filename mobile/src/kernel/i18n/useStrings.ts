@@ -2175,6 +2175,7 @@ export const useStrings = () => {
         connectWalletButtonCard: f(setupWalletMessages.connectWalletButtonCard),
         createWalletButtonCard: f(setupWalletMessages.createWalletButtonCard),
         restoreWalletButtonCard: f(setupWalletMessages.restoreWalletButtonCard),
+        scanQrCodeTitle: f(setupWalletMessages.scanQrCodeTitle),
         passwordStrengthRequirement: (values: number) =>
           f(setupWalletMessages.passwordStrengthRequirement, {
             requiredPasswordLength: values,

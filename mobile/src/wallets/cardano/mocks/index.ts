@@ -1,5 +1,48 @@
-import {BackendConfig, RawTransaction, TipStatusResponse} from '@yoroi/api'
-import {WalletTransaction} from '@yoroi/types'
+import {BackendConfig, TipStatusResponse} from '@yoroi/api'
+import {TransactionStatus, WalletTransaction} from '@yoroi/types'
+
+/**
+ * Helper to convert mock RawTransaction format to WalletTransaction format
+ */
+function convertMockTx(tx: any): WalletTransaction {
+  return {
+    id: tx.hash,
+    type: tx.type,
+    fee: tx.fee,
+    status: (tx.tx_state || tx.status) as TransactionStatus,
+    inputs: (tx.inputs || []).map((input: any) => ({
+      id: input.id,
+      address: input.address,
+      amount: input.amount,
+      assets: input.assets || [],
+    })),
+    outputs: (tx.outputs || []).map((output: any) => ({
+      address: output.address,
+      amount: output.amount,
+      assets: output.assets || [],
+    })),
+    lastUpdatedAt: tx.last_update || tx.lastUpdatedAt,
+    submittedAt: tx.time ?? tx.submittedAt ?? null,
+    blockNum: tx.block_num ?? tx.blockNum ?? null,
+    blockHash: tx.block_hash ?? tx.blockHash ?? null,
+    txOrdinal: tx.tx_ordinal ?? tx.txOrdinal ?? null,
+    epoch: tx.epoch ?? null,
+    slot: tx.slot ?? null,
+    withdrawals: tx.withdrawals || [],
+    certificates: tx.certificates || [],
+    validContract: tx.valid_contract ?? tx.validContract,
+    scriptSize: tx.script_size ?? tx.scriptSize,
+    collateralInputs: (tx.collateral_inputs || tx.collateralInputs || []).map(
+      (input: any) => ({
+        address: input.address,
+        amount: input.amount,
+        assets: input.assets || [],
+      }),
+    ),
+    memo: null,
+    metadata: tx.metadata,
+  }
+}
 
 export const mockedBackendConfig: BackendConfig = {
   API_ROOT: 'https://fakeapiroot.com',
@@ -123,11 +166,11 @@ export const mockedAddressesByChunks = [
 
 export const mockedHistoryResponse: {
   isLast: boolean
-  transactions: Array<RawTransaction>
+  transactions: Array<WalletTransaction>
 } = {
   isLast: true,
   transactions: [
-    {
+    convertMockTx({
       hash: '54ab3dc8e717040b9b4c523d0756cfc59a30f107e053b4cd474e11e818be0ddg',
       fee: '207301',
       valid_contract: true,
@@ -554,7 +597,7 @@ export const mockedHistoryResponse: {
           ],
         },
       ],
-    },
+    }),
   ],
 }
 
@@ -577,7 +620,7 @@ export const mockedTipStatusResponse: TipStatusResponse = {
 
 export const mockedEmptyHistoryResponse: {
   isLast: boolean
-  transactions: Array<RawTransaction>
+  transactions: Array<WalletTransaction>
 } = {
   transactions: [],
   isLast: true,

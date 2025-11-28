@@ -49,7 +49,8 @@ export const ExchangeResultModal = () => {
 
   // NOTE: should never happen, caller should handle it
   if (action == null) return null
-  const params: Links.ExchangeShowCreateResultParams = action.info.params
+  // TypeScript narrows based on useCase check above, but needs explicit assertion
+  const params = action.info.params as Links.ExchangeShowCreateResultParams
 
   const handleOnClose = () => {
     markActionProcessed()

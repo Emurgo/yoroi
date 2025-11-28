@@ -277,6 +277,7 @@ export const RestoreWalletDetailsScreen = () => {
           onSubmitEditing={() => passwordRef.current?.focus()}
           testID="walletNameInput"
           autoComplete="off"
+          textContentType="none"
           showErrorOnBlur
         />
 
@@ -294,7 +295,7 @@ export const RestoreWalletDetailsScreen = () => {
           testID="walletPasswordInput"
           autoComplete="off"
           showErrorOnBlur
-          textContentType="oneTimeCode"
+          textContentType="none"
         />
 
         <TextInput
@@ -308,7 +309,7 @@ export const RestoreWalletDetailsScreen = () => {
           errorText={passwordConfirmationErrorText}
           testID="walletRepeatPasswordInput"
           autoComplete="off"
-          textContentType="oneTimeCode"
+          textContentType="none"
         />
 
         <View style={[a.flex_row, a.align_center, a.justify_center, a.gap_sm]}>
