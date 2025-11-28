@@ -117,6 +117,8 @@ export async function createWithdrawalWithGovernanceTx({
   }
 
   // Helper function to calculate required ADA based on fee estimate
+  // Must account for: fee (and deposit if registering) + minimum UTXO for change output
+  // Note: Deregistration refund is returned in outputs, not subtracted from inputs
   const calculateRequiredAda = (feeEstimate: bigint): string => {
     const minUtxoValue = BigInt(
       protocolParamsConfig.minimumUtxoVal || '1000000',
@@ -126,12 +128,7 @@ export async function createWithdrawalWithGovernanceTx({
     const depositIfNeeded = !isRegistered
       ? BigInt(protocolParams.keyDeposit)
       : 0n
-    // Account for deregistration refund
-    const deregistrationRefund = shouldDeregister
-      ? BigInt(protocolParams.keyDeposit)
-      : 0n
-    const baseRequired =
-      feeEstimate + depositIfNeeded - deregistrationRefund + minUtxoValue
+    const baseRequired = feeEstimate + depositIfNeeded + minUtxoValue
     return (baseRequired + feeBuffer).toString()
   }
 
@@ -212,12 +209,15 @@ export async function createWithdrawalWithGovernanceTx({
         })
       }
 
-      // Add vote delegation certificate for DRep
-      builderState = addCertificate(builderState, {
-        kind: CertificateKind.VoteDelegation,
-        stakeCredentialKeyHashHex: stakeKeyHashHex,
-        drep: drepValue,
-      })
+      // Add vote delegation certificate for DRep only if not deregistering
+      // Deregistering removes the stake key, making vote delegation meaningless
+      if (!shouldDeregister) {
+        builderState = addCertificate(builderState, {
+          kind: CertificateKind.VoteDelegation,
+          stakeCredentialKeyHashHex: stakeKeyHashHex,
+          drep: drepValue,
+        })
+      }
 
       // Add deregistration certificate if requested
       if (shouldDeregister) {
