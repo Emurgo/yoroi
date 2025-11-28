@@ -15,8 +15,8 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {useAuth} from '~/features/Auth/context/AuthProvider'
 import {usePrefetchStakingInfo} from '~/features/Dashboard/ui/shared/StakePoolInfos'
 import {useCanVote} from '~/features/RegisterCatalyst/common/hooks'
-import {useRemoteConfig} from '~/features/RemoteConfig/hooks/useRemoteConfig'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useRemoteConfig} from '~/hooks/useRemoteConfig'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {
   BackButton,
