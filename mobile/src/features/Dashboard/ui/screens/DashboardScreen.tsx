@@ -1,4 +1,4 @@
-import {GOVERNANCE_YOROI_DREP_ID_HEX} from '@yoroi/staking'
+import {getYoroiDrepIdHex} from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
@@ -112,7 +112,7 @@ export const DashboardScreen = () => {
           try {
             // Create combined transaction with withdrawal + DRep delegation
             const drepValue: {KeyHash: string} = {
-              KeyHash: GOVERNANCE_YOROI_DREP_ID_HEX,
+              KeyHash: getYoroiDrepIdHex(wallet.networkManager.network),
             }
             const result = await createWithdrawalWithGovernanceTxFromWallet(
               wallet,
