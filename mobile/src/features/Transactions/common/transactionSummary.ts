@@ -143,7 +143,6 @@ const determineTransactionDirection = (
 
 /**
  * Convert WalletTransaction to TransactionSummary for list display
- * Reuses logic from processTransactions but returns a simpler summary format
  */
 export const walletTransactionToSummary = (
   tx: WalletTransaction,

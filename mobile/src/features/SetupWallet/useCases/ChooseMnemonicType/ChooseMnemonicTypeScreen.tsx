@@ -8,13 +8,13 @@ import {View} from 'react-native'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {SetupWalletRouteNavigation} from '~/kernel/navigation/types'
 import {LogoBanner} from '~/ui/LogoBanner/LogoBanner'
+import QRsIllustration from '~/ui/QRsIllustration/QRsIllustration'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
 
 import {ButtonCard} from '../../common/ButtonCard/ButtonCard'
 import {Mnemonic15Words} from '../../illustrations/Mnemonic15Words'
 import {Mnemonic24Words} from '../../illustrations/Mnemonic24Words'
-import QRsIllustration from '~/ui/QRsIllustration/QRsIllustration'
 
 export const ChooseMnemonicTypeScreen = () => {
   const strings = useStrings()
@@ -60,7 +60,13 @@ export const ChooseMnemonicTypeScreen = () => {
 
         <ButtonCard
           title={strings.setupWallet.scanQrCodeTitle}
-          icon={<QRsIllustration width={128} height={120} style={[a.absolute, {right: 0}]} />}
+          icon={
+            <QRsIllustration
+              width={128}
+              height={120}
+              style={[a.absolute, {right: 0}]}
+            />
+          }
           onPress={handleScanQrCode}
           testID="scan-qr-code-restore"
         />

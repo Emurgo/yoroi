@@ -103,9 +103,7 @@ export const useGovernanceVoteFlow = ({
   const setDelegatePending = (options: DelegateOptions) => {
     const yoroiDrepIdHex = getYoroiDrepIdHex(wallet.networkManager.network)
     const pendingVoteValue =
-      options.hash === yoroiDrepIdHex
-        ? 'delegate-yoroi'
-        : 'delegate-other'
+      options.hash === yoroiDrepIdHex ? 'delegate-yoroi' : 'delegate-other'
     setPendingVote(pendingVoteValue)
     pendingActionRef.current = {type: 'delegate', options}
   }

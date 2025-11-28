@@ -279,28 +279,27 @@ const formatInputsFromWalletTransaction = (
             (asset.tokenId as Portfolio.Token.Id) ||
             (asset.assetId as Portfolio.Token.Id | undefined)
 
-            if (!tokenId) {
-              return null
-            }
+          if (!tokenId) {
+            return null
+          }
 
-            const tokenInfo = tokenInfos?.get(tokenId)
-            const quantity = asQuantity(a.amount)
+          const tokenInfo = tokenInfos?.get(tokenId)
+          const quantity = asQuantity(a.amount)
 
-            // If tokenInfo is not loaded yet, create a fallback unknown token info
-            // This ensures tokens are still displayed even while token info is loading
-            const finalTokenInfo = tokenInfo
-              ? tokenInfo
-              : createUnknownTokenInfo({
-                  id: tokenId,
-                  name: tokenId,
-                })
+          // If tokenInfo is not loaded yet, create a fallback unknown token info
+          // This ensures tokens are still displayed even while token info is loading
+          const finalTokenInfo = tokenInfo
+            ? tokenInfo
+            : createUnknownTokenInfo({
+                id: tokenId,
+                name: tokenId,
+              })
 
-            return {
-              tokenInfo: finalTokenInfo,
-              quantity: quantity,
-            }
-          },
-        )
+          return {
+            tokenInfo: finalTokenInfo,
+            quantity: quantity,
+          }
+        })
         .filter(Boolean) ?? []
 
     // Extract txHash and txIndex from input.id

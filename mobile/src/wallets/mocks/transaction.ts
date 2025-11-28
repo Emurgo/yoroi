@@ -2,8 +2,9 @@ import {Balance} from '@yoroi/types'
 
 import BigNumber from 'bignumber.js'
 
+// TransactionInfo is kept internally for deprecated code - import directly from source
+import type {TransactionInfo} from '../../../packages/types/wallet/transactions'
 import {CardanoTypes} from '../cardano/types'
-import {TransactionInfo} from '../types/other'
 
 export const mockTransactionInfos: Record<string, TransactionInfo> = {
   'ef147cbd5ccb0b0907a2969a697aeb06117ac83f284ddfae53a4198b03719b52': {

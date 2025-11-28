@@ -5,8 +5,8 @@ import {
   GOVERNANCE_YOROI_DREP_ID_HEX,
   GOVERNANCE_YOROI_DREP_ID_HEX_MAINNET,
   GOVERNANCE_YOROI_DREP_ID_HEX_PREPROD,
-  getYoroiDrepIdHex,
   YOROI_TOP_STAKE_POOL_ID,
+  getYoroiDrepIdHex,
 } from './config'
 
 describe('governance config', () => {

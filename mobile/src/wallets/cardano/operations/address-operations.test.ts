@@ -107,11 +107,15 @@ describe('address-operations', () => {
       const mockWalletWithIncrease = {
         publicKeyHex: mockWallet.publicKeyHex,
         externalChain: mockChain,
-        receiveAddressInfo: () => ({canIncrease: true} as Readonly<{canIncrease: boolean}>),
+        receiveAddressInfo: () =>
+          ({canIncrease: true}) as Readonly<{canIncrease: boolean}>,
         accountManager: {
           save: jest.fn(),
         } as unknown as AccountManager | ReadOnlyAccountManager,
-        notify: jest.fn() as (event: {type: 'addresses'; addresses: Addresses}) => void,
+        notify: jest.fn() as (event: {
+          type: 'addresses'
+          addresses: Addresses
+        }) => void,
         receiveAddresses: () => mockAddresses as Addresses,
       }
 
@@ -123,11 +127,15 @@ describe('address-operations', () => {
       const readOnlyWallet = {
         publicKeyHex: '', // Empty for read-only
         externalChain: mockChain,
-        receiveAddressInfo: () => ({canIncrease: true} as Readonly<{canIncrease: boolean}>),
+        receiveAddressInfo: () =>
+          ({canIncrease: true}) as Readonly<{canIncrease: boolean}>,
         accountManager: {
           save: jest.fn(),
         } as unknown as AccountManager | ReadOnlyAccountManager,
-        notify: jest.fn() as (event: {type: 'addresses'; addresses: Addresses}) => void,
+        notify: jest.fn() as (event: {
+          type: 'addresses'
+          addresses: Addresses
+        }) => void,
         receiveAddresses: () => mockAddresses as Addresses,
       }
 

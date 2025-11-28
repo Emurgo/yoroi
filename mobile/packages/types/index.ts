@@ -309,7 +309,6 @@ import {
   TRANSACTION_TYPE,
   TransactionAssurance,
   TransactionDirection,
-  TransactionInfo,
   TransactionStatus,
   TransactionType,
   Transactions,
@@ -321,7 +320,6 @@ import {WalletAddressMode, WalletImplementation} from './wallet/wallet'
 
 // Type aliases to reference imported transaction types (avoid circular references in namespace)
 type ImportedTransactionAssurance = TransactionAssurance
-type ImportedTransactionInfo = TransactionInfo
 type ImportedWalletTransaction = WalletTransaction
 type ImportedTransactions = Transactions
 type ImportedTxMetadata = TxMetadata
@@ -743,7 +741,6 @@ export namespace Wallet {
     (typeof TRANSACTION_TYPE)[keyof typeof TRANSACTION_TYPE]
   // Reference imported types via intermediate aliases to avoid circular references
   export type TransactionAssurance = ImportedTransactionAssurance
-  export type TransactionInfo = ImportedTransactionInfo
   export type WalletTransaction = ImportedWalletTransaction
   export type Transactions = ImportedTransactions
   export type TxMetadata = ImportedTxMetadata
@@ -759,7 +756,6 @@ export {TRANSACTION_DIRECTION, TRANSACTION_STATUS, TRANSACTION_TYPE}
 export type {
   TransactionAssurance,
   TransactionDirection,
-  TransactionInfo,
   TransactionStatus,
   TransactionType,
   Transactions,

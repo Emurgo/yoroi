@@ -1,7 +1,7 @@
 import {isNonNullable, isString, useAsyncStorage} from '@yoroi/common'
 import {
-  getYoroiDrepIdHex,
   type StakingKeyState,
+  getYoroiDrepIdHex,
   governanceApiMaker,
   governanceManagerMaker,
   useDelegationCertificate,
@@ -597,8 +597,7 @@ export const useVotingOptions = () => {
       ? lastSubmittedTx.type
       : 'key'
 
-  const isPendingDelegateToYoroi =
-    pendingTxHash === yoroiDrepIdHex
+  const isPendingDelegateToYoroi = pendingTxHash === yoroiDrepIdHex
   const isPendingDelegateToOther = Boolean(
     pendingTxHash && !isPendingDelegateToYoroi,
   )

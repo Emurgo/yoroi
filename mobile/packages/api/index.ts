@@ -53,12 +53,12 @@ export {CardanoBackend, WalletContext, ManagedCardanoApi} from './cardano/types'
 export {cardanoWalletApiMaker} from './cardano/api-maker'
 
 // Re-export API types for convenience
+// Note: RawTransaction is now internal to API adapters and not exported
 export type {
   AccountStateRequest,
   AccountStateResponse,
   BackendConfig,
   FundInfoResponse,
-  RawTransaction,
   RawUtxo,
   TipStatusResponse,
   TxHistoryRequest,

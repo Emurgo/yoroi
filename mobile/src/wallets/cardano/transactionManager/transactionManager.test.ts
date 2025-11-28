@@ -1,10 +1,11 @@
+import {WalletTransaction} from '@yoroi/types'
+
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import {fromPairs} from 'lodash'
 import DeviceInfo from 'react-native-device-info'
 
 import {rootStorage} from '~/kernel/storage/storages'
 
-import {WalletTransaction} from '../../types/other'
 import {ApiHistoryError} from '../errors'
 import {
   mockTx,
@@ -20,7 +21,6 @@ import {
   TransactionManager,
   makeTxManagerStorage,
   syncTxs,
-  toCachedTx,
 } from './transactionManager'
 
 jest.mock('../api/api', () => ({
@@ -177,9 +177,7 @@ describe('syncTxs (undefined means no updates)', () => {
     }
     const response = {
       ...mockedLocalTransactions,
-      ...fromPairs(
-        mockedHistoryResponse.transactions.map((t) => [t.hash, toCachedTx(t)]),
-      ),
+      ...fromPairs(mockedHistoryResponse.transactions.map((t) => [t.id, t])),
     }
 
     const result = await syncTxs(params)
@@ -205,7 +203,7 @@ describe('syncTxs (undefined means no updates)', () => {
       },
     }
     const response = fromPairs(
-      mockedHistoryResponse.transactions.map((t) => [t.hash, toCachedTx(t)]),
+      mockedHistoryResponse.transactions.map((t) => [t.id, t]),
     )
 
     const result = await syncTxs(params)
@@ -226,10 +224,7 @@ describe('syncTxs (undefined means no updates)', () => {
         transactions: {
           ...mockedLocalTransactions,
           ...fromPairs(
-            mockedHistoryResponse.transactions.map((t) => [
-              t.hash,
-              toCachedTx(t),
-            ]),
+            mockedHistoryResponse.transactions.map((t) => [t.id, t]),
           ),
         },
         api: {

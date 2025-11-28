@@ -1,6 +1,6 @@
-import {renderHook} from '@testing-library/react-native'
-
 import {Chain} from '@yoroi/types'
+
+import {renderHook} from '@testing-library/react-native'
 
 import {governanceManagerMaker} from '../../manager'
 import {GovernanceProvider, useGovernance} from './context'

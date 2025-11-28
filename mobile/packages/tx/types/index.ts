@@ -57,10 +57,6 @@ export type WithdrawalRequest = {
   shouldDeregister: boolean
 }
 
-export type Transaction = {
-  hash: string
-}
-
 export type CardanoAddressedUtxo = RemoteUnspentOutput & {
   addressing: Addressing
 }

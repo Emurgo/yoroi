@@ -1,6 +1,6 @@
+import {CardanoActionClaim} from '../links/cardano-actions'
 import {PortfolioTokenAmount} from '../portfolio/amount'
 import {PortfolioTokenInfo} from '../portfolio/info'
-import {CardanoActionClaim} from '../links/cardano-actions'
 
 export type ClaimStatus = 'accepted' | 'processing' | 'done'
 

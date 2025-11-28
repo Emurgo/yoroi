@@ -16,9 +16,11 @@ import {Observable} from 'rxjs'
 
 import {buildPortfolioTokenManagers} from '~/features/Portfolio/common/helpers/build-token-managers'
 
+// TransactionInfo is kept internally for deprecated code - import directly from source
+import type {TransactionInfo} from '../../../packages/types/wallet/transactions'
 import {toTokenInfo, utf8ToHex} from '../cardano/api/utils'
 import {CardanoTypes, WalletSubscription, YoroiWallet} from '../cardano/types'
-import {TransactionInfo, WalletTransaction} from '../types/other'
+import {WalletTransaction} from '../types/other'
 import {
   RemotePoolMetaSuccess,
   StakingInfo,
@@ -239,7 +241,8 @@ const wallet: YoroiWallet = {
   internalAddresses: () => [],
   externalAddresses: () => [],
   confirmationCounts: () => ({}),
-  getRawTransactions: () => mockTransactionInfos as unknown as Record<string, WalletTransaction>,
+  getRawTransactions: () =>
+    mockTransactionInfos as unknown as Record<string, WalletTransaction>,
   isUsedAddressIndex: () => ({}),
   receiveAddresses: () => [],
   receiveAddressInfo: () => ({

@@ -1,7 +1,7 @@
 import {isNonNullable} from '@yoroi/common'
 import {
-  getYoroiDrepIdHex,
   GovernanceProvider,
+  getYoroiDrepIdHex,
   useDelegationCertificate,
   useGovernance,
   useStakingKeyState,

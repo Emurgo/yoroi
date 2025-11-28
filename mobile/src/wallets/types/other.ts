@@ -1,9 +1,5 @@
 import {RemoteAccountState, RemoteCertificateMeta} from '@yoroi/staking'
-import {
-  Portfolio,
-  type TransactionStatus,
-  type TxMetadata,
-} from '@yoroi/types'
+import {Portfolio, type TransactionStatus, type TxMetadata} from '@yoroi/types'
 
 // note(v-almonacid): this
 /**
@@ -152,18 +148,17 @@ export type BackendConfig = {
 
 // Re-export transaction types from @yoroi/types
 export {
-  TRANSACTION_STATUS,
   TRANSACTION_DIRECTION,
+  TRANSACTION_STATUS,
   TRANSACTION_TYPE,
-  type TransactionStatus,
-  type TransactionDirection,
-  type TransactionType,
   type TransactionAssurance,
-  type TransactionInfo,
-  type WalletTransaction,
+  type TransactionDirection,
   type Transactions,
+  type TransactionStatus,
+  type TransactionType,
   type TxMetadata,
   type TxMetadataInfo,
+  type WalletTransaction,
 } from '@yoroi/types'
 
 // Re-export BaseAsset from @yoroi/types

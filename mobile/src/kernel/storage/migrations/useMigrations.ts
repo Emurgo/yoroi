@@ -1,5 +1,6 @@
-import * as React from 'react'
 import {App} from '@yoroi/types'
+
+import * as React from 'react'
 
 import {logger} from '~/kernel/logger/logger'
 

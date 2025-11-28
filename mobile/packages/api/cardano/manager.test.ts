@@ -1,8 +1,8 @@
 import {StakePoolInfoRequest, StakePoolInfosAndHistories} from '@yoroi/staking'
+import {WalletTransaction} from '@yoroi/types'
 
 import {
   AccountStateResponse,
-  RawTransaction,
   TipStatusResponse,
   TxStatusResponse,
 } from './api-types'
@@ -45,11 +45,29 @@ describe('cardanoApiManagerMaker', () => {
 
     async fetchNewTxHistory(): Promise<{
       isLast: boolean
-      transactions: Array<RawTransaction>
+      transactions: Array<WalletTransaction>
     }> {
       return {
         isLast: true,
-        transactions: [{type: 'shelley', hash: `${name}-tx`} as RawTransaction],
+        transactions: [
+          {
+            id: `${name}-tx`,
+            type: 'shelley',
+            status: 'Successful',
+            inputs: [],
+            outputs: [],
+            lastUpdatedAt: new Date().toISOString(),
+            submittedAt: null,
+            blockNum: null,
+            blockHash: null,
+            txOrdinal: null,
+            epoch: null,
+            slot: null,
+            withdrawals: [],
+            certificates: [],
+            memo: null,
+          },
+        ],
       }
     },
 

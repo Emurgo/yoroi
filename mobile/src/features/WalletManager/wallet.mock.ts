@@ -10,8 +10,8 @@ import {Observable, Subscription} from 'rxjs'
 import {YoroiWallet} from '../../wallets/cardano/types'
 import {mockEncryptedStorage} from '../../wallets/mocks/storage'
 import {mockTransactionInfos} from '../../wallets/mocks/transaction'
-import type {WalletTransaction} from '../../wallets/types/other'
 import {utxos} from '../../wallets/mocks/utxos'
+import type {WalletTransaction} from '../../wallets/types/other'
 import {RemotePoolMetaSuccess} from '../../wallets/types/staking'
 import {CardanoMobile} from '../../wallets/wallets'
 import {networkManagers} from './common/constants'
@@ -242,7 +242,8 @@ const wallet: YoroiWallet = {
   internalAddresses: () => [],
   externalAddresses: () => [],
   confirmationCounts: () => ({}),
-  getRawTransactions: () => mockTransactionInfos as unknown as Record<string, WalletTransaction>,
+  getRawTransactions: () =>
+    mockTransactionInfos as unknown as Record<string, WalletTransaction>,
   isUsedAddressIndex: () => ({}),
   receiveAddresses: () => [],
   receiveAddressInfo: () => ({
