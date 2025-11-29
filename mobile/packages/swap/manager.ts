@@ -443,7 +443,7 @@ const invalid: Api.Response<any> = freeze(
 const warnAllLeft = (...responses: Array<Api.Response<any>>) => {
   if (responses.every(isLeft)) {
     const logger = getLogger()
-    logger.warn('Swap Manager all left', {
+    logger.debug('Swap Manager all left', {
       origin: 'swap',
       errors: responses.map((response) => response.error.message),
     })

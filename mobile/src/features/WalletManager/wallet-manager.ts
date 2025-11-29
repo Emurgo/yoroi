@@ -432,8 +432,14 @@ export const makeWalletManager = (
           return wallet
         }
 
-        throwLoggedError(
-          'WalletManager: loadWallet read-only address data not found',
+        // When switching networks, read-only wallets may not have data for the new network
+        // This is expected behavior, so log as debug instead of error
+        logger.debug(
+          'WalletManager: loadWallet read-only address data not found for network',
+          {id, network, accountVisual},
+        )
+        throw new Error(
+          `Read-only wallet ${id} has no address data for network ${network}`,
         )
       }
 
@@ -608,13 +614,17 @@ export const makeWalletManager = (
           updateWalletMetas(stateSubjects, freeze(allMetas))
         }
 
-        const metasToLoad = walletMetas.filter((meta) => !wallets.has(meta.id))
+        // Reload ALL wallets with the new network (not just new ones)
+        // This ensures wallets get the correct networkManager for the new network
+        const metasToLoad = walletMetas
 
         if (metasToLoad.length > 0) {
           const loadedWallets = await loadWalletsSafely(metasToLoad, {
             isForced: true,
             network,
           })
+          // Clear existing wallets and replace with reloaded ones
+          wallets.clear()
           for (const wallet of loadedWallets) wallets.set(wallet.id, wallet)
 
           if (syncManager) {
