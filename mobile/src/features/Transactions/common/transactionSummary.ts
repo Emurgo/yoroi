@@ -29,15 +29,24 @@ const remoteAssetsToAmounts = (
 
     if (!tokenId || tokenId === ('' as Portfolio.Token.Id)) {
       // If tokenId is missing, try to construct it from policyId and name
-      if (asset.policyId && asset.name) {
-        tokenId = `${asset.policyId}.${asset.name}` as Portfolio.Token.Id
+      if (
+        asset.policyId !== undefined &&
+        asset.policyId !== null &&
+        asset.policyId !== ''
+      ) {
+        // Has policyId - construct tokenId (name can be empty string, which is valid)
+        // Empty name means it's the native asset of that policy
+        const assetName = asset.name !== undefined ? asset.name : ''
+        tokenId = `${asset.policyId}.${assetName}` as Portfolio.Token.Id
       } else {
-        // If no policyId/name, treat as primary token
+        // If no policyId, treat as primary token
         tokenId = primaryTokenId
       }
     }
 
     // Normalize primary token
+    // Only normalize if it's actually the primary token or has no policyId
+    // DO NOT normalize assets with policyId but empty name - they are real assets
     if (tokenId === primaryTokenId || (!tokenId && !asset.policyId)) {
       tokenId = primaryTokenId
     }
