@@ -63,8 +63,9 @@ describe('utxo-operations', () => {
       )
 
       expect(modernUtxos).toHaveLength(mockRawUtxos.length)
-      expect(modernUtxos[0]).toHaveProperty('utxoId')
-      expect(modernUtxos[0]).toHaveProperty('address')
+      expect(modernUtxos[0]).toHaveProperty('txHash')
+      expect(modernUtxos[0]).toHaveProperty('txIndex')
+      expect(modernUtxos[0]).toHaveProperty('receiver')
     })
   })
 

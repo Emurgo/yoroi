@@ -374,7 +374,7 @@ describe('Amounts', () => {
       Amounts.remove(amounts, ['policyId123.assetName123' as TokenId]),
     ).toEqual({
       ['.' as TokenId]: '123' as Balance.Quantity,
-      ['token567' as TokenId]: '-789' as Balance.Quantity,
+      ['policyId567.assetName567' as TokenId]: '-789' as Balance.Quantity,
     } as Balance.Amounts)
   })
 
@@ -751,8 +751,8 @@ describe('Utxos', () => {
 
       expect(Utxos.toAmounts(utxos, primaryTokenId)).toEqual({
         'policyId.assetName': '67905',
-        'policyId123.assetName123': '15',
-        'policyId567.assetName567': '8',
+        'policy123.token123': '15',
+        'policy567.token567': '8',
       } as Balance.Amounts)
     })
   })

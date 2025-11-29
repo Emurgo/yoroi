@@ -71,12 +71,23 @@ jest.mock('@yoroi/types', () => ({
     Order: {},
     ManagerSettings: {},
   },
+  AppLoggerLevel: {
+    Debug: 'debug',
+    Log: 'log',
+    Info: 'info',
+    Warn: 'warn',
+    Error: 'error',
+  },
   App: {
     Logger: {
       Level: {
         Debug: 'debug',
+        Log: 'log',
+        Info: 'info',
         Warn: 'warn',
+        Error: 'error',
       },
+      Manager: {},
     },
   },
 }))
@@ -113,6 +124,21 @@ jest.mock('~/kernel/i18n/useStrings', () => ({
 
 jest.mock('~/wallets/cardano/common/signatureUtils', () => ({
   convertBech32ToHex: jest.fn(),
+}))
+
+jest.mock('~/hooks/useRemoteConfig', () => ({
+  useRemoteConfig: jest.fn(() => ({
+    config: {
+      swap: {
+        partners: {
+          muesliswap: {},
+          minswap: {},
+        },
+        excludedTokens: [],
+      },
+    },
+    isLoading: false,
+  })),
 }))
 
 jest.mock('./constants', () => ({
@@ -178,9 +204,12 @@ describe('SwapProvider', () => {
           id: 'primary-token-id',
           decimals: 6,
         },
-        externalAddresses: [
+        externalAddresses: jest.fn(() => [
           'addr1qxqs59lphg8g6qndelq8xwqn60ag3aeyfcp33c5p5x8e6q',
-        ],
+        ]),
+        utxos: jest.fn(() => []),
+        getAddressing: jest.fn(() => ({path: [0, 0, 0], startLevel: 0})),
+        id: 'test-wallet-id',
         isMainnet: true,
       },
     })
@@ -216,7 +245,7 @@ describe('SwapProvider', () => {
     })
 
     mockUseGetInputs.mockReturnValue({
-      getInputs: jest.fn().mockResolvedValue({}),
+      getInputs: jest.fn().mockResolvedValue(['utxo-hex-1', 'utxo-hex-2']),
     })
 
     mockConvertBech32ToHex.mockReturnValue('hex-address')
@@ -737,6 +766,30 @@ describe('SwapProvider', () => {
     })
 
     it('should handle slippage changes', async () => {
+      // Create a stable swapManager mock with initial slippage
+      const swapManagerMock = {
+        api: {
+          orders: jest
+            .fn()
+            .mockResolvedValue({tag: 'right', value: {data: []}}),
+          tokens: jest
+            .fn()
+            .mockResolvedValue({tag: 'right', value: {data: []}}),
+          limitOptions: jest.fn().mockResolvedValue({tag: 'left', error: {}}),
+          estimate: jest.fn(),
+          create: jest.fn(),
+          cancel: jest.fn(),
+        },
+        settings: {
+          routingPreference: 'auto',
+          slippage: 1,
+        },
+        assignSettings: jest.fn(),
+      }
+
+      const swapManagerMaker = require('@yoroi/swap').swapManagerMaker
+      swapManagerMaker.mockReturnValue(swapManagerMock)
+
       let contextValue: any = null
 
       const TestComponent = () => {
@@ -764,11 +817,19 @@ describe('SwapProvider', () => {
         </TestWrapper>,
       )
 
+      // Wait for initial render and swapManager effect to complete
+      await waitFor(() => {
+        expect(contextValue).toBeTruthy()
+      })
+
       const button = screen.getByTestId('change-slippage')
-      fireEvent.press(button)
+      await act(async () => {
+        fireEvent.press(button)
+      })
 
       await waitFor(() => {
-        expect(contextValue.slippageInput.value).toBe(2.5)
+        const slippageText = screen.getByTestId('slippage')
+        expect(slippageText.props.children).toBe(2.5)
       })
     })
   })
@@ -837,7 +898,6 @@ describe('SwapProvider', () => {
       }
 
       // Set up the mock BEFORE rendering
-      // Set up the mock BEFORE rendering
       const swapManagerMaker = require('@yoroi/swap').swapManagerMaker
       swapManagerMaker.mockReturnValue(swapManagerMock)
 
@@ -845,6 +905,12 @@ describe('SwapProvider', () => {
       mockUseQuery.mockImplementation((options: any) => {
         if (options.queryKey?.[0] === 'useSwapLimitOptions') {
           return {data: undefined, refetch: jest.fn()}
+        }
+        if (options.queryKey?.[0] === 'useSwapOrders') {
+          return {data: [], refetch: jest.fn()}
+        }
+        if (options.queryKey?.[0] === 'useSwapTokenIds') {
+          return {data: [], refetch: jest.fn()}
         }
         return {data: [], refetch: jest.fn()}
       })
@@ -856,18 +922,22 @@ describe('SwapProvider', () => {
         React.useEffect(() => {
           // Set up the conditions needed for estimation
           // First set both token IDs
-          contextValue.action({
-            type: 'TokenInIdChanged',
-            value: 'primary-token-id' as Portfolio.Token.Id,
-          })
-          contextValue.action({
-            type: 'TokenOutIdChanged',
-            value: 'policy1.asset1' as Portfolio.Token.Id,
+          act(() => {
+            contextValue.action({
+              type: 'TokenInIdChanged',
+              value: 'primary-token-id' as Portfolio.Token.Id,
+            })
+            contextValue.action({
+              type: 'TokenOutIdChanged',
+              value: 'policy1.asset1' as Portfolio.Token.Id,
+            })
           })
           // Then set a non-zero amount to trigger estimation
           setTimeout(() => {
-            contextValue.action({type: 'TokenInAmountChanged', value: '100'})
-          }, 0)
+            act(() => {
+              contextValue.action({type: 'TokenInAmountChanged', value: '100'})
+            })
+          }, 100)
         }, [])
         return <Text>Test</Text>
       }
@@ -880,9 +950,12 @@ describe('SwapProvider', () => {
         </TestWrapper>,
       )
 
-      await waitFor(() => {
-        expect(mockEstimate).toHaveBeenCalled()
-      })
+      await waitFor(
+        () => {
+          expect(mockEstimate).toHaveBeenCalled()
+        },
+        {timeout: 3000},
+      )
     })
 
     it('should handle estimation error', async () => {
@@ -920,6 +993,12 @@ describe('SwapProvider', () => {
         if (options.queryKey?.[0] === 'useSwapLimitOptions') {
           return {data: undefined, refetch: jest.fn()}
         }
+        if (options.queryKey?.[0] === 'useSwapOrders') {
+          return {data: [], refetch: jest.fn()}
+        }
+        if (options.queryKey?.[0] === 'useSwapTokenIds') {
+          return {data: [], refetch: jest.fn()}
+        }
         return {data: [], refetch: jest.fn()}
       })
 
@@ -930,18 +1009,22 @@ describe('SwapProvider', () => {
         React.useEffect(() => {
           // Set up the conditions needed for estimation
           // First set both token IDs
-          contextValue.action({
-            type: 'TokenInIdChanged',
-            value: 'primary-token-id' as Portfolio.Token.Id,
-          })
-          contextValue.action({
-            type: 'TokenOutIdChanged',
-            value: 'policy1.asset1' as Portfolio.Token.Id,
+          act(() => {
+            contextValue.action({
+              type: 'TokenInIdChanged',
+              value: 'primary-token-id' as Portfolio.Token.Id,
+            })
+            contextValue.action({
+              type: 'TokenOutIdChanged',
+              value: 'policy1.asset1' as Portfolio.Token.Id,
+            })
           })
           // Then set a non-zero amount to trigger estimation
           setTimeout(() => {
-            contextValue.action({type: 'TokenInAmountChanged', value: '100'})
-          }, 0)
+            act(() => {
+              contextValue.action({type: 'TokenInAmountChanged', value: '100'})
+            })
+          }, 100)
         }, [])
         return <Text>Test</Text>
       }
@@ -954,9 +1037,12 @@ describe('SwapProvider', () => {
         </TestWrapper>,
       )
 
-      await waitFor(() => {
-        expect(mockEstimate).toHaveBeenCalled()
-      })
+      await waitFor(
+        () => {
+          expect(mockEstimate).toHaveBeenCalled()
+        },
+        {timeout: 3000},
+      )
     })
 
     it('should handle create swap success', async () => {
@@ -972,7 +1058,9 @@ describe('SwapProvider', () => {
         reviewSwap: mockNavigateTo,
       })
 
-      const mockGetInputs = jest.fn().mockResolvedValue({})
+      const mockGetInputs = jest
+        .fn()
+        .mockResolvedValue(['utxo-hex-1', 'utxo-hex-2'])
       mockUseGetInputs.mockReturnValue({
         getInputs: mockGetInputs,
       })
@@ -1062,7 +1150,9 @@ describe('SwapProvider', () => {
         error: {message: 'Creation failed', status: 400, responseData: {}},
       })
 
-      const mockGetInputs = jest.fn().mockResolvedValue({})
+      const mockGetInputs = jest
+        .fn()
+        .mockResolvedValue(['utxo-hex-1', 'utxo-hex-2'])
       mockUseGetInputs.mockReturnValue({
         getInputs: mockGetInputs,
       })

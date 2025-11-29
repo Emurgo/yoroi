@@ -63,6 +63,7 @@ describe('useClaimTokens', () => {
     expect(claimManagerMock.claimTokens).toHaveBeenCalledTimes(1)
     expect(claimManagerMock.claimTokens).toHaveBeenCalledWith(
       cardanoClaimAction,
+      expect.any(Object),
     )
     expect(result.current.isError).toBe(false)
   })

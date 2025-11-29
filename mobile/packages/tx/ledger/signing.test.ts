@@ -9,16 +9,30 @@ import {
 describe('ledger signing', () => {
   describe('buildLedgerSignedTx', () => {
     it('should build signed transaction from Ledger response', async () => {
-      const mockCsl = {
-        Bip32PublicKey: {
-          fromBytes: jest.fn(() => ({
-            derive: jest.fn(() => ({
-              toRawKey: jest.fn(() => ({
-                toHex: jest.fn(() => 'publicKeyHex'),
-              })),
+      // Create a recursive mock for derive that can be called multiple times
+      // The derive function is called for each path index, so we need a chain
+      const createDeriveMock = (depth: number = 0): any => {
+        if (depth > 10) {
+          // Return final key object
+          return {
+            toRawKey: jest.fn(() => ({
+              toHex: jest.fn(() => 'publicKeyHex'),
             })),
             chaincode: jest.fn(() => Buffer.from('chaincode')),
+          }
+        }
+        return {
+          derive: jest.fn(() => createDeriveMock(depth + 1)),
+          toRawKey: jest.fn(() => ({
+            toHex: jest.fn(() => 'publicKeyHex'),
           })),
+          chaincode: jest.fn(() => Buffer.from('chaincode')),
+        }
+      }
+
+      const mockCsl = {
+        Bip32PublicKey: {
+          fromBytes: jest.fn(() => createDeriveMock(0)),
         },
         TransactionWitnessSet: {
           new: jest.fn(() => ({
@@ -27,6 +41,12 @@ describe('ledger signing', () => {
             setPlutusData: jest.fn(),
             setRedeemers: jest.fn(),
             setPlutusScripts: jest.fn(),
+          })),
+        },
+        PlutusList: {
+          new: jest.fn(() => ({
+            len: jest.fn(() => 0),
+            add: jest.fn(),
           })),
         },
         BootstrapWitness: {
@@ -39,8 +59,20 @@ describe('ledger signing', () => {
             toBytes: jest.fn(() => Buffer.from('vkey')),
           })),
         },
+        Vkeywitnesses: {
+          new: jest.fn(() => ({
+            add: jest.fn(),
+          })),
+        },
+        BootstrapWitnesses: {
+          new: jest.fn(() => ({
+            add: jest.fn(),
+          })),
+        },
         Vkey: {
-          new: jest.fn(),
+          new: jest.fn(() => ({
+            toBytes: jest.fn(() => Buffer.from('vkey')),
+          })),
         },
         Ed25519Signature: {
           fromBytes: jest.fn(() => ({
@@ -65,6 +97,13 @@ describe('ledger signing', () => {
             })),
           })),
         },
+        FixedTransaction: {
+          fromBytes: jest.fn(() => ({
+            transactionHash: jest.fn(() => ({
+              toHex: jest.fn(() => 'txHash'),
+            })),
+          })),
+        },
       } as any
 
       const unsignedTx = {
@@ -75,7 +114,7 @@ describe('ledger signing', () => {
             txIndex: 0,
             addressing: {
               path: [2147483648, 2147483648, 0, 0, 0],
-              startLevel: 0,
+              startLevel: 1, // PURPOSE level
             },
           },
         ],
@@ -94,6 +133,7 @@ describe('ledger signing', () => {
             witnessSignatureHex: 'signature',
           },
         ],
+        txHashHex: 'txHash', // Must match the hash returned by FixedTransaction mock
       } as any
 
       const result = await buildLedgerSignedTx(
@@ -105,7 +145,7 @@ describe('ledger signing', () => {
       )
 
       expect(result).toBeDefined()
-      expect(result.id).toBe('txId')
+      expect(result.id).toBe('txHash') // Should match txHashHex
       expect(result.encodedTx).toBeDefined()
     })
 
@@ -119,6 +159,12 @@ describe('ledger signing', () => {
         TransactionWitnessSet: {
           new: jest.fn(() => ({})),
         },
+        PlutusList: {
+          new: jest.fn(() => ({
+            len: jest.fn(() => 0),
+            add: jest.fn(),
+          })),
+        },
         ByronAddress: {
           isValid: jest.fn(() => false),
         },
@@ -126,6 +172,13 @@ describe('ledger signing', () => {
           fromBytes: jest.fn(() => ({
             inputs: jest.fn(() => ({
               len: jest.fn(() => 0),
+            })),
+          })),
+        },
+        FixedTransaction: {
+          fromBytes: jest.fn(() => ({
+            transactionHash: jest.fn(() => ({
+              toHex: jest.fn(() => 'txHash'),
             })),
           })),
         },
@@ -139,7 +192,7 @@ describe('ledger signing', () => {
             txIndex: 0,
             addressing: {
               path: [2147483648, 2147483648, 0, 0, 0],
-              startLevel: 0,
+              startLevel: 1, // PURPOSE level
             },
           },
         ],

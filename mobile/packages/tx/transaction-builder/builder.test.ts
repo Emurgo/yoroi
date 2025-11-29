@@ -500,10 +500,11 @@ describe('transaction builder', () => {
       const stateWithOutput = addOutput(stateWithExclusion, 'addr_test1', {
         [primaryTokenId]: '500000' as Balance.Quantity,
       })
-      const stateWithInput = addInput(stateWithOutput, utxo)
+      // The UTXO is already in collateralInputs from stateWithCollateral
+      // Don't add it as input, just build with the excluded collateral
 
       await expect(
-        buildTransaction(stateWithInput, protocolConfig),
+        buildTransaction(stateWithOutput, protocolConfig),
       ).rejects.toThrow('excluded but used as collateral')
     })
   })

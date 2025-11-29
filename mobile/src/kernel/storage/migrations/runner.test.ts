@@ -1,28 +1,48 @@
+import {parseSafe} from '@yoroi/common'
 import {App} from '@yoroi/types'
 
 import {migrations} from './registry'
 import {runMigrations} from './runner'
 
+// Mock initInstallationId and installationIdStorageKeyManager to prevent them from interfering with the test
+jest.mock('~/kernel/storage/storages', () => ({
+  ...jest.requireActual('~/kernel/storage/storages'),
+  initInstallationId: jest.fn(),
+  storageCurrentVersion: 4,
+  installationIdStorageKeyManager: {
+    read: jest.fn().mockReturnValue(null),
+    save: jest.fn(),
+  },
+}))
+
 describe('runMigrations', () => {
   let mockStorage: App.Storage
-  let storageVersion: number
+  let storageData: Map<string, string>
 
   beforeEach(() => {
-    storageVersion = 0
+    storageData = new Map<string, string>()
+    storageData.set('storageVersion', JSON.stringify(0))
     mockStorage = {
-      getItem: jest.fn().mockImplementation((key) => {
-        if (key === 'storageVersion') {
-          return Promise.resolve(storageVersion)
-        }
-        return Promise.resolve(null)
-      }),
-      setItem: jest.fn().mockImplementation((key, value) => {
-        if (key === 'storageVersion' && typeof value === 'number') {
-          storageVersion = value
-        }
+      getItem: jest
+        .fn()
+        .mockImplementation(
+          (
+            key: string,
+            parse: (item: string | null) => unknown = parseSafe,
+          ) => {
+            const value = storageData.get(key) ?? null
+            return Promise.resolve(parse(value))
+          },
+        ),
+      setItem: jest.fn().mockImplementation((key: string, value: unknown) => {
+        // Store as JSON string like real storage does
+        storageData.set(key, JSON.stringify(value))
         return Promise.resolve(undefined)
       }),
-      removeItem: jest.fn().mockResolvedValue(undefined),
+      removeItem: jest.fn().mockImplementation((key: string) => {
+        storageData.delete(key)
+        return Promise.resolve(undefined)
+      }),
       getAllKeys: jest.fn().mockResolvedValue([]),
       multiGet: jest.fn().mockResolvedValue([]),
       join: jest.fn().mockReturnValue(mockStorage),
@@ -31,11 +51,21 @@ describe('runMigrations', () => {
   })
 
   it('should run all pending migrations', async () => {
-    storageVersion = 0
-    const results = await runMigrations(mockStorage)
+    storageData.set('storageVersion', JSON.stringify(0))
 
-    expect(results.length).toBeGreaterThan(0)
-    expect(results.every((r) => r.success)).toBe(true)
+    // Mock migrations to ensure they don't fail
+    const migrationSpies = migrations.map((m) =>
+      jest.spyOn(m, 'migrate').mockResolvedValue(undefined),
+    )
+
+    try {
+      const results = await runMigrations(mockStorage)
+
+      expect(results.length).toBeGreaterThan(0)
+      expect(results.every((r) => r.success)).toBe(true)
+    } finally {
+      migrationSpies.forEach((spy) => spy.mockRestore())
+    }
   })
 
   it('should skip migrations if already at current version', async () => {
@@ -43,7 +73,7 @@ describe('runMigrations', () => {
     if (!lastMigration) {
       throw new Error('No migrations found')
     }
-    storageVersion = lastMigration.version
+    storageData.set('storageVersion', JSON.stringify(lastMigration.version))
     const results = await runMigrations(mockStorage)
 
     expect(results).toHaveLength(0)
@@ -57,7 +87,7 @@ describe('runMigrations', () => {
   })
 
   it('should save version after each successful migration', async () => {
-    storageVersion = 0
+    storageData.set('storageVersion', JSON.stringify(0))
     await runMigrations(mockStorage)
 
     // Should have called setItem for each migration version

@@ -6,9 +6,8 @@ import {api} from './api.mocks'
 import {BuildResponse, DexhunterApiConfig, LimitBuildResponse} from './types'
 
 jest.mock('@yoroi/common', () => ({
+  ...jest.requireActual('@yoroi/common'),
   fetchData: jest.fn(),
-  isLeft: jest.requireActual('@yoroi/common').isLeft,
-  difference: jest.requireActual('@yoroi/common').difference,
 }))
 
 describe('dexhunterApiMaker', () => {

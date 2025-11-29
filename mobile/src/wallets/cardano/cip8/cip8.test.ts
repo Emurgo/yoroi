@@ -21,22 +21,24 @@ describe('CIP8', () => {
     const signingKey = createRawTxSigningKey(rootKeyHex, path, CardanoMobile)
 
     const payloadInBytes = Buffer.from(payload, 'hex')
-    const normalisedAddress = CardanoMobileWrapped.cslScope((csl) =>
-      normalizeToAddress(csl, bech32),
+    // Extract address hex inside CSL scope to avoid null pointer errors
+    const addressHex = CardanoMobileWrapped.cslScope((csl) => {
+      const normalisedAddress = normalizeToAddress(csl, bech32)
+      if (!normalisedAddress) {
+        throw new Error('Failed to normalize address')
+      }
+      return normalisedAddress.toHex()
+    })
+
+    const coseSign1 = await cip8.sign(
+      Buffer.from(addressHex, 'hex'),
+      signingKey,
+      payloadInBytes,
     )
-    if (normalisedAddress != null) {
-      const coseSign1 = await cip8.sign(
-        Buffer.from(normalisedAddress.toHex(), 'hex'),
-        signingKey,
-        payloadInBytes,
-      )
-      const signature = Buffer.from(coseSign1.toBytes()).toString('hex')
-      expect(signature).toEqual(
-        '845846a201276761646472657373583901260c2a2b09aad0061a320042c15f8985449b9e8d5ced8a45e35b37dd42d6429c72c0dc1c873923e1afe475ad614cf6d3aec61ddbceeefe40a166686173686564f44548656c6c6f58400b6a6aac7a95656ab241bf4dedec8b5ca0d4893747093f3382223b1d2e869de1b6b9809f0b974536b1191b6e193cf4ec5dc506b21b52e6bc5d352f04c60bf30d',
-      )
-    } else {
-      fail()
-    }
+    const signature = Buffer.from(coseSign1.toBytes()).toString('hex')
+    expect(signature).toEqual(
+      '845846a201276761646472657373583901260c2a2b09aad0061a320042c15f8985449b9e8d5ced8a45e35b37dd42d6429c72c0dc1c873923e1afe475ad614cf6d3aec61ddbceeefe40a166686173686564f44548656c6c6f58400b6a6aac7a95656ab241bf4dedec8b5ca0d4893747093f3382223b1d2e869de1b6b9809f0b974536b1191b6e193cf4ec5dc506b21b52e6bc5d352f04c60bf30d',
+    )
   })
 })
 

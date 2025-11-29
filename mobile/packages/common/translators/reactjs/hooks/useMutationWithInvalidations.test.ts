@@ -28,13 +28,16 @@ describe('useMutationWithInvalidations', () => {
     const invalidateSpy = jest.spyOn(queryClient, 'invalidateQueries')
     const cancelSpy = jest.spyOn(queryClient, 'cancelQueries')
 
+    const wrapper = ({children}: {children: React.ReactNode}) =>
+      React.createElement(QueryClientProvider, {client: queryClient}, children)
+
     const {result} = renderHook(
       () =>
         useMutationWithInvalidations<void, unknown, void, unknown>({
           mutationFn: async () => {},
           invalidateQueries: [['test']],
         }),
-      {wrapper: createWrapper()},
+      {wrapper},
     )
 
     act(() => {
@@ -66,7 +69,8 @@ describe('useMutationWithInvalidations', () => {
     })
 
     await waitFor(() => {
-      expect(onMutate).toHaveBeenCalledWith('test')
+      expect(onMutate).toHaveBeenCalled()
+      expect(onMutate).toHaveBeenCalledWith('test', expect.anything())
     })
   })
 
@@ -87,7 +91,13 @@ describe('useMutationWithInvalidations', () => {
     })
 
     await waitFor(() => {
-      expect(onSuccess).toHaveBeenCalledWith('success', undefined, undefined)
+      expect(onSuccess).toHaveBeenCalled()
+      expect(onSuccess).toHaveBeenCalledWith(
+        'success',
+        undefined,
+        undefined,
+        expect.anything(),
+      )
     })
   })
 

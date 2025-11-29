@@ -776,22 +776,22 @@ describe('linksCardanoModuleMaker', () => {
 
     describe('connect authority', () => {
       it('should parse connect URL', () => {
-        const url = 'web+cardano://connect/v1?peerId=peer123'
+        const url = 'web+cardano://connect/v1?dappPeer=peer123'
         const link = module.parse(url)
         expect(link).toBeDefined()
         if (!link) return
         expect(link.config).toBe(configCardanoConnectV1)
-        expect(link.params.peerId).toBe('peer123')
+        expect(link.params.dappPeer).toBe('peer123')
       })
 
       it('should create connect URL', () => {
         const link = module.create({
           config: configCardanoConnectV1,
           params: {
-            peerId: 'peer123',
+            dappPeer: 'peer123',
           },
         })
-        expect(link.link).toBe('web+cardano://connect/v1?peerId=peer123')
+        expect(link.link).toBe('web+cardano://connect/v1?dappPeer=peer123')
       })
     })
 

@@ -87,9 +87,12 @@ describe('cardano constants', () => {
 
   it('should have correct configCardanoConnectV1', () => {
     expect(configCardanoConnectV1.authority).toBe('connect')
-    expect(configCardanoConnectV1.rules.requiredParams).toEqual(['peerId'])
+    expect(configCardanoConnectV1.rules.requiredParams).toEqual(['dappPeer'])
     expect(configCardanoConnectV1.rules.optionalParams).toEqual([
-      'signalingUrl',
+      'host',
+      'port',
+      'path',
+      'secure',
     ])
   })
 

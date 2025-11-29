@@ -40,14 +40,18 @@ export const getMinAmounts = async (
   return CardanoMobileWrapped.cslScope((csl) => {
     // Create address within this cslScope to avoid pointer issues
     let normalizedAddress: CSLAddress | null = null
-    if (csl.ByronAddress.isValid(addrStr)) {
-      const byronAddr = csl.ByronAddress.fromBase58(addrStr)
-      normalizedAddress = byronAddr.toAddress()
-    } else {
-      const isHexAddr = isHex(addrStr)
-      normalizedAddress = isHexAddr
-        ? csl.Address.fromHex(addrStr)
-        : csl.Address.fromBech32(addrStr)
+    try {
+      if (csl.ByronAddress.isValid(addrStr)) {
+        const byronAddr = csl.ByronAddress.fromBase58(addrStr)
+        normalizedAddress = byronAddr.toAddress()
+      } else {
+        const isHexAddr = isHex(addrStr)
+        normalizedAddress = isHexAddr
+          ? csl.Address.fromHex(addrStr)
+          : csl.Address.fromBech32(addrStr)
+      }
+    } catch (error) {
+      throw new Error('getMinAmounts::Error not a valid address')
     }
 
     if (!normalizedAddress || normalizedAddress.isMalformed())

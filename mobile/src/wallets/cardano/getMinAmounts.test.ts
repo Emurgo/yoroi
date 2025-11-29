@@ -18,14 +18,14 @@ describe('withMinAmounts()', () => {
       [tokenId2]: '55',
     } as Balance.Amounts
 
-    expect(
+    await expect(
       withMinAmounts(
         address,
         amounts,
         walletMocks.wallet.portfolioPrimaryTokenInfo,
         protocolParamsPlaceholder,
       ),
-    ).toEqual({
+    ).resolves.toEqual({
       [walletMocks.wallet.portfolioPrimaryTokenInfo.id]: '1301620',
       [tokenId1]: '12',
       [tokenId2]: '55',
@@ -45,14 +45,14 @@ describe('withMinAmounts()', () => {
       [tokenId2]: '55',
     } as Balance.Amounts
 
-    expect(
+    await expect(
       withMinAmounts(
         address,
         amounts,
         walletMocks.wallet.portfolioPrimaryTokenInfo,
         protocolParamsPlaceholder,
       ),
-    ).toEqual(amounts)
+    ).resolves.toEqual(amounts)
   })
 })
 
@@ -94,7 +94,7 @@ describe('withPrimaryToken()', () => {
 })
 
 describe('getMinAmounts()', () => {
-  it('should return the min amount', () => {
+  it('should return the min amount', async () => {
     const tokenId1 =
       '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950' as TokenId
     const tokenId2 =
@@ -107,19 +107,19 @@ describe('getMinAmounts()', () => {
     const address =
       'addr_test1qrrdv3uxj8shu27ea9djvnn3rl4w3lvh3cyck6yc36mvf6ctlqxj9g0azvpycncr9u600p6t556qhc3psk06uzzw6saq4kvdpq'
 
-    expect(
+    await expect(
       getMinAmounts(
         address,
         amounts,
         walletMocks.wallet.portfolioPrimaryTokenInfo,
         protocolParamsPlaceholder,
       ),
-    ).toEqual({
+    ).resolves.toEqual({
       [walletMocks.wallet.portfolioPrimaryTokenInfo.id]: '1301620',
     })
   })
 
-  it('should throw an error', () => {
+  it('should throw an error', async () => {
     const tokenId1 =
       '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950' as TokenId
     const tokenId2 =
@@ -134,8 +134,8 @@ describe('getMinAmounts()', () => {
 
     const primaryToken = walletMocks.wallet.portfolioPrimaryTokenInfo
 
-    expect(() =>
+    await expect(
       getMinAmounts(address, amounts, primaryToken, protocolParamsPlaceholder),
-    ).toThrow(new Error('getMinAmounts::Error not a valid address'))
+    ).rejects.toThrow('getMinAmounts::Error not a valid address')
   })
 })

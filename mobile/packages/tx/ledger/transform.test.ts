@@ -1,5 +1,7 @@
 import {TransactionHash} from '@yoroi/types'
 
+import {CertificateType} from '@cardano-foundation/ledgerjs-hw-app-cardano'
+
 import {Addressing} from '../types'
 import {
   assertTagsState,
@@ -16,8 +18,8 @@ describe('ledger transform', () => {
   describe('verifyFromBip44Root', () => {
     it('should throw error when addressing does not start from root', () => {
       const addressing: Addressing = {
-        path: [2147483648, 2147483648, 0, 0, 0],
-        startLevel: 1, // Should be 0
+        path: [2147483648, 2147483648, 0, 0],
+        startLevel: 0, // Should be 1 (PURPOSE level)
       }
 
       expect(() => verifyFromBip44Root(addressing)).toThrow(
@@ -27,8 +29,8 @@ describe('ledger transform', () => {
 
     it('should throw error when addressing size is incorrect', () => {
       const addressing: Addressing = {
-        path: [2147483648, 2147483648, 0, 0], // Too short
-        startLevel: 0,
+        path: [2147483648, 2147483648, 0, 0], // Too short - should be 5 levels total
+        startLevel: 1,
       }
 
       expect(() => verifyFromBip44Root(addressing)).toThrow(
@@ -39,7 +41,7 @@ describe('ledger transform', () => {
     it('should not throw when addressing is correct', () => {
       const addressing: Addressing = {
         path: [2147483648, 2147483648, 0, 0, 0],
-        startLevel: 0,
+        startLevel: 1, // PURPOSE level
       }
 
       expect(() => verifyFromBip44Root(addressing)).not.toThrow()
@@ -70,6 +72,14 @@ describe('ledger transform', () => {
 
   describe('transformToLedgerInputs', () => {
     it('should transform inputs and order them correctly', () => {
+      // Use proper hex strings for transaction hashes
+      const hash1Hex =
+        '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef'
+      const hash2Hex =
+        'fedcba9876543210fedcba9876543210fedcba9876543210fedcba9876543210'
+      const hash1Bytes = Buffer.from(hash1Hex, 'hex')
+      const hash2Bytes = Buffer.from(hash2Hex, 'hex')
+
       const mockTxBuilder = {
         build: jest.fn(() => ({
           inputs: jest.fn(() => ({
@@ -78,14 +88,14 @@ describe('ledger transform', () => {
               if (index === 0) {
                 return {
                   transactionId: jest.fn(() => ({
-                    toBytes: jest.fn(() => Buffer.from('hash1', 'hex')),
+                    toBytes: jest.fn(() => hash1Bytes),
                   })),
                   index: jest.fn(() => 0),
                 }
               }
               return {
                 transactionId: jest.fn(() => ({
-                  toBytes: jest.fn(() => Buffer.from('hash2', 'hex')),
+                  toBytes: jest.fn(() => hash2Bytes),
                 })),
                 index: jest.fn(() => 1),
               }
@@ -97,19 +107,19 @@ describe('ledger transform', () => {
       const unsignedTx = {
         senderUtxos: [
           {
-            txHash: 'hash1' as TransactionHash,
+            txHash: hash1Hex as TransactionHash,
             txIndex: 0,
             addressing: {
               path: [2147483648, 2147483648, 0, 0, 0],
-              startLevel: 0,
+              startLevel: 1, // PURPOSE level
             },
           },
           {
-            txHash: 'hash2' as TransactionHash,
+            txHash: hash2Hex as TransactionHash,
             txIndex: 1,
             addressing: {
               path: [2147483648, 2147483648, 0, 0, 1],
-              startLevel: 0,
+              startLevel: 1, // PURPOSE level
             },
           },
         ],
@@ -119,20 +129,26 @@ describe('ledger transform', () => {
       const result = transformToLedgerInputs(unsignedTx)
 
       expect(result).toHaveLength(2)
-      expect(result[0]?.txHashHex).toBe('hash1')
+      expect(result[0]?.txHashHex).toBe(hash1Hex)
       expect(result[0]?.outputIndex).toBe(0)
-      expect(result[1]?.txHashHex).toBe('hash2')
+      expect(result[1]?.txHashHex).toBe(hash2Hex)
       expect(result[1]?.outputIndex).toBe(1)
     })
 
     it('should throw error when input not found', () => {
+      const hash1Hex =
+        '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef'
+      const hash3Hex =
+        '3333333333333333333333333333333333333333333333333333333333333333'
+      const hash3Bytes = Buffer.from(hash3Hex, 'hex')
+
       const mockTxBuilder = {
         build: jest.fn(() => ({
           inputs: jest.fn(() => ({
             len: jest.fn(() => 1),
             get: jest.fn(() => ({
               transactionId: jest.fn(() => ({
-                toBytes: jest.fn(() => Buffer.from('hash3', 'hex')),
+                toBytes: jest.fn(() => hash3Bytes),
               })),
               index: jest.fn(() => 2),
             })),
@@ -143,11 +159,11 @@ describe('ledger transform', () => {
       const unsignedTx = {
         senderUtxos: [
           {
-            txHash: 'hash1' as TransactionHash,
+            txHash: hash1Hex as TransactionHash,
             txIndex: 0,
             addressing: {
               path: [2147483648, 2147483648, 0, 0, 0],
-              startLevel: 0,
+              startLevel: 1, // PURPOSE level
             },
           },
         ],
@@ -167,44 +183,37 @@ describe('ledger transform', () => {
     })
 
     it('should transform MultiAsset to Ledger format', () => {
-      const mockMultiAsset = {
-        keys: jest.fn(() => ({
-          len: jest.fn(() => 1),
-          get: jest.fn(() => 'policyId'),
-        })),
-        get: jest.fn(() => ({
-          keys: jest.fn(() => ({
-            len: jest.fn(() => 1),
-            get: jest.fn(() => 'assetName'),
-          })),
-          get: jest.fn(() => ({
-            toStr: jest.fn(() => '1000000'),
-          })),
-        })),
-      } as any
-
       // Mock the asset name
       const mockAssetName = {
         name: jest.fn(() => Buffer.from('test', 'utf-8')),
       }
       const mockPolicyId = {
-        toBytes: jest.fn(() => Buffer.from('policy', 'hex')),
+        toBytes: jest.fn(() =>
+          Buffer.from(
+            '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef',
+            'hex',
+          ),
+        ),
+      }
+      const mockAmount = {
+        toStr: jest.fn(() => '1000000'),
       }
 
-      // Update mocks to return proper objects
-      ;(mockMultiAsset.keys as jest.Mock).mockReturnValue({
-        len: jest.fn(() => 1),
-        get: jest.fn(() => mockPolicyId),
-      })
-      ;(mockMultiAsset.get as jest.Mock).mockReturnValue({
+      const mockAssetsForPolicy = {
         keys: jest.fn(() => ({
           len: jest.fn(() => 1),
           get: jest.fn(() => mockAssetName),
         })),
-        get: jest.fn(() => ({
-          toStr: jest.fn(() => '1000000'),
+        get: jest.fn(() => mockAmount),
+      }
+
+      const mockMultiAsset = {
+        keys: jest.fn(() => ({
+          len: jest.fn(() => 1),
+          get: jest.fn(() => mockPolicyId),
         })),
-      })
+        get: jest.fn(() => mockAssetsForPolicy),
+      } as any
 
       const result = toLedgerTokenBundle(mockMultiAsset)
 
@@ -235,7 +244,7 @@ describe('ledger transform', () => {
       )
 
       expect(result).toHaveLength(1)
-      expect(result[0]?.type).toBe('STAKE_REGISTRATION')
+      expect(result[0]?.type).toBe(CertificateType.STAKE_REGISTRATION)
     })
 
     it('should format stake deregistration certificate', () => {
@@ -256,7 +265,7 @@ describe('ledger transform', () => {
       )
 
       expect(result).toHaveLength(1)
-      expect(result[0]?.type).toBe('STAKE_DEREGISTRATION')
+      expect(result[0]?.type).toBe(CertificateType.STAKE_DEREGISTRATION)
     })
 
     it('should format stake delegation certificate', () => {
@@ -281,7 +290,7 @@ describe('ledger transform', () => {
       )
 
       expect(result).toHaveLength(1)
-      expect(result[0]?.type).toBe('STAKE_DELEGATION')
+      expect(result[0]?.type).toBe(CertificateType.STAKE_DELEGATION)
     })
 
     it('should throw error for unsupported certificate type', () => {
@@ -314,16 +323,15 @@ describe('ledger transform', () => {
           })),
         })),
       }
-      const mockWithdrawal = {
-        rewardAccount: jest.fn(() => mockRewardAddr),
-        amount: jest.fn(() => ({
-          toStr: jest.fn(() => '1000000'),
-        })),
+      const mockWithdrawalAmount = {
+        toStr: jest.fn(() => '1000000'),
       }
       const mockWithdrawals = {
-        len: jest.fn(() => 1),
-        get: jest.fn(() => mockRewardAddr),
-        getWithdrawal: jest.fn(() => mockWithdrawal),
+        keys: jest.fn(() => ({
+          len: jest.fn(() => 1),
+          get: jest.fn(() => mockRewardAddr),
+        })),
+        get: jest.fn(() => mockWithdrawalAmount),
       } as any
 
       const result = formatLedgerWithdrawals(
@@ -340,6 +348,11 @@ describe('ledger transform', () => {
 
   describe('doAllSetsHaveTag', () => {
     it('should return true when all sets have tag', () => {
+      const TransactionSetsState = {
+        AllSetsHaveTag: 'AllSetsHaveTag',
+        MixedSets: 'MixedSets',
+        NoSetsHaveTag: 'NoSetsHaveTag',
+      }
       const mockCsl = {
         Transaction: {
           fromBytes: jest.fn(() => ({
@@ -355,6 +368,10 @@ describe('ledger transform', () => {
             })),
           })),
         },
+        hasTransactionSetTag: jest.fn(
+          () => TransactionSetsState.AllSetsHaveTag,
+        ),
+        TransactionSetsState,
       } as any
 
       expect(doAllSetsHaveTag(mockCsl, 'hex')).toBe(true)
@@ -363,6 +380,11 @@ describe('ledger transform', () => {
 
   describe('assertTagsState', () => {
     it('should not throw when tags are valid', () => {
+      const TransactionSetsState = {
+        AllSetsHaveTag: 'AllSetsHaveTag',
+        MixedSets: 'MixedSets',
+        NoSetsHaveTag: 'NoSetsHaveTag',
+      }
       const mockCsl = {
         Transaction: {
           fromBytes: jest.fn(() => ({
@@ -378,6 +400,10 @@ describe('ledger transform', () => {
             })),
           })),
         },
+        hasTransactionSetTag: jest.fn(
+          () => TransactionSetsState.AllSetsHaveTag,
+        ),
+        TransactionSetsState,
       } as any
 
       expect(() => assertTagsState(mockCsl, 'hex')).not.toThrow()

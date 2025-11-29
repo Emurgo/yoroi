@@ -6,10 +6,16 @@ import {cardanoApiManagerMaker} from './manager'
 import {getBackendZeroUrl} from './utils/url-mapping'
 
 // Mock the adapters and manager
-jest.mock('../adapters/backend-zero/api-maker')
-jest.mock('../adapters/legacy/api-maker')
-jest.mock('../manager')
-jest.mock('../utils/url-mapping', () => ({
+jest.mock('./adapters/backend-zero/api-maker', () => ({
+  backendZeroApiMaker: jest.fn(() => ({})),
+}))
+jest.mock('./adapters/legacy/api-maker', () => ({
+  legacyApiMaker: jest.fn(() => ({})),
+}))
+jest.mock('./manager', () => ({
+  cardanoApiManagerMaker: jest.fn(() => ({})),
+}))
+jest.mock('./utils/url-mapping', () => ({
   getBackendZeroUrl: jest.fn((url: string) => {
     if (url.includes('api.yoroiwallet.com')) {
       return 'https://zero.yoroiwallet.com'
@@ -76,14 +82,14 @@ describe('cardanoWalletApiMaker', () => {
       backendZeroAdapter: expect.any(Object),
       legacyAdapter: expect.any(Object),
       preferences: {
-        getTipStatus: 'backend-zero',
-        fetchNewTxHistory: 'backend-zero',
-        filterUsedAddresses: 'backend-zero',
-        submitTransaction: 'backend-zero',
-        getAccountState: 'backend-zero',
-        bulkGetAccountState: 'backend-zero',
-        getPoolInfo: 'backend-zero',
-        fetchTxStatus: 'backend-zero',
+        getTipStatus: 'legacy',
+        fetchNewTxHistory: 'legacy',
+        filterUsedAddresses: 'legacy',
+        submitTransaction: 'legacy',
+        getAccountState: 'legacy',
+        bulkGetAccountState: 'legacy',
+        getPoolInfo: 'legacy',
+        fetchTxStatus: 'legacy',
         checkServerStatus: 'legacy',
         getFundInfo: 'legacy',
       },

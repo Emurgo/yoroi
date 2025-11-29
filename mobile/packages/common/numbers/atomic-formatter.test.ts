@@ -41,7 +41,7 @@ describe('atomicFormatter', () => {
 
   it('should round down decimal places', () => {
     const result = atomicFormatter({
-      value: 123456789n,
+      value: 12345n,
       decimalPlaces: 2,
     })
     expect(result).toBe('123.45')

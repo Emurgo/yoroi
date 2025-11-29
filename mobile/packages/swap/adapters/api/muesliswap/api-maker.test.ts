@@ -7,11 +7,8 @@ import {api} from './api.mocks'
 import {MuesliswapApiConfig} from './types'
 
 jest.mock('@yoroi/common', () => ({
+  ...jest.requireActual('@yoroi/common'),
   fetchData: jest.fn(),
-  isLeft: jest.requireActual('@yoroi/common').isLeft,
-  isRight: jest.requireActual('@yoroi/common').isRight,
-  isNonNullable: jest.requireActual('@yoroi/common').isNonNullable,
-  difference: jest.requireActual('@yoroi/common').difference,
 }))
 
 describe('muesliswapApiMaker', () => {

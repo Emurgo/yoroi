@@ -240,22 +240,50 @@ export const ASCII_ASSET_NAME_BLACKLIST = [
 
 /**
  * Resolve CIP-67 tag from asset name hex
+ * CIP-67 tags are 4 bytes (8 hex chars)
  */
 export function resolveCip67Tag(assetNameHEX: string): {
   hexName: string
   tag: string | null
 } {
-  if (assetNameHEX.length < 4) {
+  if (assetNameHEX.length < 8) {
     return {hexName: assetNameHEX, tag: null}
   }
 
-  const tag = assetNameHEX.substring(0, 4)
-  const hexName = assetNameHEX.substring(4)
+  // First, check if the entire hex decodes to valid ASCII
+  // If it does, it's likely not a tagged asset name
+  try {
+    const fullBytes = Buffer.from(assetNameHEX, 'hex')
+    const fullAscii = fullBytes.toString('ascii')
+    if (/^[\x20-\x7E]*$/.test(fullAscii)) {
+      // Entire hex is valid ASCII, no tag
+      return {hexName: assetNameHEX, tag: null}
+    }
+  } catch {
+    // Not valid hex or not ASCII, continue to check for tag
+  }
 
-  // CIP-67 tags are 2 bytes (4 hex chars) representing a number
-  // Valid tags are typically in specific ranges
-  // For now, we'll return the tag if it exists
-  return {hexName, tag}
+  // Extract potential tag (first 8 hex chars = 4 bytes)
+  const tag = assetNameHEX.substring(0, 8)
+  const hexName = assetNameHEX.substring(8)
+
+  // CIP-67 tags are 4 bytes (8 hex chars)
+  // Check if remaining hex can be decoded as ASCII
+  if (hexName.length > 0) {
+    try {
+      const remainingBytes = Buffer.from(hexName, 'hex')
+      const remainingAscii = remainingBytes.toString('ascii')
+      // If remaining hex is valid ASCII, it's likely a CIP-67 tag
+      if (/^[\x20-\x7E]*$/.test(remainingAscii)) {
+        return {hexName, tag}
+      }
+    } catch {
+      // Invalid hex, not a tag
+    }
+  }
+
+  // Not a valid CIP-67 tag, return original hex as hexName
+  return {hexName: assetNameHEX, tag: null}
 }
 
 /**

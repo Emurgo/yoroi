@@ -113,9 +113,10 @@ describe('walletManager', () => {
 
     await walletManager.removeWallet(meta.id)
 
-    await expect(walletManager.walletIdsMarkedForDeletion()).resolves.toEqual([
-      meta.id,
-    ])
+    // removeWallet deletes immediately, so walletIdsMarkedForDeletion should be empty
+    await expect(walletManager.walletIdsMarkedForDeletion()).resolves.toEqual(
+      [],
+    )
     await expect(walletManager.hydrate()).resolves.toEqual({
       wallets: [],
       metas: [],

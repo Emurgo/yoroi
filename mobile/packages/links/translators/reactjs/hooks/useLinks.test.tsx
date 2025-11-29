@@ -11,7 +11,7 @@ describe('useLinks', () => {
 
     const {result} = renderHook(() => useLinks(), {wrapper})
 
-    expect(result.current).toHaveProperty('action')
+    expect(result.current).toHaveProperty('pendingAction')
     expect(result.current).toHaveProperty('authorizations')
     expect(result.current).toHaveProperty('actionStarted')
     expect(result.current).toHaveProperty('actionFinished')
@@ -21,7 +21,7 @@ describe('useLinks', () => {
   it('should work without provider (has default context)', () => {
     const {result} = renderHook(() => useLinks())
 
-    expect(result.current).toHaveProperty('action')
+    expect(result.current).toHaveProperty('pendingAction')
     expect(result.current).toHaveProperty('authorizations')
   })
 })

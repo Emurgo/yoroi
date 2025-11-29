@@ -52,10 +52,14 @@ const normalizeTokenAmount = (
   token: Balance.TokenInfo | Portfolio.Token.Info,
 ): BigNumber => {
   const decimals = getDecimals(token) ?? 0
-  return atomicToDecimal({
-    value: quantity,
+  const quantityStr = quantity.toString()
+  const isNegative = quantityStr.startsWith('-')
+  const absoluteValue = isNegative ? quantityStr.slice(1) : quantityStr
+  const decimalValue = atomicToDecimal({
+    value: absoluteValue,
     decimals,
   })
+  return isNegative ? decimalValue.negated() : decimalValue
 }
 
 export const formatTokenAmount = (

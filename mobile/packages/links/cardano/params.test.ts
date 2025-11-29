@@ -221,31 +221,31 @@ describe('params', () => {
       })
     })
 
-    describe('peerId validation', () => {
+    describe('dappPeer validation', () => {
       it('should accept non-empty strings', () => {
         const validator = getParamValidator(configCardanoConnectV1)
-        expect(() => validator({key: 'peerId', value: 'peer123'})).not.toThrow()
+        expect(() =>
+          validator({key: 'dappPeer', value: 'peer123'}),
+        ).not.toThrow()
       })
 
       it('should reject empty strings', () => {
         const validator = getParamValidator(configCardanoConnectV1)
-        expect(() => validator({key: 'peerId', value: ''})).toThrow()
+        expect(() => validator({key: 'dappPeer', value: ''})).toThrow()
       })
     })
 
-    describe('signalingUrl validation', () => {
-      it('should accept valid URLs', () => {
+    describe('host validation', () => {
+      it('should accept valid host strings', () => {
         const validator = getParamValidator(configCardanoConnectV1)
         expect(() =>
-          validator({key: 'signalingUrl', value: 'https://example.com'}),
+          validator({key: 'host', value: 'example.com'}),
         ).not.toThrow()
       })
 
-      it('should reject invalid URLs', () => {
+      it('should reject empty host strings', () => {
         const validator = getParamValidator(configCardanoConnectV1)
-        expect(() =>
-          validator({key: 'signalingUrl', value: 'not-a-url'}),
-        ).toThrow()
+        expect(() => validator({key: 'host', value: ''})).toThrow()
       })
     })
 

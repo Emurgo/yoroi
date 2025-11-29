@@ -1,5 +1,7 @@
 import {Chain, Wallet} from '@yoroi/types'
 
+import {getMasterKeyFromMnemonic} from '~/wallets/cardano/mnemonic/mnemonic'
+
 import {
   createWalletFromMnemonic,
   createWalletFromRootKey,
@@ -76,8 +78,10 @@ describe('wallet-creation', () => {
 
   describe('createWalletFromRootKey', () => {
     it('should create wallet meta from root key', async () => {
-      const rootKeyHex =
-        '8e4e2f11b6ac2a269913286e26339779ab8767579d18d173cdd324929d94e2c43e3ec212cc8a36ed9860579dfe1e3ef4d6de778c5dbdd981623b48727cd96247'
+      // Generate a valid BIP32 root key from the test mnemonic
+      // getMasterKeyFromMnemonic returns the bytes of a BIP32PrivateKey (96 bytes = 192 hex chars)
+      const rootKeyBytes = getMasterKeyFromMnemonic(testMnemonic)
+      const rootKeyHex = Buffer.from(rootKeyBytes).toString('hex')
 
       const meta = await createWalletFromRootKey({
         ...mockOptions,

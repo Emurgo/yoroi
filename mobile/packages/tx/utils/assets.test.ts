@@ -209,12 +209,13 @@ describe('assets utils', () => {
   describe('resolveCip67Tag', () => {
     it('should resolve CIP-67 tag from asset name hex', () => {
       // CIP-67 format: 000643b0 + hex name
+      // The function extracts first 8 hex chars (4 bytes) as tag
       const assetNameHex = '000643b0' + Buffer.from('test').toString('hex')
 
       const result = resolveCip67Tag(assetNameHex)
 
-      expect(result.tag).toBe('0006') // First 4 hex chars
-      expect(result.hexName).toBe('43b0' + Buffer.from('test').toString('hex'))
+      expect(result.tag).toBe('000643b0') // First 8 hex chars (4 bytes)
+      expect(result.hexName).toBe(Buffer.from('test').toString('hex'))
     })
 
     it('should return null tag for short hex', () => {
@@ -224,14 +225,14 @@ describe('assets utils', () => {
       expect(result.hexName).toBe('ab')
     })
 
-    it('should extract tag from any hex string >= 4 chars', () => {
-      // Function extracts first 4 chars as tag regardless of validity
+    it('should extract tag from any hex string >= 8 chars', () => {
+      // Function extracts first 8 hex chars (4 bytes) as tag if remaining is valid ASCII
       const assetNameHex = 'abcd1234' + Buffer.from('test').toString('hex')
 
       const result = resolveCip67Tag(assetNameHex)
 
-      expect(result.tag).toBe('abcd') // First 4 hex chars
-      expect(result.hexName).toBe('1234' + Buffer.from('test').toString('hex'))
+      expect(result.tag).toBe('abcd1234') // First 8 hex chars (4 bytes)
+      expect(result.hexName).toBe(Buffer.from('test').toString('hex'))
     })
   })
 
