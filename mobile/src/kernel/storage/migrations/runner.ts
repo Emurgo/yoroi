@@ -57,14 +57,14 @@ export const runMigrations = async (
   const currentVersion = await storageVersion.read()
   const targetVersion = storageCurrentVersion
 
-  logger.info('runMigrations: Starting', {
+  logger.debug('runMigrations: Starting', {
     currentVersion,
     targetVersion,
   })
 
   // If already at target version, no migrations needed
   if (currentVersion === targetVersion) {
-    logger.info('runMigrations: No migrations needed')
+    logger.debug('runMigrations: No migrations needed')
     initInstallationId()
     return []
   }

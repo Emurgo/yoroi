@@ -3,6 +3,8 @@ import {Resolver} from '@yoroi/types'
 import {useQuery} from '@tanstack/react-query'
 import {useMemo} from 'react'
 
+import {logger} from '~/kernel/logger/logger'
+
 /**
  * Hook to resolve address aliases (AdaHandle, CNS, DRep, etc.)
  */
@@ -24,7 +26,7 @@ export const useAddressResolution = (
         })
         return response
       } catch (error) {
-        console.error('Failed to resolve address:', error)
+        logger.error('Failed to resolve address', {error, address})
         return null
       }
     },
@@ -60,7 +62,10 @@ export const useManyAddressResolution = (
             })
             return {address, response}
           } catch (error) {
-            console.error(`Failed to resolve address ${address}:`, error)
+            logger.error(`Failed to resolve address ${address}`, {
+              error,
+              address,
+            })
             return {address, response: null}
           }
         }),

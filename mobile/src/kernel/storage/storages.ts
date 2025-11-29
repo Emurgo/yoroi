@@ -26,6 +26,7 @@ import {
   isLanguageCode,
   systemLanguageCode,
 } from '~/kernel/i18n/localization'
+import {logger} from '~/kernel/logger/logger'
 import {debugStorage} from '~/kernel/storage/debug-storage'
 
 export const rootMMKV = new MMKV({id: 'default.mmkv'})
@@ -206,7 +207,7 @@ export const hasShownNetworkNoticeStorageKeyManager =
 
 // Debug storage
 const observableFunction = (v: unknown) => {
-  console.log(`key with value udpated -> `, v)
+  logger.debug('key with value updated', {value: v})
   return of(null)
 }
 appSettingsObservableStorage.observable.subscribe((v) => {

@@ -5,6 +5,7 @@ import {Keyboard} from 'react-native'
 
 import {useAuth} from '~/features/Auth/context/AuthProvider'
 import {useIsKeyboardOpen} from '~/hooks/useIsKeyboardOpen'
+import {logger} from '~/kernel/logger/logger'
 
 type ModalQueueItem = {
   content: React.ReactNode
@@ -337,7 +338,7 @@ const modalReducer = (state: ModalState, action: ModalAction) => {
           try {
             onCloseCallback()
           } catch (error) {
-            console.error('[ModalReducer] Error calling onClose:', error)
+            logger.error('[ModalReducer] Error calling onClose', {error})
           }
         }, 0)
       }

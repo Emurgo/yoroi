@@ -8,23 +8,17 @@ import {
   useGovernance,
   useLatestGovernanceAction,
   useStakingKeyState,
-  useUpdateLatestGovernanceAction,
   useVotingCertificate,
 } from '@yoroi/staking'
 import {NotEnoughMoneyToSendError} from '@yoroi/tx'
 
 import * as React from 'react'
 
-import {getTxIdFromArgs} from '~/features/ReviewTx/common/utils/getTxId'
 import {useStakingInfo} from '~/features/Staking/hooks/useStakingInfo'
 import {useStakingKey} from '~/features/Staking/hooks/useStakingKey'
 import {useWalletTransactions} from '~/features/Transactions/hooks/useWalletTransactions'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useWalletEvent} from '~/features/WalletManager/hooks/useWalletEvent'
-import {useStrings} from '~/kernel/i18n/useStrings'
-import {logger} from '~/kernel/logger/logger'
-import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
-import {InfoBanner} from '~/ui/InfoBanner/InfoBanner'
 import {CardanoMobile} from '~/wallets/wallets'
 
 import {GovernanceVote} from '../types'
@@ -99,199 +93,6 @@ export const useGovernanceManagerMaker = () => {
       }),
     [governanceStorage, network, walletId],
   )
-}
-
-export const useGovernanceActions = () => {
-  const {wallet} = useSelectedWallet()
-  const navigateTo = useNavigateTo()
-  const {updateLatestGovernanceAction} = useUpdateLatestGovernanceAction(
-    wallet.id,
-  )
-  const {navigateToTxReview} = useWalletNavigation()
-  const strings = useStrings()
-
-  const handleDelegateAction = ({
-    hash,
-    unsignedTx,
-    type,
-    CIP105 = false,
-  }: {
-    hash: string
-    type: 'key' | 'script'
-    unsignedTx: {cbor: string}
-    CIP105: boolean
-  }) => {
-    navigateToTxReview({
-      cbor: unsignedTx.cbor,
-      onSuccess: async (args) => {
-        // Use utility function to safely extract txId
-        // Pass unsigned CBOR as fallback (safe - body hash is same for signed/unsigned)
-        const txID = await getTxIdFromArgs(args, unsignedTx.cbor)
-        if (!txID) {
-          logger.error('handleDelegateAction: No txId available')
-          return
-        }
-        try {
-          updateLatestGovernanceAction(
-            {
-              kind: 'delegate-to-drep',
-              hash,
-              type,
-              txID,
-            },
-            {
-              onError: (error) => {
-                logger.error(
-                  'handleDelegateAction: Failed to update governance action',
-                  {
-                    error:
-                      error instanceof Error ? error.message : String(error),
-                    txID,
-                    hash,
-                    delegateType: type,
-                  },
-                )
-              },
-              onSuccess: () => {
-                // Governance action updated successfully
-              },
-            },
-          )
-        } catch (error) {
-          logger.error(
-            'handleDelegateAction: Error calling updateLatestGovernanceAction',
-            {
-              error: error instanceof Error ? error.message : String(error),
-              txID,
-              hash,
-              delegateType: type,
-            },
-          )
-        }
-      },
-      onNotSupportedCIP1694: navigateTo.notSupportedVersion,
-      context: 'delegate vote',
-      ...(CIP105
-        ? {
-            operationsNotice: (
-              <InfoBanner
-                content={
-                  strings.staking.delegateVotingToDRepDeprecatedFormatNotice
-                }
-              />
-            ),
-          }
-        : {}),
-    })
-  }
-
-  const handleAbstainAction = ({unsignedTx}: {unsignedTx: {cbor: string}}) => {
-    navigateToTxReview({
-      cbor: unsignedTx.cbor,
-      onSuccess: async (args) => {
-        // Use utility function to safely extract txId
-        // Pass unsigned CBOR as fallback (safe - body hash is same for signed/unsigned)
-        const txID = await getTxIdFromArgs(args, unsignedTx.cbor)
-        if (!txID) {
-          logger.error('handleAbstainAction: No txId available')
-          return
-        }
-        try {
-          updateLatestGovernanceAction(
-            {
-              kind: 'vote',
-              vote: 'abstain',
-              txID,
-            },
-            {
-              onError: (error) => {
-                logger.error(
-                  'handleAbstainAction: Failed to update governance action',
-                  {
-                    error:
-                      error instanceof Error ? error.message : String(error),
-                    txID,
-                  },
-                )
-              },
-              onSuccess: () => {
-                // Governance action updated successfully
-              },
-            },
-          )
-        } catch (error) {
-          logger.error(
-            'handleAbstainAction: Error calling updateLatestGovernanceAction',
-            {
-              error: error instanceof Error ? error.message : String(error),
-              txID,
-            },
-          )
-        }
-      },
-      onNotSupportedCIP1694: navigateTo.notSupportedVersion,
-      context: 'delegate vote',
-    })
-  }
-
-  const handleNoConfidenceAction = ({
-    unsignedTx,
-  }: {
-    unsignedTx: {cbor: string}
-  }) => {
-    navigateToTxReview({
-      cbor: unsignedTx.cbor,
-      onSuccess: async (args) => {
-        // Use utility function to safely extract txId
-        // Pass unsigned CBOR as fallback (safe - body hash is same for signed/unsigned)
-        const txID = await getTxIdFromArgs(args, unsignedTx.cbor)
-        if (!txID) {
-          logger.error('handleNoConfidenceAction: No txId available')
-          return
-        }
-        try {
-          updateLatestGovernanceAction(
-            {
-              kind: 'vote',
-              vote: 'no-confidence',
-              txID,
-            },
-            {
-              onError: (error) => {
-                logger.error(
-                  'handleNoConfidenceAction: Failed to update governance action',
-                  {
-                    error:
-                      error instanceof Error ? error.message : String(error),
-                    txID,
-                  },
-                )
-              },
-              onSuccess: () => {
-                // Governance action updated successfully
-              },
-            },
-          )
-        } catch (error) {
-          logger.error(
-            'handleNoConfidenceAction: Error calling updateLatestGovernanceAction',
-            {
-              error: error instanceof Error ? error.message : String(error),
-              txID,
-            },
-          )
-        }
-      },
-      onNotSupportedCIP1694: navigateTo.notSupportedVersion,
-      context: 'delegate vote',
-    })
-  }
-
-  return {
-    handleDelegateAction,
-    handleAbstainAction,
-    handleNoConfidenceAction,
-  } as const
 }
 
 const isTxConfirmed = (

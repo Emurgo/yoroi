@@ -4,6 +4,7 @@ import React from 'react'
 import {Alert, ScrollView, Text, TouchableOpacity, View} from 'react-native'
 
 import {useBluetooth} from '~/hooks/useBluetooth'
+import {logger} from '~/kernel/logger/logger'
 import {Button, ButtonType} from '~/ui/Button/Button'
 
 interface BluetoothDeviceManagerProps {
@@ -27,7 +28,7 @@ export const BluetoothDeviceManager: React.FC<BluetoothDeviceManagerProps> = ({
   } = useBluetooth()
 
   // Debug logging
-  console.log('BluetoothDeviceManager state:', {
+  logger.debug('BluetoothDeviceManager state', {
     isEnabled: state.isEnabled,
     isScanning: state.isScanning,
     isConnected: state.isConnected,

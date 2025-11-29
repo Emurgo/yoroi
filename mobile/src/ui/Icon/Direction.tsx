@@ -3,6 +3,7 @@ import {ThemedPalette, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {View, ViewStyle} from 'react-native'
 
+import {logger} from '~/kernel/logger/logger'
 import {DigitalAsset} from '~/ui/Icon/DigitalAsset'
 import {Governance} from '~/ui/Icon/Governance'
 import {Lock} from '~/ui/Icon/Lock'
@@ -36,7 +37,7 @@ export const Direction = ({
   const IconComponent = iconMap[iconKey]
 
   if (!IconComponent) {
-    console.warn(`Unknown transaction direction: ${transactionDirection}`)
+    logger.warn(`Unknown transaction direction: ${transactionDirection}`)
     return null
   }
 

@@ -5,6 +5,7 @@
  */
 import {CredKind} from '@emurgo/cross-csl-core'
 
+import {logger} from '~/kernel/logger/logger'
 import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
 
 export type SmartContractInfo = {
@@ -60,7 +61,7 @@ export class ContractService {
         contractType: data.contractType,
       }
     } catch (error) {
-      console.error('Failed to fetch contract info:', error)
+      logger.error('Failed to fetch contract info', {error, address})
       return null
     }
   }

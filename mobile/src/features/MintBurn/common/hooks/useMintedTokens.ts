@@ -2,6 +2,7 @@ import {Wallet} from '@yoroi/types'
 
 import * as React from 'react'
 
+import {logger} from '~/kernel/logger/logger'
 import {YoroiWallet} from '~/wallets/cardano/types'
 
 import {getStoredPolicyIds} from '../storage/mintPolicyStorage'
@@ -61,7 +62,7 @@ export const useMintedTokens = ({
 
         setMintedTokens(minted)
       } catch (error) {
-        console.error('Failed to load minted tokens:', error)
+        logger.error('Failed to load minted tokens', {error})
       } finally {
         setIsLoading(false)
       }

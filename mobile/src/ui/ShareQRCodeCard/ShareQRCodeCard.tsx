@@ -13,6 +13,7 @@ import QRCode from 'react-native-qrcode-svg'
 import Share from 'react-native-share'
 import ViewShot, {captureRef} from 'react-native-view-shot'
 
+import {logger} from '~/kernel/logger/logger'
 import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
 
@@ -60,7 +61,7 @@ export const ShareQRCodeCard = ({
       })
     } catch (error) {
       // User cancelled or error occurred
-      console.log('Share cancelled or error:', error)
+      logger.debug('Share cancelled or error', {error})
     } finally {
       setIsSharing(false)
     }

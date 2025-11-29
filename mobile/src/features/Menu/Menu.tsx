@@ -30,10 +30,10 @@ import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
 
 import {AirdropScreen} from '../Airdrop/ui/AirdropScreen'
+import {MintBurnNavigator} from '../MintBurn/navigator'
 import {InsufficientFundsModal} from '../RegisterCatalyst/common/InsufficientFundsModal'
 import {NetworkTag} from '../Settings/ui/shared/NetworkTag'
 import {usePoolTransition} from '../Staking/Staking/PoolTransition/usePoolTransition'
-import {MintBurnNavigator} from '../MintBurn/navigator'
 
 const MenuStack = createStackNavigator<MenuRoutes>()
 

@@ -329,24 +329,32 @@ export const useStrings = () => {
           tokenTypeNft: f(mintBurnMessages.mintTokenTypeNft),
           ft: {
             tokenName: f(mintBurnMessages.mintFtTokenName),
-            tokenNamePlaceholder: f(mintBurnMessages.mintFtTokenNamePlaceholder),
+            tokenNamePlaceholder: f(
+              mintBurnMessages.mintFtTokenNamePlaceholder,
+            ),
             quantity: f(mintBurnMessages.mintFtQuantity),
             quantityPlaceholder: f(mintBurnMessages.mintFtQuantityPlaceholder),
             decimals: f(mintBurnMessages.mintFtDecimals),
             decimalsPlaceholder: f(mintBurnMessages.mintFtDecimalsPlaceholder),
             image: f(mintBurnMessages.mintFtImage),
             description: f(mintBurnMessages.mintFtDescription),
-            descriptionPlaceholder: f(mintBurnMessages.mintFtDescriptionPlaceholder),
+            descriptionPlaceholder: f(
+              mintBurnMessages.mintFtDescriptionPlaceholder,
+            ),
           },
           nft: {
             assetName: f(mintBurnMessages.mintNftAssetName),
-            assetNamePlaceholder: f(mintBurnMessages.mintNftAssetNamePlaceholder),
+            assetNamePlaceholder: f(
+              mintBurnMessages.mintNftAssetNamePlaceholder,
+            ),
             imageUrl: f(mintBurnMessages.mintNftImageUrl),
             imageUrlPlaceholder: f(mintBurnMessages.mintNftImageUrlPlaceholder),
             name: f(mintBurnMessages.mintNftName),
             namePlaceholder: f(mintBurnMessages.mintNftNamePlaceholder),
             description: f(mintBurnMessages.mintNftDescription),
-            descriptionPlaceholder: f(mintBurnMessages.mintNftDescriptionPlaceholder),
+            descriptionPlaceholder: f(
+              mintBurnMessages.mintNftDescriptionPlaceholder,
+            ),
           },
           submit: f(mintBurnMessages.mintSubmit),
           submitting: f(mintBurnMessages.mintSubmitting),
