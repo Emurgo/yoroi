@@ -10,7 +10,7 @@ import {
   PolicyId,
   Portfolio,
   SlotNumber,
-  TransactionCbor,
+  TransactionCborBase64,
   TransactionHash,
   TransactionStatus,
   UtxoId,
@@ -313,7 +313,7 @@ export const legacyApiMaker = ({
       return copy.filter((addr) => used.includes(addr))
     },
 
-    async submitTransaction(signedTx: TransactionCbor): Promise<void> {
+    async submitTransaction(signedTx: TransactionCborBase64): Promise<void> {
       const txStr = typeof signedTx === 'string' ? signedTx : signedTx
       try {
         await fetchDefault('txs/signed', {signedTx: txStr}, baseApiUrl)

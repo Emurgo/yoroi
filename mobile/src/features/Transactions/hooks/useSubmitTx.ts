@@ -23,7 +23,9 @@ export const useSubmitTx = (
     mutationFn: async (signedTx) => {
       const serverStatus = await wallet.checkServerStatus()
       const txBytes = signedTx.toBytes()
-      const base64 = Buffer.from(txBytes).toString('base64')
+      const base64 = Branded.asTransactionCborBase64(
+        Buffer.from(txBytes).toString('base64'),
+      )
 
       let txId: string | undefined
       try {

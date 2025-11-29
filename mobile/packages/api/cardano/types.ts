@@ -3,7 +3,7 @@ import {
   Address,
   KeyHash,
   PublicKeyHex,
-  TransactionCbor,
+  TransactionCborBase64,
   WalletTransaction,
 } from '@yoroi/types'
 
@@ -54,7 +54,7 @@ export interface CardanoApiAdapter {
     walletContext?: WalletContext,
   ): Promise<Addresses>
 
-  submitTransaction(signedTx: TransactionCbor): Promise<void>
+  submitTransaction(signedTx: TransactionCborBase64): Promise<void>
 
   getAccountState(
     request: AccountStateRequest,
@@ -115,7 +115,7 @@ export interface ManagedCardanoApi {
     walletContext?: WalletContext,
   ): Promise<Addresses>
 
-  submitTransaction(signedTx: TransactionCbor): Promise<void>
+  submitTransaction(signedTx: TransactionCborBase64): Promise<void>
 
   getAccountState(
     request: AccountStateRequest,

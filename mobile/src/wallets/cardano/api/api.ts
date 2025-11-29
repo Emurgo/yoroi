@@ -74,7 +74,7 @@ export const submitTransaction = async (
   baseApiUrl: string,
 ): Promise<void> => {
   return getApi(baseApiUrl).submitTransaction(
-    Branded.asTransactionCbor(signedTx),
+    Branded.asTransactionCborBase64(signedTx),
   )
 }
 

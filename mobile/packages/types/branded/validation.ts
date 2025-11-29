@@ -43,6 +43,8 @@ import type {
   TokenFingerprint,
   TokenId,
   TransactionCbor,
+  TransactionCborBase64,
+  TransactionCborHex,
   TransactionHash,
   UtxoId,
 } from './index'
@@ -343,11 +345,51 @@ export const asDatumCbor = (input: string): DatumCbor => {
   return input as DatumCbor
 }
 
-export const asTransactionCbor = (input: string): TransactionCbor => {
+// Helper to check if string is base64
+const isBase64 = (str: string): boolean => {
+  if (str.length === 0) return false
+  const cleaned = str.replace(/\s/g, '')
+  // If it's hex, it's not base64 (hex is more restrictive)
+  if (isHex(cleaned)) return false
+  // Base64 regex: allows A-Z, a-z, 0-9, +, /, and = for padding
+  const base64Regex = /^[A-Za-z0-9+/]*={0,2}$/
+  // Base64 should have + or / characters, or proper padding (= or ==)
+  const hasBase64Chars = /[+/]/.test(cleaned) || /[=]{1,2}$/.test(cleaned)
+  return base64Regex.test(cleaned) && hasBase64Chars
+}
+
+/**
+ * Validate hex-encoded transaction CBOR (for internal use)
+ */
+export const asTransactionCborHex = (input: string): TransactionCborHex => {
   if (!isHex(input)) {
-    getLogger().warn(`[BrandedType] Invalid transaction CBOR format: ${input}`)
+    getLogger().warn(
+      `[BrandedType] Invalid transaction CBOR hex format: ${input.substring(0, 100)}...`,
+    )
   }
-  return input as TransactionCbor
+  return input as TransactionCborHex
+}
+
+/**
+ * Validate base64-encoded transaction CBOR (for API submission)
+ */
+export const asTransactionCborBase64 = (
+  input: string,
+): TransactionCborBase64 => {
+  if (!isBase64(input)) {
+    getLogger().warn(
+      `[BrandedType] Invalid transaction CBOR base64 format: ${input.substring(0, 100)}...`,
+    )
+  }
+  return input as TransactionCborBase64
+}
+
+/**
+ * @deprecated Use asTransactionCborHex or asTransactionCborBase64 instead
+ * Legacy function - validates as hex for backward compatibility
+ */
+export const asTransactionCbor = (input: string): TransactionCbor => {
+  return asTransactionCborHex(input)
 }
 
 // Governance validation

@@ -565,6 +565,8 @@ export type {
   TokenFingerprint,
   TokenId,
   TransactionCbor,
+  TransactionCborHex,
+  TransactionCborBase64,
   TransactionHash,
   TransactionId,
   UtxoId,
@@ -617,6 +619,8 @@ export namespace Branded {
   export const asScriptCbor = BrandedValidation.asScriptCbor
   export const asDatumCbor = BrandedValidation.asDatumCbor
   export const asTransactionCbor = BrandedValidation.asTransactionCbor
+  export const asTransactionCborHex = BrandedValidation.asTransactionCborHex
+  export const asTransactionCborBase64 = BrandedValidation.asTransactionCborBase64
   export const asDRepId = BrandedValidation.asDRepId
   export const asGovernanceActionId = BrandedValidation.asGovernanceActionId
   export const asAnchorUrl = BrandedValidation.asAnchorUrl

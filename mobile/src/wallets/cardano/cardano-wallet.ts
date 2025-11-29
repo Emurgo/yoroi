@@ -775,7 +775,9 @@ function createWalletObject(
       state.publicKeyHex,
     )
 
-    const base64 = Buffer.from(bytes).toString('base64')
+    const base64 = Branded.asTransactionCborBase64(
+      Buffer.from(bytes).toString('base64'),
+    )
     await submitTransaction(base64)
   }
 

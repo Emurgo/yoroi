@@ -1,5 +1,5 @@
 import {StakePoolInfoRequest, StakePoolInfosAndHistories} from '@yoroi/staking'
-import {Branded, TransactionCbor, WalletTransaction} from '@yoroi/types'
+import {Branded, TransactionCborBase64, WalletTransaction} from '@yoroi/types'
 
 import {
   AccountStateResponse,
@@ -245,7 +245,7 @@ describe('cardanoApiManagerMaker', () => {
       // These should work without context
       await expect(api.getTipStatus()).resolves.toBeDefined()
       await expect(
-        api.submitTransaction('signed-tx' as TransactionCbor),
+        api.submitTransaction('signed-tx' as TransactionCborBase64),
       ).resolves.toBeUndefined()
       await expect(api.getPoolInfo({poolIds: ['pool1']})).resolves.toBeDefined()
       await expect(
