@@ -1,5 +1,6 @@
 import {
   AppApi,
+  CardanoApi,
   toDisplayAssetName,
   toPolicyId,
   toTokenFingerprint,
@@ -66,7 +67,10 @@ const walletMeta: Wallet.Meta = {
 
 // TODO: should be mocked
 const {tokenManagers} = buildPortfolioTokenManagers()
-const networkManagers = buildNetworkManagers({tokenManagers})
+const networkManagers = buildNetworkManagers({
+  tokenManagers,
+  apiMaker: CardanoApi.cardanoApiMaker,
+})
 
 const wallet: YoroiWallet = {
   getAddressing(_address: string): {path: number[]; startLevel: number} {

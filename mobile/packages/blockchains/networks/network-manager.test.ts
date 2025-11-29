@@ -74,9 +74,10 @@ describe('buildNetworkManagers', () => {
     expect(mockLogger.error).toHaveBeenCalled()
   })
 
-  it('coverage only - should use default cardanoApiMaker', () => {
+  it('coverage only - should use provided apiMaker', () => {
     const managers = buildNetworkManagers({
       tokenManagers: mockTokenManagers,
+      apiMaker: mockApiMaker,
     })
     expect(managers).toBeDefined()
   })

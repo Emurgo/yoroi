@@ -1,3 +1,4 @@
+import {CardanoApi} from '@yoroi/api'
 import {buildNetworkManagers} from '@yoroi/blockchains'
 import {Wallet} from '@yoroi/types'
 
@@ -15,7 +16,10 @@ import {YoroiWallet} from '../cardano/types'
 
 // TODO: should be mocked
 const {tokenManagers} = buildPortfolioTokenManagers()
-const networkManagers = buildNetworkManagers({tokenManagers})
+const networkManagers = buildNetworkManagers({
+  tokenManagers,
+  apiMaker: CardanoApi.cardanoApiMaker,
+})
 export const walletManagerMock = makeWalletManager({
   rootStorage,
   networkManagers,

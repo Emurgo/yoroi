@@ -1,3 +1,4 @@
+import {CardanoApi} from '@yoroi/api'
 import {buildNetworkManagers} from '@yoroi/blockchains'
 import {Chain, Wallet} from '@yoroi/types'
 
@@ -15,7 +16,10 @@ export const implementations: ReadonlyArray<Wallet.Implementation> = freeze([
   'cardano-bip44',
 ] as const)
 
-export const networkManagers = buildNetworkManagers({tokenManagers})
+export const networkManagers = buildNetworkManagers({
+  tokenManagers,
+  apiMaker: CardanoApi.cardanoApiMaker,
+})
 
 // NOTE: needs update, SupportedNetworks is a client thing
 const supportedNetworksDev: Array<Chain.SupportedNetworks> = freeze([

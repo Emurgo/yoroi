@@ -1,6 +1,5 @@
 // Helper functions for TransactionBuilder
 // Utilities for creating certificates, filtering UTXOs, and handling metadata
-import {cardanoConfig} from '@yoroi/blockchains'
 import {getLogger} from '@yoroi/common'
 import {Chain, Portfolio, Wallet} from '@yoroi/types'
 
@@ -14,6 +13,10 @@ import {Buffer} from 'buffer'
 import {CardanoHaskellConfig} from '../types'
 import {ModernUtxo} from '../utxo/models'
 import {TransactionBuilderState, buildTransaction} from './builder'
+
+// Cardano minimum UTXO value constant (1 ADA = 1,000,000 lovelace)
+// Extracted to avoid circular dependency with @yoroi/blockchains
+const MIN_UTXO_VALUE = '1000000'
 
 /**
  * Create a stake registration certificate
@@ -373,7 +376,7 @@ export function createCardanoHaskellConfig(
   return {
     keyDeposit: protocolParams.keyDeposit,
     linearFee: protocolParams.linearFee,
-    minimumUtxoVal: cardanoConfig.params.minUtxoValue.toString(),
+    minimumUtxoVal: MIN_UTXO_VALUE,
     coinsPerUtxoByte: protocolParams.coinsPerUtxoByte,
     poolDeposit: protocolParams.poolDeposit,
     networkId,
