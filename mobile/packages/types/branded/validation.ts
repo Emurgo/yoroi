@@ -141,16 +141,20 @@ export const asTokenId = (input: string): TokenId => {
 export const asPortfolioTokenId = asTokenId
 
 export const asPolicyId = (input: string): PolicyId => {
-  if (!isHex(input) || input.length !== 56) {
+  // Empty string is valid for primary token (ADA/lovelace)
+  // Otherwise, must be exactly 56 hex chars (28 bytes)
+  if (input !== '' && (!isHex(input) || input.length !== 56)) {
     getLogger().warn(
-      `[BrandedType] Invalid policy ID format (expected 56 hex chars): ${input}`,
+      `[BrandedType] Invalid policy ID format (expected empty string or 56 hex chars): ${input}`,
     )
   }
   return input as PolicyId
 }
 
 export const asAssetName = (input: string): AssetName => {
-  if (!isHex(input)) {
+  // Empty string is valid for primary token (ADA/lovelace)
+  // Otherwise, must be valid hex
+  if (input !== '' && !isHex(input)) {
     getLogger().warn(`[BrandedType] Invalid asset name hex format: ${input}`)
   }
   return input as AssetName
