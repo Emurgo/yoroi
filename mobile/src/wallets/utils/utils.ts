@@ -1,8 +1,7 @@
 import {RawUtxo} from '@yoroi/api'
 import {parseNumberFromText} from '@yoroi/common'
 import {TransactionOutput} from '@yoroi/tx'
-import {Balance, Numbers} from '@yoroi/types'
-import {Portfolio} from '@yoroi/types'
+import {Balance, Branded, Numbers, Portfolio} from '@yoroi/types'
 
 import BigNumber from 'bignumber.js'
 
@@ -30,15 +29,16 @@ export const Amounts = {
   sum: (amounts: Array<Balance.Amounts>): Balance.Amounts => {
     const entries = amounts.map((amounts) => Object.entries(amounts)).flat()
 
-    return entries.reduce(
-      (result, [tokenId, quantity]) => ({
+    return entries.reduce((result, [tokenId, quantity]) => {
+      const tid = tokenId as Portfolio.Token.Id
+      const newResult: Balance.Amounts = {
         ...result,
-        [tokenId]: result[tokenId]
-          ? Quantities.sum([result[tokenId]!, quantity])
-          : quantity,
-      }),
-      {} as Balance.Amounts,
-    )
+        [tid]: (result[tid]
+          ? Quantities.sum([result[tid]!, quantity])
+          : quantity) as Balance.Quantity,
+      }
+      return newResult
+    }, {} as Balance.Amounts)
   },
   diff: (
     amounts1: Balance.Amounts,
@@ -70,8 +70,8 @@ export const Amounts = {
   },
   getAmount: (amounts: Balance.Amounts, tokenId: string): Balance.Amount => {
     return {
-      tokenId,
-      quantity: amounts[tokenId] || Quantities.zero,
+      tokenId: tokenId as Portfolio.Token.Id,
+      quantity: amounts[tokenId as Portfolio.Token.Id] || Quantities.zero,
     }
   },
   getAmountsFromEntries: (entries: TransactionOutput[]): Balance.Amounts => {
@@ -179,7 +179,10 @@ export const Quantities = {
       format,
       precision,
     })
-    return [result.sanitizedInput, (result.quantity ?? '0') as Balance.Quantity]
+    return [
+      result.sanitizedInput,
+      (result.quantity ?? Branded.ZERO_QUANTITY) as Balance.Quantity,
+    ]
   },
   format: (
     quantity: Balance.Quantity,
@@ -205,39 +208,35 @@ export const asQuantity = (value: BigNumber | number | string) => {
 }
 
 export const Utxos = {
-  toAmounts: (utxos: RawUtxo[], primaryTokenId: Portfolio.Token.Id) => {
-    return utxos.reduce(
+  toAmounts: (
+    utxos: RawUtxo[],
+    primaryTokenId: Portfolio.Token.Id,
+  ): Balance.Amounts => {
+    const result: Balance.Amounts = utxos.reduce(
       (previousAmounts, currentUtxo) => {
-        const amounts = {
+        const amounts: Balance.Amounts = {
           ...previousAmounts,
-          [primaryTokenId]: Quantities.sum([
-            previousAmounts[primaryTokenId] ?? '0',
-            currentUtxo.amount as Balance.Quantity,
-          ]),
         }
+        amounts[primaryTokenId] = Quantities.sum([
+          previousAmounts[primaryTokenId] ?? Branded.ZERO_QUANTITY,
+          currentUtxo.amount as Balance.Quantity,
+        ]) as any as Balance.Quantity
 
         if (currentUtxo.assets) {
-          return currentUtxo.assets.reduce(
-            (previousAmountsWithAssets, currentAsset) => {
-              return {
-                ...previousAmountsWithAssets,
-                [currentAsset.tokenId]: Quantities.sum([
-                  Amounts.getAmount(
-                    previousAmountsWithAssets,
-                    currentAsset.tokenId,
-                  ).quantity,
-                  currentAsset.amount as Balance.Quantity,
-                ]),
-              }
-            },
-            amounts,
-          )
+          currentUtxo.assets.forEach((currentAsset) => {
+            const tokenId = currentAsset.tokenId as Portfolio.Token.Id
+            amounts[tokenId] = Quantities.sum([
+              Amounts.getAmount(amounts, currentAsset.tokenId).quantity,
+              currentAsset.amount as Balance.Quantity,
+            ]) as any as Balance.Quantity
+          })
         }
 
         return amounts
       },
       {[primaryTokenId]: Quantities.zero} as Balance.Amounts,
     )
+    return result
   },
 }
 

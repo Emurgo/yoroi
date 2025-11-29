@@ -3,7 +3,7 @@ import {
   rawUtxoToModernUtxo,
   selectUtxos,
 } from '@yoroi/tx'
-import {Balance} from '@yoroi/types'
+import {Balance, Branded} from '@yoroi/types'
 
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
@@ -35,13 +35,13 @@ export const useGetInputs = () => {
         // If a single UTXO can cover both, we'll use just that one
         const adaAmount: Balance.Amount = {
           tokenId: primaryTokenId,
-          quantity: '5000000',
+          quantity: Branded.asBalanceQuantity('5000000'),
         }
         const adaAmounts: Balance.Amounts = {
           [adaAmount.tokenId]: adaAmount.quantity,
         }
 
-        const requestedAmount = amounts[primaryTokenId] || '0'
+        const requestedAmount = amounts[primaryTokenId] ?? Branded.ZERO_QUANTITY
         const combinedAmount = (
           BigInt(requestedAmount) + BigInt(adaAmount.quantity)
         ).toString() as Balance.Quantity

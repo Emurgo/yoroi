@@ -1,3 +1,5 @@
+import {Address} from '@yoroi/types'
+
 import {CardanoMobile} from '~/wallets/wallets'
 
 import {CardanoTypes} from '../types'
@@ -47,11 +49,12 @@ function toHexKeyHash(
 /**
  * @description Try to resolve the spending key hashes for a bech32 address
  *
- * @param {string} address expects to be a bech32
+ * @param {Address | string} address expects to be a bech32
  * @returns {Promise<string | null>} returns a hex string with the key hash or null if can't extract
  */
-export function getStakingKey(address: string) {
-  const wasmAddress = toWasmAddress(address)
+export function getStakingKey(address: Address | string) {
+  const addrStr = typeof address === 'string' ? address : address
+  const wasmAddress = toWasmAddress(addrStr)
   if (wasmAddress?.hasValue())
     return toHexKeyHash(getStakingKeyHash(wasmAddress))
   return null
@@ -60,11 +63,12 @@ export function getStakingKey(address: string) {
 /**
  * @description Try to resolve the staking key hashes for a bech32 address
  *
- * @param {string} address expects to be a bech32
+ * @param {Address | string} address expects to be a bech32
  * @returns {Promise<string | null>} returns a hex string with the key hash or null if can't extract
  */
-export function getSpendingKey(address: string) {
-  const wasmAddress = toWasmAddress(address)
+export function getSpendingKey(address: Address | string) {
+  const addrStr = typeof address === 'string' ? address : address
+  const wasmAddress = toWasmAddress(addrStr)
   if (wasmAddress?.hasValue())
     return toHexKeyHash(getSpendingKeyHash(wasmAddress))
   return null
@@ -73,14 +77,17 @@ export function getSpendingKey(address: string) {
 /**
  * @description Try to resolve bech32 to the wasm Address, ignores other than bech32 addresses
  *
- * @param {string} address expects to be a bech32
+ * @param {Address | string} address expects to be a bech32
  * @returns {Promise<CardanoTypes.Address | null>} null when byron/jorgamndur (deprecated)
  * @example toWasmAddress("addr1q9ndnrwz52yeex4j04kggp0ul5632qmxqx22ugtukkytjysw86pdygc6zarl2kks6fvg8um447uvv679sfdtzkwf2kuq673wke")
  * @example toWasmAddress("stake1u948jr02falxxqphnv3g3rkd3mdzqmtqq3x0tjl39m7dqngqg0fxp")
  */
-export function toWasmAddress(address: string): CardanoTypes.Address | null {
+export function toWasmAddress(
+  address: Address | string,
+): CardanoTypes.Address | null {
+  const addrStr = typeof address === 'string' ? address : address
   try {
-    return CardanoMobile.Address.fromBech32(address)
+    return CardanoMobile.Address.fromBech32(addrStr)
   } catch (e) {
     return null
   }

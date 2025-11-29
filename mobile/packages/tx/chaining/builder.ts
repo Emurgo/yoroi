@@ -1,4 +1,5 @@
-import {Balance} from '@yoroi/types'
+import {primaryTokenId as defaultPrimaryTokenId} from '@yoroi/portfolio'
+import {Address, Balance} from '@yoroi/types'
 
 import {TransactionBuilderState, addInput} from '../transaction-builder/builder'
 import type {UnsignedTransaction} from '../transaction-builder/types'
@@ -25,7 +26,7 @@ export function addChainedInput(
   // Create a synthetic UTXO from the chained transaction reference
   // Note: This UTXO doesn't exist on-chain yet, so we create a placeholder
   const chainedUtxo: ModernUtxo = {
-    receiver: '', // Will be set from actual transaction output
+    receiver: '' as Address, // Will be set from actual transaction output
     txHash: chainedRef.txHash,
     txIndex: chainedRef.txIndex,
     balance: outputAmounts,
@@ -70,7 +71,7 @@ export function buildTransactionChain(
 ): TransactionChain {
   // Calculate total fees
   const totalFees = transactions.reduce((sum, tx) => {
-    const fee = tx.transaction.options.manualFee?.['.'] || '0'
+    const fee = tx.transaction.options.manualFee?.[defaultPrimaryTokenId] || '0'
     return (BigInt(sum) + BigInt(fee)).toString()
   }, '0')
 

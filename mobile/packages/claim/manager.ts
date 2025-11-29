@@ -1,5 +1,5 @@
 import {FetchData, fetchData, isLeft} from '@yoroi/common'
-import {Api, Claim, Links, Portfolio} from '@yoroi/types'
+import {Address, Api, Branded, Claim, Links, Portfolio} from '@yoroi/types'
 
 import {freeze} from 'immer'
 
@@ -7,7 +7,7 @@ import {asClaimApiError, asClaimToken} from './transformers'
 import {ClaimTokensApiResponseSchema} from './validators'
 
 type ClaimManagerMakerOptions = Readonly<{
-  address: string
+  address: Address | string
   primaryTokenInfo: Portfolio.Token.Info
   tokenManager: Portfolio.Manager.Token
 }>
@@ -21,9 +21,11 @@ export const claimManagerMaker = (
     deps,
   )
 
+  const addressBranded =
+    typeof address === 'string' ? Branded.asAddress(address) : address
   return freeze({
     claimTokens,
-    address,
+    address: addressBranded,
     primaryTokenInfo,
   })
 }

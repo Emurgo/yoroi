@@ -1,11 +1,13 @@
+import {Address, Amount, BlockHash, DRepId, TransactionHash} from '../branded'
+
 export type CardanoActionSendOnlyReceiver = Readonly<{
   action: 'send-only-receiver'
-  receiver: string
+  receiver: Address
 }>
 
 export type CardanoActionSendSinglePt = Readonly<{
   action: 'send-single-pt'
-  receiver: string
+  receiver: Address
   params:
     | {
         amount: number | undefined
@@ -38,8 +40,8 @@ export type CardanoActionBrowseDapp = Readonly<{
 
 export type CardanoActionPayRequest = Readonly<{
   action: 'pay-request'
-  address: string
-  amount?: string
+  address: Address
+  amount?: Amount
   asset?: string
   memo?: string
 }>
@@ -51,23 +53,23 @@ export type CardanoActionStakePool = Readonly<{
 
 export type CardanoActionDelegateDrep = Readonly<{
   action: 'delegate-drep'
-  drep: string
+  drep: DRepId
 }>
 
 export type CardanoActionViewTransaction = Readonly<{
   action: 'view-transaction'
-  hash: string
+  hash: TransactionHash
 }>
 
 export type CardanoActionViewBlock = Readonly<{
   action: 'view-block'
-  hash?: string
+  hash?: BlockHash
   height?: string
 }>
 
 export type CardanoActionViewAddress = Readonly<{
   action: 'view-address'
-  address: string
+  address: Address
 }>
 
 export type CardanoActionP2PConnect = Readonly<{

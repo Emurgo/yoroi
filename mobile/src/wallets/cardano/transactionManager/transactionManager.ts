@@ -1,10 +1,13 @@
-import {TipStatusResponse, TxHistoryRequest} from '@yoroi/api'
+import {TipStatusResponse, TxHistoryRequest, WalletContext} from '@yoroi/api'
 import {PromiseAllLimited, isArray, parseSafe} from '@yoroi/common'
 import {RemoteCertificateMeta} from '@yoroi/staking'
 import {CertificateKind} from '@yoroi/tx'
 import {
+  Address,
   App,
+  Branded,
   TRANSACTION_STATUS,
+  TransactionHash,
   Transactions,
   WalletTransaction,
 } from '@yoroi/types'
@@ -324,10 +327,14 @@ export async function syncTxs({
           // tip
           bestBlockNum: bestBlock.height,
           // current - from state txs saved (only if valid)
-          bestBlockHash: validLastTx?.blockHash,
-          bestTxHash: validLastTx?.txHash,
+          bestBlockHash: validLastTx?.blockHash
+            ? Branded.asBlockHash(validLastTx.blockHash)
+            : null,
+          bestTxHash: validLastTx?.txHash
+            ? Branded.asTransactionHash(validLastTx.txHash)
+            : null,
         },
-        bestBlock.hash!,
+        Branded.asBlockHash(bestBlock.hash!),
       )
 
       let pageCount = 0
@@ -335,7 +342,7 @@ export async function syncTxs({
         const response = await api.fetchNewTxHistory(
           historyPayload,
           baseApiUrl,
-          walletContext,
+          walletContext as WalletContext | undefined,
         )
         taskResult.push(response.transactions)
         pageCount++
@@ -470,17 +477,24 @@ function txHistoryPayloadFactory(
   metadata: SyncMetadata,
   currentBestBlockHash: string,
 ) {
+  const addressesBranded = addresses.map((addr) => Branded.asAddress(addr))
   const request: TxHistoryRequest = {
-    addresses,
-    untilBlock: currentBestBlockHash,
+    addresses: addressesBranded,
+    untilBlock: Branded.asBlockHash(currentBestBlockHash),
   }
 
   if (metadata.bestBlockHash != null && metadata.bestTxHash != null) {
     return {
       ...request,
       after: {
-        block: metadata.bestBlockHash,
-        tx: metadata.bestTxHash,
+        block:
+          typeof metadata.bestBlockHash === 'string'
+            ? Branded.asBlockHash(metadata.bestBlockHash)
+            : metadata.bestBlockHash,
+        tx:
+          typeof metadata.bestTxHash === 'string'
+            ? Branded.asTransactionHash(metadata.bestTxHash)
+            : metadata.bestTxHash,
       },
     }
   }
@@ -598,11 +612,14 @@ type TimeForTx = {
 
 const perAddressTxsSelector = (state: TransactionManagerState) => {
   const transactions = state.transactions
-  const addressToTxs: Record<string, Array<WalletTransaction['id']>> = {}
+  const addressToTxs: Record<Address, Array<TransactionHash>> = {} as Record<
+    Address,
+    Array<TransactionHash>
+  >
 
-  const addTxTo = (txId: string, addr: string) => {
-    const current = addressToTxs[addr] || ([] as Array<string>)
-    const cleared = current.filter((_txId: string) => txId !== _txId)
+  const addTxTo = (txId: TransactionHash, addr: Address) => {
+    const current = addressToTxs[addr] || ([] as Array<TransactionHash>)
+    const cleared = current.filter((_txId: TransactionHash) => txId !== _txId)
     addressToTxs[addr] = [...cleared, txId]
   }
 

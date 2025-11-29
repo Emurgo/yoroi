@@ -1,5 +1,5 @@
 import {Fetcher, createTypeGuardFromSchema, fetcher} from '@yoroi/common'
-import {Api} from '@yoroi/types'
+import {Api, Branded} from '@yoroi/types'
 
 import {z} from 'zod'
 
@@ -45,7 +45,9 @@ export const getTokenSupply =
       > = parsedResponse.supplies
 
       Array.from(assetsMap.entries()).forEach(([id, {policy, nameHex}]) => {
-        const tokenId: Api.Cardano.TokenId = `${policy}.${nameHex}`
+        const tokenId: Api.Cardano.TokenId = Branded.asTokenId(
+          `${policy}.${nameHex}`,
+        )
         result[id] = supplies[tokenId] ?? null
       })
 

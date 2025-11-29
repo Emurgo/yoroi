@@ -11,7 +11,7 @@ import {
   setChangeAddress,
   setTTLWithBuffer,
 } from '@yoroi/tx'
-import {Portfolio, Wallet} from '@yoroi/types'
+import {Address, Portfolio, PublicKeyHex, Wallet} from '@yoroi/types'
 
 import type {BaseAddress, PublicKey} from '@emurgo/cross-csl-core'
 import {Buffer} from 'buffer'
@@ -29,11 +29,11 @@ export type CreateVotingRegTxParams = {
   }
   networkId: number
   getAbsoluteSlotNumber: () => Promise<BigNumber>
-  getChangeAddress: (addressMode: Wallet.AddressMode) => string
+  getChangeAddress: (addressMode: Wallet.AddressMode) => Address | string
   getStakingKey: () => PublicKey
   getFirstPaymentAddress: () => BaseAddress
   supportsCIP36: boolean
-  catalystKeyHex: string
+  catalystKeyHex: PublicKeyHex | string
   addressMode: Wallet.AddressMode
 }
 
@@ -51,8 +51,10 @@ export async function createVotingRegTx({
   addressMode,
 }: CreateVotingRegTxParams): Promise<{votingRegTx: {cbor: string}}> {
   const absSlotNumber = await getAbsoluteSlotNumber()
+  const catalystKeyHexStr =
+    typeof catalystKeyHex === 'string' ? catalystKeyHex : catalystKeyHex
   const votingPrivateKey = CardanoMobile.PrivateKey.fromExtendedBytes(
-    new Uint8Array(Buffer.from(catalystKeyHex, 'hex')),
+    new Uint8Array(Buffer.from(catalystKeyHexStr, 'hex')),
   )
   if (!votingPrivateKey) {
     throw new Error('Failed to create voting private key from catalystKeyHex')
@@ -65,7 +67,11 @@ export async function createVotingRegTx({
   if (!stakingPublicKey) {
     throw new Error('Failed to get staking public key')
   }
-  const changeAddress = getChangeAddress(addressMode)
+  const changeAddressRaw = getChangeAddress(addressMode)
+  const changeAddress =
+    typeof changeAddressRaw === 'string'
+      ? (changeAddressRaw as Address)
+      : changeAddressRaw
 
   const protocolParamsConfig = createCardanoHaskellConfig(
     protocolParams,
@@ -126,18 +132,26 @@ export async function createVotingRegTx({
   if (!stakingPublicKeyBech32) {
     throw new Error('Failed to convert staking public key to bech32')
   }
+  const rewardAddressBranded =
+    typeof rewardAddress === 'string'
+      ? (rewardAddress as Address)
+      : rewardAddress
+  const paymentAddressBranded =
+    typeof paymentAddressCIP36 === 'string'
+      ? (paymentAddressCIP36 as Address)
+      : paymentAddressCIP36
   const votingMetadata = supportsCIP36
     ? createCIP36VotingMetadata(
-        votingPublicKeyBech32,
-        stakingPublicKeyBech32,
-        rewardAddress,
+        votingPublicKeyBech32 as PublicKeyHex,
+        stakingPublicKeyBech32 as PublicKeyHex,
+        rewardAddressBranded,
         nonce,
-        paymentAddressCIP36,
+        paymentAddressBranded,
       )
     : createCIP15VotingMetadata(
-        votingPublicKeyBech32,
-        stakingPublicKeyBech32,
-        rewardAddress,
+        votingPublicKeyBech32 as PublicKeyHex,
+        stakingPublicKeyBech32 as PublicKeyHex,
+        rewardAddressBranded,
         nonce,
       )
 

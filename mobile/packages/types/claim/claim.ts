@@ -1,3 +1,4 @@
+import {Address, TransactionHash} from '../branded'
 import {CardanoActionClaim} from '../links/cardano-actions'
 import {PortfolioTokenAmount} from '../portfolio/amount'
 import {PortfolioTokenInfo} from '../portfolio/info'
@@ -8,11 +9,11 @@ export type ClaimInfo = Readonly<{
   // api
   status: ClaimStatus
   amounts: ReadonlyArray<PortfolioTokenAmount>
-  txHash?: string
+  txHash?: TransactionHash
 }>
 
 export type ClaimManager = Readonly<{
   claimTokens: (action: CardanoActionClaim) => Promise<ClaimInfo>
-  address: string
+  address: Address
   primaryTokenInfo: PortfolioTokenInfo
 }>

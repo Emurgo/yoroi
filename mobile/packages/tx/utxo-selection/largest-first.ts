@@ -1,4 +1,5 @@
-import {Balance} from '@yoroi/types'
+import {primaryTokenId as defaultPrimaryTokenId} from '@yoroi/portfolio'
+import {Balance, TokenId} from '@yoroi/types'
 
 import {ModernUtxo} from '../utxo/models'
 import type {SelectionOptions, SelectionResult} from './types'
@@ -24,7 +25,7 @@ import {
 export function largestFirst(
   requiredAmounts: Balance.Amounts,
   availableUtxos: ModernUtxo[],
-  primaryTokenId: string = '.',
+  primaryTokenId: TokenId = defaultPrimaryTokenId,
   options: SelectionOptions = {},
 ): SelectionResult {
   // Sort UTXOs by ADA value (largest first)

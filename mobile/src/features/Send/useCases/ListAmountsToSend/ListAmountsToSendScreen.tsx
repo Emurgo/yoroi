@@ -2,7 +2,7 @@ import {isNft, isPrimaryToken} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
 import {NotEnoughMoneyToSendError, TransactionOutput} from '@yoroi/tx'
-import {Portfolio} from '@yoroi/types'
+import {Branded, Portfolio} from '@yoroi/types'
 
 import * as CSL from '@emurgo/cross-csl-core'
 import {useNavigation} from '@react-navigation/native'
@@ -135,7 +135,8 @@ export const ListAmountsToSendScreen = () => {
           entriesCount: entries.length,
           addressMode,
           firstEntryAdaAmount:
-            entries[0]?.amounts[wallet.portfolioPrimaryTokenInfo.id] || '0',
+            entries[0]?.amounts[wallet.portfolioPrimaryTokenInfo.id] ??
+            Branded.ZERO_QUANTITY,
         })
         const result = await createSendTxFromWallet(wallet, {
           entries,

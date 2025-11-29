@@ -10,7 +10,7 @@ import {
   parseDatumFromOutput,
   parseTokenList,
 } from '@yoroi/tx'
-import {Api, Balance, Network, Portfolio} from '@yoroi/types'
+import {Api, Balance, Branded, Network, Portfolio} from '@yoroi/types'
 
 import {CredKind, WasmModuleProxy} from '@emurgo/cross-csl-core'
 import * as _ from 'lodash'
@@ -450,9 +450,9 @@ const formatOutputs = (
 
             if (scriptHash) {
               referenceScript = {
-                txHash: '', // Transaction hash would be available in real scenario
+                txHash: Branded.asTransactionHash(''), // Transaction hash would be available in real scenario
                 txIndex: index,
-                scriptHash,
+                scriptHash: Branded.asScriptHash(scriptHash),
                 scriptType,
                 scriptSize,
               }
@@ -530,7 +530,7 @@ export const formatFee = (
   wallet: YoroiWallet,
   data: TransactionBody,
 ): FormattedFee => {
-  const fee = asQuantity(data?.fee ?? '0')
+  const fee = asQuantity(data?.fee ?? Branded.ZERO_QUANTITY)
 
   return {
     tokenInfo: wallet.portfolioPrimaryTokenInfo,
@@ -729,26 +729,27 @@ function toRawUtxo(
   // Convert backend response (with assetId) to internal format (with tokenId)
   // assetId from backend is already the full token ID in format policyId.assetNameHex
   const mappedAssets = assets.map((asset) => ({
-    amount: asset.amount,
+    amount: Branded.asBalanceQuantity(asset.amount),
     tokenId: asset.assetId as Portfolio.Token.Id,
-    policyId: asset.policyId,
+    policyId: Branded.asPolicyId(asset.policyId),
     name: asset.name,
   }))
 
+  const txHashBranded = Branded.asTransactionHash(txHash)
   return {
-    amount: amount,
-    receiver: address,
-    tx_hash: txHash,
+    amount: Branded.asBalanceQuantity(amount),
+    receiver: Branded.asAddress(address),
+    tx_hash: txHashBranded,
     tx_index: txIndex,
-    utxo_id: `${txHash}:${txIndex}`,
+    utxo_id: Branded.asUtxoIdFromParts(txHashBranded, txIndex),
     assets: mappedAssets,
   }
 }
 
 const isOwnedAddress = (wallet: YoroiWallet, bech32Address: string) => {
   return (
-    wallet.internalAddresses().includes(bech32Address) ||
-    wallet.externalAddresses().includes(bech32Address)
+    wallet.internalAddresses().includes(Branded.asAddress(bech32Address)) ||
+    wallet.externalAddresses().includes(Branded.asAddress(bech32Address))
   )
 }
 

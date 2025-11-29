@@ -266,7 +266,8 @@ const areAmountsEqual = (
   if (keys1.length !== keys2.length) return false
 
   for (const key of keys1) {
-    if (amounts1[key] !== amounts2[key]) return false
+    const tokenId = key as Portfolio.Token.Id
+    if (amounts1[tokenId] !== amounts2[tokenId]) return false
   }
 
   return true

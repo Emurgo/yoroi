@@ -84,6 +84,9 @@ import {
   BalanceQuantity,
   BalanceToken,
 } from './balance/token'
+// Import validation functions for re-export
+import * as BrandedValidation from './branded/validation'
+import {ZERO_QUANTITY as ZERO_QUANTITY_CONST} from './branded/amount'
 import {
   CardanoAddress,
   CardanoMetadata,
@@ -519,6 +522,112 @@ export namespace Balance {
   export type Amount = BalanceAmount
   export type Amounts = BalanceAmounts
 }
+
+// Re-export branded types
+export type {
+  Address,
+  AddressBase58,
+  AddressBech32,
+  AddressHex,
+  Amount,
+  AmountFormatted,
+  AmountRaw,
+  AmountSanitized,
+  AnchorHash,
+  AnchorUrl,
+  AssetName,
+  AssetNameUtf8,
+  BalanceQuantity,
+  Blake2bHash,
+  BlockHash,
+  CborHex,
+  CborHexValidated,
+  DRepId,
+  DatumCbor,
+  DatumHash,
+  EpochNumber,
+  GovernanceActionId,
+  KeyHash,
+  Lovelace,
+  MetadataCbor,
+  PaymentAddress,
+  PolicyId,
+  PortfolioTokenId,
+  PrivateKeyBech32,
+  PrivateKeyHex,
+  PublicKeyHex,
+  ScriptCbor,
+  ScriptHash,
+  Sha256Hash,
+  SignatureHex,
+  SlotNumber,
+  StakingAddress,
+  TokenFingerprint,
+  TokenId,
+  TransactionCbor,
+  TransactionHash,
+  TransactionId,
+  UtxoId,
+} from './branded'
+
+export namespace Branded {
+  // Re-export validation functions
+  export const asAddress = BrandedValidation.asAddress
+  export const asAddressBech32 = BrandedValidation.asAddressBech32
+  export const asAddressHex = BrandedValidation.asAddressHex
+  export const asAddressBase58 = BrandedValidation.asAddressBase58
+  export const asPaymentAddress = BrandedValidation.asPaymentAddress
+  export const asStakingAddress = BrandedValidation.asStakingAddress
+  export const addressToBech32 = BrandedValidation.addressToBech32
+  export const addressToHex = BrandedValidation.addressToHex
+  export const addressToBase58 = BrandedValidation.addressToBase58
+  export const bech32ToAddress = BrandedValidation.bech32ToAddress
+  export const hexToAddress = BrandedValidation.hexToAddress
+  export const base58ToAddress = BrandedValidation.base58ToAddress
+  export const addressToPayment = BrandedValidation.addressToPayment
+  export const addressToStaking = BrandedValidation.addressToStaking
+  export const paymentToAddress = BrandedValidation.paymentToAddress
+  export const stakingToAddress = BrandedValidation.stakingToAddress
+  export const asTokenId = BrandedValidation.asTokenId
+  export const asPortfolioTokenId = BrandedValidation.asPortfolioTokenId
+  export const asPolicyId = BrandedValidation.asPolicyId
+  export const asAssetName = BrandedValidation.asAssetName
+  export const asTokenFingerprint = BrandedValidation.asTokenFingerprint
+  export const asAmount = BrandedValidation.asAmount
+  export const asAmountRaw = BrandedValidation.asAmountRaw
+  export const asAmountSanitized = BrandedValidation.asAmountSanitized
+  export const asAmountFormatted = BrandedValidation.asAmountFormatted
+  export const asBalanceQuantity = BrandedValidation.asBalanceQuantity
+  export const asTransactionHash = BrandedValidation.asTransactionHash
+  export const asUtxoId = BrandedValidation.asUtxoId
+  export const asUtxoIdFromParts = BrandedValidation.asUtxoIdFromParts
+  export const asBlockHash = BrandedValidation.asBlockHash
+  export const asSlotNumber = BrandedValidation.asSlotNumber
+  export const asEpochNumber = BrandedValidation.asEpochNumber
+  export const asPublicKeyHex = BrandedValidation.asPublicKeyHex
+  export const asPrivateKeyHex = BrandedValidation.asPrivateKeyHex
+  export const asKeyHash = BrandedValidation.asKeyHash
+  export const asSignatureHex = BrandedValidation.asSignatureHex
+  export const asBlake2bHash = BrandedValidation.asBlake2bHash
+  export const asSha256Hash = BrandedValidation.asSha256Hash
+  export const asDatumHash = BrandedValidation.asDatumHash
+  export const asScriptHash = BrandedValidation.asScriptHash
+  export const asCborHex = BrandedValidation.asCborHex
+  export const asMetadataCbor = BrandedValidation.asMetadataCbor
+  export const asScriptCbor = BrandedValidation.asScriptCbor
+  export const asDatumCbor = BrandedValidation.asDatumCbor
+  export const asTransactionCbor = BrandedValidation.asTransactionCbor
+  export const asDRepId = BrandedValidation.asDRepId
+  export const asGovernanceActionId = BrandedValidation.asGovernanceActionId
+  export const asAnchorUrl = BrandedValidation.asAnchorUrl
+  export const asAnchorHash = BrandedValidation.asAnchorHash
+  
+  // Re-export constants
+  export const ZERO_QUANTITY = ZERO_QUANTITY_CONST
+}
+
+// Also export ZERO_QUANTITY at top level for convenience
+export {ZERO_QUANTITY} from './branded/amount'
 
 export namespace Links {
   export type YoroiModule = LinksYoroiModule

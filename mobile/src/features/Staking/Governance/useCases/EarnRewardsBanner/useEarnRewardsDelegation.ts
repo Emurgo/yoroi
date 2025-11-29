@@ -1,5 +1,5 @@
 import {getYoroiDrepIdHex} from '@yoroi/staking'
-import {Wallet} from '@yoroi/types'
+import {Branded, KeyHash, Wallet} from '@yoroi/types'
 
 import * as React from 'react'
 
@@ -23,8 +23,8 @@ export const useEarnRewardsDelegation = (wallet: YoroiWallet) => {
     ): Promise<{cbor: string}> => {
       // Create DRep value for Yoroi DRep (network-aware)
       const yoroiDrepIdHex = getYoroiDrepIdHex(wallet.networkManager.network)
-      const drepValue: {KeyHash: string} = {
-        KeyHash: yoroiDrepIdHex,
+      const drepValue: {KeyHash: KeyHash} = {
+        KeyHash: Branded.asKeyHash(yoroiDrepIdHex),
       }
 
       // Use combined delegation recipe to create transaction with both:

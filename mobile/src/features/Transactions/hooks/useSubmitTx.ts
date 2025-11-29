@@ -1,6 +1,7 @@
 import {TxSubmissionStatus} from '@yoroi/api'
 import {useMutationWithInvalidations} from '@yoroi/common'
 import {calculateTxId} from '@yoroi/tx'
+import {Branded} from '@yoroi/types'
 
 import * as CSL from '@emurgo/cross-csl-core'
 import {UseMutationOptions} from '@tanstack/react-query'
@@ -137,14 +138,15 @@ const fetchTxStatus = async (
   txHash: string,
   waitProcessing = false,
 ): Promise<TxSubmissionStatus> => {
+  const txHashBranded = Branded.asTransactionHash(txHash)
   for (let i = txQueueRetryTimes; i > 0; i -= 1) {
     const txStatus = await wallet.fetchTxStatus({
-      txHashes: [txHash],
+      txHashes: [txHashBranded],
     })
 
-    const confirmations = txStatus.depth?.[txHash] || 0
+    const confirmations = txStatus.depth?.[txHashBranded] || 0
     const submission: TxSubmissionStatus | undefined =
-      txStatus.submissionStatus?.[txHash]
+      txStatus.submissionStatus?.[txHashBranded]
 
     // processed
     if (confirmations > 0) {

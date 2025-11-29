@@ -1,6 +1,6 @@
 import {time} from '@yoroi/common'
 import {useNotificationManager} from '@yoroi/notifications'
-import {Notifications} from '@yoroi/types'
+import {Branded, Notifications} from '@yoroi/types'
 
 import {useQuery, useQueryClient} from '@tanstack/react-query'
 
@@ -36,7 +36,7 @@ export const useGovernanceBanner = () => {
     staleTime: time.fiveMinutes,
     queryFn: async () => {
       const balance = wallet?.balanceManager.getPrimaryBalance()
-      const adaLovelace = BigInt(balance?.quantity ?? '0')
+      const adaLovelace = BigInt(balance?.quantity ?? Branded.ZERO_QUANTITY)
       const hasEnoughAda = adaLovelace > minAdaForGovernanceBanner
       logger.debug('Governance banner prerequisites ', {
         walletId: wallet?.id,

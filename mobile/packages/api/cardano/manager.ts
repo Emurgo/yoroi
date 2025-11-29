@@ -1,3 +1,5 @@
+import {TransactionCbor} from '@yoroi/types'
+
 import {freeze} from 'immer'
 
 import {
@@ -66,9 +68,11 @@ export const cardanoApiManagerMaker = ({
       return adapter.filterUsedAddresses(addresses, walletContext)
     },
 
-    async submitTransaction(signedTx: string) {
+    async submitTransaction(signedTx: TransactionCbor | string) {
       const adapter = getAdapter('submitTransaction')
-      return adapter.submitTransaction(signedTx)
+      const txCbor =
+        typeof signedTx === 'string' ? (signedTx as TransactionCbor) : signedTx
+      return adapter.submitTransaction(txCbor)
     },
 
     async getAccountState(request, walletContext?: WalletContext) {

@@ -1,6 +1,17 @@
 // Functional Transaction Builder using CSL TransactionBuilder directly
 import {getLogger} from '@yoroi/common'
-import {Balance, Portfolio} from '@yoroi/types'
+import {primaryTokenId as defaultPrimaryTokenId} from '@yoroi/portfolio'
+import {
+  Address,
+  Amount,
+  Balance,
+  KeyHash,
+  Portfolio,
+  TokenId,
+  TransactionCbor,
+  TransactionHash,
+  UtxoId,
+} from '@yoroi/types'
 
 import type {
   TransactionBuilder as CSLTransactionBuilder,
@@ -39,7 +50,7 @@ export type TransactionBuilderState = {
   collateralInputs: TransactionInput[]
   metadata: TransactionMetadata[]
   options: TransactionOptions
-  excludedUtxos: Set<string>
+  excludedUtxos: Set<UtxoId>
 }
 
 /**
@@ -64,14 +75,14 @@ export function createTransactionBuilder(): TransactionBuilderState {
 /**
  * Get exclusion key for a UTXO
  */
-function getExclusionKey(txHash: string, txIndex: number): string {
-  return `${txHash}:${txIndex}`
+function getExclusionKey(txHash: TransactionHash, txIndex: number): UtxoId {
+  return `${txHash}:${txIndex}` as UtxoId
 }
 
 /**
  * Check if a UTXO is excluded
  */
-function isExcluded(utxo: ModernUtxo, excludedUtxos: Set<string>): boolean {
+function isExcluded(utxo: ModernUtxo, excludedUtxos: Set<UtxoId>): boolean {
   return excludedUtxos.has(getExclusionKey(utxo.txHash, utxo.txIndex))
 }
 
@@ -95,7 +106,7 @@ export function addInputs(
 
 export function removeInput(
   state: TransactionBuilderState,
-  txHash: string,
+  txHash: TransactionHash,
   txIndex: number,
 ): TransactionBuilderState {
   return {
@@ -109,13 +120,14 @@ export function removeInput(
 // Output operations
 export function addOutput(
   state: TransactionBuilderState,
-  address: string,
+  address: Address | string,
   amounts: Balance.Amounts,
   datum?: Datum,
 ): TransactionBuilderState {
+  const addr = typeof address === 'string' ? (address as Address) : address
   return {
     ...state,
-    outputs: [...state.outputs, {address, amounts, datum}],
+    outputs: [...state.outputs, {address: addr, amounts, datum}],
   }
 }
 
@@ -150,12 +162,17 @@ export function addCertificates(
 // Withdrawal operations
 export function addWithdrawal(
   state: TransactionBuilderState,
-  rewardAddress: string,
-  amount: string,
+  rewardAddress: Address | string,
+  amount: Amount | string,
 ): TransactionBuilderState {
+  const addr =
+    typeof rewardAddress === 'string'
+      ? (rewardAddress as Address)
+      : rewardAddress
+  const amt = typeof amount === 'string' ? (amount as Amount) : amount
   return {
     ...state,
-    withdrawals: [...state.withdrawals, {rewardAddress, amount}],
+    withdrawals: [...state.withdrawals, {rewardAddress: addr, amount: amt}],
   }
 }
 
@@ -204,7 +221,7 @@ export function removeCollateralInput(
 // UTXO exclusion operations
 export function excludeUtxo(
   state: TransactionBuilderState,
-  txHash: string,
+  txHash: TransactionHash,
   txIndex: number,
 ): TransactionBuilderState {
   const newExcluded = new Set(state.excludedUtxos)
@@ -240,24 +257,26 @@ export function addMetadata(
 // Options operations
 export function setChangeAddress(
   state: TransactionBuilderState,
-  address: string,
+  address: Address | string,
 ): TransactionBuilderState {
+  const addr = typeof address === 'string' ? (address as Address) : address
   return {
     ...state,
-    options: {...state.options, changeAddress: address},
+    options: {...state.options, changeAddress: addr},
   }
 }
 
 export function setChangeOutput(
   state: TransactionBuilderState,
-  address: string,
+  address: Address | string,
   amounts: Balance.Amounts,
 ): TransactionBuilderState {
+  const addr = typeof address === 'string' ? (address as Address) : address
   return {
     ...state,
     options: {
       ...state.options,
-      manualChangeOutput: {address, amounts},
+      manualChangeOutput: {address: addr, amounts},
     },
   }
 }
@@ -339,9 +358,11 @@ function calculateTotalInputValue(inputs: TransactionInput[]): Balance.Amounts {
   const total: Balance.Amounts = {} as Balance.Amounts
   for (const input of inputs) {
     for (const [tokenId, quantity] of Object.entries(input.utxo.balance)) {
-      const current = BigInt(total[tokenId] || '0')
+      const current = BigInt(total[tokenId as TokenId] || '0')
       const added = BigInt(quantity)
-      total[tokenId] = (current + added).toString() as Balance.Quantity
+      total[tokenId as TokenId] = (
+        current + added
+      ).toString() as Balance.Quantity
     }
   }
   return total
@@ -357,18 +378,22 @@ function calculateTotalOutputValue(
   const total: Balance.Amounts = {} as Balance.Amounts
   for (const output of outputs) {
     for (const [tokenId, quantity] of Object.entries(output.amounts)) {
-      const current = BigInt(total[tokenId] || '0')
+      const current = BigInt(total[tokenId as TokenId] || '0')
       const added = BigInt(quantity)
-      total[tokenId] = (current + added).toString() as Balance.Quantity
+      total[tokenId as TokenId] = (
+        current + added
+      ).toString() as Balance.Quantity
     }
   }
   if (manualChangeOutput) {
     for (const [tokenId, quantity] of Object.entries(
       manualChangeOutput.amounts,
     )) {
-      const current = BigInt(total[tokenId] || '0')
+      const current = BigInt(total[tokenId as TokenId] || '0')
       const added = BigInt(quantity)
-      total[tokenId] = (current + added).toString() as Balance.Quantity
+      total[tokenId as TokenId] = (
+        current + added
+      ).toString() as Balance.Quantity
     }
   }
   return total
@@ -380,7 +405,7 @@ function calculateTotalOutputValue(
 function amountsToValue(
   csl: WasmModuleProxy,
   amounts: Balance.Amounts,
-  primaryTokenId: Portfolio.Token.Id = '.',
+  primaryTokenId: Portfolio.Token.Id = defaultPrimaryTokenId,
 ): Value {
   const logger = getLogger()
 
@@ -509,7 +534,7 @@ function amountsToValue(
 function outputToCSL(
   csl: WasmModuleProxy,
   output: TransactionOutput,
-  primaryTokenId: Portfolio.Token.Id = '.',
+  primaryTokenId: Portfolio.Token.Id = defaultPrimaryTokenId,
 ): CSLTransactionOutput {
   const logger = getLogger()
 
@@ -608,7 +633,7 @@ function createCSLTransactionBuilder(
 export async function buildTransaction(
   state: TransactionBuilderState,
   protocolParams: CardanoHaskellConfig,
-  primaryTokenId: Portfolio.Token.Id = '.',
+  primaryTokenId: Portfolio.Token.Id = defaultPrimaryTokenId,
 ): Promise<UnsignedTransaction> {
   const logger = getLogger()
 
@@ -805,7 +830,7 @@ export async function buildTransaction(
                         ? c.stakeCredentialKeyHashHex
                         : undefined,
                     )
-                    .filter((h): h is string => h !== undefined),
+                    .filter((h): h is KeyHash => h !== undefined),
                 },
               )
               throw new Error(
@@ -1482,7 +1507,9 @@ export async function buildTransaction(
       logger.error('buildTransaction: Failed to serialize transaction to bytes')
       throw new Error('Failed to serialize transaction to bytes')
     }
-    const cbor = Buffer.from(txBytes).toString('hex')
+    const cbor: TransactionCbor = Buffer.from(txBytes).toString(
+      'hex',
+    ) as TransactionCbor
 
     return {
       inputs: state.inputs,
@@ -1504,7 +1531,7 @@ export async function buildTransaction(
 export async function buildTransactionCBOR(
   state: TransactionBuilderState,
   protocolParams: CardanoHaskellConfig,
-  primaryTokenId: Portfolio.Token.Id = '.',
+  primaryTokenId: Portfolio.Token.Id = defaultPrimaryTokenId,
 ): Promise<string> {
   const unsignedTx = await buildTransaction(
     state,

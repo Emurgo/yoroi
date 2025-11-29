@@ -1,4 +1,6 @@
 // Adapter functions for converting between ModernUtxo and CardanoAddressedUtxo types
+import {Branded} from '@yoroi/types'
+
 import {CardanoAddressedUtxo} from '../types'
 import {ModernUtxo} from '../utxo/models'
 
@@ -16,7 +18,7 @@ export function modernUtxoToCardanoAddressedUtxo(
     txIndex: modernUtxo.txIndex,
     txHash: modernUtxo.txHash,
     receiver: modernUtxo.receiver,
-    utxoId: `${modernUtxo.txHash}:${modernUtxo.txIndex}`,
+    utxoId: Branded.asUtxoIdFromParts(modernUtxo.txHash, modernUtxo.txIndex),
     balance: modernUtxo.balance, // Use Balance.Amounts directly
   }
 }

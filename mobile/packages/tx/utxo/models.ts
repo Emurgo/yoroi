@@ -1,4 +1,16 @@
-import {Balance} from '@yoroi/types'
+import {
+  Address,
+  Amount,
+  AssetName,
+  Balance,
+  BlockHash,
+  EpochNumber,
+  PolicyId,
+  SlotNumber,
+  TokenId,
+  TransactionHash,
+} from '@yoroi/types'
+import {UtxoId} from '@yoroi/types'
 
 import type {
   TransactionUnspentOutput,
@@ -10,8 +22,8 @@ import {Addressing} from '../types'
 
 // Modern UTXO type matching useUtxoList.ts pattern
 export type ModernUtxo = {
-  receiver: string
-  txHash: string
+  receiver: Address
+  txHash: TransactionHash
   txIndex: number
   balance: Balance.Amounts // Record<TokenId, Quantity>
   derivationPath?: string // For display (BIP32 path string, e.g., "m/1852'/1815'/0'/0/0")
@@ -30,35 +42,35 @@ export enum UtxoApiResult {
 
 export type Block = {
   number: number
-  hash: string
-  epochNo: number
-  slotNo: number
+  hash: BlockHash
+  epochNo: EpochNumber
+  slotNo: SlotNumber
 }
 
 export type UtxoAtPointRequest = {
-  addresses: string[]
-  referenceBlockHash: string
+  addresses: Address[]
+  referenceBlockHash: BlockHash
 }
 
 export type UtxoDiffSincePointRequest = {
-  addresses: string[]
-  untilBlockHash: string
-  afterBestBlocks: string[]
+  addresses: Address[]
+  untilBlockHash: BlockHash
+  afterBestBlocks: BlockHash[]
 }
 
 export type Asset = {
-  assetId: string
-  policyId: string
-  name: string
-  amount: string
+  assetId: TokenId
+  policyId: PolicyId
+  name: AssetName
+  amount: Amount
 }
 
 // Utxo type for storage/API (uses BigNumber for amounts)
 export type Utxo = {
-  utxoId: string
-  txHash: string
+  utxoId: UtxoId
+  txHash: TransactionHash
   txIndex: number
-  receiver: string
+  receiver: Address
   amount: BigNumber
   assets: Asset[]
   blockNum: number
@@ -71,7 +83,7 @@ export enum DiffType {
 
 export type UtxoDiffItem = {
   type: DiffType
-  id: string
+  id: UtxoId
   amount: BigNumber
 }
 
@@ -82,19 +94,19 @@ export type UtxoDiffItemOutput = UtxoDiffItem & {
 export type UtxoDiff = {
   diffItems: Array<UtxoDiffItem | UtxoDiffItemOutput>
   reference: {
-    lastFoundBestBlock: string
-    lastFoundSafeBlock?: string
+    lastFoundBestBlock: BlockHash
+    lastFoundSafeBlock?: BlockHash
   }
 }
 
 export type UtxoDiffToBestBlock = {
-  lastBestBlockHash: string
-  spentUtxoIds: string[]
+  lastBestBlockHash: BlockHash
+  spentUtxoIds: UtxoId[]
   newUtxos: Utxo[]
 }
 
 export type UtxoAtSafePoint = {
-  lastSafeBlockHash: string
+  lastSafeBlockHash: BlockHash
   utxos: Utxo[]
 }
 
@@ -105,7 +117,7 @@ export type UtxoApiResponse<T> = {
 
 export type TipStatusReference = {
   reference: {
-    lastFoundSafeBlock: string
-    lastFoundBestBlock: string
+    lastFoundSafeBlock: BlockHash
+    lastFoundBestBlock: BlockHash
   }
 }

@@ -1,4 +1,4 @@
-import {Portfolio, Swap} from '@yoroi/types'
+import {Branded, Portfolio, Swap} from '@yoroi/types'
 
 import {
   BuildSwapRequest,
@@ -31,7 +31,7 @@ export const transformersMaker = ({
     }
     // Steelswap uses hex-encoded format: policyId + hexName (no separator)
     // PolicyId is always 56 characters, rest is hexName
-    return `${tokenId.slice(0, 56)}.${tokenId.slice(56)}`
+    return Branded.asTokenId(`${tokenId.slice(0, 56)}.${tokenId.slice(56)}`)
   }
 
   const toTokenId = (tokenId: Portfolio.Token.Id): string => {

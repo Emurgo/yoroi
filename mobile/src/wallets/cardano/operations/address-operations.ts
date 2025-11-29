@@ -1,12 +1,12 @@
 import {cardanoConfig, derivationConfig} from '@yoroi/blockchains'
-import {App, Wallet} from '@yoroi/types'
+import {Address, App, Branded, Wallet} from '@yoroi/types'
 
 import * as CSL from '@emurgo/cross-csl-core'
 
 import {throwLoggedError} from '~/kernel/logger/helpers/throw-logged-error'
 
 import {CardanoMobile} from '../../wallets'
-import {AccountManager, Addresses} from '../account-manager/account-manager'
+import {AccountManager} from '../account-manager/account-manager'
 import type {ReadOnlyAccountManager} from '../account-manager/read-only-account-manager'
 
 /**
@@ -20,7 +20,7 @@ export const getChangeAddress = (
     internalChain:
       | AccountManager['internalChain']
       | ReadOnlyAccountManager['internalChain']
-    isUsedAddress: (address: string) => boolean
+    isUsedAddress: (address: Address | string) => boolean
   },
   addressMode: Wallet.AddressMode,
 ): string => {
@@ -34,20 +34,20 @@ export const getChangeAddress = (
 
   const candidateAddresses = wallet.internalChain.addresses
   const unseen = candidateAddresses.filter(
-    (addr: string) => !wallet.isUsedAddress(addr),
+    (addr) => !wallet.isUsedAddress(addr),
   )
   const [changeAddress] = unseen
   if (!changeAddress) {
     throwLoggedError('getChangeAddress: unable to resolve change address')
   }
-  return changeAddress
+  return changeAddress as string // Address extends string, so this is safe
 }
 
 /**
  * Get addressing information for an address
  */
 export const getAddressing = (
-  address: string,
+  address: Address | string,
   wallet: {
     publicKeyHex: string
     accountVisual: number
@@ -73,8 +73,10 @@ export const getAddressing = (
 
   // Check if this is a read-only wallet (no accountPubKeyHex means read-only)
   const isReadOnly = !wallet.publicKeyHex || wallet.publicKeyHex === ''
+  const addressBranded =
+    typeof address === 'string' ? Branded.asAddress(address) : address
 
-  if (wallet.internalChain.isMyAddress(address)) {
+  if (wallet.internalChain.isMyAddress(addressBranded)) {
     if (isReadOnly) {
       // For read-only wallets, return minimal addressing info
       return {
@@ -82,7 +84,7 @@ export const getAddressing = (
         startLevel,
         isReadOnly: true,
         chain: 'internal' as const,
-        index: wallet.internalChain.getIndexOfAddress(address),
+        index: wallet.internalChain.getIndexOfAddress(addressBranded),
       }
     }
 
@@ -91,7 +93,7 @@ export const getAddressing = (
       implementationConfig.derivations.base.harden.coinType,
       wallet.accountVisual + derivationConfig.hardStart,
       implementationConfig.derivations.base.roles.internal,
-      wallet.internalChain.getIndexOfAddress(address),
+      wallet.internalChain.getIndexOfAddress(addressBranded),
     ]
     return {
       path,
@@ -99,7 +101,7 @@ export const getAddressing = (
     }
   }
 
-  if (wallet.externalChain.isMyAddress(address)) {
+  if (wallet.externalChain.isMyAddress(addressBranded)) {
     if (isReadOnly) {
       // For read-only wallets, return minimal addressing info
       return {
@@ -116,7 +118,7 @@ export const getAddressing = (
       implementationConfig.derivations.base.harden.coinType,
       wallet.accountVisual + derivationConfig.hardStart,
       implementationConfig.derivations.base.roles.external,
-      wallet.externalChain.getIndexOfAddress(address),
+      wallet.externalChain.getIndexOfAddress(addressBranded),
     ]
     return {
       path,
@@ -131,12 +133,13 @@ export const getAddressing = (
  * Get first payment address (BaseAddress)
  */
 export const getFirstPaymentAddress = (
-  externalAddresses: string[],
+  externalAddresses: Address[],
 ): CSL.BaseAddress => {
   const externalAddress = externalAddresses[0]
   if (!externalAddress) {
     throw new App.Errors.InvalidState('No External Address')
   }
+  // Address extends string, so we can use it directly
   const addr = CardanoMobile.Address.fromBech32(externalAddress)
   const address = CardanoMobile.BaseAddress.fromAddress(addr)
   if (!address) {
@@ -155,8 +158,8 @@ export const generateNewReceiveAddress = (wallet: {
     | ReadOnlyAccountManager['externalChain']
   receiveAddressInfo: () => Readonly<{canIncrease: boolean}>
   accountManager: AccountManager | ReadOnlyAccountManager
-  notify: (event: {type: 'addresses'; addresses: Addresses}) => void
-  receiveAddresses: () => Addresses
+  notify: (event: {type: 'addresses'; addresses: Address[]}) => void
+  receiveAddresses: () => Address[]
 }): boolean => {
   const {canIncrease} = wallet.receiveAddressInfo()
   if (!canIncrease) return false

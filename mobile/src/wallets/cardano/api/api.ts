@@ -7,13 +7,11 @@ import {
   TxStatusResponse,
 } from '@yoroi/api'
 import {StakePoolInfoRequest, StakePoolInfosAndHistories} from '@yoroi/staking'
-import {WalletTransaction} from '@yoroi/types'
+import {Address, Branded, WalletTransaction} from '@yoroi/types'
 
 import {cardanoWalletApiMaker} from '../../../../packages/api/cardano/api-maker'
 import {WalletContext} from '../../../../packages/api/cardano/types'
 import {getSpendingKey} from '../addressInfo/addressInfo'
-
-type Addresses = Array<string>
 
 // Create API instances per baseApiUrl - preferences are set at initialization
 const apiInstances = new Map<string, ReturnType<typeof cardanoWalletApiMaker>>()
@@ -59,10 +57,10 @@ export const fetchNewTxHistory = async (
  * @param walletContext - Wallet context (required for backend-zero)
  */
 export const filterUsedAddresses = async (
-  addresses: Addresses,
+  addresses: Address[],
   baseApiUrl: string,
   walletContext?: WalletContext,
-): Promise<Addresses> => {
+): Promise<Address[]> => {
   return getApi(baseApiUrl).filterUsedAddresses(addresses, walletContext)
 }
 
@@ -75,7 +73,9 @@ export const submitTransaction = async (
   signedTx: string,
   baseApiUrl: string,
 ): Promise<void> => {
-  return getApi(baseApiUrl).submitTransaction(signedTx)
+  return getApi(baseApiUrl).submitTransaction(
+    Branded.asTransactionCbor(signedTx),
+  )
 }
 
 /**
@@ -99,7 +99,7 @@ export const getAccountState = async (
  * @param walletContext - Wallet context (required for backend-zero)
  */
 export const bulkGetAccountState = async (
-  addresses: Addresses,
+  addresses: Address[],
   baseApiUrl: string,
   walletContext?: WalletContext,
 ): Promise<AccountStateResponse> => {

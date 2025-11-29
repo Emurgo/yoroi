@@ -1,15 +1,26 @@
 import {RemoteAccountState} from '@yoroi/staking'
 import {RemoteCertificateMeta} from '@yoroi/staking'
-import {Portfolio} from '@yoroi/types'
+import {
+  Address,
+  Amount,
+  BalanceQuantity,
+  BlockHash,
+  EpochNumber,
+  PolicyId,
+  Portfolio,
+  SlotNumber,
+  TransactionHash,
+  UtxoId,
+} from '@yoroi/types'
 
 /**
  * API-related types for Cardano backend communication
  */
 
 type RemoteAsset = {
-  readonly amount: string
+  readonly amount: BalanceQuantity
   readonly tokenId: Portfolio.Token.Id
-  readonly policyId: string
+  readonly policyId: PolicyId
   readonly name: string
 }
 
@@ -18,11 +29,11 @@ type RemoteAsset = {
  * Equivalent to yoroi-frontend's `RemoteUnspentOutput`
  */
 export type RawUtxo = {
-  readonly amount: string
-  readonly receiver: string
-  readonly tx_hash: string
+  readonly amount: BalanceQuantity
+  readonly receiver: Address
+  readonly tx_hash: TransactionHash
   readonly tx_index: number
-  readonly utxo_id: string
+  readonly utxo_id: UtxoId
   readonly assets: ReadonlyArray<RemoteAsset>
 }
 
@@ -30,7 +41,7 @@ export type RawUtxo = {
  * Account state request
  */
 export type AccountStateRequest = {
-  addresses: Array<string>
+  addresses: Array<Address>
 }
 
 /**
@@ -43,10 +54,10 @@ export type AccountStateResponse = Record<string, null | RemoteAccountState>
  */
 type BestblockResponse = {
   height: number
-  epoch: number | null | undefined
-  slot: number | null | undefined
-  hash: string | null | undefined
-  globalSlot: number | null | undefined
+  epoch: EpochNumber | null | undefined
+  slot: SlotNumber | null | undefined
+  hash: BlockHash | null | undefined
+  globalSlot: SlotNumber | null | undefined
 }
 
 /**
@@ -61,33 +72,33 @@ export type TipStatusResponse = {
  * Transaction history request
  */
 export type TxHistoryRequest = {
-  addresses: Array<string>
-  untilBlock: string
+  addresses: Array<Address>
+  untilBlock: BlockHash
   after?: {
-    block: string
-    tx: string
+    block: BlockHash
+    tx: TransactionHash
   }
 }
 
 type RemoteTransactionInputBase = {
-  readonly address: string
-  readonly amount: string
+  readonly address: Address
+  readonly amount: BalanceQuantity
   readonly assets: Array<RemoteAsset>
 }
 
 type RemoteTransactionUtxoInput = {
-  readonly id: string
+  readonly id: UtxoId
   // concatenation of txHash || index
   readonly index: number
-  readonly txHash: string
+  readonly txHash: TransactionHash
 }
 
 type RemoteTransactionInput = RemoteTransactionInputBase &
   RemoteTransactionUtxoInput
 
 type RemoteTransactionOutput = {
-  readonly address: string
-  readonly amount: string
+  readonly address: Address
+  readonly amount: BalanceQuantity
   readonly assets: Array<RemoteAsset>
 }
 
@@ -96,28 +107,27 @@ type RemoteTransactionOutput = {
  */
 type RemoteTxBlockMeta = {
   readonly block_num: number
-  readonly block_hash: string
+  readonly block_hash: BlockHash
   readonly tx_ordinal: number
   readonly time: string
   // timestamp with timezone
-  readonly epoch: number
-  readonly slot: number
+  readonly epoch: EpochNumber
+  readonly slot: SlotNumber
 }
 
 type RemoteTxInfo = {
   readonly type: 'byron' | 'shelley'
-  readonly fee?: string
+  readonly fee?: Amount
   // only in shelley txs
-  readonly hash: string
+  readonly hash: TransactionHash
   readonly last_update: string
   // timestamp with timezone
   readonly tx_state: string
   readonly inputs: Array<RemoteTransactionInput>
   readonly outputs: Array<RemoteTransactionOutput>
   readonly withdrawals: Array<{
-    address: string
-    // hex
-    amount: string
+    address: Address
+    amount: Amount
   }>
   readonly certificates: Array<RemoteCertificateMeta>
   readonly valid_contract?: boolean
@@ -152,7 +162,7 @@ export type TxSubmissionStatus = {
  * Transaction status request
  */
 export type TxStatusRequest = {
-  txHashes: Array<string>
+  txHashes: Array<TransactionHash>
 }
 
 /**

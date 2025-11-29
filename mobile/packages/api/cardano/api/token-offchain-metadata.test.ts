@@ -1,4 +1,4 @@
-import {ApiTokenRegistryEntry} from '@yoroi/types'
+import {ApiTokenRegistryEntry, Branded} from '@yoroi/types'
 
 import {
   getOffChainMetadata,
@@ -97,10 +97,10 @@ describe('getOffChainMetadata', () => {
 
     const fetchMetadata = getOffChainMetadata(baseUrl, mockFetcher)
     const result = await fetchMetadata([
-      'token.1',
-      'token.2',
-      'token.3',
-      'token.4',
+      Branded.asTokenId('token.1'),
+      Branded.asTokenId('token.2'),
+      Branded.asTokenId('token.3'),
+      Branded.asTokenId('token.4'),
     ])
 
     expect(result).toEqual({
@@ -131,7 +131,7 @@ describe('getOffChainMetadata', () => {
     )
 
     const fetchMetadata = getOffChainMetadata(baseUrl, mockFetcher)
-    const result = await fetchMetadata(['token.1'])
+    const result = await fetchMetadata([Branded.asTokenId('token.1')])
 
     expect(result).toEqual({
       'token.1': {tokenRegistry: undefined, isValid: false},
@@ -146,7 +146,7 @@ describe('getOffChainMetadata', () => {
     )
 
     const fetchMetadata = getOffChainMetadata(baseUrl, mockFetcher)
-    const result = await fetchMetadata(['token.1'])
+    const result = await fetchMetadata([Branded.asTokenId('token.1')])
 
     expect(result).toEqual({
       'token.1': {tokenRegistry: undefined, isValid: false},
@@ -173,7 +173,10 @@ describe('getOffChainMetadata', () => {
     )
 
     const fetchMetadata = getOffChainMetadata(baseUrl, mockFetcher)
-    const result = await fetchMetadata(['token.1', 'token.2'])
+    const result = await fetchMetadata([
+      Branded.asTokenId('token.1'),
+      Branded.asTokenId('token.2'),
+    ])
 
     expect(result).toEqual({
       'token.1': {

@@ -1,4 +1,3 @@
-import {AppApi} from '@yoroi/api'
 import type {
   AccountStateResponse,
   FundInfoResponse,
@@ -7,10 +6,10 @@ import type {
   TxStatusRequest,
   TxStatusResponse,
 } from '@yoroi/api'
+import {AppApi} from '@yoroi/api'
 import {cardanoConfig} from '@yoroi/blockchains'
 import {isNonNullable} from '@yoroi/common'
-import {StakePoolInfoRequest} from '@yoroi/staking'
-import {StakingInfo} from '@yoroi/staking'
+import {StakePoolInfoRequest, StakingInfo} from '@yoroi/staking'
 import type {Datum, ModernUtxo, UnsignedTransaction} from '@yoroi/tx'
 import {
   adaptToLedgerUnsignedTx,
@@ -21,8 +20,19 @@ import {
   modernUtxosToCardanoAddressedUtxos,
   signRawTransaction,
 } from '@yoroi/tx'
-import {Api, App, HW, Network, Portfolio, Wallet} from '@yoroi/types'
-import {WalletTransaction} from '@yoroi/types'
+import {
+  Address,
+  Api,
+  App,
+  Branded,
+  HW,
+  KeyHash,
+  Network,
+  Portfolio,
+  PublicKeyHex,
+  Wallet,
+  WalletTransaction,
+} from '@yoroi/types'
 
 import type {SignedTransactionData} from '@cardano-foundation/ledgerjs-hw-app-cardano'
 import {walletChecksum} from '@emurgo/cip4-js'
@@ -49,7 +59,6 @@ import {rootStorage} from '~/kernel/storage/storages'
 import {CardanoMobile} from '../wallets'
 import {
   AccountManager,
-  Addresses,
   accountManagerMaker,
 } from './account-manager/account-manager'
 import {
@@ -479,7 +488,7 @@ function createWalletObject(
     return getFirstPaymentAddressOp(externalAddresses())
   }
 
-  const receiveAddresses = (): Addresses => {
+  const receiveAddresses = (): Address[] => {
     return externalAddresses()
   }
 
@@ -802,7 +811,13 @@ function createWalletObject(
         const changeAddress =
           unsignedTx.options.changeAddress || getChangeAddress('multiple')
         const addressing = getAddressing(changeAddress)
-        const changeAddr = {address: changeAddress, addressing}
+        const changeAddr = {
+          address:
+            typeof changeAddress === 'string'
+              ? Branded.asAddress(changeAddress)
+              : changeAddress,
+          addressing,
+        }
 
         // Convert UnsignedTransaction to LedgerUnsignedTx format
         return CardanoMobileWrapped.cslScope(async (csl) => {
@@ -860,7 +875,13 @@ function createWalletObject(
     const changeAddress =
       unsignedTx.options.changeAddress || getChangeAddress('multiple')
     const addressing = getAddressing(changeAddress)
-    const changeAddr = {address: changeAddress, addressing}
+    const changeAddr = {
+      address:
+        typeof changeAddress === 'string'
+          ? Branded.asAddress(changeAddress)
+          : changeAddress,
+      addressing,
+    }
 
     // Convert UnsignedTransaction to LedgerUnsignedTx format
     return CardanoMobileWrapped.cslScope(async (csl) => {
@@ -952,9 +973,10 @@ function createWalletObject(
       const utxosList = utxosMaker(newUtxos)
       const potentialCollateralId = utxosList.drawnCollateral()
       if (potentialCollateralId) {
-        await state.utxoManager.setCollateralId(potentialCollateralId)
+        const collateralIdBranded = Branded.asUtxoId(potentialCollateralId)
+        await state.utxoManager.setCollateralId(collateralIdBranded)
         state.collateralId = potentialCollateralId
-        notify({type: 'collateral-id', collateralId: state.collateralId})
+        notify({type: 'collateral-id', collateralId: collateralIdBranded})
         logger.info('syncUtxos: Auto-detected and saved collateral ID', {
           collateralId: potentialCollateralId,
         })
@@ -1006,29 +1028,34 @@ function createWalletObject(
   const getCollateralInfo = () => {
     const utxosList = utxosMaker(state.utxos)
     const collateralIdValue = collateralId()
-    const collateralUtxo = utxosList.findById(collateralIdValue)
+    const collateralIdBranded = Branded.asUtxoId(collateralIdValue)
+    const collateralUtxo = utxosList.findById(collateralIdBranded)
     const quantity =
       collateralUtxo?.amount !== undefined && !(collateralUtxo.amount === '')
         ? BigInt(collateralUtxo?.amount)
         : 0n
     const collateralTxId = collateralIdValue
-      ? collateralIdValue.split(':')[0]
+      ? Branded.asTransactionHash(collateralIdValue.split(':')[0]!)
       : null
     const isConfirmed =
       !!collateralTxId && getRawTransaction(collateralTxId) !== undefined
 
     return freeze({
       utxo: collateralUtxo,
-      amount: {quantity, info: state.portfolioPrimaryTokenInfo},
-      collateralId: collateralIdValue,
+      amount: {
+        quantity,
+        info: state.portfolioPrimaryTokenInfo,
+      } as Portfolio.Token.Amount,
+      collateralId: collateralIdBranded,
       isConfirmed,
     })
   }
 
   const setCollateralId = async (id: RawUtxo['utxo_id']): Promise<void> => {
-    await state.utxoManager.setCollateralId(id)
+    const idBranded = Branded.asUtxoId(id)
+    await state.utxoManager.setCollateralId(idBranded)
     state.collateralId = id
-    notify({type: 'collateral-id', collateralId: state.collateralId})
+    notify({type: 'collateral-id', collateralId: idBranded})
   }
 
   const didUtxosUpdate = (
@@ -1076,16 +1103,16 @@ function createWalletObject(
     // Extract payment key hashes from wallet addresses for wallet registration
     const {extractPaymentKeyHashes} = await import('./api/wallet-registration')
     const allAddresses = [...externalAddresses(), ...internalAddresses()]
-    const paymentKeyHashes = extractPaymentKeyHashes(allAddresses)
-    const rewardAddresses = [state.rewardAddressHex]
+    const paymentKeyHashes = extractPaymentKeyHashes(allAddresses) as KeyHash[]
+    const rewardAddresses = [Branded.asAddress(state.rewardAddressHex)]
 
     return legacyApi.bulkGetAccountState(
-      [state.rewardAddressHex],
+      [Branded.asAddress(state.rewardAddressHex)],
       networkManager.legacyApiBaseUrl,
       {
         walletId: state.id,
-        publicKeyHex: state.publicKeyHex,
-        accountPubKeyHex: state.publicKeyHex, // accountPubKeyHex is same as publicKeyHex for CardanoWallet
+        publicKeyHex: state.publicKeyHex as PublicKeyHex,
+        accountPubKeyHex: state.publicKeyHex as PublicKeyHex,
         paymentKeyHashes,
         rewardAddresses,
       },
@@ -1107,11 +1134,11 @@ function createWalletObject(
   }
 
   // =================== getters =================== //
-  const internalAddresses = (): Addresses => {
+  const internalAddresses = (): Address[] => {
     return internalChain().addresses
   }
 
-  const externalAddresses = (): Addresses => {
+  const externalAddresses = (): Address[] => {
     return externalChain().addresses
   }
 
@@ -1124,7 +1151,9 @@ function createWalletObject(
   }
 
   const getRawTransaction = (txId: string): WalletTransaction | undefined => {
-    return state.transactionManager.transactions[txId]
+    return state.transactionManager.transactions[
+      Branded.asTransactionHash(txId)
+    ]
   }
 
   const getRawTransactions = (): Record<string, WalletTransaction> => {
@@ -1155,7 +1184,7 @@ function createWalletObject(
 
   const isUsedAddress = (address: string) => {
     const perAddressTxs = state.transactionManager.perAddressTxs
-    const txs = perAddressTxs[address]
+    const txs = perAddressTxs[Branded.asAddress(address)]
     return !!txs && txs.length > 0
   }
 

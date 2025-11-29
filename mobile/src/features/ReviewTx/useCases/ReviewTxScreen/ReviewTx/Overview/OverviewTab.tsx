@@ -6,7 +6,7 @@ import {
 } from '@yoroi/common'
 import {Blockies} from '@yoroi/identicon'
 import {atoms as a, useTheme} from '@yoroi/theme'
-import {Balance} from '@yoroi/types'
+import {Balance, Branded} from '@yoroi/types'
 
 import {CredKind} from '@emurgo/cross-csl-core'
 import {useQuery} from '@tanstack/react-query'
@@ -212,7 +212,7 @@ export const OverviewTab = ({
         0n,
       )
       return formatTokenWithText(
-        totalAmount.toString() as `${number}`,
+        Branded.asBalanceQuantity(totalAmount.toString()),
         tx.withdrawals[0]!.tokenInfo,
       )
     }

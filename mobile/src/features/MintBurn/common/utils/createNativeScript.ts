@@ -1,6 +1,6 @@
 import type {MintingScript} from '@yoroi/tx'
 import {calculatePolicyId} from '@yoroi/tx'
-import {Wallet} from '@yoroi/types'
+import {KeyHash, PolicyId, Wallet} from '@yoroi/types'
 
 import type {WasmModuleProxy} from '@emurgo/cross-csl-core'
 import {Buffer} from 'buffer'
@@ -18,8 +18,8 @@ export async function createNativeScriptFromWallet(
   addressMode: Wallet.AddressMode = 'multiple',
 ): Promise<{
   script: MintingScript
-  policyId: string
-  keyHash: string
+  policyId: PolicyId
+  keyHash: KeyHash
 }> {
   return CardanoMobileWrapped.cslScope((csl: WasmModuleProxy) => {
     // Get wallet's change address (synchronous method)
@@ -58,12 +58,12 @@ export async function createNativeScriptFromWallet(
     }
 
     // Calculate policy ID
-    const policyId = calculatePolicyId(csl, script)
+    const policyIdHex = calculatePolicyId(csl, script)
 
     return {
       script,
-      policyId,
-      keyHash,
+      policyId: policyIdHex as PolicyId,
+      keyHash: keyHash as KeyHash,
     }
   })
 }
@@ -74,12 +74,17 @@ export async function createNativeScriptFromWallet(
  */
 export async function canRecreatePolicyFromWallet(
   wallet: YoroiWallet,
-  policyId: string,
+  policyId: PolicyId | string,
 ): Promise<boolean> {
   try {
     const {policyId: recreatedPolicyId} =
       await createNativeScriptFromWallet(wallet)
-    return recreatedPolicyId === policyId
+    const policyIdStr = typeof policyId === 'string' ? policyId : policyId
+    const recreatedStr =
+      typeof recreatedPolicyId === 'string'
+        ? recreatedPolicyId
+        : recreatedPolicyId
+    return recreatedStr === policyIdStr
   } catch {
     return false
   }

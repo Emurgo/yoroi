@@ -1,4 +1,4 @@
-import {Balance} from '@yoroi/types'
+import {Address, Balance, Branded, ScriptHash} from '@yoroi/types'
 
 import type {
   NativeScript,
@@ -43,7 +43,7 @@ export function detectReferenceScript(
     }
 
     // Determine script type and hash
-    let scriptHash: string
+    let scriptHash: ScriptHash
     let scriptType: 'native' | 'plutus'
 
     // Check script type and extract hash
@@ -52,7 +52,7 @@ export function detectReferenceScript(
       const scriptBytes = scriptRef.toBytes()
       const nativeScript = csl.NativeScript.fromBytes(scriptBytes)
       if (nativeScript) {
-        scriptHash = hashNativeScript(csl, nativeScript)
+        scriptHash = Branded.asScriptHash(hashNativeScript(csl, nativeScript))
         scriptType = 'native'
       } else {
         return null
@@ -62,7 +62,7 @@ export function detectReferenceScript(
       const scriptBytes = scriptRef.toBytes()
       const plutusScript = csl.PlutusScript.fromBytes(scriptBytes)
       if (plutusScript) {
-        scriptHash = hashPlutusScript(csl, plutusScript)
+        scriptHash = Branded.asScriptHash(hashPlutusScript(csl, plutusScript))
         scriptType = 'plutus'
       } else {
         return null
@@ -167,7 +167,7 @@ export function addReferenceScriptUsage(
 ): TransactionBuilderState {
   // Create UTXO reference for the reference script
   const refUtxo: ModernUtxo = {
-    receiver: '', // Not needed for reference inputs
+    receiver: '' as Address, // Not needed for reference inputs
     txHash: referenceScript.txHash,
     txIndex: referenceScript.txIndex,
     balance: {} as Balance.Amounts,

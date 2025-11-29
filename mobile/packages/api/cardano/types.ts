@@ -1,5 +1,11 @@
 import {StakePoolInfoRequest, StakePoolInfosAndHistories} from '@yoroi/staking'
-import {WalletTransaction} from '@yoroi/types'
+import {
+  Address,
+  KeyHash,
+  PublicKeyHex,
+  TransactionCbor,
+  WalletTransaction,
+} from '@yoroi/types'
 
 import {
   AccountStateRequest,
@@ -14,10 +20,10 @@ export type CardanoBackend = 'backend-zero' | 'legacy'
 
 export type WalletContext = {
   walletId: string
-  publicKeyHex?: string
-  accountPubKeyHex?: string
-  paymentKeyHashes: string[]
-  rewardAddresses: string[]
+  publicKeyHex?: PublicKeyHex
+  accountPubKeyHex?: PublicKeyHex
+  paymentKeyHashes: KeyHash[]
+  rewardAddresses: Address[]
 }
 
 export type EndpointPreference = {
@@ -33,7 +39,7 @@ export type EndpointPreference = {
   getFundInfo: CardanoBackend
 }
 
-export type Addresses = Array<string>
+export type Addresses = Array<Address>
 
 export interface CardanoApiAdapter {
   getTipStatus(): Promise<TipStatusResponse>
@@ -48,7 +54,7 @@ export interface CardanoApiAdapter {
     walletContext?: WalletContext,
   ): Promise<Addresses>
 
-  submitTransaction(signedTx: string): Promise<void>
+  submitTransaction(signedTx: TransactionCbor): Promise<void>
 
   getAccountState(
     request: AccountStateRequest,
@@ -109,7 +115,7 @@ export interface ManagedCardanoApi {
     walletContext?: WalletContext,
   ): Promise<Addresses>
 
-  submitTransaction(signedTx: string): Promise<void>
+  submitTransaction(signedTx: TransactionCbor): Promise<void>
 
   getAccountState(
     request: AccountStateRequest,

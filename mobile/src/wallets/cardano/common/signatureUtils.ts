@@ -1,6 +1,6 @@
 import {cardanoConfig, derivationConfig} from '@yoroi/blockchains'
 import {Addressing, createLedgerPlutusPayload, getAllSigners} from '@yoroi/tx'
-import {Balance, Wallet} from '@yoroi/types'
+import {Balance, Branded, Wallet} from '@yoroi/types'
 
 import {SignTransactionRequest} from '@cardano-foundation/ledgerjs-hw-app-cardano'
 import * as CSL_TYPES from '@emurgo/cross-csl-core'
@@ -219,8 +219,10 @@ export const getDerivationPathForAddress = (
   meta: Wallet.Meta,
   partial = false,
 ) => {
-  const internalIndex = wallet.internalAddresses().indexOf(address)
-  const externalIndex = wallet.externalAddresses().indexOf(address)
+  const addressBranded =
+    typeof address === 'string' ? Branded.asAddress(address) : address
+  const internalIndex = wallet.internalAddresses().indexOf(addressBranded)
+  const externalIndex = wallet.externalAddresses().indexOf(addressBranded)
   const config = cardanoConfig.implementations[meta.implementation]
   const index = Math.max(internalIndex, externalIndex)
 

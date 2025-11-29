@@ -1,12 +1,12 @@
 import {isHex} from '@yoroi/common'
-import {Balance, Chain, Portfolio} from '@yoroi/types'
+import {Address, Balance, Chain, Portfolio} from '@yoroi/types'
 
 import {Amounts, Quantities, asQuantity} from '../utils/utils'
 import {cardanoValueFromAmounts} from './cardanoValueFromAmounts'
 import {CardanoMobileWrapped} from './wrappedCsl'
 
 export const withMinAmounts = async (
-  address: string,
+  address: Address | string,
   amounts: Balance.Amounts,
   primaryTokenInfo: Portfolio.Token.Info,
   protocolParams: Chain.Cardano.ProtocolParams,
@@ -29,22 +29,23 @@ export const withMinAmounts = async (
 }
 
 export const getMinAmounts = async (
-  address: string,
+  address: Address | string,
   amounts: Balance.Amounts,
   primaryTokenInfo: Portfolio.Token.Info,
   protocolParams: Chain.Cardano.ProtocolParams,
 ) => {
+  const addrStr = typeof address === 'string' ? address : address
   return CardanoMobileWrapped.cslScope((csl) => {
     // Create address within this cslScope to avoid pointer issues
     let normalizedAddress: any
-    if (csl.ByronAddress.isValid(address)) {
-      const byronAddr = csl.ByronAddress.fromBase58(address)
+    if (csl.ByronAddress.isValid(addrStr)) {
+      const byronAddr = csl.ByronAddress.fromBase58(addrStr)
       normalizedAddress = byronAddr.toAddress()
     } else {
-      const isHexAddr = isHex(address)
+      const isHexAddr = isHex(addrStr)
       normalizedAddress = isHexAddr
-        ? csl.Address.fromHex(address)
-        : csl.Address.fromBech32(address)
+        ? csl.Address.fromHex(addrStr)
+        : csl.Address.fromBech32(addrStr)
     }
 
     if (!normalizedAddress || normalizedAddress.isMalformed())

@@ -1,10 +1,12 @@
+import {ScriptHash, TransactionHash} from '@yoroi/types'
+
 /**
  * Reference script information
  */
 export type ReferenceScript = {
-  txHash: string
+  txHash: TransactionHash
   txIndex: number
-  scriptHash: string
+  scriptHash: ScriptHash
   scriptType: 'native' | 'plutus'
   scriptSize: number // Size in bytes
 }

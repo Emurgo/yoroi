@@ -15,7 +15,7 @@ import {
   setChangeAddress,
   setTTLWithBuffer,
 } from '@yoroi/tx'
-import {Portfolio, Wallet} from '@yoroi/types'
+import {Address, Amount, Branded, Portfolio, Wallet} from '@yoroi/types'
 
 import type {PublicKey} from '@emurgo/cross-csl-core'
 import BigNumber from 'bignumber.js'
@@ -24,7 +24,7 @@ import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
 
 export type CreateWithdrawalWithGovernanceTxParams = {
   utxos: ModernUtxo[]
-  rewardAddressHex: string
+  rewardAddressHex: Address | string
   primaryTokenId: Portfolio.Token.Id
   protocolParams: {
     coinsPerUtxoByte: string
@@ -34,9 +34,9 @@ export type CreateWithdrawalWithGovernanceTxParams = {
   }
   networkId: number
   getAbsoluteSlotNumber: () => Promise<BigNumber>
-  getChangeAddress: (addressMode: Wallet.AddressMode) => string
+  getChangeAddress: (addressMode: Wallet.AddressMode) => Address | string
   getStakingKey: () => PublicKey
-  getAccountState: (addresses: string[]) => Promise<AccountStateResponse>
+  getAccountState: (addresses: Address[]) => Promise<AccountStateResponse>
   getDelegationStatus: () => {isRegistered: boolean}
   shouldDeregister: boolean
   addressMode: Wallet.AddressMode
@@ -69,8 +69,16 @@ export async function createWithdrawalWithGovernanceTx({
   const logger = getLogger()
 
   const absSlotNumber = await getAbsoluteSlotNumber()
-  const changeAddress = getChangeAddress(addressMode)
-  const accountState = await getAccountState([rewardAddressHex])
+  const changeAddressRaw = getChangeAddress(addressMode)
+  const changeAddress =
+    typeof changeAddressRaw === 'string'
+      ? (changeAddressRaw as Address)
+      : changeAddressRaw
+  const rewardAddressBranded =
+    typeof rewardAddressHex === 'string'
+      ? Branded.asAddress(rewardAddressHex)
+      : rewardAddressHex
+  const accountState = await getAccountState([rewardAddressBranded])
   const isRegistered = getDelegationStatus().isRegistered
 
   const protocolParamsConfig = createCardanoHaskellConfig(
@@ -83,7 +91,7 @@ export async function createWithdrawalWithGovernanceTx({
   for (const address in accountState) {
     const state = accountState[address]
     if (state) {
-      rewards = state.remainingAmount || '0'
+      rewards = state.remainingAmount ?? Branded.ZERO_QUANTITY
       break
     }
   }
@@ -112,7 +120,7 @@ export async function createWithdrawalWithGovernanceTx({
       if (!address || address.isMalformed()) {
         throw new Error(`Invalid reward address: ${rewardAddressHex}`)
       }
-      return address.toBech32(undefined)
+      return address.toBech32(undefined) as Address
     })
   }
 
@@ -138,8 +146,8 @@ export async function createWithdrawalWithGovernanceTx({
     const utxosWithTokens = utxos.filter((utxo) => !pureAdaUtxos.includes(utxo))
 
     const sortedPureAda = [...pureAdaUtxos].sort((a, b) => {
-      const aAda = BigInt(a.balance[primaryTokenId] || '0')
-      const bAda = BigInt(b.balance[primaryTokenId] || '0')
+      const aAda = BigInt(a.balance[primaryTokenId] ?? Branded.ZERO_QUANTITY)
+      const bAda = BigInt(b.balance[primaryTokenId] ?? Branded.ZERO_QUANTITY)
       if (aAda < bAda) return -1
       if (aAda > bAda) return 1
       return 0
@@ -152,7 +160,9 @@ export async function createWithdrawalWithGovernanceTx({
     for (const utxo of sortedPureAda) {
       if (selectedAda >= requiredAdaBigInt) break
       selected.push(utxo)
-      selectedAda += BigInt(utxo.balance[primaryTokenId] || '0')
+      selectedAda += BigInt(
+        utxo.balance[primaryTokenId] ?? Branded.ZERO_QUANTITY,
+      )
     }
 
     if (selectedAda < requiredAdaBigInt) {
@@ -198,14 +208,23 @@ export async function createWithdrawalWithGovernanceTx({
 
       // Add withdrawal if we have rewards
       if (rewardAddressBech32 && BigInt(rewards) > 0n) {
-        builderState = addWithdrawal(builderState, rewardAddressBech32, rewards)
+        const rewardAddr =
+          typeof rewardAddressBech32 === 'string'
+            ? (rewardAddressBech32 as Address)
+            : rewardAddressBech32
+        const rewardsAmount =
+          typeof rewards === 'string' ? (rewards as Amount) : rewards
+        builderState = addWithdrawal(builderState, rewardAddr, rewardsAmount)
       }
 
       // Add stake registration certificate if not registered
       if (!isRegistered) {
         builderState = addCertificate(builderState, {
           kind: CertificateKind.StakeRegistration,
-          stakeCredentialKeyHashHex: stakeKeyHashHex,
+          stakeCredentialKeyHashHex:
+            typeof stakeKeyHashHex === 'string'
+              ? Branded.asKeyHash(stakeKeyHashHex)
+              : stakeKeyHashHex,
         })
       }
 
@@ -214,7 +233,10 @@ export async function createWithdrawalWithGovernanceTx({
       if (!shouldDeregister) {
         builderState = addCertificate(builderState, {
           kind: CertificateKind.VoteDelegation,
-          stakeCredentialKeyHashHex: stakeKeyHashHex,
+          stakeCredentialKeyHashHex:
+            typeof stakeKeyHashHex === 'string'
+              ? Branded.asKeyHash(stakeKeyHashHex)
+              : stakeKeyHashHex,
           drep: drepValue,
         })
       }
@@ -223,7 +245,10 @@ export async function createWithdrawalWithGovernanceTx({
       if (shouldDeregister) {
         builderState = addCertificate(builderState, {
           kind: CertificateKind.StakeDeregistration,
-          stakeCredentialKeyHashHex: stakeKeyHashHex,
+          stakeCredentialKeyHashHex:
+            typeof stakeKeyHashHex === 'string'
+              ? Branded.asKeyHash(stakeKeyHashHex)
+              : stakeKeyHashHex,
         })
       }
 

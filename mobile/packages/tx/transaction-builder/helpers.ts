@@ -1,7 +1,19 @@
 // Helper functions for TransactionBuilder
 // Utilities for creating certificates, filtering UTXOs, and handling metadata
 import {getLogger} from '@yoroi/common'
-import {Chain, Portfolio, Wallet} from '@yoroi/types'
+import {primaryTokenId as defaultPrimaryTokenId} from '@yoroi/portfolio'
+import {
+  Address,
+  BalanceQuantity,
+  Chain,
+  DRepId,
+  KeyHash,
+  Lovelace,
+  Portfolio,
+  PublicKeyHex,
+  TokenId,
+  Wallet,
+} from '@yoroi/types'
 
 import type {
   Certificate,
@@ -48,10 +60,12 @@ export function createStakeDeregistrationCertificate(
 export function createStakeDelegationCertificate(
   wasm: WasmModuleProxy,
   stakingKey: PublicKey,
-  poolKeyHash: string, // Hex string
+  poolKeyHash: KeyHash | string, // Hex string
 ): Certificate {
   const stakingCredential = wasm.Credential.fromKeyhash(stakingKey.hash())
-  const poolKeyHashBytes = Buffer.from(poolKeyHash, 'hex')
+  const poolKeyHashStr =
+    typeof poolKeyHash === 'string' ? poolKeyHash : poolKeyHash
+  const poolKeyHashBytes = Buffer.from(poolKeyHashStr, 'hex')
   const poolKeyHashObj = wasm.Ed25519KeyHash.fromBytes(
     new Uint8Array(poolKeyHashBytes),
   )
@@ -68,20 +82,21 @@ export function createStakeDelegationCertificate(
 export function createVoteDelegationCertificate(
   wasm: WasmModuleProxy,
   stakingKey: PublicKey,
-  drepId: string, // Hex string or bech32
+  drepId: DRepId | string, // Hex string or bech32
   isCIP105: boolean = false,
 ): Certificate {
   const stakingCredential = wasm.Credential.fromKeyhash(stakingKey.hash())
 
   // Parse DRep ID (can be hex or bech32)
+  const drepIdStr = typeof drepId === 'string' ? drepId : drepId
   let drep: import('@emurgo/cross-csl-core').DRep
-  if (drepId.startsWith('drep')) {
+  if (drepIdStr.startsWith('drep')) {
     // Bech32 format - need to decode
     // For now, assume hex format
     throw new Error('Bech32 DRep ID format not yet supported in helper')
   } else {
     // Hex format - assume it's a key hash
-    const drepKeyHashBytes = Buffer.from(drepId, 'hex')
+    const drepKeyHashBytes = Buffer.from(drepIdStr, 'hex')
     const keyHash = wasm.Ed25519KeyHash.fromBytes(
       new Uint8Array(drepKeyHashBytes),
     )
@@ -104,7 +119,7 @@ export function createVoteDelegationCertificate(
  */
 export function filterUtxosByAddress(
   utxos: ModernUtxo[],
-  addresses: string[],
+  addresses: Address[],
 ): ModernUtxo[] {
   const addressSet = new Set(addresses)
   return utxos.filter((utxo) => addressSet.has(utxo.receiver))
@@ -115,12 +130,15 @@ export function filterUtxosByAddress(
  */
 export function filterUtxosByMinAda(
   utxos: ModernUtxo[],
-  minAda: string,
-  primaryTokenId: string = '',
+  minAda: Lovelace | string,
+  primaryTokenId: TokenId = defaultPrimaryTokenId,
 ): ModernUtxo[] {
-  const minAdaBigInt = BigInt(minAda)
+  const minAdaStr = typeof minAda === 'string' ? minAda : minAda
+  const minAdaBigInt = BigInt(minAdaStr)
+  const tokenIdStr =
+    typeof primaryTokenId === 'string' ? primaryTokenId : primaryTokenId
   return utxos.filter((utxo) => {
-    const adaAmount = BigInt(utxo.balance[primaryTokenId] || '0')
+    const adaAmount = BigInt(utxo.balance[tokenIdStr] || '0')
     return adaAmount >= minAdaBigInt
   })
 }
@@ -130,12 +148,14 @@ export function filterUtxosByMinAda(
  */
 export function filterPureAdaUtxos(
   utxos: ModernUtxo[],
-  primaryTokenId: string = '',
+  primaryTokenId: TokenId = defaultPrimaryTokenId,
 ): ModernUtxo[] {
+  const tokenIdStr =
+    typeof primaryTokenId === 'string' ? primaryTokenId : primaryTokenId
   return utxos.filter((utxo) => {
     // Pure ADA means only the primary token (ADA) is present
     const keys = Object.keys(utxo.balance)
-    return keys.length === 1 && keys[0] === primaryTokenId
+    return keys.length === 1 && keys[0] === tokenIdStr
   })
 }
 
@@ -144,14 +164,20 @@ export function filterPureAdaUtxos(
  */
 export function filterCollateralUtxos(
   utxos: ModernUtxo[],
-  minCollateral: string,
-  maxCollateral: string,
-  primaryTokenId: string = '',
+  minCollateral: Lovelace | string,
+  maxCollateral: Lovelace | string,
+  primaryTokenId: TokenId = defaultPrimaryTokenId,
 ): ModernUtxo[] {
-  const minBigInt = BigInt(minCollateral)
-  const maxBigInt = BigInt(maxCollateral)
+  const minStr =
+    typeof minCollateral === 'string' ? minCollateral : minCollateral
+  const maxStr =
+    typeof maxCollateral === 'string' ? maxCollateral : maxCollateral
+  const tokenIdStr =
+    typeof primaryTokenId === 'string' ? primaryTokenId : primaryTokenId
+  const minBigInt = BigInt(minStr)
+  const maxBigInt = BigInt(maxStr)
   return utxos.filter((utxo) => {
-    const adaAmount = BigInt(utxo.balance[primaryTokenId] || '0')
+    const adaAmount = BigInt(utxo.balance[tokenIdStr] || '0')
     return adaAmount >= minBigInt && adaAmount <= maxBigInt
   })
 }
@@ -161,11 +187,13 @@ export function filterCollateralUtxos(
  */
 export function sortUtxosByAda(
   utxos: ModernUtxo[],
-  primaryTokenId: string = '',
+  primaryTokenId: TokenId = defaultPrimaryTokenId,
 ): ModernUtxo[] {
+  const tokenIdStr =
+    typeof primaryTokenId === 'string' ? primaryTokenId : primaryTokenId
   return [...utxos].sort((a, b) => {
-    const aAda = BigInt(a.balance[primaryTokenId] || '0')
-    const bAda = BigInt(b.balance[primaryTokenId] || '0')
+    const aAda = BigInt(a.balance[tokenIdStr] || '0')
+    const bAda = BigInt(b.balance[tokenIdStr] || '0')
     if (aAda > bAda) return -1
     if (aAda < bAda) return 1
     return 0
@@ -177,10 +205,14 @@ export function sortUtxosByAda(
  */
 export function selectUtxosForAmount(
   utxos: ModernUtxo[],
-  targetAmount: string,
-  primaryTokenId: string = '',
+  targetAmount: Lovelace | string,
+  primaryTokenId: TokenId = defaultPrimaryTokenId,
 ): ModernUtxo[] {
-  const targetBigInt = BigInt(targetAmount)
+  const targetStr =
+    typeof targetAmount === 'string' ? targetAmount : targetAmount
+  const tokenIdStr =
+    typeof primaryTokenId === 'string' ? primaryTokenId : primaryTokenId
+  const targetBigInt = BigInt(targetStr)
   const sorted = sortUtxosByAda(utxos, primaryTokenId)
   const selected: ModernUtxo[] = []
   let total = BigInt(0)
@@ -188,7 +220,7 @@ export function selectUtxosForAmount(
   for (const utxo of sorted) {
     if (total >= targetBigInt) break
     selected.push(utxo)
-    total += BigInt(utxo.balance[primaryTokenId] || '0')
+    total += BigInt(utxo.balance[tokenIdStr] || '0')
   }
 
   return selected
@@ -202,9 +234,9 @@ export function selectUtxosForAmount(
  */
 export function selectUtxosForAmounts(
   utxos: ModernUtxo[],
-  requiredAmounts: Record<Portfolio.Token.Id, string>, // tokenId -> quantity
-  primaryTokenId: Portfolio.Token.Id = '' as Portfolio.Token.Id,
-  estimatedFee: string = '200000', // Default 0.2 ADA fee estimate
+  requiredAmounts: Record<TokenId, BalanceQuantity>, // tokenId -> quantity
+  primaryTokenId: TokenId = defaultPrimaryTokenId,
+  estimatedFee: Lovelace | string = '200000', // Default 0.2 ADA fee estimate
 ): ModernUtxo[] {
   const logger = getLogger()
 
@@ -212,24 +244,30 @@ export function selectUtxosForAmounts(
   // Minimum UTXO is needed because change output must meet minimum UTXO requirement
   const minUtxoValue = BigInt('1000000') // Base min UTXO (1 ADA) - standard for Cardano
   const feeBuffer = BigInt('100000') // 0.1 ADA buffer for fee estimation variance
+  const feeStr = typeof estimatedFee === 'string' ? estimatedFee : estimatedFee
+  const primaryTokenIdStr =
+    typeof primaryTokenId === 'string' ? primaryTokenId : primaryTokenId
+
   const requiredAda =
-    (Object.keys(requiredAmounts) as Array<Portfolio.Token.Id>).reduce(
-      (sum, tokenId) => {
-        if (tokenId === primaryTokenId) {
-          const quantity = requiredAmounts[tokenId]
-          return sum + BigInt(quantity || '0')
-        }
-        return sum
-      },
-      BigInt(0),
-    ) +
-    BigInt(estimatedFee) +
+    (Object.keys(requiredAmounts) as Array<TokenId>).reduce((sum, tokenId) => {
+      const tokenIdStr = typeof tokenId === 'string' ? tokenId : tokenId
+      if (tokenIdStr === primaryTokenIdStr) {
+        const quantity = requiredAmounts[tokenId]
+        const qtyStr = typeof quantity === 'string' ? quantity : quantity
+        return sum + BigInt(qtyStr || '0')
+      }
+      return sum
+    }, BigInt(0)) +
+    BigInt(feeStr) +
     minUtxoValue +
     feeBuffer
 
   // Get all required token IDs (excluding primary token)
   const requiredTokenIds = new Set(
-    Object.keys(requiredAmounts).filter((id) => id !== primaryTokenId),
+    Object.keys(requiredAmounts).filter((id) => {
+      const idStr = typeof id === 'string' ? id : id
+      return idStr !== primaryTokenIdStr
+    }),
   )
 
   // First, find UTXOs that contain required tokens (must include these)
@@ -250,30 +288,33 @@ export function selectUtxosForAmounts(
 
   // Calculate what we have from UTXOs with tokens
   const selected: ModernUtxo[] = [...utxosWithTokens]
-  const selectedAmounts: Record<Portfolio.Token.Id, bigint> = {}
+  const selectedAmounts: Record<string, bigint> = {}
   let selectedAda = BigInt(0)
 
   for (const utxo of selected) {
-    selectedAda += BigInt(utxo.balance[primaryTokenId] || '0')
+    selectedAda += BigInt(utxo.balance[primaryTokenIdStr] || '0')
     for (const [tokenId, quantity] of Object.entries(utxo.balance)) {
-      const typedTokenId = tokenId as Portfolio.Token.Id
-      selectedAmounts[typedTokenId] =
-        (selectedAmounts[typedTokenId] || BigInt(0)) + BigInt(quantity)
+      selectedAmounts[tokenId] =
+        (selectedAmounts[tokenId] || BigInt(0)) + BigInt(quantity)
     }
   }
 
   // Check if we have enough of each token
   let needsMoreAda = selectedAda < requiredAda
-  const needsMoreTokens: Portfolio.Token.Id[] = []
+  const needsMoreTokens: TokenId[] = []
 
   for (const tokenId of requiredTokenIds) {
-    const typedTokenId = tokenId as Portfolio.Token.Id
-    const required = BigInt(requiredAmounts[typedTokenId] || '0')
-    const have = selectedAmounts[typedTokenId] || BigInt(0)
+    const tokenIdStr = typeof tokenId === 'string' ? tokenId : tokenId
+    const typedTokenId = tokenId as TokenId
+    const requiredQty = requiredAmounts[typedTokenId]
+    const required = BigInt(
+      typeof requiredQty === 'string' ? requiredQty : requiredQty || '0',
+    )
+    const have = selectedAmounts[tokenIdStr] || BigInt(0)
     if (have < required) {
       needsMoreTokens.push(typedTokenId)
       logger.warn('selectUtxosForAmounts: Insufficient tokens', {
-        tokenId: typedTokenId,
+        tokenId: tokenIdStr,
         required: required.toString(),
         have: have.toString(),
       })
@@ -298,7 +339,7 @@ export function selectUtxosForAmounts(
     for (const utxo of sortedRemaining) {
       if (selectedAda >= requiredAda) break
       selected.push(utxo)
-      selectedAda += BigInt(utxo.balance[primaryTokenId] || '0')
+      selectedAda += BigInt(utxo.balance[primaryTokenIdStr] || '0')
     }
   }
 
@@ -315,21 +356,24 @@ export function createMetadataEntry(
   return {label, data}
 }
 
-/**
- * Create CIP-15 voting metadata (legacy Catalyst voting)
- */
 export function createCIP15VotingMetadata(
-  votingPublicKey: string,
-  stakingPublicKey: string,
-  rewardAddress: string,
+  votingPublicKey: PublicKeyHex | string,
+  stakingPublicKey: PublicKeyHex | string,
+  rewardAddress: Address | string,
   nonce: number,
 ): {label: number; data: unknown} {
+  const votingKeyStr =
+    typeof votingPublicKey === 'string' ? votingPublicKey : votingPublicKey
+  const stakingKeyStr =
+    typeof stakingPublicKey === 'string' ? stakingPublicKey : stakingPublicKey
+  const rewardAddrStr =
+    typeof rewardAddress === 'string' ? rewardAddress : rewardAddress
   return {
     label: 61284, // CIP-15 DATA label
     data: {
-      1: votingPublicKey,
-      2: stakingPublicKey,
-      3: rewardAddress,
+      1: votingKeyStr,
+      2: stakingKeyStr,
+      3: rewardAddrStr,
       4: nonce,
     },
   }
@@ -339,21 +383,29 @@ export function createCIP15VotingMetadata(
  * Create CIP-36 voting metadata (new Catalyst voting format)
  */
 export function createCIP36VotingMetadata(
-  votingPublicKey: string,
-  stakingPublicKey: string,
-  rewardAddress: string,
+  votingPublicKey: PublicKeyHex | string,
+  stakingPublicKey: PublicKeyHex | string,
+  rewardAddress: Address | string,
   nonce: number,
-  paymentAddress?: string,
+  paymentAddress?: Address | string,
 ): {label: number; data: unknown} {
+  const votingKeyStr =
+    typeof votingPublicKey === 'string' ? votingPublicKey : votingPublicKey
+  const stakingKeyStr =
+    typeof stakingPublicKey === 'string' ? stakingPublicKey : stakingPublicKey
+  const rewardAddrStr =
+    typeof rewardAddress === 'string' ? rewardAddress : rewardAddress
   const metadata: Record<string, unknown> = {
-    1: votingPublicKey,
-    2: stakingPublicKey,
-    3: rewardAddress,
+    1: votingKeyStr,
+    2: stakingKeyStr,
+    3: rewardAddrStr,
     4: nonce,
   }
 
   if (paymentAddress) {
-    metadata[5] = paymentAddress
+    const paymentAddrStr =
+      typeof paymentAddress === 'string' ? paymentAddress : paymentAddress
+    metadata[5] = paymentAddrStr
   }
 
   return {

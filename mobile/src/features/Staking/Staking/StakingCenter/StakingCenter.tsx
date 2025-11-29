@@ -1,5 +1,6 @@
 import {getYoroiDrepIdHex} from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {Branded, KeyHash} from '@yoroi/types'
 
 import {useFocusEffect} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
@@ -99,8 +100,8 @@ export const StakingCenter = () => {
           const yoroiDrepIdHex = getYoroiDrepIdHex(
             wallet.networkManager.network,
           )
-          const drepValue: {KeyHash: string} = {
-            KeyHash: yoroiDrepIdHex,
+          const drepValue: {KeyHash: KeyHash} = {
+            KeyHash: Branded.asKeyHash(yoroiDrepIdHex),
           }
           stakingTx = await createCombinedDelegationTxFromWallet(wallet, {
             poolId,

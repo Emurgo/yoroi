@@ -1,4 +1,14 @@
-import {Balance} from '@yoroi/types'
+import {
+  Address,
+  Amount,
+  Balance,
+  DatumCbor,
+  DatumHash,
+  KeyHash,
+  TokenId,
+  TransactionHash,
+  UtxoId,
+} from '@yoroi/types'
 
 // Transaction types
 // These are WASM types from CSL
@@ -13,10 +23,10 @@ interface Bip44DerivationLevel {
 }
 
 export type AmountWithReceiver = {
-  receiver: string
-  amount: string
+  receiver: Address
+  amount: Amount
 }
-export type StakingKeyBalances = {[key: string]: string}
+export type StakingKeyBalances = {[key: KeyHash]: Amount}
 
 export enum RegistrationStatus {
   DelegateOnly,
@@ -46,14 +56,14 @@ export const Bip44DerivationLevels = {
 }
 
 export type AccountStatePart = {
-  remainingAmount: string
-  rewards: string
-  withdrawals: string
+  remainingAmount: Amount
+  rewards: Amount
+  withdrawals: Amount
 }
 
 export type WithdrawalRequest = {
   addressing: Addressing
-  rewardAddress: string
+  rewardAddress: Address
   shouldDeregister: boolean
 }
 
@@ -70,7 +80,7 @@ export type AddressingAddress = {
   addressing?: Addressing
 }
 
-export type Address = string
+export type {Address}
 
 export type Addressing = {
   path: number[]
@@ -78,32 +88,32 @@ export type Addressing = {
 }
 
 export type TxOutput = {
-  address: string
+  address: Address
   amounts: Balance.Amounts
   datum?: Datum
 }
 
 export type Datum =
   | {
-      hash: string
+      hash: DatumHash
     }
   | {
-      data: string
+      data: DatumCbor
     }
 
 // Modern UTXO format using Balance.Amounts
 export type RemoteUnspentOutput = {
-  receiver: string
-  txHash: string
+  receiver: Address
+  txHash: TransactionHash
   txIndex: number
-  utxoId: string
+  utxoId: UtxoId
   balance: Balance.Amounts // Record<TokenId, Quantity> - modern format
 }
 
 // @deprecated Use RemoteUnspentOutput.balance instead
 export type UtxoAsset = {
-  assetId: string
-  amount: string
+  assetId: TokenId
+  amount: Amount
 }
 
 export type SendToken = {
@@ -113,13 +123,13 @@ export type SendToken = {
 }
 
 export type Token = {
-  identifier: string
+  identifier: TokenId
   isDefault: boolean
 }
 
 export type TokenEntry = {
   amount: BigNumber
-  identifier: string
+  identifier: TokenId
 }
 
 export type TxOptions = {
