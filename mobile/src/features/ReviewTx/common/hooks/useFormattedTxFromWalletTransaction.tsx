@@ -65,16 +65,24 @@ export const useFormattedTxFromWalletTransaction = (
           assetWithLegacy.tokenId || assetWithLegacy.assetId
 
         if (!tokenId) {
-          // If we have policyId and name, construct the tokenId
-          if (asset.policyId && asset.name) {
-            // name is in hex format, use it directly
-            const constructedTokenId = `${asset.policyId}.${asset.name}`
+          // If we have policyId, construct the tokenId (name can be empty string, which is valid)
+          // Empty name means it's the native asset of that policy
+          if (
+            asset.policyId !== undefined &&
+            asset.policyId !== null &&
+            asset.policyId !== ''
+          ) {
+            // name is in hex format, use it directly (can be empty string)
+            const assetName = asset.name !== undefined ? asset.name : ''
+            const constructedTokenId = `${asset.policyId}.${assetName}`
             const [policyId, assetNameHex] = constructedTokenId.split('.')
-            if (policyId && assetNameHex) {
+            // policyId must exist, assetNameHex can be empty string (valid for native assets)
+            if (policyId) {
               if (!multiasset[policyId]) {
                 multiasset[policyId] = {}
               }
-              multiasset[policyId][assetNameHex] = asset.amount
+              // Use empty string as key if assetNameHex is empty (native asset)
+              multiasset[policyId][assetNameHex ?? ''] = asset.amount
               continue
             }
           }
@@ -83,15 +91,18 @@ export const useFormattedTxFromWalletTransaction = (
 
         // tokenId is already the full token ID (policyId.assetNameHex)
         // Extract policyId and assetNameHex from tokenId
+        // Note: assetNameHex can be empty string (valid for native assets)
         const [policyId, assetNameHex] = tokenId.split('.')
-        if (!policyId || !assetNameHex) {
+        if (!policyId) {
           continue
         }
+        // assetNameHex can be empty string or undefined, both are valid
+        const assetName = assetNameHex ?? ''
         const amount = asset.amount
         if (!multiasset[policyId]) {
           multiasset[policyId] = {}
         }
-        multiasset[policyId][assetNameHex] = amount
+        multiasset[policyId][assetName] = amount
       }
 
       return {
