@@ -7,7 +7,7 @@ import {
   TxStatusResponse,
 } from '@yoroi/api'
 import {StakePoolInfoRequest, StakePoolInfosAndHistories} from '@yoroi/staking'
-import {Address, Branded, WalletTransaction} from '@yoroi/types'
+import {Address, TransactionCborBase64, WalletTransaction} from '@yoroi/types'
 
 import {cardanoWalletApiMaker} from '../../../../packages/api/cardano/api-maker'
 import {WalletContext} from '../../../../packages/api/cardano/types'
@@ -66,16 +66,14 @@ export const filterUsedAddresses = async (
 
 /**
  * Submit transaction
- * @param signedTx - Signed transaction CBOR
+ * @param signedTx - Signed transaction CBOR (base64 encoded)
  * @param baseApiUrl - Base API URL (used to create/get API instance)
  */
 export const submitTransaction = async (
-  signedTx: string,
+  signedTx: TransactionCborBase64,
   baseApiUrl: string,
 ): Promise<void> => {
-  return getApi(baseApiUrl).submitTransaction(
-    Branded.asTransactionCborBase64(signedTx),
-  )
+  return getApi(baseApiUrl).submitTransaction(signedTx)
 }
 
 /**

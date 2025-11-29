@@ -30,6 +30,7 @@ import {
   Network,
   Portfolio,
   PublicKeyHex,
+  TransactionCborBase64,
   Wallet,
   WalletTransaction,
 } from '@yoroi/types'
@@ -956,7 +957,7 @@ function createWalletObject(
     }
   }
 
-  const submitTransaction = async (base64SignedTx: string) => {
+  const submitTransaction = async (base64SignedTx: TransactionCborBase64) => {
     await legacyApi.submitTransaction(
       base64SignedTx,
       networkManager.legacyApiBaseUrl,

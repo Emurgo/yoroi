@@ -30,6 +30,7 @@ import {
   HW,
   Network,
   Portfolio,
+  TransactionCborBase64,
   Wallet,
   WalletTransaction,
 } from '@yoroi/types'
@@ -125,7 +126,7 @@ export interface YoroiWallet {
     signRequest: UnsignedTransaction,
     rootKey: string,
   ): Promise<CSL.Transaction>
-  submitTransaction(signedTx: string): Promise<void>
+  submitTransaction(signedTx: TransactionCborBase64): Promise<void>
 
   // Ledger
   signTxWithLedger(
