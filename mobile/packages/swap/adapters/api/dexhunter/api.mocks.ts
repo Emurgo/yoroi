@@ -1,4 +1,5 @@
-import {Portfolio, Swap} from '@yoroi/types'
+import {primaryTokenId} from '@yoroi/portfolio'
+import {Address, Portfolio, Swap, TokenId, TransactionHash} from '@yoroi/types'
 
 import {
   BuildRequest,
@@ -19,7 +20,56 @@ import {
   TokensResponse,
 } from './types'
 
-const ordersResponse: OrdersResponse = [
+/**
+ * Helper function to create a mock order response without duplicate casts
+ */
+function createMockOrderResponse(data: {
+  _id: string
+  token_id_in: string
+  token_id_out: string
+  dex: string
+  status: string
+  user_address: string
+  user_stake: string
+  amount_in: number
+  expected_out_amount: number
+  actual_out_amount: number
+  is_dexhunter: boolean
+  submission_time: string
+  last_update: string
+  tx_hash: string
+  output_index: number
+  update_tx_hash: string
+  is_stop_loss: boolean
+  is_oor: boolean
+  batcher_fee: number
+  deposit: number
+}): OrdersResponse[number] {
+  return {
+    _id: data._id,
+    token_id_in: data.token_id_in,
+    token_id_out: data.token_id_out,
+    dex: data.dex as OrdersResponse[number]['dex'],
+    status: data.status as OrdersResponse[number]['status'],
+    user_address: data.user_address as Address,
+    user_stake: data.user_stake,
+    amount_in: data.amount_in,
+    expected_out_amount: data.expected_out_amount,
+    actual_out_amount: data.actual_out_amount,
+    is_dexhunter: data.is_dexhunter,
+    submission_time: data.submission_time,
+    last_update: data.last_update,
+    tx_hash: data.tx_hash as TransactionHash,
+    output_index: data.output_index,
+    update_tx_hash: data.update_tx_hash as TransactionHash,
+    is_stop_loss: data.is_stop_loss,
+    is_oor: data.is_oor,
+    batcher_fee: data.batcher_fee,
+    deposit: data.deposit,
+  }
+}
+
+const rawOrdersResponseData = [
   {
     _id: '66cf043794579f05fc204f72',
     token_id_in:
@@ -100,6 +150,10 @@ const ordersResponse: OrdersResponse = [
   },
 ]
 
+const ordersResponse: OrdersResponse = rawOrdersResponseData.map(
+  createMockOrderResponse,
+)
+
 const tokensResponse: TokensResponse = [
   {
     token_id:
@@ -140,7 +194,7 @@ const tokensResponse: TokensResponse = [
 ]
 
 export const primaryTokenInfo: Portfolio.Token.Info = {
-  id: '.',
+  id: primaryTokenId,
   type: Portfolio.Token.Type.FT,
   nature: Portfolio.Token.Nature.Primary,
   decimals: 6,
@@ -170,9 +224,10 @@ const ordersResult: Array<Swap.Order> = [
     protocol: 'sundaeswap-v1',
     status: 'matched',
     tokenIn:
-      'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950',
-    tokenOut: '.',
-    txHash: '8751fbef1ebec0d2da9218a69493ef36070012ce24fdbc44ec6df519377b92bf',
+      'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950' as TokenId,
+    tokenOut: primaryTokenId,
+    txHash:
+      '8751fbef1ebec0d2da9218a69493ef36070012ce24fdbc44ec6df519377b92bf' as TransactionHash as TransactionHash,
     updateTxHash:
       '92bd050ec1da6d25abf6265a6f8318a79a3068459254a79427088407c4241b37',
   },
@@ -188,9 +243,10 @@ const ordersResult: Array<Swap.Order> = [
     protocol: 'muesliswap',
     status: 'matched',
     tokenIn:
-      '1d7f33bd23d85e1a25d87d86fac4f199c3197a2f7afeb662a0f34e1e.776f726c646d6f62696c65746f6b656e',
-    tokenOut: '.',
-    txHash: 'f7826e21a464939b64274b00033d7ddebbc90924260d30530fdf7a8cd2824d51',
+      '1d7f33bd23d85e1a25d87d86fac4f199c3197a2f7afeb662a0f34e1e.776f726c646d6f62696c65746f6b656e' as TokenId,
+    tokenOut: primaryTokenId,
+    txHash:
+      'f7826e21a464939b64274b00033d7ddebbc90924260d30530fdf7a8cd2824d51' as TransactionHash as TransactionHash,
     updateTxHash:
       'a8b77336d8600f1c8dac0ed90d0ab9c4f1e815bb25f4e168aaaadd130f81457d',
   },
@@ -205,10 +261,11 @@ const ordersResult: Array<Swap.Order> = [
     placedAt: 1697122968000,
     protocol: 'vyfi-v1',
     status: 'canceled',
-    tokenIn: '.',
+    tokenIn: primaryTokenId,
     tokenOut:
-      '1d7f33bd23d85e1a25d87d86fac4f199c3197a2f7afeb662a0f34e1e.776f726c646d6f62696c65746f6b656e',
-    txHash: '8956d68753d718afbaafde0e83dc1cb1d205da3c89fb08c924ab1d63fd953ed2',
+      '1d7f33bd23d85e1a25d87d86fac4f199c3197a2f7afeb662a0f34e1e.776f726c646d6f62696c65746f6b656e' as TokenId,
+    txHash:
+      '8956d68753d718afbaafde0e83dc1cb1d205da3c89fb08c924ab1d63fd953ed2' as TransactionHash as TransactionHash,
     updateTxHash:
       '6f176b9e1cdbcecafc6c3d80735ec031b125eca19f9bccb57a0a96604e4f539a',
   },
@@ -220,7 +277,7 @@ const tokensResult: Array<Portfolio.Token.Info> = [
     decimals: 0,
     description: '',
     fingerprint: '',
-    id: '885742cd7e0dad321622b5d3ad186797bd50c44cbde8b48be1583fbd.534b554c4c',
+    id: '885742cd7e0dad321622b5d3ad186797bd50c44cbde8b48be1583fbd.534b554c4c' as TokenId as TokenId,
     name: 'SKULL',
     nature: Portfolio.Token.Nature.Secondary,
     originalImage: '',
@@ -237,7 +294,7 @@ const tokensResult: Array<Portfolio.Token.Info> = [
     decimals: 0,
     description: '',
     fingerprint: '',
-    id: '8d7cc34c1a44ef419cf1560cbb84e7720ca6c03ab99f8745ab61d19d.50414e4441',
+    id: '8d7cc34c1a44ef419cf1560cbb84e7720ca6c03ab99f8745ab61d19d.50414e4441' as TokenId as TokenId,
     name: 'PANDA Token',
     nature: Portfolio.Token.Nature.Secondary,
     originalImage: '',
@@ -254,7 +311,7 @@ const tokensResult: Array<Portfolio.Token.Info> = [
     decimals: 6,
     description: '',
     fingerprint: '',
-    id: '.',
+    id: primaryTokenId,
     name: 'Cardano',
     nature: Portfolio.Token.Nature.Primary,
     originalImage: '',
@@ -281,9 +338,10 @@ const cancelInput: Swap.CancelRequest = {
     protocol: 'sundaeswap-v1',
     status: 'matched',
     tokenIn:
-      'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950',
-    tokenOut: '.',
-    txHash: '8751fbef1ebec0d2da9218a69493ef36070012ce24fdbc44ec6df519377b92bf',
+      'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950' as TokenId,
+    tokenOut: primaryTokenId,
+    txHash:
+      '8751fbef1ebec0d2da9218a69493ef36070012ce24fdbc44ec6df519377b92bf' as TransactionHash as TransactionHash,
     updateTxHash:
       '92bd050ec1da6d25abf6265a6f8318a79a3068459254a79427088407c4241b37',
   },
@@ -305,8 +363,9 @@ const cancelResult: Swap.CancelResponse = {
 }
 
 const limitEstimateInput: Swap.EstimateRequest = {
-  tokenIn: '.',
-  tokenOut: 'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950',
+  tokenIn: primaryTokenId,
+  tokenOut:
+    'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950' as TokenId,
   amountIn: 38,
   protocol: 'minswap-v1',
   blockedProtocols: ['wingriders-v1'],
@@ -391,8 +450,9 @@ const limitEstimateResult: Swap.EstimateResponse = {
 
 const reverseEstimateInput: Swap.EstimateRequest = {
   slippage: 5,
-  tokenIn: '.',
-  tokenOut: 'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950',
+  tokenIn: primaryTokenId,
+  tokenOut:
+    'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950' as TokenId,
   amountOut: 38,
   protocol: 'minswap-v1',
   blockedProtocols: ['wingriders-v1'],
@@ -471,8 +531,9 @@ const reverseEstimateResult: Swap.EstimateResponse = {
 
 const estimateInput: Swap.EstimateRequest = {
   slippage: 0.01,
-  tokenIn: '.',
-  tokenOut: 'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950',
+  tokenIn: primaryTokenId,
+  tokenOut:
+    'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950' as TokenId,
   amountIn: 10,
   amountOut: undefined,
   protocol: 'minswap-v1',
@@ -555,8 +616,9 @@ const estimateResult: Swap.EstimateResponse = {
 
 const quoteInput: Swap.EstimateRequest = {
   slippage: 0.01,
-  tokenIn: '.',
-  tokenOut: 'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950',
+  tokenIn: primaryTokenId,
+  tokenOut:
+    'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950' as TokenId,
   amountIn: 10,
   amountOut: undefined,
   protocol: 'minswap-v1',
@@ -601,14 +663,14 @@ const createResult: Swap.CreateResponse = {
 const createInput: Array<Swap.CreateRequest> = [
   {
     tokenOut:
-      'cdaaee586376139ee8c3cc4061623968810d177ca5c300afb890b48a.43415354',
-    tokenIn: '.',
+      'cdaaee586376139ee8c3cc4061623968810d177ca5c300afb890b48a.43415354' as TokenId,
+    tokenIn: primaryTokenId,
     amountIn: 1,
   },
   {
     tokenOut:
-      'cdaaee586376139ee8c3cc4061623968810d177ca5c300afb890b48a.43415354',
-    tokenIn: '.',
+      'cdaaee586376139ee8c3cc4061623968810d177ca5c300afb890b48a.43415354' as TokenId,
+    tokenIn: primaryTokenId,
     amountIn: 1,
     protocol: 'minswap-v1',
     slippage: 2,
@@ -616,8 +678,8 @@ const createInput: Array<Swap.CreateRequest> = [
   {
     wantedPrice: 1,
     amountIn: 0,
-    tokenIn: `13244.10130193`,
-    tokenOut: `.`,
+    tokenIn: `13244.10130193` as TokenId, // Test data - not a real TokenId format
+    tokenOut: primaryTokenId,
   },
 ]
 
@@ -625,7 +687,7 @@ const limitBuildRequest: LimitBuildRequest = {
   amount_in: 1,
   blacklisted_dexes: undefined,
   buyer_address:
-    'addr1q9qhyvkm5fytm5ckgshny0zz08a3urhhh7ckdqxcm27av40eafn3v5lr2w2n2er9uj7c743mt42gpe8tgek6394z9t7qn4yjzl',
+    'addr1q9qhyvkm5fytm5ckgshny0zz08a3urhhh7ckdqxcm27av40eafn3v5lr2w2n2er9uj7c743mt42gpe8tgek6394z9t7qn4yjzl' as Address,
   dex: undefined,
   multiples: undefined,
   token_in: 'ADA',
@@ -648,7 +710,7 @@ const limitBuildResponse: LimitBuildResponse = {
       initial_price: 0.04252918925670425,
       pool_fee: 0.3,
       pool_id:
-        '0be55d262b29f564998ff81efe21bdc0022621c12f15af08d0f2ddb1.3513ef4f9724b1bdbedd1f606ed93368f0442b236f3ff201bb28532cdf2a53a9',
+        '0be55d262b29f564998ff81efe21bdc0022621c12f15af08d0f2ddb1.3513ef4f9724b1bdbedd1f606ed93368f0442b236f3ff201bb28532cdf2a53a9' as TokenId as TokenId,
       price_distortion: 1.258404559451805,
       price_impact: 1.258404559451805,
       dex: 'MINSWAP',
@@ -661,7 +723,7 @@ const buildRequest: BuildRequest = {
   amount_in: 1,
   blacklisted_dexes: undefined,
   buyer_address:
-    'addr1q9qhyvkm5fytm5ckgshny0zz08a3urhhh7ckdqxcm27av40eafn3v5lr2w2n2er9uj7c743mt42gpe8tgek6394z9t7qn4yjzl',
+    'addr1q9qhyvkm5fytm5ckgshny0zz08a3urhhh7ckdqxcm27av40eafn3v5lr2w2n2er9uj7c743mt42gpe8tgek6394z9t7qn4yjzl' as Address,
   slippage: 2,
   token_in: 'ADA',
   token_out: 'cdaaee586376139ee8c3cc4061623968810d177ca5c300afb890b48a43415354',
@@ -695,7 +757,7 @@ const buildResponse: BuildResponse = {
       initial_price: 0.04252918925670425,
       pool_fee: 0.3,
       pool_id:
-        '0be55d262b29f564998ff81efe21bdc0022621c12f15af08d0f2ddb1.3513ef4f9724b1bdbedd1f606ed93368f0442b236f3ff201bb28532cdf2a53a9',
+        '0be55d262b29f564998ff81efe21bdc0022621c12f15af08d0f2ddb1.3513ef4f9724b1bdbedd1f606ed93368f0442b236f3ff201bb28532cdf2a53a9' as TokenId as TokenId,
       price_distortion: 1.258404559451805,
       price_impact: 1.258404559451805,
       dex: 'MINSWAP',

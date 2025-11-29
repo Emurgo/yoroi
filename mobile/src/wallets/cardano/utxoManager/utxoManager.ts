@@ -7,7 +7,14 @@ import {
   UtxoStorage,
   init as initUtxo,
 } from '@yoroi/tx'
-import {App, Portfolio} from '@yoroi/types'
+import {
+  App,
+  AssetName,
+  Balance,
+  Branded,
+  PolicyId,
+  Portfolio,
+} from '@yoroi/types'
 
 import {parseInt} from 'lodash'
 
@@ -38,11 +45,15 @@ export const makeUtxoManager = async ({
   // utxo state is related to the addresses used, if it changes a reset is needed
   const sync = (addresses: Array<string>) => {
     if (addresses.length === addrCounter)
-      return service.syncUtxoState(addresses)
+      return service.syncUtxoState(
+        addresses.map((addr) => Branded.asAddress(addr)),
+      )
 
     return serviceStorage
       .clearUtxoState()
-      .then(() => service.syncUtxoState(addresses))
+      .then(() =>
+        service.syncUtxoState(addresses.map((addr) => Branded.asAddress(addr))),
+      )
       .then(() => managerStorage.addrCounter.save(addresses.length))
       .then(() => {
         addrCounter = addresses.length
@@ -91,21 +102,24 @@ export const makeUtxoManagerStorage = (storage: App.Storage) => {
   } as const
 }
 
-const serializer = (utxo: Utxo): RawUtxo => ({
-  utxo_id: utxo.utxoId,
-  tx_hash: utxo.txHash,
-  tx_index: utxo.txIndex,
-  amount: utxo.amount.toString(),
-  receiver: utxo.receiver,
-  // Convert Asset[] (with assetId) to RemoteAsset[] (with tokenId)
-  // assetId from backend is already the full token ID in format policyId.assetNameHex
-  assets: utxo.assets.map((asset) => ({
-    amount: asset.amount,
-    tokenId: asset.assetId as Portfolio.Token.Id,
-    policyId: asset.policyId,
-    name: asset.name,
-  })),
-})
+const serializer = (utxo: Utxo): RawUtxo => {
+  const rawUtxo: RawUtxo = {
+    utxo_id: utxo.utxoId,
+    tx_hash: utxo.txHash,
+    tx_index: utxo.txIndex,
+    amount: utxo.amount.toString() as Balance.Quantity,
+    receiver: utxo.receiver,
+    // Convert Asset[] (with assetId) to RemoteAsset[] (with tokenId)
+    // assetId from backend is already the full token ID in format policyId.assetNameHex
+    assets: utxo.assets.map((asset) => ({
+      amount: asset.amount as string as unknown as Balance.Amount,
+      tokenId: asset.assetId as Portfolio.Token.Id,
+      policyId: asset.policyId as PolicyId,
+      name: asset.name as AssetName,
+    })) as any,
+  }
+  return rawUtxo
+}
 
 export type UtxoManager = Awaited<ReturnType<typeof makeUtxoManager>>
 
@@ -129,7 +143,10 @@ export const makeUtxoStorage = (storage: App.Storage) => {
   const utxoStorage: UtxoStorage = {
     getUtxoAtSafePoint,
     replaceUtxoAtSafePoint: (utxos: Utxo[], lastSafeBlockHash: string) =>
-      setUtxoAtSafePoint({lastSafeBlockHash, utxos}),
+      setUtxoAtSafePoint({
+        lastSafeBlockHash: Branded.asBlockHash(lastSafeBlockHash),
+        utxos,
+      }),
 
     getUtxoDiffToBestBlock,
     appendUtxoDiffToBestBlock: async (diff: UtxoDiffToBestBlock) => {

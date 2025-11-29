@@ -1,6 +1,7 @@
 import {atomicToDecimal, parseNumberFromText} from '@yoroi/common'
 import {isPrimaryToken, isPrimaryTokenInfo} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {Branded} from '@yoroi/types'
 
 import * as React from 'react'
 import {Platform, Pressable, Text, TextInput, View} from 'react-native'
@@ -195,7 +196,7 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
             <PairedBalance
               amount={{
                 info,
-                quantity: BigInt(quantity || '0'),
+                quantity: BigInt(quantity ?? Branded.ZERO_QUANTITY),
               }}
               textStyle={a.body_2_md_regular}
               tokenActivity={tokenActivity}

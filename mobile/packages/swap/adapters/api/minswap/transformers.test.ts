@@ -1,13 +1,14 @@
-import {Portfolio} from '@yoroi/types'
+import {primaryTokenId} from '@yoroi/portfolio'
+import {Address, Portfolio, TokenId} from '@yoroi/types'
 
 import {transformersMaker} from './transformers'
 import {Dex} from './types'
 
 const mockConfig = {
-  address: 'addr1test',
+  address: 'addr1test' as Address,
   network: 'mainnet' as any,
   primaryTokenInfo: {
-    id: '.' as const,
+    id: primaryTokenId,
     name: 'Cardano',
     ticker: 'ADA',
     decimals: 6,
@@ -76,8 +77,8 @@ describe('transformersMaker', () => {
       const mockRequest = {
         amountIn: 10,
         slippage: 1,
-        tokenIn: '.' as const,
-        tokenOut: 'test-token.' as const,
+        tokenIn: primaryTokenId,
+        tokenOut: 'test-token.' as TokenId,
       }
 
       const result = transformers.estimate.request(mockRequest)
@@ -117,7 +118,7 @@ describe('transformersMaker', () => {
 
       expect(result).toHaveLength(2)
       expect(result[0]).toEqual({
-        id: '.' as Portfolio.Token.Id,
+        id: primaryTokenId as Portfolio.Token.Id,
         name: 'Cardano',
         ticker: 'ADA',
         decimals: 6,
@@ -142,7 +143,7 @@ describe('transformersMaker', () => {
         originalImage: '',
       })
       expect(result[1]).toEqual({
-        id: 'test-token-id.',
+        id: 'test-token-id.' as TokenId,
         name: 'Test Token',
         ticker: 'TEST',
         decimals: 6,
@@ -166,7 +167,7 @@ describe('transformersMaker', () => {
       const mockResponse = {
         orders: [
           {
-            owner_address: 'addr1test',
+            owner_address: 'addr1test' as Address,
             protocol: 'MinswapV2' as any,
             token_in: {
               token_id: 'lovelace',
@@ -206,8 +207,8 @@ describe('transformersMaker', () => {
         placedAt: 1234567890,
         lastUpdate: 1234567890,
         status: 'open',
-        tokenIn: '.',
-        tokenOut: 'test-token.',
+        tokenIn: primaryTokenId,
+        tokenOut: 'test-token.' as TokenId,
         amountIn: 100,
         actualAmountOut: 1000,
         expectedAmountOut: 1000,
@@ -225,9 +226,9 @@ describe('transformersMaker', () => {
         amountIn: 10,
         blockedProtocols: [],
         slippage: 1,
-        tokenIn: '.' as const,
+        tokenIn: primaryTokenId,
         tokenOut:
-          'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441' as const,
+          'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441' as TokenId,
       }
 
       const result = transformers.estimate.request(mockRequest)
@@ -269,7 +270,7 @@ describe('transformersMaker', () => {
                 'f5808c2c990d86da54bfc97d89cee6efa20cd8461616359478d96b4cee5cfbc5b0dc10c873a0bcc69e49b9af21b899f59337a894874c6b596c2da136',
               min_amount_out: '8.208325',
               pool_id:
-                'f5808c2c990d86da54bfc97d89cee6efa20cd8461616359478d96b4c.ee5cfbc5b0dc10c873a0bcc69e49b9af21b899f59337a894874c6b596c2da136',
+                'f5808c2c990d86da54bfc97d89cee6efa20cd8461616359478d96b4c.ee5cfbc5b0dc10c873a0bcc69e49b9af21b899f59337a894874c6b596c2da136' as TokenId,
               price_impact: 0.3006573962454888,
               protocol: Dex.MinswapV2,
               token_in: 'lovelace',
@@ -326,8 +327,8 @@ describe('transformersMaker', () => {
         amountIn: 10,
         blockedProtocols: [],
         slippage: 1,
-        tokenIn: '.' as const,
-        tokenOut: 'test-token.' as const,
+        tokenIn: primaryTokenId,
+        tokenOut: 'test-token.' as TokenId,
       }
 
       const result = transformersWithPartner.estimate.request(mockRequest)
@@ -339,8 +340,8 @@ describe('transformersMaker', () => {
       const mockRequest = {
         amountIn: 10,
         slippage: 1,
-        tokenIn: '.' as const,
-        tokenOut: 'test-token.' as const,
+        tokenIn: primaryTokenId,
+        tokenOut: 'test-token.' as TokenId,
       }
 
       const result = transformers.estimate.request(mockRequest)
@@ -396,7 +397,7 @@ describe('transformersMaker', () => {
                 decimals: 6,
               },
               token_b: {
-                token_id: 'test-token.',
+                token_id: 'test-token.' as TokenId,
                 logo: null,
                 ticker: 'TEST',
                 is_verified: true,
@@ -484,7 +485,7 @@ describe('transformersMaker', () => {
                   decimals: 6,
                 },
                 token_b: {
-                  token_id: 'test-token.',
+                  token_id: 'test-token.' as TokenId,
                   logo: null,
                   ticker: 'TEST',
                   is_verified: true,
@@ -512,9 +513,9 @@ describe('transformersMaker', () => {
         amountIn: 10,
         blockedProtocols: [],
         slippage: 1,
-        tokenIn: '.' as const,
+        tokenIn: primaryTokenId,
         tokenOut:
-          'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441' as const,
+          'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441' as TokenId,
       }
 
       const result = transformers.create.request(mockRequest)
@@ -544,8 +545,8 @@ describe('transformersMaker', () => {
         amountIn: 10,
         blockedProtocols: [],
         slippage: 1,
-        tokenIn: '.' as const,
-        tokenOut: 'test-token.' as const,
+        tokenIn: primaryTokenId,
+        tokenOut: 'test-token.' as TokenId,
       }
 
       const result = transformersWithPartner.create.request(mockRequest)
@@ -558,9 +559,9 @@ describe('transformersMaker', () => {
         amountIn: 10,
         blockedProtocols: [],
         slippage: 1,
-        tokenIn: '.' as const,
+        tokenIn: primaryTokenId,
         tokenOut:
-          'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441' as const,
+          'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441' as TokenId,
         inputs: ['utxo1', 'utxo2'],
       }
 
@@ -574,9 +575,9 @@ describe('transformersMaker', () => {
         amountIn: 10,
         blockedProtocols: [],
         slippage: 1,
-        tokenIn: '.' as const,
+        tokenIn: primaryTokenId,
         tokenOut:
-          'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441' as const,
+          'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441' as TokenId,
         inputs: [],
       }
 

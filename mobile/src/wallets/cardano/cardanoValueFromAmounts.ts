@@ -1,5 +1,5 @@
 import {toAssetNameHex} from '@yoroi/api'
-import {Balance} from '@yoroi/types'
+import {Balance, Branded, Portfolio} from '@yoroi/types'
 
 import {WasmModuleProxy} from '@emurgo/cross-csl-core'
 import {Buffer} from 'buffer'
@@ -7,9 +7,9 @@ import {Buffer} from 'buffer'
 export const cardanoValueFromAmounts = (
   csl: WasmModuleProxy,
   amounts: Balance.Amounts,
-  primaryTokenId: string,
+  primaryTokenId: Portfolio.Token.Id,
 ) => {
-  const adaAmount = amounts[primaryTokenId] || '0'
+  const adaAmount = amounts[primaryTokenId] ?? Branded.ZERO_QUANTITY
   const adaBigNum = csl.BigNum.fromStr(adaAmount)
   if (!adaBigNum) {
     throw new Error(
@@ -25,7 +25,9 @@ export const cardanoValueFromAmounts = (
   }
 
   // Get all asset IDs except primary token
-  const assetIds = Object.keys(amounts).filter((id) => id !== primaryTokenId)
+  const assetIds = (Object.keys(amounts) as Portfolio.Token.Id[]).filter(
+    (id) => id !== primaryTokenId,
+  )
 
   if (assetIds.length === 0) return value
 
@@ -80,7 +82,8 @@ export const cardanoValueFromAmounts = (
           )
         }
 
-        const amountStr = amounts[assetId] ?? '0'
+        const amountStr =
+          amounts[assetId as Portfolio.Token.Id] ?? Branded.ZERO_QUANTITY
         const amount = csl.BigNum.fromStr(amountStr)
         if (!amount) {
           throw new Error(

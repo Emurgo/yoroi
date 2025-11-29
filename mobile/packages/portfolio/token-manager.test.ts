@@ -41,7 +41,8 @@ describe('portfolioTokenManagerMaker', () => {
     storage.token.infos.save(tokenInfoMocks.storage.notModified)
     const api = portfolioApiMock.success
     const manager = portfolioTokenManagerMaker({api, storage})
-    const unknownTokenId: Portfolio.Token.Id = 'unknown.id'
+    const unknownTokenId: Portfolio.Token.Id =
+      'unknown.id' as Portfolio.Token.Id as Portfolio.Token.Id as Portfolio.Token.Id as Portfolio.Token.Id as Portfolio.Token.Id
     const secondaryTokenIds = [
       tokenInfoMocks.rnftWhatever.id,
       tokenInfoMocks.nftCryptoKitty.id,

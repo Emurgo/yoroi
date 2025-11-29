@@ -1,5 +1,5 @@
-import {isPrimaryToken} from '@yoroi/portfolio'
-import {Chain, Swap} from '@yoroi/types'
+import {isPrimaryToken, primaryTokenId} from '@yoroi/portfolio'
+import {Address, Chain, Swap, TokenId} from '@yoroi/types'
 
 import {api, primaryTokenInfo} from './api.mocks'
 import {
@@ -48,7 +48,7 @@ describe('transformers', () => {
           decimals: 6,
           description: '',
           fingerprint: '',
-          id: '.',
+          id: primaryTokenId,
           name: 'Cardano',
           nature: 'primary',
           originalImage: '',
@@ -78,7 +78,7 @@ describe('transformers', () => {
             _id: '66cf043794579f05fc204f72',
             dex: 'SUNDAESWAP',
             user_address:
-              'addr1q9qhyvkm5fytm5ckgshny0zz08a3urhhh7ckdqxcm27av40eafn3v5lr2w2n2er9uj7c743mt42gpe8tgek6394z9t7qn4yjzl',
+              'addr1q9qhyvkm5fytm5ckgshny0zz08a3urhhh7ckdqxcm27av40eafn3v5lr2w2n2er9uj7c743mt42gpe8tgek6394z9t7qn4yjzl' as Address,
             user_stake:
               'stake1u8u75eck203489f4v3j7f0v02ca464yqun45vmdgj63z4lqm9pu9k',
             submission_time: undefined,
@@ -104,8 +104,8 @@ describe('transformers', () => {
           outputIndex: 0,
           protocol: 'sundaeswap-v1',
           status: 'open',
-          tokenIn: '.',
-          tokenOut: '.',
+          tokenIn: primaryTokenId,
+          tokenOut: primaryTokenId,
           txHash: '',
           updateTxHash: '',
         },
@@ -353,9 +353,9 @@ describe('transformers', () => {
     test('should correctly transform the limit estimate request to default', () => {
       expect(
         transformers.limitEstimate.request({
-          tokenIn: '.',
+          tokenIn: primaryTokenId,
           tokenOut:
-            'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950',
+            'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950' as TokenId,
           amountIn: 38,
           protocol: undefined,
           blockedProtocols: ['wingriders-v1'],
@@ -496,8 +496,8 @@ describe('transformers', () => {
           ...api.inputs.create[0],
           protocol: 'minswap-v1',
           amountIn: 1,
-          tokenIn: '.',
-          tokenOut: 'abc.cbr',
+          tokenIn: primaryTokenId,
+          tokenOut: 'abc.cbr' as TokenId,
         }),
       ).toEqual({
         ...api.requests.limitBuild,
@@ -512,8 +512,8 @@ describe('transformers', () => {
           ...api.inputs.create[2],
           protocol: 'minswap-v1',
           amountIn: 1,
-          tokenIn: '.',
-          tokenOut: 'abc.cbr',
+          tokenIn: primaryTokenId,
+          tokenOut: 'abc.cbr' as TokenId,
         }),
       ).toEqual({
         ...api.requests.limitBuild,
@@ -577,7 +577,7 @@ describe('transformers', () => {
                 initial_price: 0.04252918925670425,
                 pool_fee: 0.3,
                 pool_id:
-                  '0be55d262b29f564998ff81efe21bdc0022621c12f15af08d0f2ddb1.3513ef4f9724b1bdbedd1f606ed93368f0442b236f3ff201bb28532cdf2a53a9',
+                  '0be55d262b29f564998ff81efe21bdc0022621c12f15af08d0f2ddb1.3513ef4f9724b1bdbedd1f606ed93368f0442b236f3ff201bb28532cdf2a53a9' as TokenId,
                 price_distortion: 1.258404559451805,
                 price_impact: 1.258404559451805,
                 dex: 'MINSWAP',
@@ -695,7 +695,7 @@ describe('transformers', () => {
               initial_price: 0.04252918925670425,
               pool_fee: 0.3,
               pool_id:
-                '0be55d262b29f564998ff81efe21bdc0022621c12f15af08d0f2ddb1.3513ef4f9724b1bdbedd1f606ed93368f0442b236f3ff201bb28532cdf2a53a9',
+                '0be55d262b29f564998ff81efe21bdc0022621c12f15af08d0f2ddb1.3513ef4f9724b1bdbedd1f606ed93368f0442b236f3ff201bb28532cdf2a53a9' as TokenId,
               price_distortion: 1.258404559451805,
               price_impact: 1.258404559451805,
               dex: 'MINSWAP',
@@ -761,7 +761,7 @@ describe('transformers', () => {
                 initial_price: undefined,
                 pool_fee: 0.3,
                 pool_id:
-                  '0be55d262b29f564998ff81efe21bdc0022621c12f15af08d0f2ddb1.3513ef4f9724b1bdbedd1f606ed93368f0442b236f3ff201bb28532cdf2a53a9',
+                  '0be55d262b29f564998ff81efe21bdc0022621c12f15af08d0f2ddb1.3513ef4f9724b1bdbedd1f606ed93368f0442b236f3ff201bb28532cdf2a53a9' as TokenId,
                 price_distortion: 1.258404559451805,
                 price_impact: 1.258404559451805,
                 dex: 'MINSWAP',

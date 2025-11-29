@@ -1,4 +1,5 @@
-import {Balance} from '@yoroi/types'
+import {primaryTokenId as defaultPrimaryTokenId} from '@yoroi/portfolio'
+import {Balance, TokenId} from '@yoroi/types'
 
 import {ModernUtxo} from '../utxo/models'
 import {keepRelevant} from './keep-relevant'
@@ -10,11 +11,11 @@ import type {
   SelectionStrategy,
 } from './types'
 
+export {keepRelevant} from './keep-relevant'
+export {largestFirst} from './largest-first'
+export {largestFirstMultiAsset} from './multi-asset'
 export * from './types'
 export * from './utils'
-export {largestFirst} from './largest-first'
-export {keepRelevant} from './keep-relevant'
-export {largestFirstMultiAsset} from './multi-asset'
 
 /**
  * Select UTXOs using the specified strategy
@@ -30,7 +31,7 @@ export function selectUtxos(
   requiredAmounts: Balance.Amounts,
   availableUtxos: ModernUtxo[],
   strategy: SelectionStrategy = 'largestFirst',
-  primaryTokenId: string = '.',
+  primaryTokenId: TokenId = defaultPrimaryTokenId,
   options: SelectionOptions = {},
 ): SelectionResult {
   switch (strategy) {

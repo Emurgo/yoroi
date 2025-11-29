@@ -1,4 +1,4 @@
-import {Api} from '@yoroi/types'
+import {Address, Api} from '@yoroi/types'
 
 import {
   getUtxoData,
@@ -24,7 +24,7 @@ describe('getUtxoData', () => {
       inputs: [],
       outputs: [
         {
-          address: 'addr1qxyz',
+          address: 'addr1qxyz' as Address,
           amount: {'$lovelaces': '1000000', 'policy1.asset1': '50'},
           index: 0,
         },
@@ -88,7 +88,7 @@ describe('getUtxoData', () => {
       inputs: [],
       outputs: [
         {
-          address: 'addr1qxyz',
+          address: 'addr1qxyz' as Address,
           amount: {
             '$lovelaces': '1000000',
             'policy1.asset1': '50', // string
@@ -135,7 +135,7 @@ describe('getUtxoData', () => {
       inputs: [],
       outputs: [
         {
-          address: 'addr1qxyz',
+          address: 'addr1qxyz' as Address,
           amount: {$lovelaces: '1000000'},
           index: 0,
           datumHash: 'datum123',
@@ -161,7 +161,7 @@ describe('getUtxoData', () => {
       inputs: [],
       outputs: [
         {
-          address: 'addr1qxyz',
+          address: 'addr1qxyz' as Address,
           amount: {'policy1.asset1': '50'},
           index: 0,
         },
@@ -186,7 +186,7 @@ describe('getUtxoData', () => {
       inputs: [],
       outputs: [
         {
-          address: 'addr1qxyz',
+          address: 'addr1qxyz' as Address,
           amount: {$lovelaces: '1000000', policyonly: '100'},
           index: 0,
         },
@@ -213,7 +213,7 @@ describe('getUtxoData', () => {
       inputs: [],
       outputs: [
         {
-          address: 'addr1qxyz',
+          address: 'addr1qxyz' as Address,
           amount: {$lovelaces: '1000000'},
           index: 0,
         },
@@ -238,7 +238,7 @@ describe('getUtxoData', () => {
       inputs: [],
       outputs: [
         {
-          address: 'addr1qxyz',
+          address: 'addr1qxyz' as Address,
           amount: {
             '$lovelaces': '1000000',
             'policy1.asset1': {unexpected: 'type'} as any, // object type
@@ -269,7 +269,7 @@ describe('getUtxoData', () => {
       inputs: [],
       outputs: [
         {
-          address: 'addr1qxyz',
+          address: 'addr1qxyz' as Address,
           amount: {
             '$lovelaces': '1000000',
             'policy1.asset1': true as any, // boolean type
@@ -297,7 +297,7 @@ describe('getUtxoData', () => {
 describe('parseUtxoDataResponse', () => {
   const validData: Api.Cardano.UtxoData = {
     output: {
-      address: 'addr1qxyz',
+      address: 'addr1qxyz' as Address,
       amount: '1000000',
       dataHash: null,
       assets: [
@@ -309,7 +309,7 @@ describe('parseUtxoDataResponse', () => {
 
   const invalidData = {
     output: {
-      address: 'addr1qxyz',
+      address: 'addr1qxyz' as Address,
       amount: '1000000',
       dataHash: null,
       assets: [{assetId: '1', policyId: 'policy1', name: 'asset1'}],
@@ -331,7 +331,7 @@ describe('parseUtxoDataResponse', () => {
 describe('isUtxosDataResponse', () => {
   const validData: Api.Cardano.UtxoData = {
     output: {
-      address: 'addr1qxyz',
+      address: 'addr1qxyz' as Address,
       amount: '1000000',
       dataHash: null,
       assets: [
@@ -343,7 +343,7 @@ describe('isUtxosDataResponse', () => {
 
   const invalidData = {
     output: {
-      address: 'addr1qxyz',
+      address: 'addr1qxyz' as Address,
       amount: '1000000',
       dataHash: null,
       assets: [{assetId: '1', policyId: 'policy1', name: 'asset1'}],

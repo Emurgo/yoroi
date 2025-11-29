@@ -69,7 +69,7 @@ export const useRedeemThaw = () => {
       // Similar to swap, we request UTXOs that can cover ~5 ADA for fees
       const primaryTokenId = wallet.portfolioPrimaryTokenInfo.id
       const feeAmount: Balance.Amounts = {
-        [primaryTokenId]: '5000000', // 5 ADA in lovelace
+        [primaryTokenId]: '5000000' as Balance.Quantity, // 5 ADA in lovelace
       }
 
       const fundingUtxosHex = await CardanoMobileWrapped.cslScope(

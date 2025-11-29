@@ -1,5 +1,6 @@
 import {getYoroiDrepIdHex} from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {Branded, KeyHash} from '@yoroi/types'
 
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {StackNavigationProp} from '@react-navigation/stack'
@@ -111,8 +112,10 @@ export const DashboardScreen = () => {
 
           try {
             // Create combined transaction with withdrawal + DRep delegation
-            const drepValue: {KeyHash: string} = {
-              KeyHash: getYoroiDrepIdHex(wallet.networkManager.network),
+            const drepValue: {KeyHash: KeyHash} = {
+              KeyHash: Branded.asKeyHash(
+                getYoroiDrepIdHex(wallet.networkManager.network),
+              ),
             }
             const result = await createWithdrawalWithGovernanceTxFromWallet(
               wallet,

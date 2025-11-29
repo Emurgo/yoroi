@@ -1,5 +1,12 @@
 import type {RawUtxo} from '@yoroi/api'
-import {Portfolio} from '@yoroi/types'
+import {
+  Address,
+  Balance,
+  Portfolio,
+  TokenId,
+  TransactionHash,
+  UtxoId,
+} from '@yoroi/types'
 
 import {
   didUtxosUpdate,
@@ -10,19 +17,19 @@ import {
 describe('utxo-operations', () => {
   const mockRawUtxos: RawUtxo[] = [
     {
-      utxo_id: 'tx1:0',
-      tx_hash: 'tx1',
+      utxo_id: 'tx1:0' as UtxoId,
+      tx_hash: 'tx1' as TransactionHash,
       tx_index: 0,
-      receiver: 'addr_test1...',
-      amount: '1000000',
+      receiver: 'addr_test1...' as Address,
+      amount: '1000000' as Balance.Quantity,
       assets: [],
     },
     {
-      utxo_id: 'tx2:1',
-      tx_hash: 'tx2',
+      utxo_id: 'tx2:1' as UtxoId,
+      tx_hash: 'tx2' as TransactionHash,
       tx_index: 1,
-      receiver: 'addr_test1...',
-      amount: '2000000',
+      receiver: 'addr_test1...' as Address,
+      amount: '2000000' as Balance.Quantity,
       assets: [],
     },
   ]
@@ -44,7 +51,7 @@ describe('utxo-operations', () => {
     }),
   }
 
-  const primaryTokenId = 'ada' as Portfolio.Token.Id
+  const primaryTokenId = 'ada' as TokenId as Portfolio.Token.Id
 
   describe('getAddressedUtxos', () => {
     it('should convert RawUtxos to ModernUtxos with addressing', () => {
@@ -65,13 +72,15 @@ describe('utxo-operations', () => {
     it('should return true when UTXOs length changes', () => {
       const newUtxos: RawUtxo[] = [
         ...mockRawUtxos,
-        {...mockRawUtxos[0]!, utxo_id: 'tx3:0'},
+        {...mockRawUtxos[0]!, utxo_id: 'tx3:0' as UtxoId},
       ]
       expect(didUtxosUpdate(mockRawUtxos, newUtxos)).toBe(true)
     })
 
     it('should return true when UTXO IDs change', () => {
-      const newUtxos: RawUtxo[] = [{...mockRawUtxos[0]!, utxo_id: 'tx3:0'}]
+      const newUtxos: RawUtxo[] = [
+        {...mockRawUtxos[0]!, utxo_id: 'tx3:0' as UtxoId},
+      ]
       expect(didUtxosUpdate(mockRawUtxos, newUtxos)).toBe(true)
     })
 
@@ -82,7 +91,7 @@ describe('utxo-operations', () => {
 
   describe('getSpendableUtxos', () => {
     it('should filter out collateral UTXO', () => {
-      const collateralId = 'tx1:0'
+      const collateralId = 'tx1:0' as UtxoId
       const spendable = getSpendableUtxos(mockRawUtxos, collateralId)
 
       expect(spendable).toHaveLength(1)
@@ -90,7 +99,7 @@ describe('utxo-operations', () => {
     })
 
     it('should return all UTXOs when no collateral', () => {
-      const spendable = getSpendableUtxos(mockRawUtxos, '')
+      const spendable = getSpendableUtxos(mockRawUtxos, '' as UtxoId)
       expect(spendable).toHaveLength(mockRawUtxos.length)
     })
   })

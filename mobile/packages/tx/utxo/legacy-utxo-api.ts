@@ -1,4 +1,5 @@
 import {chunk, flatten} from '@yoroi/common'
+import {BlockHash, Branded} from '@yoroi/types'
 
 import axios from 'axios'
 import BigNumber from 'bignumber.js'
@@ -111,21 +112,21 @@ const handleReferencePointAndBestBlockErrors = <T>(
   }
 }
 
-export const createBatchedEmurgoUtxoApi = (
+export const createBatchedLegacyUtxoApi = (
   base: UtxoApiContract,
   maxAddresses = 500,
 ): UtxoApiContract => {
   return {
-    async getSafeBlock(): Promise<string> {
+    async getSafeBlock(): Promise<BlockHash> {
       return await base.getSafeBlock()
     },
 
-    async getBestBlock(): Promise<string> {
+    async getBestBlock(): Promise<BlockHash> {
       return await base.getBestBlock()
     },
 
     async getTipStatusWithReference(
-      bestBlocks: string[],
+      bestBlocks: BlockHash[],
     ): Promise<UtxoApiResponse<TipStatusReference>> {
       return await base.getTipStatusWithReference(bestBlocks)
     },
@@ -224,40 +225,47 @@ async function getUtxoAtPointPage(
   return resp.data
 }
 
-export const createEmurgoUtxoApi = (
+export const createLegacyUtxoApi = (
   apiUrl: string,
   throwRequestErrors: boolean,
   pageSize = 50,
 ): UtxoApiContract => {
   return {
-    async getSafeBlock(): Promise<string> {
+    async getSafeBlock(): Promise<BlockHash> {
       const url = `${apiUrl}v2/tipStatus`
       const resp = await axios.get<GetTipStatusResponse>(url)
-      return resp.data.safeBlock.hash
+      return Branded.asBlockHash(resp.data.safeBlock.hash)
     },
 
-    async getBestBlock(): Promise<string> {
+    async getBestBlock(): Promise<BlockHash> {
       const url = `${apiUrl}v2/tipStatus`
       const resp = await axios.get<GetTipStatusResponse>(url)
-      return resp.data.bestBlock.hash
+      return Branded.asBlockHash(resp.data.bestBlock.hash)
     },
 
     async getTipStatusWithReference(
-      bestBlocks: string[],
+      bestBlocks: BlockHash[],
     ): Promise<UtxoApiResponse<TipStatusReference>> {
       try {
         const url = `${apiUrl}v2/tipStatus`
+        const bestBlocksStr = bestBlocks.map((b) =>
+          typeof b === 'string' ? b : b,
+        )
         const resp = await axios.post<TipStatusResponse>(url, {
           reference: {
-            bestBlocks: bestBlocks,
+            bestBlocks: bestBlocksStr,
           },
         })
         return {
           result: UtxoApiResult.SUCCESS,
           value: {
             reference: {
-              lastFoundBestBlock: resp.data.reference.lastFoundBestBlock,
-              lastFoundSafeBlock: resp.data.reference.lastFoundSafeBlock,
+              lastFoundBestBlock: Branded.asBlockHash(
+                resp.data.reference.lastFoundBestBlock,
+              ),
+              lastFoundSafeBlock: Branded.asBlockHash(
+                resp.data.reference.lastFoundSafeBlock,
+              ),
             },
           },
         }
@@ -313,12 +321,12 @@ export const createEmurgoUtxoApi = (
           result: UtxoApiResult.SUCCESS,
           value: allUtxos.map((u) => {
             return {
-              utxoId: u.utxo_id,
+              utxoId: Branded.asUtxoId(u.utxo_id),
               amount: new BigNumber(u.amount),
               assets: u.assets,
               blockNum: u.block_num,
-              receiver: u.receiver,
-              txHash: u.tx_hash,
+              receiver: Branded.asAddress(u.receiver),
+              txHash: Branded.asTransactionHash(u.tx_hash),
               txIndex: u.tx_index,
             }
           }),
@@ -350,8 +358,12 @@ export const createEmurgoUtxoApi = (
         }
 
         const reference = {
-          lastFoundBestBlock: response.data.lastFoundBestblock,
-          lastFoundSafeBlock: response.data.lastFoundSafeblock,
+          lastFoundBestBlock: Branded.asBlockHash(
+            response.data.lastFoundBestblock,
+          ),
+          lastFoundSafeBlock: response.data.lastFoundSafeblock
+            ? Branded.asBlockHash(response.data.lastFoundSafeblock)
+            : undefined,
         }
 
         let allDiffItems: UtxoDiffSincePointItemResponse[] = [
@@ -374,22 +386,22 @@ export const createEmurgoUtxoApi = (
               if (u.type === DiffType.INPUT) {
                 return {
                   amount: new BigNumber(u.amount),
-                  id: u.id,
+                  id: Branded.asUtxoId(u.id),
                   type: u.type,
                 } as UtxoDiffItem
               } else {
                 return {
                   amount: new BigNumber(u.amount),
-                  id: u.id,
+                  id: Branded.asUtxoId(u.id),
                   type: u.type,
                   utxo: {
                     amount: new BigNumber(u.amount),
                     assets: u.assets,
                     blockNum: u.block_num,
-                    receiver: u.receiver,
-                    txHash: u.tx_hash,
+                    receiver: Branded.asAddress(u.receiver),
+                    txHash: Branded.asTransactionHash(u.tx_hash),
                     txIndex: u.tx_index,
-                    utxoId: u.id,
+                    utxoId: Branded.asUtxoId(u.id),
                   },
                 } as UtxoDiffItemOutput
               }

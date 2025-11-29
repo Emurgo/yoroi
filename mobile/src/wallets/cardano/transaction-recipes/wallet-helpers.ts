@@ -1,6 +1,6 @@
 import {getLogger} from '@yoroi/common'
 import {TransactionOutput} from '@yoroi/tx'
-import {Network, Wallet} from '@yoroi/types'
+import {Branded, KeyHash, Network, PublicKeyHex, Wallet} from '@yoroi/types'
 
 import {BigNumber} from 'bignumber.js'
 
@@ -55,7 +55,9 @@ export async function createUtxoConsolidationTxFromWallet(
 
   return createUtxoConsolidationTx({
     utxos: modernUtxos,
-    externalAddresses: wallet.externalAddresses(),
+    externalAddresses: wallet
+      .externalAddresses()
+      .map((addr) => Branded.asAddress(addr)),
     primaryTokenId: wallet.portfolioPrimaryTokenInfo.id,
     protocolParams: wallet.protocolParams,
     networkId: wallet.networkManager.chainId,
@@ -71,7 +73,7 @@ export async function createUtxoConsolidationTxFromWallet(
 export async function createDelegationTxFromWallet(
   wallet: YoroiWallet,
   params: {
-    poolId: string | undefined
+    poolId: KeyHash | string | undefined
     addressMode: Wallet.AddressMode
   },
 ): Promise<{cbor: string}> {
@@ -97,7 +99,7 @@ export async function createDelegationTxFromWallet(
 export async function createCombinedDelegationTxFromWallet(
   wallet: YoroiWallet,
   params: {
-    poolId?: string
+    poolId?: KeyHash | string
     drepValue?: import('@yoroi/tx').DRepValue
     addressMode: Wallet.AddressMode
   },
@@ -159,7 +161,24 @@ export async function createWithdrawalTxFromWallet(
       getStakingKey: () => wallet.getStakingKey(),
       getAccountState: (addresses) => {
         // Get wallet context for backend-zero registration
-        const walletContext = wallet.getWalletContext?.()
+        const walletContextRaw = wallet.getWalletContext?.()
+        const walletContext = walletContextRaw
+          ? {
+              ...walletContextRaw,
+              publicKeyHex: walletContextRaw.publicKeyHex
+                ? Branded.asPublicKeyHex(walletContextRaw.publicKeyHex)
+                : undefined,
+              accountPubKeyHex: walletContextRaw.accountPubKeyHex
+                ? Branded.asPublicKeyHex(walletContextRaw.accountPubKeyHex)
+                : undefined,
+              paymentKeyHashes: walletContextRaw.paymentKeyHashes.map((hash) =>
+                Branded.asKeyHash(hash),
+              ),
+              rewardAddresses: walletContextRaw.rewardAddresses.map((addr) =>
+                Branded.asAddress(addr),
+              ),
+            }
+          : undefined
         return legacyApi.getAccountState(
           {addresses},
           params.networkManager.legacyApiBaseUrl,
@@ -192,13 +211,10 @@ export async function createWithdrawalTxFromWallet(
   }
 }
 
-/**
- * Create voting registration transaction from wallet
- */
 export async function createVotingRegTxFromWallet(
   wallet: YoroiWallet,
   params: {
-    catalystKeyHex: string
+    catalystKeyHex: PublicKeyHex | string
     supportsCIP36: boolean
     addressMode: Wallet.AddressMode
   },
@@ -318,7 +334,24 @@ export async function createWithdrawalWithGovernanceTxFromWallet(
       getChangeAddress: (mode) => wallet.getChangeAddress(mode),
       getStakingKey: () => wallet.getStakingKey(),
       getAccountState: (addresses) => {
-        const walletContext = wallet.getWalletContext?.()
+        const walletContextRaw = wallet.getWalletContext?.()
+        const walletContext = walletContextRaw
+          ? {
+              ...walletContextRaw,
+              publicKeyHex: walletContextRaw.publicKeyHex
+                ? Branded.asPublicKeyHex(walletContextRaw.publicKeyHex)
+                : undefined,
+              accountPubKeyHex: walletContextRaw.accountPubKeyHex
+                ? Branded.asPublicKeyHex(walletContextRaw.accountPubKeyHex)
+                : undefined,
+              paymentKeyHashes: walletContextRaw.paymentKeyHashes.map((hash) =>
+                Branded.asKeyHash(hash),
+              ),
+              rewardAddresses: walletContextRaw.rewardAddresses.map((addr) =>
+                Branded.asAddress(addr),
+              ),
+            }
+          : undefined
         return legacyApi.getAccountState(
           {addresses},
           params.networkManager.legacyApiBaseUrl,

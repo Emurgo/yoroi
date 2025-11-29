@@ -5,8 +5,16 @@ import {
   StakePoolInfoAndHistory,
   StakePoolInfosAndHistories,
 } from '@yoroi/staking'
-import {Portfolio, Wallet} from '@yoroi/types'
 import type {WalletTransaction} from '@yoroi/types'
+import {
+  Address,
+  AssetName,
+  BalanceQuantity,
+  Portfolio,
+  TransactionHash,
+  UtxoId,
+  Wallet,
+} from '@yoroi/types'
 
 import {noop} from 'lodash'
 import {Observable, Subscription} from 'rxjs'
@@ -44,7 +52,7 @@ const poolInfoAndHistory: StakePoolInfoAndHistory = {
 
 const primaryTokenInfoMainnet = createPrimaryTokenInfo({
   decimals: 6,
-  name: 'ADA',
+  name: 'ADA' as AssetName,
   ticker: 'ADA',
   symbol: '₳',
   reference: '',
@@ -153,19 +161,19 @@ const wallet: YoroiWallet = {
     return {
       utxo: {
         utxo_id:
-          '22d391c7a97559cb4784bd975214919618acce75cde573a7150a176700e76181:2',
+          '22d391c7a97559cb4784bd975214919618acce75cde573a7150a176700e76181:2' as UtxoId,
         tx_hash:
-          '22d391c7a97559cb4784bd975214919618acce75cde573a7150a176700e76181',
+          '22d391c7a97559cb4784bd975214919618acce75cde573a7150a176700e76181' as TransactionHash as TransactionHash,
         tx_index: 2,
         receiver:
-          'addr_test1qrg0x4sx2wfd3l26zqs658u8vyg8qz4dzqw0zke45lpy0vkr3y3kdut55a40jff00qmg74686vz44v6k363md06qkq0qzplc3l',
-        amount: '5449549',
+          'addr_test1qrg0x4sx2wfd3l26zqs658u8vyg8qz4dzqw0zke45lpy0vkr3y3kdut55a40jff00qmg74686vz44v6k363md06qkq0qzplc3l' as Address,
+        amount: '5449549' as BalanceQuantity,
 
         assets: [],
       },
       amount: {quantity: 5449549n, info: primaryTokenInfoMainnet},
       collateralId:
-        '22d391c7a97559cb4784bd975214919618acce75cde573a7150a176700e76181:2',
+        '22d391c7a97559cb4784bd975214919618acce75cde573a7150a176700e76181:2' as UtxoId,
       isConfirmed: true,
     }
   },

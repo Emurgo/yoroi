@@ -1,3 +1,5 @@
+import {TransactionHash} from '@yoroi/types'
+
 import {Addressing} from '../types'
 import {
   assertTagsState,
@@ -95,7 +97,7 @@ describe('ledger transform', () => {
       const unsignedTx = {
         senderUtxos: [
           {
-            txHash: 'hash1',
+            txHash: 'hash1' as TransactionHash,
             txIndex: 0,
             addressing: {
               path: [2147483648, 2147483648, 0, 0, 0],
@@ -103,7 +105,7 @@ describe('ledger transform', () => {
             },
           },
           {
-            txHash: 'hash2',
+            txHash: 'hash2' as TransactionHash,
             txIndex: 1,
             addressing: {
               path: [2147483648, 2147483648, 0, 0, 1],
@@ -141,7 +143,7 @@ describe('ledger transform', () => {
       const unsignedTx = {
         senderUtxos: [
           {
-            txHash: 'hash1',
+            txHash: 'hash1' as TransactionHash,
             txIndex: 0,
             addressing: {
               path: [2147483648, 2147483648, 0, 0, 0],

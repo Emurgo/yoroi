@@ -2,6 +2,7 @@ import {CertificateKind} from '@yoroi/tx'
 import {
   Balance,
   BaseAsset,
+  Branded,
   Portfolio,
   TRANSACTION_DIRECTION,
   TRANSACTION_TYPE,
@@ -51,8 +52,9 @@ const remoteAssetsToAmounts = (
       tokenId = primaryTokenId
     }
 
-    const existing = amounts[tokenId]
-    amounts[tokenId] = existing
+    const tokenIdBranded = Branded.asTokenId(tokenId)
+    const existing = amounts[tokenIdBranded]
+    amounts[tokenIdBranded] = existing
       ? Quantities.sum([existing, asQuantity(asset.amount)])
       : asQuantity(asset.amount)
   }
@@ -76,9 +78,9 @@ const remoteDataToAmounts = (
       [
         {
           tokenId: primaryTokenId as Portfolio.Token.Id,
-          amount: item.amount,
-          policyId: '',
-          name: '',
+          amount: Branded.asAmount(item.amount),
+          policyId: Branded.asPolicyId(''),
+          name: Branded.asAssetName(''),
         },
       ],
       primaryTokenId,

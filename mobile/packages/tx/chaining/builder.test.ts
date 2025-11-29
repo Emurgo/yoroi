@@ -1,4 +1,5 @@
-import {Balance} from '@yoroi/types'
+import {primaryTokenId} from '@yoroi/portfolio'
+import {Balance, TransactionHash} from '@yoroi/types'
 
 import {createTransactionBuilder} from '../transaction-builder/builder'
 import type {UnsignedTransaction} from '../transaction-builder/types'
@@ -14,10 +15,12 @@ describe('chaining builder', () => {
     it('should add chained input to state', () => {
       const state = createTransactionBuilder()
       const chainedRef: ChainedTransactionRef = {
-        txHash: 'hash1',
+        txHash: 'hash1' as TransactionHash,
         txIndex: 0,
       }
-      const outputAmounts: Balance.Amounts = {'.': '1000000'}
+      const outputAmounts: Balance.Amounts = {
+        [primaryTokenId]: '1000000' as Balance.Quantity,
+      }
 
       const newState = addChainedInput(state, chainedRef, outputAmounts)
 
@@ -30,10 +33,12 @@ describe('chaining builder', () => {
     it('should throw when trying to serialize chained UTXO', () => {
       const state = createTransactionBuilder()
       const chainedRef: ChainedTransactionRef = {
-        txHash: 'hash1',
+        txHash: 'hash1' as TransactionHash,
         txIndex: 0,
       }
-      const outputAmounts: Balance.Amounts = {'.': '1000000'}
+      const outputAmounts: Balance.Amounts = {
+        [primaryTokenId]: '1000000' as Balance.Quantity,
+      }
 
       const newState = addChainedInput(state, chainedRef, outputAmounts)
       const chainedUtxo = newState.inputs[0]?.utxo
@@ -90,7 +95,9 @@ describe('chaining builder', () => {
         {
           transaction: {
             cbor: 'cbor1',
-            options: {manualFee: {'.': '1000000'}},
+            options: {
+              manualFee: {[primaryTokenId]: '1000000' as Balance.Quantity},
+            },
             inputs: [],
             outputs: [],
             certificates: [],
@@ -103,7 +110,9 @@ describe('chaining builder', () => {
         {
           transaction: {
             cbor: 'cbor2',
-            options: {manualFee: {'.': '2000000'}},
+            options: {
+              manualFee: {[primaryTokenId]: '2000000' as Balance.Quantity},
+            },
             inputs: [],
             outputs: [],
             certificates: [],

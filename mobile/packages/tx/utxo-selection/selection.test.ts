@@ -1,4 +1,5 @@
-import {Balance} from '@yoroi/types'
+import {primaryTokenId} from '@yoroi/portfolio'
+import {Address, Balance, TokenId, TransactionHash} from '@yoroi/types'
 
 import {ModernUtxo} from '../utxo/models'
 import {selectUtxos} from './selection'
@@ -9,8 +10,8 @@ describe('selectUtxos', () => {
     txHash = 'hash1',
     txIndex = 0,
   ): ModernUtxo => ({
-    receiver: 'addr_test1',
-    txHash,
+    receiver: 'addr_test1' as Address,
+    txHash: txHash as TransactionHash,
     txIndex,
     balance,
     toTransactionUnspentOutputHex: jest.fn(() => 'hex'),
@@ -19,11 +20,25 @@ describe('selectUtxos', () => {
 
   it('should use largestFirst strategy by default', () => {
     const utxos = [
-      createMockUtxo({'.': '1000000'}, 'hash1', 0),
-      createMockUtxo({'.': '5000000'}, 'hash2', 1),
-      createMockUtxo({'.': '2000000'}, 'hash3', 2),
+      createMockUtxo(
+        {[primaryTokenId]: '1000000' as Balance.Quantity},
+        'hash1',
+        0,
+      ),
+      createMockUtxo(
+        {[primaryTokenId]: '5000000' as Balance.Quantity},
+        'hash2',
+        1,
+      ),
+      createMockUtxo(
+        {[primaryTokenId]: '2000000' as Balance.Quantity},
+        'hash3',
+        2,
+      ),
     ]
-    const required: Balance.Amounts = {'.': '3000000'}
+    const required: Balance.Amounts = {
+      [primaryTokenId]: '3000000' as Balance.Quantity,
+    }
 
     const result = selectUtxos(required, utxos)
 
@@ -33,10 +48,20 @@ describe('selectUtxos', () => {
 
   it('should use largestFirst strategy when specified', () => {
     const utxos = [
-      createMockUtxo({'.': '1000000'}, 'hash1', 0),
-      createMockUtxo({'.': '5000000'}, 'hash2', 1),
+      createMockUtxo(
+        {[primaryTokenId]: '1000000' as Balance.Quantity},
+        'hash1',
+        0,
+      ),
+      createMockUtxo(
+        {[primaryTokenId]: '5000000' as Balance.Quantity},
+        'hash2',
+        1,
+      ),
     ]
-    const required: Balance.Amounts = {'.': '3000000'}
+    const required: Balance.Amounts = {
+      [primaryTokenId]: '3000000' as Balance.Quantity,
+    }
 
     const result = selectUtxos(required, utxos, 'largestFirst')
 
@@ -45,12 +70,28 @@ describe('selectUtxos', () => {
   })
 
   it('should use keepRelevant strategy when specified', () => {
+    const token1 = 'token1' as TokenId
     const utxos = [
-      createMockUtxo({'.': '1000000'}, 'hash1', 0),
-      createMockUtxo({'.': '2000000', 'token1': '100'}, 'hash2', 1),
-      createMockUtxo({'.': '5000000'}, 'hash3', 2),
+      createMockUtxo(
+        {[primaryTokenId]: '1000000' as Balance.Quantity},
+        'hash1',
+        0,
+      ),
+      createMockUtxo(
+        {[primaryTokenId]: '2000000', [token1]: '100'} as Balance.Amounts,
+        'hash2',
+        1,
+      ),
+      createMockUtxo(
+        {[primaryTokenId]: '5000000' as Balance.Quantity},
+        'hash3',
+        2,
+      ),
     ]
-    const required: Balance.Amounts = {'.': '1000000', 'token1': '50'}
+    const required: Balance.Amounts = {
+      [primaryTokenId]: '1000000',
+      [token1]: '50',
+    } as Balance.Amounts
 
     const result = selectUtxos(required, utxos, 'keepRelevant')
 
@@ -58,12 +99,28 @@ describe('selectUtxos', () => {
   })
 
   it('should use largestFirstMultiAsset strategy when specified', () => {
+    const token1 = 'token1' as TokenId
     const utxos = [
-      createMockUtxo({'.': '1000000'}, 'hash1', 0),
-      createMockUtxo({'.': '2000000', 'token1': '100'}, 'hash2', 1),
-      createMockUtxo({'.': '5000000'}, 'hash3', 2),
+      createMockUtxo(
+        {[primaryTokenId]: '1000000' as Balance.Quantity},
+        'hash1',
+        0,
+      ),
+      createMockUtxo(
+        {[primaryTokenId]: '2000000', [token1]: '100'} as Balance.Amounts,
+        'hash2',
+        1,
+      ),
+      createMockUtxo(
+        {[primaryTokenId]: '5000000' as Balance.Quantity},
+        'hash3',
+        2,
+      ),
     ]
-    const required: Balance.Amounts = {'.': '1000000', 'token1': '50'}
+    const required: Balance.Amounts = {
+      [primaryTokenId]: '1000000',
+      [token1]: '50',
+    } as Balance.Amounts
 
     const result = selectUtxos(required, utxos, 'largestFirstMultiAsset')
 
@@ -73,37 +130,78 @@ describe('selectUtxos', () => {
 
   it('should pass options to strategy', () => {
     const utxos = [
-      createMockUtxo({'.': '1000000'}, 'hash1', 0),
-      createMockUtxo({'.': '2000000'}, 'hash2', 1),
-      createMockUtxo({'.': '3000000'}, 'hash3', 2),
+      createMockUtxo(
+        {[primaryTokenId]: '1000000' as Balance.Quantity},
+        'hash1',
+        0,
+      ),
+      createMockUtxo(
+        {[primaryTokenId]: '2000000' as Balance.Quantity},
+        'hash2',
+        1,
+      ),
+      createMockUtxo(
+        {[primaryTokenId]: '3000000' as Balance.Quantity},
+        'hash3',
+        2,
+      ),
     ]
-    const required: Balance.Amounts = {'.': '10000000'}
+    const required: Balance.Amounts = {
+      [primaryTokenId]: '10000000' as Balance.Quantity,
+    }
 
-    const result = selectUtxos(required, utxos, 'largestFirst', '.', {
-      maxUtxos: 2,
-    })
+    const result = selectUtxos(
+      required,
+      utxos,
+      'largestFirst',
+      primaryTokenId,
+      {
+        maxUtxos: 2,
+      },
+    )
 
     expect(result.selected.length).toBeLessThanOrEqual(2)
   })
 
   it('should use custom primaryTokenId', () => {
+    const customTokenId = 'custom' as TokenId
     const utxos = [
-      createMockUtxo({custom: '1000000'}, 'hash1', 0),
-      createMockUtxo({custom: '5000000'}, 'hash2', 1),
+      createMockUtxo(
+        {[customTokenId]: '1000000'} as Balance.Amounts,
+        'hash1',
+        0,
+      ),
+      createMockUtxo(
+        {[customTokenId]: '5000000'} as Balance.Amounts,
+        'hash2',
+        1,
+      ),
     ]
-    const required: Balance.Amounts = {custom: '3000000'}
+    const required: Balance.Amounts = {
+      [customTokenId]: '3000000',
+    } as Balance.Amounts
 
-    const result = selectUtxos(required, utxos, 'largestFirst', 'custom')
+    const result = selectUtxos(required, utxos, 'largestFirst', customTokenId)
 
     expect(result.selected.length).toBeGreaterThan(0)
   })
 
   it('should handle unknown strategy by defaulting to largestFirst', () => {
     const utxos = [
-      createMockUtxo({'.': '1000000'}, 'hash1', 0),
-      createMockUtxo({'.': '5000000'}, 'hash2', 1),
+      createMockUtxo(
+        {[primaryTokenId]: '1000000' as Balance.Quantity},
+        'hash1',
+        0,
+      ),
+      createMockUtxo(
+        {[primaryTokenId]: '5000000' as Balance.Quantity},
+        'hash2',
+        1,
+      ),
     ]
-    const required: Balance.Amounts = {'.': '3000000'}
+    const required: Balance.Amounts = {
+      [primaryTokenId]: '3000000' as Balance.Quantity,
+    }
 
     // TypeScript won't allow this, but runtime might
     const result = selectUtxos(required, utxos, 'unknown' as any)
@@ -117,7 +215,7 @@ function hasEnoughAmounts(
   amounts2: Balance.Amounts,
 ): boolean {
   for (const [tokenId, requiredQuantity] of Object.entries(amounts2)) {
-    const available = amounts1[tokenId] || '0'
+    const available = amounts1[tokenId as TokenId] || '0'
     if (parseInt(available, 10) < parseInt(requiredQuantity, 10)) {
       return false
     }

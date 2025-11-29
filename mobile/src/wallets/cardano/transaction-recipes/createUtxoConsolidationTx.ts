@@ -11,13 +11,13 @@ import {
   setChangeAddress,
   setTTLWithBuffer,
 } from '@yoroi/tx'
-import {App, Balance, Portfolio, Wallet} from '@yoroi/types'
+import {Address, App, Balance, Branded, Portfolio, Wallet} from '@yoroi/types'
 
 import {logger} from '~/kernel/logger/logger'
 
 export type CreateUtxoConsolidationTxParams = {
   utxos: ModernUtxo[]
-  externalAddresses: string[]
+  externalAddresses: Address[]
   primaryTokenId: Portfolio.Token.Id
   protocolParams: {
     coinsPerUtxoByte: string
@@ -27,7 +27,7 @@ export type CreateUtxoConsolidationTxParams = {
   }
   networkId: number
   getAbsoluteSlotNumber: () => Promise<BigNumber>
-  getChangeAddress: (addressMode: Wallet.AddressMode) => string
+  getChangeAddress: (addressMode: Wallet.AddressMode) => Address | string
   addressMode: Wallet.AddressMode
 }
 
@@ -42,21 +42,33 @@ export async function createUtxoConsolidationTx({
   addressMode,
 }: CreateUtxoConsolidationTxParams): Promise<{cbor: string}> {
   const absSlotNumber = await getAbsoluteSlotNumber()
-  const changeAddress = getChangeAddress(addressMode)
+  const changeAddressRaw = getChangeAddress(addressMode)
+  const changeAddress =
+    typeof changeAddressRaw === 'string'
+      ? (changeAddressRaw as Address)
+      : changeAddressRaw
 
   if (externalAddresses.length === 0) {
     throw new Error('No external addresses available')
   }
 
-  const firstAddress = externalAddresses[0]
-  if (!firstAddress) {
+  const firstAddressRaw = externalAddresses[0]
+  if (!firstAddressRaw) {
     throw new Error('First address is undefined')
   }
+  const firstAddress =
+    typeof firstAddressRaw === 'string'
+      ? (firstAddressRaw as Address)
+      : firstAddressRaw
 
   // Filter UTXOs that are NOT in the first address
-  const utxosToConsolidate = utxos.filter(
-    (utxo) => utxo.receiver !== firstAddress,
-  )
+  const utxosToConsolidate = utxos.filter((utxo) => {
+    const utxoReceiverStr =
+      typeof utxo.receiver === 'string' ? utxo.receiver : utxo.receiver
+    const firstAddrStr =
+      typeof firstAddress === 'string' ? firstAddress : firstAddress
+    return utxoReceiverStr !== firstAddrStr
+  })
 
   if (utxosToConsolidate.length === 0) {
     throw new Error('No UTXOs to consolidate')
@@ -69,14 +81,17 @@ export async function createUtxoConsolidationTx({
 
   for (const utxo of utxosToConsolidate) {
     for (const [tokenId, quantity] of Object.entries(utxo.balance)) {
-      if (tokenId === primaryTokenId) {
+      const tokenIdBranded = Branded.asTokenId(tokenId)
+      if (tokenIdBranded === primaryTokenId) {
         // Sum ADA separately
         totalAda += BigInt(quantity)
       } else {
         // Send all non-ADA tokens
-        const current = BigInt(consolidatedAmounts[tokenId] || '0')
+        const current = BigInt(
+          consolidatedAmounts[tokenIdBranded] ?? Branded.ZERO_QUANTITY,
+        )
         const toAdd = BigInt(quantity)
-        consolidatedAmounts[tokenId] = (
+        consolidatedAmounts[tokenIdBranded] = (
           current + toAdd
         ).toString() as Balance.Quantity
       }

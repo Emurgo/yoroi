@@ -1,13 +1,16 @@
 import type {RawUtxo} from '@yoroi/api'
 import {ModernUtxo, rawUtxoToModernUtxo} from '@yoroi/tx'
-import {Portfolio} from '@yoroi/types'
+import {Address, Portfolio} from '@yoroi/types'
 
 /**
  * Convert RawUtxo[] to ModernUtxo[] using wallet's getAddressing function
  */
 export function convertRawUtxosToModernUtxos(
   rawUtxos: RawUtxo[],
-  getAddressing: (address: string) => {path: number[]; startLevel: number},
+  getAddressing: (address: Address | string) => {
+    path: number[]
+    startLevel: number
+  },
   primaryTokenId: Portfolio.Token.Id,
 ): ModernUtxo[] {
   return rawUtxos.map((utxo: RawUtxo): ModernUtxo => {

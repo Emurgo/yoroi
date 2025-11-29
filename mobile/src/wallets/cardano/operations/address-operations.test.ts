@@ -1,10 +1,6 @@
-import {Wallet} from '@yoroi/types'
+import {Address, Wallet} from '@yoroi/types'
 
-import {
-  AccountManager,
-  AddressChain,
-  Addresses,
-} from '../account-manager/account-manager'
+import {AccountManager, AddressChain} from '../account-manager/account-manager'
 import {
   ReadOnlyAccountManager,
   ReadOnlyAddressChain,
@@ -114,9 +110,9 @@ describe('address-operations', () => {
         } as unknown as AccountManager | ReadOnlyAccountManager,
         notify: jest.fn() as (event: {
           type: 'addresses'
-          addresses: Addresses
+          addresses: Address[]
         }) => void,
-        receiveAddresses: () => mockAddresses as Addresses,
+        receiveAddresses: () => mockAddresses as Address[],
       }
 
       const result = generateNewReceiveAddress(mockWalletWithIncrease)
@@ -134,9 +130,9 @@ describe('address-operations', () => {
         } as unknown as AccountManager | ReadOnlyAccountManager,
         notify: jest.fn() as (event: {
           type: 'addresses'
-          addresses: Addresses
+          addresses: Address[]
         }) => void,
-        receiveAddresses: () => mockAddresses as Addresses,
+        receiveAddresses: () => mockAddresses as Address[],
       }
 
       const result = generateNewReceiveAddress(readOnlyWallet)

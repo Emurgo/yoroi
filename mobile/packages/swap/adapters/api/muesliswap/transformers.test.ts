@@ -1,5 +1,5 @@
-import {isPrimaryToken} from '@yoroi/portfolio'
-import {Chain, Portfolio, Swap} from '@yoroi/types'
+import {isPrimaryToken, primaryTokenId} from '@yoroi/portfolio'
+import {Chain, Portfolio, Swap, TokenId} from '@yoroi/types'
 
 import {api, primaryTokenInfo} from './api.mocks'
 import {
@@ -65,9 +65,9 @@ describe('transformers', () => {
       expect(
         transformers.quote.request({
           slippage: 0.01,
-          tokenIn: '.',
+          tokenIn: primaryTokenId,
           tokenOut:
-            'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950',
+            'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950' as TokenId,
           amountOut: 10,
           protocol: 'minswap-v1',
           blockedProtocols: ['wingriders-v1'],
@@ -113,9 +113,9 @@ describe('transformers', () => {
     test('should handle undefined blockedProtocols', () => {
       const result = transformers.quote.request({
         slippage: 0.01,
-        tokenIn: '.',
+        tokenIn: primaryTokenId,
         tokenOut:
-          'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950',
+          'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950' as TokenId,
         amountIn: 10,
         protocol: undefined,
         blockedProtocols: undefined,
@@ -127,9 +127,9 @@ describe('transformers', () => {
     test('should handle null blockedProtocols', () => {
       const result = transformers.quote.request({
         slippage: 0.01,
-        tokenIn: '.',
+        tokenIn: primaryTokenId,
         tokenOut:
-          'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950',
+          'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950' as TokenId,
         amountIn: 10,
         protocol: undefined,
         blockedProtocols: null as any,
@@ -176,9 +176,9 @@ describe('transformers', () => {
     test('should handle undefined blockedProtocols in create', () => {
       const result = transformers.create.request({
         slippage: 0.01,
-        tokenIn: '.',
+        tokenIn: primaryTokenId,
         tokenOut:
-          'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950',
+          'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950' as TokenId,
         amountIn: 10,
         protocol: undefined,
         blockedProtocols: undefined,
@@ -190,9 +190,9 @@ describe('transformers', () => {
     test('should handle null blockedProtocols in create', () => {
       const result = transformers.create.request({
         slippage: 0.01,
-        tokenIn: '.',
+        tokenIn: primaryTokenId,
         tokenOut:
-          'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950',
+          'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950' as TokenId,
         amountIn: 10,
         protocol: undefined,
         blockedProtocols: null as any,
@@ -287,9 +287,9 @@ describe('transformers', () => {
       // Verify by checking that excluded_sources is computed when providers are set
       const result = transformers.quote.request({
         slippage: 0.01,
-        tokenIn: '.',
+        tokenIn: primaryTokenId,
         tokenOut:
-          'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950',
+          'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950' as TokenId,
         amountIn: 10,
         protocol: Swap.Protocol.Minswap_v1,
       })
@@ -358,9 +358,9 @@ describe('transformers', () => {
     it('should normalize Muesliswap to Muesliswap_v2', () => {
       const result = transformers.limitQuote.request({
         protocol: Swap.Protocol.Muesliswap,
-        tokenIn: '.' as Swap.EstimateRequest['tokenIn'],
+        tokenIn: primaryTokenId as Swap.EstimateRequest['tokenIn'],
         tokenOut:
-          'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950' as Swap.EstimateRequest['tokenOut'],
+          'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950' as TokenId as Swap.EstimateRequest['tokenOut'],
         amountIn: 10,
         wantedPrice: 1,
       } as Swap.EstimateRequest)
@@ -370,9 +370,9 @@ describe('transformers', () => {
     it('should use routeHint.orderContract when provided in createLimit', () => {
       const result = transformers.createLimit.request({
         protocol: Swap.Protocol.Minswap_v1,
-        tokenIn: '.',
+        tokenIn: primaryTokenId,
         tokenOut:
-          'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950',
+          'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950' as TokenId,
         amountIn: 10,
         wantedPrice: 1,
         routeHint: {orderContract: Dex.Muesliswap_v2} as any,

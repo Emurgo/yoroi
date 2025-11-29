@@ -14,7 +14,15 @@ import {
   setChangeAddress,
   setTTLWithBuffer,
 } from '@yoroi/tx'
-import {App, Portfolio, Wallet} from '@yoroi/types'
+import {
+  Address,
+  App,
+  Branded,
+  KeyHash,
+  Portfolio,
+  ScriptHash,
+  Wallet,
+} from '@yoroi/types'
 
 import {CardanoTypes} from '~/wallets/cardano/types'
 import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
@@ -30,7 +38,7 @@ export type CreateUnsignedGovernanceTxParams = {
   }
   networkId: number
   getAbsoluteSlotNumber: () => Promise<BigNumber>
-  getChangeAddress: (addressMode: Wallet.AddressMode) => string
+  getChangeAddress: (addressMode: Wallet.AddressMode) => Address | string
   votingCertificates: CardanoTypes.Certificate[]
   addressMode: Wallet.AddressMode
 }
@@ -46,7 +54,11 @@ export async function createUnsignedGovernanceTx({
   addressMode,
 }: CreateUnsignedGovernanceTxParams): Promise<{cbor: string}> {
   const absSlotNumber = await getAbsoluteSlotNumber()
-  const changeAddress = getChangeAddress(addressMode)
+  const changeAddressRaw = getChangeAddress(addressMode)
+  const changeAddress =
+    typeof changeAddressRaw === 'string'
+      ? (changeAddressRaw as Address)
+      : changeAddressRaw
 
   const protocolParamsConfig = createCardanoHaskellConfig(
     protocolParams,
@@ -96,8 +108,8 @@ export async function createUnsignedGovernanceTx({
 
     // For pure ADA UTXOs, use smallest-first to minimize change
     const sortedPureAda = [...pureAdaUtxos].sort((a, b) => {
-      const aAda = BigInt(a.balance[primaryTokenId] || '0')
-      const bAda = BigInt(b.balance[primaryTokenId] || '0')
+      const aAda = BigInt(a.balance[primaryTokenId] ?? Branded.ZERO_QUANTITY)
+      const bAda = BigInt(b.balance[primaryTokenId] ?? Branded.ZERO_QUANTITY)
       if (aAda < bAda) return -1
       if (aAda > bAda) return 1
       return 0
@@ -111,7 +123,9 @@ export async function createUnsignedGovernanceTx({
     for (const utxo of sortedPureAda) {
       if (selectedAda >= requiredAdaBigInt) break
       selected.push(utxo)
-      selectedAda += BigInt(utxo.balance[primaryTokenId] || '0')
+      selectedAda += BigInt(
+        utxo.balance[primaryTokenId] ?? Branded.ZERO_QUANTITY,
+      )
     }
 
     // If we don't have enough from pure ADA UTXOs, add UTXOs with tokens
@@ -180,8 +194,8 @@ export async function createUnsignedGovernanceTx({
             const drepKind = drep.kind()
             // Handle different DRep types using kind() method
             let drepValue:
-              | {KeyHash: string}
-              | {ScriptHash: string}
+              | {KeyHash: KeyHash}
+              | {ScriptHash: ScriptHash}
               | 'AlwaysAbstain'
               | 'AlwaysNoConfidence'
             if (drepKind === DRepKind.AlwaysAbstain) {
@@ -191,7 +205,7 @@ export async function createUnsignedGovernanceTx({
             } else if (drepKind === DRepKind.KeyHash) {
               const drepKeyHash = drep.toKeyHash()
               if (drepKeyHash) {
-                drepValue = {KeyHash: drepKeyHash.toHex()}
+                drepValue = {KeyHash: drepKeyHash.toHex() as KeyHash}
               } else {
                 throw new Error(
                   'Vote delegation certificate DRep KeyHash is invalid',
@@ -200,7 +214,7 @@ export async function createUnsignedGovernanceTx({
             } else if (drepKind === DRepKind.ScriptHash) {
               const drepScriptHash = drep.toScriptHash()
               if (drepScriptHash) {
-                drepValue = {ScriptHash: drepScriptHash.toHex()}
+                drepValue = {ScriptHash: drepScriptHash.toHex() as ScriptHash}
               } else {
                 throw new Error(
                   'Vote delegation certificate DRep ScriptHash is invalid',
@@ -213,7 +227,7 @@ export async function createUnsignedGovernanceTx({
             }
             result.push({
               kind: CertificateKind.VoteDelegation,
-              stakeCredentialKeyHashHex: keyHash.toHex(),
+              stakeCredentialKeyHashHex: keyHash.toHex() as KeyHash,
               drep: drepValue,
             })
             continue
@@ -229,7 +243,7 @@ export async function createUnsignedGovernanceTx({
             }
             result.push({
               kind: CertificateKind.StakeRegistration,
-              stakeCredentialKeyHashHex: keyHash.toHex(),
+              stakeCredentialKeyHashHex: Branded.asKeyHash(keyHash.toHex()),
             })
             continue
           }
@@ -246,7 +260,7 @@ export async function createUnsignedGovernanceTx({
             }
             result.push({
               kind: CertificateKind.StakeDeregistration,
-              stakeCredentialKeyHashHex: keyHash.toHex(),
+              stakeCredentialKeyHashHex: Branded.asKeyHash(keyHash.toHex()),
             })
             continue
           }

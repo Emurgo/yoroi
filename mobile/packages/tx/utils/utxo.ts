@@ -1,6 +1,7 @@
 // UTXO conversion utilities
 // Functions for converting between RawUtxo and ModernUtxo
-import {Balance, Portfolio} from '@yoroi/types'
+import {primaryTokenId as defaultPrimaryTokenId} from '@yoroi/portfolio'
+import {Balance, Branded, Portfolio, TokenId} from '@yoroi/types'
 
 import type {
   TransactionUnspentOutput,
@@ -69,18 +70,18 @@ export function rawUtxoToModernUtxo(
 
   // Add primary token (ADA)
   if (Number(rawUtxo.amount) > 0) {
-    balance[primaryTokenId] = rawUtxo.amount as Balance.Quantity
+    balance[primaryTokenId as TokenId] = rawUtxo.amount as Balance.Quantity
   }
 
   // Add other assets
   rawUtxo.assets.forEach((asset) => {
-    balance[asset.tokenId] = asset.amount as Balance.Quantity
+    balance[asset.tokenId as TokenId] = asset.amount as Balance.Quantity
   })
 
   // Create the ModernUtxo object
   const modernUtxo: ModernUtxo = {
-    receiver: rawUtxo.receiver,
-    txHash: rawUtxo.tx_hash,
+    receiver: Branded.asAddress(rawUtxo.receiver),
+    txHash: Branded.asTransactionHash(rawUtxo.tx_hash),
     txIndex: rawUtxo.tx_index,
     balance,
     derivationPath,
@@ -127,13 +128,12 @@ function toTransactionUnspentOutput(
     this.txIndex,
   )
 
-  const primaryTokenId = '.'
-  const adaAmount = this.balance[primaryTokenId] ?? '0'
+  const adaAmount = this.balance[defaultPrimaryTokenId] ?? '0'
   const value = csl.Value.new(csl.BigNum.fromStr(adaAmount))
 
   // Get all token IDs except primary token
   const tokenIds = Object.keys(this.balance).filter(
-    (id) => id !== primaryTokenId,
+    (id) => id !== defaultPrimaryTokenId,
   ) as Portfolio.Token.Id[]
 
   if (tokenIds.length > 0) {

@@ -1,11 +1,18 @@
-import {Balance} from '@yoroi/types'
+import {
+  Address,
+  Amount,
+  Balance,
+  KeyHash,
+  ScriptHash,
+  TransactionCbor,
+} from '@yoroi/types'
 
 import type {MintAction} from '../minting/types'
 import {Datum} from '../types'
 import {ModernUtxo} from '../utxo/models'
 
 export type TransactionOutput = {
-  address: string
+  address: Address
   amounts: Balance.Amounts
   datum?: Datum
 }
@@ -46,8 +53,8 @@ export type CertificateKind =
 export type DRepValue =
   | 'AlwaysAbstain'
   | 'AlwaysNoConfidence'
-  | {KeyHash: string}
-  | {ScriptHash: string}
+  | {KeyHash: KeyHash}
+  | {ScriptHash: ScriptHash}
 
 /**
  * Certificate data for transaction building
@@ -59,16 +66,16 @@ export type DRepValue =
 export type TransactionCertificate =
   | {
       kind: 'StakeRegistration'
-      stakeCredentialKeyHashHex: string
+      stakeCredentialKeyHashHex: KeyHash
     }
   | {
       kind: 'StakeDeregistration'
-      stakeCredentialKeyHashHex: string
+      stakeCredentialKeyHashHex: KeyHash
     }
   | {
       kind: 'StakeDelegation'
-      stakeCredentialKeyHashHex: string
-      poolKeyHash: string // hex
+      stakeCredentialKeyHashHex: KeyHash
+      poolKeyHash: KeyHash
     }
   | {
       kind: 'PoolRegistration'
@@ -76,68 +83,68 @@ export type TransactionCertificate =
     }
   | {
       kind: 'PoolRetirement'
-      poolKeyHash: string // hex
+      poolKeyHash: KeyHash
     }
   | {
       kind: 'MoveInstantaneousRewardsCert'
-      rewards: Record<string, string>
+      rewards: Record<string, Amount>
       pot: 0 | 1
     }
   | {
       kind: 'GenesisKeyDelegation'
-      stakeCredentialKeyHashHex?: string
+      stakeCredentialKeyHashHex?: KeyHash
     }
   | {
       kind: 'CommitteeHotAuth'
-      stakeCredentialKeyHashHex?: string
+      stakeCredentialKeyHashHex?: KeyHash
     }
   | {
       kind: 'CommitteeColdResign'
-      stakeCredentialKeyHashHex?: string
+      stakeCredentialKeyHashHex?: KeyHash
     }
   | {
       kind: 'DRepDeregistration'
-      stakeCredentialKeyHashHex?: string
+      stakeCredentialKeyHashHex?: KeyHash
     }
   | {
       kind: 'DRepRegistration'
-      stakeCredentialKeyHashHex?: string
+      stakeCredentialKeyHashHex?: KeyHash
     }
   | {
       kind: 'DRepUpdate'
-      stakeCredentialKeyHashHex?: string
+      stakeCredentialKeyHashHex?: KeyHash
     }
   | {
       kind: 'VoteDelegation'
-      stakeCredentialKeyHashHex: string
+      stakeCredentialKeyHashHex: KeyHash
       drep: DRepValue
     }
   | {
       kind: 'StakeAndVoteDelegation'
-      stakeCredentialKeyHashHex: string
-      poolKeyHash?: string // hex
+      stakeCredentialKeyHashHex: KeyHash
+      poolKeyHash?: KeyHash
       drep?: DRepValue | null
     }
   | {
       kind: 'StakeRegistrationAndDelegation'
-      stakeCredentialKeyHashHex: string
-      poolKeyHash?: string // hex
+      stakeCredentialKeyHashHex: KeyHash
+      poolKeyHash?: KeyHash
     }
   | {
       kind: 'StakeVoteRegistrationAndDelegation'
-      stakeCredentialKeyHashHex: string
-      poolKeyHash?: string // hex
+      stakeCredentialKeyHashHex: KeyHash
+      poolKeyHash?: KeyHash
       drep?: DRepValue | null
     }
   | {
       kind: 'VoteRegistrationAndDelegation'
-      stakeCredentialKeyHashHex: string
+      stakeCredentialKeyHashHex: KeyHash
       drep?: DRepValue | null
     }
 
 export type TransactionWithdrawal = {
-  rewardAddress: string
-  amount: string
+  rewardAddress: Address
+  amount: Amount
 }
 
 export type TransactionReferenceInput = {
@@ -150,7 +157,7 @@ export type TransactionMetadata = {
 }
 
 export type TransactionOptions = {
-  changeAddress?: string
+  changeAddress?: Address
   ttl?: number
   validityInterval?: {
     start: number
@@ -171,5 +178,5 @@ export type UnsignedTransaction = {
   collateralInputs: TransactionInput[]
   metadata?: TransactionMetadata[]
   options: TransactionOptions
-  cbor?: string // CBOR hex string
+  cbor?: TransactionCbor // CBOR hex string
 }

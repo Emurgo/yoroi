@@ -9,7 +9,7 @@ import {
   signRawTransaction,
   validateTransactionCbor,
 } from '@yoroi/tx'
-import {Balance, BaseAsset, Portfolio, Wallet} from '@yoroi/types'
+import {Balance, BaseAsset, Branded, Portfolio, Wallet} from '@yoroi/types'
 
 import * as CSL from '@emurgo/cross-csl-core'
 import {Address, WasmModuleProxy} from '@emurgo/cross-csl-core'
@@ -186,9 +186,11 @@ class CIP30Extension {
   }
 
   async submitTx(cbor: string): Promise<string> {
-    const base64 = Buffer.from(cbor, 'hex').toString('base64')
+    const base64 = Branded.asTransactionCborBase64(
+      Buffer.from(cbor, 'hex').toString('base64'),
+    )
     const txId = await CardanoMobileWrapped.cslScope(async (csl) => {
-      return await calculateTxId(csl, base64, 'base64')
+      return await calculateTxId(csl, cbor, 'hex')
     })
     await this.wallet.submitTransaction(base64)
     return txId
@@ -382,7 +384,7 @@ const cardanoUtxoFromRemoteFormat = (
   }
 
   // Get primary token amount (ADA)
-  const primaryAmount = u.balance[primaryTokenId] || '0'
+  const primaryAmount = u.balance[primaryTokenId] ?? Branded.ZERO_QUANTITY
   const amountBigNum = csl.BigNum.fromStr(primaryAmount)
   if (!amountBigNum) {
     throw new Error(`Failed to create BigNum from amount: ${primaryAmount}`)
@@ -398,14 +400,13 @@ const cardanoUtxoFromRemoteFormat = (
     .filter(([tokenId]) => tokenId !== primaryTokenId)
     .map(([tokenId, amount]) => ({
       tokenId: tokenId as Portfolio.Token.Id,
-      amount: amount as string,
-      policyId: '', // Not needed for multiasset construction
-      name: '', // Not needed for multiasset construction
+      amount: Branded.asAmount(amount as string),
+      policyId: Branded.asPolicyId(''),
+      name: Branded.asAssetName(''),
     }))
 
   if (assets.length > 0) {
-    const baseAssets: BaseAsset[] = assets
-    const multiasset = remoteAssetToMultiasset(baseAssets, csl)
+    const multiasset = remoteAssetToMultiasset(assets, csl)
     if (!multiasset) {
       throw new Error('Failed to create MultiAsset')
     }
@@ -443,7 +444,7 @@ const _getBalance = (
   if (tokenId === 'TADA' || tokenId === 'ADA') tokenId = '.'
   const amounts = Utxos.toAmounts(utxos, primaryTokenId)
   const value = csl.Value.new(
-    csl.BigNum.fromStr(amounts[primaryTokenId] ?? '0'),
+    csl.BigNum.fromStr(amounts[primaryTokenId] ?? Branded.ZERO_QUANTITY),
   )
   const normalizedInHex = Object.keys(amounts)
     .filter((t) => {
@@ -454,7 +455,7 @@ const _getBalance = (
       if (tokenId === '.' || tokenId === '' || tokenId === primaryTokenId)
         return null
       const {policyId, name} = identifierToCardanoAsset(csl, tokenId)
-      const amount = amounts[tokenId]
+      const amount = amounts[tokenId as Portfolio.Token.Id] as string
       return {policyIdHex: policyId.toHex(), nameHex: name.toHex(), amount}
     })
 
@@ -472,7 +473,9 @@ const _getBalance = (
     for (const asset of assetValue) {
       if (!asset) continue
       const assetName = csl.AssetName.fromHex(asset.nameHex)
-      const assetValue = csl.BigNum.fromStr(asset.amount ?? '0')
+      const assetValue = csl.BigNum.fromStr(
+        asset.amount ?? Branded.ZERO_QUANTITY,
+      )
       assets.insert(assetName, assetValue)
     }
     multiAsset.insert(policyId, assets)
@@ -573,7 +576,7 @@ export const _getRequiredUtxos = async (
 
   try {
     const unsignedTx = await createSendTxFromWallet(wallet, {
-      entries: [{address: rewardAddress, amounts}],
+      entries: [{address: Branded.asAddress(rewardAddress), amounts}],
       addressMode: meta.addressMode,
     })
     const requiredUtxos = findUtxosInUnsignedTx(
@@ -740,13 +743,15 @@ const getAmountsFromValue = (
   const amounts: Balance.Amounts = {}
 
   if (valueFromHex.hasValue()) {
-    amounts[primaryTokenId] = asQuantity(valueFromHex.coin().toStr())
+    amounts[primaryTokenId as Portfolio.Token.Id] = asQuantity(
+      valueFromHex.coin().toStr(),
+    )
   }
   const ma = valueFromHex.multiasset()
   if (ma) {
     for (const token of parseTokenList(csl, ma)) {
       const {assetId, amount} = token
-      amounts[assetId] = asQuantity(amount)
+      amounts[assetId as Portfolio.Token.Id] = asQuantity(amount)
     }
   }
   return amounts

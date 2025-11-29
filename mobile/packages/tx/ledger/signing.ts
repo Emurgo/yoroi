@@ -1,5 +1,7 @@
 // Ledger signing functions
 // Functions for building signed transactions from Ledger signatures
+import {Address, PublicKeyHex} from '@yoroi/types'
+
 import {
   SignTransactionResponse,
   SignedTransactionData,
@@ -77,9 +79,9 @@ export async function buildLedgerSignedTx(
       toBytes(): Uint8Array
     } | null
     catalystRegistrationData?: {
-      votingPublicKeyHex: string
-      stakingPublicKeyHex: string
-      paymentAddress: string
+      votingPublicKeyHex: PublicKeyHex | string
+      stakingPublicKeyHex: PublicKeyHex | string
+      paymentAddress: Address | string
       nonce: number
     }
   },

@@ -14,7 +14,7 @@ import {
   setChangeAddress,
   setTTLWithBuffer,
 } from '@yoroi/tx'
-import {Portfolio, Wallet} from '@yoroi/types'
+import {Address, Branded, KeyHash, Portfolio, Wallet} from '@yoroi/types'
 
 import type {PublicKey} from '@emurgo/cross-csl-core'
 import BigNumber from 'bignumber.js'
@@ -23,7 +23,7 @@ import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
 
 export type CreateWithdrawalTxParams = {
   utxos: ModernUtxo[]
-  rewardAddressHex: string
+  rewardAddressHex: Address | string
   primaryTokenId: Portfolio.Token.Id
   protocolParams: {
     coinsPerUtxoByte: string
@@ -33,9 +33,9 @@ export type CreateWithdrawalTxParams = {
   }
   networkId: number
   getAbsoluteSlotNumber: () => Promise<BigNumber>
-  getChangeAddress: (addressMode: Wallet.AddressMode) => string
+  getChangeAddress: (addressMode: Wallet.AddressMode) => Address | string
   getStakingKey: () => PublicKey
-  getAccountState: (addresses: string[]) => Promise<AccountStateResponse>
+  getAccountState: (addresses: Address[]) => Promise<AccountStateResponse>
   shouldDeregister: boolean
   addressMode: Wallet.AddressMode
 }
@@ -56,8 +56,18 @@ export async function createWithdrawalTx({
   const logger = getLogger()
 
   const absSlotNumber = await getAbsoluteSlotNumber()
-  const changeAddress = getChangeAddress(addressMode)
-  const accountState = await getAccountState([rewardAddressHex])
+  const changeAddressRaw = getChangeAddress(addressMode)
+  const changeAddress =
+    typeof changeAddressRaw === 'string'
+      ? (changeAddressRaw as Address)
+      : changeAddressRaw
+  const rewardAddrStr =
+    typeof rewardAddressHex === 'string' ? rewardAddressHex : rewardAddressHex
+  const rewardAddressBranded =
+    typeof rewardAddressHex === 'string'
+      ? Branded.asAddress(rewardAddressHex)
+      : rewardAddressHex
+  const accountState = await getAccountState([rewardAddressBranded])
 
   const protocolParamsConfig = createCardanoHaskellConfig(
     protocolParams,
@@ -72,7 +82,7 @@ export async function createWithdrawalTx({
   for (const address in accountState) {
     const state = accountState[address]
     if (state) {
-      rewards = state.remainingAmount || '0'
+      rewards = state.remainingAmount ?? Branded.ZERO_QUANTITY
       break // Use first non-null account state (we only requested one address)
     }
   }
@@ -80,43 +90,43 @@ export async function createWithdrawalTx({
   // Extract stake credential key hash - needed for certificate (Conway requirement)
   // If we have rewards, extract from reward address; if deregistering without rewards, extract from staking key
   // This is done once outside the retry loop since it doesn't depend on UTXO selection
-  let stakeCredentialKeyHashHex: string | undefined
-  let rewardAddressBech32: string | undefined
+  let stakeCredentialKeyHashHex: KeyHash | undefined
+  let rewardAddressBech32: Address | undefined
 
   if (BigInt(rewards) > 0n) {
     // Convert reward address to bech32 and extract stake credential
     const result = CardanoMobileWrapped.cslScope((csl) => {
       let address
-      if (csl.ByronAddress.isValid(rewardAddressHex)) {
-        const byronAddr = csl.ByronAddress.fromBase58(rewardAddressHex)
+      if (csl.ByronAddress.isValid(rewardAddrStr)) {
+        const byronAddr = csl.ByronAddress.fromBase58(rewardAddrStr)
         address = byronAddr.toAddress()
       } else {
-        const isHexAddr = isHex(rewardAddressHex)
+        const isHexAddr = isHex(rewardAddrStr)
         address = isHexAddr
-          ? csl.Address.fromHex(rewardAddressHex)
-          : csl.Address.fromBech32(rewardAddressHex)
+          ? csl.Address.fromHex(rewardAddrStr)
+          : csl.Address.fromBech32(rewardAddrStr)
       }
       if (!address || address.isMalformed()) {
-        throw new Error(`Invalid reward address: ${rewardAddressHex}`)
+        throw new Error(`Invalid reward address: ${rewardAddrStr}`)
       }
 
       const rewardAddr = csl.RewardAddress.fromAddress(address)
       if (!rewardAddr) {
         throw new Error(
-          `Failed to create RewardAddress from address: ${rewardAddressHex}`,
+          `Failed to create RewardAddress from address: ${rewardAddrStr}`,
         )
       }
       const stakeCred = rewardAddr.paymentCred()
       if (!stakeCred) {
         throw new Error(
-          `Failed to extract stake credential from reward address: ${rewardAddressHex}`,
+          `Failed to extract stake credential from reward address: ${rewardAddrStr}`,
         )
       }
 
       const bech32 = address.toBech32(undefined)
       if (!bech32) {
         throw new Error(
-          `Failed to convert reward address to bech32: ${rewardAddressHex}`,
+          `Failed to convert reward address to bech32: ${rewardAddrStr}`,
         )
       }
 
@@ -128,8 +138,8 @@ export async function createWithdrawalTx({
       }
 
       return {
-        rewardAddressBech32: bech32,
-        stakeCredentialKeyHashHex: keyHash.toHex(),
+        rewardAddressBech32: bech32 as Address,
+        stakeCredentialKeyHashHex: Branded.asKeyHash(keyHash.toHex()),
       }
     })
     rewardAddressBech32 = result.rewardAddressBech32
@@ -138,7 +148,7 @@ export async function createWithdrawalTx({
     // No rewards but deregistering - extract from staking key
     stakeCredentialKeyHashHex = CardanoMobileWrapped.cslScope(() => {
       const keyHash = getStakingKey().hash()
-      return keyHash.toHex()
+      return Branded.asKeyHash(keyHash.toHex())
     })
   }
 
@@ -165,8 +175,8 @@ export async function createWithdrawalTx({
     // For pure ADA UTXOs, use smallest-first to minimize change
     // Sort smallest first (ascending)
     const sortedPureAda = [...pureAdaUtxos].sort((a, b) => {
-      const aAda = BigInt(a.balance[primaryTokenId] || '0')
-      const bAda = BigInt(b.balance[primaryTokenId] || '0')
+      const aAda = BigInt(a.balance[primaryTokenId] ?? Branded.ZERO_QUANTITY)
+      const bAda = BigInt(b.balance[primaryTokenId] ?? Branded.ZERO_QUANTITY)
       if (aAda < bAda) return -1
       if (aAda > bAda) return 1
       return 0
@@ -180,7 +190,9 @@ export async function createWithdrawalTx({
     for (const utxo of sortedPureAda) {
       if (selectedAda >= requiredAdaBigInt) break
       selected.push(utxo)
-      selectedAda += BigInt(utxo.balance[primaryTokenId] || '0')
+      selectedAda += BigInt(
+        utxo.balance[primaryTokenId] ?? Branded.ZERO_QUANTITY,
+      )
     }
 
     // If we don't have enough from pure ADA UTXOs, add UTXOs with tokens
@@ -237,7 +249,13 @@ export async function createWithdrawalTx({
 
       // Add withdrawal if we have rewards
       if (rewardAddressBech32) {
-        builderState = addWithdrawal(builderState, rewardAddressBech32, rewards)
+        const rewardsAmount =
+          typeof rewards === 'string' ? Branded.asAmount(rewards) : rewards
+        builderState = addWithdrawal(
+          builderState,
+          rewardAddressBech32,
+          rewardsAmount,
+        )
 
         // Only add certificate when explicitly deregistering (matches yoroi-lib behavior)
         // Normal withdrawals don't require certificates

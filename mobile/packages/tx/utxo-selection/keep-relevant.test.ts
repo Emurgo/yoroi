@@ -1,4 +1,5 @@
-import {Balance} from '@yoroi/types'
+import {primaryTokenId} from '@yoroi/portfolio'
+import {Address, Balance, TokenId, TransactionHash} from '@yoroi/types'
 
 import {ModernUtxo} from '../utxo/models'
 import {keepRelevant} from './keep-relevant'
@@ -9,8 +10,8 @@ describe('keepRelevant', () => {
     txHash = 'hash1',
     txIndex = 0,
   ): ModernUtxo => ({
-    receiver: 'addr_test1',
-    txHash,
+    receiver: 'addr_test1' as Address,
+    txHash: txHash as TransactionHash,
     txIndex,
     balance,
     toTransactionUnspentOutputHex: jest.fn(() => 'hex'),
@@ -18,12 +19,28 @@ describe('keepRelevant', () => {
   })
 
   it('should select UTXOs with required assets first', () => {
+    const token1 = 'token1' as TokenId
     const utxos = [
-      createMockUtxo({'.': '1000000'}, 'hash1', 0),
-      createMockUtxo({'.': '2000000', 'token1': '100'}, 'hash2', 1),
-      createMockUtxo({'.': '5000000'}, 'hash3', 2),
+      createMockUtxo(
+        {[primaryTokenId]: '1000000' as Balance.Quantity},
+        'hash1',
+        0,
+      ),
+      createMockUtxo(
+        {[primaryTokenId]: '2000000', [token1]: '100'} as Balance.Amounts,
+        'hash2',
+        1,
+      ),
+      createMockUtxo(
+        {[primaryTokenId]: '5000000' as Balance.Quantity},
+        'hash3',
+        2,
+      ),
     ]
-    const required: Balance.Amounts = {'.': '1000000', 'token1': '50'}
+    const required: Balance.Amounts = {
+      [primaryTokenId]: '1000000',
+      [token1]: '50',
+    } as Balance.Amounts
 
     const result = keepRelevant(required, utxos)
 
@@ -32,12 +49,28 @@ describe('keepRelevant', () => {
   })
 
   it('should use largest first for remaining ADA requirements', () => {
+    const token1 = 'token1' as TokenId
     const utxos = [
-      createMockUtxo({'.': '1000000', 'token1': '100'}, 'hash1', 0),
-      createMockUtxo({'.': '5000000'}, 'hash2', 1),
-      createMockUtxo({'.': '2000000'}, 'hash3', 2),
+      createMockUtxo(
+        {[primaryTokenId]: '1000000', [token1]: '100'} as Balance.Amounts,
+        'hash1',
+        0,
+      ),
+      createMockUtxo(
+        {[primaryTokenId]: '5000000' as Balance.Quantity},
+        'hash2',
+        1,
+      ),
+      createMockUtxo(
+        {[primaryTokenId]: '2000000' as Balance.Quantity},
+        'hash3',
+        2,
+      ),
     ]
-    const required: Balance.Amounts = {'.': '3000000', 'token1': '50'}
+    const required: Balance.Amounts = {
+      [primaryTokenId]: '3000000',
+      [token1]: '50',
+    } as Balance.Amounts
 
     const result = keepRelevant(required, utxos)
 
@@ -48,11 +81,25 @@ describe('keepRelevant', () => {
 
   it('should handle ADA-only requirements', () => {
     const utxos = [
-      createMockUtxo({'.': '1000000'}, 'hash1', 0),
-      createMockUtxo({'.': '5000000'}, 'hash2', 1),
-      createMockUtxo({'.': '2000000'}, 'hash3', 2),
+      createMockUtxo(
+        {[primaryTokenId]: '1000000' as Balance.Quantity},
+        'hash1',
+        0,
+      ),
+      createMockUtxo(
+        {[primaryTokenId]: '5000000' as Balance.Quantity},
+        'hash2',
+        1,
+      ),
+      createMockUtxo(
+        {[primaryTokenId]: '2000000' as Balance.Quantity},
+        'hash3',
+        2,
+      ),
     ]
-    const required: Balance.Amounts = {'.': '3000000'}
+    const required: Balance.Amounts = {
+      [primaryTokenId]: '3000000' as Balance.Quantity,
+    }
 
     const result = keepRelevant(required, utxos)
 
@@ -62,56 +109,104 @@ describe('keepRelevant', () => {
   })
 
   it('should respect maxUtxos option', () => {
+    const token1 = 'token1' as TokenId
     const utxos = [
-      createMockUtxo({'.': '1000000', 'token1': '100'}, 'hash1', 0),
-      createMockUtxo({'.': '2000000', 'token1': '50'}, 'hash2', 1),
-      createMockUtxo({'.': '1500000'}, 'hash3', 2),
+      createMockUtxo(
+        {[primaryTokenId]: '1000000', [token1]: '100'} as Balance.Amounts,
+        'hash1',
+        0,
+      ),
+      createMockUtxo(
+        {[primaryTokenId]: '2000000', [token1]: '50'} as Balance.Amounts,
+        'hash2',
+        1,
+      ),
+      createMockUtxo(
+        {[primaryTokenId]: '1500000' as Balance.Quantity},
+        'hash3',
+        2,
+      ),
     ]
-    const required: Balance.Amounts = {'.': '5000000', 'token1': '150'}
+    const required: Balance.Amounts = {
+      [primaryTokenId]: '5000000',
+      [token1]: '150',
+    } as Balance.Amounts
 
-    const result = keepRelevant(required, utxos, '.', {maxUtxos: 2})
+    const result = keepRelevant(required, utxos, primaryTokenId, {maxUtxos: 2})
 
     expect(result.selected.length).toBeLessThanOrEqual(2)
   })
 
   it('should calculate missing amounts when insufficient', () => {
     const utxos = [
-      createMockUtxo({'.': '1000000'}, 'hash1', 0),
-      createMockUtxo({'.': '2000000'}, 'hash2', 1),
-    ]
-    const required: Balance.Amounts = {'.': '5000000'}
-
-    const result = keepRelevant(required, utxos)
-
-    expect(result.missingAmounts['.']).toBeDefined()
-    expect(parseInt(result.missingAmounts['.'] || '0', 10)).toBeGreaterThan(0)
-  })
-
-  it('should handle empty UTXO list', () => {
-    const utxos: ModernUtxo[] = []
-    const required: Balance.Amounts = {'.': '1000000', 'token1': '50'}
-
-    const result = keepRelevant(required, utxos)
-
-    expect(result.selected).toHaveLength(0)
-    expect(result.missingAmounts['.']).toBe('1000000')
-  })
-
-  it('should prioritize UTXOs with multiple required assets', () => {
-    const utxos = [
-      createMockUtxo({'.': '1000000', 'token1': '50'}, 'hash1', 0),
       createMockUtxo(
-        {'.': '2000000', 'token1': '100', 'token2': '200'},
+        {[primaryTokenId]: '1000000' as Balance.Quantity},
+        'hash1',
+        0,
+      ),
+      createMockUtxo(
+        {[primaryTokenId]: '2000000' as Balance.Quantity},
         'hash2',
         1,
       ),
-      createMockUtxo({'.': '3000000'}, 'hash3', 2),
     ]
     const required: Balance.Amounts = {
-      '.': '2000000',
-      'token1': '100',
-      'token2': '150',
+      [primaryTokenId]: '5000000' as Balance.Quantity,
     }
+
+    const result = keepRelevant(required, utxos)
+    const primaryTokenIdStr = primaryTokenId as string
+
+    expect(result.missingAmounts[primaryTokenIdStr as TokenId]).toBeDefined()
+    expect(
+      parseInt(result.missingAmounts[primaryTokenIdStr as TokenId] || '0', 10),
+    ).toBeGreaterThan(0)
+  })
+
+  it('should handle empty UTXO list', () => {
+    const token1 = 'token1' as TokenId
+    const utxos: ModernUtxo[] = []
+    const required: Balance.Amounts = {
+      [primaryTokenId]: '1000000',
+      [token1]: '50',
+    } as Balance.Amounts
+
+    const result = keepRelevant(required, utxos)
+    const primaryTokenIdStr = primaryTokenId as string
+
+    expect(result.selected).toHaveLength(0)
+    expect(result.missingAmounts[primaryTokenIdStr as TokenId]).toBe('1000000')
+  })
+
+  it('should prioritize UTXOs with multiple required assets', () => {
+    const token1 = 'token1' as TokenId
+    const token2 = 'token2' as TokenId
+    const utxos = [
+      createMockUtxo(
+        {[primaryTokenId]: '1000000', [token1]: '50'} as Balance.Amounts,
+        'hash1',
+        0,
+      ),
+      createMockUtxo(
+        {
+          [primaryTokenId]: '2000000',
+          [token1]: '100',
+          [token2]: '200',
+        } as Balance.Amounts,
+        'hash2',
+        1,
+      ),
+      createMockUtxo(
+        {[primaryTokenId]: '3000000' as Balance.Quantity},
+        'hash3',
+        2,
+      ),
+    ]
+    const required: Balance.Amounts = {
+      [primaryTokenId]: '2000000',
+      [token1]: '100',
+      [token2]: '150',
+    } as Balance.Amounts
 
     const result = keepRelevant(required, utxos)
 
@@ -125,7 +220,7 @@ function hasEnoughAmounts(
   amounts2: Balance.Amounts,
 ): boolean {
   for (const [tokenId, requiredQuantity] of Object.entries(amounts2)) {
-    const available = amounts1[tokenId] || '0'
+    const available = amounts1[tokenId as TokenId] || '0'
     if (parseInt(available, 10) < parseInt(requiredQuantity, 10)) {
       return false
     }

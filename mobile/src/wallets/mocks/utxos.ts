@@ -1,6 +1,46 @@
 import {RawUtxo} from '@yoroi/api'
+import {
+  Address,
+  AssetName,
+  BalanceQuantity,
+  PolicyId,
+  Portfolio,
+  TransactionHash,
+  UtxoId,
+} from '@yoroi/types'
 
-export const utxos: RawUtxo[] = [
+/**
+ * Helper function to create a mock RawUtxo without individual field casts
+ */
+function createMockRawUtxo(data: {
+  utxo_id: string
+  tx_hash: string
+  tx_index: number
+  receiver: string
+  amount: string
+  assets?: Array<{
+    tokenId: string
+    policyId: string
+    name: string
+    amount: string
+  }>
+}): RawUtxo {
+  return {
+    utxo_id: data.utxo_id as UtxoId,
+    tx_hash: data.tx_hash as TransactionHash,
+    tx_index: data.tx_index,
+    receiver: data.receiver as Address,
+    amount: data.amount as BalanceQuantity,
+    assets: (data.assets ?? []).map((asset) => ({
+      tokenId: asset.tokenId as Portfolio.Token.Id,
+      policyId: asset.policyId as PolicyId,
+      name: asset.name as AssetName,
+      amount: asset.amount as BalanceQuantity,
+    })),
+  }
+}
+
+const rawUtxoData = [
   {
     utxo_id:
       '1d38bea2d83eec5cca60ca2c1c3cc0db48b8e2e1a632c2d97849adb5357aca05:1',
@@ -822,3 +862,5 @@ export const utxos: RawUtxo[] = [
     assets: [],
   },
 ]
+
+export const utxos = rawUtxoData.map(createMockRawUtxo) satisfies RawUtxo[]

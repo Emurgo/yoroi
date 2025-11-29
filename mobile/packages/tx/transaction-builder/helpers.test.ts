@@ -1,4 +1,12 @@
-import {Balance, Chain, Portfolio, Wallet} from '@yoroi/types'
+import {primaryTokenId} from '@yoroi/portfolio'
+import {
+  Address,
+  Balance,
+  Chain,
+  TokenId,
+  TransactionHash,
+  Wallet,
+} from '@yoroi/types'
 
 import {BigNumber} from 'bignumber.js'
 
@@ -23,8 +31,8 @@ describe('transaction builder helpers', () => {
     txHash = 'hash1',
     txIndex = 0,
   ): ModernUtxo => ({
-    receiver: 'addr_test1',
-    txHash,
+    receiver: 'addr_test1' as Address,
+    txHash: txHash as TransactionHash,
     txIndex,
     balance,
     toTransactionUnspentOutputHex: jest.fn(() => 'hex'),
@@ -145,12 +153,24 @@ describe('transaction builder helpers', () => {
   describe('sortUtxosByAda', () => {
     it('should sort UTXOs by ADA amount descending', () => {
       const utxos = [
-        createMockUtxo({'.': '1000000'}, 'hash1', 0),
-        createMockUtxo({'.': '5000000'}, 'hash2', 1),
-        createMockUtxo({'.': '2000000'}, 'hash3', 2),
+        createMockUtxo(
+          {[primaryTokenId]: '1000000' as Balance.Quantity},
+          'hash1',
+          0,
+        ),
+        createMockUtxo(
+          {[primaryTokenId]: '5000000' as Balance.Quantity},
+          'hash2',
+          1,
+        ),
+        createMockUtxo(
+          {[primaryTokenId]: '2000000' as Balance.Quantity},
+          'hash3',
+          2,
+        ),
       ]
 
-      const result = sortUtxosByAda(utxos, '.')
+      const result = sortUtxosByAda(utxos, primaryTokenId)
 
       expect(result[0]?.txHash).toBe('hash2') // Largest first
       expect(result[1]?.txHash).toBe('hash3')
@@ -158,7 +178,7 @@ describe('transaction builder helpers', () => {
     })
 
     it('should handle empty array', () => {
-      const result = sortUtxosByAda([], '.')
+      const result = sortUtxosByAda([], primaryTokenId)
 
       expect(result).toEqual([])
     })
@@ -167,33 +187,58 @@ describe('transaction builder helpers', () => {
   describe('selectUtxosForAmounts', () => {
     it('should select UTXOs with required tokens', () => {
       const utxos = [
-        createMockUtxo({'.': '1000000', 'token1': '100'}, 'hash1', 0),
-        createMockUtxo({'.': '5000000'}, 'hash2', 1),
+        createMockUtxo(
+          {
+            [primaryTokenId]: '1000000' as Balance.Quantity,
+            ['token1' as TokenId]: '100' as Balance.Quantity,
+          },
+          'hash1',
+          0,
+        ),
+        createMockUtxo(
+          {[primaryTokenId]: '5000000' as Balance.Quantity},
+          'hash2',
+          1,
+        ),
       ]
-      const requiredAmounts = {token1: '50'} as Record<
-        Portfolio.Token.Id,
-        string
-      >
+      const requiredAmounts: Record<TokenId, Balance.Quantity> = {
+        ['token1' as TokenId]: '50' as Balance.Quantity,
+      }
 
-      const result = selectUtxosForAmounts(utxos, requiredAmounts, '.')
+      const result = selectUtxosForAmounts(
+        utxos,
+        requiredAmounts,
+        primaryTokenId,
+      )
 
       expect(result.some((u) => u.txHash === 'hash1')).toBe(true)
     })
 
     it('should select additional UTXOs for ADA requirements', () => {
       const utxos = [
-        createMockUtxo({'.': '1000000', 'token1': '100'}, 'hash1', 0),
-        createMockUtxo({'.': '5000000'}, 'hash2', 1),
+        createMockUtxo(
+          {
+            [primaryTokenId]: '1000000' as Balance.Quantity,
+            ['token1' as TokenId]: '100' as Balance.Quantity,
+          },
+          'hash1',
+          0,
+        ),
+        createMockUtxo(
+          {[primaryTokenId]: '5000000' as Balance.Quantity},
+          'hash2',
+          1,
+        ),
       ]
-      const requiredAmounts = {
-        '.': '3000000',
-        'token1': '50',
-      } as Record<Portfolio.Token.Id, string>
+      const requiredAmounts: Record<TokenId, Balance.Quantity> = {
+        [primaryTokenId]: '3000000' as Balance.Quantity,
+        ['token1' as TokenId]: '50' as Balance.Quantity,
+      }
 
       const result = selectUtxosForAmounts(
         utxos,
         requiredAmounts,
-        '.',
+        primaryTokenId,
         '200000',
       )
 
@@ -202,18 +247,25 @@ describe('transaction builder helpers', () => {
 
     it('should handle estimated fee', () => {
       const utxos = [
-        createMockUtxo({'.': '1000000'}, 'hash1', 0),
-        createMockUtxo({'.': '5000000'}, 'hash2', 1),
+        createMockUtxo(
+          {[primaryTokenId]: '1000000' as Balance.Quantity},
+          'hash1',
+          0,
+        ),
+        createMockUtxo(
+          {[primaryTokenId]: '5000000' as Balance.Quantity},
+          'hash2',
+          1,
+        ),
       ]
-      const requiredAmounts = {'.': '2000000'} as Record<
-        Portfolio.Token.Id,
-        string
-      >
+      const requiredAmounts: Record<TokenId, Balance.Quantity> = {
+        [primaryTokenId]: '2000000' as Balance.Quantity,
+      }
 
       const result = selectUtxosForAmounts(
         utxos,
         requiredAmounts,
-        '.',
+        primaryTokenId,
         '500000',
       )
 

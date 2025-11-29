@@ -10,7 +10,7 @@ import {
   setChangeAddress,
   setTTLWithBuffer,
 } from '@yoroi/tx'
-import {Wallet} from '@yoroi/types'
+import {Balance, Wallet} from '@yoroi/types'
 
 import {BigNumber} from 'bignumber.js'
 import * as React from 'react'
@@ -131,7 +131,7 @@ export const useMintTransaction = ({
         const estimatedFee = '200000'
         const selectedUtxos = selectUtxosForAmounts(
           modernUtxos,
-          {} as Record<string, string>,
+          {} as Balance.Amounts,
           primaryTokenId,
           estimatedFee,
         )

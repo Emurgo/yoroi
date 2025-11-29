@@ -1,7 +1,7 @@
 import {isLeft, isRight, parseNumberFromText} from '@yoroi/common'
 import {isPrimaryToken, primaryTokenId} from '@yoroi/portfolio'
 import {swapManagerMaker, swapStorageMaker} from '@yoroi/swap'
-import {Api, App, Balance, Portfolio, Swap} from '@yoroi/types'
+import {Api, App, Balance, Branded, Portfolio, Swap} from '@yoroi/types'
 
 import {useFocusEffect} from '@react-navigation/native'
 import {useQuery} from '@tanstack/react-query'
@@ -446,7 +446,7 @@ export const SwapProvider = ({children}: React.PropsWithChildren) => {
       parseNumberFromText({
         text: state.tokenInInput.value,
         denomination: tokenInInfo?.decimals ?? 0,
-      }).quantity ?? '0'
+      }).quantity ?? Branded.asBalanceQuantity('0')
     const amountsIn: Balance.Amounts = {
       [state.tokenInInput.tokenId]: quantityIn,
     }

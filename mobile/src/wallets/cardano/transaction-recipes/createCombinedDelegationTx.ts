@@ -15,7 +15,7 @@ import {
   setChangeAddress,
   setTTLWithBuffer,
 } from '@yoroi/tx'
-import {Portfolio, Wallet} from '@yoroi/types'
+import {Address, Branded, KeyHash, Portfolio, Wallet} from '@yoroi/types'
 
 import type {PublicKey} from '@emurgo/cross-csl-core'
 import BigNumber from 'bignumber.js'
@@ -33,10 +33,10 @@ export type CreateCombinedDelegationTxParams = {
   }
   networkId: number
   getAbsoluteSlotNumber: () => Promise<BigNumber>
-  getChangeAddress: (addressMode: Wallet.AddressMode) => string
+  getChangeAddress: (addressMode: Wallet.AddressMode) => Address | string
   getStakingKey: () => PublicKey
   getDelegationStatus: () => {isRegistered: boolean}
-  poolId?: string
+  poolId?: KeyHash | string
   drepValue?: DRepValue
   addressMode: Wallet.AddressMode
 }
@@ -65,7 +65,11 @@ export async function createCombinedDelegationTx({
   const logger = getLogger()
 
   const absSlotNumber = await getAbsoluteSlotNumber()
-  const changeAddress = getChangeAddress(addressMode)
+  const changeAddressRaw = getChangeAddress(addressMode)
+  const changeAddress =
+    typeof changeAddressRaw === 'string'
+      ? (changeAddressRaw as Address)
+      : changeAddressRaw
   const registrationStatus = getDelegationStatus().isRegistered
   const stakingKey = getStakingKey()
   const delegationType = registrationStatus
@@ -86,13 +90,14 @@ export async function createCombinedDelegationTx({
   // Convert poolId from bech32 to hex if needed (transaction builder expects hex)
   const poolKeyHashHex = poolId
     ? CardanoMobileWrapped.cslScope((csl) => {
+        const poolIdStr = typeof poolId === 'string' ? poolId : poolId
         // Check if poolId is bech32 format (starts with 'pool')
-        if (poolId.startsWith('pool')) {
-          const keyHash = csl.Ed25519KeyHash.fromBech32(poolId)
-          return keyHash.toHex()
+        if (poolIdStr.startsWith('pool')) {
+          const keyHash = csl.Ed25519KeyHash.fromBech32(poolIdStr)
+          return keyHash.toHex() as KeyHash
         }
         // Assume it's already hex format
-        return poolId
+        return poolIdStr as KeyHash
       })
     : undefined
 
@@ -125,8 +130,8 @@ export async function createCombinedDelegationTx({
     // For pure ADA UTXOs, use smallest-first to minimize change
     // Sort smallest first (ascending)
     const sortedPureAda = [...pureAdaUtxos].sort((a, b) => {
-      const aAda = BigInt(a.balance[primaryTokenId] || '0')
-      const bAda = BigInt(b.balance[primaryTokenId] || '0')
+      const aAda = BigInt(a.balance[primaryTokenId] ?? Branded.ZERO_QUANTITY)
+      const bAda = BigInt(b.balance[primaryTokenId] ?? Branded.ZERO_QUANTITY)
       if (aAda < bAda) return -1
       if (aAda > bAda) return 1
       return 0
@@ -140,7 +145,9 @@ export async function createCombinedDelegationTx({
     for (const utxo of sortedPureAda) {
       if (selectedAda >= requiredAdaBigInt) break
       selected.push(utxo)
-      selectedAda += BigInt(utxo.balance[primaryTokenId] || '0')
+      selectedAda += BigInt(
+        utxo.balance[primaryTokenId] ?? Branded.ZERO_QUANTITY,
+      )
     }
 
     // If we don't have enough from pure ADA UTXOs, add UTXOs with tokens
@@ -202,7 +209,10 @@ export async function createCombinedDelegationTx({
       if (delegationType === RegistrationStatus.RegisterAndDelegate) {
         certificates.push({
           kind: CertificateKind.StakeRegistration,
-          stakeCredentialKeyHashHex: stakeKeyHashHex,
+          stakeCredentialKeyHashHex:
+            typeof stakeKeyHashHex === 'string'
+              ? Branded.asKeyHash(stakeKeyHashHex)
+              : stakeKeyHashHex,
         })
       }
 
@@ -210,8 +220,14 @@ export async function createCombinedDelegationTx({
       if (poolKeyHashHex) {
         certificates.push({
           kind: CertificateKind.StakeDelegation,
-          stakeCredentialKeyHashHex: stakeKeyHashHex,
-          poolKeyHash: poolKeyHashHex,
+          stakeCredentialKeyHashHex:
+            typeof stakeKeyHashHex === 'string'
+              ? Branded.asKeyHash(stakeKeyHashHex)
+              : stakeKeyHashHex,
+          poolKeyHash:
+            typeof poolKeyHashHex === 'string'
+              ? Branded.asKeyHash(poolKeyHashHex)
+              : poolKeyHashHex,
         })
       }
 
@@ -219,7 +235,10 @@ export async function createCombinedDelegationTx({
       if (drepValue) {
         certificates.push({
           kind: CertificateKind.VoteDelegation,
-          stakeCredentialKeyHashHex: stakeKeyHashHex,
+          stakeCredentialKeyHashHex:
+            typeof stakeKeyHashHex === 'string'
+              ? Branded.asKeyHash(stakeKeyHashHex)
+              : stakeKeyHashHex,
           drep: drepValue,
         })
       }

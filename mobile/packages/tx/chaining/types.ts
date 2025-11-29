@@ -1,10 +1,12 @@
+import {TransactionHash} from '@yoroi/types'
+
 import {UnsignedTransaction} from '../transaction-builder/types'
 
 /**
  * Chained transaction reference
  */
 export type ChainedTransactionRef = {
-  txHash: string
+  txHash: TransactionHash
   txIndex: number
 }
 

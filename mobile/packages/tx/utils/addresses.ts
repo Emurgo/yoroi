@@ -1,11 +1,12 @@
 // Cardano address utilities
 // Cardano-specific address normalization and manipulation functions
 import {isHex} from '@yoroi/common'
+import {Address, AddressBech32, AddressHex} from '@yoroi/types'
 
 import {
-  Address,
   Bip32PublicKey,
   Credential,
+  Address as CslAddress,
   WasmModuleProxy,
 } from '@emurgo/cross-csl-core'
 
@@ -17,8 +18,8 @@ import {Addressing} from '../types'
  */
 export type AddressInfo = {
   networkId: number
-  hex: string
-  bech32: string | null
+  hex: AddressHex
+  bech32: AddressBech32 | null
   isValid: boolean
 }
 
@@ -28,20 +29,29 @@ export type AddressInfo = {
  * before the WASM objects are freed
  */
 export async function validateAndExtractAddressInfo(
-  addr: string,
+  addr: Address | string,
 ): Promise<AddressInfo | undefined> {
   return CardanoMobileWrapped.cslScope((csl) => {
-    let address: any
+    const addrStr = typeof addr === 'string' ? addr : addr
+    let address: CslAddress
 
     // 1) Try converting from base58
-    if (csl.ByronAddress.isValid(addr)) {
-      const byronAddr = csl.ByronAddress.fromBase58(addr)
-      address = byronAddr.toAddress()
+    if (csl.ByronAddress.isValid(addrStr)) {
+      const byronAddr = csl.ByronAddress.fromBase58(addrStr)
+      const byronAddress = byronAddr.toAddress()
+      if (!byronAddress) {
+        return undefined
+      }
+      address = byronAddress
     } else {
-      const isHexAddr = isHex(addr)
-      address = isHexAddr
-        ? csl.Address.fromHex(addr)
-        : csl.Address.fromBech32(addr)
+      const isHexAddr = isHex(addrStr)
+      const parsedAddress = isHexAddr
+        ? csl.Address.fromHex(addrStr)
+        : csl.Address.fromBech32(addrStr)
+      if (!parsedAddress) {
+        return undefined
+      }
+      address = parsedAddress
     }
 
     if (address.isMalformed()) {
@@ -50,8 +60,8 @@ export async function validateAndExtractAddressInfo(
 
     // Extract all needed values before scope exits
     const networkId = address.networkId()
-    const hex = address.toHex()
-    const bech32 = address.toBech32(undefined) ?? null
+    const hex = address.toHex() as AddressHex
+    const bech32 = (address.toBech32(undefined) ?? null) as AddressBech32 | null
 
     return {
       networkId,
@@ -77,22 +87,29 @@ export async function validateAndExtractAddressInfo(
  */
 export function normalizeToAddress(
   csl: WasmModuleProxy,
-  addr: string,
-): Address | undefined {
+  addr: Address | string,
+): CslAddress | undefined {
+  const addrStr = typeof addr === 'string' ? addr : addr
   // in Shelley, addresses can be base16, bech32 or base58
   // this function, we try parsing in all encodings possible
 
   // 1) Try converting from base58
-  if (csl.ByronAddress.isValid(addr)) {
-    const byronAddr = csl.ByronAddress.fromBase58(addr)
+  if (csl.ByronAddress.isValid(addrStr)) {
+    const byronAddr = csl.ByronAddress.fromBase58(addrStr)
     const address = byronAddr.toAddress()
-    return address.isMalformed() ? undefined : address
+    if (!address || address.isMalformed()) {
+      return undefined
+    }
+    return address
   }
 
-  const isHexAddr = isHex(addr)
+  const isHexAddr = isHex(addrStr)
   const address = isHexAddr
-    ? csl.Address.fromHex(addr)
-    : csl.Address.fromBech32(addr)
+    ? csl.Address.fromHex(addrStr)
+    : csl.Address.fromBech32(addrStr)
+  if (!address) {
+    return undefined
+  }
   const isMalformed = address.isMalformed()
   // Return undefined when malformed for backward compatibility
   return isMalformed ? undefined : address
@@ -103,7 +120,9 @@ export function normalizeToAddress(
  * NOTE: This function must use the same csl instance as the caller to avoid
  * NULL pointer errors. All CSL objects must be created from the same instance.
  */
-export async function filterAddressesByStakingKey<T extends {receiver: string}>(
+export async function filterAddressesByStakingKey<
+  T extends {receiver: Address},
+>(
   csl: WasmModuleProxy,
   stakingKey: Credential,
   utxos: ReadonlyArray<T>,
@@ -132,23 +151,30 @@ export async function filterAddressesByStakingKey<T extends {receiver: string}>(
  */
 export async function addrContainsAccountKey(
   csl: WasmModuleProxy,
-  address: string,
+  address: Address | string,
   targetAccountKey: Credential,
   acceptTypeMismatch: boolean,
 ): Promise<boolean> {
   // Parse address within the provided csl scope to avoid pointer issues
-  let wasmAddr: any
-  if (csl.ByronAddress.isValid(address)) {
-    const byronAddr = csl.ByronAddress.fromBase58(address)
-    wasmAddr = byronAddr.toAddress()
-  } else {
-    wasmAddr = isHex(address)
-      ? csl.Address.fromHex(address)
-      : csl.Address.fromBech32(address)
-  }
+  const addrStr = typeof address === 'string' ? address : address
+  let wasmAddr: CslAddress
 
-  if (wasmAddr == null || wasmAddr.isMalformed())
-    throw new Error(`addrContainsAccountKey invalid address ${address}`)
+  if (csl.ByronAddress.isValid(addrStr)) {
+    const byronAddr = csl.ByronAddress.fromBase58(addrStr)
+    const byronAddress = byronAddr.toAddress()
+    if (!byronAddress || byronAddress.isMalformed()) {
+      throw new Error(`addrContainsAccountKey invalid address ${addrStr}`)
+    }
+    wasmAddr = byronAddress
+  } else {
+    const parsedAddress = isHex(addrStr)
+      ? csl.Address.fromHex(addrStr)
+      : csl.Address.fromBech32(addrStr)
+    if (!parsedAddress || parsedAddress.isMalformed()) {
+      throw new Error(`addrContainsAccountKey invalid address ${addrStr}`)
+    }
+    wasmAddr = parsedAddress
+  }
 
   const accountKeyString = Buffer.from(targetAccountKey.toBytes()).toString(
     'hex',

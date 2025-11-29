@@ -1,6 +1,13 @@
 import {cardanoConfig, derivationConfig} from '@yoroi/blockchains'
 import {parseSafe} from '@yoroi/common'
-import {App, Wallet} from '@yoroi/types'
+import {
+  Address,
+  App,
+  Branded,
+  KeyHash,
+  PublicKeyHex,
+  Wallet,
+} from '@yoroi/types'
 
 import _ from 'lodash'
 import {defaultMemoize} from 'reselect'
@@ -62,7 +69,7 @@ export class AddressGenerator {
     return this._rewardAddressHex
   }
 
-  generate(indexes: Array<number>): Array<string> {
+  generate(indexes: Array<number>): Address[] {
     const config = cardanoConfig.implementations[this.implementation]
 
     if (!config.features.staking) {
@@ -98,7 +105,7 @@ export class AddressGenerator {
           .toAddress()
           .toBech32(undefined)
 
-        return baseAddressBech32
+        return Branded.asAddress(baseAddressBech32)
       })
     }
   }
@@ -118,17 +125,17 @@ export class AddressGenerator {
   }
 }
 
-const _addressToIdxSelector = (addresses: Array<string>) =>
+const _addressToIdxSelector = (addresses: Address[]) =>
   _.fromPairs(addresses.map((addr, i) => [addr, i]))
 
 export class AddressChain {
-  _addresses: Addresses = []
+  _addresses: Address[] = []
   _addressGenerator: AddressGenerator
   _blockSize: number
   _gapLimit: number
   _isInitialized = false
-  _subscriptions: Array<(addresses: Addresses) => unknown> = []
-  _addressToIdxSelector: (addresses: Addresses) => Record<string, number> =
+  _subscriptions: Array<(addresses: Address[]) => unknown> = []
+  _addressToIdxSelector: (addresses: Address[]) => Record<string, number> =
     defaultMemoize(_addressToIdxSelector)
   #lastUsedIndex: number
   #lastUsedIndexVisual: number
@@ -151,7 +158,7 @@ export class AddressChain {
     return {
       gapLimit: this._gapLimit,
       blockSize: this._blockSize,
-      addresses: this._addresses,
+      addresses: this._addresses.map((addr) => addr as string), // Convert Address[] to string[] for JSON
       lastUsedIndex: this.#lastUsedIndex,
       lastUsedIndexVirtual: this.#lastUsedIndexVisual,
       addressGenerator: this._addressGenerator.toJSON(),
@@ -189,7 +196,8 @@ export class AddressChain {
       lastUsedIndexVirtual,
     )
     // is initialized && addresses
-    chain._extendAddresses(addresses)
+    // Convert string[] from JSON to Address[]
+    chain._extendAddresses(addresses.map((addr) => Branded.asAddress(addr)))
     chain._isInitialized = true
     return chain
   }
@@ -202,11 +210,11 @@ export class AddressChain {
     return this._addressToIdxSelector(this.addresses)
   }
 
-  addSubscriberToNewAddresses(subscriber: (addresses: Addresses) => unknown) {
+  addSubscriberToNewAddresses(subscriber: (addresses: Address[]) => unknown) {
     this._subscriptions.push(subscriber)
   }
 
-  _extendAddresses(newAddresses: Array<string>) {
+  _extendAddresses(newAddresses: Address[]) {
     this._addresses = [...this._addresses, ...newAddresses]
     this._subscriptions.forEach((handler) => handler(newAddresses))
   }
@@ -276,12 +284,16 @@ export class AddressChain {
     return this._addresses.length
   }
 
-  isMyAddress(address: string) {
-    return this.addressToIdxMap[address] != null
+  isMyAddress(address: Address | string) {
+    const addr =
+      typeof address === 'string' ? Branded.asAddress(address) : address
+    return this.addressToIdxMap[addr] != null
   }
 
-  getIndexOfAddress(address: string): number {
-    const idx = this.addressToIdxMap[address]
+  getIndexOfAddress(address: Address | string): number {
+    const addr =
+      typeof address === 'string' ? Branded.asAddress(address) : address
+    const idx = this.addressToIdxMap[addr]
     return idx ?? -1
   }
 
@@ -294,9 +306,9 @@ const getBIP44Addresses = (
   accountPubKeyHex: string,
   role: number,
   indexes: Array<number>,
-): Array<string> => {
+): Address[] => {
   const protocolMagic = 764824073
-  const addresses: Array<string> = []
+  const addresses: Address[] = []
 
   const withRole = CardanoMobile.Bip32PublicKey.fromBytes(
     Buffer.from(accountPubKeyHex, 'hex'),
@@ -307,7 +319,7 @@ const getBIP44Addresses = (
       withRole.derive(index),
       protocolMagic,
     ).toBase58()
-    addresses.push(byronAddrBs58)
+    addresses.push(Branded.asAddress(byronAddrBs58))
   }
 
   return addresses
@@ -332,10 +344,10 @@ export const accountManagerMaker = async ({
   baseApiUrl: string
   walletContext?: {
     walletId: string
-    publicKeyHex?: string
-    accountPubKeyHex?: string
-    paymentKeyHashes: string[]
-    rewardAddresses: string[]
+    publicKeyHex?: PublicKeyHex
+    accountPubKeyHex?: PublicKeyHex
+    paymentKeyHashes: KeyHash[]
+    rewardAddresses: Address[]
   }
 }): Promise<AccountManager> => {
   const config = cardanoConfig.implementations[implementation]
@@ -395,8 +407,29 @@ export const accountManagerMaker = async ({
     const addressesBeforeRequest =
       internalChain.addresses.length + externalChain.addresses.length
     // Use provided context or fall back to the one from construction
-    const effectiveContext = context || walletContext
-    const filterFn = (addrs: Addresses) =>
+    const effectiveContextRaw = context || walletContext
+    const effectiveContext = effectiveContextRaw
+      ? {
+          ...effectiveContextRaw,
+          publicKeyHex: effectiveContextRaw.publicKeyHex
+            ? typeof effectiveContextRaw.publicKeyHex === 'string'
+              ? Branded.asPublicKeyHex(effectiveContextRaw.publicKeyHex)
+              : effectiveContextRaw.publicKeyHex
+            : undefined,
+          accountPubKeyHex: effectiveContextRaw.accountPubKeyHex
+            ? typeof effectiveContextRaw.accountPubKeyHex === 'string'
+              ? Branded.asPublicKeyHex(effectiveContextRaw.accountPubKeyHex)
+              : effectiveContextRaw.accountPubKeyHex
+            : undefined,
+          paymentKeyHashes: effectiveContextRaw.paymentKeyHashes.map((hash) =>
+            typeof hash === 'string' ? Branded.asKeyHash(hash) : hash,
+          ),
+          rewardAddresses: effectiveContextRaw.rewardAddresses.map((addr) =>
+            typeof addr === 'string' ? Branded.asAddress(addr) : addr,
+          ),
+        }
+      : undefined
+    const filterFn = (addrs: Address[]) =>
       legacyApi.filterUsedAddresses(addrs, baseApiUrl, effectiveContext)
     await Promise.all([
       internalChain.sync(filterFn),
@@ -413,7 +446,11 @@ export const accountManagerMaker = async ({
     const externalAddresses = externalChain.getBlocks()
 
     if (rewardAddressHex != '')
-      return [...internalAddresses, ...externalAddresses, [rewardAddressHex]]
+      return [
+        ...internalAddresses,
+        ...externalAddresses,
+        [Branded.asAddress(rewardAddressHex)],
+      ]
 
     return [...internalAddresses, ...externalAddresses]
   }
@@ -440,7 +477,7 @@ export type AccountManager = {
     paymentKeyHashes: string[]
     rewardAddresses: string[]
   }) => Promise<void>
-  getAddressesInBlocks: (rewardAddressHex: string) => string[][]
+  getAddressesInBlocks: (rewardAddressHex: string) => Address[][]
   save: () => Promise<void>
   clear: () => Promise<void>
 }
@@ -455,7 +492,7 @@ type AddressChainJSON = {
   blockSize: number
   lastUsedIndex: number
   lastUsedIndexVirtual: number
-  addresses: Addresses
+  addresses: string[] // JSON stores as string[], converted to Address[] on deserialization
   addressGenerator: AddressGeneratorJSON
 }
 
@@ -465,9 +502,7 @@ type AddressGeneratorJSON = {
   role: number
 }
 
-type AsyncAddressFilter = (addresses: Array<string>) => Promise<Array<string>>
-
-export type Addresses = Array<string>
+type AsyncAddressFilter = (addresses: Address[]) => Promise<Address[]>
 
 const parseAccountJSON = (data: unknown) => {
   const parsed = parseSafe(data)

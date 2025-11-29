@@ -8,7 +8,14 @@ import {
   tokenInfo,
   utf8ToHex,
 } from '@yoroi/api'
-import {Api, Balance} from '@yoroi/types'
+import {
+  Api,
+  AssetName,
+  Balance,
+  PolicyId,
+  TokenFingerprint,
+  TokenId,
+} from '@yoroi/types'
 
 describe('api utils', () => {
   it('toPolicyId, toDisplayAssetName', () => {
@@ -159,14 +166,16 @@ describe('api utils', () => {
 
       expect(tokenInfo(entry)).toEqual<Balance.TokenInfo>({
         kind: 'ft',
-        id: '11111111111111111111111111111111111111111111111111111111.61737365744e616d65',
-        name: 'assetName',
+        id: '11111111111111111111111111111111111111111111111111111111.61737365744e616d65' as TokenId,
+        name: 'assetName' as AssetName,
         description: 'description',
-        fingerprint: 'asset1rafllrcpcurgdkesxy9vsvh40cgz2vrndle80x',
+        fingerprint:
+          'asset1rafllrcpcurgdkesxy9vsvh40cgz2vrndle80x' as TokenFingerprint,
         decimals: 6,
         ticker: 'ticker',
         image: 'logo',
-        group: '11111111111111111111111111111111111111111111111111111111',
+        group:
+          '11111111111111111111111111111111111111111111111111111111' as PolicyId,
         icon: 'logo',
         symbol: undefined,
         metadatas: {
@@ -200,14 +209,16 @@ describe('api utils', () => {
 
       expect(tokenInfo(entry)).toEqual<Balance.TokenInfo>({
         kind: 'ft',
-        id: '11111111111111111111111111111111111111111111111111111111.61737365744e616d65',
-        name: 'assetName',
+        id: '11111111111111111111111111111111111111111111111111111111.61737365744e616d65' as TokenId,
+        name: 'assetName' as AssetName,
         description: 'description',
-        fingerprint: 'asset1rafllrcpcurgdkesxy9vsvh40cgz2vrndle80x',
+        fingerprint:
+          'asset1rafllrcpcurgdkesxy9vsvh40cgz2vrndle80x' as TokenFingerprint,
         decimals: 0,
         ticker: undefined,
         image: undefined,
-        group: '11111111111111111111111111111111111111111111111111111111',
+        group:
+          '11111111111111111111111111111111111111111111111111111111' as PolicyId,
         icon: undefined,
         symbol: undefined,
         metadatas: {
@@ -230,13 +241,15 @@ describe('api utils', () => {
         ),
       ).toEqual<Balance.TokenInfo>({
         kind: 'ft',
-        id: '11111111111111111111111111111111111111111111111111111111.',
-        fingerprint: 'asset17jfppv3h7hnsjfqq5lyp52dyhwstfv9e4uauga',
-        name: '',
+        id: '11111111111111111111111111111111111111111111111111111111.' as TokenId,
+        fingerprint:
+          'asset17jfppv3h7hnsjfqq5lyp52dyhwstfv9e4uauga' as TokenFingerprint,
+        name: '' as AssetName,
         description: undefined,
         ticker: undefined,
         icon: undefined,
-        group: '11111111111111111111111111111111111111111111111111111111',
+        group:
+          '11111111111111111111111111111111111111111111111111111111' as PolicyId,
         decimals: 0,
         image: undefined,
         symbol: undefined,
@@ -249,13 +262,15 @@ describe('api utils', () => {
         ),
       ).toEqual<Balance.TokenInfo>({
         kind: 'ft',
-        id: '11111111111111111111111111111111111111111111111111111111.61737365744e616d65',
-        fingerprint: 'asset1rafllrcpcurgdkesxy9vsvh40cgz2vrndle80x',
-        name: 'assetName',
+        id: '11111111111111111111111111111111111111111111111111111111.61737365744e616d65' as TokenId,
+        fingerprint:
+          'asset1rafllrcpcurgdkesxy9vsvh40cgz2vrndle80x' as TokenFingerprint,
+        name: 'assetName' as AssetName,
         description: undefined,
         ticker: undefined,
         icon: undefined,
-        group: '11111111111111111111111111111111111111111111111111111111',
+        group:
+          '11111111111111111111111111111111111111111111111111111111' as PolicyId,
         decimals: 0,
         image: undefined,
         symbol: undefined,

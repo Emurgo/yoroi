@@ -1,4 +1,4 @@
-import {Api} from '@yoroi/types'
+import {Api, Portfolio} from '@yoroi/types'
 
 import {tokenInfoMocks} from '../token-info.mocks'
 import {DullahanApiTokenActivityResponse} from './types'
@@ -48,10 +48,22 @@ const ftNameless = {
 }
 
 const apiResponseSuccessDataOnly: Readonly<DullahanApiTokenActivityResponse> = {
-  [tokenInfoMocks.primaryETH.id]: [Api.HttpStatusCode.Ok, primaryETH],
-  [tokenInfoMocks.rnftWhatever.id]: [Api.HttpStatusCode.Ok, rnftWhatever],
-  [tokenInfoMocks.ftNoTicker.id]: [Api.HttpStatusCode.Ok, ftNoTicker],
-  [tokenInfoMocks.ftNameless.id]: [Api.HttpStatusCode.Ok, ftNameless],
+  [tokenInfoMocks.primaryETH.id as Portfolio.Token.Id]: [
+    Api.HttpStatusCode.Ok,
+    primaryETH,
+  ],
+  [tokenInfoMocks.rnftWhatever.id as Portfolio.Token.Id]: [
+    Api.HttpStatusCode.Ok,
+    rnftWhatever,
+  ],
+  [tokenInfoMocks.ftNoTicker.id as Portfolio.Token.Id]: [
+    Api.HttpStatusCode.Ok,
+    ftNoTicker,
+  ],
+  [tokenInfoMocks.ftNameless.id as Portfolio.Token.Id]: [
+    Api.HttpStatusCode.Ok,
+    ftNameless,
+  ],
 }
 
 export const duallahanTokenActivityMocks = {

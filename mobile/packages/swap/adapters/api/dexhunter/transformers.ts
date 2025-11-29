@@ -1,4 +1,4 @@
-import {Portfolio, Swap} from '@yoroi/types'
+import {Branded, Portfolio, Swap} from '@yoroi/types'
 
 import {
   BuildRequest,
@@ -84,7 +84,7 @@ export const transformersMaker = ({
   const fromTokenId = (tokenId: string): Portfolio.Token.Id =>
     tokenId === ptIdDh
       ? primaryTokenInfo.id
-      : `${tokenId.slice(0, 56)}.${tokenId.slice(56)}`
+      : Branded.asTokenId(`${tokenId.slice(0, 56)}.${tokenId.slice(56)}`)
 
   const toTokenId = (tokenId: Portfolio.Token.Id) =>
     isPrimaryToken(tokenId) ? 'ADA' : tokenId.replace('.', '')

@@ -14,7 +14,14 @@ import {
   setChangeAddress,
   setTTLWithBuffer,
 } from '@yoroi/tx'
-import {Balance, Portfolio, Wallet} from '@yoroi/types'
+import {
+  Address,
+  Balance,
+  Branded,
+  Portfolio,
+  TokenId,
+  Wallet,
+} from '@yoroi/types'
 
 import {logger} from '~/kernel/logger/logger'
 
@@ -33,7 +40,7 @@ export type CreateSendTxParams = {
   }
   networkId: number
   getAbsoluteSlotNumber: () => Promise<BigNumber>
-  getChangeAddress: (addressMode: Wallet.AddressMode) => string
+  getChangeAddress: (addressMode: Wallet.AddressMode) => Address | string
   addressMode: Wallet.AddressMode
   metadata?: Array<{label: string; data: any}>
   /**
@@ -57,7 +64,11 @@ export async function createSendTx({
   subtractFeeFromAmount = false,
 }: CreateSendTxParams): Promise<{cbor: string}> {
   const absSlotNumber = await getAbsoluteSlotNumber()
-  const changeAddress = getChangeAddress(addressMode)
+  const changeAddressRaw = getChangeAddress(addressMode)
+  const changeAddress =
+    typeof changeAddressRaw === 'string'
+      ? (changeAddressRaw as Address)
+      : changeAddressRaw
 
   const protocolParamsConfig = createCardanoHaskellConfig(
     protocolParams,
@@ -66,7 +77,10 @@ export async function createSendTx({
 
   try {
     // Calculate required amounts from outputs
-    const requiredAmounts: Record<string, string> = {}
+    const requiredAmounts: Record<TokenId, Balance.Quantity> = {} as Record<
+      TokenId,
+      Balance.Quantity
+    >
     const minUtxoValue = BigInt(
       protocolParamsConfig.minimumUtxoVal || '1000000',
     ) // Default to 1 ADA if not set
@@ -81,7 +95,9 @@ export async function createSendTx({
       const hasTokens = Object.keys(entry.amounts).some(
         (tokenId) => tokenId !== primaryTokenId,
       )
-      const adaAmount = BigInt(entry.amounts[primaryTokenId] || '0')
+      const adaAmount = BigInt(
+        entry.amounts[primaryTokenId] ?? Branded.ZERO_QUANTITY,
+      )
 
       // If output has tokens but insufficient ADA, calculate actual minimum UTXO value
       if (hasTokens && adaAmount < minUtxoValue) {
@@ -201,17 +217,26 @@ export async function createSendTx({
         // Store the calculated minAda for this entry
         entryMinAda.set(i, actualMinAda)
 
-        const currentAda = BigInt(requiredAmounts[primaryTokenId] || '0')
+        const currentAda = BigInt(
+          requiredAmounts[primaryTokenId] ?? Branded.ZERO_QUANTITY,
+        )
         // Use the calculated minimum or the hardcoded fallback, whichever is higher
         const minAdaToUse =
           actualMinAda > minUtxoValue ? actualMinAda : minUtxoValue
-        requiredAmounts[primaryTokenId] = (currentAda + minAdaToUse).toString()
+        requiredAmounts[primaryTokenId] = (
+          currentAda + minAdaToUse
+        ).toString() as Balance.Quantity
       }
 
       for (const [tokenId, quantity] of Object.entries(entry.amounts)) {
-        const current = BigInt(requiredAmounts[tokenId] || '0')
+        const tokenIdBranded = Branded.asTokenId(tokenId)
+        const current = BigInt(
+          requiredAmounts[tokenIdBranded] ?? Branded.ZERO_QUANTITY,
+        )
         const needed = BigInt(quantity)
-        requiredAmounts[tokenId] = (current + needed).toString()
+        requiredAmounts[tokenIdBranded] = (
+          current + needed
+        ).toString() as Balance.Quantity
       }
     }
 
@@ -250,7 +275,9 @@ export async function createSendTx({
         const hasTokens = Object.keys(entry.amounts).some(
           (tokenId) => tokenId !== primaryTokenId,
         )
-        const adaAmount = BigInt(entry.amounts[primaryTokenId] || '0')
+        const adaAmount = BigInt(
+          entry.amounts[primaryTokenId] ?? Branded.ZERO_QUANTITY,
+        )
 
         // If output has tokens but insufficient ADA, use calculated minAda or fallback
         const adjustedAmounts = {...entry.amounts}
@@ -326,13 +353,17 @@ export async function createSendTx({
         entriesCount: entries.length,
         totalInputAda: selectedUtxos
           .reduce(
-            (sum, utxo) => sum + BigInt(utxo.balance[primaryTokenId] || '0'),
+            (sum, utxo) =>
+              sum +
+              BigInt(utxo.balance[primaryTokenId] ?? Branded.ZERO_QUANTITY),
             BigInt(0),
           )
           .toString(),
         totalOutputAda: entries
           .reduce(
-            (sum, entry) => sum + BigInt(entry.amounts[primaryTokenId] || '0'),
+            (sum, entry) =>
+              sum +
+              BigInt(entry.amounts[primaryTokenId] ?? Branded.ZERO_QUANTITY),
             BigInt(0),
           )
           .toString(),
@@ -355,13 +386,17 @@ export async function createSendTx({
         entriesCount: entries.length,
         totalInputAda: selectedUtxos
           .reduce(
-            (sum, utxo) => sum + BigInt(utxo.balance[primaryTokenId] || '0'),
+            (sum, utxo) =>
+              sum +
+              BigInt(utxo.balance[primaryTokenId] ?? Branded.ZERO_QUANTITY),
             BigInt(0),
           )
           .toString(),
         totalOutputAda: entries
           .reduce(
-            (sum, entry) => sum + BigInt(entry.amounts[primaryTokenId] || '0'),
+            (sum, entry) =>
+              sum +
+              BigInt(entry.amounts[primaryTokenId] ?? Branded.ZERO_QUANTITY),
             BigInt(0),
           )
           .toString(),
@@ -412,13 +447,16 @@ export async function createSendTx({
       if (firstEntry) {
         // Check if selected UTXOs have non-ADA assets that will go to change
         const totalInputAda = selectedUtxos.reduce(
-          (sum, utxo) => sum + BigInt(utxo.balance[primaryTokenId] || '0'),
+          (sum, utxo) =>
+            sum + BigInt(utxo.balance[primaryTokenId] ?? Branded.ZERO_QUANTITY),
           BigInt(0),
         )
 
         // Calculate total output ADA (excluding change)
         const totalOutputAda = entries.reduce(
-          (sum, entry) => sum + BigInt(entry.amounts[primaryTokenId] || '0'),
+          (sum, entry) =>
+            sum +
+            BigInt(entry.amounts[primaryTokenId] ?? Branded.ZERO_QUANTITY),
           BigInt(0),
         )
 
@@ -428,7 +466,8 @@ export async function createSendTx({
           totalInputAda: totalInputAda.toString(),
           totalOutputAda: totalOutputAda.toString(),
           fee: result?.fee.toString() || 'unknown',
-          firstEntryAdaAmount: firstEntry.amounts[primaryTokenId] || '0',
+          firstEntryAdaAmount:
+            firstEntry.amounts[primaryTokenId] ?? Branded.ZERO_QUANTITY,
         })
 
         // Calculate total input amounts for each token
@@ -463,7 +502,7 @@ export async function createSendTx({
         }
 
         const currentAdaAmount = BigInt(
-          firstEntry.amounts[primaryTokenId] || '0',
+          firstEntry.amounts[primaryTokenId] ?? Branded.ZERO_QUANTITY,
         )
         const minAdaForEntry = entryMinAda.get(0) || minUtxoValue
 

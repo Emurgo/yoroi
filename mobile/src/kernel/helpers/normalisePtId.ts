@@ -1,5 +1,5 @@
 import {isTokenId, primaryTokenId} from '@yoroi/portfolio'
-import {Portfolio} from '@yoroi/types'
+import {Branded, Portfolio} from '@yoroi/types'
 
 import {freeze} from 'immer'
 
@@ -17,5 +17,5 @@ const legacyPtTokenIds = freeze([primaryTokenId, '', '.'])
 export const normalisePtId = (tokenId: string): Portfolio.Token.Id => {
   if (legacyPtTokenIds.includes(tokenId)) return primaryTokenId
   // NOTE: the else is not safe, since it should be hex, still we dont throw
-  return isTokenId(tokenId) ? tokenId : `${tokenId}.`
+  return isTokenId(tokenId) ? tokenId : Branded.asTokenId(`${tokenId}.`)
 }

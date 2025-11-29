@@ -1,5 +1,5 @@
 import {isNonNullable} from '@yoroi/common'
-import {Portfolio, Swap} from '@yoroi/types'
+import {Branded, Portfolio, Swap} from '@yoroi/types'
 
 import {freeze} from 'immer'
 
@@ -32,7 +32,7 @@ export const transformersMaker = (config: MinswapApiConfig) => {
   const fromTokenId = (tokenId: string): Portfolio.Token.Id =>
     tokenId === 'lovelace'
       ? primaryTokenInfo.id
-      : `${tokenId.slice(0, 56)}.${tokenId.slice(56)}`
+      : Branded.asTokenId(`${tokenId.slice(0, 56)}.${tokenId.slice(56)}`)
 
   const transformToken = (
     token: TokensResponse['tokens'][number],

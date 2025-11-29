@@ -25,7 +25,7 @@ export const cardanoWalletApiMaker = ({
     getTipStatus: 'legacy', // Uses legacyApiBaseUrl in develop (via syncTxs)
     fetchNewTxHistory: 'legacy', // Uses legacyApiBaseUrl in develop (via syncTxs)
     filterUsedAddresses: 'legacy', // Uses legacyApiBaseUrl in develop
-    submitTransaction: 'legacy', // Uses legacyApiBaseUrl in develop
+    submitTransaction: 'legacy', // Uses legacyApiBaseUrl in develop (backend-zero /tx endpoint not implemented)
     getAccountState: 'legacy', // Uses legacyApiBaseUrl in develop
     bulkGetAccountState: 'legacy', // Uses legacyApiBaseUrl in develop
     getPoolInfo: 'legacy', // Uses legacyApiBaseUrl in develop

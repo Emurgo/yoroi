@@ -89,7 +89,8 @@ const apiResponseTokenDiscovery: Readonly<
   true,
 )
 
-const apiRequestTokenDiscovery: Portfolio.Token.Id = nftCryptoKitty.id
+const apiRequestTokenDiscovery: Portfolio.Token.Id =
+  nftCryptoKitty.id as Portfolio.Token.Id
 
 const storage: {
   entries1: ReadonlyArray<
@@ -98,7 +99,7 @@ const storage: {
 } = {
   entries1: [
     [
-      primaryETH.id,
+      primaryETH.id as Portfolio.Token.Id,
       cacheRecordMaker(
         {
           expires: new Date().getTime(),
@@ -108,7 +109,7 @@ const storage: {
       ),
     ],
     [
-      nftCryptoKitty.id,
+      nftCryptoKitty.id as Portfolio.Token.Id,
       cacheRecordMaker(
         {
           expires: new Date().getTime(),
@@ -118,7 +119,7 @@ const storage: {
       ),
     ],
     [
-      rnftWhatever.id,
+      rnftWhatever.id as Portfolio.Token.Id,
       cacheRecordMaker(
         {
           expires: new Date().getTime(),

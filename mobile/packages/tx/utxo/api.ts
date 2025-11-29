@@ -1,3 +1,5 @@
+import {BlockHash} from '@yoroi/types'
+
 import {
   TipStatusReference,
   Utxo,
@@ -8,10 +10,10 @@ import {
 } from './models'
 
 export interface UtxoApiContract {
-  getBestBlock(): Promise<string>
-  getSafeBlock(): Promise<string>
+  getBestBlock(): Promise<BlockHash>
+  getSafeBlock(): Promise<BlockHash>
   getTipStatusWithReference(
-    bestBlocks: string[],
+    bestBlocks: BlockHash[],
   ): Promise<UtxoApiResponse<TipStatusReference>>
   getUtxoAtPoint(req: UtxoAtPointRequest): Promise<UtxoApiResponse<Utxo[]>>
   getUtxoDiffSincePoint(

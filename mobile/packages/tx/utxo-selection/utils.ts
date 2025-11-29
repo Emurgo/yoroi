@@ -1,4 +1,5 @@
-import {Balance} from '@yoroi/types'
+import {primaryTokenId as defaultPrimaryTokenId} from '@yoroi/portfolio'
+import {Balance, TokenId} from '@yoroi/types'
 
 import {BigNumber} from 'bignumber.js'
 
@@ -12,8 +13,8 @@ export function sumAmounts(amounts: Balance.Amounts[]): Balance.Amounts {
 
   for (const amount of amounts) {
     for (const [tokenId, quantity] of Object.entries(amount)) {
-      const current = result[tokenId] || '0'
-      result[tokenId] = new BigNumber(current)
+      const current = result[tokenId as TokenId] || '0'
+      result[tokenId as TokenId] = new BigNumber(current)
         .plus(quantity)
         .toString() as Balance.Quantity
     }
@@ -33,17 +34,17 @@ export function subtractAmounts(
 
   // Copy amounts1
   for (const [tokenId, quantity] of Object.entries(amounts1)) {
-    result[tokenId] = quantity
+    result[tokenId as TokenId] = quantity
   }
 
   // Subtract amounts2
   for (const [tokenId, quantity] of Object.entries(amounts2)) {
-    const current = result[tokenId] || '0'
+    const current = result[tokenId as TokenId] || '0'
     const diff = new BigNumber(current).minus(quantity)
     if (diff.isLessThanOrEqualTo(0)) {
-      delete result[tokenId]
+      delete result[tokenId as TokenId]
     } else {
-      result[tokenId] = diff.toString() as Balance.Quantity
+      result[tokenId as TokenId] = diff.toString() as Balance.Quantity
     }
   }
 
@@ -58,7 +59,7 @@ export function hasEnoughAmounts(
   amounts2: Balance.Amounts,
 ): boolean {
   for (const [tokenId, requiredQuantity] of Object.entries(amounts2)) {
-    const available = amounts1[tokenId] || '0'
+    const available = amounts1[tokenId as TokenId] || '0'
     if (new BigNumber(available).isLessThan(requiredQuantity)) {
       return false
     }
@@ -71,7 +72,7 @@ export function hasEnoughAmounts(
  */
 export function getAdaAmount(
   amounts: Balance.Amounts,
-  primaryTokenId = '.',
+  primaryTokenId: TokenId = defaultPrimaryTokenId,
 ): BigNumber {
   return new BigNumber(amounts[primaryTokenId] || '0')
 }
@@ -81,7 +82,7 @@ export function getAdaAmount(
  */
 export function getUtxoValue(
   utxo: ModernUtxo,
-  primaryTokenId: string = '.',
+  primaryTokenId: TokenId = defaultPrimaryTokenId,
 ): BigNumber {
   return getAdaAmount(utxo.balance, primaryTokenId)
 }
@@ -94,7 +95,7 @@ export function utxoHasRelevantAssets(
   requiredAmounts: Balance.Amounts,
 ): boolean {
   for (const tokenId of Object.keys(requiredAmounts)) {
-    if (utxo.balance[tokenId]) {
+    if (utxo.balance[tokenId as TokenId]) {
       return true
     }
   }

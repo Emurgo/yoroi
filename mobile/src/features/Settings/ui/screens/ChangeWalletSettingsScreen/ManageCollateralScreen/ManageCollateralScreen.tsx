@@ -1,7 +1,7 @@
 import {RawUtxo} from '@yoroi/api'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {TransactionOutput} from '@yoroi/tx'
-import {Portfolio} from '@yoroi/types'
+import {Branded, Portfolio, UtxoId} from '@yoroi/types'
 
 import * as CSL from '@emurgo/cross-csl-core'
 import {useMutation} from '@tanstack/react-query'
@@ -74,7 +74,7 @@ export const ManageCollateralScreen = () => {
     useSetCollateralId(wallet)
   const handleRemoveCollateral = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-    setCollateralId('')
+    setCollateralId('' as UtxoId)
   }
   const handleSetCollateralId = (collateralId: RawUtxo['utxo_id']) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
@@ -94,7 +94,7 @@ export const ManageCollateralScreen = () => {
       throw new Error('ManageCollateralScreen:: no txId available')
     }
 
-    const collateralId = `${txId}:0`
+    const collateralId = Branded.asUtxoId(`${txId}:0`)
     setCollateralId(collateralId)
     resetToTxHistory()
   }
@@ -110,7 +110,7 @@ export const ManageCollateralScreen = () => {
         try {
           const txId = await getTxIdFromArgs(undefined, result.cbor)
           if (txId) {
-            const collateralId = `${txId}:0`
+            const collateralId = Branded.asUtxoId(`${txId}:0`)
             setCollateralId(collateralId)
           }
         } catch (error) {

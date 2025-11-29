@@ -1,3 +1,5 @@
+import {Branded} from '@yoroi/types'
+
 import {logger} from '@sentry/react'
 import * as React from 'react'
 import {LayoutAnimation} from 'react-native'
@@ -42,7 +44,7 @@ export const useEarnRewardsBanner = () => {
   // Check if wallet has enough ADA (at least 5 ADA for transaction fees + stake key deposit if needed)
   const hasEnoughAda = React.useMemo(() => {
     const balance = wallet.balanceManager.getPrimaryBalance()
-    const adaLovelace = BigInt(balance?.quantity ?? '0')
+    const adaLovelace = BigInt(balance?.quantity ?? Branded.ZERO_QUANTITY)
     return adaLovelace >= minAdaForGovernanceBanner
   }, [wallet])
 

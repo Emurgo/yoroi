@@ -1,7 +1,7 @@
 import {RawUtxo} from '@yoroi/api'
 import {isNonNullable} from '@yoroi/common'
 import {createUnknownTokenInfo} from '@yoroi/portfolio'
-import {Portfolio} from '@yoroi/types'
+import {Branded, Portfolio} from '@yoroi/types'
 import {BaseAsset, WalletTransaction} from '@yoroi/types'
 
 import {CredKind} from '@emurgo/cross-csl-core'
@@ -217,7 +217,7 @@ export const useFormattedTxFromWalletTransaction = (
   }
 
   const formattedFee = formatFee(wallet, {
-    fee: walletTransaction.fee ?? '0',
+    fee: walletTransaction.fee ?? Branded.ZERO_QUANTITY,
   } as any)
   const formattedCertificates = formatCertificatesFromWalletTransaction(
     walletTransaction.certificates,
@@ -497,8 +497,8 @@ const isOwnedAddress = (
 ) => {
   // Check if it's a standard payment address (internal or external)
   if (
-    wallet.internalAddresses().includes(bech32Address) ||
-    wallet.externalAddresses().includes(bech32Address)
+    wallet.internalAddresses().includes(Branded.asAddress(bech32Address)) ||
+    wallet.externalAddresses().includes(Branded.asAddress(bech32Address))
   ) {
     return true
   }

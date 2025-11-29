@@ -1,31 +1,9 @@
 import {
+  flatten,
   groupBy,
   removeItemFromArray,
   sliceArrayUntilItem,
-  flatten
 } from '@yoroi/common'
-import {UtxoApiContract} from './api'
-import {createBatchedEmurgoUtxoApi, createEmurgoUtxoApi} from './emurgo-api'
-import {
-  DiffType,
-  TipStatusReference,
-  Utxo,
-  UtxoApiResult,
-  UtxoAtSafePoint,
-  UtxoDiff,
-  UtxoDiffItemOutput,
-  UtxoDiffToBestBlock
-} from './models'
-
-export interface UtxoStorage {
-  getUtxoAtSafePoint(): Promise<UtxoAtSafePoint | undefined>
-  getUtxoDiffToBestBlock(): Promise<UtxoDiffToBestBlock[]>
-  replaceUtxoAtSafePoint(utxos: Utxo[], safeBlockHash: string): Promise<void>
-  clearUtxoState(): Promise<void>
-  appendUtxoDiffToBestBlock(diff: UtxoDiffToBestBlock): Promise<void>
-  removeDiffWithBestBlock(blockHash: string): Promise<void>
-}
-
 /*
   safe block:
     is a block arbitrarily considered to be safe,
@@ -48,12 +26,39 @@ export interface UtxoStorage {
     and therefore should be merged into the safe set
  */
 
+import {Address, BlockHash} from '@yoroi/types'
+
+import {UtxoApiContract} from './api'
+import {
+  createBatchedLegacyUtxoApi,
+  createLegacyUtxoApi,
+} from './legacy-utxo-api'
+import {
+  DiffType,
+  TipStatusReference,
+  Utxo,
+  UtxoApiResult,
+  UtxoAtSafePoint,
+  UtxoDiff,
+  UtxoDiffItemOutput,
+  UtxoDiffToBestBlock,
+} from './models'
+
+export interface UtxoStorage {
+  getUtxoAtSafePoint(): Promise<UtxoAtSafePoint | undefined>
+  getUtxoDiffToBestBlock(): Promise<UtxoDiffToBestBlock[]>
+  replaceUtxoAtSafePoint(utxos: Utxo[], safeBlockHash: string): Promise<void>
+  clearUtxoState(): Promise<void>
+  appendUtxoDiffToBestBlock(diff: UtxoDiffToBestBlock): Promise<void>
+  removeDiffWithBestBlock(blockHash: string): Promise<void>
+}
+
 // Internal helper functions
 async function getUtxoAtSafePointFromApi(
   api: UtxoApiContract,
-  addresses: string[],
+  addresses: Address[],
 ): Promise<{
-  safeBlockHash: string
+  safeBlockHash: BlockHash
   utxos: Utxo[]
 }> {
   const safeBlock = await api.getSafeBlock()
@@ -77,9 +82,9 @@ async function getUtxoAtSafePointFromApi(
 async function getUtxoSafePoint(
   api: UtxoApiContract,
   utxoStorage: UtxoStorage,
-  addresses: string[],
+  addresses: Address[],
 ): Promise<{
-  safeBlockHash: string
+  safeBlockHash: BlockHash
   safeUtxos: Utxo[]
 }> {
   const localSafePoint = await utxoStorage.getUtxoAtSafePoint()
@@ -108,13 +113,16 @@ async function mergeDiffsIntoSafeUtxoSet(
   safeUtxos: Utxo[],
   localDiff: UtxoDiffToBestBlock[],
   diffWhichIsNowSafe: UtxoDiffToBestBlock,
-  lastFoundSafeBlock: string,
+  lastFoundSafeBlock: BlockHash,
 ): Promise<void> {
   // create a map for fetching UTxOs by ID in O(1) complexity
-  const utxoMap = safeUtxos.reduce((prev, curr) => {
-    prev[curr.utxoId] = curr
-    return prev
-  }, {} as {[key: string]: Utxo})
+  const utxoMap = safeUtxos.reduce(
+    (prev, curr) => {
+      prev[curr.utxoId] = curr
+      return prev
+    },
+    {} as {[key: string]: Utxo},
+  )
 
   const diffsToMerge = sliceArrayUntilItem(localDiff, diffWhichIsNowSafe)
   for (const diffToMerge of diffsToMerge) {
@@ -126,9 +134,7 @@ async function mergeDiffsIntoSafeUtxoSet(
       delete utxoMap[spentUtxoId]
     }
 
-    await utxoStorage.removeDiffWithBestBlock(
-      diffToMerge.lastBestBlockHash,
-    )
+    await utxoStorage.removeDiffWithBestBlock(diffToMerge.lastBestBlockHash)
   }
 
   const newSafeUtxos = Object.keys(utxoMap)
@@ -139,13 +145,13 @@ async function mergeDiffsIntoSafeUtxoSet(
 
 async function getUtxoDiffSincePoint(
   api: UtxoApiContract,
-  addresses: string[],
-  afterBestBlocks: string[],
+  addresses: Address[],
+  afterBestBlocks: BlockHash[],
 ): Promise<{
   safeBlockRollback: boolean
   value?: {
     diff: UtxoDiff
-    bestBlock: string
+    bestBlock: BlockHash
   }
 }> {
   const bestBlock = await api.getBestBlock()
@@ -177,12 +183,12 @@ async function getUtxoDiffSincePoint(
 async function syncSafeStateAndGetDiff(
   api: UtxoApiContract,
   utxoStorage: UtxoStorage,
-  addresses: string[],
+  addresses: Address[],
 ): Promise<{
-  safeBlockHash: string
+  safeBlockHash: BlockHash
   safeUtxos: Utxo[]
   diff: UtxoDiff
-  bestBlock: string
+  bestBlock: BlockHash
   localDiff: UtxoDiffToBestBlock[]
   tipStatus: TipStatusReference
 }> {
@@ -217,9 +223,7 @@ async function syncSafeStateAndGetDiff(
     return syncSafeStateAndGetDiff(api, utxoStorage, addresses)
   } else {
     if (!value)
-      throw new Error(
-        'value should not be falsy if safeBlockRollback is false',
-      )
+      throw new Error('value should not be falsy if safeBlockRollback is false')
     const {diff, bestBlock} = value
     return {
       safeBlockHash,
@@ -262,7 +266,7 @@ export const createUtxoService = (
       return utxos
     },
 
-    async syncUtxoState(addresses: string[]): Promise<void> {
+    async syncUtxoState(addresses: Address[]): Promise<void> {
       const {safeUtxos, diff, bestBlock, localDiff, tipStatus} =
         await syncSafeStateAndGetDiff(api, utxoStorage, addresses)
 
@@ -335,8 +339,8 @@ export const createUtxoService = (
  *
  * @returns {ReturnType<typeof createUtxoService>} UtxoService instance
  *
- * @example init(utxoService, 'https://cardano-api.emurgo.com/')
- * @example init(utxoService, 'https://cardano-api.emurgo.com/', 200, 200)
+ * @example init(utxoService, 'https://api.yoroiwallet.com/api/')
+ * @example init(utxoService, 'https://api.yoroiwallet.com/api/', 200, 200)
  */
 export const init = (
   utxoStorage: UtxoStorage,
@@ -344,8 +348,7 @@ export const init = (
   pageSize = 50,
   maxAddresses = 500,
 ) => {
-  const utxoApi = createEmurgoUtxoApi(apiUrl, true, pageSize)
-  const batchedUtxoApi = createBatchedEmurgoUtxoApi(utxoApi, maxAddresses)
+  const utxoApi = createLegacyUtxoApi(apiUrl, true, pageSize)
+  const batchedUtxoApi = createBatchedLegacyUtxoApi(utxoApi, maxAddresses)
   return createUtxoService(batchedUtxoApi, utxoStorage)
 }
-

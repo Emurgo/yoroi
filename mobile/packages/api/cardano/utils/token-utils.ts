@@ -1,5 +1,13 @@
 import {AssetNameUtils} from '@yoroi/tx'
-import {Api, Balance} from '@yoroi/types'
+import {
+  Api,
+  AssetName,
+  Balance,
+  Branded,
+  PolicyId,
+  TokenFingerprint,
+  TokenId,
+} from '@yoroi/types'
 
 import AssetFingerprint from '@emurgo/cip14-js'
 
@@ -15,7 +23,7 @@ export const tokenInfo = (
 
   return {
     kind: 'ft',
-    name: assetName,
+    name: Branded.asAssetName(assetName),
     group: policyId,
     decimals: entry.decimals?.value ?? 0,
     ticker: entry.ticker?.value,
@@ -23,10 +31,12 @@ export const tokenInfo = (
     image: entry.logo?.value,
     description: entry.description?.value,
     id: toTokenId(entry.subject),
-    fingerprint: toTokenFingerprint({
-      policyId,
-      assetNameHex: nameHex,
-    }),
+    fingerprint: Branded.asTokenFingerprint(
+      toTokenFingerprint({
+        policyId,
+        assetNameHex: nameHex,
+      }),
+    ),
     symbol: undefined,
     metadatas: {
       mintFt: {
@@ -44,16 +54,21 @@ export const tokenInfo = (
 /**
  * Creates a fallback Balance.TokenInfo from a tokenId string
  */
-export const fallbackTokenInfo = (tokenId: string): Balance.TokenInfo => {
-  const policyId = toPolicyId(tokenId)
-  const nameHex = toAssetNameHex(tokenId)
-  const assetName = toDisplayAssetName(tokenId)
+export const fallbackTokenInfo = (
+  tokenId: TokenId | string,
+): Balance.TokenInfo => {
+  const tokenIdStr = typeof tokenId === 'string' ? tokenId : tokenId
+  const policyId = toPolicyId(tokenIdStr)
+  const nameHex = toAssetNameHex(tokenIdStr)
+  const assetName = toDisplayAssetName(tokenIdStr)
 
   return {
     kind: 'ft',
-    id: toTokenId(tokenId),
-    name: assetName,
-    fingerprint: toTokenFingerprint({policyId, assetNameHex: nameHex}),
+    id: toTokenId(tokenIdStr),
+    name: Branded.asAssetName(assetName),
+    fingerprint: Branded.asTokenFingerprint(
+      toTokenFingerprint({policyId, assetNameHex: nameHex}),
+    ),
     description: undefined,
     group: policyId,
     decimals: 0,
@@ -68,17 +83,23 @@ export const fallbackTokenInfo = (tokenId: string): Balance.TokenInfo => {
 /**
  * Extracts the policy ID from a token identifier (handles both policyId.assetName and policyIdassetName formats)
  */
-export const toPolicyId = (tokenIdentifier: string): string => {
-  const tokenSubject = toTokenSubject(tokenIdentifier)
-  return tokenSubject.slice(0, 56)
+export const toPolicyId = (tokenIdentifier: TokenId | string): PolicyId => {
+  const tokenIdStr =
+    typeof tokenIdentifier === 'string' ? tokenIdentifier : tokenIdentifier
+  const tokenSubject = toTokenSubject(tokenIdStr)
+  return tokenSubject.slice(0, 56) as PolicyId
 }
 
 /**
  * Extracts and formats the display name from a token identifier
  * Handles tagged asset names using AssetNameUtils
  */
-export const toDisplayAssetName = (tokenIdentifier: string): string => {
-  const hexName = toAssetNameHex(tokenIdentifier)
+export const toDisplayAssetName = (
+  tokenIdentifier: TokenId | string,
+): string => {
+  const tokenIdStr =
+    typeof tokenIdentifier === 'string' ? tokenIdentifier : tokenIdentifier
+  const hexName = toAssetNameHex(tokenIdStr)
   const properties = AssetNameUtils.resolveProperties(hexName)
   const untaggedName = properties.asciiName ?? hexName
   return untaggedName
@@ -87,25 +108,36 @@ export const toDisplayAssetName = (tokenIdentifier: string): string => {
 /**
  * Extracts the asset name hex from a token identifier
  */
-export const toAssetNameHex = (tokenIdentifier: string): string => {
-  const tokenSubject = toTokenSubject(tokenIdentifier)
+export const toAssetNameHex = (
+  tokenIdentifier: TokenId | string,
+): AssetName => {
+  const tokenIdStr =
+    typeof tokenIdentifier === 'string' ? tokenIdentifier : tokenIdentifier
+  const tokenSubject = toTokenSubject(tokenIdStr)
   const maxAssetNameLengthInBytes = 32
-  return tokenSubject.slice(56, 56 + maxAssetNameLengthInBytes * 2)
+  return tokenSubject.slice(56, 56 + maxAssetNameLengthInBytes * 2) as AssetName
 }
 
 /**
  * Converts a token identifier to subject format (removes dot separator)
  * Handles both policyId.assetName and policyIdassetName formats
  */
-export const toTokenSubject = (tokenIdentifier: string): string =>
-  tokenIdentifier.replace('.', '')
+export const toTokenSubject = (tokenIdentifier: TokenId | string): string => {
+  const tokenIdStr =
+    typeof tokenIdentifier === 'string' ? tokenIdentifier : tokenIdentifier
+  return tokenIdStr.replace('.', '')
+}
 
 /**
  * Converts a token identifier to standard tokenId format (policyId.assetName)
  */
-export const toTokenId = (tokenIdentifier: string): Balance.TokenInfo['id'] => {
-  const tokenSubject = toTokenSubject(tokenIdentifier)
-  return `${tokenSubject.slice(0, 56)}.${toAssetNameHex(tokenIdentifier)}` as Balance.TokenInfo['id']
+export const toTokenId = (
+  tokenIdentifier: TokenId | string,
+): Balance.TokenInfo['id'] => {
+  const tokenIdStr =
+    typeof tokenIdentifier === 'string' ? tokenIdentifier : tokenIdentifier
+  const tokenSubject = toTokenSubject(tokenIdStr)
+  return `${tokenSubject.slice(0, 56)}.${toAssetNameHex(tokenIdStr)}` as Balance.TokenInfo['id']
 }
 
 /**
@@ -121,12 +153,15 @@ export const toTokenFingerprint = ({
   policyId,
   assetNameHex = '',
 }: {
-  policyId: string
-  assetNameHex: string | undefined
-}): string => {
+  policyId: PolicyId | string
+  assetNameHex: AssetName | string | undefined
+}): TokenFingerprint => {
+  const policyIdStr = typeof policyId === 'string' ? policyId : policyId
+  const assetNameStr =
+    typeof assetNameHex === 'string' ? assetNameHex : assetNameHex || ''
   const assetFingerprint = AssetFingerprint.fromParts(
-    Buffer.from(policyId, 'hex'),
-    Buffer.from(assetNameHex, 'hex'),
+    Buffer.from(policyIdStr, 'hex'),
+    Buffer.from(assetNameStr, 'hex'),
   )
-  return assetFingerprint.fingerprint()
+  return Branded.asTokenFingerprint(assetFingerprint.fingerprint())
 }

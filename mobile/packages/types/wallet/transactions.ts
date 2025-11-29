@@ -3,6 +3,18 @@ import {Balance} from '@yoroi/types'
 
 import {CardanoTypes} from '~/wallets/cardano/types'
 
+import {
+  Address,
+  Amount,
+  AssetName,
+  BlockHash,
+  EpochNumber,
+  PolicyId,
+  SlotNumber,
+  TokenId,
+  TransactionHash,
+} from '../branded'
+
 // Note: CardanoTypes is still in src/ but will be moved in future refactoring
 
 /**
@@ -11,10 +23,10 @@ import {CardanoTypes} from '~/wallets/cardano/types'
  */
 export type TransactionToken = {
   isDefault: boolean
-  identifier: string
+  identifier: TokenId
   // Minimal metadata for transaction display
-  policyId: string
-  assetName: string
+  policyId: PolicyId
+  assetName: AssetName
   numberOfDecimals: number
   ticker: string | null
   longName: string | null
@@ -85,10 +97,10 @@ export type TxMetadataInfo = Record<string, any>
  * Base asset type (from backend)
  */
 type RemoteAsset = {
-  readonly amount: string
-  readonly tokenId: string
-  readonly policyId: string
-  readonly name: string
+  readonly amount: Amount
+  readonly tokenId: TokenId
+  readonly policyId: PolicyId
+  readonly name: AssetName
 }
 
 export type BaseAsset = RemoteAsset
@@ -97,10 +109,10 @@ export type BaseAsset = RemoteAsset
  * Input/Output data for transaction display
  */
 type IOData = {
-  address: string
+  address: Address
   assets: Array<CardanoTypes.TokenEntry>
-  amount: string
-  id?: string
+  amount: Amount
+  id?: TransactionHash
 }
 
 /**
@@ -110,7 +122,7 @@ type IOData = {
  * This type will be removed when deprecated code is migrated.
  */
 export type TransactionInfo = {
-  id: string
+  id: TransactionHash
   inputs: Array<IOData>
   outputs: Array<IOData>
   amount: Balance.Amounts
@@ -132,39 +144,39 @@ export type TransactionInfo = {
  * Wallet transaction type (raw transaction from backend, cached in wallet)
  */
 export type WalletTransaction = {
-  id: string
+  id: TransactionHash
   type?: TransactionType
-  fee?: string
+  fee?: Amount
   status: TransactionStatus
   inputs: Array<{
-    address: string
-    amount: string
+    address: Address
+    amount: Amount
     assets: Array<BaseAsset>
-    id?: string
+    id?: TransactionHash
   }>
   outputs: Array<{
-    address: string
-    amount: string
+    address: Address
+    amount: Amount
     assets: Array<BaseAsset>
   }>
   blockNum: number | null | undefined
-  blockHash: string | null | undefined
+  blockHash: BlockHash | null | undefined
   txOrdinal: number | null | undefined
   submittedAt: string | null | undefined
   lastUpdatedAt: string
-  epoch: number | null | undefined
-  slot: number | null | undefined
+  epoch: EpochNumber | null | undefined
+  slot: SlotNumber | null | undefined
   withdrawals: Array<{
-    address: string
+    address: Address
     // hex
-    amount: string
+    amount: Amount
   }>
   certificates: Array<RemoteCertificateMeta>
   readonly validContract?: boolean
   readonly scriptSize?: number
   readonly collateralInputs?: Array<{
-    address: string
-    amount: string
+    address: Address
+    amount: Amount
     assets: Array<BaseAsset>
   }>
   memo: string | null
@@ -174,4 +186,4 @@ export type WalletTransaction = {
 /**
  * Collection of wallet transactions
  */
-export type Transactions = {[txid: string]: WalletTransaction}
+export type Transactions = {[txid: TransactionHash]: WalletTransaction}

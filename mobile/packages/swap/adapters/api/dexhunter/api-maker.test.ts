@@ -1,5 +1,5 @@
 import {fetchData} from '@yoroi/common'
-import {Api, Chain} from '@yoroi/types'
+import {Address, Api, Chain} from '@yoroi/types'
 
 import {dexhunterApiMaker} from './api-maker'
 import {api} from './api.mocks'
@@ -130,7 +130,7 @@ describe('dexhunterApiMaker', () => {
               dex: 'MUESLISWAP',
               status: 'COMPLETE',
               user_address:
-                'addr1q9qhyvkm5fytm5ckgshny0zz08a3urhhh7ckdqxcm27av40eafn3v5lr2w2n2er9uj7c743mt42gpe8tgek6394z9t7qn4yjzl',
+                'addr1q9qhyvkm5fytm5ckgshny0zz08a3urhhh7ckdqxcm27av40eafn3v5lr2w2n2er9uj7c743mt42gpe8tgek6394z9t7qn4yjzl' as Address,
               user_stake:
                 'stake1u8u75eck203489f4v3j7f0v02ca464yqun45vmdgj63z4lqm9pu9k',
               amount_in: 15.330409,
@@ -158,7 +158,7 @@ describe('dexhunterApiMaker', () => {
               dex: 'MUESLISWAP',
               status: 'COMPLETE',
               user_address:
-                'addr1q9qhyvkm5fytm5ckgshny0zz08a3urhhh7ckdqxcm27av40eafn3v5lr2w2n2er9uj7c743mt42gpe8tgek6394z9t7qn4yjzl',
+                'addr1q9qhyvkm5fytm5ckgshny0zz08a3urhhh7ckdqxcm27av40eafn3v5lr2w2n2er9uj7c743mt42gpe8tgek6394z9t7qn4yjzl' as Address,
               user_stake:
                 'stake1u8u75eck203489f4v3j7f0v02ca464yqun45vmdgj63z4lqm9pu9k',
               amount_in: 15.330409,

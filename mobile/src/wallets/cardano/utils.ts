@@ -1,11 +1,11 @@
 import {RawUtxo} from '@yoroi/api'
+import {primaryTokenId as defaultPrimaryTokenId} from '@yoroi/portfolio'
 import {
   SendToken,
   TransactionOutput,
   validateAndExtractAddressInfo,
 } from '@yoroi/tx'
-import {Balance, Chain, Portfolio, Wallet} from '@yoroi/types'
-import {BaseAsset} from '@yoroi/types'
+import {Balance, BaseAsset, Chain, Portfolio, Wallet} from '@yoroi/types'
 
 import {WasmModuleProxy} from '@emurgo/cross-csl-core'
 import {BigNumber} from 'bignumber.js'
@@ -200,12 +200,13 @@ export const amountsFromRemote = (
   const amounts: Balance.Amounts = {} as Balance.Amounts
 
   // Add primary token (ADA)
-  amounts['.'] = remoteValue.amount as Balance.Quantity
+  amounts[defaultPrimaryTokenId] = remoteValue.amount as any as Balance.Quantity
 
   // Add other assets
   if (remoteValue.assets != null) {
     for (const token of remoteValue.assets) {
-      amounts[token.tokenId] = token.amount as Balance.Quantity
+      amounts[token.tokenId as Portfolio.Token.Id] =
+        token.amount as any as Balance.Quantity
     }
   }
 
@@ -264,7 +265,7 @@ export const toSendToken =
 
     return {
       token: {
-        identifier: tokenId,
+        identifier: tokenId as Portfolio.Token.Id,
         isDefault: isPrimary,
       },
       amount: new BigNumber(quantity),

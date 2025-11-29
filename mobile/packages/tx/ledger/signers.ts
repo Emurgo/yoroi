@@ -1,5 +1,7 @@
 // Ledger signer utilities
 // Functions for determining required signers for transactions
+import {Address} from '@yoroi/types'
+
 import {Ed25519KeyHash, WasmModuleProxy} from '@emurgo/cross-csl-core'
 
 import {CardanoMobileWrapped} from '../../../src/wallets/cardano/wrappedCsl'
@@ -31,7 +33,7 @@ type GetAllSignersOptions = {
   stakingKeyPath?: number[]
   partial?: boolean
   utxos: Array<CardanoAddressedUtxo>
-  getAddressAddressing: (address: string) => Addressing | null
+  getAddressAddressing: (address: Address | string) => Addressing | null
 }
 
 /**
@@ -128,7 +130,7 @@ type GetRequiredSignersAddressing = {
   body: GetAllSignersOptions['body']
   networkId: number
   stakeVKHash: Ed25519KeyHash
-  getAddressAddressing: (address: string) => Addressing | null
+  getAddressAddressing: (address: Address | string) => Addressing | null
   partial?: boolean
   stakingKeyPath?: number[]
 }

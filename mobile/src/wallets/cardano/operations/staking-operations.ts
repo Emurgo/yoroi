@@ -1,6 +1,6 @@
 import {cardanoConfig} from '@yoroi/blockchains'
 import type {StakingInfo} from '@yoroi/staking'
-import {Balance, Portfolio, Wallet} from '@yoroi/types'
+import {Balance, Branded, Portfolio, Wallet} from '@yoroi/types'
 
 import {Buffer} from 'buffer'
 
@@ -118,10 +118,12 @@ export const getWalletStakingInfo = async (wallet: {
 
   const stakingUtxos = wallet.getAllUtxosForKey()
   const primaryTokenId = wallet.portfolioPrimaryTokenInfo.id
-  const remainingAmount = accountState.remainingAmount || '0'
+  const remainingAmount = accountState.remainingAmount ?? Branded.ZERO_QUANTITY
   const amount = Quantities.sum([
     ...stakingUtxos.map(
-      (utxo) => (utxo.balance[primaryTokenId] || '0') as Balance.Quantity,
+      (utxo) =>
+        (utxo.balance[primaryTokenId] ??
+          Branded.ZERO_QUANTITY) as Balance.Quantity,
     ),
     remainingAmount as Balance.Quantity,
   ])

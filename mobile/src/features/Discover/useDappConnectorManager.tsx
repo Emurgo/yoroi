@@ -1,5 +1,6 @@
 import {useAsyncStorage} from '@yoroi/common'
 import {DappConnection, DappConnector} from '@yoroi/dapp-connector'
+import {Branded} from '@yoroi/types'
 
 import {Transaction} from '@emurgo/cross-csl-core'
 import {useNavigation} from '@react-navigation/native'
@@ -290,7 +291,7 @@ export const useDappConnectorManager = () => {
                   if (txId) {
                     // Set collateral ID to txId:0 (assuming collateral UTXO is at output index 0)
                     // This prevents duplicate reorganization transactions while waiting for confirmation
-                    const collateralId = `${txId}:0`
+                    const collateralId = Branded.asUtxoId(`${txId}:0`)
                     wallet.setCollateralId(collateralId)
                     logger.info(
                       'useDappConnectorManager::handleSendReorganisationTx - collateral ID set',

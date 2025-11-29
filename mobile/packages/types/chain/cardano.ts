@@ -5,6 +5,7 @@ import {
 } from '@yoroi/tx'
 
 import {BalanceAmounts} from '../balance/token'
+import {Address, BlockHash, EpochNumber, SlotNumber, TokenId} from '../branded'
 import {NumbersRatio} from '../numbers/ratio'
 
 export type ChainCardanoProtocolParams = Readonly<{
@@ -82,10 +83,10 @@ export type ChainCardanoProtocolParams = Readonly<{
 }>
 
 export type ChainCardanoBestBlock = Readonly<{
-  epoch: number
-  slot: number
-  globalSlot: number
-  hash: string
+  epoch: EpochNumber
+  slot: SlotNumber
+  globalSlot: SlotNumber
+  hash: BlockHash
   height: number
 }>
 
@@ -99,7 +100,7 @@ export type CardanoSignedTx = CardanoTxInfo & {
 }
 
 export type CardanoEntry = {
-  address: string
+  address: Address
   amounts: BalanceAmounts
   datum?: Datum
 }
@@ -134,6 +135,6 @@ export type CardanoVoting = {
   }
 }
 
-export type CardanoAddress = string
-export type CardanoTokenId = string
+export type CardanoAddress = Address
+export type CardanoTokenId = TokenId
 // END legacy

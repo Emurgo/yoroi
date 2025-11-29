@@ -1,5 +1,5 @@
 import {linksCardanoModuleMaker} from '@yoroi/links'
-import {Links} from '@yoroi/types'
+import {Branded, Links} from '@yoroi/types'
 
 import {freeze} from 'immer'
 
@@ -18,7 +18,7 @@ export const parseCardanoLink = (codeContent: string): Links.CardanoAction => {
       throw new Links.Errors.UnknownContent()
     return freeze({
       action: 'send-only-receiver',
-      receiver: codeContent,
+      receiver: Branded.asAddress(codeContent),
     } as const)
   }
 
@@ -80,8 +80,8 @@ export const parseCardanoLink = (codeContent: string): Links.CardanoAction => {
     const {address, amount, asset, memo} = parsedCardanoLink.params
     return freeze({
       action: 'pay-request',
-      address: address as string,
-      amount: amount ? String(amount) : undefined,
+      address: Branded.asAddress(address as string),
+      amount: amount ? Branded.asAmount(String(amount)) : undefined,
       asset: asset as string | undefined,
       memo: memo as string | undefined,
     } as const)
@@ -92,8 +92,8 @@ export const parseCardanoLink = (codeContent: string): Links.CardanoAction => {
     const {address, amount, asset, memo} = parsedCardanoLink.params
     return freeze({
       action: 'pay-request',
-      address: address as string,
-      amount: amount ? String(amount) : undefined,
+      address: Branded.asAddress(address as string),
+      amount: amount ? Branded.asAmount(String(amount)) : undefined,
       asset: asset as string | undefined,
       memo: memo as string | undefined,
     } as const)
@@ -113,7 +113,7 @@ export const parseCardanoLink = (codeContent: string): Links.CardanoAction => {
     const {drep} = parsedCardanoLink.params
     return freeze({
       action: 'delegate-drep',
-      drep: drep as string,
+      drep: Branded.asDRepId(drep as string),
     } as const)
   }
 
@@ -122,7 +122,7 @@ export const parseCardanoLink = (codeContent: string): Links.CardanoAction => {
     const {hash} = parsedCardanoLink.params
     return freeze({
       action: 'view-transaction',
-      hash: hash as string,
+      hash: Branded.asTransactionHash(hash as string),
     } as const)
   }
 
@@ -131,7 +131,7 @@ export const parseCardanoLink = (codeContent: string): Links.CardanoAction => {
     const {hash, height} = parsedCardanoLink.params
     return freeze({
       action: 'view-block',
-      hash: hash as string | undefined,
+      hash: hash ? Branded.asBlockHash(hash as string) : undefined,
       height: height ? String(height) : undefined,
     } as const)
   }
@@ -141,7 +141,7 @@ export const parseCardanoLink = (codeContent: string): Links.CardanoAction => {
     const {address} = parsedCardanoLink.params
     return freeze({
       action: 'view-address',
-      address: address as string,
+      address: Branded.asAddress(address as string),
     } as const)
   }
 

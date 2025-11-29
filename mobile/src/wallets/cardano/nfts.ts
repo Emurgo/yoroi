@@ -1,7 +1,7 @@
 import {toDisplayAssetName} from '@yoroi/api'
 import {createTypeGuardFromSchema, isArrayOfType, isString} from '@yoroi/common'
 import {domainNormalizer} from '@yoroi/resolver'
-import {Balance} from '@yoroi/types'
+import {Balance, Branded} from '@yoroi/types'
 
 import {z} from 'zod'
 
@@ -44,11 +44,11 @@ export const convertNft = (options: {
 
   return {
     kind: 'nft',
-    id,
-    fingerprint,
-    name,
+    id: Branded.asTokenId(id),
+    fingerprint: Branded.asTokenFingerprint(fingerprint),
+    name: Branded.asAssetName(name),
     description,
-    group: policyId,
+    group: Branded.asPolicyId(policyId),
     decimals: undefined,
     ticker,
     icon: thumbnail,

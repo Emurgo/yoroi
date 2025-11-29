@@ -1,5 +1,5 @@
 import {TransactionOutput} from '@yoroi/tx'
-import {App} from '@yoroi/types'
+import {App, Branded} from '@yoroi/types'
 
 import {YoroiWallet} from '~/wallets/cardano/types'
 import {collateralConfig} from '~/wallets/cardano/utxoManager/utxos'
@@ -19,7 +19,7 @@ export const createCollateralEntry = (
     ? asQuantity(amount)
     : collateralConfig.minLovelace
   return {
-    address: getCollateralAddress(wallet),
+    address: Branded.asAddress(getCollateralAddress(wallet)),
     amounts: {
       [wallet.portfolioPrimaryTokenInfo.id]: collateralAmount,
     },

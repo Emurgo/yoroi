@@ -81,10 +81,10 @@ const apiResponseTokenActivity: Readonly<
 }
 
 const apiRequestTokenActivityArgs: ReadonlyArray<Portfolio.Token.Id> = [
-  tokenInfoMocks.primaryETH.id,
-  tokenInfoMocks.rnftWhatever.id,
-  tokenInfoMocks.ftNoTicker.id,
-  tokenInfoMocks.ftNameless.id,
+  tokenInfoMocks.primaryETH.id as Portfolio.Token.Id,
+  tokenInfoMocks.rnftWhatever.id as Portfolio.Token.Id,
+  tokenInfoMocks.ftNoTicker.id as Portfolio.Token.Id,
+  tokenInfoMocks.ftNameless.id as Portfolio.Token.Id,
 ]
 
 export const tokenActivityMocks = freeze({

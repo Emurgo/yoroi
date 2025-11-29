@@ -1,3 +1,5 @@
+import {TransactionHash} from '@yoroi/types'
+
 import {createTransactionBuilder} from '../transaction-builder/builder'
 import {
   addProposal,
@@ -13,7 +15,7 @@ describe('governance proposals', () => {
       const proposal: Proposal = {
         governanceAction: {
           type: 'parameterChange',
-          actionId: {txHash: 'hash1', txIndex: 0},
+          actionId: {txHash: 'hash1' as TransactionHash, txIndex: 0},
         },
         anchor: {url: 'https://example.com', hash: 'hash123'},
         rewardAccount: 'stake_test1',
@@ -56,7 +58,7 @@ describe('governance proposals', () => {
       const proposal: Proposal = {
         governanceAction: {
           type: 'parameterChange',
-          actionId: {txHash: 'hash1', txIndex: 0},
+          actionId: {txHash: 'hash1' as TransactionHash, txIndex: 0},
         },
         anchor: {url: 'https://example.com', hash: 'hash123'},
         rewardAccount: 'stake_test1',
@@ -85,7 +87,7 @@ describe('governance proposals', () => {
       const proposal = {
         governanceAction: {
           type: 'parameter_change',
-          id: {txHash: 'hash1', txIndex: 0},
+          id: {txHash: 'hash1' as TransactionHash, txIndex: 0},
         },
         rewardAccount: 'stake_test1',
         deposit: '500000000',
@@ -101,7 +103,7 @@ describe('governance proposals', () => {
       const proposal = {
         governanceAction: {
           type: 'parameter_change',
-          id: {txHash: 'hash1', txIndex: 0},
+          id: {txHash: 'hash1' as TransactionHash, txIndex: 0},
         },
         anchor: {url: 'https://example.com', hash: 'hash123'},
         deposit: '500000000',
@@ -117,7 +119,7 @@ describe('governance proposals', () => {
       const proposal: Proposal = {
         governanceAction: {
           type: 'parameterChange',
-          actionId: {txHash: 'hash1', txIndex: 0},
+          actionId: {txHash: 'hash1' as TransactionHash, txIndex: 0},
         },
         anchor: {url: 'https://example.com', hash: 'hash123'},
         rewardAccount: 'stake_test1',

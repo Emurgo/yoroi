@@ -1,5 +1,5 @@
 import {time} from '@yoroi/common'
-import {App} from '@yoroi/types'
+import {Address, App, BlockHash, Branded, TransactionHash} from '@yoroi/types'
 
 import {Buffer} from 'buffer'
 import _ from 'lodash'
@@ -15,27 +15,34 @@ import {CardanoMobileWrapped} from '../wrappedCsl'
  * No address generation or discovery - just manages a fixed list
  */
 export class ReadOnlyAddressChain {
-  private _addresses: string[]
+  private _addresses: Address[]
   private _blockSize: number
 
-  constructor(addresses: string[], blockSize = 50) {
-    this._addresses = [...addresses] // defensive copy
+  constructor(addresses: string[] | Address[], blockSize = 50) {
+    // Convert string[] to Address[] if needed
+    this._addresses = addresses.map((addr) =>
+      typeof addr === 'string' ? Branded.asAddress(addr) : addr,
+    )
     this._blockSize = blockSize
   }
 
-  get addresses(): string[] {
+  get addresses(): Address[] {
     return [...this._addresses] // defensive copy
   }
 
-  isMyAddress(address: string): boolean {
-    return this._addresses.includes(address)
+  isMyAddress(address: Address | string): boolean {
+    const addr =
+      typeof address === 'string' ? Branded.asAddress(address) : address
+    return this._addresses.includes(addr)
   }
 
-  getIndexOfAddress(address: string): number {
-    return this._addresses.indexOf(address)
+  getIndexOfAddress(address: Address | string): number {
+    const addr =
+      typeof address === 'string' ? Branded.asAddress(address) : address
+    return this._addresses.indexOf(addr)
   }
 
-  getBlocks(): string[][] {
+  getBlocks(): Address[][] {
     return _.chunk(this._addresses, this._blockSize)
   }
 
@@ -49,13 +56,16 @@ export class ReadOnlyAddressChain {
   }
 
   // For compatibility with AddressChain interface
-  addSubscriberToNewAddresses(_subscriber: (addresses: string[]) => unknown) {
+  addSubscriberToNewAddresses(_subscriber: (addresses: Address[]) => unknown) {
     // No-op: read-only wallets don't generate new addresses
   }
 
   // Allow adding addresses discovered from transactions
-  addAddresses(newAddresses: string[]) {
-    const uniqueNew = newAddresses.filter(
+  addAddresses(newAddresses: string[] | Address[]) {
+    const addresses = newAddresses.map((addr) =>
+      typeof addr === 'string' ? Branded.asAddress(addr) : addr,
+    )
+    const uniqueNew = addresses.filter(
       (addr) => !this._addresses.includes(addr),
     )
     if (uniqueNew.length > 0) {
@@ -74,7 +84,7 @@ export type ReadOnlyAccountManager = {
     paymentKeyHashes: string[]
     rewardAddresses: string[]
   }) => Promise<void>
-  getAddressesInBlocks: (rewardAddressHex: string) => string[][]
+  getAddressesInBlocks: (rewardAddressHex: string) => Address[][]
   save: () => Promise<void>
   clear: () => Promise<void>
 }
@@ -82,9 +92,10 @@ export type ReadOnlyAccountManager = {
 /**
  * Validates if a string looks like a valid Cardano address
  */
-function isValidCardanoAddress(address: string): boolean {
-  if (!address || typeof address !== 'string') return false
-  const trimmed = address.trim()
+function isValidCardanoAddress(address: Address | string): boolean {
+  const addrStr = typeof address === 'string' ? address : address
+  if (!addrStr || typeof addrStr !== 'string') return false
+  const trimmed = addrStr.trim()
   return (
     trimmed.startsWith('addr') ||
     trimmed.startsWith('stake') ||
@@ -155,22 +166,50 @@ async function discoverUsedAddressesByStakingCredential({
   }
 
   const txHistoryPayload = {
-    addresses: [rewardAddressBech32, knownBaseAddress],
-    untilBlock: bestBlock.hash,
+    addresses: [
+      Branded.asAddress(rewardAddressBech32),
+      Branded.asAddress(knownBaseAddress),
+    ],
+    untilBlock: bestBlock.hash as BlockHash,
   }
 
   // Fetch all transactions (may need pagination in production)
   const allTransactions: any[] = []
   let isLast = false
-  let after: {block: string; tx: string} | undefined
+  let after: {block: BlockHash; tx: TransactionHash} | undefined
 
   do {
-    const payload = after ? {...txHistoryPayload, after} : txHistoryPayload
+    const payload = after
+      ? {
+          ...txHistoryPayload,
+          after: {
+            block: after.block,
+            tx: after.tx,
+          },
+        }
+      : txHistoryPayload
 
+    const walletContextBranded = walletContext
+      ? {
+          ...walletContext,
+          publicKeyHex: walletContext.publicKeyHex
+            ? Branded.asPublicKeyHex(walletContext.publicKeyHex)
+            : undefined,
+          accountPubKeyHex: walletContext.accountPubKeyHex
+            ? Branded.asPublicKeyHex(walletContext.accountPubKeyHex)
+            : undefined,
+          paymentKeyHashes: walletContext.paymentKeyHashes.map((hash) =>
+            Branded.asKeyHash(hash),
+          ),
+          rewardAddresses: walletContext.rewardAddresses.map((addr) =>
+            Branded.asAddress(addr),
+          ),
+        }
+      : undefined
     const response = await legacyApi.fetchNewTxHistory(
       payload,
       baseApiUrl,
-      walletContext,
+      walletContextBranded,
     )
     allTransactions.push(...response.transactions)
     isLast = response.isLast
@@ -179,8 +218,8 @@ async function discoverUsedAddressesByStakingCredential({
       const lastTx = response.transactions[response.transactions.length - 1]
       if (lastTx?.blockHash && lastTx?.id) {
         after = {
-          block: lastTx.blockHash,
-          tx: lastTx.id,
+          block: Branded.asBlockHash(lastTx.blockHash),
+          tx: Branded.asTransactionHash(lastTx.id),
         }
       } else {
         isLast = true
@@ -200,12 +239,12 @@ async function discoverUsedAddressesByStakingCredential({
   }
 
   // Step 5: Filter addresses that share the same staking credential
-  const matchingAddresses: string[] = []
-  for (const address of allAddresses) {
+  const matchingAddresses: Address[] = []
+  for (const addressStr of allAddresses) {
     try {
       const matches = CardanoMobileWrapped.cslScope((csl) => {
         try {
-          const addr = csl.Address.fromBech32(address)
+          const addr = csl.Address.fromBech32(addressStr)
           const baseAddr = csl.BaseAddress.fromAddress(addr)
           if (!baseAddr) return false
 
@@ -220,11 +259,11 @@ async function discoverUsedAddressesByStakingCredential({
       })
 
       if (matches) {
-        matchingAddresses.push(address)
+        matchingAddresses.push(Branded.asAddress(addressStr))
       }
     } catch (error) {
       logger.warn('Failed to check address staking credential', {
-        address,
+        address: addressStr,
         error,
       })
     }
@@ -233,14 +272,15 @@ async function discoverUsedAddressesByStakingCredential({
   // Step 6: Classify addresses (heuristic: external are typically outputs, internal are change)
   // For now, we'll put all discovered addresses in external since we can't determine derivation
   // The user can manually organize if needed
+  const knownBaseAddressBranded = Branded.asAddress(knownBaseAddress)
   const externalAddresses = matchingAddresses.filter(
-    (addr) => addr !== knownBaseAddress,
+    (addr) => addr !== knownBaseAddressBranded,
   )
-  const internalAddresses: string[] = [] // Empty for now - would need heuristics
+  const internalAddresses: Address[] = [] // Empty for now - would need heuristics
 
   return {
-    internalAddresses,
-    externalAddresses,
+    internalAddresses: internalAddresses.map((addr) => addr as string), // Convert back to string[] for compatibility
+    externalAddresses: externalAddresses.map((addr) => addr as string), // Convert back to string[] for compatibility
     rewardAddressHex,
   }
 }
@@ -446,7 +486,11 @@ export const readOnlyAccountManagerMaker = async ({
     const externalBlocks = externalChain.getBlocks()
 
     if (rewardAddressHex !== '') {
-      return [...internalBlocks, ...externalBlocks, [rewardAddressHex]]
+      return [
+        ...internalBlocks,
+        ...externalBlocks,
+        [Branded.asAddress(rewardAddressHex)],
+      ]
     }
 
     return [...internalBlocks, ...externalBlocks]

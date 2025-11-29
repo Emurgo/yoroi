@@ -1,5 +1,5 @@
 import {protocolParamsPlaceholder} from '@yoroi/blockchains'
-import {Balance} from '@yoroi/types'
+import {Balance, TokenId} from '@yoroi/types'
 
 import {mocks as walletMocks} from '../mocks/wallet'
 import {getMinAmounts, withMinAmounts, withPrimaryToken} from './getMinAmounts'
@@ -8,12 +8,15 @@ describe('withMinAmounts()', () => {
   it('should return the min amount quantity', async () => {
     const address =
       'addr_test1qrrdv3uxj8shu27ea9djvnn3rl4w3lvh3cyck6yc36mvf6ctlqxj9g0azvpycncr9u600p6t556qhc3psk06uzzw6saq4kvdpq'
+    const tokenId1 =
+      '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950' as TokenId
+    const tokenId2 =
+      '29d222ce763455e3d7a09a665ce554f00ac89d2e99a1a83d267170c6.4d494e' as TokenId
     const amounts: Balance.Amounts = {
       [walletMocks.wallet.portfolioPrimaryTokenInfo.id]: '123',
-      '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950':
-        '12',
-      '29d222ce763455e3d7a09a665ce554f00ac89d2e99a1a83d267170c6.4d494e': '55',
-    }
+      [tokenId1]: '12',
+      [tokenId2]: '55',
+    } as Balance.Amounts
 
     expect(
       withMinAmounts(
@@ -23,22 +26,24 @@ describe('withMinAmounts()', () => {
         protocolParamsPlaceholder,
       ),
     ).toEqual({
-      '.': '1301620',
-      '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950':
-        '12',
-      '29d222ce763455e3d7a09a665ce554f00ac89d2e99a1a83d267170c6.4d494e': '55',
+      [walletMocks.wallet.portfolioPrimaryTokenInfo.id]: '1301620',
+      [tokenId1]: '12',
+      [tokenId2]: '55',
     })
   })
 
   it('should return the input amount quantity', async () => {
     const address =
       'addr_test1qrrdv3uxj8shu27ea9djvnn3rl4w3lvh3cyck6yc36mvf6ctlqxj9g0azvpycncr9u600p6t556qhc3psk06uzzw6saq4kvdpq'
+    const tokenId1 =
+      '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950' as TokenId
+    const tokenId2 =
+      '29d222ce763455e3d7a09a665ce554f00ac89d2e99a1a83d267170c6.4d494e' as TokenId
     const amounts: Balance.Amounts = {
       [walletMocks.wallet.portfolioPrimaryTokenInfo.id]: '1234432556466',
-      '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950':
-        '12',
-      '29d222ce763455e3d7a09a665ce554f00ac89d2e99a1a83d267170c6.4d494e': '55',
-    }
+      [tokenId1]: '12',
+      [tokenId2]: '55',
+    } as Balance.Amounts
 
     expect(
       withMinAmounts(
@@ -53,12 +58,15 @@ describe('withMinAmounts()', () => {
 
 describe('withPrimaryToken()', () => {
   it('should return the input amounts', () => {
+    const tokenId1 =
+      '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950' as TokenId
+    const tokenId2 =
+      '29d222ce763455e3d7a09a665ce554f00ac89d2e99a1a83d267170c6.4d494e' as TokenId
     const amounts: Balance.Amounts = {
       [walletMocks.wallet.portfolioPrimaryTokenInfo.id]: '123',
-      '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950':
-        '12',
-      '29d222ce763455e3d7a09a665ce554f00ac89d2e99a1a83d267170c6.4d494e': '55',
-    }
+      [tokenId1]: '12',
+      [tokenId2]: '55',
+    } as Balance.Amounts
 
     expect(
       withPrimaryToken(amounts, walletMocks.wallet.portfolioPrimaryTokenInfo),
@@ -66,31 +74,36 @@ describe('withPrimaryToken()', () => {
   })
 
   it('should return the input amounts plus primary token as 0', () => {
+    const tokenId1 =
+      '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950' as TokenId
+    const tokenId2 =
+      '29d222ce763455e3d7a09a665ce554f00ac89d2e99a1a83d267170c6.4d494e' as TokenId
     const amounts: Balance.Amounts = {
-      '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950':
-        '12',
-      '29d222ce763455e3d7a09a665ce554f00ac89d2e99a1a83d267170c6.4d494e': '55',
-    }
+      [tokenId1]: '12',
+      [tokenId2]: '55',
+    } as Balance.Amounts
 
     expect(
       withPrimaryToken(amounts, walletMocks.wallet.portfolioPrimaryTokenInfo),
     ).toEqual({
       [walletMocks.wallet.portfolioPrimaryTokenInfo.id]: '0',
-      '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950':
-        '12',
-      '29d222ce763455e3d7a09a665ce554f00ac89d2e99a1a83d267170c6.4d494e': '55',
+      [tokenId1]: '12',
+      [tokenId2]: '55',
     })
   })
 })
 
 describe('getMinAmounts()', () => {
   it('should return the min amount', () => {
+    const tokenId1 =
+      '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950' as TokenId
+    const tokenId2 =
+      '29d222ce763455e3d7a09a665ce554f00ac89d2e99a1a83d267170c6.4d494e' as TokenId
     const amounts: Balance.Amounts = {
       [walletMocks.wallet.portfolioPrimaryTokenInfo.id]: '123',
-      '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950':
-        '12',
-      '29d222ce763455e3d7a09a665ce554f00ac89d2e99a1a83d267170c6.4d494e': '55',
-    }
+      [tokenId1]: '12',
+      [tokenId2]: '55',
+    } as Balance.Amounts
     const address =
       'addr_test1qrrdv3uxj8shu27ea9djvnn3rl4w3lvh3cyck6yc36mvf6ctlqxj9g0azvpycncr9u600p6t556qhc3psk06uzzw6saq4kvdpq'
 
@@ -107,12 +120,15 @@ describe('getMinAmounts()', () => {
   })
 
   it('should throw an error', () => {
+    const tokenId1 =
+      '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950' as TokenId
+    const tokenId2 =
+      '29d222ce763455e3d7a09a665ce554f00ac89d2e99a1a83d267170c6.4d494e' as TokenId
     const amounts: Balance.Amounts = {
       [walletMocks.wallet.portfolioPrimaryTokenInfo.id]: '123',
-      '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950':
-        '12',
-      '29d222ce763455e3d7a09a665ce554f00ac89d2e99a1a83d267170c6.4d494e': '55',
-    }
+      [tokenId1]: '12',
+      [tokenId2]: '55',
+    } as Balance.Amounts
 
     const address = 'really-bad-address'
 

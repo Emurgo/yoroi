@@ -4,7 +4,7 @@ import {
   tokenInfoMocks,
   tokenMocks,
 } from '@yoroi/portfolio'
-import {Api, Links, Portfolio} from '@yoroi/types'
+import {Address, Api, Links, Portfolio, TokenId} from '@yoroi/types'
 
 import {claimFaucetResponses} from './api-faucet.mocks'
 import {claimManagerMaker} from './manager'
@@ -12,7 +12,7 @@ import {claimApiMockResponses} from './manager.mocks'
 
 describe('claimManagerMaker', () => {
   const options = {
-    address: 'addr_test',
+    address: 'addr_test' as Address,
     primaryTokenInfo: tokenInfoMocks.primaryETH,
     tokenManager: {} as Portfolio.Manager.Token,
   }
@@ -34,16 +34,16 @@ describe('claimManagerMaker - postClaimTokens', () => {
   const tokenManagerMock = createTokenManagerMock()
 
   tokenManagerMock.sync.mockResolvedValue(
-    new Map([
+    new Map<TokenId, any>([
       [
-        tokenMocks.nftCryptoKitty.info.id,
+        tokenMocks.nftCryptoKitty.info.id as TokenId,
         cacheRecordMaker(
           {expires: Date.now() + 3_600_000, hash: 'hash3'},
           tokenMocks.nftCryptoKitty.info,
         ),
       ],
       [
-        tokenMocks.rnftWhatever.info.id,
+        tokenMocks.rnftWhatever.info.id as TokenId,
         cacheRecordMaker(
           {expires: Date.now() + 3_600_000, hash: 'hash3'},
           tokenMocks.rnftWhatever.info,
@@ -53,7 +53,7 @@ describe('claimManagerMaker - postClaimTokens', () => {
   )
 
   const options = {
-    address: 'addr_test',
+    address: 'addr_test' as Address,
     primaryTokenInfo: tokenInfoMocks.primaryETH,
     tokenManager: tokenManagerMock,
   }

@@ -1,5 +1,6 @@
 import {fetchData} from '@yoroi/common'
-import {Api, Chain, Left, Swap} from '@yoroi/types'
+import {primaryTokenId} from '@yoroi/portfolio'
+import {Api, Chain, Left, Swap, TokenId} from '@yoroi/types'
 
 import {muesliswapApiMaker, parseMuesliError} from './api-maker'
 import {api} from './api.mocks'
@@ -107,7 +108,7 @@ describe('muesliswapApiMaker', () => {
               {
                 dex: 'sundaeswap-v1',
                 aggregator: null,
-                fromToken: '.',
+                fromToken: primaryTokenId,
                 toToken:
                   '4cb48d60d1f7823d1307c61b9ecf472ff78cf22d1ccc5786d59461f8.4144414d4f4f4e',
                 fromAmount: '0.000036',
@@ -142,7 +143,7 @@ describe('muesliswapApiMaker', () => {
               {
                 dex: 'minswap-v2',
                 aggregator: null,
-                fromToken: '.',
+                fromToken: primaryTokenId,
                 toToken:
                   '49e423161ef818adc475c783571cb479d5f15ad52a01a240eacc0d3b.434f434b',
                 fromAmount: '0.008137',
@@ -266,9 +267,9 @@ describe('muesliswapApiMaker', () => {
       // has wantedPrice
       const result = await muesliApi.estimate({
         slippage: 0.01,
-        tokenIn: '.',
+        tokenIn: primaryTokenId,
         tokenOut:
-          'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950',
+          'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950' as TokenId,
         protocol: 'minswap-v1',
         wantedPrice: 1,
         amountOut: undefined,
@@ -451,9 +452,9 @@ describe('muesliswapApiMaker', () => {
 
       const muesliApi = muesliswapApiMaker(config)
       const result = await muesliApi.limitOptions({
-        tokenIn: '.',
+        tokenIn: primaryTokenId,
         tokenOut:
-          'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950',
+          'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950' as TokenId,
       })
 
       expect(result.tag).toBe('right')
@@ -476,9 +477,9 @@ describe('muesliswapApiMaker', () => {
 
       const muesliApi = muesliswapApiMaker(config)
       const result = await muesliApi.limitOptions({
-        tokenIn: '.',
+        tokenIn: primaryTokenId,
         tokenOut:
-          'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950',
+          'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950' as TokenId,
       })
 
       expect(result.tag).toBe('left')
@@ -499,9 +500,9 @@ describe('muesliswapApiMaker', () => {
 
       const muesliApi = muesliswapApiMaker(config)
       const result = await muesliApi.limitOptions({
-        tokenIn: '.',
+        tokenIn: primaryTokenId,
         tokenOut:
-          'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950',
+          'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950' as TokenId,
       })
 
       expect(result.tag).toBe('left')

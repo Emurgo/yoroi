@@ -1,3 +1,5 @@
+import {TransactionHash} from '@yoroi/types'
+
 import {
   buildLedgerSignedTx,
   createSignedLedgerTxFromCbor,
@@ -69,7 +71,7 @@ describe('ledger signing', () => {
         senderUtxos: [
           {
             receiver: 'addr_test1',
-            txHash: 'hash1',
+            txHash: 'hash1' as TransactionHash,
             txIndex: 0,
             addressing: {
               path: [2147483648, 2147483648, 0, 0, 0],
@@ -133,7 +135,7 @@ describe('ledger signing', () => {
         senderUtxos: [
           {
             receiver: 'addr_test1',
-            txHash: 'hash1',
+            txHash: 'hash1' as TransactionHash,
             txIndex: 0,
             addressing: {
               path: [2147483648, 2147483648, 0, 0, 0],

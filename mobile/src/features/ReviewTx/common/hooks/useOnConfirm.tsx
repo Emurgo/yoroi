@@ -1,5 +1,5 @@
 import {calculateTxId} from '@yoroi/tx'
-import {Wallet} from '@yoroi/types'
+import {Branded, Wallet} from '@yoroi/types'
 
 import {Transaction, WasmModuleProxy} from '@emurgo/cross-csl-core'
 import * as React from 'react'
@@ -367,10 +367,12 @@ const submitTx = async (
       'hex',
     )
 
-    // Submit the transaction
-    const hexBase64 = Buffer.from(signedTxBytes).toString('base64')
+    // Submit the transaction (convert to base64 for API)
+    const signedTxBase64 = Branded.asTransactionCborBase64(
+      Buffer.from(signedTxBytes).toString('base64'),
+    )
     try {
-      await wallet.submitTransaction(hexBase64)
+      await wallet.submitTransaction(signedTxBase64)
       logger.debug('submitTx: Transaction submitted successfully', {txId})
     } catch (submitError) {
       logger.error('submitTx: Failed to submit transaction', {

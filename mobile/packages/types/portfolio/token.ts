@@ -1,4 +1,7 @@
-export type PortfolioTokenId = `${string}.${string}`
+import {TokenId} from '../branded'
+
+// PortfolioTokenId is an alias for TokenId - they represent the same concept
+export type PortfolioTokenId = TokenId
 
 export enum PortfolioTokenType {
   FT = 'ft',

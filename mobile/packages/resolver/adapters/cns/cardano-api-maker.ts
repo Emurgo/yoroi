@@ -1,6 +1,6 @@
 import {CardanoApi} from '@yoroi/api'
 import {FetchData, fetchData, getApiError, isLeft} from '@yoroi/common'
-import {Api, Resolver} from '@yoroi/types'
+import {Api, Branded, Resolver} from '@yoroi/types'
 
 import {AxiosRequestConfig} from 'axios'
 import {z} from 'zod'
@@ -40,7 +40,9 @@ export const makeCnsCardanoApi = (
     assetName: string,
     fetcherConfig?: AxiosRequestConfig,
   ): Promise<Api.Cardano.NftMetadata | undefined> => {
-    const id: Api.Cardano.TokenId = `${policyId}.${assetName}`
+    const id: Api.Cardano.TokenId = Branded.asTokenId(
+      `${policyId}.${assetName}`,
+    )
 
     const getOnChainMetadatas = CardanoApi.getOnChainMetadatas(`${baseUrl}/api`)
     const response = await getOnChainMetadatas([id], fetcherConfig)

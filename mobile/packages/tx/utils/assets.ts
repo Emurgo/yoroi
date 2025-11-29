@@ -1,6 +1,6 @@
 // Cardano asset utilities
 // Functions for working with Cardano assets and tokens
-import {Balance} from '@yoroi/types'
+import {Balance, TokenId} from '@yoroi/types'
 
 import {
   AssetName,
@@ -22,7 +22,7 @@ import {RemoteUnspentOutput, SendToken} from '../types'
 export function cardanoValueFromAmounts(
   csl: WasmModuleProxy,
   amounts: Balance.Amounts,
-  primaryTokenId: string,
+  primaryTokenId: TokenId,
 ): Value {
   const adaAmount = amounts[primaryTokenId] || '0'
   const value = csl.Value.new(csl.BigNum.fromStr(adaAmount))
@@ -63,7 +63,7 @@ export function cardanoValueFromAmounts(
       const name = csl.AssetName.new(
         new Uint8Array(Buffer.from(assetNameHex, 'hex')),
       )
-      const amount = csl.BigNum.fromStr(amounts[assetId] ?? '0')
+      const amount = csl.BigNum.fromStr(amounts[assetId as TokenId] ?? '0')
       assets.insert(name, amount)
     }
 
@@ -85,7 +85,7 @@ export function cardanoValueFromAmounts(
 export function amountsFromCardanoValue(
   csl: WasmModuleProxy,
   value: Value,
-  primaryTokenId: string,
+  primaryTokenId: TokenId,
 ): Balance.Amounts {
   const amounts: Balance.Amounts = {} as Balance.Amounts
 
@@ -97,7 +97,7 @@ export function amountsFromCardanoValue(
   const ma = value.multiasset()
   if (ma) {
     for (const token of parseTokenList(csl, ma)) {
-      amounts[token.assetId] = token.amount as Balance.Quantity
+      amounts[token.assetId as TokenId] = token.amount as Balance.Quantity
     }
   }
 

@@ -1,5 +1,5 @@
 import {getLogger, isLeft} from '@yoroi/common'
-import {App, Chain} from '@yoroi/types'
+import {App, Branded, Chain} from '@yoroi/types'
 
 import {CardanoTypes} from '../types'
 import {GovernanceApi} from './api'
@@ -95,13 +95,23 @@ class Manager implements GovernanceManager {
       if (data.drepDelegation.drep === 'no_confidence') {
         const {tx, slot, epoch} = data.drepDelegation
         return {
-          drepDelegation: {action: 'no-confidence', tx, slot, epoch},
+          drepDelegation: {
+            action: 'no-confidence',
+            tx: Branded.asTransactionHash(tx),
+            slot: Branded.asSlotNumber(slot),
+            epoch: Branded.asEpochNumber(epoch),
+          },
         } as const
       }
       if (data.drepDelegation.drep === 'abstain') {
         const {tx, slot, epoch} = data.drepDelegation
         return {
-          drepDelegation: {action: 'abstain', tx, slot, epoch},
+          drepDelegation: {
+            action: 'abstain',
+            tx: Branded.asTransactionHash(tx),
+            slot: Branded.asSlotNumber(slot),
+            epoch: Branded.asEpochNumber(epoch),
+          },
         } as const
       }
 
@@ -109,10 +119,10 @@ class Manager implements GovernanceManager {
       return {
         drepDelegation: {
           action: 'drep',
-          tx,
-          slot,
-          epoch,
-          hash: drep,
+          tx: Branded.asTransactionHash(tx),
+          slot: Branded.asSlotNumber(slot),
+          epoch: Branded.asEpochNumber(epoch),
+          hash: Branded.asDRepId(drep),
           type: drepKind === 'scripthash' ? 'script' : 'key',
         },
       } as const
@@ -160,7 +170,7 @@ class Manager implements GovernanceManager {
 
   async validateDRepID(drepId: string): Promise<boolean> {
     const {hash} = parseDrepId(drepId, this.config.cardano)
-    const response = await this.config.api.getDRepById(hash)
+    const response = await this.config.api.getDRepById(Branded.asDRepId(hash))
 
     if (isLeft(response)) {
       getLogger().error('DRep validation failed', {

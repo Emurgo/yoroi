@@ -13,7 +13,7 @@ import {
   setChangeAddress,
   setTTLWithBuffer,
 } from '@yoroi/tx'
-import {Portfolio, Wallet} from '@yoroi/types'
+import {Address, Branded, KeyHash, Portfolio, Wallet} from '@yoroi/types'
 
 import type {PublicKey} from '@emurgo/cross-csl-core'
 import BigNumber from 'bignumber.js'
@@ -31,10 +31,10 @@ export type CreateDelegationTxParams = {
   }
   networkId: number
   getAbsoluteSlotNumber: () => Promise<BigNumber>
-  getChangeAddress: (addressMode: Wallet.AddressMode) => string
+  getChangeAddress: (addressMode: Wallet.AddressMode) => Address | string
   getStakingKey: () => PublicKey
   getDelegationStatus: () => {isRegistered: boolean}
-  poolId: string | undefined
+  poolId: KeyHash | string | undefined
   addressMode: Wallet.AddressMode
 }
 
@@ -53,7 +53,11 @@ export async function createDelegationTx({
   const logger = getLogger()
 
   const absSlotNumber = await getAbsoluteSlotNumber()
-  const changeAddress = getChangeAddress(addressMode)
+  const changeAddressRaw = getChangeAddress(addressMode)
+  const changeAddress =
+    typeof changeAddressRaw === 'string'
+      ? (changeAddressRaw as Address)
+      : changeAddressRaw
   const registrationStatus = getDelegationStatus().isRegistered
   const stakingKey = getStakingKey()
   const delegationType = registrationStatus
@@ -93,8 +97,8 @@ export async function createDelegationTx({
     // For pure ADA UTXOs, use smallest-first to minimize change
     // Sort smallest first (ascending)
     const sortedPureAda = [...pureAdaUtxos].sort((a, b) => {
-      const aAda = BigInt(a.balance[primaryTokenId] || '0')
-      const bAda = BigInt(b.balance[primaryTokenId] || '0')
+      const aAda = BigInt(a.balance[primaryTokenId] ?? Branded.ZERO_QUANTITY)
+      const bAda = BigInt(b.balance[primaryTokenId] ?? Branded.ZERO_QUANTITY)
       if (aAda < bAda) return -1
       if (aAda > bAda) return 1
       return 0
@@ -108,7 +112,9 @@ export async function createDelegationTx({
     for (const utxo of sortedPureAda) {
       if (selectedAda >= requiredAdaBigInt) break
       selected.push(utxo)
-      selectedAda += BigInt(utxo.balance[primaryTokenId] || '0')
+      selectedAda += BigInt(
+        utxo.balance[primaryTokenId] ?? Branded.ZERO_QUANTITY,
+      )
     }
 
     // If we don't have enough from pure ADA UTXOs, add UTXOs with tokens
@@ -168,22 +174,33 @@ export async function createDelegationTx({
         // Register staking key first
         builderState = addCertificate(builderState, {
           kind: CertificateKind.StakeRegistration,
-          stakeCredentialKeyHashHex: stakeKeyHashHex,
+          stakeCredentialKeyHashHex:
+            typeof stakeKeyHashHex === 'string'
+              ? Branded.asKeyHash(stakeKeyHashHex)
+              : stakeKeyHashHex,
         })
       }
 
       if (poolId) {
         // Delegate to pool
+        const poolKeyHash =
+          typeof poolId === 'string' ? Branded.asKeyHash(poolId) : poolId
         builderState = addCertificate(builderState, {
           kind: CertificateKind.StakeDelegation,
-          stakeCredentialKeyHashHex: stakeKeyHashHex,
-          poolKeyHash: poolId,
+          stakeCredentialKeyHashHex:
+            typeof stakeKeyHashHex === 'string'
+              ? Branded.asKeyHash(stakeKeyHashHex)
+              : stakeKeyHashHex,
+          poolKeyHash,
         })
       } else {
         // Deregister (no pool means deregistration)
         builderState = addCertificate(builderState, {
           kind: CertificateKind.StakeDeregistration,
-          stakeCredentialKeyHashHex: stakeKeyHashHex,
+          stakeCredentialKeyHashHex:
+            typeof stakeKeyHashHex === 'string'
+              ? Branded.asKeyHash(stakeKeyHashHex)
+              : stakeKeyHashHex,
         })
       }
 

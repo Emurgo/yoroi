@@ -3,7 +3,23 @@ import {
   StakePoolInfoRequest,
   StakePoolInfosAndHistories,
 } from '@yoroi/staking'
-import {Portfolio, TransactionStatus, WalletTransaction} from '@yoroi/types'
+import {
+  Address,
+  Amount,
+  AssetName,
+  BalanceQuantity,
+  BlockHash,
+  Branded,
+  EpochNumber,
+  PolicyId,
+  Portfolio,
+  SlotNumber,
+  TransactionCborBase64,
+  TransactionHash,
+  TransactionStatus,
+  UtxoId,
+  WalletTransaction,
+} from '@yoroi/types'
 
 import {freeze} from 'immer'
 
@@ -30,48 +46,48 @@ import {
  */
 type InternalRawTransaction = {
   readonly type: 'byron' | 'shelley'
-  readonly fee?: string
-  readonly hash: string
+  readonly fee?: Amount
+  readonly hash: TransactionHash
   readonly last_update: string
   readonly tx_state: string
   readonly inputs: Array<{
-    readonly address: string
-    readonly amount: string
+    readonly address: Address
+    readonly amount: BalanceQuantity
     readonly assets: Array<{
       readonly tokenId: Portfolio.Token.Id
-      readonly policyId: string
+      readonly policyId: PolicyId
       readonly name: string
-      readonly amount: string
+      readonly amount: BalanceQuantity
     }>
-    readonly id?: string
+    readonly id?: UtxoId
     readonly index?: number
-    readonly txHash?: string
+    readonly txHash?: TransactionHash
   }>
   readonly outputs: Array<{
-    readonly address: string
-    readonly amount: string
+    readonly address: Address
+    readonly amount: BalanceQuantity
     readonly assets: Array<{
       readonly tokenId: Portfolio.Token.Id
-      readonly policyId: string
+      readonly policyId: PolicyId
       readonly name: string
-      readonly amount: string
+      readonly amount: BalanceQuantity
     }>
   }>
   readonly withdrawals: Array<{
-    readonly address: string
-    readonly amount: string
+    readonly address: Address
+    readonly amount: Amount
   }>
   readonly certificates: Array<RemoteCertificateMeta>
   readonly valid_contract?: boolean
   readonly script_size?: number
   readonly collateral_inputs?: Array<{
-    readonly address: string
-    readonly amount: string
+    readonly address: Address
+    readonly amount: BalanceQuantity
     readonly assets: Array<{
       readonly tokenId: Portfolio.Token.Id
-      readonly policyId: string
+      readonly policyId: PolicyId
       readonly name: string
-      readonly amount: string
+      readonly amount: BalanceQuantity
     }>
   }>
   readonly metadata?: Array<{
@@ -80,11 +96,11 @@ type InternalRawTransaction = {
     text_scalar?: string | null
   }>
   readonly block_num?: number
-  readonly block_hash?: string
+  readonly block_hash?: BlockHash
   readonly tx_ordinal?: number
   readonly time?: string
-  readonly epoch?: number
-  readonly slot?: number
+  readonly epoch?: EpochNumber
+  readonly slot?: SlotNumber
 }
 
 /**
@@ -99,24 +115,24 @@ function transformToWalletTransaction(
     fee: tx.fee ?? undefined,
     status: tx.tx_state as TransactionStatus,
     inputs: tx.inputs.map((input) => ({
-      id: input.id,
+      id: input.id ? (input.id as unknown as TransactionHash) : undefined,
       address: input.address,
-      amount: input.amount,
+      amount: input.amount as unknown as Amount,
       assets: (input.assets ?? []).map((asset) => ({
-        amount: asset.amount,
+        amount: asset.amount as unknown as Amount,
         tokenId: asset.tokenId,
         policyId: asset.policyId,
-        name: asset.name,
+        name: asset.name as unknown as AssetName,
       })),
     })),
     outputs: tx.outputs.map((output) => ({
       address: output.address,
-      amount: output.amount,
+      amount: output.amount as unknown as Amount,
       assets: (output.assets ?? []).map((asset) => ({
-        amount: asset.amount,
+        amount: asset.amount as unknown as Amount,
         tokenId: asset.tokenId,
         policyId: asset.policyId,
-        name: asset.name,
+        name: asset.name as unknown as AssetName,
       })),
     })),
     lastUpdatedAt: tx.last_update,
@@ -132,12 +148,12 @@ function transformToWalletTransaction(
     scriptSize: tx.script_size,
     collateralInputs: (tx.collateral_inputs ?? []).map((input) => ({
       address: input.address,
-      amount: input.amount,
+      amount: input.amount as unknown as Amount,
       assets: (input.assets ?? []).map((asset) => ({
-        amount: asset.amount,
+        amount: asset.amount as unknown as Amount,
         tokenId: asset.tokenId,
         policyId: asset.policyId,
-        name: asset.name,
+        name: asset.name as unknown as AssetName,
       })),
     })),
     memo: null,
@@ -167,10 +183,10 @@ export const backendZeroApiMaker = ({
 
       const blockResponse = {
         height: bestBlock.height,
-        epoch: bestBlock.epoch,
-        slot: bestBlock.slot,
-        hash: bestBlock.hash,
-        globalSlot: bestBlock.globalSlot,
+        epoch: Branded.asEpochNumber(bestBlock.epoch),
+        slot: Branded.asSlotNumber(bestBlock.slot),
+        hash: Branded.asBlockHash(bestBlock.hash),
+        globalSlot: Branded.asSlotNumber(bestBlock.globalSlot),
       }
 
       return {
@@ -259,16 +275,21 @@ export const backendZeroApiMaker = ({
       const transactions: WalletTransaction[] = backendTxs.map((tx) => {
         const internalTx: InternalRawTransaction = {
           type: 'shelley' as const,
-          hash: tx.hash || '',
-          block_hash: tx.block && tx.block.trim() ? tx.block : undefined,
+          hash: Branded.asTransactionHash(tx.hash || ''),
+          block_hash:
+            tx.block && tx.block.trim()
+              ? Branded.asBlockHash(tx.block)
+              : undefined,
           block_num: undefined,
           time: new Date(tx.when).toISOString(),
           tx_state: tx.block ? 'Successful' : 'Pending',
           last_update: new Date(tx.when).toISOString(),
           tx_ordinal: undefined,
           inputs: tx.inputs.map((input) => ({
-            address: input.source.address,
-            amount: String(input.source.amount.$lovelaces || '0'),
+            address: Branded.asAddress(input.source.address),
+            amount: Branded.asBalanceQuantity(
+              String(input.source.amount.$lovelaces || '0'),
+            ),
             assets: Object.entries(input.source.amount)
               .filter(([key]) => key !== '$lovelaces')
               .map(([assetId, amount]) => {
@@ -283,18 +304,20 @@ export const backendZeroApiMaker = ({
                         : '0'
                 return {
                   tokenId: assetId as Portfolio.Token.Id,
-                  policyId,
+                  policyId: Branded.asPolicyId(policyId),
                   name: nameHex,
-                  amount: amountStr,
+                  amount: Branded.asBalanceQuantity(amountStr),
                 }
               }),
-            id: `${input.txHash}${input.index}`,
+            id: Branded.asUtxoId(`${input.txHash}${input.index}`),
             index: input.index,
-            txHash: input.txHash,
+            txHash: Branded.asTransactionHash(input.txHash),
           })),
           outputs: tx.outputs.map((output) => ({
-            address: output.address,
-            amount: String(output.amount.$lovelaces || '0'),
+            address: Branded.asAddress(output.address),
+            amount: Branded.asBalanceQuantity(
+              String(output.amount.$lovelaces || '0'),
+            ),
             assets: Object.entries(output.amount)
               .filter(([key]) => key !== '$lovelaces')
               .map(([assetId, amount]) => {
@@ -309,13 +332,13 @@ export const backendZeroApiMaker = ({
                         : '0'
                 return {
                   tokenId: assetId as Portfolio.Token.Id,
-                  policyId,
+                  policyId: Branded.asPolicyId(policyId),
                   name: nameHex,
-                  amount: amountStr,
+                  amount: Branded.asBalanceQuantity(amountStr),
                 }
               }),
           })),
-          fee: String(tx.fee.$lovelaces || '0'),
+          fee: Branded.asAmount(String(tx.fee.$lovelaces || '0')),
           certificates: tx.certificates as Array<RemoteCertificateMeta>,
           withdrawals: (tx.withdrawals || []).map((w: unknown) => {
             const withdrawal = w as {
@@ -327,10 +350,10 @@ export const backendZeroApiMaker = ({
                 | {readonly $lovelaces?: string | number | bigint}
             }
             return {
-              address: withdrawal.address || '',
-              amount:
+              address: Branded.asAddress(withdrawal.address || ''),
+              amount: Branded.asAmount(
                 typeof withdrawal.amount === 'object' &&
-                withdrawal.amount?.$lovelaces != null
+                  withdrawal.amount?.$lovelaces != null
                   ? String(withdrawal.amount.$lovelaces)
                   : typeof withdrawal.amount === 'string'
                     ? withdrawal.amount
@@ -338,6 +361,7 @@ export const backendZeroApiMaker = ({
                         typeof withdrawal.amount === 'bigint'
                       ? String(withdrawal.amount)
                       : '0',
+              ),
             }
           }),
           // ⚠️ METADATA MISSING: Backend-zero API doesn't return transaction metadata
@@ -406,13 +430,14 @@ export const backendZeroApiMaker = ({
       })
     },
 
-    async submitTransaction(signedTx: string): Promise<void> {
+    async submitTransaction(signedTx: TransactionCborBase64): Promise<void> {
+      const txStr = typeof signedTx === 'string' ? signedTx : signedTx
       const response = await fetch(`${backendZeroUrl}/tx`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(signedTx),
+        body: JSON.stringify(txStr),
       })
 
       if (!response.ok) {

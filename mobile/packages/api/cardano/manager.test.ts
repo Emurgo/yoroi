@@ -1,5 +1,5 @@
 import {StakePoolInfoRequest, StakePoolInfosAndHistories} from '@yoroi/staking'
-import {WalletTransaction} from '@yoroi/types'
+import {Branded, TransactionCborBase64, WalletTransaction} from '@yoroi/types'
 
 import {
   AccountStateResponse,
@@ -8,6 +8,7 @@ import {
 } from './api-types'
 import {cardanoApiManagerMaker} from './manager'
 import {
+  Addresses,
   CardanoApiAdapter,
   CardanoBackend,
   EndpointPreference,
@@ -17,24 +18,24 @@ import {
 describe('cardanoApiManagerMaker', () => {
   const mockWalletContext: WalletContext = {
     walletId: 'test-wallet-id',
-    publicKeyHex: 'test-public-key',
-    accountPubKeyHex: 'test-account-key',
-    paymentKeyHashes: ['hash1', 'hash2'],
-    rewardAddresses: ['addr1'],
+    publicKeyHex: Branded.asPublicKeyHex('test-public-key'),
+    accountPubKeyHex: Branded.asPublicKeyHex('test-account-key'),
+    paymentKeyHashes: [Branded.asKeyHash('hash1'), Branded.asKeyHash('hash2')],
+    rewardAddresses: [Branded.asAddress('addr1')],
   }
 
   const createMockAdapter = (name: string): CardanoApiAdapter => ({
     async getTipStatus(): Promise<TipStatusResponse> {
       return {
         bestBlock: {
-          hash: `${name}-tip`,
+          hash: Branded.asBlockHash(`${name}-tip`),
           height: 100,
           epoch: null,
           slot: null,
           globalSlot: null,
         },
         safeBlock: {
-          hash: `${name}-safe`,
+          hash: Branded.asBlockHash(`${name}-safe`),
           height: 99,
           epoch: null,
           slot: null,
@@ -51,7 +52,7 @@ describe('cardanoApiManagerMaker', () => {
         isLast: true,
         transactions: [
           {
-            id: `${name}-tx`,
+            id: Branded.asTransactionHash(`${name}-tx`),
             type: 'shelley',
             status: 'Successful',
             inputs: [],
@@ -71,8 +72,8 @@ describe('cardanoApiManagerMaker', () => {
       }
     },
 
-    async filterUsedAddresses(): Promise<string[]> {
-      return [`${name}-used-addr`]
+    async filterUsedAddresses(): Promise<Addresses> {
+      return [Branded.asAddress(`${name}-used-addr`)]
     },
 
     async submitTransaction(): Promise<void> {
@@ -191,20 +192,29 @@ describe('cardanoApiManagerMaker', () => {
 
       // Should throw when context is missing for endpoints that require it
       await expect(
-        api.fetchNewTxHistory({addresses: [], untilBlock: 'block-hash'}),
+        api.fetchNewTxHistory({
+          addresses: [],
+          untilBlock: Branded.asBlockHash('block-hash'),
+        }),
       ).rejects.toThrow(
         'Backend-zero endpoint fetchNewTxHistory requires wallet context',
       )
 
-      await expect(api.filterUsedAddresses(['addr1'])).rejects.toThrow(
+      await expect(
+        api.filterUsedAddresses([Branded.asAddress('addr1')]),
+      ).rejects.toThrow(
         'Backend-zero endpoint filterUsedAddresses requires wallet context',
       )
 
-      await expect(api.getAccountState({addresses: ['addr1']})).rejects.toThrow(
+      await expect(
+        api.getAccountState({addresses: [Branded.asAddress('addr1')]}),
+      ).rejects.toThrow(
         'Backend-zero endpoint getAccountState requires wallet context',
       )
 
-      await expect(api.bulkGetAccountState(['addr1'])).rejects.toThrow(
+      await expect(
+        api.bulkGetAccountState([Branded.asAddress('addr1')]),
+      ).rejects.toThrow(
         'Backend-zero endpoint bulkGetAccountState requires wallet context',
       )
     })
@@ -234,10 +244,12 @@ describe('cardanoApiManagerMaker', () => {
 
       // These should work without context
       await expect(api.getTipStatus()).resolves.toBeDefined()
-      await expect(api.submitTransaction('signed-tx')).resolves.toBeUndefined()
+      await expect(
+        api.submitTransaction('signed-tx' as TransactionCborBase64),
+      ).resolves.toBeUndefined()
       await expect(api.getPoolInfo({poolIds: ['pool1']})).resolves.toBeDefined()
       await expect(
-        api.fetchTxStatus({txHashes: ['hash1']}),
+        api.fetchTxStatus({txHashes: [Branded.asTransactionHash('hash1')]}),
       ).resolves.toBeDefined()
     })
 
@@ -266,21 +278,30 @@ describe('cardanoApiManagerMaker', () => {
 
       await expect(
         api.fetchNewTxHistory(
-          {addresses: [], untilBlock: 'block-hash'},
+          {addresses: [], untilBlock: Branded.asBlockHash('block-hash')},
           mockWalletContext,
         ),
       ).resolves.toBeDefined()
 
       await expect(
-        api.filterUsedAddresses(['addr1'], mockWalletContext),
+        api.filterUsedAddresses(
+          [Branded.asAddress('addr1')],
+          mockWalletContext,
+        ),
       ).resolves.toBeDefined()
 
       await expect(
-        api.getAccountState({addresses: ['addr1']}, mockWalletContext),
+        api.getAccountState(
+          {addresses: [Branded.asAddress('addr1')]},
+          mockWalletContext,
+        ),
       ).resolves.toBeDefined()
 
       await expect(
-        api.bulkGetAccountState(['addr1'], mockWalletContext),
+        api.bulkGetAccountState(
+          [Branded.asAddress('addr1')],
+          mockWalletContext,
+        ),
       ).resolves.toBeDefined()
     })
   })

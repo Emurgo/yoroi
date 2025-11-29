@@ -4,12 +4,14 @@ import {isTokenId, parseTokenId} from './token-id'
 
 describe('isTokenId', () => {
   it('should return true for valid token id', () => {
-    const tokenId: Portfolio.Token.Id = 'dead.'
+    const tokenId: Portfolio.Token.Id =
+      'dead.' as Portfolio.Token.Id as Portfolio.Token.Id as Portfolio.Token.Id as Portfolio.Token.Id as Portfolio.Token.Id
     expect(isTokenId(tokenId)).toBe(true)
   })
 
   it('should return false for invalid token id', () => {
-    const tokenId: Portfolio.Token.Id = 'invalid_token_id' as any
+    const tokenId: Portfolio.Token.Id =
+      'invalid_token_id' as Portfolio.Token.Id as Portfolio.Token.Id as Portfolio.Token.Id as Portfolio.Token.Id as any
     expect(isTokenId(tokenId)).toBe(false)
   })
 
