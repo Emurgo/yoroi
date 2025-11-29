@@ -1,3 +1,5 @@
+import {Balance} from '@yoroi/types'
+
 import {Buffer} from 'buffer'
 
 import {mocks} from '../../mocks/wallet'
@@ -49,10 +51,10 @@ describe('cip95ExtensionMaker', () => {
         ...mocks.wallet,
         getStakingInfo: () =>
           Promise.resolve({
-            status: 'staked',
-            amount: '10',
+            status: 'staked' as const,
+            amount: '10' as Balance.Quantity,
             poolId: 'pool1',
-            rewards: '10',
+            rewards: '10' as Balance.Quantity,
           }),
       },
       mocks.walletMeta,
@@ -89,10 +91,10 @@ describe('cip95ExtensionMaker', () => {
         ...mocks.wallet,
         getStakingInfo: () =>
           Promise.resolve({
-            status: 'staked',
-            amount: '10',
+            status: 'staked' as const,
+            amount: '10' as Balance.Quantity,
             poolId: 'pool1',
-            rewards: '10',
+            rewards: '10' as Balance.Quantity,
           }),
       },
       mocks.walletMeta,

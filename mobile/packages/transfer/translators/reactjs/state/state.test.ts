@@ -1,5 +1,5 @@
-import {tokenBalanceMocks} from '@yoroi/portfolio'
-import {Chain, Links, Resolver} from '@yoroi/types'
+import {primaryTokenId, tokenBalanceMocks} from '@yoroi/portfolio'
+import {Address, Balance, Chain, Links, Resolver, TokenId} from '@yoroi/types'
 
 import {
   TargetAction,
@@ -82,7 +82,7 @@ describe('State Actions', () => {
       it('set', () => {
         const action: TransferAction = {
           type: TransferActionType.TokenSelectedChanged,
-          tokenId: 'policyId.tokenName',
+          tokenId: 'policyId.tokenName' as TokenId,
         }
         const state = combinedReducers(defaultTransferState, action)
         expect(state).toEqual({
@@ -109,7 +109,7 @@ describe('State Actions', () => {
         },
         memo: 'memo',
         selectedTargetIndex: 1,
-        selectedTokenId: '.',
+        selectedTokenId: primaryTokenId,
         unsignedTx,
         targets: [
           {
@@ -120,7 +120,7 @@ describe('State Actions', () => {
               addressRecords: undefined,
             },
             entry: {
-              address: '',
+              address: '' as Address,
               amounts: {
                 [tokenBalanceMocks.ftNoTicker.info.id]: {
                   ...tokenBalanceMocks.ftNoTicker,
@@ -137,7 +137,7 @@ describe('State Actions', () => {
               selectedNameServer: undefined,
             },
             entry: {
-              address: 'address2',
+              address: 'address2' as Address as Address,
               amounts: {
                 [tokenBalanceMocks.ftNoTicker.info.id]: {
                   ...tokenBalanceMocks.ftNoTicker,
@@ -163,7 +163,7 @@ describe('State Actions', () => {
     describe('ReceiverResolveChanged', () => {
       const prevState: TransferState = {
         selectedTargetIndex: 0,
-        selectedTokenId: '.',
+        selectedTokenId: primaryTokenId,
         allocated: new Map(),
         unsignedTx: undefined,
         memo: '',
@@ -177,7 +177,7 @@ describe('State Actions', () => {
               addressRecords: undefined,
             },
             entry: {
-              address: '',
+              address: '' as Address,
               amounts: {},
             },
           },
@@ -189,7 +189,7 @@ describe('State Actions', () => {
               selectedNameServer: undefined,
             },
             entry: {
-              address: 'address2',
+              address: 'address2' as Address as Address,
               amounts: {},
             },
           },
@@ -205,7 +205,7 @@ describe('State Actions', () => {
         const state = combinedReducers(prevState, action)
         expect(state).toEqual({
           selectedTargetIndex: 0,
-          selectedTokenId: '.',
+          selectedTokenId: primaryTokenId,
           allocated: new Map(),
           memo: '',
           unsignedTx: undefined,
@@ -219,7 +219,7 @@ describe('State Actions', () => {
                 selectedNameServer: undefined,
               },
               entry: {
-                address: 'address',
+                address: 'address' as Address as Address,
                 amounts: {},
               },
             },
@@ -231,7 +231,7 @@ describe('State Actions', () => {
                 selectedNameServer: undefined,
               },
               entry: {
-                address: 'address2',
+                address: 'address2' as Address as Address,
                 amounts: {},
               },
             },
@@ -248,7 +248,7 @@ describe('State Actions', () => {
         const state = combinedReducers(prevState, action)
         expect(state).toEqual({
           selectedTargetIndex: 0,
-          selectedTokenId: '.',
+          selectedTokenId: primaryTokenId,
           allocated: new Map(),
           memo: '',
           unsignedTx: undefined,
@@ -261,7 +261,7 @@ describe('State Actions', () => {
                 selectedNameServer: undefined,
               },
               entry: {
-                address: '',
+                address: '' as Address,
                 amounts: {},
               },
             },
@@ -273,7 +273,7 @@ describe('State Actions', () => {
                 selectedNameServer: undefined,
               },
               entry: {
-                address: 'address2',
+                address: 'address2' as Address as Address,
                 amounts: {},
               },
             },
@@ -285,7 +285,7 @@ describe('State Actions', () => {
     describe('AddressRecordsFetched', () => {
       const prevState: TransferState = {
         selectedTargetIndex: 0,
-        selectedTokenId: '.',
+        selectedTokenId: primaryTokenId,
         allocated: new Map(),
         unsignedTx: undefined,
         linkAction: undefined,
@@ -299,7 +299,7 @@ describe('State Actions', () => {
               addressRecords: undefined,
             },
             entry: {
-              address: '',
+              address: '' as Address,
               amounts: {},
             },
           },
@@ -311,7 +311,7 @@ describe('State Actions', () => {
               selectedNameServer: undefined,
             },
             entry: {
-              address: 'address2',
+              address: 'address2' as Address as Address,
               amounts: {},
             },
           },
@@ -331,7 +331,7 @@ describe('State Actions', () => {
 
         expect(state).toEqual({
           selectedTargetIndex: 0,
-          selectedTokenId: '.',
+          selectedTokenId: primaryTokenId,
           allocated: new Map(),
           memo: '',
           unsignedTx: undefined,
@@ -348,7 +348,7 @@ describe('State Actions', () => {
               },
               entry: {
                 address:
-                  'addr1qxjkgj7t3nvzkhsy0pjhuty0a65x26p2tvsdk3wsjkq8mp8yqjptk3jgl32tllqxzawy48jly69hpkj5hak7f44dw80sqfylvs',
+                  'addr1qxjkgj7t3nvzkhsy0pjhuty0a65x26p2tvsdk3wsjkq8mp8yqjptk3jgl32tllqxzawy48jly69hpkj5hak7f44dw80sqfylvs' as Address as Address,
                 amounts: {},
               },
             },
@@ -360,7 +360,7 @@ describe('State Actions', () => {
                 selectedNameServer: undefined,
               },
               entry: {
-                address: 'address2',
+                address: 'address2' as Address as Address,
                 amounts: {},
               },
             },
@@ -383,7 +383,7 @@ describe('State Actions', () => {
 
         expect(state).toEqual({
           selectedTargetIndex: 0,
-          selectedTokenId: '.',
+          selectedTokenId: primaryTokenId,
           allocated: new Map(),
           memo: '',
           unsignedTx: undefined,
@@ -401,7 +401,7 @@ describe('State Actions', () => {
                 },
               },
               entry: {
-                address: '',
+                address: '' as Address,
                 amounts: {},
               },
             },
@@ -413,7 +413,7 @@ describe('State Actions', () => {
                 selectedNameServer: undefined,
               },
               entry: {
-                address: 'address2',
+                address: 'address2' as Address as Address,
                 amounts: {},
               },
             },
@@ -431,7 +431,7 @@ describe('State Actions', () => {
 
         expect(state).toEqual({
           selectedTargetIndex: 0,
-          selectedTokenId: '.',
+          selectedTokenId: primaryTokenId,
           allocated: new Map(),
           memo: '',
           unsignedTx: undefined,
@@ -445,7 +445,7 @@ describe('State Actions', () => {
                 addressRecords: undefined,
               },
               entry: {
-                address: '',
+                address: '' as Address,
                 amounts: {},
               },
             },
@@ -457,7 +457,7 @@ describe('State Actions', () => {
                 selectedNameServer: undefined,
               },
               entry: {
-                address: 'address2',
+                address: 'address2' as Address as Address,
                 amounts: {},
               },
             },
@@ -477,7 +477,7 @@ describe('State Actions', () => {
 
         expect(state).toEqual({
           selectedTargetIndex: 0,
-          selectedTokenId: '.',
+          selectedTokenId: primaryTokenId,
           allocated: new Map(),
           memo: '',
           unsignedTx: undefined,
@@ -493,7 +493,7 @@ describe('State Actions', () => {
                 },
               },
               entry: {
-                address: '',
+                address: '' as Address,
                 amounts: {},
               },
             },
@@ -505,7 +505,7 @@ describe('State Actions', () => {
                 selectedNameServer: undefined,
               },
               entry: {
-                address: 'address2',
+                address: 'address2' as Address as Address,
                 amounts: {},
               },
             },
@@ -517,7 +517,7 @@ describe('State Actions', () => {
     describe('NameServerSelectedChanged', () => {
       const prevState: TransferState = {
         selectedTargetIndex: 0,
-        selectedTokenId: '.',
+        selectedTokenId: primaryTokenId,
         allocated: new Map(),
         unsignedTx: undefined,
         linkAction: undefined,
@@ -531,7 +531,7 @@ describe('State Actions', () => {
               addressRecords: undefined,
             },
             entry: {
-              address: '',
+              address: '' as Address,
               amounts: {},
             },
           },
@@ -543,7 +543,7 @@ describe('State Actions', () => {
               selectedNameServer: undefined,
             },
             entry: {
-              address: 'address2',
+              address: 'address2' as Address as Address,
               amounts: {},
             },
           },
@@ -559,7 +559,7 @@ describe('State Actions', () => {
 
         expect(state).toEqual({
           selectedTargetIndex: 0,
-          selectedTokenId: '.',
+          selectedTokenId: primaryTokenId,
           allocated: new Map(),
           memo: '',
           targets: [
@@ -571,7 +571,7 @@ describe('State Actions', () => {
                 selectedNameServer: 'cns',
               },
               entry: {
-                address: '',
+                address: '' as Address,
                 amounts: {},
               },
             },
@@ -583,7 +583,7 @@ describe('State Actions', () => {
                 selectedNameServer: undefined,
               },
               entry: {
-                address: 'address2',
+                address: 'address2' as Address as Address,
                 amounts: {},
               },
             },
@@ -601,7 +601,7 @@ describe('State Actions', () => {
 
         expect(state).toEqual({
           selectedTargetIndex: 0,
-          selectedTokenId: '.',
+          selectedTokenId: primaryTokenId,
           allocated: new Map(),
           memo: '',
           unsignedTx: undefined,
@@ -613,7 +613,7 @@ describe('State Actions', () => {
                 selectedNameServer: undefined,
               },
               entry: {
-                address: '',
+                address: '' as Address,
                 amounts: {},
               },
             },
@@ -625,7 +625,7 @@ describe('State Actions', () => {
                 selectedNameServer: undefined,
               },
               entry: {
-                address: 'address2',
+                address: 'address2' as Address as Address,
                 amounts: {},
               },
             },
@@ -641,7 +641,7 @@ describe('State Actions', () => {
 
         const prevState_: TransferState = {
           selectedTargetIndex: 0,
-          selectedTokenId: '.',
+          selectedTokenId: primaryTokenId,
           allocated: new Map(),
           unsignedTx: undefined,
           linkAction: undefined,
@@ -655,7 +655,7 @@ describe('State Actions', () => {
                 addressRecords: undefined,
               },
               entry: {
-                address: '',
+                address: '' as Address,
                 amounts: {},
               },
             },
@@ -666,7 +666,7 @@ describe('State Actions', () => {
 
         expect(state).toEqual({
           selectedTargetIndex: 0,
-          selectedTokenId: '.',
+          selectedTokenId: primaryTokenId,
           allocated: new Map(),
           memo: '',
           unsignedTx: undefined,
@@ -680,7 +680,7 @@ describe('State Actions', () => {
                 selectedNameServer: undefined,
               },
               entry: {
-                address: '',
+                address: '' as Address,
                 amounts: {},
               },
             },
@@ -715,7 +715,7 @@ describe('State Actions', () => {
                 addressRecords: undefined,
               },
               entry: {
-                address: '',
+                address: '' as Address,
                 amounts: {
                   [tokenBalanceMocks.primaryETH.info.id]:
                     tokenBalanceMocks.primaryETH,
@@ -730,7 +730,7 @@ describe('State Actions', () => {
                 selectedNameServer: undefined,
               },
               entry: {
-                address: 'address2',
+                address: 'address2' as Address as Address,
                 amounts: {},
               },
             },
@@ -758,7 +758,7 @@ describe('State Actions', () => {
                 selectedNameServer: undefined,
               },
               entry: {
-                address: '',
+                address: '' as Address,
                 amounts: {
                   [tokenBalanceMocks.primaryETH.info.id]: {
                     info: tokenBalanceMocks.primaryETH.info,
@@ -775,7 +775,7 @@ describe('State Actions', () => {
                 selectedNameServer: undefined,
               },
               entry: {
-                address: 'address2',
+                address: 'address2' as Address as Address,
                 amounts: {},
               },
             },
@@ -807,7 +807,7 @@ describe('State Actions', () => {
                 addressRecords: undefined,
               },
               entry: {
-                address: '',
+                address: '' as Address,
                 amounts: {
                   [tokenBalanceMocks.primaryETH.info.id]:
                     tokenBalanceMocks.primaryETH,
@@ -822,7 +822,7 @@ describe('State Actions', () => {
                 selectedNameServer: undefined,
               },
               entry: {
-                address: 'address2',
+                address: 'address2' as Address as Address,
                 amounts: {},
               },
             },
@@ -850,7 +850,7 @@ describe('State Actions', () => {
                 selectedNameServer: undefined,
               },
               entry: {
-                address: '',
+                address: '' as Address,
                 amounts: {},
               },
             },
@@ -862,7 +862,7 @@ describe('State Actions', () => {
                 selectedNameServer: undefined,
               },
               entry: {
-                address: 'address2',
+                address: 'address2' as Address as Address,
                 amounts: {},
               },
             },
@@ -876,19 +876,19 @@ describe('State Actions', () => {
 const unsignedTx: Chain.Cardano.UnsignedTx & {mock: true} = {
   entries: [
     {
-      address: 'address1',
+      address: 'address1' as Address,
       amounts: {
-        [tokenBalanceMocks.primaryETH.info.id]: '1',
+        [tokenBalanceMocks.primaryETH.info.id]: '1' as Balance.Quantity,
       },
     },
   ],
-  fee: {'.': '12345'},
+  fee: {[primaryTokenId]: '12345' as Balance.Quantity},
   metadata: {},
   change: [
     {
-      address: 'change_address',
+      address: 'change_address' as Address,
       amounts: {
-        [tokenBalanceMocks.primaryETH.info.id]: '1',
+        [tokenBalanceMocks.primaryETH.info.id]: '1' as Balance.Quantity,
       },
     },
   ],

@@ -1,4 +1,4 @@
-import {WalletTransaction} from '@yoroi/types'
+import {TransactionHash, WalletTransaction} from '@yoroi/types'
 
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import {fromPairs} from 'lodash'
@@ -40,8 +40,8 @@ describe('transactionManager', () => {
 
     const mockStorage = rootStorage.join('txs/')
     await mockStorage.multiSet<WalletTransaction | [string]>([
-      [mockTx.id, mockTx],
-      ['txids', [mockTx.id]],
+      [mockTx.id as TransactionHash, mockTx],
+      ['txids', [mockTx.id as TransactionHash]],
     ])
 
     const txManager = await TransactionManager.create(mockStorage)
@@ -79,9 +79,9 @@ describe('transaction storage', () => {
       return expect(txs).toEqual({})
     })
 
-    await saveTxs({[mockTx.id]: mockTx})
+    await saveTxs({[mockTx.id as TransactionHash]: mockTx})
     await loadTxs().then((txs) => {
-      return expect(txs).toEqual({[mockTx.id]: mockTx})
+      return expect(txs).toEqual({[mockTx.id as TransactionHash]: mockTx})
     })
 
     await clear()
@@ -93,8 +93,8 @@ describe('transaction storage', () => {
   it('drops transaction if invalid format', async () => {
     const storage = rootStorage.join('txs/')
     await storage.multiSet([
-      [mockTx.id, undefined],
-      ['txids', [mockTx.id]],
+      [mockTx.id as TransactionHash, undefined],
+      ['txids' as TransactionHash, [mockTx.id as TransactionHash]],
     ])
 
     const {loadTxs} = makeTxManagerStorage(storage)
@@ -107,8 +107,8 @@ describe('transaction storage', () => {
   it('starts fresh if txids is invalid format', async () => {
     const storage = rootStorage.join('txs/')
     await storage.multiSet([
-      [mockTx.id, mockTx],
-      ['txids', undefined],
+      [mockTx.id as TransactionHash, mockTx],
+      ['txids' as TransactionHash, undefined as any],
     ])
 
     const {loadTxs} = makeTxManagerStorage(storage)

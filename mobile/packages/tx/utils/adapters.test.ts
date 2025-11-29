@@ -1,4 +1,5 @@
-import {Balance} from '@yoroi/types'
+import {primaryTokenId} from '@yoroi/portfolio'
+import {Address, Balance, TransactionHash} from '@yoroi/types'
 
 import {ModernUtxo} from '../utxo/models'
 import {
@@ -12,8 +13,8 @@ describe('adapters', () => {
     txHash = 'hash1',
     txIndex = 0,
   ): ModernUtxo => ({
-    receiver: 'addr_test1',
-    txHash,
+    receiver: 'addr_test1' as Address,
+    txHash: txHash as TransactionHash,
     txIndex,
     balance,
     toTransactionUnspentOutputHex: jest.fn(() => 'hex'),
@@ -22,18 +23,26 @@ describe('adapters', () => {
 
   describe('modernUtxoToCardanoAddressedUtxo', () => {
     it('should convert ModernUtxo to CardanoAddressedUtxo', () => {
-      const utxo = createMockUtxo({'.': '1000000'}, 'hash1', 0)
+      const utxo = createMockUtxo(
+        {[primaryTokenId]: '1000000' as Balance.Quantity},
+        'hash1',
+        0,
+      )
       const result = modernUtxoToCardanoAddressedUtxo(utxo)
 
       expect(result.txHash).toBe('hash1')
       expect(result.txIndex).toBe(0)
       expect(result.receiver).toBe('addr_test1')
       expect(result.utxoId).toBe('hash1:0')
-      expect(result.balance).toEqual({'.': '1000000'})
+      expect(result.balance).toEqual({
+        [primaryTokenId]: '1000000' as Balance.Quantity,
+      })
     })
 
     it('should use default addressing when not provided', () => {
-      const utxo = createMockUtxo({'.': '1000000'})
+      const utxo = createMockUtxo({
+        [primaryTokenId]: '1000000' as Balance.Quantity,
+      })
       const result = modernUtxoToCardanoAddressedUtxo(utxo)
 
       expect(result.addressing).toEqual({
@@ -45,7 +54,7 @@ describe('adapters', () => {
     it('should preserve addressing when provided', () => {
       const addressing = {path: [1852, 1815, 0, 0, 0], startLevel: 2}
       const utxo: ModernUtxo = {
-        ...createMockUtxo({'.': '1000000'}),
+        ...createMockUtxo({[primaryTokenId]: '1000000' as Balance.Quantity}),
         addressing,
       }
       const result = modernUtxoToCardanoAddressedUtxo(utxo)
@@ -57,8 +66,16 @@ describe('adapters', () => {
   describe('modernUtxosToCardanoAddressedUtxos', () => {
     it('should convert array of ModernUtxo', () => {
       const utxos = [
-        createMockUtxo({'.': '1000000'}, 'hash1', 0),
-        createMockUtxo({'.': '2000000'}, 'hash2', 1),
+        createMockUtxo(
+          {[primaryTokenId]: '1000000' as Balance.Quantity},
+          'hash1',
+          0,
+        ),
+        createMockUtxo(
+          {[primaryTokenId]: '2000000' as Balance.Quantity},
+          'hash2',
+          1,
+        ),
       ]
       const result = modernUtxosToCardanoAddressedUtxos(utxos)
 

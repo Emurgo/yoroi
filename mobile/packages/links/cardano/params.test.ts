@@ -1,4 +1,4 @@
-import {Links} from '@yoroi/types'
+import {Address, Links} from '@yoroi/types'
 
 import {
   configCardanoBlockV1,
@@ -22,7 +22,7 @@ describe('params', () => {
             params: {
               code: '123',
               faucet_url: 'https://faucet.com',
-              address: 'addr1test',
+              address: 'addr1test' as Address,
             },
           }),
         ).toThrow(Links.Errors.ForbiddenParamsProvided)
@@ -62,7 +62,7 @@ describe('params', () => {
           preapareParams({
             config: configCardanoPayV1,
             params: {
-              address: 'addr1qtest',
+              address: 'addr1qtest' as Address,
               amount: 'invalid',
             },
           }),
@@ -74,7 +74,7 @@ describe('params', () => {
           config: configCardanoPayV1,
           params: {
             address:
-              'addr_test1qrgpjmyy8zk9nuza24a0f4e7mgp9gd6h3uayp0rqnjnkl54v4dlyj0kwfs0x4e38a7047lymzp37tx0y42glslcdtzhqzp57km',
+              'addr_test1qrgpjmyy8zk9nuza24a0f4e7mgp9gd6h3uayp0rqnjnkl54v4dlyj0kwfs0x4e38a7047lymzp37tx0y42glslcdtzhqzp57km' as Address,
           },
         })
         expect(result).toBeDefined()
@@ -87,7 +87,7 @@ describe('params', () => {
           config: configCardanoPayV1,
           params: {
             address:
-              'addr_test1qrgpjmyy8zk9nuza24a0f4e7mgp9gd6h3uayp0rqnjnkl54v4dlyj0kwfs0x4e38a7047lymzp37tx0y42glslcdtzhqzp57km',
+              'addr_test1qrgpjmyy8zk9nuza24a0f4e7mgp9gd6h3uayp0rqnjnkl54v4dlyj0kwfs0x4e38a7047lymzp37tx0y42glslcdtzhqzp57km' as Address,
             extraParam: 'value',
           },
         })

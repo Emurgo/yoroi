@@ -1,4 +1,5 @@
-import {Balance} from '@yoroi/types'
+import {primaryTokenId} from '@yoroi/portfolio'
+import {Address, Balance, ScriptHash, TransactionHash} from '@yoroi/types'
 
 import {createTransactionBuilder} from '../transaction-builder/builder'
 import {ModernUtxo} from '../utxo/models'
@@ -16,8 +17,8 @@ describe('reference scripts', () => {
     txHash = 'hash1',
     txIndex = 0,
   ): ModernUtxo => ({
-    receiver: 'addr_test1',
-    txHash,
+    receiver: 'addr_test1' as Address,
+    txHash: txHash as TransactionHash,
     txIndex,
     balance,
     toTransactionUnspentOutputHex: jest.fn(() => 'hex'),
@@ -26,7 +27,9 @@ describe('reference scripts', () => {
 
   describe('detectReferenceScript', () => {
     it('should detect native script reference', () => {
-      const utxo = createMockUtxo({'.': '1000000'})
+      const utxo = createMockUtxo({
+        [primaryTokenId]: '1000000' as Balance.Quantity,
+      })
       const mockScriptRef = {
         isNativeScript: jest.fn(() => true),
         isPlutusScript: jest.fn(() => false),
@@ -66,7 +69,9 @@ describe('reference scripts', () => {
     })
 
     it('should return null when no script reference', () => {
-      const utxo = createMockUtxo({'.': '1000000'})
+      const utxo = createMockUtxo({
+        [primaryTokenId]: '1000000' as Balance.Quantity,
+      })
       const mockOutput = {
         scriptRef: jest.fn(() => null),
       }
@@ -83,7 +88,9 @@ describe('reference scripts', () => {
     })
 
     it('should return null on error', () => {
-      const utxo = createMockUtxo({'.': '1000000'})
+      const utxo = createMockUtxo({
+        [primaryTokenId]: '1000000' as Balance.Quantity,
+      })
       const mockCsl = {} as any
 
       utxo.toTransactionUnspentOutput = jest.fn(() => {
@@ -99,8 +106,16 @@ describe('reference scripts', () => {
   describe('findReferenceScripts', () => {
     it('should find reference scripts in UTXOs', () => {
       const utxos = [
-        createMockUtxo({'.': '1000000'}, 'hash1', 0),
-        createMockUtxo({'.': '2000000'}, 'hash2', 1),
+        createMockUtxo(
+          {[primaryTokenId]: '1000000' as Balance.Quantity},
+          'hash1',
+          0,
+        ),
+        createMockUtxo(
+          {[primaryTokenId]: '2000000' as Balance.Quantity},
+          'hash2',
+          1,
+        ),
       ]
       const mockCsl = {} as any
 
@@ -108,7 +123,7 @@ describe('reference scripts', () => {
       const detectReferenceScript = jest
         .fn()
         .mockReturnValueOnce({
-          txHash: 'hash1',
+          txHash: 'hash1' as TransactionHash,
           txIndex: 0,
           scriptHash: 'script1',
           scriptType: 'native' as const,
@@ -136,7 +151,9 @@ describe('reference scripts', () => {
     })
 
     it('should return empty array when no scripts found', () => {
-      const utxos = [createMockUtxo({'.': '1000000'})]
+      const utxos = [
+        createMockUtxo({[primaryTokenId]: '1000000' as Balance.Quantity}),
+      ]
       const mockCsl = {} as any
 
       jest
@@ -153,14 +170,14 @@ describe('reference scripts', () => {
     it('should find reference script by hash', () => {
       const scripts = [
         {
-          txHash: 'hash1',
+          txHash: 'hash1' as TransactionHash,
           txIndex: 0,
           scriptHash: 'script1',
           scriptType: 'native' as const,
           scriptSize: 100,
         },
         {
-          txHash: 'hash2',
+          txHash: 'hash2' as TransactionHash,
           txIndex: 1,
           scriptHash: 'script2',
           scriptType: 'plutus' as const,
@@ -175,7 +192,9 @@ describe('reference scripts', () => {
     })
 
     it('should return null when script not found', () => {
-      const utxos = [createMockUtxo({'.': '1000000'})]
+      const utxos = [
+        createMockUtxo({[primaryTokenId]: '1000000' as Balance.Quantity}),
+      ]
       const mockCsl = {} as any
 
       jest
@@ -217,9 +236,9 @@ describe('reference scripts', () => {
     it('should add reference script to state', () => {
       const state = createTransactionBuilder()
       const referenceScript = {
-        txHash: 'hash1',
+        txHash: 'hash1' as TransactionHash,
         txIndex: 0,
-        scriptHash: 'script1',
+        scriptHash: 'script1' as ScriptHash,
         scriptType: 'native' as const,
         scriptSize: 100,
       }
@@ -234,9 +253,9 @@ describe('reference scripts', () => {
     it('should throw when trying to serialize reference script UTXO', () => {
       const state = createTransactionBuilder()
       const referenceScript = {
-        txHash: 'hash1',
+        txHash: 'hash1' as TransactionHash,
         txIndex: 0,
-        scriptHash: 'script1',
+        scriptHash: 'script1' as ScriptHash,
         scriptType: 'native' as const,
         scriptSize: 100,
       }

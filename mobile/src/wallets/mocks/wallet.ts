@@ -525,7 +525,9 @@ const rawTokenEntriesData = [
   },
 ]
 
-const tokenEntries = rawTokenEntriesData.map(createMockTokenEntry) satisfies Array<CardanoTypes.TokenEntry>
+const tokenEntries = rawTokenEntriesData.map(
+  createMockTokenEntry,
+) satisfies Array<CardanoTypes.TokenEntry>
 
 const balances: Balance.Amounts = {
   [primaryTokenId]: '2727363743849' as Balance.Quantity,

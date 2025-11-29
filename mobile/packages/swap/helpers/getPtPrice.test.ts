@@ -1,9 +1,10 @@
-import {Portfolio, Swap} from '@yoroi/types'
+import {primaryTokenId} from '@yoroi/portfolio'
+import {Portfolio, Swap, TokenId} from '@yoroi/types'
 
 import {getPtPrice} from './getPtPrice'
 
 describe('getPtPrice', () => {
-  const primaryTokenInfo = {id: '.'} as Portfolio.Token.Info
+  const primaryTokenInfo = {id: primaryTokenId} as Portfolio.Token.Info
 
   it('should return netPrice if estimate API call returns a Right response', async () => {
     const mockEstimate = jest.fn().mockResolvedValue({
@@ -20,7 +21,10 @@ describe('getPtPrice', () => {
       estimate: mockEstimate,
     } as unknown as Swap.Api
 
-    const price = await getPtPrice(primaryTokenInfo, api)('some.TokenId')
+    const price = await getPtPrice(
+      primaryTokenInfo,
+      api,
+    )('some.TokenId' as TokenId)
     expect(price).toBe(100)
   })
 
@@ -38,7 +42,10 @@ describe('getPtPrice', () => {
       estimate: mockEstimate,
     } as unknown as Swap.Api
 
-    const price = await getPtPrice(primaryTokenInfo, api)('some.TokenId')
+    const price = await getPtPrice(
+      primaryTokenInfo,
+      api,
+    )('some.TokenId' as TokenId)
     expect(price).toBe(0)
   })
 
@@ -70,7 +77,7 @@ describe('getPtPrice', () => {
     } as unknown as Swap.Api
 
     const getPrice = getPtPrice(primaryTokenInfo, api)
-    const price1 = await getPrice('some.TokenId')
+    const price1 = await getPrice('some.TokenId' as TokenId)
     expect(price1).toBe(100)
 
     // Change the mock to return a different value to ensure the cache is used
@@ -84,7 +91,7 @@ describe('getPtPrice', () => {
       },
     })
 
-    const price2 = await getPrice('some.TokenId')
+    const price2 = await getPrice('some.TokenId' as TokenId)
     expect(price2).toBe(100) // Should return the cached price
     expect(mockEstimate).toHaveBeenCalledTimes(1)
   })

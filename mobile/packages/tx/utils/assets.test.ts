@@ -1,4 +1,5 @@
-import {Balance} from '@yoroi/types'
+import {primaryTokenId} from '@yoroi/portfolio'
+import {Address, Balance, TokenId, TransactionHash, UtxoId} from '@yoroi/types'
 
 import {BigNumber} from 'bignumber.js'
 
@@ -17,12 +18,16 @@ import {
 describe('assets utils', () => {
   describe('amountsFromRemote', () => {
     it('should return balance from RemoteUnspentOutput', () => {
+      const token1 = 'token1' as TokenId
       const utxo: RemoteUnspentOutput = {
-        receiver: 'addr_test1',
-        txHash: 'hash1',
+        receiver: 'addr_test1' as Address,
+        txHash: 'hash1' as TransactionHash,
         txIndex: 0,
-        utxoId: 'hash1:0',
-        balance: {'.': '1000000', 'token1': '100'},
+        utxoId: 'hash1:0' as UtxoId,
+        balance: {
+          [primaryTokenId]: '1000000',
+          [token1]: '100',
+        } as Balance.Amounts,
       }
 
       const result = amountsFromRemote(utxo, '.')
@@ -33,57 +38,63 @@ describe('assets utils', () => {
 
   describe('buildSendTokenList', () => {
     it('should build token list with specific amounts', () => {
+      const token1 = 'token1' as TokenId
+      const token2 = 'token2' as TokenId
       const tokens: SendToken[] = [
         {
           amount: new BigNumber('100'),
-          token: {identifier: 'token1', isDefault: false},
+          token: {identifier: token1, isDefault: false},
           shouldSendAll: false,
         },
         {
           amount: new BigNumber('200'),
-          token: {identifier: 'token2', isDefault: false},
+          token: {identifier: token2, isDefault: false},
           shouldSendAll: false,
         },
       ]
 
       const result = buildSendTokenList('.', tokens, [])
 
-      expect(result.token1).toBe('100')
-      expect(result.token2).toBe('200')
+      expect(result[token1]).toBe('100')
+      expect(result[token2]).toBe('200')
     })
 
     it('should sum amounts when sending all from UTXOs', () => {
+      const token1 = 'token1' as TokenId
       const tokens: SendToken[] = [
         {
           amount: null as any,
-          token: {identifier: 'token1', isDefault: false},
+          token: {identifier: token1, isDefault: false},
           shouldSendAll: true,
         },
       ]
       const utxos: Balance.Amounts[] = [
-        {token1: '100'},
-        {token1: '200'},
-        {'.': '1000000'},
+        {[token1]: '100'} as Balance.Amounts,
+        {[token1]: '200'} as Balance.Amounts,
+        {[primaryTokenId]: '1000000' as Balance.Quantity},
       ]
 
       const result = buildSendTokenList('.', tokens, utxos)
 
-      expect(result.token1).toBe('300')
+      expect(result[token1]).toBe('300')
     })
 
     it('should handle tokens with no amount in UTXOs', () => {
+      const token1 = 'token1' as TokenId
       const tokens: SendToken[] = [
         {
           amount: null as any,
-          token: {identifier: 'token1', isDefault: false},
+          token: {identifier: token1, isDefault: false},
           shouldSendAll: true,
         },
       ]
-      const utxos: Balance.Amounts[] = [{'.': '1000000'}]
+      const utxos: Balance.Amounts[] = [
+        {[primaryTokenId]: '1000000' as Balance.Quantity},
+      ]
 
       const result = buildSendTokenList('.', tokens, utxos)
 
-      expect(result.token1).toBe('0')
+      expect(result[token1]).toBe('0')
     })
   })
 

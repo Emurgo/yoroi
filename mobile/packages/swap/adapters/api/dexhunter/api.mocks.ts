@@ -87,8 +87,7 @@ const rawOrdersResponseData = [
     is_dexhunter: false,
     submission_time: '2024-06-23T10:11:06Z',
     last_update: '2024-06-23T10:12:14Z',
-    tx_hash:
-      '8751fbef1ebec0d2da9218a69493ef36070012ce24fdbc44ec6df519377b92bf',
+    tx_hash: '8751fbef1ebec0d2da9218a69493ef36070012ce24fdbc44ec6df519377b92bf',
     output_index: 0,
     update_tx_hash:
       '92bd050ec1da6d25abf6265a6f8318a79a3068459254a79427088407c4241b37',
@@ -114,8 +113,7 @@ const rawOrdersResponseData = [
     is_dexhunter: false,
     submission_time: '2023-12-16T14:16:37Z',
     last_update: '2023-12-16T14:16:56Z',
-    tx_hash:
-      'f7826e21a464939b64274b00033d7ddebbc90924260d30530fdf7a8cd2824d51',
+    tx_hash: 'f7826e21a464939b64274b00033d7ddebbc90924260d30530fdf7a8cd2824d51',
     output_index: 0,
     update_tx_hash:
       'a8b77336d8600f1c8dac0ed90d0ab9c4f1e815bb25f4e168aaaadd130f81457d',
@@ -141,8 +139,7 @@ const rawOrdersResponseData = [
     is_dexhunter: true,
     submission_time: '2023-10-12T15:02:48Z',
     last_update: '2023-10-12T15:02:48Z',
-    tx_hash:
-      '8956d68753d718afbaafde0e83dc1cb1d205da3c89fb08c924ab1d63fd953ed2',
+    tx_hash: '8956d68753d718afbaafde0e83dc1cb1d205da3c89fb08c924ab1d63fd953ed2',
     output_index: 0,
     update_tx_hash:
       '6f176b9e1cdbcecafc6c3d80735ec031b125eca19f9bccb57a0a96604e4f539a',
@@ -153,7 +150,9 @@ const rawOrdersResponseData = [
   },
 ]
 
-const ordersResponse: OrdersResponse = rawOrdersResponseData.map(createMockOrderResponse)
+const ordersResponse: OrdersResponse = rawOrdersResponseData.map(
+  createMockOrderResponse,
+)
 
 const tokensResponse: TokensResponse = [
   {

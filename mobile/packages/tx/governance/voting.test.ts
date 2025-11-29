@@ -1,3 +1,5 @@
+import {TransactionHash} from '@yoroi/types'
+
 import {createTransactionBuilder} from '../transaction-builder/builder'
 import type {Vote} from './types'
 import {
@@ -12,7 +14,7 @@ describe('governance voting', () => {
     it('should add vote to metadata', () => {
       const state = createTransactionBuilder()
       const vote: Vote = {
-        governanceActionId: {txHash: 'hash1', txIndex: 0},
+        governanceActionId: {txHash: 'hash1' as TransactionHash, txIndex: 0},
         votingProcedure: {vote: 'yes'},
         voter: {type: 'drep', credential: 'cred1'},
       }
@@ -85,7 +87,7 @@ describe('governance voting', () => {
   describe('validateVote', () => {
     it('should validate correct vote', () => {
       const vote: Vote = {
-        governanceActionId: {txHash: 'hash1', txIndex: 0},
+        governanceActionId: {txHash: 'hash1' as TransactionHash, txIndex: 0},
         votingProcedure: {vote: 'yes'},
         voter: {type: 'drep', credential: 'cred1'},
       }
@@ -97,7 +99,7 @@ describe('governance voting', () => {
 
     it('should reject vote without voter', () => {
       const vote = {
-        governanceActionId: {txHash: 'hash1', txIndex: 0},
+        governanceActionId: {txHash: 'hash1' as TransactionHash, txIndex: 0},
         votingProcedure: {vote: 'yes'},
       } as any
 
@@ -121,7 +123,7 @@ describe('governance voting', () => {
 
     it('should reject vote without voting procedure', () => {
       const vote = {
-        governanceActionId: {txHash: 'hash1', txIndex: 0},
+        governanceActionId: {txHash: 'hash1' as TransactionHash, txIndex: 0},
         voter: {type: 'drep', credential: 'cred1'},
       } as any
 

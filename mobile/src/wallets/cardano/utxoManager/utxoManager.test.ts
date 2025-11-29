@@ -1,3 +1,6 @@
+import {UtxoDiffToBestBlock} from '@yoroi/tx'
+import {BlockHash} from '@yoroi/types'
+
 import {rootStorage} from '~/kernel/storage/storages'
 
 import {makeUtxoManagerStorage, makeUtxoStorage} from './utxoManager'
@@ -120,13 +123,13 @@ const utxoAtSafePoint2 = {
   utxos: [],
 }
 
-const utxoDiff1 = {
-  lastBestBlockHash: 'lastBestBlockHash - 1',
+const utxoDiff1: UtxoDiffToBestBlock = {
+  lastBestBlockHash: 'lastBestBlockHash - 1' as BlockHash,
   newUtxos: [],
   spentUtxoIds: [],
 }
-const utxoDiff2 = {
-  lastBestBlockHash: 'lastBestBlockHash - 2',
+const utxoDiff2: UtxoDiffToBestBlock = {
+  lastBestBlockHash: 'lastBestBlockHash - 2' as BlockHash,
   spentUtxoIds: [],
   newUtxos: [],
 }

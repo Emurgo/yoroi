@@ -1,5 +1,5 @@
 import {FetchData, isLeft, isRight} from '@yoroi/common'
-import {Chain} from '@yoroi/types'
+import {Chain, DRepId} from '@yoroi/types'
 
 import {governanceApiMaker} from './api'
 
@@ -154,7 +154,7 @@ describe('Governance API with Monad Pattern', () => {
       })
 
       const api = governanceApiMaker({network, request: mockRequest})
-      const result = await api.getDRepById('test-drep-id')
+      const result = await api.getDRepById('test-drep-id' as DRepId)
 
       expect(isRight(result)).toBe(true)
       if (isRight(result)) {
@@ -169,7 +169,7 @@ describe('Governance API with Monad Pattern', () => {
       })
 
       const api = governanceApiMaker({network, request: mockRequest})
-      const result = await api.getDRepById('test-drep-id')
+      const result = await api.getDRepById('test-drep-id' as DRepId)
 
       expect(isRight(result)).toBe(true)
       if (isRight(result)) {
@@ -188,7 +188,7 @@ describe('Governance API with Monad Pattern', () => {
       })
 
       const api = governanceApiMaker({network, request: mockRequest})
-      const result = await api.getDRepById('test-drep-id')
+      const result = await api.getDRepById('test-drep-id' as DRepId)
 
       expect(isLeft(result)).toBe(true)
       if (isLeft(result)) {
@@ -210,7 +210,7 @@ describe('Governance API with Monad Pattern', () => {
       })
 
       const api = governanceApiMaker({network, request: mockRequest})
-      const result = await api.getDRepById('test-drep-id')
+      const result = await api.getDRepById('test-drep-id' as DRepId)
 
       expect(isRight(result)).toBe(true)
       if (isRight(result)) {
@@ -229,7 +229,7 @@ describe('Governance API with Monad Pattern', () => {
       })
 
       const api = governanceApiMaker({network, request: mockRequest})
-      const result = await api.getDRepById('test-drep-id')
+      const result = await api.getDRepById('test-drep-id' as DRepId)
 
       expect(isLeft(result)).toBe(true)
       if (isLeft(result)) {
@@ -260,7 +260,7 @@ describe('Governance API with Monad Pattern', () => {
       })
 
       const api = governanceApiMaker({network, request: mockRequest})
-      await api.getDRepById('drep-id-123')
+      await api.getDRepById('drep-id-123' as DRepId)
 
       expect(mockRequest).toHaveBeenCalledWith({
         url: expect.stringContaining('drep-id-123'),

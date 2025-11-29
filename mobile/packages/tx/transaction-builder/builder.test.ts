@@ -1,4 +1,14 @@
-import {Balance, Chain} from '@yoroi/types'
+import {primaryTokenId} from '@yoroi/portfolio'
+import {
+  Address,
+  Amount,
+  Balance,
+  Chain,
+  DatumHash,
+  KeyHash,
+  TransactionHash,
+  UtxoId,
+} from '@yoroi/types'
 
 import {NoOutputsError} from '../errors'
 import {ModernUtxo} from '../utxo/models'
@@ -43,8 +53,8 @@ describe('transaction builder', () => {
     txIndex: number,
     balance: Balance.Amounts,
   ): ModernUtxo => ({
-    receiver: 'addr_test1',
-    txHash,
+    receiver: 'addr_test1' as Address,
+    txHash: txHash as TransactionHash,
     txIndex,
     balance,
     toTransactionUnspentOutputHex: jest.fn(() => 'hex'),
@@ -69,7 +79,9 @@ describe('transaction builder', () => {
   describe('addInput', () => {
     it('should add single input', () => {
       const state = createTransactionBuilder()
-      const utxo = createMockUtxo('hash1', 0, {'.': '1000000'})
+      const utxo = createMockUtxo('hash1', 0, {
+        [primaryTokenId]: '1000000' as Balance.Quantity,
+      })
       const newState = addInput(state, utxo)
       expect(newState.inputs).toHaveLength(1)
       expect(newState.inputs[0]?.utxo).toBe(utxo)
@@ -78,8 +90,12 @@ describe('transaction builder', () => {
 
     it('should add multiple inputs', () => {
       const state = createTransactionBuilder()
-      const utxo1 = createMockUtxo('hash1', 0, {'.': '1000000'})
-      const utxo2 = createMockUtxo('hash2', 1, {'.': '2000000'})
+      const utxo1 = createMockUtxo('hash1', 0, {
+        [primaryTokenId]: '1000000' as Balance.Quantity,
+      })
+      const utxo2 = createMockUtxo('hash2', 1, {
+        [primaryTokenId]: '2000000' as Balance.Quantity,
+      })
       const newState = addInputs(state, [utxo1, utxo2])
       expect(newState.inputs).toHaveLength(2)
     })
@@ -88,10 +104,18 @@ describe('transaction builder', () => {
   describe('removeInput', () => {
     it('should remove input by txHash and txIndex', () => {
       const state = createTransactionBuilder()
-      const utxo1 = createMockUtxo('hash1', 0, {'.': '1000000'})
-      const utxo2 = createMockUtxo('hash2', 1, {'.': '2000000'})
+      const utxo1 = createMockUtxo('hash1', 0, {
+        [primaryTokenId]: '1000000' as Balance.Quantity,
+      })
+      const utxo2 = createMockUtxo('hash2', 1, {
+        [primaryTokenId]: '2000000' as Balance.Quantity,
+      })
       const stateWithInputs = addInputs(state, [utxo1, utxo2])
-      const newState = removeInput(stateWithInputs, 'hash1', 0)
+      const newState = removeInput(
+        stateWithInputs,
+        'hash1' as TransactionHash,
+        0,
+      )
       expect(newState.inputs).toHaveLength(1)
       expect(newState.inputs[0]?.utxo.txHash).toBe('hash2')
     })
@@ -100,11 +124,13 @@ describe('transaction builder', () => {
   describe('addOutput', () => {
     it('should add single output', () => {
       const state = createTransactionBuilder()
-      const amounts: Balance.Amounts = {'.': '1000000'}
+      const amounts: Balance.Amounts = {
+        [primaryTokenId]: '1000000' as Balance.Quantity,
+      }
       const newState = addOutput(state, 'addr_test1', amounts)
       expect(newState.outputs).toHaveLength(1)
       expect(newState.outputs[0]).toEqual({
-        address: 'addr_test1',
+        address: 'addr_test1' as Address,
         amounts,
         datum: undefined,
       })
@@ -112,8 +138,10 @@ describe('transaction builder', () => {
 
     it('should add output with datum', () => {
       const state = createTransactionBuilder()
-      const amounts: Balance.Amounts = {'.': '1000000'}
-      const datum = {hash: 'datum_hash'}
+      const amounts: Balance.Amounts = {
+        [primaryTokenId]: '1000000' as Balance.Quantity,
+      }
+      const datum = {hash: 'datum_hash' as DatumHash}
       const newState = addOutput(state, 'addr_test1', amounts, datum)
       expect(newState.outputs[0]?.datum).toBe(datum)
     })
@@ -121,8 +149,14 @@ describe('transaction builder', () => {
     it('should add multiple outputs', () => {
       const state = createTransactionBuilder()
       const outputs: TransactionOutput[] = [
-        {address: 'addr1', amounts: {'.': '1000000'}},
-        {address: 'addr2', amounts: {'.': '2000000'}},
+        {
+          address: 'addr1' as Address,
+          amounts: {[primaryTokenId]: '1000000' as Balance.Quantity},
+        },
+        {
+          address: 'addr2' as Address,
+          amounts: {[primaryTokenId]: '2000000' as Balance.Quantity},
+        },
       ]
       const newState = addOutputs(state, outputs)
       expect(newState.outputs).toHaveLength(2)
@@ -134,7 +168,7 @@ describe('transaction builder', () => {
       const state = createTransactionBuilder()
       const cert: TransactionCertificate = {
         kind: 'StakeRegistration',
-        stakeCredentialKeyHashHex: 'hash',
+        stakeCredentialKeyHashHex: 'hash' as KeyHash,
       }
       const newState = addCertificate(state, cert)
       expect(newState.certificates).toHaveLength(1)
@@ -146,12 +180,12 @@ describe('transaction builder', () => {
       const certs: TransactionCertificate[] = [
         {
           kind: 'StakeRegistration',
-          stakeCredentialKeyHashHex: 'hash1',
+          stakeCredentialKeyHashHex: 'hash1' as KeyHash,
         },
         {
           kind: 'StakeDelegation',
-          stakeCredentialKeyHashHex: 'hash2',
-          poolKeyHash: 'pool1',
+          stakeCredentialKeyHashHex: 'hash2' as KeyHash,
+          poolKeyHash: 'pool1' as KeyHash,
         },
       ]
       const newState = addCertificates(state, certs)
@@ -163,8 +197,8 @@ describe('transaction builder', () => {
     it('should add withdrawal', () => {
       const state = createTransactionBuilder()
       const withdrawal: TransactionWithdrawal = {
-        rewardAddress: 'stake_test1',
-        amount: '1000000',
+        rewardAddress: 'stake_test1' as Address,
+        amount: '1000000' as Amount,
       }
       const newState = addWithdrawal(
         state,
@@ -179,7 +213,9 @@ describe('transaction builder', () => {
   describe('addReferenceInput', () => {
     it('should add reference input', () => {
       const state = createTransactionBuilder()
-      const utxo = createMockUtxo('hash1', 0, {'.': '1000000'})
+      const utxo = createMockUtxo('hash1', 0, {
+        [primaryTokenId]: '1000000' as Balance.Quantity,
+      })
       const newState = addReferenceInput(state, utxo)
       expect(newState.referenceInputs).toHaveLength(1)
       expect(newState.referenceInputs[0]?.utxo).toBe(utxo)
@@ -189,7 +225,9 @@ describe('transaction builder', () => {
   describe('addCollateralInput', () => {
     it('should add single collateral input', () => {
       const state = createTransactionBuilder()
-      const utxo = createMockUtxo('hash1', 0, {'.': '5000000'})
+      const utxo = createMockUtxo('hash1', 0, {
+        [primaryTokenId]: '5000000' as Balance.Quantity,
+      })
       const newState = addCollateralInput(state, utxo)
       expect(newState.collateralInputs).toHaveLength(1)
       expect(newState.collateralInputs[0]?.utxo).toBe(utxo)
@@ -198,8 +236,12 @@ describe('transaction builder', () => {
     it('should add multiple collateral inputs', () => {
       const state = createTransactionBuilder()
       const utxos = [
-        createMockUtxo('hash1', 0, {'.': '5000000'}),
-        createMockUtxo('hash2', 1, {'.': '5000000'}),
+        createMockUtxo('hash1', 0, {
+          [primaryTokenId]: '5000000' as Balance.Quantity,
+        }),
+        createMockUtxo('hash2', 1, {
+          [primaryTokenId]: '5000000' as Balance.Quantity,
+        }),
       ]
       const newState = addCollateralInputs(state, utxos)
       expect(newState.collateralInputs).toHaveLength(2)
@@ -207,8 +249,12 @@ describe('transaction builder', () => {
 
     it('should remove collateral input', () => {
       const state = createTransactionBuilder()
-      const utxo1 = createMockUtxo('hash1', 0, {'.': '5000000'})
-      const utxo2 = createMockUtxo('hash2', 1, {'.': '5000000'})
+      const utxo1 = createMockUtxo('hash1', 0, {
+        [primaryTokenId]: '5000000' as Balance.Quantity,
+      })
+      const utxo2 = createMockUtxo('hash2', 1, {
+        [primaryTokenId]: '5000000' as Balance.Quantity,
+      })
       const stateWithCollateral = addCollateralInputs(state, [utxo1, utxo2])
       const newState = removeCollateralInput(stateWithCollateral, 'hash1', 0)
       expect(newState.collateralInputs).toHaveLength(1)
@@ -219,20 +265,24 @@ describe('transaction builder', () => {
   describe('excludeUtxo', () => {
     it('should exclude single UTXO', () => {
       const state = createTransactionBuilder()
-      const newState = excludeUtxo(state, 'hash1', 0)
-      expect(newState.excludedUtxos.has('hash1:0')).toBe(true)
-      expect(state.excludedUtxos.has('hash1:0')).toBe(false) // Original unchanged
+      const newState = excludeUtxo(state, 'hash1' as TransactionHash, 0)
+      expect(newState.excludedUtxos.has('hash1:0' as UtxoId)).toBe(true)
+      expect(state.excludedUtxos.has('hash1:0' as UtxoId)).toBe(false) // Original unchanged
     })
 
     it('should exclude multiple UTXOs', () => {
       const state = createTransactionBuilder()
       const utxos = [
-        createMockUtxo('hash1', 0, {'.': '1000000'}),
-        createMockUtxo('hash2', 1, {'.': '2000000'}),
+        createMockUtxo('hash1', 0, {
+          [primaryTokenId]: '1000000' as Balance.Quantity,
+        }),
+        createMockUtxo('hash2', 1, {
+          [primaryTokenId]: '2000000' as Balance.Quantity,
+        }),
       ]
       const newState = excludeUtxos(state, utxos)
-      expect(newState.excludedUtxos.has('hash1:0')).toBe(true)
-      expect(newState.excludedUtxos.has('hash2:1')).toBe(true)
+      expect(newState.excludedUtxos.has('hash1:0' as UtxoId)).toBe(true)
+      expect(newState.excludedUtxos.has('hash2:1' as UtxoId)).toBe(true)
     })
   })
 
@@ -248,7 +298,7 @@ describe('transaction builder', () => {
   describe('setChangeAddress', () => {
     it('should set change address', () => {
       const state = createTransactionBuilder()
-      const newState = setChangeAddress(state, 'addr_test1')
+      const newState = setChangeAddress(state, 'addr_test1' as Address)
       expect(newState.options.changeAddress).toBe('addr_test1')
     })
   })
@@ -256,10 +306,12 @@ describe('transaction builder', () => {
   describe('setChangeOutput', () => {
     it('should set manual change output', () => {
       const state = createTransactionBuilder()
-      const amounts: Balance.Amounts = {'.': '5000000'}
+      const amounts: Balance.Amounts = {
+        [primaryTokenId]: '5000000' as Balance.Quantity,
+      }
       const newState = setChangeOutput(state, 'addr_test1', amounts)
       expect(newState.options.manualChangeOutput).toEqual({
-        address: 'addr_test1',
+        address: 'addr_test1' as Address,
         amounts,
       })
     })
@@ -268,7 +320,9 @@ describe('transaction builder', () => {
   describe('setFee', () => {
     it('should set manual fee', () => {
       const state = createTransactionBuilder()
-      const amounts: Balance.Amounts = {'.': '170000'}
+      const amounts: Balance.Amounts = {
+        [primaryTokenId]: '170000' as Balance.Quantity,
+      }
       const newState = setFee(state, amounts)
       expect(newState.options.manualFee).toBe(amounts)
     })
@@ -310,7 +364,9 @@ describe('transaction builder', () => {
   describe('getTransactionState', () => {
     it('should return current state', () => {
       const state = createTransactionBuilder()
-      const utxo = createMockUtxo('hash1', 0, {'.': '1000000'})
+      const utxo = createMockUtxo('hash1', 0, {
+        [primaryTokenId]: '1000000' as Balance.Quantity,
+      })
       const stateWithInput = addInput(state, utxo)
       const currentState = getTransactionState(stateWithInput)
       expect(currentState.inputs).toHaveLength(1)
@@ -321,22 +377,30 @@ describe('transaction builder', () => {
   describe('isTransactionReady', () => {
     it('should return false when no inputs', () => {
       const state = createTransactionBuilder()
-      const amounts: Balance.Amounts = {'.': '1000000'}
+      const amounts: Balance.Amounts = {
+        [primaryTokenId]: '1000000' as Balance.Quantity,
+      }
       const stateWithOutput = addOutput(state, 'addr_test1', amounts)
       expect(isTransactionReady(stateWithOutput)).toBe(false)
     })
 
     it('should return false when no outputs', () => {
       const state = createTransactionBuilder()
-      const utxo = createMockUtxo('hash1', 0, {'.': '1000000'})
+      const utxo = createMockUtxo('hash1', 0, {
+        [primaryTokenId]: '1000000' as Balance.Quantity,
+      })
       const stateWithInput = addInput(state, utxo)
       expect(isTransactionReady(stateWithInput)).toBe(false)
     })
 
     it('should return true when has inputs and outputs', () => {
       const state = createTransactionBuilder()
-      const utxo = createMockUtxo('hash1', 0, {'.': '1000000'})
-      const amounts: Balance.Amounts = {'.': '500000'}
+      const utxo = createMockUtxo('hash1', 0, {
+        [primaryTokenId]: '1000000' as Balance.Quantity,
+      })
+      const amounts: Balance.Amounts = {
+        [primaryTokenId]: '500000' as Balance.Quantity,
+      }
       const stateWithBoth = addOutput(
         addInput(state, utxo),
         'addr_test1',
@@ -392,7 +456,9 @@ describe('transaction builder', () => {
 
     it('should throw NoOutputsError when no outputs and no change address', async () => {
       const state = createTransactionBuilder()
-      const utxo = createMockUtxo('hash1', 0, {'.': '1000000'})
+      const utxo = createMockUtxo('hash1', 0, {
+        [primaryTokenId]: '1000000' as Balance.Quantity,
+      })
       const stateWithInput = addInput(state, utxo)
 
       await expect(
@@ -402,11 +468,17 @@ describe('transaction builder', () => {
 
     it('should throw error when excluded UTXO is used as input', async () => {
       const state = createTransactionBuilder()
-      const utxo = createMockUtxo('hash1', 0, {'.': '1000000'})
+      const utxo = createMockUtxo('hash1', 0, {
+        [primaryTokenId]: '1000000' as Balance.Quantity,
+      })
       const stateWithInput = addInput(state, utxo)
-      const stateWithExclusion = excludeUtxo(stateWithInput, 'hash1', 0)
+      const stateWithExclusion = excludeUtxo(
+        stateWithInput,
+        'hash1' as TransactionHash,
+        0,
+      )
       const stateWithOutput = addOutput(stateWithExclusion, 'addr_test1', {
-        '.': '500000',
+        [primaryTokenId]: '500000' as Balance.Quantity,
       })
 
       await expect(
@@ -416,11 +488,17 @@ describe('transaction builder', () => {
 
     it('should throw error when excluded UTXO is used as collateral', async () => {
       const state = createTransactionBuilder()
-      const utxo = createMockUtxo('hash1', 0, {'.': '1000000'})
+      const utxo = createMockUtxo('hash1', 0, {
+        [primaryTokenId]: '1000000' as Balance.Quantity,
+      })
       const stateWithCollateral = addCollateralInput(state, utxo)
-      const stateWithExclusion = excludeUtxo(stateWithCollateral, 'hash1', 0)
+      const stateWithExclusion = excludeUtxo(
+        stateWithCollateral,
+        'hash1' as TransactionHash,
+        0,
+      )
       const stateWithOutput = addOutput(stateWithExclusion, 'addr_test1', {
-        '.': '500000',
+        [primaryTokenId]: '500000' as Balance.Quantity,
       })
       const stateWithInput = addInput(stateWithOutput, utxo)
 
@@ -476,7 +554,9 @@ describe('transaction builder', () => {
 
     it('should throw NoOutputsError when no outputs and no change address', async () => {
       const state = createTransactionBuilder()
-      const utxo = createMockUtxo('hash1', 0, {'.': '1000000'})
+      const utxo = createMockUtxo('hash1', 0, {
+        [primaryTokenId]: '1000000' as Balance.Quantity,
+      })
       const stateWithInput = addInput(state, utxo)
 
       await expect(

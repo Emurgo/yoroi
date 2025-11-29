@@ -1,3 +1,5 @@
+import {Address} from '@yoroi/types'
+
 import {Addressing} from '../types'
 import {
   addrContainsAccountKey,
@@ -121,8 +123,8 @@ describe('address utils', () => {
       }
 
       const utxos = [
-        {receiver: 'addr_test1qpxxxxxx'},
-        {receiver: 'addr_test1qpyyyyyy'},
+        {receiver: 'addr_test1qpxxxxxx' as Address},
+        {receiver: 'addr_test1qpyyyyyy' as Address},
       ]
 
       const result = await filterAddressesByStakingKey(

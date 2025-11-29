@@ -4,7 +4,7 @@ import {
   tokenInfoMocks,
   tokenMocks,
 } from '@yoroi/portfolio'
-import {Api, Links, Portfolio, TokenId} from '@yoroi/types'
+import {Address, Api, Links, Portfolio, TokenId} from '@yoroi/types'
 
 import {claimFaucetResponses} from './api-faucet.mocks'
 import {claimManagerMaker} from './manager'
@@ -12,7 +12,7 @@ import {claimApiMockResponses} from './manager.mocks'
 
 describe('claimManagerMaker', () => {
   const options = {
-    address: 'addr_test',
+    address: 'addr_test' as Address,
     primaryTokenInfo: tokenInfoMocks.primaryETH,
     tokenManager: {} as Portfolio.Manager.Token,
   }
@@ -53,7 +53,7 @@ describe('claimManagerMaker - postClaimTokens', () => {
   )
 
   const options = {
-    address: 'addr_test',
+    address: 'addr_test' as Address,
     primaryTokenInfo: tokenInfoMocks.primaryETH,
     tokenManager: tokenManagerMock,
   }

@@ -1,3 +1,5 @@
+import {Amount, TransactionHash} from '@yoroi/types'
+
 import {createTransactionBuilder} from '../transaction-builder/builder'
 import {addMint, addMints, createBurnAction, createMintAction} from './mint'
 import type {MintAction} from './types'
@@ -8,7 +10,7 @@ describe('minting', () => {
       const state = createTransactionBuilder()
       const mintAction: MintAction = {
         policyId: 'policy1',
-        assets: [{assetName: 'asset1', amount: '100'}],
+        assets: [{assetName: 'asset1', amount: '100' as Amount}],
         script: {type: 'native', script: 'script1'},
       }
 
@@ -22,12 +24,12 @@ describe('minting', () => {
       const state = createTransactionBuilder()
       const mintAction1: MintAction = {
         policyId: 'policy1',
-        assets: [{assetName: 'asset1', amount: '100'}],
+        assets: [{assetName: 'asset1', amount: '100' as Amount}],
         script: {type: 'native', script: 'script1'},
       }
       const mintAction2: MintAction = {
         policyId: 'policy1',
-        assets: [{assetName: 'asset2', amount: '200'}],
+        assets: [{assetName: 'asset2', amount: '200' as Amount}],
         script: {type: 'native', script: 'script1'},
       }
 
@@ -44,13 +46,13 @@ describe('minting', () => {
       const state = createTransactionBuilder()
       const mintAction1: MintAction = {
         policyId: 'policy1',
-        assets: [{assetName: 'asset1', amount: '100'}],
+        assets: [{assetName: 'asset1', amount: '100' as Amount}],
         script: {type: 'plutus', script: 'script1'},
         redeemer: 'old_redeemer',
       }
       const mintAction2: MintAction = {
         policyId: 'policy1',
-        assets: [{assetName: 'asset2', amount: '200'}],
+        assets: [{assetName: 'asset2', amount: '200' as Amount}],
         script: {type: 'plutus', script: 'script1'},
         redeemer: 'new_redeemer',
       }
@@ -65,13 +67,13 @@ describe('minting', () => {
       const state = createTransactionBuilder()
       const mintAction1: MintAction = {
         policyId: 'policy1',
-        assets: [{assetName: 'asset1', amount: '100'}],
+        assets: [{assetName: 'asset1', amount: '100' as Amount}],
         script: {type: 'plutus', script: 'script1'},
         redeemer: 'old_redeemer',
       }
       const mintAction2: MintAction = {
         policyId: 'policy1',
-        assets: [{assetName: 'asset2', amount: '200'}],
+        assets: [{assetName: 'asset2', amount: '200' as Amount}],
         script: {type: 'plutus', script: 'script1'},
       }
 
@@ -88,12 +90,12 @@ describe('minting', () => {
       const mintActions: MintAction[] = [
         {
           policyId: 'policy1',
-          assets: [{assetName: 'asset1', amount: '100'}],
+          assets: [{assetName: 'asset1', amount: '100' as Amount}],
           script: {type: 'native', script: 'script1'},
         },
         {
           policyId: 'policy2',
-          assets: [{assetName: 'asset2', amount: '200'}],
+          assets: [{assetName: 'asset2', amount: '200' as Amount}],
           script: {type: 'native', script: 'script2'},
         },
       ]
@@ -113,7 +115,7 @@ describe('minting', () => {
 
       expect(result).toEqual({
         policyId: 'policy1',
-        assets: [{assetName: 'asset1', amount: '100'}],
+        assets: [{assetName: 'asset1', amount: '100' as Amount}],
         script: {type: 'native', script: 'script1'},
         redeemer: undefined,
         referenceScript: undefined,
@@ -127,11 +129,14 @@ describe('minting', () => {
         '100',
         {type: 'plutus', script: 'script1'},
         'redeemer1',
-        {txHash: 'hash1', txIndex: 0},
+        {txHash: 'hash1' as TransactionHash, txIndex: 0},
       )
 
       expect(result.redeemer).toBe('redeemer1')
-      expect(result.referenceScript).toEqual({txHash: 'hash1', txIndex: 0})
+      expect(result.referenceScript).toEqual({
+        txHash: 'hash1' as TransactionHash,
+        txIndex: 0,
+      })
     })
   })
 

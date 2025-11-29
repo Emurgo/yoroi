@@ -1,26 +1,26 @@
-import {tokenBalanceMocks} from '@yoroi/portfolio'
+import {primaryTokenId, tokenBalanceMocks} from '@yoroi/portfolio'
 import {TransactionOutput} from '@yoroi/tx'
-import {Transfer} from '@yoroi/types'
+import {Address, Balance, DatumHash, Transfer} from '@yoroi/types'
 
 import {toTransactionOutput} from './toTransactionOutput'
 
 describe('toTransactionOutput', () => {
   it('should convert Transfer.Entry to TransactionOutput correctly', () => {
     const entry: TransactionOutput = {
-      address: 'exampleAddress',
+      address: 'exampleAddress' as Address,
       datum: {
-        hash: 'exampleHash',
+        hash: 'exampleHash' as DatumHash,
       },
       amounts: {
-        ['.']: '10',
+        [primaryTokenId]: '10',
         [tokenBalanceMocks.nftCryptoKitty.info.id]: '20',
-      },
+      } as Balance.Amounts,
     }
 
     const transferEntry: Transfer.Entry = {
-      address: 'exampleAddress',
+      address: 'exampleAddress' as Address,
       datum: {
-        hash: 'exampleHash',
+        hash: 'exampleHash' as DatumHash,
       },
       amounts: {
         [tokenBalanceMocks.primaryETH.info.id]: {

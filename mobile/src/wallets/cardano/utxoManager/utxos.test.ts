@@ -1,3 +1,5 @@
+import {Balance, UtxoId} from '@yoroi/types'
+
 import {mockRawUtxos} from './raw-utxos.mocks'
 import {CollateralConfig} from './types'
 import {isAmountInCollateralRange, isPureUtxo, utxosMaker} from './utxos'
@@ -15,38 +17,42 @@ describe('UTXO utility functions', () => {
 
   describe('isAmountInCollateralRange', () => {
     const config: CollateralConfig = {
-      minLovelace: '100',
-      maxLovelace: '200',
+      minLovelace: '100' as Balance.Quantity,
+      maxLovelace: '200' as Balance.Quantity,
       maxUTxOs: 3,
     }
 
     it('returns true if amount is within range', () => {
-      expect(isAmountInCollateralRange('150', config)).toBe(true)
+      expect(isAmountInCollateralRange('150' as Balance.Quantity, config)).toBe(
+        true,
+      )
     })
 
     it('returns false if amount is outside range', () => {
-      expect(isAmountInCollateralRange('250', config)).toBe(false)
+      expect(isAmountInCollateralRange('250' as Balance.Quantity, config)).toBe(
+        false,
+      )
     })
   })
 
   describe('utxosMaker', () => {
     const config: CollateralConfig = {
-      minLovelace: '50',
-      maxLovelace: '200',
+      minLovelace: '50' as Balance.Quantity,
+      maxLovelace: '200' as Balance.Quantity,
       maxUTxOs: 3,
     }
     const utils = utxosMaker(mockRawUtxos, config)
 
     it('findById returns the correct UTXO by id', () => {
-      expect(utils.findById('id1#0')).toEqual(mockRawUtxos[0])
+      expect(utils.findById('id1#0' as UtxoId)).toEqual(mockRawUtxos[0])
     })
 
     it('exists returns true if UTXO id exists', () => {
-      expect(utils.exists('id1#0')).toBe(true)
+      expect(utils.exists('id1#0' as UtxoId)).toBe(true)
     })
 
     it('exists returns false if UTXO id does not exist', () => {
-      expect(utils.exists('nonexistentId')).toBe(false)
+      expect(utils.exists('nonexistentId' as UtxoId)).toBe(false)
     })
 
     it('findCollateralCandidates returns UTXOs that are pure and within the specified range', () => {
@@ -57,7 +63,7 @@ describe('UTXO utility functions', () => {
     })
 
     it('drawnCollateral returns the id of the first UTXO that is pure and within the specified range', () => {
-      expect(utils.drawnCollateral()).toBe('id1#0')
+      expect(utils.drawnCollateral()).toBe('id1#0' as UtxoId)
     })
   })
 })

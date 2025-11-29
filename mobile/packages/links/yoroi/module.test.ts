@@ -1,4 +1,4 @@
-import {Links} from '@yoroi/types'
+import {Address, Links} from '@yoroi/types'
 
 import {configCardanoLegacyTransfer} from '../cardano/constants'
 import {linksCardanoModuleMaker} from '../cardano/module'
@@ -74,7 +74,7 @@ describe('linksYoroiModuleMaker', () => {
       config: configCardanoLegacyTransfer,
       params: {
         address:
-          'addr1qygnpgnmc4twqxe4qnj3pakudc0ysheqwflv8guwwlply7zptg3wjqz84kx3t4re4xpqvs3fu7mvsahwhyxd4q3qq90s7sgxnh',
+          'addr1qygnpgnmc4twqxe4qnj3pakudc0ysheqwflv8guwwlply7zptg3wjqz84kx3t4re4xpqvs3fu7mvsahwhyxd4q3qq90s7sgxnh' as Address,
         amount: 10,
       },
     })

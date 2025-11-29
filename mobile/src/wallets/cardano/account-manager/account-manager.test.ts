@@ -1,11 +1,13 @@
+import {Address} from '@yoroi/types'
+
 import {AddressChain, AddressGenerator} from './account-manager'
 
-const getAddr = (i: number) => `Addr${i}`
+const getAddr = (i: number) => `Addr${i}` as Address
 
 describe('AddressChain', () => {
   let chain: AddressChain | undefined
   let used: number[] = []
-  const filterFn = (addrs: string[]) =>
+  const filterFn = (addrs: Address[]) =>
     Promise.resolve(addrs.filter((addr) => used.map(getAddr).includes(addr)))
 
   beforeEach(() => {
@@ -87,8 +89,10 @@ describe('AddressChain', () => {
       'Ae2tdPwUPEZ6ipzynAWN6atmb9LNqEogput2NrMD3Z8UL7phtQLDhrKt1bf', // byron mainnet
     ]
 
-    const filter = (addresses: string[]) => {
-      return Promise.resolve(addresses.filter((addr) => used.includes(addr)))
+    const filter = (addresses: Address[]) => {
+      return Promise.resolve(
+        addresses.filter((addr) => used.includes(addr as string)),
+      )
     }
     await chain.sync(filter)
     await chain2.sync(filter)

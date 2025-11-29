@@ -1,7 +1,7 @@
 import {primaryTokenInfoMainnet} from '@yoroi/blockchains'
 import {createUnknownTokenInfo} from '@yoroi/portfolio'
 import {SendToken} from '@yoroi/tx'
-import {Balance, Portfolio} from '@yoroi/types'
+import {Balance, Portfolio, TokenId} from '@yoroi/types'
 
 import {toSendToken, toSendTokenList} from './utils'
 
@@ -12,15 +12,15 @@ describe('toSendTokenList', () => {
     const amounts: Balance.Amounts = {
       [primaryTokenInfoMainnet.id]: '123',
       [secondaryToken.id]: '456',
-    }
+    } as Balance.Amounts
 
     const primaryAsToken = asSendToken({
       tokenId: primaryTokenInfoMainnet.id,
-      quantity: '123',
+      quantity: '123' as Balance.Quantity,
     })
     const secondaryAsToken = asSendToken({
       tokenId: secondaryToken.id,
-      quantity: '456',
+      quantity: '456' as Balance.Quantity,
     })
 
     const sendTokenList: Array<SendToken> = [primaryAsToken, secondaryAsToken]
@@ -32,6 +32,6 @@ describe('toSendTokenList', () => {
 })
 
 const secondaryToken = createUnknownTokenInfo({
-  id: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.',
+  id: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7.' as TokenId,
   name: 'Test Token',
 }) as Portfolio.Token.Info

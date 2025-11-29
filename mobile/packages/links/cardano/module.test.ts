@@ -1,4 +1,4 @@
-import {Links} from '@yoroi/types'
+import {Address, Links} from '@yoroi/types'
 
 import {
   configCardanoAddressV1,
@@ -127,14 +127,14 @@ describe('linksCardanoModuleMaker', () => {
           config: configCardanoLegacyTransfer,
           params: {
             address:
-              'addr_test1qrgpjmyy8zk9nuza24a0f4e7mgp9gd6h3uayp0rqnjnkl54v4dlyj0kwfs0x4e38a7047lymzp37tx0y42glslcdtzhqzp57km',
+              'addr_test1qrgpjmyy8zk9nuza24a0f4e7mgp9gd6h3uayp0rqnjnkl54v4dlyj0kwfs0x4e38a7047lymzp37tx0y42glslcdtzhqzp57km' as Address,
           },
         })
         expect(link).toEqual({
           config: configCardanoLegacyTransfer,
           params: {
             address:
-              'addr_test1qrgpjmyy8zk9nuza24a0f4e7mgp9gd6h3uayp0rqnjnkl54v4dlyj0kwfs0x4e38a7047lymzp37tx0y42glslcdtzhqzp57km',
+              'addr_test1qrgpjmyy8zk9nuza24a0f4e7mgp9gd6h3uayp0rqnjnkl54v4dlyj0kwfs0x4e38a7047lymzp37tx0y42glslcdtzhqzp57km' as Address,
           },
           link: 'web+cardano:addr_test1qrgpjmyy8zk9nuza24a0f4e7mgp9gd6h3uayp0rqnjnkl54v4dlyj0kwfs0x4e38a7047lymzp37tx0y42glslcdtzhqzp57km',
         })
@@ -145,7 +145,7 @@ describe('linksCardanoModuleMaker', () => {
           config: configCardanoLegacyTransfer,
           params: {
             address:
-              'addr_test1qrgpjmyy8zk9nuza24a0f4e7mgp9gd6h3uayp0rqnjnkl54v4dlyj0kwfs0x4e38a7047lymzp37tx0y42glslcdtzhqzp57km',
+              'addr_test1qrgpjmyy8zk9nuza24a0f4e7mgp9gd6h3uayp0rqnjnkl54v4dlyj0kwfs0x4e38a7047lymzp37tx0y42glslcdtzhqzp57km' as Address,
             amount: 1.23,
             memo: '%$-_/.memo',
             message: ['%$-_/.', 'message'],
@@ -156,7 +156,7 @@ describe('linksCardanoModuleMaker', () => {
           config: configCardanoLegacyTransfer,
           params: {
             address:
-              'addr_test1qrgpjmyy8zk9nuza24a0f4e7mgp9gd6h3uayp0rqnjnkl54v4dlyj0kwfs0x4e38a7047lymzp37tx0y42glslcdtzhqzp57km',
+              'addr_test1qrgpjmyy8zk9nuza24a0f4e7mgp9gd6h3uayp0rqnjnkl54v4dlyj0kwfs0x4e38a7047lymzp37tx0y42glslcdtzhqzp57km' as Address,
             amount: 1.23,
             memo: '%$-_/.memo',
             message: ['%$-_/.', 'message'],
@@ -167,7 +167,7 @@ describe('linksCardanoModuleMaker', () => {
           config: configCardanoLegacyTransfer,
           params: {
             address:
-              'addr_test1qrgpjmyy8zk9nuza24a0f4e7mgp9gd6h3uayp0rqnjnkl54v4dlyj0kwfs0x4e38a7047lymzp37tx0y42glslcdtzhqzp57km',
+              'addr_test1qrgpjmyy8zk9nuza24a0f4e7mgp9gd6h3uayp0rqnjnkl54v4dlyj0kwfs0x4e38a7047lymzp37tx0y42glslcdtzhqzp57km' as Address,
             amount: 1.23,
             memo: '%$-_/.memo',
             message: '%$-_/.message',
@@ -178,7 +178,7 @@ describe('linksCardanoModuleMaker', () => {
           config: configCardanoLegacyTransfer,
           params: {
             address:
-              'addr_test1qrgpjmyy8zk9nuza24a0f4e7mgp9gd6h3uayp0rqnjnkl54v4dlyj0kwfs0x4e38a7047lymzp37tx0y42glslcdtzhqzp57km',
+              'addr_test1qrgpjmyy8zk9nuza24a0f4e7mgp9gd6h3uayp0rqnjnkl54v4dlyj0kwfs0x4e38a7047lymzp37tx0y42glslcdtzhqzp57km' as Address,
             amount: 1.23,
             memo: '%$-_/.memo',
             message: '%$-_/.message',
@@ -193,7 +193,7 @@ describe('linksCardanoModuleMaker', () => {
             config: configCardanoLegacyTransfer,
             params: {
               address:
-                'addr_test1qrgpjmyy8zk9nuza24a0f4e7mgp9gd6h3uayp0rqnjnkl54v4dlyj0kwfs0x4e38a7047lymzp37tx0y42glslcdtzhqzp57km',
+                'addr_test1qrgpjmyy8zk9nuza24a0f4e7mgp9gd6h3uayp0rqnjnkl54v4dlyj0kwfs0x4e38a7047lymzp37tx0y42glslcdtzhqzp57km' as Address,
               amount: '1,23',
             },
           })
@@ -212,7 +212,7 @@ describe('linksCardanoModuleMaker', () => {
             config: configCardanoLegacyTransfer,
             params: {
               address:
-                'addr_test1qrgpjmyy8zk9nuza24a0f4e7mgp9gd6h3uayp0rqnjnkl54v4dlyj0kwfs0x4e38a7047lymzp37tx0y42glslcdtzhqzp57km',
+                'addr_test1qrgpjmyy8zk9nuza24a0f4e7mgp9gd6h3uayp0rqnjnkl54v4dlyj0kwfs0x4e38a7047lymzp37tx0y42glslcdtzhqzp57km' as Address,
               amount: 1.23,
               memo: 1,
             },
@@ -232,7 +232,7 @@ describe('linksCardanoModuleMaker', () => {
             config: configCardanoLegacyTransfer,
             params: {
               address:
-                'addr_/test1qrgpjmyy8zk9nuza24a0f4e7mgp9gd6h3uayp0rqnjnkl54v4dlyj0kwfs0x4e38a7047lymzp37tx0y42glslcdtzhqzp57km',
+                'addr_/test1qrgpjmyy8zk9nuza24a0f4e7mgp9gd6h3uayp0rqnjnkl54v4dlyj0kwfs0x4e38a7047lymzp37tx0y42glslcdtzhqzp57km' as Address,
             },
           })
         } catch (error) {
@@ -250,7 +250,7 @@ describe('linksCardanoModuleMaker', () => {
             config: configCardanoLegacyTransfer,
             params: {
               address:
-                'addr_test1qrgpjmyy8zk9nuza24a0f4e7mgp9gd6h3uayp0rqnjnkl54v4dlyj0kwfs0x4e38a7047lymzp37tx0y42glslcdtzhqzp57km',
+                'addr_test1qrgpjmyy8zk9nuza24a0f4e7mgp9gd6h3uayp0rqnjnkl54v4dlyj0kwfs0x4e38a7047lymzp37tx0y42glslcdtzhqzp57km' as Address,
               amount: 1.23,
               memo: 'memo',
               message: 1,
@@ -271,7 +271,7 @@ describe('linksCardanoModuleMaker', () => {
             config: configCardanoLegacyTransfer,
             params: {
               address:
-                'addr_test1qrgpjmyy8zk9nuza24a0f4e7mgp9gd6h3uayp0rqnjnkl54v4dlyj0kwfs0x4e38a7047lymzp37tx0y42glslcdtzhqzp57km',
+                'addr_test1qrgpjmyy8zk9nuza24a0f4e7mgp9gd6h3uayp0rqnjnkl54v4dlyj0kwfs0x4e38a7047lymzp37tx0y42glslcdtzhqzp57km' as Address,
               amount: 1.23,
               memo: 'memo',
               message: [],
@@ -292,7 +292,7 @@ describe('linksCardanoModuleMaker', () => {
             config: configCardanoLegacyTransfer,
             params: {
               address:
-                'addr_test1qrgpjmyy8zk9nuza24a0f4e7mgp9gd6h3uayp0rqnjnkl54v4dlyj0kwfs0x4e38a7047lymzp37tx0y42glslcdtzhqzp57km',
+                'addr_test1qrgpjmyy8zk9nuza24a0f4e7mgp9gd6h3uayp0rqnjnkl54v4dlyj0kwfs0x4e38a7047lymzp37tx0y42glslcdtzhqzp57km' as Address,
               amount: 1.23,
               memo: 'memo',
               message: [1],
@@ -380,7 +380,7 @@ describe('linksCardanoModuleMaker', () => {
         config: configCardanoLegacyTransfer,
         params: {
           address:
-            'addr_test1qrgpjmyy8zk9nuza24a0f4e7mgp9gd6h3uayp0rqnjnkl54v4dlyj0kwfs0x4e38a7047lymzp37tx0y42glslcdtzhqzp57km',
+            'addr_test1qrgpjmyy8zk9nuza24a0f4e7mgp9gd6h3uayp0rqnjnkl54v4dlyj0kwfs0x4e38a7047lymzp37tx0y42glslcdtzhqzp57km' as Address,
           amount: 1.23,
           memo: 'memo',
           message: 'message',
@@ -397,7 +397,7 @@ describe('linksCardanoModuleMaker', () => {
         config: configCardanoLegacyTransfer,
         params: {
           address:
-            'addr_test1qrgpjmyy8zk9nuza24a0f4e7mgp9gd6h3uayp0rqnjnkl54v4dlyj0kwfs0x4e38a7047lymzp37tx0y42glslcdtzhqzp57km',
+            'addr_test1qrgpjmyy8zk9nuza24a0f4e7mgp9gd6h3uayp0rqnjnkl54v4dlyj0kwfs0x4e38a7047lymzp37tx0y42glslcdtzhqzp57km' as Address,
         },
         link: 'web+cardano:addr_test1qrgpjmyy8zk9nuza24a0f4e7mgp9gd6h3uayp0rqnjnkl54v4dlyj0kwfs0x4e38a7047lymzp37tx0y42glslcdtzhqzp57km',
       })
@@ -563,7 +563,7 @@ describe('linksCardanoModuleMaker', () => {
           config: configCardanoAddressV1,
           params: {
             address:
-              'addr_test1qrgpjmyy8zk9nuza24a0f4e7mgp9gd6h3uayp0rqnjnkl54v4dlyj0kwfs0x4e38a7047lymzp37tx0y42glslcdtzhqzp57km',
+              'addr_test1qrgpjmyy8zk9nuza24a0f4e7mgp9gd6h3uayp0rqnjnkl54v4dlyj0kwfs0x4e38a7047lymzp37tx0y42glslcdtzhqzp57km' as Address,
           },
           link: url,
         })
@@ -586,7 +586,7 @@ describe('linksCardanoModuleMaker', () => {
           config: configCardanoAddressV1,
           params: {
             address:
-              'addr_test1qrgpjmyy8zk9nuza24a0f4e7mgp9gd6h3uayp0rqnjnkl54v4dlyj0kwfs0x4e38a7047lymzp37tx0y42glslcdtzhqzp57km',
+              'addr_test1qrgpjmyy8zk9nuza24a0f4e7mgp9gd6h3uayp0rqnjnkl54v4dlyj0kwfs0x4e38a7047lymzp37tx0y42glslcdtzhqzp57km' as Address,
           },
         })
         expect(link.link).toBe(

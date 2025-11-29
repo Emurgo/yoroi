@@ -1,4 +1,4 @@
-import {Portfolio} from '@yoroi/types'
+import {Amount, Portfolio, TokenId} from '@yoroi/types'
 
 import {rawUtxoToModernUtxo} from './utxo'
 import type {RawUtxo} from './utxo'
@@ -7,7 +7,7 @@ describe('utxo utils', () => {
   describe('rawUtxoToModernUtxo', () => {
     it('should convert RawUtxo to ModernUtxo', () => {
       const rawUtxo: RawUtxo = {
-        amount: '1000000',
+        amount: '1000000' as Amount,
         receiver: 'addr_test1',
         tx_hash: 'hash1',
         tx_index: 0,
@@ -16,24 +16,26 @@ describe('utxo utils', () => {
       }
 
       const result = rawUtxoToModernUtxo(rawUtxo)
+      const emptyTokenId = '' as TokenId
 
       expect(result.receiver).toBe('addr_test1')
       expect(result.txHash).toBe('hash1')
       expect(result.txIndex).toBe(0)
-      expect(result.balance['']).toBe('1000000')
+      expect(result.balance[emptyTokenId]).toBe('1000000')
     })
 
     it('should include assets in balance', () => {
+      const tokenId = 'policy1.asset1' as TokenId
       const rawUtxo: RawUtxo = {
-        amount: '1000000',
+        amount: '1000000' as Amount,
         receiver: 'addr_test1',
         tx_hash: 'hash1',
         tx_index: 0,
         utxo_id: 'hash1:0',
         assets: [
           {
-            amount: '100',
-            tokenId: 'policy1.asset1' as Portfolio.Token.Id,
+            amount: '100' as Amount,
+            tokenId: tokenId as Portfolio.Token.Id,
             policyId: 'policy1',
             name: 'asset1',
           },
@@ -42,12 +44,13 @@ describe('utxo utils', () => {
 
       const result = rawUtxoToModernUtxo(rawUtxo)
 
-      expect(result.balance['policy1.asset1']).toBe('100')
+      expect(result.balance[tokenId]).toBe('100')
     })
 
     it('should use custom primaryTokenId', () => {
+      const primaryTokenId = '.' as TokenId
       const rawUtxo: RawUtxo = {
-        amount: '1000000',
+        amount: '1000000' as Amount,
         receiver: 'addr_test1',
         tx_hash: 'hash1',
         tx_index: 0,
@@ -57,12 +60,12 @@ describe('utxo utils', () => {
 
       const result = rawUtxoToModernUtxo(rawUtxo, undefined, undefined, '.')
 
-      expect(result.balance['.']).toBe('1000000')
+      expect(result.balance[primaryTokenId]).toBe('1000000')
     })
 
     it('should include addressing when provided', () => {
       const rawUtxo: RawUtxo = {
-        amount: '1000000',
+        amount: '1000000' as Amount,
         receiver: 'addr_test1',
         tx_hash: 'hash1',
         tx_index: 0,
@@ -78,7 +81,7 @@ describe('utxo utils', () => {
 
     it('should include derivationPath when provided', () => {
       const rawUtxo: RawUtxo = {
-        amount: '1000000',
+        amount: '1000000' as Amount,
         receiver: 'addr_test1',
         tx_hash: 'hash1',
         tx_index: 0,
@@ -97,7 +100,7 @@ describe('utxo utils', () => {
 
     it('should handle zero amount', () => {
       const rawUtxo: RawUtxo = {
-        amount: '0',
+        amount: '0' as Amount,
         receiver: 'addr_test1',
         tx_hash: 'hash1',
         tx_index: 0,
@@ -106,13 +109,14 @@ describe('utxo utils', () => {
       }
 
       const result = rawUtxoToModernUtxo(rawUtxo)
+      const emptyTokenId = '' as TokenId
 
-      expect(result.balance['']).toBeUndefined()
+      expect(result.balance[emptyTokenId]).toBeUndefined()
     })
 
     it('should throw when trying to serialize without CSL', () => {
       const rawUtxo: RawUtxo = {
-        amount: '1000000',
+        amount: '1000000' as Amount,
         receiver: 'addr_test1',
         tx_hash: 'hash1',
         tx_index: 0,

@@ -1,3 +1,5 @@
+import {KeyHash} from '@yoroi/types'
+
 import {createCertificateFromData} from './certificates'
 import type {TransactionCertificate} from './types'
 
@@ -5,7 +7,7 @@ describe('certificates', () => {
   describe('createCertificateFromData', () => {
     it('should create stake registration certificate', () => {
       const certData: TransactionCertificate = {
-        stakeCredentialKeyHashHex: 'stake_key_hash',
+        stakeCredentialKeyHashHex: 'stake_key_hash' as KeyHash,
         kind: 'StakeRegistration',
       }
       const mockStakeCred = {}
@@ -34,7 +36,7 @@ describe('certificates', () => {
 
     it('should create stake deregistration certificate', () => {
       const certData: TransactionCertificate = {
-        stakeCredentialKeyHashHex: 'stake_key_hash',
+        stakeCredentialKeyHashHex: 'stake_key_hash' as KeyHash,
         kind: 'StakeDeregistration',
       }
       const mockStakeCred = {}
@@ -62,8 +64,8 @@ describe('certificates', () => {
 
     it('should create stake delegation certificate', () => {
       const certData: TransactionCertificate = {
-        stakeCredentialKeyHashHex: 'stake_key_hash',
-        poolKeyHash: 'pool_key_hash',
+        stakeCredentialKeyHashHex: 'stake_key_hash' as KeyHash,
+        poolKeyHash: 'pool_key_hash' as KeyHash,
         kind: 'StakeDelegation',
       }
       const mockStakeCred = {}
@@ -93,8 +95,8 @@ describe('certificates', () => {
 
     it('should create vote delegation certificate', () => {
       const certData: TransactionCertificate = {
-        stakeCredentialKeyHashHex: 'stake_key_hash',
-        drep: {KeyHash: 'drep_key_hash'},
+        stakeCredentialKeyHashHex: 'stake_key_hash' as KeyHash,
+        drep: {KeyHash: 'drep_key_hash' as KeyHash},
         kind: 'VoteDelegation',
       }
       const mockStakeCred = {}
@@ -142,7 +144,7 @@ describe('certificates', () => {
 
     it('should handle DRep AlwaysAbstain', () => {
       const certData: TransactionCertificate = {
-        stakeCredentialKeyHashHex: 'stake_key_hash',
+        stakeCredentialKeyHashHex: 'stake_key_hash' as KeyHash,
         drep: 'AlwaysAbstain',
         kind: 'VoteDelegation',
       }
@@ -177,7 +179,7 @@ describe('certificates', () => {
 
     it('should handle DRep AlwaysNoConfidence', () => {
       const certData: TransactionCertificate = {
-        stakeCredentialKeyHashHex: 'stake_key_hash',
+        stakeCredentialKeyHashHex: 'stake_key_hash' as KeyHash,
         drep: 'AlwaysNoConfidence',
         kind: 'VoteDelegation',
       }
