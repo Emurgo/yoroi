@@ -244,9 +244,11 @@ export const asEpochNumber = (input: number): EpochNumber => {
 
 // Cryptographic validation
 export const asPublicKeyHex = (input: string): PublicKeyHex => {
-  if (!isHex(input) || input.length !== 64) {
+  // Accept both regular Ed25519 public keys (64 hex chars = 32 bytes)
+  // and extended BIP32-Ed25519 public keys (128 hex chars = 64 bytes)
+  if (!isHex(input) || (input.length !== 64 && input.length !== 128)) {
     getLogger().warn(
-      `[BrandedType] Invalid public key hex format (expected 64 hex chars): ${input}`,
+      `[BrandedType] Invalid public key hex format (expected 64 or 128 hex chars): ${input}`,
     )
   }
   return input as PublicKeyHex
