@@ -1,6 +1,9 @@
+import {calculatePolicyId} from '@yoroi/tx'
 import type {MintingScript} from '@yoroi/tx'
 
 import type {WasmModuleProxy} from '@emurgo/cross-csl-core'
+
+import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
 
 import type {PolicyRecoveryData} from '../types'
 
@@ -64,10 +67,6 @@ export async function validateRecoveryData(
   recoveryData: PolicyRecoveryData,
   expectedPolicyId: string,
 ): Promise<boolean> {
-  // Import here to avoid circular dependency
-  const {CardanoMobileWrapped} = await import('~/wallets/cardano/wrappedCsl')
-  const {calculatePolicyId} = await import('@yoroi/tx')
-
   return CardanoMobileWrapped.cslScope((csl: WasmModuleProxy) => {
     const script: MintingScript = {
       type: recoveryData.scriptType,

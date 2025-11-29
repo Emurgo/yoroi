@@ -8,7 +8,6 @@ import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
 import {ReviewTxRoutes} from '~/kernel/navigation/types'
 import {Boundary} from '~/ui/Boundary/Boundary'
 import {ResultScreen} from '~/ui/ResultScreen/ResultScreen'
-import type {ResultScreenParams} from '~/ui/ResultScreen/types'
 
 import {ReviewTxScreen} from './useCases/ReviewTxScreen/ReviewTxScreen'
 import {InfraestructureIssueScreen} from './useCases/ShowInfraestructureIssueScreen/InfraestructureIssueScreen'
@@ -35,12 +34,7 @@ export const ReviewTxNavigator = () => {
 
       <Stack.Screen
         name="result-screen"
-        getComponent={() =>
-          (props: {
-            route: {
-              params: ResultScreenParams
-            }
-          }) => <ResultScreen {...props.route.params} />}
+        component={ResultScreen as React.ComponentType<any>}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

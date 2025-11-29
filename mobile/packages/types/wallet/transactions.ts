@@ -80,18 +80,29 @@ export type TransactionAssurance =
   | 'HIGH'
 
 /**
+ * JSON-serializable value types for Cardano metadata
+ */
+export type MetadataValue =
+  | string
+  | number
+  | boolean
+  | null
+  | Array<MetadataValue>
+  | {[key: string]: MetadataValue}
+
+/**
  * Transaction metadata
  */
 export type TxMetadata = Array<{
   label: string
-  map_json?: any
+  map_json?: Record<string, MetadataValue> | MetadataValue[]
   text_scalar?: string | null
 }>
 
 /**
  * Transaction metadata info (parsed/flattened)
  */
-export type TxMetadataInfo = Record<string, any>
+export type TxMetadataInfo = Record<string, MetadataValue>
 
 /**
  * Base asset type (from backend)

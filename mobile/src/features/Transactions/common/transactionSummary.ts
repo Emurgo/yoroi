@@ -78,7 +78,7 @@ const remoteDataToAmounts = (
       [
         {
           tokenId: primaryTokenId as Portfolio.Token.Id,
-          amount: Branded.asAmount(item.amount),
+          amount: Branded.asBalanceQuantity(item.amount),
           policyId: Branded.asPolicyId(''),
           name: Branded.asAssetName(''),
         },

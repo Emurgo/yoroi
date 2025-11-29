@@ -15,7 +15,13 @@ import {
   setChangeAddress,
   setTTLWithBuffer,
 } from '@yoroi/tx'
-import {Address, Amount, Branded, Portfolio, Wallet} from '@yoroi/types'
+import {
+  Address,
+  BalanceQuantity,
+  Branded,
+  Portfolio,
+  Wallet,
+} from '@yoroi/types'
 
 import type {PublicKey} from '@emurgo/cross-csl-core'
 import BigNumber from 'bignumber.js'
@@ -213,7 +219,7 @@ export async function createWithdrawalWithGovernanceTx({
             ? (rewardAddressBech32 as Address)
             : rewardAddressBech32
         const rewardsAmount =
-          typeof rewards === 'string' ? (rewards as Amount) : rewards
+          typeof rewards === 'string' ? (rewards as BalanceQuantity) : rewards
         builderState = addWithdrawal(builderState, rewardAddr, rewardsAmount)
       }
 

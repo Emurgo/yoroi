@@ -1,8 +1,6 @@
 import {invalid} from '@yoroi/common'
 import {Claim, Links} from '@yoroi/types'
 
-import {castDraft, produce} from 'immer'
-
 export type ClaimActions = Readonly<{
   claimInfoChanged: (claimInfo: Claim.Info) => void
   scanActionClaimChanged: (scanActionClaim: Links.CardanoActionClaim) => void
@@ -24,20 +22,26 @@ export const claimReducer = (
   state: ClaimState,
   action: ClaimAction,
 ): ClaimState => {
-  return produce(state, (draft) => {
-    switch (action.type) {
-      case ClaimActionType.ClaimInfoChanged:
-        draft.claimInfo = castDraft(action.claimInfo)
-        break
-      case ClaimActionType.ScanActionClaimChanged:
-        draft.scanActionClaim = action.scanActionClaim
-        break
-      case ClaimActionType.Reset:
-        draft.claimInfo = undefined
-        draft.scanActionClaim = undefined
-        break
-    }
-  })
+  switch (action.type) {
+    case ClaimActionType.ClaimInfoChanged:
+      return {
+        ...state,
+        claimInfo: action.claimInfo,
+      }
+    case ClaimActionType.ScanActionClaimChanged:
+      return {
+        ...state,
+        scanActionClaim: action.scanActionClaim,
+      }
+    case ClaimActionType.Reset:
+      return {
+        ...state,
+        claimInfo: undefined,
+        scanActionClaim: undefined,
+      }
+    default:
+      return state
+  }
 }
 
 export type ClaimState = Readonly<{

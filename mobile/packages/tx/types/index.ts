@@ -1,6 +1,6 @@
 import {
   Address,
-  Amount,
+  BalanceQuantity,
   Balance,
   DatumCbor,
   DatumHash,
@@ -24,9 +24,9 @@ interface Bip44DerivationLevel {
 
 export type AmountWithReceiver = {
   receiver: Address
-  amount: Amount
+  amount: BalanceQuantity
 }
-export type StakingKeyBalances = {[key: KeyHash]: Amount}
+export type StakingKeyBalances = {[key: KeyHash]: BalanceQuantity}
 
 export enum RegistrationStatus {
   DelegateOnly,
@@ -56,9 +56,9 @@ export const Bip44DerivationLevels = {
 }
 
 export type AccountStatePart = {
-  remainingAmount: Amount
-  rewards: Amount
-  withdrawals: Amount
+  remainingAmount: BalanceQuantity
+  rewards: BalanceQuantity
+  withdrawals: BalanceQuantity
 }
 
 export type WithdrawalRequest = {
@@ -113,7 +113,7 @@ export type RemoteUnspentOutput = {
 // @deprecated Use RemoteUnspentOutput.balance instead
 export type UtxoAsset = {
   assetId: TokenId
-  amount: Amount
+  amount: BalanceQuantity
 }
 
 export type SendToken = {
@@ -136,9 +136,20 @@ export type TxOptions = {
   metadata?: ReadonlyArray<TxMetadata>
 }
 
+/**
+ * JSON-serializable value types for transaction metadata
+ */
+export type MetadataDataValue =
+  | string
+  | number
+  | boolean
+  | null
+  | Array<MetadataDataValue>
+  | {[key: string]: MetadataDataValue}
+
 export type TxMetadata = {
   label: string
-  data: any
+  data: MetadataDataValue
 }
 
 export type CardanoHaskellConfig = {

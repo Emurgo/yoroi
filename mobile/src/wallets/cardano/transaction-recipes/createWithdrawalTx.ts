@@ -250,7 +250,9 @@ export async function createWithdrawalTx({
       // Add withdrawal if we have rewards
       if (rewardAddressBech32) {
         const rewardsAmount =
-          typeof rewards === 'string' ? Branded.asAmount(rewards) : rewards
+          typeof rewards === 'string'
+            ? Branded.asBalanceQuantity(rewards)
+            : rewards
         builderState = addWithdrawal(
           builderState,
           rewardAddressBech32,

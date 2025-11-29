@@ -117,9 +117,9 @@ function transformToWalletTransaction(
     inputs: tx.inputs.map((input) => ({
       id: input.id ? (input.id as unknown as TransactionHash) : undefined,
       address: input.address,
-      amount: input.amount as unknown as Amount,
+      amount: input.amount as BalanceQuantity,
       assets: (input.assets ?? []).map((asset) => ({
-        amount: asset.amount as unknown as Amount,
+        amount: asset.amount as BalanceQuantity,
         tokenId: asset.tokenId,
         policyId: asset.policyId,
         name: asset.name as unknown as AssetName,
@@ -127,9 +127,9 @@ function transformToWalletTransaction(
     })),
     outputs: tx.outputs.map((output) => ({
       address: output.address,
-      amount: output.amount as unknown as Amount,
+      amount: output.amount as BalanceQuantity,
       assets: (output.assets ?? []).map((asset) => ({
-        amount: asset.amount as unknown as Amount,
+        amount: asset.amount as BalanceQuantity,
         tokenId: asset.tokenId,
         policyId: asset.policyId,
         name: asset.name as unknown as AssetName,
@@ -148,16 +148,16 @@ function transformToWalletTransaction(
     scriptSize: tx.script_size,
     collateralInputs: (tx.collateral_inputs ?? []).map((input) => ({
       address: input.address,
-      amount: input.amount as unknown as Amount,
+      amount: input.amount as BalanceQuantity,
       assets: (input.assets ?? []).map((asset) => ({
-        amount: asset.amount as unknown as Amount,
+        amount: asset.amount as BalanceQuantity,
         tokenId: asset.tokenId,
         policyId: asset.policyId,
         name: asset.name as unknown as AssetName,
       })),
     })),
     memo: null,
-    metadata: tx.metadata,
+    metadata: tx.metadata as WalletTransaction['metadata'],
   }
 }
 
@@ -338,7 +338,7 @@ export const backendZeroApiMaker = ({
                 }
               }),
           })),
-          fee: Branded.asAmount(String(tx.fee.$lovelaces || '0')),
+          fee: Branded.asBalanceQuantity(String(tx.fee.$lovelaces || '0')),
           certificates: tx.certificates as Array<RemoteCertificateMeta>,
           withdrawals: (tx.withdrawals || []).map((w: unknown) => {
             const withdrawal = w as {
@@ -351,7 +351,7 @@ export const backendZeroApiMaker = ({
             }
             return {
               address: Branded.asAddress(withdrawal.address || ''),
-              amount: Branded.asAmount(
+              amount: Branded.asBalanceQuantity(
                 typeof withdrawal.amount === 'object' &&
                   withdrawal.amount?.$lovelaces != null
                   ? String(withdrawal.amount.$lovelaces)

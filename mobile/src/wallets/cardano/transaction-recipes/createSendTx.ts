@@ -14,6 +14,7 @@ import {
   setChangeAddress,
   setTTLWithBuffer,
 } from '@yoroi/tx'
+import type {TransactionMetadata} from '@yoroi/tx'
 import {
   Address,
   Balance,
@@ -22,6 +23,8 @@ import {
   TokenId,
   Wallet,
 } from '@yoroi/types'
+
+import type {Address as CSLAddress} from '@emurgo/cross-csl-core'
 
 import {logger} from '~/kernel/logger/logger'
 
@@ -42,7 +45,7 @@ export type CreateSendTxParams = {
   getAbsoluteSlotNumber: () => Promise<BigNumber>
   getChangeAddress: (addressMode: Wallet.AddressMode) => Address | string
   addressMode: Wallet.AddressMode
-  metadata?: Array<{label: string; data: any}>
+  metadata?: Array<{label: string; data: TransactionMetadata['data']}>
   /**
    * If true, subtract transaction fee from the primary token amount in the first output.
    * This is useful when sending MAX amount - the output will be automatically adjusted
@@ -105,7 +108,7 @@ export async function createSendTx({
         const actualMinAda = await CardanoMobileWrapped.cslScope(
           async (csl) => {
             // Create address within this cslScope to avoid pointer issues
-            let normalizedAddress: any
+            let normalizedAddress: CSLAddress | null = null
             if (csl.ByronAddress.isValid(entry.address)) {
               const byronAddr = csl.ByronAddress.fromBase58(entry.address)
               normalizedAddress = byronAddr.toAddress()

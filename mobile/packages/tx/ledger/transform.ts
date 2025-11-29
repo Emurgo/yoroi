@@ -24,6 +24,7 @@ import {
   MultiAsset,
   TransactionBody,
   TransactionOutputs,
+  VoteDelegation,
 } from '@emurgo/cross-csl-core'
 // Note: This will need to be updated when we migrate UnsignedTx type
 // For now, we'll use a minimal interface that matches what Ledger functions need
@@ -451,7 +452,7 @@ export const formatLedgerCertificates = (
 }
 
 const mapDrepParams = (
-  certificate: import('@emurgo/cross-csl-core').VoteDelegation,
+  certificate: VoteDelegation,
 ): LedgerDRepParams | undefined => {
   const drep = certificate.drep()
   const drepKind = drep.kind()

@@ -7,6 +7,7 @@ import {
   SignedTransactionData,
 } from '@cardano-foundation/ledgerjs-hw-app-cardano'
 import {
+  AuxiliaryData,
   Bip32PublicKey,
   BootstrapWitness,
   PrivateKey,
@@ -221,7 +222,7 @@ export async function buildLedgerSignedTx(
   }
 
   // Handle auxiliary data and catalyst registration
-  let auxData: import('@emurgo/cross-csl-core').AuxiliaryData | undefined
+  let auxData: AuxiliaryData | undefined
 
   if (unsignedTx.catalystRegistrationData) {
     // Create voting metadata based on CIP version

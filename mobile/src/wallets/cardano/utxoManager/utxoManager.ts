@@ -7,14 +7,7 @@ import {
   UtxoStorage,
   init as initUtxo,
 } from '@yoroi/tx'
-import {
-  App,
-  AssetName,
-  Balance,
-  Branded,
-  PolicyId,
-  Portfolio,
-} from '@yoroi/types'
+import {App, Balance, Branded, PolicyId, Portfolio} from '@yoroi/types'
 
 import {parseInt} from 'lodash'
 
@@ -111,12 +104,13 @@ const serializer = (utxo: Utxo): RawUtxo => {
     receiver: utxo.receiver,
     // Convert Asset[] (with assetId) to RemoteAsset[] (with tokenId)
     // assetId from backend is already the full token ID in format policyId.assetNameHex
+    // RemoteAsset expects amount: BalanceQuantity (string), not Balance.Amount
     assets: utxo.assets.map((asset) => ({
-      amount: asset.amount as string as unknown as Balance.Amount,
+      amount: asset.amount.toString() as Balance.Quantity,
       tokenId: asset.assetId as Portfolio.Token.Id,
       policyId: asset.policyId as PolicyId,
-      name: asset.name as AssetName,
-    })) as any,
+      name: asset.name,
+    })),
   }
   return rawUtxo
 }

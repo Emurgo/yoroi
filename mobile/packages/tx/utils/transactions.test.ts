@@ -1,4 +1,4 @@
-import {Amount} from '@yoroi/types'
+import {BalanceQuantity} from '@yoroi/types'
 
 import {
   calculateTxId,
@@ -94,7 +94,7 @@ describe('transaction utils', () => {
       const utxos = [
         {
           receiver: 'addr_test1qpxxxxxx', // Valid bech32 address
-          amount: '1000000' as Amount,
+          amount: '1000000' as BalanceQuantity,
         },
       ]
 
@@ -121,7 +121,7 @@ describe('transaction utils', () => {
       const utxos = [
         {
           receiver: 'invalid_address',
-          amount: '1000000' as Amount,
+          amount: '1000000' as BalanceQuantity,
         },
       ]
 
@@ -139,7 +139,7 @@ describe('transaction utils', () => {
       const utxos = [
         {
           receiver: '4invalid', // Starts with 4, not 0-3
-          amount: '1000000' as Amount,
+          amount: '1000000' as BalanceQuantity,
         },
       ]
 
@@ -176,11 +176,11 @@ describe('transaction utils', () => {
       const utxos = [
         {
           receiver: 'addr_test1qpxxxxxx',
-          amount: '1000000' as Amount,
+          amount: '1000000' as BalanceQuantity,
         },
         {
           receiver: 'addr_test1qpxxxxxx',
-          amount: '2000000' as Amount,
+          amount: '2000000' as BalanceQuantity,
         },
       ]
 

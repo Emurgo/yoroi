@@ -109,9 +109,9 @@ function transformToWalletTransaction(
     inputs: tx.inputs.map((input) => ({
       id: input.id ? (input.id as unknown as TransactionHash) : undefined,
       address: input.address,
-      amount: input.amount as unknown as Amount,
+      amount: input.amount as BalanceQuantity,
       assets: (input.assets ?? []).map((asset) => ({
-        amount: asset.amount as unknown as Amount,
+        amount: asset.amount as BalanceQuantity,
         tokenId: asset.tokenId as any,
         policyId: asset.policyId,
         name: asset.name as unknown as AssetName,
@@ -119,9 +119,9 @@ function transformToWalletTransaction(
     })),
     outputs: tx.outputs.map((output) => ({
       address: output.address,
-      amount: output.amount as unknown as Amount,
+      amount: output.amount as BalanceQuantity,
       assets: (output.assets ?? []).map((asset) => ({
-        amount: asset.amount as unknown as Amount,
+        amount: asset.amount as BalanceQuantity,
         tokenId: asset.tokenId as any,
         policyId: asset.policyId,
         name: asset.name as unknown as AssetName,
@@ -140,16 +140,16 @@ function transformToWalletTransaction(
     scriptSize: tx.script_size,
     collateralInputs: (tx.collateral_inputs ?? []).map((input) => ({
       address: input.address,
-      amount: input.amount as unknown as Amount,
+      amount: input.amount as BalanceQuantity,
       assets: (input.assets ?? []).map((asset) => ({
-        amount: asset.amount as unknown as Amount,
+        amount: asset.amount as BalanceQuantity,
         tokenId: asset.tokenId as any,
         policyId: asset.policyId,
         name: asset.name as unknown as AssetName,
       })),
     })),
     memo: null,
-    metadata: tx.metadata,
+    metadata: tx.metadata as WalletTransaction['metadata'],
   }
 }
 
@@ -234,7 +234,7 @@ export const legacyApiMaker = ({
       const transactions: WalletTransaction[] = rawTransactions.map((tx) => {
         const internalTx: InternalRawTransaction = {
           type: tx.type,
-          fee: tx.fee ? Branded.asAmount(tx.fee) : undefined,
+          fee: tx.fee ? Branded.asBalanceQuantity(tx.fee) : undefined,
           hash: Branded.asTransactionHash(tx.hash),
           last_update: tx.last_update,
           tx_state: tx.tx_state,
@@ -265,7 +265,7 @@ export const legacyApiMaker = ({
           })),
           withdrawals: tx.withdrawals.map((w) => ({
             address: Branded.asAddress(w.address),
-            amount: Branded.asAmount(w.amount),
+            amount: Branded.asBalanceQuantity(w.amount),
           })),
           certificates: tx.certificates,
           valid_contract: tx.valid_contract,

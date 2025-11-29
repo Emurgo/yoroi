@@ -1,4 +1,10 @@
-import {Address, Amount, BlockHash, DRepId, TransactionHash} from '../branded'
+import {
+  Address,
+  BalanceQuantity,
+  BlockHash,
+  DRepId,
+  TransactionHash,
+} from '../branded'
 
 export type CardanoActionSendOnlyReceiver = Readonly<{
   action: 'send-only-receiver'
@@ -17,11 +23,22 @@ export type CardanoActionSendSinglePt = Readonly<{
     | undefined
 }>
 
+/**
+ * JSON-serializable value types
+ */
+type JsonValue =
+  | string
+  | number
+  | boolean
+  | null
+  | Array<JsonValue>
+  | {[key: string]: JsonValue}
+
 export type CardanoActionClaim = Readonly<{
   action: 'claim'
   url: string
   code: string
-  params: Record<string, any> | undefined
+  params: Record<string, JsonValue> | undefined
 }>
 
 export type CardanoActionLaunchUrl = Readonly<{
@@ -41,7 +58,7 @@ export type CardanoActionBrowseDapp = Readonly<{
 export type CardanoActionPayRequest = Readonly<{
   action: 'pay-request'
   address: Address
-  amount?: Amount
+  amount?: BalanceQuantity
   asset?: string
   memo?: string
 }>

@@ -1,6 +1,8 @@
 import {isHex} from '@yoroi/common'
 import {Address, Balance, Chain, Portfolio} from '@yoroi/types'
 
+import type {Address as CSLAddress} from '@emurgo/cross-csl-core'
+
 import {Amounts, Quantities, asQuantity} from '../utils/utils'
 import {cardanoValueFromAmounts} from './cardanoValueFromAmounts'
 import {CardanoMobileWrapped} from './wrappedCsl'
@@ -37,7 +39,7 @@ export const getMinAmounts = async (
   const addrStr = typeof address === 'string' ? address : address
   return CardanoMobileWrapped.cslScope((csl) => {
     // Create address within this cslScope to avoid pointer issues
-    let normalizedAddress: any
+    let normalizedAddress: CSLAddress | null = null
     if (csl.ByronAddress.isValid(addrStr)) {
       const byronAddr = csl.ByronAddress.fromBase58(addrStr)
       normalizedAddress = byronAddr.toAddress()

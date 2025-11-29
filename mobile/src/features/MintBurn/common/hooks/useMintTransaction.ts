@@ -1,4 +1,5 @@
 import {
+  type TransactionMetadata,
   addInputs,
   addMetadata,
   addMint,
@@ -168,7 +169,7 @@ export const useMintTransaction = ({
         builderState = addMetadata(
           builderState,
           formData.tokenType === 'ft' ? '20' : '721',
-          metadata,
+          metadata as TransactionMetadata['data'],
         )
 
         // Build unsigned transaction

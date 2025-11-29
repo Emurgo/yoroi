@@ -3,8 +3,8 @@ import {getLogger} from '@yoroi/common'
 import {primaryTokenId as defaultPrimaryTokenId} from '@yoroi/portfolio'
 import {
   Address,
-  Amount,
   Balance,
+  BalanceQuantity,
   KeyHash,
   Portfolio,
   TokenId,
@@ -14,6 +14,7 @@ import {
 } from '@yoroi/types'
 
 import type {
+  AuxiliaryData,
   TransactionBuilder as CSLTransactionBuilder,
   TransactionOutput as CSLTransactionOutput,
   Value,
@@ -163,13 +164,13 @@ export function addCertificates(
 export function addWithdrawal(
   state: TransactionBuilderState,
   rewardAddress: Address | string,
-  amount: Amount | string,
+  amount: BalanceQuantity | string,
 ): TransactionBuilderState {
   const addr =
     typeof rewardAddress === 'string'
       ? (rewardAddress as Address)
       : rewardAddress
-  const amt = typeof amount === 'string' ? (amount as Amount) : amount
+  const amt = typeof amount === 'string' ? (amount as BalanceQuantity) : amount
   return {
     ...state,
     withdrawals: [...state.withdrawals, {rewardAddress: addr, amount: amt}],
@@ -246,7 +247,7 @@ export function excludeUtxos(
 export function addMetadata(
   state: TransactionBuilderState,
   label: string,
-  data: any,
+  data: TransactionMetadata['data'],
 ): TransactionBuilderState {
   return {
     ...state,
@@ -1356,7 +1357,7 @@ export async function buildTransaction(
     }
 
     // Add metadata
-    let auxData: any
+    let auxData: AuxiliaryData | undefined
     if (state.metadata.length > 0) {
       auxData = csl.AuxiliaryData.new()
       if (!auxData) {

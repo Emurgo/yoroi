@@ -67,6 +67,7 @@ import {
   readOnlyAccountManagerMaker,
 } from './account-manager/read-only-account-manager'
 import * as legacyApi from './api/api'
+import {extractPaymentKeyHashes} from './api/wallet-registration'
 import {getWalletRegistrationData} from './api/wallet-registration'
 import {calcLockedDeposit} from './assetUtils'
 import {
@@ -1104,7 +1105,6 @@ function createWalletObject(
 
   const fetchAccountState = async (): Promise<AccountStateResponse> => {
     // Extract payment key hashes from wallet addresses for wallet registration
-    const {extractPaymentKeyHashes} = await import('./api/wallet-registration')
     const allAddresses = [...externalAddresses(), ...internalAddresses()]
     const paymentKeyHashes = extractPaymentKeyHashes(allAddresses) as KeyHash[]
     const rewardAddresses = [Branded.asAddress(state.rewardAddressHex)]

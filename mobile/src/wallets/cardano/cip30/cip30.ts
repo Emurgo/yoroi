@@ -400,7 +400,7 @@ const cardanoUtxoFromRemoteFormat = (
     .filter(([tokenId]) => tokenId !== primaryTokenId)
     .map(([tokenId, amount]) => ({
       tokenId: tokenId as Portfolio.Token.Id,
-      amount: Branded.asAmount(amount as string),
+      amount: Branded.asBalanceQuantity(amount as string),
       policyId: Branded.asPolicyId(''),
       name: Branded.asAssetName(''),
     }))

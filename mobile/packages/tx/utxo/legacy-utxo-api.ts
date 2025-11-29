@@ -40,8 +40,14 @@ export type UtxoDiffSincePointItemResponse = {
   tx_index: number
 }
 
+/**
+ * Opaque type for API pagination cursor
+ * The backend returns an opaque value that should be passed back as-is
+ */
+export type UtxoDiffPoint = unknown
+
 export type UtxoDiffSincePointResponse = {
-  lastDiffPointSelected: any // opaque type
+  lastDiffPointSelected: UtxoDiffPoint // opaque type from API
   diffItems: UtxoDiffSincePointItemResponse[]
   lastFoundSafeblock?: string
   lastFoundBestblock?: string
@@ -63,12 +69,21 @@ export type GetTipStatusResponse = {
   }
 }
 
-const handleReferencePointErrors = <T>(err: any): UtxoApiResponse<T> => {
+const handleReferencePointErrors = <T>(err: unknown): UtxoApiResponse<T> => {
   if (
+    err &&
+    typeof err === 'object' &&
+    'response' in err &&
     err.response &&
+    typeof err.response === 'object' &&
+    'data' in err.response &&
     err.response.data &&
+    typeof err.response.data === 'object' &&
+    'error' in err.response.data &&
     err.response.data.error &&
-    err.response.data.error.response
+    typeof err.response.data.error === 'object' &&
+    'response' in err.response.data.error &&
+    typeof err.response.data.error.response === 'string'
   ) {
     const errResponse: string = err.response.data.error.response
     switch (errResponse) {
@@ -85,13 +100,22 @@ const handleReferencePointErrors = <T>(err: any): UtxoApiResponse<T> => {
 }
 
 const handleReferencePointAndBestBlockErrors = <T>(
-  err: any,
+  err: unknown,
 ): UtxoApiResponse<T> => {
   if (
+    err &&
+    typeof err === 'object' &&
+    'response' in err &&
     err.response &&
+    typeof err.response === 'object' &&
+    'data' in err.response &&
     err.response.data &&
+    typeof err.response.data === 'object' &&
+    'error' in err.response.data &&
     err.response.data.error &&
-    err.response.data.error.response
+    typeof err.response.data.error === 'object' &&
+    'response' in err.response.data.error &&
+    typeof err.response.data.error.response === 'string'
   ) {
     const errResponse: string = err.response.data.error.response
     switch (errResponse) {
@@ -150,7 +174,7 @@ export const createBatchedLegacyUtxoApi = (
           result: UtxoApiResult.SUCCESS,
           value: flatten(values),
         }
-      } catch (err: any) {
+      } catch (err: unknown) {
         return handleReferencePointErrors(err)
       }
     },
@@ -202,7 +226,7 @@ export const createBatchedLegacyUtxoApi = (
             },
           },
         }
-      } catch (err: any) {
+      } catch (err: unknown) {
         return handleReferencePointErrors(err)
       }
     },
@@ -269,12 +293,21 @@ export const createLegacyUtxoApi = (
             },
           },
         }
-      } catch (err: any) {
+      } catch (err: unknown) {
         if (
+          err &&
+          typeof err === 'object' &&
+          'response' in err &&
           err.response &&
+          typeof err.response === 'object' &&
+          'data' in err.response &&
           err.response.data &&
+          typeof err.response.data === 'object' &&
+          'error' in err.response.data &&
           err.response.data.error &&
-          err.response.data.error.response
+          typeof err.response.data.error === 'object' &&
+          'response' in err.response.data.error &&
+          typeof err.response.data.error.response === 'string'
         ) {
           const errResponse: string = err.response.data.error.response
           switch (errResponse) {
@@ -331,7 +364,7 @@ export const createLegacyUtxoApi = (
             }
           }),
         }
-      } catch (err: any) {
+      } catch (err: unknown) {
         if (throwRequestErrors) {
           throw err
         }
@@ -409,7 +442,7 @@ export const createLegacyUtxoApi = (
             reference: reference,
           },
         }
-      } catch (err: any) {
+      } catch (err: unknown) {
         if (throwRequestErrors) {
           throw err
         }

@@ -27,11 +27,17 @@ const extractMetadataMessages = (
   for (const item of metadata) {
     if (!item?.label) continue
 
-    const msg = item.map_json?.msg
-    if (isArray(msg)) {
-      messages.push(...msg.map((m) => String(m).toLowerCase()))
-    } else if (isString(msg)) {
-      messages.push(msg.toLowerCase())
+    if (
+      item.map_json &&
+      !isArray(item.map_json) &&
+      typeof item.map_json === 'object'
+    ) {
+      const msg = (item.map_json as Record<string, unknown>).msg
+      if (isArray(msg)) {
+        messages.push(...msg.map((m) => String(m).toLowerCase()))
+      } else if (isString(msg)) {
+        messages.push(msg.toLowerCase())
+      }
     }
   }
 

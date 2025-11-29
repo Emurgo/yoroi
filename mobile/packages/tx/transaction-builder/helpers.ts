@@ -17,6 +17,7 @@ import {
 
 import type {
   Certificate,
+  DRep,
   PublicKey,
   WasmModuleProxy,
 } from '@emurgo/cross-csl-core'
@@ -89,7 +90,7 @@ export function createVoteDelegationCertificate(
 
   // Parse DRep ID (can be hex or bech32)
   const drepIdStr = typeof drepId === 'string' ? drepId : drepId
-  let drep: import('@emurgo/cross-csl-core').DRep
+  let drep: DRep
   if (drepIdStr.startsWith('drep')) {
     // Bech32 format - need to decode
     // For now, assume hex format

@@ -9,6 +9,10 @@ import {
   TxAuxiliaryDataType,
   TxOutputDestinationType,
 } from '@cardano-foundation/ledgerjs-hw-app-cardano'
+import type {
+  Certificate as LedgerCertificate,
+  Withdrawal as LedgerWithdrawal,
+} from '@cardano-foundation/ledgerjs-hw-app-cardano'
 import {WasmModuleProxy} from '@emurgo/cross-csl-core'
 import {blake2b as blake2bHash} from '@noble/hashes/blake2b'
 
@@ -120,9 +124,7 @@ export async function buildVotingLedgerPayloadV5(
   })
 
   const withdrawals = unsignedTx.withdrawals
-  const ledgerWithdrawal: Array<
-    import('@cardano-foundation/ledgerjs-hw-app-cardano').Withdrawal
-  > = []
+  const ledgerWithdrawal: Array<LedgerWithdrawal> = []
   if (withdrawals != null && withdrawals.hasValue() && withdrawals.len() > 0) {
     if (!stakingDerivationPath)
       throw new Error('stakingDerivationPath should have value for withdrawals')
@@ -132,9 +134,7 @@ export async function buildVotingLedgerPayloadV5(
 
   const certificates = unsignedTx.certificates
 
-  const ledgerCertificates: Array<
-    import('@cardano-foundation/ledgerjs-hw-app-cardano').Certificate
-  > = []
+  const ledgerCertificates: Array<LedgerCertificate> = []
   if (
     certificates != null &&
     certificates.hasValue() &&
@@ -219,9 +219,7 @@ export async function buildLedgerPayload(
   })
 
   const withdrawals = unsignedTx.withdrawals
-  const ledgerWithdrawal: Array<
-    import('@cardano-foundation/ledgerjs-hw-app-cardano').Withdrawal
-  > = []
+  const ledgerWithdrawal: Array<LedgerWithdrawal> = []
   if (withdrawals != null && withdrawals.hasValue() && withdrawals.len() > 0) {
     if (!stakingDerivationPath)
       throw new Error('stakingDerivationPath should have value for withdrawals')
@@ -231,9 +229,7 @@ export async function buildLedgerPayload(
 
   const certificates = unsignedTx.certificates
 
-  const ledgerCertificates: Array<
-    import('@cardano-foundation/ledgerjs-hw-app-cardano').Certificate
-  > = []
+  const ledgerCertificates: Array<LedgerCertificate> = []
   if (
     certificates != null &&
     certificates.hasValue() &&

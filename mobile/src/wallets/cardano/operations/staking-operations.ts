@@ -1,3 +1,4 @@
+import type {AccountStateResponse} from '@yoroi/api'
 import {cardanoConfig} from '@yoroi/blockchains'
 import type {StakingInfo} from '@yoroi/staking'
 import {Balance, Branded, Portfolio, Wallet} from '@yoroi/types'
@@ -7,6 +8,7 @@ import {Buffer} from 'buffer'
 import {Quantities} from '../../utils/utils'
 import {CardanoMobile} from '../../wallets'
 import {getDelegationStatus} from '../delegationUtils'
+import type {TimestampedCertMeta} from '../transactionManager/transactionManager'
 import type {CardanoTypes, YoroiWallet} from '../types'
 
 /**
@@ -82,10 +84,7 @@ export const getStakingKey = (
  */
 type PerAddressCertificatesDict = Record<
   string,
-  Record<
-    string,
-    import('../transactionManager/transactionManager').TimestampedCertMeta
-  >
+  Record<string, TimestampedCertMeta>
 >
 
 export const getWalletDelegationStatus = (
@@ -102,7 +101,7 @@ export const getWalletDelegationStatus = (
 export const getWalletStakingInfo = async (wallet: {
   rewardAddressHex: string
   getAllUtxosForKey: () => Array<CardanoTypes.CardanoAddressedUtxo>
-  fetchAccountState: () => Promise<import('@yoroi/api').AccountStateResponse>
+  fetchAccountState: () => Promise<AccountStateResponse>
   balanceManager: YoroiWallet['balanceManager']
   portfolioPrimaryTokenInfo: Portfolio.Token.Info
   getDelegationStatus: () => ReturnType<typeof getDelegationStatus>

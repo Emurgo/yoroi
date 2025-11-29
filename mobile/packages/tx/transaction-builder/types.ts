@@ -9,6 +9,11 @@ import {
 
 import type {MintAction} from '../minting/types'
 import {Datum} from '../types'
+/**
+ * JSON-serializable value types for transaction metadata
+ * Re-exported from types/index to avoid duplication
+ */
+import type {MetadataDataValue} from '../types'
 import {ModernUtxo} from '../utxo/models'
 
 export type TransactionOutput = {
@@ -151,9 +156,11 @@ export type TransactionReferenceInput = {
   utxo: ModernUtxo
 }
 
+export type {MetadataDataValue}
+
 export type TransactionMetadata = {
   label: string
-  data: any
+  data: MetadataDataValue
 }
 
 export type TransactionOptions = {

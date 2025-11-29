@@ -81,7 +81,7 @@ export const parseCardanoLink = (codeContent: string): Links.CardanoAction => {
     return freeze({
       action: 'pay-request',
       address: Branded.asAddress(address as string),
-      amount: amount ? Branded.asAmount(String(amount)) : undefined,
+      amount: amount ? Branded.asBalanceQuantity(String(amount)) : undefined,
       asset: asset as string | undefined,
       memo: memo as string | undefined,
     } as const)
@@ -93,7 +93,7 @@ export const parseCardanoLink = (codeContent: string): Links.CardanoAction => {
     return freeze({
       action: 'pay-request',
       address: Branded.asAddress(address as string),
-      amount: amount ? Branded.asAmount(String(amount)) : undefined,
+      amount: amount ? Branded.asBalanceQuantity(String(amount)) : undefined,
       asset: asset as string | undefined,
       memo: memo as string | undefined,
     } as const)

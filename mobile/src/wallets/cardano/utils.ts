@@ -200,13 +200,14 @@ export const amountsFromRemote = (
   const amounts: Balance.Amounts = {} as Balance.Amounts
 
   // Add primary token (ADA)
-  amounts[defaultPrimaryTokenId] = remoteValue.amount as any as Balance.Quantity
+  // remoteValue.amount is a string, Balance.Quantity is a branded string type
+  amounts[defaultPrimaryTokenId] = remoteValue.amount as Balance.Quantity
 
   // Add other assets
   if (remoteValue.assets != null) {
     for (const token of remoteValue.assets) {
-      amounts[token.tokenId as Portfolio.Token.Id] =
-        token.amount as any as Balance.Quantity
+      // token.amount is now BalanceQuantity (String<'BalanceQuantity'>)
+      amounts[token.tokenId as Portfolio.Token.Id] = token.amount
     }
   }
 

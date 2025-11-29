@@ -16,6 +16,7 @@ import {ThemeProvider} from '@yoroi/theme'
 import {TransferProvider} from '@yoroi/transfer'
 import {Resolver} from '@yoroi/types'
 
+import {init} from '@emurgo/cross-csl-mobile'
 import * as Sentry from '@sentry/react-native'
 import * as Updates from 'expo-updates'
 import * as React from 'react'
@@ -148,7 +149,7 @@ const ResolverProviderWrapper = ({children}: React.PropsWithChildren) => {
           apiKey: unstoppableApiKey,
         },
       },
-      cslFactory: () => require('@emurgo/cross-csl-core'),
+      cslFactory: init,
       isMainnet,
     })
 

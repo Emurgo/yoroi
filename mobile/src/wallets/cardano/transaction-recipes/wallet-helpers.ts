@@ -1,7 +1,9 @@
 import {getLogger} from '@yoroi/common'
 import {TransactionOutput} from '@yoroi/tx'
+import type {DRepValue} from '@yoroi/tx'
 import {Branded, KeyHash, Network, PublicKeyHex, Wallet} from '@yoroi/types'
 
+import type {Certificate} from '@emurgo/cross-csl-core'
 import {BigNumber} from 'bignumber.js'
 
 import * as legacyApi from '~/wallets/cardano/api/api'
@@ -100,7 +102,7 @@ export async function createCombinedDelegationTxFromWallet(
   wallet: YoroiWallet,
   params: {
     poolId?: KeyHash | string
-    drepValue?: import('@yoroi/tx').DRepValue
+    drepValue?: DRepValue
     addressMode: Wallet.AddressMode
   },
 ): Promise<{cbor: string}> {
@@ -242,7 +244,7 @@ export async function createVotingRegTxFromWallet(
 export async function createUnsignedGovernanceTxFromWallet(
   wallet: YoroiWallet,
   params: {
-    votingCertificates: Array<import('@emurgo/cross-csl-core').Certificate>
+    votingCertificates: Array<Certificate>
     addressMode: Wallet.AddressMode
   },
 ): Promise<{cbor: string}> {
@@ -306,7 +308,7 @@ export async function createWithdrawalWithGovernanceTxFromWallet(
     shouldDeregister: boolean
     addressMode: Wallet.AddressMode
     networkManager: Network.Manager
-    drepValue: import('@yoroi/tx').DRepValue
+    drepValue: DRepValue
   },
 ): Promise<{cbor: string}> {
   const logger = getLogger()

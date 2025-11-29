@@ -76,12 +76,19 @@ export const TxDetails = () => {
     for (const item of walletTransaction.metadata) {
       if (!item?.label) continue
 
-      const msg = item.map_json?.msg
-      if (isArray(msg)) {
-        metadataItems.push(...(msg as string[]))
-      } else if (isString(msg)) {
-        metadataItems.push(msg)
-      } else if (item.text_scalar) {
+      if (
+        item.map_json &&
+        !isArray(item.map_json) &&
+        typeof item.map_json === 'object'
+      ) {
+        const msg = (item.map_json as Record<string, unknown>).msg
+        if (isArray(msg)) {
+          metadataItems.push(...(msg as string[]))
+        } else if (isString(msg)) {
+          metadataItems.push(msg)
+        }
+      }
+      if (item.text_scalar) {
         metadataItems.push(item.text_scalar)
       }
     }

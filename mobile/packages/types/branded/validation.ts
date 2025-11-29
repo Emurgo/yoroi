@@ -172,11 +172,9 @@ export const asTokenFingerprint = (input: string): TokenFingerprint => {
 }
 
 // Amount validation
+// @deprecated Use asBalanceQuantity instead
 export const asAmount = (input: string): Amount => {
-  if (!input || typeof input !== 'string') {
-    getLogger().warn(`[BrandedType] Invalid amount: ${input}`)
-  }
-  return input as Amount
+  return asBalanceQuantity(input)
 }
 
 export const asAmountRaw = (input: string): AmountRaw => {

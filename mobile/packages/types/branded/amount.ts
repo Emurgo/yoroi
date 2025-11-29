@@ -2,8 +2,9 @@ import {String} from './utils'
 
 /**
  * Amount types
+ * @deprecated Amount is deprecated, use BalanceQuantity instead
  */
-export type Amount = String<'Amount'> // Validated amount string
+export type Amount = BalanceQuantity // Deprecated: use BalanceQuantity
 export type AmountRaw = String<'AmountRaw'> // Unvalidated user input (directly from user)
 export type AmountSanitized = String<'AmountSanitized'> // Sanitized user input (cleaned but not validated)
 export type AmountFormatted = String<'AmountFormatted'> // Formatted for display (with locale formatting)

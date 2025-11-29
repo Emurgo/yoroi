@@ -1,5 +1,6 @@
 import {
   ModernUtxo,
+  type TransactionMetadata,
   addInputs,
   addMetadata,
   buildRecipeTransaction,
@@ -158,7 +159,7 @@ export async function createVotingRegTx({
   builderState = addMetadata(
     builderState,
     String(votingMetadata.label),
-    votingMetadata.data,
+    votingMetadata.data as TransactionMetadata['data'],
   )
 
   // Set change address

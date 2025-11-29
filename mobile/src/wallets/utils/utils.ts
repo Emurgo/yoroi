@@ -217,18 +217,20 @@ export const Utxos = {
         const amounts: Balance.Amounts = {
           ...previousAmounts,
         }
+        // Quantities.sum already returns Balance.Quantity
         amounts[primaryTokenId] = Quantities.sum([
           previousAmounts[primaryTokenId] ?? Branded.ZERO_QUANTITY,
           currentUtxo.amount as Balance.Quantity,
-        ]) as any as Balance.Quantity
+        ])
 
         if (currentUtxo.assets) {
           currentUtxo.assets.forEach((currentAsset) => {
             const tokenId = currentAsset.tokenId as Portfolio.Token.Id
+            // Quantities.sum already returns Balance.Quantity
             amounts[tokenId] = Quantities.sum([
               Amounts.getAmount(amounts, currentAsset.tokenId).quantity,
               currentAsset.amount as Balance.Quantity,
-            ]) as any as Balance.Quantity
+            ])
           })
         }
 

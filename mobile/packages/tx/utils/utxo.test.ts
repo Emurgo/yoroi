@@ -1,4 +1,4 @@
-import {Amount, Portfolio, TokenId} from '@yoroi/types'
+import {BalanceQuantity, Portfolio, TokenId} from '@yoroi/types'
 
 import {rawUtxoToModernUtxo} from './utxo'
 import type {RawUtxo} from './utxo'
@@ -7,7 +7,7 @@ describe('utxo utils', () => {
   describe('rawUtxoToModernUtxo', () => {
     it('should convert RawUtxo to ModernUtxo', () => {
       const rawUtxo: RawUtxo = {
-        amount: '1000000' as Amount,
+        amount: '1000000' as BalanceQuantity,
         receiver: 'addr_test1',
         tx_hash: 'hash1',
         tx_index: 0,
@@ -27,14 +27,14 @@ describe('utxo utils', () => {
     it('should include assets in balance', () => {
       const tokenId = 'policy1.asset1' as TokenId
       const rawUtxo: RawUtxo = {
-        amount: '1000000' as Amount,
+        amount: '1000000' as BalanceQuantity,
         receiver: 'addr_test1',
         tx_hash: 'hash1',
         tx_index: 0,
         utxo_id: 'hash1:0',
         assets: [
           {
-            amount: '100' as Amount,
+            amount: '100' as BalanceQuantity,
             tokenId: tokenId as Portfolio.Token.Id,
             policyId: 'policy1',
             name: 'asset1',
@@ -50,7 +50,7 @@ describe('utxo utils', () => {
     it('should use custom primaryTokenId', () => {
       const primaryTokenId = '.' as TokenId
       const rawUtxo: RawUtxo = {
-        amount: '1000000' as Amount,
+        amount: '1000000' as BalanceQuantity,
         receiver: 'addr_test1',
         tx_hash: 'hash1',
         tx_index: 0,
@@ -65,7 +65,7 @@ describe('utxo utils', () => {
 
     it('should include addressing when provided', () => {
       const rawUtxo: RawUtxo = {
-        amount: '1000000' as Amount,
+        amount: '1000000' as BalanceQuantity,
         receiver: 'addr_test1',
         tx_hash: 'hash1',
         tx_index: 0,
@@ -81,7 +81,7 @@ describe('utxo utils', () => {
 
     it('should include derivationPath when provided', () => {
       const rawUtxo: RawUtxo = {
-        amount: '1000000' as Amount,
+        amount: '1000000' as BalanceQuantity,
         receiver: 'addr_test1',
         tx_hash: 'hash1',
         tx_index: 0,
@@ -100,7 +100,7 @@ describe('utxo utils', () => {
 
     it('should handle zero amount', () => {
       const rawUtxo: RawUtxo = {
-        amount: '0' as Amount,
+        amount: '0' as BalanceQuantity,
         receiver: 'addr_test1',
         tx_hash: 'hash1',
         tx_index: 0,
@@ -116,7 +116,7 @@ describe('utxo utils', () => {
 
     it('should throw when trying to serialize without CSL', () => {
       const rawUtxo: RawUtxo = {
-        amount: '1000000' as Amount,
+        amount: '1000000' as BalanceQuantity,
         receiver: 'addr_test1',
         tx_hash: 'hash1',
         tx_index: 0,
