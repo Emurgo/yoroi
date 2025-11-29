@@ -1,8 +1,7 @@
 import {isNonNullable} from '@yoroi/common'
 import {infoExtractName, isPrimaryToken} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
-import {Balance, Portfolio} from '@yoroi/types'
-import {WalletTransaction} from '@yoroi/types'
+import {Balance, Portfolio, WalletTransaction} from '@yoroi/types'
 
 import {useNavigation} from '@react-navigation/native'
 import {BigNumber} from 'bignumber.js'
