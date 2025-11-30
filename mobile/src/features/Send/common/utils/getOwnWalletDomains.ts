@@ -90,7 +90,7 @@ export function getOwnWalletAdaHandles(
 
       // If not found, try to extract from metadata
       if (!handleName) {
-        const metadata = (tokenInfo as any).metadatas?.mintNft
+        const metadata = tokenInfo.metadatas?.mintNft
         if (metadata) {
           handleName = extractHandleNameFromMetadata(metadata)
         }

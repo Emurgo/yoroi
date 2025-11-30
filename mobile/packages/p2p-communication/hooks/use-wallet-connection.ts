@@ -80,18 +80,18 @@ export const useWalletConnection = (
       setStatus('error')
     }
 
-    walletCommunication.on('connect', onConnect as any)
+    walletCommunication.on('connect', onConnect)
 
-    walletCommunication.on('disconnect', onDisconnect as any)
+    walletCommunication.on('disconnect', onDisconnect)
 
-    walletCommunication.on('error', onError as any)
+    walletCommunication.on('error', onError)
 
     return () => {
-      walletCommunication.off('connect', onConnect as any)
+      walletCommunication.off('connect', onConnect)
 
-      walletCommunication.off('disconnect', onDisconnect as any)
+      walletCommunication.off('disconnect', onDisconnect)
 
-      walletCommunication.off('error', onError as any)
+      walletCommunication.off('error', onError)
     }
   }, [walletCommunication, logger])
 

@@ -1,3 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/**
+ * Exception: Dynamic WASM proxy requires runtime property access.
+ * The WASM module exposes classes and methods dynamically, making it impossible
+ * to type statically. Using 'any' is necessary for proper runtime reflection.
+ */
 import {WasmModuleProxy} from '@emurgo/cross-csl-core'
 import {init} from '@emurgo/cross-csl-mobile'
 

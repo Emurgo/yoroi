@@ -15,6 +15,7 @@ import {usePrivacyMode} from '~/features/Settings/hooks/usePrivacyMode'
 import {TransactionSummary} from '~/features/Transactions/common/types'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
+import {TxHistoryRouteNavigation} from '~/kernel/navigation/types'
 import {Boundary, ResetError} from '~/ui/Boundary/Boundary'
 import {Icon} from '~/ui/Icon'
 import {styleMap} from '~/ui/Icon/Direction'
@@ -37,7 +38,7 @@ type Props = {
 
 const TxListItemComponent = ({transaction}: Props) => {
   const strings = useStrings()
-  const navigation = useNavigation<any>()
+  const navigation = useNavigation<TxHistoryRouteNavigation>()
   const {palette: p} = useTheme()
   const {wallet} = useSelectedWallet()
   const {tokenId} = useTxFilter()
@@ -111,7 +112,7 @@ const TxListItemComponent = ({transaction}: Props) => {
   // Determine display text: use operation text if available, otherwise use direction
   const displayText =
     operationText ??
-    strings.transactions.direction(transaction.direction as any)
+    strings.transactions.direction({direction: transaction.direction})
 
   // Determine icon key for styling (matches icon selection logic)
   const getIconKeyForStyle = (

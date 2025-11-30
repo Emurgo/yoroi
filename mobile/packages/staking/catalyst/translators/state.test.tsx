@@ -1,3 +1,5 @@
+import {isError} from '@yoroi/common'
+
 import {
   CatalystAction,
   CatalystActionType,
@@ -13,7 +15,8 @@ describe('State Actions', () => {
       catalystReducer(catalystDefaultState, action)
 
       fail('it should crash before')
-    } catch (e: any) {
+    } catch (e: unknown) {
+      if (!isError(e)) throw e
       expect(e.message).toEqual('CatalystReducer invalid action')
     }
   })

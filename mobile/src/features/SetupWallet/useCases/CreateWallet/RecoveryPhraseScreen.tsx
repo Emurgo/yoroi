@@ -8,6 +8,7 @@ import {Platform, Text, TouchableOpacity, View} from 'react-native'
 
 import {useBold} from '~/hooks/useBold'
 import {useStrings} from '~/kernel/i18n/useStrings'
+import {SetupWalletRouteNavigation} from '~/kernel/navigation/types'
 import {Button} from '~/ui/Button/Button'
 import {CardAboutPhrase} from '~/ui/CardAboutPhrase/CardAboutPhrase'
 import {Info as InfoIcon} from '~/ui/InfoIcon/InfoIcon'
@@ -25,7 +26,7 @@ export const RecoveryPhraseScreen = () => {
   const bold = useBold({style: a.body_1_lg_medium})
   const {openModal, closeModal} = useModal()
   const [isBlur, setIsBlur] = React.useState(true)
-  const navigation = useNavigation<any>()
+  const navigation = useNavigation<SetupWalletRouteNavigation>()
   const strings = useStrings()
   const {
     mnemonicChanged,

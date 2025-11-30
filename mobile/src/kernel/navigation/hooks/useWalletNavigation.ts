@@ -6,7 +6,7 @@ import * as React from 'react'
 
 import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
 
-import {ReviewTxRoutes, SettingsStackRoutes} from '../types'
+import {ReviewTxRoutes, SettingsStackRoutes, WalletStackRoutes} from '../types'
 
 export const useWalletNavigation = () => {
   const navigation = useNavigation()
@@ -580,7 +580,7 @@ export const useWalletNavigation = () => {
           screen: 'setup-wallet-restore-from-link',
           params: {action},
         },
-      } as any)
+      } as NavigatorScreenParams<WalletStackRoutes>)
     },
 
     // Send Navigation Functions

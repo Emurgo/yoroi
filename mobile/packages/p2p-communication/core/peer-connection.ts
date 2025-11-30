@@ -96,7 +96,7 @@ export const peerConnectionMaker = (
   const notifyListeners = <T>(event: keyof EventListener, data: T): void => {
     state.listeners[event].forEach((callback) => {
       try {
-        ;(callback as any)(data)
+        ;(callback as EventCallback<T>)(data)
       } catch (error) {
         logger.error(
           error instanceof Error ? error : new Error(String(error)),
@@ -568,7 +568,7 @@ export const peerConnectionMaker = (
       listeners: {
         ...state.listeners,
 
-        [event]: [...currentListeners, callback as any],
+        [event]: [...currentListeners, callback],
       },
     })
   }
@@ -579,7 +579,7 @@ export const peerConnectionMaker = (
       listeners: {
         ...state.listeners,
 
-        [event]: currentListeners.filter((cb) => cb !== (callback as any)),
+        [event]: currentListeners.filter((cb) => cb !== callback),
       },
     })
   }

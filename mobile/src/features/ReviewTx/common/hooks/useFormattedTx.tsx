@@ -1266,7 +1266,11 @@ const detectChaining = (
   _csl: WasmModuleProxy,
   _inputs: FormattedInputs,
   cbor: string,
-): {isChained: boolean; chainOrder?: number; validationResult?: any} | null => {
+): {
+  isChained: boolean
+  chainOrder?: number
+  validationResult?: unknown
+} | null => {
   try {
     const tx = _csl.Transaction.fromHex(cbor)
     const txBody = tx.body()

@@ -428,7 +428,7 @@ const apiManagerMaker = (
   )
 }
 
-const invalid: Api.Response<any> = freeze(
+const invalid: Api.Response<unknown> = freeze(
   {
     tag: 'left',
     error: {
@@ -440,7 +440,7 @@ const invalid: Api.Response<any> = freeze(
   true,
 )
 
-const warnAllLeft = (...responses: Array<Api.Response<any>>) => {
+const warnAllLeft = (...responses: Array<Api.Response<unknown>>) => {
   if (responses.every(isLeft)) {
     const logger = getLogger()
     logger.debug('Swap Manager all left', {

@@ -686,7 +686,17 @@ const perAddressCertificatesSelector = (
         cert.kind === CertificateKind.StakeDeregistration ||
         cert.kind === CertificateKind.StakeDelegation
       ) {
-        const {rewardAddress} = cert as any
+        // These certificate types have rewardAddress property
+        type CertWithRewardAddress = Extract<
+          typeof cert,
+          {
+            kind:
+              | CertificateKind.StakeRegistration
+              | CertificateKind.StakeDeregistration
+              | CertificateKind.StakeDelegation
+          }
+        >
+        const {rewardAddress} = cert as CertWithRewardAddress
         addTxTo(tx.id, tx.certificates, tx.submittedAt, tx.epoch, rewardAddress)
       }
     })

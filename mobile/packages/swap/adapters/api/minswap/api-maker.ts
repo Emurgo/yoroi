@@ -1,9 +1,9 @@
-import {fetchData, isLeft} from '@yoroi/common'
+import {fetchData, isLeft, isRecord} from '@yoroi/common'
 import {Api, Chain, Left, Swap} from '@yoroi/types'
 
 import {freeze} from 'immer'
 
-import {transformersMaker} from './transformers'
+import {mapProtocolToDex, transformersMaker} from './transformers'
 import {
   CancelRequest,
   CancelResponse,
@@ -293,7 +293,7 @@ export const minswapApiMaker = (
           orders: [
             {
               tx_in: `${body.order.txHash}#${body.order.outputIndex}`,
-              protocol: body.order.protocol as any,
+              protocol: mapProtocolToDex(body.order.protocol),
             },
           ],
         }
@@ -345,8 +345,9 @@ const parseMinswapError = ({tag, error}: Left<Api.ResponseError>) =>
       error: {
         ...error,
         message:
-          typeof (error.responseData as any)?.message === 'string'
-            ? (error.responseData as any).message
+          isRecord(error.responseData) &&
+          typeof error.responseData.message === 'string'
+            ? error.responseData.message
             : error.message || 'Minswap API error',
       },
     },

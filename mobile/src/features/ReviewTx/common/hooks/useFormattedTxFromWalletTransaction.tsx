@@ -218,7 +218,7 @@ export const useFormattedTxFromWalletTransaction = (
 
   const formattedFee = formatFee(wallet, {
     fee: walletTransaction.fee ?? Branded.ZERO_QUANTITY,
-  } as any)
+  } as TransactionBody)
   const formattedCertificates = formatCertificatesFromWalletTransaction(
     walletTransaction.certificates,
   )
@@ -447,7 +447,8 @@ const formatCertificatesFromWalletTransaction = (
       ) {
         // drep may be present in the cert, or may be null/undefined
         if ('drep' in cert) {
-          value.drep = (cert as any).drep
+          type CertWithDRep = typeof cert & {drep: unknown}
+          value.drep = (cert as CertWithDRep).drep
         }
         // If drep is not present, value.drep will remain undefined
         // Operations will handle this by showing generic VoteDelegation
@@ -455,7 +456,8 @@ const formatCertificatesFromWalletTransaction = (
 
       // Handle StakeRegistrationAndDelegation - extract poolKeyHash if available
       if (kind === 'StakeRegistrationAndDelegation' && 'poolKeyHash' in cert) {
-        value.pool_keyhash = (cert as any).poolKeyHash
+        type CertWithPoolKeyHash = typeof cert & {poolKeyHash: string}
+        value.pool_keyhash = (cert as CertWithPoolKeyHash).poolKeyHash
       }
 
       // For other certificate types, we just include the type

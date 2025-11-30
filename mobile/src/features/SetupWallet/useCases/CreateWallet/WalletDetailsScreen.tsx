@@ -30,6 +30,7 @@ import {debugWalletInfo, features} from '~/kernel/features'
 import {errorMessages} from '~/kernel/i18n/messages/global'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
+import {SetupWalletRouteNavigation} from '~/kernel/navigation/types'
 import {Button} from '~/ui/Button/Button'
 import {CardAboutPhrase} from '~/ui/CardAboutPhrase/CardAboutPhrase'
 import {Icon} from '~/ui/Icon'
@@ -74,7 +75,7 @@ const useSizeModal = () => {
 // when restoring, later will be part of the onboarding
 const addressMode: Wallet.AddressMode = 'single'
 export const WalletDetailsScreen = () => {
-  const navigation = useNavigation<any>()
+  const navigation = useNavigation<SetupWalletRouteNavigation>()
   const strings = useStrings()
   const {atoms: ta} = useTheme()
   const bold = useBold({style: a.body_1_lg_medium})

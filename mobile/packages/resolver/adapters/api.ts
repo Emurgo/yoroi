@@ -97,8 +97,12 @@ const safelyExecuteOperation = async (
   try {
     const address = await operationFn(resolve, fetcherConfig)
     return {error: null, address, nameServer}
-  } catch (error: any) {
-    return {error, address: null, nameServer}
+  } catch (error: unknown) {
+    return {
+      error: error instanceof Error ? error : new Error(String(error)),
+      address: null,
+      nameServer,
+    }
   }
 }
 

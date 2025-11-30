@@ -191,7 +191,7 @@ async function discoverUsedAddressesByStakingCredential({
   }
 
   // Fetch all transactions (may need pagination in production)
-  const allTransactions: any[] = []
+  const allTransactions: WalletTransaction[] = []
   let isLast = false
   let after: {block: BlockHash; tx: TransactionHash} | undefined
 
@@ -247,10 +247,10 @@ async function discoverUsedAddressesByStakingCredential({
   // Step 4: Extract all unique addresses from transactions
   const allAddresses = new Set<string>()
   for (const tx of allTransactions) {
-    tx.inputs?.forEach((input: any) => {
+    tx.inputs?.forEach((input) => {
       if (input.address) allAddresses.add(input.address)
     })
-    tx.outputs?.forEach((output: any) => {
+    tx.outputs?.forEach((output) => {
       if (output.address) allAddresses.add(output.address)
     })
   }

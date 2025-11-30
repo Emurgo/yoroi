@@ -11,9 +11,12 @@ export const parseString = (data: unknown) => {
   return isString(parsed) ? parsed : undefined
 }
 
-export const parseSafe = (text: any) => {
+export const parseSafe = (text: unknown) => {
   try {
-    return JSON.parse(text) as unknown
+    if (typeof text === 'string') {
+      return JSON.parse(text) as unknown
+    }
+    return undefined
   } catch (_) {
     return undefined
   }
@@ -87,4 +90,30 @@ export const isStringLiteral = <T extends string>(
   value: unknown,
 ) => {
   return literals.includes(value as T)
+}
+
+// -----------
+// ERROR TYPE GUARDS
+export const isError = (error: unknown): error is Error => {
+  return (
+    error instanceof Error ||
+    (isRecord(error) &&
+      typeof error.message === 'string' &&
+      typeof error.name === 'string')
+  )
+}
+
+export const hasResponse = (
+  error: unknown,
+): error is {response: {data?: unknown; status?: number}} => {
+  return (
+    isRecord(error) &&
+    'response' in error &&
+    isRecord(error.response) &&
+    ('data' in error.response || 'status' in error.response)
+  }
+}
+
+export const hasRequest = (error: unknown): error is {request: unknown} => {
+  return isRecord(error) && 'request' in error
 }

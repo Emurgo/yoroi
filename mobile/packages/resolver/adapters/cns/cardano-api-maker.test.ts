@@ -1,4 +1,5 @@
 import {CardanoApi} from '@yoroi/api'
+import {isError} from '@yoroi/common'
 import {FetchData} from '@yoroi/common'
 import {Left, Resolver} from '@yoroi/types'
 
@@ -50,7 +51,8 @@ describe('getAssetAddress', () => {
       await getAssetAddress(policyId, assetName)
 
       fail('it should crash before')
-    } catch (e: any) {
+    } catch (e: unknown) {
+      if (!isError(e)) throw e
       expect(e.message).toBe(error.message)
     }
   })
@@ -73,7 +75,7 @@ describe('getAssetAddress', () => {
       await getAssetAddress(policyId, assetName)
 
       fail('it should crash before')
-    } catch (e: any) {
+    } catch (e: unknown) {
       expect(e).toBeInstanceOf(Resolver.Errors.NotFound)
     }
   })
@@ -131,7 +133,7 @@ describe('getMetadata', () => {
     try {
       await getMetadata(policyId, assetName)
       fail('it should crash before')
-    } catch (e: any) {
+    } catch (e: unknown) {
       expect(e).toBeInstanceOf(Resolver.Errors.NotFound)
     }
   })
@@ -196,7 +198,8 @@ describe('getAssetInlineDatum', () => {
       await getAssetInlineDatum(policyId, assetName, addresses)
 
       fail('it should crash before')
-    } catch (e: any) {
+    } catch (e: unknown) {
+      if (!isError(e)) throw e
       expect(e.message).toBe(error.message)
     }
   })
@@ -223,7 +226,7 @@ describe('getAssetInlineDatum', () => {
       await getAssetInlineDatum(policyId, assetName, addresses)
 
       fail('it should crash before')
-    } catch (e: any) {
+    } catch (e: unknown) {
       expect(e).toBeInstanceOf(Resolver.Errors.NotFound)
     }
   })

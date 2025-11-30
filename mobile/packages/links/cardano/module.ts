@@ -58,7 +58,7 @@ export const linksCardanoModuleMaker =
 
       const addSearchParams = (
         urlToAdd: URL,
-        paramsToAdd: Record<string, any>,
+        paramsToAdd: Record<string, unknown>,
       ) => {
         Object.entries(paramsToAdd).forEach(([key, value]) => {
           // TODO: add support for records
@@ -156,7 +156,7 @@ export const linksCardanoModuleMaker =
       if (!isCardano) return undefined
 
       let config: LinksCardanoUriConfig | undefined
-      const params: Record<string, any> = {}
+      const params: Record<string, unknown> = {}
 
       // Extract query params
       url.searchParams.forEach((value, key) => {

@@ -87,8 +87,9 @@ export const mountAsyncStorage = ({
           keys.filter((key) => key.startsWith(path) && isFileKey({key, path})),
         )
         .then(
-          // temporary any until async interface is migrated to receive keys for multi storage
-          (filteredKeys) => filteredKeys.map(withoutPath) as ReadonlyArray<any>,
+          // temporary unknown until async interface is migrated to receive keys for multi storage
+          (filteredKeys) =>
+            filteredKeys.map(withoutPath) as ReadonlyArray<unknown>,
         )
     },
     clear: async () => {

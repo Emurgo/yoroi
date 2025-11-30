@@ -25,6 +25,7 @@ import {errorMessages} from '~/kernel/i18n/messages/global'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 import {useUnsafeParams} from '~/kernel/navigation/hooks/useUnsafeParams'
+import {SetupWalletRouteNavigation} from '~/kernel/navigation/types'
 import {Button} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
@@ -69,7 +70,7 @@ const generateUniqueWalletName = (
 }
 
 export const RestoreWalletFromLinkScreen = () => {
-  const navigation = useNavigation<any>()
+  const navigation = useNavigation<SetupWalletRouteNavigation>()
   const strings = useStrings()
   const {atoms: ta} = useTheme()
   const {openModal, closeModal} = useModal()

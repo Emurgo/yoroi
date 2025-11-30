@@ -3,7 +3,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Alert, ScrollView, Text, TouchableOpacity, View} from 'react-native'
 
-import {useBluetooth} from '~/hooks/useBluetooth'
+import {BluetoothDevice, useBluetooth} from '~/hooks/useBluetooth'
 import {logger} from '~/kernel/logger/logger'
 import {Button, ButtonType} from '~/ui/Button/Button'
 
@@ -260,7 +260,7 @@ export const BluetoothDeviceManager: React.FC<BluetoothDeviceManagerProps> = ({
 }
 
 interface DeviceCardProps {
-  device: any
+  device: BluetoothDevice
   index: number
   onConnect: (deviceId: string) => void
   isConnected: boolean

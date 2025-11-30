@@ -1,4 +1,10 @@
-import {fetchData, isLeft, isNonNullable, isRight} from '@yoroi/common'
+import {
+  fetchData,
+  isLeft,
+  isNonNullable,
+  isRecord,
+  isRight,
+} from '@yoroi/common'
 import {Api, Chain, Left, Swap} from '@yoroi/types'
 
 import {freeze} from 'immer'
@@ -205,7 +211,7 @@ export const dexhunterApiMaker = (
             value: {
               status: response.value.status,
               data: transformers[kind].response(
-                response.value.data as any,
+                response.value.data as unknown,
                 isPrimaryToken(body.tokenIn),
               ),
             },
@@ -233,7 +239,7 @@ export const dexhunterApiMaker = (
             value: {
               status: response.value.status,
               data: transformers[kind].response(
-                response.value.data as any,
+                response.value.data as unknown,
                 isPrimaryToken(body.tokenIn),
               ),
             },
@@ -275,7 +281,9 @@ const parseDhError = ({tag, error}: Left<Api.ResponseError>) =>
       error: {
         ...error,
         message: JSON.stringify(
-          (error.responseData as any) ?? 'Dexhunter API error',
+          (isRecord(error.responseData)
+            ? JSON.stringify(error.responseData)
+            : String(error.responseData)) ?? 'Dexhunter API error',
           null,
           2,
         )

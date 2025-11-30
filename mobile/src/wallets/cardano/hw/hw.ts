@@ -1,13 +1,15 @@
 import {cardanoConfig, derivationConfig} from '@yoroi/blockchains'
-import {HW, Wallet} from '@yoroi/types'
+import {isRecord} from '@yoroi/common'
 import {
   AdaAppClosedError,
   DeprecatedAdaAppError,
   GeneralConnectionError,
+  HW,
   LedgerUserError,
+  LocalizableError,
   RejectedByUserError,
+  Wallet,
 } from '@yoroi/types'
-import {LocalizableError} from '@yoroi/types'
 
 import type {
   GetExtendedPublicKeyRequest,
@@ -44,13 +46,23 @@ type LedgerConnectionResponse = {
   serialHex: string
 }
 
-const isConnectionError = (e: Error | any): boolean => {
+const isConnectionError = (e: unknown): e is Error => {
+  if (
+    !(
+      e instanceof Error ||
+      (isRecord(e) &&
+        typeof e.message === 'string' &&
+        typeof e.name === 'string')
+    )
+  )
+    return false
+  const error = e as {message: string; name: string}
   if (
     e instanceof BleError ||
-    e.message.includes('was disconnected') ||
-    e.message.includes('DisconnectedDevice') ||
-    e.name.includes('DisconnectedDevice') ||
-    e.message.includes('not found')
+    error.message.includes('was disconnected') ||
+    error.message.includes('DisconnectedDevice') ||
+    error.name.includes('DisconnectedDevice') ||
+    error.message.includes('not found')
   ) {
     return true
   }
@@ -60,9 +72,9 @@ const isConnectionError = (e: Error | any): boolean => {
 
 // note: e.statusCode === DeviceErrorCodes.ERR_CLA_NOT_SUPPORTED is more probably due
 // to user not having ADA app opened instead of having the wrong app opened
-const isUserError = (e: Error | any): boolean => {
+const isUserError = (e: unknown): boolean => {
   if (
-    e &&
+    isRecord(e) &&
     e.code != null &&
     e.code === DeviceStatusCodes.ERR_CLA_NOT_SUPPORTED
   ) {
@@ -72,9 +84,9 @@ const isUserError = (e: Error | any): boolean => {
   return false
 }
 
-const isRejectedError = (e: Error | any): boolean => {
+const isRejectedError = (e: unknown): boolean => {
   if (
-    e &&
+    isRecord(e) &&
     e.code != null &&
     e.code === DeviceStatusCodes.ERR_REJECTED_BY_USER
   ) {
@@ -84,11 +96,11 @@ const isRejectedError = (e: Error | any): boolean => {
   return false
 }
 
-const isAdaAppClosedError = (e: Error | unknown): boolean => {
+const isAdaAppClosedError = (e: unknown): boolean => {
   return e instanceof Error && e.message.includes('0x6e01')
 }
 
-const mapLedgerError = (e: Error | any): Error | LocalizableError => {
+const mapLedgerError = (e: unknown): Error | LocalizableError => {
   if (isAdaAppClosedError(e)) {
     return new AdaAppClosedError()
   } else if (isUserError(e)) {

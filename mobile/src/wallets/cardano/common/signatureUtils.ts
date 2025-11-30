@@ -132,15 +132,21 @@ const getRequiredSigners = async (
       const collateralOpt = txBody.collateral()
       if (!collateralOpt) return null
       // Check if it's Optional (has hasValue method)
-      if (typeof (collateralOpt as any).hasValue === 'function') {
-        const opt = collateralOpt as any
+      // WASM types don't have proper TypeScript definitions for Optional types
+      type OptionalLike = {hasValue: () => boolean; value: () => unknown}
+      type TransactionInputsLike = ReturnType<typeof txBody.inputs>
+      if (
+        typeof (collateralOpt as unknown as OptionalLike).hasValue ===
+        'function'
+      ) {
+        const opt = collateralOpt as unknown as OptionalLike
         if (!opt.hasValue()) return null
         // When Optional has a value, the Optional itself IS the TransactionInputs
         // No need to call .value() - use it directly
-        return opt
+        return opt as unknown as TransactionInputsLike
       }
       // If it's already TransactionInputs, return it directly
-      return collateralOpt as any
+      return collateralOpt as TransactionInputsLike
     },
   }
 

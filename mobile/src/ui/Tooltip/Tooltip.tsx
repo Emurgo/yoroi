@@ -146,8 +146,12 @@ export const Tooltip = ({
     if (touched.current) {
       return null
     } else {
-      if ((children as any).props?.disabled) return null
-      return (children as any).props?.onPress?.()
+      const child = children as React.ReactElement<{
+        disabled?: boolean
+        onPress?: () => void
+      }>
+      if (child.props?.disabled) return null
+      return child.props?.onPress?.()
     }
   }, [children, mode, visible])
 

@@ -15,7 +15,10 @@ const addrContainsAccountKey = async (
 ) => {
   return CardanoMobileWrapped.cslScope((csl) => {
     // Create address within this cslScope to avoid pointer issues
-    let wasmAddr: any
+    type CslAddress = ReturnType<
+      ReturnType<typeof csl.ByronAddress.fromBase58>['toAddress']
+    >
+    let wasmAddr: CslAddress
     if (csl.ByronAddress.isValid(address)) {
       const byronAddr = csl.ByronAddress.fromBase58(address)
       wasmAddr = byronAddr.toAddress()
@@ -81,7 +84,8 @@ export const getDelegationStatus = (
   let status: StakingStatus = {isRegistered: false}
 
   for (const certData of Object.values(sortedCerts)) {
-    const certificates = (certData as any).certificates
+    type CertData = {certificates: (typeof cert)[]}
+    const certificates = (certData as CertData).certificates
 
     for (const cert of certificates) {
       if (cert.rewardAddress !== rewardAddress) continue

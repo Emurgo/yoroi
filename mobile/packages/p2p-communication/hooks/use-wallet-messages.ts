@@ -91,10 +91,10 @@ export const useWalletMessages = (
       }
     }
 
-    walletCommunication.on('message', handleMessage as any)
+    walletCommunication.on('message', handleMessage)
 
     return () => {
-      walletCommunication.off('message', handleMessage as any)
+      walletCommunication.off('message', handleMessage)
     }
   }, [walletCommunication, addMessage])
 

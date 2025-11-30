@@ -26,7 +26,7 @@ export const FavoriteContactItem = ({
     onSelect(favorite.domain)
   }
 
-  const handleRemove = (e: any) => {
+  const handleRemove = (e: React.MouseEvent | React.TouchEvent) => {
     e.stopPropagation()
     if (onRemove) {
       onRemove(favorite.domain)
@@ -35,7 +35,9 @@ export const FavoriteContactItem = ({
 
   // Wrap ADA Handle icon to preserve green color
   const iconComponent = isAdaHandle
-    ? (iconProps: any) => <Icon.AdaHandle {...iconProps} color="#0cd15b" />
+    ? (iconProps: {size?: number; color?: string}) => (
+        <Icon.AdaHandle {...iconProps} color="#0cd15b" />
+      )
     : Icon.Globe
 
   return (

@@ -115,7 +115,7 @@ const offlineUrl = 'https://localhost/error'
 let failedRequestToUrl = new Set<string>()
 
 // Wrapper for fetchData that updates connection state
-export const request: FetchData = async <T, D = any>(
+export const request: FetchData = async <T, D = unknown>(
   config: RequestConfig<D>,
   fetcherConfig?: AxiosRequestConfig<D>,
 ) => {

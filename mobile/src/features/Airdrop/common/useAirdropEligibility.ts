@@ -1,4 +1,5 @@
 import {time} from '@yoroi/common'
+import {isError} from '@yoroi/common'
 
 import {useQuery} from '@tanstack/react-query'
 
@@ -96,13 +97,13 @@ export const useAirdropEligibility = () => {
             redeemedSoFar,
             totalLeftToRedeem,
           })
-        } catch (error: any) {
+        } catch (error: unknown) {
           // Skip addresses without allocations (404) or network errors
-          if (error.message !== 'ADDRESS_NOT_FOUND') {
+          if (isError(error) && error.message !== 'ADDRESS_NOT_FOUND') {
             // Only log non-network errors (network errors are expected when offline)
             const isNetworkError =
-              error.message?.includes('Network') ||
-              error.message?.includes('no response')
+              error.message.includes('Network') ||
+              error.message.includes('no response')
             if (!isNetworkError) {
               logger.error('Failed to check address eligibility', {
                 address,

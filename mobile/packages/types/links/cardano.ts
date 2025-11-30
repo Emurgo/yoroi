@@ -33,7 +33,7 @@ export interface LinksWebCardanoUriConfig extends LinksUriConfig {
   readonly version: 'v1' | ''
 }
 
-export type LinksParams = Readonly<Record<string, any>>
+export type LinksParams = Readonly<Record<string, unknown>>
 
 export type LinksLink<T extends LinksUriConfig> = Readonly<{
   config: T

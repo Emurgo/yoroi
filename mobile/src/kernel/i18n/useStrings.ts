@@ -1369,13 +1369,16 @@ export const useStrings = () => {
         reviewActions: f(stakingMessages.reviewActions),
         actionYouHaveSelectedTxPending: (
           action: string,
-          formattingOptions: any,
+          formattingOptions: Record<string, unknown>,
         ) =>
           f(stakingMessages.actionYouHaveSelectedTxPending, {
             ...formattingOptions,
             action,
           }),
-        actionYouHaveSelected: (action: string, formattingOptions: any) =>
+        actionYouHaveSelected: (
+          action: string,
+          formattingOptions: Record<string, unknown>,
+        ) =>
           f(stakingMessages.actionYouHaveSelected, {
             ...formattingOptions,
             action,
@@ -1796,7 +1799,8 @@ export const useStrings = () => {
         receiveLabel: f(actionMessages.receive),
         buyLabel: f(actionMessages.buy),
         buyTitle: f(actionMessages.buyTitle),
-        buyInfo: (options: any) => f(actionMessages.buyInfo, options),
+        buyInfo: (options: Record<string, unknown>) =>
+          f(actionMessages.buyInfo, options),
         proceed: f(actionMessages.proceed),
         swapLabel: f(actionMessages.swap),
         messageBuy: f(actionMessages.soon),
@@ -1810,14 +1814,16 @@ export const useStrings = () => {
           globalMessages.syncErrorBannerTextWithoutRefresh,
         ),
         noTransactions: f(transactionsMessages.noTransactions),
-        direction: (direction: any) => {
+        direction: (direction: {
+          direction: 'SENT' | 'RECEIVED' | 'SELF' | 'MULTI'
+        }) => {
           const directionMap = {
             SENT: transactionsMessages.directionMessagesSENT,
             RECEIVED: transactionsMessages.directionMessagesRECEIVED,
             SELF: transactionsMessages.directionMessagesSELF,
             MULTI: transactionsMessages.directionMessagesMULTI,
           }
-          return f(directionMap[direction as keyof typeof directionMap])
+          return f(directionMap[direction.direction])
         },
         operation: {
           stakeRegistration: f(transactionsMessages.operationStakeRegistration),
@@ -2111,7 +2117,7 @@ export const useStrings = () => {
           setupWalletMessages.walletChecksumModalCardTitle,
         ),
         stepWalletDetails: f(setupWalletMessages.stepWalletDetails),
-        walletDetailsTitle: (bold: any) =>
+        walletDetailsTitle: (bold: {b: React.ReactNode}) =>
           f(setupWalletMessages.walletDetailsTitle, {b: bold.b}),
         walletDetailsPasswordHelper: f(
           setupWalletMessages.walletDetailsPasswordHelper,
@@ -2137,8 +2143,9 @@ export const useStrings = () => {
         hwModalUsbButton: f(setupWalletMessages.hwModalUsbButton),
         hwModalBtButton: f(setupWalletMessages.hwModalBtButton),
         hwModalIosWarning: f(setupWalletMessages.hwModalIosWarning),
-        hwWalletDetailsTitle: (bold: any) =>
-          f(setupWalletMessages.hwWalletDetailsTitle, {b: bold.b}),
+        hwWalletDetailsTitle: (bold: {
+          b: (text: React.ReactNode) => React.ReactNode
+        }) => f(setupWalletMessages.hwWalletDetailsTitle, {b: bold.b}),
         hwExportKey: f(setupWalletMessages.hwExportKey),
         bluetoothError: f(setupWalletMessages.bluetoothError),
         hwIntroTitle: f(setupWalletMessages.hwIntroTitle),
@@ -2163,25 +2170,37 @@ export const useStrings = () => {
         importReadOnlyWalletDescription: f(
           setupWalletMessages.importReadOnlyWalletDescription,
         ),
-        aboutRecoveryPhraseTitle: (bold: any) =>
-          f(setupWalletMessages.aboutRecoveryPhraseTitle, {b: bold.b}),
-        aboutRecoveryPhraseCardFirstItem: (bold: any) =>
+        aboutRecoveryPhraseTitle: (bold: {
+          b: (text: React.ReactNode) => React.ReactNode
+        }) => f(setupWalletMessages.aboutRecoveryPhraseTitle, {b: bold.b}),
+        aboutRecoveryPhraseCardFirstItem: (bold: {
+          b: (text: React.ReactNode) => React.ReactNode
+        }) =>
           f(setupWalletMessages.aboutRecoveryPhraseCardFirstItem, {b: bold.b}),
-        aboutRecoveryPhraseCardSecondItem: (bold: any) =>
+        aboutRecoveryPhraseCardSecondItem: (bold: {
+          b: (text: React.ReactNode) => React.ReactNode
+        }) =>
           f(setupWalletMessages.aboutRecoveryPhraseCardSecondItem, {b: bold.b}),
-        aboutRecoveryPhraseCardThirdItem: (bold: any) =>
+        aboutRecoveryPhraseCardThirdItem: (bold: {
+          b: (text: React.ReactNode) => React.ReactNode
+        }) =>
           f(setupWalletMessages.aboutRecoveryPhraseCardThirdItem, {b: bold.b}),
-        aboutRecoveryPhraseCardFourthItem: (bold: any) =>
+        aboutRecoveryPhraseCardFourthItem: (bold: {
+          b: (text: React.ReactNode) => React.ReactNode
+        }) =>
           f(setupWalletMessages.aboutRecoveryPhraseCardFourthItem, {b: bold.b}),
-        aboutRecoveryPhraseCardFifthItem: (bold: any) =>
+        aboutRecoveryPhraseCardFifthItem: (bold: {
+          b: (text: React.ReactNode) => React.ReactNode
+        }) =>
           f(setupWalletMessages.aboutRecoveryPhraseCardFifthItem, {b: bold.b}),
         stepAboutRecoveryPhrase: f(setupWalletMessages.stepAboutRecoveryPhrase),
         next: f(setupWalletMessages.next),
         restoreDuplicatedWalletModalTitle: f(
           setupWalletMessages.restoreDuplicatedWalletModalTitle,
         ),
-        restoreWalletScreenTitle: (bold: any) =>
-          f(setupWalletMessages.restoreWalletScreenTitle, {b: bold.b}),
+        restoreWalletScreenTitle: (bold: {
+          b: (text: React.ReactNode) => React.ReactNode
+        }) => f(setupWalletMessages.restoreWalletScreenTitle, {b: bold.b}),
         wordNotFound: f(setupWalletMessages.wordNotFound),
         learnMore: f(setupWalletMessages.learnMore),
         logoTitle: f(setupWalletMessages.logoTitle),
@@ -2207,16 +2226,18 @@ export const useStrings = () => {
           setupWalletMessages.recoveryPhraseCardFifthItem,
         ),
         stepRecoveryPhrase: f(setupWalletMessages.stepRecoveryPhrase),
-        recoveryPhraseTitle: (bold: any) =>
-          f(setupWalletMessages.recoveryPhraseTitle, {b: bold.b}),
+        recoveryPhraseTitle: (bold: {
+          b: (text: React.ReactNode) => React.ReactNode
+        }) => f(setupWalletMessages.recoveryPhraseTitle, {b: bold.b}),
         hideRecoveryPhraseButton: f(
           setupWalletMessages.hideRecoveryPhraseButton,
         ),
         showRecoveryPhraseButton: f(
           setupWalletMessages.showRecoveryPhraseButton,
         ),
-        verifyRecoveryPhraseTitle: (bold: any) =>
-          f(setupWalletMessages.verifyRecoveryPhraseTitle, {b: bold.b}),
+        verifyRecoveryPhraseTitle: (bold: {
+          b: (text: React.ReactNode) => React.ReactNode
+        }) => f(setupWalletMessages.verifyRecoveryPhraseTitle, {b: bold.b}),
         stepVerifyRecoveryPhrase: f(
           setupWalletMessages.stepVerifyRecoveryPhrase,
         ),

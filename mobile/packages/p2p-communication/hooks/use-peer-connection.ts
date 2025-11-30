@@ -104,26 +104,26 @@ export const usePeerConnection = (
       setIsReady(false)
     }
 
-    peerConnection.on('open', onOpen as any)
+    peerConnection.on('open', onOpen)
 
-    peerConnection.on('error', onError as any)
+    peerConnection.on('error', onError)
 
-    peerConnection.on('disconnected', onDisconnected as any)
+    peerConnection.on('disconnected', onDisconnected)
 
-    peerConnection.on('close', onClose as any)
+    peerConnection.on('close', onClose)
 
     return () => {
       logger.debug('Cleaning up peer connection event listeners', {
         origin: 'p2p-communication',
       })
 
-      peerConnection.off('open', onOpen as any)
+      peerConnection.off('open', onOpen)
 
-      peerConnection.off('error', onError as any)
+      peerConnection.off('error', onError)
 
-      peerConnection.off('disconnected', onDisconnected as any)
+      peerConnection.off('disconnected', onDisconnected)
 
-      peerConnection.off('close', onClose as any)
+      peerConnection.off('close', onClose)
 
       listenerSetupRef.current = false
     }

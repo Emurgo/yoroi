@@ -182,7 +182,7 @@ export namespace Catalyst {
     proposers_rewards: number
     fund_id: number
     challenge_url: string
-    highlights: any
+    highlights: unknown
   }
 
   export type CatalystApiFundNext = {

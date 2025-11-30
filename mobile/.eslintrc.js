@@ -51,5 +51,32 @@ module.exports = {
         '@typescript-eslint/no-var-requires': 'off',
       },
     },
+    {
+      files: ['**/*.d.ts'],
+      rules: {
+        // Type definition files often need 'any' for third-party library compatibility
+        '@typescript-eslint/no-explicit-any': 'off',
+      },
+    },
+    {
+      files: [
+        '**/*.test.ts',
+        '**/*.test.tsx',
+        '**/*.spec.ts',
+        '**/*.spec.tsx',
+        '**/*.mock.ts',
+        '**/*.mock.tsx',
+        '**/mocks.ts',
+        '**/mocks.tsx',
+        '**/mocks/**/*.ts',
+        '**/mocks/**/*.tsx',
+        '**/__mocks__/**/*.ts',
+        '**/__mocks__/**/*.tsx',
+      ],
+      rules: {
+        // Test and mock files can use 'any' for flexibility in testing scenarios
+        '@typescript-eslint/no-explicit-any': 'off',
+      },
+    },
   ],
 }

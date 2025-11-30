@@ -1,3 +1,4 @@
+import {isError} from '@yoroi/common'
 import {Exchange} from '@yoroi/types'
 
 import {z} from 'zod'
@@ -25,11 +26,13 @@ describe('getValidationError', () => {
       let handledError
       try {
         throw getValidationError(error)
-      } catch (e: any) {
+      } catch (e: unknown) {
         handledError = e
 
         expect(handledError).toBeInstanceOf(Exchange.Errors.Validation)
-        expect(handledError?.message).toBe(
+        if (!isError(handledError))
+          throw new Error('Expected error to be Error instance')
+        expect(handledError.message).toBe(
           'Invalid data: name: Expected string, received number, age: Expected number, received string',
         )
       }

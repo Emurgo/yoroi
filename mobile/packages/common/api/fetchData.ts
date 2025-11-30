@@ -20,16 +20,18 @@ type GetRequestConfig = {
   headers?: Record<string, string>
 } & FetcherHandlers
 
-type OtherRequestConfig<D = any> = {
+type OtherRequestConfig<D = unknown> = {
   url: string
   method: 'post' | 'put' | 'delete'
   data?: D
   headers?: Record<string, string>
 } & FetcherHandlers
 
-export type RequestConfig<D = any> = GetRequestConfig | OtherRequestConfig<D>
+export type RequestConfig<D = unknown> =
+  | GetRequestConfig
+  | OtherRequestConfig<D>
 
-export type FetchData = <T, D = any>(
+export type FetchData = <T, D = unknown>(
   config: RequestConfig<D>,
   fetcherConfig?: AxiosRequestConfig<D>,
 ) => Promise<Api.Response<T>>
@@ -103,7 +105,7 @@ export type FetchData = <T, D = any>(
  * })
  * ```
  */
-export const fetchData: FetchData = <T, D = any>(
+export const fetchData: FetchData = <T, D = unknown>(
   config: RequestConfig<D>,
   fetcherConfig?: AxiosRequestConfig<D>,
 ): Promise<Api.Response<T>> => {
