@@ -3,6 +3,8 @@ import {z} from 'zod'
 // -------
 // PARSERS
 export const parseBoolean = (data: unknown) => {
+  // If data is already a boolean, return it directly
+  if (isBoolean(data)) return data
   const parsed = parseSafe(data)
   return isBoolean(parsed) ? parsed : undefined
 }
@@ -13,6 +15,9 @@ export const parseString = (data: unknown) => {
 
 export const parseSafe = (text: unknown) => {
   try {
+    if (text === null) {
+      return null
+    }
     if (typeof text === 'string') {
       return JSON.parse(text) as unknown
     }

@@ -329,15 +329,18 @@ const parseDhError = ({tag, error}: Left<Api.ResponseError>) =>
       tag,
       error: {
         ...error,
-        message: JSON.stringify(
-          (isRecord(error.responseData)
-            ? JSON.stringify(error.responseData)
-            : String(error.responseData)) ?? 'Dexhunter API error',
-          null,
-          2,
-        )
-          .replace(/^"/, '')
-          .replace(/"$/, ''),
+        message:
+          error.responseData == null
+            ? 'Dexhunter API error'
+            : JSON.stringify(
+                isRecord(error.responseData)
+                  ? JSON.stringify(error.responseData)
+                  : String(error.responseData),
+                null,
+                2,
+              )
+                .replace(/^"/, '')
+                .replace(/"$/, ''),
       },
     },
     true,

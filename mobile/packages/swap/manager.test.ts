@@ -1249,9 +1249,10 @@ describe('swapManagerMaker', () => {
       const result = await manager.api.cancel(dhApiMocks.inputs.cancel)
 
       // Should try minswap first, then dexhunter (steelswap not configured in tests)
+      // Muesliswap should NOT be called because dexhunter returns valid CBOR and we return early
       expect(mockMinswapApi.cancel).toHaveBeenCalled()
       expect(mockDexhunterApi.cancel).toHaveBeenCalled()
-      expect(mockMuesliswapApi.cancel).toHaveBeenCalled()
+      expect(mockMuesliswapApi.cancel).not.toHaveBeenCalled()
 
       // Should return a valid CBOR from dexhunter (second in priority after minswap)
       expect(result.tag).toBe('right')
@@ -1276,9 +1277,10 @@ describe('swapManagerMaker', () => {
       const result = await manager.api.cancel(dhApiMocks.inputs.cancel)
 
       // Should try minswap first, then dexhunter (steelswap not configured in tests)
+      // Muesliswap should NOT be called because dexhunter returns valid CBOR and we return early
       expect(mockMinswapApi.cancel).toHaveBeenCalled()
       expect(mockDexhunterApi.cancel).toHaveBeenCalled()
-      expect(mockMuesliswapApi.cancel).toHaveBeenCalled()
+      expect(mockMuesliswapApi.cancel).not.toHaveBeenCalled()
 
       // Should return a valid CBOR from dexhunter (second in priority after minswap)
       expect(result.tag).toBe('right')

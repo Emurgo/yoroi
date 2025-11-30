@@ -1,3 +1,4 @@
+import {Fetcher} from '@yoroi/common'
 import {ApiTokenRegistryEntry, Branded} from '@yoroi/types'
 
 import {AxiosRequestConfig} from 'axios'
@@ -77,10 +78,10 @@ describe('getOffChainMetadata', () => {
   const baseUrl = 'http://localhost'
 
   it('should fetch metadata for multiple tokens', async () => {
-    const mockFetcher = jest.fn<
-      Promise<ApiTokenRegistryEntry>,
-      [AxiosRequestConfig]
-    >(({url}) => {
+    const mockFetcher: Fetcher = jest.fn(({url}: AxiosRequestConfig) => {
+      if (!url) {
+        return Promise.resolve(null)
+      }
       if (url.endsWith('token1')) {
         return Promise.resolve({
           subject: 'token1',
@@ -98,7 +99,7 @@ describe('getOffChainMetadata', () => {
           not: 'a valid response',
         } as unknown as ApiTokenRegistryEntry)
       }
-    })
+    }) as Fetcher
 
     const fetchMetadata = getOffChainMetadata(baseUrl, mockFetcher)
     const result = await fetchMetadata([
@@ -129,12 +130,9 @@ describe('getOffChainMetadata', () => {
   })
 
   it('should handle for failed fetches', async () => {
-    const mockFetcher = jest.fn<
-      Promise<ApiTokenRegistryEntry>,
-      [AxiosRequestConfig]
-    >(() => {
+    const mockFetcher: Fetcher = jest.fn(() => {
       return Promise.reject(new Error('Some error'))
-    })
+    }) as Fetcher
 
     const fetchMetadata = getOffChainMetadata(baseUrl, mockFetcher)
     const result = await fetchMetadata([Branded.asTokenId('token.1')])
@@ -145,12 +143,9 @@ describe('getOffChainMetadata', () => {
   })
 
   it('should handle for wrong metadata', async () => {
-    const mockFetcher = jest.fn<
-      Promise<ApiTokenRegistryEntry>,
-      [AxiosRequestConfig]
-    >(() => {
+    const mockFetcher: Fetcher = jest.fn(() => {
       return Promise.resolve(1 as unknown as ApiTokenRegistryEntry)
-    })
+    }) as Fetcher
 
     const fetchMetadata = getOffChainMetadata(baseUrl, mockFetcher)
     const result = await fetchMetadata([Branded.asTokenId('token.1')])
@@ -166,11 +161,8 @@ describe('getOffChainMetadata', () => {
   })
 
   it('should handle a mix of successful and failed fetches', async () => {
-    const mockFetcher = jest.fn<
-      Promise<ApiTokenRegistryEntry>,
-      [AxiosRequestConfig]
-    >(({url}) => {
-      if (url.endsWith('token1')) {
+    const mockFetcher: Fetcher = jest.fn(({url}: AxiosRequestConfig) => {
+      if (!url || url.endsWith('token1')) {
         return Promise.resolve({
           subject: 'token1',
           name: {signatures: [], sequenceNumber: 1, value: 'Token1'},
@@ -178,7 +170,7 @@ describe('getOffChainMetadata', () => {
       } else {
         return Promise.reject(new Error('Some error'))
       }
-    })
+    }) as Fetcher
 
     const fetchMetadata = getOffChainMetadata(baseUrl, mockFetcher)
     const result = await fetchMetadata([

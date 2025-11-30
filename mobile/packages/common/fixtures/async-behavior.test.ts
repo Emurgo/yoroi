@@ -120,13 +120,13 @@ describe('asyncBehavior', () => {
     it('should call empty with representation', async () => {
       const behavior = asyncBehavior.maker({
         data: 'test',
-        emptyRepresentation: [] as string[],
+        emptyRepresentation: 'test',
       })
 
       const result = await (
-        behavior.empty as unknown as () => Promise<string[]>
+        behavior.empty as unknown as () => Promise<string>
       )()
-      expect(result).toEqual([])
+      expect(result).toEqual('test')
     })
 
     it('should call delayed with custom timeout', async () => {

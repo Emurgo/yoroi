@@ -80,10 +80,18 @@ export const preapareParams = ({
       )
     }
     const value = paramEntries.get(requiredParam)
-    if (value !== undefined && typeof value === 'string') {
+    if (value !== undefined) {
+      // Check if param must be a string and value is not a string
+      if (mustBeString(requiredParam) && typeof value !== 'string') {
+        throw new Links.Errors.ParamsValidationFailed(
+          `The param ${requiredParam} on ${config.scheme} ${config.authority} ${config.version} must be a string`,
+        )
+      }
+      // Convert to string for validation (validators expect strings)
+      const stringValue = typeof value === 'string' ? value : String(value)
       paramValidator({
         key: requiredParam,
-        value,
+        value: stringValue,
       })
     }
   }
@@ -91,10 +99,18 @@ export const preapareParams = ({
   for (const optionalParam of optionalParams) {
     if (paramEntries.has(optionalParam)) {
       const value = paramEntries.get(optionalParam)
-      if (value !== undefined && typeof value === 'string') {
+      if (value !== undefined) {
+        // Check if param must be a string and value is not a string
+        if (mustBeString(optionalParam) && typeof value !== 'string') {
+          throw new Links.Errors.ParamsValidationFailed(
+            `The param ${optionalParam} on ${config.scheme} ${config.authority} ${config.version} must be a string`,
+          )
+        }
+        // Convert to string for validation (validators expect strings)
+        const stringValue = typeof value === 'string' ? value : String(value)
         paramValidator({
           key: optionalParam,
-          value,
+          value: stringValue,
         })
       }
     }
@@ -135,6 +151,29 @@ export const preapareParams = ({
       {} as Writable<Links.Link<LinksCardanoUriConfig>['params']>,
     ), // safe since is a subset of params
   )
+}
+
+/**
+ * Checks if a parameter must be a string type based on its key.
+ * This is used to validate type before converting to string.
+ * Note: Some params like 'amount', 'memo', 'message' can accept other types
+ * (numbers, arrays) so they are not included here.
+ */
+const mustBeString = (key: string): boolean => {
+  const stringOnlyParams = [
+    'code',
+    'address',
+    'dappPeer',
+    'host',
+    'port',
+    'path',
+    'scheme',
+    'namespaced_domain',
+    'app_path',
+    'url',
+    'hash',
+  ]
+  return stringOnlyParams.includes(key)
 }
 
 /**
