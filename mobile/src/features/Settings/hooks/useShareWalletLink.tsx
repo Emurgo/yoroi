@@ -1,7 +1,9 @@
 import {linksCardanoModuleMaker} from '@yoroi/links'
+import {WalletLinkEncryptionAlgorithm} from '@yoroi/links'
 
 import * as React from 'react'
 
+import {encryptWalletData} from '~/features/Links/crypto/wallet-link-encryption'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {makeWalletEncryptedStorage} from '~/kernel/storage/EncryptedStorage'
 
@@ -11,14 +13,35 @@ export const useShareWalletLink = () => {
   const [isGenerating, setIsGenerating] = React.useState(false)
 
   const generateFullWalletLink = React.useCallback(
-    async (password: string): Promise<string> => {
+    async (
+      walletPassword: string,
+      encryptionPassword?: string,
+      encryptionAlgorithm: WalletLinkEncryptionAlgorithm = 'plain',
+    ): Promise<string> => {
       setIsGenerating(true)
       setError(null)
 
       try {
         const encryptedStorage = makeWalletEncryptedStorage(wallet.id)
-        const rootKeyResult = await encryptedStorage.xpriv.read(password)
+        const rootKeyResult = await encryptedStorage.xpriv.read(walletPassword)
         const rootKeyHex = rootKeyResult.value
+
+        // Encrypt rootKey if encryption is enabled
+        let encryptedRootKey = rootKeyHex
+        let encryptionParam: WalletLinkEncryptionAlgorithm = 'plain'
+
+        if (
+          encryptionAlgorithm !== 'plain' &&
+          encryptionPassword &&
+          encryptionPassword.length > 0
+        ) {
+          encryptedRootKey = encryptWalletData(
+            rootKeyHex,
+            encryptionPassword,
+            encryptionAlgorithm,
+          )
+          encryptionParam = encryptionAlgorithm
+        }
 
         const cardanoLinks = linksCardanoModuleMaker()
         const link = cardanoLinks.create({
@@ -44,8 +67,8 @@ export const useShareWalletLink = () => {
           },
           params: {
             type: 'full',
-            rootKey: rootKeyHex,
-            encryption: 'plain',
+            rootKey: encryptedRootKey,
+            encryption: encryptionParam,
             name: meta.name,
             implementation: meta.implementation,
             addressMode: meta.addressMode,
@@ -66,8 +89,11 @@ export const useShareWalletLink = () => {
     [wallet, meta],
   )
 
-  const generateReadOnlyWalletLink =
-    React.useCallback(async (): Promise<string> => {
+  const generateReadOnlyWalletLink = React.useCallback(
+    async (
+      encryptionPassword?: string,
+      encryptionAlgorithm: WalletLinkEncryptionAlgorithm = 'plain',
+    ): Promise<string> => {
       setIsGenerating(true)
       setError(null)
 
@@ -79,6 +105,23 @@ export const useShareWalletLink = () => {
 
         if (!accountPubKeyHex) {
           throw new Error('Account public key not found')
+        }
+
+        // Encrypt accountPubKey if encryption is enabled
+        let encryptedAccountPubKey = accountPubKeyHex
+        let encryptionParam: WalletLinkEncryptionAlgorithm = 'plain'
+
+        if (
+          encryptionAlgorithm !== 'plain' &&
+          encryptionPassword &&
+          encryptionPassword.length > 0
+        ) {
+          encryptedAccountPubKey = encryptWalletData(
+            accountPubKeyHex,
+            encryptionPassword,
+            encryptionAlgorithm,
+          )
+          encryptionParam = encryptionAlgorithm
         }
 
         const cardanoLinks = linksCardanoModuleMaker()
@@ -105,8 +148,8 @@ export const useShareWalletLink = () => {
           },
           params: {
             type: 'readonly',
-            accountPubKey: accountPubKeyHex,
-            encryption: 'plain',
+            accountPubKey: encryptedAccountPubKey,
+            encryption: encryptionParam,
             name: meta.name,
             implementation: meta.implementation,
             addressMode: meta.addressMode,
@@ -123,7 +166,9 @@ export const useShareWalletLink = () => {
       } finally {
         setIsGenerating(false)
       }
-    }, [wallet, meta])
+    },
+    [wallet, meta],
+  )
 
   return {
     generateFullWalletLink,

@@ -7,34 +7,54 @@ import {ActivityIndicator, TextInput as RNTextInput, View} from 'react-native'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
+import {Checkbox} from '~/ui/Checkbox/Checkbox'
 import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
 import {Checkmark, TextInput} from '~/ui/TextInput/TextInput'
 
 type Props = {
-  onSuccess: (password: string) => void
+  onSuccess: (
+    walletPassword: string,
+    encryptionPassword?: string,
+    encryptionAlgorithm?: 'chacha20poly1305',
+  ) => void
   onError?: (error: unknown) => void
+  requireWalletPassword?: boolean // If false, skip wallet password (for readonly wallets)
 }
 
-export const ShareWalletPasswordModal = ({onSuccess, onError}: Props) => {
+export const ShareWalletPasswordModal = ({
+  onSuccess,
+  onError,
+  requireWalletPassword = true,
+}: Props) => {
   const passwordRef = React.useRef<RNTextInput>(null)
+  const encryptionPasswordRef = React.useRef<RNTextInput>(null)
   const {wallet} = useSelectedWallet()
   const {isDark, palette: p} = useTheme()
   const strings = useStrings()
 
   const [password, setPassword] = React.useState('')
+  const [encryptionPassword, setEncryptionPassword] = React.useState('')
+  const [useEncryption, setUseEncryption] = React.useState(false)
   const [error, setError] = React.useState<string | null>(null)
   const [isValidating, setIsValidating] = React.useState(false)
   const isPasswordCorrect = useIsPasswordCorrect(password)
 
   const handleSubmit = React.useCallback(async () => {
-    if (!password) {
-      setError('Password is required')
-      return
+    if (requireWalletPassword) {
+      if (!password) {
+        setError('Password is required')
+        return
+      }
+
+      if (!isPasswordCorrect) {
+        setError(strings.settings.shareWallet.wrongPassword)
+        return
+      }
     }
 
-    if (!isPasswordCorrect) {
-      setError(strings.settings.shareWallet.wrongPassword)
+    if (useEncryption && !encryptionPassword) {
+      setError('Encryption password is required')
       return
     }
 
@@ -42,9 +62,16 @@ export const ShareWalletPasswordModal = ({onSuccess, onError}: Props) => {
     setError(null)
 
     try {
-      // Verify password by attempting to read the root key
-      await wallet.encryptedStorage.xpriv.read(password)
-      onSuccess(password)
+      // Verify wallet password if required
+      if (requireWalletPassword) {
+        await wallet.encryptedStorage.xpriv.read(password)
+      }
+
+      onSuccess(
+        password,
+        useEncryption ? encryptionPassword : undefined,
+        useEncryption ? 'chacha20poly1305' : undefined,
+      )
     } catch (err) {
       const errorMessage = getErrorMessage(err, {
         wrongPasswordMessage: strings.settings.shareWallet.wrongPassword,
@@ -55,24 +82,69 @@ export const ShareWalletPasswordModal = ({onSuccess, onError}: Props) => {
     } finally {
       setIsValidating(false)
     }
-  }, [password, isPasswordCorrect, wallet, onSuccess, onError, strings])
+  }, [
+    password,
+    encryptionPassword,
+    useEncryption,
+    isPasswordCorrect,
+    requireWalletPassword,
+    wallet,
+    onSuccess,
+    onError,
+    strings,
+  ])
 
   return (
     <View style={[a.flex_1, a.px_lg]}>
-      <TextInput
-        secureTextEntry
-        ref={passwordRef}
-        enablesReturnKeyAutomatically
-        placeholder={strings.settings.shareWallet.password}
-        value={password}
-        onChangeText={(text) => {
-          setPassword(text)
-          setError(null)
-        }}
-        autoComplete="off"
-        right={isPasswordCorrect ? <Checkmark /> : null}
-        onSubmitEditing={handleSubmit}
+      {requireWalletPassword && (
+        <TextInput
+          secureTextEntry
+          ref={passwordRef}
+          enablesReturnKeyAutomatically
+          placeholder={strings.settings.shareWallet.password}
+          value={password}
+          onChangeText={(text) => {
+            setPassword(text)
+            setError(null)
+          }}
+          autoComplete="off"
+          right={isPasswordCorrect ? <Checkmark /> : null}
+          onSubmitEditing={() => {
+            if (useEncryption) {
+              encryptionPasswordRef.current?.focus()
+            } else {
+              handleSubmit()
+            }
+          }}
+        />
+      )}
+
+      <Space.Height.md />
+
+      <Checkbox
+        checked={useEncryption}
+        onChange={setUseEncryption}
+        text="Encrypt link"
       />
+
+      {useEncryption && (
+        <>
+          <Space.Height.sm />
+          <TextInput
+            secureTextEntry
+            ref={encryptionPasswordRef}
+            enablesReturnKeyAutomatically
+            placeholder="Encryption password"
+            value={encryptionPassword}
+            onChangeText={(text) => {
+              setEncryptionPassword(text)
+              setError(null)
+            }}
+            autoComplete="off"
+            onSubmitEditing={handleSubmit}
+          />
+        </>
+      )}
 
       {error != null && (
         <Text
@@ -90,7 +162,11 @@ export const ShareWalletPasswordModal = ({onSuccess, onError}: Props) => {
           testID="confirmButton"
           title={strings.settings.shareWallet.confirm}
           onPress={handleSubmit}
-          disabled={password.length === 0 || isValidating}
+          disabled={
+            (requireWalletPassword && password.length === 0) ||
+            (useEncryption && encryptionPassword.length === 0) ||
+            isValidating
+          }
         />
       </View>
 

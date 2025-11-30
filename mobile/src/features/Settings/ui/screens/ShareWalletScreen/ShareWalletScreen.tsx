@@ -37,10 +37,19 @@ export const ShareWalletScreen = () => {
       title: strings.settings.shareWallet.enterPassword,
       content: (
         <ShareWalletPasswordModal
-          onSuccess={async (password) => {
+          requireWalletPassword={true}
+          onSuccess={async (
+            walletPassword,
+            encryptionPassword,
+            encryptionAlgorithm,
+          ) => {
             closeModal()
             try {
-              const link = await generateFullWalletLink(password)
+              const link = await generateFullWalletLink(
+                walletPassword,
+                encryptionPassword,
+                encryptionAlgorithm || 'plain',
+              )
               setGeneratedLink(link)
               setWalletType('full')
             } catch (error) {
@@ -49,19 +58,38 @@ export const ShareWalletScreen = () => {
           }}
         />
       ),
-      height: 400,
+      height: 500,
     })
   }, [openModal, closeModal, generateFullWalletLink, strings])
 
-  const handleShareReadOnlyWallet = React.useCallback(async () => {
-    try {
-      const link = await generateReadOnlyWalletLink()
-      setGeneratedLink(link)
-      setWalletType('readonly')
-    } catch (error) {
-      // Error is handled by the hook
-    }
-  }, [generateReadOnlyWalletLink])
+  const handleShareReadOnlyWallet = React.useCallback(() => {
+    openModal({
+      title: 'Share Read-Only Wallet',
+      content: (
+        <ShareWalletPasswordModal
+          requireWalletPassword={false}
+          onSuccess={async (
+            _walletPassword,
+            encryptionPassword,
+            encryptionAlgorithm,
+          ) => {
+            closeModal()
+            try {
+              const link = await generateReadOnlyWalletLink(
+                encryptionPassword,
+                encryptionAlgorithm || 'plain',
+              )
+              setGeneratedLink(link)
+              setWalletType('readonly')
+            } catch (error) {
+              // Error is handled by the hook
+            }
+          }}
+        />
+      ),
+      height: 500,
+    })
+  }, [openModal, closeModal, generateReadOnlyWalletLink])
 
   if (!disclaimerAccepted) {
     return (

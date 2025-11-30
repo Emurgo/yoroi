@@ -14,6 +14,7 @@ import {
   View,
 } from 'react-native'
 
+import {decryptWalletData} from '~/features/Links/crypto/wallet-link-encryption'
 import {parseWalletMeta} from '~/features/WalletManager/common/validators/wallet-meta'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useCreateWalletFromRootKey} from '~/features/WalletManager/hooks/useCreateWalletFromRootKey'
@@ -100,8 +101,21 @@ export const RestoreWalletFromLinkScreen = () => {
   })
   const [password, setPassword] = React.useState('')
   const [passwordConfirmation, setPasswordConfirmation] = React.useState('')
+  const [decryptionPassword, setDecryptionPassword] = React.useState('')
+  const [decryptionError, setDecryptionError] = React.useState<string | null>(
+    null,
+  )
   const passwordRef = React.useRef<RNTextInput>(null)
   const passwordConfirmationRef = React.useRef<RNTextInput>(null)
+  const decryptionPasswordRef = React.useRef<RNTextInput>(null)
+
+  // Check if encryption is used
+  const encryptionAlgorithm =
+    (action.encryption as
+      | 'plain'
+      | 'chacha20poly1305'
+      | 'chacha20poly1305-csl') || 'plain'
+  const needsDecryption = encryptionAlgorithm !== 'plain'
 
   const passwordErrors = validatePassword(password, passwordConfirmation)
   const passwordErrorText = passwordErrors.passwordIsWeak
@@ -285,22 +299,85 @@ export const RestoreWalletFromLinkScreen = () => {
   )
 
   const handleRestore = () => {
-    if (action.type === 'full') {
-      if (action.mnemonic) {
-        createWalletFromMnemonic({
+    try {
+      // Decrypt data if encryption is used
+      let decryptedMnemonic = action.mnemonic
+      let decryptedRootKey = action.rootKey
+      let decryptedAccountPubKey = action.accountPubKey
+
+      if (needsDecryption) {
+        if (!decryptionPassword) {
+          setDecryptionError('Decryption password is required')
+          return
+        }
+
+        try {
+          if (action.mnemonic) {
+            decryptedMnemonic = decryptWalletData(
+              action.mnemonic,
+              decryptionPassword,
+              encryptionAlgorithm,
+            )
+          }
+          if (action.rootKey) {
+            decryptedRootKey = decryptWalletData(
+              action.rootKey,
+              decryptionPassword,
+              encryptionAlgorithm,
+            )
+          }
+          if (action.accountPubKey) {
+            decryptedAccountPubKey = decryptWalletData(
+              action.accountPubKey,
+              decryptionPassword,
+              encryptionAlgorithm,
+            )
+          }
+          setDecryptionError(null)
+        } catch (error) {
+          setDecryptionError('Invalid decryption password')
+          logger.error('Decryption failed', {error})
+          return
+        }
+      }
+
+      if (action.type === 'full') {
+        if (decryptedMnemonic) {
+          createWalletFromMnemonic({
+            name,
+            mnemonicPhrase: decryptedMnemonic,
+            password,
+            implementation,
+            addressMode,
+            accountVisual,
+          })
+        } else if (decryptedRootKey) {
+          createWalletFromRootKey({
+            name,
+            rootKeyHex: decryptedRootKey,
+            password,
+            implementation,
+            addressMode,
+            accountVisual,
+          })
+        } else {
+          // This should not happen due to validation, but add safety check
+          logger.error(
+            new Error(
+              'RestoreWalletFromLinkScreen: full wallet type requires either mnemonic or rootKey',
+            ),
+          )
+          showErrorDialog(errorMessages.generalError, undefined, {
+            message: 'Invalid wallet data: missing mnemonic or root key',
+          })
+        }
+      } else if (action.type === 'readonly' && decryptedAccountPubKey != null) {
+        createReadOnlyWallet({
           name,
-          mnemonicPhrase: action.mnemonic,
-          password,
+          bip44AccountPublic: decryptedAccountPubKey,
           implementation,
-          addressMode,
-          accountVisual,
-        })
-      } else if (action.rootKey) {
-        createWalletFromRootKey({
-          name,
-          rootKeyHex: action.rootKey,
-          password,
-          implementation,
+          hwDeviceInfo: null,
+          readOnly: true,
           addressMode,
           accountVisual,
         })
@@ -308,32 +385,17 @@ export const RestoreWalletFromLinkScreen = () => {
         // This should not happen due to validation, but add safety check
         logger.error(
           new Error(
-            'RestoreWalletFromLinkScreen: full wallet type requires either mnemonic or rootKey',
+            'RestoreWalletFromLinkScreen: readonly wallet type requires accountPubKey',
           ),
         )
         showErrorDialog(errorMessages.generalError, undefined, {
-          message: 'Invalid wallet data: missing mnemonic or root key',
+          message: 'Invalid wallet data: missing account public key',
         })
       }
-    } else if (action.type === 'readonly' && action.accountPubKey != null) {
-      createReadOnlyWallet({
-        name,
-        bip44AccountPublic: action.accountPubKey,
-        implementation,
-        hwDeviceInfo: null,
-        readOnly: true,
-        addressMode,
-        accountVisual,
-      })
-    } else {
-      // This should not happen due to validation, but add safety check
-      logger.error(
-        new Error(
-          'RestoreWalletFromLinkScreen: readonly wallet type requires accountPubKey',
-        ),
-      )
+    } catch (error) {
+      logger.error('Restore failed', {error})
       showErrorDialog(errorMessages.generalError, undefined, {
-        message: 'Invalid wallet data: missing account public key',
+        message: error instanceof Error ? error.message : 'Unknown error',
       })
     }
   }
@@ -345,6 +407,8 @@ export const RestoreWalletFromLinkScreen = () => {
       (!isEmptyString(password) &&
         !passwordErrors.passwordIsWeak &&
         !passwordErrors.matchesConfirmation)) &&
+    (!needsDecryption || !isEmptyString(decryptionPassword)) &&
+    !decryptionError &&
     !showSecurityWarning
 
   // Don't show modal if we've already processed this action
@@ -370,9 +434,35 @@ export const RestoreWalletFromLinkScreen = () => {
           )}
         </View>
 
+        {needsDecryption && (
+          <>
+            <TextInput
+              enablesReturnKeyAutomatically
+              ref={decryptionPasswordRef}
+              secureTextEntry
+              label="Decryption Password"
+              value={decryptionPassword}
+              onChangeText={(text) => {
+                setDecryptionPassword(text)
+                setDecryptionError(null)
+              }}
+              errorText={decryptionError ?? undefined}
+              returnKeyType="next"
+              onSubmitEditing={() => {
+                passwordRef.current?.focus()
+              }}
+              testID="decryptionPasswordInput"
+              autoComplete="off"
+              textContentType="none"
+              showErrorOnBlur
+            />
+            <Space.Height.md />
+          </>
+        )}
+
         <TextInput
           enablesReturnKeyAutomatically
-          autoFocus
+          autoFocus={!needsDecryption}
           label={strings.setupWallet.walletDetailsNameInput}
           value={name}
           onChangeText={setName}
@@ -380,7 +470,9 @@ export const RestoreWalletFromLinkScreen = () => {
           errorDelay={0}
           returnKeyType="next"
           onSubmitEditing={() => {
-            if (action.type === 'full') {
+            if (needsDecryption && !decryptionPassword) {
+              decryptionPasswordRef.current?.focus()
+            } else if (action.type === 'full') {
               passwordRef.current?.focus()
             }
           }}

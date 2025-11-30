@@ -1,6 +1,7 @@
 export * from './cardano/module'
 export * from './cardano/types'
 export * from './cardano/constants'
+export * from './cardano/wallet-link-encryption'
 
 export * from './yoroi/module'
 export * from './yoroi/constants'

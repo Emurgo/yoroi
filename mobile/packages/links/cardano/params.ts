@@ -365,9 +365,15 @@ export const getParamValidator =
         )
       }
       case 'encryption': {
-        if (isString(value) && value.length > 0) break
+        if (
+          isString(value) &&
+          (value === 'plain' ||
+            value === 'chacha20poly1305' ||
+            value === 'chacha20poly1305-csl') // Legacy format, accepted for decryption compatibility
+        )
+          break
         throw new Links.Errors.ParamsValidationFailed(
-          `The param ${key} on ${config.scheme} ${config.authority} ${config.version} must be a non-empty string`,
+          `The param ${key} on ${config.scheme} ${config.authority} ${config.version} must be one of: 'plain' or 'chacha20poly1305'`,
         )
       }
       case 'name': {
