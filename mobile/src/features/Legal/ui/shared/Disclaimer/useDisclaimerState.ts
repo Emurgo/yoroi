@@ -17,7 +17,9 @@ export const useDisclaimerState = (name: Disclaimer, key = 'accepted') => {
   const queryKey = legalQueryKeys.disclaimer(name)
 
   const mutation = useMutationWithInvalidations({
-    mutationFn: (value: boolean) => walletStorage.setItem(key, value),
+    mutationFn: async (value: boolean) => {
+      await walletStorage.setItem(key, value)
+    },
     invalidateQueries: [queryKey],
   })
 

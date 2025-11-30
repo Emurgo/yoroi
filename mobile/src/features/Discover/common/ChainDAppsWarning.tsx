@@ -73,8 +73,9 @@ const useAcceptedDAppsWarning = () => {
   const walletStorage = storage.join(`wallet/${wallet.id}/dAppsWarning/`)
   const queryKey = [wallet.id, 'dAppsWarning']
   const mutation = useMutationWithInvalidations({
-    mutationFn: (accepted: boolean) =>
-      walletStorage.setItem('accepted', accepted),
+    mutationFn: async (accepted: boolean) => {
+      await walletStorage.setItem('accepted', accepted)
+    },
     invalidateQueries: [queryKey],
   })
   return {...mutation, accept: mutation.mutate}

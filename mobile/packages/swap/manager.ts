@@ -402,39 +402,33 @@ const apiManagerMaker = (
           return isRight(response) && response.value.data.cbor.trim() !== ''
         }
 
-        // First, try the appropriate adapter based on aggregator
-        const initialAdapter =
-          body.order.aggregator === Swap.Aggregator.Muesliswap
-            ? adapters[Swap.Aggregator.Muesliswap]
-            : body.order.aggregator === Swap.Aggregator.Minswap
-              ? adapters[Swap.Aggregator.Minswap]
-              : body.order.aggregator === Swap.Aggregator.Steelswap
-                ? adapters[Swap.Aggregator.Steelswap]
-                : adapters[Swap.Aggregator.Dexhunter]
+        // Priority order for cancel APIs: minswap -> steelswap -> dexhunter -> muesliswap
+        // Muesliswap is last due to issues with malformed CBORs
+        const priorityOrder: Swap.Aggregator[] = [
+          Swap.Aggregator.Minswap,
+          Swap.Aggregator.Steelswap,
+          Swap.Aggregator.Dexhunter,
+          Swap.Aggregator.Muesliswap,
+        ]
 
-        if (!initialAdapter) return invalid as Api.Response<Swap.CancelResponse>
+        let lastResponse: Api.Response<Swap.CancelResponse> | undefined
 
-        const initialResponse = await initialAdapter.cancel(body)
+        // Try adapters in priority order, stopping at the first valid CBOR
+        for (const aggregator of priorityOrder) {
+          const adapter = adapters[aggregator]
+          if (!adapter) continue
 
-        // If we got a valid CBOR, return it
-        if (hasValidCbor(initialResponse)) {
-          return initialResponse
+          const response = await adapter.cancel(body)
+          lastResponse = response
+
+          // If we got a valid CBOR, return it immediately
+          if (hasValidCbor(response)) {
+            return response
+          }
         }
 
-        // If not, try all other adapters in parallel
-        const otherAggregators = Object.entries(adapters).filter(
-          ([_, adapter]) => adapter !== initialAdapter,
-        )
-
-        const alternativeResponses = await Promise.all(
-          otherAggregators.map(([_, adapter]) => adapter.cancel(body)),
-        )
-
-        // Find the first response with valid CBOR
-        const validResponse = alternativeResponses.find(hasValidCbor)
-
-        // If found, return it; otherwise return the initial response
-        return validResponse ?? initialResponse
+        // If no adapter returned a valid CBOR, return the last response or invalid
+        return lastResponse ?? (invalid as Api.Response<Swap.CancelResponse>)
       },
     },
     true,

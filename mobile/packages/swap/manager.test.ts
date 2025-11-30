@@ -1178,35 +1178,37 @@ describe('swapManagerMaker', () => {
       })
     })
 
-    it('delegates to the aggregator specified in the order 1', async () => {
+    it('prioritizes minswap first regardless of order aggregator', async () => {
       const manager = swapManagerMaker(baseConfig)
       const result = await manager.api.cancel(dhApiMocks.inputs.cancel)
 
-      expect(mockDexhunterApi.cancel).toHaveBeenCalled()
+      // Should try minswap first (priority order)
+      expect(mockMinswapApi.cancel).toHaveBeenCalled()
+      expect(mockDexhunterApi.cancel).not.toHaveBeenCalled()
       expect(mockMuesliswapApi.cancel).not.toHaveBeenCalled()
-      expect(mockMinswapApi.cancel).not.toHaveBeenCalled()
 
       expect(result.tag).toBe('right')
       if (result.tag === 'right') {
-        expect(result.value.data.cbor).toBe('valid-dexhunter-cbor')
+        expect(result.value.data.cbor).toBe('valid-minswap-cbor')
       }
     })
 
-    it('delegates to the aggregator specified in the order 2', async () => {
+    it('prioritizes minswap first for muesliswap orders', async () => {
       const manager = swapManagerMaker(baseConfig)
       const result = await manager.api.cancel(msApiMocks.inputs.cancel[0]!)
 
-      expect(mockMuesliswapApi.cancel).toHaveBeenCalled()
+      // Should try minswap first (priority order), not muesliswap
+      expect(mockMinswapApi.cancel).toHaveBeenCalled()
       expect(mockDexhunterApi.cancel).not.toHaveBeenCalled()
-      expect(mockMinswapApi.cancel).not.toHaveBeenCalled()
+      expect(mockMuesliswapApi.cancel).not.toHaveBeenCalled()
 
       expect(result.tag).toBe('right')
       if (result.tag === 'right') {
-        expect(result.value.data.cbor).toBe('valid-muesliswap-cbor')
+        expect(result.value.data.cbor).toBe('valid-minswap-cbor')
       }
     })
 
-    it('delegates to minswap for minswap orders', async () => {
+    it('prioritizes minswap first for minswap orders', async () => {
       const manager = swapManagerMaker(baseConfig)
       const minswapCancelRequest = {
         order: {
@@ -1229,11 +1231,11 @@ describe('swapManagerMaker', () => {
       }
     })
 
-    it('tries other adapters when initial adapter returns empty CBOR', async () => {
+    it('tries adapters in priority order when minswap returns empty CBOR', async () => {
       const manager = swapManagerMaker(baseConfig)
 
-      // Mock dexhunter to return empty CBOR
-      mockDexhunterApi.cancel.mockResolvedValue({
+      // Mock minswap to return empty CBOR (first in priority)
+      mockMinswapApi.cancel.mockResolvedValue({
         tag: 'right',
         value: {
           status: Api.HttpStatusCode.Ok,
@@ -1246,49 +1248,59 @@ describe('swapManagerMaker', () => {
 
       const result = await manager.api.cancel(dhApiMocks.inputs.cancel)
 
-      // Should call all adapters
+      // Should try minswap first, then dexhunter (steelswap not configured in tests)
+      expect(mockMinswapApi.cancel).toHaveBeenCalled()
       expect(mockDexhunterApi.cancel).toHaveBeenCalled()
       expect(mockMuesliswapApi.cancel).toHaveBeenCalled()
-      expect(mockMinswapApi.cancel).toHaveBeenCalled()
 
-      // Should return a valid CBOR from one of the other adapters
+      // Should return a valid CBOR from dexhunter (second in priority after minswap)
       expect(result.tag).toBe('right')
       if (result.tag === 'right') {
-        expect(result.value.data.cbor).toBe('valid-muesliswap-cbor')
+        expect(result.value.data.cbor).toBe('valid-dexhunter-cbor')
       }
     })
 
-    it('tries other adapters when initial adapter returns left error', async () => {
+    it('tries adapters in priority order when minswap returns error', async () => {
       const manager = swapManagerMaker(baseConfig)
 
-      // Mock dexhunter to return an error
-      mockDexhunterApi.cancel.mockResolvedValue({
+      // Mock minswap to return an error (first in priority)
+      mockMinswapApi.cancel.mockResolvedValue({
         tag: 'left',
         error: {
           status: 500,
-          message: 'Dexhunter error',
+          message: 'Minswap error',
           responseData: {},
         },
       })
 
       const result = await manager.api.cancel(dhApiMocks.inputs.cancel)
 
-      // Should call all adapters
+      // Should try minswap first, then dexhunter (steelswap not configured in tests)
+      expect(mockMinswapApi.cancel).toHaveBeenCalled()
       expect(mockDexhunterApi.cancel).toHaveBeenCalled()
       expect(mockMuesliswapApi.cancel).toHaveBeenCalled()
-      expect(mockMinswapApi.cancel).toHaveBeenCalled()
 
-      // Should return a valid CBOR from one of the other adapters
+      // Should return a valid CBOR from dexhunter (second in priority after minswap)
       expect(result.tag).toBe('right')
       if (result.tag === 'right') {
-        expect(result.value.data.cbor).toBe('valid-muesliswap-cbor')
+        expect(result.value.data.cbor).toBe('valid-dexhunter-cbor')
       }
     })
 
-    it('returns initial response when no valid CBOR is found', async () => {
+    it('returns last response when no valid CBOR is found', async () => {
       const manager = swapManagerMaker(baseConfig)
 
       // Mock all adapters to return empty CBOR
+      mockMinswapApi.cancel.mockResolvedValue({
+        tag: 'right',
+        value: {
+          status: Api.HttpStatusCode.Ok,
+          data: {
+            cbor: '',
+            additionalCancellationFee: undefined,
+          },
+        },
+      })
       mockDexhunterApi.cancel.mockResolvedValue({
         tag: 'right',
         value: {
@@ -1309,25 +1321,15 @@ describe('swapManagerMaker', () => {
           },
         },
       })
-      mockMinswapApi.cancel.mockResolvedValue({
-        tag: 'right',
-        value: {
-          status: Api.HttpStatusCode.Ok,
-          data: {
-            cbor: '',
-            additionalCancellationFee: undefined,
-          },
-        },
-      })
 
       const result = await manager.api.cancel(dhApiMocks.inputs.cancel)
 
-      // Should call all adapters
+      // Should call all adapters in priority order: minswap -> dexhunter -> muesliswap
+      expect(mockMinswapApi.cancel).toHaveBeenCalled()
       expect(mockDexhunterApi.cancel).toHaveBeenCalled()
       expect(mockMuesliswapApi.cancel).toHaveBeenCalled()
-      expect(mockMinswapApi.cancel).toHaveBeenCalled()
 
-      // Should return the initial (dexhunter) response even if it has empty CBOR
+      // Should return the last response (muesliswap) even if it has empty CBOR
       expect(result.tag).toBe('right')
       if (result.tag === 'right') {
         expect(result.value.data.cbor).toBe('')
