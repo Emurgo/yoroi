@@ -34,7 +34,11 @@ export const ReviewTxNavigator = () => {
 
       <Stack.Screen
         name="result-screen"
-        component={ResultScreen as React.ComponentType<any>}
+        component={
+          ResultScreen as unknown as React.ComponentType<
+            Record<string, unknown>
+          >
+        }
         options={{headerShown: false}}
       />
     </Stack.Navigator>

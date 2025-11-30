@@ -33,11 +33,11 @@ export type WalletCommunication = {
   readonly disconnect: () => boolean
   readonly on: (
     event: 'message' | 'connect' | 'disconnect' | 'error',
-    callback: EventCallback,
+    callback: EventCallback<unknown>,
   ) => void
   readonly off: (
     event: 'message' | 'connect' | 'disconnect' | 'error',
-    callback: EventCallback,
+    callback: EventCallback<unknown>,
   ) => void
   readonly isConnected: () => boolean
 }
@@ -76,8 +76,8 @@ export const walletCommunicationMaker = (
   ): void => {
     state.listeners[event].forEach((callback) => {
       try {
-        ;(callback as any)(data)
-      } catch (error) {
+        ;(callback as EventCallback<T>)(data)
+      } catch (error: unknown) {
         logger.error(
           error instanceof Error ? error : new Error(String(error)),
           {origin: 'p2p-communication', event: String(event)},
@@ -336,7 +336,7 @@ export const walletCommunicationMaker = (
       listeners: {
         ...state.listeners,
 
-        [event]: [...currentListeners, callback as any],
+        [event]: [...currentListeners, callback],
       },
     })
   }
@@ -350,7 +350,9 @@ export const walletCommunicationMaker = (
       listeners: {
         ...state.listeners,
 
-        [event]: currentListeners.filter((cb) => cb !== (callback as any)),
+        [event]: currentListeners.filter(
+          (cb) => cb !== (callback as EventCallback<unknown>),
+        ),
       },
     })
   }

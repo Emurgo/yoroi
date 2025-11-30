@@ -11,7 +11,10 @@ import {CollateralInfoModal} from '~/features/Settings/ui/screens/ChangeWalletSe
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
-import {removeRouteFromNavigationState} from '~/kernel/navigation/common/helpers'
+import {
+  type NavigationLike,
+  removeRouteFromNavigationState,
+} from '~/kernel/navigation/common/helpers'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {InfoBanner} from '~/ui/InfoBanner/InfoBanner'
 import {cip30ExtensionMaker} from '~/wallets/cardano/cip30/cip30'
@@ -129,9 +132,13 @@ export const useDappConnectorManager = () => {
             // Use setTimeout to ensure navigation completes before removing the route
             // Increase maxDepth to ensure we traverse up to WalletNavigator where review-tx-routes is located
             setTimeout(() => {
-              removeRouteFromNavigationState(navigation, 'review-tx-routes', {
-                maxDepth: 5,
-              })
+              removeRouteFromNavigationState(
+                navigation as NavigationLike,
+                'review-tx-routes',
+                {
+                  maxDepth: 5,
+                },
+              )
             }, 100)
           },
           onCancel: () => {
@@ -201,9 +208,13 @@ export const useDappConnectorManager = () => {
             // Use setTimeout to ensure navigation completes before removing the route
             // Increase maxDepth to ensure we traverse up to WalletNavigator where review-tx-routes is located
             setTimeout(() => {
-              removeRouteFromNavigationState(navigation, 'review-tx-routes', {
-                maxDepth: 5,
-              })
+              removeRouteFromNavigationState(
+                navigation as NavigationLike,
+                'review-tx-routes',
+                {
+                  maxDepth: 5,
+                },
+              )
             }, 100)
           },
           onErrorWithoutFeedback: (error) => {
@@ -329,7 +340,7 @@ export const useDappConnectorManager = () => {
                 // Remove review-tx-routes from navigation stack
                 setTimeout(() => {
                   removeRouteFromNavigationState(
-                    navigation,
+                    navigation as NavigationLike,
                     'review-tx-routes',
                     {
                       maxDepth: 5,

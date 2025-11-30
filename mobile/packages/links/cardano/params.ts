@@ -79,18 +79,24 @@ export const preapareParams = ({
         `Please include the param ${requiredParam} on ${config.scheme} ${config.authority} ${config.version}`,
       )
     }
-    paramValidator({
-      key: requiredParam,
-      value: paramEntries.get(requiredParam),
-    })
+    const value = paramEntries.get(requiredParam)
+    if (value !== undefined && typeof value === 'string') {
+      paramValidator({
+        key: requiredParam,
+        value,
+      })
+    }
   }
 
   for (const optionalParam of optionalParams) {
     if (paramEntries.has(optionalParam)) {
-      paramValidator({
-        key: optionalParam,
-        value: paramEntries.get(optionalParam),
-      })
+      const value = paramEntries.get(optionalParam)
+      if (value !== undefined && typeof value === 'string') {
+        paramValidator({
+          key: optionalParam,
+          value,
+        })
+      }
     }
   }
 

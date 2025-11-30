@@ -10,7 +10,7 @@ import {
 
 import BigNumber from 'bignumber.js'
 
-import {ContractService} from '~/features/ReviewTx/common/services/contract-service'
+import {isContractAddress} from '~/features/ReviewTx/common/services/contract-service'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {collateralConfig} from '~/wallets/cardano/utxoManager/utxos'
 import {Amounts, Quantities, asQuantity} from '~/wallets/utils/utils'
@@ -92,7 +92,7 @@ const hasSmartContract = (
     addresses.push(...outputs.map((output) => output.address))
   }
 
-  return addresses.some((address) => ContractService.isContractAddress(address))
+  return addresses.some((address) => isContractAddress(address))
 }
 
 /**

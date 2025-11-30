@@ -7,8 +7,15 @@ import {cip30ExtensionMaker} from '../cip30/cip30'
 import {YoroiWallet} from '../types'
 import {CardanoMobileWrapped} from '../wrappedCsl'
 
-export const cip95ExtensionMaker = (wallet: YoroiWallet, meta: Wallet.Meta) => {
-  return new CIP95Extension(wallet, meta)
+export type CIP95Extension = {
+  signData(
+    rootKey: string,
+    address: string,
+    payload: string,
+  ): Promise<{signature: string; key: string}>
+  getRegisteredPubStakeKeys(): Promise<string[]>
+  getUnregisteredPubStakeKeys(): Promise<string[]>
+  getPubDRepKey(): Promise<string>
 }
 
 export const supportsCIP95 = (
@@ -17,58 +24,58 @@ export const supportsCIP95 = (
   return implementation === 'cardano-cip1852'
 }
 
-class CIP95Extension {
-  constructor(
-    private wallet: YoroiWallet,
-    private meta: Wallet.Meta,
-  ) {
-    if (!supportsCIP95(meta.implementation))
-      throw new Error('CIP95Extension: Unsupported wallet implementation')
-  }
+export const cip95ExtensionMaker = (
+  wallet: YoroiWallet,
+  meta: Wallet.Meta,
+): CIP95Extension => {
+  if (!supportsCIP95(meta.implementation))
+    throw new Error('CIP95Extension: Unsupported wallet implementation')
 
-  async signData(rootKey: string, address: string, payload: string) {
-    const cip30 = cip30ExtensionMaker(this.wallet, this.meta)
-    return cip30.signData(rootKey, address, payload)
-  }
-
-  async getRegisteredPubStakeKeys(): Promise<string[]> {
-    const status = await this.getStakeKeyStatus()
-    return status.isRegistered ? [status.hex] : []
-  }
-
-  async getUnregisteredPubStakeKeys(): Promise<string[]> {
-    const status = await this.getStakeKeyStatus()
-    return status.isRegistered ? [] : [status.hex]
-  }
-
-  async getPubDRepKey(): Promise<string> {
-    return CardanoMobileWrapped.cslScope((csl) => {
-      const walletImplementation = this.meta.implementation
-      if (!supportsCIP95(walletImplementation))
-        throw new Error('CIP95Extension: Unsupported wallet implementation')
-
-      const accountPubKey = csl.Bip32PublicKey.fromBytes(
-        Buffer.from(this.wallet.publicKeyHex, 'hex'),
-      )
-
-      const implementationConfig =
-        cardanoConfig.implementations[walletImplementation]
-      const baseDerivations = implementationConfig.derivations.base
-
-      const rawKey = accountPubKey
-        .derive(baseDerivations.roles.drep)
-        .derive(0)
-        .toRawKey()
-
-      return rawKey.toHex()
-    })
-  }
-
-  private async getStakeKeyStatus() {
-    const stakingKey = this.wallet.getStakingKey()
-    const stakingInfo = await this.wallet.getStakingInfo()
+  const getStakeKeyStatus = async () => {
+    const stakingKey = wallet.getStakingKey()
+    const stakingInfo = await wallet.getStakingInfo()
     const isRegistered = stakingInfo.status !== 'not-registered'
     const hex = stakingKey.toHex()
     return {hex, isRegistered}
+  }
+
+  return {
+    async signData(rootKey: string, address: string, payload: string) {
+      const cip30 = cip30ExtensionMaker(wallet, meta)
+      return cip30.signData(rootKey, address, payload)
+    },
+
+    async getRegisteredPubStakeKeys() {
+      const status = await getStakeKeyStatus()
+      return status.isRegistered ? [status.hex] : []
+    },
+
+    async getUnregisteredPubStakeKeys() {
+      const status = await getStakeKeyStatus()
+      return status.isRegistered ? [] : [status.hex]
+    },
+
+    async getPubDRepKey() {
+      return CardanoMobileWrapped.cslScope((csl) => {
+        const walletImplementation = meta.implementation
+        if (!supportsCIP95(walletImplementation))
+          throw new Error('CIP95Extension: Unsupported wallet implementation')
+
+        const accountPubKey = csl.Bip32PublicKey.fromBytes(
+          Buffer.from(wallet.publicKeyHex, 'hex'),
+        )
+
+        const implementationConfig =
+          cardanoConfig.implementations[walletImplementation]
+        const baseDerivations = implementationConfig.derivations.base
+
+        const rawKey = accountPubKey
+          .derive(baseDerivations.roles.drep)
+          .derive(0)
+          .toRawKey()
+
+        return rawKey.toHex()
+      })
+    },
   }
 }

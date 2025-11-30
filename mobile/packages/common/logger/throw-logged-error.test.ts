@@ -6,6 +6,8 @@ describe('throwLoggedError', () => {
   it('should log and throw Error instance', () => {
     const mockLogger: App.Logger.Manager = {
       level: App.Logger.Level.Debug,
+      trail: [],
+      filter: null,
       debug: jest.fn(),
       log: jest.fn(),
       info: jest.fn(),
@@ -26,6 +28,8 @@ describe('throwLoggedError', () => {
   it('should log and throw Error from string', () => {
     const mockLogger: App.Logger.Manager = {
       level: App.Logger.Level.Debug,
+      trail: [],
+      filter: null,
       debug: jest.fn(),
       log: jest.fn(),
       info: jest.fn(),

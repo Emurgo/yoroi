@@ -3,7 +3,7 @@ import {getLogger} from '@yoroi/common'
 import {useCallback, useEffect, useRef, useState} from 'react'
 
 import {PeerConnection} from '../core/peer-connection'
-import {ConnectionStatus} from '../types'
+import {ConnectionStatus, EventCallback} from '../types'
 
 type UsePeerConnectionResult = {
   readonly peerId: string
@@ -69,7 +69,8 @@ export const usePeerConnection = (
       setIsReady(true)
     }
 
-    const onOpen = (id: string): void => {
+    const onOpen: EventCallback<string> = (id?: string): void => {
+      if (!id) return
       logger.log('Peer connection open event - ready for connections', {
         origin: 'p2p-communication',
         peerId: id,
@@ -80,7 +81,8 @@ export const usePeerConnection = (
       setError(null)
     }
 
-    const onError = (err: Error): void => {
+    const onError: EventCallback<Error> = (err?: Error): void => {
+      if (!err) return
       logger.error(err, {
         origin: 'p2p-communication',
         operation: 'usePeerConnection',
@@ -90,7 +92,7 @@ export const usePeerConnection = (
       setIsReady(false)
     }
 
-    const onDisconnected = (): void => {
+    const onDisconnected: EventCallback<void> = (): void => {
       logger.log('Peer connection disconnected from server', {
         origin: 'p2p-communication',
       })
@@ -98,32 +100,32 @@ export const usePeerConnection = (
       setIsReady(false)
     }
 
-    const onClose = (): void => {
+    const onClose: EventCallback<void> = (): void => {
       logger.log('Peer connection closed', {origin: 'p2p-communication'})
       setStatus('closed')
       setIsReady(false)
     }
 
-    peerConnection.on('open', onOpen as any)
+    peerConnection.on('open', onOpen as EventCallback)
 
-    peerConnection.on('error', onError as any)
+    peerConnection.on('error', onError as EventCallback)
 
-    peerConnection.on('disconnected', onDisconnected as any)
+    peerConnection.on('disconnected', onDisconnected as EventCallback)
 
-    peerConnection.on('close', onClose as any)
+    peerConnection.on('close', onClose as EventCallback)
 
     return () => {
       logger.debug('Cleaning up peer connection event listeners', {
         origin: 'p2p-communication',
       })
 
-      peerConnection.off('open', onOpen as any)
+      peerConnection.off('open', onOpen as EventCallback)
 
-      peerConnection.off('error', onError as any)
+      peerConnection.off('error', onError as EventCallback)
 
-      peerConnection.off('disconnected', onDisconnected as any)
+      peerConnection.off('disconnected', onDisconnected as EventCallback)
 
-      peerConnection.off('close', onClose as any)
+      peerConnection.off('close', onClose as EventCallback)
 
       listenerSetupRef.current = false
     }

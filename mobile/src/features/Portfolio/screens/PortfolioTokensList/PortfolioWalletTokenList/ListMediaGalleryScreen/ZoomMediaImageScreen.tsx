@@ -46,7 +46,7 @@ export const ZoomMediaImageScreen = () => {
       // Store the current scale when gesture starts
       lastScale.current = scale.value
     })
-    .onUpdate((event: any) => {
+    .onUpdate((event: {scale: number}) => {
       // Apply the pinch scale
       const newScale = lastScale.current * event.scale
       scale.value = Math.max(1, Math.min(3, newScale)) // Clamp between 1 and 3
@@ -66,7 +66,7 @@ export const ZoomMediaImageScreen = () => {
       lastTranslateX.current = translateX.value
       lastTranslateY.current = translateY.value
     })
-    .onUpdate((event: any) => {
+    .onUpdate((event: {translationX: number; translationY: number}) => {
       // Only allow panning when zoomed in
       if (scale.value > 1) {
         translateX.value = lastTranslateX.current + event.translationX

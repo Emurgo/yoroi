@@ -126,7 +126,13 @@ export const transformersMaker = (config: MinswapApiConfig) => {
           const transformedTokens = data.tokens.map((token) => {
             // If token has 'asset' property, use it (nested structure)
             // Otherwise, use the token directly (flat structure)
-            const tokenData = 'asset' in token ? (token as any).asset : token
+            type TokenWithAsset = TokensResponse['tokens'][number] & {
+              asset?: TokensResponse['tokens'][number]
+            }
+            const tokenData: TokensResponse['tokens'][number] =
+              'asset' in token
+                ? ((token as TokenWithAsset).asset ?? token)
+                : token
             return transformToken(tokenData)
           })
 
@@ -327,5 +333,45 @@ const mapDexToProtocol = (dex: Dex): Swap.Protocol => {
       return Swap.Protocol.Splash_v1
     default:
       return Swap.Protocol.Unsupported
+  }
+}
+
+export const mapProtocolToDex = (protocol: Swap.Protocol): Dex => {
+  switch (protocol) {
+    case Swap.Protocol.Minswap_v2:
+      return Dex.MinswapV2
+    case Swap.Protocol.Minswap_v1:
+      return Dex.Minswap
+    case Swap.Protocol.Minswap_stable:
+      return Dex.MinswapStable
+    case Swap.Protocol.Muesliswap:
+    case Swap.Protocol.Muesliswap_v1:
+    case Swap.Protocol.Muesliswap_v2:
+    case Swap.Protocol.Muesliswap_clp:
+    case Swap.Protocol.Muesliswap_orderbook:
+      return Dex.MuesliSwap
+    case Swap.Protocol.Splash_v1:
+    case Swap.Protocol.Splash_v4:
+    case Swap.Protocol.Splash_v5:
+    case Swap.Protocol.Splash_v6:
+      return Dex.Splash
+    case Swap.Protocol.Sundaeswap_v3:
+      return Dex.SundaeSwapV3
+    case Swap.Protocol.Sundaeswap_v1:
+      return Dex.SundaeSwap
+    case Swap.Protocol.Vyfi_v1:
+      return Dex.VyFinance
+    case Swap.Protocol.Cswap:
+      return Dex.CswapV1
+    case Swap.Protocol.Wingriders_v2:
+      return Dex.WingRidersV2
+    case Swap.Protocol.Wingriders_v1:
+      return Dex.WingRiders
+    case Swap.Protocol.Wingriders_stable:
+      return Dex.WingRidersStableV2
+    case Swap.Protocol.Spectrum_v1:
+      return Dex.Spectrum
+    default:
+      return Dex.Unsupported
   }
 }

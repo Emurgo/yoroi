@@ -1,6 +1,11 @@
 import {Address} from '@yoroi/types'
 
-import {AddressChain, AddressGenerator} from './account-manager'
+import {
+  AddressChain,
+  type AddressGenerator,
+  createAddressChain,
+  createAddressGenerator,
+} from './account-manager'
 
 const getAddr = (i: number) => `Addr${i}` as Address
 
@@ -12,7 +17,7 @@ describe('AddressChain', () => {
 
   beforeEach(() => {
     used = []
-    chain = new AddressChain(
+    chain = createAddressChain(
       {
         generate: (ids) => ids.map(getAddr),
       } as AddressGenerator,
@@ -71,8 +76,8 @@ describe('AddressChain', () => {
     const pubKey44 =
         '7f53efa3c08093db3824235769079e96ef96b6680fc254f6c021ec420e4d1555' +
         'b5bafb0b1fc6c8040cc8f69f7c1948dfb4dcadec4acd09730c0efb39c6159362',
-      chain = new AddressChain(
-        new AddressGenerator(pubKey44, 1, 'cardano-bip44', chainId),
+      chain = createAddressChain(
+        createAddressGenerator(pubKey44, 1, 'cardano-bip44', chainId),
         5,
         2,
       )

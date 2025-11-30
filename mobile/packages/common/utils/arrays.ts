@@ -19,7 +19,7 @@ export function first() {
   return true
 }
 
-export const groupBy = <T, K extends keyof any>(
+export const groupBy = <T, K extends string | number | symbol>(
   list: T[],
   getKey: (item: T) => K,
 ) =>

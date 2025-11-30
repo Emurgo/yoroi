@@ -2,7 +2,7 @@ import {isAdaHandleDomain} from '@yoroi/resolver'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
-import {TouchableOpacity, View} from 'react-native'
+import {GestureResponderEvent, TouchableOpacity, View} from 'react-native'
 
 import {FavoriteContact} from '~/kernel/storage/favorite-contacts-storage'
 import {Button, ButtonType} from '~/ui/Button/Button'
@@ -26,7 +26,7 @@ export const FavoriteContactItem = ({
     onSelect(favorite.domain)
   }
 
-  const handleRemove = (e: any) => {
+  const handleRemove = (e: GestureResponderEvent) => {
     e.stopPropagation()
     if (onRemove) {
       onRemove(favorite.domain)
@@ -35,7 +35,9 @@ export const FavoriteContactItem = ({
 
   // Wrap ADA Handle icon to preserve green color
   const iconComponent = isAdaHandle
-    ? (iconProps: any) => <Icon.AdaHandle {...iconProps} color="#0cd15b" />
+    ? (iconProps: {size?: number; color?: string}) => (
+        <Icon.AdaHandle {...iconProps} color="#0cd15b" />
+      )
     : Icon.Globe
 
   return (

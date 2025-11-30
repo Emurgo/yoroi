@@ -22,30 +22,32 @@ export type ContractServiceConfig = {
   timeout?: number
 }
 
-export class ContractService {
-  private config: ContractServiceConfig
+export type ContractService = {
+  getContractInfo(address: string): Promise<SmartContractInfo | null>
+  getManyContractInfo(
+    addresses: string[],
+  ): Promise<Record<string, SmartContractInfo | null>>
+}
 
-  constructor(config: ContractServiceConfig) {
-    this.config = config
-  }
-
-  /**
-   * Query contract information for a given address
-   */
-  async getContractInfo(address: string): Promise<SmartContractInfo | null> {
+/**
+ * Create a contract service instance
+ */
+export function createContractService(
+  config: ContractServiceConfig,
+): ContractService {
+  const getContractInfo = async (
+    address: string,
+  ): Promise<SmartContractInfo | null> => {
     try {
       // Only query API if this is a contract address
-      if (!ContractService.isContractAddress(address)) {
+      if (!isContractAddress(address)) {
         return null
       }
 
-      const response = await fetch(
-        `${this.config.apiUrl}/contracts/${address}`,
-        {
-          method: 'GET',
-          signal: AbortSignal.timeout(this.config.timeout ?? 5000),
-        },
-      )
+      const response = await fetch(`${config.apiUrl}/contracts/${address}`, {
+        method: 'GET',
+        signal: AbortSignal.timeout(config.timeout ?? 5000),
+      })
 
       if (!response.ok) {
         return null
@@ -66,48 +68,52 @@ export class ContractService {
     }
   }
 
-  /**
-   * Batch query contract information for multiple addresses
-   */
-  async getManyContractInfo(
-    addresses: string[],
-  ): Promise<Record<string, SmartContractInfo | null>> {
-    const results = await Promise.all(
-      addresses.map(async (address) => ({
-        address,
-        info: await this.getContractInfo(address),
-      })),
-    )
+  return {
+    getContractInfo,
 
-    return results.reduce(
-      (acc, {address, info}) => {
-        acc[address] = info
-        return acc
-      },
-      {} as Record<string, SmartContractInfo | null>,
-    )
+    /**
+     * Batch query contract information for multiple addresses
+     */
+    async getManyContractInfo(
+      addresses: string[],
+    ): Promise<Record<string, SmartContractInfo | null>> {
+      const results = await Promise.all(
+        addresses.map(async (address) => ({
+          address,
+          info: await getContractInfo(address),
+        })),
+      )
+
+      return results.reduce(
+        (acc, {address, info}) => {
+          acc[address] = info
+          return acc
+        },
+        {} as Record<string, SmartContractInfo | null>,
+      )
+    },
   }
+}
 
-  /**
-   * Check if an address is a smart contract address
-   * This can be done locally by checking the address type
-   */
-  static isContractAddress(address: string): boolean {
-    return CardanoMobileWrapped.cslScope((csl) => {
-      try {
-        const cslAddress = csl.Address.fromBech32(address)
-        const paymentCred = cslAddress.paymentCred()
-        if (!paymentCred) {
-          return false
-        }
-        const credKind = paymentCred.kind()
-        // Script addresses have CredKind.Script (value 1)
-        // Key addresses have CredKind.Key (value 0)
-        return credKind === CredKind.Script
-      } catch {
-        // If address parsing fails, it's not a valid address, so not a contract
+/**
+ * Check if an address is a smart contract address
+ * This can be done locally by checking the address type
+ */
+export function isContractAddress(address: string): boolean {
+  return CardanoMobileWrapped.cslScope((csl) => {
+    try {
+      const cslAddress = csl.Address.fromBech32(address)
+      const paymentCred = cslAddress.paymentCred()
+      if (!paymentCred) {
         return false
       }
-    })
-  }
+      const credKind = paymentCred.kind()
+      // Script addresses have CredKind.Script (value 1)
+      // Key addresses have CredKind.Key (value 0)
+      return credKind === CredKind.Script
+    } catch {
+      // If address parsing fails, it's not a valid address, so not a contract
+      return false
+    }
+  })
 }

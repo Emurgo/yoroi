@@ -4,10 +4,18 @@ import {Buffer} from 'buffer'
 
 import {DRepValue, TransactionCertificate} from './types'
 
+// WASM types from cross-csl-core don't have proper TypeScript definitions
+// Using ReturnType to infer the actual return type from the WASM module methods
+type CslDRep = ReturnType<WasmModuleProxy['DRep']['newAlwaysAbstain']>
+type CslCredential = ReturnType<WasmModuleProxy['Credential']['fromKeyhash']>
+
 /**
  * Create CSL DRep from DRepValue
  */
-function createDRepFromValue(csl: WasmModuleProxy, drepValue: DRepValue): any {
+function createDRepFromValue(
+  csl: WasmModuleProxy,
+  drepValue: DRepValue,
+): CslDRep {
   if (drepValue === 'AlwaysAbstain') {
     return csl.DRep.newAlwaysAbstain()
   }
@@ -39,10 +47,10 @@ function createDRepFromValue(csl: WasmModuleProxy, drepValue: DRepValue): any {
 export function createCertificateFromData(
   csl: WasmModuleProxy,
   certData: TransactionCertificate,
-  stakeCred?: any,
+  stakeCred?: CslCredential,
 ): Certificate {
   // Extract stake credential key hash if not provided
-  let stakeCredential: any = stakeCred
+  let stakeCredential: CslCredential | undefined = stakeCred
   if (!stakeCredential) {
     const stakeCredentialKeyHashHex =
       'stakeCredentialKeyHashHex' in certData

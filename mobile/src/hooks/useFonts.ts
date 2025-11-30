@@ -1,6 +1,23 @@
+import type {FontSource} from 'expo-font'
 import * as Font from 'expo-font'
 import * as React from 'react'
 
+import RubikBlack from '~/assets/fonts/Rubik-Black.ttf'
+import RubikBlackItalic from '~/assets/fonts/Rubik-BlackItalic.ttf'
+import RubikBold from '~/assets/fonts/Rubik-Bold.ttf'
+import RubikBoldItalic from '~/assets/fonts/Rubik-BoldItalic.ttf'
+import RubikExtraBold from '~/assets/fonts/Rubik-ExtraBold.ttf'
+import RubikExtraBoldItalic from '~/assets/fonts/Rubik-ExtraBoldItalic.ttf'
+import RubikItalicVariable from '~/assets/fonts/Rubik-Italic-VariableFont_wght.ttf'
+import RubikItalic from '~/assets/fonts/Rubik-Italic.ttf'
+import RubikLight from '~/assets/fonts/Rubik-Light.ttf'
+import RubikLightItalic from '~/assets/fonts/Rubik-LightItalic.ttf'
+import RubikMedium from '~/assets/fonts/Rubik-Medium.ttf'
+import RubikMediumItalic from '~/assets/fonts/Rubik-MediumItalic.ttf'
+import RubikRegular from '~/assets/fonts/Rubik-Regular.ttf'
+import RubikSemiBold from '~/assets/fonts/Rubik-SemiBold.ttf'
+import RubikSemiBoldItalic from '~/assets/fonts/Rubik-SemiBoldItalic.ttf'
+import RubikVariable from '~/assets/fonts/Rubik-VariableFont_wght.ttf'
 import {logger} from '~/kernel/logger/logger'
 
 export const useFonts = () => {
@@ -9,24 +26,24 @@ export const useFonts = () => {
   React.useEffect(() => {
     async function loadFonts() {
       try {
-        const fontMappings = {
-          'Rubik': require('../../assets/fonts/Rubik-Regular.ttf'),
-          'Rubik-Regular': require('../../assets/fonts/Rubik-Regular.ttf'),
-          'Rubik-Medium': require('../../assets/fonts/Rubik-Medium.ttf'),
-          'Rubik-Bold': require('../../assets/fonts/Rubik-Bold.ttf'),
-          'Rubik-Light': require('../../assets/fonts/Rubik-Light.ttf'),
-          'Rubik-SemiBold': require('../../assets/fonts/Rubik-SemiBold.ttf'),
-          'Rubik-Black': require('../../assets/fonts/Rubik-Black.ttf'),
-          'Rubik-ExtraBold': require('../../assets/fonts/Rubik-ExtraBold.ttf'),
-          'Rubik-Italic': require('../../assets/fonts/Rubik-Italic.ttf'),
-          'Rubik-MediumItalic': require('../../assets/fonts/Rubik-MediumItalic.ttf'),
-          'Rubik-BoldItalic': require('../../assets/fonts/Rubik-BoldItalic.ttf'),
-          'Rubik-LightItalic': require('../../assets/fonts/Rubik-LightItalic.ttf'),
-          'Rubik-SemiBoldItalic': require('../../assets/fonts/Rubik-SemiBoldItalic.ttf'),
-          'Rubik-BlackItalic': require('../../assets/fonts/Rubik-BlackItalic.ttf'),
-          'Rubik-ExtraBoldItalic': require('../../assets/fonts/Rubik-ExtraBoldItalic.ttf'),
-          'Rubik-Variable': require('../../assets/fonts/Rubik-VariableFont_wght.ttf'),
-          'Rubik-Italic-Variable': require('../../assets/fonts/Rubik-Italic-VariableFont_wght.ttf'),
+        const fontMappings: Record<string, FontSource> = {
+          'Rubik': RubikRegular as FontSource,
+          'Rubik-Regular': RubikRegular as FontSource,
+          'Rubik-Medium': RubikMedium as FontSource,
+          'Rubik-Bold': RubikBold as FontSource,
+          'Rubik-Light': RubikLight as FontSource,
+          'Rubik-SemiBold': RubikSemiBold as FontSource,
+          'Rubik-Black': RubikBlack as FontSource,
+          'Rubik-ExtraBold': RubikExtraBold as FontSource,
+          'Rubik-Italic': RubikItalic as FontSource,
+          'Rubik-MediumItalic': RubikMediumItalic as FontSource,
+          'Rubik-BoldItalic': RubikBoldItalic as FontSource,
+          'Rubik-LightItalic': RubikLightItalic as FontSource,
+          'Rubik-SemiBoldItalic': RubikSemiBoldItalic as FontSource,
+          'Rubik-BlackItalic': RubikBlackItalic as FontSource,
+          'Rubik-ExtraBoldItalic': RubikExtraBoldItalic as FontSource,
+          'Rubik-Variable': RubikVariable as FontSource,
+          'Rubik-Italic-Variable': RubikItalicVariable as FontSource,
         }
 
         logger.debug('Loading fonts...', {

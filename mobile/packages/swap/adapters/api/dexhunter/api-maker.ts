@@ -1,4 +1,10 @@
-import {fetchData, isLeft, isNonNullable, isRight} from '@yoroi/common'
+import {
+  fetchData,
+  isLeft,
+  isNonNullable,
+  isRecord,
+  isRight,
+} from '@yoroi/common'
 import {Api, Chain, Left, Swap} from '@yoroi/types'
 
 import {freeze} from 'immer'
@@ -199,13 +205,45 @@ export const dexhunterApiMaker = (
 
         if (isLeft(response)) return parseDhError(response)
 
+        const responseData = response.value.data
+        if (kind === 'estimate') {
+          return freeze(
+            {
+              tag: 'right',
+              value: {
+                status: response.value.status,
+                data: transformers.estimate.response(
+                  responseData as EstimateResponse,
+                  isPrimaryToken(body.tokenIn),
+                ),
+              },
+            },
+            true,
+          )
+        }
+        if (kind === 'reverseEstimate') {
+          return freeze(
+            {
+              tag: 'right',
+              value: {
+                status: response.value.status,
+                data: transformers.reverseEstimate.response(
+                  responseData as ReverseEstimateResponse,
+                  isPrimaryToken(body.tokenIn),
+                ),
+              },
+            },
+            true,
+          )
+        }
+        // kind === 'limitEstimate'
         return freeze(
           {
             tag: 'right',
             value: {
               status: response.value.status,
-              data: transformers[kind].response(
-                response.value.data as any,
+              data: transformers.limitEstimate.response(
+                responseData as LimitEstimateResponse,
                 isPrimaryToken(body.tokenIn),
               ),
             },
@@ -227,13 +265,30 @@ export const dexhunterApiMaker = (
 
         if (isLeft(response)) return parseDhError(response)
 
+        const responseData = response.value.data
+        if (kind === 'build') {
+          return freeze(
+            {
+              tag: 'right',
+              value: {
+                status: response.value.status,
+                data: transformers.build.response(
+                  responseData as BuildResponse,
+                  isPrimaryToken(body.tokenIn),
+                ),
+              },
+            },
+            true,
+          )
+        }
+        // kind === 'limitBuild'
         return freeze(
           {
             tag: 'right',
             value: {
               status: response.value.status,
-              data: transformers[kind].response(
-                response.value.data as any,
+              data: transformers.limitBuild.response(
+                responseData as LimitBuildResponse,
                 isPrimaryToken(body.tokenIn),
               ),
             },
@@ -275,7 +330,9 @@ const parseDhError = ({tag, error}: Left<Api.ResponseError>) =>
       error: {
         ...error,
         message: JSON.stringify(
-          (error.responseData as any) ?? 'Dexhunter API error',
+          (isRecord(error.responseData)
+            ? JSON.stringify(error.responseData)
+            : String(error.responseData)) ?? 'Dexhunter API error',
           null,
           2,
         )

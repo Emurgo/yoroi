@@ -48,6 +48,8 @@ export type AppLoggerEntry = {
 
 export interface AppLoggerManager {
   level: AppLoggerLevel
+  trail: AppLoggerEntry[]
+  filter: RegExp | null
   debug(message: string, metadata?: AppLoggerMetadata): void
   log(message: string, metadata?: AppLoggerMetadata): void
   info(message: string, metadata?: AppLoggerMetadata): void

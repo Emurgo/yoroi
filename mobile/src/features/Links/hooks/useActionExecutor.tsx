@@ -153,11 +153,15 @@ export const useActionExecutor = () => {
                     memo,
                   } = parsedCardanoLink.params
                   const ptAmount = toBigInt(
-                    amount,
+                    typeof amount === 'string' || typeof amount === 'number'
+                      ? amount
+                      : String(amount ?? '0'),
                     wallet.portfolioPrimaryTokenInfo.decimals,
                   )
-                  memoChanged(memo ?? '')
-                  receiverResolveChanged(receiver ?? '')
+                  memoChanged(typeof memo === 'string' ? memo : '')
+                  receiverResolveChanged(
+                    typeof receiver === 'string' ? receiver : '',
+                  )
                   amountChanged({
                     quantity: ptAmount,
                     info: wallet.portfolioPrimaryTokenInfo,

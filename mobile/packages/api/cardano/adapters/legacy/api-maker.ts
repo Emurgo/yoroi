@@ -1,4 +1,8 @@
-import {StakePoolInfoRequest, StakePoolInfosAndHistories} from '@yoroi/staking'
+import {
+  RemoteCertificateMeta,
+  StakePoolInfoRequest,
+  StakePoolInfosAndHistories,
+} from '@yoroi/staking'
 import {
   Address,
   Amount,
@@ -10,6 +14,7 @@ import {
   PolicyId,
   Portfolio,
   SlotNumber,
+  TokenId,
   TransactionCborBase64,
   TransactionHash,
   TransactionStatus,
@@ -112,7 +117,7 @@ function transformToWalletTransaction(
       amount: input.amount as BalanceQuantity,
       assets: (input.assets ?? []).map((asset) => ({
         amount: asset.amount as BalanceQuantity,
-        tokenId: asset.tokenId as any,
+        tokenId: asset.tokenId as TokenId,
         policyId: asset.policyId,
         name: asset.name as unknown as AssetName,
       })),
@@ -122,7 +127,7 @@ function transformToWalletTransaction(
       amount: output.amount as BalanceQuantity,
       assets: (output.assets ?? []).map((asset) => ({
         amount: asset.amount as BalanceQuantity,
-        tokenId: asset.tokenId as any,
+        tokenId: asset.tokenId as TokenId,
         policyId: asset.policyId,
         name: asset.name as unknown as AssetName,
       })),
@@ -135,7 +140,7 @@ function transformToWalletTransaction(
     epoch: tx.epoch ?? null,
     slot: tx.slot ?? null,
     withdrawals: tx.withdrawals,
-    certificates: tx.certificates as any,
+    certificates: tx.certificates as Array<RemoteCertificateMeta>,
     validContract: tx.valid_contract,
     scriptSize: tx.script_size,
     collateralInputs: (tx.collateral_inputs ?? []).map((input) => ({
@@ -143,7 +148,7 @@ function transformToWalletTransaction(
       amount: input.amount as BalanceQuantity,
       assets: (input.assets ?? []).map((asset) => ({
         amount: asset.amount as BalanceQuantity,
-        tokenId: asset.tokenId as any,
+        tokenId: asset.tokenId as TokenId,
         policyId: asset.policyId,
         name: asset.name as unknown as AssetName,
       })),

@@ -1,3 +1,5 @@
+import {CancelledByUser, TooManyAttempts} from '@yoroi/types'
+
 import * as LocalAuth from 'expo-local-authentication'
 import {Platform} from 'react-native'
 import * as Keychain from 'react-native-keychain'
@@ -48,9 +50,6 @@ async function remove(key: string) {
     service: key,
   })
 }
-
-class CancelledByUser extends Error {}
-class TooManyAttempts extends Error {}
 
 const Errors = {
   CancelledByUser,

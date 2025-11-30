@@ -276,7 +276,7 @@ export const portfolioBalanceManagerMaker: (
   const destroy = () => {
     observer.destroy()
     queue.destroy()
-    tokenManager.unsubscribe(subscription as any)
+    tokenManager.unsubscribe(subscription)
   }
 
   const clear = () => {

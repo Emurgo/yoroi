@@ -2,6 +2,7 @@ import {hex} from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import {useNavigation} from '@react-navigation/native'
+import {StackNavigationProp} from '@react-navigation/stack'
 import {BigNumber} from 'bignumber.js'
 import * as React from 'react'
 import {Alert, Text, View} from 'react-native'
@@ -15,6 +16,7 @@ import {encryptData} from '~/kernel/crypto/encrypt-data'
 import {useLanguage} from '~/kernel/i18n/LanguageProvider'
 import {LocalizableError} from '~/kernel/i18n/LocalizableError'
 import {useStrings} from '~/kernel/i18n/useStrings'
+import {MenuRoutes} from '~/kernel/navigation/types'
 import {debugStorage} from '~/kernel/storage/debug-storage'
 import {rootMMKV, rootSyncStorage} from '~/kernel/storage/storages'
 import {Button, ButtonType} from '~/ui/Button/Button'
@@ -48,7 +50,7 @@ export function DevMenu() {
   }, [])
 
   const {currency, ptActivity} = usePairing()
-  const navigation = useNavigation<any>()
+  const navigation = useNavigation<StackNavigationProp<MenuRoutes>>()
   const {openModal, closeModal} = useModal()
   const [demoText, setDemoText] = React.useState('')
   const {walletNameOverride} = useWalletNameOverride()
@@ -223,6 +225,7 @@ export function DevMenu() {
 
         <Button
           onPress={() => {
+            // @ts-ignore - test-list-search is a dev-only route not in types
             navigation.navigate('test-list-search')
           }}
           type={ButtonType.Secondary}

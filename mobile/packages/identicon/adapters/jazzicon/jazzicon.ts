@@ -15,76 +15,87 @@ interface JazziconOptions {
   size?: number
 }
 
-export class Jazzicon {
-  readonly seed: string
-  readonly shapeCount: number
-  readonly wobble: number
-  readonly colors: ReadonlyArray<string>
-  readonly #generator: MersenneTwister
-  #shiftedColors: string[] = []
+interface JazziconInstance {
+  asBase64(options?: {size: number}): string
+}
 
-  constructor({
-    seed,
-    shapeCount = initialShapeCount,
-    wobble = initialWobble,
-    colors = colorScheme,
-  }: JazziconOptions) {
-    if (shapeCount + 1 > colors.length)
-      throw new Error('Insufficient colors, shape count too high.')
-    if (!seed.match(/^[0-9a-fA-F]+$/))
-      throw new Error('Seed must be a valid hexadecimal string.')
-    if (seed.length < 10)
-      throw new Error('Seed must be at least 10 characters long.')
+/**
+ * Creates a Jazzicon instance for generating identicons from a seed
+ *
+ * @param options - The options for creating the Jazzicon instance
+ * @param options.seed - The seed used for generating the identicon **(must be hex)**
+ * @param options.shapeCount - The number of shapes to generate (default: 3)
+ * @param options.wobble - The wobble factor for color shifting (default: 30)
+ * @param options.colors - The base color scheme (default: colorScheme)
+ * @returns {JazziconInstance} An object with methods to generate identicons
+ * @throws {Error} If the seed is invalid, too short, or shape count is too high
+ */
+export function Jazzicon({
+  seed,
+  shapeCount = initialShapeCount,
+  wobble = initialWobble,
+  colors = colorScheme,
+}: JazziconOptions): JazziconInstance {
+  if (shapeCount + 1 > colors.length)
+    throw new Error('Insufficient colors, shape count too high.')
+  if (!seed.match(/^[0-9a-fA-F]+$/))
+    throw new Error('Seed must be a valid hexadecimal string.')
+  if (seed.length < 10)
+    throw new Error('Seed must be at least 10 characters long.')
 
-    this.seed = seed
-    this.shapeCount = shapeCount
-    this.wobble = wobble
-    this.colors = colors
+  const generator = new MersenneTwister()
 
-    this.#generator = new MersenneTwister()
+  const nextColor = (shiftedColors: string[]): string => {
+    const index = Math.floor(generator.random() * shiftedColors.length)
+    return shiftedColors.splice(index, 1)[0]!
   }
 
-  private nextColor(): string {
-    const index = Math.floor(
-      this.#generator.random() * this.#shiftedColors.length,
-    )
-    return this.#shiftedColors.splice(index, 1)[0]!
-  }
-
-  private nextTransform(index: number): string {
-    const angle = 2 * Math.PI * this.#generator.random()
-    const velocity =
-      (100 * (index + this.#generator.random())) / this.shapeCount
+  const nextTransform = (index: number): string => {
+    const angle = 2 * Math.PI * generator.random()
+    const velocity = (100 * (index + generator.random())) / shapeCount
     const x = Math.cos(angle) * velocity
     const y = Math.sin(angle) * velocity
-    const rotation =
-      this.#generator.random() * 360 + this.#generator.random() * 180
+    const rotation = generator.random() * 360 + generator.random() * 180
     return `translate(${x.toFixed(3)} ${y.toFixed(
       3,
     )}) rotate(${rotation.toFixed(1)} 50 50)`
   }
 
-  public asBase64({size}: {size: number} = {size: initialSize}): string {
-    const seedSlice = parseInt(this.seed.slice(2, 10), 16)
-    this.#generator.init_seed(seedSlice)
-    const position = this.#generator.random()
-    const hueShift = 30 * position - this.wobble / 2
-    this.#shiftedColors = this.colors.map((hex) =>
+  /**
+   * Generates a base64-encoded SVG identicon
+   *
+   * @param options - The options for generating the identicon
+   * @param options.size - The size of the identicon (default: 100)
+   * @returns {string} The base64-encoded SVG image
+   */
+  const asBase64 = ({size}: {size: number} = {size: initialSize}): string => {
+    const seedSlice = parseInt(seed.slice(2, 10), 16)
+    generator.init_seed(seedSlice)
+    const position = generator.random()
+    const hueShift = 30 * position - wobble / 2
+    const shiftedColors = colors.map((hex) =>
       tinycolor(hex).spin(hueShift).toHexString(),
     )
 
-    let svgContent = `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" x="0" y="0" viewBox="0 0 100 100">`
-    svgContent += `<rect x="0" y="0" width="100%" height="100%" fill="${this.nextColor()}" />`
+    // Create a mutable copy for nextColor to splice from
+    const mutableColors = [...shiftedColors]
 
-    for (let i = 0; i < this.shapeCount; i++) {
-      svgContent += `<rect x="0" y="0" width="100%" height="100%" transform="${this.nextTransform(
+    let svgContent = `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" x="0" y="0" viewBox="0 0 100 100">`
+    svgContent += `<rect x="0" y="0" width="100%" height="100%" fill="${nextColor(mutableColors)}" />`
+
+    for (let i = 0; i < shapeCount; i++) {
+      svgContent += `<rect x="0" y="0" width="100%" height="100%" transform="${nextTransform(
         i,
-      )}" fill="${this.nextColor()}" />`
+      )}" fill="${nextColor(mutableColors)}" />`
     }
 
     svgContent += '</svg>'
 
     const base64String = Buffer.from(svgContent).toString('base64')
     return `data:image/svg+xml;base64,${base64String}`
+  }
+
+  return {
+    asBase64,
   }
 }

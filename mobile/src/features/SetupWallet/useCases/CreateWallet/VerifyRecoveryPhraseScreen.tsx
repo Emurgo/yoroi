@@ -17,6 +17,7 @@ import Animated, {FadeIn, FadeOut, Layout} from 'react-native-reanimated'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useBold} from '~/hooks/useBold'
 import {useStrings} from '~/kernel/i18n/useStrings'
+import {SetupWalletRouteNavigation} from '~/kernel/navigation/types'
 import {Alert as AlertIllustration} from '~/ui/AlertIllustration/AlertIllustration'
 import {Button} from '~/ui/Button/Button'
 import {Check2 as Check2Illustration} from '~/ui/Check2Illustration/Check2Illustration'
@@ -26,7 +27,7 @@ import {StepperProgress} from '~/ui/StepperProgress/StepperProgress'
 
 export const VerifyRecoveryPhraseScreen = () => {
   const bold = useBold({style: a.body_1_lg_medium})
-  const navigation = useNavigation<any>()
+  const navigation = useNavigation<SetupWalletRouteNavigation>()
   const strings = useStrings()
   const {mnemonic, publicKeyHexChanged, accountVisual, walletImplementation} =
     useSetupWallet()

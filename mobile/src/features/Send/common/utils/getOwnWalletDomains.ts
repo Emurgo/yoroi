@@ -1,6 +1,6 @@
 import {isNft} from '@yoroi/portfolio'
 import {handleApiConfig} from '@yoroi/resolver'
-import {Portfolio} from '@yoroi/types'
+import {Balance, Portfolio} from '@yoroi/types'
 
 import {YoroiWallet} from '~/wallets/cardano/types'
 
@@ -90,7 +90,9 @@ export function getOwnWalletAdaHandles(
 
       // If not found, try to extract from metadata
       if (!handleName) {
-        const metadata = (tokenInfo as any).metadatas?.mintNft
+        // balance.info is Balance.TokenInfo which has metadatas, but tokenInfo is Portfolio.Token.Info
+        const balanceInfo = balance.info as unknown as Balance.TokenInfo
+        const metadata = balanceInfo.metadatas?.mintNft
         if (metadata) {
           handleName = extractHandleNameFromMetadata(metadata)
         }

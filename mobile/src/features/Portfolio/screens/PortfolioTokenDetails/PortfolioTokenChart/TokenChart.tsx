@@ -15,13 +15,13 @@ interface Props {
 }
 
 interface TooltipProps {
-  x: any
-  y: any
+  x: (index: number) => number
+  y: (value: number) => number
   positionX: number
   valueList: number[]
   labelList: string[]
   dataSize: number
-  palette: any
+  palette: ReturnType<typeof useTheme>['palette']
 }
 
 const Tooltip = ({
@@ -37,7 +37,7 @@ const Tooltip = ({
     return null
   }
 
-  const price = valueList[positionX]
+  const price = valueList[positionX] ?? 0
 
   const minPrice = Math.min(...valueList)
 
@@ -71,7 +71,7 @@ const Tooltip = ({
 
   return (
     <G x={xPosition} key="tooltip">
-      <G x={x}>
+      <G x={0}>
         {/* Vertical line for tooltip */}
         <Line
           y1={centerY}
@@ -197,7 +197,10 @@ const TokenChartComponent = ({dataSources = [], onValueSelected}: Props) => {
           animate={true}
           animationDuration={500}
         >
-          {(props: any) => (
+          {(props: {
+            x: (index: number) => number
+            y: (value: number) => number
+          }) => (
             <Tooltip
               {...props}
               positionX={positionX}

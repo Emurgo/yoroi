@@ -300,13 +300,15 @@ type Color = `#${string}` | `rgba(${number},${number},${number},${number})`
  * @param routeName - The name of the route to remove
  * @param options - Optional configuration
  */
+export type NavigationLike = {
+  getState: () => NavigationState | undefined
+  reset: (state: NavigationState) => void
+  getParent?: () => NavigationLike | undefined
+  dispatch?: (action: {type: string; payload?: unknown}) => void
+}
+
 export const removeRouteFromNavigationState = (
-  navigation: {
-    getState: () => NavigationState | undefined
-    reset: (state: NavigationState | any) => void
-    getParent?: () => any
-    dispatch?: (action: any) => void
-  },
+  navigation: NavigationLike,
   routeName: string,
   options?: {
     /**
@@ -323,7 +325,7 @@ export const removeRouteFromNavigationState = (
   const traverseParents = options?.traverseParents ?? true
 
   // Try to find the route in the current navigator or parent navigators
-  let targetNavigation = navigation
+  let targetNavigation: NavigationLike = navigation
   let currentDepth = 0
   let foundRoute = false
 

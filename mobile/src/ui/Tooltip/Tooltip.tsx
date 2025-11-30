@@ -88,8 +88,10 @@ export const Tooltip = ({
   }, [])
 
   React.useEffect(() => {
-    const subscription = addEventListener(Dimensions, 'change', () =>
-      setVisible(false),
+    const subscription = addEventListener(
+      Dimensions as unknown as Parameters<typeof addEventListener>[0],
+      'change',
+      () => setVisible(false),
     )
 
     return () => subscription.remove()
@@ -146,8 +148,12 @@ export const Tooltip = ({
     if (touched.current) {
       return null
     } else {
-      if ((children as any).props?.disabled) return null
-      return (children as any).props?.onPress?.()
+      const child = children as React.ReactElement<{
+        disabled?: boolean
+        onPress?: () => void
+      }>
+      if (child.props?.disabled) return null
+      return child.props?.onPress?.()
     }
   }, [children, mode, visible])
 

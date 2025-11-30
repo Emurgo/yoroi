@@ -76,15 +76,5 @@ export function validateTransactionCbor(
   }
 }
 
-/**
- * Enhanced error for CIP-30 transaction signing
- */
-export class CIP30TransactionError extends Error {
-  constructor(
-    message: string,
-    public readonly validation: TransactionValidationResult,
-  ) {
-    super(message)
-    this.name = 'CIP30TransactionError'
-  }
-}
+// Re-export from centralized error location
+export {CIP30TransactionError} from '@yoroi/types'
