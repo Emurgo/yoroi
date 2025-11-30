@@ -1,6 +1,6 @@
 import {Chain, Links, Portfolio} from '@yoroi/types'
 
-import {useNavigation} from '@react-navigation/native'
+import {NavigatorScreenParams, useNavigation} from '@react-navigation/native'
 import * as Linking from 'expo-linking'
 import * as React from 'react'
 

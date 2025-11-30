@@ -2117,8 +2117,9 @@ export const useStrings = () => {
           setupWalletMessages.walletChecksumModalCardTitle,
         ),
         stepWalletDetails: f(setupWalletMessages.stepWalletDetails),
-        walletDetailsTitle: (bold: {b: React.ReactNode}) =>
-          f(setupWalletMessages.walletDetailsTitle, {b: bold.b}),
+        walletDetailsTitle: (bold: {
+          b: (text: React.ReactNode) => React.ReactNode
+        }) => f(setupWalletMessages.walletDetailsTitle, {b: bold.b}),
         walletDetailsPasswordHelper: f(
           setupWalletMessages.walletDetailsPasswordHelper,
         ),

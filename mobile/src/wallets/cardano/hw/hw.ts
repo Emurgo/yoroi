@@ -113,7 +113,7 @@ const mapLedgerError = (e: unknown): Error | LocalizableError => {
     return e
   } else {
     logger.error('mapLedgerError: Unexpected error', {e})
-    return e
+    return e instanceof Error ? e : new Error(String(e))
   }
 }
 

@@ -20,7 +20,10 @@ export const mountAsyncStorage = ({
     parse: (item: string | null) => T,
   ): Promise<T>
   function getItem<T = unknown>(key: string): Promise<T>
-  async function getItem(key: string, parse = parseSafe) {
+  async function getItem<T = unknown>(
+    key: string,
+    parse: (item: string | null) => T = parseSafe as (item: string | null) => T,
+  ): Promise<T> {
     const item = await AsyncStorage.getItem(withPath(key))
     return parse(item)
   }
@@ -32,11 +35,14 @@ export const mountAsyncStorage = ({
   function multiGet<T = unknown>(
     keys: ReadonlyArray<string>,
   ): Promise<Array<[string, T]>>
-  async function multiGet(keys: ReadonlyArray<string>, parse = parseSafe) {
+  async function multiGet<T = unknown>(
+    keys: ReadonlyArray<string>,
+    parse: (item: string | null) => T = parseSafe as (item: string | null) => T,
+  ): Promise<Array<[string, T]>> {
     const absolutePaths = keys.map((key) => withPath(key))
     const items = await AsyncStorage.multiGet(absolutePaths)
     return items.map(
-      ([key, value]) => [withoutPath(key), parse(value)] as const,
+      ([key, value]) => [withoutPath(key), parse(value)] as [string, T],
     )
   }
 
@@ -81,15 +87,14 @@ export const mountAsyncStorage = ({
     multiRemove: async (keys: ReadonlyArray<string>) => {
       await AsyncStorage.multiRemove(keys.map((key) => withPath(key)))
     },
-    getAllKeys: () => {
+    getAllKeys: <K extends string = string>() => {
       return AsyncStorage.getAllKeys()
         .then((keys) =>
           keys.filter((key) => key.startsWith(path) && isFileKey({key, path})),
         )
         .then(
-          // temporary unknown until async interface is migrated to receive keys for multi storage
           (filteredKeys) =>
-            filteredKeys.map(withoutPath) as ReadonlyArray<unknown>,
+            filteredKeys.map(withoutPath) as unknown as ReadonlyArray<K>,
         )
     },
     clear: async () => {
@@ -126,14 +131,15 @@ export const mountAsyncMultiStorage = <T = unknown>(
     return multiSet(entriesWithKeys, serializer as (item: unknown) => string)
   }
   const readAll = () =>
-    getAllKeys().then((keysToRead) =>
+    getAllKeysStorage<string>().then((keysToRead) =>
       multiGet<T | null>(keysToRead, deserializer),
     )
   const readMany = (keysToRead: ReadonlyArray<string>) =>
     dataStorage.multiGet<T | null>(keysToRead, deserializer)
   const removeMany = (keysToRead: ReadonlyArray<string>) =>
     dataStorage.multiRemove(keysToRead)
-  const getAllKeys = () => getAllKeysStorage().then((keys) => keys)
+  const getAllKeys = <K extends string = string>() =>
+    getAllKeysStorage<K>().then((keys) => keys)
 
   return {
     getAllKeys,

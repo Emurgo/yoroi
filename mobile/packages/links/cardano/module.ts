@@ -67,7 +67,7 @@ export const linksCardanoModuleMaker =
               urlToAdd.searchParams.append(key, String(arrayValue)),
             )
           } else {
-            urlToAdd.searchParams.append(key, value)
+            urlToAdd.searchParams.append(key, String(value))
           }
         })
       }
@@ -76,7 +76,7 @@ export const linksCardanoModuleMaker =
       if (config.authority === '') {
         const {address, ...restParams} = sanitizedParams
         // address for legacy needs to be validated here
-        if (!isCardanoAddress(address)) {
+        if (typeof address !== 'string' || !isCardanoAddress(address)) {
           throw new Links.Errors.ParamsValidationFailed(
             `The param address on ${config.scheme} ${config.authority} ${config.version} must be a cardano address`,
           )
@@ -94,7 +94,7 @@ export const linksCardanoModuleMaker =
           ...queryParams
         } = sanitizedParams
         const pathSegments = [config.version, scheme, namespaced_domain]
-        if (app_path) {
+        if (app_path && typeof app_path === 'string') {
           pathSegments.push(...app_path.split('/').filter(Boolean))
         }
         url = new URL(

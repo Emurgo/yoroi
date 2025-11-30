@@ -4,7 +4,12 @@ import {useCallback, useEffect, useState} from 'react'
 
 import {WALLET_METHODS} from '../constants'
 import {WalletCommunication} from '../core/wallet-communication'
-import {ConnectionStatus, WalletMessage, WalletResponse} from '../types'
+import {
+  ConnectionStatus,
+  EventCallback,
+  WalletMessage,
+  WalletResponse,
+} from '../types'
 
 type Message = {
   readonly from: string
@@ -52,7 +57,10 @@ export const useWalletMessages = (
       return
     }
 
-    const handleMessage = (data: WalletMessage): void => {
+    const handleMessage: EventCallback<WalletMessage> = (
+      data?: WalletMessage,
+    ): void => {
+      if (!data) return
       try {
         if (data.type === 'response') {
           const response = data as WalletResponse
@@ -91,10 +99,13 @@ export const useWalletMessages = (
       }
     }
 
-    walletCommunication.on('message', handleMessage)
+    walletCommunication.on('message', handleMessage as EventCallback<unknown>)
 
     return () => {
-      walletCommunication.off('message', handleMessage)
+      walletCommunication.off(
+        'message',
+        handleMessage as EventCallback<unknown>,
+      )
     }
   }, [walletCommunication, addMessage])
 

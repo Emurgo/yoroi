@@ -336,7 +336,7 @@ const mapDexToProtocol = (dex: Dex): Swap.Protocol => {
   }
 }
 
-const mapProtocolToDex = (protocol: Swap.Protocol): Dex => {
+export const mapProtocolToDex = (protocol: Swap.Protocol): Dex => {
   switch (protocol) {
     case Swap.Protocol.Minswap_v2:
       return Dex.MinswapV2

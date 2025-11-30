@@ -54,8 +54,9 @@ module.exports = {
     {
       files: ['**/*.d.ts'],
       rules: {
-        // Type definition files often need 'any' for third-party library compatibility
+        // Type definition files often need 'any' and classes for third-party library compatibility
         '@typescript-eslint/no-explicit-any': 'off',
+        'no-restricted-syntax': 'off',
       },
     },
     {
@@ -76,6 +77,45 @@ module.exports = {
       rules: {
         // Test and mock files can use 'any' for flexibility in testing scenarios
         '@typescript-eslint/no-explicit-any': 'off',
+        // Test files can use classes for mocking and test utilities
+        'no-restricted-syntax': 'off',
+        // Test files can use require for dynamic test data loading
+        '@typescript-eslint/no-require-imports': 'off',
+        '@typescript-eslint/no-var-requires': 'off',
+      },
+    },
+    {
+      files: ['packages/types/index.ts'],
+      rules: {
+        // Error classes in namespace exports are allowed (they extend from centralized error classes)
+        'no-restricted-syntax': [
+          'error',
+          {
+            selector: 'ClassDeclaration:not([superClass])',
+            message:
+              'Classes are forbidden. Use factory functions or functional patterns instead. Add eslint-disable comment with explanation if exception needed.',
+          },
+          {
+            selector: 'ClassExpression:not([superClass])',
+            message:
+              'Classes are forbidden. Use factory functions or functional patterns instead. Add eslint-disable comment with explanation if exception needed.',
+          },
+          {
+            selector: 'CallExpression[callee.type="Import"]',
+            message:
+              'Dynamic imports are forbidden. Use static imports instead. Add eslint-disable comment with explanation if exception needed.',
+          },
+        ],
+      },
+    },
+    {
+      files: [
+        'packages/staking/governance/api.ts',
+        'packages/staking/governance/manager.ts',
+      ],
+      rules: {
+        // Implementation classes wrapped by factory functions - TODO: refactor to closures
+        'no-restricted-syntax': 'off',
       },
     },
   ],

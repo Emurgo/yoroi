@@ -1,5 +1,12 @@
 import {time} from '@yoroi/common'
-import {Address, App, BlockHash, Branded, TransactionHash} from '@yoroi/types'
+import {
+  Address,
+  App,
+  BlockHash,
+  Branded,
+  TransactionHash,
+  WalletTransaction,
+} from '@yoroi/types'
 
 import {Buffer} from 'buffer'
 import _ from 'lodash'
@@ -247,7 +254,7 @@ async function discoverUsedAddressesByStakingCredential({
   // Step 4: Extract all unique addresses from transactions
   const allAddresses = new Set<string>()
   for (const tx of allTransactions) {
-    tx.inputs?.forEach((input) => {
+    tx.inputs?.forEach((input: WalletTransaction['inputs'][number]) => {
       if (input.address) allAddresses.add(input.address)
     })
     tx.outputs?.forEach((output) => {

@@ -47,18 +47,23 @@ export const parseCardanoLink = (codeContent: string): Links.CardanoAction => {
     return freeze(
       {
         action: 'claim',
-        url,
-        code,
-        params,
+        url: typeof url === 'string' ? url : '',
+        code: typeof code === 'string' ? code : '',
+        params: params as Record<string, unknown>,
       } as const,
       true,
-    )
+    ) as Links.CardanoAction
   }
 
   // Handle browse authority (CIP-158)
   if (authority === 'browse') {
     const {scheme, namespaced_domain, app_path, url, ...queryParams} =
       parsedCardanoLink.params
+    if (typeof namespaced_domain !== 'string') {
+      throw new Links.Errors.ParamsValidationFailed(
+        'namespaced_domain must be a string',
+      )
+    }
     const reversedDomain = namespaced_domain.split('.').reverse().join('.')
     const queryString =
       Object.keys(queryParams).length > 0
@@ -194,15 +199,15 @@ export const parseCardanoLink = (codeContent: string): Links.CardanoAction => {
     return freeze(
       {
         action: 'send-single-pt',
-        receiver,
+        receiver: typeof receiver === 'string' ? receiver : '',
         params: {
-          amount,
-          memo,
-          message,
+          amount: typeof amount === 'string' ? amount : undefined,
+          memo: typeof memo === 'string' ? memo : undefined,
+          message: typeof message === 'string' ? message : undefined,
         },
       } as const,
       true,
-    )
+    ) as Links.CardanoAction
   }
 
   // Fallback: if we don't recognize the authority, treat as legacy transfer
@@ -211,15 +216,15 @@ export const parseCardanoLink = (codeContent: string): Links.CardanoAction => {
   return freeze(
     {
       action: 'send-single-pt',
-      receiver,
+      receiver: typeof receiver === 'string' ? receiver : '',
       params: {
-        amount,
-        memo,
-        message,
+        amount: typeof amount === 'string' ? amount : undefined,
+        memo: typeof memo === 'string' ? memo : undefined,
+        message: typeof message === 'string' ? message : undefined,
       },
     } as const,
     true,
-  )
+  ) as Links.CardanoAction
 }
 
 const nonProtocolRegex = /^[a-zA-Z0-9_\-.$]+$/

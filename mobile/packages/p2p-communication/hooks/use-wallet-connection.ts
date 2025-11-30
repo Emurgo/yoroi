@@ -3,7 +3,7 @@ import {getLogger} from '@yoroi/common'
 import {useCallback, useEffect, useState} from 'react'
 
 import {WalletCommunication} from '../core/wallet-communication'
-import {ConnectionStatus} from '../types'
+import {ConnectionStatus, EventCallback} from '../types'
 
 type PeerConnectionState = {
   readonly peerId: string
@@ -54,7 +54,8 @@ export const useWalletConnection = (
       setStatus('connected')
     }
 
-    const onConnect = (id: string): void => {
+    const onConnect: EventCallback<string> = (id?: string): void => {
+      if (!id) return
       logger.log('Wallet connection established in hook', {
         origin: 'p2p-communication',
         walletId: id,
@@ -65,13 +66,14 @@ export const useWalletConnection = (
       setError(null)
     }
 
-    const onDisconnect = (): void => {
+    const onDisconnect: EventCallback<void> = (): void => {
       logger.log('Wallet disconnected', {origin: 'p2p-communication'})
       setConnected(false)
       setStatus('disconnected')
     }
 
-    const onError = (err: Error): void => {
+    const onError: EventCallback<Error> = (err?: Error): void => {
+      if (!err) return
       logger.error(err, {
         origin: 'p2p-communication',
         operation: 'useWalletConnection',
@@ -80,18 +82,21 @@ export const useWalletConnection = (
       setStatus('error')
     }
 
-    walletCommunication.on('connect', onConnect)
+    walletCommunication.on('connect', onConnect as EventCallback<unknown>)
 
-    walletCommunication.on('disconnect', onDisconnect)
+    walletCommunication.on('disconnect', onDisconnect as EventCallback<unknown>)
 
-    walletCommunication.on('error', onError)
+    walletCommunication.on('error', onError as EventCallback<unknown>)
 
     return () => {
-      walletCommunication.off('connect', onConnect)
+      walletCommunication.off('connect', onConnect as EventCallback<unknown>)
 
-      walletCommunication.off('disconnect', onDisconnect)
+      walletCommunication.off(
+        'disconnect',
+        onDisconnect as EventCallback<unknown>,
+      )
 
-      walletCommunication.off('error', onError)
+      walletCommunication.off('error', onError as EventCallback<unknown>)
     }
   }, [walletCommunication, logger])
 

@@ -36,7 +36,12 @@ export const mountMMKVStorage = <Key extends string = string>(
     deserializer: (item: string | null) => T | null,
   ): T | null
   function getItem<T = unknown, K extends string = Key>(key: K): T | null
-  function getItem<K extends string = Key>(key: K, deserializer = parseSafe) {
+  function getItem<T = unknown, K extends string = Key>(
+    key: K,
+    deserializer: (item: string | null) => T | null = parseSafe as (
+      item: string | null,
+    ) => T | null,
+  ): T | null {
     const item = storage.getString(withPath(key)) ?? null
     return deserializer(item)
   }
@@ -48,17 +53,22 @@ export const mountMMKVStorage = <Key extends string = string>(
   function multiGet<T = unknown, K extends string = Key>(
     keys: ReadonlyArray<K>,
   ): ReadonlyArray<[K, T | null]>
-  function multiGet<K extends string = Key>(
+  function multiGet<T = unknown, K extends string = Key>(
     keys: ReadonlyArray<K>,
-    deserializer = parseSafe,
-  ) {
+    deserializer: (item: string | null) => T | null = parseSafe as (
+      item: string | null,
+    ) => T | null,
+  ): ReadonlyArray<[K, T | null]> {
     const absolutePaths = keys.map((key) => withPath(key))
     return Object.freeze(
-      absolutePaths.map((key) => [
-        withoutPath<K>(key),
-        deserializer(storage.getString(key) ?? null),
-      ]),
-    )
+      absolutePaths.map(
+        (key) =>
+          [
+            withoutPath<K>(key),
+            deserializer(storage.getString(key) ?? null),
+          ] as [K, T | null],
+      ),
+    ) as ReadonlyArray<[K, T | null]>
   }
 
   function setItem<T = unknown, K extends string = Key>(key: K, value: T): void

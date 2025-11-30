@@ -1,6 +1,7 @@
 import {RawUtxo} from '@yoroi/api'
 import {isNonNullable} from '@yoroi/common'
 import {
+  type ChainValidationResult,
   type DecodedDatum,
   type Proposal,
   type ReferenceScript,
@@ -246,9 +247,17 @@ export const useFormattedTx = (
     : null
 
   // Detect transaction chaining
-  const chainInfo = cbor
+  const chainInfo: FormattedTx['chainInfo'] = cbor
     ? CardanoMobileWrapped.cslScope((csl) => {
-        return detectChaining(csl, formattedInputs, cbor)
+        const result = detectChaining(csl, formattedInputs, cbor)
+        return result
+          ? {
+              ...result,
+              validationResult: result.validationResult as
+                | ChainValidationResult
+                | undefined,
+            }
+          : null
       })
     : null
 

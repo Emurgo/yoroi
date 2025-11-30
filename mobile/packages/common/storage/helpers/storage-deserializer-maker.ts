@@ -22,10 +22,10 @@ export const storageDeserializerMaker = (mapping: StorageReviverMapping) => {
   const reviver = (key: string, value: unknown) => {
     switch (mapping[key]) {
       case StorageReviverType.AsBigInt:
-        return value == null ? value : BigInt(value)
+        return value == null ? value : BigInt(String(value))
       case StorageReviverType.AsBigNumber:
       default:
-        return value === null ? value : new BigNumber(value)
+        return value === null ? value : new BigNumber(String(value))
     }
   }
 

@@ -84,11 +84,11 @@ export const getDelegationStatus = (
   let status: StakingStatus = {isRegistered: false}
 
   for (const certData of Object.values(sortedCerts)) {
-    type CertData = {certificates: (typeof cert)[]}
-    const certificates = (certData as CertData).certificates
+    const certificates = certData.certificates
 
     for (const cert of certificates) {
-      if (cert.rewardAddress !== rewardAddress) continue
+      if (!('rewardAddress' in cert) || cert.rewardAddress !== rewardAddress)
+        continue
 
       if (cert.kind === 'StakeDelegation') {
         status = {

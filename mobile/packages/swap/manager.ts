@@ -111,7 +111,7 @@ const apiManagerMaker = (
 
   return freeze(
     {
-      async tokens() {
+      async tokens(): Promise<Api.Response<Portfolio.Token.Info[]>> {
         const enabledAggregators = getEnabledAggregators()
 
         const settledResults = await Promise.allSettled(
@@ -143,7 +143,8 @@ const apiManagerMaker = (
 
         warnAllLeft(...responses)
 
-        if (responses.every(isLeft)) return invalid
+        if (responses.every(isLeft))
+          return invalid as Api.Response<Portfolio.Token.Info[]>
 
         const merged: Record<Portfolio.Token.Id, Portfolio.Token.Info> = {}
         const append = (tokenInfo: Portfolio.Token.Info) => {
@@ -165,7 +166,7 @@ const apiManagerMaker = (
         }
       },
 
-      async orders() {
+      async orders(): Promise<Api.Response<Swap.Order[]>> {
         const enabledAggregators = Object.keys(adapters).filter(
           (agg) => adapters[agg as Swap.Aggregator] !== undefined,
         ) as Swap.Aggregator[]
@@ -178,7 +179,8 @@ const apiManagerMaker = (
 
         warnAllLeft(...responses)
 
-        if (responses.every(isLeft)) return invalid
+        if (responses.every(isLeft))
+          return invalid as Api.Response<Swap.Order[]>
 
         const merged: Record<Swap.Order['txHash'], Swap.Order> = {}
         const append = (order: Swap.Order) => {
@@ -215,7 +217,9 @@ const apiManagerMaker = (
         }
       },
 
-      async limitOptions(body: Swap.LimitOptionsRequest) {
+      async limitOptions(
+        body: Swap.LimitOptionsRequest,
+      ): Promise<Api.Response<Swap.LimitOptionsResponse>> {
         const enabledAggregators = getEnabledAggregators()
 
         const responses: Array<Api.Response<Swap.LimitOptionsResponse>> =
@@ -228,13 +232,15 @@ const apiManagerMaker = (
         warnAllLeft(...responses)
 
         if (responses.every(isLeft))
-          return responses.find((res) => res.error.status !== -3) ?? invalid
+          return (responses.find((res) => res.error.status !== -3) ??
+            invalid) as Api.Response<Swap.LimitOptionsResponse>
 
         const validResponses = responses
           .filter(isRight)
           .map(({value}) => value.data)
 
-        if (validResponses.length === 0) return invalid
+        if (validResponses.length === 0)
+          return invalid as Api.Response<Swap.LimitOptionsResponse>
 
         const mergedOptions: Partial<
           Record<Swap.Protocol, Swap.LimitOptionsResponse['options'][number]>
@@ -264,7 +270,9 @@ const apiManagerMaker = (
         }
       },
 
-      async estimate(body: Swap.EstimateRequest) {
+      async estimate(
+        body: Swap.EstimateRequest,
+      ): Promise<Api.Response<Swap.EstimateResponse>> {
         const enabledAggregators = getEnabledAggregators()
 
         const settledResults = await Promise.allSettled(
@@ -306,14 +314,14 @@ const apiManagerMaker = (
                 res.error.message !== '' &&
                 !res.error.message.includes('DOCTYPE html'),
             ) ?? invalid,
-          )
+          ) as Api.Response<Swap.EstimateResponse>
 
         const estimates = responses
           .filter(isRight)
           .flatMap(({value}) => value.data)
 
         if (estimates.length === 0) {
-          return invalid
+          return invalid as Api.Response<Swap.EstimateResponse>
         }
 
         const bestEstimate = estimates.reduce(
@@ -330,13 +338,16 @@ const apiManagerMaker = (
         }
       },
 
-      async create(body: Swap.CreateRequest) {
+      async create(
+        body: Swap.CreateRequest,
+      ): Promise<Api.Response<Swap.CreateResponse>> {
         // Feature flag: single adapter create (default true)
         const singleAdapterCreate = true
 
         if (singleAdapterCreate && body.routeHint?.aggregator != null) {
           const adapter = adapters[body.routeHint.aggregator]
-          if (adapter == null) return invalid
+          if (adapter == null)
+            return invalid as Api.Response<Swap.CreateResponse>
 
           const response = await adapter.create(body)
           if (isLeft(response)) return standarizeError(response)
@@ -363,7 +374,7 @@ const apiManagerMaker = (
                 res.error.message !== '' &&
                 !res.error.message.includes('DOCTYPE html'),
             ) ?? invalid,
-          )
+          ) as Api.Response<Swap.CreateResponse>
 
         const creates = responses.filter(isRight).map(({value}) => value.data)
 
@@ -381,7 +392,9 @@ const apiManagerMaker = (
         }
       },
 
-      async cancel(body: Swap.CancelRequest) {
+      async cancel(
+        body: Swap.CancelRequest,
+      ): Promise<Api.Response<Swap.CancelResponse>> {
         // Helper function to check if response has valid CBOR
         const hasValidCbor = (
           response: Api.Response<Swap.CancelResponse>,
@@ -399,7 +412,7 @@ const apiManagerMaker = (
                 ? adapters[Swap.Aggregator.Steelswap]
                 : adapters[Swap.Aggregator.Dexhunter]
 
-        if (!initialAdapter) return invalid
+        if (!initialAdapter) return invalid as Api.Response<Swap.CancelResponse>
 
         const initialResponse = await initialAdapter.cancel(body)
 

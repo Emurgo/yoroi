@@ -111,7 +111,7 @@ export const hasResponse = (
     'response' in error &&
     isRecord(error.response) &&
     ('data' in error.response || 'status' in error.response)
-  }
+  )
 }
 
 export const hasRequest = (error: unknown): error is {request: unknown} => {

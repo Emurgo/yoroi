@@ -1,7 +1,7 @@
 import {TipStatusResponse, TxHistoryRequest, WalletContext} from '@yoroi/api'
 import {PromiseAllLimited, isArray, parseSafe} from '@yoroi/common'
 import {RemoteCertificateMeta} from '@yoroi/staking'
-import {CertificateKind} from '@yoroi/tx'
+import {CertificateKind as CertificateKindValue} from '@yoroi/tx'
 import {
   Address,
   App,
@@ -682,18 +682,18 @@ const perAddressCertificatesSelector = (
   Object.values(transactions).forEach((tx: WalletTransaction) => {
     tx.certificates.forEach((cert) => {
       if (
-        cert.kind === CertificateKind.StakeRegistration ||
-        cert.kind === CertificateKind.StakeDeregistration ||
-        cert.kind === CertificateKind.StakeDelegation
+        cert.kind === CertificateKindValue.StakeRegistration ||
+        cert.kind === CertificateKindValue.StakeDeregistration ||
+        cert.kind === CertificateKindValue.StakeDelegation
       ) {
         // These certificate types have rewardAddress property
         type CertWithRewardAddress = Extract<
           typeof cert,
           {
             kind:
-              | CertificateKind.StakeRegistration
-              | CertificateKind.StakeDeregistration
-              | CertificateKind.StakeDelegation
+              | typeof CertificateKindValue.StakeRegistration
+              | typeof CertificateKindValue.StakeDeregistration
+              | typeof CertificateKindValue.StakeDelegation
           }
         >
         const {rewardAddress} = cert as CertWithRewardAddress

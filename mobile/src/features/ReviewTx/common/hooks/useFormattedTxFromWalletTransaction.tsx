@@ -20,6 +20,7 @@ import {
   FormattedInputs,
   FormattedOutputs,
   FormattedTx,
+  TransactionBody,
   TransactionOutputs,
 } from '../types'
 import {formatFee} from './useFormattedTx'

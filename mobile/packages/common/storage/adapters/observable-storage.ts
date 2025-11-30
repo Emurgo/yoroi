@@ -53,9 +53,13 @@ export const observableStorageMaker = <
           const notify = () => {
             const [firstArg] = args
             const isArray = Array.isArray(firstArg)
-            if (isString(firstArg as K)) {
+            if (
+              firstArg != null &&
+              typeof firstArg === 'string' &&
+              isString(firstArg)
+            ) {
               // single operations
-              observer.notify([firstArg])
+              observer.notify([firstArg as K])
             } else if (isArray) {
               // multi operations
               const keys = firstArg as K[]
@@ -71,7 +75,7 @@ export const observableStorageMaker = <
             return result.then((resolvedValue) => {
               notify()
               return resolvedValue
-            })
+            }) as MethodReturn
           } else {
             notify()
             return result
@@ -129,7 +133,7 @@ export const observableMultiStorageMaker = <
             return result.then((resolvedValue) => {
               observer.notify(null)
               return resolvedValue
-            })
+            }) as MethodReturn
           } else {
             observer.notify(null)
             return result
