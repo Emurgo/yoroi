@@ -1,3 +1,4 @@
+import type {FontSource} from 'expo-font'
 import * as Font from 'expo-font'
 import * as React from 'react'
 
@@ -25,24 +26,24 @@ export const useFonts = () => {
   React.useEffect(() => {
     async function loadFonts() {
       try {
-        const fontMappings = {
-          'Rubik': RubikRegular,
-          'Rubik-Regular': RubikRegular,
-          'Rubik-Medium': RubikMedium,
-          'Rubik-Bold': RubikBold,
-          'Rubik-Light': RubikLight,
-          'Rubik-SemiBold': RubikSemiBold,
-          'Rubik-Black': RubikBlack,
-          'Rubik-ExtraBold': RubikExtraBold,
-          'Rubik-Italic': RubikItalic,
-          'Rubik-MediumItalic': RubikMediumItalic,
-          'Rubik-BoldItalic': RubikBoldItalic,
-          'Rubik-LightItalic': RubikLightItalic,
-          'Rubik-SemiBoldItalic': RubikSemiBoldItalic,
-          'Rubik-BlackItalic': RubikBlackItalic,
-          'Rubik-ExtraBoldItalic': RubikExtraBoldItalic,
-          'Rubik-Variable': RubikVariable,
-          'Rubik-Italic-Variable': RubikItalicVariable,
+        const fontMappings: Record<string, FontSource> = {
+          'Rubik': RubikRegular as FontSource,
+          'Rubik-Regular': RubikRegular as FontSource,
+          'Rubik-Medium': RubikMedium as FontSource,
+          'Rubik-Bold': RubikBold as FontSource,
+          'Rubik-Light': RubikLight as FontSource,
+          'Rubik-SemiBold': RubikSemiBold as FontSource,
+          'Rubik-Black': RubikBlack as FontSource,
+          'Rubik-ExtraBold': RubikExtraBold as FontSource,
+          'Rubik-Italic': RubikItalic as FontSource,
+          'Rubik-MediumItalic': RubikMediumItalic as FontSource,
+          'Rubik-BoldItalic': RubikBoldItalic as FontSource,
+          'Rubik-LightItalic': RubikLightItalic as FontSource,
+          'Rubik-SemiBoldItalic': RubikSemiBoldItalic as FontSource,
+          'Rubik-BlackItalic': RubikBlackItalic as FontSource,
+          'Rubik-ExtraBoldItalic': RubikExtraBoldItalic as FontSource,
+          'Rubik-Variable': RubikVariable as FontSource,
+          'Rubik-Italic-Variable': RubikItalicVariable as FontSource,
         }
 
         logger.debug('Loading fonts...', {

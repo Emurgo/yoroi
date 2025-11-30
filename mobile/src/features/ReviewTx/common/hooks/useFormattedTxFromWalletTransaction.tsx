@@ -219,7 +219,7 @@ export const useFormattedTxFromWalletTransaction = (
 
   const formattedFee = formatFee(wallet, {
     fee: walletTransaction.fee ?? Branded.ZERO_QUANTITY,
-  } as TransactionBody)
+  } as unknown as TransactionBody)
   const formattedCertificates = formatCertificatesFromWalletTransaction(
     walletTransaction.certificates,
   )

@@ -88,8 +88,10 @@ export const Tooltip = ({
   }, [])
 
   React.useEffect(() => {
-    const subscription = addEventListener(Dimensions, 'change', () =>
-      setVisible(false),
+    const subscription = addEventListener(
+      Dimensions as unknown as Parameters<typeof addEventListener>[0],
+      'change',
+      () => setVisible(false),
     )
 
     return () => subscription.remove()

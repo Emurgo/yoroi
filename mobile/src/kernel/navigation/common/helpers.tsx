@@ -300,7 +300,7 @@ type Color = `#${string}` | `rgba(${number},${number},${number},${number})`
  * @param routeName - The name of the route to remove
  * @param options - Optional configuration
  */
-type NavigationLike = {
+export type NavigationLike = {
   getState: () => NavigationState | undefined
   reset: (state: NavigationState) => void
   getParent?: () => NavigationLike | undefined

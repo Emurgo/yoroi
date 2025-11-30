@@ -225,6 +225,7 @@ export function DevMenu() {
 
         <Button
           onPress={() => {
+            // @ts-ignore - test-list-search is a dev-only route not in types
             navigation.navigate('test-list-search')
           }}
           type={ButtonType.Secondary}

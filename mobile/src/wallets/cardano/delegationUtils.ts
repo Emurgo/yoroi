@@ -95,10 +95,7 @@ export const getDelegationStatus = (
           poolKeyHash: cert.poolKeyHash,
           isRegistered: true,
         }
-      } else if (
-        cert.kind === 'StakeRegistration' ||
-        cert.kind === 'MoveInstantaneousRewardsCert'
-      ) {
+      } else if (cert.kind === 'StakeRegistration') {
         status = {isRegistered: true}
       } else if (cert.kind === 'StakeDeregistration') {
         status = {isRegistered: false}

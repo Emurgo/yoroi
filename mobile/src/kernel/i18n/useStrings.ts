@@ -1799,7 +1799,7 @@ export const useStrings = () => {
         receiveLabel: f(actionMessages.receive),
         buyLabel: f(actionMessages.buy),
         buyTitle: f(actionMessages.buyTitle),
-        buyInfo: (options: Record<string, unknown>) =>
+        buyInfo: (options: {b: (text: React.ReactNode) => React.ReactNode}) =>
           f(actionMessages.buyInfo, options),
         proceed: f(actionMessages.proceed),
         swapLabel: f(actionMessages.swap),

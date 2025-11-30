@@ -580,7 +580,7 @@ export const useWalletNavigation = () => {
           screen: 'setup-wallet-restore-from-link',
           params: {action},
         },
-      } as NavigatorScreenParams<WalletStackRoutes>)
+      } as unknown as NavigatorScreenParams<WalletStackRoutes>)
     },
 
     // Send Navigation Functions

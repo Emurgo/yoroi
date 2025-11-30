@@ -91,7 +91,7 @@ export function getOwnWalletAdaHandles(
       // If not found, try to extract from metadata
       if (!handleName) {
         // balance.info is Balance.TokenInfo which has metadatas, but tokenInfo is Portfolio.Token.Info
-        const balanceInfo = balance.info as Balance.TokenInfo
+        const balanceInfo = balance.info as unknown as Balance.TokenInfo
         const metadata = balanceInfo.metadatas?.mintNft
         if (metadata) {
           handleName = extractHandleNameFromMetadata(metadata)
