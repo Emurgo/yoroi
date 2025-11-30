@@ -1,8 +1,12 @@
 import {useQuery} from '@tanstack/react-query'
 
-import {ContractService, SmartContractInfo} from '../services/contract-service'
+import {
+  SmartContractInfo,
+  createContractService,
+  isContractAddress,
+} from '../services/contract-service'
 
-const contractService = new ContractService({
+const contractService = createContractService({
   apiUrl:
     process.env.EXPO_PUBLIC_CONTRACT_SERVICE_URL || 'https://api.example.com',
 })
@@ -14,7 +18,7 @@ export const useSmartContractInfo = (address: string | null) => {
   return useQuery<SmartContractInfo | null>({
     queryKey: ['smartContractInfo', address],
     queryFn: () => (address ? contractService.getContractInfo(address) : null),
-    enabled: !!address && ContractService.isContractAddress(address),
+    enabled: !!address && isContractAddress(address),
     staleTime: 5 * 60 * 1000, // 5 minutes
     retry: 1,
   })

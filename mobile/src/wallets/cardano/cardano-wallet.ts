@@ -94,7 +94,10 @@ import {
   getAddressedUtxos as getAddressedUtxosOp,
   getSpendableUtxos as getSpendableUtxosOp,
 } from './operations/utxo-operations'
-import {TransactionManager} from './transactionManager/transactionManager'
+import {
+  type TransactionManager,
+  createTransactionManager,
+} from './transactionManager/transactionManager'
 import {
   CardanoTypes,
   ServerStatus,
@@ -357,7 +360,7 @@ export const makeCardanoWallet = (
       apiUrl: legacyApiBaseUrl,
     })
 
-    const transactionManager = await TransactionManager.create(
+    const transactionManager = await createTransactionManager(
       accountStorage.join('txs/'),
     )
     // TODO: revisit memos should be per network and shouldn't be cleared on wallet clear (unless user selects it)

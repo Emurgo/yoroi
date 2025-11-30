@@ -14,63 +14,80 @@ import {CardanoMobileWrapped} from '../wrappedCsl'
  * Simplified AddressChain for read-only wallets
  * No address generation or discovery - just manages a fixed list
  */
-export class ReadOnlyAddressChain {
-  private _addresses: Address[]
-  private _blockSize: number
-
-  constructor(addresses: string[] | Address[], blockSize = 50) {
-    // Convert string[] to Address[] if needed
-    this._addresses = addresses.map((addr) =>
-      typeof addr === 'string' ? Branded.asAddress(addr) : addr,
-    )
-    this._blockSize = blockSize
+export type ReadOnlyAddressChain = {
+  readonly addresses: Address[]
+  readonly blockSize: number
+  readonly info: {
+    lastUsedIndex: number
+    lastUsedIndexVisual: number
+    canIncrease: boolean
   }
+  isMyAddress(address: Address | string): boolean
+  getIndexOfAddress(address: Address | string): number
+  getBlocks(): Address[][]
+  addSubscriberToNewAddresses(
+    subscriber: (addresses: Address[]) => unknown,
+  ): void
+  addAddresses(newAddresses: string[] | Address[]): void
+}
 
-  get addresses(): Address[] {
-    return [...this._addresses] // defensive copy
-  }
+export function createReadOnlyAddressChain(
+  addresses: string[] | Address[],
+  blockSize = 50,
+): ReadOnlyAddressChain {
+  let addressList: Address[] = addresses.map((addr) =>
+    typeof addr === 'string' ? Branded.asAddress(addr) : addr,
+  )
 
-  isMyAddress(address: Address | string): boolean {
-    const addr =
-      typeof address === 'string' ? Branded.asAddress(address) : address
-    return this._addresses.includes(addr)
-  }
+  return {
+    get addresses(): Address[] {
+      return [...addressList] // defensive copy
+    },
+    blockSize,
 
-  getIndexOfAddress(address: Address | string): number {
-    const addr =
-      typeof address === 'string' ? Branded.asAddress(address) : address
-    return this._addresses.indexOf(addr)
-  }
+    get info() {
+      return {
+        lastUsedIndex: addressList.length - 1,
+        lastUsedIndexVisual: addressList.length - 1,
+        canIncrease: false, // Can't generate new addresses
+      } as const
+    },
 
-  getBlocks(): Address[][] {
-    return _.chunk(this._addresses, this._blockSize)
-  }
+    isMyAddress(address: Address | string): boolean {
+      const addr =
+        typeof address === 'string' ? Branded.asAddress(address) : address
+      return addressList.includes(addr)
+    },
 
-  // No discovery, no generation - just return what we have
-  get info() {
-    return {
-      lastUsedIndex: this._addresses.length - 1,
-      lastUsedIndexVisual: this._addresses.length - 1,
-      canIncrease: false, // Can't generate new addresses
-    } as const
-  }
+    getIndexOfAddress(address: Address | string): number {
+      const addr =
+        typeof address === 'string' ? Branded.asAddress(address) : address
+      return addressList.indexOf(addr)
+    },
 
-  // For compatibility with AddressChain interface
-  addSubscriberToNewAddresses(_subscriber: (addresses: Address[]) => unknown) {
-    // No-op: read-only wallets don't generate new addresses
-  }
+    getBlocks(): Address[][] {
+      return _.chunk(addressList, blockSize)
+    },
 
-  // Allow adding addresses discovered from transactions
-  addAddresses(newAddresses: string[] | Address[]) {
-    const addresses = newAddresses.map((addr) =>
-      typeof addr === 'string' ? Branded.asAddress(addr) : addr,
-    )
-    const uniqueNew = addresses.filter(
-      (addr) => !this._addresses.includes(addr),
-    )
-    if (uniqueNew.length > 0) {
-      this._addresses = [...this._addresses, ...uniqueNew]
-    }
+    // For compatibility with AddressChain interface
+    addSubscriberToNewAddresses(
+      _subscriber: (addresses: Address[]) => unknown,
+    ) {
+      // No-op: read-only wallets don't generate new addresses
+    },
+
+    // Allow adding addresses discovered from transactions
+    addAddresses(newAddresses: string[] | Address[]) {
+      const addressesToAdd = newAddresses.map((addr) =>
+        typeof addr === 'string' ? Branded.asAddress(addr) : addr,
+      )
+      const uniqueNew = addressesToAdd.filter(
+        (addr) => !addressList.includes(addr),
+      )
+      if (uniqueNew.length > 0) {
+        addressList = [...addressList, ...uniqueNew]
+      }
+    },
   }
 }
 
@@ -392,8 +409,8 @@ export const readOnlyAccountManagerMaker = async ({
     finalExternalAddresses = [knownAddress]
   }
 
-  const internalChain = new ReadOnlyAddressChain(finalInternalAddresses)
-  const externalChain = new ReadOnlyAddressChain(finalExternalAddresses)
+  const internalChain = createReadOnlyAddressChain(finalInternalAddresses)
+  const externalChain = createReadOnlyAddressChain(finalExternalAddresses)
 
   // Throttle address discovery to at most once per hour for read-only wallets
   const DISCOVERY_THROTTLE_INTERVAL = time.hours(1)

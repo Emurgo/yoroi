@@ -1,6 +1,6 @@
 import {Wallet} from '@yoroi/types'
 
-import {AddressGenerator} from './account-manager'
+import {createAddressGenerator} from './account-manager'
 
 export const deriveAddressFromXPub = async ({
   count,
@@ -15,7 +15,7 @@ export const deriveAddressFromXPub = async ({
   implementation: Wallet.Implementation
   accountPubKeyHex: string
 }) => {
-  const addrGenerator = new AddressGenerator(
+  const addrGenerator = createAddressGenerator(
     accountPubKeyHex,
     role,
     implementation,

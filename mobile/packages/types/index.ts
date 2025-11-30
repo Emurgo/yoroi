@@ -43,15 +43,13 @@ import {
   ApiErrorTooManyRequests,
   ApiErrorUnauthorized,
   ApiErrorUnknown,
-} from './api/errors'
-import {ApiResponse, ApiResponseError, ApiResponseSuccess} from './api/response'
-import {ApiHttpStatusCode} from './api/status-code'
-import {AppCacheInfo, AppCacheRecord, AppCacheRow} from './app/cache'
-import {
   AppErrorInvalidState,
   AppErrorLibraryFailed,
   AppErrorWrongPassword,
-} from './app/errors'
+} from './errors'
+import {ApiResponse, ApiResponseError, ApiResponseSuccess} from './api/response'
+import {ApiHttpStatusCode} from './api/status-code'
+import {AppCacheInfo, AppCacheRecord, AppCacheRow} from './app/cache'
 import {
   AppLoggerEntry,
   AppLoggerLevel,
@@ -112,7 +110,7 @@ import {
   ClaimApiErrorsNotFound,
   ClaimApiErrorsRateLimited,
   ClaimApiErrorsTooEarly,
-} from './claim/errors'
+} from './errors'
 import {ExchangeApi} from './exchange/api'
 import {ExchangeBlockchainCode} from './exchange/blockchain'
 import {ExchangeManagerOptions} from './exchange/build'
@@ -121,7 +119,7 @@ import {
   ExchangeProviderNotFoundError,
   ExchangeUnknownError,
   ExchangeValidationError,
-} from './exchange/errors'
+} from './errors'
 import {ExchangeFiat} from './exchange/fiat'
 import {ExchangeManager} from './exchange/manager'
 import {ExchangeOrderType} from './exchange/order-type'
@@ -163,7 +161,7 @@ import {
   LinksErrorSchemeNotImplemented,
   LinksErrorUnsupportedAuthority,
   LinksErrorUnsupportedVersion,
-} from './links/errors'
+} from './errors'
 import {
   LinksBrowserLaunchDappUrlParams,
   LinksExchangeShowCreateResultParams,
@@ -198,7 +196,7 @@ import {
   PushNotificationEvent,
 } from './notifications/manager'
 import {NumbersAtomicValue} from './numbers/atomic-value'
-import {NumbersErrorInvalidAtomicValue} from './numbers/errors'
+import {NumbersErrorInvalidAtomicValue} from './errors'
 import {NumbersRatio} from './numbers/ratio'
 import {
   PortfolioTokenActivity,
@@ -275,12 +273,12 @@ import {
   ResolverErrorNotFound,
   ResolverErrorUnsupportedTld,
   ResolverErrorWrongBlockchain,
-} from './resolver/errors'
+} from './errors'
 import {ResolverManager} from './resolver/manager'
 import {ResolverNameServer} from './resolver/name-server'
 import {ResolverReceiver} from './resolver/receiver'
 import {ResolverStorage} from './resolver/storage'
-import {ScanErrorUnknown, ScanErrorUnknownContent} from './scan/errors'
+import {ScanErrorUnknown, ScanErrorUnknownContent} from './errors'
 import {SwapAggregator} from './swap/aggregator'
 import {
   SwapApi,
@@ -687,14 +685,42 @@ export namespace Links {
   export type CardanoActionRestoreWallet = CardanoActionRestoreWalletType
 
   export namespace Errors {
-    export class ExtraParamsDenied extends LinksErrorExtraParamsDenied {}
-    export class ForbiddenParamsProvided extends LinksErrorForbiddenParamsProvided {}
-    export class RequiredParamsMissing extends LinksErrorRequiredParamsMissing {}
-    export class ParamsValidationFailed extends LinksErrorParamsValidationFailed {}
+    export class ExtraParamsDenied extends LinksErrorExtraParamsDenied {
+      constructor(message?: string) {
+        super(message)
+      }
+    }
+    export class ForbiddenParamsProvided extends LinksErrorForbiddenParamsProvided {
+      constructor(message?: string) {
+        super(message)
+      }
+    }
+    export class RequiredParamsMissing extends LinksErrorRequiredParamsMissing {
+      constructor(message?: string) {
+        super(message)
+      }
+    }
+    export class ParamsValidationFailed extends LinksErrorParamsValidationFailed {
+      constructor(message?: string) {
+        super(message)
+      }
+    }
     export class UnknownContent extends ScanErrorUnknownContent {}
-    export class UnsupportedAuthority extends LinksErrorUnsupportedAuthority {}
-    export class UnsupportedVersion extends LinksErrorUnsupportedVersion {}
-    export class SchemeNotImplemented extends LinksErrorSchemeNotImplemented {}
+    export class UnsupportedAuthority extends LinksErrorUnsupportedAuthority {
+      constructor(message?: string) {
+        super(message)
+      }
+    }
+    export class UnsupportedVersion extends LinksErrorUnsupportedVersion {
+      constructor(message?: string) {
+        super(message)
+      }
+    }
+    export class SchemeNotImplemented extends LinksErrorSchemeNotImplemented {
+      constructor(message?: string) {
+        super(message)
+      }
+    }
   }
 }
 
@@ -981,9 +1007,21 @@ export namespace Exchange {
     ExchangeReferralUrlQueryStringParams
   export interface Api extends ExchangeApi {}
   export namespace Errors {
-    export class Validation extends ExchangeValidationError {}
-    export class Unknown extends ExchangeUnknownError {}
-    export class ProviderNotFound extends ExchangeProviderNotFoundError {}
+    export class Validation extends ExchangeValidationError {
+      constructor(message?: string) {
+        super(message)
+      }
+    }
+    export class Unknown extends ExchangeUnknownError {
+      constructor(message?: string) {
+        super(message)
+      }
+    }
+    export class ProviderNotFound extends ExchangeProviderNotFoundError {
+      constructor(message?: string) {
+        super(message)
+      }
+    }
   }
 }
 
@@ -1026,12 +1064,24 @@ export namespace Scan {
 export namespace Claim {
   export namespace Api {
     export namespace Errors {
-      export class AlreadyClaimed extends ClaimApiErrorsAlreadyClaimed {}
-      export class Expired extends ClaimApiErrorsExpired {}
-      export class InvalidRequest extends ClaimApiErrorsInvalidRequest {}
-      export class NotFound extends ClaimApiErrorsNotFound {}
-      export class RateLimited extends ClaimApiErrorsRateLimited {}
-      export class TooEarly extends ClaimApiErrorsTooEarly {}
+      export class AlreadyClaimed extends ClaimApiErrorsAlreadyClaimed {
+        static readonly statusCode = ClaimApiErrorsAlreadyClaimed.statusCode
+      }
+      export class Expired extends ClaimApiErrorsExpired {
+        static readonly statusCode = ClaimApiErrorsExpired.statusCode
+      }
+      export class InvalidRequest extends ClaimApiErrorsInvalidRequest {
+        static readonly statusCode = ClaimApiErrorsInvalidRequest.statusCode
+      }
+      export class NotFound extends ClaimApiErrorsNotFound {
+        static readonly statusCode = ClaimApiErrorsNotFound.statusCode
+      }
+      export class RateLimited extends ClaimApiErrorsRateLimited {
+        static readonly statusCode = ClaimApiErrorsRateLimited.statusCode
+      }
+      export class TooEarly extends ClaimApiErrorsTooEarly {
+        static readonly statusCode = ClaimApiErrorsTooEarly.statusCode
+      }
     }
 
     export type ClaimTokensRequestPayload = ClaimApiClaimTokensRequestPayload
@@ -1048,3 +1098,5 @@ export * from './helpers/storage'
 export * from './helpers/types'
 // Export AppLoggerLevel directly to avoid circular dependency issues
 export {AppLoggerLevel} from './app/logger'
+// Export all errors from centralized location
+export * from './errors'

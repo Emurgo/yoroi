@@ -1,7 +1,2 @@
-import {MessageDescriptor} from 'react-intl'
-
-export class LocalizableError extends Error {
-  constructor(readonly descriptor: MessageDescriptor) {
-    super()
-  }
-}
+// Re-export from centralized error location
+export {LocalizableError} from '@yoroi/types'

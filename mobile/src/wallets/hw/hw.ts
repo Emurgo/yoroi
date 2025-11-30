@@ -1,10 +1,8 @@
 import {UseMutationOptions, useMutation} from '@tanstack/react-query'
 import * as React from 'react'
-import {MessageDescriptor} from 'react-intl'
 import {Permission, PermissionsAndroid, Platform} from 'react-native'
 
 import {useBackgroundTimerControl} from '~/hooks/BackgroundTimerContext'
-import {LocalizableError} from '~/kernel/i18n/LocalizableError'
 
 const requestLedgerPermissions = async () => {
   if (Platform.OS !== 'android') return Promise.resolve()
@@ -59,63 +57,16 @@ const getLedgerPermissions = () => {
   return permissions
 }
 
-export class BaseLedgerError extends LocalizableError {
-  public values: Record<string, unknown>
-  constructor(
-    descriptor: MessageDescriptor,
-    values: Record<string, unknown> = {},
-  ) {
-    super(descriptor)
-    this.values = values
-  }
-}
-
-export class BluetoothDisabledError extends BaseLedgerError {
-  constructor() {
-    super({
-      id: 'ledger.bluetoothDisabledError',
-      defaultMessage:
-        'Bluetooth is disabled. Please enable Bluetooth to connect to your Ledger device.',
-    })
-  }
-}
-export class GeneralConnectionError extends BaseLedgerError {
-  constructor() {
-    super({
-      id: 'ledger.connectionError',
-      defaultMessage:
-        'Failed to connect to Ledger device. Please check your connection and try again.',
-    })
-  }
-}
-// note: uses same message as above.
-export class LedgerUserError extends BaseLedgerError {
-  constructor() {
-    super({
-      id: 'ledger.connectionError',
-      defaultMessage:
-        'Failed to connect to Ledger device. Please check your connection and try again.',
-    })
-  }
-}
-export class RejectedByUserError extends BaseLedgerError {
-  constructor() {
-    super({
-      id: 'ledger.rejectedByUserError',
-      defaultMessage:
-        'Operation was rejected by the user on the Ledger device.',
-    })
-  }
-}
-
-export class AdaAppClosedError extends BaseLedgerError {
-  constructor() {
-    super({
-      id: 'ledger.appOpened',
-      defaultMessage: 'Please open the Cardano app on your Ledger device.',
-    })
-  }
-}
+// Re-export from centralized error location
+export {
+  BaseLedgerError,
+  BluetoothDisabledError,
+  GeneralConnectionError,
+  LedgerUserError,
+  RejectedByUserError,
+  AdaAppClosedError,
+  DeprecatedAdaAppError,
+} from '@yoroi/types'
 
 export const HARDWARE_WALLETS = {
   LEDGER_NANO: {

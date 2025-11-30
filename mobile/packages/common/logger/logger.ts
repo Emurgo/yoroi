@@ -6,6 +6,8 @@ import {App, AppLoggerLevel} from '@yoroi/types'
  */
 export const noOpLogger: App.Logger.Manager = {
   level: AppLoggerLevel.Debug,
+  trail: [],
+  filter: null,
   debug: () => {},
   log: () => {},
   info: () => {},

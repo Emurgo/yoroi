@@ -18,7 +18,7 @@ import {
   mockedTipStatusResponse,
 } from '../mocks'
 import {
-  TransactionManager,
+  createTransactionManager,
   makeTxManagerStorage,
   syncTxs,
 } from './transactionManager'
@@ -44,7 +44,7 @@ describe('transactionManager', () => {
       ['txids', [mockTx.id as TransactionHash]],
     ])
 
-    const txManager = await TransactionManager.create(mockStorage)
+    const txManager = await createTransactionManager(mockStorage)
 
     expect(txManager.transactions).toMatchSnapshot()
     expect(txManager.perAddressTxs).toMatchSnapshot()

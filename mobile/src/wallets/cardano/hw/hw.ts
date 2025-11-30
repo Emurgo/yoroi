@@ -1,5 +1,13 @@
 import {cardanoConfig, derivationConfig} from '@yoroi/blockchains'
 import {HW, Wallet} from '@yoroi/types'
+import {
+  AdaAppClosedError,
+  DeprecatedAdaAppError,
+  GeneralConnectionError,
+  LedgerUserError,
+  RejectedByUserError,
+} from '@yoroi/types'
+import {LocalizableError} from '@yoroi/types'
 
 import type {
   GetExtendedPublicKeyRequest,
@@ -18,16 +26,11 @@ import TransportHID from '@ledgerhq/react-native-hid'
 import TransportBLE from '@ledgerhq/react-native-hw-transport-ble'
 import {BleError} from 'react-native-ble-plx'
 
-import {LocalizableError} from '~/kernel/i18n/LocalizableError'
 import {logger} from '~/kernel/logger/logger'
-import {
-  AdaAppClosedError,
-  BaseLedgerError,
-  GeneralConnectionError,
-  HARDWARE_WALLETS,
-  LedgerUserError,
-  RejectedByUserError,
-} from '~/wallets/hw/hw'
+import {HARDWARE_WALLETS} from '~/wallets/hw/hw'
+
+// Re-export for tests
+export {DeprecatedAdaAppError}
 
 const MIN_ADA_APP_VERSION = '2.2.1'
 const MIN_ADA_APP_VERSION_SUPPORTING_CIP36 = 6
@@ -39,19 +42,6 @@ type LedgerConnectionResponse = {
   deviceId: string | null | undefined
   deviceObj: HW.DeviceObj | null | undefined
   serialHex: string
-}
-
-export class DeprecatedAdaAppError extends BaseLedgerError {
-  constructor() {
-    super(
-      {
-        id: 'ledger.deprecatedAdaAppError',
-        defaultMessage:
-          'Please update your Ledger Cardano app to version {version} or higher',
-      },
-      {version: `${MIN_ADA_APP_VERSION}`},
-    )
-  }
 }
 
 const isConnectionError = (e: Error | any): boolean => {
@@ -161,7 +151,7 @@ export const checkDeviceVersion = (
     const minRequired = parseInt(minVersionArray[i]!, 10)
 
     if (deviceVersionArray[i]! < minRequired) {
-      throw new DeprecatedAdaAppError()
+      throw new DeprecatedAdaAppError(MIN_ADA_APP_VERSION)
     }
 
     if (deviceVersionArray[i]! > minRequired) {

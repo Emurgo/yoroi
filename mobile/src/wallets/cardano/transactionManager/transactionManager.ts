@@ -30,95 +30,17 @@ type TransactionManagerState = {
   bestBlockNum: number | null | undefined // global best block, not per address
 }
 
-export class TransactionManager {
-  #state: TransactionManagerState
-  #subscriptions: Array<
-    (transactions: TransactionManagerState['transactions']) => void
-  > = []
-  #perAddressTxsSelector = defaultMemoize(perAddressTxsSelector)
-  #perAddressCertificatesSelector = defaultMemoize(
-    perAddressCertificatesSelector,
-  )
-  #confirmationCountsSelector = defaultMemoize(confirmationCountsSelector)
-  #storage: TxManagerStorage
-
-  static async create(storage: App.Storage) {
-    const txStorage = makeTxManagerStorage(storage)
-    const version = DeviceInfo.getVersion() as Version
-    const isDeprecatedSchema = versionCompare(version, '4.1.0') === -1
-    if (isDeprecatedSchema) {
-      return new TransactionManager({
-        storage: txStorage,
-        transactions: {},
-      })
-    }
-
-    const txs = await txStorage.loadTxs()
-
-    return new TransactionManager({
-      storage: txStorage,
-      transactions: txs,
-    })
-  }
-
-  private constructor({
-    storage,
-    transactions,
-  }: {
-    storage: TxManagerStorage
-    transactions: Record<string, WalletTransaction>
-  }) {
-    this.#storage = storage
-    this.#state = {
-      perAddressSyncMetadata: {},
-      transactions,
-      bestBlockNum: 0,
-    }
-  }
-
+export type TransactionManager = {
   subscribe(
     handler: (transactions: Record<string, WalletTransaction>) => void,
-  ) {
-    this.#subscriptions.push(handler)
-  }
-
-  private updateState(update: TransactionManagerState) {
-    this.#state = {...this.#state, ...update}
-    if (Object.keys(this.#state.transactions).length > 0) {
-      this.#storage.saveTxs(this.#state.transactions)
-    }
-    this.#subscriptions.forEach((handler) => handler(this.#state.transactions))
-  }
-
-  resetState() {
-    this.updateState({
-      perAddressSyncMetadata: {},
-      transactions: {},
-      bestBlockNum: 0,
-    })
-  }
-
-  clear() {
-    return this.#storage.clear()
-  }
-
-  get transactions() {
-    return this.#state.transactions
-  }
-
-  get perAddressTxs() {
-    return this.#perAddressTxsSelector(this.#state)
-  }
-
-  get perRewardAddressCertificates() {
-    return this.#perAddressCertificatesSelector(this.#state)
-  }
-
-  get confirmationCounts() {
-    return this.#confirmationCountsSelector(this.#state)
-  }
-
-  async doSync(
+  ): void
+  resetState(): void
+  clear(): Promise<void>
+  readonly transactions: Record<string, WalletTransaction>
+  readonly perAddressTxs: Record<Address, Array<TransactionHash>>
+  readonly perRewardAddressCertificates: PerAddressCertificatesDict
+  readonly confirmationCounts: Record<string, number | null>
+  doSync(
     addressesByChunks: Array<Array<string>>,
     baseApiUrl: string,
     walletContext?: {
@@ -129,69 +51,8 @@ export class TransactionManager {
       rewardAddresses: string[]
     },
     tipStatus?: TipStatusResponse | null,
-  ) {
-    // Store initial state to restore if sync fails
-    const initialState = {
-      transactions: {...this.#state.transactions},
-    }
-
-    // Callback to update state incrementally as transactions are fetched
-    // This updates in-memory state for UI, but we won't save to storage until sync succeeds
-    const onBatchProcessed = (batchTxs: Record<string, WalletTransaction>) => {
-      const updatedTxs = {...this.#state.transactions, ...batchTxs}
-      this.#state = {
-        ...this.#state,
-        transactions: updatedTxs,
-      }
-      // Notify subscribers immediately so UI updates
-      this.#subscriptions.forEach((handler) =>
-        handler(this.#state.transactions),
-      )
-    }
-
-    try {
-      const txUpdate = await syncTxs({
-        addressesByChunks,
-        baseApiUrl,
-        transactions: this.#state.transactions,
-        api: yoroiApi,
-        onBatchProcessed,
-        walletContext,
-        tipStatus,
-      })
-
-      if (txUpdate) {
-        // Sync succeeded - save the updated state to storage
-        this.updateState({
-          transactions: this.#state.transactions,
-          // @deprecated
-          bestBlockNum: this.#state.bestBlockNum,
-          // @deprecated
-          perAddressSyncMetadata: this.#state.perAddressSyncMetadata,
-        })
-        return true
-      }
-      // Sync returned undefined (no updates) - state is still valid
-      return false
-    } catch (error) {
-      // Sync failed - restore initial state to avoid saving partial/corrupt data
-      this.#state = {
-        ...this.#state,
-        transactions: initialState.transactions,
-      }
-      // Notify subscribers of restored state
-      this.#subscriptions.forEach((handler) =>
-        handler(this.#state.transactions),
-      )
-      throw error
-    }
-  }
-
-  /**
-   * Quick sync that only fetches the first page of transactions for each address chunk.
-   * Used during wallet preparation to make the wallet usable quickly.
-   */
-  async doQuickSync(
+  ): Promise<boolean>
+  doQuickSync(
     addressesByChunks: Array<Array<string>>,
     baseApiUrl: string,
     walletContext?: {
@@ -202,63 +63,214 @@ export class TransactionManager {
       rewardAddresses: string[]
     },
     tipStatus?: TipStatusResponse | null,
-  ) {
-    // Store initial state to restore if sync fails
-    const initialState = {
-      transactions: {...this.#state.transactions},
-    }
+  ): Promise<boolean>
+}
 
-    // Callback to update state incrementally as transactions are fetched
-    // This updates in-memory state for UI, but we won't save to storage until sync succeeds
-    const onBatchProcessed = (batchTxs: Record<string, WalletTransaction>) => {
-      const updatedTxs = {...this.#state.transactions, ...batchTxs}
-      this.#state = {
-        ...this.#state,
-        transactions: updatedTxs,
-      }
-      // Notify subscribers immediately so UI updates
-      this.#subscriptions.forEach((handler) =>
-        handler(this.#state.transactions),
-      )
-    }
+export async function createTransactionManager(
+  storage: App.Storage,
+): Promise<TransactionManager> {
+  const txStorage = makeTxManagerStorage(storage)
+  const version = DeviceInfo.getVersion() as Version
+  const isDeprecatedSchema = versionCompare(version, '4.1.0') === -1
 
-    try {
-      const txUpdate = await syncTxs({
-        addressesByChunks,
-        baseApiUrl,
-        transactions: this.#state.transactions,
-        api: yoroiApi,
-        onBatchProcessed,
-        maxPagesPerChunk: 1, // Only fetch first page for quick sync
-        walletContext,
-        tipStatus,
+  let state: TransactionManagerState = {
+    perAddressSyncMetadata: {},
+    transactions: isDeprecatedSchema ? {} : await txStorage.loadTxs(),
+    bestBlockNum: 0,
+  }
+
+  const subscriptions: Array<
+    (transactions: TransactionManagerState['transactions']) => void
+  > = []
+  const perAddressTxsSelectorMemoized = defaultMemoize(perAddressTxsSelector)
+  const perAddressCertificatesSelectorMemoized = defaultMemoize(
+    perAddressCertificatesSelector,
+  )
+  const confirmationCountsSelectorMemoized = defaultMemoize(
+    confirmationCountsSelector,
+  )
+
+  const updateState = (update: Partial<TransactionManagerState>) => {
+    state = {...state, ...update}
+    if (Object.keys(state.transactions).length > 0) {
+      txStorage.saveTxs(state.transactions)
+    }
+    subscriptions.forEach((handler) => handler(state.transactions))
+  }
+
+  return {
+    subscribe(
+      handler: (transactions: Record<string, WalletTransaction>) => void,
+    ) {
+      subscriptions.push(handler)
+    },
+
+    resetState() {
+      updateState({
+        perAddressSyncMetadata: {},
+        transactions: {},
+        bestBlockNum: 0,
       })
+    },
 
-      if (txUpdate) {
-        // Sync succeeded - save the updated state to storage
-        this.updateState({
-          transactions: this.#state.transactions,
-          // @deprecated
-          bestBlockNum: this.#state.bestBlockNum,
-          // @deprecated
-          perAddressSyncMetadata: this.#state.perAddressSyncMetadata,
+    clear() {
+      return txStorage.clear()
+    },
+
+    get transactions() {
+      return state.transactions
+    },
+
+    get perAddressTxs() {
+      return perAddressTxsSelectorMemoized(state)
+    },
+
+    get perRewardAddressCertificates() {
+      return perAddressCertificatesSelectorMemoized(state)
+    },
+
+    get confirmationCounts() {
+      return confirmationCountsSelectorMemoized(state)
+    },
+
+    async doSync(
+      addressesByChunks: Array<Array<string>>,
+      baseApiUrl: string,
+      walletContext?: {
+        walletId: string
+        publicKeyHex?: string
+        accountPubKeyHex?: string
+        paymentKeyHashes: string[]
+        rewardAddresses: string[]
+      },
+      tipStatus?: TipStatusResponse | null,
+    ) {
+      // Store initial state to restore if sync fails
+      const initialState = {
+        transactions: {...state.transactions},
+      }
+
+      // Callback to update state incrementally as transactions are fetched
+      // This updates in-memory state for UI, but we won't save to storage until sync succeeds
+      const onBatchProcessed = (
+        batchTxs: Record<string, WalletTransaction>,
+      ) => {
+        const updatedTxs = {...state.transactions, ...batchTxs}
+        state = {
+          ...state,
+          transactions: updatedTxs,
+        }
+        // Notify subscribers immediately so UI updates
+        subscriptions.forEach((handler) => handler(state.transactions))
+      }
+
+      try {
+        const txUpdate = await syncTxs({
+          addressesByChunks,
+          baseApiUrl,
+          transactions: state.transactions,
+          api: yoroiApi,
+          onBatchProcessed,
+          walletContext,
+          tipStatus,
         })
-        return true
+
+        if (txUpdate) {
+          // Sync succeeded - save the updated state to storage
+          updateState({
+            transactions: state.transactions,
+            // @deprecated
+            bestBlockNum: state.bestBlockNum,
+            // @deprecated
+            perAddressSyncMetadata: state.perAddressSyncMetadata,
+          })
+          return true
+        }
+        // Sync returned undefined (no updates) - state is still valid
+        return false
+      } catch (error) {
+        // Sync failed - restore initial state to avoid saving partial/corrupt data
+        state = {
+          ...state,
+          transactions: initialState.transactions,
+        }
+        // Notify subscribers of restored state
+        subscriptions.forEach((handler) => handler(state.transactions))
+        throw error
       }
-      // Sync returned undefined (no updates) - state is still valid
-      return false
-    } catch (error) {
-      // Sync failed - restore initial state to avoid saving partial/corrupt data
-      this.#state = {
-        ...this.#state,
-        transactions: initialState.transactions,
+    },
+
+    /**
+     * Quick sync that only fetches the first page of transactions for each address chunk.
+     * Used during wallet preparation to make the wallet usable quickly.
+     */
+    async doQuickSync(
+      addressesByChunks: Array<Array<string>>,
+      baseApiUrl: string,
+      walletContext?: {
+        walletId: string
+        publicKeyHex?: string
+        accountPubKeyHex?: string
+        paymentKeyHashes: string[]
+        rewardAddresses: string[]
+      },
+      tipStatus?: TipStatusResponse | null,
+    ) {
+      // Store initial state to restore if sync fails
+      const initialState = {
+        transactions: {...state.transactions},
       }
-      // Notify subscribers of restored state
-      this.#subscriptions.forEach((handler) =>
-        handler(this.#state.transactions),
-      )
-      throw error
-    }
+
+      // Callback to update state incrementally as transactions are fetched
+      // This updates in-memory state for UI, but we won't save to storage until sync succeeds
+      const onBatchProcessed = (
+        batchTxs: Record<string, WalletTransaction>,
+      ) => {
+        const updatedTxs = {...state.transactions, ...batchTxs}
+        state = {
+          ...state,
+          transactions: updatedTxs,
+        }
+        // Notify subscribers immediately so UI updates
+        subscriptions.forEach((handler) => handler(state.transactions))
+      }
+
+      try {
+        const txUpdate = await syncTxs({
+          addressesByChunks,
+          baseApiUrl,
+          transactions: state.transactions,
+          api: yoroiApi,
+          onBatchProcessed,
+          maxPagesPerChunk: 1, // Only fetch first page for quick sync
+          walletContext,
+          tipStatus,
+        })
+
+        if (txUpdate) {
+          // Sync succeeded - save the updated state to storage
+          updateState({
+            transactions: state.transactions,
+            // @deprecated
+            bestBlockNum: state.bestBlockNum,
+            // @deprecated
+            perAddressSyncMetadata: state.perAddressSyncMetadata,
+          })
+          return true
+        }
+        // Sync returned undefined (no updates) - state is still valid
+        return false
+      } catch (error) {
+        // Sync failed - restore initial state to avoid saving partial/corrupt data
+        state = {
+          ...state,
+          transactions: initialState.transactions,
+        }
+        // Notify subscribers of restored state
+        subscriptions.forEach((handler) => handler(state.transactions))
+        throw error
+      }
+    },
   }
 }
 
