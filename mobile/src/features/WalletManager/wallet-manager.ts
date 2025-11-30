@@ -1285,7 +1285,7 @@ export const makeWalletManager = (
 
       const {ImagePart: seed, TextPart: plate} =
         walletFactory.calcChecksum(checksumSource)
-      const avatar = new Blockies({seed}).asBase64()
+      const avatar = Blockies({seed}).asBase64()
 
       const addressStorage = rootStorage.join(
         `legacy/${network}/v1/${id}/addresses/`,

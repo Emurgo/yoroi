@@ -51,7 +51,7 @@ export const createWalletFromMnemonic = async (params: {
 
   const {ImagePart: seed, TextPart: plate} =
     walletFactory.calcChecksum(accountPubKeyHex)
-  const avatar = new Blockies({seed}).asBase64()
+  const avatar = Blockies({seed}).asBase64()
 
   const meta = await createWalletMeta(
     id,
@@ -109,7 +109,7 @@ export const createWalletFromXPub = async (params: {
 
   const {ImagePart: seed, TextPart: plate} =
     walletFactory.calcChecksum(accountPubKeyHex)
-  const avatar = new Blockies({seed}).asBase64()
+  const avatar = Blockies({seed}).asBase64()
 
   const meta = await createWalletMeta(
     id,
@@ -167,7 +167,7 @@ export const createWalletFromRootKey = async (params: {
 
   const {ImagePart: seed, TextPart: plate} =
     walletFactory.calcChecksum(accountPubKeyHex)
-  const avatar = new Blockies({seed}).asBase64()
+  const avatar = Blockies({seed}).asBase64()
 
   const meta = await createWalletMeta(
     id,

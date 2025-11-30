@@ -33,7 +33,7 @@ const updateMeta =
         ? 'cardano-cip1852'
         : 'cardano-bip44'
     const plate = meta.checksum.TextPart
-    const avatar = new Blockies({seed: meta.checksum.ImagePart}).asBase64()
+    const avatar = Blockies({seed: meta.checksum.ImagePart}).asBase64()
 
     const walletStorage = walletsRootStorage.join(`${meta.id}/`)
     const data = (await walletStorage.getItem('data')) as {

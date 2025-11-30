@@ -424,7 +424,7 @@ const WalletInfoSection = ({
   const {walletManager} = useWalletManager()
   const {openModal} = useModal()
   const {plate, seed} = walletManager.checksum(wallet.publicKeyHex)
-  const seedImage = new Blockies({seed}).asBase64()
+  const seedImage = Blockies({seed}).asBase64()
   const {height: windowHeight} = useWindowDimensions()
 
   const handleShowWalletBalance = () => {

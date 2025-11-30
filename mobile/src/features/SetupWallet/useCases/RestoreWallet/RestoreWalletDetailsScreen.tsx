@@ -314,7 +314,7 @@ export const RestoreWalletDetailsScreen = () => {
 
         <View style={[a.flex_row, a.align_center, a.justify_center, a.gap_sm]}>
           <Icon.WalletAvatar
-            image={new Blockies({seed: plate.ImagePart}).asBase64()}
+            image={Blockies({seed: plate.ImagePart}).asBase64()}
             style={{
               width: 24,
               height: 24,

@@ -35,7 +35,7 @@ const WalletDuplicatedModalContent = ({
 
       <View style={[a.flex_row, a.align_center, a.gap_md]}>
         <Icon.WalletAvatar
-          image={new Blockies({seed}).asBase64()}
+          image={Blockies({seed}).asBase64()}
           size={38}
           style={{
             width: 38,
