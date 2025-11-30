@@ -1,9 +1,11 @@
-import {linksCardanoModuleMaker} from '@yoroi/links'
-import {WalletLinkEncryptionAlgorithm} from '@yoroi/links'
+import {
+  WalletLinkEncryptionAlgorithm,
+  encryptWalletData,
+  linksCardanoModuleMaker,
+} from '@yoroi/links'
 
 import * as React from 'react'
 
-import {encryptWalletData} from '~/features/Links/crypto/wallet-link-encryption'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {makeWalletEncryptedStorage} from '~/kernel/storage/EncryptedStorage'
 
