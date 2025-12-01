@@ -644,6 +644,7 @@ function createWalletObject(
         networkManager.legacyApiBaseUrl,
         walletContext,
         tipStatus,
+        isForced,
       ),
     ])
   }

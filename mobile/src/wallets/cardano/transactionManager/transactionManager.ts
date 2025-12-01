@@ -51,6 +51,7 @@ export type TransactionManager = {
       rewardAddresses: string[]
     },
     tipStatus?: TipStatusResponse | null,
+    isForced?: boolean,
   ): Promise<boolean>
   doQuickSync(
     addressesByChunks: Array<Array<string>>,
@@ -144,6 +145,7 @@ export async function createTransactionManager(
         rewardAddresses: string[]
       },
       tipStatus?: TipStatusResponse | null,
+      isForced: boolean = false,
     ) {
       // Store initial state to restore if sync fails
       const initialState = {
@@ -165,10 +167,14 @@ export async function createTransactionManager(
       }
 
       try {
+        // When forced (pull-to-refresh), use empty transactions to force full refetch
+        // This bypasses local state and query caches
+        const transactionsToUse = isForced ? {} : state.transactions
+
         const txUpdate = await syncTxs({
           addressesByChunks,
           baseApiUrl,
-          transactions: state.transactions,
+          transactions: transactionsToUse,
           api: yoroiApi,
           onBatchProcessed,
           walletContext,
@@ -309,14 +315,6 @@ export async function syncTxs({
   }
   if (!bestBlock.hash) return
 
-  // this should change when backend stop throwing when no tx_hash is passed
-  // so the last will become the tip and not the last tx submitted which would be faster
-  const lastTx = getLatestYoroiTransaction(Object.values(transactions))
-
-  // Validate lastTx has required fields before using it for pagination
-  // This prevents sending invalid payloads that cause 500 errors
-  const validLastTx = lastTx?.blockHash && lastTx?.txHash ? lastTx : undefined
-
   // Filter out empty chunks to avoid API errors
   const validChunks = addressesByChunks.filter((addrs) => addrs.length > 0)
 
@@ -327,23 +325,45 @@ export async function syncTxs({
     return
   }
 
+  // Helper function to find the latest transaction relevant to a specific chunk
+  // A transaction is relevant if it involves any address in the chunk
+  const getLatestTxForChunk = (chunkAddresses: Array<string>) => {
+    const addressSet = new Set(chunkAddresses)
+    const relevantTxs = Object.values(transactions).filter((tx) => {
+      // Check if transaction involves any address in this chunk
+      const involvesChunkAddress =
+        tx.inputs.some((input) => addressSet.has(input.address)) ||
+        tx.outputs.some((output) => addressSet.has(output.address))
+      return involvesChunkAddress
+    })
+    return getLatestYoroiTransaction(relevantTxs)
+  }
+
   // the way the addresses are arranged are make it slower (getting the same tx twice)
   const tasks = validChunks.map((addrs) => {
     const promise = async () => {
       const taskResult: Array<Array<WalletTransaction>> = []
       let bestTx: TimeForTx | undefined
       let isPaginating = false
+
+      // Find the latest transaction relevant to THIS chunk's addresses
+      // This prevents skipping transactions when different chunks have different block heights
+      const chunkLastTx = getLatestTxForChunk(addrs)
+      const validChunkLastTx =
+        chunkLastTx?.blockHash && chunkLastTx?.txHash ? chunkLastTx : undefined
+
       let historyPayload = txHistoryPayloadFactory(
         addrs,
         {
           // tip
           bestBlockNum: bestBlock.height,
-          // current - from state txs saved (only if valid)
-          bestBlockHash: validLastTx?.blockHash
-            ? Branded.asBlockHash(validLastTx.blockHash)
+          // current - use chunk-specific cursor instead of global cursor
+          // This ensures we don't skip transactions in chunks with older block heights
+          bestBlockHash: validChunkLastTx?.blockHash
+            ? Branded.asBlockHash(validChunkLastTx.blockHash)
             : null,
-          bestTxHash: validLastTx?.txHash
-            ? Branded.asTransactionHash(validLastTx.txHash)
+          bestTxHash: validChunkLastTx?.txHash
+            ? Branded.asTransactionHash(validChunkLastTx.txHash)
             : null,
         },
         Branded.asBlockHash(bestBlock.hash!),
@@ -436,14 +456,24 @@ export async function syncTxs({
         // it will cascade back till success
         case ApiHistoryError.errors.REFERENCE_BLOCK_MISMATCH:
         case ApiHistoryError.errors.REFERENCE_TX_NOT_FOUND:
-          if (validLastTx) {
+          // Compute latest transaction for error handling
+          const lastTxForError = getLatestYoroiTransaction(
+            Object.values(transactions),
+          )
+          const validLastTxForError =
+            lastTxForError?.blockHash && lastTxForError?.txHash
+              ? lastTxForError
+              : undefined
+
+          if (validLastTxForError) {
             // Remove transactions that reference the invalid block/tx
             // Keep only transactions from blocks before the invalid reference
             const newTxs = fromPairs(
               Object.values(transactions)
                 .filter(
                   (t) =>
-                    t.blockNum != null && t.blockNum < validLastTx.blockNum,
+                    t.blockNum != null &&
+                    t.blockNum < validLastTxForError.blockNum,
                 )
                 .map((t) => [t.id, t]),
             )
@@ -452,7 +482,7 @@ export async function syncTxs({
               {
                 originalCount: Object.keys(transactions).length,
                 cleanedCount: Object.keys(newTxs).length,
-                invalidReference: validLastTx,
+                invalidReference: validLastTxForError,
               },
             )
             return newTxs

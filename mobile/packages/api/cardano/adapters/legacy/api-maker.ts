@@ -34,7 +34,7 @@ import {
   TxStatusResponse,
 } from '../../api-types'
 import {handleError} from '../../errors'
-import {Addresses, CardanoApiAdapter} from '../../types'
+import {Addresses, CardanoApiAdapter, WalletContext} from '../../types'
 import {fetchDefault} from '../../utils/fetch'
 
 /**
@@ -172,6 +172,7 @@ export const legacyApiMaker = ({
 
     async fetchNewTxHistory(
       request: TxHistoryRequest,
+      _walletContext?: WalletContext,
     ): Promise<{isLast: boolean; transactions: Array<WalletTransaction>}> {
       // Legacy API returns raw transaction data with string types
       const rawTransactions = await fetchDefault<
