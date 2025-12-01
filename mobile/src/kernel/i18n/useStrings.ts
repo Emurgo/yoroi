@@ -1921,6 +1921,19 @@ export const useStrings = () => {
         addressDetailsTitle: f(transactionsMessages.addressDetailsTitle),
         blockDetailsTitle: f(transactionsMessages.blockDetailsTitle),
         address: f(transactionsMessages.address),
+        sent: f(transactionsMessages.sent),
+        received: f(transactionsMessages.received),
+        filterModalTitle: f(transactionsMessages.filterModalTitle),
+        filterOperations: f(transactionsMessages.filterOperations),
+        filterMetadataMemo: f(transactionsMessages.filterMetadataMemo),
+        filterMetadataMemoPlaceholder: f(
+          transactionsMessages.filterMetadataMemoPlaceholder,
+        ),
+        filterAdaAmount: f(transactionsMessages.filterAdaAmount),
+        filterMinAda: f(transactionsMessages.filterMinAda),
+        filterMaxAda: f(transactionsMessages.filterMaxAda),
+        filterApply: f(transactionsMessages.filterApply),
+        filterClear: f(transactionsMessages.filterClear),
         utxo: {
           utxoListTitle: f(transactionsMessages.utxoListTitle),
           utxoConsolidationTitle: f(

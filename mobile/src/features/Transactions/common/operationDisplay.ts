@@ -18,7 +18,7 @@ import {Amounts, Quantities, asQuantity} from '~/wallets/utils/utils'
 /**
  * Extract metadata messages from transaction metadata
  */
-const extractMetadataMessages = (
+export const extractMetadataMessages = (
   metadata: WalletTransaction['metadata'] | undefined,
 ): string[] => {
   if (!metadata) return []
@@ -47,7 +47,7 @@ const extractMetadataMessages = (
 /**
  * Check if transaction metadata indicates a swap
  */
-const isSwapTransaction = (
+export const isSwapTransaction = (
   metadata: WalletTransaction['metadata'] | undefined,
 ): {isSwap: boolean; isCancel: boolean} => {
   const messages = extractMetadataMessages(metadata)

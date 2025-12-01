@@ -461,4 +461,40 @@ export const transactionsMessages = defineMessages({
     id: 'components.transactions.operation.burn',
     defaultMessage: '!!!Burn',
   },
+  filterModalTitle: {
+    id: 'components.transactions.filterModalTitle',
+    defaultMessage: '!!!Filter Transactions',
+  },
+  filterOperations: {
+    id: 'components.transactions.filterOperations',
+    defaultMessage: '!!!Operation Types',
+  },
+  filterMetadataMemo: {
+    id: 'components.transactions.filterMetadataMemo',
+    defaultMessage: '!!!Search Metadata/Memo',
+  },
+  filterMetadataMemoPlaceholder: {
+    id: 'components.transactions.filterMetadataMemoPlaceholder',
+    defaultMessage: '!!!Search in metadata and memo...',
+  },
+  filterAdaAmount: {
+    id: 'components.transactions.filterAdaAmount',
+    defaultMessage: '!!!ADA Amount',
+  },
+  filterMinAda: {
+    id: 'components.transactions.filterMinAda',
+    defaultMessage: '!!!Min ADA',
+  },
+  filterMaxAda: {
+    id: 'components.transactions.filterMaxAda',
+    defaultMessage: '!!!Max ADA',
+  },
+  filterApply: {
+    id: 'components.transactions.filterApply',
+    defaultMessage: '!!!Apply Filters',
+  },
+  filterClear: {
+    id: 'components.transactions.filterClear',
+    defaultMessage: '!!!Clear Filters',
+  },
 })

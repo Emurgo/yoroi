@@ -18,8 +18,11 @@ import {useSync} from '~/features/WalletManager/hooks/useSync'
 import {features} from '~/kernel/features'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
+import {Button, ButtonType} from '~/ui/Button/Button'
+import {Icon} from '~/ui/Icon'
 import {Space, SpaceHeight} from '~/ui/Space/Space'
 
+import {TxFilter} from '../TxList/TxFilterProvider'
 import {TxList} from '../TxList/TxList'
 import {useUtxoConsolidationBanner} from '../UtxoConsolidation/UtxoConsolidation/useUtxoConsolidationBanner'
 import {ActionsBanner} from './ActionsBanner'
@@ -28,6 +31,7 @@ import {CollapsibleHeader} from './CollapsibleHeader'
 import {LockedDeposit} from './LockedDeposit'
 import {WarningBanner} from './WarningBanner'
 import {useOnScroll} from './useOnScroll'
+import {useTxFilterModal} from './useTxFilterModal'
 
 export const TxHistory = () => {
   useGovernanceBanner()
@@ -60,6 +64,8 @@ export const TxHistory = () => {
   })
 
   const handleOnRefresh = () => sync()
+
+  const {filters, openFilterModal} = useTxFilterModal()
 
   // Handle back navigation - always reset to wallet selection when on history-list
   React.useEffect(() => {
@@ -142,11 +148,31 @@ export const TxHistory = () => {
       >
         <Space.Height.lg />
 
-        <Text
-          style={[a.body_1_lg_medium, {color: p.gray_900, textAlign: 'center'}]}
+        <View
+          style={[a.flex_row, a.align_center, a.px_lg, {position: 'relative'}]}
         >
-          {strings.transactions.title}
-        </Text>
+          <Text
+            style={[
+              a.body_1_lg_medium,
+              {color: p.gray_900, textAlign: 'center', flex: 1},
+            ]}
+          >
+            {strings.transactions.title}
+          </Text>
+          <View style={[a.absolute, {right: 16}]}>
+            <Button
+              type={ButtonType.SecondaryText}
+              fgColorsOverride={{
+                idle: p.primary_500,
+                pressed: p.primary_600,
+                disabled: p.primary_200,
+              }}
+              icon={Icon.Magnify}
+              onPress={openFilterModal}
+              testID="txFilterButton"
+            />
+          </View>
+        </View>
 
         <Space.Height.xl />
 
@@ -174,11 +200,18 @@ export const TxHistory = () => {
           />
         )}
 
-        <TxList
-          onScroll={onScroll}
-          refreshing={isLoading}
-          onRefresh={handleOnRefresh}
-        />
+        <TxFilter
+          selectedOperations={filters.selectedOperations}
+          metadataMemoSearch={filters.metadataMemoSearch}
+          minAdaMoved={filters.minAdaMoved}
+          maxAdaMoved={filters.maxAdaMoved}
+        >
+          <TxList
+            onScroll={onScroll}
+            refreshing={isLoading}
+            onRefresh={handleOnRefresh}
+          />
+        </TxFilter>
       </View>
     </LinearGradient>
   )

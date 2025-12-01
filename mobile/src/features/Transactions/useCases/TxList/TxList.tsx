@@ -1,10 +1,16 @@
-import {atoms as a} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 
 import {FlashList, FlashListProps} from '@shopify/flash-list'
+import BigNumber from 'bignumber.js'
 import _ from 'lodash'
 import * as React from 'react'
-import {View} from 'react-native'
+import {ActivityIndicator, View} from 'react-native'
 
+import {
+  extractMetadataText,
+  getAdaAmount,
+  getTransactionOperationTypeKey,
+} from '~/features/Transactions/common/filterHelpers'
 import {TransactionSummary} from '~/features/Transactions/common/types'
 import {useTransactionSummaries} from '~/features/Transactions/hooks/useTransactionSummaries'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
@@ -17,24 +23,30 @@ import {TxListItem} from './TxListItem'
 type Props = Partial<FlashListProps<TransactionSummary>>
 export const TxList = (props: Props) => {
   const {wallet} = useSelectedWallet()
+  const {palette: p} = useTheme()
 
   const filter = useTxFilter()
   const transactionSummaries = useTransactionSummaries({wallet})
-  const filteredTransactions = React.useMemo(
-    () => filterTransactions(transactionSummaries, filter),
-    [transactionSummaries, filter],
-  )
-
-  const [loadedTxs, setLoadedTxs] = React.useState(
-    filteredTransactions.slice(0, batchSize),
-  )
-  const [currentIndex, setCurrentIndex] = React.useState(batchSize)
+  const [isPending, startTransition] = React.useTransition()
+  const [filteredTransactions, setFilteredTransactions] = React.useState<
+    TransactionSummary[]
+  >([])
 
   React.useEffect(() => {
-    setLoadedTxs(filteredTransactions.slice(0, currentIndex + batchSize))
-    setCurrentIndex(currentIndex + batchSize)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [transactionSummaries]) // must be transactionSummaries
+    startTransition(() => {
+      const filtered = filterTransactions(transactionSummaries, filter, wallet)
+      setFilteredTransactions(filtered)
+    })
+  }, [transactionSummaries, filter, wallet])
+
+  const [loadedTxs, setLoadedTxs] = React.useState<TransactionSummary[]>([])
+  const [currentIndex, setCurrentIndex] = React.useState(0)
+
+  React.useEffect(() => {
+    const initialBatch = filteredTransactions.slice(0, batchSize)
+    setLoadedTxs(initialBatch)
+    setCurrentIndex(Math.min(batchSize, filteredTransactions.length))
+  }, [filteredTransactions])
 
   const handleOnEndReached = React.useCallback(() => {
     if (currentIndex >= filteredTransactions.length) return
@@ -58,8 +70,28 @@ export const TxList = (props: Props) => {
     [],
   )
 
+  if (isPending && filteredTransactions.length === 0) {
+    return (
+      <View style={[a.flex_1, a.justify_center, a.align_center]}>
+        <ActivityIndicator size="large" color={p.primary_500} />
+      </View>
+    )
+  }
+
   return (
     <View style={a.flex_1}>
+      {isPending && (
+        <View
+          style={[
+            a.absolute,
+            {top: 0, left: 0, right: 0, zIndex: 10},
+            a.align_center,
+            a.py_sm,
+          ]}
+        >
+          <ActivityIndicator size="small" color={p.primary_500} />
+        </View>
+      )}
       <FlashList
         data={loadedTxs}
         contentContainerStyle={a.p_lg}
@@ -83,18 +115,78 @@ const batchSize = 50
 const filterTransactions = (
   transactions: Record<string, TransactionSummary>,
   filter: ReturnType<typeof useTxFilter>,
+  wallet: ReturnType<typeof useSelectedWallet>['wallet'],
 ) =>
   _(transactions)
     .filter((t) => {
+      // Token filter (existing)
       const {tokenId} = filter
-      if (tokenId === undefined) return true
-      if (tokenId === '.') {
-        const primaryTokenId = '.'
-        const deltaAmount = Amounts.getAmount(t.delta, primaryTokenId)
-        return !Quantities.isZero(deltaAmount.quantity)
+      if (tokenId !== undefined) {
+        if (tokenId === '.') {
+          const primaryTokenId = '.'
+          const deltaAmount = Amounts.getAmount(t.delta, primaryTokenId)
+          if (Quantities.isZero(deltaAmount.quantity)) return false
+        } else {
+          const deltaAmount = Amounts.getAmount(t.delta, tokenId)
+          if (Quantities.isZero(deltaAmount.quantity)) return false
+        }
       }
-      const deltaAmount = Amounts.getAmount(t.delta, tokenId)
-      return !Quantities.isZero(deltaAmount.quantity)
+
+      // Operation type filter
+      if (filter.selectedOperations && filter.selectedOperations.length > 0) {
+        const operationTypeKey = getTransactionOperationTypeKey(t)
+        const operationToMatch = operationTypeKey ?? t.direction
+        if (!filter.selectedOperations.includes(operationToMatch)) {
+          return false
+        }
+      }
+
+      // Metadata/Memo search filter
+      if (filter.metadataMemoSearch && filter.metadataMemoSearch.trim()) {
+        const searchTerm = filter.metadataMemoSearch.toLowerCase().trim()
+        const metadataText = extractMetadataText(t.metadata)
+        const rawTx = wallet.getRawTransaction(t.id)
+        const memo = rawTx?.memo ?? ''
+        const searchableText = `${metadataText} ${memo}`.toLowerCase()
+
+        if (!searchableText.includes(searchTerm)) {
+          return false
+        }
+      }
+
+      // ADA amount range filter
+      if (filter.minAdaMoved || filter.maxAdaMoved) {
+        const primaryTokenId = '.'
+        const adaAmount = getAdaAmount(t.amount, primaryTokenId)
+
+        if (filter.minAdaMoved) {
+          try {
+            const minAda = new BigNumber(filter.minAdaMoved)
+            // Convert to lovelace (multiply by 1e6)
+            const minLovelace = minAda.multipliedBy(1e6)
+            if (adaAmount.isLessThan(minLovelace)) {
+              return false
+            }
+          } catch {
+            // Invalid number, skip this filter
+          }
+        }
+
+        if (filter.maxAdaMoved) {
+          try {
+            const maxAda = new BigNumber(filter.maxAdaMoved)
+            // Convert to lovelace (multiply by 1e6)
+            const maxLovelace = maxAda.multipliedBy(1e6)
+            if (adaAmount.isGreaterThan(maxLovelace)) {
+              return false
+            }
+          } catch {
+            // Invalid number, skip this filter
+          }
+        }
+      }
+
+      return true
     })
     .sortBy((t) => t.submittedAt)
     .reverse()
