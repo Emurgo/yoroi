@@ -55,9 +55,10 @@ export const EnterDrepIdModal = ({onSubmit, initialDrepId}: Props) => {
   })
 
   // Use the resolved DRep ID or the direct input
+  // For handles, use cip_129 (bech32 format) for validation since parseDrepId expects bech32 format
   const resolvedDrepId = React.useMemo(() => {
-    if (isHandle && drepInfo?.hex) {
-      return drepInfo.hex
+    if (isHandle && drepInfo?.cip_129) {
+      return drepInfo.cip_129
     }
     return trimmedDrepId
   }, [isHandle, drepInfo, trimmedDrepId])
