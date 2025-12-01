@@ -46,10 +46,10 @@ export const SelectWalletFromList = () => {
       if (!walletManager) {
         throw new Error('WalletManager not available')
       }
-      
+
       // Show loading state immediately
       setLoadingWalletId(walletMeta.id)
-      
+
       try {
         walletManager.setSelectedWalletId(walletMeta.id)
         const shouldHandle =

@@ -60,15 +60,14 @@ export const WalletManagerProvider: React.FC<
       }
       const meta = walletManager.getWalletMetaById(walletId)
       if (meta == null) {
-        logger.error(
-          'WalletManagerProvider: wallet meta selected not found',
-          {walletId},
-        )
+        logger.error('WalletManagerProvider: wallet meta selected not found', {
+          walletId,
+        })
         return
       }
-      
+
       let wallet = walletManager.getWalletById(walletId)
-      
+
       // If wallet is not loaded, trigger loading via hydrate
       if (wallet == null) {
         logger.debug(
@@ -85,15 +84,14 @@ export const WalletManagerProvider: React.FC<
           )
         }
       }
-      
+
       if (wallet == null) {
-        logger.error(
-          'WalletManagerProvider: wallet could not be loaded',
-          {walletId},
-        )
+        logger.error('WalletManagerProvider: wallet could not be loaded', {
+          walletId,
+        })
         return
       }
-      
+
       actions.walletSelected({wallet, meta})
     },
     [actions, walletManager],
@@ -114,7 +112,12 @@ export const WalletManagerProvider: React.FC<
       (id) => {
         // setWalletSelected is async, but we don't need to await it
         // The loading state will be handled by WithWalletOpened
-        void setWalletSelected(id)
+        setWalletSelected(id).catch((error) => {
+          logger.error('WalletManagerProvider: failed to set wallet selected', {
+            id,
+            error,
+          })
+        })
       },
     )
 

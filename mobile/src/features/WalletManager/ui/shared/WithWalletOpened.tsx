@@ -4,8 +4,8 @@ import {
   exchangeApiMaker,
   exchangeManagerMaker,
 } from '@yoroi/exchange'
-import {App} from '@yoroi/types'
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {App} from '@yoroi/types'
 
 import * as React from 'react'
 import {ActivityIndicator, View} from 'react-native'
@@ -21,7 +21,7 @@ export const WithWalletOpened = ({children}: React.PropsWithChildren) => {
   const wallet = useWalletManagerSelector((ctx) => ctx.selected.wallet)
   const meta = useWalletManagerSelector((ctx) => ctx.selected.meta)
   const selectedWalletId = useWalletManagerSelector(
-    (ctx) => ctx.walletManager.selectedWalledId,
+    (ctx) => ctx.walletManager?.selectedWalledId ?? null,
   )
   const {palette: p} = useTheme()
   const {openSelectWalletModal} = useSelectWalletModal()
@@ -49,7 +49,8 @@ export const WithWalletOpened = ({children}: React.PropsWithChildren) => {
   }, [wallet, meta, hasShownModal, openSelectWalletModal, walletNavigation])
 
   // Show loading indicator when wallet is being loaded
-  const isLoadingWallet = selectedWalletId != null && (wallet == null || meta == null)
+  const isLoadingWallet =
+    selectedWalletId != null && (wallet == null || meta == null)
 
   // Must call hooks before early return (React rules)
   const claimManager = React.useMemo(() => {
