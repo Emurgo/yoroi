@@ -53,20 +53,47 @@ export const WalletManagerProvider: React.FC<
   }).current
 
   const setWalletSelected = React.useCallback(
-    (walletId: YoroiWallet['id'] | null) => {
+    async (walletId: YoroiWallet['id'] | null) => {
       if (walletId == null) {
         actions.walletSelected({wallet: null, meta: null})
         return
       }
-      const wallet = walletManager.getWalletById(walletId)
       const meta = walletManager.getWalletMetaById(walletId)
-      if (wallet == null || meta == null) {
+      if (meta == null) {
         logger.error(
-          'WalletManagerProvider: wallet or meta selected not found',
+          'WalletManagerProvider: wallet meta selected not found',
           {walletId},
         )
         return
       }
+      
+      let wallet = walletManager.getWalletById(walletId)
+      
+      // If wallet is not loaded, trigger loading via hydrate
+      if (wallet == null) {
+        logger.debug(
+          'WalletManagerProvider: wallet not loaded, triggering hydrate',
+          {walletId},
+        )
+        try {
+          await walletManager.hydrate({isForced: false})
+          wallet = walletManager.getWalletById(walletId)
+        } catch (error) {
+          logger.error(
+            'WalletManagerProvider: failed to load wallet during selection',
+            {walletId, error},
+          )
+        }
+      }
+      
+      if (wallet == null) {
+        logger.error(
+          'WalletManagerProvider: wallet could not be loaded',
+          {walletId},
+        )
+        return
+      }
+      
       actions.walletSelected({wallet, meta})
     },
     [actions, walletManager],
@@ -85,7 +112,9 @@ export const WalletManagerProvider: React.FC<
     // selected wallet: wallet id changed
     const subSelectedWalletId = walletManager.selectedWalletId$.subscribe(
       (id) => {
-        setWalletSelected(id)
+        // setWalletSelected is async, but we don't need to await it
+        // The loading state will be handled by WithWalletOpened
+        void setWalletSelected(id)
       },
     )
 

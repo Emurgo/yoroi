@@ -37,26 +37,40 @@ export const SelectWalletFromList = () => {
   const walletManager = useWalletManagerSelector((ctx) => ctx.walletManager)
   const walletNavigation = useWalletNavigation()
   const {isAuthDev} = useAuth()
+  const [loadingWalletId, setLoadingWalletId] = React.useState<
+    Wallet.Meta['id'] | null
+  >(null)
 
   const handleOnSelect = React.useCallback(
     async (walletMeta: Wallet.Meta) => {
       if (!walletManager) {
         throw new Error('WalletManager not available')
       }
-      walletManager.setSelectedWalletId(walletMeta.id)
-      const shouldHandle =
-        await shouldHandleNotificationInternalNavigationAction()
-      if (shouldHandle) {
-        await handleNotificationInternalNavigationAction(
-          pushNotificationsManager,
-          walletNavigation,
-        )
-        return
+      
+      // Show loading state immediately
+      setLoadingWalletId(walletMeta.id)
+      
+      try {
+        walletManager.setSelectedWalletId(walletMeta.id)
+        const shouldHandle =
+          await shouldHandleNotificationInternalNavigationAction()
+        if (shouldHandle) {
+          await handleNotificationInternalNavigationAction(
+            pushNotificationsManager,
+            walletNavigation,
+          )
+          return
+        }
+        navigation.navigate('manage-wallets', {
+          screen: 'main-wallet-routes',
+          params: {screen: 'history', params: {screen: 'history-list'}},
+        })
+      } finally {
+        // Clear loading state after a short delay to allow navigation
+        setTimeout(() => {
+          setLoadingWalletId(null)
+        }, 500)
       }
-      navigation.navigate('manage-wallets', {
-        screen: 'main-wallet-routes',
-        params: {screen: 'history', params: {screen: 'history-list'}},
-      })
     },
     [walletManager, navigation, walletNavigation],
   )
@@ -65,12 +79,16 @@ export const SelectWalletFromList = () => {
     () =>
       walletMetas?.map((walletMeta) => (
         <React.Fragment key={walletMeta.id}>
-          <WalletListItem walletMeta={walletMeta} onPress={handleOnSelect} />
+          <WalletListItem
+            walletMeta={walletMeta}
+            onPress={handleOnSelect}
+            isLoading={loadingWalletId === walletMeta.id}
+          />
 
           <Space.Height.lg />
         </React.Fragment>
       )),
-    [handleOnSelect, walletMetas],
+    [handleOnSelect, walletMetas, loadingWalletId],
   )
 
   return (

@@ -5,8 +5,10 @@ import {
   exchangeManagerMaker,
 } from '@yoroi/exchange'
 import {App} from '@yoroi/types'
+import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
+import {ActivityIndicator, View} from 'react-native'
 
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 
@@ -18,6 +20,10 @@ export const WithWalletOpened = ({children}: React.PropsWithChildren) => {
   // Use selector to prevent re-renders when network changes
   const wallet = useWalletManagerSelector((ctx) => ctx.selected.wallet)
   const meta = useWalletManagerSelector((ctx) => ctx.selected.meta)
+  const selectedWalletId = useWalletManagerSelector(
+    (ctx) => ctx.walletManager.selectedWalledId,
+  )
+  const {palette: p} = useTheme()
   const {openSelectWalletModal} = useSelectWalletModal()
   const walletNavigation = useWalletNavigation()
   const [hasShownModal, setHasShownModal] = React.useState(false)
@@ -42,6 +48,9 @@ export const WithWalletOpened = ({children}: React.PropsWithChildren) => {
     }
   }, [wallet, meta, hasShownModal, openSelectWalletModal, walletNavigation])
 
+  // Show loading indicator when wallet is being loaded
+  const isLoadingWallet = selectedWalletId != null && (wallet == null || meta == null)
+
   // Must call hooks before early return (React rules)
   const claimManager = React.useMemo(() => {
     if (!wallet || !meta) {
@@ -57,6 +66,15 @@ export const WithWalletOpened = ({children}: React.PropsWithChildren) => {
       tokenManager: wallet.networkManager.tokenManager,
     })
   }, [wallet, meta])
+
+  // Show loading indicator when wallet is being loaded
+  if (isLoadingWallet) {
+    return (
+      <View style={[a.flex_1, a.justify_center, a.align_center]}>
+        <ActivityIndicator size="large" color={p.primary_500} />
+      </View>
+    )
+  }
 
   // Don't render children until wallet is selected
   // The modal is shown and non-dismissible, so user must select a wallet

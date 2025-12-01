@@ -24,9 +24,14 @@ import {isByron, isShelley} from '~/wallets/cardano/utils'
 type Props = {
   walletMeta: Wallet.Meta
   onPress: (walletMeta: Wallet.Meta) => void
+  isLoading?: boolean
 }
 
-export const WalletListItem = ({walletMeta, onPress}: Props) => {
+export const WalletListItem = ({
+  walletMeta,
+  onPress,
+  isLoading = false,
+}: Props) => {
   const {palette: p, atoms: ta} = useTheme()
   const {isAuthDev} = useAuth()
 
@@ -180,7 +185,9 @@ export const WalletListItem = ({walletMeta, onPress}: Props) => {
 
           {features.walletListFeedback && (
             <>
-              {syncWalletInfo?.status === 'syncing' && <Loading />}
+              {(syncWalletInfo?.status === 'syncing' || isLoading) && (
+                <Loading />
+              )}
 
               <Space.Width.md />
 
