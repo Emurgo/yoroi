@@ -67,8 +67,10 @@ import {
   readOnlyAccountManagerMaker,
 } from './account-manager/read-only-account-manager'
 import * as legacyApi from './api/api'
-import {extractPaymentKeyHashes} from './api/wallet-registration'
-import {getWalletRegistrationData} from './api/wallet-registration'
+import {
+  extractPaymentKeyHashes,
+  getWalletRegistrationData,
+} from './api/wallet-registration'
 import {calcLockedDeposit} from './assetUtils'
 import {
   doesCardanoAppVersionSupportCIP36,
