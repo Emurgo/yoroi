@@ -226,14 +226,18 @@ export const VoteDelegationOperation = ({
           style={[
             a.body_2_md_regular,
             {color: p.text_gray_medium},
+            a.flex_shrink,
+            a.text_right,
             strike && {textDecorationLine: 'line-through'},
           ]}
+          numberOfLines={2}
+          ellipsizeMode="middle"
         >
           {CIP129label}
         </Text>
       </View>
 
-      <Space.Height.sm />
+      <Space.Height.md />
 
       <View style={[a.flex, a.flex_row, a.align_center, a.justify_between]}>
         <Label
@@ -248,8 +252,12 @@ export const VoteDelegationOperation = ({
           style={[
             a.body_2_md_regular,
             {color: p.text_gray_medium},
+            a.flex_shrink,
+            a.text_right,
             strike && {textDecorationLine: 'line-through'},
           ]}
+          numberOfLines={2}
+          ellipsizeMode="middle"
         >
           {CIP105label}
         </Text>
