@@ -11,6 +11,7 @@ import {WalletStackRoutes} from '~/kernel/navigation/types'
 export type Routes = {
   'staking-gov-home': undefined
   'staking-gov-change-vote': undefined
+  'staking-gov-voting-options': undefined
   'staking-gov-not-supported-version': undefined
   'staking-gov-no-funds': undefined
   'staking-gov-submitted-tx': {
@@ -35,6 +36,8 @@ export const useNavigateTo = () => {
     home: () => navigation.navigate('governance', {screen: 'staking-gov-home'}),
     changeVote: () =>
       navigation.navigate('governance', {screen: 'staking-gov-change-vote'}),
+    votingOptions: () =>
+      navigation.navigate('governance', {screen: 'staking-gov-voting-options'}),
     notSupportedVersion: () =>
       navigation.navigate('governance', {
         screen: 'staking-gov-not-supported-version',
