@@ -100,6 +100,16 @@ const isAdaAppClosedError = (e: unknown): boolean => {
   return e instanceof Error && e.message.includes('0x6e01')
 }
 
+const isInt64BufferError = (e: unknown): boolean => {
+  if (!(e instanceof Error)) return false
+  const message = e.message || String(e)
+  return (
+    message.includes('toBuffer is not a function') ||
+    message.includes('int64_buffer') ||
+    message.includes('Uint64BE')
+  )
+}
+
 const mapLedgerError = (e: unknown): Error | LocalizableError => {
   if (isAdaAppClosedError(e)) {
     return new AdaAppClosedError()
@@ -111,6 +121,11 @@ const mapLedgerError = (e: unknown): Error | LocalizableError => {
     return new GeneralConnectionError()
   } else if (e instanceof DeprecatedAdaAppError) {
     return e
+  } else if (isInt64BufferError(e)) {
+    logger.error('mapLedgerError: int64-buffer compatibility error', {e})
+    return new Error(
+      'Ledger device communication error: Buffer polyfill issue. Please ensure your Ledger firmware and Cardano app are up to date.',
+    )
   } else {
     logger.error('mapLedgerError: Unexpected error', {e})
     return e instanceof Error ? e : new Error(String(e))

@@ -294,6 +294,10 @@ export const useOnConfirm = ({
                   )
                   handleOnSuccess({txId})
                 }}
+                onCancel={() => {
+                  closeModal()
+                  onCancel?.()
+                }}
                 cbor={cbor}
               />
             </ErrorBoundary>

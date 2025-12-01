@@ -298,7 +298,7 @@ const metaHw: Wallet.Meta = {
     bip44AccountPublic: '1234567',
     hwFeatures: {
       vendor: 'ledger',
-      model: 'nano x',
+      model: 'ledger',
       deviceId: '123456',
       deviceObj: null,
     },
