@@ -309,7 +309,10 @@ export const backendZeroApiMaker = ({
                   amount: Branded.asBalanceQuantity(amountStr),
                 }
               }),
-            id: Branded.asUtxoId(`${input.txHash}${input.index}`),
+            id: Branded.asUtxoIdFromParts(
+              Branded.asTransactionHash(input.txHash),
+              input.index,
+            ),
             index: input.index,
             txHash: Branded.asTransactionHash(input.txHash),
           })),

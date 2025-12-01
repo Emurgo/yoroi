@@ -1,3 +1,7 @@
+// Set Buffer globally FIRST, before any other imports
+// This ensures int64-buffer can detect Buffer when it loads
+import './src/kernel/shims'
+
 import messaging from '@react-native-firebase/messaging'
 import {registerRootComponent} from 'expo'
 import 'react-native-gesture-handler'
@@ -5,7 +9,6 @@ import 'react-native-gesture-handler'
 import App from './App'
 import './src/kernel/logger/helpers/init-logger'
 import {logger} from './src/kernel/logger/logger'
-import './src/kernel/shims'
 
 // Set background message handler
 // Using default app instance - the deprecation warning is acceptable for now

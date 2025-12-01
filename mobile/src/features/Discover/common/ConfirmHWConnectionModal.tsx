@@ -68,9 +68,20 @@ const ConfirmHWConnectionModal = ({onConfirm}: Pick<Props, 'onConfirm'>) => {
   const {meta} = useSelectedWallet()
   const strings = useStrings()
   const {palette: p} = useTheme()
+  const {setHeight} = useModal()
   const {mutate: handleOnConfirm} = useMutation<void, Error, OnConfirmOptions>({
     mutationFn: onConfirm,
   })
+
+  React.useEffect(() => {
+    if (step === 'connect-transport') {
+      // Increase modal height when scanning for devices
+      setHeight(600)
+    } else if (step === 'select-transport') {
+      // Reset to default height for transport selection
+      setHeight(350)
+    }
+  }, [step, setHeight])
 
   const onSelectTransport = (selectedTransportType: TransportType) => {
     setTransportType(selectedTransportType)
