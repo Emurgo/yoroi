@@ -207,6 +207,7 @@ const connectionHandler = async (
 
     return appAda
   } catch (e) {
+    logger.error('connectionHandler error', {error: e, useUSB, deviceId})
     throw mapLedgerError(e)
   }
 }
@@ -235,6 +236,13 @@ export const getHWDeviceInfo = async (
     await appAda.transport.close()
     return hwDeviceInfo
   } catch (e) {
+    logger.error('getHWDeviceInfo error', {
+      error: e,
+      implementation,
+      deviceId,
+      deviceObj,
+      useUSB,
+    })
     throw mapLedgerError(e)
   }
 }

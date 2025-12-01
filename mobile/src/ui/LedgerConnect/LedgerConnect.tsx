@@ -84,13 +84,14 @@ function LedgerConnectInt(props: Props): React.ReactElement {
   >(null)
   const isMountedRef = React.useRef(true)
 
-  const startScan = React.useCallback(() => {
+  const startScan = React.useCallback(async () => {
     const onComplete = () => {
       logger.debug('listen: subscription completed', {useUSB})
       setRefreshing(false)
     }
 
     const onError = (error: Error) => {
+      logger.error('listen: error occurred', {error, useUSB})
       setError(error)
       setRefreshing(false)
       setDevices([])
@@ -116,11 +117,31 @@ function LedgerConnectInt(props: Props): React.ReactElement {
     }
 
     if (transportLibRef.current == null) return
-    subscriptionsRef.current = transportLibRef.current.listen({
-      complete: onComplete,
-      next: useUSB ? onHWNext : onBLENext,
-      error: onError,
-    })
+
+    // Try calling list() to check for existing devices
+    if (!useUSB && typeof transportLibRef.current?.list === 'function') {
+      try {
+        const existingDevices = await transportLibRef.current.list()
+        if (existingDevices && existingDevices.length > 0) {
+          setDevices(existingDevices as Device[])
+          setRefreshing(false)
+        }
+      } catch (listError) {
+        logger.debug('TransportBLE.list() error', {error: listError})
+      }
+    }
+
+    try {
+      subscriptionsRef.current = transportLibRef.current.listen({
+        complete: onComplete,
+        next: useUSB ? onHWNext : onBLENext,
+        error: onError,
+      })
+    } catch (error) {
+      logger.error('Failed to start transport listen', {error, useUSB})
+      setError(error instanceof Error ? error : new Error(String(error)))
+      setRefreshing(false)
+    }
   }, [useUSB])
 
   const unsubscribe = React.useCallback(() => {
@@ -148,8 +169,8 @@ function LedgerConnectInt(props: Props): React.ReactElement {
       let previousAvailable = false
       const observer: Observer<{available: boolean; type: string}> = {
         next: (e: {available: boolean; type: string}) => {
+          logger.debug('BLE observeState event', {event: e})
           if (isMountedRef.current) {
-            logger.debug('BLE observeState event', {event: e})
             if (bluetoothEnabledRef.current == null && !e.available) {
               setError(new BluetoothDisabledError())
               setRefreshing(false)
