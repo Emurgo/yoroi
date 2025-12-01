@@ -137,9 +137,9 @@ function LedgerConnectInt(props: Props): React.ReactElement {
         next: useUSB ? onHWNext : onBLENext,
         error: onError,
       })
-    } catch (error) {
-      logger.error('Failed to start transport listen', {error, useUSB})
-      setError(error instanceof Error ? error : new Error(String(error)))
+    } catch (err) {
+      logger.error('Failed to start transport listen', {error: err, useUSB})
+      setError(err instanceof Error ? err : new Error(String(err)))
       setRefreshing(false)
     }
   }, [useUSB])

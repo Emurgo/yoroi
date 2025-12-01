@@ -1,7 +1,7 @@
+import {Buffer} from '@craftzdog/react-native-buffer'
 import 'fast-text-encoding'
 import {install} from 'react-native-quick-crypto'
 import 'react-native-url-polyfill/auto'
-import {Buffer} from '@craftzdog/react-native-buffer'
 
 import '../kernel/i18n/polyfills'
 
@@ -14,9 +14,11 @@ install()
 // The int64-buffer patch (patches/int64-buffer+1.0.1.patch) provides
 // fallback checks for global.Buffer if typeof Buffer fails
 if (typeof global !== 'undefined' && !global.Buffer) {
+  // @ts-expect-error - Buffer polyfill type doesn't match BufferConstructor exactly
   global.Buffer = Buffer
 }
 if (typeof globalThis !== 'undefined' && !globalThis.Buffer) {
+  // @ts-expect-error - Buffer polyfill type doesn't match BufferConstructor exactly
   globalThis.Buffer = Buffer
 }
 
