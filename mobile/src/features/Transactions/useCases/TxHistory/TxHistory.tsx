@@ -9,7 +9,8 @@ import infoIcon from '~/assets/img/icon/info-light-green.png'
 import {useAirdropBanner} from '~/features/Airdrop/common/useAirdropBanner'
 import {useBuyCryptoBanner} from '~/features/Exchange/common/useBuyCryptoBanner'
 import {useGetImportantAlertsModal} from '~/features/Notifications/common/GetImportantAlertsModal'
-import {useEarnRewardsBanner} from '~/features/Staking/Governance/useCases/EarnRewardsBanner/useEarnRewardsBanner'
+// DISABLED: EarnRewardsBanner - "Delegate with Yoroi DRep" banner temporarily deactivated
+// import {useEarnRewardsBanner} from '~/features/Staking/Governance/useCases/EarnRewardsBanner/useEarnRewardsBanner'
 import {useGovernanceBanner} from '~/features/Staking/Governance/useCases/useGovernanceBanner'
 import {usePoolTransitionModal} from '~/features/Staking/Staking/PoolTransition/usePoolTransitionModal'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
@@ -32,7 +33,8 @@ export const TxHistory = () => {
   useGovernanceBanner()
   useBuyCryptoBanner()
   useUtxoConsolidationBanner()
-  const {renderBanner: renderEarnRewardsBanner} = useEarnRewardsBanner()
+  // DISABLED: EarnRewardsBanner - "Delegate with Yoroi DRep" banner temporarily deactivated
+  // const {renderBanner: renderEarnRewardsBanner} = useEarnRewardsBanner()
   useAirdropBanner()
 
   const strings = useStrings()
@@ -102,7 +104,8 @@ export const TxHistory = () => {
     return unsubscribe
   }, [navigation, walletNavigation])
 
-  const earnRewardsBanner = renderEarnRewardsBanner()
+  // DISABLED: EarnRewardsBanner - "Delegate with Yoroi DRep" banner temporarily deactivated
+  // const earnRewardsBanner = renderEarnRewardsBanner()
   return (
     <LinearGradient
       colors={
@@ -151,9 +154,9 @@ export const TxHistory = () => {
 
         <Space.Height.md />
 
-        {earnRewardsBanner}
-
-        {earnRewardsBanner != null && <Space.Height.md />}
+        {/* DISABLED: EarnRewardsBanner - "Delegate with Yoroi DRep" banner temporarily deactivated */}
+        {/* {earnRewardsBanner} */}
+        {/* {earnRewardsBanner != null && <Space.Height.md />} */}
 
         {meta.implementation === 'cardano-bip44' && showWarning && (
           <WarningBanner
