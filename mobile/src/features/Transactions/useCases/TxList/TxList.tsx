@@ -80,7 +80,7 @@ export const TxList = (props: Props) => {
 
   return (
     <View style={a.flex_1}>
-      {isPending && (
+      {isPending && !props.refreshing && (
         <View
           style={[
             a.absolute,
@@ -103,7 +103,6 @@ export const TxList = (props: Props) => {
         onEndReached={handleOnEndReached}
         onEndReachedThreshold={0.5}
         estimatedItemSize={72}
-        refreshing={true}
         {...props}
       />
     </View>
