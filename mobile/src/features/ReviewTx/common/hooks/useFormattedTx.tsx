@@ -1209,52 +1209,14 @@ const parseGovernance = (
       const cert = certs.get(i)
       if (!cert) continue
 
-      // Check for VoteDelegation certificate
-      const voteDeleg = cert.asVoteDelegation()
-      if (voteDeleg) {
-        // VoteDelegation certificates are votes, not proposals
-        // For now, we'll create a simplified vote representation
-        // In a full implementation, you'd parse the DRep and create proper Vote objects
-        const drep = voteDeleg.drep()
+      // Note: VoteDelegation certificates are delegations, not votes.
+      // They delegate voting power to a DRep but don't cast votes on specific governance actions.
+      // VoteDelegation certificates are already displayed correctly in the Operations tab.
+      // Actual votes on governance actions would be in transaction metadata, not certificates.
+      // For now, we skip VoteDelegation certificates here.
 
-        // Extract DRep information
-        const drepKind = drep.kind()
-        let drepCredential = ''
-
-        if (drepKind === 0) {
-          // KeyHash
-          const keyHash = drep.toKeyHash()
-          if (keyHash) {
-            drepCredential = keyHash.toHex()
-          }
-        } else if (drepKind === 1) {
-          // ScriptHash
-          const scriptHash = drep.toScriptHash()
-          if (scriptHash) {
-            drepCredential = scriptHash.toHex()
-          }
-        }
-
-        if (drepCredential) {
-          // Create a simplified vote - in practice, you'd need governance action IDs from metadata
-          votes.push({
-            voter: {
-              type: 'drep',
-              credential: drepCredential,
-            },
-            governanceActionId: {
-              txHash: '',
-              txIndex: 0,
-            },
-            votingProcedure: {
-              vote: 'yes', // Default - would be parsed from metadata
-            },
-          })
-        }
-      }
-
-      // Note: Proposals would typically be in metadata or separate certificate types
-      // For now, we'll leave proposals empty as they require more complex parsing
+      // TODO: Parse actual votes from transaction metadata
+      // TODO: Parse governance proposals from certificates or metadata
     }
   } catch {
     // Ignore parsing errors

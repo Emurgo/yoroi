@@ -181,34 +181,35 @@ const ProposalItem = ({
         >{`${proposal.governanceAction.type}`}</Text>
       </View>
 
-      {proposal.governanceAction.actionId && (
-        <>
-          <Space.Height.md />
-          <View style={[a.flex_row, a.justify_between, a.align_center]}>
-            <Text style={[a.body_2_md_medium, {color: p.text_gray_medium}]}>
-              {strings.txReview.governance.actionIdLabel}:
-            </Text>
-            <Copiable
-              text={`${proposal.governanceAction.actionId.txHash}:${proposal.governanceAction.actionId.txIndex}`}
-              style={a.flex_1}
-            >
-              <Text
-                style={[
-                  a.flex_1,
-                  a.body_2_md_regular,
-                  {color: p.text_gray_medium},
-                  a.text_right,
-                ]}
-                numberOfLines={1}
-                ellipsizeMode="middle"
-              >
-                {proposal.governanceAction.actionId.txHash}:
-                {proposal.governanceAction.actionId.txIndex}
+      {proposal.governanceAction.actionId &&
+        proposal.governanceAction.actionId.txHash && (
+          <>
+            <Space.Height.md />
+            <View style={[a.flex_row, a.justify_between, a.align_center]}>
+              <Text style={[a.body_2_md_medium, {color: p.text_gray_medium}]}>
+                {strings.txReview.governance.actionIdLabel}:
               </Text>
-            </Copiable>
-          </View>
-        </>
-      )}
+              <Copiable
+                text={`${proposal.governanceAction.actionId.txHash}:${proposal.governanceAction.actionId.txIndex}`}
+                style={a.flex_1}
+              >
+                <Text
+                  style={[
+                    a.flex_1,
+                    a.body_2_md_regular,
+                    {color: p.text_gray_medium},
+                    a.text_right,
+                  ]}
+                  numberOfLines={1}
+                  ellipsizeMode="middle"
+                >
+                  {proposal.governanceAction.actionId.txHash}:
+                  {proposal.governanceAction.actionId.txIndex}
+                </Text>
+              </Copiable>
+            </View>
+          </>
+        )}
 
       <Space.Height.md />
 
@@ -369,28 +370,33 @@ const VoteItem = ({vote, index}: {vote: Vote; index: number}) => {
 
       <Space.Height.md />
 
-      <View style={[a.flex_row, a.justify_between, a.align_center]}>
-        <Text style={[a.body_2_md_medium, {color: p.text_gray_medium}]}>
-          {strings.txReview.governance.actionIdLabel}:
-        </Text>
-        <Copiable
-          text={`${vote.governanceActionId.txHash}:${vote.governanceActionId.txIndex}`}
-          style={a.flex_1}
-        >
-          <Text
-            style={[
-              a.flex_1,
-              a.body_2_md_regular,
-              {color: p.text_gray_medium},
-              a.text_right,
-            ]}
-            numberOfLines={1}
-            ellipsizeMode="middle"
-          >
-            {vote.governanceActionId.txHash}:{vote.governanceActionId.txIndex}
-          </Text>
-        </Copiable>
-      </View>
+      {vote.governanceActionId.txHash && (
+        <>
+          <View style={[a.flex_row, a.justify_between, a.align_center]}>
+            <Text style={[a.body_2_md_medium, {color: p.text_gray_medium}]}>
+              {strings.txReview.governance.actionIdLabel}:
+            </Text>
+            <Copiable
+              text={`${vote.governanceActionId.txHash}:${vote.governanceActionId.txIndex}`}
+              style={a.flex_1}
+            >
+              <Text
+                style={[
+                  a.flex_1,
+                  a.body_2_md_regular,
+                  {color: p.text_gray_medium},
+                  a.text_right,
+                ]}
+                numberOfLines={1}
+                ellipsizeMode="middle"
+              >
+                {vote.governanceActionId.txHash}:
+                {vote.governanceActionId.txIndex}
+              </Text>
+            </Copiable>
+          </View>
+        </>
+      )}
 
       {vote.votingProcedure.anchor && (
         <>
