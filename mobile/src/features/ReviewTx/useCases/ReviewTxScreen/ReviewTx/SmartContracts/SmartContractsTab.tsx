@@ -28,8 +28,17 @@ export const SmartContractsTab = ({tx}: {tx: FormattedTx}) => {
     (tx.witnessSet?.nativeScripts.length ?? 0) > 0
   const hasDatum = tx.outputs.some((output) => output.datum != null)
   const hasRedeemers = (tx.witnessSet?.plutusData.length ?? 0) > 0
+  const hasReferenceScripts = tx.outputs.some(
+    (output) => output.referenceScript != null,
+  )
 
-  if (!hasCollateral && !hasScripts && !hasDatum && !hasRedeemers) {
+  if (
+    !hasCollateral &&
+    !hasScripts &&
+    !hasDatum &&
+    !hasRedeemers &&
+    !hasReferenceScripts
+  ) {
     return (
       <View style={[a.flex_1, a.px_lg, {backgroundColor: p.bg_color_max}]}>
         <Space.Height.lg />
@@ -47,7 +56,7 @@ export const SmartContractsTab = ({tx}: {tx: FormattedTx}) => {
       {hasCollateral && (
         <>
           <CollateralSection tx={tx} />
-          {(hasScripts || hasDatum || hasRedeemers) && (
+          {(hasScripts || hasDatum || hasRedeemers || hasReferenceScripts) && (
             <>
               <Space.Height.lg />
               <Divider verticalSpace="md" />
@@ -59,7 +68,7 @@ export const SmartContractsTab = ({tx}: {tx: FormattedTx}) => {
       {hasScripts && (
         <>
           <ScriptsSection tx={tx} />
-          {(hasDatum || hasRedeemers) && (
+          {(hasDatum || hasRedeemers || hasReferenceScripts) && (
             <>
               <Space.Height.lg />
               <Divider verticalSpace="md" />
@@ -71,6 +80,18 @@ export const SmartContractsTab = ({tx}: {tx: FormattedTx}) => {
       {hasDatum && (
         <>
           <DatumContent outputs={tx.outputs} />
+          {(hasRedeemers || hasReferenceScripts) && (
+            <>
+              <Space.Height.lg />
+              <Divider verticalSpace="md" />
+            </>
+          )}
+        </>
+      )}
+
+      {hasReferenceScripts && (
+        <>
+          <ReferenceScriptsSection outputs={tx.outputs} />
           {hasRedeemers && (
             <>
               <Space.Height.lg />
@@ -513,6 +534,136 @@ const DatumOutputContent = ({
           </View>
         </>
       )}
+    </View>
+  )
+}
+
+const ReferenceScriptsSection = ({outputs}: {outputs: FormattedOutputs}) => {
+  const {palette: p} = useTheme()
+  const strings = useStrings()
+
+  const outputsWithReferenceScripts = outputs.filter(
+    (output) => output.referenceScript != null,
+  )
+
+  if (outputsWithReferenceScripts.length === 0) {
+    return null
+  }
+
+  return (
+    <View>
+      <Text style={[a.body_1_lg_medium, {color: p.text_gray_medium}]}>
+        {strings.txReview.referenceInputs.scriptsLabel} (
+        {outputsWithReferenceScripts.length})
+      </Text>
+      <Space.Height.md />
+      {outputsWithReferenceScripts.map((output, index) => {
+        const refScript = output.referenceScript!
+        return (
+          <View key={`${output.address}-${index}`}>
+            {index > 0 && (
+              <>
+                <Space.Height.md />
+                <Divider verticalSpace="md" />
+              </>
+            )}
+            <View style={[a.flex_col, a.gap_md]}>
+              <Text style={[a.body_1_lg_medium, {color: p.text_gray_medium}]}>
+                {strings.txReview.referenceInputs.scriptLabel} #{index + 1}
+              </Text>
+
+              <View style={[a.flex_row, a.justify_between]}>
+                <Text style={[a.body_2_md_medium, {color: p.text_gray_medium}]}>
+                  {strings.txReview.datum.addressLabel}:
+                </Text>
+                <Address
+                  address={output.address}
+                  style={a.flex_1}
+                  textStyle={[
+                    a.body_2_md_regular,
+                    {color: p.text_gray_medium},
+                    a.text_right,
+                  ]}
+                />
+              </View>
+
+              <Space.Height.sm />
+
+              <View style={[a.flex_row, a.justify_between, a.align_center]}>
+                <Text style={[a.body_2_md_medium, {color: p.text_gray_medium}]}>
+                  {strings.txReview.referenceInputs.scriptTypeLabel}:
+                </Text>
+                <Text
+                  style={[a.body_2_md_regular, {color: p.text_gray_medium}]}
+                >{`${refScript.scriptType.charAt(0).toUpperCase()}${refScript.scriptType.slice(1)}`}</Text>
+              </View>
+
+              <Space.Height.sm />
+
+              <View style={[a.flex_row, a.justify_between, a.align_center]}>
+                <Text style={[a.body_2_md_medium, {color: p.text_gray_medium}]}>
+                  {strings.txReview.referenceInputs.scriptHashLabel}:
+                </Text>
+                <Copiable text={refScript.scriptHash} style={a.flex_1}>
+                  <Text
+                    style={[
+                      a.flex_1,
+                      a.body_2_md_regular,
+                      {color: p.text_gray_medium},
+                      a.text_right,
+                    ]}
+                    numberOfLines={1}
+                    ellipsizeMode="middle"
+                  >
+                    {refScript.scriptHash}
+                  </Text>
+                </Copiable>
+              </View>
+
+              <Space.Height.sm />
+
+              <View style={[a.flex_row, a.justify_between, a.align_center]}>
+                <Text style={[a.body_2_md_medium, {color: p.text_gray_medium}]}>
+                  {strings.txReview.referenceInputs.scriptSizeLabel}:
+                </Text>
+                <Text
+                  style={[a.body_2_md_regular, {color: p.text_gray_medium}]}
+                >{`${refScript.scriptSize} bytes`}</Text>
+              </View>
+
+              {refScript.txHash && (
+                <>
+                  <Space.Height.sm />
+                  <View style={[a.flex_row, a.justify_between, a.align_center]}>
+                    <Text
+                      style={[a.body_2_md_medium, {color: p.text_gray_medium}]}
+                    >
+                      {strings.txReview.utxos.utxosInputsLabel}:
+                    </Text>
+                    <Copiable
+                      text={`${refScript.txHash}:${refScript.txIndex}`}
+                      style={a.flex_1}
+                    >
+                      <Text
+                        style={[
+                          a.flex_1,
+                          a.body_2_md_regular,
+                          {color: p.text_gray_medium},
+                          a.text_right,
+                        ]}
+                        numberOfLines={1}
+                        ellipsizeMode="middle"
+                      >
+                        {refScript.txHash}:#{refScript.txIndex}
+                      </Text>
+                    </Copiable>
+                  </View>
+                </>
+              )}
+            </View>
+          </View>
+        )
+      })}
     </View>
   )
 }

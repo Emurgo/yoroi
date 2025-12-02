@@ -458,8 +458,11 @@ const formatOutputs = (
             }
 
             if (scriptHash) {
+              // For reference scripts attached to outputs in the current transaction,
+              // the txHash will be empty until the transaction is signed.
+              // The txHash will be the hash of this transaction once it's submitted.
               referenceScript = {
-                txHash: Branded.asTransactionHash(''), // Transaction hash would be available in real scenario
+                txHash: Branded.asTransactionHash(''), // Empty for unsigned transactions
                 txIndex: index,
                 scriptHash: Branded.asScriptHash(scriptHash),
                 scriptType,
