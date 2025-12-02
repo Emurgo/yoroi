@@ -12,6 +12,7 @@ import {
 import {usePoolInfo} from '~/features/Staking/hooks/usePoolInfo'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
+import {Copiable} from '~/ui/Copiable/Copiable'
 import {Icon} from '~/ui/Icon'
 import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Space} from '~/ui/Space/Space'
@@ -213,7 +214,7 @@ export const VoteDelegationOperation = ({
 
   return (
     <>
-      <View style={[a.flex, a.flex_row, a.align_center, a.justify_between]}>
+      <View style={[a.flex, a.flex_row, a.align_center]}>
         <Label
           label={strings.txReview.operations.delegateVotingToDRep}
           showWarning={showWarning}
@@ -222,24 +223,26 @@ export const VoteDelegationOperation = ({
 
         <Space.Width.lg />
 
-        <Text
-          style={[
-            a.body_2_md_regular,
-            {color: p.text_gray_medium},
-            a.flex_shrink,
-            a.text_right,
-            strike && {textDecorationLine: 'line-through'},
-          ]}
-          numberOfLines={2}
-          ellipsizeMode="middle"
-        >
-          {CIP129label}
-        </Text>
+        <Copiable text={CIP129label} style={{flex: 1}}>
+          <View style={{flex: 1}}>
+            <Text
+              style={[
+                a.body_2_md_regular,
+                {color: p.text_gray_medium},
+                strike && {textDecorationLine: 'line-through'},
+              ]}
+              numberOfLines={1}
+              ellipsizeMode="middle"
+            >
+              {CIP129label}
+            </Text>
+          </View>
+        </Copiable>
       </View>
 
-      <Space.Height.md />
+      <Space.Height.sm />
 
-      <View style={[a.flex, a.flex_row, a.align_center, a.justify_between]}>
+      <View style={[a.flex, a.flex_row, a.align_center]}>
         <Label
           label={strings.txReview.operations.delegateVotingToDRepSpecified}
           showWarning={showWarning}
@@ -248,19 +251,21 @@ export const VoteDelegationOperation = ({
 
         <Space.Width.lg />
 
-        <Text
-          style={[
-            a.body_2_md_regular,
-            {color: p.text_gray_medium},
-            a.flex_shrink,
-            a.text_right,
-            strike && {textDecorationLine: 'line-through'},
-          ]}
-          numberOfLines={2}
-          ellipsizeMode="middle"
-        >
-          {CIP105label}
-        </Text>
+        <Copiable text={CIP105label} style={{flex: 1}}>
+          <View style={{flex: 1}}>
+            <Text
+              style={[
+                a.body_2_md_regular,
+                {color: p.text_gray_medium},
+                strike && {textDecorationLine: 'line-through'},
+              ]}
+              numberOfLines={1}
+              ellipsizeMode="middle"
+            >
+              {CIP105label}
+            </Text>
+          </View>
+        </Copiable>
       </View>
     </>
   )
