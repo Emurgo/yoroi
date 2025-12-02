@@ -96,6 +96,7 @@ const ReviewTxContent = ({
     partial: params?.partial,
     preventSubmit: params?.preventSubmit,
     context: mapReviewContextToOperationContext(params?.context),
+    formattedTx: formattedTx ?? null,
     onSuccess: params?.onSuccess,
     onSuccessWithoutFeedback: params?.onSuccessWithoutFeedback,
     onError: params?.onError,

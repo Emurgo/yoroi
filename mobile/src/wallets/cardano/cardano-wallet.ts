@@ -1169,6 +1169,10 @@ function createWalletObject(
     return state.transactionManager.transactions
   }
 
+  const addOptimisticTransaction = (tx: WalletTransaction): void => {
+    state.transactionManager.addOptimisticTransaction(tx)
+  }
+
   // =================== subscriptions =================== //
   const subscribe = (subscription: WalletSubscription) => {
     state.subscriptions.push(subscription)
@@ -1257,6 +1261,7 @@ function createWalletObject(
     getRawTransactions,
     confirmationCounts,
     fetchTxStatus,
+    addOptimisticTransaction,
     // utxo functions
     utxos,
     allUtxos,

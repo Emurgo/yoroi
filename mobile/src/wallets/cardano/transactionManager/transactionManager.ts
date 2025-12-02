@@ -28,6 +28,7 @@ type TransactionManagerState = {
   perAddressSyncMetadata: Record<string, SyncMetadata>
   // @deprecated
   bestBlockNum: number | null | undefined // global best block, not per address
+  optimisticTxIds: Set<TransactionHash> // Track optimistic transactions (memory only)
 }
 
 export type TransactionManager = {
@@ -40,6 +41,8 @@ export type TransactionManager = {
   readonly perAddressTxs: Record<Address, Array<TransactionHash>>
   readonly perRewardAddressCertificates: PerAddressCertificatesDict
   readonly confirmationCounts: Record<string, number | null>
+  addOptimisticTransaction(tx: WalletTransaction): void
+  removeOptimisticTransaction(txId: TransactionHash): void
   doSync(
     addressesByChunks: Array<Array<string>>,
     baseApiUrl: string,
@@ -78,6 +81,7 @@ export async function createTransactionManager(
     perAddressSyncMetadata: {},
     transactions: isDeprecatedSchema ? {} : await txStorage.loadTxs(),
     bestBlockNum: 0,
+    optimisticTxIds: new Set<TransactionHash>(),
   }
 
   const subscriptions: Array<
@@ -93,8 +97,14 @@ export async function createTransactionManager(
 
   const updateState = (update: Partial<TransactionManagerState>) => {
     state = {...state, ...update}
-    if (Object.keys(state.transactions).length > 0) {
-      txStorage.saveTxs(state.transactions)
+    // Only persist non-optimistic transactions
+    const transactionsToSave = Object.fromEntries(
+      Object.entries(state.transactions).filter(
+        ([txId]) => !state.optimisticTxIds.has(txId as TransactionHash),
+      ),
+    )
+    if (Object.keys(transactionsToSave).length > 0) {
+      txStorage.saveTxs(transactionsToSave)
     }
     subscriptions.forEach((handler) => handler(state.transactions))
   }
@@ -111,7 +121,35 @@ export async function createTransactionManager(
         perAddressSyncMetadata: {},
         transactions: {},
         bestBlockNum: 0,
+        optimisticTxIds: new Set<TransactionHash>(),
       })
+    },
+
+    addOptimisticTransaction(tx: WalletTransaction) {
+      // Add to transactions in memory only (not persisted)
+      state.optimisticTxIds.add(tx.id)
+      state = {
+        ...state,
+        transactions: {
+          ...state.transactions,
+          [tx.id]: tx,
+        },
+      }
+      // Notify subscribers immediately
+      subscriptions.forEach((handler) => handler(state.transactions))
+    },
+
+    removeOptimisticTransaction(txId: TransactionHash) {
+      if (state.optimisticTxIds.has(txId)) {
+        state.optimisticTxIds.delete(txId)
+        const {[txId]: _, ...remainingTransactions} = state.transactions
+        state = {
+          ...state,
+          transactions: remainingTransactions,
+        }
+        // Notify subscribers
+        subscriptions.forEach((handler) => handler(state.transactions))
+      }
     },
 
     clear() {
@@ -182,9 +220,18 @@ export async function createTransactionManager(
         })
 
         if (txUpdate) {
+          // Remove optimistic transactions that have been replaced by real ones
+          const fetchedTxIds = Object.keys(txUpdate)
+          for (const txId of fetchedTxIds) {
+            if (state.optimisticTxIds.has(txId as TransactionHash)) {
+              state.optimisticTxIds.delete(txId as TransactionHash)
+            }
+          }
+
           // Sync succeeded - save the updated state to storage
           updateState({
             transactions: state.transactions,
+            optimisticTxIds: state.optimisticTxIds,
             // @deprecated
             bestBlockNum: state.bestBlockNum,
             // @deprecated

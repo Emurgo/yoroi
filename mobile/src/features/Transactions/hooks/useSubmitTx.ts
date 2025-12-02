@@ -6,16 +6,23 @@ import {Branded} from '@yoroi/types'
 import * as CSL from '@emurgo/cross-csl-core'
 import {UseMutationOptions} from '@tanstack/react-query'
 
+import {FormattedTx} from '~/features/ReviewTx/common/types'
 import {useWalletManagerSelector} from '~/features/WalletManager/context/WalletManagerProvider'
 import {logger} from '~/kernel/logger/logger'
 import {YoroiWallet} from '~/wallets/cardano/types'
 import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
 import {delay} from '~/wallets/utils/timeUtils'
 
+import {createOptimisticTransactionFromFormattedTx} from '../utils/createOptimisticTransaction'
+
 export const useSubmitTx = (
   {wallet}: {wallet: YoroiWallet},
-  options: UseMutationOptions<TxSubmissionStatus, Error, CSL.Transaction> = {},
+  options: UseMutationOptions<TxSubmissionStatus, Error, CSL.Transaction> & {
+    formattedTx?: FormattedTx
+    memo?: string | null
+  } = {},
 ) => {
+  const {formattedTx, memo, ...mutationOptions} = options
   // Use selector to prevent re-renders when selected wallet changes
   const walletManager = useWalletManagerSelector((ctx) => ctx.walletManager)
 
@@ -58,6 +65,32 @@ export const useSubmitTx = (
           txId,
           walletId: wallet.id,
         })
+
+        // Add optimistic transaction if formattedTx is provided
+        if (formattedTx && txId) {
+          try {
+            const optimisticTx = createOptimisticTransactionFromFormattedTx(
+              formattedTx,
+              txId,
+              memo ?? null,
+            )
+            wallet.addOptimisticTransaction(optimisticTx)
+            logger.debug('useSubmitTx: Added optimistic transaction', {
+              txId,
+              walletId: wallet.id,
+            })
+          } catch (optimisticError) {
+            logger.error('useSubmitTx: Failed to add optimistic transaction', {
+              error:
+                optimisticError instanceof Error
+                  ? optimisticError.message
+                  : String(optimisticError),
+              txId,
+              walletId: wallet.id,
+            })
+            // Don't fail the submission if optimistic update fails
+          }
+        }
       } catch (submitError) {
         logger.error('useSubmitTx: Failed to submit transaction', {
           error:
@@ -124,7 +157,7 @@ export const useSubmitTx = (
       } as TxSubmissionStatus
     },
     invalidateQueries: [[wallet.id, 'pendingTxs']],
-    ...options,
+    ...mutationOptions,
   })
 
   return {

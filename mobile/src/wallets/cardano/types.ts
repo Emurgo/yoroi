@@ -183,6 +183,7 @@ export interface YoroiWallet {
   getRawTransactions(): Record<string, WalletTransaction>
   confirmationCounts(): Record<string, null | number>
   fetchTxStatus(request: TxStatusRequest): Promise<TxStatusResponse>
+  addOptimisticTransaction(tx: WalletTransaction): void
 
   // Utxos
   utxos(): Array<RawUtxo>

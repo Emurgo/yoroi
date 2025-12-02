@@ -7,7 +7,9 @@ import {ErrorBoundary} from 'react-error-boundary'
 import {InteractionManager} from 'react-native'
 
 import {useReviewTxMemo} from '~/features/ReviewTx/common/context/ReviewTxMemoContext'
+import {FormattedTx} from '~/features/ReviewTx/common/types'
 import {useSaveMemo} from '~/features/Transactions/hooks/useSaveMemo'
+import {createOptimisticTransactionFromFormattedTx} from '~/features/Transactions/utils/createOptimisticTransaction'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
@@ -30,6 +32,7 @@ export type OnConfirm = {
   preventSubmit?: boolean
   partial?: boolean
   context?: OperationContext
+  formattedTx?: FormattedTx | null
   onSuccess?: (args?: {
     tx?: Transaction
     rootKey?: string
@@ -55,6 +58,7 @@ export const useOnConfirm = ({
   partial,
   preventSubmit = false,
   context,
+  formattedTx,
   onSuccess,
   onSuccessWithoutFeedback,
   onError,
@@ -317,6 +321,37 @@ export const useOnConfirm = ({
             const result = await submitTx(cbor, rootKey, wallet, meta)
             if (!result)
               throw new Error('useOnConfirm:: not possible to sign tx')
+
+            // Add optimistic transaction if formattedTx is available
+            if (formattedTx && result.txId) {
+              try {
+                const currentMemo = memoContext.memo
+                const optimisticTx = createOptimisticTransactionFromFormattedTx(
+                  formattedTx,
+                  result.txId,
+                  currentMemo.trim().length > 0 ? currentMemo.trim() : null,
+                )
+                wallet.addOptimisticTransaction(optimisticTx)
+                logger.debug('useOnConfirm: Added optimistic transaction', {
+                  txId: result.txId,
+                  walletId: wallet.id,
+                })
+              } catch (optimisticError) {
+                logger.error(
+                  'useOnConfirm: Failed to add optimistic transaction',
+                  {
+                    error:
+                      optimisticError instanceof Error
+                        ? optimisticError.message
+                        : String(optimisticError),
+                    txId: result.txId,
+                    walletId: wallet.id,
+                  },
+                )
+                // Don't fail the submission if optimistic update fails
+              }
+            }
+
             // txId and signedTx are already calculated in submitTx
             handleOnSuccess({
               rootKey,
