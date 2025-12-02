@@ -4,6 +4,7 @@ import {useNavigation} from '@react-navigation/native'
 import {LinearGradient} from 'expo-linear-gradient'
 import * as React from 'react'
 import {BackHandler, LayoutAnimation, Platform, Text, View} from 'react-native'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
 import infoIcon from '~/assets/img/icon/info-light-green.png'
 import {useAirdropBanner} from '~/features/Airdrop/common/useAirdropBanner'
@@ -20,7 +21,7 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
-import {Space, SpaceHeight} from '~/ui/Space/Space'
+import {Space} from '~/ui/Space/Space'
 
 import {TxFilter} from '../TxList/TxFilterProvider'
 import {TxList} from '../TxList/TxList'
@@ -45,6 +46,14 @@ export const TxHistory = () => {
   const {atoms: ta, palette: p, isDark} = useTheme()
   const navigation = useNavigation()
   const walletNavigation = useWalletNavigation()
+  const insets = useSafeAreaInsets()
+
+  // Calculate header spacing: safe area top + header height (typically 44-56px)
+  // Add extra padding to ensure content doesn't touch the header
+  const headerSpacing = React.useMemo(() => {
+    const headerHeight = Platform.OS === 'ios' ? 44 : 56
+    return insets.top + headerHeight + 8 // 8px extra padding
+  }, [insets.top])
 
   useGetImportantAlertsModal({enabled: features.pushNotifications})
 
@@ -127,7 +136,7 @@ export const TxHistory = () => {
       end={{x: isDark ? 0 : 0, y: isDark ? 0.5 : 0}}
       style={{flex: 1}}
     >
-      <SpaceHeight size={100} />
+      <View style={{height: headerSpacing}} />
 
       <CollapsibleHeader expanded={expanded}>
         <BalanceBanner />

@@ -142,6 +142,7 @@ export async function createTransactionManager(
     removeOptimisticTransaction(txId: TransactionHash) {
       if (state.optimisticTxIds.has(txId)) {
         state.optimisticTxIds.delete(txId)
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const {[txId]: _, ...remainingTransactions} = state.transactions
         state = {
           ...state,

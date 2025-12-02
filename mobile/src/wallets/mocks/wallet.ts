@@ -223,6 +223,9 @@ const wallet: YoroiWallet = {
   subscribeOnTxHistoryUpdate: () => {
     return () => null
   },
+  addOptimisticTransaction: () => {
+    // Mock implementation
+  },
   fetchAccountState: (..._args: never[]) => {
     return Promise.resolve({
       ['reward-address-hex']: {

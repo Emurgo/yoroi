@@ -2,7 +2,7 @@ import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Wallet} from '@yoroi/types'
 
-import {useNavigation} from '@react-navigation/native'
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 import {Linking, Text, TouchableOpacity} from 'react-native'
 
@@ -41,6 +41,13 @@ export const SelectWalletFromList = () => {
     Wallet.Meta['id'] | null
   >(null)
 
+  // Clear loading state when screen loads (navigated to)
+  useFocusEffect(
+    React.useCallback(() => {
+      setLoadingWalletId(null)
+    }, []),
+  )
+
   const handleOnSelect = React.useCallback(
     async (walletMeta: Wallet.Meta) => {
       if (!walletManager) {
@@ -65,11 +72,10 @@ export const SelectWalletFromList = () => {
           screen: 'main-wallet-routes',
           params: {screen: 'history', params: {screen: 'history-list'}},
         })
-      } finally {
-        // Clear loading state after a short delay to allow navigation
-        setTimeout(() => {
-          setLoadingWalletId(null)
-        }, 500)
+      } catch (error) {
+        // If navigation fails, clear loading state
+        setLoadingWalletId(null)
+        throw error
       }
     },
     [walletManager, navigation, walletNavigation],
