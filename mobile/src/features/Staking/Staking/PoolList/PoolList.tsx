@@ -176,7 +176,7 @@ const PoolCard = React.memo(({pool, onPress}: PoolCardProps) => {
             {pool.saturation && (
               <PoolStat
                 label="Saturation"
-                value={`${Number(pool.saturation).toFixed(1)}%`}
+                value={`${(Number(pool.saturation) * 100).toFixed(2)}%`}
               />
             )}
 

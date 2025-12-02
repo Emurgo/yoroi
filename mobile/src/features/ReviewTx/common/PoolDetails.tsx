@@ -75,7 +75,11 @@ export const PoolDetails = ({poolInfo}: {poolInfo: FullPoolInfo}) => {
 
       <Info
         label={strings.txReview.poolDetails.poolSaturation}
-        value={`${explorer?.saturation ?? '-'}%`}
+        value={
+          explorer?.saturation != null
+            ? `${(Number(explorer.saturation) * 100).toFixed(2)}%`
+            : '-'
+        }
       />
 
       <Space.Height.sm />
