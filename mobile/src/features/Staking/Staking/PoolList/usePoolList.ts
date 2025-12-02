@@ -230,12 +230,18 @@ export const usePoolList = (searchQuery?: string) => {
   })
 
   // Sort pools: preferred non-saturated pools first, then rest
+  // Skip preferred pool sorting when searching by name
   const pools = React.useMemo(() => {
     const allPools = poolsData ?? []
     const fetchedPreferredPools = preferredPoolsQuery.data ?? []
 
     if (allPools.length === 0 && fetchedPreferredPools.length === 0) {
       return []
+    }
+
+    // When searching, return pools as-is without preferred pool sorting
+    if (normalizedSearch) {
+      return allPools
     }
 
     // If no preferred pools, return pools as-is
@@ -278,6 +284,7 @@ export const usePoolList = (searchQuery?: string) => {
     preferredPoolIds,
     saturationThreshold,
     preferredPoolsQuery.data,
+    normalizedSearch,
   ])
 
   const errorResult: Error | null =
