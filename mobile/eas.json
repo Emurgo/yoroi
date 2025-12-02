@@ -57,7 +57,15 @@
         "EXPO_PUBLIC_POSTHOG_HOST": "https://eu.i.posthog.com"
       },
       "distribution": "internal",
-      "channel": "development"
+      "channel": "development",
+      "android": {
+        "buildType": "apk",
+        "image": "latest"
+      },
+      "ios": {
+        "simulator": true,
+        "image": "latest"
+      }
     },
     "preview": {
       "extends": "base",
