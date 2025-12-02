@@ -102,6 +102,13 @@ export const DashboardScreen = () => {
   const createOnWithdraw =
     ({shouldDeregister}: {shouldDeregister: boolean}) =>
     () => {
+      // For undelegation, always just undelegate without combining with DRep
+      if (shouldDeregister) {
+        createWithdrawalTx({shouldDeregister})
+        return
+      }
+
+      // For withdrawal only, show modal if not participating in governance
       if (isGovernanceParticipationLoading) {
         return
       }

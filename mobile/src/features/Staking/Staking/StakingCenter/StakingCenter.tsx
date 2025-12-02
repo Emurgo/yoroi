@@ -147,37 +147,37 @@ export const StakingCenter = () => {
   React.useEffect(() => {
     if (!pendingPoolId) return
 
-    // If user is not participating in governance, show modal
-    if (!isGovernanceParticipating) {
+    // If user is already participating in governance, proceed directly without modal
+    if (isGovernanceParticipating) {
       const poolIdToUse = pendingPoolId
-      setPendingPoolId(null) // Clear immediately to prevent re-triggering
-
-      openModal({
-        title: strings.staking.governanceRequiredTitle,
-        content: <GovernanceRequiredModal.Content />,
-        footer: (
-          <GovernanceRequiredModal.Footer
-            onDelegateToYoroiDRep={() => {
-              closeModal()
-              // Build transaction with governance delegation
-              buildDelegationTransaction(poolIdToUse, true)
-            }}
-            onDelegateStakeOnly={() => {
-              closeModal()
-              // Build transaction without governance delegation
-              buildDelegationTransaction(poolIdToUse, false)
-            }}
-          />
-        ),
-        height: 600,
-      })
+      setPendingPoolId(null)
+      buildDelegationTransaction(poolIdToUse, false)
       return
     }
 
-    // If user is already participating, proceed directly with stake-only delegation
+    // If user is not participating in governance, show modal
     const poolIdToUse = pendingPoolId
-    setPendingPoolId(null)
-    buildDelegationTransaction(poolIdToUse, false)
+    setPendingPoolId(null) // Clear immediately to prevent re-triggering
+
+    openModal({
+      title: strings.staking.governanceRequiredTitle,
+      content: <GovernanceRequiredModal.Content />,
+      footer: (
+        <GovernanceRequiredModal.Footer
+          onDelegateToYoroiDRep={() => {
+            closeModal()
+            // Build transaction with governance delegation
+            buildDelegationTransaction(poolIdToUse, true)
+          }}
+          onDelegateStakeOnly={() => {
+            closeModal()
+            // Build transaction without governance delegation
+            buildDelegationTransaction(poolIdToUse, false)
+          }}
+        />
+      ),
+      height: 600,
+    })
   }, [
     pendingPoolId,
     isGovernanceParticipating,
