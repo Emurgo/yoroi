@@ -15,4 +15,3 @@ export const ArrowLeft = ({size = 24, color = '#000000'}: IconProps) => {
     </Svg>
   )
 }
-
