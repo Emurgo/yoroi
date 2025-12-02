@@ -1,11 +1,11 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
-import {ScrollView, Text, View} from 'react-native'
+import {Text, TouchableWithoutFeedback, View} from 'react-native'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
-import {Checkbox} from '~/ui/Checkbox/Checkbox'
+import {Icon} from '~/ui/Icon'
 import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {Space} from '~/ui/Space/Space'
@@ -247,80 +247,131 @@ export const TxFilterModal = ({
 
   return (
     <Modal.Content>
-      <View style={[a.p_lg]}>
-        <Text
-          style={[a.heading_3_medium, {color: p.gray_900, marginBottom: 16}]}
-        >
-          {strings.transactions.filterOperations}
-        </Text>
+      <Space.Height.lg />
+      <Text style={[a.heading_3_medium, {color: p.gray_900, marginBottom: 16}]}>
+        {strings.transactions.filterOperations}
+      </Text>
 
-        <ScrollView style={{maxHeight: 200}} nestedScrollEnabled>
-          {OPERATION_TYPES.map((operation) => (
-            <Checkbox
-              key={operation}
-              checked={selectedOperations.includes(operation)}
-              onChange={() => toggleOperation(operation)}
-              text={getOperationLabel(operation, strings)}
-            />
-          ))}
-        </ScrollView>
+      <View style={[a.flex_row, a.flex_wrap, a.gap_sm]}>
+        {OPERATION_TYPES.map((operation) => (
+          <OperationPill
+            key={operation}
+            operation={operation}
+            isSelected={selectedOperations.includes(operation)}
+            onToggle={() => toggleOperation(operation)}
+            label={getOperationLabel(operation, strings)}
+          />
+        ))}
+      </View>
 
-        <Space.Height.lg />
+      <Space.Height.lg />
 
-        <Text
-          style={[a.heading_3_medium, {color: p.gray_900, marginBottom: 8}]}
-        >
-          {strings.transactions.filterMetadataMemo}
-        </Text>
-        <TextInput
-          value={metadataMemoSearch}
-          onChangeText={setMetadataMemoSearch}
-          placeholder={strings.transactions.filterMetadataMemoPlaceholder}
-        />
+      <Text style={[a.heading_3_medium, {color: p.gray_900, marginBottom: 8}]}>
+        {strings.transactions.filterMetadataMemo}
+      </Text>
+      <TextInput
+        value={metadataMemoSearch}
+        onChangeText={setMetadataMemoSearch}
+        placeholder={strings.transactions.filterMetadataMemoPlaceholder}
+      />
 
-        <Space.Height.lg />
+      <Space.Height.lg />
 
-        <Text
-          style={[a.heading_3_medium, {color: p.gray_900, marginBottom: 8}]}
-        >
-          {strings.transactions.filterAdaAmount}
-        </Text>
-        <View style={[a.flex_row, a.gap_sm]}>
-          <View style={[a.flex_1]}>
-            <Text
-              style={[
-                a.body_2_md_regular,
-                {color: p.gray_600, marginBottom: 4},
-              ]}
-            >
-              {strings.transactions.filterMinAda}
-            </Text>
-            <TextInput
-              value={minAdaMoved}
-              onChangeText={handleMinAdaChange}
-              placeholder="0"
-              keyboardType="decimal-pad"
-            />
-          </View>
-          <View style={[a.flex_1]}>
-            <Text
-              style={[
-                a.body_2_md_regular,
-                {color: p.gray_600, marginBottom: 4},
-              ]}
-            >
-              {strings.transactions.filterMaxAda}
-            </Text>
-            <TextInput
-              value={maxAdaMoved}
-              onChangeText={handleMaxAdaChange}
-              placeholder="0"
-              keyboardType="decimal-pad"
-            />
-          </View>
+      <Text style={[a.heading_3_medium, {color: p.gray_900, marginBottom: 8}]}>
+        {strings.transactions.filterAdaAmount}
+      </Text>
+      <View style={[a.flex_row, a.gap_sm]}>
+        <View style={[a.flex_1]}>
+          <Text
+            style={[a.body_2_md_regular, {color: p.gray_600, marginBottom: 4}]}
+          >
+            {strings.transactions.filterMinAda}
+          </Text>
+          <TextInput
+            value={minAdaMoved}
+            onChangeText={handleMinAdaChange}
+            placeholder="0"
+            keyboardType="decimal-pad"
+          />
+        </View>
+        <View style={[a.flex_1]}>
+          <Text
+            style={[a.body_2_md_regular, {color: p.gray_600, marginBottom: 4}]}
+          >
+            {strings.transactions.filterMaxAda}
+          </Text>
+          <TextInput
+            value={maxAdaMoved}
+            onChangeText={handleMaxAdaChange}
+            placeholder="0"
+            keyboardType="decimal-pad"
+          />
         </View>
       </View>
+      <Space.Height.lg />
     </Modal.Content>
+  )
+}
+
+type OperationPillProps = {
+  operation: OperationType
+  isSelected: boolean
+  onToggle: () => void
+  label: string
+}
+
+const OperationPill = ({isSelected, onToggle, label}: OperationPillProps) => {
+  const {palette: p} = useTheme()
+  const [isPressed, setIsPressed] = React.useState(false)
+
+  const getBoxChipStyle = React.useMemo(() => {
+    if (isSelected && isPressed) return {backgroundColor: p.primary_600}
+    if (isSelected && !isPressed) return {backgroundColor: p.primary_500}
+
+    if (isPressed)
+      return {
+        borderWidth: 2,
+        borderColor: p.el_primary_max,
+        backgroundColor: p.primary_100,
+      }
+
+    return {borderWidth: 2, borderColor: p.el_primary_medium}
+  }, [p, isSelected, isPressed])
+
+  const getTextChipStyle = React.useMemo(() => {
+    if (isSelected) return {color: p.white_static}
+
+    if (isPressed) return {color: p.text_primary_max}
+
+    return {color: p.text_primary_medium}
+  }, [p, isSelected, isPressed])
+
+  return (
+    <TouchableWithoutFeedback
+      onPressIn={() => setIsPressed(true)}
+      onPress={onToggle}
+      onPressOut={() => setIsPressed(false)}
+    >
+      <View
+        style={[
+          {
+            borderRadius: 8,
+            height: 40,
+            paddingHorizontal: 14,
+            backgroundColor: p.bg_color_max,
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: 8,
+          },
+          a.p_2xs,
+          getBoxChipStyle,
+        ]}
+      >
+        {isSelected && <Icon.CheckFilled2 color={getTextChipStyle.color} />}
+
+        <Text style={[a.body_1_lg_regular, getTextChipStyle]}>{label}</Text>
+      </View>
+    </TouchableWithoutFeedback>
   )
 }
 
@@ -335,7 +386,7 @@ export const TxFilterModalFooter = ({
 
   return (
     <Modal.Footer>
-      <View style={[a.flex_row, a.gap_sm, a.p_lg]}>
+      <View style={[a.flex_row, a.gap_sm]}>
         <Button
           type="Secondary"
           title={strings.transactions.filterClear}
