@@ -83,7 +83,7 @@ export const YoroiDrepCard = ({
             {
               width: 48,
               height: 48,
-              backgroundColor: pending ? p.gray_200 : p.primary_500,
+              backgroundColor: pending ? p.el_gray_min : p.primary_500,
             },
           ]}
         >
