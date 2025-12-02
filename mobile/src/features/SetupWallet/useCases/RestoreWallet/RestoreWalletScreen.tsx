@@ -4,9 +4,15 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import {useNavigation} from '@react-navigation/native'
 import {validateMnemonic} from 'bip39'
 import * as React from 'react'
-import {Keyboard, Platform, Text, TouchableOpacity, View} from 'react-native'
+import {
+  Dimensions,
+  Keyboard,
+  Platform,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native'
 import {FlatList, ScrollView} from 'react-native-gesture-handler'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
 import {WalletDuplicatedModal} from '~/features/SetupWallet/common/WalletDuplicatedModal/WalletDuplicatedModal'
 import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
@@ -296,8 +302,24 @@ const WordSuggestionList = React.memo(
     onSelect: (index: number, word: string) => void
   }) => {
     const {palette: p, atoms: ta} = useTheme()
-    const insets = useSafeAreaInsets()
-    const [keyboardHeight, setKeyboardHeight] = React.useState(0)
+    const getScreenHeight = React.useCallback(
+      () => Dimensions.get('window').height,
+      [],
+    )
+
+    const [keyboardTop, setKeyboardTop] = React.useState(() => {
+      // Try to get initial keyboard position if keyboard is already open
+      if (Platform.OS === 'android' && Keyboard.metrics) {
+        const metrics = Keyboard.metrics()
+        if (metrics) {
+          const screenHeight = getScreenHeight()
+          return (
+            screenHeight - (metrics.screenY ?? screenHeight - metrics.height)
+          )
+        }
+      }
+      return 0
+    })
 
     React.useEffect(() => {
       const showEvent =
@@ -306,17 +328,43 @@ const WordSuggestionList = React.memo(
         Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide'
 
       const keyboardDidShowListener = Keyboard.addListener(showEvent, (e) => {
-        setKeyboardHeight(e.endCoordinates.height)
+        // Use screenY (top of keyboard) to calculate distance from bottom
+        const screenHeight = getScreenHeight()
+        const distanceFromBottom = screenHeight - e.endCoordinates.screenY
+        setKeyboardTop(distanceFromBottom)
       })
       const keyboardDidHideListener = Keyboard.addListener(hideEvent, () => {
-        setKeyboardHeight(0)
+        setKeyboardTop(0)
       })
 
       return () => {
         keyboardDidShowListener.remove()
         keyboardDidHideListener.remove()
       }
-    }, [])
+    }, [getScreenHeight])
+
+    // Check keyboard position when suggestions appear (in case keyboard was already open)
+    React.useEffect(() => {
+      if (data.length > 0 && keyboardTop === 0) {
+        // Small delay to ensure keyboard metrics are available
+        const timeout = setTimeout(() => {
+          if (Platform.OS === 'android' && Keyboard.metrics) {
+            const metrics = Keyboard.metrics()
+            if (metrics) {
+              const screenHeight = getScreenHeight()
+              const distanceFromBottom =
+                screenHeight -
+                (metrics.screenY ?? screenHeight - metrics.height)
+              setKeyboardTop(distanceFromBottom)
+            }
+          }
+        }, 100)
+        return () => {
+          clearTimeout(timeout)
+        }
+      }
+      return undefined
+    }, [data.length, keyboardTop, getScreenHeight])
 
     const renderItem = React.useCallback(
       ({item: word, index: wordIndex}: {item: string; index: number}) => (
@@ -346,12 +394,9 @@ const WordSuggestionList = React.memo(
           {
             borderColor: p.gray_200,
             ...android(a.pb_sm),
-            ...(keyboardHeight > 0 && {
+            ...(keyboardTop > 0 && {
               position: 'absolute' as const,
-              bottom:
-                keyboardHeight +
-                60 -
-                (Platform.OS === 'android' ? insets.bottom : 0),
+              bottom: keyboardTop,
               left: 0,
               right: 0,
               zIndex: 1000,
