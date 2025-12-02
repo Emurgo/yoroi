@@ -1,4 +1,4 @@
-import {atoms as a} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 
 import {useQuery} from '@tanstack/react-query'
 import * as React from 'react'
@@ -23,6 +23,7 @@ export const PoolDetailScreen = ({
   disabled = false,
 }: Props) => {
   const strings = useStrings()
+  const {atoms: ta} = useTheme()
   const [poolIdOrHash, setPoolIdOrHash] = React.useState('')
 
   const {data: isValid} = useIsValidPoolIdOrHash(poolIdOrHash)
@@ -37,11 +38,11 @@ export const PoolDetailScreen = ({
   return (
     <>
       <View>
-        <Text style={[a.body_1_lg_medium]}>
+        <Text style={[a.body_1_lg_medium, ta.text_gray_max]}>
           {strings.staking.poolDetails.disclaimerTitle}
         </Text>
         <Space.Height.xs />
-        <Text style={[a.body_2_md_regular]}>
+        <Text style={[a.body_2_md_regular, ta.text_gray_medium]}>
           {strings.staking.poolDetails.disclaimerText}
         </Text>
       </View>

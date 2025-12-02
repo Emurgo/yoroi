@@ -160,29 +160,62 @@ export const StakeDelegationOperation = ({
     })
   }
 
-  const poolName = generatePoolName(poolInfo) ?? poolId
+  const poolName = generatePoolName(poolInfo)
 
   return (
-    <View style={[a.flex, a.flex_row, a.align_center, a.justify_between]}>
-      <Label
-        label={strings.txReview.operations.delegateStake}
-        showWarning={showWarning}
-        strike={strike}
-      />
+    <View>
+      <View style={[a.flex, a.flex_row, a.align_center, a.justify_between]}>
+        <Label
+          label={strings.txReview.operations.delegateStake}
+          showWarning={showWarning}
+          strike={strike}
+        />
 
-      <Space.Width.lg />
+        {poolName != null && (
+          <>
+            <Space.Width.lg />
+            <TouchableOpacity
+              activeOpacity={0.5}
+              onPress={handleShowPoolDetails}
+              style={{flex: 1}}
+            >
+              <Text
+                style={[
+                  a.body_2_md_regular,
+                  {color: p.text_primary_medium},
+                  strike && {textDecorationLine: 'line-through'},
+                ]}
+                numberOfLines={1}
+                ellipsizeMode="middle"
+              >
+                {poolName}
+              </Text>
+            </TouchableOpacity>
+          </>
+        )}
+      </View>
 
-      <TouchableOpacity activeOpacity={0.5} onPress={handleShowPoolDetails}>
-        <Text
-          style={[
-            a.body_2_md_regular,
-            {color: p.text_primary_medium},
-            strike && {textDecorationLine: 'line-through'},
-          ]}
+      <Space.Height.xs />
+
+      <Copiable text={poolId} style={{flex: 1}}>
+        <TouchableOpacity
+          activeOpacity={0.5}
+          onPress={handleShowPoolDetails}
+          style={{flex: 1}}
         >
-          {poolName}
-        </Text>
-      </TouchableOpacity>
+          <Text
+            style={[
+              a.body_2_md_regular,
+              {color: p.text_gray_medium},
+              strike && {textDecorationLine: 'line-through'},
+            ]}
+            numberOfLines={1}
+            ellipsizeMode="middle"
+          >
+            {poolId}
+          </Text>
+        </TouchableOpacity>
+      </Copiable>
     </View>
   )
 }
