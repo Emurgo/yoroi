@@ -105,7 +105,10 @@ const ParticipatingInGovernanceVariant = ({
   }
 
   return (
-    <ScrollView style={[a.px_lg, a.flex_1, ta.bg_color_max]}>
+    <ScrollView
+      style={[a.px_lg, a.flex_1, ta.bg_color_max]}
+      contentContainerStyle={a.flex_grow}
+    >
       <View>
         <Text style={[a.body_1_lg_regular, ta.text_gray_medium]}>
           {introduction}
@@ -114,7 +117,7 @@ const ParticipatingInGovernanceVariant = ({
 
       <Space.Height.lg />
 
-      <View style={[a.flex_1, a.gap_lg]}>
+      <View style={[a.gap_lg]}>
         {isDelegatingToYoroiDrep && (
           <YoroiDrepCard isDelegating pending={isPending} />
         )}
@@ -154,7 +157,7 @@ const ParticipatingInGovernanceVariant = ({
         />
       </View>
 
-      <Space.Height.sm fill />
+      <View style={a.flex_1} />
 
       <LearnMoreLink />
 
@@ -196,7 +199,10 @@ const NeverParticipatedInGovernanceVariant = () => {
     useNeverParticipatedGovernance()
 
   return (
-    <ScrollView style={[a.px_lg, a.flex_1, ta.bg_color_max]}>
+    <ScrollView
+      style={[a.px_lg, a.flex_1, ta.bg_color_max]}
+      contentContainerStyle={a.flex_grow}
+    >
       <View>
         <Text style={[a.body_1_lg_regular, ta.text_gray_medium]}>
           {strings.staking.reviewActions}
@@ -205,7 +211,7 @@ const NeverParticipatedInGovernanceVariant = () => {
 
       <Space.Height.lg />
 
-      <View style={[a.flex_1, a.gap_lg]}>
+      <View style={[a.gap_lg]}>
         {isYoroiDrepBannerEnabled && (
           <YoroiDrepCard
             onDelegate={handleDelegateToYoroi}
@@ -221,7 +227,7 @@ const NeverParticipatedInGovernanceVariant = () => {
         />
       </View>
 
-      <Space.Height.sm fill />
+      <View style={a.flex_1} />
 
       <LearnMoreLink />
 
