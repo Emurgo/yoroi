@@ -143,7 +143,7 @@ const ResolverProviderWrapper = ({children}: React.PropsWithChildren) => {
   }, [])
 
   const resolverApi = React.useMemo(() => {
-    const api = resolverApiMaker({
+    return resolverApiMaker({
       apiConfig: {
         [Resolver.NameServer.Unstoppable]: {
           apiKey: unstoppableApiKey,
@@ -152,65 +152,11 @@ const ResolverProviderWrapper = ({children}: React.PropsWithChildren) => {
       cslFactory: init,
       isMainnet,
     })
-
-    // Wrap getCardanoAddresses to add logging
-    const originalGetCardanoAddresses = api.getCardanoAddresses.bind(api)
-    api.getCardanoAddresses = async (params, config) => {
-      logger.debug(
-        '[ResolverProviderWrapper] [RESTORE] Calling getCardanoAddresses',
-        {
-          resolve: params.resolve,
-          strategy: params.strategy,
-          isMainnet,
-          hasSignal: !!config?.signal,
-        },
-      )
-      try {
-        const result = await originalGetCardanoAddresses(params, config)
-        logger.debug(
-          '[ResolverProviderWrapper] [RESTORE] getCardanoAddresses succeeded',
-          {
-            resolve: params.resolve,
-            resultLength: result.length,
-            results: result.map((r, i) => ({
-              index: i,
-              hasAddress: r.address !== null,
-              hasError: r.error !== null,
-              hasNameServer: r.nameServer !== null,
-            })),
-          },
-        )
-        return result
-      } catch (error) {
-        logger.error(
-          '[ResolverProviderWrapper] [RESTORE] getCardanoAddresses failed',
-          {
-            resolve: params.resolve,
-            error: error instanceof Error ? error.message : String(error),
-            errorStack: error instanceof Error ? error.stack : undefined,
-          },
-        )
-        throw error
-      }
-    }
-
-    return api
   }, [isMainnet])
 
   const resolverManager = React.useMemo(() => {
     return resolverManagerMaker(resolverStorage, resolverApi)
   }, [resolverStorage, resolverApi])
-
-  React.useEffect(() => {
-    logger.debug(
-      '[ResolverProviderWrapper] [RESTORE] ResolverProvider created',
-      {
-        isMainnet,
-        hasResolverManager: !!resolverManager,
-        hasCrypto: !!resolverManager?.crypto,
-      },
-    )
-  }, [isMainnet, resolverManager])
 
   return (
     <ResolverProvider resolverManager={resolverManager}>
