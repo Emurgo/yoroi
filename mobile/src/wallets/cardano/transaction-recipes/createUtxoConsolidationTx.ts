@@ -1,4 +1,5 @@
 import {cardanoConfig} from '@yoroi/blockchains'
+import {isHex} from '@yoroi/common'
 import {
   ModernUtxo,
   NoOutputsError,
@@ -13,7 +14,12 @@ import {
 } from '@yoroi/tx'
 import {Address, App, Balance, Branded, Portfolio, Wallet} from '@yoroi/types'
 
+import type {Address as CSLAddress} from '@emurgo/cross-csl-core'
+
 import {logger} from '~/kernel/logger/logger'
+
+import {cardanoValueFromAmounts} from '../cardanoValueFromAmounts'
+import {CardanoMobileWrapped} from '../wrappedCsl'
 
 export type CreateUtxoConsolidationTxParams = {
   utxos: ModernUtxo[]
@@ -61,13 +67,22 @@ export async function createUtxoConsolidationTx({
       ? (firstAddressRaw as Address)
       : firstAddressRaw
 
-  // Filter UTXOs that are NOT in the first address
+  // Filter UTXOs that are NOT in the first address (these will be consolidated)
   const utxosToConsolidate = utxos.filter((utxo) => {
     const utxoReceiverStr =
       typeof utxo.receiver === 'string' ? utxo.receiver : utxo.receiver
     const firstAddrStr =
       typeof firstAddress === 'string' ? firstAddress : firstAddress
     return utxoReceiverStr !== firstAddrStr
+  })
+
+  // Get UTXOs from the first address that can be used to help pay for fees
+  const utxosFromFirstAddress = utxos.filter((utxo) => {
+    const utxoReceiverStr =
+      typeof utxo.receiver === 'string' ? utxo.receiver : utxo.receiver
+    const firstAddrStr =
+      typeof firstAddress === 'string' ? firstAddress : firstAddress
+    return utxoReceiverStr === firstAddrStr
   })
 
   if (utxosToConsolidate.length === 0) {
@@ -77,14 +92,20 @@ export async function createUtxoConsolidationTx({
   // Sum all amounts from UTXOs to consolidate
   // We'll send all tokens and most ADA, leaving room for fees
   const consolidatedAmounts: Balance.Amounts = {}
-  let totalAda = BigInt(0)
+  let totalAdaFromConsolidation = BigInt(0)
+
+  // Also calculate total ADA available from first address UTXOs (for fee payment)
+  let totalAdaFromFirstAddress = BigInt(0)
+  for (const utxo of utxosFromFirstAddress) {
+    totalAdaFromFirstAddress += BigInt(utxo.balance[primaryTokenId] || '0')
+  }
 
   for (const utxo of utxosToConsolidate) {
     for (const [tokenId, quantity] of Object.entries(utxo.balance)) {
       const tokenIdBranded = Branded.asTokenId(tokenId)
       if (tokenIdBranded === primaryTokenId) {
         // Sum ADA separately
-        totalAda += BigInt(quantity)
+        totalAdaFromConsolidation += BigInt(quantity)
       } else {
         // Send all non-ADA tokens
         const current = BigInt(
@@ -98,13 +119,134 @@ export async function createUtxoConsolidationTx({
     }
   }
 
+  // Total ADA available = consolidation UTXOs + first address UTXOs
+  const totalAda = totalAdaFromConsolidation + totalAdaFromFirstAddress
+
   const protocolParamsConfig = createCardanoHaskellConfig(
     protocolParams,
     networkId,
   )
 
-  const minUtxoValue = BigInt(cardanoConfig.params.minUtxoValue.toString())
+  const baseMinUtxoValue = BigInt(cardanoConfig.params.minUtxoValue.toString())
   const hasTokens = Object.keys(consolidatedAmounts).length > 0
+
+  // Calculate actual minimum UTXO value if we have tokens
+  // This is critical because outputs with tokens require more ADA than the base minimum
+  let actualMinUtxoValue = baseMinUtxoValue
+  if (hasTokens) {
+    try {
+      actualMinUtxoValue = await CardanoMobileWrapped.cslScope(async (csl) => {
+        // Normalize address
+        let normalizedAddress: CSLAddress | null = null
+        if (csl.ByronAddress.isValid(firstAddress)) {
+          const byronAddr = csl.ByronAddress.fromBase58(firstAddress)
+          normalizedAddress = byronAddr.toAddress()
+        } else {
+          const isHexAddr = isHex(firstAddress)
+          normalizedAddress = isHexAddr
+            ? csl.Address.fromHex(firstAddress)
+            : csl.Address.fromBech32(firstAddress)
+        }
+
+        if (!normalizedAddress || normalizedAddress.isMalformed()) {
+          logger.error(
+            'createUtxoConsolidationTx: Failed to normalize address for minAda calculation',
+            {
+              address: firstAddress,
+            },
+          )
+          throw new Error(`Invalid address: ${firstAddress}`)
+        }
+
+        // Create value with tokens (using 0 ADA initially to calculate minimum)
+        const tempAmounts: Balance.Amounts = {
+          ...consolidatedAmounts,
+          [primaryTokenId]: '0',
+        }
+
+        let value
+        try {
+          value = cardanoValueFromAmounts(csl, tempAmounts, primaryTokenId)
+          if (!value) {
+            logger.error(
+              'createUtxoConsolidationTx: cardanoValueFromAmounts returned null',
+              {
+                address: firstAddress,
+                amounts: consolidatedAmounts,
+              },
+            )
+            throw new Error(
+              'Failed to create Value for minAda calculation: cardanoValueFromAmounts returned null',
+            )
+          }
+        } catch (error) {
+          logger.error(
+            'createUtxoConsolidationTx: Error creating Value for minAda calculation',
+            {
+              address: firstAddress,
+              amounts: consolidatedAmounts,
+              error: error instanceof Error ? error.message : String(error),
+              errorStack: error instanceof Error ? error.stack : undefined,
+            },
+          )
+          throw error
+        }
+
+        const txOutput = csl.TransactionOutput.new(normalizedAddress, value)
+        if (!txOutput) {
+          const errorValueCoin = value.coin()
+          const errorMultiasset = value.multiasset()
+          logger.error(
+            'createUtxoConsolidationTx: Failed to create TransactionOutput for minAda calculation',
+            {
+              address: firstAddress,
+              valueCoin: errorValueCoin ? errorValueCoin.toStr() : '0',
+              hasMultiasset: errorMultiasset
+                ? errorMultiasset.len() > 0
+                : false,
+            },
+          )
+          throw new Error(
+            `Failed to create TransactionOutput for minAda calculation: Pointer is NULL for address ${firstAddress}`,
+          )
+        }
+
+        const dataCost = csl.DataCost.newCoinsPerByte(
+          csl.BigNum.fromStr(protocolParams.coinsPerUtxoByte),
+        )
+        if (!dataCost) {
+          logger.error(
+            'createUtxoConsolidationTx: Failed to create DataCost for minAda calculation',
+          )
+          throw new Error('Failed to create DataCost for minAda calculation')
+        }
+
+        const minAda = csl.minAdaForOutput(txOutput, dataCost)
+        if (!minAda) {
+          logger.error(
+            'createUtxoConsolidationTx: Failed to calculate minAdaForOutput',
+            {
+              address: firstAddress,
+            },
+          )
+          throw new Error('Failed to calculate minAdaForOutput')
+        }
+
+        return BigInt(minAda.toStr())
+      })
+    } catch (error) {
+      logger.error(
+        'createUtxoConsolidationTx: Failed to calculate actual min UTXO value, using base minimum',
+        {
+          error: error instanceof Error ? error.message : String(error),
+          errorStack: error instanceof Error ? error.stack : undefined,
+          baseMinUtxoValue: baseMinUtxoValue.toString(),
+        },
+      )
+      // Fall back to base minimum if calculation fails
+      actualMinUtxoValue = baseMinUtxoValue
+    }
+  }
 
   // Estimate fee conservatively - actual fee will be calculated by builder
   // Use a larger estimate to ensure we have enough room
@@ -120,30 +262,88 @@ export async function createUtxoConsolidationTx({
   const safetyMargin = BigInt(50000) // 0.05 ADA safety margin
   const reservedAda = estimatedFee + safetyMargin
 
-  // Calculate ADA to send: total ADA minus reserved amount
-  // The remaining ADA will go back as change to the first address
-  let adaToSend = totalAda - reservedAda
+  // Calculate ADA to send: use only consolidation UTXOs initially
+  // We'll try building first without first address UTXOs, then add them if needed
+  let adaToSend = totalAdaFromConsolidation - reservedAda
 
-  // If we have tokens, we need at least minimum UTXO value in output
+  // If we have tokens, we need at least the actual minimum UTXO value in output
   if (hasTokens) {
-    if (adaToSend < minUtxoValue) {
-      // If we don't have enough ADA after fees, we can't consolidate
-      if (totalAda < reservedAda + minUtxoValue) {
-        logger.error('UTXO consolidation: Insufficient ADA', {
+    // Check if we have at least the minimum UTXO value (considering all available UTXOs)
+    // If we don't, consolidation is impossible
+    if (totalAda < actualMinUtxoValue) {
+      logger.error(
+        'createUtxoConsolidationTx: Insufficient ADA for minimum UTXO value',
+        {
+          totalAdaFromConsolidation: totalAdaFromConsolidation.toString(),
+          totalAdaFromFirstAddress: totalAdaFromFirstAddress.toString(),
           totalAda: totalAda.toString(),
-          reservedAda: reservedAda.toString(),
-          minUtxoValue: minUtxoValue.toString(),
-          required: (reservedAda + minUtxoValue).toString(),
-        })
-        throw new Error('Insufficient ADA to cover fees and minimum UTXO value')
-      }
-      adaToSend = minUtxoValue
+          actualMinUtxoValue: actualMinUtxoValue.toString(),
+          shortfall: (actualMinUtxoValue - totalAda).toString(),
+          calculation: {
+            step1_totalAdaFromConsolidation:
+              totalAdaFromConsolidation.toString(),
+            step2_totalAdaFromFirstAddress: totalAdaFromFirstAddress.toString(),
+            step3_totalAda: totalAda.toString(),
+            step4_actualMinUtxoValue: actualMinUtxoValue.toString(),
+            step5_hasEnoughForMinUtxo: totalAda >= actualMinUtxoValue,
+          },
+        },
+      )
+      throw new Error(
+        `Insufficient ADA for minimum UTXO value. Required: ${actualMinUtxoValue.toString()}, Available from consolidation UTXOs: ${totalAdaFromConsolidation.toString()}, Available from first address: ${totalAdaFromFirstAddress.toString()}, Total: ${totalAda.toString()}`,
+      )
     }
+
+    // If adaToSend is less than minimum after reserving fees, check if we can proceed
+    // We'll try building first, and if it fails, we'll add first address UTXOs
+    if (adaToSend < actualMinUtxoValue) {
+      // Check if we have at least minimum UTXO value from consolidation UTXOs alone
+      // If not, and we don't have first address UTXOs, we can't proceed
+      if (totalAdaFromConsolidation < actualMinUtxoValue) {
+        const requiredAda = reservedAda + actualMinUtxoValue
+        const hasFirstAddressUtxos = utxosFromFirstAddress.length > 0
+
+        if (!hasFirstAddressUtxos) {
+          logger.error(
+            'createUtxoConsolidationTx: Insufficient ADA for tokens and fees, no first address UTXOs available',
+            {
+              totalAdaFromConsolidation: totalAdaFromConsolidation.toString(),
+              reservedAda: reservedAda.toString(),
+              actualMinUtxoValue: actualMinUtxoValue.toString(),
+              baseMinUtxoValue: baseMinUtxoValue.toString(),
+              requiredAda: requiredAda.toString(),
+              shortfall:
+                totalAdaFromConsolidation < requiredAda
+                  ? (requiredAda - totalAdaFromConsolidation).toString()
+                  : '0',
+              calculation: {
+                step1_totalAdaFromConsolidation:
+                  totalAdaFromConsolidation.toString(),
+                step2_reservedAda: reservedAda.toString(),
+                step3_adaToSend: adaToSend.toString(),
+                step4_actualMinUtxoValue: actualMinUtxoValue.toString(),
+                step5_requiredAda: requiredAda.toString(),
+                step6_hasEnough: totalAdaFromConsolidation >= requiredAda,
+                step7_hasFirstAddressUtxos: hasFirstAddressUtxos,
+              },
+            },
+          )
+          throw new Error(
+            `Insufficient ADA to cover fees and minimum UTXO value. Required: ${requiredAda.toString()}, Available from consolidation UTXOs: ${totalAdaFromConsolidation.toString()}, Actual min UTXO: ${actualMinUtxoValue.toString()}`,
+          )
+        }
+      } else {
+      }
+    }
+
+    // Use the actual minimum UTXO value (not the base minimum)
+    adaToSend = actualMinUtxoValue
     consolidatedAmounts[primaryTokenId] =
       adaToSend.toString() as Balance.Quantity
   } else {
     // No tokens - just ADA UTXOs
     // Send all ADA minus reserved amount (change will handle the rest)
+
     if (adaToSend > 0n) {
       consolidatedAmounts[primaryTokenId] =
         adaToSend.toString() as Balance.Quantity
@@ -159,12 +359,30 @@ export async function createUtxoConsolidationTx({
         // Very tight situation - send minimum and hope builder adjusts
         consolidatedAmounts[primaryTokenId] =
           minAdaToSend.toString() as Balance.Quantity
+        logger.warn(
+          'createUtxoConsolidationTx: Very tight ADA situation, using minimum',
+          {
+            minAdaToSend: minAdaToSend.toString(),
+            totalAda: totalAda.toString(),
+            reservedAda: reservedAda.toString(),
+          },
+        )
       }
     } else {
-      logger.error('UTXO consolidation: Cannot create output', {
-        totalAda: totalAda.toString(),
-        reservedAda: reservedAda.toString(),
-      })
+      logger.error(
+        'createUtxoConsolidationTx: Cannot create output - insufficient ADA',
+        {
+          totalAda: totalAda.toString(),
+          reservedAda: reservedAda.toString(),
+          shortfall: (reservedAda - totalAda).toString(),
+          calculation: {
+            step1_totalAda: totalAda.toString(),
+            step2_reservedAda: reservedAda.toString(),
+            step3_adaToSend: adaToSend.toString(),
+            step4_canCreateOutput: totalAda > reservedAda,
+          },
+        },
+      )
       throw new Error(
         'Insufficient ADA to cover fees - cannot consolidate UTXOs',
       )
@@ -175,7 +393,7 @@ export async function createUtxoConsolidationTx({
     // Build transaction using functional TransactionBuilder
     let builderState = createTransactionBuilder()
 
-    // Add all UTXOs to consolidate as inputs
+    // First, try with only UTXOs to consolidate (not from first address)
     builderState = addInputs(builderState, utxosToConsolidate)
 
     // Add output - remaining ADA will go back as change to first address
@@ -187,13 +405,71 @@ export async function createUtxoConsolidationTx({
     // Set TTL with buffer
     builderState = setTTLWithBuffer(builderState, absSlotNumber.toNumber())
 
-    // Build the transaction
-    return await buildRecipeTransaction(
-      builderState,
-      protocolParamsConfig,
-      primaryTokenId,
-    )
+    try {
+      const result = await buildRecipeTransaction(
+        builderState,
+        protocolParamsConfig,
+        primaryTokenId,
+      )
+
+      return result
+    } catch (buildError) {
+      // If build fails due to insufficient funds, try adding first address UTXOs
+      const errorMessage =
+        buildError instanceof Error
+          ? buildError.message.toLowerCase()
+          : String(buildError).toLowerCase()
+      const isInsufficientFundsError =
+        buildError instanceof NotEnoughMoneyToSendError ||
+        (buildError instanceof Error &&
+          (errorMessage.includes('insufficient') ||
+            errorMessage.includes('not enough') ||
+            errorMessage.includes('less than') ||
+            errorMessage.includes('shortage')))
+
+      if (isInsufficientFundsError && utxosFromFirstAddress.length > 0) {
+        logger.info(
+          'createUtxoConsolidationTx: Build failed with insufficient funds, adding UTXOs from first address',
+          {
+            error:
+              buildError instanceof Error
+                ? buildError.message
+                : String(buildError),
+            utxosFromFirstAddressCount: utxosFromFirstAddress.length,
+            totalAdaFromFirstAddress: totalAdaFromFirstAddress.toString(),
+          },
+        )
+
+        // Add UTXOs from first address to help cover fees
+        builderState = addInputs(builderState, utxosFromFirstAddress)
+
+        const result = await buildRecipeTransaction(
+          builderState,
+          protocolParamsConfig,
+          primaryTokenId,
+        )
+
+        return result
+      }
+
+      // If it's not an insufficient funds error, or we don't have first address UTXOs, rethrow
+      throw buildError
+    }
   } catch (e) {
+    logger.error('createUtxoConsolidationTx: Transaction build failed', {
+      error: e instanceof Error ? e.message : String(e),
+      errorStack: e instanceof Error ? e.stack : undefined,
+      errorType:
+        e instanceof NotEnoughMoneyToSendError
+          ? 'NotEnoughMoneyToSendError'
+          : e instanceof NoOutputsError
+            ? 'NoOutputsError'
+            : 'Unknown',
+      inputsCount: utxosToConsolidate.length,
+      outputAmounts: consolidatedAmounts,
+      totalAda: totalAda.toString(),
+      reservedAda: reservedAda.toString(),
+    })
     if (e instanceof NotEnoughMoneyToSendError || e instanceof NoOutputsError)
       throw e
     throw new App.Errors.LibraryError((e as Error).message)

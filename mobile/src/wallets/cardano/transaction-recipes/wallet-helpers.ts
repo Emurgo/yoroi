@@ -53,20 +53,36 @@ export async function createUtxoConsolidationTxFromWallet(
   wallet: YoroiWallet,
   params: {addressMode: Wallet.AddressMode},
 ): Promise<{cbor: string}> {
+  const logger = getLogger()
   const modernUtxos = getModernUtxosFromWallet(wallet)
+  const externalAddresses = wallet
+    .externalAddresses()
+    .map((addr) => Branded.asAddress(addr))
 
-  return createUtxoConsolidationTx({
-    utxos: modernUtxos,
-    externalAddresses: wallet
-      .externalAddresses()
-      .map((addr) => Branded.asAddress(addr)),
-    primaryTokenId: wallet.portfolioPrimaryTokenInfo.id,
-    protocolParams: wallet.protocolParams,
-    networkId: wallet.networkManager.chainId,
-    getAbsoluteSlotNumber: () => getAbsoluteSlotNumberFromWallet(wallet),
-    getChangeAddress: (mode) => wallet.getChangeAddress(mode),
-    addressMode: params.addressMode,
-  })
+  try {
+    const result = await createUtxoConsolidationTx({
+      utxos: modernUtxos,
+      externalAddresses,
+      primaryTokenId: wallet.portfolioPrimaryTokenInfo.id,
+      protocolParams: wallet.protocolParams,
+      networkId: wallet.networkManager.chainId,
+      getAbsoluteSlotNumber: () => getAbsoluteSlotNumberFromWallet(wallet),
+      getChangeAddress: (mode) => wallet.getChangeAddress(mode),
+      addressMode: params.addressMode,
+    })
+
+    return result
+  } catch (error) {
+    logger.error(
+      'createUtxoConsolidationTxFromWallet: Failed to create consolidation transaction',
+      {
+        error: error instanceof Error ? error.message : String(error),
+        errorStack: error instanceof Error ? error.stack : undefined,
+        utxosCount: modernUtxos.length,
+      },
+    )
+    throw error
+  }
 }
 
 /**

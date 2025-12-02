@@ -481,14 +481,6 @@ export async function buildRecipeTransaction(
 ): Promise<{cbor: string}> {
   const logger = getLogger()
 
-  logger.info('buildRecipeTransaction: Starting transaction build', {
-    inputsCount: builderState.inputs.length,
-    outputsCount: builderState.outputs.length,
-    withdrawalsCount: builderState.withdrawals.length,
-    certificatesCount: builderState.certificates.length,
-    primaryTokenId,
-  })
-
   try {
     const unsignedTx = await buildTransaction(
       builderState,
@@ -514,7 +506,18 @@ export async function buildRecipeTransaction(
 
     return {cbor: unsignedTx.cbor}
   } catch (error) {
-    logger.error('buildRecipeTransaction: Failed to build transaction', {
+    // Check if this is an expected insufficient funds error (will be handled by caller)
+    const errorMessage =
+      error instanceof Error
+        ? error.message.toLowerCase()
+        : String(error).toLowerCase()
+    const isInsufficientFundsError =
+      errorMessage.includes('insufficient') ||
+      errorMessage.includes('not enough') ||
+      errorMessage.includes('less than') ||
+      errorMessage.includes('shortage')
+
+    const logData = {
       error: error instanceof Error ? error.message : String(error),
       errorStack: error instanceof Error ? error.stack : undefined,
       builderState: {
@@ -525,7 +528,21 @@ export async function buildRecipeTransaction(
         withdrawals: builderState.withdrawals,
         certificates: builderState.certificates,
       },
-    })
+    }
+
+    // Log as info for expected insufficient funds errors (caller will handle retry)
+    // Log as error for unexpected failures
+    if (isInsufficientFundsError) {
+      logger.info(
+        'buildRecipeTransaction: Insufficient funds (expected, caller will handle)',
+        logData,
+      )
+    } else {
+      logger.error(
+        'buildRecipeTransaction: Failed to build transaction',
+        logData,
+      )
+    }
     throw error
   }
 }

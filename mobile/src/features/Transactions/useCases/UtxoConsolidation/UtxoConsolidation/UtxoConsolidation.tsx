@@ -5,7 +5,6 @@ import {Image, Text, View} from 'react-native'
 
 import OrganizeWalletImage from '~/assets/img/organize-wallet-utxos.png'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {logger} from '~/kernel/logger/logger'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
@@ -20,8 +19,7 @@ export const UtxoConsolidation = () => {
   const {atoms: ta, palette: p} = useTheme()
   const {scrollViewRef} = useScrollView()
   const {navigateToTxReview} = useWalletNavigation()
-  const {consolidateUtxos, isConsolidating, data, error} =
-    useUtxoConsolidation()
+  const {consolidateUtxos, isConsolidating, data} = useUtxoConsolidation()
   const [hasNavigated, setHasNavigated] = React.useState(false)
 
   React.useEffect(() => {
@@ -33,12 +31,6 @@ export const UtxoConsolidation = () => {
       })
     }
   }, [data, navigateToTxReview, hasNavigated])
-
-  React.useEffect(() => {
-    if (error) {
-      logger.error('UTXO consolidation error in component', {error})
-    }
-  }, [error])
 
   const handleOnPress = () => {
     consolidateUtxos()
