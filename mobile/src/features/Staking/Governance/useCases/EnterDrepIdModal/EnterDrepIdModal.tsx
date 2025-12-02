@@ -1,6 +1,6 @@
 import {isNonNullable} from '@yoroi/common'
 import {
-  GOVERNANCE_YOROI_DREP_ID_HEX,
+  governanceYoroiDrepIdHex,
   parseDrepId,
   useIsValidDRepID,
 } from '@yoroi/staking'
@@ -9,6 +9,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Alert, Linking, Text, View} from 'react-native'
 
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useIsKeyboardOpen} from '~/hooks/useIsKeyboardOpen'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
@@ -39,6 +40,11 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
   const {atoms: ta, palette: p} = useTheme()
   const [drepId, setDrepId] = React.useState('')
   const {closeModal, setHeight} = useModal()
+  const {
+    wallet: {
+      networkManager: {network},
+    },
+  } = useSelectedWallet()
 
   const {error, isFetched, isFetching} = useIsValidDRepID(drepId, {
     retry: false,
@@ -92,7 +98,7 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
 
   const handleDelegateToYoroi = () => {
     onSubmit?.({
-      hash: GOVERNANCE_YOROI_DREP_ID_HEX,
+      hash: governanceYoroiDrepIdHex[network],
       type: 'key',
       CIP105: false,
     })
