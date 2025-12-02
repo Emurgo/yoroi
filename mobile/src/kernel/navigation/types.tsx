@@ -329,6 +329,7 @@ export type AppRoutes = {
   'dark-theme-announcement': undefined
   'setup-wallet': undefined
   'notifications': undefined
+  'icon-gallery': undefined
 }
 
 export type AppRouteNavigation = StackNavigationProp<AppRoutes>

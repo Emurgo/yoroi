@@ -235,6 +235,16 @@ export function DevMenu() {
 
         <Button
           onPress={() => {
+            // @ts-ignore - icon-gallery is a dev-only route in AppRoutes
+            navigation.navigate('icon-gallery')
+          }}
+          type={ButtonType.Secondary}
+          title="Icon Gallery"
+          style={[a.pt_md, a.p_md, a.rounded_md]}
+        />
+
+        <Button
+          onPress={() => {
             if (walletManager.isSyncActive) {
               walletManager.pauseSyncing()
             } else {

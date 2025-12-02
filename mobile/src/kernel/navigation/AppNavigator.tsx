@@ -10,6 +10,7 @@ import {InitiatePinScreen} from '~/features/Auth/ui/screens/InitiatePinScreen'
 import {LoginWithHostScreen} from '~/features/Auth/ui/screens/LoginWithHostScreen'
 import {LoginWithPinScreen} from '~/features/Auth/ui/screens/LoginWithPinScreen'
 import {DevMenu} from '~/features/DevMenu/DevMenu'
+import {IconGallery} from '~/features/DevMenu/IconGallery'
 import {AgreementChangedNavigator} from '~/features/Initialization/ui/navigation/AgreementChangedNavigator'
 import {InitializationNavigator} from '~/features/Initialization/ui/navigation/InitializationNavigator'
 import {
@@ -173,6 +174,15 @@ export const AppNavigator = () => {
             <Stack.Screen
               name="notifications"
               getComponent={() => NotificationsDevScreen}
+            />
+
+            <Stack.Screen
+              name="icon-gallery"
+              options={{
+                headerShown: true,
+                title: 'Icon Gallery',
+              }}
+              getComponent={() => IconGallery}
             />
           </Stack.Group>
         )}
