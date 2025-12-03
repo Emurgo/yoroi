@@ -5,7 +5,7 @@ import {CardanoMobileWrapped} from '@yoroi/cardano-wallet'
 import {useMutationWithInvalidations} from '@yoroi/common'
 import {calculateTxId} from '@yoroi/tx'
 import {Branded} from '@yoroi/types'
-import {useWalletManagerSelector} from '@yoroi/wallet-manager/context/WalletManagerProvider'
+import {useWalletManagerSelector} from '@yoroi/wallet-manager'
 
 import * as CSL from '@emurgo/cross-csl-core'
 import {UseMutationOptions} from '@tanstack/react-query'

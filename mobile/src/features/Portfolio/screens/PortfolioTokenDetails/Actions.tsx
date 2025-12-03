@@ -1,7 +1,7 @@
 import {isPrimaryToken} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Chain, Portfolio} from '@yoroi/types'
-import {useSelectedNetwork} from '@yoroi/wallet-manager/hooks/useSelectedNetwork'
+import {useSelectedNetwork} from '@yoroi/wallet-manager'
 
 import * as React from 'react'
 import {View} from 'react-native'

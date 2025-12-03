@@ -1,8 +1,8 @@
 import {createWithdrawalTxFromWallet} from '@yoroi/cardano-wallet'
 import {Quantities} from '@yoroi/cardano-wallet'
 import {getLogger} from '@yoroi/common'
-import {useSelectedNetwork} from '@yoroi/wallet-manager/hooks/useSelectedNetwork'
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
+import {useSelectedNetwork} from '@yoroi/wallet-manager'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import * as React from 'react'
 

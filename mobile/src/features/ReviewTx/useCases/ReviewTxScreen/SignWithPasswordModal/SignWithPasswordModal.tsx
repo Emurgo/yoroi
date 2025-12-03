@@ -1,7 +1,7 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {UnsignedTransaction} from '@yoroi/tx'
 import {App} from '@yoroi/types'
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import * as CSL from '@emurgo/cross-csl-core'
 import * as React from 'react'

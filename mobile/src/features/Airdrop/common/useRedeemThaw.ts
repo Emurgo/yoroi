@@ -4,7 +4,7 @@ import {CardanoMobileWrapped} from '@yoroi/cardano-wallet'
 import type {SelectionStrategy} from '@yoroi/tx'
 import {rawUtxoToModernUtxo, selectUtxos, signRawTransaction} from '@yoroi/tx'
 import {Balance} from '@yoroi/types'
-import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
+import {useWalletManager} from '@yoroi/wallet-manager'
 
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 import {Buffer} from 'buffer'

@@ -4,7 +4,7 @@ import {createRawTxSigningKey} from '@yoroi/cardano-wallet'
 import {CardanoMobileWrapped} from '@yoroi/cardano-wallet'
 import {calculateTxId} from '@yoroi/tx'
 import {Branded, Wallet} from '@yoroi/types'
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import {Transaction, WasmModuleProxy} from '@emurgo/cross-csl-core'
 import * as React from 'react'

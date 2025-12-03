@@ -1,5 +1,5 @@
 import {invalid} from '@yoroi/common'
-import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
+import {useWalletManager} from '@yoroi/wallet-manager'
 
 import {produce} from 'immer'
 import * as React from 'react'

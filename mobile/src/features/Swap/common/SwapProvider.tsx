@@ -3,7 +3,7 @@ import {isLeft, isRight, parseNumberFromText} from '@yoroi/common'
 import {isPrimaryToken, primaryTokenId} from '@yoroi/portfolio'
 import {swapManagerMaker, swapStorageMaker} from '@yoroi/swap'
 import {Api, App, Balance, Branded, Portfolio, Swap} from '@yoroi/types'
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import {useFocusEffect} from '@react-navigation/native'
 import {useQuery} from '@tanstack/react-query'

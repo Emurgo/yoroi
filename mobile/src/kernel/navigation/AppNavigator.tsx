@@ -1,6 +1,6 @@
 import {isString} from '@yoroi/common'
 import {useTheme} from '@yoroi/theme'
-import {useHasWallets} from '@yoroi/wallet-manager/hooks/useHasWallets'
+import {useHasWallets} from '@yoroi/wallet-manager'
 
 import {createStackNavigator} from '@react-navigation/stack'
 import * as React from 'react'

@@ -1,9 +1,9 @@
 import {isEmptyString} from '@yoroi/cardano-wallet'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
-import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
-import {useLaunchWalletAfterSyncing} from '@yoroi/wallet-manager/hooks/useLaunchWalletAfterSyncing'
-import {useSyncTemporarilyPaused} from '@yoroi/wallet-manager/hooks/useSyncTemporarilyPaused'
+import {useLaunchWalletAfterSyncing} from '@yoroi/wallet-manager'
+import {useSyncTemporarilyPaused} from '@yoroi/wallet-manager'
+import {useWalletManager} from '@yoroi/wallet-manager'
 
 import * as React from 'react'
 import {Text, View} from 'react-native'

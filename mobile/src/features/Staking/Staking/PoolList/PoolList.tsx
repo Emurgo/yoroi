@@ -3,7 +3,7 @@ import {asQuantity} from '@yoroi/cardano-wallet'
 import {useDebouncedValue} from '@yoroi/common'
 import {ExplorerPoolInfo} from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import {FlashList} from '@shopify/flash-list'
 import {Image} from 'expo-image'

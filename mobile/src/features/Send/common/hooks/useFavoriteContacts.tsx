@@ -1,7 +1,7 @@
 import {Wallet} from '@yoroi/types'
-import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
-import {useWalletMetas} from '@yoroi/wallet-manager/hooks/useWalletMetas'
-import {WalletManager} from '@yoroi/wallet-manager/wallet-manager'
+import {useWalletMetas} from '@yoroi/wallet-manager'
+import {useWalletManager} from '@yoroi/wallet-manager'
+import {WalletManager} from '@yoroi/wallet-manager'
 
 import * as React from 'react'
 

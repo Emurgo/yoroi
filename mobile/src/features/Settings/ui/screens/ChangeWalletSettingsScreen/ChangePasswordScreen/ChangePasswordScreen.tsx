@@ -1,8 +1,8 @@
 import {YoroiWallet} from '@yoroi/cardano-wallet'
 import {useDebouncedValue} from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
-import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
+import {useWalletManager} from '@yoroi/wallet-manager'
 
 import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'

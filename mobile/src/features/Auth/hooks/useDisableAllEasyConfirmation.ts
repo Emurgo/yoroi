@@ -1,4 +1,4 @@
-import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
+import {useWalletManager} from '@yoroi/wallet-manager'
 
 import {UseMutationOptions, useMutation} from '@tanstack/react-query'
 

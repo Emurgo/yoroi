@@ -3,7 +3,7 @@ import {Device} from '@yoroi/cardano-wallet'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a} from '@yoroi/theme'
 import {HW} from '@yoroi/types'
-import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
+import {useWalletManager} from '@yoroi/wallet-manager'
 
 import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'

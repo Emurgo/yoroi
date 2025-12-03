@@ -1,6 +1,6 @@
 import {cip30LedgerExtensionMaker} from '@yoroi/cardano-wallet'
 import {BaseLedgerError} from '@yoroi/cardano-wallet'
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import {Transaction} from '@emurgo/cross-csl-core'
 import {useMutation} from '@tanstack/react-query'

@@ -1,8 +1,8 @@
 import {Quantities} from '@yoroi/cardano-wallet'
 import {useExchange, useExchangeProvidersByOrderType} from '@yoroi/exchange'
 import {Chain} from '@yoroi/types'
-import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
+import {useWalletManager} from '@yoroi/wallet-manager'
 
 import BigNumber from 'bignumber.js'
 import * as React from 'react'

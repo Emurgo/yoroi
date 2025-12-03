@@ -1,6 +1,6 @@
 import {Amounts, Quantities} from '@yoroi/cardano-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import {FlashList, FlashListProps} from '@shopify/flash-list'
 import BigNumber from 'bignumber.js'

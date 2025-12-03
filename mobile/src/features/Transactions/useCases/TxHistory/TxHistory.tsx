@@ -1,6 +1,6 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
-import {useSync} from '@yoroi/wallet-manager/hooks/useSync'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
+import {useSync} from '@yoroi/wallet-manager'
 
 import {useNavigation} from '@react-navigation/native'
 import {LinearGradient} from 'expo-linear-gradient'

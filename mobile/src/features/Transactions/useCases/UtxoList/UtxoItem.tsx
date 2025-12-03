@@ -1,7 +1,7 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import type {ModernUtxo} from '@yoroi/tx'
 import {Portfolio} from '@yoroi/types'
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import {FlashList} from '@shopify/flash-list'
 import * as React from 'react'

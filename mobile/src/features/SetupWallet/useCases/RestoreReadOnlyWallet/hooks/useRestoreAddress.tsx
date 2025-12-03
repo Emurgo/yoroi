@@ -1,5 +1,5 @@
 import {validateAndExtractAddressInfo} from '@yoroi/tx'
-import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
+import {useWalletManager} from '@yoroi/wallet-manager'
 
 import * as React from 'react'
 

@@ -1,5 +1,5 @@
 import {Branded} from '@yoroi/types'
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import {logger} from '@sentry/react'
 import * as React from 'react'

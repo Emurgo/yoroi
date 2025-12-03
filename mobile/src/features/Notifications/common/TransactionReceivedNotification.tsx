@@ -2,7 +2,7 @@ import {YoroiWallet} from '@yoroi/cardano-wallet'
 import {Amounts, Quantities} from '@yoroi/cardano-wallet'
 import {useTheme} from '@yoroi/theme'
 import {Notifications, Portfolio} from '@yoroi/types'
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import * as React from 'react'
 import {View} from 'react-native'

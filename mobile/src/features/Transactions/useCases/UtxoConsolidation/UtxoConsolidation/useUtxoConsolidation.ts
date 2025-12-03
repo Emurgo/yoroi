@@ -1,5 +1,5 @@
 import {createUtxoConsolidationTxFromWallet} from '@yoroi/cardano-wallet'
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import {useMutation} from '@tanstack/react-query'
 import {Alert} from 'react-native'

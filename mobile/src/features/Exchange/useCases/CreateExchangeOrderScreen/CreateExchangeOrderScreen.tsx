@@ -8,8 +8,8 @@ import {
 import {linksYoroiModuleMaker} from '@yoroi/links'
 import {atoms as a} from '@yoroi/theme'
 import {Chain, Exchange} from '@yoroi/types'
-import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
+import {useWalletManager} from '@yoroi/wallet-manager'
 
 import * as React from 'react'
 import {Linking, View} from 'react-native'

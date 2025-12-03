@@ -3,7 +3,7 @@ import {isEmptyString} from '@yoroi/cardano-wallet'
 import {Quantities, asQuantity} from '@yoroi/cardano-wallet'
 import {FullPoolInfo} from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import {Image} from 'expo-image'
 import * as React from 'react'

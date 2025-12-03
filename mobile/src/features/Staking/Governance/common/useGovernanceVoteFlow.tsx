@@ -4,7 +4,7 @@ import {
   useUpdateLatestGovernanceAction,
 } from '@yoroi/staking'
 import {Wallet} from '@yoroi/types'
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import {Certificate} from '@emurgo/cross-csl-core'
 import * as React from 'react'

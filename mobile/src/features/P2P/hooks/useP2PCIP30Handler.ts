@@ -5,7 +5,7 @@ import {
   type WalletRequest,
   type WalletResponse,
 } from '@yoroi/p2p-communication'
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import {Buffer} from 'buffer'
 import * as React from 'react'

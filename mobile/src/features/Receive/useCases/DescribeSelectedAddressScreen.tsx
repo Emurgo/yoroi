@@ -1,7 +1,7 @@
 import {isEmptyString} from '@yoroi/cardano-wallet'
 import {atoms as a} from '@yoroi/theme'
 import {Wallet} from '@yoroi/types'
-import {useAddressMode} from '@yoroi/wallet-manager/hooks/useAddressMode'
+import {useAddressMode} from '@yoroi/wallet-manager'
 
 import * as React from 'react'
 import {GestureResponderEvent, ScrollView} from 'react-native'

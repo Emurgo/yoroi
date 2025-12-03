@@ -16,8 +16,8 @@ import {
   parseTokenList,
 } from '@yoroi/tx'
 import {Api, Balance, Branded, Network, Portfolio} from '@yoroi/types'
-import {useSelectedNetwork} from '@yoroi/wallet-manager/hooks/useSelectedNetwork'
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
+import {useSelectedNetwork} from '@yoroi/wallet-manager'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import {CredKind, WasmModuleProxy} from '@emurgo/cross-csl-core'
 import * as _ from 'lodash'

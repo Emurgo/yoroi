@@ -3,7 +3,7 @@ import {encryptWithPassword} from '@yoroi/cardano-wallet'
 import {createVotingRegTxFromWallet} from '@yoroi/cardano-wallet'
 import {useCatalyst} from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import {UseMutationOptions, useMutation} from '@tanstack/react-query'
 import * as React from 'react'

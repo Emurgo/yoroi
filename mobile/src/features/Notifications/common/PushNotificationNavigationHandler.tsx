@@ -1,4 +1,4 @@
-import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
+import {useWalletManager} from '@yoroi/wallet-manager'
 
 import * as React from 'react'
 import {AppState, AppStateStatus, InteractionManager} from 'react-native'

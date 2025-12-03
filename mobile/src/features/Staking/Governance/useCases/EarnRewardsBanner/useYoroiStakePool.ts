@@ -1,7 +1,7 @@
 import {API_ENDPOINTS} from '@yoroi/api'
 import {poolInfoApiMaker} from '@yoroi/staking'
-import {useSelectedNetwork} from '@yoroi/wallet-manager/hooks/useSelectedNetwork'
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
+import {useSelectedNetwork} from '@yoroi/wallet-manager'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import {useQuery} from '@tanstack/react-query'
 import * as React from 'react'

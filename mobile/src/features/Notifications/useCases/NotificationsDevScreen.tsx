@@ -8,7 +8,7 @@ import {
 } from '@yoroi/notifications'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Notifications as NotificationTypes} from '@yoroi/types'
-import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
+import {useWalletManager} from '@yoroi/wallet-manager'
 
 import * as React from 'react'
 import {Switch as RNSwitch, View} from 'react-native'

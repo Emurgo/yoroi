@@ -2,7 +2,7 @@ import {CardanoMobile} from '@yoroi/cardano-wallet'
 import {isAdaHandleDomain, useResolverDRepId} from '@yoroi/resolver'
 import {parseDrepId, useIsValidDRepID} from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import * as React from 'react'
 import {Alert, Linking, Text, View} from 'react-native'

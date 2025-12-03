@@ -1,8 +1,8 @@
 import {useAsyncStorage, useMutationWithInvalidations} from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Chain} from '@yoroi/types'
-import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
+import {useWalletManager} from '@yoroi/wallet-manager'
 
 import {useQuery} from '@tanstack/react-query'
 import {LinearGradient} from 'expo-linear-gradient'

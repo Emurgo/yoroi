@@ -1,6 +1,6 @@
 import {linksCardanoModuleMaker} from '@yoroi/links'
 import {atoms as a, useTheme} from '@yoroi/theme'
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import * as Clipboard from 'expo-clipboard'
 import * as React from 'react'

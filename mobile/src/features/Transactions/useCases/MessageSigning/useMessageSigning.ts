@@ -1,8 +1,8 @@
 import {cip30ExtensionMaker} from '@yoroi/cardano-wallet'
 import {cip30LedgerExtensionMaker} from '@yoroi/cardano-wallet'
 import {BaseLedgerError} from '@yoroi/cardano-wallet'
-import {useAddressMode} from '@yoroi/wallet-manager/hooks/useAddressMode'
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
+import {useAddressMode} from '@yoroi/wallet-manager'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import {Buffer} from 'buffer'
 import * as React from 'react'

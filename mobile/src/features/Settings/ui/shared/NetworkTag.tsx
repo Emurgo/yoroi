@@ -1,8 +1,8 @@
 import {networkConfigs} from '@yoroi/blockchains'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Chain} from '@yoroi/types'
-import {availableNetworks} from '@yoroi/wallet-manager/common/constants'
-import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
+import {useWalletManager} from '@yoroi/wallet-manager'
+import {availableNetworks} from '@yoroi/wallet-manager'
 
 import * as React from 'react'
 import {

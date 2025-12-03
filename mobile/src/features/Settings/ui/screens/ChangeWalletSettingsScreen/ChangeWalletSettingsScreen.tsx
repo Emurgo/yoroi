@@ -1,9 +1,9 @@
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Wallet} from '@yoroi/types'
-import {useAddressMode} from '@yoroi/wallet-manager/hooks/useAddressMode'
-import {useDisableEasyConfirmation} from '@yoroi/wallet-manager/hooks/useDisableEasyConfirmation'
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
+import {useAddressMode} from '@yoroi/wallet-manager'
+import {useDisableEasyConfirmation} from '@yoroi/wallet-manager'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'

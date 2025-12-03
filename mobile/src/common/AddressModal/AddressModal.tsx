@@ -1,7 +1,7 @@
 import {addressVisualDerivationPathMaker} from '@yoroi/blockchains'
 import {getSpendingKey, getStakingKey} from '@yoroi/cardano-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import {fromPairs} from 'lodash'
 import * as React from 'react'

@@ -1,7 +1,7 @@
 import {YoroiWallet} from '@yoroi/cardano-wallet'
 import {Utxos} from '@yoroi/cardano-wallet'
 import {Balance} from '@yoroi/types'
-import {useUtxos} from '@yoroi/wallet-manager/hooks/useUtxos'
+import {useUtxos} from '@yoroi/wallet-manager'
 
 // NOTE: LEGACY should use portfolio instead
 export const useBalances = (wallet: YoroiWallet): Balance.Amounts => {

@@ -1,7 +1,7 @@
 import {time} from '@yoroi/common'
 import {isError} from '@yoroi/common'
-import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
-import {useWalletEvent} from '@yoroi/wallet-manager/hooks/useWalletEvent'
+import {useWalletEvent} from '@yoroi/wallet-manager'
+import {useWalletManager} from '@yoroi/wallet-manager'
 
 import {useQuery} from '@tanstack/react-query'
 

@@ -1,6 +1,6 @@
 import {CardanoMobileWrapped} from '@yoroi/cardano-wallet'
 import {validateTransactionCbor} from '@yoroi/tx'
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import * as React from 'react'
 

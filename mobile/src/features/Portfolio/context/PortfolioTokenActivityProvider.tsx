@@ -1,8 +1,8 @@
 import {isNonNullable, time} from '@yoroi/common'
 import {isPrimaryToken} from '@yoroi/portfolio'
 import {Chain, Portfolio} from '@yoroi/types'
-import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
-import {useSelectedNetwork} from '@yoroi/wallet-manager/hooks/useSelectedNetwork'
+import {useSelectedNetwork} from '@yoroi/wallet-manager'
+import {useWalletManager} from '@yoroi/wallet-manager'
 
 import {useQuery, useQueryClient} from '@tanstack/react-query'
 import {freeze, produce} from 'immer'

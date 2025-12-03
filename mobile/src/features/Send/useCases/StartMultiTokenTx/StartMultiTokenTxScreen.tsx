@@ -6,7 +6,7 @@ import {
 } from '@yoroi/resolver'
 import {atoms as a} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import {useIsFocused} from '@react-navigation/native'
 import * as React from 'react'

@@ -4,7 +4,7 @@ import {
   useGovernance,
 } from '@yoroi/staking'
 import {ThemedPalette, atoms as a, useTheme} from '@yoroi/theme'
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import {useRoute} from '@react-navigation/native'
 import * as React from 'react'

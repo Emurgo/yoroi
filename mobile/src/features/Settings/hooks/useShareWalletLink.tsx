@@ -3,7 +3,7 @@ import {
   encryptWalletData,
   linksCardanoModuleMaker,
 } from '@yoroi/links'
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import * as React from 'react'
 

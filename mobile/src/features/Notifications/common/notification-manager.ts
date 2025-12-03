@@ -1,6 +1,6 @@
 import {notificationManagerMaker} from '@yoroi/notifications'
 import {Notifications} from '@yoroi/types'
-import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
+import {useWalletManager} from '@yoroi/wallet-manager'
 
 import * as React from 'react'
 

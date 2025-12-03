@@ -1,5 +1,5 @@
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
-import {useSync} from '@yoroi/wallet-manager/hooks/useSync'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
+import {useSync} from '@yoroi/wallet-manager'
 
 import * as React from 'react'
 

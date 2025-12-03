@@ -12,8 +12,8 @@ import {
   useVotingCertificate,
 } from '@yoroi/staking'
 import {NotEnoughMoneyToSendError} from '@yoroi/tx'
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
-import {useWalletEvent} from '@yoroi/wallet-manager/hooks/useWalletEvent'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
+import {useWalletEvent} from '@yoroi/wallet-manager'
 
 import * as React from 'react'
 

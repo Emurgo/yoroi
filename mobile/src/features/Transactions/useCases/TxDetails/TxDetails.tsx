@@ -2,7 +2,7 @@ import {formatDateRelative, formatTime} from '@yoroi/cardano-wallet'
 import {isArray, isString} from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {App} from '@yoroi/types'
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import {useRoute} from '@react-navigation/native'
 import * as React from 'react'

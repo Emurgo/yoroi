@@ -1,5 +1,5 @@
 import {atoms as a} from '@yoroi/theme'
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import {useRoute} from '@react-navigation/native'
 import {fromPairs} from 'lodash'

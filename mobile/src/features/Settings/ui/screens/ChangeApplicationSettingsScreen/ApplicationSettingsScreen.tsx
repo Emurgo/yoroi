@@ -1,6 +1,6 @@
 import {networkConfigs} from '@yoroi/blockchains'
 import {atoms as a, useTheme} from '@yoroi/theme'
-import {useSelectedNetwork} from '@yoroi/wallet-manager/hooks/useSelectedNetwork'
+import {useSelectedNetwork} from '@yoroi/wallet-manager'
 
 import * as React from 'react'
 import {ScrollView} from 'react-native'

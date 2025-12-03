@@ -2,7 +2,7 @@ import {YoroiWallet} from '@yoroi/cardano-wallet'
 import {isShelley} from '@yoroi/cardano-wallet'
 import {time} from '@yoroi/common'
 import {Catalyst, useCatalyst} from '@yoroi/staking'
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import {UseQueryOptions, useQuery} from '@tanstack/react-query'
 

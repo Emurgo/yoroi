@@ -1,6 +1,6 @@
 import {App, Wallet} from '@yoroi/types'
-import {useReceiveAddresses} from '@yoroi/wallet-manager/hooks/useReceiveAddresses'
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
+import {useReceiveAddresses} from '@yoroi/wallet-manager'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 type ReceiveAddressesStatus = {
   used: string[]

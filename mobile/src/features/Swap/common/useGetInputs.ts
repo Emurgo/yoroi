@@ -5,7 +5,7 @@ import {
   selectUtxos,
 } from '@yoroi/tx'
 import {Balance, Branded} from '@yoroi/types'
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 // Returns empty array if not enough UTXOs are found
 export const useGetInputs = () => {

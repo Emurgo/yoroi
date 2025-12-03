@@ -6,7 +6,7 @@ import {
 } from '@yoroi/resolver'
 import {validateAndExtractAddressInfo} from '@yoroi/tx'
 import {Resolver} from '@yoroi/types'
-import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
+import {useWalletManager} from '@yoroi/wallet-manager'
 
 import {useQueryClient} from '@tanstack/react-query'
 import * as React from 'react'
