@@ -1,4 +1,8 @@
-import {isPrimaryToken, usePortfolioTokenInfo} from '@yoroi/portfolio'
+import {
+  isPrimaryToken,
+  normalizeTokenId,
+  usePortfolioTokenInfo,
+} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
@@ -6,7 +10,6 @@ import {FlatList, Text, TouchableOpacity, View} from 'react-native'
 
 import {usePrivacyMode} from '~/features/Settings/hooks/usePrivacyMode'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {normalisePtId} from '~/kernel/helpers/normalisePtId'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Boundary} from '~/ui/Boundary/Boundary'
 import {CardanoTypes} from '~/wallets/cardano/types'
@@ -37,7 +40,7 @@ export const AssetList = ({assets, onSelect}: AssetListProps) => {
       <View>
         <FlatList
           data={assets.sort((asset) =>
-            isPrimaryToken(normalisePtId(asset.identifier)) ? -1 : 1,
+            isPrimaryToken(normalizeTokenId(asset.identifier)) ? -1 : 1,
           )}
           keyExtractor={(item) => item.identifier}
           renderItem={({item: entry}) => (
@@ -60,7 +63,7 @@ const AssetRow = ({entry, onSelect}: AssetRowProps) => {
   const {wallet} = useSelectedWallet()
   const {isPrivacyModeEnabled, privacyPlaceholder} = usePrivacyMode()
   const {tokenInfo} = usePortfolioTokenInfo({
-    id: normalisePtId(entry.identifier),
+    id: normalizeTokenId(entry.identifier),
     network: wallet.networkManager.network,
     getTokenInfo: wallet.networkManager.tokenManager.api.tokenInfo,
     primaryTokenInfo: wallet.portfolioPrimaryTokenInfo,
