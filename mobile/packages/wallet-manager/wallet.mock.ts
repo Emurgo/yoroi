@@ -1,4 +1,3 @@
-import {AppApi} from '@yoroi/api'
 import {cardanoConfig, protocolParamsPlaceholder} from '@yoroi/blockchains'
 import {CardanoMobile, YoroiWallet} from '@yoroi/cardano-wallet'
 import {createPrimaryTokenInfo} from '@yoroi/portfolio'
@@ -10,14 +9,16 @@ import type {WalletTransaction} from '@yoroi/types'
 import {
   Address,
   Api,
+  App,
   AssetName,
   BalanceQuantity,
+  Chain,
+  Network,
   Portfolio,
   TransactionHash,
   UtxoId,
   Wallet,
 } from '@yoroi/types'
-import {Chain, Network} from '@yoroi/types'
 
 import {noop} from 'lodash'
 import {Observable, Subscription} from 'rxjs'
@@ -26,6 +27,10 @@ import {Observable, Subscription} from 'rxjs'
 import {mockEncryptedStorage} from '../cardano-wallet/mocks/mocks/storage'
 import {mockTransactionInfos} from '../cardano-wallet/mocks/mocks/transaction'
 import {utxos} from '../cardano-wallet/mocks/mocks/utxos'
+
+// Create a local mock for AppApi since AppApi.mockAppApi is undefined in Jest
+// This matches the pattern used in cardano-wallet mocks
+const mockAppApi: App.Api = {} as const
 
 // Create a mock network manager for testing
 const mockNetworkManager = {
@@ -182,7 +187,7 @@ const wallet: YoroiWallet = {
   isEmpty: () => false,
   hasOnlyPrimary: () => false,
   id: 'wallet-id',
-  api: AppApi.mockAppApi,
+  api: mockAppApi,
   rewardAddressHex: 'reward-address-hex',
   publicKeyHex: 'publicKeyHex',
   utxos: () => utxos,

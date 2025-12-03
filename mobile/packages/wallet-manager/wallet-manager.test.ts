@@ -9,57 +9,100 @@ import {makeWalletManager} from './wallet-manager'
 
 // Mock networkManagers for testing
 // This prevents real network calls when wallets are created/loaded
-let networkManagers: ReturnType<
-  (typeof import('@yoroi/blockchains'))['buildNetworkManagers']
->
-
 jest.mock('./common/constants', () => {
   const actual = jest.requireActual('./common/constants')
   const blockchains = jest.requireActual('@yoroi/blockchains')
   const {buildNetworkManagers} =
     blockchains as typeof import('@yoroi/blockchains')
-  const {tokenManagers} = jest
-    .requireActual('../Portfolio/common/helpers/build-token-managers')
-    .buildPortfolioTokenManagers()
+  const portfolio = jest.requireActual('@yoroi/portfolio')
+  const {createTokenManagerMock} =
+    portfolio as typeof import('@yoroi/portfolio')
+  const types = jest.requireActual('@yoroi/types')
+  const {Chain} = types as typeof import('@yoroi/types')
+  const mockTokenManagers = {
+    [Chain.Network.Mainnet]: createTokenManagerMock(),
+    [Chain.Network.Preprod]: createTokenManagerMock(),
+    [Chain.Network.Preview]: createTokenManagerMock(),
+  }
   const mockApiMaker = jest.fn().mockReturnValue({
     getProtocolParams: jest.fn().mockResolvedValue({}),
     getBestBlock: jest.fn().mockResolvedValue({}),
     getUtxoData: jest.fn().mockResolvedValue({}),
   })
-  networkManagers = buildNetworkManagers({
-    tokenManagers,
+  const mockNetworkManagers = buildNetworkManagers({
+    tokenManagers: mockTokenManagers,
     apiMaker: mockApiMaker,
   })
   return {
     ...actual,
-    networkManagers,
+    networkManagers: mockNetworkManagers,
   }
 })
 
 describe('walletManager', () => {
-  beforeEach(() => {
-    AsyncStorage.clear()
+  beforeEach(async () => {
+    // Clear all storage before each test
+    await AsyncStorage.clear()
+    // Ensure walletsRootStorage is also empty
+    const walletsRootStorage = rootStorage.join('wallet/')
+    const walletKeys = await walletsRootStorage.getAllKeys()
+    if (walletKeys.length > 0) {
+      await walletsRootStorage.multiRemove(walletKeys)
+    }
   })
 
   it('creates a wallet', async () => {
+    const {networkManagers} = require('./common/constants')
+    // Create a factory function that returns storage per wallet ID
+    // Track written values so they can be read back
+    const storageMap = new Map<string, Map<string | number, string>>()
+    const makeWalletEncryptedStorage = jest.fn((id: string) => {
+      if (!storageMap.has(id)) {
+        storageMap.set(id, new Map())
+      }
+      const walletStorage = storageMap.get(id)!
+      return {
+        xpriv: {
+          read: jest.fn().mockImplementation(async (_password: string) => {
+            const value = walletStorage.get('xpriv')
+            return value ? {value} : null
+          }),
+          write: jest.fn().mockImplementation(async (value: string) => {
+            walletStorage.set('xpriv', value)
+          }),
+          remove: jest.fn().mockImplementation(async () => {
+            walletStorage.delete('xpriv')
+          }),
+        },
+        xpub: {
+          read: jest.fn().mockImplementation(async (accountVisual: number) => {
+            const value = walletStorage.get(`xpub-${accountVisual}`)
+            return value ? {value} : null
+          }),
+          write: jest
+            .fn()
+            .mockImplementation(
+              async (accountVisual: number, value: string) => {
+                walletStorage.set(`xpub-${accountVisual}`, value)
+              },
+            ),
+          remove: jest
+            .fn()
+            .mockImplementation(async (accountVisual: number) => {
+              walletStorage.delete(`xpub-${accountVisual}`)
+            }),
+        },
+        clear: jest.fn().mockImplementation(async () => {
+          walletStorage.clear()
+        }),
+      }
+    })
     const walletManager = makeWalletManager({
       rootStorage,
       networkManagers,
       cardanoWalletDependencies: {
         rootStorage,
-        makeWalletEncryptedStorage: jest.fn().mockReturnValue({
-          xpriv: {
-            read: jest.fn(),
-            write: jest.fn(),
-            remove: jest.fn(),
-          },
-          xpub: {
-            read: jest.fn(),
-            write: jest.fn(),
-            remove: jest.fn(),
-          },
-          clear: jest.fn(),
-        }),
+        makeWalletEncryptedStorage,
         buildPortfolioBalanceManager: jest.fn(),
         toBalanceManagerSyncArgs: jest.fn(),
         makeMemosManager: jest.fn(),
@@ -67,10 +110,11 @@ describe('walletManager', () => {
         createCollateralEntry: jest.fn(),
       },
     })
-    await expect(walletManager.hydrate()).resolves.toEqual({
-      wallets: [],
-      metas: [],
-    })
+    // First hydrate should return empty arrays - if there are wallet metas without xpub,
+    // loadWalletsSafely should catch the error and skip them
+    const firstHydrate = await walletManager.hydrate()
+    expect(firstHydrate.wallets).toEqual([])
+    expect(firstHydrate.metas).toEqual([])
 
     const name = 'name'
     const mnemonic = [

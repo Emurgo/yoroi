@@ -1,6 +1,10 @@
+import {CardanoApi} from '@yoroi/api'
+import {buildNetworkManagers} from '@yoroi/blockchains'
 import {getMasterKeyFromMnemonic} from '@yoroi/cardano-wallet'
+import {createTokenManagerMock} from '@yoroi/portfolio'
 import {Chain, Wallet} from '@yoroi/types'
 
+import {initializeWalletFactories} from '../network-manager/get-wallet-factory'
 import {
   createWalletFromMnemonic,
   createWalletFromRootKey,
@@ -8,6 +12,31 @@ import {
 } from './wallet-creation'
 
 describe('wallet-creation', () => {
+  // Setup network managers and initialize wallet factories
+  const mockTokenManagers = {
+    [Chain.Network.Mainnet]: createTokenManagerMock(),
+    [Chain.Network.Preprod]: createTokenManagerMock(),
+    [Chain.Network.Preview]: createTokenManagerMock(),
+  }
+  const networkManagers = buildNetworkManagers({
+    tokenManagers: mockTokenManagers,
+    apiMaker: CardanoApi.cardanoApiMaker,
+  })
+
+  const mockCardanoWalletDependencies = {
+    rootStorage: {} as any,
+    makeWalletEncryptedStorage: jest.fn(),
+    buildPortfolioBalanceManager: jest.fn(),
+    toBalanceManagerSyncArgs: jest.fn(),
+    makeMemosManager: jest.fn(),
+    toLedgerSignRequest: jest.fn(),
+    createCollateralEntry: jest.fn(),
+  }
+
+  beforeAll(() => {
+    initializeWalletFactories(mockCardanoWalletDependencies, networkManagers)
+  })
+
   const mockOptions = {
     name: 'Test Wallet',
     implementation: 'cardano-cip1852' as Wallet.Implementation,
@@ -20,7 +49,7 @@ describe('wallet-creation', () => {
       join: jest.fn().mockReturnThis(),
     } as any,
     keychainManager: undefined,
-    networkManagers: {} as any,
+    networkManagers,
   }
 
   const testMnemonic =

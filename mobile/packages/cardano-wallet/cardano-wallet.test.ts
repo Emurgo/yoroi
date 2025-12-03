@@ -1,44 +1,58 @@
+import {buildNetworkManagers} from '@yoroi/blockchains'
+import {createTokenManagerMock} from '@yoroi/portfolio'
 import {Chain} from '@yoroi/types'
-import {getWalletFactory} from '@yoroi/wallet-manager'
+import {
+  getWalletFactory,
+  initializeWalletFactories,
+} from '@yoroi/wallet-manager'
 
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import {keyManager} from './key-manager/key-manager'
 import {CardanoMobileWrapped} from './wrappedCsl'
 
-// Mock the global networkManagers before any wallet factory code imports it
-// This prevents real network calls when wallets are built
-jest.mock('~/features/WalletManager/common/constants', () => {
-  const actual = jest.requireActual('~/features/WalletManager/common/constants')
-  const {buildNetworkManagers} = jest.requireActual('@yoroi/blockchains')
-  const {tokenManagers} = jest
-    .requireActual('~/features/Portfolio/common/helpers/build-token-managers')
-    .buildPortfolioTokenManagers()
-  const mockApiMaker = jest.fn().mockReturnValue({
-    getProtocolParams: jest.fn().mockResolvedValue({}),
-    getBestBlock: jest.fn().mockResolvedValue({}),
-    getUtxoData: jest.fn().mockResolvedValue({}),
-  })
-  const networkManagers = buildNetworkManagers({
-    tokenManagers,
-    logger: actual.logger,
-    apiMaker: mockApiMaker,
-  })
-  return {
-    ...actual,
-    networkManagers,
-  }
+// Setup network managers and initialize wallet factories before tests
+const mockTokenManagers = {
+  [Chain.Network.Mainnet]: createTokenManagerMock(),
+  [Chain.Network.Preprod]: createTokenManagerMock(),
+  [Chain.Network.Preview]: createTokenManagerMock(),
+}
+const mockApiMaker = jest.fn().mockReturnValue({
+  getProtocolParams: jest.fn().mockResolvedValue({}),
+  getBestBlock: jest.fn().mockResolvedValue({}),
+  getUtxoData: jest.fn().mockResolvedValue({}),
+})
+const networkManagers = buildNetworkManagers({
+  tokenManagers: mockTokenManagers,
+  apiMaker: mockApiMaker,
+})
+
+const mockCardanoWalletDependencies = {
+  rootStorage: {} as any,
+  makeWalletEncryptedStorage: jest.fn().mockReturnValue({
+    xpriv: {read: jest.fn(), write: jest.fn(), remove: jest.fn()},
+    xpub: {read: jest.fn(), write: jest.fn(), remove: jest.fn()},
+    clear: jest.fn(),
+  }),
+  buildPortfolioBalanceManager: jest.fn(),
+  toBalanceManagerSyncArgs: jest.fn(),
+  makeMemosManager: jest.fn(),
+  toLedgerSignRequest: jest.fn(),
+  createCollateralEntry: jest.fn(),
+}
+
+beforeAll(() => {
+  initializeWalletFactories(mockCardanoWalletDependencies, networkManagers)
 })
 
 describe('CardanoWallet', () => {
   afterEach(() => AsyncStorage.clear())
 
-  const ShelleyWalletPreprod = getWalletFactory({
-    implementation: 'cardano-cip1852',
-    network: Chain.Network.Preprod,
-  })
-
   it('build', async () => {
+    const ShelleyWalletPreprod = getWalletFactory({
+      implementation: 'cardano-cip1852',
+      network: Chain.Network.Preprod,
+    })
     const mnemonic =
       'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon oak'
     const accountVisual = 0

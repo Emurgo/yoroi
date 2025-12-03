@@ -114,7 +114,8 @@ jest.mock('~/features/Staking/hooks/useStakingKey', () => ({
   useStakingKey: jest.fn(),
 }))
 
-jest.mock('~/features/WalletManager/hooks/useSelectedWallet', () => ({
+jest.mock('@yoroi/wallet-manager', () => ({
+  ...jest.requireActual('@yoroi/wallet-manager'),
   useSelectedWallet: jest.fn(),
 }))
 
@@ -122,7 +123,8 @@ jest.mock('~/kernel/i18n/useStrings', () => ({
   useStrings: jest.fn(),
 }))
 
-jest.mock('~/wallets/cardano/common/signatureUtils', () => ({
+jest.mock('@yoroi/cardano-wallet', () => ({
+  ...jest.requireActual('@yoroi/cardano-wallet'),
   convertBech32ToHex: jest.fn(),
 }))
 
@@ -184,7 +186,7 @@ const mockUseNavigateTo = require('./navigation').useNavigateTo
 const mockUseGetInputs = require('./useGetInputs').useGetInputs
 const mockUseQuery = require('@tanstack/react-query').useQuery
 const mockConvertBech32ToHex =
-  require('~/wallets/cardano/common/signatureUtils').convertBech32ToHex
+  require('@yoroi/cardano-wallet').convertBech32ToHex
 
 describe('SwapProvider', () => {
   beforeEach(() => {

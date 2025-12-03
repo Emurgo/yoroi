@@ -1,8 +1,46 @@
-import {Chain, Wallet} from '@yoroi/types'
+import {CardanoApi} from '@yoroi/api'
+import {buildNetworkManagers} from '@yoroi/blockchains'
+import {createTokenManagerMock} from '@yoroi/portfolio'
+import {Chain, Network, Wallet} from '@yoroi/types'
 
-import {getWalletFactory} from './get-wallet-factory'
+import {getWalletFactory, initializeWalletFactories} from './get-wallet-factory'
 
 describe('getWalletFactory', () => {
+  // Mock dependencies
+  const mockCardanoWalletDependencies = {
+    rootStorage: {} as any,
+    makeWalletEncryptedStorage: jest.fn().mockReturnValue({
+      xpriv: {read: jest.fn(), write: jest.fn(), remove: jest.fn()},
+      xpub: {read: jest.fn(), write: jest.fn(), remove: jest.fn()},
+      clear: jest.fn(),
+    }),
+    buildPortfolioBalanceManager: jest.fn(),
+    toBalanceManagerSyncArgs: jest.fn(),
+    makeMemosManager: jest.fn(),
+    toLedgerSignRequest: jest.fn(),
+    createCollateralEntry: jest.fn(),
+  }
+
+  let networkManagers: Readonly<
+    Record<Chain.SupportedNetworks, Network.Manager>
+  >
+
+  beforeAll(() => {
+    // Build network managers for testing with mocked token managers
+    const mockTokenManagers = {
+      [Chain.Network.Mainnet]: createTokenManagerMock(),
+      [Chain.Network.Preprod]: createTokenManagerMock(),
+      [Chain.Network.Preview]: createTokenManagerMock(),
+    }
+    networkManagers = buildNetworkManagers({
+      tokenManagers: mockTokenManagers,
+      apiMaker: CardanoApi.cardanoApiMaker,
+    })
+
+    // Initialize wallet factories
+    initializeWalletFactories(mockCardanoWalletDependencies, networkManagers)
+  })
+
   afterEach(() => {
     jest.clearAllMocks()
   })

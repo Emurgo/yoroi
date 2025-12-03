@@ -541,10 +541,19 @@ export const makeWalletManager = (
       const encryptedStorage = makeWalletEncryptedStorage(id)
       const accountPubKeyHex = await encryptedStorage.xpub.read(accountVisual)
 
-      if (!accountPubKeyHex || accountPubKeyHex === null)
-        throwLoggedError(getLogger())(
+      if (!accountPubKeyHex || accountPubKeyHex === null) {
+        // Throw error - will be caught by loadWalletsSafely
+        const error = new Error(
           'WalletManager: loadWallet accountPubKeyHex not found',
         )
+        getLogger().warn(
+          'WalletManager: loadWallet accountPubKeyHex not found',
+          {
+            walletId: id,
+          },
+        )
+        throw error
+      }
 
       const wallet = await walletFactory.build({
         id,
