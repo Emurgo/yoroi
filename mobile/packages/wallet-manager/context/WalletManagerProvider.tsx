@@ -6,18 +6,18 @@ import * as React from 'react'
 
 import {WalletManager} from '../wallet-manager'
 import {
+  WalletManagerAction,
   WalletManagerActionType,
   WalletManagerActions,
   WalletManagerContextType,
   WalletManagerState,
-  walletManagerDefaultState,
-  walletManagerInitialContext,
+  createWalletManagerDefaultState,
   walletManagerReducer,
 } from './wallet-manager-state'
 
-const WalletManagerContext = React.createContext<WalletManagerContextType>(
-  walletManagerInitialContext,
-)
+// Context will be initialized with proper networkManagers in the provider
+const WalletManagerContext =
+  React.createContext<WalletManagerContextType | null>(null)
 
 /**
  * Most wallet manager side effects should be handled on every screen
@@ -30,8 +30,35 @@ export const WalletManagerProvider: React.FC<
     initialState?: Partial<WalletManagerState>
   }>
 > = ({children, initialState, walletManager}) => {
-  const [state, dispatch] = React.useReducer(walletManagerReducer, {
-    ...walletManagerDefaultState,
+  // Get networkManagers from walletManager instance
+  const networkManagers = React.useMemo(
+    () => ({
+      [Chain.Network.Mainnet]: walletManager.getNetworkManager(
+        Chain.Network.Mainnet,
+      ),
+      [Chain.Network.Preprod]: walletManager.getNetworkManager(
+        Chain.Network.Preprod,
+      ),
+      [Chain.Network.Preview]: walletManager.getNetworkManager(
+        Chain.Network.Preview,
+      ),
+    }),
+    [walletManager],
+  )
+
+  const defaultState = React.useMemo(
+    () => createWalletManagerDefaultState(networkManagers),
+    [networkManagers],
+  )
+
+  const reducer = React.useCallback(
+    (state: WalletManagerState, action: WalletManagerAction) =>
+      walletManagerReducer(state, action, networkManagers),
+    [networkManagers],
+  )
+
+  const [state, dispatch] = React.useReducer(reducer, {
+    ...defaultState,
     ...initialState,
   })
 
@@ -169,7 +196,20 @@ export const WalletManagerProvider: React.FC<
  * @see useWalletManagerSelector - For selecting specific parts of the context
  */
 export const useWalletManager = () => {
-  const {selected, walletManager} = React.useContext(WalletManagerContext)
+  const context = React.useContext(WalletManagerContext)
+
+  if (context == null) {
+    throwLoggedError(getLogger())(
+      new App.Errors.InvalidState(
+        'useWalletManager must be used within WalletManagerProvider',
+      ),
+    )
+  }
+
+  // TypeScript: context is guaranteed non-null after the check above
+  const nonNullContext = context as WalletManagerContextType
+
+  const {selected, walletManager} = nonNullContext
 
   if (walletManager == null) {
     throwLoggedError(getLogger())(
@@ -208,7 +248,18 @@ export const useWalletManagerSelector = <T,>(
 ): T => {
   const context = React.useContext(WalletManagerContext)
 
-  if (context.walletManager == null) {
+  if (context == null) {
+    throwLoggedError(getLogger())(
+      new App.Errors.InvalidState(
+        'useWalletManagerSelector must be used within WalletManagerProvider',
+      ),
+    )
+  }
+
+  // TypeScript: context is guaranteed non-null after the check above
+  const nonNullContext = context as WalletManagerContextType
+
+  if (nonNullContext.walletManager == null) {
     throwLoggedError(getLogger())(
       new App.Errors.InvalidState(
         'useWalletManagerSelector wallet manager is not set, invalid state reached',
@@ -216,5 +267,8 @@ export const useWalletManagerSelector = <T,>(
     )
   }
 
-  return React.useMemo(() => selector(context), [context, selector])
+  // TypeScript: context is guaranteed non-null after the check above
+  const typedContext = context as WalletManagerContextType
+
+  return React.useMemo(() => selector(typedContext), [typedContext, selector])
 }

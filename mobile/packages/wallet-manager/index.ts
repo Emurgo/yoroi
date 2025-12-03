@@ -1,7 +1,7 @@
 // Main exports for @yoroi/wallet-manager package
 
 // Core wallet manager factory
-export {makeWalletManager, WALLET_MANAGER_VERSION, walletManager} from './wallet-manager'
+export {makeWalletManager, WALLET_MANAGER_VERSION} from './wallet-manager'
 export type {WalletManager} from './wallet-manager'
 
 // Types

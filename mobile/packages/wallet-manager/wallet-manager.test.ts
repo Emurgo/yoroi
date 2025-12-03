@@ -5,14 +5,19 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import {decryptData} from '~/kernel/crypto/decrypt-data'
 import {rootStorage} from '~/kernel/storage/storages'
 
-import {networkManagers} from './common/constants'
 import {makeWalletManager} from './wallet-manager'
 
-// Mock the global networkManagers before any wallet factory code imports it
+// Mock networkManagers for testing
 // This prevents real network calls when wallets are created/loaded
+let networkManagers: ReturnType<
+  (typeof import('@yoroi/blockchains'))['buildNetworkManagers']
+>
+
 jest.mock('./common/constants', () => {
   const actual = jest.requireActual('./common/constants')
-  const {buildNetworkManagers} = jest.requireActual('@yoroi/blockchains')
+  const blockchains = jest.requireActual('@yoroi/blockchains')
+  const {buildNetworkManagers} =
+    blockchains as typeof import('@yoroi/blockchains')
   const {tokenManagers} = jest
     .requireActual('../Portfolio/common/helpers/build-token-managers')
     .buildPortfolioTokenManagers()
@@ -21,9 +26,8 @@ jest.mock('./common/constants', () => {
     getBestBlock: jest.fn().mockResolvedValue({}),
     getUtxoData: jest.fn().mockResolvedValue({}),
   })
-  const networkManagers = buildNetworkManagers({
+  networkManagers = buildNetworkManagers({
     tokenManagers,
-    logger: actual.logger,
     apiMaker: mockApiMaker,
   })
   return {

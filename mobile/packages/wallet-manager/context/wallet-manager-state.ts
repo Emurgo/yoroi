@@ -1,15 +1,16 @@
 import {YoroiWallet} from '@yoroi/cardano-wallet'
-import {getLogger, throwLoggedError} from '@yoroi/common'
-import {App, Chain, Network, Wallet} from '@yoroi/types'
+import {getLogger} from '@yoroi/common'
+import {Chain, Network, Wallet} from '@yoroi/types'
 
 import {castDraft, freeze, produce} from 'immer'
 
-import {networkManagers} from '../common/constants'
+// networkManagers is now passed via WalletManager, not imported from constants
 import {WalletManager} from '../wallet-manager'
 
 export const walletManagerReducer = (
   state: WalletManagerState,
   action: WalletManagerAction,
+  networkManagers: Readonly<Record<Chain.SupportedNetworks, Network.Manager>>,
 ) => {
   return produce(state, (draft) => {
     switch (action.type) {
@@ -40,7 +41,16 @@ export const walletManagerReducer = (
   })
 }
 
-type WalletManagerAction =
+export type WalletManagerState = {
+  selected: {
+    wallet: YoroiWallet | null
+    meta: Wallet.Meta | null
+    network: Chain.SupportedNetworks
+    networkManager: Network.Manager
+  }
+}
+
+export type WalletManagerAction =
   | {
       type: WalletManagerActionType.NetworkSelected
       network: Chain.SupportedNetworks
@@ -55,26 +65,20 @@ type WalletManagerAction =
       metas: Map<YoroiWallet['id'], Wallet.Meta>
     }
 
-export type WalletManagerState = {
-  selected: {
-    wallet: YoroiWallet | null
-    meta: Wallet.Meta | null
-    network: Chain.SupportedNetworks
-    networkManager: Network.Manager
-  }
-}
-
-export const walletManagerDefaultState: Readonly<WalletManagerState> = freeze(
-  {
-    selected: {
-      network: Chain.Network.Mainnet,
-      networkManager: networkManagers[Chain.Network.Mainnet],
-      wallet: null,
-      meta: null,
+export const createWalletManagerDefaultState = (
+  networkManagers: Readonly<Record<Chain.SupportedNetworks, Network.Manager>>,
+): Readonly<WalletManagerState> =>
+  freeze(
+    {
+      selected: {
+        network: Chain.Network.Mainnet,
+        networkManager: networkManagers[Chain.Network.Mainnet],
+        wallet: null,
+        meta: null,
+      },
     },
-  },
-  true,
-)
+    true,
+  )
 
 export enum WalletManagerActionType {
   WalletSelected = 'walletSelected',
@@ -93,20 +97,15 @@ export type WalletManagerActions = {
 export type WalletManagerContextType = WalletManagerState & {
   walletManager: WalletManager | null
 }
-export const walletManagerInitialContext: WalletManagerContextType = freeze(
-  {
-    ...walletManagerDefaultState,
-    walletManager: null,
-    networkSelected: missingInit,
-    walletSelected: missingInit,
-  },
-  true,
-)
-
-function missingInit() {
-  throwLoggedError(getLogger())(
-    new App.Errors.InvalidState(
-      'WalletManagerContext is missing initialization',
-    ),
+export const createWalletManagerInitialContext = (
+  networkManagers: Readonly<Record<Chain.SupportedNetworks, Network.Manager>>,
+): WalletManagerContextType =>
+  freeze(
+    {
+      ...createWalletManagerDefaultState(networkManagers),
+      walletManager: null,
+    },
+    true,
   )
-}
+
+// missingInit removed - no longer needed

@@ -1,14 +1,15 @@
 import {cardanoConfig} from '@yoroi/blockchains'
-import {deriveAddressFromXPub, keyManager} from '@yoroi/cardano-wallet'
-import {WalletEvent, YoroiWallet} from '@yoroi/cardano-wallet'
 import {
   CardanoMobileWrapped,
+  WalletEvent,
+  YoroiWallet,
+  deriveAddressFromXPub,
   deriveRewardAddressHex,
+  keyManager,
   validatePassword,
   validateWalletName,
 } from '@yoroi/cardano-wallet'
-import {parseSafe} from '@yoroi/common'
-import {getLogger, throwLoggedError} from '@yoroi/common'
+import {getLogger, parseSafe, throwLoggedError} from '@yoroi/common'
 import {Blockies} from '@yoroi/identicon'
 import {Chain, HW, Network, Portfolio, Wallet} from '@yoroi/types'
 
@@ -18,16 +19,13 @@ import {freeze} from 'immer'
 import {BehaviorSubject, Observable, Subscription} from 'rxjs'
 import {v4} from 'uuid'
 
-import {createCardanoWalletDependencies} from '~/common/wallet-dependencies'
 // TODO: Storage dependencies need to be injected via WalletManagerOptions:
 // - makeWalletEncryptedStorage should be passed as a factory function
 // - Keychain should be passed as a dependency (currently using global)
 // - rootStorage is already in WalletManagerOptions, but some code still uses global
 import {makeWalletEncryptedStorage} from '~/kernel/storage/EncryptedStorage'
-import {Keychain} from '~/kernel/storage/Keychain'
-import {rootStorage} from '~/kernel/storage/storages'
 
-import {networkManagers} from './common/constants'
+// networkManagers is now passed via WalletManagerOptions, not imported from constants
 import {
   SyncWalletInfo,
   WalletManagerEvent,
@@ -191,7 +189,7 @@ export const makeWalletManager = (
   } = options
 
   // Initialize wallet factories with dependencies
-  initializeWalletFactories(cardanoWalletDependencies)
+  initializeWalletFactories(cardanoWalletDependencies, networkManagers)
 
   // State management
   const stateSubjects = createWalletManagerStateSubjects()
@@ -1660,9 +1658,6 @@ export const makeWalletManager = (
   }
 }
 
-export const walletManager = makeWalletManager({
-  networkManagers,
-  rootStorage,
-  keychainManager: Keychain,
-  cardanoWalletDependencies: createCardanoWalletDependencies(),
-})
+// walletManager instance should be created in the app, not here
+// This allows the app to inject networkManagers and other dependencies
+// See App.tsx for the actual instance creation

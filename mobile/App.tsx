@@ -19,8 +19,8 @@ import {
   AutomaticWalletOpenerProvider,
   WalletManagerHydrationWrapper,
   WalletManagerProvider,
+  makeWalletManager,
   useSelectedNetwork,
-  walletManager,
 } from '@yoroi/wallet-manager'
 
 import {init} from '@emurgo/cross-csl-mobile'
@@ -29,12 +29,15 @@ import * as Updates from 'expo-updates'
 import * as React from 'react'
 
 import {useFonts} from '~/common/hooks/useFonts'
+import {networkManagers} from '~/common/network-managers'
+import {createCardanoWalletDependencies} from '~/common/wallet-dependencies'
 import {BrowserProvider} from '~/features/Discover/common/BrowserProvider'
 import {PortfolioTokenActivityProvider} from '~/features/Portfolio/context/PortfolioTokenActivityProvider'
 import {ReceiveProvider} from '~/features/Receive/common/ReceiveProvider'
 import {isDev} from '~/kernel/constants'
 import {logger} from '~/kernel/logger/logger'
 import {AppNavigator} from '~/kernel/navigation/AppNavigator'
+import {Keychain} from '~/kernel/storage/Keychain'
 import {Boundary} from '~/ui/Boundary/Boundary'
 import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {ScrollViewProvider} from '~/ui/ScrollView/context/ScrollViewContext'
@@ -65,6 +68,14 @@ import {LoadingOverlayProvider} from './src/ui/LoadingOverlay/context'
 const catalystApi = catalystApiMaker()
 const catalystManager = catalystManagerMaker({
   api: catalystApi,
+})
+
+// Create wallet manager instance with app-specific dependencies
+const walletManager = makeWalletManager({
+  networkManagers,
+  rootStorage,
+  keychainManager: Keychain,
+  cardanoWalletDependencies: createCardanoWalletDependencies(),
 })
 
 function AppShell({children}: React.PropsWithChildren) {

@@ -1,3 +1,4 @@
+import {RawUtxo} from '@yoroi/api'
 import {getTransactionSigners} from '@yoroi/cardano-wallet'
 import {createRawTxSigningKey} from '@yoroi/cardano-wallet'
 import {CardanoMobileWrapped} from '@yoroi/cardano-wallet'
@@ -75,7 +76,7 @@ export const useRedeemThaw = () => {
       const fundingUtxosHex = await CardanoMobileWrapped.cslScope(
         async (csl) => {
           // Convert RawUtxo[] to ModernUtxo[] using current pattern
-          const modernUtxos = wallet.utxos().map((rawUtxo) => {
+          const modernUtxos = wallet.utxos().map((rawUtxo: RawUtxo) => {
             const addressing = wallet.getAddressing(rawUtxo.receiver)
             return rawUtxoToModernUtxo(
               rawUtxo as Parameters<typeof rawUtxoToModernUtxo>[0],

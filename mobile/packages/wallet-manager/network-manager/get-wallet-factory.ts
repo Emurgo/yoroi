@@ -1,11 +1,10 @@
 import type {CardanoWalletDependencies} from '@yoroi/cardano-wallet'
 import {makeCardanoWallet} from '@yoroi/cardano-wallet'
 import {getLogger, throwLoggedError} from '@yoroi/common'
-import {Chain, Wallet} from '@yoroi/types'
+import {Chain, Network, Wallet} from '@yoroi/types'
 
 import {freeze} from 'immer'
 
-import {networkManagers} from '../common/constants'
 import {WalletFactory} from '../common/types'
 
 /**
@@ -14,6 +13,7 @@ import {WalletFactory} from '../common/types'
  */
 export function createWalletFactories(
   dependencies: CardanoWalletDependencies,
+  networkManagers: Readonly<Record<Chain.SupportedNetworks, Network.Manager>>,
 ): Record<
   Chain.SupportedNetworks,
   Record<Wallet.Implementation, WalletFactory>
@@ -74,8 +74,9 @@ let walletFactoryMap: ReturnType<typeof createWalletFactories> | null = null
  */
 export function initializeWalletFactories(
   dependencies: CardanoWalletDependencies,
+  networkManagers: Readonly<Record<Chain.SupportedNetworks, Network.Manager>>,
 ): void {
-  walletFactoryMap = createWalletFactories(dependencies)
+  walletFactoryMap = createWalletFactories(dependencies, networkManagers)
 }
 
 /**

@@ -9,6 +9,7 @@ import {
 import type {WalletTransaction} from '@yoroi/types'
 import {
   Address,
+  Api,
   AssetName,
   BalanceQuantity,
   Portfolio,
@@ -16,6 +17,7 @@ import {
   UtxoId,
   Wallet,
 } from '@yoroi/types'
+import {Chain, Network} from '@yoroi/types'
 
 import {noop} from 'lodash'
 import {Observable, Subscription} from 'rxjs'
@@ -24,7 +26,92 @@ import {Observable, Subscription} from 'rxjs'
 import {mockEncryptedStorage} from '../cardano-wallet/mocks/mocks/storage'
 import {mockTransactionInfos} from '../cardano-wallet/mocks/mocks/transaction'
 import {utxos} from '../cardano-wallet/mocks/mocks/utxos'
-import {networkManagers} from './common/constants'
+
+// Create a mock network manager for testing
+const mockNetworkManager = {
+  network: Chain.Network.Mainnet,
+  isMainnet: true,
+  primaryTokenInfo: createPrimaryTokenInfo({
+    decimals: 6,
+    name: 'ADA' as AssetName,
+    ticker: 'ADA',
+    symbol: '₳',
+    reference: '',
+    tag: '',
+    website: 'https://www.cardano.org/',
+    originalImage: '',
+    description: 'Cardano',
+  }),
+  name: 'Mainnet',
+  chainId: 1,
+  legacyApiBaseUrl: '',
+  blockchain: Network.Blockchains.Cardano,
+  eras: [
+    {
+      name: 'shelley' as const,
+      start: new Date('2020-07-29'),
+      end: new Date('2100-01-01'),
+      slotInSeconds: 1,
+      slotsPerEpoch: 432000,
+    },
+  ],
+  protocolMagic: 764824073,
+  epoch: {
+    info: (_date: Date) =>
+      ({
+        epoch: 0,
+        start: new Date(),
+        end: new Date(),
+        era: {
+          name: 'shelley' as const,
+          start: new Date('2020-07-29'),
+          end: new Date('2100-01-01'),
+          slotInSeconds: 1,
+          slotsPerEpoch: 432000,
+        },
+        eras: [
+          {
+            name: 'shelley' as const,
+            start: new Date('2020-07-29'),
+            end: new Date('2100-01-01'),
+            slotInSeconds: 1,
+            slotsPerEpoch: 432000,
+          },
+        ],
+      }) as Network.EpochInfo,
+    progress: (_date: Date) =>
+      ({
+        progress: 0,
+        currentSlot: 0,
+        slotsRemaining: 0,
+        slotsElapsed: 0,
+        absoluteSlot: 0,
+        timeRemaining: {
+          days: 0,
+          hours: 0,
+          minutes: 0,
+          seconds: 0,
+        },
+      }) as Network.EpochProgress,
+  },
+  api: {
+    protocolParams: async () => ({}) as Chain.Cardano.ProtocolParams,
+    bestBlock: async () => ({}) as Chain.Cardano.BestBlock,
+    utxoData: async () =>
+      ({
+        output: {
+          address: '',
+          amount: '0',
+          dataHash: null,
+          assets: [],
+        },
+        spendingTxHash: null,
+      }) as Api.Cardano.UtxoData,
+  },
+  rootStorage: {} as any,
+  tokenManager: {} as any,
+  explorers: {} as any,
+} as unknown as Network.Manager
 
 const stakePoolId = 'af22f95915a19cd57adb14c558dcc4a175f60c6193dc23b8bd2d8beb'
 const poolInfoAndHistory: StakePoolInfoAndHistory = {
@@ -80,7 +167,7 @@ const wallet: YoroiWallet = {
   getAddressing(_address: string): {path: number[]; startLevel: number} {
     throw new Error('Method not implemented.')
   },
-  networkManager: networkManagers.mainnet,
+  networkManager: mockNetworkManager,
   _dependencies: {
     toLedgerSignRequest: async () => {
       throw new Error('Mock: toLedgerSignRequest not implemented')
