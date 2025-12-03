@@ -8,7 +8,7 @@ import {GovernanceStatusCard} from '~/features/Staking/Governance/common/Governa
 import {LearnMoreLink} from '~/features/Staking/Governance/common/LearnMoreLink/LearnMoreLink'
 import {OtherDrepCard} from '~/features/Staking/Governance/common/OtherDrepCard/OtherDrepCard'
 import {YoroiDrepCard} from '~/features/Staking/Governance/common/YoroiDrepCard/YoroiDrepCard'
-import {useRemoteConfig} from '~/hooks/useRemoteConfig'
+import {useRemoteConfig} from '~/common/hooks/useRemoteConfig'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'

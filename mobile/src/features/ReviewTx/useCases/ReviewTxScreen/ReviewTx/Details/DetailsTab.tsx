@@ -6,12 +6,12 @@ import {useIntl} from 'react-intl'
 import {Text, View} from 'react-native'
 
 import {FormattedMetadata, FormattedTx} from '~/features/ReviewTx/common/types'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Copiable} from '~/ui/Copiable/Copiable'
 import {Divider} from '~/ui/Divider/Divider'
 import {Space} from '~/ui/Space/Space'
-import {formatDateAndTime} from '~/wallets/utils/format'
+import {formatDateAndTime} from '@yoroi/cardano-wallet/utils/format'
 
 export const DetailsTab = ({
   tx,

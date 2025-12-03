@@ -8,7 +8,7 @@ import {
   useSuspenseQuery,
 } from '@tanstack/react-query'
 
-import {YoroiWallet} from '~/wallets/cardano/types'
+import {YoroiWallet} from '@yoroi/cardano-wallet/types'
 
 export const usePortfolioTokenInfos = (
   {

@@ -14,7 +14,7 @@ import {
   View,
 } from 'react-native'
 
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {ClaimSuccessIllustration} from '~/ui/ClaimSuccessIllustration/ClaimSuccessIllustration'
 import {Copiable} from '~/ui/Copiable/Copiable'
@@ -22,7 +22,7 @@ import {Icon} from '~/ui/Icon'
 import {ResultScreen} from '~/ui/ResultScreen/ResultScreen'
 import {Space} from '~/ui/Space/Space'
 import {TokenAmountItem} from '~/ui/TokenAmountItem/TokenAmountItem'
-import {isEmptyString} from '~/wallets/utils/string'
+import {isEmptyString} from '@yoroi/cardano-wallet/utils/string'
 
 import {useDialogs} from '../common/useDialogs'
 import {useNavigateTo} from '../common/useNavigateTo'

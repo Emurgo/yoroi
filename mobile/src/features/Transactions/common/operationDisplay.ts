@@ -12,8 +12,8 @@ import BigNumber from 'bignumber.js'
 
 import {isContractAddress} from '~/features/ReviewTx/common/services/contract-service'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {collateralConfig} from '~/wallets/cardano/utxoManager/utxos'
-import {Amounts, Quantities, asQuantity} from '~/wallets/utils/utils'
+import {collateralConfig} from '@yoroi/cardano-wallet/utxoManager/utxos'
+import {Amounts, Quantities, asQuantity} from '@yoroi/cardano-wallet/utils/utils'
 
 /**
  * Extract metadata messages from transaction metadata

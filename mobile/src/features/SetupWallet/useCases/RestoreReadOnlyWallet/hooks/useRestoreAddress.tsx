@@ -6,7 +6,7 @@ import {
   AddressErrorInvalid,
   AddressErrorWrongNetwork,
 } from '~/features/Send/common/errors'
-import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
+import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
 
 export const useRestoreAddress = (address: string) => {
   const {selected} = useWalletManager()

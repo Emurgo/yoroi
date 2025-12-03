@@ -5,9 +5,9 @@ import {KeyHash, PolicyId, Wallet} from '@yoroi/types'
 import type {WasmModuleProxy} from '@emurgo/cross-csl-core'
 import {Buffer} from 'buffer'
 
-import {getSpendingKey} from '~/wallets/cardano/addressInfo/addressInfo'
-import {YoroiWallet} from '~/wallets/cardano/types'
-import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
+import {getSpendingKey} from '@yoroi/cardano-wallet/addressInfo/addressInfo'
+import {YoroiWallet} from '@yoroi/cardano-wallet/types'
+import {CardanoMobileWrapped} from '@yoroi/cardano-wallet/wrappedCsl'
 
 /**
  * Create a basic native script from wallet address

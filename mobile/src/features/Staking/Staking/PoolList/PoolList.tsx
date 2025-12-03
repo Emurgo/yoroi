@@ -14,10 +14,10 @@ import {
 } from 'react-native'
 
 import {useSearch} from '~/features/Search/SearchContext'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 import {Space} from '~/ui/Space/Space'
-import {formatTokenWithText} from '~/wallets/utils/format'
-import {asQuantity} from '~/wallets/utils/utils'
+import {formatTokenWithText} from '@yoroi/cardano-wallet/utils/format'
+import {asQuantity} from '@yoroi/cardano-wallet/utils/utils'
 
 import {usePoolList} from './usePoolList'
 

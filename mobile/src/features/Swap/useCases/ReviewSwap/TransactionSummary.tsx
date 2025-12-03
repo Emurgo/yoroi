@@ -13,7 +13,7 @@ import {
   PRICE_IMPACT_MODERATE_RISK,
   undefinedToken,
 } from '~/features/Swap/common/constants'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 import {useLanguage} from '~/kernel/i18n/LanguageProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Divider} from '~/ui/Divider/Divider'

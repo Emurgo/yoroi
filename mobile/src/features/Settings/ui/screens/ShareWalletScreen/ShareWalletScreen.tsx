@@ -5,7 +5,7 @@ import {ScrollView} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useShareWalletLink} from '~/features/Settings/hooks/useShareWalletLink'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/context/ModalContext'

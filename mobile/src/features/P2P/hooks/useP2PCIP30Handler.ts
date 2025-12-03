@@ -10,11 +10,11 @@ import * as React from 'react'
 
 import {userRejectedError} from '~/features/Discover/common/errors'
 import {usePromptRootKey} from '~/features/ReviewTx/common/hooks/usePromptRootKey'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
-import {cip30ExtensionMaker} from '~/wallets/cardano/cip30/cip30'
+import {cip30ExtensionMaker} from '@yoroi/cardano-wallet/cip30/cip30'
 
 type P2PCIP30HandlerOptions = {
   connectionManager: ConnectionManager | null

@@ -4,7 +4,7 @@ import {Chain} from '@yoroi/types'
 import {UseQueryOptions, useQuery, useQueryClient} from '@tanstack/react-query'
 import * as React from 'react'
 
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 
 export const useDAppsConnected = (
   options?: UseQueryOptions<

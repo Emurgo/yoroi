@@ -4,7 +4,7 @@ import {HW} from '@yoroi/types'
 import * as CSL from '@emurgo/cross-csl-core'
 import {UseMutationOptions, useMutation} from '@tanstack/react-query'
 
-import {YoroiWallet} from '~/wallets/cardano/types'
+import {YoroiWallet} from '@yoroi/cardano-wallet/types'
 
 export const useSignTxWithHW = (
   {wallet}: {wallet: YoroiWallet},

@@ -9,10 +9,10 @@ import {App, Wallet} from '@yoroi/types'
 import {Transaction} from '@emurgo/cross-csl-core'
 import BigNumber from 'bignumber.js'
 
-import {cip30ExtensionMaker} from '~/wallets/cardano/cip30/cip30'
-import {cip95ExtensionMaker, supportsCIP95} from '~/wallets/cardano/cip95/cip95'
-import {YoroiWallet} from '~/wallets/cardano/types'
-import {collateralConfig} from '~/wallets/cardano/utxoManager/utxos'
+import {cip30ExtensionMaker} from '@yoroi/cardano-wallet/cip30/cip30'
+import {cip95ExtensionMaker, supportsCIP95} from '@yoroi/cardano-wallet/cip95/cip95'
+import {YoroiWallet} from '@yoroi/cardano-wallet/types'
+import {collateralConfig} from '@yoroi/cardano-wallet/utxoManager/utxos'
 
 function hasProtocol(url: string) {
   return /^[a-z]*:\/\//i.test(url)

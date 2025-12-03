@@ -6,15 +6,15 @@ import * as React from 'react'
 import {ActivityIndicator, ScrollView, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Button} from '~/ui/Button/Button'
 import {BACKSPACE, NumericKeyboard} from '~/ui/NumericKeyboard'
 import {Space} from '~/ui/Space/Space'
-import {generatePrivateKeyForCatalyst} from '~/wallets/cardano/catalyst'
-import {encryptWithPassword} from '~/wallets/cardano/catalyst/catalystCipher'
-import {createVotingRegTxFromWallet} from '~/wallets/cardano/transaction-recipes'
+import {generatePrivateKeyForCatalyst} from '@yoroi/cardano-wallet/catalyst'
+import {encryptWithPassword} from '@yoroi/cardano-wallet/catalyst/catalystCipher'
+import {createVotingRegTxFromWallet} from '@yoroi/cardano-wallet/transaction-recipes'
 
 import {
   Actions,

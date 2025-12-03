@@ -19,7 +19,7 @@ import {
 } from 'react-native'
 
 import {usePortfolioImageInvalidate} from '~/features/Portfolio/common/hooks/usePortfolioImage'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {NftRoutes} from '~/kernel/navigation/types'
 import {Boundary} from '~/ui/Boundary/Boundary'

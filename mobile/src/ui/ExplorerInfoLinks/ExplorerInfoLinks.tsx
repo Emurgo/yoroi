@@ -5,7 +5,7 @@ import {Explorers} from '@yoroi/types'
 import * as React from 'react'
 import {Linking, Text, View} from 'react-native'
 
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Space} from '~/ui/Space/Space'
 

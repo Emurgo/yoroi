@@ -21,8 +21,8 @@ import {
 import {logger} from '~/kernel/logger/logger'
 import {Button} from '~/ui/Button/Button'
 import {Space} from '~/ui/Space/Space'
-import {BluetoothDisabledError, RejectedByUserError} from '~/wallets/hw/hw'
-import {Device} from '~/wallets/types/hw'
+import {BluetoothDisabledError, RejectedByUserError} from '@yoroi/cardano-wallet/hw/hw'
+import {Device} from '@yoroi/cardano-wallet/types/hw'
 
 import {BulletPointItem} from '../BulletPointItem'
 import {Loading} from '../Loading/Loading'

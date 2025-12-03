@@ -12,7 +12,7 @@ import {usePortfolioBalances} from '~/features/Portfolio/common/hooks/usePortfol
 import {MediaGallery} from '~/features/Portfolio/ui/MediaGallery/MediaGallery'
 import {useSearch, useSearchOnNavBar} from '~/features/Search/SearchContext'
 import {limitOfSecondaryAmountsPerTx} from '~/features/Send/common/constants'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {TxHistoryRouteNavigation} from '~/kernel/navigation/types'
 import {NoAssetFoundImage} from '~/ui/NoAssetFoundImage/NoAssetFoundImage'

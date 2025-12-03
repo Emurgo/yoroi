@@ -9,7 +9,7 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
-import {isEmptyString} from '~/wallets/utils/string'
+import {isEmptyString} from '@yoroi/cardano-wallet/utils/string'
 
 import {ShowDisclaimer} from '../shared/ShowDisclaimer/ShowDisclaimer'
 

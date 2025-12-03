@@ -157,7 +157,7 @@ export const poolInfoApiMaker = ({
       transitionData.saturationThreshold ?? DEFAULT_SATURATION_THRESHOLD
     if (saturationThreshold < 0 || saturationThreshold > 1) {
       const logger = getLogger()
-      logger.warn(
+      getLogger().warn(
         `Incorrect saturation threshold value "${saturationThreshold}", expected between 0 and 1. Using default "${DEFAULT_SATURATION_THRESHOLD}"`,
         {origin: 'staking', operation: 'getTransition'},
       )

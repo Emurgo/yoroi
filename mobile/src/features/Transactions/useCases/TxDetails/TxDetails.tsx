@@ -10,13 +10,13 @@ import {Linking, Text, View} from 'react-native'
 import {useFormattedTxFromWalletTransaction} from '~/features/ReviewTx/common/hooks/useFormattedTxFromWalletTransaction'
 import {FormattedMetadata} from '~/features/ReviewTx/common/types'
 import {ReviewTx} from '~/features/ReviewTx/useCases/ReviewTxScreen/ReviewTx/ReviewTx'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
 import {Copiable} from '~/ui/Copiable/Copiable'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
-import {formatDateRelative, formatTime} from '~/wallets/utils/format'
+import {formatDateRelative, formatTime} from '@yoroi/cardano-wallet/utils/format'
 
 export const TxDetails = () => {
   const strings = useStrings()

@@ -3,7 +3,7 @@ import {Wallet} from '@yoroi/types'
 import * as React from 'react'
 
 import {logger} from '~/kernel/logger/logger'
-import {YoroiWallet} from '~/wallets/cardano/types'
+import {YoroiWallet} from '@yoroi/cardano-wallet/types'
 
 import {getStoredPolicyIds} from '../storage/mintPolicyStorage'
 import type {MintedTokenInfo} from '../types'

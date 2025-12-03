@@ -18,7 +18,7 @@ import {
   handlePushAction,
 } from '~/features/Notifications/common/tools'
 import {useWalletNotifications} from '~/features/Notifications/common/useWalletNotifications'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 import {useLanguage} from '~/kernel/i18n/LanguageProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'

@@ -37,7 +37,7 @@ export const LinksProvider = ({
 
   const setPendingActionWithLogging = React.useCallback(
     (action: PendingAction | null) => {
-      logger.debug('LinksProvider: setting pending action', {
+      getLogger().debug('LinksProvider: setting pending action', {
         source: action?.source,
         actionType:
           action?.source === 'yoroi'
@@ -54,12 +54,12 @@ export const LinksProvider = ({
   )
 
   const clearPendingAction = React.useCallback(() => {
-    logger.debug('LinksProvider: clearing pending action')
+    getLogger().debug('LinksProvider: clearing pending action')
     dispatch({type: LinksActionType.ClearPendingAction})
   }, [logger])
 
   const markActionProcessed = React.useCallback(() => {
-    logger.debug('LinksProvider: marking action as processed')
+    getLogger().debug('LinksProvider: marking action as processed')
     dispatch({type: LinksActionType.MarkActionProcessed})
   }, [logger])
 
@@ -88,7 +88,7 @@ export const LinksProvider = ({
   )
 
   React.useEffect(() => {
-    logger.debug('LinksProvider: context value changed', {
+    getLogger().debug('LinksProvider: context value changed', {
       hasPendingAction: !!context.pendingAction,
       source: context.pendingAction?.source,
       actionType:

@@ -9,12 +9,12 @@ import * as React from 'react'
 import {useNavigateTo} from '~/features/Staking/Governance/common/navigation'
 import {isInsufficientBalanceError} from '~/features/Staking/Governance/common/transactionErrorHandling'
 import {useStakingInfo} from '~/features/Staking/hooks/useStakingInfo'
-import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useSelectedNetwork} from '@yoroi/wallet-manager/hooks/useSelectedNetwork'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 import {features} from '~/kernel/features'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
-import {createDelegationTxFromWallet} from '~/wallets/cardano/transaction-recipes'
-import {YoroiWallet} from '~/wallets/cardano/types'
+import {createDelegationTxFromWallet} from '@yoroi/cardano-wallet/transaction-recipes'
+import {YoroiWallet} from '@yoroi/cardano-wallet/types'
 
 const createDelegationTxHelper = async (
   wallet: YoroiWallet,

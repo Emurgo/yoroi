@@ -5,12 +5,12 @@ import * as React from 'react'
 import {View} from 'react-native'
 
 import {walletTransactionToSummary} from '~/features/Transactions/common/transactionSummary'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Icon} from '~/ui/Icon'
 import {NotificationItem} from '~/ui/NotificationItem/NotificationItem'
-import {YoroiWallet} from '~/wallets/cardano/types'
-import {Amounts, Quantities} from '~/wallets/utils/utils'
+import {YoroiWallet} from '@yoroi/cardano-wallet/types'
+import {Amounts, Quantities} from '@yoroi/cardano-wallet/utils/utils'
 
 export const getTransactionReceivedNotificationTitle = (
   event: Notifications.Event,

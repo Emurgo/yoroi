@@ -3,7 +3,7 @@ import {App} from '@yoroi/types'
 
 import {useQuery} from '@tanstack/react-query'
 
-import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
+import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
 
 const defaultNotificationsEnabled = true
 

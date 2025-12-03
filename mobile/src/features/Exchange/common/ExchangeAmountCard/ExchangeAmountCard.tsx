@@ -8,7 +8,7 @@ import {Pressable, Text, TextInput, View} from 'react-native'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Space} from '~/ui/Space/Space'
 import {TokenInfoIcon} from '~/ui/TokenInfoIcon/TokenInfoIcon'
-import {isEmptyString} from '~/wallets/utils/string'
+import {isEmptyString} from '@yoroi/cardano-wallet/utils/string'
 
 type ExchangeAmountCardProps = {
   error?: string

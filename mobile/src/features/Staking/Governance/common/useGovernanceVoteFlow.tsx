@@ -9,13 +9,13 @@ import * as React from 'react'
 
 import {getTxIdFromArgs} from '~/features/ReviewTx/common/utils/getTxId'
 import {useCreateGovernanceTx} from '~/features/Staking/hooks/useCreateGovernanceTx'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {UsePromiseOptionsWithoutPromise} from '~/hooks/usePromise'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
+import {UsePromiseOptionsWithoutPromise} from '~/common/hooks/usePromise'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {InfoBanner} from '~/ui/InfoBanner/InfoBanner'
-import {YoroiWallet} from '~/wallets/cardano/types'
+import {YoroiWallet} from '@yoroi/cardano-wallet/types'
 
 import {useNavigateTo} from './navigation'
 

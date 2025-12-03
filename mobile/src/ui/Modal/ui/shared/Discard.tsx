@@ -16,7 +16,7 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated'
 
-import {useIsKeyboardOpen} from '~/hooks/useIsKeyboardOpen'
+import {useIsKeyboardOpen} from '~/common/hooks/useIsKeyboardOpen'
 
 import {useModal} from '../../context/ModalContext'
 

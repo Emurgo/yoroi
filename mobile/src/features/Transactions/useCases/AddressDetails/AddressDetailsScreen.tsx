@@ -5,7 +5,7 @@ import {fromPairs} from 'lodash'
 import * as React from 'react'
 
 import {AddressContent, AddressFooter} from '~/common/AddressModal/AddressModal'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {ScrollView} from '~/ui/ScrollView/ScrollView'
 import {useScrollView} from '~/ui/ScrollView/hooks/useScrollView'

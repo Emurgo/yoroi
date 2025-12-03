@@ -26,9 +26,9 @@ import {ListAmountsToSendScreen} from '~/features/Send/useCases/ListAmountsToSen
 import {StartMultiTokenTxScreen} from '~/features/Send/useCases/StartMultiTokenTx/StartMultiTokenTxScreen'
 import {NetworkTag} from '~/features/Settings/ui/shared/NetworkTag'
 import {SwapNavigator} from '~/features/Swap/navigator'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {WithWalletOpened} from '~/features/WalletManager/ui/shared/WithWalletOpened'
-import {useRemoteConfig} from '~/hooks/useRemoteConfig'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
+import {WithWalletOpened} from '@yoroi/wallet-manager/ui/shared/WithWalletOpened'
+import {useRemoteConfig} from '~/common/hooks/useRemoteConfig'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {
   BackButton,

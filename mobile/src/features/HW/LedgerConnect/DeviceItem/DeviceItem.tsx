@@ -5,7 +5,7 @@ import {Text, TouchableOpacity} from 'react-native'
 
 import {Icon} from '~/ui/Icon'
 import {Space} from '~/ui/Space/Space'
-import {Device} from '~/wallets/types/hw'
+import {Device} from '@yoroi/cardano-wallet/types/hw'
 
 type Props = {
   device: Device

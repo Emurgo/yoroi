@@ -11,10 +11,10 @@ import {TextInput} from 'react-native'
 
 import {usePortfolioBalances} from '~/features/Portfolio/common/hooks/usePortfolioBalances'
 import {usePortfolioTokenInfosSuspense} from '~/features/Portfolio/common/hooks/usePortfolioTokenInfos'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {useRemoteConfig} from '~/hooks/useRemoteConfig'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
+import {useRemoteConfig} from '~/common/hooks/useRemoteConfig'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {convertBech32ToHex} from '~/wallets/cardano/common/signatureUtils'
+import {convertBech32ToHex} from '@yoroi/cardano-wallet/common/signatureUtils'
 
 import {undefinedToken} from './constants'
 import {useNavigateTo} from './navigation'

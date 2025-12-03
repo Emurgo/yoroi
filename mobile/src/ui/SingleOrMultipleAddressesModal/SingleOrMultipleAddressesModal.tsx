@@ -5,7 +5,7 @@ import * as React from 'react'
 import {Text, View} from 'react-native'
 
 import {useMultipleAddressesInfo} from '~/features/Receive/common/useMultipleAddressesInfo'
-import {useAddressMode} from '~/features/WalletManager/hooks/useAddressMode'
+import {useAddressMode} from '@yoroi/wallet-manager/hooks/useAddressMode'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'

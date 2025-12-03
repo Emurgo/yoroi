@@ -3,9 +3,9 @@ import {isError} from '@yoroi/common'
 
 import {useQuery} from '@tanstack/react-query'
 
-import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
-import {useWalletEvent} from '~/features/WalletManager/hooks/useWalletEvent'
-import {useRemoteConfig} from '~/hooks/useRemoteConfig'
+import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
+import {useWalletEvent} from '@yoroi/wallet-manager/hooks/useWalletEvent'
+import {useRemoteConfig} from '~/common/hooks/useRemoteConfig'
 import {logger} from '~/kernel/logger/logger'
 
 import {redemptionApi} from '../api/redemptionApi'

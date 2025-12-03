@@ -3,7 +3,7 @@ import {Balance, WalletTransaction} from '@yoroi/types'
 
 import BigNumber from 'bignumber.js'
 
-import {Amounts} from '~/wallets/utils/utils'
+import {Amounts} from '@yoroi/cardano-wallet/utils/utils'
 
 import {getOperationTypeKey} from './getOperationTypeKey'
 import {TransactionSummary} from './types'

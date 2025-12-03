@@ -53,7 +53,7 @@ export const fetchDefault = async <T = Record<string, unknown>>(
   const {status, message, responseData} = response.error
 
   // Log error
-  logger.error('fetchDefault: Backend returned error response', {
+  getLogger().error('fetchDefault: Backend returned error response', {
     origin: 'fetchDefault',
     type: 'http',
     status,

@@ -6,7 +6,7 @@ import * as React from 'react'
 import {Animated} from 'react-native'
 
 import {ButtonGroup} from '~/features/Send/common/ButtonGroup/ButtonGroup'
-import {useBold} from '~/hooks/useBold'
+import {useBold} from '~/common/hooks/useBold'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Space} from '~/ui/Space/Space'
 import {WarningBanner} from '~/ui/WarningBanner/WarningBanner'

@@ -6,7 +6,7 @@ import {Linking, ScrollView, Text, View} from 'react-native'
 import {ViewProps} from 'react-native-svg/lib/typescript/fabric/utils'
 
 import {YoroiHelpLink} from '~/features/SetupWallet/common/constants'
-import {useBold} from '~/hooks/useBold'
+import {useBold} from '~/common/hooks/useBold'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {SetupWalletRouteNavigation} from '~/kernel/navigation/types'
 import {Button} from '~/ui/Button/Button'

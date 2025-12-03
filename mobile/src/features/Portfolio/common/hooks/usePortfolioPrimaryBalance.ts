@@ -3,7 +3,7 @@ import {useObservableValue} from '@yoroi/common'
 import * as React from 'react'
 import {filter} from 'rxjs'
 
-import {YoroiWallet} from '~/wallets/cardano/types'
+import {YoroiWallet} from '@yoroi/cardano-wallet/types'
 
 import {filterBySyncEvent as isSyncEvent} from '../helpers/filter-by-sync-event'
 

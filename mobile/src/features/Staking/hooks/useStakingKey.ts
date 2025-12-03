@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import {YoroiWallet} from '~/wallets/cardano/types'
+import {YoroiWallet} from '@yoroi/cardano-wallet/types'
 
 export const useStakingKey = (wallet: YoroiWallet): string => {
   return React.useMemo(() => {

@@ -78,7 +78,7 @@ export const walletCommunicationMaker = (
       try {
         ;(callback as EventCallback<T>)(data)
       } catch (error: unknown) {
-        logger.error(
+        getLogger().error(
           error instanceof Error ? error : new Error(String(error)),
           {origin: 'p2p-communication', event: String(event)},
         )
@@ -90,13 +90,13 @@ export const walletCommunicationMaker = (
     stopHeartbeat()
 
     if (!state.connected || !deps.peerConnection.isReady()) {
-      logger.debug('Cannot start heartbeat - no wallet connection', {
+      getLogger().debug('Cannot start heartbeat - no wallet connection', {
         origin: 'p2p-communication',
       })
       return
     }
 
-    logger.log('Starting wallet heartbeat monitoring', {
+    getLogger().log('Starting wallet heartbeat monitoring', {
       origin: 'p2p-communication',
     })
 
@@ -120,7 +120,7 @@ export const walletCommunicationMaker = (
       })
 
       if (!success) {
-        logger.error(new Error('Failed to send heartbeat'), {
+        getLogger().error(new Error('Failed to send heartbeat'), {
           origin: 'p2p-communication',
           operation: 'heartbeat',
         })
@@ -132,13 +132,13 @@ export const walletCommunicationMaker = (
         return
       }
 
-      logger.debug('Sent heartbeat ping to wallet', {
+      getLogger().debug('Sent heartbeat ping to wallet', {
         origin: 'p2p-communication',
       })
 
       // Set timeout for waiting for pong response
       const timeout = setTimeout(() => {
-        logger.warn('Wallet heartbeat timeout - connection may be dead', {
+        getLogger().warn('Wallet heartbeat timeout - connection may be dead', {
           origin: 'p2p-communication',
           operation: 'heartbeat',
         })
@@ -175,7 +175,7 @@ export const walletCommunicationMaker = (
         timestamp: message.timestamp,
         received: Date.now(),
       })
-      logger.debug('Received heartbeat ping, sent pong', {
+      getLogger().debug('Received heartbeat ping, sent pong', {
         origin: 'p2p-communication',
       })
       return true
@@ -187,7 +187,7 @@ export const walletCommunicationMaker = (
         updateState({heartbeatTimeout: null})
       }
       const latency = Date.now() - message.timestamp
-      logger.debug(`Wallet connection confirmed (${latency}ms latency)`, {
+      getLogger().debug(`Wallet connection confirmed (${latency}ms latency)`, {
         origin: 'p2p-communication',
         latency,
       })
@@ -220,7 +220,7 @@ export const walletCommunicationMaker = (
 
       notifyListeners('message', message)
     } catch (error) {
-      logger.error(error instanceof Error ? error : new Error(String(error)), {
+      getLogger().error(error instanceof Error ? error : new Error(String(error)), {
         origin: 'p2p-communication',
         operation: 'parseMessage',
       })
@@ -258,7 +258,7 @@ export const walletCommunicationMaker = (
 
   const sendMessage = (message: string): boolean => {
     if (!state.connected) {
-      logger.warn('Cannot send: Not connected to wallet', {
+      getLogger().warn('Cannot send: Not connected to wallet', {
         origin: 'p2p-communication',
       })
       return false
@@ -273,7 +273,7 @@ export const walletCommunicationMaker = (
     data: unknown = null,
   ): boolean => {
     if (!state.connected) {
-      logger.warn(`Cannot call ${method}: Not connected to wallet`, {
+      getLogger().warn(`Cannot call ${method}: Not connected to wallet`, {
         origin: 'p2p-communication',
         method,
       })
@@ -286,13 +286,13 @@ export const walletCommunicationMaker = (
 
   const signTransaction = (txData: unknown = null): boolean => {
     if (!state.connected) {
-      logger.warn('Cannot sign transaction: Not connected to wallet', {
+      getLogger().warn('Cannot sign transaction: Not connected to wallet', {
         origin: 'p2p-communication',
       })
       return false
     }
 
-    logger.log('Creating transaction signing request...', {
+    getLogger().log('Creating transaction signing request...', {
       origin: 'p2p-communication',
     })
 
@@ -309,7 +309,7 @@ export const walletCommunicationMaker = (
 
   const disconnect = (): boolean => {
     if (!state.connected) {
-      logger.debug('Not connected to a wallet', {
+      getLogger().debug('Not connected to a wallet', {
         origin: 'p2p-communication',
       })
       return false

@@ -16,7 +16,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Address} from '~/common/Address/Address'
 import {usePromptRootKey} from '~/features/ReviewTx/common/hooks/usePromptRootKey'
-import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
+import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 import {Button} from '~/ui/Button/Button'

@@ -5,13 +5,13 @@ import {Branded, Notifications} from '@yoroi/types'
 import {useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {BannerIds, showBanner} from '~/features/Notifications/common/banners'
-import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {useWalletEvent} from '~/features/WalletManager/hooks/useWalletEvent'
+import {useSelectedNetwork} from '@yoroi/wallet-manager/hooks/useSelectedNetwork'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
+import {useWalletEvent} from '@yoroi/wallet-manager/hooks/useWalletEvent'
 import {minAdaForGovernanceBanner} from '~/kernel/constants'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
-import {governanceQueryKeys, notificationQueryKeys} from '~/queries'
+import {governanceQueryKeys, notificationQueryKeys} from '~/common/queries'
 
 import {useGovernanceParticipation} from '../common/helpers'
 

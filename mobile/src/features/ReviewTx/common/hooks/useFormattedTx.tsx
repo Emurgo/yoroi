@@ -18,12 +18,12 @@ import * as _ from 'lodash'
 import * as React from 'react'
 
 import {usePortfolioTokenInfos} from '~/features/Portfolio/common/hooks/usePortfolioTokenInfos'
-import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {YoroiWallet} from '~/wallets/cardano/types'
-import {deriveRewardAddressFromAddress} from '~/wallets/cardano/utils'
-import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
-import {asQuantity} from '~/wallets/utils/utils'
+import {useSelectedNetwork} from '@yoroi/wallet-manager/hooks/useSelectedNetwork'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
+import {YoroiWallet} from '@yoroi/cardano-wallet/types'
+import {deriveRewardAddressFromAddress} from '@yoroi/cardano-wallet/utils'
+import {CardanoMobileWrapped} from '@yoroi/cardano-wallet/wrappedCsl'
+import {asQuantity} from '@yoroi/cardano-wallet/utils/utils'
 
 import {
   FormattedCertificate,

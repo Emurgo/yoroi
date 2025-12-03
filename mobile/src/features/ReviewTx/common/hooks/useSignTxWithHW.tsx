@@ -3,9 +3,9 @@ import {useMutation} from '@tanstack/react-query'
 import * as React from 'react'
 
 import {useConfirmHWConnectionModal} from '~/features/Discover/common/ConfirmHWConnectionModal'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {cip30LedgerExtensionMaker} from '~/wallets/cardano/cip30/cip30-ledger'
-import {BaseLedgerError} from '~/wallets/hw/hw'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
+import {cip30LedgerExtensionMaker} from '@yoroi/cardano-wallet/cip30/cip30-ledger'
+import {BaseLedgerError} from '@yoroi/cardano-wallet/hw/hw'
 
 export type SignTxWithHW = {
   cbor: string

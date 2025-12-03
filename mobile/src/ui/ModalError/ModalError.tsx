@@ -14,7 +14,7 @@ import {
   GeneralConnectionError,
   LedgerUserError,
   RejectedByUserError,
-} from '~/wallets/hw/hw'
+} from '@yoroi/cardano-wallet/hw/hw'
 
 type Props = {
   error: Error

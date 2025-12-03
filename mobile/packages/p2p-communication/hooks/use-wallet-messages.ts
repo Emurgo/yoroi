@@ -146,13 +146,13 @@ export const useWalletMessages = (
   const signTransaction = useCallback(
     (txData: unknown = null): boolean => {
       if (!connected || !walletCommunication) {
-        logger.debug('Cannot sign tx: Not connected to wallet', {
+        getLogger().debug('Cannot sign tx: Not connected to wallet', {
           origin: 'p2p-communication',
         })
         return false
       }
 
-      logger.log('Sending sign transaction request', {
+      getLogger().log('Sending sign transaction request', {
         origin: 'p2p-communication',
       })
       const success = walletCommunication.signTransaction(txData)
@@ -161,7 +161,7 @@ export const useWalletMessages = (
         addMessage('dApp', 'Requesting transaction signature...')
         setStatus('initializing')
       } else {
-        logger.error('Failed to send transaction signing request', {
+        getLogger().error('Failed to send transaction signing request', {
           origin: 'p2p-communication',
         })
       }

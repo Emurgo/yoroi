@@ -4,7 +4,7 @@ import * as React from 'react'
 import {WebView, WebViewMessageEvent} from 'react-native-webview'
 
 import {logger} from '~/kernel/logger/logger'
-import {YoroiWallet} from '~/wallets/cardano/types'
+import {YoroiWallet} from '@yoroi/cardano-wallet/types'
 
 import {useWalletNameOverride} from './WalletNameOverrideContext'
 import {walletConfig} from './wallet-config'

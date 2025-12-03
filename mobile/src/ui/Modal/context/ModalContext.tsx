@@ -4,7 +4,7 @@ import * as React from 'react'
 import {Keyboard} from 'react-native'
 
 import {useAuth} from '~/features/Auth/context/AuthProvider'
-import {useIsKeyboardOpen} from '~/hooks/useIsKeyboardOpen'
+import {useIsKeyboardOpen} from '~/common/hooks/useIsKeyboardOpen'
 import {logger} from '~/kernel/logger/logger'
 
 type ModalQueueItem = {

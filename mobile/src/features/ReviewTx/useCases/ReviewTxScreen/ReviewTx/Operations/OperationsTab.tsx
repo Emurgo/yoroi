@@ -12,7 +12,7 @@ import {Accordion} from '~/ui/Accordion/Accordion'
 import {Copiable} from '~/ui/Copiable/Copiable'
 import {Divider} from '~/ui/Divider/Divider'
 import {Space} from '~/ui/Space/Space'
-import {formatTokenWithText} from '~/wallets/utils/format'
+import {formatTokenWithText} from '@yoroi/cardano-wallet/utils/format'
 
 export const OperationsTab = ({
   tx,

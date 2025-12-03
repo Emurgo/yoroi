@@ -24,8 +24,8 @@ import {
 } from 'rxjs'
 
 import {useAuth} from '~/features/Auth/context/AuthProvider'
-import {useWalletManagerSelector} from '~/features/WalletManager/context/WalletManagerProvider'
-import {useSelectWalletModal} from '~/features/WalletManager/ui/modals/SelectWalletModal'
+import {useWalletManagerSelector} from '@yoroi/wallet-manager/context/WalletManagerProvider'
+import {useSelectWalletModal} from '@yoroi/wallet-manager/ui/modals/SelectWalletModal'
 import {logger} from '~/kernel/logger/logger'
 import {isWalletSelectionRoute} from '~/kernel/navigation/common/helpers'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'

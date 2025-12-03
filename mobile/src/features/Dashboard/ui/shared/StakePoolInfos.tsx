@@ -6,9 +6,9 @@ import * as React from 'react'
 import {ActivityIndicator, View} from 'react-native'
 
 import {useStakingInfo} from '~/features/Staking/hooks/useStakingInfo'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 import {ButtonProps} from '~/ui/Button/Button'
-import {YoroiWallet} from '~/wallets/cardano/types'
+import {YoroiWallet} from '@yoroi/cardano-wallet/types'
 
 import {StakePoolInfo} from './StakePoolInfo'
 

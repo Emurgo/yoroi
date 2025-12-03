@@ -7,11 +7,11 @@ import {freeze, produce} from 'immer'
 import * as React from 'react'
 import {merge, switchMap} from 'rxjs'
 
-import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
-import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
+import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
+import {useSelectedNetwork} from '@yoroi/wallet-manager/hooks/useSelectedNetwork'
 import {logger} from '~/kernel/logger/logger'
-import {portfolioQueryKeys} from '~/queries'
-import {throttle} from '~/utils/rxjs-operators'
+import {portfolioQueryKeys} from '~/common/queries'
+import {throttle} from '~/common/utils/rxjs-operators'
 
 const queryKey = portfolioQueryKeys.tokenActivityBase()
 const defaultPortfolioTokenActivityState: PortfolioTokenActivityState = freeze(

@@ -6,7 +6,7 @@ import * as React from 'react'
 import {AppState} from 'react-native'
 
 import {useAuth} from '~/features/Auth/context/AuthProvider'
-import {settingsQueryKeys} from '~/queries'
+import {settingsQueryKeys} from '~/common/queries'
 
 export const useFirebaseConfig = () => {
   const [hasPermission, setHasPermission] = React.useState(false)

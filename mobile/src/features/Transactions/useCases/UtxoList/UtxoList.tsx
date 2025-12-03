@@ -4,7 +4,7 @@ import {FlashList} from '@shopify/flash-list'
 import * as React from 'react'
 import {View} from 'react-native'
 
-import {useAddressMode} from '~/features/WalletManager/hooks/useAddressMode'
+import {useAddressMode} from '@yoroi/wallet-manager/hooks/useAddressMode'
 import {features} from '~/kernel/features'
 import {Space} from '~/ui/Space/Space'
 

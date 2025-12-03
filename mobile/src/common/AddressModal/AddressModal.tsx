@@ -6,7 +6,7 @@ import * as React from 'react'
 import {Linking, Text, View} from 'react-native'
 import QRCode from 'react-native-qrcode-svg'
 
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {isEmptyString} from '~/kernel/utils'
 import {Button, ButtonType} from '~/ui/Button/Button'
@@ -15,7 +15,7 @@ import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {
   getSpendingKey,
   getStakingKey,
-} from '~/wallets/cardano/addressInfo/addressInfo'
+} from '@yoroi/cardano-wallet/addressInfo/addressInfo'
 
 type Path = {
   account: number

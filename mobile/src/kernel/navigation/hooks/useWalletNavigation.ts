@@ -4,7 +4,7 @@ import {NavigatorScreenParams, useNavigation} from '@react-navigation/native'
 import * as Linking from 'expo-linking'
 import * as React from 'react'
 
-import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
+import {useSelectedNetwork} from '@yoroi/wallet-manager/hooks/useSelectedNetwork'
 
 import {ReviewTxRoutes, SettingsStackRoutes, WalletStackRoutes} from '../types'
 

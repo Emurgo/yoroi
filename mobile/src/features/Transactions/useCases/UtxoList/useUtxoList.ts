@@ -6,9 +6,9 @@ import {rawUtxoToModernUtxo} from '@yoroi/tx'
 
 import {useQuery, useQueryClient} from '@tanstack/react-query'
 
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {useWalletEvent} from '~/features/WalletManager/hooks/useWalletEvent'
-import {utxoQueryKeys} from '~/queries'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
+import {useWalletEvent} from '@yoroi/wallet-manager/hooks/useWalletEvent'
+import {utxoQueryKeys} from '~/common/queries'
 
 export const useUtxoList = () => {
   const {

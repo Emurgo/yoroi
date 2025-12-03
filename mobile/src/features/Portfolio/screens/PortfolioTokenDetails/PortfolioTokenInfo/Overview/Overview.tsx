@@ -5,7 +5,7 @@ import React, {useState} from 'react'
 import {Linking, Text, TouchableOpacity, View} from 'react-native'
 
 import {usePortfolioTokenDetailParams} from '~/features/Portfolio/common/hooks/useNavigateTo'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 import {features} from '~/kernel/features'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Accordion} from '~/ui/Accordion/Accordion'
@@ -13,7 +13,7 @@ import {Copiable} from '~/ui/Copiable/Copiable'
 import {ExplorerInfoLinks} from '~/ui/ExplorerInfoLinks/ExplorerInfoLinks'
 import {Space} from '~/ui/Space/Space'
 import {TokenInfoIcon} from '~/ui/TokenInfoIcon/TokenInfoIcon'
-import {isEmptyString} from '~/wallets/utils/string'
+import {isEmptyString} from '@yoroi/cardano-wallet/utils/string'
 
 import {TokenNews} from './TokenNews'
 

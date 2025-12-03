@@ -7,7 +7,7 @@ import {Text, TouchableOpacity, View} from 'react-native'
 
 import {usePortfolioPrimaryBalance} from '~/features/Portfolio/common/hooks/usePortfolioPrimaryBalance'
 import {usePrivacyMode} from '~/features/Settings/hooks/usePrivacyMode'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 import {ResetErrorRef} from '~/ui/Boundary/Boundary'
 import {Icon} from '~/ui/Icon'
 import {PairedBalance} from '~/ui/PairedBalance/PairedBalance'

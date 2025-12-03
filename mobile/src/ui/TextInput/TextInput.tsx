@@ -16,7 +16,7 @@ import {
 } from 'react-native-paper'
 
 import {Icon} from '~/ui/Icon'
-import {isEmptyString} from '~/wallets/utils/string'
+import {isEmptyString} from '@yoroi/cardano-wallet/utils/string'
 
 export type TextInputProps = RNTextInputProps &
   Omit<React.ComponentProps<typeof RNPTextInput>, 'theme'> & {

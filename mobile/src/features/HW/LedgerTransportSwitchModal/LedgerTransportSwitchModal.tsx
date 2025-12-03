@@ -7,7 +7,7 @@ import DeviceInfo from 'react-native-device-info'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
 import {Space} from '~/ui/Space/Space'
-import {HARDWARE_WALLETS, useLedgerPermissions} from '~/wallets/hw/hw'
+import {HARDWARE_WALLETS, useLedgerPermissions} from '@yoroi/cardano-wallet/hw/hw'
 
 type Props = {
   onSelectUSB: () => void

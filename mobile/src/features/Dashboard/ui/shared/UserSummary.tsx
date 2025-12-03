@@ -4,15 +4,15 @@ import * as React from 'react'
 import {View} from 'react-native'
 
 import {usePrivacyMode} from '~/features/Settings/hooks/usePrivacyMode'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button, ButtonProps, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
 import {TitledCard} from '~/ui/TitledCard/TitledCard'
-import {formatAdaWithText} from '~/wallets/utils/format'
-import {asQuantity} from '~/wallets/utils/utils'
+import {formatAdaWithText} from '@yoroi/cardano-wallet/utils/format'
+import {asQuantity} from '@yoroi/cardano-wallet/utils/utils'
 
 const ICON_DIM = 44
 

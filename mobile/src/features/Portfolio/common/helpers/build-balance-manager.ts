@@ -5,7 +5,7 @@ import {
 } from '@yoroi/portfolio'
 import {App, Portfolio} from '@yoroi/types'
 
-import {YoroiWallet} from '~/wallets/cardano/types'
+import {YoroiWallet} from '@yoroi/cardano-wallet/types'
 
 export const buildPortfolioBalanceManager =
   ({

@@ -2,7 +2,7 @@ import {isNft} from '@yoroi/portfolio'
 import {handleApiConfig} from '@yoroi/resolver'
 import {Balance, Portfolio} from '@yoroi/types'
 
-import {YoroiWallet} from '~/wallets/cardano/types'
+import {YoroiWallet} from '@yoroi/cardano-wallet/types'
 
 /**
  * Extract policy ID from token ID

@@ -6,7 +6,7 @@
 import {CredKind} from '@emurgo/cross-csl-core'
 
 import {logger} from '~/kernel/logger/logger'
-import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
+import {CardanoMobileWrapped} from '@yoroi/cardano-wallet/wrappedCsl'
 
 export type SmartContractInfo = {
   address: string

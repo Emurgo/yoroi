@@ -6,7 +6,7 @@ import {TouchableOpacity, View} from 'react-native'
 import {Hr} from '~/ui/Hr/Hr'
 import {Icon} from '~/ui/Icon'
 import {Text} from '~/ui/Text/Text'
-import {isEmptyString} from '~/wallets/utils/string'
+import {isEmptyString} from '@yoroi/cardano-wallet/utils/string'
 
 type SettingsSectionProps = React.PropsWithChildren<{
   title?: string

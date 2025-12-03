@@ -3,7 +3,7 @@ import {InteractionManager} from 'react-native'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useModal} from '~/ui/Modal/context/ModalContext'
-import {isEmptyString} from '~/wallets/utils/string'
+import {isEmptyString} from '@yoroi/cardano-wallet/utils/string'
 
 import {AskToRedirectModal} from '../ui/modals/AskToRedirectModal'
 

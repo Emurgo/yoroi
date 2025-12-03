@@ -4,7 +4,7 @@ import {App} from '@yoroi/types'
 import {freeze} from 'immer'
 import * as React from 'react'
 
-import {useBackgroundTimer} from '~/hooks/useBackgroundTimer'
+import {useBackgroundTimer} from '~/common/hooks/useBackgroundTimer'
 import {isDev} from '~/kernel/constants'
 import {decryptData} from '~/kernel/crypto/decrypt-data'
 import {encryptData} from '~/kernel/crypto/encrypt-data'

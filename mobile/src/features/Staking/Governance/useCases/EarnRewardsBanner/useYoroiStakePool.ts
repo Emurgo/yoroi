@@ -4,8 +4,8 @@ import {poolInfoApiMaker} from '@yoroi/staking'
 import {useQuery} from '@tanstack/react-query'
 import * as React from 'react'
 
-import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useSelectedNetwork} from '@yoroi/wallet-manager/hooks/useSelectedNetwork'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 
 /**
  * Returns the first Yoroi stake pool ID from pool transition info for the Earn Rewards Banner.

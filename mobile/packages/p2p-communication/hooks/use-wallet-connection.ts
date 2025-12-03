@@ -41,13 +41,13 @@ export const useWalletConnection = (
       return
     }
 
-    logger.log('Initializing wallet connection', {
+    getLogger().log('Initializing wallet connection', {
       origin: 'p2p-communication',
       status: walletCommunication.isConnected() ? 'connected' : 'disconnected',
     })
 
     if (walletCommunication.isConnected()) {
-      logger.debug('Wallet is already connected!', {
+      getLogger().debug('Wallet is already connected!', {
         origin: 'p2p-communication',
       })
       setConnected(true)
@@ -56,7 +56,7 @@ export const useWalletConnection = (
 
     const onConnect: EventCallback<string> = (id?: string): void => {
       if (!id) return
-      logger.log('Wallet connection established in hook', {
+      getLogger().log('Wallet connection established in hook', {
         origin: 'p2p-communication',
         walletId: id,
       })
@@ -67,14 +67,14 @@ export const useWalletConnection = (
     }
 
     const onDisconnect: EventCallback<void> = (): void => {
-      logger.log('Wallet disconnected', {origin: 'p2p-communication'})
+      getLogger().log('Wallet disconnected', {origin: 'p2p-communication'})
       setConnected(false)
       setStatus('disconnected')
     }
 
     const onError: EventCallback<Error> = (err?: Error): void => {
       if (!err) return
-      logger.error(err, {
+      getLogger().error(err, {
         origin: 'p2p-communication',
         operation: 'useWalletConnection',
       })
@@ -105,7 +105,7 @@ export const useWalletConnection = (
       return
     }
 
-    logger.log('Disconnecting from wallet...', {origin: 'p2p-communication'})
+    getLogger().log('Disconnecting from wallet...', {origin: 'p2p-communication'})
     if (walletCommunication.isConnected()) {
       try {
         walletCommunication.disconnect()

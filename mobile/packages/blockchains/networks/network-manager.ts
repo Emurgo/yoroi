@@ -36,7 +36,7 @@ export function buildNetworkManagers({
       const api = {
         protocolParams: () =>
           getProtocolParams().catch((error) => {
-            logger.error(
+            getLogger().error(
               `networkManager: ${network} protocolParams has failed, using hardcoded`,
               {error},
             )

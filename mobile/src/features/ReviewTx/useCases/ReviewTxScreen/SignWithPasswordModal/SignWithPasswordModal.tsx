@@ -8,7 +8,7 @@ import {ActivityIndicator, TextInput as RNTextInput, View} from 'react-native'
 
 import {useSignTxWithPassword} from '~/features/Transactions/hooks/useSignTxWithPassword'
 import {useSubmitTx} from '~/features/Transactions/hooks/useSubmitTx'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 import {debugWalletInfo, features} from '~/kernel/features'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'

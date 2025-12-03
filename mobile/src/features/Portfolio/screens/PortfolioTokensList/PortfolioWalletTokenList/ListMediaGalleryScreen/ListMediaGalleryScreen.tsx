@@ -13,7 +13,7 @@ import {useNavigateTo} from '~/features/Portfolio/common/navigation'
 import {MediaGallery} from '~/features/Portfolio/ui/MediaGallery/MediaGallery'
 import {useSearch, useSearchOnNavBar} from '~/features/Search/SearchContext'
 import {NetworkTag} from '~/features/Settings/ui/shared/NetworkTag'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Space} from '~/ui/Space/Space'
 

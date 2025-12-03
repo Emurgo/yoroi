@@ -30,7 +30,7 @@ import {useInitNotifications} from '~/features/Notifications/common/hooks'
 import {NotificationUIHandler} from '~/features/Notifications/useCases/NotificationUIHandler'
 import {NotificationsDevScreen} from '~/features/Notifications/useCases/NotificationsDevScreen'
 import {SetupWalletNavigator} from '~/features/SetupWallet/SetupWalletNavigator'
-import {useHasWallets} from '~/features/WalletManager/hooks/useHasWallets'
+import {useHasWallets} from '@yoroi/wallet-manager/hooks/useHasWallets'
 
 import {agreementDate} from '../constants'
 import {features} from '../features'

@@ -6,15 +6,15 @@ import {UseQueryOptions, useQuery} from '@tanstack/react-query'
 import * as React from 'react'
 import {ActivityIndicator, Linking, View} from 'react-native'
 
-import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useSelectedNetwork} from '@yoroi/wallet-manager/hooks/useSelectedNetwork'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button, ButtonProps, ButtonType} from '~/ui/Button/Button'
 import {Copiable} from '~/ui/Copiable/Copiable'
 import {Text} from '~/ui/Text/Text'
 import {TitledCard} from '~/ui/TitledCard/TitledCard'
-import {YoroiWallet} from '~/wallets/cardano/types'
-import {isEmptyString} from '~/wallets/utils/string'
+import {YoroiWallet} from '@yoroi/cardano-wallet/types'
+import {isEmptyString} from '@yoroi/cardano-wallet/utils/string'
 
 type StakePoolInfoProps = {
   stakePoolId: string

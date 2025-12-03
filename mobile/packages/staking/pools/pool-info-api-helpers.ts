@@ -94,7 +94,7 @@ export async function getManyChainPoolInfoBatch({
       return [hash, chainInfo] as [string, FullChainPoolInfo | null]
     } catch (e) {
       const logger = getLogger()
-      logger.error(e instanceof Error ? e : new Error(String(e)), {
+      getLogger().error(e instanceof Error ? e : new Error(String(e)), {
         origin: 'staking',
         operation: 'getManyChainPoolInfoBatch',
         hash,
@@ -185,7 +185,7 @@ export async function getPoolTransitionInfo({
     }
   } catch (e) {
     const logger = getLogger()
-    logger.error(e instanceof Error ? e : new Error(String(e)), {
+    getLogger().error(e instanceof Error ? e : new Error(String(e)), {
       origin: 'staking',
       operation: 'getPoolTransitionInfo',
     })

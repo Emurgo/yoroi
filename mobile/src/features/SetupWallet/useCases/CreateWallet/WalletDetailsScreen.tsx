@@ -20,10 +20,10 @@ import {
 import {useAnalyticsTracking} from '~/features/Analytics/hooks/useAnalyticsTracking'
 import {AnalyticsEventEnum} from '~/features/Analytics/types/analytics-event-enum'
 import {YoroiHelpLink} from '~/features/SetupWallet/common/constants'
-import {parseWalletMeta} from '~/features/WalletManager/common/validators/wallet-meta'
-import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
-import {useCreateWalletMnemonic} from '~/features/WalletManager/hooks/useCreateWalletMnemonic'
-import {useBold} from '~/hooks/useBold'
+import {parseWalletMeta} from '@yoroi/wallet-manager/common/validators/wallet-meta'
+import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
+import {useCreateWalletMnemonic} from '@yoroi/wallet-manager/hooks/useCreateWalletMnemonic'
+import {useBold} from '~/common/hooks/useBold'
 import {requiredPasswordLength} from '~/kernel/constants'
 import {showErrorDialog} from '~/kernel/dialogs'
 import {debugWalletInfo, features} from '~/kernel/features'
@@ -42,12 +42,12 @@ import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
 import {StepperProgress} from '~/ui/StepperProgress/StepperProgress'
 import {TextInput} from '~/ui/TextInput/TextInput'
-import {isEmptyString} from '~/wallets/utils/string'
+import {isEmptyString} from '@yoroi/cardano-wallet/utils/string'
 import {
   getWalletNameError,
   validatePassword,
   validateWalletName,
-} from '~/wallets/utils/validators'
+} from '@yoroi/cardano-wallet/utils/validators'
 
 const useSizeModal = () => {
   const heightScreen = useWindowDimensions().height

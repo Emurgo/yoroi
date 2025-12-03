@@ -10,7 +10,7 @@ import {
   WalletTransaction,
 } from '@yoroi/types'
 
-import {Amounts, Quantities, asQuantity} from '~/wallets/utils/utils'
+import {Amounts, Quantities, asQuantity} from '@yoroi/cardano-wallet/utils/utils'
 
 import {TransactionSummary} from './types'
 

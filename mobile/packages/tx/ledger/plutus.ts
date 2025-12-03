@@ -101,7 +101,7 @@ export const createLedgerPlutusPayload = async (
       const txIndex = input.index()
       const path = getAddressingPath(txId, txIndex)
       if (!path) {
-        logger.warn(
+        getLogger().warn(
           'createLedgerPlutusPayload: Could not find addressing path for transaction input',
           {
             txId,

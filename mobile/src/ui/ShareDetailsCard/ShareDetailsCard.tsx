@@ -8,7 +8,7 @@ import {useLastDateAddressUsed} from '~/features/Receive/common/ShareDetailsCard
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Copiable} from '~/ui/Copiable/Copiable'
 import {Text} from '~/ui/Text/Text'
-import {isEmptyString} from '~/wallets/utils/string'
+import {isEmptyString} from '@yoroi/cardano-wallet/utils/string'
 
 type AddressDetailsProps = {
   address: string

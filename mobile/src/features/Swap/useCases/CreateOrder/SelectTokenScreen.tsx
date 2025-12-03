@@ -16,7 +16,7 @@ import {usePortfolioTokenActivity} from '~/features/Portfolio/context/PortfolioT
 import {useSearch, useSearchOnNavBar} from '~/features/Search/SearchContext'
 import {filterBySearch} from '~/features/Swap/common/filterBySearch'
 import {useSwap} from '~/features/Swap/common/useSwap'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useUnsafeParams} from '~/kernel/navigation/hooks/useUnsafeParams'
 import {SwapTokenRoutes} from '~/kernel/navigation/types'

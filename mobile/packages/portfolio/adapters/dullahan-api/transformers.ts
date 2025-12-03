@@ -29,7 +29,7 @@ export const toSecondaryTokenInfos = (
 
       if (!parseSecondaryTokenInfoWithCacheRecord(castedTokenInfoWithCache)) {
         const logger = getLogger()
-        logger.warn('Failed to transform token info', {
+        getLogger().warn('Failed to transform token info', {
           origin: 'portfolio',
           tokenId: id,
         })

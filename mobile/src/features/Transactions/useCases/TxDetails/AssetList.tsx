@@ -9,13 +9,13 @@ import * as React from 'react'
 import {FlatList, Text, TouchableOpacity, View} from 'react-native'
 
 import {usePrivacyMode} from '~/features/Settings/hooks/usePrivacyMode'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Boundary} from '~/ui/Boundary/Boundary'
-import {CardanoTypes} from '~/wallets/cardano/types'
-import {formatTokenAmount} from '~/wallets/utils/format'
-import {isEmptyString} from '~/wallets/utils/string'
-import {asQuantity} from '~/wallets/utils/utils'
+import {CardanoTypes} from '@yoroi/cardano-wallet/types'
+import {formatTokenAmount} from '@yoroi/cardano-wallet/utils/format'
+import {isEmptyString} from '@yoroi/cardano-wallet/utils/string'
+import {asQuantity} from '@yoroi/cardano-wallet/utils/utils'
 
 type AssetListProps = {
   assets: Array<CardanoTypes.TokenEntry>

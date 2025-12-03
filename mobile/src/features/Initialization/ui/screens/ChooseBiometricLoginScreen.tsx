@@ -12,7 +12,7 @@ import * as DeviceInfo from 'react-native-device-info'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useAuth} from '~/features/Auth/context/AuthProvider'
-import {usePromise} from '~/hooks/usePromise'
+import {usePromise} from '~/common/hooks/usePromise'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 import {Button, ButtonType} from '~/ui/Button/Button'

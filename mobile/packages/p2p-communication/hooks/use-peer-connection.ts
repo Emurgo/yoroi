@@ -29,13 +29,13 @@ export const usePeerConnection = (
     }
 
     if (isReady) {
-      logger.debug('Peer connection already connected', {
+      getLogger().debug('Peer connection already connected', {
         origin: 'p2p-communication',
       })
       return
     }
 
-    logger.log('Attempting to reconnect peer connection...', {
+    getLogger().log('Attempting to reconnect peer connection...', {
       origin: 'p2p-communication',
     })
     setStatus('initializing')
@@ -48,20 +48,20 @@ export const usePeerConnection = (
     }
 
     if (listenerSetupRef.current) {
-      logger.debug(
+      getLogger().debug(
         'Peer connection listeners already set up, skipping duplicate setup',
         {origin: 'p2p-communication'},
       )
       return
     }
 
-    logger.log('Setting up peer connection event listeners', {
+    getLogger().log('Setting up peer connection event listeners', {
       origin: 'p2p-communication',
     })
     listenerSetupRef.current = true
 
     if (peerConnection.isReady()) {
-      logger.debug('Peer connection already connected, syncing state', {
+      getLogger().debug('Peer connection already connected, syncing state', {
         origin: 'p2p-communication',
       })
       setPeerId(peerConnection.getPeerId())
@@ -71,7 +71,7 @@ export const usePeerConnection = (
 
     const onOpen: EventCallback<string> = (id?: string): void => {
       if (!id) return
-      logger.log('Peer connection open event - ready for connections', {
+      getLogger().log('Peer connection open event - ready for connections', {
         origin: 'p2p-communication',
         peerId: id,
       })
@@ -83,7 +83,7 @@ export const usePeerConnection = (
 
     const onError: EventCallback<Error> = (err?: Error): void => {
       if (!err) return
-      logger.error(err, {
+      getLogger().error(err, {
         origin: 'p2p-communication',
         operation: 'usePeerConnection',
       })
@@ -93,7 +93,7 @@ export const usePeerConnection = (
     }
 
     const onDisconnected: EventCallback<void> = (): void => {
-      logger.log('Peer connection disconnected from server', {
+      getLogger().log('Peer connection disconnected from server', {
         origin: 'p2p-communication',
       })
       setStatus('disconnected')
@@ -101,7 +101,7 @@ export const usePeerConnection = (
     }
 
     const onClose: EventCallback<void> = (): void => {
-      logger.log('Peer connection closed', {origin: 'p2p-communication'})
+      getLogger().log('Peer connection closed', {origin: 'p2p-communication'})
       setStatus('closed')
       setIsReady(false)
     }
@@ -115,7 +115,7 @@ export const usePeerConnection = (
     peerConnection.on('close', onClose as EventCallback)
 
     return () => {
-      logger.debug('Cleaning up peer connection event listeners', {
+      getLogger().debug('Cleaning up peer connection event listeners', {
         origin: 'p2p-communication',
       })
 
@@ -138,7 +138,7 @@ export const usePeerConnection = (
 
     const handleVisibilityChange = (): void => {
       if (document.visibilityState === 'visible' && status === 'disconnected') {
-        logger.log('Tab became visible, attempting reconnect', {
+        getLogger().log('Tab became visible, attempting reconnect', {
           origin: 'p2p-communication',
         })
         handleReconnect()

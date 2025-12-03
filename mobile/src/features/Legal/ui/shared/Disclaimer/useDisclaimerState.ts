@@ -6,7 +6,7 @@ import {
 
 import {useSuspenseQuery} from '@tanstack/react-query'
 
-import {legalQueryKeys} from '~/queries'
+import {legalQueryKeys} from '~/common/queries'
 
 import {Disclaimer} from '../../../common/types'
 

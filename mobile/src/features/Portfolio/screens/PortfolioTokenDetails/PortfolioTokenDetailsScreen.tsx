@@ -12,7 +12,7 @@ import {
 } from '~/features/Portfolio/context/PortfolioProvider'
 import {TxFilter} from '~/features/Transactions/useCases/TxList/TxFilterProvider'
 import {TxList} from '~/features/Transactions/useCases/TxList/TxList'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {throwLoggedError} from '~/kernel/logger/helpers/throw-logged-error'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'

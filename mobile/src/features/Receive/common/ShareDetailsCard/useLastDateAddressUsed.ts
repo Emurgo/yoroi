@@ -1,7 +1,7 @@
 import * as React from 'react'
 import {useIntl} from 'react-intl'
 
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 
 export const useLastDateAddressUsed = (address: string) => {
   const {wallet} = useSelectedWallet()

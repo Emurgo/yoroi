@@ -5,7 +5,7 @@ import {
 } from '@yoroi/common'
 import {App} from '@yoroi/types'
 
-import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
+import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
 
 export const useChangeNotificationDisplaySettings = () => {
   const storage = useAsyncStorage()

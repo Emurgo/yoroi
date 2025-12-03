@@ -13,21 +13,21 @@ import {Text, TouchableOpacity, View, ViewProps} from 'react-native'
 import {useCurrencyPairing} from '~/features/Settings/context/CurrencyProvider'
 import {usePrivacyMode} from '~/features/Settings/hooks/usePrivacyMode'
 import {TransactionSummary} from '~/features/Transactions/common/types'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {TxHistoryRouteNavigation} from '~/kernel/navigation/types'
 import {Boundary, ResetError} from '~/ui/Boundary/Boundary'
 import {Icon} from '~/ui/Icon'
 import {styleMap} from '~/ui/Icon/Direction'
 import {BalanceError} from '~/ui/PairedBalance/PairedBalance'
-import {YoroiWallet} from '~/wallets/cardano/types'
+import {YoroiWallet} from '@yoroi/cardano-wallet/types'
 import {
   formatDateRelative,
   formatTime,
   formatTokenFractional,
   formatTokenInteger,
-} from '~/wallets/utils/format'
-import {Amounts, Quantities, asQuantity} from '~/wallets/utils/utils'
+} from '@yoroi/cardano-wallet/utils/format'
+import {Amounts, Quantities, asQuantity} from '@yoroi/cardano-wallet/utils/utils'
 
 import {getOperationDisplayText} from '../../common/operationDisplay'
 import {useTxFilter} from './TxFilterProvider'

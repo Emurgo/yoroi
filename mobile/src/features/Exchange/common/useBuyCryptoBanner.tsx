@@ -7,11 +7,11 @@ import * as React from 'react'
 
 import {BannerIds, showBanner} from '~/features/Notifications/common/banners'
 import {useBalances} from '~/features/Portfolio/common/hooks/useBalances'
-import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {useWalletEvent} from '~/features/WalletManager/hooks/useWalletEvent'
+import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
+import {useWalletEvent} from '@yoroi/wallet-manager/hooks/useWalletEvent'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {Amounts, Quantities} from '~/wallets/utils/utils'
+import {Amounts, Quantities} from '@yoroi/cardano-wallet/utils/utils'
 
 export const useBuyCryptoBanner = () => {
   const {wallet} = useSelectedWallet()

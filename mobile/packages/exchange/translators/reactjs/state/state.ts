@@ -126,7 +126,7 @@ export const exchangeInitialExchangeContext: ExchangeContext = freeze(
 /* istanbul ignore next */
 function missingInit() {
   const logger = getLogger()
-  logger.error('[ExchangeContext] missing initialization', {
+  getLogger().error('[ExchangeContext] missing initialization', {
     origin: 'exchange',
   })
 }

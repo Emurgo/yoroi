@@ -11,7 +11,7 @@ import {TextInput} from '~/ui/TextInput/TextInput'
 import {
   isValidPoolIdOrHash,
   normalizeToPoolHash,
-} from '~/wallets/cardano/delegationUtils'
+} from '@yoroi/cardano-wallet/delegationUtils'
 
 type Props = {
   onPressDelegate: (poolHash: string) => void

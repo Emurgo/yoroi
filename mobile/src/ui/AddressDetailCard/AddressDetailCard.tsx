@@ -11,8 +11,8 @@ import {Space} from '~/ui/Space/Space'
 import {
   getSpendingKey,
   getStakingKey,
-} from '~/wallets/cardano/addressInfo/addressInfo'
-import {isEmptyString} from '~/wallets/utils/string'
+} from '@yoroi/cardano-wallet/addressInfo/addressInfo'
+import {isEmptyString} from '@yoroi/cardano-wallet/utils/string'
 
 import {ShareDetailsCard} from '../ShareDetailsCard/ShareDetailsCard'
 import {ShareQRCodeCard} from '../ShareQRCodeCard/ShareQRCodeCard'

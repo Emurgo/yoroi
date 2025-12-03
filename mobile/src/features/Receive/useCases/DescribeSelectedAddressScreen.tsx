@@ -5,7 +5,7 @@ import * as React from 'react'
 import {GestureResponderEvent, ScrollView} from 'react-native'
 
 import {useCopy} from '~/features/Copy/context/CopyProvider'
-import {useAddressMode} from '~/features/WalletManager/hooks/useAddressMode'
+import {useAddressMode} from '@yoroi/wallet-manager/hooks/useAddressMode'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {AddressDetailCard} from '~/ui/AddressDetailCard/AddressDetailCard'
 import {Button, ButtonType} from '~/ui/Button/Button'
@@ -17,7 +17,7 @@ import {
   singleOrMultipleAddressesModalHeight,
 } from '~/ui/SingleOrMultipleAddressesModal/SingleOrMultipleAddressesModal'
 import {SkeletonAdressDetail} from '~/ui/SkeletonAddressDetail/SkeletonAddressDetail'
-import {isEmptyString} from '~/wallets/utils/string'
+import {isEmptyString} from '@yoroi/cardano-wallet/utils/string'
 
 import {useReceive} from '../common/ReceiveProvider'
 import {useMultipleAddressesInfo} from '../common/useMultipleAddressesInfo'

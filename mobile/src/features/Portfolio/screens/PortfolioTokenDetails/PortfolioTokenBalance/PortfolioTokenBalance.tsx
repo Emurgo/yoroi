@@ -5,7 +5,7 @@ import * as React from 'react'
 import {Text, View} from 'react-native'
 
 import {usePortfolioTokenDetailParams} from '~/features/Portfolio/common/hooks/useNavigateTo'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 import {LoadingBoundary} from '~/ui/Boundary/Boundary'
 import {PairedBalance} from '~/ui/PairedBalance/PairedBalance'
 

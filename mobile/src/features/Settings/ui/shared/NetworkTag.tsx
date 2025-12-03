@@ -13,8 +13,8 @@ import {
 } from 'react-native'
 
 import {useAuth} from '~/features/Auth/context/AuthProvider'
-import {availableNetworks} from '~/features/WalletManager/common/constants'
-import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
+import {availableNetworks} from '@yoroi/wallet-manager/common/constants'
+import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Button, ButtonType} from '~/ui/Button/Button'

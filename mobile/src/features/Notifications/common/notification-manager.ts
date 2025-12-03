@@ -3,7 +3,7 @@ import {Notifications} from '@yoroi/types'
 
 import * as React from 'react'
 
-import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
+import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
 
 import {bannerTriggersSubject} from './banners'
 import {primaryTokenPriceChangedSubject} from './primary-token-price-changed-notification'

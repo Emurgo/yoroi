@@ -50,20 +50,20 @@ export const connectionManagerMaker = (
 
   const initialize = async (): Promise<void> => {
     if (state.initialized) {
-      logger.debug('Services already initialized', {
+      getLogger().debug('Services already initialized', {
         origin: 'p2p-communication',
       })
       return
     }
 
     if (state.initPromise) {
-      logger.debug('Services initialization in progress', {
+      getLogger().debug('Services initialization in progress', {
         origin: 'p2p-communication',
       })
       return state.initPromise
     }
 
-    logger.log('Initializing all services centrally', {
+    getLogger().log('Initializing all services centrally', {
       origin: 'p2p-communication',
     })
 
@@ -88,11 +88,11 @@ export const connectionManagerMaker = (
           walletCommunication,
         })
 
-        logger.log('All services initialized successfully', {
+        getLogger().log('All services initialized successfully', {
           origin: 'p2p-communication',
         })
       } catch (error) {
-        logger.error(
+        getLogger().error(
           error instanceof Error ? error : new Error(String(error)),
           {origin: 'p2p-communication', operation: 'initialize'},
         )
@@ -111,7 +111,7 @@ export const connectionManagerMaker = (
       return
     }
 
-    logger.log('Cleaning up all services', {origin: 'p2p-communication'})
+    getLogger().log('Cleaning up all services', {origin: 'p2p-communication'})
 
     if (state.peerConnection) {
       state.peerConnection.destroy()

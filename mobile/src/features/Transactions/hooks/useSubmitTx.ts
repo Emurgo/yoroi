@@ -7,11 +7,11 @@ import * as CSL from '@emurgo/cross-csl-core'
 import {UseMutationOptions} from '@tanstack/react-query'
 
 import {FormattedTx} from '~/features/ReviewTx/common/types'
-import {useWalletManagerSelector} from '~/features/WalletManager/context/WalletManagerProvider'
+import {useWalletManagerSelector} from '@yoroi/wallet-manager/context/WalletManagerProvider'
 import {logger} from '~/kernel/logger/logger'
-import {YoroiWallet} from '~/wallets/cardano/types'
-import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
-import {delay} from '~/wallets/utils/timeUtils'
+import {YoroiWallet} from '@yoroi/cardano-wallet/types'
+import {CardanoMobileWrapped} from '@yoroi/cardano-wallet/wrappedCsl'
+import {delay} from '@yoroi/cardano-wallet/utils/timeUtils'
 
 import {createOptimisticTransactionFromFormattedTx} from '../utils/createOptimisticTransaction'
 

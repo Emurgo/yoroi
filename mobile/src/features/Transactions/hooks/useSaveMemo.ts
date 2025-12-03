@@ -1,7 +1,7 @@
 import * as React from 'react'
 
-import {UsePromiseOptions, usePromise} from '~/hooks/usePromise'
-import {YoroiWallet} from '~/wallets/cardano/types'
+import {UsePromiseOptions, usePromise} from '~/common/hooks/usePromise'
+import {YoroiWallet} from '@yoroi/cardano-wallet/types'
 
 export const useSaveMemo = (
   {wallet}: {wallet: YoroiWallet},

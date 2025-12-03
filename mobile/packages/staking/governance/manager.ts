@@ -82,7 +82,7 @@ class Manager implements GovernanceManager {
     const response = await api.getStakingKeyState(stakeKeyHash)
 
     if (isLeft(response)) {
-      logger.error('Failed to fetch staking key state', {
+      getLogger().error('Failed to fetch staking key state', {
         stakeKeyHash,
         error: response.error,
       })

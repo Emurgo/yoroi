@@ -7,7 +7,7 @@ import {useIsUsbSupported} from '~/features/HW/LedgerTransportSwitchModal/Ledger
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Text} from '~/ui/Text/Text'
-import {HARDWARE_WALLETS, useLedgerPermissions} from '~/wallets/hw/hw'
+import {HARDWARE_WALLETS, useLedgerPermissions} from '@yoroi/cardano-wallet/hw/hw'
 
 import {Space} from '../Space/Space'
 

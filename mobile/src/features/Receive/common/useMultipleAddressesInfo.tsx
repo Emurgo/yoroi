@@ -11,7 +11,7 @@ import {
   useSuspenseQuery,
 } from '@tanstack/react-query'
 
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 
 const isShowingMultipleAddressInfoKey = 'isShowingMultipleAddressesModal'
 

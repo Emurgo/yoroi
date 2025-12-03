@@ -6,7 +6,7 @@ import {Linking, Text, TouchableOpacity, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
 import {useAnalyticsContext} from '~/features/Analytics/context/AnalyticsRootProvider'
-import {useBold} from '~/hooks/useBold'
+import {useBold} from '~/common/hooks/useBold'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 import {metricsConsentRequestedStorageKeyManager} from '~/kernel/storage/storages'

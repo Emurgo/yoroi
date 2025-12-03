@@ -8,9 +8,9 @@ import {ScrollView, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useAuth} from '~/features/Auth/context/AuthProvider'
-import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {usePromise} from '~/hooks/usePromise'
+import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
+import {usePromise} from '~/common/hooks/usePromise'
 import {showErrorDialog} from '~/kernel/dialogs'
 import {errorMessages} from '~/kernel/i18n/messages'
 import {useStrings} from '~/kernel/i18n/useStrings'
@@ -20,7 +20,7 @@ import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingVi
 import {LoadingOverlay} from '~/ui/LoadingOverlay/LoadingOverlay'
 import {Text} from '~/ui/Text/Text'
 import {TextInput} from '~/ui/TextInput/TextInput'
-import {isEmptyString} from '~/wallets/utils/string'
+import {isEmptyString} from '@yoroi/cardano-wallet/utils/string'
 
 export const EnableEasyConfirmationScreen = () => {
   const strings = useStrings()

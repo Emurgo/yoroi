@@ -15,7 +15,7 @@ import {isInsufficientBalanceError} from '~/features/Staking/Governance/common/t
 import {PoolDetailScreen} from '~/features/Staking/Staking/PoolDetails/PoolDetailScreen'
 import {PoolList} from '~/features/Staking/Staking/PoolList/PoolList'
 import {usePrefetchPoolList} from '~/features/Staking/Staking/PoolList/usePoolList'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
@@ -25,7 +25,7 @@ import {useModal} from '~/ui/Modal/context/ModalContext'
 import {
   createCombinedDelegationTxFromWallet,
   createDelegationTxFromWallet,
-} from '~/wallets/cardano/transaction-recipes'
+} from '@yoroi/cardano-wallet/transaction-recipes'
 
 export const StakingCenter = () => {
   const strings = useStrings()

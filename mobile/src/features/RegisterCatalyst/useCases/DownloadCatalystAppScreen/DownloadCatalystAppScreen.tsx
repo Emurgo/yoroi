@@ -23,7 +23,7 @@ import {
 } from '~/features/RegisterCatalyst/common/components'
 import {useCatalystCurrentFund} from '~/features/RegisterCatalyst/common/hooks'
 import {useStakingInfo} from '~/features/Staking/hooks/useStakingInfo'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
 import {CatalystStep1} from '~/ui/CatalystStep1Illustration/CatalystStep1Illustration'

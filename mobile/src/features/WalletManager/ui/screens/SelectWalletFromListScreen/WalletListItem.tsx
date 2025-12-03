@@ -11,15 +11,15 @@ import {
   ChevronRightDarkIllustration,
   ChevronRightGrayIllustration,
 } from '~/features/SetupWallet/illustrations/ChevronRight'
-import {useAutomaticWalletOpener} from '~/features/WalletManager/context/AutomaticWalletOpeningProvider'
-import {useWalletManagerSelector} from '~/features/WalletManager/context/WalletManagerProvider'
-import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
-import {useSyncWalletInfo} from '~/features/WalletManager/hooks/useSyncWalletInfo'
+import {useAutomaticWalletOpener} from '@yoroi/wallet-manager/context/AutomaticWalletOpeningProvider'
+import {useWalletManagerSelector} from '@yoroi/wallet-manager/context/WalletManagerProvider'
+import {useSelectedNetwork} from '@yoroi/wallet-manager/hooks/useSelectedNetwork'
+import {useSyncWalletInfo} from '@yoroi/wallet-manager/hooks/useSyncWalletInfo'
 import {features} from '~/kernel/features'
 import {Icon} from '~/ui/Icon'
 import {Loading} from '~/ui/Loading/Loading'
 import {Space} from '~/ui/Space/Space'
-import {isByron, isShelley} from '~/wallets/cardano/utils'
+import {isByron, isShelley} from '@yoroi/cardano-wallet/utils'
 
 type Props = {
   walletMeta: Wallet.Meta

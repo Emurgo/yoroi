@@ -8,7 +8,7 @@ import {View} from 'react-native'
 import {usePairing} from '~/features/Pairing/context/PairingProvider'
 import {aggregatePrimaryAmount} from '~/features/Portfolio/common/helpers/aggregatePrimaryAmount'
 import {usePortfolioTokenActivity} from '~/features/Portfolio/context/PortfolioTokenActivityProvider'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 import {BalanceCardSkeleton} from '~/ui/BalanceCardSkeleton/BalanceCardSkeleton'
 import {BalanceHeaderCard} from '~/ui/BalanceHeaderCard/BalanceHeaderCard'
 
