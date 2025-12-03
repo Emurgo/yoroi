@@ -1,5 +1,15 @@
 import {cardanoConfig} from '@yoroi/blockchains'
+import {deriveAddressFromXPub} from '@yoroi/cardano-wallet/account-manager/derive-address-from-xpub'
+import {keyManager} from '@yoroi/cardano-wallet/key-manager/key-manager'
+import {WalletEvent, YoroiWallet} from '@yoroi/cardano-wallet/types'
+import {deriveRewardAddressHex} from '@yoroi/cardano-wallet/utils'
+import {
+  validatePassword,
+  validateWalletName,
+} from '@yoroi/cardano-wallet/utils/validators'
+import {CardanoMobileWrapped} from '@yoroi/cardano-wallet/wrappedCsl'
 import {parseSafe} from '@yoroi/common'
+import {getLogger, throwLoggedError} from '@yoroi/common'
 import {Blockies} from '@yoroi/identicon'
 import {Chain, HW, Network, Portfolio, Wallet} from '@yoroi/types'
 
@@ -9,7 +19,7 @@ import {freeze} from 'immer'
 import {BehaviorSubject, Observable, Subscription} from 'rxjs'
 import {v4} from 'uuid'
 
-import {getLogger, throwLoggedError} from '@yoroi/common'
+import {createCardanoWalletDependencies} from '~/common/wallet-dependencies'
 // TODO: Storage dependencies need to be injected via WalletManagerOptions:
 // - makeWalletEncryptedStorage should be passed as a factory function
 // - Keychain should be passed as a dependency (currently using global)
@@ -17,13 +27,6 @@ import {getLogger, throwLoggedError} from '@yoroi/common'
 import {makeWalletEncryptedStorage} from '~/kernel/storage/EncryptedStorage'
 import {Keychain} from '~/kernel/storage/Keychain'
 import {rootStorage} from '~/kernel/storage/storages'
-import {createCardanoWalletDependencies} from '~/common/wallet-dependencies'
-import {deriveAddressFromXPub} from '@yoroi/cardano-wallet/account-manager/derive-address-from-xpub'
-import {keyManager} from '@yoroi/cardano-wallet/key-manager/key-manager'
-import {WalletEvent, YoroiWallet} from '@yoroi/cardano-wallet/types'
-import {deriveRewardAddressHex} from '@yoroi/cardano-wallet/utils'
-import {CardanoMobileWrapped} from '@yoroi/cardano-wallet/wrappedCsl'
-import {validatePassword, validateWalletName} from '@yoroi/cardano-wallet/utils/validators'
 
 import {networkManagers} from './common/constants'
 import {
@@ -243,7 +246,10 @@ export const makeWalletManager = (
     const newMetas = new Map(stateSubjects.walletMetas.value)
     newMetas.set(id, newMeta)
     updateWalletMetas(stateSubjects, newMetas)
-    getLogger().info('WalletManager: update meta', {from: walletMeta, to: newMeta})
+    getLogger().info('WalletManager: update meta', {
+      from: walletMeta,
+      to: newMeta,
+    })
 
     walletsRootStorage.setItem(id, newMeta).catch((error) => {
       getLogger().error(error, {id})
@@ -536,7 +542,9 @@ export const makeWalletManager = (
       const accountPubKeyHex = await encryptedStorage.xpub.read(accountVisual)
 
       if (!accountPubKeyHex)
-        throwLoggedError(getLogger())('WalletManager: loadWallet accountPubKeyHex not found')
+        throwLoggedError(getLogger())(
+          'WalletManager: loadWallet accountPubKeyHex not found',
+        )
 
       const wallet = await walletFactory.build({
         id,
@@ -596,16 +604,22 @@ export const makeWalletManager = (
 
     // State setters
     setSelectedWalletId(id: YoroiWallet['id']) {
-      getLogger().debug('WalletManager: setSelectedWalletId new wallet selected', {
-        id,
-      })
+      getLogger().debug(
+        'WalletManager: setSelectedWalletId new wallet selected',
+        {
+          id,
+        },
+      )
       setSelectedWalletId(stateSubjects, id)
     },
 
     setSelectedNetwork(network: Chain.SupportedNetworks) {
-      getLogger().debug('WalletManager: setSelectedNetwork new network selected', {
-        network,
-      })
+      getLogger().debug(
+        'WalletManager: setSelectedNetwork new network selected',
+        {
+          network,
+        },
+      )
       // Use hydrate logic directly (same as hydrate method below)
       const hydrateFn = async () => {
         const deletedWalletIds = await parseDeletedWalletIds(
@@ -724,9 +738,12 @@ export const makeWalletManager = (
             syncManager?.start()
           })
           .catch((error) => {
-            getLogger().error('WalletManager: Error hydrating wallets for sync', {
-              error,
-            })
+            getLogger().error(
+              'WalletManager: Error hydrating wallets for sync',
+              {
+                error,
+              },
+            )
           })
 
         if (!syncSubscription) {
@@ -968,9 +985,12 @@ export const makeWalletManager = (
           // Ignore if doesn't exist
         })
 
-        getLogger().info('WalletManager: removeWallet successfully deleted wallet', {
-          walletId: id,
-        })
+        getLogger().info(
+          'WalletManager: removeWallet successfully deleted wallet',
+          {
+            walletId: id,
+          },
+        )
       } catch (error) {
         getLogger().error(
           'WalletManager: removeWallet failed to delete wallet files',

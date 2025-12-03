@@ -1,8 +1,7 @@
+import {YoroiWallet} from '@yoroi/cardano-wallet/types'
 import {useObservableValue} from '@yoroi/common'
 
 import * as React from 'react'
-
-import {YoroiWallet} from '@yoroi/cardano-wallet/types'
 
 import {SyncWalletInfo} from '../common/types'
 import {useWalletManager} from '../context/WalletManagerProvider'

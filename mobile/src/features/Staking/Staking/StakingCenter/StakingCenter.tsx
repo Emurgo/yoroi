@@ -1,6 +1,11 @@
+import {
+  createCombinedDelegationTxFromWallet,
+  createDelegationTxFromWallet,
+} from '@yoroi/cardano-wallet/transaction-recipes'
 import {getYoroiDrepIdHex} from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Branded, KeyHash} from '@yoroi/types'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 
 import {useFocusEffect} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
@@ -15,17 +20,12 @@ import {isInsufficientBalanceError} from '~/features/Staking/Governance/common/t
 import {PoolDetailScreen} from '~/features/Staking/Staking/PoolDetails/PoolDetailScreen'
 import {PoolList} from '~/features/Staking/Staking/PoolList/PoolList'
 import {usePrefetchPoolList} from '~/features/Staking/Staking/PoolList/usePoolList'
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {GovernanceRequiredModal} from '~/ui/GovernanceRequiredModal/GovernanceRequiredModal'
 import {LoadingOverlay} from '~/ui/LoadingOverlay/LoadingOverlay'
 import {useModal} from '~/ui/Modal/context/ModalContext'
-import {
-  createCombinedDelegationTxFromWallet,
-  createDelegationTxFromWallet,
-} from '@yoroi/cardano-wallet/transaction-recipes'
 
 export const StakingCenter = () => {
   const strings = useStrings()

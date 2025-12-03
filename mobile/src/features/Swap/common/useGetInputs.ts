@@ -1,12 +1,11 @@
+import {CardanoMobileWrapped} from '@yoroi/cardano-wallet/wrappedCsl'
 import {
   type SelectionStrategy,
   rawUtxoToModernUtxo,
   selectUtxos,
 } from '@yoroi/tx'
 import {Balance, Branded} from '@yoroi/types'
-
 import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
-import {CardanoMobileWrapped} from '@yoroi/cardano-wallet/wrappedCsl'
 
 // Returns empty array if not enough UTXOs are found
 export const useGetInputs = () => {

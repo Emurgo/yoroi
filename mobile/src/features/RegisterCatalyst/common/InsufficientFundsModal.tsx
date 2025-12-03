@@ -1,11 +1,11 @@
 import {amountFormatter} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 
 import * as React from 'react'
 import {Text} from 'react-native'
 
 import {usePortfolioPrimaryBalance} from '~/features/Portfolio/common/hooks/usePortfolioPrimaryBalance'
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/context/ModalContext'

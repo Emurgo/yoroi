@@ -1,6 +1,5 @@
-import {App} from '@yoroi/types'
-
 import {SubmitTxInsufficientCollateralError} from '@yoroi/cardano-wallet/api/errors'
+import {App} from '@yoroi/types'
 
 export const getErrorMessage = (
   error: unknown,

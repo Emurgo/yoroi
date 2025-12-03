@@ -1,6 +1,6 @@
-import {UseMutationOptions, useMutation} from '@tanstack/react-query'
-
 import {YoroiWallet} from '@yoroi/cardano-wallet/types'
+
+import {UseMutationOptions, useMutation} from '@tanstack/react-query'
 
 export const useSync = (
   wallet: YoroiWallet,

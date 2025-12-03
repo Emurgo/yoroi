@@ -1,12 +1,12 @@
 import {isRight, time, useAsyncStorage} from '@yoroi/common'
 import {useNotificationManager} from '@yoroi/notifications'
 import {App, Notifications as NotificationTypes} from '@yoroi/types'
+import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
 
 import * as React from 'react'
 import {Subject} from 'rxjs'
 
 import {fetchPtPriceActivity} from '~/features/Pairing/hooks/usePrimaryTokenActivity'
-import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
 import {currencyStorageKeyManager} from '~/kernel/storage/storages'
 
 import {generateNotificationId} from './notifications'

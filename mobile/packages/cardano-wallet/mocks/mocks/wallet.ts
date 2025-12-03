@@ -45,9 +45,9 @@ import {buildPortfolioTokenManagers} from '~/features/Portfolio/common/helpers/b
 
 // TransactionInfo is kept internally for deprecated code - import directly from source
 import type {TransactionInfo} from '../../../packages/types/wallet/transactions'
-import {CardanoTypes, WalletSubscription, YoroiWallet} from '../cardano/types'
 import {getTokenFingerprint} from '../../utils/format'
 import {CardanoMobile} from '../../wrappedCsl'
+import {CardanoTypes, WalletSubscription, YoroiWallet} from '../cardano/types'
 import {mockEncryptedStorage} from './storage'
 import {mockTransactionInfo, mockTransactionInfos} from './transaction'
 import {utxos} from './utxos'

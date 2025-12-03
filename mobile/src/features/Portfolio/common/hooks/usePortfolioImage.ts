@@ -1,4 +1,5 @@
 import {Portfolio} from '@yoroi/types'
+import {useSelectedNetwork} from '@yoroi/wallet-manager/hooks/useSelectedNetwork'
 
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 import {Image} from 'expo-image'
@@ -6,7 +7,6 @@ import * as React from 'react'
 import {useCallback, useMemo} from 'react'
 import {PixelRatio, Platform} from 'react-native'
 
-import {useSelectedNetwork} from '@yoroi/wallet-manager/hooks/useSelectedNetwork'
 import {isDev} from '~/kernel/constants'
 import {logger} from '~/kernel/logger/logger'
 

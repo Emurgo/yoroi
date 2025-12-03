@@ -1,7 +1,8 @@
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
+
 import * as React from 'react'
 import {useWindowDimensions} from 'react-native'
 
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useModal} from '~/ui/Modal/context/ModalContext'
 

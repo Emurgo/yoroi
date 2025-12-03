@@ -1,4 +1,7 @@
 import {TipStatusResponse} from '@yoroi/api'
+import {getTipStatusService} from '@yoroi/cardano-wallet/api/tip-status-service'
+import {YoroiWallet} from '@yoroi/cardano-wallet/types'
+import {getLogger} from '@yoroi/common'
 import {Chain} from '@yoroi/types'
 
 import {freeze} from 'immer'
@@ -16,10 +19,6 @@ import {
   switchMap,
   timer,
 } from 'rxjs'
-
-import {getLogger} from '@yoroi/common'
-import {getTipStatusService} from '@yoroi/cardano-wallet/api/tip-status-service'
-import {YoroiWallet} from '@yoroi/cardano-wallet/types'
 
 import {SyncWalletInfo} from '../common/types'
 import {getNextRetryTime} from './backoff'
@@ -544,7 +543,9 @@ export const makeSyncManager = (
   const triggerSync = async (walletId: YoroiWallet['id']) => {
     const wallet = currentWallets.find((w) => w.id === walletId)
     if (!wallet) {
-      getLogger().warn('syncManager: Wallet not found for sync trigger', {walletId})
+      getLogger().warn('syncManager: Wallet not found for sync trigger', {
+        walletId,
+      })
       return
     }
 

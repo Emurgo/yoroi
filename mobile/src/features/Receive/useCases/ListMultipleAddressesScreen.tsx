@@ -1,4 +1,6 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {useAddressMode} from '@yoroi/wallet-manager/hooks/useAddressMode'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 
 import * as React from 'react'
 import {
@@ -12,8 +14,6 @@ import {
 import Animated, {Layout} from 'react-native-reanimated'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useAddressMode} from '@yoroi/wallet-manager/hooks/useAddressMode'
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
 import {ShowAddressLimitInfo} from '~/ui/ShowAddressLimitInfo/ShowAddressLimitInfo'

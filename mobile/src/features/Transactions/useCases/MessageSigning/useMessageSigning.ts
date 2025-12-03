@@ -1,15 +1,16 @@
+import {cip30ExtensionMaker} from '@yoroi/cardano-wallet/cip30/cip30'
+import {cip30LedgerExtensionMaker} from '@yoroi/cardano-wallet/cip30/cip30-ledger'
+import {BaseLedgerError} from '@yoroi/cardano-wallet/hw/hw'
+import {useAddressMode} from '@yoroi/wallet-manager/hooks/useAddressMode'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
+
 import {Buffer} from 'buffer'
 import * as React from 'react'
 
 import {useConfirmHWConnectionModal} from '~/features/Discover/common/ConfirmHWConnectionModal'
 import {userRejectedError} from '~/features/Discover/common/errors'
 import {usePromptRootKey} from '~/features/ReviewTx/common/hooks/usePromptRootKey'
-import {useAddressMode} from '@yoroi/wallet-manager/hooks/useAddressMode'
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {cip30ExtensionMaker} from '@yoroi/cardano-wallet/cip30/cip30'
-import {cip30LedgerExtensionMaker} from '@yoroi/cardano-wallet/cip30/cip30-ledger'
-import {BaseLedgerError} from '@yoroi/cardano-wallet/hw/hw'
 
 export const useMessageSigning = () => {
   const {wallet, meta} = useSelectedWallet()

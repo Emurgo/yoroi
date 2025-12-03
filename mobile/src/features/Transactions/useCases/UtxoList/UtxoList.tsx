@@ -1,10 +1,10 @@
 import {atoms as a} from '@yoroi/theme'
+import {useAddressMode} from '@yoroi/wallet-manager/hooks/useAddressMode'
 
 import {FlashList} from '@shopify/flash-list'
 import * as React from 'react'
 import {View} from 'react-native'
 
-import {useAddressMode} from '@yoroi/wallet-manager/hooks/useAddressMode'
 import {features} from '~/kernel/features'
 import {Space} from '~/ui/Space/Space'
 

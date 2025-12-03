@@ -105,7 +105,9 @@ export const useWalletConnection = (
       return
     }
 
-    getLogger().log('Disconnecting from wallet...', {origin: 'p2p-communication'})
+    getLogger().log('Disconnecting from wallet...', {
+      origin: 'p2p-communication',
+    })
     if (walletCommunication.isConnected()) {
       try {
         walletCommunication.disconnect()

@@ -1,4 +1,5 @@
 import {Branded} from '@yoroi/types'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 
 import {logger} from '@sentry/react'
 import * as React from 'react'
@@ -8,7 +9,6 @@ import {useGovernanceParticipation} from '~/features/Staking/Governance/common/h
 import {useNavigateTo} from '~/features/Staking/Governance/common/navigation'
 import {isInsufficientBalanceError} from '~/features/Staking/Governance/common/transactionErrorHandling'
 import {useStakingInfo} from '~/features/Staking/hooks/useStakingInfo'
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 import {minAdaForGovernanceBanner} from '~/kernel/constants'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Space} from '~/ui/Space/Space'

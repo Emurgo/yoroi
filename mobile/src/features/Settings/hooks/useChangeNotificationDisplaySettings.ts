@@ -4,7 +4,6 @@ import {
   useMutationWithInvalidations,
 } from '@yoroi/common'
 import {App} from '@yoroi/types'
-
 import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
 
 export const useChangeNotificationDisplaySettings = () => {

@@ -1,12 +1,12 @@
 import {time} from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 
 import * as React from 'react'
 import {ScrollView, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Button, ButtonType} from '~/ui/Button/Button'

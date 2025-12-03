@@ -1,10 +1,10 @@
 import {useExchange} from '@yoroi/exchange'
 import {Chain} from '@yoroi/types'
+import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
 
 import * as React from 'react'
 import {Linking} from 'react-native'
 
-import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
 

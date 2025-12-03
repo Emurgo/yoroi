@@ -1,6 +1,7 @@
 import {usePortfolioTokenInfo} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {App} from '@yoroi/types'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 
 import * as React from 'react'
 import {Animated, NativeScrollEvent, NativeSyntheticEvent} from 'react-native'
@@ -12,7 +13,6 @@ import {
 } from '~/features/Portfolio/context/PortfolioProvider'
 import {TxFilter} from '~/features/Transactions/useCases/TxList/TxFilterProvider'
 import {TxList} from '~/features/Transactions/useCases/TxList/TxList'
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {throwLoggedError} from '~/kernel/logger/helpers/throw-logged-error'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'

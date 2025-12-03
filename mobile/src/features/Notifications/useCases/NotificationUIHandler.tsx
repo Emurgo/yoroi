@@ -1,12 +1,12 @@
 import {isString} from '@yoroi/common'
 import {useNotificationManager} from '@yoroi/notifications'
 import {Notifications} from '@yoroi/types'
+import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
 
 import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 
 import {useNotificationDisplaySettings} from '~/features/Settings/hooks/useNotificationDisplaySettings'
-import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
 import {
   isAuthRoute,
   isTxHistoryRoute,

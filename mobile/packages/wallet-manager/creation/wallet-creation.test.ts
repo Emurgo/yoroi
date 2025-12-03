@@ -1,6 +1,5 @@
-import {Chain, Wallet} from '@yoroi/types'
-
 import {getMasterKeyFromMnemonic} from '@yoroi/cardano-wallet/mnemonic/mnemonic'
+import {Chain, Wallet} from '@yoroi/types'
 
 import {
   createWalletFromMnemonic,

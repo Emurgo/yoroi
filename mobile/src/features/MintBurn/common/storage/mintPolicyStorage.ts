@@ -1,9 +1,8 @@
+import {YoroiWallet} from '@yoroi/cardano-wallet/types'
 import type {MintingScript} from '@yoroi/tx'
 import {Wallet} from '@yoroi/types'
 
 import AsyncStorage from '@react-native-async-storage/async-storage'
-
-import {YoroiWallet} from '@yoroi/cardano-wallet/types'
 
 import type {PolicyRecoveryData} from '../types'
 import {createNativeScriptFromWallet} from '../utils/createNativeScript'

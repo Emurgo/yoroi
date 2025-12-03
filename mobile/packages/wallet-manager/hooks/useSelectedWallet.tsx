@@ -1,10 +1,10 @@
+import {YoroiWallet} from '@yoroi/cardano-wallet/types'
 import {Wallet} from '@yoroi/types'
 
 import {freeze} from 'immer'
 import * as React from 'react'
 
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
-import {YoroiWallet} from '@yoroi/cardano-wallet/types'
 
 import {useWalletManager} from '../context/WalletManagerProvider'
 import {useSelectWalletModal} from '../ui/modals/SelectWalletModal'

@@ -1,7 +1,9 @@
+import {isEmptyString} from '@yoroi/cardano-wallet/utils/string'
 import {useClaim} from '@yoroi/claim'
 import {sortTokenAmountsByInfo} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {App, Claim, Portfolio} from '@yoroi/types'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 
 import * as React from 'react'
 import {
@@ -14,7 +16,6 @@ import {
   View,
 } from 'react-native'
 
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {ClaimSuccessIllustration} from '~/ui/ClaimSuccessIllustration/ClaimSuccessIllustration'
 import {Copiable} from '~/ui/Copiable/Copiable'
@@ -22,7 +23,6 @@ import {Icon} from '~/ui/Icon'
 import {ResultScreen} from '~/ui/ResultScreen/ResultScreen'
 import {Space} from '~/ui/Space/Space'
 import {TokenAmountItem} from '~/ui/TokenAmountItem/TokenAmountItem'
-import {isEmptyString} from '@yoroi/cardano-wallet/utils/string'
 
 import {useDialogs} from '../common/useDialogs'
 import {useNavigateTo} from '../common/useNavigateTo'

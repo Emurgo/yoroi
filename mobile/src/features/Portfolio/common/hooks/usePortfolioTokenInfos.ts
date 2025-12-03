@@ -1,3 +1,4 @@
+import {YoroiWallet} from '@yoroi/cardano-wallet/types'
 import {createUnknownTokenInfo, isPrimaryToken} from '@yoroi/portfolio'
 import {Portfolio} from '@yoroi/types'
 
@@ -7,8 +8,6 @@ import {
   useQuery,
   useSuspenseQuery,
 } from '@tanstack/react-query'
-
-import {YoroiWallet} from '@yoroi/cardano-wallet/types'
 
 export const usePortfolioTokenInfos = (
   {

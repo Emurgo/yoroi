@@ -1,4 +1,5 @@
 import {time} from '@yoroi/common'
+import {getLogger} from '@yoroi/common'
 import {
   Address,
   App,
@@ -10,8 +11,6 @@ import {
 
 import {Buffer} from 'buffer'
 import _ from 'lodash'
-
-import {getLogger} from '@yoroi/common'
 
 import * as legacyApi from '../api/api'
 import {deriveRewardAddressFromAddress} from '../utils'

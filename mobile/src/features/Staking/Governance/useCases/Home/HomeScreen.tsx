@@ -4,19 +4,19 @@ import {
   useGovernance,
 } from '@yoroi/staking'
 import {ThemedPalette, atoms as a, useTheme} from '@yoroi/theme'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 
 import {useRoute} from '@react-navigation/native'
 import * as React from 'react'
 import {Keyboard, Text, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
+import {useRemoteConfig} from '~/common/hooks/useRemoteConfig'
 import {GovernanceStatusCard} from '~/features/Staking/Governance/common/GovernanceStatusCard/GovernanceStatusCard'
 import {LearnMoreLink} from '~/features/Staking/Governance/common/LearnMoreLink/LearnMoreLink'
 import {OtherDrepCard} from '~/features/Staking/Governance/common/OtherDrepCard/OtherDrepCard'
 import {YoroiDrepCard} from '~/features/Staking/Governance/common/YoroiDrepCard/YoroiDrepCard'
 import {useStakingInfo} from '~/features/Staking/hooks/useStakingInfo'
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
-import {useRemoteConfig} from '~/common/hooks/useRemoteConfig'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Space} from '~/ui/Space/Space'

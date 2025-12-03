@@ -1,10 +1,10 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 
 import React, {useEffect} from 'react'
 import {ActivityIndicator, Text, View} from 'react-native'
 
 import {useAuthOsWithEasyConfirmation} from '~/features/Auth/hooks/useAuthOsWithEasyConfirmation'
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 
 import {getErrorMessage} from '../errors'

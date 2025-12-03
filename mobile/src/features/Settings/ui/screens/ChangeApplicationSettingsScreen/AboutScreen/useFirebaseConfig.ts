@@ -5,8 +5,8 @@ import * as Notifications from 'expo-notifications'
 import * as React from 'react'
 import {AppState} from 'react-native'
 
-import {useAuth} from '~/features/Auth/context/AuthProvider'
 import {settingsQueryKeys} from '~/common/queries'
+import {useAuth} from '~/features/Auth/context/AuthProvider'
 
 export const useFirebaseConfig = () => {
   const [hasPermission, setHasPermission] = React.useState(false)

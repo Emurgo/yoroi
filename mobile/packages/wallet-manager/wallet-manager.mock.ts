@@ -1,8 +1,7 @@
+import {YoroiWallet} from '@yoroi/cardano-wallet/types'
 import {Chain, Network, Wallet} from '@yoroi/types'
 
 import {BehaviorSubject, Observable} from 'rxjs'
-
-import {YoroiWallet} from '@yoroi/cardano-wallet/types'
 
 import {WalletManager} from './wallet-manager'
 import {walletMeta} from './wallet.mock'

@@ -1,12 +1,11 @@
+import type {WalletEncryptedStorage} from '@yoroi/cardano-wallet/dependencies'
+import {deriveAccountFromRootKey} from '@yoroi/cardano-wallet/key-manager/key-manager'
+import {CardanoMobileWrapped} from '@yoroi/cardano-wallet/wrappedCsl'
+import {getLogger} from '@yoroi/common'
 import {Blockies} from '@yoroi/identicon'
 import {Chain, HW, Wallet} from '@yoroi/types'
 
 import {v4} from 'uuid'
-
-import {getLogger} from '@yoroi/common'
-import type {WalletEncryptedStorage} from '@yoroi/cardano-wallet/dependencies'
-import {deriveAccountFromRootKey} from '@yoroi/cardano-wallet/key-manager/key-manager'
-import {CardanoMobileWrapped} from '@yoroi/cardano-wallet/wrappedCsl'
 
 import {createWalletMeta} from '../lifecycle/wallet-lifecycle'
 import {getWalletFactory} from '../network-manager/get-wallet-factory'

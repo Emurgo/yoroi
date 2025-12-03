@@ -6,6 +6,7 @@ import {
 } from '@yoroi/resolver'
 import {validateAndExtractAddressInfo} from '@yoroi/tx'
 import {Resolver} from '@yoroi/types'
+import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
 
 import {useQueryClient} from '@tanstack/react-query'
 import * as React from 'react'
@@ -14,7 +15,6 @@ import {
   AddressErrorInvalid,
   AddressErrorWrongNetwork,
 } from '~/features/Send/common/errors'
-import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
 import {logger} from '~/kernel/logger/logger'
 
 /**

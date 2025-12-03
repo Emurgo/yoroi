@@ -1,4 +1,5 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 
 import {LinearGradient} from 'expo-linear-gradient'
 import * as React from 'react'
@@ -22,7 +23,6 @@ import {
 
 import {TabItem, useBrowser} from '~/features/Discover/common/BrowserProvider'
 import {useConnectWalletToWebView} from '~/features/Discover/common/hooks'
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 import {isDev} from '~/kernel/constants'
 import {Icon} from '~/ui/Icon'
 import {Space} from '~/ui/Space/Space'

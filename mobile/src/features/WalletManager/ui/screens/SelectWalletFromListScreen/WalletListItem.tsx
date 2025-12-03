@@ -1,5 +1,10 @@
+import {isByron, isShelley} from '@yoroi/cardano-wallet/utils'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Wallet} from '@yoroi/types'
+import {useAutomaticWalletOpener} from '@yoroi/wallet-manager/context/AutomaticWalletOpeningProvider'
+import {useWalletManagerSelector} from '@yoroi/wallet-manager/context/WalletManagerProvider'
+import {useSelectedNetwork} from '@yoroi/wallet-manager/hooks/useSelectedNetwork'
+import {useSyncWalletInfo} from '@yoroi/wallet-manager/hooks/useSyncWalletInfo'
 
 import {useFocusEffect} from '@react-navigation/native'
 import * as React from 'react'
@@ -11,15 +16,10 @@ import {
   ChevronRightDarkIllustration,
   ChevronRightGrayIllustration,
 } from '~/features/SetupWallet/illustrations/ChevronRight'
-import {useAutomaticWalletOpener} from '@yoroi/wallet-manager/context/AutomaticWalletOpeningProvider'
-import {useWalletManagerSelector} from '@yoroi/wallet-manager/context/WalletManagerProvider'
-import {useSelectedNetwork} from '@yoroi/wallet-manager/hooks/useSelectedNetwork'
-import {useSyncWalletInfo} from '@yoroi/wallet-manager/hooks/useSyncWalletInfo'
 import {features} from '~/kernel/features'
 import {Icon} from '~/ui/Icon'
 import {Loading} from '~/ui/Loading/Loading'
 import {Space} from '~/ui/Space/Space'
-import {isByron, isShelley} from '@yoroi/cardano-wallet/utils'
 
 type Props = {
   walletMeta: Wallet.Meta

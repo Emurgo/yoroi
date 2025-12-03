@@ -1,10 +1,8 @@
+import {YoroiWallet} from '@yoroi/cardano-wallet/types'
+import {getLogger, throwLoggedError} from '@yoroi/common'
 import {App, Chain, Network, Wallet} from '@yoroi/types'
 
 import {castDraft, freeze, produce} from 'immer'
-
-import {getLogger, throwLoggedError} from '@yoroi/common'
-import {getLogger} from '@yoroi/common'
-import {YoroiWallet} from '@yoroi/cardano-wallet/types'
 
 import {networkManagers} from '../common/constants'
 import {WalletManager} from '../wallet-manager'

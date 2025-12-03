@@ -1,9 +1,9 @@
-import {mocks} from '../mocks/mocks/wallet'
+import {createCollateralEntry} from '~/features/Settings/ui/screens/ChangeWalletSettingsScreen/ManageCollateralScreen/helpers'
 
 import {getMasterKeyFromMnemonic} from '../mnemonic/mnemonic'
+import {mocks} from '../mocks/mocks/wallet'
 import {YoroiWallet} from '../types'
 import {cip30ExtensionMaker} from './cip30'
-import {createCollateralEntry} from '~/features/Settings/ui/screens/ChangeWalletSettingsScreen/ManageCollateralScreen/helpers'
 
 const mockDependencies = {
   createCollateralEntry,
@@ -16,7 +16,11 @@ describe('cip30ExtensionMaker', () => {
       submitTransaction: jest.fn(),
     }
 
-    const cip30 = cip30ExtensionMaker(mockWallet, mocks.walletMeta, mockDependencies)
+    const cip30 = cip30ExtensionMaker(
+      mockWallet,
+      mocks.walletMeta,
+      mockDependencies,
+    )
     const result = await cip30.submitTx(txCbor)
     expect(mockWallet.submitTransaction).toHaveBeenCalled()
     expect(result).toBe(
@@ -25,32 +29,52 @@ describe('cip30ExtensionMaker', () => {
   })
 
   it('should support getUtxos', async () => {
-    const cip30 = cip30ExtensionMaker(mocks.wallet, mocks.walletMeta, mockDependencies)
+    const cip30 = cip30ExtensionMaker(
+      mocks.wallet,
+      mocks.walletMeta,
+      mockDependencies,
+    )
     const result = await cip30.getUtxos(undefined, undefined)
     expect(result).toHaveLength(mocks.wallet.utxos().length)
   })
 
   it('should support getBalance', async () => {
-    const cip30 = cip30ExtensionMaker(mocks.wallet, mocks.walletMeta, mockDependencies)
+    const cip30 = cip30ExtensionMaker(
+      mocks.wallet,
+      mocks.walletMeta,
+      mockDependencies,
+    )
     const result = cip30.getBalance()
     expect(result).toBeDefined()
     expect(result.coin().toStr()).toBe('2282543724')
   })
 
   it('should support getUnusedAddresses', async () => {
-    const cip30 = cip30ExtensionMaker(mocks.wallet, mocks.walletMeta, mockDependencies)
+    const cip30 = cip30ExtensionMaker(
+      mocks.wallet,
+      mocks.walletMeta,
+      mockDependencies,
+    )
     const result = cip30.getUnusedAddresses()
     expect(result).toEqual([])
   })
 
   it('should support getUsedAddresses', async () => {
-    const cip30 = cip30ExtensionMaker(mocks.wallet, mocks.walletMeta, mockDependencies)
+    const cip30 = cip30ExtensionMaker(
+      mocks.wallet,
+      mocks.walletMeta,
+      mockDependencies,
+    )
     const result = cip30.getUsedAddresses()
     expect(result).toEqual([])
   })
 
   it('should support getChangeAddress', async () => {
-    const cip30 = cip30ExtensionMaker(mocks.wallet, mocks.walletMeta, mockDependencies)
+    const cip30 = cip30ExtensionMaker(
+      mocks.wallet,
+      mocks.walletMeta,
+      mockDependencies,
+    )
     const result = cip30.getChangeAddress()
     const bech32 = result.toBech32(undefined)
     const expectedAddress =
@@ -77,7 +101,11 @@ describe('cip30ExtensionMaker', () => {
   })
 
   it('should support getCollateral', async () => {
-    const cip30 = cip30ExtensionMaker(mocks.wallet, mocks.walletMeta, mockDependencies)
+    const cip30 = cip30ExtensionMaker(
+      mocks.wallet,
+      mocks.walletMeta,
+      mockDependencies,
+    )
     const result = await cip30.getCollateral()
     expect(result).toHaveLength(1)
     const [utxo] = result ?? []
@@ -87,7 +115,11 @@ describe('cip30ExtensionMaker', () => {
   })
 
   it('should support signTx', async () => {
-    const cip30 = cip30ExtensionMaker(mocks.wallet, mocks.walletMeta, mockDependencies)
+    const cip30 = cip30ExtensionMaker(
+      mocks.wallet,
+      mocks.walletMeta,
+      mockDependencies,
+    )
     const rootKey = getMasterKeyFromMnemonic(mnemonic)
     const rootKeyHex = Buffer.from(rootKey).toString('hex')
     const result = await cip30.signTx(rootKeyHex, txCbor, true)
@@ -103,7 +135,11 @@ describe('cip30ExtensionMaker', () => {
     const addressBech32 =
       'addr1qynqc23tpx4dqps6xgqy9s2l3xz5fxu734wwmzj9uddn0h2z6epfcukqmswgwwfruxh7gaddv9x0d5awccwahnhwleqqc4zkh4'
 
-    const cip30 = cip30ExtensionMaker(mocks.wallet, mocks.walletMeta, mockDependencies)
+    const cip30 = cip30ExtensionMaker(
+      mocks.wallet,
+      mocks.walletMeta,
+      mockDependencies,
+    )
     const result = await cip30.signData(rootKeyHex, addressBech32, message)
 
     expect(result).toEqual({

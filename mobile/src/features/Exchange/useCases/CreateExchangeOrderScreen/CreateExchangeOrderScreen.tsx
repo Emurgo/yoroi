@@ -1,3 +1,4 @@
+import {delay} from '@yoroi/cardano-wallet/utils/timeUtils'
 import {atomicBreakdown} from '@yoroi/common'
 import {
   useCreateReferralLink,
@@ -7,14 +8,14 @@ import {
 import {linksYoroiModuleMaker} from '@yoroi/links'
 import {atoms as a} from '@yoroi/theme'
 import {Chain, Exchange} from '@yoroi/types'
+import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 
 import * as React from 'react'
 import {Linking, View} from 'react-native'
 
 import {ProviderItem} from '~/features/Exchange/common/ProviderItem/ProviderItem'
 import {ShowDisclaimer} from '~/features/Legal/ui/shared/Disclaimer/ShowDisclaimer'
-import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 import {banxaTestWallet} from '~/kernel/constants'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
@@ -24,7 +25,6 @@ import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {ScrollView} from '~/ui/ScrollView/ScrollView'
 import {useScrollView} from '~/ui/ScrollView/hooks/useScrollView'
-import {delay} from '@yoroi/cardano-wallet/utils/timeUtils'
 
 import {useNavigateTo} from '../../common/useNavigateTo'
 import {BanxaLogo} from '../../illustrations/BanxaLogo'

@@ -1,4 +1,6 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
+import {WithWalletOpened} from '@yoroi/wallet-manager/ui/shared/WithWalletOpened'
 
 import {
   StackNavigationOptions,
@@ -6,6 +8,7 @@ import {
 } from '@react-navigation/stack'
 import * as React from 'react'
 
+import {useRemoteConfig} from '~/common/hooks/useRemoteConfig'
 import {AirdropScreen} from '~/features/Airdrop/ui/AirdropScreen'
 import {useAuth} from '~/features/Auth/context/AuthProvider'
 import {ClaimScreen} from '~/features/Claim/useCases/ClaimScreen'
@@ -26,9 +29,6 @@ import {ListAmountsToSendScreen} from '~/features/Send/useCases/ListAmountsToSen
 import {StartMultiTokenTxScreen} from '~/features/Send/useCases/StartMultiTokenTx/StartMultiTokenTxScreen'
 import {NetworkTag} from '~/features/Settings/ui/shared/NetworkTag'
 import {SwapNavigator} from '~/features/Swap/navigator'
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
-import {WithWalletOpened} from '@yoroi/wallet-manager/ui/shared/WithWalletOpened'
-import {useRemoteConfig} from '~/common/hooks/useRemoteConfig'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {
   BackButton,

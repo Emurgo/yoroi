@@ -1,8 +1,18 @@
+import {isEmptyString} from '@yoroi/cardano-wallet/utils/string'
+import {
+  getWalletNameError,
+  validatePassword,
+} from '@yoroi/cardano-wallet/utils/validators'
 import {useAsyncStorage} from '@yoroi/common'
 import {decryptWalletData, useLinks} from '@yoroi/links'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Api, Links, Wallet} from '@yoroi/types'
+import {parseWalletMeta} from '@yoroi/wallet-manager/common/validators/wallet-meta'
+import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
+import {useCreateWalletFromRootKey} from '@yoroi/wallet-manager/hooks/useCreateWalletFromRootKey'
+import {useCreateWalletMnemonic} from '@yoroi/wallet-manager/hooks/useCreateWalletMnemonic'
+import {useCreateWalletXPub} from '@yoroi/wallet-manager/hooks/useCreateWalletXPub'
 
 import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
@@ -14,11 +24,6 @@ import {
   View,
 } from 'react-native'
 
-import {parseWalletMeta} from '@yoroi/wallet-manager/common/validators/wallet-meta'
-import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
-import {useCreateWalletFromRootKey} from '@yoroi/wallet-manager/hooks/useCreateWalletFromRootKey'
-import {useCreateWalletMnemonic} from '@yoroi/wallet-manager/hooks/useCreateWalletMnemonic'
-import {useCreateWalletXPub} from '@yoroi/wallet-manager/hooks/useCreateWalletXPub'
 import {requiredPasswordLength} from '~/kernel/constants'
 import {showErrorDialog} from '~/kernel/dialogs'
 import {errorMessages} from '~/kernel/i18n/messages/global'
@@ -32,8 +37,6 @@ import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
 import {TextInput} from '~/ui/TextInput/TextInput'
-import {isEmptyString} from '@yoroi/cardano-wallet/utils/string'
-import {getWalletNameError, validatePassword} from '@yoroi/cardano-wallet/utils/validators'
 
 // Default values when not provided in link
 const DEFAULT_IMPLEMENTATION: Wallet.Implementation = 'cardano-cip1852'

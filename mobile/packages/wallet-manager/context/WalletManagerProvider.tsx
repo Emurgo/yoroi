@@ -1,9 +1,8 @@
+import {YoroiWallet} from '@yoroi/cardano-wallet/types'
+import {getLogger, throwLoggedError} from '@yoroi/common'
 import {App, Chain, Wallet} from '@yoroi/types'
 
 import * as React from 'react'
-
-import {getLogger, throwLoggedError} from '@yoroi/common'
-import {YoroiWallet} from '@yoroi/cardano-wallet/types'
 
 import {WalletManager} from '../wallet-manager'
 import {
@@ -59,9 +58,12 @@ export const WalletManagerProvider: React.FC<
       }
       const meta = walletManager.getWalletMetaById(walletId)
       if (meta == null) {
-        getLogger().error('WalletManagerProvider: wallet meta selected not found', {
-          walletId,
-        })
+        getLogger().error(
+          'WalletManagerProvider: wallet meta selected not found',
+          {
+            walletId,
+          },
+        )
         return
       }
 
@@ -112,10 +114,13 @@ export const WalletManagerProvider: React.FC<
         // setWalletSelected is async, but we don't need to await it
         // The loading state will be handled by WithWalletOpened
         setWalletSelected(id).catch((error) => {
-          getLogger().error('WalletManagerProvider: failed to set wallet selected', {
-            id,
-            error,
-          })
+          getLogger().error(
+            'WalletManagerProvider: failed to set wallet selected',
+            {
+              id,
+              error,
+            },
+          )
         })
       },
     )

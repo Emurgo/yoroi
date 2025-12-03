@@ -118,10 +118,13 @@ export const peerConnectionMaker = (
         iceServers: [...iceServers] as RTCIceServer[],
       })
     } catch (error) {
-      getLogger().error(error instanceof Error ? error : new Error(String(error)), {
-        origin: 'p2p-communication',
-        operation: 'createPeerConnection',
-      })
+      getLogger().error(
+        error instanceof Error ? error : new Error(String(error)),
+        {
+          origin: 'p2p-communication',
+          operation: 'createPeerConnection',
+        },
+      )
       notifyListeners('error', new Error(`Failed to create peer: ${error}`))
       return null
     }
@@ -150,10 +153,13 @@ export const peerConnectionMaker = (
     }
 
     channel.onerror = (error) => {
-      getLogger().error(error instanceof Error ? error : new Error(String(error)), {
-        origin: 'p2p-communication',
-        operation: 'dataChannel',
-      })
+      getLogger().error(
+        error instanceof Error ? error : new Error(String(error)),
+        {
+          origin: 'p2p-communication',
+          operation: 'dataChannel',
+        },
+      )
       notifyListeners('error', new Error(`Data channel error: ${error}`))
     }
   }
@@ -260,7 +266,9 @@ export const peerConnectionMaker = (
               notifyListeners('error', error)
             },
             onOpen: () => {
-              getLogger().log('Signaling connected', {origin: 'p2p-communication'})
+              getLogger().log('Signaling connected', {
+                origin: 'p2p-communication',
+              })
               updateState({signaling})
             },
             onClose: () => {
@@ -506,10 +514,13 @@ export const peerConnectionMaker = (
       channel.send(serializedData)
       return true
     } catch (error) {
-      getLogger().error(error instanceof Error ? error : new Error(String(error)), {
-        origin: 'p2p-communication',
-        operation: 'send',
-      })
+      getLogger().error(
+        error instanceof Error ? error : new Error(String(error)),
+        {
+          origin: 'p2p-communication',
+          operation: 'send',
+        },
+      )
       return false
     }
   }

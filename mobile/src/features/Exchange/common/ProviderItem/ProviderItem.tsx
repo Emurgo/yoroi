@@ -1,11 +1,11 @@
 import {useExchange} from '@yoroi/exchange'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Chain} from '@yoroi/types'
+import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
 
 import * as React from 'react'
 import {Text, TouchableOpacity, View} from 'react-native'
 
-import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
 import {Space} from '~/ui/Space/Space'
 
 type Props = {

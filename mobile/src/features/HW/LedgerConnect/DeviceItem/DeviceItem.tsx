@@ -1,3 +1,4 @@
+import {Device} from '@yoroi/cardano-wallet/types/hw'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
@@ -5,7 +6,6 @@ import {Text, TouchableOpacity} from 'react-native'
 
 import {Icon} from '~/ui/Icon'
 import {Space} from '~/ui/Space/Space'
-import {Device} from '@yoroi/cardano-wallet/types/hw'
 
 type Props = {
   device: Device

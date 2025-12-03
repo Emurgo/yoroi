@@ -1,6 +1,6 @@
-import * as React from 'react'
-
 import {getLogger} from '@yoroi/common'
+
+import * as React from 'react'
 
 import {WalletManager} from '../wallet-manager'
 
@@ -26,7 +26,9 @@ export const WalletManagerHydrationWrapper: React.FC<
         }
       })
       .catch((error) => {
-        getLogger().error('WalletManagerHydrationWrapper: hydration failed', {error})
+        getLogger().error('WalletManagerHydrationWrapper: hydration failed', {
+          error,
+        })
         // Still render children even if hydration fails to prevent app from being stuck
         if (isMounted) {
           setIsHydrated(true)

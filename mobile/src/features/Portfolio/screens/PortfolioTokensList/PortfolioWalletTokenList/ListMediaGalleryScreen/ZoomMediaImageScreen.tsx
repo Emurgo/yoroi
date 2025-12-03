@@ -1,4 +1,6 @@
+import {isEmptyString} from '@yoroi/cardano-wallet/utils/string'
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 
 import * as React from 'react'
 import {useWindowDimensions} from 'react-native'
@@ -9,12 +11,10 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated'
 
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 import {useParams} from '~/kernel/navigation/hooks/useParams'
 import {NftRoutes} from '~/kernel/navigation/types'
 import {FadeIn} from '~/ui/FadeIn/FadeIn'
 import {MediaPreview} from '~/ui/MediaPreview/MediaPreview'
-import {isEmptyString} from '@yoroi/cardano-wallet/utils/string'
 
 type Params = NftRoutes['nft-details']
 

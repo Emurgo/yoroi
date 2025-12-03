@@ -1,9 +1,8 @@
 import {isString, useAsyncStorage} from '@yoroi/common'
 import {App} from '@yoroi/types'
+import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
 
 import {useQuery} from '@tanstack/react-query'
-
-import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
 
 const defaultNotificationsEnabled = true
 

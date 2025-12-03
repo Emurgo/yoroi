@@ -1,18 +1,18 @@
+import {isEmptyString} from '@yoroi/cardano-wallet/utils/string'
+import {getWalletNameError} from '@yoroi/cardano-wallet/utils/validators'
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 
 import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 import {ScrollView, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
 import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingView'
 import {TextInput} from '~/ui/TextInput/TextInput'
-import {isEmptyString} from '@yoroi/cardano-wallet/utils/string'
-import {getWalletNameError} from '@yoroi/cardano-wallet/utils/validators'
 
 export const RenameWalletScreen = () => {
   const strings = useStrings()

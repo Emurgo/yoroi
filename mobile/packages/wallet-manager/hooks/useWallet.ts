@@ -1,6 +1,6 @@
-import * as React from 'react'
-
 import {WalletEvent, YoroiWallet} from '@yoroi/cardano-wallet/types'
+
+import * as React from 'react'
 
 import {useWalletEvent} from './useWalletEvent'
 

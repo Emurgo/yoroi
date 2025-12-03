@@ -1,19 +1,19 @@
+import {RejectedByUserError} from '@yoroi/cardano-wallet/hw/hw'
+import {withBLE, withUSB} from '@yoroi/cardano-wallet/hw/hwWallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {HW} from '@yoroi/types'
+import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 
 import {UseMutationOptions, useMutation} from '@tanstack/react-query'
 import React, {useState} from 'react'
 import {ScrollView, View} from 'react-native'
 
-import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {ActivityIndicator} from '~/ui/ActivityIndicator/ActivityIndicator'
 import {LedgerConnect} from '~/ui/LedgerConnect/LedgerConnect'
 import {LedgerTransportSwitch} from '~/ui/LedgerTransportSwitch/LedgerTransportSwitch'
 import {Text} from '~/ui/Text/Text'
-import {RejectedByUserError} from '@yoroi/cardano-wallet/hw/hw'
-import {withBLE, withUSB} from '@yoroi/cardano-wallet/hw/hwWallet'
 
 type TransportType = 'USB' | 'BLE'
 type Step = 'select-transport' | 'connect-transport' | 'loading'

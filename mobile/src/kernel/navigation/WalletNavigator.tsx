@@ -1,4 +1,5 @@
 import {useTheme} from '@yoroi/theme'
+import {SelectWalletFromList} from '@yoroi/wallet-manager/ui/screens/SelectWalletFromListScreen/SelectWalletFromListScreen'
 
 import {
   StackNavigationOptions,
@@ -13,7 +14,6 @@ import {SettingsScreenNavigator} from '~/features/Settings/ui/navigation/Setting
 import {NetworkTag} from '~/features/Settings/ui/shared/NetworkTag'
 import {SetupWalletNavigator} from '~/features/SetupWallet/SetupWalletNavigator'
 import {GovernanceNavigator} from '~/features/Staking/Governance/GovernanceNavigator'
-import {SelectWalletFromList} from '@yoroi/wallet-manager/ui/screens/SelectWalletFromListScreen/SelectWalletFromListScreen'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {WalletTabNavigator} from '~/kernel/navigation/WalletTabNavigator'
 import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'

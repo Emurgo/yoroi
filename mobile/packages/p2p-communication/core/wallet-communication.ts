@@ -220,10 +220,13 @@ export const walletCommunicationMaker = (
 
       notifyListeners('message', message)
     } catch (error) {
-      getLogger().error(error instanceof Error ? error : new Error(String(error)), {
-        origin: 'p2p-communication',
-        operation: 'parseMessage',
-      })
+      getLogger().error(
+        error instanceof Error ? error : new Error(String(error)),
+        {
+          origin: 'p2p-communication',
+          operation: 'parseMessage',
+        },
+      )
       notifyListeners('error', new Error(`Failed to parse message: ${error}`))
     }
   }

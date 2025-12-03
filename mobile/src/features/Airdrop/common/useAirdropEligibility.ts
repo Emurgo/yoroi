@@ -1,10 +1,10 @@
 import {time} from '@yoroi/common'
 import {isError} from '@yoroi/common'
+import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
+import {useWalletEvent} from '@yoroi/wallet-manager/hooks/useWalletEvent'
 
 import {useQuery} from '@tanstack/react-query'
 
-import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
-import {useWalletEvent} from '@yoroi/wallet-manager/hooks/useWalletEvent'
 import {useRemoteConfig} from '~/common/hooks/useRemoteConfig'
 import {logger} from '~/kernel/logger/logger'
 

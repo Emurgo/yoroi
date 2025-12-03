@@ -262,13 +262,16 @@ export async function createWithdrawalWithGovernanceTx({
       builderState = setChangeAddress(builderState, changeAddress)
       builderState = setTTLWithBuffer(builderState, absSlotNumber.toNumber())
 
-      getLogger().info('createWithdrawalWithGovernanceTx: Building combined tx', {
-        hasRewards: BigInt(rewards) > 0n,
-        rewards,
-        isRegistered,
-        shouldDeregister,
-        drepValue,
-      })
+      getLogger().info(
+        'createWithdrawalWithGovernanceTx: Building combined tx',
+        {
+          hasRewards: BigInt(rewards) > 0n,
+          rewards,
+          isRegistered,
+          shouldDeregister,
+          drepValue,
+        },
+      )
 
       const result = await buildRecipeTransaction(
         builderState,

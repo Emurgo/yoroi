@@ -1,20 +1,20 @@
+import {cip30ExtensionMaker} from '@yoroi/cardano-wallet/cip30/cip30'
 import {
   type ConnectionManager,
   type WalletMessage,
   type WalletRequest,
   type WalletResponse,
 } from '@yoroi/p2p-communication'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 
 import {Buffer} from 'buffer'
 import * as React from 'react'
 
 import {userRejectedError} from '~/features/Discover/common/errors'
 import {usePromptRootKey} from '~/features/ReviewTx/common/hooks/usePromptRootKey'
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
-import {cip30ExtensionMaker} from '@yoroi/cardano-wallet/cip30/cip30'
 
 type P2PCIP30HandlerOptions = {
   connectionManager: ConnectionManager | null

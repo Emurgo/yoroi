@@ -1,5 +1,6 @@
 import {cardanoConfig, derivationConfig} from '@yoroi/blockchains'
 import {isRecord} from '@yoroi/common'
+import {getLogger} from '@yoroi/common'
 import {
   AdaAppClosedError,
   DeprecatedAdaAppError,
@@ -28,7 +29,6 @@ import TransportHID from '@ledgerhq/react-native-hid'
 import TransportBLE from '@ledgerhq/react-native-hw-transport-ble'
 import {BleError} from 'react-native-ble-plx'
 
-import {getLogger} from '@yoroi/common'
 import {HARDWARE_WALLETS} from './hw/hw'
 
 // Re-export for tests
@@ -153,9 +153,12 @@ export const checkDeviceVersion = (
     versionResponse.version.minor == null ||
     versionResponse.version.patch == null
   ) {
-    getLogger().warn('checkDeviceVersion: incomplete version data from device', {
-      versionResponse,
-    })
+    getLogger().warn(
+      'checkDeviceVersion: incomplete version data from device',
+      {
+        versionResponse,
+      },
+    )
     return
   }
 

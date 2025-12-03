@@ -1,6 +1,7 @@
 import {amountBreakdown, isPrimaryToken} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
+import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
 
 import * as React from 'react'
 import {Text, TextStyle} from 'react-native'
@@ -9,7 +10,6 @@ import {usePortfolio} from '~/features/Portfolio/context/PortfolioProvider'
 import {usePortfolioTokenActivity} from '~/features/Portfolio/context/PortfolioTokenActivityProvider'
 import {useCurrencyPairing} from '~/features/Settings/context/CurrencyProvider'
 import {usePrivacyMode} from '~/features/Settings/hooks/usePrivacyMode'
-import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
 
 import {Boundary, ResetError, ResetErrorRef} from '../Boundary/Boundary'

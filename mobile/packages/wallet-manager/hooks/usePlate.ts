@@ -1,10 +1,9 @@
 import {cardanoConfig} from '@yoroi/blockchains'
+import {deriveAddressFromXPub} from '@yoroi/cardano-wallet/account-manager/derive-address-from-xpub'
 import {Wallet} from '@yoroi/types'
 
 import {walletChecksum} from '@emurgo/cip4-js'
 import {useSuspenseQuery} from '@tanstack/react-query'
-
-import {deriveAddressFromXPub} from '@yoroi/cardano-wallet/account-manager/derive-address-from-xpub'
 
 export const usePlate = ({
   chainId,

@@ -1,11 +1,12 @@
-import {App, Portfolio} from '@yoroi/types'
-import {Hex} from '@yoroi/common'
-
 import {RawUtxo} from '@yoroi/api'
+import {Hex} from '@yoroi/common'
 import {CardanoAddressedUtxo} from '@yoroi/tx'
+import {TransactionOutput} from '@yoroi/tx'
+import {App, Portfolio} from '@yoroi/types'
+
 import {SignTransactionRequest} from '@cardano-foundation/ledgerjs-hw-app-cardano'
 import {WasmModuleProxy} from '@emurgo/cross-csl-core'
-import {TransactionOutput} from '@yoroi/tx'
+
 import {YoroiWallet} from './types'
 
 /**
@@ -47,7 +48,10 @@ export type CardanoWalletDependencies = {
       totalFromTxs: bigint
       lockedAsStorageCost: bigint
     }
-    secondaryBalances: Map<Portfolio.Token.Id, Omit<Portfolio.Token.Amount, 'info'>>
+    secondaryBalances: Map<
+      Portfolio.Token.Id,
+      Omit<Portfolio.Token.Amount, 'info'>
+    >
   }
 
   /**
@@ -93,7 +97,10 @@ export type WalletEncryptedStorage = {
   }
   readonly xpub: {
     readonly read: (accountVisual: number) => Promise<string | null>
-    readonly write: (accountVisual: number, accountPubKeyHex: string) => Promise<void>
+    readonly write: (
+      accountVisual: number,
+      accountPubKeyHex: string,
+    ) => Promise<void>
     readonly remove: (accountVisual: number) => Promise<void>
   }
   readonly clear: () => Promise<void>
@@ -108,4 +115,3 @@ export type MemosManager = {
   saveMemo: (txId: string, memo: string) => Promise<void>
   clear: () => Promise<void>
 }
-

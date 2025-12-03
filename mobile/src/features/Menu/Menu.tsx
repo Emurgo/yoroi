@@ -1,4 +1,5 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 
 import * as Linking from 'expo-linking'
 import * as React from 'react'
@@ -11,11 +12,10 @@ import {
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {useRemoteConfig} from '~/common/hooks/useRemoteConfig'
 import {useAuth} from '~/features/Auth/context/AuthProvider'
 import {usePrefetchStakingInfo} from '~/features/Dashboard/ui/shared/StakePoolInfos'
 import {useCanVote} from '~/features/RegisterCatalyst/common/hooks'
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
-import {useRemoteConfig} from '~/common/hooks/useRemoteConfig'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Icon} from '~/ui/Icon'

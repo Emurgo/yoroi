@@ -5,11 +5,11 @@ import {Balance, Branded, Portfolio, Wallet} from '@yoroi/types'
 
 import {Buffer} from 'buffer'
 
-import {Quantities} from '../utils/utils'
-import {CardanoMobile} from '../wrappedCsl'
 import {getDelegationStatus} from '../delegationUtils'
 import type {TimestampedCertMeta} from '../transactionManager/transactionManager'
 import type {CardanoTypes, YoroiWallet} from '../types'
+import {Quantities} from '../utils/utils'
+import {CardanoMobile} from '../wrappedCsl'
 
 /**
  * Get staking key for a wallet

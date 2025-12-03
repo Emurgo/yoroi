@@ -2,25 +2,12 @@ import {linksCardanoModuleMaker} from '@yoroi/links'
 
 import * as React from 'react'
 
-import type {WalletEncryptedStorage} from '@yoroi/cardano-wallet/dependencies'
+import {makeWalletEncryptedStorage} from '~/kernel/storage/EncryptedStorage'
 
 import {useSelectedWallet} from './useSelectedWallet'
-import {useWalletManagerSelector} from '../context/WalletManagerProvider'
 
 export const useGenerateWalletLink = () => {
   const {wallet, meta} = useSelectedWallet()
-  // Get makeWalletEncryptedStorage from wallet manager context
-  // TODO: This should be exposed via WalletManager context or passed as dependency
-  // For now, accessing it via a workaround - needs proper dependency injection
-  const makeWalletEncryptedStorage = React.useCallback(
-    (id: string): WalletEncryptedStorage => {
-      // This is a temporary solution - the function should come from WalletManager dependencies
-      // eslint-disable-next-line @typescript-eslint/no-require-imports
-      const {makeWalletEncryptedStorage: makeStorage} = require('~/kernel/storage/EncryptedStorage')
-      return makeStorage(id)
-    },
-    [],
-  )
   const [generatedLink, setGeneratedLink] = React.useState<string | null>(null)
 
   const generateFullWalletLinkFromRootKey = async (password: string) => {

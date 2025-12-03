@@ -1,8 +1,7 @@
 import {mnemonicToEntropy} from 'bip39'
 
-import {CardanoMobile} from '../wrappedCsl'
-
 import {generateAdaMnemonic} from '../mnemonic/mnemonic'
+import {CardanoMobile} from '../wrappedCsl'
 
 export function generatePrivateKeyForCatalyst() {
   const mnemonic = generateAdaMnemonic()

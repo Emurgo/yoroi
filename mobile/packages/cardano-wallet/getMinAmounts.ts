@@ -3,8 +3,8 @@ import {Address, Balance, Chain, Portfolio} from '@yoroi/types'
 
 import type {Address as CSLAddress} from '@emurgo/cross-csl-core'
 
-import {Amounts, Quantities, asQuantity} from './utils/utils'
 import {cardanoValueFromAmounts} from './cardanoValueFromAmounts'
+import {Amounts, Quantities, asQuantity} from './utils/utils'
 import {CardanoMobileWrapped} from './wrappedCsl'
 
 export const withMinAmounts = async (

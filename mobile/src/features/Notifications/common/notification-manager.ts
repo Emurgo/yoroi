@@ -1,9 +1,8 @@
 import {notificationManagerMaker} from '@yoroi/notifications'
 import {Notifications} from '@yoroi/types'
+import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
 
 import * as React from 'react'
-
-import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
 
 import {bannerTriggersSubject} from './banners'
 import {primaryTokenPriceChangedSubject} from './primary-token-price-changed-notification'

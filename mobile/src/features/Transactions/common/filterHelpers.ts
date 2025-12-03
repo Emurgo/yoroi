@@ -1,9 +1,8 @@
+import {Amounts} from '@yoroi/cardano-wallet/utils/utils'
 import {isArray, isString} from '@yoroi/common'
 import {Balance, WalletTransaction} from '@yoroi/types'
 
 import BigNumber from 'bignumber.js'
-
-import {Amounts} from '@yoroi/cardano-wallet/utils/utils'
 
 import {getOperationTypeKey} from './getOperationTypeKey'
 import {TransactionSummary} from './types'

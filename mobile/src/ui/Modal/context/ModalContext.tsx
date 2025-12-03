@@ -3,8 +3,8 @@ import {App} from '@yoroi/types'
 import * as React from 'react'
 import {Keyboard} from 'react-native'
 
-import {useAuth} from '~/features/Auth/context/AuthProvider'
 import {useIsKeyboardOpen} from '~/common/hooks/useIsKeyboardOpen'
+import {useAuth} from '~/features/Auth/context/AuthProvider'
 import {logger} from '~/kernel/logger/logger'
 
 type ModalQueueItem = {

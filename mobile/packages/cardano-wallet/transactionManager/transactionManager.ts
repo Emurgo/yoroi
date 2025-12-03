@@ -1,5 +1,6 @@
 import {TipStatusResponse, TxHistoryRequest, WalletContext} from '@yoroi/api'
 import {PromiseAllLimited, isArray, parseSafe} from '@yoroi/common'
+import {getLogger} from '@yoroi/common'
 import {RemoteCertificateMeta} from '@yoroi/staking'
 import {CertificateKind as CertificateKindValue} from '@yoroi/tx'
 import {
@@ -16,11 +17,9 @@ import {fromPairs, mapValues, max} from 'lodash'
 import DeviceInfo from 'react-native-device-info'
 import {defaultMemoize} from 'reselect'
 
-import {getLogger} from '@yoroi/common'
-import {Version, versionCompare} from './utils/versioning'
-
 import * as yoroiApi from '../api/api'
 import {ApiHistoryError} from '../errors'
+import {Version, versionCompare} from './utils/versioning'
 
 type TransactionManagerState = {
   transactions: Transactions
@@ -856,15 +855,18 @@ export const makeTxManagerStorage = (
       const sample = corruptedTxids.slice(0, sampleSize)
       const remaining = corruptedTxids.length - sampleSize
 
-      getLogger().warn('makeTxManagerStorage: corrupted transactions detected', {
-        totalCorrupted: corruptedTxids.length,
-        totalProcessed: tuples.length,
-        sampleCorruptedTxids: sample,
-        ...(remaining > 0 && {
-          message: `${remaining} more corrupted transactions (not logged individually)`,
-        }),
-        note: 'Corrupted transactions will be removed from txids list to prevent future loading',
-      })
+      getLogger().warn(
+        'makeTxManagerStorage: corrupted transactions detected',
+        {
+          totalCorrupted: corruptedTxids.length,
+          totalProcessed: tuples.length,
+          sampleCorruptedTxids: sample,
+          ...(remaining > 0 && {
+            message: `${remaining} more corrupted transactions (not logged individually)`,
+          }),
+          note: 'Corrupted transactions will be removed from txids list to prevent future loading',
+        },
+      )
 
       // Clean up corrupted transaction IDs from the txids list
       // This prevents them from being loaded again next time and blocking the app

@@ -7,8 +7,6 @@ import type {Certificate} from '@emurgo/cross-csl-core'
 import {BigNumber} from 'bignumber.js'
 
 import * as legacyApi from './api/api'
-import {CardanoTypes, YoroiWallet} from './types'
-
 import {createCombinedDelegationTx} from './createCombinedDelegationTx'
 import {createDelegationTx} from './createDelegationTx'
 import {createSendTx} from './createSendTx'
@@ -18,6 +16,7 @@ import {createVotingRegTx} from './createVotingRegTx'
 import {createWithdrawalTx} from './createWithdrawalTx'
 import {createWithdrawalWithGovernanceTx} from './createWithdrawalWithGovernanceTx'
 import {convertRawUtxosToModernUtxos} from './helpers'
+import {CardanoTypes, YoroiWallet} from './types'
 
 /**
  * Helper to get absolute slot number from wallet

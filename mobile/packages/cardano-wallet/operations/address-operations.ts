@@ -1,13 +1,12 @@
 import {cardanoConfig, derivationConfig} from '@yoroi/blockchains'
+import {getLogger, throwLoggedError} from '@yoroi/common'
 import {Address, App, Branded, Wallet} from '@yoroi/types'
 
 import * as CSL from '@emurgo/cross-csl-core'
 
-import {getLogger, throwLoggedError} from '@yoroi/common'
-
-import {CardanoMobile} from '../wrappedCsl'
 import {AccountManager} from '../account-manager/account-manager'
 import type {ReadOnlyAccountManager} from '../account-manager/read-only-account-manager'
+import {CardanoMobile} from '../wrappedCsl'
 
 /**
  * Get change address for a wallet
@@ -38,7 +37,9 @@ export const getChangeAddress = (
   )
   const [changeAddress] = unseen
   if (!changeAddress) {
-    throwLoggedError(getLogger())('getChangeAddress: unable to resolve change address')
+    throwLoggedError(getLogger())(
+      'getChangeAddress: unable to resolve change address',
+    )
   }
   return changeAddress as string // Address extends string, so this is safe
 }
@@ -126,7 +127,9 @@ export const getAddressing = (
     }
   }
 
-  throwLoggedError(getLogger())(`getAddressing: missing address info for: ${address}`)
+  throwLoggedError(getLogger())(
+    `getAddressing: missing address info for: ${address}`,
+  )
 }
 
 /**

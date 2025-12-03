@@ -1,3 +1,5 @@
+import {convertRawUtxosToModernUtxos} from '@yoroi/cardano-wallet/transaction-recipes/helpers'
+import {YoroiWallet} from '@yoroi/cardano-wallet/types'
 import {
   type TransactionMetadata,
   addInputs,
@@ -17,8 +19,6 @@ import {BigNumber} from 'bignumber.js'
 import * as React from 'react'
 
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
-import {convertRawUtxosToModernUtxos} from '@yoroi/cardano-wallet/transaction-recipes/helpers'
-import {YoroiWallet} from '@yoroi/cardano-wallet/types'
 
 import {storePolicyScript} from '../storage/mintPolicyStorage'
 import type {MintFormData} from '../types'

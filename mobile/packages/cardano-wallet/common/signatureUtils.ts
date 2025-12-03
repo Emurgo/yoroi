@@ -1,4 +1,5 @@
 import {cardanoConfig, derivationConfig} from '@yoroi/blockchains'
+import {getLogger, throwLoggedError} from '@yoroi/common'
 import {Addressing, createLedgerPlutusPayload, getAllSigners} from '@yoroi/tx'
 import {Balance, Branded, Wallet} from '@yoroi/types'
 
@@ -7,10 +8,8 @@ import * as CSL_TYPES from '@emurgo/cross-csl-core'
 import {Buffer} from 'buffer'
 import {uniqWith} from 'lodash'
 
-import {getLogger, throwLoggedError} from '@yoroi/common'
-import {CardanoMobile} from '../wrappedCsl'
-
 import {CardanoTypes, YoroiWallet} from '../types'
+import {CardanoMobile} from '../wrappedCsl'
 
 export const createSwapCancellationLedgerPayload = async (
   cbor: string,
@@ -233,7 +232,10 @@ export const getDerivationPathForAddress = (
   const index = Math.max(internalIndex, externalIndex)
 
   if (internalIndex === -1 && externalIndex === -1) {
-    if (!partial) throwLoggedError(getLogger())('Could not find matching address ' + address)
+    if (!partial)
+      throwLoggedError(getLogger())(
+        'Could not find matching address ' + address,
+      )
     return [
       config.derivations.base.harden.purpose,
       config.derivations.base.harden.coinType,

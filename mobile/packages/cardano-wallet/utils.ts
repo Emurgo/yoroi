@@ -1,4 +1,5 @@
 import {RawUtxo} from '@yoroi/api'
+import {getLogger} from '@yoroi/common'
 import {primaryTokenId as defaultPrimaryTokenId} from '@yoroi/portfolio'
 import {
   SendToken,
@@ -11,12 +12,10 @@ import {WasmModuleProxy} from '@emurgo/cross-csl-core'
 import {BigNumber} from 'bignumber.js'
 import {Buffer} from 'buffer'
 
-import {getLogger} from '@yoroi/common'
-
-import {Amounts} from './utils/utils'
 import {identifierToCardanoAsset} from './assetHelpers'
 import {withMinAmounts} from './getMinAmounts'
 import {CardanoTypes, YoroiWallet} from './types'
+import {Amounts} from './utils/utils'
 import {CardanoMobileWrapped} from './wrappedCsl'
 
 export const deriveRewardAddressHex = (
@@ -139,9 +138,12 @@ export const cardanoValueFromRemoteFormat = (
         remoteAsset.tokenId,
       )
       if (!policyId || !name) {
-        getLogger().warn('cardanoValueFromRemoteFormat: Invalid asset identifier', {
-          tokenId: remoteAsset.tokenId,
-        })
+        getLogger().warn(
+          'cardanoValueFromRemoteFormat: Invalid asset identifier',
+          {
+            tokenId: remoteAsset.tokenId,
+          },
+        )
         continue
       }
 

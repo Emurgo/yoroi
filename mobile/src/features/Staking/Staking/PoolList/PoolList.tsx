@@ -1,6 +1,9 @@
+import {formatTokenWithText} from '@yoroi/cardano-wallet/utils/format'
+import {asQuantity} from '@yoroi/cardano-wallet/utils/utils'
 import {useDebouncedValue} from '@yoroi/common'
 import {ExplorerPoolInfo} from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 
 import {FlashList} from '@shopify/flash-list'
 import {Image} from 'expo-image'
@@ -14,10 +17,7 @@ import {
 } from 'react-native'
 
 import {useSearch} from '~/features/Search/SearchContext'
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 import {Space} from '~/ui/Space/Space'
-import {formatTokenWithText} from '@yoroi/cardano-wallet/utils/format'
-import {asQuantity} from '@yoroi/cardano-wallet/utils/utils'
 
 import {usePoolList} from './usePoolList'
 

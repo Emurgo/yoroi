@@ -1,7 +1,12 @@
+import {isEmptyString} from '@yoroi/cardano-wallet/utils/string'
+import {getWalletNameError} from '@yoroi/cardano-wallet/utils/validators'
 import {useAsyncStorage} from '@yoroi/common'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Api, Wallet} from '@yoroi/types'
+import {parseWalletMeta} from '@yoroi/wallet-manager/common/validators/wallet-meta'
+import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
+import {useCreateWalletXPub} from '@yoroi/wallet-manager/hooks/useCreateWalletXPub'
 
 import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
@@ -12,9 +17,6 @@ import {
   Text,
 } from 'react-native'
 
-import {parseWalletMeta} from '@yoroi/wallet-manager/common/validators/wallet-meta'
-import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
-import {useCreateWalletXPub} from '@yoroi/wallet-manager/hooks/useCreateWalletXPub'
 import {showErrorDialog} from '~/kernel/dialogs'
 import {errorMessages} from '~/kernel/i18n/messages/global'
 import {useStrings} from '~/kernel/i18n/useStrings'
@@ -24,8 +26,6 @@ import {Button} from '~/ui/Button/Button'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
 import {TextInput} from '~/ui/TextInput/TextInput'
-import {isEmptyString} from '@yoroi/cardano-wallet/utils/string'
-import {getWalletNameError} from '@yoroi/cardano-wallet/utils/validators'
 
 const DEFAULT_IMPLEMENTATION: Wallet.Implementation = 'cardano-cip1852'
 const DEFAULT_ADDRESS_MODE: Wallet.AddressMode = 'single'

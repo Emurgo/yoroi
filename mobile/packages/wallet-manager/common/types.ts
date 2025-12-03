@@ -1,3 +1,9 @@
+import type {CardanoWalletDependencies} from '@yoroi/cardano-wallet/dependencies'
+import {
+  CardanoTypes,
+  WalletEvent,
+  YoroiWallet,
+} from '@yoroi/cardano-wallet/types'
 import {App, Chain, HW, Network, Portfolio} from '@yoroi/types'
 
 import {WasmModuleProxy} from '@emurgo/cross-csl-core'
@@ -5,8 +11,6 @@ import {WasmModuleProxy} from '@emurgo/cross-csl-core'
 // TODO: KeychainManager should be injected, not imported from kernel
 // For now, keeping the import but it should come from dependencies
 import {KeychainManager} from '~/kernel/storage/Keychain'
-import {CardanoTypes, WalletEvent, YoroiWallet} from '@yoroi/cardano-wallet/types'
-import type {CardanoWalletDependencies} from '@yoroi/cardano-wallet/dependencies'
 
 export type NetworkTokenManagers = Readonly<
   Record<Chain.SupportedNetworks, Portfolio.Manager.Token>

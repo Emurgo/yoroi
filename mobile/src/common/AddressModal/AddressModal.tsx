@@ -1,21 +1,21 @@
 import {addressVisualDerivationPathMaker} from '@yoroi/blockchains'
+import {
+  getSpendingKey,
+  getStakingKey,
+} from '@yoroi/cardano-wallet/addressInfo/addressInfo'
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 
 import {fromPairs} from 'lodash'
 import * as React from 'react'
 import {Linking, Text, View} from 'react-native'
 import QRCode from 'react-native-qrcode-svg'
 
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {isEmptyString} from '~/kernel/utils'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Copiable} from '~/ui/Copiable/Copiable'
 import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
-import {
-  getSpendingKey,
-  getStakingKey,
-} from '@yoroi/cardano-wallet/addressInfo/addressInfo'
 
 type Path = {
   account: number

@@ -1,5 +1,8 @@
+import {isEmptyString} from '@yoroi/cardano-wallet/utils/string'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {App} from '@yoroi/types'
+import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 
 import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
@@ -7,10 +10,8 @@ import {useIntl} from 'react-intl'
 import {ScrollView, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useAuth} from '~/features/Auth/context/AuthProvider'
-import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 import {usePromise} from '~/common/hooks/usePromise'
+import {useAuth} from '~/features/Auth/context/AuthProvider'
 import {showErrorDialog} from '~/kernel/dialogs'
 import {errorMessages} from '~/kernel/i18n/messages'
 import {useStrings} from '~/kernel/i18n/useStrings'
@@ -20,7 +21,6 @@ import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingVi
 import {LoadingOverlay} from '~/ui/LoadingOverlay/LoadingOverlay'
 import {Text} from '~/ui/Text/Text'
 import {TextInput} from '~/ui/TextInput/TextInput'
-import {isEmptyString} from '@yoroi/cardano-wallet/utils/string'
 
 export const EnableEasyConfirmationScreen = () => {
   const strings = useStrings()

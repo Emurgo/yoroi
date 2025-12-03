@@ -1,3 +1,8 @@
+import {
+  BluetoothDisabledError,
+  RejectedByUserError,
+} from '@yoroi/cardano-wallet/hw/hw'
+import {Device} from '@yoroi/cardano-wallet/types/hw'
 import {atoms as a, lightPalette, useTheme} from '@yoroi/theme'
 import {HW} from '@yoroi/types'
 
@@ -21,8 +26,6 @@ import {
 import {logger} from '~/kernel/logger/logger'
 import {Button} from '~/ui/Button/Button'
 import {Space} from '~/ui/Space/Space'
-import {BluetoothDisabledError, RejectedByUserError} from '@yoroi/cardano-wallet/hw/hw'
-import {Device} from '@yoroi/cardano-wallet/types/hw'
 
 import {BulletPointItem} from '../BulletPointItem'
 import {Loading} from '../Loading/Loading'

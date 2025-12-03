@@ -1,14 +1,14 @@
 import {time} from '@yoroi/common'
 import {useNotificationManager} from '@yoroi/notifications'
 import {Chain, Notifications} from '@yoroi/types'
+import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
+import {useAddressMode} from '@yoroi/wallet-manager/hooks/useAddressMode'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 
 import {useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {BannerIds, showBanner} from '~/features/Notifications/common/banners'
 import {useUtxoList} from '~/features/Transactions/useCases/UtxoList/useUtxoList'
-import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
-import {useAddressMode} from '@yoroi/wallet-manager/hooks/useAddressMode'
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 import {features} from '~/kernel/features'
 import {useStrings} from '~/kernel/i18n/useStrings'
 

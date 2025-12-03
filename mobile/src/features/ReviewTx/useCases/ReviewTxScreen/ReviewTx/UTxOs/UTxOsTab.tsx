@@ -1,5 +1,7 @@
+import {formatTokenWithText} from '@yoroi/cardano-wallet/utils/format'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 
 import * as React from 'react'
 import {Text, View} from 'react-native'
@@ -13,13 +15,11 @@ import {
   FormattedOutputs,
   FormattedTx,
 } from '~/features/ReviewTx/common/types'
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Accordion} from '~/ui/Accordion/Accordion'
 import {Copiable} from '~/ui/Copiable/Copiable'
 import {Divider} from '~/ui/Divider/Divider'
 import {Space} from '~/ui/Space/Space'
-import {formatTokenWithText} from '@yoroi/cardano-wallet/utils/format'
 
 export const UTxOsTab = ({tx}: {tx: FormattedTx}) => {
   const {palette: p} = useTheme()

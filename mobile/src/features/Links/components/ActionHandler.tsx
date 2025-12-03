@@ -9,6 +9,8 @@
  * Uses RxJS operators to manage state flow and avoid complex useEffect interdependencies.
  */
 import {PendingAction, requiresWallet, useLinks} from '@yoroi/links'
+import {useWalletManagerSelector} from '@yoroi/wallet-manager/context/WalletManagerProvider'
+import {useSelectWalletModal} from '@yoroi/wallet-manager/ui/modals/SelectWalletModal'
 
 import * as React from 'react'
 import {InteractionManager} from 'react-native'
@@ -24,8 +26,6 @@ import {
 } from 'rxjs'
 
 import {useAuth} from '~/features/Auth/context/AuthProvider'
-import {useWalletManagerSelector} from '@yoroi/wallet-manager/context/WalletManagerProvider'
-import {useSelectWalletModal} from '@yoroi/wallet-manager/ui/modals/SelectWalletModal'
 import {logger} from '~/kernel/logger/logger'
 import {isWalletSelectionRoute} from '~/kernel/navigation/common/helpers'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'

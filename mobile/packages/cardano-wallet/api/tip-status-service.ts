@@ -11,11 +11,10 @@
  * - Reduces redundant API calls across the app
  */
 import {TipStatusResponse} from '@yoroi/api'
+import {getLogger} from '@yoroi/common'
 import {Chain} from '@yoroi/types'
 
 import {BehaviorSubject, Observable, Subscription, interval} from 'rxjs'
-
-import {getLogger} from '@yoroi/common'
 
 import * as yoroiApi from './api'
 

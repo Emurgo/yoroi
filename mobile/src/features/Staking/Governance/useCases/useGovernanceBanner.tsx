@@ -1,17 +1,17 @@
 import {time} from '@yoroi/common'
 import {useNotificationManager} from '@yoroi/notifications'
 import {Branded, Notifications} from '@yoroi/types'
-
-import {useQuery, useQueryClient} from '@tanstack/react-query'
-
-import {BannerIds, showBanner} from '~/features/Notifications/common/banners'
 import {useSelectedNetwork} from '@yoroi/wallet-manager/hooks/useSelectedNetwork'
 import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 import {useWalletEvent} from '@yoroi/wallet-manager/hooks/useWalletEvent'
+
+import {useQuery, useQueryClient} from '@tanstack/react-query'
+
+import {governanceQueryKeys, notificationQueryKeys} from '~/common/queries'
+import {BannerIds, showBanner} from '~/features/Notifications/common/banners'
 import {minAdaForGovernanceBanner} from '~/kernel/constants'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
-import {governanceQueryKeys, notificationQueryKeys} from '~/common/queries'
 
 import {useGovernanceParticipation} from '../common/helpers'
 

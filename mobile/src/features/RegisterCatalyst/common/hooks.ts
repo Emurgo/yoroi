@@ -1,13 +1,13 @@
+import {YoroiWallet} from '@yoroi/cardano-wallet/types'
+import {isShelley} from '@yoroi/cardano-wallet/utils'
 import {time} from '@yoroi/common'
 import {Catalyst, useCatalyst} from '@yoroi/staking'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 
 import {UseQueryOptions, useQuery} from '@tanstack/react-query'
 
 import {usePortfolioPrimaryBalance} from '~/features/Portfolio/common/hooks/usePortfolioPrimaryBalance'
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 import {throwLoggedError} from '~/kernel/logger/helpers/throw-logged-error'
-import {YoroiWallet} from '@yoroi/cardano-wallet/types'
-import {isShelley} from '@yoroi/cardano-wallet/utils'
 
 export const useCanVote = (wallet: YoroiWallet) => {
   const {meta} = useSelectedWallet()

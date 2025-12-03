@@ -1,8 +1,13 @@
+import {isEmptyString} from '@yoroi/cardano-wallet/utils/string'
+import {getWalletNameError} from '@yoroi/cardano-wallet/utils/validators'
 import {useAsyncStorage} from '@yoroi/common'
 import {Blockies} from '@yoroi/identicon'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Api, Wallet} from '@yoroi/types'
+import {parseWalletMeta} from '@yoroi/wallet-manager/common/validators/wallet-meta'
+import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
+import {useCreateWalletXPub} from '@yoroi/wallet-manager/hooks/useCreateWalletXPub'
 
 import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
@@ -16,14 +21,11 @@ import {
   useWindowDimensions,
 } from 'react-native'
 
+import {useBold} from '~/common/hooks/useBold'
 import {useAnalyticsTracking} from '~/features/Analytics/hooks/useAnalyticsTracking'
 import {AnalyticsEventEnum} from '~/features/Analytics/types/analytics-event-enum'
 import {YoroiHelpLink} from '~/features/SetupWallet/common/constants'
 import {Info as InfoIcon} from '~/features/SetupWallet/illustrations/Info'
-import {parseWalletMeta} from '@yoroi/wallet-manager/common/validators/wallet-meta'
-import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
-import {useCreateWalletXPub} from '@yoroi/wallet-manager/hooks/useCreateWalletXPub'
-import {useBold} from '~/common/hooks/useBold'
 import {showErrorDialog} from '~/kernel/dialogs'
 import {debugWalletInfo, features} from '~/kernel/features'
 import {errorMessages} from '~/kernel/i18n/messages/global'
@@ -40,8 +42,6 @@ import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
 import {StepperProgress} from '~/ui/StepperProgress/StepperProgress'
 import {TextInput} from '~/ui/TextInput/TextInput'
-import {isEmptyString} from '@yoroi/cardano-wallet/utils/string'
-import {getWalletNameError} from '@yoroi/cardano-wallet/utils/validators'
 
 // when hw, later will be part of the onboarding
 const addressMode: Wallet.AddressMode = 'single'

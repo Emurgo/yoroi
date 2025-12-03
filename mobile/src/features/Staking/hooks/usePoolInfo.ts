@@ -1,10 +1,10 @@
 import {API_ENDPOINTS} from '@yoroi/api'
 import {FullPoolInfo, poolInfoApiMaker} from '@yoroi/staking'
+import {useSelectedNetwork} from '@yoroi/wallet-manager/hooks/useSelectedNetwork'
 
 import {useQuery} from '@tanstack/react-query'
 import * as React from 'react'
 
-import {useSelectedNetwork} from '@yoroi/wallet-manager/hooks/useSelectedNetwork'
 import {poolQueryKeys} from '~/common/queries'
 
 export const usePoolInfo = ({poolId}: {poolId: string}): FullPoolInfo => {

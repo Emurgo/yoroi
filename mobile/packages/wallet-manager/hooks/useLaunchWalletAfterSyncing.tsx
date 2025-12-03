@@ -1,10 +1,10 @@
+import {YoroiWallet} from '@yoroi/cardano-wallet/types'
 import {time} from '@yoroi/common'
+import {getLogger} from '@yoroi/common'
 
 import * as React from 'react'
 
-import {getLogger} from '@yoroi/common'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
-import {YoroiWallet} from '@yoroi/cardano-wallet/types'
 
 import {useWalletManagerSelector} from '../context/WalletManagerProvider'
 

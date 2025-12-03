@@ -1,9 +1,8 @@
+import {YoroiWallet} from '@yoroi/cardano-wallet/types'
 import {Chain, Wallet} from '@yoroi/types'
 
 import {freeze} from 'immer'
 import {BehaviorSubject, Observable} from 'rxjs'
-
-import {YoroiWallet} from '@yoroi/cardano-wallet/types'
 
 import {SyncWalletInfos} from '../common/types'
 

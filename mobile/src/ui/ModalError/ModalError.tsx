@@ -1,3 +1,10 @@
+import {
+  AdaAppClosedError,
+  BluetoothDisabledError,
+  GeneralConnectionError,
+  LedgerUserError,
+  RejectedByUserError,
+} from '@yoroi/cardano-wallet/hw/hw'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
@@ -8,13 +15,6 @@ import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
-import {
-  AdaAppClosedError,
-  BluetoothDisabledError,
-  GeneralConnectionError,
-  LedgerUserError,
-  RejectedByUserError,
-} from '@yoroi/cardano-wallet/hw/hw'
 
 type Props = {
   error: Error

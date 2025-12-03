@@ -1,5 +1,7 @@
+import {isEmptyString} from '@yoroi/cardano-wallet/utils/string'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
 
 import {useNavigation} from '@react-navigation/native'
 import {validateMnemonic} from 'bip39'
@@ -14,9 +16,8 @@ import {
 } from 'react-native'
 import {FlatList, ScrollView} from 'react-native-gesture-handler'
 
-import {WalletDuplicatedModal} from '~/features/SetupWallet/common/WalletDuplicatedModal/WalletDuplicatedModal'
-import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
 import {useBold} from '~/common/hooks/useBold'
+import {WalletDuplicatedModal} from '~/features/SetupWallet/common/WalletDuplicatedModal/WalletDuplicatedModal'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {SetupWalletRouteNavigation} from '~/kernel/navigation/types'
 import {android} from '~/kernel/runtime'
@@ -26,7 +27,6 @@ import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {useScrollView} from '~/ui/ScrollView/hooks/useScrollView'
 import {Space} from '~/ui/Space/Space'
 import {StepperProgress} from '~/ui/StepperProgress/StepperProgress'
-import {isEmptyString} from '@yoroi/cardano-wallet/utils/string'
 
 import {MnemonicInput} from './MnemonicInput/MnemonicInput'
 

@@ -1,6 +1,7 @@
 import {parseNumberFromText} from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Swap} from '@yoroi/types'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 
 import _ from 'lodash'
 import * as React from 'react'
@@ -13,7 +14,6 @@ import {
   PRICE_IMPACT_MODERATE_RISK,
   undefinedToken,
 } from '~/features/Swap/common/constants'
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 import {useLanguage} from '~/kernel/i18n/LanguageProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Divider} from '~/ui/Divider/Divider'

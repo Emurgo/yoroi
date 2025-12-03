@@ -1,5 +1,4 @@
 import {CardanoMobile} from '../wrappedCsl'
-
 import {getSpendingKey, getStakingKey, toWasmAddress} from './addressInfo'
 
 // base

@@ -1,3 +1,10 @@
+import {cip30ExtensionMaker} from '@yoroi/cardano-wallet/cip30/cip30'
+import {
+  cip95ExtensionMaker,
+  supportsCIP95,
+} from '@yoroi/cardano-wallet/cip95/cip95'
+import {YoroiWallet} from '@yoroi/cardano-wallet/types'
+import {collateralConfig} from '@yoroi/cardano-wallet/utxoManager/utxos'
 import {
   DappConnector,
   ResolverWallet,
@@ -8,11 +15,6 @@ import {App, Wallet} from '@yoroi/types'
 
 import {Transaction} from '@emurgo/cross-csl-core'
 import BigNumber from 'bignumber.js'
-
-import {cip30ExtensionMaker} from '@yoroi/cardano-wallet/cip30/cip30'
-import {cip95ExtensionMaker, supportsCIP95} from '@yoroi/cardano-wallet/cip95/cip95'
-import {YoroiWallet} from '@yoroi/cardano-wallet/types'
-import {collateralConfig} from '@yoroi/cardano-wallet/utxoManager/utxos'
 
 function hasProtocol(url: string) {
   return /^[a-z]*:\/\//i.test(url)
@@ -167,7 +169,7 @@ export const createDappConnector = (options: CreateDappConnectorOptions) => {
   const {wallet, meta, appStorage, confirmConnection, signTx, signData} =
     options
   const cip30 = cip30ExtensionMaker(wallet, meta, {
-    createCollateralEntry: (wallet as any)._dependencies.createCollateralEntry,
+    createCollateralEntry: wallet._dependencies.createCollateralEntry,
   })
   const cip95 = supportsCIP95(meta.implementation)
     ? cip95ExtensionMaker(wallet, meta)

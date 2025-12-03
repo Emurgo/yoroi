@@ -1,3 +1,4 @@
+import {isEmptyString} from '@yoroi/cardano-wallet/utils/string'
 import {Portfolio} from '@yoroi/types'
 
 import {NavigationProp, useNavigation} from '@react-navigation/native'
@@ -5,7 +6,6 @@ import * as React from 'react'
 
 import {useParams} from '~/kernel/navigation/hooks/useParams'
 import {PortfolioRoutes} from '~/kernel/navigation/types'
-import {isEmptyString} from '@yoroi/cardano-wallet/utils/string'
 
 export const useNavigateTo = () => {
   const navigation = useNavigation<NavigationProp<PortfolioRoutes>>()

@@ -1,11 +1,10 @@
 import {useAsyncStorage} from '@yoroi/common'
 import {App, Notifications as NotificationTypes} from '@yoroi/types'
+import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
+import {walletManager} from '@yoroi/wallet-manager/wallet-manager'
 
 import * as React from 'react'
 import {Subject} from 'rxjs'
-
-import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
-import {walletManager} from '@yoroi/wallet-manager/wallet-manager'
 
 import {generateNotificationId} from './notifications'
 import {buildProcessedNotificationsStorage} from './processed-notifications-storage'

@@ -414,9 +414,12 @@ function amountsToValue(
 
   const adaBigNum = csl.BigNum.fromStr(adaAmount)
   if (!adaBigNum) {
-    getLogger().error('amountsToValue: Failed to create BigNum from ADA amount', {
-      adaAmount,
-    })
+    getLogger().error(
+      'amountsToValue: Failed to create BigNum from ADA amount',
+      {
+        adaAmount,
+      },
+    )
     throw new Error(`Failed to create BigNum from ADA amount: ${adaAmount}`)
   }
 
@@ -653,7 +656,9 @@ export async function buildTransaction(
     // Create CSL TransactionBuilder
     const cslTxBuilder = createCSLTransactionBuilder(csl, protocolParams)
     if (!cslTxBuilder) {
-      getLogger().error('buildTransaction: Failed to create CSL TransactionBuilder')
+      getLogger().error(
+        'buildTransaction: Failed to create CSL TransactionBuilder',
+      )
       throw new Error('Failed to create CSL TransactionBuilder')
     }
 
@@ -730,9 +735,12 @@ export async function buildTransaction(
         }
       }
       cslTxBuilder.setCerts(certs)
-      getLogger().info('buildTransaction: Set certificates on transaction builder', {
-        certificatesCount: state.certificates.length,
-      })
+      getLogger().info(
+        'buildTransaction: Set certificates on transaction builder',
+        {
+          certificatesCount: state.certificates.length,
+        },
+      )
     }
 
     // Add withdrawals
@@ -773,10 +781,13 @@ export async function buildTransaction(
           }
           const rewardAddr = csl.RewardAddress.fromAddress(address)
           if (!rewardAddr) {
-            getLogger().error('buildTransaction: Failed to create RewardAddress', {
-              withdrawalIndex: i,
-              rewardAddress: withdrawal.rewardAddress,
-            })
+            getLogger().error(
+              'buildTransaction: Failed to create RewardAddress',
+              {
+                withdrawalIndex: i,
+                rewardAddress: withdrawal.rewardAddress,
+              },
+            )
             throw new Error(
               `Invalid reward address: ${withdrawal.rewardAddress}`,
             )
@@ -869,9 +880,12 @@ export async function buildTransaction(
         }
       }
       cslTxBuilder.setWithdrawals(withdrawals)
-      getLogger().info('buildTransaction: Set withdrawals on transaction builder', {
-        withdrawalsCount: state.withdrawals.length,
-      })
+      getLogger().info(
+        'buildTransaction: Set withdrawals on transaction builder',
+        {
+          withdrawalsCount: state.withdrawals.length,
+        },
+      )
     }
 
     // Set TTL
@@ -905,11 +919,14 @@ export async function buildTransaction(
 
         const txInput = csl.TransactionInput.new(txHash, utxo.txIndex)
         if (!txInput) {
-          getLogger().error('buildTransaction: Failed to create TransactionInput', {
-            inputIndex: i,
-            txHash: utxo.txHash,
-            txIndex: utxo.txIndex,
-          })
+          getLogger().error(
+            'buildTransaction: Failed to create TransactionInput',
+            {
+              inputIndex: i,
+              txHash: utxo.txHash,
+              txIndex: utxo.txIndex,
+            },
+          )
           throw new Error(
             `Failed to create TransactionInput for ${utxo.txHash}:${utxo.txIndex}`,
           )
@@ -1058,7 +1075,9 @@ export async function buildTransaction(
         primaryTokenId,
       )
       if (!cslChangeOutput) {
-        getLogger().error('buildTransaction: Failed to create manual change output')
+        getLogger().error(
+          'buildTransaction: Failed to create manual change output',
+        )
         throw new Error('Failed to create manual change output')
       }
       cslTxBuilder.addOutput(cslChangeOutput)
@@ -1317,7 +1336,9 @@ export async function buildTransaction(
         }
 
         cslTxBuilder.addChangeIfNeeded(changeAddr)
-        getLogger().info('buildTransaction: Successfully added change if needed')
+        getLogger().info(
+          'buildTransaction: Successfully added change if needed',
+        )
       } catch (error) {
         const errorMessage =
           error instanceof Error ? error.message : String(error)
@@ -1465,7 +1486,9 @@ export async function buildTransaction(
     // Native scripts used in minting need to be in the witness set
     const witnessSet = csl.TransactionWitnessSet.new()
     if (!witnessSet) {
-      getLogger().error('buildTransaction: Failed to create TransactionWitnessSet')
+      getLogger().error(
+        'buildTransaction: Failed to create TransactionWitnessSet',
+      )
       throw new Error('Failed to create TransactionWitnessSet')
     }
 
@@ -1488,9 +1511,12 @@ export async function buildTransaction(
 
       if (nativeScriptsForWitness.len() > 0) {
         witnessSet.setNativeScripts(nativeScriptsForWitness)
-        getLogger().info('buildTransaction: Added native scripts to witness set', {
-          nativeScriptCount: nativeScriptsForWitness.len(),
-        })
+        getLogger().info(
+          'buildTransaction: Added native scripts to witness set',
+          {
+            nativeScriptCount: nativeScriptsForWitness.len(),
+          },
+        )
       }
     }
 
@@ -1505,7 +1531,9 @@ export async function buildTransaction(
     // Serialize full transaction to CBOR (not just the body)
     const txBytes = fullTx.toBytes()
     if (!txBytes || txBytes.length === 0) {
-      getLogger().error('buildTransaction: Failed to serialize transaction to bytes')
+      getLogger().error(
+        'buildTransaction: Failed to serialize transaction to bytes',
+      )
       throw new Error('Failed to serialize transaction to bytes')
     }
     const cbor: TransactionCbor = Buffer.from(txBytes).toString(

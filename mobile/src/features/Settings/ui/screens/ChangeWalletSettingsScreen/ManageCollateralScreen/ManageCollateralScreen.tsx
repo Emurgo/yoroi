@@ -1,7 +1,20 @@
 import {RawUtxo} from '@yoroi/api'
+import {createSendTxFromWallet} from '@yoroi/cardano-wallet/transaction-recipes'
+import {
+  Amounts,
+  Quantities,
+  asQuantity,
+} from '@yoroi/cardano-wallet/utils/utils'
+import {useCollateralInfo} from '@yoroi/cardano-wallet/utxoManager/useCollateralInfo'
+import {useSetCollateralId} from '@yoroi/cardano-wallet/utxoManager/useSetCollateralId'
+import {
+  collateralConfig,
+  utxosMaker,
+} from '@yoroi/cardano-wallet/utxoManager/utxos'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {TransactionOutput} from '@yoroi/tx'
 import {Branded, Portfolio, UtxoId} from '@yoroi/types'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 
 import * as CSL from '@emurgo/cross-csl-core'
 import {useMutation} from '@tanstack/react-query'
@@ -20,7 +33,6 @@ import {
 
 import {useBalances} from '~/features/Portfolio/common/hooks/useBalances'
 import {getTxIdFromArgs} from '~/features/ReviewTx/common/utils/getTxId'
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useUnsafeParams} from '~/kernel/navigation/hooks/useUnsafeParams'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
@@ -34,11 +46,6 @@ import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
 import {TokenAmountItem} from '~/ui/TokenAmountItem/TokenAmountItem'
-import {createSendTxFromWallet} from '@yoroi/cardano-wallet/transaction-recipes'
-import {useCollateralInfo} from '@yoroi/cardano-wallet/utxoManager/useCollateralInfo'
-import {useSetCollateralId} from '@yoroi/cardano-wallet/utxoManager/useSetCollateralId'
-import {collateralConfig, utxosMaker} from '@yoroi/cardano-wallet/utxoManager/utxos'
-import {Amounts, Quantities, asQuantity} from '@yoroi/cardano-wallet/utils/utils'
 
 import {CollateralInfoModal} from './CollateralInfoModal'
 import {

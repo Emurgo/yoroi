@@ -1,5 +1,6 @@
 import {cardanoConfig} from '@yoroi/blockchains'
 import {isHex} from '@yoroi/common'
+import {getLogger} from '@yoroi/common'
 import {
   ModernUtxo,
   NoOutputsError,
@@ -15,8 +16,6 @@ import {
 import {Address, App, Balance, Branded, Portfolio, Wallet} from '@yoroi/types'
 
 import type {Address as CSLAddress} from '@emurgo/cross-csl-core'
-
-import {getLogger} from '@yoroi/common'
 
 import {cardanoValueFromAmounts} from '../cardanoValueFromAmounts'
 import {CardanoMobileWrapped} from '../wrappedCsl'

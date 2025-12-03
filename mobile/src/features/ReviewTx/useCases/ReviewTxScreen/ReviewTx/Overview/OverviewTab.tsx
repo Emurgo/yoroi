@@ -1,3 +1,4 @@
+import {formatTokenWithText} from '@yoroi/cardano-wallet/utils/format'
 import {
   isBoolean,
   parseSafe,
@@ -7,6 +8,8 @@ import {
 import {Blockies} from '@yoroi/identicon'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Balance, Branded} from '@yoroi/types'
+import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 
 import {CredKind} from '@emurgo/cross-csl-core'
 import {useQuery} from '@tanstack/react-query'
@@ -34,8 +37,6 @@ import {
   FormattedOutputs,
   FormattedTx,
 } from '~/features/ReviewTx/common/types'
-import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Accordion} from '~/ui/Accordion/Accordion'
 import {Button} from '~/ui/Button/Button'
@@ -46,7 +47,6 @@ import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {Space} from '~/ui/Space/Space'
 import {WarningBanner} from '~/ui/WarningBanner/WarningBanner'
-import {formatTokenWithText} from '@yoroi/cardano-wallet/utils/format'
 
 import {OperationsNoticeIcon} from '../../../../illustrations/OperationsNoticeIcon'
 

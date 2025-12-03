@@ -1,3 +1,7 @@
+import {
+  HARDWARE_WALLETS,
+  useLedgerPermissions,
+} from '@yoroi/cardano-wallet/hw/hw'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
@@ -12,7 +16,6 @@ import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
-import {HARDWARE_WALLETS, useLedgerPermissions} from '@yoroi/cardano-wallet/hw/hw'
 
 const useIsAndroidUsbSupported = () => {
   const [isAndroidUsbSupported, setIsAndroidUsbSupported] =

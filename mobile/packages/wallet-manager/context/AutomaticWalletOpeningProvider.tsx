@@ -1,8 +1,7 @@
+import {getLogger} from '@yoroi/common'
 import {App} from '@yoroi/types'
 
 import * as React from 'react'
-
-import {getLogger} from '@yoroi/common'
 
 const AutomaticWalletOpenerContext = React.createContext<
   AutomaticWalletOpenerContextType | undefined

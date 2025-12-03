@@ -1,9 +1,9 @@
+import type {WalletEncryptedStorage} from '@yoroi/cardano-wallet/dependencies'
+import {YoroiWallet} from '@yoroi/cardano-wallet/types'
+import {getLogger} from '@yoroi/common'
 import {App, Chain, Network, Wallet} from '@yoroi/types'
 
-import {getLogger} from '@yoroi/common'
-import type {WalletEncryptedStorage} from '@yoroi/cardano-wallet/dependencies'
 import {KeychainManager} from '~/kernel/storage/Keychain'
-import {YoroiWallet} from '@yoroi/cardano-wallet/types'
 
 import {getWalletFactory} from '../network-manager/get-wallet-factory'
 
@@ -96,10 +96,13 @@ export const removeWalletFromStorage = async (
     try {
       await keychainManager.removeWalletKey(id)
     } catch (error) {
-      getLogger().warn('removeWalletFromStorage: Error removing keychain entry', {
-        walletId: id,
-        error,
-      })
+      getLogger().warn(
+        'removeWalletFromStorage: Error removing keychain entry',
+        {
+          walletId: id,
+          error,
+        },
+      )
     }
   }
 

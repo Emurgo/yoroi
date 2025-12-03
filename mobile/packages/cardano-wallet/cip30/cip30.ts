@@ -28,13 +28,13 @@ import {CardanoWalletDependencies} from '../dependencies'
 import {createSendTxFromWallet} from '../transaction-recipes'
 import {Pagination, YoroiWallet} from '../types'
 import {copyFromCSL, copyMultipleFromCSL, createRawTxSigningKey} from '../utils'
+import {Utxos, asQuantity} from '../utils/utils'
 import {
   collateralConfig,
   findCollateralCandidates,
   utxosMaker,
 } from '../utxoManager/utxos'
 import {CardanoMobile, CardanoMobileWrapped} from '../wrappedCsl'
-import {Utxos, asQuantity} from '../utils/utils'
 
 export type CIP30Extension = {
   getBalance(tokenId?: string): CSL.Value

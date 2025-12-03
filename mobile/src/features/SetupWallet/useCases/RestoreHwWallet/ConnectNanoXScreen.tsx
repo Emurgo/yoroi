@@ -1,6 +1,9 @@
+import {getHWDeviceInfo} from '@yoroi/cardano-wallet/hw/hw'
+import {Device} from '@yoroi/cardano-wallet/types/hw'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a} from '@yoroi/theme'
 import {HW} from '@yoroi/types'
+import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
 
 import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
@@ -8,7 +11,6 @@ import {useIntl} from 'react-intl'
 import {View} from 'react-native'
 
 import {WalletDuplicatedModal} from '~/features/SetupWallet/common/WalletDuplicatedModal/WalletDuplicatedModal'
-import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
 import {showErrorDialog} from '~/kernel/dialogs'
 import {LocalizableError} from '~/kernel/i18n/LocalizableError'
 import {errorMessages} from '~/kernel/i18n/messages/global'
@@ -19,8 +21,6 @@ import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {StepperProgress} from '~/ui/StepperProgress/StepperProgress'
-import {getHWDeviceInfo} from '@yoroi/cardano-wallet/hw/hw'
-import {Device} from '@yoroi/cardano-wallet/types/hw'
 
 type Props = {
   defaultDevices: Device[]

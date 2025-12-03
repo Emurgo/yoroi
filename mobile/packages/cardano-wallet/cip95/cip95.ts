@@ -42,7 +42,7 @@ export const cip95ExtensionMaker = (
   return {
     async signData(rootKey: string, address: string, payload: string) {
       const cip30 = cip30ExtensionMaker(wallet, meta, {
-        createCollateralEntry: (wallet as any)._dependencies.createCollateralEntry,
+        createCollateralEntry: wallet._dependencies.createCollateralEntry,
       })
       return cip30.signData(rootKey, address, payload)
     },

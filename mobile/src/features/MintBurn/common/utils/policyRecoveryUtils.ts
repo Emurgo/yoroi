@@ -1,9 +1,8 @@
+import {CardanoMobileWrapped} from '@yoroi/cardano-wallet/wrappedCsl'
 import {calculatePolicyId} from '@yoroi/tx'
 import type {MintingScript} from '@yoroi/tx'
 
 import type {WasmModuleProxy} from '@emurgo/cross-csl-core'
-
-import {CardanoMobileWrapped} from '@yoroi/cardano-wallet/wrappedCsl'
 
 import type {PolicyRecoveryData} from '../types'
 

@@ -1,6 +1,5 @@
-import {Chain} from '@yoroi/types'
-
 import {YoroiWallet} from '@yoroi/cardano-wallet/types'
+import {Chain} from '@yoroi/types'
 
 import {SyncWalletInfo} from '../common/types'
 

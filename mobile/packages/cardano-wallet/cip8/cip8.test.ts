@@ -2,13 +2,12 @@ import {normalizeToAddress} from '@yoroi/tx'
 
 import {Buffer} from 'buffer'
 
-import {CardanoMobileWrapped} from './wrappedCsl'
-import {CardanoMobile} from '../wrappedCsl'
-
 import {harden} from '../common/signatureUtils'
 import {getMasterKeyFromMnemonic} from '../mnemonic/mnemonic'
 import {createRawTxSigningKey} from '../utils'
+import {CardanoMobile} from '../wrappedCsl'
 import * as cip8 from './cip8'
+import {CardanoMobileWrapped} from './wrappedCsl'
 
 describe('CIP8', () => {
   it('should support signing', async () => {

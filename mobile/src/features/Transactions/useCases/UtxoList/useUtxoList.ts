@@ -3,11 +3,11 @@ import {addressVisualDerivationPathMaker} from '@yoroi/blockchains'
 import {primaryTokenId} from '@yoroi/portfolio'
 import type {ModernUtxo} from '@yoroi/tx'
 import {rawUtxoToModernUtxo} from '@yoroi/tx'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
+import {useWalletEvent} from '@yoroi/wallet-manager/hooks/useWalletEvent'
 
 import {useQuery, useQueryClient} from '@tanstack/react-query'
 
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
-import {useWalletEvent} from '@yoroi/wallet-manager/hooks/useWalletEvent'
 import {utxoQueryKeys} from '~/common/queries'
 
 export const useUtxoList = () => {

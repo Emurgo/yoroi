@@ -489,14 +489,17 @@ export async function buildRecipeTransaction(
     )
 
     if (!unsignedTx.cbor) {
-      getLogger().error('buildRecipeTransaction: Transaction CBOR not available', {
-        unsignedTx: {
-          inputsCount: unsignedTx.inputs.length,
-          outputsCount: unsignedTx.outputs.length,
-          withdrawalsCount: unsignedTx.withdrawals.length,
-          certificatesCount: unsignedTx.certificates.length,
+      getLogger().error(
+        'buildRecipeTransaction: Transaction CBOR not available',
+        {
+          unsignedTx: {
+            inputsCount: unsignedTx.inputs.length,
+            outputsCount: unsignedTx.outputs.length,
+            withdrawalsCount: unsignedTx.withdrawals.length,
+            certificatesCount: unsignedTx.certificates.length,
+          },
         },
-      })
+      )
       throw new Error('Transaction CBOR not available')
     }
 

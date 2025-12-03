@@ -1,4 +1,5 @@
 import {validateAndExtractAddressInfo} from '@yoroi/tx'
+import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
 
 import * as React from 'react'
 
@@ -6,7 +7,6 @@ import {
   AddressErrorInvalid,
   AddressErrorWrongNetwork,
 } from '~/features/Send/common/errors'
-import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
 
 export const useRestoreAddress = (address: string) => {
   const {selected} = useWalletManager()

@@ -15,12 +15,20 @@ import {
 import {ThemeProvider} from '@yoroi/theme'
 import {TransferProvider} from '@yoroi/transfer'
 import {Resolver} from '@yoroi/types'
+import {
+  AutomaticWalletOpeningProvider as AutomaticWalletOpenerProvider,
+  WalletManagerHydrationWrapper,
+  WalletManagerProvider,
+  useSelectedNetwork,
+  walletManager,
+} from '@yoroi/wallet-manager'
 
 import {init} from '@emurgo/cross-csl-mobile'
 import * as Sentry from '@sentry/react-native'
 import * as Updates from 'expo-updates'
 import * as React from 'react'
 
+import {useFonts} from '~/common/hooks/useFonts'
 import {BrowserProvider} from '~/features/Discover/common/BrowserProvider'
 import {PortfolioTokenActivityProvider} from '~/features/Portfolio/context/PortfolioTokenActivityProvider'
 import {ReceiveProvider} from '~/features/Receive/common/ReceiveProvider'
@@ -38,14 +46,6 @@ import {YoroiNotificationManager} from './src/features/Notifications/common/Yoro
 import {PairingProvider} from './src/features/Pairing/context/PairingProvider'
 import {SearchProvider} from './src/features/Search/SearchContext'
 import {CurrencyProvider} from './src/features/Settings/context/CurrencyProvider'
-import {
-  AutomaticWalletOpeningProvider,
-  WalletManagerHydrationWrapper,
-  WalletManagerProvider,
-  useSelectedNetwork,
-  walletManager,
-} from '@yoroi/wallet-manager'
-import {useFonts} from '~/common/hooks/useFonts'
 import {ConnectionProvider} from './src/kernel/connection/ConnectionProvider'
 import {unstoppableApiKey} from './src/kernel/constants'
 import {LanguageProvider} from './src/kernel/i18n/LanguageProvider'

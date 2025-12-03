@@ -1,7 +1,6 @@
+import {asQuantity} from '@yoroi/cardano-wallet/utils/utils'
 import {TransactionOutput} from '@yoroi/tx'
 import {Transfer} from '@yoroi/types'
-
-import {asQuantity} from '@yoroi/cardano-wallet/utils/utils'
 
 export function toTransactionOutput(entry: Transfer.Entry): TransactionOutput {
   return {

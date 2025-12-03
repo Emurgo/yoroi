@@ -1,5 +1,6 @@
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
 
 import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
@@ -14,7 +15,6 @@ import {
 import {ScrollView} from 'react-native-gesture-handler'
 import Animated, {FadeIn, FadeOut, Layout} from 'react-native-reanimated'
 
-import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
 import {useBold} from '~/common/hooks/useBold'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {SetupWalletRouteNavigation} from '~/kernel/navigation/types'

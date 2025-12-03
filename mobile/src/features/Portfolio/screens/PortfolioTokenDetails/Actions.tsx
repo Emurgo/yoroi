@@ -1,13 +1,13 @@
 import {isPrimaryToken} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Chain, Portfolio} from '@yoroi/types'
+import {useSelectedNetwork} from '@yoroi/wallet-manager/hooks/useSelectedNetwork'
 
 import * as React from 'react'
 import {View} from 'react-native'
 
 import {useNavigateTo} from '~/features/Portfolio/common/hooks/useNavigateTo'
 import {useSwap} from '~/features/Swap/common/useSwap'
-import {useSelectedNetwork} from '@yoroi/wallet-manager/hooks/useSelectedNetwork'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'

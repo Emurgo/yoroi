@@ -1,16 +1,16 @@
+import {formatTokenWithText} from '@yoroi/cardano-wallet/utils/format'
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
 import {Address} from '~/common/Address/Address'
 import {FormattedOutputs, FormattedTx} from '~/features/ReviewTx/common/types'
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Copiable} from '~/ui/Copiable/Copiable'
 import {Divider} from '~/ui/Divider/Divider'
 import {Space} from '~/ui/Space/Space'
-import {formatTokenWithText} from '@yoroi/cardano-wallet/utils/format'
 
 import {Inputs} from '../UTxOs/UTxOsTab'
 

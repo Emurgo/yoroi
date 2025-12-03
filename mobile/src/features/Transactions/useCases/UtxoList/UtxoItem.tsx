@@ -1,6 +1,7 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import type {ModernUtxo} from '@yoroi/tx'
 import {Portfolio} from '@yoroi/types'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 
 import {FlashList} from '@shopify/flash-list'
 import * as React from 'react'
@@ -8,7 +9,6 @@ import {ActivityIndicator, Text, TouchableOpacity, View} from 'react-native'
 
 import {usePortfolioTokenInfos} from '~/features/Portfolio/common/hooks/usePortfolioTokenInfos'
 import {MiniTokenAmountItem} from '~/features/Portfolio/ui/TokenAmountItem/MiniTokenAmountItem'
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Space} from '~/ui/Space/Space'
 

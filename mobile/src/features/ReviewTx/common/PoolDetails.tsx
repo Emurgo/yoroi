@@ -1,19 +1,19 @@
+import {formatTokenWithText} from '@yoroi/cardano-wallet/utils/format'
+import {isEmptyString} from '@yoroi/cardano-wallet/utils/string'
+import {Quantities, asQuantity} from '@yoroi/cardano-wallet/utils/utils'
 import {FullPoolInfo} from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 
 import {Image} from 'expo-image'
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Copiable} from '~/ui/Copiable/Copiable'
 import {ExplorerInfoLinks} from '~/ui/ExplorerInfoLinks/ExplorerInfoLinks'
 import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {Space} from '~/ui/Space/Space'
-import {formatTokenWithText} from '@yoroi/cardano-wallet/utils/format'
-import {isEmptyString} from '@yoroi/cardano-wallet/utils/string'
-import {Quantities, asQuantity} from '@yoroi/cardano-wallet/utils/utils'
 
 import {generatePoolName} from './poolUtils'
 

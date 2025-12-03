@@ -1,6 +1,10 @@
 import {networkConfigs} from '@yoroi/blockchains'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Chain} from '@yoroi/types'
+import {availableNetworks} from '@yoroi/wallet-manager/common/constants'
+import {useAutomaticWalletOpener} from '@yoroi/wallet-manager/context/AutomaticWalletOpeningProvider'
+import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
+import {useSelectedNetwork} from '@yoroi/wallet-manager/hooks/useSelectedNetwork'
 
 import {useFocusEffect} from '@react-navigation/native'
 import {freeze} from 'immer'
@@ -10,10 +14,6 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useHasShowNetworkNotice} from '~/features/Settings/hooks/useHasShowNetworkNotice'
 import {useOpenNetworkNoticeModal} from '~/features/Settings/hooks/useOpenNetworkNoticeModal'
-import {availableNetworks} from '@yoroi/wallet-manager/common/constants'
-import {useAutomaticWalletOpener} from '@yoroi/wallet-manager/context/AutomaticWalletOpeningProvider'
-import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
-import {useSelectedNetwork} from '@yoroi/wallet-manager/hooks/useSelectedNetwork'
 import {Hr} from '~/ui/Hr/Hr'
 
 import {useNavigateTo} from '../../../../hooks/useNavigateTo'

@@ -1,10 +1,9 @@
+import {CardanoMobileWrapped} from '@yoroi/cardano-wallet/wrappedCsl'
 import {isString} from '@yoroi/common'
 
 import {MetadataJsonSchema} from '@emurgo/cross-csl-core'
 import {Buffer} from 'buffer'
 import * as React from 'react'
-
-import {CardanoMobileWrapped} from '@yoroi/cardano-wallet/wrappedCsl'
 
 import {FormattedMetadata, TransactionBody} from '../types'
 

@@ -1,17 +1,17 @@
+import {delay} from '@yoroi/cardano-wallet/utils/timeUtils'
 import {isRight, time} from '@yoroi/common'
 import {isPrimaryToken} from '@yoroi/portfolio'
 import {Portfolio} from '@yoroi/types'
+import {useSelectedNetwork} from '@yoroi/wallet-manager/hooks/useSelectedNetwork'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 
 import {UseQueryOptions, useQuery} from '@tanstack/react-query'
 
 import {fetchPtPriceActivity} from '~/features/Pairing/hooks/usePrimaryTokenActivity'
 import {useCurrencyPairing} from '~/features/Settings/context/CurrencyProvider'
-import {useSelectedNetwork} from '@yoroi/wallet-manager/hooks/useSelectedNetwork'
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 import {defaultCurrency} from '~/kernel/constants'
 import {useLanguage} from '~/kernel/i18n/LanguageProvider'
 import {logger} from '~/kernel/logger/logger'
-import {delay} from '@yoroi/cardano-wallet/utils/timeUtils'
 
 import {priceChange} from '../helpers/priceChange'
 import {usePortfolioTokenDetailParams} from './useNavigateTo'

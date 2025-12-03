@@ -1,5 +1,6 @@
 import {getYoroiDrepIdHex} from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 
 import {LinearGradient} from 'expo-linear-gradient'
 import * as React from 'react'
@@ -13,7 +14,6 @@ import {
 } from 'react-native'
 
 import {useCopy} from '~/features/Copy/context/CopyProvider'
-import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'

@@ -1,10 +1,9 @@
+import {makeCardanoWallet} from '@yoroi/cardano-wallet/cardano-wallet'
+import type {CardanoWalletDependencies} from '@yoroi/cardano-wallet/dependencies'
+import {getLogger, throwLoggedError} from '@yoroi/common'
 import {Chain, Wallet} from '@yoroi/types'
 
 import {freeze} from 'immer'
-
-import {getLogger, throwLoggedError} from '@yoroi/common'
-import {makeCardanoWallet} from '@yoroi/cardano-wallet/cardano-wallet'
-import type {CardanoWalletDependencies} from '@yoroi/cardano-wallet/dependencies'
 
 import {networkManagers} from '../common/constants'
 import {WalletFactory} from '../common/types'
@@ -94,12 +93,16 @@ export function getWalletFactory({
         'getWalletFactory: Preview network is not supported in mobile app',
       )
     }
-    throwLoggedError(getLogger())('getWalletFactory: Unable to find network implementations')
+    throwLoggedError(getLogger())(
+      'getWalletFactory: Unable to find network implementations',
+    )
   }
 
   const factory = networkImplementations?.[implementation]
   if (!factory)
-    throwLoggedError(getLogger())('getWalletFactory: Unable to find wallet factory')
+    throwLoggedError(getLogger())(
+      'getWalletFactory: Unable to find wallet factory',
+    )
 
   return factory
 }

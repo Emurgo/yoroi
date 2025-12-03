@@ -1,5 +1,6 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Explorers} from '@yoroi/types'
+import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
 
 import {BigNumber} from 'bignumber.js'
 import * as React from 'react'
@@ -16,7 +17,6 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Address} from '~/common/Address/Address'
 import {usePromptRootKey} from '~/features/ReviewTx/common/hooks/usePromptRootKey'
-import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 import {Button} from '~/ui/Button/Button'

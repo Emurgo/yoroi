@@ -1,3 +1,4 @@
+import {generateAdaMnemonic} from '@yoroi/cardano-wallet/mnemonic/mnemonic'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
@@ -17,7 +18,6 @@ import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
 import {StepperProgress} from '~/ui/StepperProgress/StepperProgress'
-import {generateAdaMnemonic} from '@yoroi/cardano-wallet/mnemonic/mnemonic'
 
 import {EyeClosed} from '../../illustrations/EyeClosed'
 import {EyeOpen} from '../../illustrations/EyeOpen'

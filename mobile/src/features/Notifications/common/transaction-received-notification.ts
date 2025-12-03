@@ -1,15 +1,15 @@
+import {YoroiWallet} from '@yoroi/cardano-wallet/types'
 import {useAsyncStorage} from '@yoroi/common'
 import {App, Notifications as NotificationTypes} from '@yoroi/types'
 import {TRANSACTION_DIRECTION} from '@yoroi/types'
+import {SyncWalletInfo} from '@yoroi/wallet-manager/common/types'
+import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
+import {walletManager} from '@yoroi/wallet-manager/wallet-manager'
 
 import * as React from 'react'
 import {Subject} from 'rxjs'
 
 import {walletTransactionToSummary} from '~/features/Transactions/common/transactionSummary'
-import {SyncWalletInfo} from '@yoroi/wallet-manager/common/types'
-import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'
-import {walletManager} from '@yoroi/wallet-manager/wallet-manager'
-import {YoroiWallet} from '@yoroi/cardano-wallet/types'
 
 import {generateNotificationId} from './notifications'
 import {buildProcessedNotificationsStorage} from './processed-notifications-storage'

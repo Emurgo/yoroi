@@ -1,3 +1,4 @@
+import {formatTokenWithText} from '@yoroi/cardano-wallet/utils/format'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {type Proposal, type Vote} from '@yoroi/tx'
 
@@ -12,7 +13,6 @@ import {Accordion} from '~/ui/Accordion/Accordion'
 import {Copiable} from '~/ui/Copiable/Copiable'
 import {Divider} from '~/ui/Divider/Divider'
 import {Space} from '~/ui/Space/Space'
-import {formatTokenWithText} from '@yoroi/cardano-wallet/utils/format'
 
 export const OperationsTab = ({
   tx,
