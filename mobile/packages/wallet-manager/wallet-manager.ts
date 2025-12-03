@@ -38,7 +38,10 @@ import {
   createWalletFromXPub as createWalletFromXPubFn,
   deriveAndStoreAccount,
 } from './creation/wallet-creation'
-import {getWalletFactory} from './network-manager/get-wallet-factory'
+import {
+  getWalletFactory,
+  initializeWalletFactories,
+} from './network-manager/get-wallet-factory'
 import {
   createWalletManagerStateSubjects,
   setSelectedNetwork,
@@ -177,7 +180,15 @@ export type WalletManager = {
 export const makeWalletManager = (
   options: WalletManagerOptions,
 ): WalletManager => {
-  const {keychainManager, rootStorage, networkManagers} = options
+  const {
+    keychainManager,
+    rootStorage,
+    networkManagers,
+    cardanoWalletDependencies,
+  } = options
+
+  // Initialize wallet factories with dependencies
+  initializeWalletFactories(cardanoWalletDependencies)
 
   // State management
   const stateSubjects = createWalletManagerStateSubjects()

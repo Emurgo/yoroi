@@ -4,26 +4,66 @@ import {freeze} from 'immer'
 
 import {getLogger, throwLoggedError} from '@yoroi/common'
 import {makeCardanoWallet} from '@yoroi/cardano-wallet/cardano-wallet'
+import type {CardanoWalletDependencies} from '@yoroi/cardano-wallet/dependencies'
 
 import {networkManagers} from '../common/constants'
 import {WalletFactory} from '../common/types'
 
-const ShelleyWalletMainnet = makeCardanoWallet(
-  networkManagers[Chain.Network.Mainnet],
-  'cardano-cip1852',
-)
-const ShelleyWalletTestnet = makeCardanoWallet(
-  networkManagers[Chain.Network.Preprod],
-  'cardano-cip1852',
-)
-const ByronWalletMainnet = makeCardanoWallet(
-  networkManagers[Chain.Network.Mainnet],
-  'cardano-bip44',
-)
-const ByronWalletTestnet = makeCardanoWallet(
-  networkManagers[Chain.Network.Preprod],
-  'cardano-bip44',
-)
+/**
+ * Creates wallet factories with the given dependencies
+ * This function should be called from the app with platform-specific dependencies
+ */
+export function createWalletFactories(
+  dependencies: CardanoWalletDependencies,
+): Record<
+  Chain.SupportedNetworks,
+  Record<Wallet.Implementation, WalletFactory>
+> {
+  const ShelleyWalletMainnet = makeCardanoWallet(
+    networkManagers[Chain.Network.Mainnet],
+    'cardano-cip1852',
+    dependencies,
+  )
+  const ShelleyWalletTestnet = makeCardanoWallet(
+    networkManagers[Chain.Network.Preprod],
+    'cardano-cip1852',
+    dependencies,
+  )
+  const ByronWalletMainnet = makeCardanoWallet(
+    networkManagers[Chain.Network.Mainnet],
+    'cardano-bip44',
+    dependencies,
+  )
+  const ByronWalletTestnet = makeCardanoWallet(
+    networkManagers[Chain.Network.Preprod],
+    'cardano-bip44',
+    dependencies,
+  )
+
+  return freeze({
+    [Chain.Network.Mainnet]: {
+      'cardano-cip1852': ShelleyWalletMainnet,
+      'cardano-bip44': ByronWalletMainnet,
+    },
+    [Chain.Network.Preprod]: {
+      'cardano-cip1852': ShelleyWalletTestnet,
+      'cardano-bip44': ByronWalletTestnet,
+    },
+  } as const)
+}
+
+// Legacy factory map - will be populated by createWalletFactories
+let walletFactoryMap: ReturnType<typeof createWalletFactories> | null = null
+
+/**
+ * Initializes wallet factories with dependencies
+ * Must be called before getWalletFactory can be used
+ */
+export function initializeWalletFactories(
+  dependencies: CardanoWalletDependencies,
+): void {
+  walletFactoryMap = createWalletFactories(dependencies)
+}
 
 /**
  * Retrieves the wallet factory based on the network and implementation ID
@@ -32,7 +72,7 @@ const ByronWalletTestnet = makeCardanoWallet(
  * @param {Chain.SupportedNetworks} options.network
  * @param {Wallet.Implementation} options.implementation
  * @returns {WalletFactory} The wallet factory
- * @throws {Error} If the wallet factory is not found
+ * @throws {Error} If the wallet factory is not found or factories not initialized
  */
 export function getWalletFactory({
   network,
@@ -41,18 +81,13 @@ export function getWalletFactory({
   network: Chain.SupportedNetworks
   implementation: Wallet.Implementation
 }): WalletFactory {
-  const walletMap = freeze({
-    [Chain.Network.Mainnet]: /* cardano mainnet */ {
-      'cardano-cip1852': ShelleyWalletMainnet,
-      'cardano-bip44': ByronWalletMainnet,
-    },
-    [Chain.Network.Preprod]: /* cardano preprod */ {
-      'cardano-cip1852': ShelleyWalletTestnet,
-      'cardano-bip44': ByronWalletTestnet,
-    },
-  } as const)
+  if (!walletFactoryMap) {
+    throwLoggedError(getLogger())(
+      'getWalletFactory: Wallet factories not initialized. Call initializeWalletFactories first.',
+    )
+  }
 
-  const networkImplementations = walletMap[network as keyof typeof walletMap]
+  const networkImplementations = walletFactoryMap[network]
   if (!networkImplementations) {
     if (network === Chain.Network.Preview) {
       throwLoggedError(getLogger())(

@@ -56,14 +56,7 @@ import {
   makeMemosManager,
 } from '~/features/Transactions/common/memos/memosManager'
 import {getLogger, throwLoggedError} from '@yoroi/common'
-// TODO: Storage dependencies need to be injected via factory options:
-// - WalletEncryptedStorage, makeWalletEncryptedStorage should be passed as dependencies
-// - rootStorage should be passed as a dependency (currently using global)
-import {
-  WalletEncryptedStorage,
-  makeWalletEncryptedStorage,
-} from '~/kernel/storage/EncryptedStorage'
-import {rootStorage} from '~/kernel/storage/storages'
+import type {WalletEncryptedStorage} from './dependencies'
 
 import {CardanoMobile} from '@emurgo/cross-csl-mobile'
 import {
@@ -174,14 +167,14 @@ const _isUsedAddressIndexSelector = defaultMemoize((perAddressTxs) =>
   ),
 )
 
-// TODO: Add dependency injection for:
-// - rootStorage (currently using global)
-// - makeWalletEncryptedStorage (currently using global)
-// - Portfolio/Transactions feature helpers (currently importing from features)
+import type {CardanoWalletDependencies} from './dependencies'
+
 export const makeCardanoWallet = (
   networkManager: Network.Manager,
   implementation: Wallet.Implementation,
+  dependencies: CardanoWalletDependencies,
 ) => {
+  const {rootStorage, makeWalletEncryptedStorage} = dependencies
   const implementationConfig = cardanoConfig.implementations[implementation]
   const appApi = AppApi.appApiMaker({baseUrl: networkManager.legacyApiBaseUrl})
 
