@@ -1,5 +1,5 @@
 import {isAdaHandleDomain, useResolverDRepId} from '@yoroi/resolver'
-import {getYoroiDrepIdHex, parseDrepId, useIsValidDRepID} from '@yoroi/staking'
+import {parseDrepId, useIsValidDRepID} from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
@@ -9,8 +9,8 @@ import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWalle
 import {useIsKeyboardOpen} from '~/hooks/useIsKeyboardOpen'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
-import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {useModal} from '~/ui/Modal/context/ModalContext'
+import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {Space} from '~/ui/Space/Space'
 import {TextInput} from '~/ui/TextInput/TextInput'
 import {CardanoMobile} from '~/wallets/wallets'
@@ -33,13 +33,8 @@ export const HEIGHT_KEYBOARD_OPEN = 350
 export const EnterDrepIdModal = ({onSubmit, initialDrepId}: Props) => {
   const strings = useStrings()
   const {atoms: ta, palette: p} = useTheme()
-  const {closeModal, setHeight} = useModal()
-  const {
-    wallet,
-    wallet: {
-      networkManager: {network},
-    },
-  } = useSelectedWallet()
+  const {setHeight} = useModal()
+  const {wallet} = useSelectedWallet()
   const [drepId, setDrepId] = React.useState(initialDrepId ?? '')
 
   // Update drepId when initialDrepId changes
@@ -155,15 +150,6 @@ export const EnterDrepIdModal = ({onSubmit, initialDrepId}: Props) => {
     !isLoading &&
     !displayError &&
     (isHandle ? drepInfo !== null : isFetched)
-
-  const handleDelegateToYoroi = () => {
-    onSubmit?.({
-      hash: getYoroiDrepIdHex(network),
-      type: 'key',
-      CIP105: false,
-    })
-    closeModal()
-  }
 
   return (
     <Modal.Content>

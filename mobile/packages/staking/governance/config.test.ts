@@ -5,7 +5,6 @@ import {
   GOVERNANCE_YOROI_DREP_ID_HEX,
   GOVERNANCE_YOROI_DREP_ID_HEX_MAINNET,
   GOVERNANCE_YOROI_DREP_ID_HEX_PREPROD,
-  YOROI_TOP_STAKE_POOL_ID,
   getYoroiDrepIdHex,
 } from './config'
 
@@ -66,15 +65,9 @@ describe('governance config', () => {
     )
   })
 
-  it('should default to mainnet for Preview network', () => {
+  it('should default to preprod for Preview network', () => {
     expect(getYoroiDrepIdHex(Chain.Network.Preview)).toBe(
-      GOVERNANCE_YOROI_DREP_ID_HEX_MAINNET,
-    )
-  })
-
-  it('should have correct YOROI_TOP_STAKE_POOL_ID', () => {
-    expect(YOROI_TOP_STAKE_POOL_ID).toBe(
-      'pool1pux7lyzvx89q5dz4dv2kkjdpjdzysf30plmk0vc60x4w0hq8j5p',
+      GOVERNANCE_YOROI_DREP_ID_HEX_PREPROD,
     )
   })
 })
