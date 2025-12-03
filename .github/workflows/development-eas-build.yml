@@ -51,5 +51,5 @@ jobs:
 
       - name: 🚀 Create development build
         working-directory: mobile
-        run: eas build --profile development --platform ${{ inputs.platform }} --no-wait --non-interactive
+        run: eas build --profile dev-standalone --platform ${{ inputs.platform }} --no-wait --non-interactive
 
