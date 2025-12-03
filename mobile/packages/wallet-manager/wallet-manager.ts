@@ -1017,16 +1017,19 @@ export const makeWalletManager = (
       addressMode: Wallet.AddressMode
       accountVisual: number
     }) {
-      const meta = await createWalletFromMnemonic({
-        name,
-        mnemonic,
-        password,
-        implementation,
-        addressMode,
-        accountVisual,
-        network: stateSubjects.selectedNetwork.value,
-        version: WALLET_MANAGER_VERSION,
-      })
+      const meta = await createWalletFromMnemonic(
+        {
+          name,
+          mnemonic,
+          password,
+          implementation,
+          addressMode,
+          accountVisual,
+          network: stateSubjects.selectedNetwork.value,
+          version: WALLET_MANAGER_VERSION,
+        },
+        cardanoWalletDependencies.makeWalletEncryptedStorage,
+      )
 
       await walletsRootStorage.setItem(meta.id, meta)
       // Hydrate to load the new wallet
@@ -1412,16 +1415,19 @@ export const makeWalletManager = (
       addressMode: Wallet.AddressMode
       accountVisual: number
     }) {
-      const meta = await createWalletFromRootKey({
-        name,
-        rootKeyHex,
-        password,
-        implementation,
-        addressMode,
-        accountVisual,
-        network: stateSubjects.selectedNetwork.value,
-        version: WALLET_MANAGER_VERSION,
-      })
+      const meta = await createWalletFromRootKey(
+        {
+          name,
+          rootKeyHex,
+          password,
+          implementation,
+          addressMode,
+          accountVisual,
+          network: stateSubjects.selectedNetwork.value,
+          version: WALLET_MANAGER_VERSION,
+        },
+        cardanoWalletDependencies.makeWalletEncryptedStorage,
+      )
 
       await walletsRootStorage.setItem(meta.id, meta)
       // Hydrate to load the new wallet (same pattern as createWalletMnemonic)

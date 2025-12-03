@@ -1,7 +1,7 @@
 import {App, Chain, Network, Wallet} from '@yoroi/types'
 
 import {getLogger} from '@yoroi/common'
-import {makeWalletEncryptedStorage} from '~/kernel/storage/EncryptedStorage'
+import type {WalletEncryptedStorage} from '@yoroi/cardano-wallet/dependencies'
 import {KeychainManager} from '~/kernel/storage/Keychain'
 import {YoroiWallet} from '@yoroi/cardano-wallet/types'
 
@@ -77,6 +77,7 @@ export const saveWalletMeta = async (
 export const removeWalletFromStorage = async (
   id: string,
   walletsRootStorage: App.Storage,
+  makeWalletEncryptedStorage: (id: string) => WalletEncryptedStorage,
   keychainManager?: KeychainManager,
 ): Promise<void> => {
   // Remove wallet metadata

@@ -3,7 +3,6 @@ import {App, Chain, Wallet} from '@yoroi/types'
 import * as React from 'react'
 
 import {getLogger, throwLoggedError} from '@yoroi/common'
-import {getLogger} from '@yoroi/common'
 import {YoroiWallet} from '@yoroi/cardano-wallet/types'
 
 import {WalletManager} from '../wallet-manager'

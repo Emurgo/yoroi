@@ -6,6 +6,9 @@ export {makeCardanoWallet} from './cardano-wallet'
 // Types
 export type {YoroiWallet, WalletEvent, CardanoTypes} from './types'
 
+// Dependencies
+export type {CardanoWalletDependencies, WalletEncryptedStorage} from './dependencies'
+
 // Key manager
 export {keyManager} from './key-manager/key-manager'
 
