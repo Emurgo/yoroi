@@ -1,7 +1,7 @@
 import {cardanoConfig} from '@yoroi/blockchains'
 import {deriveAddressFromXPub} from '@yoroi/cardano-wallet/account-manager/derive-address-from-xpub'
 import {keyManager} from '@yoroi/cardano-wallet/key-manager/key-manager'
-import {WalletEvent, YoroiWallet} from '@yoroi/cardano-wallet/types'
+import {WalletEvent, YoroiWallet} from '@yoroi/cardano-wallet'
 import {deriveRewardAddressHex} from '@yoroi/cardano-wallet/utils'
 import {
   validatePassword,

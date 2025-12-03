@@ -1,4 +1,4 @@
-import {YoroiWallet} from '@yoroi/cardano-wallet/types'
+import {YoroiWallet} from '@yoroi/cardano-wallet'
 import {getLogger, throwLoggedError} from '@yoroi/common'
 import {App, Chain, Network, Wallet} from '@yoroi/types'
 

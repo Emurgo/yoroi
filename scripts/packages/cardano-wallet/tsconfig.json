@@ -25,7 +25,14 @@
     "target": "esnext",
     "paths": {
       "@tanstack/react-query": ["./node_modules/@tanstack/react-query"],
-      "@tanstack/query-core": ["./node_modules/@tanstack/query-core"]
+      "@tanstack/query-core": ["./node_modules/@tanstack/query-core"],
+      "@yoroi/api": ["../../mobile/packages/api"],
+      "@yoroi/types": ["../../mobile/packages/types"],
+      "@yoroi/common": ["../../mobile/packages/common"],
+      "@yoroi/blockchains": ["../../mobile/packages/blockchains"],
+      "@yoroi/staking": ["../../mobile/packages/staking"],
+      "@yoroi/tx": ["../../mobile/packages/tx"],
+      "@yoroi/portfolio": ["../../mobile/packages/portfolio"]
     }
   }
 }

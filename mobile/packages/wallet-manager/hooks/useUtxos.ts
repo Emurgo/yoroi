@@ -1,4 +1,4 @@
-import {YoroiWallet} from '@yoroi/cardano-wallet/types'
+import {YoroiWallet} from '@yoroi/cardano-wallet'
 
 import {useWallet} from './useWallet'
 

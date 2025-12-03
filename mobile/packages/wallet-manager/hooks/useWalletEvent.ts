@@ -1,4 +1,4 @@
-import {WalletEvent, YoroiWallet} from '@yoroi/cardano-wallet/types'
+import {WalletEvent, YoroiWallet} from '@yoroi/cardano-wallet'
 
 import * as React from 'react'
 

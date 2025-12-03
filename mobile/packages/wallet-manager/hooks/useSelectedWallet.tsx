@@ -1,4 +1,4 @@
-import {YoroiWallet} from '@yoroi/cardano-wallet/types'
+import {YoroiWallet} from '@yoroi/cardano-wallet'
 import {Wallet} from '@yoroi/types'
 
 import {freeze} from 'immer'

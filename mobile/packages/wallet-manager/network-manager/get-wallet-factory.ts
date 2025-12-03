@@ -1,5 +1,5 @@
 import {makeCardanoWallet} from '@yoroi/cardano-wallet/cardano-wallet'
-import type {CardanoWalletDependencies} from '@yoroi/cardano-wallet/dependencies'
+import type {CardanoWalletDependencies} from '@yoroi/cardano-wallet'
 import {getLogger, throwLoggedError} from '@yoroi/common'
 import {Chain, Wallet} from '@yoroi/types'
 

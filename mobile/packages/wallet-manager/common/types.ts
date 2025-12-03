@@ -1,9 +1,9 @@
-import type {CardanoWalletDependencies} from '@yoroi/cardano-wallet/dependencies'
-import {
+import type {
+  CardanoWalletDependencies,
   CardanoTypes,
   WalletEvent,
   YoroiWallet,
-} from '@yoroi/cardano-wallet/types'
+} from '@yoroi/cardano-wallet'
 import {App, Chain, HW, Network, Portfolio} from '@yoroi/types'
 
 import {WasmModuleProxy} from '@emurgo/cross-csl-core'

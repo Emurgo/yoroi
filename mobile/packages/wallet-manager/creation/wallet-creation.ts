@@ -1,4 +1,4 @@
-import type {WalletEncryptedStorage} from '@yoroi/cardano-wallet/dependencies'
+import type {WalletEncryptedStorage} from '@yoroi/cardano-wallet'
 import {deriveAccountFromRootKey} from '@yoroi/cardano-wallet/key-manager/key-manager'
 import {CardanoMobileWrapped} from '@yoroi/cardano-wallet/wrappedCsl'
 import {getLogger} from '@yoroi/common'

@@ -1,5 +1,5 @@
-import type {WalletEncryptedStorage} from '@yoroi/cardano-wallet/dependencies'
-import {YoroiWallet} from '@yoroi/cardano-wallet/types'
+import type {WalletEncryptedStorage} from '@yoroi/cardano-wallet'
+import {YoroiWallet} from '@yoroi/cardano-wallet'
 import {getLogger} from '@yoroi/common'
 import {App, Chain, Network, Wallet} from '@yoroi/types'
 

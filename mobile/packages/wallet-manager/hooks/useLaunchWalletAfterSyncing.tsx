@@ -1,4 +1,4 @@
-import {YoroiWallet} from '@yoroi/cardano-wallet/types'
+import {YoroiWallet} from '@yoroi/cardano-wallet'
 import {time} from '@yoroi/common'
 import {getLogger} from '@yoroi/common'
 

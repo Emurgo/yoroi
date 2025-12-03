@@ -65,7 +65,7 @@ export const extractPaymentKeyHashes = (addresses: string[]): string[] => {
  */
 // Re-export getBackendZeroUrl - using relative path since it's not exported from @yoroi/api index
 // TODO: Export getBackendZeroUrl from @yoroi/api index
-import {getBackendZeroUrl} from '../../../api/cardano/utils/url-mapping'
+import {getBackendZeroUrl} from '../../../packages/api/cardano/utils/url-mapping'
 export {getBackendZeroUrl}
 
 /**

@@ -1,4 +1,4 @@
-import {YoroiWallet} from '@yoroi/cardano-wallet/types'
+import {YoroiWallet} from '@yoroi/cardano-wallet'
 import {Chain, Network, Wallet} from '@yoroi/types'
 
 import {BehaviorSubject, Observable} from 'rxjs'
