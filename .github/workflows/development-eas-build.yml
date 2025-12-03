@@ -22,8 +22,21 @@ env:
 
 jobs:
   development-build:
+    # Only allow this workflow to run when triggered from protected branches
+    # This prevents malicious workflows from other branches from being executed
+    if: github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/main'
     runs-on: macos-latest
     steps:
+      - name: 🔒 Validate workflow trigger branch
+        run: |
+          if [ "${{ github.ref }}" != "refs/heads/develop" ] && [ "${{ github.ref }}" != "refs/heads/main" ]; then
+            echo "❌ Error: This workflow can only be triggered from 'develop' or 'main' branches"
+            echo "Current branch: ${{ github.ref }}"
+            echo "To build from a different branch, trigger this workflow from 'develop' and specify the branch in the 'branch' input parameter"
+            exit 1
+          fi
+          echo "✅ Workflow triggered from authorized branch: ${{ github.ref }}"
+      
       - name: 🏗 Setup repo
         uses: actions/checkout@v4
         with:
