@@ -7,9 +7,7 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "jsx": "react",
-    "lib": [
-      "esnext"
-    ],
+    "lib": ["esnext"],
     "module": "esnext",
     "moduleResolution": "node",
     "noFallthroughCasesInSwitch": true,
@@ -25,13 +23,7 @@
     "target": "esnext",
     "paths": {
       "@tanstack/react-query": ["./node_modules/@tanstack/react-query"],
-      "@tanstack/query-core": ["./node_modules/@tanstack/query-core"],
-      "@yoroi/cardano-wallet": ["../../mobile/packages/cardano-wallet"],
-      "@yoroi/types": ["../../mobile/packages/types"],
-      "@yoroi/common": ["../../mobile/packages/common"],
-      "@yoroi/blockchains": ["../../mobile/packages/blockchains"],
-      "@yoroi/api": ["../../mobile/packages/api"]
+      "@tanstack/query-core": ["./node_modules/@tanstack/query-core"]
     }
   }
 }
-
