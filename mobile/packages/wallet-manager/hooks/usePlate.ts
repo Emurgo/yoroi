@@ -1,5 +1,5 @@
 import {cardanoConfig} from '@yoroi/blockchains'
-import {deriveAddressFromXPub} from '@yoroi/cardano-wallet/account-manager/derive-address-from-xpub'
+import {deriveAddressFromXPub} from '@yoroi/cardano-wallet'
 import {Wallet} from '@yoroi/types'
 
 import {walletChecksum} from '@emurgo/cip4-js'

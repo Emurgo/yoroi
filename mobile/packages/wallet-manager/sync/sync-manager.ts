@@ -1,5 +1,5 @@
 import {TipStatusResponse} from '@yoroi/api'
-import {getTipStatusService} from '@yoroi/cardano-wallet/api/tip-status-service'
+import {getTipStatusService} from '@yoroi/cardano-wallet'
 import {YoroiWallet} from '@yoroi/cardano-wallet'
 import {getLogger} from '@yoroi/common'
 import {Chain} from '@yoroi/types'
