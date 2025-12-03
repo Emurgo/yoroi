@@ -456,16 +456,22 @@ describe('params', () => {
       })
 
       describe('encryption validation', () => {
-        it('should accept non-empty strings', () => {
+        it('should accept valid encryption values', () => {
           const validator = getParamValidator(configCardanoWalletV1)
           expect(() =>
-            validator({key: 'encryption', value: 'aes256'}),
+            validator({key: 'encryption', value: 'plain'}),
+          ).not.toThrow()
+          expect(() =>
+            validator({key: 'encryption', value: 'chacha20poly1305'}),
           ).not.toThrow()
         })
 
-        it('should reject empty strings', () => {
+        it('should reject invalid encryption values', () => {
           const validator = getParamValidator(configCardanoWalletV1)
           expect(() => validator({key: 'encryption', value: ''})).toThrow()
+          expect(() =>
+            validator({key: 'encryption', value: 'aes256'}),
+          ).toThrow()
         })
       })
 

@@ -10,9 +10,7 @@ import {primaryTokenId} from '../constants'
  * @param identifier - The token identifier string to normalize
  * @returns A valid Portfolio.Token.Id
  */
-export function normalizeTokenId(
-  identifier: string,
-): Portfolio.Token.Id {
+export function normalizeTokenId(identifier: string): Portfolio.Token.Id {
   if (
     identifier === primaryTokenId ||
     identifier === '' ||
@@ -22,4 +20,3 @@ export function normalizeTokenId(
   }
   return Branded.asPortfolioTokenId(identifier) as Portfolio.Token.Id
 }
-
