@@ -424,8 +424,6 @@
   "components.settings.applicationsettingsscreen.privacyMode": "Hide balance",
   "components.settings.applicationsettingsscreen.privacyModeInfo": "This function will be applied to all wallets in your app",
   "components.settings.applicationsettingsscreen.privacyPolicy": "Privacy Policy",
-  "components.settings.applicationsettingsscreen.screenSharing": "Enable screensharing",
-  "components.settings.applicationsettingsscreen.screenSharingInfo": "Changes to this option will enable you to make screenshots as well share your screen via third party apps",
   "components.settings.applicationsettingsscreen.security": "Security",
   "components.settings.applicationsettingsscreen.selectFiatCurrency": "Fiat Currency",
   "components.settings.applicationsettingsscreen.selectLanguage": "Language",

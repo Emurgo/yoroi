@@ -468,14 +468,6 @@ export const settingsMessages = defineMessages({
     id: 'termsOfService.privacyPolicyTitle',
     defaultMessage: '!!!Privacy Policy',
   },
-  applicationSettingsScreenSharing: {
-    id: 'components.settings.applicationsettingsscreen.screenSharing',
-    defaultMessage: '!!!Screen Sharing',
-  },
-  applicationSettingsScreenSharingInfo: {
-    id: 'components.settings.applicationsettingsscreen.screenSharingInfo',
-    defaultMessage: '!!!Screen Sharing Info',
-  },
   applicationSettingsNetwork: {
     id: 'global.network',
     defaultMessage: '!!!Network',

@@ -11,7 +11,6 @@ import {AnalyticsRootProvider} from '~/features/Analytics/context/AnalyticsRootP
 import {routeToEvent} from '~/features/Analytics/events/route-events'
 import {createPosthogClient} from '~/features/Analytics/helpers/createPosthogClient'
 import {useAnalyticsTracking} from '~/features/Analytics/hooks/useAnalyticsTracking'
-import {useScreenCapture} from '~/features/Settings/hooks/useScreenCapture'
 import {RouterContainer} from '~/kernel/navigation/RouterContainer'
 import {
   initInstallationId,
@@ -26,15 +25,9 @@ export function PlatformShell({children}: React.PropsWithChildren) {
     metricsEnabledStorageKeyManager.read(),
   )
 
-  const {init} = useScreenCapture()
-
   const isAndroid = Platform.OS === 'android'
   const platform = isAndroid ? 'Android' : 'IOS'
   const client = usePosthogClient(metricsEnabled)
-
-  React.useEffect(() => {
-    init()
-  })
 
   return (
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>

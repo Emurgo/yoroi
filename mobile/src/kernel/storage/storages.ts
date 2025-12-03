@@ -130,13 +130,6 @@ export const languageStorageKeyManager = settingsStorageKeyMaker<LanguageCode>({
   },
 })
 
-// Settings - Screen Capture
-export const screenCaptureStorageKey = 'screenCaptureEnabled'
-export const screenCaptureStorageKeyManager = settingsStorageKeyMaker<boolean>({
-  key: screenCaptureStorageKey,
-  parser: (data) => Boolean(parseBoolean(data)),
-})
-
 // Settings - Metrics
 export const metricsEnabledStorageKey = 'metricsEnabled'
 export const metricsEnabledStorageKeyManager = settingsStorageKeyMaker<boolean>(

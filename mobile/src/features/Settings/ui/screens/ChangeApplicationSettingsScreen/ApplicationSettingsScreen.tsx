@@ -8,7 +8,6 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {useAuth} from '~/features/Auth/context/AuthProvider'
 import {useAuthWithOs} from '~/features/Auth/hooks/useAuthWithOs'
 import {useNavigateTo} from '~/features/Settings/hooks/useNavigateTo'
-import {useScreenCapture} from '~/features/Settings/hooks/useScreenCapture'
 import {
   NavigatedSettingsItem,
   SettingsItem,
@@ -35,11 +34,6 @@ export const ApplicationSettingsScreen = () => {
   const {atoms: ta, paletteName: name, palette: p} = useTheme()
   const {languageCode} = useLanguage()
   const {authWithOs} = useAuthWithOs({onSuccess: navigateTo.enableLoginWithPin})
-  const {
-    isScreenCaptureEnabled,
-    toggleIsScreenCaptureEnabled,
-    canSwitchScreenCapture,
-  } = useScreenCapture()
   const {enableLoginWithHost, authSetting, canAuthWithHost} = useAuth()
 
   const language = supportedLanguages.find(
@@ -51,9 +45,6 @@ export const ApplicationSettingsScreen = () => {
   }
   const handleOnToggleCrashReports = () => {
     toggleIsCrashReportEnabled()
-  }
-  const handleOnToggleScreenCaptureEnabled = () => {
-    toggleIsScreenCaptureEnabled()
   }
   const handleOnToggleEnableLoginWithHost = () => {
     if (authSetting === 'os') {
@@ -176,19 +167,6 @@ export const ApplicationSettingsScreen = () => {
               onValueChange={handleOnToggleCrashReports}
             />
           </SettingsItem>
-
-          {canSwitchScreenCapture && (
-            <SettingsItem
-              icon={<Icon.Share {...iconProps} />}
-              label={strings.settings.applicationSettings.screenSharing}
-              info={strings.settings.applicationSettings.screenSharingInfo}
-            >
-              <SettingsSwitch
-                value={isScreenCaptureEnabled}
-                onValueChange={handleOnToggleScreenCaptureEnabled}
-              />
-            </SettingsItem>
-          )}
         </SettingsSection>
       </ScrollView>
     </SafeAreaView>

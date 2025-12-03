@@ -828,10 +828,6 @@ export const useStrings = () => {
           ),
           analytics: f(settingsMessages.applicationSettingsAnalytics),
           privacyPolicy: f(settingsMessages.applicationSettingsPrivacyPolicy),
-          screenSharing: f(settingsMessages.applicationSettingsScreenSharing),
-          screenSharingInfo: f(
-            settingsMessages.applicationSettingsScreenSharingInfo,
-          ),
           network: f(settingsMessages.applicationSettingsNetwork),
         },
       },
