@@ -10,7 +10,7 @@ export type {YoroiWallet, WalletEvent, CardanoTypes} from './types'
 export type {CardanoWalletDependencies, WalletEncryptedStorage} from './dependencies'
 
 // Key manager
-export {keyManager} from './key-manager/key-manager'
+export {keyManager, deriveAccountFromRootKey} from './key-manager/key-manager'
 
 // Account manager
 export {deriveAddressFromXPub} from './account-manager/derive-address-from-xpub'
@@ -23,6 +23,10 @@ export {
   isByron,
   isShelley,
 } from './utils'
+export * from './utils'
+
+// Mnemonic
+export {getMasterKeyFromMnemonic, generateAdaMnemonic, generateWalletRootKey} from './mnemonic/mnemonic'
 
 // Transaction recipes
 export {

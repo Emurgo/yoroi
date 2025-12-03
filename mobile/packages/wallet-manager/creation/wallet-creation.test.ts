@@ -1,4 +1,4 @@
-import {getMasterKeyFromMnemonic} from '@yoroi/cardano-wallet/mnemonic/mnemonic'
+import {getMasterKeyFromMnemonic} from '@yoroi/cardano-wallet'
 import {Chain, Wallet} from '@yoroi/types'
 
 import {
