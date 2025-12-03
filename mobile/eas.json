@@ -60,10 +60,12 @@
       "channel": "development",
       "android": {
         "buildType": "apk",
-        "image": "latest"
+        "image": "latest",
+        "resourceClass": "large"
       },
       "ios": {
-        "image": "latest"
+        "image": "latest",
+        "resourceClass": "large"
       }
     },
     "preview": {
