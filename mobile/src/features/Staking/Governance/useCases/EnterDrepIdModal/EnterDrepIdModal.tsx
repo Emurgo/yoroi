@@ -1,14 +1,12 @@
 import {isNonNullable} from '@yoroi/common'
-import {
-  GOVERNANCE_YOROI_DREP_ID_HEX,
-  parseDrepId,
-  useIsValidDRepID,
-} from '@yoroi/staking'
+import {getYoroiDrepIdHex, parseDrepId, useIsValidDRepID} from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
 import {Alert, Linking, Text, View} from 'react-native'
 
+import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useIsKeyboardOpen} from '~/hooks/useIsKeyboardOpen'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/context/ModalContext'
@@ -29,14 +27,20 @@ export type Props = {
 
 const FIND_DREPS_LINK = 'https://beta.cexplorer.io/drep'
 
-const HEIGHT_WITH_CARD = 650
-const HEIGHT_WITHOUT_CARD = 340
+export const HEIGHT_WITH_CARD = 660
+export const HEIGHT_WITHOUT_CARD = 350
+export const HEIGHT_KEYBOARD_OPEN = 350
 
 export const EnterDrepIdModal = ({onSubmit}: Props) => {
   const strings = useStrings()
   const {atoms: ta, palette: p} = useTheme()
   const [drepId, setDrepId] = React.useState('')
   const {closeModal, setHeight} = useModal()
+  const {
+    wallet: {
+      networkManager: {network},
+    },
+  } = useSelectedWallet()
 
   const {error, isFetched, isFetching} = useIsValidDRepID(drepId, {
     retry: false,
@@ -44,10 +48,35 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
   })
 
   const showYoroiDrepOption = drepId.length === 0
+  const showYoroiDrepOptionRef = React.useRef(showYoroiDrepOption)
+  showYoroiDrepOptionRef.current = showYoroiDrepOption
 
-  React.useEffect(() => {
-    setHeight(showYoroiDrepOption ? HEIGHT_WITH_CARD : HEIGHT_WITHOUT_CARD)
-  }, [showYoroiDrepOption, setHeight])
+  const handleKeyboardChange = React.useCallback(
+    (isOpen: boolean) => {
+      if (isOpen) {
+        setHeight(HEIGHT_KEYBOARD_OPEN)
+      } else {
+        setHeight(
+          showYoroiDrepOptionRef.current
+            ? HEIGHT_WITH_CARD
+            : HEIGHT_WITHOUT_CARD,
+        )
+      }
+    },
+    [setHeight],
+  )
+
+  const isKeyboardOpen = useIsKeyboardOpen({
+    onKeyboardChange: handleKeyboardChange,
+  })
+
+  const handleDrepIdChange = (text: string) => {
+    setDrepId(text)
+    if (!isKeyboardOpen) {
+      const shouldShowCard = text.length === 0
+      setHeight(shouldShowCard ? HEIGHT_WITH_CARD : HEIGHT_WITHOUT_CARD)
+    }
+  }
 
   const handleOnPress = () => {
     try {
@@ -65,7 +94,7 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
 
   const handleDelegateToYoroi = () => {
     onSubmit?.({
-      hash: GOVERNANCE_YOROI_DREP_ID_HEX,
+      hash: getYoroiDrepIdHex(network),
       type: 'key',
       CIP105: false,
     })
@@ -84,7 +113,7 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
 
       <TextInput
         value={drepId}
-        onChangeText={(text) => setDrepId(text)}
+        onChangeText={handleDrepIdChange}
         multiline
         errorDelay={1000}
         errorText={error?.message}

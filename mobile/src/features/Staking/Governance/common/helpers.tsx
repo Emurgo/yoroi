@@ -1,7 +1,7 @@
 import {isNonNullable, isString, useAsyncStorage} from '@yoroi/common'
 import {
-  GOVERNANCE_YOROI_DREP_ID_HEX,
   type StakingKeyState,
+  getYoroiDrepIdHex,
   governanceApiMaker,
   governanceManagerMaker,
   useDelegationCertificate,
@@ -317,10 +317,11 @@ export const useParticipatingGovernance = ({
     action.kind === 'delegate'
       ? formatDrepHashToCIP129Format(action.hash, action.type)
       : null
+  const yoroiDrepIdHex = getYoroiDrepIdHex(wallet.networkManager.network)
   const isDelegatingToYoroiDrep =
-    action.kind === 'delegate' && action.hash === GOVERNANCE_YOROI_DREP_ID_HEX
+    action.kind === 'delegate' && action.hash === yoroiDrepIdHex
   const isDelegatingToDrep =
-    action.kind === 'delegate' && action.hash !== GOVERNANCE_YOROI_DREP_ID_HEX
+    action.kind === 'delegate' && action.hash !== yoroiDrepIdHex
 
   const handleDelegateToOtherDrep = async (options: {
     hash: string
@@ -390,15 +391,16 @@ export const useNeverParticipatedGovernance = () => {
   const handleDelegateToYoroi = async () => {
     if (isPending) return
     const stakingKey = wallet.getStakingKey()
+    const yoroiDrepIdHex = getYoroiDrepIdHex(wallet.networkManager.network)
 
     const options = {
-      hash: GOVERNANCE_YOROI_DREP_ID_HEX,
+      hash: yoroiDrepIdHex,
       type: 'key' as const,
       CIP105: false,
     }
 
     const certificate = await createDelegationCertificate({
-      hash: GOVERNANCE_YOROI_DREP_ID_HEX,
+      hash: yoroiDrepIdHex,
       type: 'key',
       stakingKey,
     })
@@ -488,13 +490,13 @@ export const useVotingOptions = () => {
       ? lastSubmittedTx.type
       : 'key'
 
-  const isPendingDelegateToYoroi =
-    pendingTxHash === GOVERNANCE_YOROI_DREP_ID_HEX
+  const yoroiDrepIdHex = getYoroiDrepIdHex(wallet.networkManager.network)
+  const isPendingDelegateToYoroi = pendingTxHash === yoroiDrepIdHex
   const isPendingDelegateToOther = Boolean(
     pendingTxHash && !isPendingDelegateToYoroi,
   )
 
-  const confirmedDelegatingToYoroi = voteHash === GOVERNANCE_YOROI_DREP_ID_HEX
+  const confirmedDelegatingToYoroi = voteHash === yoroiDrepIdHex
   const confirmedDelegatingToOther = Boolean(
     voteKind === 'delegate' && voteHash && !confirmedDelegatingToYoroi,
   )
@@ -562,13 +564,13 @@ export const useVotingOptions = () => {
     const stakingKey = wallet.getStakingKey()
 
     const options = {
-      hash: GOVERNANCE_YOROI_DREP_ID_HEX,
+      hash: yoroiDrepIdHex,
       type: 'key' as const,
       CIP105: false,
     }
 
     const certificate = await createDelegationCertificate({
-      hash: GOVERNANCE_YOROI_DREP_ID_HEX,
+      hash: yoroiDrepIdHex,
       type: 'key',
       stakingKey,
     })

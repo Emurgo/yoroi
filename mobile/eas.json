@@ -49,6 +49,25 @@
       "distribution": "internal",
       "channel": "development"
     },
+    "dev-standalone": {
+      "extends": "base",
+      "env": {
+        "EXPO_PUBLIC_BUILD_VARIANT": "DEV",
+        "EXPO_PUBLIC_POSTHOG_KEY": "phc_zUcStVLHhwXBHajxusEvlwS77zBVAEQWhpZDx5Ef8oj",
+        "EXPO_PUBLIC_POSTHOG_HOST": "https://eu.i.posthog.com"
+      },
+      "distribution": "internal",
+      "channel": "development",
+      "android": {
+        "buildType": "apk",
+        "image": "latest",
+        "resourceClass": "large"
+      },
+      "ios": {
+        "image": "latest",
+        "resourceClass": "large"
+      }
+    },
     "preview": {
       "extends": "base",
       "env": {

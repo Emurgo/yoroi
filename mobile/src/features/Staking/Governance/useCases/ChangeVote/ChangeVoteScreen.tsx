@@ -1,9 +1,7 @@
 import {isNonNullable} from '@yoroi/common'
 import {
-  GOVERNANCE_YOROI_DREP_ID_HEX,
-  GovernanceProvider,
+  getYoroiDrepIdHex,
   useDelegationCertificate,
-  useGovernance,
   useStakingKeyState,
   useVotingCertificate,
 } from '@yoroi/staking'
@@ -19,13 +17,12 @@ import {YoroiRecordLink} from '~/features/Staking/Governance/common/YoroiRecordL
 import {useStakingKey} from '~/features/Staking/hooks/useStakingKey'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Space} from '~/ui/Space/Space'
 
 import {Action} from '../../common/Action/Action'
 import {mapStakingKeyStateToGovernanceAction} from '../../common/helpers'
 import {useGovernanceVoteFlow} from '../../common/useGovernanceVoteFlow'
-import {EnterDrepIdModal} from '../EnterDrepIdModal/EnterDrepIdModal'
+import {useOpenDrepIdModal} from '../EnterDrepIdModal/useOpenDrepIdModal'
 
 export const ChangeVoteScreen = () => {
   const {config} = useRemoteConfig()
@@ -38,8 +35,7 @@ export const ChangeVoteScreen = () => {
   const action = stakingStatus
     ? mapStakingKeyStateToGovernanceAction(stakingStatus)
     : null
-  const {openModal} = useModal()
-  const {manager} = useGovernance()
+  const {openDrepIdModal} = useOpenDrepIdModal()
 
   const createDelegationCertificate = useDelegationCertificate()
   const createVotingCertificate = useVotingCertificate()
@@ -59,27 +55,9 @@ export const ChangeVoteScreen = () => {
 
   const isPending = isCreatingTx || pendingVote !== null
 
-  const openDRepIdModal = (
-    onSubmit: (options: {
-      hash: string
-      type: 'script' | 'key'
-      CIP105: boolean
-    }) => void,
-  ) => {
-    openModal({
-      title: strings.staking.enterDRepID,
-      content: (
-        <GovernanceProvider manager={manager}>
-          <EnterDrepIdModal onSubmit={onSubmit} />
-        </GovernanceProvider>
-      ),
-      height: 650,
-    })
-  }
-
   const handleDelegate = () => {
     if (isPending) return
-    openDRepIdModal(async (options) => {
+    openDrepIdModal(async (options) => {
       const stakingKey = wallet.getStakingKey()
 
       const certificate = await createDelegationCertificate({
@@ -95,15 +73,16 @@ export const ChangeVoteScreen = () => {
   const handleDelegateToYoroi = async () => {
     if (isPending) return
     const stakingKey = wallet.getStakingKey()
+    const yoroiDrepIdHex = getYoroiDrepIdHex(wallet.networkManager.network)
 
     const options = {
-      hash: GOVERNANCE_YOROI_DREP_ID_HEX,
+      hash: yoroiDrepIdHex,
       type: 'key' as const,
       CIP105: false,
     }
 
     const certificate = await createDelegationCertificate({
-      hash: GOVERNANCE_YOROI_DREP_ID_HEX,
+      hash: yoroiDrepIdHex,
       type: 'key',
       stakingKey,
     })
@@ -139,7 +118,8 @@ export const ChangeVoteScreen = () => {
   const voteHash =
     voteKind === 'delegate' && action != null ? action.hash : undefined
   const isDelegatingNotToYoroiDrep =
-    voteKind === 'delegate' && voteHash !== GOVERNANCE_YOROI_DREP_ID_HEX
+    voteKind === 'delegate' &&
+    voteHash !== getYoroiDrepIdHex(wallet.networkManager.network)
 
   return (
     <ScrollView style={[a.flex_1, a.px_lg, ta.bg_color_max]}>
