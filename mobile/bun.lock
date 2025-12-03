@@ -71,7 +71,6 @@
         "expo-localization": "16.1.6",
         "expo-location": "18.1.6",
         "expo-notifications": "0.31.4",
-        "expo-screen-capture": "7.1.5",
         "expo-status-bar": "2.2.3",
         "expo-system-ui": "5.0.10",
         "expo-updates": "0.28.17",
@@ -1466,8 +1465,6 @@
     "expo-modules-core": ["expo-modules-core@2.5.0", "", { "dependencies": { "invariant": "^2.2.4" } }, "sha512-aIbQxZE2vdCKsolQUl6Q9Farlf8tjh/ROR4hfN1qT7QBGPl1XrJGnaOKkcgYaGrlzCPg/7IBe0Np67GzKMZKKQ=="],
 
     "expo-notifications": ["expo-notifications@0.31.4", "", { "dependencies": { "@expo/image-utils": "^0.7.6", "@ide/backoff": "^1.0.0", "abort-controller": "^3.0.0", "assert": "^2.0.0", "badgin": "^1.1.5", "expo-application": "~6.1.5", "expo-constants": "~17.1.7" }, "peerDependencies": { "expo": "*", "react": "*", "react-native": "*" } }, "sha512-NnGKIFGpgZU66qfiFUyjEBYsS77VahURpSSeWEOLt+P1zOaUFlgx2XqS+dxH3/Bn1Vm7TMj04qKsK5KvzR/8Lw=="],
-
-    "expo-screen-capture": ["expo-screen-capture@7.1.5", "", { "peerDependencies": { "expo": "*", "react": "*" } }, "sha512-4rUuYibsXBqMIsWLSKTVbXMikrkYJfyMapCx8EAo72rs7hbsZp+DcoDtHQaJS8HU/hag9WsAMVQm3KWyazWlCw=="],
 
     "expo-status-bar": ["expo-status-bar@2.2.3", "", { "dependencies": { "react-native-edge-to-edge": "1.6.0", "react-native-is-edge-to-edge": "^1.1.6" }, "peerDependencies": { "react": "*", "react-native": "*" } }, "sha512-+c8R3AESBoduunxTJ8353SqKAKpxL6DvcD8VKBuh81zzJyUUbfB4CVjr1GufSJEKsMzNPXZU+HJwXx7Xh7lx8Q=="],
 
