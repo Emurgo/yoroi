@@ -1,5 +1,9 @@
+import {formatTokenWithText} from '@yoroi/cardano-wallet'
+import {Quantities, asQuantity} from '@yoroi/cardano-wallet'
+import {CardanoMobileWrapped} from '@yoroi/cardano-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Balance} from '@yoroi/types'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import {useQuery} from '@tanstack/react-query'
 import * as React from 'react'
@@ -10,15 +14,11 @@ import {
   formatDrepHashToCIP129Format,
 } from '~/features/Staking/Governance/common/drep'
 import {usePoolInfo} from '~/features/Staking/hooks/usePoolInfo'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Copiable} from '~/ui/Copiable/Copiable'
 import {Icon} from '~/ui/Icon'
 import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Space} from '~/ui/Space/Space'
-import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
-import {formatTokenWithText} from '~/wallets/utils/format'
-import {Quantities, asQuantity} from '~/wallets/utils/utils'
 
 import {PoolDetails} from './PoolDetails'
 import {generatePoolName} from './poolUtils'

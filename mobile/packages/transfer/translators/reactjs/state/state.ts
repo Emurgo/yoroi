@@ -310,8 +310,7 @@ export enum TransferActionType {
 
 /* istanbul ignore next */
 function missingInit() {
-  const logger = getLogger()
-  logger.error('[@yoroi/transfer] missing initialization', {
+  getLogger().error('[@yoroi/transfer] missing initialization', {
     origin: 'transfer',
   })
 }

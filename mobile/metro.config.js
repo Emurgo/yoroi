@@ -46,6 +46,13 @@ config.resolver.alias = {
   '@yoroi/theme': path.resolve(projectRoot, './packages/theme'),
   '@yoroi/transfer': path.resolve(projectRoot, './packages/transfer'),
   '@yoroi/types': path.resolve(projectRoot, './packages/types'),
+  '@yoroi/cardano-wallet': path.resolve(projectRoot, './packages/cardano-wallet'),
+  '@yoroi/wallet-manager': path.resolve(projectRoot, './packages/wallet-manager'),
+  '@yoroi/tx': path.resolve(projectRoot, './packages/tx'),
+  '@yoroi/p2p-communication': path.resolve(
+    projectRoot,
+    './packages/p2p-communication',
+  ),
 
   // ~ aliases
   '~/ui': path.resolve(projectRoot, './src/ui'),

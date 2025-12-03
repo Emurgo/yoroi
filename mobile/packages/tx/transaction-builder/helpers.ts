@@ -239,8 +239,6 @@ export function selectUtxosForAmounts(
   primaryTokenId: TokenId = defaultPrimaryTokenId,
   estimatedFee: Lovelace | string = '200000', // Default 0.2 ADA fee estimate
 ): ModernUtxo[] {
-  const logger = getLogger()
-
   // Calculate total required ADA (outputs + fee + minimum UTXO for change output)
   // Minimum UTXO is needed because change output must meet minimum UTXO requirement
   const minUtxoValue = BigInt('1000000') // Base min UTXO (1 ADA) - standard for Cardano
@@ -314,7 +312,7 @@ export function selectUtxosForAmounts(
     const have = selectedAmounts[tokenIdStr] || BigInt(0)
     if (have < required) {
       needsMoreTokens.push(typedTokenId)
-      logger.warn('selectUtxosForAmounts: Insufficient tokens', {
+      getLogger().warn('selectUtxosForAmounts: Insufficient tokens', {
         tokenId: tokenIdStr,
         required: required.toString(),
         have: have.toString(),
@@ -324,7 +322,7 @@ export function selectUtxosForAmounts(
 
   // If we need more tokens, we can't proceed (tokens must come from UTXOs that have them)
   if (needsMoreTokens.length > 0) {
-    logger.error('selectUtxosForAmounts: Insufficient tokens detected', {
+    getLogger().error('selectUtxosForAmounts: Insufficient tokens detected', {
       needsMoreTokens,
       selectedCount: selected.length,
       selectedAda: selectedAda.toString(),
@@ -479,8 +477,6 @@ export async function buildRecipeTransaction(
   protocolConfig: CardanoHaskellConfig,
   primaryTokenId: Portfolio.Token.Id,
 ): Promise<{cbor: string}> {
-  const logger = getLogger()
-
   try {
     const unsignedTx = await buildTransaction(
       builderState,
@@ -489,18 +485,21 @@ export async function buildRecipeTransaction(
     )
 
     if (!unsignedTx.cbor) {
-      logger.error('buildRecipeTransaction: Transaction CBOR not available', {
-        unsignedTx: {
-          inputsCount: unsignedTx.inputs.length,
-          outputsCount: unsignedTx.outputs.length,
-          withdrawalsCount: unsignedTx.withdrawals.length,
-          certificatesCount: unsignedTx.certificates.length,
+      getLogger().error(
+        'buildRecipeTransaction: Transaction CBOR not available',
+        {
+          unsignedTx: {
+            inputsCount: unsignedTx.inputs.length,
+            outputsCount: unsignedTx.outputs.length,
+            withdrawalsCount: unsignedTx.withdrawals.length,
+            certificatesCount: unsignedTx.certificates.length,
+          },
         },
-      })
+      )
       throw new Error('Transaction CBOR not available')
     }
 
-    logger.info('buildRecipeTransaction: Transaction built successfully', {
+    getLogger().info('buildRecipeTransaction: Transaction built successfully', {
       cborLength: unsignedTx.cbor.length,
     })
 
@@ -533,12 +532,12 @@ export async function buildRecipeTransaction(
     // Log as info for expected insufficient funds errors (caller will handle retry)
     // Log as error for unexpected failures
     if (isInsufficientFundsError) {
-      logger.info(
+      getLogger().info(
         'buildRecipeTransaction: Insufficient funds (expected, caller will handle)',
         logData,
       )
     } else {
-      logger.error(
+      getLogger().error(
         'buildRecipeTransaction: Failed to build transaction',
         logData,
       )

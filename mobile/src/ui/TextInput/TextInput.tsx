@@ -1,3 +1,4 @@
+import {isEmptyString} from '@yoroi/cardano-wallet'
 import {isString, useDebouncedCallback} from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
@@ -16,7 +17,6 @@ import {
 } from 'react-native-paper'
 
 import {Icon} from '~/ui/Icon'
-import {isEmptyString} from '~/wallets/utils/string'
 
 export type TextInputProps = RNTextInputProps &
   Omit<React.ComponentProps<typeof RNPTextInput>, 'theme'> & {

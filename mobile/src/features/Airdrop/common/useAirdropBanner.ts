@@ -1,13 +1,13 @@
 import {time} from '@yoroi/common'
 import {useNotificationManager} from '@yoroi/notifications'
 import {Notifications} from '@yoroi/types'
+import {useWalletEvent} from '@yoroi/wallet-manager'
+import {useWalletManager} from '@yoroi/wallet-manager'
 
 import {useQuery, useQueryClient} from '@tanstack/react-query'
 
+import {useRemoteConfig} from '~/common/hooks/useRemoteConfig'
 import {BannerIds, showBanner} from '~/features/Notifications/common/banners'
-import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
-import {useWalletEvent} from '~/features/WalletManager/hooks/useWalletEvent'
-import {useRemoteConfig} from '~/hooks/useRemoteConfig'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 

@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react'
 
-import {useRemoteConfig} from '~/hooks/useRemoteConfig'
+import {useRemoteConfig} from '~/common/hooks/useRemoteConfig'
 
 import {DAPP_LOGO_BASE_URL} from './helpers'
 

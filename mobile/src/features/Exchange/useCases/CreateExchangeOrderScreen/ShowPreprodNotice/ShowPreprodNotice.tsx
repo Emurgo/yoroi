@@ -1,12 +1,12 @@
 import {useExchange} from '@yoroi/exchange'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Chain} from '@yoroi/types'
+import {useWalletManager} from '@yoroi/wallet-manager'
 
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
 import {PreprodNoticeIllustration} from '~/features/Exchange/illustrations/PreprodNoticeIllustration'
-import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Space} from '~/ui/Space/Space'
 

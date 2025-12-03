@@ -1,17 +1,17 @@
 import {TxSubmissionStatus} from '@yoroi/api'
+import {YoroiWallet} from '@yoroi/cardano-wallet'
+import {delay} from '@yoroi/cardano-wallet'
+import {CardanoMobileWrapped} from '@yoroi/cardano-wallet'
 import {useMutationWithInvalidations} from '@yoroi/common'
 import {calculateTxId} from '@yoroi/tx'
 import {Branded} from '@yoroi/types'
+import {useWalletManagerSelector} from '@yoroi/wallet-manager'
 
 import * as CSL from '@emurgo/cross-csl-core'
 import {UseMutationOptions} from '@tanstack/react-query'
 
 import {FormattedTx} from '~/features/ReviewTx/common/types'
-import {useWalletManagerSelector} from '~/features/WalletManager/context/WalletManagerProvider'
 import {logger} from '~/kernel/logger/logger'
-import {YoroiWallet} from '~/wallets/cardano/types'
-import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
-import {delay} from '~/wallets/utils/timeUtils'
 
 import {createOptimisticTransactionFromFormattedTx} from '../utils/createOptimisticTransaction'
 

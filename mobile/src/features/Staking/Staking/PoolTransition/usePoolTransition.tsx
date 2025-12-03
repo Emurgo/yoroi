@@ -1,6 +1,10 @@
 import {API_ENDPOINTS} from '@yoroi/api'
+import {createDelegationTxFromWallet} from '@yoroi/cardano-wallet'
+import {YoroiWallet} from '@yoroi/cardano-wallet'
 import {poolInfoApiMaker} from '@yoroi/staking'
 import {Wallet} from '@yoroi/types'
+import {useSelectedNetwork} from '@yoroi/wallet-manager'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import {init} from '@emurgo/cross-csl-mobile'
 import {useQuery} from '@tanstack/react-query'
@@ -9,12 +13,8 @@ import * as React from 'react'
 import {useNavigateTo} from '~/features/Staking/Governance/common/navigation'
 import {isInsufficientBalanceError} from '~/features/Staking/Governance/common/transactionErrorHandling'
 import {useStakingInfo} from '~/features/Staking/hooks/useStakingInfo'
-import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {features} from '~/kernel/features'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
-import {createDelegationTxFromWallet} from '~/wallets/cardano/transaction-recipes'
-import {YoroiWallet} from '~/wallets/cardano/types'
 
 const createDelegationTxHelper = async (
   wallet: YoroiWallet,

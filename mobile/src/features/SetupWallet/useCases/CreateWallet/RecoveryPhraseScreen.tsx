@@ -1,3 +1,4 @@
+import {generateAdaMnemonic} from '@yoroi/cardano-wallet'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
@@ -6,7 +7,7 @@ import {BlurView} from 'expo-blur'
 import * as React from 'react'
 import {Platform, Text, TouchableOpacity, View} from 'react-native'
 
-import {useBold} from '~/hooks/useBold'
+import {useBold} from '~/common/hooks/useBold'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {SetupWalletRouteNavigation} from '~/kernel/navigation/types'
 import {Button} from '~/ui/Button/Button'
@@ -17,7 +18,6 @@ import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
 import {StepperProgress} from '~/ui/StepperProgress/StepperProgress'
-import {generateAdaMnemonic} from '~/wallets/cardano/mnemonic/mnemonic'
 
 import {EyeClosed} from '../../illustrations/EyeClosed'
 import {EyeOpen} from '../../illustrations/EyeOpen'

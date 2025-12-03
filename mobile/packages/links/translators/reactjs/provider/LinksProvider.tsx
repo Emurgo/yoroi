@@ -29,7 +29,6 @@ export const LinksProvider = ({
 }: React.PropsWithChildren<{
   initialState?: LinksState
 }>) => {
-  const logger = getLogger()
   const [state, dispatch] = React.useReducer(linksReducer, {
     ...defaultLinksState,
     ...initialState,
@@ -37,7 +36,7 @@ export const LinksProvider = ({
 
   const setPendingActionWithLogging = React.useCallback(
     (action: PendingAction | null) => {
-      logger.debug('LinksProvider: setting pending action', {
+      getLogger().debug('LinksProvider: setting pending action', {
         source: action?.source,
         actionType:
           action?.source === 'yoroi'
@@ -50,18 +49,18 @@ export const LinksProvider = ({
         action,
       })
     },
-    [logger],
+    [],
   )
 
   const clearPendingAction = React.useCallback(() => {
-    logger.debug('LinksProvider: clearing pending action')
+    getLogger().debug('LinksProvider: clearing pending action')
     dispatch({type: LinksActionType.ClearPendingAction})
-  }, [logger])
+  }, [])
 
   const markActionProcessed = React.useCallback(() => {
-    logger.debug('LinksProvider: marking action as processed')
+    getLogger().debug('LinksProvider: marking action as processed')
     dispatch({type: LinksActionType.MarkActionProcessed})
-  }, [logger])
+  }, [])
 
   const actions = React.useRef<LinksActions>({
     authorizationsChanged: (walletId: string, authorization: string) => {
@@ -88,7 +87,7 @@ export const LinksProvider = ({
   )
 
   React.useEffect(() => {
-    logger.debug('LinksProvider: context value changed', {
+    getLogger().debug('LinksProvider: context value changed', {
       hasPendingAction: !!context.pendingAction,
       source: context.pendingAction?.source,
       actionType:
@@ -96,7 +95,7 @@ export const LinksProvider = ({
           ? context.pendingAction.action.info.useCase
           : context.pendingAction?.action.action,
     })
-  }, [context.pendingAction, logger])
+  }, [context.pendingAction])
 
   return (
     <LinksContext.Provider value={context}>{children}</LinksContext.Provider>

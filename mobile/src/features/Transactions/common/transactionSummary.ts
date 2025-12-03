@@ -1,3 +1,4 @@
+import {Amounts, Quantities, asQuantity} from '@yoroi/cardano-wallet'
 import {CertificateKind} from '@yoroi/tx'
 import {
   Balance,
@@ -9,8 +10,6 @@ import {
   TransactionDirection,
   WalletTransaction,
 } from '@yoroi/types'
-
-import {Amounts, Quantities, asQuantity} from '~/wallets/utils/utils'
 
 import {TransactionSummary} from './types'
 

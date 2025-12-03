@@ -6,14 +6,14 @@ import {
   poolInfoApiMaker,
 } from '@yoroi/staking'
 import {Chain} from '@yoroi/types'
+import {useSelectedNetwork} from '@yoroi/wallet-manager'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import {useQuery, useQueryClient} from '@tanstack/react-query'
 import axios from 'axios'
 import * as React from 'react'
 
-import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {poolQueryKeys} from '~/queries'
+import {poolQueryKeys} from '~/common/queries'
 
 type ExplorerPoolInfoApiRes = {
   data?: {

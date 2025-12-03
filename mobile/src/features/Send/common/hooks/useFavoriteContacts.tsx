@@ -1,10 +1,10 @@
 import {Wallet} from '@yoroi/types'
+import {useWalletMetas} from '@yoroi/wallet-manager'
+import {useWalletManager} from '@yoroi/wallet-manager'
+import {WalletManager} from '@yoroi/wallet-manager'
 
 import * as React from 'react'
 
-import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
-import {useWalletMetas} from '~/features/WalletManager/hooks/useWalletMetas'
-import {WalletManager} from '~/features/WalletManager/wallet-manager'
 import {
   FavoriteContact,
   favoriteContactsStorage,

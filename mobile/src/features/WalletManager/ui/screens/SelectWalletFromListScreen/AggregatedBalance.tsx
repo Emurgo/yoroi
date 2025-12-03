@@ -1,5 +1,6 @@
 import {infoExtractName} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {useSelectedNetwork} from '@yoroi/wallet-manager'
 
 import {LinearGradient} from 'expo-linear-gradient'
 import * as React from 'react'
@@ -18,8 +19,6 @@ import {BalanceCardContent} from '~/ui/BalanceCardContent/BalanceCardContent'
 import {BalanceCardSkeleton} from '~/ui/BalanceCardSkeleton/BalanceCardSkeleton'
 import {BalanceHeaderCard} from '~/ui/BalanceHeaderCard/BalanceHeaderCard'
 import {Space} from '~/ui/Space/Space'
-
-import {useSelectedNetwork} from '../../../hooks/useSelectedNetwork'
 
 export const AggregatedBalance = () => {
   const {palette: p} = useTheme()

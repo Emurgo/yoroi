@@ -1,7 +1,7 @@
+import {useSelectedWallet} from '@yoroi/wallet-manager'
+
 import React, {useState} from 'react'
 import {Keyboard} from 'react-native'
-
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 
 import {ConfirmWithSpendingPassword} from '../ConfirmWithSpendingPassword'
 

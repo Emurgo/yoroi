@@ -23,7 +23,6 @@ export const useWalletConnection = (
   peerConnection: PeerConnectionState,
   walletCommunication: WalletCommunication | null,
 ): UseWalletConnectionResult => {
-  const logger = getLogger()
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const {peerId: _peerId, isReady: _isReady} = peerConnection
 
@@ -41,13 +40,13 @@ export const useWalletConnection = (
       return
     }
 
-    logger.log('Initializing wallet connection', {
+    getLogger().log('Initializing wallet connection', {
       origin: 'p2p-communication',
       status: walletCommunication.isConnected() ? 'connected' : 'disconnected',
     })
 
     if (walletCommunication.isConnected()) {
-      logger.debug('Wallet is already connected!', {
+      getLogger().debug('Wallet is already connected!', {
         origin: 'p2p-communication',
       })
       setConnected(true)
@@ -56,7 +55,7 @@ export const useWalletConnection = (
 
     const onConnect: EventCallback<string> = (id?: string): void => {
       if (!id) return
-      logger.log('Wallet connection established in hook', {
+      getLogger().log('Wallet connection established in hook', {
         origin: 'p2p-communication',
         walletId: id,
       })
@@ -67,14 +66,14 @@ export const useWalletConnection = (
     }
 
     const onDisconnect: EventCallback<void> = (): void => {
-      logger.log('Wallet disconnected', {origin: 'p2p-communication'})
+      getLogger().log('Wallet disconnected', {origin: 'p2p-communication'})
       setConnected(false)
       setStatus('disconnected')
     }
 
     const onError: EventCallback<Error> = (err?: Error): void => {
       if (!err) return
-      logger.error(err, {
+      getLogger().error(err, {
         origin: 'p2p-communication',
         operation: 'useWalletConnection',
       })
@@ -98,14 +97,16 @@ export const useWalletConnection = (
 
       walletCommunication.off('error', onError as EventCallback<unknown>)
     }
-  }, [walletCommunication, logger])
+  }, [walletCommunication])
 
   const disconnectWallet = useCallback(() => {
     if (!walletCommunication) {
       return
     }
 
-    logger.log('Disconnecting from wallet...', {origin: 'p2p-communication'})
+    getLogger().log('Disconnecting from wallet...', {
+      origin: 'p2p-communication',
+    })
     if (walletCommunication.isConnected()) {
       try {
         walletCommunication.disconnect()
@@ -118,7 +119,7 @@ export const useWalletConnection = (
         setStatus('error')
       }
     }
-  }, [walletCommunication, logger])
+  }, [walletCommunication])
 
   return {
     walletId,

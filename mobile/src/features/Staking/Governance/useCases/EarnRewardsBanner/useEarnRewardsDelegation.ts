@@ -1,10 +1,9 @@
+import {createCombinedDelegationTxFromWallet} from '@yoroi/cardano-wallet'
+import {YoroiWallet} from '@yoroi/cardano-wallet'
 import {getYoroiDrepIdHex} from '@yoroi/staking'
 import {Branded, KeyHash, Wallet} from '@yoroi/types'
 
 import * as React from 'react'
-
-import {createCombinedDelegationTxFromWallet} from '~/wallets/cardano/transaction-recipes/wallet-helpers'
-import {YoroiWallet} from '~/wallets/cardano/types'
 
 /**
  * Creates combined delegation transactions to earn rewards:

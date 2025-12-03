@@ -1,4 +1,6 @@
+import {Amounts, Quantities} from '@yoroi/cardano-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import {FlashList, FlashListProps} from '@shopify/flash-list'
 import BigNumber from 'bignumber.js'
@@ -13,9 +15,7 @@ import {
 } from '~/features/Transactions/common/filterHelpers'
 import {TransactionSummary} from '~/features/Transactions/common/types'
 import {useTransactionSummaries} from '~/features/Transactions/hooks/useTransactionSummaries'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {Space} from '~/ui/Space/Space'
-import {Amounts, Quantities} from '~/wallets/utils/utils'
 
 import {useTxFilter} from './TxFilterProvider'
 import {TxListItem} from './TxListItem'

@@ -1,6 +1,11 @@
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Wallet} from '@yoroi/types'
+import {
+  linkToSupportOpenTicket,
+  useWalletManagerSelector,
+  useWalletMetas,
+} from '@yoroi/wallet-manager'
 
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import * as React from 'react'
@@ -22,9 +27,6 @@ import {ScrollView} from '~/ui/ScrollView/ScrollView'
 import {useScrollView} from '~/ui/ScrollView/hooks/useScrollView'
 import {Space} from '~/ui/Space/Space'
 
-import {linkToSupportOpenTicket} from '../../../common/constants'
-import {useWalletManagerSelector} from '../../../context/WalletManagerProvider'
-import {useWalletMetas} from '../../../hooks/useWalletMetas'
 import {SupportIllustration} from '../../../ui/illustrations/SupportIllustration'
 import {AggregatedBalance} from './AggregatedBalance'
 import {WalletListItem} from './WalletListItem'

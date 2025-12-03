@@ -1,10 +1,10 @@
+import {createVotingRegTxFromWallet} from '@yoroi/cardano-wallet'
+import {YoroiWallet} from '@yoroi/cardano-wallet'
 import {Wallet} from '@yoroi/types'
 
 import * as React from 'react'
 
-import {UsePromiseOptions, usePromise} from '~/hooks/usePromise'
-import {createVotingRegTxFromWallet} from '~/wallets/cardano/transaction-recipes'
-import {YoroiWallet} from '~/wallets/cardano/types'
+import {UsePromiseOptions, usePromise} from '~/common/hooks/usePromise'
 
 type VotingRegTxAndEncryptedKey = {
   votingRegTx: {cbor: string}

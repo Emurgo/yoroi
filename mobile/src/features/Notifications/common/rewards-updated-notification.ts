@@ -1,11 +1,9 @@
 import {useAsyncStorage} from '@yoroi/common'
 import {App, Notifications as NotificationTypes} from '@yoroi/types'
+import {useWalletManager} from '@yoroi/wallet-manager'
 
 import * as React from 'react'
 import {Subject} from 'rxjs'
-
-import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
-import {walletManager} from '~/features/WalletManager/wallet-manager'
 
 import {generateNotificationId} from './notifications'
 import {buildProcessedNotificationsStorage} from './processed-notifications-storage'
@@ -15,7 +13,10 @@ const storageKey = 'rewards-updated-notification-history'
 export const rewardsUpdatedSubject =
   new Subject<NotificationTypes.RewardsUpdatedEvent>()
 
-const buildNotifications = async (appStorage: App.Storage) => {
+const buildNotifications = async (
+  appStorage: App.Storage,
+  walletManager: ReturnType<typeof useWalletManager>['walletManager'],
+) => {
   const walletIds = [...walletManager.walletMetas.keys()]
   const notifications: NotificationTypes.RewardsUpdatedEvent[] = []
 
@@ -87,7 +88,10 @@ export const useRewardsUpdatedNotifications = ({
         const areAllDone = walletsDoneSyncing.length === walletInfos.length
         if (!areAllDone) return
 
-        const notifications = await buildNotifications(asyncStorage)
+        const notifications = await buildNotifications(
+          asyncStorage,
+          walletManager,
+        )
         notifications.forEach((notification) =>
           rewardsUpdatedSubject.next(notification),
         )

@@ -1,5 +1,7 @@
 // Ledger payload building functions
 // Builds transaction payloads for Ledger hardware wallet signing
+import {CardanoMobileWrapped} from '@yoroi/cardano-wallet'
+
 import {
   CIP36VoteDelegationType,
   CIP36VoteRegistrationFormat,
@@ -16,7 +18,6 @@ import type {
 import {WasmModuleProxy} from '@emurgo/cross-csl-core'
 import {blake2b as blake2bHash} from '@noble/hashes/blake2b'
 
-import {CardanoMobileWrapped} from '../../../src/wallets/cardano/wrappedCsl'
 import {
   LedgerUnsignedTx,
   assertTagsState,

@@ -1,15 +1,16 @@
+import {cip30ExtensionMaker} from '@yoroi/cardano-wallet'
+import {cip30LedgerExtensionMaker} from '@yoroi/cardano-wallet'
+import {BaseLedgerError} from '@yoroi/cardano-wallet'
+import {useAddressMode} from '@yoroi/wallet-manager'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
+
 import {Buffer} from 'buffer'
 import * as React from 'react'
 
 import {useConfirmHWConnectionModal} from '~/features/Discover/common/ConfirmHWConnectionModal'
 import {userRejectedError} from '~/features/Discover/common/errors'
 import {usePromptRootKey} from '~/features/ReviewTx/common/hooks/usePromptRootKey'
-import {useAddressMode} from '~/features/WalletManager/hooks/useAddressMode'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {cip30ExtensionMaker} from '~/wallets/cardano/cip30/cip30'
-import {cip30LedgerExtensionMaker} from '~/wallets/cardano/cip30/cip30-ledger'
-import {BaseLedgerError} from '~/wallets/hw/hw'
 
 export const useMessageSigning = () => {
   const {wallet, meta} = useSelectedWallet()
@@ -31,7 +32,10 @@ export const useMessageSigning = () => {
             confirmHWConnection({
               onConfirm: async ({transportType, deviceInfo}) => {
                 try {
-                  const cip30 = cip30LedgerExtensionMaker(wallet, meta)
+                  const cip30 = cip30LedgerExtensionMaker(wallet, meta, {
+                    toLedgerSignRequest:
+                      wallet._dependencies.toLedgerSignRequest,
+                  })
                   const result = await cip30.signData(
                     address,
                     payloadHex,
@@ -76,7 +80,10 @@ export const useMessageSigning = () => {
                 onSuccess: async (rootKey) => {
                   shouldResolveOnClose = false
                   try {
-                    const cip30 = cip30ExtensionMaker(wallet, meta)
+                    const cip30 = cip30ExtensionMaker(wallet, meta, {
+                      createCollateralEntry:
+                        wallet._dependencies.createCollateralEntry,
+                    })
                     const result = await cip30.signData(
                       rootKey,
                       address,

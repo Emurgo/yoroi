@@ -18,6 +18,14 @@ import {
   swapReducer,
 } from './SwapProvider'
 
+// Mock @yoroi/cardano-wallet FIRST before any imports that might use it
+// This must be hoisted before any module imports
+// SwapProvider only imports convertBech32ToHex, so we only need to mock that
+// Avoid jest.requireActual to prevent Chain.Network access issues
+jest.mock('@yoroi/cardano-wallet', () => ({
+  convertBech32ToHex: jest.fn(),
+}))
+
 // Mock all external dependencies
 jest.mock('@yoroi/common', () => ({
   ...jest.requireActual('@yoroi/common'),
@@ -114,7 +122,7 @@ jest.mock('~/features/Staking/hooks/useStakingKey', () => ({
   useStakingKey: jest.fn(),
 }))
 
-jest.mock('~/features/WalletManager/hooks/useSelectedWallet', () => ({
+jest.mock('@yoroi/wallet-manager', () => ({
   useSelectedWallet: jest.fn(),
 }))
 
@@ -122,11 +130,7 @@ jest.mock('~/kernel/i18n/useStrings', () => ({
   useStrings: jest.fn(),
 }))
 
-jest.mock('~/wallets/cardano/common/signatureUtils', () => ({
-  convertBech32ToHex: jest.fn(),
-}))
-
-jest.mock('~/hooks/useRemoteConfig', () => ({
+jest.mock('~/common/hooks/useRemoteConfig', () => ({
   useRemoteConfig: jest.fn(() => ({
     config: {
       swap: {
@@ -171,8 +175,7 @@ const TestWrapper = ({children}: {children: React.ReactNode}) => {
 }
 
 // Mock implementations for hooks
-const mockUseSelectedWallet =
-  require('~/features/WalletManager/hooks/useSelectedWallet').useSelectedWallet
+const mockUseSelectedWallet = require('@yoroi/wallet-manager').useSelectedWallet
 const mockUseStakingKey =
   require('~/features/Staking/hooks/useStakingKey').useStakingKey
 const mockUsePortfolioBalances =
@@ -184,7 +187,7 @@ const mockUseNavigateTo = require('./navigation').useNavigateTo
 const mockUseGetInputs = require('./useGetInputs').useGetInputs
 const mockUseQuery = require('@tanstack/react-query').useQuery
 const mockConvertBech32ToHex =
-  require('~/wallets/cardano/common/signatureUtils').convertBech32ToHex
+  require('@yoroi/cardano-wallet').convertBech32ToHex
 
 describe('SwapProvider', () => {
   beforeEach(() => {

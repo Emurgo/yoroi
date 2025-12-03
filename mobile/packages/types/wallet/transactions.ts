@@ -1,7 +1,6 @@
+import type {CardanoTypes} from '@yoroi/cardano-wallet'
 import {RemoteCertificateMeta} from '@yoroi/staking'
 import {Balance} from '@yoroi/types'
-
-import {CardanoTypes} from '~/wallets/cardano/types'
 
 import {
   Address,

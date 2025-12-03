@@ -1,10 +1,11 @@
+import {createUtxoConsolidationTxFromWallet} from '@yoroi/cardano-wallet'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
+
 import {useMutation} from '@tanstack/react-query'
 import {Alert} from 'react-native'
 
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
-import {createUtxoConsolidationTxFromWallet} from '~/wallets/cardano/transaction-recipes'
 
 export const useUtxoConsolidation = () => {
   const {wallet, meta} = useSelectedWallet()

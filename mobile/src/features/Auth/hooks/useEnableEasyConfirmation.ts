@@ -2,7 +2,7 @@
 // import {UseMutationOptions} from '@tanstack/react-query'
 
 // import {YoroiWallet} from '../yoroi-wallets/cardano/types'
-// import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
+// import {useWalletManager} from '@yoroi/wallet-manager'
 
 // export const useEnableEasyConfirmation = (
 //   walletId: YoroiWallet['id'],

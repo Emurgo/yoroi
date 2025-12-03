@@ -1,20 +1,20 @@
 import {API_ENDPOINTS} from '@yoroi/api'
+import {YoroiWallet} from '@yoroi/cardano-wallet'
+import {isEmptyString} from '@yoroi/cardano-wallet'
 import {StakePoolInfoAndHistory, poolInfoApiMaker} from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {useSelectedNetwork} from '@yoroi/wallet-manager'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import {UseQueryOptions, useQuery} from '@tanstack/react-query'
 import * as React from 'react'
 import {ActivityIndicator, Linking, View} from 'react-native'
 
-import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button, ButtonProps, ButtonType} from '~/ui/Button/Button'
 import {Copiable} from '~/ui/Copiable/Copiable'
 import {Text} from '~/ui/Text/Text'
 import {TitledCard} from '~/ui/TitledCard/TitledCard'
-import {YoroiWallet} from '~/wallets/cardano/types'
-import {isEmptyString} from '~/wallets/utils/string'
 
 type StakePoolInfoProps = {
   stakePoolId: string

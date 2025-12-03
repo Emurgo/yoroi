@@ -4,14 +4,13 @@ import {
   useAsyncStorage,
   useMutationWithInvalidations,
 } from '@yoroi/common'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import {
   UseMutationOptions,
   UseSuspenseQueryOptions,
   useSuspenseQuery,
 } from '@tanstack/react-query'
-
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 
 const isShowingMultipleAddressInfoKey = 'isShowingMultipleAddressesModal'
 

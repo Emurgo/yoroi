@@ -1,17 +1,17 @@
+import {Quantities} from '@yoroi/cardano-wallet'
 import {useExchange, useExchangeProvidersByOrderType} from '@yoroi/exchange'
 import {Chain} from '@yoroi/types'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
+import {useWalletManager} from '@yoroi/wallet-manager'
 
 import BigNumber from 'bignumber.js'
 import * as React from 'react'
 
 import {ExchangeAmountCard} from '~/features/Exchange/common/ExchangeAmountCard/ExchangeAmountCard'
 import {usePortfolioPrimaryBalance} from '~/features/Portfolio/common/hooks/usePortfolioPrimaryBalance'
-import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useLanguage} from '~/kernel/i18n/LanguageProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Space} from '~/ui/Space/Space'
-import {Quantities} from '~/wallets/utils/utils'
 
 export const EditAmount = ({disabled}: {disabled?: boolean}) => {
   const strings = useStrings()

@@ -3,7 +3,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
-import {useTranslatedError} from '~/hooks/useTranslatedError'
+import {useTranslatedError} from '~/common/hooks/useTranslatedError'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
 import {Space} from '~/ui/Space/Space'

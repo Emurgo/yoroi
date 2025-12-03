@@ -1,9 +1,8 @@
+import {CardanoMobileWrapped} from '@yoroi/cardano-wallet'
 import {calculateTxId} from '@yoroi/tx'
 
 import {Transaction, WasmModuleProxy} from '@emurgo/cross-csl-core'
 import {Buffer} from 'buffer'
-
-import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
 
 /**
  * Safe extraction of transaction ID from callback arguments

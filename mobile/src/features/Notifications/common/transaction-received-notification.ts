@@ -1,15 +1,13 @@
+import {YoroiWallet} from '@yoroi/cardano-wallet'
 import {useAsyncStorage} from '@yoroi/common'
 import {App, Notifications as NotificationTypes} from '@yoroi/types'
 import {TRANSACTION_DIRECTION} from '@yoroi/types'
+import {SyncWalletInfo, useWalletManager} from '@yoroi/wallet-manager'
 
 import * as React from 'react'
 import {Subject} from 'rxjs'
 
 import {walletTransactionToSummary} from '~/features/Transactions/common/transactionSummary'
-import {SyncWalletInfo} from '~/features/WalletManager/common/types'
-import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
-import {walletManager} from '~/features/WalletManager/wallet-manager'
-import {YoroiWallet} from '~/wallets/cardano/types'
 
 import {generateNotificationId} from './notifications'
 import {buildProcessedNotificationsStorage} from './processed-notifications-storage'
@@ -20,12 +18,14 @@ type BuildNotificationsParams = {
   appStorage: App.Storage
   sinceDate: Date
   walletIds: string[]
+  walletManager: ReturnType<typeof useWalletManager>['walletManager']
 }
 
 const buildNotifications = async ({
   appStorage,
   sinceDate,
   walletIds,
+  walletManager,
 }: BuildNotificationsParams) => {
   const notifications: NotificationTypes.TransactionReceivedEvent[] = []
 
@@ -139,6 +139,7 @@ export const useTransactionReceivedNotifications = ({
             appStorage: asyncStorage,
             sinceDate: subscriptionBeginDate,
             walletIds: [walletId],
+            walletManager,
           })
 
           notifications.forEach((notification) =>

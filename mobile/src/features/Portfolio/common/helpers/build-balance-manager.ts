@@ -1,11 +1,10 @@
+import {YoroiWallet} from '@yoroi/cardano-wallet'
 import {observableStorageMaker} from '@yoroi/common'
 import {
   portfolioBalanceManagerMaker,
   portfolioBalanceStorageMaker,
 } from '@yoroi/portfolio'
 import {App, Portfolio} from '@yoroi/types'
-
-import {YoroiWallet} from '~/wallets/cardano/types'
 
 export const buildPortfolioBalanceManager =
   ({

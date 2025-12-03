@@ -1,11 +1,11 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Chain} from '@yoroi/types'
+import {useSelectedNetwork} from '@yoroi/wallet-manager'
 
 import {useRoute} from '@react-navigation/native'
 import * as React from 'react'
 import {Linking, Text, View} from 'react-native'
 
-import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Copiable} from '~/ui/Copiable/Copiable'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'

@@ -1,3 +1,4 @@
+import {isEmptyString} from '@yoroi/cardano-wallet'
 import {parseNumberFromText} from '@yoroi/common'
 import {
   configCardanoPayV1,
@@ -5,6 +6,7 @@ import {
   linksYoroiModuleMaker,
 } from '@yoroi/links'
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import * as React from 'react'
 import {
@@ -15,7 +17,6 @@ import {
 } from 'react-native'
 
 import {useCopy} from '~/features/Copy/context/CopyProvider'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useLanguage} from '~/kernel/i18n/LanguageProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
@@ -28,7 +29,6 @@ import {useScrollView} from '~/ui/ScrollView/hooks/useScrollView'
 import {ShareQRCodeCard} from '~/ui/ShareQRCodeCard/ShareQRCodeCard'
 import {SkeletonAdressDetail} from '~/ui/SkeletonAddressDetail/SkeletonAddressDetail'
 import {TextInput} from '~/ui/TextInput/TextInput'
-import {isEmptyString} from '~/wallets/utils/string'
 
 import {useReceive} from '../common/ReceiveProvider'
 

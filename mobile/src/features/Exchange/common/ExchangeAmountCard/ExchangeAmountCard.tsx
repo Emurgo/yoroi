@@ -1,3 +1,4 @@
+import {isEmptyString} from '@yoroi/cardano-wallet'
 import {amountFormatter} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
@@ -8,7 +9,6 @@ import {Pressable, Text, TextInput, View} from 'react-native'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Space} from '~/ui/Space/Space'
 import {TokenInfoIcon} from '~/ui/TokenInfoIcon/TokenInfoIcon'
-import {isEmptyString} from '~/wallets/utils/string'
 
 type ExchangeAmountCardProps = {
   error?: string

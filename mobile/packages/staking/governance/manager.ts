@@ -78,11 +78,10 @@ class Manager implements GovernanceManager {
 
   async getStakingKeyState(stakeKeyHash: string): Promise<StakingKeyState> {
     const {api} = this.config
-    const logger = getLogger()
     const response = await api.getStakingKeyState(stakeKeyHash)
 
     if (isLeft(response)) {
-      logger.error('Failed to fetch staking key state', {
+      getLogger().error('Failed to fetch staking key state', {
         stakeKeyHash,
         error: response.error,
       })

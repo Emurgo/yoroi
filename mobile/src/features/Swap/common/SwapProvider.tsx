@@ -1,7 +1,9 @@
+import {convertBech32ToHex} from '@yoroi/cardano-wallet'
 import {isLeft, isRight, parseNumberFromText} from '@yoroi/common'
 import {isPrimaryToken, primaryTokenId} from '@yoroi/portfolio'
 import {swapManagerMaker, swapStorageMaker} from '@yoroi/swap'
 import {Api, App, Balance, Branded, Portfolio, Swap} from '@yoroi/types'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import {useFocusEffect} from '@react-navigation/native'
 import {useQuery} from '@tanstack/react-query'
@@ -9,12 +11,10 @@ import {produce} from 'immer'
 import * as React from 'react'
 import {TextInput} from 'react-native'
 
+import {useRemoteConfig} from '~/common/hooks/useRemoteConfig'
 import {usePortfolioBalances} from '~/features/Portfolio/common/hooks/usePortfolioBalances'
 import {usePortfolioTokenInfosSuspense} from '~/features/Portfolio/common/hooks/usePortfolioTokenInfos'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {useRemoteConfig} from '~/hooks/useRemoteConfig'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {convertBech32ToHex} from '~/wallets/cardano/common/signatureUtils'
 
 import {undefinedToken} from './constants'
 import {useNavigateTo} from './navigation'

@@ -1,11 +1,12 @@
+import {cip30LedgerExtensionMaker} from '@yoroi/cardano-wallet'
+import {BaseLedgerError} from '@yoroi/cardano-wallet'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
+
 import {Transaction} from '@emurgo/cross-csl-core'
 import {useMutation} from '@tanstack/react-query'
 import * as React from 'react'
 
 import {useConfirmHWConnectionModal} from '~/features/Discover/common/ConfirmHWConnectionModal'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {cip30LedgerExtensionMaker} from '~/wallets/cardano/cip30/cip30-ledger'
-import {BaseLedgerError} from '~/wallets/hw/hw'
 
 export type SignTxWithHW = {
   cbor: string
@@ -26,7 +27,9 @@ export const useSignTxWithHW = () => {
         confirmHWConnection({
           onConfirm: async ({transportType, deviceInfo}) => {
             try {
-              const cip30 = cip30LedgerExtensionMaker(wallet, meta)
+              const cip30 = cip30LedgerExtensionMaker(wallet, meta, {
+                toLedgerSignRequest: wallet._dependencies.toLedgerSignRequest,
+              })
               const tx = await cip30.signTx(
                 options.cbor,
                 options.partial ?? false,

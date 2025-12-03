@@ -1,5 +1,6 @@
 import {hex} from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {useCreateWalletMnemonic, useWalletManager} from '@yoroi/wallet-manager'
 
 import {useNavigation} from '@react-navigation/native'
 import {StackNavigationProp} from '@react-navigation/stack'
@@ -27,8 +28,6 @@ import {TextInput} from '~/ui/TextInput/TextInput'
 
 import {useWalletNameOverride} from '../Discover/common/WalletNameOverrideContext'
 import {WalletNameOverrideModalContent} from '../Discover/common/WalletNameOverrideModalContent'
-import {useWalletManager} from '../WalletManager/context/WalletManagerProvider'
-import {useCreateWalletMnemonic} from '../WalletManager/hooks/useCreateWalletMnemonic'
 import {CborReviewModalContent} from './CborReviewModalContent'
 
 export function DevMenu() {

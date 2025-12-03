@@ -87,7 +87,6 @@ export const peerConnectionMaker = (
   deps: PeerConnectionDeps,
 ): PeerConnection => {
   let state = createInitialState('')
-  const logger = getLogger()
 
   const updateState = (updates: Partial<PeerConnectionState>): void => {
     state = freeze({...state, ...updates} as const)
@@ -98,7 +97,7 @@ export const peerConnectionMaker = (
       try {
         ;(callback as EventCallback<T>)(data)
       } catch (error) {
-        logger.error(
+        getLogger().error(
           error instanceof Error ? error : new Error(String(error)),
           {origin: 'p2p-communication', event: String(event)},
         )
@@ -118,10 +117,13 @@ export const peerConnectionMaker = (
         iceServers: [...iceServers] as RTCIceServer[],
       })
     } catch (error) {
-      logger.error(error instanceof Error ? error : new Error(String(error)), {
-        origin: 'p2p-communication',
-        operation: 'createPeerConnection',
-      })
+      getLogger().error(
+        error instanceof Error ? error : new Error(String(error)),
+        {
+          origin: 'p2p-communication',
+          operation: 'createPeerConnection',
+        },
+      )
       notifyListeners('error', new Error(`Failed to create peer: ${error}`))
       return null
     }
@@ -129,7 +131,7 @@ export const peerConnectionMaker = (
 
   const setupDataChannel = (channel: RTCDataChannel): void => {
     channel.onopen = () => {
-      logger.log('Data channel opened', {origin: 'p2p-communication'})
+      getLogger().log('Data channel opened', {origin: 'p2p-communication'})
       updateState({connection: channel})
       notifyListeners('connection', channel)
     }
@@ -144,16 +146,19 @@ export const peerConnectionMaker = (
     }
 
     channel.onclose = () => {
-      logger.log('Data channel closed', {origin: 'p2p-communication'})
+      getLogger().log('Data channel closed', {origin: 'p2p-communication'})
       updateState({connection: null})
       notifyListeners('connectionClosed', undefined)
     }
 
     channel.onerror = (error) => {
-      logger.error(error instanceof Error ? error : new Error(String(error)), {
-        origin: 'p2p-communication',
-        operation: 'dataChannel',
-      })
+      getLogger().error(
+        error instanceof Error ? error : new Error(String(error)),
+        {
+          origin: 'p2p-communication',
+          operation: 'dataChannel',
+        },
+      )
       notifyListeners('error', new Error(`Data channel error: ${error}`))
     }
   }
@@ -260,11 +265,13 @@ export const peerConnectionMaker = (
               notifyListeners('error', error)
             },
             onOpen: () => {
-              logger.log('Signaling connected', {origin: 'p2p-communication'})
+              getLogger().log('Signaling connected', {
+                origin: 'p2p-communication',
+              })
               updateState({signaling})
             },
             onClose: () => {
-              logger.log('Signaling disconnected', {
+              getLogger().log('Signaling disconnected', {
                 origin: 'p2p-communication',
               })
             },
@@ -299,7 +306,7 @@ export const peerConnectionMaker = (
     }
 
     if (state.connectedPeerId === targetPeerId) {
-      logger.log('Already connected to peer', {
+      getLogger().log('Already connected to peer', {
         origin: 'p2p-communication',
         peerId: targetPeerId,
       })
@@ -399,7 +406,7 @@ export const peerConnectionMaker = (
     if (message.type === 'offer') {
       // Only handle offer if we're not already connected or if it's from the peer we're waiting for
       if (state.connectedPeerId && state.connectedPeerId !== message.peerId) {
-        logger.debug('Ignoring offer from different peer', {
+        getLogger().debug('Ignoring offer from different peer', {
           origin: 'p2p-communication',
           expectedPeerId: state.connectedPeerId,
           receivedPeerId: message.peerId,
@@ -437,7 +444,7 @@ export const peerConnectionMaker = (
     } else if (message.type === 'answer') {
       // Only handle answer if we initiated and it's from the peer we're connecting to
       if (!state.isInitiator || state.connectedPeerId !== message.peerId) {
-        logger.debug(
+        getLogger().debug(
           'Ignoring answer - not from expected peer or not initiator',
           {
             origin: 'p2p-communication',
@@ -494,7 +501,7 @@ export const peerConnectionMaker = (
   const send = (data: unknown): boolean => {
     const channel = state.connection ?? state.dataChannel
     if (!channel || channel.readyState !== 'open') {
-      logger.warn('Cannot send: No open data channel', {
+      getLogger().warn('Cannot send: No open data channel', {
         origin: 'p2p-communication',
       })
       return false
@@ -506,17 +513,20 @@ export const peerConnectionMaker = (
       channel.send(serializedData)
       return true
     } catch (error) {
-      logger.error(error instanceof Error ? error : new Error(String(error)), {
-        origin: 'p2p-communication',
-        operation: 'send',
-      })
+      getLogger().error(
+        error instanceof Error ? error : new Error(String(error)),
+        {
+          origin: 'p2p-communication',
+          operation: 'send',
+        },
+      )
       return false
     }
   }
 
   const reconnect = (): void => {
     if (state.peer && state.peer.connectionState !== 'closed') {
-      logger.log('Reconnecting peer connection...', {
+      getLogger().log('Reconnecting peer connection...', {
         origin: 'p2p-communication',
       })
       updateState({status: 'reconnecting'})
@@ -524,7 +534,7 @@ export const peerConnectionMaker = (
       try {
         state.peer.restartIce()
       } catch (error) {
-        logger.error(
+        getLogger().error(
           error instanceof Error ? error : new Error(String(error)),
           {origin: 'p2p-communication', operation: 'restartIce'},
         )
@@ -535,7 +545,7 @@ export const peerConnectionMaker = (
         })
       }
     } else {
-      logger.log('Creating new peer connection...', {
+      getLogger().log('Creating new peer connection...', {
         origin: 'p2p-communication',
       })
       updateState({status: 'reconnecting'})

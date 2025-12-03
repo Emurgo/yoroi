@@ -1,10 +1,10 @@
 // Ledger signer utilities
 // Functions for determining required signers for transactions
+import {CardanoMobileWrapped} from '@yoroi/cardano-wallet'
 import {Address} from '@yoroi/types'
 
 import {Ed25519KeyHash, WasmModuleProxy} from '@emurgo/cross-csl-core'
 
-import {CardanoMobileWrapped} from '../../../src/wallets/cardano/wrappedCsl'
 import {Addressing, CardanoAddressedUtxo} from '../types'
 
 type GetAllSignersOptions = {

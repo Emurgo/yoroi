@@ -1,8 +1,15 @@
+import {isEmptyString} from '@yoroi/cardano-wallet'
+import {getWalletNameError, validatePassword} from '@yoroi/cardano-wallet'
 import {useAsyncStorage} from '@yoroi/common'
 import {decryptWalletData, useLinks} from '@yoroi/links'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Api, Links, Wallet} from '@yoroi/types'
+import {useCreateWalletFromRootKey} from '@yoroi/wallet-manager'
+import {useCreateWalletMnemonic} from '@yoroi/wallet-manager'
+import {useCreateWalletXPub} from '@yoroi/wallet-manager'
+import {useWalletManager} from '@yoroi/wallet-manager'
+import {parseWalletMeta} from '@yoroi/wallet-manager'
 
 import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
@@ -14,11 +21,6 @@ import {
   View,
 } from 'react-native'
 
-import {parseWalletMeta} from '~/features/WalletManager/common/validators/wallet-meta'
-import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
-import {useCreateWalletFromRootKey} from '~/features/WalletManager/hooks/useCreateWalletFromRootKey'
-import {useCreateWalletMnemonic} from '~/features/WalletManager/hooks/useCreateWalletMnemonic'
-import {useCreateWalletXPub} from '~/features/WalletManager/hooks/useCreateWalletXPub'
 import {requiredPasswordLength} from '~/kernel/constants'
 import {showErrorDialog} from '~/kernel/dialogs'
 import {errorMessages} from '~/kernel/i18n/messages/global'
@@ -32,8 +34,6 @@ import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
 import {TextInput} from '~/ui/TextInput/TextInput'
-import {isEmptyString} from '~/wallets/utils/string'
-import {getWalletNameError, validatePassword} from '~/wallets/utils/validators'
 
 // Default values when not provided in link
 const DEFAULT_IMPLEMENTATION: Wallet.Implementation = 'cardano-cip1852'
