@@ -1,12 +1,12 @@
 import {cardanoConfig} from '@yoroi/blockchains'
 import {deriveAddressFromXPub, keyManager} from '@yoroi/cardano-wallet'
 import {WalletEvent, YoroiWallet} from '@yoroi/cardano-wallet'
-import {deriveRewardAddressHex} from '@yoroi/cardano-wallet/utils'
 import {
+  deriveRewardAddressHex,
+  CardanoMobileWrapped,
   validatePassword,
   validateWalletName,
-} from '@yoroi/cardano-wallet/utils/validators'
-import {CardanoMobileWrapped} from '@yoroi/cardano-wallet/wrappedCsl'
+} from '@yoroi/cardano-wallet'
 import {parseSafe} from '@yoroi/common'
 import {getLogger, throwLoggedError} from '@yoroi/common'
 import {Blockies} from '@yoroi/identicon'

@@ -24,6 +24,7 @@ export {
   isShelley,
 } from './utils'
 export * from './utils'
+export {validatePassword, validateWalletName} from './utils/validators'
 
 // Mnemonic
 export {getMasterKeyFromMnemonic, generateAdaMnemonic, generateWalletRootKey} from './mnemonic/mnemonic'
