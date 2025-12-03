@@ -1,4 +1,5 @@
 // Functional Transaction Builder using CSL TransactionBuilder directly
+import {CardanoMobileWrapped} from '@yoroi/cardano-wallet'
 import {getLogger} from '@yoroi/common'
 import {primaryTokenId as defaultPrimaryTokenId} from '@yoroi/portfolio'
 import {
@@ -22,8 +23,6 @@ import type {
 } from '@emurgo/cross-csl-core'
 import {Buffer} from 'buffer'
 
-import {getTokenIdParts} from '../../../src/features/Portfolio/common/helpers/get-token-id-parts'
-import {CardanoMobileWrapped} from '../../../src/wallets/cardano/wrappedCsl'
 import {NoOutputsError, NotEnoughMoneyToSendError} from '../errors'
 import {CardanoHaskellConfig, Datum} from '../types'
 import {ModernUtxo} from '../utxo/models'
@@ -444,7 +443,9 @@ function amountsToValue(
     const groupedByPolicyId = tokenIds.reduce(
       (acc, tokenIdStr) => {
         const tokenId = tokenIdStr as Portfolio.Token.Id
-        const {policyId, assetName: assetNameHex} = getTokenIdParts(tokenId)
+        const [policyId, assetNameHex] = (tokenId as Portfolio.Token.Id).split(
+          '.',
+        )
         if (!policyId || !assetNameHex) {
           // Invalid format, skip
           return acc

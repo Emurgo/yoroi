@@ -1,5 +1,6 @@
 // Cardano address utilities
 // Cardano-specific address normalization and manipulation functions
+import {CardanoMobileWrapped} from '@yoroi/cardano-wallet'
 import {isHex} from '@yoroi/common'
 import {Address, AddressBech32, AddressHex} from '@yoroi/types'
 
@@ -10,7 +11,6 @@ import {
   WasmModuleProxy,
 } from '@emurgo/cross-csl-core'
 
-import {CardanoMobileWrapped} from '../../../src/wallets/cardano/wrappedCsl'
 import {Addressing} from '../types'
 
 /**

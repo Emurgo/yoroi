@@ -179,12 +179,15 @@ export const useWalletManager = () => {
     )
   }
 
+  // TypeScript: walletManager is guaranteed non-null after the check above
+  const nonNullWalletManager = walletManager as WalletManager
+
   return React.useMemo(() => {
     return {
       selected,
-      walletManager,
+      walletManager: nonNullWalletManager,
     }
-  }, [selected, walletManager])
+  }, [selected, nonNullWalletManager])
 }
 
 /**

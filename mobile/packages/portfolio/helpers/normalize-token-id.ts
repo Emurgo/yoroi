@@ -20,4 +20,3 @@ export function normalizeTokenId(identifier: string): Portfolio.Token.Id {
   }
   return Branded.asPortfolioTokenId(identifier) as Portfolio.Token.Id
 }
-

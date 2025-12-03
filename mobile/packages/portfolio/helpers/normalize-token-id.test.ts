@@ -22,4 +22,3 @@ describe('normalizeTokenId', () => {
     expect(result).toBe(Branded.asPortfolioTokenId(idWithoutPeriod))
   })
 })
-

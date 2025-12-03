@@ -16,7 +16,8 @@ export const createCardanoWalletDependencies =
   (): CardanoWalletDependencies => {
     return {
       rootStorage,
-      makeWalletEncryptedStorage,
+      makeWalletEncryptedStorage:
+        makeWalletEncryptedStorage as CardanoWalletDependencies['makeWalletEncryptedStorage'],
       buildPortfolioBalanceManager,
       toBalanceManagerSyncArgs,
       makeMemosManager,

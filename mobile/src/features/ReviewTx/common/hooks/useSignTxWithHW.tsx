@@ -27,7 +27,9 @@ export const useSignTxWithHW = () => {
         confirmHWConnection({
           onConfirm: async ({transportType, deviceInfo}) => {
             try {
-              const cip30 = cip30LedgerExtensionMaker(wallet, meta)
+              const cip30 = cip30LedgerExtensionMaker(wallet, meta, {
+                toLedgerSignRequest: wallet._dependencies.toLedgerSignRequest,
+              })
               const tx = await cip30.signTx(
                 options.cbor,
                 options.partial ?? false,

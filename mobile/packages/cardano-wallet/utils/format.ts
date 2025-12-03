@@ -7,7 +7,7 @@ import AssetFingerprint from '@emurgo/cip14-js'
 import {BigNumber} from 'bignumber.js'
 import type {FormatDateOptions, IntlShape} from 'react-intl'
 
-import {isTokenInfo} from '../cardano/utils'
+import {isTokenInfo} from '../utils'
 
 export const getTokenFingerprint = ({
   policyId,

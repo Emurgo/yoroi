@@ -1,5 +1,6 @@
 // Ledger transformation utilities
 // Transforms Cardano transactions to Ledger hardware wallet format
+import {CardanoMobileWrapped} from '@yoroi/cardano-wallet'
 import {isHex} from '@yoroi/common'
 
 import {
@@ -31,7 +32,6 @@ import {
 import type {WasmModuleProxy} from '@emurgo/cross-csl-core'
 import * as bech32 from 'bech32'
 
-import {CardanoMobileWrapped} from '../../../src/wallets/cardano/wrappedCsl'
 import {Addressing, AddressingAddress, Bip44DerivationLevels} from '../types'
 
 export interface LedgerUnsignedTx {

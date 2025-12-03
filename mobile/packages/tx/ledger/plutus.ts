@@ -1,5 +1,6 @@
 // Ledger Plutus transaction payload building
 // Functions for building Ledger payloads for Plutus (smart contract) transactions
+import {CardanoMobileWrapped} from '@yoroi/cardano-wallet'
 import {getLogger} from '@yoroi/common'
 
 import {
@@ -9,8 +10,6 @@ import {
   TxRequiredSignerType,
 } from '@cardano-foundation/ledgerjs-hw-app-cardano'
 import {Ed25519KeyHash, TransactionBody} from '@emurgo/cross-csl-core'
-
-import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
 
 import {Addressing, AddressingAddress} from '../types'
 import {

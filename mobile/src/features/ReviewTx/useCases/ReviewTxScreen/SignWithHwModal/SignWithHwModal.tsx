@@ -1,6 +1,8 @@
+import {delay, withBLE, withUSB} from '@yoroi/cardano-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {UnsignedTransaction} from '@yoroi/tx'
 import {HW} from '@yoroi/types'
+import {useSelectedWallet, useWalletManager} from '@yoroi/wallet-manager'
 
 import * as CSL from '@emurgo/cross-csl-core'
 import * as React from 'react'
@@ -12,12 +14,6 @@ import {LedgerConnect} from '../../../../../ui/LedgerConnect/LedgerConnect'
 import {LedgerTransportSwitch} from '../../../../../ui/LedgerTransportSwitch/LedgerTransportSwitch'
 import {ModalError} from '../../../../../ui/ModalError/ModalError'
 import {Text} from '../../../../../ui/Text/Text'
-import {delay, withBLE, withUSB} from '@yoroi/cardano-wallet'
-import {
-  useSelectedWallet,
-  useWalletManager,
-} from '@yoroi/wallet-manager'
-
 import {useSignTxWithHW} from '../../../../Transactions/hooks/useSignTxWithHW'
 import {useSubmitTx} from '../../../../Transactions/hooks/useSubmitTx'
 

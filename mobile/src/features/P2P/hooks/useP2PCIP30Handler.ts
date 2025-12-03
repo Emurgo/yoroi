@@ -60,7 +60,9 @@ export const useP2PCIP30Handler = ({
             return
           }
 
-          const cip30 = cip30ExtensionMaker(wallet, meta)
+          const cip30 = cip30ExtensionMaker(wallet, meta, {
+            createCollateralEntry: wallet._dependencies.createCollateralEntry,
+          })
 
           switch (request.method) {
             case 'getBalance': {
@@ -228,7 +230,10 @@ export const useP2PCIP30Handler = ({
                   }
                 })
 
-                const cip30 = cip30ExtensionMaker(wallet, meta)
+                const cip30 = cip30ExtensionMaker(wallet, meta, {
+                  createCollateralEntry:
+                    wallet._dependencies.createCollateralEntry,
+                })
                 const result = await cip30.signData(rootKey, address, payload)
                 sendResponse(result)
               } catch (error) {

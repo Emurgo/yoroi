@@ -6,16 +6,16 @@ import {
 } from '@yoroi/exchange'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {App} from '@yoroi/types'
+import {
+  useSelectedNetwork,
+  useWalletManagerSelector,
+} from '@yoroi/wallet-manager'
 
 import * as React from 'react'
 import {ActivityIndicator, View} from 'react-native'
 
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 
-import {
-  useSelectedNetwork,
-  useWalletManagerSelector,
-} from '@yoroi/wallet-manager'
 import {useSelectWalletModal} from '../modals/SelectWalletModal'
 
 export const WithWalletOpened = ({children}: React.PropsWithChildren) => {

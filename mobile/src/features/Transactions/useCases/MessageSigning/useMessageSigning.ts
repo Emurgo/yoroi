@@ -32,7 +32,10 @@ export const useMessageSigning = () => {
             confirmHWConnection({
               onConfirm: async ({transportType, deviceInfo}) => {
                 try {
-                  const cip30 = cip30LedgerExtensionMaker(wallet, meta)
+                  const cip30 = cip30LedgerExtensionMaker(wallet, meta, {
+                    toLedgerSignRequest:
+                      wallet._dependencies.toLedgerSignRequest,
+                  })
                   const result = await cip30.signData(
                     address,
                     payloadHex,
@@ -77,7 +80,10 @@ export const useMessageSigning = () => {
                 onSuccess: async (rootKey) => {
                   shouldResolveOnClose = false
                   try {
-                    const cip30 = cip30ExtensionMaker(wallet, meta)
+                    const cip30 = cip30ExtensionMaker(wallet, meta, {
+                      createCollateralEntry:
+                        wallet._dependencies.createCollateralEntry,
+                    })
                     const result = await cip30.signData(
                       rootKey,
                       address,

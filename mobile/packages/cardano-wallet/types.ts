@@ -41,6 +41,7 @@ import * as CSL from '@emurgo/cross-csl-core'
 
 import {AddressChain} from './account-manager/account-manager'
 import {ReadOnlyAddressChain} from './account-manager/read-only-account-manager'
+import type {CardanoWalletDependencies} from './dependencies'
 import {WalletEncryptedStorage} from './dependencies'
 
 export type WalletEvent =

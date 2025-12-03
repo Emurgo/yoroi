@@ -19,7 +19,7 @@ import {defaultMemoize} from 'reselect'
 
 import * as yoroiApi from '../api/api'
 import {ApiHistoryError} from '../errors'
-import {Version, versionCompare} from './utils/versioning'
+import {Version, versionCompare} from '../utils/versioning'
 
 type TransactionManagerState = {
   transactions: Transactions
