@@ -341,6 +341,7 @@ const MnemonicWordInputComponent = React.forwardRef<
 
     // Update suggestions when this input becomes focused
     React.useEffect(() => {
+      if (isValidPhrase) return // Don't update suggestions when phrase is verified
       if (isFocused) {
         if (!isEmptyString(word)) {
           const matches = getMatchingWords(normalizeText(word))
@@ -349,7 +350,7 @@ const MnemonicWordInputComponent = React.forwardRef<
           setSuggestedWords([])
         }
       }
-    }, [isFocused, word, setSuggestedWords])
+    }, [isFocused, word, setSuggestedWords, isValidPhrase])
 
     React.useImperativeHandle(
       ref,
@@ -381,6 +382,10 @@ const MnemonicWordInputComponent = React.forwardRef<
     // Debounced word matching - only update if this input is focused
     useDebouncedCallback(
       React.useCallback(() => {
+        if (isValidPhrase) {
+          setSuggestedWords([])
+          return
+        }
         if (!isFocused) return // Only update suggestions for focused input
 
         if (!isEmptyString(word)) {
@@ -396,7 +401,14 @@ const MnemonicWordInputComponent = React.forwardRef<
           setSuggestedWords([])
           onClearError()
         }
-      }, [word, setSuggestedWords, onError, onClearError, isFocused]),
+      }, [
+        word,
+        setSuggestedWords,
+        onError,
+        onClearError,
+        isFocused,
+        isValidPhrase,
+      ]),
       word,
       100, // 100ms debounce
       false, // Don't skip first render

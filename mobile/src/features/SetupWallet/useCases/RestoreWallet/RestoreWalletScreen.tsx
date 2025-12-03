@@ -115,6 +115,13 @@ export const RestoreWalletScreen = () => {
     setIsValidPhrase(isValidPhraseMemoized)
   }, [isValidPhraseMemoized])
 
+  // Clear suggestions when phrase is verified
+  React.useEffect(() => {
+    if (isValidPhrase) {
+      setSuggestedWords([])
+    }
+  }, [isValidPhrase])
+
   const onSelect = React.useCallback(
     (index: number, word: string) => {
       const newWords = [...mnemonicSelectedWords]
