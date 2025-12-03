@@ -146,9 +146,7 @@
     "rxjs": "7.8.2",
     "tinycolor2": "1.6.0",
     "uuid": "11.1.0",
-    "zod": "3.25.17",
-    "@yoroi/cardano-wallet": "file:./packages/cardano-wallet",
-    "@yoroi/wallet-manager": "file:./packages/wallet-manager"
+    "zod": "3.25.17"
   },
   "trustedDependencies": [
     "@sentry/cli",

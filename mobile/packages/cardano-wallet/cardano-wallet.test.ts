@@ -1,6 +1,6 @@
 import {buildNetworkManagers} from '@yoroi/blockchains'
 import {createTokenManagerMock} from '@yoroi/portfolio'
-import {Chain} from '@yoroi/types'
+import {App, Chain} from '@yoroi/types'
 import {
   getWalletFactory,
   initializeWalletFactories,
@@ -27,14 +27,46 @@ const networkManagers = buildNetworkManagers({
   apiMaker: mockApiMaker,
 })
 
+// Create a mock storage with join method
+const createMockStorage = (path = '/'): App.Storage => {
+  return {
+    join: jest.fn(
+      (folderName: string): App.Storage =>
+        createMockStorage(`${path}${folderName}`),
+    ),
+    getItem: jest.fn().mockResolvedValue(null),
+    setItem: jest.fn().mockResolvedValue(undefined),
+    removeItem: jest.fn().mockResolvedValue(undefined),
+    getAllKeys: jest.fn().mockResolvedValue([]),
+    multiGet: jest.fn().mockResolvedValue([]),
+    multiSet: jest.fn().mockResolvedValue(undefined),
+    multiRemove: jest.fn().mockResolvedValue(undefined),
+    clear: jest.fn().mockResolvedValue(undefined),
+    removeFolder: jest.fn().mockResolvedValue(undefined),
+  }
+}
+
 const mockCardanoWalletDependencies = {
-  rootStorage: {} as any,
+  rootStorage: createMockStorage(),
   makeWalletEncryptedStorage: jest.fn().mockReturnValue({
     xpriv: {read: jest.fn(), write: jest.fn(), remove: jest.fn()},
     xpub: {read: jest.fn(), write: jest.fn(), remove: jest.fn()},
     clear: jest.fn(),
   }),
-  buildPortfolioBalanceManager: jest.fn(),
+  buildPortfolioBalanceManager: jest.fn().mockReturnValue(() => ({
+    balanceManager: {
+      hydrate: jest.fn(),
+      refresh: jest.fn(),
+      subscribe: jest.fn(),
+      unsubscribe: jest.fn(),
+      observable$: {subscribe: jest.fn()},
+      getPrimaryBalance: jest.fn(),
+      getBalances: jest.fn(),
+      destroy: jest.fn(),
+      clear: jest.fn(),
+    },
+    balanceStorage: {},
+  })),
   toBalanceManagerSyncArgs: jest.fn(),
   makeMemosManager: jest.fn(),
   toLedgerSignRequest: jest.fn(),

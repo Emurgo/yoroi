@@ -1086,16 +1086,9 @@ export const makeWalletManager = (
 
       const metasToLoad = walletMetas.filter((m) => !wallets.has(m.id))
       if (metasToLoad.length > 0) {
-        const loadedWallets = await Promise.all(
-          metasToLoad.map(({id, implementation}) =>
-            loadWallet({
-              id,
-              implementation,
-              isForced: false,
-              network: stateSubjects.selectedNetwork.value,
-            }),
-          ),
-        )
+        const loadedWallets = await loadWalletsSafely(metasToLoad, {
+          network: stateSubjects.selectedNetwork.value,
+        })
         for (const wallet of loadedWallets) wallets.set(wallet.id, wallet)
         if (syncManager) {
           syncManager.updateWallets(Array.from(wallets.values()))
