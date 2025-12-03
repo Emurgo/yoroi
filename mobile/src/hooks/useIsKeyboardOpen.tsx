@@ -1,28 +1,31 @@
 import * as React from 'react'
-import {Keyboard} from 'react-native'
+import {Keyboard, Platform} from 'react-native'
 
-export const useIsKeyboardOpen = () => {
+type Props = {
+  onKeyboardChange?: (isOpen: boolean) => void
+}
+
+const showEvent = Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow'
+const hideEvent = Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide'
+
+export const useIsKeyboardOpen = ({onKeyboardChange}: Props = {}) => {
   const [isKeyboardOpen, setIsKeyboardOpen] = React.useState(false)
 
   React.useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener(
-      'keyboardDidShow',
-      () => {
-        setIsKeyboardOpen(true)
-      },
-    )
-    const keyboardDidHideListener = Keyboard.addListener(
-      'keyboardDidHide',
-      () => {
-        setIsKeyboardOpen(false)
-      },
-    )
+    const showListener = Keyboard.addListener(showEvent, () => {
+      setIsKeyboardOpen(true)
+      onKeyboardChange?.(true)
+    })
+    const hideListener = Keyboard.addListener(hideEvent, () => {
+      setIsKeyboardOpen(false)
+      onKeyboardChange?.(false)
+    })
 
     return () => {
-      keyboardDidHideListener.remove()
-      keyboardDidShowListener.remove()
+      showListener.remove()
+      hideListener.remove()
     }
-  }, [])
+  }, [onKeyboardChange])
 
   return isKeyboardOpen
 }

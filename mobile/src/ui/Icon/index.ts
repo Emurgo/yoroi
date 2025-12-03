@@ -4,6 +4,7 @@ import {Analytics} from './Analytics'
 import {AngleDown} from './AngleDown'
 import {AngleUp} from './AngleUp'
 import {ArrowDown} from './ArrowDown'
+import {ArrowLeft} from './ArrowLeft'
 import {ArrowRight} from './ArrowRight'
 import {Assets} from './Assets'
 import {Backspace} from './Backspace'
@@ -279,6 +280,7 @@ export const Icon = {
   Danger,
   Share,
   Governance,
+  ArrowLeft,
   ArrowRight,
   ArrowDown,
   Close,

@@ -1,4 +1,3 @@
-import {GovernanceProvider, useGovernance} from '@yoroi/staking'
 import {ThemedPalette, atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
@@ -11,7 +10,6 @@ import {LearnMoreLink} from '~/features/Staking/Governance/common/LearnMoreLink/
 import {OtherDrepCard} from '~/features/Staking/Governance/common/OtherDrepCard/OtherDrepCard'
 import {YoroiDrepCard} from '~/features/Staking/Governance/common/YoroiDrepCard/YoroiDrepCard'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Space} from '~/ui/Space/Space'
 
 import {Action} from '../../common/Action/Action'
@@ -21,7 +19,7 @@ import {
   useParticipatingGovernance,
 } from '../../common/helpers'
 import {GovernanceVote} from '../../types'
-import {EnterDrepIdModal} from '../EnterDrepIdModal/EnterDrepIdModal'
+import {useOpenDrepIdModal} from '../EnterDrepIdModal/useOpenDrepIdModal'
 
 export const HomeScreen = () => {
   const {isLoading, pendingAction, confirmedAction} = useHomeScreen()
@@ -50,8 +48,7 @@ const ParticipatingInGovernanceVariant = ({
 }) => {
   const strings = useStrings()
   const {atoms: ta, palette: p} = useTheme()
-  const {openModal} = useModal()
-  const {manager} = useGovernance()
+  const {openDrepIdModal} = useOpenDrepIdModal()
 
   const {
     isPending,
@@ -82,30 +79,15 @@ const ParticipatingInGovernanceVariant = ({
         formattingOptions(p),
       )
 
-  const openDRepIdModal = (
-    onSubmit: (options: {
-      hash: string
-      type: 'key' | 'script'
-      CIP105: boolean
-    }) => void,
-  ) => {
-    openModal({
-      title: strings.staking.enterDRepID,
-      content: (
-        <GovernanceProvider manager={manager}>
-          <EnterDrepIdModal onSubmit={onSubmit} />
-        </GovernanceProvider>
-      ),
-      height: 650,
-    })
-  }
-
   const onChangeToDrep = () => {
-    openDRepIdModal(handleDelegateToOtherDrep)
+    openDrepIdModal(handleDelegateToOtherDrep)
   }
 
   return (
-    <ScrollView style={[a.px_lg, a.flex_1, ta.bg_color_max]}>
+    <ScrollView
+      style={[a.px_lg, a.flex_1, ta.bg_color_max]}
+      contentContainerStyle={a.flex_grow}
+    >
       <View>
         <Text style={[a.body_1_lg_regular, ta.text_gray_medium]}>
           {introduction}
@@ -114,7 +96,7 @@ const ParticipatingInGovernanceVariant = ({
 
       <Space.Height.lg />
 
-      <View style={[a.flex_1, a.gap_lg]}>
+      <View style={[a.gap_lg]}>
         {isDelegatingToYoroiDrep && (
           <YoroiDrepCard isDelegating pending={isPending} />
         )}
@@ -154,7 +136,7 @@ const ParticipatingInGovernanceVariant = ({
         />
       </View>
 
-      <Space.Height.sm fill />
+      <View style={a.flex_1} />
 
       <LearnMoreLink />
 
@@ -196,7 +178,10 @@ const NeverParticipatedInGovernanceVariant = () => {
     useNeverParticipatedGovernance()
 
   return (
-    <ScrollView style={[a.px_lg, a.flex_1, ta.bg_color_max]}>
+    <ScrollView
+      style={[a.px_lg, a.flex_1, ta.bg_color_max]}
+      contentContainerStyle={a.flex_grow}
+    >
       <View>
         <Text style={[a.body_1_lg_regular, ta.text_gray_medium]}>
           {strings.staking.reviewActions}
@@ -205,7 +190,7 @@ const NeverParticipatedInGovernanceVariant = () => {
 
       <Space.Height.lg />
 
-      <View style={[a.flex_1, a.gap_lg]}>
+      <View style={[a.gap_lg]}>
         {isYoroiDrepBannerEnabled && (
           <YoroiDrepCard
             onDelegate={handleDelegateToYoroi}
@@ -221,7 +206,7 @@ const NeverParticipatedInGovernanceVariant = () => {
         />
       </View>
 
-      <Space.Height.sm fill />
+      <View style={a.flex_1} />
 
       <LearnMoreLink />
 
