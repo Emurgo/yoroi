@@ -6,10 +6,13 @@ import {
 } from '@react-navigation/stack'
 import * as React from 'react'
 
+import {AirdropScreen} from '~/features/Airdrop/ui/AirdropScreen'
+import {useAuth} from '~/features/Auth/context/AuthProvider'
 import {ClaimScreen} from '~/features/Claim/useCases/ClaimScreen'
 import {ShowSuccessScreen} from '~/features/Claim/useCases/ShowSuccessScreen'
 import {CreateExchangeOrderScreen} from '~/features/Exchange/useCases/CreateExchangeOrderScreen/CreateExchangeOrderScreen'
 import {SelectProviderFromListScreen} from '~/features/Exchange/useCases/SelectProviderFromListScreen/SelectProviderFromListScreen'
+import {MintBurnNavigator} from '~/features/MintBurn/navigator'
 import {ViewNotificationHistoryScreen} from '~/features/Notifications/useCases/ViewNotificationHistory/ViewNotificationHistoryScreen'
 import {P2PConnectionScreen} from '~/features/P2P/useCases/P2PConnectionScreen/P2PConnectionScreen'
 import {DescribeSelectedAddressScreen} from '~/features/Receive/useCases/DescribeSelectedAddressScreen'
@@ -25,6 +28,7 @@ import {NetworkTag} from '~/features/Settings/ui/shared/NetworkTag'
 import {SwapNavigator} from '~/features/Swap/navigator'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {WithWalletOpened} from '~/features/WalletManager/ui/shared/WithWalletOpened'
+import {useRemoteConfig} from '~/hooks/useRemoteConfig'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {
   BackButton,
@@ -50,6 +54,9 @@ export const TxHistoryNavigator = () => {
   const {palette: p, atoms: ta} = useTheme()
   const {meta} = useSelectedWallet()
   const walletNavigation = useWalletNavigation()
+  const {config} = useRemoteConfig()
+  const {isAuthDev} = useAuth()
+  const isAirdropEnabled = config?.features?.midnightAirdrop?.enabled ?? false
 
   // Memoize headerTitle component to prevent recreation on every render
   const headerTitle = React.useCallback(
@@ -304,6 +311,27 @@ export const TxHistoryNavigator = () => {
           }}
           getComponent={() => SelectProviderFromListScreen}
         />
+
+        {/* Menu Screens */}
+        {isAirdropEnabled && (
+          <Stack.Screen
+            name="airdrop"
+            options={{
+              title: strings.menu.airdrop,
+            }}
+            getComponent={() => AirdropScreen}
+          />
+        )}
+
+        {isAuthDev && (
+          <Stack.Screen
+            name="mint-burn"
+            options={{
+              title: strings.menu.mintBurn,
+            }}
+            getComponent={() => MintBurnNavigator}
+          />
+        )}
       </Stack.Navigator>
     </WithWalletOpened>
   )

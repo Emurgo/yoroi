@@ -24,7 +24,7 @@ export type WalletTabRoutes = {
   history: NavigatorScreenParams<TxHistoryRoutes>
   portfolio: NavigatorScreenParams<PortfolioRoutes>
   discover: NavigatorScreenParams<DiscoverRoutes>
-  menu: NavigatorScreenParams<MenuRoutes>
+  menu: undefined
 }
 
 export type WalletStackRoutes = {
@@ -89,6 +89,8 @@ export type TxHistoryRoutes = {
     signature: string
     key: string
   }
+  'airdrop': undefined
+  'mint-burn': undefined
   'receive-single': undefined
   'receive-specific-amount': undefined
   'receive-multiple': undefined
@@ -310,8 +312,6 @@ export type NftRouteNavigation = StackNavigationProp<NftRoutes>
 export type MenuRoutes = {
   '_menu': undefined
   'voting-registration': undefined
-  'airdrop': undefined
-  'mint-burn': undefined
 }
 
 export type AppRoutes = {

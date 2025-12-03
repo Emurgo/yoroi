@@ -9,7 +9,7 @@ import {
 import * as React from 'react'
 
 import {DiscoverNavigator} from '~/features/Discover/DiscoverNavigator'
-import {MenuNavigator} from '~/features/Menu/Menu'
+import {Menu} from '~/features/Menu/Menu'
 import {P2PConnectionProviderWrapper} from '~/features/P2P/components/P2PConnectionProviderWrapper'
 import {P2PConnectionStatusBar} from '~/features/P2P/components/P2PConnectionStatusBar'
 import {PortfolioNavigator} from '~/features/Portfolio/PortfolioNavigator'
@@ -185,11 +185,7 @@ export const WalletTabNavigator = () => {
         options={discoverOptions}
       />
 
-      <Tab.Screen
-        name="menu"
-        getComponent={() => MenuNavigator}
-        options={menuOptions}
-      />
+      <Tab.Screen name="menu" getComponent={() => Menu} options={menuOptions} />
     </Tab.Navigator>
   )
 

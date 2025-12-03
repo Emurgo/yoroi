@@ -162,9 +162,6 @@ export const useWalletNavigation = () => {
         screen: 'main-wallet-routes',
         params: {
           screen: 'menu',
-          params: {
-            screen: '_menu',
-          },
         },
       })
     },
@@ -687,7 +684,7 @@ export const useWalletNavigation = () => {
       navigation.navigate('manage-wallets', {
         screen: 'main-wallet-routes',
         params: {
-          screen: 'menu',
+          screen: 'history',
           params: {
             screen: 'airdrop',
           },
@@ -699,7 +696,7 @@ export const useWalletNavigation = () => {
       navigation.navigate('manage-wallets', {
         screen: 'main-wallet-routes',
         params: {
-          screen: 'menu',
+          screen: 'history',
           params: {
             screen: 'mint-burn',
           },

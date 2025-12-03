@@ -1,6 +1,5 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 
-import {createStackNavigator} from '@react-navigation/stack'
 import * as Linking from 'expo-linking'
 import * as React from 'react'
 import {
@@ -18,69 +17,14 @@ import {useCanVote} from '~/features/RegisterCatalyst/common/hooks'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useRemoteConfig} from '~/hooks/useRemoteConfig'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {
-  BackButton,
-  defaultStackNavigationOptions,
-} from '~/kernel/navigation/common/helpers'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
-import {MenuRoutes} from '~/kernel/navigation/types'
 import {Icon} from '~/ui/Icon'
 import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
 
-import {AirdropScreen} from '../Airdrop/ui/AirdropScreen'
-import {MintBurnNavigator} from '../MintBurn/navigator'
 import {InsufficientFundsModal} from '../RegisterCatalyst/common/InsufficientFundsModal'
-import {NetworkTag} from '../Settings/ui/shared/NetworkTag'
 import {usePoolTransition} from '../Staking/Staking/PoolTransition/usePoolTransition'
-
-const MenuStack = createStackNavigator<MenuRoutes>()
-
-export const MenuNavigator = () => {
-  const strings = useStrings()
-  const {palette: p} = useTheme()
-  const {config} = useRemoteConfig()
-  const {isAuthDev} = useAuth()
-  const isAirdropEnabled = config?.features?.midnightAirdrop?.enabled ?? false
-
-  return (
-    <MenuStack.Navigator
-      initialRouteName="_menu"
-      screenOptions={{
-        ...defaultStackNavigationOptions(p),
-        headerLeft: () => null,
-        headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
-      }}
-    >
-      <MenuStack.Screen
-        name="_menu"
-        component={Menu}
-        options={{title: strings.menu.menu}}
-      />
-      {isAirdropEnabled && (
-        <MenuStack.Screen
-          name="airdrop"
-          component={AirdropScreen}
-          options={{
-            title: strings.menu.airdrop,
-            headerLeft: (props) => <BackButton {...props} />,
-          }}
-        />
-      )}
-      {isAuthDev && (
-        <MenuStack.Screen
-          name="mint-burn"
-          getComponent={() => MintBurnNavigator}
-          options={{
-            title: strings.menu.mintBurn,
-            headerLeft: (props) => <BackButton {...props} />,
-          }}
-        />
-      )}
-    </MenuStack.Navigator>
-  )
-}
 
 export const Menu = () => {
   const strings = useStrings()
@@ -111,28 +55,6 @@ export const Menu = () => {
           }
         />
 
-        {isAuthDev && (
-          <UtxoList
-            label={strings.menu.utxoList}
-            onPress={navigateTo.utxoList}
-            left={<Icon.Burger size={24} color={p.gray_600} />}
-          />
-        )}
-
-        {isAuthDev && (
-          <MintBurn
-            label={strings.menu.mintBurn}
-            onPress={navigateTo.mintBurn}
-            left={<Icon.Burger size={24} color={p.gray_600} />}
-          />
-        )}
-
-        <MessageSigning
-          label={strings.menu.messageSigning}
-          onPress={navigateTo.messageSigning}
-          left={<Icon.Message size={24} color={p.gray_600} />}
-        />
-
         <Governance
           label={strings.menu.governanceCentre}
           onPress={navigateTo.governanceCentre}
@@ -144,6 +66,21 @@ export const Menu = () => {
           onPress={navigateTo.catalystVoting}
           left={<Icon.Catalyst size={24} color={p.gray_600} />}
         />
+
+        {isAuthDev && (
+          <UtxoList
+            label={strings.menu.utxoList}
+            onPress={navigateTo.utxoList}
+            left={<Icon.Burger size={24} color={p.gray_600} />}
+          />
+        )}
+
+        <MessageSigning
+          label={strings.menu.messageSigning}
+          onPress={navigateTo.messageSigning}
+          left={<Icon.Message size={24} color={p.gray_600} />}
+        />
+
         {isAirdropEnabled && (
           <Airdrop
             label={strings.menu.airdrop}
@@ -151,6 +88,15 @@ export const Menu = () => {
             left={<Icon.Airdrop size={24} color={p.gray_600} />}
           />
         )}
+
+        {isAuthDev && (
+          <MintBurn
+            label={strings.menu.mintBurn}
+            onPress={navigateTo.mintBurn}
+            left={<Icon.Burger size={24} color={p.gray_600} />}
+          />
+        )}
+
         <KnowledgeBase //
           label={strings.menu.knowledgeBase}
           onPress={navigateTo.knowledgeBase}
