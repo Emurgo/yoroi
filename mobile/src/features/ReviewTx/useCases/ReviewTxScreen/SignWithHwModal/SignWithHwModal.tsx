@@ -12,12 +12,14 @@ import {LedgerConnect} from '../../../../../ui/LedgerConnect/LedgerConnect'
 import {LedgerTransportSwitch} from '../../../../../ui/LedgerTransportSwitch/LedgerTransportSwitch'
 import {ModalError} from '../../../../../ui/ModalError/ModalError'
 import {Text} from '../../../../../ui/Text/Text'
-import {withBLE, withUSB} from '../../../../../wallets/hw/hwWallet'
-import {delay} from '../../../../../wallets/utils/timeUtils'
+import {delay, withBLE, withUSB} from '@yoroi/cardano-wallet'
+import {
+  useSelectedWallet,
+  useWalletManager,
+} from '@yoroi/wallet-manager'
+
 import {useSignTxWithHW} from '../../../../Transactions/hooks/useSignTxWithHW'
 import {useSubmitTx} from '../../../../Transactions/hooks/useSubmitTx'
-import {useWalletManager} from '../../../../WalletManager/context/WalletManagerProvider'
-import {useSelectedWallet} from '../../../../WalletManager/hooks/useSelectedWallet'
 
 type TransportType = 'USB' | 'BLE'
 type Step = 'select-transport' | 'connect-transport' | 'loading'

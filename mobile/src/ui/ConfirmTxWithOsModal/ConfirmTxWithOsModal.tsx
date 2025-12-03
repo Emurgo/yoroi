@@ -8,7 +8,7 @@ import {ActivityIndicator, Text, View} from 'react-native'
 import {useAuthOsWithEasyConfirmation} from '../../features/Auth/hooks/useAuthOsWithEasyConfirmation'
 import {useSignTx} from '../../features/Transactions/hooks/useSignTx'
 import {useSubmitTx} from '../../features/Transactions/hooks/useSubmitTx'
-import {useSelectedWallet} from '../../features/WalletManager/hooks/useSelectedWallet'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 type Props = {
   onSuccess?: (signedTx: CSL.Transaction) => void

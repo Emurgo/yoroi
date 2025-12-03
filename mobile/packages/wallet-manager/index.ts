@@ -32,8 +32,15 @@ export {useWalletEvent} from './hooks/useWalletEvent'
 export {useAddressMode} from './hooks/useAddressMode'
 
 // Context providers
-export {WalletManagerProvider, useWalletManagerSelector} from './context/WalletManagerProvider'
-export {AutomaticWalletOpeningProvider} from './context/AutomaticWalletOpeningProvider'
+export {
+  WalletManagerProvider,
+  useWalletManager,
+  useWalletManagerSelector,
+} from './context/WalletManagerProvider'
+export {
+  AutomaticWalletOpeningProvider,
+  useAutomaticWalletOpener,
+} from './context/AutomaticWalletOpeningProvider'
 export {WalletManagerHydrationWrapper} from './context/WalletManagerHydrationWrapper'
 
 // State

@@ -28,12 +28,15 @@
   "browser": "lib/module/index",
   "types": "lib/typescript/index.d.ts",
   "files": [
-    "src",
+    "*.ts",
+    "*.tsx",
     "lib",
     "!**/__tests__",
     "!**/__fixtures__",
     "!**/__mocks__",
-    "!**/.*"
+    "!**/.*",
+    "!**/*.test.ts",
+    "!**/*.test.tsx"
   ],
   "scripts": {
     "build": "npm run tsc && npm run lint && npm run test --ci --silent && npm run clean && bob build",
@@ -118,4 +121,3 @@
     "registry": "https://registry.npmjs.org/"
   }
 }
-

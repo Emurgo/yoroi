@@ -12,8 +12,10 @@ import {ActivityIndicator, View} from 'react-native'
 
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 
-import {useWalletManagerSelector} from '../../context/WalletManagerProvider'
-import {useSelectedNetwork} from '../../hooks/useSelectedNetwork'
+import {
+  useSelectedNetwork,
+  useWalletManagerSelector,
+} from '@yoroi/wallet-manager'
 import {useSelectWalletModal} from '../modals/SelectWalletModal'
 
 export const WithWalletOpened = ({children}: React.PropsWithChildren) => {

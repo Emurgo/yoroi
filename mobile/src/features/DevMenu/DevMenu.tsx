@@ -27,8 +27,10 @@ import {TextInput} from '~/ui/TextInput/TextInput'
 
 import {useWalletNameOverride} from '../Discover/common/WalletNameOverrideContext'
 import {WalletNameOverrideModalContent} from '../Discover/common/WalletNameOverrideModalContent'
-import {useWalletManager} from '../WalletManager/context/WalletManagerProvider'
-import {useCreateWalletMnemonic} from '../WalletManager/hooks/useCreateWalletMnemonic'
+import {
+  useCreateWalletMnemonic,
+  useWalletManager,
+} from '@yoroi/wallet-manager'
 import {CborReviewModalContent} from './CborReviewModalContent'
 
 export function DevMenu() {
