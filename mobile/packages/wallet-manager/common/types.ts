@@ -1,6 +1,6 @@
 import type {
-  CardanoWalletDependencies,
   CardanoTypes,
+  CardanoWalletDependencies,
   WalletEvent,
   YoroiWallet,
 } from '@yoroi/cardano-wallet'

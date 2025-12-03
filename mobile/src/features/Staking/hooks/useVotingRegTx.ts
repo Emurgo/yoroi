@@ -1,5 +1,5 @@
-import {createVotingRegTxFromWallet} from '@yoroi/cardano-wallet/transaction-recipes'
-import {YoroiWallet} from '@yoroi/cardano-wallet/types'
+import {createVotingRegTxFromWallet} from '@yoroi/cardano-wallet'
+import {YoroiWallet} from '@yoroi/cardano-wallet'
 import {Wallet} from '@yoroi/types'
 
 import * as React from 'react'

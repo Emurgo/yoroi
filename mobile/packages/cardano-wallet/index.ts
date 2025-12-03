@@ -5,6 +5,7 @@ export {makeCardanoWallet} from './cardano-wallet'
 
 // Types
 export type {YoroiWallet, WalletEvent, CardanoTypes} from './types'
+export type {Device} from './types/hw'
 
 // Dependencies
 export type {CardanoWalletDependencies, WalletEncryptedStorage} from './dependencies'
@@ -22,9 +23,33 @@ export {
   deriveRewardAddressHex,
   isByron,
   isShelley,
+  deriveRewardAddressFromAddress,
+  createRawTxSigningKey,
 } from './utils'
-export * from './utils'
-export {validatePassword, validateWalletName} from './utils/validators'
+// Utils - string
+export {isEmptyString} from './utils/string'
+// Utils - format
+export {
+  formatTokenAmount,
+  formatTokenWithText,
+  formatDateAndTime,
+  formatTokenWithSymbol,
+  formatTokenInteger,
+  formatTokenFractional,
+  formatAdaWithText,
+  formatTime,
+  formatDateRelative,
+  getTokenFingerprint,
+  getAssetFingerprint,
+} from './utils/format'
+// Utils - utils (Amounts, Quantities, etc.)
+export {Amounts, Quantities, asQuantity, Utxos, Entries} from './utils/utils'
+// Utils - timeUtils
+export {delay, formatTimeSpan} from './utils/timeUtils'
+// Utils - validators
+export {validatePassword, validateWalletName, getWalletNameError} from './utils/validators'
+// Utils - amountUtils
+export {pastedFormatter, editedFormatter} from './utils/amountUtils'
 
 // Mnemonic
 export {getMasterKeyFromMnemonic, generateAdaMnemonic, generateWalletRootKey} from './mnemonic/mnemonic'
@@ -41,6 +66,7 @@ export {
   generatePrivateKeyForCatalyst,
   encryptWithPassword,
 } from './catalyst'
+export {encryptWithPassword as encryptWithPasswordFromCipher} from './catalyst/catalystCipher'
 
 // Wrapped CSL
 export {CardanoMobileWrapped} from './wrappedCsl'
@@ -61,6 +87,29 @@ export {
   BaseLedgerError,
   RejectedByUserError,
   BluetoothDisabledError,
+  getHWDeviceInfo,
 } from './hw/hw/hw'
 export {withBLE, withUSB} from './hw/hw/hwWallet'
+
+// CIP-30 extensions
+export {cip30ExtensionMaker} from './cip30/cip30'
+export {cip30LedgerExtensionMaker} from './cip30/cip30-ledger'
+
+// CIP-95 extensions
+export {cip95ExtensionMaker} from './cip95/cip95'
+export type {CIP95Extension} from './cip95/cip95'
+
+// UtxoManager
+export {collateralConfig, isPureUtxo, isAmountInCollateralRange} from './utxoManager/utxos'
+export {useCollateralInfo} from './utxoManager/useCollateralInfo'
+export {useSetCollateralId} from './utxoManager/useSetCollateralId'
+
+// AddressInfo
+export {getSpendingKey, getAddressInfo} from './addressInfo/addressInfo'
+
+// Common
+export {convertBech32ToHex, assertHasAllSigners} from './common/signatureUtils'
+
+// DelegationUtils
+export * from './delegationUtils'
 

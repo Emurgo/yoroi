@@ -1,8 +1,5 @@
-import {isEmptyString} from '@yoroi/cardano-wallet/utils/string'
-import {
-  getWalletNameError,
-  validatePassword,
-} from '@yoroi/cardano-wallet/utils/validators'
+import {isEmptyString} from '@yoroi/cardano-wallet'
+import {getWalletNameError, validatePassword} from '@yoroi/cardano-wallet'
 import {useAsyncStorage} from '@yoroi/common'
 import {Blockies} from '@yoroi/identicon'
 import {useSetupWallet} from '@yoroi/setup-wallet'

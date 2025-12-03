@@ -1,5 +1,5 @@
-import {createCombinedDelegationTxFromWallet} from '@yoroi/cardano-wallet/transaction-recipes/wallet-helpers'
-import {YoroiWallet} from '@yoroi/cardano-wallet/types'
+import {createCombinedDelegationTxFromWallet} from '@yoroi/cardano-wallet'
+import {YoroiWallet} from '@yoroi/cardano-wallet'
 import {getYoroiDrepIdHex} from '@yoroi/staking'
 import {Branded, KeyHash, Wallet} from '@yoroi/types'
 

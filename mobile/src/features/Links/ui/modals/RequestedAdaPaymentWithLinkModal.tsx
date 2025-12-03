@@ -1,4 +1,4 @@
-import {isEmptyString} from '@yoroi/cardano-wallet/utils/string'
+import {isEmptyString} from '@yoroi/cardano-wallet'
 import {useLinks} from '@yoroi/links'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Links} from '@yoroi/types'

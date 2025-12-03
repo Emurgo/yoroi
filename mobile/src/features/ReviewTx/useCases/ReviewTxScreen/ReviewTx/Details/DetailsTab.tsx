@@ -1,4 +1,4 @@
-import {formatDateAndTime} from '@yoroi/cardano-wallet/utils/format'
+import {formatDateAndTime} from '@yoroi/cardano-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Network} from '@yoroi/types'
 import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'

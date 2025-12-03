@@ -1,4 +1,4 @@
-import {asQuantity} from '@yoroi/cardano-wallet/utils/utils'
+import {asQuantity} from '@yoroi/cardano-wallet'
 import {TransactionOutput} from '@yoroi/tx'
 import {Transfer} from '@yoroi/types'
 

@@ -1,5 +1,5 @@
-import {createWithdrawalTxFromWallet} from '@yoroi/cardano-wallet/transaction-recipes'
-import {Quantities} from '@yoroi/cardano-wallet/utils/utils'
+import {createWithdrawalTxFromWallet} from '@yoroi/cardano-wallet'
+import {Quantities} from '@yoroi/cardano-wallet'
 import {getLogger} from '@yoroi/common'
 import {useSelectedNetwork} from '@yoroi/wallet-manager/hooks/useSelectedNetwork'
 import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'

@@ -1,4 +1,4 @@
-import {formatTimeSpan} from '@yoroi/cardano-wallet/utils/timeUtils'
+import {formatTimeSpan} from '@yoroi/cardano-wallet'
 import {PoolTransition} from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
 

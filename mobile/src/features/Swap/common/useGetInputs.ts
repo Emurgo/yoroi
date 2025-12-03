@@ -1,4 +1,4 @@
-import {CardanoMobileWrapped} from '@yoroi/cardano-wallet/wrappedCsl'
+import {CardanoMobileWrapped} from '@yoroi/cardano-wallet'
 import {
   type SelectionStrategy,
   rawUtxoToModernUtxo,

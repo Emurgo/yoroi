@@ -4,7 +4,7 @@ import {
   GeneralConnectionError,
   LedgerUserError,
   RejectedByUserError,
-} from '@yoroi/cardano-wallet/hw/hw'
+} from '@yoroi/cardano-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'

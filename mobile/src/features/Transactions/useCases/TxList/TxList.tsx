@@ -1,4 +1,4 @@
-import {Amounts, Quantities} from '@yoroi/cardano-wallet/utils/utils'
+import {Amounts, Quantities} from '@yoroi/cardano-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 

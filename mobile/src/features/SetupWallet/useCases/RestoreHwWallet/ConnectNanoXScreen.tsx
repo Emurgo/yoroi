@@ -1,5 +1,5 @@
-import {getHWDeviceInfo} from '@yoroi/cardano-wallet/hw/hw'
-import {Device} from '@yoroi/cardano-wallet/types/hw'
+import {getHWDeviceInfo} from '@yoroi/cardano-wallet'
+import {Device} from '@yoroi/cardano-wallet'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a} from '@yoroi/theme'
 import {HW} from '@yoroi/types'

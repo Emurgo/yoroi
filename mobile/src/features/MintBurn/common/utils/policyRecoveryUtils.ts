@@ -1,4 +1,4 @@
-import {CardanoMobileWrapped} from '@yoroi/cardano-wallet/wrappedCsl'
+import {CardanoMobileWrapped} from '@yoroi/cardano-wallet'
 import {calculatePolicyId} from '@yoroi/tx'
 import type {MintingScript} from '@yoroi/tx'
 

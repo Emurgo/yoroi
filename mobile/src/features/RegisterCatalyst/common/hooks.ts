@@ -1,5 +1,5 @@
-import {YoroiWallet} from '@yoroi/cardano-wallet/types'
-import {isShelley} from '@yoroi/cardano-wallet/utils'
+import {YoroiWallet} from '@yoroi/cardano-wallet'
+import {isShelley} from '@yoroi/cardano-wallet'
 import {time} from '@yoroi/common'
 import {Catalyst, useCatalyst} from '@yoroi/staking'
 import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'

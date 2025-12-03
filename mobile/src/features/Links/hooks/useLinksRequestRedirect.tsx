@@ -1,4 +1,4 @@
-import {isEmptyString} from '@yoroi/cardano-wallet/utils/string'
+import {isEmptyString} from '@yoroi/cardano-wallet'
 
 import * as React from 'react'
 import {InteractionManager} from 'react-native'

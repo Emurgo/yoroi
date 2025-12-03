@@ -1,4 +1,4 @@
-import {CardanoWalletDependencies} from '@yoroi/cardano-wallet/dependencies'
+import {CardanoWalletDependencies} from '@yoroi/cardano-wallet'
 
 import {toLedgerSignRequest} from '~/features/Discover/common/ledger'
 import {buildPortfolioBalanceManager} from '~/features/Portfolio/common/helpers/build-balance-manager'

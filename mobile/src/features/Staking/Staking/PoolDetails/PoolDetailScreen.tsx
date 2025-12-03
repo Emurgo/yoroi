@@ -1,7 +1,4 @@
-import {
-  isValidPoolIdOrHash,
-  normalizeToPoolHash,
-} from '@yoroi/cardano-wallet/delegationUtils'
+import {isValidPoolIdOrHash, normalizeToPoolHash} from '@yoroi/cardano-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import {useQuery} from '@tanstack/react-query'

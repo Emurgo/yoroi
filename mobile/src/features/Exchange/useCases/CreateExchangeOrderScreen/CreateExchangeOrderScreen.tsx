@@ -1,4 +1,4 @@
-import {delay} from '@yoroi/cardano-wallet/utils/timeUtils'
+import {delay} from '@yoroi/cardano-wallet'
 import {atomicBreakdown} from '@yoroi/common'
 import {
   useCreateReferralLink,

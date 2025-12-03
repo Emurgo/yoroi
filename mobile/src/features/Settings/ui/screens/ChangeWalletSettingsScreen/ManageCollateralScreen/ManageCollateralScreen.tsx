@@ -1,16 +1,9 @@
 import {RawUtxo} from '@yoroi/api'
-import {createSendTxFromWallet} from '@yoroi/cardano-wallet/transaction-recipes'
-import {
-  Amounts,
-  Quantities,
-  asQuantity,
-} from '@yoroi/cardano-wallet/utils/utils'
-import {useCollateralInfo} from '@yoroi/cardano-wallet/utxoManager/useCollateralInfo'
-import {useSetCollateralId} from '@yoroi/cardano-wallet/utxoManager/useSetCollateralId'
-import {
-  collateralConfig,
-  utxosMaker,
-} from '@yoroi/cardano-wallet/utxoManager/utxos'
+import {createSendTxFromWallet} from '@yoroi/cardano-wallet'
+import {Amounts, Quantities, asQuantity} from '@yoroi/cardano-wallet'
+import {useCollateralInfo} from '@yoroi/cardano-wallet'
+import {useSetCollateralId} from '@yoroi/cardano-wallet'
+import {collateralConfig, utxosMaker} from '@yoroi/cardano-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {TransactionOutput} from '@yoroi/tx'
 import {Branded, Portfolio, UtxoId} from '@yoroi/types'

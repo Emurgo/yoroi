@@ -1,5 +1,5 @@
 import {TxSubmissionStatus} from '@yoroi/api'
-import {YoroiWallet} from '@yoroi/cardano-wallet/types'
+import {YoroiWallet} from '@yoroi/cardano-wallet'
 import {UnsignedTransaction} from '@yoroi/tx'
 
 import * as CSL from '@emurgo/cross-csl-core'

@@ -1,5 +1,5 @@
-import {createUnsignedGovernanceTxFromWallet} from '@yoroi/cardano-wallet/transaction-recipes'
-import {YoroiWallet} from '@yoroi/cardano-wallet/types'
+import {createUnsignedGovernanceTxFromWallet} from '@yoroi/cardano-wallet'
+import {YoroiWallet} from '@yoroi/cardano-wallet'
 import {Wallet} from '@yoroi/types'
 
 import {Certificate} from '@emurgo/cross-csl-core'

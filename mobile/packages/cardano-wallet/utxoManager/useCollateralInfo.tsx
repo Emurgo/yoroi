@@ -1,4 +1,4 @@
-import {useWallet} from '~/features/WalletManager/hooks/useWallet'
+import {useWallet} from '@yoroi/wallet-manager/hooks/useWallet'
 
 import {YoroiWallet} from '../types'
 

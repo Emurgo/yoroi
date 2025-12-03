@@ -1,5 +1,8 @@
 import type {WalletEncryptedStorage} from '@yoroi/cardano-wallet'
-import {deriveAccountFromRootKey, CardanoMobileWrapped} from '@yoroi/cardano-wallet'
+import {
+  CardanoMobileWrapped,
+  deriveAccountFromRootKey,
+} from '@yoroi/cardano-wallet'
 import {getLogger} from '@yoroi/common'
 import {Blockies} from '@yoroi/identicon'
 import {Chain, HW, Wallet} from '@yoroi/types'

@@ -1,4 +1,4 @@
-import {Amounts, Quantities} from '@yoroi/cardano-wallet/utils/utils'
+import {Amounts, Quantities} from '@yoroi/cardano-wallet'
 import {time} from '@yoroi/common'
 import {useNotificationManager} from '@yoroi/notifications'
 import {Chain, Notifications} from '@yoroi/types'

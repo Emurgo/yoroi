@@ -1,4 +1,4 @@
-import {isEmptyString} from '@yoroi/cardano-wallet/utils/string'
+import {isEmptyString} from '@yoroi/cardano-wallet'
 import {isString} from '@yoroi/common'
 import {useDebouncedCallback} from '@yoroi/common'
 import {useTheme} from '@yoroi/theme'

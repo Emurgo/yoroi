@@ -1,4 +1,4 @@
-import {SubmitTxInsufficientCollateralError} from '@yoroi/cardano-wallet/api/errors'
+import {SubmitTxInsufficientCollateralError} from '@yoroi/cardano-wallet'
 import {App} from '@yoroi/types'
 
 export const getErrorMessage = (

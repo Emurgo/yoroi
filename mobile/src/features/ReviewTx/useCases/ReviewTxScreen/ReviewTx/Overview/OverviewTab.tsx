@@ -1,4 +1,4 @@
-import {formatTokenWithText} from '@yoroi/cardano-wallet/utils/format'
+import {formatTokenWithText} from '@yoroi/cardano-wallet'
 import {
   isBoolean,
   parseSafe,

@@ -1,5 +1,5 @@
-import {convertRawUtxosToModernUtxos} from '@yoroi/cardano-wallet/transaction-recipes/helpers'
-import {YoroiWallet} from '@yoroi/cardano-wallet/types'
+import {convertRawUtxosToModernUtxos} from '@yoroi/cardano-wallet'
+import {YoroiWallet} from '@yoroi/cardano-wallet'
 import {
   type TransactionMetadata,
   addInputs,

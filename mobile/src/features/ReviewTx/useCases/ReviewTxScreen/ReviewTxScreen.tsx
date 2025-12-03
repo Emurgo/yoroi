@@ -1,4 +1,4 @@
-import {CardanoMobileWrapped} from '@yoroi/cardano-wallet/wrappedCsl'
+import {CardanoMobileWrapped} from '@yoroi/cardano-wallet'
 import {validateTransactionCbor} from '@yoroi/tx'
 import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 

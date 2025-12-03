@@ -1,7 +1,4 @@
-import {
-  HARDWARE_WALLETS,
-  useLedgerPermissions,
-} from '@yoroi/cardano-wallet/hw/hw'
+import {HARDWARE_WALLETS, useLedgerPermissions} from '@yoroi/cardano-wallet'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 

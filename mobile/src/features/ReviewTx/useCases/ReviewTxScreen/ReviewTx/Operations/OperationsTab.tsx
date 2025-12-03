@@ -1,4 +1,4 @@
-import {formatTokenWithText} from '@yoroi/cardano-wallet/utils/format'
+import {formatTokenWithText} from '@yoroi/cardano-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {type Proposal, type Vote} from '@yoroi/tx'
 

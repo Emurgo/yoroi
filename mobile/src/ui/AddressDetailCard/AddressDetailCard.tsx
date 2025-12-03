@@ -1,8 +1,5 @@
-import {
-  getSpendingKey,
-  getStakingKey,
-} from '@yoroi/cardano-wallet/addressInfo/addressInfo'
-import {isEmptyString} from '@yoroi/cardano-wallet/utils/string'
+import {getSpendingKey, getStakingKey} from '@yoroi/cardano-wallet'
+import {isEmptyString} from '@yoroi/cardano-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'

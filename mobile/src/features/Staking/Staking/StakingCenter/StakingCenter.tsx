@@ -1,7 +1,7 @@
 import {
   createCombinedDelegationTxFromWallet,
   createDelegationTxFromWallet,
-} from '@yoroi/cardano-wallet/transaction-recipes'
+} from '@yoroi/cardano-wallet'
 import {getYoroiDrepIdHex} from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Branded, KeyHash} from '@yoroi/types'

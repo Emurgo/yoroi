@@ -1,8 +1,5 @@
 import {addressVisualDerivationPathMaker} from '@yoroi/blockchains'
-import {
-  getSpendingKey,
-  getStakingKey,
-} from '@yoroi/cardano-wallet/addressInfo/addressInfo'
+import {getSpendingKey, getStakingKey} from '@yoroi/cardano-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 

@@ -1,8 +1,7 @@
 import {Chain} from '@yoroi/types'
+import {getWalletFactory} from '@yoroi/wallet-manager'
 
 import AsyncStorage from '@react-native-async-storage/async-storage'
-
-import {getWalletFactory} from '@yoroi/wallet-manager'
 
 import {keyManager} from './key-manager/key-manager'
 import {CardanoMobileWrapped} from './wrappedCsl'

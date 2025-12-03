@@ -1,4 +1,4 @@
-import {YoroiWallet} from '@yoroi/cardano-wallet/types'
+import {YoroiWallet} from '@yoroi/cardano-wallet'
 import {DappConnectorManager, useDappConnector} from '@yoroi/dapp-connector'
 
 import * as React from 'react'

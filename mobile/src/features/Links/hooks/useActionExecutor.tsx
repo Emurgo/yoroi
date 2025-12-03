@@ -1,5 +1,5 @@
-import {createDelegationTxFromWallet} from '@yoroi/cardano-wallet/transaction-recipes'
-import {pastedFormatter} from '@yoroi/cardano-wallet/utils/amountUtils'
+import {createDelegationTxFromWallet} from '@yoroi/cardano-wallet'
+import {pastedFormatter} from '@yoroi/cardano-wallet'
 import {toBigInt} from '@yoroi/common'
 import {PendingAction, linksCardanoModuleMaker} from '@yoroi/links'
 import {createPrimaryTokenInfo} from '@yoroi/portfolio'

@@ -1,4 +1,4 @@
-import {generateAdaMnemonic} from '@yoroi/cardano-wallet/mnemonic/mnemonic'
+import {generateAdaMnemonic} from '@yoroi/cardano-wallet'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 

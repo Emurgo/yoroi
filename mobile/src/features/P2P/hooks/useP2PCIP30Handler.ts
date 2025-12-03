@@ -1,4 +1,4 @@
-import {cip30ExtensionMaker} from '@yoroi/cardano-wallet/cip30/cip30'
+import {cip30ExtensionMaker} from '@yoroi/cardano-wallet'
 import {
   type ConnectionManager,
   type WalletMessage,

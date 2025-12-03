@@ -1,4 +1,4 @@
-import {createSendTxFromWallet} from '@yoroi/cardano-wallet/transaction-recipes'
+import {createSendTxFromWallet} from '@yoroi/cardano-wallet'
 import {isNft, isPrimaryToken} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'

@@ -1,4 +1,4 @@
-import {convertBech32ToHex} from '@yoroi/cardano-wallet/common/signatureUtils'
+import {convertBech32ToHex} from '@yoroi/cardano-wallet'
 import {isLeft, isRight, parseNumberFromText} from '@yoroi/common'
 import {isPrimaryToken, primaryTokenId} from '@yoroi/portfolio'
 import {swapManagerMaker, swapStorageMaker} from '@yoroi/swap'

@@ -1,4 +1,4 @@
-import {YoroiWallet} from '@yoroi/cardano-wallet/types'
+import {YoroiWallet} from '@yoroi/cardano-wallet'
 import {StakingInfo} from '@yoroi/staking'
 import {useTheme} from '@yoroi/theme'
 import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'

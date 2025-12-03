@@ -1,6 +1,6 @@
-import {cip30ExtensionMaker} from '@yoroi/cardano-wallet/cip30/cip30'
-import {cip30LedgerExtensionMaker} from '@yoroi/cardano-wallet/cip30/cip30-ledger'
-import {BaseLedgerError} from '@yoroi/cardano-wallet/hw/hw'
+import {cip30ExtensionMaker} from '@yoroi/cardano-wallet'
+import {cip30LedgerExtensionMaker} from '@yoroi/cardano-wallet'
+import {BaseLedgerError} from '@yoroi/cardano-wallet'
 import {useAddressMode} from '@yoroi/wallet-manager/hooks/useAddressMode'
 import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 

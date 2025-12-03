@@ -1,4 +1,4 @@
-import {Quantities} from '@yoroi/cardano-wallet/utils/utils'
+import {Quantities} from '@yoroi/cardano-wallet'
 import {useExchange, useExchangeProvidersByOrderType} from '@yoroi/exchange'
 import {Chain} from '@yoroi/types'
 import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'

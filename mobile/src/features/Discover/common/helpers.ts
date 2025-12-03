@@ -1,10 +1,7 @@
-import {cip30ExtensionMaker} from '@yoroi/cardano-wallet/cip30/cip30'
-import {
-  cip95ExtensionMaker,
-  supportsCIP95,
-} from '@yoroi/cardano-wallet/cip95/cip95'
-import {YoroiWallet} from '@yoroi/cardano-wallet/types'
-import {collateralConfig} from '@yoroi/cardano-wallet/utxoManager/utxos'
+import {cip30ExtensionMaker} from '@yoroi/cardano-wallet'
+import {cip95ExtensionMaker, supportsCIP95} from '@yoroi/cardano-wallet'
+import {YoroiWallet} from '@yoroi/cardano-wallet'
+import {collateralConfig} from '@yoroi/cardano-wallet'
 import {
   DappConnector,
   ResolverWallet,

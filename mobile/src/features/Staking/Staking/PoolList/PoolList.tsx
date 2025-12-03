@@ -1,5 +1,5 @@
-import {formatTokenWithText} from '@yoroi/cardano-wallet/utils/format'
-import {asQuantity} from '@yoroi/cardano-wallet/utils/utils'
+import {formatTokenWithText} from '@yoroi/cardano-wallet'
+import {asQuantity} from '@yoroi/cardano-wallet'
 import {useDebouncedValue} from '@yoroi/common'
 import {ExplorerPoolInfo} from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'

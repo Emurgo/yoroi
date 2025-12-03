@@ -1,4 +1,4 @@
-import {Quantities} from '@yoroi/cardano-wallet/utils/utils'
+import {Quantities} from '@yoroi/cardano-wallet'
 import {atomicBreakdown} from '@yoroi/common'
 import {isPrimaryToken} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'

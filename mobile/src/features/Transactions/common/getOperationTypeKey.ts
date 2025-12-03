@@ -1,9 +1,5 @@
-import {
-  Amounts,
-  Quantities,
-  asQuantity,
-} from '@yoroi/cardano-wallet/utils/utils'
-import {collateralConfig} from '@yoroi/cardano-wallet/utxoManager/utxos'
+import {Amounts, Quantities, asQuantity} from '@yoroi/cardano-wallet'
+import {collateralConfig} from '@yoroi/cardano-wallet'
 import {isPrimaryToken} from '@yoroi/portfolio'
 import {CertificateKind} from '@yoroi/tx'
 import {Balance, TransactionDirection, WalletTransaction} from '@yoroi/types'

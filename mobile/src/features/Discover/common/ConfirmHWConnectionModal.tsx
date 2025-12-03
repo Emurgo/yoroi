@@ -1,4 +1,4 @@
-import {withBLE, withUSB} from '@yoroi/cardano-wallet/hw/hwWallet'
+import {withBLE, withUSB} from '@yoroi/cardano-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {HW} from '@yoroi/types'
 import {useWalletManager} from '@yoroi/wallet-manager/context/WalletManagerProvider'

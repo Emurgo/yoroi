@@ -1,4 +1,4 @@
-import {formatTokenWithText} from '@yoroi/cardano-wallet/utils/format'
+import {formatTokenWithText} from '@yoroi/cardano-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'

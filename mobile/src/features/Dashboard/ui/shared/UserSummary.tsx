@@ -1,5 +1,5 @@
-import {formatAdaWithText} from '@yoroi/cardano-wallet/utils/format'
-import {asQuantity} from '@yoroi/cardano-wallet/utils/utils'
+import {formatAdaWithText} from '@yoroi/cardano-wallet'
+import {asQuantity} from '@yoroi/cardano-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 

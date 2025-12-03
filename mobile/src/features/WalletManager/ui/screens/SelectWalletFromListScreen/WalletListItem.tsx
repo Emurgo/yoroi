@@ -1,4 +1,4 @@
-import {isByron, isShelley} from '@yoroi/cardano-wallet/utils'
+import {isByron, isShelley} from '@yoroi/cardano-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Wallet} from '@yoroi/types'
 import {useAutomaticWalletOpener} from '@yoroi/wallet-manager/context/AutomaticWalletOpeningProvider'

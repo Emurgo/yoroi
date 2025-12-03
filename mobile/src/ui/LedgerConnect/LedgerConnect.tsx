@@ -1,8 +1,8 @@
 import {
   BluetoothDisabledError,
   RejectedByUserError,
-} from '@yoroi/cardano-wallet/hw/hw'
-import {Device} from '@yoroi/cardano-wallet/types/hw'
+} from '@yoroi/cardano-wallet'
+import {Device} from '@yoroi/cardano-wallet'
 import {atoms as a, lightPalette, useTheme} from '@yoroi/theme'
 import {HW} from '@yoroi/types'
 

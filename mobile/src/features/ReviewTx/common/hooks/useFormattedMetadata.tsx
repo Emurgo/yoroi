@@ -1,4 +1,4 @@
-import {CardanoMobileWrapped} from '@yoroi/cardano-wallet/wrappedCsl'
+import {CardanoMobileWrapped} from '@yoroi/cardano-wallet'
 import {isString} from '@yoroi/common'
 
 import {MetadataJsonSchema} from '@emurgo/cross-csl-core'

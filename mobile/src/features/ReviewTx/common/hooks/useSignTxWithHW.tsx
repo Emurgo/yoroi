@@ -1,5 +1,5 @@
-import {cip30LedgerExtensionMaker} from '@yoroi/cardano-wallet/cip30/cip30-ledger'
-import {BaseLedgerError} from '@yoroi/cardano-wallet/hw/hw'
+import {cip30LedgerExtensionMaker} from '@yoroi/cardano-wallet'
+import {BaseLedgerError} from '@yoroi/cardano-wallet'
 import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 
 import {Transaction} from '@emurgo/cross-csl-core'

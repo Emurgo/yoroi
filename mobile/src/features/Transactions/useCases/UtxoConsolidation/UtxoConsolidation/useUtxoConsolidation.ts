@@ -1,4 +1,4 @@
-import {createUtxoConsolidationTxFromWallet} from '@yoroi/cardano-wallet/transaction-recipes'
+import {createUtxoConsolidationTxFromWallet} from '@yoroi/cardano-wallet'
 import {useSelectedWallet} from '@yoroi/wallet-manager/hooks/useSelectedWallet'
 
 import {useMutation} from '@tanstack/react-query'

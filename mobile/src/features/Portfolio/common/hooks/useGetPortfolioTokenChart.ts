@@ -1,4 +1,4 @@
-import {delay} from '@yoroi/cardano-wallet/utils/timeUtils'
+import {delay} from '@yoroi/cardano-wallet'
 import {isRight, time} from '@yoroi/common'
 import {isPrimaryToken} from '@yoroi/portfolio'
 import {Portfolio} from '@yoroi/types'

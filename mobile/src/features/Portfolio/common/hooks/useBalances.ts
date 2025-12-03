@@ -1,5 +1,5 @@
-import {YoroiWallet} from '@yoroi/cardano-wallet/types'
-import {Utxos} from '@yoroi/cardano-wallet/utils/utils'
+import {YoroiWallet} from '@yoroi/cardano-wallet'
+import {Utxos} from '@yoroi/cardano-wallet'
 import {Balance} from '@yoroi/types'
 import {useUtxos} from '@yoroi/wallet-manager/hooks/useUtxos'
 

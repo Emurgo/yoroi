@@ -1,6 +1,6 @@
 import {API_ENDPOINTS} from '@yoroi/api'
-import {YoroiWallet} from '@yoroi/cardano-wallet/types'
-import {isEmptyString} from '@yoroi/cardano-wallet/utils/string'
+import {YoroiWallet} from '@yoroi/cardano-wallet'
+import {isEmptyString} from '@yoroi/cardano-wallet'
 import {StakePoolInfoAndHistory, poolInfoApiMaker} from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {useSelectedNetwork} from '@yoroi/wallet-manager/hooks/useSelectedNetwork'

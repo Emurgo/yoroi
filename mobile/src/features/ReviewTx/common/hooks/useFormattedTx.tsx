@@ -1,8 +1,8 @@
 import {RawUtxo} from '@yoroi/api'
-import {YoroiWallet} from '@yoroi/cardano-wallet/types'
-import {deriveRewardAddressFromAddress} from '@yoroi/cardano-wallet/utils'
-import {asQuantity} from '@yoroi/cardano-wallet/utils/utils'
-import {CardanoMobileWrapped} from '@yoroi/cardano-wallet/wrappedCsl'
+import {YoroiWallet} from '@yoroi/cardano-wallet'
+import {deriveRewardAddressFromAddress} from '@yoroi/cardano-wallet'
+import {asQuantity} from '@yoroi/cardano-wallet'
+import {CardanoMobileWrapped} from '@yoroi/cardano-wallet'
 import {isNonNullable} from '@yoroi/common'
 import {
   type ChainValidationResult,

@@ -1,6 +1,6 @@
-import {YoroiWallet} from '@yoroi/cardano-wallet/types'
-import {asQuantity} from '@yoroi/cardano-wallet/utils/utils'
-import {collateralConfig} from '@yoroi/cardano-wallet/utxoManager/utxos'
+import {YoroiWallet} from '@yoroi/cardano-wallet'
+import {asQuantity} from '@yoroi/cardano-wallet'
+import {collateralConfig} from '@yoroi/cardano-wallet'
 import {TransactionOutput} from '@yoroi/tx'
 import {App, Branded} from '@yoroi/types'
 

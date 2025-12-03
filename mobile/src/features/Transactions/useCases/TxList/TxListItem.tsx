@@ -1,15 +1,11 @@
-import {YoroiWallet} from '@yoroi/cardano-wallet/types'
+import {YoroiWallet} from '@yoroi/cardano-wallet'
 import {
   formatDateRelative,
   formatTime,
   formatTokenFractional,
   formatTokenInteger,
-} from '@yoroi/cardano-wallet/utils/format'
-import {
-  Amounts,
-  Quantities,
-  asQuantity,
-} from '@yoroi/cardano-wallet/utils/utils'
+} from '@yoroi/cardano-wallet'
+import {Amounts, Quantities, asQuantity} from '@yoroi/cardano-wallet'
 import {isNonNullable} from '@yoroi/common'
 import {infoExtractName, isPrimaryToken} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'

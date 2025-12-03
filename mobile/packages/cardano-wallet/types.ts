@@ -39,10 +39,9 @@ import {WalletChecksum as WalletChecksumType} from '@emurgo/cip4-js'
 import * as CoreTypes from '@emurgo/cross-csl-core'
 import * as CSL from '@emurgo/cross-csl-core'
 
-import {WalletEncryptedStorage} from './dependencies'
-
 import {AddressChain} from './account-manager/account-manager'
 import {ReadOnlyAddressChain} from './account-manager/read-only-account-manager'
+import {WalletEncryptedStorage} from './dependencies'
 
 export type WalletEvent =
   | {type: 'initialize'}

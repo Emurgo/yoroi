@@ -1,4 +1,4 @@
-import {formatTokenWithText} from '@yoroi/cardano-wallet/utils/format'
+import {formatTokenWithText} from '@yoroi/cardano-wallet'
 import {atomicToDecimal, parseNumberFromText} from '@yoroi/common'
 import {isPrimaryToken, isPrimaryTokenInfo} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'

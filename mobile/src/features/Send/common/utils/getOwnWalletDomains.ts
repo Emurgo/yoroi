@@ -1,4 +1,4 @@
-import {YoroiWallet} from '@yoroi/cardano-wallet/types'
+import {YoroiWallet} from '@yoroi/cardano-wallet'
 import {isNft} from '@yoroi/portfolio'
 import {handleApiConfig} from '@yoroi/resolver'
 import {Balance, Portfolio} from '@yoroi/types'

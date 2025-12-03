@@ -6,10 +6,10 @@ import {
   TxStatusRequest,
   TxStatusResponse,
 } from '@yoroi/api'
+import {WalletContext, cardanoWalletApiMaker} from '@yoroi/api'
 import {StakePoolInfoRequest, StakePoolInfosAndHistories} from '@yoroi/staking'
 import {Address, TransactionCborBase64, WalletTransaction} from '@yoroi/types'
 
-import {cardanoWalletApiMaker, WalletContext} from '@yoroi/api'
 import {getSpendingKey} from '../addressInfo/addressInfo'
 
 // Create API instances per baseApiUrl - preferences are set at initialization

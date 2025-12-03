@@ -1,7 +1,4 @@
-import {
-  formatDateRelative,
-  formatTime,
-} from '@yoroi/cardano-wallet/utils/format'
+import {formatDateRelative, formatTime} from '@yoroi/cardano-wallet'
 import {isArray, isString} from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {App} from '@yoroi/types'

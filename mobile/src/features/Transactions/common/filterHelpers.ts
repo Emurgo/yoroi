@@ -1,4 +1,4 @@
-import {Amounts} from '@yoroi/cardano-wallet/utils/utils'
+import {Amounts} from '@yoroi/cardano-wallet'
 import {isArray, isString} from '@yoroi/common'
 import {Balance, WalletTransaction} from '@yoroi/types'
 
