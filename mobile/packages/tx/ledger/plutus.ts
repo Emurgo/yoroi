@@ -91,8 +91,6 @@ export const createLedgerPlutusPayload = async (
       return {type: TxRequiredSignerType.PATH as const, path}
     })
 
-    const logger = getLogger()
-
     const inputs = body.inputs()
     const inputsArray: TxInput[] = []
     for (let i = 0; i < inputs.len(); i++) {

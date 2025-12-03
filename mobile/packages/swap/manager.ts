@@ -134,7 +134,6 @@ const apiManagerMaker = (
         })
 
         if (errors.length > 0) {
-          const logger = getLogger()
           getLogger().warn('Some aggregators failed', {
             origin: 'swap',
             errors,
@@ -297,7 +296,6 @@ const apiManagerMaker = (
         })
 
         if (errors.length > 0) {
-          const logger = getLogger()
           getLogger().warn('Some aggregators failed during estimate', {
             origin: 'swap',
             errors,
@@ -449,7 +447,6 @@ const invalid: Api.Response<unknown> = freeze(
 
 const warnAllLeft = (...responses: Array<Api.Response<unknown>>) => {
   if (responses.every(isLeft)) {
-    const logger = getLogger()
     getLogger().debug('Swap Manager all left', {
       origin: 'swap',
       errors: responses.map((response) => response.error.message),

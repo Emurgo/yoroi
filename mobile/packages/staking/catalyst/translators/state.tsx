@@ -78,7 +78,6 @@ export const initialCatalystContext: CatalystState & CatalystActions = freeze(
 
 /* istanbul ignore next */
 function missingInit() {
-  const logger = getLogger()
   getLogger().error('[CatalystContext] missing initialization', {
     origin: 'staking',
   })

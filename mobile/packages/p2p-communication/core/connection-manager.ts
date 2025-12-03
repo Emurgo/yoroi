@@ -42,7 +42,6 @@ export const connectionManagerMaker = (
   config: ConnectionManagerConfig,
 ): ConnectionManager => {
   let state = createInitialState()
-  const logger = getLogger()
 
   const updateState = (updates: Partial<ConnectionManagerState>): void => {
     state = freeze({...state, ...updates} as const)

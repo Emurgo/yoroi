@@ -29,7 +29,6 @@ export const LinksProvider = ({
 }: React.PropsWithChildren<{
   initialState?: LinksState
 }>) => {
-  const logger = getLogger()
   const [state, dispatch] = React.useReducer(linksReducer, {
     ...defaultLinksState,
     ...initialState,
@@ -50,18 +49,18 @@ export const LinksProvider = ({
         action,
       })
     },
-    [logger],
+    [],
   )
 
   const clearPendingAction = React.useCallback(() => {
     getLogger().debug('LinksProvider: clearing pending action')
     dispatch({type: LinksActionType.ClearPendingAction})
-  }, [logger])
+  }, [])
 
   const markActionProcessed = React.useCallback(() => {
     getLogger().debug('LinksProvider: marking action as processed')
     dispatch({type: LinksActionType.MarkActionProcessed})
-  }, [logger])
+  }, [])
 
   const actions = React.useRef<LinksActions>({
     authorizationsChanged: (walletId: string, authorization: string) => {
@@ -96,7 +95,7 @@ export const LinksProvider = ({
           ? context.pendingAction.action.info.useCase
           : context.pendingAction?.action.action,
     })
-  }, [context.pendingAction, logger])
+  }, [context.pendingAction])
 
   return (
     <LinksContext.Provider value={context}>{children}</LinksContext.Provider>

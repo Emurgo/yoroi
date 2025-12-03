@@ -239,8 +239,6 @@ export function selectUtxosForAmounts(
   primaryTokenId: TokenId = defaultPrimaryTokenId,
   estimatedFee: Lovelace | string = '200000', // Default 0.2 ADA fee estimate
 ): ModernUtxo[] {
-  const logger = getLogger()
-
   // Calculate total required ADA (outputs + fee + minimum UTXO for change output)
   // Minimum UTXO is needed because change output must meet minimum UTXO requirement
   const minUtxoValue = BigInt('1000000') // Base min UTXO (1 ADA) - standard for Cardano
@@ -479,8 +477,6 @@ export async function buildRecipeTransaction(
   protocolConfig: CardanoHaskellConfig,
   primaryTokenId: Portfolio.Token.Id,
 ): Promise<{cbor: string}> {
-  const logger = getLogger()
-
   try {
     const unsignedTx = await buildTransaction(
       builderState,

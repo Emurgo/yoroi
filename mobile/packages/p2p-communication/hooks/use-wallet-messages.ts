@@ -31,7 +31,6 @@ export const useWalletMessages = (
   setStatus: (status: ConnectionStatus) => void,
   walletCommunication: WalletCommunication | null,
 ): UseWalletMessagesResult => {
-  const logger = getLogger()
   const [messages, setMessages] = useState<ReadonlyArray<Message>>([])
 
   const addMessage = useCallback((from: string, text: string): void => {
@@ -168,7 +167,7 @@ export const useWalletMessages = (
 
       return success
     },
-    [connected, walletCommunication, addMessage, setStatus, logger],
+    [connected, walletCommunication, addMessage, setStatus],
   )
 
   return {

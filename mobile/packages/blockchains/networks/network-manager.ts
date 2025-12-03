@@ -19,7 +19,6 @@ export function buildNetworkManagers({
   tokenManagers: TokenManagerByNetwork
   apiMaker: ({network}: {network: Chain.SupportedNetworks}) => Api.Cardano.Api
 }): Readonly<Record<Chain.SupportedNetworks, Network.Manager>> {
-  const logger = getLogger()
   const managers = Object.entries(networkConfigs).reduce<
     Record<Chain.SupportedNetworks, Network.Manager>
   >(

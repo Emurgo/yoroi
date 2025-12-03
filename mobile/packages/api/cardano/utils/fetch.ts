@@ -25,7 +25,6 @@ export const fetchDefault = async <T = Record<string, unknown>>(
 ): Promise<T> => {
   const fullPath = `${apiBaseUrl}/${path}`
   const yoroiVersion = `${Platform.OS} / ${DeviceInfo.getVersion()}`
-  const logger = getLogger()
 
   const response = await fetchData<T>(
     {

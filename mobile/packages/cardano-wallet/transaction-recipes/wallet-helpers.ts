@@ -52,7 +52,6 @@ export async function createUtxoConsolidationTxFromWallet(
   wallet: YoroiWallet,
   params: {addressMode: Wallet.AddressMode},
 ): Promise<{cbor: string}> {
-  const logger = getLogger()
   const modernUtxos = getModernUtxosFromWallet(wallet)
   const externalAddresses = wallet
     .externalAddresses()
@@ -149,8 +148,6 @@ export async function createWithdrawalTxFromWallet(
     networkManager: Network.Manager
   },
 ): Promise<{cbor: string}> {
-  const logger = getLogger()
-
   getLogger().info(
     'createWithdrawalTxFromWallet: Starting withdrawal transaction creation',
     {
@@ -326,7 +323,6 @@ export async function createWithdrawalWithGovernanceTxFromWallet(
     drepValue: DRepValue
   },
 ): Promise<{cbor: string}> {
-  const logger = getLogger()
   const modernUtxos = getModernUtxosFromWallet(wallet)
 
   getLogger().info(

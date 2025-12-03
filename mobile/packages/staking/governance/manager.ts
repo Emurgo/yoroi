@@ -78,7 +78,6 @@ class Manager implements GovernanceManager {
 
   async getStakingKeyState(stakeKeyHash: string): Promise<StakingKeyState> {
     const {api} = this.config
-    const logger = getLogger()
     const response = await api.getStakingKeyState(stakeKeyHash)
 
     if (isLeft(response)) {

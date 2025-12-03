@@ -109,7 +109,6 @@ export const linksReducer = (
 
 /* istanbul ignore next */
 function missingInit() {
-  const logger = getLogger()
   getLogger().error('[@yoroi/links] missing initialization', {
     origin: 'links',
   })

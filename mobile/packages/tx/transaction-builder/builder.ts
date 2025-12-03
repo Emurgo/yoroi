@@ -408,8 +408,6 @@ function amountsToValue(
   amounts: Balance.Amounts,
   primaryTokenId: Portfolio.Token.Id = defaultPrimaryTokenId,
 ): Value {
-  const logger = getLogger()
-
   const adaAmount = amounts[primaryTokenId] || '0'
 
   const adaBigNum = csl.BigNum.fromStr(adaAmount)
@@ -540,8 +538,6 @@ function outputToCSL(
   output: TransactionOutput,
   primaryTokenId: Portfolio.Token.Id = defaultPrimaryTokenId,
 ): CSLTransactionOutput {
-  const logger = getLogger()
-
   const address = csl.Address.fromBech32(output.address)
   if (!address) {
     getLogger().error('outputToCSL: Invalid address', {
@@ -639,8 +635,6 @@ export async function buildTransaction(
   protocolParams: CardanoHaskellConfig,
   primaryTokenId: Portfolio.Token.Id = defaultPrimaryTokenId,
 ): Promise<UnsignedTransaction> {
-  const logger = getLogger()
-
   return CardanoMobileWrapped.cslScope((csl) => {
     // Validate inputs
     validateInputs(state)

@@ -241,7 +241,6 @@ export const setupWalletInitialContext: SetupWalletContext = freeze(
 
 /* istanbul ignore next */
 function missingInit() {
-  const logger = getLogger()
   getLogger().error('[SetupWallet] missing initialization', {
     origin: 'setup-wallet',
   })

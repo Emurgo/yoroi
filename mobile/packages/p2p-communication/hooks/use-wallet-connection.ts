@@ -23,7 +23,6 @@ export const useWalletConnection = (
   peerConnection: PeerConnectionState,
   walletCommunication: WalletCommunication | null,
 ): UseWalletConnectionResult => {
-  const logger = getLogger()
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const {peerId: _peerId, isReady: _isReady} = peerConnection
 
@@ -98,7 +97,7 @@ export const useWalletConnection = (
 
       walletCommunication.off('error', onError as EventCallback<unknown>)
     }
-  }, [walletCommunication, logger])
+  }, [walletCommunication])
 
   const disconnectWallet = useCallback(() => {
     if (!walletCommunication) {
@@ -120,7 +119,7 @@ export const useWalletConnection = (
         setStatus('error')
       }
     }
-  }, [walletCommunication, logger])
+  }, [walletCommunication])
 
   return {
     walletId,

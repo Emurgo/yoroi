@@ -16,7 +16,6 @@ type UsePeerConnectionResult = {
 export const usePeerConnection = (
   peerConnection: PeerConnection | null,
 ): UsePeerConnectionResult => {
-  const logger = getLogger()
   const [peerId, setPeerId] = useState('')
   const [status, setStatus] = useState<ConnectionStatus>('initializing')
   const [isReady, setIsReady] = useState(false)
@@ -40,7 +39,7 @@ export const usePeerConnection = (
     })
     setStatus('initializing')
     peerConnection.reconnect()
-  }, [isReady, peerConnection, logger])
+  }, [isReady, peerConnection])
 
   useEffect(() => {
     if (!peerConnection) {
@@ -129,7 +128,7 @@ export const usePeerConnection = (
 
       listenerSetupRef.current = false
     }
-  }, [peerConnection, logger])
+  }, [peerConnection])
 
   useEffect(() => {
     if (typeof document === 'undefined') {
@@ -156,7 +155,7 @@ export const usePeerConnection = (
       document.removeEventListener('visibilitychange', handleVisibilityChange)
       window.removeEventListener('focus', handleFocus)
     }
-  }, [status, handleReconnect, logger])
+  }, [status, handleReconnect])
 
   return {
     peerId,

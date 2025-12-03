@@ -50,8 +50,6 @@ export async function createDelegationTx({
   poolId,
   addressMode,
 }: CreateDelegationTxParams): Promise<{cbor: string}> {
-  const logger = getLogger()
-
   const absSlotNumber = await getAbsoluteSlotNumber()
   const changeAddressRaw = getChangeAddress(addressMode)
   const changeAddress =

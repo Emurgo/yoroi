@@ -62,8 +62,6 @@ export async function createCombinedDelegationTx({
   drepValue,
   addressMode,
 }: CreateCombinedDelegationTxParams): Promise<{cbor: string}> {
-  const logger = getLogger()
-
   const absSlotNumber = await getAbsoluteSlotNumber()
   const changeAddressRaw = getChangeAddress(addressMode)
   const changeAddress =

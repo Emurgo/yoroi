@@ -87,7 +87,6 @@ export const peerConnectionMaker = (
   deps: PeerConnectionDeps,
 ): PeerConnection => {
   let state = createInitialState('')
-  const logger = getLogger()
 
   const updateState = (updates: Partial<PeerConnectionState>): void => {
     state = freeze({...state, ...updates} as const)

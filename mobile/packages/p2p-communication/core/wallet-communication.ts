@@ -64,7 +64,6 @@ export const walletCommunicationMaker = (
   deps: WalletCommunicationDeps,
 ): WalletCommunication => {
   let state = createInitialState()
-  const logger = getLogger()
 
   const updateState = (updates: Partial<WalletCommunicationState>): void => {
     state = freeze({...state, ...updates} as const)
