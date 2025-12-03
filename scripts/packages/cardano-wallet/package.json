@@ -24,7 +24,7 @@
   "author": "EMURGO Fintech <support@emurgo.com> (https://github.com/Emurgo/yoroi)",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
-  "source": "src/index",
+  "source": "index",
   "browser": "lib/module/index",
   "types": "lib/typescript/index.d.ts",
   "files": [

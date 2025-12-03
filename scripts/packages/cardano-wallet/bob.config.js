@@ -1,5 +1,5 @@
 module.exports = {
-  source: 'src',
+  source: '.',
   output: 'lib',
   targets: [
     'commonjs',

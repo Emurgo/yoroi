@@ -112,6 +112,12 @@
       ],
       "@yoroi/tx": [
         "./packages/tx"
+      ],
+      "@yoroi/cardano-wallet": [
+        "./packages/cardano-wallet"
+      ],
+      "@yoroi/wallet-manager": [
+        "./packages/wallet-manager"
       ]
     }
   }

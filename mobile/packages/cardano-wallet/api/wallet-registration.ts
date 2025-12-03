@@ -60,10 +60,13 @@ export const extractPaymentKeyHashes = (addresses: string[]): string[] => {
 
 /**
  * Get backend-zero base URL from legacy API URL
- * @deprecated Use getBackendZeroUrl from '@yoroi/api/cardano/utils/url-mapping' instead
+ * @deprecated Use getBackendZeroUrl from '@yoroi/api' instead
  * Re-exported from package to maintain backward compatibility
  */
-export {getBackendZeroUrl} from '../../../../packages/api/cardano/utils/url-mapping'
+// Re-export getBackendZeroUrl - using relative path since it's not exported from @yoroi/api index
+// TODO: Export getBackendZeroUrl from @yoroi/api index
+import {getBackendZeroUrl} from '../../../api/cardano/utils/url-mapping'
+export {getBackendZeroUrl}
 
 /**
  * In-memory cache for wallet registrations (per session)

@@ -9,8 +9,7 @@ import {
 import {StakePoolInfoRequest, StakePoolInfosAndHistories} from '@yoroi/staking'
 import {Address, TransactionCborBase64, WalletTransaction} from '@yoroi/types'
 
-import {cardanoWalletApiMaker} from '../../../../packages/api/cardano/api-maker'
-import {WalletContext} from '../../../../packages/api/cardano/types'
+import {cardanoWalletApiMaker, WalletContext} from '@yoroi/api'
 import {getSpendingKey} from '../addressInfo/addressInfo'
 
 // Create API instances per baseApiUrl - preferences are set at initialization

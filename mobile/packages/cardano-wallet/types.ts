@@ -39,7 +39,7 @@ import {WalletChecksum as WalletChecksumType} from '@emurgo/cip4-js'
 import * as CoreTypes from '@emurgo/cross-csl-core'
 import * as CSL from '@emurgo/cross-csl-core'
 
-import {WalletEncryptedStorage} from '~/kernel/storage/EncryptedStorage'
+import {WalletEncryptedStorage} from './dependencies'
 
 import {AddressChain} from './account-manager/account-manager'
 import {ReadOnlyAddressChain} from './account-manager/read-only-account-manager'
@@ -215,6 +215,13 @@ export interface YoroiWallet {
         rewardAddresses: string[]
       }
     | undefined
+
+  // Internal dependencies (exposed for extensions)
+  _dependencies: {
+    toLedgerSignRequest: CardanoWalletDependencies['toLedgerSignRequest']
+    createCollateralEntry: CardanoWalletDependencies['createCollateralEntry']
+    toBalanceManagerSyncArgs: CardanoWalletDependencies['toBalanceManagerSyncArgs']
+  }
 }
 
 export const isYoroiWallet = (wallet: unknown): wallet is YoroiWallet => {
