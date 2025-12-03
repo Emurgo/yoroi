@@ -1,5 +1,6 @@
 import {AppApi} from '@yoroi/api'
 import {cardanoConfig, protocolParamsPlaceholder} from '@yoroi/blockchains'
+import {CardanoMobile, YoroiWallet} from '@yoroi/cardano-wallet'
 import {createPrimaryTokenInfo} from '@yoroi/portfolio'
 import {
   StakePoolInfoAndHistory,
@@ -19,11 +20,10 @@ import {
 import {noop} from 'lodash'
 import {Observable, Subscription} from 'rxjs'
 
-import {YoroiWallet} from '../../wallets/cardano/types'
-import {mockEncryptedStorage} from '../../wallets/mocks/storage'
-import {mockTransactionInfos} from '../../wallets/mocks/transaction'
-import {utxos} from '../../wallets/mocks/utxos'
-import {CardanoMobile} from '../../wallets/wallets'
+// Note: These imports need to be relative since they're not exported from the package
+import {mockEncryptedStorage} from '../cardano-wallet/mocks/mocks/storage'
+import {mockTransactionInfos} from '../cardano-wallet/mocks/mocks/transaction'
+import {utxos} from '../cardano-wallet/mocks/mocks/utxos'
 import {networkManagers} from './common/constants'
 
 const stakePoolId = 'af22f95915a19cd57adb14c558dcc4a175f60c6193dc23b8bd2d8beb'
@@ -81,6 +81,17 @@ const wallet: YoroiWallet = {
     throw new Error('Method not implemented.')
   },
   networkManager: networkManagers.mainnet,
+  _dependencies: {
+    toLedgerSignRequest: async () => {
+      throw new Error('Mock: toLedgerSignRequest not implemented')
+    },
+    createCollateralEntry: (_wallet: YoroiWallet, _amount?: string) => {
+      throw new Error('Mock: createCollateralEntry not implemented')
+    },
+    toBalanceManagerSyncArgs: () => {
+      throw new Error('Mock: toBalanceManagerSyncArgs not implemented')
+    },
+  },
   isEmpty: () => false,
   hasOnlyPrimary: () => false,
   id: 'wallet-id',

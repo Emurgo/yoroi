@@ -26,13 +26,30 @@ describe('wallet-creation', () => {
   const testMnemonic =
     'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about'
 
+  const mockMakeWalletEncryptedStorage = jest.fn().mockReturnValue({
+    xpriv: {
+      read: jest.fn().mockResolvedValue({value: 'mock-root-key'}),
+      write: jest.fn().mockResolvedValue(undefined),
+      remove: jest.fn().mockResolvedValue(undefined),
+    },
+    xpub: {
+      read: jest.fn().mockResolvedValue(null),
+      write: jest.fn().mockResolvedValue(undefined),
+      remove: jest.fn().mockResolvedValue(undefined),
+    },
+    clear: jest.fn().mockResolvedValue(undefined),
+  })
+
   describe('createWalletFromMnemonic', () => {
     it('should create wallet meta from mnemonic', async () => {
-      const meta = await createWalletFromMnemonic({
-        ...mockOptions,
-        mnemonic: testMnemonic,
-        password: 'test-password',
-      })
+      const meta = await createWalletFromMnemonic(
+        {
+          ...mockOptions,
+          mnemonic: testMnemonic,
+          password: 'test-password',
+        },
+        mockMakeWalletEncryptedStorage,
+      )
 
       expect(meta).toBeDefined()
       expect(meta.id).toBeDefined()
@@ -47,12 +64,15 @@ describe('wallet-creation', () => {
       const accountPubKeyHex =
         '8e4e2f11b6ac2a269913286e26339779ab8767579d18d173cdd324929d94e2c43e3ec212cc8a36ed9860579dfe1e3ef4d6de778c5dbdd981623b48727cd96247'
 
-      const meta = await createWalletFromXPub({
-        ...mockOptions,
-        accountPubKeyHex,
-        hwDeviceInfo: null,
-        isReadOnly: false,
-      })
+      const meta = await createWalletFromXPub(
+        {
+          ...mockOptions,
+          accountPubKeyHex,
+          hwDeviceInfo: null,
+          isReadOnly: false,
+        },
+        mockMakeWalletEncryptedStorage,
+      )
 
       expect(meta).toBeDefined()
       expect(meta.id).toBeDefined()
@@ -64,12 +84,15 @@ describe('wallet-creation', () => {
       const accountPubKeyHex =
         '8e4e2f11b6ac2a269913286e26339779ab8767579d18d173cdd324929d94e2c43e3ec212cc8a36ed9860579dfe1e3ef4d6de778c5dbdd981623b48727cd96247'
 
-      const meta = await createWalletFromXPub({
-        ...mockOptions,
-        accountPubKeyHex,
-        hwDeviceInfo: null,
-        isReadOnly: true,
-      })
+      const meta = await createWalletFromXPub(
+        {
+          ...mockOptions,
+          accountPubKeyHex,
+          hwDeviceInfo: null,
+          isReadOnly: true,
+        },
+        mockMakeWalletEncryptedStorage,
+      )
 
       expect(meta.isReadOnly).toBe(true)
     })
@@ -82,11 +105,14 @@ describe('wallet-creation', () => {
       const rootKeyBytes = getMasterKeyFromMnemonic(testMnemonic)
       const rootKeyHex = Buffer.from(rootKeyBytes).toString('hex')
 
-      const meta = await createWalletFromRootKey({
-        ...mockOptions,
-        rootKeyHex,
-        password: 'test-password',
-      })
+      const meta = await createWalletFromRootKey(
+        {
+          ...mockOptions,
+          rootKeyHex,
+          password: 'test-password',
+        },
+        mockMakeWalletEncryptedStorage,
+      )
 
       expect(meta).toBeDefined()
       expect(meta.id).toBeDefined()

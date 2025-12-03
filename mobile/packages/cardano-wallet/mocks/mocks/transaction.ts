@@ -8,11 +8,10 @@ import {
   TokenId,
   TransactionHash,
 } from '@yoroi/types'
+// TransactionInfo is kept internally for deprecated code - import directly from source
+import type {TransactionInfo} from '@yoroi/types'
 
 import BigNumber from 'bignumber.js'
-
-// TransactionInfo is kept internally for deprecated code - import directly from source
-import type {TransactionInfo} from '../../../packages/types/wallet/transactions'
 
 /**
  * Helper function to create a mock TransactionInfo without individual field casts

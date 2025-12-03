@@ -130,6 +130,11 @@ export const getAddressing = (
   throwLoggedError(getLogger())(
     `getAddressing: missing address info for: ${address}`,
   )
+  // This will never be reached, but TypeScript needs it for the return type
+  return {
+    path: [],
+    startLevel: derivationConfig.keyLevel.purpose,
+  }
 }
 
 /**
@@ -147,8 +152,10 @@ export const getFirstPaymentAddress = (
   const address = CardanoMobile.BaseAddress.fromAddress(addr)
   if (!address) {
     throwLoggedError(getLogger())('getFirstPaymentAddress: invalid address')
+    // This will never be reached, but TypeScript needs it for the return type
+    throw new Error('Invalid address')
   }
-  return address
+  return address as CSL.BaseAddress
 }
 
 /**

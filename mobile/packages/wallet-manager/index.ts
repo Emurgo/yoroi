@@ -17,7 +17,7 @@ export {useCreateWalletMnemonic} from './hooks/useCreateWalletMnemonic'
 export {useCreateWalletXPub} from './hooks/useCreateWalletXPub'
 export {useCreateReadOnlyWalletFromAddresses} from './hooks/useCreateReadOnlyWalletFromAddresses'
 export {useCreateWalletFromRootKey} from './hooks/useCreateWalletFromRootKey'
-export {useDisableEasyConfirmation} from './hooks/useDisableEasyConfirmation'
+// useDisableEasyConfirmation removed - it imports from app and should be moved to app
 export {useGenerateWalletLink} from './hooks/useGenerateWalletLink'
 export {useLaunchWalletAfterSyncing} from './hooks/useLaunchWalletAfterSyncing'
 export {usePlate} from './hooks/usePlate'
@@ -38,7 +38,7 @@ export {
   useWalletManagerSelector,
 } from './context/WalletManagerProvider'
 export {
-  AutomaticWalletOpeningProvider,
+  AutomaticWalletOpenerProvider,
   useAutomaticWalletOpener,
 } from './context/AutomaticWalletOpeningProvider'
 export {WalletManagerHydrationWrapper} from './context/WalletManagerHydrationWrapper'
@@ -65,4 +65,7 @@ export * from './lifecycle/wallet-lifecycle'
 // Common
 export * from './common/constants'
 export * from './common/validators/wallet-meta'
+
+// Mocks (for testing)
+export {walletMocks} from './wallet.mock'
 

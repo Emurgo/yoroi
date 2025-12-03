@@ -241,7 +241,10 @@ export const makeWalletManager = (
     if (!walletMeta)
       throwLoggedError(getLogger())('WalletManager: updateMeta meta not found')
 
-    const newMeta: Wallet.Meta = {...walletMeta, ...meta}
+    const newMeta: Wallet.Meta = {
+      ...walletMeta,
+      ...meta,
+    } as Wallet.Meta
     const newMetas = new Map(stateSubjects.walletMetas.value)
     newMetas.set(id, newMeta)
     updateWalletMetas(stateSubjects, newMetas)
@@ -540,14 +543,14 @@ export const makeWalletManager = (
       const encryptedStorage = makeWalletEncryptedStorage(id)
       const accountPubKeyHex = await encryptedStorage.xpub.read(accountVisual)
 
-      if (!accountPubKeyHex)
+      if (!accountPubKeyHex || accountPubKeyHex === null)
         throwLoggedError(getLogger())(
           'WalletManager: loadWallet accountPubKeyHex not found',
         )
 
       const wallet = await walletFactory.build({
         id,
-        accountPubKeyHex,
+        accountPubKeyHex: accountPubKeyHex || undefined,
         accountVisual,
       })
 
@@ -1112,17 +1115,20 @@ export const makeWalletManager = (
       accountVisual: number
     }) {
       const network = stateSubjects.selectedNetwork.value
-      const meta = await createWalletFromXPubFn({
-        name,
-        accountPubKeyHex,
-        implementation,
-        hwDeviceInfo,
-        isReadOnly,
-        addressMode,
-        accountVisual,
-        network,
-        version: WALLET_MANAGER_VERSION,
-      })
+      const meta = await createWalletFromXPubFn(
+        {
+          name,
+          accountPubKeyHex,
+          implementation,
+          hwDeviceInfo,
+          isReadOnly,
+          addressMode,
+          accountVisual,
+          network,
+          version: WALLET_MANAGER_VERSION,
+        },
+        cardanoWalletDependencies.makeWalletEncryptedStorage,
+      )
 
       // For read-only wallets, derive and store at least one address
       // This is required for loadWallet to work properly
@@ -1406,18 +1412,22 @@ export const makeWalletManager = (
         throwLoggedError(getLogger())(
           'WalletManager: deriveAndStoreAccount wallet not found',
         )
+        throw new Error('Wallet not found') // TypeScript needs this
       }
 
       const encryptedStorage = makeWalletEncryptedStorage(id)
       const rootKeyResult = await encryptedStorage.xpriv.read(password)
       const rootKeyHex = rootKeyResult.value
 
-      return deriveAndStoreAccount({
-        id,
-        accountVisual,
-        password: rootKeyHex,
-        implementation: meta.implementation,
-      })
+      return deriveAndStoreAccount(
+        {
+          id,
+          accountVisual,
+          password: rootKeyHex,
+          implementation: meta.implementation,
+        },
+        cardanoWalletDependencies.makeWalletEncryptedStorage,
+      )
     },
 
     async createWalletFromRootKey({
@@ -1578,10 +1588,12 @@ export const makeWalletManager = (
     },
 
     async disableEasyConfirmation(id: YoroiWallet['id']) {
-      if (!keychainManager)
+      if (!keychainManager) {
         throwLoggedError(getLogger())(
           'WalletManager: disableEasyConfirmation KeychainManager not available',
         )
+        throw new Error('KeychainManager not available') // TypeScript needs this
+      }
 
       await keychainManager.removeWalletKey(id)
       updateMeta(id, {
@@ -1590,10 +1602,12 @@ export const makeWalletManager = (
     },
 
     async enableEasyConfirmation(wallet: YoroiWallet, password: string) {
-      if (!keychainManager)
+      if (!keychainManager) {
         throwLoggedError(getLogger())(
           'WalletManager: enableEasyConfirmation KeychainManager not available',
         )
+        throw new Error('KeychainManager not available') // TypeScript needs this
+      }
 
       const rootKey = await wallet.encryptedStorage.xpriv.read(password)
       keychainManager.setWalletKey(wallet.id, rootKey.value)

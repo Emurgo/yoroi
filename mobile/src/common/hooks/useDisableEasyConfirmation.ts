@@ -1,10 +1,11 @@
+import {useWalletManager} from '@yoroi/wallet-manager'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
+
 import * as React from 'react'
 
 import {useAuth} from '~/features/Auth/context/AuthProvider'
-import {usePromise} from '~/hooks/usePromise'
 
-import {useWalletManager} from '../context/WalletManagerProvider'
-import {useSelectedWallet} from './useSelectedWallet'
+import {usePromise} from './usePromise'
 
 export const useDisableEasyConfirmation = () => {
   const {walletManager} = useWalletManager()

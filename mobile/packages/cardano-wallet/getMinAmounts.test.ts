@@ -1,8 +1,8 @@
 import {protocolParamsPlaceholder} from '@yoroi/blockchains'
 import {Balance, TokenId} from '@yoroi/types'
 
-import {mocks as walletMocks} from '../mocks/wallet'
 import {getMinAmounts, withMinAmounts, withPrimaryToken} from './getMinAmounts'
+import {mocks as walletMocks} from './mocks/mocks/wallet'
 
 describe('withMinAmounts()', () => {
   it('should return the min amount quantity', async () => {

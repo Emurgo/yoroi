@@ -2,8 +2,8 @@ import {Balance} from '@yoroi/types'
 
 import {Buffer} from 'buffer'
 
-import {mocks} from '../../mocks/wallet'
 import {getMasterKeyFromMnemonic} from '../mnemonic/mnemonic'
+import {mocks} from '../mocks/mocks/wallet'
 import {cip95ExtensionMaker} from './cip95'
 
 describe('cip95ExtensionMaker', () => {

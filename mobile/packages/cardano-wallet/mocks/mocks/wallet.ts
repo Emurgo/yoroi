@@ -35,6 +35,8 @@ import {
   Wallet,
   WalletTransaction,
 } from '@yoroi/types'
+// TransactionInfo is kept internally for deprecated code - import directly from source
+import type {TransactionInfo} from '@yoroi/types'
 
 import * as CSL from '@emurgo/cross-csl-core'
 import BigNumber from 'bignumber.js'
@@ -43,11 +45,9 @@ import {Observable} from 'rxjs'
 
 import {buildPortfolioTokenManagers} from '~/features/Portfolio/common/helpers/build-token-managers'
 
-// TransactionInfo is kept internally for deprecated code - import directly from source
-import type {TransactionInfo} from '../../../packages/types/wallet/transactions'
+import type {CardanoTypes, WalletSubscription, YoroiWallet} from '../../types'
 import {getTokenFingerprint} from '../../utils/format'
 import {CardanoMobile} from '../../wrappedCsl'
-import {CardanoTypes, WalletSubscription, YoroiWallet} from '../cardano/types'
 import {mockEncryptedStorage} from './storage'
 import {mockTransactionInfo, mockTransactionInfos} from './transaction'
 import {utxos} from './utxos'
@@ -158,6 +158,17 @@ const wallet: YoroiWallet = {
     throw new Error('not implemented: getStakingInfo')
   },
   encryptedStorage: mockEncryptedStorage,
+  _dependencies: {
+    toLedgerSignRequest: async () => {
+      throw new Error('Mock: toLedgerSignRequest not implemented')
+    },
+    createCollateralEntry: (_wallet: YoroiWallet, _amount?: string) => {
+      throw new Error('Mock: createCollateralEntry not implemented')
+    },
+    toBalanceManagerSyncArgs: () => {
+      throw new Error('Mock: toBalanceManagerSyncArgs not implemented')
+    },
+  },
   ledgerSupportsCIP36: async () => {
     return true
   },

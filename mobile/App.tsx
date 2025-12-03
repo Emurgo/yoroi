@@ -16,7 +16,7 @@ import {ThemeProvider} from '@yoroi/theme'
 import {TransferProvider} from '@yoroi/transfer'
 import {Resolver} from '@yoroi/types'
 import {
-  AutomaticWalletOpeningProvider as AutomaticWalletOpenerProvider,
+  AutomaticWalletOpenerProvider,
   WalletManagerHydrationWrapper,
   WalletManagerProvider,
   useSelectedNetwork,

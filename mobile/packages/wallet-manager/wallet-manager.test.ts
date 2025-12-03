@@ -41,6 +41,27 @@ describe('walletManager', () => {
     const walletManager = makeWalletManager({
       rootStorage,
       networkManagers,
+      cardanoWalletDependencies: {
+        rootStorage,
+        makeWalletEncryptedStorage: jest.fn().mockReturnValue({
+          xpriv: {
+            read: jest.fn(),
+            write: jest.fn(),
+            remove: jest.fn(),
+          },
+          xpub: {
+            read: jest.fn(),
+            write: jest.fn(),
+            remove: jest.fn(),
+          },
+          clear: jest.fn(),
+        }),
+        buildPortfolioBalanceManager: jest.fn(),
+        toBalanceManagerSyncArgs: jest.fn(),
+        makeMemosManager: jest.fn(),
+        toLedgerSignRequest: jest.fn(),
+        createCollateralEntry: jest.fn(),
+      },
     })
     await expect(walletManager.hydrate()).resolves.toEqual({
       wallets: [],

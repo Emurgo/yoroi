@@ -1,6 +1,6 @@
 import {hex} from '@yoroi/common'
 
-import {WalletEncryptedStorage} from '~/kernel/storage/EncryptedStorage'
+import type {WalletEncryptedStorage} from '../../dependencies'
 
 export const mockEncryptedStorage: WalletEncryptedStorage = {
   xpriv: {

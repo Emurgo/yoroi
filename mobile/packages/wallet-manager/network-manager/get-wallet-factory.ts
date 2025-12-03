@@ -1,5 +1,5 @@
-import {makeCardanoWallet} from '@yoroi/cardano-wallet'
 import type {CardanoWalletDependencies} from '@yoroi/cardano-wallet'
+import {makeCardanoWallet} from '@yoroi/cardano-wallet'
 import {getLogger, throwLoggedError} from '@yoroi/common'
 import {Chain, Wallet} from '@yoroi/types'
 
@@ -38,6 +38,16 @@ export function createWalletFactories(
     'cardano-bip44',
     dependencies,
   )
+  const ShelleyWalletPreview = makeCardanoWallet(
+    networkManagers[Chain.Network.Preview],
+    'cardano-cip1852',
+    dependencies,
+  )
+  const ByronWalletPreview = makeCardanoWallet(
+    networkManagers[Chain.Network.Preview],
+    'cardano-bip44',
+    dependencies,
+  )
 
   return freeze({
     [Chain.Network.Mainnet]: {
@@ -47,6 +57,10 @@ export function createWalletFactories(
     [Chain.Network.Preprod]: {
       'cardano-cip1852': ShelleyWalletTestnet,
       'cardano-bip44': ByronWalletTestnet,
+    },
+    [Chain.Network.Preview]: {
+      'cardano-cip1852': ShelleyWalletPreview,
+      'cardano-bip44': ByronWalletPreview,
     },
   } as const)
 }
@@ -86,19 +100,15 @@ export function getWalletFactory({
     )
   }
 
-  const networkImplementations = walletFactoryMap[network]
+  const networkImplementations = walletFactoryMap?.[network]
   if (!networkImplementations) {
-    if (network === Chain.Network.Preview) {
-      throwLoggedError(getLogger())(
-        'getWalletFactory: Preview network is not supported in mobile app',
-      )
-    }
     throwLoggedError(getLogger())(
       'getWalletFactory: Unable to find network implementations',
     )
+    throw new Error('Network implementations not found') // TypeScript needs this
   }
 
-  const factory = networkImplementations?.[implementation]
+  const factory = networkImplementations[implementation]
   if (!factory)
     throwLoggedError(getLogger())(
       'getWalletFactory: Unable to find wallet factory',
