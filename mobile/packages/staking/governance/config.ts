@@ -40,21 +40,29 @@ export const GOVERNANCE_YOROI_DREP_ID_HEX_MAINNET =
 export const GOVERNANCE_YOROI_DREP_ID_HEX_PREPROD =
   'a33c54a7429f472d812e604810dddbe7edc390dd1be8d4c0f8aecb20'
 
+// NOTE: Preview network uses the same DRep ID as Preprod
+export const GOVERNANCE_YOROI_DREP_ID_HEX_PREVIEW =
+  'a33c54a7429f472d812e604810dddbe7edc390dd1be8d4c0f8aecb20'
+
+/**
+ * Network-specific Yoroi DRep ID hex hashes
+ * Use this object for direct property access: governanceYoroiDrepIdHex[network]
+ */
+export const governanceYoroiDrepIdHex: Readonly<
+  Record<Chain.SupportedNetworks, string>
+> = {
+  [Chain.Network.Mainnet]: GOVERNANCE_YOROI_DREP_ID_HEX_MAINNET,
+  [Chain.Network.Preprod]: GOVERNANCE_YOROI_DREP_ID_HEX_PREPROD,
+  [Chain.Network.Preview]: GOVERNANCE_YOROI_DREP_ID_HEX_PREVIEW,
+} as const
+
 /**
  * Get the Yoroi DRep ID hex hash based on network
- * @param network - The network (Mainnet or Preprod)
+ * @param network - The network (Mainnet, Preprod, or Preview)
  * @returns The hex hash of the Yoroi DRep ID for the given network
  */
 export const getYoroiDrepIdHex = (network: Chain.SupportedNetworks): string => {
-  switch (network) {
-    case Chain.Network.Mainnet:
-      return GOVERNANCE_YOROI_DREP_ID_HEX_MAINNET
-    case Chain.Network.Preprod:
-      return GOVERNANCE_YOROI_DREP_ID_HEX_PREPROD
-    default:
-      // For Preview or other networks, default to mainnet
-      return GOVERNANCE_YOROI_DREP_ID_HEX_MAINNET
-  }
+  return governanceYoroiDrepIdHex[network]
 }
 
 // Legacy export for backward compatibility

@@ -1,4 +1,3 @@
-import {GovernanceProvider} from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
@@ -13,21 +12,19 @@ import {useRemoteConfig} from '~/hooks/useRemoteConfig'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
-import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Space} from '~/ui/Space/Space'
 
 import {useVotingOptions} from '../../common/helpers'
-import {EnterDrepIdModal} from '../EnterDrepIdModal/EnterDrepIdModal'
+import {useOpenDrepIdModal} from '../EnterDrepIdModal/useOpenDrepIdModal'
 
 export const VotingOptionsScreen = () => {
   const {config} = useRemoteConfig()
   const isYoroiDrepBannerEnabled = config?.banners?.yoroiDrep?.display ?? false
   const strings = useStrings()
   const {atoms: ta, palette: p} = useTheme()
-  const {openModal} = useModal()
+  const {openDrepIdModal} = useOpenDrepIdModal()
 
   const {
-    manager,
     isPending,
     isDelegatingToYoroiDrep,
     isDelegatingToOtherDrep,
@@ -41,26 +38,8 @@ export const VotingOptionsScreen = () => {
     handleNoConfidence,
   } = useVotingOptions()
 
-  const openDRepIdModal = (
-    onSubmit: (options: {
-      hash: string
-      type: 'key' | 'script'
-      CIP105: boolean
-    }) => void,
-  ) => {
-    openModal({
-      title: strings.staking.enterDRepID,
-      content: (
-        <GovernanceProvider manager={manager}>
-          <EnterDrepIdModal onSubmit={onSubmit} />
-        </GovernanceProvider>
-      ),
-      height: 650,
-    })
-  }
-
   const onDelegate = () => {
-    openDRepIdModal(handleDelegate)
+    openDrepIdModal(handleDelegate)
   }
 
   const showYoroiDrep = isYoroiDrepBannerEnabled

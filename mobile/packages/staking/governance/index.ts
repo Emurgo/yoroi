@@ -3,8 +3,10 @@ export {
   GOVERNANCE_YOROI_DREP_ID_HEX,
   GOVERNANCE_YOROI_DREP_ID_HEX_MAINNET,
   GOVERNANCE_YOROI_DREP_ID_HEX_PREPROD,
-  getYoroiDrepIdHex,
+  GOVERNANCE_YOROI_DREP_ID_HEX_PREVIEW,
   YOROI_TOP_STAKE_POOL_ID,
+  getYoroiDrepIdHex,
+  governanceYoroiDrepIdHex,
 } from './config'
 export {
   convertDrepHashToCIP105Format,
