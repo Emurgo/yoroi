@@ -1,4 +1,4 @@
-import {governanceYoroiDrepIdHex} from '@yoroi/staking'
+import {getYoroiDrepIdHex} from '@yoroi/staking'
 import {Wallet} from '@yoroi/types'
 
 import {Certificate} from '@emurgo/cross-csl-core'
@@ -104,7 +104,7 @@ export const useGovernanceVoteFlow = ({
 
   const setDelegatePending = (options: DelegateOptions) => {
     const pendingVoteValue =
-      options.hash === governanceYoroiDrepIdHex[wallet.networkManager.network]
+      options.hash === getYoroiDrepIdHex(wallet.networkManager.network)
         ? 'delegate-yoroi'
         : 'delegate-other'
     setPendingVote(pendingVoteValue)

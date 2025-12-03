@@ -1,6 +1,6 @@
 import {isNonNullable} from '@yoroi/common'
 import {
-  governanceYoroiDrepIdHex,
+  getYoroiDrepIdHex,
   useDelegationCertificate,
   useStakingKeyState,
   useVotingCertificate,
@@ -73,8 +73,7 @@ export const ChangeVoteScreen = () => {
   const handleDelegateToYoroi = async () => {
     if (isPending) return
     const stakingKey = wallet.getStakingKey()
-    const yoroiDrepIdHex =
-      governanceYoroiDrepIdHex[wallet.networkManager.network]
+    const yoroiDrepIdHex = getYoroiDrepIdHex(wallet.networkManager.network)
 
     const options = {
       hash: yoroiDrepIdHex,
@@ -120,7 +119,7 @@ export const ChangeVoteScreen = () => {
     voteKind === 'delegate' && action != null ? action.hash : undefined
   const isDelegatingNotToYoroiDrep =
     voteKind === 'delegate' &&
-    voteHash !== governanceYoroiDrepIdHex[wallet.networkManager.network]
+    voteHash !== getYoroiDrepIdHex(wallet.networkManager.network)
 
   return (
     <ScrollView style={[a.flex_1, a.px_lg, ta.bg_color_max]}>

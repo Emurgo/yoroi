@@ -1,4 +1,4 @@
-import {governanceYoroiDrepIdHex} from '@yoroi/staking'
+import {getYoroiDrepIdHex} from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import {LinearGradient} from 'expo-linear-gradient'
@@ -51,10 +51,7 @@ export const YoroiDrepCard = ({
     },
   } = useSelectedWallet()
 
-  const drepId = formatDrepHashToCIP129Format(
-    governanceYoroiDrepIdHex[network],
-    'key',
-  )
+  const drepId = formatDrepHashToCIP129Format(getYoroiDrepIdHex(network), 'key')
 
   const displayId = truncateId ? truncateDrepId(drepId) : drepId
 

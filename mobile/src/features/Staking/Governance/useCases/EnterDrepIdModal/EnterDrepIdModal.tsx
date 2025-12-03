@@ -1,9 +1,5 @@
 import {isNonNullable} from '@yoroi/common'
-import {
-  governanceYoroiDrepIdHex,
-  parseDrepId,
-  useIsValidDRepID,
-} from '@yoroi/staking'
+import {getYoroiDrepIdHex, parseDrepId, useIsValidDRepID} from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
@@ -98,7 +94,7 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
 
   const handleDelegateToYoroi = () => {
     onSubmit?.({
-      hash: governanceYoroiDrepIdHex[network],
+      hash: getYoroiDrepIdHex(network),
       type: 'key',
       CIP105: false,
     })
