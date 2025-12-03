@@ -8,7 +8,7 @@ import {Buffer} from 'buffer'
 import {uniqWith} from 'lodash'
 
 import {getLogger, throwLoggedError} from '@yoroi/common'
-import {CardanoMobile} from '@emurgo/cross-csl-mobile'
+import {CardanoMobile} from '../wrappedCsl'
 
 import {CardanoTypes, YoroiWallet} from '../types'
 

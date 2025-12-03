@@ -18,7 +18,7 @@ import {
 } from '~/kernel/storage/storages'
 import {ModalProvider} from '~/ui/Modal/context/ModalContext'
 
-import {BackgroundTimerProvider} from './src/hooks/BackgroundTimerContext'
+import {BackgroundTimerProvider} from '~/common/providers/BackgroundTimerContext'
 
 export function PlatformShell({children}: React.PropsWithChildren) {
   const [metricsEnabled, setMetricsEnabled] = React.useState<boolean>(

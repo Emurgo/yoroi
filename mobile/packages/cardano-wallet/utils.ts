@@ -13,7 +13,7 @@ import {Buffer} from 'buffer'
 
 import {getLogger} from '@yoroi/common'
 
-import {Amounts} from '../utils/utils'
+import {Amounts} from './utils/utils'
 import {identifierToCardanoAsset} from './assetHelpers'
 import {withMinAmounts} from './getMinAmounts'
 import {CardanoTypes, YoroiWallet} from './types'

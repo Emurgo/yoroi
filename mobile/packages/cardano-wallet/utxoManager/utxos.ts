@@ -3,7 +3,7 @@ import {first} from '@yoroi/common'
 
 import BigNumber from 'bignumber.js'
 
-import {asQuantity} from './utils/utils'
+import {asQuantity} from '../utils/utils'
 
 import {CollateralConfig} from './types'
 

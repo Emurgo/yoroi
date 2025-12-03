@@ -17,6 +17,7 @@ import {getLogger, throwLoggedError} from '@yoroi/common'
 import {makeWalletEncryptedStorage} from '~/kernel/storage/EncryptedStorage'
 import {Keychain} from '~/kernel/storage/Keychain'
 import {rootStorage} from '~/kernel/storage/storages'
+import {createCardanoWalletDependencies} from '~/common/wallet-dependencies'
 import {deriveAddressFromXPub} from '@yoroi/cardano-wallet/account-manager/derive-address-from-xpub'
 import {keyManager} from '@yoroi/cardano-wallet/key-manager/key-manager'
 import {WalletEvent, YoroiWallet} from '@yoroi/cardano-wallet/types'
@@ -1630,4 +1631,5 @@ export const walletManager = makeWalletManager({
   networkManagers,
   rootStorage,
   keychainManager: Keychain,
+  cardanoWalletDependencies: createCardanoWalletDependencies(),
 })

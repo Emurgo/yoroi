@@ -29,7 +29,7 @@ import TransportBLE from '@ledgerhq/react-native-hw-transport-ble'
 import {BleError} from 'react-native-ble-plx'
 
 import {getLogger} from '@yoroi/common'
-import {HARDWARE_WALLETS} from '~/wallets/hw/hw'
+import {HARDWARE_WALLETS} from './hw/hw'
 
 // Re-export for tests
 export {DeprecatedAdaAppError}

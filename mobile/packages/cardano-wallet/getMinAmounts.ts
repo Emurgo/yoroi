@@ -3,7 +3,7 @@ import {Address, Balance, Chain, Portfolio} from '@yoroi/types'
 
 import type {Address as CSLAddress} from '@emurgo/cross-csl-core'
 
-import {Amounts, Quantities, asQuantity} from '../utils/utils'
+import {Amounts, Quantities, asQuantity} from './utils/utils'
 import {cardanoValueFromAmounts} from './cardanoValueFromAmounts'
 import {CardanoMobileWrapped} from './wrappedCsl'
 

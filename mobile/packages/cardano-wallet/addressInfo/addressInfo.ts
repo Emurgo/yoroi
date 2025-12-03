@@ -1,6 +1,6 @@
 import {Address} from '@yoroi/types'
 
-import {CardanoMobile} from '@emurgo/cross-csl-mobile'
+import {CardanoMobile} from '../wrappedCsl'
 
 import {CardanoTypes} from '../types'
 

@@ -25,7 +25,7 @@ import {
 } from '@yoroi/types'
 
 import {CardanoTypes} from './types'
-import {CardanoMobileWrapped} from './wrappedCsl'
+import {CardanoMobileWrapped} from '../wrappedCsl'
 
 export type CreateUnsignedGovernanceTxParams = {
   utxos: ModernUtxo[]

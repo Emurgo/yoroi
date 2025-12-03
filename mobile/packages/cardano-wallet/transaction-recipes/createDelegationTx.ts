@@ -18,7 +18,7 @@ import {Address, Branded, KeyHash, Portfolio, Wallet} from '@yoroi/types'
 import type {PublicKey} from '@emurgo/cross-csl-core'
 import BigNumber from 'bignumber.js'
 
-import {CardanoMobileWrapped} from './wrappedCsl'
+import {CardanoMobileWrapped} from '../wrappedCsl'
 
 export type CreateDelegationTxParams = {
   utxos: ModernUtxo[]

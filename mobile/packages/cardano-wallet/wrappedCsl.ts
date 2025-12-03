@@ -9,6 +9,10 @@ import {init} from '@emurgo/cross-csl-mobile'
 
 const cardano = init('wrappedCSL')
 
+// Export CardanoMobile for direct use (legacy compatibility)
+// Prefer CardanoMobileWrapped.cslScope for new code
+export const CardanoMobile = init('global')
+
 type CslPointer = {ptr: number; free: () => void}
 
 export const wrappedCsl = (): {csl: WasmModuleProxy; release: VoidFunction} => {

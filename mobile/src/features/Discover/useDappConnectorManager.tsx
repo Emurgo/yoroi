@@ -268,7 +268,9 @@ export const useDappConnectorManager = () => {
         )
 
         // Build the reorganisation transaction
-        const cip30 = cip30ExtensionMaker(wallet, meta)
+        const cip30 = cip30ExtensionMaker(wallet, meta, {
+          createCollateralEntry: (wallet as any)._dependencies.createCollateralEntry,
+        })
         cip30
           .buildReorganisationTx(value)
           .then((cbor) => {
@@ -458,7 +460,9 @@ const useSignDataWithHW = () => {
           confirmHWConnection({
             onConfirm: async ({transportType, deviceInfo}) => {
               try {
-                const cip30 = cip30LedgerExtensionMaker(wallet, meta)
+                const cip30 = cip30LedgerExtensionMaker(wallet, meta, {
+                  toLedgerSignRequest: (wallet as any)._dependencies.toLedgerSignRequest,
+                })
                 const result = await cip30.signData(
                   address,
                   payload,

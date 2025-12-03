@@ -17,7 +17,7 @@ import {Address, Portfolio, PublicKeyHex, Wallet} from '@yoroi/types'
 import type {BaseAddress, PublicKey} from '@emurgo/cross-csl-core'
 import {Buffer} from 'buffer'
 
-import {CardanoMobile} from '@emurgo/cross-csl-mobile'
+import {CardanoMobile} from '../wrappedCsl'
 
 export type CreateVotingRegTxParams = {
   utxos: ModernUtxo[]

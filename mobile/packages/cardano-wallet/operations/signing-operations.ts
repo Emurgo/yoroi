@@ -7,7 +7,7 @@ import {Wallet} from '@yoroi/types'
 import * as CSL from '@emurgo/cross-csl-core'
 import {Buffer} from 'buffer'
 
-import {CardanoMobile} from '@emurgo/cross-csl-mobile'
+import {CardanoMobile} from '../wrappedCsl'
 import {CardanoMobileWrapped} from '../wrappedCsl'
 
 /**

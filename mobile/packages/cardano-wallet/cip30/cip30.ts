@@ -1,6 +1,7 @@
 import {RawUtxo, toAssetNameHex, toPolicyId} from '@yoroi/api'
 import {cardanoConfig} from '@yoroi/blockchains'
 import {isHex} from '@yoroi/common'
+import {getLogger} from '@yoroi/common'
 import {
   CIP30TransactionError,
   RemoteUnspentOutput,
@@ -17,17 +18,13 @@ import {BigNumber} from 'bignumber.js'
 import {Buffer} from 'buffer'
 import * as _ from 'lodash'
 
-import {createCollateralEntry} from '~/features/Settings/ui/screens/ChangeWalletSettingsScreen/ManageCollateralScreen/helpers'
-import {getLogger} from '@yoroi/common'
-import {Utxos, asQuantity} from './utils/utils'
-import {CardanoMobile} from '@emurgo/cross-csl-mobile'
-
 import {identifierToCardanoAsset} from '../assetUtils'
 import * as cip8 from '../cip8/cip8'
 import {
   getDerivationPathForAddress,
   getTransactionSigners,
 } from '../common/signatureUtils'
+import {CardanoWalletDependencies} from '../dependencies'
 import {createSendTxFromWallet} from '../transaction-recipes'
 import {Pagination, YoroiWallet} from '../types'
 import {copyFromCSL, copyMultipleFromCSL, createRawTxSigningKey} from '../utils'
@@ -36,7 +33,8 @@ import {
   findCollateralCandidates,
   utxosMaker,
 } from '../utxoManager/utxos'
-import {CardanoMobileWrapped} from '../wrappedCsl'
+import {CardanoMobile, CardanoMobileWrapped} from '../wrappedCsl'
+import {Utxos, asQuantity} from '../utils/utils'
 
 export type CIP30Extension = {
   getBalance(tokenId?: string): CSL.Value
@@ -62,7 +60,9 @@ export type CIP30Extension = {
 export const cip30ExtensionMaker = (
   wallet: YoroiWallet,
   meta: Wallet.Meta,
+  dependencies: Pick<CardanoWalletDependencies, 'createCollateralEntry'>,
 ): CIP30Extension => {
+  const {createCollateralEntry} = dependencies
   return {
     getBalance(tokenId = '*') {
       return CardanoMobileWrapped.cslScope((csl) => {
@@ -149,15 +149,18 @@ export const cip30ExtensionMaker = (
             )
             return [recreateTransactionUnspentOutput(utxo)]
           } catch (error) {
-            getLogger().error('Error converting collateral UTXO to CSL format', {
-              error: error instanceof Error ? error.message : String(error),
-              utxoIndex: currentCollateral.utxo.tx_index,
-              utxoAmount: currentCollateral.utxo.amount,
-              utxoAssetsCount: currentCollateral.utxo.assets?.length ?? 0,
-              utxoReceiver: currentCollateral.utxo.receiver,
-              txHash: currentCollateral.utxo.tx_hash,
-              txIndex: currentCollateral.utxo.tx_index,
-            })
+            getLogger().error(
+              'Error converting collateral UTXO to CSL format',
+              {
+                error: error instanceof Error ? error.message : String(error),
+                utxoIndex: currentCollateral.utxo.tx_index,
+                utxoAmount: currentCollateral.utxo.amount,
+                utxoAssetsCount: currentCollateral.utxo.assets?.length ?? 0,
+                utxoReceiver: currentCollateral.utxo.receiver,
+                txHash: currentCollateral.utxo.tx_hash,
+                txIndex: currentCollateral.utxo.tx_index,
+              },
+            )
             throw error
           }
         }

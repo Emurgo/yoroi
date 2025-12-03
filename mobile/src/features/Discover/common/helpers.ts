@@ -166,7 +166,9 @@ type CreateDappConnectorOptions = {
 export const createDappConnector = (options: CreateDappConnectorOptions) => {
   const {wallet, meta, appStorage, confirmConnection, signTx, signData} =
     options
-  const cip30 = cip30ExtensionMaker(wallet, meta)
+  const cip30 = cip30ExtensionMaker(wallet, meta, {
+    createCollateralEntry: (wallet as any)._dependencies.createCollateralEntry,
+  })
   const cip95 = supportsCIP95(meta.implementation)
     ? cip95ExtensionMaker(wallet, meta)
     : null

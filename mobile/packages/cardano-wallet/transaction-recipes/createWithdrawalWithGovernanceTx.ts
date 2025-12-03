@@ -26,7 +26,7 @@ import {
 import type {PublicKey} from '@emurgo/cross-csl-core'
 import BigNumber from 'bignumber.js'
 
-import {CardanoMobileWrapped} from './wrappedCsl'
+import {CardanoMobileWrapped} from '../wrappedCsl'
 
 export type CreateWithdrawalWithGovernanceTxParams = {
   utxos: ModernUtxo[]

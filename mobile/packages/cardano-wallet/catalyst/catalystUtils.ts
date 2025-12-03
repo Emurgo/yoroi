@@ -1,6 +1,6 @@
 import {mnemonicToEntropy} from 'bip39'
 
-import {CardanoMobile} from '@emurgo/cross-csl-mobile'
+import {CardanoMobile} from '../wrappedCsl'
 
 import {generateAdaMnemonic} from '../mnemonic/mnemonic'
 

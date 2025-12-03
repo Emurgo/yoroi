@@ -1,6 +1,6 @@
 import {cardanoConfig} from '@yoroi/blockchains'
 
-import {CardanoMobile} from '@emurgo/cross-csl-mobile'
+import {CardanoMobile} from '../wrappedCsl'
 
 const isString = (s: unknown) => typeof s === 'string' || s instanceof String
 

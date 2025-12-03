@@ -5,7 +5,7 @@ import * as CSL from '@emurgo/cross-csl-core'
 
 import {getLogger, throwLoggedError} from '@yoroi/common'
 
-import {CardanoMobile} from '@emurgo/cross-csl-mobile'
+import {CardanoMobile} from '../wrappedCsl'
 import {AccountManager} from '../account-manager/account-manager'
 import type {ReadOnlyAccountManager} from '../account-manager/read-only-account-manager'
 

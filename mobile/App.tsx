@@ -38,12 +38,14 @@ import {YoroiNotificationManager} from './src/features/Notifications/common/Yoro
 import {PairingProvider} from './src/features/Pairing/context/PairingProvider'
 import {SearchProvider} from './src/features/Search/SearchContext'
 import {CurrencyProvider} from './src/features/Settings/context/CurrencyProvider'
-import {AutomaticWalletOpenerProvider} from './src/features/WalletManager/context/AutomaticWalletOpeningProvider'
-import {WalletManagerHydrationWrapper} from './src/features/WalletManager/context/WalletManagerHydrationWrapper'
-import {WalletManagerProvider} from './src/features/WalletManager/context/WalletManagerProvider'
-import {useSelectedNetwork} from './src/features/WalletManager/hooks/useSelectedNetwork'
-import {walletManager} from './src/features/WalletManager/wallet-manager'
-import {useFonts} from './src/hooks/useFonts'
+import {
+  AutomaticWalletOpeningProvider,
+  WalletManagerHydrationWrapper,
+  WalletManagerProvider,
+  useSelectedNetwork,
+  walletManager,
+} from '@yoroi/wallet-manager'
+import {useFonts} from '~/common/hooks/useFonts'
 import {ConnectionProvider} from './src/kernel/connection/ConnectionProvider'
 import {unstoppableApiKey} from './src/kernel/constants'
 import {LanguageProvider} from './src/kernel/i18n/LanguageProvider'

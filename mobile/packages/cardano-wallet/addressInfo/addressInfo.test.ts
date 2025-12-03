@@ -1,4 +1,4 @@
-import {CardanoMobile} from '@emurgo/cross-csl-mobile'
+import {CardanoMobile} from '../wrappedCsl'
 
 import {getSpendingKey, getStakingKey, toWasmAddress} from './addressInfo'
 

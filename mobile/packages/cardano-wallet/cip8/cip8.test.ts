@@ -3,7 +3,7 @@ import {normalizeToAddress} from '@yoroi/tx'
 import {Buffer} from 'buffer'
 
 import {CardanoMobileWrapped} from './wrappedCsl'
-import {CardanoMobile} from '@emurgo/cross-csl-mobile'
+import {CardanoMobile} from '../wrappedCsl'
 
 import {harden} from '../common/signatureUtils'
 import {getMasterKeyFromMnemonic} from '../mnemonic/mnemonic'

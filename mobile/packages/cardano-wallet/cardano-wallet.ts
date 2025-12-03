@@ -8,8 +8,8 @@ import type {
 } from '@yoroi/api'
 import {AppApi} from '@yoroi/api'
 import {cardanoConfig} from '@yoroi/blockchains'
-import {isNonNullable} from '@yoroi/common'
-import {StakePoolInfoRequest, StakingInfo} from '@yoroi/staking'
+import {getLogger, isNonNullable, throwLoggedError} from '@yoroi/common'
+import {StakePoolInfoRequest, StakingInfo, StakingStatus} from '@yoroi/staking'
 import type {Datum, ModernUtxo, UnsignedTransaction} from '@yoroi/tx'
 import {
   adaptToLedgerUnsignedTx,
@@ -42,23 +42,6 @@ import {Buffer} from 'buffer'
 import {freeze} from 'immer'
 import {defaultMemoize} from 'reselect'
 
-// TODO: These feature dependencies need to be extracted or injected:
-// - toLedgerSignRequest from Discover feature
-// - buildPortfolioBalanceManager from Portfolio feature
-// - toBalanceManagerSyncArgs from Portfolio feature
-// - MemosManager, makeMemosManager from Transactions feature
-// These should be passed as dependencies to makeCardanoWallet factory
-import {toLedgerSignRequest} from '~/features/Discover/common/ledger'
-import {buildPortfolioBalanceManager} from '~/features/Portfolio/common/helpers/build-balance-manager'
-import {toBalanceManagerSyncArgs} from '~/features/Portfolio/common/transformers/toBalanceManagerSyncArgs'
-import {
-  MemosManager,
-  makeMemosManager,
-} from '~/features/Transactions/common/memos/memosManager'
-import {getLogger, throwLoggedError} from '@yoroi/common'
-import type {WalletEncryptedStorage} from './dependencies'
-
-import {CardanoMobile} from '@emurgo/cross-csl-mobile'
 import {
   AccountManager,
   accountManagerMaker,
@@ -73,6 +56,11 @@ import {
   getWalletRegistrationData,
 } from './api/wallet-registration'
 import {calcLockedDeposit} from './assetUtils'
+import type {
+  CardanoWalletDependencies,
+  MemosManager,
+  WalletEncryptedStorage,
+} from './dependencies'
 import {
   doesCardanoAppVersionSupportCIP36,
   doesCardanoAppVersionSupportCIP1694,
@@ -136,6 +124,10 @@ type WalletState = {
   isInitialized: boolean
   subscriptions: Array<WalletSubscription>
   onTxHistoryUpdateSubscriptions: Array<(wallet: YoroiWallet) => void>
+  dependencies: Pick<
+    CardanoWalletDependencies,
+    'toLedgerSignRequest' | 'toBalanceManagerSyncArgs' | 'createCollateralEntry'
+  >
 }
 
 const _getUtxos = defaultMemoize((utxos: RawUtxo[], collateralId: string) => {
@@ -167,16 +159,26 @@ const _isUsedAddressIndexSelector = defaultMemoize((perAddressTxs) =>
   ),
 )
 
-import type {CardanoWalletDependencies} from './dependencies'
-
 export const makeCardanoWallet = (
   networkManager: Network.Manager,
   implementation: Wallet.Implementation,
   dependencies: CardanoWalletDependencies,
 ) => {
-  const {rootStorage, makeWalletEncryptedStorage} = dependencies
+  const {
+    rootStorage,
+    makeWalletEncryptedStorage,
+    buildPortfolioBalanceManager,
+    toBalanceManagerSyncArgs: toBalanceManagerSyncArgsFn,
+    makeMemosManager,
+    toLedgerSignRequest: toLedgerSignRequestFn,
+    createCollateralEntry,
+  } = dependencies
   const implementationConfig = cardanoConfig.implementations[implementation]
   const appApi = AppApi.appApiMaker({baseUrl: networkManager.legacyApiBaseUrl})
+
+  // Store dependencies in variables accessible to closures
+  const toBalanceManagerSyncArgs = toBalanceManagerSyncArgsFn
+  const toLedgerSignRequest = toLedgerSignRequestFn
 
   const build = async ({
     id,
@@ -399,6 +401,11 @@ export const makeCardanoWallet = (
       isInitialized: false,
       subscriptions: [],
       onTxHistoryUpdateSubscriptions: [],
+      dependencies: {
+        toLedgerSignRequest,
+        toBalanceManagerSyncArgs,
+        createCollateralEntry,
+      },
     }
 
     const wallet = createWalletObject(
@@ -547,9 +554,10 @@ function createWalletObject(
       })
     }
     throwLoggedError(getLogger())('getAllUtxosForKey staking not supported')
+    return []
   }
 
-  const getDelegationStatus = () => {
+  const getDelegationStatus = (): StakingStatus => {
     if (implementationConfig.features.staking) {
       return getWalletDelegationStatusOp(
         state.rewardAddressHex,
@@ -558,6 +566,7 @@ function createWalletObject(
     }
 
     throwLoggedError(getLogger())('getDelegationStatus staking not supported')
+    return {isRegistered: false}
   }
 
   const getStakingInfo = async (): Promise<StakingInfo> => {
@@ -573,6 +582,7 @@ function createWalletObject(
     }
 
     throwLoggedError(getLogger())('getStakingInfo staking not supported')
+    return {status: 'not-registered'}
   }
   // end of staking
 
@@ -763,17 +773,19 @@ function createWalletObject(
     }
 
     const addressingMap = await getHexAddressingMap(wallet)
-    const payload = await toLedgerSignRequest(
-      CardanoMobile,
-      cbor,
-      networkManager.chainId,
-      networkManager.protocolMagic,
-      addressingMap,
-      addressingMap,
-      modernUtxosToCardanoAddressedUtxos(getAddressedUtxos()),
-      [],
-      stakingAddressing,
-    )
+    const payload = await CardanoMobileWrapped.cslScope(async (csl) => {
+      return await state.dependencies.toLedgerSignRequest(
+        csl,
+        cbor,
+        networkManager.chainId,
+        networkManager.protocolMagic,
+        addressingMap,
+        addressingMap,
+        modernUtxosToCardanoAddressedUtxos(getAddressedUtxos()),
+        [],
+        stakingAddressing,
+      )
+    })
 
     const signedLedgerTx = await signTxWithLedgerHW(
       payload,
@@ -868,9 +880,9 @@ function createWalletObject(
           )
 
           // Convert signed transaction bytes to Transaction object
-          const signedTx = await CardanoMobile.Transaction.fromBytes(
-            signedTxResult.encodedTx,
-          )
+          const signedTx = await CardanoMobileWrapped.cslScope(async (csl) => {
+            return await csl.Transaction.fromBytes(signedTxResult.encodedTx)
+          })
 
           return signedTx
         })
@@ -949,9 +961,9 @@ function createWalletObject(
       )
 
       // Convert signed transaction bytes to Transaction object
-      const signedTx = await CardanoMobile.Transaction.fromBytes(
-        signedTxResult.encodedTx,
-      )
+      const signedTx = await CardanoMobileWrapped.cslScope(async (csl) => {
+        return await csl.Transaction.fromBytes(signedTxResult.encodedTx)
+      })
 
       return signedTx
     })
@@ -1014,7 +1026,7 @@ function createWalletObject(
 
       // Include all UTXOs (including collateral) in total balance
       // Collateral is owned by the wallet and should appear in total balance
-      const balancesToSync = toBalanceManagerSyncArgs(
+      const balancesToSync = state.dependencies.toBalanceManagerSyncArgs(
         newUtxos,
         BigInt(lockedAsStorageCost.toString()),
       )
@@ -1206,7 +1218,14 @@ function createWalletObject(
     return !!txs && txs.length > 0
   }
 
-  const wallet: YoroiWallet = {
+  const wallet: YoroiWallet & {
+    _dependencies: Pick<
+      CardanoWalletDependencies,
+      | 'toLedgerSignRequest'
+      | 'toBalanceManagerSyncArgs'
+      | 'createCollateralEntry'
+    >
+  } = {
     id: state.id,
     publicKeyHex: state.publicKeyHex,
     protocolParams: state.protocolParams,
@@ -1219,6 +1238,7 @@ function createWalletObject(
     api: appApi,
     rewardAddressHex: state.rewardAddressHex,
     encryptedStorage: state.encryptedStorage,
+    _dependencies: state.dependencies,
     // account chains - exposed directly
     externalChain: externalChain(),
     internalChain: internalChain(),

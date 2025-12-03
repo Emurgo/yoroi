@@ -13,7 +13,7 @@ import _ from 'lodash'
 import {defaultMemoize} from 'reselect'
 
 import {getLogger} from '@yoroi/common'
-import {CardanoMobile} from '@emurgo/cross-csl-mobile'
+import {CardanoMobile} from '../wrappedCsl'
 
 import * as legacyApi from '../api/api'
 import {CardanoTypes} from '../types'
