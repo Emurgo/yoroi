@@ -63,6 +63,8 @@ export const ReviewMultisigWalletScreen = () => {
   } = params
 
   const [walletName, setWalletName] = React.useState(initialWalletName || '')
+  const [password, setPassword] = React.useState('')
+  const [passwordConfirmation, setPasswordConfirmation] = React.useState('')
 
   const {
     createWallet,
