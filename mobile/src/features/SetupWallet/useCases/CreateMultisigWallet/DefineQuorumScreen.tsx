@@ -30,7 +30,7 @@ type QuorumType = 'RequireAllOf' | 'RequireAnyOf' | 'RequireNOf'
 
 export const DefineQuorumScreen = () => {
   const strings = useStrings()
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p} = useTheme()
   const navigation = useNavigation<SetupWalletRouteNavigation>()
   const route = useRoute()
   const [quorumType, setQuorumType] = React.useState<QuorumType>('RequireNOf')
@@ -118,7 +118,7 @@ export const DefineQuorumScreen = () => {
                 a.border,
                 {
                   backgroundColor:
-                    quorumType === 'RequireAllOf' ? p.primary_100 : p.white,
+                    quorumType === 'RequireAllOf' ? p.primary_100 : p.gray_min,
                   borderColor:
                     quorumType === 'RequireAllOf' ? p.primary_600 : p.gray_200,
                 },
@@ -142,7 +142,7 @@ export const DefineQuorumScreen = () => {
                 a.border,
                 {
                   backgroundColor:
-                    quorumType === 'RequireAnyOf' ? p.primary_100 : p.gray_cmin,
+                    quorumType === 'RequireAnyOf' ? p.primary_100 : p.gray_min,
                   borderColor:
                     quorumType === 'RequireAnyOf' ? p.primary_600 : p.gray_200,
                 },
@@ -166,7 +166,7 @@ export const DefineQuorumScreen = () => {
                 a.border,
                 {
                   backgroundColor:
-                    quorumType === 'RequireNOf' ? p.primary_100 : p.gray_cmin,
+                    quorumType === 'RequireNOf' ? p.primary_100 : p.gray_min,
                   borderColor:
                     quorumType === 'RequireNOf' ? p.primary_600 : p.gray_200,
                 },
@@ -210,7 +210,7 @@ export const DefineQuorumScreen = () => {
           <Space.Height.lg />
 
           <Button
-            title={strings.global.continue || 'Continue'}
+            title={strings.global.proceed}
             onPress={handleContinue}
             testID="continue-after-define-quorum-button"
           />

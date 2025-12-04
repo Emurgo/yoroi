@@ -28,7 +28,7 @@ type RouteParams = {
 
 export const GenerateSharedKeyScreen = () => {
   const strings = useStrings()
-  const {atoms: ta} = useTheme()
+  const {palette: p} = useTheme()
   const navigation = useNavigation<SetupWalletRouteNavigation>()
   const route = useRoute()
   const {walletManager} = useWalletManager()
@@ -109,12 +109,12 @@ export const GenerateSharedKeyScreen = () => {
       <SafeArea>
         <Space.Height.lg />
         <View style={[a.px_lg]}>
-          <Text style={[ta.heading_1]}>
+          <Text style={[a.heading_1_medium]}>
             {strings.setupWallet.parentWalletNotFound}
           </Text>
           <Space.Height.md />
           <Button
-            title={strings.global.back || 'Back'}
+            title={strings.global.cancel}
             onPress={() => navigation.goBack()}
           />
         </View>
@@ -131,13 +131,13 @@ export const GenerateSharedKeyScreen = () => {
         contentContainerStyle={[a.px_lg, a.pb_lg]}
       >
         <View style={[a.gap_md]}>
-          <Text style={[ta.heading_1]}>
+          <Text style={[a.heading_1_medium]}>
             {strings.setupWallet.generateSharedKeyTitle}
           </Text>
 
           <Space.Height.md />
 
-          <Text style={[ta.body_1_lg_regular]}>
+          <Text style={[a.body_1_lg_regular]}>
             {strings.setupWallet.generateSharedKeyDescription}
           </Text>
 
@@ -155,7 +155,7 @@ export const GenerateSharedKeyScreen = () => {
           {error && (
             <>
               <Space.Height.sm />
-              <Text style={[ta.body_1_lg_medium, {color: ta.error.color}]}>
+              <Text style={[a.body_1_lg_medium, {color: p.gray_max}]}>
                 {error}
               </Text>
             </>
@@ -172,13 +172,19 @@ export const GenerateSharedKeyScreen = () => {
             />
           ) : (
             <>
-              <View style={[a.bg_success_light, a.p_md, a.rounded_sm]}>
-                <Text style={[ta.body_1_lg_medium]}>
+              <View
+                style={[
+                  a.p_md,
+                  a.rounded_sm,
+                  {backgroundColor: p.secondary_100},
+                ]}
+              >
+                <Text style={[a.body_1_lg_medium]}>
                   {strings.setupWallet.sharedKeyGenerated}
                 </Text>
                 <Space.Height.sm />
                 <Text
-                  style={[ta.body_2_md_regular, {fontFamily: 'monospace'}]}
+                  style={[a.body_2_md_regular, {fontFamily: 'monospace'}]}
                   numberOfLines={3}
                   ellipsizeMode="middle"
                 >
@@ -189,7 +195,7 @@ export const GenerateSharedKeyScreen = () => {
               <Space.Height.lg />
 
               <Button
-                title={strings.global.continue || 'Continue'}
+                title={strings.global.proceed}
                 onPress={handleContinue}
                 testID="continue-after-shared-key-button"
               />

@@ -11,14 +11,14 @@ import {ScrollView, View} from 'react-native'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {SetupWalletRouteNavigation} from '~/kernel/navigation/types'
-import {Button} from '~/ui/Button/Button'
+import {Button, ButtonType} from '~/ui/Button/Button'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
 
 export const CreateMultisigWalletScreen = () => {
   const strings = useStrings()
-  const {atoms: ta} = useTheme()
+  const {palette: p} = useTheme()
   const navigation = useNavigation<SetupWalletRouteNavigation>()
   const {walletManager} = useWalletManager()
 
@@ -88,7 +88,7 @@ export const CreateMultisigWalletScreen = () => {
           <Button
             title={strings.setupWallet.importMultisigWalletButton}
             onPress={handleImportWallet}
-            type="secondary"
+            type={ButtonType.Secondary}
             testID="import-multisig-wallet-button"
           />
         </View>

@@ -11,7 +11,7 @@ import {ScrollView, TouchableOpacity, View} from 'react-native'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {SetupWalletRouteNavigation} from '~/kernel/navigation/types'
-import {Button} from '~/ui/Button/Button'
+import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
@@ -28,7 +28,7 @@ type RouteParams = {
 
 export const AddCoSignersScreen = () => {
   const strings = useStrings()
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p} = useTheme()
   const navigation = useNavigation<SetupWalletRouteNavigation>()
   const route = useRoute()
   const [coSigners, setCoSigners] = React.useState<
@@ -174,7 +174,7 @@ export const AddCoSignersScreen = () => {
                     style={[a.p_sm]}
                     testID={`remove-cosigner-${index}`}
                   >
-                    <Icon.Delete size={20} color={p.sys_red_500} />
+                    <Icon.Delete size={20} color={p.gray_max} />
                   </TouchableOpacity>
                 )}
               </View>
