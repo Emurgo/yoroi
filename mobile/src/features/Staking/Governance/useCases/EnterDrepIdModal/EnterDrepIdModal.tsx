@@ -50,30 +50,26 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
     }
   }, [])
 
-  const scheduleHeightChange = React.useCallback(
-    (height: number) => {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current)
-      timeoutRef.current = setTimeout(() => setHeight(height), 150)
-    },
-    [setHeight],
-  )
+  const scheduleHeightChange = (height: number) => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current)
+    timeoutRef.current = setTimeout(() => setHeight(height), 150)
+  }
 
-  const handleFocus = React.useCallback(() => {
+  const handleFocus = () => {
     setShowCard(false)
     scheduleHeightChange(HEIGHT_WITHOUT_CARD)
-  }, [scheduleHeightChange])
+  }
 
-  const handleBlur = React.useCallback(() => {
+  const handleBlur = () => {
     if (drepIdSelected.length === 0) {
       setShowCard(true)
       scheduleHeightChange(HEIGHT_WITH_CARD)
     }
-  }, [drepIdSelected.length, scheduleHeightChange])
+  }
 
-  const handleDrepIdChange = React.useCallback(
-    (text: string) => setDrepIdSelected(text),
-    [],
-  )
+  const handleDrepIdChange = (text: string) => {
+    setDrepIdSelected(text)
+  }
 
   const {error, isFetched, isFetching} = useIsValidDRepID(drepIdSelected, {
     retry: false,
