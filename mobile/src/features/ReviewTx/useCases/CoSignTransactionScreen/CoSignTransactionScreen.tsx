@@ -7,42 +7,35 @@ import {getMultisigMeta, isMultisigWallet} from '@yoroi/cardano-wallet'
 import {deriveMultisigAccount} from '@yoroi/cardano-wallet'
 import {getLogger} from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {getMultisigMeta, isMultisigWallet} from '@yoroi/cardano-wallet'
+import {deriveMultisigAccount} from '@yoroi/cardano-wallet'
+import {getLogger} from '@yoroi/common'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {
-  type MultipartyTransactionJSON,
   addWalletSignatureToTransactionJSON,
   parseMultipartyTransactionJSON,
 } from '@yoroi/tx/multiparty/multiparty-transaction-json'
 import {signMultisigTransaction} from '@yoroi/tx/multisig/multisig-tx-signer'
-import {
-  type MultisigTransactionJSON,
-  parseMultisigTransactionJSON,
-} from '@yoroi/tx/multisig/transaction-json'
-import {Wallet} from '@yoroi/types'
-import {useSelectedWallet, useWalletManager} from '@yoroi/wallet-manager'
+import {parseMultisigTransactionJSON} from '@yoroi/tx/multisig/transaction-json'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import {useNavigation} from '@react-navigation/native'
 import {Buffer} from 'buffer'
-// Note: expo-document-picker may need to be installed
-import * as Clipboard from 'expo-clipboard'
 import * as FileSystem from 'expo-file-system'
 import * as React from 'react'
 import {
   ActivityIndicator,
-  Alert,
   TextInput as RNTextInput,
   ScrollView,
   View,
 } from 'react-native'
 
 import {useFormattedTx} from '~/features/ReviewTx/common/hooks/useFormattedTx'
-import {useOnConfirm} from '~/features/ReviewTx/common/hooks/useOnConfirm'
 import {useTxBody} from '~/features/ReviewTx/common/hooks/useTxBody'
 import {TransactionBody} from '~/features/ReviewTx/common/types'
 import {showErrorDialog} from '~/kernel/dialogs'
 import {errorMessages} from '~/kernel/i18n/messages/global'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useUnsafeParams} from '~/kernel/navigation/hooks/useUnsafeParams'
-import {ReviewTxRoutes} from '~/kernel/navigation/types'
 import {TxHistoryRouteNavigation} from '~/kernel/navigation/types'
 import {makeWalletEncryptedStorage} from '~/kernel/storage/EncryptedStorage'
 import {Button} from '~/ui/Button/Button'
@@ -70,7 +63,6 @@ export const CoSignTransactionScreen = () => {
   const [isSigning, setIsSigning] = React.useState(false)
   const [password, setPassword] = React.useState('')
   const [error, setError] = React.useState<string | null>(null)
-  const [signedTxCbor, setSignedTxCbor] = React.useState<string | null>(null)
 
   const multisigMeta = getMultisigMeta(wallet)
   const isMultisig = isMultisigWallet(wallet) && multisigMeta !== null
@@ -292,6 +284,7 @@ export const CoSignTransactionScreen = () => {
     isMultisig,
     multisigMeta,
     meta.implementation,
+    meta.name,
     wallet,
     navigation,
     logger,

@@ -58,14 +58,8 @@ export const createMultisigWallet = async (
   params: CreateMultisigWalletParams,
   _makeWalletEncryptedStorage: (id: string) => WalletEncryptedStorage,
 ): Promise<CreateMultisigWalletResult> => {
-  const {
-    name,
-    coSigners,
-    quorumRules,
-    parentWalletIds,
-    network,
-    version,
-  } = params
+  const {name, coSigners, quorumRules, parentWalletIds, network, version} =
+    params
 
   const logger = getLogger()
 

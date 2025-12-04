@@ -2,23 +2,19 @@
  * Multisig Transaction Review Screen
  * Shows transaction details with co-signer status and quorum requirements
  */
-import {getMultisigMeta, isMultisigWallet} from '@yoroi/cardano-wallet'
-import {CardanoMobileWrapped} from '@yoroi/cardano-wallet'
+import {getMultisigMeta} from '@yoroi/cardano-wallet'
 import {getSignPolicy} from '@yoroi/cardano-wallet/multisig/script-utils'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {getSignedCoSigners} from '@yoroi/tx/multisig/multisig-tx-signer'
 import {constructMultisigTransactionJSON} from '@yoroi/tx/multisig/transaction-json'
 import type {ChainId} from '@yoroi/tx/multisig/transaction-json'
-import {Wallet} from '@yoroi/types'
 import {useSelectedWallet} from '@yoroi/wallet-manager'
 
-import {useNavigation} from '@react-navigation/native'
 import * as Clipboard from 'expo-clipboard'
 import * as React from 'react'
-import {ScrollView, TouchableOpacity, View} from 'react-native'
+import {ScrollView, View} from 'react-native'
 import {Alert} from 'react-native'
 
-import {useReviewTxMemo} from '~/features/ReviewTx/common/context/ReviewTxMemoContext'
 import {ReviewTxMemoProvider} from '~/features/ReviewTx/common/context/ReviewTxMemoContext'
 import {useFormattedTx} from '~/features/ReviewTx/common/hooks/useFormattedTx'
 import {useOnConfirm} from '~/features/ReviewTx/common/hooks/useOnConfirm'
@@ -26,7 +22,7 @@ import {useTxBody} from '~/features/ReviewTx/common/hooks/useTxBody'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useUnsafeParams} from '~/kernel/navigation/hooks/useUnsafeParams'
 import {ReviewTxRoutes} from '~/kernel/navigation/types'
-import {TxHistoryRouteNavigation} from '~/kernel/navigation/types'
+import {FormattedTx} from '~/features/ReviewTx/common/types'
 import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
@@ -40,13 +36,11 @@ const MultisigTransactionReviewContent = ({
   formattedTx,
 }: {
   params: NonNullable<ReviewTxRoutes['review-tx']>
-  formattedTx: any
+  formattedTx: FormattedTx
 }) => {
   const {wallet, meta} = useSelectedWallet()
   const strings = useStrings()
   const {atoms: ta} = useTheme()
-  const navigation = useNavigation<TxHistoryRouteNavigation>()
-  const memoContext = useReviewTxMemo()
 
   const multisigMeta = getMultisigMeta(wallet)
   const [quorumStatus, setQuorumStatus] = React.useState<{
