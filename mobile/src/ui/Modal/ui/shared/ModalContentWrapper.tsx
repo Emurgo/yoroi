@@ -16,6 +16,7 @@ export const ModalContentWrapper = ({
       contentContainerStyle={StyleSheet.flatten([a.flex_grow, a.px_lg, style])}
       bounces={false}
       focusable
+      keyboardShouldPersistTaps="handled"
       {...rest}
     >
       {children}

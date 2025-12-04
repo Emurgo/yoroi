@@ -160,6 +160,7 @@ export const OtherDrepCard = ({
       <Button
         title={strings.staking.delegateToOtherDrep}
         type={ButtonType.Secondary}
+        size="S"
         onPress={onDelegate}
         disabled={pending}
       />
