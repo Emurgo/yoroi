@@ -50,9 +50,6 @@ export const ReviewMultisigWalletScreen = () => {
   const route = useRoute()
   const storage = useAsyncStorage()
   const {walletManager} = useWalletManager()
-  const [walletName, setWalletName] = React.useState(initialWalletName || '')
-  const [password, setPassword] = React.useState('')
-  const [passwordConfirmation, setPasswordConfirmation] = React.useState('')
 
   const params = (route.params as RouteParams) || {}
   const {
@@ -64,6 +61,8 @@ export const ReviewMultisigWalletScreen = () => {
     parentWalletRootKey,
     walletName: initialWalletName,
   } = params
+
+  const [walletName, setWalletName] = React.useState(initialWalletName || '')
 
   const {
     createWallet,
