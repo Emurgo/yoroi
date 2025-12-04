@@ -36,7 +36,9 @@ export const CreateMultisigWalletScreen = () => {
 
   const handleImportWallet = React.useCallback(() => {
     // Navigate to import multisig wallet screen
-    navigation.navigate('setup-wallet-multisig-import')
+    navigation.navigate('setup-wallet-multisig-import', {
+      importedWalletSetup: undefined as unknown,
+    })
   }, [navigation])
 
   const canCreateMultisig = availableWallets.length > 0

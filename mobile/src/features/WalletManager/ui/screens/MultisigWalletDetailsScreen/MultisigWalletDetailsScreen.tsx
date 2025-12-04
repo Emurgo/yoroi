@@ -13,7 +13,7 @@ import {Alert, ScrollView, View} from 'react-native'
 import Share from 'react-native-share'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {Button} from '~/ui/Button/Button'
+import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
@@ -192,7 +192,7 @@ export const MultisigWalletDetailsScreen = () => {
                       {coSigner.sharedWalletKey.substring(0, 20)}...
                     </Text>
                   </View>
-                  <Icon.Person size={24} color={p.gray_600} />
+                  <Icon.Wallet size={24} color={p.gray_600} />
                 </View>
               ))}
             </View>

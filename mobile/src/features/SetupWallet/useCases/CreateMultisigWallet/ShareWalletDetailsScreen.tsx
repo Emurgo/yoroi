@@ -69,7 +69,10 @@ export const ShareWalletDetailsScreen = () => {
         network: 'cardano', // TODO: Get from wallet meta
       },
       multisig: {
-        coSigners: multisigMeta.coSigners as ReadonlyArray<Wallet.CoSigner>,
+        coSigners: multisigMeta.coSigners.map((cs) => ({
+          name: cs.name,
+          sharedWalletKey: cs.sharedWalletKey,
+        })) as ReadonlyArray<Wallet.CoSigner>,
         quorumRules: multisigMeta.quorumRules,
         paymentScriptCbor: multisigMeta.paymentScriptCbor,
         stakingScriptCbor: multisigMeta.stakingScriptCbor,
