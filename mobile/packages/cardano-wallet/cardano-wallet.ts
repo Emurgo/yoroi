@@ -47,6 +47,7 @@ import {defaultMemoize} from 'reselect'
 
 import {
   AccountManager,
+  AddressChain,
   accountManagerMaker,
 } from './account-manager/account-manager'
 import {

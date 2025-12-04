@@ -159,7 +159,7 @@ export const hasSigned = async (
   csl: WasmModuleProxy,
   sharedWalletKey: Bip32PublicKeyHex,
   type: 'payment' | 'staking',
-  vkeys: ReturnType<typeof csl.Vkeywitnesses.prototype>,
+  vkeys: ReturnType<ReturnType<typeof csl.Vkeywitnesses.prototype['get']> | null>,
 ): Promise<boolean> => {
   const derivationPath =
     type === 'payment' ? paymentScriptKeyPath : stakingScriptKeyPath
