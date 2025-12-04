@@ -419,8 +419,8 @@ export async function createSignedLedgerTxFromCbor(
     }
 
     // Verify transaction hash matches Ledger's hash
-    const finalTx = csl.Transaction.fromBytes(finalTxBytes)
-    const txHashHex = finalTx.hash().toHex()
+    const fixedTx = csl.FixedTransaction.fromBytes(finalTxBytes)
+    const txHashHex = fixedTx.transactionHash().toHex()
 
     if (txHashHex !== signedData.txHashHex) {
       throw new Error(

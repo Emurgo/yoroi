@@ -2,34 +2,43 @@
  * Multisig Transaction Review Screen
  * Shows transaction details with co-signer status and quorum requirements
  */
-import {getMultisigMeta} from '@yoroi/cardano-wallet'
-import {getSignPolicy} from '@yoroi/cardano-wallet'
+import {
+  CardanoMobileWrapped,
+  getMultisigMeta,
+  getSignPolicy,
+} from '@yoroi/cardano-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {
   constructMultisigTransactionJSON,
   getSignedCoSigners,
   type ChainId,
 } from '@yoroi/tx'
+import {
+  Bip32PublicKeyHex,
+  ScriptCbor,
+  TransactionCborHex,
+  Wallet,
+} from '@yoroi/types'
 import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import * as Clipboard from 'expo-clipboard'
 import * as React from 'react'
-import {ScrollView, View} from 'react-native'
-import {Alert} from 'react-native'
+import {Alert, ScrollView, View} from 'react-native'
 
-import {ReviewTxMemoProvider} from '~/features/ReviewTx/common/context/ReviewTxMemoContext'
+import {ReviewTxMemoProvider, useReviewTxMemo} from '~/features/ReviewTx/common/context/ReviewTxMemoContext'
 import {useFormattedTx} from '~/features/ReviewTx/common/hooks/useFormattedTx'
 import {useOnConfirm} from '~/features/ReviewTx/common/hooks/useOnConfirm'
 import {useTxBody} from '~/features/ReviewTx/common/hooks/useTxBody'
-import {FormattedTx} from '~/features/ReviewTx/common/types'
+import {FormattedTx, TransactionBody} from '~/features/ReviewTx/common/types'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useUnsafeParams} from '~/kernel/navigation/hooks/useUnsafeParams'
-import {ReviewTxRoutes} from '~/kernel/navigation/types'
+import {ReviewContext, ReviewTxRoutes} from '~/kernel/navigation/types'
+import {OperationContext} from '~/ui/ResultScreen/types'
 import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
-import {Text} from '~/ui/Text'
+import {Text} from '~/ui/Text/Text'
 
 import {ReviewTx} from '../ReviewTxScreen/ReviewTx/ReviewTx'
 
@@ -42,7 +51,8 @@ const MultisigTransactionReviewContent = ({
 }) => {
   const {wallet, meta} = useSelectedWallet()
   const strings = useStrings()
-  const {atoms: ta} = useTheme()
+  const {atoms: ta, palette: p} = useTheme()
+  const memoContext = useReviewTxMemo()
 
   const multisigMeta = getMultisigMeta(wallet)
   const [quorumStatus, setQuorumStatus] = React.useState<{
@@ -61,15 +71,17 @@ const MultisigTransactionReviewContent = ({
       try {
         // Get signed co-signers
         const signedCoSigners = await getSignedCoSigners(
-          params.cbor!,
-          multisigMeta.coSigners.map((c) => c.sharedWalletKey),
-          multisigMeta.paymentScriptCbor,
-          multisigMeta.stakingScriptCbor,
+          params.cbor! as Wallet.TransactionCbor,
+          multisigMeta.coSigners.map(
+            (c) => c.sharedWalletKey as Wallet.Bip32PublicKeyHex,
+          ),
+          multisigMeta.paymentScriptCbor as ScriptCbor,
+          multisigMeta.stakingScriptCbor as ScriptCbor,
         )
 
         // Get sign policy from script
         const signPolicy = await CardanoMobileWrapped.cslScope((csl) =>
-          getSignPolicy(csl, multisigMeta.paymentScriptCbor),
+          getSignPolicy(csl, multisigMeta.paymentScriptCbor as ScriptCbor),
         )
 
         if (!signPolicy) {
@@ -80,7 +92,7 @@ const MultisigTransactionReviewContent = ({
         let requiredCoSigners: number
         if (multisigMeta.quorumRules.kind === 'RequireNOf') {
           requiredCoSigners =
-            multisigMeta.quorumRules.required || signPolicy.requiredSigners
+            multisigMeta.quorumRules.required || signPolicy.requiredCosigners
         } else if (multisigMeta.quorumRules.kind === 'RequireAllOf') {
           requiredCoSigners = multisigMeta.coSigners.length
         } else {
@@ -88,8 +100,8 @@ const MultisigTransactionReviewContent = ({
         }
 
         const missingCoSigners = multisigMeta.coSigners
-          .filter((c) => !signedCoSigners.includes(c.sharedWalletKey))
-          .map((c) => c.sharedWalletKey)
+          .filter((c) => !signedCoSigners.includes(c.sharedWalletKey as Wallet.Bip32PublicKeyHex))
+          .map((c) => c.sharedWalletKey as Wallet.Bip32PublicKeyHex)
 
         setQuorumStatus({
           totalCoSigners: multisigMeta.coSigners.length,
@@ -114,7 +126,7 @@ const MultisigTransactionReviewContent = ({
           requiredCoSigners,
           signedCoSigners: [],
           missingCoSigners: multisigMeta.coSigners.map(
-            (c) => c.sharedWalletKey,
+            (c) => c.sharedWalletKey as Wallet.Bip32PublicKeyHex,
           ),
           isQuorumMet: false,
           isFullySigned: false,
@@ -140,9 +152,9 @@ const MultisigTransactionReviewContent = ({
       const chainId =
         `cip34:${wallet.networkManager.chainId}-${wallet.networkManager.protocolMagic}` as ChainId
       const txJson = constructMultisigTransactionJSON({
-        cborHex: params.cbor,
+        cborHex: params.cbor as TransactionCborHex,
         chainId,
-        createdBy: currentWalletSharedKey,
+        createdBy: currentWalletSharedKey as Bip32PublicKeyHex,
         note: memoContext.memo || undefined,
       })
 
@@ -158,12 +170,34 @@ const MultisigTransactionReviewContent = ({
         error instanceof Error ? error.message : 'Failed to export transaction',
       )
     }
-  }, [params?.cbor, multisigMeta, wallet, strings])
+  }, [params?.cbor, multisigMeta, wallet, strings, memoContext])
+
+  const mapReviewContextToOperationContext = (
+    context?: ReviewContext,
+  ): OperationContext => {
+    switch (context) {
+      case 'send':
+        return 'send'
+      case 'swap':
+        return 'swap'
+      case 'delegate':
+      case 'undelegate':
+        return 'delegate'
+      case 'delegate vote':
+        return 'governance'
+      case 'withdraw rewards':
+        return 'withdraw'
+      case 'utxo-consolidation':
+        return 'utxo-consolidation'
+      default:
+        return 'default'
+    }
+  }
 
   const {onConfirm} = useOnConfirm({
     cbor: params?.cbor,
     preventSubmit: false,
-    context: params?.context || 'send',
+    context: mapReviewContextToOperationContext(params?.context),
     formattedTx: formattedTx ?? null,
     onSuccess: params?.onSuccess,
     onError: params?.onError,
@@ -215,17 +249,23 @@ const MultisigTransactionReviewContent = ({
           {multisigMeta && quorumStatus && (
             <>
               <Space.Height.lg />
-              <View style={[a.p_md, a.bg_gray_c50, a.rounded_sm]}>
-                <Text style={[ta.heading_3]}>
+              <View
+                style={[
+                  a.p_md,
+                  a.rounded_sm,
+                  {backgroundColor: p.gray_50},
+                ]}
+              >
+                <Text style={[a.heading_3_medium]}>
                   {strings.setupWallet.multisigSigningStatus}
                 </Text>
                 <Space.Height.sm />
-                <Text style={[ta.body_1_lg_regular]}>
+                <Text style={[a.body_1_lg_regular]}>
                   {strings.setupWallet.signaturesRequired}:{' '}
                   {quorumStatus.requiredCoSigners} of {quorumStatus.totalCoSigners}
                 </Text>
                 <Space.Height.xs />
-                <Text style={[ta.body_1_lg_regular]}>
+                <Text style={[a.body_1_lg_regular]}>
                   {strings.setupWallet.signaturesReceived}:{' '}
                   {quorumStatus.signedCoSigners.length}
                 </Text>
@@ -234,8 +274,9 @@ const MultisigTransactionReviewContent = ({
                 {/* Co-signers list */}
                 <View style={[a.gap_sm]}>
                   {multisigMeta.coSigners.map((coSigner, index) => {
+                    const coSignerKey = coSigner.sharedWalletKey as Wallet.Bip32PublicKeyHex
                     const hasSigned = quorumStatus.signedCoSigners.includes(
-                      coSigner.sharedWalletKey,
+                      coSignerKey,
                     )
                     const isCurrentWallet = index === 0 // Simplified - should check actual wallet
 
@@ -245,21 +286,25 @@ const MultisigTransactionReviewContent = ({
                         style={[
                           a.p_sm,
                           a.rounded_xs,
-                          hasSigned ? a.bg_success_light : a.bg_warning_light,
                           a.flex_row,
-                          a.items_center,
+                          a.align_center,
                           a.justify_between,
+                          {
+                            backgroundColor: hasSigned
+                              ? p.secondary_100
+                              : p.sys_yellow_100,
+                          },
                         ]}
                       >
                         <View style={[a.flex_1]}>
-                          <Text style={[ta.body_1_lg_medium]}>
+                          <Text style={[a.body_1_lg_medium]}>
                             {coSigner.name}
                             {isCurrentWallet && ' (You)'}
                           </Text>
                           <Space.Height.xs />
                           <Text
                             style={[
-                              ta.body_2_md_regular,
+                              a.body_2_md_regular,
                               {fontFamily: 'monospace'},
                             ]}
                             numberOfLines={1}
@@ -269,12 +314,12 @@ const MultisigTransactionReviewContent = ({
                           </Text>
                         </View>
                         {hasSigned ? (
-                          <Icon.CheckCircle
+                          <Icon.CheckFilled
                             size={24}
-                            color={ta.success.color}
+                            color={p.secondary_500}
                           />
                         ) : (
-                          <Icon.Clock size={24} color={ta.warning.color} />
+                          <Icon.Clock size={24} color={p.sys_yellow_500} />
                         )}
                       </View>
                     )
@@ -285,7 +330,7 @@ const MultisigTransactionReviewContent = ({
                   <>
                     <Space.Height.md />
                     <Text
-                      style={[ta.body_2_md_regular, {color: ta.warning.color}]}
+                      style={[a.body_2_md_regular, {color: p.sys_yellow_500}]}
                     >
                       {strings.setupWallet.quorumNotMet}
                     </Text>
@@ -320,13 +365,14 @@ const MultisigTransactionReviewContent = ({
 }
 
 export const MultisigTransactionReviewScreen = () => {
+  const {wallet} = useSelectedWallet()
   const params = useUnsafeParams<NonNullable<ReviewTxRoutes['review-tx']>>()
   const txBody = useTxBody({cbor: params?.cbor})
   const {formattedTx} = useFormattedTx(
     (txBody ?? {
       inputs: [],
       outputs: [],
-      fee: {coin: '0'},
+      fee: {tokenInfo: wallet.portfolioPrimaryTokenInfo, quantity: '0'},
       reference_inputs: [],
     }) as TransactionBody,
     params?.cbor ?? null,
