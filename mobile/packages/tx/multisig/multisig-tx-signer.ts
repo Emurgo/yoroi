@@ -6,8 +6,8 @@ import {CardanoMobileWrapped} from '@yoroi/cardano-wallet'
 import {
   paymentScriptKeyPath,
   stakingScriptKeyPath,
-} from '@yoroi/cardano-wallet/multisig/script-derivation'
-import type {SignPolicy} from '@yoroi/cardano-wallet/multisig/script-utils'
+  type SignPolicy,
+} from '@yoroi/cardano-wallet'
 import {getLogger} from '@yoroi/common'
 import {Wallet} from '@yoroi/types'
 

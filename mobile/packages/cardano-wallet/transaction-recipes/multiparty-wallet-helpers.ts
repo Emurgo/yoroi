@@ -3,12 +3,12 @@
  * Builds transactions using multiple wallets' UTXOs
  */
 import {getLogger} from '@yoroi/common'
-import {TransactionOutput} from '@yoroi/tx'
 import {
+  TransactionOutput,
   type MultipartyInputWallet,
   type MultipartyTransactionResult,
   buildMultipartyTransaction,
-} from '@yoroi/tx/multiparty'
+} from '@yoroi/tx'
 import {Wallet} from '@yoroi/types'
 import type {WalletManager} from '@yoroi/wallet-manager'
 

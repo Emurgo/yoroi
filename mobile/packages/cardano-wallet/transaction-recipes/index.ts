@@ -42,5 +42,5 @@ export {
 } from './multiparty-wallet-helpers'
 export type {
   MultipartyTransactionResult,
-} from '@yoroi/tx/multiparty'
+} from '@yoroi/tx'
 

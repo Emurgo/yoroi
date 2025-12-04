@@ -3,10 +3,12 @@
  * Builds transactions using UTXOs from multiple wallets
  * Supports both regular wallets and read-only wallets as inputs
  */
-import {CardanoMobileWrapped} from '@yoroi/cardano-wallet'
-import type {YoroiWallet} from '@yoroi/cardano-wallet'
-import {createSendTx} from '@yoroi/cardano-wallet/transaction-recipes/createSendTx'
-import {convertRawUtxosToModernUtxos} from '@yoroi/cardano-wallet/transaction-recipes/helpers'
+import {
+  CardanoMobileWrapped,
+  createSendTx,
+  convertRawUtxosToModernUtxos,
+  type YoroiWallet,
+} from '@yoroi/cardano-wallet'
 import {getLogger} from '@yoroi/common'
 import {TransactionOutput} from '@yoroi/tx'
 import {Wallet} from '@yoroi/types'

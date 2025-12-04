@@ -5,8 +5,10 @@
  */
 import {getLogger} from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
-import {constructMultipartyTransactionJSON} from '@yoroi/tx/multiparty/multiparty-transaction-json'
-import {getSignedWallets} from '@yoroi/tx/multiparty/multiparty-tx-signer'
+import {
+  constructMultipartyTransactionJSON,
+  getSignedWallets,
+} from '@yoroi/tx'
 import {Bip32PublicKeyHex} from '@yoroi/types'
 import {useSelectedWallet} from '@yoroi/wallet-manager'
 

@@ -3,11 +3,13 @@
  * Shows transaction details with co-signer status and quorum requirements
  */
 import {getMultisigMeta} from '@yoroi/cardano-wallet'
-import {getSignPolicy} from '@yoroi/cardano-wallet/multisig/script-utils'
+import {getSignPolicy} from '@yoroi/cardano-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
-import {getSignedCoSigners} from '@yoroi/tx/multisig/multisig-tx-signer'
-import {constructMultisigTransactionJSON} from '@yoroi/tx/multisig/transaction-json'
-import type {ChainId} from '@yoroi/tx/multisig/transaction-json'
+import {
+  constructMultisigTransactionJSON,
+  getSignedCoSigners,
+  type ChainId,
+} from '@yoroi/tx'
 import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import * as Clipboard from 'expo-clipboard'

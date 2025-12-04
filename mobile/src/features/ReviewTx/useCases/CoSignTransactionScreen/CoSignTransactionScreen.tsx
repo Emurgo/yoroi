@@ -13,11 +13,9 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import {
   addWalletSignatureToTransactionJSON,
   parseMultipartyTransactionJSON,
-} from '@yoroi/tx/multiparty'
-import {
   parseMultisigTransactionJSON,
   signMultisigTransaction,
-} from '@yoroi/tx/multisig'
+} from '@yoroi/tx'
 import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import {useNavigation} from '@react-navigation/native'

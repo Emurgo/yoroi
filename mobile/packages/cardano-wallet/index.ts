@@ -137,3 +137,6 @@ export {
 
 // DelegationUtils
 export * from './delegationUtils'
+
+// Multisig utilities
+export * from './multisig'
