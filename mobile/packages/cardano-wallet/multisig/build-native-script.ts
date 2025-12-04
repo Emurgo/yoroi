@@ -2,8 +2,7 @@
  * Build native scripts for multisig wallets
  * Supports RequireAllOf, RequireAnyOf, and RequireNOf script types
  */
-import {Wallet} from '@yoroi/types'
-import {Bip32PublicKeyHex} from '@yoroi/types'
+import {Bip32PublicKeyHex, Wallet} from '@yoroi/types'
 
 import type {WasmModuleProxy} from '@emurgo/cross-csl-core'
 import {Buffer} from 'buffer'
