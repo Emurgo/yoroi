@@ -25,6 +25,9 @@ export type Props = {
   }) => void
 }
 
+export const HEIGHT_WITH_CARD = 660
+export const HEIGHT_WITHOUT_CARD = 350
+
 const FIND_DREPS_LINKS: Record<Chain.SupportedNetworks, string> = {
   [Chain.Network.Preprod]: 'https://preprod.cexplorer.io/drep',
   [Chain.Network.Mainnet]: 'https://beta.cexplorer.io/drep',
@@ -33,48 +36,71 @@ const FIND_DREPS_LINKS: Record<Chain.SupportedNetworks, string> = {
 
 export const EnterDrepIdModal = ({onSubmit}: Props) => {
   const strings = useStrings()
-  const {atoms: ta, palette: p} = useTheme()
-  const [drepId, setDrepId] = React.useState('')
   const {closeModal, setHeight} = useModal()
-  const {
-    wallet: {
-      networkManager: {network},
-    },
-  } = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
+  const network = wallet.networkManager.network
 
-  const {error, isFetched, isFetching} = useIsValidDRepID(drepId, {
+  const [showCard, setShowCard] = React.useState(true)
+  const [drepIdSelected, setDrepIdSelected] = React.useState('')
+  const timeoutRef = React.useRef<ReturnType<typeof setTimeout>>(undefined)
+
+  React.useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current)
+    }
+  }, [])
+
+  const scheduleHeightChange = React.useCallback(
+    (height: number) => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current)
+      timeoutRef.current = setTimeout(() => setHeight(height), 150)
+    },
+    [setHeight],
+  )
+
+  const handleFocus = React.useCallback(() => {
+    setShowCard(false)
+    scheduleHeightChange(HEIGHT_WITHOUT_CARD)
+  }, [scheduleHeightChange])
+
+  const handleBlur = React.useCallback(() => {
+    if (drepIdSelected.length === 0) {
+      setShowCard(true)
+      scheduleHeightChange(HEIGHT_WITH_CARD)
+    }
+  }, [drepIdSelected.length, scheduleHeightChange])
+
+  const handleDrepIdChange = React.useCallback(
+    (text: string) => setDrepIdSelected(text),
+    [],
+  )
+
+  const {error, isFetched, isFetching} = useIsValidDRepID(drepIdSelected, {
     retry: false,
-    enabled: drepId.length > 0,
+    enabled: drepIdSelected.length > 0,
   })
 
-  const {showCard, handleFocus, handleBlur, updateHasInput} =
-    useCardVisibility(setHeight)
+  const isSubmitDisabled =
+    isNonNullable(error) ||
+    drepIdSelected.length === 0 ||
+    !isFetched ||
+    isFetching
 
-  const handleDrepIdChange = (text: string) => {
-    setDrepId(text)
-    updateHasInput(text)
-  }
-
-  const handleOnPress = () => {
+  const handleSubmit = () => {
     try {
-      const {hash, type} = parseDrepId(drepId, CardanoMobile)
-      onSubmit?.({hash, type, CIP105: !error && drepId.length === 56})
+      const {hash, type} = parseDrepId(drepIdSelected, CardanoMobile)
+      const isCIP105 = !error && drepIdSelected.length === 56
+      onSubmit?.({hash, type, CIP105: isCIP105})
       closeModal()
-    } catch (e) {
+    } catch {
       Alert.alert(strings.global.error, strings.staking.invalidDRepId)
     }
   }
 
-  const handleOnLinkPress = () => {
-    Linking.openURL(FIND_DREPS_LINKS[network])
-  }
+  const handleFindDRepLink = () => Linking.openURL(FIND_DREPS_LINKS[network])
 
   const handleDelegateToYoroi = () => {
-    onSubmit?.({
-      hash: getYoroiDrepIdHex(network),
-      type: 'key',
-      CIP105: false,
-    })
+    onSubmit?.({hash: getYoroiDrepIdHex(network), type: 'key', CIP105: false})
     closeModal()
   }
 
@@ -82,14 +108,12 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
     <Modal.Content>
       <Space.Height.sm />
 
-      <Text style={[a.text_center, a.body_1_lg_regular, ta.text_gray_medium]}>
-        {strings.staking.enterDrepIDInfo}
-      </Text>
+      <Description />
 
       <Space.Height.lg />
 
       <TextInput
-        value={drepId}
+        value={drepIdSelected}
         onChangeText={handleDrepIdChange}
         onFocus={handleFocus}
         onBlur={handleBlur}
@@ -111,93 +135,79 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
       />
 
       {showCard && (
-        <>
-          <Space.Height.lg />
-
-          <View style={[a.flex_row, a.justify_center, a.flex_wrap]}>
-            <Text
-              style={[a.body_1_lg_regular, ta.text_gray_medium, a.text_center]}
-            >
-              {strings.staking.dontHaveAnID}{' '}
-            </Text>
-
-            <Text
-              style={[
-                a.body_1_lg_regular,
-                {color: p.primary_500, textDecorationLine: 'underline'},
-              ]}
-              onPress={handleOnLinkPress}
-            >
-              {strings.staking.findDRepHere}
-            </Text>
-          </View>
-
-          <Space.Height.xs />
-
-          <Text
-            style={[a.body_1_lg_regular, ta.text_gray_medium, a.text_center]}
-          >
-            {strings.staking.orDelegateToYoroiDrepBelow}
-          </Text>
-
-          <Space.Height.lg />
-
-          <YoroiDrepCard
-            onDelegate={handleDelegateToYoroi}
-            truncateId
-            variant="plain"
-          />
-        </>
+        <FindDRepSection
+          onLinkPress={handleFindDRepLink}
+          onDelegateToYoroi={handleDelegateToYoroi}
+        />
       )}
 
       <Space.Height.lg />
 
       <Button
         title={strings.staking.confirm}
-        disabled={
-          isNonNullable(error) ||
-          drepId.length === 0 ||
-          !isFetched ||
-          isFetching
-        }
-        onPress={handleOnPress}
+        disabled={isSubmitDisabled}
+        onPress={handleSubmit}
       />
     </Modal.Content>
   )
 }
 
-export const HEIGHT_WITH_CARD = 660
-export const HEIGHT_WITHOUT_CARD = 350
+const Description = () => {
+  const strings = useStrings()
+  const {atoms: ta} = useTheme()
 
-const useCardVisibility = (setHeight: (height: number) => void) => {
-  const [showCard, setShowCard] = React.useState(true)
-  const [hasInput, setHasInput] = React.useState(false)
-  const timeoutRef = React.useRef<ReturnType<typeof setTimeout>>(undefined)
-
-  React.useEffect(
-    () => () => {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current)
-    },
-    [],
+  return (
+    <Text style={[a.text_center, a.body_1_lg_regular, ta.text_gray_medium]}>
+      {strings.staking.enterDrepIDInfo}
+    </Text>
   )
+}
 
-  const handleFocus = React.useCallback(() => {
-    setShowCard(false)
-    if (timeoutRef.current) clearTimeout(timeoutRef.current)
-    timeoutRef.current = setTimeout(() => setHeight(HEIGHT_WITHOUT_CARD), 150)
-  }, [setHeight])
+type FindDRepSectionProps = {
+  onLinkPress: () => void
+  onDelegateToYoroi: () => void
+}
 
-  const handleBlur = React.useCallback(() => {
-    if (!hasInput) {
-      setShowCard(true)
-      if (timeoutRef.current) clearTimeout(timeoutRef.current)
-      timeoutRef.current = setTimeout(() => setHeight(HEIGHT_WITH_CARD), 150)
-    }
-  }, [hasInput, setHeight])
+const FindDRepSection = ({
+  onLinkPress,
+  onDelegateToYoroi,
+}: FindDRepSectionProps) => {
+  const strings = useStrings()
+  const {atoms: ta, palette} = useTheme()
 
-  const updateHasInput = React.useCallback((text: string) => {
-    setHasInput(text.length > 0)
-  }, [])
+  return (
+    <>
+      <Space.Height.lg />
 
-  return {showCard, handleFocus, handleBlur, updateHasInput}
+      <View style={[a.flex_row, a.justify_center, a.flex_wrap]}>
+        <Text style={[a.body_1_lg_regular, ta.text_gray_medium, a.text_center]}>
+          {strings.staking.dontHaveAnID}{' '}
+        </Text>
+
+        <Text
+          style={[
+            a.body_1_lg_regular,
+            {color: palette.primary_500, textDecorationLine: 'underline'},
+          ]}
+          onPress={onLinkPress}
+        >
+          {strings.staking.findDRepHere}
+        </Text>
+      </View>
+
+      <Space.Height.xs />
+
+      <Text style={[a.body_1_lg_regular, ta.text_gray_medium, a.text_center]}>
+        {strings.staking.orDelegateToYoroiDrepBelow}
+      </Text>
+
+      <Space.Height.lg />
+
+      <YoroiDrepCard
+        onDelegate={onDelegateToYoroi}
+        truncateId
+        variant="plain"
+      />
+    </>
+  )
 }
