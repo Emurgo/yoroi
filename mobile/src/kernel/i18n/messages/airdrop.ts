@@ -132,5 +132,67 @@ export const airdropMessages = defineMessages({
   statusSkipped: {
     id: 'airdrop.status.skipped',
     defaultMessage: '!!!Skipped',
+  }, // Add these to the existing airdropMessages in airdrop.ts
+  destinationAddressTitle: {
+    id: 'airdrop.destinationAddressTitle',
+    defaultMessage: '!!!Destination address',
+  },
+  destinationAddressNumber: {
+    id: 'airdrop.destinationAddressNumber',
+    defaultMessage: '!!!Destination address {number}',
+  },
+  apply: {
+    id: 'airdrop.apply',
+    defaultMessage: '!!!Apply',
+  },
+  thawSchedule: {
+    id: 'airdrop.thawSchedule',
+    defaultMessage: '!!!Thaw schedule',
+  },
+  thawScheduleDescription: {
+    id: 'airdrop.thawScheduleDescription',
+    defaultMessage:
+      '!!!Use this page as a baseline for further top performance activities.',
+  },
+  thawNumber: {
+    id: 'airdrop.thawNumber',
+    defaultMessage: '!!!Thaw {current}/{total}',
+  },
+  phaseAnnouncement: {
+    id: 'airdrop.phaseAnnouncement',
+    defaultMessage:
+      '!!!Phase 3. Lost and Found NIGHT of midnight airdrop has started.',
+  },
+  moreDetails: {
+    id: 'airdrop.moreDetails',
+    defaultMessage: '!!!More Midnight airdrop details',
+  },
+  allocationSize: {
+    id: 'airdrop.allocationSize',
+    defaultMessage: '!!!Allocation size',
+  },
+  noAvailableYet: {
+    id: 'airdrop.noAvailableYet',
+    defaultMessage: '!!!No available yet',
+  },
+  redeemed: {
+    id: 'airdrop.redeemed',
+    defaultMessage: '!!!Redeemed',
+  },
+  detailsOn: {
+    id: 'airdrop.detailsOn',
+    defaultMessage: '!!!Details on',
+  },
+  redeemableThaws: {
+    id: 'airdrop.redeemableThaws',
+    defaultMessage: '!!!Redeemable thaws',
+  },
+  readOnlyWallet: {
+    id: 'airdrop.readOnlyWallet',
+    defaultMessage: '!!!Read-only wallets cannot redeem tokens',
+  },
+  noRedeemableThaws: {
+    id: 'airdrop.noRedeemableThaws',
+    defaultMessage: '!!!No thaws are currently redeemable',
   },
 })
