@@ -142,7 +142,7 @@ export const DefineQuorumScreen = () => {
                 a.border,
                 {
                   backgroundColor:
-                    quorumType === 'RequireAnyOf' ? p.primary_100 : p.white,
+                    quorumType === 'RequireAnyOf' ? p.primary_100 : p.gray_cmin,
                   borderColor:
                     quorumType === 'RequireAnyOf' ? p.primary_600 : p.gray_200,
                 },
@@ -166,7 +166,7 @@ export const DefineQuorumScreen = () => {
                 a.border,
                 {
                   backgroundColor:
-                    quorumType === 'RequireNOf' ? p.primary_100 : p.white,
+                    quorumType === 'RequireNOf' ? p.primary_100 : p.gray_cmin,
                   borderColor:
                     quorumType === 'RequireNOf' ? p.primary_600 : p.gray_200,
                 },
@@ -201,7 +201,7 @@ export const DefineQuorumScreen = () => {
           {error && (
             <>
               <Space.Height.sm />
-              <Text style={[a.body_1_lg_medium, {color: p.sys_red_500}]}>
+              <Text style={[a.body_1_lg_medium, {color: p.gray_max}]}>
                 {error}
               </Text>
             </>

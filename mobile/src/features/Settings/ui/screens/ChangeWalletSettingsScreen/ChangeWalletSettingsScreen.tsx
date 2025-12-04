@@ -61,7 +61,7 @@ export const ChangeWalletSettingsScreen = () => {
   const logout = useLogout()
   const settingsNavigation = useNavigation<SettingsRouteNavigation>()
   const {
-    meta: {isEasyConfirmationEnabled, isHW, isReadOnly, implementation},
+    meta: {isEasyConfirmationEnabled, isHW, isReadOnly, implementation, multisigMeta},
   } = useSelectedWallet()
   const navigateTo = useNavigateTo()
   const walletType = useWalletType(implementation)
@@ -110,7 +110,7 @@ export const ChangeWalletSettingsScreen = () => {
             onNavigate={() => settingsNavigation.navigate('change-wallet-name')}
           />
 
-          {meta?.multisigMeta && (
+          {multisigMeta && (
             <NavigatedSettingsItem
               icon={<Icon.WalletStack {...iconProps} />}
               label="Multisig Wallet Details"

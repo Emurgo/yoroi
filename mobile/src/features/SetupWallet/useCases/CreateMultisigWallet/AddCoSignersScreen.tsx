@@ -211,7 +211,7 @@ export const AddCoSignersScreen = () => {
               title={strings.setupWallet.addCoSignerButton}
               onPress={handleAddCoSigner}
               disabled={!newCoSignerName.trim() || !newCoSignerKey.trim()}
-              type="secondary"
+              type={ButtonType.Secondary}
               testID="add-cosigner-button"
             />
           </View>
@@ -219,7 +219,7 @@ export const AddCoSignersScreen = () => {
           {error && (
             <>
               <Space.Height.sm />
-              <Text style={[a.body_1_lg_medium, {color: p.sys_red_500}]}>
+              <Text style={[a.body_1_lg_medium, {color: p.gray_max}]}>
                 {error}
               </Text>
             </>

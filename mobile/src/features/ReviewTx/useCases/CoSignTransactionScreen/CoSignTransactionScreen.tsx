@@ -20,6 +20,7 @@ import {ScriptCbor} from '@yoroi/types'
 import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import {useNavigation} from '@react-navigation/native'
+import type {StackNavigationProp} from '@react-navigation/stack'
 import {Buffer} from 'buffer'
 import * as FileSystem from 'expo-file-system'
 import * as React from 'react'
@@ -36,7 +37,7 @@ import {TransactionBody} from '~/features/ReviewTx/common/types'
 import {showErrorDialog} from '~/kernel/dialogs'
 import {errorMessages} from '~/kernel/i18n/messages/global'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {TxHistoryRouteNavigation} from '~/kernel/navigation/types'
+import {ReviewTxRouteNavigation} from '~/kernel/navigation/types'
 import {makeWalletEncryptedStorage} from '~/kernel/storage/EncryptedStorage'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
@@ -48,9 +49,9 @@ type TransactionType = 'multisig' | 'multiparty' | null
 
 export const CoSignTransactionScreen = () => {
   const logger = getLogger()
+  const navigation = useNavigation<StackNavigationProp<ReviewTxRoutes>>()
   const strings = useStrings()
   const {atoms: ta, palette: p} = useTheme()
-  const navigation = useNavigation<TxHistoryRouteNavigation>()
   const {wallet, meta} = useSelectedWallet()
   const [importedTxJson, setImportedTxJson] = React.useState<string | null>(
     null,
@@ -203,7 +204,7 @@ export const CoSignTransactionScreen = () => {
           onSuccess: () => {
             navigation.goBack()
           },
-        })
+        } as ReviewTxRoutes['review-tx'])
       } else if (transactionType === 'multiparty') {
         // Multiparty transaction signing - can be signed by any wallet
         const txJson = parseMultipartyTransactionJSON(importedTxJson)
