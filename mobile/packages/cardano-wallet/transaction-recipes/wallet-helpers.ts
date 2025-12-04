@@ -349,43 +349,10 @@ async function createMultisigSendTxFromWallet(
 
   const modernUtxos = getModernUtxosFromWallet(wallet)
 
-  // Build transaction using standard builder first, then add scripts
-  // We'll reuse createSendTx logic but wrap the final build step
+  // Build transaction using standard builder
+  // For multisig wallets, we'll use createSendTx which handles script inclusion
   const {createSendTx} = await import('./createSendTx')
-  const {buildMultisigTransaction} = await import(
-    '@yoroi/tx/multisig/multisig-tx-builder'
-  )
-  const {
-    createTransactionBuilder,
-    addInputs,
-    addOutput,
-    setChangeAddress,
-    setTTLWithBuffer,
-    addMetadata,
-    selectUtxosForAmounts,
-  } = await import('@yoroi/tx')
-  const {createCardanoHaskellConfig} = await import('@yoroi/tx')
 
-  // Replicate createSendTx logic but use buildMultisigTransaction at the end
-  const changeAddressRaw = wallet.getChangeAddress(params.addressMode)
-  const changeAddress =
-    typeof changeAddressRaw === 'string'
-      ? (changeAddressRaw as Address)
-      : changeAddressRaw
-
-  const protocolParamsConfig = createCardanoHaskellConfig(
-    wallet.protocolParams,
-    wallet.networkManager.chainId,
-  )
-
-  const absSlotNumber = await getAbsoluteSlotNumberFromWallet(wallet)
-
-  // Build transaction state (simplified - full logic would replicate createSendTx)
-  let builderState = createTransactionBuilder()
-
-  // Select UTXOs and add inputs/outputs (simplified version)
-  // For full implementation, we'd need to replicate the full createSendTx logic
-  // For now, we'll build the transaction normally and then add scripts
   const result = await createSendTx({
     utxos: modernUtxos,
     entries: params.entries,

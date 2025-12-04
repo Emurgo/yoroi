@@ -5,14 +5,11 @@
  */
 import {CardanoMobileWrapped} from '@yoroi/cardano-wallet'
 import {getLogger} from '@yoroi/common'
+import {derivationConfig, cardanoConfig} from '@yoroi/blockchains'
 import {Buffer} from 'buffer'
 import * as CSL from '@emurgo/cross-csl-core'
 
-import {getRequiredSignersFromTransaction} from '../transaction-builder/multiparty'
 import type {UnsignedTransaction} from '../transaction-builder/types'
-import {signTransaction} from '../utils/signing'
-import {derivationConfig} from '@yoroi/blockchains'
-import {cardanoConfig} from '@yoroi/blockchains'
 
 /**
  * Parameters for signing a multiparty transaction
@@ -82,7 +79,9 @@ export const signMultipartyTransaction = async ({
       .derive(wallet.meta.accountVisual + derivationConfig.hardStart)
 
     const paymentKey = accountPrivateKey.derive(0).derive(0).toRawKey() // external chain, index 0
-    const keyHash = Buffer.from(paymentKey.publicKey().hash().to_bytes()).toString('hex')
+    const keyHash = Buffer.from(
+      paymentKey.publicKey().hash().to_bytes(),
+    ).toString('hex')
 
     logger.debug('signMultipartyTransaction: Transaction signed', {
       walletId,

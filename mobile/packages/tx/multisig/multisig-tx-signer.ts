@@ -7,11 +7,7 @@ import {
   paymentScriptKeyPath,
   stakingScriptKeyPath,
 } from '@yoroi/cardano-wallet/multisig/script-derivation'
-import {
-  type SignPolicy,
-  getSharedWalletSignPolicy,
-  hasSigned,
-} from '@yoroi/cardano-wallet/multisig/script-utils'
+import type {SignPolicy} from '@yoroi/cardano-wallet/multisig/script-utils'
 import {getLogger} from '@yoroi/common'
 import {Wallet} from '@yoroi/types'
 
@@ -217,8 +213,8 @@ export const signMultisigTransaction = async ({
 export const checkCoSignerSignature = async (
   signedTxCbor: Wallet.TransactionCbor,
   coSignerKey: Wallet.Bip32PublicKeyHex,
-  paymentScriptCbor: Wallet.ScriptCbor,
-  stakingScriptCbor: Wallet.ScriptCbor,
+  _paymentScriptCbor: Wallet.ScriptCbor,
+  _stakingScriptCbor: Wallet.ScriptCbor,
 ): Promise<boolean> => {
   return CardanoMobileWrapped.cslScope(async (csl) => {
     const tx = csl.Transaction.fromHex(signedTxCbor)
@@ -331,9 +327,10 @@ export const getQuorumStatus = (
   const required = signPolicy.requiredCosigners
   const meetsQuorum = signed >= required
 
-  // Find missing signers
-  const missingSigners = signPolicy.signers
-    .map((signer) => {
+  // Find missing signers (unused for now, but kept for future use)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const _missingSigners = signPolicy.signers
+    .map((_signer) => {
       // Find the corresponding Bip32PublicKeyHex for this key hash
       // This requires matching the key hash to the co-signer key
       // For now, we'll return all signers as potentially missing

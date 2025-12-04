@@ -67,8 +67,8 @@ export const makeMultisigWalletFactory = (
     },
 
     makeKeys: ({
-      mnemonic,
-      csl,
+      mnemonic: _mnemonic,
+      csl: _csl,
     }: {
       mnemonic: string
       csl: import('@emurgo/cross-csl-core').WasmModuleProxy

@@ -145,7 +145,7 @@ export const shareTransaction = (
 export const signSharedTransaction = (
   params: SignSharedTransactionParams,
 ): TransactionState => {
-  const {transactionId, walletId, signedCborHex} = params
+  const {transactionId, walletId} = params
 
   // Check if transaction exists in local registry
   const localState = getTransactionState(transactionId)

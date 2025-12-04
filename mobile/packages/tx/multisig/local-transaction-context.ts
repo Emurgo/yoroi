@@ -7,7 +7,7 @@ import {Bip32PublicKeyHex} from '@yoroi/types'
 
 import {freeze} from 'immer'
 
-import {MultisigTransactionJSON, TransactionCborHex} from './transaction-json'
+import {MultisigTransactionJSON} from './transaction-json'
 
 /**
  * Transaction signer information

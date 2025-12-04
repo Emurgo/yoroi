@@ -56,14 +56,13 @@ type CreateMultisigWalletResult = {
  */
 export const createMultisigWallet = async (
   params: CreateMultisigWalletParams,
-  makeWalletEncryptedStorage: (id: string) => WalletEncryptedStorage,
+  _makeWalletEncryptedStorage: (id: string) => WalletEncryptedStorage,
 ): Promise<CreateMultisigWalletResult> => {
   const {
     name,
     coSigners,
     quorumRules,
     parentWalletIds,
-    parentWalletRootKeys,
     network,
     version,
   } = params

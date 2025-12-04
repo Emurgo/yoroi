@@ -1,14 +1,11 @@
 /**
  * Unit tests for multisig transaction signer
  */
-import {Wallet} from '@yoroi/types'
 import {Bip32PublicKeyHex, ScriptCbor, TransactionCbor} from '@yoroi/types'
 
 import type {UnsignedTransaction} from '../transaction-builder/types'
 import {
-  checkCoSignerSignature,
   getQuorumStatus,
-  getSignedCoSigners,
   signMultisigTransaction,
   validateMultisigQuorum,
 } from './multisig-tx-signer'
@@ -19,7 +16,7 @@ jest.mock('@yoroi/cardano-wallet', () => ({
     cslScope: jest.fn((fn) => {
       const mockCsl = {
         Transaction: {
-          fromHex: jest.fn((hex: string) => ({
+          fromHex: jest.fn((_hex: string) => ({
             witnessSet: jest.fn(() => ({
               nativeScripts: jest.fn(() => ({
                 len: jest.fn(() => 0),
@@ -43,7 +40,7 @@ jest.mock('@yoroi/cardano-wallet', () => ({
             })),
             auxiliaryData: jest.fn(() => null),
           })),
-          fromBytes: jest.fn((bytes: Uint8Array) => ({
+          fromBytes: jest.fn((_bytes: Uint8Array) => ({
             witnessSet: jest.fn(() => ({
               vkeys: jest.fn(() => ({
                 len: jest.fn(() => 1),
@@ -62,9 +59,9 @@ jest.mock('@yoroi/cardano-wallet', () => ({
           })),
         },
         Bip32PrivateKey: {
-          fromBytes: jest.fn((bytes: Uint8Array) => ({
-            derive: jest.fn((index: number) => ({
-              derive: jest.fn((index2: number) => ({
+          fromBytes: jest.fn((_bytes: Uint8Array) => ({
+            derive: jest.fn((_index: number) => ({
+              derive: jest.fn((_index2: number) => ({
                 toRawKey: jest.fn(() => ({
                   sign: jest.fn(() => Buffer.from('signature')),
                 })),
@@ -73,7 +70,7 @@ jest.mock('@yoroi/cardano-wallet', () => ({
           })),
         },
         FixedTransaction: {
-          fromHex: jest.fn((hex: string) => ({
+          fromHex: jest.fn((_hex: string) => ({
             signAndAddVkeySignature: jest.fn(),
             toBytes: jest.fn(() => Buffer.from('signedTx')),
           })),
@@ -97,14 +94,14 @@ jest.mock('@yoroi/cardano-wallet', () => ({
           })),
         },
         NativeScript: {
-          fromHex: jest.fn((hex: string) => ({
+          fromHex: jest.fn((_hex: string) => ({
             toHex: jest.fn(() => hex),
           })),
         },
         Bip32PublicKey: {
-          fromBytes: jest.fn((bytes: Uint8Array) => ({
-            derive: jest.fn((index: number) => ({
-              derive: jest.fn((index2: number) => ({
+          fromBytes: jest.fn((_bytes: Uint8Array) => ({
+            derive: jest.fn((_index: number) => ({
+              derive: jest.fn((_index2: number) => ({
                 toRawKey: jest.fn(() => ({
                   hash: jest.fn(() => ({
                     toHex: jest.fn(() => 'mockKeyHash'),

@@ -6,10 +6,7 @@ import {Chain, Network, Wallet} from '@yoroi/types'
 import {freeze} from 'immer'
 
 import {WalletFactory} from '../common/types'
-import {
-  createMultisigWalletFactories,
-  makeMultisigWalletFactory,
-} from './multisig-wallet-factory'
+import {createMultisigWalletFactories} from './multisig-wallet-factory'
 
 /**
  * Creates wallet factories with the given dependencies

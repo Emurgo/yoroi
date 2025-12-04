@@ -1,8 +1,8 @@
 /**
  * Unit tests for multisig transaction JSON utilities
  */
-import {Chain, Wallet} from '@yoroi/types'
-import {Bip32PublicKeyHex, ScriptCbor, TransactionCbor} from '@yoroi/types'
+import {Chain} from '@yoroi/types'
+import {Bip32PublicKeyHex} from '@yoroi/types'
 
 import {
   type MultisigTransactionJSON,

@@ -1,7 +1,7 @@
 /**
  * Unit tests for multisig transaction builder
  */
-import {ScriptCbor, TransactionCbor} from '@yoroi/types'
+import {ScriptCbor} from '@yoroi/types'
 
 import {buildTransaction} from '../transaction-builder/builder'
 import {buildMultisigTransaction} from './multisig-tx-builder'
@@ -16,7 +16,7 @@ jest.mock('@yoroi/cardano-wallet', () => ({
     cslScope: jest.fn((fn) => {
       const mockCsl = {
         Transaction: {
-          fromHex: jest.fn((hex: string) => ({
+          fromHex: jest.fn((_hex: string) => ({
             witnessSet: jest.fn(() => ({
               nativeScripts: jest.fn(() => ({
                 len: jest.fn(() => 0),
@@ -46,7 +46,7 @@ jest.mock('@yoroi/cardano-wallet', () => ({
           })),
         },
         NativeScript: {
-          fromHex: jest.fn((hex: string) => ({
+          fromHex: jest.fn((_hex: string) => ({
             toHex: jest.fn(() => hex),
           })),
         },

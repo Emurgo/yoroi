@@ -321,10 +321,6 @@ import {
 import {
   WalletAddressMode,
   WalletImplementation,
-  QuorumRuleKind,
-  QuorumRules,
-  CoSigner,
-  MultisigWalletMeta,
 } from './wallet/wallet'
 
 // Type aliases to reference imported transaction types (avoid circular references in namespace)
