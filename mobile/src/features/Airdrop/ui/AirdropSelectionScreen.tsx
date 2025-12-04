@@ -101,6 +101,15 @@ export const AirdropSelectionScreen = () => {
       style={[ta.bg_color_max, a.flex_1]}
     >
       <ScrollView contentContainerStyle={[a.p_lg, a.gap_md]} style={a.flex_1}>
+        {/* Phase Announcement */}
+        <View style={[a.flex_row, a.align_start, a.gap_sm]}>
+          <Text style={[a.body_1_lg_regular, ta.text_gray_max, a.flex_1]}>
+            {strings.airdrop.phaseAnnouncement}
+          </Text>
+        </View>
+
+        <Space.Height.xs />
+
         {allocations.map((allocation, index) => (
           <AddressCard
             key={allocation.address}

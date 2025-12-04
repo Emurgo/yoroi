@@ -138,15 +138,6 @@ export const AirdropDetailsScreen = () => {
       style={[ta.bg_color_max, a.flex_1]}
     >
       <ScrollView contentContainerStyle={[a.p_lg]} style={a.flex_1}>
-        {/* Phase Announcement */}
-        <View style={[a.flex_row, a.align_start, a.gap_sm]}>
-          <Text style={[a.body_1_lg_regular, ta.text_gray_max, a.flex_1]}>
-            {strings.airdrop.phaseAnnouncement}
-          </Text>
-        </View>
-
-        <Space.Height.xl />
-
         {/* Redeemable Now Card */}
         <TouchableOpacity
           activeOpacity={0.8}
